@@ -1,79 +1,75 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 5/5] ARM: dts: sun6i: Add dts file for CSQ
- CS908 board
-Date: Thu, 4 Dec 2014 17:33:09 +0100
-Message-ID: <20141204163309.GS30256@lukather>
-References: <1416747283-13489-1-git-send-email-hdegoede@redhat.com>
- <1416747283-13489-6-git-send-email-hdegoede@redhat.com>
- <20141125182147.GD25249@lukather>
- <5475962A.4090508@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [RFC] OPP: Redefine bindings to overcome shortcomings
+Date: Thu, 4 Dec 2014 17:18:49 +0000
+Message-ID: <20141204171849.GX7712@sirena.org.uk>
+References: <52c403454c3b8fc201abe7ac74cf657638479311.1417691389.git.viresh.kumar@linaro.org>
+ <1417692868.9037.4.camel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="szdyR02yM8NCQUEm"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBOE2QKSAKGQE3MV3J2Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="JBABWuYasNt1mk88"
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <5475962A.4090508-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1417692868.9037.4.camel@pengutronix.de>
+Sender: linux-pm-owner@vger.kernel.org
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, nm@ti.com, rob.herring@linaro.org, kesavan.abhilash@gmail.com, linaro-kernel@lists.linaro.org, catalin.marinas@arm.com, linux-pm@vger.kernel.org, sboyd@codeaurora.org, santosh.shilimkar@oracle.com, Rafael Wysocki <rjw@rjwysocki.net>, olof@lixom.net, devicetree@vger.kernel.org, mike.turquette@linaro.org, Sudeep.Holla@arm.com, grant.likely@linaro.org, thomas.petazzoni@free-electrons.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
---szdyR02yM8NCQUEm
-Content-Type: text/plain; charset=UTF-8
+
+--JBABWuYasNt1mk88
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-Hi,
+On Thu, Dec 04, 2014 at 12:34:28PM +0100, Lucas Stach wrote:
+> Am Donnerstag, den 04.12.2014, 16:44 +0530 schrieb Viresh Kumar:
 
-On Wed, Nov 26, 2014 at 09:58:18AM +0100, Hans de Goede wrote:
-> Hi,
-> 
-> On 11/25/2014 07:21 PM, Maxime Ripard wrote:
-> >On Sun, Nov 23, 2014 at 01:54:43PM +0100, Hans de Goede wrote:
-> >>The CSQ CS908 is an A31s based top-set box, with 1G RAM, 8G NAND,
-> >>rtl8188etv usb wifi, 2 USB A receptacles (1 connected through the OTG
-> >>controller), ethernet, 3.5 mm jack with a/v out and hdmi out:
-> >>
-> >>http://www.geekbuying.com/item/CS908-Allwinner-A31S-Quad-Core-1-2GHz-Android-4-4-Mini-TV-Box-HDMI-HDD-Player-1G-8G-WIFI-Miracast---Black-333395.html
-> >>
-> >>Note it has no sdcard slot and therefore can only be fel booted.
-> >
-> >Thanks a lot for working on this!
-> >
-> >I also bought another board with an A31s, but it ended up having
-> >neither USB OTG or MMC, which rendered it pretty useless.
-> 
-> Are you sure ? The cs908 also does not have an otg connector,
-> as said it has 2 usb-a receptacles, with the following usb "routing":
-> 
-> usb0 (otg): usb-a receptacle 1 (labeled 1 on the box, 0 on the print)
-> usb1 (ehci): routed to internal wifi
-> usb2 (ehci): usb-a receptacle 2 (labeled 2 on both the box and the print)
-> 
-> I'm using fel mode with an usb-a <-> usb-a cable connected to usb0 on
-> the cs908. The cs908 has no fel button, so I've hooked up the serial console,
-> and then keep 2 pressed on the serial console while inserting the usb-a into
-> the PC (which will also power the board). boot0 from the nand will then jump
-> into fel mode when it sees the 2 keypress.
-> 
-> This was an interesting exercise to confirm that everything on the A31s just
-> works with A31 code, but now that is confirms A31s devices are not all that
-> interesting anymore :)
+> > +  - voltage-tolerance: Specify the CPU voltage tolerance in percentage.
 
-Ah, that's very interesting... I'll dig this board out then, and try
-both USB-A connector. It might very well be just that.
+> This is extremely ill defined. It doesn't say in which direction the
+> tolerance is to be applied. Can you go below or above the OPP specified
+> voltage? For now everyone just assumes that it has to work both ways.
+> Also with this binding the tolerance is applied for all OPPs, where is
+> very much depends on the individual OPP.
 
-Thanks!
-Maxime
+Almost all specifications for voltages are done as either min/typ/max or
++/- a target voltage.
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---szdyR02yM8NCQUEm--
+> If you are going to redefine OPPs anyway I would really like to see this
+> property die and rather have a min/max voltage per OPP. That way you can
+> properly express the OPP constraints. Most OPPs will likely allow a much
+> higher voltage than their minimal specified one, except when you go over
+> thermal limits with a high clock/voltage combination.
+
+If you've got a minimum and maximum you also need to specify a target,
+generally it's going to be better to go for the target voltage which may
+not be the midpoint and is unlikely to be one of the bounds.  I do think
+it's sensible to have the option of doing both to more closely match
+datasheets.
+
+> > +  - clock-latency: Specify the possible maximum transition latency for clock,
+> > +    in unit of nanoseconds.
+
+> Why do we need this? This is property of the clock. We should be able to
+> handle this completely internally in the kernel. I don't know if the
+> clock API has something like this right now, but it should be a trivial
+> addition.
+
+Or have it be part of the clock binding at any rate.
+
+--JBABWuYasNt1mk88
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUgJd4AAoJECTWi3JdVIfQO2cH/A4xkox0tV1u0JGW0NZZ64CB
+iG9m41Xnvtdio2GQH7wyCZ6Q+w3Uz6JdKHq/LPG/EqVNzop7aa5F4v+MFD5pyAlx
+iTauzhvWV+FtrAek6SkOm/f96J5K2edYHVPygAmsXbjuID2u4dJ4TjdUB+tvT+vq
+DnrvlZZJkhtG6TgHekKBhGe1lyoDJagC4T6ZmIhewtBSZvnY8bRR7U2eQFqzz+lT
+If5B55ybdhHOvdDQ50DKc1F/4AYZzX0m79eK4YkYV1NxRVnbbzbzhKAzpI0HfZg6
+PgbYIN1PJoGvvOD4UB9u8MxS2dvgCuFx9zXJyEoXadxS6WEDW9BaArXlQLPGsM8=
+=Yk1q
+-----END PGP SIGNATURE-----
+
+--JBABWuYasNt1mk88--
