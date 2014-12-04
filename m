@@ -1,41 +1,48 @@
-From: Kevin Hilman <khilman@kernel.org>
-Subject: Re: [PATCH] ARM: dts: Add dts file for odroid XU3 board
-Date: Wed, 03 Dec 2014 20:40:04 -0800
-Message-ID: <7hlhmoxc2j.fsf@deeprootsystems.com>
-References: <1417438770-28696-1-git-send-email-sjoerd.simons@collabora.co.uk>
-	<7hzjb4y0gp.fsf@deeprootsystems.com>
-	<1417638971.21830.42.camel@collabora.co.uk>
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v4 1/6] dt/bindings: bman: Add phandle to the portals
+Date: Wed, 3 Dec 2014 22:51:14 -0600
+Message-ID: <1417668674.15957.243.camel@freescale.com>
+References: <1417600964-24647-1-git-send-email-Emilian.Medve@Freescale.com>
+	 <1417600964-24647-2-git-send-email-Emilian.Medve@Freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1417638971.21830.42.camel@collabora.co.uk> (Sjoerd Simons's
-	message of "Wed, 03 Dec 2014 21:36:11 +0100")
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
-Cc: Kukjin Kim <kgene.kim@samsung.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1417600964-24647-2-git-send-email-Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
+Cc: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Sjoerd Simons <sjoerd.simons@collabora.co.uk> writes:
+On Wed, 2014-12-03 at 04:02 -0600, Emil Medve wrote:
+> This supports SoC(s) with multiple BMan instances
+> 
+> Signed-off-by: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/soc/fsl/bman.txt | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/soc/fsl/bman.txt b/Documentation/devicetree/bindings/soc/fsl/bman.txt
+> index 9f80bf8..4fc4a6e 100644
+> --- a/Documentation/devicetree/bindings/soc/fsl/bman.txt
+> +++ b/Documentation/devicetree/bindings/soc/fsl/bman.txt
+> @@ -36,6 +36,11 @@ are located at offsets 0xbf8 and 0xbfc
+>  	Value type:	<prop-encoded-array>
+>  	Definition:	Standard property. The error interrupt
+>  
+> +- fsl,bman-portals
+> +	Usage:		Required
+> +	Value type:	<phandle>
+> +	Definition:	Phandle to this BMan's instance portals
 
-> On Wed, 2014-12-03 at 11:53 -0800, Kevin Hilman wrote:
->> Sjoerd Simons <sjoerd.simons@collabora.co.uk> writes:
->> Tried this on top of linux-next (next-20141125 and next20141203) and
->> boots fine on my odroid-xu3. 
->> 
->> Thanks for doing this, I've been meaning to get a DTS upstream for this
->> platform myself.  I also noticed that the imprecise aborts I've been
->> seeing when booting this board with the smdk5420 DTS are gone, so I
->> don't have to dig into those now either.  Thanks!  :)
->
-> For completeness, the problem with running the smdk5420 DTS on the XU3
-> is that the XU3 runs secure firmware while the SMD5420 doesn't.. Hence
-> the imprecise aborts you were seeing.
+s/BMan's instance/BMan instance's/
 
-OK, that's what I suspected but didn't take the time to verify.  Thanks
-for the update.
+Likewise for QMan
 
-BTW, I'll have some DTS updates for the xu3 to enable the on-board
-INA2xx current sensors for easy power measurements without external
-instrumentation.  Will send a patch for those soon.
+-Scott
 
-Kevin
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
