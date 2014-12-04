@@ -1,56 +1,65 @@
-From: Gyungoh Yoo <gyungoh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v10 2/6] backlight: Add support Skyworks SKY81452
- backlight driver
-Date: Thu, 4 Dec 2014 11:04:49 +0900
-Message-ID: <20141204020449.GA2939@jack-ThinkPad-T520>
-References: <1417590332-4912-1-git-send-email-jack.yoo@skyworksinc.com>
- <1417590332-4912-3-git-send-email-jack.yoo@skyworksinc.com>
- <1417600949.12511.7.camel@linux-0dmf.site>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+From: Addy Ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH] ARM: dts: rockchip: set dw_mmc max-freq 150Mhz
+Date: Thu,  4 Dec 2014 10:49:35 +0800
+Message-ID: <1417661375-2872-1-git-send-email-addy.ke@rock-chips.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1417600949.12511.7.camel-AfvqVibwNMkMNNZnWhT/Jw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Oliver Neukum <oneukum-l3A5Bk7waGM@public.gmane.org>
-Cc: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org, hs-ynQEQJNshbs@public.gmane.org, stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org, matti.vaittinen-OYasijW0DpE@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, florian.vaussard-p8DiymsW2f8@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, hytszk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org, jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, hj-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, yzq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhenfu.fang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wei.luo-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Addy Ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 03, 2014 at 11:02:29AM +0100, Oliver Neukum wrote:
-> On Wed, 2014-12-03 at 16:05 +0900, gyungoh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> > +static ssize_t sky81452_bl_store_enable(struct device *dev,
-> > +               struct device_attribute *attr, const char *buf, size_t
-> > count)
-> > +{
-> > +       struct regmap *regmap = bl_get_data(to_backlight_device(dev));
-> > +       unsigned long value;
-> > +       int ret;
-> > +
-> > +       ret = kstrtoul(buf, 16, &value);
-> > +       if (IS_ERR_VALUE(ret))
-> > +               return ret;
-> > +
-> > +       ret = regmap_update_bits(regmap, SKY81452_REG1, SKY81452_EN,
-> > +                                       value << CTZ(SKY81452_EN));
-> 
-> No range checking for value?
+All of mmc controllers include SDMMC, SDIO0, SDIO1, and EMMC on RK3288
+are limited to 150Mhz. It was mainly caused by two reasons:
+- RK3288's IO pad(except DDR IO pad) is generic, which can only support
+  the max of 150Mhz.
+- Mmc controller was designed at 150Mhz, and the pressure test by IC team
+  was based on this freequency point.
 
-Avaiable range is from 0 to SKY81452_EN.
-regmap_update_bits() is masking the value.
+Signed-off-by: Addy Ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+---
+ arch/arm/boot/dts/rk3288.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-> 
-> > +       if (IS_ERR_VALUE(ret))
-> > +               return ret;
-> > +
-> > +       return count;
-> > +}
-> 
-> 	Regards
-> 		Oliver
-> 
-> -- 
-> Oliver Neukum <oneukum-l3A5Bk7waGM@public.gmane.org>
-> 
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index acb6a2f..9c35a1d 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -149,6 +149,7 @@
+ 
+ 	sdmmc: dwmmc@ff0c0000 {
+ 		compatible = "rockchip,rk3288-dw-mshc";
++		clock-freq-min-max = <400000 150000000>;
+ 		clocks = <&cru HCLK_SDMMC>, <&cru SCLK_SDMMC>;
+ 		clock-names = "biu", "ciu";
+ 		fifo-depth = <0x100>;
+@@ -159,6 +160,7 @@
+ 
+ 	sdio0: dwmmc@ff0d0000 {
+ 		compatible = "rockchip,rk3288-dw-mshc";
++		clock-freq-min-max = <400000 150000000>;
+ 		clocks = <&cru HCLK_SDIO0>, <&cru SCLK_SDIO0>;
+ 		clock-names = "biu", "ciu";
+ 		fifo-depth = <0x100>;
+@@ -169,6 +171,7 @@
+ 
+ 	sdio1: dwmmc@ff0e0000 {
+ 		compatible = "rockchip,rk3288-dw-mshc";
++		clock-freq-min-max = <400000 150000000>;
+ 		clocks = <&cru HCLK_SDIO1>, <&cru SCLK_SDIO1>;
+ 		clock-names = "biu", "ciu";
+ 		fifo-depth = <0x100>;
+@@ -179,6 +182,7 @@
+ 
+ 	emmc: dwmmc@ff0f0000 {
+ 		compatible = "rockchip,rk3288-dw-mshc";
++		clock-freq-min-max = <400000 150000000>;
+ 		clocks = <&cru HCLK_EMMC>, <&cru SCLK_EMMC>;
+ 		clock-names = "biu", "ciu";
+ 		fifo-depth = <0x100>;
+-- 
+1.8.3.2
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
