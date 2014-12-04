@@ -1,75 +1,113 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [RFC] OPP: Redefine bindings to overcome shortcomings
-Date: Thu, 4 Dec 2014 17:18:49 +0000
-Message-ID: <20141204171849.GX7712@sirena.org.uk>
-References: <52c403454c3b8fc201abe7ac74cf657638479311.1417691389.git.viresh.kumar@linaro.org>
- <1417692868.9037.4.camel@pengutronix.de>
+From: =?ISO-8859-2?Q?Janusz_U=BFycki?= <j.uzycki@elproma.com.pl>
+Subject: Re: [PATCH v2] clk: Add PWM clock driver
+Date: Thu, 04 Dec 2014 19:00:18 +0100
+Message-ID: <5480A132.2010103@elproma.com.pl>
+References: <1415007078-7947-1-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="JBABWuYasNt1mk88"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1417692868.9037.4.camel@pengutronix.de>
-Sender: linux-pm-owner@vger.kernel.org
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, nm@ti.com, rob.herring@linaro.org, kesavan.abhilash@gmail.com, linaro-kernel@lists.linaro.org, catalin.marinas@arm.com, linux-pm@vger.kernel.org, sboyd@codeaurora.org, santosh.shilimkar@oracle.com, Rafael Wysocki <rjw@rjwysocki.net>, olof@lixom.net, devicetree@vger.kernel.org, mike.turquette@linaro.org, Sudeep.Holla@arm.com, grant.likely@linaro.org, thomas.petazzoni@free-electrons.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=iso-8859-2; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <1415007078-7947-1-git-send-email-p.zabel@pengutronix.de>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>, Mike Turquette <mturquette@linaro.org>, Thierry Reding <thierry.reding@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---JBABWuYasNt1mk88
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+W dniu 2014-11-03 o 10:31, Philipp Zabel pisze:
+> Some board designers, when running out of clock output pads, decide to
+> (mis)use PWM output pads to provide a clock to external components.
+> This driver supports this practice by providing an adapter between the
+> PWM and clock bindings in the device tree. As the PWM bindings specify
+> the period in the device tree, this is a fixed clock.
+>
+> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> ---
+> I'm resending this because last time the linux-pwm list was not in Cc:
+> So far I have not received any comments on the patch itself. I have used
+> it on a BoundaryDevices Nitrogen6X board to produce a master clock for
+> the OV5640 MIPI CSI-2 camera module.
+>
+> Changes since v1:
+>   - none (rebased onto v3.18-rc3)
+> ---
+>   .../devicetree/bindings/clock/pwm-clock.txt        |  23 +++++
+>   drivers/clk/Kconfig                                |   7 ++
+>   drivers/clk/Makefile                               |   1 +
+>   drivers/clk/clk-pwm.c                              | 110 +++++++++++++++++++++
+>   4 files changed, 141 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/clock/pwm-clock.txt
+>   create mode 100644 drivers/clk/clk-pwm.c
+>
+> diff --git a/Documentation/devicetree/bindings/clock/pwm-clock.txt b/Documentation/devicetree/bindings/clock/pwm-clock.txt
+> new file mode 100644
+> index 0000000..d127d17
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/pwm-clock.txt
+> @@ -0,0 +1,23 @@
+> +Binding for an external clock signal driven by a PWM pin.
+> +
+> +This binding uses the common clock binding[1] and the common PWM binding[2].
+> +
+> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+> +[2] Documentation/devicetree/bindings/pwm/pwm.txt
+> +
+> +Required properties:
+> +- compatible : shall be "pwm-clock".
+> +- #clock-cells : from common clock binding; shall be set to 0.
+> +- pwms : from common PWM binding; this determines the clock frequency
+> +  via the PWM period given in the pwm-specifier.
+> +
+> +Optional properties:
+> +- clock-output-names : From common clock binding.
+> +
+> +Example:
+> +	clock {
+> +		compatible = "pwm-clock";
+> +		#clock-cells = <0>;
+> +		clock-output-names = "mipi_mclk";
+> +		pwms = <&pwm2 0 40>; /* 1 / 40 ns = 25 MHz */
 
-On Thu, Dec 04, 2014 at 12:34:28PM +0100, Lucas Stach wrote:
-> Am Donnerstag, den 04.12.2014, 16:44 +0530 schrieb Viresh Kumar:
+Before I asked about [MHz/kHz] <-> [ns] conversion problem but I didn't 
+noticed
+you've just used [ns] in dt. As Thierry wrote:
+"Also the PWM chips will most likely use the concept of period and 
+duty-cycle
+internally anyway, so it will convert back from Hz/percentage to nanoseconds
+and fall victim to similar rounding effects."
 
-> > +  - voltage-tolerance: Specify the CPU voltage tolerance in percentage.
+Unfortunately I discovered that many pwm drivers are buggy around upper 
+freqs limit.
+The example is pwm-mxs.c. PWM has 24MHz clock. There is no problem to set
+registers directly for 12MHz 50% output (period_cycles=2-1=1, 
+inactive_c=1, active_c=0).
 
-> This is extremely ill defined. It doesn't say in which direction the
-> tolerance is to be applied. Can you go below or above the OPP specified
-> voltage? For now everyone just assumes that it has to work both ways.
-> Also with this binding the tolerance is applied for all OPPs, where is
-> very much depends on the individual OPP.
+When I set pwm-mxs period to 83ns / duty to 42ns the output is low because
+it sets inactive_c=0!
+For 125ns/63ns I got about 6MHz instead of 8MHz, and +width=42ns.
+When I set 42ns/42ns I got 12MHz 50%.
+It means new patches for pwms...
 
-Almost all specifications for voltages are done as either min/typ/max or
-+/- a target voltage.
+I will test the patch backported to 3.14 using the mxs platform.
+However as I wrote I  need to patch pwm-mxs first.
 
-> If you are going to redefine OPPs anyway I would really like to see this
-> property die and rather have a min/max voltage per OPP. That way you can
-> properly express the OPP constraints. Most OPPs will likely allow a much
-> higher voltage than their minimal specified one, except when you go over
-> thermal limits with a high clock/voltage combination.
+> [...]
+>
+> +static struct platform_driver clk_pwm_driver = {
+> +	.probe = clk_pwm_probe,
+> +	.driver = {
+> +		.name = "pwm-clock",
+> +		.owner = THIS_MODULE,
 
-If you've got a minimum and maximum you also need to specify a target,
-generally it's going to be better to go for the target voltage which may
-not be the midpoint and is unlikely to be one of the bounds.  I do think
-it's sensible to have the option of doing both to more closely match
-datasheets.
+AFAIR new drivers don't need to set .owner.
 
-> > +  - clock-latency: Specify the possible maximum transition latency for clock,
-> > +    in unit of nanoseconds.
+thanks
+Janusz
 
-> Why do we need this? This is property of the clock. We should be able to
-> handle this completely internally in the kernel. I don't know if the
-> clock API has something like this right now, but it should be a trivial
-> addition.
+> +		.of_match_table = of_match_ptr(clk_pwm_dt_ids),
+> +	},
+> +};
+> +
+> +module_platform_driver(clk_pwm_driver);
 
-Or have it be part of the clock binding at any rate.
-
---JBABWuYasNt1mk88
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUgJd4AAoJECTWi3JdVIfQO2cH/A4xkox0tV1u0JGW0NZZ64CB
-iG9m41Xnvtdio2GQH7wyCZ6Q+w3Uz6JdKHq/LPG/EqVNzop7aa5F4v+MFD5pyAlx
-iTauzhvWV+FtrAek6SkOm/f96J5K2edYHVPygAmsXbjuID2u4dJ4TjdUB+tvT+vq
-DnrvlZZJkhtG6TgHekKBhGe1lyoDJagC4T6ZmIhewtBSZvnY8bRR7U2eQFqzz+lT
-If5B55ybdhHOvdDQ50DKc1F/4AYZzX0m79eK4YkYV1NxRVnbbzbzhKAzpI0HfZg6
-PgbYIN1PJoGvvOD4UB9u8MxS2dvgCuFx9zXJyEoXadxS6WEDW9BaArXlQLPGsM8=
-=Yk1q
------END PGP SIGNATURE-----
-
---JBABWuYasNt1mk88--
