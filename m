@@ -1,58 +1,108 @@
 From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v18 0/12] dw-hdmi: convert imx hdmi to bridge/dw_hdmi
-Date: Fri, 05 Dec 2014 14:55:24 +0100
-Message-ID: <1417787724.3227.10.camel@pengutronix.de>
-References: <1417760564-16858-1-git-send-email-andy.yan@rock-chips.com>
+Subject: [PATCH] drm/bridge: dw_hdmi: use rx sense pins for plug detection if
+ hpd is unreliable
+Date: Fri,  5 Dec 2014 14:59:20 +0100
+Message-ID: <1417787960-14078-1-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1417760564-16858-1-git-send-email-andy.yan@rock-chips.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Andy Yan <andy.yan@rock-chips.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, heiko@sntech.de, airlied@linux.ie, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, Pawel Moll <pawel.moll@arm.com>, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, jay.xu@rock-chips.com, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, rmk+kernel@arm.linux.org.uk, mark.yao@rock-chips.com, fabio.estevam@freescale.com, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, djkurtz@google.com, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@linaro.org>, vladimir_zapolskiy@mentor.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de, Kumar Gala <galak@codeaurora.org>, Russell King <rmk+kernel@arm.linux.org.uk>, Andy Yan <andy.yan@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andy,
-
-Am Freitag, den 05.12.2014, 14:22 +0800 schrieb Andy Yan:
-> We found Freescale imx6 and Rockchip rk3288 and Ingenic JZ4780 (Xburst/MIPS)
-> use the interface compatible Designware HDMI IP, but they also have some
-> lightly differences, such as phy pll configuration, register width(imx hdmi
-> register is one byte, but rk3288 is 4 bytes width and can only be accessed
-> by word), 4K support(imx6 doesn't support 4k, but rk3288 does), and HDMI2.0
-> support.
-> 
-> To reuse the imx-hdmi driver, we make this patch set:
-> (1): fix some CodingStyle warning to make checkpatch happy
-> (2): convert imx-hdmi to drm_bridge
-> (3): split platform specific code
-> (4): move imx-hdmi to bridge/dw_hdmi
-> (5): extend dw_hdmi.c to support rk3288 hdmi
-> (6): add rockchip rk3288 platform specific code dw_hdmi-rockchip.c
-> 
-> Changes in v18:
-> - remove a multiple blank lines in imx-hdmi.c
-> - fix a checkpatch warning in imx-hdmi_pltfm.c
-> - add port bindings
-> - correct some spelling mistakes in dw_hdmi bindings doc
-> - correct some spelling mistakes in dw_hdmi-rockchip bindings doc
-[...]
-
-I am happy with the series so far. Pending Acks from the device tree
-maintainers for the new binding documents, I'd like to apply either the
-whole of it on top of
-    git://git.pengutronix.de/git/pza/linux.git imx-drm/next
-or take at least the i.MX specific patches (1-5) because of the
-dependency on the imx-drm OF helper conversion.
-
-regards
-Philipp
+RHVlIHRvIHRoZSB2b2x0YWdlIGRpdmlkZXIgb24gdGhlIEhQRCBsaW5lLCB0aGUgSERNSSBjb25u
+ZWN0b3Igb24KaW14NnEtc2FicmVsaXRlIGRvZXNuJ3QgcmVsaWFibHkgZGV0ZWN0IGNvbm5lY3Rl
+ZCBEVkkgbW9uaXRvcnMuClRoaXMgcGF0Y2ggYWxsb3dzIHRvIHVzZSB0aGUgUlhfU0VOU0UwIHNp
+Z25hbCBhcyBhIHdvcmthcm91bmQgd2hlbgplbmFibGVkIGJ5IGEgYm9vbGVhbiBkZXZpY2UgdHJl
+ZSBwcm9wZXJ0eSAnaHBkLXVucmVsaWFibGUnLgoKU2lnbmVkLW9mZi1ieTogUGhpbGlwcCBaYWJl
+bCA8cC56YWJlbEBwZW5ndXRyb25peC5kZT4KLS0tClRoaXMgcGF0Y2ggaXMgdXBkYXRlZCBmcm9t
+Cmh0dHA6Ly93d3cuc3Bpbmljcy5uZXQvbGlzdHMvbGludXgtZHJpdmVyLWRldmVsL21zZzQ1MjA3
+Lmh0bWwKYW5kIHJlYmFzZWQgb24gdG9wIG9mIEFuZHkgWWFuJ3MgImR3LWhkbWk6IGNvbnZlcnQg
+aW14IGhkbWkgdG8gYnJpZGdlL2R3X2hkbWkiCnNlcmllcy4KLS0tCiBEb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvZHJtL2lteC9oZG1pLnR4dCB8ICAyICsrCiBkcml2ZXJzL2dwdS9k
+cm0vYnJpZGdlL2R3X2hkbWkuYyAgICAgICAgICAgICAgICAgICB8IDQwICsrKysrKysrKysrKysr
+KystLS0tLS0KIDIgZmlsZXMgY2hhbmdlZCwgMzEgaW5zZXJ0aW9ucygrKSwgMTEgZGVsZXRpb25z
+KC0pCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RybS9p
+bXgvaGRtaS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZHJtL2lteC9o
+ZG1pLnR4dAppbmRleCAxYjc1NmNmLi5jOTk3YTNhIDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvZHJtL2lteC9oZG1pLnR4dAorKysgYi9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvZHJtL2lteC9oZG1pLnR4dApAQCAtMjIsNiArMjIsOCBAQCBS
+ZXF1aXJlZCBwcm9wZXJ0aWVzOgogCiBPcHRpb25hbCBwcm9wZXJ0aWVzOgogIC0gZGRjLWkyYy1i
+dXM6IHBoYW5kbGUgb2YgYW4gSTJDIGNvbnRyb2xsZXIgdXNlZCBmb3IgRERDIEVESUQgcHJvYmlu
+ZworIC0gaHBkLXVucmVsaWFibGUgOiBpZiBwcmVzZW50LCB0aGUgSFBEIGxpbmUgaXMgdG8gYmUg
+aWdub3JlZCBhbmQgdGhlIGRyaXZlcgorICAgc2hvdWxkIGluc3RlYWQgdXNlIGEgd29ya2Fyb3Vu
+ZCBmb3Igc2luayBkZXRlY3Rpb24uCiAKIGV4YW1wbGU6CiAKZGlmZiAtLWdpdCBhL2RyaXZlcnMv
+Z3B1L2RybS9icmlkZ2UvZHdfaGRtaS5jIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9kd19oZG1p
+LmMKaW5kZXggY2VjYzQ2YS4uYjg4MjI1YyAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL2Jy
+aWRnZS9kd19oZG1pLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9kd19oZG1pLmMKQEAg
+LTEyNSw2ICsxMjUsOSBAQCBzdHJ1Y3QgZHdfaGRtaSB7CiAJc3RydWN0IHJlZ21hcCAqcmVnbWFw
+OwogCXN0cnVjdCBpMmNfYWRhcHRlciAqZGRjOwogCXZvaWQgX19pb21lbSAqcmVnczsKKwl1OCBz
+aW5rX2RldGVjdF9wb2xhcml0eTsKKwl1OCBzaW5rX2RldGVjdF9zdGF0dXM7CisJdTggc2lua19k
+ZXRlY3RfbWFzazsKIAogCXVuc2lnbmVkIGludCBzYW1wbGVfcmF0ZTsKIAlpbnQgcmF0aW87CkBA
+IC0xMjY3LDEwICsxMjcwLDEwIEBAIHN0YXRpYyBpbnQgZHdfaGRtaV9mYl9yZWdpc3RlcmVkKHN0
+cnVjdCBkd19oZG1pICpoZG1pKQogCQkgICAgSERNSV9QSFlfSTJDTV9DVExJTlRfQUREUik7CiAK
+IAkvKiBlbmFibGUgY2FibGUgaG90IHBsdWcgaXJxICovCi0JaGRtaV93cml0ZWIoaGRtaSwgKHU4
+KX5IRE1JX1BIWV9IUEQsIEhETUlfUEhZX01BU0swKTsKKwloZG1pX3dyaXRlYihoZG1pLCBoZG1p
+LT5zaW5rX2RldGVjdF9tYXNrLCBIRE1JX1BIWV9NQVNLMCk7CiAKIAkvKiBDbGVhciBIb3RwbHVn
+IGludGVycnVwdHMgKi8KLQloZG1pX3dyaXRlYihoZG1pLCBIRE1JX0lIX1BIWV9TVEFUMF9IUEQs
+IEhETUlfSUhfUEhZX1NUQVQwKTsKKwloZG1pX3dyaXRlYihoZG1pLCBoZG1pLT5zaW5rX2RldGVj
+dF9zdGF0dXMsIEhETUlfSUhfUEhZX1NUQVQwKTsKIAogCXJldHVybiAwOwogfQpAQCAtMTQ5MCwx
+OCArMTQ5MywxOSBAQCBzdGF0aWMgaXJxcmV0dXJuX3QgZHdfaGRtaV9pcnEoaW50IGlycSwgdm9p
+ZCAqZGV2X2lkKQogCiAJcGh5X2ludF9wb2wgPSBoZG1pX3JlYWRiKGhkbWksIEhETUlfUEhZX1BP
+TDApOwogCi0JaWYgKGludHJfc3RhdCAmIEhETUlfSUhfUEhZX1NUQVQwX0hQRCkgewotCQlpZiAo
+cGh5X2ludF9wb2wgJiBIRE1JX1BIWV9IUEQpIHsKKwlpZiAoaW50cl9zdGF0ICYgaGRtaS0+c2lu
+a19kZXRlY3Rfc3RhdHVzKSB7CisJCWludCBwb2xfYml0ID0gaGRtaS0+c2lua19kZXRlY3RfcG9s
+YXJpdHk7CisKKwkJaWYgKHBoeV9pbnRfcG9sICYgcG9sX2JpdCkgewogCQkJZGV2X2RiZyhoZG1p
+LT5kZXYsICJFVkVOVD1wbHVnaW5cbiIpOwogCi0JCQloZG1pX21vZGIoaGRtaSwgMCwgSERNSV9Q
+SFlfSFBELCBIRE1JX1BIWV9QT0wwKTsKKwkJCWhkbWlfbW9kYihoZG1pLCAwLCBwb2xfYml0LCBI
+RE1JX1BIWV9QT0wwKTsKIAogCQkJZHdfaGRtaV9wb3dlcm9uKGhkbWkpOwogCQl9IGVsc2Ugewog
+CQkJZGV2X2RiZyhoZG1pLT5kZXYsICJFVkVOVD1wbHVnb3V0XG4iKTsKIAotCQkJaGRtaV9tb2Ri
+KGhkbWksIEhETUlfUEhZX0hQRCwgSERNSV9QSFlfSFBELAotCQkJCSAgSERNSV9QSFlfUE9MMCk7
+CisJCQloZG1pX21vZGIoaGRtaSwgcG9sX2JpdCwgcG9sX2JpdCwgSERNSV9QSFlfUE9MMCk7CiAK
+IAkJCWR3X2hkbWlfcG93ZXJvZmYoaGRtaSk7CiAJCX0KQEAgLTE1MDksNyArMTUxMyw3IEBAIHN0
+YXRpYyBpcnFyZXR1cm5fdCBkd19oZG1pX2lycShpbnQgaXJxLCB2b2lkICpkZXZfaWQpCiAJfQog
+CiAJaGRtaV93cml0ZWIoaGRtaSwgaW50cl9zdGF0LCBIRE1JX0lIX1BIWV9TVEFUMCk7Ci0JaGRt
+aV93cml0ZWIoaGRtaSwgfkhETUlfSUhfUEhZX1NUQVQwX0hQRCwgSERNSV9JSF9NVVRFX1BIWV9T
+VEFUMCk7CisJaGRtaV93cml0ZWIoaGRtaSwgfmhkbWktPnNpbmtfZGV0ZWN0X3N0YXR1cywgSERN
+SV9JSF9NVVRFX1BIWV9TVEFUMCk7CiAKIAlyZXR1cm4gSVJRX0hBTkRMRUQ7CiB9CkBAIC0xNjQ4
+LDYgKzE2NTIsMTYgQEAgaW50IGR3X2hkbWlfYmluZChzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVj
+dCBkZXZpY2UgKm1hc3RlciwKIAogCWluaXRpYWxpemVfaGRtaV9paF9tdXRlcyhoZG1pKTsKIAor
+CWhkbWktPnNpbmtfZGV0ZWN0X3N0YXR1cyA9IEhETUlfSUhfUEhZX1NUQVQwX0hQRDsKKwloZG1p
+LT5zaW5rX2RldGVjdF9wb2xhcml0eSA9IEhETUlfUEhZX0hQRDsKKwloZG1pLT5zaW5rX2RldGVj
+dF9tYXNrID0gfkhETUlfUEhZX0hQRDsKKworCWlmIChvZl9wcm9wZXJ0eV9yZWFkX2Jvb2wobnAs
+ICJocGQtdW5yZWxpYWJsZSIpKSB7CisJCWhkbWktPnNpbmtfZGV0ZWN0X3N0YXR1cyA9IEhETUlf
+SUhfUEhZX1NUQVQwX1JYX1NFTlNFMDsKKwkJaGRtaS0+c2lua19kZXRlY3RfcG9sYXJpdHkgPSBI
+RE1JX1BIWV9SWF9TRU5TRTA7CisJCWhkbWktPnNpbmtfZGV0ZWN0X21hc2sgPSB+SERNSV9QSFlf
+UlhfU0VOU0UwOworCX0KKwogCS8qCiAJICogVG8gcHJldmVudCBvdmVyZmxvd3MgaW4gSERNSV9J
+SF9GQ19TVEFUMiwgc2V0IHRoZSBjbGsgcmVnZW5lcmF0b3IKIAkgKiBOIGFuZCBjdHMgdmFsdWVz
+IGJlZm9yZSBlbmFibGluZyBwaHkKQEAgLTE2NTgsMTAgKzE2NzIsMTQgQEAgaW50IGR3X2hkbWlf
+YmluZChzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBkZXZpY2UgKm1hc3RlciwKIAkgKiBDb25m
+aWd1cmUgcmVnaXN0ZXJzIHJlbGF0ZWQgdG8gSERNSSBpbnRlcnJ1cHQKIAkgKiBnZW5lcmF0aW9u
+IGJlZm9yZSByZWdpc3RlcmluZyBJUlEuCiAJICovCi0JaGRtaV93cml0ZWIoaGRtaSwgSERNSV9Q
+SFlfSFBELCBIRE1JX1BIWV9QT0wwKTsKKwloZG1pX3dyaXRlYihoZG1pLCBoZG1pLT5zaW5rX2Rl
+dGVjdF9wb2xhcml0eSwgSERNSV9QSFlfUE9MMCk7CiAKIAkvKiBDbGVhciBIb3RwbHVnIGludGVy
+cnVwdHMgKi8KLQloZG1pX3dyaXRlYihoZG1pLCBIRE1JX0lIX1BIWV9TVEFUMF9IUEQsIEhETUlf
+SUhfUEhZX1NUQVQwKTsKKwloZG1pX3dyaXRlYihoZG1pLAorCQkgICAgSERNSV9JSF9QSFlfU1RB
+VDBfUlhfU0VOU0UzIHwgSERNSV9JSF9QSFlfU1RBVDBfUlhfU0VOU0UyIHwKKwkJICAgIEhETUlf
+SUhfUEhZX1NUQVQwX1JYX1NFTlNFMSB8IEhETUlfSUhfUEhZX1NUQVQwX1JYX1NFTlNFMCB8CisJ
+CSAgICBIRE1JX0lIX1BIWV9TVEFUMF9UWF9QSFlfTE9DSyB8IEhETUlfSUhfUEhZX1NUQVQwX0hQ
+RCwKKwkJICAgIEhETUlfSUhfUEhZX1NUQVQwKTsKIAogCXJldCA9IGR3X2hkbWlfZmJfcmVnaXN0
+ZXJlZChoZG1pKTsKIAlpZiAocmV0KQpAQCAtMTY3Miw3ICsxNjkwLDcgQEAgaW50IGR3X2hkbWlf
+YmluZChzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBkZXZpY2UgKm1hc3RlciwKIAkJZ290byBl
+cnJfaWFoYjsKIAogCS8qIFVubXV0ZSBpbnRlcnJ1cHRzICovCi0JaGRtaV93cml0ZWIoaGRtaSwg
+fkhETUlfSUhfUEhZX1NUQVQwX0hQRCwgSERNSV9JSF9NVVRFX1BIWV9TVEFUMCk7CisJaGRtaV93
+cml0ZWIoaGRtaSwgfmhkbWktPnNpbmtfZGV0ZWN0X3N0YXR1cywgSERNSV9JSF9NVVRFX1BIWV9T
+VEFUMCk7CiAKIAlkZXZfc2V0X2RydmRhdGEoZGV2LCBoZG1pKTsKIAotLSAKMi4xLjMKCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
+aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJl
+ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
