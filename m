@@ -1,57 +1,92 @@
-From: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH 2/2] arm: dts: imx6dl: correct cpufreq volt/freq table
-Date: Fri, 5 Dec 2014 16:23:49 +0800
-Message-ID: <1417767829-11314-2-git-send-email-b20788@freescale.com>
-References: <1417767829-11314-1-git-send-email-b20788@freescale.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v15 0/3] Add drm driver for Rockchip Socs
+Date: Fri, 05 Dec 2014 09:33:56 +0100
+Message-ID: <1435911.OORE5v4bbE@diego>
+References: <1417511600-7054-1-git-send-email-mark.yao@rock-chips.com> <CAGS+omAqkQaK99OX_uAf2Z6-fep2Euwn112Oj5gFpRca8ZAgew@mail.gmail.com> <CAPM=9tzcB0XaenK1RjJoOBpJjrq84atJP59=kh6WMA2-OcFpEA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1417767829-11314-1-git-send-email-b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAPM=9tzcB0XaenK1RjJoOBpJjrq84atJP59=kh6WMA2-OcFpEA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, simon xue <xxm-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Dominik Behr <dbehr-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, =?utf-8?B?6Zer5a2d5Yab?= <yxj-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Eddie Cai <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?IS
 List-Id: devicetree@vger.kernel.org
 
-Currently the cpufreq volt/freq table we used is
-for LDO enable mode, according to latest datasheet
-Rev. 3, 03/2014, the volt/freq table is as below:
+Hi Dave,
 
-LDO enabled(min value):
-996MHz: VDDARM: 1.225V, VDDSOC: 1.150V;
-792MHz: VDDARM: 1.150V, VDDSOC: 1.150V;
-396MHz: VDDARM: 1.050V, VDDSOC: 1.150V;
+Am Freitag, 5. Dezember 2014, 17:26:04 schrieb Dave Airlie:
+> On 5 December 2014 at 05:29, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+> > I thought the recommended solution for this was to fix OMAP3 to not
+> > select  ARM_DMA_USE_IOMMU and OMAP_IOMMU, not to drop the 'depends on'
+> > in drm/rockchip?
+> 
+> Lets fix that up once we get this merged, if I had a tree based on the
+> iommu I'd have
+> it -next now.
+> 
+> can I get a pull for that?
 
-LDO bypassed(min value):
-996MHz: VDDARM: 1.250V, VDDSOC: 1.150V;
-792MHz: VDDARM: 1.150V, VDDSOC: 1.150V;
-396MHz: VDDARM: 1.050V, VDDSOC: 1.150V;
+Mark sent a pull on tuesday as reply to the cover-letter.
+Message-ID: <547D88D7.5080005-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-Adding 25mV to cover board IR drop, for LDO enabled
-mode of 996MHz, VDDARM should be 1.250V, so this
-patch updates it.
+Replicated here, if you don't want to search.
 
-Signed-off-by: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
- arch/arm/boot/dts/imx6dl.dtsi |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx6dl.dtsi b/arch/arm/boot/dts/imx6dl.dtsi
-index 1ac2fe7..f94bf72 100644
---- a/arch/arm/boot/dts/imx6dl.dtsi
-+++ b/arch/arm/boot/dts/imx6dl.dtsi
-@@ -28,7 +28,7 @@
- 			next-level-cache = <&L2>;
- 			operating-points = <
- 				/* kHz    uV */
--				996000  1275000
-+				996000  1250000
- 				792000  1175000
- 				396000  1075000
- 			>;
--- 
-1.7.9.5
+Heiko
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+---------------- 8< -------------------------------------
+
+Hi Dave
+
+The following changes since commit 656d7077d8ffd1c2492d4a0a354367ab2e545059:
+
+   dt-bindings: iommu: Add documentation for rockchip iommu (2014-11-03 
+17:29:09 +0100)
+
+are available in the git repository at:
+
+   https://github.com/markyzq/kernel-drm-rockchip.git drm_iommu_v15
+
+for you to fetch changes up to 5ac4837b12f533de5d9f8f66b45494c58e805536:
+
+   dt-bindings: video: Add documentation for rockchip vop (2014-12-02 
+17:29:33 +0800)
+
+----------------------------------------------------------------
+Mark Yao (3):
+       drm: rockchip: Add basic drm driver
+       dt-bindings: video: Add for rockchip display subsytem
+       dt-bindings: video: Add documentation for rockchip vop
+
+  .../devicetree/bindings/video/rockchip-drm.txt     |   19 +
+  .../devicetree/bindings/video/rockchip-vop.txt     |   58 +
+  drivers/gpu/drm/Kconfig                            |    2 +
+  drivers/gpu/drm/Makefile                           |    1 +
+  drivers/gpu/drm/rockchip/Kconfig                   |   17 +
+  drivers/gpu/drm/rockchip/Makefile                  |    8 +
+  drivers/gpu/drm/rockchip/rockchip_drm_drv.c        |  551 ++++++++
+  drivers/gpu/drm/rockchip/rockchip_drm_drv.h        |   68 +
+  drivers/gpu/drm/rockchip/rockchip_drm_fb.c         |  201 +++
+  drivers/gpu/drm/rockchip/rockchip_drm_fb.h         |   28 +
+  drivers/gpu/drm/rockchip/rockchip_drm_fbdev.c      |  210 +++
+  drivers/gpu/drm/rockchip/rockchip_drm_fbdev.h      |   21 +
+  drivers/gpu/drm/rockchip/rockchip_drm_gem.c        |  294 ++++
+  drivers/gpu/drm/rockchip/rockchip_drm_gem.h        |   54 +
+  drivers/gpu/drm/rockchip/rockchip_drm_vop.c        | 1455 ++++++++++++++++++++
+  drivers/gpu/drm/rockchip/rockchip_drm_vop.h        |  201 +++
+  16 files changed, 3188 insertions(+)
+  create mode 100644 Documentation/devicetree/bindings/video/rockchip-drm.txt
+  create mode 100644 Documentation/devicetree/bindings/video/rockchip-vop.txt
+  create mode 100644 drivers/gpu/drm/rockchip/Kconfig
+  create mode 100644 drivers/gpu/drm/rockchip/Makefile
+  create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_drv.c
+  create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_drv.h
+  create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_fb.c
+  create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_fb.h
+  create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_fbdev.c
+  create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_fbdev.h
+  create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_gem.c
+  create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_gem.h
+  create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+  create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_vop.h
