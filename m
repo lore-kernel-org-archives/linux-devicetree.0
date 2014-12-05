@@ -1,95 +1,81 @@
 From: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH  RESEND v6 0/2] watchdog: Add support for ImgTec PowerDown
- Controller Watchdog Timer
-Date: Fri, 5 Dec 2014 08:54:11 -0300
-Message-ID: <54819CE3.9050807@imgtec.com>
-References: <1417064045-13274-1-git-send-email-Naidu.Tellapati@gmail.com>
+Subject: Re: [PATCH v5 0/3] iio: Add Cosmic Circuits ADC support
+Date: Fri, 5 Dec 2014 08:55:40 -0300
+Message-ID: <54819D3C.7000209@imgtec.com>
+References: <1417102762-5123-1-git-send-email-ezequiel.garcia@imgtec.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1417064045-13274-1-git-send-email-Naidu.Tellapati-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Naidu Tellapati <naidu.tellapati-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org
-Cc: naidu.tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, arul.ramasamy-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1417102762-5123-1-git-send-email-ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Pawel.Moll-5wv7dgnIgG8@public.gmane.org, Mark.Rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Wim,
+Hi Jonathan,
 
-On 11/27/2014 01:54 AM, Naidu Tellapati wrote:
-> This patchset provides support for the PowerDown Controller (PDC) Watchdog Timer
-> found on Pistachio SOC from Imagination Technologies (ImgTec).
-> 
-> The series is based on 3.18-rc5.
-> 
-> I am re-sending the series with correct Signed-off-by headers.
-> 
-> Changes from v5:
-> 
->  * Removed unused struct pdc_wdt_dev variables.
-> 
->  * Removed out_wdt label in probe function.
-> 
+On 11/27/2014 12:39 PM, Ezequiel Garcia wrote:
 > Changes from v4:
 > 
->  * Added warning message if initial timeout value exceeds maximum timeout.
+>   * Added a compile-time dependency on REGULATOR and HAVE_CLK.
+> 
+>   * Replaced the silly XOR operation for a proper mask out of the
+>     available channels.
 > 
 > Changes from v3:
 > 
->  * Removed PDC_WD_MAX_DELAY.
+>   * Fixed a few style nitpicks as per Hartmut's feedback.
 > 
->  * Removed spinlock.
-> 
->  * Removed timeout check inside pdc_wdt_set_timeout function.
-> 
->  * Changed identity to IMG PDC Watchdog.
-> 
->  * Removed pdc_wdt_set_timeout call from the probe function.
-> 
->  * Removed pdc_wdt_shutdown function call from pdc_wdt_remove function
->    and added pdc_wdt_stop function call instead.
+>   * Used GENMASK() to build the channel mask, which fixes a very nasty
+>     bug. Also found by Hartmut.
 > 
 > Changes from v2:
 > 
->  * Removed interrupt.h header file.
+>   * Changed a devicetree property from adc-available-channels to
+>     adc-reserved-channels, so it can be made optional.
 > 
->  * Removed clock rate-change notifier callback.
+>   * Renamed the driver from cc_10001_xxx to cc10001_xxx so it's consistent
+>     with the rest of the kernel style.
+> 
+>   * Some more minor cosmetic fixes.
 > 
 > Changes from v1:
 > 
->  * Arranged all include files in alphabetical order.
+>   * Removed unneeded header includes.
 > 
->  * Arranged register field masks/shifts defines next to their
->    corresponding register
+>   * Changed all the names and macros prefix: s/CC_10001_/CC10001_.
 > 
->  * Registered clock rate-change notifier callback.
+>   * Used .update_scan_mode callback to preallocate the buffer.
 > 
->  * Removed all references to 32 kHz fixed clock rate.
->    Now the clock rate is read dynamically using clk_get_rate().
+>   * Used indio_dev for the struct iio_dev.
 > 
->  * Defined a macro PDC_WD_CONFIG_ENABLE.
+>   * Only read the regulator voltage when needed.
 > 
->  * Added code for getting system clock.
+>   * Fixed probe() error handling.
 > 
->  * Moved module_param stuffs next to the corresponding variable defines.
+>   * Used for_each_set_bit() instead of open-coding it.
 > 
->  * Added code in the function pdc_wdt_remove for stopping watchdog.
+>   * Name the power-down register as _POWER_UP, to make the code
+>     less silly.
 > 
->  * Removed MODULE_ALIAS.
+>   * Error out when no valid sample can be read (i.e. when end-of-conversion
+>     poll times out).
 > 
->  * Removed few unwanted spaces and unwanted blank lines.
+>   * ... plus some assorted code cleaning based on the feedback.
 > 
-> Naidu Tellapati (2):
->   watchdog: ImgTec PDC Watchdog Timer Driver
->   DT: watchdog: Add ImgTec PDC Watchdog Timer binding documentation
+> 
+> Ezequiel Garcia (1):
+>   DT: Add a vendor prefix for Cosmic Circuits
+> 
+> Phani Movva (2):
+>   iio: adc: Cosmic Circuits 10001 ADC driver
+>   DT: iio: adc: Add CC_10001 binding documentation
 > 
 
-Do you think it's possible to merge this series in time for v3.19?
+Unless there are any outstanding issues with this series, it'd be great
+to merge it for v3.19.
 
 Thanks!
 -- 
 Ezequiel
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
