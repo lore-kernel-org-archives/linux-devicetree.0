@@ -1,108 +1,108 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH] drm/bridge: dw_hdmi: use rx sense pins for plug detection if
- hpd is unreliable
-Date: Fri,  5 Dec 2014 14:59:20 +0100
-Message-ID: <1417787960-14078-1-git-send-email-p.zabel@pengutronix.de>
+From: Orson Zhai <orsonzhai-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 0/5] Add Spreadtrum Sharkl64 Platform support
+Date: Fri, 5 Dec 2014 22:13:32 +0800
+Message-ID: <CA+H2tpF0pJ1w-MibuOv=HiXJy6pCqUJ2fDUwxLs49y0y4LEd5w@mail.gmail.com>
+References: <1417692860-18841-1-git-send-email-chunyan.zhang@spreadtrum.com>
+	<20141205104009.GE11889@leverpostej>
+	<CAAfSe-uz534FiZufojKa8MdBi=VFqhuoFLwof7K+FqXG--AGaw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de, Kumar Gala <galak@codeaurora.org>, Russell King <rmk+kernel@arm.linux.org.uk>, Andy Yan <andy.yan@rock-chips.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAAfSe-uz534FiZufojKa8MdBi=VFqhuoFLwof7K+FqXG--AGaw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lyra Zhang <zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "geng.ren-lxIno14LUO0EEoCn2XhGlw@public.gmane.org" <geng.ren-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, "zhizhou.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org" <zhizhou.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, "wei.qiao-lxIno14LUO0EEoCn2XhGlw@public.gmane.org" <wei.qiao-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "sprdlinux-uGLqWuYN4qMgsBAKwltoeQ@public.gmane.org" <sprdlinux-uGLqWuYN4qMgsBAKwltoeQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, allen.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-RHVlIHRvIHRoZSB2b2x0YWdlIGRpdmlkZXIgb24gdGhlIEhQRCBsaW5lLCB0aGUgSERNSSBjb25u
-ZWN0b3Igb24KaW14NnEtc2FicmVsaXRlIGRvZXNuJ3QgcmVsaWFibHkgZGV0ZWN0IGNvbm5lY3Rl
-ZCBEVkkgbW9uaXRvcnMuClRoaXMgcGF0Y2ggYWxsb3dzIHRvIHVzZSB0aGUgUlhfU0VOU0UwIHNp
-Z25hbCBhcyBhIHdvcmthcm91bmQgd2hlbgplbmFibGVkIGJ5IGEgYm9vbGVhbiBkZXZpY2UgdHJl
-ZSBwcm9wZXJ0eSAnaHBkLXVucmVsaWFibGUnLgoKU2lnbmVkLW9mZi1ieTogUGhpbGlwcCBaYWJl
-bCA8cC56YWJlbEBwZW5ndXRyb25peC5kZT4KLS0tClRoaXMgcGF0Y2ggaXMgdXBkYXRlZCBmcm9t
-Cmh0dHA6Ly93d3cuc3Bpbmljcy5uZXQvbGlzdHMvbGludXgtZHJpdmVyLWRldmVsL21zZzQ1MjA3
-Lmh0bWwKYW5kIHJlYmFzZWQgb24gdG9wIG9mIEFuZHkgWWFuJ3MgImR3LWhkbWk6IGNvbnZlcnQg
-aW14IGhkbWkgdG8gYnJpZGdlL2R3X2hkbWkiCnNlcmllcy4KLS0tCiBEb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvZHJtL2lteC9oZG1pLnR4dCB8ICAyICsrCiBkcml2ZXJzL2dwdS9k
-cm0vYnJpZGdlL2R3X2hkbWkuYyAgICAgICAgICAgICAgICAgICB8IDQwICsrKysrKysrKysrKysr
-KystLS0tLS0KIDIgZmlsZXMgY2hhbmdlZCwgMzEgaW5zZXJ0aW9ucygrKSwgMTEgZGVsZXRpb25z
-KC0pCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RybS9p
-bXgvaGRtaS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZHJtL2lteC9o
-ZG1pLnR4dAppbmRleCAxYjc1NmNmLi5jOTk3YTNhIDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvZHJtL2lteC9oZG1pLnR4dAorKysgYi9Eb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvZHJtL2lteC9oZG1pLnR4dApAQCAtMjIsNiArMjIsOCBAQCBS
-ZXF1aXJlZCBwcm9wZXJ0aWVzOgogCiBPcHRpb25hbCBwcm9wZXJ0aWVzOgogIC0gZGRjLWkyYy1i
-dXM6IHBoYW5kbGUgb2YgYW4gSTJDIGNvbnRyb2xsZXIgdXNlZCBmb3IgRERDIEVESUQgcHJvYmlu
-ZworIC0gaHBkLXVucmVsaWFibGUgOiBpZiBwcmVzZW50LCB0aGUgSFBEIGxpbmUgaXMgdG8gYmUg
-aWdub3JlZCBhbmQgdGhlIGRyaXZlcgorICAgc2hvdWxkIGluc3RlYWQgdXNlIGEgd29ya2Fyb3Vu
-ZCBmb3Igc2luayBkZXRlY3Rpb24uCiAKIGV4YW1wbGU6CiAKZGlmZiAtLWdpdCBhL2RyaXZlcnMv
-Z3B1L2RybS9icmlkZ2UvZHdfaGRtaS5jIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9kd19oZG1p
-LmMKaW5kZXggY2VjYzQ2YS4uYjg4MjI1YyAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL2Jy
-aWRnZS9kd19oZG1pLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9kd19oZG1pLmMKQEAg
-LTEyNSw2ICsxMjUsOSBAQCBzdHJ1Y3QgZHdfaGRtaSB7CiAJc3RydWN0IHJlZ21hcCAqcmVnbWFw
-OwogCXN0cnVjdCBpMmNfYWRhcHRlciAqZGRjOwogCXZvaWQgX19pb21lbSAqcmVnczsKKwl1OCBz
-aW5rX2RldGVjdF9wb2xhcml0eTsKKwl1OCBzaW5rX2RldGVjdF9zdGF0dXM7CisJdTggc2lua19k
-ZXRlY3RfbWFzazsKIAogCXVuc2lnbmVkIGludCBzYW1wbGVfcmF0ZTsKIAlpbnQgcmF0aW87CkBA
-IC0xMjY3LDEwICsxMjcwLDEwIEBAIHN0YXRpYyBpbnQgZHdfaGRtaV9mYl9yZWdpc3RlcmVkKHN0
-cnVjdCBkd19oZG1pICpoZG1pKQogCQkgICAgSERNSV9QSFlfSTJDTV9DVExJTlRfQUREUik7CiAK
-IAkvKiBlbmFibGUgY2FibGUgaG90IHBsdWcgaXJxICovCi0JaGRtaV93cml0ZWIoaGRtaSwgKHU4
-KX5IRE1JX1BIWV9IUEQsIEhETUlfUEhZX01BU0swKTsKKwloZG1pX3dyaXRlYihoZG1pLCBoZG1p
-LT5zaW5rX2RldGVjdF9tYXNrLCBIRE1JX1BIWV9NQVNLMCk7CiAKIAkvKiBDbGVhciBIb3RwbHVn
-IGludGVycnVwdHMgKi8KLQloZG1pX3dyaXRlYihoZG1pLCBIRE1JX0lIX1BIWV9TVEFUMF9IUEQs
-IEhETUlfSUhfUEhZX1NUQVQwKTsKKwloZG1pX3dyaXRlYihoZG1pLCBoZG1pLT5zaW5rX2RldGVj
-dF9zdGF0dXMsIEhETUlfSUhfUEhZX1NUQVQwKTsKIAogCXJldHVybiAwOwogfQpAQCAtMTQ5MCwx
-OCArMTQ5MywxOSBAQCBzdGF0aWMgaXJxcmV0dXJuX3QgZHdfaGRtaV9pcnEoaW50IGlycSwgdm9p
-ZCAqZGV2X2lkKQogCiAJcGh5X2ludF9wb2wgPSBoZG1pX3JlYWRiKGhkbWksIEhETUlfUEhZX1BP
-TDApOwogCi0JaWYgKGludHJfc3RhdCAmIEhETUlfSUhfUEhZX1NUQVQwX0hQRCkgewotCQlpZiAo
-cGh5X2ludF9wb2wgJiBIRE1JX1BIWV9IUEQpIHsKKwlpZiAoaW50cl9zdGF0ICYgaGRtaS0+c2lu
-a19kZXRlY3Rfc3RhdHVzKSB7CisJCWludCBwb2xfYml0ID0gaGRtaS0+c2lua19kZXRlY3RfcG9s
-YXJpdHk7CisKKwkJaWYgKHBoeV9pbnRfcG9sICYgcG9sX2JpdCkgewogCQkJZGV2X2RiZyhoZG1p
-LT5kZXYsICJFVkVOVD1wbHVnaW5cbiIpOwogCi0JCQloZG1pX21vZGIoaGRtaSwgMCwgSERNSV9Q
-SFlfSFBELCBIRE1JX1BIWV9QT0wwKTsKKwkJCWhkbWlfbW9kYihoZG1pLCAwLCBwb2xfYml0LCBI
-RE1JX1BIWV9QT0wwKTsKIAogCQkJZHdfaGRtaV9wb3dlcm9uKGhkbWkpOwogCQl9IGVsc2Ugewog
-CQkJZGV2X2RiZyhoZG1pLT5kZXYsICJFVkVOVD1wbHVnb3V0XG4iKTsKIAotCQkJaGRtaV9tb2Ri
-KGhkbWksIEhETUlfUEhZX0hQRCwgSERNSV9QSFlfSFBELAotCQkJCSAgSERNSV9QSFlfUE9MMCk7
-CisJCQloZG1pX21vZGIoaGRtaSwgcG9sX2JpdCwgcG9sX2JpdCwgSERNSV9QSFlfUE9MMCk7CiAK
-IAkJCWR3X2hkbWlfcG93ZXJvZmYoaGRtaSk7CiAJCX0KQEAgLTE1MDksNyArMTUxMyw3IEBAIHN0
-YXRpYyBpcnFyZXR1cm5fdCBkd19oZG1pX2lycShpbnQgaXJxLCB2b2lkICpkZXZfaWQpCiAJfQog
-CiAJaGRtaV93cml0ZWIoaGRtaSwgaW50cl9zdGF0LCBIRE1JX0lIX1BIWV9TVEFUMCk7Ci0JaGRt
-aV93cml0ZWIoaGRtaSwgfkhETUlfSUhfUEhZX1NUQVQwX0hQRCwgSERNSV9JSF9NVVRFX1BIWV9T
-VEFUMCk7CisJaGRtaV93cml0ZWIoaGRtaSwgfmhkbWktPnNpbmtfZGV0ZWN0X3N0YXR1cywgSERN
-SV9JSF9NVVRFX1BIWV9TVEFUMCk7CiAKIAlyZXR1cm4gSVJRX0hBTkRMRUQ7CiB9CkBAIC0xNjQ4
-LDYgKzE2NTIsMTYgQEAgaW50IGR3X2hkbWlfYmluZChzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVj
-dCBkZXZpY2UgKm1hc3RlciwKIAogCWluaXRpYWxpemVfaGRtaV9paF9tdXRlcyhoZG1pKTsKIAor
-CWhkbWktPnNpbmtfZGV0ZWN0X3N0YXR1cyA9IEhETUlfSUhfUEhZX1NUQVQwX0hQRDsKKwloZG1p
-LT5zaW5rX2RldGVjdF9wb2xhcml0eSA9IEhETUlfUEhZX0hQRDsKKwloZG1pLT5zaW5rX2RldGVj
-dF9tYXNrID0gfkhETUlfUEhZX0hQRDsKKworCWlmIChvZl9wcm9wZXJ0eV9yZWFkX2Jvb2wobnAs
-ICJocGQtdW5yZWxpYWJsZSIpKSB7CisJCWhkbWktPnNpbmtfZGV0ZWN0X3N0YXR1cyA9IEhETUlf
-SUhfUEhZX1NUQVQwX1JYX1NFTlNFMDsKKwkJaGRtaS0+c2lua19kZXRlY3RfcG9sYXJpdHkgPSBI
-RE1JX1BIWV9SWF9TRU5TRTA7CisJCWhkbWktPnNpbmtfZGV0ZWN0X21hc2sgPSB+SERNSV9QSFlf
-UlhfU0VOU0UwOworCX0KKwogCS8qCiAJICogVG8gcHJldmVudCBvdmVyZmxvd3MgaW4gSERNSV9J
-SF9GQ19TVEFUMiwgc2V0IHRoZSBjbGsgcmVnZW5lcmF0b3IKIAkgKiBOIGFuZCBjdHMgdmFsdWVz
-IGJlZm9yZSBlbmFibGluZyBwaHkKQEAgLTE2NTgsMTAgKzE2NzIsMTQgQEAgaW50IGR3X2hkbWlf
-YmluZChzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBkZXZpY2UgKm1hc3RlciwKIAkgKiBDb25m
-aWd1cmUgcmVnaXN0ZXJzIHJlbGF0ZWQgdG8gSERNSSBpbnRlcnJ1cHQKIAkgKiBnZW5lcmF0aW9u
-IGJlZm9yZSByZWdpc3RlcmluZyBJUlEuCiAJICovCi0JaGRtaV93cml0ZWIoaGRtaSwgSERNSV9Q
-SFlfSFBELCBIRE1JX1BIWV9QT0wwKTsKKwloZG1pX3dyaXRlYihoZG1pLCBoZG1pLT5zaW5rX2Rl
-dGVjdF9wb2xhcml0eSwgSERNSV9QSFlfUE9MMCk7CiAKIAkvKiBDbGVhciBIb3RwbHVnIGludGVy
-cnVwdHMgKi8KLQloZG1pX3dyaXRlYihoZG1pLCBIRE1JX0lIX1BIWV9TVEFUMF9IUEQsIEhETUlf
-SUhfUEhZX1NUQVQwKTsKKwloZG1pX3dyaXRlYihoZG1pLAorCQkgICAgSERNSV9JSF9QSFlfU1RB
-VDBfUlhfU0VOU0UzIHwgSERNSV9JSF9QSFlfU1RBVDBfUlhfU0VOU0UyIHwKKwkJICAgIEhETUlf
-SUhfUEhZX1NUQVQwX1JYX1NFTlNFMSB8IEhETUlfSUhfUEhZX1NUQVQwX1JYX1NFTlNFMCB8CisJ
-CSAgICBIRE1JX0lIX1BIWV9TVEFUMF9UWF9QSFlfTE9DSyB8IEhETUlfSUhfUEhZX1NUQVQwX0hQ
-RCwKKwkJICAgIEhETUlfSUhfUEhZX1NUQVQwKTsKIAogCXJldCA9IGR3X2hkbWlfZmJfcmVnaXN0
-ZXJlZChoZG1pKTsKIAlpZiAocmV0KQpAQCAtMTY3Miw3ICsxNjkwLDcgQEAgaW50IGR3X2hkbWlf
-YmluZChzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBkZXZpY2UgKm1hc3RlciwKIAkJZ290byBl
-cnJfaWFoYjsKIAogCS8qIFVubXV0ZSBpbnRlcnJ1cHRzICovCi0JaGRtaV93cml0ZWIoaGRtaSwg
-fkhETUlfSUhfUEhZX1NUQVQwX0hQRCwgSERNSV9JSF9NVVRFX1BIWV9TVEFUMCk7CisJaGRtaV93
-cml0ZWIoaGRtaSwgfmhkbWktPnNpbmtfZGV0ZWN0X3N0YXR1cywgSERNSV9JSF9NVVRFX1BIWV9T
-VEFUMCk7CiAKIAlkZXZfc2V0X2RydmRhdGEoZGV2LCBoZG1pKTsKIAotLSAKMi4xLjMKCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
-aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Hi, Mark,
+
+On Fri, Dec 5, 2014 at 8:27 PM, Lyra Zhang <zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Fri, Dec 5, 2014 at 6:40 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+>> Hi,
+>>
+>> On Thu, Dec 04, 2014 at 11:34:15AM +0000, Chunyan Zhang wrote:
+>>> Spreadtrum is a rapid growing chip vendor providing smart phone total solutions.
+>>>
+>>> Sharkl64 Platform is nominated as a SoC infrastructure that supports 4G/3G/2G
+>>> standards based on ARMv8 multiple core architecture.Now we have only one
+>>> SoC(SC9836) based on this Platform in developing.
+>>>
+>>> This patchset adds Sharkl64 support in arm64 device tree and the serial driver
+>>> of SC9836-UART.
+>>>
+>>> This patchset also has patches which address "sprd" prefix and DT compatible
+>>> strings for nodes which appear un-documented.
+>>>
+>>> This version code was tesed both on Fast Mode and sc9836-fpga board.
+>>> We use the latest boot-wrapper-aarch64 as the bootloader.
+>>>
+>>> Changes from v3:
+>>> * Addressed review comments:
+>>>       - Added the description of clock property for sc9836-uart
+>>>       - Revised the size of GICC to be 8KiB
+>>>       - Added another compatible string for psci-0.1
+>>
+>> I had open questions on v3 regarding your PSCI imlpementation. You
+>> mentioned that you are using the aarch64 bootwrapper, but your DT
+>> describes PSCI 0.2, and the (upstream) bootwrapper does not implement
+>> PSCI 0.2. Adding the old PSCI compatible string is _not_ sufficient if
+>> you do not have a full PSCI 0.2 implementation.
+>>
+>> Given that PSCI 0.2 requires more functionality to be implemented, I'd
+>> like to know that your implementation is spec-compliant (implementing
+>> the mandatory functions, nters the kernel in the correct state, etc),
+>> and that it has been tested.
+>>
+>> Would you be able to look at my comments from the last posting please?
+
+I'd like to show you more technical details of our psci implementation.
+
+Here the dt code is fresh from our engineering repository.
+As far as I  know our engineers are testing on psci currently.
+
+04b8b5a5 (zhiqiang.zhang 2014-12-04 15:27:17 +0800   98)        psci {
+04b8b5a5 (zhiqiang.zhang 2014-12-04 15:27:17 +0800   99)
+ compatible = "arm,psci";
+04b8b5a5 (zhiqiang.zhang 2014-12-04 15:27:17 +0800  100)
+ method = "smc";
+04b8b5a5 (zhiqiang.zhang 2014-12-04 15:27:17 +0800  101)
+ cpu_on  = <0xc4000003>;
+04b8b5a5 (zhiqiang.zhang 2014-12-04 15:27:17 +0800  102)
+ cpu_off = <0x84000002>;
+04b8b5a5 (zhiqiang.zhang 2014-12-04 15:27:17 +0800  103)
+ cpu_suspend = <0xc4000001>;
+04b8b5a5 (zhiqiang.zhang 2014-12-04 15:27:17 +0800  104)        };
+
+Does it reveal the information as you concern?
+It's no doubt that we'll implement psci-v0.2 eventually.
+Considering that the code might be upstreamed in few weeks later, we
+submit a psci-v0.2 dts in advanced.
+
+Thanks,
+Orson
+
+>>
+>> Thanks,
+>> Mark.
+>> --
+>
+> Hi, Mark
+>
+> Ok, I'll check it again with our related engineers.
+>
+> Actually, I had read all of your comments carefully before sending
+> each version of patches, and I replied you a few days early, I guess
+> you may miss it :)
+>
+> If we just implemented psci-0.1 until now, can we submit this path
+> without "compatible = "arm,psci-0.2"", but only with " compatible =
+> "arm,psci" ".
+>
+>
+>
+> Thanks,
+> Chunyan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
