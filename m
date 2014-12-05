@@ -1,95 +1,95 @@
-From: Ezequiel Garcia <ezequiel.garcia@imgtec.com>
-Subject: Re: [PATCH v6 0/4] Initial support for ImgTec PWM DAC and PDM DAC
-Date: Fri, 5 Dec 2014 08:52:41 -0300
-Message-ID: <54819C89.1000508@imgtec.com>
-References: <1417198345-19633-1-git-send-email-Naidu.Tellapati@gmail.com>
+From: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH  RESEND v6 0/2] watchdog: Add support for ImgTec PowerDown
+ Controller Watchdog Timer
+Date: Fri, 5 Dec 2014 08:54:11 -0300
+Message-ID: <54819CE3.9050807@imgtec.com>
+References: <1417064045-13274-1-git-send-email-Naidu.Tellapati@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <1417198345-19633-1-git-send-email-Naidu.Tellapati@gmail.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Naidu Tellapati <naidu.tellapati@gmail.com>, thierry.reding@gmail.com, abrestic@chromium.org, gregkh@linuxfoundation.org, arnd@arndb.de, James.Hartley@imgtec.com
-Cc: devicetree@vger.kernel.org, linux-pwm@vger.kernel.org, Arul.Ramasamy@imgtec.com, Sai.Masarapu@imgtec.com
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1417064045-13274-1-git-send-email-Naidu.Tellapati-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Naidu Tellapati <naidu.tellapati-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org
+Cc: naidu.tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, arul.ramasamy-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Thierry,
+Wim,
 
-On 11/28/2014 03:12 PM, Naidu Tellapati wrote:
-> The Pistachio SOC from Imagination Technologies includes =E2=80=93 4x=
- PDM blocks
-> and 1x =E2=80=9Cbasic PWM=E2=80=9D block with four output channels. T=
-hese share 4 MFIO pins,
-> each PWM channel being muxed with each PDM block output (0-3 muxed wi=
-th 0-3)
-> using the CR_PERIP_PWM_PDM_CONTROL register in the peripheral wrapper
-> register bank (offset 0x140). The PDM and PWM outputs are used to con=
-trol
-> targets such as LCD backlight.
->=20
-> The PWM driver uses Linux PWM framework. Since the PDM does not fit i=
-nto PWM
-> framework we have implemented it as a MISC driver.
->=20
-> The series is based on v3.18-rc5.
->=20
+On 11/27/2014 01:54 AM, Naidu Tellapati wrote:
+> This patchset provides support for the PowerDown Controller (PDC) Watchdog Timer
+> found on Pistachio SOC from Imagination Technologies (ImgTec).
+> 
+> The series is based on 3.18-rc5.
+> 
+> I am re-sending the series with correct Signed-off-by headers.
+> 
 > Changes from v5:
->=20
->  * Used syscon for accessing PWM & PDM control register.
->=20
+> 
+>  * Removed unused struct pdc_wdt_dev variables.
+> 
+>  * Removed out_wdt label in probe function.
+> 
 > Changes from v4:
->=20
->  * Removed CR_prefix from the defined macros.
->=20
->  * Folded same data type varibles in one line.
->=20
->  * Removed cr-periph property from PWM DT binding document.
->=20
->  * Removed regmap_update_bits from img_pwm_enable and img_pwm_disable=
- functions.
->=20
->  * Addressed few more comments given in v4.
->=20
+> 
+>  * Added warning message if initial timeout value exceeds maximum timeout.
+> 
 > Changes from v3:
->=20
->  * Addressed couple of comments given in v3.
->=20
+> 
+>  * Removed PDC_WD_MAX_DELAY.
+> 
+>  * Removed spinlock.
+> 
+>  * Removed timeout check inside pdc_wdt_set_timeout function.
+> 
+>  * Changed identity to IMG PDC Watchdog.
+> 
+>  * Removed pdc_wdt_set_timeout call from the probe function.
+> 
+>  * Removed pdc_wdt_shutdown function call from pdc_wdt_remove function
+>    and added pdc_wdt_stop function call instead.
+> 
 > Changes from v2:
->=20
->  * Added depends on MIPS || COMPILE_TEST.
->=20
->  * Corrected the logic while calculating time base steps.
->=20
->  * Addressed few other minor comments given in v2.
->=20
+> 
+>  * Removed interrupt.h header file.
+> 
+>  * Removed clock rate-change notifier callback.
+> 
 > Changes from v1:
->=20
->  * Used regmap_update_bits at some places in the driver.
->=20
->  * Placed some #defines next to their register.
->=20
->  * Added depends on HAS_IOMEM in Kconfig.
->=20
->  * Removed unnecessary paragraph from file header.
->=20
->  * Defined register masks in a readable way.
->=20
->  * Renamed clk-names with clock-names.
->=20
->  * Added system interface clock in DT binding document.
->=20
->  * Addressed few other minor review comments given in v1.
->=20
-> Naidu Tellapati (4):
->   pwm: Imagination Technologies PWM DAC driver
->   DT: pwm: Add binding document for IMG PWM DAC
->   pdm: Imagination Technologies PDM DAC driver
->   DT: pdm: Add binding document for IMG PDM DAC
->=20
+> 
+>  * Arranged all include files in alphabetical order.
+> 
+>  * Arranged register field masks/shifts defines next to their
+>    corresponding register
+> 
+>  * Registered clock rate-change notifier callback.
+> 
+>  * Removed all references to 32 kHz fixed clock rate.
+>    Now the clock rate is read dynamically using clk_get_rate().
+> 
+>  * Defined a macro PDC_WD_CONFIG_ENABLE.
+> 
+>  * Added code for getting system clock.
+> 
+>  * Moved module_param stuffs next to the corresponding variable defines.
+> 
+>  * Added code in the function pdc_wdt_remove for stopping watchdog.
+> 
+>  * Removed MODULE_ALIAS.
+> 
+>  * Removed few unwanted spaces and unwanted blank lines.
+> 
+> Naidu Tellapati (2):
+>   watchdog: ImgTec PDC Watchdog Timer Driver
+>   DT: watchdog: Add ImgTec PDC Watchdog Timer binding documentation
+> 
 
-Any comments on this series? I was aiming at merging this for v3.19,
-hope it's not too late already!
+Do you think it's possible to merge this series in time for v3.19?
 
-Thanks,
---=20
+Thanks!
+-- 
 Ezequiel
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
