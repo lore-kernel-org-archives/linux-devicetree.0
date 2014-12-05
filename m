@@ -1,93 +1,48 @@
-From: "Wang, Yalin" <Yalin.Wang@sonymobile.com>
-Subject: RE: [RFC] fdt:free the fdt reserved memory
-Date: Fri, 5 Dec 2014 10:38:10 +0800
-Message-ID: <35FD53F367049845BC99AC72306C23D103E688B313EB@CNBJMBX05.corpusers.net>
-References: <35FD53F367049845BC99AC72306C23D103D6DB49161A@CNBJMBX05.corpusers.net>
- <20140924144520.697A8C40738@trevor.secretlab.ca>
- <35FD53F367049845BC99AC72306C23D103E688B313E7@CNBJMBX05.corpusers.net>
- <20141204100453.49DF2C40992@trevor.secretlab.ca>
- <35FD53F367049845BC99AC72306C23D103E688B313E9@CNBJMBX05.corpusers.net>
- <CACxGe6ubYkz+noEsn15JeKFHz1JoL_EEaT5V126SyEqDugrCcw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACxGe6ubYkz+noEsn15JeKFHz1JoL_EEaT5V126SyEqDugrCcw@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: 'Grant Likely' <grant.likely@linaro.org>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Zhou Wang <wangzhou.bry@gmail.com>
+Subject: [PATCH v4 0/4] ARM: hip04: add GPIO support
+Date: Fri,  5 Dec 2014 11:38:38 +0800
+Message-ID: <1417750722-14027-1-git-send-email-wangzhou.bry@gmail.com>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Russell King <linux@arm.linux.org.uk>, Haojian Zhuang <haojian.zhuang@linaro.org>, Wei Xu <xuwei5@hisilicon.com>, Olof Johansson <olof@lixom.net>, Kevin Hilman <khilman@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, liguozhu@hisilicon.com
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, atull@altera.com, sebastian.hesselbarth@gmail.com, bigeasy@linutronix.de, jamie@jamieiles.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, wangzhou1@hisilicon.com, Zhou Wang <wangzhou.bry@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: glikely@secretlab.ca [mailto:glikely@secretlab.ca] On Behalf Of Grant
-> Likely
-> Sent: Thursday, December 04, 2014 8:46 PM
-> To: Wang, Yalin
-> Cc: robh+dt@kernel.org; devicetree@vger.kernel.org; pawel.moll@arm.com;
-> mark.rutland@arm.com; ijc+devicetree@hellion.org.uk; linux-
-> kernel@vger.kernel.org
-> Subject: Re: [RFC] fdt:free the fdt reserved memory
-> 
-> On Thu, Dec 4, 2014 at 10:23 AM, Wang, Yalin <Yalin.Wang@sonymobile.com>
-> wrote:
-> >> -----Original Message-----
-> >> From: Grant Likely [mailto:glikely@secretlab.ca] On Behalf Of Grant
-> >> Likely
-> >> Sent: Thursday, December 04, 2014 6:05 PM
-> >> To: Wang, Yalin; 'robh+dt@kernel.org'; 'devicetree@vger.kernel.org';
-> >> 'pawel.moll@arm.com'; 'mark.rutland@arm.com';
-> >> 'ijc+devicetree@hellion.org.uk'; 'linux-kernel@vger.kernel.org'
-> >> Subject: RE: [RFC] fdt:free the fdt reserved memory
-> >>
-> >> On Thu, 4 Dec 2014 14:56:11 +0800
-> >> , "Wang, Yalin" <Yalin.Wang@sonymobile.com>
-> >>  wrote:
-> >> > > -----Original Message-----
-> >> > > From: Grant Likely [mailto:glikely@secretlab.ca] On Behalf Of
-> >> > > Grant Likely
-> >> > > Sent: Wednesday, September 24, 2014 10:45 PM
-> >> > > To: Wang, Yalin; 'robh+dt@kernel.org';
-> >> > > 'devicetree@vger.kernel.org'; 'pawel.moll@arm.com';
-> >> > > 'mark.rutland@arm.com'; 'ijc+devicetree@hellion.org.uk'; 'linux-
-> kernel@vger.kernel.org'
-> >> > > Subject: Re: [RFC] fdt:free the fdt reserved memory
-> >> > >
-> >> > > On Thu, 18 Sep 2014 17:25:12 +0800, "Wang, Yalin"
-> >> > > <Yalin.Wang@sonymobile.com> wrote:
-> >> > > > This patch make some change to unflatten_dt_node(), make sure
-> >> > > > the device_node don't reference to fdt raw blob memory, so that
-> >> > > > we can free the raw blob reserved memory after initcalls.
-> >> > > >
-> >> > > > Signed-off-by: Yalin Wang <yalin.wang@sonymobile.com>
-> >> > >
-> >> > > Do you have any measurements showing a change in available memory
-> >> > > before and after the patch?
-> >> > >
-> >> > Does anyone have a look at this patch?
-> >> > It can save 12K on my platform,
-> >> > My dtb is 164K
-> >>
-> >> Yes, I've been thinking about this one. Unfortunately there is a
-> >> conflict with another feature that I'm merging for v3.19. See commit
-> >> 08d53aa5,
-> >> "of/fdt: export fdt blob as /sys/firmware/fdt" in linux-next.
-> >> That commit requires the original blob to be kept around.
-> >>
-> >> In order to free the original dtb, the /sys/firmware/fdt feature will
-> >> need to be changed to let it be configured out. All things
-> >> considered, that is probably the right thing to do, but doing so
-> >> increases the memory load for the platforms that want
-> >> /sys/firmware/fdt. I'd like to see what the impact would be on the
-> >> code to switch to this method when /sys/firmware/fdt is configured out.
-> >>
-> > Oh, I understand,
-> > If enable /sys/firmware/fdt feature patch, doesn't need My patch is
-> > fine, So need 2 method to unflatten dtb blob.
-> 
-> I don't want to duplicate the function. It would instead need to be a build
-> time configuration to the function that if /sys/firmware/fdt is enabled,
-> then copying the property on unflatten is disabled.
-Yeah, seems a better way if you do like this.
+This series add the support for the GPIOs of Hisilicon Soc hip04. Hip04 uses
+synopsis' GPIO IP, and we use the dwapb GPIO driver here. This series add the
+corresponding dts.
 
-BRs
+The 3/4 patch supports to find GPIO base number in increasing order,
+if gpio-number-forward is defined in related dts nodes. If there are some
+GPIO controllers in one Soc, all related GPIO dts node should contain
+gpio-number-forward property. If not, error will come out.
+
+Change in v4:
+- Delete "default 128 if ARCH_HIP04" in arch/arm/Kconfig
+- add a new patch to support find GPIO base number in increasing order
+- add gpio-number-forward property in snps gpio binding doc
+Change in v3:
+- Move CONFIG_GPIO_DWAPB to hisi_defconfig
+- Add CONFIG_GPIOLIB, CONFIG_GPIO_SYSFS in hisi_defconfig
+Change in v2:
+- Add select GPIO_DWAPB in arch/arm/mach-hisi/Kconfig
+
+Link for v3:
+- http://www.spinics.net/lists/devicetree/msg60324.html
+
+Zhou Wang (4):
+  ARM: hip04: add GPIO configure in hisi_defconfig
+  ARM: dts: hip04: add GPIO pieces
+  gpio: Add find base in a increasing order
+  Documentation: dt: gpio: Add gpio-number-forward property in snps
+    gpio binding doc
+
+ .../devicetree/bindings/gpio/snps-dwapb-gpio.txt   |    2 +
+ arch/arm/boot/dts/hip04.dtsi                       |   79 ++++++++++++++++++++
+ arch/arm/configs/hisi_defconfig                    |    3 +
+ drivers/gpio/gpiolib.c                             |   63 +++++++++++++---
+ 4 files changed, 138 insertions(+), 9 deletions(-)
+
+-- 
+1.7.9.5
+
