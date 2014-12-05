@@ -1,204 +1,146 @@
-From: Josh Wu <josh.wu@atmel.com>
-Subject: Re: [PATCH 2/4] media: ov2640: add primary dt support
-Date: Fri, 5 Dec 2014 18:17:44 +0800
-Message-ID: <54818648.8030601@atmel.com>
-References: <1417170507-11172-1-git-send-email-josh.wu@atmel.com> <1417170507-11172-3-git-send-email-josh.wu@atmel.com> <2588866.n5Pjp1h670@avalon>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [Patch v2 1/2] gpio: add GPIO hogging mechanism
+Date: Fri, 5 Dec 2014 11:24:27 +0100
+Message-ID: <20141205102427.GU30256@lukather>
+References: <1416527684-19017-1-git-send-email-bparrot@ti.com>
+ <1416527684-19017-2-git-send-email-bparrot@ti.com>
+ <CAAVeFu+VZiuzobB7McSAUehKUHJjBv1o8ZpYjSHJAKjr3o5wTA@mail.gmail.com>
+ <20141201163639.GI25249@lukather>
+ <CAAVeFuLTupDenZdSi8KO+dYsf-ekcqjsDaQ2GEzYpBG34oF7Zw@mail.gmail.com>
+ <CACRpkdZcNcPBYQM438CZJx1gYst9BFBSTj-3Qv2aPGF9pdWa5g@mail.gmail.com>
+ <20141202161227.GH30256@lukather>
+ <CAAVeFu+Gms6ptyK6j1Zy_wWg+9URs+9zBu=pOiwiEERO=8NjNw@mail.gmail.com>
+ <20141204142741.GQ30256@lukather>
+ <CAAVeFuJTjWPzQYYkV3jW3+h6uigzzeKS9d7pY2cQ-dK119msXg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <2588866.n5Pjp1h670@avalon>
-Sender: linux-media-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: linux-media@vger.kernel.org, m.chehab@samsung.com, linux-arm-kernel@lists.infradead.org, g.liakhovetski@gmx.de, devicetree@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="UC+RhZhEc8lcmajv"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAAVeFuJTjWPzQYYkV3jW3+h6uigzzeKS9d7pY2cQ-dK119msXg@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Alexandre Courbot <gnurou@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Benoit Parrot <bparrot@ti.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, Jiri Prchal <jiri.prchal@aksignal.cz>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Laurent
 
-On 12/2/2014 6:33 AM, Laurent Pinchart wrote:
-> Hi Josh,
->
-> Thank you for the patch.
->
-> On Friday 28 November 2014 18:28:25 Josh Wu wrote:
->> Add device tree support for ov2640.
->>
->> Cc:devicetree@vger.kernel.org
->> Signed-off-by: Josh Wu<josh.wu@atmel.com>
->> ---
->>   drivers/media/i2c/soc_camera/ov2640.c | 95 +++++++++++++++++++++++++++++---
->>   1 file changed, 89 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/media/i2c/soc_camera/ov2640.c
->> b/drivers/media/i2c/soc_camera/ov2640.c index 9ee910d..6506126 100644
->> --- a/drivers/media/i2c/soc_camera/ov2640.c
->> +++ b/drivers/media/i2c/soc_camera/ov2640.c
->> @@ -18,6 +18,8 @@
->>   #include <linux/i2c.h>
->>   #include <linux/slab.h>
->>   #include <linux/delay.h>
->> +#include <linux/gpio.h>
->> +#include <linux/of_gpio.h>
->>   #include <linux/v4l2-mediabus.h>
->>   #include <linux/videodev2.h>
->>
->> @@ -283,6 +285,10 @@ struct ov2640_priv {
->>   	u32	cfmt_code;
->>   	struct v4l2_clk			*clk;
->>   	const struct ov2640_win_size	*win;
->> +
->> +	struct soc_camera_subdev_desc	ssdd_dt;
->> +	int reset_pin;
->> +	int pwr_down_pin;
->>   };
->>
->>   /*
->> @@ -1047,6 +1053,70 @@ static struct v4l2_subdev_ops ov2640_subdev_ops = {
->>   	.video	= &ov2640_subdev_video_ops,
->>   };
->>
->> +/* OF probe functions */
->> +static int ov2640_hw_power(struct device *dev, int on)
->> +{
->> +	struct i2c_client *client = to_i2c_client(dev);
->> +	struct ov2640_priv *priv = to_ov2640(client);
->> +
->> +	dev_dbg(&client->dev, "%s: %s the camera\n",
->> +			__func__, on ? "ENABLE" : "DISABLE");
->> +
->> +	/* enable or disable the camera */
->> +	gpio_direction_output(priv->pwr_down_pin, !on);
-> Isn't there a delay required to wake the chip up ?
-I don't see any document mention a delay is needed when waked up.
+--UC+RhZhEc8lcmajv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->
->> +
->> +	return 0;
->> +}
->> +
->> +static int ov2640_hw_reset(struct device *dev)
->> +{
->> +	struct i2c_client *client = to_i2c_client(dev);
->> +	struct ov2640_priv *priv = to_ov2640(client);
->> +
-> If the reset GPIO isn't specified you should return immediately without
-> waiting 120ms.
+On Thu, Dec 04, 2014 at 11:49:19PM +0900, Alexandre Courbot wrote:
+> On Thu, Dec 4, 2014 at 11:27 PM, Maxime Ripard
+> <maxime.ripard@free-electrons.com> wrote:
+> > Hi,
+> >
+> > On Thu, Dec 04, 2014 at 11:15:38PM +0900, Alexandre Courbot wrote:
+> >> On Wed, Dec 3, 2014 at 1:12 AM, Maxime Ripard
+> >> <maxime.ripard@free-electrons.com> wrote:
+> >> > On Tue, Dec 02, 2014 at 03:29:46PM +0100, Linus Walleij wrote:
+> >> >> On Tue, Dec 2, 2014 at 3:13 PM, Alexandre Courbot <gnurou@gmail.com=
+> wrote:
+> >> >> > On Tue, Dec 2, 2014 at 1:36 AM, Maxime Ripard
+> >> >> > <maxime.ripard@free-electrons.com> wrote:
+> >> >>
+> >> >> >> The only thing I'd like to have would be that the request here w=
+ould
+> >> >> >> be non-exclusive, so that a later driver would still be allowed =
+later
+> >> >> >> on to request that GPIO later on and manage it itself (ideally u=
+sing
+> >> >> >> the usual gpiod_request function).
+> >> >> >
+> >> >> > Actually we have a plan (and I have some code too) to allow multi=
+ple
+> >> >> > consumers per GPIO. Although like Benoit I wonder why you would w=
+ant
+> >> >> > to hog a GPIO and then request it properly later. Also, that prob=
+ably
+> >> >> > means we should abandon the hog since it actively drives the line=
+ and
+> >> >> > would interfere with the late requested. How to do that correctly=
+ is
+> >> >> > not really clear to me.
+> >> >>
+> >> >> I don't get the usecase. A hogged GPIO is per definition hogged.
+> >> >> This sounds more like "initial settings" or something, which is ano=
+ther
+> >> >> usecase altogether.
+> >> >
+> >> > We do have one board where we have a pin (let's say GPIO14 of the ba=
+nk
+> >> > A) that enables a regulator that will provide VCC the bank B.
+> >> >
+> >> > Now, both banks are handled by the same driver, but in order to have=
+ a
+> >> > working output on the bank B, we do need to set GPIO14 as soon as
+> >> > we're probed.
+> >> >
+> >> > Just relying on the usual deferred probing introduces a circular
+> >> > dependency between the gpio-regulator that needs to grab its GPIO fr=
+om
+> >> > a driver not there yet, and the gpio driver that needs to enable its
+> >> > gpio-regulator.
+> >>
+> >> I don't get it. According to what you said, the following order should
+> >> go through IIUC:
+> >>
+> >> 1) bank A is probed, gpio 14 is available
+> >> 2) gpio-regulator is probed, acquires GPIO 14, regulator for Bank B is=
+ available
+> >> 3) bank B is probed, grabs its regulator and turn it on, probes.
+> >>
+> >> What am I missing?
+> >
+> > It would be true if bank A and B were exposed through different
+> > drivers (or at least different instances of the same driver), which is
+> > not the case.
+> >
+> > In our case, banks A and B are handled by the same instance.
+>=20
+> Ok, so both banks A and B are part of the same device/DT node. Now I
+> think I understand the issue. You need to hog the pin so that bank B
+> will work right after the device is probed.
 
-I find some document that said the reset pulse need >= 3ms. So I think 
-use 3~5ms is enough.
+Exactly.
 
->
->> +	/* If enabled, give a reset impulse */
->> +	gpio_direction_output(priv->reset_pin, 0);
->> +	msleep(20);
-> Please use usleep_range().
+> But you will still have the problem that the regulator device will
+> *not* be available when your device is probed, so you cannot call
+> regulator_get() for bank B anyway. I guess your only choice is to hog
+> that pin and leave it active ad vitam eternam.
 
-ok.
->
->> +	gpio_direction_output(priv->reset_pin, 1);
->> +	msleep(100);
-> Is the reset delay documented somewhere ? 100ms seems pretty large to me.
+Hmmm, indeed.
 
-It seems no need to wait another delay after the reset pulse is generated.
-I will remove this line: msleep(100);
->> +
->> +	return 0;
->> +}
->> +
->> +static int ov2640_probe_dt(struct i2c_client *client,
->> +		struct ov2640_priv *priv)
->> +{
->> +	struct device_node *np = client->dev.of_node;
->> +	int ret;
->> +
->> +	priv->reset_pin = of_get_named_gpio(np, "reset-gpio", 0);
->> +	priv->pwr_down_pin = of_get_named_gpio(np, "power-down-gpio", 0);
->> +	if (!gpio_is_valid(priv->reset_pin) ||
->> +			!gpio_is_valid(priv->pwr_down_pin))
->> +		return -EINVAL;
->> +
->> +	ret = devm_gpio_request(&client->dev, priv->pwr_down_pin,
->> +			"power-down-pin");
->> +	if (ret < 0) {
->> +		dev_err(&client->dev, "request gpio pin %d failed\n",
->> +				priv->pwr_down_pin);
->> +		return ret;
->> +	}
->> +
->> +	ret = devm_gpio_request(&client->dev, priv->reset_pin, "reset_pin");
->> +	if (ret < 0) {
->> +		dev_err(&client->dev, "request gpio pin %d failed\n",
->> +				priv->reset_pin);
->> +		return ret;
->> +	}
-> Please use the gpiod API with the devm_gpiod_get_index_optional() function, it
-> will simply your code and take care about GPIO polarity automatically. Don't
-> forget to specify the default state using the GPIOD_* flags.
+I'll stop boring you with this then :)
 
-Thank, I will use it.
-It seems in this case, use devm_gpiod_get_optional() is enough.
+Maxime
 
-Best Regards,
-Josh Wu
->
->> +
->> +	/* Initialize the soc_camera_subdev_desc */
->> +	priv->ssdd_dt.power = ov2640_hw_power;
->> +	priv->ssdd_dt.reset = ov2640_hw_reset;
->> +	client->dev.platform_data = &priv->ssdd_dt;
->> +
->> +	return 0;
->> +}
->> +
->>   /*
->>    * i2c_driver functions
->>    */
->> @@ -1058,12 +1128,6 @@ static int ov2640_probe(struct i2c_client *client,
->>   	struct i2c_adapter	*adapter = to_i2c_adapter(client->dev.parent);
->>   	int			ret;
->>
->> -	if (!ssdd) {
->> -		dev_err(&adapter->dev,
->> -			"OV2640: Missing platform_data for driver\n");
->> -		return -EINVAL;
->> -	}
->> -
->>   	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE_DATA)) {
->>   		dev_err(&adapter->dev,
->>   			"OV2640: I2C-Adapter doesn't support SMBUS\n");
->> @@ -1077,6 +1141,18 @@ static int ov2640_probe(struct i2c_client *client,
->>   		return -ENOMEM;
->>   	}
->>
->> +	if (!ssdd) {
->> +		if (client->dev.of_node) {
->> +			ret = ov2640_probe_dt(client, priv);
->> +			if (ret)
->> +				return ret;
->> +		} else {
->> +			dev_err(&client->dev,
->> +				"Missing platform_data for driver\n");
->> +			return  -EINVAL;
->> +		}
->> +	}
->> +
->>   	v4l2_i2c_subdev_init(&priv->subdev, client, &ov2640_subdev_ops);
->>   	v4l2_ctrl_handler_init(&priv->hdl, 2);
->>   	v4l2_ctrl_new_std(&priv->hdl, &ov2640_ctrl_ops,
->> @@ -1123,9 +1199,16 @@ static const struct i2c_device_id ov2640_id[] = {
->>   };
->>   MODULE_DEVICE_TABLE(i2c, ov2640_id);
->>
->> +static const struct of_device_id ov2640_of_match[] = {
->> +	{.compatible = "omnivision,ov2640", },
->> +	{},
->> +};
->> +MODULE_DEVICE_TABLE(of, ov2640_of_match);
->> +
->>   static struct i2c_driver ov2640_i2c_driver = {
->>   	.driver = {
->>   		.name = "ov2640",
->> +		.of_match_table = of_match_ptr(ov2640_of_match),
->>   	},
->>   	.probe    = ov2640_probe,
->>   	.remove   = ov2640_remove,
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--UC+RhZhEc8lcmajv
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUgYfbAAoJEBx+YmzsjxAgmpsP/R3WiGc4Ttc7NDAtwfbgkOo2
+OPWrvJ4xE6vJn+kEzD4Ku3MVvW7AZdJXB5pQjYsUp0upEWVfIf8K3OL3hAW9qcg8
+rn7HQJZube7cTbMuR4MR4+pyJmjyWyRAeHKtEdNu/VeOYGQDzFeCCINQElE7EjmL
+BAe7fr0cZfdJgXxOFibAUWFHF+4ADRE0ApOj+MnIzf0PiDCiziAqmtxI6tZxNB3g
+Zbz83pDrzui2+NCnP+qAMluCEDn82Wb0GCbC3CH1k33Q/wzX0uR5SyRpULfdrZWe
+nZW2c0CxcAFElpAol1r+89JpKdyF7M0bBcLnVAGy2+jchdrTDPQ/gLZvh5/7L5+2
+GqE7NTuTqTO6iJlIccI9+dnYprrDuD2oIdnywp6NVpswYGSVEZntMhqKLzlptj9z
+UIN4HIeCbzNy8057GErgNJL8rBrAXn5ThfF+ADCrSWKkA2G+KVrexQEQgVN34jwB
+rPILYBihRjSz03s1b22uNJZpUt0+vgdU9O3k7oKPz+KSD0YM2Yqxrj3uEqNYfJia
+K+0c5WoLg7HLSxfbT73a/HqFxYVX9QlbQiAlPkol9YtHne6lqz3s6eacc3KmfjKd
+i09bbdbw/6TtiqE8G2w0QsCvdgsKkNpo8k+etXSzI2mW+rYu52WISMMhp/klZkOi
+r/gLhjZoZ65iAiCaN4Z1
+=3zZ9
+-----END PGP SIGNATURE-----
+
+--UC+RhZhEc8lcmajv--
