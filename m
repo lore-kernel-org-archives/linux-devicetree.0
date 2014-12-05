@@ -1,130 +1,88 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [RFC 1/3] devfreq: dt-bindings: Document Exynos3250 devfreq
- driver
-Date: Fri, 5 Dec 2014 16:53:56 +0000
-Message-ID: <20141205165356.GC12849@leverpostej>
-References: <1417797988-29225-1-git-send-email-k.kozlowski@samsung.com>
- <1417797988-29225-2-git-send-email-k.kozlowski@samsung.com>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/4] mtd: nand: atmel: Rework DT representation of NFC/NAND
+Date: Fri, 5 Dec 2014 18:07:08 +0100
+Message-ID: <5481E63C.5020208@atmel.com>
+References: <1417732214-3292-1-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1417797988-29225-2-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Kukjin Kim <kgene@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Chanwoo Choi <cw00.choi@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1417732214-3292-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 05, 2014 at 04:46:26PM +0000, Krzysztof Kozlowski wrote:
-> Add documentation for bindings used by Exynos3250 devfreq driver.
-> 
-> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> ---
->  .../bindings/arm/samsung/exynos3250-devfreq.txt    | 66 ++++++++++++++++++++++
->  1 file changed, 66 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/samsung/exynos3250-devfreq.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/samsung/exynos3250-devfreq.txt b/Documentation/devicetree/bindings/arm/samsung/exynos3250-devfreq.txt
-> new file mode 100644
-> index 000000000000..047955e9e371
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/samsung/exynos3250-devfreq.txt
-> @@ -0,0 +1,66 @@
-> +Samsung Exynos3250 devfreq driver
+Le 04/12/2014 23:30, Boris Brezillon a =E9crit :
+> Hello,
+>=20
+> While working on the EBI driver [1] I noticed that the relationship b=
+etween
+> the NFC (NAND Flash Controller) and the NAND chip it is attached to w=
+ould
+> make things harder to represent when moving the NAND node under the E=
+BI bus
+> (another useless 'ranges' definition).
+>=20
+> Actually this representation might be even more problematic if one wa=
+nts
+> decide to connect two NAND chips on his sama5 based board, because th=
+e NFC
+> node is a child of the NAND chip node, and thus can only be attached =
+to a
+> single NAND chip.
+>=20
+> To address this problem the current series moves the NFC node outside=
+ of
+> the NAND chip device which then reference the NFC using the "atmel,nf=
+c"
+> property.
+>=20
+> The series does not implement multi-chip support, but at least the ne=
+w
+> representation should make it possible.
+>=20
+> Best Regards,
+>=20
+> Boris
+>=20
+> [1]https://lkml.org/lkml/2014/12/3/806
 
-The binding should describe the hardware, not a particular driver of
-that hardware. Please write the binding (and its documentation) with
-that in mind, and drop references to the driver and "busfreq".
+Boris,
 
-With an adequate binding we can probe the device and forward the
-information to relevant driver(s) as necessary.
+It sounds promising and for sure we have to think about a way to deal
+with SMC (EBI interface) and the NAND controller with its attributes
+(PMECC) or flavors (plain SMC or NFC).
 
-> +=================================
-> +
-> +The driver support changing frequencies and voltage for:
-> + - memory controller and bus,
-> + - peripheral buses (left and right).
+Let's consider this as a RFC and discuss how to deal with the DT
+modifications and the representation hierarchy all together.
+
+Thanks, bye.
+
+> Boris Brezillon (4):
+>   mtd: nand: atmel: Rework driver to separate nfc and nand nodes
+>   mtd: nand: atmel: Update DT documentation after splitting NFC and N=
+AND
+>   ARM: at91/dt: sama5: move NFC nodes outside of NAND nodes
+>   ARM: at91/dt: sama5: move NAND nodes into board dts/dtsi
+>=20
+>  .../devicetree/bindings/mtd/atmel-nand.txt         | 46 +++++++-----=
+-
+>  arch/arm/boot/dts/at91-sama5d3_xplained.dts        | 18 ++++-
+>  arch/arm/boot/dts/at91-sama5d4ek.dts               | 16 ++++-
+>  arch/arm/boot/dts/sama5d3.dtsi                     | 36 ++--------
+>  arch/arm/boot/dts/sama5d3xcm.dtsi                  | 18 ++++-
+>  arch/arm/boot/dts/sama5d4.dtsi                     | 36 ++--------
+>  drivers/mtd/nand/atmel_nand.c                      | 76 ++++++++++++=
++++++-----
+>  7 files changed, 149 insertions(+), 97 deletions(-)
+>=20
 
 
-What do left and right mean in this context?
-
-> +
-> +Memory controller and bus
-> +=========================
-> +Required properties:
-> + - compatible : should be "samsung,exynos3250-busfreq-mif"
-> + - reg : two sets (offset and length of the register) for PPMU registers
-> +	used by this devfreq driver
-> + - clock-names : one clock of name "dmc" to manage frequency
-> + - clocks : phandle and specifier for clock listed in clock-names property
-> + - vdd_mif-supply : phandle to MIF voltage regulator
-
-s/_/-/ in property names please.
-
-> +
-> +Peripheral buses
-> +================
-> +Required properties:
-> + - compatible : should be "samsung,exynos3250-busfreq-int"
-
-What does "int" mean here?
-
-> + - reg : two sets (offset and length of the register) for PPMU registers
-> +	used by this devfreq driver
-> + - clock-names : names for PPMU clocks and bus clocks to manage frequencies;
-> +	All following clock names (and corresponding phandles) must be
-> +	provided:
-> +	- "ppmu_left", "ppmu_right",
-> +	- "aclk_400", "aclk_266", "aclk_200", "aclk_160", "aclk_gdl", "aclk_gdr", "mfc";
-> + - clocks : phandles and specifiers for clocks listed in clock-names property
-> + - vdd_mif-supply : phandle to INT voltage regulator
-
-s/_/-/ here too.
-
-Thanks,
-Mark.
-
-> +
-> +Example
-> +=======
-> +	busfreq_mif: busfreq@106A0000 {
-> +		compatible = "samsung,exynos3250-busfreq-mif";
-> +		reg = <0x106A0000 0x2000>, <0x106B0000 0x2000>;
-> +		clocks = <&cmu_dmc CLK_DIV_DMC>;
-> +		clock-names = "dmc";
-> +		vdd_mif-supply = <&buck1_reg>;
-> +		status = "okay";
-> +	};
-> +
-> +	busfreq_int: busfreq@116A0000 {
-> +		compatible = "samsung,exynos3250-busfreq-int";
-> +		reg = <0x116A0000 0x2000>, <0x112A0000 0x2000>;
-> +		clocks = <&cmu CLK_PPMULEFT>,
-> +			<&cmu CLK_PPMURIGHT>,
-> +			<&cmu CLK_DIV_ACLK_400_MCUISP>,
-> +			<&cmu CLK_DIV_ACLK_266>,
-> +			<&cmu CLK_DIV_ACLK_200>,
-> +			<&cmu CLK_DIV_ACLK_160>,
-> +			<&cmu CLK_DIV_GDL>,
-> +			<&cmu CLK_DIV_GDR>,
-> +			<&cmu CLK_DIV_MFC>;
-> +		clock-names = "ppmuleft",
-> +			"ppmuright",
-> +			"aclk_400",
-> +			"aclk_266",
-> +			"aclk_200",
-> +			"aclk_160",
-> +			"aclk_gdl",
-> +			"aclk_gdr",
-> +			"mfc";
-> +		vdd_int-supply = <&buck3_reg>;
-> +		status = "okay";
-> +	};
-> -- 
-> 1.9.1
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+--=20
+Nicolas Ferre
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
