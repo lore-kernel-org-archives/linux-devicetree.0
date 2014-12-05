@@ -1,49 +1,93 @@
-From: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Subject: Re: [PATCH 0/7] ARM: hisi: enable HiP01 SoC
-Date: Fri, 5 Dec 2014 08:34:02 +0800
-Message-ID: <5480FD7A.6030802@hisilicon.com>
-References: <1417140950-67103-1-git-send-email-long.wanglong@huawei.com> <3601066.g7Jvjk5UFL@wuerfel>
+From: "Wang, Yalin" <Yalin.Wang@sonymobile.com>
+Subject: RE: [RFC] fdt:free the fdt reserved memory
+Date: Fri, 5 Dec 2014 10:38:10 +0800
+Message-ID: <35FD53F367049845BC99AC72306C23D103E688B313EB@CNBJMBX05.corpusers.net>
+References: <35FD53F367049845BC99AC72306C23D103D6DB49161A@CNBJMBX05.corpusers.net>
+ <20140924144520.697A8C40738@trevor.secretlab.ca>
+ <35FD53F367049845BC99AC72306C23D103E688B313E7@CNBJMBX05.corpusers.net>
+ <20141204100453.49DF2C40992@trevor.secretlab.ca>
+ <35FD53F367049845BC99AC72306C23D103E688B313E9@CNBJMBX05.corpusers.net>
+ <CACxGe6ubYkz+noEsn15JeKFHz1JoL_EEaT5V126SyEqDugrCcw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3601066.g7Jvjk5UFL@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Wang Long <long.wanglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, yanhaifeng-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, obh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, huxinwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peifeiyue-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACxGe6ubYkz+noEsn15JeKFHz1JoL_EEaT5V126SyEqDugrCcw@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: 'Grant Likely' <grant.likely@linaro.org>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 2014/12/4 20:58, Arnd Bergmann wrote:
-> On Friday 28 November 2014 02:15:43 Wang Long wrote:
->> This series patch enable Hisilicon HiP01 SoC. The HiP01 SoC series
->> chip is designed for networking product, it integrates a rich peripheral
->> interfaces to support network applications and supports both one 
->> core or dual cores and quad cores. The core is Cortex A9. 
+> -----Original Message-----
+> From: glikely@secretlab.ca [mailto:glikely@secretlab.ca] On Behalf Of Grant
+> Likely
+> Sent: Thursday, December 04, 2014 8:46 PM
+> To: Wang, Yalin
+> Cc: robh+dt@kernel.org; devicetree@vger.kernel.org; pawel.moll@arm.com;
+> mark.rutland@arm.com; ijc+devicetree@hellion.org.uk; linux-
+> kernel@vger.kernel.org
+> Subject: Re: [RFC] fdt:free the fdt reserved memory
 > 
-> Sorry for the delay in my reply. The patches look good to me, but I'm
-> not sure what you expect to happen to them. You have a number of
-> people listed as recipients, but it's not clear if you expect any of
-> us to apply them into a git tree.
-
-Hi Arnd,
-
-> Is Xu Wei going to pick these up in a git tree and send a pull request
-> to arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org?
-
-I will send a pull request about it.
-Thanks!
-
-Best Regards,
-Wei
-
-> 	Arnd
+> On Thu, Dec 4, 2014 at 10:23 AM, Wang, Yalin <Yalin.Wang@sonymobile.com>
+> wrote:
+> >> -----Original Message-----
+> >> From: Grant Likely [mailto:glikely@secretlab.ca] On Behalf Of Grant
+> >> Likely
+> >> Sent: Thursday, December 04, 2014 6:05 PM
+> >> To: Wang, Yalin; 'robh+dt@kernel.org'; 'devicetree@vger.kernel.org';
+> >> 'pawel.moll@arm.com'; 'mark.rutland@arm.com';
+> >> 'ijc+devicetree@hellion.org.uk'; 'linux-kernel@vger.kernel.org'
+> >> Subject: RE: [RFC] fdt:free the fdt reserved memory
+> >>
+> >> On Thu, 4 Dec 2014 14:56:11 +0800
+> >> , "Wang, Yalin" <Yalin.Wang@sonymobile.com>
+> >>  wrote:
+> >> > > -----Original Message-----
+> >> > > From: Grant Likely [mailto:glikely@secretlab.ca] On Behalf Of
+> >> > > Grant Likely
+> >> > > Sent: Wednesday, September 24, 2014 10:45 PM
+> >> > > To: Wang, Yalin; 'robh+dt@kernel.org';
+> >> > > 'devicetree@vger.kernel.org'; 'pawel.moll@arm.com';
+> >> > > 'mark.rutland@arm.com'; 'ijc+devicetree@hellion.org.uk'; 'linux-
+> kernel@vger.kernel.org'
+> >> > > Subject: Re: [RFC] fdt:free the fdt reserved memory
+> >> > >
+> >> > > On Thu, 18 Sep 2014 17:25:12 +0800, "Wang, Yalin"
+> >> > > <Yalin.Wang@sonymobile.com> wrote:
+> >> > > > This patch make some change to unflatten_dt_node(), make sure
+> >> > > > the device_node don't reference to fdt raw blob memory, so that
+> >> > > > we can free the raw blob reserved memory after initcalls.
+> >> > > >
+> >> > > > Signed-off-by: Yalin Wang <yalin.wang@sonymobile.com>
+> >> > >
+> >> > > Do you have any measurements showing a change in available memory
+> >> > > before and after the patch?
+> >> > >
+> >> > Does anyone have a look at this patch?
+> >> > It can save 12K on my platform,
+> >> > My dtb is 164K
+> >>
+> >> Yes, I've been thinking about this one. Unfortunately there is a
+> >> conflict with another feature that I'm merging for v3.19. See commit
+> >> 08d53aa5,
+> >> "of/fdt: export fdt blob as /sys/firmware/fdt" in linux-next.
+> >> That commit requires the original blob to be kept around.
+> >>
+> >> In order to free the original dtb, the /sys/firmware/fdt feature will
+> >> need to be changed to let it be configured out. All things
+> >> considered, that is probably the right thing to do, but doing so
+> >> increases the memory load for the platforms that want
+> >> /sys/firmware/fdt. I'd like to see what the impact would be on the
+> >> code to switch to this method when /sys/firmware/fdt is configured out.
+> >>
+> > Oh, I understand,
+> > If enable /sys/firmware/fdt feature patch, doesn't need My patch is
+> > fine, So need 2 method to unflatten dtb blob.
 > 
-> .
-> 
+> I don't want to duplicate the function. It would instead need to be a build
+> time configuration to the function that if /sys/firmware/fdt is enabled,
+> then copying the property on unflatten is disabled.
+Yeah, seems a better way if you do like this.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+BRs
