@@ -1,146 +1,133 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [Patch v2 1/2] gpio: add GPIO hogging mechanism
-Date: Fri, 5 Dec 2014 11:24:27 +0100
-Message-ID: <20141205102427.GU30256@lukather>
-References: <1416527684-19017-1-git-send-email-bparrot@ti.com>
- <1416527684-19017-2-git-send-email-bparrot@ti.com>
- <CAAVeFu+VZiuzobB7McSAUehKUHJjBv1o8ZpYjSHJAKjr3o5wTA@mail.gmail.com>
- <20141201163639.GI25249@lukather>
- <CAAVeFuLTupDenZdSi8KO+dYsf-ekcqjsDaQ2GEzYpBG34oF7Zw@mail.gmail.com>
- <CACRpkdZcNcPBYQM438CZJx1gYst9BFBSTj-3Qv2aPGF9pdWa5g@mail.gmail.com>
- <20141202161227.GH30256@lukather>
- <CAAVeFu+Gms6ptyK6j1Zy_wWg+9URs+9zBu=pOiwiEERO=8NjNw@mail.gmail.com>
- <20141204142741.GQ30256@lukather>
- <CAAVeFuJTjWPzQYYkV3jW3+h6uigzzeKS9d7pY2cQ-dK119msXg@mail.gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 2/3] drivers:input:ps2 Added sunxi A20 ps2
+ driver, changed makefile and Kconfig
+Date: Fri, 05 Dec 2014 11:33:11 +0100
+Message-ID: <12237550.afophX20rO@wuerfel>
+References: <1417647224-27950-1-git-send-email-VishnuPatekar0510@gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="UC+RhZhEc8lcmajv"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAAVeFuJTjWPzQYYkV3jW3+h6uigzzeKS9d7pY2cQ-dK119msXg@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Alexandre Courbot <gnurou@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Benoit Parrot <bparrot@ti.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, Jiri Prchal <jiri.prchal@aksignal.cz>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDEKVJM7XAHRBBEUQ2SAKGQE4UTWTPQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1417647224-27950-1-git-send-email-VishnuPatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: vishnupatekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, vishnupatekar <VishnuPatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, jdelvare-l3A5Bk7waGM@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Thursday 04 December 2014 04:23:44 vishnupatekar wrote:
+> +
+> +#define DRIVER_NAME		"sunxi-ps2"
+> +
+> +#define RESSIZE(res)        (((res)->end - (res)->start)+1)
 
---UC+RhZhEc8lcmajv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Remove this and use the existing resource_size() function
 
-On Thu, Dec 04, 2014 at 11:49:19PM +0900, Alexandre Courbot wrote:
-> On Thu, Dec 4, 2014 at 11:27 PM, Maxime Ripard
-> <maxime.ripard@free-electrons.com> wrote:
-> > Hi,
-> >
-> > On Thu, Dec 04, 2014 at 11:15:38PM +0900, Alexandre Courbot wrote:
-> >> On Wed, Dec 3, 2014 at 1:12 AM, Maxime Ripard
-> >> <maxime.ripard@free-electrons.com> wrote:
-> >> > On Tue, Dec 02, 2014 at 03:29:46PM +0100, Linus Walleij wrote:
-> >> >> On Tue, Dec 2, 2014 at 3:13 PM, Alexandre Courbot <gnurou@gmail.com=
-> wrote:
-> >> >> > On Tue, Dec 2, 2014 at 1:36 AM, Maxime Ripard
-> >> >> > <maxime.ripard@free-electrons.com> wrote:
-> >> >>
-> >> >> >> The only thing I'd like to have would be that the request here w=
-ould
-> >> >> >> be non-exclusive, so that a later driver would still be allowed =
-later
-> >> >> >> on to request that GPIO later on and manage it itself (ideally u=
-sing
-> >> >> >> the usual gpiod_request function).
-> >> >> >
-> >> >> > Actually we have a plan (and I have some code too) to allow multi=
-ple
-> >> >> > consumers per GPIO. Although like Benoit I wonder why you would w=
-ant
-> >> >> > to hog a GPIO and then request it properly later. Also, that prob=
-ably
-> >> >> > means we should abandon the hog since it actively drives the line=
- and
-> >> >> > would interfere with the late requested. How to do that correctly=
- is
-> >> >> > not really clear to me.
-> >> >>
-> >> >> I don't get the usecase. A hogged GPIO is per definition hogged.
-> >> >> This sounds more like "initial settings" or something, which is ano=
-ther
-> >> >> usecase altogether.
-> >> >
-> >> > We do have one board where we have a pin (let's say GPIO14 of the ba=
-nk
-> >> > A) that enables a regulator that will provide VCC the bank B.
-> >> >
-> >> > Now, both banks are handled by the same driver, but in order to have=
- a
-> >> > working output on the bank B, we do need to set GPIO14 as soon as
-> >> > we're probed.
-> >> >
-> >> > Just relying on the usual deferred probing introduces a circular
-> >> > dependency between the gpio-regulator that needs to grab its GPIO fr=
-om
-> >> > a driver not there yet, and the gpio driver that needs to enable its
-> >> > gpio-regulator.
-> >>
-> >> I don't get it. According to what you said, the following order should
-> >> go through IIUC:
-> >>
-> >> 1) bank A is probed, gpio 14 is available
-> >> 2) gpio-regulator is probed, acquires GPIO 14, regulator for Bank B is=
- available
-> >> 3) bank B is probed, grabs its regulator and turn it on, probes.
-> >>
-> >> What am I missing?
-> >
-> > It would be true if bank A and B were exposed through different
-> > drivers (or at least different instances of the same driver), which is
-> > not the case.
-> >
-> > In our case, banks A and B are handled by the same instance.
->=20
-> Ok, so both banks A and B are part of the same device/DT node. Now I
-> think I understand the issue. You need to hog the pin so that bank B
-> will work right after the device is probed.
+> +
+> +struct sunxips2data {
+> +	int irq;
+> +	spinlock_t ps2_lock;
+> +	void __iomem *base_address;	/* virt address of control registers*/
+> +	struct serio *serio;		/* serio*/
+> +	struct device *dev;
+> +	struct	clk	*pclk;
+> +};
 
-Exactly.
+As this is dynamically allocated, better embed the serio member
+directly to avoid allocating both separately.
 
-> But you will still have the problem that the regulator device will
-> *not* be available when your device is probed, so you cannot call
-> regulator_get() for bank B anyway. I guess your only choice is to hog
-> that pin and leave it active ad vitam eternam.
+> +static int sunxips2_open(struct serio *pserio)
+> +{
+> +	struct sunxips2data *drvdata = pserio->port_data;
+> +	u32 src_clk = 0;
+> +	u32 clk_scdf;
+> +	u32 clk_pcdf;
+> +	u32 rval;
+> +
+> +	/*Set Line Control And Enable Interrupt*/
+> +	rval = SWPS2_LCTL_TXDTOEN|SWPS2_LCTL_STOPERREN|SWPS2_LCTL_ACKERREN|SWPS2_LCTL_PARERREN|SWPS2_LCTL_RXDTOEN;
+> +	writel(rval, drvdata->base_address + SW_PS2_LCTRL);
+> +
+> +	/*Reset FIFO*/
+> +	writel(0x3<<16 | 0x607, drvdata->base_address + SW_PS2_FCTRL);
+> +
+> +	src_clk = clk_get_rate(drvdata->pclk);
+> +
+> +	if (!src_clk) {
+> +		dev_info(drvdata->dev, "w_ps2c_set_sclk error, source clock is 0.");
+> +		return -1;
+> +	}
+> +
+> +	/*Set Clock Divider Register*/
+> +	clk_scdf = ((src_clk + (SW_PS2_SAMPLE_CLK>>1)) / SW_PS2_SAMPLE_CLK - 1);
+> +	clk_pcdf = ((SW_PS2_SAMPLE_CLK + (SW_PS2_SCLK>>1)) / SW_PS2_SCLK - 1);
+> +	rval = (clk_scdf<<8) | clk_pcdf;/* | (PS2_DEBUG_SEL<<16);*/
+> +	writel(rval, drvdata->base_address + SW_PS2_CLKDR);
+> +
+> +	/*Set Global Control Register*/
+> +	rval = SWPS2_RESET|SWPS2_INTEN|SWPS2_MASTER|SWPS2_BUSEN;
+> +	writel(rval, drvdata->base_address + SW_PS2_GCTRL);
+> +
+> +	udelay(100);
 
-Hmmm, indeed.
+100 microseconds is a rather long time to block the CPU for, so this
+needs a comment explaining why the particular delay is needed and why
+you can't use usleep_range() instead.
 
-I'll stop boring you with this then :)
+> +static void sunxips2_close(struct serio *pserio)
+> +{
+> +       struct sunxips2data *drvdata = pserio->port_data;
+> +
+> +       spin_lock(&drvdata->ps2_lock);
+> +       /* Disable the PS2 interrupts */
+> +       writel(0, drvdata->base_address + SW_PS2_GCTRL);
+> +       spin_unlock(&drvdata->ps2_lock);
+> +}
 
-Maxime
+The locking is wrong here: you take the lock without disabling the
+interrupts first, so if the interrupt happens between the spin_lock()
+call and the writel(), the kernel will deadlock.
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+You will either have to use spin_lock_irq() here, or find a justification
+for dropping the lock entirely.
 
---UC+RhZhEc8lcmajv
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+> +static int sunxips2_write(struct serio *pserio, unsigned char val)
+> +{
+> +	struct sunxips2data *drvdata = (struct sunxips2data *)pserio->port_data;
+> +	u32 timeout = 10000;
+> +
+> +	do {
+> +		if (readl(drvdata->base_address + SW_PS2_FSTAT) & SWPS2_FSTA_TXRDY) {
+> +			writel(val, drvdata->base_address + SW_PS2_DATA);
+> +			return 0;
+> +		}
+> +	} while (timeout--);
+> +
+> +	return -1;
+> +}
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+We never return '-1' from in-kernel functions. Either make this a bool
+argument, or return a proper errno.h value. This should probably return
+-EIO.
 
-iQIcBAEBAgAGBQJUgYfbAAoJEBx+YmzsjxAgmpsP/R3WiGc4Ttc7NDAtwfbgkOo2
-OPWrvJ4xE6vJn+kEzD4Ku3MVvW7AZdJXB5pQjYsUp0upEWVfIf8K3OL3hAW9qcg8
-rn7HQJZube7cTbMuR4MR4+pyJmjyWyRAeHKtEdNu/VeOYGQDzFeCCINQElE7EjmL
-BAe7fr0cZfdJgXxOFibAUWFHF+4ADRE0ApOj+MnIzf0PiDCiziAqmtxI6tZxNB3g
-Zbz83pDrzui2+NCnP+qAMluCEDn82Wb0GCbC3CH1k33Q/wzX0uR5SyRpULfdrZWe
-nZW2c0CxcAFElpAol1r+89JpKdyF7M0bBcLnVAGy2+jchdrTDPQ/gLZvh5/7L5+2
-GqE7NTuTqTO6iJlIccI9+dnYprrDuD2oIdnywp6NVpswYGSVEZntMhqKLzlptj9z
-UIN4HIeCbzNy8057GErgNJL8rBrAXn5ThfF+ADCrSWKkA2G+KVrexQEQgVN34jwB
-rPILYBihRjSz03s1b22uNJZpUt0+vgdU9O3k7oKPz+KSD0YM2Yqxrj3uEqNYfJia
-K+0c5WoLg7HLSxfbT73a/HqFxYVX9QlbQiAlPkol9YtHne6lqz3s6eacc3KmfjKd
-i09bbdbw/6TtiqE8G2w0QsCvdgsKkNpo8k+etXSzI2mW+rYu52WISMMhp/klZkOi
-r/gLhjZoZ65iAiCaN4Z1
-=3zZ9
------END PGP SIGNATURE-----
+> +	drvdata->irq = irq;
+> +	drvdata->serio = serio;
+> +	drvdata->dev = dev;
+> +	error = devm_request_any_context_irq(drvdata->dev, drvdata->irq, &sunxips2_interrupt, 0,
+> +				DRIVER_NAME, drvdata);
+> +	if (error) {
+> +		dev_err(drvdata->dev,
+> +			"Couldn't allocate interrupt %d : error: %d\n", drvdata->irq, error);
+> +		return error;
+> +	}
+> +	return 0;		/* success */
+> +}
 
---UC+RhZhEc8lcmajv--
+Why any_context?
+
+	Arnd
