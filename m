@@ -1,44 +1,76 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 2/4] spi: st: Provide Device Tree binding documentation
-Date: Fri, 5 Dec 2014 17:19:52 +0000
-Message-ID: <20141205171952.GM11764@sirena.org.uk>
-References: <1417534844-25080-1-git-send-email-lee.jones@linaro.org>
- <1417534844-25080-3-git-send-email-lee.jones@linaro.org>
+From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH] ARM: dts: am57xx-beagle-x15: Add GPIO controlled fan node
+Date: Fri, 5 Dec 2014 11:32:18 -0600
+Message-ID: <1417800739-13146-1-git-send-email-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="XbHSybK3LHOYQtWI"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1417534844-25080-3-git-send-email-lee.jones@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, linux-spi@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, "Menon, Nishanth" <nm-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+From: "Menon, Nishanth" <nm-l0cyMroinI0@public.gmane.org>
 
---XbHSybK3LHOYQtWI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+TPS gpio now controls a 5v 500mA TL5209 regulator which may be supply
+a fan (such as AFB02505HHB) over J1 connector for various purposes.
+Provide device tree node to enable the same.
 
-On Tue, Dec 02, 2014 at 03:40:42PM +0000, Lee Jones wrote:
-> This patch adds DT documentation for the SPI portion of ST's SSC device.
+Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+---
+Depends on the following:
+https://patchwork.kernel.org/patch/5439201/
+https://patchwork.kernel.org/patch/5439191/
 
-Applied, thanks.
+enable and disable can be controlled by
+echo '1' > /sys/class/hwmon/hwmon0/fan1_target
+and
+echo '0' > /sys/class/hwmon/hwmon0/fan1_target
 
---XbHSybK3LHOYQtWI
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+requires CONFIG_GPIO_PALMAS and CONFIG_SENSORS_GPIO_FAN to be operational
+Applies on 
+https://git.kernel.org/cgit/linux/kernel/git/tmlind/linux-omap.git/log/?h=omap-for-v3.19/dt-v2
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+ arch/arm/boot/dts/am57xx-beagle-x15.dts |   15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-iQEcBAEBAgAGBQJUgek3AAoJECTWi3JdVIfQHX8H/3gkcjG7KUNJzZt+hZ8EkE/M
-TTprg2xKu9YAhxbQjag0jUwCRUB7FAKEkYRXjAgFkWfV7UAptgA0FWYNsJxShw4R
-RyxngE0pb1IKyHKTxkI758gyHWzEuD8Sm7MDbi9PhTMf+LWP5RksVhFb2sKM6UkP
-5IH8L+UNIiRbG3pARwUFnCdICJteJb/R/9fKLc7c0WRlcJCVauBunsfTp2HXlZ87
-bL8fsYtKH6DHy05Ex+eWna6ekB1lDy6cfFKvW9vy7aQCjtMSBnfB5dZy+tJwGCTQ
-dlpbeEOfZ0c4RmS08P4uBKIBnZ8TsNf0q9EaoL9Tx4d+TiMWDTqQ0osua1EB0oU=
-=V3y3
------END PGP SIGNATURE-----
+diff --git a/arch/arm/boot/dts/am57xx-beagle-x15.dts b/arch/arm/boot/dts/am57xx-beagle-x15.dts
+index 49edbda..7fe82ef 100644
+--- a/arch/arm/boot/dts/am57xx-beagle-x15.dts
++++ b/arch/arm/boot/dts/am57xx-beagle-x15.dts
+@@ -80,6 +80,15 @@
+ 			default-state = "off";
+ 		};
+ 	};
++
++	gpio_fan {
++		/* Based on 5v 500mA AFB02505HHB */
++		compatible = "gpio-fan";
++		pinctrl-names = "default";
++		gpios =  <&tps659038_gpio 1 GPIO_ACTIVE_HIGH>;
++		gpio-fan,speed-map = <0    0
++				      13000 1>;
++	};
+ };
+ 
+ &dra7_pmx_core {
+@@ -314,6 +323,12 @@
+ 			wakeup-source;
+ 			ti,palmas-long-press-seconds = <12>;
+ 		};
++
++		tps659038_gpio: tps659038_gpio {
++			compatible = "ti,palmas-gpio";
++			gpio-controller;
++			#gpio-cells = <2>;
++		};
+ 	};
+ 
+ 	tmp102: tmp102@48 {
+-- 
+1.7.9.5
 
---XbHSybK3LHOYQtWI--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
