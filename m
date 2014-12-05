@@ -1,88 +1,45 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/4] mtd: nand: atmel: Rework DT representation of NFC/NAND
-Date: Fri, 5 Dec 2014 18:07:08 +0100
-Message-ID: <5481E63C.5020208@atmel.com>
-References: <1417732214-3292-1-git-send-email-boris.brezillon@free-electrons.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 1/4] spi: Add new driver for STMicroelectronics' SPI
+ Controller
+Date: Fri, 5 Dec 2014 17:19:41 +0000
+Message-ID: <20141205171941.GL11764@sirena.org.uk>
+References: <1417534844-25080-1-git-send-email-lee.jones@linaro.org>
+ <1417534844-25080-2-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1417732214-3292-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="IuJpT0rwbUevm2bB"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1417534844-25080-2-git-send-email-lee.jones@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, linux-spi@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Le 04/12/2014 23:30, Boris Brezillon a =E9crit :
-> Hello,
->=20
-> While working on the EBI driver [1] I noticed that the relationship b=
-etween
-> the NFC (NAND Flash Controller) and the NAND chip it is attached to w=
-ould
-> make things harder to represent when moving the NAND node under the E=
-BI bus
-> (another useless 'ranges' definition).
->=20
-> Actually this representation might be even more problematic if one wa=
-nts
-> decide to connect two NAND chips on his sama5 based board, because th=
-e NFC
-> node is a child of the NAND chip node, and thus can only be attached =
-to a
-> single NAND chip.
->=20
-> To address this problem the current series moves the NFC node outside=
- of
-> the NAND chip device which then reference the NFC using the "atmel,nf=
-c"
-> property.
->=20
-> The series does not implement multi-chip support, but at least the ne=
-w
-> representation should make it possible.
->=20
-> Best Regards,
->=20
-> Boris
->=20
-> [1]https://lkml.org/lkml/2014/12/3/806
 
-Boris,
+--IuJpT0rwbUevm2bB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-It sounds promising and for sure we have to think about a way to deal
-with SMC (EBI interface) and the NAND controller with its attributes
-(PMECC) or flavors (plain SMC or NFC).
+On Tue, Dec 02, 2014 at 03:40:41PM +0000, Lee Jones wrote:
+> This patch adds support for the SPI portion of ST's SSC device.
 
-Let's consider this as a RFC and discuss how to deal with the DT
-modifications and the representation hierarchy all together.
+Applied, thanks.
 
-Thanks, bye.
+--IuJpT0rwbUevm2bB
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> Boris Brezillon (4):
->   mtd: nand: atmel: Rework driver to separate nfc and nand nodes
->   mtd: nand: atmel: Update DT documentation after splitting NFC and N=
-AND
->   ARM: at91/dt: sama5: move NFC nodes outside of NAND nodes
->   ARM: at91/dt: sama5: move NAND nodes into board dts/dtsi
->=20
->  .../devicetree/bindings/mtd/atmel-nand.txt         | 46 +++++++-----=
--
->  arch/arm/boot/dts/at91-sama5d3_xplained.dts        | 18 ++++-
->  arch/arm/boot/dts/at91-sama5d4ek.dts               | 16 ++++-
->  arch/arm/boot/dts/sama5d3.dtsi                     | 36 ++--------
->  arch/arm/boot/dts/sama5d3xcm.dtsi                  | 18 ++++-
->  arch/arm/boot/dts/sama5d4.dtsi                     | 36 ++--------
->  drivers/mtd/nand/atmel_nand.c                      | 76 ++++++++++++=
-+++++-----
->  7 files changed, 149 insertions(+), 97 deletions(-)
->=20
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
+iQEcBAEBAgAGBQJUgeksAAoJECTWi3JdVIfQu+oH/Rh6x1WcU8GA9JwIjizQiILE
+Pa768QsSk4iyf8juVa+l/Ty74MjNWBvOBRc4dbHzLMczIbGSzD/L0LC6gl5m5dD0
+LT9Q8oAl+5bpxLADqK0EZ5wW4ttZjm7HIyTOzrdv2CLHiRQO8bAu6T/ofvx3FEgb
+6pMAzcBZzVAQ8cJKJMUYn3WYqvwvzmf+SvC4bVs1eIkgiCbzaC7+WUp6u1H0VbjM
+mYugZ0iI27wvEHJwiNAikJBMJTKXLjzIqQTy3iVWy5NfkaHDk5yoqogNQij45izR
+Bt+ujkmDbjiOqIrbXI8QuTjL2Y/Bd7leaFqAddkUurz5vTEebjUuRkdcElLNVa8=
+=kss8
+-----END PGP SIGNATURE-----
 
---=20
-Nicolas Ferre
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--IuJpT0rwbUevm2bB--
