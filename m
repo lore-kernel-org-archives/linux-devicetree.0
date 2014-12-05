@@ -1,77 +1,41 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [GIT PULL] Broadcom STB GISB bus driver for 3.19 (v2)
-Date: Thu, 04 Dec 2014 23:23:49 -0800
-Message-ID: <54815D85.7090409@gmail.com>
-References: <1417220370-469-1-git-send-email-f.fainelli@gmail.com> <2910464.KM7dWcxCmJ@wuerfel>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH v4 0/5] Add Spreadtrum Sharkl64 Platform support
+Date: Thu, 4 Dec 2014 23:24:02 -0800
+Message-ID: <20141205072402.GC29274@quad.lixom.net>
+References: <sc9836v4>
+ <1417692860-18841-1-git-send-email-chunyan.zhang@spreadtrum.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2910464.KM7dWcxCmJ@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1417692860-18841-1-git-send-email-chunyan.zhang@spreadtrum.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
+Cc: gregkh@linuxfoundation.org, mark.rutland@arm.com, arnd@arndb.de, gnomes@lxorguk.ukuu.org.uk, broonie@kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, will.deacon@arm.com, catalin.marinas@arm.com, jslaby@suse.cz, jason@lakedaemon.net, heiko@sntech.de, florian.vaussard@epfl.ch, andrew@lunn.ch, rrichter@cavium.com, hytszk@gmail.com, grant.likely@linaro.org, orsonzhai@gmail.com, geng.ren@spreadtrum.com, zhizhou.zhang@spreadtrum.com, lanqing.liu@spreadtrum.com, zhang.lyra@gmail.com, wei.qiao@spreadtrum.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, arm@kernel.org, linux-serial@vger.kernel.org, sprdlinux@freelists.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Le 04/12/2014 07:44, Arnd Bergmann a =C3=A9crit :
-> On Friday 28 November 2014 16:19:30 Florian Fainelli wrote:
->> This pull request contains the following changes to the Broadcom GIS=
-B bus
->> arbiter from Kevin Cernekee:
->>
->> - Extend brcmstb GISB bus driver to work on MIPS (currently ARM-only=
-) and support
->>   65nm and 40nm MIPS-based chips such as: BCM7038, BCM7400 and BCM74=
-35
->=20
-> Pulled into next/drivers, thanks!
+On Thu, Dec 04, 2014 at 07:34:15PM +0800, Chunyan Zhang wrote:
+> Spreadtrum is a rapid growing chip vendor providing smart phone total solutions.
+> 
+> Sharkl64 Platform is nominated as a SoC infrastructure that supports 4G/3G/2G
+> standards based on ARMv8 multiple core architecture.Now we have only one
+> SoC(SC9836) based on this Platform in developing.
+> 
+> This patchset adds Sharkl64 support in arm64 device tree and the serial driver
+> of SC9836-UART.
+> 
+> This patchset also has patches which address "sprd" prefix and DT compatible
+> strings for nodes which appear un-documented.
+> 
+> This version code was tesed both on Fast Mode and sc9836-fpga board.
+> We use the latest boot-wrapper-aarch64 as the bootloader.
 
-Thanks! You may have to resolve a conflict when you merge
-brcm/stb-smp-uart with next/drivers for this file, especially with the
-commit below:
+Hi,
 
-203bb85ed605e43eadca62afb3a8cd128a8ec10a ("bus: brcmstb_gisb: save and
-restore GISB timeout")
-
-for brcmstb_gisb_arb_suspend() and
-brcmstb_gisb_arb_resume_noirq() which still use the ioread32/iowrite32
-accessors instead of those introduced later on by Kevin: gisb_read() an=
-d
-gisb_write. The merge resolution looks like this:
+We only got 3 of the 5 patches of this version (1, 2 and 4). Can you
+resend the dts patch to us (I'm guessing the serial one will go through Greg).
 
 
-#ifdef CONFIG_PM_SLEEP
-static int brcmstb_gisb_arb_suspend(struct device *dev)
-{
-        struct platform_device *pdev =3D to_platform_device(dev);
-        struct brcmstb_gisb_arb_device *gdev =3D platform_get_drvdata(p=
-dev);
+Thanks,
 
-        gdev->saved_timeout =3D gisb_read(gdev, ARB_TIMER);
-
-        return 0;
-}
-
-/* Make sure we provide the same timeout value that was configured
-before, and
- * do this before the GISB timeout interrupt handler has any chance to =
-run.
- */
-static int brcmstb_gisb_arb_resume_noirq(struct device *dev)
-{
-        struct platform_device *pdev =3D to_platform_device(dev);
-        struct brcmstb_gisb_arb_device *gdev =3D platform_get_drvdata(p=
-dev);
-
-        gisb_write(gdev, gdev->saved_timeout, ARB_TIMER);
-
-        return 0;
-}
-
---
-=46lorian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-Olof
