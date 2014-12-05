@@ -1,107 +1,36 @@
-From: Orson Zhai <orsonzhai-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 0/5] Add Spreadtrum Sharkl64 Platform support
-Date: Fri, 5 Dec 2014 22:13:32 +0800
-Message-ID: <CA+H2tpF0pJ1w-MibuOv=HiXJy6pCqUJ2fDUwxLs49y0y4LEd5w@mail.gmail.com>
-References: <1417692860-18841-1-git-send-email-chunyan.zhang@spreadtrum.com>
-	<20141205104009.GE11889@leverpostej>
-	<CAAfSe-uz534FiZufojKa8MdBi=VFqhuoFLwof7K+FqXG--AGaw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org>
+Subject: [PATCH 1/2] ARM: at91/dt: sam9263: Fix typo: ac91_clk -> ac97_clk
+Date: Fri,  5 Dec 2014 15:16:55 +0100
+Message-ID: <1417789016-20001-1-git-send-email-alexanders83@web.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAAfSe-uz534FiZufojKa8MdBi=VFqhuoFLwof7K+FqXG--AGaw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lyra Zhang <zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "geng.ren-lxIno14LUO0EEoCn2XhGlw@public.gmane.org" <geng.ren-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, "zhizhou.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org" <zhizhou.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, "wei.qiao-lxIno14LUO0EEoCn2XhGlw@public.gmane.org" <wei.qiao-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "sprdlinux-uGLqWuYN4qMgsBAKwltoeQ@public.gmane.org" <sprdlinux-uGLqWuYN4qMgsBAKwltoeQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, allen.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi, Mark,
+That clock should be called ac97_clk.
 
-On Fri, Dec 5, 2014 at 8:27 PM, Lyra Zhang <zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Fri, Dec 5, 2014 at 6:40 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
->> Hi,
->>
->> On Thu, Dec 04, 2014 at 11:34:15AM +0000, Chunyan Zhang wrote:
->>> Spreadtrum is a rapid growing chip vendor providing smart phone total solutions.
->>>
->>> Sharkl64 Platform is nominated as a SoC infrastructure that supports 4G/3G/2G
->>> standards based on ARMv8 multiple core architecture.Now we have only one
->>> SoC(SC9836) based on this Platform in developing.
->>>
->>> This patchset adds Sharkl64 support in arm64 device tree and the serial driver
->>> of SC9836-UART.
->>>
->>> This patchset also has patches which address "sprd" prefix and DT compatible
->>> strings for nodes which appear un-documented.
->>>
->>> This version code was tesed both on Fast Mode and sc9836-fpga board.
->>> We use the latest boot-wrapper-aarch64 as the bootloader.
->>>
->>> Changes from v3:
->>> * Addressed review comments:
->>>       - Added the description of clock property for sc9836-uart
->>>       - Revised the size of GICC to be 8KiB
->>>       - Added another compatible string for psci-0.1
->>
->> I had open questions on v3 regarding your PSCI imlpementation. You
->> mentioned that you are using the aarch64 bootwrapper, but your DT
->> describes PSCI 0.2, and the (upstream) bootwrapper does not implement
->> PSCI 0.2. Adding the old PSCI compatible string is _not_ sufficient if
->> you do not have a full PSCI 0.2 implementation.
->>
->> Given that PSCI 0.2 requires more functionality to be implemented, I'd
->> like to know that your implementation is spec-compliant (implementing
->> the mandatory functions, nters the kernel in the correct state, etc),
->> and that it has been tested.
->>
->> Would you be able to look at my comments from the last posting please?
+Signed-off-by: Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org>
+---
+ arch/arm/boot/dts/at91sam9263.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I'd like to show you more technical details of our psci implementation.
+diff --git a/arch/arm/boot/dts/at91sam9263.dtsi b/arch/arm/boot/dts/at91sam9263.dtsi
+index 7989756..5ed2810 100644
+--- a/arch/arm/boot/dts/at91sam9263.dtsi
++++ b/arch/arm/boot/dts/at91sam9263.dtsi
+@@ -294,7 +294,7 @@
+ 						reg = <17>;
+ 					};
+ 
+-					ac91_clk: ac97_clk {
++					ac97_clk: ac97_clk {
+ 						#clock-cells = <0>;
+ 						reg = <18>;
+ 					};
+-- 
+2.2.0
 
-Here the dt code is fresh from our engineering repository.
-As far as I  know our engineers are testing on psci currently.
-
-04b8b5a5 (zhiqiang.zhang 2014-12-04 15:27:17 +0800   98)        psci {
-04b8b5a5 (zhiqiang.zhang 2014-12-04 15:27:17 +0800   99)
- compatible = "arm,psci";
-04b8b5a5 (zhiqiang.zhang 2014-12-04 15:27:17 +0800  100)
- method = "smc";
-04b8b5a5 (zhiqiang.zhang 2014-12-04 15:27:17 +0800  101)
- cpu_on  = <0xc4000003>;
-04b8b5a5 (zhiqiang.zhang 2014-12-04 15:27:17 +0800  102)
- cpu_off = <0x84000002>;
-04b8b5a5 (zhiqiang.zhang 2014-12-04 15:27:17 +0800  103)
- cpu_suspend = <0xc4000001>;
-04b8b5a5 (zhiqiang.zhang 2014-12-04 15:27:17 +0800  104)        };
-
-Does it reveal the information as you concern?
-It's no doubt that we'll implement psci-v0.2 eventually.
-Considering that the code might be upstreamed in few weeks later, we
-submit a psci-v0.2 dts in advanced.
-
-Thanks,
-Orson
-
->>
->> Thanks,
->> Mark.
->> --
->
-> Hi, Mark
->
-> Ok, I'll check it again with our related engineers.
->
-> Actually, I had read all of your comments carefully before sending
-> each version of patches, and I replied you a few days early, I guess
-> you may miss it :)
->
-> If we just implemented psci-0.1 until now, can we submit this path
-> without "compatible = "arm,psci-0.2"", but only with " compatible =
-> "arm,psci" ".
->
->
->
-> Thanks,
-> Chunyan
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
