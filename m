@@ -1,472 +1,77 @@
-From: Andy Yan <andy.yan@rock-chips.com>
-Subject: [PATCH v18 12/12] drm: bridge/dw_hdmi: add rockchip rk3288 support
-Date: Fri,  5 Dec 2014 14:34:19 +0800
-Message-ID: <1417761259-17429-1-git-send-email-andy.yan@rock-chips.com>
-References: <1417760564-16858-1-git-send-email-andy.yan@rock-chips.com>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [GIT PULL] Broadcom STB GISB bus driver for 3.19 (v2)
+Date: Thu, 04 Dec 2014 23:23:49 -0800
+Message-ID: <54815D85.7090409@gmail.com>
+References: <1417220370-469-1-git-send-email-f.fainelli@gmail.com> <2910464.KM7dWcxCmJ@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1417760564-16858-1-git-send-email-andy.yan@rock-chips.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: airlied@linux.ie, Philipp Zabel <p.zabel@pengutronix.de>, heiko@sntech.de, fabio.estevam@freescale.com, rmk+kernel@arm.linux.org.uk
-Cc: Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, Arnd Bergmann <arnd@arndb.de>, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, jay.xu@rock-chips.com, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, mark.yao@rock-chips.com, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, djkurtz@google.com, Kumar Gala <galak@codeaurora.org>, Andy Yan <andy.yan@rock-chips.com>, Shawn Guo <shawn.guo@linaro.org>, vladimir_zapolskiy@mentor.com, Lucas Stach <l.stach@pengutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2910464.KM7dWcxCmJ@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Rockchip RK3288 hdmi is compatible with dw_hdmi
+Le 04/12/2014 07:44, Arnd Bergmann a =C3=A9crit :
+> On Friday 28 November 2014 16:19:30 Florian Fainelli wrote:
+>> This pull request contains the following changes to the Broadcom GIS=
+B bus
+>> arbiter from Kevin Cernekee:
+>>
+>> - Extend brcmstb GISB bus driver to work on MIPS (currently ARM-only=
+) and support
+>>   65nm and 40nm MIPS-based chips such as: BCM7038, BCM7400 and BCM74=
+35
+>=20
+> Pulled into next/drivers, thanks!
 
-this patch is depend on patch by Mark Yao
-drm: rockchip: Add basic drm driver
-see https://lkml.org/lkml/2014/12/2/161
+Thanks! You may have to resolve a conflict when you merge
+brcm/stb-smp-uart with next/drivers for this file, especially with the
+commit below:
 
-Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+203bb85ed605e43eadca62afb3a8cd128a8ec10a ("bus: brcmstb_gisb: save and
+restore GISB timeout")
 
----
+for brcmstb_gisb_arb_suspend() and
+brcmstb_gisb_arb_resume_noirq() which still use the ioread32/iowrite32
+accessors instead of those introduced later on by Kevin: gisb_read() an=
+d
+gisb_write. The merge resolution looks like this:
 
-Changes in v18: None
-Changes in v17:
-- parse resource and irq in platform driver
 
-Changes in v16: None
-Changes in v15:
-- remove THIS_MODULE in platform driver
+#ifdef CONFIG_PM_SLEEP
+static int brcmstb_gisb_arb_suspend(struct device *dev)
+{
+        struct platform_device *pdev =3D to_platform_device(dev);
+        struct brcmstb_gisb_arb_device *gdev =3D platform_get_drvdata(p=
+dev);
 
-Changes in v14: None
-Changes in v13: None
-Changes in v12:
-- add comment for the depend on patch
+        gdev->saved_timeout =3D gisb_read(gdev, ARB_TIMER);
 
-Changes in v11: None
-Changes in v10:
-- add more display mode support mpll configuration for rk3288
+        return 0;
+}
 
-Changes in v9:
-- move some phy configuration to platform driver
+/* Make sure we provide the same timeout value that was configured
+before, and
+ * do this before the GISB timeout interrupt handler has any chance to =
+run.
+ */
+static int brcmstb_gisb_arb_resume_noirq(struct device *dev)
+{
+        struct platform_device *pdev =3D to_platform_device(dev);
+        struct brcmstb_gisb_arb_device *gdev =3D platform_get_drvdata(p=
+dev);
 
-Changes in v8: None
-Changes in v7: None
-Changes in v6: None
-Changes in v5: None
-Changes in v4: None
-Changes in v3: None
+        gisb_write(gdev, gdev->saved_timeout, ARB_TIMER);
 
- drivers/gpu/drm/bridge/dw_hdmi.c            |   3 +
- drivers/gpu/drm/rockchip/Kconfig            |  10 +
- drivers/gpu/drm/rockchip/Makefile           |   2 +
- drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c | 341 ++++++++++++++++++++++++++++
- include/drm/bridge/dw_hdmi.h                |   1 +
- 5 files changed, 357 insertions(+)
- create mode 100644 drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
+        return 0;
+}
 
-diff --git a/drivers/gpu/drm/bridge/dw_hdmi.c b/drivers/gpu/drm/bridge/dw_hdmi.c
-index cecc46a..01c95a8 100644
---- a/drivers/gpu/drm/bridge/dw_hdmi.c
-+++ b/drivers/gpu/drm/bridge/dw_hdmi.c
-@@ -852,6 +852,9 @@ static int hdmi_phy_configure(struct dw_hdmi *hdmi, unsigned char prep,
- 	dw_hdmi_phy_gen2_txpwron(hdmi, 1);
- 	dw_hdmi_phy_gen2_pddq(hdmi, 0);
- 
-+	if (hdmi->dev_type == RK3288_HDMI)
-+		dw_hdmi_phy_enable_spare(hdmi, 1);
-+
- 	/*Wait for PHY PLL lock */
- 	msec = 5;
- 	do {
-diff --git a/drivers/gpu/drm/rockchip/Kconfig b/drivers/gpu/drm/rockchip/Kconfig
-index ca9f085..6ebebe8 100644
---- a/drivers/gpu/drm/rockchip/Kconfig
-+++ b/drivers/gpu/drm/rockchip/Kconfig
-@@ -15,3 +15,13 @@ config DRM_ROCKCHIP
- 	  management to userspace. This driver does not provide
- 	  2D or 3D acceleration; acceleration is performed by other
- 	  IP found on the SoC.
-+
-+config ROCKCHIP_DW_HDMI
-+        bool "Rockchip specific extensions for Synopsys DW HDMI"
-+        depends on DRM_ROCKCHIP
-+        select DRM_DW_HDMI
-+        help
-+	  This selects support for Rockchip SoC specific extensions
-+	  for the Synopsys DesignWare HDMI driver. If you want to
-+	  enable HDMI on RK3288 based SoC, you should selet this
-+	  option.
-diff --git a/drivers/gpu/drm/rockchip/Makefile b/drivers/gpu/drm/rockchip/Makefile
-index 2cb0672..beed7df 100644
---- a/drivers/gpu/drm/rockchip/Makefile
-+++ b/drivers/gpu/drm/rockchip/Makefile
-@@ -5,4 +5,6 @@
- rockchipdrm-y := rockchip_drm_drv.o rockchip_drm_fb.o rockchip_drm_fbdev.o \
- 		rockchip_drm_gem.o
- 
-+rockchipdrm-$(CONFIG_ROCKCHIP_DW_HDMI) += dw_hdmi-rockchip.o
-+
- obj-$(CONFIG_DRM_ROCKCHIP) += rockchipdrm.o rockchip_drm_vop.o
-diff --git a/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c b/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
-new file mode 100644
-index 0000000..11d54b0
---- /dev/null
-+++ b/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
-@@ -0,0 +1,341 @@
-+/*
-+ * Copyright (c) 2014, Fuzhou Rockchip Electronics Co., Ltd
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/regmap.h>
-+#include <drm/drm_of.h>
-+#include <drm/drmP.h>
-+#include <drm/drm_crtc_helper.h>
-+#include <drm/drm_edid.h>
-+#include <drm/drm_encoder_slave.h>
-+#include <drm/bridge/dw_hdmi.h>
-+
-+#include "rockchip_drm_drv.h"
-+#include "rockchip_drm_vop.h"
-+
-+#define GRF_SOC_CON6                    0x025c
-+#define HDMI_SEL_VOP_LIT                (1 << 4)
-+
-+struct rockchip_hdmi {
-+	struct device *dev;
-+	struct regmap *regmap;
-+	struct drm_encoder encoder;
-+};
-+
-+#define to_rockchip_hdmi(x)	container_of(x, struct rockchip_hdmi, x)
-+
-+static const struct dw_hdmi_mpll_config rockchip_mpll_cfg[] = {
-+	{
-+		27000000, {
-+			{ 0x00b3, 0x0000},
-+			{ 0x2153, 0x0000},
-+			{ 0x40f3, 0x0000}
-+		},
-+	}, {
-+		36000000, {
-+			{ 0x00b3, 0x0000},
-+			{ 0x2153, 0x0000},
-+			{ 0x40f3, 0x0000}
-+		},
-+	}, {
-+		40000000, {
-+			{ 0x00b3, 0x0000},
-+			{ 0x2153, 0x0000},
-+			{ 0x40f3, 0x0000}
-+		},
-+	}, {
-+		54000000, {
-+			{ 0x0072, 0x0001},
-+			{ 0x2142, 0x0001},
-+			{ 0x40a2, 0x0001},
-+		},
-+	}, {
-+		65000000, {
-+			{ 0x0072, 0x0001},
-+			{ 0x2142, 0x0001},
-+			{ 0x40a2, 0x0001},
-+		},
-+	}, {
-+		66000000, {
-+			{ 0x013e, 0x0003},
-+			{ 0x217e, 0x0002},
-+			{ 0x4061, 0x0002}
-+		},
-+	}, {
-+		74250000, {
-+			{ 0x0072, 0x0001},
-+			{ 0x2145, 0x0002},
-+			{ 0x4061, 0x0002}
-+		},
-+	}, {
-+		83500000, {
-+			{ 0x0072, 0x0001},
-+		},
-+	}, {
-+		108000000, {
-+			{ 0x0051, 0x0002},
-+			{ 0x2145, 0x0002},
-+			{ 0x4061, 0x0002}
-+		},
-+	}, {
-+		106500000, {
-+			{ 0x0051, 0x0002},
-+			{ 0x2145, 0x0002},
-+			{ 0x4061, 0x0002}
-+		},
-+	}, {
-+		146250000, {
-+			{ 0x0051, 0x0002},
-+			{ 0x2145, 0x0002},
-+			{ 0x4061, 0x0002}
-+		},
-+	}, {
-+		148500000, {
-+			{ 0x0051, 0x0003},
-+			{ 0x214c, 0x0003},
-+			{ 0x4064, 0x0003}
-+		},
-+	}, {
-+		~0UL, {
-+			{ 0x00a0, 0x000a },
-+			{ 0x2001, 0x000f },
-+			{ 0x4002, 0x000f },
-+		},
-+	}
-+};
-+
-+static const struct dw_hdmi_curr_ctrl rockchip_cur_ctr[] = {
-+	/*      pixelclk    bpp8    bpp10   bpp12 */
-+	{
-+		40000000,  { 0x0018, 0x0018, 0x0018 },
-+	}, {
-+		65000000,  { 0x0028, 0x0028, 0x0028 },
-+	}, {
-+		66000000,  { 0x0038, 0x0038, 0x0038 },
-+	}, {
-+		74250000,  { 0x0028, 0x0038, 0x0038 },
-+	}, {
-+		83500000,  { 0x0028, 0x0038, 0x0038 },
-+	}, {
-+		146250000, { 0x0038, 0x0038, 0x0038 },
-+	}, {
-+		148500000, { 0x0000, 0x0038, 0x0038 },
-+	}, {
-+		~0UL,      { 0x0000, 0x0000, 0x0000},
-+	}
-+};
-+
-+static const struct dw_hdmi_sym_term rockchip_sym_term[] = {
-+	/*pixelclk   symbol   term*/
-+	{ 74250000,  0x8009, 0x0004 },
-+	{ 148500000, 0x8029, 0x0004 },
-+	{ 297000000, 0x8039, 0x0005 },
-+	{ ~0UL,	     0x0000, 0x0000 }
-+};
-+
-+static int rockchip_hdmi_parse_dt(struct rockchip_hdmi *hdmi)
-+{
-+	struct device_node *np = hdmi->dev->of_node;
-+
-+	hdmi->regmap = syscon_regmap_lookup_by_phandle(np, "rockchip,grf");
-+	if (IS_ERR(hdmi->regmap)) {
-+		dev_err(hdmi->dev, "Unable to get rockchip,grf\n");
-+		return PTR_ERR(hdmi->regmap);
-+	}
-+
-+	return 0;
-+}
-+
-+static enum drm_mode_status
-+dw_hdmi_rockchip_mode_valid(struct drm_connector *connector,
-+			    struct drm_display_mode *mode)
-+{
-+	const struct dw_hdmi_mpll_config *mpll_cfg = rockchip_mpll_cfg;
-+	int pclk = mode->clock * 1000;
-+	bool valid = false;
-+	int i;
-+
-+	for (i = 0; mpll_cfg[i].mpixelclock != (~0UL); i++) {
-+		if (pclk == mpll_cfg[i].mpixelclock) {
-+			valid = true;
-+			break;
-+		}
-+	}
-+
-+	return (valid) ? MODE_OK : MODE_BAD;
-+}
-+
-+static struct drm_encoder_funcs dw_hdmi_rockchip_encoder_funcs = {
-+	.destroy = drm_encoder_cleanup,
-+};
-+
-+static void dw_hdmi_rockchip_encoder_disable(struct drm_encoder *encoder)
-+{
-+}
-+
-+static bool
-+dw_hdmi_rockchip_encoder_mode_fixup(struct drm_encoder *encoder,
-+				    const struct drm_display_mode *mode,
-+				    struct drm_display_mode *adj_mode)
-+{
-+	return true;
-+}
-+
-+static void dw_hdmi_rockchip_encoder_mode_set(struct drm_encoder *encoder,
-+					      struct drm_display_mode *mode,
-+					      struct drm_display_mode *adj_mode)
-+{
-+}
-+
-+static void dw_hdmi_rockchip_encoder_commit(struct drm_encoder *encoder)
-+{
-+	struct rockchip_hdmi *hdmi = to_rockchip_hdmi(encoder);
-+	u32 val;
-+	int mux;
-+
-+	mux = rockchip_drm_encoder_get_mux_id(hdmi->dev->of_node, encoder);
-+	if (mux)
-+		val = HDMI_SEL_VOP_LIT | (HDMI_SEL_VOP_LIT << 16);
-+	else
-+		val = HDMI_SEL_VOP_LIT << 16;
-+
-+	regmap_write(hdmi->regmap, GRF_SOC_CON6, val);
-+	dev_dbg(hdmi->dev, "vop %s output to hdmi\n",
-+		(mux) ? "LIT" : "BIG");
-+}
-+
-+static void dw_hdmi_rockchip_encoder_prepare(struct drm_encoder *encoder)
-+{
-+	rockchip_drm_crtc_mode_config(encoder->crtc, DRM_MODE_CONNECTOR_HDMIA,
-+				      ROCKCHIP_OUT_MODE_AAAA);
-+}
-+
-+static struct drm_encoder_helper_funcs dw_hdmi_rockchip_encoder_helper_funcs = {
-+	.mode_fixup = dw_hdmi_rockchip_encoder_mode_fixup,
-+	.mode_set   = dw_hdmi_rockchip_encoder_mode_set,
-+	.prepare    = dw_hdmi_rockchip_encoder_prepare,
-+	.commit     = dw_hdmi_rockchip_encoder_commit,
-+	.disable    = dw_hdmi_rockchip_encoder_disable,
-+};
-+
-+static const struct dw_hdmi_plat_data rockchip_hdmi_drv_data = {
-+	.mode_valid = dw_hdmi_rockchip_mode_valid,
-+	.mpll_cfg   = rockchip_mpll_cfg,
-+	.cur_ctr    = rockchip_cur_ctr,
-+	.sym_term   = rockchip_sym_term,
-+	.dev_type   = RK3288_HDMI,
-+};
-+
-+static const struct of_device_id dw_hdmi_rockchip_ids[] = {
-+	{ .compatible = "rockchip,rk3288-dw-hdmi",
-+	  .data = &rockchip_hdmi_drv_data
-+	},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, dw_hdmi_rockchip_dt_ids);
-+
-+static int dw_hdmi_rockchip_bind(struct device *dev, struct device *master,
-+				 void *data)
-+{
-+	struct platform_device *pdev = to_platform_device(dev);
-+	const struct dw_hdmi_plat_data *plat_data;
-+	const struct of_device_id *match;
-+	struct drm_device *drm = data;
-+	struct drm_encoder *encoder;
-+	struct rockchip_hdmi *hdmi;
-+	struct resource *iores;
-+	int irq;
-+	int ret;
-+
-+	if (!pdev->dev.of_node)
-+		return -ENODEV;
-+
-+	hdmi = devm_kzalloc(&pdev->dev, sizeof(*hdmi), GFP_KERNEL);
-+	if (!hdmi)
-+		return -ENOMEM;
-+
-+	match = of_match_node(dw_hdmi_rockchip_ids, pdev->dev.of_node);
-+	plat_data = match->data;
-+	hdmi->dev = &pdev->dev;
-+	encoder = &hdmi->encoder;
-+
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0)
-+		return irq;
-+
-+	iores = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!iores)
-+		return -ENXIO;
-+
-+	platform_set_drvdata(pdev, hdmi);
-+
-+	encoder->possible_crtcs = drm_of_find_possible_crtcs(drm, dev->of_node);
-+	/*
-+	 * If we failed to find the CRTC(s) which this encoder is
-+	 * supposed to be connected to, it's because the CRTC has
-+	 * not been registered yet.  Defer probing, and hope that
-+	 * the required CRTC is added later.
-+	 */
-+	if (encoder->possible_crtcs == 0)
-+		return -EPROBE_DEFER;
-+
-+	ret = rockchip_hdmi_parse_dt(hdmi);
-+	if (ret) {
-+		dev_err(hdmi->dev, "Unable to parse OF data\n");
-+		return ret;
-+	}
-+
-+	drm_encoder_helper_add(encoder, &dw_hdmi_rockchip_encoder_helper_funcs);
-+	drm_encoder_init(drm, encoder, &dw_hdmi_rockchip_encoder_funcs,
-+			 DRM_MODE_ENCODER_TMDS);
-+
-+	return dw_hdmi_bind(dev, master, data, encoder, iores, irq, plat_data);
-+}
-+
-+static void dw_hdmi_rockchip_unbind(struct device *dev, struct device *master,
-+				    void *data)
-+{
-+	return dw_hdmi_unbind(dev, master, data);
-+}
-+
-+static const struct component_ops dw_hdmi_rockchip_ops = {
-+	.bind	= dw_hdmi_rockchip_bind,
-+	.unbind	= dw_hdmi_rockchip_unbind,
-+};
-+
-+static int dw_hdmi_rockchip_probe(struct platform_device *pdev)
-+{
-+	return component_add(&pdev->dev, &dw_hdmi_rockchip_ops);
-+}
-+
-+static int dw_hdmi_rockchip_remove(struct platform_device *pdev)
-+{
-+	component_del(&pdev->dev, &dw_hdmi_rockchip_ops);
-+
-+	return 0;
-+}
-+
-+static struct platform_driver dw_hdmi_rockchip_pltfm_driver = {
-+	.probe  = dw_hdmi_rockchip_probe,
-+	.remove = dw_hdmi_rockchip_remove,
-+	.driver = {
-+		.name = "dwhdmi-rockchip",
-+		.of_match_table = dw_hdmi_rockchip_ids,
-+	},
-+};
-+
-+module_platform_driver(dw_hdmi_rockchip_pltfm_driver);
-+
-+MODULE_AUTHOR("Andy Yan <andy.yan@rock-chips.com>");
-+MODULE_AUTHOR("Yakir Yang <ykk@rock-chips.com>");
-+MODULE_DESCRIPTION("Rockchip Specific DW-HDMI Driver Extension");
-+MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:dwhdmi-rockchip");
-diff --git a/include/drm/bridge/dw_hdmi.h b/include/drm/bridge/dw_hdmi.h
-index b64e58a..5a4f490 100644
---- a/include/drm/bridge/dw_hdmi.h
-+++ b/include/drm/bridge/dw_hdmi.h
-@@ -22,6 +22,7 @@ enum {
- enum dw_hdmi_devtype {
- 	IMX6Q_HDMI,
- 	IMX6DL_HDMI,
-+	RK3288_HDMI,
- };
- 
- struct dw_hdmi_mpll_config {
--- 
-1.9.1
+--
+=46lorian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
