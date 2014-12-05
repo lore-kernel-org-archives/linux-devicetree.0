@@ -1,82 +1,55 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: [PATCH V2] ARM: dts: am57xx-beagle-x15: Add GPIO controlled fan node
-Date: Fri, 5 Dec 2014 11:48:52 -0600
-Message-ID: <1417801732-24620-1-git-send-email-nm@ti.com>
-References: <1417800739-13146-1-git-send-email-nm@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1417800739-13146-1-git-send-email-nm@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, balbi@ti.com, Nishanth Menon <nm@ti.com>
+From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH] OF: DT-Overlay configfs interface (v3)
+Date: Fri, 5 Dec 2014 19:58:27 +0200
+Message-ID: <E64BA68B-A339-4BB2-B453-B8A9165CB9B7@konsulko.com>
+References: <1417605808-23327-1-git-send-email-pantelis.antoniou@konsulko.com> <20141204103104.7D8E0C40992@trevor.secretlab.ca> <8795CB40-87D6-4683-8396-987A49E94574@konsulko.com> <20141205164450.A9294C40B61@trevor.secretlab.ca>
+Mime-Version: 1.0 (Mac OS X Mail 8.1 \(1993\))
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141205164450.A9294C40B61-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-TPS gpio now controls a 5v 500mA TL5209 regulator which may be supply
-a fan (such as AFB02505HHB) over J1 connector for various purposes.
-Provide device tree node to enable the same.
+Hi Grant,
 
-Signed-off-by: Nishanth Menon <nm@ti.com>
----
+> On Dec 5, 2014, at 18:44 , Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> w=
+rote:
+>>=20
+[snip]
 
-V2: review comment updates
-	review comments update
-		- Sanitized outlook-ified name back to normal ;) 
-		- removed unnecessary pinctrl-names property.
-V1: https://patchwork.kernel.org/patch/5444911/
+>> For instance, if the user issued a load request for a path in a cont=
+ainer
+>> which is the namespace under which the firmware file is located? Is =
+it the
+>> non-container filesystem, or is it under the container filesystem th=
+at
+>> issued the request. The firmware layer does not have an API to disce=
+rn.
+>=20
+> Wait, what? Why on earth would you want to expose this interface in a=
+ container?
+>=20
+
+It was a complaint raised.=20
+
+Look at this thread.
+
+http://permalink.gmane.org/gmane.linux.documentation/27655
 
 
-Depends on the following:
-https://patchwork.kernel.org/patch/5439201/
-https://patchwork.kernel.org/patch/5439191/
 
-enable and disable can be controlled by (post the RPM, it finds
-closest match - even a 1 will do)
+> g.
+>=20
 
-echo '13000' > /sys/class/hwmon/hwmon0/fan1_target
-and
-echo '0' > /sys/class/hwmon/hwmon0/fan1_target
+Regards
 
-Test log: http://slexy.org/view/s2T0ajh46z
+=E2=80=94 Pantelis
 
-requires CONFIG_GPIO_PALMAS and CONFIG_SENSORS_GPIO_FAN to be operational
-Applies on 
-https://git.kernel.org/cgit/linux/kernel/git/tmlind/linux-omap.git/log/?h=omap-for-v3.19/dt-v2
-
- arch/arm/boot/dts/am57xx-beagle-x15.dts |   14 ++++++++++++++
- 1 file changed, 14 insertions(+)
-
-diff --git a/arch/arm/boot/dts/am57xx-beagle-x15.dts b/arch/arm/boot/dts/am57xx-beagle-x15.dts
-index 49edbda..4e55e94 100644
---- a/arch/arm/boot/dts/am57xx-beagle-x15.dts
-+++ b/arch/arm/boot/dts/am57xx-beagle-x15.dts
-@@ -80,6 +80,14 @@
- 			default-state = "off";
- 		};
- 	};
-+
-+	gpio_fan {
-+		/* Based on 5v 500mA AFB02505HHB */
-+		compatible = "gpio-fan";
-+		gpios =  <&tps659038_gpio 1 GPIO_ACTIVE_HIGH>;
-+		gpio-fan,speed-map = <0    0
-+				      13000 1>;
-+	};
- };
- 
- &dra7_pmx_core {
-@@ -314,6 +322,12 @@
- 			wakeup-source;
- 			ti,palmas-long-press-seconds = <12>;
- 		};
-+
-+		tps659038_gpio: tps659038_gpio {
-+			compatible = "ti,palmas-gpio";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+		};
- 	};
- 
- 	tmp102: tmp102@48 {
--- 
-1.7.9.5
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
