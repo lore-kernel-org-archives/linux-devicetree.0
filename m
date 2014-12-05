@@ -1,57 +1,46 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v4] scsi: ufs: add support of generic PHY and ICE in Qualcomm
- chips
-Date: Fri, 5 Dec 2014 20:28:01 +0530
-Message-ID: <5481C7F9.1020909@ti.com>
-References: <1417104021-2997-1-git-send-email-ygardi@codeaurora.org> <20141204155451.GA29255@infradead.org>
+From: Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: at91/dt: sam9263: Fix typo: ac91_clk -> ac97_clk
+Date: Fri, 05 Dec 2014 16:00:27 +0100
+Message-ID: <2676241.BfXNcaGQ7Q@kongar>
+References: <1417789016-20001-1-git-send-email-alexanders83@web.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-scsi-owner@vger.kernel.org>
-In-Reply-To: <20141204155451.GA29255@infradead.org>
-Sender: linux-scsi-owner@vger.kernel.org
-To: Christoph Hellwig <hch@infradead.org>, Yaniv Gardi <ygardi@codeaurora.org>
-Cc: James.Bottomley@HansenPartnership.com, linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org, linux-arm-msm@vger.kernel.org, santoshsy@gmail.com, linux-scsi-owner@vger.kernel.org, subhashj@codeaurora.org, noag@codeaurora.org, draviv@codeaurora.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vinayak Holikatti <vinholikatti@gmail.com>, "James E.J. Bottomley" <JBottomley@parallels.com>, Grant Likely <grant.likely@linaro.org>, Christoph Hellwig <hch@lst.de>, Sujit Reddy Thumma <sthumma@codeaurora.org>, Raviv Shvili <rshvili@codeaurora.org>, Sahitya Tummala <stummala@codeaurora.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1417789016-20001-1-git-send-email-alexanders83-S0/GAf8tV78@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Friday 05 December 2014, 15:16:55 wrote Alexander Stein:
+> That clock should be called ac97_clk.
+> 
+> Signed-off-by: Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/at91sam9263.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/at91sam9263.dtsi b/arch/arm/boot/dts/at91sam9263.dtsi
+> index 7989756..5ed2810 100644
+> --- a/arch/arm/boot/dts/at91sam9263.dtsi
+> +++ b/arch/arm/boot/dts/at91sam9263.dtsi
+> @@ -294,7 +294,7 @@
+>  						reg = <17>;
+>  					};
+>  
+> -					ac91_clk: ac97_clk {
+> +					ac97_clk: ac97_clk {
+>  						#clock-cells = <0>;
+>  						reg = <18>;
+>  					};
+> 
 
+Please ignore those 2 patches for now. I made a mistake during local rebase.
 
-On Thursday 04 December 2014 09:24 PM, Christoph Hellwig wrote:
-> On Thu, Nov 27, 2014 at 05:59:58PM +0200, Yaniv Gardi wrote:
->> In this change we add support to the generic PHY framework.
->> Two UFS phys are implemented:
->> qmp-20nm and qmp-28nm.
->>
->> Also, the files in this change implement the UFS HW (controller & PHY)
->> specific behavior in Qualcomm chips.
->> Relocation of a few header files is needed in order to expose routines
->> and data structures between PHY driver and UFS driver.
->>
->> Also, this change include the implementation of Inline Crypto Engine (ICE)
->> in Qualcomm chips.
-> 
-> This whole patch is a mess.  It does way to many things in one patch,
-> and it doesn't explain enough of it.
-> 
-> Please explain why you need it.  Especially as the PHY API is a generic
-> phy abstraction, so having to share defintions between the provider and
-> consumer seems wrong.  Even if you need some shared bits keep them to an
-> absolute minium insted of moving so much out of the driver directory.
-> Also if at all possible keep the shared data in a single header under
-> include/linux instead of having lots of global headers in a deep
-> directory structure.
-> 
-> Second split this into patches that do a single things, and explain why
-> you're doing each:
-> 
->  1) header move if/as needed
->  2) add 20nm phy driver
->  3) add 28nm phy driver
->  4) add ufs-qcom driver
->  5) add ufs-qcom-ice support
-> 
-> and so on.
-
-+1
-
--Kishon
+Best regards,
+Alexander
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
