@@ -1,57 +1,146 @@
-From: Andy Yan <andy.yan@rock-chips.com>
-Subject: Re: [PATCH v18 0/12] dw-hdmi: convert imx hdmi to bridge/dw_hdmi
-Date: Sat, 06 Dec 2014 00:31:46 +0800
-Message-ID: <5481DDF2.6010700@rock-chips.com>
-References: <1417760564-16858-1-git-send-email-andy.yan@rock-chips.com>
- <1417787724.3227.10.camel@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1417787724.3227.10.camel@pengutronix.de>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, heiko@sntech.de, airlied@linux.ie, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, Pawel Moll <pawel.moll@arm.com>, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, jay.xu@rock-chips.com, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, rmk+kernel@arm.linux.org.uk, mark.yao@rock-chips.com, fabio.estevam@freescale.com, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, djkurtz@google.com, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@linaro.org>, vladimir_zapolskiy@mentor.com
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH] OF: DT-Overlay configfs interface (v3)
+Date: Fri, 05 Dec 2014 16:44:50 +0000
+Message-ID: <20141205164450.A9294C40B61@trevor.secretlab.ca>
+References: <1417605808-23327-1-git-send-email-pantelis.antoniou@konsulko.com>
+	<20141204103104.7D8E0C40992@trevor.secretlab.ca>
+	<8795CB40-87D6-4683-8396-987A49E94574@konsulko.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <8795CB40-87D6-4683-8396-987A49E94574-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgUGhpbGlwcDoKT24gMjAxNOW5tDEy5pyIMDXml6UgMjE6NTUsIFBoaWxpcHAgWmFiZWwgd3Jv
-dGU6Cj4gSGkgQW5keSwKPgo+IEFtIEZyZWl0YWcsIGRlbiAwNS4xMi4yMDE0LCAxNDoyMiArMDgw
-MCBzY2hyaWViIEFuZHkgWWFuOgo+PiBXZSBmb3VuZCBGcmVlc2NhbGUgaW14NiBhbmQgUm9ja2No
-aXAgcmszMjg4IGFuZCBJbmdlbmljIEpaNDc4MCAoWGJ1cnN0L01JUFMpCj4+IHVzZSB0aGUgaW50
-ZXJmYWNlIGNvbXBhdGlibGUgRGVzaWdud2FyZSBIRE1JIElQLCBidXQgdGhleSBhbHNvIGhhdmUg
-c29tZQo+PiBsaWdodGx5IGRpZmZlcmVuY2VzLCBzdWNoIGFzIHBoeSBwbGwgY29uZmlndXJhdGlv
-biwgcmVnaXN0ZXIgd2lkdGgoaW14IGhkbWkKPj4gcmVnaXN0ZXIgaXMgb25lIGJ5dGUsIGJ1dCBy
-azMyODggaXMgNCBieXRlcyB3aWR0aCBhbmQgY2FuIG9ubHkgYmUgYWNjZXNzZWQKPj4gYnkgd29y
-ZCksIDRLIHN1cHBvcnQoaW14NiBkb2Vzbid0IHN1cHBvcnQgNGssIGJ1dCByazMyODggZG9lcyks
-IGFuZCBIRE1JMi4wCj4+IHN1cHBvcnQuCj4+Cj4+IFRvIHJldXNlIHRoZSBpbXgtaGRtaSBkcml2
-ZXIsIHdlIG1ha2UgdGhpcyBwYXRjaCBzZXQ6Cj4+ICgxKTogZml4IHNvbWUgQ29kaW5nU3R5bGUg
-d2FybmluZyB0byBtYWtlIGNoZWNrcGF0Y2ggaGFwcHkKPj4gKDIpOiBjb252ZXJ0IGlteC1oZG1p
-IHRvIGRybV9icmlkZ2UKPj4gKDMpOiBzcGxpdCBwbGF0Zm9ybSBzcGVjaWZpYyBjb2RlCj4+ICg0
-KTogbW92ZSBpbXgtaGRtaSB0byBicmlkZ2UvZHdfaGRtaQo+PiAoNSk6IGV4dGVuZCBkd19oZG1p
-LmMgdG8gc3VwcG9ydCByazMyODggaGRtaQo+PiAoNik6IGFkZCByb2NrY2hpcCByazMyODggcGxh
-dGZvcm0gc3BlY2lmaWMgY29kZSBkd19oZG1pLXJvY2tjaGlwLmMKPj4KPj4gQ2hhbmdlcyBpbiB2
-MTg6Cj4+IC0gcmVtb3ZlIGEgbXVsdGlwbGUgYmxhbmsgbGluZXMgaW4gaW14LWhkbWkuYwo+PiAt
-IGZpeCBhIGNoZWNrcGF0Y2ggd2FybmluZyBpbiBpbXgtaGRtaV9wbHRmbS5jCj4+IC0gYWRkIHBv
-cnQgYmluZGluZ3MKPj4gLSBjb3JyZWN0IHNvbWUgc3BlbGxpbmcgbWlzdGFrZXMgaW4gZHdfaGRt
-aSBiaW5kaW5ncyBkb2MKPj4gLSBjb3JyZWN0IHNvbWUgc3BlbGxpbmcgbWlzdGFrZXMgaW4gZHdf
-aGRtaS1yb2NrY2hpcCBiaW5kaW5ncyBkb2MKPiBbLi4uXQo+Cj4gSSBhbSBoYXBweSB3aXRoIHRo
-ZSBzZXJpZXMgc28gZmFyLiBQZW5kaW5nIEFja3MgZnJvbSB0aGUgZGV2aWNlIHRyZWUKPiBtYWlu
-dGFpbmVycyBmb3IgdGhlIG5ldyBiaW5kaW5nIGRvY3VtZW50cywgSSdkIGxpa2UgdG8gYXBwbHkg
-ZWl0aGVyIHRoZQo+IHdob2xlIG9mIGl0IG9uIHRvcCBvZgo+ICAgICAgZ2l0Oi8vZ2l0LnBlbmd1
-dHJvbml4LmRlL2dpdC9wemEvbGludXguZ2l0IGlteC1kcm0vbmV4dAo+IG9yIHRha2UgYXQgbGVh
-c3QgdGhlIGkuTVggc3BlY2lmaWMgcGF0Y2hlcyAoMS01KSBiZWNhdXNlIG9mIHRoZQo+IGRlcGVu
-ZGVuY3kgb24gdGhlIGlteC1kcm0gT0YgaGVscGVyIGNvbnZlcnNpb24uCj4KPiByZWdhcmRzCj4g
-UGhpbGlwcAo+Cj4KPgo+CiAgSSBhbSB2ZXJ5IGdsYWQgdG8gc2VlIHlvdSBhcmUgaGFwcHkgd2l0
-aCB0aGUgcGF0Y2ggc2V0LCBpdCdzIHdvdWxkIGJlIAp2ZXJ5CiAgbmljZSBpZiB5b3UgY2FuIGFw
-cGx5IGFsbCBvZiBpdC4KICBUaGFua3MgdmVyeSBtdWNoIGZvciB5b3UgcmV2aWV3LgoKCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRldmVsIG1haWxpbmcg
-bGlzdApkZXZlbEBsaW51eGRyaXZlcnByb2plY3Qub3JnCmh0dHA6Ly9kcml2ZXJkZXYubGludXhk
-cml2ZXJwcm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaXZlcmRldi1kZXZlbAo=
+On Thu, 4 Dec 2014 13:30:05 +0200
+, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+ wrote:
+> Hi Grant,
+> 
+> > On Dec 4, 2014, at 12:31 , Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+> > 
+> > Kees,
+> > 
+> > I'm copying you on this email. This is a new interface being proposed
+> > for making live changes to the device tree at runtime, which gives
+> > pretty close to direct control to userspace of the Linux device model.
+> > Userspace can supply a blob that causes devices to get added or removed
+> > from /sys/devices, and can change how a device is accessed. This is
+> > definitely a security concern and I would love to get your opinion on
+> > the interface.
+> > 
+> > Naturally, the interface has been made root-only, but I don't think that
+> > is enough. I think we need a method which parts of the devicetree can be
+> > modified by a devicetree overlay. I've been thinking in terms of adding
+> > allow/deny properties that control whether or not changes can be made
+> > below a particular node, with the default for the whole tree to be
+> > 'deny'. That way the devicetree for the platform can restrict dynamic
+> > change to only the node that need to be modifed.
+> > 
+> > What do you think?
+> > 
+> > Pantelis, I've made comments below on the patch...
+> > 
+> > On Wed,  3 Dec 2014 13:23:28 +0200
+> > , Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+> > wrote:
+> >> Add a runtime interface to using configfs for generic device tree overlay
+> >> usage. With it its possible to use device tree overlays without having
+> >> to use a per-platform overlay manager.
+> >> 
+> >> Please see Documentation/devicetree/configfs-overlays.txt for more info.
+> >> 
+> >> Changes since v2:
+> >> - Removed ifdef CONFIG_OF_OVERLAY (since for now it's required)
+> >> - Created a documentation entry
+> >> - Slight rewording in Kconfig
+> >> 
+> >> Changes since v1:
+> >> - of_resolve() -> of_resolve_phandles().
+> >> 
+> >> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+> >> ---
+> >> Documentation/devicetree/configfs-overlays.txt |  31 +++
+> >> drivers/of/Kconfig                             |   7 +
+> >> drivers/of/Makefile                            |   1 +
+> >> drivers/of/configfs.c                          | 332 +++++++++++++++++++++++++
+> >> 4 files changed, 371 insertions(+)
+> >> create mode 100644 Documentation/devicetree/configfs-overlays.txt
+> >> create mode 100644 drivers/of/configfs.c
+> >> 
+> >> diff --git a/Documentation/devicetree/configfs-overlays.txt b/Documentation/devicetree/configfs-overlays.txt
+> >> new file mode 100644
+> >> index 0000000..5fa43e0
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/configfs-overlays.txt
+> >> @@ -0,0 +1,31 @@
+> >> +Howto use the configfs overlay interface.
+> >> +
+> >> +A device-tree configfs entry is created in /config/device-tree/overlays
+> >> +and and it is manipulated using standard file system I/O.
+> >> +Note that this is a debug level interface, for use by developers and
+> >> +not necessarily something accessed by normal users due to the
+> >> +security implications of having direct access to the kernel's device tree.
+> >> +
+> >> +* To create an overlay you mkdir the directory:
+> >> +
+> >> +	# mkdir /config/device-tree/overlays/foo
+> >> +
+> >> +* Either you echo the overlay firmware file to the path property file.
+> >> +
+> >> +	# echo foo.dtbo >/config/device-tree/overlays/foo/path
+> >> +
+> >> +* Or you cat the contents of the overlay to the dtbo file
+> >> +
+> >> +	# cat foo.dtbo >/config/device-tree/overlays/foo/dtbo
+> >> +
+> >> +The overlay file will be applied, and devices will be created/destroyed
+> >> +as required.
+> >> +
+> >> +To remove it simply rmdir the directory.
+> >> +
+> >> +	# rmdir /config/device-tree/overlays/foo
+> >> +
+> >> +The rationalle of the dual interface (firmware & direct copy) is that each is
+> > 
+> > sp. rationale
+> > 
+> 
+> OK,
+> 
+> >> +better suited to different use patterns. The firmware interface is what's
+> >> +intended to be used by hardware managers in the kernel, while the copy interface
+> >> +make sense for developers (since it avoids problems with namespaces).
+> > 
+> > The distinction between developer and production interfaces is
+> > unfortunately meaningless in the real world. The developer interface
+> > will get used in production if it is there, and having two interfaces
+> > means we have to support two interfaces that do /exactly the same
+> > thing/.
+> > 
+> > One interface only please.
+> > 
+> 
+> I wish it was so simple :/
+> 
+> 
+> > What are the problems with namespaces that you see with the firmware
+> > interface?
+> > 
+> 
+> When passing a path to a driver, which namespace are you going to use
+> to perform the lookup?
+> 
+> For instance, if the user issued a load request for a path in a container
+> which is the namespace under which the firmware file is located? Is it the
+> non-container filesystem, or is it under the container filesystem that
+> issued the request. The firmware layer does not have an API to discern.
+
+Wait, what? Why on earth would you want to expose this interface in a container?
+
+g.
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
