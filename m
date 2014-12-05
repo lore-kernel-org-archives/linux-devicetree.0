@@ -1,87 +1,60 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [GIT PULL] Broadcom STB GISB bus driver for 3.19 (v2)
-Date: Fri, 05 Dec 2014 10:54:17 +0100
-Message-ID: <6133066.hrdnRxXNp1@wuerfel>
-References: <1417220370-469-1-git-send-email-f.fainelli@gmail.com> <2910464.KM7dWcxCmJ@wuerfel> <54815D85.7090409@gmail.com>
+From: "Anson.Huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Anson.Huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH 2/2] arm: dts: imx6dl: correct cpufreq volt/freq table
+Date: Fri, 5 Dec 2014 09:58:15 +0000
+Message-ID: <BN1PR0301MB06282A4A937E613A778CF6A5FF790@BN1PR0301MB0628.namprd03.prod.outlook.com>
+References: <1417767829-11314-1-git-send-email-b20788@freescale.com>
+	 <1417767829-11314-2-git-send-email-b20788@freescale.com>
+ <1417772355.3227.3.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54815D85.7090409-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1417772355.3227.3.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 04 December 2014 23:23:49 Florian Fainelli wrote:
-> Le 04/12/2014 07:44, Arnd Bergmann a =E9crit :
-> > On Friday 28 November 2014 16:19:30 Florian Fainelli wrote:
-> >> This pull request contains the following changes to the Broadcom G=
-ISB bus
-> >> arbiter from Kevin Cernekee:
-> >>
-> >> - Extend brcmstb GISB bus driver to work on MIPS (currently ARM-on=
-ly) and support
-> >>   65nm and 40nm MIPS-based chips such as: BCM7038, BCM7400 and BCM=
-7435
-> >=20
-> > Pulled into next/drivers, thanks!
->=20
-> Thanks! You may have to resolve a conflict when you merge
-> brcm/stb-smp-uart with next/drivers for this file, especially with th=
-e
-> commit below:
->=20
-> 203bb85ed605e43eadca62afb3a8cd128a8ec10a ("bus: brcmstb_gisb: save an=
-d
-> restore GISB timeout")
->=20
-> for brcmstb_gisb_arb_suspend() and
-> brcmstb_gisb_arb_resume_noirq() which still use the ioread32/iowrite3=
-2
-> accessors instead of those introduced later on by Kevin: gisb_read() =
-and
-> gisb_write. The merge resolution looks like this:
->=20
->=20
-> #ifdef CONFIG_PM_SLEEP
-> static int brcmstb_gisb_arb_suspend(struct device *dev)
-> {
->         struct platform_device *pdev =3D to_platform_device(dev);
->         struct brcmstb_gisb_arb_device *gdev =3D platform_get_drvdata=
-(pdev);
->=20
->         gdev->saved_timeout =3D gisb_read(gdev, ARB_TIMER);
->=20
->         return 0;
-> }
->=20
-> /* Make sure we provide the same timeout value that was configured
-> before, and
->  * do this before the GISB timeout interrupt handler has any chance t=
-o run.
->  */
-> static int brcmstb_gisb_arb_resume_noirq(struct device *dev)
-> {
->         struct platform_device *pdev =3D to_platform_device(dev);
->         struct brcmstb_gisb_arb_device *gdev =3D platform_get_drvdata=
-(pdev);
->=20
->         gisb_write(gdev, gdev->saved_timeout, ARB_TIMER);
->=20
->         return 0;
-> }
-
-I ended up mismerging it actually, but Olof fixed it up. If you have th=
-e
-time, please check that the contents of our for-next branch are correct
-now.
-
-Thanks,
-
-	Arnd
+SGksIFBoaWxpcHANCglUaGUgdGFibGUgeW91IGxpc3RlZCBpcyBWRERBUk1fSU4gYW5kIFZERFNP
+Q19JTiB3aGljaCBpcyBmb3IgZXh0ZXJuYWwgUE1JQyBhbmQgd2Ugbm9ybWFsbHkgZG8gTk9UIGFk
+anVzdCB0aGVtIHdoZW4gY3B1ZnJlcSBjaGFuZ2UsIHdlIG9ubHkgYWRqdXN0IHRoZSBpbnRlcm5l
+bCBMRE8gb3V0cHV0LCBteSB0YWJsZSBpcyBmb3IgVkREQVJNX0NBUCBhbmQgVkREU09DX0NBUCB3
+aGljaCBhcmUgaW4gdGhlIGNvbW1lbnQgY29sdW1uLCBmb3IgTERPIG91dHB1dC4NCg0KRm9yIExE
+TyBlbmFibGVkIG1vZGUsIFZEREFSTS9TT0NfQ0FQIGlzIHRoZSBvdXRwdXQgb2YgTERPLCB3ZSBw
+YXNzIHRoaXMgdGFibGUgdG8ga2VybmVsIG9wcC4NCkZvciBMRE8gYnlwYXNzZWQgbW9kZSwgVkRE
+QVJNL1NPQ19JTiA9IFZEREFSTS9TT0NfQ0FQLg0KIA0KQmVzdCByZWdhcmRzIQ0KQW5zb24gSHVh
+bmcNCg0KDQotLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KRnJvbTogUGhpbGlwcCBaYWJlbCBb
+bWFpbHRvOnAuemFiZWxAcGVuZ3V0cm9uaXguZGVdIA0KU2VudDogMjAxNC0xMi0wNSA1OjM5IFBN
+DQpUbzogSHVhbmcgWW9uZ2NhaS1CMjA3ODgNCkNjOiBzaGF3bi5ndW9AbGluYXJvLm9yZzsga2Vy
+bmVsQHBlbmd1dHJvbml4LmRlOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZw0KU3ViamVjdDog
+UmU6IFtQQVRDSCAyLzJdIGFybTogZHRzOiBpbXg2ZGw6IGNvcnJlY3QgY3B1ZnJlcSB2b2x0L2Zy
+ZXEgdGFibGUNCg0KQW0gRnJlaXRhZywgZGVuIDA1LjEyLjIwMTQsIDE2OjIzICswODAwIHNjaHJp
+ZWIgQW5zb24gSHVhbmc6DQo+IEN1cnJlbnRseSB0aGUgY3B1ZnJlcSB2b2x0L2ZyZXEgdGFibGUg
+d2UgdXNlZCBpcyBmb3IgTERPIGVuYWJsZSBtb2RlLCANCj4gYWNjb3JkaW5nIHRvIGxhdGVzdCBk
+YXRhc2hlZXQgUmV2LiAzLCAwMy8yMDE0LCB0aGUgdm9sdC9mcmVxIHRhYmxlIGlzIA0KPiBhcyBi
+ZWxvdzoNCj4gDQo+IExETyBlbmFibGVkKG1pbiB2YWx1ZSk6DQo+IDk5Nk1IejogVkREQVJNOiAx
+LjIyNVYsIFZERFNPQzogMS4xNTBWOw0KPiA3OTJNSHo6IFZEREFSTTogMS4xNTBWLCBWRERTT0M6
+IDEuMTUwVjsNCj4gMzk2TUh6OiBWRERBUk06IDEuMDUwViwgVkREU09DOiAxLjE1MFY7DQoNCkZy
+b20gd2hpY2ggZGF0YXNoZWV0IGlzIHRoaXM/IEkgZmluZCBpdCB1bmxpa2VseSB0aGF0IHRoZSBM
+RE8gZW5hYmxlZCB2YWx1ZXMgYXJlIG5vdCBsYXJnZXIgdGhhbiB0aGUgTERPIGJ5cGFzc2VkIG9u
+ZXMuIEkganVzdCBoYWQgYSBsb29rIGF0IHRoZSAiaS5NWFNvbG8vNkR1YWxMaXRlIEF1dG9tb3Rp
+dmUgYW5kIEluZm90YWlubWVudCBBcHBsaWNhdGlvbnMgUHJvY2Vzc29ycyIgRGF0YXNoZWV0IChJ
+TVg2U0RMQUVDKSBSZXYuIDMsIDAzLzIwMTQgYW5kIHRoZSAiaS5NWCA2U29sby82RHVhbExpdGUg
+QXBwbGljYXRpb25zIFByb2Nlc3NvcnMgZm9yIENvbnN1bWVyIFByb2R1Y3RzIiBEYXRhc2hlZXQN
+CihJTVg2U0RMQ0VDKSBSZXYuIDMsIDAzLzIwMTQsIGFuZCB0aGV5IGJvdGggaGF2ZSBkaWZmZXJl
+bnQgdmFsdWVzIGluIFRhYmxlIDkgKE9wZXJhdGluZyBSYW5nZXMpIGZvciB0aGUgTERPIGVuYWJs
+ZWQgY2FzZToNCg0KTERPIGVuYWJsZWQobWluIHZhbHVlKToNCjk5Nk1IejogVkREQVJNOiAxLjM1
+MFYsIFZERFNPQzogMS4yNzVWOw0KNzkyTUh6OiBWRERBUk06IDEuMjc1ViwgVkREU09DOiAxLjI3
+NVY7DQozOTZNSHo6IFZEREFSTTogMS4xNzVWLCBWRERTT0M6IDEuMjc1VjsNCg0KPiBMRE8gYnlw
+YXNzZWQobWluIHZhbHVlKToNCj4gOTk2TUh6OiBWRERBUk06IDEuMjUwViwgVkREU09DOiAxLjE1
+MFY7DQo+IDc5Mk1IejogVkREQVJNOiAxLjE1MFYsIFZERFNPQzogMS4xNTBWOw0KPiAzOTZNSHo6
+IFZEREFSTTogMS4wNTBWLCBWRERTT0M6IDEuMTUwVjsNCj4gDQo+IEFkZGluZyAyNW1WIHRvIGNv
+dmVyIGJvYXJkIElSIGRyb3AsIGZvciBMRE8gZW5hYmxlZCBtb2RlIG9mIDk5Nk1IeiwgDQo+IFZE
+REFSTSBzaG91bGQgYmUgMS4yNTBWLCBzbyB0aGlzIHBhdGNoIHVwZGF0ZXMgaXQuDQo+IA0KPiBT
+aWduZWQtb2ZmLWJ5OiBBbnNvbiBIdWFuZyA8YjIwNzg4QGZyZWVzY2FsZS5jb20+DQoNCnJlZ2Fy
+ZHMNClBoaWxpcHANCg0K
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
