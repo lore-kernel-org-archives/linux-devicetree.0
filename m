@@ -1,56 +1,57 @@
-From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/3] drivers:input:ps2 Added sunxi A20 ps2
- driver, changed makefile and Kconfig
-Date: Fri, 05 Dec 2014 07:53:46 -0800
-Message-ID: <59842F96-3A97-4DBE-9A92-10BFA9179E48@gmail.com>
-References: <1417647224-27950-1-git-send-email-VishnuPatekar0510@gmail.com> <12237550.afophX20rO@wuerfel> <63D786FF-B293-4FC1-AD71-D99515DE8E3D@gmail.com> <2906898.Fr1ixVkiAI@wuerfel>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Andy Yan <andy.yan@rock-chips.com>
+Subject: Re: [PATCH v18 0/12] dw-hdmi: convert imx hdmi to bridge/dw_hdmi
+Date: Sat, 06 Dec 2014 00:31:46 +0800
+Message-ID: <5481DDF2.6010700@rock-chips.com>
+References: <1417760564-16858-1-git-send-email-andy.yan@rock-chips.com>
+ <1417787724.3227.10.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDP6N55ZUYDRBE5KQ6SAKGQE5DB2NKA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <2906898.Fr1ixVkiAI@wuerfel>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, vishnupatekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, vishnupatekar <VishnuPatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, jdelvare-l3A5Bk7waGM@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1417787724.3227.10.camel@pengutronix.de>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, heiko@sntech.de, airlied@linux.ie, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, Pawel Moll <pawel.moll@arm.com>, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, jay.xu@rock-chips.com, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, rmk+kernel@arm.linux.org.uk, mark.yao@rock-chips.com, fabio.estevam@freescale.com, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, djkurtz@google.com, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@linaro.org>, vladimir_zapolskiy@mentor.com
 List-Id: devicetree@vger.kernel.org
 
-On December 5, 2014 7:50:18 AM PST, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
->On Friday 05 December 2014 07:01:17 Dmitry Torokhov wrote:
->> 
->> On December 5, 2014 2:33:11 AM PST, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
->wrote:
->> >On Thursday 04 December 2014 04:23:44 vishnupatekar wrote:
->> >> +
->> >> +struct sunxips2data {
->> >> +    int irq;
->> >> +    spinlock_t ps2_lock;
->> >> +    void __iomem *base_address;     /* virt address of control
->registers*/
->> >> +    struct serio *serio;            /* serio*/
->> >> +    struct device *dev;
->> >> +    struct  clk     *pclk;
->> >> +};
->> >
->> >As this is dynamically allocated, better embed the serio member
->> >directly to avoid allocating both separately.
->> 
->> That would be wrong - serio is refcounted and it may outlive instance
->of sunxips2data you embedded it into.
->
->Ok, I see. I guess in this case the use of devm_kzalloc for serio is a
->bug,
->because that would lead to a double free upon module unload, right?
->
-
-Exactly. I already mentioned that in my review.
-
-Thanks.
-
--- 
-Dmitry
+SGkgUGhpbGlwcDoKT24gMjAxNOW5tDEy5pyIMDXml6UgMjE6NTUsIFBoaWxpcHAgWmFiZWwgd3Jv
+dGU6Cj4gSGkgQW5keSwKPgo+IEFtIEZyZWl0YWcsIGRlbiAwNS4xMi4yMDE0LCAxNDoyMiArMDgw
+MCBzY2hyaWViIEFuZHkgWWFuOgo+PiBXZSBmb3VuZCBGcmVlc2NhbGUgaW14NiBhbmQgUm9ja2No
+aXAgcmszMjg4IGFuZCBJbmdlbmljIEpaNDc4MCAoWGJ1cnN0L01JUFMpCj4+IHVzZSB0aGUgaW50
+ZXJmYWNlIGNvbXBhdGlibGUgRGVzaWdud2FyZSBIRE1JIElQLCBidXQgdGhleSBhbHNvIGhhdmUg
+c29tZQo+PiBsaWdodGx5IGRpZmZlcmVuY2VzLCBzdWNoIGFzIHBoeSBwbGwgY29uZmlndXJhdGlv
+biwgcmVnaXN0ZXIgd2lkdGgoaW14IGhkbWkKPj4gcmVnaXN0ZXIgaXMgb25lIGJ5dGUsIGJ1dCBy
+azMyODggaXMgNCBieXRlcyB3aWR0aCBhbmQgY2FuIG9ubHkgYmUgYWNjZXNzZWQKPj4gYnkgd29y
+ZCksIDRLIHN1cHBvcnQoaW14NiBkb2Vzbid0IHN1cHBvcnQgNGssIGJ1dCByazMyODggZG9lcyks
+IGFuZCBIRE1JMi4wCj4+IHN1cHBvcnQuCj4+Cj4+IFRvIHJldXNlIHRoZSBpbXgtaGRtaSBkcml2
+ZXIsIHdlIG1ha2UgdGhpcyBwYXRjaCBzZXQ6Cj4+ICgxKTogZml4IHNvbWUgQ29kaW5nU3R5bGUg
+d2FybmluZyB0byBtYWtlIGNoZWNrcGF0Y2ggaGFwcHkKPj4gKDIpOiBjb252ZXJ0IGlteC1oZG1p
+IHRvIGRybV9icmlkZ2UKPj4gKDMpOiBzcGxpdCBwbGF0Zm9ybSBzcGVjaWZpYyBjb2RlCj4+ICg0
+KTogbW92ZSBpbXgtaGRtaSB0byBicmlkZ2UvZHdfaGRtaQo+PiAoNSk6IGV4dGVuZCBkd19oZG1p
+LmMgdG8gc3VwcG9ydCByazMyODggaGRtaQo+PiAoNik6IGFkZCByb2NrY2hpcCByazMyODggcGxh
+dGZvcm0gc3BlY2lmaWMgY29kZSBkd19oZG1pLXJvY2tjaGlwLmMKPj4KPj4gQ2hhbmdlcyBpbiB2
+MTg6Cj4+IC0gcmVtb3ZlIGEgbXVsdGlwbGUgYmxhbmsgbGluZXMgaW4gaW14LWhkbWkuYwo+PiAt
+IGZpeCBhIGNoZWNrcGF0Y2ggd2FybmluZyBpbiBpbXgtaGRtaV9wbHRmbS5jCj4+IC0gYWRkIHBv
+cnQgYmluZGluZ3MKPj4gLSBjb3JyZWN0IHNvbWUgc3BlbGxpbmcgbWlzdGFrZXMgaW4gZHdfaGRt
+aSBiaW5kaW5ncyBkb2MKPj4gLSBjb3JyZWN0IHNvbWUgc3BlbGxpbmcgbWlzdGFrZXMgaW4gZHdf
+aGRtaS1yb2NrY2hpcCBiaW5kaW5ncyBkb2MKPiBbLi4uXQo+Cj4gSSBhbSBoYXBweSB3aXRoIHRo
+ZSBzZXJpZXMgc28gZmFyLiBQZW5kaW5nIEFja3MgZnJvbSB0aGUgZGV2aWNlIHRyZWUKPiBtYWlu
+dGFpbmVycyBmb3IgdGhlIG5ldyBiaW5kaW5nIGRvY3VtZW50cywgSSdkIGxpa2UgdG8gYXBwbHkg
+ZWl0aGVyIHRoZQo+IHdob2xlIG9mIGl0IG9uIHRvcCBvZgo+ICAgICAgZ2l0Oi8vZ2l0LnBlbmd1
+dHJvbml4LmRlL2dpdC9wemEvbGludXguZ2l0IGlteC1kcm0vbmV4dAo+IG9yIHRha2UgYXQgbGVh
+c3QgdGhlIGkuTVggc3BlY2lmaWMgcGF0Y2hlcyAoMS01KSBiZWNhdXNlIG9mIHRoZQo+IGRlcGVu
+ZGVuY3kgb24gdGhlIGlteC1kcm0gT0YgaGVscGVyIGNvbnZlcnNpb24uCj4KPiByZWdhcmRzCj4g
+UGhpbGlwcAo+Cj4KPgo+CiAgSSBhbSB2ZXJ5IGdsYWQgdG8gc2VlIHlvdSBhcmUgaGFwcHkgd2l0
+aCB0aGUgcGF0Y2ggc2V0LCBpdCdzIHdvdWxkIGJlIAp2ZXJ5CiAgbmljZSBpZiB5b3UgY2FuIGFw
+cGx5IGFsbCBvZiBpdC4KICBUaGFua3MgdmVyeSBtdWNoIGZvciB5b3UgcmV2aWV3LgoKCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRldmVsIG1haWxpbmcg
+bGlzdApkZXZlbEBsaW51eGRyaXZlcnByb2plY3Qub3JnCmh0dHA6Ly9kcml2ZXJkZXYubGludXhk
+cml2ZXJwcm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaXZlcmRldi1kZXZlbAo=
