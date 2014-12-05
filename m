@@ -1,36 +1,117 @@
-From: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 4/5] ARM: dts: add rk3288 usb PHY
-Date: Fri, 5 Dec 2014 14:47:43 +0100
-Message-ID: <CABgxDoKXdvWX1vWK78VntuJ5Eo29hyYQCBmOZGYEDZAWg0xjGA@mail.gmail.com>
-References: <1417783941-2418-1-git-send-email-lyz@rock-chips.com>
-	<1417783941-2418-5-git-send-email-lyz@rock-chips.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v18 06/12] dt-bindings: add document for dw_hdmi
+Date: Fri, 05 Dec 2014 14:54:53 +0100
+Message-ID: <1417787693.3227.9.camel@pengutronix.de>
+References: <1417760564-16858-1-git-send-email-andy.yan@rock-chips.com>
+	 <1417760834-17141-1-git-send-email-andy.yan@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1417783941-2418-5-git-send-email-lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yunzhi Li <lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, Eddie Cai <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, ulrich.prinz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1417760834-17141-1-git-send-email-andy.yan@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Yan <andy.yan@rock-chips.com>
+Cc: airlied@linux.ie, heiko@sntech.de, fabio.estevam@freescale.com, rmk+kernel@arm.linux.org.uk, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawn.guo@linaro.org>, Josh Boyer <jwboyer@redhat.com>, Sean Paul <seanpaul@chromium.org>, Inki Dae <inki.dae@samsung.com>, Dave Airlie <airlied@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Lucas Stach <l.stach@pengutronix.de>, Zubair.Kakakhel@imgtec.com, djkurtz@google.com, ykk@rock-chips.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, devel@driverdev.osuosl.org, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, jay.xu@rock-chips.com, Pawel Moll <pawel.moll@arm.com>, mark.yao@rock-chips.com, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>v
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Am Freitag, den 05.12.2014, 14:27 +0800 schrieb Andy Yan:
+> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
 
-2014-12-05 13:52 GMT+01:00 Yunzhi Li <lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org>:
-> Add dt nodes for rk3288 usb PHY.
+This binding is mostly a copy of the existing
+Documentation/devicetree/bindings/drm/imx/hdmi.txt, but there is a new
+reg-io-width property to configure the register access bus width and we
+have added new compatibles "rockchip,rk3288-dw-hdmi" and the common
+"snps,dw-hdmi-tx". Could we get an Ack for this and patch 11 by the
+device tree maintainers?
 
-Could you give more context about the changes in the long description ?
-Usually, you need a short and a long description for a commit.
+regards
+Philipp
 
-For example:
-
-short: "ARM: dts: rockchip: add rk3288 usb PHY"
-long: "This patch adds a device_node phy usb for RK3288 SoC. It also
-defines the phy to be used by usbhost and usbotg"
-
-
-
-Romain
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ---
+> 
+> Changes in v18:
+> - add port bindings
+> - correct some spelling mistakes in dw_hdmi bindings doc
+> 
+> Changes in v17: None
+> Changes in v16:
+> - describe ddc-i2c-bus as optional
+> - add common clocks bindings
+> 
+> Changes in v15: None
+> Changes in v14: None
+> Changes in v13: None
+> Changes in v12: None
+> Changes in v11: None
+> Changes in v10: None
+> Changes in v9: None
+> Changes in v8:
+> - correct some spelling mistake
+> - modify ddc-i2c-bus and interrupt description
+> 
+> Changes in v7: None
+> Changes in v6: None
+> Changes in v5: None
+> Changes in v4: None
+> Changes in v3: None
+> 
+>  .../devicetree/bindings/drm/bridge/dw_hdmi.txt     | 50 ++++++++++++++++++++++
+>  1 file changed, 50 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/drm/bridge/dw_hdmi.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/drm/bridge/dw_hdmi.txt b/Documentation/devicetree/bindings/drm/bridge/dw_hdmi.txt
+> new file mode 100644
+> index 0000000..a905c14
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/drm/bridge/dw_hdmi.txt
+> @@ -0,0 +1,50 @@
+> +DesignWare HDMI bridge bindings
+> +
+> +Required properties:
+> +- compatible: platform specific such as:
+> +   * "snps,dw-hdmi-tx"
+> +   * "fsl,imx6q-hdmi"
+> +   * "fsl,imx6dl-hdmi"
+> +   * "rockchip,rk3288-dw-hdmi"
+> +- reg: Physical base address and length of the controller's registers.
+> +- interrupts: The HDMI interrupt number
+> +- clocks, clock-names : must have the phandles to the HDMI iahb and isfr clocks,
+> +  as described in Documentation/devicetree/bindings/clock/clock-bindings.txt,
+> +  the clocks are soc specific, the clock-names should be "iahb", "isfr"
+> +-port@[X]: SoC specific port nodes with endpoint definitions as defined
+> +   in Documentation/devicetree/bindings/media/video-interfaces.txt,
+> +   please refer to the SoC specific binding document:
+> +    * Documentation/devicetree/bindings/drm/imx/hdmi.txt
+> +    * Documentation/devicetree/bindings/video/dw_hdmi-rockchip.txt
+> +
+> +Optional properties
+> +- reg-io-width: the width of the reg:1,4, default set to 1 if not present
+> +- ddc-i2c-bus: phandle of an I2C controller used for DDC EDID probing
+> +- clocks, clock-names: phandle to the HDMI CEC clock, name should be "cec"
+> +
+> +Example:
+> +	hdmi: hdmi@0120000 {
+> +		compatible = "fsl,imx6q-hdmi";
+> +		reg = <0x00120000 0x9000>;
+> +		interrupts = <0 115 0x04>;
+> +		gpr = <&gpr>;
+> +		clocks = <&clks 123>, <&clks 124>;
+> +		clock-names = "iahb", "isfr";
+> +		ddc-i2c-bus = <&i2c2>;
+> +
+> +		port@0 {
+> +			reg = <0>;
+> +
+> +			hdmi_mux_0: endpoint {
+> +				remote-endpoint = <&ipu1_di0_hdmi>;
+> +			};
+> +		};
+> +
+> +		port@1 {
+> +			reg = <1>;
+> +
+> +			hdmi_mux_1: endpoint {
+> +				remote-endpoint = <&ipu1_di1_hdmi>;
+> +			};
+> +		};
+> +	};
