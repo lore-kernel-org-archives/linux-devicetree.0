@@ -1,55 +1,51 @@
-From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] OF: DT-Overlay configfs interface (v3)
-Date: Fri, 5 Dec 2014 19:58:27 +0200
-Message-ID: <E64BA68B-A339-4BB2-B453-B8A9165CB9B7@konsulko.com>
-References: <1417605808-23327-1-git-send-email-pantelis.antoniou@konsulko.com> <20141204103104.7D8E0C40992@trevor.secretlab.ca> <8795CB40-87D6-4683-8396-987A49E94574@konsulko.com> <20141205164450.A9294C40B61@trevor.secretlab.ca>
-Mime-Version: 1.0 (Mac OS X Mail 8.1 \(1993\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: rk3288: add arm,cpu-registers-not-fw-configured
+Date: Fri, 5 Dec 2014 10:27:25 -0800
+Message-ID: <20141205182725.GA11755@quad.lixom.net>
+References: <1416941640-324-1-git-send-email-sonnyrao@chromium.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141205164450.A9294C40B61-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1416941640-324-1-git-send-email-sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
+On Tue, Nov 25, 2014 at 10:54:00AM -0800, Sonny Rao wrote:
+> This will enable use of physical arch timers on rk3288, where each
+> core comes out of reset with a different virtual offset.  Using
+> physical timers will help with SMP booting on coreboot and older
+> u-boot and should also allow suspend-resume and cpu-hotplug to work on
+> all firmwares.
+> 
+> Firmware which does initialize the cpu registers properly at boot and
+> cpu-hotplug can remove this property from the device tree.
+> 
+> Signed-off-by: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/rk3288.dtsi | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+> index 0f50d5d..c861f52 100644
+> --- a/arch/arm/boot/dts/rk3288.dtsi
+> +++ b/arch/arm/boot/dts/rk3288.dtsi
+> @@ -139,6 +139,7 @@
+>  
+>  	timer {
+>  		compatible = "arm,armv7-timer";
+> +		arm,cpu-registers-not-fw-configured;
+>  		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
+>  			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
+>  			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
 
-> On Dec 5, 2014, at 18:44 , Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> w=
-rote:
->>=20
-[snip]
-
->> For instance, if the user issued a load request for a path in a cont=
-ainer
->> which is the namespace under which the firmware file is located? Is =
-it the
->> non-container filesystem, or is it under the container filesystem th=
-at
->> issued the request. The firmware layer does not have an API to disce=
-rn.
->=20
-> Wait, what? Why on earth would you want to expose this interface in a=
- container?
->=20
-
-It was a complaint raised.=20
-
-Look at this thread.
-
-http://permalink.gmane.org/gmane.linux.documentation/27655
+Applied, thanks.
 
 
-
-> g.
->=20
-
-Regards
-
-=E2=80=94 Pantelis
-
+-Olof
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
