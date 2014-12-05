@@ -1,45 +1,112 @@
-From: Alexander Stein <alexanders83@web.de>
-Subject: [PATCH 2/2] ARM: at91/dt: sam9263: Add missing clocks to ac97 node
-Date: Fri,  5 Dec 2014 15:16:56 +0100
-Message-ID: <1417789016-20001-2-git-send-email-alexanders83@web.de>
-References: <1417789016-20001-1-git-send-email-alexanders83@web.de>
+From: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v5 0/3] iio: Add Cosmic Circuits ADC support
+Date: Fri, 5 Dec 2014 11:33:05 -0300
+Message-ID: <5481C221.2040900@imgtec.com>
+References: <1417102762-5123-1-git-send-email-ezequiel.garcia@imgtec.com> <54819D3C.7000209@imgtec.com> <4C4CBD60-74E1-4A17-9D93-EDDE8AF33841@kernel.org> <5481B24B.4020507@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1417789016-20001-1-git-send-email-alexanders83@web.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: Alexander Stein <alexanders83@web.de>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5481B24B.4020507-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Pawel.Moll-5wv7dgnIgG8@public.gmane.org, Mark.Rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The clock node specifying 'ac97_clk' was missing.
 
-Signed-off-by: Alexander Stein <alexanders83@web.de>
----
- arch/arm/boot/dts/at91sam9263.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/at91sam9263.dtsi b/arch/arm/boot/dts/at91sam9263.dtsi
-index 5ed2810..2d9d0ad 100644
---- a/arch/arm/boot/dts/at91sam9263.dtsi
-+++ b/arch/arm/boot/dts/at91sam9263.dtsi
-@@ -821,6 +821,8 @@
- 				interrupts = <18 IRQ_TYPE_LEVEL_HIGH 5>;
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&pinctrl_ac97>;
-+				clocks = <&ac97_clk>;
-+				clock-names = "ac97_clk";
- 				status = "disabled";
- 			};
- 
+On 12/05/2014 10:25 AM, Jonathan Cameron wrote:
+> On 05/12/14 13:12, Jonathan Cameron wrote:
+>>
+>>
+>> On December 5, 2014 11:55:40 AM GMT+00:00, Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
+>>> Hi Jonathan,
+>>>
+>>> On 11/27/2014 12:39 PM, Ezequiel Garcia wrote:
+>>>> Changes from v4:
+>>>>
+>>>>   * Added a compile-time dependency on REGULATOR and HAVE_CLK.
+>>>>
+>>>>   * Replaced the silly XOR operation for a proper mask out of the
+>>>>     available channels.
+>>>>
+>>>> Changes from v3:
+>>>>
+>>>>   * Fixed a few style nitpicks as per Hartmut's feedback.
+>>>>
+>>>>   * Used GENMASK() to build the channel mask, which fixes a very
+>>> nasty
+>>>>     bug. Also found by Hartmut.
+>>>>
+>>>> Changes from v2:
+>>>>
+>>>>   * Changed a devicetree property from adc-available-channels to
+>>>>     adc-reserved-channels, so it can be made optional.
+>>>>
+>>>>   * Renamed the driver from cc_10001_xxx to cc10001_xxx so it's
+>>> consistent
+>>>>     with the rest of the kernel style.
+>>>>
+>>>>   * Some more minor cosmetic fixes.
+>>>>
+>>>> Changes from v1:
+>>>>
+>>>>   * Removed unneeded header includes.
+>>>>
+>>>>   * Changed all the names and macros prefix: s/CC_10001_/CC10001_.
+>>>>
+>>>>   * Used .update_scan_mode callback to preallocate the buffer.
+>>>>
+>>>>   * Used indio_dev for the struct iio_dev.
+>>>>
+>>>>   * Only read the regulator voltage when needed.
+>>>>
+>>>>   * Fixed probe() error handling.
+>>>>
+>>>>   * Used for_each_set_bit() instead of open-coding it.
+>>>>
+>>>>   * Name the power-down register as _POWER_UP, to make the code
+>>>>     less silly.
+>>>>
+>>>>   * Error out when no valid sample can be read (i.e. when
+>>> end-of-conversion
+>>>>     poll times out).
+>>>>
+>>>>   * ... plus some assorted code cleaning based on the feedback.
+>>>>
+>>>>
+>>>> Ezequiel Garcia (1):
+>>>>   DT: Add a vendor prefix for Cosmic Circuits
+>>>>
+>>>> Phani Movva (2):
+>>>>   iio: adc: Cosmic Circuits 10001 ADC driver
+>>>>   DT: iio: adc: Add CC_10001 binding documentation
+>>>>
+>>>
+>>> Unless there are any outstanding issues with this series, it'd be great
+>>> to merge it for v3.19.
+>>>
+>>> Thanks!
+>> Sorry too late unfortunately. Merge window opens on Sunday and stuff needs to have
+>>  been in Greg KH's tree for a week before that. Going to be 3.20 now.
+>>
+
+Oh, shoot. I was hoping to be in time for the merge. Being a new driver
+there wasn't much harm in taking it earlier.
+
+> Also, the DT patch could really do with an Ack from Rob.  If Hartmut/Lars
+> want to give a reviewed-by that would be good given they done the legwork
+> on reviewing your driver.
+> 
+> Looks good to me btw.  Just taken a quick look, but little gets past those
+> guys anyway :)
+> 
+
+If at all possible, do you think you area able to pick the patches now
+(but you don't include them in your pull request to Linus) so they are
+linux-next? It'd be good to know they start getting build-test coverage
+soon.
+
+Thanks!
 -- 
-2.2.0
+Ezequiel
