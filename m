@@ -1,101 +1,102 @@
-From: Alexandre Courbot <gnurou@gmail.com>
-Subject: Re: [Patch v2 1/2] gpio: add GPIO hogging mechanism
-Date: Sat, 6 Dec 2014 21:08:36 +0900
-Message-ID: <CAAVeFuL2CYtcDnwnuWD5wfMLGK-GEwBA09BXkhBMFJCjr2rEcg@mail.gmail.com>
-References: <1416527684-19017-1-git-send-email-bparrot@ti.com>
- <1416527684-19017-2-git-send-email-bparrot@ti.com> <CAAVeFu+VZiuzobB7McSAUehKUHJjBv1o8ZpYjSHJAKjr3o5wTA@mail.gmail.com>
- <20141201163639.GI25249@lukather> <CAAVeFuLTupDenZdSi8KO+dYsf-ekcqjsDaQ2GEzYpBG34oF7Zw@mail.gmail.com>
- <CACRpkdZcNcPBYQM438CZJx1gYst9BFBSTj-3Qv2aPGF9pdWa5g@mail.gmail.com>
- <20141202161227.GH30256@lukather> <CAAVeFu+Gms6ptyK6j1Zy_wWg+9URs+9zBu=pOiwiEERO=8NjNw@mail.gmail.com>
- <20141204142741.GQ30256@lukather> <CAAVeFuJTjWPzQYYkV3jW3+h6uigzzeKS9d7pY2cQ-dK119msXg@mail.gmail.com>
- <20141205102427.GU30256@lukather>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH v2 2/3] fpga manager: framework core
+Date: Sat, 6 Dec 2014 13:00:17 +0000
+Message-ID: <CACxGe6sa=ysJAjx5TQZH5sKoas1PkoUUR4zT=Z35+uF6rrk-vw@mail.gmail.com>
+References: <1414007405-32186-1-git-send-email-atull@opensource.altera.com>
+ <1414007405-32186-3-git-send-email-atull@opensource.altera.com> <20141024105200.GA20775@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20141205102427.GU30256@lukather>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Benoit Parrot <bparrot@ti.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, Jiri Prchal <jiri.prchal@aksignal.cz>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20141024105200.GA20775@amd>
+Sender: linux-doc-owner@vger.kernel.org
+To: Pavel Machek <pavel@denx.de>
+Cc: atull@opensource.altera.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, "H. Peter Anvin" <hpa@zytor.com>, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Randy Dunlap <rdunlap@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh+dt@kernel.org>, Ira Snyder <iws@ovro.caltech.edu>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Mark Brown <broonie@kernel.org>, philip@balister.org, rubini <rubini@gnudd.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Jason <jason@lakedaemon.net>, kyle.teske@ni.com, Nicolas Pitre <nico@linaro.org>, "Balbi, Felipe" <balbi@ti.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>, David Brown <davidb@c>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 5, 2014 at 7:24 PM, Maxime Ripard
-<maxime.ripard@free-electrons.com> wrote:
-> On Thu, Dec 04, 2014 at 11:49:19PM +0900, Alexandre Courbot wrote:
->> On Thu, Dec 4, 2014 at 11:27 PM, Maxime Ripard
->> <maxime.ripard@free-electrons.com> wrote:
->> > Hi,
->> >
->> > On Thu, Dec 04, 2014 at 11:15:38PM +0900, Alexandre Courbot wrote:
->> >> On Wed, Dec 3, 2014 at 1:12 AM, Maxime Ripard
->> >> <maxime.ripard@free-electrons.com> wrote:
->> >> > On Tue, Dec 02, 2014 at 03:29:46PM +0100, Linus Walleij wrote:
->> >> >> On Tue, Dec 2, 2014 at 3:13 PM, Alexandre Courbot <gnurou@gmail.com> wrote:
->> >> >> > On Tue, Dec 2, 2014 at 1:36 AM, Maxime Ripard
->> >> >> > <maxime.ripard@free-electrons.com> wrote:
->> >> >>
->> >> >> >> The only thing I'd like to have would be that the request here would
->> >> >> >> be non-exclusive, so that a later driver would still be allowed later
->> >> >> >> on to request that GPIO later on and manage it itself (ideally using
->> >> >> >> the usual gpiod_request function).
->> >> >> >
->> >> >> > Actually we have a plan (and I have some code too) to allow multiple
->> >> >> > consumers per GPIO. Although like Benoit I wonder why you would want
->> >> >> > to hog a GPIO and then request it properly later. Also, that probably
->> >> >> > means we should abandon the hog since it actively drives the line and
->> >> >> > would interfere with the late requested. How to do that correctly is
->> >> >> > not really clear to me.
->> >> >>
->> >> >> I don't get the usecase. A hogged GPIO is per definition hogged.
->> >> >> This sounds more like "initial settings" or something, which is another
->> >> >> usecase altogether.
->> >> >
->> >> > We do have one board where we have a pin (let's say GPIO14 of the bank
->> >> > A) that enables a regulator that will provide VCC the bank B.
->> >> >
->> >> > Now, both banks are handled by the same driver, but in order to have a
->> >> > working output on the bank B, we do need to set GPIO14 as soon as
->> >> > we're probed.
->> >> >
->> >> > Just relying on the usual deferred probing introduces a circular
->> >> > dependency between the gpio-regulator that needs to grab its GPIO from
->> >> > a driver not there yet, and the gpio driver that needs to enable its
->> >> > gpio-regulator.
->> >>
->> >> I don't get it. According to what you said, the following order should
->> >> go through IIUC:
->> >>
->> >> 1) bank A is probed, gpio 14 is available
->> >> 2) gpio-regulator is probed, acquires GPIO 14, regulator for Bank B is available
->> >> 3) bank B is probed, grabs its regulator and turn it on, probes.
->> >>
->> >> What am I missing?
->> >
->> > It would be true if bank A and B were exposed through different
->> > drivers (or at least different instances of the same driver), which is
->> > not the case.
->> >
->> > In our case, banks A and B are handled by the same instance.
->>
->> Ok, so both banks A and B are part of the same device/DT node. Now I
->> think I understand the issue. You need to hog the pin so that bank B
->> will work right after the device is probed.
+On Fri, Oct 24, 2014 at 11:52 AM, Pavel Machek <pavel@denx.de> wrote:
+> Hi!
 >
-> Exactly.
+>> * /sys/class/fpga_manager/<fpga>/firmware
+>>   Name of FPGA image file to load using firmware class.
+>>   $ echo image.rbf > /sys/class/fpga_manager/<fpga>/firmware
 >
->> But you will still have the problem that the regulator device will
->> *not* be available when your device is probed, so you cannot call
->> regulator_get() for bank B anyway. I guess your only choice is to hog
->> that pin and leave it active ad vitam eternam.
->
-> Hmmm, indeed.
->
-> I'll stop boring you with this then :)
+> I .. still don't think this is good idea. What about namespaces?
+> The path corresponds to path in which namespace?
 
-Please *keep* bothering us with any doubt you may have until they are
-all cleared and you are sure this feature will be useful to you.
-Especially since we are designing DT bindings that will have to be
-carried over forever. We really want to get them right, and need input
-of potential users for that.
+I don't understand your concern here. This allows userspace to name
+the FPGA bitstream that the kernel will use during request_firmware(),
+and it will show up as the $FIRMWARE value in the uevent file, but it
+is still the responsibility of userspace to choose what to load, and
+it can freely ignore the setting of $FIRMWARE if it needs to.
 
-Having a few design arguments is a small thing compared to the hassle
-of having to work with unadapted features and bindings.
+The process that actually loads the firmware into the kernel pretty
+much has to run in the normal linux environment. How do namespaces
+come into it? What exact problem do you see?
+
+>
+>> +int fpga_mgr_write(struct fpga_manager *mgr, const char *buf, size_t count)
+>> +{
+>> +     int ret;
+>> +
+>> +     if (test_and_set_bit_lock(FPGA_MGR_BUSY, &mgr->flags))
+>> +             return -EBUSY;
+>> +
+>> +     dev_info(mgr->dev, "writing buffer to %s\n", mgr->name);
+>> +
+>> +     ret = __fpga_mgr_write(mgr, buf, count);
+>> +     clear_bit_unlock(FPGA_MGR_BUSY, &mgr->flags);
+>> +
+>> +     return ret;
+>> +}
+>> +EXPORT_SYMBOL_GPL(fpga_mgr_write);
+>
+> Is the EBUSY -- userspace please try again, but you don't know when to
+> try again -- right interface? I mean, normally kernel would wait, so
+> that userland does not have to poll?
+
+Custom locking schemes are just wrong. A mutex is the right thing to
+do here and then an -EBUSY isn't required.
+
+>
+>> +static ssize_t fpga_mgr_firmware_store(struct device *dev,
+>> +                                    struct device_attribute *attr,
+>> +                                    const char *buf, size_t count)
+>> +{
+>> +     struct fpga_manager *mgr = dev_get_drvdata(dev);
+>> +     unsigned int len;
+>> +     char image_name[NAME_MAX];
+
+Hard coding a string length is a warning sign. That is the sort of
+thing that can memdup() or strdup() can handle.
+
+>> +     int ret;
+>> +
+>> +     /* lose terminating \n */
+>> +     strcpy(image_name, buf);
+>> +     len = strlen(image_name);
+>> +     if (image_name[len - 1] == '\n')
+>> +             image_name[len - 1] = 0;
+>> +
+>> +     ret = fpga_mgr_firmware_write(mgr, image_name);
+>> +     if (ret)
+>> +             return ret;
+>> +
+>> +     return count;
+>> +}
+>
+> This shows why the interface is not right... Valid filename may
+> contain \n, right? It may even end with \n.
+
+That's not an interface problem, it implementation problem. The
+function absolutely should scrub and validate it's input. It should
+also make sure that the string doesn't have any special characters so
+that /bin/sh doesn't barf on it (because the string will appear in the
+uevent file). I would check other users of request_firmware() to see
+if any of them allow userspace to specify the filename.
+
+That said, the other way to handle this is not to specify a valid
+filename through this interface at all. Just use a dummy placeholder
+name and expect userspace to load the correct file when the request is
+posted.
+
+g.
