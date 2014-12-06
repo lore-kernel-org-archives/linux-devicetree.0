@@ -1,36 +1,43 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH 2/5] gpio: Cygnus: add GPIO driver
-Date: Fri, 05 Dec 2014 20:24:25 -0800
-Message-ID: <1417839865.31745.10.camel@perches.com>
-References: <Ray Jui <rjui@broadcom.com>
-	 <1417826408-1600-1-git-send-email-rjui@broadcom.com>
-	 <1417826408-1600-3-git-send-email-rjui@broadcom.com>
-	 <1417829282.31745.3.camel@perches.com> <5482668F.1040907@broadcom.com>
-	 <1417833291.31745.5.camel@perches.com> <54827B07.3000707@broadcom.com>
+From: Ashok Kumar <ashoks@broadcom.com>
+Subject: Re: [RFC PATCH v2 4/4] arm64:numa: adding numa support for arm64
+ platforms.
+Date: Sat, 6 Dec 2014 15:06:48 +0530
+Message-ID: <27958.5147429772$1417858733@news.gmane.org>
+References: <1416605010-10442-1-git-send-email-ganapatrao.kulkarni@caviumnetworks.com>
+ <1416605010-10442-5-git-send-email-ganapatrao.kulkarni@caviumnetworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <54827B07.3000707@broadcom.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Ray Jui <rjui@broadcom.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Scott Branden <sbranden@broadcom.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1416605010-10442-5-git-send-email-ganapatrao.kulkarni@caviumnetworks.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ganapatrao Kulkarni <ganapatrao.kulkarni@caviumnetworks.com>
+Cc: devicetree@vger.kernel.org, steve.capper@linaro.org, al.stone@linaro.org, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, Will.Deacon@arm.com, leif.lindholm@linaro.org, roy.franz@linaro.org, robh+dt@kernel.org, hanjun.guo@linaro.org, msalter@redhat.com, grant.likely@linaro.org, jchandra@broadcom.com, linux-arm-kernel@lists.infradead.org, gpkulkarni@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2014-12-05 at 19:41 -0800, Ray Jui wrote:
-> On 12/5/2014 6:34 PM, Joe Perches wrote:
-> > On Fri, 2014-12-05 at 18:14 -0800, Ray Jui wrote:
-> >> On 12/5/2014 5:28 PM, Joe Perches wrote:
-> >>> On Fri, 2014-12-05 at 16:40 -0800, Ray Jui wrote:
-> >>>> +			for_each_set_bit(bit, &val, 32) {
-[]
-> Actually, by reviewing the code more deeply, I'm not sure why using 
-> for_each_set_bit here is 'endian unsafe'.
+On Sat, Nov 22, 2014 at 02:53:30AM +0530, Ganapatrao Kulkarni wrote:
+> Adding numa support for arm64 based platforms.
+> creating numa mapping by parsing the dt node numa-map.
+> 
+> Signed-off-by: Ganapatrao Kulkarni <ganapatrao.kulkarni@caviumnetworks.com>
+Ganapat,
 
-It's not.  The 32 confused me as it was long
-and sizeof(long) isn't necessarily 32.
+Can we get a simple version of this patchset with just the associativity parameter for the cpu and memory nodes
+upstream? The initial patchset can be with the assumption of a simple full mesh topology for the distance.  The
+hierarchical complex topologies and the DT nodes and properties for that can be added in a later patch, once the
+standard for that is agreed upon.
+We are planning to support ACPI based NUMA for                                                                        Broadcom Vulcan processors(http://www.broadcom.com/press/release.php?id=s797235).
+I am working on a patch to add support for the SRAT and SLIT ACPI tables based on your patch and I will post that
+patchset soon, so it will be helpful if the core changes are upstream.
 
-Maybe the 32 should be a #define
-
-
-
+Thanks,
+Ashok
