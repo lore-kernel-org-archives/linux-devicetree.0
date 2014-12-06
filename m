@@ -1,39 +1,62 @@
 From: Pavel Machek <pavel@denx.de>
 Subject: Re: [PATCH v2 2/3] fpga manager: framework core
-Date: Sat, 6 Dec 2014 14:55:33 +0100
-Message-ID: <20141206135533.GA19672@amd>
+Date: Sat, 6 Dec 2014 15:02:18 +0100
+Message-ID: <20141206140218.GB19672@amd>
 References: <1414007405-32186-1-git-send-email-atull@opensource.altera.com>
  <1414007405-32186-3-git-send-email-atull@opensource.altera.com>
  <20141024105200.GA20775@amd>
- <B914D894-E486-4EF1-8F84-169E939C58B4@konsulko.com>
- <alpine.DEB.2.02.1410240906340.23446@atx-linux-37>
- <CACxGe6tiLxbCThzjOqrQg44Ue3XJuuRgti5jZY=UrssSY8=xqg@mail.gmail.com>
+ <CACxGe6sa=ysJAjx5TQZH5sKoas1PkoUUR4zT=Z35+uF6rrk-vw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CACxGe6tiLxbCThzjOqrQg44Ue3XJuuRgti5jZY=UrssSY8=xqg@mail.gmail.com>
+In-Reply-To: <CACxGe6sa=ysJAjx5TQZH5sKoas1PkoUUR4zT=Z35+uF6rrk-vw@mail.gmail.com>
 Sender: linux-doc-owner@vger.kernel.org
 To: Grant Likely <grant.likely@linaro.org>
-Cc: atull <atull@opensource.altera.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, "H. Peter Anvin" <hpa@zytor.com>, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Randy Dunlap <rdunlap@infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Ira Snyder <iws@ovro.caltech.edu>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Mark Brown <broonie@kernel.org>, philip@balister.org, rubini <rubini@gnudd.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Jason <jason@lakedaemon.net>, kyle.teske@ni.com, Nicolas Pitre <nico@linaro.org>, Felipe Balbi <balbi@ti.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>, David Brown <davidb@codeaurora>
+Cc: atull@opensource.altera.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, "H. Peter Anvin" <hpa@zytor.com>, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Randy Dunlap <rdunlap@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh+dt@kernel.org>, Ira Snyder <iws@ovro.caltech.edu>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Mark Brown <broonie@kernel.org>, philip@balister.org, rubini <rubini@gnudd.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Jason <jason@lakedaemon.net>, kyle.teske@ni.com, Nicolas Pitre <nico@linaro.org>, "Balbi, Felipe" <balbi@ti.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>, David Brown <davidb@c>
 List-Id: devicetree@vger.kernel.org
 
-Hi!
-
-> > I am accustomed to doing 'echo -n' for most of sysfs anyway.  Once in a
-> > while I am a bonehead and forget the '-n' and spend a few minutes
-> > wondering why this thing that worked last week suddenly rejects all
-> > commands.  I'm just trying to make my user interface a bit user-friendly.
+On Sat 2014-12-06 13:00:17, Grant Likely wrote:
+> On Fri, Oct 24, 2014 at 11:52 AM, Pavel Machek <pavel@denx.de> wrote:
+> > Hi!
 > >
-> > I will take out the '\n' stripping and update the documentation.  I didn't
-> > realize this would be controversial.
+> >> * /sys/class/fpga_manager/<fpga>/firmware
+> >>   Name of FPGA image file to load using firmware class.
+> >>   $ echo image.rbf > /sys/class/fpga_manager/<fpga>/firmware
+> >
+> > I .. still don't think this is good idea. What about namespaces?
+> > The path corresponds to path in which namespace?
 > 
-> Don't. You're doing the right thing by scrubbing your input. Requiring
-> 'echo -n' is just stupid when it is so easy to make work easily.
+> I don't understand your concern here. This allows userspace to name
+> the FPGA bitstream that the kernel will use during request_firmware(),
+> and it will show up as the $FIRMWARE value in the uevent file, but it
+> is still the responsibility of userspace to choose what to load, and
+> it can freely ignore the setting of $FIRMWARE if it needs to.
 
-'foo\nbar\n' is unusual but valid filename in linux. It is bad idea to
-echo filenames into files in the first place... and arbitrarily
-disallowing certain filenames is not helping.
+Well, consider chroot. I echo some filename but the file does not
+exist for the userspace listening for the uevent.
+
+> The process that actually loads the firmware into the kernel pretty
+> much has to run in the normal linux environment. How do namespaces
+> come into it? What exact problem do you see?
+
+> > This shows why the interface is not right... Valid filename may
+> > contain \n, right? It may even end with \n.
+> 
+> That's not an interface problem, it implementation problem. The
+> function absolutely should scrub and validate it's input. It should
+> also make sure that the string doesn't have any special characters so
+> that /bin/sh doesn't barf on it (because the string will appear in the
+> uevent file). I would check other users of request_firmware() to see
+> if any of them allow userspace to specify the filename.
+
+> That said, the other way to handle this is not to specify a valid
+> filename through this interface at all. Just use a dummy placeholder
+> name and expect userspace to load the correct file when the request is
+> posted.
+
+I'd go for that -- "dummy" works. Kernel is not a place to know shell
+limitations for all possible shells.
 
 									Pavel
 -- 
