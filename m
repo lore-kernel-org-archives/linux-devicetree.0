@@ -1,37 +1,31 @@
-From: Philipp Zabel <pza-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 2/2] arm: dts: imx6dl: correct cpufreq volt/freq table
-Date: Sun, 7 Dec 2014 11:59:25 +0100
-Message-ID: <20141207105925.GA11699@pengutronix.de>
-References: <1417767829-11314-1-git-send-email-b20788@freescale.com>
- <1417767829-11314-2-git-send-email-b20788@freescale.com>
- <1417772355.3227.3.camel@pengutronix.de>
- <BN1PR0301MB06282A4A937E613A778CF6A5FF790@BN1PR0301MB0628.namprd03.prod.outlook.com>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH V2 2/2] dmaengine: Add driver for IMG MDC
+Date: Sun, 7 Dec 2014 17:18:29 +0530
+Message-ID: <20141207114829.GX3411@intel.com>
+References: <1416002384-3525-1-git-send-email-abrestic@chromium.org>
+ <1416002384-3525-3-git-send-email-abrestic@chromium.org>
+ <20141205173553.GS3411@intel.com>
+ <CAL1qeaE+7L2p=HxPBasQYLVPD0H2qBAd439Fn_z3Fza9Y3+0eA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <BN1PR0301MB06282A4A937E613A778CF6A5FF790-RQSpjbwlmjRcEY/EnGXkZZwN6zqB+hSMnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Anson.Huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Anson.Huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL1qeaE+7L2p=HxPBasQYLVPD0H2qBAd439Fn_z3Fza9Y3+0eA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Bresticker <abrestic@chromium.org>
+Cc: Dan Williams <dan.j.williams@intel.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, James Hartley <james.hartley@imgtec.com>, James Hogan <james.hogan@imgtec.com>, Ezequiel Garcia <ezequiel.garcia@imgtec.com>, Damien Horsley <Damien.Horsley@imgtec.com>, Arnd Bergmann <arnd@arndb.de>, dmaengine@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 05, 2014 at 09:58:15AM +0000, Anson.Huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org wrote:
-> Hi, Philipp
-> 	The table you listed is VDDARM_IN and VDDSOC_IN which is for external PMIC and we normally do NOT adjust them when cpufreq change, we only adjust the internel LDO output, my table is for VDDARM_CAP and VDDSOC_CAP which are in the comment column, for LDO output.
-> 
-> For LDO enabled mode, VDDARM/SOC_CAP is the output of LDO, we pass this table to kernel opp.
-> For LDO bypassed mode, VDDARM/SOC_IN = VDDARM/SOC_CAP.
+On Fri, Dec 05, 2014 at 10:30:53AM -0800, Andrew Bresticker wrote:
+> After adding a macro for setting the WIDTH_{R,W} fields it seems fine
+> to me.  Is there something else you had in mind?
+I think whole of this might be a macro :)
 
-Now I feel stupid. Obviously the operating-points' CPU voltages are at the
-LDO output and shouldn't change if the LDO is bypassed. Thank you for the
-clarification, and sorry for not thinking this through at first. After
-looking at the correct column, feel free to consider this change
-Reviewed-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-regards
-Philipp
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > and this depends on dma_slave_config being set, which shouldn't be the case
+> > for memcpy
+okay looking back yes it depends on bus_width. But how is bus_width set, i
+thought the dma_slave_config will set that?
+
+-- 
+~Vinod
