@@ -1,42 +1,37 @@
-From: Alexander Graf <agraf@suse.de>
-Subject: Re: [PATCH v8 3/3] net: hisilicon: new hip04 ethernet driver
-Date: Sun, 07 Dec 2014 10:49:12 +0100
-Message-ID: <54842298.2010007@suse.de>
-References: <1397869980-21187-1-git-send-email-zhangfei.gao@linaro.org> <1397869980-21187-4-git-send-email-zhangfei.gao@linaro.org> <5483A279.5000503@suse.de> <5483C977.2060308@huawei.com>
+From: Philipp Zabel <pza-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 2/2] arm: dts: imx6dl: correct cpufreq volt/freq table
+Date: Sun, 7 Dec 2014 11:59:25 +0100
+Message-ID: <20141207105925.GA11699@pengutronix.de>
+References: <1417767829-11314-1-git-send-email-b20788@freescale.com>
+ <1417767829-11314-2-git-send-email-b20788@freescale.com>
+ <1417772355.3227.3.camel@pengutronix.de>
+ <BN1PR0301MB06282A4A937E613A778CF6A5FF790@BN1PR0301MB0628.namprd03.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <5483C977.2060308@huawei.com>
-Sender: netdev-owner@vger.kernel.org
-To: Ding Tianhong <dingtianhong@huawei.com>, Zhangfei Gao <zhangfei.gao@linaro.org>
-Cc: davem@davemloft.net, linux@arm.linux.org.uk, arnd@arndb.de, f.fainelli@gmail.com, sergei.shtylyov@cogentembedded.com, mark.rutland@arm.com, David.Laight@ACULAB.COM, eric.dumazet@gmail.com, xuwei5@hisilicon.com, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <BN1PR0301MB06282A4A937E613A778CF6A5FF790-RQSpjbwlmjRcEY/EnGXkZZwN6zqB+hSMnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Anson.Huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Anson.Huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 07.12.14 04:28, Ding Tianhong wrote:
-> On 2014/12/7 8:42, Alexander Graf wrote:
->> On 19.04.14 03:13, Zhangfei Gao wrote:
->>> Support Hisilicon hip04 ethernet driver, including 100M / 1000M controller.
->>> The controller has no tx done interrupt, reclaim xmitted buffer in the poll.
->>>
->>> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
->>
->> Is this driver still supposed to go upstream? I presume this was the
->> last submission and it's been quite some time ago :)
->>
+On Fri, Dec 05, 2014 at 09:58:15AM +0000, Anson.Huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org wrote:
+> Hi, Philipp
+> 	The table you listed is VDDARM_IN and VDDSOC_IN which is for external PMIC and we normally do NOT adjust them when cpufreq change, we only adjust the internel LDO output, my table is for VDDARM_CAP and VDDSOC_CAP which are in the comment column, for LDO output.
 > 
-> yes, it is really a long time, but The hip04 did not support tx irq, 
-> we couldn't get any better idea to fix this defect, do you have any suggestion?
+> For LDO enabled mode, VDDARM/SOC_CAP is the output of LDO, we pass this table to kernel opp.
+> For LDO bypassed mode, VDDARM/SOC_IN = VDDARM/SOC_CAP.
 
-Well, if hardware doesn't have a TX irq I don't see there's anything we
-can do to fix that ;).
+Now I feel stupid. Obviously the operating-points' CPU voltages are at the
+LDO output and shouldn't change if the LDO is bypassed. Thank you for the
+clarification, and sorry for not thinking this through at first. After
+looking at the correct column, feel free to consider this change
+Reviewed-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-Dave, what's your take here? Should we keep a driver from going upstream
-just because the hardware is partly broken? I'd really prefer to have an
-upstream driver on that SoC rather than some random (eventually even
-more broken) downstream code.
-
-
-Alex
+regards
+Philipp
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
