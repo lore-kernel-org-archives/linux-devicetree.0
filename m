@@ -1,122 +1,125 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 0/3] iio: Add Cosmic Circuits ADC support
-Date: Sat, 06 Dec 2014 14:56:22 +0000
-Message-ID: <54831916.8060501@kernel.org>
-References: <1417102762-5123-1-git-send-email-ezequiel.garcia@imgtec.com> <54819D3C.7000209@imgtec.com> <4C4CBD60-74E1-4A17-9D93-EDDE8AF33841@kernel.org> <5481B24B.4020507@kernel.org> <5481C221.2040900@imgtec.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 3/9] clk: sunxi: Add prcm mod0 clock driver
+Date: Sun, 7 Dec 2014 19:08:08 +0100
+Message-ID: <20141207180808.GO12434@lukather>
+References: <20141126211318.GN25249@lukather>
+ <5476E3A5.4000708@redhat.com>
+ <CAGb2v652m0bCdPWFF4LWwjcrCJZvnLibFPw8xXJ3Q-Ge+_-p7g@mail.gmail.com>
+ <5476F8AB.2000601@redhat.com>
+ <20141127190509.GR25249@lukather>
+ <54787A8A.6040209@redhat.com>
+ <20141202154524.GD30256@lukather>
+ <547EDCA0.4040805@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5481C221.2040900-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Pawel.Moll-5wv7dgnIgG8@public.gmane.org, Mark.Rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ctUzwJm0i+kwMBIK"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB6VPSKSAKGQEFYXCXRQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <547EDCA0.4040805-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Boris Brezillon <boris-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/12/14 14:33, Ezequiel Garcia wrote:
-> 
-> 
-> On 12/05/2014 10:25 AM, Jonathan Cameron wrote:
->> On 05/12/14 13:12, Jonathan Cameron wrote:
->>>
->>>
->>> On December 5, 2014 11:55:40 AM GMT+00:00, Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
->>>> Hi Jonathan,
->>>>
->>>> On 11/27/2014 12:39 PM, Ezequiel Garcia wrote:
->>>>> Changes from v4:
->>>>>
->>>>>   * Added a compile-time dependency on REGULATOR and HAVE_CLK.
->>>>>
->>>>>   * Replaced the silly XOR operation for a proper mask out of the
->>>>>     available channels.
->>>>>
->>>>> Changes from v3:
->>>>>
->>>>>   * Fixed a few style nitpicks as per Hartmut's feedback.
->>>>>
->>>>>   * Used GENMASK() to build the channel mask, which fixes a very
->>>> nasty
->>>>>     bug. Also found by Hartmut.
->>>>>
->>>>> Changes from v2:
->>>>>
->>>>>   * Changed a devicetree property from adc-available-channels to
->>>>>     adc-reserved-channels, so it can be made optional.
->>>>>
->>>>>   * Renamed the driver from cc_10001_xxx to cc10001_xxx so it's
->>>> consistent
->>>>>     with the rest of the kernel style.
->>>>>
->>>>>   * Some more minor cosmetic fixes.
->>>>>
->>>>> Changes from v1:
->>>>>
->>>>>   * Removed unneeded header includes.
->>>>>
->>>>>   * Changed all the names and macros prefix: s/CC_10001_/CC10001_.
->>>>>
->>>>>   * Used .update_scan_mode callback to preallocate the buffer.
->>>>>
->>>>>   * Used indio_dev for the struct iio_dev.
->>>>>
->>>>>   * Only read the regulator voltage when needed.
->>>>>
->>>>>   * Fixed probe() error handling.
->>>>>
->>>>>   * Used for_each_set_bit() instead of open-coding it.
->>>>>
->>>>>   * Name the power-down register as _POWER_UP, to make the code
->>>>>     less silly.
->>>>>
->>>>>   * Error out when no valid sample can be read (i.e. when
->>>> end-of-conversion
->>>>>     poll times out).
->>>>>
->>>>>   * ... plus some assorted code cleaning based on the feedback.
->>>>>
->>>>>
->>>>> Ezequiel Garcia (1):
->>>>>   DT: Add a vendor prefix for Cosmic Circuits
->>>>>
->>>>> Phani Movva (2):
->>>>>   iio: adc: Cosmic Circuits 10001 ADC driver
->>>>>   DT: iio: adc: Add CC_10001 binding documentation
->>>>>
->>>>
->>>> Unless there are any outstanding issues with this series, it'd be great
->>>> to merge it for v3.19.
->>>>
->>>> Thanks!
->>> Sorry too late unfortunately. Merge window opens on Sunday and stuff needs to have
->>>  been in Greg KH's tree for a week before that. Going to be 3.20 now.
->>>
-> 
-> Oh, shoot. I was hoping to be in time for the merge. Being a new driver
-> there wasn't much harm in taking it earlier.
-> 
->> Also, the DT patch could really do with an Ack from Rob.  If Hartmut/Lars
->> want to give a reviewed-by that would be good given they done the legwork
->> on reviewing your driver.
->>
->> Looks good to me btw.  Just taken a quick look, but little gets past those
->> guys anyway :)
->>
-> 
-> If at all possible, do you think you area able to pick the patches now
-> (but you don't include them in your pull request to Linus) so they are
-> linux-next? It'd be good to know they start getting build-test coverage
-> soon.
-Sorry no can do until 3 weeks have passed for the device tree bindings or
-a dt maintainer acks.  So might be about 2 more weeks I'm afraid.  Also
-it's heavily frowned upon to put stuff in linux next at this point in the
-cycle.  Best to wait until merge window closes.
+--ctUzwJm0i+kwMBIK
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Note I only feed linux-next via Greg KH's tree anyway (stuff doesn't
-stay in mine normally for more than a week or so, hence little gain
-in a direct pull).
+On Wed, Dec 03, 2014 at 10:49:20AM +0100, Hans de Goede wrote:
+> Hi,
+> 
+> On 12/02/2014 04:45 PM, Maxime Ripard wrote:
+> 
+> >> Ok, so thinking more about this, I'm still convinced that the MFD
+> >>framework is only getting in the way here.
+> >
+> >You still haven't said of what exactly it's getting in the way of.
+> 
+> Of using of_clk_define to bind to the mod0 clk in the prcm, because the
+> ir_clk node does not have its own reg property when the mfd framework is
+> used and of_clk_define requires the node to have its own reg property.
 
-Jonathan
+Yes. And the obvious solution to that is to just not use
+OF_CLK_DECLARE but a platform_driver, which is totally fine.
+
 > 
-> Thanks!
+> >>But I can see having things represented in devicetree properly, with
+> >>the clocks, etc. as child nodes of the prcm being something which we
+> >>want.
+> >
+> >Clocks and reset are the only thing set so far, because we need
+> >reference to them from the DT itself, nothing more.
+> >
+> >We could very much have more devices instatiated from the MFD itself.
+> >
+> >>So since all we are using the MFD for is to instantiate platform
+> >>devices under the prcm nodes, and assign an io resource for the regs
+> >>to them, why not simply make the prcm node itself a simple-bus.
+> >
+> >No, this is really not a bus. It shouldn't be described at all as
+> >such. It is a device, that has multiple functionnalities in the system
+> >=> MFD. It really is that simple.
 > 
+> Ok, I can live with that, but likewise the clocks node is not a bus either!
+
+True, and just like we just saw with Chen-Yu patches, it can even leak
+implementation details. Which was one of the arguments from Mark
+against it iirc.
+
+> So it should not have a simple-bus compatible either, and as such we cannot
+> simply change the mod0 driver from of_clk_define to a platform driver because
+> then we need to instantiate platform devs for the mod0 clock nodes, which
+> means making the clock node a simple-bus.
+
+I guess we can do that as a temporary measure until we get things
+right on that front. I'm totally open to doing that work, so I'm not
+asking you to do it.
+
+> I can see your logic in wanting the ir_clk prcm sub-node to use the
+> mod0 compatible string, so how about we make the mod0 driver both
+> register through of_declare and as a platform driver. Note this means
+> that it will try to bind twice to the ir_clk node, since of_clk_declare
+> will cause it to try and bind there too AFAIK.
+
+Hmmm, I could live with that for a while too. That shouldn't even
+require too much work, since the first thing we check in the mod0 code
+is that we actually have something in reg, which will not be the case
+in the OF_CLK_DECLARE case.
+
+> The of_clk_declare bind will fail though because there is no regs
+> property, so this double bind is not an issue as long as we do not
+> log errors on the first bind failure.
+
+Yep, exactly.
+
+> Note that the ir_clk node will still need an "ir-clk" compatible as
+> well for the MFD to find it and assign the proper resources to it.
+
+No, it really doesn't. At least for now, we have a single mod0 clock
+under the PRCM MFD. If (and only if) one day, we find ourselves in a
+position where we have two mod0 clocks under the PRCM, then we'll fix
+the MFD code to deal with that, because it really should deal with it.
+
+> But this way we will have the clk driver binding to the mod0 clk
+> compatible, which is what you want, while having the MFD assign
+> resources on the fact that it is the ir-clk node, so that things
+> will still work if there are multiple mod0 clks in the prcm.
+
+I really think having a different compatible is both wrong on a
+theoritical point of view and doesn't bring anything to the table now
+(and might never do)
+
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--ctUzwJm0i+kwMBIK--
