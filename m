@@ -1,51 +1,109 @@
-From: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 0/5] Add gpio support to Broadcom Cygnus SoC
-Date: Mon, 8 Dec 2014 10:48:14 -0800
-Message-ID: <5485F26E.6050506@broadcom.com>
-References: <Ray Jui <rjui@broadcom.com> <1418064468-8512-1-git-send-email-rjui@broadcom.com> <1418064468-8512-2-git-send-email-rjui@broadcom.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 5/5] media: ov2640: dt: add the device tree binding document
+Date: Mon, 08 Dec 2014 20:59:17 +0200
+Message-ID: <7239028.nL31Mosllm@avalon>
+References: <1418038147-13221-1-git-send-email-josh.wu@atmel.com> <1418038147-13221-6-git-send-email-josh.wu@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1418064468-8512-2-git-send-email-rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1418038147-13221-6-git-send-email-josh.wu@atmel.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Josh Wu <josh.wu@atmel.com>
+Cc: linux-media@vger.kernel.org, m.chehab@samsung.com, linux-arm-kernel@lists.infradead.org, g.liakhovetski@gmx.de, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Sorry. Please ignore this particular cover letter. It accidentally got 
-sent along with other v3 patches.
+Hi Josh,
 
-On 12/8/2014 10:47 AM, Ray Jui wrote:
-> This patchset contains the initial GPIO support for the Broadcom Cygnus SoC.
-> Cygnus has 3 GPIO controllers: 1) the ASIU GPIO; 2) the chipCommonG GPIO;
-> and 3) the ALWAYS-ON GPIO. All 3 types of GPIO controllers are supported by
-> the same Cygnus GPIO driver
->
-> Changes from v1:
->   - Get rid of inline qualifier
->   - Get rid of redundant check in the ISR
->   - Other minor fixes to imrove code readability
->
-> Ray Jui (5):
->    gpio: Cygnus: define Broadcom Cygnus GPIO binding
->    gpio: Cygnus: add GPIO driver
->    ARM: mach-bcm: Enable GPIO support for Cygnus
->    ARM: dts: enable GPIO for Broadcom Cygnus
->    MAINTAINERS: Entry for Cygnus GPIO driver
->
->   .../devicetree/bindings/gpio/brcm,cygnus-gpio.txt  |   85 +++
->   MAINTAINERS                                        |    7 +
->   arch/arm/boot/dts/bcm-cygnus.dtsi                  |   30 +
->   arch/arm/mach-bcm/Kconfig                          |    1 +
->   drivers/gpio/Kconfig                               |   11 +
->   drivers/gpio/Makefile                              |    1 +
->   drivers/gpio/gpio-bcm-cygnus.c                     |  712 ++++++++++++++++++++
->   7 files changed, 847 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/gpio/brcm,cygnus-gpio.txt
->   create mode 100644 drivers/gpio/gpio-bcm-cygnus.c
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thank you for the patch.
+
+On Monday 08 December 2014 19:29:07 Josh Wu wrote:
+> Add the document for ov2640 dt.
+> 
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Josh Wu <josh.wu@atmel.com>
+> ---
+> v1 -> v2:
+>   1. change the compatible string to be consistent with verdor file.
+
+That's nice, but you still need to send a patch to add the ovti vendor prefix 
+to Documentation/devicetree/bindings/vendor-prefixes.txt. It's not there yet.
+
+>   2. change the clock and pins' name.
+>   3. add missed pinctrl in example.
+> 
+>  .../devicetree/bindings/media/i2c/ov2640.txt       | 44 +++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov2640.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/ov2640.txt
+> b/Documentation/devicetree/bindings/media/i2c/ov2640.txt new file mode
+> 100644
+> index 0000000..15be3cb
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/ov2640.txt
+> @@ -0,0 +1,44 @@
+> +* Omnivision ov2640 CMOS sensor
+> +
+> +The Omnivision OV2640 sensor support multiple resolutions output, such as
+> +CIF, SVGA, UXGA. It also can support YUV422/420, RGB565/555 or raw RGB
+> +output format.
+> +
+> +Required Properties :
+> +- compatible: Must be "ovti,ov2640"
+> +- clocks: reference master clock, if using external fixed clock, you
+> +          no need to have such property.
+
+That's not true anymore, the clocks property is mandatory in all cases. Just 
+describe it as
+
+- clocks: reference to the xvclk input clock.
+
+> +- clock-names: Must be "xvclk", it means the master clock for ov2640.
+
+I would drop "it means the master clock for ov2640".
+
+> +Optional Properties:
+> +- resetb-gpios: reset pin
+
+- resetb-gpios: reference to the GPIO connected to the resetb pin, if any.
+
+> +- pwdn-gpios: power down pin
+
+- pwdn-gpios: reference to the GPIO connected to the pwdn pin, if any.
+
+> +
+> +The device node must contain one 'port' child node for its digital output
+> +video port, in accordance with the video interface bindings defined in
+> +Documentation/devicetree/bindings/media/video-interfaces.txt.
+> +
+> +Example:
+> +
+> +	i2c1: i2c@f0018000 {
+> +		ov2640: camera@0x30 {
+> +			compatible = "ovti,ov2640";
+> +			reg = <0x30>;
+> +
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&pinctrl_pck1 &pinctrl_ov2640_pwdn 
+&pinctrl_ov2640_reset>;
+> +
+> +			resetb-gpios = <&pioE 24 GPIO_ACTIVE_HIGH>;
+> +			pwdn-gpios = <&pioE 29 GPIO_ACTIVE_HIGH>;
+> +
+> +			clocks = <&pck1>;
+> +			clock-names = "xvclk";
+> +
+> +			port {
+> +				ov2640_0: endpoint {
+> +					remote-endpoint = <&isi_0>;
+> +					bus-width = <8>;
+> +				};
+> +			};
+> +		};
+> +	};
+
+-- 
+Regards,
+
+Laurent Pinchart
