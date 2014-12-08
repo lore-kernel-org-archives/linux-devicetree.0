@@ -1,121 +1,59 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [RFC 1/3] devfreq: dt-bindings: Document Exynos3250 devfreq driver
-Date: Mon, 08 Dec 2014 10:46:17 +0100
-Message-ID: <1418031977.6084.13.camel@AMDC1943>
-References: <1647680679.696101418015213383.JavaMail.weblogic@epmlwas04c>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1647680679.696101418015213383.JavaMail.weblogic@epmlwas04c>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: myungjoo.ham@samsung.com
-Cc: =?UTF-8?Q?=EB=B0=95=EA=B2=BD=EB=AF=BC?= <kyungmin.park@samsung.com>, Kukjin Kim <kgene@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, =?UTF-8?Q?=EC=B5=9C=EC=B0=AC=EC=9A=B0?= <cw00.choi@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>
+From: Yunzhi Li <lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v3 2/5] Documentation: bindings: add doc for the Rockchip usb PHY
+Date: Mon,  8 Dec 2014 17:46:25 +0800
+Message-ID: <1418031988-2700-3-git-send-email-lyz@rock-chips.com>
+References: <1418031988-2700-1-git-send-email-lyz@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1418031988-2700-1-git-send-email-lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Yunzhi Li <lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On pon, 2014-12-08 at 05:06 +0000, MyungJoo Ham wrote:
-> >   
-> >  Add documentation for bindings used by Exynos3250 devfreq driver.
-> > 
-> > Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> > ---
-> >  .../bindings/arm/samsung/exynos3250-devfreq.txt    | 66 ++++++++++++++++++++++
-> >  1 file changed, 66 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/arm/samsung/exynos3250-devfreq.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/arm/samsung/exynos3250-devfreq.txt b/Documentation/devicetree/bindings/arm/samsung/exynos3250-devfreq.txt
-> > new file mode 100644
-> > index 000000000000..047955e9e371
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/arm/samsung/exynos3250-devfreq.txt
-> > @@ -0,0 +1,66 @@
-> > +Samsung Exynos3250 devfreq driver
-> > +=================================
-> > +
-> > +The driver support changing frequencies and voltage for:
-> > + - memory controller and bus,
-> > + - peripheral buses (left and right).
-> > +
-> > +Memory controller and bus
-> > +=========================
-> > +Required properties:
-> > + - compatible : should be "samsung,exynos3250-busfreq-mif"
-> > + - reg : two sets (offset and length of the register) for PPMU registers
-> > +	used by this devfreq driver
-> > + - clock-names : one clock of name "dmc" to manage frequency
-> > + - clocks : phandle and specifier for clock listed in clock-names property
-> > + - vdd_mif-supply : phandle to MIF voltage regulator
-> > +
-> > +Peripheral buses
-> > +================
-> > +Required properties:
-> > + - compatible : should be "samsung,exynos3250-busfreq-int"
-> > + - reg : two sets (offset and length of the register) for PPMU registers
-> > +	used by this devfreq driver
-> > + - clock-names : names for PPMU clocks and bus clocks to manage frequencies;
-> > +	All following clock names (and corresponding phandles) must be
-> > +	provided:
-> > +	- "ppmu_left", "ppmu_right",
-> > +	- "aclk_400", "aclk_266", "aclk_200", "aclk_160", "aclk_gdl", "aclk_gdr", "mfc";
-> > + - clocks : phandles and specifiers for clocks listed in clock-names property
-> > + - vdd_mif-supply : phandle to INT voltage regulator
-> > +
-> > +Example
-> > +=======
-> > +	busfreq_mif: busfreq@106A0000 {
-> > +		compatible = "samsung,exynos3250-busfreq-mif";
-> > +		reg = <0x106A0000 0x2000>, <0x106B0000 0x2000>;
-> > +		clocks = <&cmu_dmc CLK_DIV_DMC>;
-> > +		clock-names = "dmc";
-> > +		vdd_mif-supply = <&buck1_reg>;
-> > +		status = "okay";
-> > +	};
-> 
-> The hardware you are binding hereby is "Exynos PPMU".
-> You may consider to bind PPMU (DMC PPMU or BUS PPMU whichever hardware
-> you want to use) with DT and then let exynos bus devfreq driver use
-> the already-bound devices if found, ... in principle.
-> In other words or point of view, you may implement PPMU driver in
-> devfreq class device driver so that you let it bind PPMU device with DT.
-> It may be done similarly with the device below.
+Document the bindings of the Rockchip usb PHY driver.
 
-Yes, you're right. I saw also similar case for Tegra Activity Monitor. 
+Signed-off-by: Yunzhi Li <lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+---
 
-Thanks for pointing this,
-Krzysztof
+Changes in v3: None
+
+ .../devicetree/bindings/phy/rockchip-usb-phy.txt   | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/rockchip-usb-phy.txt
+
+diff --git a/Documentation/devicetree/bindings/phy/rockchip-usb-phy.txt b/Documentation/devicetree/bindings/phy/rockchip-usb-phy.txt
+new file mode 100644
+index 0000000..4574696
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/rockchip-usb-phy.txt
+@@ -0,0 +1,22 @@
++ROCKCHIP USB2 PHY
++
++Required properties:
++ - compatible: rockchip,rk3288-usb-phy
++ - rockchip,grf : phandle to the syscon managing the "general
++   register files"
++ - #phy-cells: must be 1
++
++Optional Properties:
++ - clocks : phandle + clock specifier for the phy clocks
++ - clock-names :
++		"usbphy0" - PHY clock for OTG controller
++		"usbphy1" - PHY clock for HOST0 controller
++		"usbphy2" - PHY clock for HOST1 controller
++
++Example:
++
++usbphy: phy {
++	#phy-cells = <1>;
++	compatible = "rockchip,rk3288-usb-phy";
++	rockchip,grf = <&grf>;
++};
+-- 
+2.0.0
 
 
-> 
-> 
-> Cheers,
-> MyungJoo.
-> 
-> 
-> > +
-> > +	busfreq_int: busfreq@116A0000 {
-> > +		compatible = "samsung,exynos3250-busfreq-int";
-> > +		reg = <0x116A0000 0x2000>, <0x112A0000 0x2000>;
-> > +		clocks = <&cmu CLK_PPMULEFT>,
-> > +			<&cmu CLK_PPMURIGHT>,
-> > +			<&cmu CLK_DIV_ACLK_400_MCUISP>,
-> > +			<&cmu CLK_DIV_ACLK_266>,
-> > +			<&cmu CLK_DIV_ACLK_200>,
-> > +			<&cmu CLK_DIV_ACLK_160>,
-> > +			<&cmu CLK_DIV_GDL>,
-> > +			<&cmu CLK_DIV_GDR>,
-> > +			<&cmu CLK_DIV_MFC>;
-> > +		clock-names = "ppmuleft",
-> > +			"ppmuright",
-> > +			"aclk_400",
-> > +			"aclk_266",
-> > +			"aclk_200",
-> > +			"aclk_160",
-> > +			"aclk_gdl",
-> > +			"aclk_gdr",
-> > +			"mfc";
-> > +		vdd_int-supply = <&buck3_reg>;
-> > +		status = "okay";
-> > +	};
-> > -- 
-> > 1.9.1
-> > 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
