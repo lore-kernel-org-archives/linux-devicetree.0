@@ -1,79 +1,80 @@
-From: Ding Tianhong <dingtianhong@huawei.com>
-Subject: Re: [PATCH v8 3/3] net: hisilicon: new hip04 ethernet driver
-Date: Mon, 8 Dec 2014 09:48:07 +0800
-Message-ID: <54850357.802@huawei.com>
-References: <1397869980-21187-1-git-send-email-zhangfei.gao@linaro.org>
- <5483C977.2060308@huawei.com> <54842298.2010007@suse.de>
- <2619239.NTtdNaZCJM@wuerfel>
+From: Ray Jui <rjui@broadcom.com>
+Subject: Re: [PATCH 2/5] gpio: Cygnus: add GPIO driver
+Date: Sun, 7 Dec 2014 17:59:57 -0800
+Message-ID: <5485061D.1060302@broadcom.com>
+References: <Ray Jui <rjui@broadcom.com>	 <1417826408-1600-1-git-send-email-rjui@broadcom.com>	 <1417826408-1600-3-git-send-email-rjui@broadcom.com> <1417829282.31745.3.camel@perches.com> <5482668F.1040907@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <2619239.NTtdNaZCJM@wuerfel>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>, Alexander Graf <agraf@suse.de>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, f.fainelli@gmail.com, linux@arm.linux.org.uk, eric.dumazet@gmail.com, sergei.shtylyov@cogentembedded.com, netdev@vger.kernel.org, xuwei5@hisilicon.com, David.Laight@aculab.com, Zhangfei Gao <zhangfei.gao@linaro.org>, davem@davemloft.net, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=windows-1252;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <5482668F.1040907@broadcom.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Joe Perches <joe@perches.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Scott Branden <sbranden@broadcom.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2014/12/8 4:09, Arnd Bergmann wrote:
-> On Sunday 07 December 2014 10:49:12 Alexander Graf wrote:
->> On 07.12.14 04:28, Ding Tianhong wrote:
->>> On 2014/12/7 8:42, Alexander Graf wrote:
->>>> On 19.04.14 03:13, Zhangfei Gao wrote:
->>>>> Support Hisilicon hip04 ethernet driver, including 100M / 1000M controller.
->>>>> The controller has no tx done interrupt, reclaim xmitted buffer in the poll.
->>>>>
->>>>> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
->>>>
->>>> Is this driver still supposed to go upstream? I presume this was the
->>>> last submission and it's been quite some time ago 
->>>>
->>>
->>> yes, it is really a long time, but The hip04 did not support tx irq, 
->>> we couldn't get any better idea to fix this defect, do you have any suggestion?
+
+
+On 12/5/2014 6:14 PM, Ray Jui wrote:
+>>> +static struct irq_chip bcm_cygnus_gpio_irq_chip =3D {
+>>> +    .name =3D "bcm-cygnus-gpio",
+>>> +    .irq_ack =3D bcm_cygnus_gpio_irq_ack,
+>>> +    .irq_mask =3D bcm_cygnus_gpio_irq_mask,
+>>> +    .irq_unmask =3D bcm_cygnus_gpio_irq_unmask,
+>>> +    .irq_set_type =3D bcm_cygnus_gpio_irq_set_type,
+>>> +};
 >>
->> Well, if hardware doesn't have a TX irq I don't see there's anything we
->> can do to fix that ;).
-> 
-> I don't know if it's related to the ethernet on hip01, but I would assume
-> it is, and that platform is currently being submitted for inclusion, so
-> I'd definitely hope to see this driver get merged too eventually.
-> 
-> IIRC, the last revision of the patch set had basically fixed the problem,
-> except for a race that would still allow the napi poll function to exit
-> with poll_complete() but a full queue of TX descriptors and no fallback
-> to clean them up. There was also still an open question about whether or
-> not the driver should use skb_orphan, but I may be misremembering that part.
->  
->> Dave, what's your take here? Should we keep a driver from going upstream
->> just because the hardware is partly broken? I'd really prefer to have an
->> upstream driver on that SoC rather than some random (eventually even
->> more broken) downstream code.
-> 
-> We can certainly have a slow driver for this hardware, and I'd much
-> prefer slow over broken. I'd guess that some of the performance impact
-> of the missing interrupts can now be offset with the xmit_more	 logic.
-> 
-> 	Arnd
+>> const?
+>>
+>
+>
+> Sure, will add const to bcm_cygnus_gpio_irq_chip
+>
+>>> +static struct irq_domain_ops bcm_cygnus_irq_ops =3D {
+>>> +    .map =3D bcm_cygnus_gpio_irq_map,
+>>> +    .unmap =3D bcm_cygnus_gpio_irq_unmap,
+>>> +    .xlate =3D irq_domain_xlate_twocell,
+>>> +};
+>>
+>> const here too?
+>>
+>
+> Yes, will make bcm_cygnus_irq_ops const.
+>
+Actually, I cannot make them const here. Note they are passed into othe=
+r=20
+APIs which can potentially modifies their values internally.
 
-Ok, if so, I can modify this patch set and send them again base on zhangfei's last version
-just for reviewing.
-
-Regards
-Ding
-
-> --
-> To unsubscribe from this list: send the line "unsubscribe netdev" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
-> .
-> 
+drivers/gpio/gpio-bcm-cygnus.c: In function =91bcm_cygnus_gpio_irq_map=92=
+:
+drivers/gpio/gpio-bcm-cygnus.c:430:4: warning: passing argument 2 of=20
+=91irq_set_chip_and_handler=92 discards =91const=92 qualifier from poin=
+ter=20
+target type [enabled by default]
+     handle_simple_irq);
+     ^
+In file included from drivers/gpio/gpio-bcm-cygnus.c:17:0:
+include/linux/irq.h:461:20: note: expected =91struct irq_chip *=92 but=20
+argument is of type =91const struct irq_chip *=92
+  static inline void irq_set_chip_and_handler(unsigned int irq, struct=20
+irq_chip *chip,
+                     ^
+drivers/gpio/gpio-bcm-cygnus.c: In function =91bcm_cygnus_gpio_probe=92=
+:
+drivers/gpio/gpio-bcm-cygnus.c:679:5: warning: passing argument 2 of=20
+=91irq_set_chip_and_handler=92 discards =91const=92 qualifier from poin=
+ter=20
+target type [enabled by default]
+      handle_simple_irq);
+      ^
+In file included from drivers/gpio/gpio-bcm-cygnus.c:17:0:
+include/linux/irq.h:461:20: note: expected =91struct irq_chip *=92 but=20
+argument is of type =91const struct irq_chip *=92
+  static inline void irq_set_chip_and_handler(unsigned int irq, struct=20
+irq_chip *chip,
+--
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
