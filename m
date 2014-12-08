@@ -1,60 +1,121 @@
-From: Romain Baeriswyl <romain.baeriswyl-Yycd8EPnGM5BDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] i2c: designware: Fix falling time bindings doc
-Date: Mon, 08 Dec 2014 09:57:07 +0100
-Message-ID: <548567E3.6020101@alitech.com>
-References: <1417805379-8999-1-git-send-email-dianders@chromium.org>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [RFC 1/3] devfreq: dt-bindings: Document Exynos3250 devfreq driver
+Date: Mon, 08 Dec 2014 10:46:17 +0100
+Message-ID: <1418031977.6084.13.camel@AMDC1943>
+References: <1647680679.696101418015213383.JavaMail.weblogic@epmlwas04c>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1417805379-8999-1-git-send-email-dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Romain Baeriswyl <Romain.Baeriswyl-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Shinya Kuribayashi <skuribay-e+AXbWqSrlAAvxtiuMwx3w@public.gmane.org>
-Cc: Christian Ruppert <christian.ruppert-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>, Addy Ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1647680679.696101418015213383.JavaMail.weblogic@epmlwas04c>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: myungjoo.ham@samsung.com
+Cc: =?UTF-8?Q?=EB=B0=95=EA=B2=BD=EB=AF=BC?= <kyungmin.park@samsung.com>, Kukjin Kim <kgene@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, =?UTF-8?Q?=EC=B5=9C=EC=B0=AC=EC=9A=B0?= <cw00.choi@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Acked-by: Romain Baeriswyl <romain.baeriswyl-Yycd8EPnGM5BDgjK7y7TUQ@public.gmane.org>
+On pon, 2014-12-08 at 05:06 +0000, MyungJoo Ham wrote:
+> >   
+> >  Add documentation for bindings used by Exynos3250 devfreq driver.
+> > 
+> > Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> > ---
+> >  .../bindings/arm/samsung/exynos3250-devfreq.txt    | 66 ++++++++++++++++++++++
+> >  1 file changed, 66 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/arm/samsung/exynos3250-devfreq.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/arm/samsung/exynos3250-devfreq.txt b/Documentation/devicetree/bindings/arm/samsung/exynos3250-devfreq.txt
+> > new file mode 100644
+> > index 000000000000..047955e9e371
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/arm/samsung/exynos3250-devfreq.txt
+> > @@ -0,0 +1,66 @@
+> > +Samsung Exynos3250 devfreq driver
+> > +=================================
+> > +
+> > +The driver support changing frequencies and voltage for:
+> > + - memory controller and bus,
+> > + - peripheral buses (left and right).
+> > +
+> > +Memory controller and bus
+> > +=========================
+> > +Required properties:
+> > + - compatible : should be "samsung,exynos3250-busfreq-mif"
+> > + - reg : two sets (offset and length of the register) for PPMU registers
+> > +	used by this devfreq driver
+> > + - clock-names : one clock of name "dmc" to manage frequency
+> > + - clocks : phandle and specifier for clock listed in clock-names property
+> > + - vdd_mif-supply : phandle to MIF voltage regulator
+> > +
+> > +Peripheral buses
+> > +================
+> > +Required properties:
+> > + - compatible : should be "samsung,exynos3250-busfreq-int"
+> > + - reg : two sets (offset and length of the register) for PPMU registers
+> > +	used by this devfreq driver
+> > + - clock-names : names for PPMU clocks and bus clocks to manage frequencies;
+> > +	All following clock names (and corresponding phandles) must be
+> > +	provided:
+> > +	- "ppmu_left", "ppmu_right",
+> > +	- "aclk_400", "aclk_266", "aclk_200", "aclk_160", "aclk_gdl", "aclk_gdr", "mfc";
+> > + - clocks : phandles and specifiers for clocks listed in clock-names property
+> > + - vdd_mif-supply : phandle to INT voltage regulator
+> > +
+> > +Example
+> > +=======
+> > +	busfreq_mif: busfreq@106A0000 {
+> > +		compatible = "samsung,exynos3250-busfreq-mif";
+> > +		reg = <0x106A0000 0x2000>, <0x106B0000 0x2000>;
+> > +		clocks = <&cmu_dmc CLK_DIV_DMC>;
+> > +		clock-names = "dmc";
+> > +		vdd_mif-supply = <&buck1_reg>;
+> > +		status = "okay";
+> > +	};
+> 
+> The hardware you are binding hereby is "Exynos PPMU".
+> You may consider to bind PPMU (DMC PPMU or BUS PPMU whichever hardware
+> you want to use) with DT and then let exynos bus devfreq driver use
+> the already-bound devices if found, ... in principle.
+> In other words or point of view, you may implement PPMU driver in
+> devfreq class device driver so that you let it bind PPMU device with DT.
+> It may be done similarly with the device below.
+
+Yes, you're right. I saw also similar case for Tegra Activity Monitor. 
+
+Thanks for pointing this,
+Krzysztof
 
 
-On 2014-12-05 19:49, Doug Anderson wrote:
-> In (6468276 i2c: designware: make SCL and SDA falling time
-> configurable) new device tree properties were added for setting the
-> falling time of SDA and SCL.  The device tree bindings doc had a typo
-> in it: it forgot the "-ns" suffix for both properies in the prose of
-> the bindings.
->
-> I assume this is a typo because:
-> * The source code includes the "-ns"
-> * The example in the bindings includes the "-ns".
->
-> Fix the typo.
->
-> Signed-off-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> Fixes: 6468276b2206 ("i2c: designware: make SCL and SDA falling time configurable")
-> ---
->   Documentation/devicetree/bindings/i2c/i2c-designware.txt | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-designware.txt b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
-> index 5199b0c..fee26dc 100644
-> --- a/Documentation/devicetree/bindings/i2c/i2c-designware.txt
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
-> @@ -14,10 +14,10 @@ Optional properties :
->    - i2c-sda-hold-time-ns : should contain the SDA hold time in nanoseconds.
->      This option is only supported in hardware blocks version 1.11a or newer.
->
-> - - i2c-scl-falling-time : should contain the SCL falling time in nanoseconds.
-> + - i2c-scl-falling-time-ns : should contain the SCL falling time in nanoseconds.
->      This value which is by default 300ns is used to compute the tLOW period.
->
-> - - i2c-sda-falling-time : should contain the SDA falling time in nanoseconds.
-> + - i2c-sda-falling-time-ns : should contain the SDA falling time in nanoseconds.
->      This value which is by default 300ns is used to compute the tHIGH period.
->
->   Example :
->
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> 
+> Cheers,
+> MyungJoo.
+> 
+> 
+> > +
+> > +	busfreq_int: busfreq@116A0000 {
+> > +		compatible = "samsung,exynos3250-busfreq-int";
+> > +		reg = <0x116A0000 0x2000>, <0x112A0000 0x2000>;
+> > +		clocks = <&cmu CLK_PPMULEFT>,
+> > +			<&cmu CLK_PPMURIGHT>,
+> > +			<&cmu CLK_DIV_ACLK_400_MCUISP>,
+> > +			<&cmu CLK_DIV_ACLK_266>,
+> > +			<&cmu CLK_DIV_ACLK_200>,
+> > +			<&cmu CLK_DIV_ACLK_160>,
+> > +			<&cmu CLK_DIV_GDL>,
+> > +			<&cmu CLK_DIV_GDR>,
+> > +			<&cmu CLK_DIV_MFC>;
+> > +		clock-names = "ppmuleft",
+> > +			"ppmuright",
+> > +			"aclk_400",
+> > +			"aclk_266",
+> > +			"aclk_200",
+> > +			"aclk_160",
+> > +			"aclk_gdl",
+> > +			"aclk_gdr",
+> > +			"mfc";
+> > +		vdd_int-supply = <&buck3_reg>;
+> > +		status = "okay";
+> > +	};
+> > -- 
+> > 1.9.1
+> > 
