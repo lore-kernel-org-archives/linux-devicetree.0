@@ -1,33 +1,135 @@
-From: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH v4 3/8] iio: Add support for DA9150 GPADC
-Date: Mon, 8 Dec 2014 13:23:07 +0000
-Message-ID: <2E89032DDAA8B9408CB92943514A0337AB52290B@SW-EX-MBX01.diasemi.com>
-References: <cover.1416938054.git.Adam.Thomson.Opensource@diasemi.com>
- <377be6cf23ba23dac0b21fe2a449307ec5bac63a.1416938054.git.Adam.Thomson.Opensource@diasemi.com>
- <5480E7F4.7090808@gmx.de>
+From: Inki Dae <inki.dae@samsung.com>
+Subject: Re: [PATCH 1/2] drm/exynos: fimd: Remove drm_dev and pipe members from
+ fimd_context
+Date: Mon, 08 Dec 2014 22:37:53 +0900
+Message-ID: <5485A9B1.30703@samsung.com>
+References: <1417953876-28266-1-git-send-email-ajaykumar.rs@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5480E7F4.7090808-Mmb7MZpHnFY@public.gmane.org>
-Content-Language: en-US
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, "Opensource [Adam Thomson]" <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, "linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1417953876-28266-1-git-send-email-ajaykumar.rs@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Ajay Kumar <ajaykumar.rs@samsung.com>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, jy0922.shim@samsung.com, jg1.han@samsung.com, seanpaul@google.com, ajaynumb@gmail.com, bhushan.r@samsung.com, prashanth.g@samsung.com, cpgs@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-T24gRGVjZW1iZXIgMDQsIDIwMTQgMjM6MDIsIEhhcnRtdXQgS25hYWNrIHdyb3RlOg0KDQo+ID4g
-KwlpbmRpb19kZXYgPSBkZXZtX2lpb19kZXZpY2VfYWxsb2MoJnBkZXYtPmRldiwNCj4gPiArCQkJ
-CQkgIHNpemVvZihzdHJ1Y3QgZGE5MTUwX2dwYWRjKSk7DQo+IEJUVzogSWYgeW91IHVzZSBzaXpl
-b2YoKmdwYWRjKSBpbnN0ZWFkIChsaWtlIGl0IGlzIHVzdWFsbHkgZG9uZSBhcyB3ZWxsKSwNCj4g
-aXQgd2lsbCBwZXJmZWN0bHkgZml0IGluIG9uZSBsaW5lLg0KDQpJIHByZWZlcnJlZCB0byBiZSBl
-eHBsaWNpdCB0aGF0IHRoZSBpdGVtIGlzIGEgc3RydWN0LCBidXQgcmVhbGx5IG5vdCB0aGF0IGZ1
-c3NlZA0KZWl0aGVyIHdheS4gQWxzbyBoYXZlIGJlZW4gYXNrZWQgcHJldmlvdXNseSBpbiBhIHNl
-cGFyYXRlIGRyaXZlciB0byBtYWtlIHRoZQ0Kc2FtZSBtb2QgeW91IG1lbnRpb24gc28gd2lsbCB1
-cGRhdGUgYWNjb3JkaW5nbHkuDQoNCj4gPiArCXJldCA9IGRldm1fcmVxdWVzdF90aHJlYWRlZF9p
-cnEoZGV2LCBpcnEsIE5VTEwsIGRhOTE1MF9ncGFkY19pcnEsDQo+ID4gKwkJCQkJSVJRRl9PTkVT
-SE9ULCAiR1BBREMiLCBncGFkYyk7DQo+ID4gKwlpZiAocmV0KSB7DQo+ID4gKwkJZGV2X2Vycihk
-ZXYsICJGYWlsZWQgdG8gcmVxdWVzdCBJUlEgJWQ6ICVkXG4iLCBpcnEsIHJldCk7DQo+ID4gKwkJ
-Z290byBpaW9fbWFwX3VucmVnOw0KPiBZb3UgbmVlZCB0byByZXR1cm4gcmV0IGhlcmUsIG5vIGp1
-bXAgdG8gZXJyb3Igb3V0IHBhdGguDQoNClllcywgdGhhbmtzLiBBbm5veWVkIEkgbWlzc2VkIHRo
-YXQgaW4gdGhlIHJlLWZhY3Rvci4gV2lsbCBmaXggaXQuDQo=
+On 2014=EB=85=84 12=EC=9B=94 07=EC=9D=BC 21:04, Ajay Kumar wrote:
+> ctx->drm_dev is unnecessary since it can be easily accessed
+> via ctx->manager->drm_dev. Even the pipe variable inside
+> fimd_context is redundant. Cleaning up the same.
+
+Already applied.
+
+Thanks,
+Inki Dae
+
+>=20
+> Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
+> ---
+>  drivers/gpu/drm/exynos/exynos_drm_fimd.c |   28 ++++++++++++++------=
+--------
+>  1 file changed, 14 insertions(+), 14 deletions(-)
+>=20
+> diff --git a/drivers/gpu/drm/exynos/exynos_drm_fimd.c b/drivers/gpu/d=
+rm/exynos/exynos_drm_fimd.c
+> index e5810d1..157f4dd 100644
+> --- a/drivers/gpu/drm/exynos/exynos_drm_fimd.c
+> +++ b/drivers/gpu/drm/exynos/exynos_drm_fimd.c
+> @@ -159,7 +159,6 @@ struct fimd_win_data {
+>  struct fimd_context {
+>  	struct exynos_drm_manager	manager;
+>  	struct device			*dev;
+> -	struct drm_device		*drm_dev;
+>  	struct clk			*bus_clk;
+>  	struct clk			*lcd_clk;
+>  	void __iomem			*regs;
+> @@ -174,7 +173,6 @@ struct fimd_context {
+>  	u32				i80ifcon;
+>  	bool				i80_if;
+>  	bool				suspended;
+> -	int				pipe;
+>  	wait_queue_head_t		wait_vsync_queue;
+>  	atomic_t			wait_vsync_event;
+>  	atomic_t			win_updated;
+> @@ -298,17 +296,17 @@ static int fimd_mgr_initialize(struct exynos_dr=
+m_manager *mgr,
+>  	struct exynos_drm_private *priv;
+>  	priv =3D drm_dev->dev_private;
+> =20
+> -	mgr->drm_dev =3D ctx->drm_dev =3D drm_dev;
+> -	mgr->pipe =3D ctx->pipe =3D priv->pipe++;
+> +	mgr->drm_dev =3D drm_dev;
+> +	mgr->pipe =3D priv->pipe++;
+> =20
+>  	/* attach this sub driver to iommu mapping if supported. */
+> -	if (is_drm_iommu_supported(ctx->drm_dev)) {
+> +	if (is_drm_iommu_supported(mgr->drm_dev)) {
+>  		/*
+>  		 * If any channel is already active, iommu will throw
+>  		 * a PAGE FAULT when enabled. So clear any channel if enabled.
+>  		 */
+>  		fimd_clear_channel(mgr);
+> -		drm_iommu_attach_device(ctx->drm_dev, ctx->dev);
+> +		drm_iommu_attach_device(mgr->drm_dev, ctx->dev);
+>  	}
+> =20
+>  	return 0;
+> @@ -319,8 +317,8 @@ static void fimd_mgr_remove(struct exynos_drm_man=
+ager *mgr)
+>  	struct fimd_context *ctx =3D mgr_to_fimd(mgr);
+> =20
+>  	/* detach this sub driver from iommu mapping if supported. */
+> -	if (is_drm_iommu_supported(ctx->drm_dev))
+> -		drm_iommu_detach_device(ctx->drm_dev, ctx->dev);
+> +	if (is_drm_iommu_supported(mgr->drm_dev))
+> +		drm_iommu_detach_device(mgr->drm_dev, ctx->dev);
+>  }
+> =20
+>  static u32 fimd_calc_clkdiv(struct fimd_context *ctx,
+> @@ -1001,7 +999,7 @@ static void fimd_te_handler(struct exynos_drm_ma=
+nager *mgr)
+>  	struct fimd_context *ctx =3D mgr_to_fimd(mgr);
+> =20
+>  	/* Checks the crtc is detached already from encoder */
+> -	if (ctx->pipe < 0 || !ctx->drm_dev)
+> +	if (mgr->pipe < 0 || !mgr->drm_dev)
+>  		return;
+> =20
+>  	/*
+> @@ -1018,7 +1016,7 @@ static void fimd_te_handler(struct exynos_drm_m=
+anager *mgr)
+>  	}
+> =20
+>  	if (test_bit(0, &ctx->irq_flags))
+> -		drm_handle_vblank(ctx->drm_dev, ctx->pipe);
+> +		drm_handle_vblank(mgr->drm_dev, mgr->pipe);
+>  }
+> =20
+>  static struct exynos_drm_manager_ops fimd_manager_ops =3D {
+> @@ -1047,17 +1045,19 @@ static irqreturn_t fimd_irq_handler(int irq, =
+void *dev_id)
+>  		writel(clear_bit, ctx->regs + VIDINTCON1);
+> =20
+>  	/* check the crtc is detached already from encoder */
+> -	if (ctx->pipe < 0 || !ctx->drm_dev)
+> +	if (ctx->manager.pipe < 0 || !ctx->manager.drm_dev)
+>  		goto out;
+> =20
+>  	if (ctx->i80_if) {
+> -		exynos_drm_crtc_finish_pageflip(ctx->drm_dev, ctx->pipe);
+> +		exynos_drm_crtc_finish_pageflip(ctx->manager.drm_dev,
+> +							ctx->manager.pipe);
+> =20
+>  		/* Exits triggering mode */
+>  		atomic_set(&ctx->triggering, 0);
+>  	} else {
+> -		drm_handle_vblank(ctx->drm_dev, ctx->pipe);
+> -		exynos_drm_crtc_finish_pageflip(ctx->drm_dev, ctx->pipe);
+> +		drm_handle_vblank(ctx->manager.drm_dev, ctx->manager.pipe);
+> +		exynos_drm_crtc_finish_pageflip(ctx->manager.drm_dev,
+> +							ctx->manager.pipe);
+> =20
+>  		/* set wait vsync event to zero and wake up queue. */
+>  		if (atomic_read(&ctx->wait_vsync_event)) {
+>=20
