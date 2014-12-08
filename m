@@ -1,7 +1,7 @@
 From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v1 30/34] NFC: nci: Add support RF_NFCEE_ACTION_NTF
-Date: Mon,  8 Dec 2014 22:08:35 +0100
-Message-ID: <1418072919-10535-31-git-send-email-christophe-h.ricard@st.com>
+Subject: [PATCH v1 32/34] NFC: st21nfcb: Add support for HCI event transaction
+Date: Mon,  8 Dec 2014 22:08:37 +0100
+Message-ID: <1418072919-10535-33-git-send-email-christophe-h.ricard@st.com>
 References: <1418072919-10535-1-git-send-email-christophe-h.ricard@st.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1418072919-10535-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
@@ -10,65 +10,55 @@ To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-RF NFCEE Action is the mechanism used to indicate that an action involving one of the NFCEEs
-in the device has occurred that may be of interest to the DH.
-
-This may happen for example when doing an RF Transaction with a payment reader.
+The event transaction notifies the Device Host that an action is required
+to manage a specific Secure Element application.
 
 Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
 ---
- include/net/nfc/nci.h |  8 ++++++++
- net/nfc/nci/ntf.c     | 11 +++++++++++
- 2 files changed, 19 insertions(+)
+ drivers/nfc/st21nfcb/st21nfcb_se.c | 23 ++++++++++++++++++++++-
+ 1 file changed, 22 insertions(+), 1 deletion(-)
 
-diff --git a/include/net/nfc/nci.h b/include/net/nfc/nci.h
-index deac78b..6c1beb2 100644
---- a/include/net/nfc/nci.h
-+++ b/include/net/nfc/nci.h
-@@ -499,6 +499,14 @@ struct nci_rf_deactivate_ntf {
- 	__u8	reason;
- } __packed;
- 
-+#define NCI_OP_RF_NFCEE_ACTION_NTF	nci_opcode_pack(NCI_GID_RF_MGMT, 0x09)
-+struct nci_rf_nfcee_action_ntf {
-+	__u8 nfcee_id;
-+	__u8 trigger;
-+	__u8 supported_data_length;
-+	__u8 supported_data[0];
-+} __packed;
-+
- #define NCI_OP_NFCEE_DISCOVER_NTF nci_opcode_pack(NCI_GID_NFCEE_MGMT, 0x00)
- struct nci_nfcee_supported_protocol {
- 	__u8	num_protocol;
-diff --git a/net/nfc/nci/ntf.c b/net/nfc/nci/ntf.c
-index 5af0564..83ba1f8 100644
---- a/net/nfc/nci/ntf.c
-+++ b/net/nfc/nci/ntf.c
-@@ -736,6 +736,12 @@ exit:
- 	nci_req_complete(ndev, status);
- }
- 
-+static void nci_nfcee_action_ntf_packet(struct nci_dev *ndev,
-+					struct sk_buff *skb)
-+{
-+	pr_debug("\n");
-+}
-+
- void nci_ntf_packet(struct nci_dev *ndev, struct sk_buff *skb)
+diff --git a/drivers/nfc/st21nfcb/st21nfcb_se.c b/drivers/nfc/st21nfcb/st21nfcb_se.c
+index cf65368..6868043 100644
+--- a/drivers/nfc/st21nfcb/st21nfcb_se.c
++++ b/drivers/nfc/st21nfcb/st21nfcb_se.c
+@@ -287,14 +287,35 @@ static int st21nfcb_hci_connectivity_event_received(struct st21nfcb_hci_dev *hde
+ 						    struct sk_buff *skb)
  {
- 	__u16 ntf_opcode = nci_opcode(skb->data);
-@@ -777,6 +783,11 @@ void nci_ntf_packet(struct nci_dev *ndev, struct sk_buff *skb)
- 	case NCI_OP_NFCEE_DISCOVER_NTF:
- 		nci_nfcee_discover_ntf_packet(ndev, skb);
- 		break;
+ 	int r = 0;
++	struct device *dev = &hdev->ndev->nfc_dev->dev;
++	struct nfc_evt_transaction *transaction;
+ 
+ 	pr_debug("connectivity gate event: %x\n", event);
+ 
+ 	switch (event) {
+ 	case ST21NFCB_EVT_CONNECTIVITY:
 +
-+	case NCI_OP_RF_NFCEE_ACTION_NTF:
-+		nci_nfcee_action_ntf_packet(ndev, skb);
-+		break;
+ 	break;
+ 	case ST21NFCB_EVT_TRANSACTION:
+-	break;
++		if (skb->len < NFC_MIN_AID_LENGTH + 2 &&
++		    skb->data[0] != NFC_EVT_TRANSACTION_AID_TAG)
++			return -EPROTO;
 +
++		transaction = (struct nfc_evt_transaction *)devm_kzalloc(dev,
++					    skb->len - 2, GFP_KERNEL);
++
++		transaction->aid_len = skb->data[1];
++		memcpy(transaction->aid, &skb->data[2], skb->data[1]);
++
++		if (skb->data[transaction->aid_len + 2] !=
++		    NFC_EVT_TRANSACTION_PARAMS_TAG)
++			return -EPROTO;
++
++		transaction->params_len = skb->data[transaction->aid_len + 3];
++		memcpy(transaction->params, skb->data +
++		       transaction->aid_len + 4, transaction->params_len);
++
++		r = nfc_se_transaction(hdev->ndev->nfc_dev, host, transaction);
  	default:
- 		pr_err("unknown ntf opcode 0x%x\n", ntf_opcode);
- 		break;
+ 		return 1;
+ 	}
 -- 
 2.1.0
 
