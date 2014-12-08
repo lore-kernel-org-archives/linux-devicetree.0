@@ -1,7 +1,7 @@
 From: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v5 5/6] powerpc/mpc85xx: Add FSL QorIQ DPAA BMan support to device tree(s)
-Date: Mon, 8 Dec 2014 04:29:20 -0600
-Message-ID: <1418034561-12034-6-git-send-email-Emilian.Medve@Freescale.com>
+Subject: [PATCH v5 6/6] powerpc/mpc85xx: Add FSL QorIQ DPAA QMan support to device tree(s)
+Date: Mon, 8 Dec 2014 04:29:21 -0600
+Message-ID: <1418034561-12034-7-git-send-email-Emilian.Medve@Freescale.com>
 References: <1418034561-12034-1-git-send-email-Emilian.Medve@Freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -23,145 +23,138 @@ Signed-off-by: Poonam Aggrwal <poonam.aggrwal-KZfg59tc24xl57MIdRCFDg@public.gman
 [Emil Medve: Sync with the upstream binding]
 Signed-off-by: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
 ---
- arch/powerpc/boot/dts/b4qds.dtsi            |  17 +-
- arch/powerpc/boot/dts/fsl/b4860si-post.dtsi |  60 ++++++-
- arch/powerpc/boot/dts/fsl/b4si-post.dtsi    |  89 +++++++++-
- arch/powerpc/boot/dts/fsl/p1023si-post.dtsi |  37 +++-
- arch/powerpc/boot/dts/fsl/p2041si-post.dtsi |  11 +-
- arch/powerpc/boot/dts/fsl/p3041si-post.dtsi |  11 +-
- arch/powerpc/boot/dts/fsl/p4080si-post.dtsi |  11 +-
- arch/powerpc/boot/dts/fsl/p5020si-post.dtsi |  11 +-
- arch/powerpc/boot/dts/fsl/p5040si-post.dtsi |  11 +-
- arch/powerpc/boot/dts/fsl/t1040si-post.dtsi |  65 ++++++-
- arch/powerpc/boot/dts/fsl/t2081si-post.dtsi | 105 ++++++++++-
- arch/powerpc/boot/dts/fsl/t4240si-post.dtsi | 265 +++++++++++++++++++++++++++-
- arch/powerpc/boot/dts/kmcoge4.dts           |  15 ++
- arch/powerpc/boot/dts/oca4080.dts           |  15 ++
- arch/powerpc/boot/dts/p1023rdb.dts          |  18 +-
- arch/powerpc/boot/dts/p2041rdb.dts          |  17 +-
- arch/powerpc/boot/dts/p3041ds.dts           |  17 +-
- arch/powerpc/boot/dts/p4080ds.dts           |  17 +-
- arch/powerpc/boot/dts/p5020ds.dts           |  17 +-
- arch/powerpc/boot/dts/p5040ds.dts           |  17 +-
- arch/powerpc/boot/dts/t104xqds.dtsi         |  17 +-
- arch/powerpc/boot/dts/t104xrdb.dtsi         |  14 ++
- arch/powerpc/boot/dts/t208xqds.dtsi         |  17 +-
- arch/powerpc/boot/dts/t208xrdb.dtsi         |  15 ++
- arch/powerpc/boot/dts/t4240qds.dts          |  17 +-
- arch/powerpc/boot/dts/t4240rdb.dts          |  15 ++
- 26 files changed, 899 insertions(+), 22 deletions(-)
+ arch/powerpc/boot/dts/b4qds.dtsi            |  12 ++
+ arch/powerpc/boot/dts/fsl/b4860si-post.dtsi |  69 ++++++
+ arch/powerpc/boot/dts/fsl/b4si-post.dtsi    | 106 ++++++++++
+ arch/powerpc/boot/dts/fsl/p1023si-post.dtsi |  43 ++++
+ arch/powerpc/boot/dts/fsl/p2041si-post.dtsi |  13 ++
+ arch/powerpc/boot/dts/fsl/p3041si-post.dtsi |  13 ++
+ arch/powerpc/boot/dts/fsl/p4080si-post.dtsi |  13 ++
+ arch/powerpc/boot/dts/fsl/p5020si-post.dtsi |  13 ++
+ arch/powerpc/boot/dts/fsl/p5040si-post.dtsi |  13 ++
+ arch/powerpc/boot/dts/fsl/t1040si-post.dtsi |  78 +++++++
+ arch/powerpc/boot/dts/fsl/t2081si-post.dtsi | 126 +++++++++++
+ arch/powerpc/boot/dts/fsl/t4240si-post.dtsi | 318 ++++++++++++++++++++++++++++
+ arch/powerpc/boot/dts/kmcoge4.dts           |  12 ++
+ arch/powerpc/boot/dts/oca4080.dts           |  12 ++
+ arch/powerpc/boot/dts/p1023rdb.dts          |  12 ++
+ arch/powerpc/boot/dts/p2041rdb.dts          |  12 ++
+ arch/powerpc/boot/dts/p3041ds.dts           |  12 ++
+ arch/powerpc/boot/dts/p4080ds.dts           |  12 ++
+ arch/powerpc/boot/dts/p5020ds.dts           |  12 ++
+ arch/powerpc/boot/dts/p5040ds.dts           |  12 ++
+ arch/powerpc/boot/dts/t104xqds.dtsi         |  12 ++
+ arch/powerpc/boot/dts/t104xrdb.dtsi         |  12 ++
+ arch/powerpc/boot/dts/t208xqds.dtsi         |  12 ++
+ arch/powerpc/boot/dts/t208xrdb.dtsi         |  12 ++
+ arch/powerpc/boot/dts/t4240qds.dts          |  12 ++
+ arch/powerpc/boot/dts/t4240rdb.dts          |  12 ++
+ 26 files changed, 985 insertions(+)
 
 diff --git a/arch/powerpc/boot/dts/b4qds.dtsi b/arch/powerpc/boot/dts/b4qds.dtsi
-index 6188583..89fa85f 100644
+index 89fa85f..7ca7b7a 100644
 --- a/arch/powerpc/boot/dts/b4qds.dtsi
 +++ b/arch/powerpc/boot/dts/b4qds.dtsi
-@@ -1,7 +1,7 @@
- /*
-  * B4420DS Device Tree Source
-  *
-- * Copyright 2012 Freescale Semiconductor, Inc.
-+ * Copyright 2012 - 2014 Freescale Semiconductor, Inc.
-  *
-  * Redistribution and use in source and binary forms, with or without
-  * modification, are permitted provided that the following conditions are met:
-@@ -104,10 +104,25 @@
- 		device_type = "memory";
- 	};
- 
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		bman_fbpr: bman-fbpr {
-+			size = <0 0x1000000>;
-+			alignment = <0 0x1000000>;
+@@ -113,6 +113,14 @@
+ 			size = <0 0x1000000>;
+ 			alignment = <0 0x1000000>;
+ 		};
++		qman_fqd: qman-fqd {
++			size = <0 0x400000>;
++			alignment = <0 0x400000>;
 +		};
-+	};
-+
- 	dcsr: dcsr@f00000000 {
- 		ranges = <0x00000000 0xf 0x00000000 0x01052000>;
++		qman_pfdr: qman-pfdr {
++			size = <0 0x2000000>;
++			alignment = <0 0x2000000>;
++		};
  	};
  
-+	bportals: bman-portals@ff4000000 {
-+		ranges = <0x0 0xf 0xf4000000 0x2000000>;
+ 	dcsr: dcsr@f00000000 {
+@@ -123,6 +131,10 @@
+ 		ranges = <0x0 0xf 0xf4000000 0x2000000>;
+ 	};
+ 
++	qportals: qman-portals@ff6000000 {
++		ranges = <0x0 0xf 0xf6000000 0x2000000>;
 +	};
 +
  	soc: soc@ffe000000 {
  		ranges = <0x00000000 0xf 0xfe000000 0x1000000>;
  		reg = <0xf 0xfe000000 0 0x00001000>;
 diff --git a/arch/powerpc/boot/dts/fsl/b4860si-post.dtsi b/arch/powerpc/boot/dts/fsl/b4860si-post.dtsi
-index f356ed2..2dd61fa 100644
+index 2dd61fa..38e297b 100644
 --- a/arch/powerpc/boot/dts/fsl/b4860si-post.dtsi
 +++ b/arch/powerpc/boot/dts/fsl/b4860si-post.dtsi
-@@ -1,7 +1,7 @@
- /*
-  * B4860 Silicon/SoC Device Tree Source (post include)
-  *
-- * Copyright 2012 Freescale Semiconductor Inc.
-+ * Copyright 2012 - 2014 Freescale Semiconductor Inc.
-  *
-  * Redistribution and use in source and binary forms, with or without
-  * modification, are permitted provided that the following conditions are met:
-@@ -109,6 +109,64 @@
+@@ -167,6 +167,75 @@
  	};
  };
  
-+&bportals {
-+	bman-portal@38000 {
-+		compatible = "fsl,bman-portal";
++&qportals {
++	qportal14: qman-portal@38000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x38000 0x4000>, <0x100e000 0x1000>;
-+		interrupts = <133 2 0 0>;
++		interrupts = <132 0x2 0 0>;
++		fsl,qman-channel-id = <0xe>;
 +	};
-+	bman-portal@3c000 {
-+		compatible = "fsl,bman-portal";
++	qportal15: qman-portal@3c000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x3c000 0x4000>, <0x100f000 0x1000>;
-+		interrupts = <135 2 0 0>;
++		interrupts = <134 0x2 0 0>;
++		fsl,qman-channel-id = <0xf>;
 +	};
-+	bman-portal@40000 {
-+		compatible = "fsl,bman-portal";
++	qportal16: qman-portal@40000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x40000 0x4000>, <0x1010000 0x1000>;
-+		interrupts = <137 2 0 0>;
++		interrupts = <136 0x2 0 0>;
++		fsl,qman-channel-id = <0x10>;
 +	};
-+	bman-portal@44000 {
-+		compatible = "fsl,bman-portal";
++	qportal17: qman-portal@44000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x44000 0x4000>, <0x1011000 0x1000>;
-+		interrupts = <139 2 0 0>;
++		interrupts = <138 0x2 0 0>;
++		fsl,qman-channel-id = <0x11>;
 +	};
-+	bman-portal@48000 {
-+		compatible = "fsl,bman-portal";
++	qportal18: qman-portal@48000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x48000 0x4000>, <0x1012000 0x1000>;
-+		interrupts = <141 2 0 0>;
++		interrupts = <140 0x2 0 0>;
++		fsl,qman-channel-id = <0x12>;
 +	};
-+	bman-portal@4c000 {
-+		compatible = "fsl,bman-portal";
++	qportal19: qman-portal@4c000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x4c000 0x4000>, <0x1013000 0x1000>;
-+		interrupts = <143 2 0 0>;
++		interrupts = <142 0x2 0 0>;
++		fsl,qman-channel-id = <0x13>;
 +	};
-+	bman-portal@50000 {
-+		compatible = "fsl,bman-portal";
++	qportal20: qman-portal@50000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x50000 0x4000>, <0x1014000 0x1000>;
-+		interrupts = <145 2 0 0>;
++		interrupts = <144 0x2 0 0>;
++		fsl,qman-channel-id = <0x14>;
 +	};
-+	bman-portal@54000 {
-+		compatible = "fsl,bman-portal";
++	qportal21: qman-portal@54000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x54000 0x4000>, <0x1015000 0x1000>;
-+		interrupts = <147 2 0 0>;
++		interrupts = <146 0x2 0 0>;
++		fsl,qman-channel-id = <0x15>;
 +	};
-+	bman-portal@58000 {
-+		compatible = "fsl,bman-portal";
++	qportal22: qman-portal@58000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x58000 0x4000>, <0x1016000 0x1000>;
-+		interrupts = <149 2 0 0>;
++		interrupts = <148 0x2 0 0>;
++		fsl,qman-channel-id = <0x16>;
 +	};
-+	bman-portal@5c000 {
-+		compatible = "fsl,bman-portal";
++	qportal23: qman-portal@5c000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x5c000 0x4000>, <0x1017000 0x1000>;
-+		interrupts = <151 2 0 0>;
++		interrupts = <150 0x2 0 0>;
++		fsl,qman-channel-id = <0x17>;
 +	};
-+	bman-portal@60000 {
-+		compatible = "fsl,bman-portal";
++	qportal24: qman-portal@60000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x60000 0x4000>, <0x1018000 0x1000>;
-+		interrupts = <153 2 0 0>;
++		interrupts = <152 0x2 0 0>;
++		fsl,qman-channel-id = <0x18>;
 +	};
 +};
 +
@@ -169,1450 +162,1398 @@ index f356ed2..2dd61fa 100644
  	ddr2: memory-controller@9000 {
  		compatible = "fsl,qoriq-memory-controller-v4.5", "fsl,qoriq-memory-controller";
 diff --git a/arch/powerpc/boot/dts/fsl/b4si-post.dtsi b/arch/powerpc/boot/dts/fsl/b4si-post.dtsi
-index 4cd4a31..0d09bfb 100644
+index 0d09bfb..5879cf3 100644
 --- a/arch/powerpc/boot/dts/fsl/b4si-post.dtsi
 +++ b/arch/powerpc/boot/dts/fsl/b4si-post.dtsi
-@@ -1,7 +1,7 @@
- /*
-  * B4420 Silicon/SoC Device Tree Source (post include)
-  *
-- * Copyright 2012 Freescale Semiconductor, Inc.
-+ * Copyright 2012 - 2014 Freescale Semiconductor, Inc.
-  *
-  * Redistribution and use in source and binary forms, with or without
-  * modification, are permitted provided that the following conditions are met:
-@@ -32,6 +32,11 @@
-  * this software, even if advised of the possibility of such damage.
-  */
+@@ -37,6 +37,16 @@
+ 	alloc-ranges = <0 0 0x10000 0>;
+ };
  
-+&bman_fbpr {
-+	compatible = "fsl,bman-fbpr";
++&qman_fqd {
++	compatible = "fsl,qman-fqd";
++	alloc-ranges = <0 0 0x10000 0>;
++};
++
++&qman_pfdr {
++	compatible = "fsl,qman-pfdr";
 +	alloc-ranges = <0 0 0x10000 0>;
 +};
 +
  &ifc {
  	#address-cells = <2>;
  	#size-cells = <1>;
-@@ -128,6 +133,83 @@
+@@ -210,6 +220,97 @@
  	};
  };
  
-+&bportals {
++&qportals {
 +	#address-cells = <0x1>;
 +	#size-cells = <0x1>;
 +	compatible = "simple-bus";
 +
-+	bman-portal@0 {
-+		compatible = "fsl,bman-portal";
++	qportal0: qman-portal@0 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x0 0x4000>, <0x1000000 0x1000>;
-+		interrupts = <105 2 0 0>;
++		interrupts = <104 0x2 0 0>;
++		fsl,qman-channel-id = <0x0>;
 +	};
-+	bman-portal@4000 {
-+		compatible = "fsl,bman-portal";
++	qportal1: qman-portal@4000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x4000 0x4000>, <0x1001000 0x1000>;
-+		interrupts = <107 2 0 0>;
++		interrupts = <106 0x2 0 0>;
++		fsl,qman-channel-id = <0x1>;
 +	};
-+	bman-portal@8000 {
-+		compatible = "fsl,bman-portal";
++	qportal2: qman-portal@8000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x8000 0x4000>, <0x1002000 0x1000>;
-+		interrupts = <109 2 0 0>;
++		interrupts = <108 0x2 0 0>;
++		fsl,qman-channel-id = <0x2>;
 +	};
-+	bman-portal@c000 {
-+		compatible = "fsl,bman-portal";
++	qportal3: qman-portal@c000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0xc000 0x4000>, <0x1003000 0x1000>;
-+		interrupts = <111 2 0 0>;
++		interrupts = <110 0x2 0 0>;
++		fsl,qman-channel-id = <0x3>;
 +	};
-+	bman-portal@10000 {
-+		compatible = "fsl,bman-portal";
++	qportal4: qman-portal@10000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x10000 0x4000>, <0x1004000 0x1000>;
-+		interrupts = <113 2 0 0>;
++		interrupts = <112 0x2 0 0>;
++		fsl,qman-channel-id = <0x4>;
 +	};
-+	bman-portal@14000 {
-+		compatible = "fsl,bman-portal";
++	qportal5: qman-portal@14000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x14000 0x4000>, <0x1005000 0x1000>;
-+		interrupts = <115 2 0 0>;
++		interrupts = <114 0x2 0 0>;
++		fsl,qman-channel-id = <0x5>;
 +	};
-+	bman-portal@18000 {
-+		compatible = "fsl,bman-portal";
++	qportal6: qman-portal@18000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x18000 0x4000>, <0x1006000 0x1000>;
-+		interrupts = <117 2 0 0>;
++		interrupts = <116 0x2 0 0>;
++		fsl,qman-channel-id = <0x6>;
 +	};
-+	bman-portal@1c000 {
-+		compatible = "fsl,bman-portal";
++	qportal7: qman-portal@1c000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x1c000 0x4000>, <0x1007000 0x1000>;
-+		interrupts = <119 2 0 0>;
++		interrupts = <118 0x2 0 0>;
++		fsl,qman-channel-id = <0x7>;
 +	};
-+	bman-portal@20000 {
-+		compatible = "fsl,bman-portal";
++	qportal8: qman-portal@20000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x20000 0x4000>, <0x1008000 0x1000>;
-+		interrupts = <121 2 0 0>;
++		interrupts = <120 0x2 0 0>;
++		fsl,qman-channel-id = <0x8>;
 +	};
-+	bman-portal@24000 {
-+		compatible = "fsl,bman-portal";
++	qportal9: qman-portal@24000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x24000 0x4000>, <0x1009000 0x1000>;
-+		interrupts = <123 2 0 0>;
++		interrupts = <122 0x2 0 0>;
++		fsl,qman-channel-id = <0x9>;
 +	};
-+	bman-portal@28000 {
-+		compatible = "fsl,bman-portal";
++	qportal10: qman-portal@28000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x28000 0x4000>, <0x100a000 0x1000>;
-+		interrupts = <125 2 0 0>;
++		interrupts = <124 0x2 0 0>;
++		fsl,qman-channel-id = <0xa>;
 +	};
-+	bman-portal@2c000 {
-+		compatible = "fsl,bman-portal";
++	qportal11: qman-portal@2c000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x2c000 0x4000>, <0x100b000 0x1000>;
-+		interrupts = <127 2 0 0>;
++		interrupts = <126 0x2 0 0>;
++		fsl,qman-channel-id = <0xb>;
 +	};
-+	bman-portal@30000 {
-+		compatible = "fsl,bman-portal";
++	qportal12: qman-portal@30000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x30000 0x4000>, <0x100c000 0x1000>;
-+		interrupts = <129 2 0 0>;
++		interrupts = <128 0x2 0 0>;
++		fsl,qman-channel-id = <0xc>;
 +	};
-+	bman-portal@34000 {
-+		compatible = "fsl,bman-portal";
++	qportal13: qman-portal@34000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x34000 0x4000>, <0x100d000 0x1000>;
-+		interrupts = <131 2 0 0>;
++		interrupts = <130 0x2 0 0>;
++		fsl,qman-channel-id = <0xd>;
 +	};
 +};
 +
  &soc {
  	#address-cells = <1>;
  	#size-cells = <1>;
-@@ -261,6 +343,11 @@
+@@ -343,6 +444,11 @@
  /include/ "qoriq-duart-1.dtsi"
  /include/ "qoriq-sec5.3-0.dtsi"
  
-+/include/ "qoriq-bman1.dtsi"
-+	bman: bman@31a000 {
-+		interrupts = <16 2 1 29>;
++/include/ "qoriq-qman3.dtsi"
++	qman: qman@318000 {
++		interrupts = <16 2 1 28>;
 +	};
 +
- /include/ "qoriq-fman3-0.dtsi"
- /include/ "qoriq-fman3-0-1g-0.dtsi"
- /include/ "qoriq-fman3-0-1g-1.dtsi"
+ /include/ "qoriq-bman1.dtsi"
+ 	bman: bman@31a000 {
+ 		interrupts = <16 2 1 29>;
 diff --git a/arch/powerpc/boot/dts/fsl/p1023si-post.dtsi b/arch/powerpc/boot/dts/fsl/p1023si-post.dtsi
-index 01fd153..a236af1 100644
+index a236af1..da02dc4 100644
 --- a/arch/powerpc/boot/dts/fsl/p1023si-post.dtsi
 +++ b/arch/powerpc/boot/dts/fsl/p1023si-post.dtsi
-@@ -1,7 +1,7 @@
- /*
-  * P1023/P1017 Silicon/SoC Device Tree Source (post include)
-  *
-- * Copyright 2011 Freescale Semiconductor Inc.
-+ * Copyright 2011 - 2014 Freescale Semiconductor Inc.
-  *
-  * Redistribution and use in source and binary forms, with or without
-  * modification, are permitted provided that the following conditions are met:
-@@ -32,6 +32,11 @@
-  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-  */
+@@ -37,6 +37,16 @@
+ 	alloc-ranges = <0 0 0x10 0>;
+ };
  
-+&bman_fbpr {
-+	compatible = "fsl,bman-fbpr";
++&qman_fqd {
++	compatible = "fsl,qman-fqd";
++	alloc-ranges = <0 0 0x10 0>;
++};
++
++&qman_pfdr {
++	compatible = "fsl,qman-pfdr";
 +	alloc-ranges = <0 0 0x10 0>;
 +};
 +
  &lbc {
  	#address-cells = <2>;
  	#size-cells = <1>;
-@@ -97,6 +102,28 @@
+@@ -102,6 +112,31 @@
  	};
  };
  
-+&bportals {
++&qportals {
 +	#address-cells = <1>;
 +	#size-cells = <1>;
 +	compatible = "simple-bus";
 +
-+	bman-portal@0 {
-+		compatible = "fsl,bman-portal";
++	qportal0: qman-portal@0 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x0 0x4000>, <0x100000 0x1000>;
-+		interrupts = <30 2 0 0>;
++		interrupts = <29 2 0 0>;
++		fsl,qman-channel-id = <0>;
 +	};
-+	bman-portal@4000 {
-+		compatible = "fsl,bman-portal";
++	qportal1: qman-portal@4000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x4000 0x4000>, <0x101000 0x1000>;
-+		interrupts = <32 2 0 0>;
++		interrupts = <31 2 0 0>;
++		fsl,qman-channel-id = <1>;
 +	};
-+	bman-portal@8000 {
-+		compatible = "fsl,bman-portal";
++	qportal2: qman-portal@8000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x8000 0x4000>, <0x102000 0x1000>;
-+		interrupts = <34 2 0 0>;
++		interrupts = <33 2 0 0>;
++		fsl,qman-channel-id = <2>;
 +	};
 +};
 +
- &soc {
+ &bportals {
  	#address-cells = <1>;
  	#size-cells = <1>;
-@@ -221,6 +248,14 @@
+@@ -248,6 +283,14 @@
  /include/ "pq3-mpic.dtsi"
  /include/ "pq3-mpic-timer-B.dtsi"
  
-+	bman: bman@8a000 {
-+		compatible = "fsl,bman";
-+		reg = <0x8a000 0x1000>;
++	qman: qman@88000 {
++		compatible = "fsl,qman";
++		reg = <0x88000 0x1000>;
 +		interrupts = <16 2 0 0>;
-+		fsl,bman-portals = <&bportals>;
-+		memory-region = <&bman_fbpr>;
++		fsl,qman-portals = <&qportals>;
++		memory-region = <&qman_fqd &qman_pfdr>;
 +	};
 +
- 	global-utilities@e0000 {
- 		compatible = "fsl,p1023-guts";
- 		reg = <0xe0000 0x1000>;
+ 	bman: bman@8a000 {
+ 		compatible = "fsl,bman";
+ 		reg = <0x8a000 0x1000>;
 diff --git a/arch/powerpc/boot/dts/fsl/p2041si-post.dtsi b/arch/powerpc/boot/dts/fsl/p2041si-post.dtsi
-index 37d35da..31d55e6 100644
+index 31d55e6..b612005 100644
 --- a/arch/powerpc/boot/dts/fsl/p2041si-post.dtsi
 +++ b/arch/powerpc/boot/dts/fsl/p2041si-post.dtsi
-@@ -1,7 +1,7 @@
- /*
-  * P2041/P2040 Silicon/SoC Device Tree Source (post include)
-  *
-- * Copyright 2011 Freescale Semiconductor Inc.
-+ * Copyright 2011 - 2014 Freescale Semiconductor Inc.
-  *
-  * Redistribution and use in source and binary forms, with or without
-  * modification, are permitted provided that the following conditions are met:
-@@ -32,6 +32,11 @@
-  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-  */
+@@ -37,6 +37,16 @@
+ 	alloc-ranges = <0 0 0x10 0>;
+ };
  
-+&bman_fbpr {
-+	compatible = "fsl,bman-fbpr";
++&qman_fqd {
++	compatible = "fsl,qman-fqd";
++	alloc-ranges = <0 0 0x10 0>;
++};
++
++&qman_pfdr {
++	compatible = "fsl,qman-pfdr";
 +	alloc-ranges = <0 0 0x10 0>;
 +};
 +
  &lbc {
  	compatible = "fsl,p2041-elbc", "fsl,elbc", "simple-bus";
  	interrupts = <25 2 0 0>;
-@@ -216,6 +221,8 @@
- 	};
- };
+@@ -223,6 +233,8 @@
  
-+/include/ "qoriq-bman1-portals.dtsi"
+ /include/ "qoriq-bman1-portals.dtsi"
+ 
++/include/ "qoriq-qman1-portals.dtsi"
 +
  &soc {
  	#address-cells = <1>;
  	#size-cells = <1>;
-@@ -408,6 +415,8 @@ crypto: crypto@300000 {
+@@ -415,6 +427,7 @@ crypto: crypto@300000 {
  		fsl,iommu-parent = <&pamu1>;
  	};
  
-+/include/ "qoriq-bman1.dtsi"
-+
++/include/ "qoriq-qman1.dtsi"
+ /include/ "qoriq-bman1.dtsi"
+ 
  /include/ "qoriq-fman-0.dtsi"
- /include/ "qoriq-fman-0-1g-0.dtsi"
- /include/ "qoriq-fman-0-1g-1.dtsi"
 diff --git a/arch/powerpc/boot/dts/fsl/p3041si-post.dtsi b/arch/powerpc/boot/dts/fsl/p3041si-post.dtsi
-index 0e9a07d..c544445 100644
+index c544445..754a154 100644
 --- a/arch/powerpc/boot/dts/fsl/p3041si-post.dtsi
 +++ b/arch/powerpc/boot/dts/fsl/p3041si-post.dtsi
-@@ -1,7 +1,7 @@
- /*
-  * P3041 Silicon/SoC Device Tree Source (post include)
-  *
-- * Copyright 2011 Freescale Semiconductor Inc.
-+ * Copyright 2011 - 2014 Freescale Semiconductor Inc.
-  *
-  * Redistribution and use in source and binary forms, with or without
-  * modification, are permitted provided that the following conditions are met:
-@@ -32,6 +32,11 @@
-  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-  */
+@@ -37,6 +37,16 @@
+ 	alloc-ranges = <0 0 0x10 0>;
+ };
  
-+&bman_fbpr {
-+	compatible = "fsl,bman-fbpr";
++&qman_fqd {
++	compatible = "fsl,qman-fqd";
++	alloc-ranges = <0 0 0x10 0>;
++};
++
++&qman_pfdr {
++	compatible = "fsl,qman-pfdr";
 +	alloc-ranges = <0 0 0x10 0>;
 +};
 +
  &lbc {
  	compatible = "fsl,p3041-elbc", "fsl,elbc", "simple-bus";
  	interrupts = <25 2 0 0>;
-@@ -243,6 +248,8 @@
- 	};
- };
+@@ -250,6 +260,8 @@
  
-+/include/ "qoriq-bman1-portals.dtsi"
+ /include/ "qoriq-bman1-portals.dtsi"
+ 
++/include/ "qoriq-qman1-portals.dtsi"
 +
  &soc {
  	#address-cells = <1>;
  	#size-cells = <1>;
-@@ -435,6 +442,8 @@ crypto: crypto@300000 {
+@@ -442,6 +454,7 @@ crypto: crypto@300000 {
  		fsl,iommu-parent = <&pamu1>;
  	};
  
-+/include/ "qoriq-bman1.dtsi"
-+
++/include/ "qoriq-qman1.dtsi"
+ /include/ "qoriq-bman1.dtsi"
+ 
  /include/ "qoriq-fman-0.dtsi"
- /include/ "qoriq-fman-0-1g-0.dtsi"
- /include/ "qoriq-fman-0-1g-1.dtsi"
 diff --git a/arch/powerpc/boot/dts/fsl/p4080si-post.dtsi b/arch/powerpc/boot/dts/fsl/p4080si-post.dtsi
-index 090c586..ec86606 100644
+index ec86606..5f93f9e 100644
 --- a/arch/powerpc/boot/dts/fsl/p4080si-post.dtsi
 +++ b/arch/powerpc/boot/dts/fsl/p4080si-post.dtsi
-@@ -1,7 +1,7 @@
- /*
-  * P4080/P4040 Silicon/SoC Device Tree Source (post include)
-  *
-- * Copyright 2011 Freescale Semiconductor Inc.
-+ * Copyright 2011 - 2014 Freescale Semiconductor Inc.
-  *
-  * Redistribution and use in source and binary forms, with or without
-  * modification, are permitted provided that the following conditions are met:
-@@ -32,6 +32,11 @@
-  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-  */
+@@ -37,6 +37,16 @@
+ 	alloc-ranges = <0 0 0x10 0>;
+ };
  
-+&bman_fbpr {
-+	compatible = "fsl,bman-fbpr";
++&qman_fqd {
++	compatible = "fsl,qman-fqd";
++	alloc-ranges = <0 0 0x10 0>;
++};
++
++&qman_pfdr {
++	compatible = "fsl,qman-pfdr";
 +	alloc-ranges = <0 0 0x10 0>;
 +};
 +
  &lbc {
  	compatible = "fsl,p4080-elbc", "fsl,elbc", "simple-bus";
  	interrupts = <25 2 0 0>;
-@@ -243,6 +248,8 @@
+@@ -250,6 +260,8 @@
  
- };
+ /include/ "qoriq-bman1-portals.dtsi"
  
-+/include/ "qoriq-bman1-portals.dtsi"
++/include/ "qoriq-qman1-portals.dtsi"
 +
  &soc {
  	#address-cells = <1>;
  	#size-cells = <1>;
-@@ -491,6 +498,8 @@ crypto: crypto@300000 {
+@@ -498,6 +510,7 @@ crypto: crypto@300000 {
  		fsl,iommu-parent = <&pamu1>;
  	};
  
-+/include/ "qoriq-bman1.dtsi"
-+
++/include/ "qoriq-qman1.dtsi"
+ /include/ "qoriq-bman1.dtsi"
+ 
  /include/ "qoriq-fman-0.dtsi"
- /include/ "qoriq-fman-0-1g-0.dtsi"
- /include/ "qoriq-fman-0-1g-1.dtsi"
 diff --git a/arch/powerpc/boot/dts/fsl/p5020si-post.dtsi b/arch/powerpc/boot/dts/fsl/p5020si-post.dtsi
-index db82352..eb28ef7 100644
+index eb28ef7..a632bab 100644
 --- a/arch/powerpc/boot/dts/fsl/p5020si-post.dtsi
 +++ b/arch/powerpc/boot/dts/fsl/p5020si-post.dtsi
-@@ -1,7 +1,7 @@
- /*
-  * P5020/5010 Silicon/SoC Device Tree Source (post include)
-  *
-- * Copyright 2011 Freescale Semiconductor Inc.
-+ * Copyright 2011 - 2014 Freescale Semiconductor Inc.
-  *
-  * Redistribution and use in source and binary forms, with or without
-  * modification, are permitted provided that the following conditions are met:
-@@ -32,6 +32,11 @@
-  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-  */
+@@ -37,6 +37,16 @@
+ 	alloc-ranges = <0 0 0x10000 0>;
+ };
  
-+&bman_fbpr {
-+	compatible = "fsl,bman-fbpr";
++&qman_fqd {
++	compatible = "fsl,qman-fqd";
++	alloc-ranges = <0 0 0x10000 0>;
++};
++
++&qman_pfdr {
++	compatible = "fsl,qman-pfdr";
 +	alloc-ranges = <0 0 0x10000 0>;
 +};
 +
  &lbc {
  	compatible = "fsl,p5020-elbc", "fsl,elbc", "simple-bus";
  	interrupts = <25 2 0 0>;
-@@ -240,6 +245,8 @@
- 	};
- };
+@@ -247,6 +257,8 @@
  
-+/include/ "qoriq-bman1-portals.dtsi"
+ /include/ "qoriq-bman1-portals.dtsi"
+ 
++/include/ "qoriq-qman1-portals.dtsi"
 +
  &soc {
  	#address-cells = <1>;
  	#size-cells = <1>;
-@@ -421,6 +428,8 @@
+@@ -428,6 +440,7 @@
  		fsl,iommu-parent = <&pamu1>;
  	};
  
-+/include/ "qoriq-bman1.dtsi"
-+
++/include/ "qoriq-qman1.dtsi"
+ /include/ "qoriq-bman1.dtsi"
+ 
  /include/ "qoriq-raid1.0-0.dtsi"
- 	raideng@320000 {
- 		fsl,iommu-parent = <&pamu1>;
 diff --git a/arch/powerpc/boot/dts/fsl/p5040si-post.dtsi b/arch/powerpc/boot/dts/fsl/p5040si-post.dtsi
-index cd44659..c8225a8 100644
+index c8225a8..6ee4d4f 100644
 --- a/arch/powerpc/boot/dts/fsl/p5040si-post.dtsi
 +++ b/arch/powerpc/boot/dts/fsl/p5040si-post.dtsi
-@@ -1,7 +1,7 @@
- /*
-  * P5040 Silicon/SoC Device Tree Source (post include)
-  *
-- * Copyright 2012 Freescale Semiconductor Inc.
-+ * Copyright 2012 - 2014 Freescale Semiconductor Inc.
-  *
-  * Redistribution and use in source and binary forms, with or without
-  * modification, are permitted provided that the following conditions are met:
-@@ -32,6 +32,11 @@
-  * software, even if advised of the possibility of such damage.
-  */
+@@ -37,6 +37,16 @@
+ 	alloc-ranges = <0 0 0x10000 0>;
+ };
  
-+&bman_fbpr {
-+	compatible = "fsl,bman-fbpr";
++&qman_fqd {
++	compatible = "fsl,qman-fqd";
++	alloc-ranges = <0 0 0x10000 0>;
++};
++
++&qman_pfdr {
++	compatible = "fsl,qman-pfdr";
 +	alloc-ranges = <0 0 0x10000 0>;
 +};
 +
  &lbc {
  	compatible = "fsl,p5040-elbc", "fsl,elbc", "simple-bus";
  	interrupts = <25 2 0 0>;
-@@ -195,6 +200,8 @@
- 	};
- };
+@@ -202,6 +212,8 @@
  
-+/include/ "qoriq-bman1-portals.dtsi"
+ /include/ "qoriq-bman1-portals.dtsi"
+ 
++/include/ "qoriq-qman1-portals.dtsi"
 +
  &soc {
  	#address-cells = <1>;
  	#size-cells = <1>;
-@@ -400,6 +407,8 @@
+@@ -407,6 +419,7 @@
  		fsl,iommu-parent = <&pamu4>;
  	};
  
-+/include/ "qoriq-bman1.dtsi"
-+
++/include/ "qoriq-qman1.dtsi"
+ /include/ "qoriq-bman1.dtsi"
+ 
  /include/ "qoriq-fman-0.dtsi"
- /include/ "qoriq-fman-0-1g-0.dtsi"
- /include/ "qoriq-fman-0-1g-1.dtsi"
 diff --git a/arch/powerpc/boot/dts/fsl/t1040si-post.dtsi b/arch/powerpc/boot/dts/fsl/t1040si-post.dtsi
-index 15ae462..5cc01be 100644
+index 5cc01be..4d41ce1 100644
 --- a/arch/powerpc/boot/dts/fsl/t1040si-post.dtsi
 +++ b/arch/powerpc/boot/dts/fsl/t1040si-post.dtsi
-@@ -1,7 +1,7 @@
- /*
-  * T1040 Silicon/SoC Device Tree Source (post include)
-  *
-- * Copyright 2013 Freescale Semiconductor Inc.
-+ * Copyright 2013 - 2014 Freescale Semiconductor Inc.
-  *
-  * Redistribution and use in source and binary forms, with or without
-  * modification, are permitted provided that the following conditions are met:
-@@ -32,6 +32,11 @@
-  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-  */
+@@ -37,6 +37,16 @@
+ 	alloc-ranges = <0 0 0x10000 0>;
+ };
  
-+&bman_fbpr {
-+	compatible = "fsl,bman-fbpr";
++&qman_fqd {
++	compatible = "fsl,qman-fqd";
++	alloc-ranges = <0 0 0x10000 0>;
++};
++
++&qman_pfdr {
++	compatible = "fsl,qman-pfdr";
 +	alloc-ranges = <0 0 0x10000 0>;
 +};
 +
  &ifc {
  	#address-cells = <2>;
  	#size-cells = <1>;
-@@ -218,6 +223,63 @@
+@@ -280,6 +290,73 @@
  	};
  };
  
-+&bportals {
++&qportals {
 +	#address-cells = <0x1>;
 +	#size-cells = <0x1>;
 +	compatible = "simple-bus";
 +
-+	bman-portal@0 {
-+		compatible = "fsl,bman-portal";
++	qportal0: qman-portal@0 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x0 0x4000>, <0x1000000 0x1000>;
-+		interrupts = <105 2 0 0>;
++		interrupts = <104 0x2 0 0>;
++		fsl,qman-channel-id = <0x0>;
 +	};
-+	bman-portal@4000 {
-+		compatible = "fsl,bman-portal";
++	qportal1: qman-portal@4000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x4000 0x4000>, <0x1001000 0x1000>;
-+		interrupts = <107 2 0 0>;
++		interrupts = <106 0x2 0 0>;
++		fsl,qman-channel-id = <0x1>;
 +	};
-+	bman-portal@8000 {
-+		compatible = "fsl,bman-portal";
++	qportal2: qman-portal@8000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x8000 0x4000>, <0x1002000 0x1000>;
-+		interrupts = <109 2 0 0>;
++		interrupts = <108 0x2 0 0>;
++		fsl,qman-channel-id = <0x2>;
 +	};
-+	bman-portal@c000 {
-+		compatible = "fsl,bman-portal";
++	qportal3: qman-portal@c000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0xc000 0x4000>, <0x1003000 0x1000>;
-+		interrupts = <111 2 0 0>;
++		interrupts = <110 0x2 0 0>;
++		fsl,qman-channel-id = <0x3>;
 +	};
-+	bman-portal@10000 {
-+		compatible = "fsl,bman-portal";
++	qportal4: qman-portal@10000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x10000 0x4000>, <0x1004000 0x1000>;
-+		interrupts = <113 2 0 0>;
++		interrupts = <112 0x2 0 0>;
++		fsl,qman-channel-id = <0x4>;
 +	};
-+	bman-portal@14000 {
-+		compatible = "fsl,bman-portal";
++	qportal5: qman-portal@14000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x14000 0x4000>, <0x1005000 0x1000>;
-+		interrupts = <115 2 0 0>;
++		interrupts = <114 0x2 0 0>;
++		fsl,qman-channel-id = <0x5>;
 +	};
-+	bman-portal@18000 {
-+		compatible = "fsl,bman-portal";
++	qportal6: qman-portal@18000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x18000 0x4000>, <0x1006000 0x1000>;
-+		interrupts = <117 2 0 0>;
++		interrupts = <116 0x2 0 0>;
++		fsl,qman-channel-id = <0x6>;
 +	};
-+	bman-portal@1c000 {
-+		compatible = "fsl,bman-portal";
++	qportal7: qman-portal@1c000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x1c000 0x4000>, <0x1007000 0x1000>;
-+		interrupts = <119 2 0 0>;
++		interrupts = <118 0x2 0 0>;
++		fsl,qman-channel-id = <0x7>;
 +	};
-+	bman-portal@20000 {
-+		compatible = "fsl,bman-portal";
++	qportal8: qman-portal@20000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x20000 0x4000>, <0x1008000 0x1000>;
-+		interrupts = <121 2 0 0>;
++		interrupts = <120 0x2 0 0>;
++		fsl,qman-channel-id = <0x8>;
 +	};
-+	bman-portal@24000 {
-+		compatible = "fsl,bman-portal";
++	qportal9: qman-portal@24000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x24000 0x4000>, <0x1009000 0x1000>;
-+		interrupts = <123 2 0 0>;
++		interrupts = <122 0x2 0 0>;
++		fsl,qman-channel-id = <0x9>;
 +	};
 +};
 +
  &soc {
  	#address-cells = <1>;
  	#size-cells = <1>;
-@@ -401,4 +463,5 @@
+@@ -463,5 +540,6 @@
  		fsl,liodn-reg = <&guts 0x554>; /* SATA2LIODNR */
  	};
  /include/ "qoriq-sec5.0-0.dtsi"
-+/include/ "qoriq-bman1.dtsi"
++/include/ "qoriq-qman3.dtsi"
+ /include/ "qoriq-bman1.dtsi"
  };
 diff --git a/arch/powerpc/boot/dts/fsl/t2081si-post.dtsi b/arch/powerpc/boot/dts/fsl/t2081si-post.dtsi
-index 1ce91e3..86bdaf6 100644
+index 86bdaf6..c2cb0f3 100644
 --- a/arch/powerpc/boot/dts/fsl/t2081si-post.dtsi
 +++ b/arch/powerpc/boot/dts/fsl/t2081si-post.dtsi
-@@ -1,7 +1,7 @@
- /*
-  * T2081 Silicon/SoC Device Tree Source (post include)
-  *
-- * Copyright 2013 Freescale Semiconductor Inc.
-+ * Copyright 2013 - 2014 Freescale Semiconductor Inc.
-  *
-  * Redistribution and use in source and binary forms, with or without
-  * modification, are permitted provided that the following conditions are met:
-@@ -32,6 +32,11 @@
-  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-  */
+@@ -37,6 +37,16 @@
+ 	alloc-ranges = <0 0 0x10000 0>;
+ };
  
-+&bman_fbpr {
-+	compatible = "fsl,bman-fbpr";
++&qman_fqd {
++	compatible = "fsl,qman-fqd";
++	alloc-ranges = <0 0 0x10000 0>;
++};
++
++&qman_pfdr {
++	compatible = "fsl,qman-pfdr";
 +	alloc-ranges = <0 0 0x10000 0>;
 +};
 +
  &ifc {
  	#address-cells = <2>;
  	#size-cells = <1>;
-@@ -224,6 +229,103 @@
+@@ -326,6 +336,121 @@
  	};
  };
  
-+&bportals {
++&qportals {
 +	#address-cells = <0x1>;
 +	#size-cells = <0x1>;
 +	compatible = "simple-bus";
 +
-+	bman-portal@0 {
-+		compatible = "fsl,bman-portal";
++	qportal0: qman-portal@0 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x0 0x4000>, <0x1000000 0x1000>;
-+		interrupts = <105 2 0 0>;
++		interrupts = <104 0x2 0 0>;
++		fsl,qman-channel-id = <0x0>;
 +	};
-+	bman-portal@4000 {
-+		compatible = "fsl,bman-portal";
++	qportal1: qman-portal@4000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x4000 0x4000>, <0x1001000 0x1000>;
-+		interrupts = <107 2 0 0>;
++		interrupts = <106 0x2 0 0>;
++		fsl,qman-channel-id = <0x1>;
 +	};
-+	bman-portal@8000 {
-+		compatible = "fsl,bman-portal";
++	qportal2: qman-portal@8000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x8000 0x4000>, <0x1002000 0x1000>;
-+		interrupts = <109 2 0 0>;
++		interrupts = <108 0x2 0 0>;
++		fsl,qman-channel-id = <0x2>;
 +	};
-+	bman-portal@c000 {
-+		compatible = "fsl,bman-portal";
++	qportal3: qman-portal@c000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0xc000 0x4000>, <0x1003000 0x1000>;
-+		interrupts = <111 2 0 0>;
++		interrupts = <110 0x2 0 0>;
++		fsl,qman-channel-id = <0x3>;
 +	};
-+	bman-portal@10000 {
-+		compatible = "fsl,bman-portal";
++	qportal4: qman-portal@10000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x10000 0x4000>, <0x1004000 0x1000>;
-+		interrupts = <113 2 0 0>;
++		interrupts = <112 0x2 0 0>;
++		fsl,qman-channel-id = <0x4>;
 +	};
-+	bman-portal@14000 {
-+		compatible = "fsl,bman-portal";
++	qportal5: qman-portal@14000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x14000 0x4000>, <0x1005000 0x1000>;
-+		interrupts = <115 2 0 0>;
++		interrupts = <114 0x2 0 0>;
++		fsl,qman-channel-id = <0x5>;
 +	};
-+	bman-portal@18000 {
-+		compatible = "fsl,bman-portal";
++	qportal6: qman-portal@18000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x18000 0x4000>, <0x1006000 0x1000>;
-+		interrupts = <117 2 0 0>;
++		interrupts = <116 0x2 0 0>;
++		fsl,qman-channel-id = <0x6>;
 +	};
-+	bman-portal@1c000 {
-+		compatible = "fsl,bman-portal";
++	qportal7: qman-portal@1c000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x1c000 0x4000>, <0x1007000 0x1000>;
-+		interrupts = <119 2 0 0>;
++		interrupts = <118 0x2 0 0>;
++		fsl,qman-channel-id = <0x7>;
 +	};
-+	bman-portal@20000 {
-+		compatible = "fsl,bman-portal";
++	qportal8: qman-portal@20000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x20000 0x4000>, <0x1008000 0x1000>;
-+		interrupts = <121 2 0 0>;
++		interrupts = <120 0x2 0 0>;
++		fsl,qman-channel-id = <0x8>;
 +	};
-+	bman-portal@24000 {
-+		compatible = "fsl,bman-portal";
++	qportal9: qman-portal@24000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x24000 0x4000>, <0x1009000 0x1000>;
-+		interrupts = <123 2 0 0>;
++		interrupts = <122 0x2 0 0>;
++		fsl,qman-channel-id = <0x9>;
 +	};
-+	bman-portal@28000 {
-+		compatible = "fsl,bman-portal";
++	qportal10: qman-portal@28000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x28000 0x4000>, <0x100a000 0x1000>;
-+		interrupts = <125 2 0 0>;
++		interrupts = <124 0x2 0 0>;
++		fsl,qman-channel-id = <0xa>;
 +	};
-+	bman-portal@2c000 {
-+		compatible = "fsl,bman-portal";
++	qportal11: qman-portal@2c000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x2c000 0x4000>, <0x100b000 0x1000>;
-+		interrupts = <127 2 0 0>;
++		interrupts = <126 0x2 0 0>;
++		fsl,qman-channel-id = <0xb>;
 +	};
-+	bman-portal@30000 {
-+		compatible = "fsl,bman-portal";
++	qportal12: qman-portal@30000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x30000 0x4000>, <0x100c000 0x1000>;
-+		interrupts = <129 2 0 0>;
++		interrupts = <128 0x2 0 0>;
++		fsl,qman-channel-id = <0xc>;
 +	};
-+	bman-portal@34000 {
-+		compatible = "fsl,bman-portal";
++	qportal13: qman-portal@34000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x34000 0x4000>, <0x100d000 0x1000>;
-+		interrupts = <131 2 0 0>;
++		interrupts = <130 0x2 0 0>;
++		fsl,qman-channel-id = <0xd>;
 +	};
-+	bman-portal@38000 {
-+		compatible = "fsl,bman-portal";
++	qportal14: qman-portal@38000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x38000 0x4000>, <0x100e000 0x1000>;
-+		interrupts = <133 2 0 0>;
++		interrupts = <132 0x2 0 0>;
++		fsl,qman-channel-id = <0xe>;
 +	};
-+	bman-portal@3c000 {
-+		compatible = "fsl,bman-portal";
++	qportal15: qman-portal@3c000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x3c000 0x4000>, <0x100f000 0x1000>;
-+		interrupts = <135 2 0 0>;
++		interrupts = <134 0x2 0 0>;
++		fsl,qman-channel-id = <0xf>;
 +	};
-+	bman-portal@40000 {
-+		compatible = "fsl,bman-portal";
++	qportal16: qman-portal@40000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x40000 0x4000>, <0x1010000 0x1000>;
-+		interrupts = <137 2 0 0>;
++		interrupts = <136 0x2 0 0>;
++		fsl,qman-channel-id = <0x10>;
 +	};
-+	bman-portal@44000 {
-+		compatible = "fsl,bman-portal";
++	qportal17: qman-portal@44000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x44000 0x4000>, <0x1011000 0x1000>;
-+		interrupts = <139 2 0 0>;
++		interrupts = <138 0x2 0 0>;
++		fsl,qman-channel-id = <0x11>;
 +	};
 +};
 +
  &soc {
  	#address-cells = <1>;
  	#size-cells = <1>;
-@@ -400,6 +502,7 @@
+@@ -502,6 +627,7 @@
  		phy_type = "utmi";
  	};
  /include/ "qoriq-sec5.2-0.dtsi"
-+/include/ "qoriq-bman1.dtsi"
++/include/ "qoriq-qman3.dtsi"
+ /include/ "qoriq-bman1.dtsi"
  
  	L2_1: l2-cache-controller@c20000 {
- 		/* Cluster 0 L2 cache */
 diff --git a/arch/powerpc/boot/dts/fsl/t4240si-post.dtsi b/arch/powerpc/boot/dts/fsl/t4240si-post.dtsi
-index b73ee47..6493ed1 100644
+index 6493ed1..2023c2b 100644
 --- a/arch/powerpc/boot/dts/fsl/t4240si-post.dtsi
 +++ b/arch/powerpc/boot/dts/fsl/t4240si-post.dtsi
-@@ -1,7 +1,7 @@
- /*
-  * T4240 Silicon/SoC Device Tree Source (post include)
-  *
-- * Copyright 2012 Freescale Semiconductor Inc.
-+ * Copyright 2012 - 2014 Freescale Semiconductor Inc.
-  *
-  * Redistribution and use in source and binary forms, with or without
-  * modification, are permitted provided that the following conditions are met:
-@@ -32,6 +32,11 @@
-  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-  */
+@@ -37,6 +37,16 @@
+ 	alloc-ranges = <0 0 0x10000 0>;
+ };
  
-+&bman_fbpr {
-+	compatible = "fsl,bman-fbpr";
++&qman_fqd {
++	compatible = "fsl,qman-fqd";
++	alloc-ranges = <0 0 0x10000 0>;
++};
++
++&qman_pfdr {
++	compatible = "fsl,qman-pfdr";
 +	alloc-ranges = <0 0 0x10000 0>;
 +};
 +
  &ifc {
  	#address-cells = <2>;
  	#size-cells = <1>;
-@@ -294,6 +299,263 @@
+@@ -556,6 +566,313 @@
  	};
  };
  
-+&bportals {
++&qportals {
 +	#address-cells = <0x1>;
 +	#size-cells = <0x1>;
 +	compatible = "simple-bus";
 +
-+	bman-portal@0 {
-+		compatible = "fsl,bman-portal";
++	qportal0: qman-portal@0 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x0 0x4000>, <0x1000000 0x1000>;
-+		interrupts = <105 2 0 0>;
++		interrupts = <104 0x2 0 0>;
++		fsl,qman-channel-id = <0x0>;
 +	};
-+	bman-portal@4000 {
-+		compatible = "fsl,bman-portal";
++	qportal1: qman-portal@4000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x4000 0x4000>, <0x1001000 0x1000>;
-+		interrupts = <107 2 0 0>;
++		interrupts = <106 0x2 0 0>;
++		fsl,qman-channel-id = <0x1>;
 +	};
-+	bman-portal@8000 {
-+		compatible = "fsl,bman-portal";
++	qportal2: qman-portal@8000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x8000 0x4000>, <0x1002000 0x1000>;
-+		interrupts = <109 2 0 0>;
++		interrupts = <108 0x2 0 0>;
++		fsl,qman-channel-id = <0x2>;
 +	};
-+	bman-portal@c000 {
-+		compatible = "fsl,bman-portal";
++	qportal3: qman-portal@c000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0xc000 0x4000>, <0x1003000 0x1000>;
-+		interrupts = <111 2 0 0>;
++		interrupts = <110 0x2 0 0>;
++		fsl,qman-channel-id = <0x3>;
 +	};
-+	bman-portal@10000 {
-+		compatible = "fsl,bman-portal";
++	qportal4: qman-portal@10000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x10000 0x4000>, <0x1004000 0x1000>;
-+		interrupts = <113 2 0 0>;
++		interrupts = <112 0x2 0 0>;
++		fsl,qman-channel-id = <0x4>;
 +	};
-+	bman-portal@14000 {
-+		compatible = "fsl,bman-portal";
++	qportal5: qman-portal@14000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x14000 0x4000>, <0x1005000 0x1000>;
-+		interrupts = <115 2 0 0>;
++		interrupts = <114 0x2 0 0>;
++		fsl,qman-channel-id = <0x5>;
 +	};
-+	bman-portal@18000 {
-+		compatible = "fsl,bman-portal";
++	qportal6: qman-portal@18000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x18000 0x4000>, <0x1006000 0x1000>;
-+		interrupts = <117 2 0 0>;
++		interrupts = <116 0x2 0 0>;
++		fsl,qman-channel-id = <0x6>;
 +	};
-+	bman-portal@1c000 {
-+		compatible = "fsl,bman-portal";
++	qportal7: qman-portal@1c000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x1c000 0x4000>, <0x1007000 0x1000>;
-+		interrupts = <119 2 0 0>;
++		interrupts = <118 0x2 0 0>;
++		fsl,qman-channel-id = <0x7>;
 +	};
-+	bman-portal@20000 {
-+		compatible = "fsl,bman-portal";
++	qportal8: qman-portal@20000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x20000 0x4000>, <0x1008000 0x1000>;
-+		interrupts = <121 2 0 0>;
++		interrupts = <120 0x2 0 0>;
++		fsl,qman-channel-id = <0x8>;
 +	};
-+	bman-portal@24000 {
-+		compatible = "fsl,bman-portal";
++	qportal9: qman-portal@24000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x24000 0x4000>, <0x1009000 0x1000>;
-+		interrupts = <123 2 0 0>;
++		interrupts = <122 0x2 0 0>;
++		fsl,qman-channel-id = <0x9>;
 +	};
-+	bman-portal@28000 {
-+		compatible = "fsl,bman-portal";
++	qportal10: qman-portal@28000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x28000 0x4000>, <0x100a000 0x1000>;
-+		interrupts = <125 2 0 0>;
++		interrupts = <124 0x2 0 0>;
++		fsl,qman-channel-id = <0xa>;
 +	};
-+	bman-portal@2c000 {
-+		compatible = "fsl,bman-portal";
++	qportal11: qman-portal@2c000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x2c000 0x4000>, <0x100b000 0x1000>;
-+		interrupts = <127 2 0 0>;
++		interrupts = <126 0x2 0 0>;
++		fsl,qman-channel-id = <0xb>;
 +	};
-+	bman-portal@30000 {
-+		compatible = "fsl,bman-portal";
++	qportal12: qman-portal@30000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x30000 0x4000>, <0x100c000 0x1000>;
-+		interrupts = <129 2 0 0>;
++		interrupts = <128 0x2 0 0>;
++		fsl,qman-channel-id = <0xc>;
 +	};
-+	bman-portal@34000 {
-+		compatible = "fsl,bman-portal";
++	qportal13: qman-portal@34000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x34000 0x4000>, <0x100d000 0x1000>;
-+		interrupts = <131 2 0 0>;
++		interrupts = <130 0x2 0 0>;
++		fsl,qman-channel-id = <0xd>;
 +	};
-+	bman-portal@38000 {
-+		compatible = "fsl,bman-portal";
++	qportal14: qman-portal@38000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x38000 0x4000>, <0x100e000 0x1000>;
-+		interrupts = <133 2 0 0>;
++		interrupts = <132 0x2 0 0>;
++		fsl,qman-channel-id = <0xe>;
 +	};
-+	bman-portal@3c000 {
-+		compatible = "fsl,bman-portal";
++	qportal15: qman-portal@3c000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x3c000 0x4000>, <0x100f000 0x1000>;
-+		interrupts = <135 2 0 0>;
++		interrupts = <134 0x2 0 0>;
++		fsl,qman-channel-id = <0xf>;
 +	};
-+	bman-portal@40000 {
-+		compatible = "fsl,bman-portal";
++	qportal16: qman-portal@40000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x40000 0x4000>, <0x1010000 0x1000>;
-+		interrupts = <137 2 0 0>;
++		interrupts = <136 0x2 0 0>;
++		fsl,qman-channel-id = <0x10>;
 +	};
-+	bman-portal@44000 {
-+		compatible = "fsl,bman-portal";
++	qportal17: qman-portal@44000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x44000 0x4000>, <0x1011000 0x1000>;
-+		interrupts = <139 2 0 0>;
++		interrupts = <138 0x2 0 0>;
++		fsl,qman-channel-id = <0x11>;
 +	};
-+	bman-portal@48000 {
-+		compatible = "fsl,bman-portal";
++	qportal18: qman-portal@48000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x48000 0x4000>, <0x1012000 0x1000>;
-+		interrupts = <141 2 0 0>;
++		interrupts = <140 0x2 0 0>;
++		fsl,qman-channel-id = <0x12>;
 +	};
-+	bman-portal@4c000 {
-+		compatible = "fsl,bman-portal";
++	qportal19: qman-portal@4c000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x4c000 0x4000>, <0x1013000 0x1000>;
-+		interrupts = <143 2 0 0>;
++		interrupts = <142 0x2 0 0>;
++		fsl,qman-channel-id = <0x13>;
 +	};
-+	bman-portal@50000 {
-+		compatible = "fsl,bman-portal";
++	qportal20: qman-portal@50000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x50000 0x4000>, <0x1014000 0x1000>;
-+		interrupts = <145 2 0 0>;
++		interrupts = <144 0x2 0 0>;
++		fsl,qman-channel-id = <0x14>;
 +	};
-+	bman-portal@54000 {
-+		compatible = "fsl,bman-portal";
++	qportal21: qman-portal@54000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x54000 0x4000>, <0x1015000 0x1000>;
-+		interrupts = <147 2 0 0>;
++		interrupts = <146 0x2 0 0>;
++		fsl,qman-channel-id = <0x15>;
 +	};
-+	bman-portal@58000 {
-+		compatible = "fsl,bman-portal";
++	qportal22: qman-portal@58000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x58000 0x4000>, <0x1016000 0x1000>;
-+		interrupts = <149 2 0 0>;
++		interrupts = <148 0x2 0 0>;
++		fsl,qman-channel-id = <0x16>;
 +	};
-+	bman-portal@5c000 {
-+		compatible = "fsl,bman-portal";
++	qportal23: qman-portal@5c000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x5c000 0x4000>, <0x1017000 0x1000>;
-+		interrupts = <151 2 0 0>;
++		interrupts = <150 0x2 0 0>;
++		fsl,qman-channel-id = <0x17>;
 +	};
-+	bman-portal@60000 {
-+		compatible = "fsl,bman-portal";
++	qportal24: qman-portal@60000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x60000 0x4000>, <0x1018000 0x1000>;
-+		interrupts = <153 2 0 0>;
++		interrupts = <152 0x2 0 0>;
++		fsl,qman-channel-id = <0x18>;
 +	};
-+	bman-portal@64000 {
-+		compatible = "fsl,bman-portal";
++	qportal25: qman-portal@64000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x64000 0x4000>, <0x1019000 0x1000>;
-+		interrupts = <155 2 0 0>;
++		interrupts = <154 0x2 0 0>;
++		fsl,qman-channel-id = <0x19>;
 +	};
-+	bman-portal@68000 {
-+		compatible = "fsl,bman-portal";
++	qportal26: qman-portal@68000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x68000 0x4000>, <0x101a000 0x1000>;
-+		interrupts = <157 2 0 0>;
++		interrupts = <156 0x2 0 0>;
++		fsl,qman-channel-id = <0x1a>;
 +	};
-+	bman-portal@6c000 {
-+		compatible = "fsl,bman-portal";
++	qportal27: qman-portal@6c000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x6c000 0x4000>, <0x101b000 0x1000>;
-+		interrupts = <159 2 0 0>;
++		interrupts = <158 0x2 0 0>;
++		fsl,qman-channel-id = <0x1b>;
 +	};
-+	bman-portal@70000 {
-+		compatible = "fsl,bman-portal";
++	qportal28: qman-portal@70000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x70000 0x4000>, <0x101c000 0x1000>;
-+		interrupts = <161 2 0 0>;
++		interrupts = <160 0x2 0 0>;
++		fsl,qman-channel-id = <0x1c>;
 +	};
-+	bman-portal@74000 {
-+		compatible = "fsl,bman-portal";
++	qportal29: qman-portal@74000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x74000 0x4000>, <0x101d000 0x1000>;
-+		interrupts = <163 2 0 0>;
++		interrupts = <162 0x2 0 0>;
++		fsl,qman-channel-id = <0x1d>;
 +	};
-+	bman-portal@78000 {
-+		compatible = "fsl,bman-portal";
++	qportal30: qman-portal@78000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x78000 0x4000>, <0x101e000 0x1000>;
-+		interrupts = <165 2 0 0>;
++		interrupts = <164 0x2 0 0>;
++		fsl,qman-channel-id = <0x1e>;
 +	};
-+	bman-portal@7c000 {
-+		compatible = "fsl,bman-portal";
++	qportal31: qman-portal@7c000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x7c000 0x4000>, <0x101f000 0x1000>;
-+		interrupts = <167 2 0 0>;
++		interrupts = <166 0x2 0 0>;
++		fsl,qman-channel-id = <0x1f>;
 +	};
-+	bman-portal@80000 {
-+		compatible = "fsl,bman-portal";
++	qportal32: qman-portal@80000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x80000 0x4000>, <0x1020000 0x1000>;
-+		interrupts = <169 2 0 0>;
++		interrupts = <168 0x2 0 0>;
++		fsl,qman-channel-id = <0x20>;
 +	};
-+	bman-portal@84000 {
-+		compatible = "fsl,bman-portal";
++	qportal33: qman-portal@84000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x84000 0x4000>, <0x1021000 0x1000>;
-+		interrupts = <171 2 0 0>;
++		interrupts = <170 0x2 0 0>;
++		fsl,qman-channel-id = <0x21>;
 +	};
-+	bman-portal@88000 {
-+		compatible = "fsl,bman-portal";
++	qportal34: qman-portal@88000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x88000 0x4000>, <0x1022000 0x1000>;
-+		interrupts = <173 2 0 0>;
++		interrupts = <172 0x2 0 0>;
++		fsl,qman-channel-id = <0x22>;
 +	};
-+	bman-portal@8c000 {
-+		compatible = "fsl,bman-portal";
++	qportal35: qman-portal@8c000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x8c000 0x4000>, <0x1023000 0x1000>;
-+		interrupts = <175 2 0 0>;
++		interrupts = <174 0x2 0 0>;
++		fsl,qman-channel-id = <0x23>;
 +	};
-+	bman-portal@90000 {
-+		compatible = "fsl,bman-portal";
++	qportal36: qman-portal@90000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x90000 0x4000>, <0x1024000 0x1000>;
-+		interrupts = <385 2 0 0>;
++		interrupts = <384 0x2 0 0>;
++		fsl,qman-channel-id = <0x24>;
 +	};
-+	bman-portal@94000 {
-+		compatible = "fsl,bman-portal";
++	qportal37: qman-portal@94000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x94000 0x4000>, <0x1025000 0x1000>;
-+		interrupts = <387 2 0 0>;
++		interrupts = <386 0x2 0 0>;
++		fsl,qman-channel-id = <0x25>;
 +	};
-+	bman-portal@98000 {
-+		compatible = "fsl,bman-portal";
++	qportal38: qman-portal@98000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x98000 0x4000>, <0x1026000 0x1000>;
-+		interrupts = <389 2 0 0>;
++		interrupts = <388 0x2 0 0>;
++		fsl,qman-channel-id = <0x26>;
 +	};
-+	bman-portal@9c000 {
-+		compatible = "fsl,bman-portal";
++	qportal39: qman-portal@9c000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0x9c000 0x4000>, <0x1027000 0x1000>;
-+		interrupts = <391 2 0 0>;
++		interrupts = <390 0x2 0 0>;
++		fsl,qman-channel-id = <0x27>;
 +	};
-+	bman-portal@a0000 {
-+		compatible = "fsl,bman-portal";
++	qportal40: qman-portal@a0000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0xa0000 0x4000>, <0x1028000 0x1000>;
-+		interrupts = <393 2 0 0>;
++		interrupts = <392 0x2 0 0>;
++		fsl,qman-channel-id = <0x28>;
 +	};
-+	bman-portal@a4000 {
-+		compatible = "fsl,bman-portal";
++	qportal41: qman-portal@a4000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0xa4000 0x4000>, <0x1029000 0x1000>;
-+		interrupts = <395 2 0 0>;
++		interrupts = <394 0x2 0 0>;
++		fsl,qman-channel-id = <0x29>;
 +	};
-+	bman-portal@a8000 {
-+		compatible = "fsl,bman-portal";
++	qportal42: qman-portal@a8000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0xa8000 0x4000>, <0x102a000 0x1000>;
-+		interrupts = <397 2 0 0>;
++		interrupts = <396 0x2 0 0>;
++		fsl,qman-channel-id = <0x2a>;
 +	};
-+	bman-portal@ac000 {
-+		compatible = "fsl,bman-portal";
++	qportal43: qman-portal@ac000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0xac000 0x4000>, <0x102b000 0x1000>;
-+		interrupts = <399 2 0 0>;
++		interrupts = <398 0x2 0 0>;
++		fsl,qman-channel-id = <0x2b>;
 +	};
-+	bman-portal@b0000 {
-+		compatible = "fsl,bman-portal";
++	qportal44: qman-portal@b0000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0xb0000 0x4000>, <0x102c000 0x1000>;
-+		interrupts = <401 2 0 0>;
++		interrupts = <400 0x2 0 0>;
++		fsl,qman-channel-id = <0x2c>;
 +	};
-+	bman-portal@b4000 {
-+		compatible = "fsl,bman-portal";
++	qportal45: qman-portal@b4000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0xb4000 0x4000>, <0x102d000 0x1000>;
-+		interrupts = <403 2 0 0>;
++		interrupts = <402 0x2 0 0>;
++		fsl,qman-channel-id = <0x2d>;
 +	};
-+	bman-portal@b8000 {
-+		compatible = "fsl,bman-portal";
++	qportal46: qman-portal@b8000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0xb8000 0x4000>, <0x102e000 0x1000>;
-+		interrupts = <405 2 0 0>;
++		interrupts = <404 0x2 0 0>;
++		fsl,qman-channel-id = <0x2e>;
 +	};
-+	bman-portal@bc000 {
-+		compatible = "fsl,bman-portal";
++	qportal47: qman-portal@bc000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0xbc000 0x4000>, <0x102f000 0x1000>;
-+		interrupts = <407 2 0 0>;
++		interrupts = <406 0x2 0 0>;
++		fsl,qman-channel-id = <0x2f>;
 +	};
-+	bman-portal@c0000 {
-+		compatible = "fsl,bman-portal";
++	qportal48: qman-portal@c0000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0xc0000 0x4000>, <0x1030000 0x1000>;
-+		interrupts = <409 2 0 0>;
++		interrupts = <408 0x2 0 0>;
++		fsl,qman-channel-id = <0x30>;
 +	};
-+	bman-portal@c4000 {
-+		compatible = "fsl,bman-portal";
++	qportal49: qman-portal@c4000 {
++		compatible = "fsl,qman-portal";
 +		reg = <0xc4000 0x4000>, <0x1031000 0x1000>;
-+		interrupts = <411 2 0 0>;
++		interrupts = <410 0x2 0 0>;
++		fsl,qman-channel-id = <0x31>;
 +	};
 +};
 +
  &soc {
  	#address-cells = <1>;
  	#size-cells = <1>;
-@@ -486,6 +748,7 @@
+@@ -748,6 +1065,7 @@
  /include/ "qoriq-sata2-0.dtsi"
  /include/ "qoriq-sata2-1.dtsi"
  /include/ "qoriq-sec5.0-0.dtsi"
-+/include/ "qoriq-bman1.dtsi"
++/include/ "qoriq-qman3.dtsi"
+ /include/ "qoriq-bman1.dtsi"
  /include/ "qoriq-fman3-0.dtsi"
  /include/ "qoriq-fman3-0-1g-0.dtsi"
- /include/ "qoriq-fman3-0-1g-1.dtsi"
 diff --git a/arch/powerpc/boot/dts/kmcoge4.dts b/arch/powerpc/boot/dts/kmcoge4.dts
-index 89b4119..97e6d11 100644
+index 97e6d11..2aa930e 100644
 --- a/arch/powerpc/boot/dts/kmcoge4.dts
 +++ b/arch/powerpc/boot/dts/kmcoge4.dts
-@@ -25,10 +25,25 @@
- 		device_type = "memory";
+@@ -34,6 +34,14 @@
+ 			size = <0 0x1000000>;
+ 			alignment = <0 0x1000000>;
+ 		};
++                qman_fqd: qman-fqd {
++                        size = <0 0x400000>;
++                        alignment = <0 0x400000>;
++                };
++                qman_pfdr: qman-pfdr {
++                        size = <0 0x2000000>;
++                        alignment = <0 0x2000000>;
++                };
  	};
  
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		bman_fbpr: bman-fbpr {
-+			size = <0 0x1000000>;
-+			alignment = <0 0x1000000>;
-+		};
-+	};
-+
  	dcsr: dcsr@f00000000 {
- 		ranges = <0x00000000 0xf 0x00000000 0x01008000>;
+@@ -44,6 +52,10 @@
+ 		ranges = <0x0 0xf 0xf4000000 0x200000>;
  	};
  
-+	bportals: bman-portals@ff4000000 {
-+		ranges = <0x0 0xf 0xf4000000 0x200000>;
++	qportals: qman-portals@ff4200000 {
++		ranges = <0x0 0xf 0xf4200000 0x200000>;
 +	};
 +
  	soc: soc@ffe000000 {
  		ranges = <0x00000000 0xf 0xfe000000 0x1000000>;
  		reg = <0xf 0xfe000000 0 0x00001000>;
 diff --git a/arch/powerpc/boot/dts/oca4080.dts b/arch/powerpc/boot/dts/oca4080.dts
-index 3d4c751..eb76caa 100644
+index eb76caa..157f789 100644
 --- a/arch/powerpc/boot/dts/oca4080.dts
 +++ b/arch/powerpc/boot/dts/oca4080.dts
-@@ -49,10 +49,25 @@
- 		device_type = "memory";
+@@ -58,6 +58,14 @@
+ 			size = <0 0x1000000>;
+ 			alignment = <0 0x1000000>;
+ 		};
++                qman_fqd: qman-fqd {
++                        size = <0 0x400000>;
++                        alignment = <0 0x400000>;
++                };
++                qman_pfdr: qman-pfdr {
++                        size = <0 0x2000000>;
++                        alignment = <0 0x2000000>;
++                };
  	};
  
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		bman_fbpr: bman-fbpr {
-+			size = <0 0x1000000>;
-+			alignment = <0 0x1000000>;
-+		};
-+	};
-+
  	dcsr: dcsr@f00000000 {
- 		ranges = <0x00000000 0xf 0x00000000 0x01008000>;
+@@ -68,6 +76,10 @@
+ 		ranges = <0x0 0xf 0xf4000000 0x200000>;
  	};
  
-+	bportals: bman-portals@ff4000000 {
-+		ranges = <0x0 0xf 0xf4000000 0x200000>;
++	qportals: qman-portals@ff4200000 {
++		ranges = <0x0 0xf 0xf4200000 0x200000>;
 +	};
 +
  	soc: soc@ffe000000 {
  		ranges = <0x00000000 0xf 0xfe000000 0x1000000>;
  		reg = <0xf 0xfe000000 0 0x00001000>;
 diff --git a/arch/powerpc/boot/dts/p1023rdb.dts b/arch/powerpc/boot/dts/p1023rdb.dts
-index d121bda..c1992ad 100644
+index c1992ad..11b2a3f 100644
 --- a/arch/powerpc/boot/dts/p1023rdb.dts
 +++ b/arch/powerpc/boot/dts/p1023rdb.dts
-@@ -1,7 +1,7 @@
- /*
-  * P1023 RDB Device Tree Source
-  *
-- *    Copyright 2013 Freescale Semiconductor Inc.
-+ * Copyright 2013 - 2014 Freescale Semiconductor Inc.
-  *
-  * Author: Chunhe Lan <Chunhe.Lan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-  *
-@@ -47,6 +47,21 @@
- 		device_type = "memory";
- 	};
- 
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		bman_fbpr: bman-fbpr {
-+			size = <0 0x1000000>;
-+			alignment = <0 0x1000000>;
+@@ -56,6 +56,18 @@
+ 			size = <0 0x1000000>;
+ 			alignment = <0 0x1000000>;
+ 		};
++		qman_fqd: qman-fqd {
++			size = <0 0x400000>;
++			alignment = <0 0x400000>;
++		};
++		qman_pfdr: qman-pfdr {
++			size = <0 0x2000000>;
++			alignment = <0 0x2000000>;
 +		};
 +	};
 +
-+	bportals: bman-portals@ff200000 {
-+		ranges = <0x0 0xf 0xff200000 0x200000>;
-+	};
-+
- 	soc: soc@ff600000 {
- 		ranges = <0x0 0x0 0xff600000 0x200000>;
- 
-@@ -247,7 +262,6 @@
- 				  0x0 0x100000>;
- 		};
++	qportals: qman-portals@ff000000 {
++		ranges = <0x0 0xf 0xff000000 0x200000>;
  	};
--
- };
  
- /include/ "fsl/p1023si-post.dtsi"
+ 	bportals: bman-portals@ff200000 {
 diff --git a/arch/powerpc/boot/dts/p2041rdb.dts b/arch/powerpc/boot/dts/p2041rdb.dts
-index 1060716..e7f75a2 100644
+index e7f75a2..818e6dc 100644
 --- a/arch/powerpc/boot/dts/p2041rdb.dts
 +++ b/arch/powerpc/boot/dts/p2041rdb.dts
-@@ -1,7 +1,7 @@
- /*
-  * P2041RDB Device Tree Source
-  *
-- * Copyright 2011 Freescale Semiconductor Inc.
-+ * Copyright 2011 - 2014 Freescale Semiconductor Inc.
-  *
-  * Redistribution and use in source and binary forms, with or without
-  * modification, are permitted provided that the following conditions are met:
-@@ -58,10 +58,25 @@
- 		device_type = "memory";
- 	};
- 
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		bman_fbpr: bman-fbpr {
-+			size = <0 0x1000000>;
-+			alignment = <0 0x1000000>;
+@@ -67,6 +67,14 @@
+ 			size = <0 0x1000000>;
+ 			alignment = <0 0x1000000>;
+ 		};
++		qman_fqd: qman-fqd {
++			size = <0 0x400000>;
++			alignment = <0 0x400000>;
 +		};
-+	};
-+
- 	dcsr: dcsr@f00000000 {
- 		ranges = <0x00000000 0xf 0x00000000 0x01008000>;
++		qman_pfdr: qman-pfdr {
++			size = <0 0x2000000>;
++			alignment = <0 0x2000000>;
++		};
  	};
  
-+	bportals: bman-portals@ff4000000 {
-+		ranges = <0x0 0xf 0xf4000000 0x200000>;
+ 	dcsr: dcsr@f00000000 {
+@@ -77,6 +85,10 @@
+ 		ranges = <0x0 0xf 0xf4000000 0x200000>;
+ 	};
+ 
++	qportals: qman-portals@ff4200000 {
++		ranges = <0x0 0xf 0xf4200000 0x200000>;
 +	};
 +
  	soc: soc@ffe000000 {
  		ranges = <0x00000000 0xf 0xfe000000 0x1000000>;
  		reg = <0xf 0xfe000000 0 0x00001000>;
 diff --git a/arch/powerpc/boot/dts/p3041ds.dts b/arch/powerpc/boot/dts/p3041ds.dts
-index 253d01b..d2b2086 100644
+index d2b2086..c3e55f6 100644
 --- a/arch/powerpc/boot/dts/p3041ds.dts
 +++ b/arch/powerpc/boot/dts/p3041ds.dts
-@@ -1,7 +1,7 @@
- /*
-  * P3041DS Device Tree Source
-  *
-- * Copyright 2010-2011 Freescale Semiconductor Inc.
-+ * Copyright 2010 - 2014 Freescale Semiconductor Inc.
-  *
-  * Redistribution and use in source and binary forms, with or without
-  * modification, are permitted provided that the following conditions are met:
-@@ -59,10 +59,25 @@
- 		device_type = "memory";
- 	};
- 
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		bman_fbpr: bman-fbpr {
-+			size = <0 0x1000000>;
-+			alignment = <0 0x1000000>;
+@@ -68,6 +68,14 @@
+ 			size = <0 0x1000000>;
+ 			alignment = <0 0x1000000>;
+ 		};
++		qman_fqd: qman-fqd {
++			size = <0 0x400000>;
++			alignment = <0 0x400000>;
 +		};
-+	};
-+
- 	dcsr: dcsr@f00000000 {
- 		ranges = <0x00000000 0xf 0x00000000 0x01008000>;
++		qman_pfdr: qman-pfdr {
++			size = <0 0x2000000>;
++			alignment = <0 0x2000000>;
++		};
  	};
  
-+	bportals: bman-portals@ff4000000 {
-+		ranges = <0x0 0xf 0xf4000000 0x200000>;
+ 	dcsr: dcsr@f00000000 {
+@@ -78,6 +86,10 @@
+ 		ranges = <0x0 0xf 0xf4000000 0x200000>;
+ 	};
+ 
++	qportals: qman-portals@ff4200000 {
++		ranges = <0x0 0xf 0xf4200000 0x200000>;
 +	};
 +
  	soc: soc@ffe000000 {
  		ranges = <0x00000000 0xf 0xfe000000 0x1000000>;
  		reg = <0xf 0xfe000000 0 0x00001000>;
 diff --git a/arch/powerpc/boot/dts/p4080ds.dts b/arch/powerpc/boot/dts/p4080ds.dts
-index f6b4923..8f9eda5 100644
+index 8f9eda5..0555698 100644
 --- a/arch/powerpc/boot/dts/p4080ds.dts
 +++ b/arch/powerpc/boot/dts/p4080ds.dts
-@@ -1,7 +1,7 @@
- /*
-  * P4080DS Device Tree Source
-  *
-- * Copyright 2009-2011 Freescale Semiconductor Inc.
-+ * Copyright 2009 - 2014 Freescale Semiconductor Inc.
-  *
-  * Redistribution and use in source and binary forms, with or without
-  * modification, are permitted provided that the following conditions are met:
-@@ -59,10 +59,25 @@
- 		device_type = "memory";
- 	};
- 
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		bman_fbpr: bman-fbpr {
-+			size = <0 0x1000000>;
-+			alignment = <0 0x1000000>;
+@@ -68,6 +68,14 @@
+ 			size = <0 0x1000000>;
+ 			alignment = <0 0x1000000>;
+ 		};
++		qman_fqd: qman-fqd {
++			size = <0 0x400000>;
++			alignment = <0 0x400000>;
 +		};
-+	};
-+
- 	dcsr: dcsr@f00000000 {
- 		ranges = <0x00000000 0xf 0x00000000 0x01008000>;
++		qman_pfdr: qman-pfdr {
++			size = <0 0x2000000>;
++			alignment = <0 0x2000000>;
++		};
  	};
  
-+	bportals: bman-portals@ff4000000 {
-+		ranges = <0x0 0xf 0xf4000000 0x200000>;
+ 	dcsr: dcsr@f00000000 {
+@@ -78,6 +86,10 @@
+ 		ranges = <0x0 0xf 0xf4000000 0x200000>;
+ 	};
+ 
++	qportals: qman-portals@ff4200000 {
++		ranges = <0x0 0xf 0xf4200000 0x200000>;
 +	};
 +
  	soc: soc@ffe000000 {
  		ranges = <0x00000000 0xf 0xfe000000 0x1000000>;
  		reg = <0xf 0xfe000000 0 0x00001000>;
 diff --git a/arch/powerpc/boot/dts/p5020ds.dts b/arch/powerpc/boot/dts/p5020ds.dts
-index 981f5df..52b8c59 100644
+index 52b8c59..ac69c75 100644
 --- a/arch/powerpc/boot/dts/p5020ds.dts
 +++ b/arch/powerpc/boot/dts/p5020ds.dts
-@@ -1,7 +1,7 @@
- /*
-  * P5020DS Device Tree Source
-  *
-- * Copyright 2010-2011 Freescale Semiconductor Inc.
-+ * Copyright 2010 - 2014 Freescale Semiconductor Inc.
-  *
-  * Redistribution and use in source and binary forms, with or without
-  * modification, are permitted provided that the following conditions are met:
-@@ -59,10 +59,25 @@
- 		device_type = "memory";
- 	};
- 
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		bman_fbpr: bman-fbpr {
-+			size = <0 0x1000000>;
-+			alignment = <0 0x1000000>;
+@@ -68,6 +68,14 @@
+ 			size = <0 0x1000000>;
+ 			alignment = <0 0x1000000>;
+ 		};
++		qman_fqd: qman-fqd {
++			size = <0 0x400000>;
++			alignment = <0 0x400000>;
 +		};
-+	};
-+
- 	dcsr: dcsr@f00000000 {
- 		ranges = <0x00000000 0xf 0x00000000 0x01008000>;
++		qman_pfdr: qman-pfdr {
++			size = <0 0x2000000>;
++			alignment = <0 0x2000000>;
++		};
  	};
  
-+	bportals: bman-portals@ff4000000 {
-+		ranges = <0x0 0xf 0xf4000000 0x200000>;
+ 	dcsr: dcsr@f00000000 {
+@@ -78,6 +86,10 @@
+ 		ranges = <0x0 0xf 0xf4000000 0x200000>;
+ 	};
+ 
++	qportals: qman-portals@ff4200000 {
++		ranges = <0x0 0xf 0xf4200000 0x200000>;
 +	};
 +
  	soc: soc@ffe000000 {
  		ranges = <0x00000000 0xf 0xfe000000 0x1000000>;
  		reg = <0xf 0xfe000000 0 0x00001000>;
 diff --git a/arch/powerpc/boot/dts/p5040ds.dts b/arch/powerpc/boot/dts/p5040ds.dts
-index a5be79d..a0d9447 100644
+index a0d9447..836a409 100644
 --- a/arch/powerpc/boot/dts/p5040ds.dts
 +++ b/arch/powerpc/boot/dts/p5040ds.dts
-@@ -1,7 +1,7 @@
- /*
-  * P5040DS Device Tree Source
-  *
-- * Copyright 2012 Freescale Semiconductor Inc.
-+ * Copyright 2012 - 2014 Freescale Semiconductor Inc.
-  *
-  * Redistribution and use in source and binary forms, with or without
-  * modification, are permitted provided that the following conditions are met:
-@@ -73,10 +73,25 @@
- 		hydra_xg_slot2 = &hydra_xg_slot2;
- 	};
- 
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		bman_fbpr: bman-fbpr {
-+			size = <0 0x1000000>;
-+			alignment = <0 0x1000000>;
+@@ -82,6 +82,14 @@
+ 			size = <0 0x1000000>;
+ 			alignment = <0 0x1000000>;
+ 		};
++		qman_fqd: qman-fqd {
++			size = <0 0x400000>;
++			alignment = <0 0x400000>;
 +		};
-+	};
-+
- 	dcsr: dcsr@f00000000 {
- 		ranges = <0x00000000 0xf 0x00000000 0x01008000>;
++		qman_pfdr: qman-pfdr {
++			size = <0 0x2000000>;
++			alignment = <0 0x2000000>;
++		};
  	};
  
-+	bportals: bman-portals@ff4000000 {
-+		ranges = <0x0 0xf 0xf4000000 0x200000>;
+ 	dcsr: dcsr@f00000000 {
+@@ -92,6 +100,10 @@
+ 		ranges = <0x0 0xf 0xf4000000 0x200000>;
+ 	};
+ 
++	qportals: qman-portals@ff4200000 {
++		ranges = <0x0 0xf 0xf4200000 0x200000>;
 +	};
 +
  	soc: soc@ffe000000 {
  		ranges = <0x00000000 0xf 0xfe000000 0x1000000>;
  		reg = <0xf 0xfe000000 0 0x00001000>;
 diff --git a/arch/powerpc/boot/dts/t104xqds.dtsi b/arch/powerpc/boot/dts/t104xqds.dtsi
-index 234f4b5..f7e9bfb 100644
+index f7e9bfb..1498d1e 100644
 --- a/arch/powerpc/boot/dts/t104xqds.dtsi
 +++ b/arch/powerpc/boot/dts/t104xqds.dtsi
-@@ -1,7 +1,7 @@
- /*
-  * T104xQDS Device Tree Source
-  *
-- * Copyright 2013 Freescale Semiconductor Inc.
-+ * Copyright 2013 - 2014 Freescale Semiconductor Inc.
-  *
-  * Redistribution and use in source and binary forms, with or without
-  * modification, are permitted provided that the following conditions are met:
-@@ -38,6 +38,17 @@
- 	#size-cells = <2>;
- 	interrupt-parent = <&mpic>;
- 
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		bman_fbpr: bman-fbpr {
-+			size = <0 0x1000000>;
-+			alignment = <0 0x1000000>;
+@@ -47,6 +47,14 @@
+ 			size = <0 0x1000000>;
+ 			alignment = <0 0x1000000>;
+ 		};
++		qman_fqd: qman-fqd {
++			size = <0 0x400000>;
++			alignment = <0 0x400000>;
 +		};
-+	};
-+
- 	ifc: localbus@ffe124000 {
- 		reg = <0xf 0xfe124000 0 0x2000>;
- 		ranges = <0 0 0xf 0xe8000000 0x08000000
-@@ -77,6 +88,10 @@
- 		ranges = <0x00000000 0xf 0x00000000 0x01072000>;
++		qman_pfdr: qman-pfdr {
++			size = <0 0x2000000>;
++			alignment = <0 0x2000000>;
++		};
  	};
  
-+	bportals: bman-portals@ff4000000 {
-+		ranges = <0x0 0xf 0xf4000000 0x2000000>;
+ 	ifc: localbus@ffe124000 {
+@@ -92,6 +100,10 @@
+ 		ranges = <0x0 0xf 0xf4000000 0x2000000>;
+ 	};
+ 
++	qportals: qman-portals@ff6000000 {
++		ranges = <0x0 0xf 0xf6000000 0x2000000>;
 +	};
 +
  	soc: soc@ffe000000 {
  		ranges = <0x00000000 0xf 0xfe000000 0x1000000>;
  		reg = <0xf 0xfe000000 0 0x00001000>;
 diff --git a/arch/powerpc/boot/dts/t104xrdb.dtsi b/arch/powerpc/boot/dts/t104xrdb.dtsi
-index 1cf0f3c..56f8d43 100644
+index 56f8d43..d541b67 100644
 --- a/arch/powerpc/boot/dts/t104xrdb.dtsi
 +++ b/arch/powerpc/boot/dts/t104xrdb.dtsi
-@@ -33,6 +33,16 @@
-  */
- 
- / {
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		bman_fbpr: bman-fbpr {
-+			size = <0 0x1000000>;
-+			alignment = <0 0x1000000>;
+@@ -42,6 +42,14 @@
+ 			size = <0 0x1000000>;
+ 			alignment = <0 0x1000000>;
+ 		};
++		qman_fqd: qman-fqd {
++			size = <0 0x400000>;
++			alignment = <0 0x400000>;
 +		};
-+	};
- 
- 	ifc: localbus@ffe124000 {
- 		reg = <0xf 0xfe124000 0 0x2000>;
-@@ -69,6 +79,10 @@
- 		ranges = <0x00000000 0xf 0x00000000 0x01072000>;
++		qman_pfdr: qman-pfdr {
++			size = <0 0x2000000>;
++			alignment = <0 0x2000000>;
++		};
  	};
  
-+	bportals: bman-portals@ff4000000 {
-+		ranges = <0x0 0xf 0xf4000000 0x2000000>;
+ 	ifc: localbus@ffe124000 {
+@@ -83,6 +91,10 @@
+ 		ranges = <0x0 0xf 0xf4000000 0x2000000>;
+ 	};
+ 
++	qportals: qman-portals@ff6000000 {
++		ranges = <0x0 0xf 0xf6000000 0x2000000>;
 +	};
 +
  	soc: soc@ffe000000 {
  		ranges = <0x00000000 0xf 0xfe000000 0x1000000>;
  		reg = <0xf 0xfe000000 0 0x00001000>;
 diff --git a/arch/powerpc/boot/dts/t208xqds.dtsi b/arch/powerpc/boot/dts/t208xqds.dtsi
-index 555dc6e..1d6cf31 100644
+index 1d6cf31..f14ad77 100644
 --- a/arch/powerpc/boot/dts/t208xqds.dtsi
 +++ b/arch/powerpc/boot/dts/t208xqds.dtsi
-@@ -1,7 +1,7 @@
- /*
-  * T2080/T2081 QDS Device Tree Source
-  *
-- * Copyright 2013 Freescale Semiconductor Inc.
-+ * Copyright 2013 - 2014 Freescale Semiconductor Inc.
-  *
-  * Redistribution and use in source and binary forms, with or without
-  * modification, are permitted provided that the following conditions are met:
-@@ -39,6 +39,17 @@
- 	#size-cells = <2>;
- 	interrupt-parent = <&mpic>;
- 
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		bman_fbpr: bman-fbpr {
-+			size = <0 0x1000000>;
-+			alignment = <0 0x1000000>;
+@@ -48,6 +48,14 @@
+ 			size = <0 0x1000000>;
+ 			alignment = <0 0x1000000>;
+ 		};
++		qman_fqd: qman-fqd {
++			size = <0 0x400000>;
++			alignment = <0 0x400000>;
 +		};
-+	};
-+
- 	ifc: localbus@ffe124000 {
- 		reg = <0xf 0xfe124000 0 0x2000>;
- 		ranges = <0 0 0xf 0xe8000000 0x08000000
-@@ -78,6 +89,10 @@
- 		ranges = <0x00000000 0xf 0x00000000 0x01072000>;
++		qman_pfdr: qman-pfdr {
++			size = <0 0x2000000>;
++			alignment = <0 0x2000000>;
++		};
  	};
  
-+	bportals: bman-portals@ff4000000 {
-+		ranges = <0x0 0xf 0xf4000000 0x2000000>;
+ 	ifc: localbus@ffe124000 {
+@@ -93,6 +101,10 @@
+ 		ranges = <0x0 0xf 0xf4000000 0x2000000>;
+ 	};
+ 
++	qportals: qman-portals@ff6000000 {
++		ranges = <0x0 0xf 0xf6000000 0x2000000>;
 +	};
 +
  	soc: soc@ffe000000 {
  		ranges = <0x00000000 0xf 0xfe000000 0x1000000>;
  		reg = <0xf 0xfe000000 0 0x00001000>;
 diff --git a/arch/powerpc/boot/dts/t208xrdb.dtsi b/arch/powerpc/boot/dts/t208xrdb.dtsi
-index 1481e19..e1463b1 100644
+index e1463b1..693d2a8 100644
 --- a/arch/powerpc/boot/dts/t208xrdb.dtsi
 +++ b/arch/powerpc/boot/dts/t208xrdb.dtsi
-@@ -39,6 +39,17 @@
- 	#size-cells = <2>;
- 	interrupt-parent = <&mpic>;
- 
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		bman_fbpr: bman-fbpr {
-+			size = <0 0x1000000>;
-+			alignment = <0 0x1000000>;
+@@ -48,6 +48,14 @@
+ 			size = <0 0x1000000>;
+ 			alignment = <0 0x1000000>;
+ 		};
++		qman_fqd: qman-fqd {
++			size = <0 0x400000>;
++			alignment = <0 0x400000>;
 +		};
-+	};
-+
- 	ifc: localbus@ffe124000 {
- 		reg = <0xf 0xfe124000 0 0x2000>;
- 		ranges = <0 0 0xf 0xe8000000 0x08000000
-@@ -79,6 +90,10 @@
- 		ranges = <0x00000000 0xf 0x00000000 0x01072000>;
++		qman_pfdr: qman-pfdr {
++			size = <0 0x2000000>;
++			alignment = <0 0x2000000>;
++		};
  	};
  
-+	bportals: bman-portals@ff4000000 {
-+		ranges = <0x0 0xf 0xf4000000 0x2000000>;
+ 	ifc: localbus@ffe124000 {
+@@ -94,6 +102,10 @@
+ 		ranges = <0x0 0xf 0xf4000000 0x2000000>;
+ 	};
+ 
++	qportals: qman-portals@ff6000000 {
++		ranges = <0x0 0xf 0xf6000000 0x2000000>;
 +	};
 +
  	soc: soc@ffe000000 {
  		ranges = <0x00000000 0xf 0xfe000000 0x1000000>;
  		reg = <0xf 0xfe000000 0 0x00001000>;
 diff --git a/arch/powerpc/boot/dts/t4240qds.dts b/arch/powerpc/boot/dts/t4240qds.dts
-index e9f528c..6bb9a18 100644
+index 6bb9a18..ad6b37d 100644
 --- a/arch/powerpc/boot/dts/t4240qds.dts
 +++ b/arch/powerpc/boot/dts/t4240qds.dts
-@@ -1,7 +1,7 @@
- /*
-  * T4240QDS Device Tree Source
-  *
-- * Copyright 2012 Freescale Semiconductor Inc.
-+ * Copyright 2012 - 2014 Freescale Semiconductor Inc.
-  *
-  * Redistribution and use in source and binary forms, with or without
-  * modification, are permitted provided that the following conditions are met:
-@@ -288,10 +288,25 @@
- 		device_type = "memory";
- 	};
- 
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		bman_fbpr: bman-fbpr {
-+			size = <0 0x1000000>;
-+			alignment = <0 0x1000000>;
+@@ -297,6 +297,14 @@
+ 			size = <0 0x1000000>;
+ 			alignment = <0 0x1000000>;
+ 		};
++		qman_fqd: qman-fqd {
++			size = <0 0x400000>;
++			alignment = <0 0x400000>;
 +		};
-+	};
-+
- 	dcsr: dcsr@f00000000 {
- 		ranges = <0x00000000 0xf 0x00000000 0x01072000>;
++		qman_pfdr: qman-pfdr {
++			size = <0 0x2000000>;
++			alignment = <0 0x2000000>;
++		};
  	};
  
-+	bportals: bman-portals@ff4000000 {
-+		ranges = <0x0 0xf 0xf4000000 0x2000000>;
+ 	dcsr: dcsr@f00000000 {
+@@ -307,6 +315,10 @@
+ 		ranges = <0x0 0xf 0xf4000000 0x2000000>;
+ 	};
+ 
++	qportals: qman-portals@ff6000000 {
++		ranges = <0x0 0xf 0xf6000000 0x2000000>;
 +	};
 +
  	soc: soc@ffe000000 {
  		ranges = <0x00000000 0xf 0xfe000000 0x1000000>;
  		reg = <0xf 0xfe000000 0 0x00001000>;
 diff --git a/arch/powerpc/boot/dts/t4240rdb.dts b/arch/powerpc/boot/dts/t4240rdb.dts
-index 53761d4..46049cf 100644
+index 46049cf..0f3411b 100644
 --- a/arch/powerpc/boot/dts/t4240rdb.dts
 +++ b/arch/powerpc/boot/dts/t4240rdb.dts
-@@ -69,10 +69,25 @@
- 		device_type = "memory";
+@@ -78,6 +78,14 @@
+ 			size = <0 0x1000000>;
+ 			alignment = <0 0x1000000>;
+ 		};
++                qman_fqd: qman-fqd {
++                        size = <0 0x400000>;
++                        alignment = <0 0x400000>;
++                };
++                qman_pfdr: qman-pfdr {
++                        size = <0 0x2000000>;
++                        alignment = <0 0x2000000>;
++                };
  	};
  
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		bman_fbpr: bman-fbpr {
-+			size = <0 0x1000000>;
-+			alignment = <0 0x1000000>;
-+		};
-+	};
-+
  	dcsr: dcsr@f00000000 {
- 		ranges = <0x00000000 0xf 0x00000000 0x01072000>;
+@@ -88,6 +96,10 @@
+ 		ranges = <0x0 0xf 0xf4000000 0x2000000>;
  	};
  
-+	bportals: bman-portals@ff4000000 {
-+		ranges = <0x0 0xf 0xf4000000 0x2000000>;
++	qportals: qman-portals@ff6000000 {
++		ranges = <0x0 0xf 0xf6000000 0x2000000>;
 +	};
 +
  	soc: soc@ffe000000 {
