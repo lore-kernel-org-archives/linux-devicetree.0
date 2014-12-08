@@ -1,7 +1,7 @@
 From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v1 17/34] NFC: st21nfca: Remove skb_pipe_list and skb_pipe_info useless allocation
-Date: Mon,  8 Dec 2014 22:08:22 +0100
-Message-ID: <1418072919-10535-18-git-send-email-christophe-h.ricard@st.com>
+Subject: [PATCH v1 13/34] NFC: nfc_enable_se Remove useless blank line at beginning of function
+Date: Mon,  8 Dec 2014 22:08:18 +0100
+Message-ID: <1418072919-10535-14-git-send-email-christophe-h.ricard@st.com>
 References: <1418072919-10535-1-git-send-email-christophe-h.ricard@st.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1418072919-10535-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
@@ -10,45 +10,25 @@ To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-skb_pipe_list and skb_pipe_info are allocated in nfc_hci_send_cmd.
-alloc_skb on those buffer are then useless.
+Remove one useless blank line at beginning of nfc_enable_se function.
 
 Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
 ---
- drivers/nfc/st21nfca/st21nfca.c | 13 -------------
- 1 file changed, 13 deletions(-)
+ net/nfc/core.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/nfc/st21nfca/st21nfca.c b/drivers/nfc/st21nfca/st21nfca.c
-index e92af42..f1aced5 100644
---- a/drivers/nfc/st21nfca/st21nfca.c
-+++ b/drivers/nfc/st21nfca/st21nfca.c
-@@ -127,18 +127,6 @@ static int st21nfca_hci_load_session(struct nfc_hci_dev *hdev)
- 		NFC_HCI_TERMINAL_HOST_ID, 0
- 	};
+diff --git a/net/nfc/core.c b/net/nfc/core.c
+index 819b877..81fabed 100644
+--- a/net/nfc/core.c
++++ b/net/nfc/core.c
+@@ -555,7 +555,6 @@ EXPORT_SYMBOL(nfc_find_se);
  
--	skb_pipe_list = alloc_skb(ST21NFCA_HCI_LLC_MAX_SIZE, GFP_KERNEL);
--	if (!skb_pipe_list) {
--		r = -ENOMEM;
--		goto free_list;
--	}
+ int nfc_enable_se(struct nfc_dev *dev, u32 se_idx)
+ {
 -
--	skb_pipe_info = alloc_skb(ST21NFCA_HCI_LLC_MAX_SIZE, GFP_KERNEL);
--	if (!skb_pipe_info) {
--		r = -ENOMEM;
--		goto free_info;
--	}
--
- 	/* On ST21NFCA device pipes number are dynamics
- 	 * A maximum of 16 pipes can be created at the same time
- 	 * If pipes are already created, hci_dev_up will fail.
-@@ -233,7 +221,6 @@ static int st21nfca_hci_load_session(struct nfc_hci_dev *hdev)
- 	memcpy(hdev->init_data.gates, st21nfca_gates, sizeof(st21nfca_gates));
- free_info:
- 	kfree_skb(skb_pipe_info);
--free_list:
- 	kfree_skb(skb_pipe_list);
- 	return r;
- }
+ 	struct nfc_se *se;
+ 	int rc;
+ 
 -- 
 2.1.0
 
