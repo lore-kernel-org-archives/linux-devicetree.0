@@ -1,185 +1,182 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 2/2] Input: gpio_keys - replace timer and workqueue with
- delayed workqueue
-Date: Sun, 7 Dec 2014 23:21:24 -0800
-Message-ID: <20141208072124.GA21031@dtor-ws>
-References: <20141208071930.GA20802@dtor-ws>
+From: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH] arm: dts: imx6sx: add i.mx6sx sabreauto board support
+Date: Mon, 8 Dec 2014 15:05:54 +0800
+Message-ID: <1418022354-21988-1-git-send-email-b20788@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20141208071930.GA20802@dtor-ws>
-Sender: linux-input-owner@vger.kernel.org
-To: linux-input@vger.kernel.org
-Cc: Alexander Stein <alexander.stein@systec-electronic.com>, Linus Walleij <linus.walleij@linaro.org>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Alexander Shiyan <shc_work@mail.ru>, Laxman Dewangan <ldewangan@nvidia.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-We do not need to roll our own implementation of delayed work now that we
-have proper implementation of mod_delayed_work.
+Add basic i.MX6SoloX Sabre Auto board support, currently
+only debug UART and uSDHC are supported on this board.
 
-For interrupt-only driven buttons we retain the timer, but we rename
-it to release_timer to better reflect its purpose.
-
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
- drivers/input/keyboard/gpio_keys.c |   65 +++++++++++++++++-------------------
- 1 file changed, 31 insertions(+), 34 deletions(-)
+ arch/arm/boot/dts/Makefile             |    1 +
+ arch/arm/boot/dts/imx6sx-sabreauto.dts |  135 ++++++++++++++++++++++++++++++++
+ 2 files changed, 136 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6sx-sabreauto.dts
 
-diff --git a/drivers/input/keyboard/gpio_keys.c b/drivers/input/keyboard/gpio_keys.c
-index a5ece3f..eefd976 100644
---- a/drivers/input/keyboard/gpio_keys.c
-+++ b/drivers/input/keyboard/gpio_keys.c
-@@ -35,9 +35,13 @@
- struct gpio_button_data {
- 	const struct gpio_keys_button *button;
- 	struct input_dev *input;
--	struct timer_list timer;
--	struct work_struct work;
--	unsigned int timer_debounce;	/* in msecs */
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 4600499..f5acbc1 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -251,6 +251,7 @@ dtb-$(CONFIG_ARCH_MXC) += \
+ 	imx6q-tx6q-1110.dtb \
+ 	imx6sl-evk.dtb \
+ 	imx6sx-sdb.dtb \
++	imx6sx-sabreauto.dtb \
+ 	ls1021a-qds.dtb \
+ 	ls1021a-twr.dtb \
+ 	vf500-colibri-eval-v3.dtb \
+diff --git a/arch/arm/boot/dts/imx6sx-sabreauto.dts b/arch/arm/boot/dts/imx6sx-sabreauto.dts
+new file mode 100644
+index 0000000..95f7f0f
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6sx-sabreauto.dts
+@@ -0,0 +1,135 @@
++/*
++ * Copyright (C) 2014 Freescale Semiconductor, Inc.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
 +
-+	struct timer_list release_timer;
-+	unsigned int release_delay;	/* in msecs, for IRQ-only buttons */
++/dts-v1/;
 +
-+	struct delayed_work work;
-+	unsigned int software_debounce;	/* in msecs, for GPIO-driven buttons */
++#include "imx6sx.dtsi"
 +
- 	unsigned int irq;
- 	spinlock_t lock;
- 	bool disabled;
-@@ -116,11 +120,14 @@ static void gpio_keys_disable_button(struct gpio_button_data *bdata)
- {
- 	if (!bdata->disabled) {
- 		/*
--		 * Disable IRQ and possible debouncing timer.
-+		 * Disable IRQ and associated timer/work structure.
- 		 */
- 		disable_irq(bdata->irq);
--		if (bdata->timer_debounce)
--			del_timer_sync(&bdata->timer);
++/ {
++	model = "Freescale i.MX6 SoloX Sabre Auto Board";
++	compatible = "fsl,imx6sx-sabreauto", "fsl,imx6sx";
 +
-+		if (gpio_is_valid(bdata->button->gpio))
-+			cancel_delayed_work_sync(&bdata->work);
-+		else
-+			del_timer_sync(&bdata->release_timer);
- 
- 		bdata->disabled = true;
- 	}
-@@ -343,7 +350,7 @@ static void gpio_keys_gpio_report_event(struct gpio_button_data *bdata)
- static void gpio_keys_gpio_work_func(struct work_struct *work)
- {
- 	struct gpio_button_data *bdata =
--		container_of(work, struct gpio_button_data, work);
-+		container_of(work, struct gpio_button_data, work.work);
- 
- 	gpio_keys_gpio_report_event(bdata);
- 
-@@ -351,13 +358,6 @@ static void gpio_keys_gpio_work_func(struct work_struct *work)
- 		pm_relax(bdata->input->dev.parent);
- }
- 
--static void gpio_keys_gpio_timer(unsigned long _data)
--{
--	struct gpio_button_data *bdata = (struct gpio_button_data *)_data;
--
--	schedule_work(&bdata->work);
--}
--
- static irqreturn_t gpio_keys_gpio_isr(int irq, void *dev_id)
- {
- 	struct gpio_button_data *bdata = dev_id;
-@@ -366,11 +366,10 @@ static irqreturn_t gpio_keys_gpio_isr(int irq, void *dev_id)
- 
- 	if (bdata->button->wakeup)
- 		pm_stay_awake(bdata->input->dev.parent);
--	if (bdata->timer_debounce)
--		mod_timer(&bdata->timer,
--			jiffies + msecs_to_jiffies(bdata->timer_debounce));
--	else
--		schedule_work(&bdata->work);
++	memory {
++		reg = <0x80000000 0x80000000>;
++	};
 +
-+	mod_delayed_work(system_wq,
-+			 &bdata->work,
-+			 msecs_to_jiffies(bdata->software_debounce));
- 
- 	return IRQ_HANDLED;
- }
-@@ -408,7 +407,7 @@ static irqreturn_t gpio_keys_irq_isr(int irq, void *dev_id)
- 		input_event(input, EV_KEY, button->code, 1);
- 		input_sync(input);
- 
--		if (!bdata->timer_debounce) {
-+		if (!bdata->release_delay) {
- 			input_event(input, EV_KEY, button->code, 0);
- 			input_sync(input);
- 			goto out;
-@@ -417,9 +416,9 @@ static irqreturn_t gpio_keys_irq_isr(int irq, void *dev_id)
- 		bdata->key_pressed = true;
- 	}
- 
--	if (bdata->timer_debounce)
--		mod_timer(&bdata->timer,
--			jiffies + msecs_to_jiffies(bdata->timer_debounce));
-+	if (bdata->release_delay)
-+		mod_timer(&bdata->release_timer,
-+			jiffies + msecs_to_jiffies(bdata->release_delay));
- out:
- 	spin_unlock_irqrestore(&bdata->lock, flags);
- 	return IRQ_HANDLED;
-@@ -429,10 +428,10 @@ static void gpio_keys_quiesce_key(void *data)
- {
- 	struct gpio_button_data *bdata = data;
- 
--	if (bdata->timer_debounce)
--		del_timer_sync(&bdata->timer);
--
--	cancel_work_sync(&bdata->work);
-+	if (gpio_is_valid(bdata->button->gpio))
-+		cancel_delayed_work_sync(&bdata->work);
-+	else
-+		del_timer_sync(&bdata->release_timer);
- }
- 
- static int gpio_keys_setup_key(struct platform_device *pdev,
-@@ -466,7 +465,7 @@ static int gpio_keys_setup_key(struct platform_device *pdev,
- 					button->debounce_interval * 1000);
- 			/* use timer if gpiolib doesn't provide debounce */
- 			if (error < 0)
--				bdata->timer_debounce =
-+				bdata->software_debounce =
- 						button->debounce_interval;
- 		}
- 
-@@ -484,9 +483,7 @@ static int gpio_keys_setup_key(struct platform_device *pdev,
- 			bdata->irq = irq;
- 		}
- 
--		INIT_WORK(&bdata->work, gpio_keys_gpio_work_func);
--		setup_timer(&bdata->timer,
--			    gpio_keys_gpio_timer, (unsigned long)bdata);
-+		INIT_DELAYED_WORK(&bdata->work, gpio_keys_gpio_work_func);
- 
- 		isr = gpio_keys_gpio_isr;
- 		irqflags = IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING;
-@@ -503,8 +500,8 @@ static int gpio_keys_setup_key(struct platform_device *pdev,
- 			return -EINVAL;
- 		}
- 
--		bdata->timer_debounce = button->debounce_interval;
--		setup_timer(&bdata->timer,
-+		bdata->release_delay = button->debounce_interval;
-+		setup_timer(&bdata->release_timer,
- 			    gpio_keys_irq_timer, (unsigned long)bdata);
- 
- 		isr = gpio_keys_irq_isr;
-@@ -514,7 +511,7 @@ static int gpio_keys_setup_key(struct platform_device *pdev,
- 	input_set_capability(input, button->type ?: EV_KEY, button->code);
- 
- 	/*
--	 * Install custom action to cancel debounce timer and
-+	 * Install custom action to cancel release timer and
- 	 * workqueue item.
- 	 */
- 	error = devm_add_action(&pdev->dev, gpio_keys_quiesce_key, bdata);
-
++	regulators {
++		compatible = "simple-bus";
++
++		reg_sd3_vmmc: sd3_vmmc{
++			compatible = "regulator-fixed";
++			regulator-name = "VCC_SD3";
++			regulator-min-microvolt = <3000000>;
++			regulator-max-microvolt = <3000000>;
++			gpio = <&gpio2 11 GPIO_ACTIVE_HIGH>;
++			enable-active-high;
++		};
++	};
++};
++
++&uart1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart1_1>;
++	status = "okay";
++};
++
++&usdhc3 {
++	pinctrl-names = "default", "state_100mhz", "state_200mhz";
++	pinctrl-0 = <&pinctrl_usdhc3_1>;
++	pinctrl-1 = <&pinctrl_usdhc3_1_100mhz>;
++	pinctrl-2 = <&pinctrl_usdhc3_1_200mhz>;
++	bus-width = <8>;
++	cd-gpios = <&gpio7 10 0>;
++	wp-gpios = <&gpio3 19 0>;
++	keep-power-in-suspend;
++	enable-sdio-wakeup;
++	vmmc-supply = <&reg_sd3_vmmc>;
++	status = "okay";
++};
++
++&usdhc4 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usdhc4_3>;
++	bus-width = <8>;
++	cd-gpios = <&gpio7 11 0>;
++	no-1-8-v;
++	keep-power-in-suspend;
++	enable-sdio-wakup;
++	status = "okay";
++};
++
++&iomuxc {
++	imx6x-sabreauto {
++		pinctrl_uart1_1: uart1grp {
++			fsl,pins = <
++				MX6SX_PAD_GPIO1_IO04__UART1_TX		0x1b0b1
++				MX6SX_PAD_GPIO1_IO05__UART1_RX		0x1b0b1
++			>;
++		};
++
++		pinctrl_usdhc3_1: usdhc3grp {
++			fsl,pins = <
++				MX6SX_PAD_SD3_CMD__USDHC3_CMD		0x17059
++				MX6SX_PAD_SD3_CLK__USDHC3_CLK		0x10059
++				MX6SX_PAD_SD3_DATA0__USDHC3_DATA0	0x17059
++				MX6SX_PAD_SD3_DATA1__USDHC3_DATA1	0x17059
++				MX6SX_PAD_SD3_DATA2__USDHC3_DATA2	0x17059
++				MX6SX_PAD_SD3_DATA3__USDHC3_DATA3	0x17059
++				MX6SX_PAD_SD3_DATA4__USDHC3_DATA4	0x17059
++				MX6SX_PAD_SD3_DATA5__USDHC3_DATA5	0x17059
++				MX6SX_PAD_SD3_DATA6__USDHC3_DATA6	0x17059
++				MX6SX_PAD_SD3_DATA7__USDHC3_DATA7	0x17059
++				MX6SX_PAD_KEY_COL0__GPIO2_IO_10		0x17059 /* CD */
++				MX6SX_PAD_KEY_ROW0__GPIO2_IO_15		0x17059 /* WP */
++			>;
++		};
++
++		pinctrl_usdhc3_1_100mhz: usdhc3grp-100mhz {
++			fsl,pins = <
++				MX6SX_PAD_SD3_CMD__USDHC3_CMD		0x170b9
++				MX6SX_PAD_SD3_CLK__USDHC3_CLK		0x100b9
++				MX6SX_PAD_SD3_DATA0__USDHC3_DATA0	0x170b9
++				MX6SX_PAD_SD3_DATA1__USDHC3_DATA1	0x170b9
++				MX6SX_PAD_SD3_DATA2__USDHC3_DATA2	0x170b9
++				MX6SX_PAD_SD3_DATA3__USDHC3_DATA3	0x170b9
++				MX6SX_PAD_SD3_DATA4__USDHC3_DATA4	0x170b9
++				MX6SX_PAD_SD3_DATA5__USDHC3_DATA5	0x170b9
++				MX6SX_PAD_SD3_DATA6__USDHC3_DATA6	0x170b9
++				MX6SX_PAD_SD3_DATA7__USDHC3_DATA7	0x170b9
++			>;
++		};
++
++		pinctrl_usdhc3_1_200mhz: usdhc3grp-200mhz {
++			fsl,pins = <
++				MX6SX_PAD_SD3_CMD__USDHC3_CMD		0x170f9
++				MX6SX_PAD_SD3_CLK__USDHC3_CLK		0x100f9
++				MX6SX_PAD_SD3_DATA0__USDHC3_DATA0	0x170f9
++				MX6SX_PAD_SD3_DATA1__USDHC3_DATA1	0x170f9
++				MX6SX_PAD_SD3_DATA2__USDHC3_DATA2	0x170f9
++				MX6SX_PAD_SD3_DATA3__USDHC3_DATA3	0x170f9
++				MX6SX_PAD_SD3_DATA4__USDHC3_DATA4	0x170f9
++				MX6SX_PAD_SD3_DATA5__USDHC3_DATA5	0x170f9
++				MX6SX_PAD_SD3_DATA6__USDHC3_DATA6	0x170f9
++				MX6SX_PAD_SD3_DATA7__USDHC3_DATA7	0x170f9
++			>;
++		};
++
++		pinctrl_usdhc4_3: usdhc4grp {
++			fsl,pins = <
++				MX6SX_PAD_SD4_CMD__USDHC4_CMD		0x17059
++				MX6SX_PAD_SD4_CLK__USDHC4_CLK		0x10059
++				MX6SX_PAD_SD4_DATA0__USDHC4_DATA0	0x17059
++				MX6SX_PAD_SD4_DATA1__USDHC4_DATA1	0x17059
++				MX6SX_PAD_SD4_DATA2__USDHC4_DATA2	0x17059
++				MX6SX_PAD_SD4_DATA3__USDHC4_DATA3	0x17059
++				MX6SX_PAD_SD4_DATA7__GPIO6_IO_21	0x17059 /* CD */
++				MX6SX_PAD_SD4_DATA6__GPIO6_IO_20	0x17059 /* WP */
++			>;
++		};
++	};
++};
 -- 
-Dmitry
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
