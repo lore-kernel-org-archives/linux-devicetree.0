@@ -1,7 +1,7 @@
 From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v1 18/34] NFC: st21nfca: Remove checkpatch.pl warning Possible unnecessary 'out of memory' message
-Date: Mon,  8 Dec 2014 22:08:23 +0100
-Message-ID: <1418072919-10535-19-git-send-email-christophe-h.ricard@st.com>
+Subject: [PATCH v1 21/34] NFC: nci: Make nci_request available for nfc driver
+Date: Mon,  8 Dec 2014 22:08:26 +0100
+Message-ID: <1418072919-10535-22-git-send-email-christophe-h.ricard@st.com>
 References: <1418072919-10535-1-git-send-email-christophe-h.ricard@st.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1418072919-10535-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
@@ -10,31 +10,55 @@ To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Remove unnecessary memory allocation message already shown by devm_kzalloc.
-This remove a warning when running scripts/checkpatch.
+NFC drivers may need to send raw data over NCI. Make this function
+available in the NCI core framework.
 
 Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
 ---
- drivers/nfc/st21nfca/i2c.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ include/net/nfc/nci_core.h | 3 +++
+ net/nfc/nci/core.c         | 8 ++++----
+ 2 files changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/nfc/st21nfca/i2c.c b/drivers/nfc/st21nfca/i2c.c
-index ea3db65..a321439 100644
---- a/drivers/nfc/st21nfca/i2c.c
-+++ b/drivers/nfc/st21nfca/i2c.c
-@@ -601,11 +601,8 @@ static int st21nfca_hci_i2c_probe(struct i2c_client *client,
+diff --git a/include/net/nfc/nci_core.h b/include/net/nfc/nci_core.h
+index 25c0a70..395f804 100644
+--- a/include/net/nfc/nci_core.h
++++ b/include/net/nfc/nci_core.h
+@@ -217,6 +217,9 @@ int nci_send_data(struct nci_dev *ndev, __u8 conn_id, struct sk_buff *skb);
+ void nci_data_exchange_complete(struct nci_dev *ndev, struct sk_buff *skb,
+ 				__u8 conn_id, int err);
+ void nci_clear_target_list(struct nci_dev *ndev);
++int nci_request(struct nci_dev *ndev,
++			void (*req)(struct nci_dev *ndev, unsigned long opt),
++			unsigned long opt, __u32 timeout);
  
- 	phy = devm_kzalloc(&client->dev, sizeof(struct st21nfca_i2c_phy),
- 			   GFP_KERNEL);
--	if (!phy) {
--		nfc_err(&client->dev,
--			"Cannot allocate memory for st21nfca i2c phy.\n");
-+	if (!phy)
- 		return -ENOMEM;
--	}
+ /* ----- NCI requests ----- */
+ #define NCI_REQ_DONE		0
+diff --git a/net/nfc/nci/core.c b/net/nfc/nci/core.c
+index 92b42e2..b3ec63e 100644
+--- a/net/nfc/nci/core.c
++++ b/net/nfc/nci/core.c
+@@ -109,10 +109,9 @@ static int __nci_request(struct nci_dev *ndev,
+ 	return rc;
+ }
  
- 	phy->i2c_dev = client;
- 	phy->pending_skb = alloc_skb(ST21NFCA_HCI_LLC_MAX_SIZE * 2, GFP_KERNEL);
+-static inline int nci_request(struct nci_dev *ndev,
+-			      void (*req)(struct nci_dev *ndev,
+-					  unsigned long opt),
+-			      unsigned long opt, __u32 timeout)
++inline int nci_request(struct nci_dev *ndev,
++		void (*req)(struct nci_dev *ndev, unsigned long opt),
++		unsigned long opt, __u32 timeout)
+ {
+ 	int rc;
+ 
+@@ -126,6 +125,7 @@ static inline int nci_request(struct nci_dev *ndev,
+ 
+ 	return rc;
+ }
++EXPORT_SYMBOL_GPL(nci_request);
+ 
+ static void nci_reset_req(struct nci_dev *ndev, unsigned long opt)
+ {
 -- 
 2.1.0
 
