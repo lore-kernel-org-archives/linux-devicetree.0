@@ -1,80 +1,45 @@
 From: Ray Jui <rjui@broadcom.com>
-Subject: Re: [PATCH 2/5] gpio: Cygnus: add GPIO driver
-Date: Sun, 7 Dec 2014 17:59:57 -0800
-Message-ID: <5485061D.1060302@broadcom.com>
-References: <Ray Jui <rjui@broadcom.com>	 <1417826408-1600-1-git-send-email-rjui@broadcom.com>	 <1417826408-1600-3-git-send-email-rjui@broadcom.com> <1417829282.31745.3.camel@perches.com> <5482668F.1040907@broadcom.com>
+Subject: [PATCH v2 0/5] Add gpio support to Broadcom Cygnus SoC
+Date: Sun, 7 Dec 2014 18:38:31 -0800
+Message-ID: <1418006316-324-1-git-send-email-rjui@broadcom.com>
+References: <Ray Jui <rjui@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain
 Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <5482668F.1040907@broadcom.com>
+In-Reply-To: <Ray Jui <rjui@broadcom.com>
 Sender: linux-gpio-owner@vger.kernel.org
-To: Joe Perches <joe@perches.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Scott Branden <sbranden@broadcom.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Joe Perches <joe@perches.com>
+Cc: Scott Branden <sbranden@broadcom.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, Ray Jui <rjui@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
+This patchset contains the initial GPIO support for the Broadcom Cygnus SoC.
+Cygnus has 3 GPIO controllers: 1) the ASIU GPIO; 2) the chipCommonG GPIO;
+and 3) the ALWAYS-ON GPIO. All 3 types of GPIO controllers are supported by
+the same Cygnus GPIO driver
 
+Changes from v1:
+ - Get rid of inline qualifier
+ - Get rid of redundant check in the ISR
+ - Other minor fixes to imrove code readability
 
-On 12/5/2014 6:14 PM, Ray Jui wrote:
->>> +static struct irq_chip bcm_cygnus_gpio_irq_chip =3D {
->>> +    .name =3D "bcm-cygnus-gpio",
->>> +    .irq_ack =3D bcm_cygnus_gpio_irq_ack,
->>> +    .irq_mask =3D bcm_cygnus_gpio_irq_mask,
->>> +    .irq_unmask =3D bcm_cygnus_gpio_irq_unmask,
->>> +    .irq_set_type =3D bcm_cygnus_gpio_irq_set_type,
->>> +};
->>
->> const?
->>
->
->
-> Sure, will add const to bcm_cygnus_gpio_irq_chip
->
->>> +static struct irq_domain_ops bcm_cygnus_irq_ops =3D {
->>> +    .map =3D bcm_cygnus_gpio_irq_map,
->>> +    .unmap =3D bcm_cygnus_gpio_irq_unmap,
->>> +    .xlate =3D irq_domain_xlate_twocell,
->>> +};
->>
->> const here too?
->>
->
-> Yes, will make bcm_cygnus_irq_ops const.
->
-Actually, I cannot make them const here. Note they are passed into othe=
-r=20
-APIs which can potentially modifies their values internally.
+Ray Jui (5):
+  gpio: Cygnus: define Broadcom Cygnus GPIO binding
+  gpio: Cygnus: add GPIO driver
+  ARM: mach-bcm: Enable GPIO support for Cygnus
+  ARM: dts: enable GPIO for Broadcom Cygnus
+  MAINTAINERS: Entry for Cygnus GPIO driver
 
-drivers/gpio/gpio-bcm-cygnus.c: In function =91bcm_cygnus_gpio_irq_map=92=
-:
-drivers/gpio/gpio-bcm-cygnus.c:430:4: warning: passing argument 2 of=20
-=91irq_set_chip_and_handler=92 discards =91const=92 qualifier from poin=
-ter=20
-target type [enabled by default]
-     handle_simple_irq);
-     ^
-In file included from drivers/gpio/gpio-bcm-cygnus.c:17:0:
-include/linux/irq.h:461:20: note: expected =91struct irq_chip *=92 but=20
-argument is of type =91const struct irq_chip *=92
-  static inline void irq_set_chip_and_handler(unsigned int irq, struct=20
-irq_chip *chip,
-                     ^
-drivers/gpio/gpio-bcm-cygnus.c: In function =91bcm_cygnus_gpio_probe=92=
-:
-drivers/gpio/gpio-bcm-cygnus.c:679:5: warning: passing argument 2 of=20
-=91irq_set_chip_and_handler=92 discards =91const=92 qualifier from poin=
-ter=20
-target type [enabled by default]
-      handle_simple_irq);
-      ^
-In file included from drivers/gpio/gpio-bcm-cygnus.c:17:0:
-include/linux/irq.h:461:20: note: expected =91struct irq_chip *=92 but=20
-argument is of type =91const struct irq_chip *=92
-  static inline void irq_set_chip_and_handler(unsigned int irq, struct=20
-irq_chip *chip,
---
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ .../devicetree/bindings/gpio/brcm,cygnus-gpio.txt  |   85 +++
+ MAINTAINERS                                        |    7 +
+ arch/arm/boot/dts/bcm-cygnus.dtsi                  |   30 +
+ arch/arm/mach-bcm/Kconfig                          |    1 +
+ drivers/gpio/Kconfig                               |   11 +
+ drivers/gpio/Makefile                              |    1 +
+ drivers/gpio/gpio-bcm-cygnus.c                     |  712 ++++++++++++++++++++
+ 7 files changed, 847 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/brcm,cygnus-gpio.txt
+ create mode 100644 drivers/gpio/gpio-bcm-cygnus.c
+
+-- 
+1.7.9.5
+
