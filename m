@@ -1,126 +1,78 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v10 0/4] This suspend patch is only support cut off the power of cpu and some external
-Date: Mon, 08 Dec 2014 00:46:47 +0100
-Message-ID: <2362255.5fGiDIoeyd@phil>
-References: <1417423940-1669-1-git-send-email-zyw@rock-chips.com> <547F1639.3030102@rock-chips.com> <7hiohszgep.fsf@deeprootsystems.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH/RFC 0/4] ARM: shmobile: Correct masks for GIC PPI
+ interrupts
+Date: Mon, 8 Dec 2014 09:13:45 +0900
+Message-ID: <20141208001345.GA11177@verge.net.au>
+References: <1417085839-22836-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <7hiohszgep.fsf-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Tony Xie <xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1417085839-22836-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-Am Mittwoch, 3. Dezember 2014, 11:23:26 schrieb Kevin Hilman:
-> Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org> writes:
+On Thu, Nov 27, 2014 at 11:57:15AM +0100, Geert Uytterhoeven wrote:
+> 	Hi all,
 > 
-> [...]
+> This patch series corrects the masks in the second interrupt cells for
+> Private Peripheral Interrupts in dtsi files for the shmobile family of
+> SoCs.
 > 
-> > I have test these patches on evb board base on next-20141128 with a
-> > defconfig[0], and with u-boot[1].
-> > As Doug said, we need below 3 patches for resume.
-> > 
-> > 1.https://patchwork.kernel.org/patch/5051881/  - clocksource:
-> >    arch_timer: Allow the device tree to specify uninitialized timer
-> >    registers
-> > 
-> > 2.https://patchwork.kernel.org/patch/5363671/  - clocksource:
-> >    arch_timer: Fix code to use physical timers when requested
-> > 
-> > 3.https://patchwork.kernel.org/patch/5382141/  - ARM: dts: rk3288: add
-> > 
-> >    arm,cpu-registers-not-fw-configured
-> > 
-> > And it will auto wakeup, as Heiko said in v8.
+> It's my understanding this mask should reflect the actual number of CPU
+> cores the interrupt is wired too.
+> Is that correct?
 > 
-> OK, with your series plus those 3 patches on top of next-20141128, I'm
-> now seeing it auto-wakeup, either with multi_v7_defconfig or Heiko's
-> rk3288_defconfig.
+>   - Hence it should be "GIC_CPU_MASK_SIMPLE(2)" on dual-core CPUs, like
+>     r8a7791 and r8a7794 (the first two patches),
+>   - Should it be "GIC_CPU_MASK_SIMPLE(8)" on big.LITTLE configurations
+>     with four Cortex-A15 cores and four Cortex-A7 cores?
+>     Or should the interrupts be delivered to the four Cortex-A15 cores
+>     only by default?
+>     The last two RFC-patches implement the former for r8a7790 and
+>     r8a73a4.
 > 
-> > But I have never notice before, since the u-boot never enable edp, and
-> > I use the coreboot with edp display.  Actually it is a bug in rk3288,
-> > the rk3288 have not 27Mhz clock source, but the edp initially set to
-> > this non-existent clock. At this time, edp is working on a unknown
-> > state, and it always bring a interrupt, this interrupt avoid system
-> > enter suspend.
+> Note that incorrect masks for GIC PPI interrupts are not limited to
+> shmobile. Presumably the interrupt specifiers got copied around a lot,
+> cfr. the proliferation of "GIC_CPU_MASK_SIMPLE(4)" (and the older
+> hardcoded "0xf0x" variant) in various dtsi files, not always limited to
+> quad-core CPUs.
 > 
-> I see, good find!
+> This was tested on r8a7791/koelsch, which uses the arch timer interrupt.
+> 
+> Thanks for your feedback!
+> 
+> Geert Uytterhoeven (4):
+>   ARM: shmobile: r8a7791: Correct mask for GIC PPI interrupts
+>   ARM: shmobile: r8a7794: Correct mask for GIC PPI interrupts
 
-I think the "problem" might be a different one.
+Hi Geert,
 
-With Chris' short patch [0] enabling a bit of gic debug output on resume I was
-able to track down where my wakeup comes from and it seems to be the
-sdmmc_detect_n interrupt. When I have a sd card inserted it wakes up again
-directly and when I remove it it stays asleep till I wake it with the power-
-button.
+the above two patches seem like they could be queued up.
+Shall I do so?
 
-Relevant output would be:
-	gic_cpu_restore add = f0000000, 0, 0, 0, 0, 8
-
-I have verified that at least for me the sclk_edp_24m has no influence on this,
-by using an uboot that does not reparent the edp clock (it stays an orphan)
-and an uboot that reparents it to xin24m.
-
-In both cases the system wakes up directly when I have a sd card in the slot
-and stays asleep (till pressing the power-key) when I remove the card.
-
-So the auto-wakeup is not the fault of the new suspend-code, but we should
-find a way to tame sdmmc_detect_n :-)
-
-
-Now I only need to check why I get a
-	rk3288_suspend_finish: Suspend finish failed
-on every resume [1], but that is something for tomorrow.
-
-
-Heiko
-
-
-[0]
-diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
-index d617ee5..37d5ce0 100644
---- a/drivers/irqchip/irq-gic.c
-+++ b/drivers/irqchip/irq-gic.c
-@@ -538,6 +538,7 @@ static void gic_cpu_restore(unsigned int gic_nr)
- 	u32 *ptr;
- 	void __iomem *dist_base;
- 	void __iomem *cpu_base;
-+	u32 reg[5];
- 
- 	if (gic_nr >= MAX_GIC_NR)
- 		BUG();
-@@ -562,6 +563,10 @@ static void gic_cpu_restore(unsigned int gic_nr)
- 
- 	writel_relaxed(GICC_INT_PRI_THRESHOLD, cpu_base + GIC_CPU_PRIMASK);
- 	gic_cpu_if_up();
-+
-+	for (i = 0; i < 5; i++)
-+		reg[i] = readl_relaxed(dist_base + 0x200 + i * 4);
-+	printk("%s add = %x, %x, %x, %x, %x, %x\n",__func__, dist_base, reg[0], reg[1], reg[2], reg[3], reg[4]);
- }
- 
- static int gic_notifier(struct notifier_block *self, unsigned long cmd,	void *v)
-
-[1]
-Disabling non-boot CPUs ...
-CPU1: shutdown
-CPU2: shutdown
-CPU3: shutdown
-gic_cpu_restore add = f0000000, 0, 0, 0, 20000, 0
-Enabling non-boot CPUs ...
-CPU1 is up
-CPU2 is up
-CPU3 is up
-PM: noirq resume of devices complete after 0.892 msecs
-PM: early resume of devices complete after 0.991 msecs
-rk3288_suspend_finish: Suspend finish failed
-PM: resume of devices complete after 2.496 msecs
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>   [RFC] ARM: shmobile: r8a7790: Correct mask for GIC PPI interrupts
+>   [RFC] ARM: shmobile: r8a73a4: Correct mask for GIC PPI interrupts
+> 
+>  arch/arm/boot/dts/r8a73a4.dtsi | 10 +++++-----
+>  arch/arm/boot/dts/r8a7790.dtsi | 10 +++++-----
+>  arch/arm/boot/dts/r8a7791.dtsi | 10 +++++-----
+>  arch/arm/boot/dts/r8a7794.dtsi | 10 +++++-----
+>  4 files changed, 20 insertions(+), 20 deletions(-)
+> 
+> -- 
+> 1.9.1
+> 
+> Gr{oetje,eeting}s,
+> 
+> 						Geert
+> 
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+> 							    -- Linus Torvalds
+> 
