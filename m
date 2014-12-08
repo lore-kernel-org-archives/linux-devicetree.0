@@ -1,56 +1,67 @@
-From: Emil Medve <Emilian.Medve@Freescale.com>
-Subject: [PATCH v5 1/6] dt/bindings: b/qman: Fix the alloc-ranges in the
- example(s)
-Date: Mon, 8 Dec 2014 04:29:16 -0600
-Message-ID: <1418034561-12034-2-git-send-email-Emilian.Medve@Freescale.com>
-References: <1418034561-12034-1-git-send-email-Emilian.Medve@Freescale.com>
+From: Yunzhi Li <lyz@rock-chips.com>
+Subject: Re: [PATCH v3 1/5] phy: add a driver for the Rockchip SoC internal
+ USB2.0 PHY
+Date: Mon, 08 Dec 2014 19:04:20 +0800
+Message-ID: <548585B4.107@rock-chips.com>
+References: <1418031988-2700-1-git-send-email-lyz@rock-chips.com> <1418031988-2700-2-git-send-email-lyz@rock-chips.com> <548575F0.4090909@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1418034561-12034-1-git-send-email-Emilian.Medve@Freescale.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: scottwood@Freescale.com, linuxppc-dev@ozlabs.org, devicetree@vger.kernel.org
-Cc: Emil Medve <Emilian.Medve@Freescale.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <548575F0.4090909@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>, heiko@sntech.de, dianders@chromium.org, romain.perier@gmail.com
+Cc: olof@lixom.net, huangtao@rock-chips.com, zyw@rock-chips.com, cf@rock-chips.com, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-J3JhbmdlcycgYXJlIHNwZWNpZmllZCBhcyA8YmFzZSBzaXplPiBub3QgYXMgPHN0YXJ0IGVuZD4K
-ClNpZ25lZC1vZmYtYnk6IEVtaWwgTWVkdmUgPEVtaWxpYW4uTWVkdmVARnJlZXNjYWxlLmNvbT4K
-LS0tCiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc29jL2ZzbC9ibWFuLnR4dCB8
-IDIgKy0KIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb2MvZnNsL3FtYW4udHh0
-IHwgNCArKy0tCiAyIGZpbGVzIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMo
-LSkKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc29jL2Zz
-bC9ibWFuLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb2MvZnNsL2Jt
-YW4udHh0CmluZGV4IDlmODBiZjguLmVlMDNlZjIgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9zb2MvZnNsL2JtYW4udHh0CisrKyBiL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9zb2MvZnNsL2JtYW4udHh0CkBAIC05Niw3ICs5Niw3IEBAIFRo
-ZSBleGFtcGxlIGJlbG93IHNob3dzIGEgQk1hbiBGQlBSIGR5bmFtaWMgYWxsb2NhdGlvbiBtZW1v
-cnkgbm9kZQogCiAJCWJtYW5fZmJwcjogYm1hbi1mYnByIHsKIAkJCWNvbXBhdGlibGUgPSAiZnNs
-LGJtYW4tZmJwciI7Ci0JCQlhbGxvYy1yYW5nZXMgPSA8MCAwIDB4ZiAweGZmZmZmZmZmPjsKKwkJ
-CWFsbG9jLXJhbmdlcyA9IDwwIDAgMHgxMCAwPjsKIAkJCXNpemUgPSA8MCAweDEwMDAwMDA+Owog
-CQkJYWxpZ25tZW50ID0gPDAgMHgxMDAwMDAwPjsKIAkJfTsKZGlmZiAtLWdpdCBhL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb2MvZnNsL3FtYW4udHh0IGIvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9mc2wvcW1hbi50eHQKaW5kZXggMDYzZTNhMC4uZjNk
-YTkxZSAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9m
-c2wvcW1hbi50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9m
-c2wvcW1hbi50eHQKQEAgLTExMywxMyArMTEzLDEzIEBAIFRoZSBleGFtcGxlIGJlbG93IHNob3dz
-IGEgUU1hbiBGUUQgYW5kIGEgUEZEUiBkeW5hbWljIGFsbG9jYXRpb24gbWVtb3J5IG5vZGVzCiAK
-IAkJcW1hbl9mcWQ6IHFtYW4tZnFkIHsKIAkJCWNvbXBhdGlibGUgPSAiZnNsLHFtYW4tZnFkIjsK
-LQkJCWFsbG9jLXJhbmdlcyA9IDwwIDAgMHhmIDB4ZmZmZmZmZmY+OworCQkJYWxsb2MtcmFuZ2Vz
-ID0gPDAgMCAweDEwIDA+OwogCQkJc2l6ZSA9IDwwIDB4NDAwMDAwPjsKIAkJCWFsaWdubWVudCA9
-IDwwIDB4NDAwMDAwPjsKIAkJfTsKIAkJcW1hbl9wZmRyOiBxbWFuLXBmZHIgewogCQkJY29tcGF0
-aWJsZSA9ICJmc2wscW1hbi1wZmRyIjsKLQkJCWFsbG9jLXJhbmdlcyA9IDwwIDAgMHhmIDB4ZmZm
-ZmZmZmY+OworCQkJYWxsb2MtcmFuZ2VzID0gPDAgMCAweDEwIDA+OwogCQkJc2l6ZSA9IDwwIDB4
-MjAwMDAwMD47CiAJCQlhbGlnbm1lbnQgPSA8MCAweDIwMDAwMDA+OwogCQl9OwotLSAKMi4yLjAK
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4cHBj
-LWRldiBtYWlsaW5nIGxpc3QKTGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9s
-aXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2xpbnV4cHBjLWRldg==
+Hi Kishon :
+
+On 2014/12/8 17:57, Kishon Vijay Abraham I wrote:
+> Hi,
+>
+> On Monday 08 December 2014 03:16 PM, Yunzhi Li wrote:
+>> This patche to add a generic PHY driver for ROCKCHIP usb PHYs,
+> %s/patche/patch
+Sorry for this typo.
+>> +#include <linux/reset.h>
+>> +#include <linux/regmap.h>
+>> +#include <linux/mfd/syscon.h>
+>> +
+>> +#define ROCKCHIP_RK3288_UOC(n)	(0x320 + n * 0x14)
+>> +
+>> +#define SIDDQ_MSK		BIT(13 + 16)
+> This doesn't look correct. Won't this mask bit no:29?
+The higher 16-bit of this register is used for write-protect, only if 
+BIT(13 + 16)
+set to 1 the BIT(13) can be written. I will add some comments here in 
+the next
+version, to prevent others confused. ok ?
+
+>> [...]
+>>
+>> +static int rockchip_usb_phy_probe(struct platform_device *pdev)
+>> +{
+>> +	struct device *dev = &pdev->dev;
+>> +	struct rockchip_usb_phy *rk_phy;
+>> +	struct rockchip_usb_phy *phy_array;
+>> +	struct phy_provider *phy_provider;
+>> +	struct regmap *grf;
+>> +	char clk_name[16];
+>> +	int i;
+>> +
+>> +	grf = syscon_regmap_lookup_by_phandle(dev->of_node, "rockchip,grf");
+>> +	if (IS_ERR(grf)) {
+>> +		dev_err(&pdev->dev, "Missing rockchip,grf property\n");
+>> +		return PTR_ERR(grf);
+>> +	}
+>> +
+>> +	phy_array = devm_kzalloc(dev, RK3288_NUM_PHYS * sizeof(*rk_phy),
+>> +				 GFP_KERNEL);
+>> +	if (!phy_array)
+>> +		return -ENOMEM;
+>> +
+>> +	for (i = 0; i < RK3288_NUM_PHYS; i++) {
+> Don't hardcode NUM_PHYS. All this has to come from dt. Model each PHYs as
+> subnode of the phy provider node and use it here.
+I got it, it should be like this, model each PHYs as sub node and use 
+of_get_child_count() to get the number of phys.
