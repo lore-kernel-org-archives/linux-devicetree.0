@@ -1,66 +1,89 @@
-From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v1 33/34] NFC: st21nfca: Add support for HCI event transaction
-Date: Mon,  8 Dec 2014 22:08:38 +0100
-Message-ID: <1418072919-10535-34-git-send-email-christophe-h.ricard@st.com>
-References: <1418072919-10535-1-git-send-email-christophe-h.ricard@st.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1418072919-10535-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
-Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Kenneth Westfield <kwestfie@codeaurora.org>
+Subject: [Patch v2 00/11] ASoC: QCOM: Add support for ipq806x SOC
+Date: Mon,  8 Dec 2014 14:01:02 -0800
+Message-ID: <1418076073-12623-1-git-send-email-kwestfie@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.de>, Liam Girdwood <lgirdwood@gmail.com>, David Brown <davidb@codeaurora.org>, Bryan Huntsman <bryanh@codeaurora.org>, Rob Herring <rob.herring@calxeda.com>, Greg KH <gregkh@linuxfoundation.org>, Patrick Lai <plai@codeaurora.org>, Banajit Goswami <bgoswami@codeaurora.org>
+Cc: ALSA Mailing List <alsa-devel@alsa-project.org>, Device Tree Mailing List <devicetree@vger.kernel.org>, MSM Mailing List <linux-arm-msm@vger.kernel.org>, Kenneth Westfield <kwestfie@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-The event transaction notifies the Device Host that an action is required
-to manage a specific Secure Element application.
+From: Kenneth Westfield <kwestfie@codeaurora.org>
 
-Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
----
- drivers/nfc/st21nfca/st21nfca_se.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+This set of patches adds support for audio on the Qualcomm Technologies ipq806x SOC.
 
-diff --git a/drivers/nfc/st21nfca/st21nfca_se.c b/drivers/nfc/st21nfca/st21nfca_se.c
-index 9b93d39..bd13cac 100644
---- a/drivers/nfc/st21nfca/st21nfca_se.c
-+++ b/drivers/nfc/st21nfca/st21nfca_se.c
-@@ -301,6 +301,8 @@ int st21nfca_connectivity_event_received(struct nfc_hci_dev *hdev, u8 host,
- 				u8 event, struct sk_buff *skb)
- {
- 	int r = 0;
-+	struct device *dev = &hdev->ndev->dev;
-+	struct nfc_evt_transaction *transaction;
- 
- 	pr_debug("connectivity gate event: %x\n", event);
- 
-@@ -308,6 +310,25 @@ int st21nfca_connectivity_event_received(struct nfc_hci_dev *hdev, u8 host,
- 	case ST21NFCA_EVT_CONNECTIVITY:
- 		break;
- 	case ST21NFCA_EVT_TRANSACTION:
-+		if (skb->len < NFC_MIN_AID_LENGTH + 2 &&
-+		    skb->data[0] != NFC_EVT_TRANSACTION_AID_TAG)
-+			return -EPROTO;
-+
-+		transaction = (struct nfc_evt_transaction *)devm_kzalloc(dev,
-+						   skb->len - 2, GFP_KERNEL);
-+
-+		transaction->aid_len = skb->data[1];
-+		memcpy(transaction->aid, &skb->data[2], skb->data[1]);
-+
-+		if (skb->data[transaction->aid_len + 2] !=
-+		    NFC_EVT_TRANSACTION_PARAMS_TAG)
-+			return -EPROTO;
-+
-+		transaction->params_len = skb->data[transaction->aid_len + 3];
-+		memcpy(transaction->params, skb->data +
-+		       transaction->aid_len + 4, transaction->params_len);
-+
-+		r = nfc_se_transaction(hdev->ndev, host, transaction);
- 		break;
- 	default:
- 		return 1;
+The ipq806x SOC has audio-related hardware blocks in its low-power audio subsystem (or LPASS).  One of the relevant blocks in the LPASS is its low-power audio interface (or LPAIF).  This encapsulates the MI2S port, which is what these drivers are configured to use.  The I2S pins are connected to an external DAC/amp chip.  In addition, a single GPIO is connected to the same DAC/amp, which gives the SOC enable/disable control.
+
+The specific drivers added are:
+ - a Codec DAI driver that controls the SOC external pins
+ - a CPU DAI driver for controlling the LPASS-LPAIF block
+ - a PCM MI2S platform driver
+ - a machine driver that ties the three drivers together
+
+Corresponding additions to the device tree for the ipq806x and its documentation has also been added.  Also, as this is a new directory, the MAINTAINERS file has been updated as well.
+
+== Updates from my previous post:
+
+[PATCH 00/9] ASoC: QCOM: Add support for ipq806x SOC
+http://thread.gmane.org/gmane.linux.ports.arm.msm/10701
+
+ - remove the native LPAIF driver, and move its functionality to the CPU DAI driver
+ - add a codec driver to manage the pins going to the external DAC (previously managed by the machine driver)
+ - use devm_* and dev_* where possible
+ - ISR only handles relevant DMA channel now
+ - update device tree documentation to reflect changes
+ - general code cleanup
+
+== Additional patch series upon which this patch series has device-tree dependencies (lcc)
+
+[PATCH v2 0/8] qcom audio clock control drivers
+http://thread.gmane.org/gmane.linux.ports.arm.msm/10793
+
+
+Kenneth Westfield (11):
+  MAINTAINERS: Add QCOM audio ASoC maintainer
+  ASoC: qcom: Add device tree binding docs
+  ASoC: ipq806x: add LPAIF header file
+  ASoC: codec: Add Maxim codec driver
+  ASoC: ipq806x: Add LPASS CPU DAI driver
+  ASoC: ipq806x: Add I2S PCM platform driver
+  ASoC: ipq806x: Add machine driver for IPQ806X SOC
+  ASoC: codec: Add ability to build QCOM codec
+  ASoC: qcom: Add ability to build QCOM drivers
+  ASoC: Allow for building QCOM drivers
+  ARM: dts: Model IPQ LPASS audio hardware
+
+ .../bindings/sound/qcom,ipq806x-snd-card.txt       |  25 ++
+ .../bindings/sound/qcom,lpass-cpu-dai.txt          |  32 ++
+ .../bindings/sound/qcom,lpass-pcm-mi2s.txt         |  12 +
+ .../bindings/sound/qcom,max98357a-codec.txt        |  23 ++
+ MAINTAINERS                                        |   7 +
+ arch/arm/boot/dts/qcom-ipq8064.dtsi                |  33 ++
+ sound/soc/Kconfig                                  |   1 +
+ sound/soc/Makefile                                 |   1 +
+ sound/soc/codecs/Kconfig                           |   4 +
+ sound/soc/codecs/Makefile                          |   2 +
+ sound/soc/codecs/max98357a.c                       | 267 ++++++++++++
+ sound/soc/qcom/Kconfig                             |  25 ++
+ sound/soc/qcom/Makefile                            |  11 +
+ sound/soc/qcom/ipq806x.c                           | 127 ++++++
+ sound/soc/qcom/lpass-cpu-mi2s.c                    | 374 +++++++++++++++++
+ sound/soc/qcom/lpass-cpu-mi2s.h                    |  48 +++
+ sound/soc/qcom/lpass-lpaif.h                       | 154 +++++++
+ sound/soc/qcom/lpass-pcm-mi2s.c                    | 452 +++++++++++++++++++++
+ 18 files changed, 1598 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/qcom,ipq806x-snd-card.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/qcom,lpass-cpu-dai.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/qcom,lpass-pcm-mi2s.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/qcom,max98357a-codec.txt
+ create mode 100644 sound/soc/codecs/max98357a.c
+ create mode 100644 sound/soc/qcom/Kconfig
+ create mode 100644 sound/soc/qcom/Makefile
+ create mode 100644 sound/soc/qcom/ipq806x.c
+ create mode 100644 sound/soc/qcom/lpass-cpu-mi2s.c
+ create mode 100644 sound/soc/qcom/lpass-cpu-mi2s.h
+ create mode 100644 sound/soc/qcom/lpass-lpaif.h
+ create mode 100644 sound/soc/qcom/lpass-pcm-mi2s.c
+
 -- 
-2.1.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.8.2.1
