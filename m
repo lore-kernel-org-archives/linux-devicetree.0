@@ -1,7 +1,7 @@
 From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v1 01/34] NFC: dts: st21nfca: Fix compatible string spelling to follow other drivers
-Date: Mon,  8 Dec 2014 22:08:06 +0100
-Message-ID: <1418072919-10535-2-git-send-email-christophe-h.ricard@st.com>
+Subject: [PATCH v1 02/34] NFC: dts: st21nfcb: Fix compatible string spelling to follow other drivers
+Date: Mon,  8 Dec 2014 22:08:07 +0100
+Message-ID: <1418072919-10535-3-git-send-email-christophe-h.ricard@st.com>
 References: <1418072919-10535-1-git-send-email-christophe-h.ricard@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -23,45 +23,45 @@ string is added to the of_device_id table.
 
 Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
 ---
- Documentation/devicetree/bindings/net/nfc/st21nfca.txt | 4 ++--
- drivers/nfc/st21nfca/i2c.c                             | 1 +
+ Documentation/devicetree/bindings/net/nfc/st21nfcb.txt | 4 ++--
+ drivers/nfc/st21nfcb/i2c.c                             | 1 +
  2 files changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/net/nfc/st21nfca.txt b/D=
-ocumentation/devicetree/bindings/net/nfc/st21nfca.txt
-index e4faa2e..db677fe 100644
---- a/Documentation/devicetree/bindings/net/nfc/st21nfca.txt
-+++ b/Documentation/devicetree/bindings/net/nfc/st21nfca.txt
+diff --git a/Documentation/devicetree/bindings/net/nfc/st21nfcb.txt b/D=
+ocumentation/devicetree/bindings/net/nfc/st21nfcb.txt
+index 9005608..bb23707 100644
+--- a/Documentation/devicetree/bindings/net/nfc/st21nfcb.txt
++++ b/Documentation/devicetree/bindings/net/nfc/st21nfcb.txt
 @@ -1,7 +1,7 @@
- * STMicroelectronics SAS. ST21NFCA NFC Controller
+ * STMicroelectronics SAS. ST21NFCB NFC Controller
 =20
  Required properties:
--- compatible: Should be "st,st21nfca_i2c".
-+- compatible: Should be "st,st21nfca-i2c".
+-- compatible: Should be "st,st21nfcb_i2c".
++- compatible: Should be "st,st21nfcb-i2c".
  - clock-frequency: I=C2=B2C work frequency.
  - reg: address on the bus
  - interrupt-parent: phandle for the interrupt gpio controller
-@@ -20,7 +20,7 @@ Example (for ARM-based BeagleBoard xM with ST21NFCA o=
+@@ -20,7 +20,7 @@ Example (for ARM-based BeagleBoard xM with ST21NFCB o=
 n I2C2):
 =20
- 	st21nfca: st21nfca@1 {
+ 	st21nfcb: st21nfcb@8 {
 =20
--		compatible =3D "st,st21nfca_i2c";
-+		compatible =3D "st,st21nfca-i2c";
+-		compatible =3D "st,st21nfcb_i2c";
++		compatible =3D "st,st21nfcb-i2c";
 =20
- 		reg =3D <0x01>;
+ 		reg =3D <0x08>;
  		clock-frequency =3D <400000>;
-diff --git a/drivers/nfc/st21nfca/i2c.c b/drivers/nfc/st21nfca/i2c.c
-index 0572208..b2e0792 100644
---- a/drivers/nfc/st21nfca/i2c.c
-+++ b/drivers/nfc/st21nfca/i2c.c
-@@ -661,6 +661,7 @@ static int st21nfca_hci_i2c_remove(struct i2c_clien=
+diff --git a/drivers/nfc/st21nfcb/i2c.c b/drivers/nfc/st21nfcb/i2c.c
+index 01ba865..b65847c 100644
+--- a/drivers/nfc/st21nfcb/i2c.c
++++ b/drivers/nfc/st21nfcb/i2c.c
+@@ -373,6 +373,7 @@ static int st21nfcb_nci_i2c_remove(struct i2c_clien=
 t *client)
 =20
  #ifdef CONFIG_OF
- static const struct of_device_id of_st21nfca_i2c_match[] =3D {
-+	{ .compatible =3D "st,st21nfca-i2c", },
- 	{ .compatible =3D "st,st21nfca_i2c", },
+ static const struct of_device_id of_st21nfcb_i2c_match[] =3D {
++	{ .compatible =3D "st,st21nfcb-i2c", },
+ 	{ .compatible =3D "st,st21nfcb_i2c", },
  	{}
  };
 --=20
