@@ -1,109 +1,179 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 5/5] media: ov2640: dt: add the device tree binding document
-Date: Mon, 08 Dec 2014 20:59:17 +0200
-Message-ID: <7239028.nL31Mosllm@avalon>
-References: <1418038147-13221-1-git-send-email-josh.wu@atmel.com> <1418038147-13221-6-git-send-email-josh.wu@atmel.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [Patch v2 1/2] gpio: add GPIO hogging mechanism
+Date: Mon, 8 Dec 2014 20:18:43 +0100
+Message-ID: <20141208191843.GI8739@lukather>
+References: <CAAVeFu+VZiuzobB7McSAUehKUHJjBv1o8ZpYjSHJAKjr3o5wTA@mail.gmail.com>
+ <20141201163639.GI25249@lukather>
+ <CAAVeFuLTupDenZdSi8KO+dYsf-ekcqjsDaQ2GEzYpBG34oF7Zw@mail.gmail.com>
+ <CACRpkdZcNcPBYQM438CZJx1gYst9BFBSTj-3Qv2aPGF9pdWa5g@mail.gmail.com>
+ <20141202161227.GH30256@lukather>
+ <CAAVeFu+Gms6ptyK6j1Zy_wWg+9URs+9zBu=pOiwiEERO=8NjNw@mail.gmail.com>
+ <20141204142741.GQ30256@lukather>
+ <CAAVeFuJTjWPzQYYkV3jW3+h6uigzzeKS9d7pY2cQ-dK119msXg@mail.gmail.com>
+ <20141205102427.GU30256@lukather>
+ <CAAVeFuL2CYtcDnwnuWD5wfMLGK-GEwBA09BXkhBMFJCjr2rEcg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1418038147-13221-6-git-send-email-josh.wu@atmel.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Josh Wu <josh.wu@atmel.com>
-Cc: linux-media@vger.kernel.org, m.chehab@samsung.com, linux-arm-kernel@lists.infradead.org, g.liakhovetski@gmx.de, devicetree@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="boAH8PqvUi1v1f55"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAAVeFuL2CYtcDnwnuWD5wfMLGK-GEwBA09BXkhBMFJCjr2rEcg@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Alexandre Courbot <gnurou@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Benoit Parrot <bparrot@ti.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, Jiri Prchal <jiri.prchal@aksignal.cz>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Josh,
 
-Thank you for the patch.
+--boAH8PqvUi1v1f55
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Monday 08 December 2014 19:29:07 Josh Wu wrote:
-> Add the document for ov2640 dt.
-> 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Josh Wu <josh.wu@atmel.com>
-> ---
-> v1 -> v2:
->   1. change the compatible string to be consistent with verdor file.
+On Sat, Dec 06, 2014 at 09:08:36PM +0900, Alexandre Courbot wrote:
+> On Fri, Dec 5, 2014 at 7:24 PM, Maxime Ripard
+> <maxime.ripard@free-electrons.com> wrote:
+> > On Thu, Dec 04, 2014 at 11:49:19PM +0900, Alexandre Courbot wrote:
+> >> On Thu, Dec 4, 2014 at 11:27 PM, Maxime Ripard
+> >> <maxime.ripard@free-electrons.com> wrote:
+> >> > Hi,
+> >> >
+> >> > On Thu, Dec 04, 2014 at 11:15:38PM +0900, Alexandre Courbot wrote:
+> >> >> On Wed, Dec 3, 2014 at 1:12 AM, Maxime Ripard
+> >> >> <maxime.ripard@free-electrons.com> wrote:
+> >> >> > On Tue, Dec 02, 2014 at 03:29:46PM +0100, Linus Walleij wrote:
+> >> >> >> On Tue, Dec 2, 2014 at 3:13 PM, Alexandre Courbot <gnurou@gmail.=
+com> wrote:
+> >> >> >> > On Tue, Dec 2, 2014 at 1:36 AM, Maxime Ripard
+> >> >> >> > <maxime.ripard@free-electrons.com> wrote:
+> >> >> >>
+> >> >> >> >> The only thing I'd like to have would be that the request her=
+e would
+> >> >> >> >> be non-exclusive, so that a later driver would still be allow=
+ed later
+> >> >> >> >> on to request that GPIO later on and manage it itself (ideall=
+y using
+> >> >> >> >> the usual gpiod_request function).
+> >> >> >> >
+> >> >> >> > Actually we have a plan (and I have some code too) to allow mu=
+ltiple
+> >> >> >> > consumers per GPIO. Although like Benoit I wonder why you woul=
+d want
+> >> >> >> > to hog a GPIO and then request it properly later. Also, that p=
+robably
+> >> >> >> > means we should abandon the hog since it actively drives the l=
+ine and
+> >> >> >> > would interfere with the late requested. How to do that correc=
+tly is
+> >> >> >> > not really clear to me.
+> >> >> >>
+> >> >> >> I don't get the usecase. A hogged GPIO is per definition hogged.
+> >> >> >> This sounds more like "initial settings" or something, which is =
+another
+> >> >> >> usecase altogether.
+> >> >> >
+> >> >> > We do have one board where we have a pin (let's say GPIO14 of the=
+ bank
+> >> >> > A) that enables a regulator that will provide VCC the bank B.
+> >> >> >
+> >> >> > Now, both banks are handled by the same driver, but in order to h=
+ave a
+> >> >> > working output on the bank B, we do need to set GPIO14 as soon as
+> >> >> > we're probed.
+> >> >> >
+> >> >> > Just relying on the usual deferred probing introduces a circular
+> >> >> > dependency between the gpio-regulator that needs to grab its GPIO=
+ from
+> >> >> > a driver not there yet, and the gpio driver that needs to enable =
+its
+> >> >> > gpio-regulator.
+> >> >>
+> >> >> I don't get it. According to what you said, the following order sho=
+uld
+> >> >> go through IIUC:
+> >> >>
+> >> >> 1) bank A is probed, gpio 14 is available
+> >> >> 2) gpio-regulator is probed, acquires GPIO 14, regulator for Bank B=
+ is available
+> >> >> 3) bank B is probed, grabs its regulator and turn it on, probes.
+> >> >>
+> >> >> What am I missing?
+> >> >
+> >> > It would be true if bank A and B were exposed through different
+> >> > drivers (or at least different instances of the same driver), which =
+is
+> >> > not the case.
+> >> >
+> >> > In our case, banks A and B are handled by the same instance.
+> >>
+> >> Ok, so both banks A and B are part of the same device/DT node. Now I
+> >> think I understand the issue. You need to hog the pin so that bank B
+> >> will work right after the device is probed.
+> >
+> > Exactly.
+> >
+> >> But you will still have the problem that the regulator device will
+> >> *not* be available when your device is probed, so you cannot call
+> >> regulator_get() for bank B anyway. I guess your only choice is to hog
+> >> that pin and leave it active ad vitam eternam.
+> >
+> > Hmmm, indeed.
+> >
+> > I'll stop boring you with this then :)
+>=20
+> Please *keep* bothering us with any doubt you may have until they are
+> all cleared and you are sure this feature will be useful to you.
+> Especially since we are designing DT bindings that will have to be
+> carried over forever. We really want to get them right, and need input
+> of potential users for that.
+>=20
+> Having a few design arguments is a small thing compared to the hassle
+> of having to work with unadapted features and bindings.
 
-That's nice, but you still need to send a patch to add the ovti vendor prefix 
-to Documentation/devicetree/bindings/vendor-prefixes.txt. It's not there yet.
+Ok. What I had in mind when I first thought about it was to set GPIO
+as hogged through the GPIO flags, and then have a dumb GPIO driver
+like Pantelis was suggesting.
 
->   2. change the clock and pins' name.
->   3. add missed pinctrl in example.
-> 
->  .../devicetree/bindings/media/i2c/ov2640.txt       | 44 +++++++++++++++++++
->  1 file changed, 44 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov2640.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/ov2640.txt
-> b/Documentation/devicetree/bindings/media/i2c/ov2640.txt new file mode
-> 100644
-> index 0000000..15be3cb
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/ov2640.txt
-> @@ -0,0 +1,44 @@
-> +* Omnivision ov2640 CMOS sensor
-> +
-> +The Omnivision OV2640 sensor support multiple resolutions output, such as
-> +CIF, SVGA, UXGA. It also can support YUV422/420, RGB565/555 or raw RGB
-> +output format.
-> +
-> +Required Properties :
-> +- compatible: Must be "ovti,ov2640"
-> +- clocks: reference master clock, if using external fixed clock, you
-> +          no need to have such property.
+I don't know if hogged would still be the right term, but we could
+have that flag that would just allow the value to be set through
+gpio_request init value, and deny/cache any subsequent change through
+gpio_set_value.
 
-That's not true anymore, the clocks property is mandatory in all cases. Just 
-describe it as
+gpio_request with this flag would never return EPROBE_DEFER, and just
+cache the value to be set for when the driver comes in.
 
-- clocks: reference to the xvclk input clock.
+We could enforce driver-less GPIOs through that dumb driver, and we
+would still be able to break weird dependency chains that end up in
+circle.
 
-> +- clock-names: Must be "xvclk", it means the master clock for ov2640.
+That's just a thought though.
 
-I would drop "it means the master clock for ov2640".
+Maxime
 
-> +Optional Properties:
-> +- resetb-gpios: reset pin
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 
-- resetb-gpios: reference to the GPIO connected to the resetb pin, if any.
+--boAH8PqvUi1v1f55
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> +- pwdn-gpios: power down pin
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-- pwdn-gpios: reference to the GPIO connected to the pwdn pin, if any.
+iQIcBAEBAgAGBQJUhfmTAAoJEBx+YmzsjxAgmLsP/ApAmAOMscaotvWPssOAGNcX
+qkrYlHCl/165mp/jPuoanhPi57t1532U2uP4zzTg6njfBToLyU3By8TO9yDClwKG
+u5e3/8g5UTV0zHIZuY5YeNS2b6oDm0Mh7GottDXgNTeffnU6ozP+T5VKne/kD298
+w3Xia7+iCVnBOh1GxOmyjRU1viX0cQtkQqjRzh0r7TJR0TsJy8pBBi/AF7nFGEk6
+7s8d7zhajjUMY5P79Boj1sY34HOYdCvzKPKdCVLgoZHfQRw7YFEmE5DPkNCc8NLw
+X0f7kk6X0hw3Rj8WlKyd2H9nWuscMIDEOa0yIvjxWpIAPEJf5WTkf6zB9hiWSZKH
+D6vW2NPsEXT8AfyUEv40n+Hdrb+LG4VMyiHCdGS2tA5m2uNVLjevs1OWqkggCRoh
+PW1pWYHy5XvNQ0qQopEF8lWvG+dryju92yr5/m3hh7p1Hm8KOyckfwDjNCWPok7E
+cW8aP7OQgqSjroujbSY/mkmmzw3NUId5uQdplrl3NSLfQYk8LJSNJ25fj5QrsyGX
+F4lpJQiEoWssmelVECSuJjkBpihrwh3vhek9BrD5of2OT0yMGf6TBPuNC72oruxc
+hzriDMx8aCADx+aOekWIZ4ab2YU3GL0W/LAXogy15A1uCxbDrU2YlqJsQnib4Vjb
+he3ueuck7H/JPK90UD1U
+=fzgU
+-----END PGP SIGNATURE-----
 
-> +
-> +The device node must contain one 'port' child node for its digital output
-> +video port, in accordance with the video interface bindings defined in
-> +Documentation/devicetree/bindings/media/video-interfaces.txt.
-> +
-> +Example:
-> +
-> +	i2c1: i2c@f0018000 {
-> +		ov2640: camera@0x30 {
-> +			compatible = "ovti,ov2640";
-> +			reg = <0x30>;
-> +
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&pinctrl_pck1 &pinctrl_ov2640_pwdn 
-&pinctrl_ov2640_reset>;
-> +
-> +			resetb-gpios = <&pioE 24 GPIO_ACTIVE_HIGH>;
-> +			pwdn-gpios = <&pioE 29 GPIO_ACTIVE_HIGH>;
-> +
-> +			clocks = <&pck1>;
-> +			clock-names = "xvclk";
-> +
-> +			port {
-> +				ov2640_0: endpoint {
-> +					remote-endpoint = <&isi_0>;
-> +					bus-width = <8>;
-> +				};
-> +			};
-> +		};
-> +	};
-
--- 
-Regards,
-
-Laurent Pinchart
+--boAH8PqvUi1v1f55--
