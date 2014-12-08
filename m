@@ -1,78 +1,36 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH/RFC 0/4] ARM: shmobile: Correct masks for GIC PPI
- interrupts
-Date: Mon, 8 Dec 2014 09:13:45 +0900
-Message-ID: <20141208001345.GA11177@verge.net.au>
-References: <1417085839-22836-1-git-send-email-geert+renesas@glider.be>
+From: Ray Jui <rjui@broadcom.com>
+Subject: Re: [PATCH 2/5] gpio: Cygnus: add GPIO driver
+Date: Sun, 7 Dec 2014 17:34:18 -0800
+Message-ID: <5485001A.7050909@broadcom.com>
+References: <Ray Jui <rjui@broadcom.com>	 <1417826408-1600-1-git-send-email-rjui@broadcom.com>	 <1417826408-1600-3-git-send-email-rjui@broadcom.com>	 <1417829282.31745.3.camel@perches.com> <5482668F.1040907@broadcom.com>	 <1417833291.31745.5.camel@perches.com> <54827B07.3000707@broadcom.com> <1417839865.31745.10.camel@perches.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1417085839-22836-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1417839865.31745.10.camel@perches.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Joe Perches <joe@perches.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Scott Branden <sbranden@broadcom.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 27, 2014 at 11:57:15AM +0100, Geert Uytterhoeven wrote:
-> 	Hi all,
-> 
-> This patch series corrects the masks in the second interrupt cells for
-> Private Peripheral Interrupts in dtsi files for the shmobile family of
-> SoCs.
-> 
-> It's my understanding this mask should reflect the actual number of CPU
-> cores the interrupt is wired too.
-> Is that correct?
-> 
->   - Hence it should be "GIC_CPU_MASK_SIMPLE(2)" on dual-core CPUs, like
->     r8a7791 and r8a7794 (the first two patches),
->   - Should it be "GIC_CPU_MASK_SIMPLE(8)" on big.LITTLE configurations
->     with four Cortex-A15 cores and four Cortex-A7 cores?
->     Or should the interrupts be delivered to the four Cortex-A15 cores
->     only by default?
->     The last two RFC-patches implement the former for r8a7790 and
->     r8a73a4.
-> 
-> Note that incorrect masks for GIC PPI interrupts are not limited to
-> shmobile. Presumably the interrupt specifiers got copied around a lot,
-> cfr. the proliferation of "GIC_CPU_MASK_SIMPLE(4)" (and the older
-> hardcoded "0xf0x" variant) in various dtsi files, not always limited to
-> quad-core CPUs.
-> 
-> This was tested on r8a7791/koelsch, which uses the arch timer interrupt.
-> 
-> Thanks for your feedback!
-> 
-> Geert Uytterhoeven (4):
->   ARM: shmobile: r8a7791: Correct mask for GIC PPI interrupts
->   ARM: shmobile: r8a7794: Correct mask for GIC PPI interrupts
 
-Hi Geert,
 
-the above two patches seem like they could be queued up.
-Shall I do so?
-
->   [RFC] ARM: shmobile: r8a7790: Correct mask for GIC PPI interrupts
->   [RFC] ARM: shmobile: r8a73a4: Correct mask for GIC PPI interrupts
-> 
->  arch/arm/boot/dts/r8a73a4.dtsi | 10 +++++-----
->  arch/arm/boot/dts/r8a7790.dtsi | 10 +++++-----
->  arch/arm/boot/dts/r8a7791.dtsi | 10 +++++-----
->  arch/arm/boot/dts/r8a7794.dtsi | 10 +++++-----
->  4 files changed, 20 insertions(+), 20 deletions(-)
-> 
-> -- 
-> 1.9.1
-> 
-> Gr{oetje,eeting}s,
-> 
-> 						Geert
-> 
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
-> 							    -- Linus Torvalds
-> 
+On 12/5/2014 8:24 PM, Joe Perches wrote:
+> On Fri, 2014-12-05 at 19:41 -0800, Ray Jui wrote:
+>> On 12/5/2014 6:34 PM, Joe Perches wrote:
+>>> On Fri, 2014-12-05 at 18:14 -0800, Ray Jui wrote:
+>>>> On 12/5/2014 5:28 PM, Joe Perches wrote:
+>>>>> On Fri, 2014-12-05 at 16:40 -0800, Ray Jui wrote:
+>>>>>> +			for_each_set_bit(bit, &val, 32) {
+> []
+>> Actually, by reviewing the code more deeply, I'm not sure why using
+>> for_each_set_bit here is 'endian unsafe'.
+>
+> It's not.  The 32 confused me as it was long
+> and sizeof(long) isn't necessarily 32.
+>
+> Maybe the 32 should be a #define
+>
+>
+>
+Okay, to improve readability, I will change 32 to NGPIOS_PER_BANK.
