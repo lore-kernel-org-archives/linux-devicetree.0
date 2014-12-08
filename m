@@ -1,141 +1,73 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] gpio: sn54hc595: new driver for GPIO shift registers chipsets
-Date: Mon, 8 Dec 2014 17:59:11 +0100
-Message-ID: <CAMuHMdVvK1CTB1SKiNgD8zB9qorV=sQwRO66Dbm5zy=jhw82RA@mail.gmail.com>
-References: <1418048833-27658-1-git-send-email-zajec5@gmail.com>
-	<CAMuHMdWf_Cw7DTqhut6Mcic1FmcJjHdXWuXkNZM2z0Zx9wjCxw@mail.gmail.com>
-	<CACna6rwRR7FpS97Znyk3ewVW58dn5yYTj8OjCstsuzzX8Prg5Q@mail.gmail.com>
-	<2176453.HD1opzG9Wg@wuerfel>
-	<CACna6rydKTDO+tBTdNNUDvQCXytE6VnEPjLSGs0yMee8Jz8FGA@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 1/5] gpio: Cygnus: define Broadcom Cygnus GPIO binding
+Date: Mon, 08 Dec 2014 18:11:08 +0100
+Message-ID: <9945772.cPNxB9AH25@wuerfel>
+References: <1418006316-324-2-git-send-email-rjui@broadcom.com> <2594176.SCRFa6Sb3O@wuerfel> <5485D7F8.6090305@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACna6rydKTDO+tBTdNNUDvQCXytE6VnEPjLSGs0yMee8Jz8FGA@mail.gmail.com>
+In-Reply-To: <5485D7F8.6090305@broadcom.com>
 Sender: linux-gpio-owner@vger.kernel.org
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Hauke Mehrtens <hauke@hauke-m.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Gabor Juhos <juhosg@openwrt.org>, Miguel Gaio <miguel.gaio@efixo.com>
+To: linux-arm-kernel@lists.infradead.org
+Cc: Ray Jui <rjui@broadcom.com>, Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Scott Branden <sbranden@broadcom.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Christian Daudt <bcm@fixthebug.org>, linux-kernel@vger.kernel.org, Matt Porter <mporter@linaro.org>, Joe Perches <joe@perches.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-gpio@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rafa=C5=82,
+On Monday 08 December 2014 08:55:20 Ray Jui wrote:
+> 
+> On 12/8/2014 3:22 AM, Arnd Bergmann wrote:
+> > On Sunday 07 December 2014 18:38:32 Ray Jui wrote:
+> >> +Required properties:
+> >> +
+> >> +- compatible:
+> >> +    Currently supported Cygnus GPIO controllers include:
+> >> +    "brcm,cygnus-ccm-gpio": ChipcommonG GPIO controller
+> >> +    "brcm,cygnus-asiu-gpio": ASIU GPIO controller
+> >> +    "brcm,cygnus-crmu-gpio": CRMU GPIO controller
+> >
+> > How different are these? If they are almost the same, would it
+> > be better to use the same compatible string for all of them and
+> > describe the differences in extra properties?
+> >
+> > If they are rather different, maybe you should have a separate
+> > binding and driver for each?
+> >
+> > 	Arnd
+> >
+> They are quite similar with the following minor differences:
+> 1) ChipcommonG GPIO controller uses a separate register block 
+> (0x0301d164) to control drive stregnth
+> 2) Cannot control drive strength for the CMRU GPIO
 
-On Mon, Dec 8, 2014 at 5:31 PM, Rafa=C5=82 Mi=C5=82ecki <zajec5@gmail.c=
-om> wrote:
-> On 8 December 2014 at 16:41, Arnd Bergmann <arnd@arndb.de> wrote:
->> On Monday 08 December 2014 16:23:01 Rafa=C5=82 Mi=C5=82ecki wrote:
->>> On 8 December 2014 at 16:03, Geert Uytterhoeven <geert@linux-m68k.o=
-rg> wrote:
->>> > On Mon, Dec 8, 2014 at 3:47 PM, Rafa=C5=82 Mi=C5=82ecki <zajec5@g=
-mail.com> wrote:
->>> >> On 8 December 2014 at 15:41, Geert Uytterhoeven <geert@linux-m68=
-k.org> wrote:
->>> >>> On Mon, Dec 8, 2014 at 3:27 PM, Rafa=C5=82 Mi=C5=82ecki <zajec5=
-@gmail.com> wrote:
->>> >>>> SN54HC595 and SN74HC595 are devices based on shift registers c=
-ontrolled
->>> >>>> with 5 input signals (serial-in) and providing 8 outputs (para=
-llel-out).
->>> >>>>
->>> >>>> They are present on some Broadcom home router boards where man=
-ufacturer
->>> >>>> needed few extra GPIOs.
->>> >>>>
->>> >>>> This driver simply uses specified GPIOs to control shift regis=
-ters and
->>> >>>> registers another GPIO chip. So you can call it a GPIO extende=
-r.
->>> >>>>
->>> >>>> Due to the hardware design only output direction is supported.=
- Reading
->>> >>>> values is handled using tiny internal cache.
->>> >>>>
->>> >>>> Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <zajec5@gmail.com>
->>> >>>> ---
->>> >>>>  .../devicetree/bindings/gpio/gpio-sn54hc595.txt    |  35 ++++
->>> >>>>  drivers/gpio/Kconfig                               |  11 ++
->>> >>>>  drivers/gpio/Makefile                              |   1 +
->>> >>>>  drivers/gpio/gpio-sn54hc595.c                      | 219 ++++=
-+++++++++++++++++
->>> >>>
->>> >>> The '595 is already handled by drivers/gpio/gpio-74x164.c.
->>> >>
->>> >> gpio-74x164.c seems to be tight closely to the SPI. In my case i=
-t's
->>> >> GPIO-controller '595.
->>> >
->>> > Right. gpio-74x164.c uses the SPI framework, so it will work with=
- any SPI
->>> > master controller, while your driver contains a very simple varia=
-nt (without any
->>> > timing constraints) of spi-gpio.c, and is limited to connecting t=
-o GPIO pins.
->>> >
->>> >> Do you have any other idea how we could handle this?
->>> >
->>> > Your driver does provide OE support, which gpio-74x164 doesn't su=
-pport.
->>> > Perhaps that can be added to gpio-74x164 instead?
->>>
->>> It's not the missing OE support in gpio-74x164 that worries me, but
->>> the whole rest.
->>>
->>> I would need to modify gpio-74x164 to:
->>> 1) Use another OF table with different entry
->>> 2) Use different probe function that doesn't take spi_device parame=
-ter
->>> and doesn't do spi setup
->>> 3) Extend struct gen_74x164_chip to include GPIOs
->>> 4) Use totally different __gen_74x164_write_config
->>
->> I think the suggestion was to use the spi-gpio driver in combination
->> with gpio-74x164.
->
-> Oh, OK, I've obviously missed that.
->
-> I don't know... I'm somehow not really convinced to that, because
-> AFAIK there isn't any SPI master device between GPIOs and 'HC595. I
+This can be deducted from having one or two register blocks I
+assume.
 
-There is: you implement SPI using bitbang on GPIOs.
+> 3) CRMU GPIO controller's interrupt is not connected to GIC of A9. 
+> Currently that's taken care of by using a "no-interrupt" device tree 
+> property
 
-> don't know if pretending there is some extra hardware (just to use
-> another Linux driver/layer) is a good idea. This would:
-> 1) Not match hardware design
-> 2) Involve some extra code.
->
-> I'm not even sure if this would work out-of-the box (without some
-> extra changes) at all. From early look at spi-gpio.c I can't see it
-> implementing everything I need for GPIO-connected 'HC595.
+No need for this property even, just see if there is an "interrupts"
+property or not.
+ 
+> I can change to use the common compatible string "brcm,cygnus-gpio". 
+> With an introduction of property "no-drv-stregnth" which should be set 
+> for CRMU GPIO controller. 
 
-It should. Plenty of people have connected '595s to SPI buses (I did so
-myself, too). Hint: connect chip select to the register clock.
+Ok.
 
-> I think that implementing support for this extra SPI layer will
-> actually require more code/tricks than a separated driver.
+> For ChipcommonG GPIO, it will have a second 
+> register block defined, so we'll know to use that second register block 
+> for drive strength configuration. For the rest, we assume normal drive 
+> strength configuration (i.e., ASIU in our case).
 
-Yes, it will require more code, as spi-gpio is more generic than your s=
-imple
-implementation.  But the end result is more flexible and reusable.
+Maybe see if something older than cygnus was already using a compatible
+gpio controller and then use the name of that.
 
-The only thing missing is the programmable OE and reset pins,
-which are assumed hardwired by the gpio-74x164 driver.
-These could be implemented using new gpio-oe and gpio-reset
-properties.
+> Looking at this again, it looks like the "no-interrupt" property is 
+> really redundant. For GPIO controller without interrupt connected to A9, 
+> we can simply leave its interrupt properties not defined. I'll get rid 
+> of it along with the above changes.
 
-Gr{oetje,eeting}s,
+Right.
 
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-=
-m68k.org
-
-In personal conversations with technical people, I call myself a hacker=
-=2E But
-when I'm talking to journalists I just say "programmer" or something li=
-ke that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
