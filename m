@@ -1,73 +1,64 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 1/5] gpio: Cygnus: define Broadcom Cygnus GPIO binding
-Date: Mon, 08 Dec 2014 18:11:08 +0100
-Message-ID: <9945772.cPNxB9AH25@wuerfel>
-References: <1418006316-324-2-git-send-email-rjui@broadcom.com> <2594176.SCRFa6Sb3O@wuerfel> <5485D7F8.6090305@broadcom.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v5 5/6] Documentation: dt-bindings: Add binding info for
+ X-Gene QMTM UIO driver
+Date: Mon, 8 Dec 2014 11:15:39 -0600
+Message-ID: <CAL_Jsq+F5GepyyZbpJOAKLtQsvJOF9wZzf2GyjA6sDe2nr4SrQ@mail.gmail.com>
+References: <1416220572-13381-1-git-send-email-ankit.jindal@linaro.org>
+ <2279061.naADrHDgyn@wuerfel> <CAPTm99WYNyxtY-NCVN8pB0HwNPn+EFx-7w7yEevaEK1z7-Zqxg@mail.gmail.com>
+ <1503477.DVdkExccIe@wuerfel> <CAPTm99V1qP5dAgDV04i3m_yR1ri9h=b8fDXBDxmPfpZG_P268g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <5485D7F8.6090305@broadcom.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Ray Jui <rjui@broadcom.com>, Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Scott Branden <sbranden@broadcom.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Christian Daudt <bcm@fixthebug.org>, linux-kernel@vger.kernel.org, Matt Porter <mporter@linaro.org>, Joe Perches <joe@perches.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-gpio@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAPTm99V1qP5dAgDV04i3m_yR1ri9h=b8fDXBDxmPfpZG_P268g@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ankit Jindal <ankit.jindal@linaro.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Varka Bhadram <varkabhadram@gmail.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Anup Patel <anup@brainfault.org>, Guenter Roeck <linux@roeck-us.net>, "patches@apm.com" <patches@apm.com>, Rob Herring <robh+dt@kernel.org>, "Hans J. Koch" <hjk@hansjkoch.de>, Tushar Jagad <tushar.jagad@linaro.org>, Kumar Gala <galak@codeaurora.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 08 December 2014 08:55:20 Ray Jui wrote:
-> 
-> On 12/8/2014 3:22 AM, Arnd Bergmann wrote:
-> > On Sunday 07 December 2014 18:38:32 Ray Jui wrote:
-> >> +Required properties:
-> >> +
-> >> +- compatible:
-> >> +    Currently supported Cygnus GPIO controllers include:
-> >> +    "brcm,cygnus-ccm-gpio": ChipcommonG GPIO controller
-> >> +    "brcm,cygnus-asiu-gpio": ASIU GPIO controller
-> >> +    "brcm,cygnus-crmu-gpio": CRMU GPIO controller
-> >
-> > How different are these? If they are almost the same, would it
-> > be better to use the same compatible string for all of them and
-> > describe the differences in extra properties?
-> >
-> > If they are rather different, maybe you should have a separate
-> > binding and driver for each?
-> >
-> > 	Arnd
-> >
-> They are quite similar with the following minor differences:
-> 1) ChipcommonG GPIO controller uses a separate register block 
-> (0x0301d164) to control drive stregnth
-> 2) Cannot control drive strength for the CMRU GPIO
+On Mon, Dec 8, 2014 at 6:42 AM, Ankit Jindal <ankit.jindal@linaro.org> wrote:
+> On 18 November 2014 at 18:40, Arnd Bergmann <arnd@arndb.de> wrote:
+>> On Tuesday 18 November 2014 14:59:54 Ankit Jindal wrote:
+>>> On 17 November 2014 16:47, Arnd Bergmann <arnd@arndb.de> wrote:
+>>> > On Monday 17 November 2014 16:06:11 Ankit Jindal wrote:
+>>> >> +
+>>> >> +       qmtm1_uio: qmtm_uio@1f200000 {
+>>> >> +               compatible = "apm,xgene-qmtm";
+>>> >> +               status = "disabled";
+>>> >> +               reg = <0x0 0x1f200000 0x0 0x10000>,
+>>> >> +                     <0x0 0x1b000000 0x0 0x400000>;
+>>> >> +               reg-names = "csr", "fabric";
+>>> >> +               qpool-memory = <&qmtm1_uio_qpool>;
+>>> >> +               clocks = <&qmtm1clk 0>;
+>>> >> +               num-queues = <0x400>;
+>>> >> +               devid = <1>;
+>>> >> +       };
+>>> >> +
+>>> >
+>>> > To make my previous review comments clearer:
+>>> >
+>>> > NAK
+>>> >
+>>> > Do not create device nodes that are meant for a specific use case in
+>>> > software and that are not usable for the common case. I don't think
+>>> > it makes any sense to keep on submitting a UIO driver for this until
+>>> > we have a proper network driver that uses this so we can make sure we
+>>> > have a working binding.
 
-This can be deducted from having one or two register blocks I
-assume.
++1
 
-> 3) CRMU GPIO controller's interrupt is not connected to GIC of A9. 
-> Currently that's taken care of by using a "no-interrupt" device tree 
-> property
+>>> The dataplane frameworks like OpenDataPlane etc, need to have access
+>>> to complete subsystem from the user space. Hence, we would like to
+>>> have this driver and some other UIO drivers to be the part of kernel
+>>> to have data plane frameworks working on our platform.
+>>
+>> Please work with the people that do the in-kernel QMTM driver to come
+>> up with a common binding then.
+> Thanks Arnd, I have synced with them, and in future our dt bindings
+> for this device is going to be inline with the one mentioned in the
+> patchset.
 
-No need for this property even, just see if there is an "interrupts"
-property or not.
- 
-> I can change to use the common compatible string "brcm,cygnus-gpio". 
-> With an introduction of property "no-drv-stregnth" which should be set 
-> for CRMU GPIO controller. 
+What does "in the future" mean? Is there already a QMTM binding? If
+so, you need to figure out how to either align with it or deprecate
+it. This patch at a minimum needs to be fixed to not refer to UIO.
 
-Ok.
-
-> For ChipcommonG GPIO, it will have a second 
-> register block defined, so we'll know to use that second register block 
-> for drive strength configuration. For the rest, we assume normal drive 
-> strength configuration (i.e., ASIU in our case).
-
-Maybe see if something older than cygnus was already using a compatible
-gpio controller and then use the name of that.
-
-> Looking at this again, it looks like the "no-interrupt" property is 
-> really redundant. For GPIO controller without interrupt connected to A9, 
-> we can simply leave its interrupt properties not defined. I'll get rid 
-> of it along with the above changes.
-
-Right.
-
-	Arnd
+Rob
