@@ -1,70 +1,75 @@
-From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] OF: DT-Overlay configfs interface (v3)
-Date: Mon, 8 Dec 2014 20:29:03 +0200
-Message-ID: <C7DADD77-A379-47E5-93DE-FB04C1C0FF30@konsulko.com>
-References: <1417605808-23327-1-git-send-email-pantelis.antoniou@konsulko.com> <20141204103104.7D8E0C40992@trevor.secretlab.ca> <8795CB40-87D6-4683-8396-987A49E94574@konsulko.com> <20141205164450.A9294C40B61@trevor.secretlab.ca> <E64BA68B-A339-4BB2-B453-B8A9165CB9B7@konsulko.com> <20141208182531.41BD6C40D73@trevor.secretlab.ca>
-Mime-Version: 1.0 (Mac OS X Mail 8.1 \(1993\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141208182531.41BD6C40D73-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH v2 2/3] fpga manager: framework core
+Date: Mon, 8 Dec 2014 18:30:56 +0000
+Message-ID: <CACxGe6uy7FhAPC4PU8ciNEgg7d+oV+GR=8wYrO1YD7UuUfy7Bw@mail.gmail.com>
+References: <1414007405-32186-1-git-send-email-atull@opensource.altera.com>
+ <1414007405-32186-3-git-send-email-atull@opensource.altera.com>
+ <20141024105200.GA20775@amd> <B914D894-E486-4EF1-8F84-169E939C58B4@konsulko.com>
+ <alpine.DEB.2.02.1410240906340.23446@atx-linux-37> <CACxGe6tiLxbCThzjOqrQg44Ue3XJuuRgti5jZY=UrssSY8=xqg@mail.gmail.com>
+ <20141206135533.GA19672@amd> <20141208175050.92EDAC40D73@trevor.secretlab.ca> <6B035765-3AFB-4A28-8A16-51D2E2737932@konsulko.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <6B035765-3AFB-4A28-8A16-51D2E2737932@konsulko.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Cc: Pavel Machek <pavel@denx.de>, atull <atull@opensource.altera.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, "H. Peter Anvin" <hpa@zytor.com>, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Randy Dunlap <rdunlap@infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Ira Snyder <iws@ovro.caltech.edu>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Philip Balister <philip@balister.org>, rubini <rubini@gnudd.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Jason <jason@lakedaemon.net>, kyle.teske@ni.com, Nicolas Pitre <nico@linaro.org>, Felipe Balbi <balbi@ti.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>, David Brown <davidb@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
+On Mon, Dec 8, 2014 at 5:56 PM, Pantelis Antoniou
+<pantelis.antoniou@konsulko.com> wrote:
+> Hi Grant,
+>
+>> On Dec 8, 2014, at 19:50 , Grant Likely <grant.likely@linaro.org> wrote:
+>>
+>> On Sat, 6 Dec 2014 14:55:33 +0100
+>> , Pavel Machek <pavel@denx.de>
+>> wrote:
+>>> Hi!
+>>>
+>>>>> I am accustomed to doing 'echo -n' for most of sysfs anyway.  Once in a
+>>>>> while I am a bonehead and forget the '-n' and spend a few minutes
+>>>>> wondering why this thing that worked last week suddenly rejects all
+>>>>> commands.  I'm just trying to make my user interface a bit user-friendly.
+>>>>>
+>>>>> I will take out the '\n' stripping and update the documentation.  I didn't
+>>>>> realize this would be controversial.
+>>>>
+>>>> Don't. You're doing the right thing by scrubbing your input. Requiring
+>>>> 'echo -n' is just stupid when it is so easy to make work easily.
+>>>
+>>> 'foo\nbar\n' is unusual but valid filename in linux. It is bad idea to
+>>> echo filenames into files in the first place... and arbitrarily
+>>> disallowing certain filenames is not helping.
+>>
+>> Meh. Just because it is a valid linux filename doesn't mean this
+>> interface is forced to accept it. There should be tighter rules about
+>> how the filename can be constructed. Allowing any arbitrary path for any
+>> arbitrary valid linux filename makes for a large attack surface.
+>>
+>> I would like to know, what is the purpose of the interface? Why is it
+>> important to provide the firmware filename in this manor? Are there
+>> going to be a lot of different FPGA bitstreams that may need to be
+>> loaded? How does userspace choose between them, and is there a better
+>> way to do the selection without passing the firmware filename through
+>> the kernel? Is this merely intended to get udev to behave in a certain
+>> way? If so, then maybe there is a better way to go about it.
+>>
+>> We could for example use a UDEV 'PROGRAM=' rule to execute a userspace
+>> app and have that program figure out which firmware file to provide to
+>> the kernel.
+>>
+>
+> Please, lets not depend at all on udev. Firmware can be embedded in the kernel
+> image, which is pretty important to work before userland if you have to have
+> the rootfs on a device that's instantiated via an FPGA bitstream.
 
-> On Dec 8, 2014, at 20:25 , Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> w=
-rote:
->=20
-> On Fri, 5 Dec 2014 19:58:27 +0200
-> , Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-> wrote:
->> Hi Grant,
->>=20
->>> On Dec 5, 2014, at 18:44 , Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>=
- wrote:
->>>>=20
->> [snip]
->>=20
->>>> For instance, if the user issued a load request for a path in a co=
-ntainer
->>>> which is the namespace under which the firmware file is located? I=
-s it the
->>>> non-container filesystem, or is it under the container filesystem =
-that
->>>> issued the request. The firmware layer does not have an API to dis=
-cern.
->>>=20
->>> Wait, what? Why on earth would you want to expose this interface in=
- a container?
->>>=20
->>=20
->> It was a complaint raised.=20
->>=20
->> Look at this thread.
->>=20
->> http://permalink.gmane.org/gmane.linux.documentation/27655
->=20
-> I've replied on that thread. I don't think the issues raised there
-> warrent two completely separate methods for loading the data into the
-> kernel. I want to see one method only.
->=20
+It sounds like there are two issues here. One is the loading of a
+default image (like when built into the kernel), and the other is
+selecting between multiple firmware files, but the kernel won't know
+which without either userspace or firmware assistance. For the second
+issue is sounds to me like the rules for choosing between multiple
+images needs to be well defined. Echoing an arbitrary filename into
+the sysfs interface is too loosely defined.
 
-The firmware interface is required and is the simplest one.
-
-If that=E2=80=99s OK, let=E2=80=99s go with that.
-
-> g.
->=20
-
-Regards
-
-=E2=80=94 Pantelis
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+g.
