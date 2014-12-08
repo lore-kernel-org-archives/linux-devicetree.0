@@ -1,82 +1,56 @@
-From: Kenneth Westfield <kwestfie@codeaurora.org>
-Subject: [Patch v2 11/11] ARM: dts: Model IPQ LPASS audio hardware
-Date: Mon,  8 Dec 2014 14:01:13 -0800
-Message-ID: <1418076073-12623-12-git-send-email-kwestfie@codeaurora.org>
-References: <1418076073-12623-1-git-send-email-kwestfie@codeaurora.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1418076073-12623-1-git-send-email-kwestfie@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.de>, Liam Girdwood <lgirdwood@gmail.com>, David Brown <davidb@codeaurora.org>, Bryan Huntsman <bryanh@codeaurora.org>, Rob Herring <rob.herring@calxeda.com>, Greg KH <gregkh@linuxfoundation.org>, Patrick Lai <plai@codeaurora.org>, Banajit Goswami <bgoswami@codeaurora.org>
-Cc: ALSA Mailing List <alsa-devel@alsa-project.org>, Device Tree Mailing List <devicetree@vger.kernel.org>, MSM Mailing List <linux-arm-msm@vger.kernel.org>, Kenneth Westfield <kwestfie@codeaurora.org>
+From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v3] i2c: Driver to expose PowerNV platform i2c busses
+Date: Tue, 09 Dec 2014 08:43:46 +1100
+Message-ID: <1418075026.13358.4.camel@kernel.crashing.org>
+References: <20141208063039.14356.34770.stgit@localhost.localdomain>
+	 <1418069595.4827.43.camel@kernel.crashing.org>
+	 <20141208205520.GA12715@katana>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141208205520.GA12715@katana>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: Neelesh Gupta <neelegup-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Kenneth Westfield <kwestfie@codeaurora.org>
+On Mon, 2014-12-08 at 21:55 +0100, Wolfram Sang wrote:
+> On Tue, Dec 09, 2014 at 07:13:15AM +1100, Benjamin Herrenschmidt wrote:
+> > On Mon, 2014-12-08 at 12:06 +0530, Neelesh Gupta wrote:
+> > > The patch exposes the available i2c busses on the PowerNV platform
+> > > to the kernel and implements the bus driver to support i2c and
+> > > smbus commands.
+> > > The driver uses the platform device infrastructure to probe the busses
+> > > on the platform and registers them with the i2c driver framework.
+> > 
+> > Wolfram, what are you remaining objections here ? We need that in
+> > distros ASAP ...
+> 
+> Oh, I thought we agreed that you take it via powerpc. I still think this
+> is the best solution.
 
-Model the LPASS audio hardware for the IPQ806X.
+I threatened to do that :-) I don't remember you replying, did I miss
+it ? If you are ok with the driver and are happy for me to take it,
+please send an Ack.
 
-Signed-off-by: Kenneth Westfield <kwestfie@codeaurora.org>
-Acked-by: Banajit Goswami <bgoswami@codeaurora.org>
----
- arch/arm/boot/dts/qcom-ipq8064.dtsi | 33 +++++++++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
+> > I still maintain that it's not reasonable to hold driver for the
+> > additions of multi-byte smbus offsets. This is a new feature that will
+> > require changes to a number of existing bus and device drivers, so a
+> > very pervasive change, and which will be visible to user space, which
+> > means that drivers will need to continue supporting the "old" way at
+> > least for a while anyway...
+> 
+> Yeah, I agree on that. I am still unsure about the port-name binding,
+> but well, if it is needed to fit your PowerNV scheme...
 
-diff --git a/arch/arm/boot/dts/qcom-ipq8064.dtsi b/arch/arm/boot/dts/qcom-ipq8064.dtsi
-index 63b2146f563b541e4994697af5ee1bbb41a4abd1..fb1d6f6e290b9c645eb82fc4403d0fba48305f81 100644
---- a/arch/arm/boot/dts/qcom-ipq8064.dtsi
-+++ b/arch/arm/boot/dts/qcom-ipq8064.dtsi
-@@ -2,6 +2,7 @@
- 
- #include "skeleton.dtsi"
- #include <dt-bindings/clock/qcom,gcc-ipq806x.h>
-+#include <dt-bindings/clock/qcom,lcc-ipq806x.h>
- #include <dt-bindings/soc/qcom,gsbi.h>
- 
- / {
-@@ -66,6 +67,31 @@
- 		ranges;
- 		compatible = "simple-bus";
- 
-+		lpass_pcm_mi2s: lpass-pcm-mi2s {
-+			compatible = "qcom,lpass-pcm-mi2s";
-+			status = "disabled";
-+		};
-+
-+		lpass_cpu_mi2s: lpass-cpu-mi2s {
-+			compatible = "qcom,lpass-cpu-mi2s";
-+			status = "disabled";
-+			reg = <0x28100000 0x10000>;
-+			reg-names = "lpass-lpaif-mem";
-+			clocks = <&lcc AHBIX_CLK>,
-+					<&lcc MI2S_OSR_CLK>,
-+					<&lcc MI2S_BIT_CLK>;
-+			clock-names = "ahbix_clk",
-+					"mi2s_osr_clk",
-+					"mi2s_bit_clk";
-+			interrupts = <0 85 1>;
-+			interrupt-names = "lpass-lpaif-irq";
-+		};
-+
-+		max98357a_codec: max98357a-codec {
-+			compatible = "qcom,max98357a-codec";
-+			status = "disabled";
-+		};
-+
- 		qcom_pinmux: pinmux@800000 {
- 			compatible = "qcom,ipq8064-pinctrl";
- 			reg = <0x800000 0x4000>;
-@@ -234,6 +260,13 @@
- 			};
- 		};
- 
-+		lcc: clock-controller@28000000 {
-+			compatible = "qcom,lcc-ipq8064";
-+			reg = <0x28000000 0x1000>;
-+			#clock-cells = <1>;
-+			#reset-cells = <1>;
-+		};
-+
- 		sata_phy: sata-phy@1b400000 {
- 			compatible = "qcom,ipq806x-sata-phy";
- 			reg = <0x1b400000 0x200>;
--- 
-1.8.2.1
+>From a binding perspective, it's just a piece of additional info that
+the firmware provides for convenience. That we use it as the i2c port
+name in Linux makes sense, it means that when listing the i2c ports,
+it's immediately clear to the user which is which, it's not used
+functionally by any driver or piece of code, but it's handy for people
+doing things like manufacturing of machines, to know what bus to poke to
+program a VPD EEPROM or test if a chip responds for example.
+
+Cheers,
+Ben.
