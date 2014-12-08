@@ -1,7 +1,7 @@
 From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v1 12/34] NFC: hci: Remove nfc_hci_pipe2gate function
-Date: Mon,  8 Dec 2014 22:08:17 +0100
-Message-ID: <1418072919-10535-13-git-send-email-christophe-h.ricard@st.com>
+Subject: [PATCH v1 17/34] NFC: st21nfca: Remove skb_pipe_list and skb_pipe_info useless allocation
+Date: Mon,  8 Dec 2014 22:08:22 +0100
+Message-ID: <1418072919-10535-18-git-send-email-christophe-h.ricard@st.com>
 References: <1418072919-10535-1-git-send-email-christophe-h.ricard@st.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1418072919-10535-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
@@ -10,50 +10,45 @@ To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-nfc_hci_pipe2gate is now doing double usage with the pipes table field in
-the struct nfc_hci_dev. Also it is not used any more.
+skb_pipe_list and skb_pipe_info are allocated in nfc_hci_send_cmd.
+alloc_skb on those buffer are then useless.
 
 Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
 ---
- net/nfc/hci/hci.h |  2 --
- net/nfc/hci/hcp.c | 11 -----------
- 2 files changed, 13 deletions(-)
+ drivers/nfc/st21nfca/st21nfca.c | 13 -------------
+ 1 file changed, 13 deletions(-)
 
-diff --git a/net/nfc/hci/hci.h b/net/nfc/hci/hci.h
-index c1278bd..ab4c8e8 100644
---- a/net/nfc/hci/hci.h
-+++ b/net/nfc/hci/hci.h
-@@ -85,8 +85,6 @@ int nfc_hci_hcp_message_tx(struct nfc_hci_dev *hdev, u8 pipe,
- 			   data_exchange_cb_t cb, void *cb_context,
- 			   unsigned long completion_delay);
+diff --git a/drivers/nfc/st21nfca/st21nfca.c b/drivers/nfc/st21nfca/st21nfca.c
+index e92af42..f1aced5 100644
+--- a/drivers/nfc/st21nfca/st21nfca.c
++++ b/drivers/nfc/st21nfca/st21nfca.c
+@@ -127,18 +127,6 @@ static int st21nfca_hci_load_session(struct nfc_hci_dev *hdev)
+ 		NFC_HCI_TERMINAL_HOST_ID, 0
+ 	};
  
--u8 nfc_hci_pipe2gate(struct nfc_hci_dev *hdev, u8 pipe);
+-	skb_pipe_list = alloc_skb(ST21NFCA_HCI_LLC_MAX_SIZE, GFP_KERNEL);
+-	if (!skb_pipe_list) {
+-		r = -ENOMEM;
+-		goto free_list;
+-	}
 -
- void nfc_hci_hcp_message_rx(struct nfc_hci_dev *hdev, u8 pipe, u8 type,
- 			    u8 instruction, struct sk_buff *skb);
- 
-diff --git a/net/nfc/hci/hcp.c b/net/nfc/hci/hcp.c
-index e9de151..1fe725d 100644
---- a/net/nfc/hci/hcp.c
-+++ b/net/nfc/hci/hcp.c
-@@ -124,17 +124,6 @@ out_skb_err:
- 	return err;
+-	skb_pipe_info = alloc_skb(ST21NFCA_HCI_LLC_MAX_SIZE, GFP_KERNEL);
+-	if (!skb_pipe_info) {
+-		r = -ENOMEM;
+-		goto free_info;
+-	}
+-
+ 	/* On ST21NFCA device pipes number are dynamics
+ 	 * A maximum of 16 pipes can be created at the same time
+ 	 * If pipes are already created, hci_dev_up will fail.
+@@ -233,7 +221,6 @@ static int st21nfca_hci_load_session(struct nfc_hci_dev *hdev)
+ 	memcpy(hdev->init_data.gates, st21nfca_gates, sizeof(st21nfca_gates));
+ free_info:
+ 	kfree_skb(skb_pipe_info);
+-free_list:
+ 	kfree_skb(skb_pipe_list);
+ 	return r;
  }
- 
--u8 nfc_hci_pipe2gate(struct nfc_hci_dev *hdev, u8 pipe)
--{
--	int gate;
--
--	for (gate = 0; gate < NFC_HCI_MAX_GATES; gate++)
--		if (hdev->gate2pipe[gate] == pipe)
--			return gate;
--
--	return 0xff;
--}
--
- /*
-  * Receive hcp message for pipe, with type and cmd.
-  * skb contains optional message data only.
 -- 
 2.1.0
 
