@@ -1,171 +1,48 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [RFC 1/3] devfreq: dt-bindings: Document Exynos3250 devfreq driver
-Date: Mon, 08 Dec 2014 10:09:02 +0100
-Message-ID: <1418029742.6084.8.camel@AMDC1943>
-References: <1417797988-29225-1-git-send-email-k.kozlowski@samsung.com>
- <1417797988-29225-2-git-send-email-k.kozlowski@samsung.com>
- <20141205165356.GC12849@leverpostej>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-reply-to: <20141205165356.GC12849@leverpostej>
-Sender: linux-pm-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Kukjin Kim <kgene@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Chanwoo Choi <cw00.choi@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>
+From: Inha Song <ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [alsa-devel][PATCH 2/2] mfd: arizona: Update DT binding to support
+ OUTn_MONO init_data
+Date: Mon, 08 Dec 2014 18:20:22 +0900
+Message-ID: <1418030422-27061-3-git-send-email-ideal.song@samsung.com>
+References: <1418030422-27061-1-git-send-email-ideal.song@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1418030422-27061-1-git-send-email-ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, ckeepax-yzvPICuk2ABX+icLlh6Yhe4GMZTVgNySAL8bYrjMMd8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, Inha Song <ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On pi=C4=85, 2014-12-05 at 16:53 +0000, Mark Rutland wrote:
-> On Fri, Dec 05, 2014 at 04:46:26PM +0000, Krzysztof Kozlowski wrote:
-> > Add documentation for bindings used by Exynos3250 devfreq driver.
-> >=20
-> > Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> > ---
-> >  .../bindings/arm/samsung/exynos3250-devfreq.txt    | 66 ++++++++++=
-++++++++++++
-> >  1 file changed, 66 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/arm/samsung/e=
-xynos3250-devfreq.txt
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/arm/samsung/exynos32=
-50-devfreq.txt b/Documentation/devicetree/bindings/arm/samsung/exynos32=
-50-devfreq.txt
-> > new file mode 100644
-> > index 000000000000..047955e9e371
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/arm/samsung/exynos3250-devf=
-req.txt
-> > @@ -0,0 +1,66 @@
-> > +Samsung Exynos3250 devfreq driver
->=20
-> The binding should describe the hardware, not a particular driver of
-> that hardware. Please write the binding (and its documentation) with
-> that in mind, and drop references to the driver and "busfreq".
->=20
-> With an adequate binding we can probe the device and forward the
-> information to relevant driver(s) as necessary.
+This patch update DT binding to support OUTn_MONO init_data. Each
+output signal can be configurated as a mono differential output.
+The mono differential configuration is selected using the OUTn_MONO
+registers.
 
-OK
+Signed-off-by: Inha Song <ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+---
+ Documentation/devicetree/bindings/mfd/arizona.txt | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
->=20
-> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > +
-> > +The driver support changing frequencies and voltage for:
-> > + - memory controller and bus,
-> > + - peripheral buses (left and right).
->=20
->=20
-> What do left and right mean in this context?
+diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
+index 7bd1273..cf11d42 100644
+--- a/Documentation/devicetree/bindings/mfd/arizona.txt
++++ b/Documentation/devicetree/bindings/mfd/arizona.txt
+@@ -49,6 +49,13 @@ Optional properties:
+     input singals. If values less than the number of input signals, elements
+     that has not been specifed are set to 0 by default.
+ 
++  - wlf,out-mono : A list of OUTn_MONO register values, where n is the number
++    of output signals. Valid values are 0 (Disabled) and 1 (Enabled). If absent,
++    OUTn_MONO registers set to 0 by default. If present, values must be specified
++    less than or equal to the number of output signals. If values less than the
++    number of input signals, elements that has not been specified are set to 0
++    by default.
++
+   - DCVDD-supply, MICVDD-supply : Power supplies, only need to be specified if
+     they are being externally supplied. As covered in
+     Documentation/devicetree/bindings/regulator/regulator.txt
+-- 
+2.0.0.390.gcb682f8
 
-These are names for clock domains associated with buses between memory
-controller and peripherals. They're called "leftbus" and "rightbus" in
-documentation.
-
->=20
-> > +
-> > +Memory controller and bus
-> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D
-> > +Required properties:
-> > + - compatible : should be "samsung,exynos3250-busfreq-mif"
-> > + - reg : two sets (offset and length of the register) for PPMU reg=
-isters
-> > +	used by this devfreq driver
-> > + - clock-names : one clock of name "dmc" to manage frequency
-> > + - clocks : phandle and specifier for clock listed in clock-names =
-property
-> > + - vdd_mif-supply : phandle to MIF voltage regulator
->=20
-> s/_/-/ in property names please.
-
-Sure.
-
->=20
-> > +
-> > +Peripheral buses
-> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > +Required properties:
-> > + - compatible : should be "samsung,exynos3250-busfreq-int"
->=20
-> What does "int" mean here?
-
-It is the name of power source (VDD_INT) and regulator supplying certai=
-n
-power domains in SoC. However I have no clue what engineers meant by
-this abbreviation.
-
->=20
-> > + - reg : two sets (offset and length of the register) for PPMU reg=
-isters
-> > +	used by this devfreq driver
-> > + - clock-names : names for PPMU clocks and bus clocks to manage fr=
-equencies;
-> > +	All following clock names (and corresponding phandles) must be
-> > +	provided:
-> > +	- "ppmu_left", "ppmu_right",
-> > +	- "aclk_400", "aclk_266", "aclk_200", "aclk_160", "aclk_gdl", "ac=
-lk_gdr", "mfc";
-> > + - clocks : phandles and specifiers for clocks listed in clock-nam=
-es property
-> > + - vdd_mif-supply : phandle to INT voltage regulator
->=20
-> s/_/-/ here too.
-
-OK
-
-Thanks for feedback.
-
-Best regards,
-Krzysztof
-
-
-> Thanks,
-> Mark.
->=20
-> > +
-> > +Example
-> > +=3D=3D=3D=3D=3D=3D=3D
-> > +	busfreq_mif: busfreq@106A0000 {
-> > +		compatible =3D "samsung,exynos3250-busfreq-mif";
-> > +		reg =3D <0x106A0000 0x2000>, <0x106B0000 0x2000>;
-> > +		clocks =3D <&cmu_dmc CLK_DIV_DMC>;
-> > +		clock-names =3D "dmc";
-> > +		vdd_mif-supply =3D <&buck1_reg>;
-> > +		status =3D "okay";
-> > +	};
-> > +
-> > +	busfreq_int: busfreq@116A0000 {
-> > +		compatible =3D "samsung,exynos3250-busfreq-int";
-> > +		reg =3D <0x116A0000 0x2000>, <0x112A0000 0x2000>;
-> > +		clocks =3D <&cmu CLK_PPMULEFT>,
-> > +			<&cmu CLK_PPMURIGHT>,
-> > +			<&cmu CLK_DIV_ACLK_400_MCUISP>,
-> > +			<&cmu CLK_DIV_ACLK_266>,
-> > +			<&cmu CLK_DIV_ACLK_200>,
-> > +			<&cmu CLK_DIV_ACLK_160>,
-> > +			<&cmu CLK_DIV_GDL>,
-> > +			<&cmu CLK_DIV_GDR>,
-> > +			<&cmu CLK_DIV_MFC>;
-> > +		clock-names =3D "ppmuleft",
-> > +			"ppmuright",
-> > +			"aclk_400",
-> > +			"aclk_266",
-> > +			"aclk_200",
-> > +			"aclk_160",
-> > +			"aclk_gdl",
-> > +			"aclk_gdr",
-> > +			"mfc";
-> > +		vdd_int-supply =3D <&buck3_reg>;
-> > +		status =3D "okay";
-> > +	};
-> > --=20
-> > 1.9.1
-> >=20
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe devicetre=
-e" in
-> > the body of a message to majordomo@vger.kernel.org
-> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> >=20
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
