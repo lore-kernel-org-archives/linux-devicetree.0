@@ -1,7 +1,7 @@
 From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v1 22/34] NFC: nci: Add NCI NFCEE constant
-Date: Mon,  8 Dec 2014 22:08:27 +0100
-Message-ID: <1418072919-10535-23-git-send-email-christophe-h.ricard@st.com>
+Subject: [PATCH v1 23/34] NFC: nci: Add nci_nfcee_discover handler command/response/notification
+Date: Mon,  8 Dec 2014 22:08:28 +0100
+Message-ID: <1418072919-10535-24-git-send-email-christophe-h.ricard@st.com>
 References: <1418072919-10535-1-git-send-email-christophe-h.ricard@st.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1418072919-10535-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
@@ -10,95 +10,153 @@ To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add NFCEE NCI constant for:
-- NFCEE Interface/Protocols
-- Destination type
-- Destination-specific parameters type
-- NFCEE Discovery Action
+Add nci_nfcee_discover handler according to NFC Forum NCI specification.
+It is necessary for example for secure element handling.
 
 Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
 ---
- include/net/nfc/nci.h | 48 ++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 48 insertions(+)
+ include/net/nfc/nci_core.h |  4 ++++
+ net/nfc/nci/core.c         | 17 +++++++++++++++++
+ net/nfc/nci/ntf.c          | 29 +++++++++++++++++++++++++++++
+ net/nfc/nci/rsp.c          | 21 +++++++++++++++++++++
+ 4 files changed, 71 insertions(+)
 
-diff --git a/include/net/nfc/nci.h b/include/net/nfc/nci.h
-index e7257a4..6d99e8f 100644
---- a/include/net/nfc/nci.h
-+++ b/include/net/nfc/nci.h
-@@ -62,6 +62,25 @@
- #define NCI_STATUS_NFCEE_PROTOCOL_ERROR				0xc2
- #define NCI_STATUS_NFCEE_TIMEOUT_ERROR				0xc3
+diff --git a/include/net/nfc/nci_core.h b/include/net/nfc/nci_core.h
+index 395f804..3df7cd6 100644
+--- a/include/net/nfc/nci_core.h
++++ b/include/net/nfc/nci_core.h
+@@ -99,6 +99,8 @@ struct nci_conn_info {
+ 	struct sk_buff *rx_skb;
+ };
  
-+/* NFCEE Interface/Protocols */
-+#define NCI_NFCEE_INTERFACE_APDU           0x00
-+#define NCI_NFCEE_INTERFACE_HCI_ACCESS     0x01
-+#define NCI_NFCEE_INTERFACE_TYPE3_CMD_SET  0x02
-+#define NCI_NFCEE_INTERFACE_TRANSPARENT        0x03
++#define NCI_INVALID_CONN_ID 0x80
 +
-+/* Destination type */
-+#define NCI_DESTINATION_NFCC_LOOPBACK      0x01
-+#define NCI_DESTINATION_REMOTE_NFC_ENDPOINT    0x02
-+#define NCI_DESTINATION_NFCEE              0x03
-+
-+/* Destination-specific parameters type */
-+#define NCI_DESTINATION_SPECIFIC_PARAM_RF_TYPE     0x00
-+#define NCI_DESTINATION_SPECIFIC_PARAM_NFCEE_TYPE  0x01
-+
-+/* NFCEE Discovery Action */
-+#define NCI_NFCEE_DISCOVERY_ACTION_DISABLE			0x00
-+#define NCI_NFCEE_DISCOVERY_ACTION_ENABLE			0x01
-+
- /* NCI RF Technology and Mode */
- #define NCI_NFC_A_PASSIVE_POLL_MODE				0x00
- #define NCI_NFC_B_PASSIVE_POLL_MODE				0x01
-@@ -260,6 +279,11 @@ struct nci_rf_deactivate_cmd {
- 	__u8	type;
- } __packed;
+ /* NCI Core structures */
+ struct nci_dev {
+ 	struct nfc_dev		*nfc_dev;
+@@ -181,6 +183,8 @@ void nci_unregister_device(struct nci_dev *ndev);
+ int nci_recv_frame(struct nci_dev *ndev, struct sk_buff *skb);
+ int nci_set_config(struct nci_dev *ndev, __u8 id, size_t len, __u8 *val);
  
-+#define NCI_OP_NFCEE_DISCOVER_CMD nci_opcode_pack(NCI_GID_NFCEE_MGMT, 0x00)
-+struct nci_nfcee_discover_cmd {
-+	__u8	discovery_action;
-+} __packed;
++int nci_nfcee_discover(struct nci_dev *ndev, u8 action);
 +
- /* ----------------------- */
- /* ---- NCI Responses ---- */
- /* ----------------------- */
-@@ -303,6 +327,12 @@ struct nci_core_set_config_rsp {
+ static inline struct sk_buff *nci_skb_alloc(struct nci_dev *ndev,
+ 					    unsigned int len,
+ 					    gfp_t how)
+diff --git a/net/nfc/nci/core.c b/net/nfc/nci/core.c
+index b3ec63e..bd968d5 100644
+--- a/net/nfc/nci/core.c
++++ b/net/nfc/nci/core.c
+@@ -456,6 +456,23 @@ int nci_set_config(struct nci_dev *ndev, __u8 id, size_t len, __u8 *val)
+ }
+ EXPORT_SYMBOL(nci_set_config);
  
- #define NCI_OP_RF_DEACTIVATE_RSP	nci_opcode_pack(NCI_GID_RF_MGMT, 0x06)
++static void nci_nfcee_discover_req(struct nci_dev *ndev, unsigned long opt)
++{
++	struct nci_nfcee_discover_cmd cmd;
++	__u8 action = opt;
++
++	cmd.discovery_action = action;
++
++	nci_send_cmd(ndev, NCI_OP_NFCEE_DISCOVER_CMD, 1, &cmd);
++}
++
++int nci_nfcee_discover(struct nci_dev *ndev, u8 action)
++{
++	return nci_request(ndev, nci_nfcee_discover_req, action,
++				msecs_to_jiffies(NCI_CMD_TIMEOUT));
++}
++EXPORT_SYMBOL(nci_nfcee_discover);
++
+ static int nci_set_local_general_bytes(struct nfc_dev *nfc_dev)
+ {
+ 	struct nci_dev *ndev = nfc_get_drvdata(nfc_dev);
+diff --git a/net/nfc/nci/ntf.c b/net/nfc/nci/ntf.c
+index 8c73462..5af0564 100644
+--- a/net/nfc/nci/ntf.c
++++ b/net/nfc/nci/ntf.c
+@@ -710,6 +710,32 @@ static void nci_rf_deactivate_ntf_packet(struct nci_dev *ndev,
+ 	nci_req_complete(ndev, NCI_STATUS_OK);
+ }
  
-+#define NCI_OP_NFCEE_DISCOVER_RSP nci_opcode_pack(NCI_GID_NFCEE_MGMT, 0x00)
-+struct nci_nfcee_discover_rsp {
-+	__u8	status;
-+	__u8	num_nfcee;
-+} __packed;
++static void nci_nfcee_discover_ntf_packet(struct nci_dev *ndev,
++					  struct sk_buff *skb)
++{
++	u8 status = NCI_STATUS_OK;
++	struct nci_conn_info    *conn_info;
++	struct nci_nfcee_discover_ntf   *nfcee_ntf =
++				(struct nci_nfcee_discover_ntf *)skb->data;
 +
- /* --------------------------- */
- /* ---- NCI Notifications ---- */
- /* --------------------------- */
-@@ -430,4 +460,22 @@ struct nci_rf_deactivate_ntf {
- 	__u8	reason;
- } __packed;
++	pr_debug("\n");
++
++	conn_info = devm_kzalloc(&ndev->nfc_dev->dev,
++				 sizeof(struct nci_conn_info), GFP_KERNEL);
++	if (!conn_info) {
++		status = NCI_STATUS_REJECTED;
++		goto exit;
++	}
++
++	conn_info->id = nfcee_ntf->nfcee_id;
++	conn_info->conn_id = NCI_INVALID_CONN_ID;
++
++	ndev->conn_info_by_id[conn_info->id] = conn_info;
++
++exit:
++	nci_req_complete(ndev, status);
++}
++
+ void nci_ntf_packet(struct nci_dev *ndev, struct sk_buff *skb)
+ {
+ 	__u16 ntf_opcode = nci_opcode(skb->data);
+@@ -748,6 +774,9 @@ void nci_ntf_packet(struct nci_dev *ndev, struct sk_buff *skb)
+ 		nci_rf_deactivate_ntf_packet(ndev, skb);
+ 		break;
  
-+#define NCI_OP_NFCEE_DISCOVER_NTF nci_opcode_pack(NCI_GID_NFCEE_MGMT, 0x00)
-+struct nci_nfcee_supported_protocol {
-+	__u8	num_protocol;
-+	__u8	supported_protocol[0];
-+} __packed;
++	case NCI_OP_NFCEE_DISCOVER_NTF:
++		nci_nfcee_discover_ntf_packet(ndev, skb);
++		break;
+ 	default:
+ 		pr_err("unknown ntf opcode 0x%x\n", ntf_opcode);
+ 		break;
+diff --git a/net/nfc/nci/rsp.c b/net/nfc/nci/rsp.c
+index ff8721e..a93133b 100644
+--- a/net/nfc/nci/rsp.c
++++ b/net/nfc/nci/rsp.c
+@@ -192,6 +192,23 @@ static void nci_rf_deactivate_rsp_packet(struct nci_dev *ndev,
+ 	}
+ }
+ 
++static void nci_nfcee_discover_rsp_packet(struct nci_dev *ndev,
++					  struct sk_buff *skb)
++{
++	struct nci_nfcee_discover_rsp *discover_rsp;
 +
-+struct nci_nfcee_information_tlv {
-+	__u8	num_tlv;
-+	__u8	information_tlv[0];
-+} __packed;
++	if (skb->len != 2) {
++		nci_req_complete(ndev, NCI_STATUS_NFCEE_PROTOCOL_ERROR);
++		return;
++	}
 +
-+struct nci_nfcee_discover_ntf {
-+	__u8	nfcee_id;
-+	__u8	nfcee_status;
-+	struct nci_nfcee_supported_protocol supported_protocols;
-+	struct nci_nfcee_information_tlv	information_tlv;
-+} __packed;
++	discover_rsp = (struct nci_nfcee_discover_rsp *)skb->data;
 +
- #endif /* __NCI_H */
++	if (discover_rsp->status != NCI_STATUS_OK ||
++	    discover_rsp->num_nfcee == 0)
++		nci_req_complete(ndev, discover_rsp->status);
++}
++
+ void nci_rsp_packet(struct nci_dev *ndev, struct sk_buff *skb)
+ {
+ 	__u16 rsp_opcode = nci_opcode(skb->data);
+@@ -237,6 +254,10 @@ void nci_rsp_packet(struct nci_dev *ndev, struct sk_buff *skb)
+ 		nci_rf_deactivate_rsp_packet(ndev, skb);
+ 		break;
+ 
++	case NCI_OP_NFCEE_DISCOVER_RSP:
++		nci_nfcee_discover_rsp_packet(ndev, skb);
++		break;
++
+ 	default:
+ 		pr_err("unknown rsp opcode 0x%x\n", rsp_opcode);
+ 		break;
 -- 
 2.1.0
 
