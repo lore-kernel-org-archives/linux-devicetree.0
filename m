@@ -1,7 +1,7 @@
 From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v1 08/34] NFC: hci: Reference every pipe information according to notification
-Date: Mon,  8 Dec 2014 22:08:13 +0100
-Message-ID: <1418072919-10535-9-git-send-email-christophe-h.ricard@st.com>
+Subject: [PATCH v1 05/34] NFC: hci: Change event_received handler gate parameter to pipe
+Date: Mon,  8 Dec 2014 22:08:10 +0100
+Message-ID: <1418072919-10535-6-git-send-email-christophe-h.ricard@st.com>
 References: <1418072919-10535-1-git-send-email-christophe-h.ricard@st.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1418072919-10535-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
@@ -10,129 +10,43 @@ To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Save a relevant pipe status according to received command in pipes table
-with tuple {gate, host}.
+We are usually receiving an event from a known pipe.
 
-Also:
-- If an error is detected it was so far not reported to the CLF.
-- Any HCI command can be received, we need to respond something back to the
-CLF.
+Keep this information as is as we can easily determine gate and host
+triggering this event.
 
 Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
 ---
- net/nfc/hci/core.c | 56 ++++++++++++++++++++++++++++++++++++------------------
- net/nfc/hci/hci.h  |  8 ++++++++
- 2 files changed, 45 insertions(+), 19 deletions(-)
+ include/net/nfc/hci.h | 2 +-
+ net/nfc/hci/core.c    | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/include/net/nfc/hci.h b/include/net/nfc/hci.h
+index 14bd0e1..031c0be 100644
+--- a/include/net/nfc/hci.h
++++ b/include/net/nfc/hci.h
+@@ -51,7 +51,7 @@ struct nfc_hci_ops {
+ 	int (*tm_send)(struct nfc_hci_dev *hdev, struct sk_buff *skb);
+ 	int (*check_presence)(struct nfc_hci_dev *hdev,
+ 			      struct nfc_target *target);
+-	int (*event_received)(struct nfc_hci_dev *hdev, u8 gate, u8 event,
++	int (*event_received)(struct nfc_hci_dev *hdev, u8 pipe, u8 event,
+ 			      struct sk_buff *skb);
+ 	int (*fw_download)(struct nfc_hci_dev *hdev, const char *firmware_name);
+ 	int (*discover_se)(struct nfc_hci_dev *dev);
 diff --git a/net/nfc/hci/core.c b/net/nfc/hci/core.c
-index 88af43a..67e7049 100644
+index ef50e77..12a9a4b 100644
 --- a/net/nfc/hci/core.c
 +++ b/net/nfc/hci/core.c
-@@ -192,48 +192,66 @@ exit:
- void nfc_hci_cmd_received(struct nfc_hci_dev *hdev, u8 pipe, u8 cmd,
- 			  struct sk_buff *skb)
- {
--	int r = 0;
- 	u8 gate = hdev->pipes[pipe].gate;
--	u8 local_gate, new_pipe;
--	u8 gate_opened = 0x00;
-+	u8 status = NFC_HCI_ANY_OK;
-+	struct hci_create_pipe_resp *create_info;
-+	struct hci_delete_pipe_noti *delete_info;
-+	struct hci_all_pipe_cleared_noti *cleared_info;
- 
- 	pr_debug("from gate %x pipe %x cmd %x\n", gate, pipe, cmd);
- 
- 	switch (cmd) {
- 	case NFC_HCI_ADM_NOTIFY_PIPE_CREATED:
- 		if (skb->len != 5) {
--			r = -EPROTO;
--			break;
-+			status = NFC_HCI_ANY_E_NOK;
-+			goto exit;
- 		}
-+		create_info = (struct hci_create_pipe_resp *)skb->data;
- 
--		local_gate = skb->data[3];
--		new_pipe = skb->data[4];
--		nfc_hci_send_response(hdev, gate, NFC_HCI_ANY_OK, NULL, 0);
--
--		/* save the new created pipe and bind with local gate,
-+		/* Save the new created pipe and bind with local gate,
- 		 * the description for skb->data[3] is destination gate id
- 		 * but since we received this cmd from host controller, we
- 		 * are the destination and it is our local gate
- 		 */
--		hdev->gate2pipe[local_gate] = new_pipe;
-+		hdev->gate2pipe[create_info->dest_gate] = create_info->pipe;
-+		hdev->pipes[create_info->pipe].gate = create_info->dest_gate;
-+		hdev->pipes[create_info->pipe].dest_host =
-+							create_info->src_host;
- 		break;
- 	case NFC_HCI_ANY_OPEN_PIPE:
--		/* if the pipe is already created, we allow remote host to
--		 * open it
--		 */
--		if (gate != 0xff)
--			nfc_hci_send_response(hdev, gate, NFC_HCI_ANY_OK,
--					      &gate_opened, 1);
-+		/* If the pipe is not created report an error */
-+		if (gate == NFC_HCI_INVALID_GATE) {
-+			status = NFC_HCI_ANY_E_NOK;
-+			goto exit;
-+		}
-+		break;
-+	case NFC_HCI_ADM_NOTIFY_PIPE_DELETED:
-+		if (skb->len != 1) {
-+			status = NFC_HCI_ANY_E_NOK;
-+			goto exit;
-+		}
-+		delete_info = (struct hci_delete_pipe_noti *)skb->data;
-+
-+		hdev->pipes[delete_info->pipe].gate = NFC_HCI_INVALID_GATE;
-+		hdev->pipes[delete_info->pipe].dest_host = NFC_HCI_INVALID_HOST;
- 		break;
- 	case NFC_HCI_ADM_NOTIFY_ALL_PIPE_CLEARED:
--		nfc_hci_send_response(hdev, gate, NFC_HCI_ANY_OK, NULL, 0);
-+		if (skb->len != 1) {
-+			status = NFC_HCI_ANY_E_NOK;
-+			goto exit;
-+		}
-+		cleared_info = (struct hci_all_pipe_cleared_noti *)skb->data;
-+
-+		nfc_hci_reset_pipes_per_host(hdev, cleared_info->host);
- 		break;
- 	default:
- 		pr_info("Discarded unknown cmd %x to gate %x\n", cmd, gate);
--		r = -EINVAL;
- 		break;
+@@ -338,7 +338,7 @@ void nfc_hci_event_received(struct nfc_hci_dev *hdev, u8 pipe, u8 event,
  	}
  
-+exit:
-+	nfc_hci_send_response(hdev, pipe, status, NULL, 0);
-+
- 	kfree_skb(skb);
- }
- 
-diff --git a/net/nfc/hci/hci.h b/net/nfc/hci/hci.h
-index c3d2e2c..c1278bd 100644
---- a/net/nfc/hci/hci.h
-+++ b/net/nfc/hci/hci.h
-@@ -65,6 +65,14 @@ struct hci_create_pipe_resp {
- 	u8 pipe;
- } __packed;
- 
-+struct hci_delete_pipe_noti {
-+	u8 pipe;
-+} __packed;
-+
-+struct hci_all_pipe_cleared_noti {
-+	u8 host;
-+} __packed;
-+
- #define NFC_HCI_FRAGMENT	0x7f
- 
- #define HCP_HEADER(type, instr) ((((type) & 0x03) << 6) | ((instr) & 0x3f))
+ 	if (hdev->ops->event_received) {
+-		r = hdev->ops->event_received(hdev, gate, event, skb);
++		r = hdev->ops->event_received(hdev, pipe, event, skb);
+ 		if (r <= 0)
+ 			goto exit_noskb;
+ 	}
 -- 
 2.1.0
 
