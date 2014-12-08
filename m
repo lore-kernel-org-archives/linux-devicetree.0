@@ -1,73 +1,116 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 3/9] clk: sunxi: Add prcm mod0 clock driver
-Date: Mon, 08 Dec 2014 09:19:02 +0100
-Message-ID: <54855EF6.1000900@redhat.com>
-References: <20141126211318.GN25249@lukather> <5476E3A5.4000708@redhat.com> <CAGb2v652m0bCdPWFF4LWwjcrCJZvnLibFPw8xXJ3Q-Ge+_-p7g@mail.gmail.com> <5476F8AB.2000601@redhat.com> <20141127190509.GR25249@lukather> <54787A8A.6040209@redhat.com> <20141202154524.GD30256@lukather> <547EDCA0.4040805@redhat.com> <20141207180808.GO12434@lukather>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 2/8] mfd: MT6397: Add support for PMIC MT6397 MFD
+Date: Mon, 8 Dec 2014 08:46:29 +0000
+Message-ID: <20141208084629.GB3951@x1>
+References: <1417752479-4749-1-git-send-email-flora.fu@mediatek.com>
+ <1417752479-4749-3-git-send-email-flora.fu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBBN6SWSAKGQE4XPLB5I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20141207180808.GO12434@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Boris Brezillon <boris-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1417752479-4749-3-git-send-email-flora.fu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Flora Fu <flora.fu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Dongdong Cheng <dongdong.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, HenryC Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Menghui Lin <menghui.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Fri, 05 Dec 2014, Flora Fu wrote:
 
-On 07-12-14 19:08, Maxime Ripard wrote:
-> On Wed, Dec 03, 2014 at 10:49:20AM +0100, Hans de Goede wrote:
+> Add core files for MT6397 MFD driver.
+>=20
+> Signed-off-by: Flora Fu <flora.fu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>  drivers/mfd/Kconfig                  |  10 +
+>  drivers/mfd/Makefile                 |   1 +
+>  drivers/mfd/mt6397-core.c            |  87 +++++++++
+>  include/linux/mfd/mt6397/core.h      |  23 +++
+>  include/linux/mfd/mt6397/registers.h | 362 +++++++++++++++++++++++++=
+++++++++++
+>  5 files changed, 483 insertions(+)
+>  create mode 100644 drivers/mfd/mt6397-core.c
+>  create mode 100644 include/linux/mfd/mt6397/core.h
+>  create mode 100644 include/linux/mfd/mt6397/registers.h
 
-<snip>
+[...]
 
->> So it should not have a simple-bus compatible either, and as such we cannot
->> simply change the mod0 driver from of_clk_define to a platform driver because
->> then we need to instantiate platform devs for the mod0 clock nodes, which
->> means making the clock node a simple-bus.
->
-> I guess we can do that as a temporary measure until we get things
-> right on that front. I'm totally open to doing that work, so I'm not
-> asking you to do it.
->
->> I can see your logic in wanting the ir_clk prcm sub-node to use the
->> mod0 compatible string, so how about we make the mod0 driver both
->> register through of_declare and as a platform driver. Note this means
->> that it will try to bind twice to the ir_clk node, since of_clk_declare
->> will cause it to try and bind there too AFAIK.
->
-> Hmmm, I could live with that for a while too. That shouldn't even
-> require too much work, since the first thing we check in the mod0 code
-> is that we actually have something in reg, which will not be the case
-> in the OF_CLK_DECLARE case.
->
->> The of_clk_declare bind will fail though because there is no regs
->> property, so this double bind is not an issue as long as we do not
->> log errors on the first bind failure.
->
-> Yep, exactly.
->
->> Note that the ir_clk node will still need an "ir-clk" compatible as
->> well for the MFD to find it and assign the proper resources to it.
->
-> No, it really doesn't. At least for now, we have a single mod0 clock
-> under the PRCM MFD. If (and only if) one day, we find ourselves in a
-> position where we have two mod0 clocks under the PRCM, then we'll fix
-> the MFD code to deal with that, because it really should deal with it.
+> +++ b/drivers/mfd/mt6397-core.c
+> @@ -0,0 +1,87 @@
+> +/*
+> + * Copyright (c) 2014 MediaTek Inc.
+> + * Author: Flora Fu <flora.fu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or mod=
+ify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/of_device.h>
+> +#include <linux/mfd/core.h>
+> +#include <linux/mfd/mt6397/core.h>
+> +#include <linux/soc/mediatek/mtk-pmic-wrap.h>
+> +
+> +static const struct mfd_cell mt6397_devs[] =3D {
+> +	{ .name =3D "mt6397-rtc" },
+> +	{
+> +		.name =3D "mt6397-regulator",
+> +		.of_compatible =3D "mediatek,mt6397-regulator",
+> +	},
+> +	{
+> +		.name =3D "mt6397-codec",
+> +		.of_compatible =3D "mediatek,mt6397-codec",
+> +	},
+> +};
+> +
+> +static int mt6397_probe(struct platform_device *pdev)
+> +{
+> +	u32 ret;
+> +	struct mt6397_chip *mt6397;
+> +	struct pmic_wrapper *wrp;
+> +
+> +	/* mt6397 MFD is child device of soc pmic wrapper. */
+> +	if (!pdev->dev.parent)
+> +		return -ENODEV;
+> +
+> +	wrp =3D dev_get_drvdata(pdev->dev.parent);
 
-Ok, using only the mod0 compat string works for me. I'll respin my
-patch-set (minus the one patch you've already merged) to make the modo
-clk driver use both of_clk_declare and make it a platfrom driver, and
-use the mod0 compat string for the ir-clk node.
+You're _still_ not checking the return value prior to dereferencing.
 
-Not sure when I'll get this done exactly though, but we still have
-a while before 3.20 :)
+> +	mt6397 =3D devm_kzalloc(&pdev->dev, sizeof(*mt6397), GFP_KERNEL);
+> +	if (!mt6397)
+> +		return -ENOMEM;
+> +
+> +	mt6397->dev =3D &pdev->dev;
+> +	mt6397->regmap =3D wrp->regmap;
 
-Regards,
+> +	platform_set_drvdata(pdev, mt6397);
+> +
+> +	ret =3D mfd_add_devices(&pdev->dev, -1, &mt6397_devs[0],
 
-Hans
+Just mt6397_devs here.
+
+> +			ARRAY_SIZE(mt6397_devs), NULL, 0, NULL);
+> +	if (ret)
+> +		dev_err(&pdev->dev, "failed to add child devices: %d\n", ret);
+
+There is no point in printing ret.  The kernel will do that for you.
+
+[...]
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
