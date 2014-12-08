@@ -1,69 +1,226 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH] i2c: designware: Fix falling time bindings doc
-Date: Mon, 8 Dec 2014 10:51:39 +0100
-Message-ID: <20141208095139.GA1088@katana>
-References: <1417805379-8999-1-git-send-email-dianders@chromium.org>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v3 1/5] phy: add a driver for the Rockchip SoC internal
+ USB2.0 PHY
+Date: Mon, 8 Dec 2014 15:27:04 +0530
+Message-ID: <548575F0.4090909@ti.com>
+References: <1418031988-2700-1-git-send-email-lyz@rock-chips.com>
+ <1418031988-2700-2-git-send-email-lyz@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="G4iJoqBmSsgzjUCe"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1417805379-8999-1-git-send-email-dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Romain Baeriswyl <Romain.Baeriswyl-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>, Shinya Kuribayashi <skuribay-e+AXbWqSrlAAvxtiuMwx3w@public.gmane.org>, Christian Ruppert <christian.ruppert-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>, Addy Ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1418031988-2700-2-git-send-email-lyz@rock-chips.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Yunzhi Li <lyz@rock-chips.com>, heiko@sntech.de, dianders@chromium.org, romain.perier@gmail.com
+Cc: huangtao@rock-chips.com, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, zyw@rock-chips.com, Rob Herring <robh+dt@kernel.org>, olof@lixom.net, cf@rock-chips.com, linux-arm-kernel@lists.infradead.org, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---G4iJoqBmSsgzjUCe
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Monday 08 December 2014 03:16 PM, Yunzhi Li wrote:
+> This patche to add a generic PHY driver for ROCKCHIP usb PHYs,
 
-On Fri, Dec 05, 2014 at 10:49:39AM -0800, Doug Anderson wrote:
-> In (6468276 i2c: designware: make SCL and SDA falling time
-> configurable) new device tree properties were added for setting the
-> falling time of SDA and SCL.  The device tree bindings doc had a typo
-> in it: it forgot the "-ns" suffix for both properies in the prose of
-> the bindings.
->=20
-> I assume this is a typo because:
-> * The source code includes the "-ns"
-> * The example in the bindings includes the "-ns".
->=20
-> Fix the typo.
->=20
-> Signed-off-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> Fixes: 6468276b2206 ("i2c: designware: make SCL and SDA falling time conf=
-igurable")
+%s/patche/patch
+> currently this driver can support RK3288. The RK3288 SoC have
+> three independent USB PHY IPs which are all configured through a
+> set of registers located in the GRF (general register files)
+> module.
+> 
+> Signed-off-by: Yunzhi Li <lyz@rock-chips.com>
+> 
+> ---
+> 
+> Changes in v3:
+> - Use BIT macro instead of bit shift ops.
+> - Rename the config entry to PHY_ROCKCHIP_USB.
+> 
+>  drivers/phy/Kconfig            |   7 ++
+>  drivers/phy/Makefile           |   1 +
+>  drivers/phy/phy-rockchip-usb.c | 179 +++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 187 insertions(+)
+>  create mode 100644 drivers/phy/phy-rockchip-usb.c
+> 
+> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+> index ccad880..8a39d2a 100644
+> --- a/drivers/phy/Kconfig
+> +++ b/drivers/phy/Kconfig
+> @@ -239,6 +239,13 @@ config PHY_QCOM_IPQ806X_SATA
+>  	depends on OF
+>  	select GENERIC_PHY
+>  
+> +config PHY_ROCKCHIP_USB2
+> +	tristate "Rockchip USB2 PHY Driver"
+> +	depends on ARCH_ROCKCHIP && OF
+> +	select GENERIC_PHY
+> +	help
+> +	  Enable this to support the Rockchip USB 2.0 PHY.
+> +
+>  config PHY_ST_SPEAR1310_MIPHY
+>  	tristate "ST SPEAR1310-MIPHY driver"
+>  	select GENERIC_PHY
+> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+> index aa74f96..8a13f72 100644
+> --- a/drivers/phy/Makefile
+> +++ b/drivers/phy/Makefile
+> @@ -28,6 +28,7 @@ phy-exynos-usb2-$(CONFIG_PHY_EXYNOS5250_USB2)	+= phy-exynos5250-usb2.o
+>  phy-exynos-usb2-$(CONFIG_PHY_S5PV210_USB2)	+= phy-s5pv210-usb2.o
+>  obj-$(CONFIG_PHY_EXYNOS5_USBDRD)	+= phy-exynos5-usbdrd.o
+>  obj-$(CONFIG_PHY_QCOM_APQ8064_SATA)	+= phy-qcom-apq8064-sata.o
+> +obj-$(CONFIG_PHY_ROCKCHIP_USB2) += phy-rockchip-usb.o
+>  obj-$(CONFIG_PHY_QCOM_IPQ806X_SATA)	+= phy-qcom-ipq806x-sata.o
+>  obj-$(CONFIG_PHY_ST_SPEAR1310_MIPHY)	+= phy-spear1310-miphy.o
+>  obj-$(CONFIG_PHY_ST_SPEAR1340_MIPHY)	+= phy-spear1340-miphy.o
+> diff --git a/drivers/phy/phy-rockchip-usb.c b/drivers/phy/phy-rockchip-usb.c
+> new file mode 100644
+> index 0000000..98af043
+> --- /dev/null
+> +++ b/drivers/phy/phy-rockchip-usb.c
+> @@ -0,0 +1,179 @@
+> +/*
+> + * Rockchip usb PHY driver
+> + *
+> + * Copyright (C) 2014 Yunzhi Li <lyz@rock-chips.com>
+> + * Copyright (C) 2014 ROCKCHIP, Inc.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/io.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/phy/phy.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/reset.h>
+> +#include <linux/regmap.h>
+> +#include <linux/mfd/syscon.h>
+> +
+> +#define ROCKCHIP_RK3288_UOC(n)	(0x320 + n * 0x14)
+> +
+> +#define SIDDQ_MSK		BIT(13 + 16)
 
-Applied to for-next and added stable, thanks!
+This doesn't look correct. Won't this mask bit no:29?
+> +#define SIDDQ_ON		BIT(13)
+> +#define SIDDQ_OFF		(0 << 13)
+> +
+> +enum rk3288_phy_id {
 
+rockchip_usb_phy_id?
+> +	RK3288_OTG,
+> +	RK3288_HOST0,
+> +	RK3288_HOST1,
+> +	RK3288_NUM_PHYS,
+> +};
+> +
+> +struct rockchip_usb_phy {
+> +	struct regmap *reg_base;
+> +	unsigned int reg_offset;
+> +	struct clk *clk;
+> +	struct phy *phy;
+> +};
+> +
+> +static int rockchip_usb_phy_power(struct rockchip_usb_phy *phy,
+> +					   bool siddq)
+> +{
+> +	return regmap_write(phy->reg_base, phy->reg_offset,
+> +			    SIDDQ_MSK | (siddq ? SIDDQ_ON : SIDDQ_OFF));
+> +}
+> +
+> +static int rockchip_usb_phy_power_off(struct phy *_phy)
+> +{
+> +	struct rockchip_usb_phy *phy = phy_get_drvdata(_phy);
+> +	int ret = 0;
+> +
+> +	/* Power down usb phy analog blocks by set siddq 1*/
+> +	ret = rockchip_usb_phy_power(phy, 1);
+> +	if (ret)
+> +		return ret;
+> +
+> +	clk_disable_unprepare(phy->clk);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return 0;
+> +}
+> +
+> +static int rockchip_usb_phy_power_on(struct phy *_phy)
+> +{
+> +	struct rockchip_usb_phy *phy = phy_get_drvdata(_phy);
+> +	int ret = 0;
+> +
+> +	ret = clk_prepare_enable(phy->clk);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Power up usb phy analog blocks by set siddq 0*/
+> +	ret = rockchip_usb_phy_power(phy, 0);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return 0;
+> +}
+> +
+> +static struct phy *rockchip_usb_phy_xlate(struct device *dev,
+> +					struct of_phandle_args *args)
+> +{
+> +	struct rockchip_usb_phy *phy_array = dev_get_drvdata(dev);
+> +
+> +	if (WARN_ON(args->args[0] == 0 || args->args[0] >= RK3288_NUM_PHYS))
+> +		return ERR_PTR(-ENODEV);
+> +
+> +	return (phy_array + args->args[0])->phy;
+> +}
+> +
+> +static struct phy_ops ops = {
+> +	.power_on	= rockchip_usb_phy_power_on,
+> +	.power_off	= rockchip_usb_phy_power_off,
+> +	.owner		= THIS_MODULE,
+> +};
+> +
+> +static int rockchip_usb_phy_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct rockchip_usb_phy *rk_phy;
+> +	struct rockchip_usb_phy *phy_array;
+> +	struct phy_provider *phy_provider;
+> +	struct regmap *grf;
+> +	char clk_name[16];
+> +	int i;
+> +
+> +	grf = syscon_regmap_lookup_by_phandle(dev->of_node, "rockchip,grf");
+> +	if (IS_ERR(grf)) {
+> +		dev_err(&pdev->dev, "Missing rockchip,grf property\n");
+> +		return PTR_ERR(grf);
+> +	}
+> +
+> +	phy_array = devm_kzalloc(dev, RK3288_NUM_PHYS * sizeof(*rk_phy),
+> +				 GFP_KERNEL);
+> +	if (!phy_array)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < RK3288_NUM_PHYS; i++) {
 
---G4iJoqBmSsgzjUCe
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Don't hardcode NUM_PHYS. All this has to come from dt. Model each PHYs as
+subnode of the phy provider node and use it here.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUhXSrAAoJEBQN5MwUoCm20HQP/jcWHm32P7hLUIadcCH0pSaO
-HrVbgasKdBAYsyQW55xKV2xQc/01keMXWaNZWti/uBRdoTBVjvkuSyykN+gQBGHu
-5HOFE1QvA3h72gF5pMSFiG5YxCd5S4gL+W7cej1w/FD2T3D9AJjEl6uNHuwwJxgC
-SGyBx2rohKF8InMHOn6RVCXRjr5IjTTpjhZpdkFIZfwKvJtOAFnuYn9bfoHcu5QT
-lM2jW56aaW9qfPp8+59/Ln5VcwaR29/chZ/3e0uRKY1m5QaST2fUaRC5zo0+Ijh1
-WvVkpJS8y41E/Hy9/qXqJFfdioZP0sYFG6UTlKIpG4KQidBUjixvH3xkjW0rskWo
-eraLquoZfUc7gBlkRvW0gMRULdlEXqM/7BfomIT+eXJMTbIJuxywZB1QhUlYz756
-BaapgNJ+VFSK4+eednS/9O+EqI7XqmjyFzQhhqNasSBOk2NEaGP0hPvW8vaMAfTR
-ZmlWpHpSIUgAk8A2uOeniNWV/x7CQjj7+AgByvOrOkNTe22z0XJFT/B3H3Nu9bj4
-mWRT4gODbUigZ6fuwOOAL2Kka9PamNLd1Vmbud1DRBdREpuvuljnoLqr1DxO86gZ
-4J6/Z2P73ZDpMhk2a2mJ46PsZo0J6XKepDhRKkOxI64fEIXkk4PUqvrhK9x1U8uY
-Ss4MbKo6QrnWDyv1s1A9
-=SrVj
------END PGP SIGNATURE-----
-
---G4iJoqBmSsgzjUCe--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks
+Kishon
