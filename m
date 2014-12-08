@@ -1,7 +1,7 @@
 From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v1 16/34] NFC: st21nfca: Remove useless ST21NFCA_SE_HOST_EVT_HOT_PLUG macro
-Date: Mon,  8 Dec 2014 22:08:21 +0100
-Message-ID: <1418072919-10535-17-git-send-email-christophe-h.ricard@st.com>
+Subject: [PATCH v1 12/34] NFC: hci: Remove nfc_hci_pipe2gate function
+Date: Mon,  8 Dec 2014 22:08:17 +0100
+Message-ID: <1418072919-10535-13-git-send-email-christophe-h.ricard@st.com>
 References: <1418072919-10535-1-git-send-email-christophe-h.ricard@st.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1418072919-10535-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
@@ -10,25 +10,50 @@ To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-ST21NFCA_SE_HOST_EVT_HOT_PLUG is never used in the driver.
+nfc_hci_pipe2gate is now doing double usage with the pipes table field in
+the struct nfc_hci_dev. Also it is not used any more.
 
 Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
 ---
- drivers/nfc/st21nfca/st21nfca.c | 1 -
- 1 file changed, 1 deletion(-)
+ net/nfc/hci/hci.h |  2 --
+ net/nfc/hci/hcp.c | 11 -----------
+ 2 files changed, 13 deletions(-)
 
-diff --git a/drivers/nfc/st21nfca/st21nfca.c b/drivers/nfc/st21nfca/st21nfca.c
-index d57e342..e92af42 100644
---- a/drivers/nfc/st21nfca/st21nfca.c
-+++ b/drivers/nfc/st21nfca/st21nfca.c
-@@ -80,7 +80,6 @@
+diff --git a/net/nfc/hci/hci.h b/net/nfc/hci/hci.h
+index c1278bd..ab4c8e8 100644
+--- a/net/nfc/hci/hci.h
++++ b/net/nfc/hci/hci.h
+@@ -85,8 +85,6 @@ int nfc_hci_hcp_message_tx(struct nfc_hci_dev *hdev, u8 pipe,
+ 			   data_exchange_cb_t cb, void *cb_context,
+ 			   unsigned long completion_delay);
  
- #define ST21NFCA_EVT_HOT_PLUG			0x03
- #define ST21NFCA_EVT_HOT_PLUG_IS_INHIBITED(x) (x->data[0] & 0x80)
--#define ST21NFCA_SE_HOST_EVT_HOT_PLUG	0x01
+-u8 nfc_hci_pipe2gate(struct nfc_hci_dev *hdev, u8 pipe);
+-
+ void nfc_hci_hcp_message_rx(struct nfc_hci_dev *hdev, u8 pipe, u8 type,
+ 			    u8 instruction, struct sk_buff *skb);
  
- #define ST21NFCA_SE_TO_PIPES			2000
+diff --git a/net/nfc/hci/hcp.c b/net/nfc/hci/hcp.c
+index e9de151..1fe725d 100644
+--- a/net/nfc/hci/hcp.c
++++ b/net/nfc/hci/hcp.c
+@@ -124,17 +124,6 @@ out_skb_err:
+ 	return err;
+ }
  
+-u8 nfc_hci_pipe2gate(struct nfc_hci_dev *hdev, u8 pipe)
+-{
+-	int gate;
+-
+-	for (gate = 0; gate < NFC_HCI_MAX_GATES; gate++)
+-		if (hdev->gate2pipe[gate] == pipe)
+-			return gate;
+-
+-	return 0xff;
+-}
+-
+ /*
+  * Receive hcp message for pipe, with type and cmd.
+  * skb contains optional message data only.
 -- 
 2.1.0
 
