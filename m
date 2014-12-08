@@ -1,39 +1,56 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] OF: DT-Overlay configfs interface (v3)
-Date: Mon, 08 Dec 2014 17:39:05 +0000
-Message-ID: <20141208173905.C4A48C40D73@trevor.secretlab.ca>
-References: <1417605808-23327-1-git-send-email-pantelis.antoniou@konsulko.com>
-	<20141204103104.7D8E0C40992@trevor.secretlab.ca>
-	<CAGXu5jKZYrGpSwdpG8Pk=0N87Z1yT3S=utzCnQgvZ+4YeA2hKg@mail.gmail.com>
-	<0CD21000-1C09-47D7-AE3B-3DAE942CB861@antoniou-consulting.com>
-	<CAGXu5j+txFEtMSXab9LjcbvL5rhbPc94wimBMOyQj_Fcf3QZjw@mail.gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGXu5j+txFEtMSXab9LjcbvL5rhbPc94wimBMOyQj_Fcf3QZjw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH v2 2/3] fpga manager: framework core
+Date: Mon, 08 Dec 2014 17:50:50 +0000
+Message-ID: <20141208175050.92EDAC40D73@trevor.secretlab.ca>
+References: <1414007405-32186-1-git-send-email-atull@opensource.altera.com>
+	<1414007405-32186-3-git-send-email-atull@opensource.altera.com>
+	<20141024105200.GA20775@amd>
+	<B914D894-E486-4EF1-8F84-169E939C58B4@konsulko.com>
+	<alpine.DEB.2.02.1410240906340.23446@atx-linux-37>
+	<CACxGe6tiLxbCThzjOqrQg44Ue3XJuuRgti5jZY=UrssSY8=xqg@mail.gmail.com>
+	<20141206135533.GA19672@amd>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20141206135533.GA19672@amd>
+Sender: linux-doc-owner@vger.kernel.org
+To: Pavel Machek <pavel@denx.de>
+Cc: atull <atull@opensource.altera.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, "H. Peter Anvin" <hpa@zytor.com>, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Randy Dunlap <rdunlap@infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Ira Snyder <iws@ovro.caltech.edu>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Mark Brown <broonie@kernel.org>, philip@balister.org, rubini <rubini@gnudd.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Jason <jason@lakedaemon.net>, kyle.teske@ni.com, Nicolas Pitre <nico@linaro.org>, Felipe Balbi <balbi@ti.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>, David Brown <davidb@codeaurora>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 5 Dec 2014 14:01:44 -0800
-, Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+On Sat, 6 Dec 2014 14:55:33 +0100
+, Pavel Machek <pavel@denx.de>
  wrote:
-> On Fri, Dec 5, 2014 at 1:27 PM, Pantelis Antoniou
-> <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org> wrote:
-> >
-> > Devices will be created potentially; those have a probe method, which can
-> > can make anything happen.
-> >
-> > This is exactly like from a security point of view as loading modules.
+> Hi!
 > 
-> Just a random idea, but would it make sense to just tie the logic to
-> the modules_disabled flag? Probably not, but thought I'd throw it out
-> there.
+> > > I am accustomed to doing 'echo -n' for most of sysfs anyway.  Once in a
+> > > while I am a bonehead and forget the '-n' and spend a few minutes
+> > > wondering why this thing that worked last week suddenly rejects all
+> > > commands.  I'm just trying to make my user interface a bit user-friendly.
+> > >
+> > > I will take out the '\n' stripping and update the documentation.  I didn't
+> > > realize this would be controversial.
+> > 
+> > Don't. You're doing the right thing by scrubbing your input. Requiring
+> > 'echo -n' is just stupid when it is so easy to make work easily.
+> 
+> 'foo\nbar\n' is unusual but valid filename in linux. It is bad idea to
+> echo filenames into files in the first place... and arbitrarily
+> disallowing certain filenames is not helping.
 
-I think it might. This opens a whole new window for manipulating the
-kernel state. If existing userspace disables modules, but is booted on a
-new kernel, then there is suddenly a new window for affecting change on
-the kernel that it didn't know about.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Meh. Just because it is a valid linux filename doesn't mean this
+interface is forced to accept it. There should be tighter rules about
+how the filename can be constructed. Allowing any arbitrary path for any
+arbitrary valid linux filename makes for a large attack surface.
+
+I would like to know, what is the purpose of the interface? Why is it
+important to provide the firmware filename in this manor? Are there
+going to be a lot of different FPGA bitstreams that may need to be
+loaded? How does userspace choose between them, and is there a better
+way to do the selection without passing the firmware filename through
+the kernel? Is this merely intended to get udev to behave in a certain
+way? If so, then maybe there is a better way to go about it.
+
+We could for example use a UDEV 'PROGRAM=' rule to execute a userspace
+app and have that program figure out which firmware file to provide to
+the kernel.
+
+g.
