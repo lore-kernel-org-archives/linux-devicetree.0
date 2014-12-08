@@ -1,7 +1,7 @@
 From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v1 04/34] NFC: st21nfca: Remove unreachable code
-Date: Mon,  8 Dec 2014 22:08:09 +0100
-Message-ID: <1418072919-10535-5-git-send-email-christophe-h.ricard@st.com>
+Subject: [PATCH v1 03/34] NFC: st21nfcb: Fix "WARNING: invalid free of devm_ allocated data"
+Date: Mon,  8 Dec 2014 22:08:08 +0100
+Message-ID: <1418072919-10535-4-git-send-email-christophe-h.ricard@st.com>
 References: <1418072919-10535-1-git-send-email-christophe-h.ricard@st.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1418072919-10535-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
@@ -10,27 +10,29 @@ To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-kfree_skb(skb) in st21nfca_hci_event_received is never reach.
+ndlc pointer got allocated with devm_kzalloc in ndlc_probe function.
+
+This gives this error message:
+drivers/nfc/st21nfcb/ndlc.c:296:1-6: WARNING: invalid free of devm_ allocated data.
 
 Reported-by: Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
+Reported-by: Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>
 Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
 ---
- drivers/nfc/st21nfca/st21nfca.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/nfc/st21nfcb/ndlc.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/nfc/st21nfca/st21nfca.c b/drivers/nfc/st21nfca/st21nfca.c
-index f2596c8..880193b 100644
---- a/drivers/nfc/st21nfca/st21nfca.c
-+++ b/drivers/nfc/st21nfca/st21nfca.c
-@@ -845,8 +845,6 @@ static int st21nfca_hci_event_received(struct nfc_hci_dev *hdev, u8 gate,
- 	default:
- 		return 1;
- 	}
--	kfree_skb(skb);
--	return 0;
- }
+diff --git a/drivers/nfc/st21nfcb/ndlc.c b/drivers/nfc/st21nfcb/ndlc.c
+index bac50e8..ef0f997 100644
+--- a/drivers/nfc/st21nfcb/ndlc.c
++++ b/drivers/nfc/st21nfcb/ndlc.c
+@@ -297,6 +297,5 @@ void ndlc_remove(struct llt_ndlc *ndlc)
+ 	skb_queue_purge(&ndlc->send_q);
  
- static struct nfc_hci_ops st21nfca_hci_ops = {
+ 	st21nfcb_nci_remove(ndlc->ndev);
+-	kfree(ndlc);
+ }
+ EXPORT_SYMBOL(ndlc_remove);
 -- 
 2.1.0
 
