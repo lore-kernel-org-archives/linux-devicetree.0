@@ -1,90 +1,36 @@
-From: Andy Yan <andy.yan@rock-chips.com>
-Subject: Re: [PATCH v18 06/12] dt-bindings: add document for dw_hdmi
-Date: Mon, 08 Dec 2014 14:10:14 +0800
-Message-ID: <548540C6.8090701@rock-chips.com>
-References: <1417760564-16858-1-git-send-email-andy.yan@rock-chips.com>	
- <1417760834-17141-1-git-send-email-andy.yan@rock-chips.com>
- <1417787693.3227.9.camel@pengutronix.de>
+From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH V2 2/2] dmaengine: Add driver for IMG MDC
+Date: Sun, 7 Dec 2014 22:14:05 -0800
+Message-ID: <CAL1qeaFDZV2FiuHqRAzsaYUmoV72Kaq8o0di7CueUrN6qzrT+w@mail.gmail.com>
+References: <1416002384-3525-1-git-send-email-abrestic@chromium.org>
+	<1416002384-3525-3-git-send-email-abrestic@chromium.org>
+	<20141205173553.GS3411@intel.com>
+	<CAL1qeaE+7L2p=HxPBasQYLVPD0H2qBAd439Fn_z3Fza9Y3+0eA@mail.gmail.com>
+	<20141207114829.GX3411@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1417787693.3227.9.camel@pengutronix.de>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>, fabio.estevam@freescale.com, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
-Cc: heiko@sntech.de, airlied@linux.ie, dri-devel@lists.freedesktop.org, ykk@rock-chips.com, devel@driverdev.osuosl.org, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, jay.xu@rock-chips.com, devicetree@vger.kernel.org, Zubair.Kakakhel@imgtec.com, Arnd Bergmann <arnd@arndb.de>, Inki Dae <inki.dae@samsung.com>, Sean Paul <seanpaul@chromium.org>, rmk+kernel@arm.linux.org.uk, mark.yao@rock-chips.com, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, djkurtz@google.com, Shawn Guo <shawn.guo@linaro.org>, vladimir_zapolskiy@mentor.com, Lucas Stach <l.stach@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141207114829.GX3411-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Damien Horsley <Damien.Horsley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWFyayBSdXRsYW5kLCBSb2IgSGVycmluZywgUGF3ZWwgTW9sbCwgSWFuIENhbXBiZWxsLCBL
-dW1hciBHYWxhOgpXb3VsZCB5b3UgcGxlYXNlIGdpdmUgYW4gQWNrIGZvciB0aGlzPwoKT24gMjAx
-NOW5tDEy5pyIMDXml6UgMjE6NTQsIFBoaWxpcHAgWmFiZWwgd3JvdGU6Cj4gQW0gRnJlaXRhZywg
-ZGVuIDA1LjEyLjIwMTQsIDE0OjI3ICswODAwIHNjaHJpZWIgQW5keSBZYW46Cj4+IFNpZ25lZC1v
-ZmYtYnk6IEFuZHkgWWFuIDxhbmR5LnlhbkByb2NrLWNoaXBzLmNvbT4KPiBUaGlzIGJpbmRpbmcg
-aXMgbW9zdGx5IGEgY29weSBvZiB0aGUgZXhpc3RpbmcKPiBEb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvZHJtL2lteC9oZG1pLnR4dCwgYnV0IHRoZXJlIGlzIGEgbmV3Cj4gcmVnLWlv
-LXdpZHRoIHByb3BlcnR5IHRvIGNvbmZpZ3VyZSB0aGUgcmVnaXN0ZXIgYWNjZXNzIGJ1cyB3aWR0
-aCBhbmQgd2UKPiBoYXZlIGFkZGVkIG5ldyBjb21wYXRpYmxlcyAicm9ja2NoaXAscmszMjg4LWR3
-LWhkbWkiIGFuZCB0aGUgY29tbW9uCj4gInNucHMsZHctaGRtaS10eCIuIENvdWxkIHdlIGdldCBh
-biBBY2sgZm9yIHRoaXMgYW5kIHBhdGNoIDExIGJ5IHRoZQo+IGRldmljZSB0cmVlIG1haW50YWlu
-ZXJzPwo+Cj4gcmVnYXJkcwo+IFBoaWxpcHAKPj4gLS0tCj4+Cj4+IENoYW5nZXMgaW4gdjE4Ogo+
-PiAtIGFkZCBwb3J0IGJpbmRpbmdzCj4+IC0gY29ycmVjdCBzb21lIHNwZWxsaW5nIG1pc3Rha2Vz
-IGluIGR3X2hkbWkgYmluZGluZ3MgZG9jCj4+Cj4+IENoYW5nZXMgaW4gdjE3OiBOb25lCj4+IENo
-YW5nZXMgaW4gdjE2Ogo+PiAtIGRlc2NyaWJlIGRkYy1pMmMtYnVzIGFzIG9wdGlvbmFsCj4+IC0g
-YWRkIGNvbW1vbiBjbG9ja3MgYmluZGluZ3MKPj4KPj4gQ2hhbmdlcyBpbiB2MTU6IE5vbmUKPj4g
-Q2hhbmdlcyBpbiB2MTQ6IE5vbmUKPj4gQ2hhbmdlcyBpbiB2MTM6IE5vbmUKPj4gQ2hhbmdlcyBp
-biB2MTI6IE5vbmUKPj4gQ2hhbmdlcyBpbiB2MTE6IE5vbmUKPj4gQ2hhbmdlcyBpbiB2MTA6IE5v
-bmUKPj4gQ2hhbmdlcyBpbiB2OTogTm9uZQo+PiBDaGFuZ2VzIGluIHY4Ogo+PiAtIGNvcnJlY3Qg
-c29tZSBzcGVsbGluZyBtaXN0YWtlCj4+IC0gbW9kaWZ5IGRkYy1pMmMtYnVzIGFuZCBpbnRlcnJ1
-cHQgZGVzY3JpcHRpb24KPj4KPj4gQ2hhbmdlcyBpbiB2NzogTm9uZQo+PiBDaGFuZ2VzIGluIHY2
-OiBOb25lCj4+IENoYW5nZXMgaW4gdjU6IE5vbmUKPj4gQ2hhbmdlcyBpbiB2NDogTm9uZQo+PiBD
-aGFuZ2VzIGluIHYzOiBOb25lCj4+Cj4+ICAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZHJtL2Jy
-aWRnZS9kd19oZG1pLnR4dCAgICAgfCA1MCArKysrKysrKysrKysrKysrKysrKysrCj4+ICAgMSBm
-aWxlIGNoYW5nZWQsIDUwIGluc2VydGlvbnMoKykKPj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RybS9icmlkZ2UvZHdfaGRtaS50eHQKPj4K
-Pj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kcm0vYnJp
-ZGdlL2R3X2hkbWkudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RybS9i
-cmlkZ2UvZHdfaGRtaS50eHQKPj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPj4gaW5kZXggMDAwMDAw
-MC4uYTkwNWMxNAo+PiAtLS0gL2Rldi9udWxsCj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9kcm0vYnJpZGdlL2R3X2hkbWkudHh0Cj4+IEBAIC0wLDAgKzEsNTAgQEAK
-Pj4gK0Rlc2lnbldhcmUgSERNSSBicmlkZ2UgYmluZGluZ3MKPj4gKwo+PiArUmVxdWlyZWQgcHJv
-cGVydGllczoKPj4gKy0gY29tcGF0aWJsZTogcGxhdGZvcm0gc3BlY2lmaWMgc3VjaCBhczoKPj4g
-KyAgICogInNucHMsZHctaGRtaS10eCIKPj4gKyAgICogImZzbCxpbXg2cS1oZG1pIgo+PiArICAg
-KiAiZnNsLGlteDZkbC1oZG1pIgo+PiArICAgKiAicm9ja2NoaXAscmszMjg4LWR3LWhkbWkiCj4+
-ICstIHJlZzogUGh5c2ljYWwgYmFzZSBhZGRyZXNzIGFuZCBsZW5ndGggb2YgdGhlIGNvbnRyb2xs
-ZXIncyByZWdpc3RlcnMuCj4+ICstIGludGVycnVwdHM6IFRoZSBIRE1JIGludGVycnVwdCBudW1i
-ZXIKPj4gKy0gY2xvY2tzLCBjbG9jay1uYW1lcyA6IG11c3QgaGF2ZSB0aGUgcGhhbmRsZXMgdG8g
-dGhlIEhETUkgaWFoYiBhbmQgaXNmciBjbG9ja3MsCj4+ICsgIGFzIGRlc2NyaWJlZCBpbiBEb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svY2xvY2stYmluZGluZ3MudHh0LAo+
-PiArICB0aGUgY2xvY2tzIGFyZSBzb2Mgc3BlY2lmaWMsIHRoZSBjbG9jay1uYW1lcyBzaG91bGQg
-YmUgImlhaGIiLCAiaXNmciIKPj4gKy1wb3J0QFtYXTogU29DIHNwZWNpZmljIHBvcnQgbm9kZXMg
-d2l0aCBlbmRwb2ludCBkZWZpbml0aW9ucyBhcyBkZWZpbmVkCj4+ICsgICBpbiBEb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvdmlkZW8taW50ZXJmYWNlcy50eHQsCj4+ICsg
-ICBwbGVhc2UgcmVmZXIgdG8gdGhlIFNvQyBzcGVjaWZpYyBiaW5kaW5nIGRvY3VtZW50Ogo+PiAr
-ICAgICogRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RybS9pbXgvaGRtaS50eHQK
-Pj4gKyAgICAqIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92aWRlby9kd19oZG1p
-LXJvY2tjaGlwLnR4dAo+PiArCj4+ICtPcHRpb25hbCBwcm9wZXJ0aWVzCj4+ICstIHJlZy1pby13
-aWR0aDogdGhlIHdpZHRoIG9mIHRoZSByZWc6MSw0LCBkZWZhdWx0IHNldCB0byAxIGlmIG5vdCBw
-cmVzZW50Cj4+ICstIGRkYy1pMmMtYnVzOiBwaGFuZGxlIG9mIGFuIEkyQyBjb250cm9sbGVyIHVz
-ZWQgZm9yIEREQyBFRElEIHByb2JpbmcKPj4gKy0gY2xvY2tzLCBjbG9jay1uYW1lczogcGhhbmRs
-ZSB0byB0aGUgSERNSSBDRUMgY2xvY2ssIG5hbWUgc2hvdWxkIGJlICJjZWMiCj4+ICsKPj4gK0V4
-YW1wbGU6Cj4+ICsJaGRtaTogaGRtaUAwMTIwMDAwIHsKPj4gKwkJY29tcGF0aWJsZSA9ICJmc2ws
-aW14NnEtaGRtaSI7Cj4+ICsJCXJlZyA9IDwweDAwMTIwMDAwIDB4OTAwMD47Cj4+ICsJCWludGVy
-cnVwdHMgPSA8MCAxMTUgMHgwND47Cj4+ICsJCWdwciA9IDwmZ3ByPjsKPj4gKwkJY2xvY2tzID0g
-PCZjbGtzIDEyMz4sIDwmY2xrcyAxMjQ+Owo+PiArCQljbG9jay1uYW1lcyA9ICJpYWhiIiwgImlz
-ZnIiOwo+PiArCQlkZGMtaTJjLWJ1cyA9IDwmaTJjMj47Cj4+ICsKPj4gKwkJcG9ydEAwIHsKPj4g
-KwkJCXJlZyA9IDwwPjsKPj4gKwo+PiArCQkJaGRtaV9tdXhfMDogZW5kcG9pbnQgewo+PiArCQkJ
-CXJlbW90ZS1lbmRwb2ludCA9IDwmaXB1MV9kaTBfaGRtaT47Cj4+ICsJCQl9Owo+PiArCQl9Owo+
-PiArCj4+ICsJCXBvcnRAMSB7Cj4+ICsJCQlyZWcgPSA8MT47Cj4+ICsKPj4gKwkJCWhkbWlfbXV4
-XzE6IGVuZHBvaW50IHsKPj4gKwkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmlwdTFfZGkxX2hkbWk+
-Owo+PiArCQkJfTsKPj4gKwkJfTsKPj4gKwl9Owo+Cj4KPgo+CgoKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZGV2ZWwgbWFpbGluZyBsaXN0CmRldmVsQGxp
-bnV4ZHJpdmVycHJvamVjdC5vcmcKaHR0cDovL2RyaXZlcmRldi5saW51eGRyaXZlcnByb2plY3Qu
-b3JnL21haWxtYW4vbGlzdGluZm8vZHJpdmVyZGV2LWRldmVsCg==
+On Sun, Dec 7, 2014 at 3:48 AM, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
+> On Fri, Dec 05, 2014 at 10:30:53AM -0800, Andrew Bresticker wrote:
+>> After adding a macro for setting the WIDTH_{R,W} fields it seems fine
+>> to me.  Is there something else you had in mind?
+> I think whole of this might be a macro :)
+>
+>
+>> > and this depends on dma_slave_config being set, which shouldn't be the case
+>> > for memcpy
+
+> okay looking back yes it depends on bus_width. But how is bus_width set, i
+> thought the dma_slave_config will set that?
+
+The MDC's memory bus width is read from a HW register and set in probe().
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
