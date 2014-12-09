@@ -1,71 +1,71 @@
-From: atull <atull@opensource.altera.com>
-Subject: Re: [PATCH v2 2/3] fpga manager: framework core
-Date: Tue, 9 Dec 2014 10:07:42 -0600
-Message-ID: <alpine.DEB.2.02.1412090958250.4875@linuxheads99>
-References: <1414007405-32186-1-git-send-email-atull@opensource.altera.com> <1414007405-32186-3-git-send-email-atull@opensource.altera.com> <20141024105200.GA20775@amd> <CACxGe6sa=ysJAjx5TQZH5sKoas1PkoUUR4zT=Z35+uF6rrk-vw@mail.gmail.com>
- <20141208225519.64501d2d@lxorguk.ukuu.org.uk>
+From: <atull@opensource.altera.com>
+Subject: [PATCH v3 1/3] fpga manager: add sysfs interface document
+Date: Tue, 9 Dec 2014 10:27:59 -0600
+Message-ID: <1418142481-6167-2-git-send-email-atull@opensource.altera.com>
+References: <1418142481-6167-1-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20141208225519.64501d2d@lxorguk.ukuu.org.uk>
+In-Reply-To: <1418142481-6167-1-git-send-email-atull@opensource.altera.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
-Cc: Grant Likely <grant.likely@linaro.org>, Pavel Machek <pavel@denx.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, "H. Peter Anvin" <hpa@zytor.com>, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Randy Dunlap <rdunlap@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh+dt@kernel.org>, Ira Snyder <iws@ovro.caltech.edu>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Mark Brown <broonie@kernel.org>, philip@balister.org, rubini <rubini@gnudd.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Jason <jason@lakedaemon.net>, kyle.teske@ni.com, Nicolas Pitre <nico@linaro.org>, "Balbi, Felipe" <balbi@ti.com>, Mauro
+To: gregkh@linuxfoundation.org, jgunthorpe@obsidianresearch.com, hpa@zytor.com, monstr@monstr.eu, michal.simek@xilinx.com, rdunlap@infradead.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, pantelis.antoniou@konsulko.com, robh+dt@kernel.org, grant.likely@linaro.org, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, pavel@denx.de, broonie@kernel.org, philip@balister.org, rubini@gnudd.com, s.trumtrar@pengutronix.de, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, balbi@ti.com, m.chehab@samsung.com, davidb@codeaurora.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, linus.walleij@linaro.org, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com, Alan Tull <atull@opensource.altera.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 8 Dec 2014, One Thousand Gnomes wrote:
+From: Alan Tull <atull@opensource.altera.com>
 
-> On Sat, 6 Dec 2014 13:00:17 +0000
-> Grant Likely <grant.likely@linaro.org> wrote:
-> 
-> > On Fri, Oct 24, 2014 at 11:52 AM, Pavel Machek <pavel@denx.de> wrote:
-> > > Hi!
-> > >
-> > >> * /sys/class/fpga_manager/<fpga>/firmware
-> > >>   Name of FPGA image file to load using firmware class.
-> > >>   $ echo image.rbf > /sys/class/fpga_manager/<fpga>/firmware
-> > >
-> > > I .. still don't think this is good idea. What about namespaces?
-> > > The path corresponds to path in which namespace?
-> > 
-> > I don't understand your concern here. This allows userspace to name
-> > the FPGA bitstream that the kernel will use during request_firmware(),
-> > and it will show up as the $FIRMWARE value in the uevent file, but it
-> > is still the responsibility of userspace to choose what to load, and
-> > it can freely ignore the setting of $FIRMWARE if it needs to.
-> 
-> I think the entire model here is basically pedicated on a bogus
-> assumption that an FPGA is a one shot device. It's not. It's a fast
-> reloadable reusable device. A lot of work being done with FPGAs in
-> operating systems already involves basically task switching and
-> scheduling FPGAs as a shared resource pool. Trying to nail something
-> together with request_firmware is several years behind the curve.
-> 
-> From userspace it needs to be a open, load, use, close type model, not a
-> static or semi-static pile of mappings.
-> 
-> Alan
-> 
+Add documentation for new fpga manager sysfs interface.
 
-Hi Alan,
+Signed-off-by: Alan Tull <atull@opensource.altera.com>
+---
+ Documentation/ABI/testing/sysfs-class-fpga-manager |   38 ++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-fpga-manager
 
-I agree with the view that a FPGA is something that can get reprogrammed a lot.
-That's a flexibility we want to use.  I don't see a problem with using firmware
-to do the programming as long as we have a lightweight interface where we can
-load an image, use it, then later reset the FGPA and load a different image
-instead.
+diff --git a/Documentation/ABI/testing/sysfs-class-fpga-manager b/Documentation/ABI/testing/sysfs-class-fpga-manager
+new file mode 100644
+index 0000000..eb600f2
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-class-fpga-manager
+@@ -0,0 +1,38 @@
++What:		/sys/class/fpga_manager/<fpga>/name
++Date:		October 2014
++KernelVersion:	3.18
++Contact:	Alan Tull <atull@opensource.altera.com>
++Description:	Name of low level driver.
++
++What:		/sys/class/fpga_manager/<fpga>/firmware
++Date:		October 2014
++KernelVersion:	3.18
++Contact:	Alan Tull <atull@opensource.altera.com>
++Description:	Name of the FPGA image file to load using firmware class.
++
++What:		/sys/class/fpga_manager/<fpga>/reset
++Date:		October 2014
++KernelVersion:	3.18
++Contact:	Alan Tull <atull@opensource.altera.com>
++Description:	Write 1 to reset the FPGA
++
++What:		/sys/class/fpga_manager/<fpga>/state
++Date:		October 2014
++KernelVersion:	3.18
++Contact:	Alan Tull <atull@opensource.altera.com>
++Description:	Read state of fpga framework state machine as a string.
++		Valid states may vary by manufacturer; superset is:
++		* unknown		= can't determine state
++		* power_off		= FPGA power is off
++		* power_up		= FPGA reports power is up
++		* reset			= FPGA held in reset state
++		* firmware_request	= firmware class request in progress
++		* firmware_request_err	= firmware request failed
++		* write_init		= FPGA being prepared for programming
++		* write_init_err	= Error while preparing FPGA for
++					  programming
++		* write			= FPGA ready to receive image data
++		* write_err		= Error while programming
++		* write_complete	= Doing post programming steps
++		* write_complete_err	= Error while doing post programming
++		* operating		= FPGA is programmed and operating
+-- 
+1.7.9.5
 
-This assumes that the system will have a pile of FPGA images sitting on
-the filesystem for us to switch between.
-
-My intent is to also support loading using device tree overlays.  This is a lot
-more linux-like and less of something just bolted on.  The flow here is:
-
-* load a DT overlay
-* this causes the fpga to get programmed
-* appropriate bridges get enabled
-* appropriate drivers get probed
-
-When the DT overlay is removed, all these get undone in the reverse order.
-
-Alan Tull
