@@ -1,60 +1,285 @@
-From: Flora Fu <flora.fu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v3 1/8] soc: mediatek: Add PMIC wrapper for MT8135 and
- MT6397 SoC
-Date: Tue, 9 Dec 2014 10:15:37 +0800
-Message-ID: <1418091337.5663.9.camel@mtksdaap41>
-References: <1417752479-4749-1-git-send-email-flora.fu@mediatek.com>
-	 <1417752479-4749-2-git-send-email-flora.fu@mediatek.com>
-	 <2751641.o51TuZRl88@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2751641.o51TuZRl88@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, HenryC Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Menghui Lin <menghui.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Dongdong Cheng <dongdong.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+From: Yunzhi Li <lyz@rock-chips.com>
+Subject: [PATCH v4 1/5] phy: add a driver for the Rockchip SoC internal USB2.0 PHY
+Date: Tue,  9 Dec 2014 10:43:17 +0800
+Message-ID: <1418093001-30443-2-git-send-email-lyz@rock-chips.com>
+References: <1418093001-30443-1-git-send-email-lyz@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1418093001-30443-1-git-send-email-lyz@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: heiko@sntech.de, dianders@chromium.org
+Cc: olof@lixom.net, huangtao@rock-chips.com, zyw@rock-chips.com, cf@rock-chips.com, linux-rockchip@lists.infradead.org, Yunzhi Li <lyz@rock-chips.com>, Kishon Vijay Abraham I <kishon@ti.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi, Arnd,
+This patch to add a generic PHY driver for ROCKCHIP usb PHYs,
+currently this driver can support RK3288. The RK3288 SoC have
+three independent USB PHY IPs which are all configured through a
+set of registers located in the GRF (general register files)
+module.
 
-On Fri, 2014-12-05 at 11:13 +0100, Arnd Bergmann wrote:
-> On Friday 05 December 2014 12:07:52 Flora Fu wrote:
-> > Add PMIC wrapper of MT8135 to access MT6397 MFD.
-> > 
-> > Signed-off-by: Flora Fu <flora.fu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > 
-> 
-> Please explain what a PMIC wrapper is and why you need one for MT8135.
-> I don't understand the purpose of this code at all. Is this just another
-> way of accessing the MT6397 when not using i2c or spi like other
-> PMIC drivers do?
-> 
+Signed-off-by: Yunzhi Li <lyz@rock-chips.com>
 
-Yes, MT8135 uses a proprietary hardware to communicate with MT6397. 
-The hardware is called PMIC Wrapper or PWRAP.
-Since it is not standard i2c or spi protocols, a soc related software
-driver is implemented to handle access protocols in AP side.
+---
 
-+-----------------+           +---------------+
-|                 |           |               |
-| Mediatek AP SoC |           |               |
-| (ex. MT8135)    |           |    MT6397     |
-|                 |           |               |
-|      +--------+ | (SPI bus) | +--------+    |
-|      |        | |-----------| |        |    |
-|      |  PMIC  | |-----------| |  PMIC  |    |
-|      | Wrapper| |-----------| | Wrapper|    |
-|      |        | |-----------| |        |    |
-|      +--------+ |           | +--------+    |
-|                 |           |               |
-+-----------------+           +---------------+
+Changes in v4:
+- Get number of PHYs from device tree.
+- Model each PHY as subnode of the phy provider node.
 
-Thanks,
-Flora
+Changes in v3:
+- Use BIT macro instead of bit shift ops.
+- Rename the config entry to PHY_ROCKCHIP_USB.
 
+ drivers/phy/Kconfig            |   7 ++
+ drivers/phy/Makefile           |   1 +
+ drivers/phy/phy-rockchip-usb.c | 211 +++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 219 insertions(+)
+ create mode 100644 drivers/phy/phy-rockchip-usb.c
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+index ccad880..8a39d2a 100644
+--- a/drivers/phy/Kconfig
++++ b/drivers/phy/Kconfig
+@@ -239,6 +239,13 @@ config PHY_QCOM_IPQ806X_SATA
+ 	depends on OF
+ 	select GENERIC_PHY
+ 
++config PHY_ROCKCHIP_USB2
++	tristate "Rockchip USB2 PHY Driver"
++	depends on ARCH_ROCKCHIP && OF
++	select GENERIC_PHY
++	help
++	  Enable this to support the Rockchip USB 2.0 PHY.
++
+ config PHY_ST_SPEAR1310_MIPHY
+ 	tristate "ST SPEAR1310-MIPHY driver"
+ 	select GENERIC_PHY
+diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+index aa74f96..8a13f72 100644
+--- a/drivers/phy/Makefile
++++ b/drivers/phy/Makefile
+@@ -28,6 +28,7 @@ phy-exynos-usb2-$(CONFIG_PHY_EXYNOS5250_USB2)	+= phy-exynos5250-usb2.o
+ phy-exynos-usb2-$(CONFIG_PHY_S5PV210_USB2)	+= phy-s5pv210-usb2.o
+ obj-$(CONFIG_PHY_EXYNOS5_USBDRD)	+= phy-exynos5-usbdrd.o
+ obj-$(CONFIG_PHY_QCOM_APQ8064_SATA)	+= phy-qcom-apq8064-sata.o
++obj-$(CONFIG_PHY_ROCKCHIP_USB2) += phy-rockchip-usb.o
+ obj-$(CONFIG_PHY_QCOM_IPQ806X_SATA)	+= phy-qcom-ipq806x-sata.o
+ obj-$(CONFIG_PHY_ST_SPEAR1310_MIPHY)	+= phy-spear1310-miphy.o
+ obj-$(CONFIG_PHY_ST_SPEAR1340_MIPHY)	+= phy-spear1340-miphy.o
+diff --git a/drivers/phy/phy-rockchip-usb.c b/drivers/phy/phy-rockchip-usb.c
+new file mode 100644
+index 0000000..0317c21
+--- /dev/null
++++ b/drivers/phy/phy-rockchip-usb.c
+@@ -0,0 +1,211 @@
++/*
++ * Rockchip usb PHY driver
++ *
++ * Copyright (C) 2014 Yunzhi Li <lyz@rock-chips.com>
++ * Copyright (C) 2014 ROCKCHIP, Inc.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <linux/clk.h>
++#include <linux/io.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/mutex.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/phy/phy.h>
++#include <linux/platform_device.h>
++#include <linux/regulator/consumer.h>
++#include <linux/reset.h>
++#include <linux/regmap.h>
++#include <linux/mfd/syscon.h>
++
++#define ROCKCHIP_RK3288_UOC(n)	(0x320 + n * 0x14)
++
++/*
++ * The higher 16-bit of this register is used for write protection
++ * only if BIT(13 + 16) set to 1 the BIT(13) can be written.
++ */
++#define SIDDQ_MSK		BIT(13 + 16)
++#define SIDDQ_ON		BIT(13)
++#define SIDDQ_OFF		(0 << 13)
++
++struct rockchip_usb_phy {
++	struct regmap	*reg_base;
++	unsigned int	reg_offset;
++	struct clk	*clk;
++	struct phy	*phy;
++	unsigned	index;
++};
++
++struct rockchip_usb_phy_priv {
++	struct rockchip_usb_phy	*phys;
++	unsigned		nphys;
++};
++
++static int rockchip_usb_phy_power(struct rockchip_usb_phy *phy,
++					   bool siddq)
++{
++	return regmap_write(phy->reg_base, phy->reg_offset,
++			    SIDDQ_MSK | (siddq ? SIDDQ_ON : SIDDQ_OFF));
++}
++
++static int rockchip_usb_phy_power_off(struct phy *_phy)
++{
++	struct rockchip_usb_phy *phy = phy_get_drvdata(_phy);
++	int ret = 0;
++
++	/* Power down usb phy analog blocks by set siddq 1 */
++	ret = rockchip_usb_phy_power(phy, 1);
++	if (ret)
++		return ret;
++
++	clk_disable_unprepare(phy->clk);
++	if (ret)
++		return ret;
++
++	return 0;
++}
++
++static int rockchip_usb_phy_power_on(struct phy *_phy)
++{
++	struct rockchip_usb_phy *phy = phy_get_drvdata(_phy);
++	int ret = 0;
++
++	ret = clk_prepare_enable(phy->clk);
++	if (ret)
++		return ret;
++
++	/* Power up usb phy analog blocks by set siddq 0 */
++	ret = rockchip_usb_phy_power(phy, 0);
++	if (ret)
++		return ret;
++
++	return 0;
++}
++
++static struct phy *rockchip_usb_phy_xlate(struct device *dev,
++					struct of_phandle_args *args)
++{
++	struct rockchip_usb_phy_priv *priv = dev_get_drvdata(dev);
++	int i;
++
++	if (WARN_ON(args->args[0] >= priv->nphys))
++		return ERR_PTR(-ENODEV);
++
++	for (i = 0; i < priv->nphys; i++) {
++		if (priv->phys[i].index == args->args[0])
++			break;
++	}
++
++	if (i == priv->nphys)
++		return ERR_PTR(-ENODEV);
++
++	return priv->phys[i].phy;
++}
++
++static struct phy_ops ops = {
++	.power_on	= rockchip_usb_phy_power_on,
++	.power_off	= rockchip_usb_phy_power_off,
++	.owner		= THIS_MODULE,
++};
++
++static int rockchip_usb_phy_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct rockchip_usb_phy *rk_phy;
++	struct rockchip_usb_phy_priv *priv;
++	struct phy_provider *phy_provider;
++	struct device_node *child;
++	struct regmap *grf;
++	unsigned int phy_id;
++
++	grf = syscon_regmap_lookup_by_phandle(dev->of_node, "rockchip,grf");
++	if (IS_ERR(grf)) {
++		dev_err(&pdev->dev, "Missing rockchip,grf property\n");
++		return PTR_ERR(grf);
++	}
++
++	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	/* Get number of phys from device tree */
++	priv->nphys = of_get_child_count(dev->of_node);
++	if (priv->nphys == 0)
++		return -ENODEV;
++
++	priv->phys = devm_kzalloc(dev, priv->nphys * sizeof(*priv->phys),
++				  GFP_KERNEL);
++	if (!priv->phys)
++		return -ENOMEM;
++
++	rk_phy = priv->phys;
++	for_each_available_child_of_node(dev->of_node, child) {
++		if (of_property_read_u32(child, "reg", &phy_id)) {
++			dev_err(dev, "missing reg property in node %s\n",
++				child->name);
++			return -EINVAL;
++		}
++
++		if (phy_id < 0 || phy_id >= priv->nphys) {
++			dev_err(dev, "invalid phy id\n");
++			return -EINVAL;
++		}
++
++		rk_phy->reg_offset = ROCKCHIP_RK3288_UOC(phy_id);
++		rk_phy->reg_base = grf;
++
++		rk_phy->clk = of_clk_get(child, 0);
++		if (IS_ERR(rk_phy->clk)) {
++			dev_warn(dev, "failed to get clock\n");
++			rk_phy->clk = NULL;
++		}
++
++		rk_phy->phy = devm_phy_create(dev, NULL, &ops);
++		if (IS_ERR(rk_phy->phy)) {
++			dev_err(dev, "failed to create PHY %d\n", phy_id);
++			return PTR_ERR(rk_phy->phy);
++		}
++		phy_set_drvdata(rk_phy->phy, rk_phy);
++
++		rk_phy->index = phy_id;
++		rk_phy++;
++	}
++
++	platform_set_drvdata(pdev, priv);
++
++	phy_provider = devm_of_phy_provider_register(dev,
++						     rockchip_usb_phy_xlate);
++	return PTR_ERR_OR_ZERO(phy_provider);
++}
++
++static const struct of_device_id rockchip_usb_phy_dt_ids[] = {
++	{ .compatible = "rockchip,rk3288-usb-phy" },
++	{}
++};
++
++MODULE_DEVICE_TABLE(of, rockchip_usb_phy_dt_ids);
++
++static struct platform_driver rockchip_usb_driver = {
++	.probe		= rockchip_usb_phy_probe,
++	.driver		= {
++		.name	= "rockchip-usb-phy",
++		.owner	= THIS_MODULE,
++		.of_match_table = rockchip_usb_phy_dt_ids,
++	},
++};
++
++module_platform_driver(rockchip_usb_driver);
++
++MODULE_AUTHOR("Yunzhi Li <lyz@rock-chips.com>");
++MODULE_DESCRIPTION("Rockchip USB 2.0 PHY driver");
++MODULE_LICENSE("GPL v2");
+-- 
+2.0.0
