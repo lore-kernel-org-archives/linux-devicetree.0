@@ -1,124 +1,52 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: Re: [PATCH v5] media: platform: add VPFE capture driver support for
- AM437X
-Date: Tue, 09 Dec 2014 12:13:20 +0100
-Message-ID: <5486D950.6050108@xs4all.nl>
-References: <1418077306-2493-1-git-send-email-prabhakar.csengg@gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v3 1/8] soc: mediatek: Add PMIC wrapper for MT8135 and MT6397 SoC
+Date: Tue, 09 Dec 2014 12:20:04 +0100
+Message-ID: <3015972.tvmzP0zTdv@wuerfel>
+References: <1417752479-4749-1-git-send-email-flora.fu@mediatek.com> <20141209101341.GV30369@pengutronix.de> <CABuKBe+whgVryssULCu2MAXRu3u+pYwM2nN3ToTEGpEvniQ6Jw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1418077306-2493-1-git-send-email-prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Lad, Prabhakar" <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, LMML <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CABuKBe+whgVryssULCu2MAXRu3u+pYwM2nN3ToTEGpEvniQ6Jw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Flora Fu <flora.fu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, HenryC Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Menghui Lin <menghui.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.l>
 List-Id: devicetree@vger.kernel.org
 
-On 12/08/14 23:21, Lad, Prabhakar wrote:
-> From: Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>
-> 
-> This patch adds Video Processing Front End (VPFE) driver for
-> AM437X family of devices
-> Driver supports the following:
-> - V4L2 API using MMAP buffer access based on videobuf2 api
-> - Asynchronous sensor/decoder sub device registration
-> - DT support
-> 
-> Signed-off-by: Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>
-> Signed-off-by: Darren Etheridge <detheridge-l0cyMroinI0@public.gmane.org>
-> Signed-off-by: Lad, Prabhakar <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  Changes for v5:
->  1: Fixed review comments pointed out by Hans, fixing race condition.
-> 
->  v4l2-compliance output:
+On Tuesday 09 December 2014 11:30:15 Matthias Brugger wrote:
+> 2014-12-09 11:13 GMT+01:00 Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>:
+> > On Tue, Dec 09, 2014 at 09:23:18AM +0100, Arnd Bergmann wrote:
+> >>
+> >> I think we have had a similar case recently where a controller wasn't
+> >> actually using I2C, but the sofware protocol was close enough so we decided
+> >> to make it appear as i2c in Linux.
+> >>
+> >> Would that work for you, i.e. register the pmic wrapper as a fake spi
+> >> master driver in drivers/spi/ and register the rtc/regulator/codec
+> >> as SPI clients from DT?
+> >
+> > I don't think that's appropriate. I mean technically that could even
+> > work, but in software you really don't see anything from the underlying
+> > SPI bus. The SoC and the PMIC are really tightly coupled via the PMIC
+> > wrapper. This goes to the point where pins of the SoCs internal I2C and
+> > keypad controllers are routed over the SPI bus out of the PMIC. In
+> > software you do this by setting a bit in the I2C controller. If it's
+> > set, the signals are routed out of the PMIC instead of the main die.
+> > As said, technically we probably could create a fake SPI master, but
+> > that wouldn't really fit to this situation.
 
-Thanks!
+Ok, I see.
 
-<snip>
+> I agree with Sascha. Although from the hardware point of view, the
+> communication between the PMIC and the SOC is done through SPI from
+> the point of view of the software everything looks like I2C commands
+> which will be "transalted" into SPI messages by the PMIC wrapper.
 
->  ----------------------
-> 
-> diff --git a/drivers/media/platform/am437x/am437x-vpfe.c b/drivers/media/platform/am437x/am437x-vpfe.c
-> new file mode 100644
-> index 0000000..c2b29a2
-> --- /dev/null
-> +++ b/drivers/media/platform/am437x/am437x-vpfe.c
-> +/*
-> + * vpfe_release : This function is based on the vb2_fop_release
-> + * helper function.
-> + * It has been augmented to handle module power management,
-> + * by disabling/enabling h/w module fcntl clock when necessary.
-> + */
-> +static int vpfe_release(struct file *file)
-> +{
-> +	struct vpfe_device *vpfe = video_drvdata(file);
-> +	bool close = v4l2_fh_is_singular_file(file);
-> +	int ret;
-> +
-> +	vpfe_dbg(2, vpfe, "vpfe_release\n");
-> +
-> +	mutex_lock(&vpfe->lock);
+If it looks like i2c messages, would it be more appropriate to make
+it appear as an i2c controller then?
 
-The v4l2_fh_is_singular_file() call should be inside the lock as well.
-So:
-
-	close = v4l2_fh_is_singular_file(file);
-
-> +
-> +	ret = _vb2_fop_release(file, NULL);
-> +	if (close)
-> +		vpfe_ccdc_close(&vpfe->ccdc, vpfe->pdev);
-> +
-> +	mutex_unlock(&vpfe->lock);
-> +
-> +	return ret;
-> +}
-> +
-> +/*
-> + * vpfe_open : This function is based on the v4l2_fh_open helper function.
-> + * It has been augmented to handle module power management,
-> + * by disabling/enabling h/w module fcntl clock when necessary.
-> + */
-> +static int vpfe_open(struct file *file)
-> +{
-> +	struct vpfe_device *vpfe = video_drvdata(file);
-> +	int ret;
-> +
-> +	ret = v4l2_fh_open(file);
-
-Same here, v4l2_fh_open should be inside the lock.
-
-> +	if (ret) {
-> +		vpfe_err(vpfe, "v4l2_fh_open failed\n");
-> +		return ret;
-> +	}
-> +
-> +	mutex_lock(&vpfe->lock);
-
-So:
-
-	ret = v4l2_fh_open(file);
-	if (ret) {
-		vpfe_err(vpfe, "v4l2_fh_open failed\n");
-		goto unlock;
-	}
-
-	
-> +
-> +	if (!v4l2_fh_is_singular_file(file))
-> +		goto unlock;
-> +
-> +	if (vpfe_initialize_device(vpfe)) {
-> +		v4l2_fh_release(file);
-> +		ret = -ENODEV;
-> +	}
-> +
-> +unlock:
-> +	mutex_unlock(&vpfe->lock);
-> +	return ret;
-> +}
-
-Regards,
-
-	Hans
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
