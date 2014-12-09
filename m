@@ -1,41 +1,37 @@
 From: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 1/2] ARM: at91/dt: sama5d3: move wm8904 codec to i2c1
-Date: Tue, 9 Dec 2014 18:54:45 +0800
-Message-ID: <1418122486-23184-1-git-send-email-josh.wu@atmel.com>
+Subject: [PATCH 2/2] ARM: at91/dt: sama5d3: enable D2 as the heartbeat LED
+Date: Tue, 9 Dec 2014 18:54:46 +0800
+Message-ID: <1418122486-23184-2-git-send-email-josh.wu@atmel.com>
+References: <1418122486-23184-1-git-send-email-josh.wu@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1418122486-23184-1-git-send-email-josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Since from rev.D MB, the wm8904 is moved to i2c1.
-This patch will adapt to this change.
+This D2 led is aviable for all sama5d3x-ek board. So make it as
+heartbeat led.
 
 Signed-off-by: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/boot/dts/sama5d3xmb.dtsi | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ arch/arm/boot/dts/sama5d3xcm.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/sama5d3xmb.dtsi b/arch/arm/boot/dts/sama5d3xmb.dtsi
-index 49c10d3..74bc633 100644
---- a/arch/arm/boot/dts/sama5d3xmb.dtsi
-+++ b/arch/arm/boot/dts/sama5d3xmb.dtsi
-@@ -38,12 +38,7 @@
- 				atmel,clk-from-rk-pin;
- 			};
- 
--			/*
--			 * i2c0 conflicts with ISI:
--			 * disable it to allow the use of ISI
--			 * can not enable audio when i2c0 disabled
--			 */
--			i2c0: i2c@f0014000 {
-+			i2c1: i2c@f0018000 {
- 				wm8904: wm8904@1a {
- 					compatible = "wm8904";
- 					reg = <0x1a>;
+diff --git a/arch/arm/boot/dts/sama5d3xcm.dtsi b/arch/arm/boot/dts/sama5d3xcm.dtsi
+index 962dc28..5a57c45 100644
+--- a/arch/arm/boot/dts/sama5d3xcm.dtsi
++++ b/arch/arm/boot/dts/sama5d3xcm.dtsi
+@@ -122,6 +122,7 @@
+ 		d2 {
+ 			label = "d2";
+ 			gpios = <&pioE 25 GPIO_ACTIVE_LOW>;	/* PE25, conflicts with A25, RXD2 */
++			linux,default-trigger = "heartbeat";
+ 		};
+ 	};
+ };
 -- 
 1.9.1
 
