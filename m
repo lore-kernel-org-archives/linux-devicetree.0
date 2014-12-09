@@ -1,60 +1,49 @@
-From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Subject: [PATCH v4 3/3] ARM: tegra: Add Tegra124 ACTMON support
-Date: Tue,  9 Dec 2014 14:15:06 +0100
-Message-ID: <1418130912-24725-4-git-send-email-tomeu.vizoso@collabora.com>
-References: <1418130912-24725-1-git-send-email-tomeu.vizoso@collabora.com>
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1418130912-24725-1-git-send-email-tomeu.vizoso@collabora.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: linux-pm@vger.kernel.org
-Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Alexandre Courbot <gnurou@gmail.com>, Mikko Perttunen <mikko.perttunen@kapsi.fi>, Arto Merilainen <amerilainen@nvidia.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Neelesh Gupta <neelegup-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [v3] i2c: Driver to expose PowerNV platform i2c busses
+Date: Tue, 09 Dec 2014 18:48:40 +0530
+Message-ID: <5486F6B0.4030302@linux.vnet.ibm.com>
+References: <20141209094503.100F81400DE@ozlabs.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141209094503.100F81400DE-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add device node for the ACTMON block to the Tegra124 device tree.
 
-Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+On 12/09/2014 03:15 PM, Michael Ellerman wrote:
+> On Mon, 2014-08-12 at 06:36:16 UTC, Neelesh Gupta wrote:
+>> The patch exposes the available i2c busses on the PowerNV platform
+>> to the kernel and implements the bus driver to support i2c and
+>> smbus commands.
+>> The driver uses the platform device infrastructure to probe the busses
+>> on the platform and registers them with the i2c driver framework.
+>>   arch/powerpc/include/asm/opal.h                    |   29 ++
+>>   arch/powerpc/platforms/powernv/opal-wrappers.S     |    1
+>>   arch/powerpc/platforms/powernv/opal.c              |   11 +
+> This had major conflicts in the above files.
+>
+> I've fixed it up but please check I did it correctly:
+>
+>    https://github.com/mpe/powerpc-merge/commits/pw/neelesh-i2c
+>
+> It also doesn't build as a module:
+>
+>    $ grep CONFIG_I2C_OPAL .config
+>    CONFIG_I2C_OPAL=m
+>    $ make ...
+>    ...
+>    ERROR: "opal_i2c_request" [drivers/i2c/busses/i2c-opal.ko] undefined!
 
----
+Yeah, this needs to be exported.
+I think for the same reason, "opal-rtc" is still waiting, plus awaiting 
+"ack" from
+maintainers.
 
-v2:	* Add operating-points property
----
- arch/arm/boot/dts/tegra124.dtsi | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+- Neelesh
 
-diff --git a/arch/arm/boot/dts/tegra124.dtsi b/arch/arm/boot/dts/tegra124.dtsi
-index a49e7da..9d7baa8 100644
---- a/arch/arm/boot/dts/tegra124.dtsi
-+++ b/arch/arm/boot/dts/tegra124.dtsi
-@@ -215,6 +215,29 @@
- 		reg = <0x0 0x60007000 0x0 0x1000>;
- 	};
- 
-+	actmon@0,6000c800 {
-+		compatible = "nvidia,tegra124-actmon";
-+		reg = <0x0 0x6000c800 0x0 0x400>;
-+		interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&tegra_car TEGRA124_CLK_ACTMON>,
-+			 <&tegra_car TEGRA124_CLK_EMC>;
-+		clock-names = "actmon", "emc";
-+		resets = <&tegra_car 119>;
-+		reset-names = "actmon";
-+		operating-points = <
-+			/* KHz	uV */
-+			/* TODO: Add more points below 102 MHz */
-+			102000	800000
-+			204000	800000
-+			300000	820000
-+			396000	850000
-+			528000	880000
-+			600000	910000
-+			792000	980000
-+			924000	1010000
-+		>;
-+	};
-+
- 	gpio: gpio@0,6000d000 {
- 		compatible = "nvidia,tegra124-gpio", "nvidia,tegra30-gpio";
- 		reg = <0x0 0x6000d000 0x0 0x1000>;
--- 
-1.9.3
-
+>
+> cheers
+>
