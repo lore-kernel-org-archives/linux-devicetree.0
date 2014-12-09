@@ -1,49 +1,109 @@
-From: Neelesh Gupta <neelegup-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [v3] i2c: Driver to expose PowerNV platform i2c busses
-Date: Tue, 09 Dec 2014 18:48:40 +0530
-Message-ID: <5486F6B0.4030302@linux.vnet.ibm.com>
-References: <20141209094503.100F81400DE@ozlabs.org>
+From: Michal Simek <monstr@monstr.eu>
+Subject: Re: [PATCH v2 2/3] fpga manager: framework core
+Date: Tue, 09 Dec 2014 14:42:35 +0100
+Message-ID: <5486FC4B.5080106@monstr.eu>
+References: <1414007405-32186-1-git-send-email-atull@opensource.altera.com> <1414007405-32186-3-git-send-email-atull@opensource.altera.com> <20141024105200.GA20775@amd> <CACxGe6sa=ysJAjx5TQZH5sKoas1PkoUUR4zT=Z35+uF6rrk-vw@mail.gmail.com> <20141208225519.64501d2d@lxorguk.ukuu.org.uk> <CACxGe6tM1UXMCO=eVDad7rj2gxN-nbvyApti5kV5ScxQ+r2Kzg@mail.gmail.com>
+Reply-To: monstr@monstr.eu
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141209094503.100F81400DE-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="pcVxi3nL47OhJhk3e8ulnnf3dsSSXRGac"
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CACxGe6tM1UXMCO=eVDad7rj2gxN-nbvyApti5kV5ScxQ+r2Kzg@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
+Cc: Pavel Machek <pavel@denx.de>, atull <atull@opensource.altera.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, "H. Peter Anvin" <hpa@zytor.com>, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Randy Dunlap <rdunlap@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh+dt@kernel.org>, Ira Snyder <iws@ovro.caltech.edu>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Philip Balister <philip@balister.org>, rubini <rubini@gnudd.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Jason <jason@lakedaemon.net>, kyle.teske@ni.com, Nicolas Pitre <nico@linaro.org>, "Balbi, Felipe" <balbi@ti.com>, Mauro
 List-Id: devicetree@vger.kernel.org
 
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--pcVxi3nL47OhJhk3e8ulnnf3dsSSXRGac
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: quoted-printable
 
-On 12/09/2014 03:15 PM, Michael Ellerman wrote:
-> On Mon, 2014-08-12 at 06:36:16 UTC, Neelesh Gupta wrote:
->> The patch exposes the available i2c busses on the PowerNV platform
->> to the kernel and implements the bus driver to support i2c and
->> smbus commands.
->> The driver uses the platform device infrastructure to probe the busses
->> on the platform and registers them with the i2c driver framework.
->>   arch/powerpc/include/asm/opal.h                    |   29 ++
->>   arch/powerpc/platforms/powernv/opal-wrappers.S     |    1
->>   arch/powerpc/platforms/powernv/opal.c              |   11 +
-> This had major conflicts in the above files.
->
-> I've fixed it up but please check I did it correctly:
->
->    https://github.com/mpe/powerpc-merge/commits/pw/neelesh-i2c
->
-> It also doesn't build as a module:
->
->    $ grep CONFIG_I2C_OPAL .config
->    CONFIG_I2C_OPAL=m
->    $ make ...
->    ...
->    ERROR: "opal_i2c_request" [drivers/i2c/busses/i2c-opal.ko] undefined!
+On 12/09/2014 02:11 PM, Grant Likely wrote:
+> On Mon, Dec 8, 2014 at 10:55 PM, One Thousand Gnomes
+> <gnomes@lxorguk.ukuu.org.uk> wrote:
+>> On Sat, 6 Dec 2014 13:00:17 +0000
+>> Grant Likely <grant.likely@linaro.org> wrote:
+>>
+>>> On Fri, Oct 24, 2014 at 11:52 AM, Pavel Machek <pavel@denx.de> wrote:=
 
-Yeah, this needs to be exported.
-I think for the same reason, "opal-rtc" is still waiting, plus awaiting 
-"ack" from
-maintainers.
+>>>> Hi!
+>>>>
+>>>>> * /sys/class/fpga_manager/<fpga>/firmware
+>>>>>   Name of FPGA image file to load using firmware class.
+>>>>>   $ echo image.rbf > /sys/class/fpga_manager/<fpga>/firmware
+>>>>
+>>>> I .. still don't think this is good idea. What about namespaces?
+>>>> The path corresponds to path in which namespace?
+>>>
+>>> I don't understand your concern here. This allows userspace to name
+>>> the FPGA bitstream that the kernel will use during request_firmware()=
+,
+>>> and it will show up as the $FIRMWARE value in the uevent file, but it=
 
-- Neelesh
+>>> is still the responsibility of userspace to choose what to load, and
+>>> it can freely ignore the setting of $FIRMWARE if it needs to.
+>>
+>> I think the entire model here is basically pedicated on a bogus
+>> assumption that an FPGA is a one shot device. It's not. It's a fast
+>> reloadable reusable device. A lot of work being done with FPGAs in
+>> operating systems already involves basically task switching and
+>> scheduling FPGAs as a shared resource pool. Trying to nail something
+>> together with request_firmware is several years behind the curve.
+>>
+>> From userspace it needs to be a open, load, use, close type model, not=
+ a
+>> static or semi-static pile of mappings.
+>=20
+> If FPGA is a general purpose resource hanging off the side that
+> applications can use, then sure, but the majority of FPGA usage does
+> not fall into that scenario*. The majority of FPGA usage that I've
+> seen has core parts of the system implemented in the FPGA fabric.
+> Video pipelines, network switching, dma to/from main memory, control
+> of dedicated hardware. It's more than merely an application being able
+> to use the FPGA as an accelerator.
+>=20
+> I'm certainly not dismissing the concept of FPGA scheduling and being
+> able to 'task switch' between bitstreams. Yes that is important, but
+> for most users it really does look like, as you say, "a static or
+> semi-static pile of mappings".
+>=20
+> * Altera and Xilinx people - correct me if you disagree.
 
->
-> cheers
->
+We need to start to walk before we can run. We should move the part of th=
+is
+patch series to drivers/staging directory. Greg is OK with that and
+start to adding drivers for current drivers.
+Static use case is good start and we should move forward not to stay in c=
+ircle.
+
+I have some changes to this series internally which should be done.
+Please give me some days to finish other work and we can move.
+
+Thanks,
+Michal
+
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
+
+
+
+--pcVxi3nL47OhJhk3e8ulnnf3dsSSXRGac
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+
+iEYEARECAAYFAlSG/EsACgkQykllyylKDCHNqwCfVhxmnv1+X2/23w7VpQ8rvltC
+T48An2fLhRrO13Y7a0cHoqQTIYy+uJlY
+=vP8i
+-----END PGP SIGNATURE-----
+
+--pcVxi3nL47OhJhk3e8ulnnf3dsSSXRGac--
