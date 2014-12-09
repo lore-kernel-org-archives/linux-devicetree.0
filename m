@@ -1,101 +1,99 @@
-From: Pankaj Dubey <pankaj.dubey@samsung.com>
-Subject: Re: [PATCH 12/19] clk: samsung: exynos5433: Add clocks for CMU_GSCL
- domain
-Date: Tue, 09 Dec 2014 13:18:24 +0530
-Message-ID: <5486A948.7010906@samsung.com>
-References: <1417510196-6714-1-git-send-email-cw00.choi@samsung.com>
- <1417510196-6714-13-git-send-email-cw00.choi@samsung.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH 3/5] media: ov2640: add primary dt support
+Date: Tue, 09 Dec 2014 10:07:47 +0200
+Message-ID: <4259882.xUnFntZnaF@avalon>
+References: <1418038147-13221-1-git-send-email-josh.wu@atmel.com> <13013762.Jqm1jQRnFM@avalon> <54866809.7020402@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1417510196-6714-13-git-send-email-cw00.choi@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: kgene.kim@samsung.com, mark.rutland@arm.com, marc.zyngier@arm.com, arnd@arndb.de, olof@lixom.net, catalin.marinas@arm.com, will.deacon@arm.com, s.nawrocki@samsung.com, tomasz.figa@gmail.com, kyungmin.park@samsung.com, inki.dae@samsung.com, chanho61.park@samsung.com, geunsik.lim@samsung.com, sw0312.kim@samsung.com, jh80.chung@samsung.com, a.kesavan@samsung.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54866809.7020402-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, g.liakhovetski-Mmb7MZpHnFY@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Chanwoo,
+Hi Josh,
 
-On Tuesday 02 December 2014 02:19 PM, Chanwoo Choi wrote:
-> This patch adds the divider/gate of CMU_GSCL domain which contains gscaler
-> clocks.
->
-> Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> Cc: Tomasz Figa <tomasz.figa@gmail.com>
-> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-> Acked-by: Inki Dae <inki.dae@samsung.com>
-> Acked-by: Geunsik Lim <geunsik.lim@samsung.com>
-> ---
->   .../devicetree/bindings/clock/exynos5433-clock.txt |   8 ++
->   drivers/clk/samsung/clk-exynos5433.c               | 144 +++++++++++++++++++++
->   include/dt-bindings/clock/exynos5433.h             |  37 +++++-
->   3 files changed, 188 insertions(+), 1 deletion(-)
->
+On Tuesday 09 December 2014 11:10:01 Josh Wu wrote:
+> On 12/9/2014 2:39 AM, Laurent Pinchart wrote:
+> > Hi Josh,
+> > 
+> > Thank you for the patch.
+> > 
+> > On Monday 08 December 2014 19:29:05 Josh Wu wrote:
+> >> Add device tree support for ov2640.
+> >> 
+> >> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> >> Signed-off-by: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> >> ---
+> >> 
+> >> v1 -> v2:
+> >>    1. use gpiod APIs.
+> >>    2. change the gpio pin's name according to datasheet.
+> >>    3. reduce the delay for .reset() function.
+> >>   
+> >>   drivers/media/i2c/soc_camera/ov2640.c | 86 +++++++++++++++++++++++++---
+> >>   1 file changed, 80 insertions(+), 6 deletions(-)
+> >> 
+> >> diff --git a/drivers/media/i2c/soc_camera/ov2640.c
+> >> b/drivers/media/i2c/soc_camera/ov2640.c index 9ee910d..2a57979 100644
+> >> --- a/drivers/media/i2c/soc_camera/ov2640.c
+> >> +++ b/drivers/media/i2c/soc_camera/ov2640.c
 
 [snip]
 
->   }
->   CLK_OF_DECLARE(exynos5433_cmu_g3d, "samsung,exynos5433-cmu-g3d",
->   		exynos5433_cmu_g3d_init);
-> +
-> +/*
-> + * Register offset definitions for CMU_GSCL
-> + */
-> +#define MUX_SEL_GSCL				0x0200
-> +#define MUX_ENABLE_GSCL				0x0300
-> +#define	MUX_STAT_GSCL				0x0400
-> +#define	ENABLE_ACLK_GSCL			0x0800
-> +#define	ENABLE_ACLK_GSCL_SECURE_SMMU_GSCL0	0x0804
-> +#define	ENABLE_ACLK_GSCL_SECURE_SMMU_GSCL1	0x0808
-> +#define	ENABLE_ACLK_GSCL_SECURE_SMMU_GSCL2	0x080c
-> +#define	ENABLE_PCLK_GSCL			0x0900
-> +#define	ENABLE_PCLK_GSCL_SECURE_SMMU_GSCL0	0x0904
-> +#define	ENABLE_PCLK_GSCL_SECURE_SMMU_GSCL1	0x0908
-> +#define	ENABLE_PCLK_GSCL_SECURE_SMMU_GSCL2	0x090c
-> +#define	ENABLE_IP_GSCL0				0x0b00
-> +#define	ENABLE_IP_GSCL1				0x0b04
-> +#define	ENABLE_IP_GSCL_SECURE_SMMU_GSCL0	0x0b08
-> +#define	ENABLE_IP_GSCL_SECURE_SMMU_GSCL1	0x0b0c
-> +#define	ENABLE_IP_GSCL_SECURE_SMMU_GSCL2	0x0b10
-> +
+> >> +static int ov2640_probe_dt(struct i2c_client *client,
+> >> +		struct ov2640_priv *priv)
+> >> +{
+> >> +	priv->resetb_gpio = devm_gpiod_get_optional(&client->dev, "resetb",
+> >> +			GPIOD_OUT_HIGH);
+> >> +	if (!priv->resetb_gpio)
+> >> +		dev_warn(&client->dev, "resetb gpio not found!\n");
+> > 
+> > No need to warn here, it's perfectly fine if the reset signal isn't
+> > connected to a GPIO.
+> 
+> I want to print some information if no GPIO is assigned. So I'd like use
+> dev_dbg() here.
+> What do you feel?
 
-nit: tabspace after #define should be changed to one whitespace.
+If you want to print a message in that case dev_dbg is the most appropriate 
+log level. I would skip it completely, but that's up to you.
 
-> +static unsigned long gscl_clk_regs[] __initdata = {
-> +	MUX_SEL_GSCL,
-> +	MUX_ENABLE_GSCL,
-> +	MUX_STAT_GSCL,
-> +	ENABLE_ACLK_GSCL,
-> +	ENABLE_ACLK_GSCL_SECURE_SMMU_GSCL0,
-> +	ENABLE_ACLK_GSCL_SECURE_SMMU_GSCL1,
-> +	ENABLE_ACLK_GSCL_SECURE_SMMU_GSCL2,
-> +	ENABLE_PCLK_GSCL,
-> +	ENABLE_PCLK_GSCL_SECURE_SMMU_GSCL0,
-> +	ENABLE_PCLK_GSCL_SECURE_SMMU_GSCL1,
-> +	ENABLE_PCLK_GSCL_SECURE_SMMU_GSCL2,
-> +	ENABLE_IP_GSCL0,
-> +	ENABLE_IP_GSCL1,
-> +	ENABLE_IP_GSCL_SECURE_SMMU_GSCL0,
-> +	ENABLE_IP_GSCL_SECURE_SMMU_GSCL1,
-> +	ENABLE_IP_GSCL_SECURE_SMMU_GSCL2,
-> +};
-> +
-> +/* list of all parent clock list */
-> +PNAME(aclk_gscl_111_user_p)	= { "fin_pll", "aclk_gscl_111", };
-> +PNAME(aclk_gscl_333_user_p)	= { "fin_pll", "aclk_gscl_333", };
-> +
-> +static struct samsung_mux_clock gscl_mux_clks[] __initdata = {
-> +	/* MUX_SEL_GSCL */
-> +	MUX(CLK_MOUT_ACLK_GSCL_111_USER, "mout_aclk_gscl_111_user",
-> +			aclk_gscl_111_user_p, MUX_SEL_GSCL, 4, 1),
-> +	MUX(CLK_MOUT_ACLK_GSCL_333_USER, "mout_aclk_gscl_333_user",
-> +			aclk_gscl_333_user_p, MUX_SEL_GSCL, 4, 1),
+> >> +	else if (IS_ERR(priv->resetb_gpio))
+> >> +		return -EINVAL;
+> >> +
+> >> +	priv->pwdn_gpio = devm_gpiod_get_optional(&client->dev, "pwdn",
+> >> +			GPIOD_OUT_HIGH);
+> >> +	if (!priv->pwdn_gpio)
+> >> +		dev_warn(&client->dev, "pwdn gpio not found!\n");
+> > 
+> > Same here.
+> 
+> ditto.
+> 
+> >> +	else if (IS_ERR(priv->pwdn_gpio))
+> >> +		return -EINVAL;
+> >> +
+> >> +	/* Initialize the soc_camera_subdev_desc */
+> >> +	priv->ssdd_dt.power = ov2640_hw_power;
+> >> +	priv->ssdd_dt.reset = ov2640_hw_reset;
+> >> +	client->dev.platform_data = &priv->ssdd_dt;
+> >> +
+> >> +	return 0;
+> >> +}
+> >> +
+> >>   /*
+> >>    * i2c_driver functions
+> >>    */
 
-aclk_gscl_333_user mux clock has a shift of '0'.
+-- 
+Regards,
 
-> +};
-> +
+Laurent Pinchart
 
-Thanks,
-Pankaj Dubey
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
