@@ -1,7 +1,7 @@
 From: <atull@opensource.altera.com>
-Subject: [PATCH v4 1/6] doc: add bindings document for altera fpga manager
-Date: Tue, 9 Dec 2014 14:14:45 -0600
-Message-ID: <1418156090-23578-2-git-send-email-atull@opensource.altera.com>
+Subject: [PATCH v4 2/6] arm: dts: socfpga: add altera fpga manager
+Date: Tue, 9 Dec 2014 14:14:46 -0600
+Message-ID: <1418156090-23578-3-git-send-email-atull@opensource.altera.com>
 References: <1418156090-23578-1-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,36 +14,32 @@ List-Id: devicetree@vger.kernel.org
 
 From: Alan Tull <atull@opensource.altera.com>
 
-New bindings document for Altera fpga manager.
+Add Altera FGPA manager to device tree.
 
 Signed-off-by: Alan Tull <atull@opensource.altera.com>
 ---
- .../devicetree/bindings/fpga/altera-fpga-mgr.txt   |   17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/fpga/altera-fpga-mgr.txt
+ arch/arm/boot/dts/socfpga.dtsi |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/fpga/altera-fpga-mgr.txt b/Documentation/devicetree/bindings/fpga/altera-fpga-mgr.txt
-new file mode 100644
-index 0000000..373af7b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/fpga/altera-fpga-mgr.txt
-@@ -0,0 +1,17 @@
-+Altera FPGA Manager
+diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+index 4472fd9..bab98b6 100644
+--- a/arch/arm/boot/dts/socfpga.dtsi
++++ b/arch/arm/boot/dts/socfpga.dtsi
+@@ -751,5 +751,15 @@
+ 			compatible = "altr,sys-mgr", "syscon";
+ 			reg = <0xffd08000 0x4000>;
+ 		};
 +
-+Required properties:
-+- compatible : should contain "altr,fpga-mgr"
-+- reg        : base address and size for memory mapped io.
-+               - The first index is for FPGA manager register access.
-+               - The second index is for writing FPGA configuration data.
-+- interrupts : interrupt for the FPGA Manager device.
-+
-+Example:
-+
-+	hps_0_fpgamgr: fpgamgr@0xff706000 {
-+		compatible = "altr,fpga-mgr";
-+		reg = <0xFF706000 0x1000
-+		       0xFFB90000 0x1000>;
-+		interrupts = <0 175 4>;
-+	};
++		hps_0_fpgamgr: fpgamgr@0xff706000 {
++			compatible = "altr,fpga-mgr", "simple-bus";
++			reg = <0xFF706000 0x1000
++			       0xFFB90000 0x1000>;
++			interrupts = <0 175 4>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges;
++		};
+ 	};
+ };
 -- 
 1.7.9.5
