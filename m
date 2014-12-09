@@ -1,123 +1,78 @@
-From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 03/19] clk: samsung: exynos5433: Add clocks for CMU_PERIC
- domain
-Date: Tue, 09 Dec 2014 15:30:32 +0900
-Message-ID: <54869708.6000303@samsung.com>
-References: <1417510196-6714-1-git-send-email-cw00.choi@samsung.com>
- <1417510196-6714-4-git-send-email-cw00.choi@samsung.com>
- <54858C13.8020704@samsung.com> <54864C90.9040205@samsung.com>
- <548692ED.4080301@samsung.com>
+From: Ankit Jindal <ankit.jindal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 5/6] Documentation: dt-bindings: Add binding info for
+ X-Gene QMTM UIO driver
+Date: Tue, 9 Dec 2014 12:03:08 +0530
+Message-ID: <CAPTm99WYOOaDFWN6Cj+NPhvUUTW3=nexua1tO4QbtNy00dp2Ug@mail.gmail.com>
+References: <1416220572-13381-1-git-send-email-ankit.jindal@linaro.org>
+ <2279061.naADrHDgyn@wuerfel> <CAPTm99WYNyxtY-NCVN8pB0HwNPn+EFx-7w7yEevaEK1z7-Zqxg@mail.gmail.com>
+ <1503477.DVdkExccIe@wuerfel> <CAPTm99V1qP5dAgDV04i3m_yR1ri9h=b8fDXBDxmPfpZG_P268g@mail.gmail.com>
+ <CAL_Jsq+F5GepyyZbpJOAKLtQsvJOF9wZzf2GyjA6sDe2nr4SrQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <548692ED.4080301-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <CAL_Jsq+F5GepyyZbpJOAKLtQsvJOF9wZzf2GyjA6sDe2nr4SrQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, chanho61.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, geunsik.lim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Inha Song <ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Anup Patel <anup-aa5cPYPs4nSSZfiimGR9Ow@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Hans J. Koch" <hjk-vqZO0P4V72/QD6PfKP4TzA@public.gmane.org>, Tushar Jagad <tushar.jagad-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/09/2014 03:13 PM, Pankaj Dubey wrote:
-> 
-> 
-> On Tuesday 09 December 2014 06:42 AM, Chanwoo Choi wrote:
->> Hi Pankaj,
->>
->> On 12/08/2014 08:31 PM, Pankaj Dubey wrote:
->>> Hi Chanwoo,
+On 8 December 2014 at 22:45, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Mon, Dec 8, 2014 at 6:42 AM, Ankit Jindal <ankit.jindal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> On 18 November 2014 at 18:40, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+>>> On Tuesday 18 November 2014 14:59:54 Ankit Jindal wrote:
+>>>> On 17 November 2014 16:47, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+>>>> > On Monday 17 November 2014 16:06:11 Ankit Jindal wrote:
+>>>> >> +
+>>>> >> +       qmtm1_uio: qmtm_uio@1f200000 {
+>>>> >> +               compatible = "apm,xgene-qmtm";
+>>>> >> +               status = "disabled";
+>>>> >> +               reg = <0x0 0x1f200000 0x0 0x10000>,
+>>>> >> +                     <0x0 0x1b000000 0x0 0x400000>;
+>>>> >> +               reg-names = "csr", "fabric";
+>>>> >> +               qpool-memory = <&qmtm1_uio_qpool>;
+>>>> >> +               clocks = <&qmtm1clk 0>;
+>>>> >> +               num-queues = <0x400>;
+>>>> >> +               devid = <1>;
+>>>> >> +       };
+>>>> >> +
+>>>> >
+>>>> > To make my previous review comments clearer:
+>>>> >
+>>>> > NAK
+>>>> >
+>>>> > Do not create device nodes that are meant for a specific use case in
+>>>> > software and that are not usable for the common case. I don't think
+>>>> > it makes any sense to keep on submitting a UIO driver for this until
+>>>> > we have a proper network driver that uses this so we can make sure we
+>>>> > have a working binding.
+>
+> +1
+>
+>>>> The dataplane frameworks like OpenDataPlane etc, need to have access
+>>>> to complete subsystem from the user space. Hence, we would like to
+>>>> have this driver and some other UIO drivers to be the part of kernel
+>>>> to have data plane frameworks working on our platform.
 >>>
->>> On Tuesday 02 December 2014 02:19 PM, Chanwoo Choi wrote:
->>>> This patch adds missing divider/gate clocks of CMU_PERIC domain
->>>> which includes I2S/PCM/SPDIF/PWM/SLIMBUS IPs. The SPI/I2S may use
->>>> external input clock which has 'ioclk_*' prefix.
->>>>
->>>> Cc: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>>> Cc: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>>> Signed-off-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>>> [ideal.song: Change clk flags of to pclk_gpio_* clk, pclk_gpio_* should be always on.]
->>>> Signed-off-by: Inha Song <ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>>> Acked-by: Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>>> Acked-by: Geunsik Lim <geunsik.lim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>>> ---
->>>>    drivers/clk/samsung/clk-exynos5433.c   | 80 +++++++++++++++++++++++++++++++++-
->>>>    include/dt-bindings/clock/exynos5433.h | 34 ++++++++++++++-
->>>>    2 files changed, 112 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/drivers/clk/samsung/clk-exynos5433.c b/drivers/clk/samsung/clk-exynos5433.c
->>>> index 88e8cac..a48b36c 100644
->>>> --- a/drivers/clk/samsung/clk-exynos5433.c
->>>> +++ b/drivers/clk/samsung/clk-exynos5433.c
->>>> @@ -256,6 +256,14 @@ static struct samsung_fixed_rate_clock top_fixed_clks[] __initdata = {
->>>>        FRATE(0, "ioclk_audiocdclk0", NULL, CLK_IS_ROOT, 100000000),
->>>>        /* Xi2s1SDI input clock for SPDIF */
->>>>        FRATE(0, "ioclk_spdif_extclk", NULL, CLK_IS_ROOT, 100000000),
->>>> +    /* XspiCLK[4:0] input clock for SPI */
->>>> +    FRATE(0, "ioclk_spi4_clk_in", NULL, CLK_IS_ROOT, 50000000),
->>>> +    FRATE(0, "ioclk_spi3_clk_in", NULL, CLK_IS_ROOT, 50000000),
->>>> +    FRATE(0, "ioclk_spi2_clk_in", NULL, CLK_IS_ROOT, 50000000),
->>>> +    FRATE(0, "ioclk_spi1_clk_in", NULL, CLK_IS_ROOT, 50000000),
->>>> +    FRATE(0, "ioclk_spi0_clk_in", NULL, CLK_IS_ROOT, 50000000),
->>>> +    /* Xi2s1SCLK input clock for I2S1_BCLK */
->>>> +    FRATE(0, "ioclk_i2s1_bclk_in", NULL, CLK_IS_ROOT, 12288000),
->>>>    };
->>>>
->>>>    static struct samsung_mux_clock top_mux_clks[] __initdata = {
->>>> @@ -760,6 +768,7 @@ CLK_OF_DECLARE(exynos5433_cmu_mif, "samsung,exynos5433-cmu-mif",
->>>>     * Register offset definitions for CMU_PERIC
->>>>     */
->>>>    #define DIV_PERIC            0x0600
->>>> +#define DIV_STAT_PERIC            0x0700
->>>>    #define ENABLE_ACLK_PERIC        0x0800
->>>>    #define ENABLE_PCLK_PERIC0        0x0900
->>>>    #define ENABLE_PCLK_PERIC1        0x0904
->>>> @@ -770,6 +779,7 @@ CLK_OF_DECLARE(exynos5433_cmu_mif, "samsung,exynos5433-cmu-mif",
->>>>
->>>>    static unsigned long peric_clk_regs[] __initdata = {
->>>>        DIV_PERIC,
->>>> +    DIV_STAT_PERIC,
->>>
->>> IMO, this line should have been added in first place itself when you added peric_clk_regs.
->>
->> Why? I want to locate it according to address base.
-> 
-> Since DIV_PERIC and DIV_STAT_PERIC both has same address base, why not to add DIV_STAT_PERIC at the same place when you added DIV_PERIC?
+>>> Please work with the people that do the in-kernel QMTM driver to come
+>>> up with a common binding then.
+>> Thanks Arnd, I have synced with them, and in future our dt bindings
+>> for this device is going to be inline with the one mentioned in the
+>> patchset.
+>
+> What does "in the future" mean? Is there already a QMTM binding? If
+> so, you need to figure out how to either align with it or deprecate
+> it. This patch at a minimum needs to be fixed to not refer to UIO.
 
-I mean the register offset instead of address base.
-DIV_PERIC(0x0600) is less than DIV_STAT_PERIC(0x0700).
-So, I want to locate DIV_STAT_PERIC on behind DIV_PERIC in ascending order.
+There is no QMTM dt binding as of now, and the kernel QMTM driver will
+also use the same dt binding.
+I will remove all references to the UIO from this patch, and move this
+binding under the misc folder.
 
-But, It is just minor issue.
+>
+> Rob
 
-Best Regards,
-Chanwoo Choi
-
-> 
-> Anyways, this was just my opinion as I don't see any dependency why we should add it here? I left this up to you.
-> 
->>
->>>
->>>>        ENABLE_ACLK_PERIC,
->>>>        ENABLE_PCLK_PERIC0,
->>>>        ENABLE_PCLK_PERIC1,
->>>> @@ -779,14 +789,57 @@ static unsigned long peric_clk_regs[] __initdata = {
->>>>        ENABLE_IP_PERIC2,
->>>>    };
->>>>
->>>> +static struct samsung_div_clock peric_div_clks[] __initdata = {
->>>> +    /* DIV_PERIC */
->>>> +    DIV(CLK_DIV_SCLK_SCI, "div_sclk_sci", "fin_pll", DIV_PERIC, 4, 8),
->>>
->>> As per UM I have DIV_SCLK_SCI has 4 bit wide as [7:4] please cross verify.
->>
->> You're right. It is my mistake. I'll fix it.
->>
->> Best Regards,
->> Chanwoo Choi
->>
-> Thanks,
-> Pankaj Dubey
-> 
-
+Thanks,
+Ankit
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
