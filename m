@@ -1,77 +1,96 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH v3] i2c: Driver to expose PowerNV platform i2c busses
-Date: Tue, 9 Dec 2014 09:54:35 +0100
-Message-ID: <20141209085435.GA1154@katana>
-References: <20141208063039.14356.34770.stgit@localhost.localdomain>
- <1418069595.4827.43.camel@kernel.crashing.org>
- <20141208205520.GA12715@katana>
- <1418075026.13358.4.camel@kernel.crashing.org>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 3/9] clk: sunxi: Add prcm mod0 clock driver
+Date: Tue, 9 Dec 2014 09:51:37 +0100
+Message-ID: <20141209085137.GQ8739@lukather>
+References: <20141126211318.GN25249@lukather>
+ <5476E3A5.4000708@redhat.com>
+ <CAGb2v652m0bCdPWFF4LWwjcrCJZvnLibFPw8xXJ3Q-Ge+_-p7g@mail.gmail.com>
+ <5476F8AB.2000601@redhat.com>
+ <20141127190509.GR25249@lukather>
+ <54787A8A.6040209@redhat.com>
+ <20141202154524.GD30256@lukather>
+ <547EDCA0.4040805@redhat.com>
+ <20141207180808.GO12434@lukather>
+ <54855EF6.1000900@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="h31gzZEtNLTqOjlF"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="6tPipYVl+OcoAvSh"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBZ7RTKSAKGQE42YXHSY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1418075026.13358.4.camel-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: Neelesh Gupta <neelegup-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <54855EF6.1000900-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Boris Brezillon <boris-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---h31gzZEtNLTqOjlF
-Content-Type: text/plain; charset=us-ascii
+--6tPipYVl+OcoAvSh
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-> > Oh, I thought we agreed that you take it via powerpc. I still think this
-> > is the best solution.
->=20
-> I threatened to do that :-) I don't remember you replying, did I miss
-> it ?
+On Mon, Dec 08, 2014 at 09:19:02AM +0100, Hans de Goede wrote:
+> Hi,
+> 
+> On 07-12-14 19:08, Maxime Ripard wrote:
+> >On Wed, Dec 03, 2014 at 10:49:20AM +0100, Hans de Goede wrote:
+> 
+> <snip>
+> 
+> >>So it should not have a simple-bus compatible either, and as such we cannot
+> >>simply change the mod0 driver from of_clk_define to a platform driver because
+> >>then we need to instantiate platform devs for the mod0 clock nodes, which
+> >>means making the clock node a simple-bus.
+> >
+> >I guess we can do that as a temporary measure until we get things
+> >right on that front. I'm totally open to doing that work, so I'm not
+> >asking you to do it.
+> >
+> >>I can see your logic in wanting the ir_clk prcm sub-node to use the
+> >>mod0 compatible string, so how about we make the mod0 driver both
+> >>register through of_declare and as a platform driver. Note this means
+> >>that it will try to bind twice to the ir_clk node, since of_clk_declare
+> >>will cause it to try and bind there too AFAIK.
+> >
+> >Hmmm, I could live with that for a while too. That shouldn't even
+> >require too much work, since the first thing we check in the mod0 code
+> >is that we actually have something in reg, which will not be the case
+> >in the OF_CLK_DECLARE case.
+> >
+> >>The of_clk_declare bind will fail though because there is no regs
+> >>property, so this double bind is not an issue as long as we do not
+> >>log errors on the first bind failure.
+> >
+> >Yep, exactly.
+> >
+> >>Note that the ir_clk node will still need an "ir-clk" compatible as
+> >>well for the MFD to find it and assign the proper resources to it.
+> >
+> >No, it really doesn't. At least for now, we have a single mod0 clock
+> >under the PRCM MFD. If (and only if) one day, we find ourselves in a
+> >position where we have two mod0 clocks under the PRCM, then we'll fix
+> >the MFD code to deal with that, because it really should deal with it.
+> 
+> Ok, using only the mod0 compat string works for me. I'll respin my
+> patch-set (minus the one patch you've already merged) to make the modo
+> clk driver use both of_clk_declare and make it a platfrom driver, and
+> use the mod0 compat string for the ir-clk node.
+> 
+> Not sure when I'll get this done exactly though, but we still have
+> a while before 3.20 :)
 
-It is here:
-http://thread.gmane.org/gmane.linux.drivers.i2c/20762/focus=3D21099
+Indeed :)
 
-> If you are ok with the driver and are happy for me to take it,
-> please send an Ack.
+Thanks!
+Maxime
 
-"Happy" is not the correct word, but let's just go over with it. Maybe
-like this:
-
-Acked-by: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org> (I2C part, excluding the binding=
-s)
-
-> From a binding perspective, it's just a piece of additional info that
-> the firmware provides for convenience.
-
-I do understand the use case. I even agree it makes sense to have
-something like this. It is just that I'd prefer a generic, widely
-acknowledged solution, with consensus where it belongs and how it should
-be named. Not a custom solution which, frankly, feels forced on me
-by time pressure I have nothing to do with. So, not happy here, but also
-not looking for drama. Let's move on...
-
-
---h31gzZEtNLTqOjlF
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUhrjLAAoJEBQN5MwUoCm2SxQP/14KP9HmX7/VElUaCTmG4+BP
-m0muuYKuqOB1lPmw1sB3IgdHcpm9rQbRCRnXTPGSKEAlNZrTzS615jvedtUhVQP4
-dCkd5aD0+C66eRK+S7fgAzHSuWL87DfGYRaOp5iipiiPUBDhwGM+jWnnRA0N927Y
-UlV6jUhjqq+r8m5j7nvRg7ZZNi/IGOUNtEF0GK3wGzZmzI3iG50m0FkSFxAppaLY
-0AHG69cuNVUMJI5nXH2NW+hXVghKiEA/AIxvIU8aQBt/siRywCSxcqSmOZ+gnaWT
-mPlct61FEQ+d8IyjrqfkkyM24uC57YG0g1cE4l/kkxkmOwEGqP2t2cPUs2eFndIZ
-v7qrBp3Y4ODctBeZBVAsqIrV1eIuxPiOzzZKG1Qvw9DCSP+e2pYp/KPLNz4Itaws
-NwbZL/Lu7LagolCuysz94RmChhcJt395IUAOny2zeL9k8gVFbQ3qy/F/lV+tRmUp
-thtXRd5LVa3hp9OxzAEIW9T5EC72pBngKu4GpN6LQ26tiCUzjHXXoVtoThHe1J9S
-6Wr75+X2rxRSolHC9MlyT+3S+z2grBWhAYdaFftfG1+6IAyo9Cb/Rj1xHpHbgZu/
-SmlB7qncNDJsxl22V6kHsN/wDN536f7wPhllMZ9KRLUQi195pJ6fbtw4enlTl1Pq
-CMdpAtwaX/MnXcQ4ddz5
-=Cs8K
------END PGP SIGNATURE-----
-
---h31gzZEtNLTqOjlF--
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--6tPipYVl+OcoAvSh--
