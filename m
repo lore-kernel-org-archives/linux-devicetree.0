@@ -1,28 +1,46 @@
-From: Josh Wu <josh.wu@atmel.com>
-Subject: Re: [PATCH 4/5] media: ov2640: add a master clock for sensor
-Date: Tue, 9 Dec 2014 11:03:40 +0800
-Message-ID: <5486668C.3000808@atmel.com>
-References: <1418038147-13221-1-git-send-email-josh.wu@atmel.com>	<1418038147-13221-5-git-send-email-josh.wu@atmel.com> <CAOMZO5ASNUCz908esJ3iTQ6VEQGeNi-HOmqMOf12c633Q8pavw@mail.gmail.com>
+From: "Kim, Milo" <milo.kim-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] backlight/lp855x: Add supply regulator to lp855x
+Date: Tue, 9 Dec 2014 12:03:49 +0900
+Message-ID: <54866695.3050307@ti.com>
+References: <1417570752-23633-1-git-send-email-seanpaul@chromium.org> <1417570752-23633-2-git-send-email-seanpaul@chromium.org> <5204192.bzM5jPIgHv@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5ASNUCz908esJ3iTQ6VEQGeNi-HOmqMOf12c633Q8pavw@mail.gmail.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: linux-media <linux-media@vger.kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5204192.bzM5jPIgHv@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, =?windows-1252?Q?St=E9phane_?= =?windows-1252?Q?Marchesin?= <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Aaron Durbin <adurbin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Fabio
+Hi Arnd,
 
-On 12/8/2014 11:10 PM, Fabio Estevam wrote:
-> On Mon, Dec 8, 2014 at 9:29 AM, Josh Wu <josh.wu@atmel.com> wrote:
->
->> +       priv->master_clk = devm_clk_get(&client->dev, "xvclk");
->> +       if (IS_ERR(priv->master_clk))
->> +               return -EINVAL;
-> You should return PTR_ERR(priv->master_clk) instead.
-sure. I'll fix it in next version. Thanks.
+Good to talk to you again. It's been a long time since I met you in 
+Linaro Connect HK few years ago :)
 
-Best Regards,
-Josh Wu
+On 12/3/2014 11:11 PM, Arnd Bergmann wrote:
+> While your two patches are both correct (and applied already), I took
+> a look at the platform_data header and noticed that all users of this
+> file have been converted to DT a while ago, so it would be nice to clean
+> it up by integrating the linux/platform_data/lp855x.h header file into the
+> drivers/video/backlight/lp855x_bl.c itself.
+
+I like this cleanup but need to consider few things.
+
+- Platform which does not support the DT
+In this case, there is no way to configure options like backlight device 
+control mode. Without the DT, only default options are set.
+To change the settings, the driver modification is required.
+I don't want to write project/platform dependency code inside the driver.
+
+- Backward compatibility
+Some customers have been using this platform data in their board-*.c 
+(but this *.c has not been mainlined yet).
+My concern is the backward compatibility issue may happen in their projects.
+
+Best regards,
+Milo
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
