@@ -1,99 +1,69 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 1/8] soc: mediatek: Add PMIC wrapper for MT8135 and
- MT6397 SoC
-Date: Tue, 9 Dec 2014 11:30:15 +0100
-Message-ID: <CABuKBe+whgVryssULCu2MAXRu3u+pYwM2nN3ToTEGpEvniQ6Jw@mail.gmail.com>
-References: <1417752479-4749-1-git-send-email-flora.fu@mediatek.com>
-	<2751641.o51TuZRl88@wuerfel>
-	<1418091337.5663.9.camel@mtksdaap41>
-	<2248330.M654Toyebg@wuerfel>
-	<20141209101341.GV30369@pengutronix.de>
+From: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 1/5] phy: add a driver for the Rockchip SoC internal
+ USB2.0 PHY
+Date: Tue, 9 Dec 2014 11:41:36 +0100
+Message-ID: <CABgxDoJRA4cQBqNBTCSGnnLpcOHqqTuBqcyWQosVv4A_Gx315g@mail.gmail.com>
+References: <1418093001-30443-1-git-send-email-lyz@rock-chips.com>
+	<1418093001-30443-2-git-send-email-lyz@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141209101341.GV30369-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <1418093001-30443-2-git-send-email-lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Flora Fu <flora.fu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, HenryC Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Menghui Lin <menghui.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely@lin>
+To: Yunzhi Li <lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Eddie Cai <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2014-12-09 11:13 GMT+01:00 Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>:
-> On Tue, Dec 09, 2014 at 09:23:18AM +0100, Arnd Bergmann wrote:
->> On Tuesday 09 December 2014 10:15:37 Flora Fu wrote:
->> > Hi, Arnd,
->> >
->> > On Fri, 2014-12-05 at 11:13 +0100, Arnd Bergmann wrote:
->> > > On Friday 05 December 2014 12:07:52 Flora Fu wrote:
->> > > > Add PMIC wrapper of MT8135 to access MT6397 MFD.
->> > > >
->> > > > Signed-off-by: Flora Fu <flora.fu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
->> > > >
->> > >
->> > > Please explain what a PMIC wrapper is and why you need one for MT8135.
->> > > I don't understand the purpose of this code at all. Is this just another
->> > > way of accessing the MT6397 when not using i2c or spi like other
->> > > PMIC drivers do?
->> > >
->> >
->> > Yes, MT8135 uses a proprietary hardware to communicate with MT6397.
->> > The hardware is called PMIC Wrapper or PWRAP.
->> > Since it is not standard i2c or spi protocols, a soc related software
->> > driver is implemented to handle access protocols in AP side.
->> >
->> > +-----------------+           +---------------+
->> > |                 |           |               |
->> > | Mediatek AP SoC |           |               |
->> > | (ex. MT8135)    |           |    MT6397     |
->> > |                 |           |               |
->> > |      +--------+ | (SPI bus) | +--------+    |
->> > |      |        | |-----------| |        |    |
->> > |      |  PMIC  | |-----------| |  PMIC  |    |
->> > |      | Wrapper| |-----------| | Wrapper|    |
->> > |      |        | |-----------| |        |    |
->> > |      +--------+ |           | +--------+    |
->> > |                 |           |               |
->> > +-----------------+           +---------------+
->> >
->>
->> I think we have had a similar case recently where a controller wasn't
->> actually using I2C, but the sofware protocol was close enough so we decided
->> to make it appear as i2c in Linux.
->>
->> Would that work for you, i.e. register the pmic wrapper as a fake spi
->> master driver in drivers/spi/ and register the rtc/regulator/codec
->> as SPI clients from DT?
+Hi,
+
+2014-12-09 3:43 GMT+01:00 Yunzhi Li <lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org>:
+> Changes in v3:
+> - Use BIT macro instead of bit shift ops.
+> - Rename the config entry to PHY_ROCKCHIP_USB.
+
+Contradiction between this , [1] and [2]
 >
-> I don't think that's appropriate. I mean technically that could even
-> work, but in software you really don't see anything from the underlying
-> SPI bus. The SoC and the PMIC are really tightly coupled via the PMIC
-> wrapper. This goes to the point where pins of the SoCs internal I2C and
-> keypad controllers are routed over the SPI bus out of the PMIC. In
-> software you do this by setting a bit in the I2C controller. If it's
-> set, the signals are routed out of the PMIC instead of the main die.
-> As said, technically we probably could create a fake SPI master, but
-> that wouldn't really fit to this situation.
-
-I agree with Sascha. Although from the hardware point of view, the
-communication between the PMIC and the SOC is done through SPI from
-the point of view of the software everything looks like I2C commands
-which will be "transalted" into SPI messages by the PMIC wrapper.
-
-Cheers,
-Matthias
-
+>  drivers/phy/Kconfig            |   7 ++
+>  drivers/phy/Makefile           |   1 +
+>  drivers/phy/phy-rockchip-usb.c | 211 +++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 219 insertions(+)
+>  create mode 100644 drivers/phy/phy-rockchip-usb.c
 >
-> Sascha
+> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+> index ccad880..8a39d2a 100644
+> --- a/drivers/phy/Kconfig
+> +++ b/drivers/phy/Kconfig
+> @@ -239,6 +239,13 @@ config PHY_QCOM_IPQ806X_SATA
+>         depends on OF
+>         select GENERIC_PHY
 >
-> --
-> Pengutronix e.K.                           |                             |
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> +config PHY_ROCKCHIP_USB2
+> +       tristate "Rockchip USB2 PHY Driver"
+> +       depends on ARCH_ROCKCHIP && OF
+> +       select GENERIC_PHY
+> +       help
+> +         Enable this to support the Rockchip USB 2.0 PHY.
+> +
 
+1. The config entry ends by "USB2". Explain that your driver is for
+usb 2.0 in the description is enough, imho.
 
+>  config PHY_ST_SPEAR1310_MIPHY
+>         tristate "ST SPEAR1310-MIPHY driver"
+>         select GENERIC_PHY
+> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+> index aa74f96..8a13f72 100644
+> --- a/drivers/phy/Makefile
+> +++ b/drivers/phy/Makefile
+> @@ -28,6 +28,7 @@ phy-exynos-usb2-$(CONFIG_PHY_EXYNOS5250_USB2) += phy-exynos5250-usb2.o
+>  phy-exynos-usb2-$(CONFIG_PHY_S5PV210_USB2)     += phy-s5pv210-usb2.o
+>  obj-$(CONFIG_PHY_EXYNOS5_USBDRD)       += phy-exynos5-usbdrd.o
+>  obj-$(CONFIG_PHY_QCOM_APQ8064_SATA)    += phy-qcom-apq8064-sata.o
+> +obj-$(CONFIG_PHY_ROCKCHIP_USB2) += phy-rockchip-usb.o
 
--- 
-motzblog.wordpress.com
+2. and... this :)
+
+Romain
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
