@@ -1,49 +1,79 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [RFC PATCH v2 1/4] arm64: defconfig: increase NR_CPUS range to 2-128
-Date: Tue, 09 Dec 2014 09:27:13 +0100
-Message-ID: <2054688.iIEQnOEqVy@wuerfel>
-References: <1416605010-10442-1-git-send-email-ganapatrao.kulkarni@caviumnetworks.com> <3519779.ILzEnWe9lP@wuerfel> <CAMDttNe33ie9vgyEn8GHz+8isadaDfXXUJcp5mQM-42_mx3Pbw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMDttNe33ie9vgyEn8GHz+8isadaDfXXUJcp5mQM-42_mx3Pbw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zi Shen Lim <zlim.lnx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Ganapatrao Kulkarni <ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Steve Capper <steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, roy.franz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Peter Rosin <peda@lysator.liu.se>
+Subject: [PATCH] ASoC: pcm512x: Also support PCM514x devices
+Date: Tue,  9 Dec 2014 09:28:09 +0100
+Message-ID: <1418113689-21505-1-git-send-email-peda@lysator.liu.se>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: alsa-devel@alsa-project.org
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Peter Rosin <peda@axentia.se>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 08 December 2014 17:57:03 Zi Shen Lim wrote:
-> Hi Arnd,
-> 
-> On Mon, Nov 24, 2014 at 3:53 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> >
-> > On Saturday 22 November 2014 02:53:27 Ganapatrao Kulkarni wrote:
-> > > Raising the maximum limit to 128. This is needed for Cavium's
-> > > Thunder system that will have 96 cores on Multi-node system.
-> > >
-> > > Signed-off-by: Ganapatrao Kulkarni <ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-> > >
-> >
-> > Could we please raise the compile-time limit to the highest number that
-> > you are able to boot successfully on some existing machine?
-> >
-> > There isn't much point in doubling this every few months.
-> 
-> Agreed. If we look back at [1], Mark Rutland has actually compiled and
-> boot-tested NR_CPUS=4096 on Juno.
-> 
-> [1] https://lkml.org/lkml/2014/9/8/537
+From: Peter Rosin <peda@axentia.se>
 
-Ok, 4096 sounds like a good NR_CPUS limit then, it should last for a while.
+Signed-off-by: Peter Rosin <peda@axentia.se>
+---
+ Documentation/devicetree/bindings/sound/pcm512x.txt |    3 ++-
+ sound/soc/codecs/pcm512x-i2c.c                      |    4 ++++
+ sound/soc/codecs/pcm512x-spi.c                      |    4 ++++
+ 3 files changed, 10 insertions(+), 1 deletion(-)
 
-For the defconfig, we probably want a much smaller value, either one that
-covers all known machines (96 at this time), or something that covers
-95% of all users (maybe 32?) and does not have an serious impact on
-memory consumption or performance on small machines.
-
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/sound/pcm512x.txt b/Documentation/devicetree/bindings/sound/pcm512x.txt
+index faff75e64573..98e0d34915e8 100644
+--- a/Documentation/devicetree/bindings/sound/pcm512x.txt
++++ b/Documentation/devicetree/bindings/sound/pcm512x.txt
+@@ -5,7 +5,8 @@ on the board).
+ 
+ Required properties:
+ 
+-  - compatible : One of "ti,pcm5121" or "ti,pcm5122"
++  - compatible : One of "ti,pcm5121", "ti,pcm5122", "ti,pcm5141" or
++                 "ti,pcm5142"
+ 
+   - reg : the I2C address of the device for I2C, the chip select
+           number for SPI.
+diff --git a/sound/soc/codecs/pcm512x-i2c.c b/sound/soc/codecs/pcm512x-i2c.c
+index 4d62230bd378..08047ac952f4 100644
+--- a/sound/soc/codecs/pcm512x-i2c.c
++++ b/sound/soc/codecs/pcm512x-i2c.c
+@@ -41,6 +41,8 @@ static int pcm512x_i2c_remove(struct i2c_client *i2c)
+ static const struct i2c_device_id pcm512x_i2c_id[] = {
+ 	{ "pcm5121", },
+ 	{ "pcm5122", },
++	{ "pcm5141", },
++	{ "pcm5142", },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(i2c, pcm512x_i2c_id);
+@@ -48,6 +50,8 @@ MODULE_DEVICE_TABLE(i2c, pcm512x_i2c_id);
+ static const struct of_device_id pcm512x_of_match[] = {
+ 	{ .compatible = "ti,pcm5121", },
+ 	{ .compatible = "ti,pcm5122", },
++	{ .compatible = "ti,pcm5141", },
++	{ .compatible = "ti,pcm5142", },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, pcm512x_of_match);
+diff --git a/sound/soc/codecs/pcm512x-spi.c b/sound/soc/codecs/pcm512x-spi.c
+index f297058c0038..7b64a9cef704 100644
+--- a/sound/soc/codecs/pcm512x-spi.c
++++ b/sound/soc/codecs/pcm512x-spi.c
+@@ -43,6 +43,8 @@ static int pcm512x_spi_remove(struct spi_device *spi)
+ static const struct spi_device_id pcm512x_spi_id[] = {
+ 	{ "pcm5121", },
+ 	{ "pcm5122", },
++	{ "pcm5141", },
++	{ "pcm5142", },
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(spi, pcm512x_spi_id);
+@@ -50,6 +52,8 @@ MODULE_DEVICE_TABLE(spi, pcm512x_spi_id);
+ static const struct of_device_id pcm512x_of_match[] = {
+ 	{ .compatible = "ti,pcm5121", },
+ 	{ .compatible = "ti,pcm5122", },
++	{ .compatible = "ti,pcm5141", },
++	{ .compatible = "ti,pcm5142", },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, pcm512x_of_match);
+-- 
+1.7.10.4
