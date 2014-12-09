@@ -1,10 +1,8 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 6/7] ARM: shmobile: alt dts: Replace status value "ok" by "okay"
-Date: Tue,  9 Dec 2014 12:25:04 +0100
-Message-ID: <1418124305-7445-6-git-send-email-geert+renesas@glider.be>
-References: <1418124305-7445-1-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH 1/7] ARM: shmobile: genmai dts: Replace status value "ok" by "okay"
+Date: Tue,  9 Dec 2014 12:24:59 +0100
+Message-ID: <1418124305-7445-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1418124305-7445-1-git-send-email-geert+renesas@glider.be>
 Sender: linux-sh-owner@vger.kernel.org
 To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
 Cc: devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Geert Uytterhoeven <geert+renesas@glider.be>
@@ -16,25 +14,22 @@ values.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- arch/arm/boot/dts/r8a7794-alt.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/r7s72100-genmai.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/r8a7794-alt.dts b/arch/arm/boot/dts/r8a7794-alt.dts
-index f2cf7576bf3f5a0b..0d848e60507172ef 100644
---- a/arch/arm/boot/dts/r8a7794-alt.dts
-+++ b/arch/arm/boot/dts/r8a7794-alt.dts
-@@ -40,9 +40,9 @@
+diff --git a/arch/arm/boot/dts/r7s72100-genmai.dts b/arch/arm/boot/dts/r7s72100-genmai.dts
+index 1518c5bcca33d8d1..a9da7a89fc4ba65a 100644
+--- a/arch/arm/boot/dts/r7s72100-genmai.dts
++++ b/arch/arm/boot/dts/r7s72100-genmai.dts
+@@ -45,7 +45,7 @@
  };
  
- &cmt0 {
+ &mtu2 {
 -	status = "ok";
 +	status = "okay";
  };
  
- &scif2 {
--	status = "ok";
-+	status = "okay";
- };
+ &i2c2 {
 -- 
 1.9.1
 
