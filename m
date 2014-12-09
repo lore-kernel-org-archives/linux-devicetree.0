@@ -1,65 +1,87 @@
 From: Yunzhi Li <lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v4 2/5] Documentation: bindings: add doc for the Rockchip usb PHY
-Date: Tue,  9 Dec 2014 10:48:13 +0800
-Message-ID: <1418093293-30557-1-git-send-email-lyz@rock-chips.com>
+Subject: [PATCH v4 4/5] ARM: dts: add rk3288 usb PHY
+Date: Tue,  9 Dec 2014 10:52:34 +0800
+Message-ID: <1418093554-30671-1-git-send-email-lyz@rock-chips.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Yunzhi Li <lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Document the bindings of the Rockchip usb PHY driver.
+This patch adds a device_node for RK3288 SoC usb phy. It also
+defines the phy to be used by three usb controllers: usb_host0/1
+and usb_otg.
 
 Signed-off-by: Yunzhi Li <lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
 ---
 
 Changes in v4:
-- Updata description for phy device tree subnode.
+- Add phy subnodes.
 
 Changes in v3: None
 
- .../devicetree/bindings/phy/rockchip-usb-phy.txt   | 32 ++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/rockchip-usb-phy.txt
+ arch/arm/boot/dts/rk3288.dtsi | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/phy/rockchip-usb-phy.txt b/Documentation/devicetree/bindings/phy/rockchip-usb-phy.txt
-new file mode 100644
-index 0000000..0b725e4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/rockchip-usb-phy.txt
-@@ -0,0 +1,32 @@
-+ROCKCHIP USB2 PHY
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index 874e66d..2db2d12 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -329,12 +329,35 @@
+ 		status = "disabled";
+ 	};
+ 
++	usbphy: phy {
++		#phy-cells = <1>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		compatible = "rockchip,rk3288-usb-phy";
++		rockchip,grf = <&grf>;
++		status = "disabled";
 +
-+Required properties:
-+ - compatible: rockchip,rk3288-usb-phy
-+ - rockchip,grf : phandle to the syscon managing the "general
-+   register files"
-+ - #phy-cells: should be 1
-+ - #address-cells: should be 1
-+ - #size-cells: should be 0
++		usb-phy@0 {
++			reg = <0>;
++		};
 +
-+Sub-nodes:
-+Each PHY should be represented as a sub-node.
++		usb-phy@1 {
++			reg = <1>;
++		};
 +
-+Sub-nodes
-+required properties:
-+- reg: the PHY number
-+		"0" - PHY connect to OTG controller
-+		"1" - PHY connect to HOST0 controller
-+		"2" - PHY connect to HOST1 controller
++		usb-phy@2 {
++			reg = <2>;
++		};
++	};
 +
-+Optional Properties:
-+- clocks : phandle + clock specifier for the phy clocks
-+
-+Example:
-+
-+usbphy: phy {
-+	#phy-cells = <1>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	compatible = "rockchip,rk3288-usb-phy";
-+	rockchip,grf = <&grf>;
-+};
+ 	usb_host0_ehci: usb@ff500000 {
+ 		compatible = "generic-ehci";
+ 		reg = <0xff500000 0x100>;
+ 		interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&cru HCLK_USBHOST0>;
+ 		clock-names = "usbhost";
++		phys = <&usbphy 1>;
++		phy-names = "usb";
+ 		status = "disabled";
+ 	};
+ 
+@@ -347,6 +370,8 @@
+ 		interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&cru HCLK_USBHOST1>;
+ 		clock-names = "otg";
++		phys = <&usbphy 2>;
++		phy-names = "usb2-phy";
+ 		status = "disabled";
+ 	};
+ 
+@@ -357,6 +382,8 @@
+ 		interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&cru HCLK_OTG0>;
+ 		clock-names = "otg";
++		phys = <&usbphy 0>;
++		phy-names = "usb2-phy";
+ 		status = "disabled";
+ 	};
+ 
 -- 
 2.0.0
 
