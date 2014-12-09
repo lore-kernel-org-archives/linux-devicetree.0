@@ -1,54 +1,61 @@
 From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] backlight/lp855x: Add supply regulator to lp855x
-Date: Tue, 09 Dec 2014 09:13:04 +0100
-Message-ID: <11871302.y60x8yR8Ol@wuerfel>
-References: <1417570752-23633-1-git-send-email-seanpaul@chromium.org> <54866695.3050307@ti.com> <000a01d01362$aee684d0$0cb38e70$%han@samsung.com>
+Subject: Re: [PATCH v3 1/8] soc: mediatek: Add PMIC wrapper for MT8135 and MT6397 SoC
+Date: Tue, 09 Dec 2014 09:23:18 +0100
+Message-ID: <2248330.M654Toyebg@wuerfel>
+References: <1417752479-4749-1-git-send-email-flora.fu@mediatek.com> <2751641.o51TuZRl88@wuerfel> <1418091337.5663.9.camel@mtksdaap41>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <000a01d01362$aee684d0$0cb38e70$%han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <1418091337.5663.9.camel@mtksdaap41>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: "'Kim, Milo'" <milo.kim-l0cyMroinI0@public.gmane.org>, 'Sean Paul' <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, =?ISO-8859-1?Q?=27St=E9phane?= Marchesin' <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, 'Aaron Durbin' <adurbin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+To: Flora Fu <flora.fu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, HenryC Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Menghui Lin <menghui.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Dongdong Cheng <dongdong.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 09 December 2014 12:46:15 Jingoo Han wrote:
-> On Tuesday, December 09, 2014 12:04 PM, Kim, Milo wrote:
-> > 
-> > Hi Arnd,
-> > 
-> > Good to talk to you again. It's been a long time since I met you in
-> > Linaro Connect HK few years ago 
-> > 
-> > On 12/3/2014 11:11 PM, Arnd Bergmann wrote:
-> > > While your two patches are both correct (and applied already), I took
-> > > a look at the platform_data header and noticed that all users of this
-> > > file have been converted to DT a while ago, so it would be nice to clean
-> > > it up by integrating the linux/platform_data/lp855x.h header file into the
-> > > drivers/video/backlight/lp855x_bl.c itself.
-> > 
-> > I like this cleanup but need to consider few things.
-> > 
-> > - Platform which does not support the DT
-> > In this case, there is no way to configure options like backlight device
-> > control mode. Without the DT, only default options are set.
-> > To change the settings, the driver modification is required.
-> > I don't want to write project/platform dependency code inside the driver.
-> > 
-> > - Backward compatibility
-> > Some customers have been using this platform data in their board-*.c
-> > (but this *.c has not been mainlined yet).
-> > My concern is the backward compatibility issue may happen in their projects.
+On Tuesday 09 December 2014 10:15:37 Flora Fu wrote:
+> Hi, Arnd,
 > 
-> I understand this situation. In the case of Exynos DisplayPort driver,
-> a similar issue happened. At that time, the conclusion was that
-> out-of-tree code (not mainlined yet) cannot be considered.
+> On Fri, 2014-12-05 at 11:13 +0100, Arnd Bergmann wrote:
+> > On Friday 05 December 2014 12:07:52 Flora Fu wrote:
+> > > Add PMIC wrapper of MT8135 to access MT6397 MFD.
+> > > 
+> > > Signed-off-by: Flora Fu <flora.fu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > > 
+> > 
+> > Please explain what a PMIC wrapper is and why you need one for MT8135.
+> > I don't understand the purpose of this code at all. Is this just another
+> > way of accessing the MT6397 when not using i2c or spi like other
+> > PMIC drivers do?
+> > 
+> 
+> Yes, MT8135 uses a proprietary hardware to communicate with MT6397. 
+> The hardware is called PMIC Wrapper or PWRAP.
+> Since it is not standard i2c or spi protocols, a soc related software
+> driver is implemented to handle access protocols in AP side.
+> 
+> +-----------------+           +---------------+
+> |                 |           |               |
+> | Mediatek AP SoC |           |               |
+> | (ex. MT8135)    |           |    MT6397     |
+> |                 |           |               |
+> |      +--------+ | (SPI bus) | +--------+    |
+> |      |        | |-----------| |        |    |
+> |      |  PMIC  | |-----------| |  PMIC  |    |
+> |      | Wrapper| |-----------| | Wrapper|    |
+> |      |        | |-----------| |        |    |
+> |      +--------+ |           | +--------+    |
+> |                 |           |               |
+> +-----------------+           +---------------+
+> 
 
-Right. Basically when the only reason to have code in the kernel is
-to support someone with an out-of-tree patch set, they can be expected
-to add the extra bit to their patch set, it doesn't add any extra burden
-to them, and it makes our lives easier.
+I think we have had a similar case recently where a controller wasn't
+actually using I2C, but the sofware protocol was close enough so we decided
+to make it appear as i2c in Linux.
+
+Would that work for you, i.e. register the pmic wrapper as a fake spi
+master driver in drivers/spi/ and register the rtc/regulator/codec
+as SPI clients from DT?
 
 	Arnd
 --
