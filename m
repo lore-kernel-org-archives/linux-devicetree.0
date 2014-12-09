@@ -1,245 +1,642 @@
-From: <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: [PATCH v3 3/3] fpga manager: device tree overlay support
-Date: Tue, 9 Dec 2014 10:28:01 -0600
-Message-ID: <1418142481-6167-4-git-send-email-atull@opensource.altera.com>
-References: <1418142481-6167-1-git-send-email-atull@opensource.altera.com>
+From: John Ogness <john.ogness-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Subject: [PATCH 1/1] uio: uio_fsl_elbc_gpcm: new driver
+Date: Tue, 09 Dec 2014 17:43:10 +0100
+Message-ID: <87iohk22qp.fsf@linutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1418142481-6167-1-git-send-email-atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org, hpa-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org, monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, iws-lulEs6mt1IksTUYHLfqkUA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-ynQEQJNshbs@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, philip-6RQC9ztksjxg9hUCZPvPmw@public.gmane.org, rubini-kaDoWcXyVrEAvxtiuMwx3w@public.gmane.org, s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, kyle.teske-acOepvfBmUk@public.gmane.org, nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, cesarb-PWySMVKUnqmsTnJN9+BGXg@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org, mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org, hjk-vqZO0P4V72/QD6PfKP4TzA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dongsheng.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org, scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org, galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+This driver provides UIO access to memory of a peripheral connected
+to the Freescale enhanced local bus controller (eLBC) interface
+using the general purpose chip-select mode (GPCM).
 
-Support programming the fpga from device tree overlays.
-
-This patch adds two exported functions to the core
-(fpga-mgr.c):
-  of_fpga_mgr_dev_lookup
-    Get pointer to fpga manager struct given a phandle.
-
-  of_find_fpga_mgr_by_node
-    Get pointer to fpga manager given device node
-
-This code is dependent on Pantelis Antoniou's current work
-on Device Tree overlays, a method of dynamically altering
-the kernel's live Device Tree.  The rest of the patchset was
-tested with recent for-next, but this 'bus driver' patch was
-tested with Pantelis's and Grant Likely's stuff that is in git
-(his git repo https://github.com/pantoniou/linux-beagle-track-mainline
- v3.17-rc2-115-gbc778b8 == dt-ng/bbb) plus some dtc fixups
-for compiling overlays.
-
-TODO: Integrate bridge support
-
-General flow is:
-1. Load a DT overlay
-2. This causes the FPGA to get programmed
-3. TODO - enable FPGA bridges
-4. Drivers get probed
-
-The reverse flow is also supported:
-1. Remove the DT overlay
-2. Drivers get removed
-3. TODO - disable FPGA bridges
-4. FPGA gets reset
-
-Signed-off-by: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Signed-off-by: John Ogness <john.ogness-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 ---
- drivers/fpga/Kconfig     |    7 ++++
- drivers/fpga/fpga-mgr.c  |  104 +++++++++++++++++++++++++++++++++++++++++++++-
- include/linux/fpga-mgr.h |    3 ++
- 3 files changed, 113 insertions(+), 1 deletion(-)
+There are currently drivers that use FCM and UPM modes. But there
+are no drivers using the very simple GPCM mode. If other drivers
+from other subsystems should start using this mode (for example,
+mtd, eeprom, char) then it may make sense to try to implement
+generic GPCM support in arch/powerpc/sysdev/fsl_lbc.c. There
+would not be much overlap, but there is no point in having
+multiple drivers implement bank and OR/BR validation.
 
-diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
-index e775b17..2bd6c83 100644
---- a/drivers/fpga/Kconfig
-+++ b/drivers/fpga/Kconfig
-@@ -18,4 +18,11 @@ config FPGA_MGR_SYSFS
- 	help
- 	  FPGA Manager SysFS interface.
+As for the device-specific netX support, I considered if a common
+header file with the PCI variant drivers/uio/uio_netx.c should
+exist. Merging the two drivers didn't seem to make sense since
+this is actually a generic eLBC-GPCM driver (that optionally
+supports netX) and the other is a PCI netX driver.
+
+ .../devicetree/bindings/powerpc/fsl/lbc.txt        |   18 +-
+ arch/powerpc/include/asm/fsl_lbc.h                 |    3 +
+ drivers/uio/Kconfig                                |   20 +
+ drivers/uio/Makefile                               |    1 +
+ drivers/uio/uio_fsl_elbc_gpcm.c                    |  499 ++++++++++++++++++++
+ 5 files changed, 536 insertions(+), 5 deletions(-)
+ create mode 100644 drivers/uio/uio_fsl_elbc_gpcm.c
+
+diff --git a/Documentation/devicetree/bindings/powerpc/fsl/lbc.txt b/Documentation/devicetree/bindings/powerpc/fsl/lbc.txt
+index 3300fec..1c80fce 100644
+--- a/Documentation/devicetree/bindings/powerpc/fsl/lbc.txt
++++ b/Documentation/devicetree/bindings/powerpc/fsl/lbc.txt
+@@ -16,20 +16,28 @@ Example:
+ 			   "fsl,pq2-localbus";
+ 		#address-cells = <2>;
+ 		#size-cells = <1>;
+-		reg = <f0010100 40>;
++		reg = <0xf0010100 0x40>;
  
-+config FPGA_MGR_BUS
-+	bool "FPGA Manager Bus"
-+	depends on FPGA
-+	help
-+	  FPGA Manager Bus interface.  Allows loading FPGA images
-+	  from Device Tree or from other drivers.
+-		ranges = <0 0 fe000000 02000000
+-			  1 0 f4500000 00008000>;
++		ranges = <0x0 0x0 0xfe000000 0x02000000
++			  0x1 0x0 0xf4500000 0x00008000
++			  0x2 0x0 0xfd810000 0x00010000>;
+ 
+ 		flash@0,0 {
+ 			compatible = "jedec-flash";
+-			reg = <0 0 2000000>;
++			reg = <0x0 0x0 0x2000000>;
+ 			bank-width = <4>;
+ 			device-width = <1>;
+ 		};
+ 
+ 		board-control@1,0 {
+-			reg = <1 0 20>;
++			reg = <0x1 0x0 0x20>;
+ 			compatible = "fsl,mpc8272ads-bcsr";
+ 		};
 +
- endmenu
-diff --git a/drivers/fpga/fpga-mgr.c b/drivers/fpga/fpga-mgr.c
-index d08cb82..6f9c196 100644
---- a/drivers/fpga/fpga-mgr.c
-+++ b/drivers/fpga/fpga-mgr.c
-@@ -36,6 +36,7 @@ static DEFINE_IDA(fpga_mgr_ida);
- static struct class *fpga_mgr_class;
- 
- static LIST_HEAD(fpga_manager_list);
-+static struct notifier_block fpga_mgr_of_notifier_block;
- 
- /*
-  * Get FPGA state from low level driver
-@@ -186,12 +187,17 @@ int fpga_mgr_firmware_write(struct fpga_manager *mgr, const char *image_name)
- 	ret = request_firmware(&fw, image_name, &mgr->dev);
- 	if (ret) {
- 		mgr->state = FPGA_MGR_STATE_FIRMWARE_REQ_ERR;
-+		dev_dbg(&mgr->dev, "Error requesting firmware %s\n",
-+			image_name);
- 		goto fw_wr_exit;
- 	}
- 
- 	ret = __fpga_mgr_write(mgr, fw->data, fw->size);
--	if (ret)
-+	if (ret) {
-+		dev_dbg(&mgr->dev, "Error writing %s to %s\n",
-+			image_name, mgr->name);
- 		goto fw_wr_exit;
-+	}
- 
- 	strcpy(mgr->image_name, image_name);
- 
-@@ -367,6 +373,87 @@ const struct dev_pm_ops fpga_mgr_dev_pm_ops = {
- 	.resume		= fpga_mgr_resume,
++		simple-periph@2,0 {
++			compatible = "fsl,elbc-gpcm-uio";
++			reg = <0x2 0x0 0x10000>;
++			elbc-gpcm-br = <0xfd810800>;
++			elbc-gpcm-or = <0xffff09f7>;
++		};
+ 	};
+diff --git a/arch/powerpc/include/asm/fsl_lbc.h b/arch/powerpc/include/asm/fsl_lbc.h
+index 067fb0d..c7240a0 100644
+--- a/arch/powerpc/include/asm/fsl_lbc.h
++++ b/arch/powerpc/include/asm/fsl_lbc.h
+@@ -95,6 +95,9 @@ struct fsl_lbc_bank {
+ #define OR_FCM_TRLX_SHIFT                2
+ #define OR_FCM_EHTR             0x00000002
+ #define OR_FCM_EHTR_SHIFT                1
++
++#define OR_GPCM_AM		0xFFFF8000
++#define OR_GPCM_AM_SHIFT		15
  };
  
-+#if IS_ENABLED(CONFIG_OF)
-+/* Find the fpga manager that is pointed to by a phandle */
-+struct fpga_manager *of_fpga_mgr_dev_lookup(struct device_node *node,
-+					    const char *mgr_property)
+ struct fsl_lbc_regs {
+diff --git a/drivers/uio/Kconfig b/drivers/uio/Kconfig
+index 5a90914..8a15c32 100644
+--- a/drivers/uio/Kconfig
++++ b/drivers/uio/Kconfig
+@@ -104,6 +104,26 @@ config UIO_NETX
+ 	  To compile this driver as a module, choose M here; the module
+ 	  will be called uio_netx.
+ 
++config UIO_FSL_ELBC_GPCM
++	tristate "eLBC/GPCM driver"
++	depends on FSL_LBC
++	help
++	  Generic driver for accessing a peripheral connected to an eLBC port
++	  that is running in GPCM mode. GPCM is an interface for simple lower
++	  performance memories and memory-mapped devices. For devices using
++	  FCM or UPM eLBC modes, other device-specific drivers are available.
++
++config UIO_FSL_ELBC_GPCM_NETX5152
++	bool "eLBC/GPCM netX 51/52 support"
++	depends on UIO_FSL_ELBC_GPCM
++	help
++	  This will add support for netX 51/52 devices connected via eLBC/GPCM.
++	  In particular, it implements interrupt handling. This can be used
++	  together with the userspace netX stack from Hilscher.
++
++	  Information about this hardware can be found at:
++	  http://www.hilscher.com/netx
++
+ config UIO_PRUSS
+ 	tristate "Texas Instruments PRUSS driver"
+ 	depends on ARCH_DAVINCI_DA850
+diff --git a/drivers/uio/Makefile b/drivers/uio/Makefile
+index d3218bd..8560dad 100644
+--- a/drivers/uio/Makefile
++++ b/drivers/uio/Makefile
+@@ -8,3 +8,4 @@ obj-$(CONFIG_UIO_PCI_GENERIC)	+= uio_pci_generic.o
+ obj-$(CONFIG_UIO_NETX)	+= uio_netx.o
+ obj-$(CONFIG_UIO_PRUSS)         += uio_pruss.o
+ obj-$(CONFIG_UIO_MF624)         += uio_mf624.o
++obj-$(CONFIG_UIO_FSL_ELBC_GPCM)	+= uio_fsl_elbc_gpcm.o
+diff --git a/drivers/uio/uio_fsl_elbc_gpcm.c b/drivers/uio/uio_fsl_elbc_gpcm.c
+new file mode 100644
+index 0000000..b6cac91
+--- /dev/null
++++ b/drivers/uio/uio_fsl_elbc_gpcm.c
+@@ -0,0 +1,499 @@
++/* uio_fsl_elbc_gpcm: UIO driver for eLBC/GPCM peripherals
++
++   Copyright (C) 2014 Linutronix GmbH
++     Author: John Ogness <john.ogness-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
++
++   This driver provides UIO access to memory of a peripheral connected
++   to the Freescale enhanced local bus controller (eLBC) interface
++   using the general purpose chip-select mode (GPCM).
++
++   Here is an example of the device tree entries:
++
++	localbus@ffe05000 {
++		ranges = <0x2 0x0 0x0 0xff810000 0x10000>;
++
++		dpm@2,0 {
++			compatible = "fsl,elbc-gpcm-uio";
++			reg = <0x2 0x0 0x10000>;
++			elbc-gpcm-br = <0xff810800>;
++			elbc-gpcm-or = <0xffff09f7>;
++			interrupt-parent = <&mpic>;
++			interrupts = <4 1>;
++			device_type = "netx5152";
++			uio_name = "netx_custom";
++			netx5152,init-win0-offset = <0x0>;
++		};
++	};
++
++   Only the entries reg (to identify bank) and elbc-gpcm-* (initial BR/OR
++   values) are required. The entries interrupt*, device_type, and uio_name
++   are optional (as well as any type-specific options such as
++   netx5152,init-win0-offset). As long as no interrupt handler is needed,
++   this driver can be used without any type-specific implementation.
++
++   The netx5152 type has been tested to work with the netX 51/52 hardware
++   from Hilscher using the Hilscher userspace netX stack.
++
++   The netx5152 type should serve as a model to add new type-specific
++   devices as needed.
++*/
++
++#include <linux/module.h>
++#include <linux/device.h>
++#include <linux/string.h>
++#include <linux/slab.h>
++#include <linux/platform_device.h>
++#include <linux/uio_driver.h>
++#include <linux/of_address.h>
++#include <linux/of_irq.h>
++
++#include <asm/fsl_lbc.h>
++
++#define MAX_BANKS 8
++
++struct fsl_elbc_gpcm {
++	struct device *dev;
++	struct fsl_lbc_regs __iomem *lbc;
++	u32 bank;
++	const char *name;
++
++	void (*init)(struct uio_info *info);
++	void (*shutdown)(struct uio_info *info, bool init_err);
++	irqreturn_t (*irq_handler)(int irq, struct uio_info *info);
++};
++
++static ssize_t reg_show(struct device *dev, struct device_attribute *attr,
++			char *buf);
++static ssize_t reg_store(struct device *dev, struct device_attribute *attr,
++			 const char *buf, size_t count);
++
++DEVICE_ATTR(reg_br, S_IRUGO|S_IWUSR|S_IWGRP, reg_show, reg_store);
++DEVICE_ATTR(reg_or, S_IRUGO|S_IWUSR|S_IWGRP, reg_show, reg_store);
++
++static ssize_t reg_show(struct device *dev, struct device_attribute *attr,
++			char *buf)
 +{
-+	struct fpga_manager *mgr;
-+	struct device_node *mgr_node;
++	struct platform_device *pdev = to_platform_device(dev);
++	struct uio_info *info = platform_get_drvdata(pdev);
++	struct fsl_elbc_gpcm *priv = info->priv;
++	struct fsl_lbc_bank *bank = &priv->lbc->bank[priv->bank];
 +
-+	if (node == NULL)
-+		return NULL;
++	if (attr == &dev_attr_reg_br) {
++		return scnprintf(buf, PAGE_SIZE, "0x%08x\n",
++				 in_be32(&bank->br));
 +
-+	mgr_node = of_parse_phandle(node, mgr_property, 0);
-+	if (!mgr_node)
-+		return NULL;
++	} else if (attr == &dev_attr_reg_or) {
++		return scnprintf(buf, PAGE_SIZE, "0x%08x\n",
++				 in_be32(&bank->or));
++	}
 +
-+	list_for_each_entry(mgr, &fpga_manager_list, list)
-+		if (mgr_node == mgr->dev.of_node) {
-+			of_node_put(mgr_node);
-+			return mgr;
++	return 0;
++}
++
++static ssize_t reg_store(struct device *dev, struct device_attribute *attr,
++			 const char *buf, size_t count)
++{
++	struct platform_device *pdev = to_platform_device(dev);
++	struct uio_info *info = platform_get_drvdata(pdev);
++	struct fsl_elbc_gpcm *priv = info->priv;
++	struct fsl_lbc_bank *bank = &priv->lbc->bank[priv->bank];
++	unsigned long val;
++	u32 reg_br_cur;
++	u32 reg_or_cur;
++	u32 reg_new;
++
++	/* parse use input */
++	if (kstrtoul(buf, 0, &val) != 0)
++		return -EINVAL;
++	reg_new = (u32)val;
++
++	/* read current values */
++	reg_br_cur = in_be32(&bank->br);
++	reg_or_cur = in_be32(&bank->or);
++
++	if (attr == &dev_attr_reg_br) {
++		/* not allowed to change effective base address */
++		if ((reg_br_cur & reg_or_cur & BR_BA) !=
++		    (reg_new & reg_or_cur & BR_BA)) {
++			return -EINVAL;
 +		}
 +
-+	of_node_put(mgr_node);
++		/* not allowed to change mode */
++		if ((reg_new & BR_MSEL) != BR_MS_GPCM)
++			return -EINVAL;
 +
-+	return NULL;
-+}
-+EXPORT_SYMBOL_GPL(of_fpga_mgr_dev_lookup);
++		/* write new value (force valid) */
++		out_be32(&bank->br, reg_new | BR_V);
 +
-+struct fpga_manager *of_find_fpga_mgr_by_node(struct device_node *node)
-+{
-+	struct fpga_manager *mgr;
++	} else if (attr == &dev_attr_reg_or) {
++		/* not allowed to change access mask */
++		if ((reg_or_cur & OR_GPCM_AM) != (reg_new & OR_GPCM_AM))
++			return -EINVAL;
 +
-+	if (node == NULL)
-+		return NULL;
++		/* write new value */
++		out_be32(&bank->or, reg_new);
 +
-+	list_for_each_entry(mgr, &fpga_manager_list, list)
-+		if (node == mgr->dev.of_node)
-+			return mgr;
-+
-+	return NULL;
-+}
-+EXPORT_SYMBOL_GPL(of_find_fpga_mgr_by_node);
-+#endif	/* CONFIG_OF */
-+
-+static int of_fpga_mgr_notify(struct notifier_block *nb, unsigned long action,
-+			      void *arg)
-+{
-+	struct device_node *dn;
-+	const char *path;
-+	struct fpga_manager *mgr;
-+	int state;
-+
-+	state = of_reconfig_get_state_change(action, arg);
-+	if (state == -1)
-+		return NOTIFY_OK;
-+
-+	switch (action) {
-+	case OF_RECONFIG_ATTACH_NODE:
-+	case OF_RECONFIG_DETACH_NODE:
-+		dn = arg;
-+		break;
-+	case OF_RECONFIG_ADD_PROPERTY:
-+	case OF_RECONFIG_REMOVE_PROPERTY:
-+	case OF_RECONFIG_UPDATE_PROPERTY:
-+	default:
-+		return NOTIFY_OK;
-+	}
-+
-+	mgr = of_find_fpga_mgr_by_node(dn->parent);
-+	if (!mgr)
-+		return NOTIFY_OK;	/* not for us */
-+
-+	if (state) {
-+		if (!of_property_read_string(dn, "fpga-firmware", &path))
-+			fpga_mgr_firmware_write(mgr, path);
 +	} else {
-+		fpga_mgr_reset(mgr);
++		return -EINVAL;
 +	}
 +
-+	return NOTIFY_OK;
++	return count;
 +}
 +
- static void fpga_mgr_dev_release(struct device *dev)
- {
- 	struct fpga_manager *mgr = to_fpga_manager(dev);
-@@ -459,6 +546,8 @@ EXPORT_SYMBOL_GPL(fpga_mgr_remove);
- 
- static int __init fpga_mgr_dev_init(void)
- {
++#ifdef CONFIG_UIO_FSL_ELBC_GPCM_NETX5152
++#define DPM_HOST_WIN0_OFFSET	0xff00
++#define DPM_HOST_INT_STAT0	0xe0
++#define DPM_HOST_INT_EN0	0xf0
++#define DPM_HOST_INT_MASK	0xe600ffff
++#define DPM_HOST_INT_GLOBAL_EN	0x80000000
++
++static irqreturn_t netx5152_irq_handler(int irq, struct uio_info *info)
++{
++	void __iomem *reg_int_en = info->mem[0].internal_addr +
++					DPM_HOST_WIN0_OFFSET +
++					DPM_HOST_INT_EN0;
++	void __iomem *reg_int_stat = info->mem[0].internal_addr +
++					DPM_HOST_WIN0_OFFSET +
++					DPM_HOST_INT_STAT0;
++
++	/* check if an interrupt is enabled and active */
++	if ((ioread32(reg_int_en) & ioread32(reg_int_stat) &
++	     DPM_HOST_INT_MASK) == 0) {
++		return IRQ_NONE;
++	}
++
++	/* disable interrupts */
++	iowrite32(ioread32(reg_int_en) & ~DPM_HOST_INT_GLOBAL_EN, reg_int_en);
++
++	return IRQ_HANDLED;
++}
++
++static void netx5152_init(struct uio_info *info)
++{
++	unsigned long win0_offset = DPM_HOST_WIN0_OFFSET;
++	struct fsl_elbc_gpcm *priv = info->priv;
++	const void *prop;
++
++	/* get an optional initial win0 offset */
++	prop = of_get_property(priv->dev->of_node,
++			       "netx5152,init-win0-offset", NULL);
++	if (prop)
++		win0_offset = of_read_ulong(prop, 1);
++
++	/* disable interrupts */
++	iowrite32(0, info->mem[0].internal_addr + win0_offset +
++		     DPM_HOST_INT_EN0);
++}
++
++static void netx5152_shutdown(struct uio_info *info, bool init_err)
++{
++	if (init_err)
++		return;
++
++	/* disable interrupts */
++	iowrite32(0, info->mem[0].internal_addr + DPM_HOST_WIN0_OFFSET +
++		     DPM_HOST_INT_EN0);
++}
++#endif
++
++static void setup_periph(struct fsl_elbc_gpcm *priv,
++				   const char *type)
++{
++#ifdef CONFIG_UIO_FSL_ELBC_GPCM_NETX5152
++	if (strcmp(type, "netx5152") == 0) {
++		priv->irq_handler = netx5152_irq_handler;
++		priv->init = netx5152_init;
++		priv->shutdown = netx5152_shutdown;
++		priv->name = "netX 51/52";
++		return;
++	}
++#endif
++}
++
++static int check_of_data(struct fsl_elbc_gpcm *priv,
++				   struct resource *res,
++				   u32 reg_br, u32 reg_or)
++{
++	/* check specified bank */
++	if (priv->bank >= MAX_BANKS) {
++		dev_err(priv->dev, "invalid bank\n");
++		return -ENODEV;
++	}
++
++	/* check specified mode (BR_MS_GPCM is 0) */
++	if ((reg_br & BR_MSEL) != BR_MS_GPCM) {
++		dev_err(priv->dev, "unsupported mode\n");
++		return -ENODEV;
++	}
++
++	/* check specified mask vs. resource size */
++	if ((~(reg_or & OR_GPCM_AM) + 1) != resource_size(res)) {
++		dev_err(priv->dev, "address mask / size mismatch\n");
++		return -ENODEV;
++	}
++
++	/* check specified address */
++	if ((reg_br & reg_or & BR_BA) != fsl_lbc_addr(res->start)) {
++		dev_err(priv->dev, "base address mismatch\n");
++		return -ENODEV;
++	}
++
++	return 0;
++}
++
++static int get_of_data(struct fsl_elbc_gpcm *priv, struct device_node *node,
++		       struct resource *res, u32 *reg_br,
++		       u32 *reg_or, unsigned int *irq, char **name)
++{
++	const char *dt_name;
++	const char *type;
 +	int ret;
 +
- 	pr_info("FPGA Manager framework driver\n");
- 
- 	fpga_mgr_class = class_create(THIS_MODULE, "fpga_manager");
-@@ -468,11 +557,24 @@ static int __init fpga_mgr_dev_init(void)
- 	fpga_mgr_class->dev_groups = fpga_mgr_groups;
- 	fpga_mgr_class->pm = &fpga_mgr_dev_pm_ops;
- 
-+#if IS_ENABLED(CONFIG_OF)
-+	fpga_mgr_of_notifier_block.notifier_call = of_fpga_mgr_notify;
-+	ret = of_reconfig_notifier_register(&fpga_mgr_of_notifier_block);
++	/* get the memory resource */
++	ret = of_address_to_resource(node, 0, res);
 +	if (ret) {
-+		class_destroy(fpga_mgr_class);
-+		ida_destroy(&fpga_mgr_ida);
++		dev_err(priv->dev, "failed to get resource\n");
 +		return ret;
 +	}
-+#endif
 +
- 	return 0;
- }
- 
- static void __exit fpga_mgr_dev_exit(void)
- {
-+#if IS_ENABLED(CONFIG_OF)
-+	of_reconfig_notifier_unregister(&fpga_mgr_of_notifier_block);
-+#endif
- 	class_destroy(fpga_mgr_class);
- 	ida_destroy(&fpga_mgr_ida);
- }
-diff --git a/include/linux/fpga-mgr.h b/include/linux/fpga-mgr.h
-index 7ac762c..414d949 100644
---- a/include/linux/fpga-mgr.h
-+++ b/include/linux/fpga-mgr.h
-@@ -99,6 +99,9 @@ int fpga_mgr_reset(struct fpga_manager *mgr);
- int fpga_mgr_register(struct device *pdev, const char *name,
- 		      struct fpga_manager_ops *mops, void *priv);
- void fpga_mgr_remove(struct device *dev);
-+struct fpga_manager *of_fpga_mgr_dev_lookup(struct device_node *node,
-+					    const char *mgr_property);
-+struct fpga_manager *of_find_fpga_mgr_by_node(struct device_node *node);
- 
- #endif /* CONFIG_FPGA */
- #endif /*_LINUX_FPGA_MGR_H */
++	/* get the bank number */
++	ret = of_property_read_u32(node, "reg", &priv->bank);
++	if (ret) {
++		dev_err(priv->dev, "failed to get bank number\n");
++		return ret;
++	}
++
++	/* get BR value to set */
++	ret = of_property_read_u32(node, "elbc-gpcm-br", reg_br);
++	if (ret) {
++		dev_err(priv->dev, "missing elbc-gpcm-br value\n");
++		return ret;
++	}
++
++	/* get OR value to set */
++	ret = of_property_read_u32(node, "elbc-gpcm-or", reg_or);
++	if (ret) {
++		dev_err(priv->dev, "missing elbc-gpcm-or value\n");
++		return ret;
++	}
++
++	/* get optional peripheral type */
++	priv->name = "generic";
++	if (of_property_read_string(node, "device_type", &type) == 0)
++		setup_periph(priv, type);
++
++	/* get optional irq value */
++	*irq = irq_of_parse_and_map(node, 0);
++
++	/* sanity check device tree data */
++	ret = check_of_data(priv, res, *reg_br, *reg_or);
++	if (ret)
++		return ret;
++
++	/* get optional uio name */
++	if (of_property_read_string(node, "uio_name", &dt_name) != 0)
++		dt_name = "eLBC_GPCM";
++	*name = kstrdup(dt_name, GFP_KERNEL);
++	if (!*name)
++		return -ENOMEM;
++
++	return 0;
++}
++
++static int uio_fsl_elbc_gpcm_probe(struct platform_device *pdev)
++{
++	struct device_node *node = pdev->dev.of_node;
++	struct fsl_elbc_gpcm *priv;
++	struct uio_info *info;
++	char *uio_name = NULL;
++	struct resource res;
++	unsigned int irq;
++	u32 reg_br_cur;
++	u32 reg_or_cur;
++	u32 reg_br_new;
++	u32 reg_or_new;
++	int ret;
++
++	if (!fsl_lbc_ctrl_dev || !fsl_lbc_ctrl_dev->regs)
++		return -ENODEV;
++
++	/* allocate private data */
++	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++	priv->dev = &pdev->dev;
++	priv->lbc = fsl_lbc_ctrl_dev->regs;
++
++	/* get device tree data */
++	ret = get_of_data(priv, node, &res, &reg_br_new, &reg_or_new,
++			  &irq, &uio_name);
++	if (ret)
++		goto out_err0;
++
++	/* allocate UIO structure */
++	info = kzalloc(sizeof(*info), GFP_KERNEL);
++	if (!info) {
++		ret = -ENOMEM;
++		goto out_err0;
++	}
++
++	/* get current BR/OR values */
++	reg_br_cur = in_be32(&priv->lbc->bank[priv->bank].br);
++	reg_or_cur = in_be32(&priv->lbc->bank[priv->bank].or);
++
++	/* if bank already configured, make sure it matches */
++	if ((reg_br_cur & BR_V)) {
++		if ((reg_br_cur & BR_MSEL) != BR_MS_GPCM ||
++		    (reg_br_cur & reg_or_cur & BR_BA)
++		     != fsl_lbc_addr(res.start)) {
++			dev_err(priv->dev,
++				"bank in use by another peripheral\n");
++			ret = -ENODEV;
++			goto out_err1;
++		}
++
++		/* warn if behavior settings changing */
++		if ((reg_br_cur & ~(BR_BA | BR_V)) !=
++		    (reg_br_new & ~(BR_BA | BR_V))) {
++			dev_warn(priv->dev,
++				 "modifying BR settings: 0x%08x -> 0x%08x",
++				 reg_br_cur, reg_br_new);
++		}
++		if ((reg_or_cur & ~OR_GPCM_AM) != (reg_or_new & ~OR_GPCM_AM)) {
++			dev_warn(priv->dev,
++				 "modifying OR settings: 0x%08x -> 0x%08x",
++				 reg_or_cur, reg_or_new);
++		}
++	}
++
++	/* configure the bank (force base address and GPCM) */
++	reg_br_new &= ~(BR_BA | BR_MSEL);
++	reg_br_new |= fsl_lbc_addr(res.start) | BR_MS_GPCM | BR_V;
++	out_be32(&priv->lbc->bank[priv->bank].or, reg_or_new);
++	out_be32(&priv->lbc->bank[priv->bank].br, reg_br_new);
++
++	/* map the memory resource */
++	info->mem[0].internal_addr = ioremap(res.start, resource_size(&res));
++	if (!info->mem[0].internal_addr) {
++		dev_err(priv->dev, "failed to map chip region\n");
++		ret = -ENODEV;
++		goto out_err1;
++	}
++
++	/* set all UIO data */
++	if (node->name)
++		info->mem[0].name = kstrdup(node->name, GFP_KERNEL);
++	info->mem[0].addr = res.start;
++	info->mem[0].size = resource_size(&res);
++	info->mem[0].memtype = UIO_MEM_PHYS;
++	info->priv = priv;
++	info->name = uio_name;
++	info->version = "0.0.1";
++	if (irq != NO_IRQ) {
++		if (priv->irq_handler) {
++			info->irq = irq;
++			info->irq_flags = IRQF_SHARED;
++			info->handler = priv->irq_handler;
++		} else {
++			irq = NO_IRQ;
++			dev_warn(priv->dev, "ignoring irq, no handler\n");
++		}
++	}
++
++	if (priv->init)
++		priv->init(info);
++
++	/* register UIO device */
++	if (uio_register_device(priv->dev, info) != 0) {
++		dev_err(priv->dev, "UIO registration failed\n");
++		ret = -ENODEV;
++		goto out_err2;
++	}
++
++	/* store private data */
++	platform_set_drvdata(pdev, info);
++
++	/* create sysfs files */
++	ret = device_create_file(priv->dev, &dev_attr_reg_br);
++	if (ret)
++		goto out_err3;
++	ret = device_create_file(priv->dev, &dev_attr_reg_or);
++	if (ret)
++		goto out_err4;
++
++	dev_info(priv->dev,
++		 "eLBC/GPCM device (%s) at 0x%llx, bank %d, irq=%d\n",
++		 priv->name, (unsigned long long)res.start, priv->bank,
++		 irq != NO_IRQ ? irq : -1);
++
++	return 0;
++out_err4:
++	device_remove_file(priv->dev, &dev_attr_reg_br);
++out_err3:
++	platform_set_drvdata(pdev, NULL);
++	uio_unregister_device(info);
++out_err2:
++	if (priv->shutdown)
++		priv->shutdown(info, true);
++	iounmap(info->mem[0].internal_addr);
++out_err1:
++	kfree(info->mem[0].name);
++	kfree(info);
++out_err0:
++	kfree(uio_name);
++	kfree(priv);
++	return ret;
++}
++
++static int uio_fsl_elbc_gpcm_remove(struct platform_device *pdev)
++{
++	struct uio_info *info = platform_get_drvdata(pdev);
++	struct fsl_elbc_gpcm *priv = info->priv;
++
++	device_remove_file(priv->dev, &dev_attr_reg_or);
++	device_remove_file(priv->dev, &dev_attr_reg_br);
++	platform_set_drvdata(pdev, NULL);
++	uio_unregister_device(info);
++	if (priv->shutdown)
++		priv->shutdown(info, false);
++	iounmap(info->mem[0].internal_addr);
++	kfree(info->mem[0].name);
++	kfree(info->name);
++	kfree(info);
++	kfree(priv);
++
++	return 0;
++
++}
++
++static const struct of_device_id uio_fsl_elbc_gpcm_match[] = {
++	{ .compatible = "fsl,elbc-gpcm-uio", },
++	{}
++};
++
++static struct platform_driver uio_fsl_elbc_gpcm_driver = {
++	.driver = {
++		.name = "fsl,elbc-gpcm-uio",
++		.owner = THIS_MODULE,
++		.of_match_table = uio_fsl_elbc_gpcm_match,
++	},
++	.probe = uio_fsl_elbc_gpcm_probe,
++	.remove = uio_fsl_elbc_gpcm_remove,
++};
++
++static int __init uio_fsl_elbc_gpcm_init(void)
++{
++	return platform_driver_register(&uio_fsl_elbc_gpcm_driver);
++}
++
++static void __exit uio_fsl_elbc_gpcm_exit(void)
++{
++	platform_driver_unregister(&uio_fsl_elbc_gpcm_driver);
++}
++
++module_init(uio_fsl_elbc_gpcm_init);
++module_exit(uio_fsl_elbc_gpcm_exit);
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("John Ogness <john.ogness-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>");
++MODULE_DESCRIPTION("Freescale Enhanced Local Bus Controller GPCM driver");
 -- 
-1.7.9.5
-
+1.7.10.4
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
