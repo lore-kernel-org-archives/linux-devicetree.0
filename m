@@ -1,52 +1,54 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [Patch v2 11/11] ARM: dts: Model IPQ LPASS audio hardware
-Date: Tue, 9 Dec 2014 16:08:47 +0000
-Message-ID: <20141209160847.GI1934@sirena.org.uk>
-References: <1418076073-12623-1-git-send-email-kwestfie@codeaurora.org>
- <1418076073-12623-12-git-send-email-kwestfie@codeaurora.org>
+From: <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Subject: [PATCH v3 0/3] FPGA Manager Framework
+Date: Tue, 9 Dec 2014 10:27:58 -0600
+Message-ID: <1418142481-6167-1-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="l0l+eSofNeLXHSnY"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1418076073-12623-12-git-send-email-kwestfie@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Kenneth Westfield <kwestfie@codeaurora.org>
-Cc: Takashi Iwai <tiwai@suse.de>, Liam Girdwood <lgirdwood@gmail.com>, David Brown <davidb@codeaurora.org>, Bryan Huntsman <bryanh@codeaurora.org>, Rob Herring <rob.herring@calxeda.com>, Greg KH <gregkh@linuxfoundation.org>, Patrick Lai <plai@codeaurora.org>, Banajit Goswami <bgoswami@codeaurora.org>, ALSA Mailing List <alsa-devel@alsa-project.org>, Device Tree Mailing List <devicetree@vger.kernel.org>, MSM Mailing List <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org, hpa-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org, monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, iws-lulEs6mt1IksTUYHLfqkUA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-ynQEQJNshbs@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, philip-6RQC9ztksjxg9hUCZPvPmw@public.gmane.org, rubini-kaDoWcXyVrEAvxtiuMwx3w@public.gmane.org, s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, kyle.teske-acOepvfBmUk@public.gmane.org, nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, cesarb-PWySMVKUnqmsTnJN9+BGXg@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+From: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 
---l0l+eSofNeLXHSnY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Improvements in this version:
 
-On Mon, Dec 08, 2014 at 02:01:13PM -0800, Kenneth Westfield wrote:
+Fixed things in the framework that were left over from my original
+version that was a character driver.  In particular, make the
+struct device be present in the fpga_manager struct, not as a
+pointer, so container_of will work.
 
-> +		max98357a_codec: max98357a-codec {
-> +			compatible = "qcom,max98357a-codec";
-> +			status = "disabled";
-> +		};
-> +
->  		qcom_pinmux: pinmux@800000 {
+Also rewrote the part that handles DT notifications.  Now this
+section takes notifications instead of being another device to
+load/unload.
 
-This appears to be adding an off-SoC CODEC driver to the .dtsi for the
-SoC.  Don't do that, just let the relevant boards register the devices
-on them.
+Still want to integrate bridge enable/disable with this, but
+that's not done yet.
 
---l0l+eSofNeLXHSnY
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Alan Tull (3):
+  fpga manager: add sysfs interface document
+  fpga manager: framework core
+  fpga manager: device tree overlay support
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+ Documentation/ABI/testing/sysfs-class-fpga-manager |   38 ++
+ drivers/Kconfig                                    |    2 +
+ drivers/Makefile                                   |    1 +
+ drivers/fpga/Kconfig                               |   28 +
+ drivers/fpga/Makefile                              |   10 +
+ drivers/fpga/fpga-mgr.c                            |  587 ++++++++++++++++++++
+ include/linux/fpga-mgr.h                           |  107 ++++
+ 7 files changed, 773 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-fpga-manager
+ create mode 100644 drivers/fpga/Kconfig
+ create mode 100644 drivers/fpga/Makefile
+ create mode 100644 drivers/fpga/fpga-mgr.c
+ create mode 100644 include/linux/fpga-mgr.h
 
-iQEcBAEBAgAGBQJUhx6OAAoJECTWi3JdVIfQBQ0H/3fati7yjW76dYnbjgqczhKA
-QNRIurU2BOhg/QoOEXxlpmia8v8as2madlOttST3dXbDxUNz1x9OyMiGhPR+D1+3
-hrh/s/PIAUynKCDylBRMK4B8vjm1cMypNK/B68ik3cb3jwhapJb5ZTm53TCFyC8j
-rMh49ZH8mliXSYmfVdRZxfYPmy25Ci03Rj6zKJ1KgNQJ6yPpueURRVVjeZonGgV3
-XMHPk+uSfAdmGvJkm+JOE7tSDh+G5lmo1kFopoO1CgA9hz6PkhaYEcxuR+ndZITX
-00ByRMvcx9ikjx4jvtRalWSnWZGngJSgqLvES0Ogdx1K1ousio6gg5Du0SctCTI=
-=HYwH
------END PGP SIGNATURE-----
+-- 
+1.7.9.5
 
---l0l+eSofNeLXHSnY--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
