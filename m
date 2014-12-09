@@ -1,7 +1,7 @@
 From: <atull@opensource.altera.com>
-Subject: [PATCH v4 2/6] arm: dts: socfpga: add altera fpga manager
-Date: Tue, 9 Dec 2014 14:14:46 -0600
-Message-ID: <1418156090-23578-3-git-send-email-atull@opensource.altera.com>
+Subject: [PATCH v4 4/6] fpga manager: add sysfs interface document
+Date: Tue, 9 Dec 2014 14:14:48 -0600
+Message-ID: <1418156090-23578-5-git-send-email-atull@opensource.altera.com>
 References: <1418156090-23578-1-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,32 +14,57 @@ List-Id: devicetree@vger.kernel.org
 
 From: Alan Tull <atull@opensource.altera.com>
 
-Add Altera FGPA manager to device tree.
+Add documentation for new fpga manager sysfs interface.
 
 Signed-off-by: Alan Tull <atull@opensource.altera.com>
 ---
- arch/arm/boot/dts/socfpga.dtsi |   10 ++++++++++
- 1 file changed, 10 insertions(+)
+ Documentation/ABI/testing/sysfs-class-fpga-manager |   38 ++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-fpga-manager
 
-diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-index 4472fd9..bab98b6 100644
---- a/arch/arm/boot/dts/socfpga.dtsi
-+++ b/arch/arm/boot/dts/socfpga.dtsi
-@@ -751,5 +751,15 @@
- 			compatible = "altr,sys-mgr", "syscon";
- 			reg = <0xffd08000 0x4000>;
- 		};
+diff --git a/Documentation/ABI/testing/sysfs-class-fpga-manager b/Documentation/ABI/testing/sysfs-class-fpga-manager
+new file mode 100644
+index 0000000..eb600f2
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-class-fpga-manager
+@@ -0,0 +1,38 @@
++What:		/sys/class/fpga_manager/<fpga>/name
++Date:		October 2014
++KernelVersion:	3.18
++Contact:	Alan Tull <atull@opensource.altera.com>
++Description:	Name of low level driver.
 +
-+		hps_0_fpgamgr: fpgamgr@0xff706000 {
-+			compatible = "altr,fpga-mgr", "simple-bus";
-+			reg = <0xFF706000 0x1000
-+			       0xFFB90000 0x1000>;
-+			interrupts = <0 175 4>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges;
-+		};
- 	};
- };
++What:		/sys/class/fpga_manager/<fpga>/firmware
++Date:		October 2014
++KernelVersion:	3.18
++Contact:	Alan Tull <atull@opensource.altera.com>
++Description:	Name of the FPGA image file to load using firmware class.
++
++What:		/sys/class/fpga_manager/<fpga>/reset
++Date:		October 2014
++KernelVersion:	3.18
++Contact:	Alan Tull <atull@opensource.altera.com>
++Description:	Write 1 to reset the FPGA
++
++What:		/sys/class/fpga_manager/<fpga>/state
++Date:		October 2014
++KernelVersion:	3.18
++Contact:	Alan Tull <atull@opensource.altera.com>
++Description:	Read state of fpga framework state machine as a string.
++		Valid states may vary by manufacturer; superset is:
++		* unknown		= can't determine state
++		* power_off		= FPGA power is off
++		* power_up		= FPGA reports power is up
++		* reset			= FPGA held in reset state
++		* firmware_request	= firmware class request in progress
++		* firmware_request_err	= firmware request failed
++		* write_init		= FPGA being prepared for programming
++		* write_init_err	= Error while preparing FPGA for
++					  programming
++		* write			= FPGA ready to receive image data
++		* write_err		= Error while programming
++		* write_complete	= Doing post programming steps
++		* write_complete_err	= Error while doing post programming
++		* operating		= FPGA is programmed and operating
 -- 
 1.7.9.5
