@@ -1,98 +1,56 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH 3/5] media: ov2640: add primary dt support
-Date: Tue, 09 Dec 2014 10:07:47 +0200
-Message-ID: <4259882.xUnFntZnaF@avalon>
-References: <1418038147-13221-1-git-send-email-josh.wu@atmel.com> <13013762.Jqm1jQRnFM@avalon> <54866809.7020402@atmel.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] backlight/lp855x: Add supply regulator to lp855x
+Date: Tue, 09 Dec 2014 09:13:04 +0100
+Message-ID: <11871302.y60x8yR8Ol@wuerfel>
+References: <1417570752-23633-1-git-send-email-seanpaul@chromium.org> <54866695.3050307@ti.com> <000a01d01362$aee684d0$0cb38e70$%han@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54866809.7020402-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <000a01d01362$aee684d0$0cb38e70$%han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, g.liakhovetski-Mmb7MZpHnFY@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: "'Kim, Milo'" <milo.kim-l0cyMroinI0@public.gmane.org>, 'Sean Paul' <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, =?ISO-8859-1?Q?=27St=E9phane?= Marchesin' <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, 'Aaron Durbin' <adurbin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Josh,
-
-On Tuesday 09 December 2014 11:10:01 Josh Wu wrote:
-> On 12/9/2014 2:39 AM, Laurent Pinchart wrote:
-> > Hi Josh,
+On Tuesday 09 December 2014 12:46:15 Jingoo Han wrote:
+> On Tuesday, December 09, 2014 12:04 PM, Kim, Milo wrote:
 > > 
-> > Thank you for the patch.
+> > Hi Arnd,
 > > 
-> > On Monday 08 December 2014 19:29:05 Josh Wu wrote:
-> >> Add device tree support for ov2640.
-> >> 
-> >> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> >> Signed-off-by: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> >> ---
-> >> 
-> >> v1 -> v2:
-> >>    1. use gpiod APIs.
-> >>    2. change the gpio pin's name according to datasheet.
-> >>    3. reduce the delay for .reset() function.
-> >>   
-> >>   drivers/media/i2c/soc_camera/ov2640.c | 86 +++++++++++++++++++++++++---
-> >>   1 file changed, 80 insertions(+), 6 deletions(-)
-> >> 
-> >> diff --git a/drivers/media/i2c/soc_camera/ov2640.c
-> >> b/drivers/media/i2c/soc_camera/ov2640.c index 9ee910d..2a57979 100644
-> >> --- a/drivers/media/i2c/soc_camera/ov2640.c
-> >> +++ b/drivers/media/i2c/soc_camera/ov2640.c
-
-[snip]
-
-> >> +static int ov2640_probe_dt(struct i2c_client *client,
-> >> +		struct ov2640_priv *priv)
-> >> +{
-> >> +	priv->resetb_gpio = devm_gpiod_get_optional(&client->dev, "resetb",
-> >> +			GPIOD_OUT_HIGH);
-> >> +	if (!priv->resetb_gpio)
-> >> +		dev_warn(&client->dev, "resetb gpio not found!\n");
+> > Good to talk to you again. It's been a long time since I met you in
+> > Linaro Connect HK few years ago 
 > > 
-> > No need to warn here, it's perfectly fine if the reset signal isn't
-> > connected to a GPIO.
+> > On 12/3/2014 11:11 PM, Arnd Bergmann wrote:
+> > > While your two patches are both correct (and applied already), I took
+> > > a look at the platform_data header and noticed that all users of this
+> > > file have been converted to DT a while ago, so it would be nice to clean
+> > > it up by integrating the linux/platform_data/lp855x.h header file into the
+> > > drivers/video/backlight/lp855x_bl.c itself.
+> > 
+> > I like this cleanup but need to consider few things.
+> > 
+> > - Platform which does not support the DT
+> > In this case, there is no way to configure options like backlight device
+> > control mode. Without the DT, only default options are set.
+> > To change the settings, the driver modification is required.
+> > I don't want to write project/platform dependency code inside the driver.
+> > 
+> > - Backward compatibility
+> > Some customers have been using this platform data in their board-*.c
+> > (but this *.c has not been mainlined yet).
+> > My concern is the backward compatibility issue may happen in their projects.
 > 
-> I want to print some information if no GPIO is assigned. So I'd like use
-> dev_dbg() here.
-> What do you feel?
+> I understand this situation. In the case of Exynos DisplayPort driver,
+> a similar issue happened. At that time, the conclusion was that
+> out-of-tree code (not mainlined yet) cannot be considered.
 
-If you want to print a message in that case dev_dbg is the most appropriate 
-log level. I would skip it completely, but that's up to you.
+Right. Basically when the only reason to have code in the kernel is
+to support someone with an out-of-tree patch set, they can be expected
+to add the extra bit to their patch set, it doesn't add any extra burden
+to them, and it makes our lives easier.
 
-> >> +	else if (IS_ERR(priv->resetb_gpio))
-> >> +		return -EINVAL;
-> >> +
-> >> +	priv->pwdn_gpio = devm_gpiod_get_optional(&client->dev, "pwdn",
-> >> +			GPIOD_OUT_HIGH);
-> >> +	if (!priv->pwdn_gpio)
-> >> +		dev_warn(&client->dev, "pwdn gpio not found!\n");
-> > 
-> > Same here.
-> 
-> ditto.
-> 
-> >> +	else if (IS_ERR(priv->pwdn_gpio))
-> >> +		return -EINVAL;
-> >> +
-> >> +	/* Initialize the soc_camera_subdev_desc */
-> >> +	priv->ssdd_dt.power = ov2640_hw_power;
-> >> +	priv->ssdd_dt.reset = ov2640_hw_reset;
-> >> +	client->dev.platform_data = &priv->ssdd_dt;
-> >> +
-> >> +	return 0;
-> >> +}
-> >> +
-> >>   /*
-> >>    * i2c_driver functions
-> >>    */
-
--- 
-Regards,
-
-Laurent Pinchart
-
+	Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
