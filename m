@@ -1,75 +1,157 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [alsa-devel][PATCH 1/2] mfd: arizona: Add support for OUTn_MONO
- register control
-Date: Tue, 9 Dec 2014 08:57:17 +0000
-Message-ID: <20141209085717.GT3951@x1>
-References: <1418030422-27061-1-git-send-email-ideal.song@samsung.com>
- <1418030422-27061-2-git-send-email-ideal.song@samsung.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v7 1/4] mfd: rt5033: Add Richtek RT5033 driver core.
+Date: Tue, 9 Dec 2014 09:06:26 +0000
+Message-ID: <20141209090626.GU3951@x1>
+References: <1417527591-20450-1-git-send-email-beomho.seo@samsung.com>
+ <1417527591-20450-2-git-send-email-beomho.seo@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1418030422-27061-2-git-send-email-ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Inha Song <ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, ckeepax-yzvPICuk2ABX+icLlh6Yhe4GMZTVgNySAL8bYrjMMd8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
+In-Reply-To: <1417527591-20450-2-git-send-email-beomho.seo@samsung.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Beomho Seo <beomho.seo@samsung.com>
+Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, sameo@linux.intel.com, lee.jone@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, sre@kernel.org, dbaryshkov@gmail.com, dwmw2@infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, cw00.choi@samsung.com, geunsik.lim@samsung.com, inki.dae@samsung.com, sw0312.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 08 Dec 2014, Inha Song wrote:
+On Tue, 02 Dec 2014, Beomho Seo wrote:
 
-> Some boards need to set the OUTn_MONO register to configurates
-> the output signal path as a mono differential output. This
-> wlf,out-mono property is optional. If present, values must be
-> specified less than or equal to the number of output signals.
-> If values less than the number of output signals, elements
-> that has not been specified are set to 0 by default.
+> This patch adds a new driver for Richtek RT5033 driver.
+> RT5033 is a Multifunction device which includes battery charger, fuel=
+ gauge,
+> flash LED current source, LDO and synchronous Buck converter. It is i=
+nterfaced
+> to host controller using I2C interface.
 >=20
-> Example:
->  - wlf,out-mono =3D <1 0 1>; /* set OUT1,OUT3 to mono differential */
->=20
-> Signed-off-by: Inha Song <ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Cc: Samuel Ortiz <sameo@linux.intel.com>
+> Cc: Lee Jones <lee.jone@linaro.org>
+> Signed-off-by: Beomho Seo <beomho.seo@samsung.com>
+> Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
 > ---
->  drivers/mfd/arizona-core.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
+> Changes in v7
+> - Use small description.
+> - Change some names for a variable.
+> - Revise of_device_id struct style.
 >=20
-> diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.c
-> index bce7c07..117be32 100644
-> --- a/drivers/mfd/arizona-core.c
-> +++ b/drivers/mfd/arizona-core.c
-> @@ -561,6 +561,16 @@ static int arizona_of_get_core_pdata(struct ariz=
-ona *arizona)
->  		count++;
->  	}
-> =20
-> +	count =3D 0;
-> +	of_property_for_each_u32(arizona->dev->of_node, "wlf,out-mono", pro=
-p,
-> +				 cur, val) {
+> Changes in v6
+> - Fix white space issue in mfd cell struct.
+>=20
+> Changes in v5
+> - Change possible built as a module.
+> - Revise rt5033_dev mfd cell entry.
+> - Fix incorrect typo.
+> - Add module alias.
+>=20
+> Changes in v4
+> - none.
+>=20
+> Changes in v3
+> - Correct sentence errors.
+> - Add author information the top of each drivers.
+> - Remove unnecessary pre-initialise, struct member(rt5033->i2c) and b=
+link.
+> - Change some return check.
+> - Use bool and of_match_ptr().
+>=20
+> Changes in v2
+> - Remove volatile_reg callback. Because this driver not in use regmap=
+ cache.
+> - Revmoe unnecessary subnode of_compatible.
+> - Add define for set_high impedance mode of charger.
+> ---
+>  drivers/mfd/Kconfig                |   12 ++
+>  drivers/mfd/Makefile               |    1 +
+>  drivers/mfd/rt5033.c               |  141 +++++++++++++++++++
+>  include/linux/mfd/rt5033-private.h |  260 ++++++++++++++++++++++++++=
+++++++++++
+>  include/linux/mfd/rt5033.h         |   62 +++++++++
+>  5 files changed, 476 insertions(+)
+>  create mode 100644 drivers/mfd/rt5033.c
+>  create mode 100644 include/linux/mfd/rt5033-private.h
+>  create mode 100644 include/linux/mfd/rt5033.h
 
-Nit: Can you break after the first parameter instead?
+[...]
 
-> +		if (count =3D=3D ARRAY_SIZE(arizona->pdata.out_mono))
+> diff --git a/drivers/mfd/rt5033.c b/drivers/mfd/rt5033.c
+> new file mode 100644
+> index 0000000..2d2bfbe
+> --- /dev/null
+> +++ b/drivers/mfd/rt5033.c
+> @@ -0,0 +1,141 @@
+> +/*
+> + * RT5033 core driver.
 
-It's better practise to use ">=3D".
+I asked you to write a small description of the h/w here.
 
-> +			break;
+Instead you've made it _less_ descriptive?
+
+> + * Copyright (C) 2014 Samsung Electronics, Co., Ltd.
+> + * Author: Beomho Seo <beomho.seo@samsung.com>
+> + *
+> + * This program is free software; you can redistribute it and/or mod=
+ify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published bythe Free Software Foundation.
+> + */
 > +
-> +		arizona->pdata.out_mono[count] =3D !!val;
-> +		count++;
-> +	}
+> +#include <linux/err.h>
+> +#include <linux/module.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/of_device.h>
+> +#include <linux/mfd/core.h>
+> +#include <linux/mfd/rt5033.h>
+> +#include <linux/mfd/rt5033-private.h>
 > +
->  	return 0;
->  }
-> =20
+> +static const struct regmap_irq rt5033_irqs[] =3D {
+> +	{ .mask =3D RT5033_PMIC_IRQ_BUCKOCP, },
+> +	{ .mask =3D RT5033_PMIC_IRQ_BUCKLV, },
+> +	{ .mask =3D RT5033_PMIC_IRQ_SAFELDOLV, },
+> +	{ .mask =3D RT5033_PMIC_IRQ_LDOLV, },
+> +	{ .mask =3D RT5033_PMIC_IRQ_OT, },
+> +	{ .mask =3D RT5033_PMIC_IRQ_VDDA_UV, },
+> +};
+> +
+> +static const struct regmap_irq_chip rt5033_irq_chip =3D {
+> +	.name		=3D "rt5033",
+> +	.status_base	=3D RT5033_REG_PMIC_IRQ_STAT,
+> +	.mask_base	=3D RT5033_REG_PMIC_IRQ_CTRL,
+> +	.mask_invert	=3D true,
+> +	.num_regs	=3D 1,
+> +	.irqs		=3D rt5033_irqs,
+> +	.num_irqs	=3D ARRAY_SIZE(rt5033_irqs),
+> +};
+> +
+> +static const struct mfd_cell rt5033_devs[] =3D {
+> +	{ .name =3D "rt5033-regulator", },
+> +	{
+> +		.name =3D "rt5033-charger",
+> +		.of_compatible =3D "richtek,rt5033-charger",
+> +	}, {
+> +		.name =3D "rt5033-battery",
+> +		.of_compatible =3D "richtek,rt5033-battery",
+> +	},
+> +};
+> +
+> +static const struct of_device_id rt5033_dt_match[] =3D {
+> +	{
+> +		.compatible =3D "richtek,rt5033",
+> +	},
+> +	{ }
+> +};
+
+This was better as a single line entry.
+
+I also asked you to move it down to where it's first used, instead of
+way up here.  Please convert it back to one line and move the whole
+structure down just above the line:
+
+"static struct i2c_driver rt5033_driver =3D {"
+
+[...]
 
 --=20
 Lee Jones
 Linaro STMicroelectronics Landing Team Lead
 Linaro.org =E2=94=82 Open source software for ARM SoCs
 =46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
