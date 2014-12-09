@@ -1,68 +1,58 @@
-From: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] backlight/lp855x: Add supply regulator to lp855x
-Date: Tue, 09 Dec 2014 12:46:15 +0900
-Message-ID: <000a01d01362$aee684d0$0cb38e70$%han@samsung.com>
-References: <1417570752-23633-1-git-send-email-seanpaul@chromium.org>
- <1417570752-23633-2-git-send-email-seanpaul@chromium.org>
- <5204192.bzM5jPIgHv@wuerfel> <54866695.3050307@ti.com>
+From: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
+Subject: Re: [PATCH] arch: powerpc: kernel: vio.c:  Remove unused function
+Date: Tue, 09 Dec 2014 16:29:57 +1100
+Message-ID: <1418102997.527.3.camel@concordia>
+References: <1417991502-20223-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <54866695.3050307-l0cyMroinI0@public.gmane.org>
-Content-language: ko
+In-Reply-To: <1417991502-20223-1-git-send-email-rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "'Kim, Milo'" <milo.kim-l0cyMroinI0@public.gmane.org>, 'Arnd Bergmann' <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: 'Sean Paul' <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, =?iso-8859-1?Q?'St=E9phane_Marchesin'?= <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, 'Aaron Durbin' <adurbin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, 'Jingoo Han' <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
+Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Daniel Walter <dwalter-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Li Zhong <zhong-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, December 09, 2014 12:04 PM, Kim, Milo wrote:
+On Sun, 2014-12-07 at 23:31 +0100, Rickard Strandqvist wrote:
+> Remove the function cmo_high_show() that is not used anywhere.
 > 
-> Hi Arnd,
+> This was partially found by using a static code analysis program called cppcheck.
 > 
-> Good to talk to you again. It's been a long time since I met you in
-> Linaro Connect HK few years ago :)
+> Signed-off-by: Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
+> ---
+>  arch/powerpc/kernel/vio.c |    5 -----
+>  1 file changed, 5 deletions(-)
 > 
-> On 12/3/2014 11:11 PM, Arnd Bergmann wrote:
-> > While your two patches are both correct (and applied already), I took
-> > a look at the platform_data header and noticed that all users of this
-> > file have been converted to DT a while ago, so it would be nice to clean
-> > it up by integrating the linux/platform_data/lp855x.h header file into the
-> > drivers/video/backlight/lp855x_bl.c itself.
-> 
-> I like this cleanup but need to consider few things.
-> 
-> - Platform which does not support the DT
-> In this case, there is no way to configure options like backlight device
-> control mode. Without the DT, only default options are set.
-> To change the settings, the driver modification is required.
-> I don't want to write project/platform dependency code inside the driver.
-> 
-> - Backward compatibility
-> Some customers have been using this platform data in their board-*.c
-> (but this *.c has not been mainlined yet).
-> My concern is the backward compatibility issue may happen in their projects.
+> diff --git a/arch/powerpc/kernel/vio.c b/arch/powerpc/kernel/vio.c
+> index 5bfdab9..11657d2 100644
+> --- a/arch/powerpc/kernel/vio.c
+> +++ b/arch/powerpc/kernel/vio.c
+> @@ -1032,11 +1032,6 @@ viobus_cmo_pool_rd_attr(reserve, size);
+>  viobus_cmo_pool_rd_attr(excess, size);
+>  viobus_cmo_pool_rd_attr(excess, free);
+>  
+> -static ssize_t cmo_high_show(struct bus_type *bt, char *buf)
+> -{
+> -	return sprintf(buf, "%lu\n", vio_cmo.high);
+> -}
 
-I understand this situation. In the case of Exynos DisplayPort driver,
-a similar issue happened. At that time, the conclusion was that
-out-of-tree code (not mainlined yet) cannot be considered.
 
-In this context, it is valuable to upstream the code to mainline kernel.
-I think that one of the followings can be considered.
+from ../arch/powerpc/kernel/vio.c:17:
+../arch/powerpc/kernel/vio.c:1046:20: error: 'cmo_high_show' undeclared here (not in a function)
+static BUS_ATTR_RW(cmo_high);
+^
+../include/linux/sysfs.h:76:10: note: in definition of macro '__ATTR'
+.show = _show,      \
+^
+../include/linux/device.h:53:42: note: in expansion of macro '__ATTR_RW'
+struct bus_attribute bus_attr_##_name = __ATTR_RW(_name)
+^
+../arch/powerpc/kernel/vio.c:1046:8: note: in expansion of macro 'BUS_ATTR_RW'
+static BUS_ATTR_RW(cmo_high);
+^
 
-  1. Ask customers to upstream their machine code
-  2. Ask customers to use DT
+cheers
 
-If they don't want to these things, someone (you or customers)
-will need to make the patch for non-DT support, whenever new
-kernel is released and is used by projects not supporting DT.
-
-Best regards,
-Jingoo Han
-
-> 
-> Best regards,
-> Milo
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
