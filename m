@@ -1,112 +1,70 @@
-From: Josh Wu <josh.wu@atmel.com>
-Subject: Re: [PATCH 5/5] media: ov2640: dt: add the device tree binding document
-Date: Tue, 9 Dec 2014 11:19:32 +0800
-Message-ID: <54866A44.2020600@atmel.com>
-References: <1418038147-13221-1-git-send-email-josh.wu@atmel.com> <1418038147-13221-6-git-send-email-josh.wu@atmel.com> <7239028.nL31Mosllm@avalon>
+From: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] backlight/lp855x: Add supply regulator to lp855x
+Date: Tue, 09 Dec 2014 12:46:15 +0900
+Message-ID: <000a01d01362$aee684d0$0cb38e70$%han@samsung.com>
+References: <1417570752-23633-1-git-send-email-seanpaul@chromium.org>
+ <1417570752-23633-2-git-send-email-seanpaul@chromium.org>
+ <5204192.bzM5jPIgHv@wuerfel> <54866695.3050307@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <7239028.nL31Mosllm@avalon>
-Sender: linux-media-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: linux-media@vger.kernel.org, m.chehab@samsung.com, linux-arm-kernel@lists.infradead.org, g.liakhovetski@gmx.de, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <54866695.3050307-l0cyMroinI0@public.gmane.org>
+Content-language: ko
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "'Kim, Milo'" <milo.kim-l0cyMroinI0@public.gmane.org>, 'Arnd Bergmann' <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: 'Sean Paul' <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, =?iso-8859-1?Q?'St=E9phane_Marchesin'?= <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, 'Aaron Durbin' <adurbin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, 'Jingoo Han' <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Laurent
+On Tuesday, December 09, 2014 12:04 PM, Kim, Milo wrote:
+> 
+> Hi Arnd,
+> 
+> Good to talk to you again. It's been a long time since I met you in
+> Linaro Connect HK few years ago :)
+> 
+> On 12/3/2014 11:11 PM, Arnd Bergmann wrote:
+> > While your two patches are both correct (and applied already), I took
+> > a look at the platform_data header and noticed that all users of this
+> > file have been converted to DT a while ago, so it would be nice to clean
+> > it up by integrating the linux/platform_data/lp855x.h header file into the
+> > drivers/video/backlight/lp855x_bl.c itself.
+> 
+> I like this cleanup but need to consider few things.
+> 
+> - Platform which does not support the DT
+> In this case, there is no way to configure options like backlight device
+> control mode. Without the DT, only default options are set.
+> To change the settings, the driver modification is required.
+> I don't want to write project/platform dependency code inside the driver.
+> 
+> - Backward compatibility
+> Some customers have been using this platform data in their board-*.c
+> (but this *.c has not been mainlined yet).
+> My concern is the backward compatibility issue may happen in their projects.
 
-On 12/9/2014 2:59 AM, Laurent Pinchart wrote:
-> Hi Josh,
->
-> Thank you for the patch.
->
-> On Monday 08 December 2014 19:29:07 Josh Wu wrote:
->> Add the document for ov2640 dt.
->>
->> Cc: devicetree@vger.kernel.org
->> Signed-off-by: Josh Wu <josh.wu@atmel.com>
->> ---
->> v1 -> v2:
->>    1. change the compatible string to be consistent with verdor file.
-> That's nice, but you still need to send a patch to add the ovti vendor prefix
-> to Documentation/devicetree/bindings/vendor-prefixes.txt. It's not there yet.
-As Fabio already send a patch to fix the vendor file.
-See URL: http://patchwork.ozlabs.org/patch/416685/
-I think it will go to mainline soon.
+I understand this situation. In the case of Exynos DisplayPort driver,
+a similar issue happened. At that time, the conclusion was that
+out-of-tree code (not mainlined yet) cannot be considered.
 
->
->>    2. change the clock and pins' name.
->>    3. add missed pinctrl in example.
->>
->>   .../devicetree/bindings/media/i2c/ov2640.txt       | 44 +++++++++++++++++++
->>   1 file changed, 44 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/media/i2c/ov2640.txt
->>
->> diff --git a/Documentation/devicetree/bindings/media/i2c/ov2640.txt
->> b/Documentation/devicetree/bindings/media/i2c/ov2640.txt new file mode
->> 100644
->> index 0000000..15be3cb
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/media/i2c/ov2640.txt
->> @@ -0,0 +1,44 @@
->> +* Omnivision ov2640 CMOS sensor
->> +
->> +The Omnivision OV2640 sensor support multiple resolutions output, such as
->> +CIF, SVGA, UXGA. It also can support YUV422/420, RGB565/555 or raw RGB
->> +output format.
->> +
->> +Required Properties :
->> +- compatible: Must be "ovti,ov2640"
->> +- clocks: reference master clock, if using external fixed clock, you
->> +          no need to have such property.
-> That's not true anymore, the clocks property is mandatory in all cases. Just
-> describe it as
->
-> - clocks: reference to the xvclk input clock.
->
->> +- clock-names: Must be "xvclk", it means the master clock for ov2640.
-> I would drop "it means the master clock for ov2640".
->
->> +Optional Properties:
->> +- resetb-gpios: reset pin
-> - resetb-gpios: reference to the GPIO connected to the resetb pin, if any.
->
->> +- pwdn-gpios: power down pin
-> - pwdn-gpios: reference to the GPIO connected to the pwdn pin, if any.
+In this context, it is valuable to upstream the code to mainline kernel.
+I think that one of the followings can be considered.
 
-I'll fix all above that you mentioned in next version.
-Thank a lot for the review.
+  1. Ask customers to upstream their machine code
+  2. Ask customers to use DT
 
-Best Regards,
-Josh Wu
->
->> +
->> +The device node must contain one 'port' child node for its digital output
->> +video port, in accordance with the video interface bindings defined in
->> +Documentation/devicetree/bindings/media/video-interfaces.txt.
->> +
->> +Example:
->> +
->> +	i2c1: i2c@f0018000 {
->> +		ov2640: camera@0x30 {
->> +			compatible = "ovti,ov2640";
->> +			reg = <0x30>;
->> +
->> +			pinctrl-names = "default";
->> +			pinctrl-0 = <&pinctrl_pck1 &pinctrl_ov2640_pwdn
-> &pinctrl_ov2640_reset>;
->> +
->> +			resetb-gpios = <&pioE 24 GPIO_ACTIVE_HIGH>;
->> +			pwdn-gpios = <&pioE 29 GPIO_ACTIVE_HIGH>;
->> +
->> +			clocks = <&pck1>;
->> +			clock-names = "xvclk";
->> +
->> +			port {
->> +				ov2640_0: endpoint {
->> +					remote-endpoint = <&isi_0>;
->> +					bus-width = <8>;
->> +				};
->> +			};
->> +		};
->> +	};
+If they don't want to these things, someone (you or customers)
+will need to make the patch for non-DT support, whenever new
+kernel is released and is used by projects not supporting DT.
+
+Best regards,
+Jingoo Han
+
+> 
+> Best regards,
+> Milo
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
