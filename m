@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 3/7] ARM: shmobile: lager dts: Replace status value "ok" by "okay"
-Date: Tue,  9 Dec 2014 12:25:01 +0100
-Message-ID: <1418124305-7445-3-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH 2/7] ARM: shmobile: armadillo800eva dts: Replace status value "ok" by "okay"
+Date: Tue,  9 Dec 2014 12:25:00 +0100
+Message-ID: <1418124305-7445-2-git-send-email-geert+renesas@glider.be>
 References: <1418124305-7445-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <1418124305-7445-1-git-send-email-geert+renesas@glider.be>
@@ -16,61 +16,31 @@ values.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- arch/arm/boot/dts/r8a7790-lager.dts | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ arch/arm/boot/dts/r8a7740-armadillo800eva.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/r8a7790-lager.dts b/arch/arm/boot/dts/r8a7790-lager.dts
-index 4118030f366dfa7d..59365bccc9450c6c 100644
---- a/arch/arm/boot/dts/r8a7790-lager.dts
-+++ b/arch/arm/boot/dts/r8a7790-lager.dts
-@@ -355,7 +355,7 @@
- 
- 	phy-handle = <&phy1>;
- 	renesas,ether-link-active-low;
--	status = "ok";
-+	status = "okay";
- 
- 	phy1: ethernet-phy@1 {
- 		reg = <1>;
-@@ -366,7 +366,7 @@
- };
- 
- &cmt0 {
--	status = "ok";
-+	status = "okay";
- };
- 
- &mmcif1 {
-@@ -470,17 +470,17 @@
- };
- 
- &iic0	{
--	status = "ok";
-+	status = "okay";
- };
- 
- &iic1	{
--	status = "ok";
-+	status = "okay";
- 	pinctrl-0 = <&iic1_pins>;
- 	pinctrl-names = "default";
- };
- 
- &iic2	{
--	status = "ok";
-+	status = "okay";
- 	pinctrl-0 = <&iic2_pins>;
+diff --git a/arch/arm/boot/dts/r8a7740-armadillo800eva.dts b/arch/arm/boot/dts/r8a7740-armadillo800eva.dts
+index d4af4d86c6b03d01..9bd0cb439f448d03 100644
+--- a/arch/arm/boot/dts/r8a7740-armadillo800eva.dts
++++ b/arch/arm/boot/dts/r8a7740-armadillo800eva.dts
+@@ -172,7 +172,7 @@
  	pinctrl-names = "default";
  
-@@ -562,7 +562,7 @@
- 	pinctrl-0 = <&vin1_pins>;
- 	pinctrl-names = "default";
- 
+ 	phy-handle = <&phy0>;
 -	status = "ok";
 +	status = "okay";
  
- 	port {
- 		#address-cells = <1>;
+ 	phy0: ethernet-phy@0 {
+ 		reg = <0>;
+@@ -193,7 +193,7 @@
+ };
+ 
+ &cmt1 {
+-	status = "ok";
++	status = "okay";
+ };
+ 
+ &i2c0 {
 -- 
 1.9.1
 
