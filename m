@@ -1,8 +1,10 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 1/7] ARM: shmobile: genmai dts: Replace status value "ok" by "okay"
-Date: Tue,  9 Dec 2014 12:24:59 +0100
-Message-ID: <1418124305-7445-1-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH 3/7] ARM: shmobile: lager dts: Replace status value "ok" by "okay"
+Date: Tue,  9 Dec 2014 12:25:01 +0100
+Message-ID: <1418124305-7445-3-git-send-email-geert+renesas@glider.be>
+References: <1418124305-7445-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1418124305-7445-1-git-send-email-geert+renesas@glider.be>
 Sender: linux-sh-owner@vger.kernel.org
 To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
 Cc: devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Geert Uytterhoeven <geert+renesas@glider.be>
@@ -14,22 +16,61 @@ values.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- arch/arm/boot/dts/r7s72100-genmai.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/r8a7790-lager.dts | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm/boot/dts/r7s72100-genmai.dts b/arch/arm/boot/dts/r7s72100-genmai.dts
-index 1518c5bcca33d8d1..a9da7a89fc4ba65a 100644
---- a/arch/arm/boot/dts/r7s72100-genmai.dts
-+++ b/arch/arm/boot/dts/r7s72100-genmai.dts
-@@ -45,7 +45,7 @@
+diff --git a/arch/arm/boot/dts/r8a7790-lager.dts b/arch/arm/boot/dts/r8a7790-lager.dts
+index 4118030f366dfa7d..59365bccc9450c6c 100644
+--- a/arch/arm/boot/dts/r8a7790-lager.dts
++++ b/arch/arm/boot/dts/r8a7790-lager.dts
+@@ -355,7 +355,7 @@
+ 
+ 	phy-handle = <&phy1>;
+ 	renesas,ether-link-active-low;
+-	status = "ok";
++	status = "okay";
+ 
+ 	phy1: ethernet-phy@1 {
+ 		reg = <1>;
+@@ -366,7 +366,7 @@
  };
  
- &mtu2 {
+ &cmt0 {
 -	status = "ok";
 +	status = "okay";
  };
  
- &i2c2 {
+ &mmcif1 {
+@@ -470,17 +470,17 @@
+ };
+ 
+ &iic0	{
+-	status = "ok";
++	status = "okay";
+ };
+ 
+ &iic1	{
+-	status = "ok";
++	status = "okay";
+ 	pinctrl-0 = <&iic1_pins>;
+ 	pinctrl-names = "default";
+ };
+ 
+ &iic2	{
+-	status = "ok";
++	status = "okay";
+ 	pinctrl-0 = <&iic2_pins>;
+ 	pinctrl-names = "default";
+ 
+@@ -562,7 +562,7 @@
+ 	pinctrl-0 = <&vin1_pins>;
+ 	pinctrl-names = "default";
+ 
+-	status = "ok";
++	status = "okay";
+ 
+ 	port {
+ 		#address-cells = <1>;
 -- 
 1.9.1
 
