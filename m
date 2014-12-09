@@ -1,55 +1,116 @@
-From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: Re: [v3] i2c: Driver to expose PowerNV platform i2c busses
-Date: Tue, 09 Dec 2014 21:21:32 +1100
-Message-ID: <1418120492.13358.45.camel@kernel.crashing.org>
-References: <20141209094503.100F81400DE@ozlabs.org>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v4 4/5] ARM: dts: add rk3288 usb PHY
+Date: Tue, 09 Dec 2014 11:26:21 +0100
+Message-ID: <1433902.kJO8gnlzYm@phil>
+References: <1418093554-30671-1-git-send-email-lyz@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141209094503.100F81400DE-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
-Cc: Neelesh Gupta <neelegup-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, Jeremy Kerr <jeremy.kerr-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1418093554-30671-1-git-send-email-lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yunzhi Li <lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2014-12-09 at 20:45 +1100, Michael Ellerman wrote:
-> On Mon, 2014-08-12 at 06:36:16 UTC, Neelesh Gupta wrote:
-> > The patch exposes the available i2c busses on the PowerNV platform
-> > to the kernel and implements the bus driver to support i2c and
-> > smbus commands.
-> > The driver uses the platform device infrastructure to probe the busses
-> > on the platform and registers them with the i2c driver framework.
-> 
-> >  arch/powerpc/include/asm/opal.h                    |   29 ++
-> >  arch/powerpc/platforms/powernv/opal-wrappers.S     |    1 
-> >  arch/powerpc/platforms/powernv/opal.c              |   11 +
-> 
-> This had major conflicts in the above files.
-> 
-> I've fixed it up but please check I did it correctly:
-> 
->   https://github.com/mpe/powerpc-merge/commits/pw/neelesh-i2c
-> 
-> It also doesn't build as a module:
-> 
->   $ grep CONFIG_I2C_OPAL .config
->   CONFIG_I2C_OPAL=m
->   $ make ...
->   ...
->   ERROR: "opal_i2c_request" [drivers/i2c/busses/i2c-opal.ko] undefined!
+Hi,
 
-Right that needs to be exported, however for those OPAL wrappers to work
-when exported as modules on an LE kernel with ABI v2 (pfiew !) we need
-another patch from jk to sort out the external entry to the asm...
+Am Dienstag, 9. Dezember 2014, 10:52:34 schrieb Yunzhi Li:
+> This patch adds a device_node for RK3288 SoC usb phy. It also
+> defines the phy to be used by three usb controllers: usb_host0/1
+> and usb_otg.
+> 
+> Signed-off-by: Yunzhi Li <lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> 
+> ---
+> 
+> Changes in v4:
+> - Add phy subnodes.
+> 
+> Changes in v3: None
+> 
+>  arch/arm/boot/dts/rk3288.dtsi | 27 +++++++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+> index 874e66d..2db2d12 100644
+> --- a/arch/arm/boot/dts/rk3288.dtsi
+> +++ b/arch/arm/boot/dts/rk3288.dtsi
+> @@ -329,12 +329,35 @@
+>  		status = "disabled";
+>  	};
+> 
+> +	usbphy: phy {
 
-Jeremy, is that already in or not yet ?
+the nodes in the dts are ordered by address, please move it accordingly. I 
+guess a good position might be to have the "phy" before the "pinctrl" node.
 
-Cheers,
-Ben.
+Also please reorder the properties a bit to have the "compatible" at the top 
+of the list, like
 
-> cheers
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+		compatible = "rockchip,rk3288-usb-phy";
+		rockchip,grf = <&grf>;
+		#phy-cells = <1>;
+		#address-cells = <1>;
+		#size-cells = <0>;
+		status = "disabled";
+
+		subnodes...
+
+
+Thanks
+Heiko
+
+> +		#phy-cells = <1>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		compatible = "rockchip,rk3288-usb-phy";
+> +		rockchip,grf = <&grf>;
+> +		status = "disabled";
+> +
+> +		usb-phy@0 {
+> +			reg = <0>;
+> +		};
+> +
+> +		usb-phy@1 {
+> +			reg = <1>;
+> +		};
+> +
+> +		usb-phy@2 {
+> +			reg = <2>;
+> +		};
+> +	};
+> +
+>  	usb_host0_ehci: usb@ff500000 {
+>  		compatible = "generic-ehci";
+>  		reg = <0xff500000 0x100>;
+>  		interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
+>  		clocks = <&cru HCLK_USBHOST0>;
+>  		clock-names = "usbhost";
+> +		phys = <&usbphy 1>;
+> +		phy-names = "usb";
+>  		status = "disabled";
+>  	};
+> 
+> @@ -347,6 +370,8 @@
+>  		interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
+>  		clocks = <&cru HCLK_USBHOST1>;
+>  		clock-names = "otg";
+> +		phys = <&usbphy 2>;
+> +		phy-names = "usb2-phy";
+>  		status = "disabled";
+>  	};
+> 
+> @@ -357,6 +382,8 @@
+>  		interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
+>  		clocks = <&cru HCLK_OTG0>;
+>  		clock-names = "otg";
+> +		phys = <&usbphy 0>;
+> +		phy-names = "usb2-phy";
+>  		status = "disabled";
+>  	};
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
