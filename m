@@ -1,7 +1,7 @@
 From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: [REVIEW PATCH v3 01/12] smiapp: Remove FSF's address from the license header
-Date: Tue,  9 Dec 2014 02:04:09 +0200
-Message-ID: <1418083460-28556-2-git-send-email-sakari.ailus@iki.fi>
+Subject: [REVIEW PATCH v3 12/12] smiapp: Fully probe the device in probe
+Date: Tue,  9 Dec 2014 02:04:20 +0200
+Message-ID: <1418083460-28556-13-git-send-email-sakari.ailus@iki.fi>
 References: <1418083460-28556-1-git-send-email-sakari.ailus@iki.fi>
 Return-path: <linux-media-owner@vger.kernel.org>
 In-Reply-To: <1418083460-28556-1-git-send-email-sakari.ailus@iki.fi>
@@ -10,231 +10,177 @@ To: linux-media@vger.kernel.org
 Cc: devicetree@vger.kernel.org, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-Remove FSF's address information from the license header in the smiapp
-driver and the smiapp-pll PLL calculator. This should no longer be needed,
-and would be rendered outdated in case the FSF chooses to relocate its
-office.
+In the case of platform data, ISPs that provide clocks to the sensor must
+probe before the sensor does. Accessing the sensor does require the clocks,
+and thus, probe cannot access the sensor in such a system.
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Timo Ahonen <timo.ahonen@nokia.com>
+This limitation does not exist in the case of the DT. Perform all
+initialisation except Media entity initialisation, link creation and
+sub-device registration in probe.
+
+Signed-off-by: Sakari Ailus <sakari.ailus@iki.fi>
 ---
- drivers/media/i2c/smiapp-pll.c             |    6 ------
- drivers/media/i2c/smiapp-pll.h             |    6 ------
- drivers/media/i2c/smiapp/smiapp-core.c     |    6 ------
- drivers/media/i2c/smiapp/smiapp-limits.c   |    6 ------
- drivers/media/i2c/smiapp/smiapp-limits.h   |    6 ------
- drivers/media/i2c/smiapp/smiapp-quirk.c    |    6 ------
- drivers/media/i2c/smiapp/smiapp-quirk.h    |    6 ------
- drivers/media/i2c/smiapp/smiapp-reg-defs.h |    6 ------
- drivers/media/i2c/smiapp/smiapp-reg.h      |    6 ------
- drivers/media/i2c/smiapp/smiapp-regs.c     |    6 ------
- drivers/media/i2c/smiapp/smiapp-regs.h     |    6 ------
- drivers/media/i2c/smiapp/smiapp.h          |    6 ------
- 12 files changed, 72 deletions(-)
+ drivers/media/i2c/smiapp/smiapp-core.c |   68 +++++++++++++++++++++-----------
+ 1 file changed, 46 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/media/i2c/smiapp-pll.c b/drivers/media/i2c/smiapp-pll.c
-index e40d902..2b84d09 100644
---- a/drivers/media/i2c/smiapp-pll.c
-+++ b/drivers/media/i2c/smiapp-pll.c
-@@ -14,12 +14,6 @@
-  * WITHOUT ANY WARRANTY; without even the implied warranty of
-  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-  * General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program; if not, write to the Free Software
-- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
-- * 02110-1301 USA
-- *
-  */
- 
- #include <linux/gcd.h>
-diff --git a/drivers/media/i2c/smiapp-pll.h b/drivers/media/i2c/smiapp-pll.h
-index e8f035a..77f7ff2f 100644
---- a/drivers/media/i2c/smiapp-pll.h
-+++ b/drivers/media/i2c/smiapp-pll.h
-@@ -14,12 +14,6 @@
-  * WITHOUT ANY WARRANTY; without even the implied warranty of
-  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-  * General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program; if not, write to the Free Software
-- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
-- * 02110-1301 USA
-- *
-  */
- 
- #ifndef SMIAPP_PLL_H
 diff --git a/drivers/media/i2c/smiapp/smiapp-core.c b/drivers/media/i2c/smiapp/smiapp-core.c
-index 65e4e05..ab917a6 100644
+index c2bf718..48e1a1f 100644
 --- a/drivers/media/i2c/smiapp/smiapp-core.c
 +++ b/drivers/media/i2c/smiapp/smiapp-core.c
-@@ -18,12 +18,6 @@
-  * WITHOUT ANY WARRANTY; without even the implied warranty of
-  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-  * General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program; if not, write to the Free Software
-- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
-- * 02110-1301 USA
-- *
+@@ -2334,10 +2334,9 @@ static DEVICE_ATTR(ident, S_IRUGO, smiapp_sysfs_ident_read, NULL);
+  * V4L2 subdev core operations
   */
  
- #include <linux/clk.h>
-diff --git a/drivers/media/i2c/smiapp/smiapp-limits.c b/drivers/media/i2c/smiapp/smiapp-limits.c
-index 847cb23..784b114 100644
---- a/drivers/media/i2c/smiapp/smiapp-limits.c
-+++ b/drivers/media/i2c/smiapp/smiapp-limits.c
-@@ -14,12 +14,6 @@
-  * WITHOUT ANY WARRANTY; without even the implied warranty of
-  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-  * General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program; if not, write to the Free Software
-- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
-- * 02110-1301 USA
-- *
-  */
+-static int smiapp_identify_module(struct v4l2_subdev *subdev)
++static int smiapp_identify_module(struct smiapp_sensor *sensor)
+ {
+-	struct smiapp_sensor *sensor = to_smiapp_sensor(subdev);
+-	struct i2c_client *client = v4l2_get_subdevdata(subdev);
++	struct i2c_client *client = v4l2_get_subdevdata(&sensor->src->sd);
+ 	struct smiapp_module_info *minfo = &sensor->minfo;
+ 	unsigned int i;
+ 	int rval = 0;
+@@ -2517,10 +2516,17 @@ static int smiapp_register_subdevs(struct smiapp_sensor *sensor)
+ 	return 0;
+ }
  
- #include "smiapp.h"
-diff --git a/drivers/media/i2c/smiapp/smiapp-limits.h b/drivers/media/i2c/smiapp/smiapp-limits.h
-index 343e9c3..b201248 100644
---- a/drivers/media/i2c/smiapp/smiapp-limits.h
-+++ b/drivers/media/i2c/smiapp/smiapp-limits.h
-@@ -14,12 +14,6 @@
-  * WITHOUT ANY WARRANTY; without even the implied warranty of
-  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-  * General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program; if not, write to the Free Software
-- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
-- * 02110-1301 USA
-- *
-  */
+-static int smiapp_registered(struct v4l2_subdev *subdev)
++static void smiapp_cleanup(struct smiapp_sensor *sensor)
+ {
+-	struct smiapp_sensor *sensor = to_smiapp_sensor(subdev);
+-	struct i2c_client *client = v4l2_get_subdevdata(subdev);
++	struct i2c_client *client = v4l2_get_subdevdata(&sensor->src->sd);
++
++	device_remove_file(&client->dev, &dev_attr_nvm);
++	device_remove_file(&client->dev, &dev_attr_ident);
++}
++
++static int smiapp_init(struct smiapp_sensor *sensor)
++{
++	struct i2c_client *client = v4l2_get_subdevdata(&sensor->src->sd);
+ 	struct smiapp_pll *pll = &sensor->pll;
+ 	struct smiapp_subdev *last = NULL;
+ 	u32 tmp;
+@@ -2566,7 +2572,7 @@ static int smiapp_registered(struct v4l2_subdev *subdev)
+ 	if (rval)
+ 		return -ENODEV;
  
- #define SMIAPP_LIMIT_ANALOGUE_GAIN_CAPABILITY			0
-diff --git a/drivers/media/i2c/smiapp/smiapp-quirk.c b/drivers/media/i2c/smiapp/smiapp-quirk.c
-index e0bee87..dd4ae6f 100644
---- a/drivers/media/i2c/smiapp/smiapp-quirk.c
-+++ b/drivers/media/i2c/smiapp/smiapp-quirk.c
-@@ -14,12 +14,6 @@
-  * WITHOUT ANY WARRANTY; without even the implied warranty of
-  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-  * General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program; if not, write to the Free Software
-- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
-- * 02110-1301 USA
-- *
-  */
+-	rval = smiapp_identify_module(subdev);
++	rval = smiapp_identify_module(sensor);
+ 	if (rval) {
+ 		rval = -ENODEV;
+ 		goto out_power_off;
+@@ -2646,13 +2652,13 @@ static int smiapp_registered(struct v4l2_subdev *subdev)
+ 		if (sensor->nvm == NULL) {
+ 			dev_err(&client->dev, "nvm buf allocation failed\n");
+ 			rval = -ENOMEM;
+-			goto out_ident_release;
++			goto out_cleanup;
+ 		}
  
- #include <linux/delay.h>
-diff --git a/drivers/media/i2c/smiapp/smiapp-quirk.h b/drivers/media/i2c/smiapp/smiapp-quirk.h
-index 46e9ea8..3a3c3e5 100644
---- a/drivers/media/i2c/smiapp/smiapp-quirk.h
-+++ b/drivers/media/i2c/smiapp/smiapp-quirk.h
-@@ -14,12 +14,6 @@
-  * WITHOUT ANY WARRANTY; without even the implied warranty of
-  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-  * General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program; if not, write to the Free Software
-- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
-- * 02110-1301 USA
-- *
-  */
+ 		if (device_create_file(&client->dev, &dev_attr_nvm) != 0) {
+ 			dev_err(&client->dev, "sysfs nvm entry failed\n");
+ 			rval = -EBUSY;
+-			goto out_ident_release;
++			goto out_cleanup;
+ 		}
+ 	}
  
- #ifndef __SMIAPP_QUIRK__
-diff --git a/drivers/media/i2c/smiapp/smiapp-reg-defs.h b/drivers/media/i2c/smiapp/smiapp-reg-defs.h
-index c488ef0..f928d4c 100644
---- a/drivers/media/i2c/smiapp/smiapp-reg-defs.h
-+++ b/drivers/media/i2c/smiapp/smiapp-reg-defs.h
-@@ -14,12 +14,6 @@
-  * WITHOUT ANY WARRANTY; without even the implied warranty of
-  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-  * General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program; if not, write to the Free Software
-- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
-- * 02110-1301 USA
-- *
-  */
- #define SMIAPP_REG_MK_U8(r) ((SMIAPP_REG_8BIT << 16) | (r))
- #define SMIAPP_REG_MK_U16(r) ((SMIAPP_REG_16BIT << 16) | (r))
-diff --git a/drivers/media/i2c/smiapp/smiapp-reg.h b/drivers/media/i2c/smiapp/smiapp-reg.h
-index b0dcbb8..4c8b406 100644
---- a/drivers/media/i2c/smiapp/smiapp-reg.h
-+++ b/drivers/media/i2c/smiapp/smiapp-reg.h
-@@ -14,12 +14,6 @@
-  * WITHOUT ANY WARRANTY; without even the implied warranty of
-  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-  * General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program; if not, write to the Free Software
-- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
-- * 02110-1301 USA
-- *
-  */
+@@ -2696,7 +2702,7 @@ static int smiapp_registered(struct v4l2_subdev *subdev)
+ 	rval = smiapp_get_mbus_formats(sensor);
+ 	if (rval) {
+ 		rval = -ENODEV;
+-		goto out_nvm_release;
++		goto out_cleanup;
+ 	}
  
- #ifndef __SMIAPP_REG_H_
-diff --git a/drivers/media/i2c/smiapp/smiapp-regs.c b/drivers/media/i2c/smiapp/smiapp-regs.c
-index a209800..6b6c20b 100644
---- a/drivers/media/i2c/smiapp/smiapp-regs.c
-+++ b/drivers/media/i2c/smiapp/smiapp-regs.c
-@@ -14,12 +14,6 @@
-  * WITHOUT ANY WARRANTY; without even the implied warranty of
-  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-  * General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program; if not, write to the Free Software
-- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
-- * 02110-1301 USA
-- *
-  */
+ 	for (i = 0; i < SMIAPP_SUBDEVS; i++) {
+@@ -2758,10 +2764,6 @@ static int smiapp_registered(struct v4l2_subdev *subdev)
+ 		last = this;
+ 	}
  
- #include <linux/delay.h>
-diff --git a/drivers/media/i2c/smiapp/smiapp-regs.h b/drivers/media/i2c/smiapp/smiapp-regs.h
-index 3552112..6dd0e49 100644
---- a/drivers/media/i2c/smiapp/smiapp-regs.h
-+++ b/drivers/media/i2c/smiapp/smiapp-regs.h
-@@ -14,12 +14,6 @@
-  * WITHOUT ANY WARRANTY; without even the implied warranty of
-  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-  * General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program; if not, write to the Free Software
-- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
-- * 02110-1301 USA
-- *
-  */
+-	rval = smiapp_register_subdevs(sensor);
+-	if (rval)
+-		goto out_nvm_release;
+-
+ 	dev_dbg(&client->dev, "profile %d\n", sensor->minfo.smiapp_profile);
  
- #ifndef SMIAPP_REGS_H
-diff --git a/drivers/media/i2c/smiapp/smiapp.h b/drivers/media/i2c/smiapp/smiapp.h
-index f88f8ec..8fded46 100644
---- a/drivers/media/i2c/smiapp/smiapp.h
-+++ b/drivers/media/i2c/smiapp/smiapp.h
-@@ -14,12 +14,6 @@
-  * WITHOUT ANY WARRANTY; without even the implied warranty of
-  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-  * General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program; if not, write to the Free Software
-- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
-- * 02110-1301 USA
-- *
-  */
+ 	sensor->pixel_array->sd.entity.type = MEDIA_ENT_T_V4L2_SUBDEV_SENSOR;
+@@ -2770,14 +2772,14 @@ static int smiapp_registered(struct v4l2_subdev *subdev)
+ 	smiapp_read_frame_fmt(sensor);
+ 	rval = smiapp_init_controls(sensor);
+ 	if (rval < 0)
+-		goto out_nvm_release;
++		goto out_cleanup;
  
- #ifndef __SMIAPP_PRIV_H_
+ 	mutex_lock(&sensor->mutex);
+ 	rval = smiapp_update_mode(sensor);
+ 	mutex_unlock(&sensor->mutex);
+ 	if (rval) {
+ 		dev_err(&client->dev, "update mode failed\n");
+-		goto out_nvm_release;
++		goto out_cleanup;
+ 	}
+ 
+ 	sensor->streaming = false;
+@@ -2787,23 +2789,39 @@ static int smiapp_registered(struct v4l2_subdev *subdev)
+ 	rval = smiapp_read(sensor, SMIAPP_REG_U8_FLASH_MODE_CAPABILITY, &tmp);
+ 	sensor->flash_capability = tmp;
+ 	if (rval)
+-		goto out_nvm_release;
++		goto out_cleanup;
+ 
+ 	smiapp_power_off(sensor);
+ 
+ 	return 0;
+ 
+-out_nvm_release:
+-	device_remove_file(&client->dev, &dev_attr_nvm);
+-
+-out_ident_release:
+-	device_remove_file(&client->dev, &dev_attr_ident);
++out_cleanup:
++	smiapp_cleanup(sensor);
+ 
+ out_power_off:
+ 	smiapp_power_off(sensor);
+ 	return rval;
+ }
+ 
++static int smiapp_registered(struct v4l2_subdev *subdev)
++{
++	struct smiapp_sensor *sensor = to_smiapp_sensor(subdev);
++	struct i2c_client *client = v4l2_get_subdevdata(subdev);
++	int rval;
++
++	if (!client->dev.of_node) {
++		rval = smiapp_init(sensor);
++		if (rval)
++			return rval;
++	}
++
++	rval = smiapp_register_subdevs(sensor);
++	if (rval)
++		smiapp_cleanup(sensor);
++
++	return rval;
++}
++
+ static int smiapp_open(struct v4l2_subdev *sd, struct v4l2_subdev_fh *fh)
+ {
+ 	struct smiapp_subdev *ssd = to_smiapp_subdev(sd);
+@@ -3077,6 +3095,12 @@ static int smiapp_probe(struct i2c_client *client,
+ 	if (rval < 0)
+ 		return rval;
+ 
++	if (client->dev.of_node) {
++		rval = smiapp_init(sensor);
++		if (rval)
++			goto out_media_entity_cleanup;
++	}
++
+ 	rval = v4l2_async_register_subdev(&sensor->src->sd);
+ 	if (rval < 0)
+ 		goto out_media_entity_cleanup;
 -- 
 1.7.10.4
