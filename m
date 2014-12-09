@@ -1,59 +1,48 @@
 From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: [REVIEW PATCH v3 00/12] smiapp OF support
-Date: Tue,  9 Dec 2014 02:04:08 +0200
-Message-ID: <1418083460-28556-1-git-send-email-sakari.ailus@iki.fi>
+Subject: [REVIEW PATCH v3 04/12] smiapp: Use types better suitable for DT
+Date: Tue,  9 Dec 2014 02:04:12 +0200
+Message-ID: <1418083460-28556-5-git-send-email-sakari.ailus@iki.fi>
+References: <1418083460-28556-1-git-send-email-sakari.ailus@iki.fi>
 Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1418083460-28556-1-git-send-email-sakari.ailus@iki.fi>
 Sender: linux-media-owner@vger.kernel.org
 To: linux-media@vger.kernel.org
 Cc: devicetree@vger.kernel.org, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+Signed-off-by: Sakari Ailus <sakari.ailus@iki.fi>
+---
+ include/media/smiapp.h |   10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-This patchset adds support for Device tree in the smiapp driver. Platform
-data support is retained as well. The actual DT related changes are
-prepended by a few simple cleanups.
-
-A new link-frequency property is defined in video-interfaces.txt, as this is
-hardly something which is specific to the SMIA compliant sensors.
-
-since v2:
-
-- patch 8 (now 9) "of: smiapp: Add documentation":
-
-	- Cleanups                                                                      
-
-	- Removed clock-names property documentation
-
-	- Port node documentation was really endpoint node documentation
-
-	- Added remote-endpoint as mandatory endpoint node properties
-
-	- Rename link-frequency property as link-frequencies
-
-	- Removed clock-names property from the DT example
-
-	- Fix clock property documentation
-
-- Use struct smiapp_sensor pointer as an argument to many functions, instead
-  of struct v4l2_subdev pointer. This modifies patch "smiapp: Fully probe
-  the device in probe".
-
-- smiapp_subdev_{init,cleanup} renamed as smiapp_{init,cleanup} (same patch)
-
-- Remove redundant sub-device name change, patch "smiapp: Don't give the
-  source sub-device a temporary name" added to the set.
-
-since v1:
-
-- Only use dev->of_node to determine whether the OF node is there.
-
-- Add clock-lanes and data-lanes properties to mandatory properties list in
-  documentation.
-
-- Add a patch to include include/uapi/linux/smiapp.h in MAINTAINERS section
-  for the smiapp driver.
-
+diff --git a/include/media/smiapp.h b/include/media/smiapp.h
+index 0b8f124..268a3cd 100644
+--- a/include/media/smiapp.h
++++ b/include/media/smiapp.h
+@@ -65,19 +65,19 @@ struct smiapp_platform_data {
+ 	unsigned short i2c_addr_dfl;	/* Default i2c addr */
+ 	unsigned short i2c_addr_alt;	/* Alternate i2c addr */
+ 
+-	unsigned int nvm_size;			/* bytes */
+-	unsigned int ext_clk;			/* sensor external clk */
++	uint32_t nvm_size;		/* bytes */
++	uint32_t ext_clk;		/* sensor external clk */
+ 
+ 	unsigned int lanes;		/* Number of CSI-2 lanes */
+-	u8 csi_signalling_mode;		/* SMIAPP_CSI_SIGNALLING_MODE_* */
+-	const s64 *op_sys_clock;
++	uint32_t csi_signalling_mode;	/* SMIAPP_CSI_SIGNALLING_MODE_* */
++	uint64_t *op_sys_clock;
+ 
+ 	enum smiapp_module_board_orient module_board_orient;
+ 
+ 	struct smiapp_flash_strobe_parms *strobe_setup;
+ 
+ 	int (*set_xclk)(struct v4l2_subdev *sd, int hz);
+-	int xshutdown;			/* gpio or SMIAPP_NO_XSHUTDOWN */
++	int32_t xshutdown;		/* gpio or SMIAPP_NO_XSHUTDOWN */
+ };
+ 
+ #endif /* __SMIAPP_H_  */
 -- 
-Kind regards,
-Sakari
+1.7.10.4
