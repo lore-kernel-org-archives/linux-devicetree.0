@@ -1,60 +1,138 @@
-From: Hyungwon Hwang <human.hwang@samsung.com>
-Subject: [PATCH v2 3/3] ARM: dts: add Panel device support for
- exynos3250-rinato
-Date: Tue, 09 Dec 2014 18:29:06 +0900
-Message-ID: <1418117346-9078-4-git-send-email-human.hwang@samsung.com>
-References: <1418117346-9078-1-git-send-email-human.hwang@samsung.com>
+From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v3] i2c: Driver to expose PowerNV platform i2c busses
+Date: Tue, 09 Dec 2014 20:43:03 +1100
+Message-ID: <1418118183.13358.38.camel@kernel.crashing.org>
+References: <20141208063039.14356.34770.stgit@localhost.localdomain>
+	 <1418069595.4827.43.camel@kernel.crashing.org>
+	 <20141208205520.GA12715@katana>
+	 <1418075026.13358.4.camel@kernel.crashing.org>
+	 <20141209085435.GA1154@katana>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <1418117346-9078-1-git-send-email-human.hwang@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, a.hajda@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org, Hyungwon Hwang <human.hwang@samsung.com>, galak@codeaurora.org, kgene.kim@samsung.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141209085435.GA1154@katana>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: Neelesh Gupta <neelegup-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogSW5raSBEYWUgPGlua2kuZGFlQHNhbXN1bmcuY29tPgoKVGhpcyBwYXRjaCBhZGRzIE1J
-UEktRFNJIGFuZCBNSVBJLURTSSBiYXNlZCBTNkU2M0owWDAzIEFNT0xFRCBwYW5lbApkZXZpY2Ug
-bm9kZXMgZm9yIEV4eW5vczMyNTAgUmluYXRvIGJvYXJkLgoKU2lnbmVkLW9mZi1ieTogSW5raSBE
-YWUgPGlua2kuZGFlQHNhbXN1bmcuY29tPgpTaWduZWQtb2ZmLWJ5OiBIeXVuZ3dvbiBId2FuZyA8
-aHVtYW4uaHdhbmdAc2Ftc3VuZy5jb20+CkFja2VkLWJ5OiBLeXVuZ21pbiBQYXJrIDxreXVuZ21p
-bi5wYXJrQHNhbXN1bmcuY29tPgotLS0KQ2hhbmdlcyBmb3IgdjI6Ci0gTm9uZQoKIGFyY2gvYXJt
-L2Jvb3QvZHRzL2V4eW5vczMyNTAtcmluYXRvLmR0cyB8IDYwICsrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKwogMSBmaWxlIGNoYW5nZWQsIDYwIGluc2VydGlvbnMoKykKCmRpZmYgLS1n
-aXQgYS9hcmNoL2FybS9ib290L2R0cy9leHlub3MzMjUwLXJpbmF0by5kdHMgYi9hcmNoL2FybS9i
-b290L2R0cy9leHlub3MzMjUwLXJpbmF0by5kdHMKaW5kZXggNzlhYTkxNi4uYThjYWVlNSAxMDA2
-NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zMzI1MC1yaW5hdG8uZHRzCisrKyBiL2Fy
-Y2gvYXJtL2Jvb3QvZHRzL2V4eW5vczMyNTAtcmluYXRvLmR0cwpAQCAtMTI1LDYgKzEyNSw2NiBA
-QAogCX07CiB9OwogCismZHNpXzAgeworCXZkZGNvcmUtc3VwcGx5ID0gPCZsZG82X3JlZz47CisJ
-dmRkaW8tc3VwcGx5ID0gPCZsZG82X3JlZz47CisJc2Ftc3VuZyxwbGwtY2xvY2stZnJlcXVlbmN5
-ID0gPDI0MDAwMDAwPjsKKwlzdGF0dXMgPSAib2theSI7CisKKwlwb3J0cyB7CisJCSNhZGRyZXNz
-LWNlbGxzID0gPDE+OworCQkjc2l6ZS1jZWxscyA9IDwwPjsKKworCQlwb3J0QDEgeworCQkJcmVn
-ID0gPDE+OworCisJCQlkc2lfb3V0OiBlbmRwb2ludCB7CisJCQkJcmVtb3RlLWVuZHBvaW50ID0g
-PCZkc2lfaW4+OworCQkJCXNhbXN1bmcsYnVyc3QtY2xvY2stZnJlcXVlbmN5ID0gPDI1MDAwMDAw
-MD47CisJCQkJc2Ftc3VuZyxlc2MtY2xvY2stZnJlcXVlbmN5ID0gPDIwMDAwMDAwPjsKKwkJCX07
-CisJCX07CisJfTsKKworCXBhbmVsQDAgeworCQljb21wYXRpYmxlID0gInNhbXN1bmcsczZlNjNq
-MHgwMyI7CisJCXJlZyA9IDwwPjsKKwkJdmRkMy1zdXBwbHkgPSA8JmxkbzE2X3JlZz47CisJCXZj
-aS1zdXBwbHkgPSA8JmxkbzIwX3JlZz47CisJCXJlc2V0LWdwaW9zID0gPCZncGUwIDEgMD47CisJ
-CXRlLWdwaW9zID0gPCZncHgwIDYgMD47CisJCXBvd2VyLW9uLWRlbGF5PSA8MzA+OworCQlwb3dl
-ci1vZmYtZGVsYXk9IDwxMjA+OworCQlyZXNldC1kZWxheSA9IDw1PjsKKwkJaW5pdC1kZWxheSA9
-IDwxMDA+OworCQlmbGlwLWhvcml6b250YWw7CisJCWZsaXAtdmVydGljYWw7CisJCXBhbmVsLXdp
-ZHRoLW1tID0gPDI5PjsKKwkJcGFuZWwtaGVpZ2h0LW1tID0gPDI5PjsKKworCisJCWRpc3BsYXkt
-dGltaW5ncyB7CisJCQl0aW1pbmctMCB7CisJCQkJY2xvY2stZnJlcXVlbmN5ID0gPDA+OworCQkJ
-CWhhY3RpdmUgPSA8MzIwPjsKKwkJCQl2YWN0aXZlID0gPDMyMD47CisJCQkJaGZyb250LXBvcmNo
-ID0gPDE+OworCQkJCWhiYWNrLXBvcmNoID0gPDE+OworCQkJCWhzeW5jLWxlbiA9IDwxPjsKKwkJ
-CQl2ZnJvbnQtcG9yY2ggPSA8MTUwPjsKKwkJCQl2YmFjay1wb3JjaCA9IDwxPjsKKwkJCQl2c3lu
-Yy1sZW4gPSA8Mj47CisJCQl9OworCQl9OworCisJCXBvcnQgeworCQkJZHNpX2luOiBlbmRwb2lu
-dCB7CisJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZkc2lfb3V0PjsKKwkJCX07CisJCX07CisJfTsK
-K307CisKICZmaW1kIHsKIAlzdGF0dXMgPSAib2theSI7CiAKLS0gCjEuOS4xCgpfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBs
-aXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNr
-dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Tue, 2014-12-09 at 09:54 +0100, Wolfram Sang wrote:
+> > > Oh, I thought we agreed that you take it via powerpc. I still think this
+> > > is the best solution.
+> > 
+> > I threatened to do that :-) I don't remember you replying, did I miss
+> > it ?
+
+> It is here:
+> http://thread.gmane.org/gmane.linux.drivers.i2c/20762/focus=21099
+
+Weird, it never made it to my mbox... anyway:
+
+> I did not invent DT bindings.
+
+No I did :) Or rather Mitch did with OF and I contributed heavily at
+slapping it onto everbody's face :) Then I let Grant run with it and
+deal with the carnage... but as you can imagine, I feel like whatever
+rule I made for others don't apply to me :)
+
+> I did not invent that DT is/should be a
+>hardware description. 
+
+This is the basic idea but it's flexible. It is in essence a description
+of the environment, which is essentially the HW but there is no taboo
+about adding various ancilliary pieces of informations that one deems
+useful, especially if they are prefixed by a vendor prefix to avoid
+collision with "well defined" properties.
+
+I think we ended up being fairly strict about the rules initially to try
+to rein in the crowd of ARM embedded folks who really went all over the
+place but like every rule, it's meant to be broken (hear the french guy
+talking ...).
+
+>For me, it is a burden that I (as a subsystem
+> maintainer for mainly drivers) have to prevent people from using DT ?>
+> for software configuration (some people use it as an 1:1 mapping for
+> platform data even.)
+
+Well, yes and no... for example, it's perfectly legit to have a node
+representing a UART, have the firmware slap into it the default expected
+baud rate as a property (or whatever it has configured it to be) which
+makes it then a reasonable default for the kernel to use.
+
+Generally speaking there is nothing fundamentally wrong about having
+configuration information in the device-tree, but it has to be clearly
+identifiable as such.
+
+The description of the HW in my world at least also implies how that HW
+is meant to be configured for a given platform.
+
+> Since there are no guidelines (probably there can't
+> be), I developed a set of rules out of experience and when those don't
+> match I ask for help. Having a different set of rules for
+> powerpc/arm/... (or server/embedded for that matter) will increase
+> this burden a lot. People will come and say "But they did it as 
+> well..."
+
+The basic rule is "does it make sense ?". Really. Apply your jugement
+based on your experience as to whether something is a reasonable
+comprimise or not and whether it will turn into a big mess in the long
+run or, on the contrary, is a perfectly fine ad-hoc solution for a given
+setup.
+
+> It's getting quite tempting to just throw that driver into powerpc.git
+
+Maybe this is the easiest. Just make sure that MAINTAINERS also point
+this driver to you or PowerNV maintainers. And no Ack from me, please.
+Then, I can always say "I dunno" if people start asking questions.
+
+:)
+
+Technically I need your ack if we are to follow the process for Linux
+upstreaming. I doubt Linux will holler if I just put it in the tree but
+I'd rather follow the process if possible.
+
+>> And I don't give a flying crap about what random ARM SOC vendor
+>> thinks of my powerpc FW interface for a powerpc unique FW interface.
+>
+> But you are not alone here. If you open the box for giving busses a
+> configurable name, I can see other people (without FW) wanting this,
+> too. So, this discussion will come anyhow IMO.
+
+Right and I personally don't see a problem with that ... what's
+fundamentally wrong with letting the platform description (ie,. the DT)
+specify reasonable names for i2c busses ? It has pretty much no impact
+on drivers nowadays but means things are easier to figure out/locate for
+users/admin/developers and eases diagnostics.
+
+> > If you are ok with the driver and are happy for me to take it,
+> > please send an Ack.
+> 
+> "Happy" is not the correct word, but let's just go over with it. Maybe
+> like this:
+> 
+> Acked-by: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org> (I2C part, excluding the bindings)
+
+Forget about the binding mess, Olof reminded me that the result of one
+of the recent KS was that the bindings no longer needed "approval", and
+are to be sent to the list purely for informational purposes, otherwise
+the process is a mess. We have to provide at least some trust here, and
+we can reject the driver if we think the binding is really way too
+gross.
+
+> > From a binding perspective, it's just a piece of additional info that
+> > the firmware provides for convenience.
+> 
+> I do understand the use case. I even agree it makes sense to have
+> something like this. It is just that I'd prefer a generic, widely
+> acknowledged solution, with consensus where it belongs and how it should
+> be named. Not a custom solution which, frankly, feels forced on me
+> by time pressure I have nothing to do with. So, not happy here, but also
+> not looking for drama. Let's move on...
+
+Adding a generic binding for i2c controllers to name their respective
+busses sounds like a laudable idea, and if that happens I'll be happy to
+update the driver to take that into account so that a future FW version
+can add it (in addition to the old property for backward compat).
+
+Ben.
