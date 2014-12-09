@@ -1,79 +1,101 @@
-From: Ankit Jindal <ankit.jindal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 5/6] Documentation: dt-bindings: Add binding info for
- X-Gene QMTM UIO driver
-Date: Tue, 9 Dec 2014 12:03:08 +0530
-Message-ID: <CAPTm99WYOOaDFWN6Cj+NPhvUUTW3=nexua1tO4QbtNy00dp2Ug@mail.gmail.com>
-References: <1416220572-13381-1-git-send-email-ankit.jindal@linaro.org>
- <2279061.naADrHDgyn@wuerfel> <CAPTm99WYNyxtY-NCVN8pB0HwNPn+EFx-7w7yEevaEK1z7-Zqxg@mail.gmail.com>
- <1503477.DVdkExccIe@wuerfel> <CAPTm99V1qP5dAgDV04i3m_yR1ri9h=b8fDXBDxmPfpZG_P268g@mail.gmail.com>
- <CAL_Jsq+F5GepyyZbpJOAKLtQsvJOF9wZzf2GyjA6sDe2nr4SrQ@mail.gmail.com>
+From: Pankaj Dubey <pankaj.dubey@samsung.com>
+Subject: Re: [PATCH 12/19] clk: samsung: exynos5433: Add clocks for CMU_GSCL
+ domain
+Date: Tue, 09 Dec 2014 13:18:24 +0530
+Message-ID: <5486A948.7010906@samsung.com>
+References: <1417510196-6714-1-git-send-email-cw00.choi@samsung.com>
+ <1417510196-6714-13-git-send-email-cw00.choi@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_Jsq+F5GepyyZbpJOAKLtQsvJOF9wZzf2GyjA6sDe2nr4SrQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Anup Patel <anup-aa5cPYPs4nSSZfiimGR9Ow@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Hans J. Koch" <hjk-vqZO0P4V72/QD6PfKP4TzA@public.gmane.org>, Tushar Jagad <tushar.jagad-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1417510196-6714-13-git-send-email-cw00.choi@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: kgene.kim@samsung.com, mark.rutland@arm.com, marc.zyngier@arm.com, arnd@arndb.de, olof@lixom.net, catalin.marinas@arm.com, will.deacon@arm.com, s.nawrocki@samsung.com, tomasz.figa@gmail.com, kyungmin.park@samsung.com, inki.dae@samsung.com, chanho61.park@samsung.com, geunsik.lim@samsung.com, sw0312.kim@samsung.com, jh80.chung@samsung.com, a.kesavan@samsung.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 8 December 2014 at 22:45, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Mon, Dec 8, 2014 at 6:42 AM, Ankit Jindal <ankit.jindal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> On 18 November 2014 at 18:40, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
->>> On Tuesday 18 November 2014 14:59:54 Ankit Jindal wrote:
->>>> On 17 November 2014 16:47, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
->>>> > On Monday 17 November 2014 16:06:11 Ankit Jindal wrote:
->>>> >> +
->>>> >> +       qmtm1_uio: qmtm_uio@1f200000 {
->>>> >> +               compatible = "apm,xgene-qmtm";
->>>> >> +               status = "disabled";
->>>> >> +               reg = <0x0 0x1f200000 0x0 0x10000>,
->>>> >> +                     <0x0 0x1b000000 0x0 0x400000>;
->>>> >> +               reg-names = "csr", "fabric";
->>>> >> +               qpool-memory = <&qmtm1_uio_qpool>;
->>>> >> +               clocks = <&qmtm1clk 0>;
->>>> >> +               num-queues = <0x400>;
->>>> >> +               devid = <1>;
->>>> >> +       };
->>>> >> +
->>>> >
->>>> > To make my previous review comments clearer:
->>>> >
->>>> > NAK
->>>> >
->>>> > Do not create device nodes that are meant for a specific use case in
->>>> > software and that are not usable for the common case. I don't think
->>>> > it makes any sense to keep on submitting a UIO driver for this until
->>>> > we have a proper network driver that uses this so we can make sure we
->>>> > have a working binding.
->
-> +1
->
->>>> The dataplane frameworks like OpenDataPlane etc, need to have access
->>>> to complete subsystem from the user space. Hence, we would like to
->>>> have this driver and some other UIO drivers to be the part of kernel
->>>> to have data plane frameworks working on our platform.
->>>
->>> Please work with the people that do the in-kernel QMTM driver to come
->>> up with a common binding then.
->> Thanks Arnd, I have synced with them, and in future our dt bindings
->> for this device is going to be inline with the one mentioned in the
->> patchset.
->
-> What does "in the future" mean? Is there already a QMTM binding? If
-> so, you need to figure out how to either align with it or deprecate
-> it. This patch at a minimum needs to be fixed to not refer to UIO.
+Hi Chanwoo,
 
-There is no QMTM dt binding as of now, and the kernel QMTM driver will
-also use the same dt binding.
-I will remove all references to the UIO from this patch, and move this
-binding under the misc folder.
-
+On Tuesday 02 December 2014 02:19 PM, Chanwoo Choi wrote:
+> This patch adds the divider/gate of CMU_GSCL domain which contains gscaler
+> clocks.
 >
-> Rob
+> Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> Cc: Tomasz Figa <tomasz.figa@gmail.com>
+> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+> Acked-by: Inki Dae <inki.dae@samsung.com>
+> Acked-by: Geunsik Lim <geunsik.lim@samsung.com>
+> ---
+>   .../devicetree/bindings/clock/exynos5433-clock.txt |   8 ++
+>   drivers/clk/samsung/clk-exynos5433.c               | 144 +++++++++++++++++++++
+>   include/dt-bindings/clock/exynos5433.h             |  37 +++++-
+>   3 files changed, 188 insertions(+), 1 deletion(-)
+>
+
+[snip]
+
+>   }
+>   CLK_OF_DECLARE(exynos5433_cmu_g3d, "samsung,exynos5433-cmu-g3d",
+>   		exynos5433_cmu_g3d_init);
+> +
+> +/*
+> + * Register offset definitions for CMU_GSCL
+> + */
+> +#define MUX_SEL_GSCL				0x0200
+> +#define MUX_ENABLE_GSCL				0x0300
+> +#define	MUX_STAT_GSCL				0x0400
+> +#define	ENABLE_ACLK_GSCL			0x0800
+> +#define	ENABLE_ACLK_GSCL_SECURE_SMMU_GSCL0	0x0804
+> +#define	ENABLE_ACLK_GSCL_SECURE_SMMU_GSCL1	0x0808
+> +#define	ENABLE_ACLK_GSCL_SECURE_SMMU_GSCL2	0x080c
+> +#define	ENABLE_PCLK_GSCL			0x0900
+> +#define	ENABLE_PCLK_GSCL_SECURE_SMMU_GSCL0	0x0904
+> +#define	ENABLE_PCLK_GSCL_SECURE_SMMU_GSCL1	0x0908
+> +#define	ENABLE_PCLK_GSCL_SECURE_SMMU_GSCL2	0x090c
+> +#define	ENABLE_IP_GSCL0				0x0b00
+> +#define	ENABLE_IP_GSCL1				0x0b04
+> +#define	ENABLE_IP_GSCL_SECURE_SMMU_GSCL0	0x0b08
+> +#define	ENABLE_IP_GSCL_SECURE_SMMU_GSCL1	0x0b0c
+> +#define	ENABLE_IP_GSCL_SECURE_SMMU_GSCL2	0x0b10
+> +
+
+nit: tabspace after #define should be changed to one whitespace.
+
+> +static unsigned long gscl_clk_regs[] __initdata = {
+> +	MUX_SEL_GSCL,
+> +	MUX_ENABLE_GSCL,
+> +	MUX_STAT_GSCL,
+> +	ENABLE_ACLK_GSCL,
+> +	ENABLE_ACLK_GSCL_SECURE_SMMU_GSCL0,
+> +	ENABLE_ACLK_GSCL_SECURE_SMMU_GSCL1,
+> +	ENABLE_ACLK_GSCL_SECURE_SMMU_GSCL2,
+> +	ENABLE_PCLK_GSCL,
+> +	ENABLE_PCLK_GSCL_SECURE_SMMU_GSCL0,
+> +	ENABLE_PCLK_GSCL_SECURE_SMMU_GSCL1,
+> +	ENABLE_PCLK_GSCL_SECURE_SMMU_GSCL2,
+> +	ENABLE_IP_GSCL0,
+> +	ENABLE_IP_GSCL1,
+> +	ENABLE_IP_GSCL_SECURE_SMMU_GSCL0,
+> +	ENABLE_IP_GSCL_SECURE_SMMU_GSCL1,
+> +	ENABLE_IP_GSCL_SECURE_SMMU_GSCL2,
+> +};
+> +
+> +/* list of all parent clock list */
+> +PNAME(aclk_gscl_111_user_p)	= { "fin_pll", "aclk_gscl_111", };
+> +PNAME(aclk_gscl_333_user_p)	= { "fin_pll", "aclk_gscl_333", };
+> +
+> +static struct samsung_mux_clock gscl_mux_clks[] __initdata = {
+> +	/* MUX_SEL_GSCL */
+> +	MUX(CLK_MOUT_ACLK_GSCL_111_USER, "mout_aclk_gscl_111_user",
+> +			aclk_gscl_111_user_p, MUX_SEL_GSCL, 4, 1),
+> +	MUX(CLK_MOUT_ACLK_GSCL_333_USER, "mout_aclk_gscl_333_user",
+> +			aclk_gscl_333_user_p, MUX_SEL_GSCL, 4, 1),
+
+aclk_gscl_333_user mux clock has a shift of '0'.
+
+> +};
+> +
 
 Thanks,
-Ankit
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Pankaj Dubey
