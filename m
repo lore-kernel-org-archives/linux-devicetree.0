@@ -1,44 +1,118 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH/RFC v9 06/19] DT: Add documentation for the mfd Maxim
- max77693
-Date: Tue, 9 Dec 2014 16:09:27 +0200
-Message-ID: <20141209140927.GL15559@valkosipuli.retiisi.org.uk>
-References: <1417622814-10845-1-git-send-email-j.anaszewski@samsung.com>
- <1417622814-10845-7-git-send-email-j.anaszewski@samsung.com>
- <20141204100706.GP14746@valkosipuli.retiisi.org.uk>
- <54804840.4030202@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-leds-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <54804840.4030202@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, kyungmin.park@samsung.com, b.zolnierkie@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, s.nawrocki@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, Andrzej Hajda <a.hajda@samsung.com>, Lee Jones <lee.jones@linaro.org>, Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: [RFC PATCHv2 0/7] devfreq: Add devfreq-event class to provide raw data
+ for devfreq device
+Date: Tue, 09 Dec 2014 23:12:59 +0900
+Message-ID: <1418134386-14681-1-git-send-email-cw00.choi@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: myungjoo.ham@samsung.com, kyungmin.park@samsung.com, kgene.kim@samsung.com, rafael.j.wysocki@intel.com, a.kesavan@samsung.com, tomasz.figa@gmail.com, b.zolnierkie@samsung.com, k.kozlowski@samsung.com, cw00.choi@samsung.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacek,
+This patchset add new devfreq_event class to provide raw data to determine
+current utilization of device  which is used for devfreq governor.
 
-On Thu, Dec 04, 2014 at 12:40:48PM +0100, Jacek Anaszewski wrote:
-> >>+			the flash/torch.
-> >>+- maxim,trigger : Array of flags indicating which trigger can activate given led
-> >>+	in order: fled1, fled2.
-> >>+	Possible flag values (can be combined):
-> >>+		MAX77693_LED_TRIG_FLASHEN - FLASHEN pin of the chip,
-> >>+		MAX77693_LED_TRIG_TORCHEN - TORCHEN pin of the chip,
-> >>+		MAX77693_LED_TRIG_SOFTWARE - software via I2C command.
-> >
-> >Is there a need to prevent strobing using a certain method? Just wondering.
-> 
-> In some cases it could be convenient to prevent some options through
-> device tree.
+[Description of devfreq-event class]
+This patchset add new devfreq_event class for devfreq_event device which provide
+raw data (e.g., memory bus utilization/GPU utilization). This raw data from
+devfreq_event data would be used for the governor of devfreq subsystem.
+- devfreq_event device : Provide raw data for governor of existing devfreq device
+- devfreq device       : Monitor device state and change frequency/voltage of device
+                         using the raw data from devfreq_event device
 
-Do you have that need now?
+The devfreq subsystem support generic DVFS(Dynamic Voltage/Frequency Scaling)
+for Non-CPU Devices. The devfreq device would dertermine current device state
+using various governor (e.g., ondemand, performance, powersave). After completed
+determination of system state, devfreq device would change the frequency/voltage
+of devfreq device according to the result of governor.
 
-If not, I'd propose to postpone this and add it only if there ever is one.
+But, devfreq governor must need basic data which indicates current device state.
+Existing devfreq subsystem only consider devfreq device which check current system
+state and determine proper system state using basic data. There is no subsystem
+for device providing basic data to devfreq device.
+
+The devfreq subsystem must need devfreq_event device(data-provider device) for
+existing devfreq device. So, this patch add new devfreq_event class for
+devfreq_event device which read various basic data(e.g, memory bus utilization,
+GPU utilization) and provide measured data to existing devfreq device through
+standard APIs of devfreq_event class.
+
+The following description explains the feature of two kind of devfreq class:
+- devfreq class (existing)
+ : devfreq consumer device use raw data from devfreq_event device for
+   determining proper current system state and change voltage/frequency
+   dynamically using various governors.
+- devfreq_event class (new)
+ : Provide measured raw data to devfreq device for governor
+
+Also, the devfreq-event device would support various type event as following:
+ : DEVFREQ_EVENT_TYPE_RAW_DATA
+ : DEVFREQ_EVENT_TYPE_UTILIZATION
+ : DEVFREQ_EVENT_TYPE_BANDWIDTH
+ : DEVFREQ_EVENT_TYPE_LATENCY
+
+[For example]
+If board dts includes PPMU_DMC0/DMC1/CPU event node,
+would show following sysfs entry. Also devfreq driver(e.g., exynos4_bus.c)
+can get the instance of devfreq-event device by using provided API and then
+get raw data which reflect the current state of device.
+
+-sh-3.2# pwd
+/sys/class/devfreq_event
+-sh-3.2# ls -al
+total 0
+drwxr-xr-x  2 root root 0 Jan  7 11:10 .
+drwxr-xr-x 37 root root 0 Jan  7 11:10 ..
+lrwxrwxrwx  1 root root 0 Jan  7 11:10 event.0 -> ../../devices/soc/106a0000.ppmu_dmc0/devfreq_event/event.0
+lrwxrwxrwx  1 root root 0 Jan  7 11:10 event.1 -> ../../devices/soc/106a0000.ppmu_dmc0/devfreq_event/event.1
+lrwxrwxrwx  1 root root 0 Jan  7 11:10 event.2 -> ../../devices/soc/106a0000.ppmu_dmc0/devfreq_event/event.2
+lrwxrwxrwx  1 root root 0 Jan  7 11:10 event.3 -> ../../devices/soc/106a0000.ppmu_dmc0/devfreq_event/event.3
+lrwxrwxrwx  1 root root 0 Jan  7 11:10 event.4 -> ../../devices/soc/106b0000.ppmu_dmc1/devfreq_event/event.4
+lrwxrwxrwx  1 root root 0 Jan  7 11:10 event.5 -> ../../devices/soc/106c0000.ppmu_cpu/devfreq_event/event.5
+lrwxrwxrwx  1 root root 0 Jan  7 11:10 event.6 -> ../../devices/soc/106c0000.ppmu_cpu/devfreq_event/event.6
+lrwxrwxrwx  1 root root 0 Jan  7 11:10 event.7 -> ../../devices/soc/106c0000.ppmu_cpu/devfreq_event/event.7
+lrwxrwxrwx  1 root root 0 Jan  7 11:10 event.8 -> ../../devices/soc/106c0000.ppmu_cpu/devfreq_event/event.8
+
+Changes from v1:
+- Code clean
+- Add the description of devfreq-event structure
+- Add 'is_enabled' function to devfreq_event_ops structure
+- Add 'enable_count' field to devfreq_event_dev structure
+- Check whether devfreq-event device is enabled or not
+  during calling devfreq_event API
+- Define the type of devfreq-event device as following
+  : DEVFREQ_EVENT_TYPE_RAW_DATA
+  : DEVFREQ_EVENT_TYPE_UTILIZATION
+  : DEVFREQ_EVENT_TYPE_BANDWIDTH
+  : DEVFREQ_EVENT_TYPE_LATENCY
+- Add the exclusive feature of devfreq-event device.
+  If devfreq-event device is used on only on devfreq driver,
+  should used 'devfreq_enable_event_dev_exclusive()' function
+- Add new patch6 for test on Exynos3250-based Rinato board
+
+Chanwoo Choi (7):
+  devfreq: event: Add new devfreq_event class to provide basic data for devfreq governor
+  devfreq: event: Add the list of supported devfreq-event type
+  devfreq: event: Add the exclusive flag for devfreq-event device
+  devfreq: event: Add exynos-ppmu devfreq event driver
+  ARM: dts: Add PPMU dt node for Exynos3250
+  ARM: dts: Add PPMU dt node for Exynos4 SoC
+  ARM: dts: exynos: Add PPMU dt node to Exynos3250-based Rinato board
+
+ arch/arm/boot/dts/exynos3250-rinato.dts |  55 +++++
+ arch/arm/boot/dts/exynos3250.dtsi       |  66 ++++++
+ arch/arm/boot/dts/exynos4.dtsi          |  96 ++++++++
+ arch/arm/boot/dts/exynos4210.dtsi       |   8 +
+ drivers/devfreq/Kconfig                 |  11 +
+ drivers/devfreq/Makefile                |   5 +-
+ drivers/devfreq/devfreq-event.c         | 363 ++++++++++++++++++++++++++++
+ drivers/devfreq/event/Makefile          |   2 +
+ drivers/devfreq/event/exynos-ppmu.c     | 409 ++++++++++++++++++++++++++++++++
+ include/linux/devfreq.h                 | 178 ++++++++++++++
+ 10 files changed, 1192 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/devfreq/devfreq-event.c
+ create mode 100644 drivers/devfreq/event/Makefile
+ create mode 100644 drivers/devfreq/event/exynos-ppmu.c
 
 -- 
-Kind regards,
-
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
+1.8.5.5
