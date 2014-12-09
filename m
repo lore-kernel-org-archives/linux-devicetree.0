@@ -1,140 +1,62 @@
-From: =?UTF-8?B?SmFudXN6IFXFvHlja2k=?= <j.uzycki@elproma.com.pl>
-Subject: Re: [PATCH v2] clk: Add PWM clock driver
-Date: Tue, 09 Dec 2014 14:09:44 +0100
-Message-ID: <5486F498.30309@elproma.com.pl>
-References: <1415007078-7947-1-git-send-email-p.zabel@pengutronix.de>	 <5480A132.2010103@elproma.com.pl> <54860426.3020400@elproma.com.pl> <1418116533.3107.1.camel@pengutronix.de>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH v2 2/3] fpga manager: framework core
+Date: Tue, 9 Dec 2014 13:11:59 +0000
+Message-ID: <CACxGe6tM1UXMCO=eVDad7rj2gxN-nbvyApti5kV5ScxQ+r2Kzg@mail.gmail.com>
+References: <1414007405-32186-1-git-send-email-atull@opensource.altera.com>
+ <1414007405-32186-3-git-send-email-atull@opensource.altera.com>
+ <20141024105200.GA20775@amd> <CACxGe6sa=ysJAjx5TQZH5sKoas1PkoUUR4zT=Z35+uF6rrk-vw@mail.gmail.com>
+ <20141208225519.64501d2d@lxorguk.ukuu.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <1418116533.3107.1.camel@pengutronix.de>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Mike Turquette <mturquette@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20141208225519.64501d2d@lxorguk.ukuu.org.uk>
+Sender: linux-doc-owner@vger.kernel.org
+To: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
+Cc: Pavel Machek <pavel@denx.de>, atull <atull@opensource.altera.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, "H. Peter Anvin" <hpa@zytor.com>, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Randy Dunlap <rdunlap@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh+dt@kernel.org>, Ira Snyder <iws@ovro.caltech.edu>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Philip Balister <philip@balister.org>, rubini <rubini@gnudd.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Jason <jason@lakedaemon.net>, kyle.teske@ni.com, Nicolas Pitre <nico@linaro.org>, "Balbi, Felipe" <balbi@ti.com>, Mauro
 List-Id: devicetree@vger.kernel.org
 
-Hi Philipp,
-
-W dniu 2014-12-09 o 10:15, Philipp Zabel pisze:
-> Hi Janusz,
+On Mon, Dec 8, 2014 at 10:55 PM, One Thousand Gnomes
+<gnomes@lxorguk.ukuu.org.uk> wrote:
+> On Sat, 6 Dec 2014 13:00:17 +0000
+> Grant Likely <grant.likely@linaro.org> wrote:
 >
-> Am Montag, den 08.12.2014, 21:03 +0100 schrieb Janusz U=C5=BCycki:
->> Hi,
+>> On Fri, Oct 24, 2014 at 11:52 AM, Pavel Machek <pavel@denx.de> wrote:
+>> > Hi!
+>> >
+>> >> * /sys/class/fpga_manager/<fpga>/firmware
+>> >>   Name of FPGA image file to load using firmware class.
+>> >>   $ echo image.rbf > /sys/class/fpga_manager/<fpga>/firmware
+>> >
+>> > I .. still don't think this is good idea. What about namespaces?
+>> > The path corresponds to path in which namespace?
 >>
->> I've fixed my pwm driver and I can enable 12MHz 50% output using sys=
-fs.
->> Then I rebased the pwm-clock to 3.14.
->> I have connected mcp2515 and it works with fixed clock. When I switc=
-h
->> the chip's clock to pwm clock in dt
->> I get "mcp251x: probe of spi1.2 failed with error -2". I've also add=
-ed
->> clock-frequency property
->> but it didn't help.
->> When I set the mcp2515 clock to fixed clock again but the clock is n=
-ot
->> applied to mcp2515 I get
->> "mcp251x spi1.2: MCP251x didn't enter in conf mode after reset".
->> So it looks this is indeed probe error caused likely by dt.
-> Did pwm-clock fail to probe already? Could you check with the patch
-> below?
-
-Added. clk_pwm_probe() is never called. The pwm-clk driver is built-in.=
-=20
-mcp251x is a module.
-mcp251x doesn't trigger pwm-clock dt. I found fixed-clock uses=20
-CLK_OF_DECLARE().
-How does it work for you? What is missing?
-
-The pwm-clock driver set CLK_IS_ROOT and no parents.
-I think it fail the clock on suspend/resume race but I can be wrong.
-
->> The fixed and pwm clock in DT:
->>           clocks {
->>                   #address-cells =3D <1>;
->>                   #size-cells =3D <1>;
->>                   ranges;
->>                   mcp251x_xtal_clk: mcp2515_xtal {
->>                           compatible =3D "fixed-clock";
->>                           #clock-cells =3D <0>;
->>                           clock-frequency =3D <12000000>;
->>                   };
->>
->>                   mcp251x_pwm_clk: mcp2515_pwm {
->>                           compatible =3D "pwm-clock";
->>                           #clock-cells =3D <0>;
->>                           clock-frequency =3D <12000000>;
->>                           clock-output-names =3D "can_clk";
->>                           pwms =3D <&pwm 3 83>;     /* 12MHz =3D 1 /=
- ~83ns */
->>                   };
->>           };
->>
->> Also the mentioned frequency recalculation problem appears here.
->> In the case above recalc value is about 12.048MHz instead of 12.0MHz=
-=2E
->> While PWM block is clocked 24MHz and the pwm generates exactly 12MHz
->> the pwm-clock driver returns drifted value. Using clock-frequency li=
-ke
->> fixed-clock does could simply solve the binding problem.
-> Yes, for this case it is very unfortunate that there's only nanosecon=
-d
-> resolution for the duty cycle. Adding a clock-frequency property to
-> indicate the real frequency would solve this problem.
-
-Yes but the property also must be supported by pwm-clock driver.
-
-best regards
-Janusz
-
+>> I don't understand your concern here. This allows userspace to name
+>> the FPGA bitstream that the kernel will use during request_firmware(),
+>> and it will show up as the $FIRMWARE value in the uevent file, but it
+>> is still the responsibility of userspace to choose what to load, and
+>> it can freely ignore the setting of $FIRMWARE if it needs to.
 >
-> ------8<------
-> diff --git a/drivers/clk/clk-pwm.c b/drivers/clk/clk-pwm.c
-> index 8f747b3..9c13856 100644
-> --- a/drivers/clk/clk-pwm.c
-> +++ b/drivers/clk/clk-pwm.c
-> @@ -63,12 +63,16 @@ int clk_pwm_probe(struct platform_device *pdev)
->   		return -ENOMEM;
->  =20
->   	pwm =3D devm_pwm_get(&pdev->dev, NULL);
-> -	if (IS_ERR(pwm))
-> +	if (IS_ERR(pwm)) {
-> +		dev_err(&pdev->dev, "failed to get pwm: %ld\n", PTR_ERR(pwm));
->   		return PTR_ERR(pwm);
-> +	}
->  =20
->   	ret =3D pwm_config(pwm, (pwm->period + 1) >> 1, pwm->period);
-> -	if (ret < 0)
-> +	if (ret < 0) {
-> +		dev_err(&pdev->dev, "failed to configure pwm: %d\n", ret);
->   		return ret;
-> +	}
->  =20
->   	init.name =3D "pwm-clock";
->   	init.ops =3D &clk_pwm_ops;
-> @@ -78,11 +82,18 @@ int clk_pwm_probe(struct platform_device *pdev)
->   	clk_pwm->pwm =3D pwm;
->   	clk_pwm->hw.init =3D &init;
->   	clk =3D devm_clk_register(&pdev->dev, &clk_pwm->hw);
-> -	if (IS_ERR(clk))
-> +	if (IS_ERR(clk)) {
-> +		dev_err(&pdev->dev, "failed to register clock: %ld\n",
-> +			PTR_ERR(clk));
->   		return PTR_ERR(clk);
-> +	}
->  =20
-> -	return of_clk_add_provider(pdev->dev.of_node,
-> -				   of_clk_src_simple_get, clk);
-> +	ret =3D of_clk_add_provider(pdev->dev.of_node,
-> +				  of_clk_src_simple_get, clk);
-> +	if (ret)
-> +		dev_err(&pdev->dev, "failed to add clock provider: %d\n", ret);
-> +
-> +	return ret;
->   }
->  =20
->   int clk_pwm_remove(struct platform_device *pdev)
+> I think the entire model here is basically pedicated on a bogus
+> assumption that an FPGA is a one shot device. It's not. It's a fast
+> reloadable reusable device. A lot of work being done with FPGAs in
+> operating systems already involves basically task switching and
+> scheduling FPGAs as a shared resource pool. Trying to nail something
+> together with request_firmware is several years behind the curve.
 >
->
+> From userspace it needs to be a open, load, use, close type model, not a
+> static or semi-static pile of mappings.
 
+If FPGA is a general purpose resource hanging off the side that
+applications can use, then sure, but the majority of FPGA usage does
+not fall into that scenario*. The majority of FPGA usage that I've
+seen has core parts of the system implemented in the FPGA fabric.
+Video pipelines, network switching, dma to/from main memory, control
+of dedicated hardware. It's more than merely an application being able
+to use the FPGA as an accelerator.
+
+I'm certainly not dismissing the concept of FPGA scheduling and being
+able to 'task switch' between bitstreams. Yes that is important, but
+for most users it really does look like, as you say, "a static or
+semi-static pile of mappings".
+
+* Altera and Xilinx people - correct me if you disagree.
