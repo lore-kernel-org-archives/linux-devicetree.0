@@ -1,7 +1,7 @@
 From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: [REVIEW PATCH v3 09/12] of: smiapp: Add documentation
-Date: Tue,  9 Dec 2014 02:04:17 +0200
-Message-ID: <1418083460-28556-10-git-send-email-sakari.ailus@iki.fi>
+Subject: [REVIEW PATCH v3 11/12] smiapp: Split sub-device initialisation off from the registered callback
+Date: Tue,  9 Dec 2014 02:04:19 +0200
+Message-ID: <1418083460-28556-12-git-send-email-sakari.ailus@iki.fi>
 References: <1418083460-28556-1-git-send-email-sakari.ailus@iki.fi>
 Return-path: <linux-media-owner@vger.kernel.org>
 In-Reply-To: <1418083460-28556-1-git-send-email-sakari.ailus@iki.fi>
@@ -10,95 +10,118 @@ To: linux-media@vger.kernel.org
 Cc: devicetree@vger.kernel.org, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-Document the smiapp device tree properties.
+The registered callback is called by the V4L2 async framework after the
+bound callback. This allows separating the functionality in the registered
+callback so that on DT based systems only sub-device registration is done
+there.
 
 Signed-off-by: Sakari Ailus <sakari.ailus@iki.fi>
 ---
- .../devicetree/bindings/media/i2c/nokia,smia.txt   |   63 ++++++++++++++++++++
- MAINTAINERS                                        |    1 +
- 2 files changed, 64 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/nokia,smia.txt
+ drivers/media/i2c/smiapp/smiapp-core.c |   82 +++++++++++++++++++++-----------
+ 1 file changed, 54 insertions(+), 28 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/nokia,smia.txt b/Documentation/devicetree/bindings/media/i2c/nokia,smia.txt
-new file mode 100644
-index 0000000..855e1fa
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/nokia,smia.txt
-@@ -0,0 +1,63 @@
-+SMIA/SMIA++ sensor
-+
-+SMIA (Standard Mobile Imaging Architecture) is an image sensor standard
-+defined jointly by Nokia and ST. SMIA++, defined by Nokia, is an extension
-+of that. These definitions are valid for both types of sensors.
-+
-+More detailed documentation can be found in
-+Documentation/devicetree/bindings/media/video-interfaces.txt .
-+
-+
-+Mandatory properties
-+--------------------
-+
-+- compatible: "nokia,smia"
-+- reg: I2C address (0x10, or an alternative address)
-+- vana-supply: Analogue voltage supply (VANA), typically 2,8 volts (sensor
-+  dependent).
-+- clocks: External clock to the sensor
-+- clock-frequency: Frequency of the external clock to the sensor
-+- link-frequencies: List of allowed data link frequencies. An array of
-+  64-bit elements.
-+
-+
-+Optional properties
-+-------------------
-+
-+- nokia,nvm-size: The size of the NVM, in bytes. If the size is not given,
-+  the NVM contents will not be read.
-+- reset-gpios: XSHUTDOWN GPIO
-+
-+
-+Endpoint node mandatory properties
-+----------------------------------
-+
-+- clock-lanes: <0>
-+- data-lanes: <1..n>
-+- remote-endpoint: A phandle to the bus receiver's endpoint node.
-+
-+
-+Example
-+-------
-+
-+&i2c2 {
-+	clock-frequency = <400000>;
-+
-+	smiapp_1: camera@10 {
-+		compatible = "nokia,smia";
-+		reg = <0x10>;
-+		reset-gpios = <&gpio3 20 0>;
-+		vana-supply = <&vaux3>;
-+		clocks = <&omap3_isp 0>;
-+		clock-frequency = <9600000>;
-+		nokia,nvm-size = <512>; /* 8 * 64 */
-+		link-frequencies = /bits/ 64 <199200000 210000000 499200000>;
-+		port {
-+			smiapp_1_1: endpoint {
-+				clock-lanes = <0>;
-+				data-lanes = <1 2>;
-+				remote-endpoint = <&csi2a_ep>;
-+			};
-+		};
-+	};
-+};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index f2d9159..437981a 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8625,6 +8625,7 @@ F:	include/media/smiapp.h
- F:	drivers/media/i2c/smiapp-pll.c
- F:	drivers/media/i2c/smiapp-pll.h
- F:	include/uapi/linux/smiapp.h
-+F:	Documentation/devicetree/bindings/media/i2c/nokia,smia.txt
+diff --git a/drivers/media/i2c/smiapp/smiapp-core.c b/drivers/media/i2c/smiapp/smiapp-core.c
+index 1e60f4a..c2bf718 100644
+--- a/drivers/media/i2c/smiapp/smiapp-core.c
++++ b/drivers/media/i2c/smiapp/smiapp-core.c
+@@ -2467,6 +2467,56 @@ static const struct v4l2_subdev_ops smiapp_ops;
+ static const struct v4l2_subdev_internal_ops smiapp_internal_ops;
+ static const struct media_entity_operations smiapp_entity_ops;
  
- SMM665 HARDWARE MONITOR DRIVER
- M:	Guenter Roeck <linux@roeck-us.net>
++static int smiapp_register_subdevs(struct smiapp_sensor *sensor)
++{
++	struct i2c_client *client = v4l2_get_subdevdata(&sensor->src->sd);
++	struct smiapp_subdev *ssds[] = {
++		sensor->scaler,
++		sensor->binner,
++		sensor->pixel_array,
++	};
++	unsigned int i;
++	int rval;
++
++	for (i = 0; i < SMIAPP_SUBDEVS - 1; i++) {
++		struct smiapp_subdev *this = ssds[i + 1];
++		struct smiapp_subdev *last = ssds[i];
++
++		if (!last)
++			continue;
++
++		rval = media_entity_init(&this->sd.entity,
++					 this->npads, this->pads, 0);
++		if (rval) {
++			dev_err(&client->dev,
++				"media_entity_init failed\n");
++			return rval;
++		}
++
++		rval = media_entity_create_link(&this->sd.entity,
++						this->source_pad,
++						&last->sd.entity,
++						last->sink_pad,
++						MEDIA_LNK_FL_ENABLED |
++						MEDIA_LNK_FL_IMMUTABLE);
++		if (rval) {
++			dev_err(&client->dev,
++				"media_entity_create_link failed\n");
++			return rval;
++		}
++
++		rval = v4l2_device_register_subdev(sensor->src->sd.v4l2_dev,
++						   &this->sd);
++		if (rval) {
++			dev_err(&client->dev,
++				"v4l2_device_register_subdev failed\n");
++			return rval;
++		}
++	}
++
++	return 0;
++}
++
+ static int smiapp_registered(struct v4l2_subdev *subdev)
+ {
+ 	struct smiapp_sensor *sensor = to_smiapp_sensor(subdev);
+@@ -2705,37 +2755,13 @@ static int smiapp_registered(struct v4l2_subdev *subdev)
+ 		this->sd.owner = THIS_MODULE;
+ 		v4l2_set_subdevdata(&this->sd, client);
+ 
+-		rval = media_entity_init(&this->sd.entity,
+-					 this->npads, this->pads, 0);
+-		if (rval) {
+-			dev_err(&client->dev,
+-				"media_entity_init failed\n");
+-			goto out_nvm_release;
+-		}
+-
+-		rval = media_entity_create_link(&this->sd.entity,
+-						this->source_pad,
+-						&last->sd.entity,
+-						last->sink_pad,
+-						MEDIA_LNK_FL_ENABLED |
+-						MEDIA_LNK_FL_IMMUTABLE);
+-		if (rval) {
+-			dev_err(&client->dev,
+-				"media_entity_create_link failed\n");
+-			goto out_nvm_release;
+-		}
+-
+-		rval = v4l2_device_register_subdev(sensor->src->sd.v4l2_dev,
+-						   &this->sd);
+-		if (rval) {
+-			dev_err(&client->dev,
+-				"v4l2_device_register_subdev failed\n");
+-			goto out_nvm_release;
+-		}
+-
+ 		last = this;
+ 	}
+ 
++	rval = smiapp_register_subdevs(sensor);
++	if (rval)
++		goto out_nvm_release;
++
+ 	dev_dbg(&client->dev, "profile %d\n", sensor->minfo.smiapp_profile);
+ 
+ 	sensor->pixel_array->sd.entity.type = MEDIA_ENT_T_V4L2_SUBDEV_SENSOR;
 -- 
 1.7.10.4
