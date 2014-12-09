@@ -1,68 +1,265 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v4 2/2] spi: st: Provide Device Tree binding documentation
-Date: Tue,  9 Dec 2014 20:21:31 +0000
-Message-ID: <1418156491-26613-3-git-send-email-lee.jones@linaro.org>
-References: <1418156491-26613-1-git-send-email-lee.jones@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1418156491-26613-1-git-send-email-lee.jones@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: lee.jones@linaro.org, kernel@stlinux.com, broonie@kernel.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH 1/1] uio: uio_fsl_elbc_gpcm: new driver
+Date: Tue, 9 Dec 2014 14:37:58 -0600
+Message-ID: <1418157478.5581.30.camel@freescale.com>
+References: <87iohk22qp.fsf@linutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87iohk22qp.fsf-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: John Ogness <john.ogness-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds DT documentation for the SPI portion of ST's SSC device.
+[Trimmed excessive CC list]
 
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- Documentation/devicetree/bindings/spi/spi-st.txt | 40 ++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/spi/spi-st.txt
+On Tue, 2014-12-09 at 17:43 +0100, John Ogness wrote:
+> This driver provides UIO access to memory of a peripheral connected
+> to the Freescale enhanced local bus controller (eLBC) interface
+> using the general purpose chip-select mode (GPCM).
+> 
+> Signed-off-by: John Ogness <john.ogness-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+> ---
+> There are currently drivers that use FCM and UPM modes. But there
+> are no drivers using the very simple GPCM mode.
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-st.txt b/Documentation/devicetree/bindings/spi/spi-st.txt
-new file mode 100644
-index 0000000..fe54959
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/spi-st.txt
-@@ -0,0 +1,40 @@
-+STMicroelectronics SSC (SPI) Controller
-+---------------------------------------
-+
-+Required properties:
-+- compatible	: "st,comms-ssc4-spi"
-+- reg		: Offset and length of the device's register set
-+- interrupts	: The interrupt specifier
-+- clock-names	: Must contain "ssc"
-+- clocks	: Must contain an entry for each name in clock-names
-+		    See ../clk/*
-+- pinctrl-names	: Uses "default", can use "sleep" if provided
-+		    See ../pinctrl/pinctrl-binding.txt
-+
-+Optional properties:
-+- cs-gpios	: List of GPIO chip selects
-+		    See ../spi/spi-bus.txt
-+
-+Child nodes represent devices on the SPI bus
-+  See ../spi/spi-bus.txt
-+
-+Example:
-+	spi@9840000 {
-+		compatible	= "st,comms-ssc4-spi";
-+		reg		= <0x9840000 0x110>;
-+		interrupts	= <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks		= <&clk_s_c0_flexgen CLK_EXT2F_A9>;
-+		clock-names	= "ssc";
-+		pinctrl-0	= <&pinctrl_spi0_default>;
-+		pinctrl-names	= "default";
-+		cs-gpios	= <&pio17 5 0>;
-+		#address-cells	= <1>;
-+		#size-cells	= <0>;
-+
-+		st95hf@0{
-+			compatible		= "st,st95hf";
-+			reg			= <0>;
-+			spi-max-frequency	= <1000000>;
-+			interrupts		= <2 IRQ_TYPE_EDGE_FALLING>;
-+		};
-+	};
--- 
-1.9.1
+Yes, there are -- the NOR flash driver, various board FPGAs, etc.
+
+> If other drivers from other subsystems should start using this mode
+> (for example, mtd, eeprom, char) then it may make sense to try to
+> implement generic GPCM support in arch/powerpc/sysdev/fsl_lbc.c.
+
+It's already there, though all that's needed is error handling.  Setting
+up the chipselects is handled in U-Boot (same as with FCM -- and
+probably UPM, though I'm less familiar with that).
+
+> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/lbc.txt b/Documentation/devicetree/bindings/powerpc/fsl/lbc.txt
+> index 3300fec..1c80fce 100644
+> --- a/Documentation/devicetree/bindings/powerpc/fsl/lbc.txt
+> +++ b/Documentation/devicetree/bindings/powerpc/fsl/lbc.txt
+> @@ -16,20 +16,28 @@ Example:
+>  			   "fsl,pq2-localbus";
+>  		#address-cells = <2>;
+>  		#size-cells = <1>;
+> -		reg = <f0010100 40>;
+> +		reg = <0xf0010100 0x40>;
+>  
+> -		ranges = <0 0 fe000000 02000000
+> -			  1 0 f4500000 00008000>;
+> +		ranges = <0x0 0x0 0xfe000000 0x02000000
+> +			  0x1 0x0 0xf4500000 0x00008000
+> +			  0x2 0x0 0xfd810000 0x00010000>;
+>  
+>  		flash@0,0 {
+>  			compatible = "jedec-flash";
+> -			reg = <0 0 2000000>;
+> +			reg = <0x0 0x0 0x2000000>;
+>  			bank-width = <4>;
+>  			device-width = <1>;
+>  		};
+>  
+>  		board-control@1,0 {
+> -			reg = <1 0 20>;
+> +			reg = <0x1 0x0 0x20>;
+>  			compatible = "fsl,mpc8272ads-bcsr";
+>  		};
+> +
+
+Ideally this sort of cleanup change would be a separate patch.
+
+> +		simple-periph@2,0 {
+> +			compatible = "fsl,elbc-gpcm-uio";
+> +			reg = <0x2 0x0 0x10000>;
+> +			elbc-gpcm-br = <0xfd810800>;
+> +			elbc-gpcm-or = <0xffff09f7>;
+> +		};
+
+This is not an acceptable compatible string.  Compatible should describe
+what the hardware is, not how you plan to use it in Linux.
+
+I also see no description of elbc-gpcm-br/or, and in general putting
+register values in the device tree is not a good idea.  As with
+compatible, the device tree should describe the hardware, not how to
+configure it.
+
+>  	};
+> diff --git a/arch/powerpc/include/asm/fsl_lbc.h b/arch/powerpc/include/asm/fsl_lbc.h
+> index 067fb0d..c7240a0 100644
+> --- a/arch/powerpc/include/asm/fsl_lbc.h
+> +++ b/arch/powerpc/include/asm/fsl_lbc.h
+> @@ -95,6 +95,9 @@ struct fsl_lbc_bank {
+>  #define OR_FCM_TRLX_SHIFT                2
+>  #define OR_FCM_EHTR             0x00000002
+>  #define OR_FCM_EHTR_SHIFT                1
+> +
+> +#define OR_GPCM_AM		0xFFFF8000
+> +#define OR_GPCM_AM_SHIFT		15
+>  };
+
+Please maintain a consistent whitespace style with what's already there.
+
+> diff --git a/drivers/uio/uio_fsl_elbc_gpcm.c b/drivers/uio/uio_fsl_elbc_gpcm.c
+> new file mode 100644
+> index 0000000..b6cac91
+> --- /dev/null
+> +++ b/drivers/uio/uio_fsl_elbc_gpcm.c
+> @@ -0,0 +1,499 @@
+> +/* uio_fsl_elbc_gpcm: UIO driver for eLBC/GPCM peripherals
+> +
+> +   Copyright (C) 2014 Linutronix GmbH
+> +     Author: John Ogness <john.ogness-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+> +
+> +   This driver provides UIO access to memory of a peripheral connected
+> +   to the Freescale enhanced local bus controller (eLBC) interface
+> +   using the general purpose chip-select mode (GPCM).
+> +
+> +   Here is an example of the device tree entries:
+> +
+> +	localbus@ffe05000 {
+> +		ranges = <0x2 0x0 0x0 0xff810000 0x10000>;
+> +
+> +		dpm@2,0 {
+> +			compatible = "fsl,elbc-gpcm-uio";
+> +			reg = <0x2 0x0 0x10000>;
+> +			elbc-gpcm-br = <0xff810800>;
+> +			elbc-gpcm-or = <0xffff09f7>;
+> +			interrupt-parent = <&mpic>;
+> +			interrupts = <4 1>;
+> +			device_type = "netx5152";
+> +			uio_name = "netx_custom";
+> +			netx5152,init-win0-offset = <0x0>;
+> +		};
+> +	};
+
+What is "uio_name"?  Again, not hardware description.
+
+Where is the binding for this device?  What is
+netx5152,init-win0-offset?  Documentations go in
+Documentation/devicetree/bindings, not code comments.
+
+Don't use device_type.
+
+> +#ifdef CONFIG_UIO_FSL_ELBC_GPCM_NETX5152
+> +#define DPM_HOST_WIN0_OFFSET	0xff00
+> +#define DPM_HOST_INT_STAT0	0xe0
+> +#define DPM_HOST_INT_EN0	0xf0
+> +#define DPM_HOST_INT_MASK	0xe600ffff
+> +#define DPM_HOST_INT_GLOBAL_EN	0x80000000
+
+What's this doing in the "generic" file?
+
+> +static void netx5152_shutdown(struct uio_info *info, bool init_err)
+> +{
+> +	if (init_err)
+> +		return;
+> +
+> +	/* disable interrupts */
+> +	iowrite32(0, info->mem[0].internal_addr + DPM_HOST_WIN0_OFFSET +
+> +		     DPM_HOST_INT_EN0);
+> +}
+
+Why would you ever call this function with init_err = true?  What is it
+supposed to do?  When you introduce a callback interface you should
+document the semantics that are expected of an implementation,
+especially if there are details that aren't clear from existing
+examples.
+
+> +	/* get current BR/OR values */
+> +	reg_br_cur = in_be32(&priv->lbc->bank[priv->bank].br);
+> +	reg_or_cur = in_be32(&priv->lbc->bank[priv->bank].or);
+> +
+> +	/* if bank already configured, make sure it matches */
+> +	if ((reg_br_cur & BR_V)) {
+> +		if ((reg_br_cur & BR_MSEL) != BR_MS_GPCM ||
+> +		    (reg_br_cur & reg_or_cur & BR_BA)
+> +		     != fsl_lbc_addr(res.start)) {
+> +			dev_err(priv->dev,
+> +				"bank in use by another peripheral\n");
+> +			ret = -ENODEV;
+> +			goto out_err1;
+> +		}
+> +
+> +		/* warn if behavior settings changing */
+> +		if ((reg_br_cur & ~(BR_BA | BR_V)) !=
+> +		    (reg_br_new & ~(BR_BA | BR_V))) {
+> +			dev_warn(priv->dev,
+> +				 "modifying BR settings: 0x%08x -> 0x%08x",
+> +				 reg_br_cur, reg_br_new);
+> +		}
+> +		if ((reg_or_cur & ~OR_GPCM_AM) != (reg_or_new & ~OR_GPCM_AM)) {
+> +			dev_warn(priv->dev,
+> +				 "modifying OR settings: 0x%08x -> 0x%08x",
+> +				 reg_or_cur, reg_or_new);
+> +		}
+> +	}
+
+Why is a wrong value for MSEL in pre-existing BRn a fatal error but
+wrong address/size isn't?
+
+> +	info->version = "0.0.1";
+
+What does this version mean?  When will it be updated?
+
+> +	if (irq != NO_IRQ) {
+> +		if (priv->irq_handler) {
+> +			info->irq = irq;
+> +			info->irq_flags = IRQF_SHARED;
+> +			info->handler = priv->irq_handler;
+> +		} else {
+> +			irq = NO_IRQ;
+> +			dev_warn(priv->dev, "ignoring irq, no handler\n");
+> +		}
+> +	}
+
+Don't use NO_IRQ.  A value of zero indicates the absence of an
+interrupt.
+
+> +	if (priv->init)
+> +		priv->init(info);
+> +
+> +	/* register UIO device */
+> +	if (uio_register_device(priv->dev, info) != 0) {
+> +		dev_err(priv->dev, "UIO registration failed\n");
+> +		ret = -ENODEV;
+> +		goto out_err2;
+> +	}
+> +
+> +	/* store private data */
+> +	platform_set_drvdata(pdev, info);
+
+Shouldn't you set drvdata before registering?
+
+> +static struct platform_driver uio_fsl_elbc_gpcm_driver = {
+> +	.driver = {
+> +		.name = "fsl,elbc-gpcm-uio",
+> +		.owner = THIS_MODULE,
+> +		.of_match_table = uio_fsl_elbc_gpcm_match,
+> +	},
+
+Setting .owner in platform_driver is no longer necessary, and there was
+recently a big patchset to remove them.
+
+> +static int __init uio_fsl_elbc_gpcm_init(void)
+> +{
+> +	return platform_driver_register(&uio_fsl_elbc_gpcm_driver);
+> +}
+> +
+> +static void __exit uio_fsl_elbc_gpcm_exit(void)
+> +{
+> +	platform_driver_unregister(&uio_fsl_elbc_gpcm_driver);
+> +}
+> +
+> +module_init(uio_fsl_elbc_gpcm_init);
+> +module_exit(uio_fsl_elbc_gpcm_exit);
+
+module_platform_driver()
+
+-Scott
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
