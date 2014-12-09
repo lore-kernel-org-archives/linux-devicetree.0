@@ -1,62 +1,63 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH v2 2/3] fpga manager: framework core
-Date: Tue, 9 Dec 2014 13:11:59 +0000
-Message-ID: <CACxGe6tM1UXMCO=eVDad7rj2gxN-nbvyApti5kV5ScxQ+r2Kzg@mail.gmail.com>
-References: <1414007405-32186-1-git-send-email-atull@opensource.altera.com>
- <1414007405-32186-3-git-send-email-atull@opensource.altera.com>
- <20141024105200.GA20775@amd> <CACxGe6sa=ysJAjx5TQZH5sKoas1PkoUUR4zT=Z35+uF6rrk-vw@mail.gmail.com>
- <20141208225519.64501d2d@lxorguk.ukuu.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20141208225519.64501d2d@lxorguk.ukuu.org.uk>
-Sender: linux-doc-owner@vger.kernel.org
-To: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
-Cc: Pavel Machek <pavel@denx.de>, atull <atull@opensource.altera.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, "H. Peter Anvin" <hpa@zytor.com>, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Randy Dunlap <rdunlap@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh+dt@kernel.org>, Ira Snyder <iws@ovro.caltech.edu>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Philip Balister <philip@balister.org>, rubini <rubini@gnudd.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Jason <jason@lakedaemon.net>, kyle.teske@ni.com, Nicolas Pitre <nico@linaro.org>, "Balbi, Felipe" <balbi@ti.com>, Mauro
+From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Subject: [PATCH v4 0/3] Add support for Tegra Activity Monitor
+Date: Tue,  9 Dec 2014 14:15:03 +0100
+Message-ID: <1418130912-24725-1-git-send-email-tomeu.vizoso@collabora.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: linux-pm@vger.kernel.org
+Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Alexandre Courbot <gnurou@gmail.com>, Mikko Perttunen <mikko.perttunen@kapsi.fi>, Arto Merilainen <amerilainen@nvidia.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 8, 2014 at 10:55 PM, One Thousand Gnomes
-<gnomes@lxorguk.ukuu.org.uk> wrote:
-> On Sat, 6 Dec 2014 13:00:17 +0000
-> Grant Likely <grant.likely@linaro.org> wrote:
->
->> On Fri, Oct 24, 2014 at 11:52 AM, Pavel Machek <pavel@denx.de> wrote:
->> > Hi!
->> >
->> >> * /sys/class/fpga_manager/<fpga>/firmware
->> >>   Name of FPGA image file to load using firmware class.
->> >>   $ echo image.rbf > /sys/class/fpga_manager/<fpga>/firmware
->> >
->> > I .. still don't think this is good idea. What about namespaces?
->> > The path corresponds to path in which namespace?
->>
->> I don't understand your concern here. This allows userspace to name
->> the FPGA bitstream that the kernel will use during request_firmware(),
->> and it will show up as the $FIRMWARE value in the uevent file, but it
->> is still the responsibility of userspace to choose what to load, and
->> it can freely ignore the setting of $FIRMWARE if it needs to.
->
-> I think the entire model here is basically pedicated on a bogus
-> assumption that an FPGA is a one shot device. It's not. It's a fast
-> reloadable reusable device. A lot of work being done with FPGAs in
-> operating systems already involves basically task switching and
-> scheduling FPGAs as a shared resource pool. Trying to nail something
-> together with request_firmware is several years behind the curve.
->
-> From userspace it needs to be a open, load, use, close type model, not a
-> static or semi-static pile of mappings.
+Hello,
 
-If FPGA is a general purpose resource hanging off the side that
-applications can use, then sure, but the majority of FPGA usage does
-not fall into that scenario*. The majority of FPGA usage that I've
-seen has core parts of the system implemented in the FPGA fabric.
-Video pipelines, network switching, dma to/from main memory, control
-of dedicated hardware. It's more than merely an application being able
-to use the FPGA as an accelerator.
+this v4 just fixes a botched rename in v3. The original cover letter for v3 follows:
 
-I'm certainly not dismissing the concept of FPGA scheduling and being
-able to 'task switch' between bitstreams. Yes that is important, but
-for most users it really does look like, as you say, "a static or
-semi-static pile of mappings".
+this v3 addresses the comments that the devfreq implementation got, namely:
 
-* Altera and Xilinx people - correct me if you disagree.
+* Address misc. style issues found by Thierry and Alexander
+* Added helpers for register i/o
+* Further documented the structs
+* Enable the ACTMON after the IRQ handler has been installed
+* Disable the ACTMON before removing the IRQ handler
+* Add governor in a subsys initcall
+
+There's an open question on whether some functionality currently in this
+devfreq driver should be moved into the devfreq framework, but without knowing
+of other SoC family that would benefit from it, I'm reticent. It would be
+great to hear from the devfreq maintainers if they have any plans regarding
+this, or if they have any suggestion.
+
+These patches implement support for setting the rate of the EMC clock based on
+stats collected from the ACTMON, a piece of hw in the Tegra124 that counts
+memory accesses (among others).
+
+It depends on the following in-flight patches:
+
+* EMC driver: http://thread.gmane.org/gmane.linux.drivers.devicetree/99304
+* CPUFreq driver: http://thread.gmane.org/gmane.linux.kernel/1812962
+
+I have pushed a branch here for testing:
+
+http://cgit.collabora.com/git/user/tomeu/linux.git/log/?h=actmon-v4
+
+Regards,
+
+Tomeu
+
+Tomeu Vizoso (3):
+  of: Add binding for NVIDIA Tegra ACTMON node
+  PM / devfreq: tegra: add devfreq driver for Tegra Activity Monitor
+  ARM: tegra: Add Tegra124 ACTMON support
+
+ .../devicetree/bindings/arm/tegra/actmon.txt       |  38 +
+ arch/arm/boot/dts/tegra124.dtsi                    |  23 +
+ drivers/devfreq/Kconfig                            |   9 +
+ drivers/devfreq/Makefile                           |   1 +
+ drivers/devfreq/tegra-actmon-devfreq.c             | 777 +++++++++++++++++++++
+ 5 files changed, 848 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/tegra/actmon.txt
+ create mode 100644 drivers/devfreq/tegra-actmon-devfreq.c
+
+-- 
+1.9.3
+
