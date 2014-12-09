@@ -1,41 +1,35 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: [REVIEW PATCH v3 08/12] of: v4l: Document link-frequencies property in video-interfaces.txt
-Date: Tue,  9 Dec 2014 02:04:16 +0200
-Message-ID: <1418083460-28556-9-git-send-email-sakari.ailus@iki.fi>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: [REVIEW PATCH v3 05/12] smiapp: Don't give the source sub-device a temporary name
+Date: Tue,  9 Dec 2014 02:04:13 +0200
+Message-ID: <1418083460-28556-6-git-send-email-sakari.ailus@iki.fi>
 References: <1418083460-28556-1-git-send-email-sakari.ailus@iki.fi>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1418083460-28556-1-git-send-email-sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1418083460-28556-1-git-send-email-sakari.ailus@iki.fi>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: devicetree@vger.kernel.org, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-link-frequencies is a 64-bit unsigned integer array of allowed link
-frequencies.
+The source sub-device's name will be overwritten shortly. Don't give it a
+name in the meantime.
 
-Signed-off-by: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Signed-off-by: Sakari Ailus <sakari.ailus@iki.fi>
 ---
- Documentation/devicetree/bindings/media/video-interfaces.txt |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/media/i2c/smiapp/smiapp-core.c |    2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
-index ce719f8..52a14cf 100644
---- a/Documentation/devicetree/bindings/media/video-interfaces.txt
-+++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
-@@ -103,6 +103,9 @@ Optional endpoint properties
-   array contains only one entry.
- - clock-noncontinuous: a boolean property to allow MIPI CSI-2 non-continuous
-   clock mode.
-+- link-frequencies: Allowed data bus frequencies. For MIPI CSI-2, for
-+  instance, this is the actual frequency of the bus, not bits per clock per
-+  lane value. An array of 64-bit unsigned integers.
+diff --git a/drivers/media/i2c/smiapp/smiapp-core.c b/drivers/media/i2c/smiapp/smiapp-core.c
+index ab917a6..92a7840 100644
+--- a/drivers/media/i2c/smiapp/smiapp-core.c
++++ b/drivers/media/i2c/smiapp/smiapp-core.c
+@@ -2458,8 +2458,6 @@ static int smiapp_identify_module(struct v4l2_subdev *subdev)
+ 		minfo->name, minfo->manufacturer_id, minfo->model_id,
+ 		minfo->revision_number_major);
  
+-	strlcpy(subdev->name, sensor->minfo.name, sizeof(subdev->name));
+-
+ 	return 0;
+ }
  
- Example
 -- 
 1.7.10.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
