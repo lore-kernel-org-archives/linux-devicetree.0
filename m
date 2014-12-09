@@ -1,76 +1,125 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH] gpio: sn54hc595: new driver for GPIO shift registers
- chipsets
-Date: Tue, 9 Dec 2014 10:12:02 +0100
-Message-ID: <20141209091202.GS8739@lukather>
-References: <1418048833-27658-1-git-send-email-zajec5@gmail.com>
- <CAMuHMdWf_Cw7DTqhut6Mcic1FmcJjHdXWuXkNZM2z0Zx9wjCxw@mail.gmail.com>
- <CACna6rwRR7FpS97Znyk3ewVW58dn5yYTj8OjCstsuzzX8Prg5Q@mail.gmail.com>
- <2176453.HD1opzG9Wg@wuerfel>
- <CACna6rydKTDO+tBTdNNUDvQCXytE6VnEPjLSGs0yMee8Jz8FGA@mail.gmail.com>
- <CAMuHMdVvK1CTB1SKiNgD8zB9qorV=sQwRO66Dbm5zy=jhw82RA@mail.gmail.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v2] clk: Add PWM clock driver
+Date: Tue, 09 Dec 2014 10:15:33 +0100
+Message-ID: <1418116533.3107.1.camel@pengutronix.de>
+References: <1415007078-7947-1-git-send-email-p.zabel@pengutronix.de>
+	 <5480A132.2010103@elproma.com.pl> <54860426.3020400@elproma.com.pl>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="BuGwuXnZwGGQ9GEc"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdVvK1CTB1SKiNgD8zB9qorV=sQwRO66Dbm5zy=jhw82RA@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Hauke Mehrtens <hauke@hauke-m.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Gabor Juhos <juhosg@openwrt.org>, Miguel Gaio <miguel.gaio@efixo.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54860426.3020400-9tnw74Q4ehaHKKo6LODCOg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Janusz =?UTF-8?Q?U=C5=BCycki?= <j.uzycki-9tnw74Q4ehaHKKo6LODCOg@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Janusz,
 
---BuGwuXnZwGGQ9GEc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Dec 08, 2014 at 05:59:11PM +0100, Geert Uytterhoeven wrote:
-> > I think that implementing support for this extra SPI layer will
-> > actually require more code/tricks than a separated driver.
+Am Montag, den 08.12.2014, 21:03 +0100 schrieb Janusz U=C5=BCycki:
+> Hi,
 >=20
-> Yes, it will require more code, as spi-gpio is more generic than your sim=
-ple
-> implementation.  But the end result is more flexible and reusable.
+> I've fixed my pwm driver and I can enable 12MHz 50% output using sysf=
+s.=20
+> Then I rebased the pwm-clock to 3.14.
+> I have connected mcp2515 and it works with fixed clock. When I switch=
+=20
+> the chip's clock to pwm clock in dt
+> I get "mcp251x: probe of spi1.2 failed with error -2". I've also adde=
+d=20
+> clock-frequency property
+> but it didn't help.
+> When I set the mcp2515 clock to fixed clock again but the clock is no=
+t=20
+> applied to mcp2515 I get
+> "mcp251x spi1.2: MCP251x didn't enter in conf mode after reset".
+> So it looks this is indeed probe error caused likely by dt.
+
+Did pwm-clock fail to probe already? Could you check with the patch
+below?
+
+> The fixed and pwm clock in DT:
+>          clocks {
+>                  #address-cells =3D <1>;
+>                  #size-cells =3D <1>;
+>                  ranges;
+>                  mcp251x_xtal_clk: mcp2515_xtal {
+>                          compatible =3D "fixed-clock";
+>                          #clock-cells =3D <0>;
+>                          clock-frequency =3D <12000000>;
+>                  };
 >=20
-> The only thing missing is the programmable OE and reset pins,
-> which are assumed hardwired by the gpio-74x164 driver.
-> These could be implemented using new gpio-oe and gpio-reset
-> properties.
+>                  mcp251x_pwm_clk: mcp2515_pwm {
+>                          compatible =3D "pwm-clock";
+>                          #clock-cells =3D <0>;
+>                          clock-frequency =3D <12000000>;
+>                          clock-output-names =3D "can_clk";
+>                          pwms =3D <&pwm 3 83>;     /* 12MHz =3D 1 / ~=
+83ns */
+>                  };
+>          };
+>=20
+> Also the mentioned frequency recalculation problem appears here.
+> In the case above recalc value is about 12.048MHz instead of 12.0MHz.
+> While PWM block is clocked 24MHz and the pwm generates exactly 12MHz
+> the pwm-clock driver returns drifted value. Using clock-frequency lik=
+e
+> fixed-clock does could simply solve the binding problem.
 
-=46rom my (very) vague memories of it, OE was actually supported by
-using it as spi-gpio's chip select.
+Yes, for this case it is very unfortunate that there's only nanosecond
+resolution for the duty cycle. Adding a clock-frequency property to
+indicate the real frequency would solve this problem.
 
-So I'd say that only the gpio-reset should be implemented.
+------8<------
+diff --git a/drivers/clk/clk-pwm.c b/drivers/clk/clk-pwm.c
+index 8f747b3..9c13856 100644
+--- a/drivers/clk/clk-pwm.c
++++ b/drivers/clk/clk-pwm.c
+@@ -63,12 +63,16 @@ int clk_pwm_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+=20
+ 	pwm =3D devm_pwm_get(&pdev->dev, NULL);
+-	if (IS_ERR(pwm))
++	if (IS_ERR(pwm)) {
++		dev_err(&pdev->dev, "failed to get pwm: %ld\n", PTR_ERR(pwm));
+ 		return PTR_ERR(pwm);
++	}
+=20
+ 	ret =3D pwm_config(pwm, (pwm->period + 1) >> 1, pwm->period);
+-	if (ret < 0)
++	if (ret < 0) {
++		dev_err(&pdev->dev, "failed to configure pwm: %d\n", ret);
+ 		return ret;
++	}
+=20
+ 	init.name =3D "pwm-clock";
+ 	init.ops =3D &clk_pwm_ops;
+@@ -78,11 +82,18 @@ int clk_pwm_probe(struct platform_device *pdev)
+ 	clk_pwm->pwm =3D pwm;
+ 	clk_pwm->hw.init =3D &init;
+ 	clk =3D devm_clk_register(&pdev->dev, &clk_pwm->hw);
+-	if (IS_ERR(clk))
++	if (IS_ERR(clk)) {
++		dev_err(&pdev->dev, "failed to register clock: %ld\n",
++			PTR_ERR(clk));
+ 		return PTR_ERR(clk);
++	}
+=20
+-	return of_clk_add_provider(pdev->dev.of_node,
+-				   of_clk_src_simple_get, clk);
++	ret =3D of_clk_add_provider(pdev->dev.of_node,
++				  of_clk_src_simple_get, clk);
++	if (ret)
++		dev_err(&pdev->dev, "failed to add clock provider: %d\n", ret);
++
++	return ret;
+ }
+=20
+ int clk_pwm_remove(struct platform_device *pdev)
 
-Maxime
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---BuGwuXnZwGGQ9GEc
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUhrziAAoJEBx+YmzsjxAgQRkP/RiSkrSDY5lnk64+lE81AcGV
-y9FD8+JZKpRZkOw+F4JNw7LILkO3Jx//210YiT22dVQwJ2GbCPxosbRcbtHkIjdH
-8KwfcNiNby+uQr2/TUUaTeg47wl1ZY7mwLlefScESS8pQMBeHWfj2XvZHi1Kzitr
-NIVDgIFDaa+48U0Gwip/kwtA5J0ifem2dKsIX2fpuVD6O0j83vynBtLYHdV0kXIY
-F9oUGQZo1ogj+BzhDJiV6bq0mLwAufZhZHfajafcYp6zphItRnLzAtGGmw83VyZB
-dgeU2X9jZd9yZTHAU9WDY7KOHuSqSwMfuuVMTbWV33WAe0fm8TzUpwcHG+ovQRrT
-NFpzG/hrRfKE17KM9RSslvCcW+0aie957dBM7sE0cuT4d4WWdSJf/hLZg2cRadf9
-pYf3o0aIEodaoFCIOuvYagYT+fOSkvbSKZKUNQY3zEAsQtoWZjWg933smAwe344Z
-bXBMVjmdu1MT8vjZF4zP0BOUo119gZyABeCpVXe+fSgm4IHMVlKKqtOaNYuaAxXO
-QEJvEdYztGA6TI/9aZY8H2UznBF4oGkt5joYabzGf9NmV4o05TadwopxJEZ2V+Yc
-Js67PJoF7URIDcGHQ2sqxK7CctXIjArRGIxga+OjdzQJf5QKPXn2EbjHAe+xMfzY
-TDBFPawg1c0F5zHAnLOd
-=e17I
------END PGP SIGNATURE-----
-
---BuGwuXnZwGGQ9GEc--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
