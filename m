@@ -1,7 +1,7 @@
 From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: [REVIEW PATCH v3 10/12] smiapp: Obtain device information from the Device Tree if OF node exists
-Date: Tue,  9 Dec 2014 02:04:18 +0200
-Message-ID: <1418083460-28556-11-git-send-email-sakari.ailus@iki.fi>
+Subject: [REVIEW PATCH v3 01/12] smiapp: Remove FSF's address from the license header
+Date: Tue,  9 Dec 2014 02:04:09 +0200
+Message-ID: <1418083460-28556-2-git-send-email-sakari.ailus@iki.fi>
 References: <1418083460-28556-1-git-send-email-sakari.ailus@iki.fi>
 Return-path: <linux-media-owner@vger.kernel.org>
 In-Reply-To: <1418083460-28556-1-git-send-email-sakari.ailus@iki.fi>
@@ -10,176 +10,231 @@ To: linux-media@vger.kernel.org
 Cc: devicetree@vger.kernel.org, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-Platform data support is retained.
+Remove FSF's address information from the license header in the smiapp
+driver and the smiapp-pll PLL calculator. This should no longer be needed,
+and would be rendered outdated in case the FSF chooses to relocate its
+office.
 
-of_property_read_u64_array() isn't used yet as it's not in yet.
-
-Signed-off-by: Sakari Ailus <sakari.ailus@iki.fi>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Timo Ahonen <timo.ahonen@nokia.com>
 ---
- drivers/media/i2c/smiapp/smiapp-core.c |  114 +++++++++++++++++++++++++++++++-
- 1 file changed, 112 insertions(+), 2 deletions(-)
+ drivers/media/i2c/smiapp-pll.c             |    6 ------
+ drivers/media/i2c/smiapp-pll.h             |    6 ------
+ drivers/media/i2c/smiapp/smiapp-core.c     |    6 ------
+ drivers/media/i2c/smiapp/smiapp-limits.c   |    6 ------
+ drivers/media/i2c/smiapp/smiapp-limits.h   |    6 ------
+ drivers/media/i2c/smiapp/smiapp-quirk.c    |    6 ------
+ drivers/media/i2c/smiapp/smiapp-quirk.h    |    6 ------
+ drivers/media/i2c/smiapp/smiapp-reg-defs.h |    6 ------
+ drivers/media/i2c/smiapp/smiapp-reg.h      |    6 ------
+ drivers/media/i2c/smiapp/smiapp-regs.c     |    6 ------
+ drivers/media/i2c/smiapp/smiapp-regs.h     |    6 ------
+ drivers/media/i2c/smiapp/smiapp.h          |    6 ------
+ 12 files changed, 72 deletions(-)
 
+diff --git a/drivers/media/i2c/smiapp-pll.c b/drivers/media/i2c/smiapp-pll.c
+index e40d902..2b84d09 100644
+--- a/drivers/media/i2c/smiapp-pll.c
++++ b/drivers/media/i2c/smiapp-pll.c
+@@ -14,12 +14,6 @@
+  * WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  * General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, write to the Free Software
+- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+- * 02110-1301 USA
+- *
+  */
+ 
+ #include <linux/gcd.h>
+diff --git a/drivers/media/i2c/smiapp-pll.h b/drivers/media/i2c/smiapp-pll.h
+index e8f035a..77f7ff2f 100644
+--- a/drivers/media/i2c/smiapp-pll.h
++++ b/drivers/media/i2c/smiapp-pll.h
+@@ -14,12 +14,6 @@
+  * WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  * General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, write to the Free Software
+- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+- * 02110-1301 USA
+- *
+  */
+ 
+ #ifndef SMIAPP_PLL_H
 diff --git a/drivers/media/i2c/smiapp/smiapp-core.c b/drivers/media/i2c/smiapp/smiapp-core.c
-index 2f13735..1e60f4a 100644
+index 65e4e05..ab917a6 100644
 --- a/drivers/media/i2c/smiapp/smiapp-core.c
 +++ b/drivers/media/i2c/smiapp/smiapp-core.c
-@@ -25,11 +25,13 @@
- #include <linux/device.h>
- #include <linux/gpio.h>
- #include <linux/module.h>
-+#include <linux/of_gpio.h>
- #include <linux/regulator/consumer.h>
- #include <linux/slab.h>
- #include <linux/smiapp.h>
- #include <linux/v4l2-mediabus.h>
- #include <media/v4l2-device.h>
-+#include <media/v4l2-of.h>
+@@ -18,12 +18,6 @@
+  * WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  * General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, write to the Free Software
+- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+- * 02110-1301 USA
+- *
+  */
+ 
+ #include <linux/clk.h>
+diff --git a/drivers/media/i2c/smiapp/smiapp-limits.c b/drivers/media/i2c/smiapp/smiapp-limits.c
+index 847cb23..784b114 100644
+--- a/drivers/media/i2c/smiapp/smiapp-limits.c
++++ b/drivers/media/i2c/smiapp/smiapp-limits.c
+@@ -14,12 +14,6 @@
+  * WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  * General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, write to the Free Software
+- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+- * 02110-1301 USA
+- *
+  */
  
  #include "smiapp.h"
+diff --git a/drivers/media/i2c/smiapp/smiapp-limits.h b/drivers/media/i2c/smiapp/smiapp-limits.h
+index 343e9c3..b201248 100644
+--- a/drivers/media/i2c/smiapp/smiapp-limits.h
++++ b/drivers/media/i2c/smiapp/smiapp-limits.h
+@@ -14,12 +14,6 @@
+  * WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  * General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, write to the Free Software
+- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+- * 02110-1301 USA
+- *
+  */
  
-@@ -2919,19 +2921,121 @@ static int smiapp_resume(struct device *dev)
+ #define SMIAPP_LIMIT_ANALOGUE_GAIN_CAPABILITY			0
+diff --git a/drivers/media/i2c/smiapp/smiapp-quirk.c b/drivers/media/i2c/smiapp/smiapp-quirk.c
+index e0bee87..dd4ae6f 100644
+--- a/drivers/media/i2c/smiapp/smiapp-quirk.c
++++ b/drivers/media/i2c/smiapp/smiapp-quirk.c
+@@ -14,12 +14,6 @@
+  * WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  * General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, write to the Free Software
+- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+- * 02110-1301 USA
+- *
+  */
  
- #endif /* CONFIG_PM */
+ #include <linux/delay.h>
+diff --git a/drivers/media/i2c/smiapp/smiapp-quirk.h b/drivers/media/i2c/smiapp/smiapp-quirk.h
+index 46e9ea8..3a3c3e5 100644
+--- a/drivers/media/i2c/smiapp/smiapp-quirk.h
++++ b/drivers/media/i2c/smiapp/smiapp-quirk.h
+@@ -14,12 +14,6 @@
+  * WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  * General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, write to the Free Software
+- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+- * 02110-1301 USA
+- *
+  */
  
-+static struct smiapp_platform_data *smiapp_get_pdata(struct device *dev)
-+{
-+	struct smiapp_platform_data *pdata;
-+	struct v4l2_of_endpoint bus_cfg;
-+	struct device_node *ep;
-+	struct property *prop;
-+	__be32 *val;
-+	uint32_t asize;
-+	unsigned int i;
-+	int rval;
-+
-+	if (!dev->of_node)
-+		return dev->platform_data;
-+
-+	ep = of_graph_get_next_endpoint(dev->of_node, NULL);
-+	if (!ep)
-+		return NULL;
-+
-+	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
-+	if (!pdata) {
-+		rval = -ENOMEM;
-+		goto out_err;
-+	}
-+
-+	v4l2_of_parse_endpoint(ep, &bus_cfg);
-+
-+	switch (bus_cfg.bus_type) {
-+	case V4L2_MBUS_CSI2:
-+		pdata->csi_signalling_mode = SMIAPP_CSI_SIGNALLING_MODE_CSI2;
-+		break;
-+		/* FIXME: add CCP2 support. */
-+	default:
-+		rval = -EINVAL;
-+		goto out_err;
-+	}
-+
-+	pdata->lanes = bus_cfg.bus.mipi_csi2.num_data_lanes;
-+	dev_dbg(dev, "lanes %u\n", pdata->lanes);
-+
-+	/* xshutdown GPIO is optional */
-+	pdata->xshutdown = of_get_named_gpio(dev->of_node, "reset-gpios", 0);
-+
-+	/* NVM size is not mandatory */
-+	of_property_read_u32(dev->of_node, "nokia,nvm-size",
-+				    &pdata->nvm_size);
-+
-+	rval = of_property_read_u32(dev->of_node, "clock-frequency",
-+				    &pdata->ext_clk);
-+	if (rval) {
-+		dev_warn(dev, "can't get clock-frequency\n");
-+		goto out_err;
-+	}
-+
-+	dev_dbg(dev, "reset %d, nvm %d, clk %d, csi %d\n", pdata->xshutdown,
-+		pdata->nvm_size, pdata->ext_clk, pdata->csi_signalling_mode);
-+
-+	rval = of_get_property(
-+		dev->of_node, "link-frequencies", &asize) ? 0 : -ENOENT;
-+	if (rval) {
-+		dev_warn(dev, "can't get link-frequencies array size\n");
-+		goto out_err;
-+	}
-+
-+	pdata->op_sys_clock = devm_kzalloc(dev, asize, GFP_KERNEL);
-+	if (!pdata->op_sys_clock) {
-+		rval = -ENOMEM;
-+		goto out_err;
-+	}
-+
-+	asize /= sizeof(*pdata->op_sys_clock);
-+	/*
-+	 * Read a 64-bit array --- this will be replaced with a
-+	 * of_property_read_u64_array() once it's merged.
-+	 */
-+	prop = of_find_property(dev->of_node, "link-frequencies", NULL);
-+	if (!prop)
-+		goto out_err;
-+	if (!prop->value)
-+		goto out_err;
-+	if (asize * sizeof(*pdata->op_sys_clock) > prop->length)
-+		goto out_err;
-+	val = prop->value;
-+	if (IS_ERR(val))
-+		goto out_err;
-+
-+	for (i = 0; i < asize; i++)
-+		pdata->op_sys_clock[i] = of_read_number(val + i * 2, 2);
-+
-+	for (; asize > 0; asize--)
-+		dev_dbg(dev, "freq %d: %lld\n", asize - 1,
-+			pdata->op_sys_clock[asize - 1]);
-+
-+	of_node_put(ep);
-+	return pdata;
-+
-+out_err:
-+	of_node_put(ep);
-+	return NULL;
-+}
-+
- static int smiapp_probe(struct i2c_client *client,
- 			const struct i2c_device_id *devid)
- {
- 	struct smiapp_sensor *sensor;
-+	struct smiapp_platform_data *pdata = smiapp_get_pdata(&client->dev);
-+	int rval;
+ #ifndef __SMIAPP_QUIRK__
+diff --git a/drivers/media/i2c/smiapp/smiapp-reg-defs.h b/drivers/media/i2c/smiapp/smiapp-reg-defs.h
+index c488ef0..f928d4c 100644
+--- a/drivers/media/i2c/smiapp/smiapp-reg-defs.h
++++ b/drivers/media/i2c/smiapp/smiapp-reg-defs.h
+@@ -14,12 +14,6 @@
+  * WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  * General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, write to the Free Software
+- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+- * 02110-1301 USA
+- *
+  */
+ #define SMIAPP_REG_MK_U8(r) ((SMIAPP_REG_8BIT << 16) | (r))
+ #define SMIAPP_REG_MK_U16(r) ((SMIAPP_REG_16BIT << 16) | (r))
+diff --git a/drivers/media/i2c/smiapp/smiapp-reg.h b/drivers/media/i2c/smiapp/smiapp-reg.h
+index b0dcbb8..4c8b406 100644
+--- a/drivers/media/i2c/smiapp/smiapp-reg.h
++++ b/drivers/media/i2c/smiapp/smiapp-reg.h
+@@ -14,12 +14,6 @@
+  * WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  * General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, write to the Free Software
+- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+- * 02110-1301 USA
+- *
+  */
  
--	if (client->dev.platform_data == NULL)
-+	if (pdata == NULL)
- 		return -ENODEV;
+ #ifndef __SMIAPP_REG_H_
+diff --git a/drivers/media/i2c/smiapp/smiapp-regs.c b/drivers/media/i2c/smiapp/smiapp-regs.c
+index a209800..6b6c20b 100644
+--- a/drivers/media/i2c/smiapp/smiapp-regs.c
++++ b/drivers/media/i2c/smiapp/smiapp-regs.c
+@@ -14,12 +14,6 @@
+  * WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  * General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, write to the Free Software
+- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+- * 02110-1301 USA
+- *
+  */
  
- 	sensor = devm_kzalloc(&client->dev, sizeof(*sensor), GFP_KERNEL);
- 	if (sensor == NULL)
- 		return -ENOMEM;
+ #include <linux/delay.h>
+diff --git a/drivers/media/i2c/smiapp/smiapp-regs.h b/drivers/media/i2c/smiapp/smiapp-regs.h
+index 3552112..6dd0e49 100644
+--- a/drivers/media/i2c/smiapp/smiapp-regs.h
++++ b/drivers/media/i2c/smiapp/smiapp-regs.h
+@@ -14,12 +14,6 @@
+  * WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  * General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, write to the Free Software
+- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+- * 02110-1301 USA
+- *
+  */
  
--	sensor->platform_data = client->dev.platform_data;
-+	sensor->platform_data = pdata;
- 	mutex_init(&sensor->mutex);
- 	mutex_init(&sensor->power_mutex);
- 	sensor->src = &sensor->ssds[sensor->ssds_used];
-@@ -2990,6 +3094,11 @@ static int smiapp_remove(struct i2c_client *client)
- 	return 0;
- }
+ #ifndef SMIAPP_REGS_H
+diff --git a/drivers/media/i2c/smiapp/smiapp.h b/drivers/media/i2c/smiapp/smiapp.h
+index f88f8ec..8fded46 100644
+--- a/drivers/media/i2c/smiapp/smiapp.h
++++ b/drivers/media/i2c/smiapp/smiapp.h
+@@ -14,12 +14,6 @@
+  * WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  * General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, write to the Free Software
+- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+- * 02110-1301 USA
+- *
+  */
  
-+static const struct of_device_id smiapp_of_table[] = {
-+	{ .compatible = "nokia,smia" },
-+	{ },
-+};
-+
- static const struct i2c_device_id smiapp_id_table[] = {
- 	{ SMIAPP_NAME, 0 },
- 	{ },
-@@ -3003,6 +3112,7 @@ static const struct dev_pm_ops smiapp_pm_ops = {
- 
- static struct i2c_driver smiapp_i2c_driver = {
- 	.driver	= {
-+		.of_match_table = smiapp_of_table,
- 		.name = SMIAPP_NAME,
- 		.pm = &smiapp_pm_ops,
- 	},
+ #ifndef __SMIAPP_PRIV_H_
 -- 
 1.7.10.4
