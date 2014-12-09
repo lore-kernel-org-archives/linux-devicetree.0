@@ -1,287 +1,1016 @@
-From: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3] irqchip: gic: Allow interrupt level to be set for
- PPIs.
-Date: Tue, 9 Dec 2014 12:29:19 +0000
-Message-ID: <20141209122919.GR821@e106497-lin.cambridge.arm.com>
-References: <1417437909-20923-1-git-send-email-Liviu.Dudau@arm.com>
+From: Mike Looijmans <mike.looijmans@topic.nl>
+Subject: Re: [PATCH v2] Add TI CDCE925 I2C controlled clock synthesizer driver
+Date: Tue, 9 Dec 2014 13:33:03 +0100
+Message-ID: <5486EBFF.7060304@topic.nl>
+References: <1414151815-21736-2-git-send-email-mike.looijmans@topic.nl> <1417677976-4218-1-git-send-email-mike.looijmans@topic.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1417437909-20923-1-git-send-email-Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1417677976-4218-1-git-send-email-mike.looijmans@topic.nl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: mturquette@linaro.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 01, 2014 at 12:45:09PM +0000, Liviu Dudau wrote:
-> During a recent cleanup of the arm64 DTs it has become clear that
-> the handling of PPIs in xxxx_set_type() is incorrect. The ARM TRMs
-> for GICv2 and later allow for "implementation defined" support for
-> setting the edge or level type of the PPI interrupts and don't restri=
-ct
-> the activation level of the signal. Current ARM implementations
-> do restrict the PPI level type to IRQ_TYPE_LEVEL_LOW, but licensees
-> of the IP can decide to shoot themselves in the foot at any time.
->=20
-> Signed-off-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+=EF=BB=BFJust a ping to ask for attention. Anyone care to review, comme=
+nt or otherwise=20
+provide some feedback?
+
+
+On 12/04/2014 08:26 AM, Mike Looijmans wrote:
+> This driver supports the TI CDCE925 programmable clock synthesizer.
+> The chip contains two PLLs with spread-spectrum clocking support and
+> five output dividers. The driver only supports the following setup,
+> and uses a fixed setting for the output muxes:
+>    Y1 is derived from the input clock
+>    Y2 and Y3 derive from PLL1
+>    Y4 and Y5 derive from PLL2
+> Given a target output frequency, the driver will set the PLL and
+> divider to best approximate the desired output.
+>
+> Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
 > ---
->=20
-> Made a stupid mistake in v2 and got my bit test confused with logical=
- test.
-
-Gentle ping!
-
-Any comments here? Russell, are you OK with this approach?
-
-Best regards,
-Liviu
-
->=20
->  Documentation/devicetree/bindings/arm/gic.txt |  8 ++++++--
->  drivers/irqchip/irq-gic-common.c              | 21 +++++++++++++----=
-----
->  drivers/irqchip/irq-gic-common.h              |  2 +-
->  drivers/irqchip/irq-gic-v3.c                  |  8 ++++----
->  drivers/irqchip/irq-gic.c                     |  9 ++++++---
->  drivers/irqchip/irq-hip04.c                   |  9 ++++++---
->  6 files changed, 36 insertions(+), 21 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/arm/gic.txt b/Document=
-ation/devicetree/bindings/arm/gic.txt
-> index 8112d0c..c97484b 100644
-> --- a/Documentation/devicetree/bindings/arm/gic.txt
-> +++ b/Documentation/devicetree/bindings/arm/gic.txt
-> @@ -32,12 +32,16 @@ Main node required properties:
->    The 3rd cell is the flags, encoded as follows:
->  	bits[3:0] trigger type and level flags.
->  		1 =3D low-to-high edge triggered
-> -		2 =3D high-to-low edge triggered
-> +		2 =3D high-to-low edge triggered (invalid for SPIs)
->  		4 =3D active high level-sensitive
-> -		8 =3D active low level-sensitive
-> +		8 =3D active low level-sensitive (invalid for SPIs).
->  	bits[15:8] PPI interrupt cpu mask.  Each bit corresponds to each of
->  	the 8 possible cpus attached to the GIC.  A bit set to '1' indicate=
-d
->  	the interrupt is wired to that CPU.  Only valid for PPI interrupts.
-> +	Also note that the configurability of PPI interrupts is IMPLEMENTAT=
-ION
-> +	DEFINED and as such not guaranteed to be present (most SoC availabl=
-e
-> +	in 2014 seem to ignore the setting of this flag and use the hardwar=
-e
-> +	default value).
-> =20
->  - reg : Specifies base physical address(s) and size of the GIC regis=
-ters. The
->    first region is the GIC distributor register base and size. The 2n=
-d region is
-> diff --git a/drivers/irqchip/irq-gic-common.c b/drivers/irqchip/irq-g=
-ic-common.c
-> index 61541ff..ffee521 100644
-> --- a/drivers/irqchip/irq-gic-common.c
-> +++ b/drivers/irqchip/irq-gic-common.c
-> @@ -21,7 +21,7 @@
-> =20
->  #include "irq-gic-common.h"
-> =20
-> -void gic_configure_irq(unsigned int irq, unsigned int type,
-> +int gic_configure_irq(unsigned int irq, unsigned int type,
->  		       void __iomem *base, void (*sync_access)(void))
->  {
->  	u32 enablemask =3D 1 << (irq % 32);
-> @@ -29,16 +29,17 @@ void gic_configure_irq(unsigned int irq, unsigned=
- int type,
->  	u32 confmask =3D 0x2 << ((irq % 16) * 2);
->  	u32 confoff =3D (irq / 16) * 4;
->  	bool enabled =3D false;
-> -	u32 val;
-> +	u32 val, oldval;
-> +	int ret =3D 0;
-> =20
->  	/*
->  	 * Read current configuration register, and insert the config
->  	 * for "irq", depending on "type".
->  	 */
-> -	val =3D readl_relaxed(base + GIC_DIST_CONFIG + confoff);
-> -	if (type =3D=3D IRQ_TYPE_LEVEL_HIGH)
-> +	val =3D oldval =3D readl_relaxed(base + GIC_DIST_CONFIG + confoff);
-> +	if (type & IRQ_TYPE_LEVEL_MASK)
->  		val &=3D ~confmask;
-> -	else if (type =3D=3D IRQ_TYPE_EDGE_RISING)
-> +	else if (type & IRQ_TYPE_EDGE_BOTH)
->  		val |=3D confmask;
-> =20
->  	/*
-> @@ -54,15 +55,19 @@ void gic_configure_irq(unsigned int irq, unsigned=
- int type,
-> =20
->  	/*
->  	 * Write back the new configuration, and possibly re-enable
-> -	 * the interrupt.
-> +	 * the interrupt. If we tried to write a new configuration and fail=
-ed,
-> +	 * return an error.
->  	 */
->  	writel_relaxed(val, base + GIC_DIST_CONFIG + confoff);
-> -
-> -	if (enabled)
-> +	if (readl_relaxed(base + GIC_DIST_CONFIG + confoff) !=3D val && val=
- !=3D oldval)
-> +		ret =3D -EINVAL;
-> +	else if (enabled)
->  		writel_relaxed(enablemask, base + GIC_DIST_ENABLE_SET + enableoff)=
-;
-> =20
->  	if (sync_access)
->  		sync_access();
+>
+> v2: Coding style check
+>      Add devicetree binding documentation
+>
+>   .../devicetree/bindings/clock/cdce925.txt          |   61 ++
+>   drivers/clk/Kconfig                                |   17 +
+>   drivers/clk/Makefile                               |    1 +
+>   drivers/clk/clk-cdce925.c                          |  792 +++++++++=
++++++++++++
+>   4 files changed, 871 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/clock/cdce925.=
+txt
+>   create mode 100644 drivers/clk/clk-cdce925.c
+>
+> diff --git a/Documentation/devicetree/bindings/clock/cdce925.txt b/Do=
+cumentation/devicetree/bindings/clock/cdce925.txt
+> new file mode 100644
+> index 0000000..0eac770
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/cdce925.txt
+> @@ -0,0 +1,61 @@
+> +Binding for TO CDCE925 programmable I2C clock synthesizers.
 > +
-> +	return ret;
->  }
-> =20
->  void __init gic_dist_config(void __iomem *base, int gic_irqs,
-> diff --git a/drivers/irqchip/irq-gic-common.h b/drivers/irqchip/irq-g=
-ic-common.h
-> index b41f024..35a9884 100644
-> --- a/drivers/irqchip/irq-gic-common.h
-> +++ b/drivers/irqchip/irq-gic-common.h
-> @@ -20,7 +20,7 @@
->  #include <linux/of.h>
->  #include <linux/irqdomain.h>
-> =20
-> -void gic_configure_irq(unsigned int irq, unsigned int type,
-> +int gic_configure_irq(unsigned int irq, unsigned int type,
->                         void __iomem *base, void (*sync_access)(void)=
-);
->  void gic_dist_config(void __iomem *base, int gic_irqs,
->  		     void (*sync_access)(void));
-> diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v=
-3.c
-> index 1a146cc..6e50803 100644
-> --- a/drivers/irqchip/irq-gic-v3.c
-> +++ b/drivers/irqchip/irq-gic-v3.c
-> @@ -238,7 +238,9 @@ static int gic_set_type(struct irq_data *d, unsig=
-ned int type)
->  	if (irq < 16)
->  		return -EINVAL;
-> =20
-> -	if (type !=3D IRQ_TYPE_LEVEL_HIGH && type !=3D IRQ_TYPE_EDGE_RISING=
-)
-> +	/* SPIs have restrictions on the supported types */
-> +	if (irq >=3D 32 && type !=3D IRQ_TYPE_LEVEL_HIGH &&
-> +			 type !=3D IRQ_TYPE_EDGE_RISING)
->  		return -EINVAL;
-> =20
->  	if (gic_irq_in_rdist(d)) {
-> @@ -249,9 +251,7 @@ static int gic_set_type(struct irq_data *d, unsig=
-ned int type)
->  		rwp_wait =3D gic_dist_wait_for_rwp;
->  	}
-> =20
-> -	gic_configure_irq(irq, type, base, rwp_wait);
-> -
-> -	return 0;
-> +	return gic_configure_irq(irq, type, base, rwp_wait);
->  }
-> =20
->  static u64 gic_mpidr_to_affinity(u64 mpidr)
-> diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
-> index d617ee5..4634cf7 100644
-> --- a/drivers/irqchip/irq-gic.c
-> +++ b/drivers/irqchip/irq-gic.c
-> @@ -188,12 +188,15 @@ static int gic_set_type(struct irq_data *d, uns=
-igned int type)
->  {
->  	void __iomem *base =3D gic_dist_base(d);
->  	unsigned int gicirq =3D gic_irq(d);
+> +Reference
+> +This binding uses the common clock binding[1].
+> +
+> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+> +[2] http://www.ti.com/product/cdce925
+> +
+> +Required properties:
+> + - compatible: Shall be one of "cdce925", "cdce925pw",
+> + - reg: I2C device address.
+> + - clocks: Points to a fixed parent clock that provides the input fr=
+equency.
+> + - #clock-cells: From common clock bindings: Shall be 1.
+> +
+> +Optional properties:
+> + - xtal-load-pf: Crystal load-capacitor value to fine-tune performan=
+ce on a
+> +                 board, or to compensate for external influences.
+> +
+> +
+> +For each connected output Y1 through Y5, a child node should be prov=
+ided. Each
+> +child node must have the following properties:
+> + - #clock-cells: From common clock bindings: Shall be 0.
+> +Optional properties for the output nodes:
+> + - clock-frequency: Output frequency to generate. This defines the o=
+utput
+> +		    frequency set during boot. It can be reprogrammed during
+> +		    runtime through the common clock framework.
+> +
+> +For both PLL1 and PLL2 an optional child node can be used to specify=
+ spread
+> +spectrum clocking parameters.
+> +  - spread-spectrum: SSC mode as defined in the data sheet.
+> +  - spread-spectrum-center: Use "centered" mode instead of "max" mod=
+e. When this
+> +    is present, the clock runs at the requested frequency on average=
+=2E
+> +
+> +
+> +Example:
+> +
+> +	clockgen: cdce925pw@64 {
+> +		compatible =3D "cdce925";
+> +		reg =3D <0x64>;
+> +		clocks =3D <&xtal_27Mhz>;
+> +		xtal-load-pf =3D <5>;
+> +		#clock-cells =3D <1>;
+> +		/* PLL options to get SSC 1% centered */
+> +		PLL2 {
+> +			spread-spectrum =3D <4>;
+> +			spread-spectrum-center;
+> +		};
+> +		/* Outputs calculate mux and divider settings */
+> +		Y1 {
+> +			#clock-cells =3D <0>;
+> +			clock-frequency =3D <27000>;
+> +		};
+> +		audio_clock: Y2 {
+> +			#clock-cells =3D <0>;
+> +			clock-frequency =3D <12288000>; /* SPDIF audio */
+> +		};
+> +		hdmi_pixel_clock: Y4 {
+> +			#clock-cells =3D <0>;
+> +			clock-frequency =3D <148500000>; /* HD-video */
+> +		};
+> +	};
+> diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+> index 455fd17..4e474b3 100644
+> --- a/drivers/clk/Kconfig
+> +++ b/drivers/clk/Kconfig
+> @@ -77,6 +77,23 @@ config COMMON_CLK_SI570
+>   	  This driver supports Silicon Labs 570/571/598/599 programmable
+>   	  clock generators.
+>
+> +config COMMON_CLK_CDCE925
+> +	tristate "Clock driver for TI CDCE925 devices"
+> +	depends on I2C
+> +	depends on OF
+> +	select REGMAP_I2C
+> +	help
+> +	---help---
+> +	  This driver supports the TI CDCE925 programmable clock synthesize=
+r.
+> +	  The chip contains two PLLs with spread-spectrum clocking support =
+and
+> +	  five output dividers. The driver only supports the following setu=
+p,
+> +	  and uses a fixed setting for the output muxes.
+> +	  Y1 is derived from the input clock
+> +	  Y2 and Y3 derive from PLL1
+> +	  Y4 and Y5 derive from PLL2
+> +	  Given a target output frequency, the driver will set the PLL and
+> +	  divider to best approximate the desired output.
+> +
+>   config COMMON_CLK_S2MPS11
+>   	tristate "Clock driver for S2MPS1X/S5M8767 MFD"
+>   	depends on MFD_SEC_CORE
+> diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+> index d5fba5b..c476066 100644
+> --- a/drivers/clk/Makefile
+> +++ b/drivers/clk/Makefile
+> @@ -35,6 +35,7 @@ obj-$(CONFIG_COMMON_CLK_RK808)		+=3D clk-rk808.o
+>   obj-$(CONFIG_COMMON_CLK_S2MPS11)	+=3D clk-s2mps11.o
+>   obj-$(CONFIG_COMMON_CLK_SI5351)		+=3D clk-si5351.o
+>   obj-$(CONFIG_COMMON_CLK_SI570)		+=3D clk-si570.o
+> +obj-$(CONFIG_COMMON_CLK_CDCE925)	+=3D clk-cdce925.o
+>   obj-$(CONFIG_CLK_TWL6040)		+=3D clk-twl6040.o
+>   obj-$(CONFIG_ARCH_U300)			+=3D clk-u300.o
+>   obj-$(CONFIG_ARCH_VT8500)		+=3D clk-vt8500.o
+> diff --git a/drivers/clk/clk-cdce925.c b/drivers/clk/clk-cdce925.c
+> new file mode 100644
+> index 0000000..faa867f
+> --- /dev/null
+> +++ b/drivers/clk/clk-cdce925.c
+> @@ -0,0 +1,792 @@
+> +/*
+> + * Driver for TI Dual PLL CDCE925 clock synthesizer
+> + *
+> + * This driver always connects the Y1 to the input clock, Y2/Y3 to P=
+LL1
+> + * and Y4/Y5 to PLL2. PLL frequency is set on a first-come-first-ser=
+ve
+> + * basis. Clients can directly request any frequency that the chip c=
+an
+> + * deliver using the standard clk framework. In addition, the device=
+ can
+> + * be configured and activated via the devicetree.
+> + *
+> + * Copyright (C) 2014, Topic Embedded Products
+> + * Licenced under GPL
+> + */
+> +#include <linux/clk-provider.h>
+> +#include <linux/clk-private.h>
+> +#include <linux/delay.h>
+> +#include <linux/module.h>
+> +#include <linux/i2c.h>
+> +#include <linux/regmap.h>
+> +#include <linux/slab.h>
+> +#include <linux/gcd.h>
+> +
+> +/* The chip has 2 PLLs which can be routed through dividers to 5 out=
+puts.
+> + * Model this as 2 PLL clocks which are parents to the outputs.
+> + */
+> +#define NUMBER_OF_PLLS	2
+> +#define NUMBER_OF_OUTPUTS	5
+> +
+> +#define CDCE925_REG_GLOBAL1	0x01
+> +#define CDCE925_REG_Y1SPIPDIVH	0x02
+> +#define CDCE925_REG_PDIVL	0x03
+> +#define CDCE925_REG_XCSEL	0x05
+> +/* PLL parameters start at 0x10, steps of 0x10 */
+> +#define CDCE925_OFFSET_PLL	0x10
+> +/* Add CDCE925_OFFSET_PLL * (pll) to these registers before sending =
+*/
+> +#define CDCE925_PLL_MUX_OUTPUTS	0x14
+> +#define CDCE925_PLL_MULDIV	0x18
+> +
+> +#define CDCE925_PLL_FREQUENCY_MIN	 80000000
+> +#define CDCE925_PLL_FREQUENCY_MAX	230000000
+> +struct clk_cdce925_chip;
+> +
+> +struct clk_cdce925_output {
+> +	struct clk_hw hw;
+> +	struct clk_cdce925_chip *chip;
+> +	u8 index;
+> +	u16 pdiv; /* 1..127 for Y2-Y5; 1..1023 for Y1 */
+> +};
+> +#define to_clk_cdce925_output(_hw) \
+> +	container_of(_hw, struct clk_cdce925_output, hw)
+> +
+> +struct clk_cdce925_pll {
+> +	struct clk_hw hw;
+> +	struct clk_cdce925_chip *chip;
+> +	u8 index;
+> +	u16 m;   /* 1..511 */
+> +	u16 n;   /* 1..4095 */
+> +};
+> +#define to_clk_cdce925_pll(_hw)	container_of(_hw, struct clk_cdce925=
+_pll, hw)
+> +
+> +struct clk_cdce925_chip {
+> +	struct regmap *regmap;
+> +	struct i2c_client *i2c_client;
+> +	struct clk_cdce925_pll pll[NUMBER_OF_PLLS];
+> +	struct clk_cdce925_output clk[NUMBER_OF_OUTPUTS];
+> +};
+> +
+> +/* ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** **=
+ */
+> +
+> +static unsigned long cdce925_pll_calculate_rate(unsigned long parent=
+_rate,
+> +	u16 n, u16 m)
+> +{
+> +	if ((!m || !n) || (m =3D=3D n))
+> +		return parent_rate; /* In bypass mode runs at same frequency */
+> +	return mult_frac(parent_rate, (unsigned long)n, (unsigned long)m);
+> +}
+> +
+> +static unsigned long cdce925_pll_recalc_rate(struct clk_hw *hw,
+> +		unsigned long parent_rate)
+> +{
+> +	/* Output frequency of PLL is Fout =3D (Fin/Pdiv)*(N/M) */
+> +	struct clk_cdce925_pll *data =3D to_clk_cdce925_pll(hw);
+> +
+> +	return cdce925_pll_calculate_rate(parent_rate, data->n, data->m);
+> +}
+> +
+> +static int cdce925_pll_find_rate(unsigned long rate,
+> +		unsigned long parent_rate, u16 *n, u16 *m)
+> +{
+> +	if (rate <=3D parent_rate) {
+> +		/* Can always deliver parent_rate in bypass mode */
+> +		rate =3D parent_rate;
+> +		*n =3D 0;
+> +		*m =3D 0;
+> +	} else {
+> +		/* In PLL mode, need to apply min/max range */
+> +		unsigned long un;
+> +		unsigned long um;
+> +		unsigned long g;
+> +
+> +		if (rate < CDCE925_PLL_FREQUENCY_MIN)
+> +			rate =3D CDCE925_PLL_FREQUENCY_MIN;
+> +		else if (rate > CDCE925_PLL_FREQUENCY_MAX)
+> +			rate =3D CDCE925_PLL_FREQUENCY_MAX;
+> +
+> +		g =3D gcd(rate, parent_rate);
+> +		um =3D parent_rate / g;
+> +		un =3D rate / g;
+> +		/* When outside hw range, reduce to fit (rounding errors) */
+> +		while ((un > 4095) || (um > 511)) {
+> +			un >>=3D 1;
+> +			um >>=3D 1;
+> +		}
+> +		if (un =3D=3D 0)
+> +			un =3D 1;
+> +		if (um =3D=3D 0)
+> +			um =3D 1;
+> +
+> +		*n =3D un;
+> +		*m =3D um;
+> +	}
+> +
+> +	pr_debug("%s(%lu,%lu) n=3D%u m=3D%u\n",
+> +			__func__, rate, parent_rate, *n, *m);
+> +
+> +	return 0;
+> +}
+> +
+> +static long cdce925_pll_round_rate(struct clk_hw *hw, unsigned long =
+rate,
+> +		unsigned long *parent_rate)
+> +{
+> +	struct clk_cdce925_pll *data =3D to_clk_cdce925_pll(hw);
+> +	u16 n, m;
 > +	int ret;
-> =20
->  	/* Interrupt configuration for SGIs can't be changed */
->  	if (gicirq < 16)
->  		return -EINVAL;
-> =20
-> -	if (type !=3D IRQ_TYPE_LEVEL_HIGH && type !=3D IRQ_TYPE_EDGE_RISING=
-)
-> +	/* SPIs have restrictions on the supported types */
-> +	if (gicirq >=3D 32 && type !=3D IRQ_TYPE_LEVEL_HIGH &&
-> +			    type !=3D IRQ_TYPE_EDGE_RISING)
->  		return -EINVAL;
-> =20
->  	raw_spin_lock(&irq_controller_lock);
-> @@ -201,11 +204,11 @@ static int gic_set_type(struct irq_data *d, uns=
-igned int type)
->  	if (gic_arch_extn.irq_set_type)
->  		gic_arch_extn.irq_set_type(d, type);
-> =20
-> -	gic_configure_irq(gicirq, type, base, NULL);
-> +	ret =3D gic_configure_irq(gicirq, type, base, NULL);
-> =20
->  	raw_spin_unlock(&irq_controller_lock);
-> =20
-> -	return 0;
-> +	return ret;
->  }
-> =20
->  static int gic_retrigger(struct irq_data *d)
-> diff --git a/drivers/irqchip/irq-hip04.c b/drivers/irqchip/irq-hip04.=
-c
-> index 29b8f21..d059e66 100644
-> --- a/drivers/irqchip/irq-hip04.c
-> +++ b/drivers/irqchip/irq-hip04.c
-> @@ -120,21 +120,24 @@ static int hip04_irq_set_type(struct irq_data *=
-d, unsigned int type)
->  {
->  	void __iomem *base =3D hip04_dist_base(d);
->  	unsigned int irq =3D hip04_irq(d);
+> +
+> +	pr_debug("%s (index=3D%d parent_rate=3D%lu rate=3D%lu)\n", __func__=
+,
+> +		data->index, *parent_rate, rate);
+> +	ret =3D cdce925_pll_find_rate(rate, *parent_rate, &n, &m);
+> +	return (long)cdce925_pll_calculate_rate(*parent_rate, n, m);
+> +}
+> +
+> +static int cdce925_pll_set_rate(struct clk_hw *hw, unsigned long rat=
+e,
+> +		unsigned long parent_rate)
+> +{
+> +	struct clk_cdce925_pll *data =3D to_clk_cdce925_pll(hw);
+> +
+> +	if (!rate || (rate =3D=3D parent_rate)) {
+> +		data->m =3D 0; /* Bypass mode */
+> +		data->n =3D 0;
+> +		return 0;
+> +	}
+> +
+> +	if ((rate < CDCE925_PLL_FREQUENCY_MIN) ||
+> +		(rate > CDCE925_PLL_FREQUENCY_MAX)) {
+> +		pr_debug("%s: rate %lu outside PLL range.\n", __func__, rate);
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (rate < parent_rate) {
+> +		pr_debug("%s: rate %lu less than parent rate %lu.\n", __func__,
+> +			rate, parent_rate);
+> +		return -EINVAL;
+> +	}
+> +
+> +	return cdce925_pll_find_rate(rate, parent_rate, &data->n, &data->m)=
+;
+> +}
+> +
+> +
+> +/* calculate p =3D max(0, 4 - int(log2 (n/m))) */
+> +static u8 cdce925_pll_calc_p(u16 n, u16 m)
+> +{
+> +	u8 p;
+> +	u16 r =3D n / m;
+> +
+> +	if (r >=3D 16)
+> +		return 0;
+> +	p =3D 4;
+> +	while (r > 1) {
+> +		r >>=3D 1;
+> +		--p;
+> +	}
+> +	return p;
+> +}
+> +
+> +/* Returns VCO range bits for VCO1_0_RANGE */
+> +static u8 cdce925_pll_calc_range_bits(struct clk_hw *hw, u16 n, u16 =
+m)
+> +{
+> +	struct clk *parent =3D clk_get_parent(hw->clk);
+> +	unsigned long rate =3D clk_get_rate(parent);
+> +
+> +	rate =3D mult_frac(rate, (unsigned long)n, (unsigned long)m);
+> +	if (rate >=3D 175000000)
+> +		return 0x3;
+> +	if (rate >=3D 150000000)
+> +		return 0x02;
+> +	if (rate >=3D 125000000)
+> +		return 0x01;
+> +	return 0x00;
+> +}
+> +
+> +/* I2C clock, hence everything must happen in (un)prepare because th=
+is
+> + * may sleep */
+> +static int cdce925_pll_prepare(struct clk_hw *hw)
+> +{
+> +	struct clk_cdce925_pll *data =3D to_clk_cdce925_pll(hw);
+> +	u16 n =3D data->n;
+> +	u16 m =3D data->m;
+> +	u16 r;
+> +	u8 q;
+> +	u8 p;
+> +	u16 nn;
+> +	u8 pll[4]; /* Bits are spread out over 4 byte registers */
+> +	u8 reg_ofs =3D data->index * CDCE925_OFFSET_PLL;
+> +	unsigned i;
+> +
+> +	pr_debug("%s: index=3D%d\n", __func__, data->index);
+> +
+> +	if ((!m || !n) || (m =3D=3D n)) {
+> +		/* Set PLL mux to bypass mode, leave the rest as is */
+> +		regmap_update_bits(data->chip->regmap,
+> +			reg_ofs + CDCE925_PLL_MUX_OUTPUTS, 0x80, 0x80);
+> +	} else {
+> +		/* According to data sheet: */
+> +		/* p =3D max(0, 4 - int(log2 (n/m))) */
+> +		p =3D cdce925_pll_calc_p(n, m);
+> +		/* nn =3D n * 2^p */
+> +		nn =3D n * BIT(p);
+> +		/* q =3D int(nn/m) */
+> +		q =3D nn / m;
+> +		if ((q < 16) || (1 > 64)) {
+> +			pr_debug("%s invalid q=3D%d\n", __func__, q);
+> +			return -EINVAL;
+> +		}
+> +		r =3D nn - (m*q);
+> +		if (r > 511) {
+> +			pr_debug("%s invalid r=3D%d\n", __func__, r);
+> +			return -EINVAL;
+> +		}
+> +		pr_debug("%s n=3D%d m=3D%d p=3D%d q=3D%d r=3D%d\n", __func__,
+> +			n, m, p, q, r);
+> +		/* encode into register bits */
+> +		pll[0] =3D n >> 4;
+> +		pll[1] =3D ((n & 0x0F) << 4) | ((r >> 5) & 0x0F);
+> +		pll[2] =3D ((r & 0x1F) << 3) | ((q >> 3) & 0x07);
+> +		pll[3] =3D ((q & 0x07) << 5) | (p << 2) |
+> +				cdce925_pll_calc_range_bits(hw, n, m);
+> +		/* Write to registers */
+> +		for (i =3D 0; i < ARRAY_SIZE(pll); ++i)
+> +			regmap_write(data->chip->regmap,
+> +				reg_ofs + CDCE925_PLL_MULDIV + i, pll[i]);
+> +		/* Enable PLL */
+> +		regmap_update_bits(data->chip->regmap,
+> +			reg_ofs + CDCE925_PLL_MUX_OUTPUTS, 0x80, 0x00);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void cdce925_pll_unprepare(struct clk_hw *hw)
+> +{
+> +	struct clk_cdce925_pll *data =3D to_clk_cdce925_pll(hw);
+> +	u8 reg_ofs =3D data->index * CDCE925_OFFSET_PLL;
+> +
+> +	pr_debug("%s: index=3D%d\n", __func__, data->index);
+> +	regmap_update_bits(data->chip->regmap,
+> +			reg_ofs + CDCE925_PLL_MUX_OUTPUTS, 0x80, 0x80);
+> +}
+> +
+> +static const struct clk_ops cdce925_pll_ops =3D {
+> +	.prepare =3D cdce925_pll_prepare,
+> +	.unprepare =3D cdce925_pll_unprepare,
+> +	.recalc_rate =3D cdce925_pll_recalc_rate,
+> +	.round_rate =3D cdce925_pll_round_rate,
+> +	.set_rate =3D cdce925_pll_set_rate,
+> +};
+> +
+> +
+> +static void cdce925_clk_set_pdiv(struct clk_cdce925_output *data, u1=
+6 pdiv)
+> +{
+> +	pr_debug("%s: index=3D%d pdiv=3D%d\n", __func__, data->index, pdiv)=
+;
+> +	switch (data->index) {
+> +	case 0:
+> +		regmap_update_bits(data->chip->regmap,
+> +			CDCE925_REG_Y1SPIPDIVH,
+> +			0x03, (pdiv >> 8) & 0x03);
+> +		regmap_write(data->chip->regmap, 0x03, pdiv & 0xFF);
+> +		break;
+> +	case 1:
+> +		regmap_update_bits(data->chip->regmap, 0x16, 0x7F, pdiv);
+> +		break;
+> +	case 2:
+> +		regmap_update_bits(data->chip->regmap, 0x17, 0x7F, pdiv);
+> +		break;
+> +	case 3:
+> +		regmap_update_bits(data->chip->regmap, 0x26, 0x7F, pdiv);
+> +		break;
+> +	case 4:
+> +		regmap_update_bits(data->chip->regmap, 0x27, 0x7F, pdiv);
+> +		break;
+> +	}
+> +}
+> +
+> +static void cdce925_clk_activate(struct clk_cdce925_output *data)
+> +{
+> +	pr_debug("%s: index=3D%d\n", __func__, data->index);
+> +	switch (data->index) {
+> +	case 0:
+> +		regmap_update_bits(data->chip->regmap,
+> +			CDCE925_REG_Y1SPIPDIVH, 0x0c, 0x0c);
+> +		break;
+> +	case 1:
+> +	case 2:
+> +		regmap_update_bits(data->chip->regmap, 0x14, 0x03, 0x03);
+> +		break;
+> +	case 3:
+> +	case 4:
+> +		regmap_update_bits(data->chip->regmap, 0x24, 0x03, 0x03);
+> +		break;
+> +	}
+> +}
+> +
+> +static int cdce925_clk_prepare(struct clk_hw *hw)
+> +{
+> +	struct clk_cdce925_output *data =3D to_clk_cdce925_output(hw);
+> +
+> +	pr_debug("%s: index=3D%d\n", __func__, data->index);
+> +	cdce925_clk_set_pdiv(data, data->pdiv);
+> +	cdce925_clk_activate(data);
+> +	return 0;
+> +}
+> +
+> +static void cdce925_clk_unprepare(struct clk_hw *hw)
+> +{
+> +	struct clk_cdce925_output *data =3D to_clk_cdce925_output(hw);
+> +
+> +	pr_debug("%s: index=3D%d\n", __func__, data->index);
+> +	/* Disable clock by setting divider to "0" */
+> +	cdce925_clk_set_pdiv(data, 0);
+> +}
+> +
+> +static unsigned long cdce925_clk_recalc_rate(struct clk_hw *hw,
+> +		unsigned long parent_rate)
+> +{
+> +	struct clk_cdce925_output *data =3D to_clk_cdce925_output(hw);
+> +
+> +	pr_debug("%s: index=3D%d parent_rate=3D%lu pdiv=3D%d\n", __func__,
+> +		data->index, parent_rate, data->pdiv);
+> +	if (data->pdiv)
+> +		return parent_rate / data->pdiv;
+> +	return 0;
+> +}
+> +
+> +static u16 cdce925_calc_divider(unsigned long rate,
+> +		unsigned long parent_rate)
+> +{
+> +	if (rate >=3D parent_rate) {
+> +		return 1;
+> +	} else if (rate) {
+> +		unsigned long divider =3D DIV_ROUND_CLOSEST(parent_rate, rate);
+> +
+> +		if (divider > 0x7F) /* TODO: Y1 has 10-bit divider */
+> +			divider =3D 0x7F;
+> +		return (u16)divider;
+> +	} else {
+> +		return 0;
+> +	}
+> +}
+> +
+> +static unsigned long cdce925_clk_best_parent_rate(
+> +	struct clk_hw *hw, unsigned long rate)
+> +{
+> +	struct clk *pll =3D clk_get_parent(hw->clk);
+> +	struct clk *root =3D clk_get_parent(pll);
+> +	unsigned long root_rate =3D clk_get_rate(root);
+> +	unsigned long best_rate_error =3D rate;
+> +	u16 pdiv_min;
+> +	u16 pdiv_max;
+> +	u16 pdiv_best;
+> +	u16 pdiv_now;
+> +
+> +	if (root_rate % rate =3D=3D 0)
+> +		return root_rate; /* Don't need the PLL, use bypass */
+> +
+> +	pdiv_min =3D (u16)max(1u, DIV_ROUND_UP(CDCE925_PLL_FREQUENCY_MIN, r=
+ate));
+> +	pdiv_max =3D (u16)min(127u, CDCE925_PLL_FREQUENCY_MAX / rate);
+> +
+> +	if (pdiv_min > pdiv_max)
+> +		return 0; /* No can do? */
+> +
+> +	pdiv_best =3D pdiv_min;
+> +	for (pdiv_now =3D pdiv_min; pdiv_now < pdiv_max; ++pdiv_now) {
+> +		unsigned long target_rate =3D rate * pdiv_now;
+> +		long pll_rate =3D clk_round_rate(pll, target_rate);
+> +		unsigned long actual_rate;
+> +		unsigned long rate_error;
+> +
+> +		if (pll_rate <=3D 0)
+> +			continue;
+> +		actual_rate =3D pll_rate / pdiv_now;
+> +		rate_error =3D abs((long)actual_rate - (long)rate);
+> +		if (rate_error < best_rate_error) {
+> +			pdiv_best =3D pdiv_now;
+> +			best_rate_error =3D rate_error;
+> +		}
+> +		/* TODO: Consider PLL frequency based on smaller n/m values
+> +		 * and pick the better one if the error is equal */
+> +	}
+> +
+> +	return rate * pdiv_best;
+> +}
+> +
+> +static long cdce925_clk_round_rate(struct clk_hw *hw, unsigned long =
+rate,
+> +		unsigned long *parent_rate)
+> +{
+> +	struct clk_cdce925_output *data =3D to_clk_cdce925_output(hw);
+> +	unsigned long l_parent_rate =3D *parent_rate;
+> +	u16 divider =3D cdce925_calc_divider(rate, l_parent_rate);
+> +
+> +	pr_debug("%s (index=3D%d parent_rate=3D%lu rate=3D%lu)\n", __func__=
+,
+> +		data->index, l_parent_rate, rate);
+> +	if (l_parent_rate / divider !=3D rate) {
+> +		l_parent_rate =3D cdce925_clk_best_parent_rate(hw, rate);
+> +		divider =3D cdce925_calc_divider(rate, l_parent_rate);
+> +		*parent_rate =3D l_parent_rate;
+> +	}
+> +	pr_debug("%s parent_rate=3D%lu pdiv=3D%u\n", __func__,
+> +		l_parent_rate, divider);
+> +	if (divider)
+> +		return (long)(l_parent_rate / divider);
+> +	return 0;
+> +}
+> +
+> +static int cdce925_clk_set_rate(struct clk_hw *hw, unsigned long rat=
+e,
+> +		unsigned long parent_rate)
+> +{
+> +	struct clk_cdce925_output *data =3D to_clk_cdce925_output(hw);
+> +
+> +	data->pdiv =3D cdce925_calc_divider(rate, parent_rate);
+> +	pr_debug("%s (index=3D%d parent_rate=3D%lu rate=3D%lu div=3D%d)\n",=
+ __func__,
+> +		data->index, parent_rate, rate, data->pdiv);
+> +	return 0;
+> +}
+> +
+> +static const struct clk_ops cdce925_clk_ops =3D {
+> +	.prepare =3D cdce925_clk_prepare,
+> +	.unprepare =3D cdce925_clk_unprepare,
+> +	.recalc_rate =3D cdce925_clk_recalc_rate,
+> +	.round_rate =3D cdce925_clk_round_rate,
+> +	.set_rate =3D cdce925_clk_set_rate,
+> +};
+> +
+> +
+> +static u16 cdce925_y1_calc_divider(unsigned long rate,
+> +		unsigned long parent_rate)
+> +{
+> +	if (rate >=3D parent_rate)
+> +		return 1;
+> +	else if (rate) {
+> +		unsigned long divider =3D DIV_ROUND_CLOSEST(parent_rate, rate);
+> +
+> +		if (divider > 0x3FF) /* Y1 has 10-bit divider */
+> +			divider =3D 0x3FF;
+> +		return (u16)divider;
+> +	} else
+> +		return 0;
+> +}
+> +
+> +static long cdce925_clk_y1_round_rate(struct clk_hw *hw, unsigned lo=
+ng rate,
+> +		unsigned long *parent_rate)
+> +{
+> +	struct clk_cdce925_output *data =3D to_clk_cdce925_output(hw);
+> +	unsigned long l_parent_rate =3D *parent_rate;
+> +	u16 divider =3D cdce925_y1_calc_divider(rate, l_parent_rate);
+> +
+> +	pr_debug("%s (index=3D%d parent_rate=3D%lu rate=3D%lu pdiv=3D%u)\n"=
+, __func__,
+> +		data->index, l_parent_rate, rate, divider);
+> +	if (divider)
+> +		return (long)(l_parent_rate / divider);
+> +	return 0;
+> +}
+> +
+> +static int cdce925_clk_y1_set_rate(struct clk_hw *hw, unsigned long =
+rate,
+> +		unsigned long parent_rate)
+> +{
+> +	struct clk_cdce925_output *data =3D to_clk_cdce925_output(hw);
+> +
+> +	data->pdiv =3D cdce925_y1_calc_divider(rate, parent_rate);
+> +	pr_debug("%s (index=3D%d parent_rate=3D%lu rate=3D%lu div=3D%d)\n",=
+ __func__,
+> +		data->index, parent_rate, rate, data->pdiv);
+> +	return 0;
+> +}
+> +
+> +static const struct clk_ops cdce925_clk_y1_ops =3D {
+> +	.prepare =3D cdce925_clk_prepare,
+> +	.unprepare =3D cdce925_clk_unprepare,
+> +	.recalc_rate =3D cdce925_clk_recalc_rate,
+> +	.round_rate =3D cdce925_clk_y1_round_rate,
+> +	.set_rate =3D cdce925_clk_y1_set_rate,
+> +};
+> +
+> +
+> +static struct regmap_config cdce925_regmap_config =3D {
+> +	.name =3D "configuration0",
+> +	.reg_bits =3D 8,
+> +	.val_bits =3D 8,
+> +	.cache_type =3D REGCACHE_RBTREE,
+> +	.max_register =3D 0x2F,
+> +};
+> +
+> +#define CDCE925_I2C_COMMAND_BLOCK_TRANSFER	0x00
+> +#define CDCE925_I2C_COMMAND_BYTE_TRANSFER	0x80
+> +
+> +static int cdce925_regmap_i2c_write(
+> +	void *context, const void *data, size_t count)
+> +{
+> +	struct device *dev =3D context;
+> +	struct i2c_client *i2c =3D to_i2c_client(dev);
 > +	int ret;
-> =20
->  	/* Interrupt configuration for SGIs can't be changed */
->  	if (irq < 16)
->  		return -EINVAL;
-> =20
-> -	if (type !=3D IRQ_TYPE_LEVEL_HIGH && type !=3D IRQ_TYPE_EDGE_RISING=
-)
-> +	/* SPIs have restrictions on the supported types */
-> +	if (irq >=3D 32 && type !=3D IRQ_TYPE_LEVEL_HIGH &&
-> +			 type !=3D IRQ_TYPE_EDGE_RISING)
->  		return -EINVAL;
-> =20
->  	raw_spin_lock(&irq_controller_lock);
-> =20
-> -	gic_configure_irq(irq, type, base, NULL);
-> +	ret =3D gic_configure_irq(irq, type, base, NULL);
-> =20
->  	raw_spin_unlock(&irq_controller_lock);
-> =20
-> -	return 0;
-> +	return ret;
->  }
-> =20
->  #ifdef CONFIG_SMP
-> --=20
-> 2.1.3
->=20
->=20
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->=20
+> +	u8 reg_data[2];
+> +
+> +	if (count !=3D 2)
+> +		return -ENOTSUPP;
+> +
+> +	/* First byte is command code */
+> +	reg_data[0] =3D CDCE925_I2C_COMMAND_BYTE_TRANSFER | ((u8 *)data)[0]=
+;
+> +	reg_data[1] =3D ((u8 *)data)[1];
+> +
+> +	dev_dbg(&i2c->dev, "%s(%u) %#x %#x\n", __func__, count,
+> +			reg_data[0], reg_data[1]);
+> +
+> +	ret =3D i2c_master_send(i2c, reg_data, count);
+> +	if (likely(ret =3D=3D count))
+> +		return 0;
+> +	else if (ret < 0)
+> +		return ret;
+> +	else
+> +		return -EIO;
+> +}
+> +
+> +static int cdce925_regmap_i2c_read(void *context,
+> +	   const void *reg, size_t reg_size, void *val, size_t val_size)
+> +{
+> +	struct device *dev =3D context;
+> +	struct i2c_client *i2c =3D to_i2c_client(dev);
+> +	struct i2c_msg xfer[2];
+> +	int ret;
+> +	u8 reg_data[2];
+> +
+> +	if (reg_size !=3D 1)
+> +		return -ENOTSUPP;
+> +
+> +	xfer[0].addr =3D i2c->addr;
+> +	xfer[0].flags =3D 0;
+> +	xfer[0].buf =3D reg_data;
+> +	if (val_size =3D=3D 1) {
+> +		reg_data[0] =3D
+> +			CDCE925_I2C_COMMAND_BYTE_TRANSFER | ((u8 *)reg)[0];
+> +		xfer[0].len =3D 1;
+> +	} else {
+> +		reg_data[0] =3D
+> +			CDCE925_I2C_COMMAND_BLOCK_TRANSFER | ((u8 *)reg)[0];
+> +		reg_data[1] =3D val_size;
+> +		xfer[0].len =3D 2;
+> +	}
+> +
+> +	xfer[1].addr =3D i2c->addr;
+> +	xfer[1].flags =3D I2C_M_RD;
+> +	xfer[1].len =3D val_size;
+> +	xfer[1].buf =3D val;
+> +
+> +	ret =3D i2c_transfer(i2c->adapter, xfer, 2);
+> +	if (likely(ret =3D=3D 2)) {
+> +		dev_dbg(&i2c->dev, "%s(%u, %u) %#x %#x\n", __func__,
+> +				reg_size, val_size, reg_data[0], *((u8 *)val));
+> +		return 0;
+> +	} else if (ret < 0)
+> +		return ret;
+> +	else
+> +		return -EIO;
+> +}
+> +
+> +/* The CDCE925 uses a funky way to read/write registers. Bulk mode i=
+s
+> + * just weird, so just use the single byte mode exclusively. */
+> +static struct regmap_bus regmap_cdce925_bus =3D {
+> +	.write =3D cdce925_regmap_i2c_write,
+> +	.read =3D cdce925_regmap_i2c_read,
+> +};
+> +
+> +static int cdce925_probe(struct i2c_client *client,
+> +		const struct i2c_device_id *id)
+> +{
+> +	struct clk_cdce925_chip *data;
+> +	struct device_node *node =3D client->dev.of_node;
+> +	const char *parent_name;
+> +	struct clk_init_data init;
+> +	struct clk *clk;
+> +	u32 value;
+> +	int i;
+> +	int err;
+> +	struct device_node *np_output;
+> +	char child_name[6];
+> +
+> +	dev_dbg(&client->dev, "%s\n", __func__);
+> +	data =3D devm_kzalloc(&client->dev, sizeof(*data), GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
+> +
+> +	data->i2c_client =3D client;
+> +	data->regmap =3D devm_regmap_init(&client->dev, &regmap_cdce925_bus=
+,
+> +			&client->dev, &cdce925_regmap_config);
+> +	if (IS_ERR(data->regmap)) {
+> +		dev_err(&client->dev, "failed to allocate register map\n");
+> +		return PTR_ERR(data->regmap);
+> +	}
+> +	i2c_set_clientdata(client, data);
+> +
+> +	parent_name =3D of_clk_get_parent_name(node, 0);
+> +	if (!parent_name) {
+> +		dev_err(&client->dev, "missing parent clock\n");
+> +		return -ENODEV;
+> +	}
+> +	dev_dbg(&client->dev, "parent is: %s\n", parent_name);
+> +
+> +	if (of_property_read_u32(node, "xtal-load-pf", &value) =3D=3D 0)
+> +		regmap_write(data->regmap,
+> +			CDCE925_REG_XCSEL, (value << 3) & 0xF8);
+> +	/* PWDN bit */
+> +	regmap_update_bits(data->regmap, CDCE925_REG_GLOBAL1, BIT(4), 0);
+> +
+> +	/* Set input source for Y1 to be the XTAL */
+> +	regmap_update_bits(data->regmap, 0x02, BIT(7), 0);
+> +
+> +	init.ops =3D &cdce925_pll_ops;
+> +	init.flags =3D 0;
+> +	init.parent_names =3D &parent_name;
+> +	init.num_parents =3D parent_name ? 1 : 0;
+> +
+> +	/* Register PLL clocks */
+> +	for (i =3D 0; i < NUMBER_OF_PLLS; ++i) {
+> +		init.name =3D kasprintf(GFP_KERNEL, "%s.pll%d",
+> +			client->dev.of_node->name, i);
+> +		data->pll[i].chip =3D data;
+> +		data->pll[i].hw.init =3D &init;
+> +		data->pll[i].index =3D i;
+> +		clk =3D devm_clk_register(&client->dev, &data->pll[i].hw);
+> +		kfree(init.name); /* clock framework made a copy of the name */
+> +		if (IS_ERR(clk)) {
+> +			dev_err(&client->dev, "Failed register PLL %d\n", i);
+> +			err =3D PTR_ERR(clk);
+> +			goto error;
+> +		}
+> +		sprintf(child_name, "PLL%d", i+1);
+> +		np_output =3D of_get_child_by_name(node, child_name);
+> +		if (!np_output)
+> +			continue;
+> +		if (!of_property_read_u32(np_output,
+> +			"clock-frequency", &value)) {
+> +			err =3D clk_set_rate(clk, value);
+> +			if (err)
+> +				dev_err(&client->dev,
+> +					"unable to set PLL frequency %ud\n",
+> +					value);
+> +		}
+> +		if (!of_property_read_u32(np_output,
+> +			"spread-spectrum", &value)) {
+> +			u8 flag =3D of_property_read_bool(np_output,
+> +				"spread-spectrum-center") ? 0x80 : 0x00;
+> +			regmap_update_bits(data->regmap,
+> +				0x16 + (i*CDCE925_OFFSET_PLL),
+> +				0x80, flag);
+> +			regmap_update_bits(data->regmap,
+> +				0x12 + (i*CDCE925_OFFSET_PLL),
+> +				0x07, value & 0x07);
+> +		}
+> +	}
+> +
+> +	/* Register output clock Y1 */
+> +	init.ops =3D &cdce925_clk_y1_ops;
+> +	init.flags =3D 0;
+> +	init.num_parents =3D 1;
+> +	init.parent_names =3D &parent_name; /* Mux Y1 to input */
+> +	init.name =3D kasprintf(GFP_KERNEL, "%s.Y1", client->dev.of_node->n=
+ame);
+> +	data->clk[0].chip =3D data;
+> +	data->clk[0].hw.init =3D &init;
+> +	data->clk[0].index =3D 0;
+> +	data->clk[0].pdiv =3D 1;
+> +	clk =3D devm_clk_register(&client->dev, &data->clk[0].hw);
+> +	kfree(init.name); /* clock framework made a copy of the name */
+> +	if (IS_ERR(clk)) {
+> +		dev_err(&client->dev, "clock registration Y1 failed\n");
+> +		err =3D PTR_ERR(clk);
+> +		goto error;
+> +	}
+> +
+> +	/* Register output clocks Y2 .. Y5*/
+> +	init.ops =3D &cdce925_clk_ops;
+> +	init.flags =3D CLK_SET_RATE_PARENT;
+> +	init.num_parents =3D 1;
+> +	for (i =3D 1; i < NUMBER_OF_OUTPUTS; ++i) {
+> +		init.name =3D kasprintf(GFP_KERNEL, "%s.Y%d",
+> +			client->dev.of_node->name, i+1);
+> +		data->clk[i].chip =3D data;
+> +		data->clk[i].hw.init =3D &init;
+> +		data->clk[i].index =3D i;
+> +		data->clk[i].pdiv =3D 1;
+> +		switch (i) {
+> +		case 1:
+> +		case 2:
+> +			/* Mux Y2/3 to PLL1 */
+> +			init.parent_names =3D &data->pll[0].hw.clk->name;
+> +			break;
+> +		case 3:
+> +		case 4:
+> +			/* Mux Y4/5 to PLL2 */
+> +			init.parent_names =3D &data->pll[1].hw.clk->name;
+> +			break;
+> +		}
+> +		clk =3D devm_clk_register(&client->dev, &data->clk[i].hw);
+> +		kfree(init.name); /* clock framework made a copy of the name */
+> +		if (IS_ERR(clk)) {
+> +			dev_err(&client->dev, "clock registration failed\n");
+> +			err =3D PTR_ERR(clk);
+> +			goto error;
+> +		}
+> +	}
+> +
+> +	/* Fetch settings from devicetree, if any */
+> +	for (i =3D 0; i < NUMBER_OF_OUTPUTS; ++i) {
+> +		sprintf(child_name, "Y%d", i+1);
+> +		np_output =3D of_get_child_by_name(node, child_name);
+> +		if (!np_output) {
+> +			/* Disable unlisted/unused clock outputs explicitly */
+> +			cdce925_clk_unprepare(&data->clk[i].hw);
+> +			continue;
+> +		}
+> +		clk =3D data->clk[i].hw.clk;
+> +		if (!of_property_read_u32(np_output,
+> +			"clock-frequency", &value)) {
+> +			err =3D clk_set_rate(clk, value);
+> +			if (err)
+> +				dev_err(&client->dev,
+> +					"unable to set frequency %ud\n",
+> +					value);
+> +		}
+> +		if (of_property_read_bool(np_output, "clock-enabled")) {
+> +			err =3D clk_prepare_enable(clk);
+> +			if (err)
+> +				dev_err(&client->dev,
+> +					"Failed to enable clock %s\n",
+> +					init.name);
+> +		} else {
+> +			cdce925_clk_unprepare(&data->clk[i].hw);
+> +		}
+> +		err =3D of_clk_add_provider(np_output,
+> +			of_clk_src_simple_get, clk);
+> +		if (err)
+> +			dev_err(&client->dev,
+> +				"unable to add clock provider '%s'\n",
+> +				init.name);
+> +	}
+> +
+> +	return 0;
+> +
+> +error:
+> +	return err;
+> +}
+> +
+> +static const struct i2c_device_id cdce925_id[] =3D {
+> +	{ "cdce925", 0 },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(i2c, cdce925_id);
+> +
+> +static const struct of_device_id clk_cdce925_of_match[] =3D {
+> +	{ .compatible =3D "cdce925pw" },
+> +	{ .compatible =3D "cdce925" },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, clk_cdce925_of_match);
+> +
+> +static struct i2c_driver cdce925_driver =3D {
+> +	.driver =3D {
+> +		.name =3D "cdce925",
+> +		.of_match_table =3D of_match_ptr(clk_cdce925_of_match),
+> +	},
+> +	.probe		=3D cdce925_probe,
+> +	.id_table	=3D cdce925_id,
+> +};
+> +module_i2c_driver(cdce925_driver);
+> +
+> +MODULE_AUTHOR("Mike Looijmans <mike.looijmans@topic.nl>");
+> +MODULE_DESCRIPTION("cdce925 driver");
+> +MODULE_LICENSE("GPL");
+>
 
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+Met vriendelijke groet / kind regards,
+
+Mike Looijmans
+System Expert
+
+
+TOPIC Embedded Systems
+Eindhovenseweg 32-C, NL-5683 KH Best
+Postbus 440, NL-5680 AK Best
+Telefoon: (+31) (0) 499 33 69 79
+Telefax:  (+31) (0) 499 33 69 70
+E-mail: mike.looijmans@topic.nl
+Website: www.topic.nl
+
+Please consider the environment before printing this e-mail
+
+Topic zoekt gedreven (embedded) software specialisten!
+http://topic.nl/vacatures/topic-zoekt-software-engineers/
