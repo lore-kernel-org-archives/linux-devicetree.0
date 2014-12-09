@@ -1,126 +1,112 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v6] media: platform: add VPFE capture driver support for
- AM437X
-Date: Tue, 09 Dec 2014 21:49:43 +0100
-Message-ID: <54876067.2070608@xs4all.nl>
-References: <1418154224-6045-1-git-send-email-prabhakar.csengg@gmail.com>
+From: Alexander Stein <alexanders83@web.de>
+Subject: Re: [PATCH v3 05/11] memory: add Atmel EBI (External Bus Interface)
+ driver
+Date: Tue, 09 Dec 2014 21:53:12 +0100
+Message-ID: <5455670.EDnhYEk7hP@kongar>
+References: <1417429647-3419-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1417429647-3419-6-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1418154224-6045-1-git-send-email-prabhakar.csengg@gmail.com>
-Sender: linux-media-owner@vger.kernel.org
-To: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>, LMML <linux-media@vger.kernel.org>, devicetree@vger.kernel.org, linux-api <linux-api@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1417429647-3419-6-git-send-email-boris.brezillon@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jean-Jacques Hiblot <jjhiblot@traphandler.com>, Samuel Ortiz <sameo@linux.intel.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Lee Jones <lee.jones@linaro.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Kumar Gala <galak@codeaurora.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Andrew Victor <linux@maxim.org.za>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/09/2014 08:43 PM, Lad, Prabhakar wrote:
-> From: Benoit Parrot <bparrot@ti.com>
-> 
-> This patch adds Video Processing Front End (VPFE) driver for
-> AM437X family of devices
-> Driver supports the following:
-> - V4L2 API using MMAP buffer access based on videobuf2 api
-> - Asynchronous sensor/decoder sub device registration
-> - DT support
-> 
-> Signed-off-by: Benoit Parrot <bparrot@ti.com>
-> Signed-off-by: Darren Etheridge <detheridge@ti.com>
-> Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
-> ---
->  Changes for v6:
->  1: Fixed review comments pointed Hans, fixing race condition.
->  
->  v5: https://patchwork.kernel.org/patch/5459311/
->  v4: https://patchwork.kernel.org/patch/5449211/
->  v3: https://patchwork.kernel.org/patch/5434291/
->  v2: https://patchwork.kernel.org/patch/5425631/
->  v1: https://patchwork.kernel.org/patch/5362661/
->  
->  .../devicetree/bindings/media/ti-am437x-vpfe.txt   |   61 +
->  MAINTAINERS                                        |    9 +
->  drivers/media/platform/Kconfig                     |    1 +
->  drivers/media/platform/Makefile                    |    2 +
->  drivers/media/platform/am437x/Kconfig              |   11 +
->  drivers/media/platform/am437x/Makefile             |    3 +
->  drivers/media/platform/am437x/am437x-vpfe.c        | 2777 ++++++++++++++++++++
->  drivers/media/platform/am437x/am437x-vpfe.h        |  283 ++
->  drivers/media/platform/am437x/am437x-vpfe_regs.h   |  140 +
->  include/uapi/linux/Kbuild                          |    1 +
->  include/uapi/linux/am437x-vpfe.h                   |  122 +
->  11 files changed, 3410 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/ti-am437x-vpfe.txt
->  create mode 100644 drivers/media/platform/am437x/Kconfig
->  create mode 100644 drivers/media/platform/am437x/Makefile
->  create mode 100644 drivers/media/platform/am437x/am437x-vpfe.c
->  create mode 100644 drivers/media/platform/am437x/am437x-vpfe.h
->  create mode 100644 drivers/media/platform/am437x/am437x-vpfe_regs.h
->  create mode 100644 include/uapi/linux/am437x-vpfe.h
-> 
+Hi,
 
-<snip>
-
-> +/*
-> + * vpfe_release : This function is based on the vb2_fop_release
-> + * helper function.
-> + * It has been augmented to handle module power management,
-> + * by disabling/enabling h/w module fcntl clock when necessary.
-> + */
-> +static int vpfe_release(struct file *file)
+On Monday 01 December 2014, 11:27:21 wrote Boris Brezillon:
+> +static int at91_ebi_probe(struct platform_device *pdev)
 > +{
-> +	struct vpfe_device *vpfe = video_drvdata(file);
+> +	const struct of_device_id *match;
+> +	struct device_node *child;
+> +	struct device_node *np;
+> +	struct at91_ebi *ebi;
+> +	struct clk *clk;
 > +	int ret;
 > +
-> +	mutex_lock(&vpfe->lock);
+> +	match = of_match_device(at91_ebi_id_table, &pdev->dev);
+> +	if (!match || !match->data)
+> +		return -EINVAL;
 > +
-> +	ret = _vb2_fop_release(file, NULL);
-> +	if (v4l2_fh_is_singular_file(file))
-> +		vpfe_ccdc_close(&vpfe->ccdc, vpfe->pdev);
-
-This function seems cursed since your _vb2_fop_release call should
-go *after* the v4l2_fh_is_singular_file() check.
-
-I've fixed that in the patch in my pull request, so there is no need
-for a v7. I know you've tested that since that was the order in your v5
-version of this patch.
-
-Regards,
-
-	Hans
-
+> +	ebi = devm_kzalloc(&pdev->dev, sizeof(*ebi), GFP_KERNEL);
+> +	if (!ebi)
+> +		return -ENOMEM;
 > +
-> +	mutex_unlock(&vpfe->lock);
+> +	ebi->caps = match->data;
+> +	ebi->dev = &pdev->dev;
+> +
+> +	clk = devm_clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(clk))
+> +		return PTR_ERR(clk);
+> +
+> +	ebi->clk = clk;
+> +
+> +	np = of_parse_phandle(pdev->dev.of_node, "atmel,smc", 0);
+> +	if (!np)
+> +		return -EINVAL;
+> +
+> +	ebi->smc = syscon_node_to_regmap(np);
+> +	if (IS_ERR(ebi->smc))
+> +		return PTR_ERR(ebi->smc);
+> +
+> +	/*
+> +	 * The sama5d3 does not provide an EBICSA register and thus does need
+> +	 * to access the matrix registers.
+> +	 */
+> +	if (ebi->caps->ebi_csa) {
+> +		np = of_parse_phandle(pdev->dev.of_node, "atmel,matrix", 0);
+> +		if (np)
+         ^^^^^^^
+Shouldn't this be if (!np)?
+
+> +			return -EINVAL;
+> +
+> +		ebi->matrix = syscon_node_to_regmap(np);
+> +		if (IS_ERR(ebi->matrix))
+> +			return PTR_ERR(ebi->matrix);
+> +
+> +		ebi->ebi_csa = regmap_field_alloc(ebi->matrix,
+> +						  *ebi->caps->ebi_csa);
+> +		if (IS_ERR(ebi->ebi_csa))
+> +			return PTR_ERR(ebi->ebi_csa);
+> +	}
+> +
+> +	ret = ebi->caps->init(ebi);
+> +	if (ret)
+> +		return ret;
+> +
+> +	for_each_child_of_node(pdev->dev.of_node, child) {
+> +		ret = at91_ebi_dev_setup(ebi, child);
+> +		if (ret)
+> +			return ret;
+> +	}
 > +
 > +	return ret;
 > +}
 > +
-> +/*
-> + * vpfe_open : This function is based on the v4l2_fh_open helper function.
-> + * It has been augmented to handle module power management,
-> + * by disabling/enabling h/w module fcntl clock when necessary.
-> + */
-> +static int vpfe_open(struct file *file)
-> +{
-> +	struct vpfe_device *vpfe = video_drvdata(file);
-> +	int ret;
+> +static struct platform_driver at91_ebi_driver = {
+> +	.driver = {
+> +		.name = "atmel-ebi",
+> +		.of_match_table	= at91_ebi_id_table,
+> +	},
+> +};
+> +module_platform_driver_probe(at91_ebi_driver, at91_ebi_probe);
 > +
-> +	mutex_lock(&vpfe->lock);
-> +
-> +	ret = v4l2_fh_open(file);
-> +	if (ret) {
-> +		vpfe_err(vpfe, "v4l2_fh_open failed\n");
-> +		goto unlock;
-> +	}
-> +
-> +	if (!v4l2_fh_is_singular_file(file))
-> +		goto unlock;
-> +
-> +	if (vpfe_initialize_device(vpfe)) {
-> +		v4l2_fh_release(file);
-> +		ret = -ENODEV;
-> +	}
-> +
-> +unlock:
-> +	mutex_unlock(&vpfe->lock);
-> +	return ret;
-> +}
+> +MODULE_AUTHOR("JJ Hiblot");
+> +MODULE_DESCRIPTION("Atmel's EBI driver");
+> +MODULE_LICENSE("GPL");
+
+
+Best regards,
+Alexander
