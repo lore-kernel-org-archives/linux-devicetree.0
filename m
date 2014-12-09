@@ -1,96 +1,75 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 3/9] clk: sunxi: Add prcm mod0 clock driver
-Date: Tue, 9 Dec 2014 09:51:37 +0100
-Message-ID: <20141209085137.GQ8739@lukather>
-References: <20141126211318.GN25249@lukather>
- <5476E3A5.4000708@redhat.com>
- <CAGb2v652m0bCdPWFF4LWwjcrCJZvnLibFPw8xXJ3Q-Ge+_-p7g@mail.gmail.com>
- <5476F8AB.2000601@redhat.com>
- <20141127190509.GR25249@lukather>
- <54787A8A.6040209@redhat.com>
- <20141202154524.GD30256@lukather>
- <547EDCA0.4040805@redhat.com>
- <20141207180808.GO12434@lukather>
- <54855EF6.1000900@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [alsa-devel][PATCH 1/2] mfd: arizona: Add support for OUTn_MONO
+ register control
+Date: Tue, 9 Dec 2014 08:57:17 +0000
+Message-ID: <20141209085717.GT3951@x1>
+References: <1418030422-27061-1-git-send-email-ideal.song@samsung.com>
+ <1418030422-27061-2-git-send-email-ideal.song@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="6tPipYVl+OcoAvSh"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBZ7RTKSAKGQE42YXHSY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <54855EF6.1000900-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Boris Brezillon <boris-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1418030422-27061-2-git-send-email-ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Inha Song <ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, ckeepax-yzvPICuk2ABX+icLlh6Yhe4GMZTVgNySAL8bYrjMMd8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---6tPipYVl+OcoAvSh
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+On Mon, 08 Dec 2014, Inha Song wrote:
 
-On Mon, Dec 08, 2014 at 09:19:02AM +0100, Hans de Goede wrote:
-> Hi,
-> 
-> On 07-12-14 19:08, Maxime Ripard wrote:
-> >On Wed, Dec 03, 2014 at 10:49:20AM +0100, Hans de Goede wrote:
-> 
-> <snip>
-> 
-> >>So it should not have a simple-bus compatible either, and as such we cannot
-> >>simply change the mod0 driver from of_clk_define to a platform driver because
-> >>then we need to instantiate platform devs for the mod0 clock nodes, which
-> >>means making the clock node a simple-bus.
-> >
-> >I guess we can do that as a temporary measure until we get things
-> >right on that front. I'm totally open to doing that work, so I'm not
-> >asking you to do it.
-> >
-> >>I can see your logic in wanting the ir_clk prcm sub-node to use the
-> >>mod0 compatible string, so how about we make the mod0 driver both
-> >>register through of_declare and as a platform driver. Note this means
-> >>that it will try to bind twice to the ir_clk node, since of_clk_declare
-> >>will cause it to try and bind there too AFAIK.
-> >
-> >Hmmm, I could live with that for a while too. That shouldn't even
-> >require too much work, since the first thing we check in the mod0 code
-> >is that we actually have something in reg, which will not be the case
-> >in the OF_CLK_DECLARE case.
-> >
-> >>The of_clk_declare bind will fail though because there is no regs
-> >>property, so this double bind is not an issue as long as we do not
-> >>log errors on the first bind failure.
-> >
-> >Yep, exactly.
-> >
-> >>Note that the ir_clk node will still need an "ir-clk" compatible as
-> >>well for the MFD to find it and assign the proper resources to it.
-> >
-> >No, it really doesn't. At least for now, we have a single mod0 clock
-> >under the PRCM MFD. If (and only if) one day, we find ourselves in a
-> >position where we have two mod0 clocks under the PRCM, then we'll fix
-> >the MFD code to deal with that, because it really should deal with it.
-> 
-> Ok, using only the mod0 compat string works for me. I'll respin my
-> patch-set (minus the one patch you've already merged) to make the modo
-> clk driver use both of_clk_declare and make it a platfrom driver, and
-> use the mod0 compat string for the ir-clk node.
-> 
-> Not sure when I'll get this done exactly though, but we still have
-> a while before 3.20 :)
+> Some boards need to set the OUTn_MONO register to configurates
+> the output signal path as a mono differential output. This
+> wlf,out-mono property is optional. If present, values must be
+> specified less than or equal to the number of output signals.
+> If values less than the number of output signals, elements
+> that has not been specified are set to 0 by default.
+>=20
+> Example:
+>  - wlf,out-mono =3D <1 0 1>; /* set OUT1,OUT3 to mono differential */
+>=20
+> Signed-off-by: Inha Song <ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  drivers/mfd/arizona-core.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+>=20
+> diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.c
+> index bce7c07..117be32 100644
+> --- a/drivers/mfd/arizona-core.c
+> +++ b/drivers/mfd/arizona-core.c
+> @@ -561,6 +561,16 @@ static int arizona_of_get_core_pdata(struct ariz=
+ona *arizona)
+>  		count++;
+>  	}
+> =20
+> +	count =3D 0;
+> +	of_property_for_each_u32(arizona->dev->of_node, "wlf,out-mono", pro=
+p,
+> +				 cur, val) {
 
-Indeed :)
+Nit: Can you break after the first parameter instead?
 
-Thanks!
-Maxime
+> +		if (count =3D=3D ARRAY_SIZE(arizona->pdata.out_mono))
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---6tPipYVl+OcoAvSh--
+It's better practise to use ">=3D".
+
+> +			break;
+> +
+> +		arizona->pdata.out_mono[count] =3D !!val;
+> +		count++;
+> +	}
+> +
+>  	return 0;
+>  }
+> =20
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
