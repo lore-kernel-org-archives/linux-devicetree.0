@@ -1,5 +1,5 @@
-Return-Path: <linux-arm-kernel-bounces+robherring2=gmail.com@lists.infradead.org>
-Message-ID: <54883c87.083b460a.2456.ffff847eSMTPIN_ADDED_BROKEN@mx.google.com>
+Return-Path: <ashoks@broadcom.com>
+Message-ID: <54883be5.4684460a.225a.27ffSMTPIN_ADDED_BROKEN@mx.google.com>
 Date: Wed, 10 Dec 2014 17:56:04 +0530
 From: Ashok Kumar <ashoks@broadcom.com>
 Subject: Re: [RFC PATCH v2 4/4] arm64:numa: adding numa support for arm64
@@ -9,21 +9,11 @@ References: <1416605010-10442-1-git-send-email-ganapatrao.kulkarni@caviumnetwork
  <5482ce36.c9e2420a.5d40.71c7SMTPIN_ADDED_BROKEN@mx.google.com>
  <CAFpQJXU89uwAkHyi+dvHmbZOvadO_EyQbrG8jMo5G3tnWP5qcw@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
 In-Reply-To: <CAFpQJXU89uwAkHyi+dvHmbZOvadO_EyQbrG8jMo5G3tnWP5qcw@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+robherring2=gmail.com@lists.infradead.org
 To: Ganapatrao Kulkarni <gpkulkarni@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Steve Capper <steve.capper@linaro.org>, Al Stone <al.stone@linaro.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Leif Lindholm <leif.lindholm@linaro.org>, Roy Franz <roy.franz@linaro.org>, Rob Herring <robh+dt@kernel.org>, Ganapatrao Kulkarni <ganapatrao.kulkarni@caviumnetworks.com>, msalter@redhat.com, Grant Likely <grant.likely@linaro.org>, jchandra@broadcom.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Hanjun Guo <hanjun.guo@linaro.org>
+Cc: Ganapatrao Kulkarni <ganapatrao.kulkarni@caviumnetworks.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Will Deacon <Will.Deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Leif Lindholm <leif.lindholm@linaro.org>, "Roy Franz  <roy.franz@linaro.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>," <msalter@redhat.com>, Rob Herring <robh+dt@kernel.org>, Steve Capper <steve.capper@linaro.org>, Hanjun Guo <hanjun.guo@linaro.org>, jchandra@broadcom.com, Al Stone <al.stone@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
 On Sat, Dec 06, 2014 at 10:50:57AM -0800, Ganapatrao Kulkarni wrote:
@@ -146,8 +136,3 @@ index c846a96..a02e56e 100644
 
 Thanks,
 Ashok
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
