@@ -1,52 +1,43 @@
-From: Liu Ying <Ying.Liu@freescale.com>
-Subject: [PATCH RFC 14/15] ARM: imx_v6_v7_defconfig: Add support for MIPI DSI
- host controller
-Date: Wed, 10 Dec 2014 16:37:27 +0800
-Message-ID: <1418200648-32656-15-git-send-email-Ying.Liu@freescale.com>
-References: <1418200648-32656-1-git-send-email-Ying.Liu@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1418200648-32656-1-git-send-email-Ying.Liu@freescale.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: dri-devel@lists.freedesktop.org
-Cc: devicetree@vger.kernel.org, linux@arm.linux.org.uk, kernel@pengutronix.de, airlied@linux.ie, linux-kernel@vger.kernel.org, thierry.reding@gmail.com, p.zabel@pengutronix.de, mturquette@linaro.org, shawn.guo@linaro.org, linux-arm-kernel@lists.infradead.org
+From: Vivek Gautam <gautam.vivek@samsung.com>
+Subject: [PATCH 1/2] Documentation: dt-bindings: Add aliases information for
+ Exynos7 pin controllers
+Date: Wed, 10 Dec 2014 14:09:39 +0530
+Message-ID: <1418200780-22363-1-git-send-email-gautam.vivek@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org
+Cc: robh+dt@kernel.org, kgene@kernel.org, alim.akhtar@samsung.com, Vivek Gautam <gautam.vivek@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for MIPI DSI host controller.
+Adding list of aliases for supported Exynos7 pin controller blocks.
 
-The new imx_v6_v7_defconfig is generated in this way:
-* make ARCH=arm imx_v6_v7_defconfig
-* make ARCH=arm menuconfig and manually choose to build in
-  the MIPI DSI host controller driver
-* make ARCH=arm savedefconfig
-* cp defconfig arch/arm/configs/imx_v6_v7_defconfig
-
-Signed-off-by: Liu Ying <Ying.Liu@freescale.com>
+Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
+Cc: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>
 ---
- arch/arm/configs/imx_v6_v7_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ .../devicetree/bindings/pinctrl/samsung-pinctrl.txt          |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/arm/configs/imx_v6_v7_defconfig b/arch/arm/configs/imx_v6_v7_defconfig
-index 0dbd0c3..3e0e589 100644
---- a/arch/arm/configs/imx_v6_v7_defconfig
-+++ b/arch/arm/configs/imx_v6_v7_defconfig
-@@ -199,6 +199,7 @@ CONFIG_DRM_IMX_TVE=y
- CONFIG_DRM_IMX_LDB=y
- CONFIG_DRM_IMX_IPUV3=y
- CONFIG_DRM_IMX_HDMI=y
-+CONFIG_DRM_IMX_MIPI_DSI=y
- CONFIG_LCD_CLASS_DEVICE=y
- CONFIG_LCD_L4F00242T03=y
- CONFIG_LCD_PLATFORM=y
+diff --git a/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
+index 8425838..742e472 100644
+--- a/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
+@@ -171,6 +171,16 @@ Aliases:
+ All the pin controller nodes should be represented in the aliases node using
+ the following format 'pinctrl{n}' where n is a unique number for the alias.
+ 
++Aliases for controllers compatible with "samsung,exynos7-pinctrl":
++- pinctrl0: pin controller of ALIVE block,
++- pinctrl1: pin controller of BUS0 block,
++- pinctrl2: pin controller of NFC block,
++- pinctrl3: pin controller of TOUCH block,
++- pinctrl4: pin controller of FF block,
++- pinctrl5: pin controller of ESE block,
++- pinctrl6: pin controller of FSYS0 block,
++- pinctrl7: pin controller of FSYS1 block,
++
+ Example: A pin-controller node with pin banks:
+ 
+ 	pinctrl_0: pinctrl@11400000 {
 -- 
-2.1.0
+1.7.10.4
