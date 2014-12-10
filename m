@@ -1,219 +1,504 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH] extcon: add MAX3355 driver
-Date: Thu, 11 Dec 2014 02:28:38 +0300
-Message-ID: <14631865.01KLlU2iKL@wasted.cogentembedded.com>
+From: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>
+Subject: Re: [PATCH v5 1/3] iio: adc: Cosmic Circuits 10001 ADC driver
+Date: Thu, 11 Dec 2014 00:43:43 +0100
+Message-ID: <5488DAAF.1080506@gmx.de>
+References: <1417102762-5123-1-git-send-email-ezequiel.garcia@imgtec.com> <1417102762-5123-2-git-send-email-ezequiel.garcia@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, myungjoo.ham@samsung.com, cw00.choi@samsung.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: linux-sh@vger.kernel.org, linux-usb@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1417102762-5123-2-git-send-email-ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Pawel.Moll-5wv7dgnIgG8@public.gmane.org, Mark.Rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Phani Movva <Phani.Movva-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-MAX3355E chip integrates a charge pump and comparators to enable a system with
-an integrated USB OTG dual-role transceiver to function as a USB OTG dual-role
-device. In addition to sensing/controlling Vbus, the chip also passes thru the
-ID signal from the USB OTG connector.  On some Renesas boards, this signal  is
-just  fed into the SoC thru a GPIO pin -- there's no real OTG controller, only
-host and gadget USB controllers sharing the same USB bus; however,  we'd  like
-to allow host or gadget drivers to be loaded depending on the cable type, hence
-the need for the MAX3355 extcon driver. The Vbus status signals are also wired
-to GPIOs (however, we're not currently intested in them), the  OFFVBUS# signal
-is controlled  by the host controllers, there's also the SHDN# signal wired to
-GPIO, which should be high for normal operation.
-
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-
----
-The patch is against the 'extcon-next' branch of the 'extcon.git' repo.
-
- Documentation/devicetree/bindings/extcon/extcon-max3355.txt |   21 ++
- drivers/extcon/Kconfig                                      |    6 
- drivers/extcon/Makefile                                     |    1 
- drivers/extcon/extcon-max3355.c                             |  122 ++++++++++++
- 4 files changed, 150 insertions(+)
-
-Index: extcon/Documentation/devicetree/bindings/extcon/extcon-max3355.txt
-===================================================================
---- /dev/null
-+++ extcon/Documentation/devicetree/bindings/extcon/extcon-max3355.txt
-@@ -0,0 +1,21 @@
-+MAX3355 USB OTG chip
-+--------------------
-+
-+MAX3355 integrates a charge pump and comparators to enable a system with an
-+integrated USB OTG dual-role transceiver to function as a USB OTG dual-role
-+device.
-+
-+Required properties:
-+- compatible: should be "maxim,max3355";
-+- maxim,shdn-gpio: should contain a phandle and GPIO specifier for the GPIO pin
-+  connected to the MAX3355's SHDN# pin;
-+- maxim,id-gpio: should contain a phandle and GPIO specifier for the GPIO pin
-+  connected to the MAX3355's ID_OUT pin.
-+
-+Example (Koelsch board):
-+
-+	usb-otg {
-+		compatible = "maxim,max3355";
-+		maxim,shdn-gpio = <&gpio2 4 GPIO_ACTIVE_LOW>;
-+		maxim,id-gpio = <&gpio5 31 GPIO_ACTIVE_HIGH>;
-+	};
-Index: extcon/drivers/extcon/Kconfig
-===================================================================
---- extcon.orig/drivers/extcon/Kconfig
-+++ extcon/drivers/extcon/Kconfig
-@@ -45,6 +45,12 @@ config EXTCON_MAX14577
- 	  Maxim MAX14577/77836. The MAX14577/77836 MUIC is a USB port accessory
- 	  detector and switch.
- 
-+config EXTCON_MAX3355
-+	tristate "MAX3355 USB OTG EXTCON Support"
-+	help
-+	  Say Y here to enable support for the USB host detection by MAX3355
-+	  OTG USB chip.
-+
- config EXTCON_MAX77693
- 	tristate "MAX77693 EXTCON Support"
- 	depends on MFD_MAX77693 && INPUT
-Index: extcon/drivers/extcon/Makefile
-===================================================================
---- extcon.orig/drivers/extcon/Makefile
-+++ extcon/drivers/extcon/Makefile
-@@ -7,6 +7,7 @@ obj-$(CONFIG_EXTCON_ADC_JACK)	+= extcon-
- obj-$(CONFIG_EXTCON_ARIZONA)	+= extcon-arizona.o
- obj-$(CONFIG_EXTCON_GPIO)	+= extcon-gpio.o
- obj-$(CONFIG_EXTCON_MAX14577)	+= extcon-max14577.o
-+obj-$(CONFIG_EXTCON_MAX3355)	+= extcon-max3355.o
- obj-$(CONFIG_EXTCON_MAX77693)	+= extcon-max77693.o
- obj-$(CONFIG_EXTCON_MAX8997)	+= extcon-max8997.o
- obj-$(CONFIG_EXTCON_PALMAS)	+= extcon-palmas.o
-Index: extcon/drivers/extcon/extcon-max3355.c
-===================================================================
---- /dev/null
-+++ extcon/drivers/extcon/extcon-max3355.c
-@@ -0,0 +1,122 @@
-+/*
-+ * MAX3355 USB OTG chip extcon driver
-+ *
-+ * Copyright (C) 2014 Cogent Embedded, Inc.
-+ * Author: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-+ *
-+ * This software is licensed under the terms of the GNU General Public
-+ * License version 2, as published by the Free Software Foundation, and
-+ * may be copied, distributed, and modified under those terms.
-+ */
-+
-+#include <linux/extcon.h>
-+#include <linux/gpio.h>
-+#include <linux/init.h>
-+#include <linux/interrupt.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of_gpio.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+#include <linux/workqueue.h>
-+
-+struct max3355_data {
-+	struct extcon_dev *edev;
-+	int id_gpio;
-+};
-+
-+static const char *max3355_cable[] = {
-+	[0] = "USB-HOST",
-+	NULL,
-+};
-+
-+static irqreturn_t max3355_id_irq(int irq, void *dev_id)
-+{
-+	struct max3355_data *data = dev_id;
-+	int id = gpio_get_value(data->id_gpio);
-+
-+	extcon_set_cable_state(data->edev, "USB-HOST", !id);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int max3355_probe(struct platform_device *pdev)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	struct max3355_data *data;
-+	int gpio, irq, ret;
-+
-+	data = devm_kzalloc(&pdev->dev, sizeof(struct max3355_data),
-+			    GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	data->edev = devm_extcon_dev_allocate(&pdev->dev, max3355_cable);
-+	if (IS_ERR(data->edev)) {
-+		dev_err(&pdev->dev, "failed to allocate extcon device\n");
-+		return PTR_ERR(data->edev);
-+	}
-+	data->edev->name = kstrdup(np->name, GFP_KERNEL);
-+
-+	gpio = of_get_named_gpio(np, "maxim,id-gpio", 0);
-+	if (gpio < 0)
-+		return gpio;
-+	data->id_gpio = gpio;
-+
-+	gpio = of_get_named_gpio(np, "maxim,shdn-gpio", 0);
-+	if (gpio < 0)
-+		return gpio;
-+
-+	ret = devm_gpio_request_one(&pdev->dev, gpio, GPIOF_DIR_OUT |
-+				    GPIOF_INIT_HIGH, pdev->name);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = devm_gpio_request_one(&pdev->dev, data->id_gpio, GPIOF_DIR_IN,
-+				    pdev->name);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = devm_extcon_dev_register(&pdev->dev, data->edev);
-+	if (ret < 0)
-+		return ret;
-+
-+	irq = gpio_to_irq(data->id_gpio);
-+	if (irq < 0)
-+		return irq;
-+
-+	ret = devm_request_threaded_irq(&pdev->dev, irq, NULL, max3355_id_irq,
-+					IRQF_TRIGGER_RISING |
-+					IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
-+					pdev->name, data);
-+	if (ret < 0)
-+		return ret;
-+
-+	platform_set_drvdata(pdev, data);
-+
-+	/* Perform initial detection */
-+	max3355_id_irq(irq, data);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id max3355_match_table[] = {
-+	{ .compatible = "maxim,max3355", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, max3355_match_table);
-+
-+static struct platform_driver max3355_driver = {
-+	.probe		= max3355_probe,
-+	.driver		= {
-+		.name	= "extcon-max3355",
-+		.of_match_table = max3355_match_table,
-+		.owner	= THIS_MODULE,
-+	},
-+};
-+
-+module_platform_driver(max3355_driver);
-+
-+MODULE_AUTHOR("Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>");
-+MODULE_DESCRIPTION("MAX3355 extcon driver");
-+MODULE_LICENSE("GPL v2");
-
+Ezequiel Garcia schrieb am 27.11.2014 um 16:39:
+> From: Phani Movva <Phani.Movva-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+> 
+> This commit adds support for Cosmic Circuits 10001 10-bit ADC device.
+Still some issues left, unfortunately things I pointed out in my last review.
+> 
+> Signed-off-by: Phani Movva <Phani.Movva-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+> [Ezequiel: code style cleaning]
+> Signed-off-by: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+> ---
+>  drivers/iio/adc/Kconfig       |  11 ++
+>  drivers/iio/adc/Makefile      |   1 +
+>  drivers/iio/adc/cc10001_adc.c | 424 ++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 436 insertions(+)
+>  create mode 100644 drivers/iio/adc/cc10001_adc.c
+> 
+> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> index 88bdc8f..15bb1ae 100644
+> --- a/drivers/iio/adc/Kconfig
+> +++ b/drivers/iio/adc/Kconfig
+> @@ -127,6 +127,17 @@ config AT91_ADC
+>  	help
+>  	  Say yes here to build support for Atmel AT91 ADC.
+>  
+> +config CC10001_ADC
+> +	tristate "Cosmic Circuits 10001 ADC driver"
+> +	depends on HAS_IOMEM || HAVE_CLK || REGULATOR
+> +	select IIO_BUFFER
+> +	select IIO_TRIGGERED_BUFFER
+> +	help
+> +	  Say yes here to build support for Cosmic Circuits 10001 ADC.
+> +
+> +	  This driver can also be built as a module. If so, the module will be
+> +	  called cc10001_adc.
+> +
+>  config EXYNOS_ADC
+>  	tristate "Exynos ADC driver support"
+>  	depends on ARCH_EXYNOS || ARCH_S3C24XX || ARCH_S3C64XX || (OF && COMPILE_TEST)
+> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
+> index cb88a6a..9286c59 100644
+> --- a/drivers/iio/adc/Makefile
+> +++ b/drivers/iio/adc/Makefile
+> @@ -14,6 +14,7 @@ obj-$(CONFIG_AD7793) += ad7793.o
+>  obj-$(CONFIG_AD7887) += ad7887.o
+>  obj-$(CONFIG_AD799X) += ad799x.o
+>  obj-$(CONFIG_AT91_ADC) += at91_adc.o
+> +obj-$(CONFIG_CC10001_ADC) += cc10001_adc.o
+>  obj-$(CONFIG_EXYNOS_ADC) += exynos_adc.o
+>  obj-$(CONFIG_LP8788_ADC) += lp8788_adc.o
+>  obj-$(CONFIG_MAX1027) += max1027.o
+> diff --git a/drivers/iio/adc/cc10001_adc.c b/drivers/iio/adc/cc10001_adc.c
+> new file mode 100644
+> index 0000000..a079ee0
+> --- /dev/null
+> +++ b/drivers/iio/adc/cc10001_adc.c
+> @@ -0,0 +1,424 @@
+> +/*
+> + * Copyright (c) 2014 Imagination Technologies Ltd.
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms of the GNU General Public License version 2 as published by
+> + * the Free Software Foundation.
+> + *
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +#include <linux/err.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/slab.h>
+> +
+> +#include <linux/iio/buffer.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/iio/sysfs.h>
+> +#include <linux/iio/trigger.h>
+> +#include <linux/iio/trigger_consumer.h>
+> +#include <linux/iio/triggered_buffer.h>
+> +
+> +/* Registers */
+> +#define CC10001_ADC_CONFIG		0x00
+> +#define CC10001_ADC_START_CONV		BIT(4)
+> +#define CC10001_ADC_MODE_SINGLE_CONV	BIT(5)
+> +
+> +#define CC10001_ADC_DDATA_OUT		0x04
+> +#define CC10001_ADC_EOC			0x08
+> +#define CC10001_ADC_EOC_SET		BIT(0)
+> +
+> +#define CC10001_ADC_CHSEL_SAMPLED	0x0c
+> +#define CC10001_ADC_POWER_UP		0x10
+> +#define CC10001_ADC_POWER_UP_SET	BIT(0)
+> +#define CC10001_ADC_DEBUG		0x14
+> +#define CC10001_ADC_DATA_COUNT		0x20
+> +
+> +#define CC10001_ADC_DATA_MASK		GENMASK(9, 0)
+> +#define CC10001_ADC_NUM_CHANNELS	8
+> +#define CC10001_ADC_CH_MASK		GENMASK(CC10001_ADC_NUM_CHANNELS - 1, 0)
+This is only valid for one of the cases you make (wrong) use of CC10001_ADC_CH_MASK.
+As you seem to use this mask to separate channel selection values (0 - 7) in register
+CC10001_ADC_CONFIG, a GENMASK(2, 0) would be appropriate.
+In case of the indio_dev->channel_mask, you would actually need this 
+GENMASK(CC10001_ADC_NUM_CHANNELS - 1, 0).
+> +
+> +#define CC10001_INVALID_SAMPLED		0xffff
+> +#define CC10001_MAX_POLL_COUNT		20
+> +
+> +/*
+> + * As per device specification, wait six clock cycles after power-up to
+> + * activate START. Since adding two more clock cycles delay does not
+> + * impact the performance too much, we are adding two additional cycles delay
+> + * intentionally here.
+> + */
+> +#define	CC10001_WAIT_CYCLES		8
+> +
+> +struct cc10001_adc_device {
+> +	void __iomem *reg_base;
+> +	struct clk *adc_clk;
+> +	struct regulator *reg;
+> +	u16 *buf;
+> +
+> +	struct mutex lock;
+> +	unsigned long channel_map;
+> +	unsigned int start_delay_ns;
+> +	unsigned int eoc_delay_ns;
+> +};
+> +
+> +static inline void cc10001_adc_write_reg(struct cc10001_adc_device *adc_dev,
+> +					 u32 reg, u32 val)
+> +{
+> +	writel(val, adc_dev->reg_base + reg);
+> +}
+> +
+> +static inline u32 cc10001_adc_read_reg(struct cc10001_adc_device *adc_dev,
+> +				       u32 reg)
+> +{
+> +	return readl(adc_dev->reg_base + reg);
+> +}
+> +
+> +static void cc10001_adc_start(struct cc10001_adc_device *adc_dev,
+> +			      unsigned int channel)
+> +{
+> +	u32 val;
+> +
+> +	/* Channel selection and mode of operation */
+> +	val = (channel & CC10001_ADC_CH_MASK) | CC10001_ADC_MODE_SINGLE_CONV;
+> +	cc10001_adc_write_reg(adc_dev, CC10001_ADC_CONFIG, val);
+> +
+> +	val = cc10001_adc_read_reg(adc_dev, CC10001_ADC_CONFIG);
+> +	val = val | CC10001_ADC_START_CONV;
+> +	cc10001_adc_write_reg(adc_dev, CC10001_ADC_CONFIG, val);
+> +}
+> +
+> +static u16 cc10001_adc_poll_done(struct iio_dev *indio_dev,
+> +				 unsigned int channel,
+> +				 unsigned int delay)
+> +{
+> +	struct cc10001_adc_device *adc_dev = iio_priv(indio_dev);
+> +	unsigned int poll_count = 0;
+> +
+> +	while (!(cc10001_adc_read_reg(adc_dev, CC10001_ADC_EOC) &
+> +			CC10001_ADC_EOC_SET)) {
+> +
+> +		ndelay(delay);
+> +		if (poll_count++ == CC10001_MAX_POLL_COUNT)
+> +			return CC10001_INVALID_SAMPLED;
+> +	}
+> +
+> +	poll_count = 0;
+> +	while ((cc10001_adc_read_reg(adc_dev, CC10001_ADC_CHSEL_SAMPLED) &
+> +			CC10001_ADC_CH_MASK) != channel) {
+> +
+> +		ndelay(delay);
+> +		if (poll_count++ == CC10001_MAX_POLL_COUNT)
+> +			return CC10001_INVALID_SAMPLED;
+> +	}
+> +
+> +	/* Read the 10 bit output register */
+> +	return cc10001_adc_read_reg(adc_dev, CC10001_ADC_DDATA_OUT) &
+> +			       CC10001_ADC_DATA_MASK;
+> +}
+> +
+> +static irqreturn_t cc10001_adc_trigger_h(int irq, void *p)
+> +{
+> +	struct cc10001_adc_device *adc_dev;
+> +	struct iio_poll_func *pf = p;
+> +	struct iio_dev *indio_dev;
+> +	unsigned int delay_ns;
+> +	unsigned int channel;
+> +	bool sample_invalid;
+> +	u16 *data;
+> +	int i;
+> +
+> +	indio_dev = pf->indio_dev;
+> +	adc_dev = iio_priv(indio_dev);
+> +	data = adc_dev->buf;
+> +
+> +	mutex_lock(&adc_dev->lock);
+> +
+> +	cc10001_adc_write_reg(adc_dev, CC10001_ADC_POWER_UP,
+> +			      CC10001_ADC_POWER_UP_SET);
+> +
+> +	/* Wait for 8 (6+2) clock cycles before activating START */
+> +	ndelay(adc_dev->start_delay_ns);
+> +
+> +	/* Calculate delay step for eoc and sampled data */
+> +	delay_ns = adc_dev->eoc_delay_ns / CC10001_MAX_POLL_COUNT;
+> +
+> +	i = 0;
+> +	sample_invalid = false;
+> +	for_each_set_bit(channel, indio_dev->active_scan_mask,
+> +				  indio_dev->masklength) {
+> +
+> +		cc10001_adc_start(adc_dev, channel);
+> +
+> +		data[i] = cc10001_adc_poll_done(indio_dev, channel, delay_ns);
+> +		if (data[i] == CC10001_INVALID_SAMPLED) {
+> +			dev_warn(&indio_dev->dev,
+> +				 "invalid sample on channel %d\n", channel);
+> +			sample_invalid = true;
+> +			goto done;
+> +		}
+> +		i++;
+> +	}
+> +
+> +done:
+> +	cc10001_adc_write_reg(adc_dev, CC10001_ADC_POWER_UP, 0);
+> +
+> +	mutex_unlock(&adc_dev->lock);
+> +
+> +	if (!sample_invalid)
+> +		iio_push_to_buffers_with_timestamp(indio_dev, data,
+> +						   iio_get_time_ns());
+> +	iio_trigger_notify_done(indio_dev->trig);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static u16 cc10001_adc_read_raw_voltage(struct iio_dev *indio_dev,
+> +					struct iio_chan_spec const *chan)
+> +{
+> +	struct cc10001_adc_device *adc_dev = iio_priv(indio_dev);
+> +	unsigned int delay_ns;
+> +	u16 val;
+> +
+> +	cc10001_adc_write_reg(adc_dev, CC10001_ADC_POWER_UP,
+> +			      CC10001_ADC_POWER_UP_SET);
+> +
+> +	/* Wait for 8 (6+2) clock cycles before activating START */
+> +	ndelay(adc_dev->start_delay_ns);
+> +
+> +	/* Calculate delay step for eoc and sampled data */
+> +	delay_ns = adc_dev->eoc_delay_ns / CC10001_MAX_POLL_COUNT;
+> +
+> +	cc10001_adc_start(adc_dev, chan->channel);
+> +
+> +	val = cc10001_adc_poll_done(indio_dev, chan->channel, delay_ns);
+> +
+> +	cc10001_adc_write_reg(adc_dev, CC10001_ADC_POWER_UP, 0);
+> +
+> +	return val;
+> +}
+> +
+> +static int cc10001_adc_read_raw(struct iio_dev *indio_dev,
+> +				 struct iio_chan_spec const *chan,
+> +				 int *val, int *val2, long mask)
+> +{
+> +	struct cc10001_adc_device *adc_dev = iio_priv(indio_dev);
+> +	int ret;
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		if (iio_buffer_enabled(indio_dev))
+> +			return -EBUSY;
+> +		mutex_lock(&adc_dev->lock);
+> +		*val = cc10001_adc_read_raw_voltage(indio_dev, chan);
+> +		mutex_unlock(&adc_dev->lock);
+> +
+> +		if (*val == CC10001_INVALID_SAMPLED)
+> +			return -EIO;
+> +		return IIO_VAL_INT;
+> +
+> +	case IIO_CHAN_INFO_SCALE:
+> +		ret = regulator_get_voltage(adc_dev->reg);
+> +		if (ret)
+> +			return ret;
+> +
+> +		*val = ret / 1000;
+> +		*val2 = chan->scan_type.realbits;
+> +		return IIO_VAL_FRACTIONAL_LOG2;
+> +
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static int cc10001_update_scan_mode(struct iio_dev *indio_dev,
+> +				    const unsigned long *scan_mask)
+> +{
+> +	struct cc10001_adc_device *adc_dev = iio_priv(indio_dev);
+> +
+> +	kfree(adc_dev->buf);
+> +	adc_dev->buf = kmalloc(indio_dev->scan_bytes, GFP_KERNEL);
+> +	if (!adc_dev->buf)
+> +		return -ENOMEM;
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct iio_info cc10001_adc_info = {
+> +	.driver_module = THIS_MODULE,
+> +	.read_raw = &cc10001_adc_read_raw,
+> +	.update_scan_mode = &cc10001_update_scan_mode,
+> +};
+> +
+> +static int cc10001_adc_channel_init(struct iio_dev *indio_dev)
+> +{
+> +	struct cc10001_adc_device *adc_dev = iio_priv(indio_dev);
+> +	struct iio_chan_spec *chan_array, *timestamp;
+> +	unsigned int bit, idx = 0;
+> +
+> +	indio_dev->num_channels = bitmap_weight(&adc_dev->channel_map,
+> +						CC10001_ADC_NUM_CHANNELS);
+> +
+> +	chan_array = devm_kcalloc(&indio_dev->dev, indio_dev->num_channels + 1,
+> +				  sizeof(struct iio_chan_spec),
+> +				  GFP_KERNEL);
+> +	if (!chan_array)
+> +		return -ENOMEM;
+> +
+> +	for_each_set_bit(bit, &adc_dev->channel_map, CC10001_ADC_NUM_CHANNELS) {
+> +		struct iio_chan_spec *chan = &chan_array[idx];
+> +
+> +		chan->type = IIO_VOLTAGE;
+> +		chan->indexed = 1;
+> +		chan->channel = bit;
+> +		chan->scan_index = idx;
+> +		chan->scan_type.sign = 'u';
+> +		chan->scan_type.realbits = 10;
+> +		chan->scan_type.storagebits = 16;
+> +		chan->info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE);
+> +		chan->info_mask_separate = BIT(IIO_CHAN_INFO_RAW);
+> +		idx++;
+> +	}
+> +
+> +	timestamp = &chan_array[idx];
+> +	timestamp->type = IIO_TIMESTAMP;
+> +	timestamp->channel = -1;
+> +	timestamp->scan_index = idx;
+> +	timestamp->scan_type.sign = 's';
+> +	timestamp->scan_type.realbits = 64;
+> +	timestamp->scan_type.storagebits = 64;
+> +
+> +	indio_dev->channels = chan_array;
+> +
+> +	return 0;
+> +}
+> +
+> +static int cc10001_adc_probe(struct platform_device *pdev)
+> +{
+> +	struct device_node *node = pdev->dev.of_node;
+> +	struct cc10001_adc_device *adc_dev;
+> +	unsigned long adc_clk_rate;
+> +	struct resource *res;
+> +	struct iio_dev *indio_dev;
+> +	int ret;
+> +
+> +	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*adc_dev));
+> +	if (indio_dev == NULL)
+> +		return -ENOMEM;
+> +
+> +	adc_dev = iio_priv(indio_dev);
+> +
+> +	adc_dev->channel_map = CC10001_ADC_CH_MASK;
+So, here you need a GENMASK(CC10001_ADC_NUM_CHANNELS - 1, 0).
+> +	if (!of_property_read_u32(node, "cosmic,reserved-adc-channels", &ret))
+> +		adc_dev->channel_map &= ~ret;
+> +
+> +	adc_dev->reg = devm_regulator_get(&pdev->dev, "vref");
+> +	if (IS_ERR(adc_dev->reg))
+> +		return -EINVAL;
+Preferably pass up the real error code with PTR_ERR(adc_dev->reg).
+> +
+> +	ret = regulator_enable(adc_dev->reg);
+> +	if (ret)
+> +		return ret;
+> +
+> +	indio_dev->dev.parent = &pdev->dev;
+> +	indio_dev->name = dev_name(&pdev->dev);
+> +	indio_dev->info = &cc10001_adc_info;
+> +	indio_dev->modes = INDIO_DIRECT_MODE;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	adc_dev->reg_base = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(adc_dev->reg_base)) {
+> +		ret = PTR_ERR(adc_dev->reg_base);
+> +		goto err_disable_reg;
+> +	}
+> +
+> +	adc_dev->adc_clk = devm_clk_get(&pdev->dev, "adc");
+> +	if (IS_ERR(adc_dev->adc_clk)) {
+> +		dev_err(&pdev->dev, "failed to get the clock\n");
+> +		ret = PTR_ERR(adc_dev->adc_clk);
+> +		goto err_disable_reg;
+> +	}
+> +
+> +	ret = clk_prepare_enable(adc_dev->adc_clk);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "failed to enable the clock\n");
+> +		goto err_disable_reg;
+> +	}
+> +
+> +	adc_clk_rate = clk_get_rate(adc_dev->adc_clk);
+> +	if (!adc_clk_rate) {
+> +		ret = -EINVAL;
+> +		dev_err(&pdev->dev, "null clock rate!\n");
+> +		goto err_disable_clk;
+> +	}
+> +
+> +	adc_dev->eoc_delay_ns = NSEC_PER_SEC / adc_clk_rate;
+> +	adc_dev->start_delay_ns = adc_dev->eoc_delay_ns * CC10001_WAIT_CYCLES;
+> +
+> +	/* Setup the ADC channels available on the device */
+> +	ret = cc10001_adc_channel_init(indio_dev);
+> +	if (ret < 0)
+> +		goto err_disable_clk;
+> +
+> +	mutex_init(&adc_dev->lock);
+> +
+> +	ret = iio_triggered_buffer_setup(indio_dev, NULL,
+> +					 &cc10001_adc_trigger_h, NULL);
+> +	if (ret < 0)
+> +		goto err_disable_clk;
+> +
+> +	ret = iio_device_register(indio_dev);
+> +	if (ret < 0)
+> +		goto err_cleanup_buffer;
+> +
+> +	platform_set_drvdata(pdev, indio_dev);
+> +
+> +	return 0;
+> +
+> +err_cleanup_buffer:
+> +	iio_triggered_buffer_cleanup(indio_dev);
+> +err_disable_clk:
+> +	clk_disable_unprepare(adc_dev->adc_clk);
+> +err_disable_reg:
+> +	regulator_disable(adc_dev->reg);
+> +	return ret;
+> +}
+> +
+> +static int cc10001_adc_remove(struct platform_device *pdev)
+> +{
+> +	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
+> +	struct cc10001_adc_device *adc_dev = iio_priv(indio_dev);
+> +
+> +	iio_device_unregister(indio_dev);
+> +	iio_triggered_buffer_cleanup(indio_dev);
+> +	clk_disable_unprepare(adc_dev->adc_clk);
+> +	regulator_disable(adc_dev->reg);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id cc10001_adc_dt_ids[] = {
+> +	{ .compatible = "cosmic,10001-adc", },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, cc10001_adc_dt_ids);
+> +
+> +static struct platform_driver cc10001_adc_driver = {
+> +	.driver = {
+> +		.name   = "cc10001-adc",
+> +		.owner	= THIS_MODULE,
+> +		.of_match_table = cc10001_adc_dt_ids,
+> +	},
+> +	.probe	= cc10001_adc_probe,
+> +	.remove	= cc10001_adc_remove,
+> +};
+> +module_platform_driver(cc10001_adc_driver);
+> +
+> +MODULE_AUTHOR("Phani Movva <Phani.Movva-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>");
+> +MODULE_DESCRIPTION("Cosmic Circuits ADC driver");
+> +MODULE_LICENSE("GPL v2");
+> 
