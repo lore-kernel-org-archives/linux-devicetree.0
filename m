@@ -1,196 +1,197 @@
 Return-Path: <varkabhadram@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <5487A355.6030704@broadcom.com>
+In-Reply-To: <CAEUmHyZ+VqjzL4LkQozGJtnictPNXHYWM2qMKvD=LmfQdcT8iQ@mail.gmail.com>
 References: <rjui@broadcom.com>
 	<1418172891-19441-1-git-send-email-rjui@broadcom.com>
-	<1418172891-19441-2-git-send-email-rjui@broadcom.com>
-	<5487A16C.5000707@gmail.com>
-	<5487A355.6030704@broadcom.com>
-Date: Wed, 10 Dec 2014 08:42:55 +0530
-Message-ID: <CAEUmHyb_wu1kVj-G5LQj8Q_A1Tid1gSGbU=cGeBf4EXZgXChbg@mail.gmail.com>
-Subject: Re: [PATCH 1/4] i2c: iProc: define Broadcom iProc I2C binding
+	<1418172891-19441-3-git-send-email-rjui@broadcom.com>
+	<5487A2D6.8070901@gmail.com>
+	<5487A4C9.2000604@broadcom.com>
+	<CAEUmHyZ+VqjzL4LkQozGJtnictPNXHYWM2qMKvD=LmfQdcT8iQ@mail.gmail.com>
+Date: Wed, 10 Dec 2014 08:58:26 +0530
+Message-ID: <CAEUmHyZ86r=7KzJzfE9_upv45vN7geW9woqMkaGaBPwfp3xbMQ@mail.gmail.com>
+Subject: Re: [PATCH 2/4] i2c: iproc: Add Broadcom iProc I2C Driver
 From: Varka Bhadram <varkabhadram@gmail.com>
-Content-Type: multipart/alternative; boundary=089e014940462d7f6e0509d409a2
+Content-Type: multipart/alternative; boundary=001a11c33fccb063700509d440cb
 To: Ray Jui <rjui@broadcom.com>
 Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Scott Branden <sbranden@broadcom.com>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, bcm-kernel-feedback-list@broadcom.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
---089e014940462d7f6e0509d409a2
+--001a11c33fccb063700509d440cb
 Content-Type: text/plain; charset=UTF-8
 
-On Wed, Dec 10, 2014 at 7:05 AM, Ray Jui <rjui@broadcom.com> wrote:
+On Wed, Dec 10, 2014 at 8:51 AM, Varka Bhadram <varkabhadram@gmail.com>
+wrote:
 
+
+> On Wed, Dec 10, 2014 at 7:11 AM, Ray Jui <rjui@broadcom.com> wrote:
 >
+>>
+>>
+>> On 12/9/2014 5:33 PM, Varka Bhadram wrote:
+>>
+>>>
+>>> On Wednesday 10 December 2014 06:24 AM, Ray Jui wrote:
+>>>
+>>>> Add initial support to the Broadcom iProc I2C controller found in the
+>>>> iProc family of SoCs.
+>>>>
+>>>> The iProc I2C controller has separate internal TX and RX FIFOs, each has
+>>>> a size of 64 bytes. The iProc I2C controller supports two bus speeds
+>>>> including standard mode (100kHz) and fast mode (400kHz)
+>>>>
+>>>> Signed-off-by: Ray Jui <rjui@broadcom.com>
+>>>> Reviewed-by: Scott Branden <sbranden@broadcom.com>
+>>>> ---
+>>>>   drivers/i2c/busses/Kconfig         |    9 +
+>>>>   drivers/i2c/busses/Makefile        |    1 +
+>>>>   drivers/i2c/busses/i2c-bcm-iproc.c |  503
+>>>> ++++++++++++++++++++++++++++++++++++
+>>>>   3 files changed, 513 insertions(+)
+>>>>   create mode 100644 drivers/i2c/busses/i2c-bcm-iproc.c
+>>>>
+>>>> (...)
 >
-> On 12/9/2014 5:27 PM, Varka Bhadram wrote:
+> +static int bcm_iproc_i2c_probe(struct platform_device *pdev)
+>>>> +{
+>>>> +    int irq, ret = 0;
+>>>> +    struct bcm_iproc_i2c_dev *dev;
+>>>> +    struct i2c_adapter *adap;
+>>>> +    struct resource *res;
+>>>> +
+>>>> +    dev = devm_kzalloc(&pdev->dev, sizeof(*dev), GFP_KERNEL);
+>>>> +    if (!dev)
+>>>> +        return -ENOMEM;
+>>>> +
+>>>> +    platform_set_drvdata(pdev, dev);
+>>>> +    dev->device = &pdev->dev;
+>>>> +    init_completion(&dev->done);
+>>>> +
+>>>> +    res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>>>> +    if (!res)
+>>>> +        return -ENODEV;
+>>>>
+>>>
+>>> We can remove this resource check. This checking will happen with
+>>> devm_ioremap_resource()
+>>>
+>>>  Don't you need to obtain a valid resource and pass it into
+>> devm_ioremap_resource? Without 'res' being assigned a valid resource,
+>> devm_ioremap_resource will reject with "invalid resource".
+>>
+>>   platform_get_resource() will return a resource, checking on this
+> resource is happening at
+> http://lxr.free-electrons.com/source/lib/devres.c#L115. So no need to
+> check it explicitly.
 >
->> Hi,
->>
->> On Wednesday 10 December 2014 06:24 AM, Ray Jui wrote:
->>
->>> Document the I2C device tree binding for Broadcom iProc family of
->>> SoCs
->>>
->>> Signed-off-by: Ray Jui <rjui@broadcom.com>
->>> Reviewed-by: Scott Branden <sbranden@broadcom.com>
->>> ---
->>>   .../devicetree/bindings/i2c/brcm,iproc-i2c.txt     |   37
->>> ++++++++++++++++++++
->>>   1 file changed, 37 insertions(+)
->>>   create mode 100644
->>> Documentation/devicetree/bindings/i2c/brcm,iproc-i2c.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/i2c/brcm,iproc-i2c.txt
->>> b/Documentation/devicetree/bindings/i2c/brcm,iproc-i2c.txt
->>> new file mode 100644
->>> index 0000000..81f982c
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/i2c/brcm,iproc-i2c.txt
->>> @@ -0,0 +1,37 @@
->>> +Broadcom iProc I2C controller
->>> +
->>> +Required properties:
->>> +
->>> +- compatible:
->>> +    Must be "brcm,iproc-i2c"
->>> +
->>> +- reg:
->>> +    Define the base and range of the I/O address space that contain
->>> the iProc
->>> +    I2C controller registers
->>> +
->>> +- interrupts:
->>> +    Should contain the I2C interrupt
->>> +
->>> +- clock-frequency:
->>> +    This is the I2C bus clock. Need to be either 100000 or 400000
->>> +
->>> +- #address-cells:
->>> +    Always 1 (for I2C addresses)
->>> +
->>> +- #size-cells:
->>> +    Always 0
->>> +
->>>
->>
->> All the properties defined with two lines of statements.
->>
->> Why cant they be with single line statement, like:
->>
->> compatible:    Must be "brcm,iproc-i2c"
->> reg:        Define the base and range of the I/O address space that
->>          contain the iProc I2C controller registers
->>
->> ....
->>
->>
->>  I thought making them two lines are more readable (and obviously that's
-> very subjective, :)). But more importantly, it matches the format of other
-> Broadcom iProc/Cygnus devicetree binding documents that are currently in
-> progress of upstreaming.
+> If you check here it will be duplication of check with resource. Two times
+> we are checking on
+> the resource. No point of doing like that.
+>
+> Thanks.
 >
 
-But max of the bindings over the kernel follows single line statements.
+See this: http://lxr.free-electrons.com/source/lib/devres.c#L102
 
 -- 
 Thanks and Regards,
 Varka Bhadram.
 
---089e014940462d7f6e0509d409a2
+--001a11c33fccb063700509d440cb
 Content-Type: text/html; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
 <div dir=3D"ltr"><br><div class=3D"gmail_extra"><br><div class=3D"gmail_quo=
-te">On Wed, Dec 10, 2014 at 7:05 AM, Ray Jui <span dir=3D"ltr">&lt;<a href=
-=3D"mailto:rjui@broadcom.com" target=3D"_blank">rjui@broadcom.com</a>&gt;</=
-span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8e=
-x;border-left:1px #ccc solid;padding-left:1ex"><div class=3D"HOEnZb"><div c=
-lass=3D"h5"><br>
+te">On Wed, Dec 10, 2014 at 8:51 AM, Varka Bhadram <span dir=3D"ltr">&lt;<a=
+ href=3D"mailto:varkabhadram@gmail.com" target=3D"_blank">varkabhadram@gmai=
+l.com</a>&gt;</span> wrote:<br><div>=C2=A0</div><blockquote class=3D"gmail_=
+quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,=
+204);padding-left:1ex"><div dir=3D"ltr"><div class=3D"gmail_extra"><div cla=
+ss=3D"gmail_quote"><span class=3D"">On Wed, Dec 10, 2014 at 7:11 AM, Ray Ju=
+i <span dir=3D"ltr">&lt;<a href=3D"mailto:rjui@broadcom.com" target=3D"_bla=
+nk">rjui@broadcom.com</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_q=
+uote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,2=
+04);padding-left:1ex"><div><div><br>
 <br>
-On 12/9/2014 5:27 PM, Varka Bhadram wrote:<br>
-<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
-x #ccc solid;padding-left:1ex">
-Hi,<br>
+On 12/9/2014 5:33 PM, Varka Bhadram wrote:<br>
+<blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-=
+left:1px solid rgb(204,204,204);padding-left:1ex">
 <br>
 On Wednesday 10 December 2014 06:24 AM, Ray Jui wrote:<br>
-<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
-x #ccc solid;padding-left:1ex">
-Document the I2C device tree binding for Broadcom iProc family of<br>
-SoCs<br>
+<blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-=
+left:1px solid rgb(204,204,204);padding-left:1ex">
+Add initial support to the Broadcom iProc I2C controller found in the<br>
+iProc family of SoCs.<br>
+<br>
+The iProc I2C controller has separate internal TX and RX FIFOs, each has<br=
+>
+a size of 64 bytes. The iProc I2C controller supports two bus speeds<br>
+including standard mode (100kHz) and fast mode (400kHz)<br>
 <br>
 Signed-off-by: Ray Jui &lt;<a href=3D"mailto:rjui@broadcom.com" target=3D"_=
 blank">rjui@broadcom.com</a>&gt;<br>
 Reviewed-by: Scott Branden &lt;<a href=3D"mailto:sbranden@broadcom.com" tar=
 get=3D"_blank">sbranden@broadcom.com</a>&gt;<br>
 ---<br>
-=C2=A0 .../devicetree/bindings/i2c/<u></u>brcm,iproc-i2c.txt=C2=A0 =C2=A0 =
-=C2=A0|=C2=A0 =C2=A037<br>
-++++++++++++++++++++<br>
-=C2=A0 1 file changed, 37 insertions(+)<br>
-=C2=A0 create mode 100644<br>
-Documentation/devicetree/<u></u>bindings/i2c/brcm,iproc-i2c.<u></u>txt<br>
-<br>
-diff --git a/Documentation/devicetree/<u></u>bindings/i2c/brcm,iproc-i2c.<u=
-></u>txt<br>
-b/Documentation/devicetree/<u></u>bindings/i2c/brcm,iproc-i2c.<u></u>txt<br=
->
-new file mode 100644<br>
-index 0000000..81f982c<br>
---- /dev/null<br>
-+++ b/Documentation/devicetree/<u></u>bindings/i2c/brcm,iproc-i2c.<u></u>tx=
-t<br>
-@@ -0,0 +1,37 @@<br>
-+Broadcom iProc I2C controller<br>
+=C2=A0 drivers/i2c/busses/Kconfig=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0|=C2=A0 =
+=C2=A0 9 +<br>
+=C2=A0 drivers/i2c/busses/Makefile=C2=A0 =C2=A0 =C2=A0 =C2=A0 |=C2=A0 =C2=
+=A0 1 +<br>
+=C2=A0 drivers/i2c/busses/i2c-bcm-iproc.c |=C2=A0 503<br>
+++++++++++++++++++++++++++++++++++++<br>
+=C2=A0 3 files changed, 513 insertions(+)<br>
+=C2=A0 create mode 100644 drivers/i2c/busses/i2c-bcm-iproc.c<br>
+<br></blockquote></blockquote></div></div></blockquote></span><div><span st=
+yle=3D"font-family:monospace">(...) </span><br></div><span class=3D""></spa=
+n><br><div><div class=3D"h5"><blockquote class=3D"gmail_quote" style=3D"mar=
+gin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1=
+ex"><div><div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px=
+ 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex"><blockquote=
+ class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px so=
+lid rgb(204,204,204);padding-left:1ex">
++static int bcm_iproc_i2c_probe(struct platform_device *pdev)<br>
++{<br>
++=C2=A0 =C2=A0 int irq, ret =3D 0;<br>
++=C2=A0 =C2=A0 struct bcm_iproc_i2c_dev *dev;<br>
++=C2=A0 =C2=A0 struct i2c_adapter *adap;<br>
++=C2=A0 =C2=A0 struct resource *res;<br>
 +<br>
-+Required properties:<br>
++=C2=A0 =C2=A0 dev =3D devm_kzalloc(&amp;pdev-&gt;dev, sizeof(*dev), GFP_KE=
+RNEL);<br>
++=C2=A0 =C2=A0 if (!dev)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 return -ENOMEM;<br>
 +<br>
-+- compatible:<br>
-+=C2=A0 =C2=A0 Must be &quot;brcm,iproc-i2c&quot;<br>
++=C2=A0 =C2=A0 platform_set_drvdata(pdev, dev);<br>
++=C2=A0 =C2=A0 dev-&gt;device =3D &amp;pdev-&gt;dev;<br>
++=C2=A0 =C2=A0 init_completion(&amp;dev-&gt;done);<br>
 +<br>
-+- reg:<br>
-+=C2=A0 =C2=A0 Define the base and range of the I/O address space that cont=
-ain<br>
-the iProc<br>
-+=C2=A0 =C2=A0 I2C controller registers<br>
-+<br>
-+- interrupts:<br>
-+=C2=A0 =C2=A0 Should contain the I2C interrupt<br>
-+<br>
-+- clock-frequency:<br>
-+=C2=A0 =C2=A0 This is the I2C bus clock. Need to be either 100000 or 40000=
-0<br>
-+<br>
-+- #address-cells:<br>
-+=C2=A0 =C2=A0 Always 1 (for I2C addresses)<br>
-+<br>
-+- #size-cells:<br>
-+=C2=A0 =C2=A0 Always 0<br>
-+<br>
++=C2=A0 =C2=A0 res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);<br>
++=C2=A0 =C2=A0 if (!res)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 return -ENODEV;<br>
 </blockquote>
 <br>
-All the properties defined with two lines of statements.<br>
-<br>
-Why cant they be with single line statement, like:<br>
-<br>
-compatible:=C2=A0 =C2=A0 Must be &quot;brcm,iproc-i2c&quot;<br>
-reg:=C2=A0 =C2=A0 =C2=A0 =C2=A0 Define the base and range of the I/O addres=
-s space that<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0contain the iProc I2C controller register=
-s<br>
-<br>
-....<br>
-<br>
+We can remove this resource check. This checking will happen with<br>
+devm_ioremap_resource()<br>
 <br>
 </blockquote></div></div>
-I thought making them two lines are more readable (and obviously that&#39;s=
- very subjective, :)). But more importantly, it matches the format of other=
- Broadcom iProc/Cygnus devicetree binding documents that are currently in p=
-rogress of upstreaming.<br>
-</blockquote></div><br></div><div class=3D"gmail_extra"><font face=3D"monos=
-pace">But max of the bindings over the kernel follows single line statement=
-s.<br><br clear=3D"all"></font></div><div class=3D"gmail_extra">-- <br><div=
- class=3D"gmail_signature"><div dir=3D"ltr"><div>Thanks and Regards,<br></d=
-iv>Varka Bhadram.<br></div></div>
+Don&#39;t you need to obtain a valid resource and pass it into devm_ioremap=
+_resource? Without &#39;res&#39; being assigned a valid resource, devm_iore=
+map_resource will reject with &quot;invalid resource&quot;.<div><div><br></=
+div></div></blockquote></div></div><div>=C2=A0<span style=3D"font-family:mo=
+nospace"> platform_get_resource() will return a resource, checking on this =
+resource is happening at<br><a href=3D"http://lxr.free-electrons.com/source=
+/lib/devres.c#L115" target=3D"_blank">http://lxr.free-electrons.com/source/=
+lib/devres.c#L115</a>. So no need to check it explicitly.<br><br></span></d=
+iv><div><span style=3D"font-family:monospace">If you check here it will be =
+duplication of check with resource. Two times we are checking on<br></span>=
+</div><div><span style=3D"font-family:monospace">the resource. No point of =
+doing like that.<br><br></span></div><div><span style=3D"font-family:monosp=
+ace">Thanks. <br></span></div></div></div></div>
+</blockquote></div><br></div><div class=3D"gmail_extra"><span style=3D"font=
+-family:monospace">See this: <a href=3D"http://lxr.free-electrons.com/sourc=
+e/lib/devres.c#L102">http://lxr.free-electrons.com/source/lib/devres.c#L102=
+</a></span><br clear=3D"all"></div><div class=3D"gmail_extra"><br>-- <br><d=
+iv class=3D"gmail_signature"><div dir=3D"ltr"><div>Thanks and Regards,<br><=
+/div>Varka Bhadram.<br></div></div>
 </div></div>
 
---089e014940462d7f6e0509d409a2--
+--001a11c33fccb063700509d440cb--
