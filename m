@@ -1,94 +1,148 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH RFC 04/15] drm/dsi: Do not add DSI devices for the child
- nodes with input-port property
-Date: Wed, 10 Dec 2014 13:21:07 +0100
-Message-ID: <20141210122105.GC23558@ulmo.nvidia.com>
-References: <1418200648-32656-1-git-send-email-Ying.Liu@freescale.com>
- <1418200648-32656-5-git-send-email-Ying.Liu@freescale.com>
+From: Ashok Kumar <ashoks@broadcom.com>
+Subject: Re: [RFC PATCH v2 4/4] arm64:numa: adding numa support for arm64
+ platforms.
+Date: Wed, 10 Dec 2014 17:56:04 +0530
+Message-ID: <1717.42750467292$1418214433@news.gmane.org>
+References: <1416605010-10442-1-git-send-email-ganapatrao.kulkarni@caviumnetworks.com>
+ <1416605010-10442-5-git-send-email-ganapatrao.kulkarni@caviumnetworks.com>
+ <5482ce36.c9e2420a.5d40.71c7SMTPIN_ADDED_BROKEN@mx.google.com>
+ <CAFpQJXU89uwAkHyi+dvHmbZOvadO_EyQbrG8jMo5G3tnWP5qcw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1940123345=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1418200648-32656-5-git-send-email-Ying.Liu@freescale.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Liu Ying <Ying.Liu@freescale.com>
-Cc: devicetree@vger.kernel.org, linux@arm.linux.org.uk, kernel@pengutronix.de, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, mturquette@linaro.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <CAFpQJXU89uwAkHyi+dvHmbZOvadO_EyQbrG8jMo5G3tnWP5qcw@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ganapatrao Kulkarni <gpkulkarni@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Steve Capper <steve.capper@linaro.org>, Al Stone <al.stone@linaro.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Leif Lindholm <leif.lindholm@linaro.org>, Roy Franz <roy.franz@linaro.org>, Rob Herring <robh+dt@kernel.org>, Ganapatrao Kulkarni <ganapatrao.kulkarni@caviumnetworks.com>, msalter@redhat.com, Grant Likely <grant.likely@linaro.org>, jchandra@broadcom.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Hanjun Guo <hanjun.guo@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+On Sat, Dec 06, 2014 at 10:50:57AM -0800, Ganapatrao Kulkarni wrote:
+> On Sat, Dec 6, 2014 at 1:36 AM, Ashok Kumar <ashoks@broadcom.com> wrote:
+> > On Sat, Nov 22, 2014 at 02:53:30AM +0530, Ganapatrao Kulkarni wrote:
+> >> Adding numa support for arm64 based platforms.
+> >> creating numa mapping by parsing the dt node numa-map.
+> >>
+> >> Signed-off-by: Ganapatrao Kulkarni <ganapatrao.kulkarni@caviumnetworks.com>
+> > Ganapat,
+> >
+> > Can we get a simple version of this patchset with just the associativity parameter for the cpu and memory nodes
+> > upstream? The initial patchset can be with the assumption of a simple full mesh topology for the distance.  The
+> > hierarchical complex topologies and the DT nodes and properties for that can be added in a later patch, once the
+> > standard for that is agreed upon.
+> > We are planning to support ACPI based NUMA for Broadcom Vulcan processors(http://www.broadcom.com/press/release.php?id=s797235).
+> > I am working on a patch to add support for the SRAT and SLIT ACPI tables based on your patch and I will post that
+> > patchset soon, so it will be helpful if the core changes are upstream.
+> >
+> to implement, ibm/ppc like implementation, we need efi-stub patch to
+> not remove the memory node from the dt.
+> current efi-stub parses dt file and removes memory nodes.
+> can i get the efi-stub patch to start with please?
 
---===============1940123345==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="PuGuTyElPB9bOcsM"
-Content-Disposition: inline
+Ganapat,
+ I tried the below patch in qemu and it works. Would this be of help to you?
+
+Roy/Ard,
+ Is the below patch fine? 
+
+>From 27b4aecf09707e3d5bd4ff7bf765cd609772476f Mon Sep 17 00:00:00 2001
+From: Ashok Kumar <ashoks@broadcom.com>
+Date: Tue, 9 Dec 2014 17:23:11 +0530
+Subject: [PATCH] efi/arm64: Remove deleting memory nodes in efi-stub
+
+Dont delete memory nodes from DT as it will be
+used by NUMA configuration.
+
+Signed-off-by: Ashok Kumar <ashoks@broadcom.com>
+---
+ arch/arm64/kernel/setup.c          | 12 +++++++++++-
+ drivers/firmware/efi/libstub/fdt.c | 24 +-----------------------
+ 2 files changed, 12 insertions(+), 24 deletions(-)
+
+diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+index 27f65b0..ac6d34f 100644
+--- a/arch/arm64/kernel/setup.c
++++ b/arch/arm64/kernel/setup.c
+@@ -302,7 +302,7 @@ static void __init setup_processor(void)
+ 
+ static void __init setup_machine_fdt(phys_addr_t dt_phys)
+ {
+-	if (!dt_phys || !early_init_dt_scan(phys_to_virt(dt_phys))) {
++	if (!dt_phys || !early_init_dt_verify(phys_to_virt(dt_phys))) {
+ 		early_print("\n"
+ 			"Error: invalid device tree blob at physical address 0x%p (virtual address 0x%p)\n"
+ 			"The dtb must be 8-byte aligned and passed in the first 512MB of memory\n"
+@@ -313,6 +313,16 @@ static void __init setup_machine_fdt(phys_addr_t dt_phys)
+ 			cpu_relax();
+ 	}
+ 
++	/* Retrieve various information from the /chosen node */
++	of_scan_flat_dt(early_init_dt_scan_chosen, boot_command_line);
++
++	/* Initialize {size,address}-cells info */
++	of_scan_flat_dt(early_init_dt_scan_root, NULL);
++
++	/* Setup memory, calling early_init_dt_add_memory_arch */
++	if (!IS_ENABLED(CONFIG_EFI))
++		of_scan_flat_dt(early_init_dt_scan_memory, NULL);
++
+ 	machine_name = of_flat_dt_get_machine_name();
+ }
+ 
+diff --git a/drivers/firmware/efi/libstub/fdt.c b/drivers/firmware/efi/libstub/fdt.c
+index c846a96..a02e56e 100644
+--- a/drivers/firmware/efi/libstub/fdt.c
++++ b/drivers/firmware/efi/libstub/fdt.c
+@@ -22,7 +22,7 @@ efi_status_t update_fdt(efi_system_table_t *sys_table, void *orig_fdt,
+ 			unsigned long map_size, unsigned long desc_size,
+ 			u32 desc_ver)
+ {
+-	int node, prev, num_rsv;
++	int node, num_rsv;
+ 	int status;
+ 	u32 fdt_val32;
+ 	u64 fdt_val64;
+@@ -52,28 +52,6 @@ efi_status_t update_fdt(efi_system_table_t *sys_table, void *orig_fdt,
+ 		goto fdt_set_fail;
+ 
+ 	/*
+-	 * Delete any memory nodes present. We must delete nodes which
+-	 * early_init_dt_scan_memory may try to use.
+-	 */
+-	prev = 0;
+-	for (;;) {
+-		const char *type;
+-		int len;
+-
+-		node = fdt_next_node(fdt, prev, NULL);
+-		if (node < 0)
+-			break;
+-
+-		type = fdt_getprop(fdt, node, "device_type", &len);
+-		if (type && strncmp(type, "memory", len) == 0) {
+-			fdt_del_node(fdt, node);
+-			continue;
+-		}
+-
+-		prev = node;
+-	}
+-
+-	/*
+ 	 * Delete all memory reserve map entries. When booting via UEFI,
+ 	 * kernel will use the UEFI memory map to find reserved regions.
+ 	 */
+-- 
+1.9.1
 
 
---PuGuTyElPB9bOcsM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Dec 10, 2014 at 04:37:17PM +0800, Liu Ying wrote:
-> The MIPI DSI bus driver would try to add a DSI device for a host's every
-> child node which contains the reg property.  Unfortunately, the existing
-> i.MX6Q/SDL MIPI DSI host device tree node's child nodes contain the reg
-
-There aren't any existing nodes for the DSI host on i.MX. This patch
-series adds support for them.
-
-> property, but the child nodes are ports pointing to dedicated CRTCs.
-> So, this patch phases out the child nodes with input-port property before
-> adding DSI devices for them and updates the MIPI DSI bus OF binding
-> documentation.
->=20
-> Signed-off-by: Liu Ying <Ying.Liu@freescale.com>
-> ---
->  Documentation/devicetree/bindings/mipi/dsi/mipi-dsi-bus.txt | 4 ++++
->  drivers/gpu/drm/drm_mipi_dsi.c                              | 5 +++--
->  2 files changed, 7 insertions(+), 2 deletions(-)
-
-Sorry, but NAK. There's no need for this special-case. I'll go into more
-detail in response to patch 09/15.
-
-Thierry
-
---PuGuTyElPB9bOcsM
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJUiDqxAAoJEN0jrNd/PrOhVKgP/juzUrsAppVY2PtOlvuMiJBm
-GphVtL7zCISpwBveA6NvoY7/i+j5VgpFHcMdOr5QQEPs7+CjbaHNJMPK6wVrT9m2
-QjWpwBn+K2ra0oK4Lf4lPlBMhMlt6eYMkxJ2xJoRU0SK7BozWiCKvs807yA5wBcf
-qhd+hv9/R/DwK0WZwU7SpgG3B0cv1ua4zvggNA0DQ6V/p9jqQKG9RJl6Cew2mF54
-/up7H0GZv15BcdG8ZezwKulOGRkcV+G1qCXj041T+6TnDUnuIvQS1wop3yZY2wvT
-DLdxDMxczVjKoBivoBmHWsogrl7vftpSZy0vvjh9Nqw+eLe16X2oMC/lNh9GdikQ
-zpS7lhoNBQWgXyHZrv8HbZqQlNTsVR6NZuEi4j5YlTt15DuK7/R6oOf8RKHve0jP
-jc5UvygOoRkiGh07iZjVo5sAv/r680yiFLuDA4YnkNaKUeDXoWph6OBx2/5KNTCS
-qiYMjNWzY6dCupID9kINctV/DtOBoQZP+Z+vFmZCRE0xPt6x/u6kmj5M0dRcK0bj
-SMMHSN4GvJL4+dvp3QXR3rb4bnlRNdrQ2UX+GPA0b/X28Aol50WOLvhx0eVKJdEL
-KWzidhWCR+ygs0d4NAlPRzL/y3ARggwoSGJKrLDlcJBk4Y8MAmzlOiLLwjnmeYVw
-8r3MbIrxfU7STF7njSt+
-=ckC4
------END PGP SIGNATURE-----
-
---PuGuTyElPB9bOcsM--
-
---===============1940123345==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
-
---===============1940123345==--
+Thanks,
+Ashok
