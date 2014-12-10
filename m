@@ -1,47 +1,174 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH v4 4/6] fpga manager: add sysfs interface document
-Date: Wed, 10 Dec 2014 16:24:25 +0100
-Message-ID: <4efe5243e781496082b814f7ccdd1b43@BN1BFFO11FD038.protection.gbl>
-References: <1418156090-23578-1-git-send-email-atull@opensource.altera.com>
- <1418156090-23578-5-git-send-email-atull@opensource.altera.com>
- <c234f48c2ff145b4810cef72482bb49c@BL2FFO11FD045.protection.gbl>
- <20141210144724.GA17184@kroah.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20141210144724.GA17184@kroah.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Greg KH <gregkh@linuxfoundation.org>, Michal Simek <michal.simek@xilinx.com>
-Cc: atull@opensource.altera.com, jgunthorpe@obsidianresearch.com, hpa@zytor.com, monstr@monstr.eu, rdunlap@infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, pantelis.antoniou@konsulko.com, robh+dt@kernel.org, grant.likely@linaro.org, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, pavel@denx.de, broonie@kernel.org, philip@balister.org, rubini@gnudd.com, s.trumtrar@pengutronix.de, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, balbi@ti.com, m.chehab@samsung.com, davidb@codeaurora.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, linus.walleij@linaro.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yv
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: [RFC 00/15] Resource tracking/allocation framework
+Date: Wed, 10 Dec 2014 16:48:18 +0100
+Message-ID: <1418226513-14105-1-git-send-email-a.hajda@samsung.com>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: open list <linux-kernel@vger.kernel.org>
+Cc: Andrzej Hajda <a.hajda@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mike Turquette <mturquette@linaro.org>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Inki Dae <inki.dae@samsung.com>, Kishon Vijay Abraham I <kishon@ti.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "moderated list:ARM/CLKDEV SUPPORT" <linux-arm-kernel@lists.infradead.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, "moderated list:ARM/S5P EXYNOS AR..." <linux-samsung-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>b
 List-Id: devicetree@vger.kernel.org
 
-On 12/10/2014 03:47 PM, Greg KH wrote:
-> On Wed, Dec 10, 2014 at 10:42:39AM +0100, Michal Simek wrote:
->> Hi Greg,
->>
->> On 12/09/2014 09:14 PM, atull@opensource.altera.com wrote:
->>> From: Alan Tull <atull@opensource.altera.com>
->>>
->>> Add documentation for new fpga manager sysfs interface.
->>>
->>> Signed-off-by: Alan Tull <atull@opensource.altera.com>
->>> ---
->>>  Documentation/ABI/testing/sysfs-class-fpga-manager |   38 ++++++++++++++++++++
->>>  1 file changed, 38 insertions(+)
->>>  create mode 100644 Documentation/ABI/testing/sysfs-class-fpga-manager
->>
->> What's the rule for adding sysfs doc for driver which is added to staging?
->> Is this location fine?
-> 
-> No, staging drivers should be "self-contained" so when^Wif we delete
-> them, it is easy to do so :)
-> 
-> Put it in the same directory as your driver.
+Hi,
 
-That's what I thought.
-Thanks for confirmation.
+Many kernel frameworks that uses provider/consumer schema suffer from
+few issues:
+1. They have broken driver unbinding handling. When device driver of the provider
+  is unbound from the device, its consumers stay with reference to non-existing
+  objects, as a result we can observe oopses, crashes, hangs.
+  Frameworks tries to handle it by using:
+  - module refcounting (try_module_get/module_put) - as the name says it
+    protects only from module unloading, not driver unbinding. Additionally
+    it can cause circular dependencies of modules and inability to unload them.
+  - ghost providers - when driver is unbound provider is replaced with phony one,
+    which returns errors on every access. It also does not solve the issue -
+    consumer device can hang if the hardware represented by the provider is off.
+2. Consumer does not know when required resource becomes available. Currently it
+  is solved by deferred probing. The main problem with this solution is that it
+  delays deferred device probe to late_initcall, for some devices it is
+  unacceptable/undesirable.
+3. There are drivers which can work without specific resource, but if
+  the resource becomes available/unavailable it can do some additional stuff.
+  An example of such driver is DRM driver (more precisely drm_connector) -
+  it can start without attached drm_panel, but if the panel becomes available it
+  can react by generating HPD event and start using it. Delaying drm
+  initialization due to lack of panel should be avoided - drm can still be
+  usable without it, for example it can still use HDMI monitor.
+  Currently it can be handled by periodic polling drm_panel framework for
+  the panel, but it is rather an workaround, not a real solution.
 
-Thanks,
-Michal
+The main problem with the 1st issue is that drivers cannot be protected from
+unbinding. So there is no way to prevent removal of resources they provide.
+The only solution I see is to provide notifications to consumers about incoming
+removal of resources they are using, so they can react appropriately.
+Symmetrically we can add notifications about appearance of specific resources,
+this way the 2nd issue can be solved.
+And finally with both notifications we can solve the 3rd issue.
+
+In the 1st patch I propose generic framework providing such notifications, named
+track - propositions for better name are welcome.
+Its main feature is that callbacks are serialized but are not called under lock,
+it allows two important things:
+- avoid additional locks in the consumers to protect data access from different
+  callbacks,
+- call the framework from within the callback, so complex dependencies can be
+  modelled this way, without worries about deadlocks due to framework.
+
+The 2nd patch contains restrack framework which uses internally track framework
+to track and automatically allocate different resources. In short it can replace
+all resource allocations with single call + callback. Of course it is just
+a bonus. The most important thing is that it solves all described issues:
+- it can properly handle provider unbind/re-bind,
+- it avoids late init due to deferred probing,
+- it allows to track optional resources.
+
+Simple example taken from restrack commit message:
+
+    static int lcd_probe(...)
+    {
+        struct restrack *rtrack;
+
+    (...initialization w/o resource allocation ...)
+
+        rtrack = devm_restrack_register(dev, lcd_callback,
+                regulator_bulk_restrack_desc(&ctx->supplies[0]),
+                regulator_bulk_restrack_desc(&ctx->supplies[1]),
+                clk_restrack_desc(&ctx->pll_clk, "pll_clk"),
+                clk_restrack_desc(&ctx->bus_clk, "bus_clk"),
+                phy_restrack_desc(&ctx->phy, "dsim"),
+        );
+
+        return PTR_ERR_OR_NULL(rtrack);
+    }
+
+    void lcd_callback(struct device *dev, int ret)
+    {
+        struct lcd_ctx *ctx = dev_get_drvdata(dev);
+
+        if (ret == 0)
+                drm_panel_add(&ctx->panel);
+        else if (ret == -EPROBE_DEFER)
+                drm_panel_remove(&ctx->panel);
+        else
+                dev_err(dev, "restrack error %d\n", ret);
+    }
+
+For other examples look at patches 11, 13, 15.
+
+Patches 3,4,6,8,9 adds restrack support to various frameworks. Restrack support
+is added only to resources exposed via Device Tree. Adding support for non-DT
+resources should be also possible, but I guess it can be more complicated as
+resource lookup mechanism is more fuzzy. Anyway I can work on it if necessary.
+Moreover these patches in some cases adds redundant code for DT lookup,
+this redundancy can be removed in final version of the patchset.
+Also another frameworks may need similar patches.
+
+Patch 11 converts exynos-dsi driver to restrack API. It solves issues of
+provider unbind (1st issue) and late init due to deferred probing (2nd issue).
+
+Patch 13 shows how to deal with optional resources (3rd issue).
+
+Patch 15 is a simple example how to deal with resources depending on other
+resources. In this particular case ld9040 lcd panel driver requires presence
+of regulators and gpio prior to expose drm_panel resource.
+
+Patches 5 and 7 adds helper functions for DT node lookup of resource providers.
+
+Patches 10,12,14 are just fixes or cleanups.
+
+The patchset is based on exynos-drm-next [1] due to fact I have developed it
+on exynos platforms. I can rebase it on other branch, if necessary.
+
+[1]: https://git.kernel.org/cgit/linux/kernel/git/daeinki/drm-exynos.git/log/?h=exynos-drm-next
+
+Regards
+Andrzej
+
+
+Andrzej Hajda (15):
+  drivers/base: add track framework
+  drivers/base: add restrack framework
+  drm/panel: add restrack support
+  regulator: add restrack support
+  gpio: move DT parsing code to separate functions
+  gpio: add restrack support
+  clk: add DT parsing function
+  clk: add restrack support
+  phy: add restrack support
+  drm/exynos/dsi: simplify hotplug code
+  drm/exynos/dsi: convert to restrack API
+  drm/exynos/dpi: use common of_graph functions
+  drm/exynos/dpi: convert to restrack API
+  drm/panel/ld9040: do not power off panel on removal
+  drm/panel/ld9040: convert to restrack API
+
+ drivers/base/Makefile                    |   2 +-
+ drivers/base/restrack.c                  | 344 +++++++++++++++++++++++++++++++
+ drivers/base/track.c                     | 241 ++++++++++++++++++++++
+ drivers/clk/clk.c                        |   6 +
+ drivers/clk/clkdev.c                     |  97 +++++++++
+ drivers/gpio/gpiolib-of.c                |  59 +++---
+ drivers/gpio/gpiolib.c                   | 114 +++++++++-
+ drivers/gpio/gpiolib.h                   |   4 +-
+ drivers/gpu/drm/drm_panel.c              |  97 +++++++++
+ drivers/gpu/drm/exynos/exynos_drm_dpi.c  | 193 +++++++----------
+ drivers/gpu/drm/exynos/exynos_drm_dsi.c  | 113 +++++-----
+ drivers/gpu/drm/exynos/exynos_drm_fimd.c |   7 +
+ drivers/gpu/drm/panel/panel-ld9040.c     |  42 ++--
+ drivers/phy/phy-core.c                   |  90 ++++++++
+ drivers/regulator/core.c                 |  77 +++++++
+ include/drm/drm_panel.h                  |   4 +
+ include/linux/clk.h                      |   3 +
+ include/linux/gpio/consumer.h            |   4 +
+ include/linux/phy/phy.h                  |   3 +
+ include/linux/regulator/consumer.h       |  10 +
+ include/linux/restrack.h                 | 143 +++++++++++++
+ include/linux/track.h                    | 148 +++++++++++++
+ 22 files changed, 1567 insertions(+), 234 deletions(-)
+ create mode 100644 drivers/base/restrack.c
+ create mode 100644 drivers/base/track.c
+ create mode 100644 include/linux/restrack.h
+ create mode 100644 include/linux/track.h
+
+-- 
+1.9.1
 
