@@ -1,67 +1,43 @@
-From: Zhang Rui <rui.zhang@intel.com>
-Subject: Re: [PATCH] thermal: Fix cdev registration with THERMAL_NO_LIMIT on
- 64bit
-Date: Wed, 10 Dec 2014 09:57:37 +0800
-Message-ID: <1418176657.12435.40.camel@rzhang1-toshiba>
-References: <1418127721-1182-1-git-send-email-punit.agrawal@arm.com>
+From: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2 0/4] Add I2C support to Broadcom iProc
+Date: Tue, 9 Dec 2014 18:18:09 -0800
+Message-ID: <1418177893-22094-1-git-send-email-rjui@broadcom.com>
+References: <Ray Jui <rjui@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1418127721-1182-1-git-send-email-punit.agrawal@arm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Punit Agrawal <punit.agrawal@arm.com>
-Cc: edubezval@gmail.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2014-12-09 at 12:22 +0000, Punit Agrawal wrote:
-> The size of unsigned long varies between 32 and 64 bit systems while
-> the size of phandle arguments is always 32 bits per parameter.
-> 
-> On 64-bit systems, cooling devices registered via of-thermal apis fail
-> to bind when the min/max cooling state is specified as
-> THERMAL_NO_LIMIT (-1UL) as there is a mis-match between the value read
-> from the device tree (32bit) and the pre-processor define (64bit).
-> 
-> As we're unlikely to need cooling states larger than 32 bits, and for
-> consistency with the size of phandle arguments, explicitly limit
-> THERMAL_NO_LIMIT to 32 bits.
-> 
-> Signed-off-by: Punit Agrawal <punit.agrawal@arm.com>
-> ---
->  include/dt-bindings/thermal/thermal.h | 2 +-
->  include/linux/thermal.h               | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/include/dt-bindings/thermal/thermal.h b/include/dt-bindings/thermal/thermal.h
-> index 59822a9..b5e6b00 100644
-> --- a/include/dt-bindings/thermal/thermal.h
-> +++ b/include/dt-bindings/thermal/thermal.h
-> @@ -11,7 +11,7 @@
->  #define _DT_BINDINGS_THERMAL_THERMAL_H
->  
->  /* On cooling devices upper and lower limits */
-> -#define THERMAL_NO_LIMIT		(-1UL)
-> +#define THERMAL_NO_LIMIT		(~0)
->  
-I'm okay with the other change, so Eduardo, what do you think of this?
+This patchset contains the initial I2C support for Broadcom iProc family of
+SoCs.
 
-thanks,
-rui
->  #endif
->  
-> diff --git a/include/linux/thermal.h b/include/linux/thermal.h
-> index ef90838..005586f 100644
-> --- a/include/linux/thermal.h
-> +++ b/include/linux/thermal.h
-> @@ -38,7 +38,7 @@
->  #define THERMAL_CSTATE_INVALID -1UL
->  
->  /* No upper/lower limit requirement */
-> -#define THERMAL_NO_LIMIT	THERMAL_CSTATE_INVALID
-> +#define THERMAL_NO_LIMIT	((u32)~0)
->  
->  /* Unit conversion macros */
->  #define KELVIN_TO_CELSIUS(t)	(long)(((long)t-2732 >= 0) ?	\
+The iProc I2C controller has separate internal TX and RX FIFOs, each has a
+size of 64 bytes. The iProc I2C controller supports two bus speeds including
+standard mode (100 kHz) and fast mode (400 kHz)
 
+Changes from v1:
+ - Fix function argument parenthesis
+ - Get rid of redundant driver owner field
 
+Ray Jui (4):
+  i2c: iProc: define Broadcom iProc I2C binding
+  i2c: iproc: Add Broadcom iProc I2C Driver
+  ARM: mach-bcm: Enable I2C support for iProc
+  ARM: dts: add I2C device nodes for Broadcom Cygnus
+
+ .../devicetree/bindings/i2c/brcm,iproc-i2c.txt     |   37 ++
+ arch/arm/boot/dts/bcm-cygnus.dtsi                  |   20 +
+ arch/arm/mach-bcm/Kconfig                          |    1 +
+ drivers/i2c/busses/Kconfig                         |    9 +
+ drivers/i2c/busses/Makefile                        |    1 +
+ drivers/i2c/busses/i2c-bcm-iproc.c                 |  502 ++++++++++++++++++++
+ 6 files changed, 570 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/brcm,iproc-i2c.txt
+ create mode 100644 drivers/i2c/busses/i2c-bcm-iproc.c
+
+-- 
+1.7.9.5
