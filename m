@@ -1,196 +1,59 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH 2/2] Input: gpio_keys - replace timer and workqueue with
- delayed workqueue
-Date: Wed, 10 Dec 2014 20:32:56 +0200
-Message-ID: <1418236376.17201.57.camel@linux.intel.com>
-References: <20141208071930.GA20802@dtor-ws>
-	 <20141208072124.GA21031@dtor-ws>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/4] PCI: iproc: Add Broadcom iProc PCIe driver
+Date: Wed, 10 Dec 2014 10:46:57 -0800
+Message-ID: <CAGVrzcbZ_f43Vf1mu2XErVi_Jehjggh2TREyrSs84ntSm98yvg@mail.gmail.com>
+References: <1418169871-19232-3-git-send-email-rjui@broadcom.com>
+ <9707535.Y78sV0TgX4@wuerfel> <54887901.8070501@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20141208072124.GA21031@dtor-ws>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: linux-input@vger.kernel.org, Alexander Stein <alexander.stein@systec-electronic.com>, Linus Walleij <linus.walleij@linaro.org>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Alexander Shiyan <shc_work@mail.ru>, Laxman Dewangan <ldewangan@nvidia.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54887901.8070501-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 2014-12-07 at 23:21 -0800, Dmitry Torokhov wrote:
-> We do not need to roll our own implementation of delayed work now that we
-> have proper implementation of mod_delayed_work.
-> 
-> For interrupt-only driven buttons we retain the timer, but we rename
-> it to release_timer to better reflect its purpose.
+2014-12-10 8:46 GMT-08:00 Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>:
+> On 14-12-10 03:31 AM, Arnd Bergmann wrote:
+>>
+>> On Tuesday 09 December 2014 16:04:29 Ray Jui wrote:
+>>>
+>>> Add initial version of the Broadcom iProc PCIe driver. This driver
+>>> has been tested on NSP and Cygnus and is expected to work on all iProc
+>>> family of SoCs that deploys the same PCIe host controller
+>>>
+>>> The driver also supports MSI
+>>>
+>>> Signed-off-by: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>>> Reviewed-by: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>>
+>>
+>> The driver looks suspiciously like the one that Hauke already submitted a
+>> while ago for bcm53xx. Please come up with a merged driver that works for
+>> both.
+>
+> Could you please be a little more specific.  What driver did "Hauke already
+> submitted"?  I do not see any driver in the kernel you are talking about.
 
-At least it doesn't break the driver on Intel Medfield device.
+https://www.marc.info/?l=linux-pci&m=141547043110684&w=2
 
-Tested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+>>
+>>
+>> Are you sure that iProc isn't based on the BCMA bus infrastructure after
+>> all? Even the physical address of your PCI host falls into the address
+>> range that is used for the internal BCMA bus on the other chips!
+>
+> BCMA seems to be for MIPS architectures.  It seems to be quite specific to
+> those architectures using BCMA.  I see no use of it in bcm53xx code?
 
-> 
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> ---
->  drivers/input/keyboard/gpio_keys.c |   65 +++++++++++++++++-------------------
->  1 file changed, 31 insertions(+), 34 deletions(-)
-> 
-> diff --git a/drivers/input/keyboard/gpio_keys.c b/drivers/input/keyboard/gpio_keys.c
-> index a5ece3f..eefd976 100644
-> --- a/drivers/input/keyboard/gpio_keys.c
-> +++ b/drivers/input/keyboard/gpio_keys.c
-> @@ -35,9 +35,13 @@
->  struct gpio_button_data {
->  	const struct gpio_keys_button *button;
->  	struct input_dev *input;
-> -	struct timer_list timer;
-> -	struct work_struct work;
-> -	unsigned int timer_debounce;	/* in msecs */
-> +
-> +	struct timer_list release_timer;
-> +	unsigned int release_delay;	/* in msecs, for IRQ-only buttons */
-> +
-> +	struct delayed_work work;
-> +	unsigned int software_debounce;	/* in msecs, for GPIO-driven buttons */
-> +
->  	unsigned int irq;
->  	spinlock_t lock;
->  	bool disabled;
-> @@ -116,11 +120,14 @@ static void gpio_keys_disable_button(struct gpio_button_data *bdata)
->  {
->  	if (!bdata->disabled) {
->  		/*
-> -		 * Disable IRQ and possible debouncing timer.
-> +		 * Disable IRQ and associated timer/work structure.
->  		 */
->  		disable_irq(bdata->irq);
-> -		if (bdata->timer_debounce)
-> -			del_timer_sync(&bdata->timer);
-> +
-> +		if (gpio_is_valid(bdata->button->gpio))
-> +			cancel_delayed_work_sync(&bdata->work);
-> +		else
-> +			del_timer_sync(&bdata->release_timer);
->  
->  		bdata->disabled = true;
->  	}
-> @@ -343,7 +350,7 @@ static void gpio_keys_gpio_report_event(struct gpio_button_data *bdata)
->  static void gpio_keys_gpio_work_func(struct work_struct *work)
->  {
->  	struct gpio_button_data *bdata =
-> -		container_of(work, struct gpio_button_data, work);
-> +		container_of(work, struct gpio_button_data, work.work);
->  
->  	gpio_keys_gpio_report_event(bdata);
->  
-> @@ -351,13 +358,6 @@ static void gpio_keys_gpio_work_func(struct work_struct *work)
->  		pm_relax(bdata->input->dev.parent);
->  }
->  
-> -static void gpio_keys_gpio_timer(unsigned long _data)
-> -{
-> -	struct gpio_button_data *bdata = (struct gpio_button_data *)_data;
-> -
-> -	schedule_work(&bdata->work);
-> -}
-> -
->  static irqreturn_t gpio_keys_gpio_isr(int irq, void *dev_id)
->  {
->  	struct gpio_button_data *bdata = dev_id;
-> @@ -366,11 +366,10 @@ static irqreturn_t gpio_keys_gpio_isr(int irq, void *dev_id)
->  
->  	if (bdata->button->wakeup)
->  		pm_stay_awake(bdata->input->dev.parent);
-> -	if (bdata->timer_debounce)
-> -		mod_timer(&bdata->timer,
-> -			jiffies + msecs_to_jiffies(bdata->timer_debounce));
-> -	else
-> -		schedule_work(&bdata->work);
-> +
-> +	mod_delayed_work(system_wq,
-> +			 &bdata->work,
-> +			 msecs_to_jiffies(bdata->software_debounce));
->  
->  	return IRQ_HANDLED;
->  }
-> @@ -408,7 +407,7 @@ static irqreturn_t gpio_keys_irq_isr(int irq, void *dev_id)
->  		input_event(input, EV_KEY, button->code, 1);
->  		input_sync(input);
->  
-> -		if (!bdata->timer_debounce) {
-> +		if (!bdata->release_delay) {
->  			input_event(input, EV_KEY, button->code, 0);
->  			input_sync(input);
->  			goto out;
-> @@ -417,9 +416,9 @@ static irqreturn_t gpio_keys_irq_isr(int irq, void *dev_id)
->  		bdata->key_pressed = true;
->  	}
->  
-> -	if (bdata->timer_debounce)
-> -		mod_timer(&bdata->timer,
-> -			jiffies + msecs_to_jiffies(bdata->timer_debounce));
-> +	if (bdata->release_delay)
-> +		mod_timer(&bdata->release_timer,
-> +			jiffies + msecs_to_jiffies(bdata->release_delay));
->  out:
->  	spin_unlock_irqrestore(&bdata->lock, flags);
->  	return IRQ_HANDLED;
-> @@ -429,10 +428,10 @@ static void gpio_keys_quiesce_key(void *data)
->  {
->  	struct gpio_button_data *bdata = data;
->  
-> -	if (bdata->timer_debounce)
-> -		del_timer_sync(&bdata->timer);
-> -
-> -	cancel_work_sync(&bdata->work);
-> +	if (gpio_is_valid(bdata->button->gpio))
-> +		cancel_delayed_work_sync(&bdata->work);
-> +	else
-> +		del_timer_sync(&bdata->release_timer);
->  }
->  
->  static int gpio_keys_setup_key(struct platform_device *pdev,
-> @@ -466,7 +465,7 @@ static int gpio_keys_setup_key(struct platform_device *pdev,
->  					button->debounce_interval * 1000);
->  			/* use timer if gpiolib doesn't provide debounce */
->  			if (error < 0)
-> -				bdata->timer_debounce =
-> +				bdata->software_debounce =
->  						button->debounce_interval;
->  		}
->  
-> @@ -484,9 +483,7 @@ static int gpio_keys_setup_key(struct platform_device *pdev,
->  			bdata->irq = irq;
->  		}
->  
-> -		INIT_WORK(&bdata->work, gpio_keys_gpio_work_func);
-> -		setup_timer(&bdata->timer,
-> -			    gpio_keys_gpio_timer, (unsigned long)bdata);
-> +		INIT_DELAYED_WORK(&bdata->work, gpio_keys_gpio_work_func);
->  
->  		isr = gpio_keys_gpio_isr;
->  		irqflags = IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING;
-> @@ -503,8 +500,8 @@ static int gpio_keys_setup_key(struct platform_device *pdev,
->  			return -EINVAL;
->  		}
->  
-> -		bdata->timer_debounce = button->debounce_interval;
-> -		setup_timer(&bdata->timer,
-> +		bdata->release_delay = button->debounce_interval;
-> +		setup_timer(&bdata->release_timer,
->  			    gpio_keys_irq_timer, (unsigned long)bdata);
->  
->  		isr = gpio_keys_irq_isr;
-> @@ -514,7 +511,7 @@ static int gpio_keys_setup_key(struct platform_device *pdev,
->  	input_set_capability(input, button->type ?: EV_KEY, button->code);
->  
->  	/*
-> -	 * Install custom action to cancel debounce timer and
-> +	 * Install custom action to cancel release timer and
->  	 * workqueue item.
->  	 */
->  	error = devm_add_action(&pdev->dev, gpio_keys_quiesce_key, bdata);
-> 
-
-
+BCMA lives in its own directory in drivers/bcma/ and is not specific
+to MIPS actually. Older BCM47xx/BCM53xx MIPS-based SoCs traditionally
+started with a discoverable Silicon Sonics Backplane (drivers/ssb) and
+progressively migrated to BCMA (drivers/bcma), both subsystems offer a
+very similar bus/device/driver abstraction and discovery mechanism.
 -- 
-Andy Shevchenko <andriy.shevchenko@intel.com>
-Intel Finland Oy
-
+Florian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
