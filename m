@@ -1,41 +1,86 @@
-From: atull <atull@opensource.altera.com>
-Subject: Re: [PATCH v4 0/6] FPGA Manager Framework
-Date: Wed, 10 Dec 2014 14:49:56 -0600
-Message-ID: <alpine.DEB.2.02.1412101449200.31575@linuxheads99>
-References: <1418156090-23578-1-git-send-email-atull@opensource.altera.com> <20141210145241.GB17393@kroah.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20141210145241.GB17393@kroah.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: jgunthorpe@obsidianresearch.com, hpa@zytor.com, monstr@monstr.eu, michal.simek@xilinx.com, rdunlap@infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, pantelis.antoniou@konsulko.com, robh+dt@kernel.org, grant.likely@linaro.org, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, pavel@denx.de, broonie@kernel.org, philip@balister.org, rubini@gnudd.com, s.trumtrar@pengutronix.de, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, balbi@ti.com, m.chehab@samsung.com, davidb@codeaurora.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, linus.walleij@linaro.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yvande
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH] ARM: dts: Bump SD card pin drive strength up on rk3288-evb
+Date: Wed, 10 Dec 2014 12:55:29 -0800
+Message-ID: <1418244929-8254-1-git-send-email-dianders@chromium.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Addy Ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Seungwon Jeon <tgih.jun-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 10 Dec 2014, Greg KH wrote:
+It seems that ever since (536f6b9 mmc: dw_mmc: Reset DMA before
+enabling IDMAC) landed upstream that SD cards have been very unhappy
+on rk3288-evb.  They were a little unhappy before that change, but
+after that change they're REALLY unhappy.
 
-> On Tue, Dec 09, 2014 at 02:14:44PM -0600, atull@opensource.altera.com wrote:
-> > From: Alan Tull <atull@opensource.altera.com>
-> > 
-> > Improvements in this v3 and v4:
-> 
-> Due to the review comments here, and all of the kbuild issues found,
-> please just work on a v5 series that I can apply after 3.19-rc1 is out.
-> I'm dropping this series from my queue now because of those issues.
+It turns out that the above fix happens to fix a corruption when
+reading card information during probe time.  Without the fix we didn't
+detect that high speed SD cards could actually support high speed.
+With the fix we suddenly detect that they're high speed and we try to
+use them at 50MHz.  That doesn't work so well on EVB with the default
+drive strength (maybe because there are two physical SD card slots
+hooked up to the same pin?).
 
-That sounds great.
+Fix the problem by bumping up the drive strength of the sdmmc lines.
 
-Thank you,
+Signed-off-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Fixes: 536f6b91d21b ("mmc: dw_mmc: Reset DMA before enabling IDMAC")
+---
+ arch/arm/boot/dts/rk3288-evb.dtsi | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-Alan
+diff --git a/arch/arm/boot/dts/rk3288-evb.dtsi b/arch/arm/boot/dts/rk3288-evb.dtsi
+index 3e067dd..6194d67 100644
+--- a/arch/arm/boot/dts/rk3288-evb.dtsi
++++ b/arch/arm/boot/dts/rk3288-evb.dtsi
+@@ -155,6 +155,15 @@
+ };
+ 
+ &pinctrl {
++	pcfg_pull_none_drv_8ma: pcfg-pull-none-drv-8ma {
++		drive-strength = <8>;
++	};
++
++	pcfg_pull_up_drv_8ma: pcfg-pull-up-drv-8ma {
++		bias-pull-up;
++		drive-strength = <8>;
++	};
++
+ 	backlight {
+ 		bl_en: bl-en {
+ 			rockchip,pins = <7 2 RK_FUNC_GPIO &pcfg_pull_none>;
+@@ -173,6 +182,27 @@
+ 		};
+ 	};
+ 
++	sdmmc {
++		/*
++		 * Default drive strength isn't enough to achieve even
++		 * high-speed mode on EVB board so bump up to 8ma.
++		 */
++		sdmmc_bus4: sdmmc-bus4 {
++			rockchip,pins = <6 16 RK_FUNC_1 &pcfg_pull_up_drv_8ma>,
++					<6 17 RK_FUNC_1 &pcfg_pull_up_drv_8ma>,
++					<6 18 RK_FUNC_1 &pcfg_pull_up_drv_8ma>,
++					<6 19 RK_FUNC_1 &pcfg_pull_up_drv_8ma>;
++		};
++
++		sdmmc_clk: sdmmc-clk {
++			rockchip,pins = <6 20 RK_FUNC_1 &pcfg_pull_none_drv_8ma>;
++		};
++
++		sdmmc_cmd: sdmmc-cmd {
++			rockchip,pins = <6 21 RK_FUNC_1 &pcfg_pull_up_drv_8ma>;
++		};
++	};
++
+ 	usb {
+ 		host_vbus_drv: host-vbus-drv {
+ 			rockchip,pins = <0 14 RK_FUNC_GPIO &pcfg_pull_none>;
+-- 
+2.2.0.rc0.207.ga3a616c
 
-
-> 
-> thanks,
-> 
-> greg k-h
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
