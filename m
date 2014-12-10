@@ -1,51 +1,36 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 2/4] irqchip: mediatek: Add support for mt8173
-Date: Wed, 10 Dec 2014 15:41:15 +0100
-Message-ID: <4428865.bnDr16Yqvr@wuerfel>
-References: <1418208602-35584-1-git-send-email-eddie.huang@mediatek.com> <2545975.QDuBFbG7BN@wuerfel> <1418222233.21309.17.camel@mtksdaap41>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH v8 3/3] net: hisilicon: new hip04 ethernet driver
+Date: Wed, 10 Dec 2014 11:07:32 -0500 (EST)
+Message-ID: <20141210.110732.519666115784722516.davem@davemloft.net>
+References: <5487C357.9030507@huawei.com>
+	<5487EC09.8090907@huawei.com>
+	<2331317.LV3gPP3odb@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1418222233.21309.17.camel@mtksdaap41>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, yh.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <2331317.LV3gPP3odb@wuerfel>
+Sender: netdev-owner@vger.kernel.org
+To: arnd@arndb.de
+Cc: dingtianhong@huawei.com, agraf@suse.de, zhangfei.gao@linaro.org, linux@arm.linux.org.uk, f.fainelli@gmail.com, sergei.shtylyov@cogentembedded.com, mark.rutland@arm.com, David.Laight@aculab.com, eric.dumazet@gmail.com, xuwei5@hisilicon.com, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 10 December 2014 22:37:13 Yingjoe Chen wrote:
-> OK, I'll change to something like this in next version:
+From: Arnd Bergmann <arnd@arndb.de>
+Date: Wed, 10 Dec 2014 10:35:20 +0100
 
-I've just taken another look at the driver and have a different
-suggestion:
-
-> --- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt
-> +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt
-> @@ -17,12 +17,17 @@ Required properties:
->    use the same interrupt-cells format as GIC.
->  - reg: Physical base address of the intpol registers and length of memory
->    mapped region.
+> On Wednesday 10 December 2014 14:45:29 Ding Tianhong wrote:
+>> 
+>> Miss this code, I think the best way is skb_orphan(skb), just like the cxgb3 drivers, some hardware
+>> didn't use the tx inq to free dmad Tx packages.
 > 
-> +Optional properties:
-> +- mediatek,intpol-number: The number of interrupts supported by intpol,
-> +  default 224 if omitted.
-> +
->  Example:
->         sysirq: interrupt-controller@10200100 {
->                 compatible = "mediatek,mt6589-sysirq", "mediatek,mt6577-sysirq";
->                 interrupt-controller;
->                 #interrupt-cells = >;
->                 interrupt-parent = <&gic>;
->                 reg = <0 0x10200100 0 0x1c>;
-> +               mediatek,intpol-number = <224>;
->         };
+> The problem with skb_orphan is that you are telling the network stack that
+> the packet is now out of its reach and it will no longer be able to take
+> queued packets into account.
 
-The number of interrupt pins directly corresponds to the size of the reg
-property in bits, so I think you can just use that and don't even need
-another property.
+skb_orphan() also does not release netfilter resources attached to the
+packet.
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Really, all drivers must free TX SKBs in a small, finite, amount of
+time after submission.
+
+There is no way around this.
