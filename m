@@ -1,85 +1,68 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH] ARM: dts: Bump SD card pin drive strength up on rk3288-evb
-Date: Wed, 10 Dec 2014 12:55:29 -0800
-Message-ID: <1418244929-8254-1-git-send-email-dianders@chromium.org>
+From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Subject: Re: BCM2048 bluetooth connected over OMAP serial
+Date: Wed, 10 Dec 2014 21:56:22 +0100
+Message-ID: <20141210205622.GA25286@amd>
+References: <20141210164333.GA3154@amd>
+ <11367725.nphhSzdtpK@wuerfel>
+ <20141210184203.GA28150@leverpostej>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20141210184203.GA28150@leverpostej>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Addy Ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Seungwon Jeon <tgih.jun-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org" <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, "sre-GFxCN5SEZAc@public.gmane.org" <sre-GFxCN5SEZAc@public.gmane.org>, kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org" <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "aaro.koskinen-X3B1VOXEql0@public.gmane.org" <aaro.koskinen-X3B1VOXEql0@public.gmane.org>, "ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-It seems that ever since (536f6b9 mmc: dw_mmc: Reset DMA before
-enabling IDMAC) landed upstream that SD cards have been very unhappy
-on rk3288-evb.  They were a little unhappy before that change, but
-after that change they're REALLY unhappy.
+On Wed 2014-12-10 18:42:03, Mark Rutland wrote:
+> On Wed, Dec 10, 2014 at 05:02:42PM +0000, Arnd Bergmann wrote:
+> > On Wednesday 10 December 2014 17:43:33 Pavel Machek wrote:
+> > > 
+> > > So, there's bluetooth chip that's connected to the SoC by UART and some
+> > > GPIOs. What would be right representation in the device tree?
+> > > Something like this?
+> > > 
+> > >         bluetooth {
+> > >                   compatible = "broadcom,bcm2048";
+> > >                   uart = <&uart2>;
+> > >                   reset-gpios = <&gpio3 27 GPIO_ACTIVE_HIGH>; /* want 91 */
+> > >                   host-wakeup-gpios = <&gpio4 5 GPIO_ACTIVE_HIGH>; /* want 101 */
+> > >                   bluetooth-wakeup-gpios = <&gpio2 5 GPIO_ACTIVE_HIGH>; /* want 37 */
+> > >                   chip-type = >;
+> > >                   bt-sysclk = <2>;
+> > >                   reset-gpio-shared = <0>;
+> > >         };
+> > > 
+> > > Is there some way to prevent OMAP tty driver from binding to the
+> > > device and exporting the device to userspace?
+> > 
+> > I think from the driver perspective, you want this to be a tty line
+> > discipline rather than a driver that attaches to the physical
+> > uart.
+> > 
+> > For the DT representation, I fear we haven't got a precedent. A uart
+> > phandle sounds reasonable, but there might be other ways to do it
+> > and we should consider if there are better alternatives. It could
+> > possibly be a child node of the uart, but that would require other
+> > infrastructure in the kernel because we don't currently create
+> > devices for those.
+> 
+> I think the child node is the way to go; that would match what we do for
+> I2C and SPI. We might need new infrastructure, but I don't think we
+> should treat this differently simlpy because we don't have that yet.
 
-It turns out that the above fix happens to fix a corruption when
-reading card information during probe time.  Without the fix we didn't
-detect that high speed SD cards could actually support high speed.
-With the fix we suddenly detect that they're high speed and we try to
-use them at 50MHz.  That doesn't work so well on EVB with the default
-drive strength (maybe because there are two physical SD card slots
-hooked up to the same pin?).
+Well, uart in this case looks more like a GPIO than an I2C (no
+addressing, just few wires). And we do phandle for GPIOs.
 
-Fix the problem by bumping up the drive strength of the sdmmc lines.
+Actually, the chip also has PCM, analog audio, and "pc compatible?"
+connections, plus some connection to WIFI. So we may need more
+phandles there....
 
-Signed-off-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Fixes: 536f6b91d21b ("mmc: dw_mmc: Reset DMA before enabling IDMAC")
----
- arch/arm/boot/dts/rk3288-evb.dtsi | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
-
-diff --git a/arch/arm/boot/dts/rk3288-evb.dtsi b/arch/arm/boot/dts/rk3288-evb.dtsi
-index 3e067dd..6194d67 100644
---- a/arch/arm/boot/dts/rk3288-evb.dtsi
-+++ b/arch/arm/boot/dts/rk3288-evb.dtsi
-@@ -155,6 +155,15 @@
- };
- 
- &pinctrl {
-+	pcfg_pull_none_drv_8ma: pcfg-pull-none-drv-8ma {
-+		drive-strength = <8>;
-+	};
-+
-+	pcfg_pull_up_drv_8ma: pcfg-pull-up-drv-8ma {
-+		bias-pull-up;
-+		drive-strength = <8>;
-+	};
-+
- 	backlight {
- 		bl_en: bl-en {
- 			rockchip,pins = <7 2 RK_FUNC_GPIO &pcfg_pull_none>;
-@@ -173,6 +182,27 @@
- 		};
- 	};
- 
-+	sdmmc {
-+		/*
-+		 * Default drive strength isn't enough to achieve even
-+		 * high-speed mode on EVB board so bump up to 8ma.
-+		 */
-+		sdmmc_bus4: sdmmc-bus4 {
-+			rockchip,pins = <6 16 RK_FUNC_1 &pcfg_pull_up_drv_8ma>,
-+					<6 17 RK_FUNC_1 &pcfg_pull_up_drv_8ma>,
-+					<6 18 RK_FUNC_1 &pcfg_pull_up_drv_8ma>,
-+					<6 19 RK_FUNC_1 &pcfg_pull_up_drv_8ma>;
-+		};
-+
-+		sdmmc_clk: sdmmc-clk {
-+			rockchip,pins = <6 20 RK_FUNC_1 &pcfg_pull_none_drv_8ma>;
-+		};
-+
-+		sdmmc_cmd: sdmmc-cmd {
-+			rockchip,pins = <6 21 RK_FUNC_1 &pcfg_pull_up_drv_8ma>;
-+		};
-+	};
-+
- 	usb {
- 		host_vbus_drv: host-vbus-drv {
- 			rockchip,pins = <0 14 RK_FUNC_GPIO &pcfg_pull_none>;
+									Pavel
 -- 
-2.2.0.rc0.207.ga3a616c
-
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
