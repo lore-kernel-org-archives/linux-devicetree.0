@@ -1,100 +1,57 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [RFC/PATCH 2/7] arm: omap: devicetree: add new properties for
- OMAP devices
-Date: Wed, 10 Dec 2014 09:00:49 -0600
-Message-ID: <20141210150049.GD4602@saruman>
-References: <1418164072-19087-1-git-send-email-balbi@ti.com>
- <1418164072-19087-3-git-send-email-balbi@ti.com>
- <54882967.60302@ti.com>
-Reply-To: <balbi@ti.com>
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: Re: [PATCH v4 2/6] arm: dts: socfpga: add altera fpga manager
+Date: Wed, 10 Dec 2014 16:01:09 +0100
+Message-ID: <20141210150109.GA23358@pengutronix.de>
+References: <1418156090-23578-1-git-send-email-atull@opensource.altera.com>
+ <1418156090-23578-3-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="T7mxYSe680VjQnyC"
-Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <54882967.60302@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Lokesh Vutla <lokeshvutla@ti.com>
-Cc: Felipe Balbi <balbi@ti.com>, Tony Lindgren <tony@atomide.com>, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>, Paul Walmsley <paul@pwsan.com>, Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org
+In-Reply-To: <1418156090-23578-3-git-send-email-atull@opensource.altera.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: atull@opensource.altera.com
+Cc: gregkh@linuxfoundation.org, jgunthorpe@obsidianresearch.com, hpa@zytor.com, monstr@monstr.eu, michal.simek@xilinx.com, rdunlap@infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, pantelis.antoniou@konsulko.com, robh+dt@kernel.org, grant.likely@linaro.org, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, pavel@denx.de, broonie@kernel.org, philip@balister.org, rubini@gnudd.com, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, balbi@ti.com, m.chehab@samsung.com, davidb@codeaurora.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, linus.walleij@linaro.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com
 List-Id: devicetree@vger.kernel.org
 
---T7mxYSe680VjQnyC
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi!
 
-Hi,
+On Tue, Dec 09, 2014 at 02:14:46PM -0600, atull@opensource.altera.com wrote:
+> From: Alan Tull <atull@opensource.altera.com>
+> 
+> Add Altera FGPA manager to device tree.
+> 
+> Signed-off-by: Alan Tull <atull@opensource.altera.com>
+> ---
+>  arch/arm/boot/dts/socfpga.dtsi |   10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+> index 4472fd9..bab98b6 100644
+> --- a/arch/arm/boot/dts/socfpga.dtsi
+> +++ b/arch/arm/boot/dts/socfpga.dtsi
+> @@ -751,5 +751,15 @@
+>  			compatible = "altr,sys-mgr", "syscon";
+>  			reg = <0xffd08000 0x4000>;
+>  		};
+> +
+> +		hps_0_fpgamgr: fpgamgr@0xff706000 {
+> +			compatible = "altr,fpga-mgr", "simple-bus";
+> +			reg = <0xFF706000 0x1000
+> +			       0xFFB90000 0x1000>;
+> +			interrupts = <0 175 4>;
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges;
+> +		};
 
-On Wed, Dec 10, 2014 at 04:37:19PM +0530, Lokesh Vutla wrote:
-> Hi Felipe,
->=20
-> On Wednesday 10 December 2014 03:57 AM, Felipe Balbi wrote:
-> > In order to get rid of some more hwmod data, we
-> > introduce a few extra properties to OMAP DT
-> > data in order to be able to pass the needed
-> > information through DT.
-> >=20
-> > Signed-off-by: Felipe Balbi <balbi@ti.com>
-> > ---
-> >  Documentation/devicetree/bindings/arm/omap/omap.txt | 7 +++++++
-> >  1 file changed, 7 insertions(+)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/arm/omap/omap.txt b/Docu=
-mentation/devicetree/bindings/arm/omap/omap.txt
-> > index 4f6a82c..c6b9515 100644
-> > --- a/Documentation/devicetree/bindings/arm/omap/omap.txt
-> > +++ b/Documentation/devicetree/bindings/arm/omap/omap.txt
-> > @@ -23,6 +23,13 @@ Optional properties:
-> >    during suspend.
-> >  - ti,no-reset-on-init: When present, the module should not be reset at=
- init
-> >  - ti,no-idle-on-init: When present, the module should not be idled at =
-init
-> > +- ti,rev_offs: IP block revision register offset (defaults to 0)
-> > +- ti,sysc_offs: OCP_SYSCONFIG register offset (defaults to 0)
-> > +- ti,syss_offs: OCP_SYSSTATUS register offset (defaults to 0)
-> > +- ti,srst_udelay: Delay needed after a softreset in usecs (defaults to=
- 0)
-> > +- ti,idlemodes: Slave and Master supported idling modes
-> > +- ti,clockact: default value of clock activity bits (defaults to 0)
-> > +- ti,sysc_type: OCP_SYSCONFIG type. Valid types are 1, 2 or 3 (default=
-s to 1)
-> Once if all the hwmod data comes to dt it will be very dufficult to see a=
-ll the data
-> together. Can we separate out hwmod class data like clocks data is separa=
-ted out into different node
-> or something of the sort like below?
->=20
-> 	ti, hwmod_class {
-> 		ti,class_name =3D <>;
+The fpgamgr is NOT a bus. You don't need ranges and/or simple-bus.
 
-this can be done, but I don't want to pass a class name. It's anyways
-just the hwmod name without the digits. For those which are not, I would
-rather change the class name to match.
+Regards,
+Steffen
 
---=20
-balbi
-
---T7mxYSe680VjQnyC
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUiGAhAAoJEIaOsuA1yqREM48QAKuL33csR+O99dHxFfj+hLww
-31sPi8FtFzK2My/YxGBRSoO+/SXpffouQT8e2mrosQnmiDRLVBQLT8yqy4o9dNV8
-TpG34X1NLsXb/GWWf7cY2KxxnSkO9I7Gv4wm/NQJ3l6ZwBk1V8RlE9oFttWusYUW
-5rH2eAwcGqM6z86KkQIVQB/rnoSwiDcIpmcgqahoZENJOeBQfFV1C6n4NMy0b4nm
-hrPjm2DrAZtWAMyq0b7QX0u6NEpBoSBeMC3LmBerKU1OH/TVH0TI/A0K5ZtrZmmd
-wzbh8RVs6+mfkZynwl9NFF/E1B7ywzS/RawYGI+oFouGg62oVV1+ebwZ7PxFMrMh
-CXvyQK9rKuXAaMX0mM1PNn5rZcFxUTxLBGCXZLoyKha6eVtYTaOFOUT6UZKovVc+
-rMsjBWg9ZbsiCaBF0qRlF5eSffDYZPiA0R760zQUZK9a4vkOVY7x0BNtVw/2Ikoz
-uWWfYE9nsGEM0ojv6Ow7k41ljd1u/cBbozVjdCRjPFvnunwgA7upw6i8OHY8jQjy
-2ZotRIPHj+YNV7yAfj1LJvT3y5SQl4N+RRN8lBXUFZc1WbVwnXSdMDOUq9CKsEkS
-uEZV020vfqkSAw3YynJDqwTYS+7cC70oi81XXSwvCIEJMe9BuFTn2HynniAH9YT3
-m7zKyBOdeTdix/+/GAU0
-=CHQz
------END PGP SIGNATURE-----
-
---T7mxYSe680VjQnyC--
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
