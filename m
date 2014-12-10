@@ -1,74 +1,129 @@
-From: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 3/4] ARM: mach-bcm: Enable I2C support for iProc
-Date: Tue, 9 Dec 2014 19:58:27 -0800
-Message-ID: <5487C4E3.6060403@broadcom.com>
-References: <Ray Jui <rjui@broadcom.com> <1418177893-22094-1-git-send-email-rjui@broadcom.com> <1418177893-22094-4-git-send-email-rjui@broadcom.com> <5487ADE5.4070705@gmail.com> <5487AEF0.5010404@broadcom.com> <5487BBE0.4000701@gmail.com>
+From: Ding Tianhong <dingtianhong@huawei.com>
+Subject: Re: [PATCH v8 3/3] net: hisilicon: new hip04 ethernet driver
+Date: Wed, 10 Dec 2014 14:45:29 +0800
+Message-ID: <5487EC09.8090907@huawei.com>
+References: <1397869980-21187-1-git-send-email-zhangfei.gao@linaro.org> <5483C977.2060308@huawei.com> <54842298.2010007@suse.de> <2619239.NTtdNaZCJM@wuerfel> <5487C357.9030507@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5487BBE0.4000701-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <5487C357.9030507@huawei.com>
+Sender: netdev-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, Alexander Graf <agraf@suse.de>
+Cc: Zhangfei Gao <zhangfei.gao@linaro.org>, davem@davemloft.net, linux@arm.linux.org.uk, f.fainelli@gmail.com, sergei.shtylyov@cogentembedded.com, mark.rutland@arm.com, David.Laight@aculab.com, eric.dumazet@gmail.com, xuwei5@hisilicon.com, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 12/9/2014 7:20 PM, Florian Fainelli wrote:
-> On 09/12/14 18:24, Ray Jui wrote:
->>
->>
->> On 12/9/2014 6:20 PM, Florian Fainelli wrote:
->>> On 09/12/14 18:18, Ray Jui wrote:
->>>> Enable I2C driver support for Broadcom iProc family of SoCs by
->>>> selecting I2C_BCM_IPROC
+On 2014/12/10 11:51, Ding Tianhong wrote:
+> On 2014/12/8 4:09, Arnd Bergmann wrote:
+>> On Sunday 07 December 2014 10:49:12 Alexander Graf wrote:
+>>> On 07.12.14 04:28, Ding Tianhong wrote:
+>>>> On 2014/12/7 8:42, Alexander Graf wrote:
+>>>>> On 19.04.14 03:13, Zhangfei Gao wrote:
+>>>>>> Support Hisilicon hip04 ethernet driver, including 100M / 1000M controller.
+>>>>>> The controller has no tx done interrupt, reclaim xmitted buffer in the poll.
+>>>>>>
+>>>>>> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+>>>>>
+>>>>> Is this driver still supposed to go upstream? I presume this was the
+>>>>> last submission and it's been quite some time ago 
+>>>>>
 >>>>
->>>> Signed-off-by: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->>>> Reviewed-by: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->>>> ---
->>>>    arch/arm/mach-bcm/Kconfig |    1 +
->>>>    1 file changed, 1 insertion(+)
->>>>
->>>> diff --git a/arch/arm/mach-bcm/Kconfig b/arch/arm/mach-bcm/Kconfig
->>>> index aaeec78..86ee90b 100644
->>>> --- a/arch/arm/mach-bcm/Kconfig
->>>> +++ b/arch/arm/mach-bcm/Kconfig
->>>> @@ -19,6 +19,7 @@ config ARCH_BCM_IPROC
->>>>        select ARCH_REQUIRE_GPIOLIB
->>>>        select ARM_AMBA
->>>>        select PINCTRL
->>>> +    select I2C_BCM_IPROC
+>>>> yes, it is really a long time, but The hip04 did not support tx irq, 
+>>>> we couldn't get any better idea to fix this defect, do you have any suggestion?
 >>>
->>> One way to avoid having to modify mach-bcm/Kconfig would be to have your
->>> i2c driver Kconfig do this:
->>>
->>> default ARCH_BCM_IPROC
->>>
->>> would that work?
->>>
->> Yes. So in which case it is better to select a driver from the
->> architecture specific Kconfig?
->
-> I suppose if your driver/subsystem is critical for system boot, like
-> powering a regulator or something that has a critical purpose, a select
-> is probably more appropriate here. If this is just exposing non-critical
-> devices, I would go with a depends on/default at the driver Kconfig level.
->
-> This is just how I see things, others would definitively have a
-> different view.
->
-Okay. Thanks. I default the driver to y in patchset v3 just like some 
-other I2C drivers in the same Kconfig. It already depends on 
-ARCH_BCM_IPROC so it makes sense to set the default to y, i.e., it will 
-be enabled by default for ARCH_BCM_IPROC platforms.
-
+>>> Well, if hardware doesn't have a TX irq I don't see there's anything we
+>>> can do to fix that ;).
 >>
->>>>        help
->>>>          This enables support for systems based on Broadcom IPROC
->>>> architected SoCs.
->>>>          The IPROC complex contains one or more ARM CPUs along with
->>>> common
->>>>
->>>
->
+>> I don't know if it's related to the ethernet on hip01, but I would assume
+>> it is, and that platform is currently being submitted for inclusion, so
+>> I'd definitely hope to see this driver get merged too eventually.
+>>
+>> IIRC, the last revision of the patch set had basically fixed the problem,
+>> except for a race that would still allow the napi poll function to exit
+>> with poll_complete() but a full queue of TX descriptors and no fallback
+>> to clean them up. There was also still an open question about whether or
+>> not the driver should use skb_orphan, but I may be misremembering that part.
+>>  
+> 
+> Hi Arnd:
+> 
+> what about use a state machine to check the tx queue and free the skb, just like:
+> 
+> diff --git a/drivers/net/ethernet/hisilicon/hip04_eth.c b/drivers/net/ethernet/hisilicon/hip04_eth.c
+> index 8593658..71faca8 100644
+> --- a/drivers/net/ethernet/hisilicon/hip04_eth.c
+> +++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
+> @@ -396,9 +396,25 @@ static int hip04_mac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+>         stats->tx_packets++;
+>         priv->tx_count++;
+> 
+> +
+> +       queue_delayed_work(priv->wq, &priv->tx_queue, delay);
+> +
+>         return NETDEV_TX_OK;
+>  }
+> 
+> +static void hip04_tx_queue_monitor(struct work_struct *work)
+> +{
+> +       struct hip04_priv *priv = container_of(work, struct hip04_priv,
+> +                                              queue_work.work);
+> +       struct net_device *dev = priv->ndev;
+> +       hip04_tx_reclain(ndev, false);
+> +
+> +       if (TX_QUEUE_IS_EMPRY(ndev))
+> +               return;
+> +
+> +       queue_delayed_work(priv->wq, &priv->tx_queue, delay);
+> +}
+> +
+>  static int hip04_rx_poll(struct napi_struct *napi, int budget)
+>  {
+>         struct hip04_priv *priv = container_of(napi, struct hip04_priv, napi);
+> @@ -736,6 +752,8 @@ static int hip04_mac_probe(struct platform_device *pdev)
+>                 goto alloc_fail;
+>         }
+> 
+> +       INIT_DELAYED_WORK(&priv->tx_queue, hip04_tx_queue_monitor);
+> +
+>         return 0;
+> 
+> 
+> 
+> what do you think of this solution?
+> 
+> Regards
+> Ding
+> 
+
+Miss this code, I think the best way is skb_orphan(skb), just like the cxgb3 drivers, some hardware
+didn't use the tx inq to free dmad Tx packages.
+
+Ding
+
+> 
+>>> Dave, what's your take here? Should we keep a driver from going upstream
+>>> just because the hardware is partly broken? I'd really prefer to have an
+>>> upstream driver on that SoC rather than some random (eventually even
+>>> more broken) downstream code.
+>>
+>> We can certainly have a slow driver for this hardware, and I'd much
+>> prefer slow over broken. I'd guess that some of the performance impact
+>> of the missing interrupts can now be offset with the xmit_more	 logic.
+>>
+>> 	Arnd
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe netdev" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>
+>> .
+>>
+> 
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe netdev" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> .
+> 
