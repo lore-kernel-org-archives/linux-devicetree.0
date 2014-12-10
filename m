@@ -1,103 +1,151 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH/RFC v9 06/19] DT: Add documentation for the mfd Maxim
- max77693
-Date: Wed, 10 Dec 2014 12:50:51 +0200
-Message-ID: <20141210105051.GN15559@valkosipuli.retiisi.org.uk>
-References: <1417622814-10845-1-git-send-email-j.anaszewski@samsung.com>
- <1417622814-10845-7-git-send-email-j.anaszewski@samsung.com>
- <20141204100706.GP14746@valkosipuli.retiisi.org.uk>
- <54804840.4030202@samsung.com>
- <54881A1F.2080607@samsung.com>
+From: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
+Subject: Re: [RFC/PATCH 4/7] arm: omap: device: add support for generating
+ sysconfig data from DT
+Date: Wed, 10 Dec 2014 16:19:06 +0530
+Message-ID: <54882522.20002@ti.com>
+References: <1418164072-19087-1-git-send-email-balbi@ti.com> <1418164072-19087-5-git-send-email-balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-leds-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <54881A1F.2080607@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, kyungmin.park@samsung.com, b.zolnierkie@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, s.nawrocki@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, Andrzej Hajda <a.hajda@samsung.com>, Lee Jones <lee.jones@linaro.org>, Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1418164072-19087-5-git-send-email-balbi-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: "Kristo, Tero" <t-kristo-l0cyMroinI0@public.gmane.org>, Linux ARM Kernel Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacek,
-
-On Wed, Dec 10, 2014 at 11:02:07AM +0100, Jacek Anaszewski wrote:
-> Hi Sakari,
+Hi Felipe,
+On Wednesday 10 December 2014 03:57 AM, Felipe Balbi wrote:
+> After moving sysconfig data to DT, we need to make
+> sure we can generate the same data we have today in C
+> files out of the DT provided properties.
 > 
-> On 12/04/2014 12:40 PM, Jacek Anaszewski wrote:
+> This patch adds support for all optional properties
+> documented by a previous commit.
 > 
-> >On 12/04/2014 11:07 AM, Sakari Ailus wrote:
-> >>Hi Jacek,
-> >>
-> >>On Wed, Dec 03, 2014 at 05:06:41PM +0100, Jacek Anaszewski wrote:
-> >>>This patch adds device tree binding documentation for
-> >>>the flash cell of the Maxim max77693 multifunctional device.
-> >>>
-> >>>Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
-> >>>Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-> >>>Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
-> >>>Cc: Lee Jones <lee.jones@linaro.org>
-> >>>Cc: Chanwoo Choi <cw00.choi@samsung.com>
-> >>>Cc: Bryan Wu <cooloney@gmail.com>
-> >>>Cc: Richard Purdie <rpurdie@rpsys.net>
-> >>>Cc: Rob Herring <robh+dt@kernel.org>
-> >>>Cc: Pawel Moll <pawel.moll@arm.com>
-> >>>Cc: Mark Rutland <mark.rutland@arm.com>
-> >>>Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-> >>>Cc: Kumar Gala <galak@codeaurora.org>
-> >>>Cc: <devicetree@vger.kernel.org>
-> >>>---
-> >>>  Documentation/devicetree/bindings/mfd/max77693.txt |   89
-> >>>++++++++++++++++++++
-> >>>  1 file changed, 89 insertions(+)
-> >>>
-> >>>diff --git a/Documentation/devicetree/bindings/mfd/max77693.txt
-> >>>b/Documentation/devicetree/bindings/mfd/max77693.txt
-> >>>index 01e9f30..25a6e78 100644
-> >>>--- a/Documentation/devicetree/bindings/mfd/max77693.txt
-> >>>+++ b/Documentation/devicetree/bindings/mfd/max77693.txt
-> >>>@@ -41,7 +41,66 @@ Optional properties:
-> >>>       To get more informations, please refer to documentaion.
-> >>>      [*] refer Documentation/devicetree/bindings/pwm/pwm.txt
-> >>>
-> >>>+- led : the LED submodule device node
-> >>>+
-> >>>+There are two led outputs available - fled1 and fled2. Each of them can
-> >>>+control a separate led or they can be connected together to double
-> >>>+the maximum current for a single connected led. One led is represented
-> >>>+by one child node.
-> >>>+
-> >>>+Required properties:
-> >>>+- compatible : Must be "maxim,max77693-led".
-> >>>+
-> >>>+Optional properties:
-> >>>+- maxim,fleds : Array of current outputs in order: fled1, fled2.
-> >>>+    Note: both current outputs can be connected to a single led
-> >>>+    Possible values:
-> >>>+        MAX77693_LED_FLED_UNUSED - the output is left disconnected,
-> >>>+        MAX77693_LED_FLED_USED - a diode is connected to the output.
-> >>
-> >>As you have a LED sub-nodes for each LED already, isn't this redundant?
-> >
-> >Well, it seems so :)
+> Signed-off-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+> ---
+>  arch/arm/mach-omap2/omap_device.c | 115 ++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 115 insertions(+)
 > 
-> I agreed here recklessly. This property allows to describe the
+> diff --git a/arch/arm/mach-omap2/omap_device.c b/arch/arm/mach-omap2/omap_device.c
+> index abd622b..ea729aa 100644
+> --- a/arch/arm/mach-omap2/omap_device.c
+> +++ b/arch/arm/mach-omap2/omap_device.c
+> @@ -25,6 +25,7 @@
+>   */
+>  #undef DEBUG
 
-If this is reckless then we're doing very, very well. :-D
+[...snip..]
 
-> situation when one LED is connected to both outputs. Single sub-node
-> can describe two type of designs: one LED connected to a single
-> output or one LED connected to both outputs. Therefore additional
-> property is needed to assess what is the actual case.
+> +
+> +static int omap_hwmod_init_sysc(struct device *dev,
+> +		struct omap_hwmod *oh, int index)
+> +{
+> +	struct device_node *node = dev->of_node;
+> +	struct omap_hwmod_class *class = oh->class;
+> +	struct omap_hwmod_class_sysconfig *sysc;
+> +	int ret;
+> +	int i;
+> +	char name[128];
+> +	const char *tmp = oh->name;
+> +	u32 prop;
+> +
+> +	/* if data isn't provided by DT, skip */
+> +	if ((class && class->sysc) || !omap_hwmod_has_sysc_bindings(dev))
+> +		return 0;
+> +
+> +	class = kzalloc(sizeof(*class), GFP_KERNEL);
+> +	if (!class)
+> +		return -ENOMEM;
+> +
+> +	i = 0;
+> +	while (*tmp) {
+> +		if (isalpha(*tmp))
+> +			name[i++] = *tmp;
+> +		tmp++;
+> +	}
+> +	name[i] = '\0';
+> +
+> +	class->name = kzalloc(sizeof(name), GFP_KERNEL);
+> +	if (!class->name)
+> +		return -ENOMEM;
+> +	strncpy(class->name, name, sizeof(name) - 1);
+> +
+> +	sysc = kzalloc(sizeof(*sysc), GFP_KERNEL);
+> +	if (!sysc)
+> +		return -ENOMEM;
+> +
+> +	ret = of_property_read_u32_index(node, "ti,rev_offs", index, &prop);
+> +	if (!ret)
+> +		sysc->rev_offs = prop;
+> +
+> +	ret = of_property_read_u32_index(node, "ti,sysc_offs", index, &prop);
+> +	if (!ret)
+> +		sysc->sysc_offs = prop;
+> +
+> +	ret = of_property_read_u32_index(node, "ti,syss_offs", index, &prop);
+> +	if (!ret)
+> +		sysc->syss_offs = prop;
+> +
+> +	ret = of_property_read_u32_index(node, "ti,sysc_flags", index, &prop);
+> +	if (!ret)
+> +		sysc->sysc_flags = prop & 0xffff;
+> +
+> +	ret = of_property_read_u32_index(node, "ti,srst_udelay", index, &prop);
+> +	if (!ret)
+> +		sysc->srst_udelay = prop & 0xff;
+> +
+> +	ret = of_property_read_u32_index(node, "ti,idlemodes", index, &prop);
+> +	if (!ret)
+> +		sysc->idlemodes = prop & 0xff;
+> +
+> +	ret = of_property_read_u32_index(node, "ti,clockact", index, &prop);
+> +	if (!ret)
+> +		sysc->clockact = prop & 0xff;
+> +
+> +	ret = of_property_read_u32_index(node, "ti,sysc_type", index, &prop);
+> +	if (ret)
+> +		prop = 1;
+> +
+> +	switch (prop) {
+> +	case 2:
+> +		sysc->sysc_fields = &omap_hwmod_sysc_type2;
+> +		break;
+> +	case 3:
+> +		sysc->sysc_fields = &omap_hwmod_sysc_type3;
+> +		break;
+> +	case 1:
+> +	default:
+> +		sysc->sysc_fields = &omap_hwmod_sysc_type1;
+> +	}
+Missed hooking the class to oh?
+	class->sysc = sysc;
+	oh->class = class;
 
-Which output do you say such LED is connected then?
+Thanks and regards,
+Lokesh
+> +
+> +	return 0;
+> +}
+>  
+>  /**
+>   * omap_device_build_from_dt - build an omap_device with multiple hwmods
+> @@ -154,6 +264,11 @@ static int omap_device_build_from_dt(struct platform_device *pdev)
+>  			goto odbfd_exit1;
+>  		}
+>  		hwmods[i] = oh;
+> +
+> +		ret = omap_hwmod_init_sysc(&pdev->dev, oh, i);
+> +		if (ret)
+> +			goto odbfd_exit1;
+> +
+>  		if (oh->flags & HWMOD_INIT_NO_IDLE)
+>  			device_active = true;
+>  
+> 
 
-I wonder if the reg property could be made an array, so you could say the
-LED is connected to this and that output.
-
-The advantage would be that this still works even if you have three outputs.
-
--- 
-Regards,
-
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
