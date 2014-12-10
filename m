@@ -1,59 +1,27 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH 3/4] arm64: dts: Add mediatek MT8173 SoC and evaluation
- board dts and Makefile
-Date: Wed, 10 Dec 2014 15:50:57 +0100
-Message-ID: <CABuKBe+U22ogGBToftgaSJw6fcJmciGfa9scAkyP3g5OJSaAOA@mail.gmail.com>
-References: <1418208602-35584-1-git-send-email-eddie.huang@mediatek.com>
-	<1418208602-35584-4-git-send-email-eddie.huang@mediatek.com>
-	<1418221662.21309.13.camel@mtksdaap41>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v4 0/6] FPGA Manager Framework
+Date: Wed, 10 Dec 2014 09:52:41 -0500
+Message-ID: <20141210145241.GB17393@kroah.com>
+References: <1418156090-23578-1-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1418221662.21309.13.camel@mtksdaap41>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Cc: Eddie Huang <eddie.huang@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Jason Cooper <jason@lakedaemon.net>, srv_heupstream <srv_heupstream@mediatek.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Olof Johansson <olof@lixom.net>, Robert Richter <rrichter@cavium.com>, Mark Brown <broonie@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sascha Hauer <kernel@pengutronix.de>, =?UTF-8?B?WUggQ2hlbiAo6Zmz5pix6LGqKQ==?= <yh.chen@mediatek.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1418156090-23578-1-git-send-email-atull@opensource.altera.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: atull@opensource.altera.com
+Cc: jgunthorpe@obsidianresearch.com, hpa@zytor.com, monstr@monstr.eu, michal.simek@xilinx.com, rdunlap@infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, pantelis.antoniou@konsulko.com, robh+dt@kernel.org, grant.likely@linaro.org, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, pavel@denx.de, broonie@kernel.org, philip@balister.org, rubini@gnudd.com, s.trumtrar@pengutronix.de, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, balbi@ti.com, m.chehab@samsung.com, davidb@codeaurora.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, linus.walleij@linaro.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com
 List-Id: devicetree@vger.kernel.org
 
-2014-12-10 15:27 GMT+01:00 Yingjoe Chen <yingjoe.chen@mediatek.com>:
->
-> Hi,
->
-> On Wed, 2014-12-10 at 18:50 +0800, Eddie Huang wrote:
-> <...>
->> diff --git a/arch/arm64/boot/dts/mt8173-evb.dts b/arch/arm64/boot/dts/mt8173-evb.dts
->> new file mode 100644
->> index 0000000..adf26dd
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/mt8173-evb.dts
-> <...>
->> +     timer {
->> +             compatible = "arm,armv8-timer";
->> +             interrupt-parent = <&gic>;
->> +             interrupts = <1 13 0x8>,
->> +                          <1 14 0x8>,
->> +                          <1 11 0x8>,
->> +                          <1 10 0x8>;
->> +             clock-frequency = <13000000>;
->
-> I believe our firmware doesn't need this line. Please remove it.
+On Tue, Dec 09, 2014 at 02:14:44PM -0600, atull@opensource.altera.com wrote:
+> From: Alan Tull <atull@opensource.altera.com>
+> 
+> Improvements in this v3 and v4:
 
-The point here would be to know if you need to enable a special timer
-from the mtk-timer block to get the arch timer working.
-In any case, you will need some sort of timer. This dts does not
-describe the mtk-timer (may in the mt8173 it does not exist) but
-defines the clocks clk26m and clk32k. So if you don't use the
-mtk-timer, please remove the clocks as there isn't a block using them.
+Due to the review comments here, and all of the kbuild issues found,
+please just work on a v5 series that I can apply after 3.19-rc1 is out.
+I'm dropping this series from my queue now because of those issues.
 
-Thanks,
-Matthias
+thanks,
 
->
-> Joe.C
->
->
-
-
-
--- 
-motzblog.wordpress.com
+greg k-h
