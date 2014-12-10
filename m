@@ -1,170 +1,145 @@
-From: Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [rtc-linux] [PATCHv1 4/6] rtc: rtc-isl12057: fix isil vs isl
- naming for intersil
-Date: Wed, 10 Dec 2014 13:30:41 -0800
-Message-ID: <20141210133041.27c5cb53bbf29b611fa5c48a@linux-foundation.org>
-References: <cover.1416006090.git.arno@natisbad.org>
-	<3dde5b6adfc9c953e0c943b0b40ccd2177508030.1416006090.git.arno@natisbad.org>
+From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v7 2/3] net: Add Keystone NetCP ethernet driver
+Date: Wed, 10 Dec 2014 16:31:02 -0500
+Message-ID: <5488BB96.9070609@ti.com>
+References: <1417556503-22290-1-git-send-email-m-karicheri2@ti.com> <1417556503-22290-3-git-send-email-m-karicheri2@ti.com> <20141209.131053.2026868499542642866.davem@davemloft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <3dde5b6adfc9c953e0c943b0b40ccd2177508030.1416006090.git.arno@natisbad.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: rtc-linux@googlegroups.com
-Cc: Arnaud Ebalard <arno@natisbad.org>, Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Peter Huewe <peter.huewe@infineon.com>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <treding@nvidia.com>, Mark Brown <broonie@kernel.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Rob Landley <rob@landley.net>, Jason Cooper <jason@lakedaemon.net>, Guenter Roeck <linux@roeck-us.net>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141209.131053.2026868499542642866.davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 15 Nov 2014 00:07:05 +0100 Arnaud Ebalard <arno@natisbad.org> w=
-rote:
-
->=20
-> When Intersil ISL12057 driver was introduced by commit 70e123373c05
-> ("rtc: Add support for Intersil ISL12057 I2C RTC chip"), the vendor
-> prefix 'isl' was used instead of the expected 'isil' (Intersil
-> NASDAQ symbol). Recently, a patch from Philip Zabel (7a6540ca856a,
-> "ARM: mvebu: Change vendor prefix for Intersil Corporation to isil")
-> fixed that prefix in ReadyNAS devices .dts files (AFAICT, the only
-> users).
->=20
-> That patch completes that work to change the remaining values in:
->=20
->  - Intersil ISL12057 driver (compatible string) and also associated
->    Documentation/devicetree/bindings/i2c/trivial-devices.txt file
->    to reflect the changes introduced by previous commit from Philip
->  - Documentation/devicetree/bindings/vendor-prefixes.txt files to
->    avoid future mistakes
->=20
-> ...
+On 12/09/2014 01:10 PM, David Miller wrote:
+> From: Murali Karicheri<m-karicheri2-l0cyMroinI0@public.gmane.org>
+> Date: Tue, 2 Dec 2014 16:41:42 -0500
 >
-> diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.tx=
-t b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-> index fbde415078e6..edac97c0f756 100644
-> --- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-> +++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-> @@ -55,7 +55,7 @@ fsl,sgtl5000		SGTL5000: Ultra Low-Power Audio Codec
->  gmt,g751		G751: Digital Temperature Sensor and Thermal Watchdog with=
- Two-Wire Interface
->  infineon,slb9635tt	Infineon SLB9635 (Soft-) I2C TPM (old protocol, m=
-ax 100khz)
->  infineon,slb9645tt	Infineon SLB9645 I2C TPM (new protocol, max 400kh=
-z)
-> -isl,isl12057		Intersil ISL12057 I2C RTC Chip
-> +isil,isl12057		Intersil ISL12057 I2C RTC Chip
->  maxim,ds1050		5 Bit Programmable, Pulse-Width Modulator
->  maxim,max1237		Low-Power, 4-/12-Channel, 2-Wire Serial, 12-Bit ADCs
->  maxim,max6625		9-Bit/12-Bit Temperature Sensors with I__C-Compatible=
- Serial Interface
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/=
-Documentation/devicetree/bindings/vendor-prefixes.txt
-> index 723999d73744..84193ecdc41c 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -77,7 +77,7 @@ innolux	Innolux Corporation
->  intel	Intel Corporation
->  intercontrol	Inter Control Group
->  isee	ISEE 2007 S.L.
-> -isl	Intersil
-> +isil	Intersil
->  karo	Ka-Ro electronics GmbH
->  keymile	Keymile GmbH
->  lacie	LaCie
-> diff --git a/drivers/rtc/rtc-isl12057.c b/drivers/rtc/rtc-isl12057.c
-> index fe562820a54a..31eaa6a9c2b2 100644
-> --- a/drivers/rtc/rtc-isl12057.c
-> +++ b/drivers/rtc/rtc-isl12057.c
-> @@ -310,7 +310,8 @@ static int isl12057_probe(struct i2c_client *clie=
-nt,
-> =20
->  #ifdef CONFIG_OF
->  static const struct of_device_id isl12057_dt_match[] =3D {
-> -	{ .compatible =3D "isl,isl12057" },
-> +	{ .compatible =3D "isl,isl12057" },  /* obsolete */
-> +	{ .compatible =3D "isil,isl12057" },
->  	{ },
->  };
->  #endif
+>> +static void set_pkt_info_le(u32 buff, u32 buff_len, u32 ndesc,
+>> +			    struct knav_dma_desc *desc)
+>> +{
+>> +	desc->buff_len = cpu_to_le32(buff_len);
+>> +	desc->buff = cpu_to_le32(buff);
+>> +	desc->next_desc = cpu_to_le32(ndesc);
+>> +}
+>
+> The members of knav_dma_desc are "u32", so you are going to get tons of
+> static checker warnings from trying to assign cpu_to_le32()'s result
+> (which is a le32) into them.
+David,
 
-Your patch conflicts both textually and materially with the two below
-patches, which are now upstream.
+Thanks for your comment.
 
-I don't know what to do about this so I'll drop "rtc: rtc-isl12057: fix
-isil vs isl naming for intersil".  Could you folks please sort this all
-out?
+Are you referring to the static code analyser sparse that is invoked 
+through?
+
+make C=1 CHECK=sparse
+
+I am running it now.
+
+I started a build of v3.18-rc7 with this option and seeing a lot of
+warnings. Am I using the right tool? A snapshot of the output is below
+
+   CHECK   drivers/clk/clk.c
+include/linux/err.h:40:16: warning: testing a 'safe expression'
+include/linux/err.h:40:16: warning: testing a 'safe expression'
+include/linux/err.h:40:16: warning: testing a 'safe expression'
+include/linux/err.h:40:16: warning: testing a 'safe expression'
+drivers/clk/clk.c:2263:5: warning: symbol '__clk_get' was not declared. 
+Should it be static?
+drivers/clk/clk.c:2274:6: warning: symbol '__clk_put' was not declared. 
+Should it be static?
+drivers/clk/clk.c:2647:37: warning: incorrect type in assignment 
+(different modifiers)
+drivers/clk/clk.c:2647:37:    expected void ( *[usertype] clk_init_cb )( 
+... )
+drivers/clk/clk.c:2647:37:    got void const *const data
+drivers/clk/clk.c:67:22: warning: context imbalance in 'clk_enable_lock' 
+- wrong count at exit
+drivers/clk/clk.c:92:9: warning: context imbalance in 
+'clk_enable_unlock' - unexpected unlock
+   CC      drivers/clk/clk.o
+   CHECK   drivers/clk/clk-divider.c
+drivers/clk/clk-divider.c:362:9: warning: context imbalance in 
+'clk_divider_set_rate' - different lock contexts for basic block
+   CC      drivers/clk/clk-divider.o
+   CHECK   drivers/clk/clk-fixed-factor.c
+   CC      drivers/clk/clk-fixed-factor.o
+   CHECK   drivers/clk/clk-fixed-rate.c
+   CC      drivers/clk/clk-fixed-rate.o
+   CHECK   drivers/clk/clk-gate.c
+drivers/clk/clk-gate.c:71:9: warning: context imbalance in 
+'clk_gate_endisable' - different lock contexts for basic block
+   CC      drivers/clk/clk-gate.o
+   CHECK   drivers/clk/clk-mux.c
+drivers/clk/clk-mux.c:69:12: warning: context imbalance in 
+'clk_mux_set_parent' - different lock contexts for basic block
+   CC      drivers/clk/clk-mux.o
+   CHECK   drivers/clk/clk-composite.c
+   CC      drivers/clk/clk-composite.o
+   CHECK   drivers/clk/clk-fractional-divider.c
+drivers/clk/clk-fractional-divider.c:36:9: warning: context imbalance in 
+'clk_fd_recalc_rate' - different lock contexts for basic block
+drivers/clk/clk-fractional-divider.c:65:12: warning: context imbalance 
+in 'clk_fd_set_rate' - different lock contexts for basic block
+   CC      drivers/clk/clk-fractional-divider.o
+   CHECK   drivers/clk/clk-gpio-gate.c
+drivers/clk/clk-gpio-gate.c:189:13: warning: symbol 
+'of_gpio_gate_clk_setup' was not declared. Should it be static?
+   CC      drivers/clk/clk-gpio-gate.o
+   CHECK   drivers/clk/clk-conf.c
+   CC      drivers/clk/clk-conf.o
+   CHECK   drivers/clk/keystone/pll.c
+   CC      drivers/clk/keystone/pll.o
+   CHECK   drivers/clk/keystone/gate.c
+drivers/clk/keystone/gate.c:118:12: warning: context imbalance in 
+'keystone_clk_enable' - different lock contexts for basic block
+drivers/clk/keystone/gate.c:148:9: warning: context imbalance in 
+'keystone_clk_disable' - different lock contexts for basic block
+   CC      drivers/clk/keystone/gate.o
+   LD      drivers/clk/keystone/built-in.o
+   LD      drivers/clk/built-in.o
+   CHECK   drivers/clocksource/clksrc-of.c
+drivers/clocksource/clksrc-of.c:37:27: warning: incorrect type in 
+assignment (different modifiers)
+drivers/clocksource/clksrc-of.c:37:27:    expected void ( *[usertype] 
+init_func )( ... )
+drivers/clocksource/clksrc-of.c:37:27:    got void const *const data
+   CC      drivers/clocksource/clksrc-of.o
+   CHECK   drivers/clocksource/mmio.c
+   CC      drivers/clocksource/mmio.o
+   CHECK   drivers/clocksource/arm_arch_timer.c
+   CC      drivers/clocksource/arm_arch_timer.o
+   CHECK   drivers/clocksource/dummy_timer.c
+   CC      drivers/clocksource/dummy_timer.o
+   CHECK   drivers/clocksource/timer-keystone.c
+   CC      drivers/clocksource/timer-keystone.o
+   LD      drivers/clocksource/built-in.o
+   LD      drivers/crypto/built-in.o
+   CHECK   drivers/dma/dmaengine.c
+   CC      drivers/dma/dmaengine.o
+   CHECK   drivers/dma/virt-dma.c
+drivers/dma/virt-dma.c:22:14: warning: symbol 'vchan_tx_submit' was not 
+declared. Should it be static?
+   CC      drivers/dma/virt-dma.o
+   CHECK   drivers/dma/of-dma.c
+   CC      drivers/dma/of-dma.o
+   CHECK   drivers/dma/edma.c
+drivers/dma/edma.c:560:32: warning: symbol 'edma_prep_dma_memcpy' was 
+not declared. Should it be static?
+drivers/dma/edma.c:1099:6: warning: symbol 'edma_filter_fn' was not 
+declared. Should it be static?
 
 
 
-commit 7c75c1d5e72be6736aa558efd33ca2b31d77e425
-Author:     Darshana Padmadas <darshanapadmadas@gmail.com>
-AuthorDate: Sat Nov 8 22:52:06 2014 +0530
-Commit:     Arnd Bergmann <arnd@arndb.de>
-CommitDate: Thu Nov 20 12:20:18 2014 +0100
-
-    dt-bindings: Document deprecated device vendor name to fix related =
-warning
-   =20
-    This patch documents deprecated vendor name "isil" to fix warning o=
-f
-    undocumented string for device isl29028 as reported while running c=
-heckpatch.pl
-    on drivers/staging/iio/light/isl29028.c. This is done to maintain c=
-ompatibility
-    with older kernels.
-   =20
-    Signed-off-by: Darshana Padmadas <darshanapadmadas@gmail.com>
-    Acked-by: Arnd Bergmann <arnd@arndb.de>
-    Acked-by: Mark Rutland <mark.rutland@arm.com>
-    Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Do=
-cumentation/devicetree/bindings/vendor-prefixes.txt
-index 723999d..bfbd93e 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -77,6 +77,7 @@ innolux	Innolux Corporation
- intel	Intel Corporation
- intercontrol	Inter Control Group
- isee	ISEE 2007 S.L.
-+isil    Intersil (deprecated, use isl)
- isl	Intersil
- karo	Ka-Ro electronics GmbH
- keymile	Keymile GmbH
 
 
-commit b2ea3f82e7984d855c5e61fef18746771d90c73c
-Author:     Darshana Padmadas <darshanapadmadas@gmail.com>
-AuthorDate: Sat Nov 8 22:52:05 2014 +0530
-Commit:     Arnd Bergmann <arnd@arndb.de>
-CommitDate: Thu Nov 20 12:19:59 2014 +0100
-
-    dt-bindings: Document correct and deprecated vendor-prefix with dev=
-ice isl29028
-   =20
-    This patch documents the device isl29028 with its vendor-prefix. Un=
-documented deprecated vendor-prefix
-    found by checkpatch also documented for compatibility reasons.
-   =20
-    Signed-off-by: Darshana Padmadas <darshanapadmadas@gmail.com>
-    Acked-by: Arnd Bergmann <arnd@arndb.de>
-    Acked-by: Mark Rutland <mark.rutland@arm.com>
-    Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-
-diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt =
-b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-index fbde415..605dcca 100644
---- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-+++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-@@ -56,6 +56,8 @@ gmt,g751		G751: Digital Temperature Sensor and Therma=
-l Watchdog with Two-Wire In
- infineon,slb9635tt	Infineon SLB9635 (Soft-) I2C TPM (old protocol, max=
- 100khz)
- infineon,slb9645tt	Infineon SLB9645 I2C TPM (new protocol, max 400khz)
- isl,isl12057		Intersil ISL12057 I2C RTC Chip
-+isil,isl29028           (deprecated, use isl)
-+isl,isl29028            Intersil ISL29028 Ambient Light and Proximity =
-Sensor
- maxim,ds1050		5 Bit Programmable, Pulse-Width Modulator
- maxim,max1237		Low-Power, 4-/12-Channel, 2-Wire Serial, 12-Bit ADCs
- maxim,max6625		9-Bit/12-Bit Temperature Sensors with I=B2C-Compatible =
-Serial Interface
-
+-- 
+Murali Karicheri
+Linux Kernel, Texas Instruments
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
