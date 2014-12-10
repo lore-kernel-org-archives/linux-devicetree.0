@@ -1,70 +1,80 @@
-From: Beomho Seo <beomho.seo@samsung.com>
-Subject: Re: [PATCH v8 1/4] mfd: rt5033: Add Richtek RT5033 driver core.
-Date: Wed, 10 Dec 2014 21:34:44 +0900
-Message-ID: <54883DE4.5000907@samsung.com>
-References: <1418126634-4781-1-git-send-email-beomho.seo@samsung.com>
- <1418126634-4781-2-git-send-email-beomho.seo@samsung.com>
- <20141209140102.GZ3951@x1> <54882255.9060303@samsung.com>
- <20141210121331.GD23481@x1>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH/RFC v9 06/19] DT: Add documentation for the mfd Maxim
+ max77693
+Date: Wed, 10 Dec 2014 13:41:21 +0100
+Message-ID: <54883F71.5010803@samsung.com>
+References: <1417622814-10845-1-git-send-email-j.anaszewski@samsung.com>
+ <1417622814-10845-7-git-send-email-j.anaszewski@samsung.com>
+ <20141204100706.GP14746@valkosipuli.retiisi.org.uk>
+ <54804840.4030202@samsung.com> <20141204161201.GB29080@amd>
+ <54883A70.7070903@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20141210121331.GD23481@x1>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, sameo@linux.intel.com, lee.jone@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, sre@kernel.org, dbaryshkov@gmail.com, dwmw2@infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, cw00.choi@samsung.com, geunsik.lim@samsung.com, inki.dae@samsung.com, sw0312.kim@samsung.com
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <54883A70.7070903@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Pavel Machek <pavel@ucw.cz>, Sakari Ailus <sakari.ailus@iki.fi>, linux-leds@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, kyungmin.park@samsung.com, b.zolnierkie@samsung.com, cooloney@gmail.com, rpurdie@rpsys.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, Andrzej Hajda <a.hajda@samsung.com>, Lee Jones <lee.jones@linaro.org>, Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/10/2014 09:13 PM, Lee Jones wrote:
-> On Wed, 10 Dec 2014, Beomho Seo wrote:
-> 
->> On 12/09/2014 11:01 PM, Lee Jones wrote:
->>> On Tue, 09 Dec 2014, Beomho Seo wrote:
->>>
->>>> This patch adds a new driver for Richtek RT5033 driver.
->>>> RT5033 is a Multifunction device which includes battery charger, fuel gauge,
->>>> flash LED current source, LDO and synchronous Buck converter. It is interfaced
->>>> to host controller using I2C interface.
+On 12/10/2014 01:20 PM, Sylwester Nawrocki wrote:
+> Hi,
+>
+> On 04/12/14 17:12, Pavel Machek wrote:
+>>>>> +- maxim,boost-mode :
+>>>>>>>> +	In boost mode the device can produce up to 1.2A of total current
+>>>>>>>> +	on both outputs. The maximum current on each output is reduced
+>>>>>>>> +	to 625mA then. If there are two child led nodes defined then boost
+>>>>>>>> +	is enabled by default.
+>>>>>>>> +	Possible values:
+>>>>>>>> +		MAX77693_LED_BOOST_OFF - no boost,
+>>>>>>>> +		MAX77693_LED_BOOST_ADAPTIVE - adaptive mode,
+>>>>>>>> +		MAX77693_LED_BOOST_FIXED - fixed mode.
+>>>>>>>> +- maxim,boost-vout : Output voltage of the boost module in millivolts.
+>>>>>>>> +- maxim,vsys-min : Low input voltage level in millivolts. Flash is not fired
+>>>>>>>> +	if chip estimates that system voltage could drop below this level due
+>>>>>>>> +	to flash power consumption.
+>>>>>>>> +
+>>>>>>>> +Required properties of the LED child node:
+>>>>>>>> +- label : see Documentation/devicetree/bindings/leds/common.txt
+>>>>>>>> +- maxim,fled_id : Identifier of the fled output the led is connected to;
+>>>>>>
+>>>>>> I'm pretty sure this will be needed for about every chip that can drive
+>>>>>> multiple LEDs. Shouldn't it be documented in the generic documentation?
 >>>>
->>>> Cc: Samuel Ortiz <sameo@linux.intel.com>
->>>> Cc: Lee Jones <lee.jone@linaro.org>
->>>> Signed-off-by: Beomho Seo <beomho.seo@samsung.com>
->>>> Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
->>>> ---
->>>>  drivers/mfd/Kconfig                |   12 ++
->>>>  drivers/mfd/Makefile               |    1 +
->>>>  drivers/mfd/rt5033.c               |  142 ++++++++++++++++++++
->>>>  include/linux/mfd/rt5033-private.h |  260 ++++++++++++++++++++++++++++++++++++
->>>>  include/linux/mfd/rt5033.h         |   62 +++++++++
->>>>  5 files changed, 477 insertions(+)
->>>>  create mode 100644 drivers/mfd/rt5033.c
->>>>  create mode 100644 include/linux/mfd/rt5033-private.h
->>>>  create mode 100644 include/linux/mfd/rt5033.h
->>>
->>> Much better.
->>>
->>> For my own reference:
->>>
->>> Acked-by: Lee Jones <lee.jones@linaro.org>
->>>
->>> So what's the plan with this set?
->>>
+>>>> OK.
 >>
->> This patch have been made on for-next-mfd branch of your git repository.
->> So I hope this patch to be merged at your git repository.
->> Another patch set(RT5033 regulator driver) have been merged on for-next branch of regulator git repository.
->>
->> https://git.kernel.org/cgit/linux/kernel/git/broonie/regulator.git/commit/?h=for-next&id=b1917578fd5d8efa67afa05a0d6d7e323f2802da
->>
->> Other patches(about charger, fuelgague and devicetree doc) will be re-sent to each maintainers.
-> 
-> Okay, so all patches are indipendant/othognal of each other for sure?
-> 
+>> Well... "fled_id" is not exactly suitable name. On other busses, it
+>> would be "reg = <1>"?
+>
+> I think we need to clarify what the LED device node subnodes really mean.
+> I thought initially they describe a physical current output of the LED
+> controller, but it turns out the subnode corresponds to a LED attached
+> to the LED controller.  Since a LED can be connected to multiple outputs
+> of the LED controller I think 'reg' property doesn't make sense here.
+>
+> Then presumably we should use a property in each subnode, telling which
+> LED controller outputs a LED is connected to?
+>
+> For instance, if we assign numbers 0, 1 to FLED1, FLED2 outputs of
+> MAX77693 and there is just one LED connected to those outputs we would
+> have something like:
+>
+> max77693: led {
+> 	compatible = "maxim,max77693-led";	
+> 	...
+> 	led1 {
+> 		maxim,fled-sources = <0 1>;
+> 		...
+> 	};
+> };
+>
+> Feel free to propose better name for the property, I guess we need to
+> avoid "maxim,current-sources" due to ambiguity of the word "current".
 
-Yes, rt5033 core driver merge before other patches with no problem.
-It is do not have dependency other patches.
+For me this sounds reasonable. Moreover we will avoid the need for
+address-cells and size-cells properties in the parent node.
 
-
-Best regards,
-Beomho Seo
+Best Regards,
+Jacek Anaszewski
