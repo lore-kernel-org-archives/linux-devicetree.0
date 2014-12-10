@@ -1,80 +1,76 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v8 1/4] mfd: rt5033: Add Richtek RT5033 driver core.
-Date: Wed, 10 Dec 2014 12:13:31 +0000
-Message-ID: <20141210121331.GD23481@x1>
-References: <1418126634-4781-1-git-send-email-beomho.seo@samsung.com>
- <1418126634-4781-2-git-send-email-beomho.seo@samsung.com>
- <20141209140102.GZ3951@x1>
- <54882255.9060303@samsung.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH/RFC v9 06/19] DT: Add documentation for the mfd Maxim
+ max77693
+Date: Wed, 10 Dec 2014 13:20:00 +0100
+Message-ID: <54883A70.7070903@samsung.com>
+References: <1417622814-10845-1-git-send-email-j.anaszewski@samsung.com>
+ <1417622814-10845-7-git-send-email-j.anaszewski@samsung.com>
+ <20141204100706.GP14746@valkosipuli.retiisi.org.uk>
+ <54804840.4030202@samsung.com> <20141204161201.GB29080@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <54882255.9060303-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, geunsik.lim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <20141204161201.GB29080@amd>
+Sender: linux-leds-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>, Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: Sakari Ailus <sakari.ailus@iki.fi>, linux-leds@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, kyungmin.park@samsung.com, b.zolnierkie@samsung.com, cooloney@gmail.com, rpurdie@rpsys.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, Andrzej Hajda <a.hajda@samsung.com>, Lee Jones <lee.jones@linaro.org>, Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 10 Dec 2014, Beomho Seo wrote:
+Hi,
 
-> On 12/09/2014 11:01 PM, Lee Jones wrote:
-> > On Tue, 09 Dec 2014, Beomho Seo wrote:
-> >=20
-> >> This patch adds a new driver for Richtek RT5033 driver.
-> >> RT5033 is a Multifunction device which includes battery charger, f=
-uel gauge,
-> >> flash LED current source, LDO and synchronous Buck converter. It i=
-s interfaced
-> >> to host controller using I2C interface.
-> >>
-> >> Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> >> Cc: Lee Jones <lee.jone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >> Signed-off-by: Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> >> Acked-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> >> ---
-> >>  drivers/mfd/Kconfig                |   12 ++
-> >>  drivers/mfd/Makefile               |    1 +
-> >>  drivers/mfd/rt5033.c               |  142 ++++++++++++++++++++
-> >>  include/linux/mfd/rt5033-private.h |  260 +++++++++++++++++++++++=
-+++++++++++++
-> >>  include/linux/mfd/rt5033.h         |   62 +++++++++
-> >>  5 files changed, 477 insertions(+)
-> >>  create mode 100644 drivers/mfd/rt5033.c
-> >>  create mode 100644 include/linux/mfd/rt5033-private.h
-> >>  create mode 100644 include/linux/mfd/rt5033.h
-> >=20
-> > Much better.
-> >=20
-> > For my own reference:
-> >=20
-> > Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >=20
-> > So what's the plan with this set?
-> >=20
->=20
-> This patch have been made on for-next-mfd branch of your git reposito=
-ry.
-> So I hope this patch to be merged at your git repository.
-> Another patch set(RT5033 regulator driver) have been merged on for-ne=
-xt branch of regulator git repository.
->=20
-> https://git.kernel.org/cgit/linux/kernel/git/broonie/regulator.git/co=
-mmit/?h=3Dfor-next&id=3Db1917578fd5d8efa67afa05a0d6d7e323f2802da
->=20
-> Other patches(about charger, fuelgague and devicetree doc) will be re=
--sent to each maintainers.
+On 04/12/14 17:12, Pavel Machek wrote:
+>>>> +- maxim,boost-mode :
+>>>> > >>+	In boost mode the device can produce up to 1.2A of total current
+>>>> > >>+	on both outputs. The maximum current on each output is reduced
+>>>> > >>+	to 625mA then. If there are two child led nodes defined then boost
+>>>> > >>+	is enabled by default.
+>>>> > >>+	Possible values:
+>>>> > >>+		MAX77693_LED_BOOST_OFF - no boost,
+>>>> > >>+		MAX77693_LED_BOOST_ADAPTIVE - adaptive mode,
+>>>> > >>+		MAX77693_LED_BOOST_FIXED - fixed mode.
+>>>> > >>+- maxim,boost-vout : Output voltage of the boost module in millivolts.
+>>>> > >>+- maxim,vsys-min : Low input voltage level in millivolts. Flash is not fired
+>>>> > >>+	if chip estimates that system voltage could drop below this level due
+>>>> > >>+	to flash power consumption.
+>>>> > >>+
+>>>> > >>+Required properties of the LED child node:
+>>>> > >>+- label : see Documentation/devicetree/bindings/leds/common.txt
+>>>> > >>+- maxim,fled_id : Identifier of the fled output the led is connected to;
+>>> > >
+>>> > >I'm pretty sure this will be needed for about every chip that can drive
+>>> > >multiple LEDs. Shouldn't it be documented in the generic documentation?
+>> > 
+>> > OK.
+>
+> Well... "fled_id" is not exactly suitable name. On other busses, it
+> would be "reg = <1>"?
 
-Okay, so all patches are indipendant/othognal of each other for sure?
+I think we need to clarify what the LED device node subnodes really mean.
+I thought initially they describe a physical current output of the LED
+controller, but it turns out the subnode corresponds to a LED attached
+to the LED controller.  Since a LED can be connected to multiple outputs
+of the LED controller I think 'reg' property doesn't make sense here.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Then presumably we should use a property in each subnode, telling which
+LED controller outputs a LED is connected to?
+
+For instance, if we assign numbers 0, 1 to FLED1, FLED2 outputs of
+MAX77693 and there is just one LED connected to those outputs we would
+have something like:
+
+max77693: led {
+	compatible = "maxim,max77693-led";	
+	...
+	led1 {
+		maxim,fled-sources = <0 1>;
+		...
+	};
+};
+
+Feel free to propose better name for the property, I guess we need to
+avoid "maxim,current-sources" due to ambiguity of the word "current".
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Sylwester
