@@ -1,172 +1,153 @@
-Return-Path: <vishnupatekar0510@gmail.com>
+Return-Path: <linux-arm-kernel-bounces+robherring2=gmail.com@lists.infradead.org>
+Message-ID: <54883c87.083b460a.2456.ffff847eSMTPIN_ADDED_BROKEN@mx.google.com>
+Date: Wed, 10 Dec 2014 17:56:04 +0530
+From: Ashok Kumar <ashoks@broadcom.com>
+Subject: Re: [RFC PATCH v2 4/4] arm64:numa: adding numa support for arm64
+ platforms.
+References: <1416605010-10442-1-git-send-email-ganapatrao.kulkarni@caviumnetworks.com>
+ <1416605010-10442-5-git-send-email-ganapatrao.kulkarni@caviumnetworks.com>
+ <5482ce36.c9e2420a.5d40.71c7SMTPIN_ADDED_BROKEN@mx.google.com>
+ <CAFpQJXU89uwAkHyi+dvHmbZOvadO_EyQbrG8jMo5G3tnWP5qcw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAGb2v65xpUhiMzSKu_1+JGNbg3oFdpw2EQ+JGUYkivCtG2O6gw@mail.gmail.com>
-References: <1418408748-9797-1-git-send-email-vishnupatekar0510@gmail.com>
-	<1418408748-9797-6-git-send-email-vishnupatekar0510@gmail.com>
-	<CAGb2v65xpUhiMzSKu_1+JGNbg3oFdpw2EQ+JGUYkivCtG2O6gw@mail.gmail.com>
-Date: Sat, 13 Dec 2014 08:48:13 +0530
-Message-ID: <CAEzqOZtOycU5LT8b3SHOymMpMOMExGC9PHiZ9wHtAjxR2R5+Ew@mail.gmail.com>
-Subject: Re: [PATCHv3 5/5] ARM: sunxi: dts: Add note ps2 pins conflict with hdmi
-From: Vishnu Patekar <vishnupatekar0510@gmail.com>
-Content-Type: multipart/alternative; boundary=047d7ba97f2aa5be57050a107520
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Hans De Goede <hdegoede@redhat.com>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>, "msalter@redhat.com" <msalter@redhat.com>, linux-kernel <linux-kernel@vger.kernel.org>, "ralf@linux-mips.org" <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, "jdelvare@suse.de" <jdelvare@suse.de>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <CAFpQJXU89uwAkHyi+dvHmbZOvadO_EyQbrG8jMo5G3tnWP5qcw@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+robherring2=gmail.com@lists.infradead.org
+To: Ganapatrao Kulkarni <gpkulkarni@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Steve Capper <steve.capper@linaro.org>, Al Stone <al.stone@linaro.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Leif Lindholm <leif.lindholm@linaro.org>, Roy Franz <roy.franz@linaro.org>, Rob Herring <robh+dt@kernel.org>, Ganapatrao Kulkarni <ganapatrao.kulkarni@caviumnetworks.com>, msalter@redhat.com, Grant Likely <grant.likely@linaro.org>, jchandra@broadcom.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Hanjun Guo <hanjun.guo@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
---047d7ba97f2aa5be57050a107520
-Content-Type: text/plain; charset=UTF-8
-
-Hello Chen-Yu,
-Thank you for pointing out styling error.
-
-On Sat, Dec 13, 2014 at 7:36 AM, Chen-Yu Tsai <wens@csie.org> wrote:
->
-> Hi,
->
-> On Sat, Dec 13, 2014 at 2:25 AM, VishnuPatekar
-> <vishnupatekar0510@gmail.com> wrote:
-> > 1. Please note that ps20 pins conflict with HDMI on Lime2 Board
-> > so, by deault ps20 and ps21 are disabled for Lime2 Board.
-> > There is no on board ps2 connector and these pins can be used
-> > for different purpose.
+On Sat, Dec 06, 2014 at 10:50:57AM -0800, Ganapatrao Kulkarni wrote:
+> On Sat, Dec 6, 2014 at 1:36 AM, Ashok Kumar <ashoks@broadcom.com> wrote:
+> > On Sat, Nov 22, 2014 at 02:53:30AM +0530, Ganapatrao Kulkarni wrote:
+> >> Adding numa support for arm64 based platforms.
+> >> creating numa mapping by parsing the dt node numa-map.
+> >>
+> >> Signed-off-by: Ganapatrao Kulkarni <ganapatrao.kulkarni@caviumnetworks.com>
+> > Ganapat,
 > >
-> > Signed-off-by: VishnuPatekar <vishnupatekar0510@gmail.com>
-> > ---
-> >  arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts |    6 +++++-
-> >  1 file changed, 5 insertions(+), 1 deletion(-)
+> > Can we get a simple version of this patchset with just the associativity parameter for the cpu and memory nodes
+> > upstream? The initial patchset can be with the assumption of a simple full mesh topology for the distance.  The
+> > hierarchical complex topologies and the DT nodes and properties for that can be added in a later patch, once the
+> > standard for that is agreed upon.
+> > We are planning to support ACPI based NUMA for Broadcom Vulcan processors(http://www.broadcom.com/press/release.php?id=s797235).
+> > I am working on a patch to add support for the SRAT and SLIT ACPI tables based on your patch and I will post that
+> > patchset soon, so it will be helpful if the core changes are upstream.
 > >
-> > diff --git a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
-> b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
-> > index ed364d5..951b615 100644
-> > --- a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
-> > +++ b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
-> > @@ -112,7 +112,11 @@
-> >                         pinctrl-0 = <&uart0_pins_a>;
-> >                         status = "okay";
-> >                 };
-> > -
-> > +
-> > +               /* PS2 0 and PS2 1 are disabled by default; Please note
-> that
-> > +               ps20 pins conflict with HDMI on Lime2 Board
-> > +               */
-> > +
->
-> Multi-line comments should be:
->
-> /*
->  * line 1
->  * line 2
->  * ...
->  */
->
-Okie.
+> to implement, ibm/ppc like implementation, we need efi-stub patch to
+> not remove the memory node from the dt.
+> current efi-stub parses dt file and removes memory nodes.
+> can i get the efi-stub patch to start with please?
 
->
-> And why is there a delete and insert for an empty line?
-> Weird... though git seems to ignore it when applying.
->
-I used clean_patch to clear the styling error. that might have modified it.
+Ganapat,
+ I tried the below patch in qemu and it works. Would this be of help to you?
+
+Roy/Ard,
+ Is the below patch fine? 
+
+>From 27b4aecf09707e3d5bd4ff7bf765cd609772476f Mon Sep 17 00:00:00 2001
+From: Ashok Kumar <ashoks@broadcom.com>
+Date: Tue, 9 Dec 2014 17:23:11 +0530
+Subject: [PATCH] efi/arm64: Remove deleting memory nodes in efi-stub
+
+Dont delete memory nodes from DT as it will be
+used by NUMA configuration.
+
+Signed-off-by: Ashok Kumar <ashoks@broadcom.com>
+---
+ arch/arm64/kernel/setup.c          | 12 +++++++++++-
+ drivers/firmware/efi/libstub/fdt.c | 24 +-----------------------
+ 2 files changed, 12 insertions(+), 24 deletions(-)
+
+diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+index 27f65b0..ac6d34f 100644
+--- a/arch/arm64/kernel/setup.c
++++ b/arch/arm64/kernel/setup.c
+@@ -302,7 +302,7 @@ static void __init setup_processor(void)
+ 
+ static void __init setup_machine_fdt(phys_addr_t dt_phys)
+ {
+-	if (!dt_phys || !early_init_dt_scan(phys_to_virt(dt_phys))) {
++	if (!dt_phys || !early_init_dt_verify(phys_to_virt(dt_phys))) {
+ 		early_print("\n"
+ 			"Error: invalid device tree blob at physical address 0x%p (virtual address 0x%p)\n"
+ 			"The dtb must be 8-byte aligned and passed in the first 512MB of memory\n"
+@@ -313,6 +313,16 @@ static void __init setup_machine_fdt(phys_addr_t dt_phys)
+ 			cpu_relax();
+ 	}
+ 
++	/* Retrieve various information from the /chosen node */
++	of_scan_flat_dt(early_init_dt_scan_chosen, boot_command_line);
++
++	/* Initialize {size,address}-cells info */
++	of_scan_flat_dt(early_init_dt_scan_root, NULL);
++
++	/* Setup memory, calling early_init_dt_add_memory_arch */
++	if (!IS_ENABLED(CONFIG_EFI))
++		of_scan_flat_dt(early_init_dt_scan_memory, NULL);
++
+ 	machine_name = of_flat_dt_get_machine_name();
+ }
+ 
+diff --git a/drivers/firmware/efi/libstub/fdt.c b/drivers/firmware/efi/libstub/fdt.c
+index c846a96..a02e56e 100644
+--- a/drivers/firmware/efi/libstub/fdt.c
++++ b/drivers/firmware/efi/libstub/fdt.c
+@@ -22,7 +22,7 @@ efi_status_t update_fdt(efi_system_table_t *sys_table, void *orig_fdt,
+ 			unsigned long map_size, unsigned long desc_size,
+ 			u32 desc_ver)
+ {
+-	int node, prev, num_rsv;
++	int node, num_rsv;
+ 	int status;
+ 	u32 fdt_val32;
+ 	u64 fdt_val64;
+@@ -52,28 +52,6 @@ efi_status_t update_fdt(efi_system_table_t *sys_table, void *orig_fdt,
+ 		goto fdt_set_fail;
+ 
+ 	/*
+-	 * Delete any memory nodes present. We must delete nodes which
+-	 * early_init_dt_scan_memory may try to use.
+-	 */
+-	prev = 0;
+-	for (;;) {
+-		const char *type;
+-		int len;
+-
+-		node = fdt_next_node(fdt, prev, NULL);
+-		if (node < 0)
+-			break;
+-
+-		type = fdt_getprop(fdt, node, "device_type", &len);
+-		if (type && strncmp(type, "memory", len) == 0) {
+-			fdt_del_node(fdt, node);
+-			continue;
+-		}
+-
+-		prev = node;
+-	}
+-
+-	/*
+ 	 * Delete all memory reserve map entries. When booting via UEFI,
+ 	 * kernel will use the UEFI memory map to find reserved regions.
+ 	 */
+-- 
+1.9.1
 
 
+Thanks,
+Ashok
 
->
-> ChenYu
->
-> >                 i2c0: i2c@01c2ac00 {
-> >                         pinctrl-names = "default";
-> >                         pinctrl-0 = <&i2c0_pins_a>;
-> > --
-> > 1.7.9.5
-> >
-> >
-> > _______________________________________________
-> > linux-arm-kernel mailing list
-> > linux-arm-kernel@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->
-
---047d7ba97f2aa5be57050a107520
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr">Hello Chen-Yu,<div>Thank you for pointing out styling erro=
-r.</div><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">On Sat, D=
-ec 13, 2014 at 7:36 AM, Chen-Yu Tsai <span dir=3D"ltr">&lt;<a href=3D"mailt=
-o:wens@csie.org" target=3D"_blank">wens@csie.org</a>&gt;</span> wrote:<bloc=
-kquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #cc=
-c solid;padding-left:1ex">Hi,<br>
-<span class=3D""><br>
-On Sat, Dec 13, 2014 at 2:25 AM, VishnuPatekar<br>
-&lt;<a href=3D"mailto:vishnupatekar0510@gmail.com">vishnupatekar0510@gmail.=
-com</a>&gt; wrote:<br>
-&gt; 1. Please note that ps20 pins conflict with HDMI on Lime2 Board<br>
-&gt; so, by deault ps20 and ps21 are disabled for Lime2 Board.<br>
-&gt; There is no on board ps2 connector and these pins can be used<br>
-&gt; for different purpose.<br>
-&gt;<br>
-&gt; Signed-off-by: VishnuPatekar &lt;<a href=3D"mailto:vishnupatekar0510@g=
-mail.com">vishnupatekar0510@gmail.com</a>&gt;<br>
-&gt; ---<br>
-&gt;=C2=A0 arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts |=C2=A0 =C2=A0 6=
- +++++-<br>
-&gt;=C2=A0 1 file changed, 5 insertions(+), 1 deletion(-)<br>
-&gt;<br>
-&gt; diff --git a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts b/arch/ar=
-m/boot/dts/sun7i-a20-olinuxino-lime2.dts<br>
-&gt; index ed364d5..951b615 100644<br>
-&gt; --- a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts<br>
-&gt; +++ b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts<br>
-&gt; @@ -112,7 +112,11 @@<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0pinctrl-0 =3D &lt;&amp;uart0_pins_a&gt;;<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0status =3D &quot;okay&quot;;<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0};<br>
-&gt; -<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0/* PS2 0 and P=
-S2 1 are disabled by default; Please note that<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0ps20 pins conf=
-lict with HDMI on Lime2 Board<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0*/<br>
-&gt; +<br>
-<br>
-</span>Multi-line comments should be:<br>
-<br>
-/*<br>
-=C2=A0* line 1<br>
-=C2=A0* line 2<br>
-=C2=A0* ...<br>
-=C2=A0*/<br></blockquote><div>Okie.=C2=A0</div><blockquote class=3D"gmail_q=
-uote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1e=
-x">
-<br>
-And why is there a delete and insert for an empty line?<br>
-Weird... though git seems to ignore it when applying.<br></blockquote><div>=
-I used clean_patch to clear the styling error. that might have modified it.=
-</div><div><br></div><div>=C2=A0</div><blockquote class=3D"gmail_quote" sty=
-le=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">
-<br>
-ChenYu<br>
-<span class=3D""><br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0i2c0: i2c=
-@01c2ac00 {<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0pinctrl-names =3D &quot;default&quot;;<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0pinctrl-0 =3D &lt;&amp;i2c0_pins_a&gt;;<br>
-&gt; --<br>
-&gt; 1.7.9.5<br>
-&gt;<br>
-&gt;<br>
-</span>&gt; _______________________________________________<br>
-&gt; linux-arm-kernel mailing list<br>
-&gt; <a href=3D"mailto:linux-arm-kernel@lists.infradead.org">linux-arm-kern=
-el@lists.infradead.org</a><br>
-&gt; <a href=3D"http://lists.infradead.org/mailman/listinfo/linux-arm-kerne=
-l" target=3D"_blank">http://lists.infradead.org/mailman/listinfo/linux-arm-=
-kernel</a><br>
-</blockquote></div></div></div>
-
---047d7ba97f2aa5be57050a107520--
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
