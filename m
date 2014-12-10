@@ -1,879 +1,583 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH v4 5/6] staging: fpga manager: framework core
-Date: Wed, 10 Dec 2014 13:41:07 +0100
-Message-ID: <049ad99df824432caa190566141d1525@BN1BFFO11FD005.protection.gbl>
-References: <1418156090-23578-1-git-send-email-atull@opensource.altera.com>
- <1418156090-23578-6-git-send-email-atull@opensource.altera.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH RFC 09/15] drm: imx: Add MIPI DSI host controller driver
+Date: Wed, 10 Dec 2014 14:16:42 +0100
+Message-ID: <20141210131640.GD23558@ulmo.nvidia.com>
+References: <1418200648-32656-1-git-send-email-Ying.Liu@freescale.com>
+ <1418200648-32656-10-git-send-email-Ying.Liu@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1418156090-23578-6-git-send-email-atull@opensource.altera.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: atull@opensource.altera.com, gregkh@linuxfoundation.org, jgunthorpe@obsidianresearch.com, hpa@zytor.com, monstr@monstr.eu, michal.simek@xilinx.com, rdunlap@infradead.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, pantelis.antoniou@konsulko.com, robh+dt@kernel.org, grant.likely@linaro.org, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, pavel@denx.de, broonie@kernel.org, philip@balister.org, rubini@gnudd.com, s.trumtrar@pengutronix.de, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, balbi@ti.com, m.chehab@samsung.com, davidb@codeaurora.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, linus.walleij@linaro.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com
+Content-Type: multipart/mixed; boundary="===============1742979649=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1418200648-32656-10-git-send-email-Ying.Liu@freescale.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Liu Ying <Ying.Liu@freescale.com>
+Cc: devicetree@vger.kernel.org, linux@arm.linux.org.uk, kernel@pengutronix.de, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, mturquette@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/09/2014 09:14 PM, atull@opensource.altera.com wrote:
-> From: Alan Tull <atull@opensource.altera.com>
-> 
-> Supports standard ops for low level FPGA drivers.
-> Various manufacturors' FPGAs can be supported by adding low
-> level drivers.  Each driver needs to register its ops
-> using fpga_mgr_register().
-> 
-> Exports methods of doing operations to program  FPGAs. These
-> should be sufficient for individual drivers to request FPGA
-> programming directly if desired.
-> 
-> Adds a sysfs interface.  The sysfs interface can be compiled out
-> where desired in production builds.
-> 
-> Resume is supported by calling low level driver's resume
-> function, then reloading the firmware image.
-> 
-> The following are exported as GPL:
-> * fpga_mgr_reset
->    Reset the FGPA.
-> 
-> * fpga_mgr_write
->    Write a image (in buffer) to the FPGA.
-> 
-> * fpga_mgr_firmware_write
->    Request firmware by file name and write it to the FPGA.
-> 
-> * fpga_mgr_name
->    Get name of FPGA manager.
-> 
-> * fpga_mgr_state
->    Get a state of framework as a string.
-> 
-> * fpga_mgr_register and fpga_mgr_remove
->    Register/unregister low level fpga manager driver.
-> 
-> The following sysfs files are created:
-> * /sys/class/fpga_manager/<fpga>/name
->   Name of low level driver.
-> 
-> * /sys/class/fpga_manager/<fpga>/firmware
->   Name of FPGA image file to load using firmware class.
->   $ echo image.rbf > /sys/class/fpga_manager/<fpga>/firmware
-> 
->   read: read back name of image file previous loaded
->   $ cat /sys/class/fpga_manager/<fpga>/firmware
-> 
-> * /sys/class/fpga_manager/<fpga>/reset
->   reset the FPGA
->   $ echo 1 > /sys/class/fpga_manager/<fpga>/reset
-> 
-> * /sys/class/fpga_manager/<fpga>/state
->   State of fpga framework state machine
-> 
-> Signed-off-by: Alan Tull <atull@opensource.altera.com>
+
+--===============1742979649==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="OROCMA9jn6tkzFBc"
+Content-Disposition: inline
+
+
+--OROCMA9jn6tkzFBc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Dec 10, 2014 at 04:37:22PM +0800, Liu Ying wrote:
+> This patch adds i.MX MIPI DSI host controller driver support.
+> Currently, the driver supports the burst with sync pulses mode only.
+>=20
+> Signed-off-by: Liu Ying <Ying.Liu@freescale.com>
 > ---
-> v2: s/mangager/manager/
->     check for invalid request_nr
->     add fpga reset interface
->     rework the state code
->     remove FPGA_MGR_FAIL flag
->     add _ERR states to fpga manager states enum
->     low level state op now returns a state enum value
->     initialize framework state from driver state op
->     remove unused fpga read stuff
->     merge sysfs.c into fpga-mgr.c
->     move suspend/resume from bus.c to fpga-mgr.c
-> 
-> v3: Add struct device to fpga_manager (not as a pointer)
->     Add to_fpga_manager
->     Don't get irq in fpga-mgr.c (let low level driver do it)
->     remove from struct fpga_manager: nr, np, parent
->     get rid of fpga_mgr_get_new_minor()
->     simplify fpga_manager_register:
->       reorder parameters
->       use dev instead of pdev
->     get rid of code that used to make more sense when this
->       was a char driver, don't alloc_chrdev_region
->     use a mutex instead of flags
-> 
-> v4: Move to drivers/staging
-> ---
->  drivers/staging/Kconfig         |    2 +
->  drivers/staging/Makefile        |    1 +
->  drivers/staging/fpga/Kconfig    |   21 ++
->  drivers/staging/fpga/Makefile   |   10 +
->  drivers/staging/fpga/fpga-mgr.c |  485 +++++++++++++++++++++++++++++++++++++++
->  include/linux/fpga-mgr.h        |  104 +++++++++
->  6 files changed, 623 insertions(+)
->  create mode 100644 drivers/staging/fpga/Kconfig
->  create mode 100644 drivers/staging/fpga/Makefile
->  create mode 100644 drivers/staging/fpga/fpga-mgr.c
->  create mode 100644 include/linux/fpga-mgr.h
-> 
-> diff --git a/drivers/staging/Kconfig b/drivers/staging/Kconfig
-> index 4690ae9..4338a4c 100644
-> --- a/drivers/staging/Kconfig
-> +++ b/drivers/staging/Kconfig
-> @@ -108,4 +108,6 @@ source "drivers/staging/skein/Kconfig"
->  
->  source "drivers/staging/unisys/Kconfig"
->  
-> +source "drivers/staging/fpga/Kconfig"
-> +
->  endif # STAGING
-> diff --git a/drivers/staging/Makefile b/drivers/staging/Makefile
-> index c780a0e..43654a2 100644
-> --- a/drivers/staging/Makefile
-> +++ b/drivers/staging/Makefile
-> @@ -46,3 +46,4 @@ obj-$(CONFIG_MTD_SPINAND_MT29F)	+= mt29f_spinand/
->  obj-$(CONFIG_GS_FPGABOOT)	+= gs_fpgaboot/
->  obj-$(CONFIG_CRYPTO_SKEIN)	+= skein/
->  obj-$(CONFIG_UNISYSSPAR)	+= unisys/
-> +obj-$(CONFIG_FPGA)		+= fpga/
-> diff --git a/drivers/staging/fpga/Kconfig b/drivers/staging/fpga/Kconfig
+>  .../devicetree/bindings/drm/imx/mipi_dsi.txt       |   81 ++
+>  drivers/gpu/drm/imx/Kconfig                        |    6 +
+>  drivers/gpu/drm/imx/Makefile                       |    1 +
+>  drivers/gpu/drm/imx/imx-mipi-dsi.c                 | 1017 ++++++++++++++=
+++++++
+>  4 files changed, 1105 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/drm/imx/mipi_dsi.txt
+>  create mode 100644 drivers/gpu/drm/imx/imx-mipi-dsi.c
+>=20
+> diff --git a/Documentation/devicetree/bindings/drm/imx/mipi_dsi.txt b/Doc=
+umentation/devicetree/bindings/drm/imx/mipi_dsi.txt
 > new file mode 100644
-> index 0000000..e775b17
+> index 0000000..3d07fd7
 > --- /dev/null
-> +++ b/drivers/staging/fpga/Kconfig
-> @@ -0,0 +1,21 @@
-> +#
-> +# FPGA framework configuration
-> +#
+> +++ b/Documentation/devicetree/bindings/drm/imx/mipi_dsi.txt
+> @@ -0,0 +1,81 @@
+> +Device-Tree bindings for MIPI DSI host controller
 > +
-> +menu "FPGA devices"
+> +MIPI DSI host controller
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
 > +
-> +config FPGA
-> +	tristate "FPGA Framework"
-> +	help
-> +	  Say Y here if you want support for configuring FPGAs from the
-> +	  kernel.  The FPGA framework adds a FPGA manager class and FPGA
-> +	  manager drivers.
+> +The MIPI DSI host controller is a Synopsys DesignWare IP.
+> +It is a digital core that implements all protocol functions defined
+> +in the MIPI DSI specification, providing an interface between the
+> +system and the MIPI DPHY, and allowing communication with a MIPI DSI
+> +compliant display.
 > +
+> +Required properties:
+> + - #address-cells : Should be <1>.
+> + - #size-cells : Should be <0>.
+> + - compatible : Should be "fsl,imx6q-mipi-dsi" for i.MX6q/sdl SoCs.
+> + - reg : Physical base address of the controller and length of memory
+> +         mapped region.
+> + - interrupts : The controller's interrupt number to the CPU(s).
+> + - gpr : Should be <&gpr>.
+> +         The phandle points to the iomuxc-gpr region containing the
+> +         multiplexer control register for the controller.
 
-I would add here
-if FPGA
+Side-note: Shouldn't this really be a pinmux, then?
 
+> + - clocks, clock-names : Phandles to the controller pllref, pllref_gate
+> +           and core_cfg clocks, as described in [1] and [2].
+> + - panel@0 : A panel node which contains a display-timings child node as
+> +             defined in [3].
 
-> +config FPGA_MGR_SYSFS
-> +	bool "FPGA Manager SysFS Interface"
-> +	depends on FPGA
+There's no need for these to be named panel@*. They could be bridges for
+example. And no, they shouldn't contain a display-timings child node
+either. Panels should have a proper driver and the driver being device
+specific it should have the timings embedded.
 
-remove this line.
+> + - port@[0-4] : Up to four port nodes with endpoint definitions as defin=
+ed
+> +   in [4], corresponding to the four inputs to the controller multiplexe=
+r.
+> +   Note that each port node should contain the input-port property to
+> +   distinguish it from the panel node, as described in [5].
 
-> +	depends on SYSFS
-> +	help
-> +	  FPGA Manager SysFS interface.
-> +
+[4] says that you can group all port nodes under a ports parent node. I
+think this is really what you want to do here to make it clear that the
+ports aren't part of the DSI host binding part of the device.
 
-maybe this is not needed at, i2c has no this dependency too and compilation
-looks good too.
-
-
-endif here
-
-The reason is that all "low level" drivers will depend on FPGA that's why with this
-we don't need to add depends on FPGA to every entry.
-
-> +endmenu
-> diff --git a/drivers/staging/fpga/Makefile b/drivers/staging/fpga/Makefile
-> new file mode 100644
-> index 0000000..c8a676f
-> --- /dev/null
-> +++ b/drivers/staging/fpga/Makefile
-> @@ -0,0 +1,10 @@
-> +#
-> +# Makefile for the fpga framework and fpga manager drivers.
-> +#
-> +
-> +fpga-mgr-core-y += fpga-mgr.o
-> +
-> +# Core FPGA Manager Framework
-> +obj-$(CONFIG_FPGA)			+= fpga-mgr-core.o
-
-Just
-obj-$(CONFIG_FPGA)			+= fpga-mgr.o
-should be enough here.
-
-> +
-> +# FPGA Manager Drivers
-> diff --git a/drivers/staging/fpga/fpga-mgr.c b/drivers/staging/fpga/fpga-mgr.c
-> new file mode 100644
-> index 0000000..d08cb82
-> --- /dev/null
-> +++ b/drivers/staging/fpga/fpga-mgr.c
-> @@ -0,0 +1,485 @@
+> diff --git a/drivers/gpu/drm/imx/imx-mipi-dsi.c b/drivers/gpu/drm/imx/imx=
+-mipi-dsi.c
+[...]
 > +/*
-> + * FPGA Manager Core
+> + * i.MX drm driver - MIPI DSI Host Controller
 > + *
-> + *  Copyright (C) 2013-2014 Altera Corporation
+> + * Copyright (C) 2011-2014 Freescale Semiconductor, Inc.
 > + *
-> + * With code from the mailing list:
-> + * Copyright (C) 2013 Xilinx, Inc.
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License
+> + * as published by the Free Software Foundation; either version 2
+> + * of the License, or (at your option) any later version.
 > + *
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms and conditions of the GNU General Public License,
-> + * version 2, as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope it will be useful, but WITHOUT
-> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-> + * more details.
-> + *
-> + * You should have received a copy of the GNU General Public License along with
-> + * this program.  If not, see <http://www.gnu.org/licenses/>.
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
 > + */
-
-Greg, Grant: What about to use just SPDX?
-
-SPDX-License-Identifier:     GPL-2.0
-
-> +#include <linux/delay.h>
-> +#include <linux/firmware.h>
-> +#include <linux/fpga-mgr.h>
-
-I think it will be worth to add this to linux/fpga/ folder.
-
-> +#include <linux/fs.h>
-> +#include <linux/idr.h>
-> +#include <linux/interrupt.h>
-
-Already added by fpga-mgr.h
-
-> +#include <linux/kernel.h>
-
-linux/delay.h is adding this header already.
-
+> +
+> +#include <linux/clk.h>
+> +#include <linux/component.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/mfd/syscon/imx6q-iomuxc-gpr.h>
 > +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/pm.h>
-> +#include <linux/slab.h>
-> +#include <linux/vmalloc.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/videodev2.h>
+> +#include <asm/div64.h>
+
+Don't you want the more generic linux/math64.h here?
+
+> +#include <drm/drmP.h>
+> +#include <drm/drm_crtc_helper.h>
+> +#include <drm/drm_fb_helper.h>
+
+I don't see any of the functions defined in that header used here.
+
+> +#include <drm/drm_mipi_dsi.h>
+> +#include <drm/drm_panel.h>
+> +#include <video/mipi_display.h>
+> +#include <video/of_videomode.h>
+> +#include <video/videomode.h>
 > +
-> +static DEFINE_MUTEX(fpga_mgr_mutex);
-> +static DEFINE_IDA(fpga_mgr_ida);
-> +static struct class *fpga_mgr_class;
+> +#include "imx-drm.h"
 > +
-> +static LIST_HEAD(fpga_manager_list);
+> +#define DRIVER_NAME 			"imx-mipi-dsi"
 > +
-> +/*
-> + * Get FPGA state from low level driver
-> + * return value is same enum as fpga_mgr_framework_state
+> +#define	DSI_VERSION			0x00
+> +
+> +#define	DSI_PWR_UP			0x04
+> +#define	RESET				0
+> +#define	POWERUP				BIT(0)
+> +
+> +#define	DSI_CLKMGR_CFG			0x08
+> +#define TO_CLK_DIVIDSION(div)		(((div) & 0xff) << 8)
+> +#define TX_ESC_CLK_DIVIDSION(div)	(((div) & 0xff) << 0)
 
-This is enum fpga_mgr_states based on fpga-mgr.h
+Your indentation here is... weird.
 
-> + *
-> + * This will be used to initialize framework state
-> + */
+> +#define IMX_MIPI_DSI_MAX_DATA_LANES	2
+> +
+> +#define PHY_STATUS_TIMEOUT		10
+> +#define CMD_PKT_STATUS_TIMEOUT		20
+> +
+> +#define IMX_MIPI_DSI_PLD_DATA_BUF_SIZE	4
+> +
+> +#define MHZ				1000000
 
-We have an opportunity to have this in kernel-doc format.
-Description is pretty similar to kernel doc anyway.
+Why not reuse the existing USEC_PER_SEC?
 
-> +int fpga_mgr_low_level_state(struct fpga_manager *mgr)
+> +#define host_to_dsi(host) container_of(host, struct imx_mipi_dsi, dsi_ho=
+st)
+> +#define con_to_dsi(x) container_of(x, struct imx_mipi_dsi, connector)
+> +#define enc_to_dsi(x) container_of(x, struct imx_mipi_dsi, encoder)
 
-static enum fpga_mgr_states here
+These should really be static inline functions for proper type safety.
 
+> +struct imx_mipi_dsi {
+> +	struct mipi_dsi_host dsi_host;
+> +	struct drm_connector connector;
+> +	struct drm_encoder encoder;
+> +	struct device_node *panel_node;
+> +	struct drm_panel *panel;
+> +	struct device *dev;
+> +
+> +	struct regmap *regmap;
+> +	void __iomem *base;
+> +
+> +	struct clk *pllref_clk;
+> +	struct clk *pllref_gate_clk;
+> +	struct clk *cfg_clk;
+> +
+> +	unsigned int lane_mbps; /* per lane */
+> +	u32 channel;
+> +	u32 lanes;
+> +	u32 format;
+> +	struct videomode vm;
+> +
+> +	bool enabled;
 
+Do you really need this flag?
 
+> +};
+> +
+> +enum {
+> +	STATUS_TO_CLEAR,
+> +	STATUS_TO_SET,
+> +};
+> +
+> +struct dphy_pll_testdin_map {
+> +	int max_mbps;
 
+unsigned?
+
+> +	u8 testdin;
+> +};
+> +
+> +/* The table is based on 27MHz DPHY pll reference clock. */
+> +static const struct dphy_pll_testdin_map dptdin_map[] =3D {
+> +	{160, 0x04}, {180, 0x24}, {200, 0x44}, {210, 0x06},
+> +	{240, 0x26}, {250, 0x46}, {270, 0x08}, {300, 0x28},
+> +	{330, 0x48}, {360, 0x2a}, {400, 0x4a}, {450, 0x0c},
+> +	{500, 0x2c}, {550, 0x0e}, {600, 0x2e}, {650, 0x10},
+> +	{700, 0x30}, {750, 0x12}, {800, 0x32}, {850, 0x14},
+> +	{900, 0x34}, {950, 0x54}, {1000, 0x74}
+> +};
+> +
+> +static int max_mbps_to_testdin(unsigned int max_mbps)
 > +{
-> +	if (!mgr || !mgr->mops || !mgr->mops->state)
-> +		return FPGA_MGR_STATE_UNKNOWN;
+> +	int i;
 > +
-> +	return mgr->mops->state(mgr);
+> +	for (i =3D 0; i < ARRAY_SIZE(dptdin_map); i++)
+> +		if (dptdin_map[i].max_mbps =3D=3D max_mbps)
+> +			return dptdin_map[i].testdin;
+> +
+> +	return -EINVAL;
 > +}
 > +
-> +/*
-> + * Unlocked version
-> + */
-> +static int __fpga_mgr_reset(struct fpga_manager *mgr)
+> +static int format_to_bpp(struct imx_mipi_dsi *dsi)
 > +{
-> +	int ret;
-> +
-> +	if (!mgr->mops->reset)
+> +	switch (dsi->format) {
+> +	case MIPI_DSI_FMT_RGB888:
+> +	case MIPI_DSI_FMT_RGB666:
+> +		return 24;
+> +	case MIPI_DSI_FMT_RGB666_PACKED:
+> +		return 18;
+> +	case MIPI_DSI_FMT_RGB565:
+> +		return 16;
+> +	default:
+> +		dev_err(dsi->dev, "unsupported pixel format\n");
 > +		return -EINVAL;
+> +	}
+> +}
+
+Is there a reason why this can't be a standard MIPI DSI function?
+
 > +
-> +	ret = mgr->mops->reset(mgr);
+> +static int check_status(struct imx_mipi_dsi *dsi, u32 reg, u32 status,
+> +			int timeout, bool to_set)
+> +{
+> +	u32 val;
+> +	bool out =3D false;
 > +
-> +	mgr->state = fpga_mgr_low_level_state(mgr);
+> +	val =3D dsi_read(dsi, reg);
+> +	for (;;) {
+> +		out =3D to_set ? (val & status) : !(val & status);
+> +		if (out)
+> +			break;
 > +
-> +	return ret;
+> +		if (!timeout--)
+> +			return -EFAULT;
+> +
+> +		msleep(1);
+> +		val =3D dsi_read(dsi, reg);
+> +	}
+> +	return 0;
+> +}
+
+You should probably use a properly timed loop here. msleep() isn't
+guaranteed to return after exactly one millisecond, so your timeout is
+never going to be accurate. Something like the following would be better
+in my opinion:
+
+	timeout =3D jiffies + msecs_to_jiffies(timeout);
+
+	while (time_before(jiffies, timeout)) {
+		...
+	}
+
+Also timeout should be unsigned long in that case.
+
+> +static int imx_mipi_dsi_host_attach(struct mipi_dsi_host *host,
+> +				    struct mipi_dsi_device *device)
+> +{
+> +	struct imx_mipi_dsi *dsi =3D host_to_dsi(host);
+> +	int ret;
+> +
+> +	if (device->lanes > IMX_MIPI_DSI_MAX_DATA_LANES) {
+> +		dev_err(dsi->dev, "the number of data lanes(%d) is too many\n",
+> +				device->lanes);
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (!(device->mode_flags & MIPI_DSI_MODE_VIDEO_BURST) ||
+> +	    !(device->mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE)) {
+> +		dev_err(dsi->dev, "device mode is unsupported\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	dsi->lanes =3D device->lanes;
+> +	dsi->channel =3D device->channel;
+> +	dsi->format =3D device->format;
+> +	dsi->panel_node =3D device->dev.of_node;
+> +	of_get_videomode(dsi->panel_node, &dsi->vm, 0);
+
+No, you shouldn't use this. Query the mode from the panel instead. Or
+rather, encode this requirement in ->mode_valid() since that'll give you
+direct access to the mode.
+
+That way, ->host_attach() becomes a filter for compatible devices, yet
+devices may support multiple modes, therefore ->mode_valid() can be used
+to filter out those that don't work with your DSI host controller. There
+is a subtle difference here between devices that are compatible with the
+controller and modes that the controller doesn't support.
+
+> +
+> +	ret =3D imx_mipi_dsi_get_lane_bps(dsi, &dsi->lane_mbps);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return 0;
 > +}
 > +
-> +int fpga_mgr_reset(struct fpga_manager *mgr)
+> +static int imx_mipi_dsi_host_detach(struct mipi_dsi_host *host,
+> +				    struct mipi_dsi_device *device)
+> +{
+> +	struct imx_mipi_dsi *dsi =3D host_to_dsi(host);
+> +
+> +	dsi->panel_node =3D NULL;
+> +	dsi->panel =3D NULL;
+> +
+> +	return 0;
+> +}
+
+You'll want to detach from the panel here as well.
+
+> +
+> +static int imx_mipi_dsi_gen_pkt_hdr_write(struct imx_mipi_dsi *dsi, u32 =
+val)
 > +{
 > +	int ret;
 > +
-> +	if (!mutex_trylock(&mgr->lock))
-> +		return -EBUSY;
+> +	ret =3D check_status(dsi, DSI_CMD_PKT_STATUS, GEN_CMD_FULL,
+> +			   CMD_PKT_STATUS_TIMEOUT, STATUS_TO_CLEAR);
+> +	if (ret < 0) {
+> +		dev_err(dsi->dev, "failed to get avaliable command FIFO\n");
+> +		return ret;
+> +	}
 > +
-> +	ret = __fpga_mgr_reset(mgr);
+> +	dsi_write(dsi, DSI_GEN_HDR, val);
 > +
-> +	mutex_unlock(&mgr->lock);
+> +	ret =3D check_status(dsi, DSI_CMD_PKT_STATUS,
+> +			   GEN_CMD_EMPTY | GEN_PLD_W_EMPTY,
+> +			   CMD_PKT_STATUS_TIMEOUT, STATUS_TO_SET);
+> +	if (ret < 0) {
+> +		dev_err(dsi->dev, "failed to write command FIFO\n");
+> +		return ret;
+> +	}
 > +
-> +	return ret;
+> +	return 0;
 > +}
-> +EXPORT_SYMBOL_GPL(fpga_mgr_reset);
 > +
-> +/*
-> + * Unlocked
-> + */
-> +static int __fpga_mgr_stage_write_init(struct fpga_manager *mgr)
+> +static int imx_mipi_dsi_dcs_short_write(struct imx_mipi_dsi *dsi,
+> +					const struct mipi_dsi_msg *msg)
 > +{
-> +	int ret;
+> +	const u16 *tx_buf =3D msg->tx_buf;
+> +	u32 val =3D GEN_HDATA(*tx_buf) | GEN_HTYPE(msg->type);
 > +
-> +	if (mgr->mops->write_init) {
-> +		mgr->state = FPGA_MGR_STATE_WRITE_INIT;
-> +		ret = mgr->mops->write_init(mgr);
-> +		if (ret) {
-> +			mgr->state = FPGA_MGR_STATE_WRITE_INIT_ERR;
+> +	if (msg->tx_len > 2) {
+> +		dev_err(dsi->dev, "too long tx buf length %d for short write\n",
+> +			msg->tx_len);
+> +		return -EINVAL;
+> +	}
+> +
+> +	return imx_mipi_dsi_gen_pkt_hdr_write(dsi, val);
+> +}
+
+It seems like you would profit from converting to the newly introduced
+mipi_dsi_create_packet() helper which does most of the packing along
+with some sanity checking for you.
+
+> +
+> +static int imx_mipi_dsi_dcs_long_write(struct imx_mipi_dsi *dsi,
+> +				       const struct mipi_dsi_msg *msg)
+> +{
+> +	const u32 *tx_buf =3D msg->tx_buf;
+> +	int len =3D msg->tx_len, ret;
+> +	u32 val =3D GEN_HDATA(msg->tx_len) | GEN_HTYPE(msg->type);
+> +
+> +	if (msg->tx_len < 3) {
+> +		dev_err(dsi->dev, "wrong tx buf length %d for long write\n",
+> +			msg->tx_len);
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* write the bulks */
+> +	while (len / IMX_MIPI_DSI_PLD_DATA_BUF_SIZE) {
+> +		dsi_write(dsi, DSI_GEN_PLD_DATA, *tx_buf);
+> +		tx_buf++;
+> +		len -=3D IMX_MIPI_DSI_PLD_DATA_BUF_SIZE;
+
+This is confusing. Maybe a better option would be to use sizeof(*tx_buf)
+instead of this macro. You're effectively consuming one u32 with each
+write, irrespective of what the value of the macro is.
+
+> +		ret =3D check_status(dsi, DSI_CMD_PKT_STATUS, GEN_PLD_W_FULL,
+> +				   CMD_PKT_STATUS_TIMEOUT, STATUS_TO_CLEAR);
+> +		if (ret < 0) {
+> +			dev_err(dsi->dev, "failed to get avaliable "
+> +					"write payload FIFO\n");
 > +			return ret;
 > +		}
 > +	}
 > +
-> +	return 0;
-> +}
-> +
-> +static int __fpga_mgr_stage_write(struct fpga_manager *mgr, const char *buf,
-> +				  size_t count)
-> +{
-> +	int ret;
-> +
-> +	mgr->state = FPGA_MGR_STATE_WRITE;
-> +	ret = mgr->mops->write(mgr, buf, count);
-> +	if (ret) {
-> +		mgr->state = FPGA_MGR_STATE_WRITE_ERR;
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int __fpga_mgr_stage_write_complete(struct fpga_manager *mgr)
-> +{
-> +	int ret;
-> +
-> +	if (mgr->mops->write_complete) {
-> +		mgr->state = FPGA_MGR_STATE_WRITE_COMPLETE;
-> +		ret = mgr->mops->write_complete(mgr);
-> +		if (ret) {
-> +			mgr->state = FPGA_MGR_STATE_WRITE_COMPLETE_ERR;
+> +	/* write the remainder */
+> +	if (len > 0) {
+> +		ret =3D check_status(dsi, DSI_CMD_PKT_STATUS, GEN_PLD_W_FULL,
+> +				   CMD_PKT_STATUS_TIMEOUT, STATUS_TO_CLEAR);
+> +		if (ret < 0) {
+> +			dev_err(dsi->dev, "failed to get avaliable "
+> +					"write payload FIFO\n");
 > +			return ret;
 > +		}
+> +		dsi_write(dsi, DSI_GEN_PLD_DATA, *tx_buf);
 > +	}
-> +
-> +	mgr->state = fpga_mgr_low_level_state(mgr);
-> +
-> +	return 0;
+
+This is really duplicating what the above loop does. Why can't you do it
+in a single loop? Also the transmission buffer isn't guaranteed to be a
+multiple of 4 bytes, so you could have the situation where len > 0 and
+len < 4 and yet you'll be reading 4 bytes by doing *tx_buf and accessing
+memory that you shouldn't.
+
+> +	return imx_mipi_dsi_gen_pkt_hdr_write(dsi, val);
 > +}
 > +
-> +static int __fpga_mgr_write(struct fpga_manager *mgr, const char *buf,
-> +			    size_t count)
+> +static ssize_t imx_mipi_dsi_host_transfer(struct mipi_dsi_host *host,
+> +					  const struct mipi_dsi_msg *msg)
 > +{
+> +	struct imx_mipi_dsi *dsi =3D host_to_dsi(host);
 > +	int ret;
 > +
-> +	ret = __fpga_mgr_stage_write_init(mgr);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = __fpga_mgr_stage_write(mgr, buf, count);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return __fpga_mgr_stage_write_complete(mgr);
-> +}
-> +
-> +int fpga_mgr_write(struct fpga_manager *mgr, const char *buf, size_t count)
-> +{
-> +	int ret;
-> +
-> +	if (!mutex_trylock(&mgr->lock))
-> +		return -EBUSY;
-> +
-> +	dev_info(&mgr->dev, "writing buffer to %s\n", mgr->name);
-> +
-> +	ret = __fpga_mgr_write(mgr, buf, count);
-> +	mutex_unlock(&mgr->lock);
+> +	switch (msg->type) {
+> +	case MIPI_DSI_DCS_SHORT_WRITE:
+> +	case MIPI_DSI_DCS_SHORT_WRITE_PARAM:
+> +	case MIPI_DSI_SET_MAXIMUM_RETURN_PACKET_SIZE:
+> +		ret =3D imx_mipi_dsi_dcs_short_write(dsi, msg);
+> +		break;
+> +	case MIPI_DSI_DCS_LONG_WRITE:
+> +		ret =3D imx_mipi_dsi_dcs_long_write(dsi, msg);
+> +		break;
+> +	default:
+> +		dev_err(dsi->dev, "unsupported message type\n");
+> +		ret =3D -EFAULT;
+
+EFAULT really isn't appropriate here.
+
+> +	}
 > +
 > +	return ret;
 > +}
-> +EXPORT_SYMBOL_GPL(fpga_mgr_write);
 > +
-> +/*
-> + * Grab lock, request firmware, and write out to the FPGA.
-> + * Update the state before each step to provide info on what step
-> + * failed if there is a failure.
-> + */
-> +int fpga_mgr_firmware_write(struct fpga_manager *mgr, const char *image_name)
+> +static const struct mipi_dsi_host_ops imx_mipi_dsi_host_ops =3D {
+> +	.attach =3D imx_mipi_dsi_host_attach,
+> +	.detach =3D imx_mipi_dsi_host_detach,
+> +	.transfer =3D imx_mipi_dsi_host_transfer,
+> +};
+> +
+> +static enum drm_connector_status
+> +imx_mipi_dsi_detect(struct drm_connector *connector, bool force)
 > +{
-> +	const struct firmware *fw;
-> +	int ret;
+> +	struct imx_mipi_dsi *dsi =3D con_to_dsi(connector);
 > +
-> +	if (!mutex_trylock(&mgr->lock))
-> +		return -EBUSY;
-> +
-> +	dev_info(&mgr->dev, "writing %s to %s\n", image_name, mgr->name);
-> +
-> +	mgr->state = FPGA_MGR_STATE_FIRMWARE_REQ;
-> +	ret = request_firmware(&fw, image_name, &mgr->dev);
-> +	if (ret) {
-> +		mgr->state = FPGA_MGR_STATE_FIRMWARE_REQ_ERR;
-> +		goto fw_wr_exit;
+> +	if (!dsi->panel) {
+> +		dsi->panel =3D of_drm_find_panel(dsi->panel_node);
+> +		if (dsi->panel)
+> +			drm_panel_attach(dsi->panel, &dsi->connector);
 > +	}
 > +
-> +	ret = __fpga_mgr_write(mgr, fw->data, fw->size);
-> +	if (ret)
-> +		goto fw_wr_exit;
+> +	if (dsi->panel)
+> +		return connector_status_connected;
 > +
-> +	strcpy(mgr->image_name, image_name);
+> +	return connector_status_disconnected;
 > +
-> +fw_wr_exit:
-> +	mutex_unlock(&mgr->lock);
-> +
-> +	return ret;
 > +}
-> +EXPORT_SYMBOL_GPL(fpga_mgr_firmware_write);
-> +
-> +int fpga_mgr_name(struct fpga_manager *mgr, char *buf)
+
+You really shouldn't be doing that here. of_drm_find_panel() returning
+NULL should be considered cause for deferring probe. I suspect that the
+driver doesn't really handle that very well at all, though, since if it
+did you would've run into the same issue that Benjamin ran into this
+morning.
+
+> +static void imx_mipi_dsi_encoder_prepare(struct drm_encoder *encoder)
 > +{
-> +	if (!mgr)
-> +		return -ENODEV;
+> +	struct imx_mipi_dsi *dsi =3D enc_to_dsi(encoder);
+> +	u32 interface_pix_fmt;
 > +
-> +	return sprintf(buf, "%s\n", mgr->name);
-> +}
-> +EXPORT_SYMBOL_GPL(fpga_mgr_name);
-> +
-> +#if IS_ENABLED(CONFIG_FPGA_MGR_SYSFS)
+> +	switch (dsi->format) {
+> +	case MIPI_DSI_FMT_RGB888:
+> +		interface_pix_fmt =3D V4L2_PIX_FMT_RGB24;
+> +		break;
+> +	case MIPI_DSI_FMT_RGB565:
+> +		interface_pix_fmt =3D V4L2_PIX_FMT_RGB565;
+> +		break;
+> +	default:
+> +		dev_err(dsi->dev, "unsupported DSI pixel format\n");
+> +		return;
 
-This shouldn't be needed.
+Why even try doing this if you know upfront that it can't be done. You
+know much earlier than this that you can't drive the pixel format, why
+not abort then?
 
-> +const char *state_str[] = {
+People are much more likely to notice that the panel isn't supported if
+the DSI output doesn't even show up (or doesn't expose any modes) rather
+than if they have to find this error message in dmesg.
 
-static const ...
-
-> +	[FPGA_MGR_STATE_UNKNOWN] =		"unknown",
-> +	[FPGA_MGR_STATE_POWER_OFF] =		"power_off",
-> +	[FPGA_MGR_STATE_POWER_UP] =		"power_up",
-> +	[FPGA_MGR_STATE_RESET] =		"reset",
-> +
-> +	/* write sequence */
-> +	[FPGA_MGR_STATE_FIRMWARE_REQ] =		"firmware_request",
-> +	[FPGA_MGR_STATE_FIRMWARE_REQ_ERR] =	"firmware_request_err",
-> +	[FPGA_MGR_STATE_WRITE_INIT] =		"write_init",
-> +	[FPGA_MGR_STATE_WRITE_INIT_ERR] =	"write_init_err",
-> +	[FPGA_MGR_STATE_WRITE] =		"write",
-> +	[FPGA_MGR_STATE_WRITE_ERR] =		"write_err",
-> +	[FPGA_MGR_STATE_WRITE_COMPLETE] =	"write_complete",
-> +	[FPGA_MGR_STATE_WRITE_COMPLETE_ERR] =	"write_complete_err",
-> +
-> +	[FPGA_MGR_STATE_OPERATING] =		"operating",
-> +};
-> +
-> +/*
-> + * class attributes
-> + */
-> +static ssize_t fpga_mgr_name_show(struct device *dev,
-> +				  struct device_attribute *attr, char *buf)
+> +static void imx_mipi_dsi_video_mode_config(struct imx_mipi_dsi *dsi)
 > +{
-> +	struct fpga_manager *mgr = to_fpga_manager(dev);
+> +	u32 val;
 > +
-> +	return fpga_mgr_name(mgr, buf);
+> +	val =3D VID_MODE_TYPE_BURST_SYNC_PULSES | ENABLE_LOW_POWER;
+> +
+> +	dsi_write(dsi, DSI_VID_MODE_CFG, val);
 > +}
-> +
-> +static ssize_t fpga_mgr_state_show(struct device *dev,
-> +				   struct device_attribute *attr, char *buf)
-> +{
-> +	struct fpga_manager *mgr = to_fpga_manager(dev);
-> +
-> +	return sprintf(buf, "%s\n", state_str[mgr->state]);
-> +}
-> +
-> +static ssize_t fpga_mgr_firmware_show(struct device *dev,
-> +				      struct device_attribute *attr, char *buf)
-> +{
-> +	struct fpga_manager *mgr = to_fpga_manager(dev);
-> +
-> +	return sprintf(buf, "%s\n", mgr->image_name);
-> +}
-> +
-> +static ssize_t fpga_mgr_firmware_store(struct device *dev,
-> +				       struct device_attribute *attr,
-> +				       const char *buf, size_t count)
-> +{
-> +	struct fpga_manager *mgr = to_fpga_manager(dev);
-> +	unsigned int len;
-> +	char image_name[NAME_MAX];
-> +	int ret;
-> +
-> +	/* lose terminating \n */
-> +	strcpy(image_name, buf);
-> +	len = strlen(image_name);
-> +	if (image_name[len - 1] == '\n')
-> +		image_name[len - 1] = 0;
-> +
-> +	ret = fpga_mgr_firmware_write(mgr, image_name);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return count;
-> +}
-> +
-> +static ssize_t fpga_mgr_reset_store(struct device *dev,
-> +				    struct device_attribute *attr,
-> +				    const char *buf, size_t count)
-> +{
-> +	struct fpga_manager *mgr = to_fpga_manager(dev);
-> +	unsigned long val;
-> +	int ret;
-> +
-> +	ret = kstrtoul(buf, 0, &val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (val == 1) {
-> +		ret = fpga_mgr_reset(mgr);
-> +		if (ret)
-> +			return ret;
-> +	} else {
-> +		return -EINVAL;
-> +	}
-> +
-> +	return count;
-> +}
-> +
-> +static DEVICE_ATTR(name, S_IRUGO, fpga_mgr_name_show, NULL);
 
-DEVICE_ATTR_RO - name change.
+You probably want to parameterize based on the DSI peripheral's flags. I
+see that you do reject devices with any other modes, so this may not be
+necessary now. Out of curiosity, the hardware supports other modes,
+right?
 
-> +static DEVICE_ATTR(state, S_IRUGO, fpga_mgr_state_show, NULL);
-
-DEVICE_ATTR_RO
-
-> +static DEVICE_ATTR(firmware, S_IRUGO | S_IWUSR,
-> +		   fpga_mgr_firmware_show, fpga_mgr_firmware_store);
-
-
-DEVICE_ATTR_RW
-
-> +static DEVICE_ATTR(reset, S_IWUSR, NULL, fpga_mgr_reset_store);
-
-DEVICE_ATTR_WO
-
-> +
-> +static struct attribute *fpga_mgr_attrs[] = {
-> +	&dev_attr_name.attr,
-> +	&dev_attr_state.attr,
-> +	&dev_attr_firmware.attr,
-> +	&dev_attr_reset.attr,
-> +	NULL,
-> +};
-> +
-> +static const struct attribute_group fpga_mgr_group = {
-> +	.attrs = fpga_mgr_attrs,
-> +};
-> +
-> +const struct attribute_group *fpga_mgr_groups[] = {
-> +	&fpga_mgr_group,
-> +	NULL,
-> +};
-> +#else
-> +#define fpga_mgr_groups NULL
-> +#endif /* CONFIG_FPGA_MGR_SYSFS */
-
-ATTRIBUTE_GROUPS(fpga_mgr)
-
-> +
-> +static int fpga_mgr_suspend(struct device *dev)
-> +{
-> +	struct fpga_manager *mgr = to_fpga_manager(dev);
-> +
-> +	if (!mgr)
-> +		return -ENODEV;
-> +
-> +	if (mgr->mops->suspend)
-> +		return mgr->mops->suspend(mgr);
-> +
-> +	return 0;
-> +}
-> +
-> +static int fpga_mgr_resume(struct device *dev)
-> +{
-> +	struct fpga_manager *mgr = to_fpga_manager(dev);
-> +	int ret = 0;
-> +
-> +	if (!mgr)
-> +		return -ENODEV;
-> +
-> +	if (mgr->mops->resume) {
-> +		ret = mgr->mops->resume(mgr);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	if (strlen(mgr->image_name) != 0)
-> +		fpga_mgr_firmware_write(mgr, mgr->image_name);
-> +
-> +	return 0;
-> +}
-> +
-> +const struct dev_pm_ops fpga_mgr_dev_pm_ops = {
-
-static
-
-> +	.suspend	= fpga_mgr_suspend,
-> +	.resume		= fpga_mgr_resume,
-> +};
-> +
-> +static void fpga_mgr_dev_release(struct device *dev)
-> +{
-> +	struct fpga_manager *mgr = to_fpga_manager(dev);
-> +
-> +	dev_dbg(dev, "releasing '%s'\n", dev_name(dev));
-> +	kfree(mgr);
-> +}
-> +
-> +int fpga_mgr_register(struct device *dev, const char *name,
-> +		      struct fpga_manager_ops *mops,
-> +		      void *priv)
-> +{
-> +	struct fpga_manager *mgr;
-> +	int id, ret;
-> +
-> +	BUG_ON(!mops || !name || !strlen(name));
-
-Isn't this pretty strong? Any reasonable reaction will be better.
-
-> +
-> +	id = ida_simple_get(&fpga_mgr_ida, 0, 0, GFP_KERNEL);
-> +	if (id < 0)
-> +		return id;
-> +
-> +	mgr = kzalloc(sizeof(*mgr), GFP_KERNEL);
-> +	if (!mgr)
-> +		return -ENOMEM;
-
-here is missing error path handling because you got id.
-It should be moved before ida_simple_get call
-
-> +
-> +	mutex_init(&mgr->lock);
-> +
-> +	mgr->name = name;
-> +	mgr->mops = mops;
-> +	mgr->priv = priv;
-> +
-> +	/*
-> +	 * Initialize framework state by requesting low level driver read state
-> +	 * from device.  FPGA may be in reset mode or may have been programmed
-> +	 * by bootloader or EEPROM.
-> +	 */
-> +	mgr->state = fpga_mgr_low_level_state(mgr);
-> +
-> +	INIT_LIST_HEAD(&mgr->list);
-> +	mutex_lock(&fpga_mgr_mutex);
-> +	list_add(&mgr->list, &fpga_manager_list);
-> +	mutex_unlock(&fpga_mgr_mutex);
-> +
-> +	device_initialize(&mgr->dev);
-> +	mgr->dev.class = fpga_mgr_class;
-> +	mgr->dev.parent = dev;
-> +	mgr->dev.of_node = dev->of_node;
-> +	mgr->dev.release = fpga_mgr_dev_release;
-> +	mgr->dev.id = id;
-> +	dev_set_name(&mgr->dev, "%d", id);
-> +	ret = device_add(&mgr->dev);
-> +	if (ret)
-> +		goto error_device;
-> +
-> +	dev_info(&mgr->dev, "fpga manager [%s] registered as id %d\n",
-> +		 dev_name(&mgr->dev), id);
-> +
-> +	return 0;
-> +
-> +error_device:
-> +	ida_simple_remove(&fpga_mgr_ida, id);
-> +	kfree(mgr);
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(fpga_mgr_register);
-> +
-> +void fpga_mgr_remove(struct device *dev)
-> +{
-> +	struct fpga_manager *mgr = to_fpga_manager(dev);
-> +	int id;
-> +
-> +	if (mgr)
-> +		id = mgr->dev.id;
-
-Why is here the checking? What cases this can cover if mrg
-is not there?
-
-> +
-> +	device_unregister(dev);
-> +
-> +	if (mgr) {
-> +		if (mgr->mops->fpga_remove)
-> +			mgr->mops->fpga_remove(mgr);
-> +
-> +		mutex_lock(&fpga_mgr_mutex);
-> +		list_del(&mgr->list);
-> +		mutex_unlock(&fpga_mgr_mutex);
-> +		kfree(mgr);
-> +		ida_simple_remove(&fpga_mgr_ida, id);
-> +	}
-> +}
-> +EXPORT_SYMBOL_GPL(fpga_mgr_remove);
-> +
-> +static int __init fpga_mgr_dev_init(void)
-> +{
-> +	pr_info("FPGA Manager framework driver\n");
-> +
-> +	fpga_mgr_class = class_create(THIS_MODULE, "fpga_manager");
-> +	if (IS_ERR(fpga_mgr_class))
-> +		return PTR_ERR(fpga_mgr_class);
-> +
-> +	fpga_mgr_class->dev_groups = fpga_mgr_groups;
-> +	fpga_mgr_class->pm = &fpga_mgr_dev_pm_ops;
-> +
-> +	return 0;
-> +}
-> +
-> +static void __exit fpga_mgr_dev_exit(void)
-> +{
-> +	class_destroy(fpga_mgr_class);
-> +	ida_destroy(&fpga_mgr_ida);
-> +}
-> +
-> +MODULE_AUTHOR("Alan Tull <atull@opensource.altera.com>");
-> +MODULE_DESCRIPTION("FPGA Manager framework driver");
+[...]
 > +MODULE_LICENSE("GPL v2");
-> +
-> +subsys_initcall(fpga_mgr_dev_init);
-> +module_exit(fpga_mgr_dev_exit);
-> diff --git a/include/linux/fpga-mgr.h b/include/linux/fpga-mgr.h
-> new file mode 100644
-> index 0000000..7ac762c
-> --- /dev/null
-> +++ b/include/linux/fpga-mgr.h
-> @@ -0,0 +1,104 @@
-> +/*
-> + * FPGA Framework
-> + *
-> + *  Copyright (C) 2013-2014 Altera Corporation
-> + *
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms and conditions of the GNU General Public License,
-> + * version 2, as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope it will be useful, but WITHOUT
-> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-> + * more details.
-> + *
-> + * You should have received a copy of the GNU General Public License along with
-> + * this program.  If not, see <http://www.gnu.org/licenses/>.
-> + */
-> +#include <linux/device.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/limits.h>
-> +#include <linux/mutex.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +
-> +#ifndef _LINUX_FPGA_MGR_H
-> +#define _LINUX_FPGA_MGR_H
-> +
-> +struct fpga_manager;
-> +
-> +/*
-> + * fpga_manager_ops are the low level functions implemented by a specific
-> + * fpga manager driver.  Leaving any of these out that aren't needed is fine
-> + * as they are all tested for NULL before being called.
-> + */
-> +struct fpga_manager_ops {
-> +	/* Returns an enum value of the FPGA's state */
-> +	int (*state)(struct fpga_manager *mgr);
 
-here return should be enum not int.
+Sigh... according to your header comment this needs to be "GPL".
 
-> +
-> +	/* Put FPGA into reset state */
-> +	int (*reset)(struct fpga_manager *mgr);
-> +
-> +	/* Prepare the FPGA to receive confuration data */
-> +	int (*write_init)(struct fpga_manager *mgr);
-> +
-> +	/* Write count bytes of configuration data to the FPGA */
-> +	int (*write)(struct fpga_manager *mgr, const char *buf, size_t count);
-> +
-> +	/* Return FPGA to default state after writing is done */
-> +	int (*write_complete)(struct fpga_manager *mgr);
-> +
+Thierry
 
-Here are missing read options which were in any previous series.
-But they can be added in the following patch.
+--OROCMA9jn6tkzFBc
+Content-Type: application/pgp-signature
 
-> +	/* Optional: Set FPGA into a specific state during driver remove */
-> +	void (*fpga_remove)(struct fpga_manager *mgr);
-> +
-> +	int (*suspend)(struct fpga_manager *mgr);
-> +
-> +	int (*resume)(struct fpga_manager *mgr);
-> +};
-> +
-> +/* Valid states may vary by manufacturer; superset is: */
-> +enum fpga_mgr_states {
-> +	FPGA_MGR_STATE_UNKNOWN,		/* can't determine state */
-> +	FPGA_MGR_STATE_POWER_OFF,	/* FPGA power is off */
-> +	FPGA_MGR_STATE_POWER_UP,	/* FPGA reports power is up */
-> +	FPGA_MGR_STATE_RESET,		/* FPGA held in reset state */
-> +
-> +	/* write sequence */
-> +	FPGA_MGR_STATE_FIRMWARE_REQ,	/* firmware request in progress */
-> +	FPGA_MGR_STATE_FIRMWARE_REQ_ERR, /* firmware request failed */
-> +	FPGA_MGR_STATE_WRITE_INIT,	/* preparing FPGA for programming */
-> +	FPGA_MGR_STATE_WRITE_INIT_ERR,	/* Error during write_init stage */
-> +	FPGA_MGR_STATE_WRITE,		/* FPGA ready to receive image data */
-> +	FPGA_MGR_STATE_WRITE_ERR,	/* Error while programming FPGA */
-> +	FPGA_MGR_STATE_WRITE_COMPLETE,	/* Doing post programming steps */
-> +	FPGA_MGR_STATE_WRITE_COMPLETE_ERR, /* Error during write_complete */
-> +
-> +	FPGA_MGR_STATE_OPERATING,	/* FPGA is programmed and operating */
-> +};
-> +
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-kernel-doc here will be good.
+iQIcBAEBAgAGBQJUiEe4AAoJEN0jrNd/PrOh7BYQAIKH8iBS4mosyhHkr30O/iSk
+pcvf03UpQT+u7wKKZhVxqq07ZcFbmzArixladuGS2H5ec4na0cv7K0ecxpt0/1m7
+QMNdSXJ2kIbN7rFACtGlYkM+wuGke+gJYsJBJjlfaeiCQBHsW/7tyvA/ZOrSqmIL
+Mw5YYtwV+G+snxCEbStKAR1GzO++1tNays7weGfmZAtSJXIpyCZF/jjyMXdFI0wK
+v6dw1gWW7k8R6ZGOMvi/5h6Fsj7AnwdjTG+kic094A3nA99ykauiSS1FzK7DMv8A
+uILRezMKbJlKXSzMYzGZzEr87FE6ShX0t1rq0mnHry1fpjrSBfKZVOBF4yLQCsyz
+r0RuhlrqyE8xFnalsHDqcV7yFm1lueMpQMgHpX4anNsu9kdobZBXzjwL7jwgabgF
+wTV0TNuSuy3F0B1yRhTugNXpVsE/JrKpLJZeO+6Hwid1X0VdbGpwIIgmHKrPzcwx
+zVtouNkm+ERziFlkEuGPYSCbz4Mw0DtNw5gMS+F6UAS2x8ITQumMKiNH2oNd8XXQ
+9CbMF/CKIQWIoKfqaO5KEvIj1lFZsaFk78PdtWbaCD58rqspXbUqhuciAFt8Rtno
+u1G2tctTkU9Pe3UMOLhS8lldldfFlWBgxdXbML4WqFG+1/DunqprTztiY51u3LUl
+s3LXwfRwfLuxM/AHUdiK
+=N3Du
+-----END PGP SIGNATURE-----
 
-> +struct fpga_manager {
-> +	const char *name;
-> +	struct device dev;
-> +	struct list_head list;
-> +	struct mutex lock;
-> +	enum fpga_mgr_states state;
-> +	char image_name[NAME_MAX];
-> +
-> +	struct fpga_manager_ops *mops;
-> +	void *priv;
-> +};
-> +
-> +#define to_fpga_manager(d) container_of(d, struct fpga_manager, dev)
-> +
-> +#if IS_ENABLED(CONFIG_FPGA)
+--OROCMA9jn6tkzFBc--
 
-you can simple remove this if.
+--===============1742979649==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
 
-> +
-> +int fpga_mgr_firmware_write(struct fpga_manager *mgr, const char *image_name);
-> +int fpga_mgr_write(struct fpga_manager *mgr, const char *buf, size_t count);
-> +int fpga_mgr_name(struct fpga_manager *mgr, char *buf);
-> +int fpga_mgr_reset(struct fpga_manager *mgr);
-> +int fpga_mgr_register(struct device *pdev, const char *name,
-> +		      struct fpga_manager_ops *mops, void *priv);
-> +void fpga_mgr_remove(struct device *dev);
-> +
-> +#endif /* CONFIG_FPGA */
-> +#endif /*_LINUX_FPGA_MGR_H */
-> 
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0
+cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
 
-Thanks,
-Michal
-
+--===============1742979649==--
