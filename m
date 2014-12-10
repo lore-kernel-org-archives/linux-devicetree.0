@@ -1,7 +1,7 @@
 From: Liu Ying <Ying.Liu@freescale.com>
-Subject: [PATCH RFC 08/15] ARM: imx6q: clk: Add the video_27m clock
-Date: Wed, 10 Dec 2014 16:37:21 +0800
-Message-ID: <1418200648-32656-9-git-send-email-Ying.Liu@freescale.com>
+Subject: [PATCH RFC 15/15] ARM: imx_v6_v7_defconfig: Add support for Himax HX8369A panel
+Date: Wed, 10 Dec 2014 16:37:28 +0800
+Message-ID: <1418200648-32656-16-git-send-email-Ying.Liu@freescale.com>
 References: <1418200648-32656-1-git-send-email-Ying.Liu@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,39 +12,31 @@ To: dri-devel@lists.freedesktop.org
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, p.zabel@pengutronix.de, thierry.reding@gmail.com, shawn.guo@linaro.org, kernel@pengutronix.de, linux@arm.linux.org.uk, mturquette@linaro.org, airlied@linux.ie
 List-Id: devicetree@vger.kernel.org
 
-This patch supports the video_27m clock which is a fixed factor
-clock of the pll3_pfd1_540m clock.
+This patch adds support for Himax HX8369A panel.
+
+The new imx_v6_v7_defconfig is generated in this way:
+* make ARCH=arm imx_v6_v7_defconfig
+* make ARCH=arm menuconfig and manually choose to build in
+  the Himax HX8369A panel driver
+* make ARCH=arm savedefconfig
+* cp defconfig arch/arm/configs/imx_v6_v7_defconfig
 
 Signed-off-by: Liu Ying <Ying.Liu@freescale.com>
 ---
- arch/arm/mach-imx/clk-imx6q.c             | 1 +
- include/dt-bindings/clock/imx6qdl-clock.h | 3 ++-
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ arch/arm/configs/imx_v6_v7_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/mach-imx/clk-imx6q.c b/arch/arm/mach-imx/clk-imx6q.c
-index 4e79da7..9470df3 100644
---- a/arch/arm/mach-imx/clk-imx6q.c
-+++ b/arch/arm/mach-imx/clk-imx6q.c
-@@ -246,6 +246,7 @@ static void __init imx6q_clocks_init(struct device_node *ccm_node)
- 	clk[IMX6QDL_CLK_PLL3_60M]  = imx_clk_fixed_factor("pll3_60m",  "pll3_usb_otg",   1, 8);
- 	clk[IMX6QDL_CLK_TWD]       = imx_clk_fixed_factor("twd",       "arm",            1, 2);
- 	clk[IMX6QDL_CLK_GPT_3M]    = imx_clk_fixed_factor("gpt_3m",    "osc",            1, 8);
-+	clk[IMX6QDL_CLK_VIDEO_27M] = imx_clk_fixed_factor("video_27m", "pll3_pfd1_540m", 1, 20);
- 	if (cpu_is_imx6dl()) {
- 		clk[IMX6QDL_CLK_GPU2D_AXI] = imx_clk_fixed_factor("gpu2d_axi", "mmdc_ch0_axi_podf", 1, 1);
- 		clk[IMX6QDL_CLK_GPU3D_AXI] = imx_clk_fixed_factor("gpu3d_axi", "mmdc_ch0_axi_podf", 1, 1);
-diff --git a/include/dt-bindings/clock/imx6qdl-clock.h b/include/dt-bindings/clock/imx6qdl-clock.h
-index b690cdb..25625bf 100644
---- a/include/dt-bindings/clock/imx6qdl-clock.h
-+++ b/include/dt-bindings/clock/imx6qdl-clock.h
-@@ -248,6 +248,7 @@
- #define IMX6QDL_PLL6_BYPASS			235
- #define IMX6QDL_PLL7_BYPASS			236
- #define IMX6QDL_CLK_GPT_3M			237
--#define IMX6QDL_CLK_END				238
-+#define IMX6QDL_CLK_VIDEO_27M			238
-+#define IMX6QDL_CLK_END				239
- 
- #endif /* __DT_BINDINGS_CLOCK_IMX6QDL_H */
+diff --git a/arch/arm/configs/imx_v6_v7_defconfig b/arch/arm/configs/imx_v6_v7_defconfig
+index 3e0e589..01b2b89 100644
+--- a/arch/arm/configs/imx_v6_v7_defconfig
++++ b/arch/arm/configs/imx_v6_v7_defconfig
+@@ -192,6 +192,7 @@ CONFIG_SOC_CAMERA_OV2640=y
+ CONFIG_IMX_IPUV3_CORE=y
+ CONFIG_DRM=y
+ CONFIG_DRM_PANEL_SIMPLE=y
++CONFIG_DRM_PANEL_HX8369A=y
+ CONFIG_DRM_IMX=y
+ CONFIG_DRM_IMX_FB_HELPER=y
+ CONFIG_DRM_IMX_PARALLEL_DISPLAY=y
 -- 
 2.1.0
