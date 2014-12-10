@@ -1,125 +1,219 @@
-From: "sre@debian.org" <sre@kernel.org>
-Subject: Re: BCM2048 bluetooth connected over OMAP serial
-Date: Wed, 10 Dec 2014 23:50:37 +0100
-Message-ID: <20141210225036.GA5585@earth.universe>
-References: <20141210164333.GA3154@amd>
- <11367725.nphhSzdtpK@wuerfel>
- <20141210184203.GA28150@leverpostej>
- <20141210205622.GA25286@amd>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH] extcon: add MAX3355 driver
+Date: Thu, 11 Dec 2014 02:28:38 +0300
+Message-ID: <14631865.01KLlU2iKL@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="x+6KMIRAuhnl3hBn"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20141210205622.GA25286@amd>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "pali.rohar@gmail.com" <pali.rohar@gmail.com>, kernel list <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "tony@atomide.com" <tony@atomide.com>, "khilman@kernel.org" <khilman@kernel.org>, "aaro.koskinen@iki.fi" <aaro.koskinen@iki.fi>, "ivo.g.dimitrov.75@gmail.com" <ivo.g.dimitrov.75@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, myungjoo.ham@samsung.com, cw00.choi@samsung.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: linux-sh@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+MAX3355E chip integrates a charge pump and comparators to enable a system with
+an integrated USB OTG dual-role transceiver to function as a USB OTG dual-role
+device. In addition to sensing/controlling Vbus, the chip also passes thru the
+ID signal from the USB OTG connector.  On some Renesas boards, this signal  is
+just  fed into the SoC thru a GPIO pin -- there's no real OTG controller, only
+host and gadget USB controllers sharing the same USB bus; however,  we'd  like
+to allow host or gadget drivers to be loaded depending on the cable type, hence
+the need for the MAX3355 extcon driver. The Vbus status signals are also wired
+to GPIOs (however, we're not currently intested in them), the  OFFVBUS# signal
+is controlled  by the host controllers, there's also the SHDN# signal wired to
+GPIO, which should be high for normal operation.
 
---x+6KMIRAuhnl3hBn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-Hi,
+---
+The patch is against the 'extcon-next' branch of the 'extcon.git' repo.
 
-On Wed, Dec 10, 2014 at 09:56:22PM +0100, Pavel Machek wrote:
-> On Wed 2014-12-10 18:42:03, Mark Rutland wrote:
-> > On Wed, Dec 10, 2014 at 05:02:42PM +0000, Arnd Bergmann wrote:
-> > > On Wednesday 10 December 2014 17:43:33 Pavel Machek wrote:
-> > > >=20
-> > > > So, there's bluetooth chip that's connected to the SoC by UART and =
-some
-> > > > GPIOs. What would be right representation in the device tree?
-> > > > Something like this?
-> > > >=20
-> > > >         bluetooth {
-> > > >                   compatible =3D "broadcom,bcm2048";
-> > > >                   uart =3D <&uart2>;
-> > > >                   reset-gpios =3D <&gpio3 27 GPIO_ACTIVE_HIGH>; /* =
-want 91 */
-> > > >                   host-wakeup-gpios =3D <&gpio4 5 GPIO_ACTIVE_HIGH>=
-; /* want 101 */
-> > > >                   bluetooth-wakeup-gpios =3D <&gpio2 5 GPIO_ACTIVE_=
-HIGH>; /* want 37 */
-> > > >                   chip-type =3D >;
-> > > >                   bt-sysclk =3D <2>;
-> > > >                   reset-gpio-shared =3D <0>;
-> > > >         };
-> > > >=20
-> > > > Is there some way to prevent OMAP tty driver from binding to the
-> > > > device and exporting the device to userspace?
-> > >=20
-> > > I think from the driver perspective, you want this to be a tty line
-> > > discipline rather than a driver that attaches to the physical
-> > > uart.
-> > >=20
-> > > For the DT representation, I fear we haven't got a precedent. A uart
-> > > phandle sounds reasonable, but there might be other ways to do it
-> > > and we should consider if there are better alternatives. It could
-> > > possibly be a child node of the uart, but that would require other
-> > > infrastructure in the kernel because we don't currently create
-> > > devices for those.
-> >=20
-> > I think the child node is the way to go; that would match what we do for
-> > I2C and SPI. We might need new infrastructure, but I don't think we
-> > should treat this differently simlpy because we don't have that yet.
->=20
-> Well, uart in this case looks more like a GPIO than an I2C (no
-> addressing, just few wires). And we do phandle for GPIOs.
+ Documentation/devicetree/bindings/extcon/extcon-max3355.txt |   21 ++
+ drivers/extcon/Kconfig                                      |    6 
+ drivers/extcon/Makefile                                     |    1 
+ drivers/extcon/extcon-max3355.c                             |  122 ++++++++++++
+ 4 files changed, 150 insertions(+)
 
-Right and the devices use I2C for full communication and GPIOs as
-helpers. I guess UART counts as full communication and not as helper.
+Index: extcon/Documentation/devicetree/bindings/extcon/extcon-max3355.txt
+===================================================================
+--- /dev/null
++++ extcon/Documentation/devicetree/bindings/extcon/extcon-max3355.txt
+@@ -0,0 +1,21 @@
++MAX3355 USB OTG chip
++--------------------
++
++MAX3355 integrates a charge pump and comparators to enable a system with an
++integrated USB OTG dual-role transceiver to function as a USB OTG dual-role
++device.
++
++Required properties:
++- compatible: should be "maxim,max3355";
++- maxim,shdn-gpio: should contain a phandle and GPIO specifier for the GPIO pin
++  connected to the MAX3355's SHDN# pin;
++- maxim,id-gpio: should contain a phandle and GPIO specifier for the GPIO pin
++  connected to the MAX3355's ID_OUT pin.
++
++Example (Koelsch board):
++
++	usb-otg {
++		compatible = "maxim,max3355";
++		maxim,shdn-gpio = <&gpio2 4 GPIO_ACTIVE_LOW>;
++		maxim,id-gpio = <&gpio5 31 GPIO_ACTIVE_HIGH>;
++	};
+Index: extcon/drivers/extcon/Kconfig
+===================================================================
+--- extcon.orig/drivers/extcon/Kconfig
++++ extcon/drivers/extcon/Kconfig
+@@ -45,6 +45,12 @@ config EXTCON_MAX14577
+ 	  Maxim MAX14577/77836. The MAX14577/77836 MUIC is a USB port accessory
+ 	  detector and switch.
+ 
++config EXTCON_MAX3355
++	tristate "MAX3355 USB OTG EXTCON Support"
++	help
++	  Say Y here to enable support for the USB host detection by MAX3355
++	  OTG USB chip.
++
+ config EXTCON_MAX77693
+ 	tristate "MAX77693 EXTCON Support"
+ 	depends on MFD_MAX77693 && INPUT
+Index: extcon/drivers/extcon/Makefile
+===================================================================
+--- extcon.orig/drivers/extcon/Makefile
++++ extcon/drivers/extcon/Makefile
+@@ -7,6 +7,7 @@ obj-$(CONFIG_EXTCON_ADC_JACK)	+= extcon-
+ obj-$(CONFIG_EXTCON_ARIZONA)	+= extcon-arizona.o
+ obj-$(CONFIG_EXTCON_GPIO)	+= extcon-gpio.o
+ obj-$(CONFIG_EXTCON_MAX14577)	+= extcon-max14577.o
++obj-$(CONFIG_EXTCON_MAX3355)	+= extcon-max3355.o
+ obj-$(CONFIG_EXTCON_MAX77693)	+= extcon-max77693.o
+ obj-$(CONFIG_EXTCON_MAX8997)	+= extcon-max8997.o
+ obj-$(CONFIG_EXTCON_PALMAS)	+= extcon-palmas.o
+Index: extcon/drivers/extcon/extcon-max3355.c
+===================================================================
+--- /dev/null
++++ extcon/drivers/extcon/extcon-max3355.c
+@@ -0,0 +1,122 @@
++/*
++ * MAX3355 USB OTG chip extcon driver
++ *
++ * Copyright (C) 2014 Cogent Embedded, Inc.
++ * Author: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
++ *
++ * This software is licensed under the terms of the GNU General Public
++ * License version 2, as published by the Free Software Foundation, and
++ * may be copied, distributed, and modified under those terms.
++ */
++
++#include <linux/extcon.h>
++#include <linux/gpio.h>
++#include <linux/init.h>
++#include <linux/interrupt.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/of_gpio.h>
++#include <linux/platform_device.h>
++#include <linux/slab.h>
++#include <linux/workqueue.h>
++
++struct max3355_data {
++	struct extcon_dev *edev;
++	int id_gpio;
++};
++
++static const char *max3355_cable[] = {
++	[0] = "USB-HOST",
++	NULL,
++};
++
++static irqreturn_t max3355_id_irq(int irq, void *dev_id)
++{
++	struct max3355_data *data = dev_id;
++	int id = gpio_get_value(data->id_gpio);
++
++	extcon_set_cable_state(data->edev, "USB-HOST", !id);
++
++	return IRQ_HANDLED;
++}
++
++static int max3355_probe(struct platform_device *pdev)
++{
++	struct device_node *np = pdev->dev.of_node;
++	struct max3355_data *data;
++	int gpio, irq, ret;
++
++	data = devm_kzalloc(&pdev->dev, sizeof(struct max3355_data),
++			    GFP_KERNEL);
++	if (!data)
++		return -ENOMEM;
++
++	data->edev = devm_extcon_dev_allocate(&pdev->dev, max3355_cable);
++	if (IS_ERR(data->edev)) {
++		dev_err(&pdev->dev, "failed to allocate extcon device\n");
++		return PTR_ERR(data->edev);
++	}
++	data->edev->name = kstrdup(np->name, GFP_KERNEL);
++
++	gpio = of_get_named_gpio(np, "maxim,id-gpio", 0);
++	if (gpio < 0)
++		return gpio;
++	data->id_gpio = gpio;
++
++	gpio = of_get_named_gpio(np, "maxim,shdn-gpio", 0);
++	if (gpio < 0)
++		return gpio;
++
++	ret = devm_gpio_request_one(&pdev->dev, gpio, GPIOF_DIR_OUT |
++				    GPIOF_INIT_HIGH, pdev->name);
++	if (ret < 0)
++		return ret;
++
++	ret = devm_gpio_request_one(&pdev->dev, data->id_gpio, GPIOF_DIR_IN,
++				    pdev->name);
++	if (ret < 0)
++		return ret;
++
++	ret = devm_extcon_dev_register(&pdev->dev, data->edev);
++	if (ret < 0)
++		return ret;
++
++	irq = gpio_to_irq(data->id_gpio);
++	if (irq < 0)
++		return irq;
++
++	ret = devm_request_threaded_irq(&pdev->dev, irq, NULL, max3355_id_irq,
++					IRQF_TRIGGER_RISING |
++					IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
++					pdev->name, data);
++	if (ret < 0)
++		return ret;
++
++	platform_set_drvdata(pdev, data);
++
++	/* Perform initial detection */
++	max3355_id_irq(irq, data);
++
++	return 0;
++}
++
++static const struct of_device_id max3355_match_table[] = {
++	{ .compatible = "maxim,max3355", },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, max3355_match_table);
++
++static struct platform_driver max3355_driver = {
++	.probe		= max3355_probe,
++	.driver		= {
++		.name	= "extcon-max3355",
++		.of_match_table = max3355_match_table,
++		.owner	= THIS_MODULE,
++	},
++};
++
++module_platform_driver(max3355_driver);
++
++MODULE_AUTHOR("Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>");
++MODULE_DESCRIPTION("MAX3355 extcon driver");
++MODULE_LICENSE("GPL v2");
 
-phandle vs child node is not a matter of adressing and btw where is
-the difference between "5th gpio on 1st gpio controller" and "5th
-address on 1st i2c controller"?
-
-> Actually, the chip also has PCM, analog audio, and "pc compatible?"
-> connections, plus some connection to WIFI. So we may need more
-> phandles there....
-
-This is much harder to solve. I think we don't have a DT binding for
-a device, which uses two communication interfaces as the bcm2048
-(uart & i2c). OTOH we may just add a slave device for the fm-radio
-part like this:
-
-uart {
-    bcm2048 {
-        stuff;
-    };
-};
-
-i2c {
-    bcm2048-radio {
-        master =3D <&bcm2048>;
-    };
-};
-
--- Sebastian
-
---x+6KMIRAuhnl3hBn
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJUiM45AAoJENju1/PIO/qaV3YQAKMMjP8Dw83+z+KNaKLZiMCU
-hpX4RNXDYXh4MHqNKWG/TnKU1ROZuKDwRSrcnv5U0VuI4VviOstnAiSCJgwYygQL
-rUW/zVr0NdqF7rTIxt/3ylm0WHOT+4pQhwYxs19YMTMExabiCIQZzjFk+YRkskxG
-9wDcs0V8X4LnVrZjAZ0dwmkaGJBiDxY069GPtGB5SCWPmYtSegsMNGaG9ijse+Is
-kyY8wufsQ7KlR+QOZ0TxepDDya/rSZ4u05TL9a8hSTHkdPT799alXtvZDgcZrg2Q
-unHD1F1yKnUYUZPwIQNBg6BMyVb1y0g0LZz15EerzQpYEbNBPRjGTJyR15Eq4Imk
-PBH9Q8ehqE7wHRGUu5hXwgCPXwQLZTuhb0iwjcMVPqnb3XInDp85yocC+7lnjh+A
-gps6gI1Eg5daR54Nas1rVtrykYDiKsh+cP6uzwd6ResLzFYkziOnxI4XW+7oxxME
-Ua0YXDKJrwDmv63tzKdBFXIAFShNd3mBvn/yU3cVPOEmSUiAxjLYJA3EtgIr/F9b
-IpUdelis9vGqO9vB6bk0Gzi8mk+DnlztFQjd9ZKqgbjv5hlQVMSweTLWLV2iExmz
-m2TB7eryydUxolDceGBosCXBmn1l73IzyhydE5L4nEEAyBaxk6CN84yZTFYD5+ZM
-ncPeC12B+/U7rPb1qZbe
-=Mhsd
------END PGP SIGNATURE-----
-
---x+6KMIRAuhnl3hBn--
