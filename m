@@ -1,504 +1,469 @@
-From: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>
-Subject: Re: [PATCH v5 1/3] iio: adc: Cosmic Circuits 10001 ADC driver
-Date: Thu, 11 Dec 2014 00:43:43 +0100
-Message-ID: <5488DAAF.1080506@gmx.de>
-References: <1417102762-5123-1-git-send-email-ezequiel.garcia@imgtec.com> <1417102762-5123-2-git-send-email-ezequiel.garcia@imgtec.com>
+From: Benoit Parrot <bparrot@ti.com>
+Subject: Re: [Patch v3 1/2] gpio: add GPIO hogging mechanism
+Date: Wed, 10 Dec 2014 17:48:17 -0600
+Message-ID: <20141210234817.GB13407@ti.com>
+References: <1417726922-10376-1-git-send-email-bparrot@ti.com>
+ <1417726922-10376-2-git-send-email-bparrot@ti.com>
+ <CAAVeFuK0zNOW-_+J5HgjZ5A_5sTqXvzJkzq0Z52Eewudj0pTng@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1417102762-5123-2-git-send-email-ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Pawel.Moll-5wv7dgnIgG8@public.gmane.org, Mark.Rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Phani Movva <Phani.Movva-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAAVeFuK0zNOW-_+J5HgjZ5A_5sTqXvzJkzq0Z52Eewudj0pTng@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Alexandre Courbot <gnurou@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Jiri Prchal <jiri.prchal@aksignal.cz>, Pantelis Antoniou <panto@antoniou-consulting.com>
 List-Id: devicetree@vger.kernel.org
 
-Ezequiel Garcia schrieb am 27.11.2014 um 16:39:
-> From: Phani Movva <Phani.Movva-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Alexandre Courbot <gnurou@gmail.com> wrote on Wed [2014-Dec-10 20:19:51 +0900]:
+> On Fri, Dec 5, 2014 at 6:02 AM, Benoit Parrot <bparrot@ti.com> wrote:
+> > Based on Boris Brezillion's work this is a reworked patch
+> > of his initial GPIO hogging mechanism.
+> > This patch provides a way to initally configure specific GPIO
+> > when the gpio controller is probed.
+> >
+> > The actual DT scanning to collect the GPIO specific data is performed
+> > as part of the gpiochip_add().
+> >
+> > The purpose of this is to allows specific GPIOs to be configured
+> > without any driver specific code.
+> > This particularly useful because board design are getting
+> > increasingly complex and given SoC pins can now have upward
+> > of 10 mux values a lot of connections are now dependent on
+> > external IO muxes to switch various modes and combination.
+> >
+> > Specific drivers should not necessarily need to be aware of
+> > what accounts to a specific board implementation. This board level
+> > "description" should be best kept as part of the dts file.
+> >
+> > Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> > ---
+> > Changes since v2:
+> >  * Refactor the gpio-hog mechanism to split the DT related action
+> >    from the actual "hogging" operation.
+> >  * This allows non-DT providers to implement hogs as well.
+> >  * Added FLAG_IS_HOGGED to mark hogged gpio and make gpiochip removal
+> >    able to release hogged gpio.
+> >  * Similarly to the hogging, the cleanup is performed as part of
+> >    of_gpiochip_remove
+> >  * Refactor the gpio-hog mechanism as private functions meant to
+> >    be to invoked from of_gpiochip_add().
+> >
+> > Changes since v1:
+> >  * Refactor the gpio-hog mechanism as private functions meant to
+> >    be to invoked from of_gpiochip_add().
+> >
+> >  drivers/gpio/gpiolib-of.c     | 127 ++++++++++++++++++++++++++++++++++++++++++
+> >  drivers/gpio/gpiolib.c        | 118 ++++++++++++++++++++++++++++++---------
+> >  drivers/gpio/gpiolib.h        |   1 +
+> >  include/linux/gpio/consumer.h |   9 +++
+> >  4 files changed, 229 insertions(+), 26 deletions(-)
+> >
+> > diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+> > index 604dbe6..e13134d 100644
+> > --- a/drivers/gpio/gpiolib-of.c
+> > +++ b/drivers/gpio/gpiolib-of.c
+> > @@ -22,6 +22,7 @@
+> >  #include <linux/of_gpio.h>
+> >  #include <linux/pinctrl/pinctrl.h>
+> >  #include <linux/slab.h>
+> > +#include <linux/gpio/machine.h>
+> >
+> >  #include "gpiolib.h"
+> >
+> > @@ -111,6 +112,128 @@ int of_get_named_gpio_flags(struct device_node *np, const char *list_name,
+> >  EXPORT_SYMBOL(of_get_named_gpio_flags);
+> >
+> >  /**
+> > + * of_get_gpio_hog() - Get a GPIO hog descriptor, names and flags for GPIO API
+> > + * @np:                device node to get GPIO from
+> > + * @name:      GPIO line name
+> > + * @flags:     a flags pointer to fill in
+> > + *
+> > + * Returns GPIO descriptor to use with Linux GPIO API, or one of the errno
+> > + * value on the error condition.
+> > + */
+> > +
+> > +static struct gpio_desc *of_get_gpio_hog(struct device_node *np,
+> > +                                 const char **name,
+> > +                                 enum gpio_lookup_flags *lflags,
+> > +                                 enum gpiod_flags *dflags)
+> > +{
+> > +       struct device_node *chip_np;
+> > +       enum of_gpio_flags xlate_flags;
+> > +       struct gpio_desc *desc;
+> > +       const char *dir_val;
+> > +       struct gg_data gg_data = {
+> > +               .flags = &xlate_flags,
+> > +               .out_gpio = NULL,
+> > +       };
+> > +       u32 tmp;
+> > +       int i, ret;
+> > +
+> > +       chip_np = np->parent;
+> > +       if (!chip_np)
+> > +               return ERR_PTR(-EINVAL);
+> > +
+> > +       xlate_flags = 0;
+> > +       *lflags = 0;
+> > +       *dflags = 0;
+> > +
+> > +       ret = of_property_read_u32(chip_np, "#gpio-cells", &tmp);
+> > +       if (ret)
+> > +               return ERR_PTR(ret);
+> > +
+> > +       if (tmp > MAX_PHANDLE_ARGS)
+> > +               return ERR_PTR(-EINVAL);
+> > +
+> > +       gg_data.gpiospec.args_count = tmp;
+> > +       gg_data.gpiospec.np = chip_np;
+> > +       for (i = 0; i < tmp; i++) {
+> > +               ret = of_property_read_u32_index(np, "gpios", i,
+> > +                                          &gg_data.gpiospec.args[i]);
+> > +               if (ret)
+> > +                       return ERR_PTR(ret);
+> > +       }
+> > +
+> > +       gpiochip_find(&gg_data, of_gpiochip_find_and_xlate);
+> > +       if (!gg_data.out_gpio) {
+> > +               if (np->parent == np)
+> > +                       return ERR_PTR(-ENXIO);
+> > +               else
+> > +                       return ERR_PTR(-EPROBE_DEFER);
+> > +       }
+> > +
+> > +       if (xlate_flags & OF_GPIO_ACTIVE_LOW)
+> > +               *lflags |= GPIO_ACTIVE_LOW;
+> > +
+> > +       if (!of_property_read_string(np, "direction", &dir_val)) {
+> > +               if (!strcmp(dir_val, "input"))
+> > +                       *dflags |= GPIOD_IN;
+> > +               else if (!strcmp(dir_val, "output-low"))
+> > +                       *dflags |= GPIOD_OUT_LOW;
+> > +               else if (!strcmp(dir_val, "output-high"))
+> > +                       *dflags |= GPIOD_OUT_HIGH;
+> > +       }
 > 
-> This commit adds support for Cosmic Circuits 10001 10-bit ADC device.
-Still some issues left, unfortunately things I pointed out in my last review.
+> ... else?
 > 
-> Signed-off-by: Phani Movva <Phani.Movva-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-> [Ezequiel: code style cleaning]
-> Signed-off-by: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-> ---
->  drivers/iio/adc/Kconfig       |  11 ++
->  drivers/iio/adc/Makefile      |   1 +
->  drivers/iio/adc/cc10001_adc.c | 424 ++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 436 insertions(+)
->  create mode 100644 drivers/iio/adc/cc10001_adc.c
+> We should probably return an error if the property is not specified -
+> is there a point in hogging a GPIO without a direction? E.g:
 > 
-> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-> index 88bdc8f..15bb1ae 100644
-> --- a/drivers/iio/adc/Kconfig
-> +++ b/drivers/iio/adc/Kconfig
-> @@ -127,6 +127,17 @@ config AT91_ADC
->  	help
->  	  Say yes here to build support for Atmel AT91 ADC.
->  
-> +config CC10001_ADC
-> +	tristate "Cosmic Circuits 10001 ADC driver"
-> +	depends on HAS_IOMEM || HAVE_CLK || REGULATOR
-> +	select IIO_BUFFER
-> +	select IIO_TRIGGERED_BUFFER
-> +	help
-> +	  Say yes here to build support for Cosmic Circuits 10001 ADC.
-> +
-> +	  This driver can also be built as a module. If so, the module will be
-> +	  called cc10001_adc.
-> +
->  config EXYNOS_ADC
->  	tristate "Exynos ADC driver support"
->  	depends on ARCH_EXYNOS || ARCH_S3C24XX || ARCH_S3C64XX || (OF && COMPILE_TEST)
-> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
-> index cb88a6a..9286c59 100644
-> --- a/drivers/iio/adc/Makefile
-> +++ b/drivers/iio/adc/Makefile
-> @@ -14,6 +14,7 @@ obj-$(CONFIG_AD7793) += ad7793.o
->  obj-$(CONFIG_AD7887) += ad7887.o
->  obj-$(CONFIG_AD799X) += ad799x.o
->  obj-$(CONFIG_AT91_ADC) += at91_adc.o
-> +obj-$(CONFIG_CC10001_ADC) += cc10001_adc.o
->  obj-$(CONFIG_EXYNOS_ADC) += exynos_adc.o
->  obj-$(CONFIG_LP8788_ADC) += lp8788_adc.o
->  obj-$(CONFIG_MAX1027) += max1027.o
-> diff --git a/drivers/iio/adc/cc10001_adc.c b/drivers/iio/adc/cc10001_adc.c
-> new file mode 100644
-> index 0000000..a079ee0
-> --- /dev/null
-> +++ b/drivers/iio/adc/cc10001_adc.c
-> @@ -0,0 +1,424 @@
-> +/*
-> + * Copyright (c) 2014 Imagination Technologies Ltd.
-> + *
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms of the GNU General Public License version 2 as published by
-> + * the Free Software Foundation.
-> + *
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/delay.h>
-> +#include <linux/err.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regulator/consumer.h>
-> +#include <linux/slab.h>
-> +
-> +#include <linux/iio/buffer.h>
-> +#include <linux/iio/iio.h>
-> +#include <linux/iio/sysfs.h>
-> +#include <linux/iio/trigger.h>
-> +#include <linux/iio/trigger_consumer.h>
-> +#include <linux/iio/triggered_buffer.h>
-> +
-> +/* Registers */
-> +#define CC10001_ADC_CONFIG		0x00
-> +#define CC10001_ADC_START_CONV		BIT(4)
-> +#define CC10001_ADC_MODE_SINGLE_CONV	BIT(5)
-> +
-> +#define CC10001_ADC_DDATA_OUT		0x04
-> +#define CC10001_ADC_EOC			0x08
-> +#define CC10001_ADC_EOC_SET		BIT(0)
-> +
-> +#define CC10001_ADC_CHSEL_SAMPLED	0x0c
-> +#define CC10001_ADC_POWER_UP		0x10
-> +#define CC10001_ADC_POWER_UP_SET	BIT(0)
-> +#define CC10001_ADC_DEBUG		0x14
-> +#define CC10001_ADC_DATA_COUNT		0x20
-> +
-> +#define CC10001_ADC_DATA_MASK		GENMASK(9, 0)
-> +#define CC10001_ADC_NUM_CHANNELS	8
-> +#define CC10001_ADC_CH_MASK		GENMASK(CC10001_ADC_NUM_CHANNELS - 1, 0)
-This is only valid for one of the cases you make (wrong) use of CC10001_ADC_CH_MASK.
-As you seem to use this mask to separate channel selection values (0 - 7) in register
-CC10001_ADC_CONFIG, a GENMASK(2, 0) would be appropriate.
-In case of the indio_dev->channel_mask, you would actually need this 
-GENMASK(CC10001_ADC_NUM_CHANNELS - 1, 0).
-> +
-> +#define CC10001_INVALID_SAMPLED		0xffff
-> +#define CC10001_MAX_POLL_COUNT		20
-> +
-> +/*
-> + * As per device specification, wait six clock cycles after power-up to
-> + * activate START. Since adding two more clock cycles delay does not
-> + * impact the performance too much, we are adding two additional cycles delay
-> + * intentionally here.
-> + */
-> +#define	CC10001_WAIT_CYCLES		8
-> +
-> +struct cc10001_adc_device {
-> +	void __iomem *reg_base;
-> +	struct clk *adc_clk;
-> +	struct regulator *reg;
-> +	u16 *buf;
-> +
-> +	struct mutex lock;
-> +	unsigned long channel_map;
-> +	unsigned int start_delay_ns;
-> +	unsigned int eoc_delay_ns;
-> +};
-> +
-> +static inline void cc10001_adc_write_reg(struct cc10001_adc_device *adc_dev,
-> +					 u32 reg, u32 val)
-> +{
-> +	writel(val, adc_dev->reg_base + reg);
-> +}
-> +
-> +static inline u32 cc10001_adc_read_reg(struct cc10001_adc_device *adc_dev,
-> +				       u32 reg)
-> +{
-> +	return readl(adc_dev->reg_base + reg);
-> +}
-> +
-> +static void cc10001_adc_start(struct cc10001_adc_device *adc_dev,
-> +			      unsigned int channel)
-> +{
-> +	u32 val;
-> +
-> +	/* Channel selection and mode of operation */
-> +	val = (channel & CC10001_ADC_CH_MASK) | CC10001_ADC_MODE_SINGLE_CONV;
-> +	cc10001_adc_write_reg(adc_dev, CC10001_ADC_CONFIG, val);
-> +
-> +	val = cc10001_adc_read_reg(adc_dev, CC10001_ADC_CONFIG);
-> +	val = val | CC10001_ADC_START_CONV;
-> +	cc10001_adc_write_reg(adc_dev, CC10001_ADC_CONFIG, val);
-> +}
-> +
-> +static u16 cc10001_adc_poll_done(struct iio_dev *indio_dev,
-> +				 unsigned int channel,
-> +				 unsigned int delay)
-> +{
-> +	struct cc10001_adc_device *adc_dev = iio_priv(indio_dev);
-> +	unsigned int poll_count = 0;
-> +
-> +	while (!(cc10001_adc_read_reg(adc_dev, CC10001_ADC_EOC) &
-> +			CC10001_ADC_EOC_SET)) {
-> +
-> +		ndelay(delay);
-> +		if (poll_count++ == CC10001_MAX_POLL_COUNT)
-> +			return CC10001_INVALID_SAMPLED;
-> +	}
-> +
-> +	poll_count = 0;
-> +	while ((cc10001_adc_read_reg(adc_dev, CC10001_ADC_CHSEL_SAMPLED) &
-> +			CC10001_ADC_CH_MASK) != channel) {
-> +
-> +		ndelay(delay);
-> +		if (poll_count++ == CC10001_MAX_POLL_COUNT)
-> +			return CC10001_INVALID_SAMPLED;
-> +	}
-> +
-> +	/* Read the 10 bit output register */
-> +	return cc10001_adc_read_reg(adc_dev, CC10001_ADC_DDATA_OUT) &
-> +			       CC10001_ADC_DATA_MASK;
-> +}
-> +
-> +static irqreturn_t cc10001_adc_trigger_h(int irq, void *p)
-> +{
-> +	struct cc10001_adc_device *adc_dev;
-> +	struct iio_poll_func *pf = p;
-> +	struct iio_dev *indio_dev;
-> +	unsigned int delay_ns;
-> +	unsigned int channel;
-> +	bool sample_invalid;
-> +	u16 *data;
-> +	int i;
-> +
-> +	indio_dev = pf->indio_dev;
-> +	adc_dev = iio_priv(indio_dev);
-> +	data = adc_dev->buf;
-> +
-> +	mutex_lock(&adc_dev->lock);
-> +
-> +	cc10001_adc_write_reg(adc_dev, CC10001_ADC_POWER_UP,
-> +			      CC10001_ADC_POWER_UP_SET);
-> +
-> +	/* Wait for 8 (6+2) clock cycles before activating START */
-> +	ndelay(adc_dev->start_delay_ns);
-> +
-> +	/* Calculate delay step for eoc and sampled data */
-> +	delay_ns = adc_dev->eoc_delay_ns / CC10001_MAX_POLL_COUNT;
-> +
-> +	i = 0;
-> +	sample_invalid = false;
-> +	for_each_set_bit(channel, indio_dev->active_scan_mask,
-> +				  indio_dev->masklength) {
-> +
-> +		cc10001_adc_start(adc_dev, channel);
-> +
-> +		data[i] = cc10001_adc_poll_done(indio_dev, channel, delay_ns);
-> +		if (data[i] == CC10001_INVALID_SAMPLED) {
-> +			dev_warn(&indio_dev->dev,
-> +				 "invalid sample on channel %d\n", channel);
-> +			sample_invalid = true;
-> +			goto done;
-> +		}
-> +		i++;
-> +	}
-> +
-> +done:
-> +	cc10001_adc_write_reg(adc_dev, CC10001_ADC_POWER_UP, 0);
-> +
-> +	mutex_unlock(&adc_dev->lock);
-> +
-> +	if (!sample_invalid)
-> +		iio_push_to_buffers_with_timestamp(indio_dev, data,
-> +						   iio_get_time_ns());
-> +	iio_trigger_notify_done(indio_dev->trig);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static u16 cc10001_adc_read_raw_voltage(struct iio_dev *indio_dev,
-> +					struct iio_chan_spec const *chan)
-> +{
-> +	struct cc10001_adc_device *adc_dev = iio_priv(indio_dev);
-> +	unsigned int delay_ns;
-> +	u16 val;
-> +
-> +	cc10001_adc_write_reg(adc_dev, CC10001_ADC_POWER_UP,
-> +			      CC10001_ADC_POWER_UP_SET);
-> +
-> +	/* Wait for 8 (6+2) clock cycles before activating START */
-> +	ndelay(adc_dev->start_delay_ns);
-> +
-> +	/* Calculate delay step for eoc and sampled data */
-> +	delay_ns = adc_dev->eoc_delay_ns / CC10001_MAX_POLL_COUNT;
-> +
-> +	cc10001_adc_start(adc_dev, chan->channel);
-> +
-> +	val = cc10001_adc_poll_done(indio_dev, chan->channel, delay_ns);
-> +
-> +	cc10001_adc_write_reg(adc_dev, CC10001_ADC_POWER_UP, 0);
-> +
-> +	return val;
-> +}
-> +
-> +static int cc10001_adc_read_raw(struct iio_dev *indio_dev,
-> +				 struct iio_chan_spec const *chan,
-> +				 int *val, int *val2, long mask)
-> +{
-> +	struct cc10001_adc_device *adc_dev = iio_priv(indio_dev);
-> +	int ret;
-> +
-> +	switch (mask) {
-> +	case IIO_CHAN_INFO_RAW:
-> +		if (iio_buffer_enabled(indio_dev))
-> +			return -EBUSY;
-> +		mutex_lock(&adc_dev->lock);
-> +		*val = cc10001_adc_read_raw_voltage(indio_dev, chan);
-> +		mutex_unlock(&adc_dev->lock);
-> +
-> +		if (*val == CC10001_INVALID_SAMPLED)
-> +			return -EIO;
-> +		return IIO_VAL_INT;
-> +
-> +	case IIO_CHAN_INFO_SCALE:
-> +		ret = regulator_get_voltage(adc_dev->reg);
-> +		if (ret)
-> +			return ret;
-> +
-> +		*val = ret / 1000;
-> +		*val2 = chan->scan_type.realbits;
-> +		return IIO_VAL_FRACTIONAL_LOG2;
-> +
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +static int cc10001_update_scan_mode(struct iio_dev *indio_dev,
-> +				    const unsigned long *scan_mask)
-> +{
-> +	struct cc10001_adc_device *adc_dev = iio_priv(indio_dev);
-> +
-> +	kfree(adc_dev->buf);
-> +	adc_dev->buf = kmalloc(indio_dev->scan_bytes, GFP_KERNEL);
-> +	if (!adc_dev->buf)
-> +		return -ENOMEM;
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct iio_info cc10001_adc_info = {
-> +	.driver_module = THIS_MODULE,
-> +	.read_raw = &cc10001_adc_read_raw,
-> +	.update_scan_mode = &cc10001_update_scan_mode,
-> +};
-> +
-> +static int cc10001_adc_channel_init(struct iio_dev *indio_dev)
-> +{
-> +	struct cc10001_adc_device *adc_dev = iio_priv(indio_dev);
-> +	struct iio_chan_spec *chan_array, *timestamp;
-> +	unsigned int bit, idx = 0;
-> +
-> +	indio_dev->num_channels = bitmap_weight(&adc_dev->channel_map,
-> +						CC10001_ADC_NUM_CHANNELS);
-> +
-> +	chan_array = devm_kcalloc(&indio_dev->dev, indio_dev->num_channels + 1,
-> +				  sizeof(struct iio_chan_spec),
-> +				  GFP_KERNEL);
-> +	if (!chan_array)
-> +		return -ENOMEM;
-> +
-> +	for_each_set_bit(bit, &adc_dev->channel_map, CC10001_ADC_NUM_CHANNELS) {
-> +		struct iio_chan_spec *chan = &chan_array[idx];
-> +
-> +		chan->type = IIO_VOLTAGE;
-> +		chan->indexed = 1;
-> +		chan->channel = bit;
-> +		chan->scan_index = idx;
-> +		chan->scan_type.sign = 'u';
-> +		chan->scan_type.realbits = 10;
-> +		chan->scan_type.storagebits = 16;
-> +		chan->info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE);
-> +		chan->info_mask_separate = BIT(IIO_CHAN_INFO_RAW);
-> +		idx++;
-> +	}
-> +
-> +	timestamp = &chan_array[idx];
-> +	timestamp->type = IIO_TIMESTAMP;
-> +	timestamp->channel = -1;
-> +	timestamp->scan_index = idx;
-> +	timestamp->scan_type.sign = 's';
-> +	timestamp->scan_type.realbits = 64;
-> +	timestamp->scan_type.storagebits = 64;
-> +
-> +	indio_dev->channels = chan_array;
-> +
-> +	return 0;
-> +}
-> +
-> +static int cc10001_adc_probe(struct platform_device *pdev)
-> +{
-> +	struct device_node *node = pdev->dev.of_node;
-> +	struct cc10001_adc_device *adc_dev;
-> +	unsigned long adc_clk_rate;
-> +	struct resource *res;
-> +	struct iio_dev *indio_dev;
-> +	int ret;
-> +
-> +	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*adc_dev));
-> +	if (indio_dev == NULL)
-> +		return -ENOMEM;
-> +
-> +	adc_dev = iio_priv(indio_dev);
-> +
-> +	adc_dev->channel_map = CC10001_ADC_CH_MASK;
-So, here you need a GENMASK(CC10001_ADC_NUM_CHANNELS - 1, 0).
-> +	if (!of_property_read_u32(node, "cosmic,reserved-adc-channels", &ret))
-> +		adc_dev->channel_map &= ~ret;
-> +
-> +	adc_dev->reg = devm_regulator_get(&pdev->dev, "vref");
-> +	if (IS_ERR(adc_dev->reg))
-> +		return -EINVAL;
-Preferably pass up the real error code with PTR_ERR(adc_dev->reg).
-> +
-> +	ret = regulator_enable(adc_dev->reg);
-> +	if (ret)
-> +		return ret;
-> +
-> +	indio_dev->dev.parent = &pdev->dev;
-> +	indio_dev->name = dev_name(&pdev->dev);
-> +	indio_dev->info = &cc10001_adc_info;
-> +	indio_dev->modes = INDIO_DIRECT_MODE;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	adc_dev->reg_base = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(adc_dev->reg_base)) {
-> +		ret = PTR_ERR(adc_dev->reg_base);
-> +		goto err_disable_reg;
-> +	}
-> +
-> +	adc_dev->adc_clk = devm_clk_get(&pdev->dev, "adc");
-> +	if (IS_ERR(adc_dev->adc_clk)) {
-> +		dev_err(&pdev->dev, "failed to get the clock\n");
-> +		ret = PTR_ERR(adc_dev->adc_clk);
-> +		goto err_disable_reg;
-> +	}
-> +
-> +	ret = clk_prepare_enable(adc_dev->adc_clk);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "failed to enable the clock\n");
-> +		goto err_disable_reg;
-> +	}
-> +
-> +	adc_clk_rate = clk_get_rate(adc_dev->adc_clk);
-> +	if (!adc_clk_rate) {
-> +		ret = -EINVAL;
-> +		dev_err(&pdev->dev, "null clock rate!\n");
-> +		goto err_disable_clk;
-> +	}
-> +
-> +	adc_dev->eoc_delay_ns = NSEC_PER_SEC / adc_clk_rate;
-> +	adc_dev->start_delay_ns = adc_dev->eoc_delay_ns * CC10001_WAIT_CYCLES;
-> +
-> +	/* Setup the ADC channels available on the device */
-> +	ret = cc10001_adc_channel_init(indio_dev);
-> +	if (ret < 0)
-> +		goto err_disable_clk;
-> +
-> +	mutex_init(&adc_dev->lock);
-> +
-> +	ret = iio_triggered_buffer_setup(indio_dev, NULL,
-> +					 &cc10001_adc_trigger_h, NULL);
-> +	if (ret < 0)
-> +		goto err_disable_clk;
-> +
-> +	ret = iio_device_register(indio_dev);
-> +	if (ret < 0)
-> +		goto err_cleanup_buffer;
-> +
-> +	platform_set_drvdata(pdev, indio_dev);
-> +
-> +	return 0;
-> +
-> +err_cleanup_buffer:
-> +	iio_triggered_buffer_cleanup(indio_dev);
-> +err_disable_clk:
-> +	clk_disable_unprepare(adc_dev->adc_clk);
-> +err_disable_reg:
-> +	regulator_disable(adc_dev->reg);
-> +	return ret;
-> +}
-> +
-> +static int cc10001_adc_remove(struct platform_device *pdev)
-> +{
-> +	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
-> +	struct cc10001_adc_device *adc_dev = iio_priv(indio_dev);
-> +
-> +	iio_device_unregister(indio_dev);
-> +	iio_triggered_buffer_cleanup(indio_dev);
-> +	clk_disable_unprepare(adc_dev->adc_clk);
-> +	regulator_disable(adc_dev->reg);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id cc10001_adc_dt_ids[] = {
-> +	{ .compatible = "cosmic,10001-adc", },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, cc10001_adc_dt_ids);
-> +
-> +static struct platform_driver cc10001_adc_driver = {
-> +	.driver = {
-> +		.name   = "cc10001-adc",
-> +		.owner	= THIS_MODULE,
-> +		.of_match_table = cc10001_adc_dt_ids,
-> +	},
-> +	.probe	= cc10001_adc_probe,
-> +	.remove	= cc10001_adc_remove,
-> +};
-> +module_platform_driver(cc10001_adc_driver);
-> +
-> +MODULE_AUTHOR("Phani Movva <Phani.Movva-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>");
-> +MODULE_DESCRIPTION("Cosmic Circuits ADC driver");
-> +MODULE_LICENSE("GPL v2");
+> if (of_property_read_string(np, "direction", &dir_val))
+>     return ERR_PTR(-EINVAL);
 > 
+> if (!strcmp(...
+> 
+> to use the nice pattern that errors (and not normal behavior) are the exception.
+
+Bah, I was going for compartmentalization.
+It make sense if you don't think about it ..... :) 
+
+> 
+> > +
+> > +       if (name && of_property_read_string(np, "line-name", name))
+> > +               *name = np->name;
+> > +
+> > +       desc = gg_data.out_gpio;
+> > +
+> > +       return desc;
+> > +}
+> > +
+> > +/**
+> > + * _gpiochip_hog - Scan gpio-controller and apply GPIO hog as requested
+> > + * @chip:      gpio chip to act on
+> > + *
+> > + * This is only used by of_gpiochip_add to request/set GPIO initial
+> > + * configuration.
+> > + */
+> > +static void _gpiochip_hog(struct gpio_chip *chip)
+> 
+> Rename to of_gpio_scan_hogs() maybe?
+
+Given that it is meant for gpiochip_add, how about
+_gpiochip_scan_hogs()?
+
+> 
+> > +{
+> > +       struct gpio_desc *desc = NULL;
+> > +       struct device_node *np;
+> > +       const char *name;
+> > +       enum gpio_lookup_flags lflags;
+> > +       enum gpiod_flags dflags;
+> > +
+> > +       for_each_child_of_node(chip->dev->of_node, np) {
+> > +               if (!of_property_read_bool(np, "gpio-hog"))
+> > +                       continue;
+> > +
+> > +               desc = of_get_gpio_hog(np, &name, &lflags, &dflags);
+> > +               if (IS_ERR(desc))
+> > +                       continue;
+> > +
+> > +               __gpiod_hog(desc, name, lflags, dflags);
+> 
+> You are not propagating any error returned by __gpiod_hog here.
+
+_gpiochip_hog is a void function given that __gpiod_hog() is the last call of that loop
+there is nothing to propagate. 
+You would still want to scan all of the child node regardless of errors, no?
+
+> 
+> > +       }
+> > +}
+> > +
+> > +/**
+> > + * _gpiochip_unhog - Scan gpio-controller and apply GPIO hog as requested
+> > + * @chip:      gpio chip to act on
+> > + *
+> > + * This is only used by of_gpiochip_remove to free hogged gpios
+> > + *
+> > + */
+> > +static void _gpiochip_unhog(struct gpio_chip *chip)
+> > +{
+> > +       int id;
+> > +
+> > +       for (id = 0; id < chip->ngpio; id++) {
+> > +               if (test_bit(FLAG_IS_HOGGED, &chip->desc[id].flags))
+> > +                       gpiod_put(&chip->desc[id]);
+> > +       }
+> > +}
+> 
+> This function is not DT-specific. It should be included in gpiolib.c
+> and called from there before of_gpiochip_remove().
+
+Agreed, any name request while I am at it or tis this fine as is?
+
+> 
+> > +
+> > +/**
+> >   * of_gpio_simple_xlate - translate gpio_spec to the GPIO number and flags
+> >   * @gc:                pointer to the gpio_chip structure
+> >   * @np:                device node of the GPIO chip
+> > @@ -302,10 +425,14 @@ void of_gpiochip_add(struct gpio_chip *chip)
+> >
+> >         of_gpiochip_add_pin_range(chip);
+> >         of_node_get(chip->of_node);
+> > +
+> > +       _gpiochip_hog(chip);
+> >  }
+> >
+> >  void of_gpiochip_remove(struct gpio_chip *chip)
+> >  {
+> >         gpiochip_remove_pin_ranges(chip);
+> >         of_node_put(chip->of_node);
+> > +
+> > +       _gpiochip_unhog(chip);
+> >  }
+> > diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> > index e8e98ca..4ef6eb8 100644
+> > --- a/drivers/gpio/gpiolib.c
+> > +++ b/drivers/gpio/gpiolib.c
+> > @@ -849,6 +849,7 @@ static bool __gpiod_free(struct gpio_desc *desc)
+> >                 clear_bit(FLAG_REQUESTED, &desc->flags);
+> >                 clear_bit(FLAG_OPEN_DRAIN, &desc->flags);
+> >                 clear_bit(FLAG_OPEN_SOURCE, &desc->flags);
+> > +               clear_bit(FLAG_IS_HOGGED, &desc->flags);
+> >                 ret = true;
+> >         }
+> >
+> > @@ -1631,6 +1632,58 @@ struct gpio_desc *__must_check __gpiod_get_optional(struct device *dev,
+> >  }
+> >  EXPORT_SYMBOL_GPL(__gpiod_get_optional);
+> >
+> > +
+> > +/**
+> > + * __gpiod_get_helper - helper function to request and configure a given GPIO
+> > + * @desc:      gpio whose value will be assigned
+> > + * @con_id:    unction within the GPIO consumer
+> > + * @lflags:    gpio_lookup_flags - returned from of_find_gpio() or
+> > + *             of_get_gpio_hog()
+> > + * @dflags:    gpiod_flags - optional GPIO initialization flags
+> > + *
+> > + * Return 0 on success, -ENOENT if no GPIO has been assigned to the
+> > + * requested function and/or index, or another IS_ERR() code if an error
+> > + * occurred while trying to acquire the GPIO.
+> > + */
+> > +static int __gpiod_get_helper(struct gpio_desc *desc, const char *con_id,
+> > +               unsigned long lflags, enum gpiod_flags dflags)
+> > +{
+> > +       int status;
+> > +
+> > +       status = gpiod_request(desc, con_id);
+> 
+> As I mentioned in the previous revision, this will prevent the module
+> from being unloaded with hogged GPIOs. You need to use
+> gpiochip_request_own_desc() here and gpiochip_free_own_desc() instead
+> of gpiod_put() to free hogged GPIOs. Therefore the call to
+> gpiod_request/gpiochip_request_own_gpio should be taken out of this
+> (very nice otherwise!) helper.
+
+I can split the functionality out but I do not understand why in this case using
+gpiod_request would prevent module from being unloaded?
+Isn't gpiochip_remove() part of a gpio module unload sequence?
+
+Because then the _gpiochip_unhog() would release these descriptors. Am I missing something?
+Also would using gpiochip_request_own_desc() basically allow the very same hogged GPIO to be
+requested later on by a consumer.
+
+I thought we did not want that to be possible?
+
+> 
+> > +
+> > +       if (status < 0)
+> > +               return status;
+> > +
+> > +       if (lflags & GPIO_ACTIVE_LOW)
+> > +               set_bit(FLAG_ACTIVE_LOW, &desc->flags);
+> > +       if (lflags & GPIO_OPEN_DRAIN)
+> > +               set_bit(FLAG_OPEN_DRAIN, &desc->flags);
+> > +       if (lflags & GPIO_OPEN_SOURCE)
+> > +               set_bit(FLAG_OPEN_SOURCE, &desc->flags);
+> > +
+> > +       /* No particular flag request, return here... */
+> > +       if (!(dflags & GPIOD_FLAGS_BIT_DIR_SET)) {
+> > +               pr_debug("no flags found for %s\n", con_id);
+> > +               return 0;
+> > +       }
+> > +       /* Process flags */
+> > +       if (dflags & GPIOD_FLAGS_BIT_DIR_OUT)
+> > +               status = gpiod_direction_output(desc,
+> > +                                             dflags & GPIOD_FLAGS_BIT_DIR_VAL);
+> > +       else
+> > +               status = gpiod_direction_input(desc);
+> > +
+> > +       if (status < 0) {
+> > +               pr_debug("setup of GPIO %s failed\n", con_id);
+> > +               gpiod_put(desc);
+> > +               return status;
+> > +       }
+> > +
+> > +       return 0;
+> > +}
+> > +
+> > +
+> >  /**
+> >   * gpiod_get_index - obtain a GPIO from a multi-index GPIO function
+> >   * @dev:       GPIO consumer, can be NULL for system-global GPIOs
+> > @@ -1679,35 +1732,10 @@ struct gpio_desc *__must_check __gpiod_get_index(struct device *dev,
+> >                 return desc;
+> >         }
+> >
+> > -       status = gpiod_request(desc, con_id);
+> > -
+> > +       status = __gpiod_get_helper(desc, con_id, lookupflags, flags);
+> >         if (status < 0)
+> >                 return ERR_PTR(status);
+> >
+> > -       if (lookupflags & GPIO_ACTIVE_LOW)
+> > -               set_bit(FLAG_ACTIVE_LOW, &desc->flags);
+> > -       if (lookupflags & GPIO_OPEN_DRAIN)
+> > -               set_bit(FLAG_OPEN_DRAIN, &desc->flags);
+> > -       if (lookupflags & GPIO_OPEN_SOURCE)
+> > -               set_bit(FLAG_OPEN_SOURCE, &desc->flags);
+> > -
+> > -       /* No particular flag request, return here... */
+> > -       if (!(flags & GPIOD_FLAGS_BIT_DIR_SET))
+> > -               return desc;
+> > -
+> > -       /* Process flags */
+> > -       if (flags & GPIOD_FLAGS_BIT_DIR_OUT)
+> > -               status = gpiod_direction_output(desc,
+> > -                                             flags & GPIOD_FLAGS_BIT_DIR_VAL);
+> > -       else
+> > -               status = gpiod_direction_input(desc);
+> > -
+> > -       if (status < 0) {
+> > -               dev_dbg(dev, "setup of GPIO %s failed\n", con_id);
+> > -               gpiod_put(desc);
+> > -               return ERR_PTR(status);
+> > -       }
+> > -
+> >         return desc;
+> >  }
+> >  EXPORT_SYMBOL_GPL(__gpiod_get_index);
+> > @@ -1742,6 +1770,44 @@ struct gpio_desc *__must_check __gpiod_get_index_optional(struct device *dev,
+> >  EXPORT_SYMBOL_GPL(__gpiod_get_index_optional);
+> >
+> >  /**
+> > + * __gpiod_hog - Hog the specified GPIO desc given the provided flags
+> > + * @desc:      gpio whose value will be assigned
+> > + * @name:      gpio line name
+> > + * @lflags:    gpio_lookup_flags - returned from of_find_gpio() or
+> > + *             of_get_gpio_hog()
+> > + * @dflags:    gpiod_flags - optional GPIO initialization flags
+> > + *
+> > + */
+> > +int __gpiod_hog(struct gpio_desc *desc, const char *name,
+> > +               unsigned long lflags, enum gpiod_flags dflags)
+> > +{
+> > +       int status;
+> > +
+> > +       /* No particular flag request, not really hogging then... */
+> > +       if (!(dflags & GPIOD_FLAGS_BIT_DIR_SET)) {
+> > +               pr_warn("%s: GPIO:%d (%s): no hogging direction specified, bailing out\n",
+> > +                        __func__, desc_to_gpio(desc), name);
+> > +               return -EINVAL;
+> > +       }
+> 
+> Better to catch that error earlier as I suggested IMHO.
+
+Agreed.
+
+> 
+> > +
+> > +       status = __gpiod_get_helper(desc, name, lflags, dflags);
+> > +       if (status < 0)
+> > +               return status;
+> > +
+> > +       /* Mark GPIO as hogged so it can be identified and removed later */
+> > +       set_bit(FLAG_IS_HOGGED, &desc->flags);
+> > +
+> > +       pr_debug("%s: GPIO:%d (%s) as %s%s\n", __func__,
+> > +               desc_to_gpio(desc), name,
+> > +               (dflags&GPIOD_FLAGS_BIT_DIR_OUT) ? "output" : "input",
+> > +               (dflags&GPIOD_FLAGS_BIT_DIR_OUT) ?
+> > +                       (dflags&GPIOD_FLAGS_BIT_DIR_VAL) ? "/high" : "/low":"");
+> > +
+> > +       return 0;
+> > +}
+> > +EXPORT_SYMBOL_GPL(__gpiod_hog);
+> 
+> No export needed for this gpiolib-private function.
+
+Agreed.
+
+> 
+> > +
+> > +/**
+> >   * gpiod_put - dispose of a GPIO descriptor
+> >   * @desc:      GPIO descriptor to dispose of
+> >   *
+> > diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
+> > index 9db2b6a..e3c8a1f 100644
+> > --- a/drivers/gpio/gpiolib.h
+> > +++ b/drivers/gpio/gpiolib.h
+> > @@ -76,6 +76,7 @@ struct gpio_desc {
+> >  #define FLAG_OPEN_DRAIN        7       /* Gpio is open drain type */
+> >  #define FLAG_OPEN_SOURCE 8     /* Gpio is open source type */
+> >  #define FLAG_USED_AS_IRQ 9     /* GPIO is connected to an IRQ */
+> > +#define FLAG_IS_HOGGED 10      /* GPIO is hogged */
+> >
+> >  #define ID_SHIFT       16      /* add new flags before this one */
+> >
+> > diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
+> > index 12f146f..626f93d 100644
+> > --- a/include/linux/gpio/consumer.h
+> > +++ b/include/linux/gpio/consumer.h
+> > @@ -64,6 +64,8 @@ struct gpio_desc *__must_check __devm_gpiod_get_optional(struct device *dev,
+> >  struct gpio_desc *__must_check
+> >  __devm_gpiod_get_index_optional(struct device *dev, const char *con_id,
+> >                               unsigned int index, enum gpiod_flags flags);
+> > +int __gpiod_hog(struct gpio_desc *desc, const char *name,
+> > +               unsigned long lflags, enum gpiod_flags dflags);
+> 
+> Errr nope. __gpiod_hog is a gpiolib-private function, so it should be
+> in drivers/gpio/gpiolib.h.
+
+Agreed.
+
+
