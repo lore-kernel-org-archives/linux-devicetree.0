@@ -1,142 +1,108 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [RFC PATCHv2 0/7] devfreq: Add devfreq-event class to provide raw
- data for devfreq device
-Date: Wed, 10 Dec 2014 11:07:26 +0100
-Message-ID: <1418206046.16644.26.camel@AMDC1943>
-References: <1418134386-14681-1-git-send-email-cw00.choi@samsung.com>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH 1/4] pci: iProc: define Broadcom iProc PCIe binding
+Date: Wed, 10 Dec 2014 11:30:27 +0100
+Message-ID: <1418207427.7616.5.camel@pengutronix.de>
+References: <Ray Jui <rjui@broadcom.com>
+	 <1418169871-19232-1-git-send-email-rjui@broadcom.com>
+	 <1418169871-19232-2-git-send-email-rjui@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1418134386-14681-1-git-send-email-cw00.choi@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, kgene.kim@samsung.com, rafael.j.wysocki@intel.com, a.kesavan@samsung.com, tomasz.figa@gmail.com, b.zolnierkie@samsung.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1418169871-19232-2-git-send-email-rjui@broadcom.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Ray Jui <rjui@broadcom.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Scott Branden <sbranden@broadcom.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On wto, 2014-12-09 at 23:12 +0900, Chanwoo Choi wrote:
-> This patchset add new devfreq_event class to provide raw data to determine
-> current utilization of device  which is used for devfreq governor.
+Am Dienstag, den 09.12.2014, 16:04 -0800 schrieb Ray Jui:
+> Document the PCIe device tree binding for Broadcom iProc family of SoCs
 > 
-> [Description of devfreq-event class]
-> This patchset add new devfreq_event class for devfreq_event device which provide
-> raw data (e.g., memory bus utilization/GPU utilization). This raw data from
-> devfreq_event data would be used for the governor of devfreq subsystem.
-> - devfreq_event device : Provide raw data for governor of existing devfreq device
-> - devfreq device       : Monitor device state and change frequency/voltage of device
->                          using the raw data from devfreq_event device
+> Signed-off-by: Ray Jui <rjui@broadcom.com>
+> Reviewed-by: Scott Branden <sbranden@broadcom.com>
+> ---
+>  .../devicetree/bindings/pci/brcm,iproc-pcie.txt    |   62 ++++++++++++++++++++
+>  1 file changed, 62 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/brcm,iproc-pcie.txt
 > 
-> The devfreq subsystem support generic DVFS(Dynamic Voltage/Frequency Scaling)
-> for Non-CPU Devices. The devfreq device would dertermine current device state
-> using various governor (e.g., ondemand, performance, powersave). After completed
-> determination of system state, devfreq device would change the frequency/voltage
-> of devfreq device according to the result of governor.
-> 
-> But, devfreq governor must need basic data which indicates current device state.
-> Existing devfreq subsystem only consider devfreq device which check current system
-> state and determine proper system state using basic data. There is no subsystem
-> for device providing basic data to devfreq device.
-> 
-> The devfreq subsystem must need devfreq_event device(data-provider device) for
-> existing devfreq device. So, this patch add new devfreq_event class for
-> devfreq_event device which read various basic data(e.g, memory bus utilization,
-> GPU utilization) and provide measured data to existing devfreq device through
-> standard APIs of devfreq_event class.
-> 
-> The following description explains the feature of two kind of devfreq class:
-> - devfreq class (existing)
->  : devfreq consumer device use raw data from devfreq_event device for
->    determining proper current system state and change voltage/frequency
->    dynamically using various governors.
-> - devfreq_event class (new)
->  : Provide measured raw data to devfreq device for governor
-> 
-> Also, the devfreq-event device would support various type event as following:
->  : DEVFREQ_EVENT_TYPE_RAW_DATA
->  : DEVFREQ_EVENT_TYPE_UTILIZATION
->  : DEVFREQ_EVENT_TYPE_BANDWIDTH
->  : DEVFREQ_EVENT_TYPE_LATENCY
-> 
-> [For example]
-> If board dts includes PPMU_DMC0/DMC1/CPU event node,
-> would show following sysfs entry. Also devfreq driver(e.g., exynos4_bus.c)
-> can get the instance of devfreq-event device by using provided API and then
-> get raw data which reflect the current state of device.
-> 
+> diff --git a/Documentation/devicetree/bindings/pci/brcm,iproc-pcie.txt b/Documentation/devicetree/bindings/pci/brcm,iproc-pcie.txt
+> new file mode 100644
+> index 0000000..2467628
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/brcm,iproc-pcie.txt
+> @@ -0,0 +1,62 @@
+> +* Broadcom iProc PCIe controller
+> +
+> +Required properties:
+> +- compatible: Must be "brcm,iproc-pcie"
+> +- reg: base address and length of the PCIe controller and the MDIO interface
+> +  that controls the PCIe PHY
+> +- interrupts: interrupt IDs
+> +- bus-range: PCI bus numbers covered
+> +- #address-cells: set to <3>
+> +- #size-cells: set to <2>
+> +- device_type: set to "pci"
+> +- ranges: ranges for the PCI memory and I/O regions
+> +- phy-addr: MDC/MDIO adddress of the PCIe PHY
+> +- have-msi-inten-reg: Required for legacy iProc PCIe controllers that need the
+> +  MSI interrupt enable register to be set explicitly
+> +
+> +The Broadcom iProc PCie driver adapts the multi-domain structure, i.e., each
+> +interface has its own domain and therefore has its own device node
+> +Example:
+> +
+> +SoC specific DT Entry:
+> +
+> +	pcie0: pcie@18012000 {
+> +		compatible = "brcm,iproc-pcie";
+> +		reg = <0x18012000 0x1000>,
+> +			<0x18002000 0x1000>;
+> +		interrupts = <GIC_SPI 96 IRQ_TYPE_NONE>,
+> +			     <GIC_SPI 97 IRQ_TYPE_NONE>,
+> +			     <GIC_SPI 98 IRQ_TYPE_NONE>,
+> +			     <GIC_SPI 99 IRQ_TYPE_NONE>,
+> +			     <GIC_SPI 100 IRQ_TYPE_NONE>,
+> +			     <GIC_SPI 101 IRQ_TYPE_NONE>;
 
-Hi,
+This is missing the interrupt-map and interrupt-map-mask for the legacy
+INTx interrupts. If you add this you don't need to have a special map
+function in your driver, but can just use the standard
+of_irq_parse_and_map_pci() function.
 
-Overall I like the idea. I understand that now devfreq devices (like
-exynos devfreq) should bind themselves to buses, not to PPMU. It makes
-sense to me because bus clock and bus voltage are properties of bus, not
-monitoring unit.
+Regards,
+Lucas
 
-I see that this is still a RFC so it would be hard to base current
-devfreq work on top of it.
+> +		bus-range = <0x00 0xFF>;
+> +
+> +		#address-cells = <3>;
+> +		#size-cells = <2>;
+> +		device_type = "pci";
+> +		ranges = <0x81000000 0 0	  0x28000000 0 0x00010000   /* downstream I/O */
+> +			  0x82000000 0 0x20000000 0x20000000 0 0x04000000>; /* non-prefetchable memory */
+> +		phy-addr = <5>;
+> +	};
+> +
+> +	pcie1: pcie@18013000 {
+> +		compatible = "brcm,iproc-pcie";
+> +		reg = <0x18013000 0x1000>,
+> +			<0x18002000 0x1000>;
+> +
+> +		interrupts = <GIC_SPI 102 IRQ_TYPE_NONE>,
+> +			     <GIC_SPI 103 IRQ_TYPE_NONE>,
+> +			     <GIC_SPI 104 IRQ_TYPE_NONE>,
+> +			     <GIC_SPI 105 IRQ_TYPE_NONE>,
+> +			     <GIC_SPI 106 IRQ_TYPE_NONE>,
+> +			     <GIC_SPI 107 IRQ_TYPE_NONE>;
+> +		bus-range = <0x00 0xFF>;
+> +
+> +		#address-cells = <3>;
+> +		#size-cells = <2>;
+> +		device_type = "pci";
+> +		ranges = <0x81000000 0 0	  0x48000000 0 0x00010000   /* downstream I/O */
+> +			  0x82000000 0 0x40000000 0x40000000 0 0x04000000>; /* non-prefetchable memory */
+> +		phy-addr = <6>;
+> +	};
 
-One more general comment: you're adding a some API which is not used by
-current devfreq_event user (exynos). For example the exclusive flag or
-event types. I think it will be simpler to stick to the basic approach
-(reduced API). If some other user emerges then new API will be added.
-
-Best regards,
-Krzysztof
-
-
-> -sh-3.2# pwd
-> /sys/class/devfreq_event
-> -sh-3.2# ls -al
-> total 0
-> drwxr-xr-x  2 root root 0 Jan  7 11:10 .
-> drwxr-xr-x 37 root root 0 Jan  7 11:10 ..
-> lrwxrwxrwx  1 root root 0 Jan  7 11:10 event.0 -> ../../devices/soc/106a0000.ppmu_dmc0/devfreq_event/event.0
-> lrwxrwxrwx  1 root root 0 Jan  7 11:10 event.1 -> ../../devices/soc/106a0000.ppmu_dmc0/devfreq_event/event.1
-> lrwxrwxrwx  1 root root 0 Jan  7 11:10 event.2 -> ../../devices/soc/106a0000.ppmu_dmc0/devfreq_event/event.2
-> lrwxrwxrwx  1 root root 0 Jan  7 11:10 event.3 -> ../../devices/soc/106a0000.ppmu_dmc0/devfreq_event/event.3
-> lrwxrwxrwx  1 root root 0 Jan  7 11:10 event.4 -> ../../devices/soc/106b0000.ppmu_dmc1/devfreq_event/event.4
-> lrwxrwxrwx  1 root root 0 Jan  7 11:10 event.5 -> ../../devices/soc/106c0000.ppmu_cpu/devfreq_event/event.5
-> lrwxrwxrwx  1 root root 0 Jan  7 11:10 event.6 -> ../../devices/soc/106c0000.ppmu_cpu/devfreq_event/event.6
-> lrwxrwxrwx  1 root root 0 Jan  7 11:10 event.7 -> ../../devices/soc/106c0000.ppmu_cpu/devfreq_event/event.7
-> lrwxrwxrwx  1 root root 0 Jan  7 11:10 event.8 -> ../../devices/soc/106c0000.ppmu_cpu/devfreq_event/event.8
-> 
-> Changes from v1:
-> - Code clean
-> - Add the description of devfreq-event structure
-> - Add 'is_enabled' function to devfreq_event_ops structure
-> - Add 'enable_count' field to devfreq_event_dev structure
-> - Check whether devfreq-event device is enabled or not
->   during calling devfreq_event API
-> - Define the type of devfreq-event device as following
->   : DEVFREQ_EVENT_TYPE_RAW_DATA
->   : DEVFREQ_EVENT_TYPE_UTILIZATION
->   : DEVFREQ_EVENT_TYPE_BANDWIDTH
->   : DEVFREQ_EVENT_TYPE_LATENCY
-> - Add the exclusive feature of devfreq-event device.
->   If devfreq-event device is used on only on devfreq driver,
->   should used 'devfreq_enable_event_dev_exclusive()' function
-> - Add new patch6 for test on Exynos3250-based Rinato board
-> 
-> Chanwoo Choi (7):
->   devfreq: event: Add new devfreq_event class to provide basic data for devfreq governor
->   devfreq: event: Add the list of supported devfreq-event type
->   devfreq: event: Add the exclusive flag for devfreq-event device
->   devfreq: event: Add exynos-ppmu devfreq event driver
->   ARM: dts: Add PPMU dt node for Exynos3250
->   ARM: dts: Add PPMU dt node for Exynos4 SoC
->   ARM: dts: exynos: Add PPMU dt node to Exynos3250-based Rinato board
-> 
->  arch/arm/boot/dts/exynos3250-rinato.dts |  55 +++++
->  arch/arm/boot/dts/exynos3250.dtsi       |  66 ++++++
->  arch/arm/boot/dts/exynos4.dtsi          |  96 ++++++++
->  arch/arm/boot/dts/exynos4210.dtsi       |   8 +
->  drivers/devfreq/Kconfig                 |  11 +
->  drivers/devfreq/Makefile                |   5 +-
->  drivers/devfreq/devfreq-event.c         | 363 ++++++++++++++++++++++++++++
->  drivers/devfreq/event/Makefile          |   2 +
->  drivers/devfreq/event/exynos-ppmu.c     | 409 ++++++++++++++++++++++++++++++++
->  include/linux/devfreq.h                 | 178 ++++++++++++++
->  10 files changed, 1192 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/devfreq/devfreq-event.c
->  create mode 100644 drivers/devfreq/event/Makefile
->  create mode 100644 drivers/devfreq/event/exynos-ppmu.c
-> 
+-- 
+Pengutronix e.K.             | Lucas Stach                 |
+Industrial Linux Solutions   | http://www.pengutronix.de/  |
