@@ -1,33 +1,44 @@
-From: Kevin Hilman <khilman@kernel.org>
-Subject: Re: [PATCH v4 0/3] Fix Arndale Octa/Peach Pi boot on Audio subsystem clocks
-Date: Wed, 10 Dec 2014 08:17:26 -0800
-Message-ID: <7h4mt3pjhl.fsf@deeprootsystems.com>
-References: <1417777254-26579-1-git-send-email-k.kozlowski@samsung.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v8 3/3] net: hisilicon: new hip04 ethernet driver
+Date: Wed, 10 Dec 2014 17:36:46 +0100
+Message-ID: <34612839.hAkXUcbKUQ@wuerfel>
+References: <5487C357.9030507@huawei.com> <2331317.LV3gPP3odb@wuerfel> <20141210.110732.519666115784722516.davem@davemloft.net>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1417777254-26579-1-git-send-email-k.kozlowski@samsung.com>
-	(Krzysztof Kozlowski's message of "Fri, 05 Dec 2014 12:00:51 +0100")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Mike Turquette <mturquette@linaro.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Kukjin Kim <kgene@kernel.org>, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Vivek Gautam <gautam.vivek@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20141210.110732.519666115784722516.davem@davemloft.net>
+Sender: netdev-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: David Miller <davem@davemloft.net>, mark.rutland@arm.com, devicetree@vger.kernel.org, f.fainelli@gmail.com, linux@arm.linux.org.uk, eric.dumazet@gmail.com, sergei.shtylyov@cogentembedded.com, netdev@vger.kernel.org, agraf@suse.de, xuwei5@hisilicon.com, David.Laight@aculab.com, dingtianhong@huawei.com, zhangfei.gao@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof,
+On Wednesday 10 December 2014 11:07:32 David Miller wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> Date: Wed, 10 Dec 2014 10:35:20 +0100
+> 
+> > On Wednesday 10 December 2014 14:45:29 Ding Tianhong wrote:
+> >> 
+> >> Miss this code, I think the best way is skb_orphan(skb), just like the cxgb3 drivers, some hardware
+> >> didn't use the tx inq to free dmad Tx packages.
+> > 
+> > The problem with skb_orphan is that you are telling the network stack that
+> > the packet is now out of its reach and it will no longer be able to take
+> > queued packets into account.
+> 
+> skb_orphan() also does not release netfilter resources attached to the
+> packet.
+> 
+> Really, all drivers must free TX SKBs in a small, finite, amount of
+> time after submission.
+> 
+> There is no way around this.
 
-Krzysztof Kozlowski <k.kozlowski@samsung.com> writes:
+I see. Do you see a problem with returning early from napi->poll()
+without calling napi_complete() when the TX queue remains full at
+the end of the poll function?
 
-> Changes since v3
-> ================
-> 1. Patch 1/3: Fix issues pointed by Sylwester.
-> 2. Add Javier's tested-by [1]
+Or is there any better alternative for broken hardware that lacks
+a TX-complete interrupt?
 
-I tested this series on top of next-20141210 (exynos_defconfig and
-multi_v7_defconfig) on exynos5800-peach-pi and exynos5420-arndale-octa
-it fixes the boot hangs I was seeing with linux-next on those platforms.
-
-Feel free to add:
-
-Tested-by: Kevin Hilman <khilman@linaro.org>
-
-Kevin
+	Arnd
