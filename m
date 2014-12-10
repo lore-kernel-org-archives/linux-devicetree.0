@@ -1,51 +1,84 @@
-From: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
-Subject: Re: BCM2048 bluetooth connected over OMAP serial
-Date: Wed, 10 Dec 2014 18:42:33 +0100
-Message-ID: <5C56C73A-1D8E-4ACC-B1B7-3E8D49943A70@holtmann.org>
-References: <20141210164333.GA3154@amd> <CAL_Jsq+dy+5Fsg_oasP_hN3RuL1Wk7fOcQjyp+UdaJZyGa=uEg@mail.gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 8.1 \(1993\))
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: Re: [PATCH v4 2/6] arm: dts: socfpga: add altera fpga manager
+Date: Wed, 10 Dec 2014 18:49:45 +0100
+Message-ID: <20141210174945.GC23358@pengutronix.de>
+References: <1418156090-23578-1-git-send-email-atull@opensource.altera.com>
+ <1418156090-23578-3-git-send-email-atull@opensource.altera.com>
+ <20141210150109.GA23358@pengutronix.de>
+ <alpine.DEB.2.02.1412101123530.25868@linuxheads99>
+Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_Jsq+dy+5Fsg_oasP_hN3RuL1Wk7fOcQjyp+UdaJZyGa=uEg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, =?utf-8?Q?Pali_Roh=C3=A1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org>, kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>, Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.02.1412101123530.25868@linuxheads99>
+Sender: linux-doc-owner@vger.kernel.org
+To: atull <atull@opensource.altera.com>
+Cc: gregkh@linuxfoundation.org, jgunthorpe@obsidianresearch.com, hpa@zytor.com, monstr@monstr.eu, michal.simek@xilinx.com, rdunlap@infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, pantelis.antoniou@konsulko.com, robh+dt@kernel.org, grant.likely@linaro.org, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, pavel@denx.de, broonie@kernel.org, philip@balister.org, rubini@gnudd.com, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, balbi@ti.com, m.chehab@samsung.com, davidb@codeaurora.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, linus.walleij@linaro.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
->> So, there's bluetooth chip that's connected to the SoC by UART and some
->> GPIOs. What would be right representation in the device tree?
->> Something like this?
->> 
->>        bluetooth {
->>                  compatible = "broadcom,bcm2048";
->>                  uart = <&uart2>;
->>                  reset-gpios = <&gpio3 27 GPIO_ACTIVE_HIGH>; /* want 91 */
->>                  host-wakeup-gpios = <&gpio4 5 GPIO_ACTIVE_HIGH>; /* want 101 */
->>                  bluetooth-wakeup-gpios = <&gpio2 5 GPIO_ACTIVE_HIGH>; /* want 37 */
->>                  chip-type = <3>;
->>                  bt-sysclk = <2>;
->>                  reset-gpio-shared = <0>;
->>        };
->> 
->> Is there some way to prevent OMAP tty driver from binding to the
->> device and exporting the device to userspace?
+On Wed, Dec 10, 2014 at 11:25:59AM -0600, atull wrote:
+> On Wed, 10 Dec 2014, Steffen Trumtrar wrote:
 > 
-> Isn't the normal way for BT to work is the uart is exposed to
-> userspace and the BT stack is all in userspace? This is how other
-> Broadcom BT/WiFi combo parts work.
+> > Hi!
+> > 
+> > On Tue, Dec 09, 2014 at 02:14:46PM -0600, atull@opensource.altera.com wrote:
+> > > From: Alan Tull <atull@opensource.altera.com>
+> > > 
+> > > Add Altera FGPA manager to device tree.
+> > > 
+> > > Signed-off-by: Alan Tull <atull@opensource.altera.com>
+> > > ---
+> > >  arch/arm/boot/dts/socfpga.dtsi |   10 ++++++++++
+> > >  1 file changed, 10 insertions(+)
+> > > 
+> > > diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+> > > index 4472fd9..bab98b6 100644
+> > > --- a/arch/arm/boot/dts/socfpga.dtsi
+> > > +++ b/arch/arm/boot/dts/socfpga.dtsi
+> > > @@ -751,5 +751,15 @@
+> > >  			compatible = "altr,sys-mgr", "syscon";
+> > >  			reg = <0xffd08000 0x4000>;
+> > >  		};
+> > > +
+> > > +		hps_0_fpgamgr: fpgamgr@0xff706000 {
+> > > +			compatible = "altr,fpga-mgr", "simple-bus";
+> > > +			reg = <0xFF706000 0x1000
+> > > +			       0xFFB90000 0x1000>;
+> > > +			interrupts = <0 175 4>;
+> > > +			#address-cells = <1>;
+> > > +			#size-cells = <1>;
+> > > +			ranges;
+> > > +		};
+> > 
+> > The fpgamgr is NOT a bus. You don't need ranges and/or simple-bus.
+> > 
+> > Regards,
+> > Steffen
+> 
+> Actually, I am going to be using this when I add the DT notification 
+> stuff.  That stuff is waiting for DT overlays to show up in the main
+> tree.
+> 
+> So the choice it to either change this file now, once, or do the minimal 
+> changes and have to change it again later.
+> 
 
-not on Linux actually. The Bluetooth core layer (including the HCI transport) are all in kernel space.
+Yes, that is what I thought. And still, devices can NOT show up
+at the fpgamgr. They show up on the various bridges.
 
-However UART based Bluetooth chips are exposed as TTY and then the N_HCI line discipline is used to attach it to the kernel Bluetooth subsystem.
+And as far as I understand the DT overlay stuff, you specify in
+the overlay what the parent node will be.
+For i2c this is one of the i2c-hosts, for spi one of the spi-hosts
+and for IP cores in a bitstream one of the bridges.
 
-Regards
+The fpgamgr is, from my understanding, only responsible for writing
+the bitstream to the FPGA; nothing more.
 
-Marcel
+Regards,
+Steffen
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
