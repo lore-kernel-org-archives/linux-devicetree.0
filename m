@@ -1,86 +1,72 @@
-From: Bryan Wu <cooloney@gmail.com>
-Subject: Re: [PATCH 1/2] leds: add DT binding for Qualcomm PM8941 WLED block
-Date: Tue, 9 Dec 2014 17:19:10 -0800
-Message-ID: <CAK5ve-+NV2OCKABr16-DfkGre4pM_iEeac8ryY_4ALdEZdeZ1w@mail.gmail.com>
-References: <1418084551-28946-1-git-send-email-bjorn.andersson@sonymobile.com>
+From: Varka Bhadram <varkabhadram@gmail.com>
+Subject: Re: [PATCH 1/4] i2c: iProc: define Broadcom iProc I2C binding
+Date: Wed, 10 Dec 2014 06:57:08 +0530
+Message-ID: <5487A16C.5000707@gmail.com>
+References: <Ray Jui <rjui@broadcom.com> <1418172891-19441-1-git-send-email-rjui@broadcom.com> <1418172891-19441-2-git-send-email-rjui@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <1418084551-28946-1-git-send-email-bjorn.andersson@sonymobile.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Richard Purdie <rpurdie@rpsys.net>, Grant Likely <grant.likely@linaro.org>, Courtney Cavin <courtney.cavin@sonymobile.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1418172891-19441-2-git-send-email-rjui@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ray Jui <rjui@broadcom.com>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>
+Cc: Scott Branden <sbranden@broadcom.com>, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 8, 2014 at 4:22 PM, Bjorn Andersson
-<bjorn.andersson@sonymobile.com> wrote:
-> From: Courtney Cavin <courtney.cavin@sonymobile.com>
+Hi,
+
+On Wednesday 10 December 2014 06:24 AM, Ray Jui wrote:
+> Document the I2C device tree binding for Broadcom iProc family of
+> SoCs
 >
-> This adds device tree binding documentation for the WLED ('White' LED)
-> block on Qualcomm's PM8941 PMICs.
->
-
-Looks good to me, I need device tree reviewer's Ack to merge it.
-
-Thanks,
--Bryan
-
-> Signed-off-by: Courtney Cavin <courtney.cavin@sonymobile.com>
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+> Signed-off-by: Ray Jui <rjui@broadcom.com>
+> Reviewed-by: Scott Branden <sbranden@broadcom.com>
 > ---
->  .../devicetree/bindings/leds/leds-pm8941-wled.txt  | 43 ++++++++++++++++++++++
->  1 file changed, 43 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/leds-pm8941-wled.txt
+>   .../devicetree/bindings/i2c/brcm,iproc-i2c.txt     |   37 ++++++++++++++++++++
+>   1 file changed, 37 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/i2c/brcm,iproc-i2c.txt
 >
-> diff --git a/Documentation/devicetree/bindings/leds/leds-pm8941-wled.txt b/Documentation/devicetree/bindings/leds/leds-pm8941-wled.txt
+> diff --git a/Documentation/devicetree/bindings/i2c/brcm,iproc-i2c.txt b/Documentation/devicetree/bindings/i2c/brcm,iproc-i2c.txt
 > new file mode 100644
-> index 0000000..a85a964
+> index 0000000..81f982c
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/leds-pm8941-wled.txt
-> @@ -0,0 +1,43 @@
-> +Binding for Qualcomm PM8941 WLED driver
+> +++ b/Documentation/devicetree/bindings/i2c/brcm,iproc-i2c.txt
+> @@ -0,0 +1,37 @@
+> +Broadcom iProc I2C controller
 > +
 > +Required properties:
-> +- compatible: should be "qcom,pm8941-wled"
-> +- reg: slave address
 > +
-> +Optional properties:
-> +- label: The label for this led
-> +  See Documentation/devicetree/bindings/leds/common.txt
-> +- linux,default-trigger: Default trigger assigned to the LED
-> +  See Documentation/devicetree/bindings/leds/common.txt
-> +- qcom,cs-out: bool; enable current sink output
-> +- qcom,cabc: bool; enable content adaptive backlight control
-> +- qcom,ext-gen: bool; use externally generated modulator signal to dim
-> +- qcom,current-limit: mA; per-string current limit; value from 0 to 25
-> +       default: 20mA
-> +- qcom,current-boost-limit: mA; boost current limit; one of:
-> +       105, 385, 525, 805, 980, 1260, 1400, 1680
-> +       default: 805mA
-> +- qcom,switching-freq: kHz; switching frequency; one of:
-> +       600, 640, 685, 738, 800, 872, 960, 1066, 1200, 1371,
-> +       1600, 1920, 2400, 3200, 4800, 9600,
-> +       default: 1600kHz
-> +- qcom,ovp: V; Over-voltage protection limit; one of:
-> +       27, 29, 32, 35
-> +       default: 29V
-> +- qcom,num-strings: #; number of led strings attached; value from 1 to 3
-> +       default: 2
+> +- compatible:
+> +    Must be "brcm,iproc-i2c"
 > +
-> +Example:
+> +- reg:
+> +    Define the base and range of the I/O address space that contain the iProc
+> +    I2C controller registers
 > +
-> +pm8941-wled@d800 {
-> +       compatible = "qcom,pm8941-wled";
-> +       reg = <0xd800>;
-> +       label = "backlight";
+> +- interrupts:
+> +    Should contain the I2C interrupt
 > +
-> +       qcom,cs-out;
-> +       qcom,current-limit = <20>;
-> +       qcom,current-boost-limit = <805>;
-> +       qcom,switching-freq = <1600>;
-> +       qcom,ovp = <29>;
-> +       qcom,num-strings = <2>;
-> +};
-> --
-> 1.8.2.2
->
+> +- clock-frequency:
+> +    This is the I2C bus clock. Need to be either 100000 or 400000
+> +
+> +- #address-cells:
+> +    Always 1 (for I2C addresses)
+> +
+> +- #size-cells:
+> +    Always 0
+> +
+
+All the properties defined with two lines of statements.
+
+Why cant they be with single line statement, like:
+
+compatible:	Must be "brcm,iproc-i2c"
+reg:		Define the base and range of the I/O address space that
+		contain the iProc I2C controller registers
+
+....
+
+
+-- 
+Thanks and Regards,
+Varka Bhadram.
