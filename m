@@ -1,148 +1,70 @@
-From: Ashok Kumar <ashoks@broadcom.com>
-Subject: Re: [RFC PATCH v2 4/4] arm64:numa: adding numa support for arm64
- platforms.
-Date: Wed, 10 Dec 2014 17:56:04 +0530
-Message-ID: <1717.42750467292$1418214433@news.gmane.org>
-References: <1416605010-10442-1-git-send-email-ganapatrao.kulkarni@caviumnetworks.com>
- <1416605010-10442-5-git-send-email-ganapatrao.kulkarni@caviumnetworks.com>
- <5482ce36.c9e2420a.5d40.71c7SMTPIN_ADDED_BROKEN@mx.google.com>
- <CAFpQJXU89uwAkHyi+dvHmbZOvadO_EyQbrG8jMo5G3tnWP5qcw@mail.gmail.com>
+From: Beomho Seo <beomho.seo@samsung.com>
+Subject: Re: [PATCH v8 1/4] mfd: rt5033: Add Richtek RT5033 driver core.
+Date: Wed, 10 Dec 2014 21:34:44 +0900
+Message-ID: <54883DE4.5000907@samsung.com>
+References: <1418126634-4781-1-git-send-email-beomho.seo@samsung.com>
+ <1418126634-4781-2-git-send-email-beomho.seo@samsung.com>
+ <20141209140102.GZ3951@x1> <54882255.9060303@samsung.com>
+ <20141210121331.GD23481@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CAFpQJXU89uwAkHyi+dvHmbZOvadO_EyQbrG8jMo5G3tnWP5qcw@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ganapatrao Kulkarni <gpkulkarni@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Steve Capper <steve.capper@linaro.org>, Al Stone <al.stone@linaro.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Leif Lindholm <leif.lindholm@linaro.org>, Roy Franz <roy.franz@linaro.org>, Rob Herring <robh+dt@kernel.org>, Ganapatrao Kulkarni <ganapatrao.kulkarni@caviumnetworks.com>, msalter@redhat.com, Grant Likely <grant.likely@linaro.org>, jchandra@broadcom.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Hanjun Guo <hanjun.guo@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <20141210121331.GD23481@x1>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, sameo@linux.intel.com, lee.jone@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, sre@kernel.org, dbaryshkov@gmail.com, dwmw2@infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, cw00.choi@samsung.com, geunsik.lim@samsung.com, inki.dae@samsung.com, sw0312.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Dec 06, 2014 at 10:50:57AM -0800, Ganapatrao Kulkarni wrote:
-> On Sat, Dec 6, 2014 at 1:36 AM, Ashok Kumar <ashoks@broadcom.com> wrote:
-> > On Sat, Nov 22, 2014 at 02:53:30AM +0530, Ganapatrao Kulkarni wrote:
-> >> Adding numa support for arm64 based platforms.
-> >> creating numa mapping by parsing the dt node numa-map.
-> >>
-> >> Signed-off-by: Ganapatrao Kulkarni <ganapatrao.kulkarni@caviumnetworks.com>
-> > Ganapat,
-> >
-> > Can we get a simple version of this patchset with just the associativity parameter for the cpu and memory nodes
-> > upstream? The initial patchset can be with the assumption of a simple full mesh topology for the distance.  The
-> > hierarchical complex topologies and the DT nodes and properties for that can be added in a later patch, once the
-> > standard for that is agreed upon.
-> > We are planning to support ACPI based NUMA for Broadcom Vulcan processors(http://www.broadcom.com/press/release.php?id=s797235).
-> > I am working on a patch to add support for the SRAT and SLIT ACPI tables based on your patch and I will post that
-> > patchset soon, so it will be helpful if the core changes are upstream.
-> >
-> to implement, ibm/ppc like implementation, we need efi-stub patch to
-> not remove the memory node from the dt.
-> current efi-stub parses dt file and removes memory nodes.
-> can i get the efi-stub patch to start with please?
+On 12/10/2014 09:13 PM, Lee Jones wrote:
+> On Wed, 10 Dec 2014, Beomho Seo wrote:
+> 
+>> On 12/09/2014 11:01 PM, Lee Jones wrote:
+>>> On Tue, 09 Dec 2014, Beomho Seo wrote:
+>>>
+>>>> This patch adds a new driver for Richtek RT5033 driver.
+>>>> RT5033 is a Multifunction device which includes battery charger, fuel gauge,
+>>>> flash LED current source, LDO and synchronous Buck converter. It is interfaced
+>>>> to host controller using I2C interface.
+>>>>
+>>>> Cc: Samuel Ortiz <sameo@linux.intel.com>
+>>>> Cc: Lee Jones <lee.jone@linaro.org>
+>>>> Signed-off-by: Beomho Seo <beomho.seo@samsung.com>
+>>>> Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+>>>> ---
+>>>>  drivers/mfd/Kconfig                |   12 ++
+>>>>  drivers/mfd/Makefile               |    1 +
+>>>>  drivers/mfd/rt5033.c               |  142 ++++++++++++++++++++
+>>>>  include/linux/mfd/rt5033-private.h |  260 ++++++++++++++++++++++++++++++++++++
+>>>>  include/linux/mfd/rt5033.h         |   62 +++++++++
+>>>>  5 files changed, 477 insertions(+)
+>>>>  create mode 100644 drivers/mfd/rt5033.c
+>>>>  create mode 100644 include/linux/mfd/rt5033-private.h
+>>>>  create mode 100644 include/linux/mfd/rt5033.h
+>>>
+>>> Much better.
+>>>
+>>> For my own reference:
+>>>
+>>> Acked-by: Lee Jones <lee.jones@linaro.org>
+>>>
+>>> So what's the plan with this set?
+>>>
+>>
+>> This patch have been made on for-next-mfd branch of your git repository.
+>> So I hope this patch to be merged at your git repository.
+>> Another patch set(RT5033 regulator driver) have been merged on for-next branch of regulator git repository.
+>>
+>> https://git.kernel.org/cgit/linux/kernel/git/broonie/regulator.git/commit/?h=for-next&id=b1917578fd5d8efa67afa05a0d6d7e323f2802da
+>>
+>> Other patches(about charger, fuelgague and devicetree doc) will be re-sent to each maintainers.
+> 
+> Okay, so all patches are indipendant/othognal of each other for sure?
+> 
 
-Ganapat,
- I tried the below patch in qemu and it works. Would this be of help to you?
-
-Roy/Ard,
- Is the below patch fine? 
-
->From 27b4aecf09707e3d5bd4ff7bf765cd609772476f Mon Sep 17 00:00:00 2001
-From: Ashok Kumar <ashoks@broadcom.com>
-Date: Tue, 9 Dec 2014 17:23:11 +0530
-Subject: [PATCH] efi/arm64: Remove deleting memory nodes in efi-stub
-
-Dont delete memory nodes from DT as it will be
-used by NUMA configuration.
-
-Signed-off-by: Ashok Kumar <ashoks@broadcom.com>
----
- arch/arm64/kernel/setup.c          | 12 +++++++++++-
- drivers/firmware/efi/libstub/fdt.c | 24 +-----------------------
- 2 files changed, 12 insertions(+), 24 deletions(-)
-
-diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
-index 27f65b0..ac6d34f 100644
---- a/arch/arm64/kernel/setup.c
-+++ b/arch/arm64/kernel/setup.c
-@@ -302,7 +302,7 @@ static void __init setup_processor(void)
- 
- static void __init setup_machine_fdt(phys_addr_t dt_phys)
- {
--	if (!dt_phys || !early_init_dt_scan(phys_to_virt(dt_phys))) {
-+	if (!dt_phys || !early_init_dt_verify(phys_to_virt(dt_phys))) {
- 		early_print("\n"
- 			"Error: invalid device tree blob at physical address 0x%p (virtual address 0x%p)\n"
- 			"The dtb must be 8-byte aligned and passed in the first 512MB of memory\n"
-@@ -313,6 +313,16 @@ static void __init setup_machine_fdt(phys_addr_t dt_phys)
- 			cpu_relax();
- 	}
- 
-+	/* Retrieve various information from the /chosen node */
-+	of_scan_flat_dt(early_init_dt_scan_chosen, boot_command_line);
-+
-+	/* Initialize {size,address}-cells info */
-+	of_scan_flat_dt(early_init_dt_scan_root, NULL);
-+
-+	/* Setup memory, calling early_init_dt_add_memory_arch */
-+	if (!IS_ENABLED(CONFIG_EFI))
-+		of_scan_flat_dt(early_init_dt_scan_memory, NULL);
-+
- 	machine_name = of_flat_dt_get_machine_name();
- }
- 
-diff --git a/drivers/firmware/efi/libstub/fdt.c b/drivers/firmware/efi/libstub/fdt.c
-index c846a96..a02e56e 100644
---- a/drivers/firmware/efi/libstub/fdt.c
-+++ b/drivers/firmware/efi/libstub/fdt.c
-@@ -22,7 +22,7 @@ efi_status_t update_fdt(efi_system_table_t *sys_table, void *orig_fdt,
- 			unsigned long map_size, unsigned long desc_size,
- 			u32 desc_ver)
- {
--	int node, prev, num_rsv;
-+	int node, num_rsv;
- 	int status;
- 	u32 fdt_val32;
- 	u64 fdt_val64;
-@@ -52,28 +52,6 @@ efi_status_t update_fdt(efi_system_table_t *sys_table, void *orig_fdt,
- 		goto fdt_set_fail;
- 
- 	/*
--	 * Delete any memory nodes present. We must delete nodes which
--	 * early_init_dt_scan_memory may try to use.
--	 */
--	prev = 0;
--	for (;;) {
--		const char *type;
--		int len;
--
--		node = fdt_next_node(fdt, prev, NULL);
--		if (node < 0)
--			break;
--
--		type = fdt_getprop(fdt, node, "device_type", &len);
--		if (type && strncmp(type, "memory", len) == 0) {
--			fdt_del_node(fdt, node);
--			continue;
--		}
--
--		prev = node;
--	}
--
--	/*
- 	 * Delete all memory reserve map entries. When booting via UEFI,
- 	 * kernel will use the UEFI memory map to find reserved regions.
- 	 */
--- 
-1.9.1
+Yes, rt5033 core driver merge before other patches with no problem.
+It is do not have dependency other patches.
 
 
-Thanks,
-Ashok
+Best regards,
+Beomho Seo
