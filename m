@@ -1,129 +1,75 @@
-From: Ding Tianhong <dingtianhong@huawei.com>
-Subject: Re: [PATCH v8 3/3] net: hisilicon: new hip04 ethernet driver
-Date: Wed, 10 Dec 2014 14:45:29 +0800
-Message-ID: <5487EC09.8090907@huawei.com>
-References: <1397869980-21187-1-git-send-email-zhangfei.gao@linaro.org> <5483C977.2060308@huawei.com> <54842298.2010007@suse.de> <2619239.NTtdNaZCJM@wuerfel> <5487C357.9030507@huawei.com>
+From: Vivek Gautam <gautamvivek1987-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V2 1/2] pinctrl: exynos: Add BUS1 pin controller for exynos7
+Date: Wed, 10 Dec 2014 13:51:55 +0530
+Message-ID: <CAFp+6iHKx-donDzM0pBcdEw9RJtMxCSB6GfiMttTvhGVSSaN_A@mail.gmail.com>
+References: <CAFp+6iF-N63YSsdv2a6=MYp_mD=eQY_Oi8=9JVNU5dG0BA7YGQ@mail.gmail.com>
+	<1416834177-11170-1-git-send-email-gautam.vivek@samsung.com>
+	<CA+Ln22GHVinmpJccYYxNjYeApj3miy_zGMnWd8e5AOt0PCjh9g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <5487C357.9030507@huawei.com>
-Sender: netdev-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, Alexander Graf <agraf@suse.de>
-Cc: Zhangfei Gao <zhangfei.gao@linaro.org>, davem@davemloft.net, linux@arm.linux.org.uk, f.fainelli@gmail.com, sergei.shtylyov@cogentembedded.com, mark.rutland@arm.com, David.Laight@aculab.com, eric.dumazet@gmail.com, xuwei5@hisilicon.com, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CA+Ln22GHVinmpJccYYxNjYeApj3miy_zGMnWd8e5AOt0PCjh9g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2014/12/10 11:51, Ding Tianhong wrote:
-> On 2014/12/8 4:09, Arnd Bergmann wrote:
->> On Sunday 07 December 2014 10:49:12 Alexander Graf wrote:
->>> On 07.12.14 04:28, Ding Tianhong wrote:
->>>> On 2014/12/7 8:42, Alexander Graf wrote:
->>>>> On 19.04.14 03:13, Zhangfei Gao wrote:
->>>>>> Support Hisilicon hip04 ethernet driver, including 100M / 1000M controller.
->>>>>> The controller has no tx done interrupt, reclaim xmitted buffer in the poll.
->>>>>>
->>>>>> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
->>>>>
->>>>> Is this driver still supposed to go upstream? I presume this was the
->>>>> last submission and it's been quite some time ago 
->>>>>
->>>>
->>>> yes, it is really a long time, but The hip04 did not support tx irq, 
->>>> we couldn't get any better idea to fix this defect, do you have any suggestion?
->>>
->>> Well, if hardware doesn't have a TX irq I don't see there's anything we
->>> can do to fix that ;).
->>
->> I don't know if it's related to the ethernet on hip01, but I would assume
->> it is, and that platform is currently being submitted for inclusion, so
->> I'd definitely hope to see this driver get merged too eventually.
->>
->> IIRC, the last revision of the patch set had basically fixed the problem,
->> except for a race that would still allow the napi poll function to exit
->> with poll_complete() but a full queue of TX descriptors and no fallback
->> to clean them up. There was also still an open question about whether or
->> not the driver should use skb_orphan, but I may be misremembering that part.
->>  
-> 
-> Hi Arnd:
-> 
-> what about use a state machine to check the tx queue and free the skb, just like:
-> 
-> diff --git a/drivers/net/ethernet/hisilicon/hip04_eth.c b/drivers/net/ethernet/hisilicon/hip04_eth.c
-> index 8593658..71faca8 100644
-> --- a/drivers/net/ethernet/hisilicon/hip04_eth.c
-> +++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
-> @@ -396,9 +396,25 @@ static int hip04_mac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
->         stats->tx_packets++;
->         priv->tx_count++;
-> 
-> +
-> +       queue_delayed_work(priv->wq, &priv->tx_queue, delay);
-> +
->         return NETDEV_TX_OK;
->  }
-> 
-> +static void hip04_tx_queue_monitor(struct work_struct *work)
-> +{
-> +       struct hip04_priv *priv = container_of(work, struct hip04_priv,
-> +                                              queue_work.work);
-> +       struct net_device *dev = priv->ndev;
-> +       hip04_tx_reclain(ndev, false);
-> +
-> +       if (TX_QUEUE_IS_EMPRY(ndev))
-> +               return;
-> +
-> +       queue_delayed_work(priv->wq, &priv->tx_queue, delay);
-> +}
-> +
->  static int hip04_rx_poll(struct napi_struct *napi, int budget)
->  {
->         struct hip04_priv *priv = container_of(napi, struct hip04_priv, napi);
-> @@ -736,6 +752,8 @@ static int hip04_mac_probe(struct platform_device *pdev)
->                 goto alloc_fail;
->         }
-> 
-> +       INIT_DELAYED_WORK(&priv->tx_queue, hip04_tx_queue_monitor);
-> +
->         return 0;
-> 
-> 
-> 
-> what do you think of this solution?
-> 
-> Regards
-> Ding
-> 
+Hi Tomasz,
 
-Miss this code, I think the best way is skb_orphan(skb), just like the cxgb3 drivers, some hardware
-didn't use the tx inq to free dmad Tx packages.
 
-Ding
+On Mon, Dec 1, 2014 at 9:37 PM, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Hi Vivek,
+>
+> Please see my comments below.
+>
+> 2014-11-24 22:02 GMT+09:00 Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>:
+>> USB and Power regulator on Exynos7 require gpios available
+>> in BUS1 pin controller block.
+>> So adding the BUS1 pinctrl support.
+>>
+>> Signed-off-by: Naveen Krishna Ch <naveenkrishna.ch-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Signed-off-by: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> ---
+>>
+>> This patch was part of series:
+>> "[PATCH 00/11] Exynos7: Adding USB 3.0 support"
+>>  https://lkml.org/lkml/2014/11/21/247
+>>
+>> Changes since V1:
+>>  - Added support for all pin banks which are part of BUS1 pin controller.
+>>
+>>  drivers/pinctrl/samsung/pinctrl-exynos.c |   19 +++++++++++++++++++
+>>  1 file changed, 19 insertions(+)
+>
+> I have missed this with previous patch, but DT bindings documentation
+> should list all aliases for all supported compatible strings, because
+> they are required for correct operation. There is a small section
+> about aliases in [1] already, so please add there information about
+> aliases for Exynos7 pin controllers along with their names, e.g.
+>
+> Aliases for controllers compatible with "samsung,exynos7-pinctrl":
+>  - pinctrl0: pin controller of ALIVE block,
+>  - pinctrl1: pin controller of BUS0 block,
+>  [...]
+>  - pinctrl8: pin controller of BUS1 block.
+>
+> [1] Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
+>
+> I guess you can do this in separate patch or respin this one with this added.
 
-> 
->>> Dave, what's your take here? Should we keep a driver from going upstream
->>> just because the hardware is partly broken? I'd really prefer to have an
->>> upstream driver on that SoC rather than some random (eventually even
->>> more broken) downstream code.
->>
->> We can certainly have a slow driver for this hardware, and I'd much
->> prefer slow over broken. I'd guess that some of the performance impact
->> of the missing interrupts can now be offset with the xmit_more	 logic.
->>
->> 	Arnd
->> --
->> To unsubscribe from this list: send the line "unsubscribe netdev" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>
->> .
->>
-> 
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe netdev" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
-> .
-> 
+Sure, i will add the aliases in a separate patch.
+I missed to update the patch in this cycle :-(
+So we can queue up the reworked version for 3.20.
+
+
+
+-- 
+Best Regards
+Vivek Gautam
+Samsung R&D Institute, Bangalore
+India
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
