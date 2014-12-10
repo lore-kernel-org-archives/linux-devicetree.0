@@ -1,45 +1,51 @@
-From: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 2/4] PCI: iproc: Add Broadcom iProc PCIe driver
-Date: Wed, 10 Dec 2014 08:46:57 -0800
-Message-ID: <54887901.8070501@broadcom.com>
-References: <1418169871-19232-3-git-send-email-rjui@broadcom.com> <9707535.Y78sV0TgX4@wuerfel>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 0/2] ARM: dts: dra7-evm: Regulator max voltage fixes
+Date: Wed, 10 Dec 2014 08:47:35 -0800
+Message-ID: <20141210164734.GE30437@atomide.com>
+References: <1417608237-12258-1-git-send-email-rk@ti.com>
+ <547F0A57.7040806@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <9707535.Y78sV0TgX4@wuerfel>
+Content-Disposition: inline
+In-Reply-To: <547F0A57.7040806-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org
+To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Cc: Ravikumar Kattekola <rk-l0cyMroinI0@public.gmane.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 14-12-10 03:31 AM, Arnd Bergmann wrote:
-> On Tuesday 09 December 2014 16:04:29 Ray Jui wrote:
->> Add initial version of the Broadcom iProc PCIe driver. This driver
->> has been tested on NSP and Cygnus and is expected to work on all iProc
->> family of SoCs that deploys the same PCIe host controller
->>
->> The driver also supports MSI
->>
->> Signed-off-by: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->> Reviewed-by: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->
-> The driver looks suspiciously like the one that Hauke already submitted a
-> while ago for bcm53xx. Please come up with a merged driver that works for
-> both.
-Could you please be a little more specific.  What driver did "Hauke 
-already submitted"?  I do not see any driver in the kernel you are 
-talking about.
->
-> Are you sure that iProc isn't based on the BCMA bus infrastructure after
-> all? Even the physical address of your PCI host falls into the address
-> range that is used for the internal BCMA bus on the other chips!
-BCMA seems to be for MIPS architectures.  It seems to be quite specific 
-to those architectures using BCMA.  I see no use of it in bcm53xx code?
->
-> 	Arnd
->
+* Nishanth Menon <nm-l0cyMroinI0@public.gmane.org> [141203 05:06]:
+> On 12/03/2014 06:03 AM, Ravikumar Kattekola wrote:
+> > Hi,
+> > 
+> > This set does a minor fix and an update:
+> > 
+> >    - Fix a typo in the max voltage property of smps6 (vdd_gpu) regulator node added by
+> >      the patch : c56a831ca47e ("ARM: dts: DRA7: Add TPS659038 PMIC nodes")
+> > 
+> >    - Update max voltage property of smps7 (vdd_core) regulator node to align with the 
+> >      latest Data Manual
+> > 
+> > Regards,
+> > RK
+> > 
+> > Ravikumar Kattekola (2):
+> >   ARM: dts: dra7-evm: Fix typo in SMPS6 (VDD_GPU) max voltage
+> >   ARM: dts: dra7-evm: Update SMPS7 (VDD_CORE) max voltage to match DM
+> > 
+> >  arch/arm/boot/dts/dra7-evm.dts  |    4 ++--
+> >  arch/arm/boot/dts/dra72-evm.dts |    2 +-
+> >  2 files changed, 3 insertions(+), 3 deletions(-)
+> > 
+> These apply to
+> 
+> https://git.kernel.org/cgit/linux/kernel/git/tmlind/linux-omap.git/log/?h=omap-for-v3.19/dt-v2
+> 
+> Acked-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
 
+Applying both into omap-for-v3.19/fixes thanks.
+
+Tony
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
