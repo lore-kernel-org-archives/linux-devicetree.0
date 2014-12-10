@@ -1,44 +1,38 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v8 3/3] net: hisilicon: new hip04 ethernet driver
-Date: Wed, 10 Dec 2014 17:36:46 +0100
-Message-ID: <34612839.hAkXUcbKUQ@wuerfel>
-References: <5487C357.9030507@huawei.com> <2331317.LV3gPP3odb@wuerfel> <20141210.110732.519666115784722516.davem@davemloft.net>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: BCM2048 bluetooth connected over OMAP serial
+Date: Wed, 10 Dec 2014 17:43:33 +0100
+Message-ID: <20141210164333.GA3154@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20141210.110732.519666115784722516.davem@davemloft.net>
-Sender: netdev-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: David Miller <davem@davemloft.net>, mark.rutland@arm.com, devicetree@vger.kernel.org, f.fainelli@gmail.com, linux@arm.linux.org.uk, eric.dumazet@gmail.com, sergei.shtylyov@cogentembedded.com, netdev@vger.kernel.org, agraf@suse.de, xuwei5@hisilicon.com, David.Laight@aculab.com, dingtianhong@huawei.com, zhangfei.gao@linaro.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: linux-omap-owner@vger.kernel.org
+To: pali.rohar@gmail.com, sre@debian.org, sre@ring0.de, kernel list <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-omap@vger.kernel.org, tony@atomide.com, khilman@kernel.org, aaro.koskinen@iki.fi, ivo.g.dimitrov.75@gmail.com, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 10 December 2014 11:07:32 David Miller wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> Date: Wed, 10 Dec 2014 10:35:20 +0100
-> 
-> > On Wednesday 10 December 2014 14:45:29 Ding Tianhong wrote:
-> >> 
-> >> Miss this code, I think the best way is skb_orphan(skb), just like the cxgb3 drivers, some hardware
-> >> didn't use the tx inq to free dmad Tx packages.
-> > 
-> > The problem with skb_orphan is that you are telling the network stack that
-> > the packet is now out of its reach and it will no longer be able to take
-> > queued packets into account.
-> 
-> skb_orphan() also does not release netfilter resources attached to the
-> packet.
-> 
-> Really, all drivers must free TX SKBs in a small, finite, amount of
-> time after submission.
-> 
-> There is no way around this.
+Hi!
 
-I see. Do you see a problem with returning early from napi->poll()
-without calling napi_complete() when the TX queue remains full at
-the end of the poll function?
+So, there's bluetooth chip that's connected to the SoC by UART and some
+GPIOs. What would be right representation in the device tree?
+Something like this?
 
-Or is there any better alternative for broken hardware that lacks
-a TX-complete interrupt?
+	bluetooth {
+                  compatible = "broadcom,bcm2048";
+                  uart = <&uart2>;
+                  reset-gpios = <&gpio3 27 GPIO_ACTIVE_HIGH>; /* want 91 */
+                  host-wakeup-gpios = <&gpio4 5 GPIO_ACTIVE_HIGH>; /* want 101 */
+	          bluetooth-wakeup-gpios = <&gpio2 5 GPIO_ACTIVE_HIGH>; /* want 37 */
+                  chip-type = <3>;
+                  bt-sysclk = <2>;
+                  reset-gpio-shared = <0>;
+        };
 
-	Arnd
+Is there some way to prevent OMAP tty driver from binding to the
+device and exporting the device to userspace?
+
+Best regards,
+									Pavel
+
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
