@@ -1,66 +1,69 @@
-From: Arend van Spriel <arend@broadcom.com>
-Subject: Re: [PATCH 2/4] PCI: iproc: Add Broadcom iProc PCIe driver
-Date: Thu, 11 Dec 2014 10:44:30 +0100
-Message-ID: <5489677E.3000607@broadcom.com>
-References: <1418169871-19232-3-git-send-email-rjui@broadcom.com> <9707535.Y78sV0TgX4@wuerfel> <54887901.8070501@broadcom.com> <CAGVrzcbZ_f43Vf1mu2XErVi_Jehjggh2TREyrSs84ntSm98yvg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGVrzcbZ_f43Vf1mu2XErVi_Jehjggh2TREyrSs84ntSm98yvg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Scott Branden <sbranden@broadcom.com>, Arnd Bergmann <arnd@arndb.de>, Ray Jui <rjui@broadcom.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Russell King <linux@arm.linux.org.uk>, linux-pci@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Hauke Mehrtens <hauke@hauke-m.de>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+From: Yunzhi Li <lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v6 0/5] Patches to add support for Rockchip usb PHYs.
+Date: Thu, 11 Dec 2014 17:55:17 +0800
+Message-ID: <1418291722-25448-1-git-send-email-lyz@rock-chips.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
+Cc: olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Yunzhi Li <lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Paul Zimmerman <paulz-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-+ Rafal
 
-On 12/10/14 19:46, Florian Fainelli wrote:
-> 2014-12-10 8:46 GMT-08:00 Scott Branden<sbranden@broadcom.com>:
->> On 14-12-10 03:31 AM, Arnd Bergmann wrote:
->>>
->>> On Tuesday 09 December 2014 16:04:29 Ray Jui wrote:
->>>>
->>>> Add initial version of the Broadcom iProc PCIe driver. This driver
->>>> has been tested on NSP and Cygnus and is expected to work on all iProc
->>>> family of SoCs that deploys the same PCIe host controller
->>>>
->>>> The driver also supports MSI
->>>>
->>>> Signed-off-by: Ray Jui<rjui@broadcom.com>
->>>> Reviewed-by: Scott Branden<sbranden@broadcom.com>
->>>
->>>
->>> The driver looks suspiciously like the one that Hauke already submitted a
->>> while ago for bcm53xx. Please come up with a merged driver that works for
->>> both.
->>
->> Could you please be a little more specific.  What driver did "Hauke already
->> submitted"?  I do not see any driver in the kernel you are talking about.
->
-> https://www.marc.info/?l=linux-pci&m=141547043110684&w=2
->
->>>
->>>
->>> Are you sure that iProc isn't based on the BCMA bus infrastructure after
->>> all? Even the physical address of your PCI host falls into the address
->>> range that is used for the internal BCMA bus on the other chips!
->>
->> BCMA seems to be for MIPS architectures.  It seems to be quite specific to
->> those architectures using BCMA.  I see no use of it in bcm53xx code?
->
-> BCMA lives in its own directory in drivers/bcma/ and is not specific
-> to MIPS actually. Older BCM47xx/BCM53xx MIPS-based SoCs traditionally
-> started with a discoverable Silicon Sonics Backplane (drivers/ssb) and
-> progressively migrated to BCMA (drivers/bcma), both subsystems offer a
-> very similar bus/device/driver abstraction and discovery mechanism.
+Patches to add support for Rockchip usb phys.Add a new Rockchip
+usb phy driver and modify dwc2 controller driver to make dwc2
+platform devices support a generic PHY framework driver. This
+patch set has been tested on my rk3288-evb and power off the usb
+phys would reduce about 60mW power budget in total during sustem
+suspend.
 
-BCMA core is the bus driver for discoverable ARM AXI interconnect. Apart 
-from that it also provides drivers for some cores. For the chips to be 
-discoverable it needs additional IP logic. If that is not used in the 
-iProc family devices, it can not use the BCMA-based PCIe controller 
-driver that Hauke submitted unless BCMA would provide an API to provide 
-the chips' core information statically either per core or a full list.
+Changes in v6:
+- Rename SIDDQ_MSK to SIDDQ_WRITE_ENA.
+- Use phandle args to find a phy struct directly.
 
-Regards,
-Arend
+Changes in v5:
+- Adjust entry order of example devicetree node in document.
+- reorder the phy dt node to a correct position.
+
+Changes in v4:
+- Get number of PHYs from device tree.
+- Model each PHY as subnode of the phy provider node.
+- Updata description for phy device tree subnode.
+- Add phy subnodes.
+
+Changes in v3:
+- Use BIT macro instead of bit shift ops.
+- Rename the config entry to PHY_ROCKCHIP_USB.
+- Fix coding style: both branches of the if() which only one
+  branch of the conditional statement is a single statement
+  should have braces.
+- No need to test dwc2->phy for NULL before calling generic phy
+  APIs.
+
+Yunzhi Li (5):
+  phy: add a driver for the Rockchip SoC internal USB2.0 PHY
+  Documentation: bindings: add dt documentation for Rockchip usb PHY
+  usb: dwc2: add generic PHY framework support for dwc2 usb controler
+    platform driver.
+  ARM: dts: rockchip: add rk3288 usb PHY
+  ARM: dts: rockchip: Enable usb PHY on rk3288-evb board
+
+ .../devicetree/bindings/phy/rockchip-usb-phy.txt   |  32 ++++
+ arch/arm/boot/dts/rk3288-evb.dtsi                  |   4 +
+ arch/arm/boot/dts/rk3288.dtsi                      |  27 +++
+ drivers/phy/Kconfig                                |   7 +
+ drivers/phy/Makefile                               |   1 +
+ drivers/phy/phy-rockchip-usb.c                     | 198 +++++++++++++++++++++
+ drivers/usb/dwc2/gadget.c                          |  33 ++--
+ drivers/usb/dwc2/platform.c                        |  36 +++-
+ 8 files changed, 315 insertions(+), 23 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/rockchip-usb-phy.txt
+ create mode 100644 drivers/phy/phy-rockchip-usb.c
+
+-- 
+2.0.0
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
