@@ -1,136 +1,72 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: [PATCH/RFC 14/14] ARM: dts: Switch Odroid X2/U2 to simple-audio-card
-Date: Thu, 11 Dec 2014 18:45:52 +0100
-Message-ID: <1418319952-10163-15-git-send-email-s.nawrocki@samsung.com>
-References: <1418319952-10163-1-git-send-email-s.nawrocki@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1418319952-10163-1-git-send-email-s.nawrocki@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org
-Cc: broonie@kernel.org, padma.v@samsung.com, drake@endlessm.com, sbkim73@samsung.com, Sylwester Nawrocki <s.nawrocki@samsung.com>, devicetree@vger.kernel.org
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [RFC/PATCH 5/7] arm: omap: hwmod: allow for registration of
+ class-less hwmods
+Date: Thu, 11 Dec 2014 09:56:52 -0800
+Message-ID: <20141211175651.GC2990@atomide.com>
+References: <1418164072-19087-1-git-send-email-balbi@ti.com>
+ <1418164072-19087-6-git-send-email-balbi@ti.com>
+ <54882576.8020609@ti.com>
+ <20141210145433.GC4602@saruman>
+ <20141211005238.GC5585@earth.universe>
+ <20141211142333.GE20762@saruman>
+ <20141211174434.GA2022@earth.universe>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20141211174434.GA2022@earth.universe>
+Sender: linux-omap-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>
+Cc: Felipe Balbi <balbi@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>, "Kristo, Tero" <t-kristo@ti.com>, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, Paul Walmsley <paul@pwsan.com>, Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Now when the CDCLK I2S output clock can be handled through the clock
-API the Odroid X2/U3 can be switched to the simple-audio-card DT binding.
+* Sebastian Reichel <sre@kernel.org> [141211 09:46]:
+> On Thu, Dec 11, 2014 at 08:23:33AM -0600, Felipe Balbi wrote:
+> > true, but I'm still a bit iffy wrt that. ABI compatibility breaks and
+> > all
+> 
+> Moving the hwmod data to device tree will break the ABI
+> compatibility anyways. You wont be able to use an old DT with the
+> new kernel, since then you are missing the hwmod data (assuming
+> there won't be a fallback hwmod data kept in the kernel source).
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
----
- arch/arm/boot/dts/exynos4.dtsi                  |    3 +++
- arch/arm/boot/dts/exynos4412-odroid-common.dtsi |   19 ++++++++++++++++---
- arch/arm/boot/dts/exynos4412-odroidu3.dts       |    8 +++++---
- arch/arm/boot/dts/exynos4412-odroidx2.dts       |    8 ++++++--
- 4 files changed, 30 insertions(+), 8 deletions(-)
+Right, the way to deal with that is to do the following:
 
-diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
-index e1ce457..5f9e72f 100644
---- a/arch/arm/boot/dts/exynos4.dtsi
-+++ b/arch/arm/boot/dts/exynos4.dtsi
-@@ -66,6 +66,7 @@
- 		dmas = <&pdma0 12>, <&pdma0 11>, <&pdma0 10>;
- 		dma-names = "tx", "rx", "tx-sec";
- 		samsung,idma-addr = <0x03000000>;
-+		#sound-dai-cells = <1>;
- 		status = "disabled";
- 	};
+1. Once we have the binding in place, start printing out warnings
+   and deprecate the old built in data.
 
-@@ -378,6 +379,7 @@
- 		clock-output-names = "i2s_cdclk1";
- 		dmas = <&pdma1 12>, <&pdma1 11>;
- 		dma-names = "tx", "rx";
-+		#sound-dai-cells = <1>;
- 		status = "disabled";
- 	};
+2. For missing sysc data, we just keep printing warnings and won't
+   idle or enable the devices. This keeps the optional boot console
+   UART working based on the bootloader settings.
 
-@@ -390,6 +392,7 @@
- 		clock-output-names = "i2s_cdclk2";
- 		dmas = <&pdma0 14>, <&pdma0 13>;
- 		dma-names = "tx", "rx";
-+		#sound-dai-cells = <1>;
- 		status = "disabled";
- 	};
+3. We may want to keep the UART and system timer data around forever
+   to be able to print sane error messages.
 
-diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-index 956737e..89fed7a 100644
---- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-+++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-@@ -43,9 +43,7 @@
- 	};
+> > > IMHO instead of DT referencing the hwmod stuff using ti,hwmods the
+> > > hwmod database should reference the compatible values. This depends
+> > > on omap3 being DT only of course.
+> > 
+> > don't you think it's too late for that ? We need to support the current
+> > form of dts files forever. It's an ABI afterall.
+> 
+> As I described above the ABI *will* break if hwmod data is removed from
+> the kernel.
 
- 	sound: sound {
--		compatible = "samsung,odroidx2-audio";
--		samsung,i2s-controller = <&i2s0>;
--		samsung,audio-codec = <&max98090>;
-+		compatible = "simple-audio-card";
- 		assigned-clocks = <&clock_audss EXYNOS_MOUT_AUDSS>,
- 				<&clock_audss EXYNOS_MOUT_I2S>,
- 				<&clock_audss EXYNOS_DOUT_SRP>,
-@@ -56,6 +54,20 @@
- 				<0>,
- 				<192000000>,
- 				<19200000>;
-+
-+		simple-audio-card,format = "i2s";
-+		simple-audio-card,bitclock-master = <&link0_codec>;
-+		simple-audio-card,frame-master = <&link0_codec>;
-+
-+		simple-audio-card,cpu {
-+			sound-dai = <&i2s0 0>;
-+			system-clock-frequency = <19200000>;
-+		};
-+
-+		link0_codec: simple-audio-card,codec {
-+			sound-dai = <&max98090>;
-+			clocks = <&i2s0 0>;
-+		};
- 	};
+Right, there is no way we can support incomplete device tree
+bindings except for devices that are enabled by the bootloader
+already. But we can take our time removing the built-in device
+data, there's no need to do it all at once.
 
- 	mmc@12550000 {
-@@ -360,6 +372,7 @@
- 			interrupts = <0 0>;
- 			clocks = <&i2s0 0>;
- 			clock-names = "mclk";
-+			#sound-dai-cells = <0>;
- 		};
- 	};
+> OTOH where is the ABI breakage when hwmod database in kernel is
+> built from the compatible value? The compatible values are already
+> part of the ABI, so there are no new properties needed. The ti,hwmod
+> property can be marked as deprecated (and maybe removed after some
+> years).
 
-diff --git a/arch/arm/boot/dts/exynos4412-odroidu3.dts b/arch/arm/boot/dts/exynos4412-odroidu3.dts
-index c8a64be..44684e5 100644
---- a/arch/arm/boot/dts/exynos4412-odroidu3.dts
-+++ b/arch/arm/boot/dts/exynos4412-odroidu3.dts
-@@ -49,9 +49,11 @@
- };
+Yes we can keep it around but don't have to do anything with it
+eventually. For the legacy systems, we can have built in mapping
+of compatible values to ti,hwmods along the clock aliases.
 
- &sound {
--	compatible = "samsung,odroidu3-audio";
--	samsung,model = "Odroid-U3";
--	samsung,audio-routing =
-+	simple-audio-card,name = "Odroid-U3";
-+	simple-audio-card,widgets =
-+		"Headphone", "Headphone Jack",
-+		"Speakers", "Speakers";
-+	simple-audio-card,routing =
- 		"Headphone Jack", "HPL",
- 		"Headphone Jack", "HPR",
- 		"Headphone Jack", "MICBIAS",
-diff --git a/arch/arm/boot/dts/exynos4412-odroidx2.dts b/arch/arm/boot/dts/exynos4412-odroidx2.dts
-index 96b43f4..6e33678 100644
---- a/arch/arm/boot/dts/exynos4412-odroidx2.dts
-+++ b/arch/arm/boot/dts/exynos4412-odroidx2.dts
-@@ -23,8 +23,12 @@
- };
+Regards,
 
- &sound {
--	samsung,model = "Odroid-X2";
--	samsung,audio-routing =
-+	simple-audio-card,name = "Odroid-X2";
-+	simple-audio-card,widgets =
-+		"Headphone", "Headphone Jack",
-+		"Microphone", "Mic Jack",
-+		"Microphone", "DMIC";
-+	simple-audio-card,routing =
- 		"Headphone Jack", "HPL",
- 		"Headphone Jack", "HPR",
- 		"IN1", "Mic Jack",
---
-1.7.9.5
+Tony
