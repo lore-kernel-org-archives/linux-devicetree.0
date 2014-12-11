@@ -1,274 +1,286 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: [PATCH v2] i2c: rk3x: Account for repeated start time requirement
-Date: Thu, 11 Dec 2014 15:00:36 -0800
-Message-ID: <1418338836-21838-1-git-send-email-dianders@chromium.org>
+From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/3] TTY: add slave driver to power-on device via a
+ regulator.
+Date: Thu, 11 Dec 2014 23:58:48 +0100
+Message-ID: <20141211225847.GB11666@earth.universe>
+References: <20141211214801.4127.93914.stgit@notabene.brown>
+ <20141211215944.4127.4186.stgit@notabene.brown>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: wsa@the-dreams.de, max.schwarz@online.de
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, addy.ke@rock-chips.com, cyw@rock-chips.com, hl@rock-chips.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, Doug Anderson <dianders@chromium.org>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, linux-i2c@vger.kernel.org, u.kleine-koenig@pengutronix.de, linux-arm-kernel@lists.infradead.org, heiko@sntech.de
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="gj572EiMnwbLXET9"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20141211215944.4127.4186.stgit-wvvUuzkyo1EYVZTmpyfIwg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Rockchip I2C the controller drops SDA low in the repeated start
-condition at half the SCL high time.
 
-If we want to meet timing requirements, that means we need to hold SCL
-high for (4.7us * 2) when we're sending a repeated start (.6us * 2 for
-Fast-mode).  That lets us achieve minimum tSU;STA.  However, we don't
-want to always hold SCL high for that long because we'd never be able
-to make 100kHz or 400kHz speeds.
+--gj572EiMnwbLXET9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Let's fix this by doing our clock calculations twice: once taking the
-above into account and once running at normal speeds.  We'll use the
-slower speed when sending the start bit and the normal speed
-otherwise.
+Hi,
 
-Note: we really only need the conservative timing when sending
-_repeated_ starts, not when sending the first start.  We don't account
-for this so technically the first start bit will be longer too.
-...well, except in the case when we use the combined write/read
-optimization which doesn't use the same code.
+On Fri, Dec 12, 2014 at 08:59:44AM +1100, NeilBrown wrote:
+> The regulator is identified in devicetree as 'vdd-supply'
 
-As part of this change we needed to account for the SDA falling time.
-The specification indicates that this should be the same, but we'll
-follow Designware and add a binding.  Note that we deviate from
-Designware and assign the default SDA falling time to be the same as
-the SCL falling time, which is incredibly likely.
+long description is kind of useless...
 
-Signed-off-by: Doug Anderson <dianders@chromium.org>
----
-Note: This is based on Addy's patch (i2c: rk3x: fix bug that cause
-measured high_ns doesn't meet I2C specification) that can be found at
-<https://patchwork.kernel.org/patch/5475331/>.
+> Signed-off-by: NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>
+> ---
+>  .../devicetree/bindings/serial/slave-reg.txt       |   18 ++++
+>  drivers/tty/Kconfig                                |    2=20
+>  drivers/tty/Makefile                               |    1=20
+>  drivers/tty/slaves/Kconfig                         |   12 ++
+>  drivers/tty/slaves/Makefile                        |    2=20
+>  drivers/tty/slaves/tty-reg.c                       |  102 ++++++++++++++=
+++++++
+>  6 files changed, 137 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/serial/slave-reg.txt
+>  create mode 100644 drivers/tty/slaves/Kconfig
+>  create mode 100644 drivers/tty/slaves/Makefile
+>  create mode 100644 drivers/tty/slaves/tty-reg.c
+>=20
+> diff --git a/Documentation/devicetree/bindings/serial/slave-reg.txt b/Doc=
+umentation/devicetree/bindings/serial/slave-reg.txt
+> new file mode 100644
+> index 000000000000..7896bce8dfe4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/serial/slave-reg.txt
+> @@ -0,0 +1,18 @@
+> +Regulator powered UART-attached device
+> +
+> +Required properties:
+> +- compatible: "tty,regulator"
+> +- vdd-supply: regulator to power the device
+> +
+> +
+> +This is listed as a child node of a UART.  When the
+> +UART is opened, the device is powered.
+> +
+> +Example:
+> +
+> +&uart1 {
+> +	bluetooth {
+> +		compatible =3D "tty,regulator";
+> +		vdd-supply =3D <&vaux4>;
+> +	};
+> +};
 
-Changes in v2:
-- Also multiply SCL rise time by 2 for repeated start calculation
+NACK. The compatible value should describe the connected device. You
+did not connect a regulator, but a bluetooth chip! DT should look
+like this:
 
- Documentation/devicetree/bindings/i2c/i2c-rk3x.txt |  7 +-
- drivers/i2c/busses/i2c-rk3x.c                      | 89 +++++++++++++++++-----
- 2 files changed, 73 insertions(+), 23 deletions(-)
+&uart1 {
+    bluetooth {
+        compatible =3D "vendor,bluetooth-chip";
+        vdd-supply =3D <&vaux4>;
+    };
+};
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-rk3x.txt b/Documentation/devicetree/bindings/i2c/i2c-rk3x.txt
-index 1885bd8..8cc75d9 100644
---- a/Documentation/devicetree/bindings/i2c/i2c-rk3x.txt
-+++ b/Documentation/devicetree/bindings/i2c/i2c-rk3x.txt
-@@ -21,14 +21,17 @@ Required on RK3066, RK3188 :
- Optional properties :
- 
-  - clock-frequency : SCL frequency to use (in Hz). If omitted, 100kHz is used.
-- - i2c-scl-rising-time-ns : Number of nanoseconds the signal takes to rise
-+ - i2c-scl-rising-time-ns : Number of nanoseconds the SCL signal takes to rise
- 	(t(r) in I2C specification). If not specified this is assumed to be
- 	the maximum the specification allows(1000 ns for Standard-mode,
- 	300 ns for Fast-mode) which might cause slightly slower communication.
-- - i2c-scl-falling-time-ns : Number of nanoseconds the signal takes to fall
-+ - i2c-scl-falling-time-ns : Number of nanoseconds the SCL signal takes to fall
- 	(t(f) in the I2C specification). If not specified this is assumed to
- 	be the maximum the specification allows (300 ns) which might cause
- 	slightly slowercommunication.
-+ - i2c-sda-falling-time-ns : Number of nanoseconds the SDA signal takes to fall
-+	(t(f) in the I2C specification). If not specified we'll use the SCL
-+	value since they are the same in nearly all cases.
- 
- Example:
- 
-diff --git a/drivers/i2c/busses/i2c-rk3x.c b/drivers/i2c/busses/i2c-rk3x.c
-index 36a9224..f0e5da9 100644
---- a/drivers/i2c/busses/i2c-rk3x.c
-+++ b/drivers/i2c/busses/i2c-rk3x.c
-@@ -102,8 +102,14 @@ struct rk3x_i2c {
- 
- 	/* Settings */
- 	unsigned int scl_frequency;
--	unsigned int rise_ns;
--	unsigned int fall_ns;
-+	unsigned int scl_rise_ns;
-+	unsigned int scl_fall_ns;
-+	unsigned int sda_fall_ns;
-+
-+	/* DIV changes when we're sending a repeated start; keep both */
-+	bool sending_start;
-+	u32 div_normal;
-+	u32 div_start;
- 
- 	/* Synchronization & notification */
- 	spinlock_t lock;
-@@ -146,6 +152,9 @@ static void rk3x_i2c_start(struct rk3x_i2c *i2c)
- {
- 	u32 val;
- 
-+	i2c->sending_start = true;
-+	i2c_writel(i2c, i2c->div_start, REG_CLKDIV);
-+
- 	rk3x_i2c_clean_ipd(i2c);
- 	i2c_writel(i2c, REG_INT_START, REG_IEN);
- 
-@@ -281,6 +290,9 @@ static void rk3x_i2c_handle_start(struct rk3x_i2c *i2c, unsigned int ipd)
- 	/* disable start bit */
- 	i2c_writel(i2c, i2c_readl(i2c, REG_CON) & ~REG_CON_START, REG_CON);
- 
-+	i2c->sending_start = false;
-+	i2c_writel(i2c, i2c->div_normal, REG_CLKDIV);
-+
- 	/* enable appropriate interrupts and transition */
- 	if (i2c->mode == REG_CON_MOD_TX) {
- 		i2c_writel(i2c, REG_INT_MBTF | REG_INT_NAKRCV, REG_IEN);
-@@ -437,21 +449,26 @@ out:
-  *
-  * @clk_rate: I2C input clock rate
-  * @scl_rate: Desired SCL rate
-- * @rise_ns: How many ns it takes for signals to rise.
-- * @fall_ns: How many ns it takes for signals to fall.
-+ * @scl_rise_ns: How many ns it takes for SCL to rise.
-+ * @scl_fall_ns: How many ns it takes for SCL to fall.
-+ * @sda_fall_ns: How many ns it takes for SDA to fall.
-  * @div_low: Divider output for low
-  * @div_high: Divider output for high
-+ * @for_start: Take into account that we might be sending a start bit.
-  *
-  * Returns: 0 on success, -EINVAL if the goal SCL rate is too slow. In that case
-  * a best-effort divider value is returned in divs. If the target rate is
-  * too high, we silently use the highest possible rate.
-  */
- static int rk3x_i2c_calc_divs(unsigned long clk_rate, unsigned long scl_rate,
--			      unsigned long rise_ns, unsigned long fall_ns,
--			      unsigned long *div_low, unsigned long *div_high)
-+			      unsigned long scl_rise_ns,
-+			      unsigned long scl_fall_ns,
-+			      unsigned long sda_fall_ns,
-+			      unsigned long *div_low, unsigned long *div_high,
-+			      bool for_start)
- {
- 	unsigned long spec_min_low_ns, spec_min_high_ns;
--	unsigned long spec_max_data_hold_ns;
-+	unsigned long spec_setup_start, spec_max_data_hold_ns;
- 	unsigned long data_hold_buffer_ns;
- 
- 	unsigned long min_low_ns, min_high_ns;
-@@ -490,18 +507,31 @@ static int rk3x_i2c_calc_divs(unsigned long clk_rate, unsigned long scl_rate,
- 	if (scl_rate <= 100000) {
- 		/* Standard-mode */
- 		spec_min_low_ns = 4700;
-+		spec_setup_start = 4700;
- 		spec_min_high_ns = 4000;
- 		spec_max_data_hold_ns = 3450;
- 		data_hold_buffer_ns = 50;
- 	} else {
- 		/* Fast-mode */
- 		spec_min_low_ns = 1300;
-+		spec_setup_start = 600;
- 		spec_min_high_ns = 600;
- 		spec_max_data_hold_ns = 900;
- 		data_hold_buffer_ns = 50;
- 	}
--	min_low_ns = spec_min_low_ns + fall_ns;
--	min_high_ns = spec_min_high_ns + rise_ns;
-+	/*
-+	 * For repeated start we need at least (spec_setup_start * 2) to meet
-+	 * (tSU;SDA) requirements. The controller drops data low at half the
-+	 * high time). Also need to meet normal specification requirements.
-+	 */
-+	if (for_start)
-+		min_high_ns = max((scl_rise_ns + spec_setup_start) * 2,
-+				  scl_rise_ns + spec_setup_start +
-+				  sda_fall_ns + spec_min_high_ns);
-+	else
-+		min_high_ns = scl_rise_ns + spec_min_high_ns;
-+
-+	min_low_ns = scl_fall_ns + spec_min_low_ns;
- 	max_low_ns = spec_max_data_hold_ns * 2 - data_hold_buffer_ns;
- 	min_total_ns = min_low_ns + min_high_ns;
- 
-@@ -597,15 +627,28 @@ static void rk3x_i2c_adapt_div(struct rk3x_i2c *i2c, unsigned long clk_rate)
- {
- 	unsigned long div_low, div_high;
- 	u64 t_low_ns, t_high_ns;
-+	unsigned long flags;
- 	int ret;
- 
--	ret = rk3x_i2c_calc_divs(clk_rate, i2c->scl_frequency, i2c->rise_ns,
--				 i2c->fall_ns, &div_low, &div_high);
-+	ret = rk3x_i2c_calc_divs(clk_rate, i2c->scl_frequency, i2c->scl_rise_ns,
-+				 i2c->scl_fall_ns, i2c->sda_fall_ns,
-+				 &div_low, &div_high, true);
-+	i2c->div_start = (div_high << 16) | (div_low & 0xffff);
-+	WARN_ONCE(ret != 0, "Could not reach SCL freq %u", i2c->scl_frequency);
- 
-+	ret = rk3x_i2c_calc_divs(clk_rate, i2c->scl_frequency, i2c->scl_rise_ns,
-+				 i2c->scl_fall_ns, i2c->sda_fall_ns,
-+				 &div_low, &div_high, false);
-+	i2c->div_normal = (div_high << 16) | (div_low & 0xffff);
- 	WARN_ONCE(ret != 0, "Could not reach SCL freq %u", i2c->scl_frequency);
- 
- 	clk_enable(i2c->clk);
--	i2c_writel(i2c, (div_high << 16) | (div_low & 0xffff), REG_CLKDIV);
-+	spin_lock_irqsave(&i2c->lock, flags);
-+	if (i2c->sending_start)
-+		i2c_writel(i2c, i2c->div_start, REG_CLKDIV);
-+	else
-+		i2c_writel(i2c, i2c->div_normal, REG_CLKDIV);
-+	spin_unlock_irqrestore(&i2c->lock, flags);
- 	clk_disable(i2c->clk);
- 
- 	t_low_ns = div_u64(((u64)div_low + 1) * 8 * 1000000000, clk_rate);
-@@ -644,8 +687,9 @@ static int rk3x_i2c_clk_notifier_cb(struct notifier_block *nb, unsigned long
- 	switch (event) {
- 	case PRE_RATE_CHANGE:
- 		if (rk3x_i2c_calc_divs(ndata->new_rate, i2c->scl_frequency,
--				       i2c->rise_ns, i2c->fall_ns, &div_low,
--				       &div_high) != 0)
-+				       i2c->scl_rise_ns, i2c->scl_fall_ns,
-+				       i2c->sda_fall_ns,
-+				       &div_low, &div_high, true) != 0)
- 			return NOTIFY_STOP;
- 
- 		/* scale up */
-@@ -779,10 +823,10 @@ static int rk3x_i2c_xfer(struct i2c_adapter *adap,
- 		if (i + ret >= num)
- 			i2c->is_last_msg = true;
- 
--		spin_unlock_irqrestore(&i2c->lock, flags);
--
- 		rk3x_i2c_start(i2c);
- 
-+		spin_unlock_irqrestore(&i2c->lock, flags);
-+
- 		timeout = wait_event_timeout(i2c->wait, !i2c->busy,
- 					     msecs_to_jiffies(WAIT_TIMEOUT));
- 
-@@ -875,15 +919,18 @@ static int rk3x_i2c_probe(struct platform_device *pdev)
- 	 * the default maximum timing from the specification.
- 	 */
- 	if (of_property_read_u32(pdev->dev.of_node, "i2c-scl-rising-time-ns",
--				 &i2c->rise_ns)) {
-+				 &i2c->scl_rise_ns)) {
- 		if (i2c->scl_frequency <= 100000)
--			i2c->rise_ns = 1000;
-+			i2c->scl_rise_ns = 1000;
- 		else
--			i2c->rise_ns = 300;
-+			i2c->scl_rise_ns = 300;
- 	}
- 	if (of_property_read_u32(pdev->dev.of_node, "i2c-scl-falling-time-ns",
--				 &i2c->fall_ns))
--		i2c->fall_ns = 300;
-+				 &i2c->scl_fall_ns))
-+		i2c->scl_fall_ns = 300;
-+	if (of_property_read_u32(pdev->dev.of_node, "i2c-sda-falling-time-ns",
-+				 &i2c->scl_fall_ns))
-+		i2c->sda_fall_ns = i2c->scl_fall_ns;
- 
- 	strlcpy(i2c->adap.name, "rk3x-i2c", sizeof(i2c->adap.name));
- 	i2c->adap.owner = THIS_MODULE;
--- 
-2.2.0.rc0.207.ga3a616c
+I think it would be ok to use your generic driver to handle the
+specific compatible value, though.
+
+Having the proper compatible value means, that there can be a more
+specific driver later, that other operating systems can expose the
+device as some kind of /dev/bluetooth instead of /dev/ttyXY, that
+userspace is able to know there is a bluetooth device connected to
+/dev/ttyXY by parsing the DT and results in easier-to-understand
+DTS.
+
+> diff --git a/drivers/tty/Kconfig b/drivers/tty/Kconfig
+> index b24aa010f68c..ea3383c71701 100644
+> --- a/drivers/tty/Kconfig
+> +++ b/drivers/tty/Kconfig
+> @@ -419,4 +419,6 @@ config DA_CONSOLE
+>  	help
+>  	  This enables a console on a Dash channel.
+> =20
+> +source drivers/tty/slaves/Kconfig
+> +
+>  endif # TTY
+> diff --git a/drivers/tty/Makefile b/drivers/tty/Makefile
+> index 58ad1c05b7f8..45957d671e33 100644
+> --- a/drivers/tty/Makefile
+> +++ b/drivers/tty/Makefile
+> @@ -13,6 +13,7 @@ obj-$(CONFIG_R3964)		+=3D n_r3964.o
+>  obj-y				+=3D vt/
+>  obj-$(CONFIG_HVC_DRIVER)	+=3D hvc/
+>  obj-y				+=3D serial/
+> +obj-$(CONFIG_TTY_SLAVE)		+=3D slaves/
+> =20
+>  # tty drivers
+>  obj-$(CONFIG_AMIGA_BUILTIN_SERIAL) +=3D amiserial.o
+> diff --git a/drivers/tty/slaves/Kconfig b/drivers/tty/slaves/Kconfig
+> new file mode 100644
+> index 000000000000..2dd1acf80f8c
+> --- /dev/null
+> +++ b/drivers/tty/slaves/Kconfig
+> @@ -0,0 +1,12 @@
+> +menuconfig TTY_SLAVE
+> +	bool "TTY slave devices"
+> +	help
+> +	 Devices which attach via a uart, but need extra
+> +	 driver support for power management etc.
+> +
+> +if TTY_SLAVE
+> +
+> +config TTY_SLAVE_REGULATOR
+> +	tristate "TTY slave device powered by regulator"
+> +
+> +endif
+> diff --git a/drivers/tty/slaves/Makefile b/drivers/tty/slaves/Makefile
+> new file mode 100644
+> index 000000000000..e636bf49f1cc
+> --- /dev/null
+> +++ b/drivers/tty/slaves/Makefile
+> @@ -0,0 +1,2 @@
+> +
+> +obj-$(CONFIG_TTY_SLAVE_REGULATOR) +=3D tty-reg.o
+> diff --git a/drivers/tty/slaves/tty-reg.c b/drivers/tty/slaves/tty-reg.c
+> new file mode 100644
+> index 000000000000..613f8b10967c
+> --- /dev/null
+> +++ b/drivers/tty/slaves/tty-reg.c
+> @@ -0,0 +1,102 @@
+> +/*
+> + * tty-reg:
+> + *   Support for any device which needs a regulator turned on
+> + *   when a tty is opened.
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/slab.h>
+> +#include <linux/err.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/tty.h>
+> +
+> +struct tty_reg_data {
+> +	struct regulator *reg;
+> +	bool	reg_enabled;
+> +};
+> +
+> +static int tty_reg_runtime_resume(struct device *slave)
+> +{
+> +	struct tty_reg_data *data =3D dev_get_drvdata(slave);
+> +	if (!data->reg_enabled &&
+> +	    regulator_enable(data->reg) =3D=3D 0) {
+> +		dev_dbg(slave, "power on\n");
+> +		data->reg_enabled =3D true;
+> +	}
+> +	return 0;
+> +}
+> +
+> +static int tty_reg_runtime_suspend(struct device *slave)
+> +{
+> +	struct tty_reg_data *data =3D dev_get_drvdata(slave);
+> +
+> +	if (data->reg_enabled &&
+> +	    regulator_disable(data->reg) =3D=3D 0) {
+> +		dev_dbg(slave, "power off\n");
+> +		data->reg_enabled =3D false;
+> +	}
+> +	return 0;
+> +}
+> +
+> +static int tty_reg_probe(struct platform_device *pdev)
+> +{
+> +	struct tty_reg_data *data;
+> +	struct regulator *reg;
+> +	int err;
+> +
+> +	err =3D -ENODEV;
+> +	if (pdev->dev.parent =3D=3D NULL)
+> +		goto out;
+> +	reg =3D devm_regulator_get(&pdev->dev, "vdd");
+> +	err =3D PTR_ERR(reg);
+> +	if (IS_ERR(reg))
+> +		goto out;
+> +
+> +	data =3D devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
+> +	err =3D -ENOMEM;
+> +	if (!data)
+> +		goto out;
+> +	data->reg =3D reg;
+> +	data->reg_enabled =3D false;
+> +	pm_runtime_enable(&pdev->dev);
+> +	platform_set_drvdata(pdev, data);
+> +	err =3D 0;
+> +out:
+> +	return err;
+> +}
+> +
+> +static struct of_device_id tty_reg_dt_ids[] =3D {
+> +	{ .compatible =3D "tty,regulator", },
+> +	{}
+> +};
+> +
+> +static const struct dev_pm_ops tty_reg_pm_ops =3D {
+> +	SET_RUNTIME_PM_OPS(tty_reg_runtime_suspend,
+> +			   tty_reg_runtime_resume, NULL)
+> +};
+> +
+> +static struct platform_driver tty_reg_driver =3D {
+> +	.driver.name	=3D "tty-regulator",
+> +	.driver.owner	=3D THIS_MODULE,
+> +	.driver.of_match_table =3D tty_reg_dt_ids,
+> +	.driver.pm	=3D &tty_reg_pm_ops,
+> +	.probe		=3D tty_reg_probe,
+> +};
+> +
+> +static int __init tty_reg_init(void)
+> +{
+> +	return platform_driver_register(&tty_reg_driver);
+> +}
+> +module_init(tty_reg_init);
+> +
+> +static void __exit tty_reg_exit(void)
+> +{
+> +	platform_driver_unregister(&tty_reg_driver);
+> +}
+> +module_exit(tty_reg_exit);
+> +
+> +MODULE_AUTHOR("NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>");
+> +MODULE_DESCRIPTION("Serial port device which requires a regulator when o=
+pen.");
+> +MODULE_LICENSE("GPL v2");
+>=20
+>=20
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
+
+--gj572EiMnwbLXET9
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJUiiGlAAoJENju1/PIO/qaVo4QAIoZqUwJu8sB84q8HYJfHh+5
+KmzD8lJatlWIlPFmfRvRY6y3j0aP3vrqXqgXDRn6JqswS3N6MV0Fy0d6z7UyEh1y
+xG5aN9/1d2LUmqDj4eWl/l6a3oKeiioV+WKjZYPPWHuzeF+6B5gZqH/2KJgjCcXk
+ZAf3ONB2gH0I8EwCLL+XbtmMyIXcIbdT3TVF5LnLcJNv5rf0I06bGStDiNCQfRoj
+aeCoPayLJEX9M6IE+s7hMG3aFHrPdbjZd15NNyG/vKaVDPHymhlOXeEje6kdWSJu
+Nu5AX03T0ROzTd0A02VWjuUg9RMSZVNBGGx7sWo1DSZ7jQOZmSn6c7flhTo0kam0
+br4H2iWCZS6kHO7DyzcKNEB5mGhjnbMDledKIp2GNPK8Wr6KZ9NMM8pqkhvSyIDR
+cOGtoZ7NSPrt1HZ3OQtftatOB4//aWDqohFICq9PQSBBFRk3lvWqRucvZzi6QXUi
+olAOvspSBt/Anh80YAyvxNLVxT/TvAxG0Uu3Mx7TvZQrJgrqB92XiBUeGArsMZpd
+6+8i4fMctFwZhef5Cu4JZuCGN/pXPqz8TDVoSj4+SsizPi0xPKRl34vffs60SStc
+rceD/MmiJxhTofpTbAJM4ZYJ3/p5l4bCR4rKSquiSqzbnfmXWKzPxIXZalb3RPJ+
+MIKQZdzN25Ldx4IpS0sY
+=qdgn
+-----END PGP SIGNATURE-----
+
+--gj572EiMnwbLXET9--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
