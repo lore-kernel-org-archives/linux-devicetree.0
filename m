@@ -1,46 +1,75 @@
-From: Eliad Peller <eliad@wizery.com>
-Subject: Re: SDIO device binding
-Date: Thu, 11 Dec 2014 18:44:44 +0200
-Message-ID: <CAB3XZEfZJDM590JtQLptQ8nG2PdKH7+UPLJR_+9YeHTzDZTatA@mail.gmail.com>
-References: <CAB3XZEfX7oAmJe=86j+WC0w73kQxO4C=Ufdy6eMgtYYh8Swv2g@mail.gmail.com>
-	<CAPDyKFrXHu_F5WH6HyvXY4+6e2Uq0ve31A2M=bP6iEhod6_nNQ@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 0/3] ARM: sun4i: SPI improvements
+Date: Thu, 11 Dec 2014 17:56:02 +0100
+Message-ID: <20141211165602.GD8739@lukather>
+References: <1418033642-29731-1-git-send-email-mr.nuke.me@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFrXHu_F5WH6HyvXY4+6e2Uq0ve31A2M=bP6iEhod6_nNQ@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-mmc <linux-mmc@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Chris Ball <chris@printf.net>, Hans de Goede <hdegoede@redhat.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="3Shs6nLsUBL77Lfu"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1418033642-29731-1-git-send-email-mr.nuke.me-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandru Gagniuc <mr.nuke.me-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 11, 2014 at 5:37 PM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
-> On 11 December 2014 at 14:32, Eliad Peller <eliad@wizery.com> wrote:
->> hi,
->>
->> I'm looking for the proper way to pass SDIO device properties using devicetree.
->>
->> There seems to be a patchset sent previously by Sascha Hauer to handle
->> it, but for some reason it didn't get merged, and i can't find any
->> further discussion regarding the patches.
->>
->> https://patchwork.ozlabs.org/patch/355235/
->> http://lists.infradead.org/pipermail/linux-arm-kernel/2014-June/261575.html
->>
->> Was there any issue with the patches, or is there any other binding
->> that should be used instead?
->
-> This above is most likely the correct solution. Thanks for the
-> reminder, I will try to find some time to go through them again.
->
-great, thanks.
 
-> May I ask what kind of properties you would like to configure for the
-> SDIO device?
->
-The most important ones are the OOB irq (used by some wifi sdio cards)
-and clocks, but i guess other device-specific properties might be
-applicable as well.
-(there's an actual example in the binding documentation patch)
+--3Shs6nLsUBL77Lfu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-thanks,
-Eliad.
+On Mon, Dec 08, 2014 at 04:13:59AM -0600, Alexandru Gagniuc wrote:
+> This is a series of patches that gets SPI working in a better state on the
+> Cubieboard. The main motivation was to use flashrom to to program SPI ROM=
+s.
+> There is one patch missing, which adds an spidev node on the Cubieboard. =
+Since
+> Maxime did not like the approach in that patch, I've left it out for now.
+
+Just to make things straight, it's not me alone that didn't like the
+approach.
+
+It's both wrong on a theorical point of view to put that in the DT,
+since it has no hardware meaning at all (ie it doesn't describe the
+hardware, or the state the bootloader left the hardware in), and this
+has been NAKed a number of times already by Mark Brown.
+
+See http://permalink.gmane.org/gmane.linux.kernel.spi.devel/11747 for
+example.
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--3Shs6nLsUBL77Lfu
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUicyiAAoJEBx+YmzsjxAg9twP/3bQgAN+X5ClIXQJ+Qlx9oRJ
+d0fkgMv5w9XgpSzMcSYFBUzKlarTm4FPvyCa/0075ylAuP3fPTgwn37JYU+s6gvf
+PnYHhk+JGsimwzD55+HldZm+d+7rbOGvvCRq8nTOtWDCyhJ6NOH775Gkg3BIVB3V
+uzeEvDxdAFhT6M9lJOVRrmCQ5+lTVjEnkeirmkdTMISzYn4elajWW2ncIYow2hQV
+pWL9iM7MBjLHP/yFzLeqD5fcc6hALDBsKiagj+EI3gXKYI5Qxyjh6mJUcjuFa/Da
+yur5bevfa87LhFkf1EsY8z/Q2bGGzhei/3tbW7dsZoGieEgJQ+m3rfRpMyitbfv9
+siTEt0y8UhYS+1Du8yqhCL7IYS1hn1VAizTdFK/VyNcQ2vGyU5eZEtAoWiO11LhD
+AkK/9SUTJvspBENbTZkbDAL2SMB7AbluGiofQvwYXtYXwoGc81ivZtNx96WmCyUG
+8tHKhSRxG7SECx9T/jcW7xulc92BUHfOHOjfIKqSYblbrWYmFoL/y1LbTXwqxnY1
+Wc30O4UWYXeRyj/PPxAqS70ItXY+av4o6CARqAcGSJ7pYr0JxbyYtFeCqu2T+58v
+D6zvRAUW97B8ATUf+5v2X+BnetL/M6mSgv0eLxzE7qLk7v/nHuOMFHtPtjR+ocSd
+YSHxlUQYTZmgdUnEfk9w
+=agy8
+-----END PGP SIGNATURE-----
+
+--3Shs6nLsUBL77Lfu--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
