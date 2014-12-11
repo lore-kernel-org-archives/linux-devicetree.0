@@ -1,58 +1,79 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [RFC 04/15] regulator: add restrack support
-Date: Thu, 11 Dec 2014 11:49:54 +0100
-Message-ID: <548976D2.7080005@samsung.com>
-References: <1418226513-14105-1-git-send-email-a.hajda@samsung.com>
- <1418226513-14105-5-git-send-email-a.hajda@samsung.com>
- <20141210160720.GS11764@sirena.org.uk>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] gpio: sn54hc595: new driver for GPIO shift registers chipsets
+Date: Thu, 11 Dec 2014 12:03:09 +0100
+Message-ID: <CAMuHMdWc1Uu81pG5QiPLpjX4h-3TeBjXXhnCX+4yNNTKQEzo3w@mail.gmail.com>
+References: <1418048833-27658-1-git-send-email-zajec5@gmail.com>
+	<CAMuHMdWf_Cw7DTqhut6Mcic1FmcJjHdXWuXkNZM2z0Zx9wjCxw@mail.gmail.com>
+	<CACna6rwRR7FpS97Znyk3ewVW58dn5yYTj8OjCstsuzzX8Prg5Q@mail.gmail.com>
+	<2176453.HD1opzG9Wg@wuerfel>
+	<CACna6rydKTDO+tBTdNNUDvQCXytE6VnEPjLSGs0yMee8Jz8FGA@mail.gmail.com>
+	<CAMuHMdVvK1CTB1SKiNgD8zB9qorV=sQwRO66Dbm5zy=jhw82RA@mail.gmail.com>
+	<20141209091202.GS8739@lukather>
+	<CACna6rwBO388iF+BJ2=nCEWrNsedag8bbBc+OZYe+pvf4zrmgw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <20141210160720.GS11764@sirena.org.uk>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: Alexandre Courbot <gnurou@gmail.com>, "moderated list:ARM/S5P EXYNOS AR..." <linux-samsung-soc@vger.kernel.org>, Mike Turquette <mturquette@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, Grant Likely <grant.likely@linaro.org>, Russell King <linux@arm.linux.org.uk>, "moderated list:ARM/CLKDEV SUPPORT" <linux-arm-kernel@lists.infradead.org>, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACna6rwBO388iF+BJ2=nCEWrNsedag8bbBc+OZYe+pvf4zrmgw@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Hauke Mehrtens <hauke@hauke-m.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Gabor Juhos <juhosg@openwrt.org>, Miguel Gaio <miguel.gaio@efixo.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWFyaywKCk9uIDEyLzEwLzIwMTQgMDU6MDcgUE0sIE1hcmsgQnJvd24gd3JvdGU6Cj4gT24g
-V2VkLCBEZWMgMTAsIDIwMTQgYXQgMDQ6NDg6MjJQTSArMDEwMCwgQW5kcnplaiBIYWpkYSB3cm90
-ZToKPj4gUmVndWxhdG9ycyBzdXBwb3J0cyB2YXJpb3VzIG1ldGhvZHMgb2YgbG9va3VwLgo+PiBU
-aGUgcGF0Y2ggYWRkcyByZXN0cmFjayBzdXBwb3J0IG9ubHkgdG8gRFQgYmFzZWQgcmVndWxhdG9y
-cy4KPiBXaHksIHdoYXQgZG9lcyB0aGlzIG1lYW4gYW5kIGhvdyBtaWdodCBvbmUgdXNlIGl0PyAg
-SSd2ZSBub3QgbG9va2VkIGF0Cj4gdGhlIGNvZGUgc2luY2UgSSBkb24ndCBrbm93IHdoYXQgaXQn
-cyBzdXBwb3NlZCB0byBhY2NvbXBsaXNoLi4uCgpMb29raW5nIGF0IHRoaXMgcGF0Y2ggbWFrZXMg
-bm8gc2Vuc2Ugd2l0aG91dCBsb29raW5nIGF0IGNvdmVyIGxldHRlcgpvciBhdCB0aGUgcGF0Y2gg
-YWRkaW5nIHJlc3RyYWNrIGZyYW1ld29yay4gSW4gc2hvcnQgYWRkaW5nIHJlc3RyYWNrIHN1cHBv
-cnQKdG8gcmVndWxhdG9ycyB3aWxsIGFsbG93IHRvOgotIHByb3BlciBoYW5kbGUgcmVndWxhdG9y
-IHByb3ZpZGVyIHVuYmluZC9yZS1iaW5kLCBjdXJyZW50bHkgaXQgcmVzdWx0cwppbiBvb3BzZXMs
-IGNyYXNoZXMgYW5kIGhhbmdzLAotIGF2b2lkIGxhdGUgcHJvYmUgZHVlIHRvIGRlZmVycmVkIHBy
-b2JpbmcsIGN1cnJlbnRseSBpZiBwcm9iZSBpcwpkZWZlcnJlZCwgcmUtcHJvYmUgb2NjdXJzIGlu
-IGxhdGUgaW5pdGNhbGwsCi0gdHJhY2sgYXBwZWFyYW5jZSBvZiByZXNvdXJjZXMgd2hpY2ggY2Fu
-IGFsdGVyIGJlaGF2aW9yIG9mIHRoZSBkcml2ZXIKaWYgcHJlc2VudCBidXQgdGhleSBhcmUgbm90
-IHJlcXVpcmVkLAogIEkgYW0gbm90IHN1cmUgaWYgdGhlcmUgYXJlIHVzZSBjYXNlcyBmb3IgaXQg
-aW4gY2FzZSBvZiByZWd1bGF0b3JzLCBidXQKb3RoZXIgcmVzb3VyY2VzIGhhdmUgc3VjaCB1c2Ug
-Y2FzZXMsCi0gYXMgYSBib251cyB3ZSBjYW4gaGF2ZSBzaW1wbGVyIGFsbG9jYXRpb24gb2YgdmFy
-aW91cyByZXNvdXJjZXMsIHBsZWFzZQpsb29rIGF0IGNvdmVyIGxldHRlciBmb3IgZXhhbXBsZS4K
-Cj4KPiBPbmUgdmVyeSBoaWdoIGxldmVsIHRoaW5nIGlzIHRoYXQgYW55dGhpbmcgdGhhdCBvbmx5
-IHdvcmtzIGZvciBEVCBvbmx5Cj4gc2VlbXMgdG8gYmUgYSBub24tc3RhcnRlciwgdGhlIEFQSSBz
-aG91bGQgYmUgaGlkaW5nIGRldGFpbHMgb2YgdGhlCj4gZmlybXdhcmUgaW50ZXJmYWNlLgoKSSBh
-Z3JlZSwgYnV0IGFzIHRoaXMgaXMgUkZDLCBub3QgZXZlcnl0aGluZyBpcyBmaW5pc2hlZC4gSXQg
-c2VlbXMgSSBoYXZlCmZvcmdvdHRlbiB0byBtZW50aW9uIGl0IGNsZWFybHkgaW4gY292ZXIKbGV0
-dGVyLgpBbnl3YXkgaXQgc2VlbXMgSSBzaG91bGQgYWRqdXN0IHBhdGNoc2V0IGFuZCBtb3ZlIG1h
-dGNoaW5nIGNvZGUgZnJvbQpyZXN0cmFjay90cmFjayBjb3JlIHRvIHNwZWNpZmljIGZyYW1ld29y
-a3MuClRoaXMgd2F5IGFueSBjdXJyZW50IG9yIGZ1dHVyZSBsb29rdXAgbWV0aG9kIHNob3VsZCBi
-ZSBzdXBwb3J0ZWQuCgpCdXQgdGhlIG1haW4gcHVycG9zZSBvZiB0aGlzIHBhdGNoc2V0IGlzIHRv
-IGdldCBvcGluaW9ucywgaWYgdGhlIG1haW4KaWRlYXMgYXJlIE9LLiBBbmQgaWYgdGhlIHBhdGNo
-c2V0IGNhbiBiZQpldmVudHVhbGx5IGFjY2VwdGVkLgoKUmVnYXJkcwpBbmRyemVqCgpfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGlu
-ZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVk
-ZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Thu, Dec 11, 2014 at 11:36 AM, Rafa=C5=82 Mi=C5=82ecki <zajec5@gmail=
+=2Ecom> wrote:
+> On 9 December 2014 at 10:12, Maxime Ripard
+> <maxime.ripard@free-electrons.com> wrote:
+>> On Mon, Dec 08, 2014 at 05:59:11PM +0100, Geert Uytterhoeven wrote:
+>>> > I think that implementing support for this extra SPI layer will
+>>> > actually require more code/tricks than a separated driver.
+>>>
+>>> Yes, it will require more code, as spi-gpio is more generic than yo=
+ur simple
+>>> implementation.  But the end result is more flexible and reusable.
+>>>
+>>> The only thing missing is the programmable OE and reset pins,
+>>> which are assumed hardwired by the gpio-74x164 driver.
+>>> These could be implemented using new gpio-oe and gpio-reset
+>>> properties.
+>>
+>> From my (very) vague memories of it, OE was actually supported by
+>> using it as spi-gpio's chip select.
+>>
+>> So I'd say that only the gpio-reset should be implemented.
+>
+> I've tracked how spi_bitbang_transfer_one does work. Long story short=
+ it does:
+
+[deleted standard SPI protocol]
+
+> As you can see, we don't call OE in spi_gpio_chipselect. So currently
+> both input signals and unhandled: OE and SRCLR. Luckily for me, it
+> appears my bootloader puts them in a wanted state, but this still
+> should be handled somehow.
+
+I think you can just add two properties (one array for OE, one for SRCL=
+R)
+to the bindings for the gpio-74x164 driver, so it can set those GPIO pi=
+ns,
+if present. Note that they should be arrays, as gpio-74x164 supports\
+daisy-chaining chips.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-=
+m68k.org
+
+In personal conversations with technical people, I call myself a hacker=
+=2E But
+when I'm talking to journalists I just say "programmer" or something li=
+ke that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
