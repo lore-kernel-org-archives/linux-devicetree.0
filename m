@@ -1,68 +1,63 @@
-From: Laszlo Ersek <lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v3 1/2] devicetree: document the "qemu" and "virtio" vendor prefixes
-Date: Thu, 11 Dec 2014 04:49:11 +0100
-Message-ID: <1418269752-31516-2-git-send-email-lersek@redhat.com>
-References: <1418269752-31516-1-git-send-email-lersek@redhat.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1418269752-31516-1-git-send-email-lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, drjones-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+From: Liu Ying <Ying.Liu@freescale.com>
+Subject: Re: [PATCH RFC 04/15] drm/dsi: Do not add DSI devices for the child
+ nodes with input-port property
+Date: Thu, 11 Dec 2014 13:50:00 +0800
+Message-ID: <54893088.4000203@freescale.com>
+References: <1418200648-32656-1-git-send-email-Ying.Liu@freescale.com>
+ <1418200648-32656-5-git-send-email-Ying.Liu@freescale.com>
+ <20141210122105.GC23558@ulmo.nvidia.com> <548906FD.5070009@freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <548906FD.5070009@freescale.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: devicetree@vger.kernel.org, linux@arm.linux.org.uk, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, kernel@pengutronix.de, mturquette@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The QEMU open source machine emulator and virtualizer presents firmware
-and operating systems running in virtual machines ("guests") with purely
-virtual hardware (ie. hardware that has never existed in physical form).
-Since QEMU exposes some of these devices in a DTB, it makes sense to
-define "qemu" and "virtio" as vendor prefixes.
-
-The qemu definition is from [1], revision 4451 (22:24, 25 November 2014).
-
-The virtio definition is composed from [2] and [3].
-
-[1] http://wiki.qemu.org/Main_Page
-[2] http://docs.oasis-open.org/virtio/virtio/v1.0/csprd01/virtio-v1.0-csprd01.html
-[3] http://en.wikipedia.org/wiki/OASIS_%28organization%29
-
-Suggested-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Suggested-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Signed-off-by: Laszlo Ersek <lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
-
-Notes:
-    v3:
-    - no changes
-    
-    v2:
-    - new in v2 [Mark Rutland, Arnd Bergmann]
-
- Documentation/devicetree/bindings/vendor-prefixes.txt | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 0d35462..a783613 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -122,6 +122,7 @@ pixcir  PIXCIR MICROELECTRONICS Co., Ltd
- powervr	PowerVR (deprecated, use img)
- qca	Qualcomm Atheros, Inc.
- qcom	Qualcomm Technologies, Inc
-+qemu	QEMU, a generic and open source machine emulator and virtualizer
- qnap	QNAP Systems, Inc.
- radxa	Radxa
- raidsonic	RaidSonic Technology GmbH
-@@ -163,6 +164,7 @@ usi	Universal Scientific Industrial Co., Ltd.
- v3	V3 Semiconductor
- variscite	Variscite Ltd.
- via	VIA Technologies, Inc.
-+virtio	Virtual I/O Device Specification, developed by the OASIS consortium
- voipac	Voipac Technologies s.r.o.
- winbond Winbond Electronics corp.
- wlf	Wolfson Microelectronics
--- 
-1.8.3.1
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgVGhpZXJyeSwKCk9uIDEyLzExLzIwMTQgMTA6NTIgQU0sIExpdSBZaW5nIHdyb3RlOgo+IEhp
+IFRoaWVycnksCj4KPiBPbiAxMi8xMC8yMDE0IDA4OjIxIFBNLCBUaGllcnJ5IFJlZGluZyB3cm90
+ZToKPj4gT24gV2VkLCBEZWMgMTAsIDIwMTQgYXQgMDQ6Mzc6MTdQTSArMDgwMCwgTGl1IFlpbmcg
+d3JvdGU6Cj4+PiBUaGUgTUlQSSBEU0kgYnVzIGRyaXZlciB3b3VsZCB0cnkgdG8gYWRkIGEgRFNJ
+IGRldmljZSBmb3IgYSBob3N0J3MgZXZlcnkKPj4+IGNoaWxkIG5vZGUgd2hpY2ggY29udGFpbnMg
+dGhlIHJlZyBwcm9wZXJ0eS4gIFVuZm9ydHVuYXRlbHksIHRoZSBleGlzdGluZwo+Pj4gaS5NWDZR
+L1NETCBNSVBJIERTSSBob3N0IGRldmljZSB0cmVlIG5vZGUncyBjaGlsZCBub2RlcyBjb250YWlu
+IHRoZSByZWcKPj4KPj4gVGhlcmUgYXJlbid0IGFueSBleGlzdGluZyBub2RlcyBmb3IgdGhlIERT
+SSBob3N0IG9uIGkuTVguIFRoaXMgcGF0Y2gKPj4gc2VyaWVzIGFkZHMgc3VwcG9ydCBmb3IgdGhl
+bS4KPgo+IFRoZXJlIGFyZSBleGlzdGluZyBub2RlcyBmb3IgdGhlIERTSSBob3N0IG5vZGUuIFBs
+ZWFzZSBmaW5kIHRoZW0gaW4KPiBhcmNoL2FybS9ib290L2R0cy9pbXg2cWRsLmR0c2kgYW5kIGFy
+Y2gvYXJtL2Jvb3QvZHRzL2lteDZxLmR0cy4gVGhlIERTSQo+IGhvc3Qgbm9kZSBjb250YWlucyB0
+d28gY2hpbGQgbm9kZXMgZm9yIGkuTVg2REwgYW5kIGFub3RoZXIgdHdvIGZvcgo+IGkuTVg2US4g
+IEVhY2ggY2hpbGQgbm9kZSBoYXMgYSByZWcgcHJvcGVydHkgZW1iZWRkZWQuCj4KPj4KPj4+IHBy
+b3BlcnR5LCBidXQgdGhlIGNoaWxkIG5vZGVzIGFyZSBwb3J0cyBwb2ludGluZyB0byBkZWRpY2F0
+ZWQgQ1JUQ3MuCj4+PiBTbywgdGhpcyBwYXRjaCBwaGFzZXMgb3V0IHRoZSBjaGlsZCBub2RlcyB3
+aXRoIGlucHV0LXBvcnQgcHJvcGVydHkKPj4+IGJlZm9yZQo+Pj4gYWRkaW5nIERTSSBkZXZpY2Vz
+IGZvciB0aGVtIGFuZCB1cGRhdGVzIHRoZSBNSVBJIERTSSBidXMgT0YgYmluZGluZwo+Pj4gZG9j
+dW1lbnRhdGlvbi4KPj4+Cj4+PiBTaWduZWQtb2ZmLWJ5OiBMaXUgWWluZyA8WWluZy5MaXVAZnJl
+ZXNjYWxlLmNvbT4KPj4+IC0tLQo+Pj4gICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvbWlwaS9kc2kvbWlwaS1kc2ktYnVzLnR4dCB8IDQgKysrKwo+Pj4gICBkcml2ZXJzL2dwdS9k
+cm0vZHJtX21pcGlfZHNpLmMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8IDUgKysrLS0K
+Pj4+ICAgMiBmaWxlcyBjaGFuZ2VkLCA3IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCj4+
+Cj4+IFNvcnJ5LCBidXQgTkFLLiBUaGVyZSdzIG5vIG5lZWQgZm9yIHRoaXMgc3BlY2lhbC1jYXNl
+LiBJJ2xsIGdvIGludG8gbW9yZQo+PiBkZXRhaWwgaW4gcmVzcG9uc2UgdG8gcGF0Y2ggMDkvMTUu
+Cj4KPiBUaGFua3MgZm9yIHJldmlld2luZyB0aGUgcGF0Y2hlcy4KPgo+IEFueSBpZGVhIGhvdyB0
+byBoYW5kbGUgdGhlIHNwZWNpYWwgY2FzZT8gIFRoZSBleGlzdGluZyBjaGlsZCBub2RlcyBmb3IK
+PiB0aGUgRFNJIGhvc3Qgbm9kZSBkbyBoYXZlIHRoZSByZWcgcHJvcGVydGllcyBlbWJlZGRlZC4K
+PgoKSSBzZWUgeW91ciBzdWdnZXN0aW9ucyBvbiB0aGlzIHRvcGljIGluIHRoZSBjb21tZW50cyBm
+b3IgcGF0Y2ggMDkvMTUuCkkgd2lsbCB0cnkgdG8gbW92ZSB0aGUgZXhpc3RpbmcgY2hpbGQgbm9k
+ZXMgaW50byBhIHBhcmVudCBwb3J0IG5vZGUuCgpMaXUgWWluZwoKPgo+Pgo+PiBUaGllcnJ5Cj4+
+Cj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KPiBkcmkt
+ZGV2ZWwgbWFpbGluZyBsaXN0Cj4gZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwo+IGh0
+dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwKX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
+aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5m
+cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
