@@ -1,119 +1,78 @@
-From: Belisko Marek <marek.belisko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: BCM2048 bluetooth connected over OMAP serial
-Date: Thu, 11 Dec 2014 23:10:17 +0100
-Message-ID: <CAAfyv35D1bn5uzWU298Wz6xRXb58-5i6Mgz6WogLh3_PK4p1pg@mail.gmail.com>
-References: <20141210164333.GA3154@amd>
-	<11367725.nphhSzdtpK@wuerfel>
-	<20141210184203.GA28150@leverpostej>
-	<20141210205622.GA25286@amd>
-	<20141210225036.GA5585@earth.universe>
+From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3] TTY: add support for "tty slave" devices.
+Date: Thu, 11 Dec 2014 23:41:04 +0100
+Message-ID: <20141211224104.GA11666@earth.universe>
+References: <20141211214801.4127.93914.stgit@notabene.brown>
+ <20141211215943.4127.24792.stgit@notabene.brown>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="qDbXVdCdHGoSgWSk"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141210225036.GA5585-SfvFxonMDyemK9LvCR3Hrw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20141211215943.4127.24792.stgit-wvvUuzkyo1EYVZTmpyfIwg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org" <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org" <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "aaro.koskinen-X3B1VOXEql0@public.gmane.org" <aaro.koskinen-X3B1VOXEql0@public.gmane.org>, kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Neil Brown send series which implement what was suggested in previous posts:
-https://lkml.org/lkml/2014/12/11/454
 
-On Wed, Dec 10, 2014 at 11:50 PM, sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> Hi,
->
-> On Wed, Dec 10, 2014 at 09:56:22PM +0100, Pavel Machek wrote:
->> On Wed 2014-12-10 18:42:03, Mark Rutland wrote:
->> > On Wed, Dec 10, 2014 at 05:02:42PM +0000, Arnd Bergmann wrote:
->> > > On Wednesday 10 December 2014 17:43:33 Pavel Machek wrote:
->> > > >
->> > > > So, there's bluetooth chip that's connected to the SoC by UART and some
->> > > > GPIOs. What would be right representation in the device tree?
->> > > > Something like this?
->> > > >
->> > > >         bluetooth {
->> > > >                   compatible = "broadcom,bcm2048";
->> > > >                   uart = <&uart2>;
->> > > >                   reset-gpios = <&gpio3 27 GPIO_ACTIVE_HIGH>; /* want 91 */
->> > > >                   host-wakeup-gpios = <&gpio4 5 GPIO_ACTIVE_HIGH>; /* want 101 */
->> > > >                   bluetooth-wakeup-gpios = <&gpio2 5 GPIO_ACTIVE_HIGH>; /* want 37 */
->> > > >                   chip-type = >;
->> > > >                   bt-sysclk = <2>;
->> > > >                   reset-gpio-shared = <0>;
->> > > >         };
->> > > >
->> > > > Is there some way to prevent OMAP tty driver from binding to the
->> > > > device and exporting the device to userspace?
->> > >
->> > > I think from the driver perspective, you want this to be a tty line
->> > > discipline rather than a driver that attaches to the physical
->> > > uart.
->> > >
->> > > For the DT representation, I fear we haven't got a precedent. A uart
->> > > phandle sounds reasonable, but there might be other ways to do it
->> > > and we should consider if there are better alternatives. It could
->> > > possibly be a child node of the uart, but that would require other
->> > > infrastructure in the kernel because we don't currently create
->> > > devices for those.
->> >
->> > I think the child node is the way to go; that would match what we do for
->> > I2C and SPI. We might need new infrastructure, but I don't think we
->> > should treat this differently simlpy because we don't have that yet.
->>
->> Well, uart in this case looks more like a GPIO than an I2C (no
->> addressing, just few wires). And we do phandle for GPIOs.
->
-> Right and the devices use I2C for full communication and GPIOs as
-> helpers. I guess UART counts as full communication and not as helper.
->
-> phandle vs child node is not a matter of adressing and btw where is
-> the difference between "5th gpio on 1st gpio controller" and "5th
-> address on 1st i2c controller"?
->
->> Actually, the chip also has PCM, analog audio, and "pc compatible?"
->> connections, plus some connection to WIFI. So we may need more
->> phandles there....
->
-> This is much harder to solve. I think we don't have a DT binding for
-> a device, which uses two communication interfaces as the bcm2048
-> (uart & i2c). OTOH we may just add a slave device for the fm-radio
-> part like this:
->
-> uart {
->     bcm2048 {
->         stuff;
->     };
+--qDbXVdCdHGoSgWSk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Fri, Dec 12, 2014 at 08:59:44AM +1100, NeilBrown wrote:
+> A "tty slave" is a device connected via UART.
+> It may need a driver to, for example, power the device on
+> when the tty is opened, and power it off when the tty
+> is released.
+>=20
+> A "tty slave" is a platform device which is declared as a
+> child of the uart in device-tree:
+>=20
+> &uart1 {
+> 	bluetooth {
+> 		compatible =3D "tty,regulator";
+> 		vdd-supply =3D <&vaux4>;
+> 	};
 > };
->
-> i2c {
->     bcm2048-radio {
->         master = <&bcm2048>;
->     };
-> };
->
-> -- Sebastian
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->
+>=20
+> runtime power management is used to power-up the device
+> on tty_open() and  power-down on tty_release().
+>=20
+> Signed-off-by: NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>
 
-BR,
+FWIW:
 
-marek
+Acked-By: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
--- 
-as simple and primitive as possible
--------------------------------------------------
-Marek Belisko - OPEN-NANDRA
-Freelance Developer
+-- Sebastian
 
-Ruska Nova Ves 219 | Presov, 08005 Slovak Republic
-Tel: +421 915 052 184
-skype: marekwhite
-twitter: #opennandra
-web: http://open-nandra.com
+--qDbXVdCdHGoSgWSk
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJUih19AAoJENju1/PIO/qa5oEP/RY34vy8VJRE3Fez7FB9zX+k
+GhEmT+Mzn0XHfsYWclVNCAj/1roznRwpw+Gw1QmAW8Z26h/ab9CrIjQpu0idSEMA
+rhRJSL+a/+TwfdQYc7wPFCqlcCia+zXzrgTJLteWkoN+f8N3YyFILQpZtun9UKb2
+J2tkcLu9lU/B2tl8FJ1Oi5yYD4RpZ9oFqiMA/AQM6WbGcmKFK04SY+Pv82fhCtm9
+asTHv/Ao95jUIwZsnp4rUumIwxP83+yhJT9JnF1ttLj/OPTcxJOGyQDTKLoqgoVI
+7aIZ3Tmx4P/idy95fd60P4bkCa6jgKEjlxgKYe4QCnb2UiiHfWyVQoHxVm5pgM0d
+hGdtwF2JXvJ3Hom8mDMw3w3yQ2QoYOg7sq9/dpMSZqX1zym0waJmiVFzz26PWY+c
+Y6SZQCzwtEfY9Ncs96ZYqlZMnetCkCPbkjwVDfTigJpGLGKIuL7SIL0gyU2asO82
+7XP2y7+Q+/VjGQmle74K0lG3lmnZ5Bk6k84vuXCSxPJxf1+os2/59394RtCWBkTf
+omiRExXkGtKDtFqGvnfTSM9BUd3HvwP011ra3R81+nzaQIMQDGtosleHqPHuKZ06
+PEQ/KJRHAHY3nI2PYKZNDoWIvxkGnZeXw/8cfHES8arA/BEVhnzkyeW7V+uJYXCh
+aTI3/pxM7Wt55xIRf3iK
+=t1+L
+-----END PGP SIGNATURE-----
+
+--qDbXVdCdHGoSgWSk--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
