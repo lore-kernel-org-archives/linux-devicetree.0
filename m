@@ -1,50 +1,36 @@
-From: Bo Shen <voice.shen@atmel.com>
-Subject: [PATCH 2/3] ARM: at91: sama5d3xek/dt: use dt ids for
-	wm8904
-Date: Thu, 11 Dec 2014 11:14:40 +0800
-Message-ID: <1418267681-4091-2-git-send-email-voice.shen@atmel.com>
-References: <1418267681-4091-1-git-send-email-voice.shen@atmel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1418267681-4091-1-git-send-email-voice.shen@atmel.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: nicolas.ferre@atmel.com, Mark Brown <broonie@kernel.org>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org, Alexander Morozov <linux@meltdown.ru>, Bo Shen <voice.shen@atmel.com>, linux-arm-kernel@lists.infradead.org
+From: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v2 0/2] add the dvs support for rk808
+Date: Thu, 11 Dec 2014 11:16:40 +0800
+Message-ID: <1418267802-13159-1-git-send-email-zyw@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Zhang Qing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Alexander Morozov <linux@meltdown.ru>
+rk808 has a dvs function, there are 3 pins for dvs, dvs1 & dvs2 & dvsok.
+Normally, the voltage of DCDC1/DCDC2 are controlled by BUCKn_ON_VSEL, when
+we pull dvs1/dvs2 pin to active, they would be controlled by BUCKn_DVS_VSEL.
+And the dvsok pin is used to indicate whether regulating has been completed.
+When dvs1/dvs2 pin change, dvsok would be pull down, and it would be pull up
+once the regulating is complete.
 
-Using the wm8904 device tree compatible string.
+Changes in v2:
+- increase description about dvs pins
+- modify the multiline commenting
 
-Signed-off-by: Alexander Morozov <linux@meltdown.ru>
-Signed-off-by: Bo Shen <voice.shen@atmel.com>
----
+Chris Zhong (2):
+  mfd: dt-bindings: add the description about dvs gpio for rk808
+  regulator: rk808: add dvs support
 
- arch/arm/boot/dts/sama5d3xmb.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/mfd/rk808.txt |  13 +-
+ drivers/regulator/rk808-regulator.c             | 192 ++++++++++++++++++++++--
+ 2 files changed, 192 insertions(+), 13 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sama5d3xmb.dtsi b/arch/arm/boot/dts/sama5d3xmb.dtsi
-index 49c10d3..2a1aa58 100644
---- a/arch/arm/boot/dts/sama5d3xmb.dtsi
-+++ b/arch/arm/boot/dts/sama5d3xmb.dtsi
-@@ -45,7 +45,7 @@
- 			 */
- 			i2c0: i2c@f0014000 {
- 				wm8904: wm8904@1a {
--					compatible = "wm8904";
-+					compatible = "wlf,wm8904";
- 					reg = <0x1a>;
- 					clocks = <&pck0>;
- 					clock-names = "mclk";
 -- 
-2.1.0.24.g4109c28
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
