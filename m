@@ -1,57 +1,29 @@
-From: Chris Zhong <zyw@rock-chips.com>
-Subject: [PATCH v2 1/2] mfd: dt-bindings: add the description about dvs gpio for rk808
-Date: Thu, 11 Dec 2014 11:16:41 +0800
-Message-ID: <1418267802-13159-2-git-send-email-zyw@rock-chips.com>
-References: <1418267802-13159-1-git-send-email-zyw@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1418267802-13159-1-git-send-email-zyw@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de, dianders@chromium.org, broonie@kernel.org
-Cc: linux-rockchip@lists.infradead.org, Chris Zhong <zyw@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Zhang Qing <zhangqing@rock-chips.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Laszlo Ersek <lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v3 0/2] devicetree: document ARM bindings for QEMU's Firmware Config interface
+Date: Thu, 11 Dec 2014 04:49:10 +0100
+Message-ID: <1418269752-31516-1-git-send-email-lersek@redhat.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, drjones-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-add the description about dvs1, dvs2, dvsok, and add the example.
+Addressing v2 comments from Peter Maydell and Arnd Bergmann. Also
+documenting the new 64-bit wide data register, and possibility for
+future extensions. Changes are noted on each patch.
 
-Signed-off-by: Chris Zhong <zyw@rock-chips.com>
+Laszlo Ersek (2):
+  devicetree: document the "qemu" and "virtio" vendor prefixes
+  devicetree: document ARM bindings for QEMU's Firmware Config interface
 
----
+ Documentation/devicetree/bindings/arm/fw-cfg.txt   | 72 ++++++++++++++++++++++
+ .../devicetree/bindings/vendor-prefixes.txt        |  2 +
+ 2 files changed, 74 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/fw-cfg.txt
 
-Changes in v2:
-- increase description about dvs pins
-
- Documentation/devicetree/bindings/mfd/rk808.txt | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/mfd/rk808.txt b/Documentation/devicetree/bindings/mfd/rk808.txt
-index 9e6e259..923cdca 100644
---- a/Documentation/devicetree/bindings/mfd/rk808.txt
-+++ b/Documentation/devicetree/bindings/mfd/rk808.txt
-@@ -24,6 +24,14 @@ Optional properties:
- - vcc10-supply: The input supply for LDO_REG6
- - vcc11-supply: The input supply for LDO_REG8
- - vcc12-supply: The input supply for SWITCH_REG2
-+- dvs-gpios:  buck1/2 can be controlled by gpio dvs, this is GPIO specifiers
-+  for 2 host gpio's used for dvs. The format of the gpio specifier depends in
-+  the gpio controller. If DVS GPIOs aren't present, voltage changes will happen
-+  without being very quickly with no slow ramp time.
-+- dvsok-gpios: if we use dvs gpio to control buck1/2, this gpio will be pull
-+  high, once RK808 completed the adjustment of voltage. If the DVSOK isn't
-+  present, we'll just delay based on whatever is specified in the regulator
-+  constraints.
- 
- Regulators: All the regulators of RK808 to be instantiated shall be
- listed in a child node named 'regulators'. Each regulator is represented
-@@ -55,7 +63,10 @@ Example:
- 		interrupt-parent = <&gpio0>;
- 		interrupts = <4 IRQ_TYPE_LEVEL_LOW>;
- 		pinctrl-names = "default";
--		pinctrl-0 = <&pmic_int>;
-+		pinctrl-0 = <&pmic_int &dvs_ok &dvs_1 &dvs_2>;
-+		dvsok-gpios = <&gpio7 9 GPIO_ACTIVE_HIGH>;
-+		dvs-gpios = <&gpio7 11 GPIO_ACTIVE_HIGH>,
-+			    <&gpio7 15 GPIO_ACTIVE_HIGH>;
- 		reg = <0x1b>;
- 		rockchip,system-power-controller;
- 		wakeup-source;
 -- 
-1.9.1
+1.8.3.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
