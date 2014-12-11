@@ -1,224 +1,100 @@
-From: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/3] TTY: add slave driver to power-on device via a regulator.
-Date: Thu, 11 Dec 2014 18:32:52 -0500
-Message-ID: <548A29A4.7060908@hurleysoftware.com>
-References: <20141211214801.4127.93914.stgit@notabene.brown> <20141211215944.4127.4186.stgit@notabene.brown>
+From: atull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Subject: Re: [RFC 0/3] SoCFPGA: Add HPS bridges
+Date: Thu, 11 Dec 2014 17:35:40 -0600
+Message-ID: <alpine.DEB.2.02.1412111734480.11739@linuxheads99>
+References: <1418329302-20813-1-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="US-ASCII"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141211215944.4127.4186.stgit-wvvUuzkyo1EYVZTmpyfIwg@public.gmane.org>
+In-Reply-To: <1418329302-20813-1-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mgerlach-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/11/2014 04:59 PM, NeilBrown wrote:
-> The regulator is identified in devicetree as 'vdd-supply'
+On Thu, 11 Dec 2014, Steffen Trumtrar wrote:
+
+CC Matthew Gerlach
+
+> Hi!
 > 
-> Signed-off-by: NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>
-
-tty_* is only for tty core functions/data.
-
-Regards,
-Peter Hurley
-
-> ---
->  .../devicetree/bindings/serial/slave-reg.txt       |   18 ++++
->  drivers/tty/Kconfig                                |    2 
->  drivers/tty/Makefile                               |    1 
->  drivers/tty/slaves/Kconfig                         |   12 ++
->  drivers/tty/slaves/Makefile                        |    2 
->  drivers/tty/slaves/tty-reg.c                       |  102 ++++++++++++++++++++
->  6 files changed, 137 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/serial/slave-reg.txt
->  create mode 100644 drivers/tty/slaves/Kconfig
->  create mode 100644 drivers/tty/slaves/Makefile
->  create mode 100644 drivers/tty/slaves/tty-reg.c
+> This series adds support for the SoCFPGA bridges.
 > 
-> diff --git a/Documentation/devicetree/bindings/serial/slave-reg.txt b/Documentation/devicetree/bindings/serial/slave-reg.txt
-> new file mode 100644
-> index 000000000000..7896bce8dfe4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/serial/slave-reg.txt
-> @@ -0,0 +1,18 @@
-> +Regulator powered UART-attached device
-> +
-> +Required properties:
-> +- compatible: "tty,regulator"
-> +- vdd-supply: regulator to power the device
-> +
-> +
-> +This is listed as a child node of a UART.  When the
-> +UART is opened, the device is powered.
-> +
-> +Example:
-> +
-> +&uart1 {
-> +	bluetooth {
-> +		compatible = "tty,regulator";
-> +		vdd-supply = <&vaux4>;
-> +	};
-> +};
-> diff --git a/drivers/tty/Kconfig b/drivers/tty/Kconfig
-> index b24aa010f68c..ea3383c71701 100644
-> --- a/drivers/tty/Kconfig
-> +++ b/drivers/tty/Kconfig
-> @@ -419,4 +419,6 @@ config DA_CONSOLE
->  	help
->  	  This enables a console on a Dash channel.
->  
-> +source drivers/tty/slaves/Kconfig
-> +
->  endif # TTY
-> diff --git a/drivers/tty/Makefile b/drivers/tty/Makefile
-> index 58ad1c05b7f8..45957d671e33 100644
-> --- a/drivers/tty/Makefile
-> +++ b/drivers/tty/Makefile
-> @@ -13,6 +13,7 @@ obj-$(CONFIG_R3964)		+= n_r3964.o
->  obj-y				+= vt/
->  obj-$(CONFIG_HVC_DRIVER)	+= hvc/
->  obj-y				+= serial/
-> +obj-$(CONFIG_TTY_SLAVE)		+= slaves/
->  
->  # tty drivers
->  obj-$(CONFIG_AMIGA_BUILTIN_SERIAL) += amiserial.o
-> diff --git a/drivers/tty/slaves/Kconfig b/drivers/tty/slaves/Kconfig
-> new file mode 100644
-> index 000000000000..2dd1acf80f8c
-> --- /dev/null
-> +++ b/drivers/tty/slaves/Kconfig
-> @@ -0,0 +1,12 @@
-> +menuconfig TTY_SLAVE
-> +	bool "TTY slave devices"
-> +	help
-> +	 Devices which attach via a uart, but need extra
-> +	 driver support for power management etc.
-> +
-> +if TTY_SLAVE
-> +
-> +config TTY_SLAVE_REGULATOR
-> +	tristate "TTY slave device powered by regulator"
-> +
-> +endif
-> diff --git a/drivers/tty/slaves/Makefile b/drivers/tty/slaves/Makefile
-> new file mode 100644
-> index 000000000000..e636bf49f1cc
-> --- /dev/null
-> +++ b/drivers/tty/slaves/Makefile
-> @@ -0,0 +1,2 @@
-> +
-> +obj-$(CONFIG_TTY_SLAVE_REGULATOR) += tty-reg.o
-> diff --git a/drivers/tty/slaves/tty-reg.c b/drivers/tty/slaves/tty-reg.c
-> new file mode 100644
-> index 000000000000..613f8b10967c
-> --- /dev/null
-> +++ b/drivers/tty/slaves/tty-reg.c
-> @@ -0,0 +1,102 @@
-> +/*
-> + * tty-reg:
-> + *   Support for any device which needs a regulator turned on
-> + *   when a tty is opened.
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/slab.h>
-> +#include <linux/err.h>
-> +#include <linux/regulator/consumer.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/tty.h>
-> +
-> +struct tty_reg_data {
-> +	struct regulator *reg;
-> +	bool	reg_enabled;
-> +};
-> +
-> +static int tty_reg_runtime_resume(struct device *slave)
-> +{
-> +	struct tty_reg_data *data = dev_get_drvdata(slave);
-> +	if (!data->reg_enabled &&
-> +	    regulator_enable(data->reg) == 0) {
-> +		dev_dbg(slave, "power on\n");
-> +		data->reg_enabled = true;
-> +	}
-> +	return 0;
-> +}
-> +
-> +static int tty_reg_runtime_suspend(struct device *slave)
-> +{
-> +	struct tty_reg_data *data = dev_get_drvdata(slave);
-> +
-> +	if (data->reg_enabled &&
-> +	    regulator_disable(data->reg) == 0) {
-> +		dev_dbg(slave, "power off\n");
-> +		data->reg_enabled = false;
-> +	}
-> +	return 0;
-> +}
-> +
-> +static int tty_reg_probe(struct platform_device *pdev)
-> +{
-> +	struct tty_reg_data *data;
-> +	struct regulator *reg;
-> +	int err;
-> +
-> +	err = -ENODEV;
-> +	if (pdev->dev.parent == NULL)
-> +		goto out;
-> +	reg = devm_regulator_get(&pdev->dev, "vdd");
-> +	err = PTR_ERR(reg);
-> +	if (IS_ERR(reg))
-> +		goto out;
-> +
-> +	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-> +	err = -ENOMEM;
-> +	if (!data)
-> +		goto out;
-> +	data->reg = reg;
-> +	data->reg_enabled = false;
-> +	pm_runtime_enable(&pdev->dev);
-> +	platform_set_drvdata(pdev, data);
-> +	err = 0;
-> +out:
-> +	return err;
-> +}
-> +
-> +static struct of_device_id tty_reg_dt_ids[] = {
-> +	{ .compatible = "tty,regulator", },
-> +	{}
-> +};
-> +
-> +static const struct dev_pm_ops tty_reg_pm_ops = {
-> +	SET_RUNTIME_PM_OPS(tty_reg_runtime_suspend,
-> +			   tty_reg_runtime_resume, NULL)
-> +};
-> +
-> +static struct platform_driver tty_reg_driver = {
-> +	.driver.name	= "tty-regulator",
-> +	.driver.owner	= THIS_MODULE,
-> +	.driver.of_match_table = tty_reg_dt_ids,
-> +	.driver.pm	= &tty_reg_pm_ops,
-> +	.probe		= tty_reg_probe,
-> +};
-> +
-> +static int __init tty_reg_init(void)
-> +{
-> +	return platform_driver_register(&tty_reg_driver);
-> +}
-> +module_init(tty_reg_init);
-> +
-> +static void __exit tty_reg_exit(void)
-> +{
-> +	platform_driver_unregister(&tty_reg_driver);
-> +}
-> +module_exit(tty_reg_exit);
-> +
-> +MODULE_AUTHOR("NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>");
-> +MODULE_DESCRIPTION("Serial port device which requires a regulator when open.");
-> +MODULE_LICENSE("GPL v2");
-
-
+> From the datasheet:
+> 
+> 	The HPS-FPGA bridges allow masters in the FPGA fabric to
+> 	communicate with slaves in the HPS logic and vice versa.
+> 	For example, you can instantiate additional memories or
+> 	peripherals in the FPGA fabric, and master interfaces
+> 	belonging to components in the HPS logic can access them.
+> 	You can also instantiate components such as a NiosII
+> 	processor in the FPGA fabric and their master interfaces
+> 	can access memories or peripherals in the HPS logic
+> 
+> This does only work with the driver from my other series
+> 
+> 	SoCFPGA: L3 NIC driver
+> 
+> As the binding, although simple, is still in debate and the
+> outcome may have impact on this series, this is a just an RFC
+> for now.
+> 
+> Also, the drivers beg for the DT overlay series which is floating
+> around, but this shouldn't have any effect on the current binding.
+> The driver part can be changed later.
+> 
+> Lastly, the bridges have an optional dependency on the fpgamgr
+> series from Alan Tull. I have added this to the binding, the drivers
+> don't do anything with this yet.
+> My idea here would be:
+> 	1. probe bridge
+> 	2. check if fpgamgr phandle is given
+> 	 2a. if yes: defer till fpgamgr is done
+> 	 2b. if no: continue
+> 	3. probe subnodes with the help of DT overlays
+> 
+> I have only tested the HPS and LWHPS drivers, as I don't have any
+> bitstreams that use the FPGA2HPS bridge; here be dragons.
+> 
+> Regards,
+> Steffen
+> 
+> Steffen Trumtrar (3):
+>   devicetree: bindings: Add SoCFpga HPS bridges
+>   ARM: socfpga: Add drivers for the SoC-to-FPGA bridges
+>   ARM: dts: socfpga: Add AXI bridges
+> 
+>  .../soc/socfpga/altr,fpga2hps-axi-bridge.txt       |  32 +++
+>  .../soc/socfpga/altr,hps2fpga-axi-bridge.txt       |  54 +++++
+>  .../soc/socfpga/altr,lwhps2fpga-axi-bridge.txt     |  31 +++
+>  arch/arm/boot/dts/socfpga.dtsi                     |  48 ++++
+>  drivers/soc/socfpga/Kconfig                        |  43 ++++
+>  drivers/soc/socfpga/Makefile                       |   4 +
+>  drivers/soc/socfpga/bridges-common.c               |  84 +++++++
+>  drivers/soc/socfpga/bridges-common.h               |  28 +++
+>  drivers/soc/socfpga/fpga2hps-bridge.c              |  97 ++++++++
+>  drivers/soc/socfpga/hps2fpga-bridge.c              | 258 +++++++++++++++++++++
+>  drivers/soc/socfpga/lwhps2fpga-bridge.c            | 141 +++++++++++
+>  drivers/soc/socfpga/lwhps2fpga.h                   |  31 +++
+>  include/soc/socfpga/bridge.h                       |  65 ++++++
+>  13 files changed, 916 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/socfpga/altr,fpga2hps-axi-bridge.txt
+>  create mode 100644 Documentation/devicetree/bindings/soc/socfpga/altr,hps2fpga-axi-bridge.txt
+>  create mode 100644 Documentation/devicetree/bindings/soc/socfpga/altr,lwhps2fpga-axi-bridge.txt
+>  create mode 100644 drivers/soc/socfpga/Kconfig
+>  create mode 100644 drivers/soc/socfpga/Makefile
+>  create mode 100644 drivers/soc/socfpga/bridges-common.c
+>  create mode 100644 drivers/soc/socfpga/bridges-common.h
+>  create mode 100644 drivers/soc/socfpga/fpga2hps-bridge.c
+>  create mode 100644 drivers/soc/socfpga/hps2fpga-bridge.c
+>  create mode 100644 drivers/soc/socfpga/lwhps2fpga-bridge.c
+>  create mode 100644 drivers/soc/socfpga/lwhps2fpga.h
+>  create mode 100644 include/soc/socfpga/bridge.h
+> 
+> -- 
+> 2.1.3
+> 
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
