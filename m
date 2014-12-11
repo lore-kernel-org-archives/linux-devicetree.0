@@ -1,63 +1,208 @@
-From: Liu Ying <Ying.Liu@freescale.com>
-Subject: Re: [PATCH RFC 04/15] drm/dsi: Do not add DSI devices for the child
- nodes with input-port property
-Date: Thu, 11 Dec 2014 13:50:00 +0800
-Message-ID: <54893088.4000203@freescale.com>
-References: <1418200648-32656-1-git-send-email-Ying.Liu@freescale.com>
- <1418200648-32656-5-git-send-email-Ying.Liu@freescale.com>
- <20141210122105.GC23558@ulmo.nvidia.com> <548906FD.5070009@freescale.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v5 1/5] phy: add a driver for the Rockchip SoC internal
+ USB2.0 PHY
+Date: Thu, 11 Dec 2014 11:32:52 +0530
+Message-ID: <5489338C.1030109@ti.com>
+References: <1418208371-18851-1-git-send-email-lyz@rock-chips.com>
+ <1418208371-18851-2-git-send-email-lyz@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <548906FD.5070009@freescale.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: devicetree@vger.kernel.org, linux@arm.linux.org.uk, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, kernel@pengutronix.de, mturquette@linaro.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1418208371-18851-2-git-send-email-lyz@rock-chips.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Yunzhi Li <lyz@rock-chips.com>, heiko@sntech.de, jwerner@chromium.org, dianders@chromium.org
+Cc: huangtao@rock-chips.com, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, zyw@rock-chips.com, Rob Herring <robh+dt@kernel.org>, olof@lixom.net, cf@rock-chips.com, linux-arm-kernel@lists.infradead.org, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgVGhpZXJyeSwKCk9uIDEyLzExLzIwMTQgMTA6NTIgQU0sIExpdSBZaW5nIHdyb3RlOgo+IEhp
-IFRoaWVycnksCj4KPiBPbiAxMi8xMC8yMDE0IDA4OjIxIFBNLCBUaGllcnJ5IFJlZGluZyB3cm90
-ZToKPj4gT24gV2VkLCBEZWMgMTAsIDIwMTQgYXQgMDQ6Mzc6MTdQTSArMDgwMCwgTGl1IFlpbmcg
-d3JvdGU6Cj4+PiBUaGUgTUlQSSBEU0kgYnVzIGRyaXZlciB3b3VsZCB0cnkgdG8gYWRkIGEgRFNJ
-IGRldmljZSBmb3IgYSBob3N0J3MgZXZlcnkKPj4+IGNoaWxkIG5vZGUgd2hpY2ggY29udGFpbnMg
-dGhlIHJlZyBwcm9wZXJ0eS4gIFVuZm9ydHVuYXRlbHksIHRoZSBleGlzdGluZwo+Pj4gaS5NWDZR
-L1NETCBNSVBJIERTSSBob3N0IGRldmljZSB0cmVlIG5vZGUncyBjaGlsZCBub2RlcyBjb250YWlu
-IHRoZSByZWcKPj4KPj4gVGhlcmUgYXJlbid0IGFueSBleGlzdGluZyBub2RlcyBmb3IgdGhlIERT
-SSBob3N0IG9uIGkuTVguIFRoaXMgcGF0Y2gKPj4gc2VyaWVzIGFkZHMgc3VwcG9ydCBmb3IgdGhl
-bS4KPgo+IFRoZXJlIGFyZSBleGlzdGluZyBub2RlcyBmb3IgdGhlIERTSSBob3N0IG5vZGUuIFBs
-ZWFzZSBmaW5kIHRoZW0gaW4KPiBhcmNoL2FybS9ib290L2R0cy9pbXg2cWRsLmR0c2kgYW5kIGFy
-Y2gvYXJtL2Jvb3QvZHRzL2lteDZxLmR0cy4gVGhlIERTSQo+IGhvc3Qgbm9kZSBjb250YWlucyB0
-d28gY2hpbGQgbm9kZXMgZm9yIGkuTVg2REwgYW5kIGFub3RoZXIgdHdvIGZvcgo+IGkuTVg2US4g
-IEVhY2ggY2hpbGQgbm9kZSBoYXMgYSByZWcgcHJvcGVydHkgZW1iZWRkZWQuCj4KPj4KPj4+IHBy
-b3BlcnR5LCBidXQgdGhlIGNoaWxkIG5vZGVzIGFyZSBwb3J0cyBwb2ludGluZyB0byBkZWRpY2F0
-ZWQgQ1JUQ3MuCj4+PiBTbywgdGhpcyBwYXRjaCBwaGFzZXMgb3V0IHRoZSBjaGlsZCBub2RlcyB3
-aXRoIGlucHV0LXBvcnQgcHJvcGVydHkKPj4+IGJlZm9yZQo+Pj4gYWRkaW5nIERTSSBkZXZpY2Vz
-IGZvciB0aGVtIGFuZCB1cGRhdGVzIHRoZSBNSVBJIERTSSBidXMgT0YgYmluZGluZwo+Pj4gZG9j
-dW1lbnRhdGlvbi4KPj4+Cj4+PiBTaWduZWQtb2ZmLWJ5OiBMaXUgWWluZyA8WWluZy5MaXVAZnJl
-ZXNjYWxlLmNvbT4KPj4+IC0tLQo+Pj4gICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvbWlwaS9kc2kvbWlwaS1kc2ktYnVzLnR4dCB8IDQgKysrKwo+Pj4gICBkcml2ZXJzL2dwdS9k
-cm0vZHJtX21pcGlfZHNpLmMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8IDUgKysrLS0K
-Pj4+ICAgMiBmaWxlcyBjaGFuZ2VkLCA3IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCj4+
-Cj4+IFNvcnJ5LCBidXQgTkFLLiBUaGVyZSdzIG5vIG5lZWQgZm9yIHRoaXMgc3BlY2lhbC1jYXNl
-LiBJJ2xsIGdvIGludG8gbW9yZQo+PiBkZXRhaWwgaW4gcmVzcG9uc2UgdG8gcGF0Y2ggMDkvMTUu
-Cj4KPiBUaGFua3MgZm9yIHJldmlld2luZyB0aGUgcGF0Y2hlcy4KPgo+IEFueSBpZGVhIGhvdyB0
-byBoYW5kbGUgdGhlIHNwZWNpYWwgY2FzZT8gIFRoZSBleGlzdGluZyBjaGlsZCBub2RlcyBmb3IK
-PiB0aGUgRFNJIGhvc3Qgbm9kZSBkbyBoYXZlIHRoZSByZWcgcHJvcGVydGllcyBlbWJlZGRlZC4K
-PgoKSSBzZWUgeW91ciBzdWdnZXN0aW9ucyBvbiB0aGlzIHRvcGljIGluIHRoZSBjb21tZW50cyBm
-b3IgcGF0Y2ggMDkvMTUuCkkgd2lsbCB0cnkgdG8gbW92ZSB0aGUgZXhpc3RpbmcgY2hpbGQgbm9k
-ZXMgaW50byBhIHBhcmVudCBwb3J0IG5vZGUuCgpMaXUgWWluZwoKPgo+Pgo+PiBUaGllcnJ5Cj4+
-Cj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KPiBkcmkt
-ZGV2ZWwgbWFpbGluZyBsaXN0Cj4gZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwo+IGh0
-dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
-aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5m
-cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Hi,
+
+On Wednesday 10 December 2014 04:16 PM, Yunzhi Li wrote:
+> This patch to add a generic PHY driver for ROCKCHIP usb PHYs,
+> currently this driver can support RK3288. The RK3288 SoC have
+> three independent USB PHY IPs which are all configured through a
+> set of registers located in the GRF (general register files)
+> module.
+> 
+> Signed-off-by: Yunzhi Li <lyz@rock-chips.com>
+> 
+> ---
+> 
+> Changes in v5: None
+> Changes in v4:
+> - Get number of PHYs from device tree.
+> - Model each PHY as subnode of the phy provider node.
+> 
+> Changes in v3:
+> - Use BIT macro instead of bit shift ops.
+> - Rename the config entry to PHY_ROCKCHIP_USB.
+> 
+>  drivers/phy/Kconfig            |   7 ++
+>  drivers/phy/Makefile           |   1 +
+>  drivers/phy/phy-rockchip-usb.c | 211 +++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 219 insertions(+)
+>  create mode 100644 drivers/phy/phy-rockchip-usb.c
+> 
+> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+> index ccad880..8a39d2a 100644
+> --- a/drivers/phy/Kconfig
+> +++ b/drivers/phy/Kconfig
+> @@ -239,6 +239,13 @@ config PHY_QCOM_IPQ806X_SATA
+>  	depends on OF
+>  	select GENERIC_PHY
+>  
+> +config PHY_ROCKCHIP_USB2
+> +	tristate "Rockchip USB2 PHY Driver"
+> +	depends on ARCH_ROCKCHIP && OF
+> +	select GENERIC_PHY
+> +	help
+> +	  Enable this to support the Rockchip USB 2.0 PHY.
+> +
+>  config PHY_ST_SPEAR1310_MIPHY
+>  	tristate "ST SPEAR1310-MIPHY driver"
+>  	select GENERIC_PHY
+> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+> index aa74f96..8a13f72 100644
+> --- a/drivers/phy/Makefile
+> +++ b/drivers/phy/Makefile
+> @@ -28,6 +28,7 @@ phy-exynos-usb2-$(CONFIG_PHY_EXYNOS5250_USB2)	+= phy-exynos5250-usb2.o
+>  phy-exynos-usb2-$(CONFIG_PHY_S5PV210_USB2)	+= phy-s5pv210-usb2.o
+>  obj-$(CONFIG_PHY_EXYNOS5_USBDRD)	+= phy-exynos5-usbdrd.o
+>  obj-$(CONFIG_PHY_QCOM_APQ8064_SATA)	+= phy-qcom-apq8064-sata.o
+> +obj-$(CONFIG_PHY_ROCKCHIP_USB2) += phy-rockchip-usb.o
+>  obj-$(CONFIG_PHY_QCOM_IPQ806X_SATA)	+= phy-qcom-ipq806x-sata.o
+>  obj-$(CONFIG_PHY_ST_SPEAR1310_MIPHY)	+= phy-spear1310-miphy.o
+>  obj-$(CONFIG_PHY_ST_SPEAR1340_MIPHY)	+= phy-spear1340-miphy.o
+> diff --git a/drivers/phy/phy-rockchip-usb.c b/drivers/phy/phy-rockchip-usb.c
+> new file mode 100644
+> index 0000000..0317c21
+> --- /dev/null
+> +++ b/drivers/phy/phy-rockchip-usb.c
+> @@ -0,0 +1,211 @@
+> +/*
+> + * Rockchip usb PHY driver
+> + *
+> + * Copyright (C) 2014 Yunzhi Li <lyz@rock-chips.com>
+> + * Copyright (C) 2014 ROCKCHIP, Inc.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/io.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/phy/phy.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/reset.h>
+> +#include <linux/regmap.h>
+> +#include <linux/mfd/syscon.h>
+> +
+> +#define ROCKCHIP_RK3288_UOC(n)	(0x320 + n * 0x14)
+> +
+> +/*
+> + * The higher 16-bit of this register is used for write protection
+> + * only if BIT(13 + 16) set to 1 the BIT(13) can be written.
+> + */
+> +#define SIDDQ_MSK		BIT(13 + 16)
+
+I think here the "MSK" is misleading. it should be something that refers write
+protection?
+
+> +#define SIDDQ_ON		BIT(13)
+> +#define SIDDQ_OFF		(0 << 13)
+> +
+> +struct rockchip_usb_phy {
+> +	struct regmap	*reg_base;
+> +	unsigned int	reg_offset;
+> +	struct clk	*clk;
+> +	struct phy	*phy;
+> +	unsigned	index;
+> +};
+> +
+> +struct rockchip_usb_phy_priv {
+> +	struct rockchip_usb_phy	*phys;
+> +	unsigned		nphys;
+> +};
+> +
+> +static int rockchip_usb_phy_power(struct rockchip_usb_phy *phy,
+> +					   bool siddq)
+> +{
+> +	return regmap_write(phy->reg_base, phy->reg_offset,
+> +			    SIDDQ_MSK | (siddq ? SIDDQ_ON : SIDDQ_OFF));
+
+Shouldn't we actually reset the bit for power off?
+> +}
+> +
+> +static int rockchip_usb_phy_power_off(struct phy *_phy)
+> +{
+> +	struct rockchip_usb_phy *phy = phy_get_drvdata(_phy);
+> +	int ret = 0;
+> +
+> +	/* Power down usb phy analog blocks by set siddq 1 */
+> +	ret = rockchip_usb_phy_power(phy, 1);
+> +	if (ret)
+> +		return ret;
+> +
+> +	clk_disable_unprepare(phy->clk);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return 0;
+> +}
+> +
+> +static int rockchip_usb_phy_power_on(struct phy *_phy)
+> +{
+> +	struct rockchip_usb_phy *phy = phy_get_drvdata(_phy);
+> +	int ret = 0;
+> +
+> +	ret = clk_prepare_enable(phy->clk);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Power up usb phy analog blocks by set siddq 0 */
+> +	ret = rockchip_usb_phy_power(phy, 0);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return 0;
+> +}
+> +
+> +static struct phy *rockchip_usb_phy_xlate(struct device *dev,
+> +					struct of_phandle_args *args)
+> +{
+> +	struct rockchip_usb_phy_priv *priv = dev_get_drvdata(dev);
+> +	int i;
+> +
+> +	if (WARN_ON(args->args[0] >= priv->nphys))
+> +		return ERR_PTR(-ENODEV);
+> +
+> +	for (i = 0; i < priv->nphys; i++) {
+> +		if (priv->phys[i].index == args->args[0])
+> +			break;
+
+using the type of PHY instead of index might look better.
+However this shouldn't be needed at all if the phandle refers to the sub-node
+of the phy provider.
+
+Thanks
+Kishon
