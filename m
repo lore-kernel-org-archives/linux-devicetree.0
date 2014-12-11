@@ -1,28 +1,43 @@
-From: Eliad Peller <eliad@wizery.com>
-Subject: SDIO device binding
-Date: Thu, 11 Dec 2014 15:32:51 +0200
-Message-ID: <CAB3XZEfX7oAmJe=86j+WC0w73kQxO4C=Ufdy6eMgtYYh8Swv2g@mail.gmail.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [RFC 04/15] regulator: add restrack support
+Date: Thu, 11 Dec 2014 13:43:27 +0000
+Message-ID: <20141211134327.GO11285@n2100.arm.linux.org.uk>
+References: <1418226513-14105-1-git-send-email-a.hajda@samsung.com>
+ <1418226513-14105-5-git-send-email-a.hajda@samsung.com>
+ <20141210160720.GS11764@sirena.org.uk>
+ <548976D2.7080005@samsung.com>
+ <20141211125837.GV11764@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Chris Ball <chris@printf.net>, Hans de Goede <hdegoede@redhat.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20141211125837.GV11764@sirena.org.uk>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Andrzej Hajda <a.hajda@samsung.com>, open list <linux-kernel@vger.kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mike Turquette <mturquette@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Inki Dae <inki.dae@samsung.com>, Kishon Vijay Abraham I <kishon@ti.com>, Liam Girdwood <lgirdwood@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "moderated list:ARM/CLKDEV SUPPORT" <linux-arm-kernel@lists.infradead.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, "moderated list:ARM/S5P EXYNOS AR..." <linux-samsung-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, boris.brezillon@fr
 List-Id: devicetree@vger.kernel.org
 
-hi,
+On Thu, Dec 11, 2014 at 12:58:37PM +0000, Mark Brown wrote:
+> I'd expect someone reading the change in the regulator API to have at
+> least some idea how this fits in with the rest of the API and how to use
+> it, and probably more importantly I'd expect to be able to understand
+> why this is DT only.
 
-I'm looking for the proper way to pass SDIO device properties using devicetree.
+Yep.
 
-There seems to be a patchset sent previously by Sascha Hauer to handle
-it, but for some reason it didn't get merged, and i can't find any
-further discussion regarding the patches.
+This is a repetitive problem, and I fully agree with your concern about
+stuff which is supposed to be arch-independent being designed with only
+DT in mind.
 
-https://patchwork.ozlabs.org/patch/355235/
-http://lists.infradead.org/pipermail/linux-arm-kernel/2014-June/261575.html
+New core kernel features should *not* be designed with only DT in mind -
+DT is not the only firmware description language which the kernel
+supports.  Folk need to understand that if they design a new arch
+independent kernel feature where the sole use case is with DT, that new
+feature is probably going to get rejected, especially when it's
+something as generic as resource tracking.
 
-Was there any issue with the patches, or is there any other binding
-that should be used instead?
+The world is not DT only.
 
-thanks,
-Eliad.
+-- 
+FTTC broadband for 0.8mile line: currently at 9.5Mbps down 400kbps up
+according to speedtest.net.
