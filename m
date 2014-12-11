@@ -1,49 +1,122 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v18 12/12] drm: bridge/dw_hdmi: add rockchip rk3288 support
-Date: Thu, 11 Dec 2014 12:24:15 +0100
-Message-ID: <6479148.dVz0vTNYfK@phil>
-References: <1417760564-16858-1-git-send-email-andy.yan@rock-chips.com> <1417761259-17429-1-git-send-email-andy.yan@rock-chips.com> <CAGS+omA1Gf8yqrd4Bu=Pm1OBdsJBHg0gt+TP_6vi88Zz+O3jHA@mail.gmail.com>
+From: Ding Tianhong <dingtianhong@huawei.com>
+Subject: [PATCH net-next v9 1/3] Documentation: add Device tree bindings for Hisilicon hip04 ethernet
+Date: Thu, 11 Dec 2014 19:42:28 +0800
+Message-ID: <1418298150-4944-2-git-send-email-dingtianhong@huawei.com>
+References: <1418298150-4944-1-git-send-email-dingtianhong@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGS+omA1Gf8yqrd4Bu=Pm1OBdsJBHg0gt+TP_6vi88Zz+O3jHA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Kurtz <djkurtz@chromium.org>, David Airlie <airlied@linux.ie>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Andy Yan <andy.yan@rock-chips.com>, fabio.estevam@freescale.com, rmk+kernel@arm.linux.org.uk, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawn.guo@linaro.org>, Josh Boyer <jwboyer@redhat.com>, Sean Paul <seanpaul@chromium.org>, Inki Dae <inki.dae@samsung.com>, Dave Airlie <airlied@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Lucas Stach <l.stach@pengutronix.de>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, Yakir Yang <ykk@rock-chips.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, devel@driverdev.osuosl.org, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Xu Jianqun <jay.xu@rock-chips.com>, Pawel Moll <pawel.moll@arm.>
+Content-Type: text/plain
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1418298150-4944-1-git-send-email-dingtianhong@huawei.com>
+Sender: netdev-owner@vger.kernel.org
+To: zhangfei.gao@linaro.org, davem@davemloft.net, linux@arm.linux.org.uk, arnd@arndb.de, f.fainelli@gmail.com, sergei.shtylyov@cogentembedded.com, mark.rutland@arm.com, David.Laight@ACULAB.COM, eric.dumazet@gmail.com, xuwei5@hisilicon.com
+Cc: linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Daniel,
+From: Zhangfei Gao <zhangfei.gao@linaro.org>
 
-Am Mittwoch, 10. Dezember 2014, 20:36:17 schrieb Daniel Kurtz:
-> This driver adds HDMI to rockchip/drm.  The fact that rockchip's hdmi
-> uses dw_hdmi is an implementation detail.  I do not think that the names
-> used for rk3288-hdmi should include "dw" in them.
-> 
-> See inline for what I mean...
+This patch adds the Device Tree bindings for the Hisilicon hip04
+Ethernet controller, including 100M / 1000M controller.
 
-I guess in general this is more a matter of preference.
+Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+Signed-off-by: Ding Tianhong <dingtianhong@huawei.com>
+---
+ .../bindings/net/hisilicon-hip04-net.txt           | 88 ++++++++++++++++++++++
+ 1 file changed, 88 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/hisilicon-hip04-net.txt
 
-Past practices suggest that having the dw in the name is a sane solution too, 
-like in dw_mmc-foo (mmc/host), dwmac-foo (net/ethernet/stmicro/stmmac).
-
-And personally I'd keep to this already established naming scheme ... i.e. not 
-hiding the dw heritage.
-
-And also it looks like other involved parties like Philipp and Russell seemed 
-to be ok with the naming through the revisions till now.
-
-[...]
-
-> > +static enum drm_mode_status
-> > +dw_hdmi_rockchip_mode_valid(struct drm_connector *connector,
-> 
-> Similarly, I would rename these function names to start with
-> rockchip_hdmi (or maybe rk_hdmi for brevity).
-> Especially the ones for the module & driver: (bind/unbind/probe/remove).
-
-Please keep to one rk <-> rockchip style at least per subsystem. The core drm 
-driver uses rockchip, so the hdmi driver should too (instead of rk).
-
-
-Heiko
+diff --git a/Documentation/devicetree/bindings/net/hisilicon-hip04-net.txt b/Documentation/devicetree/bindings/net/hisilicon-hip04-net.txt
+new file mode 100644
+index 0000000..988fc69
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/hisilicon-hip04-net.txt
+@@ -0,0 +1,88 @@
++Hisilicon hip04 Ethernet Controller
++
++* Ethernet controller node
++
++Required properties:
++- compatible: should be "hisilicon,hip04-mac".
++- reg: address and length of the register set for the device.
++- interrupts: interrupt for the device.
++- port-handle: <phandle port channel>
++	phandle, specifies a reference to the syscon ppe node
++	port, port number connected to the controller
++	channel, recv channel start from channel * number (RX_DESC_NUM)
++- phy-mode: see ethernet.txt [1].
++
++Optional properties:
++- phy-handle: see ethernet.txt [1].
++
++[1] Documentation/devicetree/bindings/net/ethernet.txt
++
++
++* Ethernet ppe node:
++Control rx & tx fifos of all ethernet controllers.
++Have 2048 recv channels shared by all ethernet controllers, only if no overlap.
++Each controller's recv channel start from channel * number (RX_DESC_NUM).
++
++Required properties:
++- compatible: "hisilicon,hip04-ppe", "syscon".
++- reg: address and length of the register set for the device.
++
++
++* MDIO bus node:
++
++Required properties:
++
++- compatible: should be "hisilicon,hip04-mdio".
++- Inherits from MDIO bus node binding [2]
++[2] Documentation/devicetree/bindings/net/phy.txt
++
++Example:
++	mdio {
++		compatible = "hisilicon,hip04-mdio";
++		reg = <0x28f1000 0x1000>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		phy0: ethernet-phy@0 {
++			compatible = "ethernet-phy-ieee802.3-c22";
++			reg = <0>;
++			marvell,reg-init = <18 0x14 0 0x8001>;
++		};
++
++		phy1: ethernet-phy@1 {
++			compatible = "ethernet-phy-ieee802.3-c22";
++			reg = <1>;
++			marvell,reg-init = <18 0x14 0 0x8001>;
++		};
++	};
++
++	ppe: ppe@28c0000 {
++		compatible = "hisilicon,hip04-ppe", "syscon";
++		reg = <0x28c0000 0x10000>;
++	};
++
++	fe: ethernet@28b0000 {
++		compatible = "hisilicon,hip04-mac";
++		reg = <0x28b0000 0x10000>;
++		interrupts = <0 413 4>;
++		phy-mode = "mii";
++		port-handle = <&ppe 31 0>;
++	};
++
++	ge0: ethernet@2800000 {
++		compatible = "hisilicon,hip04-mac";
++		reg = <0x2800000 0x10000>;
++		interrupts = <0 402 4>;
++		phy-mode = "sgmii";
++		port-handle = <&ppe 0 1>;
++		phy-handle = <&phy0>;
++	};
++
++	ge8: ethernet@2880000 {
++		compatible = "hisilicon,hip04-mac";
++		reg = <0x2880000 0x10000>;
++		interrupts = <0 410 4>;
++		phy-mode = "sgmii";
++		port-handle = <&ppe 8 2>;
++		phy-handle = <&phy1>;
++	};
+-- 
+1.8.0
