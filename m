@@ -1,83 +1,65 @@
-From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [RFC 3/3] ARM: dts: socfpga: Add AXI bridges
-Date: Thu, 11 Dec 2014 21:21:42 +0100
-Message-ID: <1418329302-20813-4-git-send-email-s.trumtrar@pengutronix.de>
-References: <1418329302-20813-1-git-send-email-s.trumtrar@pengutronix.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1418329302-20813-1-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+From: Nicolae Rosia <nicolae.rosia-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 0/6] Touchscreen performance related fixes
+Date: Thu, 11 Dec 2014 22:34:10 +0200
+Message-ID: <CAH=tA9FO5MCzE274thc-NugCNte6WdyC-Rxc6yfnuR=+6_qMbA@mail.gmail.com>
+References: <1415941651-28962-1-git-send-email-vigneshr@ti.com>
+	<20141124115116.GA14997@linutronix.de>
+	<547C3A95.30605@ti.com>
+	<547C3C19.5090501@linutronix.de>
+	<547C42FF.5010700@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <547C42FF.5010700-l0cyMroinI0@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
+Cc: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Brad Griffis <bgriffis-l0cyMroinI0@public.gmane.org>, Sanjeev Sharma <sanjeev_sharma-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>, Jan Kardell <jan.kardell-KSZdJiTw9mzQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
- arch/arm/boot/dts/socfpga.dtsi | 48 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 48 insertions(+)
+Hello,
 
-diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-index 12e4e437050f..bfbdb326f531 100644
---- a/arch/arm/boot/dts/socfpga.dtsi
-+++ b/arch/arm/boot/dts/socfpga.dtsi
-@@ -67,6 +67,54 @@
- 		interrupt-parent = <&intc>;
- 		ranges;
- 
-+		lwhps2fpga: axibridge@ff400000 {
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			compatible = "altr,lwhps2fpga-axi-bridge";
-+			reg = <0xff400000 0x100000>,
-+			      <0xff200000 0x200000>;
-+			reg-names = "gpv", "data";
-+			clocks = <&l4_mp_clk>;
-+			resets = <&rst LWHPS2FPGA_RESET>;
-+			reset-names = "lwhps2fpga";
-+			altr,l3-gpv = <&l3regs>;
-+			status = "disabled";
-+			ranges;
-+		};
-+
-+		hps2fpga: axibridge@ff500000 {
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			compatible = "altr,hps2fpga-axi-bridge";
-+			reg = <0xff500000 0x100000>,
-+			      <0xc0000000 0x3c000000>;
-+			reg-names = "gpv", "data";
-+			clocks = <&l4_mp_clk>, <&l3_main_clk>;
-+			clock-names = "gpv_clk", "data_clk";
-+			resets = <&rst HPS2FPGA_RESET>;
-+			reset-names = "hps2fpga";
-+			altr,bridge-gpv = <&lwhps2fpga>;
-+			altr,l3-gpv = <&l3regs>;
-+			bus-width = <64>;
-+			status = "disabled";
-+			ranges;
-+		};
-+
-+		fpga2hps: axibridge@ff600000 {
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			compatible = "altr,fpga2hps-axi-bridge";
-+			reg = <0xff600000 0x100000>;
-+			reg-names = "gpv";
-+			clocks = <&l4_mp_clk>, <&l3_main_clk>;
-+			clock-names = "gpv_clk", "data_clk";
-+			resets = <&rst FPGA2HPS_RESET>;
-+			reset-names = "fpga2hps";
-+			altr,bridge-gpv = <&lwhps2fpga>;
-+			bus-width = <64>;
-+			status = "disabled";
-+		};
-+
- 		amba {
- 			compatible = "arm,amba-bus";
- 			#address-cells = <1>;
--- 
-2.1.3
+Any updates on this series? I don't see it applied in [1] or [2].
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[1] https://github.com/RobertCNelson/ti-linux-kernel/commits/ti-linux-3.14.y/drivers/input/touchscreen/ti_am335x_tsc.c
+[2] https://github.com/RobertCNelson/ti-linux-kernel/commits/ti-linux-3.14.y-exp/drivers/input/touchscreen/ti_am335x_tsc.c
+
+Regards,
+Nicolae Rosia
+
+On Mon, Dec 1, 2014 at 12:29 PM, Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org> wrote:
+>
+> Hi,
+>
+> On Monday 01 December 2014 03:29 PM, Sebastian Andrzej Siewior wrote:
+>> On 12/01/2014 10:53 AM, Vignesh R wrote:
+>>> Hi Sebastian,
+>>
+>> Hi Vignesh,
+>>
+>>> I fixed the issue that was triggering the WARN_ON(). I think it would be
+>>> better if you tested these patches, before I posted them on the
+>>> mainline. I don't want to clutter the list with too main versions. Here
+>>> is the link to the tree with latest changes:
+>>
+>> awesome, thank you.
+>>
+>>>
+>>> git clone -b tsc-devel git://git.ti.com/kernel/tsc-adc.git
+>>> (tsc-devel branch)
+>>
+>> I will and let you know.
+>>
+>>> Please test the above tree and let me know the results.
+>>> I will post new version(v5) if there are no issues wrt IIO and TSC
+>>> working at the same time.
+>>
+>> Cool. Were you able to get in touch with someone who has a 5-wire touch?
+>
+> I have asked Jeff Lance to verify 5-wire touch.
+>
+> Regards
+> Vignesh
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
