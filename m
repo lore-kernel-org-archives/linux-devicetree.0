@@ -1,254 +1,274 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [RFC/PATCH 5/7] arm: omap: hwmod: allow for registration of
- class-less hwmods
-Date: Thu, 11 Dec 2014 18:44:35 +0100
-Message-ID: <20141211174434.GA2022@earth.universe>
-References: <1418164072-19087-1-git-send-email-balbi@ti.com>
- <1418164072-19087-6-git-send-email-balbi@ti.com>
- <54882576.8020609@ti.com>
- <20141210145433.GC4602@saruman>
- <20141211005238.GC5585@earth.universe>
- <20141211142333.GE20762@saruman>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="T4sUOijqQbZv57TR"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20141211142333.GE20762@saruman>
-Sender: linux-omap-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>
-Cc: Lokesh Vutla <lokeshvutla@ti.com>, Tony Lindgren <tony@atomide.com>, "Kristo, Tero" <t-kristo@ti.com>, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, Paul Walmsley <paul@pwsan.com>, Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: [PATCH/RFC 12/14] ASoC: samsung: i2s: Add clock provider for the I2S
+ internal clocks
+Date: Thu, 11 Dec 2014 18:45:50 +0100
+Message-ID: <1418319952-10163-13-git-send-email-s.nawrocki@samsung.com>
+References: <1418319952-10163-1-git-send-email-s.nawrocki@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1418319952-10163-1-git-send-email-s.nawrocki@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org
+Cc: broonie@kernel.org, padma.v@samsung.com, drake@endlessm.com, sbkim73@samsung.com, Sylwester Nawrocki <s.nawrocki@samsung.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+This patch adds clock provider (currently only for DT platforms) for
+the CODECLKO (CDCLK) gate, RCLKSRC mux and RCLK pre-scaler divider
+divider clock. Those all tree clock are only available in the IIS
+Multi Audio Interface (I2S0), the regular IIS Bus Interface has only
+CDCLK gate clock.
 
---T4sUOijqQbZv57TR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The motivation behind this patch is to expose the I2S internal clocks
+which are currently controlled through set_sysclk() through the clk
+API, so dedicated sound machine driver per each board can be avoided.
 
-On Thu, Dec 11, 2014 at 08:23:33AM -0600, Felipe Balbi wrote:
-> Hi,
->=20
-> On Thu, Dec 11, 2014 at 01:52:38AM +0100, Sebastian Reichel wrote:
-> > On Wed, Dec 10, 2014 at 08:54:33AM -0600, Felipe Balbi wrote:
-> > > Hi,
-> > >=20
-> > > (adding linux-omap back to the loop)
-> > >=20
-> > > On Wed, Dec 10, 2014 at 04:20:30PM +0530, Lokesh Vutla wrote:
-> > > > Hi Felipe,
-> > > >=20
-> > > > On Wednesday 10 December 2014 03:57 AM, Felipe Balbi wrote:
-> > > > > Before this patch, HWMOD requires the existence
-> > > > > of a struct omap_hwmod_class very early.
-> > > > Yes, hwmod code looks for omap_hwmod_class entry before registering=
- any hwmod.
-> > > >=20
-> > > > With the patch 4/7 omap_hwmod_class gets populated from dt very lat=
-e after registration of the hwmod.
-> > > > So all the hwmod which gets class data from dt never gets registere=
-d and state is always UNKNOWN.
-> > > > Mostly making it unusable.
-> > > > IMO this patch just masks the problem.
-> > > >=20
-> > > > In order to register hwmod we need to populate class data very earl=
-y.
-> > > > We can populate at the same place as how reg property is being pars=
-ed.
-> > > > Call omap_hwmod_init_sysc() in _init() of the particular hwmod:
-> > > > The below diff will help:
-> > > >
-> > > > diff --git a/arch/arm/mach-omap2/omap_hwmod.c b/arch/arm/mach-omap2=
-/omap_hwmod.c
-> > > > index cbb908d..05ecf8a 100644
-> > > > --- a/arch/arm/mach-omap2/omap_hwmod.c
-> > > > +++ b/arch/arm/mach-omap2/omap_hwmod.c
-> > > > @@ -2415,6 +2415,116 @@ static int __init _init_mpu_rt_base(struct =
-omap_hwmod *oh, void *data,
-> > > >  	return 0;
-> > > >  }
-> > > > =20
-> > > > +static int omap_hwmod_has_sysc_bindings(struct device_node *node)
-> > > > +{
-> > > > +	char *properties[] =3D {
-> > > > +		"ti,rev_offs",
-> > > > +		"ti,sysc_offs",
-> > > > +		"ti,syss_offs",
-> > > > +		"ti,sysc_flags",
-> > > > +		"ti,srst_udelay",
-> > > > +		"ti,idlemodes",
-> > > > +		"ti,clockact",
-> > > > +		"ti,sysc_type",
-> > > > +		NULL
-> > > > +	};
-> > > > +	char **tmp =3D properties;
-> > > > +
-> > > > +	while (*tmp) {
-> > > > +		if (of_property_read_bool(node, *tmp)) {
-> > > > +			return true;
-> > > > +		}
-> > > > +		tmp++;
-> > > > +	}
-> > > > +
-> > > > +	return 0;
-> > > > +}
-> > > > +
-> > > > +static int omap_hwmod_init_sysc(struct device_node *node,
-> > > > +		struct omap_hwmod *oh, int index)
-> > > > +{
-> > > > +	struct omap_hwmod_class *class =3D oh->class;
-> > > > +	struct omap_hwmod_class_sysconfig *sysc;
-> > > > +	int ret;
-> > > > +	int i;
-> > > > +	char name[128];
-> > > > +	const char *tmp =3D oh->name;
-> > > > +	u32 prop;
-> > > > +
-> > > > +	/* if data isn't provided by DT, skip */
-> > > > +	if ((class && class->sysc) || !omap_hwmod_has_sysc_bindings(node))
-> > > > +		return 0;
-> > > > +
-> > > > +	class =3D kzalloc(sizeof(*class), GFP_KERNEL);
-> > > > +	if (!class)
-> > > > +		return -ENOMEM;
-> > > > +
-> > > > +	i =3D 0;
-> > > > +	while (*tmp) {
-> > > > +		if (isalpha(*tmp))
-> > > > +			name[i++] =3D *tmp;
-> > > > +		tmp++;
-> > > > +	}
-> > > > +	name[i] =3D '\0';
-> > > > +
-> > > > +	class->name =3D kzalloc(sizeof(name), GFP_KERNEL);
-> > > > +	if (!class->name)
-> > > > +		return -ENOMEM;
-> > > > +	strncpy(class->name, name, sizeof(name) - 1);
-> > > > +
-> > > > +	sysc =3D kzalloc(sizeof(*sysc), GFP_KERNEL);
-> > > > +	if (!sysc)
-> > > > +		return -ENOMEM;
-> > > > +
-> > > > +	ret =3D of_property_read_u32_index(node, "ti,rev_offs", index, &p=
-rop);
-> > > > +	if (!ret)
-> > > > +		sysc->rev_offs =3D prop;
-> > > > +
-> > > > +	ret =3D of_property_read_u32_index(node, "ti,sysc_offs", index, &=
-prop);
-> > > > +	if (!ret)
-> > > > +		sysc->sysc_offs =3D prop;
-> > > > +
-> > > > +	ret =3D of_property_read_u32_index(node, "ti,syss_offs", index, &=
-prop);
-> > > > +	if (!ret)
-> > > > +		sysc->syss_offs =3D prop;
-> > > > +
-> > > > +	ret =3D of_property_read_u32_index(node, "ti,sysc_flags", index, =
-&prop);
-> > > > +	if (!ret)
-> > > > +		sysc->sysc_flags =3D prop & 0xffff;
-> > > > +
-> > > > +	ret =3D of_property_read_u32_index(node, "ti,srst_udelay", index,=
- &prop);
-> > > > +	if (!ret)
-> > > > +		sysc->srst_udelay =3D prop & 0xff;
-> > > > +
-> > > > +	ret =3D of_property_read_u32_index(node, "ti,idlemodes", index, &=
-prop);
-> > > > +	if (!ret)
-> > > > +		sysc->idlemodes =3D prop & 0xff;
-> > > > +
-> > > > +	ret =3D of_property_read_u32_index(node, "ti,clockact", index, &p=
-rop);
-> > > > +	if (!ret)
-> > > > +		sysc->clockact =3D prop & 0xff;
-> > > > +
-> > > > +	ret =3D of_property_read_u32_index(node, "ti,sysc_type", index, &=
-prop);
-> > > > +	if (ret)
-> > > > +		prop =3D 1;
-> > > > +
-> > > > +	switch (prop) {
-> > > > +	case 2:
-> > > > +		sysc->sysc_fields =3D &omap_hwmod_sysc_type2;
-> > > > +		break;
-> > > > +	case 3:
-> > > > +		sysc->sysc_fields =3D &omap_hwmod_sysc_type3;
-> > > > +		break;
-> > > > +	case 1:
-> > > > +	default:
-> > > > +		sysc->sysc_fields =3D &omap_hwmod_sysc_type1;
-> > > > +	}
-> > > > +	class->sysc =3D sysc;
-> > > > +	oh->class =3D class;
-> > > > +
-> > > > +	return 0;
-> > > > +}
-> > > > +
-> > > >  /**
-> > > >   * _init - initialize internal data for the hwmod @oh
-> > > >   * @oh: struct omap_hwmod *
-> > > > @@ -2449,6 +2559,12 @@ static int __init _init(struct omap_hwmod *o=
-h, void *data)
-> > > >  		else if (np && index)
-> > > >  			pr_warn("omap_hwmod: %s using broken dt data from %s\n",
-> > > >  				oh->name, np->name);
-> > > > +
-> > > > +		if (np) {
-> > > > +			r =3D omap_hwmod_init_sysc(np, oh, 0);
-> > >=20
-> > > this won't handle any binding which lists more than one hwmod on its
-> > > ti,hwmods property.
-> >=20
-> > I think Tony planned to remove this kind of multi hwmod references.
->=20
-> true, but I'm still a bit iffy wrt that. ABI compatibility breaks and
-> all
+The intention is also to fix the CDCLK gating issue reported by
+Daniel Drake:
+http://mailman.alsa-project.org/pipermail/alsa-devel/2014-September/081753.html
 
-Moving the hwmod data to device tree will break the ABI
-compatibility anyways. You wont be able to use an old DT with the
-new kernel, since then you are missing the hwmod data (assuming
-there won't be a fallback hwmod data kept in the kernel source).
+This patch also reverts commit b97c60abf9a561f86ae71bd741add02673cc1
+("ASoC: samsung-i2s: Maintain CDCLK settings across i2s_{shutdown/
+startup}") The problem that commit attempted to solve only affects
+the Odroid X2/U3, which doesn't configure the CDCLK clock in
+struct snd_soc_dai_ops hw_params callback and the issue should be
+now resolved by using clk API, i.e. having the codec enabling/
+disabling the CDCLK clock as required.
 
-> > IMHO instead of DT referencing the hwmod stuff using ti,hwmods the
-> > hwmod database should reference the compatible values. This depends
-> > on omap3 being DT only of course.
->=20
-> don't you think it's too late for that ? We need to support the current
-> form of dts files forever. It's an ABI afterall.
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+---
+ .../devicetree/bindings/sound/samsung-i2s.txt      |   18 ++-
+ sound/soc/samsung/i2s.c                            |  116 ++++++++++++++++----
+ 2 files changed, 113 insertions(+), 21 deletions(-)
 
-As I described above the ABI *will* break if hwmod data is removed from
-the kernel.
+diff --git a/Documentation/devicetree/bindings/sound/samsung-i2s.txt b/Documentation/devicetree/bindings/sound/samsung-i2s.txt
+index d188296..fb3b777 100644
+--- a/Documentation/devicetree/bindings/sound/samsung-i2s.txt
++++ b/Documentation/devicetree/bindings/sound/samsung-i2s.txt
+@@ -34,12 +34,26 @@ Required SoC Specific Properties:
+   clk. i2s0 has internal mux to select the source of root clk and i2s1 and i2s2
+   doesn't have any such mux.
 
-OTOH where is the ABI breakage when hwmod database in kernel is
-built from the compatible value? The compatible values are already
-part of the ABI, so there are no new properties needed. The ti,hwmod
-property can be marked as deprecated (and maybe removed after some
-years).
+-Optional SoC Specific Properties:
++Optional Properties:
 
--- Sebastian
+ - samsung,idma-addr: Internal DMA register base address of the audio
+   sub system(used in secondary sound source).
+ - pinctrl-0: Should specify pin control groups used for this controller.
+ - pinctrl-names: Should contain only one value - "default".
++- #clock-cells: should be 1, this property must be present if the I2S device
++  is a clock provider in terms of the common clock bindings, described in
++  ../clock/clock-bindings.txt.
++- clock-output-names: from the common clock bindings, names of the CDCLK
++  I2S output clocks, suggested values are "i2s_cdclk0", "i2s_cdclk1",
++  "i2s_cdclk3" for the I2S0, I2S1, I2S2 devices recpectively.
++
++The assignment of indices for the I2Sx clock provider is as follows:
++ 0 - the CDCLK (CODECLKO) gate clock,
++ 1 - the RCLK prescaler divider clock (corresponding to the IISPSR register),
++ 2 - the RCLKSRC mux clock (corresponding to RCLKSRC bit in register IISMOD).
++
++Clocks 1, 2 are normally only available in the IIS Mutli Audio Interface (I2S0).
++
 
---T4sUOijqQbZv57TR
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+ Example:
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+@@ -54,6 +68,8 @@ i2s0: i2s@03830000 {
+ 		<&clock_audss EXYNOS_I2S_BUS>,
+ 		<&clock_audss EXYNOS_SCLK_I2S>;
+ 	clock-names = "iis", "i2s_opclk0", "i2s_opclk1";
++	#clock-cells;
++	clock-output-names = "i2s_cdclk0";
+ 	samsung,idma-addr = <0x03000000>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&i2s0_bus>;
+diff --git a/sound/soc/samsung/i2s.c b/sound/soc/samsung/i2s.c
+index 825138b..3f4d2c0 100644
+--- a/sound/soc/samsung/i2s.c
++++ b/sound/soc/samsung/i2s.c
+@@ -13,6 +13,7 @@
+ #include <linux/delay.h>
+ #include <linux/slab.h>
+ #include <linux/clk.h>
++#include <linux/clk-provider.h>
+ #include <linux/io.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+@@ -81,8 +82,6 @@ struct i2s_dai {
+ #define DAI_OPENED	(1 << 0) /* Dai is opened */
+ #define DAI_MANAGER	(1 << 1) /* Dai is the manager */
+ 	unsigned mode;
+-	/* CDCLK pin direction: 0  - input, 1 - output */
+-	unsigned int cdclk_out:1;
+ 	/* Driver for this DAI */
+ 	struct snd_soc_dai_driver i2s_dai_drv;
+ 	/* DMA parameters */
+@@ -98,6 +97,10 @@ struct i2s_dai {
+ 	/* Spinlock protecting access to the device's registers */
+ 	spinlock_t spinlock;
+ 	spinlock_t *lock;
++
++	/* Below fields are only valid if this is the primary FIFO */
++	struct clk *clk_table[3];
++	struct clk_onecell_data clk_data;
+ };
 
-iQIcBAEBCgAGBQJUidf/AAoJENju1/PIO/qavkAP/RxKhIBBXHM7VSWwEQQPTY8G
-c/iX5dhgRFS/leEsuaokcjBhUoC3DiQ21JKyTglh1/jxJlJAAmpoFww1KiyfHc/L
-Olmtf78QKyIaVNJNQckdNO5OvUZ5llQQt9A46hLeU91BX9pQRDzxZdzaFe5OG/Rr
-RR1LjzEfgIzDEFMsOk50/r6JkJaeynhhHmfX3vnArOwg+1+uosihbpftAGex1WsU
-BfNlly99s5K7Xwvu979G28gyW9L9/ruvaDNvHTCDcobpwf0P0YNUBjPOiKVIDVj3
-YdmMp7rVumoArfDBjY9Bf+lOnqQvoUGji4VtdTGT7Vm4hwKGKnYsCNUqrgjMPHIF
-BqAGLbVetIaCwoWop5Z6MUIb0qFu3d0HG1ArxibgXudxpObjiqlcYRS/TF8pOqa2
-Ai51aL+YbNz4KhG3e4G8W4jc7xfASxCer28BU+UiS2MCH8/Ihes6Ws6zfzPoTTGZ
-640WWF1xt3qodMppBRUj5cL9cfY5c8kRwjwUoLLl1ai1I37KjfwTF1YtwjcwT9Lc
-4AM7DYyP2csSPH79syfVowutWB1jMq0Y68tfDqVPFOxnq8hXroOQDpollWqAICvR
-6TCtj5KY3MfVfVPC6+xvKCIWdIRLSJUwxpxjimiDqhktMRUazanhsP/a+n39fxNX
-t4syaDdvCjbqihD7Q4D9
-=rYKK
------END PGP SIGNATURE-----
+ /* Lock for cross i/f checks */
+@@ -774,9 +777,6 @@ static int i2s_startup(struct snd_pcm_substream *substream,
 
---T4sUOijqQbZv57TR--
+ 	spin_unlock_irqrestore(&lock, flags);
+
+-	if (!is_opened(other) && i2s->cdclk_out)
+-		i2s_set_sysclk(dai, SAMSUNG_I2S_CDCLK,
+-				0, SND_SOC_CLOCK_OUT);
+ 	return 0;
+ }
+
+@@ -786,31 +786,20 @@ static void i2s_shutdown(struct snd_pcm_substream *substream,
+ 	struct i2s_dai *i2s = to_info(dai);
+ 	struct i2s_dai *other = get_other_dai(i2s);
+ 	unsigned long flags;
+-	const struct samsung_i2s_variant_regs *i2s_regs = i2s->variant_regs;
+
+ 	spin_lock_irqsave(&lock, flags);
+
+ 	i2s->mode &= ~DAI_OPENED;
+ 	i2s->mode &= ~DAI_MANAGER;
+
+-	if (is_opened(other)) {
++	if (is_opened(other))
+ 		other->mode |= DAI_MANAGER;
+-	} else {
+-		u32 mod = readl(i2s->addr + I2SMOD);
+-		i2s->cdclk_out = !(mod & (1 << i2s_regs->cdclkcon_off));
+-		if (other)
+-			other->cdclk_out = i2s->cdclk_out;
+-	}
++
+ 	/* Reset any constraint on RFS and BFS */
+ 	i2s->rfs = 0;
+ 	i2s->bfs = 0;
+
+ 	spin_unlock_irqrestore(&lock, flags);
+-
+-	/* Gate CDCLK by default */
+-	if (!is_opened(other))
+-		i2s_set_sysclk(dai, SAMSUNG_I2S_CDCLK,
+-				0, SND_SOC_CLOCK_IN);
+ }
+
+ static int config_setup(struct i2s_dai *i2s)
+@@ -1147,6 +1136,91 @@ static int i2s_runtime_resume(struct device *dev)
+ }
+ #endif /* CONFIG_PM_RUNTIME */
+
++static void i2s_unregister_clocks(struct i2s_dai *i2s)
++{
++	int i;
++
++	for (i = 0; i < i2s->clk_data.clk_num; i++) {
++		if (!IS_ERR(i2s->clk_table[i]))
++			clk_unregister(i2s->clk_table[i]);
++	}
++}
++
++static void i2s_unregister_clock_provider(struct platform_device *pdev)
++{
++	struct i2s_dai *i2s = dev_get_drvdata(&pdev->dev);
++
++	of_clk_del_provider(pdev->dev.of_node);
++	i2s_unregister_clocks(i2s);
++}
++
++static int i2s_register_clock_provider(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct i2s_dai *i2s = dev_get_drvdata(dev);
++	const char *clk_name[2] = { "i2s_opclk0", "i2s_opclk1" };
++	const char *p_names[2] = { NULL };
++	const struct samsung_i2s_variant_regs *reg_info = i2s->variant_regs;
++	struct clk *rclksrc;
++	int ret, i;
++
++	/* Register the clock provider only if it's expected in the DTB */
++	if (!of_find_property(dev->of_node, "#clock-cells", NULL))
++		return 0;
++
++	/* Get the RCLKSRC mux clock parent clock names */
++	for (i = 0; i < ARRAY_SIZE(p_names); i++) {
++		rclksrc = clk_get(dev, clk_name[i]);
++		if (IS_ERR(rclksrc))
++			continue;
++		p_names[i] = __clk_get_name(rclksrc);
++		clk_put(rclksrc);
++	}
++	/*
++	 * Register the mux and div clocks only if both source clocks
++	 * are available, i.e. for the I2S0 instance and versions with
++	 * QUIRK_NO_MUXPSR quirk not set.
++	 */
++	if (p_names[1] && !(i2s->quirks & QUIRK_NO_MUXPSR)) {
++		/* Activate the prescaler */
++		u32 val = readl(i2s->addr + I2SPSR);
++		writel(val | PSR_PSREN, i2s->addr + I2SPSR);
++
++		i2s->clk_table[1] = clk_register_mux(NULL, "i2s_rclksrc",
++				p_names, ARRAY_SIZE(p_names),
++				CLK_SET_RATE_NO_REPARENT | CLK_SET_RATE_PARENT,
++				i2s->addr + I2SMOD, reg_info->rclksrc_off,
++				1, 0, i2s->lock);
++
++		i2s->clk_table[2] = clk_register_divider(NULL,
++				"i2s_presc", "i2s_rclksrc",
++				CLK_SET_RATE_PARENT,
++				i2s->addr + I2SPSR, 8, 6, 0, i2s->lock);
++
++		p_names[0] = "i2s_presc";
++		i2s->clk_data.clk_num = 2;
++	}
++	of_property_read_string_index(dev->of_node,
++				"clock-output-names", 0, &clk_name[0]);
++
++	i2s->clk_table[0] = clk_register_gate(NULL, clk_name[0],
++				p_names[0], CLK_SET_RATE_PARENT,
++				i2s->addr + I2SMOD, reg_info->cdclkcon_off,
++				CLK_GATE_SET_TO_DISABLE, i2s->lock);
++
++	i2s->clk_data.clk_num += 1;
++	i2s->clk_data.clks = i2s->clk_table;
++
++	ret = of_clk_add_provider(dev->of_node, of_clk_src_onecell_get,
++				  &i2s->clk_data);
++	if (ret < 0) {
++		dev_err(dev, "failed to add clock provider\n");
++		i2s_unregister_clocks(i2s);
++	}
++
++	return ret;
++}
++
+ static int samsung_i2s_probe(struct platform_device *pdev)
+ {
+ 	struct i2s_dai *pri_dai, *sec_dai = NULL;
+@@ -1297,7 +1371,7 @@ static int samsung_i2s_probe(struct platform_device *pdev)
+ 	if (ret != 0)
+ 		return ret;
+
+-	return 0;
++	return i2s_register_clock_provider(pdev);
+ }
+
+ static int samsung_i2s_remove(struct platform_device *pdev)
+@@ -1314,8 +1388,10 @@ static int samsung_i2s_remove(struct platform_device *pdev)
+ 		pm_runtime_disable(&pdev->dev);
+ 	}
+
+-	if (!is_secondary(i2s))
++	if (!is_secondary(i2s)) {
++		i2s_unregister_clock_provider(pdev);
+ 		clk_disable_unprepare(i2s->clk);
++	}
+
+ 	i2s->pri_dai = NULL;
+ 	i2s->sec_dai = NULL;
+--
+1.7.9.5
