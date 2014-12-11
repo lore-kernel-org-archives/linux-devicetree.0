@@ -1,224 +1,797 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [RFC/PATCH 5/7] arm: omap: hwmod: allow for registration of
- class-less hwmods
-Date: Thu, 11 Dec 2014 01:52:38 +0100
-Message-ID: <20141211005238.GC5585@earth.universe>
-References: <1418164072-19087-1-git-send-email-balbi@ti.com>
- <1418164072-19087-6-git-send-email-balbi@ti.com>
- <54882576.8020609@ti.com>
- <20141210145433.GC4602@saruman>
+From: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v4 2/5] gpio: Cygnus: add GPIO driver
+Date: Wed, 10 Dec 2014 17:30:00 -0800
+Message-ID: <5488F398.2000605@broadcom.com>
+References: <rjui@broadcom.com> <1418071319-11779-1-git-send-email-rjui@broadcom.com> <1418071319-11779-3-git-send-email-rjui@broadcom.com> <CAAVeFuJ875fvEwPbnc-Eewsw4Rp7hLbv7nXWBb=OgvLwhQBVvQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="/e2eDi0V/xtL+Mc8"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20141210145433.GC4602@saruman>
-Sender: linux-omap-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>
-Cc: Lokesh Vutla <lokeshvutla@ti.com>, Tony Lindgren <tony@atomide.com>, "Kristo, Tero" <t-kristo@ti.com>, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, Paul Walmsley <paul@pwsan.com>, Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAAVeFuJ875fvEwPbnc-Eewsw4Rp7hLbv7nXWBb=OgvLwhQBVvQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---/e2eDi0V/xtL+Mc8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Dec 10, 2014 at 08:54:33AM -0600, Felipe Balbi wrote:
-> Hi,
->=20
-> (adding linux-omap back to the loop)
->=20
-> On Wed, Dec 10, 2014 at 04:20:30PM +0530, Lokesh Vutla wrote:
-> > Hi Felipe,
-> >=20
-> > On Wednesday 10 December 2014 03:57 AM, Felipe Balbi wrote:
-> > > Before this patch, HWMOD requires the existence
-> > > of a struct omap_hwmod_class very early.
-> > Yes, hwmod code looks for omap_hwmod_class entry before registering any=
- hwmod.
-> >=20
-> > With the patch 4/7 omap_hwmod_class gets populated from dt very late af=
-ter registration of the hwmod.
-> > So all the hwmod which gets class data from dt never gets registered an=
-d state is always UNKNOWN.
-> > Mostly making it unusable.
-> > IMO this patch just masks the problem.
-> >=20
-> > In order to register hwmod we need to populate class data very early.
-> > We can populate at the same place as how reg property is being parsed.
-> > Call omap_hwmod_init_sysc() in _init() of the particular hwmod:
-> > The below diff will help:
-> >
-> > diff --git a/arch/arm/mach-omap2/omap_hwmod.c b/arch/arm/mach-omap2/oma=
-p_hwmod.c
-> > index cbb908d..05ecf8a 100644
-> > --- a/arch/arm/mach-omap2/omap_hwmod.c
-> > +++ b/arch/arm/mach-omap2/omap_hwmod.c
-> > @@ -2415,6 +2415,116 @@ static int __init _init_mpu_rt_base(struct omap=
-_hwmod *oh, void *data,
-> >  	return 0;
-> >  }
-> > =20
-> > +static int omap_hwmod_has_sysc_bindings(struct device_node *node)
-> > +{
-> > +	char *properties[] =3D {
-> > +		"ti,rev_offs",
-> > +		"ti,sysc_offs",
-> > +		"ti,syss_offs",
-> > +		"ti,sysc_flags",
-> > +		"ti,srst_udelay",
-> > +		"ti,idlemodes",
-> > +		"ti,clockact",
-> > +		"ti,sysc_type",
-> > +		NULL
-> > +	};
-> > +	char **tmp =3D properties;
-> > +
-> > +	while (*tmp) {
-> > +		if (of_property_read_bool(node, *tmp)) {
-> > +			return true;
-> > +		}
-> > +		tmp++;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int omap_hwmod_init_sysc(struct device_node *node,
-> > +		struct omap_hwmod *oh, int index)
-> > +{
-> > +	struct omap_hwmod_class *class =3D oh->class;
-> > +	struct omap_hwmod_class_sysconfig *sysc;
-> > +	int ret;
-> > +	int i;
-> > +	char name[128];
-> > +	const char *tmp =3D oh->name;
-> > +	u32 prop;
-> > +
-> > +	/* if data isn't provided by DT, skip */
-> > +	if ((class && class->sysc) || !omap_hwmod_has_sysc_bindings(node))
-> > +		return 0;
-> > +
-> > +	class =3D kzalloc(sizeof(*class), GFP_KERNEL);
-> > +	if (!class)
-> > +		return -ENOMEM;
-> > +
-> > +	i =3D 0;
-> > +	while (*tmp) {
-> > +		if (isalpha(*tmp))
-> > +			name[i++] =3D *tmp;
-> > +		tmp++;
-> > +	}
-> > +	name[i] =3D '\0';
-> > +
-> > +	class->name =3D kzalloc(sizeof(name), GFP_KERNEL);
-> > +	if (!class->name)
-> > +		return -ENOMEM;
-> > +	strncpy(class->name, name, sizeof(name) - 1);
-> > +
-> > +	sysc =3D kzalloc(sizeof(*sysc), GFP_KERNEL);
-> > +	if (!sysc)
-> > +		return -ENOMEM;
-> > +
-> > +	ret =3D of_property_read_u32_index(node, "ti,rev_offs", index, &prop);
-> > +	if (!ret)
-> > +		sysc->rev_offs =3D prop;
-> > +
-> > +	ret =3D of_property_read_u32_index(node, "ti,sysc_offs", index, &prop=
-);
-> > +	if (!ret)
-> > +		sysc->sysc_offs =3D prop;
-> > +
-> > +	ret =3D of_property_read_u32_index(node, "ti,syss_offs", index, &prop=
-);
-> > +	if (!ret)
-> > +		sysc->syss_offs =3D prop;
-> > +
-> > +	ret =3D of_property_read_u32_index(node, "ti,sysc_flags", index, &pro=
-p);
-> > +	if (!ret)
-> > +		sysc->sysc_flags =3D prop & 0xffff;
-> > +
-> > +	ret =3D of_property_read_u32_index(node, "ti,srst_udelay", index, &pr=
-op);
-> > +	if (!ret)
-> > +		sysc->srst_udelay =3D prop & 0xff;
-> > +
-> > +	ret =3D of_property_read_u32_index(node, "ti,idlemodes", index, &prop=
-);
-> > +	if (!ret)
-> > +		sysc->idlemodes =3D prop & 0xff;
-> > +
-> > +	ret =3D of_property_read_u32_index(node, "ti,clockact", index, &prop);
-> > +	if (!ret)
-> > +		sysc->clockact =3D prop & 0xff;
-> > +
-> > +	ret =3D of_property_read_u32_index(node, "ti,sysc_type", index, &prop=
-);
-> > +	if (ret)
-> > +		prop =3D 1;
-> > +
-> > +	switch (prop) {
-> > +	case 2:
-> > +		sysc->sysc_fields =3D &omap_hwmod_sysc_type2;
-> > +		break;
-> > +	case 3:
-> > +		sysc->sysc_fields =3D &omap_hwmod_sysc_type3;
-> > +		break;
-> > +	case 1:
-> > +	default:
-> > +		sysc->sysc_fields =3D &omap_hwmod_sysc_type1;
-> > +	}
-> > +	class->sysc =3D sysc;
-> > +	oh->class =3D class;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> >  /**
-> >   * _init - initialize internal data for the hwmod @oh
-> >   * @oh: struct omap_hwmod *
-> > @@ -2449,6 +2559,12 @@ static int __init _init(struct omap_hwmod *oh, v=
-oid *data)
-> >  		else if (np && index)
-> >  			pr_warn("omap_hwmod: %s using broken dt data from %s\n",
-> >  				oh->name, np->name);
-> > +
-> > +		if (np) {
-> > +			r =3D omap_hwmod_init_sysc(np, oh, 0);
->=20
-> this won't handle any binding which lists more than one hwmod on its
-> ti,hwmods property.
+On 12/10/2014 2:34 AM, Alexandre Courbot wrote:
+> On Tue, Dec 9, 2014 at 5:41 AM, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
+>> This GPIO driver supports all 3 GPIO controllers in the Broadcom Cygnus
+>> SoC. The 3 GPIO controllers are 1) the ASIU GPIO controller, 2) the
+>> chipCommonG GPIO controller, and 3) the ALWAYS-ON GPIO controller
+>>
+>> Signed-off-by: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> Reviewed-by: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> ---
+>>   drivers/gpio/Kconfig           |   11 +
+>>   drivers/gpio/Makefile          |    1 +
+>>   drivers/gpio/gpio-bcm-cygnus.c |  705 ++++++++++++++++++++++++++++++++++++++++
+>>   3 files changed, 717 insertions(+)
+>>   create mode 100644 drivers/gpio/gpio-bcm-cygnus.c
+>>
+>> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+>> index 633ec21..3e3b0342 100644
+>> --- a/drivers/gpio/Kconfig
+>> +++ b/drivers/gpio/Kconfig
+>> @@ -126,6 +126,17 @@ config GPIO_74XX_MMIO
+>>              8 bits:     74244 (Input), 74273 (Output)
+>>              16 bits:    741624 (Input), 7416374 (Output)
+>>
+>> +config GPIO_BCM_CYGNUS
+>> +       bool "Broadcom Cygnus GPIO support"
+>> +       depends on ARCH_BCM_CYGNUS && OF_GPIO
+>> +       help
+>> +         Say yes here to turn on GPIO support for Broadcom Cygnus SoC
+>> +
+>> +         The Broadcom Cygnus SoC has 3 GPIO controllers including the ASIU
+>> +         GPIO controller (ASIU), the chipCommonG GPIO controller (CCM), and
+>> +         the always-ON GPIO controller (CRMU). All 3 GPIO controllers are
+>> +         supported by this driver
+>> +
+>>   config GPIO_CLPS711X
+>>          tristate "CLPS711X GPIO support"
+>>          depends on ARCH_CLPS711X || COMPILE_TEST
+>> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+>> index 81755f1..31eb7e0 100644
+>> --- a/drivers/gpio/Makefile
+>> +++ b/drivers/gpio/Makefile
+>> @@ -19,6 +19,7 @@ obj-$(CONFIG_GPIO_ADP5520)    += gpio-adp5520.o
+>>   obj-$(CONFIG_GPIO_ADP5588)     += gpio-adp5588.o
+>>   obj-$(CONFIG_GPIO_AMD8111)     += gpio-amd8111.o
+>>   obj-$(CONFIG_GPIO_ARIZONA)     += gpio-arizona.o
+>> +obj-$(CONFIG_GPIO_BCM_CYGNUS)  += gpio-bcm-cygnus.o
+>>   obj-$(CONFIG_GPIO_BCM_KONA)    += gpio-bcm-kona.o
+>>   obj-$(CONFIG_GPIO_BT8XX)       += gpio-bt8xx.o
+>>   obj-$(CONFIG_GPIO_CLPS711X)    += gpio-clps711x.o
+>> diff --git a/drivers/gpio/gpio-bcm-cygnus.c b/drivers/gpio/gpio-bcm-cygnus.c
+>> new file mode 100644
+>> index 0000000..4fd9b73
+>> --- /dev/null
+>> +++ b/drivers/gpio/gpio-bcm-cygnus.c
+>> @@ -0,0 +1,705 @@
+>> +/*
+>> + * Copyright (C) 2014 Broadcom Corporation
+>> + *
+>> + * This program is free software; you can redistribute it and/or
+>> + * modify it under the terms of the GNU General Public License as
+>> + * published by the Free Software Foundation version 2.
+>> + *
+>> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
+>> + * kind, whether express or implied; without even the implied warranty
+>> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + * GNU General Public License for more details.
+>> + */
+>> +
+>> +#include <linux/kernel.h>
+>> +#include <linux/slab.h>
+>> +#include <linux/module.h>
+>> +#include <linux/irq.h>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/io.h>
+>> +#include <linux/gpio.h>
+>> +#include <linux/ioport.h>
+>> +#include <linux/of_device.h>
+>> +#include <linux/of_irq.h>
+>> +#include <linux/irqchip/chained_irq.h>
+>> +
+>> +#define CYGNUS_GPIO_DATA_IN_OFFSET   0x00
+>> +#define CYGNUS_GPIO_DATA_OUT_OFFSET  0x04
+>> +#define CYGNUS_GPIO_OUT_EN_OFFSET    0x08
+>> +#define CYGNUS_GPIO_IN_TYPE_OFFSET   0x0c
+>> +#define CYGNUS_GPIO_INT_DE_OFFSET    0x10
+>> +#define CYGNUS_GPIO_INT_EDGE_OFFSET  0x14
+>> +#define CYGNUS_GPIO_INT_MSK_OFFSET   0x18
+>> +#define CYGNUS_GPIO_INT_STAT_OFFSET  0x1c
+>> +#define CYGNUS_GPIO_INT_MSTAT_OFFSET 0x20
+>> +#define CYGNUS_GPIO_INT_CLR_OFFSET   0x24
+>> +#define CYGNUS_GPIO_PAD_RES_OFFSET   0x34
+>> +#define CYGNUS_GPIO_RES_EN_OFFSET    0x38
+>> +
+>> +/* drive strength control for ASIU GPIO */
+>> +#define CYGNUS_GPIO_ASIU_DRV0_CTRL_OFFSET 0x58
+>> +
+>> +/* drive strength control for CCM GPIO */
+>> +#define CYGNUS_GPIO_CCM_DRV0_CTRL_OFFSET  0x00
+>> +
+>> +#define GPIO_BANK_SIZE 0x200
+>> +#define NGPIOS_PER_BANK 32
+>> +#define GPIO_BIT(pin) ((pin) % NGPIOS_PER_BANK)
+>> +#define GPIO_BANK(pin) ((pin) / NGPIOS_PER_BANK)
+>> +
+>> +#define GPIO_FLAG_BIT_MASK           0xffff
+>> +#define GPIO_PULL_BIT_SHIFT          16
+>> +#define GPIO_PULL_BIT_MASK           0x3
+>> +
+>> +#define GPIO_DRV_STRENGTH_BIT_SHIFT  20
+>> +#define GPIO_DRV_STRENGTH_BITS       3
+>> +#define GPIO_DRV_STRENGTH_BIT_MASK   ((1 << GPIO_DRV_STRENGTH_BITS) - 1)
+>> +
+>> +/*
+>> + * For GPIO internal pull up/down registers
+>> + */
+>> +enum gpio_pull {
+>> +       GPIO_PULL_NONE = 0,
+>> +       GPIO_PULL_UP,
+>> +       GPIO_PULL_DOWN,
+>> +       GPIO_PULL_INVALID,
+>> +};
+>> +
+>> +/*
+>> + * GPIO drive strength
+>> + */
+>> +enum gpio_drv_strength {
+>> +       GPIO_DRV_STRENGTH_2MA = 0,
+>> +       GPIO_DRV_STRENGTH_4MA,
+>> +       GPIO_DRV_STRENGTH_6MA,
+>> +       GPIO_DRV_STRENGTH_8MA,
+>> +       GPIO_DRV_STRENGTH_10MA,
+>> +       GPIO_DRV_STRENGTH_12MA,
+>> +       GPIO_DRV_STRENGTH_14MA,
+>> +       GPIO_DRV_STRENGTH_16MA,
+>> +       GPIO_DRV_STRENGTH_INVALID,
+>> +};
+>> +
+>> +struct bcm_cygnus_gpio {
+>> +       struct device *dev;
+>> +       void __iomem *base;
+>> +       void __iomem *io_ctrl;
+>> +       spinlock_t lock;
+>> +       struct gpio_chip gc;
+>> +       unsigned num_banks;
+>> +       int irq;
+>> +       struct irq_domain *irq_domain;
+>> +};
+>> +
+>> +static unsigned int gpio_base_index;
+>
+> Nope. What happens if there are other GPIO controllers with
+> conflicting base GPIOs? I guess this adds more weight to that
+> "linux,gpio-base" property I mentioned in
+> http://www.spinics.net/lists/arm-kernel/msg384847.html .
+>
+> The best solution would be for users of the GPIOs provided by this
+> driver to not rely on GPIO numbers at all, and exclusively use the
+> gpiod interface. Is that an option for you?
+>
+Doesn't sysfs still rely the global GPIO number? We need to support the 
+sysfs GPIO entries because some of our customers are using that for GPIO 
+configuration.
 
-I think Tony planned to remove this kind of multi hwmod references.
+I can definitely change the code to use device tree property 
+"linux,gpio-base" though.
 
-IMHO instead of DT referencing the hwmod stuff using ti,hwmods the
-hwmod database should reference the compatible values. This depends
-on omap3 being DT only of course.
+>> +
+>> +static struct bcm_cygnus_gpio *to_bcm_cygnus_gpio(struct gpio_chip *gc)
+>> +{
+>> +       return container_of(gc, struct bcm_cygnus_gpio, gc);
+>> +}
+>> +
+>> +static int bcm_cygnus_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
+>> +{
+>> +       struct bcm_cygnus_gpio *cygnus_gpio = to_bcm_cygnus_gpio(gc);
+>> +
+>> +       return irq_find_mapping(cygnus_gpio->irq_domain, offset);
+>> +}
+>> +
+>> +static unsigned int __gpio_reg_offset(struct bcm_cygnus_gpio *cygnus_gpio,
+>> +               unsigned gpio)
+>> +{
+>> +       return GPIO_BANK(gpio) * GPIO_BANK_SIZE;
+>> +}
+>
+> The cygnus_gpio argument in this function is unused. The compiler is
+> supposed to signal such issues. Have you looked at your compiler
+> output?
+>
+Let me change it to marco GPIO_REG(gpio) as you suggested.
 
--- Sebastian
+>> +
+>> +static unsigned int __gpio_bitpos(struct bcm_cygnus_gpio *cygnus_gpio,
+>> +               unsigned gpio)
+>> +{
+>> +       return GPIO_BIT(gpio);
+>> +}
+>
+> Same here. Also they are so simple that macros would be more adequate
+> here I believe:
+>
+Agreed.
 
---/e2eDi0V/xtL+Mc8
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+> #define CYGNUS_GPIO_REG(pin, reg) (GPIO_BANK(pin) * GPIO_BANK_SIZE + reg)
+> #define CYGNUS_GPIO_SHIFT(pin) (pin % NGPIOS_PER_BANK) /* and remove
+> the GPIO_BIT macro */
+>
+Right. The two macros make it simpler. Especially CYGNUS_GPIO_REG that 
+takes the register offset as well. Will make the change.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+>> +
+>> +static void bcm_cygnus_gpio_irq_handler(unsigned int irq,
+>> +               struct irq_desc *desc)
+>> +{
+>> +       struct bcm_cygnus_gpio *cygnus_gpio;
+>> +       struct irq_chip *chip = irq_desc_get_chip(desc);
+>> +       int i, bit;
+>> +
+>> +       chained_irq_enter(chip, desc);
+>> +
+>> +       cygnus_gpio = irq_get_handler_data(irq);
+>> +
+>> +       /* go through the entire GPIO banks and handle all interrupts */
+>> +       for (i = 0; i < cygnus_gpio->num_banks; i++) {
+>> +               unsigned long val = readl(cygnus_gpio->base +
+>> +                               (i * GPIO_BANK_SIZE) +
+>> +                               CYGNUS_GPIO_INT_MSTAT_OFFSET);
+>
+> Can you add cygnus_readl() and cygnus_writel() functions to avoid
+> explicitly doing this operation on cygnus_gpio->base every time? It
+> would be clearer and less error-prone.
+>
+Hmmm...But 'base' isn't the only register block that we access in this 
+driver. There's also 'io_ctrl'.
 
-iQIcBAEBCgAGBQJUiOrVAAoJENju1/PIO/qaD5QP/A+JHsWm3SoC3OJSfX+Nxe7b
-CiHzRP0du6xNr70LCmj8gIKKy/4/NtnNPaXzKjuphRj5ovb/ChY0aRwhgZVlVAAB
-S/zRjvudKntaIIBJJBMZ+fH1Jt3Im3+T4UG8R8vtTZzKkqusH6KZaYm78Qd21ZJb
-ls7ybgcGYtVrVb9qfXNKn7+OYptxZIHVnSBBIodjCrK457JrYj6mzyN6OZF1h2Jk
-2xQbGFNG5w4QV6xeTCNnrbOk+ENUszBz1z3SKSztDYNmIg4doa2btzdpAT44Tq8d
-/PBXXt75W6JCrskytrzyn8PdIK1AO+OL1+sqdZ0ccoBvkDHjo7uxSpG7pQ3DG6zG
-7tSPcZPeMlhf+ttk0pikplPeCjJys/nZ8E3KMEiMlE/RivBBVqXpFnuDirvw7QTX
-Fi6Gx7fGnuzpw8KMbBsg1Bp7yOUDSl7vb+ptjinjK7LuL7aQ2+Z90qsWjR1QBK1S
-wwBeNprPH8+amUS3Av7qdb+3/Qcmd8yt5wyzkz09JnjM1GhXliio0itGNojq4SpV
-8LIpTj/ynUj33qfiB1K6+gqo53xljAqm3dttqG5O87C7HhF1idme5ocMtxRYlKZ9
-CGNG9IQP64EQNjG2OLTZ+KnVryQsQAwBPam3XG4FItyk3Z+mzzaV0gW3nT/LroDy
-wi3rA35khIAGKcp9PU8a
-=61lD
------END PGP SIGNATURE-----
+What I can do is to introduce cygnus_readl() and cygnus_writel() like 
+you suggested, and in the particular function 
+bcm_cygnus_gpio_set_strength where io_ctrl register is needed, still use 
+the normal readl and writel functions.
 
---/e2eDi0V/xtL+Mc8--
+>> +
+>> +               for_each_set_bit(bit, &val, NGPIOS_PER_BANK) {
+>> +                       unsigned pin = NGPIOS_PER_BANK * i + bit;
+>> +                       int child_irq =
+>> +                               bcm_cygnus_gpio_to_irq(&cygnus_gpio->gc, pin);
+>> +
+>> +                       /*
+>> +                        * Clear the interrupt before invoking the
+>> +                        * handler, so we do not leave any window
+>> +                        */
+>> +                       writel(1 << bit,
+>> +                               cygnus_gpio->base + (i * GPIO_BANK_SIZE) +
+>> +                               CYGNUS_GPIO_INT_CLR_OFFSET);
+>> +
+>> +                       generic_handle_irq(child_irq);
+>> +               }
+>> +       }
+>> +
+>> +       chained_irq_exit(chip, desc);
+>> +}
+>> +
+>> +static void bcm_cygnus_gpio_irq_ack(struct irq_data *d)
+>> +{
+>> +       struct bcm_cygnus_gpio *cygnus_gpio = irq_data_get_irq_chip_data(d);
+>> +       unsigned gpio = d->hwirq;
+>> +       unsigned int offset, shift;
+>> +       u32 val;
+>> +
+>> +       offset = __gpio_reg_offset(cygnus_gpio, gpio) +
+>> +               CYGNUS_GPIO_INT_CLR_OFFSET;
+>> +       shift = __gpio_bitpos(cygnus_gpio, gpio);
+>> +
+>> +       val = 1 << shift;
+>
+> val = BIT(shift);
+>
+Will change.
+
+>> +       writel(val, cygnus_gpio->base + offset);
+>> +
+>> +       dev_dbg(cygnus_gpio->dev, "gpio:%u offset:0x%04x shift:%u\n", gpio,
+>> +                       offset, shift);
+>> +}
+>> +
+>> +static void bcm_cygnus_gpio_irq_mask(struct irq_data *d)
+>> +{
+>> +       struct bcm_cygnus_gpio *cygnus_gpio = irq_data_get_irq_chip_data(d);
+>> +       unsigned gpio = d->hwirq;
+>> +       unsigned int offset, shift;
+>> +       u32 val;
+>> +       unsigned long flags;
+>> +
+>> +       offset = __gpio_reg_offset(cygnus_gpio, gpio) +
+>> +               CYGNUS_GPIO_INT_MSK_OFFSET;
+>> +       shift = __gpio_bitpos(cygnus_gpio, gpio);
+>> +
+>> +       spin_lock_irqsave(&cygnus_gpio->lock, flags);
+>> +
+>> +       val = readl(cygnus_gpio->base + offset);
+>> +       val &= ~(1 << shift);
+>
+> val &= ~BIT(shift);
+>
+Yes.
+
+>> +       writel(val, cygnus_gpio->base + offset);
+>> +
+>> +       spin_unlock_irqrestore(&cygnus_gpio->lock, flags);
+>> +
+>> +       dev_dbg(cygnus_gpio->dev, "gpio:%u offset:0x%04x shift:%u\n", gpio,
+>> +                       offset, shift);
+>> +}
+>> +
+>> +static void bcm_cygnus_gpio_irq_unmask(struct irq_data *d)
+>> +{
+>> +       struct bcm_cygnus_gpio *cygnus_gpio = irq_data_get_irq_chip_data(d);
+>> +       unsigned gpio = d->hwirq;
+>> +       unsigned int offset, shift;
+>> +       u32 val;
+>> +       unsigned long flags;
+>> +
+>> +       offset = __gpio_reg_offset(cygnus_gpio, gpio) +
+>> +               CYGNUS_GPIO_INT_MSK_OFFSET;
+>> +       shift = __gpio_bitpos(cygnus_gpio, gpio);
+>> +
+>> +       spin_lock_irqsave(&cygnus_gpio->lock, flags);
+>> +
+>> +       val = readl(cygnus_gpio->base + offset);
+>> +       val |= 1 << shift;
+>
+> val |= BIT(shift);
+>
+> Same remark everywhere it applies in this file.
+>
+Got it. Will go through the entire driver again and use 'BIT' where it 
+applies.
+
+>> +       writel(val, cygnus_gpio->base + offset);
+>> +
+>> +       spin_unlock_irqrestore(&cygnus_gpio->lock, flags);
+>> +
+>> +       dev_dbg(cygnus_gpio->dev, "gpio:%u offset:0x%04x shift:%u\n", gpio,
+>> +                       offset, shift);
+>> +}
+>
+> It seems like you can factorize bcm_cygnus_gpio_irq_mask() and
+> bcm_cygnus_gpio_irq_unmask() into one function which prototype would
+> be, say:
+>
+> static void bcm_cygnus_gpio_irq_set_mask(struct irq_data *d, int mask);
+>
+> which would set of clear the bit according to the value of mask. Then
+> your two mask/unmask functions would just need to call this one,
+> reducing the amount of redundant code.
+>
+> Also I noticed that this driver has lots of readl()/twiddle
+> bit/writel() sequences. Maybe it would make sense to have a
+> cygnus_set_bit(chip, reg, gpio, set) function to factorize this:
+>
+> void cygnus_set_bit(chip, reg, gpio, set)
+> {
+>      unsigned int offset = CYGNUS_GPIO_REG(gpio, reg);
+>      unsigned int shift = CYGNUS_GPIO_SHIFT(gpio);
+>      u32 val;
+>
+>      val = cygnus_readl(chip, offset);
+>      if (set)
+>          val |= BIT(shift);
+>      else
+>          val &= ~BIT(shift);
+>      cygnus_writel(chip, offset, val);
+> }
+>
+Okay. Need to go through the entire driver and make the change.
+
+>> +
+>> +static int bcm_cygnus_gpio_irq_set_type(struct irq_data *d, unsigned int type)
+>> +{
+>> +       struct bcm_cygnus_gpio *cygnus_gpio = irq_data_get_irq_chip_data(d);
+>> +       unsigned gpio = d->hwirq;
+>> +       unsigned int int_type, dual_edge, edge_lvl;
+>> +       unsigned int offset, shift;
+>> +       u32 val;
+>> +       unsigned long flags;
+>> +
+>> +       switch (type & IRQ_TYPE_SENSE_MASK) {
+>> +       case IRQ_TYPE_EDGE_RISING:
+>> +               int_type = 0;
+>> +               dual_edge = 0;
+>> +               edge_lvl = 1;
+>> +               break;
+>> +
+>> +       case IRQ_TYPE_EDGE_FALLING:
+>> +               int_type = 0;
+>> +               dual_edge = 0;
+>> +               edge_lvl = 0;
+>> +               break;
+>> +
+>> +       case IRQ_TYPE_EDGE_BOTH:
+>> +               int_type = 0;
+>> +               dual_edge = 1;
+>> +               edge_lvl = 0;
+>> +               break;
+>> +
+>> +       case IRQ_TYPE_LEVEL_HIGH:
+>> +               int_type = 1;
+>> +               dual_edge = 0;
+>> +               edge_lvl = 1;
+>> +               break;
+>> +
+>> +       case IRQ_TYPE_LEVEL_LOW:
+>> +               int_type = 1;
+>> +               dual_edge = 0;
+>> +               edge_lvl = 0;
+>> +               break;
+>> +
+>> +       default:
+>> +               dev_err(cygnus_gpio->dev, "invalid GPIO irq type 0x%x\n", type);
+>> +               return -EINVAL;
+>> +       }
+>> +
+>> +       spin_lock_irqsave(&cygnus_gpio->lock, flags);
+>> +
+>> +       shift = __gpio_bitpos(cygnus_gpio, gpio);
+>> +       offset = __gpio_reg_offset(cygnus_gpio, gpio) +
+>> +               CYGNUS_GPIO_IN_TYPE_OFFSET;
+>> +       val = readl(cygnus_gpio->base + offset);
+>> +       val &= ~(1 << shift);
+>> +       val |= int_type << shift;
+>> +       writel(val, cygnus_gpio->base + offset);
+>> +
+>> +       offset = __gpio_reg_offset(cygnus_gpio, gpio) +
+>> +               CYGNUS_GPIO_INT_DE_OFFSET;
+>> +       val = readl(cygnus_gpio->base + offset);
+>> +       val &= ~(1 << shift);
+>> +       val |= dual_edge << shift;
+>> +       writel(val, cygnus_gpio->base + offset);
+>> +
+>> +       offset = __gpio_reg_offset(cygnus_gpio, gpio) +
+>> +               CYGNUS_GPIO_INT_EDGE_OFFSET;
+>> +       val = readl(cygnus_gpio->base + offset);
+>> +       val &= ~(1 << shift);
+>> +       val |= edge_lvl << shift;
+>> +       writel(val, cygnus_gpio->base + offset);
+>
+> With the functions/macros suggested above I think you could change the
+> 3 blocks above into something like:
+>
+> cygnus_set_bit(cygnus_gpio, CYGNUS_GPIO_IN_TYPE_OFFSET, gpio, int_type);
+> cygnus_set_bit(cygnus_gpio, CYGNUS_GPIO_INT_DE_OFFSET, gpio, dual_edge);
+> cygnus_set_bit(cygnus_gpio, CYGNUS_GPIO_INT_EDGE_OFFSET, gpio, edge_lvl);
+>
+Yes. Indeed a lot simpler and easier to read. Thanks.
+
+>> +
+>> +       spin_unlock_irqrestore(&cygnus_gpio->lock, flags);
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static struct irq_chip bcm_cygnus_gpio_irq_chip = {
+>> +       .name = "bcm-cygnus-gpio",
+>> +       .irq_ack = bcm_cygnus_gpio_irq_ack,
+>> +       .irq_mask = bcm_cygnus_gpio_irq_mask,
+>> +       .irq_unmask = bcm_cygnus_gpio_irq_unmask,
+>> +       .irq_set_type = bcm_cygnus_gpio_irq_set_type,
+>> +};
+>> +
+>> +static int bcm_cygnus_gpio_direction_input(struct gpio_chip *gc,
+>> +               unsigned gpio)
+>> +{
+>> +       struct bcm_cygnus_gpio *cygnus_gpio = to_bcm_cygnus_gpio(gc);
+>> +       unsigned int offset, shift;
+>> +       u32 val;
+>> +       unsigned long flags;
+>> +
+>> +       offset = __gpio_reg_offset(cygnus_gpio, gpio) +
+>> +               CYGNUS_GPIO_OUT_EN_OFFSET;
+>> +       shift = __gpio_bitpos(cygnus_gpio, gpio);
+>> +
+>> +       spin_lock_irqsave(&cygnus_gpio->lock, flags);
+>> +
+>> +       val = readl(cygnus_gpio->base + offset);
+>> +       val &= ~(1 << shift);
+>> +       writel(val, cygnus_gpio->base + offset);
+>> +
+>> +       spin_unlock_irqrestore(&cygnus_gpio->lock, flags);
+>> +
+>> +       dev_dbg(cygnus_gpio->dev, "gpio:%u offset:0x%04x shift:%u\n", gpio,
+>> +                       offset, shift);
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static int bcm_cygnus_gpio_direction_output(struct gpio_chip *gc,
+>> +               unsigned gpio, int value)
+>> +{
+>> +       struct bcm_cygnus_gpio *cygnus_gpio = to_bcm_cygnus_gpio(gc);
+>> +       unsigned int offset, shift;
+>> +       u32 val;
+>> +       unsigned long flags;
+>> +
+>> +       offset = __gpio_reg_offset(cygnus_gpio, gpio) +
+>> +               CYGNUS_GPIO_OUT_EN_OFFSET;
+>> +       shift = __gpio_bitpos(cygnus_gpio, gpio);
+>> +
+>> +       spin_lock_irqsave(&cygnus_gpio->lock, flags);
+>> +
+>> +       val = readl(cygnus_gpio->base + offset);
+>> +       val |= 1 << shift;
+>> +       writel(val, cygnus_gpio->base + offset);
+>> +
+>> +       dev_dbg(cygnus_gpio->dev, "gpio:%u offset:0x%04x shift:%u\n", gpio,
+>> +                       offset, shift);
+>> +
+>> +       offset = __gpio_reg_offset(cygnus_gpio, gpio) +
+>> +               CYGNUS_GPIO_DATA_OUT_OFFSET;
+>> +
+>> +       val = readl(cygnus_gpio->base + offset);
+>> +       if (value)
+>> +               val |= 1 << shift;
+>> +       else
+>> +               val &= ~(1 << shift);
+>> +       writel(val, cygnus_gpio->base + offset);
+>
+> And here you would have:
+>
+> cygnus_set_bit(cygnus_gpio, CYGNUS_GPIO_OUT_EN_OFFSET, gpio, 1);
+> cygnus_set_bit(cygnus_gpio, CYGNUS_GPIO_DATA_OUT_OFFSET, gpio, value);
+>
+> Many other sites in this file could be simplified this way.
+>
+Yes. Will make the change.
+
+>> +
+>> +       spin_unlock_irqrestore(&cygnus_gpio->lock, flags);
+>> +
+>> +       dev_dbg(cygnus_gpio->dev,
+>> +               "gpio:%u offset:0x%04x shift:%u val:0x%08x\n",
+>> +               gpio, offset, shift, val);
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static void bcm_cygnus_gpio_set(struct gpio_chip *gc, unsigned gpio,
+>> +               int value)
+>> +{
+>> +       struct bcm_cygnus_gpio *cygnus_gpio = to_bcm_cygnus_gpio(gc);
+>> +       unsigned int offset, shift;
+>> +       u32 val;
+>> +       unsigned long flags;
+>> +
+>> +       offset = __gpio_reg_offset(cygnus_gpio, gpio) +
+>> +               CYGNUS_GPIO_DATA_OUT_OFFSET;
+>> +       shift = __gpio_bitpos(cygnus_gpio, gpio);
+>> +
+>> +       spin_lock_irqsave(&cygnus_gpio->lock, flags);
+>> +
+>> +       val = readl(cygnus_gpio->base + offset);
+>> +       if (value)
+>> +               val |= 1 << shift;
+>> +       else
+>> +               val &= ~(1 << shift);
+>> +       writel(val, cygnus_gpio->base + offset);
+>> +
+>> +       spin_unlock_irqrestore(&cygnus_gpio->lock, flags);
+>> +
+>> +       dev_dbg(cygnus_gpio->dev,
+>> +               "gpio:%u offset:0x%04x shift:%u val:0x%08x\n",
+>> +               gpio, offset, shift, val);
+>> +}
+>> +
+>> +static int bcm_cygnus_gpio_get(struct gpio_chip *gc, unsigned gpio)
+>> +{
+>> +       struct bcm_cygnus_gpio *cygnus_gpio = to_bcm_cygnus_gpio(gc);
+>> +       unsigned int offset, shift;
+>> +       u32 val;
+>> +
+>> +       offset = __gpio_reg_offset(cygnus_gpio, gpio) +
+>> +               CYGNUS_GPIO_DATA_IN_OFFSET;
+>> +       shift = __gpio_bitpos(cygnus_gpio, gpio);
+>> +
+>> +       val = readl(cygnus_gpio->base + offset);
+>> +       val = (val >> shift) & 1;
+>> +
+>> +       dev_dbg(cygnus_gpio->dev, "gpio:%u offset:0x%04x shift:%u val:%u\n",
+>> +                       gpio, offset, shift, val);
+>> +
+>> +       return val;
+>> +}
+>> +
+>> +static struct lock_class_key gpio_lock_class;
+>> +
+>> +static int bcm_cygnus_gpio_irq_map(struct irq_domain *d, unsigned int irq,
+>> +                                irq_hw_number_t hwirq)
+>> +{
+>> +       int ret;
+>> +
+>> +       ret = irq_set_chip_data(irq, d->host_data);
+>> +       if (ret < 0)
+>> +               return ret;
+>> +       irq_set_lockdep_class(irq, &gpio_lock_class);
+>> +       irq_set_chip_and_handler(irq, &bcm_cygnus_gpio_irq_chip,
+>> +                       handle_simple_irq);
+>> +       set_irq_flags(irq, IRQF_VALID);
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static void bcm_cygnus_gpio_irq_unmap(struct irq_domain *d, unsigned int irq)
+>> +{
+>> +       irq_set_chip_and_handler(irq, NULL, NULL);
+>> +       irq_set_chip_data(irq, NULL);
+>> +}
+>> +
+>> +static struct irq_domain_ops bcm_cygnus_irq_ops = {
+>> +       .map = bcm_cygnus_gpio_irq_map,
+>> +       .unmap = bcm_cygnus_gpio_irq_unmap,
+>> +       .xlate = irq_domain_xlate_twocell,
+>> +};
+>> +
+>> +#ifdef CONFIG_OF_GPIO
+>> +static void bcm_cygnus_gpio_set_pull(struct bcm_cygnus_gpio *cygnus_gpio,
+>> +               unsigned gpio, enum gpio_pull pull)
+>> +{
+>> +       unsigned int offset, shift;
+>> +       u32 val, pullup;
+>> +       unsigned long flags;
+>> +
+>> +       switch (pull) {
+>> +       case GPIO_PULL_UP:
+>> +               pullup = 1;
+>> +               break;
+>> +       case GPIO_PULL_DOWN:
+>> +               pullup = 0;
+>> +               break;
+>> +       case GPIO_PULL_NONE:
+>> +       case GPIO_PULL_INVALID:
+>> +       default:
+>> +               return;
+>> +       }
+>> +
+>> +       spin_lock_irqsave(&cygnus_gpio->lock, flags);
+>> +
+>> +       /* set pull up/down */
+>> +       offset = __gpio_reg_offset(cygnus_gpio, gpio) +
+>> +               CYGNUS_GPIO_PAD_RES_OFFSET;
+>> +       shift = __gpio_bitpos(cygnus_gpio, gpio);
+>> +
+>> +       val = readl(cygnus_gpio->base + offset);
+>> +       val &= ~(1 << shift);
+>> +       if (pullup)
+>> +               val |= 1 << shift;
+>> +       writel(val, cygnus_gpio->base + offset);
+>> +
+>> +       /* enable pad */
+>> +       offset = __gpio_reg_offset(cygnus_gpio, gpio) +
+>> +               CYGNUS_GPIO_RES_EN_OFFSET;
+>> +       val = readl(cygnus_gpio->base + offset);
+>> +       val |= 1 << shift;
+>> +       writel(val, cygnus_gpio->base + offset);
+>> +
+>> +       spin_unlock_irqrestore(&cygnus_gpio->lock, flags);
+>> +}
+>> +
+>> +static void bcm_cygnus_gpio_set_strength(struct bcm_cygnus_gpio *cygnus_gpio,
+>> +               unsigned gpio, enum gpio_drv_strength strength)
+>> +{
+>> +       struct device *dev = cygnus_gpio->dev;
+>> +       void __iomem *base;
+>> +       unsigned int i, offset, shift;
+>> +       u32 val;
+>> +       unsigned long flags;
+>> +
+>> +       /* some GPIO controllers do not support drive strength configuration */
+>> +       if (of_find_property(dev->of_node, "no-drv-strength", NULL))
+>> +               return;
+>> +
+>> +       if (cygnus_gpio->io_ctrl) {
+>> +               base = cygnus_gpio->io_ctrl;
+>> +               offset = CYGNUS_GPIO_CCM_DRV0_CTRL_OFFSET;
+>> +       } else {
+>> +               base = cygnus_gpio->base;
+>> +               offset = __gpio_reg_offset(cygnus_gpio, gpio) +
+>> +                       CYGNUS_GPIO_ASIU_DRV0_CTRL_OFFSET;
+>> +       }
+>> +
+>> +       shift = __gpio_bitpos(cygnus_gpio, gpio);
+>> +
+>> +       spin_lock_irqsave(&cygnus_gpio->lock, flags);
+>> +
+>> +       for (i = 0; i < GPIO_DRV_STRENGTH_BITS; i++) {
+>> +               val = readl(base + offset);
+>> +               val &= ~(1 << shift);
+>> +               val |= ((strength >> i) & 0x1) << shift;
+>> +               writel(val, base + offset);
+>> +               offset += 4;
+>> +       }
+>> +
+>> +       spin_unlock_irqrestore(&cygnus_gpio->lock, flags);
+>> +}
+>> +
+>> +static int bcm_cygnus_gpio_of_xlate(struct gpio_chip *gc,
+>> +               const struct of_phandle_args *gpiospec, u32 *flags)
+>> +{
+>> +       struct bcm_cygnus_gpio *cygnus_gpio = to_bcm_cygnus_gpio(gc);
+>> +       enum gpio_pull pull;
+>> +       enum gpio_drv_strength strength;
+>> +
+>> +       if (gc->of_gpio_n_cells < 2)
+>> +               return -EINVAL;
+>> +
+>> +       if (WARN_ON(gpiospec->args_count < gc->of_gpio_n_cells))
+>> +               return -EINVAL;
+>> +
+>> +       if (gpiospec->args[0] >= gc->ngpio)
+>> +               return -EINVAL;
+>> +
+>> +       pull = (gpiospec->args[1] >> GPIO_PULL_BIT_SHIFT) & GPIO_PULL_BIT_MASK;
+>> +       if (WARN_ON(pull >= GPIO_PULL_INVALID))
+>> +               return -EINVAL;
+>> +
+>> +       strength = (gpiospec->args[1] >> GPIO_DRV_STRENGTH_BIT_SHIFT) &
+>> +               GPIO_DRV_STRENGTH_BIT_MASK;
+>> +
+>> +       if (flags)
+>> +               *flags = gpiospec->args[1] & GPIO_FLAG_BIT_MASK;
+>> +
+>> +       bcm_cygnus_gpio_set_pull(cygnus_gpio, gpiospec->args[0], pull);
+>> +       bcm_cygnus_gpio_set_strength(cygnus_gpio, gpiospec->args[0], strength);
+>> +
+>> +       return gpiospec->args[0];
+>> +}
+>> +#endif
+>> +
+>> +static const struct of_device_id bcm_cygnus_gpio_of_match[] = {
+>> +       { .compatible = "brcm,cygnus-gpio" },
+>> +       { }
+>> +};
+>> +MODULE_DEVICE_TABLE(of, bcm_cygnus_gpio_of_match);
+>> +
+>> +static int bcm_cygnus_gpio_probe(struct platform_device *pdev)
+>> +{
+>> +       struct device *dev = &pdev->dev;
+>> +       const struct of_device_id *match;
+>> +       struct resource *res;
+>> +       struct bcm_cygnus_gpio *cygnus_gpio;
+>> +       struct gpio_chip *gc;
+>> +       u32 i, ngpios;
+>> +       int ret;
+>> +
+>> +       match = of_match_device(bcm_cygnus_gpio_of_match, dev);
+>> +       if (!match) {
+>> +               dev_err(&pdev->dev, "failed to find GPIO controller\n");
+>> +               return -ENODEV;
+>> +       }
+>
+> Do you still need that block of code? match is never used in this function.
+>
+Will get rid of it. Pretty much a redundant check.
+
+> ... well, I think you get the drill. Let's first start by factorizing
+> as much code as can be to make this driver easier to read (I have a
+> few leads, but I am sure there are other similar factorizations that
+> can be made). Let's also get rid of this static gpio_base_index
+> variable that effectively prevents any other GPIO driver from being
+> used alongside with this one. If you really need to use global GPIO
+> numbers, let's see if Linus agrees for that "linux,gpio-base" DT
+> property that would certainly make many people happy.
+>
+Will make the change. Thanks for the review. Very helpful!
+
+We do need to use global GPIO numbers, at least before sysfs GPIO 
+interface is updated to use gpiod. I'm fine with using 
+"linux,gpio-base". Btw, I assume that's per GPIO controller based device 
+tree property, correct?
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
