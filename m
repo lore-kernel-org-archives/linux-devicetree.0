@@ -1,51 +1,66 @@
-From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] extcon: add MAX3355 driver
-Date: Thu, 11 Dec 2014 21:51:54 +0900
-Message-ID: <5489936A.3010409@samsung.com>
-References: <14631865.01KLlU2iKL@wasted.cogentembedded.com>
- <5488F775.1030304@samsung.com> <54899264.30009@cogentembedded.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [RFC 04/15] regulator: add restrack support
+Date: Thu, 11 Dec 2014 12:58:37 +0000
+Message-ID: <20141211125837.GV11764@sirena.org.uk>
+References: <1418226513-14105-1-git-send-email-a.hajda@samsung.com>
+ <1418226513-14105-5-git-send-email-a.hajda@samsung.com>
+ <20141210160720.GS11764@sirena.org.uk>
+ <548976D2.7080005@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <54899264.30009-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="5FNPeqk0egs0iuvD"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <548976D2.7080005@samsung.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Andrzej Hajda <a.hajda@samsung.com>
+Cc: open list <linux-kernel@vger.kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mike Turquette <mturquette@linaro.org>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Inki Dae <inki.dae@samsung.com>, Kishon Vijay Abraham I <kishon@ti.com>, Liam Girdwood <lgirdwood@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "moderated list:ARM/CLKDEV SUPPORT" <linux-arm-kernel@lists.infradead.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, "moderated list:ARM/S5P EXYNOS AR..." <linux-samsung-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, boris.brezillon@
 List-Id: devicetree@vger.kernel.org
 
-On 12/11/2014 09:47 PM, Sergei Shtylyov wrote:
-> Hello.
-> 
-> On 12/11/2014 4:46 AM, Chanwoo Choi wrote:
-> 
->> I reviewed this patch quickly. This driver has just two gpio without any registers for IP.
-> 
->    Because there are no registers.
-> 
->> I wonder whether MAX3355E is separate chip to detect external connector
-> 
->    Yes. I thought my description has made that clear...
-> 
->> or just use gpio of AP.
-> 
->    What do you mean by AP?
->    MAX3355 is indeed partly connected to GPIOs and partly to the USB pins.
-> 
->> Could you send the datasheet of MAX3355E to me?
-> 
->    Looks like Geert has beaten me to it. :-)
-> 
->> Thanks,
->> Chanwoo Choi
-> 
 
-OK, I'll review it.
+--5FNPeqk0egs0iuvD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Thanks,
-Chanwoo Choi
+On Thu, Dec 11, 2014 at 11:49:54AM +0100, Andrzej Hajda wrote:
+> On 12/10/2014 05:07 PM, Mark Brown wrote:
+> > On Wed, Dec 10, 2014 at 04:48:22PM +0100, Andrzej Hajda wrote:
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> >> Regulators supports various methods of lookup.
+> >> The patch adds restrack support only to DT based regulators.
+
+> > Why, what does this mean and how might one use it?  I've not looked at
+> > the code since I don't know what it's supposed to accomplish...
+
+> Looking at this patch makes no sense without looking at cover letter
+> or at the patch adding restrack framework. In short adding restrack support
+> to regulators will allow to:
+
+I did look at the cover letter and glance at the first couple of patches
+but I still can't tell what this is really intended to do.  There's a
+lot of implementation detail but not a lot of high level overview so
+it's not very clear to me how exactly this solves problems or how it is
+different to the component framework, it sounds very similar.
+
+I'd expect someone reading the change in the regulator API to have at
+least some idea how this fits in with the rest of the API and how to use
+it, and probably more importantly I'd expect to be able to understand
+why this is DT only.
+
+--5FNPeqk0egs0iuvD
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUiZT9AAoJECTWi3JdVIfQt+cH/0dvoIx1Mg0GgnLlbSrzaC/+
+e9DXQHbh/ynUlqjM60wKCz/xo0mD/glSQQbZaCkpADoBWObnLDnydaGEg8w9fGub
+bN2gDtOcelvibN4ID1nZshRFHWFa1ubdGksf8v2nqvX7cvmdVcw0XLKIjiVlp4aI
+UVhr3RIqZEn4cCmw4FfrAxrxXMJfm9ehl5mecBKRuUlVGWFgw49AEG2GjKnnt2fM
+KogSkZdKOQpaWRQpst+wGnDnOUpYooe3ojfxBIxv6aZyCndXtUMO4Lr+55yhp5n7
+v+j0yRBmUmOPckm+MYU2/Ops09ROpD/FlShbb3jf+HxgLdy6W/kK45N11oadLu4=
+=wRH4
+-----END PGP SIGNATURE-----
+
+--5FNPeqk0egs0iuvD--
