@@ -1,47 +1,93 @@
-From: Andrew Bresticker <abrestic@chromium.org>
-Subject: [PATCH V3 0/2] dmaengine: Support for IMG MDC
-Date: Thu, 11 Dec 2014 14:59:15 -0800
-Message-ID: <1418338757-10022-1-git-send-email-abrestic@chromium.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>
-Cc: Andrew Bresticker <abrestic@chromium.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, James Hartley <james.hartley@imgtec.com>, James Hogan <james.hogan@imgtec.com>, Ezequiel Garcia <ezequiel.garcia@imgtec.com>, Damien Horsley <Damien.Horsley@imgtec.com>, Arnd Bergmann <arnd@arndb.de>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/3] TTY/slave: add driver for w2sg0004 GPS
+Date: Fri, 12 Dec 2014 00:04:05 +0100
+Message-ID: <20141211230404.GC11666@earth.universe>
+References: <20141211214801.4127.93914.stgit@notabene.brown>
+ <20141211215944.4127.57146.stgit@notabene.brown>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="4jXrM3lyYWu4nBt5"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20141211215944.4127.57146.stgit-wvvUuzkyo1EYVZTmpyfIwg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, NeilBrown <neil-+NVA1uvv1dVBDLzU/O5InQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This series adds support for the IMG Multi-threaded DMA Controller (MDC)
-which is found on IMG SoCs.  Currently this driver only supports the
-variant found on the MIPS-based Pistachio SoC.
 
-The MDC supports slave and memory-to-memory transfers on up to 32 channels.
-Requests from channels are handled by MDC threads.  Thread assignments are
-per-channel and are specified in the device-tree.
+--4jXrM3lyYWu4nBt5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Tested on a platform based on the Pistachio SoC with additional patches.
-Support for Pistachio will be submitted later.  Slave DMA was tested
-with the recently submitted IMG SPFI driver [1] and memory-to-memory
-DMA was tested with the dmatest module.
+Hi,
 
-Based on Vinod's slave-dma/topic/slave_caps_device_control_fix.
+On Fri, Dec 12, 2014 at 08:59:44AM +1100, NeilBrown wrote:
+> This uart-attatched GPS device has a toggle which turns
+> both on and off.  For reliable use we need to know what
+> start it is in.
 
-Changes from v2:
- - addressed Vinod's review comments
-Changes from v1:
- - addressed Arnd's review comments
- - rebased on Maxime's dmaengine cleanups
+I guess you mean "what state it is in"?
 
-[1] https://lkml.org/lkml/2014/11/12/763
+> So it registers with the tty for recv events when the tty
+> is open, and optionally configures the RX pin as a GPIO
+> interrupt when the tty is closed.
+>=20
+> If it detects data when it should be off, or a lack of data
+> when it should be on, it toggles the line.
+>=20
+> A regulator can also be configured to power the antenna.
+> In this case an rfkill device is created.  When the rfkill
+> is 'blocked' or the device is otherwise powered down,
+> the regulator is turned off.
 
-Andrew Bresticker (2):
-  dmaengine: Add binding document for IMG MDC
-  dmaengine: Add driver for IMG MDC
+[...]
 
- .../devicetree/bindings/dma/img-mdc-dma.txt        |   57 ++
- drivers/dma/Kconfig                                |    9 +
- drivers/dma/Makefile                               |    1 +
- drivers/dma/img-mdc-dma.c                          | 1011 ++++++++++++++++++++
- 4 files changed, 1078 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/img-mdc-dma.txt
- create mode 100644 drivers/dma/img-mdc-dma.c
+> index 000000000000..c9e7838b3198
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/serial/slave-w2sg0004.txt
+> @@ -0,0 +1,35 @@
+> +w2sg0004 UART-attached GPS receiver
+> +
+> +Required properties:
+> +- compatbile: "tty,w2sg0004"
 
--- 
-2.2.0.rc0.207.ga3a616c
+grep tty=20
+
+$ grep -c tty Documentation/devicetree/bindings/vendor-prefixes.txt
+0
+
+This should be something like "wi2wi,w2sg0004"
+
+[...]
+
+-- Sebastian
+
+--4jXrM3lyYWu4nBt5
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJUiiLkAAoJENju1/PIO/qaJHIP/0JVBvxvEcWMOFKsdla3hTSo
+ROWTR/vct+sCUOrY1G46aQReS22L14WObvT/nbVTQxKoGQCVfMVNeIP19xLPgu6C
+8d6ByVMmQFXLFG7+2E4RBX8340vNy2Msvx/ZCPO8Hax7NUIBOT72UF5s7oN2TZ/Q
+zETxmWKyqqAOZzJ0w1w7bNNtyi/wGkpVsuKzldzQcXZpiDSm3Tbo0vBDeQQqCBKB
+I9PsFuaGa4Ed4DtAkn0buSMWeDsCC33WU0EnHFmOnB4JUXb5lerTu+QivbILuMjs
+PDCRu+CInphQEJItar7kXShbalWxGyu725oOhX9BJxxtPAfe1CtBvY5YovarnQ1j
+9Oed3SPeL6y1OQT30TY6uheb50C54OWl11TeL/8mNuBZ9C5506gf0UNz4N9czNlP
+L22IstfHObuYHdybvCQsXuhykqWAR8uxzuZdyBQjWjF4/U0lVt1NrvMu0aNfcuU9
+jxe0kfaBNlXYQJ2Elc6z19f5YJ4yIEVsr3jXaCwLIFxkgQrpPO9pgF0+EVdjXuJ1
+e/MvA+bb8J4aEUhX024+kZ4gOAJVDjUV+8NcqDbRviQA1Rqfrd4hm8gGDgf1zO/e
+wQ1DjrsUnhcwW1EUuzC+XLBhHkmTkn00mEAi5SJVCSy6vlBKKnRniFBRvXl44bVY
+Roaybj6FDwdlRXzI3/S6
+=amiF
+-----END PGP SIGNATURE-----
+
+--4jXrM3lyYWu4nBt5--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
