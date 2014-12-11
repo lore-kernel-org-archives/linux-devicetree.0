@@ -1,30 +1,110 @@
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: Re: [PATCH v4 0/6] Touchscreen performance related fixes
-Date: Thu, 11 Dec 2014 21:40:05 +0100
-Message-ID: <548A0125.6040708@linutronix.de>
-References: <1415941651-28962-1-git-send-email-vigneshr@ti.com>	<20141124115116.GA14997@linutronix.de>	<547C3A95.30605@ti.com>	<547C3C19.5090501@linutronix.de>	<547C42FF.5010700@ti.com> <CAH=tA9FO5MCzE274thc-NugCNte6WdyC-Rxc6yfnuR=+6_qMbA@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCHv2 2/3] sunxi:drivers:input:ps2 Added sunxi
+ A10/A20 ps2 driver
+Date: Thu, 11 Dec 2014 22:09:19 +0100
+Message-ID: <20141211210919.GI8739@lukather>
+References: <1417907719-26775-1-git-send-email-VishnuPatekar0510@gmail.com>
+ <1417907719-26775-3-git-send-email-VishnuPatekar0510@gmail.com>
+ <20141208224137.GO8739@lukather>
+ <CAEzqOZu9TWmYyBOP8t+b7mepqdbKjhf-3P-uNJS_Od05XiBLZw@mail.gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <CAH=tA9FO5MCzE274thc-NugCNte6WdyC-Rxc6yfnuR=+6_qMbA@mail.gmail.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Nicolae Rosia <nicolae.rosia@gmail.com>, Vignesh R <vigneshr@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, richardcochran@gmail.com, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee.jones@linaro.org>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Samuel Ortiz <sameo@linux.intel.com>, Felipe Balbi <balbi@ti.com>, Brad Griffis <bgriffis@ti.com>, Sanjeev Sharma <sanjeev_sharma@mentor.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Jan Kardell <jan.kardell@telliq.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kerne
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="np3HfElajyDBpWGr"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBNMQVCSAKGQE5PHQEQA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAEzqOZu9TWmYyBOP8t+b7mepqdbKjhf-3P-uNJS_Od05XiBLZw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, leafy.myeh-Q9AEpCAkrSgqDJ6do+/SaQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/11/2014 09:34 PM, Nicolae Rosia wrote:
-> Hello,
+--np3HfElajyDBpWGr
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
 Hi,
 
-> Any updates on this series? I don't see it applied in [1] or [2].
+Remember to reply to all the recipients.
 
-I manage to freeze am335x-evm with those patches and I think Vignesh
-is looking into this.
+On Tue, Dec 09, 2014 at 04:40:36PM +0530, Vishnu Patekar wrote:
+> > > Signed-off-by: vishnupatekar <VishnuPatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > > ---
+> > >  drivers/input/serio/Kconfig     |   10 ++
+> > >  drivers/input/serio/Makefile    |    1 +
+> > >  drivers/input/serio/sunxi-ps2.c |  364
+> > +++++++++++++++++++++++++++++++++++++++
+> > >  3 files changed, 375 insertions(+)
+> > >  create mode 100644 drivers/input/serio/sunxi-ps2.c
+> > >
+> > > diff --git a/drivers/input/serio/Kconfig b/drivers/input/serio/Kconfig
+> > > index bc2d474..3a7599c 100644
+> > > --- a/drivers/input/serio/Kconfig
+> > > +++ b/drivers/input/serio/Kconfig
+> > > @@ -281,4 +281,14 @@ config HYPERV_KEYBOARD
+> > >         To compile this driver as a module, choose M here: the module
+> > will
+> > >         be called hyperv_keyboard.
+> > >
+> > > +config SERIO_SUNXI_PS2
+> > > +     tristate "Allwinner Sun4i-A10/Sun7i-A20 PS/2 controller"
+> >
+> > Allwinner A10 is enough
+> >
+> Okie, Should I change the config option as well, like SERIO_SUN4I_PS2 ?
 
-> Regards,
-> Nicolae Rosia
+Yep.
 
-Sebastian
+> > > +     /*Set Clock Divider Register*/
+> > > +     clk_scdf = DIV_ROUND_UP(src_clk, PS2_SAMPLE_CLK) - 1;
+> > > +     clk_pcdf = DIV_ROUND_UP(PS2_SAMPLE_CLK, PS2_SCLK) - 1;
+> >
+> > So this is actually a rounding down?
+> >
+> > Why not just using src_clk / PS2_SAMPLE_CLK directly?
+> >
+> > > +     rval = (clk_scdf<<8) | clk_pcdf;
+> >
+> > Spaces between the operators. Remember, run checkpatch.
+> >
+> Okie.
+> 
+> checkpatch could  not catch this!!
 
+Well, then it should have :)
+
+> > > +     writel(rval, drvdata->reg_base + PS2_REG_CLKDR);
+> > > +
+> > > +     /*Set Global Control Register*/
+> > > +     rval = PS2_GCTL_RESET | PS2_GCTL_INTEN | PS2_GCTL_MASTER
+> > > +             | PS2_GCTL_BUSEN;
+> > > +     writel(rval, drvdata->reg_base + PS2_REG_GCTL);
+> >
+> > You seem to be reading/writing from the same registers than in your
+> > interrupt handler, don't you need some locking in here?
+> >
+>
+> Interrupt is getting enabled only after writing to GCTL register.
+>
+> do you think still we need to locking mechanism here?
+
+Not really, you don't know the state of the device before your driver
+is probed, and the interrupts are enabled as soon as request_irq. So
+you can very well have the device running with the interrupts running
+before this function is called.
+
+Plus you might get spurious interrupts.
+
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--np3HfElajyDBpWGr--
