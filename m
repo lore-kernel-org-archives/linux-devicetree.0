@@ -1,42 +1,169 @@
-From: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH v5 1/5] phy: add a driver for the Rockchip SoC internal
- USB2.0 PHY
-Date: Thu, 11 Dec 2014 15:16:06 +0800
-Message-ID: <548944B6.90703@rock-chips.com>
-References: <1418208371-18851-1-git-send-email-lyz@rock-chips.com>	 <1418208371-18851-2-git-send-email-lyz@rock-chips.com>	 <5489338C.1030109@ti.com> <1418278322.18092.30.camel@perches.com>	 <54893963.7060304@ti.com> <1418279847.18092.32.camel@perches.com>	 <54893F26.5050304@rock-chips.com> <1418281568.18092.34.camel@perches.com>
+From: Josh Wu <josh.wu@atmel.com>
+Subject: [v3][PATCH 3/5] media: ov2640: add primary dt support
+Date: Thu, 11 Dec 2014 15:35:37 +0800
+Message-ID: <1418283339-16281-4-git-send-email-josh.wu@atmel.com>
+References: <1418283339-16281-1-git-send-email-josh.wu@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1418281568.18092.34.camel-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Yunzhi Li <lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1418283339-16281-1-git-send-email-josh.wu@atmel.com>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-media@vger.kernel.org, g.liakhovetski@gmx.de
+Cc: m.chehab@samsung.com, linux-arm-kernel@lists.infradead.org, laurent.pinchart@ideasonboard.com, s.nawrocki@samsung.com, festevam@gmail.com, Josh Wu <josh.wu@atmel.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Add device tree support for ov2640.
 
-On 12/11/2014 03:06 PM, Joe Perches wrote:
-> On Thu, 2014-12-11 at 14:52 +0800, Yunzhi Li wrote:
->> On 2014/12/11 14:37, Joe Perches wrote:
->>> On Thu, 2014-12-11 at 11:57 +0530, Kishon Vijay Abraham I wrote:
-> []
->>>> So If I have to write something on bit 0, I have to set bit 16.
->>>> If I have to write something on bit 1, I have to set bit 17.
->>>> If I have to write something on bit 2, I have to set bit 18.
->>>> and so on.
->>> To me it'd look better to use another << rather than a plus
->> Like (BIT(13) << 16)? It looks strange, or could I just use ((1 << 13)
->> << 16) to describe this bit ?
-> Up to you.  To me, the BIT(x+y) seems odd.
-I think BIT(29) is better, since you have described in comments.
->
->
->
->
->
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Josh Wu <josh.wu@atmel.com>
+---
+v2 -> v3:
+  1. fix gpiod usage.
+  2. refine the ov2640_probe() function.
 
+v1 -> v2:
+  1. use gpiod APIs.
+  2. change the gpio pin's name according to datasheet.
+  3. reduce the delay for .reset() function.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ drivers/media/i2c/soc_camera/ov2640.c | 87 ++++++++++++++++++++++++++++++++---
+ 1 file changed, 81 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/media/i2c/soc_camera/ov2640.c b/drivers/media/i2c/soc_camera/ov2640.c
+index 9ee910d..e0bcf5b 100644
+--- a/drivers/media/i2c/soc_camera/ov2640.c
++++ b/drivers/media/i2c/soc_camera/ov2640.c
+@@ -18,6 +18,8 @@
+ #include <linux/i2c.h>
+ #include <linux/slab.h>
+ #include <linux/delay.h>
++#include <linux/gpio.h>
++#include <linux/of_gpio.h>
+ #include <linux/v4l2-mediabus.h>
+ #include <linux/videodev2.h>
+ 
+@@ -283,6 +285,10 @@ struct ov2640_priv {
+ 	u32	cfmt_code;
+ 	struct v4l2_clk			*clk;
+ 	const struct ov2640_win_size	*win;
++
++	struct soc_camera_subdev_desc	ssdd_dt;
++	struct gpio_desc *resetb_gpio;
++	struct gpio_desc *pwdn_gpio;
+ };
+ 
+ /*
+@@ -1047,6 +1053,63 @@ static struct v4l2_subdev_ops ov2640_subdev_ops = {
+ 	.video	= &ov2640_subdev_video_ops,
+ };
+ 
++/* OF probe functions */
++static int ov2640_hw_power(struct device *dev, int on)
++{
++	struct i2c_client *client = to_i2c_client(dev);
++	struct ov2640_priv *priv = to_ov2640(client);
++
++	dev_dbg(&client->dev, "%s: %s the camera\n",
++			__func__, on ? "ENABLE" : "DISABLE");
++
++	if (priv->pwdn_gpio)
++		gpiod_direction_output(priv->pwdn_gpio, !on);
++
++	return 0;
++}
++
++static int ov2640_hw_reset(struct device *dev)
++{
++	struct i2c_client *client = to_i2c_client(dev);
++	struct ov2640_priv *priv = to_ov2640(client);
++
++	if (priv->resetb_gpio) {
++		/* Active the resetb pin to perform a reset pulse */
++		gpiod_direction_output(priv->resetb_gpio, 1);
++		usleep_range(3000, 5000);
++		gpiod_direction_output(priv->resetb_gpio, 0);
++	}
++
++	return 0;
++}
++
++static int ov2640_probe_dt(struct i2c_client *client,
++		struct ov2640_priv *priv)
++{
++	/* reset is not actived */
++	priv->resetb_gpio = devm_gpiod_get_optional(&client->dev, "resetb",
++			GPIOD_OUT_LOW);
++	if (!priv->resetb_gpio)
++		dev_dbg(&client->dev, "resetb gpio is not assigned!\n");
++	else if (IS_ERR(priv->resetb_gpio))
++		return PTR_ERR(priv->resetb_gpio);
++
++	/* Power down actived */
++	priv->pwdn_gpio = devm_gpiod_get_optional(&client->dev, "pwdn",
++			GPIOD_OUT_HIGH);
++	if (!priv->pwdn_gpio)
++		dev_dbg(&client->dev, "pwdn gpio is not assigned!\n");
++	else if (IS_ERR(priv->pwdn_gpio))
++		return PTR_ERR(priv->pwdn_gpio);
++
++	/* Initialize the soc_camera_subdev_desc */
++	priv->ssdd_dt.power = ov2640_hw_power;
++	priv->ssdd_dt.reset = ov2640_hw_reset;
++	client->dev.platform_data = &priv->ssdd_dt;
++
++	return 0;
++}
++
+ /*
+  * i2c_driver functions
+  */
+@@ -1058,12 +1121,6 @@ static int ov2640_probe(struct i2c_client *client,
+ 	struct i2c_adapter	*adapter = to_i2c_adapter(client->dev.parent);
+ 	int			ret;
+ 
+-	if (!ssdd) {
+-		dev_err(&adapter->dev,
+-			"OV2640: Missing platform_data for driver\n");
+-		return -EINVAL;
+-	}
+-
+ 	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE_DATA)) {
+ 		dev_err(&adapter->dev,
+ 			"OV2640: I2C-Adapter doesn't support SMBUS\n");
+@@ -1077,6 +1134,17 @@ static int ov2640_probe(struct i2c_client *client,
+ 		return -ENOMEM;
+ 	}
+ 
++	if (!ssdd && !client->dev.of_node) {
++		dev_err(&client->dev, "Missing platform_data for driver\n");
++		return  -EINVAL;
++	}
++
++	if (!ssdd && client->dev.of_node) {
++		ret = ov2640_probe_dt(client, priv);
++		if (ret)
++			return ret;
++	}
++
+ 	v4l2_i2c_subdev_init(&priv->subdev, client, &ov2640_subdev_ops);
+ 	v4l2_ctrl_handler_init(&priv->hdl, 2);
+ 	v4l2_ctrl_new_std(&priv->hdl, &ov2640_ctrl_ops,
+@@ -1123,9 +1191,16 @@ static const struct i2c_device_id ov2640_id[] = {
+ };
+ MODULE_DEVICE_TABLE(i2c, ov2640_id);
+ 
++static const struct of_device_id ov2640_of_match[] = {
++	{.compatible = "ovti,ov2640", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, ov2640_of_match);
++
+ static struct i2c_driver ov2640_i2c_driver = {
+ 	.driver = {
+ 		.name = "ov2640",
++		.of_match_table = of_match_ptr(ov2640_of_match),
+ 	},
+ 	.probe    = ov2640_probe,
+ 	.remove   = ov2640_remove,
+-- 
+1.9.1
