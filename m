@@ -1,76 +1,69 @@
-From: Valentin Longchamp <valentin.longchamp@keymile.com>
-Subject: Re: [PATCH] i2c-qoriq: modified compatibility for correct prescaler
-Date: Thu, 11 Dec 2014 14:44:20 +0100
-Message-ID: <54899FB4.9010207@keymile.com>
-References: <1413538026-15739-1-git-send-email-valentin.longchamp@keymile.com>	
- <1414537731.23458.120.camel@snotra.buserror.net>	
- <5450AC85.40302@keymile.com> <20141113003418.GE2062@katana>	
- <5465B285.7070005@keymile.com> <20141114082832.GA2180@katana>	
- <1416274083.15957.96.camel@freescale.com> <20141125181347.GC9716@katana>
- <1416966097.15957.171.camel@freescale.com>
+From: Yunzhi Li <lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH v6 1/5] phy: add a driver for the Rockchip SoC internal
+ USB2.0 PHY
+Date: Thu, 11 Dec 2014 21:45:11 +0800
+Message-ID: <54899FE7.7050808@rock-chips.com>
+References: <1418291722-25448-1-git-send-email-lyz@rock-chips.com> <1418291722-25448-2-git-send-email-lyz@rock-chips.com> <548971AF.1020506@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1416966097.15957.171.camel@freescale.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Scott Wood <scottwood@freescale.com>, Wolfram Sang <wsa@the-dreams.de>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, danielle.costantino@gmail.com, "Boschung,
- Rainer" <Rainer.Boschung@keymile.com>, "Brunck,
- Holger" <Holger.Brunck@keymile.com>, Linux I2C <linux-i2c@vger.kernel.org>, Linux PowerPC Kernel <linuxppc-dev@lists.ozlabs.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <548971AF.1020506-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
+Cc: olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgYWxsLAoKUGlja2luZyB1cCB0aGlzIGlzc3VlIGFnYWluLgoKT24gMTEvMjYvMjAxNCAwMjo0
-MSBBTSwgU2NvdHQgV29vZCB3cm90ZToKPiBPbiBUdWUsIDIwMTQtMTEtMjUgYXQgMTk6MTMgKzAx
-MDAsIFdvbGZyYW0gU2FuZyB3cm90ZToKPj4gT24gTW9uLCBOb3YgMTcsIDIwMTQgYXQgMDc6Mjg6
-MDNQTSAtMDYwMCwgU2NvdHQgV29vZCB3cm90ZToKPj4+IE9uIEZyaSwgMjAxNC0xMS0xNCBhdCAw
-OToyOCArMDEwMCwgV29sZnJhbSBTYW5nIHdyb3RlOgo+Pj4+Pj4KPj4+Pj4+IElmIHdlJ3JlIGdv
-aW5nIHRvIGNoYW5nZSB0aGUgZGV2aWNlIHRyZWUgSSdkIHJhdGhlciBqdXN0IGFkZCBhIHByb3Bl
-cnR5Cj4+Pj4+PiB0byBzYXkgd2hhdCB0aGUgcHJlc2NhbGVyIGlzLgo+Pj4+Pgo+Pj4+PiAgV2Ug
-d291bGQgaG93ZXZlciwgbGVhdmUgdGhlIGJvYXJkcycgZGV2aWNlIHRyZWVzIHRoYXQgdXNlIHRo
-aW5ncyBsaWtlCj4+Pj4+ICJmc2wsbXBjODU0My1pMmMiIGFzIGlzIGFuZCBpbnRyb2R1Y2UgdGhl
-IHByZXNjYWxlciBmb3IgdGhlIG90aGVycyByZXF1aXJpbmcgaXQuCj4+Pj4+Cj4+Pj4+Cj4+Pj4+
-IE5vdyB0aGUgZHJhd2JhY2sgaXMgdGhhdCB0aGUgZHJpdmVyIHdvdWxkIHJlcXVpcmUgYSBjaGFu
-Z2UsIHRvIHBhcnNlIHRoaXMKPj4+Pj4gcHJlc2NhbGVyIG5ldyBwcmVzY2FsZXIgcHJvcGVydHku
-IFdvdWxkIHRoaXMgYmUgT0sgZnJvbSB5b3VyIHBvaW50IG9mIHZpZXcKPj4+Pj4gV29sZnJhbSA/
-IElmIHllcywgSSB3aWxsIHNlbmQgdGhlIHBhdGNoZXMgZm9yIGl0Lgo+Pj4+Cj4+Pj4gSSBkb24n
-dCB0aGluayBpdCBpcyBPSy4KPj4+Cj4+PiBXaHk/Cj4+Cj4+IEJlY2F1c2UgSSB0aG91Z2h0IGl0
-IGNvdWxkIGJlIGRlZHVjZWQuIFRoZW4sIGEgc2VwZXJhdGUgcHJvcGVydHkgd291bGQKPj4gbm90
-IGJlIE9LLgo+Pgo+Pj4+ICBJJ2QgdGhpbmsgaXQgY2FuIGJlIGRlZHVjZWQgZnJvbSB0aGUgY29t
-cGF0aWJsZSBwcm9wZXJ0eS4KPj4+Cj4+PiBGb3IgYWxtb3N0IGFsbCBleGlzdGluZyBkZXZpY2Ug
-dHJlZXMgaXQgY2Fubm90IGJlLgo+Pgo+PiBQaXR5IDooIElmIHdlIGRvIGludHJvZHVjZSBhIG5l
-dyBwcm9wZXJ0eSwgaXQgc2hvdWxkIHByb2JhYmx5IGJlCj4+ICJjbG9jay1kaXYiLiBHcmVwcGlu
-ZyB0aHJvdWdoIGJpbmRpbmcgZG9jdW1lbnRhdGlvbiwgdGhhdCBzZWVtcwo+PiBhY2NlcHRlZC4g
-V2Ugc2hvdWxkIGFzayBEVCBtYWludGFpbmVycywgdG9vLCB0byBiZSBzYWZlLgo+Pgo+Pj4gSWYg
-eW91IHdhbnQgc29tZXRoaW5nIHRoYXQgd2lsbCB3b3JrIHdpdGhvdXQgY2hhbmdpbmcgZGV2aWNl
-IHRyZWVzLAo+Pj4geW91J2xsIG5lZWQgdG8gdXNlIFNWUiB0byBpZGVudGlmeSB0aGUgU29DLgo+
-Pgo+PiBUaGUgZHJpdmVyIGlzIGRvaW5nIHRoYXQgYWxyZWFkeSwgc2VlIG1wY19pMmNfZ2V0X3Nl
-Y19jZmdfOHh4eCgpLiBEdW5ubwo+PiBpZiBpdCBtYWtlcyBzZW5zZSB0byBhZGQgdG8gaXQgZm9y
-IGNvbnNpc3RlbmN5IHJlYXNvbnM/Cj4gCj4gVGhhdCdzIG5vdCBTVlIsIGJ1dCBzdXJlLiAgQmV0
-dGVyIHRvIGF2b2lkIG1lc3Npbmcgd2l0aCBleGlzdGluZyBkZXZpY2UKPiB0cmVlcy4KPiAKCldo
-YXQgaXMgdGhlbiB0aGUgYWdyZWVtZW50IGhlcmUgPyBBZGQgYSBjbG9jay1kaXYgdG8gdGhlIGRl
-dmljZSB0cmVlcyA/IE9yIGRvCnNvbWV0aGluZyBzaW1pbGFyIHRvICBtcGNfaTJjX2dldF9zZWNf
-Y2ZnXzh4eHgoKSA/CgpJIHRoaW5rIHRoZSBjbG9jay1kaXYgcHJvcGVydHkgaXMgYmV0dGVyIGFj
-Y29yZGluZyB0byBGcmVlc2NhbGUncyBBTiAyOTE5CnNlY3Rpb24gMy4xIFNvdXJjZSBjbG9jay4g
-QWxsIHRoZSBzb3VyY2UgY2xvY2tzIGFyZSBmaXhlZCAod2l0aCBhIGNsb2NrLWRpdiBvZiAyCmlu
-IGNhc2Ugb2YgbXBjODUzNi80My80NS80Ny80OC82Ny82OC83MiwgcGx1cyBwMjAyMCkgZXhjZXB0
-IGZvciB0aGUgbXBjODUzMy80NAp3aGVyZSBpdCBjYW4gYmUgMiBvciAzLCBhbmQgdGhhdCdzIHdo
-YXQgbXBjX2kyY19nZXRfc2VjX2NmZ184eHh4KCkgZGV0ZXJtaW5lcy4KClNvIG1wY19pMmNfZ2V0
-X3NlY19jZmdfOHh4eCgpIHNob3VsZCByZW1haW4gdGhlIGV4Y2VwdGlvbiBhbmQgdGhlIG90aGVy
-CnByZXNjYWxlciB2YWx1ZXMgc2hvdWxkIGJlIGRlcml2ZWQgZnJvbSBhbiBhZGRpdGlvbmFsIGNs
-b2NrLWRpdiB0aGF0IG11c3QgYmUKYWRkZWQgaW4gdGhlIHJlc3BlY3RpdmUgZGV2aWNlIHRyZWVz
-IChhdCBsZWFzdCBmb3IgdGhlIHFvcmlxIGRldmljZXMsIGJlY2F1c2UKZm9yIGluc3RhbmNlIG1w
-Yzg1NDMgYWxyZWFkeSBoYXMgdGhlIGNvcnJlY3QgcHJlc2NhbGVyIHRoYW5rcyB0bwptcGNfaTJj
-X2RhdGFfODU0MyBmcm9tIGkyYy1tcGMuYykuCgpWYWxlbnRpbgpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eHBwYy1kZXYgbWFpbGluZyBsaXN0Ckxp
-bnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0
-aW5mby9saW51eHBwYy1kZXY=
+Hi Kishon:
+
+On 2014/12/11 18:27, Kishon Vijay Abraham I wrote:
+> Hi,
+>
+> On Thursday 11 December 2014 03:25 PM, Yunzhi Li wrote:
+>> +
+>> +static struct phy *rockchip_usb_phy_xlate(struct device *dev,
+>> +					struct of_phandle_args *args)
+>> +{
+>> +	struct rockchip_usb_phy_priv *priv = dev_get_drvdata(dev);
+>> +	unsigned int phy_id = args->args[0];
+>> +
+>> +	if (WARN_ON(phy_id < 0 || phy_id >= priv->nphys))
+>> +		return ERR_PTR(-ENODEV);
+>> +
+>> +	return priv->phys[phy_id].phy;
+> I didn't mean that. You can get rid of this entire xlate stuff if you use
+> something like below
+>
+> phy@xxx {
+> 	compatible = "";
+> 	phy1:usb_phy {
+> 	}
+> 	phy2:usb_phy {
+> 	};
+> };
+>
+>
+> usb@xx {
+> 	compatible = "";
+> 	phys = <&phy1>; //doesn't need xlate
+> 	/* this needs xlate
+> 	   phys = <&phy 1>;
+> 	*/
+> 	phy-names = "phy";
+> };
+
+Thank you so much for your suggestion, but still have a question:
+I have to add the #phy-cells property in each phy sub-node, otherwise 
+devm_get_phy() will fail and I get log info like
+"/usb@ff500000: could not get #phy-cells for /phy/usbp-phy1". So can the 
+#phy-cells property defines in patent node
+also valid for it's child nodes like #address-cells ?
+
+---
+Yunzhi Li @ rockchip
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
