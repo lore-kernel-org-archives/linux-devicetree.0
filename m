@@ -1,40 +1,52 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH] extcon: add MAX3355 driver
-Date: Thu, 11 Dec 2014 15:47:32 +0300
-Message-ID: <54899264.30009@cogentembedded.com>
-References: <14631865.01KLlU2iKL@wasted.cogentembedded.com> <5488F775.1030304@samsung.com>
+From: Vivek Gautam <gautamvivek1987@gmail.com>
+Subject: Re: [PATCH 0/4] phy: samsung-usb2: Add support for Vbus regulator
+Date: Thu, 11 Dec 2014 18:21:45 +0530
+Message-ID: <CAFp+6iEDvBDfg6FepOs48+CwoDhdEKAnF5C0MrHdBgPFSot5TQ@mail.gmail.com>
+References: <1418299367-2412-1-git-send-email-gautam.vivek@samsung.com>
+	<063D6719AE5E284EB5DD2968C1650D6D1CA0B0EB@AcuExch.aculab.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5488F775.1030304@samsung.com>
+In-Reply-To: <063D6719AE5E284EB5DD2968C1650D6D1CA0B0EB@AcuExch.aculab.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, myungjoo.ham@samsung.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, linux-usb@vger.kernel.org
+To: David Laight <David.Laight@aculab.com>
+Cc: Vivek Gautam <gautam.vivek@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "kishon@ti.com" <kishon@ti.com>, "k.debski@samsung.com" <k.debski@samsung.com>, "kgene@kernel.org" <kgene@kernel.org>, "jg1.han@samsung.com" <jg1.han@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On Thu, Dec 11, 2014 at 5:52 PM, David Laight <David.Laight@aculab.com> wrote:
+> From: Vivek Gautam
+>> This has been on my to-do list for sometime.
+>> Until now the host controller (specifically ehci-exynos) is responsible
+>> for enabling VBUS supply. This opens up one more issue which is, when
+>> only ohci-exynos is enabled and ehci-exynosis disabled then VBUS was
+>> never enabled (since ohci did not have the code to enabled the VBUS supply).
+>>
+>> Rather it should be wise to move the VBUS related stuff to phy driver and
+>> let phy take care of enabling it.
+>>
+>> This patch series adds that VBUS regulator to phy-samsung-usb2 driver,
+>> adds necessary binding information as well as vbus-supply properties
+>> to phy nodes on exynos5250 systems.
+> ...
+>
+> Does this go anyway to allowing devices to be powered from a micro-usb
+> connector while acting as a USB host (USB OTG).
+> ie when you want VBUS disabled even though it would normally
+> need to be enabled.
 
-On 12/11/2014 4:46 AM, Chanwoo Choi wrote:
+Sorry i didn't get your second line.
 
-> I reviewed this patch quickly. This driver has just two gpio without any registers for IP.
+This change allows HOST and HSIC phys to enable VBUS for the devices
+connected to it.
+Although now i think there can be a flaw in this approach
+when only in OTG mode, when DEVICE phy is being used, even then
+the regulator will be turned on causing power unnecessary consumption.
 
-    Because there are no registers.
 
-> I wonder whether MAX3355E is separate chip to detect external connector
 
-    Yes. I thought my description has made that clear...
 
-> or just use gpio of AP.
-
-    What do you mean by AP?
-    MAX3355 is indeed partly connected to GPIOs and partly to the USB pins.
-
-> Could you send the datasheet of MAX3355E to me?
-
-    Looks like Geert has beaten me to it. :-)
-
-> Thanks,
-> Chanwoo Choi
-
-WBR, Sergei
+-- 
+Best Regards
+Vivek Gautam
+Samsung R&D Institute, Bangalore
+India
