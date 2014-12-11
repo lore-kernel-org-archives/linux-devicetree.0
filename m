@@ -1,43 +1,76 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [RFC 04/15] regulator: add restrack support
-Date: Thu, 11 Dec 2014 13:43:27 +0000
-Message-ID: <20141211134327.GO11285@n2100.arm.linux.org.uk>
-References: <1418226513-14105-1-git-send-email-a.hajda@samsung.com>
- <1418226513-14105-5-git-send-email-a.hajda@samsung.com>
- <20141210160720.GS11764@sirena.org.uk>
- <548976D2.7080005@samsung.com>
- <20141211125837.GV11764@sirena.org.uk>
+From: Valentin Longchamp <valentin.longchamp@keymile.com>
+Subject: Re: [PATCH] i2c-qoriq: modified compatibility for correct prescaler
+Date: Thu, 11 Dec 2014 14:44:20 +0100
+Message-ID: <54899FB4.9010207@keymile.com>
+References: <1413538026-15739-1-git-send-email-valentin.longchamp@keymile.com>	
+ <1414537731.23458.120.camel@snotra.buserror.net>	
+ <5450AC85.40302@keymile.com> <20141113003418.GE2062@katana>	
+ <5465B285.7070005@keymile.com> <20141114082832.GA2180@katana>	
+ <1416274083.15957.96.camel@freescale.com> <20141125181347.GC9716@katana>
+ <1416966097.15957.171.camel@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20141211125837.GV11764@sirena.org.uk>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Andrzej Hajda <a.hajda@samsung.com>, open list <linux-kernel@vger.kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mike Turquette <mturquette@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Inki Dae <inki.dae@samsung.com>, Kishon Vijay Abraham I <kishon@ti.com>, Liam Girdwood <lgirdwood@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "moderated list:ARM/CLKDEV SUPPORT" <linux-arm-kernel@lists.infradead.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, "moderated list:ARM/S5P EXYNOS AR..." <linux-samsung-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, boris.brezillon@fr
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1416966097.15957.171.camel@freescale.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Scott Wood <scottwood@freescale.com>, Wolfram Sang <wsa@the-dreams.de>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, danielle.costantino@gmail.com, "Boschung,
+ Rainer" <Rainer.Boschung@keymile.com>, "Brunck,
+ Holger" <Holger.Brunck@keymile.com>, Linux I2C <linux-i2c@vger.kernel.org>, Linux PowerPC Kernel <linuxppc-dev@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 11, 2014 at 12:58:37PM +0000, Mark Brown wrote:
-> I'd expect someone reading the change in the regulator API to have at
-> least some idea how this fits in with the rest of the API and how to use
-> it, and probably more importantly I'd expect to be able to understand
-> why this is DT only.
-
-Yep.
-
-This is a repetitive problem, and I fully agree with your concern about
-stuff which is supposed to be arch-independent being designed with only
-DT in mind.
-
-New core kernel features should *not* be designed with only DT in mind -
-DT is not the only firmware description language which the kernel
-supports.  Folk need to understand that if they design a new arch
-independent kernel feature where the sole use case is with DT, that new
-feature is probably going to get rejected, especially when it's
-something as generic as resource tracking.
-
-The world is not DT only.
-
--- 
-FTTC broadband for 0.8mile line: currently at 9.5Mbps down 400kbps up
-according to speedtest.net.
+SGkgYWxsLAoKUGlja2luZyB1cCB0aGlzIGlzc3VlIGFnYWluLgoKT24gMTEvMjYvMjAxNCAwMjo0
+MSBBTSwgU2NvdHQgV29vZCB3cm90ZToKPiBPbiBUdWUsIDIwMTQtMTEtMjUgYXQgMTk6MTMgKzAx
+MDAsIFdvbGZyYW0gU2FuZyB3cm90ZToKPj4gT24gTW9uLCBOb3YgMTcsIDIwMTQgYXQgMDc6Mjg6
+MDNQTSAtMDYwMCwgU2NvdHQgV29vZCB3cm90ZToKPj4+IE9uIEZyaSwgMjAxNC0xMS0xNCBhdCAw
+OToyOCArMDEwMCwgV29sZnJhbSBTYW5nIHdyb3RlOgo+Pj4+Pj4KPj4+Pj4+IElmIHdlJ3JlIGdv
+aW5nIHRvIGNoYW5nZSB0aGUgZGV2aWNlIHRyZWUgSSdkIHJhdGhlciBqdXN0IGFkZCBhIHByb3Bl
+cnR5Cj4+Pj4+PiB0byBzYXkgd2hhdCB0aGUgcHJlc2NhbGVyIGlzLgo+Pj4+Pgo+Pj4+PiAgV2Ug
+d291bGQgaG93ZXZlciwgbGVhdmUgdGhlIGJvYXJkcycgZGV2aWNlIHRyZWVzIHRoYXQgdXNlIHRo
+aW5ncyBsaWtlCj4+Pj4+ICJmc2wsbXBjODU0My1pMmMiIGFzIGlzIGFuZCBpbnRyb2R1Y2UgdGhl
+IHByZXNjYWxlciBmb3IgdGhlIG90aGVycyByZXF1aXJpbmcgaXQuCj4+Pj4+Cj4+Pj4+Cj4+Pj4+
+IE5vdyB0aGUgZHJhd2JhY2sgaXMgdGhhdCB0aGUgZHJpdmVyIHdvdWxkIHJlcXVpcmUgYSBjaGFu
+Z2UsIHRvIHBhcnNlIHRoaXMKPj4+Pj4gcHJlc2NhbGVyIG5ldyBwcmVzY2FsZXIgcHJvcGVydHku
+IFdvdWxkIHRoaXMgYmUgT0sgZnJvbSB5b3VyIHBvaW50IG9mIHZpZXcKPj4+Pj4gV29sZnJhbSA/
+IElmIHllcywgSSB3aWxsIHNlbmQgdGhlIHBhdGNoZXMgZm9yIGl0Lgo+Pj4+Cj4+Pj4gSSBkb24n
+dCB0aGluayBpdCBpcyBPSy4KPj4+Cj4+PiBXaHk/Cj4+Cj4+IEJlY2F1c2UgSSB0aG91Z2h0IGl0
+IGNvdWxkIGJlIGRlZHVjZWQuIFRoZW4sIGEgc2VwZXJhdGUgcHJvcGVydHkgd291bGQKPj4gbm90
+IGJlIE9LLgo+Pgo+Pj4+ICBJJ2QgdGhpbmsgaXQgY2FuIGJlIGRlZHVjZWQgZnJvbSB0aGUgY29t
+cGF0aWJsZSBwcm9wZXJ0eS4KPj4+Cj4+PiBGb3IgYWxtb3N0IGFsbCBleGlzdGluZyBkZXZpY2Ug
+dHJlZXMgaXQgY2Fubm90IGJlLgo+Pgo+PiBQaXR5IDooIElmIHdlIGRvIGludHJvZHVjZSBhIG5l
+dyBwcm9wZXJ0eSwgaXQgc2hvdWxkIHByb2JhYmx5IGJlCj4+ICJjbG9jay1kaXYiLiBHcmVwcGlu
+ZyB0aHJvdWdoIGJpbmRpbmcgZG9jdW1lbnRhdGlvbiwgdGhhdCBzZWVtcwo+PiBhY2NlcHRlZC4g
+V2Ugc2hvdWxkIGFzayBEVCBtYWludGFpbmVycywgdG9vLCB0byBiZSBzYWZlLgo+Pgo+Pj4gSWYg
+eW91IHdhbnQgc29tZXRoaW5nIHRoYXQgd2lsbCB3b3JrIHdpdGhvdXQgY2hhbmdpbmcgZGV2aWNl
+IHRyZWVzLAo+Pj4geW91J2xsIG5lZWQgdG8gdXNlIFNWUiB0byBpZGVudGlmeSB0aGUgU29DLgo+
+Pgo+PiBUaGUgZHJpdmVyIGlzIGRvaW5nIHRoYXQgYWxyZWFkeSwgc2VlIG1wY19pMmNfZ2V0X3Nl
+Y19jZmdfOHh4eCgpLiBEdW5ubwo+PiBpZiBpdCBtYWtlcyBzZW5zZSB0byBhZGQgdG8gaXQgZm9y
+IGNvbnNpc3RlbmN5IHJlYXNvbnM/Cj4gCj4gVGhhdCdzIG5vdCBTVlIsIGJ1dCBzdXJlLiAgQmV0
+dGVyIHRvIGF2b2lkIG1lc3Npbmcgd2l0aCBleGlzdGluZyBkZXZpY2UKPiB0cmVlcy4KPiAKCldo
+YXQgaXMgdGhlbiB0aGUgYWdyZWVtZW50IGhlcmUgPyBBZGQgYSBjbG9jay1kaXYgdG8gdGhlIGRl
+dmljZSB0cmVlcyA/IE9yIGRvCnNvbWV0aGluZyBzaW1pbGFyIHRvICBtcGNfaTJjX2dldF9zZWNf
+Y2ZnXzh4eHgoKSA/CgpJIHRoaW5rIHRoZSBjbG9jay1kaXYgcHJvcGVydHkgaXMgYmV0dGVyIGFj
+Y29yZGluZyB0byBGcmVlc2NhbGUncyBBTiAyOTE5CnNlY3Rpb24gMy4xIFNvdXJjZSBjbG9jay4g
+QWxsIHRoZSBzb3VyY2UgY2xvY2tzIGFyZSBmaXhlZCAod2l0aCBhIGNsb2NrLWRpdiBvZiAyCmlu
+IGNhc2Ugb2YgbXBjODUzNi80My80NS80Ny80OC82Ny82OC83MiwgcGx1cyBwMjAyMCkgZXhjZXB0
+IGZvciB0aGUgbXBjODUzMy80NAp3aGVyZSBpdCBjYW4gYmUgMiBvciAzLCBhbmQgdGhhdCdzIHdo
+YXQgbXBjX2kyY19nZXRfc2VjX2NmZ184eHh4KCkgZGV0ZXJtaW5lcy4KClNvIG1wY19pMmNfZ2V0
+X3NlY19jZmdfOHh4eCgpIHNob3VsZCByZW1haW4gdGhlIGV4Y2VwdGlvbiBhbmQgdGhlIG90aGVy
+CnByZXNjYWxlciB2YWx1ZXMgc2hvdWxkIGJlIGRlcml2ZWQgZnJvbSBhbiBhZGRpdGlvbmFsIGNs
+b2NrLWRpdiB0aGF0IG11c3QgYmUKYWRkZWQgaW4gdGhlIHJlc3BlY3RpdmUgZGV2aWNlIHRyZWVz
+IChhdCBsZWFzdCBmb3IgdGhlIHFvcmlxIGRldmljZXMsIGJlY2F1c2UKZm9yIGluc3RhbmNlIG1w
+Yzg1NDMgYWxyZWFkeSBoYXMgdGhlIGNvcnJlY3QgcHJlc2NhbGVyIHRoYW5rcyB0bwptcGNfaTJj
+X2RhdGFfODU0MyBmcm9tIGkyYy1tcGMuYykuCgpWYWxlbnRpbgpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eHBwYy1kZXYgbWFpbGluZyBsaXN0Ckxp
+bnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0
+aW5mby9saW51eHBwYy1kZXY=
