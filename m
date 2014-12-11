@@ -1,94 +1,73 @@
-From: Josh Wu <josh.wu@atmel.com>
-Subject: [v3][PATCH 5/5] media: ov2640: dt: add the device tree binding document
-Date: Thu, 11 Dec 2014 15:35:39 +0800
-Message-ID: <1418283339-16281-6-git-send-email-josh.wu@atmel.com>
-References: <1418283339-16281-1-git-send-email-josh.wu@atmel.com>
+From: Yunzhi Li <lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH v5 1/5] phy: add a driver for the Rockchip SoC internal
+ USB2.0 PHY
+Date: Thu, 11 Dec 2014 15:44:18 +0800
+Message-ID: <54894B52.3060105@rock-chips.com>
+References: <1418208371-18851-1-git-send-email-lyz@rock-chips.com> <1418208371-18851-2-git-send-email-lyz@rock-chips.com> <5489338C.1030109@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1418283339-16281-1-git-send-email-josh.wu@atmel.com>
-Sender: linux-media-owner@vger.kernel.org
-To: linux-media@vger.kernel.org, g.liakhovetski@gmx.de
-Cc: m.chehab@samsung.com, linux-arm-kernel@lists.infradead.org, laurent.pinchart@ideasonboard.com, s.nawrocki@samsung.com, festevam@gmail.com, Josh Wu <josh.wu@atmel.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5489338C.1030109-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
+Cc: olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add the document for ov2640 dt.
+Hi Kishon:
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Josh Wu <josh.wu@atmel.com>
+On 2014/12/11 14:02, Kishon Vijay Abraham I wrote:
+> Hi,
+>
+> On Wednesday 10 December 2014 04:16 PM, Yunzhi Li wrote:
+>> This patch to add a generic PHY driver for ROCKCHIP usb PHYs,
+>> currently this driver can support RK3288. The RK3288 SoC have
+>> three independent USB PHY IPs which are all configured through a
+>> set of registers located in the GRF (general register files)
+>> module.
+>>
+>> Signed-off-by: Yunzhi Li <lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>>
+>> +
+>> +#define ROCKCHIP_RK3288_UOC(n)	(0x320 + n * 0x14)
+>> +
+>> +/*
+>> + * The higher 16-bit of this register is used for write protection
+>> + * only if BIT(13 + 16) set to 1 the BIT(13) can be written.
+>> + */
+>> +#define SIDDQ_MSK		BIT(13 + 16)
+> I think here the "MSK" is misleading. it should be something that refers write
+> protection?
+So, #define SIDDQ_WRITE_ENA  BIT(29) , could be ok ?
+>> +#define SIDDQ_ON		BIT(13)
+>> +#define SIDDQ_OFF		(0 << 13)
+>> +
+>> +struct rockchip_usb_phy {
+>> +	struct regmap	*reg_base;
+>> +	unsigned int	reg_offset;
+>> +	struct clk	*clk;
+>> +	struct phy	*phy;
+>> +	unsigned	index;
+>> +};
+>> +
+>> +struct rockchip_usb_phy_priv {
+>> +	struct rockchip_usb_phy	*phys;
+>> +	unsigned		nphys;
+>> +};
+>> +
+>> +static int rockchip_usb_phy_power(struct rockchip_usb_phy *phy,
+>> +					   bool siddq)
+>> +{
+>> +	return regmap_write(phy->reg_base, phy->reg_offset,
+>> +			    SIDDQ_MSK | (siddq ? SIDDQ_ON : SIDDQ_OFF));
+> Shouldn't we actually reset the bit for power off?
+Sorry, which bit you refer to here  and why should it be reset? could 
+you give more infomation.
+
 ---
-v2 -> v3:
-  1. fix incorrect description.
-  2. Add assigned-clocks & assigned-clock-rates.
-  3. resetb pin should be ACTIVE_LOW.
+Yunzhi Li @ rockchip
 
-v1 -> v2:
-  1. change the compatible string to be consistent with verdor file.
-  2. change the clock and pins' name.
-  3. add missed pinctrl in example.
-
- .../devicetree/bindings/media/i2c/ov2640.txt       | 53 ++++++++++++++++++++++
- 1 file changed, 53 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/ov2640.txt
-
-diff --git a/Documentation/devicetree/bindings/media/i2c/ov2640.txt b/Documentation/devicetree/bindings/media/i2c/ov2640.txt
-new file mode 100644
-index 0000000..958e120
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/ov2640.txt
-@@ -0,0 +1,53 @@
-+* Omnivision ov2640 CMOS sensor
-+
-+The Omnivision OV2640 sensor support multiple resolutions output, such as
-+CIF, SVGA, UXGA. It also can support YUV422/420, RGB565/555 or raw RGB
-+output format.
-+
-+Required Properties:
-+- compatible: Must be "ovti,ov2640"
-+- clocks: reference to the xvclk input clock. It can be an external fixed
-+          clock or a programmable clock from SoC.
-+- clock-names: Must be "xvclk".
-+- assigned-clocks: reference to the above 'clocks' property.
-+- assigned-clock-rates: reference to the clock frequency of xvclk. Typical
-+                        value is 25Mhz (25000000).
-+                        This clock should only have single user. Specifying
-+                        Conflicting rate configuration in multiple consumer
-+                        nodes for a shared clock is forbidden.
-+
-+Optional Properties:
-+- resetb-gpios: reference to the GPIO connected to the resetb pin, if any.
-+- pwdn-gpios: reference to the GPIO connected to the pwdn pin, if any.
-+
-+The device node must contain one 'port' child node for its digital output
-+video port, in accordance with the video interface bindings defined in
-+Documentation/devicetree/bindings/media/video-interfaces.txt.
-+
-+Example:
-+
-+	i2c1: i2c@f0018000 {
-+		ov2640: camera@0x30 {
-+			compatible = "ovti,ov2640";
-+			reg = <0x30>;
-+
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_pck1 &pinctrl_ov2640_pwdn &pinctrl_ov2640_resetb>;
-+
-+			resetb-gpios = <&pioE 24 GPIO_ACTIVE_LOW>;
-+			pwdn-gpios = <&pioE 29 GPIO_ACTIVE_HIGH>;
-+
-+			clocks = <&pck1>;
-+			clock-names = "xvclk";
-+
-+			assigned-clocks = <&pck1>;
-+			assigned-clock-rates = <25000000>;
-+
-+			port {
-+				ov2640_0: endpoint {
-+					remote-endpoint = <&isi_0>;
-+					bus-width = <8>;
-+				};
-+			};
-+		};
-+	};
--- 
-1.9.1
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
