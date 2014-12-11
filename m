@@ -1,233 +1,403 @@
 From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH] extcon: add MAX3355 driver
-Date: Thu, 11 Dec 2014 10:46:29 +0900
-Message-ID: <5488F775.1030304@samsung.com>
-References: <14631865.01KLlU2iKL@wasted.cogentembedded.com>
+Subject: Re: [RFC PATCHv2 1/7] devfreq: event: Add new devfreq_event class to
+ provide basic data for devfreq governor
+Date: Thu, 11 Dec 2014 11:13:34 +0900
+Message-ID: <5488FDCE.2060009@samsung.com>
+References: <1418134386-14681-1-git-send-email-cw00.choi@samsung.com>
+ <1418134386-14681-2-git-send-email-cw00.choi@samsung.com>
+ <1418204220.16644.14.camel@AMDC1943>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <14631865.01KLlU2iKL@wasted.cogentembedded.com>
+In-reply-to: <1418204220.16644.14.camel@AMDC1943>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, myungjoo.ham@samsung.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, linux-usb@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, kgene.kim@samsung.com, rafael.j.wysocki@intel.com, a.kesavan@samsung.com, tomasz.figa@gmail.com, b.zolnierkie@samsung.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
+Hi Krzysztof,
 
-I reviewed this patch quickly. This driver has just two gpio without any registers for IP.
-I wonder whether MAX3355E is separate chip to detect external connector or just use gpio of AP.
+First of all, thanks for your review.
 
-Could you send the datasheet of MAX3355E to me?
+On 12/10/2014 06:37 PM, Krzysztof Kozlowski wrote:
+> On wto, 2014-12-09 at 23:13 +0900, Chanwoo Choi wrote:
+>> This patch add new devfreq_event class for devfreq_event device which provide
+>> raw data (e.g., memory bus utilization/GPU utilization). This raw data from
+>> devfreq_event data would be used for the governor of devfreq subsystem.
+>> - devfreq_event device : Provide raw data for governor of existing devfreq device
+>> - devfreq device       : Monitor device state and change frequency/voltage of device
+>>                          using the raw data from devfreq_event device
+>>
+>> The devfreq subsystem support generic DVFS(Dynamic Voltage/Frequency Scaling)
+>> for Non-CPU Devices. The devfreq device would dertermine current device state
+>> using various governor (e.g., ondemand, performance, powersave). After completed
+>> determination of system state, devfreq device would change the frequency/voltage
+>> of devfreq device according to the result of governor.
+>>
+>> But, devfreq governor must need basic data which indicates current device state.
+>> Existing devfreq subsystem only consider devfreq device which check current system
+>> state and determine proper system state using basic data. There is no subsystem
+>> for device providing basic data to devfreq device.
+>>
+>> The devfreq subsystem must need devfreq_event device(data-provider device) for
+>> existing devfreq device. So, this patch add new devfreq_event class for
+>> devfreq_event device which read various basic data(e.g, memory bus utilization,
+>> GPU utilization) and provide measured data to existing devfreq device through
+>> standard APIs of devfreq_event class.
+>>
+>> The following description explains the feature of two kind of devfreq class:
+>> - devfreq class (existing)
+>>  : devfreq consumer device use raw data from devfreq_event device for
+>>    determining proper current system state and change voltage/frequency
+>>    dynamically using various governors.
+>>
+>> - devfreq_event class (new)
+>>  : Provide measured raw data to devfreq device for governor
+>>
+>> Cc: MyungJoo Ham <myungjoo.ham@samsung.com>
+>> Cc: Kyungmin Park <kyungmin.park@samsung.com>
+>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+>> ---
+>>  drivers/devfreq/Kconfig         |   2 +
+>>  drivers/devfreq/Makefile        |   5 +-
+>>  drivers/devfreq/devfreq-event.c | 302 ++++++++++++++++++++++++++++++++++++++++
+>>  drivers/devfreq/event/Makefile  |   1 +
+>>  include/linux/devfreq.h         | 141 +++++++++++++++++++
+>>  5 files changed, 450 insertions(+), 1 deletion(-)
+>>  create mode 100644 drivers/devfreq/devfreq-event.c
+>>  create mode 100644 drivers/devfreq/event/Makefile
+>>
+>> diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
+>> index faf4e70..4d15b62 100644
+>> --- a/drivers/devfreq/Kconfig
+>> +++ b/drivers/devfreq/Kconfig
+>> @@ -87,4 +87,6 @@ config ARM_EXYNOS5_BUS_DEVFREQ
+>>  	  It reads PPMU counters of memory controllers and adjusts the
+>>  	  operating frequencies and voltages with OPP support.
+>>  
+>> +comment "DEVFREQ Event Drivers"
+>> +
+>>  endif # PM_DEVFREQ
+>> diff --git a/drivers/devfreq/Makefile b/drivers/devfreq/Makefile
+>> index 16138c9..a1ffabe 100644
+>> --- a/drivers/devfreq/Makefile
+>> +++ b/drivers/devfreq/Makefile
+>> @@ -1,4 +1,4 @@
+>> -obj-$(CONFIG_PM_DEVFREQ)	+= devfreq.o
+>> +obj-$(CONFIG_PM_DEVFREQ)		+= devfreq.o devfreq-event.o
+>>  obj-$(CONFIG_DEVFREQ_GOV_SIMPLE_ONDEMAND)	+= governor_simpleondemand.o
+>>  obj-$(CONFIG_DEVFREQ_GOV_PERFORMANCE)	+= governor_performance.o
+>>  obj-$(CONFIG_DEVFREQ_GOV_POWERSAVE)	+= governor_powersave.o
+>> @@ -7,3 +7,6 @@ obj-$(CONFIG_DEVFREQ_GOV_USERSPACE)	+= governor_userspace.o
+>>  # DEVFREQ Drivers
+>>  obj-$(CONFIG_ARM_EXYNOS4_BUS_DEVFREQ)	+= exynos/
+>>  obj-$(CONFIG_ARM_EXYNOS5_BUS_DEVFREQ)	+= exynos/
+>> +
+>> +# DEVFREQ Event Drivers
+>> +obj-$(CONFIG_PM_DEVFREQ)		+= event/
+>> diff --git a/drivers/devfreq/devfreq-event.c b/drivers/devfreq/devfreq-event.c
+>> new file mode 100644
+>> index 0000000..b47329f
+>> --- /dev/null
+>> +++ b/drivers/devfreq/devfreq-event.c
+>> @@ -0,0 +1,302 @@
+>> +/*
+>> + * devfreq-event: Generic DEVFREQ Event class driver
+>> + *
+>> + * Copyright (C) 2014 Samsung Electronics
+>> + * Chanwoo Choi <cw00.choi@samsung.com>
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + *
+>> + * This driver is based on drivers/devfreq/devfreq.c
+>> + */
+>> +
+>> +#include <linux/kernel.h>
+>> +#include <linux/sched.h>
+>> +#include <linux/errno.h>
+>> +#include <linux/err.h>
+>> +#include <linux/init.h>
+>> +#include <linux/module.h>
+>> +#include <linux/slab.h>
+>> +#include <linux/stat.h>
+>> +#include <linux/pm_opp.h>
+>> +#include <linux/devfreq.h>
+>> +#include <linux/workqueue.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/list.h>
+>> +#include <linux/printk.h>
+>> +#include <linux/hrtimer.h>
+>> +#include <linux/of.h>
+>> +#include "governor.h"
+>> +
+>> +static struct class *devfreq_event_class;
+>> +
+>> +/* The list of all devfreq event list */
+>> +static LIST_HEAD(devfreq_event_list);
+>> +static DEFINE_MUTEX(devfreq_event_list_lock);
+>> +
+>> +#define to_devfreq_event(DEV) container_of(DEV, struct devfreq_event_dev, dev)
+>> +
+>> +struct devfreq_event_dev *devfreq_add_event_device(struct device *dev,
+>> +					struct devfreq_event_desc *desc)
+>> +{
+>> +	struct devfreq_event_dev *event_dev;
+>> +	static atomic_t event_no = ATOMIC_INIT(0);
+>> +	int ret;
+>> +
+>> +	if (!dev || !desc)
+>> +		return ERR_PTR(-EINVAL);
+>> +
+>> +	if (!desc->name || !desc->ops)
+>> +		return ERR_PTR(-EINVAL);
+>> +
+>> +	event_dev = kzalloc(sizeof(struct devfreq_event_dev), GFP_KERNEL);
+>> +	if (!event_dev)
+>> +		return ERR_PTR(-ENOMEM);
+> 
+> Is this memory freed anywhere when driver is removed? I couldn't find
+> it. I couldn't also find function like devfreq_remove_event_device()
+> which would be reverting all the work done when adding.
 
-Thanks,
+You're right. I'll use devm_kzalloc instead of kzalloc.
+
+> 
+>> +
+>> +	mutex_lock(&devfreq_event_list_lock);
+>> +
+>> +	mutex_init(&event_dev->lock);
+>> +	event_dev->desc = desc;
+>> +	event_dev->dev.parent = dev;
+>> +	event_dev->dev.class = devfreq_event_class;
+>> +
+>> +	dev_set_name(&event_dev->dev, "event.%d",
+>> +		     atomic_inc_return(&event_no) - 1);
+>> +	ret = device_register(&event_dev->dev);
+>> +	if (ret != 0) {
+>> +		put_device(&event_dev->dev);
+>> +		goto err;
+>> +	}
+>> +	dev_set_drvdata(&event_dev->dev, event_dev);
+>> +
+>> +	/* Add devfreq event device to devfreq_event_list */
+>> +	INIT_LIST_HEAD(&event_dev->node);
+>> +	list_add(&event_dev->node, &devfreq_event_list);
+>> +
+>> +	mutex_unlock(&devfreq_event_list_lock);
+>> +
+>> +	return event_dev;
+>> +err:
+> 
+> Missing 'mutex_unlock(&devfreq_event_list_lock)' here.
+
+OK. I'll fix it.
+
+> 
+> 
+>> +	kfree(event_dev);
+>> +	return ERR_PTR(ret);
+>> +}
+>> +EXPORT_SYMBOL(devfreq_add_event_device);
+>> +
+>> +struct devfreq_event_dev *devfreq_get_event_dev(const char *event_dev_name)
+>> +{
+>> +	struct devfreq_event_dev *event_dev;
+>> +
+>> +	mutex_lock(&devfreq_event_list_lock);
+>> +	list_for_each_entry(event_dev, &devfreq_event_list, node) {
+>> +		if (!strcmp(event_dev->desc->name, event_dev_name))
+>> +			goto out;
+>> +	}
+>> +	event_dev = NULL;
+>> +out:
+>> +	mutex_unlock(&devfreq_event_list_lock);
+>> +
+>> +	return event_dev;
+>> +}
+>> +EXPORT_SYMBOL_GPL(devfreq_get_event_dev);
+>> +
+>> +struct devfreq_event_dev *devfreq_get_event_dev_by_phandle(struct device *dev,
+>> +						      int index)
+>> +{
+>> +	struct device_node *node;
+>> +	struct devfreq_event_dev *event_dev;
+>> +
+>> +	if (!dev->of_node) {
+>> +		dev_err(dev, "device does not have a device node entry\n");
+>> +		return ERR_PTR(-EINVAL);
+>> +	}
+>> +
+>> +	node = of_parse_phandle(dev->of_node, "devfreq-events", index);
+>> +	if (!node) {
+>> +		dev_err(dev, "failed to get phandle in %s node\n",
+>> +			dev->of_node->full_name);
+>> +		return ERR_PTR(-ENODEV);
+>> +	}
+>> +
+>> +	event_dev = devfreq_get_event_dev(node->name);
+>> +	if (!event_dev) {
+>> +		dev_err(dev, "unable to get devfreq-event device : %s\n",
+>> +			node->name);
+> 
+> of_node_put() for node obtained with of_parse_phandle().
+
+OK. I'll add it.
+
+> 
+>> +		return ERR_PTR(-ENODEV);
+>> +	}
+>> +
+>> +	return event_dev;
+>> +}
+>> +EXPORT_SYMBOL_GPL(devfreq_get_event_dev_by_phandle);
+>> +
+>> +int devfreq_put_event_dev(struct devfreq_event_dev *event_dev)
+>> +{
+> 
+> of_node_put() here to decrement refcnt from of_parse_phandle()?
+
+It is my mistake. I think that devfreq_put_event_dev is not necesssary.
+I'll remove it.
+
+> 
+>> +	return 0;
+>> +}
+>> +EXPORT_SYMBOL_GPL(devfreq_put_event_dev);
+>> +
+>> +int devfreq_enable_event_dev(struct devfreq_event_dev *event_dev)
+>> +{
+>> +	int ret = 0;
+>> +
+>> +	if (!event_dev || !event_dev->desc)
+>> +		return -EINVAL;
+>> +
+>> +	mutex_lock(&event_dev->lock);
+>> +	if (event_dev->desc->ops && event_dev->desc->ops->enable) {
+>> +		ret = event_dev->desc->ops->enable(event_dev);
+>> +		if (ret < 0)
+>> +			goto err;
+>> +	}
+>> +	event_dev->enable_count++;
+>> +err:
+>> +	mutex_unlock(&event_dev->lock);
+>> +
+>> +	return ret;
+>> +}
+>> +EXPORT_SYMBOL_GPL(devfreq_enable_event_dev);
+>> +
+>> +int devfreq_disable_event_dev(struct devfreq_event_dev *event_dev)
+>> +{
+>> +	int ret = 0;
+>> +
+>> +	if (!event_dev || !event_dev->desc)
+>> +		return -EINVAL;
+>> +
+>> +	mutex_lock(&event_dev->lock);
+>> +	if (event_dev->enable_count > 0) {
+>> +		event_dev->enable_count--;
+>> +	} else {
+>> +		dev_warn(&event_dev->dev, "unbalanced enable_count\n");
+>> +		ret = -EINVAL;
+>> +		goto err;
+>> +	}
+>> +
+>> +	if (event_dev->desc->ops && event_dev->desc->ops->disable) {
+>> +		ret = event_dev->desc->ops->disable(event_dev);
+>> +		if (ret < 0) {
+>> +			event_dev->enable_count++;
+>> +			goto err;
+>> +		}
+>> +	}
+>> +err:
+>> +	mutex_unlock(&event_dev->lock);
+>> +
+>> +	return ret;
+>> +}
+>> +EXPORT_SYMBOL_GPL(devfreq_disable_event_dev);
+>> +
+>> +bool devfreq_is_enabled_event_dev(struct devfreq_event_dev *event_dev)
+>> +{
+>> +	bool enabled = false;
+>> +
+>> +	if (!event_dev || !event_dev->desc)
+>> +		return enabled;
+>> +
+>> +	if (!(event_dev->enable_count > 0))
+>> +		return enabled;
+>> +
+>> +	if (event_dev->desc->ops && event_dev->desc->ops->is_enabled)
+>> +		enabled = event_dev->desc->ops->is_enabled(event_dev);
+>> +
+>> +	return enabled;
+>> +}
+>> +EXPORT_SYMBOL_GPL(devfreq_is_enabled_event_dev);
+>> +
+>> +int devfreq_set_event_event_dev(struct devfreq_event_dev *event_dev)
+> 
+> The convention of names you use is not obvious to me. I would expect
+> rather devfreq_event_dev_XXX (where XXX is "set_event", "is_enabled"
+> etc).
+> The one above is good example what is the issue with current convention:
+> devfreq_set_event_event_dev
+>             ^     ^
+> This double "event" looks weird.
+
+You're right. I'll have to fix the function name according to your comment.
+
+> 
+>> +{
+>> +	if (!event_dev || !event_dev->desc)
+>> +		return -EINVAL;
+>> +
+>> +	if (!devfreq_is_enabled_event_dev(event_dev))
+>> +		return -EPERM;
+>> +
+>> +	if (event_dev->desc->ops && event_dev->desc->ops->set_event)
+>> +		return event_dev->desc->ops->set_event(event_dev);
+> 
+> No mutexes here? What exactly is protected by mutex?
+
+I used the mutex when devfreq-event class read/write the data of devfreq_event_dev structure.
+
+> 
+>> +
+>> +	return -EINVAL;
+>> +}
+>> +EXPORT_SYMBOL_GPL(devfreq_set_event_event_dev);
+>> +
+>> +int devfreq_get_event_event_dev(struct devfreq_event_dev *event_dev,
+>> +				int *total_event)
+>> +{
+>> +	if (!event_dev || !event_dev->desc)
+>> +		return -EINVAL;
+>> +
+>> +	if (!devfreq_is_enabled_event_dev(event_dev))
+>> +		return -EPERM;
+>> +
+>> +	if (event_dev->desc->ops && event_dev->desc->ops->get_event)
+>> +		return event_dev->desc->ops->get_event(event_dev, total_event);
+>> +
+>> +	return -EINVAL;
+>> +}
+>> +EXPORT_SYMBOL_GPL(devfreq_get_event_event_dev);
+>> +
+>> +int devfreq_reset_event_dev(struct devfreq_event_dev *event_dev)
+>> +{
+>> +	if (!event_dev || !event_dev->desc)
+>> +		return -EINVAL;
+>> +
+>> +	if (!devfreq_is_enabled_event_dev(event_dev))
+>> +		return -EPERM;
+>> +
+>> +	if (event_dev->desc->ops && event_dev->desc->ops->reset)
+>> +		return event_dev->desc->ops->reset(event_dev);
+> 
+> Same here, no mutex?
+
+I replied it on previous your question.
+
+Best Regards,
 Chanwoo Choi
-
-On 12/11/2014 08:28 AM, Sergei Shtylyov wrote:
-> MAX3355E chip integrates a charge pump and comparators to enable a system with
-> an integrated USB OTG dual-role transceiver to function as a USB OTG dual-role
-> device. In addition to sensing/controlling Vbus, the chip also passes thru the
-> ID signal from the USB OTG connector.  On some Renesas boards, this signal  is
-> just  fed into the SoC thru a GPIO pin -- there's no real OTG controller, only
-> host and gadget USB controllers sharing the same USB bus; however,  we'd  like
-> to allow host or gadget drivers to be loaded depending on the cable type, hence
-> the need for the MAX3355 extcon driver. The Vbus status signals are also wired
-> to GPIOs (however, we're not currently intested in them), the  OFFVBUS# signal
-> is controlled  by the host controllers, there's also the SHDN# signal wired to
-> GPIO, which should be high for normal operation.
-> 
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> 
-> ---
-> The patch is against the 'extcon-next' branch of the 'extcon.git' repo.
-> 
->  Documentation/devicetree/bindings/extcon/extcon-max3355.txt |   21 ++
->  drivers/extcon/Kconfig                                      |    6 
->  drivers/extcon/Makefile                                     |    1 
->  drivers/extcon/extcon-max3355.c                             |  122 ++++++++++++
->  4 files changed, 150 insertions(+)
-> 
-> Index: extcon/Documentation/devicetree/bindings/extcon/extcon-max3355.txt
-> ===================================================================
-> --- /dev/null
-> +++ extcon/Documentation/devicetree/bindings/extcon/extcon-max3355.txt
-> @@ -0,0 +1,21 @@
-> +MAX3355 USB OTG chip
-> +--------------------
-> +
-> +MAX3355 integrates a charge pump and comparators to enable a system with an
-> +integrated USB OTG dual-role transceiver to function as a USB OTG dual-role
-> +device.
-> +
-> +Required properties:
-> +- compatible: should be "maxim,max3355";
-> +- maxim,shdn-gpio: should contain a phandle and GPIO specifier for the GPIO pin
-> +  connected to the MAX3355's SHDN# pin;
-> +- maxim,id-gpio: should contain a phandle and GPIO specifier for the GPIO pin
-> +  connected to the MAX3355's ID_OUT pin.
-> +
-> +Example (Koelsch board):
-> +
-> +	usb-otg {
-> +		compatible = "maxim,max3355";
-> +		maxim,shdn-gpio = <&gpio2 4 GPIO_ACTIVE_LOW>;
-> +		maxim,id-gpio = <&gpio5 31 GPIO_ACTIVE_HIGH>;
-> +	};
-> Index: extcon/drivers/extcon/Kconfig
-> ===================================================================
-> --- extcon.orig/drivers/extcon/Kconfig
-> +++ extcon/drivers/extcon/Kconfig
-> @@ -45,6 +45,12 @@ config EXTCON_MAX14577
->  	  Maxim MAX14577/77836. The MAX14577/77836 MUIC is a USB port accessory
->  	  detector and switch.
->  
-> +config EXTCON_MAX3355
-> +	tristate "MAX3355 USB OTG EXTCON Support"
-> +	help
-> +	  Say Y here to enable support for the USB host detection by MAX3355
-> +	  OTG USB chip.
-> +
->  config EXTCON_MAX77693
->  	tristate "MAX77693 EXTCON Support"
->  	depends on MFD_MAX77693 && INPUT
-> Index: extcon/drivers/extcon/Makefile
-> ===================================================================
-> --- extcon.orig/drivers/extcon/Makefile
-> +++ extcon/drivers/extcon/Makefile
-> @@ -7,6 +7,7 @@ obj-$(CONFIG_EXTCON_ADC_JACK)	+= extcon-
->  obj-$(CONFIG_EXTCON_ARIZONA)	+= extcon-arizona.o
->  obj-$(CONFIG_EXTCON_GPIO)	+= extcon-gpio.o
->  obj-$(CONFIG_EXTCON_MAX14577)	+= extcon-max14577.o
-> +obj-$(CONFIG_EXTCON_MAX3355)	+= extcon-max3355.o
->  obj-$(CONFIG_EXTCON_MAX77693)	+= extcon-max77693.o
->  obj-$(CONFIG_EXTCON_MAX8997)	+= extcon-max8997.o
->  obj-$(CONFIG_EXTCON_PALMAS)	+= extcon-palmas.o
-> Index: extcon/drivers/extcon/extcon-max3355.c
-> ===================================================================
-> --- /dev/null
-> +++ extcon/drivers/extcon/extcon-max3355.c
-> @@ -0,0 +1,122 @@
-> +/*
-> + * MAX3355 USB OTG chip extcon driver
-> + *
-> + * Copyright (C) 2014 Cogent Embedded, Inc.
-> + * Author: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> + *
-> + * This software is licensed under the terms of the GNU General Public
-> + * License version 2, as published by the Free Software Foundation, and
-> + * may be copied, distributed, and modified under those terms.
-> + */
-> +
-> +#include <linux/extcon.h>
-> +#include <linux/gpio.h>
-> +#include <linux/init.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of_gpio.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/slab.h>
-> +#include <linux/workqueue.h>
-> +
-> +struct max3355_data {
-> +	struct extcon_dev *edev;
-> +	int id_gpio;
-> +};
-> +
-> +static const char *max3355_cable[] = {
-> +	[0] = "USB-HOST",
-> +	NULL,
-> +};
-> +
-> +static irqreturn_t max3355_id_irq(int irq, void *dev_id)
-> +{
-> +	struct max3355_data *data = dev_id;
-> +	int id = gpio_get_value(data->id_gpio);
-> +
-> +	extcon_set_cable_state(data->edev, "USB-HOST", !id);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static int max3355_probe(struct platform_device *pdev)
-> +{
-> +	struct device_node *np = pdev->dev.of_node;
-> +	struct max3355_data *data;
-> +	int gpio, irq, ret;
-> +
-> +	data = devm_kzalloc(&pdev->dev, sizeof(struct max3355_data),
-> +			    GFP_KERNEL);
-> +	if (!data)
-> +		return -ENOMEM;
-> +
-> +	data->edev = devm_extcon_dev_allocate(&pdev->dev, max3355_cable);
-> +	if (IS_ERR(data->edev)) {
-> +		dev_err(&pdev->dev, "failed to allocate extcon device\n");
-> +		return PTR_ERR(data->edev);
-> +	}
-> +	data->edev->name = kstrdup(np->name, GFP_KERNEL);
-> +
-> +	gpio = of_get_named_gpio(np, "maxim,id-gpio", 0);
-> +	if (gpio < 0)
-> +		return gpio;
-> +	data->id_gpio = gpio;
-> +
-> +	gpio = of_get_named_gpio(np, "maxim,shdn-gpio", 0);
-> +	if (gpio < 0)
-> +		return gpio;
-> +
-> +	ret = devm_gpio_request_one(&pdev->dev, gpio, GPIOF_DIR_OUT |
-> +				    GPIOF_INIT_HIGH, pdev->name);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = devm_gpio_request_one(&pdev->dev, data->id_gpio, GPIOF_DIR_IN,
-> +				    pdev->name);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = devm_extcon_dev_register(&pdev->dev, data->edev);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	irq = gpio_to_irq(data->id_gpio);
-> +	if (irq < 0)
-> +		return irq;
-> +
-> +	ret = devm_request_threaded_irq(&pdev->dev, irq, NULL, max3355_id_irq,
-> +					IRQF_TRIGGER_RISING |
-> +					IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
-> +					pdev->name, data);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	platform_set_drvdata(pdev, data);
-> +
-> +	/* Perform initial detection */
-> +	max3355_id_irq(irq, data);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id max3355_match_table[] = {
-> +	{ .compatible = "maxim,max3355", },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, max3355_match_table);
-> +
-> +static struct platform_driver max3355_driver = {
-> +	.probe		= max3355_probe,
-> +	.driver		= {
-> +		.name	= "extcon-max3355",
-> +		.of_match_table = max3355_match_table,
-> +		.owner	= THIS_MODULE,
-> +	},
-> +};
-> +
-> +module_platform_driver(max3355_driver);
-> +
-> +MODULE_AUTHOR("Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>");
-> +MODULE_DESCRIPTION("MAX3355 extcon driver");
-> +MODULE_LICENSE("GPL v2");
-> 
-> 
