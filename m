@@ -1,46 +1,49 @@
-From: Marcel Holtmann <marcel@holtmann.org>
-Subject: Re: default enable sparse __CHECK_ENDIAN__ (was: Re: [PATCH v7 2/3] net: Add Keystone NetCP ethernet driver)
-Date: Thu, 11 Dec 2014 12:18:44 +0100
-Message-ID: <479338B3-A0C0-4443-9C44-E03421F0679C@holtmann.org>
-References: <1417556503-22290-3-git-send-email-m-karicheri2@ti.com> <20141209.131053.2026868499542642866.davem@davemloft.net> <5488BB96.9070609@ti.com> <20141210.204110.618599360537141819.davem@davemloft.net> <1418267099.18092.28.camel@perches.com>
-Mime-Version: 1.0 (Mac OS X Mail 8.1 \(1993\))
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-sparse-owner@vger.kernel.org>
-In-Reply-To: <1418267099.18092.28.camel@perches.com>
-Sender: linux-sparse-owner@vger.kernel.org
-To: Joe Perches <joe@perches.com>
-Cc: "David S. Miller" <davem@davemloft.net>, Andrew Morton <akpm@linux-foundation.org>, Christopher Li <sparse@chrisli.org>, Michal Marek <mmarek@suse.cz>, m-karicheri2@ti.com, Network Development <netdev@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, kernel list <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, grant.likely@linaro.org, linux-sparse@vger.kernel.org
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v18 12/12] drm: bridge/dw_hdmi: add rockchip rk3288 support
+Date: Thu, 11 Dec 2014 12:24:15 +0100
+Message-ID: <6479148.dVz0vTNYfK@phil>
+References: <1417760564-16858-1-git-send-email-andy.yan@rock-chips.com> <1417761259-17429-1-git-send-email-andy.yan@rock-chips.com> <CAGS+omA1Gf8yqrd4Bu=Pm1OBdsJBHg0gt+TP_6vi88Zz+O3jHA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAGS+omA1Gf8yqrd4Bu=Pm1OBdsJBHg0gt+TP_6vi88Zz+O3jHA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Kurtz <djkurtz@chromium.org>, David Airlie <airlied@linux.ie>, Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Andy Yan <andy.yan@rock-chips.com>, fabio.estevam@freescale.com, rmk+kernel@arm.linux.org.uk, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawn.guo@linaro.org>, Josh Boyer <jwboyer@redhat.com>, Sean Paul <seanpaul@chromium.org>, Inki Dae <inki.dae@samsung.com>, Dave Airlie <airlied@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Lucas Stach <l.stach@pengutronix.de>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, Yakir Yang <ykk@rock-chips.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, devel@driverdev.osuosl.org, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Xu Jianqun <jay.xu@rock-chips.com>, Pawel Moll <pawel.moll@arm.>
 List-Id: devicetree@vger.kernel.org
 
-Hi Joe,
+Hi Daniel,
 
->>> Are you referring to the static code analyser sparse that is invoked
->>> through?
->> You have to explicitly enable endian checking, it's not on by
->> default.
+Am Mittwoch, 10. Dezember 2014, 20:36:17 schrieb Daniel Kurtz:
+> This driver adds HDMI to rockchip/drm.  The fact that rockchip's hdmi
+> uses dw_hdmi is an implementation detail.  I do not think that the names
+> used for rk3288-hdmi should include "dw" in them.
 > 
-> There don't seem to be thousands of warnings anymore.
+> See inline for what I mean...
+
+I guess in general this is more a matter of preference.
+
+Past practices suggest that having the dw in the name is a sane solution too, 
+like in dw_mmc-foo (mmc/host), dwmac-foo (net/ethernet/stmicro/stmmac).
+
+And personally I'd keep to this already established naming scheme ... i.e. not 
+hiding the dw heritage.
+
+And also it looks like other involved parties like Philipp and Russell seemed 
+to be ok with the naming through the revisions till now.
+
+[...]
+
+> > +static enum drm_mode_status
+> > +dw_hdmi_rockchip_mode_valid(struct drm_connector *connector,
 > 
-> Maybe it's time to default enable it when using C=?
-> 
-> from: Documentation/sparse.txt:
-> 
-> The optional make variable CF can be used to pass arguments to sparse.  The
-> build system passes -Wbitwise to sparse automatically.  To perform endianness
-> checks, you may define __CHECK_ENDIAN__:
-> 
->        make C=2 CF="-D__CHECK_ENDIAN__"
-> 
-> These checks are disabled by default as they generate a host of warnings.
+> Similarly, I would rename these function names to start with
+> rockchip_hdmi (or maybe rk_hdmi for brevity).
+> Especially the ones for the module & driver: (bind/unbind/probe/remove).
 
-actually a few subsystems use this in their Makefile:
+Please keep to one rk <-> rockchip style at least per subsystem. The core drm 
+driver uses rockchip, so the hdmi driver should too (instead of rk).
 
-	subdir-ccflags-y += -D__CHECK_ENDIAN__
 
-We could start with that to enable endian checks by default in various places.
-
-Regards
-
-Marcel
-
+Heiko
