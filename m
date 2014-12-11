@@ -1,99 +1,66 @@
-From: Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH v2 2/4] Documentation: arm64/arm: dt bindings for
- numa.
-Date: Thu, 11 Dec 2014 17:16:35 +0800
-Message-ID: <548960F3.7070405@linaro.org>
-References: <1416605010-10442-1-git-send-email-ganapatrao.kulkarni@caviumnetworks.com> <2065254.jRdQcinOdg@wuerfel> <54759991.50204@linaro.org> <10603826.6Z6KUoI9qZ@wuerfel>
+From: Arend van Spriel <arend@broadcom.com>
+Subject: Re: [PATCH 2/4] PCI: iproc: Add Broadcom iProc PCIe driver
+Date: Thu, 11 Dec 2014 10:44:30 +0100
+Message-ID: <5489677E.3000607@broadcom.com>
+References: <1418169871-19232-3-git-send-email-rjui@broadcom.com> <9707535.Y78sV0TgX4@wuerfel> <54887901.8070501@broadcom.com> <CAGVrzcbZ_f43Vf1mu2XErVi_Jehjggh2TREyrSs84ntSm98yvg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <10603826.6Z6KUoI9qZ@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Steve Capper <steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Roy Franz <roy.franz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Ganapatrao Kulkarni <ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAGVrzcbZ_f43Vf1mu2XErVi_Jehjggh2TREyrSs84ntSm98yvg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Scott Branden <sbranden@broadcom.com>, Arnd Bergmann <arnd@arndb.de>, Ray Jui <rjui@broadcom.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Russell King <linux@arm.linux.org.uk>, linux-pci@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Hauke Mehrtens <hauke@hauke-m.de>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
++ Rafal
 
-On 2014=E5=B9=B412=E6=9C=8810=E6=97=A5 18:57, Arnd Bergmann wrote:
-> On Wednesday 26 November 2014 17:12:49 Hanjun Guo wrote:
+On 12/10/14 19:46, Florian Fainelli wrote:
+> 2014-12-10 8:46 GMT-08:00 Scott Branden<sbranden@broadcom.com>:
+>> On 14-12-10 03:31 AM, Arnd Bergmann wrote:
+>>>
+>>> On Tuesday 09 December 2014 16:04:29 Ray Jui wrote:
+>>>>
+>>>> Add initial version of the Broadcom iProc PCIe driver. This driver
+>>>> has been tested on NSP and Cygnus and is expected to work on all iProc
+>>>> family of SoCs that deploys the same PCIe host controller
+>>>>
+>>>> The driver also supports MSI
+>>>>
+>>>> Signed-off-by: Ray Jui<rjui@broadcom.com>
+>>>> Reviewed-by: Scott Branden<sbranden@broadcom.com>
+>>>
+>>>
+>>> The driver looks suspiciously like the one that Hauke already submitted a
+>>> while ago for bcm53xx. Please come up with a merged driver that works for
+>>> both.
 >>
->> Thanks for the detail information. I have the concerns about the dis=
-tance
->> for NUMA nodes, does the "ibm,associativity-reference-points" proper=
-ty can
->> represent the distance between NUMA nodes?
->>
->> For example, a system with 4 sockets connected like below:
->>
->> Socket 0  <---->  Socket 1  <---->  Socket 2  <---->  Socket 3
->>
->> So from socket 0 to socket 1 (maybe on the same board), it just need=
- 1
->> jump to access the memory, but from socket 0 to socket 2/3, it needs
->> 2/3 jumps and the *distance* relative longer. Can
->> "ibm,associativity-reference-points" property cover this?
->>
+>> Could you please be a little more specific.  What driver did "Hauke already
+>> submitted"?  I do not see any driver in the kernel you are talking about.
 >
-> Hi Hanjun,
+> https://www.marc.info/?l=linux-pci&m=141547043110684&w=2
 >
-> I only today found your replies in my spam folder, I need to put you =
-on
-> a whitelist so that doesn't happen again.
+>>>
+>>>
+>>> Are you sure that iProc isn't based on the BCMA bus infrastructure after
+>>> all? Even the physical address of your PCI host falls into the address
+>>> range that is used for the internal BCMA bus on the other chips!
+>>
+>> BCMA seems to be for MIPS architectures.  It seems to be quite specific to
+>> those architectures using BCMA.  I see no use of it in bcm53xx code?
+>
+> BCMA lives in its own directory in drivers/bcma/ and is not specific
+> to MIPS actually. Older BCM47xx/BCM53xx MIPS-based SoCs traditionally
+> started with a discoverable Silicon Sonics Backplane (drivers/ssb) and
+> progressively migrated to BCMA (drivers/bcma), both subsystems offer a
+> very similar bus/device/driver abstraction and discovery mechanism.
 
-Thanks. I hope my ACPI patches will not scare your email filter :)
+BCMA core is the bus driver for discoverable ARM AXI interconnect. Apart 
+from that it also provides drivers for some cores. For the chips to be 
+discoverable it needs additional IP logic. If that is not used in the 
+iProc family devices, it can not use the BCMA-based PCIe controller 
+driver that Hauke submitted unless BCMA would provide an API to provide 
+the chips' core information statically either per core or a full list.
 
->
-> The above topology is not easy to represent, but I think it would wor=
-k
-> like this (ignoring the threads/cores/clusters on the socket, which
-> would also need to be described in a full DT), using multiple logical
-> paths between the nodes:
->
-> socket 0
-> ibm,associativity =3D <0 0 0 0>, <1 1 1 0>, <2 2 0 0>, <3 0 0 0>;
->
-> socket 1
-> ibm,associativity =3D <1 1 1 1>, <0 0 0 1>, <2 2 2 1>, <3 3 1 1>;
->
-> socket 2
-> ibm,associativity =3D <2 2 2 2>, <0 0 2 2>, <1 1 1 2>, <3 3 3 2>;
->
-> socket 3
-> ibm,associativity =3D <3 3 3 3>, <0 3 3 3>, <1 1 3 3>, <2 2 2 3>;
->
-> This describes four levels or hierarchy, with the lowest level
-> being a single CPU core on one socket, and four paths between
-> the sockets. To compute the associativity between two sockets,
-> you need to look at each combination of paths to find the best
-> match.
->
-> Comparing sockets 0 and 1, the best matches are <1 1 1 0>
-> with <1 1 1 1>, and <0 0 0 0> with <0 0 0 1>. In each case, the
-> associativity is "3", meaning the first three entries match.
->
-> Comparing sockets 0 and 3, we have four equally bad matches
-> that each only match in the highest-level domain, e.g. <0 0 0 0>
-> with <0 3 3 3>, so the associativity is only "1", and that means
-> the two nodes are less closely associated than two neighboring
-> ones.
->
-> With the algorithm that powerpc uses to turn associativity into
-> distance, 2**(numlevels - associativity), this would put the
-> distance of neighboring nodes at "2", and the longest distance
-> at "8".
-
-Thanks for the explain, I can understand how it works now,
-a bit complicated for me and I think the distance property
-"node-matrix" in Ganapatrao's patch is straight forward,
-what do you think?
-
-Thanks
-Hanjun
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Arend
