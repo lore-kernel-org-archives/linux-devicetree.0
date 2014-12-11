@@ -1,56 +1,40 @@
-From: Liu Ying <Ying.Liu@freescale.com>
-Subject: Re: [PATCH RFC 04/15] drm/dsi: Do not add DSI devices for the child
- nodes with input-port property
-Date: Thu, 11 Dec 2014 10:52:45 +0800
-Message-ID: <548906FD.5070009@freescale.com>
-References: <1418200648-32656-1-git-send-email-Ying.Liu@freescale.com>
- <1418200648-32656-5-git-send-email-Ying.Liu@freescale.com>
- <20141210122105.GC23558@ulmo.nvidia.com>
+From: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] ARM: at91/dt: sama5d4: fix the timer reg length
+Date: Thu, 11 Dec 2014 10:54:33 +0800
+Message-ID: <1418266473-30187-1-git-send-email-voice.shen@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20141210122105.GC23558@ulmo.nvidia.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: devicetree@vger.kernel.org, linux@arm.linux.org.uk, kernel@pengutronix.de, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, mturquette@linaro.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgVGhpZXJyeSwKCk9uIDEyLzEwLzIwMTQgMDg6MjEgUE0sIFRoaWVycnkgUmVkaW5nIHdyb3Rl
-Ogo+IE9uIFdlZCwgRGVjIDEwLCAyMDE0IGF0IDA0OjM3OjE3UE0gKzA4MDAsIExpdSBZaW5nIHdy
-b3RlOgo+PiBUaGUgTUlQSSBEU0kgYnVzIGRyaXZlciB3b3VsZCB0cnkgdG8gYWRkIGEgRFNJIGRl
-dmljZSBmb3IgYSBob3N0J3MgZXZlcnkKPj4gY2hpbGQgbm9kZSB3aGljaCBjb250YWlucyB0aGUg
-cmVnIHByb3BlcnR5LiAgVW5mb3J0dW5hdGVseSwgdGhlIGV4aXN0aW5nCj4+IGkuTVg2US9TREwg
-TUlQSSBEU0kgaG9zdCBkZXZpY2UgdHJlZSBub2RlJ3MgY2hpbGQgbm9kZXMgY29udGFpbiB0aGUg
-cmVnCj4KPiBUaGVyZSBhcmVuJ3QgYW55IGV4aXN0aW5nIG5vZGVzIGZvciB0aGUgRFNJIGhvc3Qg
-b24gaS5NWC4gVGhpcyBwYXRjaAo+IHNlcmllcyBhZGRzIHN1cHBvcnQgZm9yIHRoZW0uCgpUaGVy
-ZSBhcmUgZXhpc3Rpbmcgbm9kZXMgZm9yIHRoZSBEU0kgaG9zdCBub2RlLiBQbGVhc2UgZmluZCB0
-aGVtIGluIAphcmNoL2FybS9ib290L2R0cy9pbXg2cWRsLmR0c2kgYW5kIGFyY2gvYXJtL2Jvb3Qv
-ZHRzL2lteDZxLmR0cy4gVGhlIERTSSAKaG9zdCBub2RlIGNvbnRhaW5zIHR3byBjaGlsZCBub2Rl
-cyBmb3IgaS5NWDZETCBhbmQgYW5vdGhlciB0d28gZm9yIAppLk1YNlEuICBFYWNoIGNoaWxkIG5v
-ZGUgaGFzIGEgcmVnIHByb3BlcnR5IGVtYmVkZGVkLgoKPgo+PiBwcm9wZXJ0eSwgYnV0IHRoZSBj
-aGlsZCBub2RlcyBhcmUgcG9ydHMgcG9pbnRpbmcgdG8gZGVkaWNhdGVkIENSVENzLgo+PiBTbywg
-dGhpcyBwYXRjaCBwaGFzZXMgb3V0IHRoZSBjaGlsZCBub2RlcyB3aXRoIGlucHV0LXBvcnQgcHJv
-cGVydHkgYmVmb3JlCj4+IGFkZGluZyBEU0kgZGV2aWNlcyBmb3IgdGhlbSBhbmQgdXBkYXRlcyB0
-aGUgTUlQSSBEU0kgYnVzIE9GIGJpbmRpbmcKPj4gZG9jdW1lbnRhdGlvbi4KPj4KPj4gU2lnbmVk
-LW9mZi1ieTogTGl1IFlpbmcgPFlpbmcuTGl1QGZyZWVzY2FsZS5jb20+Cj4+IC0tLQo+PiAgIERv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9taXBpL2RzaS9taXBpLWRzaS1idXMudHh0
-IHwgNCArKysrCj4+ICAgZHJpdmVycy9ncHUvZHJtL2RybV9taXBpX2RzaS5jICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgfCA1ICsrKy0tCj4+ICAgMiBmaWxlcyBjaGFuZ2VkLCA3IGluc2Vy
-dGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCj4KPiBTb3JyeSwgYnV0IE5BSy4gVGhlcmUncyBubyBu
-ZWVkIGZvciB0aGlzIHNwZWNpYWwtY2FzZS4gSSdsbCBnbyBpbnRvIG1vcmUKPiBkZXRhaWwgaW4g
-cmVzcG9uc2UgdG8gcGF0Y2ggMDkvMTUuCgpUaGFua3MgZm9yIHJldmlld2luZyB0aGUgcGF0Y2hl
-cy4KCkFueSBpZGVhIGhvdyB0byBoYW5kbGUgdGhlIHNwZWNpYWwgY2FzZT8gIFRoZSBleGlzdGlu
-ZyBjaGlsZCBub2RlcyBmb3IgCnRoZSBEU0kgaG9zdCBub2RlIGRvIGhhdmUgdGhlIHJlZyBwcm9w
-ZXJ0aWVzIGVtYmVkZGVkLgoKUmVnYXJkcywKCkxpdSBZaW5nCgo+Cj4gVGhpZXJyeQo+Cl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
-aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+The second property of reg is the length, so correct it for timer.
+
+Signed-off-by: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+---
+
+ arch/arm/boot/dts/sama5d4.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/sama5d4.dtsi b/arch/arm/boot/dts/sama5d4.dtsi
+index 2cc3cfe..0901706 100644
+--- a/arch/arm/boot/dts/sama5d4.dtsi
++++ b/arch/arm/boot/dts/sama5d4.dtsi
+@@ -940,7 +940,7 @@
+ 
+ 			pit: timer@fc068630 {
+ 				compatible = "atmel,at91sam9260-pit";
+-				reg = <0xfc068630 0xf>;
++				reg = <0xfc068630 0x10>;
+ 				interrupts = <3 IRQ_TYPE_LEVEL_HIGH 5>;
+ 				clocks = <&h32ck>;
+ 			};
+-- 
+2.1.0.24.g4109c28
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
