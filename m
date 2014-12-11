@@ -1,38 +1,100 @@
-From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v7 2/3] net: Add Keystone NetCP ethernet driver
-Date: Thu, 11 Dec 2014 12:17:10 -0500
-Message-ID: <5489D196.4070703@ti.com>
-References: <5488BB96.9070609@ti.com> <20141210.204110.618599360537141819.davem@davemloft.net> <5489A6CD.20909@ti.com> <20141211.120104.312460507509497826.davem@davemloft.net>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [RFC/PATCH 5/7] arm: omap: hwmod: allow for registration of
+ class-less hwmods
+Date: Thu, 11 Dec 2014 09:32:28 -0800
+Message-ID: <20141211173228.GB2990@atomide.com>
+References: <1418164072-19087-1-git-send-email-balbi@ti.com>
+ <1418164072-19087-6-git-send-email-balbi@ti.com>
+ <54882576.8020609@ti.com>
+ <20141210145433.GC4602@saruman>
+ <20141211005238.GC5585@earth.universe>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141211.120104.312460507509497826.davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, WingMan Kwok <w-kwok2-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20141211005238.GC5585@earth.universe>
+Sender: linux-omap-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>
+Cc: Felipe Balbi <balbi@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>, "Kristo, Tero" <t-kristo@ti.com>, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, Paul Walmsley <paul@pwsan.com>, Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/11/2014 12:01 PM, David Miller wrote:
-> From: Murali Karicheri<m-karicheri2-l0cyMroinI0@public.gmane.org>
-> Date: Thu, 11 Dec 2014 09:14:37 -0500
->
->> BTW, could you provide any suggestions that would help us merge this
->> series to upstream? This has been sitting on this list for a while
->> now.
->
-> You simply have to continue going through the review and revision
-> process until people no longer find problems with your changes.
->
-> This could take several more weeks, you simply must be patient.
+* Sebastian Reichel <sre@kernel.org> [141210 16:55]:
+> On Wed, Dec 10, 2014 at 08:54:33AM -0600, Felipe Balbi wrote:
+> > > @@ -2449,6 +2559,12 @@ static int __init _init(struct omap_hwmod *oh, void *data)
+> > >  		else if (np && index)
+> > >  			pr_warn("omap_hwmod: %s using broken dt data from %s\n",
+> > >  				oh->name, np->name);
+> > > +
+> > > +		if (np) {
+> > > +			r = omap_hwmod_init_sysc(np, oh, 0);
+> > 
+> > this won't handle any binding which lists more than one hwmod on its
+> > ti,hwmods property.
+> 
+> I think Tony planned to remove this kind of multi hwmod references.
 
-Ok. Thanks. That is encouraging to hear!
+Yes we really should do that. But that involves repairs in the drivers,
+dts files, and hwmod.
+
+We really should aim for 1 to 1 to 1 mapping of the dts compatible
+property to device hwmod to device sysc registers.
+
+Once all the devices are mapped that way, we can deprecate
+ti,hwmods in the dts files and set it up automatically based on
+the compatible and the instance number of the device.
+
+For an example of how to fix the interlaced device dts entries,
+let's look at the EDMA. Instead of the current setup in
+am33xx.dtsi:
+
+edma: edma@49000000 {
+	compatible = "ti,edma3";
+	ti,hwmods = "tpcc", "tptc0", "tptc1", "tptc2";
+	reg =   <0x49000000 0x10000>,
+		<0x44e10f90 0x40>;
+		interrupts = <12 13 14>;
+		#dma-cells = <1>;
+};
+
+It really should be set up in the following way (eventually
+without ti,hwmods):
+
+edma: edma@49000000 {
+	compatible = "ti,edma3";
+	reg =   <0x49000000 0x10000>,
+		<0x44e10f90 0x40>;
+	interrupts = <12>;
+	#dma-cells = <1>;
+};
+
+tptc0 {
+	compatible = "ti,edma3-tptc";
+	reg = <0x49800000 0x100000>;
+	interrupts = <13>;
+};
+
+tptc1 {
+	compatible = "ti,edma3-tptc";
+	reg = <0x49900000 0x100000>;
+	interrupts = <14>;
+};
+
+tptc2 {
+	compatible = "ti,edma3-tptc";
+	reg = <0x49900000 0x100000>;
+	interrupts = <15>;
+};
+
+This is because each tptc entry has it's own sysc register and
+can idle on it's own. With the above we can have 1 to 1 to 1 mapping
+of compatible property to hwmod to sysc registers for each device.
+
+> IMHO instead of DT referencing the hwmod stuff using ti,hwmods the
+> hwmod database should reference the compatible values. This depends
+> on omap3 being DT only of course.
+
+Yes agreed.
 
 Regards,
--- 
-Murali Karicheri
-Linux Kernel, Texas Instruments
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+Tony
