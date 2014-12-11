@@ -1,35 +1,154 @@
-From: "Kenneth Westfield" <kwestfie@codeaurora.org>
-Subject: Re: [Patch v2 02/11] ASoC: qcom: Add device tree binding docs
-Date: Thu, 11 Dec 2014 00:23:55 -0800
-Message-ID: <fdc53daed0c7c41168a14de6b2983895.squirrel@www.codeaurora.org>
-Reply-To: kwestfie@codeaurora.org
+From: Jean-Michel Hautbois <jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>
+Subject: regulator: tps65023 : Adding support for DT
+Date: Thu, 11 Dec 2014 09:36:26 +0100
+Message-ID: <CAL8zT=jo2AsK9p_r_C+od_QEovOQNmo7MnNu9JtUHoA=KtsxGw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Kenneth Westfield <kwestfie@codeaurora.org>, Takashi Iwai <tiwai@suse.de>, Liam Girdwood <lgirdwood@gmail.com>, David Brown <davidb@codeaurora.org>, Bryan Huntsman <bryanh@codeaurora.org>, Rob Herring <rob.herring@calxeda.com>, Greg KH <gregkh@linuxfoundation.org>, Patrick Lai <plai@codeaurora.org>, Banajit Goswami <bgoswami@codeaurora.org>, ALSA Mailing List <alsa-devel@alsa-project.org>, Device Tree Mailing List <devicetree@vger.kernel.org>, MSM Mailing List <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, December 9, 2014 7:37 am, Mark Brown wrote:
-> On Mon, Dec 08, 2014 at 02:01:04PM -0800, Kenneth Westfield wrote:
->> From: Kenneth Westfield <kwestfie@codeaurora.org>
+Hi,
 
->> Add documentation to the sound directory of the
->> device-tree bindings for IPQ806x audio drivers.
-> Please don't send multiple separate changes in a single patch.  One change per patch.
+I have a board with a AM3505 and a tps65023 PMIC.
+Until now, this board was running a 2.6.37.
+I am trying to use a 3.18.
 
-In an effort to reduce the number of patches, would it be possible to package the DT doc with its
-respective driver in one patch?  Or does the DT doc need to be in a patch by itself?  I've seen
-examples of both.
+I started to add support for DT in this regulator, but I can't get a
+booting kernel with it. I know it lacks regulator init in the parse_dt
+function, but I don't really know what is the best way to do it. I
+have used tps6507x as an example until know...
 
-Also, I will combine the partial addition of each driver to its respective Kconfig/Makefile
-entries.  For this, I believe I need to start with an empty Kconfig/Makefile in the first patch?
+I don't know for instance if a tps_board is needed (it would contain
+only a struct regulator_init_data * so probably not very useful) ?
+
+Below is my current status (I also have created a tps65023.dtsi in
+arch/arm/boot/dts which is only a copy of tps6507x.dtsi so didn't copy
+it here).
+
+diff --git a/drivers/regulator/tps65023-regulator.c
+b/drivers/regulator/tps65023-regulator.c
+index 7380af8..6e6fd78 100644
+--- a/drivers/regulator/tps65023-regulator.c
++++ b/drivers/regulator/tps65023-regulator.c
+@@ -19,9 +19,12 @@
+ #include <linux/module.h>
+ #include <linux/init.h>
+ #include <linux/err.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
+ #include <linux/platform_device.h>
+ #include <linux/regulator/driver.h>
+ #include <linux/regulator/machine.h>
++#include <linux/regulator/of_regulator.h>
+ #include <linux/i2c.h>
+ #include <linux/slab.h>
+ #include <linux/regmap.h>
+@@ -199,6 +202,60 @@ static struct regmap_config tps65023_regmap_config = {
+        .val_bits = 8,
+ };
+
++#if defined(CONFIG_OF)
++static const struct of_device_id tps65023_of_match[] = {
++       { .compatible = "ti,tps65023",},
++       {},
++};
++MODULE_DEVICE_TABLE(of, tps65023_of_match);
++
++static struct of_regulator_match tps65023_matches[] = {
++       { .name = "VDCDC1"},
++       { .name = "VDCDC2"},
++       { .name = "VDCDC3"},
++       { .name = "LDO1"},
++       { .name = "LDO2"},
++};
++
++static struct regulator_init_data*
++       of_get_tps65023_platform_data(struct device *dev)
++{
++       struct regulator_init_data *pdata;
++       struct device_node *np = dev->of_node;
++       struct device_node *regulators;
++       struct of_regulator_match *matches;
++       int i, count, ret;
++
++       pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
++       if (!pdata)
++               return NULL;
++
++       regulators = of_get_child_by_name(np, "regulators");
++       if (!regulators) {
++               dev_err(dev, "regulator node not found\n");
++               return NULL;
++       }
++
++       count = ARRAY_SIZE(tps65023_matches);
++       matches = tps65023_matches;
++
++       ret = of_regulator_match(dev, regulators, matches, count);
++       of_node_put(regulators);
++       if (ret < 0) {
++               dev_err(dev, "Error parsing regulator init data: %d\n", ret);
++               return NULL;
++       }
++
++       return pdata;
++}
++#else
++static struct regulator_init_data*
++       of_get_tps65023_platform_data(struct device *dev)
++{
++       return NULL;
++}
++#endif
++
+ static int tps_65023_probe(struct i2c_client *client,
+                                     const struct i2c_device_id *id)
+ {
+@@ -211,13 +268,27 @@ static int tps_65023_probe(struct i2c_client *client,
+        int i;
+        int error;
+
++       if (client->dev.of_node) {
++               const struct of_device_id *match;
++               match = of_match_device(of_match_ptr(tps65023_of_match),
++                                       &client->dev);
++               if (!match) {
++                       dev_err(&client->dev, "Error: No device match found\n");
++                       return -ENODEV;
++               }
++       }
++
+        /**
+         * init_data points to array of regulator_init structures
+         * coming from the board-evm file.
+         */
+        init_data = dev_get_platdata(&client->dev);
+-       if (!init_data)
+-               return -EIO;
++       if (!init_data && client->dev.of_node)
++               init_data = of_get_tps65023_platform_data(&client->dev);
++       if(!init_data) {
++               dev_err(&client->dev, "No Platform data\n");
++               return -EINVAL;
++       }
+
+        tps = devm_kzalloc(&client->dev, sizeof(*tps), GFP_KERNEL);
+        if (!tps)
+@@ -411,6 +482,7 @@ static struct i2c_driver tps_65023_i2c_driver = {
+        .driver = {
+                .name = "tps65023",
+                .owner = THIS_MODULE,
++               .of_match_table = of_match_ptr(tps65023_of_match),
+        },
+        .probe = tps_65023_probe,
+        .id_table = tps_65023_id,
 
 
--- 
-Kenneth Westfield
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,  a Linux Foundation
-Collaborative Project
+Thanks,
+JM
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
