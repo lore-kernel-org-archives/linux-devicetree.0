@@ -1,79 +1,46 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] gpio: sn54hc595: new driver for GPIO shift registers chipsets
-Date: Thu, 11 Dec 2014 12:03:09 +0100
-Message-ID: <CAMuHMdWc1Uu81pG5QiPLpjX4h-3TeBjXXhnCX+4yNNTKQEzo3w@mail.gmail.com>
-References: <1418048833-27658-1-git-send-email-zajec5@gmail.com>
-	<CAMuHMdWf_Cw7DTqhut6Mcic1FmcJjHdXWuXkNZM2z0Zx9wjCxw@mail.gmail.com>
-	<CACna6rwRR7FpS97Znyk3ewVW58dn5yYTj8OjCstsuzzX8Prg5Q@mail.gmail.com>
-	<2176453.HD1opzG9Wg@wuerfel>
-	<CACna6rydKTDO+tBTdNNUDvQCXytE6VnEPjLSGs0yMee8Jz8FGA@mail.gmail.com>
-	<CAMuHMdVvK1CTB1SKiNgD8zB9qorV=sQwRO66Dbm5zy=jhw82RA@mail.gmail.com>
-	<20141209091202.GS8739@lukather>
-	<CACna6rwBO388iF+BJ2=nCEWrNsedag8bbBc+OZYe+pvf4zrmgw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACna6rwBO388iF+BJ2=nCEWrNsedag8bbBc+OZYe+pvf4zrmgw@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Hauke Mehrtens <hauke@hauke-m.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Gabor Juhos <juhosg@openwrt.org>, Miguel Gaio <miguel.gaio@efixo.com>
+From: Marcel Holtmann <marcel@holtmann.org>
+Subject: Re: default enable sparse __CHECK_ENDIAN__ (was: Re: [PATCH v7 2/3] net: Add Keystone NetCP ethernet driver)
+Date: Thu, 11 Dec 2014 12:18:44 +0100
+Message-ID: <479338B3-A0C0-4443-9C44-E03421F0679C@holtmann.org>
+References: <1417556503-22290-3-git-send-email-m-karicheri2@ti.com> <20141209.131053.2026868499542642866.davem@davemloft.net> <5488BB96.9070609@ti.com> <20141210.204110.618599360537141819.davem@davemloft.net> <1418267099.18092.28.camel@perches.com>
+Mime-Version: 1.0 (Mac OS X Mail 8.1 \(1993\))
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-sparse-owner@vger.kernel.org>
+In-Reply-To: <1418267099.18092.28.camel@perches.com>
+Sender: linux-sparse-owner@vger.kernel.org
+To: Joe Perches <joe@perches.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Andrew Morton <akpm@linux-foundation.org>, Christopher Li <sparse@chrisli.org>, Michal Marek <mmarek@suse.cz>, m-karicheri2@ti.com, Network Development <netdev@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, kernel list <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, grant.likely@linaro.org, linux-sparse@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 11, 2014 at 11:36 AM, Rafa=C5=82 Mi=C5=82ecki <zajec5@gmail=
-=2Ecom> wrote:
-> On 9 December 2014 at 10:12, Maxime Ripard
-> <maxime.ripard@free-electrons.com> wrote:
->> On Mon, Dec 08, 2014 at 05:59:11PM +0100, Geert Uytterhoeven wrote:
->>> > I think that implementing support for this extra SPI layer will
->>> > actually require more code/tricks than a separated driver.
->>>
->>> Yes, it will require more code, as spi-gpio is more generic than yo=
-ur simple
->>> implementation.  But the end result is more flexible and reusable.
->>>
->>> The only thing missing is the programmable OE and reset pins,
->>> which are assumed hardwired by the gpio-74x164 driver.
->>> These could be implemented using new gpio-oe and gpio-reset
->>> properties.
->>
->> From my (very) vague memories of it, OE was actually supported by
->> using it as spi-gpio's chip select.
->>
->> So I'd say that only the gpio-reset should be implemented.
->
-> I've tracked how spi_bitbang_transfer_one does work. Long story short=
- it does:
+Hi Joe,
 
-[deleted standard SPI protocol]
+>>> Are you referring to the static code analyser sparse that is invoked
+>>> through?
+>> You have to explicitly enable endian checking, it's not on by
+>> default.
+> 
+> There don't seem to be thousands of warnings anymore.
+> 
+> Maybe it's time to default enable it when using C=?
+> 
+> from: Documentation/sparse.txt:
+> 
+> The optional make variable CF can be used to pass arguments to sparse.  The
+> build system passes -Wbitwise to sparse automatically.  To perform endianness
+> checks, you may define __CHECK_ENDIAN__:
+> 
+>        make C=2 CF="-D__CHECK_ENDIAN__"
+> 
+> These checks are disabled by default as they generate a host of warnings.
 
-> As you can see, we don't call OE in spi_gpio_chipselect. So currently
-> both input signals and unhandled: OE and SRCLR. Luckily for me, it
-> appears my bootloader puts them in a wanted state, but this still
-> should be handled somehow.
+actually a few subsystems use this in their Makefile:
 
-I think you can just add two properties (one array for OE, one for SRCL=
-R)
-to the bindings for the gpio-74x164 driver, so it can set those GPIO pi=
-ns,
-if present. Note that they should be arrays, as gpio-74x164 supports\
-daisy-chaining chips.
+	subdir-ccflags-y += -D__CHECK_ENDIAN__
 
-Gr{oetje,eeting}s,
+We could start with that to enable endian checks by default in various places.
 
-                        Geert
+Regards
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-=
-m68k.org
+Marcel
 
-In personal conversations with technical people, I call myself a hacker=
-=2E But
-when I'm talking to journalists I just say "programmer" or something li=
-ke that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
