@@ -1,17 +1,18 @@
 From: Yunzhi Li <lyz@rock-chips.com>
-Subject: [PATCH v6 2/5] Documentation: bindings: add dt documentation for Rockchip usb PHY
-Date: Thu, 11 Dec 2014 17:55:19 +0800
-Message-ID: <1418291722-25448-3-git-send-email-lyz@rock-chips.com>
+Subject: [PATCH v6 4/5] ARM: dts: rockchip: add rk3288 usb PHY
+Date: Thu, 11 Dec 2014 17:55:21 +0800
+Message-ID: <1418291722-25448-5-git-send-email-lyz@rock-chips.com>
 References: <1418291722-25448-1-git-send-email-lyz@rock-chips.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1418291722-25448-1-git-send-email-lyz@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: heiko@sntech.de, jwerner@chromium.org, dianders@chromium.org
-Cc: olof@lixom.net, huangtao@rock-chips.com, zyw@rock-chips.com, cf@rock-chips.com, linux-rockchip@lists.infradead.org, Yunzhi Li <lyz@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: olof@lixom.net, huangtao@rock-chips.com, zyw@rock-chips.com, cf@rock-chips.com, linux-rockchip@lists.infradead.org, Yunzhi Li <lyz@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a binding that describes the Rockchip usb PHYs
-found on Rockchip SoCs usb interface.
+This patch adds a device_node for RK3288 SoC usb phy. It also
+defines the phy to be used by three usb controllers: usb_host0/1
+and usb_otg.
 
 Signed-off-by: Yunzhi Li <lyz@rock-chips.com>
 
@@ -19,54 +20,74 @@ Signed-off-by: Yunzhi Li <lyz@rock-chips.com>
 
 Changes in v6: None
 Changes in v5:
-- Adjust entry order of example devicetree node in document.
+- reorder the phy dt node to a correct position.
 
 Changes in v4:
-- Updata description for phy device tree subnode.
+- Add phy subnodes.
 
 Changes in v3: None
 
- .../devicetree/bindings/phy/rockchip-usb-phy.txt   | 32 ++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/rockchip-usb-phy.txt
+ arch/arm/boot/dts/rk3288.dtsi | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/phy/rockchip-usb-phy.txt b/Documentation/devicetree/bindings/phy/rockchip-usb-phy.txt
-new file mode 100644
-index 0000000..e9500d9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/rockchip-usb-phy.txt
-@@ -0,0 +1,32 @@
-+ROCKCHIP USB2 PHY
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index 874e66d..bd2a1e0 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -335,6 +335,8 @@
+ 		interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&cru HCLK_USBHOST0>;
+ 		clock-names = "usbhost";
++		phys = <&usbphy 1>;
++		phy-names = "usb";
+ 		status = "disabled";
+ 	};
+ 
+@@ -347,6 +349,8 @@
+ 		interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&cru HCLK_USBHOST1>;
+ 		clock-names = "otg";
++		phys = <&usbphy 2>;
++		phy-names = "usb2-phy";
+ 		status = "disabled";
+ 	};
+ 
+@@ -357,6 +361,8 @@
+ 		interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&cru HCLK_OTG0>;
+ 		clock-names = "otg";
++		phys = <&usbphy 0>;
++		phy-names = "usb2-phy";
+ 		status = "disabled";
+ 	};
+ 
+@@ -497,6 +503,27 @@
+ 		interrupts = <GIC_PPI 9 0xf04>;
+ 	};
+ 
++	usbphy: phy {
++		compatible = "rockchip,rk3288-usb-phy";
++		rockchip,grf = <&grf>;
++		#phy-cells = <1>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
 +
-+Required properties:
-+ - compatible: rockchip,rk3288-usb-phy
-+ - rockchip,grf : phandle to the syscon managing the "general
-+   register files"
-+ - #phy-cells: should be 1
-+ - #address-cells: should be 1
-+ - #size-cells: should be 0
++		usb-phy@0 {
++			reg = <0>;
++		};
 +
-+Sub-nodes:
-+Each PHY should be represented as a sub-node.
++		usb-phy@1 {
++			reg = <1>;
++		};
 +
-+Sub-nodes
-+required properties:
-+- reg: the PHY number
-+		"0" - PHY connect to OTG controller
-+		"1" - PHY connect to HOST0 controller
-+		"2" - PHY connect to HOST1 controller
++		usb-phy@2 {
++			reg = <2>;
++		};
++	};
 +
-+Optional Properties:
-+- clocks : phandle + clock specifier for the phy clocks
-+
-+Example:
-+
-+usbphy: phy {
-+	compatible = "rockchip,rk3288-usb-phy";
-+	rockchip,grf = <&grf>;
-+	#phy-cells = <1>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+};
+ 	pinctrl: pinctrl {
+ 		compatible = "rockchip,rk3288-pinctrl";
+ 		rockchip,grf = <&grf>;
 -- 
 2.0.0
