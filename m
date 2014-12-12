@@ -1,157 +1,547 @@
 From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH 1/3] TTY: add support for "tty slave" devices.
-Date: Fri, 12 Dec 2014 11:59:20 +0000
-Message-ID: <20141212115920.4277AC408F1@trevor.secretlab.ca>
+Subject: Re: [PATCH 3/3] TTY/slave: add driver for w2sg0004 GPS
+Date: Fri, 12 Dec 2014 12:11:37 +0000
+Message-ID: <20141212121137.92E2AC40966@trevor.secretlab.ca>
 References: <20141211214801.4127.93914.stgit@notabene.brown>
-	<20141211215943.4127.24792.stgit@notabene.brown>
+	<20141211215944.4127.57146.stgit@notabene.brown>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141211215943.4127.24792.stgit@notabene.brown>
+In-Reply-To: <20141211215944.4127.57146.stgit@notabene.brown>
 Sender: linux-kernel-owner@vger.kernel.org
 To: NeilBrown <neilb@suse.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Jiri Slaby <jslaby@suse.cz>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: NeilBrown <neil@brown.name>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 On Fri, 12 Dec 2014 08:59:44 +1100
 , NeilBrown <neilb@suse.de>
  wrote:
-> A "tty slave" is a device connected via UART.
-> It may need a driver to, for example, power the device on
-> when the tty is opened, and power it off when the tty
-> is released.
-
-Some nit picking below, mostly about avoiding nasty surprises on devices
-that may already have child nodes below the tty node.
-
+> This uart-attatched GPS device has a toggle which turns
+> both on and off.  For reliable use we need to know what
+> start it is in.
 > 
-> A "tty slave" is a platform device which is declared as a
-> child of the uart in device-tree:
-
-As far as the binding is concerned, talking about platform devices isn't
-relevant. That's an implementation detail. They are just devices.
-
-Using a platform device is somewhat problematic for the kernel because
-the DT could specify pretty much *any* platform device compatible value
-here and the kernel will happily bind a driver to it. I strongly
-recommend a separate bus type so that the pool of drivers remains
-separate. It would be a good time to look at platform_bus_type and see
-if more of it can be generalized so that subsystems can have custom bus
-types without very much code at all.
-
+> So it registers with the tty for recv events when the tty
+> is open, and optionally configures the RX pin as a GPIO
+> interrupt when the tty is closed.
 > 
-> &uart1 {
-> 	bluetooth {
-> 		compatible = "tty,regulator";
-> 		vdd-supply = <&vaux4>;
-> 	};
-
-The example here isn't great. The compatible value should specify the
-specific device, not a generic "tty,regulator" type binding. The
-expectation is the driver understands the attachment and understands how
-to do PM on the device.
-
-> };
+> If it detects data when it should be off, or a lack of data
+> when it should be on, it toggles the line.
 > 
-> runtime power management is used to power-up the device
-> on tty_open() and  power-down on tty_release().
-
-What about devices that need to stay powered up even if the tty is not
-opened? The runtime PM model needs to be better described for tty slaves.
-
+> A regulator can also be configured to power the antenna.
+> In this case an rfkill device is created.  When the rfkill
+> is 'blocked' or the device is otherwise powered down,
+> the regulator is turned off.
 > 
-> Signed-off-by: NeilBrown <neilb@suse.de>
+> Signed-off-by: NeilBrown <neil@brown.name>
 > ---
->  .../devicetree/bindings/serial/of-serial.txt       |    4 ++++
->  drivers/tty/tty_io.c                               |   22 ++++++++++++++++++++
->  2 files changed, 26 insertions(+)
+>  .../devicetree/bindings/serial/slave-w2sg0004.txt  |   35 ++
+>  drivers/tty/slaves/Kconfig                         |    6 
+>  drivers/tty/slaves/Makefile                        |    3 
+>  drivers/tty/slaves/tty-w2sg0004.c                  |  412 ++++++++++++++++++++
+>  4 files changed, 455 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/serial/slave-w2sg0004.txt
+>  create mode 100644 drivers/tty/slaves/tty-w2sg0004.c
 > 
-> diff --git a/Documentation/devicetree/bindings/serial/of-serial.txt b/Documentation/devicetree/bindings/serial/of-serial.txt
-> index 8c4fd0332028..b59501ee2f21 100644
-> --- a/Documentation/devicetree/bindings/serial/of-serial.txt
-> +++ b/Documentation/devicetree/bindings/serial/of-serial.txt
-> @@ -39,6 +39,10 @@ Optional properties:
->    driver is allowed to detect support for the capability even without this
->    property.
+> diff --git a/Documentation/devicetree/bindings/serial/slave-w2sg0004.txt b/Documentation/devicetree/bindings/serial/slave-w2sg0004.txt
+> new file mode 100644
+> index 000000000000..c9e7838b3198
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/serial/slave-w2sg0004.txt
+
+This isn't a binding for a serial device, it is a binding for a GPS
+device, which happens to be tty attached.
+Documentation/devicetree/bindings/gps perhaps?
+
+> @@ -0,0 +1,35 @@
+> +w2sg0004 UART-attached GPS receiver
+> +
+> +Required properties:
+> +- compatbile: "tty,w2sg0004"
+
+'tty' is the wrong prefix. It should be the vendor abbreviation for the
+GPS vendor.
+
+> +- gpios: gpio used to toggle 'on/off' pin
+> +- interrupts: interrupt generated by RX pin when device should
+> +              be idle
+> +- pinctrl: "default", "idle"
+> +	     "idle" setting is active when device should be off.
+> +	     This can remap the RX pin to a GPIO interrupt.
+> +
+> +Optional properties:
+> +- vdd-supply: regulator, e.g. to power antenna
+> +
+> +
+> +The w2sg0004 uses a pin-toggle both to power-on and to
+> +power-off, so the driver needs to detect what state it is in.
+> +It does this by detecting characters on the RX line.
+> +When it should be off, these can optionally be detected by a GPIO.
+> +
+> +The node for this device must be the child of a UART.
+
+This may need some tweaking to be more portable. ie. if it is wired into
+a platform with a separate gpio pin also wired to the rx line so that
+pinctrl manipulation isn't needed. I would make the pinctrl settings
+optional.
+
+> +
+> +Example:
+> +&uart2 {
+> +	gps {
+> +		compatible = "tty,w2sg0004";
+> +		vdd-supply = <&vsim>;
+> +		gpios = <&gpio5 17 0>; /* GPIO_145 */
+> +		interrupts-extended = <&gpio5 19 0>; /* GPIO_147 */
+> +		/* When idle, switch RX to be an interrupt */
+> +		pinctrl-names = "default", "idle";
+> +		pinctrl-0 = <&uart2_pins>;
+> +		pinctrl-1 = <&uart2_pins_rx_gpio>;
+> +	};
+> +};
+> diff --git a/drivers/tty/slaves/Kconfig b/drivers/tty/slaves/Kconfig
+> index 2dd1acf80f8c..7a669faaf02d 100644
+> --- a/drivers/tty/slaves/Kconfig
+> +++ b/drivers/tty/slaves/Kconfig
+> @@ -9,4 +9,10 @@ if TTY_SLAVE
+>  config TTY_SLAVE_REGULATOR
+>  	tristate "TTY slave device powered by regulator"
 >  
-> +Optional child node:
-> +- a platform device listed as a child node will be probed and
-> +  powered-on whenever the tty is in use (open).
+> +config TTY_SLAVE_W2SG0004
+> +	tristate "W2SG0004 GPS on/off control"
+> +	help
+> +	  Enable on/off control of W2SG0004 GPS when attached
+> +	  to a UART.
 > +
 
-The biggest concern I have is what happens to nodes that already have
-child devices that /don't/ match this use case? It is possible that some
-UART nodes already have a child node used to store other data. There are
-two ways to handle this; 1) add a new bool property that indicates the
-child nodes are tty slave devices, or 2) Make each uart driver
-explicitly enable the feature so that driver authors can check if it is
-a problem for that device. I personally would suggest #1 because then it
-can be enabled in generic code.
+Drivers/gps maybe? Do we have any other gps drivers in-tree?
 
->  Example:
+>  endif
+> diff --git a/drivers/tty/slaves/Makefile b/drivers/tty/slaves/Makefile
+> index e636bf49f1cc..ba528fa27110 100644
+> --- a/drivers/tty/slaves/Makefile
+> +++ b/drivers/tty/slaves/Makefile
+> @@ -1,2 +1,3 @@
 >  
->  	uart@80230000 {
-> diff --git a/drivers/tty/tty_io.c b/drivers/tty/tty_io.c
-> index 0508a1d8e4cd..7acdc6f093f4 100644
-> --- a/drivers/tty/tty_io.c
-> +++ b/drivers/tty/tty_io.c
-> @@ -95,6 +95,8 @@
->  #include <linux/seq_file.h>
->  #include <linux/serial.h>
->  #include <linux/ratelimit.h>
+> -obj-$(CONFIG_TTY_SLAVE_REGULATOR) += tty-reg.o
+> +obj-$(CONFIG_TTY_SLAVE_REGULATOR)	+= tty-reg.o
+> +obj-$(CONFIG_TTY_SLAVE_W2SG0004)	+= tty-w2sg0004.o
+> diff --git a/drivers/tty/slaves/tty-w2sg0004.c b/drivers/tty/slaves/tty-w2sg0004.c
+> new file mode 100644
+> index 000000000000..7c7ae479bf41
+> --- /dev/null
+> +++ b/drivers/tty/slaves/tty-w2sg0004.c
+> @@ -0,0 +1,412 @@
+> +/*
+> + * tty-w2sg0004.c - tty-slave for  w2sg0004 GPS device
+> + *
+> + * Copyright (C) 2014  NeilBrown <neil@brown.name>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + * The w2sg0004 is turned 'on' or 'off' by toggling a line, which
+> + * is normally connected to a GPIO.  Thus you need to know the current
+> + * state in order to determine how to achieve some particular state.
+> + * The only way to detect the state is by detecting transitions on
+> + * its TX line (our RX line).
+> + * So this tty slave listens for 'recv' events and deduces the GPS is
+> + * on if it has received one recently.
+> + * If suitably configure, and if the hardware is capable, it also
+> + * enables an interrupt (presumably via a GPIO connected to the RX
+> + * line via pinctrl) when the tty is inactive and treat and interrupts
+> + * as an indication that the device is 'on' and should be turned 'off'.
+> + *
+> + * Driver also listens for open/close and trys to turn the GPS on if it is
+> + * off and the tty is open.  On final 'close', the GPS is then turned
+> + * off.
+> + *
+> + * When the device is opened, the GPIO is toggled immediately and then
+> + * again after 2 seconds of no data.  If there is still no data the
+> + * toggle happens are 4, 8, 16 seconds etc.
+> + *
+> + * When the device is closed, the GPIO is toggled immediately and
+> + * if interrupts are received after 1 second it is toggled again
+> + * (and again and again with exponentially increasing delays while
+> + * interrupts continue).
+> + *
+> + * If a regulator is configured (e.g. to power the antenna), that is
+> + * enabled/disabled on open/close.
+> + *
+> + * During system suspend the GPS is turned off even if the tty is
+> + * open.  No repeat attempts are made.
+> + * Possibly it should be possible to keep the GPS on with some
+> + * configuration.
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/slab.h>
+> +#include <linux/err.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/gpio.h>
+> +#include <linux/of_gpio.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/tty.h>
+> +#include <linux/delay.h>
 > +#include <linux/pm_runtime.h>
-> +#include <linux/of_platform.h>
->  
->  #include <linux/uaccess.h>
->  
-> @@ -1683,6 +1685,17 @@ static int tty_release_checks(struct tty_struct *tty, struct tty_struct *o_tty,
->  	return 0;
->  }
->  
-> +static int open_child(struct device *dev, void *data)
+> +#include <linux/rfkill.h>
+> +
+> +struct w2sg_data {
+> +	int		gpio;
+> +	int		irq;	/* irq line from RX pin when pinctrl
+> +				 * set to 'idle' */
+> +	struct regulator *reg;
+> +
+> +	unsigned long	last_toggle;	/* jiffies when last toggle completed. */
+> +	unsigned long	backoff;	/* jiffies since last_toggle when
+> +					 * we try again
+> +					 */
+> +	enum {Idle, Down, Up} state;	/* state-machine state. */
+> +	bool		requested, is_on;
+> +	bool		suspended;
+> +	bool		reg_enabled;
+> +
+> +	struct delayed_work work;
+> +	spinlock_t	lock;
+> +	struct device	*dev;
+> +
+> +	struct rfkill	*rfkill;
+> +};
+> +
+> +/*
+> + * There seems to restrictions on how quickly we can toggle the
+> + * on/off line.  Data sheets says "two rtc ticks", whatever that means.
+> + * If we do it too soon it doesn't work.
+> + * So we have a state machine which uses the common work queue to ensure
+> + * clean transitions.
+> + * When a change is requested we record that request and only act on it
+> + * once the previous change has completed.
+> + * A change involves a 10ms low pulse, and a 10ms raised level.
+> + */
+> +
+> +static void toggle_work(struct work_struct *work)
 > +{
-> +	pm_runtime_get_sync(dev);
-> +	return 0;
+> +	struct w2sg_data *data = container_of(
+> +		work, struct w2sg_data, work.work);
+> +
+> +	spin_lock_irq(&data->lock);
+> +	switch (data->state) {
+> +	case Up:
+> +		data->state = Idle;
+> +		if (data->requested == data->is_on)
+> +			break;
+> +		if (!data->requested)
+> +			/* Assume it is off unless activity is detected */
+> +			break;
+> +		/* Try again in a while unless we get some activity */
+> +		dev_dbg(data->dev, "Wait %dusec until retry\n",
+> +		       jiffies_to_msecs(data->backoff));
+> +		schedule_delayed_work(&data->work, data->backoff);
+> +		break;
+> +	case Idle:
+> +		if (data->requested == data->is_on)
+> +			break;
+> +
+> +		/* Time to toggle */
+> +		dev_dbg(data->dev, "Starting toggle to turn %s\n",
+> +			data->requested ? "on" : "off");
+> +		data->state = Down;
+> +		spin_unlock_irq(&data->lock);
+> +		gpio_set_value_cansleep(data->gpio, 0);
+> +		schedule_delayed_work(&data->work,
+> +				      msecs_to_jiffies(10));
+> +		return;
+> +
+> +	case Down:
+> +		data->state = Up;
+> +		data->last_toggle = jiffies;
+> +		dev_dbg(data->dev, "Toggle completed, should be %s now.\n",
+> +			data->is_on ? "off" : "on");
+> +		data->is_on = ! data->is_on;
+> +		spin_unlock_irq(&data->lock);
+> +
+> +		gpio_set_value_cansleep(data->gpio, 1);
+> +		schedule_delayed_work(&data->work,
+> +				      msecs_to_jiffies(10));
+> +		return;
+> +	}
+> +	spin_unlock_irq(&data->lock);
 > +}
-> +static int release_child(struct device *dev, void *data)
+> +
+> +static irqreturn_t tty_w2_isr(int irq, void *dev_id)
 > +{
-> +	pm_runtime_put_autosuspend(dev);
+> +	struct w2sg_data *data = dev_id;
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&data->lock, flags);
+> +	if (!data->requested && !data->is_on && data->state == Idle &&
+> +	    time_after(jiffies, data->last_toggle + data->backoff)) {
+> +		data->is_on = 1;
+> +		data->backoff *= 2;
+> +		dev_dbg(data->dev, "Received data, must be on. Try to turn off\n");
+> +		if (!data->suspended)
+> +			schedule_delayed_work(&data->work, 0);
+> +	}
+> +	spin_unlock_irqrestore(&data->lock, flags);
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int tty_w2_runtime_resume(struct device *slave)
+> +{
+> +	struct w2sg_data *data = dev_get_drvdata(slave);
+> +	unsigned long flags;
+> +
+> +	if (!data->reg_enabled &&
+> +	    data->reg &&
+> +	    !rfkill_blocked(data->rfkill))
+> +		if (regulator_enable(data->reg) == 0)
+> +			data->reg_enabled = true;
+> +
+> +	spin_lock_irqsave(&data->lock, flags);
+> +	if (!data->requested) {
+> +		dev_dbg(data->dev, "Device open - turn GPS on\n");
+> +		data->requested = true;
+> +		data->backoff = HZ;
+> +		if (data->irq) {
+> +			disable_irq(data->irq);
+> +			pinctrl_pm_select_default_state(slave);
+> +		}
+> +		if (!data->suspended && data->state == Idle)
+> +			schedule_delayed_work(&data->work, 0);
+> +	}
+> +	spin_unlock_irqrestore(&data->lock, flags);
 > +	return 0;
 > +}
 > +
->  /**
->   *	tty_release		-	vfs callback for close
->   *	@inode: inode of tty
-> @@ -1712,6 +1725,8 @@ int tty_release(struct inode *inode, struct file *filp)
->  	long	timeout = 0;
->  	int	once = 1;
->  
-> +	if (tty->dev)
-> +		device_for_each_child(tty->dev, NULL, release_child);
->  	if (tty_paranoia_check(tty, inode, __func__))
->  		return 0;
->  
-> @@ -2118,6 +2133,8 @@ retry_open:
->  		__proc_set_tty(current, tty);
->  	spin_unlock_irq(&current->sighand->siglock);
->  	tty_unlock(tty);
-> +	if (tty->dev)
-> +		device_for_each_child(tty->dev, NULL, open_child);
->  	mutex_unlock(&tty_mutex);
->  	return 0;
->  err_unlock:
-> @@ -3207,6 +3224,11 @@ struct device *tty_register_device_attr(struct tty_driver *driver,
->  	retval = device_register(dev);
->  	if (retval)
->  		goto error;
-> +	if (device && device->of_node)
-> +		/* Children are platform devices and will be
-> +		 * runtime_pm managed by this tty.
-> +		 */
-> +		of_platform_populate(device->of_node, NULL, NULL, dev);
+> +static int tty_w2_rfkill_set_block(void *vdata, bool blocked)
+> +{
+> +	struct w2sg_data *data = vdata;
+> +
+> +	dev_dbg(data->dev, "rfkill_set_blocked %d\n", blocked);
+> +	if (blocked && data->reg_enabled)
+> +		if (regulator_disable(data->reg) == 0)
+> +			data->reg_enabled = false;
+> +	if (!blocked &&
+> +	    !data->reg_enabled && data->reg &&
+> +	    !pm_runtime_suspended(data->dev))
+> +		if (regulator_enable(data->reg) == 0)
+> +			data->reg_enabled = true;
+> +	return 0;
+> +}
+> +
+> +static struct rfkill_ops tty_w2_rfkill_ops = {
+> +	.set_block = tty_w2_rfkill_set_block,
+> +};
+> +
+> +static int tty_w2_runtime_suspend(struct device *slave)
+> +{
+> +	struct w2sg_data *data = dev_get_drvdata(slave);
+> +	unsigned long flags;
+> +
+> +	dev_dbg(data->dev, "Device closed - turn GPS off\n");
+> +	if (data->reg && data->reg_enabled)
+> +		if (regulator_disable(data->reg) == 0)
+> +			data->reg_enabled = false;
+> +
+> +	spin_lock_irqsave(&data->lock, flags);
+> +	if (data->requested) {
+> +		data->requested = false;
+> +		data->backoff = HZ;
+> +		if (data->irq) {
+> +			pinctrl_pm_select_idle_state(slave);
+> +			enable_irq(data->irq);
+> +		}
+> +		if (!data->suspended && data->state == Idle)
+> +			schedule_delayed_work(&data->work, 0);
+> +	}
+> +	spin_unlock_irqrestore(&data->lock, flags);
+> +	return 0;
+> +}
+> +
+> +static int tty_w2_suspend(struct device *dev)
+> +{
+> +	/* Ignore incoming data and just turn device off.
+> +	 * we cannot really wait for a separate thread to
+> +	 * do things, so we disable that and do it all
+> +	 * here
+> +	 */
+> +	struct w2sg_data *data = dev_get_drvdata(dev);
+> +
+> +	spin_lock_irq(&data->lock);
+> +	data->suspended = true;
+> +	spin_unlock_irq(&data->lock);
+> +
+> +	cancel_delayed_work_sync(&data->work);
+> +	if (data->state == Down) {
+> +		dev_dbg(data->dev, "Suspending while GPIO down - raising\n");
+> +		msleep(10);
+> +		gpio_set_value_cansleep(data->gpio, 1);
+> +		data->last_toggle = jiffies;
+> +		data->is_on = !data->is_on;
+> +		data->state = Up;
+> +	}
+> +	if (data->state == Up) {
+> +		msleep(10);
+> +		data->state = Idle;
+> +	}
+> +	if (data->is_on) {
+> +		dev_dbg(data->dev, "Suspending while GPS on: toggling\n");
+> +		gpio_set_value_cansleep(data->gpio, 0);
+> +		msleep(10);
+> +		gpio_set_value_cansleep(data->gpio, 1);
+> +		data->is_on = 0;
+> +	}
+> +	return 0;
+> +}
+> +
+> +static int tty_w2_resume(struct device *dev)
+> +{
+> +	struct w2sg_data *data = dev_get_drvdata(dev);
+> +
+> +	spin_lock_irq(&data->lock);
+> +	data->suspended = false;
+> +	spin_unlock_irq(&data->lock);
+> +	schedule_delayed_work(&data->work, 0);
+> +	return 0;
+> +}
+> +
+> +static const struct dev_pm_ops tty_w2_pm_ops = {
+> +	SET_SYSTEM_SLEEP_PM_OPS(tty_w2_suspend, tty_w2_resume)
+> +	SET_RUNTIME_PM_OPS(tty_w2_runtime_suspend,
+> +			   tty_w2_runtime_resume,
+> +			   NULL)
+> +};
+> +
+> +static bool toggle_on_probe = false;
+> +
+> +static int tty_w2_probe(struct platform_device *pdev)
+> +{
+> +	struct w2sg_data *data;
+> +	struct regulator *reg;
+> +	int err;
+> +
+> +	if (pdev->dev.parent == NULL)
+> +		return -ENODEV;
+> +
+> +	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
+> +
+> +	reg = devm_regulator_get(&pdev->dev, "vdd");
+> +	if (IS_ERR(reg)) {
+> +		err = PTR_ERR(reg);
+> +		if (err != -ENODEV)
+> +			goto out;
+> +	} else
+> +		data->reg = reg;
+> +
+> +	data->irq = platform_get_irq(pdev, 0);
+> +	if (data->irq < 0) {
+> +		err = data->irq;
+> +		goto out;
+> +	}
+> +	dev_dbg(&pdev->dev, "IRQ configured: %d\n", data->irq);
+> +
+> +	data->last_toggle = jiffies;
+> +	data->backoff = HZ;
+> +	data->state = Idle;
+> +	data->gpio = of_get_named_gpio(pdev->dev.of_node, "gpios", 0);
+> +	if (data->gpio < 0) {
+> +		err = data->gpio;
+> +		goto out;
+> +	}
+> +	dev_dbg(&pdev->dev, "GPIO configured: %d\n", data->gpio);
+> +	spin_lock_init(&data->lock);
+> +	INIT_DELAYED_WORK(&data->work, toggle_work);
+> +	err = devm_gpio_request_one(&pdev->dev, data->gpio,
+> +				    GPIOF_OUT_INIT_HIGH,
+> +				    "tty-w2sg0004-on-off");
+> +	if (err)
+> +		goto out;
+> +
+> +	if (data->irq) {
+> +		irq_set_status_flags(data->irq, IRQ_NOAUTOEN);
+> +		err = devm_request_irq(&pdev->dev, data->irq, tty_w2_isr,
+> +				       IRQF_TRIGGER_FALLING,
+> +				       "tty-w2sg0004", data);
+> +	}
+> +	if (err)
+> +		goto out;
+> +
+> +	if (data->reg) {
+> +		data->rfkill = rfkill_alloc("GPS", &pdev->dev, RFKILL_TYPE_GPS,
+> +					    &tty_w2_rfkill_ops, data);
+> +		if (!data->rfkill) {
+> +			err = -ENOMEM;
+> +			goto out;
+> +		}
+> +		err = rfkill_register(data->rfkill);
+> +		if (err) {
+> +			dev_err(&pdev->dev, "Cannot register rfkill device");
+> +			rfkill_destroy(data->rfkill);
+> +			goto out;
+> +		}
+> +	}
+> +	platform_set_drvdata(pdev, data);
+> +	data->dev = &pdev->dev;
+> +	pm_runtime_enable(&pdev->dev);
+> +	if (data->irq) {
+> +		pinctrl_pm_select_idle_state(&pdev->dev);
+> +		enable_irq(data->irq);
+> +	}
+> +	if (toggle_on_probe) {
+> +		dev_dbg(data->dev, "Performing initial toggle\n");
+> +		gpio_set_value_cansleep(data->gpio, 0);
+> +		msleep(10);
+> +		gpio_set_value_cansleep(data->gpio, 1);
+> +		msleep(10);
+> +	}
+> +out:
+> +	dev_dbg(data->dev, "Probed: err=%d\n", err);
+> +	return err;
+> +}
+> +module_param(toggle_on_probe, bool, 0);
+> +MODULE_PARM_DESC(toggle_on_probe, "simulate power-on with GPS active");
+> +
+> +static int tty_w2_remove(struct platform_device *pdev)
+> +{
+> +	struct w2sg_data *data = dev_get_drvdata(&pdev->dev);
+> +	if (data->rfkill) {
+> +		rfkill_unregister(data->rfkill);
+> +		rfkill_destroy(data->rfkill);
+> +	}
+> +	return 0;
+> +}
+> +
+> +static struct of_device_id tty_w2_dt_ids[] = {
+> +	{ .compatible = "tty,w2sg0004", },
+> +	{}
+> +};
+> +
+> +static struct platform_driver tty_w2_driver = {
+> +	.driver.name	= "tty-w2sg0004",
+> +	.driver.owner	= THIS_MODULE,
+> +	.driver.pm	= &tty_w2_pm_ops,
+> +	.driver.of_match_table = tty_w2_dt_ids,
+> +	.probe		= tty_w2_probe,
+> +	.remove		= tty_w2_remove,
+> +};
+> +
+> +static int __init tty_w2_init(void)
+> +{
+> +	return platform_driver_register(&tty_w2_driver);
+> +}
+> +module_init(tty_w2_init);
+> +
+> +static void __exit tty_w2_exit(void)
+> +{
+> +	platform_driver_unregister(&tty_w2_driver);
+> +}
+> +module_exit(tty_w2_exit);
 
-Also need to remove all the tty slaves on driver unbind.
-
->  
->  	return dev;
->  
+module_platform_driver() is your friend. :-)
+> +
+> +MODULE_AUTHOR("NeilBrown <neilb@suse.de>");
+> +MODULE_DESCRIPTION("Serial port device which turns on W2SG0004 GPS");
+> +MODULE_LICENSE("GPL v2");
 > 
 > 
