@@ -1,80 +1,43 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
-Subject: Re: [PATCH v3 0/7] Pinctrl support for Zynq
-Date: Fri, 12 Dec 2014 08:37:53 -0800
-Message-ID: <4d544fe425694a4e8043ddbf604db062@BN1AFFO11FD033.protection.gbl>
-References: <1d59c0972da04ec89dec6c09724986a1@BY2FFO11FD010.protection.gbl>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH 3/4] arm64: dts: Add mediatek MT8173 SoC and evaluation
+ board dts and Makefile
+Date: Fri, 12 Dec 2014 11:42:54 -0500
+Message-ID: <20141212164254.GK22670@titan.lakedaemon.net>
+References: <1418208602-35584-1-git-send-email-eddie.huang@mediatek.com>
+ <1418208602-35584-4-git-send-email-eddie.huang@mediatek.com>
+ <20141211180245.GE28150@leverpostej>
+ <1418371705.423.31.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1d59c0972da04ec89dec6c09724986a1@BY2FFO11FD010.protection.gbl>
+In-Reply-To: <1418371705.423.31.camel@mtksdaap41>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
-Cc: Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Alessandro Rubini <rubini@unipv.it>, Heiko Stuebner <heiko@sntech.de>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-rockchip@lists.infradead.org, linux-sh@vger.kernel.org, "Ivan T. Ivanov" <iivanov@mm-sol.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Beniamino Galvani <b.galvani@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org
+To: Eddie Huang <eddie.huang@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, "srv_heupstream@mediatek.com" <srv_heupstream@mediatek.com>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Olof Johansson <olof@lixom.net>, "Joe.C" <yingjoe.chen@mediatek.com>, Robert Richter <rrichter@cavium.com>, Mark Brown <broonie@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sascha Hauer <kernel@pengutronix.de>, "yh.chen@mediatek.com" <yh.chen@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Argh, this went through the wrong SMTP. I suspect threading is broken
-due to that. Let me know if you want me to resend this with intact
-threading.
-My apologies.
+On Fri, Dec 12, 2014 at 04:08:25PM +0800, Eddie Huang wrote:
+> On Thu, 2014-12-11 at 18:02 +0000, Mark Rutland wrote:
+> > On Wed, Dec 10, 2014 at 10:50:01AM +0000, Eddie Huang wrote:
+...
+> > > +	memory {
+> > 
+> > Nit: should be memory@40000000 (and you'll need to add device_type =
+> > "memory").
+> > 
+> > > +		reg = <0 0x40000000 0 0x40000000>;
+> > > +	};
+> 
+> skeleton.dtsi already has /memory node with address-cells=2,
+> size-cells=1, which will cause build warning if I change to use
+> memory@40000000, because we use size-cells=2. I will not include
+> skeleton.dtsi and follow your suggestion in next version.
 
-	Thanks,
-	S=C3=B6ren
+There's skeleton64.dtsi in arch/arm/boot/dts (arm 32bit has LPAE-enabled
+systems).  Perhaps we should come up with a way to share both across the
+arches?
 
-On Fri, 2014-12-12 at 08:34AM -0800, Soren Brinkmann wrote:
-> Hi,
->=20
-> I made those few adjustments that came up in the v2 review. Other tha=
-n
-> those, these are the same patches as before.
-> The series is based on pinctrl-v3.19-1, the current pinctrl/devel
-> branch.
-> A branch with these changes is available at
-> https://github.com/sorenb-xlnx/linux-xlnx/commits/pinctrl
->=20
-> 	Thanks,
-> 	S=C3=B6ren
->=20
-> Soren Brinkmann (7):
->   pinctrl: pinconf-generic: Infer map type from DT property
->   pinctrl: pinconf-generic: Allow driver to specify DT params
->   pinctrl: zynq: Document DT binding
->   pinctrl: Add driver for Zynq
->   ARM: zynq: Enable pinctrl
->   ARM: zynq: DT: Add pinctrl information
->   pinctrl: qcom-spmi-gpio: Migrate to pinconf-generic
->=20
->  .../bindings/pinctrl/xlnx,zynq-pinctrl.txt         |  104 ++
->  arch/arm/boot/dts/zynq-7000.dtsi                   |    8 +-
->  arch/arm/boot/dts/zynq-zc702.dts                   |  181 +++
->  arch/arm/boot/dts/zynq-zc706.dts                   |  152 +++
->  arch/arm/mach-zynq/Kconfig                         |    2 +
->  drivers/pinctrl/Kconfig                            |    8 +
->  drivers/pinctrl/Makefile                           |    1 +
->  drivers/pinctrl/nomadik/pinctrl-abx500.c           |    2 +-
->  drivers/pinctrl/pinconf-generic.c                  |  199 ++--
->  drivers/pinctrl/pinconf.c                          |    4 +-
->  drivers/pinctrl/pinconf.h                          |   22 +-
->  drivers/pinctrl/pinctrl-rockchip.c                 |    2 +-
->  drivers/pinctrl/pinctrl-tz1090-pdc.c               |    2 +-
->  drivers/pinctrl/pinctrl-tz1090.c                   |    2 +-
->  drivers/pinctrl/pinctrl-zynq.c                     | 1176 ++++++++++=
-++++++++++
->  drivers/pinctrl/qcom/pinctrl-spmi-gpio.c           |  125 +--
->  drivers/pinctrl/sh-pfc/pinctrl.c                   |    2 +-
->  include/linux/pinctrl/pinconf-generic.h            |   29 +
->  include/linux/pinctrl/pinctrl.h                    |    9 +
->  19 files changed, 1808 insertions(+), 222 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/xlnx,zy=
-nq-pinctrl.txt
->  create mode 100644 drivers/pinctrl/pinctrl-zynq.c
->=20
-> --=20
-> 2.2.0.1.g9ee0458
->=20
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree"=
- in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+hth,
+
+Jason.
