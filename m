@@ -1,110 +1,78 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [GIT PULL] ACPI and power management updates for 3.19-rc1
-Date: Fri, 12 Dec 2014 15:42:07 +0100
-Message-ID: <1589257.Va5eEYbcUY@vostro.rjw.lan>
-References: <CAJZ5v0i3UhvaAu9JV_BuB0fPFmHAa_NdX+eXYBnAHcsiaVOw9g@mail.gmail.com> <CA+55aFx+8gKsDSDKSAxB4+JuL_M22uuHDmzSfsv1qJ=dSZ3-ww@mail.gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [RFC PATCH v2 2/4] Documentation: arm64/arm: dt bindings for numa.
+Date: Fri, 12 Dec 2014 15:20:27 +0100
+Message-ID: <1833364.xuE8O3LGeh@wuerfel>
+References: <1416605010-10442-1-git-send-email-ganapatrao.kulkarni@caviumnetworks.com> <10603826.6Z6KUoI9qZ@wuerfel> <548960F3.7070405@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <CA+55aFx+8gKsDSDKSAxB4+JuL_M22uuHDmzSfsv1qJ=dSZ3-ww@mail.gmail.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <548960F3.7070405-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Steve Capper <steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Roy Franz <roy.franz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Ganapatrao Kulkarni <ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, December 11, 2014 07:59:20 PM Linus Torvalds wrote:
-> On Mon, Dec 8, 2014 at 4:21 PM, Rafael J. Wysocki <rafael@kernel.org> wrote:
+On Thursday 11 December 2014 17:16:35 Hanjun Guo wrote:
+> On 2014=E5=B9=B412=E6=9C=8810=E6=97=A5 18:57, Arnd Bergmann wrote:
+> > On Wednesday 26 November 2014 17:12:49 Hanjun Guo wrote:
+> > The above topology is not easy to represent, but I think it would w=
+ork
+> > like this (ignoring the threads/cores/clusters on the socket, which
+> > would also need to be described in a full DT), using multiple logic=
+al
+> > paths between the nodes:
 > >
-> > Also the ACPI core is now going to support the _DEP configuration
-> > information in a limited way.
-> 
-> Hmm. That seems to be the cause of this annoying new message:
-> 
->     ...
->     ACPI: Using IOAPIC for interrupt routing
->     PCI: Using host bridge windows from ACPI; if necessary, use
-> "pci=nocrs" and report a bug
->     ACPI: [Package] has zero elements (ffff88040ccdb200)
->     acpi LNXCPU:00: Failed to evaluate _DEP.
->     ACPI: [Package] has zero elements (ffff88040ccdb200)
->     acpi LNXCPU:01: Failed to evaluate _DEP.
->     ACPI: [Package] has zero elements (ffff88040ccdb200)
->     acpi LNXCPU:02: Failed to evaluate _DEP.
->     ACPI: [Package] has zero elements (ffff88040ccdb200)
->     acpi LNXCPU:03: Failed to evaluate _DEP.
->     ACPI: [Package] has zero elements (ffff88040ccdb200)
->     acpi LNXCPU:04: Failed to evaluate _DEP.
->     ACPI: [Package] has zero elements (ffff88040ccdb200)
->     acpi LNXCPU:05: Failed to evaluate _DEP.
->     ACPI: [Package] has zero elements (ffff88040ccdb200)
->     acpi LNXCPU:06: Failed to evaluate _DEP.
->     ACPI: [Package] has zero elements (ffff88040ccdb200)
->     acpi LNXCPU:07: Failed to evaluate _DEP.
->     ACPI: [Package] has zero elements (ffff88040ccdb840)
->     acpi device:27: Failed to evaluate _DEP.
->     ACPI: [Package] has zero elements (ffff88040ccdb840)
->     acpi device:3f: Failed to evaluate _DEP.
->     ACPI: [Package] has zero elements (ffff88040ccdb8c0)
->     acpi LNXVIDEO:00: Failed to evaluate _DEP.
->     ACPI: Power Resource [FN00] (off)
->     ...
-> 
-> which doesn't seem to hinder anything from working, but is extremely
-> annoying because it's printed out as some super-important "KERN_ERR
-> message of Doom!"
-> 
-> I don't see why incomplete ACPI tables would *ever* be "KERN_ERR"
-> level messages, but I particularly don't see it when it seems to be
-> our own meaningless fake entries.
+> > socket 0
+> > ibm,associativity =3D <0 0 0 0>, <1 1 1 0>, <2 2 0 0>,  0 0 0>;
+> >
+> > socket 1
+> > ibm,associativity =3D <1 1 1 1>, <0 0 0 1>, <2 2 2 1>,  3 1 1>;
+> >
+> > socket 2
+> > ibm,associativity =3D <2 2 2 2>, <0 0 2 2>, <1 1 1 2>,  3 3 2>;
+> >
+> > socket 3
+> > ibm,associativity =3D  3 3 3>, <0 3 3 3>, <1 1 3 3>, <2 2 2 3>;
+> >
+> > This describes four levels or hierarchy, with the lowest level
+> > being a single CPU core on one socket, and four paths between
+> > the sockets. To compute the associativity between two sockets,
+> > you need to look at each combination of paths to find the best
+> > match.
+> >
+> > Comparing sockets 0 and 1, the best matches are <1 1 1 0>
+> > with <1 1 1 1>, and <0 0 0 0> with <0 0 0 1>. In each case, the
+> > associativity is "3", meaning the first three entries match.
+> >
+> > Comparing sockets 0 and 3, we have four equally bad matches
+> > that each only match in the highest-level domain, e.g. <0 0 0 0>
+> > with <0 3 3 3>, so the associativity is only "1", and that means
+> > the two nodes are less closely associated than two neighboring
+> > ones.
+> >
+> > With the algorithm that powerpc uses to turn associativity into
+> > distance, 2**(numlevels - associativity), this would put the
+> > distance of neighboring nodes at "2", and the longest distance
+> > at "8".
+>=20
+> Thanks for the explain, I can understand how it works now,
+> a bit complicated for me and I think the distance property
+> "node-matrix" in Ganapatrao's patch is straight forward,
+> what do you think?
 
-Right the KERN_ERR level in there is silly.  Overlooked in review, sorry
-about that.  The patch below should take care of it.
+I still think we should go the whole way of having something compatible
+with the existing bindings, possibly using different property names
+if there are objections to using the "ibm," prefix.
 
-Some of the messages you're seeing are from acpi_evaluate_reference(),
-though, and are not really useful too.  I'll cut a separate patch for
-these.
+The associativity property is more expressive and lets you describe
+things that you can't describe with the mem-map/cpu-map properties,
+e.g. devices that are part of the NUMA hierarchy but not associated
+to exactly one last-level node.
 
-Rafael
-
-
----
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Subject: ACPI / scan: Change the level of _DEP-related messages to KERN_DEBUG
-
-Two _DEP-related failure messages are printed as dev_err() which is
-unnecessary and annoying.  Use dev_dbg() to print them.
-
-While at it, one of the messages should actually say it is related
-to _DEP, so modify it to that effect.
-
-Fixes: 40e7fcb19293 (ACPI: Add _DEP support to fix battery issue on Asus T100TA)
-Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
- drivers/acpi/scan.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-Index: linux-pm/drivers/acpi/scan.c
-===================================================================
---- linux-pm.orig/drivers/acpi/scan.c
-+++ linux-pm/drivers/acpi/scan.c
-@@ -2214,7 +2214,7 @@ static void acpi_device_dep_initialize(s
- 	status = acpi_evaluate_reference(adev->handle, "_DEP", NULL,
- 					&dep_devices);
- 	if (ACPI_FAILURE(status)) {
--		dev_err(&adev->dev, "Failed to evaluate _DEP.\n");
-+		dev_dbg(&adev->dev, "Failed to evaluate _DEP.\n");
- 		return;
- 	}
- 
-@@ -2224,7 +2224,7 @@ static void acpi_device_dep_initialize(s
- 
- 		status = acpi_get_object_info(dep_devices.handles[i], &info);
- 		if (ACPI_FAILURE(status)) {
--			dev_err(&adev->dev, "Error reading device info\n");
-+			dev_dbg(&adev->dev, "Error reading _DEP device info\n");
- 			continue;
- 		}
- 
-
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
