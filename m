@@ -1,40 +1,58 @@
-From: Stanimir Varbanov <svarbanov@mm-sol.com>
-Subject: [PATCH 5/5] ARM: qcom: Add Qualcomm APQ8084 SoC
-Date: Fri, 12 Dec 2014 19:14:01 +0200
-Message-ID: <1418404441-5518-6-git-send-email-svarbanov@mm-sol.com>
-References: <1418404441-5518-1-git-send-email-svarbanov@mm-sol.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1418404441-5518-1-git-send-email-svarbanov@mm-sol.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, Kishon Vijay Abraham I <kishon@ti.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, Stanimir Varbanov <svarbanov@mm-sol.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 4/5] PCI: qcom: Add Qualcomm PCIe controller driver
+Date: Fri, 12 Dec 2014 18:30:03 +0100
+Message-ID: <2577563.x0mEZJNVDQ@wuerfel>
+References: <1418404441-5518-1-git-send-email-svarbanov@mm-sol.com> <1418404441-5518-5-git-send-email-svarbanov@mm-sol.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1418404441-5518-5-git-send-email-svarbanov@mm-sol.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Stanimir Varbanov <svarbanov@mm-sol.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, Kishon Vijay Abraham I <kishon@ti.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This adds Snapdragon 805 ARM-based SoC as multiplatform
-compatible platform.
+On Friday 12 December 2014 19:14:00 Stanimir Varbanov wrote:
+> The PCIe driver reuse the Designware common code for host
+> and MSI initialization, and also program the Qualcomm
+> application specific registers.
+> 
+> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
 
-Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
----
- arch/arm/mach-qcom/Kconfig |    7 +++++++
- 1 files changed, 7 insertions(+), 0 deletions(-)
+Looks nice!
 
-diff --git a/arch/arm/mach-qcom/Kconfig b/arch/arm/mach-qcom/Kconfig
-index ee5697b..b8abe7d 100644
---- a/arch/arm/mach-qcom/Kconfig
-+++ b/arch/arm/mach-qcom/Kconfig
-@@ -23,6 +23,13 @@ config ARCH_MSM8974
- 	bool "Enable support for MSM8974"
- 	select HAVE_ARM_ARCH_TIMER
- 
-+config ARCH_APQ8084
-+	bool "Enable support for APQ8084"
-+	select HAVE_ARM_ARCH_TIMER
-+	select PCI
-+	select PCI_DOMAINS
-+	select PCI_MSI
-+
- config QCOM_SCM
- 	bool
- 
--- 
-1.7.0.4
+> +static int
+> +qcom_pcie_rd_own_conf(struct pcie_port *pp, int where, int size, u32 *val)
+> +{
+> +	if (where == PCI_CLASS_REVISION && size == 4) {
+> +		*val = readl(pp->dbi_base + PCI_CLASS_REVISION);
+> +		*val &= ~(0xffff << 16);
+> +		*val |= PCI_CLASS_BRIDGE_PCI << 16;
+> +		return PCIBIOS_SUCCESSFUL;
+> +	}
+> +
+> +	return dw_pcie_cfg_read(pp->dbi_base + (where & ~0x3), where,
+> +				size, val);
+> +}
+
+Could you add a comment here to explain what this is for?
+
+> +static int __init qcom_pcie_probe(struct platform_device *pdev)
+> +{
+
+I think it's a bug to mark this function as __init. It breaks
+deferred probing and detaching/reattaching the device trough sysfs.
+
+After you fix that, you can remove the __refdata below.
+
+> +static struct platform_driver __refdata qcom_pcie_driver = {
+> +	.probe = qcom_pcie_probe,
+> +	.remove = qcom_pcie_remove,
+> +	.driver = {
+> +		.name = "qcom-pcie",
+> +		.of_match_table = qcom_pcie_match,
+> +	},
+> +};
+
+	Arnd
