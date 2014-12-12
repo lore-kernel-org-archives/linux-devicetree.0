@@ -1,62 +1,47 @@
-From: Soren Brinkmann <soren.brinkmann@xilinx.com>
-Subject: [PATCH v3 0/7] Pinctrl support for Zynq
-Date: Fri, 12 Dec 2014 08:34:51 -0800
-Message-ID: <1d59c0972da04ec89dec6c09724986a1@BY2FFO11FD010.protection.gbl>
+From: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v3 5/7] ARM: zynq: Enable pinctrl
+Date: Fri, 12 Dec 2014 08:34:56 -0800
+Message-ID: <7af19dab6e804ce096e5af4654f6452c@BL2FFO11FD045.protection.gbl>
+References: <1418402098-3811-1-git-send-email-soren.brinkmann@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-sh-owner@vger.kernel.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
-Cc: =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann@xilinx.com>, Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Alessandro Rubini <rubini@unipv.it>, Heiko Stuebner <heiko@sntech.de>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-rockchip@lists.infradead.org, linux-sh@vger.kernel.org, "Ivan T. Ivanov" <iivanov@mm-sol.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Beniamino Galvani <b.galvani@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1418402098-3811-1-git-send-email-soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alessandro Rubini <rubini-9wsNiZum9E8@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Select pinctrl and the Zynq pinctrl driver.
 
-I made those few adjustments that came up in the v2 review. Other than
-those, these are the same patches as before.
-The series is based on pinctrl-v3.19-1, the current pinctrl/devel
-branch.
-A branch with these changes is available at
-https://github.com/sorenb-xlnx/linux-xlnx/commits/pinctrl
+Signed-off-by: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Tested-by: Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
+---
+Changes since RFC v2:
+ - separate mach-zynq changes in their own patch
+---
+ arch/arm/mach-zynq/Kconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
-	Thanks,
-	S=C3=B6ren
-
-Soren Brinkmann (7):
-  pinctrl: pinconf-generic: Infer map type from DT property
-  pinctrl: pinconf-generic: Allow driver to specify DT params
-  pinctrl: zynq: Document DT binding
-  pinctrl: Add driver for Zynq
-  ARM: zynq: Enable pinctrl
-  ARM: zynq: DT: Add pinctrl information
-  pinctrl: qcom-spmi-gpio: Migrate to pinconf-generic
-
- .../bindings/pinctrl/xlnx,zynq-pinctrl.txt         |  104 ++
- arch/arm/boot/dts/zynq-7000.dtsi                   |    8 +-
- arch/arm/boot/dts/zynq-zc702.dts                   |  181 +++
- arch/arm/boot/dts/zynq-zc706.dts                   |  152 +++
- arch/arm/mach-zynq/Kconfig                         |    2 +
- drivers/pinctrl/Kconfig                            |    8 +
- drivers/pinctrl/Makefile                           |    1 +
- drivers/pinctrl/nomadik/pinctrl-abx500.c           |    2 +-
- drivers/pinctrl/pinconf-generic.c                  |  199 ++--
- drivers/pinctrl/pinconf.c                          |    4 +-
- drivers/pinctrl/pinconf.h                          |   22 +-
- drivers/pinctrl/pinctrl-rockchip.c                 |    2 +-
- drivers/pinctrl/pinctrl-tz1090-pdc.c               |    2 +-
- drivers/pinctrl/pinctrl-tz1090.c                   |    2 +-
- drivers/pinctrl/pinctrl-zynq.c                     | 1176 ++++++++++++=
-++++++++
- drivers/pinctrl/qcom/pinctrl-spmi-gpio.c           |  125 +--
- drivers/pinctrl/sh-pfc/pinctrl.c                   |    2 +-
- include/linux/pinctrl/pinconf-generic.h            |   29 +
- include/linux/pinctrl/pinctrl.h                    |    9 +
- 19 files changed, 1808 insertions(+), 222 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/xlnx,zynq=
--pinctrl.txt
- create mode 100644 drivers/pinctrl/pinctrl-zynq.c
-
+diff --git a/arch/arm/mach-zynq/Kconfig b/arch/arm/mach-zynq/Kconfig
+index aaa5162c1509..78e5e007f52d 100644
+--- a/arch/arm/mach-zynq/Kconfig
++++ b/arch/arm/mach-zynq/Kconfig
+@@ -9,6 +9,8 @@ config ARCH_ZYNQ
+ 	select HAVE_ARM_TWD if SMP
+ 	select ICST
+ 	select MFD_SYSCON
++	select PINCTRL
++	select PINCTRL_ZYNQ
+ 	select SOC_BUS
+ 	help
+ 	  Support for Xilinx Zynq ARM Cortex A9 Platform
 --=20
 2.2.0.1.g9ee0458
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
