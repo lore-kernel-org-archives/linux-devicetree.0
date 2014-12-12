@@ -1,38 +1,27 @@
-From: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/3] TTY: add slave driver to power-on device via a regulator.
-Date: Fri, 12 Dec 2014 06:59:39 -0500
-Message-ID: <548AD8AB.4090400@hurleysoftware.com>
-References: <20141211214801.4127.93914.stgit@notabene.brown>	<20141211215944.4127.4186.stgit@notabene.brown>	<548A29A4.7060908@hurleysoftware.com> <20141212162714.3a2378df@notabene.brown>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v5 1/3] gpio: Cygnus: define Broadcom Cygnus GPIO binding
+Date: Fri, 12 Dec 2014 13:08:05 +0100
+Message-ID: <1918116.UxUgDPTmcq@wuerfel>
+References: <1418342706-14755-2-git-send-email-rjui@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141212162714.3a2378df-wvvUuzkyo1EYVZTmpyfIwg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1418342706-14755-2-git-send-email-rjui@broadcom.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Ray Jui <rjui@broadcom.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Joe Perches <joe@perches.com>, Scott Branden <sbranden@broadcom.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/12/2014 12:27 AM, NeilBrown wrote:
-> On Thu, 11 Dec 2014 18:32:52 -0500 Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
-> wrote:
+On Thursday 11 December 2014 16:05:04 Ray Jui wrote:
+> +
+> +- linux,gpio-base:
+> +    Base GPIO number of this controller
+> +
 > 
->> On 12/11/2014 04:59 PM, NeilBrown wrote:
->>> The regulator is identified in devicetree as 'vdd-supply'
->>>
->>> Signed-off-by: NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>
->>
->> tty_* is only for tty core functions/data.
-> 
-> I think you are just objecting to the function and type names - is that
-> correct?
 
-Yeah, exactly.
+We've NAK'ed properties like this multiple times before, and it
+doesn't get any better this time. What are you trying to achieve
+here?
 
->  I suspect I can come up with something different.
-
-Thanks.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
