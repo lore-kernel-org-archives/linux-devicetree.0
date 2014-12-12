@@ -1,230 +1,157 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [RFC PATCH 2/2] of/clk: use "clkops-clocks" to specify clocks handled by clock_ops domain
-Date: Fri, 12 Dec 2014 19:40:52 +0200
-Message-ID: <2061380.HdoWyg3PvY@avalon>
-References: <1398334403-26181-1-git-send-email-geert+renesas@glider.be> <2717555.fiA6A86F65@avalon> <53D8F24B.7010104@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <53D8F24B.7010104@ti.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Geert Uytterhoeven <geert+renesas@glider.be>, ulf.hansson@linaro.org, Kevin Hilman <khilman@linaro.org>, Mike Turquette <mturquette@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, Ben Dooks <ben.dooks@codethink.co.uk>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH 1/3] TTY: add support for "tty slave" devices.
+Date: Fri, 12 Dec 2014 11:59:20 +0000
+Message-ID: <20141212115920.4277AC408F1@trevor.secretlab.ca>
+References: <20141211214801.4127.93914.stgit@notabene.brown>
+	<20141211215943.4127.24792.stgit@notabene.brown>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20141211215943.4127.24792.stgit@notabene.brown>
+Sender: linux-kernel-owner@vger.kernel.org
+To: NeilBrown <neilb@suse.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Jiri Slaby <jslaby@suse.cz>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Grygorii,
+On Fri, 12 Dec 2014 08:59:44 +1100
+, NeilBrown <neilb@suse.de>
+ wrote:
+> A "tty slave" is a device connected via UART.
+> It may need a driver to, for example, power the device on
+> when the tty is opened, and power it off when the tty
+> is released.
 
-I've found this mail deep inside my inbox :-)
+Some nit picking below, mostly about avoiding nasty surprises on devices
+that may already have child nodes below the tty node.
 
-On Wednesday 30 July 2014 16:25:31 Grygorii Strashko wrote:
-> On 07/30/2014 03:06 AM, Laurent Pinchart wrote:
-> > On Monday 28 July 2014 23:52:34 Grant Likely wrote:
-> >> On Mon, Jul 28, 2014 at 11:47 AM, Grygorii Strashko wrote:
-> >>> On 07/28/2014 05:05 PM, Grant Likely wrote:
-> >>>> On Thu, 12 Jun 2014 19:53:43 +0300, Grygorii Strashko wrote:
-> >>>>> Use "clkops-clocks" property to specify clocks handled by
-> >>>>> clock_ops domain PM domain. Only clocks defined in "clkops-clocks"
-> >>>>> set of clocks will be handled by Runtime PM through clock_ops
-> >>>>> Pm domain.
-> >>>>> 
-> >>>>> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-> >>>>> ---
-> >>>>> 
-> >>>>>    drivers/of/of_clk.c |    7 ++-----
-> >>>>>    1 file changed, 2 insertions(+), 5 deletions(-)
-> >>>>> 
-> >>>>> diff --git a/drivers/of/of_clk.c b/drivers/of/of_clk.c
-> >>>>> index 35f5e9f..5f9b90e 100644
-> >>>>> --- a/drivers/of/of_clk.c
-> >>>>> +++ b/drivers/of/of_clk.c
-> >>>>> @@ -86,11 +86,8 @@ int of_clk_register_runtime_pm_clocks(struct
-> >>>>> device_node *np,>>>
-> >>>>> 
-> >>>>>       struct clk *clk;
-> >>>>>       int error;
-> >>>>> 
-> >>>>> -    for (i = 0; (clk = of_clk_get(np, i)) && !IS_ERR(clk); i++) {
-> >>>>> -            if (!clk_may_runtime_pm(clk)) {
-> >>>>> -                    clk_put(clk);
-> >>>>> -                    continue;
-> >>>>> -            }
-> >>>>> +    for (i = 0; (clk = of_clk_get_from_set(np, "clkops", i)) &&
-> >>>>> +                 !IS_ERR(clk); i++) {
-> >>>> 
-> >>>> This really looks like an ABI break to me. What happens to all the
-> >>>> existing platforms who don't have this new clkops-clocks in their
-> >>>> device tree?
-> >>> 
-> >>> Agree. This patch as is will break such platforms.
-> >>> As possible solution for above problem - the NULL can be used as clock's
-> >>> prefix by default and platform code can configure new value of clock's
-> >>> prefix during initialization.
-> >>> In addition, to make this solution full the of_clk_get_by_name() will
-> >>> need to be modified too.
-> >>> 
-> >>> But note pls, this is pure RFC patches which I did to find out the
-> >>> answer on questions: - What is better: maintain Runtime PM clocks
-> >>> configuration in DT or in code?
-> >> 
-> >> In code. I don't think it is workable to embed runtime PM behaviour
-> >> into the DT bindings. I think there will be too much variance in what
-> >> hardware requires. We can create helpers to make this simpler, but I
-> >> don't think it is a good idea to set it up automatically without any
-> >> control from the driver itself.
-> >> 
-> >>> - Where and when to call of_clk_register_runtime_pm_clocks()?
-> >>> 
-> >>>    Bus notifier/ platform core/ device drivers
-> >> 
-> >> I would say in device drivers.
-> > 
-> > I tend to agree with that.
-> > 
-> > It will help here to take a step back and remember what the problem we're
-> > trying to solve is.
-> > 
-> > At the root is clock management. Our system comprise many clocks, and they
-> > need to be handled. The Common Clock Framework nicely models the clocks,
-> > and offers an API for drivers to retrieve device clocks and control them.
-> > Drivers can thus implement clock management manually without much pain.
-> > 
-> > A clock can be managed in roughly three different ways :
-> > 
-> > - it can be enabled at probe time and disabled at remove time ;
-> > 
-> > - it can be enabled right before the device leaves its idle state and
-> > disabled when the device goes back to idle ; or
-> > 
-> > - it can be enabled and disabled in a more fine-grained, device-specific
-> > manner.
-> > 
-> > The selected clock management granularity depends on constraints specific
-> > to the device and on how aggressive power saving needs to be. Enabling
-> > the clocks at probe time and disabling them at remove time is enough for
-> > most devices, but leads to a high power consumption. For that reason the
-> > second clock management scheme is often desired.
-> > 
-> > Managing clocks manually in the driver is a valid option. However, when
-> > adding runtime PM to the equation, and realizing that the clocks need to
-> > be enabled in the runtime PM resume handler and disabled in the suspend
-> > handler, the clock management code starts looking very similar in most
-> > drivers. We're thus tempted to factorize it away from the drivers into a
-> > shared location.
-> > 
-> > It's important to note at this point that the goal here is only to
-> > simplify drivers. Moving clock management code out of the drivers doesn't
-> > (unless I'm missing something) open the door to new possibilities, it just
-> > serves as a simplification.
-> > 
-> > Now, as Grygorii mentioned, differences between how a given IP core is
-> > integrated in various SoCs can make clock management SoC-dependent. In the
-> > vast majority of cases (which is really what we need to target, given that
-> > our target is simplifying drivers) SoC integration can be described as a
-> > list of clocks that must be managed. That list can be common to all
-> > devices in a given SoC, or can be device-dependent as well.
 > 
-> That's actually a problem - now we have static list of managed clocks
-> per-SoC and not per device.
-> 
-> > Few locations can be used to express a per-device list of per-SoC clocks.
-> > We can have clocks lists in a per-SoC and per-device location, per-device
-> > clocks lists in an SoC-specific location, or per-SoC clocks lists in a
-> > device- specific location.
-> > 
-> > The first option would require listing clocks to be managed by runtime PM
-> > in DT nodes, as proposed by this patch set. I don't think this is the
-> > best option, as that information is a mix of hardware description and
-> > software policy, with the hardware description part being already present
-> > in DT in the clocks property.
-> 
-> I'm not fully agree here. The clock is "functional clock" If It's managed by
-> runtime PM. And all such clocks need to be enabled/disabled always when
-> device is powered on/off. So, from my point of view it's HW description and
-> it follows TRM.
->
-> Other clocks are optional
+> A "tty slave" is a platform device which is declared as a
+> child of the uart in device-tree:
 
-That's actually use-case dependent, some of them might be mandatory.
+As far as the binding is concerned, talking about platform devices isn't
+relevant. That's an implementation detail. They are just devices.
 
-> and only drivers should control them.
-> And question is how to define sets of such clocks in the best way?
-> 
-> > The second option calls for storing the lists in SoC code under arch/. As
-> > we're trying to minimize the amount of SoC code there (and even remove SoC
-> > code completely when possible) I don't think that's a good option.
-> > 
-> > The third option would require storing the clocks lists in device drivers.
-> > I believe this is our best option, as a trade-off between simplicity and
-> > versatility. Drivers that use runtime PM already need to enable it
-> > explicitly when probing devices. Passing a list of clock names to runtime
-> > PM at that point wouldn't complicate drivers much. When the clocks list
-> > isn't SoC- dependent it could be stored as static information. Otherwise
-> > it could be derived from DT (or any other source of hardware description)
-> > using C code, offering all the versatility we need.
-> 
-> Ok. if I understand right, you propose smth like this:
-> 1) DT based solution:
-> 
-> devA {
-> 	clocks = <&clkpa>, <&clkcpgmac>, <&chipclk12>;
-> 	rpm-clocks = <&clkpa>, <&clkcpgmac>;
-> - or -
-> 	clocks = <&clkpa>, <&clkcpgmac>, <&chipclk12>;
-> 	clock-names = "clk_pa", "clk_cpgmac", "cpsw_cpts_rft_clk";
-> 	rpm-clocks =  "clk_pa", "clk_cpgmac";
-> }
+Using a platform device is somewhat problematic for the kernel because
+the DT could specify pretty much *any* platform device compatible value
+here and the kernel will happily bind a driver to it. I strongly
+recommend a separate bus type so that the pool of drivers remains
+separate. It would be a good time to look at platform_bus_type and see
+if more of it can be generalized so that subsystems can have custom bus
+types without very much code at all.
 
-On a side note I believe the "rpm-clocks" name is too tied to the Linux 
-implementation. A name similar to "functional-clocks" would be better.
-
-> in driver:
->  pm_runtime_enable();
 > 
->   |- of_clk_register_runtime_pm_clocks()
-> 
-> - or -
->  of_clk_register_runtime_pm_clocks()
->  pm_runtime_enable();
+> &uart1 {
+> 	bluetooth {
+> 		compatible = "tty,regulator";
+> 		vdd-supply = <&vaux4>;
+> 	};
 
-I prefer the second option, as an explicit opt-in is less likely to cause 
-regressions, and would also offer an easy way for drivers to opt-out.
+The example here isn't great. The compatible value should specify the
+specific device, not a generic "tty,regulator" type binding. The
+expectation is the driver understands the attachment and understands how
+to do PM on the device.
 
-> 2) Static solution:
-> char *con_ids_davinci[] =
->     { "fck", "master", "slave", NULL };
-> char *con_ids_keystone[] =
->     { "clk_pa", "clk_cpgmac" };
-> 
-> static struct of_device_id of_match[] = {
-> 	{ .compatible = "ti,keystone", con_ids_keystone},
-> 	{ .compatible = "ti,davinci", con_ids_davinci},
-> 	{},
 > };
 > 
-> Personally, I like option 1 and, seems, it will not break ABI.
+> runtime power management is used to power-up the device
+> on tty_open() and  power-down on tty_release().
 
-Is option 2 really representative of most use cases ? The list of clock inputs 
-to an IP core is a property of the IP core itself. How those inputs are 
-connected in the SoC is a property of the SoC integration. The clocks 
-references in DT can thus vary per-SoC, but the clock names should be pretty 
-much constant for a given IP core. Thus, if we have a single list of clocks to 
-manager for a given IP core, it shouldn't be difficult to pass that list to 
-the of_clk_register_runtime_pm_clocks() function.
+What about devices that need to stay powered up even if the tty is not
+opened? The runtime PM model needs to be better described for tty slaves.
 
-> > The only drawback of this solution I can think of right now is that the
-> > runtime PM core couldn't manage device clocks before probing the device.
-> > Specifically device clocks couldn't be managed if no driver is loaded for
-> > that device. I somehow recall that someone raised this as being a
-> > problem, but I can't remember why.
 > 
-> I can recollect only OMAP2+ SoCs where some abstraction called HW_MOD is
-> used during platform initialization to reset all devices and turn off
-> unused ones before probing the devices. But clock_ops are not used by
-> OMAP2+:)
+> Signed-off-by: NeilBrown <neilb@suse.de>
+> ---
+>  .../devicetree/bindings/serial/of-serial.txt       |    4 ++++
+>  drivers/tty/tty_io.c                               |   22 ++++++++++++++++++++
+>  2 files changed, 26 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/serial/of-serial.txt b/Documentation/devicetree/bindings/serial/of-serial.txt
+> index 8c4fd0332028..b59501ee2f21 100644
+> --- a/Documentation/devicetree/bindings/serial/of-serial.txt
+> +++ b/Documentation/devicetree/bindings/serial/of-serial.txt
+> @@ -39,6 +39,10 @@ Optional properties:
+>    driver is allowed to detect support for the capability even without this
+>    property.
+>  
+> +Optional child node:
+> +- a platform device listed as a child node will be probed and
+> +  powered-on whenever the tty is in use (open).
+> +
 
--- 
-Regards,
+The biggest concern I have is what happens to nodes that already have
+child devices that /don't/ match this use case? It is possible that some
+UART nodes already have a child node used to store other data. There are
+two ways to handle this; 1) add a new bool property that indicates the
+child nodes are tty slave devices, or 2) Make each uart driver
+explicitly enable the feature so that driver authors can check if it is
+a problem for that device. I personally would suggest #1 because then it
+can be enabled in generic code.
 
-Laurent Pinchart
+>  Example:
+>  
+>  	uart@80230000 {
+> diff --git a/drivers/tty/tty_io.c b/drivers/tty/tty_io.c
+> index 0508a1d8e4cd..7acdc6f093f4 100644
+> --- a/drivers/tty/tty_io.c
+> +++ b/drivers/tty/tty_io.c
+> @@ -95,6 +95,8 @@
+>  #include <linux/seq_file.h>
+>  #include <linux/serial.h>
+>  #include <linux/ratelimit.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/of_platform.h>
+>  
+>  #include <linux/uaccess.h>
+>  
+> @@ -1683,6 +1685,17 @@ static int tty_release_checks(struct tty_struct *tty, struct tty_struct *o_tty,
+>  	return 0;
+>  }
+>  
+> +static int open_child(struct device *dev, void *data)
+> +{
+> +	pm_runtime_get_sync(dev);
+> +	return 0;
+> +}
+> +static int release_child(struct device *dev, void *data)
+> +{
+> +	pm_runtime_put_autosuspend(dev);
+> +	return 0;
+> +}
+> +
+>  /**
+>   *	tty_release		-	vfs callback for close
+>   *	@inode: inode of tty
+> @@ -1712,6 +1725,8 @@ int tty_release(struct inode *inode, struct file *filp)
+>  	long	timeout = 0;
+>  	int	once = 1;
+>  
+> +	if (tty->dev)
+> +		device_for_each_child(tty->dev, NULL, release_child);
+>  	if (tty_paranoia_check(tty, inode, __func__))
+>  		return 0;
+>  
+> @@ -2118,6 +2133,8 @@ retry_open:
+>  		__proc_set_tty(current, tty);
+>  	spin_unlock_irq(&current->sighand->siglock);
+>  	tty_unlock(tty);
+> +	if (tty->dev)
+> +		device_for_each_child(tty->dev, NULL, open_child);
+>  	mutex_unlock(&tty_mutex);
+>  	return 0;
+>  err_unlock:
+> @@ -3207,6 +3224,11 @@ struct device *tty_register_device_attr(struct tty_driver *driver,
+>  	retval = device_register(dev);
+>  	if (retval)
+>  		goto error;
+> +	if (device && device->of_node)
+> +		/* Children are platform devices and will be
+> +		 * runtime_pm managed by this tty.
+> +		 */
+> +		of_platform_populate(device->of_node, NULL, NULL, dev);
 
+Also need to remove all the tty slaves on driver unbind.
+
+>  
+>  	return dev;
+>  
+> 
+> 
