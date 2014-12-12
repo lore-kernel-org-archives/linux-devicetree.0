@@ -1,35 +1,110 @@
-From: "Griffis, Brad" <bgriffis@ti.com>
-Subject: RE: [PATCH v4 0/6] Touchscreen performance related fixes
-Date: Fri, 12 Dec 2014 14:16:29 +0000
-Message-ID: <912A29987EAE174BA6CF187D7CDFA9CE26FA135A@DLEE08.ent.ti.com>
-References: <1415941651-28962-1-git-send-email-vigneshr@ti.com>
-	<20141124115116.GA14997@linutronix.de>	<547C3A95.30605@ti.com>
-	<547C3C19.5090501@linutronix.de>	<547C42FF.5010700@ti.com>
-	<CAH=tA9FO5MCzE274thc-NugCNte6WdyC-Rxc6yfnuR=+6_qMbA@mail.gmail.com>
-	<548A0125.6040708@linutronix.de>
- <CABH3fy8zCjsxARsqBf9JXOHBkzySdiqifA1KtjnGpJdBY2EikA@mail.gmail.com>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [GIT PULL] ACPI and power management updates for 3.19-rc1
+Date: Fri, 12 Dec 2014 15:42:07 +0100
+Message-ID: <1589257.Va5eEYbcUY@vostro.rjw.lan>
+References: <CAJZ5v0i3UhvaAu9JV_BuB0fPFmHAa_NdX+eXYBnAHcsiaVOw9g@mail.gmail.com> <CA+55aFx+8gKsDSDKSAxB4+JuL_M22uuHDmzSfsv1qJ=dSZ3-ww@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <CABH3fy8zCjsxARsqBf9JXOHBkzySdiqifA1KtjnGpJdBY2EikA@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-input-owner@vger.kernel.org
-To: Catalin Crenguta <catalin.crenguta@gmail.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Nicolae Rosia <nicolae.rosia@gmail.com>, "R, Vignesh" <vigneshr@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, "richardcochran@gmail.com" <richardcochran@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee.jones@linaro.org>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Samuel Ortiz <sameo@linux.intel.com>, "Balbi, Felipe" <balbi@ti.com>, Sanjeev Sharma <sanjeev_sharma@mentor.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Jan Kardell <jan.kardell@telliq.com>, devicetree@vger.kerne
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <CA+55aFx+8gKsDSDKSAxB4+JuL_M22uuHDmzSfsv1qJ=dSZ3-ww@mail.gmail.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBDYXRhbGluIENyZW5ndXRhIFtt
-YWlsdG86Y2F0YWxpbi5jcmVuZ3V0YUBnbWFpbC5jb21dDQo+IEkgaGF2ZSB0cmllZCB5b3VyIHBh
-dGNoZXMgYnkgY2xvbmluZyBbMV0gYW5kIGNvcHlpbmcgdGhlIHJlbGV2YW50IGZpbGVzIG92ZXIN
-Cj4gdGhlIGtlcm5lbCBJJ3ZlIGNsb25lZCBmcm9tIFsyXS4NCj4gSXQgY29tcGlsZXMgJiBydW5z
-LCBidXQgSSdtIHNlZWluZyBsb3RzIG9mIHBlbi1kb3duL3Blbi11cCBldmVudHMgd2hlbiBJJ20N
-Cj4gbm90IHRvdWNoaW5nIHRoZSBzY3JlZW4uDQo+IEFueSBzdWdnZXN0aW9ucz8NCg0KSG93IGFy
-ZSB5b3UgY29uZmlndXJpbmcgdGksY2hhcmdlLWRlbGF5IGluIHlvdXIgZHRzPyAgSSd2ZSBzZWVu
-IHRoaXMgYmVoYXZpb3Igb24gc29tZSBjdXN0b20gYm9hcmRzIHdoZXJlIHdlIHdlcmUgdXNpbmcg
-YSBzbWFsbGVyIGNoYXJnZSBkZWxheSAoMHg0MDApIHRvIGJlZ2luIHdpdGgsIGFuZCBieSB1cHBp
-bmcgaXQgdG8gMHhiMDAwIHdlIHJlc29sdmVkIHRoZSBpc3N1ZS4gIFRoZXNlIHBhdGNoZXMgaG93
-ZXZlciBhbHJlYWR5IHNwZWNpZmllZCB0aSxjaGFyZ2UtZGVsYXkgPSAweGIwMDAgYnkgZGVmYXVs
-dCBzbyB0aGlzIHdvdWxkIHN1cnByaXNlIG1lIHRoYXQgaXQncyBzdGlsbCBzZWVpbmcgdGhhdCBp
-c3N1ZS4gIFdhcyB0aGUgdG91Y2hzY3JlZW4gd29ya2luZyBhcyBleHBlY3RlZCBiZWZvcmUgdGhl
-c2UgbmV3IHBhdGNoZXMsIG9yIGRvZXMgaXQgaGF2ZSBpc3N1ZXMgYm90aCB3YXlzPw0K
+On Thursday, December 11, 2014 07:59:20 PM Linus Torvalds wrote:
+> On Mon, Dec 8, 2014 at 4:21 PM, Rafael J. Wysocki <rafael@kernel.org> wrote:
+> >
+> > Also the ACPI core is now going to support the _DEP configuration
+> > information in a limited way.
+> 
+> Hmm. That seems to be the cause of this annoying new message:
+> 
+>     ...
+>     ACPI: Using IOAPIC for interrupt routing
+>     PCI: Using host bridge windows from ACPI; if necessary, use
+> "pci=nocrs" and report a bug
+>     ACPI: [Package] has zero elements (ffff88040ccdb200)
+>     acpi LNXCPU:00: Failed to evaluate _DEP.
+>     ACPI: [Package] has zero elements (ffff88040ccdb200)
+>     acpi LNXCPU:01: Failed to evaluate _DEP.
+>     ACPI: [Package] has zero elements (ffff88040ccdb200)
+>     acpi LNXCPU:02: Failed to evaluate _DEP.
+>     ACPI: [Package] has zero elements (ffff88040ccdb200)
+>     acpi LNXCPU:03: Failed to evaluate _DEP.
+>     ACPI: [Package] has zero elements (ffff88040ccdb200)
+>     acpi LNXCPU:04: Failed to evaluate _DEP.
+>     ACPI: [Package] has zero elements (ffff88040ccdb200)
+>     acpi LNXCPU:05: Failed to evaluate _DEP.
+>     ACPI: [Package] has zero elements (ffff88040ccdb200)
+>     acpi LNXCPU:06: Failed to evaluate _DEP.
+>     ACPI: [Package] has zero elements (ffff88040ccdb200)
+>     acpi LNXCPU:07: Failed to evaluate _DEP.
+>     ACPI: [Package] has zero elements (ffff88040ccdb840)
+>     acpi device:27: Failed to evaluate _DEP.
+>     ACPI: [Package] has zero elements (ffff88040ccdb840)
+>     acpi device:3f: Failed to evaluate _DEP.
+>     ACPI: [Package] has zero elements (ffff88040ccdb8c0)
+>     acpi LNXVIDEO:00: Failed to evaluate _DEP.
+>     ACPI: Power Resource [FN00] (off)
+>     ...
+> 
+> which doesn't seem to hinder anything from working, but is extremely
+> annoying because it's printed out as some super-important "KERN_ERR
+> message of Doom!"
+> 
+> I don't see why incomplete ACPI tables would *ever* be "KERN_ERR"
+> level messages, but I particularly don't see it when it seems to be
+> our own meaningless fake entries.
+
+Right the KERN_ERR level in there is silly.  Overlooked in review, sorry
+about that.  The patch below should take care of it.
+
+Some of the messages you're seeing are from acpi_evaluate_reference(),
+though, and are not really useful too.  I'll cut a separate patch for
+these.
+
+Rafael
+
+
+---
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Subject: ACPI / scan: Change the level of _DEP-related messages to KERN_DEBUG
+
+Two _DEP-related failure messages are printed as dev_err() which is
+unnecessary and annoying.  Use dev_dbg() to print them.
+
+While at it, one of the messages should actually say it is related
+to _DEP, so modify it to that effect.
+
+Fixes: 40e7fcb19293 (ACPI: Add _DEP support to fix battery issue on Asus T100TA)
+Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ drivers/acpi/scan.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+Index: linux-pm/drivers/acpi/scan.c
+===================================================================
+--- linux-pm.orig/drivers/acpi/scan.c
++++ linux-pm/drivers/acpi/scan.c
+@@ -2214,7 +2214,7 @@ static void acpi_device_dep_initialize(s
+ 	status = acpi_evaluate_reference(adev->handle, "_DEP", NULL,
+ 					&dep_devices);
+ 	if (ACPI_FAILURE(status)) {
+-		dev_err(&adev->dev, "Failed to evaluate _DEP.\n");
++		dev_dbg(&adev->dev, "Failed to evaluate _DEP.\n");
+ 		return;
+ 	}
+ 
+@@ -2224,7 +2224,7 @@ static void acpi_device_dep_initialize(s
+ 
+ 		status = acpi_get_object_info(dep_devices.handles[i], &info);
+ 		if (ACPI_FAILURE(status)) {
+-			dev_err(&adev->dev, "Error reading device info\n");
++			dev_dbg(&adev->dev, "Error reading _DEP device info\n");
+ 			continue;
+ 		}
+ 
+
