@@ -1,237 +1,77 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v4] clk: Add PWM clock driver
-Date: Fri, 12 Dec 2014 11:47:49 +0100
-Message-ID: <1418381269-26399-1-git-send-email-p.zabel@pengutronix.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: =?UTF-8?q?Janusz=20U=C5=BCycki?= <j.uzycki-9tnw74Q4ehaHKKo6LODCOg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 8/8] iio: Add ABI documentation for input current readings
+Date: Fri, 12 Dec 2014 11:45:59 +0000
+Message-ID: <548AD577.10508@kernel.org>
+References: <cover.1416938054.git.Adam.Thomson.Opensource@diasemi.com> <9d3c3451c2cac6035277fb36ffead1a1f8af453e.1416938054.git.Adam.Thomson.Opensource@diasemi.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <9d3c3451c2cac6035277fb36ffead1a1f8af453e.1416938054.git.Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Adam Thomson <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, support.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Some board designers, when running out of clock output pads, decide to
-(mis)use PWM output pads to provide a clock to external components.
-This driver supports this practice by providing an adapter between the
-PWM and clock bindings in the device tree. As the PWM bindings specify
-the period in the device tree, this is a fixed clock.
+On 25/11/14 18:25, Adam Thomson wrote:
+> Add information on in_current related readings.
+> 
+> Signed-off-by: Adam Thomson <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+This one stands on it's own to applied (with some fuzz and tiny
+bit of rearranging) to the togreg branch of iio.git - initially pushed
+out as testing for the autobuilders to play with it.
 
-Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
-Changes since v3:
- - Call pwm_enable/disable from prepare/unprepare callbacks
- - Use NSEC_PER_SEC
- - Add CLK_IS_BASIC flag
- - Register clk_pwm_remove function
- - Since this is a platform_device, remove driver.owner = THIS_MODULE
----
- .../devicetree/bindings/clock/pwm-clock.txt        |  26 +++++
- drivers/clk/Kconfig                                |   7 ++
- drivers/clk/Makefile                               |   1 +
- drivers/clk/clk-pwm.c                              | 129 +++++++++++++++++++++
- 4 files changed, 163 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/pwm-clock.txt
- create mode 100644 drivers/clk/clk-pwm.c
+Thanks,
 
-diff --git a/Documentation/devicetree/bindings/clock/pwm-clock.txt b/Documentation/devicetree/bindings/clock/pwm-clock.txt
-new file mode 100644
-index 0000000..751fff5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/pwm-clock.txt
-@@ -0,0 +1,26 @@
-+Binding for an external clock signal driven by a PWM pin.
-+
-+This binding uses the common clock binding[1] and the common PWM binding[2].
-+
-+[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-+[2] Documentation/devicetree/bindings/pwm/pwm.txt
-+
-+Required properties:
-+- compatible : shall be "pwm-clock".
-+- #clock-cells : from common clock binding; shall be set to 0.
-+- pwms : from common PWM binding; this determines the clock frequency
-+  via the PWM period given in the pwm-specifier.
-+
-+Optional properties:
-+- clock-output-names : From common clock binding.
-+- clock-frequency : Exact output frequency, in case the pwm period
-+  is not exact but was rounded to nanoseconds.
-+
-+Example:
-+	clock {
-+		compatible = "pwm-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <25000000>;
-+		clock-output-names = "mipi_mclk";
-+		pwms = <&pwm2 0 40>; /* 1 / 40 ns = 25 MHz */
-+	};
-diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-index 455fd17..36a6918a 100644
---- a/drivers/clk/Kconfig
-+++ b/drivers/clk/Kconfig
-@@ -129,6 +129,13 @@ config COMMON_CLK_PALMAS
- 	  This driver supports TI Palmas devices 32KHz output KG and KG_AUDIO
- 	  using common clock framework.
- 
-+config COMMON_CLK_PWM
-+	bool "Clock driver for PWMs used as clock outputs"
-+	depends on PWM
-+	---help---
-+	  Adapter driver so that any PWM output can be (mis)used as clock signal
-+	  at 50% duty cycle.
-+
- config COMMON_CLK_PXA
- 	def_bool COMMON_CLK && ARCH_PXA
- 	---help---
-diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-index d5fba5b..6a0c5cf 100644
---- a/drivers/clk/Makefile
-+++ b/drivers/clk/Makefile
-@@ -40,6 +40,7 @@ obj-$(CONFIG_ARCH_U300)			+= clk-u300.o
- obj-$(CONFIG_ARCH_VT8500)		+= clk-vt8500.o
- obj-$(CONFIG_COMMON_CLK_WM831X)		+= clk-wm831x.o
- obj-$(CONFIG_COMMON_CLK_XGENE)		+= clk-xgene.o
-+obj-$(CONFIG_COMMON_CLK_PWM)		+= clk-pwm.o
- obj-$(CONFIG_COMMON_CLK_AT91)		+= at91/
- obj-$(CONFIG_ARCH_BCM_MOBILE)		+= bcm/
- obj-$(CONFIG_ARCH_BERLIN)		+= berlin/
-diff --git a/drivers/clk/clk-pwm.c b/drivers/clk/clk-pwm.c
-new file mode 100644
-index 0000000..c7d5652
---- /dev/null
-+++ b/drivers/clk/clk-pwm.c
-@@ -0,0 +1,129 @@
-+/*
-+ * Copyright (C) 2014 Philipp Zabel, Pengutronix
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * PWM (mis)used as clock output
-+ */
-+#include <linux/clk-provider.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/pwm.h>
-+
-+struct clk_pwm {
-+	struct clk_hw hw;
-+	struct pwm_device *pwm;
-+	u32 fixed_rate;
-+};
-+
-+#define to_clk_pwm(_hw) container_of(_hw, struct clk_pwm, hw)
-+
-+static int clk_pwm_prepare(struct clk_hw *hw)
-+{
-+	struct clk_pwm *clk_pwm = to_clk_pwm(hw);
-+
-+	return pwm_enable(clk_pwm->pwm);
-+}
-+
-+static void clk_pwm_unprepare(struct clk_hw *hw)
-+{
-+	struct clk_pwm *clk_pwm = to_clk_pwm(hw);
-+
-+	pwm_disable(clk_pwm->pwm);
-+}
-+
-+static unsigned long clk_pwm_recalc_rate(struct clk_hw *hw,
-+					 unsigned long parent_rate)
-+{
-+	struct clk_pwm *clk_pwm = to_clk_pwm(hw);
-+
-+	return clk_pwm->fixed_rate;
-+}
-+
-+const struct clk_ops clk_pwm_ops = {
-+	.prepare = clk_pwm_prepare,
-+	.unprepare = clk_pwm_unprepare,
-+	.recalc_rate = clk_pwm_recalc_rate,
-+};
-+
-+int clk_pwm_probe(struct platform_device *pdev)
-+{
-+	struct device_node *node = pdev->dev.of_node;
-+	struct clk_init_data init;
-+	struct clk_pwm *clk_pwm;
-+	struct pwm_device *pwm;
-+	const char *clk_name;
-+	struct clk *clk;
-+	int ret;
-+
-+	clk_pwm = devm_kzalloc(&pdev->dev, sizeof(*clk_pwm), GFP_KERNEL);
-+	if (!clk_pwm)
-+		return -ENOMEM;
-+
-+	pwm = devm_pwm_get(&pdev->dev, NULL);
-+	if (IS_ERR(pwm))
-+		return PTR_ERR(pwm);
-+
-+	if (!pwm || !pwm->period) {
-+		dev_err(&pdev->dev, "invalid pwm period\n");
-+		return -EINVAL;
-+	}
-+
-+	if (of_property_read_u32(node, "clock-frequency", &clk_pwm->fixed_rate))
-+		clk_pwm->fixed_rate = NSEC_PER_SEC / pwm->period;
-+
-+	if (pwm->period != NSEC_PER_SEC / clk_pwm->fixed_rate &&
-+	    pwm->period != DIV_ROUND_UP(NSEC_PER_SEC, clk_pwm->fixed_rate)) {
-+		dev_err(&pdev->dev,
-+			"clock-frequency does not match pwm period\n");
-+		return -EINVAL;
-+	}
-+
-+	ret = pwm_config(pwm, (pwm->period + 1) >> 1, pwm->period);
-+	if (ret < 0)
-+		return ret;
-+
-+	clk_name = node->name;
-+	of_property_read_string(node, "clock-output-names", &clk_name);
-+
-+	init.name = clk_name;
-+	init.ops = &clk_pwm_ops;
-+	init.flags = CLK_IS_BASIC | CLK_IS_ROOT;
-+	init.num_parents = 0;
-+
-+	clk_pwm->pwm = pwm;
-+	clk_pwm->hw.init = &init;
-+	clk = devm_clk_register(&pdev->dev, &clk_pwm->hw);
-+	if (IS_ERR(clk))
-+		return PTR_ERR(clk);
-+
-+	return of_clk_add_provider(node, of_clk_src_simple_get, clk);
-+}
-+
-+int clk_pwm_remove(struct platform_device *pdev)
-+{
-+	of_clk_del_provider(pdev->dev.of_node);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id clk_pwm_dt_ids[] = {
-+	{ .compatible = "pwm-clock" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, clk_pwm_dt_ids);
-+
-+static struct platform_driver clk_pwm_driver = {
-+	.probe = clk_pwm_probe,
-+	.remove = clk_pwm_remove,
-+	.driver = {
-+		.name = "pwm-clock",
-+		.of_match_table = of_match_ptr(clk_pwm_dt_ids),
-+	},
-+};
-+
-+module_platform_driver(clk_pwm_driver);
--- 
-2.1.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Jonathan
+> ---
+>  Documentation/ABI/testing/sysfs-bus-iio | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
+> index d760b02..37cd4d4 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-iio
+> +++ b/Documentation/ABI/testing/sysfs-bus-iio
+> @@ -92,6 +92,18 @@ Description:
+>  		is required is a consistent labeling.  Units after application
+>  		of scale and offset are millivolts.
+> 
+> +What:		/sys/bus/iio/devices/iio:deviceX/in_currentY_raw
+> +What:		/sys/bus/iio/devices/iio:deviceX/in_currentY_supply_raw
+> +KernelVersion:	3.17
+> +Contact:	linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> +Description:
+> +		Raw (unscaled no bias removal etc.) current measurement from
+> +		channel Y. In special cases where the channel does not
+> +		correspond to externally available input one of the named
+> +		versions may be used. The number must always be specified and
+> +		unique to allow association with event codes. Units after
+> +		application of scale and offset are milliamps.
+> +
+>  What:		/sys/bus/iio/devices/iio:deviceX/in_capacitanceY_raw
+>  KernelVersion:	3.2
+>  Contact:	linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> @@ -227,6 +239,8 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_accel_y_offset
+>  What:		/sys/bus/iio/devices/iio:deviceX/in_accel_z_offset
+>  What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_offset
+>  What:		/sys/bus/iio/devices/iio:deviceX/in_voltage_offset
+> +What:		/sys/bus/iio/devices/iio:deviceX/in_currentY_offset
+> +What:		/sys/bus/iio/devices/iio:deviceX/in_current_offset
+>  What:		/sys/bus/iio/devices/iio:deviceX/in_tempY_offset
+>  What:		/sys/bus/iio/devices/iio:deviceX/in_temp_offset
+>  What:		/sys/bus/iio/devices/iio:deviceX/in_pressureY_offset
+> @@ -249,8 +263,11 @@ Description:
+>  		to the _raw output.
+> 
+>  What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_scale
+> +What:		/sys/bus/iio/devices/iio:deviceX/in_currentY_scale
+>  What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_supply_scale
+> +What:		/sys/bus/iio/devices/iio:deviceX/in_currentY_supply_scale
+>  What:		/sys/bus/iio/devices/iio:deviceX/in_voltage_scale
+> +What:		/sys/bus/iio/devices/iio:deviceX/in_current_scale
+>  What:		/sys/bus/iio/devices/iio:deviceX/out_voltageY_scale
+>  What:		/sys/bus/iio/devices/iio:deviceX/out_altvoltageY_scale
+>  What:		/sys/bus/iio/devices/iio:deviceX/in_accel_scale
+> --
+> 1.9.3
+> 
