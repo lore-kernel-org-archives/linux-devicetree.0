@@ -1,64 +1,93 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v6 1/5] phy: add a driver for the Rockchip SoC internal
- USB2.0 PHY
-Date: Fri, 12 Dec 2014 11:17:01 +0530
-Message-ID: <548A8155.8080809@ti.com>
-References: <1418291722-25448-1-git-send-email-lyz@rock-chips.com>	<1418291722-25448-2-git-send-email-lyz@rock-chips.com>	<548971AF.1020506@ti.com>
- <CAD=FV=XTYmzxvteNip2gtuDSSEWph-vY=BOPejHa1Z5KS2Kf6Q@mail.gmail.com>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH 3/4] arm64: dts: Add mediatek MT8173 SoC and evaluation
+ board dts and Makefile
+Date: Fri, 12 Dec 2014 07:52:35 +0100
+Message-ID: <20141212065235.GK30369@pengutronix.de>
+References: <1418208602-35584-1-git-send-email-eddie.huang@mediatek.com>
+ <1418208602-35584-4-git-send-email-eddie.huang@mediatek.com>
+ <20141211180245.GE28150@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAD=FV=XTYmzxvteNip2gtuDSSEWph-vY=BOPejHa1Z5KS2Kf6Q@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Tao Huang <huangtao@rock-chips.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko@sntech.de>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chris <zyw@rock-chips.com>, Eddie Cai <cf@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Yunzhi Li <lyz@rock-chips.com>, Olof Johansson <olof@lixom.net>, jwerner@chromium.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Grant Likely <grant.likely@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20141211180245.GE28150@leverpostej>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Eddie Huang <eddie.huang@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Jason Cooper <jason@lakedaemon.net>, "srv_heupstream@mediatek.com" <srv_heupstream@mediatek.com>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Olof Johansson <olof@lixom.net>, "Joe.C" <yingjoe.chen@mediatek.com>, Robert Richter <rrichter@cavium.com>, Mark Brown <broonie@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sascha Hauer <kernel@pengutronix.de>, "yh.chen@mediatek.com" <yh.chen@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Friday 12 December 2014 12:11 AM, Doug Anderson wrote:
-> Kishon,
+On Thu, Dec 11, 2014 at 06:02:46PM +0000, Mark Rutland wrote:
+> Hi,
 > 
-> On Thu, Dec 11, 2014 at 2:27 AM, Kishon Vijay Abraham I <kishon@ti.com> wrote:
->> I didn't mean that. You can get rid of this entire xlate stuff if you use
->> something like below
->>
->> phy@xxx {
->>         compatible = "";
->>         phy1:usb_phy {
->>         }
->>         phy2:usb_phy {
->>         };
->> };
->>
->>
->> usb@xx {
->>         compatible = "";
->>         phys = <&phy1>; //doesn't need xlate
->>         /* this needs xlate
->>            phys = <&phy 1>;
->>         */
->>         phy-names = "phy";
->> };
+> On Wed, Dec 10, 2014 at 10:50:01AM +0000, Eddie Huang wrote:
+> > Add device tree support for MT8173 SoC and evalutaion board based on it.
+> > 
+> > Signed-off-by: Eddie Huang <eddie.huang@mediatek.com>
+> > ---
+> >  arch/arm64/boot/dts/Makefile       |   1 +
+> >  arch/arm64/boot/dts/mt8173-evb.dts |  31 +++++++
+> >  arch/arm64/boot/dts/mt8173.dtsi    | 164 +++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 196 insertions(+)
+> >  create mode 100644 arch/arm64/boot/dts/mt8173-evb.dts
+> >  create mode 100644 arch/arm64/boot/dts/mt8173.dtsi
+> > 
+> > diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
+> > index f8001a6..db7661e 100644
+> > --- a/arch/arm64/boot/dts/Makefile
+> > +++ b/arch/arm64/boot/dts/Makefile
+> > @@ -1,3 +1,4 @@
+> > +dtb-$(CONFIG_ARCH_MEDIATEK) += mt8173-evb.dtb
+> >  dtb-$(CONFIG_ARCH_THUNDER) += thunder-88xx.dtb
+> >  dtb-$(CONFIG_ARCH_VEXPRESS) += rtsm_ve-aemv8a.dtb foundation-v8.dtb
+> >  dtb-$(CONFIG_ARCH_XGENE) += apm-mustang.dtb
+> > diff --git a/arch/arm64/boot/dts/mt8173-evb.dts b/arch/arm64/boot/dts/mt8173-evb.dts
+> > new file mode 100644
+> > index 0000000..adf26dd
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/mt8173-evb.dts
+> > @@ -0,0 +1,31 @@
+> > +/*
+> > + * Copyright (c) 2014 MediaTek Inc.
+> > + * Author: Eddie Huang <eddie.huang@mediatek.com>
+> > + *
+> > + * This program is free software; you can redistribute it and/or modify
+> > + * it under the terms of the GNU General Public License version 2 as
+> > + * published by the Free Software Foundation.
+> > + *
+> > + * This program is distributed in the hope that it will be useful,
+> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > + * GNU General Public License for more details.
+> > + */
+> > +
+> > +/dts-v1/;
+> > +#include "mt8173.dtsi"
+> > +
+> > +/ {
+> > +	model = "mediatek,mt8173-evb";
+> > +
+> > +	aliases {
+> > +		serial0 = &uart0;
+> > +		serial1 = &uart1;
+> > +		serial2 = &uart2;
+> > +		serial3 = &uart3;
 > 
-> Is the syntax you proposed really better?  Are you saying that you
-> advocate never using "#phy-cells" other than 0 for new bindings?  Is
+> Do any of these support earlycon?
+> 
+> > +	};
+> > +
+> > +	memory {
+> 
+> Nit: should be memory@40000000 (and you'll need to add device_type =
+> "memory").
 
-No. It can still be used for configuring the PHY. For example, in the case of
-PIPE3 PHY we configure it to USB PHY, SATA PHY or PCIE PHY depending on to
-which controller the PHY is connected to.
+skeleton.dtsi already has a /memory node with device_type = "memory".
+Shouldn't that be used?
 
-I feel using phy-cells just for differentiating the PHY is pointless when you
-have a separate node for each PHY.
+Sascha
 
-Thanks
-Kishon
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
