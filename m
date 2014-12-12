@@ -1,171 +1,44 @@
 From: Kevin Cernekee <cernekee@gmail.com>
-Subject: [PATCH V5 15/23] MIPS: BMIPS: Rewrite DMA code to use "dma-ranges" property
-Date: Fri, 12 Dec 2014 14:07:06 -0800
-Message-ID: <1418422034-17099-16-git-send-email-cernekee@gmail.com>
+Subject: [PATCH V5 11/23] MIPS: Fall back to the generic restart notifier
+Date: Fri, 12 Dec 2014 14:07:02 -0800
+Message-ID: <1418422034-17099-12-git-send-email-cernekee@gmail.com>
 References: <1418422034-17099-1-git-send-email-cernekee@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-mips-bounce@linux-mips.org>
 In-Reply-To: <1418422034-17099-1-git-send-email-cernekee@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
 To: ralf@linux-mips.org
 Cc: f.fainelli@gmail.com, tglx@linutronix.de, jason@lakedaemon.net, jogo@openwrt.org, arnd@arndb.de, computersforpeace@gmail.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This is a more standardized way of handling DMA remapping, and it is
-suitable for the memory map found on BCM3384.
+If the machine doesn't set its own _machine_restart callback, call the
+common do_kernel_restart() instead.  This allows arch-independent reset
+drivers from drivers/power/reset/ to be used to reboot the machine.
 
 Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
 ---
- arch/mips/bmips/dma.c | 100 ++++++++++++++++++++++++++++++++++----------------
- 1 file changed, 68 insertions(+), 32 deletions(-)
+ arch/mips/kernel/reset.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/mips/bmips/dma.c b/arch/mips/bmips/dma.c
-index ea42012..04790f4 100644
---- a/arch/mips/bmips/dma.c
-+++ b/arch/mips/bmips/dma.c
-@@ -6,76 +6,112 @@
-  * Copyright (C) 2014 Kevin Cernekee <cernekee@gmail.com>
-  */
- 
-+#define pr_fmt(fmt)		"bmips-dma: " fmt
-+
- #include <linux/device.h>
- #include <linux/dma-direction.h>
- #include <linux/dma-mapping.h>
- #include <linux/init.h>
--#include <linux/mm.h>
-+#include <linux/io.h>
- #include <linux/of.h>
--#include <linux/pci.h>
-+#include <linux/printk.h>
-+#include <linux/slab.h>
- #include <linux/types.h>
- #include <dma-coherence.h>
- 
- /*
-- * BCM3384 has configurable address translation windows which allow the
-+ * BCM338x has configurable address translation windows which allow the
-  * peripherals' DMA addresses to be different from the Zephyr-visible
-  * physical addresses.  e.g. usb_dma_addr = zephyr_pa ^ 0x08000000
-  *
-- * If our DT "memory" node has a "dma-xor-mask" property we will enable this
-- * translation using the provided offset.
-+ * If the "brcm,ubus" node has a "dma-ranges" property we will enable this
-+ * translation globally using the provided information.  This implements a
-+ * very limited subset of "dma-ranges" support and it will probably be
-+ * replaced by a more generic version later.
-  */
--static u32 bcm3384_dma_xor_mask;
--static u32 bcm3384_dma_xor_limit = 0xffffffff;
- 
--/*
-- * PCI collapses the memory hole at 0x10000000 - 0x1fffffff.
-- * On systems with a dma-xor-mask, this range is guaranteed to live above
-- * the dma-xor-limit.
-- */
--#define BCM3384_MEM_HOLE_PA	0x10000000
--#define BCM3384_MEM_HOLE_SIZE	0x10000000
-+struct bmips_dma_range {
-+	u32			child_addr;
-+	u32			parent_addr;
-+	u32			size;
-+};
- 
--static dma_addr_t bcm3384_phys_to_dma(struct device *dev, phys_addr_t pa)
-+static struct bmips_dma_range *bmips_dma_ranges;
-+
-+#define FLUSH_RAC		0x100
-+
-+static dma_addr_t bmips_phys_to_dma(struct device *dev, phys_addr_t pa)
+diff --git a/arch/mips/kernel/reset.c b/arch/mips/kernel/reset.c
+index 07fc524..cf23ab5 100644
+--- a/arch/mips/kernel/reset.c
++++ b/arch/mips/kernel/reset.c
+@@ -29,6 +29,8 @@ void machine_restart(char *command)
  {
--	if (dev && dev_is_pci(dev) &&
--	    pa >= (BCM3384_MEM_HOLE_PA + BCM3384_MEM_HOLE_SIZE))
--		return pa - BCM3384_MEM_HOLE_SIZE;
--	if (pa <= bcm3384_dma_xor_limit)
--		return pa ^ bcm3384_dma_xor_mask;
-+	struct bmips_dma_range *r;
-+
-+	for (r = bmips_dma_ranges; r && r->size; r++) {
-+		if (pa >= r->child_addr &&
-+		    pa < (r->child_addr + r->size))
-+			return pa - r->child_addr + r->parent_addr;
-+	}
- 	return pa;
+ 	if (_machine_restart)
+ 		_machine_restart(command);
++	else
++		do_kernel_restart(command);
  }
  
- dma_addr_t plat_map_dma_mem(struct device *dev, void *addr, size_t size)
- {
--	return bcm3384_phys_to_dma(dev, virt_to_phys(addr));
-+	return bmips_phys_to_dma(dev, virt_to_phys(addr));
- }
- 
- dma_addr_t plat_map_dma_mem_page(struct device *dev, struct page *page)
- {
--	return bcm3384_phys_to_dma(dev, page_to_phys(page));
-+	return bmips_phys_to_dma(dev, page_to_phys(page));
- }
- 
- unsigned long plat_dma_addr_to_phys(struct device *dev, dma_addr_t dma_addr)
- {
--	if (dev && dev_is_pci(dev) &&
--	    dma_addr >= BCM3384_MEM_HOLE_PA)
--		return dma_addr + BCM3384_MEM_HOLE_SIZE;
--	if ((dma_addr ^ bcm3384_dma_xor_mask) <= bcm3384_dma_xor_limit)
--		return dma_addr ^ bcm3384_dma_xor_mask;
-+	struct bmips_dma_range *r;
-+
-+	for (r = bmips_dma_ranges; r && r->size; r++) {
-+		if (dma_addr >= r->parent_addr &&
-+		    dma_addr < (r->parent_addr + r->size))
-+			return dma_addr - r->parent_addr + r->child_addr;
-+	}
- 	return dma_addr;
- }
- 
--static int __init bcm3384_init_dma_xor(void)
-+static int __init bmips_init_dma_ranges(void)
- {
--	struct device_node *np = of_find_node_by_type(NULL, "memory");
-+	struct device_node *np =
-+		of_find_compatible_node(NULL, NULL, "brcm,ubus");
-+	const __be32 *data;
-+	struct bmips_dma_range *r;
-+	int len;
- 
- 	if (!np)
- 		return 0;
- 
--	of_property_read_u32(np, "dma-xor-mask", &bcm3384_dma_xor_mask);
--	of_property_read_u32(np, "dma-xor-limit", &bcm3384_dma_xor_limit);
-+	data = of_get_property(np, "dma-ranges", &len);
-+	if (!data)
-+		goto out_good;
-+
-+	len /= sizeof(*data) * 3;
-+	if (!len)
-+		goto out_bad;
-+
-+	/* add a dummy (zero) entry at the end as a sentinel */
-+	bmips_dma_ranges = kzalloc(sizeof(struct bmips_dma_range) * (len + 1),
-+				   GFP_KERNEL);
-+	if (!bmips_dma_ranges)
-+		goto out_bad;
- 
-+	for (r = bmips_dma_ranges; len; len--, r++) {
-+		r->child_addr = be32_to_cpup(data++);
-+		r->parent_addr = be32_to_cpup(data++);
-+		r->size = be32_to_cpup(data++);
-+	}
-+
-+out_good:
- 	of_node_put(np);
- 	return 0;
-+
-+out_bad:
-+	pr_err("error parsing dma-ranges property\n");
-+	of_node_put(np);
-+	return -EINVAL;
- }
--arch_initcall(bcm3384_init_dma_xor);
-+arch_initcall(bmips_init_dma_ranges);
+ void machine_halt(void)
 -- 
 2.1.1
