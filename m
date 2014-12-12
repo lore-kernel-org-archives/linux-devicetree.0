@@ -1,176 +1,118 @@
-From: Soren Brinkmann <soren.brinkmann@xilinx.com>
-Subject: [PATCH v3 6/7] ARM: zynq: DT: Add pinctrl information
-Date: Fri, 12 Dec 2014 08:34:57 -0800
-Message-ID: <25c5e4f404e449ceb0f61645013f9645@BY2FFO11FD022.protection.gbl>
-References: <1418402098-3811-1-git-send-email-soren.brinkmann@xilinx.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [RFC 01/15] drivers/base: add track framework
+Date: Fri, 12 Dec 2014 16:36:53 +0000
+Message-ID: <20141212163653.GO11764@sirena.org.uk>
+References: <1418226513-14105-2-git-send-email-a.hajda@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1418402098-3811-1-git-send-email-soren.brinkmann@xilinx.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Heiko Stuebner <heiko@sntech.de>, linux-sh@vger.kernel.org, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, Beniamino Galvani <b.galvani@gmail.com>, linux-rockchip@lists.infradead.org, =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann@xilinx.com>, "Ivan T. Ivanov" <iivanov@mm-sol.com>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org, Alessandro Rubini <rubini@unipv.it>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="H8fFO+isr9ADh2Iv"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1418226513-14105-2-git-send-email-a.hajda@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrzej Hajda <a.hajda@samsung.com>
+Cc: open list <linux-kernel@vger.kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mike Turquette <mturquette@linaro.org>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Inki Dae <inki.dae@samsung.com>, Kishon Vijay Abraham I <kishon@ti.com>, Liam Girdwood <lgirdwood@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "moderated list:ARM/CLKDEV SUPPORT" <linux-arm-kernel@lists.infradead.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, "moderated list:ARM/S5P EXYNOS AR..." <linux-samsung-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, boris.brezillon@
 List-Id: devicetree@vger.kernel.org
 
-QWRkIHBpbmN0cmwgZGVzY3JpcHRpb25zIHRvIHRoZSB6YzcwMiBhbmQgemM3MDYgZGV2aWNlIHRy
-ZWVzLgoKU2lnbmVkLW9mZi1ieTogU29yZW4gQnJpbmttYW5uIDxzb3Jlbi5icmlua21hbm5AeGls
-aW54LmNvbT4KVGVzdGVkLWJ5OiBBbmRyZWFzIEbDpHJiZXIgPGFmYWVyYmVyQHN1c2UuZGU+Ci0t
-LQpDaGFuZ2VzIHNpbmNlIHYxOgogLSByZW1vdmUgJ3BpbmN0cmwtJyBwcmVmaXggZm9yIHBpbmN0
-cmwgc3ViLW5vZGVzCiAtIHNlcGFyYXRlIGNvbmZpZyBhbmQgbXV4IG5vZGVzCgpDaGFuZ2VzIHNp
-bmNlIFJGQyB2MjoKIC0gYWRkIHBpbmNvbmYgcHJvcGVydGllcyB0byB6YzcwMiBtZGlvIG5vZGUK
-IC0gcmVtb3ZlIGFyZ3VtZW50cyBmcm9tIGJpYXMtcmVsYXRlZCBwcm9wcwoKQ2hhbmdlcyBzaW5j
-ZSBSRkMgdjE6CiAtIHNlcGFyYXRlIERUIGNoYW5nZXMgaW50byB0aGVpciBvd24gcGF0Y2gKLS0t
-CiBhcmNoL2FybS9ib290L2R0cy96eW5xLTcwMDAuZHRzaSB8ICAgOCArLQogYXJjaC9hcm0vYm9v
-dC9kdHMvenlucS16YzcwMi5kdHMgfCAxODEgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrCiBhcmNoL2FybS9ib290L2R0cy96eW5xLXpjNzA2LmR0cyB8IDE1MiArKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKwogMyBmaWxlcyBjaGFuZ2VkLCAzNDAgaW5zZXJ0aW9u
-cygrKSwgMSBkZWxldGlvbigtKQoKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3p5bnEt
-NzAwMC5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvenlucS03MDAwLmR0c2kKaW5kZXggMjQwMzZj
-NDQwNDQwLi4zN2Q3ZmUzNmExMjkgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL3p5bnEt
-NzAwMC5kdHNpCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3p5bnEtNzAwMC5kdHNpCkBAIC0yMzgs
-NyArMjM4LDcgQEAKIAkJc2xjcjogc2xjckBmODAwMDAwMCB7CiAJCQkjYWRkcmVzcy1jZWxscyA9
-IDwxPjsKIAkJCSNzaXplLWNlbGxzID0gPDE+OwotCQkJY29tcGF0aWJsZSA9ICJ4bG54LHp5bnEt
-c2xjciIsICJzeXNjb24iOworCQkJY29tcGF0aWJsZSA9ICJ4bG54LHp5bnEtc2xjciIsICJzeXNj
-b24iLCAic2ltcGxlLWJ1cyI7CiAJCQlyZWcgPSA8MHhGODAwMDAwMCAweDEwMDA+OwogCQkJcmFu
-Z2VzOwogCQkJY2xrYzogY2xrY0AxMDAgewpAQCAtMjU5LDYgKzI1OSwxMiBAQAogCQkJCQkJImRi
-Z190cmMiLCAiZGJnX2FwYiI7CiAJCQkJcmVnID0gPDB4MTAwIDB4MTAwPjsKIAkJCX07CisKKwkJ
-CXBpbmN0cmwwOiBwaW5jdHJsQDcwMCB7CisJCQkJY29tcGF0aWJsZSA9ICJ4bG54LHBpbmN0cmwt
-enlucSI7CisJCQkJcmVnID0gPDB4NzAwIDB4MjAwPjsKKwkJCQlzeXNjb24gPSA8JnNsY3I+Owor
-CQkJfTsKIAkJfTsKIAogCQlkbWFjX3M6IGRtYWNAZjgwMDMwMDAgewpkaWZmIC0tZ2l0IGEvYXJj
-aC9hcm0vYm9vdC9kdHMvenlucS16YzcwMi5kdHMgYi9hcmNoL2FybS9ib290L2R0cy96eW5xLXpj
-NzAyLmR0cwppbmRleCA5NGUyY2RhNmY5YjYuLjFlM2Q4MDBlNWIyZSAxMDA2NDQKLS0tIGEvYXJj
-aC9hcm0vYm9vdC9kdHMvenlucS16YzcwMi5kdHMKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvenlu
-cS16YzcwMi5kdHMKQEAgLTQwLDIxICs0MCwzMiBAQAogCiAmY2FuMCB7CiAJc3RhdHVzID0gIm9r
-YXkiOworCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7CisJcGluY3RybC0wID0gPCZwaW5jdHJs
-X2NhbjBfZGVmYXVsdD47CiB9OwogCiAmZ2VtMCB7CiAJc3RhdHVzID0gIm9rYXkiOwogCXBoeS1t
-b2RlID0gInJnbWlpLWlkIjsKIAlwaHktaGFuZGxlID0gPCZldGhlcm5ldF9waHk+OworCXBpbmN0
-cmwtbmFtZXMgPSAiZGVmYXVsdCI7CisJcGluY3RybC0wID0gPCZwaW5jdHJsX2dlbTBfZGVmYXVs
-dD47CiAKIAlldGhlcm5ldF9waHk6IGV0aGVybmV0LXBoeUA3IHsKIAkJcmVnID0gPDc+OwogCX07
-CiB9OwogCismZ3BpbzAgeworCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7CisJcGluY3RybC0w
-ID0gPCZwaW5jdHJsX2dwaW8wX2RlZmF1bHQ+OworfTsKKwogJmkyYzAgewogCXN0YXR1cyA9ICJv
-a2F5IjsKIAljbG9jay1mcmVxdWVuY3kgPSA8NDAwMDAwPjsKKwlwaW5jdHJsLW5hbWVzID0gImRl
-ZmF1bHQiOworCXBpbmN0cmwtMCA9IDwmcGluY3RybF9pMmMwX2RlZmF1bHQ+OwogCiAJaTJjc3dp
-dGNoQDc0IHsKIAkJY29tcGF0aWJsZSA9ICJueHAscGNhOTU0OCI7CkBAIC0xMjgsMTAgKzEzOSwx
-ODAgQEAKIAl9OwogfTsKIAorJnBpbmN0cmwwIHsKKwlwaW5jdHJsX2NhbjBfZGVmYXVsdDogY2Fu
-MC1kZWZhdWx0IHsKKwkJbXV4IHsKKwkJCWZ1bmN0aW9uID0gImNhbjAiOworCQkJZ3JvdXBzID0g
-ImNhbjBfOV9ncnAiOworCQl9OworCisJCWNvbmYgeworCQkJZ3JvdXBzID0gImNhbjBfOV9ncnAi
-OworCQkJc2xldy1yYXRlID0gPDA+OworCQkJaW8tc3RhbmRhcmQgPSA8MT47CisJCX07CisKKwkJ
-Y29uZi1yeCB7CisJCQlwaW5zID0gIk1JTzQ2IjsKKwkJCWJpYXMtaGlnaC1pbXBlZGFuY2U7CisJ
-CX07CisKKwkJY29uZi10eCB7CisJCQlwaW5zID0gIk1JTzQ3IjsKKwkJCWJpYXMtZGlzYWJsZTsK
-KwkJfTsKKwl9OworCisJcGluY3RybF9nZW0wX2RlZmF1bHQ6IGdlbTAtZGVmYXVsdCB7CisJCW11
-eCB7CisJCQlmdW5jdGlvbiA9ICJldGhlcm5ldDAiOworCQkJZ3JvdXBzID0gImV0aGVybmV0MF8w
-X2dycCI7CisJCX07CisKKwkJY29uZiB7CisJCQlncm91cHMgPSAiZXRoZXJuZXQwXzBfZ3JwIjsK
-KwkJCXNsZXctcmF0ZSA9IDwwPjsKKwkJCWlvLXN0YW5kYXJkID0gPDQ+OworCQl9OworCisJCWNv
-bmYtcnggeworCQkJcGlucyA9ICJNSU8yMiIsICJNSU8yMyIsICJNSU8yNCIsICJNSU8yNSIsICJN
-SU8yNiIsICJNSU8yNyI7CisJCQliaWFzLWhpZ2gtaW1wZWRhbmNlOworCQkJbG93LXBvd2VyLWRp
-c2FibGU7CisJCX07CisKKwkJY29uZi10eCB7CisJCQlwaW5zID0gIk1JTzE2IiwgIk1JTzE3Iiwg
-Ik1JTzE4IiwgIk1JTzE5IiwgIk1JTzIwIiwgIk1JTzIxIjsKKwkJCWJpYXMtZGlzYWJsZTsKKwkJ
-CWxvdy1wb3dlci1lbmFibGU7CisJCX07CisKKwkJbXV4LW1kaW8geworCQkJZnVuY3Rpb24gPSAi
-bWRpbzAiOworCQkJZ3JvdXBzID0gIm1kaW8wXzBfZ3JwIjsKKwkJfTsKKworCQljb25mLW1kaW8g
-eworCQkJZ3JvdXBzID0gIm1kaW8wXzBfZ3JwIjsKKwkJCXNsZXctcmF0ZSA9IDwwPjsKKwkJCWlv
-LXN0YW5kYXJkID0gPDE+OworCQkJYmlhcy1kaXNhYmxlOworCQl9OworCX07CisKKwlwaW5jdHJs
-X2dwaW8wX2RlZmF1bHQ6IGdwaW8wLWRlZmF1bHQgeworCQltdXggeworCQkJZnVuY3Rpb24gPSAi
-Z3BpbzAiOworCQkJZ3JvdXBzID0gImdwaW8wXzdfZ3JwIiwgImdwaW8wXzhfZ3JwIiwgImdwaW8w
-XzlfZ3JwIiwKKwkJCQkgImdwaW8wXzEwX2dycCIsICJncGlvMF8xMV9ncnAiLCAiZ3BpbzBfMTJf
-Z3JwIiwKKwkJCQkgImdwaW8wXzEzX2dycCIsICJncGlvMF8xNF9ncnAiOworCQl9OworCisJCWNv
-bmYgeworCQkJZ3JvdXBzID0gImdwaW8wXzdfZ3JwIiwgImdwaW8wXzhfZ3JwIiwgImdwaW8wXzlf
-Z3JwIiwKKwkJCQkgImdwaW8wXzEwX2dycCIsICJncGlvMF8xMV9ncnAiLCAiZ3BpbzBfMTJfZ3Jw
-IiwKKwkJCQkgImdwaW8wXzEzX2dycCIsICJncGlvMF8xNF9ncnAiOworCQkJc2xldy1yYXRlID0g
-PDA+OworCQkJaW8tc3RhbmRhcmQgPSA8MT47CisJCX07CisKKwkJY29uZi1wdWxsLXVwIHsKKwkJ
-CXBpbnMgPSAiTUlPOSIsICJNSU8xMCIsICJNSU8xMSIsICJNSU8xMiIsICJNSU8xMyIsICJNSU8x
-NCI7CisJCQliaWFzLXB1bGwtdXA7CisJCX07CisKKwkJY29uZi1wdWxsLW5vbmUgeworCQkJcGlu
-cyA9ICJNSU83IiwgIk1JTzgiOworCQkJYmlhcy1kaXNhYmxlOworCQl9OworCX07CisKKwlwaW5j
-dHJsX2kyYzBfZGVmYXVsdDogaTJjMC1kZWZhdWx0IHsKKwkJbXV4IHsKKwkJCWdyb3VwcyA9ICJp
-MmMwXzEwX2dycCI7CisJCQlmdW5jdGlvbiA9ICJpMmMwIjsKKwkJfTsKKworCQljb25mIHsKKwkJ
-CWdyb3VwcyA9ICJpMmMwXzEwX2dycCI7CisJCQliaWFzLXB1bGwtdXA7CisJCQlzbGV3LXJhdGUg
-PSA8MD47CisJCQlpby1zdGFuZGFyZCA9IDwxPjsKKwkJfTsKKwl9OworCisJcGluY3RybF9zZGhj
-aTBfZGVmYXVsdDogc2RoY2kwLWRlZmF1bHQgeworCQltdXggeworCQkJZ3JvdXBzID0gInNkaW8w
-XzJfZ3JwIjsKKwkJCWZ1bmN0aW9uID0gInNkaW8wIjsKKwkJfTsKKworCQljb25mIHsKKwkJCWdy
-b3VwcyA9ICJzZGlvMF8yX2dycCI7CisJCQlzbGV3LXJhdGUgPSA8MD47CisJCQlpby1zdGFuZGFy
-ZCA9IDwxPjsKKwkJCWJpYXMtZGlzYWJsZTsKKwkJfTsKKworCQltdXgtY2QgeworCQkJZ3JvdXBz
-ID0gImdwaW8wXzBfZ3JwIjsKKwkJCWZ1bmN0aW9uID0gInNkaW8wX2NkIjsKKwkJfTsKKworCQlj
-b25mLWNkIHsKKwkJCWdyb3VwcyA9ICJncGlvMF8wX2dycCI7CisJCQliaWFzLWhpZ2gtaW1wZWRh
-bmNlOworCQkJYmlhcy1wdWxsLXVwOworCQkJc2xldy1yYXRlID0gPDA+OworCQkJaW8tc3RhbmRh
-cmQgPSA8MT47CisJCX07CisKKwkJbXV4LXdwIHsKKwkJCWdyb3VwcyA9ICJncGlvMF8xNV9ncnAi
-OworCQkJZnVuY3Rpb24gPSAic2RpbzBfd3AiOworCQl9OworCisJCWNvbmYtd3AgeworCQkJZ3Jv
-dXBzID0gImdwaW8wXzE1X2dycCI7CisJCQliaWFzLWhpZ2gtaW1wZWRhbmNlOworCQkJYmlhcy1w
-dWxsLXVwOworCQkJc2xldy1yYXRlID0gPDA+OworCQkJaW8tc3RhbmRhcmQgPSA8MT47CisJCX07
-CisJfTsKKworCXBpbmN0cmxfdWFydDFfZGVmYXVsdDogdWFydDEtZGVmYXVsdCB7CisJCW11eCB7
-CisJCQlncm91cHMgPSAidWFydDFfMTBfZ3JwIjsKKwkJCWZ1bmN0aW9uID0gInVhcnQxIjsKKwkJ
-fTsKKworCQljb25mIHsKKwkJCWdyb3VwcyA9ICJ1YXJ0MV8xMF9ncnAiOworCQkJc2xldy1yYXRl
-ID0gPDA+OworCQkJaW8tc3RhbmRhcmQgPSA8MT47CisJCX07CisKKwkJY29uZi1yeCB7CisJCQlw
-aW5zID0gIk1JTzQ5IjsKKwkJCWJpYXMtaGlnaC1pbXBlZGFuY2U7CisJCX07CisKKwkJY29uZi10
-eCB7CisJCQlwaW5zID0gIk1JTzQ4IjsKKwkJCWJpYXMtZGlzYWJsZSA9IDwwPjsKKwkJfTsKKwl9
-OworfTsKKwogJnNkaGNpMCB7CiAJc3RhdHVzID0gIm9rYXkiOworCXBpbmN0cmwtbmFtZXMgPSAi
-ZGVmYXVsdCI7CisJcGluY3RybC0wID0gPCZwaW5jdHJsX3NkaGNpMF9kZWZhdWx0PjsKIH07CiAK
-ICZ1YXJ0MSB7CiAJc3RhdHVzID0gIm9rYXkiOworCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7
-CisJcGluY3RybC0wID0gPCZwaW5jdHJsX3VhcnQxX2RlZmF1bHQ+OwogfTsKZGlmZiAtLWdpdCBh
-L2FyY2gvYXJtL2Jvb3QvZHRzL3p5bnEtemM3MDYuZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMvenlu
-cS16YzcwNi5kdHMKaW5kZXggYThiYmRmYmM3MDkzLi4xYWU3ODc2NmQ5MjYgMTAwNjQ0Ci0tLSBh
-L2FyY2gvYXJtL2Jvb3QvZHRzL3p5bnEtemM3MDYuZHRzCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRz
-L3p5bnEtemM3MDYuZHRzCkBAIC0zMywxNSArMzMsMjQgQEAKIAlzdGF0dXMgPSAib2theSI7CiAJ
-cGh5LW1vZGUgPSAicmdtaWktaWQiOwogCXBoeS1oYW5kbGUgPSA8JmV0aGVybmV0X3BoeT47CisJ
-cGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKKwlwaW5jdHJsLTAgPSA8JnBpbmN0cmxfZ2VtMF9k
-ZWZhdWx0PjsKIAogCWV0aGVybmV0X3BoeTogZXRoZXJuZXQtcGh5QDcgewogCQlyZWcgPSA8Nz47
-CiAJfTsKIH07CiAKKyZncGlvMCB7CisJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKKwlwaW5j
-dHJsLTAgPSA8JnBpbmN0cmxfZ3BpbzBfZGVmYXVsdD47Cit9OworCiAmaTJjMCB7CiAJc3RhdHVz
-ID0gIm9rYXkiOwogCWNsb2NrLWZyZXF1ZW5jeSA9IDw0MDAwMDA+OworCXBpbmN0cmwtbmFtZXMg
-PSAiZGVmYXVsdCI7CisJcGluY3RybC0wID0gPCZwaW5jdHJsX2kyYzBfZGVmYXVsdD47CiAKIAlp
-MmNzd2l0Y2hANzQgewogCQljb21wYXRpYmxlID0gIm54cCxwY2E5NTQ4IjsKQEAgLTEwNywxMCAr
-MTE2LDE1MyBAQAogCX07CiB9OwogCismcGluY3RybDAgeworCXBpbmN0cmxfZ2VtMF9kZWZhdWx0
-OiBnZW0wLWRlZmF1bHQgeworCQltdXggeworCQkJZnVuY3Rpb24gPSAiZXRoZXJuZXQwIjsKKwkJ
-CWdyb3VwcyA9ICJldGhlcm5ldDBfMF9ncnAiOworCQl9OworCisJCWNvbmYgeworCQkJZ3JvdXBz
-ID0gImV0aGVybmV0MF8wX2dycCI7CisJCQlzbGV3LXJhdGUgPSA8MD47CisJCQlpby1zdGFuZGFy
-ZCA9IDw0PjsKKwkJfTsKKworCQljb25mLXJ4IHsKKwkJCXBpbnMgPSAiTUlPMjIiLCAiTUlPMjMi
-LCAiTUlPMjQiLCAiTUlPMjUiLCAiTUlPMjYiLCAiTUlPMjciOworCQkJYmlhcy1oaWdoLWltcGVk
-YW5jZTsKKwkJCWxvdy1wb3dlci1kaXNhYmxlOworCQl9OworCisJCWNvbmYtdHggeworCQkJcGlu
-cyA9ICJNSU8xNiIsICJNSU8xNyIsICJNSU8xOCIsICJNSU8xOSIsICJNSU8yMCIsICJNSU8yMSI7
-CisJCQlsb3ctcG93ZXItZW5hYmxlOworCQkJYmlhcy1kaXNhYmxlOworCQl9OworCisJCW11eC1t
-ZGlvIHsKKwkJCWZ1bmN0aW9uID0gIm1kaW8wIjsKKwkJCWdyb3VwcyA9ICJtZGlvMF8wX2dycCI7
-CisJCX07CisKKwkJY29uZi1tZGlvIHsKKwkJCWdyb3VwcyA9ICJtZGlvMF8wX2dycCI7CisJCQlz
-bGV3LXJhdGUgPSA8MD47CisJCQlpby1zdGFuZGFyZCA9IDwxPjsKKwkJCWJpYXMtZGlzYWJsZTsK
-KwkJfTsKKwl9OworCisJcGluY3RybF9ncGlvMF9kZWZhdWx0OiBncGlvMC1kZWZhdWx0IHsKKwkJ
-bXV4IHsKKwkJCWZ1bmN0aW9uID0gImdwaW8wIjsKKwkJCWdyb3VwcyA9ICJncGlvMF83X2dycCIs
-ICJncGlvMF80Nl9ncnAiLCAiZ3BpbzBfNDdfZ3JwIjsKKwkJfTsKKworCQljb25mIHsKKwkJCWdy
-b3VwcyA9ICJncGlvMF83X2dycCIsICJncGlvMF80Nl9ncnAiLCAiZ3BpbzBfNDdfZ3JwIjsKKwkJ
-CXNsZXctcmF0ZSA9IDwwPjsKKwkJCWlvLXN0YW5kYXJkID0gPDE+OworCQl9OworCisJCWNvbmYt
-cHVsbC11cCB7CisJCQlwaW5zID0gIk1JTzQ2IiwgIk1JTzQ3IjsKKwkJCWJpYXMtcHVsbC11cDsK
-KwkJfTsKKworCQljb25mLXB1bGwtbm9uZSB7CisJCQlwaW5zID0gIk1JTzciOworCQkJYmlhcy1k
-aXNhYmxlOworCQl9OworCX07CisKKwlwaW5jdHJsX2kyYzBfZGVmYXVsdDogaTJjMC1kZWZhdWx0
-IHsKKwkJbXV4IHsKKwkJCWdyb3VwcyA9ICJpMmMwXzEwX2dycCI7CisJCQlmdW5jdGlvbiA9ICJp
-MmMwIjsKKwkJfTsKKworCQljb25mIHsKKwkJCWdyb3VwcyA9ICJpMmMwXzEwX2dycCI7CisJCQli
-aWFzLXB1bGwtdXA7CisJCQlzbGV3LXJhdGUgPSA8MD47CisJCQlpby1zdGFuZGFyZCA9IDwxPjsK
-KwkJfTsKKwl9OworCisJcGluY3RybF9zZGhjaTBfZGVmYXVsdDogc2RoY2kwLWRlZmF1bHQgewor
-CQltdXggeworCQkJZ3JvdXBzID0gInNkaW8wXzJfZ3JwIjsKKwkJCWZ1bmN0aW9uID0gInNkaW8w
-IjsKKwkJfTsKKworCQljb25mIHsKKwkJCWdyb3VwcyA9ICJzZGlvMF8yX2dycCI7CisJCQlzbGV3
-LXJhdGUgPSA8MD47CisJCQlpby1zdGFuZGFyZCA9IDwxPjsKKwkJCWJpYXMtZGlzYWJsZTsKKwkJ
-fTsKKworCQltdXgtY2QgeworCQkJZ3JvdXBzID0gImdwaW8wXzE0X2dycCI7CisJCQlmdW5jdGlv
-biA9ICJzZGlvMF9jZCI7CisJCX07CisKKwkJY29uZi1jZCB7CisJCQlncm91cHMgPSAiZ3BpbzBf
-MTRfZ3JwIjsKKwkJCWJpYXMtaGlnaC1pbXBlZGFuY2U7CisJCQliaWFzLXB1bGwtdXA7CisJCQlz
-bGV3LXJhdGUgPSA8MD47CisJCQlpby1zdGFuZGFyZCA9IDwxPjsKKwkJfTsKKworCQltdXgtd3Ag
-eworCQkJZ3JvdXBzID0gImdwaW8wXzE1X2dycCI7CisJCQlmdW5jdGlvbiA9ICJzZGlvMF93cCI7
-CisJCX07CisKKwkJY29uZi13cCB7CisJCQlncm91cHMgPSAiZ3BpbzBfMTVfZ3JwIjsKKwkJCWJp
-YXMtaGlnaC1pbXBlZGFuY2U7CisJCQliaWFzLXB1bGwtdXA7CisJCQlzbGV3LXJhdGUgPSA8MD47
-CisJCQlpby1zdGFuZGFyZCA9IDwxPjsKKwkJfTsKKwl9OworCisJcGluY3RybF91YXJ0MV9kZWZh
-dWx0OiB1YXJ0MS1kZWZhdWx0IHsKKwkJbXV4IHsKKwkJCWdyb3VwcyA9ICJ1YXJ0MV8xMF9ncnAi
-OworCQkJZnVuY3Rpb24gPSAidWFydDEiOworCQl9OworCisJCWNvbmYgeworCQkJZ3JvdXBzID0g
-InVhcnQxXzEwX2dycCI7CisJCQlzbGV3LXJhdGUgPSA8MD47CisJCQlpby1zdGFuZGFyZCA9IDwx
-PjsKKwkJfTsKKworCQljb25mLXJ4IHsKKwkJCXBpbnMgPSAiTUlPNDkiOworCQkJYmlhcy1oaWdo
-LWltcGVkYW5jZTsKKwkJfTsKKworCQljb25mLXR4IHsKKwkJCXBpbnMgPSAiTUlPNDgiOworCQkJ
-Ymlhcy1kaXNhYmxlOworCQl9OworCX07Cit9OworCiAmc2RoY2kwIHsKIAlzdGF0dXMgPSAib2th
-eSI7CisJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKKwlwaW5jdHJsLTAgPSA8JnBpbmN0cmxf
-c2RoY2kwX2RlZmF1bHQ+OwogfTsKIAogJnVhcnQxIHsKIAlzdGF0dXMgPSAib2theSI7CisJcGlu
-Y3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKKwlwaW5jdHJsLTAgPSA8JnBpbmN0cmxfdWFydDFfZGVm
-YXVsdD47CiB9OwotLSAKMi4yLjAuMS5nOWVlMDQ1OAoKCl9fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0Cmxp
-bnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFk
-Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+
+--H8fFO+isr9ADh2Iv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, Dec 10, 2014 at 04:48:19PM +0100, Andrzej Hajda wrote:
+> track is a generic framework for safe tracking presence of any kernel objects
+> having an id. There are no special requirements about type of object or its
+> id. Id shall be unique.
+
+This is pretty confusing, when it talks about "kernel objects" that
+sounds like it means struct kobject but in fact there's no connection
+with that or any of the other kernel object stuff.  Perhaps it makes
+sense but it should be addressed.
+
+> Typical usage of the framework by consumer looks as follow:
+> 1. Consumer registers notifier callback for objects with given id.
+
+This is also a custom thing not connected with the notifier mechanism
+implemented by struct notifier_block.  Again this should probably be
+addressed, even if it's just used internally it seems like there should
+be some opportunity for code reuse here.
+
+> +	case track_task_up:
+> +		node = track_get_node(track, task->type, task->id, true);
+> +
+> +		node->up = true;
+> +		node->data = task->data;
+> +		list_for_each_entry_safe(itb, node->itb_next, &node->itb_head,
+> +					 list)
+> +			itb->callback(itb, node->data, true);
+> +		return;
+> +	case track_task_down:
+
+I'm not sure the up and down naming is the most obvious naming for
+users.  It's obviously inspired by semaphores but it's not entirely
+obvious that this is going to make things clear and meaningful for
+someone trying to understand the interface.
+
+> +static int track_process_queue(struct tracker *track)
+> +{
+> +	struct track_task *task, *ptask = NULL;
+> +	unsigned long flags;
+> +	bool empty;
+> +
+> +	/* Queue non-emptiness is used as a sentinel to prevent processing
+> +	 * by multiple threads, so we cannot delete entry from the queue
+> +	 * until it is processed.
+> +	 */
+> +	while (true) {
+> +		spin_lock_irqsave(&track->queue_lock, flags);
+> +
+> +		if (ptask)
+> +			list_del(&ptask->list);
+> +		task = list_first_entry(&track->queue,
+> +					struct track_task, list);
+> +
+> +		empty = list_empty(&track->queue);
+> +		if (empty)
+> +			complete_all(&track->queue_empty);
+> +
+> +		spin_unlock_irqrestore(&track->queue_lock, flags);
+
+Here we get a task from the head of the list and drop the lock, leaving
+the task on the list...
+
+> +		kfree(ptask);
+> +
+> +		if (empty)
+> +			break;
+> +
+> +		track_process_task(track, task);
+
+...we then go and do some other stuff, including processing that task,
+without the lock or or any other means I can see of excluding other
+users before going round and removing the task.  This seems to leave us
+vulnerable to double execution.  I *think* this is supposed to be
+handled by your comment "Provider should take care of calling
+notifications synchronously in proper order" in the changelog but that's
+a bit obscure, it's not specific about what the requirements are (or
+what the limits are supposed to be on the notification callbacks).
+
+I'm also unclear what is supposed to happen if adding a notification
+races with removing the thing being watched.
+
+--H8fFO+isr9ADh2Iv
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUixmlAAoJECTWi3JdVIfQYzkH/2PSJ17rhazR845Aysdj33h4
+A05VuTFXiQ8CO8EcV82HCkc+b3nTzdev8gmxCUIFf5F6VPPyHdbueAh3GCvvqYH8
+XAN3WQLPfiSmf/hqKbhAM39SLF/xTUYkUlLsx4foKB6JK5ENvsCoS/M/i022cQfl
+i5y7AruOzC+TAm70HQ/lKhDc5Xu3Pl25+thsVccYL3UUlCIZxiFpTyHueeA5IoTK
+BWJ7uLVLNnq2ngPs+IZpwrl6LmybAp8WHwe+FOYvMeqQd2T5RGjroMfuvyOBGXsH
+yHb/+Qbo3byiFrEjckIFKcK1RBrMb1kqEfvuhpwrIafC7hT6LqHPAT17rOeDlJg=
+=TiBG
+-----END PGP SIGNATURE-----
+
+--H8fFO+isr9ADh2Iv--
