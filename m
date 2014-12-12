@@ -1,194 +1,165 @@
 From: Kevin Cernekee <cernekee@gmail.com>
-Subject: [PATCH V5 20/23] MIPS: BMIPS: Enable additional peripheral and CPU support in defconfig
-Date: Fri, 12 Dec 2014 14:07:11 -0800
-Message-ID: <1418422034-17099-21-git-send-email-cernekee@gmail.com>
+Subject: [PATCH V5 06/23] irqchip: bcm7120-l2: Refactor driver for arbitrary IRQEN/IRQSTAT offsets
+Date: Fri, 12 Dec 2014 14:06:57 -0800
+Message-ID: <1418422034-17099-7-git-send-email-cernekee@gmail.com>
 References: <1418422034-17099-1-git-send-email-cernekee@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-mips-bounce@linux-mips.org>
 In-Reply-To: <1418422034-17099-1-git-send-email-cernekee@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
 To: ralf@linux-mips.org
 Cc: f.fainelli@gmail.com, tglx@linutronix.de, jason@lakedaemon.net, jogo@openwrt.org, arnd@arndb.de, computersforpeace@gmail.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Also, add an LE defconfig for set-top box (BCM7xxx).  This will allow the
-BMIPS kernel to run on several non-BCM3384 platforms.
+Currently the driver assumes that REG_BASE+0x00 is the IRQ enable mask,
+and REG_BASE+0x04 is the IRQ status mask.  This is true on BCM3384 and
+BCM7xxx, but it is not true for some of the controllers found on BCM63xx
+chips.  So we will change a couple of key assumptions:
+
+ - Don't assume that both the IRQEN and IRQSTAT registers will be
+   covered by a single ioremap() operation.
+
+ - Don't assume any particular ordering (IRQSTAT might show up before
+   IRQEN on some chips).
+
+ - For an L2 controller with >=64 IRQs, don't assume that every
+   IRQEN/IRQSTAT pair will use the same register spacing.
+
+This patch changes the "plumbing" but doesn't yet provide a way for users
+to instantiate a controller with arbitrary IRQEN/IRQSTAT offsets.
 
 Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
 ---
- arch/mips/Kconfig                     | 18 +++++--
- arch/mips/configs/bmips_be_defconfig  |  9 +++-
- arch/mips/configs/bmips_stb_defconfig | 88 +++++++++++++++++++++++++++++++++++
- 3 files changed, 109 insertions(+), 6 deletions(-)
- create mode 100644 arch/mips/configs/bmips_stb_defconfig
+ drivers/irqchip/irq-bcm7120-l2.c | 41 +++++++++++++++++++++++++++-------------
+ 1 file changed, 28 insertions(+), 13 deletions(-)
 
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index d28c29e..d277863 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -139,17 +139,25 @@ config BMIPS_GENERIC
- 	select CSRC_R4K
- 	select SYNC_R4K
- 	select COMMON_CLK
--	select DMA_NONCOHERENT
-+	select BCM7038_L1_IRQ
-+	select BCM7120_L2_IRQ
-+	select BRCMSTB_L2_IRQ
- 	select IRQ_CPU
-+	select RAW_IRQ_ACCESSORS
-+	select DMA_NONCOHERENT
- 	select SYS_SUPPORTS_32BIT_KERNEL
-+	select SYS_SUPPORTS_LITTLE_ENDIAN
- 	select SYS_SUPPORTS_BIG_ENDIAN
- 	select SYS_SUPPORTS_HIGHMEM
-+	select SYS_HAS_CPU_BMIPS3300
-+	select SYS_HAS_CPU_BMIPS4350
-+	select SYS_HAS_CPU_BMIPS4380
- 	select SYS_HAS_CPU_BMIPS5000
- 	select SWAP_IO_SPACE
--	select USB_EHCI_BIG_ENDIAN_DESC
--	select USB_EHCI_BIG_ENDIAN_MMIO
--	select USB_OHCI_BIG_ENDIAN_DESC
--	select USB_OHCI_BIG_ENDIAN_MMIO
-+	select USB_EHCI_BIG_ENDIAN_DESC if CPU_BIG_ENDIAN
-+	select USB_EHCI_BIG_ENDIAN_MMIO if CPU_BIG_ENDIAN
-+	select USB_OHCI_BIG_ENDIAN_DESC if CPU_BIG_ENDIAN
-+	select USB_OHCI_BIG_ENDIAN_MMIO if CPU_BIG_ENDIAN
- 	help
- 	  Build a generic DT-based kernel image that boots on select
- 	  BCM33xx cable modem chips, BCM63xx DSL chips, and BCM7xxx set-top
-diff --git a/arch/mips/configs/bmips_be_defconfig b/arch/mips/configs/bmips_be_defconfig
-index 36af5af..f5585c8 100644
---- a/arch/mips/configs/bmips_be_defconfig
-+++ b/arch/mips/configs/bmips_be_defconfig
-@@ -33,6 +33,7 @@ CONFIG_DEVTMPFS=y
- CONFIG_DEVTMPFS_MOUNT=y
- # CONFIG_STANDALONE is not set
- # CONFIG_PREVENT_FIRMWARE_BUILD is not set
-+CONFIG_BRCMSTB_GISB_ARB=y
- CONFIG_MTD=y
- CONFIG_MTD_CFI=y
- CONFIG_MTD_CFI_INTELEXT=y
-@@ -43,15 +44,19 @@ CONFIG_SCSI=y
- CONFIG_BLK_DEV_SD=y
- # CONFIG_SCSI_LOWLEVEL is not set
- CONFIG_NETDEVICES=y
-+CONFIG_BCMGENET=y
- CONFIG_USB_USBNET=y
- # CONFIG_INPUT is not set
- # CONFIG_SERIO is not set
- # CONFIG_VT is not set
- # CONFIG_DEVKMEM is not set
--CONFIG_SERIAL_EARLYCON_FORCE=y
- CONFIG_SERIAL_BCM63XX=y
- CONFIG_SERIAL_BCM63XX_CONSOLE=y
- # CONFIG_HW_RANDOM is not set
-+CONFIG_POWER_SUPPLY=y
-+CONFIG_POWER_RESET=y
-+CONFIG_POWER_RESET_BRCMSTB=y
-+CONFIG_POWER_RESET_SYSCON=y
- # CONFIG_HWMON is not set
- CONFIG_USB=y
- CONFIG_USB_EHCI_HCD=y
-@@ -75,4 +80,6 @@ CONFIG_NLS_ASCII=y
- CONFIG_NLS_ISO8859_1=y
- CONFIG_DEBUG_FS=y
- CONFIG_MAGIC_SYSRQ=y
-+CONFIG_CMDLINE_BOOL=y
-+CONFIG_CMDLINE="earlycon"
- # CONFIG_CRYPTO_HW is not set
-diff --git a/arch/mips/configs/bmips_stb_defconfig b/arch/mips/configs/bmips_stb_defconfig
-new file mode 100644
-index 0000000..400a47e
---- /dev/null
-+++ b/arch/mips/configs/bmips_stb_defconfig
-@@ -0,0 +1,88 @@
-+CONFIG_BMIPS_GENERIC=y
-+CONFIG_CPU_LITTLE_ENDIAN=y
-+CONFIG_HIGHMEM=y
-+CONFIG_SMP=y
-+CONFIG_NR_CPUS=4
-+# CONFIG_SECCOMP is not set
-+CONFIG_MIPS_O32_FP64_SUPPORT=y
-+# CONFIG_LOCALVERSION_AUTO is not set
-+# CONFIG_SWAP is not set
-+CONFIG_NO_HZ=y
-+CONFIG_BLK_DEV_INITRD=y
-+# CONFIG_RD_GZIP is not set
-+CONFIG_EXPERT=y
-+# CONFIG_VM_EVENT_COUNTERS is not set
-+# CONFIG_SLUB_DEBUG is not set
-+# CONFIG_BLK_DEV_BSG is not set
-+# CONFIG_IOSCHED_DEADLINE is not set
-+# CONFIG_IOSCHED_CFQ is not set
-+CONFIG_NET=y
-+CONFIG_PACKET=y
-+CONFIG_PACKET_DIAG=y
-+CONFIG_UNIX=y
-+CONFIG_INET=y
-+# CONFIG_INET_XFRM_MODE_TRANSPORT is not set
-+# CONFIG_INET_XFRM_MODE_TUNNEL is not set
-+# CONFIG_INET_XFRM_MODE_BEET is not set
-+# CONFIG_INET_LRO is not set
-+# CONFIG_INET_DIAG is not set
-+CONFIG_CFG80211=y
-+CONFIG_NL80211_TESTMODE=y
-+CONFIG_MAC80211=y
-+CONFIG_UEVENT_HELPER_PATH="/sbin/hotplug"
-+CONFIG_DEVTMPFS=y
-+CONFIG_DEVTMPFS_MOUNT=y
-+# CONFIG_STANDALONE is not set
-+# CONFIG_PREVENT_FIRMWARE_BUILD is not set
-+CONFIG_BRCMSTB_GISB_ARB=y
-+CONFIG_MTD=y
-+CONFIG_MTD_CFI=y
-+CONFIG_MTD_CFI_INTELEXT=y
-+CONFIG_MTD_CFI_AMDSTD=y
-+CONFIG_MTD_PHYSMAP=y
-+# CONFIG_BLK_DEV is not set
-+CONFIG_SCSI=y
-+CONFIG_BLK_DEV_SD=y
-+# CONFIG_SCSI_LOWLEVEL is not set
-+CONFIG_NETDEVICES=y
-+CONFIG_BCMGENET=y
-+CONFIG_USB_USBNET=y
-+# CONFIG_INPUT is not set
-+# CONFIG_SERIO is not set
-+# CONFIG_VT is not set
-+# CONFIG_DEVKMEM is not set
-+CONFIG_SERIAL_8250=y
-+# CONFIG_SERIAL_8250_DEPRECATED_OPTIONS is not set
-+CONFIG_SERIAL_8250_CONSOLE=y
-+CONFIG_SERIAL_OF_PLATFORM=y
-+# CONFIG_HW_RANDOM is not set
-+CONFIG_POWER_SUPPLY=y
-+CONFIG_POWER_RESET=y
-+CONFIG_POWER_RESET_BRCMSTB=y
-+CONFIG_POWER_RESET_SYSCON=y
-+# CONFIG_HWMON is not set
-+CONFIG_USB=y
-+CONFIG_USB_EHCI_HCD=y
-+# CONFIG_USB_EHCI_TT_NEWSCHED is not set
-+CONFIG_USB_EHCI_HCD_PLATFORM=y
-+CONFIG_USB_OHCI_HCD=y
-+CONFIG_USB_OHCI_HCD_PLATFORM=y
-+CONFIG_USB_STORAGE=y
-+CONFIG_EXT4_FS=y
-+CONFIG_EXT4_FS_POSIX_ACL=y
-+CONFIG_EXT4_FS_SECURITY=y
-+# CONFIG_DNOTIFY is not set
-+CONFIG_FUSE_FS=y
-+CONFIG_VFAT_FS=y
-+CONFIG_PROC_KCORE=y
-+CONFIG_TMPFS=y
-+CONFIG_NFS_FS=y
-+CONFIG_CIFS=y
-+CONFIG_NLS_CODEPAGE_437=y
-+CONFIG_NLS_ASCII=y
-+CONFIG_NLS_ISO8859_1=y
-+CONFIG_DEBUG_FS=y
-+CONFIG_MAGIC_SYSRQ=y
-+CONFIG_CMDLINE_BOOL=y
-+CONFIG_CMDLINE="earlycon"
-+# CONFIG_CRYPTO_HW is not set
+diff --git a/drivers/irqchip/irq-bcm7120-l2.c b/drivers/irqchip/irq-bcm7120-l2.c
+index 8eec8e1..e8441ee 100644
+--- a/drivers/irqchip/irq-bcm7120-l2.c
++++ b/drivers/irqchip/irq-bcm7120-l2.c
+@@ -34,11 +34,15 @@
+ #define IRQSTAT		0x04
+ 
+ #define MAX_WORDS	4
++#define MAX_MAPPINGS	MAX_WORDS
+ #define IRQS_PER_WORD	32
+ 
+ struct bcm7120_l2_intc_data {
+ 	unsigned int n_words;
+-	void __iomem *base[MAX_WORDS];
++	void __iomem *map_base[MAX_MAPPINGS];
++	void __iomem *pair_base[MAX_WORDS];
++	int en_offset[MAX_WORDS];
++	int stat_offset[MAX_WORDS];
+ 	struct irq_domain *domain;
+ 	bool can_wake;
+ 	u32 irq_fwd_mask[MAX_WORDS];
+@@ -61,7 +65,8 @@ static void bcm7120_l2_intc_irq_handle(unsigned int irq, struct irq_desc *desc)
+ 		int hwirq;
+ 
+ 		irq_gc_lock(gc);
+-		pending = irq_reg_readl(gc, IRQSTAT) & gc->mask_cache;
++		pending = irq_reg_readl(gc, b->stat_offset[idx]) &
++					    gc->mask_cache;
+ 		irq_gc_unlock(gc);
+ 
+ 		for_each_set_bit(hwirq, &pending, IRQS_PER_WORD) {
+@@ -76,21 +81,24 @@ static void bcm7120_l2_intc_irq_handle(unsigned int irq, struct irq_desc *desc)
+ static void bcm7120_l2_intc_suspend(struct irq_data *d)
+ {
+ 	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
++	struct irq_chip_type *ct = irq_data_get_chip_type(d);
+ 	struct bcm7120_l2_intc_data *b = gc->private;
+ 
+ 	irq_gc_lock(gc);
+ 	if (b->can_wake)
+-		irq_reg_writel(gc, gc->mask_cache | gc->wake_active, IRQEN);
++		irq_reg_writel(gc, gc->mask_cache | gc->wake_active,
++			       ct->regs.mask);
+ 	irq_gc_unlock(gc);
+ }
+ 
+ static void bcm7120_l2_intc_resume(struct irq_data *d)
+ {
+ 	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
++	struct irq_chip_type *ct = irq_data_get_chip_type(d);
+ 
+ 	/* Restore the saved mask */
+ 	irq_gc_lock(gc);
+-	irq_reg_writel(gc, gc->mask_cache, IRQEN);
++	irq_reg_writel(gc, gc->mask_cache, ct->regs.mask);
+ 	irq_gc_unlock(gc);
+ }
+ 
+@@ -137,9 +145,14 @@ int __init bcm7120_l2_intc_of_init(struct device_node *dn,
+ 		return -ENOMEM;
+ 
+ 	for (idx = 0; idx < MAX_WORDS; idx++) {
+-		data->base[idx] = of_iomap(dn, idx);
+-		if (!data->base[idx])
++		data->map_base[idx] = of_iomap(dn, idx);
++		if (!data->map_base[idx])
+ 			break;
++
++		data->pair_base[idx] = data->map_base[idx];
++		data->en_offset[idx] = IRQEN;
++		data->stat_offset[idx] = IRQSTAT;
++
+ 		data->n_words = idx + 1;
+ 	}
+ 	if (!data->n_words) {
+@@ -157,7 +170,8 @@ int __init bcm7120_l2_intc_of_init(struct device_node *dn,
+ 	if (ret == 0 || ret == -EINVAL) {
+ 		for (idx = 0; idx < data->n_words; idx++)
+ 			__raw_writel(data->irq_fwd_mask[idx],
+-				     data->base[idx] + IRQEN);
++				     data->pair_base[idx] +
++				     data->en_offset[idx]);
+ 	} else {
+ 		/* property exists but has the wrong number of words */
+ 		pr_err("invalid int-fwd-mask property\n");
+@@ -215,11 +229,12 @@ int __init bcm7120_l2_intc_of_init(struct device_node *dn,
+ 		gc = irq_get_domain_generic_chip(data->domain, irq);
+ 
+ 		gc->unused = 0xffffffff & ~data->irq_map_mask[idx];
+-		gc->reg_base = data->base[idx];
+ 		gc->private = data;
+ 		ct = gc->chip_types;
+ 
+-		ct->regs.mask = IRQEN;
++		gc->reg_base = data->pair_base[idx];
++		ct->regs.mask = data->en_offset[idx];
++
+ 		ct->chip.irq_mask = irq_gc_mask_clr_bit;
+ 		ct->chip.irq_unmask = irq_gc_mask_set_bit;
+ 		ct->chip.irq_ack = irq_gc_noop;
+@@ -237,16 +252,16 @@ int __init bcm7120_l2_intc_of_init(struct device_node *dn,
+ 	}
+ 
+ 	pr_info("registered BCM7120 L2 intc (mem: 0x%p, parent IRQ(s): %d)\n",
+-			data->base[0], num_parent_irqs);
++			data->map_base[0], num_parent_irqs);
+ 
+ 	return 0;
+ 
+ out_free_domain:
+ 	irq_domain_remove(data->domain);
+ out_unmap:
+-	for (idx = 0; idx < MAX_WORDS; idx++) {
+-		if (data->base[idx])
+-			iounmap(data->base[idx]);
++	for (idx = 0; idx < MAX_MAPPINGS; idx++) {
++		if (data->map_base[idx])
++			iounmap(data->map_base[idx]);
+ 	}
+ 	kfree(data);
+ 	return ret;
 -- 
 2.1.1
