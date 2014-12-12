@@ -1,68 +1,117 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [RFC 02/15] drivers/base: add restrack framework
-Date: Fri, 12 Dec 2014 16:52:30 +0000
-Message-ID: <20141212165230.GP11764@sirena.org.uk>
-References: <1418226513-14105-1-git-send-email-a.hajda@samsung.com>
- <1418226513-14105-3-git-send-email-a.hajda@samsung.com>
+From: Ray Jui <rjui@broadcom.com>
+Subject: Re: [PATCH v2 1/4] pci: iProc: define Broadcom iProc PCIe binding
+Date: Fri, 12 Dec 2014 08:53:44 -0800
+Message-ID: <548B1D98.6030400@broadcom.com>
+References: <1418351817-14898-2-git-send-email-rjui@broadcom.com> <3375037.6pjWmlOLA3@wuerfel>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="BtjZvq0+OkLkL8An"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1418226513-14105-3-git-send-email-a.hajda@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Andrzej Hajda <a.hajda@samsung.com>
-Cc: open list <linux-kernel@vger.kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mike Turquette <mturquette@linaro.org>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Inki Dae <inki.dae@samsung.com>, Kishon Vijay Abraham I <kishon@ti.com>, Liam Girdwood <lgirdwood@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "moderated list:ARM/CLKDEV SUPPORT" <linux-arm-kernel@lists.infradead.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, "moderated list:ARM/S5P EXYNOS AR..." <linux-samsung-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, boris.brezillon@
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <3375037.6pjWmlOLA3@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Hauke Mehrtens <hauke@hauke-m.de>, devicetree@vger.kernel.org, Scott Branden <sbranden@broadcom.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
 
---BtjZvq0+OkLkL8An
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Wed, Dec 10, 2014 at 04:48:20PM +0100, Andrzej Hajda wrote:
-> restrack framework allows tracking presence of resources with dynamic life
-> time. Typical example of such resources are all resources provided by device
+On 12/12/2014 4:14 AM, Arnd Bergmann wrote:
+> On Thursday 11 December 2014 18:36:54 Ray Jui wrote:
+>> index 0000000..040bc0f
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pci/brcm,iproc-pcie.txt
+>> @@ -0,0 +1,74 @@
+>> +* Broadcom iProc PCIe controller
+>> +
+>> +Required properties:
+>> +- compatible: Must be "brcm,iproc-pcie"
+>> +- reg: base address and length of the PCIe controller and the MDIO interface
+>> +  that controls the PCIe PHY
+>> +- #interrupt-cells: set to <1>
+>> +- interrupts: interrupt IDs
+>
+> How many, and what are they?
+>
+Different iProc SoCs might have different number of interrupts. I'll 
+elaborate more on the next patch.
 
-I don't know about anyone else but I'm having a hard time reading the
-restrack name, it looks like a misspelling of restack to me.
+>> +- interrupt-map-mask and interrupt-map, standard PCI properties to define the
+>> +  mapping of the PCIe interface to interrupt numbers
+>> +- bus-range: PCI bus numbers covered
+>> +- #address-cells: set to <3>
+>> +- #size-cells: set to <2>
+>> +- device_type: set to "pci"
+>> +- ranges: ranges for the PCI memory and I/O regions
+>> +- phy-addr: MDC/MDIO adddress of the PCIe PHY
+>
+> It looks like the phy controller is separate from the PCI controller,
+> and you even list the same register range for both PHYs. Better make
+> that a separate driver and put the phy address into the "phys" reference.
+>
+Okay. In this case, I need to create a separate PHY driver under the 
+drivers/phy directory and have the PCIe host driver reference it through 
+the standard PHY API.
 
-At a high level my biggest questions here are the relationship between
-this and the component code and usability.  The usability concern I have
-is that I see no diagnostics or trace here at all.  This means that if a
-user looks at their system, sees that the device model claims the driver
-for a device bound to the device but can't see any sign of the device
-doing anything they don't have any way of telling why that is other than
-to look in the driver code, see what resources it was trying to depend
-on and then go back to the running system to try to understand which of
-those resources hasn't appeared.
+>> +- have-msi-inten-reg: Required for legacy iProc PCIe controllers that need the
+>> +  MSI interrupt enable register to be set explicitly
+>> +
+>> +The Broadcom iProc PCie driver adapts the multi-domain structure, i.e., each
+>> +interface has its own domain and therefore has its own device node
+>> +Example:
+>> +
+>> +SoC specific DT Entry:
+>> +
+>> +       pcie0: pcie@18012000 {
+>> +               compatible = "brcm,iproc-pcie";
+>> +               reg = <0x18012000 0x1000>,
+>> +                       <0x18002000 0x1000>;
+>
+> I guess the addresses should be relative to the BCMA bus, and this node
+> get moved under that. Please see Hauke's patch series, we've discussed
+> this in great length already.
+>
 
-> +int restrack_up(unsigned long type, const void *id, void *data)
+As Arend van Spriel pointed out in the previous discussion:
 
-> +int restrack_down(unsigned long type, const void *id, void *data)
+BCMA core is the bus driver for discoverable ARM AXI interconnect. Apart 
+from that it also provides drivers for some cores. For the chips to be 
+discoverable it needs additional IP logic.
 
-Again I'm not sure that the up and down naming is meaningful in the
-context of this interface.
+Not all iProc family of SoCs have the additional IP logic and for those 
+which don't, they cannot use the BCMA bus.
 
-> +static void restrack_itb_cb(struct track_block *itb, void *data, bool on)
-> +{
+>> +               #interrupt-cells = <1>;
+>> +               interrupts = <GIC_SPI 96 IRQ_TYPE_NONE>,
+>> +                            <GIC_SPI 97 IRQ_TYPE_NONE>,
+>> +                            <GIC_SPI 98 IRQ_TYPE_NONE>,
+>> +                            <GIC_SPI 99 IRQ_TYPE_NONE>,
+>> +                            <GIC_SPI 100 IRQ_TYPE_NONE>,
+>> +                            <GIC_SPI 101 IRQ_TYPE_NONE>;
+>
+>
+>
+>> +               interrupt-map-mask = <0 0 0 0>;
+>> +               interrupt-map = <0 0 0 0 &gic GIC_SPI 100 IRQ_TYPE_NONE>;
+>
+> This interrupt is also listed in the "interrupts" above, which is
+> probably a mistake, unless the IRQ line is shared between all PCI
+> devices and the PCI host itself.
+>
+interrupts are for MSI interrupt support and interrupt-map is for legacy 
+INTx support. To my best knowledge, MSI and INTx cannot be used at the 
+same time. "nvidia,tegra20-pcie.txt" and "rcar-pci.txt" have similar 
+configurations.
 
-itb_cb?
-
---BtjZvq0+OkLkL8An
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUix1NAAoJECTWi3JdVIfQAPMH/R+IVHCd39YcJ+18grWKmwT4
-9bWUGZ9CGXaPnvTcFkiJ31g6Y0M7FaKYSGbt/mIGWQKrOGEbdn3ba751zj36RfIg
-b1sjS1g+09CkvVnKGkvaLyxILeh+Tw46hFiy6QqAejbqzSMGCigGpJOMilGkSYt9
-bJ1nESyD1U6iHHJkJ89p5latFSjHY4tYOlecIf0dTJ7Ct/EKvsuxJo2uVzspeV0Y
-MM88Mklo0cCgvZNrXMPmoDQGQ90UZ/O6PkYZ4sMi40XNNJ7QasRTR54l7FcAJdEg
-mBrJSyfh1IFr40NKFMJOnvYpZrWN0SNOYEJXll6y/KpKBZpF9qlfc2TC/KkzQM8=
-=WFLX
------END PGP SIGNATURE-----
-
---BtjZvq0+OkLkL8An--
+>> +               bus-range = <0x00 0xFF>;
+>> +
+>> +               #address-cells = >;
+>> +               #size-cells = <2>;
+>> +               device_type = "pci";
+>> +               ranges = <0x81000000 0 0          0x28000000 0 0x00010000   /* downstream I/O */
+>> +                         0x82000000 0 0x20000000 0x20000000 0 0x04000000>; /* non-prefetchable memory */
+>> +               phy-addr = <5>;
+>> +       };
+>>
+>
+> 	Arnd
+>
