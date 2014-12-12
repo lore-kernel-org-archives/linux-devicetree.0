@@ -1,172 +1,62 @@
 From: Soren Brinkmann <soren.brinkmann@xilinx.com>
-Subject: [PATCH v3 3/7] pinctrl: zynq: Document DT binding
-Date: Fri, 12 Dec 2014 08:34:54 -0800
-Message-ID: <f37b0fd0d52f4619abed4eeaa66a4156@BY2FFO11FD031.protection.gbl>
-References: <1418402098-3811-1-git-send-email-soren.brinkmann@xilinx.com>
+Subject: [PATCH v3 0/7] Pinctrl support for Zynq
+Date: Fri, 12 Dec 2014 08:34:51 -0800
+Message-ID: <1d59c0972da04ec89dec6c09724986a1@BY2FFO11FD010.protection.gbl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1418402098-3811-1-git-send-email-soren.brinkmann@xilinx.com>
 Sender: linux-sh-owner@vger.kernel.org
 To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
 Cc: =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann@xilinx.com>, Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Alessandro Rubini <rubini@unipv.it>, Heiko Stuebner <heiko@sntech.de>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-rockchip@lists.infradead.org, linux-sh@vger.kernel.org, "Ivan T. Ivanov" <iivanov@mm-sol.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Beniamino Galvani <b.galvani@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add documentation for the devicetree binding for the Zynq pincontroller=
-=2E
+Hi,
 
-Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
-Tested-by: Andreas F=C3=A4rber <afaerber@suse.de>
----
-Changes since v1:
- - fix typo
- - add USB related documentation
- - remove 'pinctrl-' prefix for pinctrl sub-nodes
- - update documentation to enforce strict separation of pinmux
-   and pinconf nodes
-   - update example accordingly
----
- .../bindings/pinctrl/xlnx,zynq-pinctrl.txt         | 104 +++++++++++++=
+I made those few adjustments that came up in the v2 review. Other than
+those, these are the same patches as before.
+The series is based on pinctrl-v3.19-1, the current pinctrl/devel
+branch.
+A branch with these changes is available at
+https://github.com/sorenb-xlnx/linux-xlnx/commits/pinctrl
+
+	Thanks,
+	S=C3=B6ren
+
+Soren Brinkmann (7):
+  pinctrl: pinconf-generic: Infer map type from DT property
+  pinctrl: pinconf-generic: Allow driver to specify DT params
+  pinctrl: zynq: Document DT binding
+  pinctrl: Add driver for Zynq
+  ARM: zynq: Enable pinctrl
+  ARM: zynq: DT: Add pinctrl information
+  pinctrl: qcom-spmi-gpio: Migrate to pinconf-generic
+
+ .../bindings/pinctrl/xlnx,zynq-pinctrl.txt         |  104 ++
+ arch/arm/boot/dts/zynq-7000.dtsi                   |    8 +-
+ arch/arm/boot/dts/zynq-zc702.dts                   |  181 +++
+ arch/arm/boot/dts/zynq-zc706.dts                   |  152 +++
+ arch/arm/mach-zynq/Kconfig                         |    2 +
+ drivers/pinctrl/Kconfig                            |    8 +
+ drivers/pinctrl/Makefile                           |    1 +
+ drivers/pinctrl/nomadik/pinctrl-abx500.c           |    2 +-
+ drivers/pinctrl/pinconf-generic.c                  |  199 ++--
+ drivers/pinctrl/pinconf.c                          |    4 +-
+ drivers/pinctrl/pinconf.h                          |   22 +-
+ drivers/pinctrl/pinctrl-rockchip.c                 |    2 +-
+ drivers/pinctrl/pinctrl-tz1090-pdc.c               |    2 +-
+ drivers/pinctrl/pinctrl-tz1090.c                   |    2 +-
+ drivers/pinctrl/pinctrl-zynq.c                     | 1176 ++++++++++++=
 ++++++++
- 1 file changed, 104 insertions(+)
+ drivers/pinctrl/qcom/pinctrl-spmi-gpio.c           |  125 +--
+ drivers/pinctrl/sh-pfc/pinctrl.c                   |    2 +-
+ include/linux/pinctrl/pinconf-generic.h            |   29 +
+ include/linux/pinctrl/pinctrl.h                    |    9 +
+ 19 files changed, 1808 insertions(+), 222 deletions(-)
  create mode 100644 Documentation/devicetree/bindings/pinctrl/xlnx,zynq=
 -pinctrl.txt
+ create mode 100644 drivers/pinctrl/pinctrl-zynq.c
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/xlnx,zynq-pinctr=
-l.txt b/Documentation/devicetree/bindings/pinctrl/xlnx,zynq-pinctrl.txt
-new file mode 100644
-index 000000000000..b7b55a964f65
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/xlnx,zynq-pinctrl.txt
-@@ -0,0 +1,104 @@
-+	Binding for Xilinx Zynq Pinctrl
-+
-+Required properties:
-+- compatible: "xlnx,zynq-pinctrl"
-+- syscon: phandle to SLCR
-+- reg: Offset and length of pinctrl space in SLCR
-+
-+Please refer to pinctrl-bindings.txt in this directory for details of =
-the
-+common pinctrl bindings used by client devices, including the meaning =
-of the
-+phrase "pin configuration node".
-+
-+Zynq's pin configuration nodes act as a container for an arbitrary num=
-ber of
-+subnodes. Each of these subnodes represents some desired configuration=
- for a
-+pin, a group, or a list of pins or groups. This configuration can incl=
-ude the
-+mux function to select on those pin(s)/group(s), and various pin confi=
-guration
-+parameters, such as pull-up, slew rate, etc.
-+
-+Each configuration node can consist of multiple nodes describing the p=
-inmux and
-+pinconf options. Those nodes can be pinmux nodes or pinconf nodes.
-+
-+The name of each subnode is not important; all subnodes should be enum=
-erated
-+and processed purely based on their content.
-+
-+Required properties for pinmux nodes are:
-+ - groups: A list of pinmux groups.
-+ - function: The name of a pinmux function to activate for the specifi=
-ed set
-+   of groups.
-+
-+Required properties for configuration nodes:
-+One of:
-+ - pins: a list of pin names
-+ - groups: A list of pinmux groups.
-+
-+The following generic properties as defined in pinctrl-bindings.txt ar=
-e valid
-+to specify in a pinmux subnode:
-+ groups, function
-+
-+The following generic properties as defined in pinctrl-bindings.txt ar=
-e valid
-+to specify in a pinconf subnode:
-+ groups, pins, bias-disable, bias-high-impedance, bias-pull-up, slew-r=
-ate,
-+ low-power-disable, low-power-enable
-+
-+ Valid arguments for 'slew-rate' are '0' and '1' to select between slo=
-w and fast
-+ respectively.
-+
-+ Valid values for groups are:
-+   ethernet0_0_grp, ethernet1_0_grp, mdio0_0_grp, mdio1_0_grp,
-+   qspi0_0_grp, qspi1_0_grp, qspi_fbclk, qspi_cs1_grp, spi0_0_grp,
-+   spi0_1_grp - spi0_2_grp, spi1_0_grp - spi1_3_grp, sdio0_0_grp - sdi=
-o0_2_grp,
-+   sdio1_0_grp - sdio1_3_grp, sdio0_emio_wp, sdio0_emio_cd, sdio1_emio=
-_wp,
-+   sdio1_emio_cd, smc0_nor, smc0_nor_cs1_grp, smc0_nor_addr25_grp, smc=
-0_nand,
-+   can0_0_grp - can0_10_grp, can1_0_grp - can1_11_grp, uart0_0_grp - u=
-art0_10_grp,
-+   uart1_0_grp - uart1_11_grp, i2c0_0_grp - i2c0_10_grp, i2c1_0_grp - =
-i2c1_10_grp,
-+   ttc0_0_grp - ttc0_2_grp, ttc1_0_grp - ttc1_2_grp, swdt0_0_grp - swd=
-t0_4_grp,
-+   gpio0_0_grp - gpio0_53_grp, usb0_0_grp, usb1_0_grp
-+
-+ Valid values for pins are:
-+   MIO0 - MIO53
-+
-+ Valid values for function are:
-+   ethernet0, ethernet1, mdio0, mdio1, qspi0, qspi1, qspi_fbclk, qspi_=
-cs1,
-+   spi0, spi1, sdio0, sdio0_pc, sdio0_cd, sdio0_wp,
-+   sdio1, sdio1_pc, sdio1_cd, sdio1_wp,
-+   smc0_nor, smc0_nor_cs1, smc0_nor_addr25, smc0_nand, can0, can1, uar=
-t0, uart1,
-+   i2c0, i2c1, ttc0, ttc1, swdt0, gpio0, usb0, usb1
-+
-+The following driver-specific properties as defined here are valid to =
-specify in
-+a pin configuration subnode:
-+ - io-standard: Configure the pin to use the selected IO standard acco=
-rding to
-+   this mapping:
-+    1: LVCMOS18
-+    2: LVCMOS25
-+    3: LVCMOS33
-+    4: HSTL
-+
-+Example:
-+	pinctrl0: pinctrl@700 {
-+		compatible =3D "xlnx,pinctrl-zynq";
-+		reg =3D <0x700 0x200>;
-+		syscon =3D <&slcr>;
-+
-+		pinctrl_uart1_default: uart1-default {
-+			mux {
-+				groups =3D "uart1_10_grp";
-+				function =3D "uart1";
-+			};
-+
-+			conf {
-+				groups =3D "uart1_10_grp";
-+				slew-rate =3D <0>;
-+				io-standard =3D <1>;
-+			};
-+
-+			conf-rx {
-+				pins =3D "MIO49";
-+				bias-high-impedance;
-+			};
-+
-+			conf-tx {
-+				pins =3D "MIO48";
-+				bias-disable;
-+			};
-+		};
-+	};
 --=20
 2.2.0.1.g9ee0458
 
