@@ -1,49 +1,56 @@
-From: Eduardo Valentin <edubezval@gmail.com>
-Subject: [PATCH 1/2] thermal: db8500: Do not print error message in the EPROBE_DEFER case
-Date: Fri, 12 Dec 2014 10:14:24 -0400
-Message-ID: <1418393665-16850-2-git-send-email-edubezval@gmail.com>
-References: <1418393665-16850-1-git-send-email-edubezval@gmail.com>
+From: VishnuPatekar <vishnupatekar0510@gmail.com>
+Subject: [PATCHv3 1/5] sunxi:dts-bindings:input:ps2 bindings for A10/A20 ps2.
+Date: Fri, 12 Dec 2014 23:55:44 +0530
+Message-ID: <1418408748-9797-2-git-send-email-vishnupatekar0510@gmail.com>
+References: <1418408748-9797-1-git-send-email-vishnupatekar0510@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1418393665-16850-1-git-send-email-edubezval@gmail.com>
+In-Reply-To: <1418408748-9797-1-git-send-email-vishnupatekar0510@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linux PM <linux-pm@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Eduardo Valentin <edubezval@gmail.com>, Zhang Rui <rui.zhang@intel.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+To: linux-input@vger.kernel.org, maxime.ripard@free-electrons.com, dmitry.torokhov@gmail.com, hdegoede@redhat.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, grant.likely@linaro.org, benh@kernel.crashing.org, msalter@redhat.com, ralf@linux-mips.org, jdelvare@suse.de, VishnuPatekar <vishnupatekar0510@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Avoid printing the error message in the EPROBE_DEFER case
-where registering cpu cooling at db8500 thermal driver.
+1. dt bindings should use the compat string for the earliest version of the
+hardware which has the relevant hardware block, unless there are differences,
+the A10 and A20 ps2 controllers are identical, so for both sun4i-a10-ps2
+should be used as compat string.
+2. ps2 / serio bindings belong under Documentation/devicetree/bindings/serio
 
-Cc: Zhang Rui <rui.zhang@intel.com>
-Cc: Grant Likely <grant.likely@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: linux-pm@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Eduardo Valentin <edubezval@gmail.com>
+Signed-off-by: VishnuPatekar <vishnupatekar0510@gmail.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/thermal/db8500_cpufreq_cooling.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ .../bindings/serio/allwinner,sun4i-ps2.txt         |   23 ++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/serio/allwinner,sun4i-ps2.txt
 
-diff --git a/drivers/thermal/db8500_cpufreq_cooling.c b/drivers/thermal/db8500_cpufreq_cooling.c
-index 3cc3dd9..28bbff9 100644
---- a/drivers/thermal/db8500_cpufreq_cooling.c
-+++ b/drivers/thermal/db8500_cpufreq_cooling.c
-@@ -30,8 +30,14 @@ static int db8500_cpufreq_cooling_probe(struct platform_device *pdev)
- 
- 	cdev = cpufreq_cooling_register(cpu_present_mask);
- 	if (IS_ERR(cdev)) {
--		dev_err(&pdev->dev, "Failed to register cooling device\n");
--		return PTR_ERR(cdev);
-+		int ret = PTR_ERR(cdev);
+diff --git a/Documentation/devicetree/bindings/serio/allwinner,sun4i-ps2.txt b/Documentation/devicetree/bindings/serio/allwinner,sun4i-ps2.txt
+new file mode 100644
+index 0000000..0c30440
+--- /dev/null
++++ b/Documentation/devicetree/bindings/serio/allwinner,sun4i-ps2.txt
+@@ -0,0 +1,23 @@
++* Device tree bindings for Allwinner A10, A20 PS2 host controller
 +
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(&pdev->dev,
-+				"Failed to register cooling device %d\n",
-+				ret);
-+				
-+		return ret;
- 	}
- 
- 	platform_set_drvdata(pdev, cdev);
++A20 PS2 is dual role controller(PS2 host and PS2 device). These bindings are
++for PS2 A10/A20 host controller. IBM compliant IBM PS2 and AT-compatible keyboard
++and mouse can be connected.
++
++Required properties:
++
++ - reg             : Offset and length of the register set for the device.
++ - compatible      : Should be as of the following:
++                     - "allwinner,sun4i-a10-ps2"
++ - interrupts      : The interrupt line connected to the PS2.
++ - clocks          : The gate clk connected to the PS2.
++
++
++Example:
++	ps20: ps2@0x01c2a000 {
++		compatible = "allwinner,sun4i-a10-ps2";
++		reg = <0x01c2a000 0x400>;
++		interrupts = <0 62 4>;
++		clocks = <&apb1_gates 6>;
++		status = "disabled";
++	};
 -- 
-2.1.3
+1.7.9.5
