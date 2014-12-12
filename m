@@ -1,197 +1,491 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [RFC PATCH 2/2] of/clk: use "clkops-clocks" to specify clocks handled by clock_ops domain
-Date: Fri, 12 Dec 2014 19:52:42 +0200
-Message-ID: <3639676.T9j4AkXvCz@avalon>
-References: <1398334403-26181-1-git-send-email-geert+renesas@glider.be> <2717555.fiA6A86F65@avalon> <7hegvlq3a2.fsf@linaro.org>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] iio: add driver for the TI DAC8554
+Date: Fri, 12 Dec 2014 18:14:04 +0000
+Message-ID: <548B306C.1030800@kernel.org>
+References: <1416858614-32265-1-git-send-email-nikolaus.schulz@avionic-design.de> <1416858614-32265-2-git-send-email-nikolaus.schulz@avionic-design.de> <5482EA33.7020305@gmx.de> <20141212155804.GA1142@avionic-0071.adnet.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <7hegvlq3a2.fsf@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Kevin Hilman <khilman@kernel.org>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Grygorii Strashko <grygorii.strashko@ti.com>, Geert Uytterhoeven <geert+renesas@glider.be>, ulf.hansson@linaro.org, Mike Turquette <mturquette@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, Ben Dooks <ben.dooks@codethink.co.uk>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141212155804.GA1142-RM9K5IK7kjJNqqvv04100KcOhU4Rzj621B7CTYaBSLdn68oJJulU0Q@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nikolaus Schulz <nikolaus.schulz-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>
+Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>, Philippe Reynes <tremyfr-Qt13gs6zZMY@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alban Bedel <alban.bedel-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kevin,
-
-On Monday 08 September 2014 13:13:25 Kevin Hilman wrote:
-> Laurent Pinchart <laurent.pinchart@ideasonboard.com> writes:
-> > On Monday 28 July 2014 23:52:34 Grant Likely wrote:
-> >> On Mon, Jul 28, 2014 at 11:47 AM, Grygorii Strashko wrote:
-> >> > On 07/28/2014 05:05 PM, Grant Likely wrote:
-> >> >> On Thu, 12 Jun 2014 19:53:43 +0300, Grygorii Strashko wrote:
+On 12/12/14 15:58, Nikolaus Schulz wrote:
+> On Sat, Dec 06, 2014 at 12:36:19PM +0100, Hartmut Knaack wrote:
+>> Nikolaus Schulz schrieb am 24.11.2014 um 20:50:
+>>> The TI DAC8554 is a quad-channel Digital-to-Analog Converter with an SPI
+>>> interface.
+>>>
+>>> Changes in v2:
+>>> * Use DMA-safe buffer for SPI transfer
+>>> * Normalize powerdown_mode name "hi-z" to "three_state" as per
+>>>   ABI/testing/sysfs-bus-iio
+>>> * Register device late in probe function
+>>> * Avoid powerdown broadcast update, which touches all DAC on the bus
+>> There are a few issues left, please see my comments inline.
+>>>
+>>> Signed-off-by: Nikolaus Schulz <nikolaus.schulz-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+>>> ---
+>>>  drivers/iio/dac/Kconfig      |  10 ++
+>>>  drivers/iio/dac/Makefile     |   1 +
+>>>  drivers/iio/dac/ti-dac8554.c | 374 +++++++++++++++++++++++++++++++++++++++++++
+>>>  3 files changed, 385 insertions(+)
+>>>  create mode 100644 drivers/iio/dac/ti-dac8554.c
 > [...]
+>>> diff --git a/drivers/iio/dac/ti-dac8554.c b/drivers/iio/dac/ti-dac8554.c
+>>> new file mode 100644
+>>> index 0000000..fca751f
+>>> --- /dev/null
+>>> +++ b/drivers/iio/dac/ti-dac8554.c
+>>> @@ -0,0 +1,374 @@
+>>> +/*
+>>> + * TI DAC8554 Digital to Analog Converter SPI driver
+>>> + *
+>>> + * Copyright (C) 2014 Avionic Design GmbH
+>>> + *
+>>> + * Based on ad5446r_spi.c
+>>> + * Copyright (C) 2010,2011 Analog Devices Inc.
+>>> + *
+>>> + * This program is free software; you can redistribute it and/or modify
+>>> + * it under the terms of the GNU General Public License version 2 as
+>>> + * published by the Free Software Foundation.
+>>> + */
+>>> +
+>>> +#include <linux/spi/spi.h>
+>>> +#include <linux/regulator/consumer.h>
+>>> +#include <linux/module.h>
+>>> +#include <linux/iio/iio.h>
+>>> +#include <linux/of.h>
+>>> +
+>>> +#define DAC8554_DRIVERNAME			"ti-dac8554"
+>>> +#define DAC8554_DAC_CHANNELS			4
+>>> +
+>>> +/* Load commands */
+>>> +#define DAC8554_CMD_STORE_DAC_N			0x0
+>>> +#define DAC8554_CMD_UPDATE_DAC_N		0x1
+>>> +#define DAC8554_CMD_STORE_DAC_N_UPDATE_ALL	0x2
+>>> +#define DAC8554_CMD_UPDATE_BROADCAST		0x3
+>>> +
+>>> +#define DAC8554_BROADCAST_USE_SRDATA		0x2
+>> Add a blank line here.
 > 
-> >> > - Where and when to call of_clk_register_runtime_pm_clocks()?
-> >> > 
-> >> >   Bus notifier/ platform core/ device drivers
-> >> 
-> >> I would say in device drivers.
-> > 
-> > I tend to agree with that.
-> > 
-> > It will help here to take a step back and remember what the problem we're
-> > trying to solve is.
+> Fixed.
 > 
-> [jumping in late, after Grygorii ping'd me about looking at this]
+>>> +/* Powerdown modes (ORed PD1|PD2 bits) */
+>> It took my some time to figure out ORed. I think you could drop it and just
+>> mention (PD1 | PD2 bits).
 > 
-> Laurent, thanks for summarizing the problem so well.  It helped me
-> catchup on the discussion.
-
-You're welcome. Sorry for the very late reply.
-
-> > At the root is clock management. Our system comprise many clocks, and they
-> > need to be handled. The Common Clock Framework nicely models the clocks,
-> > and offers an API for drivers to retrieve device clocks and control them.
-> > Drivers can thus implement clock management manually without much pain.
-> > 
-> > A clock can be managed in roughly three different ways :
-> > 
-> > - it can be enabled at probe time and disabled at remove time ;
-> > 
-> > - it can be enabled right before the device leaves its idle state and
-> > disabled when the device goes back to idle ; or
-> > 
-> > - it can be enabled and disabled in a more fine-grained, device-specific
-> > manner.
-> > 
-> > The selected clock management granularity depends on constraints specific
-> > to the device and on how aggressive power saving needs to be. Enabling
-> > the clocks at probe time and disabling them at remove time is enough for
-> > most devices, but leads to a high power consumption. For that reason the
-> > second clock management scheme is often desired.
-> > 
-> > Managing clocks manually in the driver is a valid option. However, when
-> > adding runtime PM to the equation, and realizing that the clocks need to
-> > be enabled in the runtime PM resume handler and disabled in the suspend
-> > handler, the clock management code starts looking very similar in most
-> > drivers. We're thus tempted to factorize it away from the drivers into a
-> > shared location.
-> > 
-> > It's important to note at this point that the goal here is only to
-> > simplify drivers. Moving clock management code out of the drivers doesn't
-> > (unless I'm missing something) open the door to new possibilities, it just
-> > serves as a simplification.
+> Agreed, and fixed.
 > 
-> I disagree. Actually, it opens up the door to lots of new possibilities
-> that are crucial for fine-grained PM with QoS. It is not just
-> simplification. There are many good reasons that some SoCs have moved all
-> the management of PM-related clocks *out* of device drivers. More on that
-> below...
+>>> +#define DAC8554_PWRDN_HIZ			0x0
+>>> +#define DAC8554_PWRDN_1K			0x1
+>>> +#define DAC8554_PWRDN_100K			0x2
+>>> +
+>>> +#define DAC8554_PWRDN_TO_SR(mode)		(BIT(16) | (mode) << 14)
+>>> +
+>>> +/**
+>>> + * struct dac8554_state - driver instance specific data
+>>> + * @spi:		spi_device
+>> SPI device?
 > 
-> > Now, as Grygorii mentioned, differences between how a given IP core is
-> > integrated in various SoCs can make clock management SoC-dependent. In the
-> > vast majority of cases (which is really what we need to target, given that
-> > our target is simplifying drivers) SoC integration can be described as a
-> > list of clocks that must be managed. That list can be common to all
-> > devices in a given SoC, or can be device-dependent as well.
+> Yes, fixed.
 > 
-> If we care about fine-grained PM, this is a way-too oversimplified
-> version of what SoC integragion means.
+>>> + * @reg:		supply regulator
+>>> + * @addr:		two-bit chip address
+>>> + * @vref_mv:		reference voltage in millivolt
+>>> + * @val			DAC/channel data
+>> DAC channel data?
 > 
-> There are lots of pieces which fall under "SoC integration", for
-> example: clock domains, power domains, voltage domains, SoC-specific
-> wakeup capabilities, etc. etc.  Then, for fun throw in QoS constraints,
-> and things get really exciting.
+> "channel data" will do, actually.
 > 
-> IOW, if you care about fine-grained PM and QoS, you simply can't reduce
-> SoC integration down to "a list of clocks to be managed."
-
-Of course. I was talking about SoC integration for clocks, not about SoC 
-integration in general.
-
-> QoS makes this interesting as well because a device driver's decision to
-> gate its own clocks may have serious repercussions on the wakeup latency
-> of *other* devices in the same power domain. For example, the clock gating
-> of the last active device in a powerdomain may cause the enclosing power-
-> domain to be power gated, having a major impact on the wakup latency of
-> *all* devices in that power domain.
+>>> + * @powerdown		channel powerdown flag
+>>> + * @powerdown_mode	channel powerdown mode
+>>> + * @xfer		SPI transfer buffer
+>> Half of the comments are with colon, the other half are missing it.
 > 
-> So if we're going to manage the list of PM-related clocks in the device
-> driver, we'll also keep track of all the other devices in the same power
-> domain, whether or not they're active, whether or not they have QoS
-> constraints, etc. etc. Hopefully you can see that we're quickly way outside
-> the scope of the IP block that the device driver is intended to manage.
+> Fixed.
 > 
-> All of this is "SoC integration" knowledge, and IMO doen't belong in the
-> device drivers.  It belongs at the SoC integration level, and in todays
-> kernel frameworks that means pm_domain/genpd.
-
-Ok, there's more to it than I initially thought. Let's see how we can make 
-this happen then :-)
-
-> > Few locations can be used to express a per-device list of per-SoC clocks.
-> > We can have clocks lists in a per-SoC and per-device location, per-device
-> > clocks lists in an SoC-specific location, or per-SoC clocks lists in a
-> > device- specific location.
-> > 
-> > The first option would require listing clocks to be managed by runtime PM
-> > in DT nodes, as proposed by this patch set. I don't think this is the
-> > best option, as that information is a mix of hardware description and
-> > software policy, with the hardware description part being already present
-> > in DT in the clocks property.
+>>> + */
+>>> +struct dac8554_state {
+>>> +	struct spi_device		*spi;
+>>> +	struct regulator		*reg;
+>>> +	unsigned			addr;
+>>> +	unsigned			vref_mv;
+>>> +	u16				val[DAC8554_DAC_CHANNELS];
+>>> +	bool				powerdown[DAC8554_DAC_CHANNELS];
+>>> +	u8				powerdown_mode[DAC8554_DAC_CHANNELS];
+>>> +
+>>> +	/*
+>>> +	 * DMA (thus cache coherency maintenance) requires the
+>>> +	 * transfer buffers to live in their own cache lines.
+>>> +	 */
+>>> +	u8				xfer[3] ____cacheline_aligned;
+>>> +};
+>>> +
+>>> +static int dac8554_spi_write(struct dac8554_state *st,
+>>> +			     unsigned cmd,
+>>> +			     unsigned chan_addr,
+>>> +			     unsigned val)
+>>> +{
+>>> +	u32 data;
+>>> +
+>>> +	/*
+>>> +	 * The input shift register is 24 bits wide. The 8 MSB are
+>>> +	 * control bits, followed by 16 data bits.
+>>> +	 * The first two bits A1 and A0 address a DAC8554 chip.
+>>> +	 * The next two are the command bits, LD1 and LD0.
+>>> +	 * After a don't-care-bit, the next two bits select the channel.
+>>> +	 * The final control bit PD0 is a flag signalling if the data
+>>> +	 * bits encode a powerdown mode. We merge PD0 with the adjacent
+>>> +	 * data bits.
+>>> +	 */
+>>> +
+>>> +	if (cmd > 3 || chan_addr > 3 ||
+>>> +			(val > 0xffff && (val & ~DAC8554_PWRDN_TO_SR(3))))
+>>> +		return -EINVAL;
+>>> +
+>>> +	data = (st->addr << 22) | (cmd << 20) | (chan_addr << 17) | val;
+>> Could be more readable by using definition for the magic shifts, or macros.
 > 
-> I'm not seeing which part you think is software policy here?  Which clocks
-> are driving which IP blocks is a hardware description.
+> Hmm. The magic is all concentrated at this place, and the variable names
+> tell the story, so I figured that's ok.  But, why not: fixed.
 > 
-> Which clocks are actually gated, and if/when is software policy and should
-> be decided by the SoC-specific runtime PM and genpd implementations, but
-> describing which clocks are wired to which IP blocks is certainly hardware
-> description IMO.
-
-The clocks property is a hardware description, but a new property that would 
-hold a list of clocks to be managed by the runtime PM core is less so.
-
-> > The second option calls for storing the lists in SoC code under arch/. As
-> > we're trying to minimize the amount of SoC code there (and even remove SoC
-> > code completely when possible) I don't think that's a good option.
-> > 
-> > The third option would require storing the clocks lists in device drivers.
-> > I believe this is our best option, as a trade-off between simplicity and
-> > versatility. Drivers that use runtime PM already need to enable it
-> > explicitly when probing devices. Passing a list of clock names to runtime
-> > PM at that point wouldn't complicate drivers much. When the clocks list
-> > isn't SoC- dependent it could be stored as static information. Otherwise
-> > it could be derived from DT (or any other source of hardware description)
-> > using C code, offering all the versatility we need.
+>>> +	st->xfer[0] = data >> 16;
+>>> +	st->xfer[1] = data >> 8;
+>>> +	st->xfer[2] = data;
+>>> +
+>>> +	return spi_write(st->spi, st->xfer, sizeof(st->xfer));
+>>> +}
+>>> +
+>>> +static int dac8554_read_raw(struct iio_dev *indio_dev,
+>>> +			    struct iio_chan_spec const *chan,
+>>> +			    int *val,
+>>> +			    int *val2,
+>>> +			    long m)
+>> Commonly, m is called mask (like you do in _write_raw).
 > 
-> As is probably clear from above, I don't like this approach at all.
-
-Do we at least agree that option 2 (storing the lists in arch/) is a bad idea 
-and should be ruled out ?
-
-> > The only drawback of this solution I can think of right now is that the
-> > runtime PM core couldn't manage device clocks before probing the device.
-> > Specifically device clocks couldn't be managed if no driver is loaded for
-> > that device. I somehow recall that someone raised this as being a
-> > problem, but I can't remember why.
+> Ah yes. Fixed.
 > 
-> The bigger drawback of this approach is that the device-drivers become a
-> repository for SoC integration details that IMO don't belong in a device
-> driver for a specific IP block.
-
-I agree that SoC integration details don't belong in device drivers, but I 
-don't see this as SoC integration details. The driver knows that the IP core 
-it manages has two functional clock inputs, and knows how those clock inputs 
-are named. The name is a property of the IP core, not of the SoC. Only how 
-(and whether) those clocks are connected in the SoC is integration 
-information.
-
-Now, if the IP core itself can be synthesized with different clock option, 
-those synthesis options belong to DT, either explicitly in the clock-names 
-property or implicitly in the compatible property.
-
-> Over the last few years, we've created abstractions for this kind of SoC
-> integration information (pm_domains) as well as frameworks for handling
-> much of the common parts (genpd) and in doing so, have been able to
-> remove PM-related clock management from device drivers altogether.
+>>> +{
+>>> +	struct dac8554_state *st = iio_priv(indio_dev);
+>>> +
+>>> +	switch (m) {
+>>> +	case IIO_CHAN_INFO_RAW:
+>>> +		*val = st->val[chan->address];
+>>> +		return IIO_VAL_INT;
+>>> +	case IIO_CHAN_INFO_SCALE:
+>>> +		*val = st->vref_mv;
+>>> +		*val2 = 16;
+>>> +		return IIO_VAL_FRACTIONAL_LOG2;
+>>> +	}
+>>> +	return -EINVAL;
+>>> +}
+>>> +
+>>> +static int dac8554_write_raw(struct iio_dev *indio_dev,
+>>> +			     struct iio_chan_spec const *chan,
+>>> +			     int val,
+>>> +			     int val2,
+>>> +			     long mask)
+>>> +{
+>>> +	struct dac8554_state *st = iio_priv(indio_dev);
+>>> +	int err;
+>>> +
+>>> +	switch (mask) {
+>>> +	case IIO_CHAN_INFO_RAW:
+>>> +		if (val > 0xffff || val < 0)
+>>> +			return -EINVAL;
+>>> +
+>>> +		err = dac8554_spi_write(st, DAC8554_CMD_UPDATE_DAC_N,
+>>> +					chan->address, val);
+>>> +		if (err)
+>>> +			return err;
+>>> +
+>>> +		st->val[chan->address] = val;
+>>> +
+>>> +		/* By hw design, DAC updates automatically trigger powerup. */
+>>> +		st->powerdown[chan->address] = false;
+>>> +
+>>> +		return 0;
+>>> +
+>>> +	default:
+>>> +		return -EINVAL;
+>>> +	}
+>>> +}
+>>> +
+>>> +static int dac8554_get_powerdown_mode(struct iio_dev *indio_dev,
+>>> +				      const struct iio_chan_spec *chan)
+>>> +{
+>>> +	struct dac8554_state *st = iio_priv(indio_dev);
+>>> +
+>>> +	return st->powerdown_mode[chan->address];
+>>> +}
+>>> +
+>>> +static int dac8554_set_powerdown_mode(struct iio_dev *indio_dev,
+>>> +				      const struct iio_chan_spec *chan,
+>>> +				      unsigned int mode)
+>>> +{
+>>> +	struct dac8554_state *st = iio_priv(indio_dev);
+>>> +
+>>> +	st->powerdown_mode[chan->address] = mode;
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static ssize_t dac8554_read_dac_powerdown(struct iio_dev *indio_dev,
+>>> +					  uintptr_t private,
+>>> +					  const struct iio_chan_spec *chan,
+>>> +					  char *buf)
+>>> +{
+>>> +	struct dac8554_state *st = iio_priv(indio_dev);
+>>> +
+>>> +	return sprintf(buf, "%d\n", st->powerdown[chan->address]);
+>>> +}
+>>> +
+>>> +static ssize_t dac8554_write_dac_powerdown(struct iio_dev *indio_dev,
+>>> +					   uintptr_t private,
+>>> +					   const struct iio_chan_spec *chan,
+>>> +					   const char *buf,
+>>> +					   size_t len)
+>>> +{
+>>> +	bool powerdown;
+>>> +	int ret;
+>>> +	struct dac8554_state *st = iio_priv(indio_dev);
+>>> +	u8 powerdown_mode;
+>>> +
+>>> +	ret = strtobool(buf, &powerdown);
+>>> +	if (ret)
+>>> +		return ret;
+>>> +
+>>> +	st->powerdown[chan->address] = powerdown;
+>>> +
+>>> +	if (powerdown) {
+>>> +		powerdown_mode = st->powerdown_mode[chan->address];
+>>> +		ret = dac8554_spi_write(st,
+>>> +				DAC8554_CMD_UPDATE_DAC_N,
+>>> +				chan->address,
+>>> +				DAC8554_PWRDN_TO_SR(powerdown_mode));
+>> The parameters sill fit on line even with proper indentation.
 > 
-> I think managing this stuff back in device drivers would be a major step
-> backwards.
-
--- 
-Regards,
-
-Laurent Pinchart
-
+> Fixed.
+> 
+>>> +	} else {
+>>> +		/* Load DAC with cached value. This triggers a powerup. */
+>>> +		ret = dac8554_spi_write(st,
+>>> +				DAC8554_CMD_UPDATE_DAC_N,
+>>> +				chan->address,
+>>> +				st->val[chan->address]);
+>> Same here with indentation.
+> 
+> Fixed.
+> 
+>>> +	}
+>>> +
+>>> +	if (ret)
+>>> +		return ret;
+>>> +
+>>> +	return len;
+>> Just: return (ret) ? ret : len;
+> 
+> I think avoiding the ternary operator makes the code more readable, and
+> it separates the error path from normal operation. So I would prefer to
+> keep it that way.
+Agreed. Matter of personal taste - personally I don't really care either
+way ;)
+> 
+>>> +}
+>>> +
+>>> +static int dac8554_powerdown(struct dac8554_state *st,
+>>> +			     u8 powerdown_mode)
+>>> +{
+>>> +	int chan, cmd, ret;
+>>> +
+>>> +	for (chan = DAC8554_DAC_CHANNELS-1; chan >= 0; --chan) {
+>> Please mind spaces around operators.
+> 
+> Fixed.
+> 
+>>> +		cmd = chan ? DAC8554_CMD_STORE_DAC_N
+>>> +			   : DAC8554_CMD_STORE_DAC_N_UPDATE_ALL;
+>>> +		ret = dac8554_spi_write(st, cmd, chan,
+>>> +				DAC8554_PWRDN_TO_SR(powerdown_mode));
+>>> +		if (ret)
+>>> +			return ret;
+>>> +	}
+>>> +
+>>> +	memset(st->powerdown_mode, powerdown_mode, sizeof(st->powerdown_mode));
+>>> +	memset(st->powerdown, true, sizeof(st->powerdown));
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static const struct iio_info dac8554_info = {
+>>> +	.write_raw = dac8554_write_raw,
+>>> +	.read_raw = dac8554_read_raw,
+>>> +	.driver_module = THIS_MODULE,
+>>> +};
+>>> +
+>>> +static const char * const dac8554_powerdown_modes[] = {
+>>> +	"three_state",
+>>> +	"1kohm_to_gnd",
+>>> +	"100kohm_to_gnd"
+>>> +};
+>>> +
+>>> +static const struct iio_enum dac8854_powerdown_mode_enum = {
+>>> +	.items = dac8554_powerdown_modes,
+>>> +	.num_items = ARRAY_SIZE(dac8554_powerdown_modes),
+>>> +	.get = dac8554_get_powerdown_mode,
+>>> +	.set = dac8554_set_powerdown_mode,
+>>> +};
+>>> +
+>>> +static const struct iio_chan_spec_ext_info dac8554_ext_info[] = {
+>>> +	{
+>>> +		.name = "powerdown",
+>>> +		.read = dac8554_read_dac_powerdown,
+>>> +		.write = dac8554_write_dac_powerdown,
+>>> +		.shared = IIO_SEPARATE,
+>>> +	},
+>>> +	IIO_ENUM("powerdown_mode", IIO_SEPARATE,
+>>> +		 &dac8854_powerdown_mode_enum),
+>>> +	IIO_ENUM_AVAILABLE("powerdown_mode", &dac8854_powerdown_mode_enum),
+>>> +	{ },
+>>> +};
+>>> +
+>>> +#define DAC8554_CHANNEL(chan) { \
+>>> +	.type = IIO_VOLTAGE, \
+>>> +	.indexed = 1, \
+>>> +	.output = 1, \
+>>> +	.channel = (chan), \
+>>> +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW), \
+>>> +	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE), \
+>>> +	.address = (chan), \
+>>> +	.ext_info = dac8554_ext_info, \
+>>> +}
+>>> +const struct iio_chan_spec dac8554_channels[] = {
+>>> +	DAC8554_CHANNEL(0),
+>>> +	DAC8554_CHANNEL(1),
+>>> +	DAC8554_CHANNEL(2),
+>>> +	DAC8554_CHANNEL(3),
+>>> +};
+>>> +#undef DAC8554_CHANNEL
+>>> +
+>>> +static int dac8554_probe(struct spi_device *spi)
+>>> +{
+>>> +	struct dac8554_state *st;
+>>> +	struct iio_dev *indio_dev;
+>>> +	int ret, voltage_uv;
+>>> +	u32 addr;
+>>> +
+>>> +	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
+>>> +	if (!indio_dev)
+>>> +		return -ENOMEM;
+>>> +
+>>> +	indio_dev->dev.parent = &spi->dev;
+>>> +	indio_dev->name = DAC8554_DRIVERNAME;
+>>> +	indio_dev->info = &dac8554_info;
+>>> +	indio_dev->modes = INDIO_DIRECT_MODE;
+>>> +	indio_dev->channels = dac8554_channels;
+>>> +	indio_dev->num_channels = ARRAY_SIZE(dac8554_channels);
+>>> +
+>>> +	spi_set_drvdata(spi, indio_dev);
+>>> +
+>>> +	st = iio_priv(indio_dev);
+>>> +
+>>> +	if (!spi->dev.of_node) {
+>>> +		dev_err(&spi->dev, "missing OF node");
+>>> +		return -ENODEV;
+>>> +	}
+>>> +	ret = of_property_read_u32(spi->dev.of_node, "address", &addr);
+>>> +	if (ret || addr < 0 || addr > 2) {
+>>> +		dev_err(&spi->dev, "no or invalid chip address");
+>>> +		return -ENODEV;
+>>> +	}
+>>> +
+>>> +	st->spi = spi;
+>>> +	st->addr = addr;
+>>> +
+>> According to your DT bindings, the regulator from property "vref-supply" should
+>> be used. This is missing here.
+> 
+> Uhm, it's right below, no?
+> 
+>>> +	st->reg = devm_regulator_get(&spi->dev, "vref");
+>>> +	if (IS_ERR(st->reg))
+>>> +		return PTR_ERR(st->reg);
+>>> +
+>>> +	ret = regulator_enable(st->reg);
+>>> +	if (ret)
+>>> +		return ret;
+>>> +
+>>> +	voltage_uv = regulator_get_voltage(st->reg);
+>>> +	if (voltage_uv < 0)
+>>> +		goto error_disable_reg;
+>> Missing ret = voltage_uv before goto. Or just drop voltage_uv completely and use ret instead.
+> 
+> Fixed.
+> 
+>>> +	st->vref_mv = voltage_uv / 1000;
+>> How hard do you want to depend on a voltage regulator? Doing regulator_get_voltage()
+>> could even be called dynamically in _read_raw(), making a real regulator optional.
+> 
+> Hmm. I understand that the DAC voltage input may not be provided by a
+> regulator, but is that a common scenario?  No other DAC driver I looked
+> at handles that case, they all consider it an error if the regulator is
+> absent.
+Sure - if there isn't one, then a fixed regulator can be specified in the DT
+to provide whatever the voltage is.
+> 
+>>> +
+>>> +	ret = dac8554_powerdown(st, DAC8554_PWRDN_100K);
+>>> +	if (ret)
+>>> +		goto error_disable_reg;
+>>> +
+>>> +	ret = iio_device_register(indio_dev);
+>>> +	if (ret)
+>>> +		goto error_disable_reg;
+>>> +
+>>> +	return 0;
+>>> +
+>>> +error_disable_reg:
+>>> +	regulator_disable(st->reg);
+>>> +	return ret;
+>>> +}
+>>> +
+>>> +static int dac8554_remove(struct spi_device *spi)
+>>> +{
+>>> +	struct iio_dev *indio_dev = spi_get_drvdata(spi);
+>>> +	struct dac8554_state *st = iio_priv(indio_dev);
+>>> +
+>>> +	iio_device_unregister(indio_dev);
+>>> +	regulator_disable(st->reg);
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static const struct of_device_id dac8554_of_match[] = {
+>>> +	{ .compatible = "ti,dac8554" },
+>>> +	{ }
+>>> +};
+>>> +MODULE_DEVICE_TABLE(of, dac8554_of_match);
+>>> +
+>>> +static struct spi_driver dac8554_driver = {
+>>> +	.driver = {
+>>> +		.name = DAC8554_DRIVERNAME,
+>>> +		.owner = THIS_MODULE,
+>>> +		.of_match_table = dac8554_of_match,
+>>> +	 },
+>>> +	.probe = dac8554_probe,
+>>> +	.remove = dac8554_remove,
+>>> +};
+>>> +module_spi_driver(dac8554_driver);
+>>> +
+>>> +MODULE_AUTHOR("Nikolaus Schulz <nikolaus.schulz-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>");
+>>> +MODULE_DESCRIPTION("Texas Instruments DAC8554 SPI driver");
+>>> +MODULE_LICENSE("GPL v2");
+> 
+> Thanks for the review!
+> 
+> Nikolaus
+> 
