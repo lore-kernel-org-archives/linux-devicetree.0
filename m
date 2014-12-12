@@ -1,25 +1,118 @@
-From: Ding Tianhong <dingtianhong@huawei.com>
-Subject: Re: [PATCH net-next v9 0/3] add hisilicon hip04 ethernet driver
-Date: Fri, 12 Dec 2014 09:46:19 +0800
-Message-ID: <548A48EB.6020905@huawei.com>
-References: <1418298150-4944-1-git-send-email-dingtianhong@huawei.com> <20141211.120414.806666053427479402.davem@davemloft.net>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [v3][PATCH 4/5] media: ov2640: add a master clock for sensor
+Date: Fri, 12 Dec 2014 04:13:54 +0200
+Message-ID: <2368220.9kzqcjNO4y@avalon>
+References: <1418283339-16281-1-git-send-email-josh.wu@atmel.com> <1418283339-16281-5-git-send-email-josh.wu@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20141211.120414.806666053427479402.davem@davemloft.net>
-Sender: netdev-owner@vger.kernel.org
-To: David Miller <davem@davemloft.net>
-Cc: zhangfei.gao@linaro.org, linux@arm.linux.org.uk, arnd@arndb.de, f.fainelli@gmail.com, sergei.shtylyov@cogentembedded.com, mark.rutland@arm.com, David.Laight@ACULAB.COM, eric.dumazet@gmail.com, xuwei5@hisilicon.com, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1418283339-16281-5-git-send-email-josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, g.liakhovetski-Mmb7MZpHnFY@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2014/12/12 1:04, David Miller wrote:
-> 
-> The net-next tree is closed, therefore it is not appropriate to
-> submit net-next changes at this time.
-> 
-> .
-> 
-Ok, sure, thanks.
+Hi Josh,
 
-Ding
+Thank you for the patch.
+
+On Thursday 11 December 2014 15:35:38 Josh Wu wrote:
+> The master clock (xvclk) is mandatory. It's a common clock framework clock.
+> It can make sensor output a pixel clock to the camera interface.
+> 
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+
+Acked-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+
+> ---
+> v2 -> v3:
+>   1. should return PTR_ERR().
+> 
+> v1 -> v2:
+>   1. change the clock's name.
+>   2. Make the clock is mandatory.
+> 
+>  drivers/media/i2c/soc_camera/ov2640.c | 23 ++++++++++++++++++++++-
+>  1 file changed, 22 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/media/i2c/soc_camera/ov2640.c
+> b/drivers/media/i2c/soc_camera/ov2640.c index e0bcf5b..055702c 100644
+> --- a/drivers/media/i2c/soc_camera/ov2640.c
+> +++ b/drivers/media/i2c/soc_camera/ov2640.c
+> @@ -13,6 +13,7 @@
+>   * published by the Free Software Foundation.
+>   */
+> 
+> +#include <linux/clk.h>
+>  #include <linux/init.h>
+>  #include <linux/module.h>
+>  #include <linux/i2c.h>
+> @@ -31,6 +32,7 @@
+> 
+>  #define VAL_SET(x, mask, rshift, lshift)  \
+>  		((((x) >> rshift) & mask) << lshift)
+> +
+>  /*
+>   * DSP registers
+>   * register offset for BANK_SEL == BANK_SEL_DSP
+> @@ -284,6 +286,7 @@ struct ov2640_priv {
+>  	struct v4l2_ctrl_handler	hdl;
+>  	u32	cfmt_code;
+>  	struct v4l2_clk			*clk;
+> +	struct clk			*master_clk;
+>  	const struct ov2640_win_size	*win;
+> 
+>  	struct soc_camera_subdev_desc	ssdd_dt;
+> @@ -746,6 +749,7 @@ static int ov2640_s_power(struct v4l2_subdev *sd, int
+> on) struct soc_camera_subdev_desc *ssdd = soc_camera_i2c_to_desc(client);
+> struct ov2640_priv *priv = to_ov2640(client);
+>  	struct v4l2_clk *clk;
+> +	int ret;
+> 
+>  	if (!priv->clk) {
+>  		clk = v4l2_clk_get(&client->dev, "mclk");
+> @@ -755,7 +759,20 @@ static int ov2640_s_power(struct v4l2_subdev *sd, int
+> on) priv->clk = clk;
+>  	}
+> 
+> -	return soc_camera_set_power(&client->dev, ssdd, priv->clk, on);
+> +	if (on) {
+> +		ret = clk_prepare_enable(priv->master_clk);
+> +		if (ret)
+> +			return ret;
+> +	} else {
+> +		clk_disable_unprepare(priv->master_clk);
+> +	}
+> +
+> +	ret = soc_camera_set_power(&client->dev, ssdd, priv->clk, on);
+> +
+> +	if (ret && on)
+> +		clk_disable_unprepare(priv->master_clk);
+> +
+> +	return ret;
+>  }
+> 
+>  /* Select the nearest higher resolution for capture */
+> @@ -1145,6 +1162,10 @@ static int ov2640_probe(struct i2c_client *client,
+>  			return ret;
+>  	}
+> 
+> +	priv->master_clk = devm_clk_get(&client->dev, "xvclk");
+> +	if (IS_ERR(priv->master_clk))
+> +		return PTR_ERR(priv->master_clk);
+> +
+>  	v4l2_i2c_subdev_init(&priv->subdev, client, &ov2640_subdev_ops);
+>  	v4l2_ctrl_handler_init(&priv->hdl, 2);
+>  	v4l2_ctrl_new_std(&priv->hdl, &ov2640_ctrl_ops,
+
+-- 
+Regards,
+
+Laurent Pinchart
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
