@@ -1,91 +1,48 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [alsa-devel] [PATCH/RFC 12/14] ASoC: samsung: i2s: Add clock
- provider for the I2S internal clocks
-Date: Fri, 12 Dec 2014 20:03:42 +0000
-Message-ID: <20141212200342.GV11764@sirena.org.uk>
-References: <1418319952-10163-1-git-send-email-s.nawrocki@samsung.com>
- <1418319952-10163-13-git-send-email-s.nawrocki@samsung.com>
+From: =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niso@kth.se>
+Subject: [PATCH 4/4] ARM: shmobile: emev2-kzm9d: Add PFC information for uart1
+Date: Fri, 12 Dec 2014 21:01:37 +0100
+Message-ID: <1418414497-23741-5-git-send-email-niso@kth.se>
+References: <1418414497-23741-1-git-send-email-niso@kth.se>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="v0nHJk0tUyruD8GZ"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1418319952-10163-13-git-send-email-s.nawrocki@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, padma.v@samsung.com, sbkim73@samsung.com, drake@endlessm.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1418414497-23741-1-git-send-email-niso@kth.se>
+Sender: linux-sh-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, laurent.pinchart@ideasonboard.com, linus.walleij@linaro.org
+Cc: devicetree@vger.kernel.org, linux-sh@vger.kernel.org, magnus.damm@gmail.com, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niso@kth.se>
 List-Id: devicetree@vger.kernel.org
 
+Configure the pinmux on kzm9d to use the serial connector for uart1.
 
---v0nHJk0tUyruD8GZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Niklas S=C3=B6derlund <niso@kth.se>
+---
+ arch/arm/boot/dts/emev2-kzm9d.dts | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-On Thu, Dec 11, 2014 at 06:45:50PM +0100, Sylwester Nawrocki wrote:
+diff --git a/arch/arm/boot/dts/emev2-kzm9d.dts b/arch/arm/boot/dts/emev=
+2-kzm9d.dts
+index 667d323..daf19bf 100644
+--- a/arch/arm/boot/dts/emev2-kzm9d.dts
++++ b/arch/arm/boot/dts/emev2-kzm9d.dts
+@@ -94,3 +94,16 @@
+ 		vdd33a-supply =3D <&reg_3p3v>;
+ 	};
+ };
++
++&pfc {
++	uart1_pins: uart@e1030000 {
++		renesas,groups =3D "uart1_rx", "uart1_tx", "uart1_ctsb", "uart1_rtsb=
+";
++		renesas,function =3D "uart1";
++	};
++};
++
++&uart1 {
++	pinctrl-0 =3D <&uart1_pins>;
++	pinctrl-names =3D "default";
++	status =3D "okay";
++};
+--=20
+2.1.3
 
-> +Optional Properties:
->=20
->  - samsung,idma-addr: Internal DMA register base address of the audio
->    sub system(used in secondary sound source).
->  - pinctrl-0: Should specify pin control groups used for this controller.
->  - pinctrl-names: Should contain only one value - "default".
-> +- #clock-cells: should be 1, this property must be present if the I2S de=
-vice
-> +  is a clock provider in terms of the common clock bindings, described in
-> +  ../clock/clock-bindings.txt.
-> +- clock-output-names: from the common clock bindings, names of the CDCLK
-> +  I2S output clocks, suggested values are "i2s_cdclk0", "i2s_cdclk1",
-> +  "i2s_cdclk3" for the I2S0, I2S1, I2S2 devices recpectively.
-> +
-
-Why not make this mandatory going forwards?  You can add a note saying
-that older DTs may not have it.
-
-> +The assignment of indices for the I2Sx clock provider is as follows:
-> + 0 - the CDCLK (CODECLKO) gate clock,
-> + 1 - the RCLK prescaler divider clock (corresponding to the IISPSR regis=
-ter),
-> + 2 - the RCLKSRC mux clock (corresponding to RCLKSRC bit in register IIS=
-MOD).
-
-Why use the indicies here, they only seem to add obscurity?
-
-> +		clk_put(rclksrc);
-> +	}
-> +	/*
-
-Missing blank line.
-
-> +	 * Register the mux and div clocks only if both source clocks
-> +	 * are available, i.e. for the I2S0 instance and versions with
-> +	 * QUIRK_NO_MUXPSR quirk not set.
-> +	 */
-
-Why not proceed even if one is missing?  This repeats in words the if
-statement but doesn't explain why we're doing this.
-
-> +	ret =3D of_clk_add_provider(dev->of_node, of_clk_src_onecell_get,
-> +				  &i2s->clk_data);
-> +	if (ret < 0) {
-> +		dev_err(dev, "failed to add clock provider\n");
-
-Best practice is to print the error code.
-
---v0nHJk0tUyruD8GZ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUi0odAAoJECTWi3JdVIfQTfwIAIJajeCegYrDXaw7DIEQYqc4
-PiOw9203Q4y6wO2dF7QMoe5DP7TkPa/gIkjPPqX7njVwen3f3XdvbS8jFcE9gJdq
-E+fc1mQdaLJXk8EzZt+e3xDDlCfTiEAUivHYC3SOyAddp5ZPTTS3BLZ3YJ41krxp
-sbsuP9QCARSNnYlgW2XKo8SA2ykDlRIHIQzzRyLrELI5+h1moo+sdl3ruKLjFdsR
-38SkFUnbHzrWi3Uf7i/XujQ6DlNYs8v/BSbGZrVzQJ3OiKEwmuNBGwjdNOrUxOXP
-cGeDG3gRQpwiI2vqc7s5PI2uO+tVLwYKQjbiXEVunrtq+pM3EwtQ/TLu0AT9q+4=
-=nQVx
------END PGP SIGNATURE-----
-
---v0nHJk0tUyruD8GZ--
