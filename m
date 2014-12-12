@@ -1,37 +1,240 @@
-From: =?ISO-8859-1?Q?S=F8ren?= Andersen <san-KGKi0rHxN0fKWSuBa/xFvVpr/1R2p/CL@public.gmane.org>
-Subject: [patch 2/4] rtc: pcf85063 Add support for different qaurtz
-Date: Fri, 12 Dec 2014 17:58:09 +0100
-Message-ID: <1418403489.4555.14.camel@sanws1.rosetechnology.dk>
+From: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 2/4] PCI: iproc: Add Broadcom iProc PCIe driver
+Date: Fri, 12 Dec 2014 09:08:48 -0800
+Message-ID: <548B2120.4080207@broadcom.com>
+References: <1418351817-14898-3-git-send-email-rjui@broadcom.com> <2190666.DfrpWiLTCc@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2190666.DfrpWiLTCc@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Soeren Andersen <san at rosetechnology.dk>
----
- Documentation/devicetree/bindings/i2c/trivial-devices.txt | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-index 605dcca..6b5a8a5 100644
---- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-+++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-@@ -71,7 +71,6 @@ nuvoton,npct501		i2c trusted platform module (TPM)
- nxp,pca9556		Octal SMBus and I2C registered interface
- nxp,pca9557		8-bit I2C-bus and SMBus I/O port with reset
- nxp,pcf8563		Real-time clock/calendar
--nxp,pcf85063		Tiny Real-Time Clock
- ovti,ov5642		OV5642: Color CMOS QSXGA (5-megapixel) Image Sensor with
-OmniBSI and Embedded TrueFocus
- pericom,pt7c4338	Real-time Clock Module
- plx,pex8648		48-Lane, 12-Port PCI Express Gen 2 (5.0 GT/s) Switch
 
 
+On 12/12/2014 4:29 AM, Arnd Bergmann wrote:
+> On Thursday 11 December 2014 18:36:55 Ray Jui wrote:
+>> Add initial version of the Broadcom iProc PCIe driver. This driver
+>> has been tested on NSP and Cygnus and is expected to work on all iProc
+>> family of SoCs that deploys the same PCIe host controller
+>>
+>> The driver also supports MSI
+>
+> Overall, I'm not convinced it's worth continuing this driver. While it
+> supports more features, Hauke's version seemed much cleaner, and I'd
+> rather see his driver merged and have you add the additional features.
+>
+> Why did you drop him from Cc again?
+>
+In fact, Hauke is on the "to" list of all v2 patchset that I sent out. I 
+added him to the "to" list because he mentioned during v1 patchset 
+review that he'll help to test this on North Star.
+
+Doesn't Hauke's driver depends on BCMA? In that case, how does it work 
+on the SoCs that do not have the IP block to support BCMA?
+
+>> +
+>> +#define MII_MGMT_CTRL_OFFSET         0x000
+>> +#define MII_MGMT_CTRL_MDCDIV_SHIFT   0
+>> +#define MII_MGMT_CTRL_PRE_SHIFT      7
+>> +#define MII_MGMT_CTRL_BUSY_SHIFT     8
+>> +#define MII_MGMT_CTRL_EXT_SHIFT      9
+>> +#define MII_MGMT_CTRL_BTP_SHIFT      10
+>
+> As mentioned, better move all the MII handling to a separate driver.
+>
+Agreed.
+
+>> +struct iproc_pcie;
+>> +
+>> +/**
+>> + * iProc MSI
+>> + * @pcie: pointer to the iProc PCIe data structure
+>> + * @irq_in_use: bitmap of MSI IRQs that are in use
+>> + * @domain: MSI IRQ domain
+>> + * @chip: MSI controller
+>> + * @eq_page: memory page to store the iProc MSI event queue
+>> + * @msi_page: memory page for MSI posted writes
+>> + */
+>> +struct iproc_msi {
+>> +	struct iproc_pcie *pcie;
+>> +	DECLARE_BITMAP(irq_in_use, MAX_IRQS);
+>> +	struct irq_domain *domain;
+>> +	struct msi_controller chip;
+>> +	unsigned long eq_page;
+>> +	unsigned long msi_page;
+>> +};
+>
+> Same for MSI. I would assume that you will eventually have
+> chips with this PCI core and a GICv2m or GICv3, so it would
+> be better to reference the MSI controller through an msi-parent
+> reference that can be replaced with a reference to the GIC.
+>
+I'll need to look into this in more details.
+
+>> +
+>> +	u32 phy_addr;
+>
+> struct phy *phy;
+>
+>> +	int irqs[MAX_IRQS];
+>
+> Please name these irqs individually according to what they do.
+> The MSI IRQ should of course be moved to the MSI driver.
+>
+Will investigate more on MSI.
+
+>> +	struct iproc_msi msi;
+>> +};
+>> +
+>> +static inline int mdio_wait_idle(struct iproc_pcie *pcie)
+>> +{
+>> +	int timeout = MDIO_TIMEOUT_USEC;
+>> +
+>> +	while (readl(pcie->mii + MII_MGMT_CTRL_OFFSET) &
+>> +			(1 << MII_MGMT_CTRL_BUSY_SHIFT)) {
+>> +		udelay(1);
+>> +		if (timeout-- <= 0)
+>> +			return -EBUSY;
+>> +	}
+>> +	return 0;
+>> +}
+>
+> Better use ktime_get()/ktime_add_ns()/ktime_before() loop here
+> to do an accurate timeout.
+>
+Sure. Will do that in the PHY driver.
+
+>> +static void iproc_pcie_reset(struct iproc_pcie *pcie)
+>> +{
+>> +	u32 val;
+>> +
+>> +	/* send a downstream reset */
+>> +	val = EP_MODE_SURVIVE_PERST | RC_PCIE_RST_OUTPUT;
+>> +	writel(val, pcie->reg + CLK_CONTROL_OFFSET);
+>> +	udelay(250);
+>> +	val &= ~EP_MODE_SURVIVE_PERST;
+>> +	writel(val, pcie->reg + CLK_CONTROL_OFFSET);
+>> +	mdelay(250);
+>> +}
+>
+> 250ms delay is not acceptable. Please find a way to call this function
+> from a context in which you can sleep.
+>
+This is called from driver probe, where runs in the process context 
+where you can sleep. Is my understanding correct? I can change mdelay to 
+msleep so the CPU does not waste time spinning.
+
+>> +static int iproc_pcie_check_link(struct iproc_pcie *pcie)
+>> +{
+>> +	int ret;
+>> +	u8 nlw;
+>> +	u16 pos, tmp16;
+>> +	u32 val;
+>> +	struct pci_sys_data sys;
+>> +	struct pci_bus bus;
+>> +
+>> +	val = readl(pcie->reg + PCIE_LINK_STATUS_OFFSET);
+>> +	dev_dbg(pcie->dev, "link status: 0x%08x\n", val);
+>> +
+>> +	val = readl(pcie->reg + STRAP_STATUS_OFFSET);
+>> +	dev_dbg(pcie->dev, "strap status: 0x%08x\n", val);
+>> +
+>> +	memset(&sys, 0, sizeof(sys));
+>> +	memset(&bus, 0, sizeof(bus));
+>> +
+>> +	bus.number = 0;
+>> +	bus.ops = &iproc_pcie_ops;
+>> +	bus.sysdata = &sys;
+>> +	sys.private_data = pcie;
+>> +
+>> +	ret = iproc_pci_read_conf(&bus, 0, PCI_HEADER_TYPE, 1, &val);
+>> +	if (ret != PCIBIOS_SUCCESSFUL || val != PCI_HEADER_TYPE_BRIDGE) {
+>> +		dev_err(pcie->dev, "in EP mode, val=0x08%x\n", val);
+>> +		return -EFAULT;
+>> +	}
+>
+> Remove the fake pci_bus hack and just read the config space directly.
+>
+Will look into this in more details.
+
+>> +	if (nlw == 0) {
+>> +		/* try GEN 1 link speed */
+>> +#define PCI_LINK_STATUS_CTRL_2_OFFSET 0xDC
+>> +#define PCI_TARGET_LINK_SPEED_MASK    0xF
+>> +#define PCI_TARGET_LINK_SPEED_GEN2    0x2
+>> +#define PCI_TARGET_LINK_SPEED_GEN1    0x1
+>> +		pci_bus_read_config_dword(&bus, 0,
+>> +				PCI_LINK_STATUS_CTRL_2_OFFSET, &val);
+>> +		if ((val & PCI_TARGET_LINK_SPEED_MASK) ==
+>> +				PCI_TARGET_LINK_SPEED_GEN2) {
+>> +			val &= ~PCI_TARGET_LINK_SPEED_MASK;
+>> +			val |= PCI_TARGET_LINK_SPEED_GEN1;
+>> +			pci_bus_write_config_dword(&bus, 0,
+>> +					PCI_LINK_STATUS_CTRL_2_OFFSET, val);
+>> +			pci_bus_read_config_dword(&bus, 0,
+>> +					PCI_LINK_STATUS_CTRL_2_OFFSET, &val);
+>> +			mdelay(100);
+>
+> Too much delay.
+>
+Need to confirm with the ASIC engineer. The delay may be what's needed.
+
+>> +static struct hw_pci hw;
+>
+> Put this on the stack.
+>
+>> +
+>> +	/* Get the PCI memory ranges from DT */
+>> +	for_each_of_pci_range(&parser, &range) {
+>> +		of_pci_range_to_resource(&range, np, &res);
+>> +
+>> +		switch (res.flags & IORESOURCE_TYPE_BITS) {
+>> +		case IORESOURCE_IO:
+>> +			memcpy(&pcie->io, &res, sizeof(res));
+>> +			pcie->io.name = "I/O";
+>> +			break;
+>> +
+>> +		case IORESOURCE_MEM:
+>> +			memcpy(&pcie->mem, &res, sizeof(res));
+>> +			pcie->mem.name = "MEM";
+>> +			break;
+>> +		}
+>> +	}
+>
+> I think you need to request all the resources here, including the physical
+> I/O space window.
+>
+Okay.
+
+>> +static struct platform_driver iproc_pcie_driver = {
+>> +	.driver = {
+>> +		.owner = THIS_MODULE,
+>> +		.name = "iproc-pcie",
+>> +		.of_match_table =
+>> +		   of_match_ptr(iproc_pcie_of_match_table),
+>> +	},
+>> +};
+>
+> Make this a bcma_driver.
+>
+Cannot be a bcma driver. Reason explained above and in PATCH v2 1/4 emails.
+
+>> +static int __init iproc_pcie_init(void)
+>> +{
+>> +	return platform_driver_probe(&iproc_pcie_driver,
+>> +			iproc_pcie_probe);
+>> +}
+>> +subsys_initcall(iproc_pcie_init);
+>
+> module_init()? Doesn't seem necessary to have this early.
+>
+> 	Arnd
+>
+Will look into this. Forgot why we use subsys_initcall here...
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
