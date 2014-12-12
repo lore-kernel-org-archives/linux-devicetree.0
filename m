@@ -1,47 +1,47 @@
-From: =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niso@kth.se>
-Subject: [PATCH 0/4] sh-pfc: Add emev2 pinmux support
-Date: Fri, 12 Dec 2014 21:01:33 +0100
-Message-ID: <1418414497-23741-1-git-send-email-niso@kth.se>
+From: =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niso-UNjuZkX4dYU@public.gmane.org>
+Subject: [PATCH 1/4] sh-pfc: add macro to define pinmux without function
+Date: Fri, 12 Dec 2014 21:01:34 +0100
+Message-ID: <1418414497-23741-2-git-send-email-niso@kth.se>
+References: <1418414497-23741-1-git-send-email-niso@kth.se>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-sh-owner@vger.kernel.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, laurent.pinchart@ideasonboard.com, linus.walleij@linaro.org
-Cc: devicetree@vger.kernel.org, linux-sh@vger.kernel.org, magnus.damm@gmail.com, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niso@kth.se>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1418414497-23741-1-git-send-email-niso-UNjuZkX4dYU@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niso-UNjuZkX4dYU@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Greetings,
+Used to define pinmux configurations where the pinmux function have no
+representation in the configuration registers but instead solely depend=
+s
+on a group selection.
 
-This patchset introduces pinmux support for the EMMA Mobile EV2 board t=
-o
-the sh-pfc pin-controller driver. Devicetree bindings for gpio and the
-populated serial connector are also defined in 3/4 and 4/4.
+Signed-off-by: Niklas S=C3=B6derlund <niso-UNjuZkX4dYU@public.gmane.org>
+---
+ drivers/pinctrl/sh-pfc/sh_pfc.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Comments are welcome!
-
-Regards
-// Niklas
-
-Niklas S=C3=B6derlund (4):
-  sh-pfc: add macro to define pinmux without function
-  sh-pfc: Add emev2 pinmux support
-  ARM: shmobile: emev2: Add PFC information to emev2.dtsi
-  ARM: shmobile: emev2-kzm9d: Add PFC information for uart1
-
- .../bindings/pinctrl/renesas,pfc-pinctrl.txt       |    1 +
- arch/arm/boot/dts/emev2-kzm9d.dts                  |   13 +
- arch/arm/boot/dts/emev2.dtsi                       |   11 +
- drivers/pinctrl/sh-pfc/Kconfig                     |    5 +
- drivers/pinctrl/sh-pfc/Makefile                    |    1 +
- drivers/pinctrl/sh-pfc/core.c                      |    9 +
- drivers/pinctrl/sh-pfc/core.h                      |    1 +
- drivers/pinctrl/sh-pfc/pfc-emev2.c                 | 1915 ++++++++++++=
-++++++++
- drivers/pinctrl/sh-pfc/sh_pfc.h                    |    2 +
- 9 files changed, 1958 insertions(+)
- create mode 100644 drivers/pinctrl/sh-pfc/pfc-emev2.c
-
---
+diff --git a/drivers/pinctrl/sh-pfc/sh_pfc.h b/drivers/pinctrl/sh-pfc/s=
+h_pfc.h
+index 5b72831..c837286 100644
+--- a/drivers/pinctrl/sh-pfc/sh_pfc.h
++++ b/drivers/pinctrl/sh-pfc/sh_pfc.h
+@@ -167,6 +167,8 @@ struct sh_pfc_soc_info {
+ 	PINMUX_DATA(fn##_MARK, FN_##fn, FN_##ipsr)
+ #define PINMUX_IPSR_NOGM(ispr, fn, ms)					\
+ 	PINMUX_DATA(fn##_MARK, FN_##fn, FN_##ms)
++#define PINMUX_IPSR_NOFN(ipsr, fn, ms)					\
++	PINMUX_DATA(fn##_MARK, FN_##ipsr, FN_##ms)
+ #define PINMUX_IPSR_MSEL(ipsr, fn, ms)					\
+ 	PINMUX_DATA(fn##_MARK, FN_##fn, FN_##ipsr, FN_##ms)
+ #define PINMUX_IPSR_MODSEL_DATA(ipsr, fn, ms)				\
+--=20
 2.1.3
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
