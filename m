@@ -1,231 +1,78 @@
 From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH 2/3] TTY: add slave driver to power-on device via
- =?iso-8859-1?Q?a=0D?= regulator.
-Date: Fri, 12 Dec 2014 12:05:42 +0000
-Message-ID: <20141212120542.E4CB8C40932@trevor.secretlab.ca>
-References: <20141211214801.4127.93914.stgit@notabene.brown>
-	<20141211215944.4127.4186.stgit@notabene.brown>
+Subject: Re: [PATCH] staging:board: fix build errors and warnings
+Date: Fri, 12 Dec 2014 11:36:10 +0000
+Message-ID: <20141212113610.C88F5C40872@trevor.secretlab.ca>
+References: <1418059449-15108-1-git-send-email-tsunghan.tw@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141211215944.4127.4186.stgit@notabene.brown>
+In-Reply-To: <1418059449-15108-1-git-send-email-tsunghan.tw@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: NeilBrown <neilb@suse.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Jiri Slaby <jslaby@suse.cz>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Tsung-Han Lin <tsunghan.tw@gmail.com>, gregkh@linuxfoundation.org
+Cc: robh+dt@kernel.org, horms+renesas@verge.net.au, damm+renesas@opensource.se, devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 12 Dec 2014 08:59:44 +1100
-, NeilBrown <neilb@suse.de>
+On Tue,  9 Dec 2014 01:24:09 +0800
+, Tsung-Han Lin <tsunghan.tw@gmail.com>
  wrote:
-> The regulator is identified in devicetree as 'vdd-supply'
+> Add dummy implementation of 'of_find_all_nodes',
+> and remove the unnecessary 'of_can_translate_address',
+> which is already removed in commit
+> d9c6866be8a145e32da616d8dcbae806032d75b5 ("of: kill off
+> of_can_translate_address"), to fix the build errors and warnings
+> found by sparse.
 > 
-> Signed-off-by: NeilBrown <neilb@suse.de>
+> Signed-off-by: Tsung-Han Lin <tsunghan.tw@gmail.com>
+
+???
+
+This code is just weird. If CONFIG_OF is not enabled, then board.c
+shouldn't be compiled at all. You can do this with a patch to the
+Kconfig and Makefile. Also, if the functions in
+drivers/staging/board/board.c are needed for driver support, then please
+propose a patch that moves them in into drivers/of/base.c so that they
+can be reviewed properly. They are so short and simple that fixing them
+up as part of the normal review process should be sufficient.
+
+As for fixing the compile error, please drop the change to
+include/linux/of.h and resubmit.
+
+g.
+
+
 > ---
->  .../devicetree/bindings/serial/slave-reg.txt       |   18 ++++
->  drivers/tty/Kconfig                                |    2 
->  drivers/tty/Makefile                               |    1 
->  drivers/tty/slaves/Kconfig                         |   12 ++
->  drivers/tty/slaves/Makefile                        |    2 
->  drivers/tty/slaves/tty-reg.c                       |  102 ++++++++++++++++++++
->  6 files changed, 137 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/serial/slave-reg.txt
->  create mode 100644 drivers/tty/slaves/Kconfig
->  create mode 100644 drivers/tty/slaves/Makefile
->  create mode 100644 drivers/tty/slaves/tty-reg.c
+>  drivers/staging/board/board.c | 3 +--
+>  include/linux/of.h            | 5 +++++
+>  2 files changed, 6 insertions(+), 2 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/serial/slave-reg.txt b/Documentation/devicetree/bindings/serial/slave-reg.txt
-> new file mode 100644
-> index 000000000000..7896bce8dfe4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/serial/slave-reg.txt
-> @@ -0,0 +1,18 @@
-> +Regulator powered UART-attached device
-> +
-> +Required properties:
-> +- compatible: "tty,regulator"
-> +- vdd-supply: regulator to power the device
-
-The binding should be specfic to the device. Trying to do a generic
-binding like this doesn't scale well. Do a specific binding for the
-bluetooth chipset and make that driver understand how to do PM
-operations on that device. That way each kind of tty slave device driver
-can have its own set of PM mechanism which may be completely different.
-
-> +This is listed as a child node of a UART.  When the
-> +UART is opened, the device is powered.
-
-Another thought, what if I *don't* want the device to be powered
-merely because the uart is opened?
-
-> +
-> +Example:
-> +
-> +&uart1 {
-> +	bluetooth {
-> +		compatible = "tty,regulator";
-> +		vdd-supply = <&vaux4>;
-> +	};
-> +};
-> diff --git a/drivers/tty/Kconfig b/drivers/tty/Kconfig
-> index b24aa010f68c..ea3383c71701 100644
-> --- a/drivers/tty/Kconfig
-> +++ b/drivers/tty/Kconfig
-> @@ -419,4 +419,6 @@ config DA_CONSOLE
->  	help
->  	  This enables a console on a Dash channel.
+> diff --git a/drivers/staging/board/board.c b/drivers/staging/board/board.c
+> index 6050fbdfd31f..d5a6abc84519 100644
+> --- a/drivers/staging/board/board.c
+> +++ b/drivers/staging/board/board.c
+> @@ -11,8 +11,7 @@ static bool find_by_address(u64 base_address)
+>  	struct resource res;
 >  
-> +source drivers/tty/slaves/Kconfig
-> +
->  endif # TTY
-> diff --git a/drivers/tty/Makefile b/drivers/tty/Makefile
-> index 58ad1c05b7f8..45957d671e33 100644
-> --- a/drivers/tty/Makefile
-> +++ b/drivers/tty/Makefile
-> @@ -13,6 +13,7 @@ obj-$(CONFIG_R3964)		+= n_r3964.o
->  obj-y				+= vt/
->  obj-$(CONFIG_HVC_DRIVER)	+= hvc/
->  obj-y				+= serial/
-> +obj-$(CONFIG_TTY_SLAVE)		+= slaves/
+>  	while (dn) {
+> -		if (of_can_translate_address(dn)
+> -		    && !of_address_to_resource(dn, 0, &res)) {
+> +		if (!of_address_to_resource(dn, 0, &res)) {
+>  			if (res.start == base_address) {
+>  				of_node_put(dn);
+>  				return true;
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index dfde07e77a63..c2c5021c1ee4 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -616,6 +616,11 @@ static inline const char *of_prop_next_string(struct property *prop,
+>  	return NULL;
+>  }
 >  
->  # tty drivers
->  obj-$(CONFIG_AMIGA_BUILTIN_SERIAL) += amiserial.o
-> diff --git a/drivers/tty/slaves/Kconfig b/drivers/tty/slaves/Kconfig
-> new file mode 100644
-> index 000000000000..2dd1acf80f8c
-> --- /dev/null
-> +++ b/drivers/tty/slaves/Kconfig
-> @@ -0,0 +1,12 @@
-> +menuconfig TTY_SLAVE
-> +	bool "TTY slave devices"
-> +	help
-> +	 Devices which attach via a uart, but need extra
-> +	 driver support for power management etc.
-> +
-> +if TTY_SLAVE
-> +
-> +config TTY_SLAVE_REGULATOR
-> +	tristate "TTY slave device powered by regulator"
-> +
-> +endif
-> diff --git a/drivers/tty/slaves/Makefile b/drivers/tty/slaves/Makefile
-> new file mode 100644
-> index 000000000000..e636bf49f1cc
-> --- /dev/null
-> +++ b/drivers/tty/slaves/Makefile
-> @@ -0,0 +1,2 @@
-> +
-> +obj-$(CONFIG_TTY_SLAVE_REGULATOR) += tty-reg.o
-> diff --git a/drivers/tty/slaves/tty-reg.c b/drivers/tty/slaves/tty-reg.c
-> new file mode 100644
-> index 000000000000..613f8b10967c
-> --- /dev/null
-> +++ b/drivers/tty/slaves/tty-reg.c
-> @@ -0,0 +1,102 @@
-> +/*
-> + * tty-reg:
-> + *   Support for any device which needs a regulator turned on
-> + *   when a tty is opened.
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/slab.h>
-> +#include <linux/err.h>
-> +#include <linux/regulator/consumer.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/tty.h>
-> +
-> +struct tty_reg_data {
-> +	struct regulator *reg;
-> +	bool	reg_enabled;
-> +};
-> +
-> +static int tty_reg_runtime_resume(struct device *slave)
+> +static inline struct device_node *of_find_all_nodes(struct device_node *prev)
 > +{
-> +	struct tty_reg_data *data = dev_get_drvdata(slave);
-> +	if (!data->reg_enabled &&
-> +	    regulator_enable(data->reg) == 0) {
-> +		dev_dbg(slave, "power on\n");
-> +		data->reg_enabled = true;
-> +	}
-> +	return 0;
+> +	return NULL;
 > +}
 > +
-> +static int tty_reg_runtime_suspend(struct device *slave)
-> +{
-> +	struct tty_reg_data *data = dev_get_drvdata(slave);
-> +
-> +	if (data->reg_enabled &&
-> +	    regulator_disable(data->reg) == 0) {
-> +		dev_dbg(slave, "power off\n");
-> +		data->reg_enabled = false;
-> +	}
-> +	return 0;
-> +}
-> +
-> +static int tty_reg_probe(struct platform_device *pdev)
-> +{
-> +	struct tty_reg_data *data;
-> +	struct regulator *reg;
-> +	int err;
-> +
-> +	err = -ENODEV;
-> +	if (pdev->dev.parent == NULL)
-> +		goto out;
-> +	reg = devm_regulator_get(&pdev->dev, "vdd");
-> +	err = PTR_ERR(reg);
-> +	if (IS_ERR(reg))
-> +		goto out;
-> +
-> +	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-> +	err = -ENOMEM;
-> +	if (!data)
-> +		goto out;
-> +	data->reg = reg;
-> +	data->reg_enabled = false;
-> +	pm_runtime_enable(&pdev->dev);
-> +	platform_set_drvdata(pdev, data);
-> +	err = 0;
-> +out:
-> +	return err;
-> +}
-> +
-> +static struct of_device_id tty_reg_dt_ids[] = {
-> +	{ .compatible = "tty,regulator", },
-> +	{}
-> +};
-> +
-> +static const struct dev_pm_ops tty_reg_pm_ops = {
-> +	SET_RUNTIME_PM_OPS(tty_reg_runtime_suspend,
-> +			   tty_reg_runtime_resume, NULL)
-> +};
-> +
-> +static struct platform_driver tty_reg_driver = {
-> +	.driver.name	= "tty-regulator",
-> +	.driver.owner	= THIS_MODULE,
-> +	.driver.of_match_table = tty_reg_dt_ids,
-> +	.driver.pm	= &tty_reg_pm_ops,
-> +	.probe		= tty_reg_probe,
-> +};
-
-Instead of creating a full driver that binds against the device, would
-it not be better to provide a library of stock PM operations that other
-device drivers (like the bluetooth driver) can use as-is instead of
-defining its own?
-
-> +
-> +static int __init tty_reg_init(void)
-> +{
-> +	return platform_driver_register(&tty_reg_driver);
-> +}
-> +module_init(tty_reg_init);
-> +
-> +static void __exit tty_reg_exit(void)
-> +{
-> +	platform_driver_unregister(&tty_reg_driver);
-> +}
-> +module_exit(tty_reg_exit);
-> +
-> +MODULE_AUTHOR("NeilBrown <neilb@suse.de>");
-> +MODULE_DESCRIPTION("Serial port device which requires a regulator when open.");
-> +MODULE_LICENSE("GPL v2");
-> 
+>  #define of_match_ptr(_ptr)	NULL
+>  #define of_match_node(_matches, _node)	NULL
+>  #endif /* CONFIG_OF */
+> -- 
+> 2.1.0
 > 
