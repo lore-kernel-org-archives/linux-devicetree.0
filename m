@@ -1,165 +1,165 @@
 From: Kevin Cernekee <cernekee@gmail.com>
-Subject: [PATCH V5 06/23] irqchip: bcm7120-l2: Refactor driver for arbitrary IRQEN/IRQSTAT offsets
-Date: Fri, 12 Dec 2014 14:06:57 -0800
-Message-ID: <1418422034-17099-7-git-send-email-cernekee@gmail.com>
+Subject: [PATCH V5 17/23] MIPS: BMIPS: Add quirks for several Broadcom platforms
+Date: Fri, 12 Dec 2014 14:07:08 -0800
+Message-ID: <1418422034-17099-18-git-send-email-cernekee@gmail.com>
 References: <1418422034-17099-1-git-send-email-cernekee@gmail.com>
-Return-path: <linux-mips-bounce@linux-mips.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1418422034-17099-1-git-send-email-cernekee@gmail.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+Sender: linux-kernel-owner@vger.kernel.org
 To: ralf@linux-mips.org
 Cc: f.fainelli@gmail.com, tglx@linutronix.de, jason@lakedaemon.net, jogo@openwrt.org, arnd@arndb.de, computersforpeace@gmail.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Currently the driver assumes that REG_BASE+0x00 is the IRQ enable mask,
-and REG_BASE+0x04 is the IRQ status mask.  This is true on BCM3384 and
-BCM7xxx, but it is not true for some of the controllers found on BCM63xx
-chips.  So we will change a couple of key assumptions:
-
- - Don't assume that both the IRQEN and IRQSTAT registers will be
-   covered by a single ioremap() operation.
-
- - Don't assume any particular ordering (IRQSTAT might show up before
-   IRQEN on some chips).
-
- - For an L2 controller with >=64 IRQs, don't assume that every
-   IRQEN/IRQSTAT pair will use the same register spacing.
-
-This patch changes the "plumbing" but doesn't yet provide a way for users
-to instantiate a controller with arbitrary IRQEN/IRQSTAT offsets.
+A couple of chips require special handling in order to make SMP secondary
+boot and/or exception vectors work correctly.  Take care of these in
+setup.c.
 
 Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
 ---
- drivers/irqchip/irq-bcm7120-l2.c | 41 +++++++++++++++++++++++++++-------------
- 1 file changed, 28 insertions(+), 13 deletions(-)
+ arch/mips/bmips/setup.c | 101 +++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 99 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/irqchip/irq-bcm7120-l2.c b/drivers/irqchip/irq-bcm7120-l2.c
-index 8eec8e1..e8441ee 100644
---- a/drivers/irqchip/irq-bcm7120-l2.c
-+++ b/drivers/irqchip/irq-bcm7120-l2.c
-@@ -34,11 +34,15 @@
- #define IRQSTAT		0x04
+diff --git a/arch/mips/bmips/setup.c b/arch/mips/bmips/setup.c
+index ac402ed..fae800e 100644
+--- a/arch/mips/bmips/setup.c
++++ b/arch/mips/bmips/setup.c
+@@ -8,9 +8,12 @@
+  */
  
- #define MAX_WORDS	4
-+#define MAX_MAPPINGS	MAX_WORDS
- #define IRQS_PER_WORD	32
+ #include <linux/init.h>
++#include <linux/bitops.h>
+ #include <linux/bootmem.h>
+ #include <linux/clk-provider.h>
+ #include <linux/ioport.h>
++#include <linux/kernel.h>
++#include <linux/io.h>
+ #include <linux/of.h>
+ #include <linux/of_fdt.h>
+ #include <linux/of_platform.h>
+@@ -18,9 +21,92 @@
+ #include <asm/addrspace.h>
+ #include <asm/bmips.h>
+ #include <asm/bootinfo.h>
++#include <asm/cpu-type.h>
++#include <asm/mipsregs.h>
+ #include <asm/prom.h>
+ #include <asm/smp-ops.h>
+ #include <asm/time.h>
++#include <asm/traps.h>
++
++#define RELO_NORMAL_VEC		BIT(18)
++
++#define REG_BCM6328_OTP		((void __iomem *)CKSEG1ADDR(0x1000062c))
++#define BCM6328_TP1_DISABLED	BIT(9)
++
++static const unsigned long kbase = VMLINUX_LOAD_ADDRESS & 0xfff00000;
++
++struct bmips_quirk {
++	const char		*compatible;
++	void			(*quirk_fn)(void);
++};
++
++static void kbase_setup(void)
++{
++	__raw_writel(kbase | RELO_NORMAL_VEC,
++		     BMIPS_GET_CBR() + BMIPS_RELO_VECTOR_CONTROL_1);
++	ebase = kbase;
++}
++
++static void bcm3384_viper_quirks(void)
++{
++	/*
++	 * Some experimental CM boxes are set up to let CM own the Viper TP0
++	 * and let Linux own TP1.  This requires moving the kernel
++	 * load address to a non-conflicting region (e.g. via
++	 * CONFIG_PHYSICAL_START) and supplying an alternate DTB.
++	 * If we detect this condition, we need to move the MIPS exception
++	 * vectors up to an area that we own.
++	 *
++	 * This is distinct from the OTHER special case mentioned in
++	 * smp-bmips.c (boot on TP1, but enable SMP, then TP0 becomes our
++	 * logical CPU#1).  For the Viper TP1 case, SMP is off limits.
++	 *
++	 * Also note that many BMIPS435x CPUs do not have a
++	 * BMIPS_RELO_VECTOR_CONTROL_1 register, so it isn't safe to just
++	 * write VMLINUX_LOAD_ADDRESS into that register on every SoC.
++	 */
++	board_ebase_setup = &kbase_setup;
++	bmips_smp_enabled = 0;
++}
++
++static void bcm63xx_fixup_cpu1(void)
++{
++	/*
++	 * The bootloader has set up the CPU1 reset vector at
++	 * 0xa000_0200.
++	 * This conflicts with the special interrupt vector (IV).
++	 * The bootloader has also set up CPU1 to respond to the wrong
++	 * IPI interrupt.
++	 * Here we will start up CPU1 in the background and ask it to
++	 * reconfigure itself then go back to sleep.
++	 */
++	memcpy((void *)0xa0000200, &bmips_smp_movevec, 0x20);
++	__sync();
++	set_c0_cause(C_SW0);
++	cpumask_set_cpu(1, &bmips_booted_mask);
++}
++
++static void bcm6328_quirks(void)
++{
++	/* Check CPU1 status in OTP (it is usually disabled) */
++	if (__raw_readl(REG_BCM6328_OTP) & BCM6328_TP1_DISABLED)
++		bmips_smp_enabled = 0;
++	else
++		bcm63xx_fixup_cpu1();
++}
++
++static void bcm6368_quirks(void)
++{
++	bcm63xx_fixup_cpu1();
++}
++
++static const struct bmips_quirk bmips_quirk_list[] = {
++	{ "brcm,bcm3384-viper",		&bcm3384_viper_quirks		},
++	{ "brcm,bcm33843-viper",	&bcm3384_viper_quirks		},
++	{ "brcm,bcm6328",		&bcm6328_quirks			},
++	{ "brcm,bcm6368",		&bcm6368_quirks			},
++	{ },
++};
  
- struct bcm7120_l2_intc_data {
- 	unsigned int n_words;
--	void __iomem *base[MAX_WORDS];
-+	void __iomem *map_base[MAX_MAPPINGS];
-+	void __iomem *pair_base[MAX_WORDS];
-+	int en_offset[MAX_WORDS];
-+	int stat_offset[MAX_WORDS];
- 	struct irq_domain *domain;
- 	bool can_wake;
- 	u32 irq_fwd_mask[MAX_WORDS];
-@@ -61,7 +65,8 @@ static void bcm7120_l2_intc_irq_handle(unsigned int irq, struct irq_desc *desc)
- 		int hwirq;
- 
- 		irq_gc_lock(gc);
--		pending = irq_reg_readl(gc, IRQSTAT) & gc->mask_cache;
-+		pending = irq_reg_readl(gc, b->stat_offset[idx]) &
-+					    gc->mask_cache;
- 		irq_gc_unlock(gc);
- 
- 		for_each_set_bit(hwirq, &pending, IRQS_PER_WORD) {
-@@ -76,21 +81,24 @@ static void bcm7120_l2_intc_irq_handle(unsigned int irq, struct irq_desc *desc)
- static void bcm7120_l2_intc_suspend(struct irq_data *d)
+ void __init prom_init(void)
  {
- 	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
-+	struct irq_chip_type *ct = irq_data_get_chip_type(d);
- 	struct bcm7120_l2_intc_data *b = gc->private;
+@@ -53,7 +139,8 @@ void __init plat_time_init(void)
  
- 	irq_gc_lock(gc);
- 	if (b->can_wake)
--		irq_reg_writel(gc, gc->mask_cache | gc->wake_active, IRQEN);
-+		irq_reg_writel(gc, gc->mask_cache | gc->wake_active,
-+			       ct->regs.mask);
- 	irq_gc_unlock(gc);
+ void __init plat_mem_setup(void)
+ {
+-	void *dtb = __dtb_start;
++	void *dtb;
++	const struct bmips_quirk *q;
+ 
+ 	set_io_port_base(0);
+ 	ioport_resource.start = 0;
+@@ -62,10 +149,20 @@ void __init plat_mem_setup(void)
+ 	/* intended to somewhat resemble ARM; see Documentation/arm/Booting */
+ 	if (fw_arg0 == 0 && fw_arg1 == 0xffffffff)
+ 		dtb = phys_to_virt(fw_arg2);
++	else if (__dtb_start != __dtb_end)
++		dtb = (void *)__dtb_start;
++	else
++		panic("no dtb found");
+ 
+ 	__dt_setup_arch(dtb);
+-
+ 	strlcpy(arcs_cmdline, boot_command_line, COMMAND_LINE_SIZE);
++
++	for (q = bmips_quirk_list; q->quirk_fn; q++) {
++		if (of_flat_dt_is_compatible(of_get_flat_dt_root(),
++					     q->compatible)) {
++			q->quirk_fn();
++		}
++	}
  }
  
- static void bcm7120_l2_intc_resume(struct irq_data *d)
- {
- 	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
-+	struct irq_chip_type *ct = irq_data_get_chip_type(d);
- 
- 	/* Restore the saved mask */
- 	irq_gc_lock(gc);
--	irq_reg_writel(gc, gc->mask_cache, IRQEN);
-+	irq_reg_writel(gc, gc->mask_cache, ct->regs.mask);
- 	irq_gc_unlock(gc);
- }
- 
-@@ -137,9 +145,14 @@ int __init bcm7120_l2_intc_of_init(struct device_node *dn,
- 		return -ENOMEM;
- 
- 	for (idx = 0; idx < MAX_WORDS; idx++) {
--		data->base[idx] = of_iomap(dn, idx);
--		if (!data->base[idx])
-+		data->map_base[idx] = of_iomap(dn, idx);
-+		if (!data->map_base[idx])
- 			break;
-+
-+		data->pair_base[idx] = data->map_base[idx];
-+		data->en_offset[idx] = IRQEN;
-+		data->stat_offset[idx] = IRQSTAT;
-+
- 		data->n_words = idx + 1;
- 	}
- 	if (!data->n_words) {
-@@ -157,7 +170,8 @@ int __init bcm7120_l2_intc_of_init(struct device_node *dn,
- 	if (ret == 0 || ret == -EINVAL) {
- 		for (idx = 0; idx < data->n_words; idx++)
- 			__raw_writel(data->irq_fwd_mask[idx],
--				     data->base[idx] + IRQEN);
-+				     data->pair_base[idx] +
-+				     data->en_offset[idx]);
- 	} else {
- 		/* property exists but has the wrong number of words */
- 		pr_err("invalid int-fwd-mask property\n");
-@@ -215,11 +229,12 @@ int __init bcm7120_l2_intc_of_init(struct device_node *dn,
- 		gc = irq_get_domain_generic_chip(data->domain, irq);
- 
- 		gc->unused = 0xffffffff & ~data->irq_map_mask[idx];
--		gc->reg_base = data->base[idx];
- 		gc->private = data;
- 		ct = gc->chip_types;
- 
--		ct->regs.mask = IRQEN;
-+		gc->reg_base = data->pair_base[idx];
-+		ct->regs.mask = data->en_offset[idx];
-+
- 		ct->chip.irq_mask = irq_gc_mask_clr_bit;
- 		ct->chip.irq_unmask = irq_gc_mask_set_bit;
- 		ct->chip.irq_ack = irq_gc_noop;
-@@ -237,16 +252,16 @@ int __init bcm7120_l2_intc_of_init(struct device_node *dn,
- 	}
- 
- 	pr_info("registered BCM7120 L2 intc (mem: 0x%p, parent IRQ(s): %d)\n",
--			data->base[0], num_parent_irqs);
-+			data->map_base[0], num_parent_irqs);
- 
- 	return 0;
- 
- out_free_domain:
- 	irq_domain_remove(data->domain);
- out_unmap:
--	for (idx = 0; idx < MAX_WORDS; idx++) {
--		if (data->base[idx])
--			iounmap(data->base[idx]);
-+	for (idx = 0; idx < MAX_MAPPINGS; idx++) {
-+		if (data->map_base[idx])
-+			iounmap(data->map_base[idx]);
- 	}
- 	kfree(data);
- 	return ret;
+ void __init device_tree_init(void)
 -- 
 2.1.1
