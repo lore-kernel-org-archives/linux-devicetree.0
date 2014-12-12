@@ -1,166 +1,241 @@
 From: Kevin Cernekee <cernekee@gmail.com>
-Subject: [PATCH V5 08/23] irqchip: bcm7120-l2: Add support for BCM3380-style controllers
-Date: Fri, 12 Dec 2014 14:06:59 -0800
-Message-ID: <1418422034-17099-9-git-send-email-cernekee@gmail.com>
+Subject: [PATCH V5 18/23] MIPS: BMIPS: Delete the irqchip driver from irq.c
+Date: Fri, 12 Dec 2014 14:07:09 -0800
+Message-ID: <1418422034-17099-19-git-send-email-cernekee@gmail.com>
 References: <1418422034-17099-1-git-send-email-cernekee@gmail.com>
-Return-path: <linux-mips-bounce@linux-mips.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1418422034-17099-1-git-send-email-cernekee@gmail.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+Sender: linux-kernel-owner@vger.kernel.org
 To: ralf@linux-mips.org
 Cc: f.fainelli@gmail.com, tglx@linutronix.de, jason@lakedaemon.net, jogo@openwrt.org, arnd@arndb.de, computersforpeace@gmail.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-These controllers support multiple enable/status pairs (64+ IRQs),
-can put the enable/status words at different offsets, and do not
-support multiple parent IRQs.
+BCM3384/BCM63xx can use the common drivers/irqchip/irq-bcm7120-l2.c for
+this purpose; BCM7xxx will use drivers/irqchip/irq-bcm7038-l1.c.  We no
+longer need this code under arch/mips.
 
 Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
 ---
- .../interrupt-controller/brcm,bcm3380-l2-intc.txt  | 41 ++++++++++++++++
- drivers/irqchip/irq-bcm7120-l2.c                   | 55 ++++++++++++++++++++--
- 2 files changed, 92 insertions(+), 4 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/brcm,bcm3380-l2-intc.txt
+ .../devicetree/bindings/mips/brcm/bcm3384-intc.txt |  37 ----
+ arch/mips/bmips/irq.c                              | 189 ++-------------------
+ 2 files changed, 17 insertions(+), 209 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/mips/brcm/bcm3384-intc.txt
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm3380-l2-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm3380-l2-intc.txt
-new file mode 100644
-index 0000000..8f48aad
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm3380-l2-intc.txt
-@@ -0,0 +1,41 @@
-+Broadcom BCM3380-style Level 1 / Level 2 interrupt controller
-+
-+This interrupt controller shows up in various forms on many BCM338x/BCM63xx
-+chipsets.  It has the following properties:
-+
-+- outputs a single interrupt signal to its interrupt controller parent
-+
-+- contains one or more enable/status word pairs, which often appear at
-+  different offsets in different blocks
-+
-+- no atomic set/clear operations
-+
-+Required properties:
-+
-+- compatible: should be "brcm,bcm3380-l2-intc"
-+- reg: specifies one or more enable/status pairs, in the following format:
-+  <enable_reg 0x4 status_reg 0x4>...
-+- interrupt-controller: identifies the node as an interrupt controller
-+- #interrupt-cells: specifies the number of cells needed to encode an interrupt
-+  source, should be 1.
-+- interrupt-parent: specifies the phandle to the parent interrupt controller
-+  this one is cascaded from
-+- interrupts: specifies the interrupt line in the interrupt-parent controller
-+  node, valid values depend on the type of parent interrupt controller
-+
-+Optional properties:
-+
-+- brcm,irq-can-wake: if present, this means the L2 controller can be used as a
-+  wakeup source for system suspend/resume.
-+
-+Example:
-+
-+irq0_intc: interrupt-controller@10000020 {
-+	compatible = "brcm,bcm3380-l2-intc";
-+	reg = <0x10000024 0x4 0x1000002c 0x4>,
-+	      <0x10000020 0x4 0x10000028 0x4>;
-+	interrupt-controller;
-+	#interrupt-cells = <1>;
-+	interrupt-parent = <&cpu_intc>;
-+	interrupts = <2>;
-+};
-diff --git a/drivers/irqchip/irq-bcm7120-l2.c b/drivers/irqchip/irq-bcm7120-l2.c
-index 6a62858..3ba5cc7 100644
---- a/drivers/irqchip/irq-bcm7120-l2.c
-+++ b/drivers/irqchip/irq-bcm7120-l2.c
-@@ -14,6 +14,7 @@
- #include <linux/slab.h>
- #include <linux/module.h>
- #include <linux/kconfig.h>
-+#include <linux/kernel.h>
- #include <linux/platform_device.h>
- #include <linux/of.h>
- #include <linux/of_irq.h>
-@@ -120,10 +121,15 @@ static int bcm7120_l2_intc_init_one(struct device_node *dn,
- 	/* For multiple parent IRQs with multiple words, this looks like:
- 	 * <irq0_w0 irq0_w1 irq1_w0 irq1_w1 ...>
- 	 */
--	for (idx = 0; idx < data->n_words; idx++)
--		data->irq_map_mask[idx] |=
--			be32_to_cpup(data->map_mask_prop +
--				     irq * data->n_words + idx);
-+	for (idx = 0; idx < data->n_words; idx++) {
-+		if (data->map_mask_prop) {
-+			data->irq_map_mask[idx] |=
-+				be32_to_cpup(data->map_mask_prop +
-+					     irq * data->n_words + idx);
-+		} else {
-+			data->irq_map_mask[idx] = 0xffffffff;
-+		}
-+	}
+diff --git a/Documentation/devicetree/bindings/mips/brcm/bcm3384-intc.txt b/Documentation/devicetree/bindings/mips/brcm/bcm3384-intc.txt
+deleted file mode 100644
+index d4e0141..0000000
+diff --git a/arch/mips/bmips/irq.c b/arch/mips/bmips/irq.c
+index fd94fe8..14552e5 100644
+--- a/arch/mips/bmips/irq.c
++++ b/arch/mips/bmips/irq.c
+@@ -3,191 +3,36 @@
+  * under the terms of the GNU General Public License version 2 as published
+  * by the Free Software Foundation.
+  *
+- * Partially based on arch/mips/ralink/irq.c
+- *
+- * Copyright (C) 2009 Gabor Juhos <juhosg@openwrt.org>
+- * Copyright (C) 2013 John Crispin <blogic@openwrt.org>
+- * Copyright (C) 2014 Kevin Cernekee <cernekee@gmail.com>
++ * Copyright (C) 2014 Broadcom Corporation
++ * Author: Kevin Cernekee <cernekee@gmail.com>
+  */
  
- 	irq_set_handler_data(parent_irq, data);
- 	irq_set_chained_handler(parent_irq, bcm7120_l2_intc_irq_handle);
-@@ -165,6 +171,37 @@ static int __init bcm7120_l2_intc_iomap_7120(struct device_node *dn,
- 	return 0;
+-#include <linux/io.h>
+-#include <linux/bitops.h>
+-#include <linux/of_platform.h>
+-#include <linux/of_address.h>
+-#include <linux/of_irq.h>
+-#include <linux/irqdomain.h>
+-#include <linux/interrupt.h>
+-#include <linux/slab.h>
+-#include <linux/spinlock.h>
++#include <linux/of.h>
++#include <linux/irqchip.h>
+ 
+ #include <asm/bmips.h>
++#include <asm/irq.h>
+ #include <asm/irq_cpu.h>
+-#include <asm/mipsregs.h>
+-
+-/* INTC register offsets */
+-#define INTC_REG_ENABLE		0x00
+-#define INTC_REG_STATUS		0x04
+-
+-#define MAX_WORDS		2
+-#define IRQS_PER_WORD		32
+-
+-struct bcm3384_intc {
+-	int			n_words;
+-	void __iomem		*reg[MAX_WORDS];
+-	u32			enable[MAX_WORDS];
+-	spinlock_t		lock;
+-};
+-
+-static void bcm3384_intc_irq_unmask(struct irq_data *d)
+-{
+-	struct bcm3384_intc *priv = d->domain->host_data;
+-	unsigned long flags;
+-	int idx = d->hwirq / IRQS_PER_WORD;
+-	int bit = d->hwirq % IRQS_PER_WORD;
+-
+-	spin_lock_irqsave(&priv->lock, flags);
+-	priv->enable[idx] |= BIT(bit);
+-	__raw_writel(priv->enable[idx], priv->reg[idx] + INTC_REG_ENABLE);
+-	spin_unlock_irqrestore(&priv->lock, flags);
+-}
+-
+-static void bcm3384_intc_irq_mask(struct irq_data *d)
+-{
+-	struct bcm3384_intc *priv = d->domain->host_data;
+-	unsigned long flags;
+-	int idx = d->hwirq / IRQS_PER_WORD;
+-	int bit = d->hwirq % IRQS_PER_WORD;
+-
+-	spin_lock_irqsave(&priv->lock, flags);
+-	priv->enable[idx] &= ~BIT(bit);
+-	__raw_writel(priv->enable[idx], priv->reg[idx] + INTC_REG_ENABLE);
+-	spin_unlock_irqrestore(&priv->lock, flags);
+-}
+-
+-static struct irq_chip bcm3384_intc_irq_chip = {
+-	.name		= "INTC",
+-	.irq_unmask	= bcm3384_intc_irq_unmask,
+-	.irq_mask	= bcm3384_intc_irq_mask,
+-	.irq_mask_ack	= bcm3384_intc_irq_mask,
+-};
++#include <asm/time.h>
+ 
+ unsigned int get_c0_compare_int(void)
+ {
+ 	return CP0_LEGACY_COMPARE_IRQ;
  }
  
-+static int __init bcm7120_l2_intc_iomap_3380(struct device_node *dn,
-+					     struct bcm7120_l2_intc_data *data)
-+{
-+	unsigned int gc_idx;
-+
-+	for (gc_idx = 0; gc_idx < MAX_WORDS; gc_idx++) {
-+		unsigned int map_idx = gc_idx * 2;
-+		void __iomem *en = of_iomap(dn, map_idx + 0);
-+		void __iomem *stat = of_iomap(dn, map_idx + 1);
-+		void __iomem *base = min(en, stat);
-+
-+		data->map_base[map_idx + 0] = en;
-+		data->map_base[map_idx + 1] = stat;
-+
-+		if (!base)
-+			break;
-+
-+		data->pair_base[gc_idx] = base;
-+		data->en_offset[gc_idx] = en - base;
-+		data->stat_offset[gc_idx] = stat - base;
-+	}
-+
-+	if (!gc_idx) {
-+		pr_err("unable to map registers\n");
-+		return -EINVAL;
-+	}
-+
-+	data->n_words = gc_idx;
-+	return 0;
-+}
-+
- int __init bcm7120_l2_intc_probe(struct device_node *dn,
- 				 struct device_node *parent,
- 				 int (*iomap_regs_fn)(struct device_node *,
-@@ -279,5 +316,15 @@ int __init bcm7120_l2_intc_probe_7120(struct device_node *dn,
- 				     "BCM7120 L2");
+-static void bcm3384_intc_irq_handler(unsigned int irq, struct irq_desc *desc)
+-{
+-	struct irq_domain *domain = irq_get_handler_data(irq);
+-	struct bcm3384_intc *priv = domain->host_data;
+-	unsigned long flags;
+-	unsigned int idx;
+-
+-	for (idx = 0; idx < priv->n_words; idx++) {
+-		unsigned long pending;
+-		int hwirq;
+-
+-		spin_lock_irqsave(&priv->lock, flags);
+-		pending = __raw_readl(priv->reg[idx] + INTC_REG_STATUS) &
+-			  priv->enable[idx];
+-		spin_unlock_irqrestore(&priv->lock, flags);
+-
+-		for_each_set_bit(hwirq, &pending, IRQS_PER_WORD) {
+-			generic_handle_irq(irq_find_mapping(domain,
+-					   hwirq + idx * IRQS_PER_WORD));
+-		}
+-	}
+-}
+-
+-asmlinkage void plat_irq_dispatch(void)
+-{
+-	unsigned long pending =
+-		(read_c0_status() & read_c0_cause() & ST0_IM) >> STATUSB_IP0;
+-	int bit;
+-
+-	for_each_set_bit(bit, &pending, 8)
+-		do_IRQ(MIPS_CPU_IRQ_BASE + bit);
+-}
+-
+-static int intc_map(struct irq_domain *d, unsigned int irq, irq_hw_number_t hw)
+-{
+-	irq_set_chip_and_handler(irq, &bcm3384_intc_irq_chip, handle_level_irq);
+-	return 0;
+-}
+-
+-static const struct irq_domain_ops irq_domain_ops = {
+-	.xlate = irq_domain_xlate_onecell,
+-	.map = intc_map,
+-};
+-
+-static int __init ioremap_one_pair(struct bcm3384_intc *priv,
+-				   struct device_node *node,
+-				   int idx)
+-{
+-	struct resource res;
+-
+-	if (of_address_to_resource(node, idx, &res))
+-		return 0;
+-
+-	if (request_mem_region(res.start, resource_size(&res),
+-			       res.name) < 0)
+-		pr_err("Failed to request INTC register region\n");
+-
+-	priv->reg[idx] = ioremap_nocache(res.start, resource_size(&res));
+-	if (!priv->reg[idx])
+-		panic("Failed to ioremap INTC register range");
+-
+-	/* start up with everything masked before we hook the parent IRQ */
+-	__raw_writel(0, priv->reg[idx] + INTC_REG_ENABLE);
+-	priv->enable[idx] = 0;
+-
+-	return IRQS_PER_WORD;
+-}
+-
+-static int __init intc_of_init(struct device_node *node,
+-			       struct device_node *parent)
++void __init arch_init_irq(void)
+ {
+-	struct irq_domain *domain;
+-	unsigned int parent_irq, n_irqs = 0;
+-	struct bcm3384_intc *priv;
+-
+-	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
+-	if (!priv)
+-		panic("Failed to allocate bcm3384_intc struct");
+-
+-	spin_lock_init(&priv->lock);
+-
+-	parent_irq = irq_of_parse_and_map(node, 0);
+-	if (!parent_irq)
+-		panic("Failed to get INTC IRQ");
+-
+-	n_irqs += ioremap_one_pair(priv, node, 0);
+-	n_irqs += ioremap_one_pair(priv, node, 1);
+-
+-	if (!n_irqs)
+-		panic("Failed to map INTC registers");
++	struct device_node *dn;
+ 
+-	priv->n_words = n_irqs / IRQS_PER_WORD;
+-	domain = irq_domain_add_linear(node, n_irqs, &irq_domain_ops, priv);
+-	if (!domain)
+-		panic("Failed to add irqdomain");
++	/* Only the STB (bcm7038) controller supports SMP IRQ affinity */
++	dn = of_find_compatible_node(NULL, NULL, "brcm,bcm7038-l1-intc");
++	if (dn)
++		of_node_put(dn);
++	else
++		bmips_tp1_irqs = 0;
+ 
+-	irq_set_chained_handler(parent_irq, bcm3384_intc_irq_handler);
+-	irq_set_handler_data(parent_irq, domain);
+-
+-	return 0;
++	irqchip_init();
  }
  
-+int __init bcm7120_l2_intc_probe_3380(struct device_node *dn,
-+				      struct device_node *parent)
-+{
-+	return bcm7120_l2_intc_probe(dn, parent, bcm7120_l2_intc_iomap_3380,
-+				     "BCM3380 L2");
-+}
-+
- IRQCHIP_DECLARE(bcm7120_l2_intc, "brcm,bcm7120-l2-intc",
- 		bcm7120_l2_intc_probe_7120);
-+
-+IRQCHIP_DECLARE(bcm3380_l2_intc, "brcm,bcm3380-l2-intc",
-+		bcm7120_l2_intc_probe_3380);
+-static struct of_device_id of_irq_ids[] __initdata = {
+-	{ .compatible = "mti,cpu-interrupt-controller",
+-	  .data = mips_cpu_irq_of_init },
+-	{ .compatible = "brcm,bcm3384-intc",
+-	  .data = intc_of_init },
+-	{},
+-};
+-
+-void __init arch_init_irq(void)
+-{
+-	bmips_tp1_irqs = 0;
+-	of_irq_init(of_irq_ids);
+-}
++OF_DECLARE_2(irqchip, mips_cpu_intc, "mti,cpu-interrupt-controller",
++	     mips_cpu_irq_of_init);
 -- 
 2.1.1
