@@ -1,77 +1,471 @@
 From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 8/8] iio: Add ABI documentation for input current readings
-Date: Fri, 12 Dec 2014 11:45:59 +0000
-Message-ID: <548AD577.10508@kernel.org>
-References: <cover.1416938054.git.Adam.Thomson.Opensource@diasemi.com> <9d3c3451c2cac6035277fb36ffead1a1f8af453e.1416938054.git.Adam.Thomson.Opensource@diasemi.com>
+Subject: Re: [PATCH v2 2/2] iio: add driver for the TI DAC8554
+Date: Fri, 12 Dec 2014 11:57:08 +0000
+Message-ID: <548AD814.2060206@kernel.org>
+References: <1416858614-32265-1-git-send-email-nikolaus.schulz@avionic-design.de> <1416858614-32265-2-git-send-email-nikolaus.schulz@avionic-design.de> <5482EA33.7020305@gmx.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <9d3c3451c2cac6035277fb36ffead1a1f8af453e.1416938054.git.Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <5482EA33.7020305-Mmb7MZpHnFY@public.gmane.org>
 Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Adam Thomson <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, support.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org
+To: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Nikolaus Schulz <nikolaus.schulz-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>, Philippe Reynes <tremyfr-Qt13gs6zZMY@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Alban Bedel <alban.bedel-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 25/11/14 18:25, Adam Thomson wrote:
-> Add information on in_current related readings.
+On 06/12/14 11:36, Hartmut Knaack wrote:
+> Nikolaus Schulz schrieb am 24.11.2014 um 20:50:
+>> The TI DAC8554 is a quad-channel Digital-to-Analog Converter with an SPI
+>> interface.
+>>
+>> Changes in v2:
+>> * Use DMA-safe buffer for SPI transfer
+>> * Normalize powerdown_mode name "hi-z" to "three_state" as per
+>>   ABI/testing/sysfs-bus-iio
+>> * Register device late in probe function
+>> * Avoid powerdown broadcast update, which touches all DAC on the bus
+> There are a few issues left, please see my comments inline.
+1 little one from me...
+>>
+>> Signed-off-by: Nikolaus Schulz <nikolaus.schulz-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+>> ---
+>>  drivers/iio/dac/Kconfig      |  10 ++
+>>  drivers/iio/dac/Makefile     |   1 +
+>>  drivers/iio/dac/ti-dac8554.c | 374 +++++++++++++++++++++++++++++++++++++++++++
+>>  3 files changed, 385 insertions(+)
+>>  create mode 100644 drivers/iio/dac/ti-dac8554.c
+>>
+>> diff --git a/drivers/iio/dac/Kconfig b/drivers/iio/dac/Kconfig
+>> index 2236ea2..1689260 100644
+>> --- a/drivers/iio/dac/Kconfig
+>> +++ b/drivers/iio/dac/Kconfig
+>> @@ -181,4 +181,14 @@ config MCP4922
+>>  	  To compile this driver as a module, choose M here: the module
+>>  	  will be called mcp4922.
+>>  
+>> +config TI_DAC8554
+>> +	tristate "TI DAC8554 driver"
+>> +	depends on SPI
+>> +	depends on OF
+>> +	help
+>> +	  Say yes here to build the driver for the TI DAC8554.
+>> +
+>> +	  To compile this driver as a module, choose M here: the module
+>> +	  will be called ti-dac8554.
+>> +
+>>  endmenu
+>> diff --git a/drivers/iio/dac/Makefile b/drivers/iio/dac/Makefile
+>> index 52be7e1..b98d79a 100644
+>> --- a/drivers/iio/dac/Makefile
+>> +++ b/drivers/iio/dac/Makefile
+>> @@ -20,3 +20,4 @@ obj-$(CONFIG_MAX517) += max517.o
+>>  obj-$(CONFIG_MAX5821) += max5821.o
+>>  obj-$(CONFIG_MCP4725) += mcp4725.o
+>>  obj-$(CONFIG_MCP4922) += mcp4922.o
+>> +obj-$(CONFIG_TI_DAC8554) += ti-dac8554.o
+>> diff --git a/drivers/iio/dac/ti-dac8554.c b/drivers/iio/dac/ti-dac8554.c
+>> new file mode 100644
+>> index 0000000..fca751f
+>> --- /dev/null
+>> +++ b/drivers/iio/dac/ti-dac8554.c
+>> @@ -0,0 +1,374 @@
+>> +/*
+>> + * TI DAC8554 Digital to Analog Converter SPI driver
+>> + *
+>> + * Copyright (C) 2014 Avionic Design GmbH
+>> + *
+>> + * Based on ad5446r_spi.c
+>> + * Copyright (C) 2010,2011 Analog Devices Inc.
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + */
+>> +
+>> +#include <linux/spi/spi.h>
+>> +#include <linux/regulator/consumer.h>
+>> +#include <linux/module.h>
+>> +#include <linux/iio/iio.h>
+>> +#include <linux/of.h>
+>> +
+>> +#define DAC8554_DRIVERNAME			"ti-dac8554"
+>> +#define DAC8554_DAC_CHANNELS			4
+>> +
+>> +/* Load commands */
+>> +#define DAC8554_CMD_STORE_DAC_N			0x0
+>> +#define DAC8554_CMD_UPDATE_DAC_N		0x1
+>> +#define DAC8554_CMD_STORE_DAC_N_UPDATE_ALL	0x2
+>> +#define DAC8554_CMD_UPDATE_BROADCAST		0x3
+>> +
+>> +#define DAC8554_BROADCAST_USE_SRDATA		0x2
+> Add a blank line here.
+>> +/* Powerdown modes (ORed PD1|PD2 bits) */
+> It took my some time to figure out ORed. I think you could drop it and just
+> mention (PD1 | PD2 bits).
+>> +#define DAC8554_PWRDN_HIZ			0x0
+>> +#define DAC8554_PWRDN_1K			0x1
+>> +#define DAC8554_PWRDN_100K			0x2
+>> +
+>> +#define DAC8554_PWRDN_TO_SR(mode)		(BIT(16) | (mode) << 14)
+>> +
+>> +/**
+>> + * struct dac8554_state - driver instance specific data
+>> + * @spi:		spi_device
+> SPI device?
+>> + * @reg:		supply regulator
+>> + * @addr:		two-bit chip address
+>> + * @vref_mv:		reference voltage in millivolt
+>> + * @val			DAC/channel data
+> DAC channel data?
+>> + * @powerdown		channel powerdown flag
+>> + * @powerdown_mode	channel powerdown mode
+>> + * @xfer		SPI transfer buffer
+> Half of the comments are with colon, the other half are missing it.
+>> + */
+>> +struct dac8554_state {
+>> +	struct spi_device		*spi;
+>> +	struct regulator		*reg;
+>> +	unsigned			addr;
+>> +	unsigned			vref_mv;
+>> +	u16				val[DAC8554_DAC_CHANNELS];
+>> +	bool				powerdown[DAC8554_DAC_CHANNELS];
+>> +	u8				powerdown_mode[DAC8554_DAC_CHANNELS];
+>> +
+>> +	/*
+>> +	 * DMA (thus cache coherency maintenance) requires the
+>> +	 * transfer buffers to live in their own cache lines.
+>> +	 */
+>> +	u8				xfer[3] ____cacheline_aligned;
+>> +};
+>> +
+>> +static int dac8554_spi_write(struct dac8554_state *st,
+>> +			     unsigned cmd,
+>> +			     unsigned chan_addr,
+>> +			     unsigned val)
+>> +{
+>> +	u32 data;
+>> +
+>> +	/*
+>> +	 * The input shift register is 24 bits wide. The 8 MSB are
+>> +	 * control bits, followed by 16 data bits.
+>> +	 * The first two bits A1 and A0 address a DAC8554 chip.
+>> +	 * The next two are the command bits, LD1 and LD0.
+>> +	 * After a don't-care-bit, the next two bits select the channel.
+>> +	 * The final control bit PD0 is a flag signalling if the data
+>> +	 * bits encode a powerdown mode. We merge PD0 with the adjacent
+>> +	 * data bits.
+>> +	 */
+>> +
+>> +	if (cmd > 3 || chan_addr > 3 ||
+>> +			(val > 0xffff && (val & ~DAC8554_PWRDN_TO_SR(3))))
+>> +		return -EINVAL;
+>> +
+>> +	data = (st->addr << 22) | (cmd << 20) | (chan_addr << 17) | val;
+> Could be more readable by using definition for the magic shifts, or macros.
+>> +	st->xfer[0] = data >> 16;
+>> +	st->xfer[1] = data >> 8;
+>> +	st->xfer[2] = data;
+>> +
+>> +	return spi_write(st->spi, st->xfer, sizeof(st->xfer));
+>> +}
+>> +
+>> +static int dac8554_read_raw(struct iio_dev *indio_dev,
+>> +			    struct iio_chan_spec const *chan,
+>> +			    int *val,
+>> +			    int *val2,
+>> +			    long m)
+> Commonly, m is called mask (like you do in _write_raw).
+>> +{
+>> +	struct dac8554_state *st = iio_priv(indio_dev);
+>> +
+>> +	switch (m) {
+>> +	case IIO_CHAN_INFO_RAW:
+>> +		*val = st->val[chan->address];
+>> +		return IIO_VAL_INT;
+>> +	case IIO_CHAN_INFO_SCALE:
+>> +		*val = st->vref_mv;
+>> +		*val2 = 16;
+>> +		return IIO_VAL_FRACTIONAL_LOG2;
+>> +	}
+>> +	return -EINVAL;
+>> +}
+>> +
+>> +static int dac8554_write_raw(struct iio_dev *indio_dev,
+>> +			     struct iio_chan_spec const *chan,
+>> +			     int val,
+>> +			     int val2,
+>> +			     long mask)
+>> +{
+>> +	struct dac8554_state *st = iio_priv(indio_dev);
+>> +	int err;
+>> +
+>> +	switch (mask) {
+>> +	case IIO_CHAN_INFO_RAW:
+>> +		if (val > 0xffff || val < 0)
+>> +			return -EINVAL;
+>> +
+>> +		err = dac8554_spi_write(st, DAC8554_CMD_UPDATE_DAC_N,
+>> +					chan->address, val);
+>> +		if (err)
+>> +			return err;
+>> +
+>> +		st->val[chan->address] = val;
+>> +
+>> +		/* By hw design, DAC updates automatically trigger powerup. */
+>> +		st->powerdown[chan->address] = false;
+>> +
+>> +		return 0;
+>> +
+>> +	default:
+>> +		return -EINVAL;
+>> +	}
+>> +}
+>> +
+>> +static int dac8554_get_powerdown_mode(struct iio_dev *indio_dev,
+>> +				      const struct iio_chan_spec *chan)
+>> +{
+>> +	struct dac8554_state *st = iio_priv(indio_dev);
+>> +
+>> +	return st->powerdown_mode[chan->address];
+>> +}
+>> +
+>> +static int dac8554_set_powerdown_mode(struct iio_dev *indio_dev,
+>> +				      const struct iio_chan_spec *chan,
+>> +				      unsigned int mode)
+>> +{
+>> +	struct dac8554_state *st = iio_priv(indio_dev);
+>> +
+>> +	st->powerdown_mode[chan->address] = mode;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static ssize_t dac8554_read_dac_powerdown(struct iio_dev *indio_dev,
+>> +					  uintptr_t private,
+>> +					  const struct iio_chan_spec *chan,
+>> +					  char *buf)
+>> +{
+>> +	struct dac8554_state *st = iio_priv(indio_dev);
+>> +
+>> +	return sprintf(buf, "%d\n", st->powerdown[chan->address]);
+>> +}
+>> +
+>> +static ssize_t dac8554_write_dac_powerdown(struct iio_dev *indio_dev,
+>> +					   uintptr_t private,
+>> +					   const struct iio_chan_spec *chan,
+>> +					   const char *buf,
+>> +					   size_t len)
+>> +{
+>> +	bool powerdown;
+>> +	int ret;
+>> +	struct dac8554_state *st = iio_priv(indio_dev);
+>> +	u8 powerdown_mode;
+>> +
+>> +	ret = strtobool(buf, &powerdown);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	st->powerdown[chan->address] = powerdown;
+>> +
+>> +	if (powerdown) {
+>> +		powerdown_mode = st->powerdown_mode[chan->address];
+>> +		ret = dac8554_spi_write(st,
+>> +				DAC8554_CMD_UPDATE_DAC_N,
+>> +				chan->address,
+>> +				DAC8554_PWRDN_TO_SR(powerdown_mode));
+> The parameters sill fit on line even with proper indentation.
+>> +	} else {
+>> +		/* Load DAC with cached value. This triggers a powerup. */
+>> +		ret = dac8554_spi_write(st,
+>> +				DAC8554_CMD_UPDATE_DAC_N,
+>> +				chan->address,
+>> +				st->val[chan->address]);
+> Same here with indentation.
+>> +	}
+>> +
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	return len;
+> Just: return (ret) ? ret : len;
+>> +}
+>> +
+>> +static int dac8554_powerdown(struct dac8554_state *st,
+>> +			     u8 powerdown_mode)
+>> +{
+>> +	int chan, cmd, ret;
+>> +
+>> +	for (chan = DAC8554_DAC_CHANNELS-1; chan >= 0; --chan) {
+> Please mind spaces around operators.
+>> +		cmd = chan ? DAC8554_CMD_STORE_DAC_N
+>> +			   : DAC8554_CMD_STORE_DAC_N_UPDATE_ALL;
+>> +		ret = dac8554_spi_write(st, cmd, chan,
+>> +				DAC8554_PWRDN_TO_SR(powerdown_mode));
+>> +		if (ret)
+>> +			return ret;
+>> +	}
+>> +
+>> +	memset(st->powerdown_mode, powerdown_mode, sizeof(st->powerdown_mode));
+>> +	memset(st->powerdown, true, sizeof(st->powerdown));
+Whilst this probably works, I think for the boolean case it is less
+than entirely obvious, so probably better to have a simple loop.
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct iio_info dac8554_info = {
+>> +	.write_raw = dac8554_write_raw,
+>> +	.read_raw = dac8554_read_raw,
+>> +	.driver_module = THIS_MODULE,
+>> +};
+>> +
+>> +static const char * const dac8554_powerdown_modes[] = {
+>> +	"three_state",
+>> +	"1kohm_to_gnd",
+>> +	"100kohm_to_gnd"
+>> +};
+>> +
+>> +static const struct iio_enum dac8854_powerdown_mode_enum = {
+>> +	.items = dac8554_powerdown_modes,
+>> +	.num_items = ARRAY_SIZE(dac8554_powerdown_modes),
+>> +	.get = dac8554_get_powerdown_mode,
+>> +	.set = dac8554_set_powerdown_mode,
+>> +};
+>> +
+>> +static const struct iio_chan_spec_ext_info dac8554_ext_info[] = {
+>> +	{
+>> +		.name = "powerdown",
+>> +		.read = dac8554_read_dac_powerdown,
+>> +		.write = dac8554_write_dac_powerdown,
+>> +		.shared = IIO_SEPARATE,
+>> +	},
+>> +	IIO_ENUM("powerdown_mode", IIO_SEPARATE,
+>> +		 &dac8854_powerdown_mode_enum),
+>> +	IIO_ENUM_AVAILABLE("powerdown_mode", &dac8854_powerdown_mode_enum),
+>> +	{ },
+>> +};
+>> +
+>> +#define DAC8554_CHANNEL(chan) { \
+>> +	.type = IIO_VOLTAGE, \
+>> +	.indexed = 1, \
+>> +	.output = 1, \
+>> +	.channel = (chan), \
+>> +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW), \
+>> +	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE), \
+>> +	.address = (chan), \
+>> +	.ext_info = dac8554_ext_info, \
+>> +}
+>> +const struct iio_chan_spec dac8554_channels[] = {
+>> +	DAC8554_CHANNEL(0),
+>> +	DAC8554_CHANNEL(1),
+>> +	DAC8554_CHANNEL(2),
+>> +	DAC8554_CHANNEL(3),
+>> +};
+>> +#undef DAC8554_CHANNEL
+>> +
+>> +static int dac8554_probe(struct spi_device *spi)
+>> +{
+>> +	struct dac8554_state *st;
+>> +	struct iio_dev *indio_dev;
+>> +	int ret, voltage_uv;
+>> +	u32 addr;
+>> +
+>> +	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
+>> +	if (!indio_dev)
+>> +		return -ENOMEM;
+>> +
+>> +	indio_dev->dev.parent = &spi->dev;
+>> +	indio_dev->name = DAC8554_DRIVERNAME;
+>> +	indio_dev->info = &dac8554_info;
+>> +	indio_dev->modes = INDIO_DIRECT_MODE;
+>> +	indio_dev->channels = dac8554_channels;
+>> +	indio_dev->num_channels = ARRAY_SIZE(dac8554_channels);
+>> +
+>> +	spi_set_drvdata(spi, indio_dev);
+>> +
+>> +	st = iio_priv(indio_dev);
+>> +
+>> +	if (!spi->dev.of_node) {
+>> +		dev_err(&spi->dev, "missing OF node");
+>> +		return -ENODEV;
+>> +	}
+>> +	ret = of_property_read_u32(spi->dev.of_node, "address", &addr);
+>> +	if (ret || addr < 0 || addr > 2) {
+>> +		dev_err(&spi->dev, "no or invalid chip address");
+>> +		return -ENODEV;
+>> +	}
+>> +
+>> +	st->spi = spi;
+>> +	st->addr = addr;
+>> +
+> According to your DT bindings, the regulator from property "vref-supply" should
+> be used. This is missing here.
+>> +	st->reg = devm_regulator_get(&spi->dev, "vref");
+>> +	if (IS_ERR(st->reg))
+>> +		return PTR_ERR(st->reg);
+>> +
+>> +	ret = regulator_enable(st->reg);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	voltage_uv = regulator_get_voltage(st->reg);
+>> +	if (voltage_uv < 0)
+>> +		goto error_disable_reg;
+> Missing ret = voltage_uv before goto. Or just drop voltage_uv completely and use ret instead.
+>> +	st->vref_mv = voltage_uv / 1000;
+> How hard do you want to depend on a voltage regulator? Doing regulator_get_voltage()
+> could even be called dynamically in _read_raw(), making a real regulator optional.
+>> +
+>> +	ret = dac8554_powerdown(st, DAC8554_PWRDN_100K);
+>> +	if (ret)
+>> +		goto error_disable_reg;
+>> +
+>> +	ret = iio_device_register(indio_dev);
+>> +	if (ret)
+>> +		goto error_disable_reg;
+>> +
+>> +	return 0;
+>> +
+>> +error_disable_reg:
+>> +	regulator_disable(st->reg);
+>> +	return ret;
+>> +}
+>> +
+>> +static int dac8554_remove(struct spi_device *spi)
+>> +{
+>> +	struct iio_dev *indio_dev = spi_get_drvdata(spi);
+>> +	struct dac8554_state *st = iio_priv(indio_dev);
+>> +
+>> +	iio_device_unregister(indio_dev);
+>> +	regulator_disable(st->reg);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct of_device_id dac8554_of_match[] = {
+>> +	{ .compatible = "ti,dac8554" },
+>> +	{ }
+>> +};
+>> +MODULE_DEVICE_TABLE(of, dac8554_of_match);
+>> +
+>> +static struct spi_driver dac8554_driver = {
+>> +	.driver = {
+>> +		.name = DAC8554_DRIVERNAME,
+>> +		.owner = THIS_MODULE,
+>> +		.of_match_table = dac8554_of_match,
+>> +	 },
+>> +	.probe = dac8554_probe,
+>> +	.remove = dac8554_remove,
+>> +};
+>> +module_spi_driver(dac8554_driver);
+>> +
+>> +MODULE_AUTHOR("Nikolaus Schulz <nikolaus.schulz-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>");
+>> +MODULE_DESCRIPTION("Texas Instruments DAC8554 SPI driver");
+>> +MODULE_LICENSE("GPL v2");
+>>
 > 
-> Signed-off-by: Adam Thomson <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-This one stands on it's own to applied (with some fuzz and tiny
-bit of rearranging) to the togreg branch of iio.git - initially pushed
-out as testing for the autobuilders to play with it.
-
-Thanks,
-
-Jonathan
-> ---
->  Documentation/ABI/testing/sysfs-bus-iio | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
-> index d760b02..37cd4d4 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-iio
-> +++ b/Documentation/ABI/testing/sysfs-bus-iio
-> @@ -92,6 +92,18 @@ Description:
->  		is required is a consistent labeling.  Units after application
->  		of scale and offset are millivolts.
-> 
-> +What:		/sys/bus/iio/devices/iio:deviceX/in_currentY_raw
-> +What:		/sys/bus/iio/devices/iio:deviceX/in_currentY_supply_raw
-> +KernelVersion:	3.17
-> +Contact:	linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> +Description:
-> +		Raw (unscaled no bias removal etc.) current measurement from
-> +		channel Y. In special cases where the channel does not
-> +		correspond to externally available input one of the named
-> +		versions may be used. The number must always be specified and
-> +		unique to allow association with event codes. Units after
-> +		application of scale and offset are milliamps.
-> +
->  What:		/sys/bus/iio/devices/iio:deviceX/in_capacitanceY_raw
->  KernelVersion:	3.2
->  Contact:	linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> @@ -227,6 +239,8 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_accel_y_offset
->  What:		/sys/bus/iio/devices/iio:deviceX/in_accel_z_offset
->  What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_offset
->  What:		/sys/bus/iio/devices/iio:deviceX/in_voltage_offset
-> +What:		/sys/bus/iio/devices/iio:deviceX/in_currentY_offset
-> +What:		/sys/bus/iio/devices/iio:deviceX/in_current_offset
->  What:		/sys/bus/iio/devices/iio:deviceX/in_tempY_offset
->  What:		/sys/bus/iio/devices/iio:deviceX/in_temp_offset
->  What:		/sys/bus/iio/devices/iio:deviceX/in_pressureY_offset
-> @@ -249,8 +263,11 @@ Description:
->  		to the _raw output.
-> 
->  What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_scale
-> +What:		/sys/bus/iio/devices/iio:deviceX/in_currentY_scale
->  What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_supply_scale
-> +What:		/sys/bus/iio/devices/iio:deviceX/in_currentY_supply_scale
->  What:		/sys/bus/iio/devices/iio:deviceX/in_voltage_scale
-> +What:		/sys/bus/iio/devices/iio:deviceX/in_current_scale
->  What:		/sys/bus/iio/devices/iio:deviceX/out_voltageY_scale
->  What:		/sys/bus/iio/devices/iio:deviceX/out_altvoltageY_scale
->  What:		/sys/bus/iio/devices/iio:deviceX/in_accel_scale
 > --
-> 1.9.3
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 > 
