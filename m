@@ -1,13 +1,14 @@
 From: Ray Jui <rjui@broadcom.com>
-Subject: [PATCH v2 0/4] Add PCIe support to Broadcom iProc
-Date: Thu, 11 Dec 2014 18:36:53 -0800
-Message-ID: <1418351817-14898-1-git-send-email-rjui@broadcom.com>
+Subject: [PATCH v2 1/4] pci: iProc: define Broadcom iProc PCIe binding
+Date: Thu, 11 Dec 2014 18:36:54 -0800
+Message-ID: <1418351817-14898-2-git-send-email-rjui@broadcom.com>
 References: <Ray Jui <rjui@broadcom.com>
+ <1418351817-14898-1-git-send-email-rjui@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <Ray Jui <rjui@broadcom.com>
+In-Reply-To: <1418351817-14898-1-git-send-email-rjui@broadcom.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,33 +23,94 @@ To: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Pawel
 Cc: devicetree@vger.kernel.org, Scott Branden <sbranden@broadcom.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Ray Jui <rjui@broadcom.com>, linux-arm-kernel@lists.infradead.org, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-This patchset contains the initial PCIe support for Broadcom iProc family of
-SoCs. This driver has been validated with Cygnus and NSP and is expected to
-work on other iProc family of SoCs that deploy the same PCIe controller
+Document the PCIe device tree binding for Broadcom iProc family of SoCs
 
-Changes from v1:
- - Add standard PCI interrupt DT properties "#interrupt-cells",
-   "interrupt-map-mask" and "interrupt-map" so legacy INTx interrupts can be
-   supported by using standard PCI OF IRQ parsing function
- - Get rid of custom IRQ mapping function in the driver. Use
-   of_irq_parse_and_map_pci instead
-
-Ray Jui (4):
-  pci: iProc: define Broadcom iProc PCIe binding
-  PCI: iproc: Add Broadcom iProc PCIe driver
-  ARM: mach-bcm: Enable PCIe support for iProc
-  ARM: dts: enable PCIe for Broadcom Cygnus
-
- .../devicetree/bindings/pci/brcm,iproc-pcie.txt    |   74 ++
- arch/arm/boot/dts/bcm-cygnus.dtsi                  |   52 ++
- arch/arm/boot/dts/bcm958300k.dts                   |    8 +
- arch/arm/mach-bcm/Kconfig                          |    1 +
- drivers/pci/host/Kconfig                           |    9 +
- drivers/pci/host/Makefile                          |    1 +
- drivers/pci/host/pcie-iproc.c                      |  888 ++++++++++++++++++++
- 7 files changed, 1033 insertions(+)
+Signed-off-by: Ray Jui <rjui@broadcom.com>
+Reviewed-by: Scott Branden <sbranden@broadcom.com>
+---
+ .../devicetree/bindings/pci/brcm,iproc-pcie.txt    |   74 ++++++++++++++++++++
+ 1 file changed, 74 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/pci/brcm,iproc-pcie.txt
- create mode 100644 drivers/pci/host/pcie-iproc.c
 
+diff --git a/Documentation/devicetree/bindings/pci/brcm,iproc-pcie.txt b/Documentation/devicetree/bindings/pci/brcm,iproc-pcie.txt
+new file mode 100644
+index 0000000..040bc0f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/brcm,iproc-pcie.txt
+@@ -0,0 +1,74 @@
++* Broadcom iProc PCIe controller
++
++Required properties:
++- compatible: Must be "brcm,iproc-pcie"
++- reg: base address and length of the PCIe controller and the MDIO interface
++  that controls the PCIe PHY
++- #interrupt-cells: set to <1>
++- interrupts: interrupt IDs
++- interrupt-map-mask and interrupt-map, standard PCI properties to define the
++  mapping of the PCIe interface to interrupt numbers
++- bus-range: PCI bus numbers covered
++- #address-cells: set to <3>
++- #size-cells: set to <2>
++- device_type: set to "pci"
++- ranges: ranges for the PCI memory and I/O regions
++- phy-addr: MDC/MDIO adddress of the PCIe PHY
++- have-msi-inten-reg: Required for legacy iProc PCIe controllers that need the
++  MSI interrupt enable register to be set explicitly
++
++The Broadcom iProc PCie driver adapts the multi-domain structure, i.e., each
++interface has its own domain and therefore has its own device node
++Example:
++
++SoC specific DT Entry:
++
++	pcie0: pcie@18012000 {
++		compatible = "brcm,iproc-pcie";
++		reg = <0x18012000 0x1000>,
++			<0x18002000 0x1000>;
++
++		#interrupt-cells = <1>;
++		interrupts = <GIC_SPI 96 IRQ_TYPE_NONE>,
++			     <GIC_SPI 97 IRQ_TYPE_NONE>,
++			     <GIC_SPI 98 IRQ_TYPE_NONE>,
++			     <GIC_SPI 99 IRQ_TYPE_NONE>,
++			     <GIC_SPI 100 IRQ_TYPE_NONE>,
++			     <GIC_SPI 101 IRQ_TYPE_NONE>;
++		interrupt-map-mask = <0 0 0 0>;
++		interrupt-map = <0 0 0 0 &gic GIC_SPI 100 IRQ_TYPE_NONE>;
++
++		bus-range = <0x00 0xFF>;
++
++		#address-cells = <3>;
++		#size-cells = <2>;
++		device_type = "pci";
++		ranges = <0x81000000 0 0	  0x28000000 0 0x00010000   /* downstream I/O */
++			  0x82000000 0 0x20000000 0x20000000 0 0x04000000>; /* non-prefetchable memory */
++		phy-addr = <5>;
++	};
++
++	pcie1: pcie@18013000 {
++		compatible = "brcm,iproc-pcie";
++		reg = <0x18013000 0x1000>,
++			<0x18002000 0x1000>;
++
++		#interrupt-cells = <1>;
++		interrupts = <GIC_SPI 102 IRQ_TYPE_NONE>,
++			     <GIC_SPI 103 IRQ_TYPE_NONE>,
++			     <GIC_SPI 104 IRQ_TYPE_NONE>,
++			     <GIC_SPI 105 IRQ_TYPE_NONE>,
++			     <GIC_SPI 106 IRQ_TYPE_NONE>,
++			     <GIC_SPI 107 IRQ_TYPE_NONE>;
++		interrupt-map-mask = <0 0 0 0>;
++		interrupt-map = <0 0 0 0 &gic GIC_SPI 106 IRQ_TYPE_NONE>;
++
++		bus-range = <0x00 0xFF>;
++
++		#address-cells = <3>;
++		#size-cells = <2>;
++		device_type = "pci";
++		ranges = <0x81000000 0 0	  0x48000000 0 0x00010000   /* downstream I/O */
++			  0x82000000 0 0x40000000 0x40000000 0 0x04000000>; /* non-prefetchable memory */
++		phy-addr = <6>;
++	};
 -- 
 1.7.9.5
