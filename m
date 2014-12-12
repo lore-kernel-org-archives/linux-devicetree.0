@@ -1,205 +1,193 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 2/4] PCI: iproc: Add Broadcom iProc PCIe driver
-Date: Fri, 12 Dec 2014 13:29:20 +0100
-Message-ID: <2190666.DfrpWiLTCc@wuerfel>
-References: <1418351817-14898-3-git-send-email-rjui@broadcom.com>
+From: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/3] TTY: add support for "tty slave" devices.
+Date: Fri, 12 Dec 2014 08:02:48 -0500
+Message-ID: <548AE778.90205@hurleysoftware.com>
+References: <20141211214801.4127.93914.stgit@notabene.brown>	<20141211215943.4127.24792.stgit@notabene.brown>	<548A264D.8070103@hurleysoftware.com> <20141212162352.66be5b5e@notabene.brown>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1418351817-14898-3-git-send-email-rjui@broadcom.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Ray Jui <rjui@broadcom.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Hauke Mehrtens <hauke@hauke-m.de>, Lucas Stach <l.stach@pengutronix.de>, Scott Branden <sbranden@broadcom.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.orghauke@hauke-m.de
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141212162352.66be5b5e-wvvUuzkyo1EYVZTmpyfIwg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 11 December 2014 18:36:55 Ray Jui wrote:
-> Add initial version of the Broadcom iProc PCIe driver. This driver
-> has been tested on NSP and Cygnus and is expected to work on all iProc
-> family of SoCs that deploys the same PCIe host controller
->
-> The driver also supports MSI
+On 12/12/2014 12:23 AM, NeilBrown wrote:
+> On Thu, 11 Dec 2014 18:18:37 -0500 Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+> wrote:
+> 
+>> On 12/11/2014 04:59 PM, NeilBrown wrote:
+>>> A "tty slave" is a device connected via UART.
+>>> It may need a driver to, for example, power the device on
+>>> when the tty is opened, and power it off when the tty
+>>> is released.
+>>>
+>>> A "tty slave" is a platform device which is declared as a
+>>> child of the uart in device-tree:
+>>>
+>>> &uart1 {
+>>> 	bluetooth {
+>>> 		compatible = "tty,regulator";
+>>> 		vdd-supply = <&vaux4>;
+>>> 	};
+>>> };
+>>>
+>>> runtime power management is used to power-up the device
+>>> on tty_open() and  power-down on tty_release().
+>>
+>> I have a couple of issues with this:
+>> 1) why does a child device imply power management and a platform
+>>    device? iow, what happens when someone else wants to have a
+>>    child device that does something different?
+> 
+> Why does it imply power management?
+>  Because it seems to make obvious sense to turn something on when the tty is
+>  open.  If the device has other reason to remain on when the tty is closed,
+>  it can arrange for extra references to be taken of course.
+>  Is it conceivable that you would want the device to remain off when the
+>  tty device is open?  In that case just make it a regular platform device.
+> 
+> Why a platform device?
+>  Things on an i2c bus are i2c devices.  Things on a usb bus are usb devices.
+>  Ideally a thing on a uart 'bus' would be a 'uart device', but no such thing
+>  exists.  I did contemplate the possibility of creating an explicit "uart" or
+>  "tty" bus type, but I could find no value in that.
+>  The door is certainly still open to that possibility if a meaning for the
+>  idea becomes apparent.  As far as device tree is concerned it is just a
+>  child device node.  The fact that it is implemented as a "platform" device
+>  could easily be changed later if needed without device tree noticing.
+> 
+> What could conceivably want to be different?  The only (purely hypothetical)
+> concept I can come up with which wouldn't fit is a device with both an UART
+> port and a USB port, or similar.  However device tree, and the device model
+> in general, just isn't geared towards devices being on multiple buses so
+> if that were real it would have much greater implications that just here.
+> 
+> But maybe I misunderstand...
 
-Overall, I'm not convinced it's worth continuing this driver. While it
-supports more features, Hauke's version seemed much cleaner, and I'd
-rather see his driver merged and have you add the additional features.
+Yeah, misunderstanding.
 
-Why did you drop him from Cc again?
+This patch is using a very generic abstraction (parent-child device association)
+for a really specific purpose (power management for platform devices).
+What about PCI, PNP, etc.?
 
-> +
-> +#define MII_MGMT_CTRL_OFFSET         0x000
-> +#define MII_MGMT_CTRL_MDCDIV_SHIFT   0
-> +#define MII_MGMT_CTRL_PRE_SHIFT      7
-> +#define MII_MGMT_CTRL_BUSY_SHIFT     8
-> +#define MII_MGMT_CTRL_EXT_SHIFT      9
-> +#define MII_MGMT_CTRL_BTP_SHIFT      10
+Also, what happens for existing child device associations like bluetooth & serio?
+Why not just provide a serial core interface for associating power-managed
+child devices?
 
-As mentioned, better move all the MII handling to a separate driver.
+Which brings up another point: why not do this in the runtime power management;
+ie, turn on the slave device when the master device is turned on? Sebastian
+recently made the 8250 driver power-managed per access, which would enable
+significant power savings over just leaving the slave device on the whole time.
 
-> +struct iproc_pcie;
-> +
-> +/**
-> + * iProc MSI
-> + * @pcie: pointer to the iProc PCIe data structure
-> + * @irq_in_use: bitmap of MSI IRQs that are in use
-> + * @domain: MSI IRQ domain
-> + * @chip: MSI controller
-> + * @eq_page: memory page to store the iProc MSI event queue
-> + * @msi_page: memory page for MSI posted writes
-> + */
-> +struct iproc_msi {
-> +	struct iproc_pcie *pcie;
-> +	DECLARE_BITMAP(irq_in_use, MAX_IRQS);
-> +	struct irq_domain *domain;
-> +	struct msi_controller chip;
-> +	unsigned long eq_page;
-> +	unsigned long msi_page;
-> +};
+>> 2) why is this tied to the tty core and not the serial core
+>>    if this is only for UART?
+> 
+> Because the knowledge of "the device is being opened" or "the device is being
+> closed" seems to exist in the tty core but not in the serial core.
 
-Same for MSI. I would assume that you will eventually have
-chips with this PCI core and a GICv2m or GICv3, so it would
-be better to reference the MSI controller through an msi-parent
-reference that can be replaced with a reference to the GIC.
+uart_open() = device file is being opened
+uart_close() = device file is being released
 
-> +
-> +	u32 phy_addr;
+> The "of_platform_populate()" call could certainly go in serial_core.c, in
+> uart_add_one_port() I think.  I did have it there originally.  I moved it for
+> a reason that I think is no longer relevant.  As the on/off code is (and I
+> think has to be) in tty_io.c, I left all of it there.
+> 
+> I'm happy to move it to serial_core.c if that is preferred.
+> I'll also move the open/close handling if you can point to where it should go.
 
-struct phy *phy;
+Yes, please.
+The reverse dependency (tty core => of) is undesirable.
 
-> +	int irqs[MAX_IRQS];
+Regards,
+Peter Hurley
 
-Please name these irqs individually according to what they do.
-The MSI IRQ should of course be moved to the MSI driver.
+>>> Signed-off-by: NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>
+>>> ---
+>>>  .../devicetree/bindings/serial/of-serial.txt       |    4 ++++
+>>>  drivers/tty/tty_io.c                               |   22 ++++++++++++++++++++
+>>>  2 files changed, 26 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/serial/of-serial.txt b/Documentation/devicetree/bindings/serial/of-serial.txt
+>>> index 8c4fd0332028..b59501ee2f21 100644
+>>> --- a/Documentation/devicetree/bindings/serial/of-serial.txt
+>>> +++ b/Documentation/devicetree/bindings/serial/of-serial.txt
+>>> @@ -39,6 +39,10 @@ Optional properties:
+>>>    driver is allowed to detect support for the capability even without this
+>>>    property.
+>>>  
+>>> +Optional child node:
+>>> +- a platform device listed as a child node will be probed and
+>>> +  powered-on whenever the tty is in use (open).
+>>> +
+>>>  Example:
+>>>  
+>>>  	uart@80230000 {
+>>> diff --git a/drivers/tty/tty_io.c b/drivers/tty/tty_io.c
+>>> index 0508a1d8e4cd..7acdc6f093f4 100644
+>>> --- a/drivers/tty/tty_io.c
+>>> +++ b/drivers/tty/tty_io.c
+>>> @@ -95,6 +95,8 @@
+>>>  #include <linux/seq_file.h>
+>>>  #include <linux/serial.h>
+>>>  #include <linux/ratelimit.h>
+>>> +#include <linux/pm_runtime.h>
+>>> +#include <linux/of_platform.h>
+>>>  
+>>>  #include <linux/uaccess.h>
+>>>  
+>>> @@ -1683,6 +1685,17 @@ static int tty_release_checks(struct tty_struct *tty, struct tty_struct *o_tty,
+>>>  	return 0;
+>>>  }
+>>>  
+>>> +static int open_child(struct device *dev, void *data)
+>>> +{
+>>> +	pm_runtime_get_sync(dev);
+>>> +	return 0;
+>>> +}
+>>> +static int release_child(struct device *dev, void *data)
+>>> +{
+>>> +	pm_runtime_put_autosuspend(dev);
+>>> +	return 0;
+>>> +}
+>>> +
+>>>  /**
+>>>   *	tty_release		-	vfs callback for close
+>>>   *	@inode: inode of tty
+>>> @@ -1712,6 +1725,8 @@ int tty_release(struct inode *inode, struct file *filp)
+>>>  	long	timeout = 0;
+>>>  	int	once = 1;
+>>>  
+>>> +	if (tty->dev)
+>>> +		device_for_each_child(tty->dev, NULL, release_child);
+>>>  	if (tty_paranoia_check(tty, inode, __func__))
+>>>  		return 0;
+>>>  
+>>> @@ -2118,6 +2133,8 @@ retry_open:
+>>>  		__proc_set_tty(current, tty);
+>>>  	spin_unlock_irq(&current->sighand->siglock);
+>>>  	tty_unlock(tty);
+>>> +	if (tty->dev)
+>>> +		device_for_each_child(tty->dev, NULL, open_child);
+>>>  	mutex_unlock(&tty_mutex);
+>>>  	return 0;
+>>>  err_unlock:
+>>> @@ -3207,6 +3224,11 @@ struct device *tty_register_device_attr(struct tty_driver *driver,
+>>>  	retval = device_register(dev);
+>>>  	if (retval)
+>>>  		goto error;
+>>> +	if (device && device->of_node)
+>>> +		/* Children are platform devices and will be
+>>> +		 * runtime_pm managed by this tty.
+>>> +		 */
+>>> +		of_platform_populate(device->of_node, NULL, NULL, dev);
+>>>  
+>>>  	return dev;
 
-> +	struct iproc_msi msi;
-> +};
-> +
-> +static inline int mdio_wait_idle(struct iproc_pcie *pcie)
-> +{
-> +	int timeout = MDIO_TIMEOUT_USEC;
-> +
-> +	while (readl(pcie->mii + MII_MGMT_CTRL_OFFSET) &
-> +			(1 << MII_MGMT_CTRL_BUSY_SHIFT)) {
-> +		udelay(1);
-> +		if (timeout-- <= 0)
-> +			return -EBUSY;
-> +	}
-> +	return 0;
-> +}
 
-Better use ktime_get()/ktime_add_ns()/ktime_before() loop here
-to do an accurate timeout.
-
-> +static void iproc_pcie_reset(struct iproc_pcie *pcie)
-> +{
-> +	u32 val;
-> +
-> +	/* send a downstream reset */
-> +	val = EP_MODE_SURVIVE_PERST | RC_PCIE_RST_OUTPUT;
-> +	writel(val, pcie->reg + CLK_CONTROL_OFFSET);
-> +	udelay(250);
-> +	val &= ~EP_MODE_SURVIVE_PERST;
-> +	writel(val, pcie->reg + CLK_CONTROL_OFFSET);
-> +	mdelay(250);
-> +}
-
-250ms delay is not acceptable. Please find a way to call this function
-from a context in which you can sleep.
-
-> +static int iproc_pcie_check_link(struct iproc_pcie *pcie)
-> +{
-> +	int ret;
-> +	u8 nlw;
-> +	u16 pos, tmp16;
-> +	u32 val;
-> +	struct pci_sys_data sys;
-> +	struct pci_bus bus;
-> +
-> +	val = readl(pcie->reg + PCIE_LINK_STATUS_OFFSET);
-> +	dev_dbg(pcie->dev, "link status: 0x%08x\n", val);
-> +
-> +	val = readl(pcie->reg + STRAP_STATUS_OFFSET);
-> +	dev_dbg(pcie->dev, "strap status: 0x%08x\n", val);
-> +
-> +	memset(&sys, 0, sizeof(sys));
-> +	memset(&bus, 0, sizeof(bus));
-> +
-> +	bus.number = 0;
-> +	bus.ops = &iproc_pcie_ops;
-> +	bus.sysdata = &sys;
-> +	sys.private_data = pcie;
-> +
-> +	ret = iproc_pci_read_conf(&bus, 0, PCI_HEADER_TYPE, 1, &val);
-> +	if (ret != PCIBIOS_SUCCESSFUL || val != PCI_HEADER_TYPE_BRIDGE) {
-> +		dev_err(pcie->dev, "in EP mode, val=0x08%x\n", val);
-> +		return -EFAULT;
-> +	}
-
-Remove the fake pci_bus hack and just read the config space directly.
-
-> +	if (nlw == 0) {
-> +		/* try GEN 1 link speed */
-> +#define PCI_LINK_STATUS_CTRL_2_OFFSET 0xDC
-> +#define PCI_TARGET_LINK_SPEED_MASK    0xF
-> +#define PCI_TARGET_LINK_SPEED_GEN2    0x2
-> +#define PCI_TARGET_LINK_SPEED_GEN1    0x1
-> +		pci_bus_read_config_dword(&bus, 0,
-> +				PCI_LINK_STATUS_CTRL_2_OFFSET, &val);
-> +		if ((val & PCI_TARGET_LINK_SPEED_MASK) ==
-> +				PCI_TARGET_LINK_SPEED_GEN2) {
-> +			val &= ~PCI_TARGET_LINK_SPEED_MASK;
-> +			val |= PCI_TARGET_LINK_SPEED_GEN1;
-> +			pci_bus_write_config_dword(&bus, 0,
-> +					PCI_LINK_STATUS_CTRL_2_OFFSET, val);
-> +			pci_bus_read_config_dword(&bus, 0,
-> +					PCI_LINK_STATUS_CTRL_2_OFFSET, &val);
-> +			mdelay(100);
-
-Too much delay.
-
-> +static struct hw_pci hw;
-
-Put this on the stack.
-
-> +
-> +	/* Get the PCI memory ranges from DT */
-> +	for_each_of_pci_range(&parser, &range) {
-> +		of_pci_range_to_resource(&range, np, &res);
-> +
-> +		switch (res.flags & IORESOURCE_TYPE_BITS) {
-> +		case IORESOURCE_IO:
-> +			memcpy(&pcie->io, &res, sizeof(res));
-> +			pcie->io.name = "I/O";
-> +			break;
-> +
-> +		case IORESOURCE_MEM:
-> +			memcpy(&pcie->mem, &res, sizeof(res));
-> +			pcie->mem.name = "MEM";
-> +			break;
-> +		}
-> +	}
-
-I think you need to request all the resources here, including the physical
-I/O space window.
-
-> +static struct platform_driver iproc_pcie_driver = {
-> +	.driver = {
-> +		.owner = THIS_MODULE,
-> +		.name = "iproc-pcie",
-> +		.of_match_table =
-> +		   of_match_ptr(iproc_pcie_of_match_table),
-> +	},
-> +};
-
-Make this a bcma_driver.
-
-> +static int __init iproc_pcie_init(void)
-> +{
-> +	return platform_driver_probe(&iproc_pcie_driver,
-> +			iproc_pcie_probe);
-> +}
-> +subsys_initcall(iproc_pcie_init);
-
-module_init()? Doesn't seem necessary to have this early.
-
-	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
