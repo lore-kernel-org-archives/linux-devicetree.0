@@ -1,55 +1,49 @@
-From: VishnuPatekar <vishnupatekar0510@gmail.com>
-Subject: [PATCHv3 0/5] ARM:sunxi:ps2 Added support for A10/A20 ps2 controller.
-Date: Fri, 12 Dec 2014 23:55:43 +0530
-Message-ID: <1418408748-9797-1-git-send-email-vishnupatekar0510@gmail.com>
-Return-path: <linux-input-owner@vger.kernel.org>
-Sender: linux-input-owner@vger.kernel.org
-To: linux-input@vger.kernel.org, maxime.ripard@free-electrons.com, dmitry.torokhov@gmail.com, hdegoede@redhat.com
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, grant.likely@linaro.org, benh@kernel.crashing.org, msalter@redhat.com, ralf@linux-mips.org, jdelvare@suse.de, VishnuPatekar <vishnupatekar0510@gmail.com>
+From: Eduardo Valentin <edubezval@gmail.com>
+Subject: [PATCH 1/2] thermal: db8500: Do not print error message in the EPROBE_DEFER case
+Date: Fri, 12 Dec 2014 10:14:24 -0400
+Message-ID: <1418393665-16850-2-git-send-email-edubezval@gmail.com>
+References: <1418393665-16850-1-git-send-email-edubezval@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1418393665-16850-1-git-send-email-edubezval@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linux PM <linux-pm@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Eduardo Valentin <edubezval@gmail.com>, Zhang Rui <rui.zhang@intel.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-v2 --> v3
-1. changed config to SERIO_SUN4I_PS2 from SERIO_SUNXI_PS2
-2. changed driver name to sun4i-ps2 from sunxi-ps2.
-3. changed the function names to sun4i_ps2_*.
-4. added locking in sun4i_ps2_open.
-5. kept compatible "sun4i-a10-ps2" for A10 and A20, as A10 is earlier SOC.
-6. corrected the style errors.
-7. separated the dts patches.
-8. removed commented ps2 notes from lime2 dts.
-9. added note that ps2 pins confilt with hdmi.
-10. corrected the interrupt property for A10.
-11. moved dt-bindings to Documentation/devicetree/bindings/serio
+Avoid printing the error message in the EPROBE_DEFER case
+where registering cpu cooling at db8500 thermal driver.
 
-v1 --> v2: 
-1. added default n depends on ARCH_SUNXI || COMPILE_TEST in Kconfig. 
-2. handled errors and free resources on errors. 
-3. used BIT(x), DIV_ROUND_UP macros. 
-4. corrected style errors. 
-5. added support for A10 also, A10 and A2 have same properties of PS2 controller. 
-6. by default commented ps20 and ps21 nodes,as ps20 pins conflict with HDMI.
-7. added compatible as allwinner,sun4i-a10-ps2. 
-8. corrected the possible race condition. 
+Cc: Zhang Rui <rui.zhang@intel.com>
+Cc: Grant Likely <grant.likely@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: linux-pm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Eduardo Valentin <edubezval@gmail.com>
+---
+ drivers/thermal/db8500_cpufreq_cooling.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-
-VishnuPatekar (5):
-  sunxi:dts-bindings:input:ps2 bindings for A10/A20 ps2.
-  ARM:sunxi:drivers:input Add support for A10/A20 PS2
-  ARM: sunxi: dts: Add PS2 nodes to dtsi for A10 and A20
-  ARM: sunxi: dts: Add A10/A20 PS2 pin muxing options
-  ARM: sunxi: dts: Add note ps2 pins conflict with hdmi
-
- .../bindings/serio/allwinner,sun4i-ps2.txt         |   23 ++
- arch/arm/boot/dts/sun4i-a10.dtsi                   |   31 ++
- arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts    |    6 +-
- arch/arm/boot/dts/sun7i-a20.dtsi                   |   32 ++
- drivers/input/serio/Kconfig                        |   11 +
- drivers/input/serio/Makefile                       |    1 +
- drivers/input/serio/sun4i-ps2.c                    |  362 ++++++++++++++++++++
- 7 files changed, 465 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/serio/allwinner,sun4i-ps2.txt
- create mode 100644 drivers/input/serio/sun4i-ps2.c
-
+diff --git a/drivers/thermal/db8500_cpufreq_cooling.c b/drivers/thermal/db8500_cpufreq_cooling.c
+index 3cc3dd9..28bbff9 100644
+--- a/drivers/thermal/db8500_cpufreq_cooling.c
++++ b/drivers/thermal/db8500_cpufreq_cooling.c
+@@ -30,8 +30,14 @@ static int db8500_cpufreq_cooling_probe(struct platform_device *pdev)
+ 
+ 	cdev = cpufreq_cooling_register(cpu_present_mask);
+ 	if (IS_ERR(cdev)) {
+-		dev_err(&pdev->dev, "Failed to register cooling device\n");
+-		return PTR_ERR(cdev);
++		int ret = PTR_ERR(cdev);
++
++		if (ret != -EPROBE_DEFER)
++			dev_err(&pdev->dev,
++				"Failed to register cooling device %d\n",
++				ret);
++				
++		return ret;
+ 	}
+ 
+ 	platform_set_drvdata(pdev, cdev);
 -- 
-1.7.9.5
-
+2.1.3
