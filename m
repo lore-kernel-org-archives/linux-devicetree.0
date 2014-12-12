@@ -1,520 +1,235 @@
-From: Ley Foon Tan <lftan-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH (resend)] mailbox: Add Altera mailbox driver
-Date: Fri, 12 Dec 2014 18:04:50 +0800
-Message-ID: <1418378690-3466-1-git-send-email-lftan@altera.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH v4] clk: Add PWM clock driver
+Date: Fri, 12 Dec 2014 11:47:49 +0100
+Message-ID: <1418381269-26399-1-git-send-email-p.zabel@pengutronix.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Ley Foon Tan <lftan-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, lftan.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: =?UTF-8?q?Janusz=20U=C5=BCycki?= <j.uzycki-9tnw74Q4ehaHKKo6LODCOg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The Altera mailbox allows for interprocessor communication. It supports
-only one channel and work as either sender or receiver.
+Some board designers, when running out of clock output pads, decide to
+(mis)use PWM output pads to provide a clock to external components.
+This driver supports this practice by providing an adapter between the
+PWM and clock bindings in the device tree. As the PWM bindings specify
+the period in the device tree, this is a fixed clock.
 
-Signed-off-by: Ley Foon Tan <lftan-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 ---
- .../devicetree/bindings/mailbox/altera-mailbox.txt |  49 +++
- drivers/mailbox/Kconfig                            |   6 +
- drivers/mailbox/Makefile                           |   2 +
- drivers/mailbox/mailbox-altera.c                   | 404 +++++++++++++++++++++
- 4 files changed, 461 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mailbox/altera-mailbox.txt
- create mode 100644 drivers/mailbox/mailbox-altera.c
+Changes since v3:
+ - Call pwm_enable/disable from prepare/unprepare callbacks
+ - Use NSEC_PER_SEC
+ - Add CLK_IS_BASIC flag
+ - Register clk_pwm_remove function
+ - Since this is a platform_device, remove driver.owner = THIS_MODULE
+---
+ .../devicetree/bindings/clock/pwm-clock.txt        |  26 +++++
+ drivers/clk/Kconfig                                |   7 ++
+ drivers/clk/Makefile                               |   1 +
+ drivers/clk/clk-pwm.c                              | 129 +++++++++++++++++++++
+ 4 files changed, 163 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/pwm-clock.txt
+ create mode 100644 drivers/clk/clk-pwm.c
 
-diff --git a/Documentation/devicetree/bindings/mailbox/altera-mailbox.txt b/Documentation/devicetree/bindings/mailbox/altera-mailbox.txt
+diff --git a/Documentation/devicetree/bindings/clock/pwm-clock.txt b/Documentation/devicetree/bindings/clock/pwm-clock.txt
 new file mode 100644
-index 0000000..c261979
+index 0000000..751fff5
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/mailbox/altera-mailbox.txt
-@@ -0,0 +1,49 @@
-+Altera Mailbox Driver
-+=====================
++++ b/Documentation/devicetree/bindings/clock/pwm-clock.txt
+@@ -0,0 +1,26 @@
++Binding for an external clock signal driven by a PWM pin.
++
++This binding uses the common clock binding[1] and the common PWM binding[2].
++
++[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
++[2] Documentation/devicetree/bindings/pwm/pwm.txt
 +
 +Required properties:
-+- compatible :	"altr,mailbox-1.0".
-+- reg : 	physical base address of the mailbox and length of
-+		memory mapped region.
-+- #mbox-cells:	Common mailbox binding property to identify the number
-+		of cells required for the mailbox specifier. Should be 1.
++- compatible : shall be "pwm-clock".
++- #clock-cells : from common clock binding; shall be set to 0.
++- pwms : from common PWM binding; this determines the clock frequency
++  via the PWM period given in the pwm-specifier.
 +
 +Optional properties:
-+- interrupt-parent :	interrupt source phandle.
-+- interrupts :		interrupt number. The interrupt specifier format
-+			depends on the interrupt controller parent.
++- clock-output-names : From common clock binding.
++- clock-frequency : Exact output frequency, in case the pwm period
++  is not exact but was rounded to nanoseconds.
 +
 +Example:
-+	mbox_tx: mailbox@0x100 {
-+		compatible = "altr,mailbox-1.0";
-+		reg = <0x100 0x8>;
-+		interrupt-parent = < &gic_0 >;
-+		interrupts = <5>;
-+		#mbox-cells = <1>;
++	clock {
++		compatible = "pwm-clock";
++		#clock-cells = <0>;
++		clock-frequency = <25000000>;
++		clock-output-names = "mipi_mclk";
++		pwms = <&pwm2 0 40>; /* 1 / 40 ns = 25 MHz */
 +	};
-+
-+	mbox_rx: mailbox@0x200 {
-+		compatible = "altr,mailbox-1.0";
-+		reg = <0x200 0x8>;
-+		interrupt-parent = < &gic_0 >;
-+		interrupts = <6>;
-+		#mbox-cells = <1>;
-+	};
-+
-+Mailbox client
-+===============
-+"mboxes" and the optional "mbox-names" (please see
-+Documentation/devicetree/bindings/mailbox/mailbox.txt for details). Each value
-+of the mboxes property should contain a phandle to the mailbox controller
-+device node and second argument is the channel index. It must be 0 (hardware
-+support only one channel).The equivalent "mbox-names" property value can be
-+used to give a name to the communication channel to be used by the client user.
-+
-+Example:
-+	mclient0: mclient0@0x400 {
-+		compatible = "client-1.0";
-+		reg = <0x400 0x10>;
-+		mbox-names = "mbox-tx", "mbox-rx";
-+		mboxes = <&mbox_tx 0>,
-+			 <&mbox_rx 0>;
-+	};
-diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
-index c04fed9..84325f2 100644
---- a/drivers/mailbox/Kconfig
-+++ b/drivers/mailbox/Kconfig
-@@ -45,4 +45,10 @@ config PCC
- 	  states). Select this driver if your platform implements the
- 	  PCC clients mentioned above.
+diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+index 455fd17..36a6918a 100644
+--- a/drivers/clk/Kconfig
++++ b/drivers/clk/Kconfig
+@@ -129,6 +129,13 @@ config COMMON_CLK_PALMAS
+ 	  This driver supports TI Palmas devices 32KHz output KG and KG_AUDIO
+ 	  using common clock framework.
  
-+config ALTERA_MBOX
-+	tristate "Altera Mailbox"
-+	help
-+	  An implementation of the Altera Mailbox soft core. It is used
-+	  to send message between processors. Say Y here if you want to use the
-+	  Altera mailbox support.
- endif
-diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile
-index dd412c2..2e79231 100644
---- a/drivers/mailbox/Makefile
-+++ b/drivers/mailbox/Makefile
-@@ -7,3 +7,5 @@ obj-$(CONFIG_PL320_MBOX)	+= pl320-ipc.o
- obj-$(CONFIG_OMAP2PLUS_MBOX)	+= omap-mailbox.o
- 
- obj-$(CONFIG_PCC)		+= pcc.o
++config COMMON_CLK_PWM
++	bool "Clock driver for PWMs used as clock outputs"
++	depends on PWM
++	---help---
++	  Adapter driver so that any PWM output can be (mis)used as clock signal
++	  at 50% duty cycle.
 +
-+obj-$(CONFIG_ALTERA_MBOX)	+= mailbox-altera.o
-diff --git a/drivers/mailbox/mailbox-altera.c b/drivers/mailbox/mailbox-altera.c
+ config COMMON_CLK_PXA
+ 	def_bool COMMON_CLK && ARCH_PXA
+ 	---help---
+diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+index d5fba5b..6a0c5cf 100644
+--- a/drivers/clk/Makefile
++++ b/drivers/clk/Makefile
+@@ -40,6 +40,7 @@ obj-$(CONFIG_ARCH_U300)			+= clk-u300.o
+ obj-$(CONFIG_ARCH_VT8500)		+= clk-vt8500.o
+ obj-$(CONFIG_COMMON_CLK_WM831X)		+= clk-wm831x.o
+ obj-$(CONFIG_COMMON_CLK_XGENE)		+= clk-xgene.o
++obj-$(CONFIG_COMMON_CLK_PWM)		+= clk-pwm.o
+ obj-$(CONFIG_COMMON_CLK_AT91)		+= at91/
+ obj-$(CONFIG_ARCH_BCM_MOBILE)		+= bcm/
+ obj-$(CONFIG_ARCH_BERLIN)		+= berlin/
+diff --git a/drivers/clk/clk-pwm.c b/drivers/clk/clk-pwm.c
 new file mode 100644
-index 0000000..9ed10de
+index 0000000..c7d5652
 --- /dev/null
-+++ b/drivers/mailbox/mailbox-altera.c
-@@ -0,0 +1,404 @@
++++ b/drivers/clk/clk-pwm.c
+@@ -0,0 +1,129 @@
 +/*
-+ * Copyright Altera Corporation (C) 2013-2014. All rights reserved
++ * Copyright (C) 2014 Philipp Zabel, Pengutronix
 + *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
 + *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along with
-+ * this program.  If not, see <http://www.gnu.org/licenses/>.
++ * PWM (mis)used as clock output
 + */
-+
++#include <linux/clk-provider.h>
 +#include <linux/kernel.h>
 +#include <linux/module.h>
-+#include <linux/device.h>
-+#include <linux/platform_device.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
 +#include <linux/of.h>
-+#include <linux/mailbox_controller.h>
++#include <linux/platform_device.h>
++#include <linux/pwm.h>
 +
-+#define DRIVER_NAME	"altera-mailbox"
-+
-+#define MAILBOX_CMD_REG			0x00
-+#define MAILBOX_PTR_REG			0x04
-+#define MAILBOX_STS_REG			0x08
-+#define MAILBOX_INTMASK_REG		0x0C
-+
-+#define INT_PENDING_MSK			0x1
-+#define INT_SPACE_MSK			0x2
-+
-+#define STS_PENDING_MSK			0x1
-+#define STS_FULL_MSK			0x2
-+#define STS_FULL_OFT			0x1
-+
-+#define MBOX_PENDING(status)	(((status) & STS_PENDING_MSK))
-+#define MBOX_FULL(status)	(((status) & STS_FULL_MSK) >> STS_FULL_OFT)
-+
-+enum altera_mbox_msg {
-+	MBOX_CMD = 0,
-+	MBOX_PTR,
++struct clk_pwm {
++	struct clk_hw hw;
++	struct pwm_device *pwm;
++	u32 fixed_rate;
 +};
 +
-+#define MBOX_POLLING_MS		1	/* polling interval 1ms */
++#define to_clk_pwm(_hw) container_of(_hw, struct clk_pwm, hw)
 +
-+struct altera_mbox {
-+	bool is_sender;		/* 1-sender, 0-receiver */
-+	bool intr_mode;
-+	int irq;
-+	void __iomem *mbox_base;
-+	struct device *dev;
-+	struct mbox_chan chan;
-+	struct mbox_controller controller;
++static int clk_pwm_prepare(struct clk_hw *hw)
++{
++	struct clk_pwm *clk_pwm = to_clk_pwm(hw);
 +
-+	/* If the controller supports only RX polling mode */
-+	struct timer_list rxpoll_timer;
++	return pwm_enable(clk_pwm->pwm);
++}
++
++static void clk_pwm_unprepare(struct clk_hw *hw)
++{
++	struct clk_pwm *clk_pwm = to_clk_pwm(hw);
++
++	pwm_disable(clk_pwm->pwm);
++}
++
++static unsigned long clk_pwm_recalc_rate(struct clk_hw *hw,
++					 unsigned long parent_rate)
++{
++	struct clk_pwm *clk_pwm = to_clk_pwm(hw);
++
++	return clk_pwm->fixed_rate;
++}
++
++const struct clk_ops clk_pwm_ops = {
++	.prepare = clk_pwm_prepare,
++	.unprepare = clk_pwm_unprepare,
++	.recalc_rate = clk_pwm_recalc_rate,
 +};
 +
-+static inline struct altera_mbox *to_altera_mbox(struct mbox_chan *chan)
++int clk_pwm_probe(struct platform_device *pdev)
 +{
-+	if (!chan)
-+		return NULL;
-+
-+	return container_of(chan, struct altera_mbox, chan);
-+}
-+
-+static inline int altera_mbox_full(struct altera_mbox *mbox)
-+{
-+	u32 status;
-+
-+	status = __raw_readl(mbox->mbox_base + MAILBOX_STS_REG);
-+	return MBOX_FULL(status);
-+}
-+
-+static inline int altera_mbox_pending(struct altera_mbox *mbox)
-+{
-+	u32 status;
-+
-+	status = __raw_readl(mbox->mbox_base + MAILBOX_STS_REG);
-+	return MBOX_PENDING(status);
-+}
-+
-+static void altera_mbox_rx_intmask(struct altera_mbox *mbox, bool enable)
-+{
-+	u32 mask;
-+
-+	mask = __raw_readl(mbox->mbox_base + MAILBOX_INTMASK_REG);
-+	if (enable)
-+		mask |= INT_PENDING_MSK;
-+	else
-+		mask &= ~INT_PENDING_MSK;
-+	__raw_writel(mask, mbox->mbox_base + MAILBOX_INTMASK_REG);
-+}
-+
-+static void altera_mbox_tx_intmask(struct altera_mbox *mbox, bool enable)
-+{
-+	u32 mask;
-+
-+	mask = __raw_readl(mbox->mbox_base + MAILBOX_INTMASK_REG);
-+	if (enable)
-+		mask |= INT_SPACE_MSK;
-+	else
-+		mask &= ~INT_SPACE_MSK;
-+	__raw_writel(mask, mbox->mbox_base + MAILBOX_INTMASK_REG);
-+}
-+
-+static bool altera_mbox_is_sender(struct altera_mbox *mbox)
-+{
-+	u32 reg;
-+	/* Write a magic number to PTR register and read back this register.
-+	 * This register is read-write if it is a sender.
-+	 */
-+	#define MBOX_MAGIC	0xA5A5AA55
-+	__raw_writel(MBOX_MAGIC, mbox->mbox_base + MAILBOX_PTR_REG);
-+	reg = __raw_readl(mbox->mbox_base + MAILBOX_PTR_REG);
-+	if (reg == MBOX_MAGIC) {
-+		/* Clear to 0 */
-+		__raw_writel(0, mbox->mbox_base + MAILBOX_PTR_REG);
-+		return true;
-+	}
-+	return false;
-+}
-+
-+static void altera_mbox_rx_data(struct mbox_chan *chan)
-+{
-+	struct altera_mbox *mbox = to_altera_mbox(chan);
-+	u32 data[2];
-+
-+	if (altera_mbox_pending(mbox)) {
-+		data[MBOX_PTR] = __raw_readl(mbox->mbox_base + MAILBOX_PTR_REG);
-+		data[MBOX_CMD] = __raw_readl(mbox->mbox_base + MAILBOX_CMD_REG);
-+		mbox_chan_received_data(chan, (void *)data);
-+	}
-+}
-+
-+static void altera_mbox_poll_rx(unsigned long data)
-+{
-+	struct mbox_chan *chan = (struct mbox_chan *)data;
-+	struct altera_mbox *mbox = to_altera_mbox(chan);
-+
-+	altera_mbox_rx_data(chan);
-+
-+	mod_timer(&mbox->rxpoll_timer,
-+		jiffies + msecs_to_jiffies(MBOX_POLLING_MS));
-+}
-+
-+static irqreturn_t altera_mbox_tx_interrupt(int irq, void *p)
-+{
-+	struct mbox_chan *chan = (struct mbox_chan *)p;
-+	struct altera_mbox *mbox = to_altera_mbox(chan);
-+
-+	altera_mbox_tx_intmask(mbox, false);
-+	mbox_chan_txdone(chan, 0);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static irqreturn_t altera_mbox_rx_interrupt(int irq, void *p)
-+{
-+	struct mbox_chan *chan = (struct mbox_chan *)p;
-+
-+	altera_mbox_rx_data(chan);
-+	return IRQ_HANDLED;
-+}
-+
-+static int altera_mbox_startup_sender(struct mbox_chan *chan)
-+{
-+	int ret;
-+	struct altera_mbox *mbox = to_altera_mbox(chan);
-+
-+	if (mbox->intr_mode) {
-+		ret = request_irq(mbox->irq, altera_mbox_tx_interrupt, 0,
-+			DRIVER_NAME, chan);
-+		if (unlikely(ret)) {
-+			dev_err(mbox->dev,
-+				"failed to register mailbox interrupt:%d\n",
-+				ret);
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int altera_mbox_startup_receiver(struct mbox_chan *chan)
-+{
-+	int ret;
-+	struct altera_mbox *mbox = to_altera_mbox(chan);
-+
-+	if (mbox->intr_mode) {
-+		ret = request_irq(mbox->irq, altera_mbox_rx_interrupt, 0,
-+			DRIVER_NAME, chan);
-+		if (unlikely(ret)) {
-+			dev_err(mbox->dev,
-+				"failed to register mailbox interrupt:%d\n",
-+				ret);
-+			return ret;
-+		}
-+		altera_mbox_rx_intmask(mbox, true);
-+	} else {
-+		/* Setup polling timer */
-+		setup_timer(&mbox->rxpoll_timer, altera_mbox_poll_rx,
-+			(unsigned long)chan);
-+		mod_timer(&mbox->rxpoll_timer,
-+			jiffies + msecs_to_jiffies(MBOX_POLLING_MS));
-+	}
-+
-+	return 0;
-+}
-+
-+static int altera_mbox_send_data(struct mbox_chan *chan, void *data)
-+{
-+	struct altera_mbox *mbox = to_altera_mbox(chan);
-+	u32 *udata = (u32 *)data;
-+
-+	if (!mbox || !data)
-+		return -EINVAL;
-+	if (!mbox->is_sender) {
-+		dev_warn(mbox->dev,
-+			"failed to send. This is receiver mailbox.\n");
-+		return -EINVAL;
-+	}
-+
-+	if (altera_mbox_full(mbox))
-+		return -EBUSY;
-+
-+	/* Enable interrupt before send */
-+	altera_mbox_tx_intmask(mbox, true);
-+
-+	/* Pointer register must write before command register */
-+	__raw_writel(udata[MBOX_PTR], mbox->mbox_base + MAILBOX_PTR_REG);
-+	__raw_writel(udata[MBOX_CMD], mbox->mbox_base + MAILBOX_CMD_REG);
-+
-+	return 0;
-+}
-+
-+static bool altera_mbox_last_tx_done(struct mbox_chan *chan)
-+{
-+	struct altera_mbox *mbox = to_altera_mbox(chan);
-+
-+	if (WARN_ON(!mbox))
-+		return false;
-+
-+	/* Return false if mailbox is full */
-+	return altera_mbox_full(mbox) ? false : true;
-+}
-+
-+static bool altera_mbox_peek_data(struct mbox_chan *chan)
-+{
-+	struct altera_mbox *mbox = to_altera_mbox(chan);
-+
-+	if (WARN_ON(!mbox))
-+		return false;
-+
-+	return altera_mbox_pending(mbox) ? true : false;
-+}
-+
-+static int altera_mbox_startup(struct mbox_chan *chan)
-+{
-+	struct altera_mbox *mbox = to_altera_mbox(chan);
-+	int ret = 0;
-+
-+	if (!mbox)
-+		return -EINVAL;
-+
-+	if (mbox->is_sender)
-+		ret = altera_mbox_startup_sender(chan);
-+	else
-+		ret = altera_mbox_startup_receiver(chan);
-+
-+	return ret;
-+}
-+
-+static void altera_mbox_shutdown(struct mbox_chan *chan)
-+{
-+	struct altera_mbox *mbox = to_altera_mbox(chan);
-+
-+	if (WARN_ON(!mbox))
-+		return;
-+
-+	if (mbox->intr_mode) {
-+		/* Unmask all interrupt masks */
-+		__raw_writel(~0, mbox->mbox_base + MAILBOX_INTMASK_REG);
-+		free_irq(mbox->irq, chan);
-+	} else if (!mbox->is_sender)
-+		del_timer_sync(&mbox->rxpoll_timer);
-+}
-+
-+static struct mbox_chan_ops altera_mbox_ops = {
-+	.send_data = altera_mbox_send_data,
-+	.startup = altera_mbox_startup,
-+	.shutdown = altera_mbox_shutdown,
-+	.last_tx_done = altera_mbox_last_tx_done,
-+	.peek_data = altera_mbox_peek_data,
-+};
-+
-+static int altera_mbox_probe(struct platform_device *pdev)
-+{
-+	struct altera_mbox *mbox;
-+	struct mbox_chan *chans[1];
-+	struct resource	*regs;
++	struct device_node *node = pdev->dev.of_node;
++	struct clk_init_data init;
++	struct clk_pwm *clk_pwm;
++	struct pwm_device *pwm;
++	const char *clk_name;
++	struct clk *clk;
 +	int ret;
 +
-+	mbox = devm_kzalloc(&pdev->dev, sizeof(struct altera_mbox),
-+		GFP_KERNEL);
-+	if (!mbox)
++	clk_pwm = devm_kzalloc(&pdev->dev, sizeof(*clk_pwm), GFP_KERNEL);
++	if (!clk_pwm)
 +		return -ENOMEM;
 +
-+	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!regs)
-+		return -ENXIO;
++	pwm = devm_pwm_get(&pdev->dev, NULL);
++	if (IS_ERR(pwm))
++		return PTR_ERR(pwm);
 +
-+	mbox->mbox_base = devm_ioremap_resource(&pdev->dev, regs);
-+	if (IS_ERR(mbox->mbox_base))
-+		return PTR_ERR(mbox->mbox_base);
-+
-+	/* Check is it a sender or receiver? */
-+	mbox->is_sender = altera_mbox_is_sender(mbox);
-+
-+	mbox->irq = platform_get_irq(pdev, 0);
-+	if (mbox->irq >= 0)
-+		mbox->intr_mode = true;
-+
-+	mbox->dev = &pdev->dev;
-+
-+	/* Hardware supports only one channel. */
-+	chans[0] = &mbox->chan;
-+	mbox->controller.dev = mbox->dev;
-+	mbox->controller.num_chans = 1;
-+	mbox->controller.chans =  &mbox->chan;
-+	mbox->controller.ops = &altera_mbox_ops;
-+
-+	if (mbox->is_sender) {
-+		if (mbox->intr_mode)
-+			mbox->controller.txdone_irq = true;
-+		else {
-+			mbox->controller.txdone_poll = true;
-+			mbox->controller.txpoll_period = MBOX_POLLING_MS;
-+		}
-+	}
-+
-+	ret = mbox_controller_register(&mbox->controller);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Register mailbox failed\n");
-+		goto err;
-+	}
-+
-+	platform_set_drvdata(pdev, mbox);
-+	return 0;
-+err:
-+	return ret;
-+}
-+
-+static int altera_mbox_remove(struct platform_device *pdev)
-+{
-+	struct altera_mbox *mbox = platform_get_drvdata(pdev);
-+
-+	if (!mbox)
++	if (!pwm || !pwm->period) {
++		dev_err(&pdev->dev, "invalid pwm period\n");
 +		return -EINVAL;
++	}
 +
-+	mbox_controller_unregister(&mbox->controller);
++	if (of_property_read_u32(node, "clock-frequency", &clk_pwm->fixed_rate))
++		clk_pwm->fixed_rate = NSEC_PER_SEC / pwm->period;
 +
-+	platform_set_drvdata(pdev, NULL);
++	if (pwm->period != NSEC_PER_SEC / clk_pwm->fixed_rate &&
++	    pwm->period != DIV_ROUND_UP(NSEC_PER_SEC, clk_pwm->fixed_rate)) {
++		dev_err(&pdev->dev,
++			"clock-frequency does not match pwm period\n");
++		return -EINVAL;
++	}
++
++	ret = pwm_config(pwm, (pwm->period + 1) >> 1, pwm->period);
++	if (ret < 0)
++		return ret;
++
++	clk_name = node->name;
++	of_property_read_string(node, "clock-output-names", &clk_name);
++
++	init.name = clk_name;
++	init.ops = &clk_pwm_ops;
++	init.flags = CLK_IS_BASIC | CLK_IS_ROOT;
++	init.num_parents = 0;
++
++	clk_pwm->pwm = pwm;
++	clk_pwm->hw.init = &init;
++	clk = devm_clk_register(&pdev->dev, &clk_pwm->hw);
++	if (IS_ERR(clk))
++		return PTR_ERR(clk);
++
++	return of_clk_add_provider(node, of_clk_src_simple_get, clk);
++}
++
++int clk_pwm_remove(struct platform_device *pdev)
++{
++	of_clk_del_provider(pdev->dev.of_node);
++
 +	return 0;
 +}
 +
-+static const struct of_device_id altera_mbox_match[] = {
-+	{ .compatible = "altr,mailbox-1.0" },
-+	{ /* Sentinel */ }
++static const struct of_device_id clk_pwm_dt_ids[] = {
++	{ .compatible = "pwm-clock" },
++	{ }
 +};
++MODULE_DEVICE_TABLE(of, clk_pwm_dt_ids);
 +
-+MODULE_DEVICE_TABLE(of, altera_mbox_match);
-+
-+static struct platform_driver altera_mbox_driver = {
-+	.probe	= altera_mbox_probe,
-+	.remove	= altera_mbox_remove,
-+	.driver	= {
-+		.name	= DRIVER_NAME,
-+		.owner	= THIS_MODULE,
-+		.of_match_table	= altera_mbox_match,
++static struct platform_driver clk_pwm_driver = {
++	.probe = clk_pwm_probe,
++	.remove = clk_pwm_remove,
++	.driver = {
++		.name = "pwm-clock",
++		.of_match_table = of_match_ptr(clk_pwm_dt_ids),
 +	},
 +};
 +
-+static int altera_mbox_init(void)
-+{
-+	return platform_driver_register(&altera_mbox_driver);
-+}
-+
-+static void altera_mbox_exit(void)
-+{
-+	platform_driver_unregister(&altera_mbox_driver);
-+}
-+
-+module_init(altera_mbox_init);
-+module_exit(altera_mbox_exit);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("Altera mailbox specific functions");
-+MODULE_AUTHOR("Ley Foon Tan <lftan-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>");
-+MODULE_ALIAS("platform:altera-mailbox");
++module_platform_driver(clk_pwm_driver);
 -- 
-1.8.2.1
+2.1.3
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
