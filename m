@@ -1,7 +1,7 @@
 From: Kevin Cernekee <cernekee@gmail.com>
-Subject: [PATCH V5 11/23] MIPS: Fall back to the generic restart notifier
-Date: Fri, 12 Dec 2014 14:07:02 -0800
-Message-ID: <1418422034-17099-12-git-send-email-cernekee@gmail.com>
+Subject: [PATCH V5 13/23] MIPS: BMIPS: Flush the readahead cache after DMA
+Date: Fri, 12 Dec 2014 14:07:04 -0800
+Message-ID: <1418422034-17099-14-git-send-email-cernekee@gmail.com>
 References: <1418422034-17099-1-git-send-email-cernekee@gmail.com>
 Return-path: <linux-mips-bounce@linux-mips.org>
 In-Reply-To: <1418422034-17099-1-git-send-email-cernekee@gmail.com>
@@ -18,27 +18,46 @@ To: ralf@linux-mips.org
 Cc: f.fainelli@gmail.com, tglx@linutronix.de, jason@lakedaemon.net, jogo@openwrt.org, arnd@arndb.de, computersforpeace@gmail.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-If the machine doesn't set its own _machine_restart callback, call the
-common do_kernel_restart() instead.  This allows arch-independent reset
-drivers from drivers/power/reset/ to be used to reboot the machine.
+BMIPS 3300/435x/438x CPUs have a readahead cache that is separate from
+the L1/L2.  During a DMA operation, accesses adjacent to a DMA buffer
+may cause parts of the DMA buffer to be prefetched into the RAC.  To
+avoid possible coherency problems, flush the RAC upon DMA completion.
 
 Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
 ---
- arch/mips/kernel/reset.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/mips/mm/dma-default.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/arch/mips/kernel/reset.c b/arch/mips/kernel/reset.c
-index 07fc524..cf23ab5 100644
---- a/arch/mips/kernel/reset.c
-+++ b/arch/mips/kernel/reset.c
-@@ -29,6 +29,8 @@ void machine_restart(char *command)
- {
- 	if (_machine_restart)
- 		_machine_restart(command);
-+	else
-+		do_kernel_restart(command);
- }
+diff --git a/arch/mips/mm/dma-default.c b/arch/mips/mm/dma-default.c
+index af5f046..ee6d12c 100644
+--- a/arch/mips/mm/dma-default.c
++++ b/arch/mips/mm/dma-default.c
+@@ -18,6 +18,7 @@
+ #include <linux/highmem.h>
+ #include <linux/dma-contiguous.h>
  
- void machine_halt(void)
++#include <asm/bmips.h>
+ #include <asm/cache.h>
+ #include <asm/cpu-type.h>
+ #include <asm/io.h>
+@@ -69,6 +70,18 @@ static inline struct page *dma_addr_to_page(struct device *dev,
+  */
+ static inline int cpu_needs_post_dma_flush(struct device *dev)
+ {
++	if (boot_cpu_type() == CPU_BMIPS3300 ||
++	    boot_cpu_type() == CPU_BMIPS4350 ||
++	    boot_cpu_type() == CPU_BMIPS4380) {
++		void __iomem *cbr = BMIPS_GET_CBR();
++
++		/* Flush stale data out of the readahead cache */
++		__raw_writel(0x100, cbr + BMIPS_RAC_CONFIG);
++		__raw_readl(cbr + BMIPS_RAC_CONFIG);
++
++		return 0;
++	}
++
+ 	return !plat_device_is_coherent(dev) &&
+ 	       (boot_cpu_type() == CPU_R10000 ||
+ 		boot_cpu_type() == CPU_R12000 ||
 -- 
 2.1.1
