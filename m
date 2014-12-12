@@ -1,165 +1,166 @@
 From: Kevin Cernekee <cernekee@gmail.com>
-Subject: [PATCH V5 17/23] MIPS: BMIPS: Add quirks for several Broadcom platforms
-Date: Fri, 12 Dec 2014 14:07:08 -0800
-Message-ID: <1418422034-17099-18-git-send-email-cernekee@gmail.com>
+Subject: [PATCH V5 08/23] irqchip: bcm7120-l2: Add support for BCM3380-style controllers
+Date: Fri, 12 Dec 2014 14:06:59 -0800
+Message-ID: <1418422034-17099-9-git-send-email-cernekee@gmail.com>
 References: <1418422034-17099-1-git-send-email-cernekee@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-mips-bounce@linux-mips.org>
 In-Reply-To: <1418422034-17099-1-git-send-email-cernekee@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
 To: ralf@linux-mips.org
 Cc: f.fainelli@gmail.com, tglx@linutronix.de, jason@lakedaemon.net, jogo@openwrt.org, arnd@arndb.de, computersforpeace@gmail.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-A couple of chips require special handling in order to make SMP secondary
-boot and/or exception vectors work correctly.  Take care of these in
-setup.c.
+These controllers support multiple enable/status pairs (64+ IRQs),
+can put the enable/status words at different offsets, and do not
+support multiple parent IRQs.
 
 Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
 ---
- arch/mips/bmips/setup.c | 101 +++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 99 insertions(+), 2 deletions(-)
+ .../interrupt-controller/brcm,bcm3380-l2-intc.txt  | 41 ++++++++++++++++
+ drivers/irqchip/irq-bcm7120-l2.c                   | 55 ++++++++++++++++++++--
+ 2 files changed, 92 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/brcm,bcm3380-l2-intc.txt
 
-diff --git a/arch/mips/bmips/setup.c b/arch/mips/bmips/setup.c
-index ac402ed..fae800e 100644
---- a/arch/mips/bmips/setup.c
-+++ b/arch/mips/bmips/setup.c
-@@ -8,9 +8,12 @@
-  */
- 
- #include <linux/init.h>
-+#include <linux/bitops.h>
- #include <linux/bootmem.h>
- #include <linux/clk-provider.h>
- #include <linux/ioport.h>
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm3380-l2-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm3380-l2-intc.txt
+new file mode 100644
+index 0000000..8f48aad
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm3380-l2-intc.txt
+@@ -0,0 +1,41 @@
++Broadcom BCM3380-style Level 1 / Level 2 interrupt controller
++
++This interrupt controller shows up in various forms on many BCM338x/BCM63xx
++chipsets.  It has the following properties:
++
++- outputs a single interrupt signal to its interrupt controller parent
++
++- contains one or more enable/status word pairs, which often appear at
++  different offsets in different blocks
++
++- no atomic set/clear operations
++
++Required properties:
++
++- compatible: should be "brcm,bcm3380-l2-intc"
++- reg: specifies one or more enable/status pairs, in the following format:
++  <enable_reg 0x4 status_reg 0x4>...
++- interrupt-controller: identifies the node as an interrupt controller
++- #interrupt-cells: specifies the number of cells needed to encode an interrupt
++  source, should be 1.
++- interrupt-parent: specifies the phandle to the parent interrupt controller
++  this one is cascaded from
++- interrupts: specifies the interrupt line in the interrupt-parent controller
++  node, valid values depend on the type of parent interrupt controller
++
++Optional properties:
++
++- brcm,irq-can-wake: if present, this means the L2 controller can be used as a
++  wakeup source for system suspend/resume.
++
++Example:
++
++irq0_intc: interrupt-controller@10000020 {
++	compatible = "brcm,bcm3380-l2-intc";
++	reg = <0x10000024 0x4 0x1000002c 0x4>,
++	      <0x10000020 0x4 0x10000028 0x4>;
++	interrupt-controller;
++	#interrupt-cells = <1>;
++	interrupt-parent = <&cpu_intc>;
++	interrupts = <2>;
++};
+diff --git a/drivers/irqchip/irq-bcm7120-l2.c b/drivers/irqchip/irq-bcm7120-l2.c
+index 6a62858..3ba5cc7 100644
+--- a/drivers/irqchip/irq-bcm7120-l2.c
++++ b/drivers/irqchip/irq-bcm7120-l2.c
+@@ -14,6 +14,7 @@
+ #include <linux/slab.h>
+ #include <linux/module.h>
+ #include <linux/kconfig.h>
 +#include <linux/kernel.h>
-+#include <linux/io.h>
+ #include <linux/platform_device.h>
  #include <linux/of.h>
- #include <linux/of_fdt.h>
- #include <linux/of_platform.h>
-@@ -18,9 +21,92 @@
- #include <asm/addrspace.h>
- #include <asm/bmips.h>
- #include <asm/bootinfo.h>
-+#include <asm/cpu-type.h>
-+#include <asm/mipsregs.h>
- #include <asm/prom.h>
- #include <asm/smp-ops.h>
- #include <asm/time.h>
-+#include <asm/traps.h>
-+
-+#define RELO_NORMAL_VEC		BIT(18)
-+
-+#define REG_BCM6328_OTP		((void __iomem *)CKSEG1ADDR(0x1000062c))
-+#define BCM6328_TP1_DISABLED	BIT(9)
-+
-+static const unsigned long kbase = VMLINUX_LOAD_ADDRESS & 0xfff00000;
-+
-+struct bmips_quirk {
-+	const char		*compatible;
-+	void			(*quirk_fn)(void);
-+};
-+
-+static void kbase_setup(void)
-+{
-+	__raw_writel(kbase | RELO_NORMAL_VEC,
-+		     BMIPS_GET_CBR() + BMIPS_RELO_VECTOR_CONTROL_1);
-+	ebase = kbase;
-+}
-+
-+static void bcm3384_viper_quirks(void)
-+{
-+	/*
-+	 * Some experimental CM boxes are set up to let CM own the Viper TP0
-+	 * and let Linux own TP1.  This requires moving the kernel
-+	 * load address to a non-conflicting region (e.g. via
-+	 * CONFIG_PHYSICAL_START) and supplying an alternate DTB.
-+	 * If we detect this condition, we need to move the MIPS exception
-+	 * vectors up to an area that we own.
-+	 *
-+	 * This is distinct from the OTHER special case mentioned in
-+	 * smp-bmips.c (boot on TP1, but enable SMP, then TP0 becomes our
-+	 * logical CPU#1).  For the Viper TP1 case, SMP is off limits.
-+	 *
-+	 * Also note that many BMIPS435x CPUs do not have a
-+	 * BMIPS_RELO_VECTOR_CONTROL_1 register, so it isn't safe to just
-+	 * write VMLINUX_LOAD_ADDRESS into that register on every SoC.
-+	 */
-+	board_ebase_setup = &kbase_setup;
-+	bmips_smp_enabled = 0;
-+}
-+
-+static void bcm63xx_fixup_cpu1(void)
-+{
-+	/*
-+	 * The bootloader has set up the CPU1 reset vector at
-+	 * 0xa000_0200.
-+	 * This conflicts with the special interrupt vector (IV).
-+	 * The bootloader has also set up CPU1 to respond to the wrong
-+	 * IPI interrupt.
-+	 * Here we will start up CPU1 in the background and ask it to
-+	 * reconfigure itself then go back to sleep.
-+	 */
-+	memcpy((void *)0xa0000200, &bmips_smp_movevec, 0x20);
-+	__sync();
-+	set_c0_cause(C_SW0);
-+	cpumask_set_cpu(1, &bmips_booted_mask);
-+}
-+
-+static void bcm6328_quirks(void)
-+{
-+	/* Check CPU1 status in OTP (it is usually disabled) */
-+	if (__raw_readl(REG_BCM6328_OTP) & BCM6328_TP1_DISABLED)
-+		bmips_smp_enabled = 0;
-+	else
-+		bcm63xx_fixup_cpu1();
-+}
-+
-+static void bcm6368_quirks(void)
-+{
-+	bcm63xx_fixup_cpu1();
-+}
-+
-+static const struct bmips_quirk bmips_quirk_list[] = {
-+	{ "brcm,bcm3384-viper",		&bcm3384_viper_quirks		},
-+	{ "brcm,bcm33843-viper",	&bcm3384_viper_quirks		},
-+	{ "brcm,bcm6328",		&bcm6328_quirks			},
-+	{ "brcm,bcm6368",		&bcm6368_quirks			},
-+	{ },
-+};
- 
- void __init prom_init(void)
- {
-@@ -53,7 +139,8 @@ void __init plat_time_init(void)
- 
- void __init plat_mem_setup(void)
- {
--	void *dtb = __dtb_start;
-+	void *dtb;
-+	const struct bmips_quirk *q;
- 
- 	set_io_port_base(0);
- 	ioport_resource.start = 0;
-@@ -62,10 +149,20 @@ void __init plat_mem_setup(void)
- 	/* intended to somewhat resemble ARM; see Documentation/arm/Booting */
- 	if (fw_arg0 == 0 && fw_arg1 == 0xffffffff)
- 		dtb = phys_to_virt(fw_arg2);
-+	else if (__dtb_start != __dtb_end)
-+		dtb = (void *)__dtb_start;
-+	else
-+		panic("no dtb found");
- 
- 	__dt_setup_arch(dtb);
--
- 	strlcpy(arcs_cmdline, boot_command_line, COMMAND_LINE_SIZE);
-+
-+	for (q = bmips_quirk_list; q->quirk_fn; q++) {
-+		if (of_flat_dt_is_compatible(of_get_flat_dt_root(),
-+					     q->compatible)) {
-+			q->quirk_fn();
+ #include <linux/of_irq.h>
+@@ -120,10 +121,15 @@ static int bcm7120_l2_intc_init_one(struct device_node *dn,
+ 	/* For multiple parent IRQs with multiple words, this looks like:
+ 	 * <irq0_w0 irq0_w1 irq1_w0 irq1_w1 ...>
+ 	 */
+-	for (idx = 0; idx < data->n_words; idx++)
+-		data->irq_map_mask[idx] |=
+-			be32_to_cpup(data->map_mask_prop +
+-				     irq * data->n_words + idx);
++	for (idx = 0; idx < data->n_words; idx++) {
++		if (data->map_mask_prop) {
++			data->irq_map_mask[idx] |=
++				be32_to_cpup(data->map_mask_prop +
++					     irq * data->n_words + idx);
++		} else {
++			data->irq_map_mask[idx] = 0xffffffff;
 +		}
 +	}
+ 
+ 	irq_set_handler_data(parent_irq, data);
+ 	irq_set_chained_handler(parent_irq, bcm7120_l2_intc_irq_handle);
+@@ -165,6 +171,37 @@ static int __init bcm7120_l2_intc_iomap_7120(struct device_node *dn,
+ 	return 0;
  }
  
- void __init device_tree_init(void)
++static int __init bcm7120_l2_intc_iomap_3380(struct device_node *dn,
++					     struct bcm7120_l2_intc_data *data)
++{
++	unsigned int gc_idx;
++
++	for (gc_idx = 0; gc_idx < MAX_WORDS; gc_idx++) {
++		unsigned int map_idx = gc_idx * 2;
++		void __iomem *en = of_iomap(dn, map_idx + 0);
++		void __iomem *stat = of_iomap(dn, map_idx + 1);
++		void __iomem *base = min(en, stat);
++
++		data->map_base[map_idx + 0] = en;
++		data->map_base[map_idx + 1] = stat;
++
++		if (!base)
++			break;
++
++		data->pair_base[gc_idx] = base;
++		data->en_offset[gc_idx] = en - base;
++		data->stat_offset[gc_idx] = stat - base;
++	}
++
++	if (!gc_idx) {
++		pr_err("unable to map registers\n");
++		return -EINVAL;
++	}
++
++	data->n_words = gc_idx;
++	return 0;
++}
++
+ int __init bcm7120_l2_intc_probe(struct device_node *dn,
+ 				 struct device_node *parent,
+ 				 int (*iomap_regs_fn)(struct device_node *,
+@@ -279,5 +316,15 @@ int __init bcm7120_l2_intc_probe_7120(struct device_node *dn,
+ 				     "BCM7120 L2");
+ }
+ 
++int __init bcm7120_l2_intc_probe_3380(struct device_node *dn,
++				      struct device_node *parent)
++{
++	return bcm7120_l2_intc_probe(dn, parent, bcm7120_l2_intc_iomap_3380,
++				     "BCM3380 L2");
++}
++
+ IRQCHIP_DECLARE(bcm7120_l2_intc, "brcm,bcm7120-l2-intc",
+ 		bcm7120_l2_intc_probe_7120);
++
++IRQCHIP_DECLARE(bcm3380_l2_intc, "brcm,bcm3380-l2-intc",
++		bcm7120_l2_intc_probe_3380);
 -- 
 2.1.1
