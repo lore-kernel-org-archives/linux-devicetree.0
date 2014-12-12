@@ -1,57 +1,57 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: Re: [PATCH V8 00/14] drm/exynos: few patches to enhance bridge chip
- support
-Date: Fri, 12 Dec 2014 10:51:50 +0100
-Message-ID: <548ABAB6.6010200@collabora.co.uk>
-References: <1416045309-13359-1-git-send-email-ajaykumar.rs@samsung.com> <CAEC9eQOrKw2Z1q-ztFfadXmsL3CTcAkkv9kcS2QnDOAVSh2AuQ@mail.gmail.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v3] clk: Add PWM clock driver
+Date: Fri, 12 Dec 2014 10:53:56 +0100
+Message-ID: <1418378036.3172.3.camel@pengutronix.de>
+References: <1418138392-17081-1-git-send-email-p.zabel@pengutronix.de>
+		 <54872810.7000700@elproma.com.pl>
+	 <1418223593.3258.10.camel@pengutronix.de> <5489C385.9090305@elproma.com.pl>
+	 <5489CE19.8080108@elproma.com.pl> <548AAE51.7060507@elproma.com.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAEC9eQOrKw2Z1q-ztFfadXmsL3CTcAkkv9kcS2QnDOAVSh2AuQ@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Ajay kumar <ajaynumb@gmail.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Ajay Kumar <ajaykumar.rs@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, InKi Dae <inki.dae@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Sean Paul <seanpaul@google.com>, Thierry Reding <thierry.reding@gmail.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Pannaga Bhushan Reddy Patel <bhushan.r@samsung.com>, Prashanth G <prashanth.g@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <548AAE51.7060507-9tnw74Q4ehaHKKo6LODCOg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Janusz =?UTF-8?Q?U=C5=BCycki?= <j.uzycki-9tnw74Q4ehaHKKo6LODCOg@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Hi Janusz,
 
-On 11/18/2014 07:20 AM, Ajay kumar wrote:
-> On Sat, Nov 15, 2014 at 3:24 PM, Ajay Kumar <ajaykumar.rs@samsung.com> wrote:
->> This series is based on master branch of Linus tree at:
->> git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
->>
+Am Freitag, den 12.12.2014, 09:58 +0100 schrieb Janusz U=C5=BCycki:
+> Hi Philipp,
+>=20
+> It moved .enable to .prepare which can sleep and it works
+> without any bug.
+> The dirty fix:
+>   const struct clk_ops clk_pwm_ops =3D {
+> -       .enable =3D clk_pwm_enable,
+> -       .disable =3D clk_pwm_disable,
+> +       .prepare =3D clk_pwm_enable,
+> +       .unprepare =3D clk_pwm_disable,
+>          .recalc_rate =3D clk_pwm_recalc_rate,
+>   };
+>=20
+> What do you think about?
 
-This series has been in the mailing lists for months and have been tested
-by many people. What else is missing before it can be merged?
+Thanks! Since the pwm API does not give any guarantees that
+pwm_enable/disable may be called from atomic context, I think this
+change is correct. The PWM documentation says:
 
-It would be great to have proper display support on platforms that have a
-eDP to LVDS bridge chip (e.g: Snow, Peach Pit and Spring Chromebooks) and
-everything is in place but this series which had been missing many kernel
-releases already.
+   "Currently the PWM core does not enforce any locking to pwm_enable()=
+,
+    pwm_disable() and pwm_config(), so the calling context is currently
+    driver specific. This is an issue derived from the former barebone
+    API and should be fixed soon."
 
->>
->> Changes since V7:
->>         -- Address comments from Tomi and Laurent:
->>                 -- Use videoports and endpoints to represent the connection between
->>                    encoder, bridge and the panel, instead of using phandles.
->>         -- Address comments from Daniel:
->>                 -- Make the patch description more descriptive.
->>                 -- remove device pointer from drm_bridge, and just use
->>                    device_node instead.
->>                 -- don't pass encoder pointer to bridge_attach.
->>         -- Address comments from Sean Paul:
->>                 -- Remove bridge from mode_config, and pull out drm_bridge
->>                    functions from drm_crtc.c to drm_bridge.c
->>
+clk_enable should support reentrancy, but calling clk_prepare_enable
+inside a clk_enable callback is not going to work.
 
-Tomi and Laurent,
+regards
+Philipp
 
-You asked Ajay to change his series to use the video port and enpoints DT
-bindings instead of phandles, could you please review his latest version?
-
-I guess is now too late for 3.19 since we are in the middle of the merge
-window but it would be great if this series can at least made it to 3.20.
-
-Thanks a lot and best regards,
-Javier
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
