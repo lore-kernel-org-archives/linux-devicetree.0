@@ -1,188 +1,168 @@
 From: Kevin Cernekee <cernekee@gmail.com>
-Subject: [PATCH V5 21/23] MIPS: BMIPS: Refresh BCM3384 DTS files
-Date: Fri, 12 Dec 2014 14:07:12 -0800
-Message-ID: <1418422034-17099-22-git-send-email-cernekee@gmail.com>
+Subject: [PATCH V5 02/23] MIPS: Create a common <asm/mach-generic/war.h>
+Date: Fri, 12 Dec 2014 14:06:53 -0800
+Message-ID: <1418422034-17099-3-git-send-email-cernekee@gmail.com>
 References: <1418422034-17099-1-git-send-email-cernekee@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-mips-bounce@linux-mips.org>
 In-Reply-To: <1418422034-17099-1-git-send-email-cernekee@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
 To: ralf@linux-mips.org
 Cc: f.fainelli@gmail.com, tglx@linutronix.de, jason@lakedaemon.net, jogo@openwrt.org, arnd@arndb.de, computersforpeace@gmail.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The DT bindings for this platform have changed as the bootloader and
-product requirements evolved.  In particular, there are both
-Linux-on-Zephyr and Linux-on-Viper configurations.
+11 platforms require at least one of these workarounds to be enabled; 22
+platforms do not.  In the latter case we can fall back to a generic version.
 
+Note that this also deletes an orphaned reference to RM9000_CDEX_SMP_WAR.
+
+Suggested-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
 ---
- arch/mips/boot/dts/bcm3384.dtsi        | 109 ----------------------------
- arch/mips/boot/dts/bcm3384_zephyr.dtsi | 126 +++++++++++++++++++++++++++++++++
- arch/mips/boot/dts/bcm93384wvg.dts     |   9 +--
- 3 files changed, 127 insertions(+), 117 deletions(-)
- delete mode 100644 arch/mips/boot/dts/bcm3384.dtsi
- create mode 100644 arch/mips/boot/dts/bcm3384_zephyr.dtsi
+ arch/mips/include/asm/mach-ar7/war.h               | 24 ---------------------
+ arch/mips/include/asm/mach-ath25/war.h             | 25 ----------------------
+ arch/mips/include/asm/mach-ath79/war.h             | 24 ---------------------
+ arch/mips/include/asm/mach-au1x00/war.h            | 24 ---------------------
+ arch/mips/include/asm/mach-bcm3384/war.h           | 24 ---------------------
+ arch/mips/include/asm/mach-bcm47xx/war.h           | 24 ---------------------
+ arch/mips/include/asm/mach-bcm63xx/war.h           | 24 ---------------------
+ arch/mips/include/asm/mach-cavium-octeon/war.h     | 25 ----------------------
+ arch/mips/include/asm/mach-cobalt/war.h            | 24 ---------------------
+ arch/mips/include/asm/mach-dec/war.h               | 24 ---------------------
+ arch/mips/include/asm/mach-emma2rh/war.h           | 24 ---------------------
+ .../asm/{mach-ralink => mach-generic}/war.h        |  6 +++---
+ arch/mips/include/asm/mach-jazz/war.h              | 24 ---------------------
+ arch/mips/include/asm/mach-jz4740/war.h            | 24 ---------------------
+ arch/mips/include/asm/mach-lantiq/war.h            | 23 --------------------
+ arch/mips/include/asm/mach-lasat/war.h             | 24 ---------------------
+ arch/mips/include/asm/mach-loongson/war.h          | 24 ---------------------
+ arch/mips/include/asm/mach-loongson1/war.h         | 24 ---------------------
+ arch/mips/include/asm/mach-netlogic/war.h          | 25 ----------------------
+ arch/mips/include/asm/mach-paravirt/war.h          | 25 ----------------------
+ arch/mips/include/asm/mach-pnx833x/war.h           | 24 ---------------------
+ arch/mips/include/asm/mach-tx39xx/war.h            | 24 ---------------------
+ arch/mips/include/asm/mach-vr41xx/war.h            | 24 ---------------------
+ 23 files changed, 3 insertions(+), 534 deletions(-)
+ delete mode 100644 arch/mips/include/asm/mach-ar7/war.h
+ delete mode 100644 arch/mips/include/asm/mach-ath25/war.h
+ delete mode 100644 arch/mips/include/asm/mach-ath79/war.h
+ delete mode 100644 arch/mips/include/asm/mach-au1x00/war.h
+ delete mode 100644 arch/mips/include/asm/mach-bcm3384/war.h
+ delete mode 100644 arch/mips/include/asm/mach-bcm47xx/war.h
+ delete mode 100644 arch/mips/include/asm/mach-bcm63xx/war.h
+ delete mode 100644 arch/mips/include/asm/mach-cavium-octeon/war.h
+ delete mode 100644 arch/mips/include/asm/mach-cobalt/war.h
+ delete mode 100644 arch/mips/include/asm/mach-dec/war.h
+ delete mode 100644 arch/mips/include/asm/mach-emma2rh/war.h
+ rename arch/mips/include/asm/{mach-ralink => mach-generic}/war.h (86%)
+ delete mode 100644 arch/mips/include/asm/mach-jazz/war.h
+ delete mode 100644 arch/mips/include/asm/mach-jz4740/war.h
+ delete mode 100644 arch/mips/include/asm/mach-lantiq/war.h
+ delete mode 100644 arch/mips/include/asm/mach-lasat/war.h
+ delete mode 100644 arch/mips/include/asm/mach-loongson/war.h
+ delete mode 100644 arch/mips/include/asm/mach-loongson1/war.h
+ delete mode 100644 arch/mips/include/asm/mach-netlogic/war.h
+ delete mode 100644 arch/mips/include/asm/mach-paravirt/war.h
+ delete mode 100644 arch/mips/include/asm/mach-pnx833x/war.h
+ delete mode 100644 arch/mips/include/asm/mach-tx39xx/war.h
+ delete mode 100644 arch/mips/include/asm/mach-vr41xx/war.h
 
-diff --git a/arch/mips/boot/dts/bcm3384.dtsi b/arch/mips/boot/dts/bcm3384.dtsi
+diff --git a/arch/mips/include/asm/mach-ar7/war.h b/arch/mips/include/asm/mach-ar7/war.h
 deleted file mode 100644
-index 21b074a..0000000
-diff --git a/arch/mips/boot/dts/bcm3384_zephyr.dtsi b/arch/mips/boot/dts/bcm3384_zephyr.dtsi
-new file mode 100644
-index 0000000..a7bd856
---- /dev/null
-+++ b/arch/mips/boot/dts/bcm3384_zephyr.dtsi
-@@ -0,0 +1,126 @@
-+/ {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	compatible = "brcm,bcm3384", "brcm,bcm33843";
-+
-+	memory@0 {
-+		device_type = "memory";
-+
-+		/* Typical range.  The bootloader should fill this in. */
-+		reg = <0x0 0x08000000>;
-+	};
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		/* On BMIPS5000 this is 1/8th of the CPU core clock */
-+		mips-hpt-frequency = <100000000>;
-+
-+		cpu@0 {
-+			compatible = "brcm,bmips5000";
-+			device_type = "cpu";
-+			reg = <0>;
-+		};
-+
-+		cpu@1 {
-+			compatible = "brcm,bmips5000";
-+			device_type = "cpu";
-+			reg = <1>;
-+		};
-+	};
-+
-+	cpu_intc: cpu_intc {
-+		#address-cells = <0>;
-+		compatible = "mti,cpu-interrupt-controller";
-+
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+	};
-+
-+	clocks {
-+		periph_clk: periph_clk {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <54000000>;
-+		};
-+	};
-+
-+	aliases {
-+		uart0 = &uart0;
-+	};
-+
-+	ubus {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		compatible = "brcm,ubus", "simple-bus";
-+		ranges;
-+		dma-ranges = <0x00000000 0x08000000 0x08000000>,
-+			     <0x08000000 0x00000000 0x08000000>;
-+
-+		periph_intc: periph_intc@14e00038 {
-+			compatible = "brcm,bcm3380-l2-intc";
-+			reg = <0x14e00038 0x4 0x14e0003c 0x4>,
-+			      <0x14e00340 0x4 0x14e00344 0x4>;
-+
-+			interrupt-controller;
-+			#interrupt-cells = <1>;
-+
-+			interrupt-parent = <&cpu_intc>;
-+			interrupts = <4>;
-+		};
-+
-+		zmips_intc: zmips_intc@104b0060 {
-+			compatible = "brcm,bcm3380-l2-intc";
-+			reg = <0x104b0060 0x4 0x104b0064 0x4>;
-+
-+			interrupt-controller;
-+			#interrupt-cells = <1>;
-+
-+			interrupt-parent = <&periph_intc>;
-+			interrupts = <29>;
-+			brcm,int-map-mask = <0xffffffff>;
-+		};
-+
-+		iop_intc: iop_intc@14e00058 {
-+			compatible = "brcm,bcm3380-l2-intc";
-+			reg = <0x14e00058 0x4 0x14e0005c 0x4>;
-+
-+			interrupt-controller;
-+			#interrupt-cells = <1>;
-+
-+			interrupt-parent = <&cpu_intc>;
-+			interrupts = <6>;
-+			brcm,int-map-mask = <0xffffffff>;
-+		};
-+
-+		uart0: serial@14e00520 {
-+			compatible = "brcm,bcm6345-uart";
-+			reg = <0x14e00520 0x18>;
-+			interrupt-parent = <&periph_intc>;
-+			interrupts = <2>;
-+			clocks = <&periph_clk>;
-+			status = "disabled";
-+		};
-+
-+		ehci0: usb@15400300 {
-+			compatible = "brcm,bcm3384-ehci", "generic-ehci";
-+			reg = <0x15400300 0x100>;
-+			big-endian;
-+			interrupt-parent = <&periph_intc>;
-+			interrupts = <41>;
-+			status = "disabled";
-+		};
-+
-+		ohci0: usb@15400400 {
-+			compatible = "brcm,bcm3384-ohci", "generic-ohci";
-+			reg = <0x15400400 0x100>;
-+			big-endian;
-+			no-big-frame-no;
-+			interrupt-parent = <&periph_intc>;
-+			interrupts = <40>;
-+			status = "disabled";
-+		};
-+	};
-+};
-diff --git a/arch/mips/boot/dts/bcm93384wvg.dts b/arch/mips/boot/dts/bcm93384wvg.dts
-index 8317411..d1e44a1 100644
---- a/arch/mips/boot/dts/bcm93384wvg.dts
-+++ b/arch/mips/boot/dts/bcm93384wvg.dts
-@@ -1,6 +1,6 @@
- /dts-v1/;
+index 99071e5..0000000
+diff --git a/arch/mips/include/asm/mach-ath25/war.h b/arch/mips/include/asm/mach-ath25/war.h
+deleted file mode 100644
+index e3a5250..0000000
+diff --git a/arch/mips/include/asm/mach-ath79/war.h b/arch/mips/include/asm/mach-ath79/war.h
+deleted file mode 100644
+index 0bb3090..0000000
+diff --git a/arch/mips/include/asm/mach-au1x00/war.h b/arch/mips/include/asm/mach-au1x00/war.h
+deleted file mode 100644
+index 72e260d..0000000
+diff --git a/arch/mips/include/asm/mach-bcm3384/war.h b/arch/mips/include/asm/mach-bcm3384/war.h
+deleted file mode 100644
+index 59d7599..0000000
+diff --git a/arch/mips/include/asm/mach-bcm47xx/war.h b/arch/mips/include/asm/mach-bcm47xx/war.h
+deleted file mode 100644
+index a3d2f44..0000000
+diff --git a/arch/mips/include/asm/mach-bcm63xx/war.h b/arch/mips/include/asm/mach-bcm63xx/war.h
+deleted file mode 100644
+index 05ee867..0000000
+diff --git a/arch/mips/include/asm/mach-cavium-octeon/war.h b/arch/mips/include/asm/mach-cavium-octeon/war.h
+deleted file mode 100644
+index eb72b35..0000000
+diff --git a/arch/mips/include/asm/mach-cobalt/war.h b/arch/mips/include/asm/mach-cobalt/war.h
+deleted file mode 100644
+index 34ae404..0000000
+diff --git a/arch/mips/include/asm/mach-dec/war.h b/arch/mips/include/asm/mach-dec/war.h
+deleted file mode 100644
+index d29996f..0000000
+diff --git a/arch/mips/include/asm/mach-emma2rh/war.h b/arch/mips/include/asm/mach-emma2rh/war.h
+deleted file mode 100644
+index 79ae82d..0000000
+diff --git a/arch/mips/include/asm/mach-ralink/war.h b/arch/mips/include/asm/mach-generic/war.h
+similarity index 86%
+rename from arch/mips/include/asm/mach-ralink/war.h
+rename to arch/mips/include/asm/mach-generic/war.h
+index c074b5d..a1bc2e7 100644
+--- a/arch/mips/include/asm/mach-ralink/war.h
++++ b/arch/mips/include/asm/mach-generic/war.h
+@@ -5,8 +5,8 @@
+  *
+  * Copyright (C) 2002, 2004, 2007 by Ralf Baechle <ralf@linux-mips.org>
+  */
+-#ifndef __ASM_MACH_RALINK_WAR_H
+-#define __ASM_MACH_RALINK_WAR_H
++#ifndef __ASM_MACH_GENERIC_WAR_H
++#define __ASM_MACH_GENERIC_WAR_H
  
--/include/ "bcm3384.dtsi"
-+/include/ "bcm3384_zephyr.dtsi"
+ #define R4600_V1_INDEX_ICACHEOP_WAR	0
+ #define R4600_V1_HIT_CACHEOP_WAR	0
+@@ -21,4 +21,4 @@
+ #define R10000_LLSC_WAR			0
+ #define MIPS34K_MISSED_ITLB_WAR		0
  
- / {
- 	compatible = "brcm,bcm93384wvg", "brcm,bcm3384";
-@@ -10,13 +10,6 @@
- 		bootargs = "console=ttyS0,115200";
- 		stdout-path = &uart0;
- 	};
--
--	memory@0 {
--		device_type = "memory";
--		reg = <0x0 0x04000000>;
--		dma-xor-mask = <0x08000000>;
--		dma-xor-limit = <0x0fffffff>;
--	};
- };
- 
- &uart0 {
+-#endif /* __ASM_MACH_RALINK_WAR_H */
++#endif /* __ASM_MACH_GENERIC_WAR_H */
+diff --git a/arch/mips/include/asm/mach-jazz/war.h b/arch/mips/include/asm/mach-jazz/war.h
+deleted file mode 100644
+index 5b18b9a..0000000
+diff --git a/arch/mips/include/asm/mach-jz4740/war.h b/arch/mips/include/asm/mach-jz4740/war.h
+deleted file mode 100644
+index 9b511d3..0000000
+diff --git a/arch/mips/include/asm/mach-lantiq/war.h b/arch/mips/include/asm/mach-lantiq/war.h
+deleted file mode 100644
+index 358ca97..0000000
+diff --git a/arch/mips/include/asm/mach-lasat/war.h b/arch/mips/include/asm/mach-lasat/war.h
+deleted file mode 100644
+index 741ae72..0000000
+diff --git a/arch/mips/include/asm/mach-loongson/war.h b/arch/mips/include/asm/mach-loongson/war.h
+deleted file mode 100644
+index f2570df..0000000
+diff --git a/arch/mips/include/asm/mach-loongson1/war.h b/arch/mips/include/asm/mach-loongson1/war.h
+deleted file mode 100644
+index 8fb50d0..0000000
+diff --git a/arch/mips/include/asm/mach-netlogic/war.h b/arch/mips/include/asm/mach-netlogic/war.h
+deleted file mode 100644
+index 2c72168..0000000
+diff --git a/arch/mips/include/asm/mach-paravirt/war.h b/arch/mips/include/asm/mach-paravirt/war.h
+deleted file mode 100644
+index 36d3afb..0000000
+diff --git a/arch/mips/include/asm/mach-pnx833x/war.h b/arch/mips/include/asm/mach-pnx833x/war.h
+deleted file mode 100644
+index e410df4..0000000
+diff --git a/arch/mips/include/asm/mach-tx39xx/war.h b/arch/mips/include/asm/mach-tx39xx/war.h
+deleted file mode 100644
+index 6a52e65..0000000
+diff --git a/arch/mips/include/asm/mach-vr41xx/war.h b/arch/mips/include/asm/mach-vr41xx/war.h
+deleted file mode 100644
+index ffe31e7..0000000
 -- 
 2.1.1
