@@ -1,70 +1,70 @@
-From: Ray Jui <rjui@broadcom.com>
-Subject: [PATCH v5 3/3] ARM: dts: enable GPIO for Broadcom Cygnus
-Date: Thu, 11 Dec 2014 16:05:06 -0800
-Message-ID: <1418342706-14755-4-git-send-email-rjui@broadcom.com>
-References: <Ray Jui <rjui@broadcom.com>
- <1418342706-14755-1-git-send-email-rjui@broadcom.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Marcel Holtmann <marcel@holtmann.org>
+Subject: Re: [PATCH 2/3] TTY: add slave driver to power-on device via a regulator.
+Date: Fri, 12 Dec 2014 01:46:33 +0100
+Message-ID: <3884A980-C9EE-42A2-8D23-DF65FEC61DD2@holtmann.org>
+References: <20141211214801.4127.93914.stgit@notabene.brown> <20141211215944.4127.4186.stgit@notabene.brown> <20141211225847.GB11666@earth.universe>
+Mime-Version: 1.0 (Mac OS X Mail 8.1 \(1993\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1418342706-14755-1-git-send-email-rjui@broadcom.com>
+In-Reply-To: <20141211225847.GB11666@earth.universe>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Joe Perches <joe@perches.com>, Arnd Bergmann <arnd@arndb.de>
-Cc: Scott Branden <sbranden@broadcom.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, Ray Jui <rjui@broadcom.com>
+To: Sebastian Reichel <sre@kernel.org>
+Cc: NeilBrown <neilb@suse.de>, Grant Likely <grant.likely@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Jiri Slaby <jslaby@suse.cz>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This enables all 3 GPIO controllers including the ASIU GPIO, the
-chipcommonG GPIO, and the ALWAYS-ON GPIO, for Broadcom Cygnus SoC
+Hi Sebastian,
 
-Signed-off-by: Ray Jui <rjui@broadcom.com>
-Reviewed-by: Scott Branden <sbranden@broadcom.com>
----
- arch/arm/boot/dts/bcm-cygnus.dtsi |   33 +++++++++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
+>> diff --git a/Documentation/devicetree/bindings/serial/slave-reg.txt b/Documentation/devicetree/bindings/serial/slave-reg.txt
+>> new file mode 100644
+>> index 000000000000..7896bce8dfe4
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/serial/slave-reg.txt
+>> @@ -0,0 +1,18 @@
+>> +Regulator powered UART-attached device
+>> +
+>> +Required properties:
+>> +- compatible: "tty,regulator"
+>> +- vdd-supply: regulator to power the device
+>> +
+>> +
+>> +This is listed as a child node of a UART.  When the
+>> +UART is opened, the device is powered.
+>> +
+>> +Example:
+>> +
+>> +&uart1 {
+>> +	bluetooth {
+>> +		compatible = "tty,regulator";
+>> +		vdd-supply = <&vaux4>;
+>> +	};
+>> +};
+> 
+> NACK. The compatible value should describe the connected device. You
+> did not connect a regulator, but a bluetooth chip! DT should look
+> like this:
+> 
+> &uart1 {
+>    bluetooth {
+>        compatible = "vendor,bluetooth-chip";
+>        vdd-supply = <&vaux4>;
+>    };
+> };
+> 
+> I think it would be ok to use your generic driver to handle the
+> specific compatible value, though.
+> 
+> Having the proper compatible value means, that there can be a more
+> specific driver later, that other operating systems can expose the
+> device as some kind of /dev/bluetooth instead of /dev/ttyXY, that
+> userspace is able to know there is a bluetooth device connected to
+> /dev/ttyXY by parsing the DT and results in easier-to-understand
+> DTS.
 
-diff --git a/arch/arm/boot/dts/bcm-cygnus.dtsi b/arch/arm/boot/dts/bcm-cygnus.dtsi
-index 5126f9e..35272b7 100644
---- a/arch/arm/boot/dts/bcm-cygnus.dtsi
-+++ b/arch/arm/boot/dts/bcm-cygnus.dtsi
-@@ -54,6 +54,39 @@
- 
- 	/include/ "bcm-cygnus-clock.dtsi"
- 
-+	gpio_ccm: gpio@1800a000 {
-+		compatible = "brcm,cygnus-gpio";
-+		reg = <0x1800a000 0x50>,
-+			<0x0301d164 0x20>;
-+		ngpios = <24>;
-+		linux,gpio-base = <0>;
-+		#gpio-cells = <2>;
-+		gpio-controller;
-+		interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-controller;
-+	};
-+
-+	gpio_asiu: gpio@180a5000 {
-+		compatible = "brcm,cygnus-gpio";
-+		reg = <0x180a5000 0x668>;
-+		ngpios = <122>;
-+		linux,gpio-base = <24>;
-+		#gpio-cells = <2>;
-+		gpio-controller;
-+		interrupt-controller;
-+		interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+
-+	gpio_crmu: gpio@03024800 {
-+		compatible = "brcm,cygnus-gpio";
-+		reg = <0x03024800 0x50>;
-+		ngpios = <6>;
-+		linux,gpio-base = <146>;
-+		#gpio-cells = <2>;
-+		gpio-controller;
-+		no-drv-strength;
-+	};
-+
- 	amba {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
--- 
-1.7.9.5
+I think that is up to udev to be able to make this a nice device node. However the device node name is pretty much irrelevant. What you want is enough meta data to tell that there is Bluetooth chip behind this TTY. From a Bluetooth stack perspective only hciattach needs to be run to get the N_HCI line discipline up and running for that chip.
+
+However what would be interesting for hciattach would be a possibility to expose the Bluetooth manufacturer. Since the init routine is different for each manufacturer. So if that could be encoded in the DT, then that would be certainly helpful.
+
+Regards
+
+Marcel
