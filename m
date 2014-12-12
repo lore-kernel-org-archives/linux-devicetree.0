@@ -1,63 +1,67 @@
-From: Kevin Cernekee <cernekee@gmail.com>
-Subject: [PATCH V5 13/23] MIPS: BMIPS: Flush the readahead cache after DMA
-Date: Fri, 12 Dec 2014 14:07:04 -0800
-Message-ID: <1418422034-17099-14-git-send-email-cernekee@gmail.com>
-References: <1418422034-17099-1-git-send-email-cernekee@gmail.com>
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <1418422034-17099-1-git-send-email-cernekee@gmail.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: ralf@linux-mips.org
-Cc: f.fainelli@gmail.com, tglx@linutronix.de, jason@lakedaemon.net, jogo@openwrt.org, arnd@arndb.de, computersforpeace@gmail.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Benoit Parrot <bparrot@ti.com>
+Subject: [Patch v4 2/2] gpio: Document GPIO hogging mechanism
+Date: Fri, 12 Dec 2014 16:07:31 -0600
+Message-ID: <1418422051-9471-3-git-send-email-bparrot@ti.com>
+References: <1418422051-9471-1-git-send-email-bparrot@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1418422051-9471-1-git-send-email-bparrot@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Alexandre Courbot <gnurou@gmail.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Jiri Prchal <jiri.prchal@aksignal.cz>, Pantelis Antoniou <panto@antoniou-consulting.com>, Benoit Parrot <bparrot@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-BMIPS 3300/435x/438x CPUs have a readahead cache that is separate from
-the L1/L2.  During a DMA operation, accesses adjacent to a DMA buffer
-may cause parts of the DMA buffer to be prefetched into the RAC.  To
-avoid possible coherency problems, flush the RAC upon DMA completion.
+Add GPIO hogging documentation to gpio.txt
 
-Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
+Signed-off-by: Benoit Parrot <bparrot@ti.com>
 ---
- arch/mips/mm/dma-default.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+Changes since v3:
+ * Renamed the "direction" DT properties to "state".
 
-diff --git a/arch/mips/mm/dma-default.c b/arch/mips/mm/dma-default.c
-index af5f046..ee6d12c 100644
---- a/arch/mips/mm/dma-default.c
-+++ b/arch/mips/mm/dma-default.c
-@@ -18,6 +18,7 @@
- #include <linux/highmem.h>
- #include <linux/dma-contiguous.h>
+ Documentation/devicetree/bindings/gpio/gpio.txt | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documentation/devicetree/bindings/gpio/gpio.txt
+index 3fb8f53..a38da91 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio.txt
+@@ -103,6 +103,22 @@ Every GPIO controller node must contain both an empty "gpio-controller"
+ property, and a #gpio-cells integer property, which indicates the number of
+ cells in a gpio-specifier.
  
-+#include <asm/bmips.h>
- #include <asm/cache.h>
- #include <asm/cpu-type.h>
- #include <asm/io.h>
-@@ -69,6 +70,18 @@ static inline struct page *dma_addr_to_page(struct device *dev,
-  */
- static inline int cpu_needs_post_dma_flush(struct device *dev)
- {
-+	if (boot_cpu_type() == CPU_BMIPS3300 ||
-+	    boot_cpu_type() == CPU_BMIPS4350 ||
-+	    boot_cpu_type() == CPU_BMIPS4380) {
-+		void __iomem *cbr = BMIPS_GET_CBR();
++The GPIO chip may contain GPIO hog definitions. GPIO hogging is a mechanism
++providing automatic GPIO request and configuration as part of the
++gpio-controller's driver probe function.
 +
-+		/* Flush stale data out of the readahead cache */
-+		__raw_writel(0x100, cbr + BMIPS_RAC_CONFIG);
-+		__raw_readl(cbr + BMIPS_RAC_CONFIG);
++Each GPIO hog definition is represented as a child node of the GPIO controller.
++Required properties:
++- gpio-hog:  A property specifying that this child node represent a gpio-hog.
++- gpios:     Store the gpio information (id, flags, ...). Shall contain the
++	     number of cells specified in its parent node (GPIO controller
++	     node).
++- state:     A property specifying the direction/value needed. This property
++	     can take the folowing values: input, output-high, output-low.
 +
-+		return 0;
-+	}
++Optional properties:
++- line-name: The GPIO label name. If not present the node name is used.
 +
- 	return !plat_device_is_coherent(dev) &&
- 	       (boot_cpu_type() == CPU_R10000 ||
- 		boot_cpu_type() == CPU_R12000 ||
+ Example of two SOC GPIO banks defined as gpio-controller nodes:
+ 
+ 	qe_pio_a: gpio-controller@1400 {
+@@ -110,6 +126,13 @@ Example of two SOC GPIO banks defined as gpio-controller nodes:
+ 		reg = <0x1400 0x18>;
+ 		gpio-controller;
+ 		#gpio-cells = <2>;
++
++		line_b {
++			gpio-hog;
++			gpios = <6 0>;
++			state = "output-low";
++			line-name = "foo-bar-gpio";
++		};
+ 	};
+ 
+ 	qe_pio_e: gpio-controller@1460 {
 -- 
-2.1.1
+1.8.5.1
