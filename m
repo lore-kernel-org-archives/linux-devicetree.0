@@ -1,118 +1,80 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [RFC 01/15] drivers/base: add track framework
-Date: Fri, 12 Dec 2014 16:36:53 +0000
-Message-ID: <20141212163653.GO11764@sirena.org.uk>
-References: <1418226513-14105-2-git-send-email-a.hajda@samsung.com>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: Re: [PATCH v3 0/7] Pinctrl support for Zynq
+Date: Fri, 12 Dec 2014 08:37:53 -0800
+Message-ID: <4d544fe425694a4e8043ddbf604db062@BN1AFFO11FD033.protection.gbl>
+References: <1d59c0972da04ec89dec6c09724986a1@BY2FFO11FD010.protection.gbl>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="H8fFO+isr9ADh2Iv"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1418226513-14105-2-git-send-email-a.hajda@samsung.com>
+In-Reply-To: <1d59c0972da04ec89dec6c09724986a1@BY2FFO11FD010.protection.gbl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrzej Hajda <a.hajda@samsung.com>
-Cc: open list <linux-kernel@vger.kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mike Turquette <mturquette@linaro.org>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Inki Dae <inki.dae@samsung.com>, Kishon Vijay Abraham I <kishon@ti.com>, Liam Girdwood <lgirdwood@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "moderated list:ARM/CLKDEV SUPPORT" <linux-arm-kernel@lists.infradead.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, "moderated list:ARM/S5P EXYNOS AR..." <linux-samsung-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, boris.brezillon@
+To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
+Cc: Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Alessandro Rubini <rubini@unipv.it>, Heiko Stuebner <heiko@sntech.de>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-rockchip@lists.infradead.org, linux-sh@vger.kernel.org, "Ivan T. Ivanov" <iivanov@mm-sol.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Beniamino Galvani <b.galvani@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Argh, this went through the wrong SMTP. I suspect threading is broken
+due to that. Let me know if you want me to resend this with intact
+threading.
+My apologies.
 
---H8fFO+isr9ADh2Iv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+	Thanks,
+	S=C3=B6ren
 
-On Wed, Dec 10, 2014 at 04:48:19PM +0100, Andrzej Hajda wrote:
-> track is a generic framework for safe tracking presence of any kernel objects
-> having an id. There are no special requirements about type of object or its
-> id. Id shall be unique.
-
-This is pretty confusing, when it talks about "kernel objects" that
-sounds like it means struct kobject but in fact there's no connection
-with that or any of the other kernel object stuff.  Perhaps it makes
-sense but it should be addressed.
-
-> Typical usage of the framework by consumer looks as follow:
-> 1. Consumer registers notifier callback for objects with given id.
-
-This is also a custom thing not connected with the notifier mechanism
-implemented by struct notifier_block.  Again this should probably be
-addressed, even if it's just used internally it seems like there should
-be some opportunity for code reuse here.
-
-> +	case track_task_up:
-> +		node = track_get_node(track, task->type, task->id, true);
-> +
-> +		node->up = true;
-> +		node->data = task->data;
-> +		list_for_each_entry_safe(itb, node->itb_next, &node->itb_head,
-> +					 list)
-> +			itb->callback(itb, node->data, true);
-> +		return;
-> +	case track_task_down:
-
-I'm not sure the up and down naming is the most obvious naming for
-users.  It's obviously inspired by semaphores but it's not entirely
-obvious that this is going to make things clear and meaningful for
-someone trying to understand the interface.
-
-> +static int track_process_queue(struct tracker *track)
-> +{
-> +	struct track_task *task, *ptask = NULL;
-> +	unsigned long flags;
-> +	bool empty;
-> +
-> +	/* Queue non-emptiness is used as a sentinel to prevent processing
-> +	 * by multiple threads, so we cannot delete entry from the queue
-> +	 * until it is processed.
-> +	 */
-> +	while (true) {
-> +		spin_lock_irqsave(&track->queue_lock, flags);
-> +
-> +		if (ptask)
-> +			list_del(&ptask->list);
-> +		task = list_first_entry(&track->queue,
-> +					struct track_task, list);
-> +
-> +		empty = list_empty(&track->queue);
-> +		if (empty)
-> +			complete_all(&track->queue_empty);
-> +
-> +		spin_unlock_irqrestore(&track->queue_lock, flags);
-
-Here we get a task from the head of the list and drop the lock, leaving
-the task on the list...
-
-> +		kfree(ptask);
-> +
-> +		if (empty)
-> +			break;
-> +
-> +		track_process_task(track, task);
-
-...we then go and do some other stuff, including processing that task,
-without the lock or or any other means I can see of excluding other
-users before going round and removing the task.  This seems to leave us
-vulnerable to double execution.  I *think* this is supposed to be
-handled by your comment "Provider should take care of calling
-notifications synchronously in proper order" in the changelog but that's
-a bit obscure, it's not specific about what the requirements are (or
-what the limits are supposed to be on the notification callbacks).
-
-I'm also unclear what is supposed to happen if adding a notification
-races with removing the thing being watched.
-
---H8fFO+isr9ADh2Iv
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUixmlAAoJECTWi3JdVIfQYzkH/2PSJ17rhazR845Aysdj33h4
-A05VuTFXiQ8CO8EcV82HCkc+b3nTzdev8gmxCUIFf5F6VPPyHdbueAh3GCvvqYH8
-XAN3WQLPfiSmf/hqKbhAM39SLF/xTUYkUlLsx4foKB6JK5ENvsCoS/M/i022cQfl
-i5y7AruOzC+TAm70HQ/lKhDc5Xu3Pl25+thsVccYL3UUlCIZxiFpTyHueeA5IoTK
-BWJ7uLVLNnq2ngPs+IZpwrl6LmybAp8WHwe+FOYvMeqQd2T5RGjroMfuvyOBGXsH
-yHb/+Qbo3byiFrEjckIFKcK1RBrMb1kqEfvuhpwrIafC7hT6LqHPAT17rOeDlJg=
-=TiBG
------END PGP SIGNATURE-----
-
---H8fFO+isr9ADh2Iv--
+On Fri, 2014-12-12 at 08:34AM -0800, Soren Brinkmann wrote:
+> Hi,
+>=20
+> I made those few adjustments that came up in the v2 review. Other tha=
+n
+> those, these are the same patches as before.
+> The series is based on pinctrl-v3.19-1, the current pinctrl/devel
+> branch.
+> A branch with these changes is available at
+> https://github.com/sorenb-xlnx/linux-xlnx/commits/pinctrl
+>=20
+> 	Thanks,
+> 	S=C3=B6ren
+>=20
+> Soren Brinkmann (7):
+>   pinctrl: pinconf-generic: Infer map type from DT property
+>   pinctrl: pinconf-generic: Allow driver to specify DT params
+>   pinctrl: zynq: Document DT binding
+>   pinctrl: Add driver for Zynq
+>   ARM: zynq: Enable pinctrl
+>   ARM: zynq: DT: Add pinctrl information
+>   pinctrl: qcom-spmi-gpio: Migrate to pinconf-generic
+>=20
+>  .../bindings/pinctrl/xlnx,zynq-pinctrl.txt         |  104 ++
+>  arch/arm/boot/dts/zynq-7000.dtsi                   |    8 +-
+>  arch/arm/boot/dts/zynq-zc702.dts                   |  181 +++
+>  arch/arm/boot/dts/zynq-zc706.dts                   |  152 +++
+>  arch/arm/mach-zynq/Kconfig                         |    2 +
+>  drivers/pinctrl/Kconfig                            |    8 +
+>  drivers/pinctrl/Makefile                           |    1 +
+>  drivers/pinctrl/nomadik/pinctrl-abx500.c           |    2 +-
+>  drivers/pinctrl/pinconf-generic.c                  |  199 ++--
+>  drivers/pinctrl/pinconf.c                          |    4 +-
+>  drivers/pinctrl/pinconf.h                          |   22 +-
+>  drivers/pinctrl/pinctrl-rockchip.c                 |    2 +-
+>  drivers/pinctrl/pinctrl-tz1090-pdc.c               |    2 +-
+>  drivers/pinctrl/pinctrl-tz1090.c                   |    2 +-
+>  drivers/pinctrl/pinctrl-zynq.c                     | 1176 ++++++++++=
+++++++++++
+>  drivers/pinctrl/qcom/pinctrl-spmi-gpio.c           |  125 +--
+>  drivers/pinctrl/sh-pfc/pinctrl.c                   |    2 +-
+>  include/linux/pinctrl/pinconf-generic.h            |   29 +
+>  include/linux/pinctrl/pinctrl.h                    |    9 +
+>  19 files changed, 1808 insertions(+), 222 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/xlnx,zy=
+nq-pinctrl.txt
+>  create mode 100644 drivers/pinctrl/pinctrl-zynq.c
+>=20
+> --=20
+> 2.2.0.1.g9ee0458
+>=20
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree"=
+ in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
