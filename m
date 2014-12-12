@@ -1,57 +1,41 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/3] ASoC: codecs: wm8904: add dt ids table
-Date: Fri, 12 Dec 2014 13:23:21 +0000
-Message-ID: <20141212132321.GI11764@sirena.org.uk>
-References: <1418267681-4091-1-git-send-email-voice.shen@atmel.com>
+From: Vignesh R <vigneshr@ti.com>
+Subject: Re: [PATCH v4 0/6] Touchscreen performance related fixes
+Date: Fri, 12 Dec 2014 19:18:40 +0530
+Message-ID: <548AF238.6070808@ti.com>
+References: <1415941651-28962-1-git-send-email-vigneshr@ti.com>	<20141124115116.GA14997@linutronix.de>	<547C3A95.30605@ti.com>	<547C3C19.5090501@linutronix.de>	<547C42FF.5010700@ti.com> <CAH=tA9FO5MCzE274thc-NugCNte6WdyC-Rxc6yfnuR=+6_qMbA@mail.gmail.com> <548A0125.6040708@linutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="sqSKez5rJqaWrTl+"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1418267681-4091-1-git-send-email-voice.shen@atmel.com>
+In-Reply-To: <548A0125.6040708@linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bo Shen <voice.shen@atmel.com>
-Cc: nicolas.ferre@atmel.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-sound@vger.kernel.org, Alexander Morozov <linux@meltdown.ru>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Nicolae Rosia <nicolae.rosia@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, richardcochran@gmail.com, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee.jones@linaro.org>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Samuel Ortiz <sameo@linux.intel.com>, Felipe Balbi <balbi@ti.com>, Brad Griffis <bgriffis@ti.com>, Sanjeev Sharma <sanjeev_sharma@mentor.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Jan Kardell <jan.kardell@telliq.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.orglinux
 List-Id: devicetree@vger.kernel.org
 
 
---sqSKez5rJqaWrTl+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Thu, Dec 11, 2014 at 11:14:39AM +0800, Bo Shen wrote:
+On Friday 12 December 2014 02:10 AM, Sebastian Andrzej Siewior wrote:
+> On 12/11/2014 09:34 PM, Nicolae Rosia wrote:
+>> Hello,
+> 
+> Hi,
+> 
+>> Any updates on this series? I don't see it applied in [1] or [2].
+> 
+> I manage to freeze am335x-evm with those patches and I think Vignesh
+> is looking into this.
 
-> +static const struct of_device_id wm8904_of_match[] = {
-> +	{ .compatible = "wlf,wm8904", },
-> +	{ .compatible = "wlf,wm8912", },
-> +	{ .compatible = "wlf,wm8918", },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, wm8904_of_match);
-> +
->  static struct i2c_driver wm8904_i2c_driver = {
->  	.driver = {
->  		.name = "wm8904",
->  		.owner = THIS_MODULE,
-> +		.of_match_table = wm8904_of_match,
+I was not able to reproduce this issue with my kernel configurations.
+I am yet to try with Sebastian's ".config" file. Not been able work on this.
 
-I'm not seeing anything here that ensures that devtype is set correctly
-when probing using the OF IDs - currently we rely on i2c->driver_data.
 
---sqSKez5rJqaWrTl+
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+> 
+>> Regards,
+>> Nicolae Rosia
+> 
+> Sebastian
+> 
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUiuxJAAoJECTWi3JdVIfQa/EH/3sImuPwqYCbtDH6kGYmchW8
-4go5oQrdon2GmMjCI7y9W7lx/Yvnp/MoH4eoxQWnk+d0PSqxRAK1Rpwir1Cb8V9G
-Y9VvUChbGJQIkDwmaNdoCGd0CNsXDLCA4sNq8BGcyjocwjozCx7oFmd2XmOorHPn
-NvCpvZoXz6T3bg2CEqkrO61zAqS8n9wfVpfvfDfkM+J6MCGg+ptjJo2CwEgE2WOY
-JpcjjM8MeDCttK06bYfk7xdbKbP9GAgdGVEgchOtYG4K+XSVOoKTf88cglpJ3fNT
-JSxIdxkfbGkv1e1qDPSVVV9f711U/smhgB44fAEgS9Hk+8zpHTKKPncPUkDTkmc=
-=DvjI
------END PGP SIGNATURE-----
-
---sqSKez5rJqaWrTl+--
+Regards,
+Vignesh
