@@ -1,7 +1,7 @@
 From: Silvio Fricke <silvio.fricke@gmail.com>
-Subject: [PATCH 1/3] ARM: mx5: dts: remove unused irq-trigger entry
-Date: Sat, 13 Dec 2014 02:46:46 +0100
-Message-ID: <73b964064f87e3e632cc251894c130b88aaaf0b8.1418434448.git.silvio.fricke@gmail.com>
+Subject: [PATCH 3/3] ARM: SPEAr: dts: remove unused irq-trigger, id and block entries
+Date: Sat, 13 Dec 2014 02:46:48 +0100
+Message-ID: <557b9b23d0313dede22786d9550c7867d9f22837.1418434448.git.silvio.fricke@gmail.com>
 References: <cover.1418434448.git.silvio.fricke@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1418434448.git.silvio.fricke@gmail.com>
@@ -17,20 +17,56 @@ CC: Thomas Gleixner <tglx@linutronix.de>
 CC: Jason Cooper <jason@lakedaemon.net>
 CC: Marc Zyngier <marc.zyngier@arm.com>
 ---
- arch/arm/boot/dts/imx53-m53.dtsi | 1 -
- 1 file changed, 1 deletion(-)
+ arch/arm/boot/dts/spear1310-evb.dts | 1 -
+ arch/arm/boot/dts/spear1340-evb.dts | 2 --
+ arch/arm/boot/dts/spear320-hmi.dts  | 3 ---
+ 3 files changed, 6 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx53-m53.dtsi b/arch/arm/boot/dts/imx53-m53.dtsi
-index 87a7fc7..8a5acb5 100644
---- a/arch/arm/boot/dts/imx53-m53.dtsi
-+++ b/arch/arm/boot/dts/imx53-m53.dtsi
-@@ -60,7 +60,6 @@
- 		blocks = <0x5>;
- 		interrupts = <6 0x0>;
- 		interrupt-parent = <&gpio7>;
--		irq-trigger = <0x1>;
+diff --git a/arch/arm/boot/dts/spear1310-evb.dts b/arch/arm/boot/dts/spear1310-evb.dts
+index d42c84b..95c2ff1 100644
+--- a/arch/arm/boot/dts/spear1310-evb.dts
++++ b/arch/arm/boot/dts/spear1310-evb.dts
+@@ -369,7 +369,6 @@
+ 					pl022,duplex = <0>;
+ 					interrupts = <6 0x4>;
+ 					interrupt-parent = <&gpio1>;
+-					irq-trigger = <0x2>;
  
- 		stmpe_touchscreen {
- 			compatible = "st,stmpe-ts";
+ 					stmpe_touchscreen {
+ 						compatible = "st,stmpe-ts";
+diff --git a/arch/arm/boot/dts/spear1340-evb.dts b/arch/arm/boot/dts/spear1340-evb.dts
+index b23e05e..bba3389 100644
+--- a/arch/arm/boot/dts/spear1340-evb.dts
++++ b/arch/arm/boot/dts/spear1340-evb.dts
+@@ -325,7 +325,6 @@
+ 					reg = <0x41>;
+ 					interrupts = <4 0x4>;
+ 					interrupt-parent = <&gpio0>;
+-					irq-trigger = <0x2>;
+ 
+ 					stmpegpio: stmpe_gpio {
+ 						compatible = "st,stmpe-gpio";
+@@ -478,7 +477,6 @@
+ 					pl022,duplex = <0>;
+ 					interrupts = <100 0>;
+ 					interrupt-parent = <&gpiopinctrl>;
+-					irq-trigger = <0x2>;
+ 					#address-cells = <1>;
+ 					#size-cells = <0>;
+ 
+diff --git a/arch/arm/boot/dts/spear320-hmi.dts b/arch/arm/boot/dts/spear320-hmi.dts
+index 0aa6fef..f8ed01e 100644
+--- a/arch/arm/boot/dts/spear320-hmi.dts
++++ b/arch/arm/boot/dts/spear320-hmi.dts
+@@ -243,9 +243,6 @@
+ 					reg = <0x41>;
+ 					irq-over-gpio;
+ 					irq-gpios = <&gpiopinctrl 29 0x4>;
+-					id = <0>;
+-					blocks = <0x5>;
+-					irq-trigger = <0x1>;
+ 
+ 					stmpegpio: stmpe-gpio {
+ 						compatible = "stmpe,gpio";
 -- 
 2.1.3
