@@ -1,67 +1,78 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH 0/3] removing of some unused/unsupported dts entries
-Date: Sat, 13 Dec 2014 09:33:28 -0500
-Message-ID: <20141213143328.GA967@titan.lakedaemon.net>
-References: <cover.1418434448.git.silvio.fricke@gmail.com>
- <8761dfgb1o.fsf@why.wild-wind.fr.eu.org>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH 1/3] TTY: add support for "tty slave" devices.
+Date: Sat, 13 Dec 2014 18:46:41 +0100
+Message-ID: <20141213174640.GA18961@earth.universe>
+References: <20141211214801.4127.93914.stgit@notabene.brown>
+ <20141211215943.4127.24792.stgit@notabene.brown>
+ <20141212115920.4277AC408F1@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="HcAYCG3uE/tztfnV"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <8761dfgb1o.fsf-Fmn/x+r+pSA9//JtdbceeD8Kkb2uy4ct@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Cc: Silvio Fricke <silvio.fricke-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+In-Reply-To: <20141212115920.4277AC408F1@trevor.secretlab.ca>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>
+Cc: NeilBrown <neilb@suse.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Jiri Slaby <jslaby@suse.cz>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Silvio, Marc,
 
-On Sat, Dec 13, 2014 at 09:21:23AM +0000, Marc Zyngier wrote:
-> On Sat, Dec 13 2014 at  1:46:45 am GMT, Silvio Fricke <silvio.fricke-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> 
-> Hi Silvio,
-> 
-> > I have found some dts entries which are not evaluated by the drivers. This
-> > patch remove this entries from the dts files.
-> > Jason has mentioned I should CC: Thomas, Marc and him self to this
-> > mails.
-> 
-> As far as I can tell, this looks correct. A few key things though:
-> 
-> - Please write decent commit logs. Indicate *why* you think these
->   properties can be removed (hint: not finding corresponding in the
->   drivers is not enough a reason, the binding itself matters).
+--HcAYCG3uE/tztfnV
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Right.  The real issue is the state of these properties within the
-binding documentation.  Linux isn't the only consumer of these dts
-files (*BSD, barebox, etc), so us not using them doesn't necessarily
-mean the property should be removed.
+Hi,
 
-The most important lesson (recently learned ;-) ) is to make sure all
-properties are accurately describing the *hardware*.  Not Linux's
-implementation of talking to the hardware.  That'll go a long way if the
-changelog discusses how property X is an implementation detail vice a
-hardware characteristic or feature.
+On Fri, Dec 12, 2014 at 11:59:20AM +0000, Grant Likely wrote:
+> [...]
+> > --- a/Documentation/devicetree/bindings/serial/of-serial.txt
+> > +++ b/Documentation/devicetree/bindings/serial/of-serial.txt
+> > @@ -39,6 +39,10 @@ Optional properties:
+> >    driver is allowed to detect support for the capability even without =
+this
+> >    property.
+> > =20
+> > +Optional child node:
+> > +- a platform device listed as a child node will be probed and
+> > +  powered-on whenever the tty is in use (open).
+> > +
+>=20
+> The biggest concern I have is what happens to nodes that already have
+> child devices that /don't/ match this use case? It is possible that some
+> UART nodes already have a child node used to store other data. There are
+> two ways to handle this; 1) add a new bool property that indicates the
+> child nodes are tty slave devices, or 2) Make each uart driver
+> explicitly enable the feature so that driver authors can check if it is
+> a problem for that device. I personally would suggest #1 because then it
+> can be enabled in generic code.
 
-> - Cc the relevant platform maintainers. You're changing things that they
->   care about, basic courtesy is to keep them in the loop.
+maybe simple depend on the compatible value? If the UART node has
+child nodes to store other random data it should not have a
+compatible value?
 
-True.  In Silvio's defense, I just told him to Cc us to get the ball
-rolling.  (I tend to dislike long discussions on chat mediums, I'd much
-rather they be in email.  So I was definitely too succinct).
+-- Sebastian
 
-For the record, you can use ./scripts/get_maintainer.pl on your patches
-to make sure you get most of the right people.  In this case, that'll
-include the DT maintainers.  You may want to run a get_maintainer.pl -f
-arch/arm/mach-$ARCH for each of the dts file you touch.  Those
-maintainers usually wrangle the patches for their dts files.
-Unfortunately, not all of them have updated MAINTAINERS
-(<cough>mvebu<cough>) to include the dts file patterns.
+--HcAYCG3uE/tztfnV
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-thx,
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-Jason.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+iQIcBAEBCgAGBQJUjHt+AAoJENju1/PIO/qaBNkP/RILKWmQxOsqhnr6kxoUGF6t
+RrGr+NJ8cELaS9fxaAP9EB0mlOQPJeR5Xe8sY0lNEjo2XVvdsOyHQssLTbNaJDM0
+LXdU3cN441fhL6h2fUFZG1cUtBDSqj0VcqAkepd9vS+cF8x+NYAz6MKS2drut5Bz
+/SaG8670aXNLhZN6CgbTXdSrklN/oU6f7aIosSDs5UNCtk3btU1u+F7vDCB4C+q4
+0jYDRMfhVK0rtVzwQ6bGzE2+8SfY/rCak8ODAiVxXQ/UQxUR47pJR9TuY3bELGlU
+4IrNURia2LS9VKjej8YWx51B8/NiAC6ve/lUL7xp3B2xWuWG+LzaTTLxpsEFVEFX
+FXeHfcMIplef8ELNAseQE9KzpA7YKpKeEnENamsRYzVlxwvW3t3tjh5hM2bgV7Ir
+0QzwmCS0go7n0pXBYwyR+crRWurJPmCLSRJq3EEO42rEQp9XcYiPLBsH4bPIlN7L
+h4h1yRyw8KH1rL8uY+yAjNFz3/D9K2FAvWPCoswshEYiMuyf4BfI8W6XF8ANPGR8
+D1OqKz/Lanf4iZSFtaAlTvX6cEiIn8oj4A+5jKp2IJqMqS0NevLqM2SAZbiIJ+un
+M0CMaCD3iyyx+jiaZ0M34ufC01N/GdamvxvOVgTo3YyZgBvokDhhDAz8AcTigZhq
+A/F9BRz1HdmvCb17S9tk
+=Sw0H
+-----END PGP SIGNATURE-----
+
+--HcAYCG3uE/tztfnV--
