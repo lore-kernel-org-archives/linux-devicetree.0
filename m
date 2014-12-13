@@ -1,36 +1,67 @@
-From: Silvio Fricke <silvio.fricke@gmail.com>
-Subject: [PATCH 2/3] ARM: tegra: dts: remove unused irq-trigger entry
-Date: Sat, 13 Dec 2014 02:46:47 +0100
-Message-ID: <bc18448982ba1fb8b976443193937a8bc6cc4c23.1418434448.git.silvio.fricke@gmail.com>
-References: <cover.1418434448.git.silvio.fricke@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1418434448.git.silvio.fricke@gmail.com>
-In-Reply-To: <cover.1418434448.git.silvio.fricke@gmail.com>
-References: <cover.1418434448.git.silvio.fricke@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Silvio Fricke <silvio.fricke@gmail.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCHv3 5/5] ARM: sunxi: dts: Add note ps2 pins conflict with hdmi
+Date: Sat, 13 Dec 2014 10:06:04 +0800
+Message-ID: <CAGb2v65xpUhiMzSKu_1+JGNbg3oFdpw2EQ+JGUYkivCtG2O6gw@mail.gmail.com>
+References: <1418408748-9797-1-git-send-email-vishnupatekar0510@gmail.com> <1418408748-9797-6-git-send-email-vishnupatekar0510@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1418408748-9797-6-git-send-email-vishnupatekar0510@gmail.com>
+Sender: linux-input-owner@vger.kernel.org
+To: VishnuPatekar <vishnupatekar0510@gmail.com>
+Cc: "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Hans De Goede <hdegoede@redhat.com>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, benh@kernel.crashing.org, msalter@redhat.com, linux-kernel <linux-kernel@vger.kernel.org>, ralf@linux-mips.org, Rob Herring <robh+dt@kernel.org>, jdelvare@suse.de, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Silvio Fricke <silvio.fricke@gmail.com>
-CC: Thomas Gleixner <tglx@linutronix.de>
-CC: Jason Cooper <jason@lakedaemon.net>
-CC: Marc Zyngier <marc.zyngier@arm.com>
----
- arch/arm/boot/dts/tegra30-apalis.dtsi | 1 -
- 1 file changed, 1 deletion(-)
+Hi,
 
-diff --git a/arch/arm/boot/dts/tegra30-apalis.dtsi b/arch/arm/boot/dts/tegra30-apalis.dtsi
-index a5446cb..c2a7528 100644
---- a/arch/arm/boot/dts/tegra30-apalis.dtsi
-+++ b/arch/arm/boot/dts/tegra30-apalis.dtsi
-@@ -540,7 +540,6 @@
- 			interrupt-controller;
- 			id = <0>;
- 			blocks = <0x5>;
--			irq-trigger = <0x1>;
- 
- 			stmpe_touchscreen {
- 				compatible = "st,stmpe-ts";
--- 
-2.1.3
+On Sat, Dec 13, 2014 at 2:25 AM, VishnuPatekar
+<vishnupatekar0510@gmail.com> wrote:
+> 1. Please note that ps20 pins conflict with HDMI on Lime2 Board
+> so, by deault ps20 and ps21 are disabled for Lime2 Board.
+> There is no on board ps2 connector and these pins can be used
+> for different purpose.
+>
+> Signed-off-by: VishnuPatekar <vishnupatekar0510@gmail.com>
+> ---
+>  arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts |    6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
+> index ed364d5..951b615 100644
+> --- a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
+> +++ b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
+> @@ -112,7 +112,11 @@
+>                         pinctrl-0 = <&uart0_pins_a>;
+>                         status = "okay";
+>                 };
+> -
+> +
+> +               /* PS2 0 and PS2 1 are disabled by default; Please note that
+> +               ps20 pins conflict with HDMI on Lime2 Board
+> +               */
+> +
+
+Multi-line comments should be:
+
+/*
+ * line 1
+ * line 2
+ * ...
+ */
+
+And why is there a delete and insert for an empty line?
+Weird... though git seems to ignore it when applying.
+
+ChenYu
+
+>                 i2c0: i2c@01c2ac00 {
+>                         pinctrl-names = "default";
+>                         pinctrl-0 = <&i2c0_pins_a>;
+> --
+> 1.7.9.5
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
