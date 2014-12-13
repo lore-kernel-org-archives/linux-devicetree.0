@@ -1,75 +1,67 @@
-From: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
-Subject: Re: [PATCH 1/3] TTY: add support for "tty slave" devices.
-Date: Sat, 13 Dec 2014 14:23:44 +0000
-Message-ID: <20141213142344.61372b92@lxorguk.ukuu.org.uk>
-References: <20141211214801.4127.93914.stgit@notabene.brown>
-	<20141211215943.4127.24792.stgit@notabene.brown>
-	<548A264D.8070103@hurleysoftware.com>
-	<20141212162352.66be5b5e@notabene.brown>
-	<548AE778.90205@hurleysoftware.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH 0/3] removing of some unused/unsupported dts entries
+Date: Sat, 13 Dec 2014 09:33:28 -0500
+Message-ID: <20141213143328.GA967@titan.lakedaemon.net>
+References: <cover.1418434448.git.silvio.fricke@gmail.com>
+ <8761dfgb1o.fsf@why.wild-wind.fr.eu.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <548AE778.90205@hurleysoftware.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Hurley <peter@hurleysoftware.com>
-Cc: NeilBrown <neilb@suse.de>, Grant Likely <grant.likely@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Jiri Slaby <jslaby@suse.cz>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <8761dfgb1o.fsf-Fmn/x+r+pSA9//JtdbceeD8Kkb2uy4ct@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Cc: Silvio Fricke <silvio.fricke-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 12 Dec 2014 08:02:48 -0500
-> Which brings up another point: why not do this in the runtime power management;
-> ie, turn on the slave device when the master device is turned on? Sebastian
-> recently made the 8250 driver power-managed per access, which would enable
-> significant power savings over just leaving the slave device on the whole time.
+Silvio, Marc,
 
-That per access model only works on 8250 (in fact only on some 8250). On
-most devices if the UART is in low power you lose bytes send to it rather
-than then queuing up anywhere.
-
-It doesn't handle cases where you need to keep power on to different rules
-(for example there are cases where you do things like power the uart down
-after no bits have been received for 'n' millseconds). Right now if you
-look into Androidspace you'll find people doing this in userspace by
-having the sysfs node open and playing crazy games with sysfs, Android
-glue hacks and gpio poking via the gpio sysfs/gpio lib routines.
-
-Good example is some of the GPS and serial based sensor chips. The
-latency of tty open/close is unacceptable and risks losing bits so they
-keep the tty open and whack the power management by hand right now.
-
-The kind of thing many of them want is stuff like
-
-"hold power on until we see receive data, then keep it on until it shuts
-up for a bit"
-
-"assert gpio, send, receive, wait idle, drop gpio"
-
-"on GPIO interrupt wake uart, wait for data, when idle, power uart down"
-
-> >> 2) why is this tied to the tty core and not the serial core
-> >>    if this is only for UART?
-> > 
-> > Because the knowledge of "the device is being opened" or "the device is being
-> > closed" seems to exist in the tty core but not in the serial core.
+On Sat, Dec 13, 2014 at 09:21:23AM +0000, Marc Zyngier wrote:
+> On Sat, Dec 13 2014 at  1:46:45 am GMT, Silvio Fricke <silvio.fricke-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 > 
-> uart_open() = device file is being opened
-> uart_close() = device file is being released
-
-Only for a subset of uart type devices that use the uart layer. Quite a
-few don't, including all the USB ones, and the sd ones.
-
-> > I'm happy to move it to serial_core.c if that is preferred.
-> > I'll also move the open/close handling if you can point to where it should go.
+> Hi Silvio,
 > 
-> Yes, please.
+> > I have found some dts entries which are not evaluated by the drivers. This
+> > patch remove this entries from the dts files.
+> > Jason has mentioned I should CC: Thomas, Marc and him self to this
+> > mails.
+> 
+> As far as I can tell, this looks correct. A few key things though:
+> 
+> - Please write decent commit logs. Indicate *why* you think these
+>   properties can be removed (hint: not finding corresponding in the
+>   drivers is not enough a reason, the binding itself matters).
 
-NAK - I certainly object to it being moved to uart. That's the wrong
-abstraction layer for this. It's a generic behaviour, it's a tty level
-behaviour without any uart specific properties. It should work for uarts
-that don't use the legacy serial_core code, uarts that do, uarts that use
-USB, uarts that are directly connected to things like sdio etc.
+Right.  The real issue is the state of these properties within the
+binding documentation.  Linux isn't the only consumer of these dts
+files (*BSD, barebox, etc), so us not using them doesn't necessarily
+mean the property should be removed.
 
-That means it has to be tty layer.
+The most important lesson (recently learned ;-) ) is to make sure all
+properties are accurately describing the *hardware*.  Not Linux's
+implementation of talking to the hardware.  That'll go a long way if the
+changelog discusses how property X is an implementation detail vice a
+hardware characteristic or feature.
 
-Alan
+> - Cc the relevant platform maintainers. You're changing things that they
+>   care about, basic courtesy is to keep them in the loop.
+
+True.  In Silvio's defense, I just told him to Cc us to get the ball
+rolling.  (I tend to dislike long discussions on chat mediums, I'd much
+rather they be in email.  So I was definitely too succinct).
+
+For the record, you can use ./scripts/get_maintainer.pl on your patches
+to make sure you get most of the right people.  In this case, that'll
+include the DT maintainers.  You may want to run a get_maintainer.pl -f
+arch/arm/mach-$ARCH for each of the dts file you touch.  Those
+maintainers usually wrangle the patches for their dts files.
+Unfortunately, not all of them have updated MAINTAINERS
+(<cough>mvebu<cough>) to include the dts file patterns.
+
+thx,
+
+Jason.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
