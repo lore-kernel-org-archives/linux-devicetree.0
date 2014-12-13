@@ -1,152 +1,80 @@
-From: AH <najdrozszy@gmail.com>
-Subject: Re: [RFC 01/15] drivers/base: add track framework
-Date: Sat, 13 Dec 2014 00:12:19 +0100
-Message-ID: <548B7653.7020004@gmail.com>
-References: <1418226513-14105-2-git-send-email-a.hajda@samsung.com> <20141212163653.GO11764@sirena.org.uk>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v7 2/5] phy: add a driver for the Rockchip SoC internal
+ USB2.0 PHY
+Date: Fri, 12 Dec 2014 16:19:49 -0800
+Message-ID: <CAD=FV=XiP37Q8EkDYpBgh=Ng9nJD9-Uow0qCy78u6kCZomGNPA@mail.gmail.com>
+References: <1418396413-27937-1-git-send-email-lyz@rock-chips.com>
+	<1418396866-32625-1-git-send-email-lyz@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20141212163653.GO11764@sirena.org.uk>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, Andrzej Hajda <a.hajda@samsung.com>
-Cc: open list <linux-kernel@vger.kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mike Turquette <mturquette@linaro.org>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Inki Dae <inki.dae@samsung.com>, Kishon Vijay Abraham I <kishon@ti.com>, Liam Girdwood <lgirdwood@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, ARM/CLKDEV SUPPORT <linux-arm-kernel@lists.infradead.org>, GPIO SUBSYSTEM <linux-gpio@vger.kernel.org>, DRM PANEL DRIVERS <dri-devel@lists.freedesktop.org>, "ARM/S5P EXYNOS AR..." <linux-samsung-soc@vger.kernel.org>, "OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1418396866-32625-1-git-send-email-lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yunzhi Li <lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Chris <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Eddie Cai <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+Yunzhi,
 
-Thanks for review.
-
-Mark Brown wrote on 12.12.2014 17:36:
-> On Wed, Dec 10, 2014 at 04:48:19PM +0100, Andrzej Hajda wrote:
->> track is a generic framework for safe tracking presence of any kernel objects
->> having an id. There are no special requirements about type of object or its
->> id. Id shall be unique.
+On Fri, Dec 12, 2014 at 7:07 AM, Yunzhi Li <lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+> This patch to add a generic PHY driver for ROCKCHIP usb PHYs,
+> currently this driver can support RK3288. The RK3288 SoC have
+> three independent USB PHY IPs which are all configured through a
+> set of registers located in the GRF (general register files)
+> module.
 >
-> This is pretty confusing, when it talks about "kernel objects" that
-> sounds like it means struct kobject but in fact there's no connection
-> with that or any of the other kernel object stuff.  Perhaps it makes
-> sense but it should be addressed.
+> Signed-off-by: Yunzhi Li <lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 >
-
-OK
-
->> Typical usage of the framework by consumer looks as follow:
->> 1. Consumer registers notifier callback for objects with given id.
+> ---
 >
-> This is also a custom thing not connected with the notifier mechanism
-> implemented by struct notifier_block.  Again this should probably be
-> addressed, even if it's just used internally it seems like there should
-> be some opportunity for code reuse here.
+> Changes in v7:
+> - Accept Kishon's comments to use phandle args to find a phy
+>   struct directly and get rid of using a custom of_xlate
+>   function.
 
-I though about using notfier_block, but beside the struct itself there 
-wouldn't be too much code to reuse. In my previous attempt of this 
-framework more arguments were passed to the callback so I have dropped
-this idea completely, but now after simplifying the callback it fits better.
-
->
->> +	case track_task_up:
->> +		node = track_get_node(track, task->type, task->id, true);
->> +
->> +		node->up = true;
->> +		node->data = task->data;
->> +		list_for_each_entry_safe(itb, node->itb_next, &node->itb_head,
->> +					 list)
->> +			itb->callback(itb, node->data, true);
->> +		return;
->> +	case track_task_down:
->
-> I'm not sure the up and down naming is the most obvious naming for
-> users.  It's obviously inspired by semaphores but it's not entirely
-> obvious that this is going to make things clear and meaningful for
-> someone trying to understand the interface.
-
-In my 1st attempt I have called the framework interface_tracker, so it 
-was named ifup/ifdown after unix commands:) Now it is less obvious.
-Finding good names is always painful, anyway I will think about it.
-
->
->> +static int track_process_queue(struct tracker *track)
->> +{
->> +	struct track_task *task, *ptask = NULL;
->> +	unsigned long flags;
->> +	bool empty;
->> +
->> +	/* Queue non-emptiness is used as a sentinel to prevent processing
->> +	 * by multiple threads, so we cannot delete entry from the queue
->> +	 * until it is processed.
->> +	 */
->> +	while (true) {
->> +		spin_lock_irqsave(&track->queue_lock, flags);
->> +
->> +		if (ptask)
->> +			list_del(&ptask->list);
->> +		task = list_first_entry(&track->queue,
->> +					struct track_task, list);
->> +
->> +		empty = list_empty(&track->queue);
->> +		if (empty)
->> +			complete_all(&track->queue_empty);
->> +
->> +		spin_unlock_irqrestore(&track->queue_lock, flags);
->
-> Here we get a task from the head of the list and drop the lock, leaving
-> the task on the list...
-
-Yes and it is explained in the comment few lines above.
-
->
->> +		kfree(ptask);
->> +
->> +		if (empty)
->> +			break;
->> +
->> +		track_process_task(track, task);
->
-> ...we then go and do some other stuff, including processing that task,
-> without the lock or or any other means I can see of excluding other
-> users before going round and removing the task.  This seems to leave us
-> vulnerable to double execution.
-
-No, if you look at track_add_task function you will see that the queue 
-is processed only if it is initially empty, otherwise the task is only 
-added to the queue, so it will be processed after processing earlier tasks.
-So the rule is that if someone add task to the queue it checks if the 
-queue is empty, in such case it process all tasks from the queue until
-the queue becomes empty, even the tasks added by other processed.
-This way all tasks are serialized.
+I'm going to assume you didn't test this version, since it doesn't
+work for me.  At suspend time power is high and my printouts in the
+powerup/powerdown code aren't called...
 
 
-> I *think* this is supposed to be
-> handled by your comment "Provider should take care of calling
-> notifications synchronously in proper order" in the changelog but that's
-> a bit obscure, it's not specific about what the requirements are (or
-> what the limits are supposed to be on the notification callbacks).
+> +       for_each_available_child_of_node(dev->of_node, child) {
+> +               rk_phy = devm_kzalloc(dev, sizeof(*rk_phy), GFP_KERNEL);
+> +               if (!rk_phy)
+> +                       return -ENOMEM;
+> +
+> +               if (of_property_read_u32(child, "reg", &reg_offset)) {
+> +                       dev_err(dev, "missing reg property in node %s\n",
+> +                               child->name);
+> +                       return -EINVAL;
+> +               }
+> +
+> +               rk_phy->reg_offset = reg_offset;
+> +               rk_phy->reg_base = grf;
+> +
+> +               rk_phy->clk = of_clk_get_by_name(child, "phyclk");
+> +               if (IS_ERR(rk_phy->clk))
+> +                       rk_phy->clk = NULL;
+> +
+> +               rk_phy->phy = devm_phy_create(dev, child, &ops);
+> +               if (IS_ERR(rk_phy->phy)) {
+> +                       dev_err(dev, "failed to create PHY\n");
+> +                       return PTR_ERR(rk_phy->phy);
+> +               }
+> +               phy_set_drvdata(rk_phy->phy, rk_phy);
+> +       }
+> +
+> +       phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
 
-No, this comment is just to avoid advertising object (ie calling 
-track_up) that can be just removed by concurrent thread.
+I think your bug is here.  I think you now need to register 3 phy
+providers, not just one.
 
+I'll continue to assert my utter noviceness with this code, but my
+attempt at a solution (which works) can be found at:
 
->
-> I'm also unclear what is supposed to happen if adding a notification
-> races with removing the thing being watched.
->
+https://chromium-review.googlesource.com/235456
 
-The sequence should be always as follows:
-1. create thing, then call track_up(thing).
-...
-2. call track_down(thing) then remove thing.
-
-If we put 1 into probe and 2 into remove callback of the driver it will 
-be safe - we are synchronised by device_lock. But if, for some reason, 
-we want to create object after probe we should do own synchronization or 
-just put device_lock around 1. The same applies if we want to remove
-object earlier. This is the comment above about. I will expand it to 
-more verbose explanation.
-
-Regards
-Andrzej
-
-
-
-
+-Doug
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
