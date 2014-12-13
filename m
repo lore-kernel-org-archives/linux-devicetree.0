@@ -1,36 +1,37 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH 2/2] Input: gpio_keys - replace timer and workqueue with
- delayed workqueue
-Date: Sat, 13 Dec 2014 11:09:26 -0800
-Message-ID: <20141213190926.GD22702@dtor-ws>
-References: <20141208071930.GA20802@dtor-ws>
- <20141208072124.GA21031@dtor-ws>
- <1418236376.17201.57.camel@linux.intel.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 1/4] pci: iProc: define Broadcom iProc PCIe binding
+Date: Sat, 13 Dec 2014 20:46:42 +0100
+Message-ID: <3383252.Ad6Qf0H2fa@wuerfel>
+References: <1418351817-14898-2-git-send-email-rjui@broadcom.com> <3907917.zNo7yttzkh@wuerfel> <548C0F80.2090300@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1418236376.17201.57.camel@linux.intel.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: linux-input@vger.kernel.org, Alexander Stein <alexander.stein@systec-electronic.com>, Linus Walleij <linus.walleij@linaro.org>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Alexander Shiyan <shc_work@mail.ru>, Laxman Dewangan <ldewangan@nvidia.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <548C0F80.2090300@broadcom.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Arend van Spriel <arend@broadcom.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Scott Branden <sbranden@broadcom.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ray Jui <rjui@broadcom.com>, Christian Daudt <bcm@fixthebug.org>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Matt Porter <mporter@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, Hauke Mehrtens <hauke@hauke-m.de>, Kumar Gala <galak@codeaurora.org>, Bjorn Helgaas <bhelgaas@google.com>, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andy,
-
-On Wed, Dec 10, 2014 at 08:32:56PM +0200, Andy Shevchenko wrote:
-> On Sun, 2014-12-07 at 23:21 -0800, Dmitry Torokhov wrote:
-> > We do not need to roll our own implementation of delayed work now that we
-> > have proper implementation of mod_delayed_work.
-> > 
-> > For interrupt-only driven buttons we retain the timer, but we rename
-> > it to release_timer to better reflect its purpose.
+On Saturday 13 December 2014 11:05:52 Arend van Spriel wrote:
 > 
-> At least it doesn't break the driver on Intel Medfield device.
-> 
-> Tested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Makes sense. I think that is what Hauke meant by "adding
+> additional support for registering to bcma". So the discovery info is a 
+> piece of read-only memory in the chip. Its address is stored in the 
+> chipcommon core register space. BCMA parses that memory blob resulting 
+> in a list of cores which register address info. We could add DT support 
+> in BCMA matching the compatible string and register a core for it.
 
-Thank you for testing it. Assume it is for both patches, right?
+Ah, interesting idea. That would mirror what we do for drivers/amba,
+I like the idea.
 
--- 
-Dmitry
+> However, apart from the discovery info a "discoverable ARM AXI" chip has 
+> a register space per core that provides common procedures like 
+> enable/disable, reset, core status, which are implemented in BCMA. I am 
+> not seeing that register space in the DT examples so I guess this IP 
+> block is not there for iProc chips.
+
+I wouldn't draw conclusions from the absence of some node. Maybe these
+registers are present but just not used by the original BSP.
+
+	Arnd
