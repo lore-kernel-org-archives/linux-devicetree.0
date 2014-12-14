@@ -1,98 +1,209 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v7 2/5] phy: add a driver for the Rockchip SoC internal
- USB2.0 PHY
-Date: Sat, 13 Dec 2014 15:12:10 -0800
-Message-ID: <CAD=FV=UZn1Xjq8eS35Wk=b-EL1U2hh+Wxt48k40f_zupaUHdMw@mail.gmail.com>
-References: <1418396413-27937-1-git-send-email-lyz@rock-chips.com>
-	<1418396866-32625-1-git-send-email-lyz@rock-chips.com>
-	<CAD=FV=XiP37Q8EkDYpBgh=Ng9nJD9-Uow0qCy78u6kCZomGNPA@mail.gmail.com>
-	<548BE99E.2000409@ti.com>
+From: Arnaud Ebalard <arno@natisbad.org>
+Subject: [PATCHv0 0/5] ISL12057 alarm support and isil vs isl fix
+Date: Sun, 14 Dec 2014 02:42:01 +0100
+Message-ID: <cover.1418519430.git.arno@natisbad.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <548BE99E.2000409-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Yunzhi Li <lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Chris <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Eddie Cai <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Andrew Morton <akpm@linux-foundation.org>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Peter Huewe <peter.huewe@infineon.com>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <treding@nvidia.com>, Mark Brown <broonie@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Darshana Padmadas <darshanapadmadas@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Rob Landley <rob@landley.net>, rtc-linux@googlegroups.com, Jason Cooper <jason@lakedaemon.net>, Guenter Roeck <linux@roeck-us.net>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Andrew, Uwe,
 
-On Fri, Dec 12, 2014 at 11:24 PM, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> wrote:
-> hi,
->
-> On Saturday 13 December 2014 05:49 AM, Doug Anderson wrote:
->> Yunzhi,
->>
->> On Fri, Dec 12, 2014 at 7:07 AM, Yunzhi Li <lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
->>> This patch to add a generic PHY driver for ROCKCHIP usb PHYs,
->>> currently this driver can support RK3288. The RK3288 SoC have
->>> three independent USB PHY IPs which are all configured through a
->>> set of registers located in the GRF (general register files)
->>> module.
->>>
->>> Signed-off-by: Yunzhi Li <lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->>>
->>> ---
->>>
->>> Changes in v7:
->>> - Accept Kishon's comments to use phandle args to find a phy
->>>   struct directly and get rid of using a custom of_xlate
->>>   function.
->>
->> I'm going to assume you didn't test this version, since it doesn't
->> work for me.  At suspend time power is high and my printouts in the
->> powerup/powerdown code aren't called...
->>
->>
->>> +       for_each_available_child_of_node(dev->of_node, child) {
->>> +               rk_phy = devm_kzalloc(dev, sizeof(*rk_phy), GFP_KERNEL);
->>> +               if (!rk_phy)
->>> +                       return -ENOMEM;
->>> +
->>> +               if (of_property_read_u32(child, "reg", &reg_offset)) {
->>> +                       dev_err(dev, "missing reg property in node %s\n",
->>> +                               child->name);
->>> +                       return -EINVAL;
->>> +               }
->>> +
->>> +               rk_phy->reg_offset = reg_offset;
->>> +               rk_phy->reg_base = grf;
->>> +
->>> +               rk_phy->clk = of_clk_get_by_name(child, "phyclk");
->>> +               if (IS_ERR(rk_phy->clk))
->>> +                       rk_phy->clk = NULL;
->>> +
->>> +               rk_phy->phy = devm_phy_create(dev, child, &ops);
->>> +               if (IS_ERR(rk_phy->phy)) {
->>> +                       dev_err(dev, "failed to create PHY\n");
->>> +                       return PTR_ERR(rk_phy->phy);
->>> +               }
->>> +               phy_set_drvdata(rk_phy->phy, rk_phy);
->>> +       }
->>> +
->>> +       phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
->>
->> I think your bug is here.  I think you now need to register 3 phy
->> providers, not just one.
->
-> No there should be only one phy provider. It means the bug is elsewhere.
+Andrew, the first patch of this series is a new version of the one you
+have in your tree, providing the changes asked by Uwe (i.e. you can
+just replace yours by that one). If you prefer an additional commit over
+what you already have, do not hesitate to tell me. Below, you have a
+diff between previous (the one you have) and  this first patch, w/ some
+inline comments. Uwe, tell me if it is what you expected.
 
-Ah.  That's what I get for testing on a backported kernel.  I bet it's
-because I'm missing:
+The three patches for RN102, RN104 and RN2120 .dts files just add a
+boolean property to the ISL12057 node to mark it has a wakeup source,
+as proposed by Uwe. If first patch is ok, I think those three can
+either be merged by Jason or directly by you, Andrew.
 
-2a4c370 phy: core: Fix of_phy_provider_lookup to return PHY provider
-for sub node
+The last patch tries and fix the isl vs isil issue which led to the
+conflict between the previous version of this patch and two patches
+merged upstream by Darshana, *by using isil everywhere and deprecating
+isl*. Arnd is also in copy to provide some feedback. At the moment, this
+last patch and the first one of this series can be applied in whatever
+order but I think this is just luck (first and last patch both touch
+rtc-isl12057.c file) so we'll have to be careful if it's merged by
+different maintainers.
 
-Hrm, that made things better, but I still only got one printout when I
-expected 3 (one for each user of the PHY).  I bet there are more picks
-I need then...  :-/  Ah, yup.  When I pick the whole load of PHY
-related stuff then I get all 3.  :)
+Cheers,
 
-I'll do more testing when I have more time and post up a Tested-by, then...
+a+
 
--Doug
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Some comments on the changes in first patch:
+
+-diff -puN drivers/rtc/rtc-isl12057.c~rtc-rtc-isl12057-add-alarm-support-to-intersil-isl12057-rtc-driver drivers/rtc/rtc-isl12057.c
+---- a/drivers/rtc/rtc-isl12057.c~rtc-rtc-isl12057-add-alarm-support-to-intersil-isl12057-rtc-driver
+-+++ a/drivers/rtc/rtc-isl12057.c
++Index: linux/drivers/rtc/rtc-isl12057.c
++===================================================================
++--- linux.orig/drivers/rtc/rtc-isl12057.c
+++++ linux/drivers/rtc/rtc-isl12057.c
+ @@ -1,5 +1,5 @@
+  /*
+ - * rtc-isl12057 - Driver for Intersil ISL12057 I2C Real Time Clock
+@@ -335,10 +310,44 @@
+  static int isl12057_rtc_set_time(struct device *dev, struct rtc_time *tm)
+  {
+  	struct isl12057_rtc_data *data = dev_get_drvdata(dev);
+-@@ -262,9 +457,48 @@ static int isl12057_check_rtc_status(str
++@@ -262,9 +457,82 @@ static int isl12057_check_rtc_status(str
+  	return 0;
+  }
+  
+> ++#ifdef CONFIG_OF
+> ++/*
+> ++ * One would expect the device to be marked as a wakeup source only
+> ++ * when an IRQ pin of the RTC is routed to an interrupt line of the
+> ++ * CPU. In practice, such an IRQ pin can be connected to a PMIC and
+> ++ * this allows the device to be powered up when RTC alarm rings. This
+> ++ * is for instance the case on ReadyNAS 102, 104 and 2120. On those
+> ++ * devices with no IRQ driectly connected to the SoC, the RTC chip
+> ++ * can be forced as a wakeup source by stating that explicitly in
+> ++ * the device's .dts file using the "can-wakeup-machine" boolean
+> ++ * property. This will guarantee 'wakealarm' sysfs entry is available
+> ++ * on the device.
+> ++ *
+> ++ * The function below returns 1, i.e. the capability of the chip to
+> ++ * wakeup the device, based on IRQ availability or if the boolean
+> ++ * property has been set in the .dts file. Otherwise, it returns 0.
+> ++ */
+> ++
+> ++static bool isl12057_can_wakeup_machine(struct device *dev)
+> ++{
+> ++	struct isl12057_rtc_data *data = dev_get_drvdata(dev);
+> ++
+> ++	return (data->irq ||
+> ++		of_property_read_bool(dev->of_node, "can-wakeup-machine"));
+> ++}
+> ++#else
+> ++static bool isl12057_can_wakeup_machine(struct device *dev)
+> ++{
+> ++	struct isl12057_rtc_data *data = dev_get_drvdata(dev);
+> ++
+> ++	return !!data->irq;
+> ++}
+> ++#endif
+> ++
+
+a small helper. Note: the only way to mark the device is a wakeup source
+is via system .dts file. Uwe, now is the time to decide if we put a prefix
+before the property and which ;-)
+
+I have also added a Documentation/devicetree/bindings/rtc/isil,isl12057.txt
+in first patch to describe the purpose of the property and give some
+example. I decided to let the device in the list of trivial I2C device
+though, as this property is not per see required by the device, nor
+specific to ISL12057 but to the way the chip IRQ line is connected (or
+not connected) to the SoC.
+ 
+
+>  +static int isl12057_rtc_alarm_irq_enable(struct device *dev,
+>  +					 unsigned int enable)
+>  +{
+> @@ -385,7 +394,7 @@
+>   };
+>   
+>   static struct regmap_config isl12057_rtc_regmap_config = {
+> -@@ -277,7 +511,6 @@ static int isl12057_probe(struct i2c_cli
+> +@@ -277,7 +545,6 @@ static int isl12057_probe(struct i2c_cli
+>   {
+>   	struct device *dev = &client->dev;
+>   	struct isl12057_rtc_data *data;
+> @@ -393,7 +402,7 @@
+>   	struct regmap *regmap;
+>   	int ret;
+>   
+> -@@ -310,10 +543,79 @@ static int isl12057_probe(struct i2c_cli
+> +@@ -310,9 +577,70 @@ static int isl12057_probe(struct i2c_cli
+>   	data->regmap = regmap;
+>   	dev_set_drvdata(dev, data);
+>   
+> @@ -411,14 +420,8 @@
+>  +				client->irq, ret);
+>  +	}
+>  +
+> -+	/*
+> -+	 * This is needed to have 'wakealarm' sysfs entry available. One
+> -+	 * would expect the device to be marked as a wakeup source only
+> -+	 * when an IRQ pin of the RTC is routed to an interrupt line of the
+> -+	 * CPU. In practice, such an IRQ pin can be connected to a PMIC and
+> -+	 * this allows the device to be powered up when RTC alarm rings.
+> -+	 */
+> -+	device_init_wakeup(dev, true);
+> ++	if (isl12057_can_wakeup_machine(dev))
+> ++		device_init_wakeup(dev, true);
+
+We mark the device as a wakeup source if irq is available or the .dts
+file explicitly require it via our new boolean can-wakeup-machine
+property.
+
+
+> ++}
+> ++
+>  +static int isl12057_remove(struct i2c_client *client)
+>  +{
+> -+	struct isl12057_rtc_data *rtc_data = dev_get_drvdata(&client->dev);
+> -+
+> -+	if (rtc_data->irq > 0)
+> ++	if (isl12057_can_wakeup_machine(&client->dev))
+>  +		device_init_wakeup(&client->dev, false);
+
+Same reason is used to remove the device as from wakeup sources.
+
+
+>  +
+>  +	return 0;
+> @@ -452,7 +453,7 @@
+>  +{
+>  +	struct isl12057_rtc_data *rtc_data = dev_get_drvdata(dev);
+>  +
+> -+	if (device_may_wakeup(dev))
+> ++	if (rtc_data->irq && device_may_wakeup(dev))
+>  +		return enable_irq_wake(rtc_data->irq);
+>  +
+>  +	return 0;
+> @@ -462,20 +463,19 @@
+>  +{
+>  +	struct isl12057_rtc_data *rtc_data = dev_get_drvdata(dev);
+>  +
+> -+	if (device_may_wakeup(dev))
+> ++	if (rtc_data->irq && device_may_wakeup(dev))
+>  +		return disable_irq_wake(rtc_data->irq);
+
+check we have a valid irq before passing it to enable/disable_irq_wake(). 
+
+
+Arnaud Ebalard (5):
+  rtc: rtc-isl12057: add alarm support to Intersil ISL12057 RTC driver
+  ARM: mvebu: ISL12057 rtc chip can be used to wake up RN102
+  ARM: mvebu: ISL12057 rtc chip can be used to wake up RN104
+  ARM: mvebu: ISL12057 rtc chip can be used to wake up RN2120
+  dt-bindings: fix isl vs isil prefix issue for Intersil
+
+ .../devicetree/bindings/i2c/trivial-devices.txt    |   5 +-
+ .../devicetree/bindings/regulator/isl9305.txt      |   4 +-
+ .../devicetree/bindings/rtc/isil,isl12057.txt      |  71 +++++
+ .../devicetree/bindings/vendor-prefixes.txt        |   3 +-
+ arch/arm/boot/dts/armada-370-netgear-rn102.dts     |   1 +
+ arch/arm/boot/dts/armada-370-netgear-rn104.dts     |   1 +
+ arch/arm/boot/dts/armada-xp-netgear-rn2120.dts     |   1 +
+ arch/arm/boot/dts/tegra30-cardhu.dtsi              |   2 +-
+ arch/arm/boot/dts/zynq-parallella.dts              |   2 +-
+ drivers/regulator/isl9305.c                        |   6 +-
+ drivers/rtc/rtc-isl12022.c                         |   3 +-
+ drivers/rtc/rtc-isl12057.c                         | 353 ++++++++++++++++++++-
+ drivers/staging/iio/light/isl29028.c               |   4 +-
+ 13 files changed, 431 insertions(+), 25 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/rtc/isil,isl12057.txt
+
+-- 
+2.1.1
+
