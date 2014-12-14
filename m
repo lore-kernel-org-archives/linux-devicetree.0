@@ -1,83 +1,80 @@
-From: David Laight <David.Laight-ZS65k/vG3HxXrIkS9f7CXA@public.gmane.org>
-Subject: RE: [PATCH 4/4] usb: atmel_usba_udc: mask status with enabled irqs
-Date: Mon, 15 Dec 2014 17:22:04 +0000
-Message-ID: <063D6719AE5E284EB5DD2968C1650D6D1CA0D0EF@AcuExch.aculab.com>
-References: <1418648588-17872-1-git-send-email-boris.brezillon@free-electrons.com>
-	<1418648588-17872-5-git-send-email-boris.brezillon@free-electrons.com>
-	<548EE2DA.6050408@cogentembedded.com>
-	<063D6719AE5E284EB5DD2968C1650D6D1CA0CE20@AcuExch.aculab.com>
- <20141215180239.05037dcd@bbrezillon>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v3 1/8] soc: mediatek: Add PMIC wrapper for MT8135 and MT6397 SoC
+Date: Sun, 14 Dec 2014 21:18:34 +0100
+Message-ID: <5375041.4IGZ3lO9Xc@wuerfel>
+References: <1417752479-4749-1-git-send-email-flora.fu@mediatek.com> <3015972.tvmzP0zTdv@wuerfel> <1418292255.2315.12.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141215180239.05037dcd@bbrezillon>
-Content-Language: en-US
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: 'Boris Brezillon' <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: 'Sergei Shtylyov' <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1418292255.2315.12.camel@mtksdaap41>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Flora Fu <flora.fu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, HenryC Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Menghui Lin <menghui.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant
 List-Id: devicetree@vger.kernel.org
 
-From: Boris Brezillon
-> Hi David,
-> 
-> On Mon, 15 Dec 2014 13:34:56 +0000
-> David Laight <David.Laight-ZS65k/vG3HxXrIkS9f7CXA@public.gmane.org> wrote:
-> 
-> > From: Sergei Shtylyov
-> > > Hello.
-> > >
-> > > On 12/15/2014 4:03 PM, Boris Brezillon wrote:
-> > >
-> > > > Avoid interpreting useless status flags when we're not waiting for such
-> > > > events by masking the status variable with the interrupt enabled register
-> > > > value.
-> > >
-> > > > Reported-by: Patrice VILCHEZ <patrice.vilchez-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> > > > Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> > > > ---
-> > > >   drivers/usb/gadget/udc/atmel_usba_udc.c | 6 +++++-
-> > > >   1 file changed, 5 insertions(+), 1 deletion(-)
-> > >
-> > > > diff --git a/drivers/usb/gadget/udc/atmel_usba_udc.c b/drivers/usb/gadget/udc/atmel_usba_udc.c
-> > > > index 55c8dde..bc3a532 100644
-> > > > --- a/drivers/usb/gadget/udc/atmel_usba_udc.c
-> > > > +++ b/drivers/usb/gadget/udc/atmel_usba_udc.c
-> > > > @@ -1612,12 +1612,14 @@ static irqreturn_t usba_udc_irq(int irq, void *devid)
+On Thursday 11 December 2014 18:04:15 Flora Fu wrote:
+> On Tue, 2014-12-09 at 12:20 +0100, Arnd Bergmann wrote:
+> > On Tuesday 09 December 2014 11:30:15 Matthias Brugger wrote:
+> > > 2014-12-09 11:13 GMT+01:00 Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>:
+> > > > On Tue, Dec 09, 2014 at 09:23:18AM +0100, Arnd Bergmann wrote:
+> > > >>
+> > > >> I think we have had a similar case recently where a controller wasn't
+> > > >> actually using I2C, but the sofware protocol was close enough so we decided
+> > > >> to make it appear as i2c in Linux.
+> > > >>
+> > > >> Would that work for you, i.e. register the pmic wrapper as a fake spi
+> > > >> master driver in drivers/spi/ and register the rtc/regulator/codec
+> > > >> as SPI clients from DT?
 > > > >
-> > > >   	spin_lock(&udc->lock);
-> > > >
-> > > > -	status = usba_readl(udc, INT_STA);
-> > > > +	status = usba_readl(udc, INT_STA) & usba_readl(udc, INT_ENB);
-...
-> > >     Looks like t make sense to read the INT_ENB register into a separate
-> > > variable, to save on extra reads?
-> >
-> >
-> > Better still remember the written value in one of the structures so
-> > that it doesn't have to be read at all.
+> > > > I don't think that's appropriate. I mean technically that could even
+> > > > work, but in software you really don't see anything from the underlying
+> > > > SPI bus. The SoC and the PMIC are really tightly coupled via the PMIC
+> > > > wrapper. This goes to the point where pins of the SoCs internal I2C and
+> > > > keypad controllers are routed over the SPI bus out of the PMIC. In
+> > > > software you do this by setting a bit in the I2C controller. If it's
+> > > > set, the signals are routed out of the PMIC instead of the main die.
+> > > > As said, technically we probably could create a fake SPI master, but
+> > > > that wouldn't really fit to this situation.
+> > 
+> > Ok, I see.
+> > 
+> > > I agree with Sascha. Although from the hardware point of view, the
+> > > communication between the PMIC and the SOC is done through SPI from
+> > > the point of view of the software everything looks like I2C commands
+> > > which will be "transalted" into SPI messages by the PMIC wrapper.
+> > 
+> > If it looks like i2c messages, would it be more appropriate to make
+> > it appear as an i2c controller then?
 > 
-> Hmm, I'm getting back to this suggestion.
-> While I definitely understand why I should use a local variable to
-> store INT_ENB value in usba_udc_irq, I don't see the point of mirroring
-> INT_EN status in an udc struct field (after all, INT_EN will always
-> contain the value we previously set).
+> 
+> Although the message looks like I2C command, it is not I2C.
+> Form source code, the software does not touch any I2C i/o or protocols.
+> It depends SoC and has specific initial flow, read and write transfer
+> state. It is not able to an i2c controller.
+> That's why we consider its a proprietary hardware with specific
+> protocols. How about let it appear in driver/soc?
 
-This is exactly why it makes sense to mirror it locally.
+Ok, I've looked a lot more at other drivers now, and I see that one
+of my main objections which was about the way that the drivers look
+into dev->parent->drvdata is in fact common practice for pmic drivers,
+and using i2c wouldn't change anything here. Based on this, using
+drivers/soc is probably best as you say.
 
-> Is this a performance concern ?
+I still think the relation between the mt8135 pmic wrapper and the
+mt6397 mfd driver could be improved. I don't like the way that
+include/linux/soc/mediatek/mtk-pmic-wrap.h exposes an internal
+data structure of the pmic-wrap driver to the mfd driver, which
+really only needs the regmap pointer from it, and I think it would
+be better to pass that pointer using platform_data here in one way
+or another. The easiest way to do that is probably using an auxdata
+table in of_platform_populate, while another method might be to
+restructure the relationship between the wrapper driver and the
+mfd driver in some form to take out the extra device node and make
+the mfd cells children of the wrapper itself.
 
-Absolutely, you really don't want to know how many cpu cycles it is
-likely to take to do a read from an io device.
-At best it is a uncached read of a fast on-chip peripheral.
-If you are reading from a PCIe device then you are looking at hundreds
-(if not thousands) of cpu clock cycles.
-
-	David
-
-
-
+	Arnd
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
