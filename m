@@ -1,38 +1,46 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 2/2] Input: gpio_keys - replace timer and workqueue with
- delayed workqueue
-Date: Sun, 14 Dec 2014 10:05:43 +0100
-Message-ID: <CACRpkdZsHbUVNsG60veYPpAKP+dngpUq=gLjncaUb+Lvq+h1-A@mail.gmail.com>
-References: <20141208071930.GA20802@dtor-ws>
-	<20141208072124.GA21031@dtor-ws>
+From: Arend van Spriel <arend@broadcom.com>
+Subject: Re: [PATCH v2 1/4] pci: iProc: define Broadcom iProc PCIe binding
+Date: Sun, 14 Dec 2014 10:48:01 +0100
+Message-ID: <548D5CD1.10801@broadcom.com>
+References: <1418351817-14898-2-git-send-email-rjui@broadcom.com> <3907917.zNo7yttzkh@wuerfel> <548C0F80.2090300@broadcom.com> <3383252.Ad6Qf0H2fa@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141208072124.GA21031@dtor-ws>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Linux Input <linux-input@vger.kernel.org>, Alexander Stein <alexander.stein@systec-electronic.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Alexander Shiyan <shc_work@mail.ru>, Laxman Dewangan <ldewangan@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <3383252.Ad6Qf0H2fa@wuerfel>
+Sender: linux-pci-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Scott Branden <sbranden@broadcom.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ray Jui <rjui@broadcom.com>, Christian Daudt <bcm@fixthebug.org>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Matt Porter <mporter@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, Hauke Mehrtens <hauke@hauke-m.de>, Kumar Gala <galak@codeaurora.org>, Bjorn Helgaas <bhelgaas@google.com>, Lucas Stach <l.stach@pengutronix.de>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 8, 2014 at 8:21 AM, Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
-
-> We do not need to roll our own implementation of delayed work now that we
-> have proper implementation of mod_delayed_work.
+On 12/13/14 20:46, Arnd Bergmann wrote:
+> On Saturday 13 December 2014 11:05:52 Arend van Spriel wrote:
+>>
+>> Makes sense. I think that is what Hauke meant by "adding
+>> additional support for registering to bcma". So the discovery info is a
+>> piece of read-only memory in the chip. Its address is stored in the
+>> chipcommon core register space. BCMA parses that memory blob resulting
+>> in a list of cores which register address info. We could add DT support
+>> in BCMA matching the compatible string and register a core for it.
 >
-> For interrupt-only driven buttons we retain the timer, but we rename
-> it to release_timer to better reflect its purpose.
+> Ah, interesting idea. That would mirror what we do for drivers/amba,
+> I like the idea.
+
++ Rafal
+
+Let's explore this. Although I don't have the iProc hardware to verify it.
+
+>> However, apart from the discovery info a "discoverable ARM AXI" chip has
+>> a register space per core that provides common procedures like
+>> enable/disable, reset, core status, which are implemented in BCMA. I am
+>> not seeing that register space in the DT examples so I guess this IP
+>> block is not there for iProc chips.
 >
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> I wouldn't draw conclusions from the absence of some node. Maybe these
+> registers are present but just not used by the original BSP.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+I do not intend to. We have raised the question internally to iProc chip 
+designers.
 
-What I want to do with this, on top of this, is to move debouncing to
-the GPIO subsystem. I want gpio(d)_set_debounce() to *always*
-work and the timer moved to gpiolib.c.
-
-We can't have debouncing in every subsystem using GPIOs, it
-belongs in the GPIO core.
-
-Yours,
-Linus Walleij
+Regards,
+Arend
