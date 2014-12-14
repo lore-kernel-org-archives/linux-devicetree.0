@@ -1,313 +1,271 @@
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: [PATCH v2 1/3] irqchip: vf610-mscm: add support for MSCM interrupt router
-Date: Sun, 14 Dec 2014 23:09:56 +0100
-Message-ID: <1418594998-2361-2-git-send-email-stefan@agner.ch>
-References: <1418594998-2361-1-git-send-email-stefan@agner.ch>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1418594998-2361-1-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org
-Cc: u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org
+From: Robert Jarzmik <robert.jarzmik@free.fr>
+Subject: [PATCH] mfd: cottula: add cottula board
+Date: Mon, 15 Dec 2014 00:10:06 +0100
+Message-ID: <1418598606-21352-1-git-send-email-robert.jarzmik@free.fr>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Robert Jarzmik <robert.jarzmik@free.fr>
 List-Id: devicetree@vger.kernel.org
 
-This adds support for Vybrid's interrupt router. On VF6xx models,
-almost all peripherals can be accessed from either of the two
-CPU's, from the Cortex-A5 or from the Cortex-M4. The interrupt
-router routes the peripheral interrupts to the configured CPU.
+Cottula board is the IO motherboard of the Intel PXA25x Development
+Platform, which supports the Lubbock pxa25x soc board.
 
-The driver makes use of the irqdomain hierarchy support. The
-parent is either the ARM GIC or the ARM NVIC interrupt controller
-depending on which CPU the kernel is executed on. Currently only
-ARM GIC is supported because the NVIC driver lacks hierarchical
-irqdomain support as of now.
+Historically, this support was in arch/arm/mach-pxa/lubbock.c. When
+gpio-pxa was moved to drivers/pxa, it became a driver, and its
+initialization and probing happened at postcore initcall. The lubbock
+code used to install the chained lubbock interrupt handler at init_irq()
+time.
 
-Currently, there is no resource control mechnism implemented to
-avoid concurrent access of the same peripheral. The user needs
-to make sure to use device trees which assign the peripherals
-orthogonally. However, this driver warns the user in case the
-interrupt is already configured for the other CPU. This provides
-a poor man's resource controller.
+The consequence of the gpio-pxa change is that the installed chained irq
+handler lubbock_irq_handler() was overwritten in pxa_gpio_probe(_dt)(),
+removing :
+ - the handler
+ - the falling edge detection setting of GPIO0, which revealed the
+   interrupt request from the lubbock IO board.
 
-Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+As a fix, move the gpio0 chained handler setup to a place where we have
+the guarantee that pxa_gpio_probe() was called before, so that lubbock
+handler becomes the true IRQ chained handler of GPIO0, demuxing the
+lubbock IO board interrupts.
+
+This patch moves all that handling to a mfd driver. It's only purpose
+for the time being is the interrupt handling, but in the future it
+should encompass all the motherboard CPLDs handling :
+ - leds
+ - switches
+ - hexleds
+
+Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
 ---
-Thanks for the feedback on the initial driver, I'm quite happy
-with the outcome using the hierarchic irqdomain support.
-The driver is tested on Vybrid running on the Cortex-A5 CPU.
-However, to properly support Cortex-M4, some more work will be
-needed. Beside the hierarchic irqdomain support for NVIC, the
-different IRQ cell layout need to be solved: NVIC uses only
-one cell, whereas GIC uses three. I see two possible solutions:
-- Support two layouts in this driver. Maybe by using IS_ENABLED,
-  since it is not possible to compile a kernel for the A5 and
-  M4.
-- Define a 3 cell layout as GIC uses it for the MSCM, and pass
-  a syntetic one cell layout to the parent when calling
-  irq_domain_alloc_irqs_parent. This driver would then still
-  need to know what type of interrupt controller the parent is...
+ drivers/mfd/Kconfig   |  10 +++
+ drivers/mfd/Makefile  |   1 +
+ drivers/mfd/cottula.c | 184 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 195 insertions(+)
+ create mode 100644 drivers/mfd/cottula.c
 
-Ideas/advice welcome...
-
- arch/arm/mach-imx/Kconfig        |   1 +
- drivers/irqchip/Kconfig          |  11 +++
- drivers/irqchip/Makefile         |   1 +
- drivers/irqchip/irq-vf610-mscm.c | 198 +++++++++++++++++++++++++++++++++++++++
- 4 files changed, 211 insertions(+)
- create mode 100644 drivers/irqchip/irq-vf610-mscm.c
-
-diff --git a/arch/arm/mach-imx/Kconfig b/arch/arm/mach-imx/Kconfig
-index e8627e0..3c5859e 100644
---- a/arch/arm/mach-imx/Kconfig
-+++ b/arch/arm/mach-imx/Kconfig
-@@ -631,6 +631,7 @@ config SOC_IMX6SX
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index 1456ea7..051bd6d 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -79,6 +79,16 @@ config MFD_AXP20X
+ 	  components like regulators or the PEK (Power Enable Key) under the
+ 	  corresponding menus.
  
- config SOC_VF610
- 	bool "Vybrid Family VF610 support"
-+	select VF610_MSCM
- 	select ARM_GIC
- 	select PINCTRL_VF610
- 	select PL310_ERRATA_769419 if CACHE_L2X0
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index cc79d2a..af5e72a 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -136,6 +136,17 @@ config IRQ_CROSSBAR
- 	  a free irq and configures the IP. Thus the peripheral interrupts are
- 	  routed to one of the free irqchip interrupt lines.
- 
-+config VF610_MSCM
-+	bool
++config MFD_COTTULA
++	bool "Cottula Motherboard"
++	def_bool ARCH_LUBBOCK
++	select MFD_CORE
 +	help
-+	  Support for MSCM interrupt router available on Vybrid SoC's. The
-+	  interrupt router is between the CPU's interrupt controller and the
-+	  peripheral. The router allows to route the peripheral interrupts to
-+	  one of the two available CPU's on Vybrid VF6xx SoC's (Cortex-A5 or
-+	  Cortex-M4). The router will be configured transparently on a IRQ
-+	  request.
-+	select IRQ_DOMAIN_HIERARCHY
++	  This driver supports the Cottula multifunction chip found on the
++	  lubbock development platform system (named Cottula). This IO board
++	  supports the interrupts handling, ethernet controller, flash chips,
++	  etc ...
 +
- config KEYSTONE_IRQ
- 	tristate "Keystone 2 IRQ controller IP"
- 	depends on ARCH_KEYSTONE
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index 9516a32..85651be 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -37,6 +37,7 @@ obj-$(CONFIG_TB10X_IRQC)		+= irq-tb10x.o
- obj-$(CONFIG_XTENSA)			+= irq-xtensa-pic.o
- obj-$(CONFIG_XTENSA_MX)			+= irq-xtensa-mx.o
- obj-$(CONFIG_IRQ_CROSSBAR)		+= irq-crossbar.o
-+obj-$(CONFIG_VF610_MSCM)		+= irq-vf610-mscm.o
- obj-$(CONFIG_BCM7120_L2_IRQ)		+= irq-bcm7120-l2.o
- obj-$(CONFIG_BRCMSTB_L2_IRQ)		+= irq-brcmstb-l2.o
- obj-$(CONFIG_KEYSTONE_IRQ)		+= irq-keystone.o
-diff --git a/drivers/irqchip/irq-vf610-mscm.c b/drivers/irqchip/irq-vf610-mscm.c
+ config MFD_CROS_EC
+ 	tristate "ChromeOS Embedded Controller"
+ 	select MFD_CORE
+diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+index 8bd54b1..48cc65b 100644
+--- a/drivers/mfd/Makefile
++++ b/drivers/mfd/Makefile
+@@ -9,6 +9,7 @@ obj-$(CONFIG_MFD_88PM805)	+= 88pm805.o 88pm80x.o
+ obj-$(CONFIG_MFD_SM501)		+= sm501.o
+ obj-$(CONFIG_MFD_ASIC3)		+= asic3.o tmio_core.o
+ obj-$(CONFIG_MFD_BCM590XX)	+= bcm590xx.o
++obj-$(CONFIG_MFD_COTTULA)	+= cottula.o
+ obj-$(CONFIG_MFD_CROS_EC)	+= cros_ec.o
+ obj-$(CONFIG_MFD_CROS_EC_I2C)	+= cros_ec_i2c.o
+ obj-$(CONFIG_MFD_CROS_EC_SPI)	+= cros_ec_spi.o
+diff --git a/drivers/mfd/cottula.c b/drivers/mfd/cottula.c
 new file mode 100644
-index 0000000..1597185
+index 0000000..0345dbd
 --- /dev/null
-+++ b/drivers/irqchip/irq-vf610-mscm.c
-@@ -0,0 +1,198 @@
++++ b/drivers/mfd/cottula.c
+@@ -0,0 +1,184 @@
 +/*
-+ * Copyright 2014 Stefan Agner
++ * Intel Cotulla MFD - lubbock motherboard
 + *
-+ * The code contained herein is licensed under the GNU General Public
-+ * License. You may obtain a copy of the GNU General Public License
-+ * Version 2 or later at the following locations:
++ * Copyright (C) 2014 Robert Jarzmik
 + *
-+ * http://www.opensource.org/licenses/gpl-license.html
-+ * http://www.gnu.org/copyleft/gpl.html
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * Cottula motherboard driver, supporting lubbock (aka. pxa25x) soc board.
++ *
 + */
 +
-+#include <linux/cpu_pm.h>
++#include <linux/bitops.h>
++#include <linux/gpio.h>
++#include <linux/gpio/consumer.h>
++#include <linux/interrupt.h>
 +#include <linux/io.h>
 +#include <linux/irq.h>
 +#include <linux/irqdomain.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/slab.h>
++#include <linux/mfd/core.h>
++#include <linux/module.h>
++#include <linux/of_platform.h>
 +
-+#include "irqchip.h"
++#define COT_IRQ_MASK_EN 0xc0
++#define COT_IRQ_SET_CLR 0xd0
 +
-+#define MSCM_CPxNUM		0x4
-+#define MSCM_IRSPRC(n)		(0x880 + 2 * (n))
-+#define MSCM_IRSPRC_CPEN_MASK	0x3
++#define COTTULA_NB_IRQ	8
 +
-+#define MSCM_IRSPRC_NUM		112
-+
-+struct vf610_mscm_chip_data {
-+	void __iomem *mscm_base;
-+	u16 cpu_mask;
-+	u16 mscm_saved_irsprc[MSCM_IRSPRC_NUM];
++struct cottula {
++	void __iomem	*base;
++	int irq;
++	unsigned int irq_mask;
++	struct gpio_desc *gpio0;
++	struct irq_domain *irqdomain;
 +};
 +
-+static struct vf610_mscm_chip_data *chip_data;
-+
-+static int vf610_mscm_notifier(struct notifier_block *self, unsigned long cmd,
-+			       void *v)
++static void cottula_irq_handler(unsigned int in_irq, struct irq_desc *desc)
 +{
-+	int i;
++	struct cottula *cot = irq_desc_get_handler_data(desc);
++	unsigned long pending;
++	unsigned int bit;
 +
-+	switch (cmd) {
-+	case CPU_CLUSTER_PM_ENTER:
-+		for (i = 0; i < MSCM_IRSPRC_NUM; i++)
-+			chip_data->mscm_saved_irsprc[i] = readw_relaxed(
-+					chip_data->mscm_base + MSCM_IRSPRC(i));
-+		break;
-+	case CPU_CLUSTER_PM_ENTER_FAILED:
-+	case CPU_CLUSTER_PM_EXIT:
-+		for (i = 0; i < MSCM_IRSPRC_NUM; i++)
-+			writew_relaxed(chip_data->mscm_saved_irsprc[i],
-+				       chip_data->mscm_base + MSCM_IRSPRC(i));
-+		break;
-+	}
-+
-+	return NOTIFY_OK;
++	pending = readl(cot->base + COT_IRQ_SET_CLR) & cot->irq_mask;
++	for_each_set_bit(bit, &pending, COTTULA_NB_IRQ)
++		generic_handle_irq(irq_find_mapping(cot->irqdomain, bit));
 +}
 +
-+static struct notifier_block mscm_notifier_block = {
-+	.notifier_call = vf610_mscm_notifier,
++static void cottula_irq_mask_ack(struct irq_data *d)
++{
++	struct cottula *cot = irq_data_get_irq_chip_data(d);
++	unsigned int cottula_irq = irqd_to_hwirq(d);
++	unsigned int set, bit = BIT(cottula_irq);
++
++	cot->irq_mask &= ~bit;
++	writel(cot->irq_mask, cot->base + COT_IRQ_MASK_EN);
++	set = readl(cot->base + COT_IRQ_SET_CLR);
++	writel(set & ~bit, cot->base + COT_IRQ_SET_CLR);
++}
++
++static void cottula_irq_unmask(struct irq_data *d)
++{
++	struct cottula *cot = irq_data_get_irq_chip_data(d);
++	unsigned int cottula_irq = irqd_to_hwirq(d);
++	unsigned int bit = BIT(cottula_irq);
++
++	cot->irq_mask |= bit;
++	writel(cot->irq_mask, cot->base + COT_IRQ_MASK_EN);
++}
++
++static struct irq_chip cottula_irq_chip = {
++	.name		= "cottula",
++	.irq_mask_ack	= cottula_irq_mask_ack,
++	.irq_unmask	= cottula_irq_unmask,
++	.flags		= IRQCHIP_MASK_ON_SUSPEND | IRQCHIP_SKIP_SET_WAKE,
 +};
 +
-+static void vf610_mscm_enable(struct irq_data *data)
++static int cottula_irq_domain_map(struct irq_domain *d, unsigned int irq,
++				   irq_hw_number_t hwirq)
 +{
-+	irq_hw_number_t hwirq = data->hwirq;
-+	struct vf610_mscm_chip_data *chip_data = data->chip_data;
-+	u16 irsprc;
++	struct cottula *cot = d->host_data;
 +
-+	irsprc = readw_relaxed(chip_data->mscm_base + MSCM_IRSPRC(hwirq));
-+	irsprc &= MSCM_IRSPRC_CPEN_MASK;
-+
-+	WARN_ON(irsprc);
-+
-+	writew_relaxed(chip_data->cpu_mask,
-+		       chip_data->mscm_base + MSCM_IRSPRC(hwirq));
-+
-+	irq_chip_unmask_parent(data);
-+}
-+
-+static void vf610_mscm_disable(struct irq_data *data)
-+{
-+	irq_hw_number_t hwirq = data->hwirq;
-+	struct vf610_mscm_chip_data *chip_data = data->chip_data;
-+	u16 irsprc;
-+
-+	irsprc = readw_relaxed(chip_data->mscm_base + MSCM_IRSPRC(hwirq));
-+	irsprc &= MSCM_IRSPRC_CPEN_MASK;
-+
-+	writew_relaxed(0x0, chip_data->mscm_base + MSCM_IRSPRC(hwirq));
-+
-+	irq_chip_mask_parent(data);
-+}
-+
-+static struct irq_chip vf610_mscm_irq_chip = {
-+	.name			= "MSCM_IR",
-+	.irq_mask		= irq_chip_mask_parent,
-+	.irq_unmask		= irq_chip_unmask_parent,
-+	.irq_eoi		= irq_chip_eoi_parent,
-+	.irq_enable		= vf610_mscm_enable,
-+	.irq_disable		= vf610_mscm_disable,
-+	.irq_retrigger		= irq_chip_retrigger_hierarchy,
-+	.irq_set_affinity	= irq_chip_set_affinity_parent,
-+};
-+
-+static int vf610_mscm_domain_xlate(struct irq_domain *d,
-+				struct device_node *controller,
-+				const u32 *intspec, unsigned int intsize,
-+				unsigned long *out_hwirq,
-+				unsigned int *out_type)
-+{
-+	if (intsize != 3)
-+		return -EINVAL;
-+
-+	/* MSCM doesn't handle PPI */
-+	if (intspec[0])
-+		return -EINVAL;
-+
-+	*out_hwirq = intspec[1];
-+	*out_type = intspec[2] & IRQ_TYPE_SENSE_MASK;
++	irq_set_chip_and_handler(irq, &cottula_irq_chip, handle_level_irq);
++	irq_set_chip_data(irq, cot);
 +	return 0;
 +}
 +
-+static int vf610_mscm_domain_alloc(struct irq_domain *domain, unsigned int virq,
-+				   unsigned int nr_irqs, void *arg)
-+{
-+	int i;
-+	irq_hw_number_t hwirq;
-+	struct of_phandle_args *irq_data = arg;
-+	struct of_phandle_args gic_data = *irq_data;
-+
-+	if (irq_data->args_count != 3)
-+		return -EINVAL;
-+
-+	/* MSCM doesn't handle PPI */
-+	if (irq_data->args[0])
-+		return -EINVAL;
-+
-+	hwirq = irq_data->args[1];
-+	for (i = 0; i < nr_irqs; i++)
-+		irq_domain_set_hwirq_and_chip(domain, virq + i, hwirq + i,
-+					      &vf610_mscm_irq_chip,
-+					      domain->host_data);
-+
-+	gic_data.np = domain->parent->of_node;
-+	return irq_domain_alloc_irqs_parent(domain, virq, nr_irqs, &gic_data);
-+}
-+
-+static const struct irq_domain_ops mscm_irq_domain_ops = {
-+	.xlate = vf610_mscm_domain_xlate,
-+	.alloc = vf610_mscm_domain_alloc,
-+	.free = irq_domain_free_irqs_common,
++static const struct irq_domain_ops cottula_irq_domain_ops = {
++	.xlate = irq_domain_xlate_twocell,
++	.map = cottula_irq_domain_map,
 +};
 +
-+static int __init vf610_mscm_of_init(struct device_node *node,
-+			       struct device_node *parent)
++static int cottula_resume(struct platform_device *pdev)
 +{
-+	struct irq_domain *domain, *domain_parent;
++	struct cottula *cot = platform_get_drvdata(pdev);
++
++	writel(cot->irq_mask, cot->base + COT_IRQ_MASK_EN);
++	return 0;
++}
++
++static int cottula_probe(struct platform_device *pdev)
++{
++	struct resource *res;
++	struct cottula *cot;
 +	int ret;
++	unsigned int base_irq = 0;
 +
-+	domain_parent = irq_find_host(parent);
-+	if (!domain_parent) {
-+		pr_err("vf610_mscm: interrupt-parent not found\n");
-+		return -EINVAL;
-+	}
-+
-+	chip_data = kzalloc(sizeof(*chip_data), GFP_KERNEL);
-+	if (!chip_data)
++	cot = devm_kzalloc(&pdev->dev, sizeof(*cot), GFP_KERNEL);
++	if (!cot)
 +		return -ENOMEM;
++	res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
++	if (res)
++		base_irq = (unsigned int)res->start;
 +
-+	chip_data->mscm_base = of_io_request_and_map(node, 0, "mscm");
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	cot->base = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(cot->base))
++		return PTR_ERR(cot->base);
 +
-+	if (!chip_data->mscm_base) {
-+		pr_err("vf610_mscm: unable to map mscm register\n");
-+		ret = -ENOMEM;
-+		goto out_free;
++	platform_set_drvdata(pdev, cot);
++	cot->gpio0 = gpiod_get(&pdev->dev, "lubbock_irq", 0);
++	if (IS_ERR(cot->gpio0)) {
++		dev_err(&pdev->dev, "Couldn't request GPIO : ret = %d\n", ret);
++		return PTR_ERR(cot->gpio0);
++	}
++	cot->irq = gpiod_to_irq(cot->gpio0);
++	if (cot->irq < 0)
++		return cot->irq;
++
++	cot->irqdomain =
++		irq_domain_add_linear(pdev->dev.of_node, COTTULA_NB_IRQ,
++				      &cottula_irq_domain_ops, cot);
++	if (!cot->irqdomain)
++		return -ENODEV;
++
++	ret = 0;
++	if (base_irq)
++		ret = irq_create_strict_mappings(cot->irqdomain, base_irq, 0,
++						 COTTULA_NB_IRQ);
++	if (ret) {
++		dev_err(&pdev->dev, "Couldn't create the irq mapping %d..%d\n",
++			base_irq, base_irq + COTTULA_NB_IRQ);
++		return ret;
 +	}
 +
-+	domain = irq_domain_add_hierarchy(domain_parent, 0,
-+					  MSCM_IRSPRC_NUM, node,
-+					  &mscm_irq_domain_ops, chip_data);
-+	if (!domain) {
-+		ret = -ENOMEM;
-+		goto out_unmap;
-+	}
-+
-+	chip_data->cpu_mask = 0x1 <<
-+		readl_relaxed(chip_data->mscm_base + MSCM_CPxNUM);
-+
-+	cpu_pm_register_notifier(&mscm_notifier_block);
-+
++	writel(cot->irq_mask, cot->base + COT_IRQ_MASK_EN);
++	writel(0, cot->base + COT_IRQ_SET_CLR);
++	irq_set_chained_handler(cot->irq, cottula_irq_handler);
++	irq_set_handler_data(cot->irq, cot);
++	irq_set_irq_type(cot->irq, IRQ_TYPE_EDGE_FALLING);
++	irq_set_irq_wake(cot->irq, 1);
 +	return 0;
-+
-+out_unmap:
-+	iounmap(chip_data->mscm_base);
-+out_free:
-+	kfree(chip_data);
-+	return ret;
 +}
-+IRQCHIP_DECLARE(vf610_mscm, "fsl,vf610-mscm", vf610_mscm_of_init);
++
++static int cottula_remove(struct platform_device *pdev)
++{
++	struct cottula *cot = platform_get_drvdata(pdev);
++
++	irq_set_chip_and_handler(cot->irq, NULL, NULL);
++	return 0;
++}
++
++static const struct of_device_id cottula_id_table[] = {
++	{ .compatible = "marvell,cottula", },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, cottula_id_table);
++
++static struct platform_driver cottula_driver = {
++	.driver		= {
++		.name	= "cottula",
++		.of_match_table = of_match_ptr(cottula_id_table),
++	},
++	.probe		= cottula_probe,
++	.remove		= cottula_remove,
++	.resume		= cottula_resume,
++};
++
++module_platform_driver(cottula_driver);
++
++MODULE_DESCRIPTION("Cottula lubbock driver");
++MODULE_AUTHOR("Robert Jarzmik");
++MODULE_LICENSE("GPL");
 -- 
-2.1.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.1.0
