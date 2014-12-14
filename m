@@ -1,225 +1,470 @@
-From: Paul Walmsley <paul@pwsan.com>
-Subject: Re: [PATCH v4 2/3] PM / devfreq: tegra: add devfreq driver for Tegra
- Activity Monitor
-Date: Sun, 14 Dec 2014 18:26:08 +0000 (UTC)
-Message-ID: <alpine.DEB.2.02.1412141801050.3102@utopia.booyaka.com>
-References: <1418130912-24725-1-git-send-email-tomeu.vizoso@collabora.com> <1418130912-24725-3-git-send-email-tomeu.vizoso@collabora.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCHv3 2/5] ARM:sunxi:drivers:input Add support for A10/A20 PS2
+Date: Sun, 14 Dec 2014 12:37:59 -0800
+Message-ID: <20141214203759.GA36053@dtor-ws>
+References: <1418408748-9797-1-git-send-email-vishnupatekar0510@gmail.com>
+ <1418408748-9797-3-git-send-email-vishnupatekar0510@gmail.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1418130912-24725-3-git-send-email-tomeu.vizoso@collabora.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc: linux-pm@vger.kernel.org, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Alexandre Courbot <gnurou@gmail.com>, Mikko Perttunen <mikko.perttunen@kapsi.fi>, Arto Merilainen <amerilainen@nvidia.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, khilman@linaro.org, afrid@nvidia.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1418408748-9797-3-git-send-email-vishnupatekar0510@gmail.com>
+Sender: linux-input-owner@vger.kernel.org
+To: VishnuPatekar <vishnupatekar0510@gmail.com>
+Cc: linux-input@vger.kernel.org, maxime.ripard@free-electrons.com, hdegoede@redhat.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, grant.likely@linaro.org, benh@kernel.crashing.org, msalter@redhat.com, ralf@linux-mips.org, jdelvare@suse.de
 List-Id: devicetree@vger.kernel.org
 
-Hi
+Hi Vishnu,
 
-I have not reviewed this code closely, but a few items just caught my eye 
-at a brief glance.
-
-On Tue, 9 Dec 2014, Tomeu Vizoso wrote:
-
-> The ACTMON block can monitor several counters, providing averaging and firing
-> interrupts based on watermarking configuration. This implementation monitors
-> the MCALL and MCCPU counters to choose an appropriate frequency for the
-> external memory clock.
+On Fri, Dec 12, 2014 at 11:55:45PM +0530, VishnuPatekar wrote:
 > 
-> This patch is based on work by Alex Frid <afrid@nvidia.com> and Mikko
-> Perttunen <mikko.perttunen@kapsi.fi>.
+> Signed-off-by: VishnuPatekar <vishnupatekar0510@gmail.com>
+> ---
+>  drivers/input/serio/Kconfig     |   11 ++
+>  drivers/input/serio/Makefile    |    1 +
+>  drivers/input/serio/sun4i-ps2.c |  362 +++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 374 insertions(+)
+>  create mode 100644 drivers/input/serio/sun4i-ps2.c
+> 
+> diff --git a/drivers/input/serio/Kconfig b/drivers/input/serio/Kconfig
+> index bc2d474..964afc5 100644
+> --- a/drivers/input/serio/Kconfig
+> +++ b/drivers/input/serio/Kconfig
+> @@ -281,4 +281,15 @@ config HYPERV_KEYBOARD
+>  	  To compile this driver as a module, choose M here: the module will
+>  	  be called hyperv_keyboard.
+>  
+> +config SERIO_SUN4I_PS2
+> +	tristate "Allwinner A10 PS/2 controller support"
+> +	default n
+> +	depends on ARCH_SUNXI || COMPILE_TEST
+> +	help
+> +	  This selects support for the PS/2 Host Controller on
+> +	  Allwinner A10.
+> +
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called sun4i-ps2.
+> +
+>  endif
+> diff --git a/drivers/input/serio/Makefile b/drivers/input/serio/Makefile
+> index 815d874..c600089 100644
+> --- a/drivers/input/serio/Makefile
+> +++ b/drivers/input/serio/Makefile
+> @@ -29,3 +29,4 @@ obj-$(CONFIG_SERIO_ARC_PS2)	+= arc_ps2.o
+>  obj-$(CONFIG_SERIO_APBPS2)	+= apbps2.o
+>  obj-$(CONFIG_SERIO_OLPC_APSP)	+= olpc_apsp.o
+>  obj-$(CONFIG_HYPERV_KEYBOARD)	+= hyperv-keyboard.o
+> +obj-$(CONFIG_SERIO_SUN4I_PS2)	+= sun4i-ps2.o
+> diff --git a/drivers/input/serio/sun4i-ps2.c b/drivers/input/serio/sun4i-ps2.c
+> new file mode 100644
+> index 0000000..e6d22ae
+> --- /dev/null
+> +++ b/drivers/input/serio/sun4i-ps2.c
+> @@ -0,0 +1,362 @@
+> +/*
+> + *	Driver for Allwinner A10 PS2 host controller
+> + *
+> + *	Author: Vishnu Patekar <vishnupatekar0510@gmail.com>
+> + *		Aaron.maoye <leafy.myeh@newbietech.com>
+> + *
+> + *
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/serio.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/errno.h>
+> +#include <linux/slab.h>
+> +#include <linux/list.h>
+> +#include <linux/io.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +
+> +#define DRIVER_NAME		"sun4i-ps2"
+> +
+> +/* register offset definitions */
+> +#define PS2_REG_GCTL		(0x00)	/*  PS2 Module Global Control Reg */
+> +#define PS2_REG_DATA		(0x04)  /*  PS2 Module Data Reg		*/
+> +#define PS2_REG_LCTL		(0x08)	/*  PS2 Module Line Control Reg */
+> +#define PS2_REG_LSTS		(0x0C)  /*  PS2 Module Line Status Reg	*/
+> +#define PS2_REG_FCTL		(0x10)	/*  PS2 Module FIFO Control Reg */
+> +#define PS2_REG_FSTS		(0x14)	/*  PS2 Module FIFO Status Reg	*/
+> +#define PS2_REG_CLKDR		(0x18)	/*  PS2 Module Clock Divider Reg*/
 
-It's important to put people in the Cc: section, either when you're basing 
-your code off of their work, or when you mention them in the patch 
-description.  This means including specific Cc: lines in the 
-Signed-off-by: section at the bottom of the patch -- not just mentioning 
-them in the patch description.  That way, any further followup from others 
-after the patch is committed is more likely to be appropriately copied to 
-those people.
+You do not need parenthesis around simple constants.
 
-For some reason this doesn't happen with many Tegra upstream-bound patches 
--- from a variety of submitters, including NVIDIA submitters! -- but it 
-needs to start happening.
+> +
+> +/*  PS2 GLOBAL CONTROL REGISTER PS2_GCTL */
+> +#define PS2_GCTL_INTFLAG	BIT(4)
+> +#define PS2_GCTL_INTEN		BIT(3)
+> +#define PS2_GCTL_RESET		BIT(2)
+> +#define PS2_GCTL_MASTER		BIT(1)
+> +#define PS2_GCTL_BUSEN		BIT(0)
+> +
+> +/* PS2 LINE CONTROL REGISTER */
+> +#define PS2_LCTL_NOACK		BIT(18)
+> +#define PS2_LCTL_TXDTOEN	BIT(8)
+> +#define PS2_LCTL_STOPERREN	BIT(3)
+> +#define PS2_LCTL_ACKERREN	BIT(2)
+> +#define PS2_LCTL_PARERREN	BIT(1)
+> +#define PS2_LCTL_RXDTOEN	BIT(0)
+> +
+> +/* PS2 LINE STATUS REGISTER */
+> +#define PS2_LSTS_TXTDO		BIT(8)
+> +#define PS2_LSTS_STOPERR	BIT(3)
+> +#define PS2_LSTS_ACKERR		BIT(2)
+> +#define PS2_LSTS_PARERR		BIT(1)
+> +#define PS2_LSTS_RXTDO		BIT(0)
+> +
+> +#define PS2_LINE_ERROR_BIT \
+> +	(PS2_LSTS_TXTDO | PS2_LSTS_STOPERR | PS2_LSTS_ACKERR | \
+> +	PS2_LSTS_PARERR | PS2_LSTS_RXTDO)
+> +
+> +/* PS2 FIFO CONTROL REGISTER */
+> +#define PS2_FCTL_TXRST		BIT(17)
+> +#define PS2_FCTL_RXRST		BIT(16)
+> +#define PS2_FCTL_TXUFIEN	BIT(10)
+> +#define PS2_FCTL_TXOFIEN	BIT(9)
+> +#define PS2_FCTL_TXRDYIEN	BIT(8)
+> +#define PS2_FCTL_RXUFIEN	BIT(2)
+> +#define PS2_FCTL_RXOFIEN	BIT(1)
+> +#define PS2_FCTL_RXRDYIEN	BIT(0)
+> +
+> +/* PS2 FIFO STATUS REGISTER */
+> +#define PS2_FSTS_TXUF		BIT(10)
+> +#define PS2_FSTS_TXOF		BIT(9)
+> +#define PS2_FSTS_TXRDY		BIT(8)
+> +#define PS2_FSTS_RXUF		BIT(2)
+> +#define PS2_FSTS_RXOF		BIT(1)
+> +#define PS2_FSTS_RXRDY		BIT(0)
+> +
+> +#define PS2_FIFO_ERROR_BIT \
+> +	(PS2_FSTS_TXUF | PS2_FSTS_TXOF | PS2_FSTS_RXUF | PS2_FSTS_RXOF)
+> +
+> +#define PS2_SAMPLE_CLK		(1000000)
+> +#define PS2_SCLK		(125000)
+> +
+> +struct sun4i_ps2data {
+> +	struct serio *serio;
+> +	struct device *dev;
+> +
+> +	/* IO mapping base */
+> +	void __iomem	*reg_base;
+> +
+> +	/* clock management */
+> +	struct clk	*clk;
+> +
+> +	/* irq */
+> +	spinlock_t	lock;
+> +	int		irq;
+> +};
+> +
+> +/*********************/
+> +/* Interrupt handler */
+> +/*********************/
+> +static irqreturn_t sun4i_ps2_interrupt(int irq, void *dev_id)
+> +{
+> +	struct sun4i_ps2data *drvdata = dev_id;
+> +	u32 intr_status;
+> +	u32 fifo_status;
+> +	unsigned char byte;
+> +	u32 rval;
+> +	u32 error = 0;
+> +
+> +	spin_lock(&drvdata->lock);
+> +
+> +	/* Get the PS/2 interrupts and clear them */
+> +	intr_status  = readl(drvdata->reg_base + PS2_REG_LSTS);
+> +	fifo_status  = readl(drvdata->reg_base + PS2_REG_FSTS);
+> +
+> +	/*Check Line Status Register*/
+> +	if (intr_status & PS2_LINE_ERROR_BIT) {
+> +		if (intr_status & PS2_LSTS_STOPERR)
+> +			dev_info(drvdata->dev, "PS/2 Stop Bit Error!");
 
-Also I see that Aleks Frid wasn't cc'ed at all in the E-mail headers; 
-fixing at least that point.
+The stop bit error is I believe should be reported to consumers as
+SSERIO_FRAME, receive timeout as SERIO_TIMEOUT and parity as
+SERIO_PARITY.
 
-> +static struct tegra_devfreq_device_config actmon_device_configs[] = {
-> +	{
-> +		/* MCALL: All memory accesses (including from the CPUs) */
-> +		.offset = 0x1c0,
-> +		.irq_mask = 1 << 26,
-> +		.boost_up_coeff = 200,
-> +		.boost_down_coeff = 50,
-> +		.boost_up_threshold = 60,
-> +		.boost_down_threshold = 40,
-> +	},
-> +	{
-> +		/* MCCPU: memory accesses from the CPUs */
-> +		.offset = 0x200,
-> +		.irq_mask = 1 << 25,
-> +		.boost_up_coeff = 800,
-> +		.boost_down_coeff = 90,
-> +		.boost_up_threshold = 27,
-> +		.boost_down_threshold = 10,
-> +		.avg_dependency_threshold = 50000,
+> +		if (intr_status & PS2_LSTS_ACKERR)
+> +			dev_info(drvdata->dev, "PS/2 Acknowledge Error!\n");
+
+When is this error signalled?
+
+> +		if (intr_status & PS2_LSTS_PARERR)
+> +			dev_info(drvdata->dev, "PS/2 Parity Error!\n");
+> +		if (intr_status & PS2_LSTS_TXTDO)
+> +			dev_info(drvdata->dev, "PS/2 Transmit Data Timeout!\n");
+
+Should not you check this status in serio_write() instead of here?
+
+> +		if (intr_status & PS2_LSTS_RXTDO)
+> +			dev_info(drvdata->dev, "PS/2 Receive Data Timeout!\n");
+> +
+> +		/*reset PS/2 controller*/
+> +		rval = readl(drvdata->reg_base + PS2_REG_GCTL);
+> +		writel(rval | PS2_GCTL_RESET, drvdata->reg_base + PS2_REG_GCTL);
+
+Why do we need to reset controller in case of, let's say, parity glitch?
+
+> +
+> +		rval = PS2_LSTS_TXTDO | PS2_LSTS_STOPERR | PS2_LSTS_ACKERR |
+> +			PS2_LSTS_PARERR | PS2_LSTS_RXTDO;
+> +		writel(rval, drvdata->reg_base + PS2_REG_LSTS);
+> +		error = 1;
+> +	}
+> +
+> +	/*Check FIFO Status Register*/
+> +	if (fifo_status & PS2_FIFO_ERROR_BIT) {
+> +		if (fifo_status & PS2_FSTS_TXUF)
+> +			dev_info(drvdata->dev, "PS/2 Tx FIFO Underflow!\n");
+> +		if (fifo_status & PS2_FSTS_TXOF)
+> +			dev_info(drvdata->dev, "PS/2 Tx FIFO Overflow!\n");
+> +		if (fifo_status & PS2_FSTS_RXUF)
+> +			dev_info(drvdata->dev, "PS/2 Rx FIFO Underflow!\n");
+> +		if (fifo_status & PS2_FSTS_RXOF)
+> +			dev_info(drvdata->dev, "PS/2 Rx FIFO Overflow!\n");
+> +		/*reset PS/2 controller*/
+> +		writel(readl(drvdata->reg_base + PS2_REG_GCTL) | PS2_GCTL_RESET,
+> +			drvdata->reg_base + PS2_REG_GCTL);
+
+Again, we do we need to reset controller? Does it stop receiving data
+after RX overflow condition?
+
+> +
+> +		rval = PS2_FSTS_TXUF | PS2_FSTS_TXOF | PS2_FSTS_TXRDY |
+> +			PS2_FSTS_RXUF | PS2_FSTS_RXOF | PS2_FSTS_RXRDY;
+> +		writel(rval, drvdata->reg_base + PS2_REG_FSTS);
+> +		error = 1;
+> +	}
+> +
+> +	rval = (fifo_status >> 16) & 0x3;
+> +	while (!error && rval--) {
+> +		byte = readl(drvdata->reg_base + PS2_REG_DATA) & 0xff;
+> +		serio_interrupt(drvdata->serio, byte, 0);
+> +	}
+> +
+> +	writel(intr_status, drvdata->reg_base + PS2_REG_LSTS);
+> +	writel(fifo_status, drvdata->reg_base + PS2_REG_FSTS);
+> +
+> +	spin_unlock(&drvdata->lock);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +
+> +static int sun4i_ps2_open(struct serio *pserio)
+> +{
+> +	struct sun4i_ps2data *drvdata = pserio->port_data;
+> +	u32 src_clk = 0;
+> +	u32 clk_scdf;
+> +	u32 clk_pcdf;
+> +	u32 rval;
+> +	unsigned long flags;
+> +
+> +	/*Set Line Control And Enable Interrupt*/
+> +	rval = PS2_LCTL_TXDTOEN | PS2_LCTL_STOPERREN | PS2_LCTL_ACKERREN
+> +		| PS2_LCTL_PARERREN | PS2_LCTL_RXDTOEN;
+> +	writel(rval, drvdata->reg_base + PS2_REG_LCTL);
+> +
+> +	/*Reset FIFO*/
+> +	rval = PS2_FCTL_TXRST | PS2_FCTL_RXRST | PS2_FCTL_TXUFIEN
+> +		| PS2_FCTL_TXOFIEN | PS2_FCTL_RXUFIEN
+> +		| PS2_FCTL_RXOFIEN | PS2_FCTL_RXRDYIEN;
+> +
+> +	writel(rval, drvdata->reg_base + PS2_REG_FCTL);
+> +
+> +	src_clk = clk_get_rate(drvdata->clk);
+> +	/*Set Clock Divider Register*/
+> +	clk_scdf = DIV_ROUND_UP(src_clk, PS2_SAMPLE_CLK) - 1;
+> +	clk_pcdf = DIV_ROUND_UP(PS2_SAMPLE_CLK, PS2_SCLK) - 1;
+> +	rval = (clk_scdf<<8) | clk_pcdf;
+> +	writel(rval, drvdata->reg_base + PS2_REG_CLKDR);
+> +
+> +
+> +	/*Set Global Control Register*/
+> +	rval = PS2_GCTL_RESET | PS2_GCTL_INTEN | PS2_GCTL_MASTER
+> +		| PS2_GCTL_BUSEN;
+> +
+> +	spin_lock_irqsave(&drvdata->lock, flags);
+> +	writel(rval, drvdata->reg_base + PS2_REG_GCTL);
+> +	spin_unlock_irqrestore(&drvdata->lock, flags);
+> +
+> +	return 0;
+> +}
+> +
+> +static void sun4i_ps2_close(struct serio *pserio)
+> +{
+> +	struct sun4i_ps2data *drvdata = pserio->port_data;
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&drvdata->lock, flags);
+> +	/* Disable the PS2 interrupts */
+> +	writel(0, drvdata->reg_base + PS2_REG_GCTL);
+> +	spin_unlock_irqrestore(&drvdata->lock, flags);
+
+
+I think you want to add synchronize_irq() here to make sure pending
+interrupt handler runs to completion before you return.
+
+> +}
+> +
+> +static int sun4i_ps2_write(struct serio *pserio, unsigned char val)
+> +{
+> +	unsigned long expire = jiffies + msecs_to_jiffies(10000);
+> +	struct sun4i_ps2data *drvdata;
+> +
+> +	drvdata = (struct sun4i_ps2data *)pserio->port_data;
+> +
+> +	do {
+> +		if (readl(drvdata->reg_base + PS2_REG_FSTS) & PS2_FSTS_TXRDY) {
+> +			writel(val, drvdata->reg_base + PS2_REG_DATA);
+> +			return 0;
+> +		}
+> +	} while (time_before(jiffies, expire));
+> +
+> +	return 0;
+> +}
+> +
+> +static int sun4i_ps2_probe(struct platform_device *pdev)
+> +{
+> +	struct resource *res; /* IO mem resources */
+> +	struct sun4i_ps2data *drvdata;
+> +	struct serio *serio;
+> +	struct device *dev = &pdev->dev;
+> +	unsigned int irq;
+> +	int error;
+> +
+> +	drvdata = devm_kzalloc(dev, sizeof(struct sun4i_ps2data), GFP_KERNEL);
+> +	serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
+> +	if (!drvdata || !serio) {
+> +		error = -ENOMEM;
+> +		goto err_free_mem;
+> +	}
+> +
+> +	spin_lock_init(&drvdata->lock);
+> +
+> +	/* IO */
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	drvdata->reg_base = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(drvdata->reg_base)) {
+> +		dev_err(dev, "failed to map registers\n");
+> +		error = PTR_ERR(drvdata->reg_base);
+> +		goto err_free_mem;
+> +	}
+> +
+> +	drvdata->clk = devm_clk_get(dev, NULL);
+> +	if (IS_ERR(drvdata->clk)) {
+> +		error = PTR_ERR(drvdata->clk);
+> +		dev_err(dev, "couldn't get clock %d\n", error);
+> +		goto err_free_mem;
+> +	}
+> +
+> +	error = clk_prepare_enable(drvdata->clk);
+> +	if (error) {
+> +		dev_err(dev, "failed to enable clock %d\n", error);
+> +		goto err_free_mem;
+> +	}
+> +
+
+I think you should explicitly prohibit the device generating interrupts
+by writing to PS2_ERG_CTRL here.
+
+> +	serio->id.type = SERIO_8042;
+> +	serio->write = sun4i_ps2_write;
+> +	serio->open = sun4i_ps2_open;
+> +	serio->close = sun4i_ps2_close;
+> +	serio->port_data = drvdata;
+> +	serio->dev.parent = dev;
+> +	strlcpy(serio->name, dev_name(dev), sizeof(serio->name));
+> +	strlcpy(serio->phys, dev_name(dev), sizeof(serio->phys));
+> +
+> +	/* Get IRQ for the device */
+> +	irq = platform_get_irq(pdev, 0);
+> +	if (!irq) {
+> +		dev_err(dev, "no IRQ found\n");
+> +		error = -ENXIO;
+> +		goto error_disable_clk;
+> +	}
+> +
+> +	drvdata->irq = irq;
+> +	drvdata->serio = serio;
+> +	drvdata->dev = dev;
+> +	error = devm_request_threaded_irq(dev, drvdata->irq,
+> +		sun4i_ps2_interrupt, NULL, 0, DRIVER_NAME, drvdata);
+> +
+> +	if (error) {
+> +		dev_err(drvdata->dev, "Interrupt alloc failed %d:error:%d\n",
+> +			drvdata->irq, error);
+> +		goto error_disable_clk;
+> +	}
+> +
+> +	serio_register_port(serio);
+> +	platform_set_drvdata(pdev, drvdata);
+> +
+> +	return 0;	/* success */
+> +
+> +error_disable_clk:
+> +	clk_disable_unprepare(drvdata->clk);
+> +
+> +err_free_mem:
+> +	kfree(serio);
+> +	return error;
+> +}
+> +
+> +static int sun4i_ps2_remove(struct platform_device *pdev)
+> +{
+> +	struct sun4i_ps2data *drvdata = platform_get_drvdata(pdev);
+> +
+> +	serio_unregister_port(drvdata->serio);
+> +	disable_irq(drvdata->irq);
+
+I do not think you need to disable irq here - serio_close will make sure
+that the device does not generate interrupts.
+
+> +
+> +	if (!IS_ERR(drvdata->clk))
+> +		clk_disable_unprepare(drvdata->clk);
+> +	kfree(drvdata->serio);
+> +
+> +	return 0;
+> +}
+> +
+> +/* Match table for of_platform binding */
+> +static const struct of_device_id sun4i_ps2_match[] = {
+> +	{ .compatible = "allwinner,sun4i-a10-ps2", },
+> +	{ },
+> +};
+> +
+> +MODULE_DEVICE_TABLE(of, sun4i_ps2_match);
+> +
+> +/*platform driver structure*/
+
+I do not think we should keep the obvious comments like this one.
+
+> +static struct platform_driver sun4i_ps2_driver = {
+> +	.probe		= sun4i_ps2_probe,
+> +	.remove		= sun4i_ps2_remove,
+> +	.driver = {
+> +		.name = DRIVER_NAME,
+> +		.of_match_table = sun4i_ps2_match,
 > +	},
 > +};
+> +module_platform_driver(sun4i_ps2_driver);
+> +
+> +MODULE_AUTHOR("Vishnu Patekar <vishnupatekar0510@gmail.com>");
+> +MODULE_AUTHOR("Aaron.maoye <leafy.myeh@newbietech.com>");
+> +MODULE_DESCRIPTION("Allwinner A10/Sun4i PS/2 driver");
+> +MODULE_LICENSE("GPL v2");
+> -- 
+> 1.7.9.5
+> 
 
-This data represents PM policy.  In other words, it is use-case sensitive.  
-Different users may wish to change these values depending on their 
-application characteristics -- and it does not represent unchangeable 
-hardware fact.
+Thanks.
 
-On the other hand...
-
-> +static u32 actmon_readl(struct tegra_devfreq *tegra, u32 offset)
-> +{
-> +	return readl(tegra->regs + offset);
-> +}
-> +
-> +static void actmon_writel(struct tegra_devfreq *tegra, u32 val, u32 offset)
-> +{
-> +	writel(val, tegra->regs + offset);
-> +}
-> +
-> +static u32 device_readl(struct tegra_devfreq_device *dev, u32 offset)
-> +{
-> +	return readl(dev->regs + offset);
-> +}
-> +
-> +static void device_writel(struct tegra_devfreq_device *dev, u32 val,
-> +			  u32 offset)
-> +{
-> +	writel(val, dev->regs + offset);
-> +}
-> +
-> +static unsigned long do_percent(unsigned long val, unsigned int pct)
-> +{
-> +	return val * pct / 100;
-> +}
-> +
-> +static void tegra_devfreq_update_avg_wmark(struct tegra_devfreq *tegra,
-> +					   struct tegra_devfreq_device *dev)
-> +{
-> +	u32 avg = dev->avg_count;
-> +	u32 avg_band_freq = tegra->max_freq * ACTMON_DEFAULT_AVG_BAND / KHZ;
-> +	u32 band = avg_band_freq * ACTMON_SAMPLING_PERIOD;
-> +
-> +	device_writel(dev, avg + band, ACTMON_DEV_AVG_UPPER_WMARK);
-> +
-> +	avg = max(dev->avg_count, band);
-> +	device_writel(dev, avg - band, ACTMON_DEV_AVG_LOWER_WMARK);
-> +}
-> +
-> +static void tegra_devfreq_update_wmark(struct tegra_devfreq *tegra,
-> +				       struct tegra_devfreq_device *dev)
-> +{
-> +	u32 val = tegra->cur_freq * ACTMON_SAMPLING_PERIOD;
-> +
-> +	device_writel(dev, do_percent(val, dev->config->boost_up_threshold),
-> +		      ACTMON_DEV_UPPER_WMARK);
-> +
-> +	device_writel(dev, do_percent(val, dev->config->boost_down_threshold),
-> +		      ACTMON_DEV_LOWER_WMARK);
-> +}
-> +
-> +static void actmon_write_barrier(struct tegra_devfreq *tegra)
-> +{
-> +	/* ensure the update has reached the ACTMON */
-> +	wmb();
-> +	actmon_readl(tegra, ACTMON_GLB_STATUS);
-> +}
-> +
-> +static irqreturn_t actmon_isr(int irq, void *data)
-> +{
-> +	struct tegra_devfreq *tegra = data;
-> +	struct tegra_devfreq_device *dev = NULL;
-> +	unsigned long flags;
-> +	u32 val, intr_status, dev_ctrl;
-> +	unsigned int i;
-> +
-> +	val = actmon_readl(tegra, ACTMON_GLB_STATUS);
-> +
-> +	for (i = 0; i < ARRAY_SIZE(tegra->devices); i++) {
-> +		if (val & tegra->devices[i].config->irq_mask) {
-> +			dev = tegra->devices + i;
-> +			break;
-> +		}
-> +	}
-> +
-> +	if (!dev)
-> +		return IRQ_NONE;
-> +
-> +	spin_lock_irqsave(&tegra->lock, flags);
-> +
-> +	dev->avg_count = device_readl(dev, ACTMON_DEV_AVG_COUNT);
-> +	tegra_devfreq_update_avg_wmark(tegra, dev);
-> +
-> +	intr_status = device_readl(dev, ACTMON_DEV_INTR_STATUS);
-> +	dev_ctrl = device_readl(dev, ACTMON_DEV_CTRL);
-> +
-> +	if (intr_status & ACTMON_DEV_INTR_CONSECUTIVE_UPPER) {
-> +		/*
-> +		 * new_boost = min(old_boost * up_coef + step, max_freq)
-> +		 */
-> +		dev->boost_freq = do_percent(dev->boost_freq,
-> +					     dev->config->boost_up_coeff);
-> +		dev->boost_freq += ACTMON_BOOST_FREQ_STEP;
-> +
-> +		dev_ctrl |= ACTMON_DEV_CTRL_CONSECUTIVE_BELOW_WMARK_EN;
-> +
-> +		if (dev->boost_freq >= tegra->max_freq)
-> +			dev->boost_freq = tegra->max_freq;
-> +		else
-> +			dev_ctrl |= ACTMON_DEV_CTRL_CONSECUTIVE_ABOVE_WMARK_EN;
-> +	} else if (intr_status & ACTMON_DEV_INTR_CONSECUTIVE_LOWER) {
-> +		/*
-> +		 * new_boost = old_boost * down_coef
-> +		 * or 0 if (old_boost * down_coef < step / 2)
-> +		 */
-> +		dev->boost_freq = do_percent(dev->boost_freq,
-> +					     dev->config->boost_down_coeff);
-> +
-> +		dev_ctrl |= ACTMON_DEV_CTRL_CONSECUTIVE_ABOVE_WMARK_EN;
-> +
-> +		if (dev->boost_freq < (ACTMON_BOOST_FREQ_STEP >> 1))
-> +			dev->boost_freq = 0;
-> +		else
-> +			dev_ctrl |= ACTMON_DEV_CTRL_CONSECUTIVE_BELOW_WMARK_EN;
-> +	}
-> +
-> +	if (dev->config->avg_dependency_threshold) {
-> +		if (dev->avg_count >= dev->config->avg_dependency_threshold)
-> +			dev_ctrl |= ACTMON_DEV_CTRL_CONSECUTIVE_BELOW_WMARK_EN;
-> +		else if (dev->boost_freq == 0)
-> +			dev_ctrl &= ~ACTMON_DEV_CTRL_CONSECUTIVE_BELOW_WMARK_EN;
-> +	}
-> +
-> +	device_writel(dev, dev_ctrl, ACTMON_DEV_CTRL);
-> +
-> +	device_writel(dev, ACTMON_INTR_STATUS_CLEAR, ACTMON_DEV_INTR_STATUS);
-> +
-> +	actmon_write_barrier(tegra);
-> +
-> +	spin_unlock_irqrestore(&tegra->lock, flags);
-> +
-> +	return IRQ_WAKE_THREAD;
-> +}
-
-... all this code is clearly low level device driver code and is intended 
-to represent immutable hardware fact.  It is use-case independent, PM 
-policy-invariant, and in theory should be verifiable against the Tegra TRM 
-(or whatever).
-
-The policy code and data should be separated into a separate file and/or 
-subsystem from the low-level ACTMON device driver.  The policy code should 
-be easily swappable or tunable by end-users without touching the 
-underlying device driver.
-
-So these entities should use some kind of Linux generic subsystem/function 
-call interface to loosely couple the policy with the low-level device 
-driver.  I have not combed the tree to see what makes the most sense.  But 
-the perf subsystem comes to mind as one strong candidate.
-
-
-- Paul
+-- 
+Dmitry
