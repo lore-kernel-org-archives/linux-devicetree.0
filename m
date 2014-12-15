@@ -1,101 +1,73 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCHv3 0/5] ARM:sunxi:ps2 Added support for A10/A20 ps2 controller.
-Date: Mon, 15 Dec 2014 23:41:59 +0800
-Message-ID: <CAGb2v659jEj7cxPCu1UNPb-p6iaH6Sjcp4LCgsBOyBh-odSUhw@mail.gmail.com>
-References: <1418408748-9797-1-git-send-email-vishnupatekar0510@gmail.com>
- <548C1E7D.1000005@redhat.com> <CAEzqOZtyeAnG660AKf_0_gCa-+BT_pAzHk0HYYSCdm4y89GFJA@mail.gmail.com>
- <548D5207.8030004@redhat.com> <CAEzqOZsWSpd_r3Oc=PBVw3NQH-_1V9JXtC2H4tZ3U6nCN_Z7aA@mail.gmail.com>
- <548EFA9F.4080208@redhat.com>
+From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Subject: Re: [PATCH] mfd: cottula: add cottula board
+Date: Mon, 15 Dec 2014 16:45:03 +0100
+Message-ID: <877fxsapds.fsf@free.fr>
+References: <1418598606-21352-1-git-send-email-robert.jarzmik@free.fr>
+	<4307800.p21Sk5E3dV@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <548EFA9F.4080208@redhat.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Vishnu Patekar <vishnupatekar0510@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "jdelvare@suse.de" <jdelvare@suse.de>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "ralf@linux-mips.org" <ralf@linux-mips.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "msalter@redhat.com" <msalter@redhat.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Kumar Gala <galak@codeaurora.org>, "maxime.ripard@free-electrons.com" <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infr
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4307800.p21Sk5E3dV@wuerfel> (Arnd Bergmann's message of "Mon, 15
+	Dec 2014 11:46:20 +0100")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> writes:
 
-On Mon, Dec 15, 2014 at 11:13 PM, Hans de Goede <hdegoede@redhat.com> wrote:
-> Hi,
+> On Monday 15 December 2014 00:10:06 Robert Jarzmik wrote:
+>> +
+>> +       platform_set_drvdata(pdev, cot);
+>> +       cot->gpio0 = gpiod_get(&pdev->dev, "lubbock_irq", 0);
+>> +       if (IS_ERR(cot->gpio0)) {
+>> +               dev_err(&pdev->dev, "Couldn't request GPIO : ret = %d\n", ret);
+>> +               return PTR_ERR(cot->gpio0);
+>> +       }
+>> +       cot->irq = gpiod_to_irq(cot->gpio0);
+>> +       if (cot->irq < 0)
+>> +               return cot->irq;
+>> +
+>> +       cot->irqdomain =
+>> +               irq_domain_add_linear(pdev->dev.of_node, COTTULA_NB_IRQ,
+>> +                                     &cottula_irq_domain_ops, cot);
+>> +       if (!cot->irqdomain)
+>> +               return -ENODEV;
+>> +
+>> +       ret = 0;
+>> +       if (base_irq)
+>> +               ret = irq_create_strict_mappings(cot->irqdomain, base_irq, 0,
+>> +                                                COTTULA_NB_IRQ);
+>> 
 >
+> This looks a bit ambiguous: You get a GPIO line for the purpose of the
+> IRQ nesting but don't use the GPIO otherwise, and you pass the device's
+> own irq domain start as an IORESOURCE_IRQ resource.
 >
-> On 15-12-14 15:13, Vishnu Patekar wrote:
->>
->> Hi,
->>
->> On Sun, Dec 14, 2014 at 2:31 PM, Hans de Goede <hdegoede@redhat.com>
->> wrote:
->>>
->>> Hi,
->>>
->>> On 13-12-14 21:01, Vishnu Patekar wrote:
->>>>
->>>>
->>>> Hello Hans,
->>>> Please find my comments inlined.
->>>>
->>>> On 12/13/14, Hans de Goede <hdegoede@redhat.com> wrote:
->>>>>
->>>>>
->>>>> Hi VishnuPatekar,
->>>>>
->>>>> The patch mangling for this set seems to have gone a bit wrong I'm
->>>>> afraid
->>>>
->>>>
->>>>
->>>> No, this time I've corrected it. Infact, last version of patch did not
->>>> used the status bit error macros.
->>>>
->>>>> a lot of the patches have my fixup commit messages (which should have
->>>>> disappeared when squashing in the patches), please replace those by
->>>>> proper
->>>>> commit messages describing what the patch actually does.
->>>>
->>>>
->>>> Yes, [PATCHv3 3/5] uses fixup. I'll correct it.
->>>>>
->>>>>
->>>>>
->>>>> Also the adding of the commented nodes for the lime2 seems to be gone
->>>>> entirely
->>>>> from the set, instead now only a comment about the conflict with the
->>>>> hdmi
->>>>> pins is added, but it is above the i2c node instead of above a ps2
->>>>> node.
->>>>>
->>>> Maxime's suggested that we should not add commented nodes specially
->>>> when its trivial to apply. And just note saying ps20 pins conflict
->>>> with HDMI.
->>>
->>>
->>>
->>> Ah, I see.
->>>
->>>> Should I remove the this comment as well?
->>>> Or
->>>> Put this note in start of DTS file?
->>>
->>>
->>>
->>> The comment should be added to where the pinctrl bits are, not to the
->>> lime2
->>> file, ps0 will conflict with hdmi on all boards.
->>
->>
->> Well, In that case,PS2_0 pins conflicts with HDMI, PS2_1 pins
->> conflicts with LCD. Every pin has multiplexing.
->
->
-> Almost every A10 board has a hdmi connector, and only the hdmi ddc pins
-> are multiplexed, so this is sort of special, but yes if we do not have
-> the commented nodes in the dts file, then this comment can be dropped too
-> I guess.
+> For consistency between DT and ATAGS based uses, and with similar DT
+> based drivers, I would instead recommend passing the parent irq (from
+> the GPIO) as an IORESOURCE_IRQ resource instead of a gpio lookup,
+> and passing the base_irq as platform_data for the ATAGS case.
 
-All the HDMI pins have dedicated pins. In addition, the DDC pins are
-multiplexed. On the Lime, the dedicated pins (ball # R23, R22) are
-used. I just checked the schematics. There should be no conflict.
+I understand Arnd, yet I wanted to avoid any platform data if possible, as this
+is a motherboard, it will not be plugged anywhere else with different
+parameters.
 
-ChenYu
+What would you say if I did this :
+ - remove the gpio
+ - use IORESOURCE_IRQ(0) as the parent irq (as you suggested)
+ - use IORESOURCE_IRQ(1) as the base_irq
+   => this resource would be optional
+        - if exists, use it as base_irq
+        - if doesn't exist, let base_irq = 0
+
+Will that look correct ?
+
+Cheers.
+
+-- 
+Robert
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
