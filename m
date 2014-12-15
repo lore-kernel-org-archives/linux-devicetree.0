@@ -1,91 +1,86 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [RFC 01/15] drivers/base: add track framework
-Date: Mon, 15 Dec 2014 15:00:04 +0100
-Message-ID: <548EE964.2050504@samsung.com>
-References: <548B7653.7020004@gmail.com> <20141215125557.GB11764@sirena.org.uk>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 4/4] usb: atmel_usba_udc: mask status with enabled irqs
+Date: Mon, 15 Dec 2014 15:01:25 +0100
+Message-ID: <20141215150125.0bc8454b@bbrezillon>
+References: <1418648588-17872-1-git-send-email-boris.brezillon@free-electrons.com>
+	<1418648588-17872-5-git-send-email-boris.brezillon@free-electrons.com>
+	<548EE2DA.6050408@cogentembedded.com>
+	<063D6719AE5E284EB5DD2968C1650D6D1CA0CE20@AcuExch.aculab.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <20141215125557.GB11764@sirena.org.uk>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: Alexandre Courbot <gnurou@gmail.com>, "ARM/S5P EXYNOS AR..." <linux-samsung-soc@vger.kernel.org>, Mike Turquette <mturquette@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, GPIO SUBSYSTEM <linux-gpio@vger.kernel.org>, "OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, DRM PANEL DRIVERS <dri-devel@lists.freedesktop.org>, Grant Likely <grant.likely@linaro.org>, Russell King <linux@arm.linux.org.uk>, ARM/CLKDEV SUPPORT <linux-arm-kernel@lists.infradead.org>, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <063D6719AE5E284EB5DD2968C1650D6D1CA0CE20-VkEWCZq2GCInGFn1LkZF6NBPR1lH4CV8@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Laight <David.Laight-ZS65k/vG3HxXrIkS9f7CXA@public.gmane.org>
+Cc: 'Sergei Shtylyov' <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMTIvMTUvMjAxNCAwMTo1NSBQTSwgTWFyayBCcm93biB3cm90ZToKPiBPbiBTYXQsIERlYyAx
-MywgMjAxNCBhdCAxMjoxMjoxOUFNICswMTAwLCBBSCB3cm90ZToKPj4gTWFyayBCcm93biB3cm90
-ZSBvbiAxMi4xMi4yMDE0IDE3OjM2Ogo+Pj4gT24gV2VkLCBEZWMgMTAsIDIwMTQgYXQgMDQ6NDg6
-MTlQTSArMDEwMCwgQW5kcnplaiBIYWpkYSB3cm90ZToKPj4+PiArCQlrZnJlZShwdGFzayk7Cj4+
-Pj4gKwo+Pj4+ICsJCWlmIChlbXB0eSkKPj4+PiArCQkJYnJlYWs7Cj4+Pj4gKwo+Pj4+ICsJCXRy
-YWNrX3Byb2Nlc3NfdGFzayh0cmFjaywgdGFzayk7Cj4+PiAuLi53ZSB0aGVuIGdvIGFuZCBkbyBz
-b21lIG90aGVyIHN0dWZmLCBpbmNsdWRpbmcgcHJvY2Vzc2luZyB0aGF0IHRhc2ssCj4+PiB3aXRo
-b3V0IHRoZSBsb2NrIG9yIG9yIGFueSBvdGhlciBtZWFucyBJIGNhbiBzZWUgb2YgZXhjbHVkaW5n
-IG90aGVyCj4+PiB1c2VycyBiZWZvcmUgZ29pbmcgcm91bmQgYW5kIHJlbW92aW5nIHRoZSB0YXNr
-LiAgVGhpcyBzZWVtcyB0byBsZWF2ZSB1cwo+Pj4gdnVsbmVyYWJsZSB0byBkb3VibGUgZXhlY3V0
-aW9uLgo+PiBObywgaWYgeW91IGxvb2sgYXQgdHJhY2tfYWRkX3Rhc2sgZnVuY3Rpb24geW91IHdp
-bGwgc2VlIHRoYXQgdGhlIHF1ZXVlIGlzCj4+IHByb2Nlc3NlZCBvbmx5IGlmIGl0IGlzIGluaXRp
-YWxseSBlbXB0eSwgb3RoZXJ3aXNlIHRoZSB0YXNrIGlzIG9ubHkgYWRkZWQgdG8KPj4gdGhlIHF1
-ZXVlLCBzbyBpdCB3aWxsIGJlIHByb2Nlc3NlZCBhZnRlciBwcm9jZXNzaW5nIGVhcmxpZXIgdGFz
-a3MuCj4+IFNvIHRoZSBydWxlIGlzIHRoYXQgaWYgc29tZW9uZSBhZGQgdGFzayB0byB0aGUgcXVl
-dWUgaXQgY2hlY2tzIGlmIHRoZSBxdWV1ZQo+PiBpcyBlbXB0eSwgaW4gc3VjaCBjYXNlIGl0IHBy
-b2Nlc3MgYWxsIHRhc2tzIGZyb20gdGhlIHF1ZXVlIHVudGlsCj4+IHRoZSBxdWV1ZSBiZWNvbWVz
-IGVtcHR5LCBldmVuIHRoZSB0YXNrcyBhZGRlZCBieSBvdGhlciBwcm9jZXNzZWQuCj4+IFRoaXMg
-d2F5IGFsbCB0YXNrcyBhcmUgc2VyaWFsaXplZC4KPiBUaGlzIGlzIGFsbCBwcmV0dHkgZmlkZGx5
-IGFuZCBzZWVtcyBmcmFnaWxlIC0gaWYgbm90aGluZyBlbHNlIHRoZSBjb2RlCj4gc2VlbXMgdW5k
-ZXJjb21tZW50ZWQgc2luY2UgdGhlIGFib3ZlIGlzIG9ubHkgZ29pbmcgdG8gYmUgYXBwYXJlbnQg
-d2l0aAo+IGZvbGxvd2luZyB0aHJvdWdoIG11bHRpcGxlIGZ1bmN0aW9ucyBhbmQgd2UncmUgcmVs
-eWluZyBvbiBib3RoIG93bmVyIGFuZAo+IGxpc3QgZW1wdGluZXNzIHdpdGggbW9yZSB0aGFuIG9u
-ZSBwbGFjZSB3aGVyZSBhIHRhc2sgY2FuIGdldCBwcm9jZXNzZWQuCgpJIGhhdmUgY2hhbmdlZCBp
-dCBhbHJlYWR5IHRvIHRlc3QgcXVldWUgb3duZXIsIHRoaXMgd2F5IGl0IHNob3VsZApiZSBtb3Jl
-IGNsZWFyLgoKPgo+Pj4gSSdtIGFsc28gdW5jbGVhciB3aGF0IGlzIHN1cHBvc2VkIHRvIGhhcHBl
-biBpZiBhZGRpbmcgYSBub3RpZmljYXRpb24KPj4+IHJhY2VzIHdpdGggcmVtb3ZpbmcgdGhlIHRo
-aW5nIGJlaW5nIHdhdGNoZWQuCj4+IFRoZSBzZXF1ZW5jZSBzaG91bGQgYmUgYWx3YXlzIGFzIGZv
-bGxvd3M6Cj4+IDEuIGNyZWF0ZSB0aGluZywgdGhlbiBjYWxsIHRyYWNrX3VwKHRoaW5nKS4KPj4g
-Li4uCj4+IDIuIGNhbGwgdHJhY2tfZG93bih0aGluZykgdGhlbiByZW1vdmUgdGhpbmcuCj4+IElm
-IHdlIHB1dCAxIGludG8gcHJvYmUgYW5kIDIgaW50byByZW1vdmUgY2FsbGJhY2sgb2YgdGhlIGRy
-aXZlciBpdCB3aWxsIGJlCj4+IHNhZmUgLSB3ZSBhcmUgc3luY2hyb25pc2VkIGJ5IGRldmljZV9s
-b2NrLiBCdXQgaWYsIGZvciBzb21lIHJlYXNvbiwgd2Ugd2FudAo+PiB0byBjcmVhdGUgb2JqZWN0
-IGFmdGVyIHByb2JlIHdlIHNob3VsZCBkbyBvd24gc3luY2hyb25pemF0aW9uIG9yIGp1c3QgcHV0
-Cj4+IGRldmljZV9sb2NrIGFyb3VuZCAxLiBUaGUgc2FtZSBhcHBsaWVzIGlmIHdlIHdhbnQgdG8g
-cmVtb3ZlCj4+IG9iamVjdCBlYXJsaWVyLiBUaGlzIGlzIHRoZSBjb21tZW50IGFib3ZlIGFib3V0
-LiBJIHdpbGwgZXhwYW5kIGl0IHRvIG1vcmUKPj4gdmVyYm9zZSBleHBsYW5hdGlvbi4KPiBZb3Ug
-Y2FuJ3QgcmVseSBvbiB0aGUgZGV2aWNlIGxvY2sgaGVyZSBzaW5jZSB0aGlzIGlzbid0IHRpZWQg
-dG8ga29iamVjdHMKPiBvciBhbnl0aGluZyBhdCBhbGwgLSBpdCdzIGEgZnJlZXN0YW5kaW5nIGlu
-dGVyZmFjZSBzb21lb25lIGNvdWxkIHBpY2sgdXAKPiBhbmQgdXNlIGluIGFub3RoZXIgY29udGV4
-dC4gIEJlc2lkZXMsIHRoYXQgaXNuJ3QgcmVhbGx5IG15IGNvbmNlcm4gLSBteQo+IGNvbmNlcm4g
-aXMgd2hhdCBoYXBwZW5zIGlmIHNvbWV0aGluZyBhc2tzIHRvIHdhaXQgZm9yIApCdXQgSSBkbyBu
-b3QgcmVseSBoZXJlIG9uIGRldmljZV9sb2NrLCBJIGp1c3QgcG9pbnQgb3V0IHRoYXQgMSBhbmQg
-MgpzaG91bGQgYmUKc3luY2hyb25pemVkIGFuZCBhcyBhIGNvbW1vbiB3YXkgaXMgdG8gcHV0IHN1
-Y2ggdGhpbmdzIGludG8gcHJvYmUKYW5kIHJlbW92ZSwgZGV2aWNlX2xvY2sgY2FuIGRvIHRoZSBz
-eW5jaHJvbml6YXRpb24gZm9yIHVzIGluIHN1Y2ggY2FzZSwKc28gbm8gbmVlZCBmb3IgYWRkaXRp
-b25hbCBzeW5jaHJvbml6YXRpb24uCgpBbmQgdG8gbWFrZSBldmVyeXRoaW5nIGNsZWFyLCB0cmFj
-a191cCB3aWxsIG5vdCBiZSBjYWxsZWQgYnkgdGhlIGRyaXZlcgpkaXJlY3RseSwKaXQgc2hhbGwg
-YmUgY2FsbGVkIGJ5IHJlc3BlY3RpdmUgcmVzb3VyY2UgZnJhbWV3b3JrIGZ1bmN0aW9ucywgZm9y
-IGV4YW1wbGUKYnkgcmVndWxhdG9yX3JlZ2lzdGVyIGFuZCByZWd1bGF0b3JfdW5yZWdpc3Rlci4K
-CkFuZCByZWdhcmRpbmcgeW91ciBpbml0aWFsL3JlYWwgY29uY2VybiwgSSBndWVzcyB5b3UgbWVh
-biB0aGlzIG9uZToKPj4gSSdtIGFsc28gdW5jbGVhciB3aGF0IGlzIHN1cHBvc2VkIHRvIGhhcHBl
-biBpZiBhZGRpbmcgYSBub3RpZmljYXRpb24KPj4gcmFjZXMgd2l0aCByZW1vdmluZyB0aGUgdGhp
-bmcgYmVpbmcgd2F0Y2hlZC4KSSBndWVzcyB5b3UgbWVhbiByZWdpc3RlcmluZyBub3RpZmllciBh
-bmQgcmVtb3ZhbCBvZiB0aGluZyBpdCBpcwpzdXBwb3NlZCB0byB3YXRjaC4KQXMgYWxsIHRyYWNr
-IHRhc2tzIGFyZSBzZXJpYWxpemVkIHRoZXNlIHR3byB3aWxsIGJlIHNlcmlhbGl6ZWQgYWxzbyBz
-bwp3ZSBjYW4gaGF2ZQpvbmx5IHR3byBzY2VuYXJpb3M6CjEuCiAgYSkgcmVnaXN0ZXIgbm90aWZp
-ZXIKICAtIHRoaW5nIGlzIHVwLCBzbyBub3RpZmllciB3aWxsIGJlIGltbWVkaWF0ZWx5IGNhbGxl
-ZCB3aXRoIGluZm8gdGhhdAp0aGUgdGhpbmcgaXMgdXAKICBiKSByZW1vdmUgdGhpbmcKICAtIHRo
-aW5nIHdpbGwgYmUgZG93biwgc28gbm90aWZpZXIgd2lsbCBiZSBjYWxsZWQgd2l0aCBpbmZvIHRo
-YXQgdGhlCnRoaW5nIHdpbGwgYmUgcmVtb3ZlZAoyLgogIGEpIHJlbW92ZSB0aGluZwogIC0gbm90
-aWZpZXIgaXMgbm90IHlldCByZWdpc3RlcmVkLCBzbyBjYWxsYmFjayB3aWxsIG5vdCBiZSBjYWxs
-ZWQsCiAgYikgcmVnaXN0ZXIgbm90aWZpZXIKICAtIHRoaW5nIGlzIGFscmVhZHkgcmVtb3ZlZCwg
-c28gY2FsbGJhY2sgd2lsbCBub3QgYmUgY2FsbGVkLgoKSSBob3BlIHRoaXMgaXMgd2hhdCB5b3Ug
-d2VyZSBhc2tpbmcgZm9yLgoKUmVnYXJkcwpBbmRyemVqCgpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZl
-bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Mon, 15 Dec 2014 13:34:56 +0000
+David Laight <David.Laight-ZS65k/vG3HxXrIkS9f7CXA@public.gmane.org> wrote:
+
+> From: Sergei Shtylyov
+> > Hello.
+> > 
+> > On 12/15/2014 4:03 PM, Boris Brezillon wrote:
+> > 
+> > > Avoid interpreting useless status flags when we're not waiting for such
+> > > events by masking the status variable with the interrupt enabled register
+> > > value.
+> > 
+> > > Reported-by: Patrice VILCHEZ <patrice.vilchez-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> > > Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > > ---
+> > >   drivers/usb/gadget/udc/atmel_usba_udc.c | 6 +++++-
+> > >   1 file changed, 5 insertions(+), 1 deletion(-)
+> > 
+> > > diff --git a/drivers/usb/gadget/udc/atmel_usba_udc.c b/drivers/usb/gadget/udc/atmel_usba_udc.c
+> > > index 55c8dde..bc3a532 100644
+> > > --- a/drivers/usb/gadget/udc/atmel_usba_udc.c
+> > > +++ b/drivers/usb/gadget/udc/atmel_usba_udc.c
+> > > @@ -1612,12 +1612,14 @@ static irqreturn_t usba_udc_irq(int irq, void *devid)
+> > >
+> > >   	spin_lock(&udc->lock);
+> > >
+> > > -	status = usba_readl(udc, INT_STA);
+> > > +	status = usba_readl(udc, INT_STA) & usba_readl(udc, INT_ENB);
+> > >   	DBG(DBG_INT, "irq, status=%#08x\n", status);
+> > >
+> > >   	if (status & USBA_DET_SUSPEND) {
+> > >   		toggle_bias(udc, 0);
+> > >   		usba_writel(udc, INT_CLR, USBA_DET_SUSPEND);
+> > > +		usba_writel(udc, INT_ENB,
+> > > +			    usba_readl(udc, INT_ENB) | USBA_WAKE_UP);
+> > >   		udc->bias_pulse_needed = true;
+> > >   		DBG(DBG_BUS, "Suspend detected\n");
+> > >   		if (udc->gadget.speed != USB_SPEED_UNKNOWN
+> > > @@ -1631,6 +1633,8 @@ static irqreturn_t usba_udc_irq(int irq, void *devid)
+> > >   	if (status & USBA_WAKE_UP) {
+> > >   		toggle_bias(udc, 1);
+> > >   		usba_writel(udc, INT_CLR, USBA_WAKE_UP);
+> > > +		usba_writel(udc, INT_ENB,
+> > > +			    usba_readl(udc, INT_ENB) & ~USBA_WAKE_UP);
+> > >   		DBG(DBG_BUS, "Wake Up CPU detected\n");
+> > >   	}
+> > 
+> >     Looks like t make sense to read the INT_ENB register into a separate
+> > variable, to save on extra reads?
+> 
+> 
+> Better still remember the written value in one of the structures so
+> that it doesn't have to be read at all.
+
+Sure, I'll modify the code accordingly.
+
+Thanks,
+
+Boris
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
