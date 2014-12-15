@@ -1,45 +1,66 @@
-From: Michael Lawnick <ml.lawnick-Mmb7MZpHnFY@public.gmane.org>
-Subject: Re: [PATCH] of: i2c: Add DT bindings for idle states to PCA954x mux
- driver
-Date: Mon, 15 Dec 2014 13:08:39 +0100
-Message-ID: <548ECF47.8030307@gmx.de>
-References: <548E387E.2020502@nsn.com> <4262366.rJm0Aq2lpm@avalon>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 0/8] irqchip: New driver for ST's SysCfg controlled
+ IRQs
+Date: Mon, 15 Dec 2014 12:28:26 +0000
+Message-ID: <20141215122826.GB13885@x1>
+References: <1416932705-16880-1-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4262366.rJm0Aq2lpm@avalon>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>
-Cc: Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Lawnick Michael 61283229 <michael.lawnick-OYasijW0DpE@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1416932705-16880-1-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
+Jason, would you like me to send this set again?
 
-Am 15.12.2014 um 09:40 schrieb Laurent Pinchart:
-> Hi Alexander,
->
-> Thank you for the patch.
->
-> On Monday 15 December 2014 02:25:18 Alexander Sverdlin wrote:
->> of: i2c: Add DT bindings for idle states to PCA954x mux driver
->>
->> Introduce two new device tree bindings to specify idle state of PCA954x
->> family of I2C multiplexors:
->>    - idle-state: specifies particular child bus to be selected in idle;
->>    - idle-disconnect: signals that mux should disconnect all child buses in
->> idle;
->
-> Could you please briefly explain your use case(s) for those two properties ?
+> This driver enables IRQs which are controlled using System Configurat=
+ion
+> registers.  Without it Performance Monitoring, Core Sight Tracing and=
+ some
+> L2 Caches will fail to function.
+>=20
+> v1 =3D> v2:
+>  - Fixed up Jason's review comments
+>=20
+> Lee Jones (8):
+>   dt: bindings: Supply shared ST IRQ defines
+>   irqchip: Supply new driver for STi based devices
+>   irqchip: irq-st: Add documentation for STi based syscfg IRQs
+>   ARM: STi: STiH416: Enable Cortex-A9 PMU support
+>   ARM: STi: STiH416: Enable PMU IRQs
+>   ARM: STi: STiH407: Enable Cortex-A9 PMU support
+>   ARM: STi: STiH407: Enable PMU IRQs
+>   ARM: STI: Ensure requested STi's SysCfg Controlled IRQs are enabled=
+ at
+>     boot
+>=20
+>  .../interrupt-controller/st,sti-irq-syscfg.txt     |  35 ++++
+>  arch/arm/boot/dts/stih407.dtsi                     |  16 ++
+>  arch/arm/boot/dts/stih416.dtsi                     |  16 ++
+>  arch/arm/mach-sti/Kconfig                          |   1 +
+>  drivers/irqchip/Kconfig                            |   7 +
+>  drivers/irqchip/Makefile                           |   1 +
+>  drivers/irqchip/irq-st.c                           | 208 +++++++++++=
+++++++++++
+>  include/dt-bindings/interrupt-controller/irq-st.h  |  30 +++
+>  8 files changed, 314 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-contr=
+oller/st,sti-irq-syscfg.txt
+>  create mode 100644 drivers/irqchip/irq-st.c
+>  create mode 100644 include/dt-bindings/interrupt-controller/irq-st.h
+>=20
 
-Rationale (which should be added) is:
-If there are two or more multiplexers/switches connected to same bus 
-unused ones need to be set to neutral/unconnected state, otherwise 
-transactions to devices behind current multiplexer get visible to all 
-buses lately addressed on the other multiplexers. This will lead to 
-address conflicts for all devices with same address.
-
-Usage of new bindings is xor.
-
-KR
-Michael
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
