@@ -1,62 +1,166 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [RFC 02/15] drivers/base: add restrack framework
-Date: Mon, 15 Dec 2014 09:28:41 +0100
-Message-ID: <548E9BB9.806@samsung.com>
-References: <1418226513-14105-1-git-send-email-a.hajda@samsung.com>
- <1418226513-14105-3-git-send-email-a.hajda@samsung.com>
- <20141212165230.GP11764@sirena.org.uk>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH] of: i2c: Add DT bindings for idle states to PCA954x mux driver
+Date: Mon, 15 Dec 2014 10:40:15 +0200
+Message-ID: <4262366.rJm0Aq2lpm@avalon>
+References: <548E387E.2020502@nsn.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-reply-to: <20141212165230.GP11764@sirena.org.uk>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: open list <linux-kernel@vger.kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mike Turquette <mturquette@linaro.org>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Inki Dae <inki.dae@samsung.com>, Kishon Vijay Abraham I <kishon@ti.com>, Liam Girdwood <lgirdwood@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "moderated list:ARM/CLKDEV SUPPORT" <linux-arm-kernel@lists.infradead.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, "moderated list:ARM/S5P EXYNOS AR..." <linux-samsung-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, boris.brezillon@
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <548E387E.2020502-OYasijW0DpE@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>
+Cc: Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Lawnick Michael 61283229 <michael.lawnick-OYasijW0DpE@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/12/2014 05:52 PM, Mark Brown wrote:
-> On Wed, Dec 10, 2014 at 04:48:20PM +0100, Andrzej Hajda wrote:
->> restrack framework allows tracking presence of resources with dynamic life
->> time. Typical example of such resources are all resources provided by device
-> I don't know about anyone else but I'm having a hard time reading the
-> restrack name, it looks like a misspelling of restack to me.
+Hi Alexander,
 
-Any alternative names?
+Thank you for the patch.
 
->
-> At a high level my biggest questions here are the relationship between
-> this and the component code and usability.  The usability concern I have
-> is that I see no diagnostics or trace here at all.  This means that if a
-> user looks at their system, sees that the device model claims the driver
-> for a device bound to the device but can't see any sign of the device
-> doing anything they don't have any way of telling why that is other than
-> to look in the driver code, see what resources it was trying to depend
-> on and then go back to the running system to try to understand which of
-> those resources hasn't appeared.
+On Monday 15 December 2014 02:25:18 Alexander Sverdlin wrote:
+> of: i2c: Add DT bindings for idle states to PCA954x mux driver
+> 
+> Introduce two new device tree bindings to specify idle state of PCA954x
+> family of I2C multiplexors:
+>   - idle-state: specifies particular child bus to be selected in idle;
+>   - idle-disconnect: signals that mux should disconnect all child buses in
+> idle;
 
-I will move the code for provider matching to frameworks,
-so it will be easy to add just dev_info after every failed attempt
-of getting resource, including deferring. This is the simplest solution
-and it should be similar in verbosity to deferred probing.
+Could you please briefly explain your use case(s) for those two properties ?
 
-Maybe other solution is to provide debug_fs (or device) attribute showing
-restrack status per device.
+> Signed-off-by: Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>
+> ---
+>  .../devicetree/bindings/i2c/i2c-mux-pca954x.txt    |    3 +
+>  drivers/i2c/muxes/i2c-mux-pca954x.c                |   51 +++++++++++++++--
+>  2 files changed, 48 insertions(+), 6 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
+> b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt index
+> 34a3fb6..1fbe287 100644
+> --- a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
+> @@ -16,6 +16,9 @@ Required Properties:
+>  Optional Properties:
+> 
+>    - reset-gpios: Reference to the GPIO connected to the reset input.
+> +  - idle-state: Child bus connected in idle state (specified by its "reg"
+> value) +  - idle-disconnect: Boolean; if defined, forces mux to disconnect
+> all children +    in idle state
+> 
+> 
+>  Example:
+> diff --git a/drivers/i2c/muxes/i2c-mux-pca954x.c
+> b/drivers/i2c/muxes/i2c-mux-pca954x.c index ec11b40..69cf603 100644
+> --- a/drivers/i2c/muxes/i2c-mux-pca954x.c
+> +++ b/drivers/i2c/muxes/i2c-mux-pca954x.c
+> @@ -43,6 +43,7 @@
+>  #include <linux/module.h>
+>  #include <linux/pm.h>
+>  #include <linux/slab.h>
+> +#include <linux/of.h>
 
->
->> +int restrack_up(unsigned long type, const void *id, void *data)
->> +int restrack_down(unsigned long type, const void *id, void *data)
-> Again I'm not sure that the up and down naming is meaningful in the
-> context of this interface.
->
->> +static void restrack_itb_cb(struct track_block *itb, void *data, bool on)
->> +{
-> itb_cb?
+Could you please keep headers sorted alphabetically ?
 
-Ups I forgot to rename few variables from my previous attempt.
-itb - stayed for interface tracker block.
+>  #define PCA954X_MAX_NCHANS 8
+> 
+> @@ -62,6 +63,8 @@ struct pca954x {
+>  	struct i2c_adapter *virt_adaps[PCA954X_MAX_NCHANS];
+> 
+>  	u8 last_chan;		/* last register value */
+> +	bool idle_disconnect;
+> +	s8 idle_chan;		/* valid if not negative */
+>  };
+> 
+>  struct chip_desc {
+> @@ -172,10 +175,20 @@ static int pca954x_deselect_mux(struct i2c_adapter
+> *adap, void *client, u32 chan)
+>  {
+>  	struct pca954x *data = i2c_get_clientdata(client);
+> +	struct pca954x_platform_data *pdata =
+> +		dev_get_platdata(&((struct i2c_client *)client)->dev);
+> +
+> +	if ((pdata && pdata->modes[chan].deselect_on_exit) ||
+> +	    data->idle_disconnect) {
 
-Regards
-Andrzej
+I would copy pdata->modes[chan].deselect_on_exit to data->idle_disconnect in 
+the probe function, so you could avoiding accessing pdata here.
 
+> +		/* Deselect active channel */
+> +		data->last_chan = 0;
+> +		return pca954x_reg_write(adap, client, data->last_chan);
+> +	}
+> 
+> -	/* Deselect active channel */
+> -	data->last_chan = 0;
+> -	return pca954x_reg_write(adap, client, data->last_chan);
+> +	if (data->idle_chan >= 0)
+> +		return pca954x_select_chan(adap, client, data->idle_chan);
+> +
+> +	return 0;
+>  }
+> 
+>  /*
+> @@ -186,6 +199,7 @@ static int pca954x_probe(struct i2c_client *client,
+>  {
+>  	struct i2c_adapter *adap = to_i2c_adapter(client->dev.parent);
+>  	struct pca954x_platform_data *pdata = dev_get_platdata(&client->dev);
+> +	struct device_node *of_node = client->dev.of_node;
+>  	struct gpio_desc *gpio;
+>  	int num, force, class;
+>  	struct pca954x *data;
+> @@ -216,6 +230,27 @@ static int pca954x_probe(struct i2c_client *client,
+> 
+>  	data->type = id->driver_data;
+>  	data->last_chan = 0;		   /* force the first selection */
+> +	data->idle_chan = -1;		   /* no forced idle state */
+> +
+> +	if (of_node) {
+> +		u32 ch;
+> +
+> +		if (of_property_read_bool(of_node, "idle-disconnect"))
+> +			data->idle_disconnect = true;
+> +
+> +		if (!of_property_read_u32_index(of_node, "idle-state", 0, &ch)) {
+> +			if (ch < PCA954X_MAX_NCHANS) {
+> +				data->idle_chan = ch;
+> +				/* Force idle state from the beginning */
+> +				ret = pca954x_select_chan(adap, client, ch);
+> +				if (ret)
+> +					return ret;
+> +			} else {
+> +				dev_warn(&client->dev,
+> +				         "Invalid idle-state property\n");
+> +			}
+> +		}
+> +	}
+> 
+>  	/* Now create an adapter for each channel */
+>  	for (num = 0; num < chips[data->type].nchans; num++) {
+> @@ -234,8 +269,7 @@ static int pca954x_probe(struct i2c_client *client,
+>  		data->virt_adaps[num] =
+>  			i2c_add_mux_adapter(adap, &client->dev, client,
+>  				force, num, class, pca954x_select_chan,
+> -				(pdata && pdata->modes[num].deselect_on_exit)
+> -					? pca954x_deselect_mux : NULL);
+> +				pca954x_deselect_mux);
+> 
+>  		if (data->virt_adaps[num] == NULL) {
+>  			ret = -ENODEV;
+> @@ -281,7 +315,12 @@ static int pca954x_resume(struct device *dev)
+>  	struct pca954x *data = i2c_get_clientdata(client);
+> 
+>  	data->last_chan = 0;
+> -	return i2c_smbus_write_byte(client, 0);
+> +	/* Restore idle state on resume */
+> +	if (data->idle_chan >= 0)
+> +		return pca954x_select_chan(to_i2c_adapter(client->dev.parent),
+> +		                           client, data->idle_chan);
+> +	else
+> +		return i2c_smbus_write_byte(client, 0);
+>  }
+>  #endif
 
+-- 
+Regards,
+
+Laurent Pinchart
