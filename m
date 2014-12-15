@@ -1,35 +1,69 @@
-From: Hans de Goede <j.w.r.degoede-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Linus' tree (master) not working for Allwinner sun4i,
- sun5i, sun7i SoC-s + fix
-Date: Mon, 15 Dec 2014 17:30:04 +0100
-Message-ID: <548F0C8C.3030006@gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: regulator: tps65023 : Adding support for DT
+Date: Mon, 15 Dec 2014 16:56:27 +0000
+Message-ID: <20141215165627.GF11764@sirena.org.uk>
+References: <CAL8zT=jo2AsK9p_r_C+od_QEovOQNmo7MnNu9JtUHoA=KtsxGw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <linux-sunxi+bncBDL4X2GMZUKRBDUZXSSAKGQEURSIGFQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="N/O9EBh0K7980Yi6"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAL8zT=jo2AsK9p_r_C+od_QEovOQNmo7MnNu9JtUHoA=KtsxGw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jean-Michel Hautbois <jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime,
 
-Somehow this commit of your sunxi/clocks-for-3.19 branch has made it into Linus' tree:
+--N/O9EBh0K7980Yi6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-https://git.kernel.org/cgit/linux/kernel/git/mripard/linux.git/commit/?h=sunxi/clocks-for-3.19&id=93746e70be83a3f113134a16065957b324af50f7
+On Thu, Dec 11, 2014 at 09:36:26AM +0100, Jean-Michel Hautbois wrote:
 
-But this one has not:
+> I started to add support for DT in this regulator, but I can't get a
+> booting kernel with it. I know it lacks regulator init in the parse_dt
+> function, but I don't really know what is the best way to do it. I
+> have used tps6507x as an example until know...
 
-https://git.kernel.org/cgit/linux/kernel/git/mripard/linux.git/commit/?h=sunxi/clocks-for-3.19&id=acbcc0f03b15585387f9ca69c2a976b02cb69023
+Well, the best thing to do would be to backport the changes to add
+support for DT parsing in the core and use that.  See "regulator: of:
+Provide simplified DT parsing method" and preceeding commits in
+mainline.  Otherwise what you've got looks basically OK from a quick
+scan through.
 
-Rather badly breaking Allwinner sun4i, sun5i, sun7i SoC-s.
+> I don't know for instance if a tps_board is needed (it would contain
+> only a struct regulator_init_data * so probably not very useful) ?
 
-Regards,
+Probably not, no.
 
-Hans
+> Below is my current status (I also have created a tps65023.dtsi in
+> arch/arm/boot/dts which is only a copy of tps6507x.dtsi so didn't copy
+> it here).
+
+If you need to create a .dsti file for a regulator that's a warning sign
+- it should be empty.  You'll want things in the particular board but
+that ought to be board specific things rather than something that
+applies to all boards using the regulator.
+
+--N/O9EBh0K7980Yi6
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUjxK6AAoJECTWi3JdVIfQNMwH/1pACLvHtOmlqL17pbtgneZV
+vYzufWsSJdh6zx5URgKSF0mjjt9bDs7Ru8dxXsKcVo1t3KI6r0/Xm8Uxov5cO5b+
+6NZwBTa1/C16tqVlQGO/SNiNj4KuZezX77gGElWfRxV6geK+cJYo6VQFJWxUcwK2
+9oOdt/4c3xtuTBUfHot8LLt9x6X+zk2WsWBAJOMYPyiAk6r5vkGC62Jm2rx9sOZE
+CK2PBwH/vlGSAkXScIL8eZBW9wsZNWIaEf+MOjMhJeixf9BV0YJZQTRH2si2RbWF
+S7JvPmVoENjmm0l8cWu4/XnHe7laE6VoPIkXy+39SbLUZj66cJuarVlKXOH59ew=
+=YQZS
+-----END PGP SIGNATURE-----
+
+--N/O9EBh0K7980Yi6--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
