@@ -1,70 +1,60 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCHv0 5/5] dt-bindings: fix isl vs isil prefix issue for
- Intersil
-Date: Mon, 15 Dec 2014 13:06:06 -0500
-Message-ID: <20141215180606.GF967@titan.lakedaemon.net>
-References: <cover.1418519430.git.arno@natisbad.org>
- <b2c34bea6fc7bd42d636c9cadfe1b7e5ec523aeb.1418519430.git.arno@natisbad.org>
- <20141215135545.GC967@titan.lakedaemon.net>
- <87388gkcv5.fsf@natisbad.org>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v7 2/5] phy: add a driver for the Rockchip SoC internal
+ USB2.0 PHY
+Date: Mon, 15 Dec 2014 10:12:20 -0800
+Message-ID: <CAD=FV=WvEcZAf-4yDBFVb3Bq8XLv=vWB5cM7GT9spOuYDLk96A@mail.gmail.com>
+References: <1418396413-27937-1-git-send-email-lyz@rock-chips.com>
+	<1418396866-32625-1-git-send-email-lyz@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <87388gkcv5.fsf@natisbad.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Arnaud Ebalard <arno@natisbad.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>, Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Peter Huewe <peter.huewe@infineon.com>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <treding@nvidia.com>, Mark Brown <broonie@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Darshana Padmadas <darshanapadmadas@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Rob Landley <rob@landley.net>, rtc-linux@googlegroups.com, Guenter Roeck <linux@roeck-us.net>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infrade
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1418396866-32625-1-git-send-email-lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yunzhi Li <lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Chris <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Eddie Cai <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 15, 2014 at 07:05:18PM +0100, Arnaud Ebalard wrote:
-> Hi,
-> 
-> Jason Cooper <jason@lakedaemon.net> writes:
-> 
-> >> AFAICT, it seems it makes sense to *definitively* settle for isil
-> >> as the vendor prefix for Intersil, as Philip did in 7a6540ca856a:
-> >> it's the NASDAQ symbol and this choice requires less changes than
-> >> opting for isl.
-> >> 
-> >> So, this patch changes compatible strings in .dts files to use isil
-> >> where isl was found before, and modify drivers w/ compatible
-> >> strings using isl to add one using isil. In those cases, a comment
-> >> is made that the old compatible string is kept for backward
-> >> compatibility (w/ out-fo-tree users of those drivers).
-> >> Additionally, it leaves only isil as prefix in vendor-prefixes.txt.
-> >> Those changes should prevent any new inclusion of isl compatible
-> >> strings for Intersil devices due to copy-and-paste.
-> >> 
-> >> Signed-off-by: Arnaud Ebalard <arno@natisbad.org> ---
-> >> Documentation/devicetree/bindings/i2c/trivial-devices.txt | 5 ++---
-> >> Documentation/devicetree/bindings/regulator/isl9305.txt   | 4 ++--
-> >> Documentation/devicetree/bindings/vendor-prefixes.txt     | 3 +--
-> >
-> >>  arch/arm/boot/dts/tegra30-cardhu.dtsi                     | 2 +-
-> >>  arch/arm/boot/dts/zynq-parallella.dts                     | 2 +-
-> >
-> >>  drivers/regulator/isl9305.c                               | 6
-> >>  ++++-- drivers/rtc/rtc-isl12022.c                                |
-> >>  3 ++- drivers/rtc/rtc-isl12057.c                                |
-> >>  3 ++- drivers/staging/iio/light/isl29028.c                      |
-> >>  4 ++-- 9 files changed, 17 insertions(+), 15 deletions(-)
-> >
-> > Please split the dts{i} changes out into a separate patch.  The
-> > different maintainers under drivers/ may want separate patches as
-> > well.
-> 
-> I will prepare that, and then let get_maintainer.pl decide who should
-> be added to the CC: list. But before doing that work, I would like to
-> at least get some feedback that there will not be a big NAK on the
-> whole approach in the end.
+Yunzhi,
 
-As long as you are maintaining compatibility with old dtbs (which you
-are), then there shouldn't be a problem.  I think the original dust up
-occurred because two different maintainers merged two different
-solutions and didn't run into each other.  This looks like a sane
-cleanup of the resulting mess. :)
+On Fri, Dec 12, 2014 at 7:07 AM, Yunzhi Li <lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+> This patch to add a generic PHY driver for ROCKCHIP usb PHYs,
+> currently this driver can support RK3288. The RK3288 SoC have
+> three independent USB PHY IPs which are all configured through a
+> set of registers located in the GRF (general register files)
+> module.
+>
+> Signed-off-by: Yunzhi Li <lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>
+> ---
+>
+> Changes in v7:
+> - Accept Kishon's comments to use phandle args to find a phy
+>   struct directly and get rid of using a custom of_xlate
+>   function.
+>
+> Changes in v6:
+> - Rename SIDDQ_MSK to SIDDQ_WRITE_ENA.
+>
+> Changes in v5: None
+> Changes in v4:
+> - Get number of PHYs from device tree.
+> - Model each PHY as subnode of the phy provider node.
+>
+> Changes in v3:
+> - Use BIT macro instead of bit shift ops.
+> - Rename the config entry to PHY_ROCKCHIP_USB.
+>
+>  drivers/phy/Kconfig            |   7 ++
+>  drivers/phy/Makefile           |   1 +
+>  drivers/phy/phy-rockchip-usb.c | 158 +++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 166 insertions(+)
+>  create mode 100644 drivers/phy/phy-rockchip-usb.c
 
-thx,
+On rk3288-pinky (on a 3.14 tree with backports), I can confirm that
+this properly gets us into low power at suspend time.
 
-Jason.
+Tested-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
