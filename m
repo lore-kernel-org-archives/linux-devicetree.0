@@ -1,60 +1,39 @@
-From: Yakir Yang <ykk@rock-chips.com>
-Subject: [PATCH 5/6] dt-bindings: Add documentation for Rockchip hdmi-audio
-Date: Mon, 15 Dec 2014 10:55:14 +0800
-Message-ID: <1418612114-19692-1-git-send-email-ykk@rock-chips.com>
-References: <1418609494-15820-1-git-send-email-ykk@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1418609494-15820-1-git-send-email-ykk@rock-chips.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: ykk@rock-chips.com
-Cc: Mark Rutland <mark.rutland@arm.com>, alsa-devel@alsa-project.org, Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Liam Girdwood <lgirdwood@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>, Bard Liao <bardliao@realtek.com>, Lars-Peter Clausen <lars@metafoo.de>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Takashi Iwai <tiwai@suse.de>, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dylan Reid <dgreid@chromium.org>, Xu Jianqun <jay.xu@rock-chips.com>, Oder Chiou <oder_chiou@realtek.com>, Zubair.Kakakhel@imgtec.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jyri Sarha <jsarha@ti.com>, Ben Zhang <benzh@chromium.org>, Rob Herring <robh+dt@kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, =?UTF-8?q?St=A8=A6phane=
+From: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v3 0/2] add the dvs support for rk808
+Date: Mon, 15 Dec 2014 11:07:56 +0800
+Message-ID: <1418612879-16094-1-git-send-email-zyw@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Zhang Qing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Required properties:
-- compatible: platform specific
-- cpu-of-node: the device node of cpu_dai
-- codec-name: the dw-hdmi codec's device name
-- codec-dai-name: the dw-hdmi codec's dai name
+rk808 has a dvs function, there are 3 pins for dvs, dvs1 & dvs2 & dvsok.
+Normally, the voltage of DCDC1/DCDC2 are controlled by BUCKn_ON_VSEL, when
+we pull dvs1/dvs2 pin to active, they would be controlled by BUCKn_DVS_VSEL.
+And the dvsok pin is used to indicate whether regulating has been completed.
+When dvs1/dvs2 pin change, dvsok would be pull down, and it would be pull up
+once the regulating is complete.
 
-Signed-off-by: Yakir Yang <ykk@rock-chips.com>
----
+Changes in v3:
+- Modify the syntax error
 
- .../bindings/sound/rockchip,rockchip-hdmi-audio.txt      | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/rockchip,rockchip-hdmi-audio.txt
+Changes in v2:
+- increase description about dvs pins
+- modify the multiline commenting
 
-diff --git a/Documentation/devicetree/bindings/sound/rockchip,rockchip-hdmi-audio.txt b/Documentation/devicetree/bindings/sound/rockchip,rockchip-hdmi-audio.txt
-new file mode 100644
-index 0000000..674cff0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/rockchip,rockchip-hdmi-audio.txt
-@@ -0,0 +1,16 @@
-+Rockchip hdmi audio bindings
-+
-+Required properties:
-+- compatible: platform specific
-+- cpu-of-node: the device node of cpu_dai
-+- codec-name: the dw-hdmi codec's device name
-+- codec-dai-name: the dw-hdmi codec's dai name
-+
-+Example:
-+
-+sound {
-+	compatible = "rockchip,rk3288-hdmi-audio";
-+	cpu-of-node = <&i2s>;
-+	codec-name = "dw-hdmi-audio";
-+	codec-dai-name = "dw-hdmi-hifi";
-+};
+Chris Zhong (2):
+  mfd: dt-bindings: add the description about dvs gpio for rk808
+  regulator: rk808: add dvs support
+
+ Documentation/devicetree/bindings/mfd/rk808.txt |  13 +-
+ drivers/regulator/rk808-regulator.c             | 192 ++++++++++++++++++++++--
+ 2 files changed, 192 insertions(+), 13 deletions(-)
+
 -- 
-2.1.2
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
