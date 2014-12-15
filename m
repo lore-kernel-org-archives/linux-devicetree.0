@@ -1,146 +1,89 @@
-From: Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Re: [PATCH 5/5] ARM: dts: sun6i: Add dts file for
- CSQ CS908 board
-Date: Mon, 15 Dec 2014 11:21:37 +0100
-Message-ID: <CAEKpxBnm2w9pcuf_T1HaO8ACz+94U9G3MeYKNhtzph+9fPtPWg@mail.gmail.com>
-References: <1416747283-13489-1-git-send-email-hdegoede@redhat.com>
-	<1416747283-13489-6-git-send-email-hdegoede@redhat.com>
-	<20141125182147.GD25249@lukather>
-	<5475962A.4090508@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 05/11] memory: add Atmel EBI (External Bus Interface)
+ driver
+Date: Mon, 15 Dec 2014 11:22:30 +0100
+Message-ID: <20141215112230.6fca1d69@bbrezillon>
+References: <1417429647-3419-1-git-send-email-boris.brezillon@free-electrons.com>
+	<1417429647-3419-6-git-send-email-boris.brezillon@free-electrons.com>
+	<5455670.EDnhYEk7hP@kongar>
 Mime-Version: 1.0
-Content-Type: multipart/alternative; boundary=047d7b3a84c08b8f29050a3e9b1c
-Return-path: <linux-sunxi+bncBCHNXO4F7MHBBMPMXKSAKGQENC7WFYY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <5475962A.4090508-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5455670.EDnhYEk7hP@kongar>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org>
+Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---047d7b3a84c08b8f29050a3e9b1c
-Content-Type: text/plain; charset=UTF-8
+Hi Alexander,
 
->
-> usb0 (otg): usb-a receptacle 1 (labeled 1 on the box, 0 on the print)
-> usb1 (ehci): routed to internal wifi
-> usb2 (ehci): usb-a receptacle 2 (labeled 2 on both the box and the print)
->
-> I'm using fel mode with an usb-a <-> usb-a cable connected to usb0 on
-> the cs908. The cs908 has no fel button, so I've hooked up the serial
-> console,
-> and then keep 2 pressed on the serial console while inserting the usb-a
-> into
-> the PC (which will also power the board). boot0 from the nand will then
-> jump
-> into fel mode when it sees the 2 keypress.
->
+On Tue, 09 Dec 2014 21:53:12 +0100
+Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org> wrote:
 
-Hi Hans,
+> Hi,
+> 
+> On Monday 01 December 2014, 11:27:21 wrote Boris Brezillon:
+> > +static int at91_ebi_probe(struct platform_device *pdev)
+> > +{
+> > +	const struct of_device_id *match;
+> > +	struct device_node *child;
+> > +	struct device_node *np;
+> > +	struct at91_ebi *ebi;
+> > +	struct clk *clk;
+> > +	int ret;
+> > +
+> > +	match = of_match_device(at91_ebi_id_table, &pdev->dev);
+> > +	if (!match || !match->data)
+> > +		return -EINVAL;
+> > +
+> > +	ebi = devm_kzalloc(&pdev->dev, sizeof(*ebi), GFP_KERNEL);
+> > +	if (!ebi)
+> > +		return -ENOMEM;
+> > +
+> > +	ebi->caps = match->data;
+> > +	ebi->dev = &pdev->dev;
+> > +
+> > +	clk = devm_clk_get(&pdev->dev, NULL);
+> > +	if (IS_ERR(clk))
+> > +		return PTR_ERR(clk);
+> > +
+> > +	ebi->clk = clk;
+> > +
+> > +	np = of_parse_phandle(pdev->dev.of_node, "atmel,smc", 0);
+> > +	if (!np)
+> > +		return -EINVAL;
+> > +
+> > +	ebi->smc = syscon_node_to_regmap(np);
+> > +	if (IS_ERR(ebi->smc))
+> > +		return PTR_ERR(ebi->smc);
+> > +
+> > +	/*
+> > +	 * The sama5d3 does not provide an EBICSA register and thus does need
+> > +	 * to access the matrix registers.
+> > +	 */
+> > +	if (ebi->caps->ebi_csa) {
+> > +		np = of_parse_phandle(pdev->dev.of_node, "atmel,matrix", 0);
+> > +		if (np)
+>          ^^^^^^^
+> Shouldn't this be if (!np)?
 
-I'm looking to try this on my vidon box which like the cs908 doesn't have
-OTG
-or a fel button. Just would like to confirm the wiring on the usb-a 2 usb-a
-male
-cable. Are they connected one to one i.e. 5v <-> 5v, D+ <-> D+ etc or are
-the
-data lines twisted. i.e. D+ <-> D- and vice versa?.
+Absolutely, thanks for pointing this out.
+I'll test on other at91 platforms (I currently only test on sama5d3
+boards, which do not have this EBICSA register) before submitting a new
+version.
 
-Good work with the A31 and A23 deliveries.
-Thanks,
-CK
+Regards,
+
+Boris
 
 
->
-> This was an interesting exercise to confirm that everything on the A31s
-> just
-> works with A31 code, but now that is confirms A31s devices are not all that
-> interesting anymore :)
->
->  I wonder wether to put URL in the commit log is the right thing
->> though. It's most likely to be dead in a very near future. The cover
->> letter would be a better fit for that.
->>
->
-> Ok, I'll drop it from the commit message.
->
-> Regards,
->
-> Hans
->
->
 
 -- 
-You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
-
---047d7b3a84c08b8f29050a3e9b1c
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div class=3D"gmail_extra"><div class=3D"gmail_quote"><spa=
-n class=3D""></span><br><blockquote class=3D"gmail_quote" style=3D"margin:0=
- 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">
-<br>
-usb0 (otg): usb-a receptacle 1 (labeled 1 on the box, 0 on the print)<br>
-usb1 (ehci): routed to internal wifi<br>
-usb2 (ehci): usb-a receptacle 2 (labeled 2 on both the box and the print)<b=
-r>
-<br>
-I&#39;m using fel mode with an usb-a &lt;-&gt; usb-a cable connected to usb=
-0 on<br>
-the cs908. The cs908 has no fel button, so I&#39;ve hooked up the serial co=
-nsole,<br>
-and then keep 2 pressed on the serial console while inserting the usb-a int=
-o<br>
-the PC (which will also power the board). boot0 from the nand will then jum=
-p<br>
-into fel mode when it sees the 2 keypress.<br></blockquote><div><br>Hi Hans=
-,<br><br>I&#39;m looking to try this on my vidon box which like the cs908 d=
-oesn&#39;t have OTG <br>or a fel button. Just would like to confirm the wir=
-ing on the usb-a 2 usb-a male <br></div><div>cable. Are they connected one =
-to one i.e. 5v &lt;-&gt; 5v, D+ &lt;-&gt; D+ etc or are the<br></div><div>d=
-ata lines twisted. i.e. D+ &lt;-&gt; D- and vice versa?.<br><br></div><div>=
-Good work with the A31 and A23 deliveries.<br></div><div>Thanks,<br></div><=
-div>CK<br></div><div>=C2=A0</div><blockquote class=3D"gmail_quote" style=3D=
-"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">
-<br>
-This was an interesting exercise to confirm that everything on the A31s jus=
-t<br>
-works with A31 code, but now that is confirms A31s devices are not all that=
-<br>
-interesting anymore :)<span class=3D""><br>
-<br>
-<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
-x #ccc solid;padding-left:1ex">
-I wonder wether to put URL in the commit log is the right thing<br>
-though. It&#39;s most likely to be dead in a very near future. The cover<br=
->
-letter would be a better fit for that.<br>
-</blockquote>
-<br></span>
-Ok, I&#39;ll drop it from the commit message.<br>
-<br>
-Regards,<br>
-<br>
-Hans<div class=3D"HOEnZb"><div class=3D"h5"><br></div></div></blockquote></=
-div></div></div>
-
-<p></p>
-
--- <br />
-You received this message because you are subscribed to the Google Groups &=
-quot;linux-sunxi&quot; group.<br />
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to <a href=3D"mailto:linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org">linux-s=
-unxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org</a>.<br />
-For more options, visit <a href=3D"https://groups.google.com/d/optout">http=
-s://groups.google.com/d/optout</a>.<br />
-
---047d7b3a84c08b8f29050a3e9b1c--
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
