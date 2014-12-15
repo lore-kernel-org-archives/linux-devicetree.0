@@ -1,153 +1,447 @@
-From: Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH v2 4/4] arm64:numa: adding numa support for arm64 platforms.
-Date: Mon, 15 Dec 2014 10:16:28 -0800
-Message-ID: <CAFpQJXU858fnJ-oWda=mTkVv1e+3goTxvZ8sfvty==2msFus_Q@mail.gmail.com>
-References: <1416605010-10442-1-git-send-email-ganapatrao.kulkarni@caviumnetworks.com>
-	<1416605010-10442-5-git-send-email-ganapatrao.kulkarni@caviumnetworks.com>
-	<5482ce36.c9e2420a.5d40.71c7SMTPIN_ADDED_BROKEN@mx.google.com>
-	<CAFpQJXU89uwAkHyi+dvHmbZOvadO_EyQbrG8jMo5G3tnWP5qcw@mail.gmail.com>
-	<54883be3.8284440a.3154.ffffa34fSMTPIN_ADDED_BROKEN@mx.google.com>
+From: James Hartley <James.Hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH RESEND v6 1/2] watchdog: ImgTec PDC Watchdog Timer Driver
+Date: Mon, 15 Dec 2014 18:28:58 +0000
+Message-ID: <72BC0C8BD7BB6F45988A99382E5FBAE5443AB68E@hhmail02.hh.imgtec.org>
+References: <1417064045-13274-1-git-send-email-Naidu.Tellapati@gmail.com>
+ <1417064045-13274-2-git-send-email-Naidu.Tellapati@gmail.com>
+ <20141215171744.GA16516@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54883be3.8284440a.3154.ffffa34fSMTPIN_ADDED_BROKEN-ATjtLOhZ0NVl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ashok Kumar <ashoks-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Ganapatrao Kulkarni <ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Roy Franz <roy.franz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Steve Capper <steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141215171744.GA16516-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Content-Language: en-US
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Naidu Tellapati <naidu.tellapati-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org" <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, "abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Ezequiel Garcia <Ezequiel.Garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, James Hogan <James.Hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Arul Ramasamy <Arul.Ramasamy-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jude Abraham <Jude.Abraham-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Roy/Leif
+Hi Guenter, 
 
-On Wed, Dec 10, 2014 at 4:26 AM, Ashok Kumar <ashoks-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
-> On Sat, Dec 06, 2014 at 10:50:57AM -0800, Ganapatrao Kulkarni wrote:
->> On Sat, Dec 6, 2014 at 1:36 AM, Ashok Kumar <ashoks-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
->> > On Sat, Nov 22, 2014 at 02:53:30AM +0530, Ganapatrao Kulkarni wrote:
->> >> Adding numa support for arm64 based platforms.
->> >> creating numa mapping by parsing the dt node numa-map.
->> >>
->> >> Signed-off-by: Ganapatrao Kulkarni <ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
->> > Ganapat,
->> >
->> > Can we get a simple version of this patchset with just the associativity parameter for the cpu and memory nodes
->> > upstream? The initial patchset can be with the assumption of a simple full mesh topology for the distance.  The
->> > hierarchical complex topologies and the DT nodes and properties for that can be added in a later patch, once the
->> > standard for that is agreed upon.
->> > We are planning to support ACPI based NUMA for Broadcom Vulcan processors(http://www.broadcom.com/press/release.php?id=s797235).
->> > I am working on a patch to add support for the SRAT and SLIT ACPI tables based on your patch and I will post that
->> > patchset soon, so it will be helpful if the core changes are upstream.
->> >
->> to implement, ibm/ppc like implementation, we need efi-stub patch to
->> not remove the memory node from the dt.
->> current efi-stub parses dt file and removes memory nodes.
->> can i get the efi-stub patch to start with please?
->
-> Ganapat,
->  I tried the below patch in qemu and it works. Would this be of help to you?
->
-> Roy/Ard,
->  Is the below patch fine?
->
-> From 27b4aecf09707e3d5bd4ff7bf765cd609772476f Mon Sep 17 00:00:00 2001
-> From: Ashok Kumar <ashoks-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Date: Tue, 9 Dec 2014 17:23:11 +0530
-> Subject: [PATCH] efi/arm64: Remove deleting memory nodes in efi-stub
->
-> Dont delete memory nodes from DT as it will be
-> used by NUMA configuration.
->
-> Signed-off-by: Ashok Kumar <ashoks-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> ---
->  arch/arm64/kernel/setup.c          | 12 +++++++++++-
->  drivers/firmware/efi/libstub/fdt.c | 24 +-----------------------
->  2 files changed, 12 insertions(+), 24 deletions(-)
->
-> diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
-> index 27f65b0..ac6d34f 100644
-> --- a/arch/arm64/kernel/setup.c
-> +++ b/arch/arm64/kernel/setup.c
-> @@ -302,7 +302,7 @@ static void __init setup_processor(void)
->
->  static void __init setup_machine_fdt(phys_addr_t dt_phys)
->  {
-> -       if (!dt_phys || !early_init_dt_scan(phys_to_virt(dt_phys))) {
-> +       if (!dt_phys || !early_init_dt_verify(phys_to_virt(dt_phys))) {
->                 early_print("\n"
->                         "Error: invalid device tree blob at physical address 0x%p (virtual address 0x%p)\n"
->                         "The dtb must be 8-byte aligned and passed in the first 512MB of memory\n"
-> @@ -313,6 +313,16 @@ static void __init setup_machine_fdt(phys_addr_t dt_phys)
->                         cpu_relax();
->         }
->
-> +       /* Retrieve various information from the /chosen node */
-> +       of_scan_flat_dt(early_init_dt_scan_chosen, boot_command_line);
-> +
-> +       /* Initialize {size,address}-cells info */
-> +       of_scan_flat_dt(early_init_dt_scan_root, NULL);
-> +
-> +       /* Setup memory, calling early_init_dt_add_memory_arch */
-> +       if (!IS_ENABLED(CONFIG_EFI))
-> +               of_scan_flat_dt(early_init_dt_scan_memory, NULL);
-> +
->         machine_name = of_flat_dt_get_machine_name();
->  }
->
-> diff --git a/drivers/firmware/efi/libstub/fdt.c b/drivers/firmware/efi/libstub/fdt.c
-> index c846a96..a02e56e 100644
-> --- a/drivers/firmware/efi/libstub/fdt.c
-> +++ b/drivers/firmware/efi/libstub/fdt.c
-> @@ -22,7 +22,7 @@ efi_status_t update_fdt(efi_system_table_t *sys_table, void *orig_fdt,
->                         unsigned long map_size, unsigned long desc_size,
->                         u32 desc_ver)
->  {
-> -       int node, prev, num_rsv;
-> +       int node, num_rsv;
->         int status;
->         u32 fdt_val32;
->         u64 fdt_val64;
-> @@ -52,28 +52,6 @@ efi_status_t update_fdt(efi_system_table_t *sys_table, void *orig_fdt,
->                 goto fdt_set_fail;
->
->         /*
-> -        * Delete any memory nodes present. We must delete nodes which
-> -        * early_init_dt_scan_memory may try to use.
-> -        */
-> -       prev = 0;
-> -       for (;;) {
-> -               const char *type;
-> -               int len;
-> -
-> -               node = fdt_next_node(fdt, prev, NULL);
-> -               if (node < 0)
-> -                       break;
-> -
-> -               type = fdt_getprop(fdt, node, "device_type", &len);
-> -               if (type && strncmp(type, "memory", len) == 0) {
-> -                       fdt_del_node(fdt, node);
-> -                       continue;
-> -               }
-> -
-> -               prev = node;
-> -       }
-> -
-> -       /*
->          * Delete all memory reserve map entries. When booting via UEFI,
->          * kernel will use the UEFI memory map to find reserved regions.
->          */
-> --
-> 1.9.1
->
->
-what will happen, If we keep memory node in the DT and boot with UEFI,
-will both efi-stub and dt try to add memblocks?
-is kernel ignores second request to add memblock to the same address?
+Thanks for your comments, 
 
+> -----Original Message-----
+> From: Guenter Roeck [mailto:linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org]
+> Sent: 15 December 2014 17:18
+> To: Naidu Tellapati
+> Cc: wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org; abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org; Ezequiel Garcia; James Hartley;
+> James Hogan; Naidu Tellapati; Arul Ramasamy; linux-
+> watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Jude Abraham
+> Subject: Re: [PATCH RESEND v6 1/2] watchdog: ImgTec PDC Watchdog Timer
+> Driver
+> 
+> On Thu, Nov 27, 2014 at 10:24:04AM +0530, Naidu Tellapati wrote:
+> > This commit adds support for ImgTec PowerDown Controller Watchdog
+> Timer.
+> >
+> > Signed-off-by: Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+> > Signed-off-by: Jude.Abraham <Jude.Abraham-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+> > Reviewed-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> > Reviewed-by: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+> > ---
+> >  drivers/watchdog/Kconfig      |   11 ++
+> >  drivers/watchdog/Makefile     |    1 +
+> >  drivers/watchdog/imgpdc_wdt.c |  298
+> > +++++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 310 insertions(+), 0 deletions(-)  create mode
+> > 100644 drivers/watchdog/imgpdc_wdt.c
+> >
+> > diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig index
+> > d0107d4..a184f23 100644
+> > --- a/drivers/watchdog/Kconfig
+> > +++ b/drivers/watchdog/Kconfig
+> > @@ -1235,6 +1235,17 @@ config BCM_KONA_WDT_DEBUG
+> >
+> >  	  If in doubt, say 'N'.
+> >
+> > +config IMGPDC_WDT
+> > +	tristate "Imagination Technologies PDC Watchdog Timer"
+> > +	depends on HAS_IOMEM
+> > +	depends on METAG || MIPS || COMPILE_TEST
+> > +	help
+> > +	  Driver for Imagination Technologies PowerDown Controller
+> > +	  Watchdog Timer.
+> > +
+> > +	  To compile this driver as a loadable module, choose M here.
+> > +	  The module will be called imgpdc_wdt.
+> > +
+> >  config LANTIQ_WDT
+> >  	tristate "Lantiq SoC watchdog"
+> >  	depends on LANTIQ
+> > diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
+> > index c569ec8..d4dfbb4 100644
+> > --- a/drivers/watchdog/Makefile
+> > +++ b/drivers/watchdog/Makefile
+> > @@ -142,6 +142,7 @@ obj-$(CONFIG_OCTEON_WDT) += octeon-wdt.o
+> > octeon-wdt-y := octeon-wdt-main.o octeon-wdt-nmi.o
+> >  obj-$(CONFIG_LANTIQ_WDT) += lantiq_wdt.o
+> >  obj-$(CONFIG_RALINK_WDT) += rt2880_wdt.o
+> > +obj-$(CONFIG_IMGPDC_WDT) += imgpdc_wdt.o
+> >
+> >  # PARISC Architecture
+> >
+> > diff --git a/drivers/watchdog/imgpdc_wdt.c
+> > b/drivers/watchdog/imgpdc_wdt.c new file mode 100644 index
+> > 0000000..efb00b5
+> > --- /dev/null
+> > +++ b/drivers/watchdog/imgpdc_wdt.c
+> > @@ -0,0 +1,298 @@
+> > +/*
+> > + * Imagination Technologies PowerDown Controller Watchdog Timer.
+> > + *
+> > + * Copyright (c) 2014 Imagination Technologies Ltd.
+> > + *
+> > + * This program is free software; you can redistribute it and/or
+> > +modify it
+> > + * under the terms of the GNU General Public License version 2 as
+> > +published by
+> > + * the Free Software Foundation.
+> > + *
+> > + * Based on drivers/watchdog/sunxi_wdt.c Copyright (c) 2013 Carlo
+> Caione
+> > + *                                                     2012 Henrik Nordstrom
+> > + */
+> > +
+> > +#include <linux/clk.h>
+> > +#include <linux/io.h>
+> > +#include <linux/log2.h>
+> > +#include <linux/module.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/slab.h>
+> > +#include <linux/watchdog.h>
+> > +
+> > +/* registers */
+> > +#define PDC_WD_SW_RESET			0x000
+> > +
+> > +#define PDC_WD_CONFIG			0x004
+> > +#define PDC_WD_CONFIG_ENABLE		BIT(31)
+> > +#define PDC_WD_CONFIG_DELAY_MASK	0x0000001f
+> > +#define PDC_WD_CONFIG_DELAY_SHIFT	0
+> > +
+> > +#define PDC_WD_TICKLE1			0x008
+> > +#define PDC_WD_TICKLE1_MAGIC		0xabcd1234
+> > +
+> > +#define PDC_WD_TICKLE2			0x00c
+> > +#define PDC_WD_TICKLE2_MAGIC		0x4321dcba
+> > +
+> > +#define PDC_WD_TICKLE_STATUS_MASK	0x00000007
+> > +#define PDC_WD_TICKLE_STATUS_SHIFT	0
+> > +#define PDC_WD_TICKLE_STATUS_HRESET     0x0  /* Hard reset */
+> > +#define PDC_WD_TICKLE_STATUS_TIMEOUT    0x1  /* Timeout */
+> > +#define PDC_WD_TICKLE_STATUS_TICKLE     0x2  /* Tickled incorrectly */
+> > +#define PDC_WD_TICKLE_STATUS_SRESET     0x3  /* Soft reset */
+> > +#define PDC_WD_TICKLE_STATUS_USER       0x4  /* User reset */
+> > +
+> > +/* timeout in seconds */
+> > +#define PDC_WD_MIN_TIMEOUT		1
+> > +#define PDC_WD_DEFAULT_TIMEOUT		64
+> > +
+> > +static int timeout = PDC_WD_DEFAULT_TIMEOUT;
+> module_param(timeout,
+> > +int, 0); MODULE_PARM_DESC(timeout, "PDC watchdog delay in seconds
+> > +(default 64s)");
+> 
+> It might be better to use
+> __MODULE_STRING(PDC_WD_DEFAULT_TIMEOUT)
+> to encode the default timeout.
+> 
+> > +
+> > +static bool nowayout = WATCHDOG_NOWAYOUT;
+> module_param(nowayout,
+> > +bool, 0); MODULE_PARM_DESC(nowayout, "Watchdog cannot be
+> stopped once
+> > +started");
+> > +
+> > +struct pdc_wdt_dev {
+> > +	struct watchdog_device wdt_dev;
+> > +	struct clk *wdt_clk;
+> > +	struct clk *sys_clk;
+> > +	int min_delay;
+> > +	void __iomem *base;
+> > +};
+> > +
+> > +static int pdc_wdt_keepalive(struct watchdog_device *wdt_dev) {
+> > +	struct pdc_wdt_dev *wdt = watchdog_get_drvdata(wdt_dev);
+> > +
+> > +	writel(PDC_WD_TICKLE1_MAGIC, wdt->base + PDC_WD_TICKLE1);
+> > +	writel(PDC_WD_TICKLE2_MAGIC, wdt->base + PDC_WD_TICKLE2);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int pdc_wdt_stop(struct watchdog_device *wdt_dev) {
+> > +	unsigned int val;
+> > +	struct pdc_wdt_dev *wdt = watchdog_get_drvdata(wdt_dev);
+> > +
+> > +	val = readl(wdt->base + PDC_WD_CONFIG);
+> > +	val &= ~PDC_WD_CONFIG_ENABLE;
+> > +	writel(val, wdt->base + PDC_WD_CONFIG);
+> > +
+> > +	/* Must tickle to finish the stop */
+> > +	pdc_wdt_keepalive(wdt_dev);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int pdc_wdt_set_timeout(struct watchdog_device *wdt_dev,
+> > +			       unsigned int new_timeout)
+> > +{
+> > +	unsigned int val;
+> > +	struct pdc_wdt_dev *wdt = watchdog_get_drvdata(wdt_dev);
+> > +
+> > +	wdt->wdt_dev.timeout = new_timeout;
+> > +	/* round up to the next power of 2 */
+> > +	new_timeout = order_base_2(new_timeout);
+> > +	val = readl(wdt->base + PDC_WD_CONFIG);
+> > +	val &= ~PDC_WD_CONFIG_DELAY_MASK;
+> > +	val |= (new_timeout + wdt->min_delay) <<
+> PDC_WD_CONFIG_DELAY_SHIFT;
+> > +	writel(val, wdt->base + PDC_WD_CONFIG);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +/* Start the watchdog timer (delay should already be set) */ static
+> > +int pdc_wdt_start(struct watchdog_device *wdt_dev) {
+> > +	unsigned int val;
+> > +	struct pdc_wdt_dev *wdt = watchdog_get_drvdata(wdt_dev);
+> > +
+> > +	val = readl(wdt->base + PDC_WD_CONFIG);
+> > +	val |= PDC_WD_CONFIG_ENABLE;
+> > +	writel(val, wdt->base + PDC_WD_CONFIG);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static struct watchdog_info pdc_wdt_info = {
+> > +	.identity	= "IMG PDC Watchdog",
+> > +	.options	= WDIOF_SETTIMEOUT |
+> > +			  WDIOF_KEEPALIVEPING |
+> > +			  WDIOF_MAGICCLOSE,
+> > +};
+> > +
+> > +/* Kernel interface */
+> > +static const struct watchdog_ops pdc_wdt_ops = {
+> > +	.owner		= THIS_MODULE,
+> > +	.start		= pdc_wdt_start,
+> > +	.stop		= pdc_wdt_stop,
+> > +	.ping		= pdc_wdt_keepalive,
+> > +	.set_timeout	= pdc_wdt_set_timeout,
+> > +};
+> > +
+> > +static int pdc_wdt_probe(struct platform_device *pdev) {
+> > +	int ret, val;
+> > +	unsigned long clk_rate;
+> > +	struct resource *res;
+> > +	struct pdc_wdt_dev *pdc_wdt;
+> > +
+> > +	pdc_wdt = devm_kzalloc(&pdev->dev, sizeof(*pdc_wdt),
+> GFP_KERNEL);
+> > +	if (!pdc_wdt)
+> > +		return -ENOMEM;
+> > +
+> > +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > +	pdc_wdt->base = devm_ioremap_resource(&pdev->dev, res);
+> > +	if (IS_ERR(pdc_wdt->base))
+> > +		return PTR_ERR(pdc_wdt->base);
+> > +
+> > +	pdc_wdt->sys_clk = devm_clk_get(&pdev->dev, "sys");
+> > +	if (IS_ERR(pdc_wdt->sys_clk)) {
+> > +		dev_err(&pdev->dev, "failed to get the sys clock.\n");
+> > +		ret = PTR_ERR(pdc_wdt->wdt_clk);
+> 
+> 					sys_clk
+> > +		return ret;
+> 
+> 		return PTR_ERR(pdc_wdt->sys_clk);
+> 
+> On a higher level, what is sys_clk needed and used for in the first place ?
+> The need for wdt_clk is obvious, but there is no explanation for the need of
+> sys_clk, and the bindings file doesn't give a hint either.
 
-> Thanks,
-> Ashok
+I believe that the watchdog registers are clocked from sys_clk, so without that they are not accessible.  
 
-thanks
-Ganapat
+> 
+> > +	}
+> > +
+> > +	pdc_wdt->wdt_clk = devm_clk_get(&pdev->dev, "wdt");
+> > +	if (IS_ERR(pdc_wdt->wdt_clk)) {
+> > +		dev_err(&pdev->dev, "failed to get the wdt clock.\n");
+> > +		ret = PTR_ERR(pdc_wdt->wdt_clk);
+> > +		return ret;
+> 
+> 		return PTR_ERR(pdc_wdt->wdt_clk);
+> 
+> > +	}
+> > +
+> > +	ret = clk_prepare_enable(pdc_wdt->sys_clk);
+> > +	if (ret) {
+> > +		dev_err(&pdev->dev, "could not prepare or enable sys
+> clock.\n");
+> > +		return ret;
+> > +	}
+> > +
+> > +	ret = clk_prepare_enable(pdc_wdt->wdt_clk);
+> > +	if (ret) {
+> > +		dev_err(&pdev->dev, "could not prepare or enable wdt
+> clock.\n");
+> > +		goto disable_sys_clk;
+> 
+> I would suggest to drop the '.' in those messages.
+> 
+> > +	}
+> > +
+> > +	/* We use the clock rate to calculate the max timeout */
+> > +	clk_rate = clk_get_rate(pdc_wdt->wdt_clk);
+> > +	if (clk_rate == 0) {
+> > +		dev_err(&pdev->dev, "failed to get clock rate\n");
+> > +		ret = -EINVAL;
+> > +		goto disable_wdt_clk;
+> > +	}
+> > +
+> > +	if (order_base_2(clk_rate) > PDC_WD_CONFIG_DELAY_MASK + 1) {
+> > +		dev_err(&pdev->dev, "invalid clock rate\n");
+> > +		ret = -EINVAL;
+> > +		goto disable_wdt_clk;
+> > +	}
+> > +
+> > +	if (order_base_2(clk_rate) == 0)
+> > +		pdc_wdt->wdt_dev.min_timeout =
+> PDC_WD_MIN_TIMEOUT + 1;
+> > +	else
+> > +		pdc_wdt->wdt_dev.min_timeout =
+> PDC_WD_MIN_TIMEOUT;
+> > +
+> > +	pdc_wdt->min_delay = order_base_2(clk_rate) - 1;
+> 
+> Ultimately this means that min_delay can be smaller than 0, which makes it
+> quite difficult to validate the rest of the code to ensure that it handles this
+> case correctly.
+> 
+> Give that a clock rate of 1 is somewhere between highly unlikely and
+> unreasonable, wouldn't it be much easier to consider it to be invalid and not
+> try to handle it ?
+
+Sounds reasonable to me.
+
+> 
+> > +
+> > +	pdc_wdt->wdt_dev.info = &pdc_wdt_info;
+> > +	pdc_wdt->wdt_dev.ops = &pdc_wdt_ops;
+> > +	pdc_wdt->wdt_dev.max_timeout =
+> > +			(1 << (PDC_WD_CONFIG_DELAY_MASK - pdc_wdt-
+> >min_delay));
+> > +	pdc_wdt->wdt_dev.parent = &pdev->dev;
+> > +
+> > +	ret = watchdog_init_timeout(&pdc_wdt->wdt_dev, timeout, &pdev-
+> >dev);
+> > +	if (ret < 0) {
+> > +		pdc_wdt->wdt_dev.timeout = pdc_wdt-
+> >wdt_dev.max_timeout;
+> > +		dev_warn(&pdev->dev,
+> > +			 "Initial timeout out of range! setting max
+> timeout\n");
+> > +	}
+> > +
+> > +	pdc_wdt_stop(&pdc_wdt->wdt_dev);
+> > +
+> > +	/* Find what caused the last reset */
+> > +	val = readl(pdc_wdt->base + PDC_WD_TICKLE1);
+> > +	val = (val & PDC_WD_TICKLE_STATUS_MASK) >>
+> PDC_WD_TICKLE_STATUS_SHIFT;
+> > +	switch (val) {
+> > +	case PDC_WD_TICKLE_STATUS_TICKLE:
+> > +	case PDC_WD_TICKLE_STATUS_TIMEOUT:
+> > +		pdc_wdt->wdt_dev.bootstatus |= WDIOF_CARDRESET;
+> > +		dev_info(&pdev->dev,
+> > +			 "watchdog module last reset due to timeout\n");
+> > +		break;
+> > +	case PDC_WD_TICKLE_STATUS_HRESET:
+> > +		dev_info(&pdev->dev,
+> > +			 "watchdog module last reset due to hard reset\n");
+> > +		break;
+> > +	case PDC_WD_TICKLE_STATUS_SRESET:
+> > +		dev_info(&pdev->dev,
+> > +			 "watchdog module last reset due to soft reset\n");
+> > +		break;
+> > +	case PDC_WD_TICKLE_STATUS_USER:
+> > +		dev_info(&pdev->dev,
+> > +			 "watchdog module last reset due to user reset\n");
+> > +		break;
+> > +	default:
+> > +		dev_info(&pdev->dev,
+> > +			 "contains an illegal status code (%08x)\n", val);
+> > +		break;
+> > +	}
+> > +
+> > +	watchdog_set_nowayout(&pdc_wdt->wdt_dev, nowayout);
+> > +
+> > +	platform_set_drvdata(pdev, pdc_wdt);
+> > +	watchdog_set_drvdata(&pdc_wdt->wdt_dev, pdc_wdt);
+> > +
+> > +	ret = watchdog_register_device(&pdc_wdt->wdt_dev);
+> > +	if (ret)
+> > +		goto disable_wdt_clk;
+> > +
+> > +	return 0;
+> > +
+> > +disable_wdt_clk:
+> > +	clk_disable_unprepare(pdc_wdt->wdt_clk);
+> > +disable_sys_clk:
+> > +	clk_disable_unprepare(pdc_wdt->sys_clk);
+> > +	return ret;
+> > +}
+> > +
+> > +static void pdc_wdt_shutdown(struct platform_device *pdev) {
+> > +	struct pdc_wdt_dev *pdc_wdt = platform_get_drvdata(pdev);
+> > +
+> > +	pdc_wdt_stop(&pdc_wdt->wdt_dev);
+> > +}
+> > +
+> > +static int pdc_wdt_remove(struct platform_device *pdev) {
+> > +	struct pdc_wdt_dev *pdc_wdt = platform_get_drvdata(pdev);
+> > +
+> > +	pdc_wdt_stop(&pdc_wdt->wdt_dev);
+> > +	watchdog_unregister_device(&pdc_wdt->wdt_dev);
+> > +	clk_disable_unprepare(pdc_wdt->wdt_clk);
+> > +	clk_disable_unprepare(pdc_wdt->sys_clk);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static const struct of_device_id pdc_wdt_match[] = {
+> > +	{ .compatible = "img,pdc-wdt" },
+> 
+> Will "img" be added to the list of vendor prefixes with some other patch ?
+
+I think Img is already in the list of vendor prefixes.
+
+> 
+> > +	{}
+> > +};
+> > +MODULE_DEVICE_TABLE(of, pdc_wdt_match);
+> > +
+> > +static struct platform_driver pdc_wdt_driver = {
+> > +	.driver = {
+> > +		.name = "imgpdc-wdt",
+> > +		.of_match_table	= pdc_wdt_match,
+> > +	},
+> > +	.probe = pdc_wdt_probe,
+> > +	.remove = pdc_wdt_remove,
+> > +	.shutdown = pdc_wdt_shutdown,
+> > +};
+> > +module_platform_driver(pdc_wdt_driver);
+> > +
+> > +MODULE_AUTHOR("Jude Abraham <Jude.Abraham-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>");
+> > +MODULE_AUTHOR("Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>");
+> > +MODULE_DESCRIPTION("Imagination Technologies PDC Watchdog Timer
+> > +Driver"); MODULE_LICENSE("GPL v2");
+> > --
+> > 1.7.0.4
+> >
+
+James.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
