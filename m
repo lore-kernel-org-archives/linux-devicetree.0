@@ -1,134 +1,55 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC] ARM: dts: mt8173: Add psci cpuidle support
-Date: Mon, 15 Dec 2014 11:07:06 +0000
-Message-ID: <20141215110706.GD462@leverpostej>
-References: <1418633948-2513-1-git-send-email-howard.chen@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1418633948-2513-1-git-send-email-howard.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Howard Chen <howard.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 0/8] mfd: watchdog: rtc: New driver for ST's LPC IP
+Date: Mon, 15 Dec 2014 11:25:30 +0000
+Message-ID: <1418642738-17407-1-git-send-email-lee.jones@linaro.org>
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 15, 2014 at 08:59:08AM +0000, Howard Chen wrote:
-> add device tree for psci-0.2 on mt8173 platform
-> add device tree for cupidle-arm64 on mt8173 platform
-> 
-> Signed-off-by: Howard Chen <howard.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/mt8173.dtsi | 51 +++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 51 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/mt8173.dtsi b/arch/arm64/boot/dts/mt8173.dtsi
-> index 79b7e46..c5e1127 100644
-> --- a/arch/arm64/boot/dts/mt8173.dtsi
-> +++ b/arch/arm64/boot/dts/mt8173.dtsi
-> @@ -44,6 +44,11 @@
->  		};
->  	};
->  
-> +	psci {
-> +		compatible = "arm,psci-0.2";
-> +		method = "smc";
-> +	};
-> +
->  	cpus {
->  		#address-cells = <1>;
->  		#size-cells = <0>;
-> @@ -54,6 +59,7 @@
->  			reg = <0x000>;
->  			enable-method = "mt-boot";
+ST's Low Power Controller (LPC) controls two devices; watchdog and RTC.
+Only one of the devices can be used at any one time, which is enforced
+by the correlating MFD driver.
 
-What is "mt-boot", and why is this not "psci"?
+This driver set provides everything you need to choose one (and only
+one) of the LPC devices to run per I/P block, of which there are two
+on the enabled STiH407 h/w.
 
-What tree is this based on?
+Lee Jones (8):
+  ARM: multi_v7_defconfig: Enable support for ST's LPC Watchdog
+  ARM: multi_v7_defconfig: Enable support for ST's LPC RTC
+  mfd: bindings: Provide ST bindings for ST's LPC device
+  mfd: dt-bindings: Provide human readable defines for LPC mode choosing
+  mfd: Add ST's Low Power Controller driver
+  watchdog: st_wdt: Add new driver for ST's LPC Watchdog
+  rtc: st: add new driver for ST's LPC RTC
+  ARM: STi: DT: STiH407: Add Device Tree node for the LPC
 
-The additions for idle look fine as of themselves, but we shouldn't
-require non-standard enable method code with PSCI.
+ Documentation/devicetree/bindings/mfd/st-lpc.txt |  36 +++
+ arch/arm/boot/dts/stih407.dtsi                   |  20 ++
+ arch/arm/configs/multi_v7_defconfig              |   2 +
+ drivers/mfd/Kconfig                              |   8 +
+ drivers/mfd/Makefile                             |   1 +
+ drivers/mfd/st-lpc.c                             |  88 ++++++
+ drivers/rtc/Kconfig                              |  13 +
+ drivers/rtc/Makefile                             |   1 +
+ drivers/rtc/rtc-st-lpc.c                         | 330 +++++++++++++++++++++++
+ drivers/watchdog/Kconfig                         |  13 +
+ drivers/watchdog/Makefile                        |   1 +
+ drivers/watchdog/st_wdt.c                        | 312 +++++++++++++++++++++
+ include/dt-bindings/mfd/st-lpc.h                 |  15 ++
+ 13 files changed, 840 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/st-lpc.txt
+ create mode 100644 drivers/mfd/st-lpc.c
+ create mode 100644 drivers/rtc/rtc-st-lpc.c
+ create mode 100644 drivers/watchdog/st_wdt.c
+ create mode 100644 include/dt-bindings/mfd/st-lpc.h
 
-Mark.
+-- 
+1.9.1
 
->  			cpu-release-addr = <0x0 0x40000200>;
-> +			cpu-idle-states = <&CPU_SLEEP_1_0 &CLUSTER_SLEEP_1>;
->  		};
->  
->  		cpu1: cpu@1 {
-> @@ -62,6 +68,7 @@
->  			reg = <0x001>;
->  			enable-method = "mt-boot";
->  			cpu-release-addr = <0x0 0x40000200>;
-> +			cpu-idle-states = <&CPU_SLEEP_1_0 &CLUSTER_SLEEP_1>;
->  		};
->  
->  		cpu2: cpu@2 {
-> @@ -70,6 +77,7 @@
->  			reg = <0x100>;
->  			enable-method = "mt-boot";
->  			cpu-release-addr = <0x0 0x40000200>;
-> +			cpu-idle-states = <&CPU_SLEEP_0_0 &CLUSTER_SLEEP_0>;
->  		};
->  
->  		cpu3: cpu@3 {
-> @@ -78,8 +86,51 @@
->  			reg = <0x101>;
->  			enable-method = "mt-boot";
->  			cpu-release-addr = <0x0 0x40000200>;
-> +			cpu-idle-states = <&CPU_SLEEP_0_0 &CLUSTER_SLEEP_0>;
->  		};
->  
-> +		idle-states {
-> +			entry-method = "arm,psci-0.2";
-> +
-> +			CPU_SLEEP_0_0: cpu-sleep-0-0 {
-> +				compatible = "arm,idle-state";
-> +				local-timer-stop;
-> +				arm,psci-suspend-param = <0x0010000>;
-> +				entry-latency-us = <250>;
-> +				exit-latency-us = <500>;
-> +				min-residency-us = <950>;
-> +			};
-> +
-> +			CLUSTER_SLEEP_0: cluster-sleep-0 {
-> +				compatible = "arm,idle-state";
-> +				local-timer-stop;
-> +				arm,psci-suspend-param = <0x1010000>;
-> +				entry-latency-us = <600>;
-> +				exit-latency-us = <1100>;
-> +				min-residency-us = <2700>;
-> +				wakeup-latency-us = <1500>;
-> +			};
-> +
-> +			CPU_SLEEP_1_0: cpu-sleep-1-0 {
-> +				compatible = "arm,idle-state";
-> +				local-timer-stop;
-> +				arm,psci-suspend-param = <0x0010000>;
-> +				entry-latency-us = <70>;
-> +				exit-latency-us = <100>;
-> +				min-residency-us = <300>;
-> +				wakeup-latency-us = <150>;
-> +			};
-> +
-> +			CLUSTER_SLEEP_1: cluster-sleep-1 {
-> +				compatible = "arm,idle-state";
-> +				local-timer-stop;
-> +				arm,psci-suspend-param = <0x1010000>;
-> +				entry-latency-us = <500>;
-> +				exit-latency-us = <1200>;
-> +				min-residency-us = <3500>;
-> +				wakeup-latency-us = <1300>;
-> +			};
-> +		};
->  	};
->  
->  	clocks {
-> -- 
-> 1.9.1
-> 
-> 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
