@@ -1,91 +1,67 @@
-From: Nikolaus Schulz <nikolaus.schulz-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] iio: document ti-dac8554 devicetree bindings
-Date: Mon, 15 Dec 2014 14:15:59 +0100
-Message-ID: <20141215131559.GA16545@avionic-0071.adnet.avionic-design.de>
-References: <1418643605-15554-1-git-send-email-nikolaus.schulz@avionic-design.de>
- <20141215130248.GA8264@leverpostej>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 4/4] usb: atmel_usba_udc: mask status with enabled irqs
+Date: Mon, 15 Dec 2014 16:32:10 +0300
+Message-ID: <548EE2DA.6050408@cogentembedded.com>
+References: <1418648588-17872-1-git-send-email-boris.brezillon@free-electrons.com> <1418648588-17872-5-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20141215130248.GA8264@leverpostej>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alban Bedel <alban.bedel-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1418648588-17872-5-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 15, 2014 at 01:02:48PM +0000, Mark Rutland wrote:
-> On Mon, Dec 15, 2014 at 11:39:56AM +0000, Nikolaus Schulz wrote:
-> > Signed-off-by: Nikolaus Schulz <nikolaus.schulz-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/iio/dac/ti-dac8554.txt     | 22 ++++++++++=
-++++++++++++
-> >  1 file changed, 22 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/dac/ti-da=
-c8554.txt
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/iio/dac/ti-dac8554.t=
-xt b/Documentation/devicetree/bindings/iio/dac/ti-dac8554.txt
-> > new file mode 100644
-> > index 0000000..32e96859
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iio/dac/ti-dac8554.txt
-> > @@ -0,0 +1,22 @@
-> > +TI DAC8554 Digital to Analog Converter
-> > +
-> > +This driver supports the SPI bus.
->=20
-> The binding need not refer to the driver, this sentence can go. It mi=
-ght
-> be worth adding "(SPI)" to the first line.
+Hello.
 
-OK
+On 12/15/2014 4:03 PM, Boris Brezillon wrote:
 
-> > +
-> > +Required properties:
-> > +	- compatible: must be "ti,dac8554"
-> > +	- vref-supply: the vref power supply
-> > +	- ti,address: the additional 2-bit chip address
-> > +
-> > +For required properties on SPI, please consult
-> > +Documentation/devicetree/bindings/spi/spi-bus.txt
-> > +
-> > +Example:
-> > +
-> > +	dac8554@0 {
-> > +		compatible =3D "ti,dac8554";
-> > +		reg =3D <0>;
-> > +		spi-max-frequency =3D <50000000>;
-> > +
-> > +		vref-supply =3D <&vdd_vref>;
-> > +		ti,address =3D <0>;
->=20
-> What's this property used for?
+> Avoid interpreting useless status flags when we're not waiting for such
+> events by masking the status variable with the interrupt enabled register
+> value.
 
-The DAC8554 has its own addressing scheme, where each chip is assigned =
-a
-two-bit address, defined by the state of two pins. So up to 4 DAC8554
-can be operated independently on the same SPI bus.
+> Reported-by: Patrice VILCHEZ <patrice.vilchez-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>   drivers/usb/gadget/udc/atmel_usba_udc.c | 6 +++++-
+>   1 file changed, 5 insertions(+), 1 deletion(-)
 
-> > +	};
->=20
-> Otherwise this looks sane to me.
->=20
-> Mark.
+> diff --git a/drivers/usb/gadget/udc/atmel_usba_udc.c b/drivers/usb/gadget/udc/atmel_usba_udc.c
+> index 55c8dde..bc3a532 100644
+> --- a/drivers/usb/gadget/udc/atmel_usba_udc.c
+> +++ b/drivers/usb/gadget/udc/atmel_usba_udc.c
+> @@ -1612,12 +1612,14 @@ static irqreturn_t usba_udc_irq(int irq, void *devid)
+>
+>   	spin_lock(&udc->lock);
+>
+> -	status = usba_readl(udc, INT_STA);
+> +	status = usba_readl(udc, INT_STA) & usba_readl(udc, INT_ENB);
+>   	DBG(DBG_INT, "irq, status=%#08x\n", status);
+>
+>   	if (status & USBA_DET_SUSPEND) {
+>   		toggle_bias(udc, 0);
+>   		usba_writel(udc, INT_CLR, USBA_DET_SUSPEND);
+> +		usba_writel(udc, INT_ENB,
+> +			    usba_readl(udc, INT_ENB) | USBA_WAKE_UP);
+>   		udc->bias_pulse_needed = true;
+>   		DBG(DBG_BUS, "Suspend detected\n");
+>   		if (udc->gadget.speed != USB_SPEED_UNKNOWN
+> @@ -1631,6 +1633,8 @@ static irqreturn_t usba_udc_irq(int irq, void *devid)
+>   	if (status & USBA_WAKE_UP) {
+>   		toggle_bias(udc, 1);
+>   		usba_writel(udc, INT_CLR, USBA_WAKE_UP);
+> +		usba_writel(udc, INT_ENB,
+> +			    usba_readl(udc, INT_ENB) & ~USBA_WAKE_UP);
+>   		DBG(DBG_BUS, "Wake Up CPU detected\n");
+>   	}
 
---=20
-Avionic Design GmbH
-Nikolaus Schulz
-Wragekamp 10
-D-22397 Hamburg
-Germany
+    Looks like t make sense to read the INT_ENB register into a separate 
+variable, to save on extra reads?
 
-Tel.:  +49 40 88187-163
-=46ax:   +49 40 88187-150
-Email: nikolaus.schulz-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org
+WBR, Sergei
 
-Avionic Design GmbH
-Amtsgericht Hamburg HRB 82598
-Gesch=E4ftsf=FChrung: Cornelis Broers
-Ust.-Ident-Nr.: DE813378254
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
