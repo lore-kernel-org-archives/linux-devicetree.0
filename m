@@ -1,63 +1,33 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [RFC 02/15] drivers/base: add restrack framework
-Date: Mon, 15 Dec 2014 11:38:32 +0000
-Message-ID: <20141215113832.GX11764@sirena.org.uk>
-References: <1418226513-14105-1-git-send-email-a.hajda@samsung.com>
- <1418226513-14105-3-git-send-email-a.hajda@samsung.com>
- <20141212165230.GP11764@sirena.org.uk>
- <548E9BB9.806@samsung.com>
+From: One Thousand Gnomes <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>
+Subject: Re: [PATCH 3/3] TTY/slave: add driver for w2sg0004 GPS
+Date: Mon, 15 Dec 2014 11:39:54 +0000
+Message-ID: <20141215113954.21e2ea61@lxorguk.ukuu.org.uk>
+References: <20141211214801.4127.93914.stgit@notabene.brown>
+	<20141211215944.4127.57146.stgit@notabene.brown>
+	<20141211231100.05782a30@lxorguk.ukuu.org.uk>
+	<20141212160607.361d20db@notabene.brown>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="elthcBrLbYw+6uqa"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <548E9BB9.806@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Andrzej Hajda <a.hajda@samsung.com>
-Cc: open list <linux-kernel@vger.kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mike Turquette <mturquette@linaro.org>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Inki Dae <inki.dae@samsung.com>, Kishon Vijay Abraham I <kishon@ti.com>, Liam Girdwood <lgirdwood@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "moderated list:ARM/CLKDEV SUPPORT" <linux-arm-kernel@lists.infradead.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, "moderated list:ARM/S5P EXYNOS AR..." <linux-samsung-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, boris.brezillon@
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141212160607.361d20db-wvvUuzkyo1EYVZTmpyfIwg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, NeilBrown <neil-+NVA1uvv1dVBDLzU/O5InQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+> > Am I missing some w2sg004 specific bits here ?
+> 
+> There is particular behaviour that the device is both turned on and turned
+> off by toggling a GPIO, and the only way to detect which state it is in is
+> to watch the RX uart line (by reconfiguring it as a GPIO).
 
---elthcBrLbYw+6uqa
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Ok so it is somewhat different to things like the Broadcom and the more
+usual 'wait for idle, drop power' setup.
 
-On Mon, Dec 15, 2014 at 09:28:41AM +0100, Andrzej Hajda wrote:
-> On 12/12/2014 05:52 PM, Mark Brown wrote:
-> > On Wed, Dec 10, 2014 at 04:48:20PM +0100, Andrzej Hajda wrote:
 
-> > I don't know about anyone else but I'm having a hard time reading the
-> > restrack name, it looks like a misspelling of restack to me.
-
-> Any alternative names?
-
-Well, even just res_track would help.
-
-> I will move the code for provider matching to frameworks,
-> so it will be easy to add just dev_info after every failed attempt
-> of getting resource, including deferring. This is the simplest solution
-> and it should be similar in verbosity to deferred probing.
-
-> Maybe other solution is to provide debug_fs (or device) attribute showing
-> restrack status per device.
-
-I think both are useful - it's often helpful to have a listing of what
-resources have actually been registered, for example to help spot typos.
-
---elthcBrLbYw+6uqa
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUjsg3AAoJECTWi3JdVIfQ0B8H/RvF/DMTN70TqlHNn9pDjcBk
-TH7amwHd0crIonpZ/NzYIKbmi3GuwBYmcLgPodqEfd0+0wqYiyvp7mF2WQWtRUlI
-KOPghdPrJjDF1k1qJH9XP9bpvqX4k1b+MIWA2SzI0MBkiiXD5g5wZlHmzx+gvBzG
-tsRavBntWRbs0k6xBosyoUFJPD3IUQtYOhgYFkS5FhJjg0uFgokHLO0kL2Fl/5Mp
-vYALsrJJNhT55jgBlckAy6i+fE9+4qltVqw+bGCEUxOdFwlA5PtdA+PjHZqRu4pE
-sWyrpo+P5f47aO7yA9tvgIcjP5KRmbYT/Wa/dvfleWP3xXL85qs1AaeWApeE5Bw=
-=G4p5
------END PGP SIGNATURE-----
-
---elthcBrLbYw+6uqa--
+Alan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
