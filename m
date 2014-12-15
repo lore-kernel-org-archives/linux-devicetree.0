@@ -1,39 +1,107 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH 5/6] dt-bindings: Add documentation for Rockchip
- hdmi-audio
-Date: Mon, 15 Dec 2014 10:40:29 +0000
-Message-ID: <20141215104029.GE11285@n2100.arm.linux.org.uk>
-References: <1418609494-15820-1-git-send-email-ykk@rock-chips.com>
- <1418612114-19692-1-git-send-email-ykk@rock-chips.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 05/11] memory: add Atmel EBI (External Bus Interface)
+ driver
+Date: Mon, 15 Dec 2014 11:43:38 +0100
+Message-ID: <20141215114338.401050ed@bbrezillon>
+References: <1417429647-3419-1-git-send-email-boris.brezillon@free-electrons.com>
+	<5455670.EDnhYEk7hP@kongar>
+	<20141215112230.6fca1d69@bbrezillon>
+	<6356167.d2upusqxqj@ws-stein>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1418612114-19692-1-git-send-email-ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-Reply-To: <6356167.d2upusqxqj@ws-stein>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Xu Jianqun <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, =?utf-8?B?U3Tvv73vv71waGFuZQ==?= Marchesin <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>, Bard Liao <bardliao-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org>, Max Filippov <jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Oder Chiou <oder_chiou-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM@public.gmane.org
+To: Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org>
+Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 15, 2014 at 10:55:14AM +0800, Yakir Yang wrote:
-> Required properties:
-> - compatible: platform specific
-> - cpu-of-node: the device node of cpu_dai
-> - codec-name: the dw-hdmi codec's device name
-> - codec-dai-name: the dw-hdmi codec's dai name
+On Mon, 15 Dec 2014 11:29:14 +0100
+Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org> wrote:
 
-This is not actually a separate physical device from the main dw-hdmi
-device.  What you are doing is merely describing the Linux kernel
-internals in DT, which is not what DT is supposed to be about.  DT is
-supposed to describe the hardware in an operating system independent
-manner.
+> On Monday 15 December 2014 11:22:30, Boris Brezillon wrote:
+> > Hi Alexander,
+> > 
+> > On Tue, 09 Dec 2014 21:53:12 +0100
+> > Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org> wrote:
+> > 
+> > > Hi,
+> > > 
+> > > On Monday 01 December 2014, 11:27:21 wrote Boris Brezillon:
+> > > > +static int at91_ebi_probe(struct platform_device *pdev)
+> > > > +{
+> > > > +	const struct of_device_id *match;
+> > > > +	struct device_node *child;
+> > > > +	struct device_node *np;
+> > > > +	struct at91_ebi *ebi;
+> > > > +	struct clk *clk;
+> > > > +	int ret;
+> > > > +
+> > > > +	match = of_match_device(at91_ebi_id_table, &pdev->dev);
+> > > > +	if (!match || !match->data)
+> > > > +		return -EINVAL;
+> > > > +
+> > > > +	ebi = devm_kzalloc(&pdev->dev, sizeof(*ebi), GFP_KERNEL);
+> > > > +	if (!ebi)
+> > > > +		return -ENOMEM;
+> > > > +
+> > > > +	ebi->caps = match->data;
+> > > > +	ebi->dev = &pdev->dev;
+> > > > +
+> > > > +	clk = devm_clk_get(&pdev->dev, NULL);
+> > > > +	if (IS_ERR(clk))
+> > > > +		return PTR_ERR(clk);
+> > > > +
+> > > > +	ebi->clk = clk;
+> > > > +
+> > > > +	np = of_parse_phandle(pdev->dev.of_node, "atmel,smc", 0);
+> > > > +	if (!np)
+> > > > +		return -EINVAL;
+> > > > +
+> > > > +	ebi->smc = syscon_node_to_regmap(np);
+> > > > +	if (IS_ERR(ebi->smc))
+> > > > +		return PTR_ERR(ebi->smc);
+> > > > +
+> > > > +	/*
+> > > > +	 * The sama5d3 does not provide an EBICSA register and thus does need
+> > > > +	 * to access the matrix registers.
+> > > > +	 */
+> > > > +	if (ebi->caps->ebi_csa) {
+> > > > +		np = of_parse_phandle(pdev->dev.of_node, "atmel,matrix", 0);
+> > > > +		if (np)
+> > >          ^^^^^^^
+> > > Shouldn't this be if (!np)?
+> > 
+> > Absolutely, thanks for pointing this out.
+> > I'll test on other at91 platforms (I currently only test on sama5d3
+> > boards, which do not have this EBICSA register) before submitting a new
+> > version.
+> 
+> Oh, well. I've noticed you posted a v4 of this patch which changed this specific code. I didn't noticed this.
 
-Including details like this (because ASoC needs a separate DT node) is
-the wrong approach.
+Indeed, calling syscon_regmap_lookup_by_phandle fixed the problem.
+
+Actually there is a v5 [1], and you should use this version because the
+DT binding has slightly changed).
+I'll add you in Cc of my future versions ;-).
+
+> I'll replace the old v3 and retry. I'm using this code on 9263 so far configuring EBI1 for a PSRAM. Works so far.
+> Once I exchanged patch 05/11 with your v4 I'll send my DT changes for 9263 to support this feature.
+
+Thanks for testing that part, I'm looking forward to your DT
+patches :-).
+
+Regards,
+
+Boris
+
+[1]https://lkml.org/lkml/2014/12/3/806
 
 -- 
-FTTC broadband for 0.8mile line: currently at 9.5Mbps down 400kbps up
-according to speedtest.net.
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
