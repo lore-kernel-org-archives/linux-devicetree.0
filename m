@@ -1,69 +1,64 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] mfd: cottula: add cottula board
-Date: Mon, 15 Dec 2014 17:01:14 +0100
-Message-ID: <2126713.SdhEsThCG0@wuerfel>
-References: <1418598606-21352-1-git-send-email-robert.jarzmik@free.fr> <4307800.p21Sk5E3dV@wuerfel> <877fxsapds.fsf@free.fr>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 5/6] dt-bindings: Add documentation for Rockchip
+ hdmi-audio
+Date: Mon, 15 Dec 2014 16:18:27 +0000
+Message-ID: <20141215161827.GE11764@sirena.org.uk>
+References: <1418609494-15820-1-git-send-email-ykk@rock-chips.com>
+ <1418612114-19692-1-git-send-email-ykk@rock-chips.com>
+ <20141215104029.GE11285@n2100.arm.linux.org.uk>
+ <20141215120205.GZ11764@sirena.org.uk>
+ <548EDDC2.9050104@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <877fxsapds.fsf@free.fr>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Robert Jarzmik <robert.jarzmik@free.fr>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="C64opeEuicNVb5KK"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <548EDDC2.9050104-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Kuankuan.Yang" <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Xu Jianqun <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, =?utf-8?B?U3Tvv73vv71waGFuZQ==?= Marchesin <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>, Bard Liao <bardliao-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org>, Max Filippov <jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Oder Chiou <oder_chiou-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.orglin
 List-Id: devicetree@vger.kernel.org
 
-On Monday 15 December 2014 16:45:03 Robert Jarzmik wrote:
-> Arnd Bergmann <arnd@arndb.de> writes:
-> 
-> > On Monday 15 December 2014 00:10:06 Robert Jarzmik wrote:
-> >> +
-> >> +       platform_set_drvdata(pdev, cot);
-> >> +       cot->gpio0 = gpiod_get(&pdev->dev, "lubbock_irq", 0);
-> >> +       if (IS_ERR(cot->gpio0)) {
-> >> +               dev_err(&pdev->dev, "Couldn't request GPIO : ret = %d\n", ret);
-> >> +               return PTR_ERR(cot->gpio0);
-> >> +       }
-> >> +       cot->irq = gpiod_to_irq(cot->gpio0);
-> >> +       if (cot->irq < 0)
-> >> +               return cot->irq;
-> >> +
-> >> +       cot->irqdomain =
-> >> +               irq_domain_add_linear(pdev->dev.of_node, COTTULA_NB_IRQ,
-> >> +                                     &cottula_irq_domain_ops, cot);
-> >> +       if (!cot->irqdomain)
-> >> +               return -ENODEV;
-> >> +
-> >> +       ret = 0;
-> >> +       if (base_irq)
-> >> +               ret = irq_create_strict_mappings(cot->irqdomain, base_irq, 0,
-> >> +                                                COTTULA_NB_IRQ);
-> >> 
-> >
-> > This looks a bit ambiguous: You get a GPIO line for the purpose of the
-> > IRQ nesting but don't use the GPIO otherwise, and you pass the device's
-> > own irq domain start as an IORESOURCE_IRQ resource.
-> >
-> > For consistency between DT and ATAGS based uses, and with similar DT
-> > based drivers, I would instead recommend passing the parent irq (from
-> > the GPIO) as an IORESOURCE_IRQ resource instead of a gpio lookup,
-> > and passing the base_irq as platform_data for the ATAGS case.
-> 
-> I understand Arnd, yet I wanted to avoid any platform data if possible, as this
-> is a motherboard, it will not be plugged anywhere else with different
-> parameters.
-> 
-> What would you say if I did this :
->  - remove the gpio
->  - use IORESOURCE_IRQ(0) as the parent irq (as you suggested)
->  - use IORESOURCE_IRQ(1) as the base_irq
->    => this resource would be optional
->         - if exists, use it as base_irq
->         - if doesn't exist, let base_irq = 0
-> 
-> Will that look correct ?
 
-I'd still prefer the platform data, but this seems good enough and I
-see no serious problems with it.
+--C64opeEuicNVb5KK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-	Arnd
+On Mon, Dec 15, 2014 at 09:10:26PM +0800, Kuankuan.Yang wrote:
+> Hi Mark & Russell:
+
+Please don't top post, that way people have some context for what you're
+saying - look at how people normally format their mails on thelist.
+
+> In that way, dt will only need compatible for creating sound device. is it
+> ok  ?
+> sound {
+>     compatible = "rockchip,rk3288-hdmi-audio";
+>     status = "okay";
+> }
+> could you give me some advises.
+
+That'd be good, though the other question is if this can be made to use
+simple-card so we can avoid having a custom driver for this.
+
+--C64opeEuicNVb5KK
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUjwnSAAoJECTWi3JdVIfQmAwH/0hdq6BjZ9xYACE0CunvAQcQ
+sBdvJEB0SF8PplZgNYZo+I3FR9J/DgW5cWdO3hyNZtWzgQaQbhUwmbPy5lAfkVqU
+sUhCYsXgGJorvFVdmF2/hUOt4fjwJ/+DwmbLmf7x075P+BecgL27DxIF5PoJKOzT
+PCGxqlnnpcEyyULR7h6ZITB7LpakyvFq9ZVvvdKqZgBhPYAp16EWk6Dn+LmYVFXC
+vXDST0SMgbWAylzHEPQMpmQQbU9ahF4m3nb2PR+9RF09EopV1hM/NMWPXWyn04+7
+RfWoJIYqNavnIXptNKnAwXF1nCqjx/D4kKBBdobCyXaD1R7eOrv1y+ZF20yjLiY=
+=ZeYG
+-----END PGP SIGNATURE-----
+
+--C64opeEuicNVb5KK--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
