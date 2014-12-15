@@ -1,101 +1,50 @@
-From: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v5 1/3] gpio: Cygnus: define Broadcom Cygnus GPIO binding
-Date: Mon, 15 Dec 2014 13:35:47 -0800
-Message-ID: <548F5433.5090901@broadcom.com>
-References: <1418342706-14755-2-git-send-email-rjui@broadcom.com> <1918116.UxUgDPTmcq@wuerfel> <CAAVeFuL2MKRA7YLm_wsyftNy-sxgEYPrmqBm8XTRZQb66YF-qw@mail.gmail.com> <1628217.66frkAqHMc@wuerfel>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 2/4] PCI: iproc: Add Broadcom iProc PCIe driver
+Date: Mon, 15 Dec 2014 22:37:19 +0100
+Message-ID: <2242033.mU3KpyO3Rt@wuerfel>
+References: <1418351817-14898-3-git-send-email-rjui@broadcom.com> <1790462.K12S5vem48@wuerfel> <548F338F.9030203@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1628217.66frkAqHMc@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <548F338F.9030203@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ray Jui <rjui@broadcom.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Hauke Mehrtens <hauke@hauke-m.de>, Lucas Stach <l.stach@pengutronix.de>, Scott Branden <sbranden@broadcom.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Monday 15 December 2014 11:16:31 Ray Jui wrote:
+> On 12/12/2014 9:21 AM, Arnd Bergmann wrote:
+> > On Friday 12 December 2014 09:08:48 Ray Jui wrote:
+> > One way to solve this would be by turning the driver into a library
+> > the same way as the pcie-dw driver, and have separate front-ends
+> > for it for platform_device and bcma_device.
+> >
+> I'm fine with this solution, i.e., to introduce a common pcie-iproc core 
+> driver (just like pcie-designware) and have different front-ends 
+> depending on the device/bus type. If we end up deciding to go with this 
+> solution, I need to discuss with Hauke to come up with a plan to 
+> collaborate.
 
+Ok
 
-On 12/12/2014 7:28 AM, Arnd Bergmann wrote:
-> On Friday 12 December 2014 22:05:37 Alexandre Courbot wrote:
->> On Fri, Dec 12, 2014 at 9:08 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
->>> On Thursday 11 December 2014 16:05:04 Ray Jui wrote:
->>>> +
->>>> +- linux,gpio-base:
->>>> +    Base GPIO number of this controller
->>>> +
->>>>
->>>
->>> We've NAK'ed properties like this multiple times before, and it
->>> doesn't get any better this time. What are you trying to achieve
->>> here?
->>
->> I am to blame for suggesting using this property to Ray, and I am
->> fully aware that this has been rejected before, but look at what
->> people came with recently to palliate the lack of control over the
->> GPIO number space for DT platforms:
->>
->> http://www.spinics.net/lists/arm-kernel/msg384847.html
->> https://lkml.org/lkml/2014/12/10/133
->>
->> Right now GPIO numbering for platforms using DT is a very inconsistent
->> process, subject to change by the simple action of adjusting the value
->> of ARCH_NR_GPIOS (which we did recently, btw), adding a new GPIO
->> controller, or changing the probe order of devices. For users of the
->> integer or sysfs interfaces, this results in GPIO numbers that change,
->> and drivers and/or user-space programs that behave incorrectly.
->> Ironically, the only way to have consistent numbers is to use the old
->> platform files, where you can specify the base number of a gpio_chip.
->>
->> DT is actually probably not such a bad place to provide consistency in
->> GPIO numbering. It has a global vision of the system layout, including
->> all GPIO controllers and the number of GPIOs they include, and thus
->> can make informed decisions. It provides a consistent result
->> regardless of probe order. And allowing it to assign GPIO bases to
->> controllers will free us from the nonsensical dependency of some
->> arbitrary upper-bound for GPIO numbers that ARCH_NR_GPIOS imposes on
->> us. Also about ARCH_NR_GPIOS, the plan is to eventually remove it
->> since we don't need it anymore after the removal of the global
->> gpio_descs array. This will again interfere with the numbering of GPIO
->> chips that do not have a base number provided.
->>
->> Note that I don't really like this, either - but the problem is the
->> GPIO integer interface. Until everyone has upgraded to gpiod and we
->> have a replacement for the current sysfs interface (this will take a
->> while) we have to cope with this. This issue has been bothering users
->> for years, so this time I'd like to try and solve it the less ugly
->> way. If there is a better solution, of course I'm all for it.
->
-> I think the scheme will fail if you ever get gpio controllers that are
-> not part of the DT: We have hotpluggable devices (PCI, USB, ...) that
-> are not represented in DT and that may also provide GPIOs for internal
-> uses.
->
-> The current state of affairs is definitely problematic, but defining
-> the GPIO numbers in DT properties would only be a relative improvement,
-> not a solution, and I fear it would make it harder to change the kernel
-> to remove the gpio numbers eventually.
->
-> I wonder if we could instead come up with an approach that completely
-> randomizes the gpio numbers (as a compile-time option) to find any
-> places that still rely on specific numbers.
->
-> 	Arnd
->
-Okay, if people think defining the GPIO base number in DT properties as 
-a temporary, transient solution is not acceptable, I can switch the 
-driver to use dynamic GPIO number allocation (by setting gpio base to a 
-negative number and let gpiochip_add find a usable base number).
+> But before we choose to go with that route, may I ask, what is the 
+> purpose of tying a PCIe host driver to BCMA? What benefit does BCMA give 
+> us? If we have a generic platform based PCIe driver that can work on all 
+> iProc SoCs + BCM4708 and BCM5301X with all HW specific configurations 
+> taken care of by device tree, why do we still need to use BCMA?
+> 
+> I thought all a BCMA device here does is to auto-instantiate based on 
+> some register readings?
 
-Like I said previously, dynamic GPIO allocation works fine in the 
-kernel, as long as all of our GPIO clients in the kernel use gpiod based 
-API, which is what we will enforce going forward. The only problem is 
-with some of our customers who use GPIO through sysfs and expect fixed 
-global GPIO numbers. Thinking about this more, it's probably not that 
-difficult to add a script for those customers to convert/map the GPIO 
-numbers based on readings parsed from sysfs, so I guess that's fine.
+Basically, DT is a hack that we only need for nondiscoverable buses.
+As BCMA is (mostly) discoverable, we should use that, just like we do
+for things like PCI and USB. There are clearly some limitations to 
+BCMA as well, e.g. on bcm4708 we don't have proper IRQ numbers in
+the device list and we need to work around that using DT, but overall
+it still seems to have more upsides than downsides to use it.
 
-I'll submit v6 patchset with DT property "linux,gpio-base" removed.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+It's also good to point other SoC makers to Broadcom as a good example
+for how to do things they claim are impossible to do.
+
+	Arnd
