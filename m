@@ -1,199 +1,84 @@
-From: Josh Wu <josh.wu@atmel.com>
-Subject: Re: [v3][PATCH 3/5] media: ov2640: add primary dt support
-Date: Mon, 15 Dec 2014 18:23:54 +0800
-Message-ID: <548EB6BA.90508@atmel.com>
-References: <1418283339-16281-1-git-send-email-josh.wu@atmel.com> <1418283339-16281-4-git-send-email-josh.wu@atmel.com> <2810609.1cJv5BoTgd@avalon>
+From: Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org>
+Subject: Re: [PATCH v3 05/11] memory: add Atmel EBI (External Bus Interface) driver
+Date: Mon, 15 Dec 2014 11:29:14 +0100
+Message-ID: <6356167.d2upusqxqj@ws-stein>
+References: <1417429647-3419-1-git-send-email-boris.brezillon@free-electrons.com> <5455670.EDnhYEk7hP@kongar> <20141215112230.6fca1d69@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <2810609.1cJv5BoTgd@avalon>
-Sender: linux-media-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: linux-media@vger.kernel.org, g.liakhovetski@gmx.de, m.chehab@samsung.com, linux-arm-kernel@lists.infradead.org, s.nawrocki@samsung.com, festevam@gmail.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141215112230.6fca1d69@bbrezillon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Laurent
+On Monday 15 December 2014 11:22:30, Boris Brezillon wrote:
+> Hi Alexander,
+> 
+> On Tue, 09 Dec 2014 21:53:12 +0100
+> Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org> wrote:
+> 
+> > Hi,
+> > 
+> > On Monday 01 December 2014, 11:27:21 wrote Boris Brezillon:
+> > > +static int at91_ebi_probe(struct platform_device *pdev)
+> > > +{
+> > > +	const struct of_device_id *match;
+> > > +	struct device_node *child;
+> > > +	struct device_node *np;
+> > > +	struct at91_ebi *ebi;
+> > > +	struct clk *clk;
+> > > +	int ret;
+> > > +
+> > > +	match = of_match_device(at91_ebi_id_table, &pdev->dev);
+> > > +	if (!match || !match->data)
+> > > +		return -EINVAL;
+> > > +
+> > > +	ebi = devm_kzalloc(&pdev->dev, sizeof(*ebi), GFP_KERNEL);
+> > > +	if (!ebi)
+> > > +		return -ENOMEM;
+> > > +
+> > > +	ebi->caps = match->data;
+> > > +	ebi->dev = &pdev->dev;
+> > > +
+> > > +	clk = devm_clk_get(&pdev->dev, NULL);
+> > > +	if (IS_ERR(clk))
+> > > +		return PTR_ERR(clk);
+> > > +
+> > > +	ebi->clk = clk;
+> > > +
+> > > +	np = of_parse_phandle(pdev->dev.of_node, "atmel,smc", 0);
+> > > +	if (!np)
+> > > +		return -EINVAL;
+> > > +
+> > > +	ebi->smc = syscon_node_to_regmap(np);
+> > > +	if (IS_ERR(ebi->smc))
+> > > +		return PTR_ERR(ebi->smc);
+> > > +
+> > > +	/*
+> > > +	 * The sama5d3 does not provide an EBICSA register and thus does need
+> > > +	 * to access the matrix registers.
+> > > +	 */
+> > > +	if (ebi->caps->ebi_csa) {
+> > > +		np = of_parse_phandle(pdev->dev.of_node, "atmel,matrix", 0);
+> > > +		if (np)
+> >          ^^^^^^^
+> > Shouldn't this be if (!np)?
+> 
+> Absolutely, thanks for pointing this out.
+> I'll test on other at91 platforms (I currently only test on sama5d3
+> boards, which do not have this EBICSA register) before submitting a new
+> version.
 
-On 12/11/2014 4:10 PM, Laurent Pinchart wrote:
-> Hi Josh,
->
-> Thank you for the patch.
->
-> I only have three minor comments. After fixing them,
->
-> Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Oh, well. I've noticed you posted a v4 of this patch which changed this specific code. I didn't noticed this.
+I'll replace the old v3 and retry. I'm using this code on 9263 so far configuring EBI1 for a PSRAM. Works so far.
+Once I exchanged patch 05/11 with your v4 I'll send my DT changes for 9263 to support this feature.
 
-Thanks for the review.
->
-> On Thursday 11 December 2014 15:35:37 Josh Wu wrote:
->> Add device tree support for ov2640.
->>
->> Cc: devicetree@vger.kernel.org
->> Signed-off-by: Josh Wu <josh.wu@atmel.com>
->> ---
->> v2 -> v3:
->>    1. fix gpiod usage.
->>    2. refine the ov2640_probe() function.
->>
->> v1 -> v2:
->>    1. use gpiod APIs.
->>    2. change the gpio pin's name according to datasheet.
->>    3. reduce the delay for .reset() function.
->>
->>   drivers/media/i2c/soc_camera/ov2640.c | 87 +++++++++++++++++++++++++++++---
->>   1 file changed, 81 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/media/i2c/soc_camera/ov2640.c
->> b/drivers/media/i2c/soc_camera/ov2640.c index 9ee910d..e0bcf5b 100644
->> --- a/drivers/media/i2c/soc_camera/ov2640.c
->> +++ b/drivers/media/i2c/soc_camera/ov2640.c
->> @@ -18,6 +18,8 @@
->>   #include <linux/i2c.h>
->>   #include <linux/slab.h>
->>   #include <linux/delay.h>
->> +#include <linux/gpio.h>
->> +#include <linux/of_gpio.h>
->>   #include <linux/v4l2-mediabus.h>
->>   #include <linux/videodev2.h>
->>
->> @@ -283,6 +285,10 @@ struct ov2640_priv {
->>   	u32	cfmt_code;
->>   	struct v4l2_clk			*clk;
->>   	const struct ov2640_win_size	*win;
->> +
->> +	struct soc_camera_subdev_desc	ssdd_dt;
->> +	struct gpio_desc *resetb_gpio;
->> +	struct gpio_desc *pwdn_gpio;
->>   };
->>
->>   /*
->> @@ -1047,6 +1053,63 @@ static struct v4l2_subdev_ops ov2640_subdev_ops = {
->>   	.video	= &ov2640_subdev_video_ops,
->>   };
->>
->> +/* OF probe functions */
->> +static int ov2640_hw_power(struct device *dev, int on)
->> +{
->> +	struct i2c_client *client = to_i2c_client(dev);
->> +	struct ov2640_priv *priv = to_ov2640(client);
->> +
->> +	dev_dbg(&client->dev, "%s: %s the camera\n",
->> +			__func__, on ? "ENABLE" : "DISABLE");
->> +
->> +	if (priv->pwdn_gpio)
->> +		gpiod_direction_output(priv->pwdn_gpio, !on);
->> +
->> +	return 0;
->> +}
->> +
->> +static int ov2640_hw_reset(struct device *dev)
->> +{
->> +	struct i2c_client *client = to_i2c_client(dev);
->> +	struct ov2640_priv *priv = to_ov2640(client);
->> +
->> +	if (priv->resetb_gpio) {
->> +		/* Active the resetb pin to perform a reset pulse */
->> +		gpiod_direction_output(priv->resetb_gpio, 1);
->> +		usleep_range(3000, 5000);
->> +		gpiod_direction_output(priv->resetb_gpio, 0);
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static int ov2640_probe_dt(struct i2c_client *client,
->> +		struct ov2640_priv *priv)
->> +{
->> +	/* reset is not actived */
-> Do you mean that you configure the reset signal as inactive ? I would state
-> that as "Request the reset GPIO deasserted".
+Best regards,
+Alexander
 
-yes, exactly. I'll take your sentence. thanks.
->
->> +	priv->resetb_gpio = devm_gpiod_get_optional(&client->dev, "resetb",
->> +			GPIOD_OUT_LOW);
->> +	if (!priv->resetb_gpio)
->> +		dev_dbg(&client->dev, "resetb gpio is not assigned!\n");
->> +	else if (IS_ERR(priv->resetb_gpio))
->> +		return PTR_ERR(priv->resetb_gpio);
->> +
->> +	/* Power down actived */
-> And "Request the power down GPIO asserted".
-ditto.
-
->
->> +	priv->pwdn_gpio = devm_gpiod_get_optional(&client->dev, "pwdn",
->> +			GPIOD_OUT_HIGH);
->> +	if (!priv->pwdn_gpio)
->> +		dev_dbg(&client->dev, "pwdn gpio is not assigned!\n");
->> +	else if (IS_ERR(priv->pwdn_gpio))
->> +		return PTR_ERR(priv->pwdn_gpio);
->> +
->> +	/* Initialize the soc_camera_subdev_desc */
->> +	priv->ssdd_dt.power = ov2640_hw_power;
->> +	priv->ssdd_dt.reset = ov2640_hw_reset;
->> +	client->dev.platform_data = &priv->ssdd_dt;
->> +
->> +	return 0;
->> +}
->> +
->>   /*
->>    * i2c_driver functions
->>    */
->> @@ -1058,12 +1121,6 @@ static int ov2640_probe(struct i2c_client *client,
->>   	struct i2c_adapter	*adapter = to_i2c_adapter(client->dev.parent);
->>   	int			ret;
->>
->> -	if (!ssdd) {
->> -		dev_err(&adapter->dev,
->> -			"OV2640: Missing platform_data for driver\n");
->> -		return -EINVAL;
->> -	}
->> -
->>   	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE_DATA)) {
->>   		dev_err(&adapter->dev,
->>   			"OV2640: I2C-Adapter doesn't support SMBUS\n");
->> @@ -1077,6 +1134,17 @@ static int ov2640_probe(struct i2c_client *client,
->>   		return -ENOMEM;
->>   	}
->>
->> +	if (!ssdd && !client->dev.of_node) {
->> +		dev_err(&client->dev, "Missing platform_data for driver\n");
->> +		return  -EINVAL;
->> +	}
->> +
->> +	if (!ssdd && client->dev.of_node) {
-> You can just test for !ssdd as you've tested client->dev.of_node above
-> already.
-
-Right, thanks.
-
-Best Regards,
-Josh Wu
->
->> +		ret = ov2640_probe_dt(client, priv);
->> +		if (ret)
->> +			return ret;
->> +	}
->> +
->>   	v4l2_i2c_subdev_init(&priv->subdev, client, &ov2640_subdev_ops);
->>   	v4l2_ctrl_handler_init(&priv->hdl, 2);
->>   	v4l2_ctrl_new_std(&priv->hdl, &ov2640_ctrl_ops,
->> @@ -1123,9 +1191,16 @@ static const struct i2c_device_id ov2640_id[] = {
->>   };
->>   MODULE_DEVICE_TABLE(i2c, ov2640_id);
->>
->> +static const struct of_device_id ov2640_of_match[] = {
->> +	{.compatible = "ovti,ov2640", },
->> +	{},
->> +};
->> +MODULE_DEVICE_TABLE(of, ov2640_of_match);
->> +
->>   static struct i2c_driver ov2640_i2c_driver = {
->>   	.driver = {
->>   		.name = "ov2640",
->> +		.of_match_table = of_match_ptr(ov2640_of_match),
->>   	},
->>   	.probe    = ov2640_probe,
->>   	.remove   = ov2640_remove,
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
