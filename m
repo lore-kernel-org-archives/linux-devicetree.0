@@ -1,57 +1,60 @@
-From: Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH (resend)] mailbox: Add Altera mailbox driver
-Date: Mon, 15 Dec 2014 08:22:23 -0600
-Message-ID: <548EEE9F.4030508@gmail.com>
-References: <CAFiDJ58uQifY7th-mzvm2mjgJdw_MWmWFFhDPYT9TomOexiVNw@mail.gmail.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH V8 00/14] drm/exynos: few patches to enhance bridge chip
+ support
+Date: Mon, 15 Dec 2014 16:30:25 +0200
+Message-ID: <548EF081.8090009@ti.com>
+References: <1416045309-13359-1-git-send-email-ajaykumar.rs@samsung.com> <CAEC9eQOrKw2Z1q-ztFfadXmsL3CTcAkkv9kcS2QnDOAVSh2AuQ@mail.gmail.com> <548ABAB6.6010200@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAFiDJ58uQifY7th-mzvm2mjgJdw_MWmWFFhDPYT9TomOexiVNw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ley Foon Tan <lftan-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-Cc: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="CdVce63N8fsFenAFn6UXxfX53igVFhO7x"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <548ABAB6.6010200@collabora.co.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Ajay kumar <ajaynumb@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Ajay Kumar <ajaykumar.rs@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, InKi Dae <inki.dae@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Sean Paul <seanpaul@google.com>, Thierry Reding <thierry.reding@gmail.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Pannaga Bhushan Reddy Patel <bhushan.r@samsung.com>, Prashanth G <prashanth.g@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
+--CdVce63N8fsFenAFn6UXxfX53igVFhO7x
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+On 12/12/14 11:51, Javier Martinez Canillas wrote:
+
+> Tomi and Laurent,
+>=20
+> You asked Ajay to change his series to use the video port and enpoints =
+DT
+> bindings instead of phandles, could you please review his latest versio=
+n?
+
+Looking only at the binding documentation patch, looks good to me.
+
+ Tomi
 
 
-On 12/15/14, 12:22 AM, Ley Foon Tan wrote:
-> On Fri, Dec 12, 2014 at 10:38 PM, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> 
->>> +
->>> +#include <linux/kernel.h>
->>> +#include <linux/module.h>
->>> +#include <linux/device.h>
->>> +#include <linux/platform_device.h>
->>> +#include <linux/interrupt.h>
->>> +#include <linux/io.h>
->>> +#include <linux/of.h>
->>> +#include <linux/mailbox_controller.h>
->>
->> Alphabetize the headers.
-> Okay.
-> 
-> 
->>> +static int altera_mbox_startup_sender(struct mbox_chan *chan)
->>> +{
->>> +     int ret;
->>> +     struct altera_mbox *mbox = to_altera_mbox(chan);
->>> +
->>> +     if (mbox->intr_mode) {
->>> +             ret = request_irq(mbox->irq, altera_mbox_tx_interrupt, 0,
->>
->> Use devm_request_irq, since you didn't have and don't need use free_irq
->> in the shutdown function.
-> We want to free_irq when it shutdown. That means nobody requests for
-> that mailbox (or channel) and request_irq() again if someone requests
-> for a mailbox.
-> 
 
-But you didn't have any free_irq in the shutdown function. Use
-devm_request_irq here, so you don't have to add them.
+--CdVce63N8fsFenAFn6UXxfX53igVFhO7x
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
-Dinh
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUjvCBAAoJEPo9qoy8lh718AEP/2ht1OQqeuFeiItl7U8fbkPL
+sjDaznEpQ+BjCgSVpdM5cXecsF+YEW6gq5jl2kxgOjivhsrHBkRHCblePZ1VbuM2
+rcxDWi6x0WJAHh3rXl27P4xyQWo2GgReYPraW7pKHkZBRYk2W7dixuTenKWWiS6V
+A5wRQjJOrfvpINkpOPbgCxmaMosfD95Jq5bX8O9kxUnBXf98tUIzlE9MFqunC7TA
+a8oM5T4PwFU/GsVW3UqiXJPdeh07ebEzzHNpAmteuKUS8hNOgA96adWR13Y1mg8u
+vKZNqZ2/XE4g/Z6WZN4coS8cA4Ft0K5JMoJtfEtS4WeR72QQlKMmNJQ/OI/gPV75
+KkWLuIUfpuF3m9fCZD6up613HsAzhQQBRwFXPenS2q6BvclJWA+wVVKtNILpA67g
+0DgO+hooJysIm/hSfii+VRd6RjTNLP5/4TCqLUJJbCch8ZNBvVQ+Oec+SV6yDoXj
+npclxphYn6L5mDKPO3O5egu3jHJ3BXwFVxESXxRuc3+53GbxmXkxlCAmXFKklYO5
+kdU9yv+gWSevizfDCeTWaF1af9mVy00S97hSyLUNJ7KaBHBvZg3q4zAlZZaW1v56
+hIv64Y5XTcKwtbp/vJrYSSinmV0WMv1SALOWxt0NojtO8WFKgXNR+c2FWk3cODSt
+hgyZ9cFqNDVG0DrD7qgH
+=jF23
+-----END PGP SIGNATURE-----
+
+--CdVce63N8fsFenAFn6UXxfX53igVFhO7x--
