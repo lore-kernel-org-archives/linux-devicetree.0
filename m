@@ -1,68 +1,83 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/8] soc: mediatek: Add PMIC wrapper for MT8135 and
- MT6397 SoC
-Date: Mon, 15 Dec 2014 17:22:02 +0000
-Message-ID: <20141215172202.GI11764@sirena.org.uk>
-References: <1417752479-4749-1-git-send-email-flora.fu@mediatek.com>
- <20141209101341.GV30369@pengutronix.de>
- <CABuKBe+whgVryssULCu2MAXRu3u+pYwM2nN3ToTEGpEvniQ6Jw@mail.gmail.com>
- <3015972.tvmzP0zTdv@wuerfel>
- <1418292255.2315.12.camel@mtksdaap41>
+From: David Laight <David.Laight-ZS65k/vG3HxXrIkS9f7CXA@public.gmane.org>
+Subject: RE: [PATCH 4/4] usb: atmel_usba_udc: mask status with enabled irqs
+Date: Mon, 15 Dec 2014 17:22:04 +0000
+Message-ID: <063D6719AE5E284EB5DD2968C1650D6D1CA0D0EF@AcuExch.aculab.com>
+References: <1418648588-17872-1-git-send-email-boris.brezillon@free-electrons.com>
+	<1418648588-17872-5-git-send-email-boris.brezillon@free-electrons.com>
+	<548EE2DA.6050408@cogentembedded.com>
+	<063D6719AE5E284EB5DD2968C1650D6D1CA0CE20@AcuExch.aculab.com>
+ <20141215180239.05037dcd@bbrezillon>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="JCIJwDXlZmsNNBnR"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1418292255.2315.12.camel@mtksdaap41>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Flora Fu <flora.fu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, HenryC Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Menghui Lin <menghui.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141215180239.05037dcd@bbrezillon>
+Content-Language: en-US
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: 'Boris Brezillon' <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: 'Sergei Shtylyov' <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+From: Boris Brezillon
+> Hi David,
+> 
+> On Mon, 15 Dec 2014 13:34:56 +0000
+> David Laight <David.Laight-ZS65k/vG3HxXrIkS9f7CXA@public.gmane.org> wrote:
+> 
+> > From: Sergei Shtylyov
+> > > Hello.
+> > >
+> > > On 12/15/2014 4:03 PM, Boris Brezillon wrote:
+> > >
+> > > > Avoid interpreting useless status flags when we're not waiting for such
+> > > > events by masking the status variable with the interrupt enabled register
+> > > > value.
+> > >
+> > > > Reported-by: Patrice VILCHEZ <patrice.vilchez-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> > > > Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > > > ---
+> > > >   drivers/usb/gadget/udc/atmel_usba_udc.c | 6 +++++-
+> > > >   1 file changed, 5 insertions(+), 1 deletion(-)
+> > >
+> > > > diff --git a/drivers/usb/gadget/udc/atmel_usba_udc.c b/drivers/usb/gadget/udc/atmel_usba_udc.c
+> > > > index 55c8dde..bc3a532 100644
+> > > > --- a/drivers/usb/gadget/udc/atmel_usba_udc.c
+> > > > +++ b/drivers/usb/gadget/udc/atmel_usba_udc.c
+> > > > @@ -1612,12 +1612,14 @@ static irqreturn_t usba_udc_irq(int irq, void *devid)
+> > > >
+> > > >   	spin_lock(&udc->lock);
+> > > >
+> > > > -	status = usba_readl(udc, INT_STA);
+> > > > +	status = usba_readl(udc, INT_STA) & usba_readl(udc, INT_ENB);
+...
+> > >     Looks like t make sense to read the INT_ENB register into a separate
+> > > variable, to save on extra reads?
+> >
+> >
+> > Better still remember the written value in one of the structures so
+> > that it doesn't have to be read at all.
+> 
+> Hmm, I'm getting back to this suggestion.
+> While I definitely understand why I should use a local variable to
+> store INT_ENB value in usba_udc_irq, I don't see the point of mirroring
+> INT_EN status in an udc struct field (after all, INT_EN will always
+> contain the value we previously set).
 
---JCIJwDXlZmsNNBnR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This is exactly why it makes sense to mirror it locally.
 
-On Thu, Dec 11, 2014 at 06:04:15PM +0800, Flora Fu wrote:
-> On Tue, 2014-12-09 at 12:20 +0100, Arnd Bergmann wrote:
+> Is this a performance concern ?
 
-> > If it looks like i2c messages, would it be more appropriate to make
-> > it appear as an i2c controller then?
+Absolutely, you really don't want to know how many cpu cycles it is
+likely to take to do a read from an io device.
+At best it is a uncached read of a fast on-chip peripheral.
+If you are reading from a PCIe device then you are looking at hundreds
+(if not thousands) of cpu clock cycles.
 
-> Although the message looks like I2C command, it is not I2C.
-> Form source code, the software does not touch any I2C i/o or protocols.
-> It depends SoC and has specific initial flow, read and write transfer
-> state. It is not able to an i2c controller.
+	David
 
-What Arnd is suggesting is that if the flow for using it is similar
-enough to I2C you can push it through the I2C framework anyway even
-though it'll never be possible to use it with generic devices.
 
-> That's why we consider its a proprietary hardware with specific
-> protocols. How about let it appear in driver/soc?
 
-That's another option, though I'm not sure that's what the arm-soc
-people are looking for.
-
---JCIJwDXlZmsNNBnR
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUjxi6AAoJECTWi3JdVIfQw7wH/1AIX1p59noFFxlhkujylKr4
-VBb6gyyUHBI5lFpWiDgk5Qe6auX4FaSdY3kro+chPto0uBJmAZsFE2kfu1JMlbJj
-Jz4cqyfmOri5J+c7MG/0fQCv+2LyTSAhloDdjf8X6Y4pvRQmA0Mau3B1jHX2XYeH
-s60qEawadTn37taFsj7qhkIrO9Weqs6IloejYXO+cmmrjJHdtc5NZZv2dPeGK5Ji
-jESpOqy7T1b73IczBJsMCaFxZponQ8yLlkjNEjF2YjVwhmQBBOBFmGM7dt7BBcRa
-j7tEq9EWcRCTJ5FbBuHRkN9Zb1rVzUINh2VGqt99BJ01z/pndWhdQA8D/oTNjVM=
-=a5Zx
------END PGP SIGNATURE-----
-
---JCIJwDXlZmsNNBnR--
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
