@@ -1,51 +1,45 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 5/6] dt-bindings: Add documentation for Rockchip
- hdmi-audio
-Date: Mon, 15 Dec 2014 12:02:05 +0000
-Message-ID: <20141215120205.GZ11764@sirena.org.uk>
-References: <1418609494-15820-1-git-send-email-ykk@rock-chips.com>
- <1418612114-19692-1-git-send-email-ykk@rock-chips.com>
- <20141215104029.GE11285@n2100.arm.linux.org.uk>
+From: Michael Lawnick <ml.lawnick-Mmb7MZpHnFY@public.gmane.org>
+Subject: Re: [PATCH] of: i2c: Add DT bindings for idle states to PCA954x mux
+ driver
+Date: Mon, 15 Dec 2014 13:08:39 +0100
+Message-ID: <548ECF47.8030307@gmx.de>
+References: <548E387E.2020502@nsn.com> <4262366.rJm0Aq2lpm@avalon>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="eVN8q1r3v0Uw6/qa"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20141215104029.GE11285@n2100.arm.linux.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Yakir Yang <ykk@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Philipp Zabel <p.zabel@pengutronix.de>, Zubair.Kakakhel@imgtec.com, Fabio Estevam <fabio.estevam@freescale.com>, Shawn Guo <shawn.guo@linaro.org>, dri-devel@lists.freedesktop.org, Daniel Kurtz <djkurtz@chromium.org>, Sonny Rao <sonnyrao@chromium.org>, Dylan Reid <dgreid@chromium.org>, Xu Jianqun <jay.xu@rock-chips.com>, =?utf-8?B?U3Tvv73vv71waGFuZQ==?= Marchesin <marcheu@chromium.org>, Lars-Peter Clausen <lars@metafoo.de>, Brian Austin <brian.austin@cirrus.com>, Bard Liao <bardliao@realtek.com>, Max Filippov <jcmvbkbc@gmail.com>, Oder Chiou <oder_chiou@realtek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kern
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4262366.rJm0Aq2lpm@avalon>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>
+Cc: Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Lawnick Michael 61283229 <michael.lawnick-OYasijW0DpE@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Laurent,
 
---eVN8q1r3v0Uw6/qa
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Am 15.12.2014 um 09:40 schrieb Laurent Pinchart:
+> Hi Alexander,
+>
+> Thank you for the patch.
+>
+> On Monday 15 December 2014 02:25:18 Alexander Sverdlin wrote:
+>> of: i2c: Add DT bindings for idle states to PCA954x mux driver
+>>
+>> Introduce two new device tree bindings to specify idle state of PCA954x
+>> family of I2C multiplexors:
+>>    - idle-state: specifies particular child bus to be selected in idle;
+>>    - idle-disconnect: signals that mux should disconnect all child buses in
+>> idle;
+>
+> Could you please briefly explain your use case(s) for those two properties ?
 
-On Mon, Dec 15, 2014 at 10:40:29AM +0000, Russell King - ARM Linux wrote:
+Rationale (which should be added) is:
+If there are two or more multiplexers/switches connected to same bus 
+unused ones need to be set to neutral/unconnected state, otherwise 
+transactions to devices behind current multiplexer get visible to all 
+buses lately addressed on the other multiplexers. This will lead to 
+address conflicts for all devices with same address.
 
-> Including details like this (because ASoC needs a separate DT node) is
-> the wrong approach.
+Usage of new bindings is xor.
 
-And indeed there should be no Linux-internal reason for that - we should
-be able to use whatever DT node makes sense, if there's some reason
-that's not possible we should fix that (we do have several drivers doing
-this sort of thing already though).
-
---eVN8q1r3v0Uw6/qa
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUjs28AAoJECTWi3JdVIfQyuIIAIJDD10SCDDvHTyH/jpnvSpZ
-g7ObS21UKrw3LuBbQkIPqAow0ixm6c3NudWxv8C1QX74osQgpWMFljUlUUDWYARm
-Qbul4Sz49ab0HgNjV3848OQV0NmMGJLmEqCuAoCy0ayoHsUi3jJzgTFlQnfIvxr7
-3y1OGXiZ+BTJLntRbpGbuUHZe36Q7/9YaN8lC+PPQo1MuE26Iz+66SucWT1iYvpb
-i8KgkW5GATtGpWDSTZX/1SfE2kwwx5J9mWZs84MRe319mHHiL44CL6JboCnFt/Ev
-45v15Sba3caEFqwxZB5NwhTlPINfstYG2ZeO11gTScAHgF3jY6VSiD0keOcK4rQ=
-=9XaR
------END PGP SIGNATURE-----
-
---eVN8q1r3v0Uw6/qa--
+KR
+Michael
