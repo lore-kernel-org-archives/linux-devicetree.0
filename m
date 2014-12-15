@@ -1,118 +1,46 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 2/4] PCI: iproc: Add Broadcom iProc PCIe driver
-Date: Fri, 12 Dec 2014 18:21:37 +0100
-Message-ID: <1790462.K12S5vem48@wuerfel>
-References: <1418351817-14898-3-git-send-email-rjui@broadcom.com> <2190666.DfrpWiLTCc@wuerfel> <548B2120.4080207@broadcom.com>
+From: arno@natisbad.org (Arnaud Ebalard)
+Subject: Re: [PATCHv0 2/5] ARM: mvebu: ISL12057 rtc chip can be used to wake up RN102
+Date: Mon, 15 Dec 2014 19:00:57 +0100
+Message-ID: <877fxskd2e.fsf@natisbad.org>
+References: <cover.1418519430.git.arno@natisbad.org>
+	<b7208bdcd16dbc511d7ae6dd47aee91ab81f54f4.1418519430.git.arno@natisbad.org>
+	<20141215135308.GB967@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <548B2120.4080207@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ray Jui <rjui@broadcom.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Hauke Mehrtens <hauke@hauke-m.de>, Lucas Stach <l.stach@pengutronix.de>, Scott Branden <sbranden@broadcom.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20141215135308.GB967@titan.lakedaemon.net> (Jason Cooper's
+	message of "Mon, 15 Dec 2014 08:53:08 -0500")
+Sender: linux-doc-owner@vger.kernel.org
+To: Jason Cooper <jason@lakedaemon.net>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Uwe =?utf-8?Q?Kleine-K?= =?utf-8?Q?=C3=B6nig?= <uwe@kleine-koenig.org>, Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Peter Huewe <peter.huewe@infineon.com>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <treding@nvidia.com>, Mark Brown <broonie@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Darshana Padmadas <darshanapadmadas@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Rob Landley <rob@landley.net>, rtc-linux@googlegroups.com, Guenter Roeck <linux@roeck-us.net>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@l
 List-Id: devicetree@vger.kernel.org
 
-On Friday 12 December 2014 09:08:48 Ray Jui wrote:
-> 
-> On 12/12/2014 4:29 AM, Arnd Bergmann wrote:
-> > On Thursday 11 December 2014 18:36:55 Ray Jui wrote:
-> >> Add initial version of the Broadcom iProc PCIe driver. This driver
-> >> has been tested on NSP and Cygnus and is expected to work on all iProc
-> >> family of SoCs that deploys the same PCIe host controller
-> >>
-> >> The driver also supports MSI
-> >
-> > Overall, I'm not convinced it's worth continuing this driver. While it
-> > supports more features, Hauke's version seemed much cleaner, and I'd
-> > rather see his driver merged and have you add the additional features.
-> >
-> > Why did you drop him from Cc again?
-> >
-> In fact, Hauke is on the "to" list of all v2 patchset that I sent out. I 
-> added him to the "to" list because he mentioned during v1 patchset 
-> review that he'll help to test this on North Star.
 
-Sorry, my mistake. I looked through the Cc list multiple times but failed
-to see him there.
- 
-> Doesn't Hauke's driver depends on BCMA? In that case, how does it work 
-> on the SoCs that do not have the IP block to support BCMA?
+Jason Cooper <jason@lakedaemon.net> writes:
 
-I hadn't realized that there are some SoCs that are not BCMA based.
-As the host controller implementation is closely related, we will
-have to come up with some solution.
+> On Sun, Dec 14, 2014 at 02:42:28AM +0100, Arnaud Ebalard wrote:
+>> 
+>> Now that alarm support for ISL12057 chip is available, let's use a
+>> feature of the driver dedicated to NETGEAR ReadyNAS 102 specific
+>> routing of RTC IRQ#2 pin; on the device, this pin is not connected
+>> to the SoC but to a PMIC, which allows the device to be powered
+>> up when RTC alarm rings.
+>> 
+>> For that to work, the chip needs to be explicitly marked as a
+>> device wakeup source using the "can-wakeup-machine" boolean
+>> property. This makes 'wakealarm' sysfs entry available to
+>> configure the alarm.
+>> 
+>> Signed-off-by: Arnaud Ebalard <arno@natisbad.org>
+>> ---
+>>  arch/arm/boot/dts/armada-370-netgear-rn102.dts | 1 +
+>>  1 file changed, 1 insertion(+)
+>
+> Please group patches 2 - 4 into one patch.
 
-One way to solve this would be by turning the driver into a library
-the same way as the pcie-dw driver, and have separate front-ends
-for it for platform_device and bcma_device.
+Will do.
 
-As I mentioned in my other reply, we will likely have the same problem
-in a number of other drivers too, so we could try to come up with
-a way to make bcma_device fit better into the platform_device
-infrastructure, but I wouldn't know how to do that without giving
-it more thought.
+a+
 
-> >> +static void iproc_pcie_reset(struct iproc_pcie *pcie)
-> >> +{
-> >> +	u32 val;
-> >> +
-> >> +	/* send a downstream reset */
-> >> +	val = EP_MODE_SURVIVE_PERST | RC_PCIE_RST_OUTPUT;
-> >> +	writel(val, pcie->reg + CLK_CONTROL_OFFSET);
-> >> +	udelay(250);
-> >> +	val &= ~EP_MODE_SURVIVE_PERST;
-> >> +	writel(val, pcie->reg + CLK_CONTROL_OFFSET);
-> >> +	mdelay(250);
-> >> +}
-> >
-> > 250ms delay is not acceptable. Please find a way to call this function
-> > from a context in which you can sleep.
-> >
-> This is called from driver probe, where runs in the process context 
-> where you can sleep. Is my understanding correct? I can change mdelay to 
-> msleep so the CPU does not waste time spinning.
 
-Right, that sounds good.
 
-> >> +	if (nlw == 0) {
-> >> +		/* try GEN 1 link speed */
-> >> +#define PCI_LINK_STATUS_CTRL_2_OFFSET 0xDC
-> >> +#define PCI_TARGET_LINK_SPEED_MASK    0xF
-> >> +#define PCI_TARGET_LINK_SPEED_GEN2    0x2
-> >> +#define PCI_TARGET_LINK_SPEED_GEN1    0x1
-> >> +		pci_bus_read_config_dword(&bus, 0,
-> >> +				PCI_LINK_STATUS_CTRL_2_OFFSET, &val);
-> >> +		if ((val & PCI_TARGET_LINK_SPEED_MASK) ==
-> >> +				PCI_TARGET_LINK_SPEED_GEN2) {
-> >> +			val &= ~PCI_TARGET_LINK_SPEED_MASK;
-> >> +			val |= PCI_TARGET_LINK_SPEED_GEN1;
-> >> +			pci_bus_write_config_dword(&bus, 0,
-> >> +					PCI_LINK_STATUS_CTRL_2_OFFSET, val);
-> >> +			pci_bus_read_config_dword(&bus, 0,
-> >> +					PCI_LINK_STATUS_CTRL_2_OFFSET, &val);
-> >> +			mdelay(100);
-> >
-> > Too much delay.
-> >
-> Need to confirm with the ASIC engineer. The delay may be what's needed.
-
-If you can turn it into msleep here, it's fine. Just don't waste 100
-million CPU cycles for no reason.
-
-> >> +static int __init iproc_pcie_init(void)
-> >> +{
-> >> +	return platform_driver_probe(&iproc_pcie_driver,
-> >> +			iproc_pcie_probe);
-> >> +}
-> >> +subsys_initcall(iproc_pcie_init);
-> >
-> > module_init()? Doesn't seem necessary to have this early.
-> >
-> > 	Arnd
-> >
-> Will look into this. Forgot why we use subsys_initcall here...
-
-Probably copied from other drivers. It used to be required.
-
-	Arnd
