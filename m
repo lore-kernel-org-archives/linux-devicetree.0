@@ -1,58 +1,66 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: Linus' tree (master) not working for Allwinner
- sun4i, sun5i, sun7i SoC-s + fix
-Date: Mon, 15 Dec 2014 17:56:55 +0100
-Message-ID: <20141215165655.GL4337@lukather>
-References: <548F0C8C.3030006@gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/3] ARM: sun4i: SPI improvements
+Date: Mon, 15 Dec 2014 16:59:51 +0000
+Message-ID: <20141215165951.GG11764@sirena.org.uk>
+References: <1418033642-29731-1-git-send-email-mr.nuke.me@gmail.com>
+ <20141211165602.GD8739@lukather>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Jl+DbTnyraiZ/loT"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBE5HXSSAKGQE7VNNUJA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="IOWfJl95iVQnrM9l"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <548F0C8C.3030006-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <j.w.r.degoede-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+In-Reply-To: <20141211165602.GD8739@lukather>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Alexandru Gagniuc <mr.nuke.me-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---Jl+DbTnyraiZ/loT
-Content-Type: text/plain; charset=UTF-8
+
+--IOWfJl95iVQnrM9l
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-Hi,
+On Thu, Dec 11, 2014 at 05:56:02PM +0100, Maxime Ripard wrote:
+> On Mon, Dec 08, 2014 at 04:13:59AM -0600, Alexandru Gagniuc wrote:
 
-On Mon, Dec 15, 2014 at 05:30:04PM +0100, Hans de Goede wrote:
-> Hi Maxime,
-> 
-> Somehow this commit of your sunxi/clocks-for-3.19 branch has made it
-> into Linus' tree:
-> 
-> https://git.kernel.org/cgit/linux/kernel/git/mripard/linux.git/commit/?h=sunxi/clocks-for-3.19&id=93746e70be83a3f113134a16065957b324af50f7
-> 
-> But this one has not:
-> 
-> https://git.kernel.org/cgit/linux/kernel/git/mripard/linux.git/commit/?h=sunxi/clocks-for-3.19&id=acbcc0f03b15585387f9ca69c2a976b02cb69023
-> 
-> Rather badly breaking Allwinner sun4i, sun5i, sun7i SoC-s.
+> > This is a series of patches that gets SPI working in a better state on the
+> > Cubieboard. The main motivation was to use flashrom to to program SPI ROMs.
+> > There is one patch missing, which adds an spidev node on the Cubieboard. Since
+> > Maxime did not like the approach in that patch, I've left it out for now.
 
-I don't know what you are looking at, but I don't see any of these
-commits in Linus' current master, either in the git repo itself, or
-using the kernel.org git interface.
+> Just to make things straight, it's not me alone that didn't like the
+> approach.
 
-They're both part of Mike Turquette's clk-next though, so they should
-both land just fine whenever that will be merged.
+> It's both wrong on a theorical point of view to put that in the DT,
+> since it has no hardware meaning at all (ie it doesn't describe the
+> hardware, or the state the bootloader left the hardware in), and this
+> has been NAKed a number of times already by Mark Brown.
 
-Maxime
+> See http://permalink.gmane.org/gmane.linux.kernel.spi.devel/11747 for
+> example.
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---Jl+DbTnyraiZ/loT--
+Right, I'm getting sufficiently many people making this mistake that I
+think I'm going to add code to complain loudly if it's instantiated as
+spidev from DT.
+
+--IOWfJl95iVQnrM9l
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUjxOGAAoJECTWi3JdVIfQOBkH/2s+GVPj6p9Hx/1Eqwi5U2EX
+S8FzsSeMeoMMFTKo90ZYtzkBt5TZUvwkHYkcYvdbyavGcxyvDn3psWaVYLHe3KXi
+INEGSOpTS18x+61Any0hr/ALReFwSmY3vvwDbib23HqJCDQKE1Yxnj+Ho5IeL7G5
+h6p1yAwe6qq/uWi3U0wjCbG6JptRsF+gj121hN5drv4BTJGBlBgx3PDgHpb3nG8G
+S69plVLoNDUGXbKj30exbHf/9wpmwLSmh9dnvcAAc53j7cGllKfPrFVUBW2LNGfy
+09KeIpSbDExNnRnu7sKW2qKxNdn4ow5WD9WtV5nAMOamX/kHTJ78kZaFrSQ5SkY=
+=FtL4
+-----END PGP SIGNATURE-----
+
+--IOWfJl95iVQnrM9l--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
