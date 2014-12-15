@@ -1,90 +1,45 @@
-From: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Subject: Re: [PATCH V5 13/23] MIPS: BMIPS: Flush the readahead cache after DMA
-Date: Mon, 15 Dec 2014 10:43:58 +0100
-Message-ID: <CAOiHx=nX9jJEFZmkA-1fWj47whq85wj-ZgUxnZBwpAYDUfAO4w@mail.gmail.com>
-References: <1418422034-17099-1-git-send-email-cernekee@gmail.com> <1418422034-17099-14-git-send-email-cernekee@gmail.com>
+From: "Kuankuan.Yang" <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH 5/6] dt-bindings: Add documentation for Rockchip hdmi-audio
+Date: Mon, 15 Dec 2014 17:46:35 +0800
+Message-ID: <548EADFB.6020903@rock-chips.com>
+References: <1418609494-15820-1-git-send-email-ykk@rock-chips.com> <1418612114-19692-1-git-send-email-ykk@rock-chips.com> <548EA3B9.5080407@metafoo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1418422034-17099-14-git-send-email-cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <548EA3B9.5080407-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Xu Jianqun <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, =?UTF-8?B?U3Tvv73vv71waGFuZSBNYXJjaGVzaW4=?= <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>, Bard Liao <bardliao-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org>, Max Filippov <jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Oder Chiou <oder_chiou-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel@lists
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 12, 2014 at 11:07 PM, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> BMIPS 3300/435x/438x CPUs have a readahead cache that is separate from
-> the L1/L2.  During a DMA operation, accesses adjacent to a DMA buffer
-> may cause parts of the DMA buffer to be prefetched into the RAC.  To
-> avoid possible coherency problems, flush the RAC upon DMA completion.
+Hi lars:
 
-According to what I have, any cpu [d-]cache invalidate operation
-should already flush the full RAC unless explicitly disabled in the
-RAC configuration - is this intended as an optimization/shortcut?
+thks for your review, I will move it to hdmi audio driver, give the=20
+codec_name & codec_dai_name an const string.
 
-> Signed-off-by: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/mips/mm/dma-default.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
+Best Regards.
+
+=E5=9C=A8 2014=E5=B9=B412=E6=9C=8815=E6=97=A5 17:02, Lars-Peter Clausen=
+ =E5=86=99=E9=81=93:
+> On 12/15/2014 03:55 AM, Yakir Yang wrote:
+> [...]
+>> +- codec-name: the dw-hdmi codec's device name
+>> +- codec-dai-name: the dw-hdmi codec's dai name
 >
-> diff --git a/arch/mips/mm/dma-default.c b/arch/mips/mm/dma-default.c
-> index af5f046..ee6d12c 100644
-> --- a/arch/mips/mm/dma-default.c
-> +++ b/arch/mips/mm/dma-default.c
-> @@ -18,6 +18,7 @@
->  #include <linux/highmem.h>
->  #include <linux/dma-contiguous.h>
+> Please you phandles for this, the names are Linux driver and framewor=
+k=20
+> specific details. That should not leak into the DT bindings.
 >
-> +#include <asm/bmips.h>
->  #include <asm/cache.h>
->  #include <asm/cpu-type.h>
->  #include <asm/io.h>
-> @@ -69,6 +70,18 @@ static inline struct page *dma_addr_to_page(struct device *dev,
->   */
->  static inline int cpu_needs_post_dma_flush(struct device *dev)
->  {
-
-The place for it seems a bit misplaced; I would not expect
-cpu_needs_post_dma_flush() to have any side effects.
-
-> +       if (boot_cpu_type() == CPU_BMIPS3300 ||
-> +           boot_cpu_type() == CPU_BMIPS4350 ||
-> +           boot_cpu_type() == CPU_BMIPS4380) {
-> +               void __iomem *cbr = BMIPS_GET_CBR();
-> +
-> +               /* Flush stale data out of the readahead cache */
-> +               __raw_writel(0x100, cbr + BMIPS_RAC_CONFIG);
-
-Hm, according to what I have, bits [6:0] of RAC_CONFIG are R/W
-configuration bits, and this will overwrite them:
-
-CFE> dm 0xff400000 4
-ff400000: 02a07015                                        ..p.
-CFE> sm 0xff400000 0x100 4
-ff400000: 02a00000                                        ....
-
-(As far as I can tell, RAC was previously enabled for instruction
-cache misses , and now isn't any more for anything, so effectively
-disabled?)
-
-Also for BMIPS4350 (and I guess 4380) there seems to be a second
-RAC_CONFIG register at 0x8, I guess for the second thread? Does it
-need flushing, too?
-
-> +               __raw_readl(cbr + BMIPS_RAC_CONFIG);
-> +
-> +               return 0;
-> +       }
-> +
->         return !plat_device_is_coherent(dev) &&
->                (boot_cpu_type() == CPU_R10000 ||
->                 boot_cpu_type() == CPU_R12000 ||
-> --
-> 2.1.1
+> [..]
+>
+>
+>
 
 
-Jonas
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
