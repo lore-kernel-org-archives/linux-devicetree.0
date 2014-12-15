@@ -1,239 +1,117 @@
-From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH RFC] pinctrl: at91
-Date: Mon, 15 Dec 2014 10:57:50 +0100
-Message-ID: <1418637470-5839-1-git-send-email-ludovic.desroches@atmel.com>
-References: <CACRpkdbkUUzVVMp14szY+vGNd+d+8bL066STh_XMGud-UsFBqA@mail.gmail.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH RESEND v2] mfd: syscon: add child device support
+Date: Mon, 15 Dec 2014 09:58:19 +0000
+Message-ID: <20141215095819.GB7972@x1>
+References: <1417451138-13583-1-git-send-email-p.zabel@pengutronix.de>
+ <1418636633.3193.3.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdbkUUzVVMp14szY+vGNd+d+8bL066STh_XMGud-UsFBqA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1418636633.3193.3.camel@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Flora Fu <flora.fu@mediatek.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
----
+On Mon, 15 Dec 2014, Philipp Zabel wrote:
+> Am Montag, den 01.12.2014, 17:25 +0100 schrieb Philipp Zabel:
+> > For devices which have a complete register for themselves, it is po=
+ssible to
+> > place them next to the syscon device with overlapping reg ranges. T=
+he same is
+> > not possible for devices which only occupy bitfields in registers s=
+hared with
+> > other users.
+> > For devices that are completely controlled by bitfields in the sysc=
+on address
+> > range, such as multiplexers or voltage regulators, allow to put chi=
+ld devices
+> > into the syscon device node.
+>=20
+> What is the status of this patch?
+> Is this ok to be applied after the merge window closes?
+>=20
+> For reference, these are the previous threads:
+> https://lkml.org/lkml/2014/5/27/422
+> https://lkml.org/lkml/2014/11/3/134
 
-Hi Linus,
+As this is such an important driver I need more Acks for users/testers
+and senior reviewers before applying.
 
-I have reworked my patch (of course it will be split for submission) trying to
-follow your advices.
-
-I have replaced pinctrl_add_gpio_range() with of_gpiochip_add(). I'll do more
-tests but it seems to work. Maybe I've missed something but I still need to fix
-the case when there is a gpio controller not used.
-
-A lot of things rely on the gpio controller id (taken from the alias):
-index for gpio_chips array, pin muxing, naming, etc. I am not sure I can't get
-rid of this constraint.
-
-Regards
-
-Ludovic
-
- arch/arm/boot/dts/sama5d4.dtsi | 19 ++++++++++++++++++-
- drivers/pinctrl/pinctrl-at91.c | 42 +++++++++++++++++++++++-------------------
- 2 files changed, 41 insertions(+), 20 deletions(-)
-
-diff --git a/arch/arm/boot/dts/sama5d4.dtsi b/arch/arm/boot/dts/sama5d4.dtsi
-index 1b0f30c..c1c01a3 100644
---- a/arch/arm/boot/dts/sama5d4.dtsi
-+++ b/arch/arm/boot/dts/sama5d4.dtsi
-@@ -62,6 +62,7 @@
- 		gpio0 = &pioA;
- 		gpio1 = &pioB;
- 		gpio2 = &pioC;
-+		gpio3 = &pioD;
- 		gpio4 = &pioE;
- 		tcb0 = &tcb0;
- 		tcb1 = &tcb1;
-@@ -1063,7 +1064,7 @@
- 			};
- 
- 
--			pinctrl@fc06a000 {
-+			pinctrl: pinctrl@fc06a000 {
- 				#address-cells = <1>;
- 				#size-cells = <1>;
- 				compatible = "atmel,at91sam9x5-pinctrl", "atmel,at91rm9200-pinctrl", "simple-bus";
-@@ -1084,6 +1085,7 @@
- 					interrupts = <23 IRQ_TYPE_LEVEL_HIGH 1>;
- 					#gpio-cells = <2>;
- 					gpio-controller;
-+					gpio-ranges = <&pinctrl 0 0 32>;
- 					interrupt-controller;
- 					#interrupt-cells = <2>;
- 					clocks = <&pioA_clk>;
-@@ -1095,6 +1097,7 @@
- 					interrupts = <24 IRQ_TYPE_LEVEL_HIGH 1>;
- 					#gpio-cells = <2>;
- 					gpio-controller;
-+					gpio-ranges = <&pinctrl 0 32 32>;
- 					interrupt-controller;
- 					#interrupt-cells = <2>;
- 					clocks = <&pioB_clk>;
-@@ -1106,17 +1109,31 @@
- 					interrupts = <25 IRQ_TYPE_LEVEL_HIGH 1>;
- 					#gpio-cells = <2>;
- 					gpio-controller;
-+					gpio-ranges = <&pinctrl 0 64 32>;
- 					interrupt-controller;
- 					#interrupt-cells = <2>;
- 					clocks = <&pioC_clk>;
- 				};
- 
-+				pioD: gpio@fc068000 {
-+					compatible = "atmel,at91sam9x5-gpio", "atmel,at91rm9200-gpio";
-+					reg = <0xfc068000 0x100>;
-+					interrupts = <5 IRQ_TYPE_LEVEL_HIGH 1>;
-+					#gpio-cells = <2>;
-+					gpio-controller;
-+					interrupt-controller;
-+					#interrupt-cells = <2>;
-+					clocks = <&pioD_clk>;
-+					status = "disabled";
-+				};
+> > Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> > ---
+> > Changes since v1:
+> >  - Reworded binding documentation to allow #size-cells =3D <1>, whi=
+ch is useful
+> >    for syscon children that are controlled through a (possibly shar=
+ed) register
+> >    range.
+> > ---
+> >  Documentation/devicetree/bindings/mfd/syscon.txt | 13 ++++++++++++=
 +
- 				pioE: gpio@fc06d000 {
- 					compatible = "atmel,at91sam9x5-gpio", "atmel,at91rm9200-gpio";
- 					reg = <0xfc06d000 0x100>;
- 					interrupts = <26 IRQ_TYPE_LEVEL_HIGH 1>;
- 					#gpio-cells = <2>;
- 					gpio-controller;
-+					gpio-ranges = <&pinctrl 0 128 32>;
- 					interrupt-controller;
- 					#interrupt-cells = <2>;
- 					clocks = <&pioE_clk>;
-diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
-index dfd021e..f5d4aea 100644
---- a/drivers/pinctrl/pinctrl-at91.c
-+++ b/drivers/pinctrl/pinctrl-at91.c
-@@ -13,6 +13,7 @@
- #include <linux/of.h>
- #include <linux/of_device.h>
- #include <linux/of_address.h>
-+#include <linux/of_gpio.h>
- #include <linux/of_irq.h>
- #include <linux/slab.h>
- #include <linux/interrupt.h>
-@@ -35,7 +36,6 @@ struct at91_pinctrl_mux_ops;
- 
- struct at91_gpio_chip {
- 	struct gpio_chip	chip;
--	struct pinctrl_gpio_range range;
- 	struct at91_gpio_chip	*next;		/* Bank sharing same clock */
- 	int			pioc_hwirq;	/* PIO bank interrupt identifier on AIC */
- 	int			pioc_virq;	/* PIO bank Linux virtual interrupt */
-@@ -178,6 +178,7 @@ struct at91_pinctrl {
- 	struct pinctrl_dev	*pctl;
- 
- 	int			nbanks;
-+	int			nactive_banks;
- 
- 	uint32_t		*mux_mask;
- 	int			nmux;
-@@ -982,6 +983,8 @@ static void at91_pinctrl_child_count(struct at91_pinctrl *info,
- 	for_each_child_of_node(np, child) {
- 		if (of_device_is_compatible(child, gpio_compat)) {
- 			info->nbanks++;
-+			if (of_device_is_available(child))
-+				info->nactive_banks;
- 		} else {
- 			info->nfunctions++;
- 			info->ngroups += of_get_child_count(child);
-@@ -1145,8 +1148,12 @@ static int at91_pinctrl_probe_dt(struct platform_device *pdev,
- 	dev_dbg(&pdev->dev, "mux-mask\n");
- 	tmp = info->mux_mask;
- 	for (i = 0; i < info->nbanks; i++) {
-+		if (!gpio_chips[i]) {
-+			tmp += info->nmux;
-+			continue;
-+		}
- 		for (j = 0; j < info->nmux; j++, tmp++) {
--			dev_dbg(&pdev->dev, "%d:%d\t0x%x\n", i, j, tmp[0]);
-+			dev_dbg(&pdev->dev, "pio%c:periphal %c\t0x%x\n", 'A' + i, 'A' + j, tmp[0]);
- 		}
- 	}
- 
-@@ -1185,7 +1192,7 @@ static int at91_pinctrl_probe(struct platform_device *pdev)
- {
- 	struct at91_pinctrl *info;
- 	struct pinctrl_pin_desc *pdesc;
--	int ret, i, j, k;
-+	int ret, i, j, k, ngpio_chips_enabled = 0;
- 
- 	info = devm_kzalloc(&pdev->dev, sizeof(*info), GFP_KERNEL);
- 	if (!info)
-@@ -1201,11 +1208,15 @@ static int at91_pinctrl_probe(struct platform_device *pdev)
- 	 * need this to proceed.
- 	 */
- 	for (i = 0; i < info->nbanks; i++) {
--		if (!gpio_chips[i]) {
--			dev_warn(&pdev->dev, "GPIO chip %d not registered yet\n", i);
--			devm_kfree(&pdev->dev, info);
--			return -EPROBE_DEFER;
--		}
-+		if (gpio_chips[i])
-+			ngpio_chips_enabled++;
-+	}
-+	if (ngpio_chips_enabled < info->nactive_banks) {
-+		dev_warn(&pdev->dev,
-+			 "All GPIO chips are not registered yet (%d/%d)\n",
-+			 ngpio_chips_enabled, info->nactive_banks);
-+		devm_kfree(&pdev->dev, info);
-+		return -EPROBE_DEFER;
- 	}
- 
- 	at91_pinctrl_desc.name = dev_name(&pdev->dev);
-@@ -1233,9 +1244,9 @@ static int at91_pinctrl_probe(struct platform_device *pdev)
- 		goto err;
- 	}
- 
--	/* We will handle a range of GPIO pins */
- 	for (i = 0; i < info->nbanks; i++)
--		pinctrl_add_gpio_range(info->pctl, &gpio_chips[i]->range);
-+		if (gpio_chips[i])
-+			of_gpiochip_add(&gpio_chips[i]->chip);
- 
- 	dev_info(&pdev->dev, "initialized AT91 pinctrl driver\n");
- 
-@@ -1682,6 +1693,8 @@ static void at91_gpio_probe_fixup(void)
- 
- 	for (i = 0; i < gpio_banks; i++) {
- 		at91_gpio = gpio_chips[i];
-+		if (!at91_gpio)
-+			continue;
- 
- 		/*
- 		 * GPIO controller are grouped on some SoC:
-@@ -1705,7 +1718,6 @@ static int at91_gpio_probe(struct platform_device *pdev)
- 	struct resource *res;
- 	struct at91_gpio_chip *at91_chip = NULL;
- 	struct gpio_chip *chip;
--	struct pinctrl_gpio_range *range;
- 	int ret = 0;
- 	int irq, i;
- 	int alias_idx = of_alias_get_id(np, "gpio");
-@@ -1790,14 +1802,6 @@ static int at91_gpio_probe(struct platform_device *pdev)
- 
- 	chip->names = (const char *const *)names;
- 
--	range = &at91_chip->range;
--	range->name = chip->label;
--	range->id = alias_idx;
--	range->pin_base = range->base = range->id * MAX_NB_GPIO_PER_BANK;
--
--	range->npins = chip->ngpio;
--	range->gc = chip;
--
- 	ret = gpiochip_add(chip);
- 	if (ret)
- 		goto gpiochip_add_err;
--- 
-2.0.3
+> >  drivers/mfd/syscon.c                             |  3 +++
+> >  2 files changed, 16 insertions(+)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/mfd/syscon.txt b/Doc=
+umentation/devicetree/bindings/mfd/syscon.txt
+> > index fe8150b..0c6b497 100644
+> > --- a/Documentation/devicetree/bindings/mfd/syscon.txt
+> > +++ b/Documentation/devicetree/bindings/mfd/syscon.txt
+> > @@ -9,12 +9,25 @@ using a specific compatible value), interrogate t=
+he node (or associated
+> >  OS driver) to determine the location of the registers, and access =
+the
+> >  registers directly.
+> > =20
+> > +Optionally, devices that are controlled exclusively through syscon=
+ registers,
+> > +or even bitfields in shared syscon registers, can also be added as=
+ child nodes
+> > +to the syscon device node. These devices can implicitly assume the=
+ir parent
+> > +node is a syscon provider without referencing it explicitly via ph=
+andle.
+> > +In this case, the syscon node should have #address-cells =3D <1> a=
+nd
+> > +#size-cells =3D <0> or <1> and no ranges property.
+> > +
+> >  Required properties:
+> >  - compatible: Should contain "syscon".
+> >  - reg: the register region can be accessed from syscon
+> > =20
+> > +Optional properties:
+> > +- #address-cells: Should be 1.
+> > +- #size-cells: Should be 0 or 1.
+> > +
+> >  Examples:
+> >  gpr: iomuxc-gpr@020e0000 {
+> > +	#address-cells =3D <1>;
+> > +	#size-cells =3D <0>;
+> >  	compatible =3D "fsl,imx6q-iomuxc-gpr", "syscon";
+> >  	reg =3D <0x020e0000 0x38>;
+> >  };
+> > diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
+> > index ca15878..38da178 100644
+> > --- a/drivers/mfd/syscon.c
+> > +++ b/drivers/mfd/syscon.c
+> > @@ -155,6 +155,9 @@ static int syscon_probe(struct platform_device =
+*pdev)
+> > =20
+> >  	dev_dbg(dev, "regmap %pR registered\n", res);
+> > =20
+> > +	if (!of_device_is_compatible(pdev->dev.of_node, "simple-bus"))
+> > +		of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
+> > +
+> >  	return 0;
+> >  }
+> > =20
+>=20
+>=20
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
