@@ -1,403 +1,406 @@
-From: Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
-Subject: [PATCH 1/3] xgene-ahbc-iommu: Add support for APM X-Gene SoC AHBC IOMMU driver.
-Date: Mon, 15 Dec 2014 22:25:21 +0530
-Message-ID: <1418662523-8458-2-git-send-email-stripathi@apm.com>
-References: <1418662523-8458-1-git-send-email-stripathi@apm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1418662523-8458-1-git-send-email-stripathi-qTEPVZfXA3Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
-Cc: iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ddutile-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH RESEND v6 1/2] watchdog: ImgTec PDC Watchdog Timer Driver
+Date: Mon, 15 Dec 2014 09:17:44 -0800
+Message-ID: <20141215171744.GA16516@roeck-us.net>
+References: <1417064045-13274-1-git-send-email-Naidu.Tellapati@gmail.com>
+ <1417064045-13274-2-git-send-email-Naidu.Tellapati@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1417064045-13274-2-git-send-email-Naidu.Tellapati-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Naidu Tellapati <naidu.tellapati-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, naidu.tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, arul.ramasamy-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Jude.Abraham" <Jude.Abraham-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the support for the APM X-Gene SoC AHBC IOMMU driver.
-This driver translates the 32-bit AHB address from the dma master to
-42-bit AXI address with the help of a set of AHBC inbound mapper (AIM)
-registers. The AHB dma master for slaves, eg: sdhci etc, will use this
-driver to do a dma transfer operation.
+On Thu, Nov 27, 2014 at 10:24:04AM +0530, Naidu Tellapati wrote:
+> This commit adds support for ImgTec PowerDown Controller Watchdog Timer.
+> 
+> Signed-off-by: Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Jude.Abraham <Jude.Abraham-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+> Reviewed-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Reviewed-by: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+> ---
+>  drivers/watchdog/Kconfig      |   11 ++
+>  drivers/watchdog/Makefile     |    1 +
+>  drivers/watchdog/imgpdc_wdt.c |  298 +++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 310 insertions(+), 0 deletions(-)
+>  create mode 100644 drivers/watchdog/imgpdc_wdt.c
+> 
+> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> index d0107d4..a184f23 100644
+> --- a/drivers/watchdog/Kconfig
+> +++ b/drivers/watchdog/Kconfig
+> @@ -1235,6 +1235,17 @@ config BCM_KONA_WDT_DEBUG
+>  
+>  	  If in doubt, say 'N'.
+>  
+> +config IMGPDC_WDT
+> +	tristate "Imagination Technologies PDC Watchdog Timer"
+> +	depends on HAS_IOMEM
+> +	depends on METAG || MIPS || COMPILE_TEST
+> +	help
+> +	  Driver for Imagination Technologies PowerDown Controller
+> +	  Watchdog Timer.
+> +
+> +	  To compile this driver as a loadable module, choose M here.
+> +	  The module will be called imgpdc_wdt.
+> +
+>  config LANTIQ_WDT
+>  	tristate "Lantiq SoC watchdog"
+>  	depends on LANTIQ
+> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
+> index c569ec8..d4dfbb4 100644
+> --- a/drivers/watchdog/Makefile
+> +++ b/drivers/watchdog/Makefile
+> @@ -142,6 +142,7 @@ obj-$(CONFIG_OCTEON_WDT) += octeon-wdt.o
+>  octeon-wdt-y := octeon-wdt-main.o octeon-wdt-nmi.o
+>  obj-$(CONFIG_LANTIQ_WDT) += lantiq_wdt.o
+>  obj-$(CONFIG_RALINK_WDT) += rt2880_wdt.o
+> +obj-$(CONFIG_IMGPDC_WDT) += imgpdc_wdt.o
+>  
+>  # PARISC Architecture
+>  
+> diff --git a/drivers/watchdog/imgpdc_wdt.c b/drivers/watchdog/imgpdc_wdt.c
+> new file mode 100644
+> index 0000000..efb00b5
+> --- /dev/null
+> +++ b/drivers/watchdog/imgpdc_wdt.c
+> @@ -0,0 +1,298 @@
+> +/*
+> + * Imagination Technologies PowerDown Controller Watchdog Timer.
+> + *
+> + * Copyright (c) 2014 Imagination Technologies Ltd.
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms of the GNU General Public License version 2 as published by
+> + * the Free Software Foundation.
+> + *
+> + * Based on drivers/watchdog/sunxi_wdt.c Copyright (c) 2013 Carlo Caione
+> + *                                                     2012 Henrik Nordstrom
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/io.h>
+> +#include <linux/log2.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/slab.h>
+> +#include <linux/watchdog.h>
+> +
+> +/* registers */
+> +#define PDC_WD_SW_RESET			0x000
+> +
+> +#define PDC_WD_CONFIG			0x004
+> +#define PDC_WD_CONFIG_ENABLE		BIT(31)
+> +#define PDC_WD_CONFIG_DELAY_MASK	0x0000001f
+> +#define PDC_WD_CONFIG_DELAY_SHIFT	0
+> +
+> +#define PDC_WD_TICKLE1			0x008
+> +#define PDC_WD_TICKLE1_MAGIC		0xabcd1234
+> +
+> +#define PDC_WD_TICKLE2			0x00c
+> +#define PDC_WD_TICKLE2_MAGIC		0x4321dcba
+> +
+> +#define PDC_WD_TICKLE_STATUS_MASK	0x00000007
+> +#define PDC_WD_TICKLE_STATUS_SHIFT	0
+> +#define PDC_WD_TICKLE_STATUS_HRESET     0x0  /* Hard reset */
+> +#define PDC_WD_TICKLE_STATUS_TIMEOUT    0x1  /* Timeout */
+> +#define PDC_WD_TICKLE_STATUS_TICKLE     0x2  /* Tickled incorrectly */
+> +#define PDC_WD_TICKLE_STATUS_SRESET     0x3  /* Soft reset */
+> +#define PDC_WD_TICKLE_STATUS_USER       0x4  /* User reset */
+> +
+> +/* timeout in seconds */
+> +#define PDC_WD_MIN_TIMEOUT		1
+> +#define PDC_WD_DEFAULT_TIMEOUT		64
+> +
+> +static int timeout = PDC_WD_DEFAULT_TIMEOUT;
+> +module_param(timeout, int, 0);
+> +MODULE_PARM_DESC(timeout, "PDC watchdog delay in seconds (default 64s)");
 
-Signed-off-by: Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
----
- drivers/iommu/Kconfig            |  10 ++
- drivers/iommu/Makefile           |   1 +
- drivers/iommu/xgene-ahbc-iommu.c | 336 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 347 insertions(+)
- create mode 100644 drivers/iommu/xgene-ahbc-iommu.c
+It might be better to use  __MODULE_STRING(PDC_WD_DEFAULT_TIMEOUT)
+to encode the default timeout.
 
-diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-index dd51122..c0f5f23 100644
---- a/drivers/iommu/Kconfig
-+++ b/drivers/iommu/Kconfig
-@@ -302,4 +302,14 @@ config ARM_SMMU
- 	  Say Y here if your SoC includes an IOMMU device implementing
- 	  the ARM SMMU architecture.
+> +
+> +static bool nowayout = WATCHDOG_NOWAYOUT;
+> +module_param(nowayout, bool, 0);
+> +MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started");
+> +
+> +struct pdc_wdt_dev {
+> +	struct watchdog_device wdt_dev;
+> +	struct clk *wdt_clk;
+> +	struct clk *sys_clk;
+> +	int min_delay;
+> +	void __iomem *base;
+> +};
+> +
+> +static int pdc_wdt_keepalive(struct watchdog_device *wdt_dev)
+> +{
+> +	struct pdc_wdt_dev *wdt = watchdog_get_drvdata(wdt_dev);
+> +
+> +	writel(PDC_WD_TICKLE1_MAGIC, wdt->base + PDC_WD_TICKLE1);
+> +	writel(PDC_WD_TICKLE2_MAGIC, wdt->base + PDC_WD_TICKLE2);
+> +
+> +	return 0;
+> +}
+> +
+> +static int pdc_wdt_stop(struct watchdog_device *wdt_dev)
+> +{
+> +	unsigned int val;
+> +	struct pdc_wdt_dev *wdt = watchdog_get_drvdata(wdt_dev);
+> +
+> +	val = readl(wdt->base + PDC_WD_CONFIG);
+> +	val &= ~PDC_WD_CONFIG_ENABLE;
+> +	writel(val, wdt->base + PDC_WD_CONFIG);
+> +
+> +	/* Must tickle to finish the stop */
+> +	pdc_wdt_keepalive(wdt_dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static int pdc_wdt_set_timeout(struct watchdog_device *wdt_dev,
+> +			       unsigned int new_timeout)
+> +{
+> +	unsigned int val;
+> +	struct pdc_wdt_dev *wdt = watchdog_get_drvdata(wdt_dev);
+> +
+> +	wdt->wdt_dev.timeout = new_timeout;
+> +	/* round up to the next power of 2 */
+> +	new_timeout = order_base_2(new_timeout);
+> +	val = readl(wdt->base + PDC_WD_CONFIG);
+> +	val &= ~PDC_WD_CONFIG_DELAY_MASK;
+> +	val |= (new_timeout + wdt->min_delay) << PDC_WD_CONFIG_DELAY_SHIFT;
+> +	writel(val, wdt->base + PDC_WD_CONFIG);
+> +
+> +	return 0;
+> +}
+> +
+> +/* Start the watchdog timer (delay should already be set) */
+> +static int pdc_wdt_start(struct watchdog_device *wdt_dev)
+> +{
+> +	unsigned int val;
+> +	struct pdc_wdt_dev *wdt = watchdog_get_drvdata(wdt_dev);
+> +
+> +	val = readl(wdt->base + PDC_WD_CONFIG);
+> +	val |= PDC_WD_CONFIG_ENABLE;
+> +	writel(val, wdt->base + PDC_WD_CONFIG);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct watchdog_info pdc_wdt_info = {
+> +	.identity	= "IMG PDC Watchdog",
+> +	.options	= WDIOF_SETTIMEOUT |
+> +			  WDIOF_KEEPALIVEPING |
+> +			  WDIOF_MAGICCLOSE,
+> +};
+> +
+> +/* Kernel interface */
+> +static const struct watchdog_ops pdc_wdt_ops = {
+> +	.owner		= THIS_MODULE,
+> +	.start		= pdc_wdt_start,
+> +	.stop		= pdc_wdt_stop,
+> +	.ping		= pdc_wdt_keepalive,
+> +	.set_timeout	= pdc_wdt_set_timeout,
+> +};
+> +
+> +static int pdc_wdt_probe(struct platform_device *pdev)
+> +{
+> +	int ret, val;
+> +	unsigned long clk_rate;
+> +	struct resource *res;
+> +	struct pdc_wdt_dev *pdc_wdt;
+> +
+> +	pdc_wdt = devm_kzalloc(&pdev->dev, sizeof(*pdc_wdt), GFP_KERNEL);
+> +	if (!pdc_wdt)
+> +		return -ENOMEM;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	pdc_wdt->base = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(pdc_wdt->base))
+> +		return PTR_ERR(pdc_wdt->base);
+> +
+> +	pdc_wdt->sys_clk = devm_clk_get(&pdev->dev, "sys");
+> +	if (IS_ERR(pdc_wdt->sys_clk)) {
+> +		dev_err(&pdev->dev, "failed to get the sys clock.\n");
+> +		ret = PTR_ERR(pdc_wdt->wdt_clk);
 
-+config XGENE_AHBC_IOMMU
-+	bool "X-Gene AHBC IOMMU Support"
-+	default y if ARCH_XGENE
-+	select IOMMU_API
-+	help
-+	  Support for AHBC translation driver for X-Gene. This driver
-+	  translates the 32-bit AHB address from dma master to 42-bit
-+	  AXI address with the help of some set of AHB inbound mapping
-+	  registers.
-+
- endif # IOMMU_SUPPORT
-diff --git a/drivers/iommu/Makefile b/drivers/iommu/Makefile
-index 16edef7..ae3b663 100644
---- a/drivers/iommu/Makefile
-+++ b/drivers/iommu/Makefile
-@@ -19,3 +19,4 @@ obj-$(CONFIG_EXYNOS_IOMMU) += exynos-iommu.o
- obj-$(CONFIG_SHMOBILE_IOMMU) += shmobile-iommu.o
- obj-$(CONFIG_SHMOBILE_IPMMU) += shmobile-ipmmu.o
- obj-$(CONFIG_FSL_PAMU) += fsl_pamu.o fsl_pamu_domain.o
-+obj-$(CONFIG_XGENE_AHBC_IOMMU) += xgene-ahbc-iommu.o
-diff --git a/drivers/iommu/xgene-ahbc-iommu.c b/drivers/iommu/xgene-ahbc-iommu.c
-new file mode 100644
-index 0000000..7e3701e
---- /dev/null
-+++ b/drivers/iommu/xgene-ahbc-iommu.c
-@@ -0,0 +1,336 @@
-+/*
-+ * APM X-Gene SoC AHBC(IOMMU) Translation Driver
-+ *
-+ * Copyright (c) 2014 Applied Micro Circuits Corporation.
-+ * Author: Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute  it and/or modify it
-+ * under  the terms of  the GNU General  Public License as published by the
-+ * Free Software Foundation;  either version 2 of the  License, or (at your
-+ * option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+#include <linux/amba/bus.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/iommu.h>
-+#include <linux/of_address.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+#include <linux/version.h>
-+
-+#define AHB_PAGE_SIZE		(4*1024)
-+#define AHB_MAP_COUNT		8
-+
-+/* APM X-Gene SoC AHB bridge registers */
-+#define AIM0				0x0000
-+#define AIM0_SIZE_CTL			0x0004
-+#define AIM0_AXI_LO			0x0008
-+#define AIM0_AXI_HI			0x0010
-+
-+#define AIMX				0x0014
-+#define AIM_AXI_ADDRESS_HI_N_WR(src)	(((u32) (src) << 20) & 0xfff00000)
-+#define AIMX_SIZE_CTL			0x0018
-+#define AIM_EN_N_WR(src)		(((u32) (src) << 31) & 0x80000000)
-+#define AIM_EN_N_RD(src)		(((u32) (src) & 0x80000000) >> 31)
-+#define ARSB_WR(src)			(((u32) (src) << 24) & 0x0f000000)
-+#define AWSB_WR(src)			(((u32) (src) << 20) & 0x00f00000)
-+#define AIM_MASK_N_WR(src)		(((u32) (src)) & 0x000fffff)
-+#define AIMX_AXI_LO			0x001c
-+#define AIMX_AXI_HI			0x0020
-+#define AIMX_STRIDE			0x0010
-+
-+#define ENABLE_AIM_TRANSLATION		AIM_EN_N_WR(1) | ARSB_WR(1) | \
-+					AWSB_WR(1) | \
-+		       			AIM_MASK_N_WR(0)
-+
-+#define DISABLE_AIM_TRANSLATION        AIM_EN_N_WR(0) | ARSB_WR(0) | \
-+					AWSB_WR(0) | \
-+		       			AIM_MASK_N_WR(0)
-+
-+struct xgene_ahbc_mmu_device {
-+	struct device *dev;
-+	void __iomem *ahb_csr;
-+};
-+
-+struct xgene_ahbc_mmu_domain {
-+	struct xgene_ahbc_mmu_device *leaf_ahbc;
-+	spinlock_t lock;
-+	int slot_used;
-+};
-+
-+struct xgene_ahbc_mmu_device *ahbc_mmu;
-+
-+static int xgene_ahbc_mmu_find_entry(struct xgene_ahbc_mmu_device *ctx)
-+{
-+	int i;
-+	u32 val;
-+
-+	/*
-+	 * Find free slot by checking the EN-bit
-+	 * of AIMX register.
-+	 *
-+	 * AIMX_SIZE_CTL[31]
-+	 * 0 : Register available for reuse.
-+	 * 1 : Translation going on using the register.
-+	 */
-+	for (i = 0; i < AHB_MAP_COUNT; i++) {
-+		/*
-+		 * The AIM0_LO register offset for slot 0 is different from
-+		 * other slots. So explicitly check for slot 0 is
-+		 * required
-+		 */
-+		if (i == 0)
-+			val = readl(ctx->ahb_csr + AIM0_SIZE_CTL);
-+		else
-+			val = readl(ctx->ahb_csr + AIMX +
-+				   (i - 1 ) * AIMX_STRIDE);
-+		if (!AIM_EN_N_RD(val))
-+			return i;
-+	}
-+	return -ENODEV;
-+}
-+
-+static void xgene_ahbc_mmu_prog_entry(struct xgene_ahbc_mmu_device * ctx,
-+				      int slot,
-+				      phys_addr_t pa)
-+{
-+	/*
-+	 * Program the upper 32-bits of AXI address into
-+	 * one of the 8 set of AHB INBOUND MAPPER(AIM) registers
-+	 * for 32-bit AHB address by DMA master to 42-bit AXI address
-+	 * translation. Slot0 indicates AHB inbound register mapper 0(AIM0)
-+	 * and slot[1-7] is indicated by AIMX. As the AIM0_LO register offset
-+	 * for slot 0 is different from other slots, so explicitly check
-+	 * for slot 0.
-+	 */
-+	if (slot == 0) {
-+		writel(0, ctx->ahb_csr + AIM0_AXI_LO);
-+		writel(AIM_AXI_ADDRESS_HI_N_WR(pa >> 32),
-+		       ctx->ahb_csr + AIM0_AXI_HI);
-+		writel(0, ctx->ahb_csr + AIM0);
-+		/* Enable the AIM0 window translation */
-+		writel(ENABLE_AIM_TRANSLATION,
-+		       ctx->ahb_csr + AIM0_SIZE_CTL);
-+	} else {
-+		u32 os = (slot - 1) * AIMX_STRIDE;
-+
-+		writel(0, ctx->ahb_csr + AIMX_AXI_LO + os);
-+		writel(AIM_AXI_ADDRESS_HI_N_WR(pa >> 32),
-+		       ctx->ahb_csr + AIMX_AXI_HI + os);
-+		writel(0, ctx->ahb_csr + AIMX + os);
-+		/* Enable the AIMX[1-7] window translation */
-+		writel(ENABLE_AIM_TRANSLATION,
-+		       ctx->ahb_csr + AIMX_SIZE_CTL + os);
-+	}
-+}
-+
-+static void xgene_ahbc_mmu_clr_entry(struct xgene_ahbc_mmu_device * ctx, int slot)
-+{
-+	/*
-+	 * Disable the AIM window translation to reuse the AIM registers.
-+	 * As the AIM0_LO register offset for slot 0 is different from other
-+	 * slots, so explicitly check for slot 0.
-+	 */
-+	if (slot == 0)
-+		writel(DISABLE_AIM_TRANSLATION,
-+		       ctx->ahb_csr + AIM0_SIZE_CTL);
-+	else
-+		writel(DISABLE_AIM_TRANSLATION,
-+		       ctx->ahb_csr + AIMX_SIZE_CTL +
-+		       (slot - 1) * AIMX_STRIDE);
-+}
-+
-+static int xgene_ahbc_mmu_iommu_map(struct iommu_domain *domain,
-+				    unsigned long iova,
-+				    phys_addr_t pa,
-+				    size_t bytes, int prot)
-+{
-+	struct xgene_ahbc_mmu_domain *ahbc_mmu_domain = domain->priv;
-+	unsigned long flags;
-+	int slot;
-+
-+	spin_lock_irqsave(&ahbc_mmu_domain->lock, flags);
-+	slot = xgene_ahbc_mmu_find_entry(ahbc_mmu_domain->leaf_ahbc);
-+	if (slot < 0) {
-+		spin_unlock_irqrestore(&ahbc_mmu_domain->lock, flags);
-+		return slot;
-+	}
-+
-+	ahbc_mmu_domain->slot_used = slot;
-+
-+	xgene_ahbc_mmu_prog_entry(ahbc_mmu_domain->leaf_ahbc, slot, pa);
-+	spin_unlock_irqrestore(&ahbc_mmu_domain->lock, flags);
-+
-+	return 0;
-+}
-+
-+static size_t xgene_ahb_iommu_unmap(struct iommu_domain *domain,
-+				    unsigned long iova, size_t bytes)
-+{
-+	struct xgene_ahbc_mmu_domain *ahbc_mmu_domain = domain->priv;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&ahbc_mmu_domain->lock, flags);
-+	xgene_ahbc_mmu_clr_entry(ahbc_mmu_domain->leaf_ahbc,
-+				 ahbc_mmu_domain->slot_used);
-+	spin_unlock_irqrestore(&ahbc_mmu_domain->lock, flags);
-+	return AHB_PAGE_SIZE;
-+}
-+
-+
-+static int xgene_ahbc_mmu_domain_has_cap(struct iommu_domain *domain,
-+				     unsigned long cap)
-+{
-+	return 0;
-+}
-+
-+static int xgene_ahbc_mmu_attach_dev(struct iommu_domain *domain,
-+				 struct device *dev)
-+{
-+	struct xgene_ahbc_mmu_domain *ahbc_mmu_domain = domain->priv;
-+
-+	if (!ahbc_mmu_domain) {
-+		dev_err(dev, "%s failed to attach\n", dev_name(dev));
-+		return -EINVAL;
-+	}
-+
-+	ahbc_mmu_domain->leaf_ahbc = ahbc_mmu;
-+
-+	dev_dbg(dev, "%s is attached\n", dev_name(dev));
-+	return 0;
-+}
-+
-+static void xgene_ahbc_mmu_detach_dev(struct iommu_domain *domain,
-+				  struct device *dev)
-+{
-+	struct xgene_ahbc_mmu_domain *ahbc_mmu_domain = domain->priv;
-+
-+	ahbc_mmu_domain->leaf_ahbc = NULL;
-+
-+	dev_dbg(dev, "%s is deattached\n", dev_name(dev));
-+}
-+
-+static int xgene_ahbc_mmu_add_device(struct device *dev)
-+{
-+	if (dev->archdata.iommu) {
-+		dev_warn(dev, "IOMMU driver already assigned to device\n");
-+		return -EINVAL;
-+	}
-+
-+	dev->archdata.iommu = ahbc_mmu;
-+	return 0;
-+}
-+
-+static void xgene_ahbc_mmu_remove_device(struct device *dev)
-+{
-+	dev->archdata.iommu = NULL;
-+}
-+
-+static int xgene_ahbc_mmu_domain_init(struct iommu_domain *domain)
-+{
-+	struct xgene_ahbc_mmu_domain *ahbc_mmu_domain;
-+
-+	ahbc_mmu_domain = kzalloc(sizeof(*ahbc_mmu_domain), GFP_KERNEL);
-+	if (!ahbc_mmu_domain)
-+		return -ENOMEM;
-+
-+	spin_lock_init(&ahbc_mmu_domain->lock);
-+	domain->priv = ahbc_mmu_domain;
-+	return 0;
-+}
-+
-+static void xgene_ahbc_mmu_domain_destroy(struct iommu_domain *domain)
-+{
-+	struct xgene_ahbc_mmu_domain *ahbc_mmu_domain = domain->priv;
-+
-+	domain->priv = NULL;
-+	kfree(ahbc_mmu_domain);
-+}
-+
-+static struct iommu_ops xgene_ahbc_mmu_ops = {
-+	.domain_init	= xgene_ahbc_mmu_domain_init,
-+	.domain_destroy	= xgene_ahbc_mmu_domain_destroy,
-+	.attach_dev	= xgene_ahbc_mmu_attach_dev,
-+	.detach_dev	= xgene_ahbc_mmu_detach_dev,
-+	.add_device	= xgene_ahbc_mmu_add_device,
-+	.remove_device	= xgene_ahbc_mmu_remove_device,
-+	.map		= xgene_ahbc_mmu_iommu_map,
-+	.unmap		= xgene_ahb_iommu_unmap,
-+	.domain_has_cap	= xgene_ahbc_mmu_domain_has_cap,
-+	.pgsize_bitmap	= AHB_PAGE_SIZE,
-+};
-+
-+static int xgene_ahbc_mmu_probe(struct platform_device *pdev)
-+{
-+	struct xgene_ahbc_mmu_device *ctx;
-+	struct device *dev = &pdev->dev;
-+	struct resource *res;
-+
-+	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
-+	if (!ctx)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	ctx->ahb_csr = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(ctx->ahb_csr))
-+		return PTR_ERR(ctx->ahb_csr);
-+
-+	ctx->dev = dev;
-+
-+	platform_set_drvdata(pdev, ctx);
-+	ahbc_mmu = ctx;
-+
-+	if (!iommu_present(&amba_bustype))
-+		bus_set_iommu(&amba_bustype, &xgene_ahbc_mmu_ops);
-+
-+	return 0;
-+}
-+
-+static int xgene_ahbc_mmu_remove(struct platform_device *pdev)
-+{
-+	struct xgene_ahbc_mmu_device *ctx = platform_get_drvdata(pdev);
-+
-+	devm_kfree(&pdev->dev, ctx);
-+	return 0;
-+}
-+
-+static struct of_device_id xgene_ahbc_mmu_of_match[] = {
-+	{ .compatible = "apm,xgene-ahbc-iommu"},
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, xgene_ahbc_mmu_of_match);
-+
-+static struct platform_driver xgene_ahbc_mmu_driver = {
-+	.probe		= xgene_ahbc_mmu_probe,
-+	.remove		= xgene_ahbc_mmu_remove,
-+	.driver = {
-+		.owner	= THIS_MODULE,
-+		.name	= "xgene-ahbc",
-+		.of_match_table = of_match_ptr(xgene_ahbc_mmu_of_match),
-+	},
-+};
-+
-+static int xgene_ahbc_mmu_init(void)
-+{
-+	return platform_driver_register(&xgene_ahbc_mmu_driver);
-+}
-+subsys_initcall(xgene_ahbc_mmu_init);
-+
-+static void __exit xgene_ahbc_mmu_exit(void)
-+{
-+	platform_driver_unregister(&xgene_ahbc_mmu_driver);
-+}
-+module_exit(xgene_ahbc_mmu_exit);
-+
-+MODULE_DESCRIPTION("APM X-Gene SoC AHB Translation");
-+MODULE_AUTHOR("Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>");
-+MODULE_LICENSE("GPL v2");
+					sys_clk
+> +		return ret;
+
+		return PTR_ERR(pdc_wdt->sys_clk);
+
+On a higher level, what is sys_clk needed and used for in the first place ?
+The need for wdt_clk is obvious, but there is no explanation for the need
+of sys_clk, and the bindings file doesn't give a hint either.
+
+> +	}
+> +
+> +	pdc_wdt->wdt_clk = devm_clk_get(&pdev->dev, "wdt");
+> +	if (IS_ERR(pdc_wdt->wdt_clk)) {
+> +		dev_err(&pdev->dev, "failed to get the wdt clock.\n");
+> +		ret = PTR_ERR(pdc_wdt->wdt_clk);
+> +		return ret;
+
+		return PTR_ERR(pdc_wdt->wdt_clk);
+
+> +	}
+> +
+> +	ret = clk_prepare_enable(pdc_wdt->sys_clk);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "could not prepare or enable sys clock.\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = clk_prepare_enable(pdc_wdt->wdt_clk);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "could not prepare or enable wdt clock.\n");
+> +		goto disable_sys_clk;
+
+I would suggest to drop the '.' in those messages.
+
+> +	}
+> +
+> +	/* We use the clock rate to calculate the max timeout */
+> +	clk_rate = clk_get_rate(pdc_wdt->wdt_clk);
+> +	if (clk_rate == 0) {
+> +		dev_err(&pdev->dev, "failed to get clock rate\n");
+> +		ret = -EINVAL;
+> +		goto disable_wdt_clk;
+> +	}
+> +
+> +	if (order_base_2(clk_rate) > PDC_WD_CONFIG_DELAY_MASK + 1) {
+> +		dev_err(&pdev->dev, "invalid clock rate\n");
+> +		ret = -EINVAL;
+> +		goto disable_wdt_clk;
+> +	}
+> +
+> +	if (order_base_2(clk_rate) == 0)
+> +		pdc_wdt->wdt_dev.min_timeout = PDC_WD_MIN_TIMEOUT + 1;
+> +	else
+> +		pdc_wdt->wdt_dev.min_timeout = PDC_WD_MIN_TIMEOUT;
+> +
+> +	pdc_wdt->min_delay = order_base_2(clk_rate) - 1;
+
+Ultimately this means that min_delay can be smaller than 0,
+which makes it quite difficult to validate the rest of the code
+to ensure that it handles this case correctly.
+
+Give that a clock rate of 1 is somewhere between highly unlikely and
+unreasonable, wouldn't it be much easier to consider it to be invalid
+and not try to handle it ?
+
+> +
+> +	pdc_wdt->wdt_dev.info = &pdc_wdt_info;
+> +	pdc_wdt->wdt_dev.ops = &pdc_wdt_ops;
+> +	pdc_wdt->wdt_dev.max_timeout =
+> +			(1 << (PDC_WD_CONFIG_DELAY_MASK - pdc_wdt->min_delay));
+> +	pdc_wdt->wdt_dev.parent = &pdev->dev;
+> +
+> +	ret = watchdog_init_timeout(&pdc_wdt->wdt_dev, timeout, &pdev->dev);
+> +	if (ret < 0) {
+> +		pdc_wdt->wdt_dev.timeout = pdc_wdt->wdt_dev.max_timeout;
+> +		dev_warn(&pdev->dev,
+> +			 "Initial timeout out of range! setting max timeout\n");
+> +	}
+> +
+> +	pdc_wdt_stop(&pdc_wdt->wdt_dev);
+> +
+> +	/* Find what caused the last reset */
+> +	val = readl(pdc_wdt->base + PDC_WD_TICKLE1);
+> +	val = (val & PDC_WD_TICKLE_STATUS_MASK) >> PDC_WD_TICKLE_STATUS_SHIFT;
+> +	switch (val) {
+> +	case PDC_WD_TICKLE_STATUS_TICKLE:
+> +	case PDC_WD_TICKLE_STATUS_TIMEOUT:
+> +		pdc_wdt->wdt_dev.bootstatus |= WDIOF_CARDRESET;
+> +		dev_info(&pdev->dev,
+> +			 "watchdog module last reset due to timeout\n");
+> +		break;
+> +	case PDC_WD_TICKLE_STATUS_HRESET:
+> +		dev_info(&pdev->dev,
+> +			 "watchdog module last reset due to hard reset\n");
+> +		break;
+> +	case PDC_WD_TICKLE_STATUS_SRESET:
+> +		dev_info(&pdev->dev,
+> +			 "watchdog module last reset due to soft reset\n");
+> +		break;
+> +	case PDC_WD_TICKLE_STATUS_USER:
+> +		dev_info(&pdev->dev,
+> +			 "watchdog module last reset due to user reset\n");
+> +		break;
+> +	default:
+> +		dev_info(&pdev->dev,
+> +			 "contains an illegal status code (%08x)\n", val);
+> +		break;
+> +	}
+> +
+> +	watchdog_set_nowayout(&pdc_wdt->wdt_dev, nowayout);
+> +
+> +	platform_set_drvdata(pdev, pdc_wdt);
+> +	watchdog_set_drvdata(&pdc_wdt->wdt_dev, pdc_wdt);
+> +
+> +	ret = watchdog_register_device(&pdc_wdt->wdt_dev);
+> +	if (ret)
+> +		goto disable_wdt_clk;
+> +
+> +	return 0;
+> +
+> +disable_wdt_clk:
+> +	clk_disable_unprepare(pdc_wdt->wdt_clk);
+> +disable_sys_clk:
+> +	clk_disable_unprepare(pdc_wdt->sys_clk);
+> +	return ret;
+> +}
+> +
+> +static void pdc_wdt_shutdown(struct platform_device *pdev)
+> +{
+> +	struct pdc_wdt_dev *pdc_wdt = platform_get_drvdata(pdev);
+> +
+> +	pdc_wdt_stop(&pdc_wdt->wdt_dev);
+> +}
+> +
+> +static int pdc_wdt_remove(struct platform_device *pdev)
+> +{
+> +	struct pdc_wdt_dev *pdc_wdt = platform_get_drvdata(pdev);
+> +
+> +	pdc_wdt_stop(&pdc_wdt->wdt_dev);
+> +	watchdog_unregister_device(&pdc_wdt->wdt_dev);
+> +	clk_disable_unprepare(pdc_wdt->wdt_clk);
+> +	clk_disable_unprepare(pdc_wdt->sys_clk);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id pdc_wdt_match[] = {
+> +	{ .compatible = "img,pdc-wdt" },
+
+Will "img" be added to the list of vendor prefixes with some other patch ?
+
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, pdc_wdt_match);
+> +
+> +static struct platform_driver pdc_wdt_driver = {
+> +	.driver = {
+> +		.name = "imgpdc-wdt",
+> +		.of_match_table	= pdc_wdt_match,
+> +	},
+> +	.probe = pdc_wdt_probe,
+> +	.remove = pdc_wdt_remove,
+> +	.shutdown = pdc_wdt_shutdown,
+> +};
+> +module_platform_driver(pdc_wdt_driver);
+> +
+> +MODULE_AUTHOR("Jude Abraham <Jude.Abraham-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>");
+> +MODULE_AUTHOR("Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>");
+> +MODULE_DESCRIPTION("Imagination Technologies PDC Watchdog Timer Driver");
+> +MODULE_LICENSE("GPL v2");
+> -- 
+> 1.7.0.4
+> 
 --
-1.8.2.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
