@@ -1,240 +1,617 @@
-From: Evgeni Dobrev <evgeni@studio-punkt.com>
-Subject: [PATCH 2/2] ARM: dts: kirkwood: add dts support for Seagate
- BlackArmor NAS220
-Date: Mon, 15 Dec 2014 21:38:55 +0100
-Message-ID: <20141215203855.GA28940@anne>
+From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH (resend)] mailbox: Add Altera mailbox driver
+Date: Mon, 15 Dec 2014 14:54:49 -0600
+Message-ID: <548F4A99.7040409@ti.com>
+References: <1418378690-3466-1-git-send-email-lftan@altera.com> <548AFDE9.6000909@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <548AFDE9.6000909-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ley Foon Tan <lftan-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: lftan.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for Seagate BlackArmor NAS220.
+Hi Ley Foon,
 
-The Seagate BlackArmor NAS 220 is a NAS system based on Marvell 88f6192. It has 32MB NAND and 128MB DRAM. It has two SATA slots, one Gigabit Ethernet port, two USB 2.0 ports, two buttons and three LEDs. There is a serial port available on the CN5 connector on the board (1 - TX, 4 - RX, 6 - GND).
+On 12/12/2014 08:38 AM, Dinh Nguyen wrote:
+> 
+> 
+> On 12/12/14, 4:04 AM, Ley Foon Tan wrote:
+>> The Altera mailbox allows for interprocessor communication. It supports
+>> only one channel and work as either sender or receiver.
 
-The only functionality still not implemented is the bi-color led on the front panel (status). Pins mpp22 and mpp23 control this led. Setting mpp22 to high and mpp23 to low results in orange color. Setting mpp22 to low and mpp23 to high results in blue color.
+I have a few more comments in addition to those that Dinh provided.
 
-The third led is wired to show the SATA activity on the two drives.
+>>
+>> Signed-off-by: Ley Foon Tan <lftan-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/mailbox/altera-mailbox.txt |  49 +++
+>>  drivers/mailbox/Kconfig                            |   6 +
+>>  drivers/mailbox/Makefile                           |   2 +
+>>  drivers/mailbox/mailbox-altera.c                   | 404 +++++++++++++++++++++
+>>  4 files changed, 461 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/mailbox/altera-mailbox.txt
+>>  create mode 100644 drivers/mailbox/mailbox-altera.c
+>>
+>> diff --git a/Documentation/devicetree/bindings/mailbox/altera-mailbox.txt b/Documentation/devicetree/bindings/mailbox/altera-mailbox.txt
+>> new file mode 100644
+>> index 0000000..c261979
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mailbox/altera-mailbox.txt
+>> @@ -0,0 +1,49 @@
+>> +Altera Mailbox Driver
+>> +=====================
+>> +
+>> +Required properties:
+>> +- compatible :	"altr,mailbox-1.0".
 
-Signed-off-by: Evgeni Dobrev <evgeni@studio-punkt.com>
----
- arch/arm/boot/dts/Makefile            |    1 +
- arch/arm/boot/dts/kirkwood-nas220.dts |  182 +++++++++++++++++++++++++++++++++
- 2 files changed, 183 insertions(+)
- create mode 100644 arch/arm/boot/dts/kirkwood-nas220.dts
+I am not sure on this convention, sounds like IP version number. Please
+check this with a DT maintainer.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 38c89ca..8b9ad1d 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -132,6 +132,7 @@ dtb-$(CONFIG_MACH_KIRKWOOD) += kirkwood-b3.dtb \
- 	kirkwood-lsxhl.dtb \
- 	kirkwood-mplcec4.dtb \
- 	kirkwood-mv88f6281gtw-ge.dtb \
-+	kirkwood-nas220.dtb \
- 	kirkwood-net2big.dtb \
- 	kirkwood-net5big.dtb \
- 	kirkwood-netgear_readynas_duo_v2.dtb \
-diff --git a/arch/arm/boot/dts/kirkwood-nas220.dts b/arch/arm/boot/dts/kirkwood-nas220.dts
-new file mode 100644
-index 0000000..1de2ac3
---- /dev/null
-+++ b/arch/arm/boot/dts/kirkwood-nas220.dts
-@@ -0,0 +1,182 @@
-+/*
-+ * Device Tree file for Seagate BlackArmor NAS220
-+ *
-+ * Copyright (C) 2014 Evgeni Dobrev <evgeni@studio-punkt.com>
-+ *
-+ * Licensed under GPLv2 or later.
-+ */
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include "kirkwood.dtsi"
-+#include "kirkwood-6192.dtsi"
-+
-+/ {
-+	model = "Seagate NAS 220";
-+	compatible = "seagate,nas220", "marvell,kirkwood-88f6192", "marvell,kirkwood";
-+
-+	memory { /* 128 MB */
-+		device_type = "memory";
-+		reg = <0x00000000 0x8000000>;
-+	};
-+
-+        chosen {
-+                bootargs = "console=ttyS0,115200n8";
-+		stdout-path = &uart0;
-+        };
-+
-+	ocp@f1000000 {
-+		pinctrl: pin-controller@10000 {
-+			pinctrl-0 = < &pmx_uart0
-+				&pmx_button_reset
-+				&pmx_button_power
-+				>;
-+			pinctrl-names = "default";
-+
-+                        pmx_act_sata0: pmx-act-sata0 {
-+                                marvell,pins = "mpp15";
-+                                marvell,function = "sata0";
-+                        };
-+                        pmx_act_sata1: pmx-act-sata1 {
-+                                marvell,pins = "mpp16";
-+                                marvell,function = "sata1";
-+                        };
-+                        pmx_power_sata0: pmx-power-sata0 {
-+                                marvell,pins = "mpp24";
-+                                marvell,function = "gpio";
-+                        };
-+                        pmx_power_sata1: pmx-power-sata1 {
-+                                marvell,pins = "mpp28";
-+                                marvell,function = "gpio";
-+                        };
-+                        pmx_button_reset: pmx-button-reset {
-+                                marvell,pins = "mpp29";
-+                                marvell,function = "gpio";
-+                        };
-+                        pmx_button_power: pmx-button-power {
-+                                marvell,pins = "mpp26";
-+                                marvell,function = "gpio";
-+                        };
-+		};
-+
-+		serial@12000 {
-+			status = "okay";
-+		};
-+
-+                sata@80000 {
-+                        nr-ports = <2>;
-+                        status = "okay";
-+                };
-+
-+		i2c@11000 {
-+			status = "okay";
-+			adt7476: adt7476a@2e {
-+				compatible = "adi,adt7476";
-+				reg = <0x2e>;
-+			};
-+		};
-+	};
-+
-+	gpio_poweroff {
-+		compatible = "gpio-poweroff";
-+		gpios = <&gpio0 14 GPIO_ACTIVE_LOW>;
-+	};
-+
-+	gpio_keys {
-+		compatible = "gpio-keys";
-+
-+		button@1{
-+			label = "Reset push button";
-+			linux,code = <KEY_POWER>;
-+			gpios = <&gpio0 29 GPIO_ACTIVE_HIGH>;
-+		};
-+		button@2{
-+			label = "Power push button";
-+			linux,code = <KEY_SLEEP>;
-+			gpios = <&gpio0 26 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+
-+	gpio-leds {
-+		compatible = "gpio-leds";
-+
-+		blue-power {
-+			label = "nas220:blue:power";
-+			gpios = <&gpio0 12 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "default-on";
-+		};
-+	};
-+
-+        regulators {
-+                compatible = "simple-bus";
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+                pinctrl-0 = <&pmx_power_sata0 &pmx_power_sata1>;
-+                pinctrl-names = "default";
-+
-+                sata0_power: regulator@1 {
-+                        compatible = "regulator-fixed";
-+                        reg = <1>;
-+                        regulator-name = "SATA0 Power";
-+                        regulator-min-microvolt = <5000000>;
-+                        regulator-max-microvolt = <5000000>;
-+                        enable-active-high;
-+                        regulator-always-on;
-+                        regulator-boot-on;
-+                        gpio = <&gpio0 24 0>;
-+                };
-+
-+                sata1_power: regulator@2 {
-+                        compatible = "regulator-fixed";
-+                        reg = <2>;
-+                        regulator-name = "SATA1 Power";
-+                        regulator-min-microvolt = <5000000>;
-+                        regulator-max-microvolt = <5000000>;
-+                        enable-active-high;
-+                        regulator-always-on;
-+                        regulator-boot-on;
-+                        gpio = <&gpio0 28 0>;
-+                };
-+        };
-+};
-+
-+&nand {
-+	status = "okay";
-+	partition@0 {
-+		label = "uboot";
-+		reg = <0x0 0xa0000>;
-+		read-only;
-+	};
-+
-+	partition@a0000 {
-+		label = "env";
-+		reg = <0xa0000 0x010000>;
-+	};
-+
-+	partition@c0000 {
-+		label = "uimage";
-+		reg = <0xc0000 0x500000>;
-+	};
-+
-+	partition@5c0000 {
-+		label = "rootfs";
-+		reg = <0x5c0000 0x1a40000>;
-+	};
-+};
-+
-+&mdio {
-+        status = "okay";
-+        ethphy0: ethernet-phy@8 {
-+                reg = <8>;
-+        };
-+};
-+
-+&eth0 {
-+        status = "okay";
-+        ethernet0-port@0 {
-+                phy-handle = <&ethphy0>;
-+        };
-+};
-+
--- 
-1.7.10.4
+>> +- reg : 	physical base address of the mailbox and length of
+>> +		memory mapped region.
+>> +- #mbox-cells:	Common mailbox binding property to identify the number
+>> +		of cells required for the mailbox specifier. Should be 1.
+>> +
+>> +Optional properties:
+>> +- interrupt-parent :	interrupt source phandle.
+>> +- interrupts :		interrupt number. The interrupt specifier format
+>> +			depends on the interrupt controller parent.
+>> +
+>> +Example:
+>> +	mbox_tx: mailbox@0x100 {
+>> +		compatible = "altr,mailbox-1.0";
+>> +		reg = <0x100 0x8>;
+>> +		interrupt-parent = < &gic_0 >;
+>> +		interrupts = <5>;
+>> +		#mbox-cells = <1>;
+>> +	};
+>> +
+>> +	mbox_rx: mailbox@0x200 {
+>> +		compatible = "altr,mailbox-1.0";
+>> +		reg = <0x200 0x8>;
+>> +		interrupt-parent = < &gic_0 >;
+>> +		interrupts = <6>;
+>> +		#mbox-cells = <1>;
+>> +	};
+>> +
+>> +Mailbox client
+>> +===============
+>> +"mboxes" and the optional "mbox-names" (please see
+>> +Documentation/devicetree/bindings/mailbox/mailbox.txt for details). Each value
+>> +of the mboxes property should contain a phandle to the mailbox controller
+>> +device node and second argument is the channel index. It must be 0 (hardware
+>> +support only one channel).The equivalent "mbox-names" property value can be
+>> +used to give a name to the communication channel to be used by the client user.
+>> +
+>> +Example:
+>> +	mclient0: mclient0@0x400 {
+>> +		compatible = "client-1.0";
+>> +		reg = <0x400 0x10>;
+>> +		mbox-names = "mbox-tx", "mbox-rx";
+>> +		mboxes = <&mbox_tx 0>,
+>> +			 <&mbox_rx 0>;
+>> +	};
+>> diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
+>> index c04fed9..84325f2 100644
+>> --- a/drivers/mailbox/Kconfig
+>> +++ b/drivers/mailbox/Kconfig
+>> @@ -45,4 +45,10 @@ config PCC
+>>  	  states). Select this driver if your platform implements the
+>>  	  PCC clients mentioned above.
+>>  
+>> +config ALTERA_MBOX
+>> +	tristate "Altera Mailbox"
+
+You haven't used any depends on here, this driver is not applicable on
+all platforms, right?
+
+>> +	help
+>> +	  An implementation of the Altera Mailbox soft core. It is used
+>> +	  to send message between processors. Say Y here if you want to use the
+>> +	  Altera mailbox support.
+>>  endif
+>> diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile
+>> index dd412c2..2e79231 100644
+>> --- a/drivers/mailbox/Makefile
+>> +++ b/drivers/mailbox/Makefile
+>> @@ -7,3 +7,5 @@ obj-$(CONFIG_PL320_MBOX)	+= pl320-ipc.o
+>>  obj-$(CONFIG_OMAP2PLUS_MBOX)	+= omap-mailbox.o
+>>  
+>>  obj-$(CONFIG_PCC)		+= pcc.o
+>> +
+>> +obj-$(CONFIG_ALTERA_MBOX)	+= mailbox-altera.o
+>> diff --git a/drivers/mailbox/mailbox-altera.c b/drivers/mailbox/mailbox-altera.c
+>> new file mode 100644
+>> index 0000000..9ed10de
+>> --- /dev/null
+>> +++ b/drivers/mailbox/mailbox-altera.c
+>> @@ -0,0 +1,404 @@
+>> +/*
+>> + * Copyright Altera Corporation (C) 2013-2014. All rights reserved
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify it
+>> + * under the terms and conditions of the GNU General Public License,
+>> + * version 2, as published by the Free Software Foundation.
+>> + *
+>> + * This program is distributed in the hope it will be useful, but WITHOUT
+>> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+>> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+>> + * more details.
+>> + *
+>> + * You should have received a copy of the GNU General Public License along with
+>> + * this program.  If not, see <http://www.gnu.org/licenses/>.
+>> + */
+>> +
+>> +#include <linux/kernel.h>
+>> +#include <linux/module.h>
+>> +#include <linux/device.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/io.h>
+>> +#include <linux/of.h>
+>> +#include <linux/mailbox_controller.h>
+> 
+> Alphabetize the headers.
+> 
+>> +
+>> +#define DRIVER_NAME	"altera-mailbox"
+>> +
+>> +#define MAILBOX_CMD_REG			0x00
+>> +#define MAILBOX_PTR_REG			0x04
+>> +#define MAILBOX_STS_REG			0x08
+>> +#define MAILBOX_INTMASK_REG		0x0C
+>> +
+>> +#define INT_PENDING_MSK			0x1
+>> +#define INT_SPACE_MSK			0x2
+>> +
+>> +#define STS_PENDING_MSK			0x1
+>> +#define STS_FULL_MSK			0x2
+>> +#define STS_FULL_OFT			0x1
+>> +
+>> +#define MBOX_PENDING(status)	(((status) & STS_PENDING_MSK))
+>> +#define MBOX_FULL(status)	(((status) & STS_FULL_MSK) >> STS_FULL_OFT)
+>> +
+>> +enum altera_mbox_msg {
+>> +	MBOX_CMD = 0,
+>> +	MBOX_PTR,
+>> +};
+>> +
+>> +#define MBOX_POLLING_MS		1	/* polling interval 1ms */
+>> +
+>> +struct altera_mbox {
+>> +	bool is_sender;		/* 1-sender, 0-receiver */
+>> +	bool intr_mode;
+>> +	int irq;
+>> +	void __iomem *mbox_base;
+>> +	struct device *dev;
+>> +	struct mbox_chan chan;
+>> +	struct mbox_controller controller;
+>> +
+>> +	/* If the controller supports only RX polling mode */
+>> +	struct timer_list rxpoll_timer;
+>> +};
+>> +
+>> +static inline struct altera_mbox *to_altera_mbox(struct mbox_chan *chan)
+>> +{
+>> +	if (!chan)
+>> +		return NULL;
+>> +
+>> +	return container_of(chan, struct altera_mbox, chan);
+>> +}
+>> +
+>> +static inline int altera_mbox_full(struct altera_mbox *mbox)
+>> +{
+>> +	u32 status;
+>> +
+>> +	status = __raw_readl(mbox->mbox_base + MAILBOX_STS_REG);
+
+You may want to replace all the __raw_readl/__raw_writel with regular
+readl/writel or its equivalent relaxed versions depending on your needs.
+
+>> +	return MBOX_FULL(status);
+>> +}
+>> +
+>> +static inline int altera_mbox_pending(struct altera_mbox *mbox)
+>> +{
+>> +	u32 status;
+>> +
+>> +	status = __raw_readl(mbox->mbox_base + MAILBOX_STS_REG);
+>> +	return MBOX_PENDING(status);
+>> +}
+>> +
+>> +static void altera_mbox_rx_intmask(struct altera_mbox *mbox, bool enable)
+>> +{
+>> +	u32 mask;
+>> +
+>> +	mask = __raw_readl(mbox->mbox_base + MAILBOX_INTMASK_REG);
+>> +	if (enable)
+>> +		mask |= INT_PENDING_MSK;
+>> +	else
+>> +		mask &= ~INT_PENDING_MSK;
+>> +	__raw_writel(mask, mbox->mbox_base + MAILBOX_INTMASK_REG);
+>> +}
+>> +
+>> +static void altera_mbox_tx_intmask(struct altera_mbox *mbox, bool enable)
+>> +{
+>> +	u32 mask;
+>> +
+>> +	mask = __raw_readl(mbox->mbox_base + MAILBOX_INTMASK_REG);
+>> +	if (enable)
+>> +		mask |= INT_SPACE_MSK;
+>> +	else
+>> +		mask &= ~INT_SPACE_MSK;
+>> +	__raw_writel(mask, mbox->mbox_base + MAILBOX_INTMASK_REG);
+>> +}
+>> +
+>> +static bool altera_mbox_is_sender(struct altera_mbox *mbox)
+>> +{
+>> +	u32 reg;
+>> +	/* Write a magic number to PTR register and read back this register.
+>> +	 * This register is read-write if it is a sender.
+>> +	 */
+>> +	#define MBOX_MAGIC	0xA5A5AA55
+>> +	__raw_writel(MBOX_MAGIC, mbox->mbox_base + MAILBOX_PTR_REG);
+>> +	reg = __raw_readl(mbox->mbox_base + MAILBOX_PTR_REG);
+>> +	if (reg == MBOX_MAGIC) {
+>> +		/* Clear to 0 */
+>> +		__raw_writel(0, mbox->mbox_base + MAILBOX_PTR_REG);
+>> +		return true;
+>> +	}
+>> +	return false;
+>> +}
+>> +
+>> +static void altera_mbox_rx_data(struct mbox_chan *chan)
+>> +{
+>> +	struct altera_mbox *mbox = to_altera_mbox(chan);
+>> +	u32 data[2];
+>> +
+>> +	if (altera_mbox_pending(mbox)) {
+>> +		data[MBOX_PTR] = __raw_readl(mbox->mbox_base + MAILBOX_PTR_REG);
+>> +		data[MBOX_CMD] = __raw_readl(mbox->mbox_base + MAILBOX_CMD_REG);
+>> +		mbox_chan_received_data(chan, (void *)data);
+>> +	}
+>> +}
+>> +
+>> +static void altera_mbox_poll_rx(unsigned long data)
+>> +{
+>> +	struct mbox_chan *chan = (struct mbox_chan *)data;
+>> +	struct altera_mbox *mbox = to_altera_mbox(chan);
+>> +
+>> +	altera_mbox_rx_data(chan);
+>> +
+>> +	mod_timer(&mbox->rxpoll_timer,
+>> +		jiffies + msecs_to_jiffies(MBOX_POLLING_MS));
+>> +}
+>> +
+>> +static irqreturn_t altera_mbox_tx_interrupt(int irq, void *p)
+>> +{
+>> +	struct mbox_chan *chan = (struct mbox_chan *)p;
+>> +	struct altera_mbox *mbox = to_altera_mbox(chan);
+>> +
+>> +	altera_mbox_tx_intmask(mbox, false);
+>> +	mbox_chan_txdone(chan, 0);
+>> +
+>> +	return IRQ_HANDLED;
+>> +}
+>> +
+>> +static irqreturn_t altera_mbox_rx_interrupt(int irq, void *p)
+>> +{
+>> +	struct mbox_chan *chan = (struct mbox_chan *)p;
+>> +
+>> +	altera_mbox_rx_data(chan);
+>> +	return IRQ_HANDLED;
+>> +}
+>> +
+>> +static int altera_mbox_startup_sender(struct mbox_chan *chan)
+>> +{
+>> +	int ret;
+>> +	struct altera_mbox *mbox = to_altera_mbox(chan);
+>> +
+>> +	if (mbox->intr_mode) {
+>> +		ret = request_irq(mbox->irq, altera_mbox_tx_interrupt, 0,
+> 
+> Use devm_request_irq, since you didn't have and don't need use free_irq
+> in the shutdown function.
+> 
+>> +			DRIVER_NAME, chan);
+>> +		if (unlikely(ret)) {
+>> +			dev_err(mbox->dev,
+>> +				"failed to register mailbox interrupt:%d\n",
+>> +				ret);
+>> +			return ret;
+>> +		}
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int altera_mbox_startup_receiver(struct mbox_chan *chan)
+>> +{
+>> +	int ret;
+>> +	struct altera_mbox *mbox = to_altera_mbox(chan);
+>> +
+>> +	if (mbox->intr_mode) {
+>> +		ret = request_irq(mbox->irq, altera_mbox_rx_interrupt, 0,
+>> +			DRIVER_NAME, chan);
+> 
+> Use devm_request_irq
+> 
+> 
+>> +		if (unlikely(ret)) {
+>> +			dev_err(mbox->dev,
+>> +				"failed to register mailbox interrupt:%d\n",
+>> +				ret);
+>> +			return ret;
+>> +		}
+>> +		altera_mbox_rx_intmask(mbox, true);
+>> +	} else {
+>> +		/* Setup polling timer */
+>> +		setup_timer(&mbox->rxpoll_timer, altera_mbox_poll_rx,
+>> +			(unsigned long)chan);
+>> +		mod_timer(&mbox->rxpoll_timer,
+>> +			jiffies + msecs_to_jiffies(MBOX_POLLING_MS));
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int altera_mbox_send_data(struct mbox_chan *chan, void *data)
+>> +{
+>> +	struct altera_mbox *mbox = to_altera_mbox(chan);
+>> +	u32 *udata = (u32 *)data;
+>> +
+>> +	if (!mbox || !data)
+>> +		return -EINVAL;
+>> +	if (!mbox->is_sender) {
+>> +		dev_warn(mbox->dev,
+>> +			"failed to send. This is receiver mailbox.\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	if (altera_mbox_full(mbox))
+>> +		return -EBUSY;
+
+I think this logic in general will conflict between interrupt and poll
+mode. send_data is supposed to return -EBUSY only in polling mode and
+not in interrupt mode.
+
+>> +
+>> +	/* Enable interrupt before send */
+>> +	altera_mbox_tx_intmask(mbox, true);
+
+Is this true and required in Polling mode too?
+
+>> +
+>> +	/* Pointer register must write before command register */
+>> +	__raw_writel(udata[MBOX_PTR], mbox->mbox_base + MAILBOX_PTR_REG);
+>> +	__raw_writel(udata[MBOX_CMD], mbox->mbox_base + MAILBOX_CMD_REG);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static bool altera_mbox_last_tx_done(struct mbox_chan *chan)
+>> +{
+>> +	struct altera_mbox *mbox = to_altera_mbox(chan);
+>> +
+>> +	if (WARN_ON(!mbox))
+>> +		return false;
+> 
+> Are these checks necessary? Shouldn't the driver probe function have
+> already failed?
+> 
+>> +
+>> +	/* Return false if mailbox is full */
+>> +	return altera_mbox_full(mbox) ? false : true;
+>> +}
+>> +
+>> +static bool altera_mbox_peek_data(struct mbox_chan *chan)
+>> +{
+>> +	struct altera_mbox *mbox = to_altera_mbox(chan);
+>> +
+>> +	if (WARN_ON(!mbox))
+>> +		return false;
+>> +
+>> +	return altera_mbox_pending(mbox) ? true : false;
+>> +}
+>> +
+>> +static int altera_mbox_startup(struct mbox_chan *chan)
+>> +{
+>> +	struct altera_mbox *mbox = to_altera_mbox(chan);
+>> +	int ret = 0;
+>> +
+>> +	if (!mbox)
+>> +		return -EINVAL;
+>> +
+>> +	if (mbox->is_sender)
+>> +		ret = altera_mbox_startup_sender(chan);
+>> +	else
+>> +		ret = altera_mbox_startup_receiver(chan);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static void altera_mbox_shutdown(struct mbox_chan *chan)
+>> +{
+>> +	struct altera_mbox *mbox = to_altera_mbox(chan);
+>> +
+>> +	if (WARN_ON(!mbox))
+>> +		return;
+>> +
+>> +	if (mbox->intr_mode) {
+>> +		/* Unmask all interrupt masks */
+>> +		__raw_writel(~0, mbox->mbox_base + MAILBOX_INTMASK_REG);
+>> +		free_irq(mbox->irq, chan);
+>> +	} else if (!mbox->is_sender)
+>> +		del_timer_sync(&mbox->rxpoll_timer);
+> 
+> Need braces around the else as well.
+> 
+>> +}
+>> +
+>> +static struct mbox_chan_ops altera_mbox_ops = {
+>> +	.send_data = altera_mbox_send_data,
+>> +	.startup = altera_mbox_startup,
+>> +	.shutdown = altera_mbox_shutdown,
+>> +	.last_tx_done = altera_mbox_last_tx_done,
+>> +	.peek_data = altera_mbox_peek_data,
+>> +};
+>> +
+>> +static int altera_mbox_probe(struct platform_device *pdev)
+>> +{
+>> +	struct altera_mbox *mbox;
+>> +	struct mbox_chan *chans[1];
+> 
+> It would be cleaner if you use devm_kzalloc to allocate the channel here.
+
+Do you even need the chans variable, don't see it getting used
+anywhere. You are directly using the mbox->chan during registration..
+
+> 
+>> +	struct resource	*regs;
+>> +	int ret;
+>> +
+>> +	mbox = devm_kzalloc(&pdev->dev, sizeof(struct altera_mbox),
+
+Use sizeof(*mbox)
+
+>> +		GFP_KERNEL);
+
+You have a few "Alignment should match open parenthesis" checks
+generated with the --strict option on checkpatch. I am not sure if Jassi
+is requiring them, but I would recommend that you fix all of them.
+
+>> +	if (!mbox)
+>> +		return -ENOMEM;
+>> +
+>> +	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +	if (!regs)
+>> +		return -ENXIO;
+
+You can remove the check for regs, devm_ioremap_resource is capable
+of handling the error.
+
+>> +
+>> +	mbox->mbox_base = devm_ioremap_resource(&pdev->dev, regs);
+>> +	if (IS_ERR(mbox->mbox_base))
+>> +		return PTR_ERR(mbox->mbox_base);
+>> +
+>> +	/* Check is it a sender or receiver? */
+>> +	mbox->is_sender = altera_mbox_is_sender(mbox);
+>> +
+>> +	mbox->irq = platform_get_irq(pdev, 0);
+>> +	if (mbox->irq >= 0)
+>> +		mbox->intr_mode = true;
+
+This seems to be a poor way of setting up the mode. Is it the same IP
+block but different integration on different SoCs? Or on the same SoC,
+and you can use it either by interrupt driven or by polling.
+
+>> +
+>> +	mbox->dev = &pdev->dev;
+>> +
+>> +	/* Hardware supports only one channel. */
+>> +	chans[0] = &mbox->chan;
+>> +	mbox->controller.dev = mbox->dev;
+>> +	mbox->controller.num_chans = 1;
+>> +	mbox->controller.chans =  &mbox->chan;
+>> +	mbox->controller.ops = &altera_mbox_ops;
+>> +
+>> +	if (mbox->is_sender) {
+>> +		if (mbox->intr_mode)
+>> +			mbox->controller.txdone_irq = true;
+>> +		else {
+>> +			mbox->controller.txdone_poll = true;
+>> +			mbox->controller.txpoll_period = MBOX_POLLING_MS;
+>> +		}
+> 
+> Need braces around the if as well.
+> 
+>> +	}
+>> +
+>> +	ret = mbox_controller_register(&mbox->controller);
+>> +	if (ret) {
+>> +		dev_err(&pdev->dev, "Register mailbox failed\n");
+>> +		goto err;
+>> +	}
+>> +
+>> +	platform_set_drvdata(pdev, mbox);
+>> +	return 0;
+
+Not required, ret should be 0 if mbox_controller_register succeeds.
+
+>> +err:
+>> +	return ret;
+>> +}
+>> +
+>> +static int altera_mbox_remove(struct platform_device *pdev)
+>> +{
+>> +	struct altera_mbox *mbox = platform_get_drvdata(pdev);
+>> +
+>> +	if (!mbox)
+>> +		return -EINVAL;
+>> +
+>> +	mbox_controller_unregister(&mbox->controller);
+>> +
+>> +	platform_set_drvdata(pdev, NULL);
+
+This is not required.
+
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct of_device_id altera_mbox_match[] = {
+>> +	{ .compatible = "altr,mailbox-1.0" },
+>> +	{ /* Sentinel */ }
+>> +};
+>> +
+>> +MODULE_DEVICE_TABLE(of, altera_mbox_match);
+>> +
+>> +static struct platform_driver altera_mbox_driver = {
+>> +	.probe	= altera_mbox_probe,
+>> +	.remove	= altera_mbox_remove,
+>> +	.driver	= {
+>> +		.name	= DRIVER_NAME,
+>> +		.owner	= THIS_MODULE,
+>> +		.of_match_table	= altera_mbox_match,
+
+of_match_ptr(altera_mbox_match).
+
+>> +	},
+>> +};
+>> +
+>> +static int altera_mbox_init(void)
+>> +{
+>> +	return platform_driver_register(&altera_mbox_driver);
+>> +}
+>> +
+>> +static void altera_mbox_exit(void)
+>> +{
+>> +	platform_driver_unregister(&altera_mbox_driver);
+>> +}
+
+Use module_platform_driver here as you are using just regular platform
+driver register and unregister.
+
+regards
+Suman
+
+>> +
+>> +module_init(altera_mbox_init);
+>> +module_exit(altera_mbox_exit);
+>> +
+>> +MODULE_LICENSE("GPL v2");
+>> +MODULE_DESCRIPTION("Altera mailbox specific functions");
+>> +MODULE_AUTHOR("Ley Foon Tan <lftan-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>");
+>> +MODULE_ALIAS("platform:altera-mailbox");
+>>
+> 
+> Dinh
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
