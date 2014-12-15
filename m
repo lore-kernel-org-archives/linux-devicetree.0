@@ -1,58 +1,91 @@
-From: "Kuankuan.Yang" <ykk@rock-chips.com>
-Subject: Re: [RFC PATCH 0/6] Those patches is used for dw_hdmi
-	audio.
-Date: Mon, 15 Dec 2014 19:45:37 +0800
-Message-ID: <548EC9E1.5040206@rock-chips.com>
-References: <1418609494-15820-1-git-send-email-ykk@rock-chips.com>
- <20141215103830.GD11285@n2100.arm.linux.org.uk>
+From: Nikolaus Schulz <nikolaus.schulz-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] iio: document ti-dac8554 devicetree bindings
+Date: Mon, 15 Dec 2014 14:15:59 +0100
+Message-ID: <20141215131559.GA16545@avionic-0071.adnet.avionic-design.de>
+References: <1418643605-15554-1-git-send-email-nikolaus.schulz@avionic-design.de>
+ <20141215130248.GA8264@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20141215103830.GD11285@n2100.arm.linux.org.uk>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Mark Rutland <mark.rutland@arm.com>, alsa-devel@alsa-project.org, Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Liam Girdwood <lgirdwood@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>, Bard Liao <bardliao@realtek.com>, Lars-Peter Clausen <lars@metafoo.de>, Pawel Moll <pawel.moll@arm.com>, Takashi Iwai <tiwai@suse.de>, linux-rockchip@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Dylan Reid <dgreid@chromium.org>, Xu Jianqun <jay.xu@rock-chips.com>, Oder Chiou <oder_chiou@realtek.com>, Zubair.Kakakhel@imgtec.com, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jyri Sarha <jsarha@ti.com>, Ben Zhang <benzh@chromium.org>, Rob Herring <robh+dt@kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, =?UTF-8?B?U3TDqXBoYW5lIE1hcmNoZXNpbg==?= <marcheu@chromium.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20141215130248.GA8264@leverpostej>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alban Bedel <alban.bedel-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUnVzc2VsbDoKCiAgIHRoa3MgZm9yIHlvdXIgcmVwbGF5LCBhY3R1YWxseSB5b3UgYWxzbyBo
-YXZlIHNlbmQgbWUgdGhvc2UgCmR3LWhkbWktYXVkaW8uYyBwYXRjaGVzLCBhbmQgSSBhbHNvIGFn
-cmVlIGl0J3MgYW4gYmVhdXRpZnVsIHdheSB0byBtYWtlIApoZG1pLWF1ZGlvIHdvcmtzLiBCZXNp
-ZGUsCkkgdHJ5IHRvIHJldXNlIGl0IGludG8gb3VyIHBsYXRmb3JtLCBhbmQgYWN0dWFsbHkgdGhl
-IHN5c3RlbSBoYXZlIApjcmVhdGVkIHRoZSBEV19IRE1JIHNvdW5kIGNhcmQgc3VjY2Vzc2Z1bGx5
-LCBidXQgaSBjYW5ub3QgcGxheSBhbnkgCnNvdW5kICB3aXRoIHRoaXMgc291bmQgY2FyZC4KICAg
-QWZ0ZXIgZHVtcCB0aGUgcmVnaXN0ZXJzLCBJIGZvdW5kIHRoZSBwYXJ0IG9mICJBdWRpbyBETUEg
-UmVnaXN0ZXJzIiAKY2Fubm90IHdyaXRlIGFuZCBhbHdheXMgcmVhZCB3aXRoIDB4MDAuICBTbyBJ
-IHNlYXJjaGluZyB0aGUgZG9jdW1lbnQgIAoiRGVzaWdud2FyZSBDb3JlCkhETUkgVHJhbnNtaXR0
-ZXIgQ29udHJvbGxlciBEYXRhYm9vayIsIGFuZCBmb3VuZCB0aGF0ICAiQXVkaW8gRE1BIApSZWdp
-c3RlcnMiIG9ubHkgcHJlc2VudCB3aGVuIHRoZSBoYXJkd2FyZSBjb25maWd1cmF0aW9uIHBhcmFt
-ZXRlciAKQVVESU9fSUYgaXMgc2V0IHRvCkFIQkFVRERNQS4gVGhhbiBJIGNvbW11bmljYXRlIHdp
-dGggb3VyIElDIGNvbGxlYWd1ZXMsIHRoZXkgdG9sZCBtZSB0aGF0IApvdXIgY3B1IHJrMzI4OCBv
-bmx5IHN1cHBvcnQgdHdvIHdheSB0byAgdHJhbnNtaXQgYXVkaW8gZGF0YSggSTJTICYgU1BESUYg
-CiksIGluIHRoYXQKd2F5IHdlIGRvIG5vdCBzdXBwb3J0IEFIQl9ETUEsIGl0J3MgdmVyeSBzYWQs
-IGFuZCB0aGlzIGl0IHdoeSBpIGdpdmUgdXAgCnRoaXMgd2F5LCBhbHNvIGl0J3MgbXkgYmFkIHRo
-YXQgaSBzaG91bGQgcmVwbGF5IHRvIHUgZmlyc3QgaW4gdGhlIGJlZm9yZSAKbWFpbC4KCkJlc3Qg
-UmVnYXJkcy4KCuWcqCAyMDE05bm0MTLmnIgxNeaXpSAxODozOCwgUnVzc2VsbCBLaW5nIC0gQVJN
-IExpbnV4IOWGmemBkzoKPiBPbiBNb24sIERlYyAxNSwgMjAxNCBhdCAxMDoxMToyOEFNICswODAw
-LCBZYWtpciBZYW5nIHdyb3RlOgo+PiByazMyODggdXNlIERlc2lnbndhcmUgSERNSSBJUCwgRGVz
-aWdud2FyZSBIRE1JIHN1cHBvcnRzIGZvdXIgaW50ZXJmYWNlcyB0bwo+PiBjb25maWcgaGRtaSBh
-dWRpbyhJMlMsIFMvUERJRiwgR2VuZXJpYyBQYXJhbGxlbCBBdWRpbywgQUhCIEF1ZGlvIERNQSks
-IGJ1dAo+PiByazMyODggb25seSBzdXBwb3J0IHR3byB3YXlzIHRvIGNvbmZpZyBoZG1pIGF1ZGlv
-KEkyUywgUy9QRElGKSwgU28gd2UgdGFrZQo+PiBJMlMgYXMgaGRtaSBhdWRpbyBvcGVyYXRpb24g
-aW50ZXJmYWNlcywgYW5kIHRoZW4gdHJlYXQgaGRtaSBhdWRpbyBhcyBhbgo+PiBzdGFuZGFyZCBB
-TFNBIGRldmljZXMob25seSBnb3QgcGxhdGJhY2sgZnVuY3Rpb24pLgo+IFRoZXJlIGlzIG5vIG5l
-ZWQgZm9yIGR3LWhkbWkgYXVkaW8gdG8gYmUgaW1wbGVtZW50ZWQgYXMgYW4gQVNvQwo+IGRldmlj
-ZSAtIGFzIEkndmUgYWxyZWFkeSBzZW50IHBhdGNoZXMgdG8gQW5keSB3aXRoIG15IEFMU0EgZHJp
-dmVyCj4gd2hpY2ggaGFzIGJlZW4gYXJvdW5kIGZvciB0aGUgbGFzdCB0d28geWVhcnMsIGFuZCB3
-b3JrcyB3ZWxsLCBhbmQKPiBkb2Vzbid0IHJlcXVpcmUgYW55IGFkZGl0aW9uYWwgRFQgZGVzY3Jp
-cHRpb24uCj4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-CkFsc2EtZGV2ZWwgbWFpbGluZyBsaXN0CkFsc2EtZGV2ZWxAYWxzYS1wcm9qZWN0Lm9yZwpodHRw
-Oi8vbWFpbG1hbi5hbHNhLXByb2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8vYWxzYS1kZXZlbAo=
+On Mon, Dec 15, 2014 at 01:02:48PM +0000, Mark Rutland wrote:
+> On Mon, Dec 15, 2014 at 11:39:56AM +0000, Nikolaus Schulz wrote:
+> > Signed-off-by: Nikolaus Schulz <nikolaus.schulz-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+> > ---
+> >  .../devicetree/bindings/iio/dac/ti-dac8554.txt     | 22 ++++++++++=
+++++++++++++
+> >  1 file changed, 22 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/iio/dac/ti-da=
+c8554.txt
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/iio/dac/ti-dac8554.t=
+xt b/Documentation/devicetree/bindings/iio/dac/ti-dac8554.txt
+> > new file mode 100644
+> > index 0000000..32e96859
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/iio/dac/ti-dac8554.txt
+> > @@ -0,0 +1,22 @@
+> > +TI DAC8554 Digital to Analog Converter
+> > +
+> > +This driver supports the SPI bus.
+>=20
+> The binding need not refer to the driver, this sentence can go. It mi=
+ght
+> be worth adding "(SPI)" to the first line.
+
+OK
+
+> > +
+> > +Required properties:
+> > +	- compatible: must be "ti,dac8554"
+> > +	- vref-supply: the vref power supply
+> > +	- ti,address: the additional 2-bit chip address
+> > +
+> > +For required properties on SPI, please consult
+> > +Documentation/devicetree/bindings/spi/spi-bus.txt
+> > +
+> > +Example:
+> > +
+> > +	dac8554@0 {
+> > +		compatible =3D "ti,dac8554";
+> > +		reg =3D <0>;
+> > +		spi-max-frequency =3D <50000000>;
+> > +
+> > +		vref-supply =3D <&vdd_vref>;
+> > +		ti,address =3D <0>;
+>=20
+> What's this property used for?
+
+The DAC8554 has its own addressing scheme, where each chip is assigned =
+a
+two-bit address, defined by the state of two pins. So up to 4 DAC8554
+can be operated independently on the same SPI bus.
+
+> > +	};
+>=20
+> Otherwise this looks sane to me.
+>=20
+> Mark.
+
+--=20
+Avionic Design GmbH
+Nikolaus Schulz
+Wragekamp 10
+D-22397 Hamburg
+Germany
+
+Tel.:  +49 40 88187-163
+=46ax:   +49 40 88187-150
+Email: nikolaus.schulz-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org
+
+Avionic Design GmbH
+Amtsgericht Hamburg HRB 82598
+Gesch=E4ftsf=FChrung: Cornelis Broers
+Ust.-Ident-Nr.: DE813378254
