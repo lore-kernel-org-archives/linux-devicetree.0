@@ -1,49 +1,91 @@
-From: "ykk@rock-chips.com" <ykk@rock-chips.com>
-Subject: Re: [PATCH 5/6] dt-bindings: Add documentation for
-	Rockchip hdmi-audio
-Date: Mon, 15 Dec 2014 17:28:12 +0800
-Message-ID: <201412151725475801333@rock-chips.com>
-References: <1418609494-15820-1-git-send-email-ykk@rock-chips.com>,
- <1418612114-19692-1-git-send-email-ykk@rock-chips.com>,
- <548EA3B9.5080407@metafoo.de>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH RESEND v2] mfd: syscon: add child device support
+Date: Mon, 15 Dec 2014 10:43:53 +0100
+Message-ID: <1418636633.3193.3.camel@pengutronix.de>
+References: <1417451138-13583-1-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Lars-Peter Clausen <lars@metafoo.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, alsa-devel <alsa-devel@alsa-project.org>, Heiko Stuebner <heiko@sntech.de>, devicetree <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, dri-devel <dri-devel@lists.freedesktop.org>, Liam Girdwood <lgirdwood@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>, Bard Liao <bardliao@realtek.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Takashi Iwai <tiwai@suse.de>, linux-rockchip <linux-rockchip@lists.infradead.org>, Grant Likely <grant.likely@linaro.org>, Dylan Reid <dgreid@chromium.org>, Xu Jianqun <jay.xu@rock-chips.com>, Oder Chiou <oder_chiou@realtek.com>, "Zubair.Kakakhel" <Zubair.Kakakhel@imgtec.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jyri Sarha <jsarha@ti.com>, Ben Zhang <benzh@chromium.org>, Rob Herring <robh+dt@kernel.org>, Daniel Kurtz <djkurtz@ch>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1417451138-13583-1-git-send-email-p.zabel@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Flora Fu <flora.fu@mediatek.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-SGkgbGFyczoNCg0KdGhrcyBmb3IgeW91ciByZXZpZXcsIEkgd2lsbCBtb3ZlIGl0IHRvIGhkbWkg
-YXVkaW8gZHJpdmVyLCBnaXZlIHRoZSBjb2RlY19uYW1lICYgY29kZWNfZGFpX25hbWUgYW4gY29u
-c3Qgc3RyaW5nLg0KDQpCZXN0IFJlZ2FyZHMuDQoNCg0KWWFuZyBLdWFuS3VhbiB8IFNvZnR3YXJl
-IEVuZ2luZWVyIHwgMTUwNjA0MTY3ODMgfCB5a2tAcm9jay1jaGlwcy5jb20NCiANCkZyb206IExh
-cnMtUGV0ZXIgQ2xhdXNlbg0KRGF0ZTogMjAxNC0xMi0xNSAxNzowMg0KVG86IFlha2lyIFlhbmcN
-CkNDOiBIZWlrbyBTdHVlYm5lcjsgUm9iIEhlcnJpbmc7IFBhd2VsIE1vbGw7IE1hcmsgUnV0bGFu
-ZDsgSWFuIENhbXBiZWxsOyBLdW1hciBHYWxhOyBSdXNzZWxsIEtpbmc7IFBoaWxpcHAgWmFiZWw7
-IFp1YmFpci5LYWtha2hlbDsgRmFiaW8gRXN0ZXZhbTsgU2hhd24gR3VvOyBkcmktZGV2ZWw7IERh
-bmllbCBLdXJ0ejsgU29ubnkgUmFvOyBEeWxhbiBSZWlkOyBYdSBKaWFucXVuOyBTdO+/ve+/vXBo
-YW5lIE1hcmNoZXNpbjsgQnJpYW4gQXVzdGluOyBCYXJkIExpYW87IE1heCBGaWxpcHBvdjsgT2Rl
-ciBDaGlvdTsgZGV2aWNldHJlZTsgbGludXgta2VybmVsOyBsaW51eC1hcm0ta2VybmVsOyBsaW51
-eC1yb2NrY2hpcDsgYWxzYS1kZXZlbDsgQXJuZCBCZXJnbWFubjsgRGF2aWQgQWlybGllOyBTZWFu
-IENyb3NzOyBHcmFudCBMaWtlbHk7IEdyZWcgS3JvYWgtSGFydG1hbjsgQmVuIFpoYW5nOyBMaWFt
-IEdpcmR3b29kOyBKYXJvc2xhdiBLeXNlbGE7IE1hcmsgQnJvd247IFRha2FzaGkgSXdhaTsgSnly
-aSBTYXJoYQ0KU3ViamVjdDogUmU6IFtQQVRDSCA1LzZdIGR0LWJpbmRpbmdzOiBBZGQgZG9jdW1l
-bnRhdGlvbiBmb3IgUm9ja2NoaXAgaGRtaS1hdWRpbw0KT24gMTIvMTUvMjAxNCAwMzo1NSBBTSwg
-WWFraXIgWWFuZyB3cm90ZToNClsuLi5dDQo+ICstIGNvZGVjLW5hbWU6IHRoZSBkdy1oZG1pIGNv
-ZGVjJ3MgZGV2aWNlIG5hbWUNCj4gKy0gY29kZWMtZGFpLW5hbWU6IHRoZSBkdy1oZG1pIGNvZGVj
-J3MgZGFpIG5hbWUNCiANClBsZWFzZSB5b3UgcGhhbmRsZXMgZm9yIHRoaXMsIHRoZSBuYW1lcyBh
-cmUgTGludXggZHJpdmVyIGFuZCBmcmFtZXdvcmsgDQpzcGVjaWZpYyBkZXRhaWxzLiBUaGF0IHNo
-b3VsZCBub3QgbGVhayBpbnRvIHRoZSBEVCBiaW5kaW5ncy4NCiANClsuLl0NCiANCiANCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkFsc2EtZGV2ZWwgbWFp
-bGluZyBsaXN0CkFsc2EtZGV2ZWxAYWxzYS1wcm9qZWN0Lm9yZwpodHRwOi8vbWFpbG1hbi5hbHNh
-LXByb2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8vYWxzYS1kZXZlbAo=
+Hi,
+
+Am Montag, den 01.12.2014, 17:25 +0100 schrieb Philipp Zabel:
+> For devices which have a complete register for themselves, it is possible to
+> place them next to the syscon device with overlapping reg ranges. The same is
+> not possible for devices which only occupy bitfields in registers shared with
+> other users.
+> For devices that are completely controlled by bitfields in the syscon address
+> range, such as multiplexers or voltage regulators, allow to put child devices
+> into the syscon device node.
+
+What is the status of this patch?
+Is this ok to be applied after the merge window closes?
+
+For reference, these are the previous threads:
+https://lkml.org/lkml/2014/5/27/422
+https://lkml.org/lkml/2014/11/3/134
+
+regards
+Philipp
+
+> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> ---
+> Changes since v1:
+>  - Reworded binding documentation to allow #size-cells = <1>, which is useful
+>    for syscon children that are controlled through a (possibly shared) register
+>    range.
+> ---
+>  Documentation/devicetree/bindings/mfd/syscon.txt | 13 +++++++++++++
+>  drivers/mfd/syscon.c                             |  3 +++
+>  2 files changed, 16 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/syscon.txt b/Documentation/devicetree/bindings/mfd/syscon.txt
+> index fe8150b..0c6b497 100644
+> --- a/Documentation/devicetree/bindings/mfd/syscon.txt
+> +++ b/Documentation/devicetree/bindings/mfd/syscon.txt
+> @@ -9,12 +9,25 @@ using a specific compatible value), interrogate the node (or associated
+>  OS driver) to determine the location of the registers, and access the
+>  registers directly.
+>  
+> +Optionally, devices that are controlled exclusively through syscon registers,
+> +or even bitfields in shared syscon registers, can also be added as child nodes
+> +to the syscon device node. These devices can implicitly assume their parent
+> +node is a syscon provider without referencing it explicitly via phandle.
+> +In this case, the syscon node should have #address-cells = <1> and
+> +#size-cells = <0> or <1> and no ranges property.
+> +
+>  Required properties:
+>  - compatible: Should contain "syscon".
+>  - reg: the register region can be accessed from syscon
+>  
+> +Optional properties:
+> +- #address-cells: Should be 1.
+> +- #size-cells: Should be 0 or 1.
+> +
+>  Examples:
+>  gpr: iomuxc-gpr@020e0000 {
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+>  	compatible = "fsl,imx6q-iomuxc-gpr", "syscon";
+>  	reg = <0x020e0000 0x38>;
+>  };
+> diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
+> index ca15878..38da178 100644
+> --- a/drivers/mfd/syscon.c
+> +++ b/drivers/mfd/syscon.c
+> @@ -155,6 +155,9 @@ static int syscon_probe(struct platform_device *pdev)
+>  
+>  	dev_dbg(dev, "regmap %pR registered\n", res);
+>  
+> +	if (!of_device_is_compatible(pdev->dev.of_node, "simple-bus"))
+> +		of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
+> +
+>  	return 0;
+>  }
+>  
