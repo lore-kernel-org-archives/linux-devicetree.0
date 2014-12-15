@@ -1,77 +1,110 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 3/8] mfd: bindings: Provide ST bindings for ST's LPC device
-Date: Mon, 15 Dec 2014 11:25:33 +0000
-Message-ID: <1418642738-17407-4-git-send-email-lee.jones@linaro.org>
-References: <1418642738-17407-1-git-send-email-lee.jones@linaro.org>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 3/4] arm64: dts: Add mediatek MT8173 SoC and evaluation
+ board dts and Makefile
+Date: Mon, 15 Dec 2014 11:28:48 +0000
+Message-ID: <20141215112848.GE462@leverpostej>
+References: <1418208602-35584-1-git-send-email-eddie.huang@mediatek.com>
+ <1418208602-35584-4-git-send-email-eddie.huang@mediatek.com>
+ <20141211180245.GE28150@leverpostej>
+ <20141212065235.GK30369@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1418642738-17407-1-git-send-email-lee.jones@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: a.zummo@towertech.it, kernel@stlinux.com, rtc-linux@googlegroups.com, devicetree@vger.kernel.org, wim@iguana.be, lee.jones@linaro.org, linux-watchdog@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20141212065235.GK30369-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "Joe.C" <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "yh.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <yh.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On current ST platforms the LPC controls a number of functions including
-Watchdog and Real Time Clock.  This patch provides the bindings used to
-choose and configure the devices.
+On Fri, Dec 12, 2014 at 06:52:35AM +0000, Sascha Hauer wrote:
+> On Thu, Dec 11, 2014 at 06:02:46PM +0000, Mark Rutland wrote:
+> > Hi,
+> > 
+> > On Wed, Dec 10, 2014 at 10:50:01AM +0000, Eddie Huang wrote:
+> > > Add device tree support for MT8173 SoC and evalutaion board based on it.
+> > > 
+> > > Signed-off-by: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > > ---
+> > >  arch/arm64/boot/dts/Makefile       |   1 +
+> > >  arch/arm64/boot/dts/mt8173-evb.dts |  31 +++++++
+> > >  arch/arm64/boot/dts/mt8173.dtsi    | 164 +++++++++++++++++++++++++++++++++++++
+> > >  3 files changed, 196 insertions(+)
+> > >  create mode 100644 arch/arm64/boot/dts/mt8173-evb.dts
+> > >  create mode 100644 arch/arm64/boot/dts/mt8173.dtsi
+> > > 
+> > > diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
+> > > index f8001a6..db7661e 100644
+> > > --- a/arch/arm64/boot/dts/Makefile
+> > > +++ b/arch/arm64/boot/dts/Makefile
+> > > @@ -1,3 +1,4 @@
+> > > +dtb-$(CONFIG_ARCH_MEDIATEK) += mt8173-evb.dtb
+> > >  dtb-$(CONFIG_ARCH_THUNDER) += thunder-88xx.dtb
+> > >  dtb-$(CONFIG_ARCH_VEXPRESS) += rtsm_ve-aemv8a.dtb foundation-v8.dtb
+> > >  dtb-$(CONFIG_ARCH_XGENE) += apm-mustang.dtb
+> > > diff --git a/arch/arm64/boot/dts/mt8173-evb.dts b/arch/arm64/boot/dts/mt8173-evb.dts
+> > > new file mode 100644
+> > > index 0000000..adf26dd
+> > > --- /dev/null
+> > > +++ b/arch/arm64/boot/dts/mt8173-evb.dts
+> > > @@ -0,0 +1,31 @@
+> > > +/*
+> > > + * Copyright (c) 2014 MediaTek Inc.
+> > > + * Author: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > > + *
+> > > + * This program is free software; you can redistribute it and/or modify
+> > > + * it under the terms of the GNU General Public License version 2 as
+> > > + * published by the Free Software Foundation.
+> > > + *
+> > > + * This program is distributed in the hope that it will be useful,
+> > > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > > + * GNU General Public License for more details.
+> > > + */
+> > > +
+> > > +/dts-v1/;
+> > > +#include "mt8173.dtsi"
+> > > +
+> > > +/ {
+> > > +	model = "mediatek,mt8173-evb";
+> > > +
+> > > +	aliases {
+> > > +		serial0 = &uart0;
+> > > +		serial1 = &uart1;
+> > > +		serial2 = &uart2;
+> > > +		serial3 = &uart3;
+> > 
+> > Do any of these support earlycon?
+> > 
+> > > +	};
+> > > +
+> > > +	memory {
+> > 
+> > Nit: should be memory@40000000 (and you'll need to add device_type =
+> > "memory").
+> 
+> skeleton.dtsi already has a /memory node with device_type = "memory".
+> Shouldn't that be used?
 
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- Documentation/devicetree/bindings/mfd/st-lpc.txt | 36 ++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/st-lpc.txt
+To be honest I don't think that skeleton.dtsi is all that helpful.
 
-diff --git a/Documentation/devicetree/bindings/mfd/st-lpc.txt b/Documentation/devicetree/bindings/mfd/st-lpc.txt
-new file mode 100644
-index 0000000..b13f143
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/st-lpc.txt
-@@ -0,0 +1,36 @@
-+STMicroelectronics Low Power Controller (LPC)
-+=============================================
-+
-+Currently supports Watchdog OR Real Time Clock functionality.
-+
-+Required properties [common]
-+
-+- compatible 	: Must be one of: "st,stih407-lpc" "st,stih416-lpc"
-+				  "st,stih415-lpc" "st,stid127-lpc"
-+- reg		: LPC registers base address + size
-+- interrupts    : LPC interrupt line number and associated flags
-+- clocks	: Clock used by LPC device (See: ../clock/clock-bindings.txt)
-+- st,lpc-mode	: The LPC can run either one of two modes ST_LPC_MODE_RTC [0] or
-+		  ST_LPC_MODE_WDT [1].  One (and only one) mode must be
-+		  selected.
-+
-+Required properties [watchdog mode]
-+
-+- st,syscfg	: Phandle to syscfg node used to enable watchdog and configure
-+		  CPU reset type.
-+- timeout-sec	: Watchdog timeout in seconds
-+
-+Optional properties [watchdog mode]
-+
-+- st,warm-reset	: If present reset type will be 'warm' - if not it will be cold
-+
-+Example:
-+	lpc@fde05000 {
-+		compatible	= "st,stih416-lpc-watchdog";
-+		reg		= <0xfde05000 0x1000>;
-+		clocks 		= <&clk_s_d3_flexgen CLK_LPC_0>;
-+		st,syscfg	= <&syscfg_core>;
-+		timeout-sec	= <600>;
-+		st,lpc-mode	= <ST_LPC_MODE_WDT>;
-+		st,warm-reset;
-+	};
--- 
-1.9.1
+Almost all dts files define the root #address-cells and #size-cells for
+clarity anyway (which means the memory node isn't necessarily adequately
+sized), and the memory node(s) should have unit-addresses (so they won't
+match the memory node it provides).
+
+Where a dts is written with the assumption that the bootloader will fill
+things there should be a comment in the dts to that effect, with
+adequately sized memory nodes.
+
+The only potentially useful items are the empty /chosen and /aliases
+nodes. Both of which don't seem to be strictly required.
+
+If anything, I'd be tempted to get rid of skeleton.dtsi entirely.
+
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
