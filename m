@@ -1,45 +1,239 @@
-From: "Kuankuan.Yang" <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH 5/6] dt-bindings: Add documentation for Rockchip hdmi-audio
-Date: Mon, 15 Dec 2014 17:46:35 +0800
-Message-ID: <548EADFB.6020903@rock-chips.com>
-References: <1418609494-15820-1-git-send-email-ykk@rock-chips.com> <1418612114-19692-1-git-send-email-ykk@rock-chips.com> <548EA3B9.5080407@metafoo.de>
+From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH RFC] pinctrl: at91
+Date: Mon, 15 Dec 2014 10:57:50 +0100
+Message-ID: <1418637470-5839-1-git-send-email-ludovic.desroches@atmel.com>
+References: <CACRpkdbkUUzVVMp14szY+vGNd+d+8bL066STh_XMGud-UsFBqA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <548EA3B9.5080407-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+In-Reply-To: <CACRpkdbkUUzVVMp14szY+vGNd+d+8bL066STh_XMGud-UsFBqA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Xu Jianqun <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, =?UTF-8?B?U3Tvv73vv71waGFuZSBNYXJjaGVzaW4=?= <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>, Bard Liao <bardliao-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org>, Max Filippov <jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Oder Chiou <oder_chiou-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel@lists
+To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi lars:
+Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+---
 
-thks for your review, I will move it to hdmi audio driver, give the=20
-codec_name & codec_dai_name an const string.
+Hi Linus,
 
-Best Regards.
+I have reworked my patch (of course it will be split for submission) trying to
+follow your advices.
 
-=E5=9C=A8 2014=E5=B9=B412=E6=9C=8815=E6=97=A5 17:02, Lars-Peter Clausen=
- =E5=86=99=E9=81=93:
-> On 12/15/2014 03:55 AM, Yakir Yang wrote:
-> [...]
->> +- codec-name: the dw-hdmi codec's device name
->> +- codec-dai-name: the dw-hdmi codec's dai name
->
-> Please you phandles for this, the names are Linux driver and framewor=
-k=20
-> specific details. That should not leak into the DT bindings.
->
-> [..]
->
->
->
+I have replaced pinctrl_add_gpio_range() with of_gpiochip_add(). I'll do more
+tests but it seems to work. Maybe I've missed something but I still need to fix
+the case when there is a gpio controller not used.
 
+A lot of things rely on the gpio controller id (taken from the alias):
+index for gpio_chips array, pin muxing, naming, etc. I am not sure I can't get
+rid of this constraint.
+
+Regards
+
+Ludovic
+
+ arch/arm/boot/dts/sama5d4.dtsi | 19 ++++++++++++++++++-
+ drivers/pinctrl/pinctrl-at91.c | 42 +++++++++++++++++++++++-------------------
+ 2 files changed, 41 insertions(+), 20 deletions(-)
+
+diff --git a/arch/arm/boot/dts/sama5d4.dtsi b/arch/arm/boot/dts/sama5d4.dtsi
+index 1b0f30c..c1c01a3 100644
+--- a/arch/arm/boot/dts/sama5d4.dtsi
++++ b/arch/arm/boot/dts/sama5d4.dtsi
+@@ -62,6 +62,7 @@
+ 		gpio0 = &pioA;
+ 		gpio1 = &pioB;
+ 		gpio2 = &pioC;
++		gpio3 = &pioD;
+ 		gpio4 = &pioE;
+ 		tcb0 = &tcb0;
+ 		tcb1 = &tcb1;
+@@ -1063,7 +1064,7 @@
+ 			};
+ 
+ 
+-			pinctrl@fc06a000 {
++			pinctrl: pinctrl@fc06a000 {
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
+ 				compatible = "atmel,at91sam9x5-pinctrl", "atmel,at91rm9200-pinctrl", "simple-bus";
+@@ -1084,6 +1085,7 @@
+ 					interrupts = <23 IRQ_TYPE_LEVEL_HIGH 1>;
+ 					#gpio-cells = <2>;
+ 					gpio-controller;
++					gpio-ranges = <&pinctrl 0 0 32>;
+ 					interrupt-controller;
+ 					#interrupt-cells = <2>;
+ 					clocks = <&pioA_clk>;
+@@ -1095,6 +1097,7 @@
+ 					interrupts = <24 IRQ_TYPE_LEVEL_HIGH 1>;
+ 					#gpio-cells = <2>;
+ 					gpio-controller;
++					gpio-ranges = <&pinctrl 0 32 32>;
+ 					interrupt-controller;
+ 					#interrupt-cells = <2>;
+ 					clocks = <&pioB_clk>;
+@@ -1106,17 +1109,31 @@
+ 					interrupts = <25 IRQ_TYPE_LEVEL_HIGH 1>;
+ 					#gpio-cells = <2>;
+ 					gpio-controller;
++					gpio-ranges = <&pinctrl 0 64 32>;
+ 					interrupt-controller;
+ 					#interrupt-cells = <2>;
+ 					clocks = <&pioC_clk>;
+ 				};
+ 
++				pioD: gpio@fc068000 {
++					compatible = "atmel,at91sam9x5-gpio", "atmel,at91rm9200-gpio";
++					reg = <0xfc068000 0x100>;
++					interrupts = <5 IRQ_TYPE_LEVEL_HIGH 1>;
++					#gpio-cells = <2>;
++					gpio-controller;
++					interrupt-controller;
++					#interrupt-cells = <2>;
++					clocks = <&pioD_clk>;
++					status = "disabled";
++				};
++
+ 				pioE: gpio@fc06d000 {
+ 					compatible = "atmel,at91sam9x5-gpio", "atmel,at91rm9200-gpio";
+ 					reg = <0xfc06d000 0x100>;
+ 					interrupts = <26 IRQ_TYPE_LEVEL_HIGH 1>;
+ 					#gpio-cells = <2>;
+ 					gpio-controller;
++					gpio-ranges = <&pinctrl 0 128 32>;
+ 					interrupt-controller;
+ 					#interrupt-cells = <2>;
+ 					clocks = <&pioE_clk>;
+diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
+index dfd021e..f5d4aea 100644
+--- a/drivers/pinctrl/pinctrl-at91.c
++++ b/drivers/pinctrl/pinctrl-at91.c
+@@ -13,6 +13,7 @@
+ #include <linux/of.h>
+ #include <linux/of_device.h>
+ #include <linux/of_address.h>
++#include <linux/of_gpio.h>
+ #include <linux/of_irq.h>
+ #include <linux/slab.h>
+ #include <linux/interrupt.h>
+@@ -35,7 +36,6 @@ struct at91_pinctrl_mux_ops;
+ 
+ struct at91_gpio_chip {
+ 	struct gpio_chip	chip;
+-	struct pinctrl_gpio_range range;
+ 	struct at91_gpio_chip	*next;		/* Bank sharing same clock */
+ 	int			pioc_hwirq;	/* PIO bank interrupt identifier on AIC */
+ 	int			pioc_virq;	/* PIO bank Linux virtual interrupt */
+@@ -178,6 +178,7 @@ struct at91_pinctrl {
+ 	struct pinctrl_dev	*pctl;
+ 
+ 	int			nbanks;
++	int			nactive_banks;
+ 
+ 	uint32_t		*mux_mask;
+ 	int			nmux;
+@@ -982,6 +983,8 @@ static void at91_pinctrl_child_count(struct at91_pinctrl *info,
+ 	for_each_child_of_node(np, child) {
+ 		if (of_device_is_compatible(child, gpio_compat)) {
+ 			info->nbanks++;
++			if (of_device_is_available(child))
++				info->nactive_banks;
+ 		} else {
+ 			info->nfunctions++;
+ 			info->ngroups += of_get_child_count(child);
+@@ -1145,8 +1148,12 @@ static int at91_pinctrl_probe_dt(struct platform_device *pdev,
+ 	dev_dbg(&pdev->dev, "mux-mask\n");
+ 	tmp = info->mux_mask;
+ 	for (i = 0; i < info->nbanks; i++) {
++		if (!gpio_chips[i]) {
++			tmp += info->nmux;
++			continue;
++		}
+ 		for (j = 0; j < info->nmux; j++, tmp++) {
+-			dev_dbg(&pdev->dev, "%d:%d\t0x%x\n", i, j, tmp[0]);
++			dev_dbg(&pdev->dev, "pio%c:periphal %c\t0x%x\n", 'A' + i, 'A' + j, tmp[0]);
+ 		}
+ 	}
+ 
+@@ -1185,7 +1192,7 @@ static int at91_pinctrl_probe(struct platform_device *pdev)
+ {
+ 	struct at91_pinctrl *info;
+ 	struct pinctrl_pin_desc *pdesc;
+-	int ret, i, j, k;
++	int ret, i, j, k, ngpio_chips_enabled = 0;
+ 
+ 	info = devm_kzalloc(&pdev->dev, sizeof(*info), GFP_KERNEL);
+ 	if (!info)
+@@ -1201,11 +1208,15 @@ static int at91_pinctrl_probe(struct platform_device *pdev)
+ 	 * need this to proceed.
+ 	 */
+ 	for (i = 0; i < info->nbanks; i++) {
+-		if (!gpio_chips[i]) {
+-			dev_warn(&pdev->dev, "GPIO chip %d not registered yet\n", i);
+-			devm_kfree(&pdev->dev, info);
+-			return -EPROBE_DEFER;
+-		}
++		if (gpio_chips[i])
++			ngpio_chips_enabled++;
++	}
++	if (ngpio_chips_enabled < info->nactive_banks) {
++		dev_warn(&pdev->dev,
++			 "All GPIO chips are not registered yet (%d/%d)\n",
++			 ngpio_chips_enabled, info->nactive_banks);
++		devm_kfree(&pdev->dev, info);
++		return -EPROBE_DEFER;
+ 	}
+ 
+ 	at91_pinctrl_desc.name = dev_name(&pdev->dev);
+@@ -1233,9 +1244,9 @@ static int at91_pinctrl_probe(struct platform_device *pdev)
+ 		goto err;
+ 	}
+ 
+-	/* We will handle a range of GPIO pins */
+ 	for (i = 0; i < info->nbanks; i++)
+-		pinctrl_add_gpio_range(info->pctl, &gpio_chips[i]->range);
++		if (gpio_chips[i])
++			of_gpiochip_add(&gpio_chips[i]->chip);
+ 
+ 	dev_info(&pdev->dev, "initialized AT91 pinctrl driver\n");
+ 
+@@ -1682,6 +1693,8 @@ static void at91_gpio_probe_fixup(void)
+ 
+ 	for (i = 0; i < gpio_banks; i++) {
+ 		at91_gpio = gpio_chips[i];
++		if (!at91_gpio)
++			continue;
+ 
+ 		/*
+ 		 * GPIO controller are grouped on some SoC:
+@@ -1705,7 +1718,6 @@ static int at91_gpio_probe(struct platform_device *pdev)
+ 	struct resource *res;
+ 	struct at91_gpio_chip *at91_chip = NULL;
+ 	struct gpio_chip *chip;
+-	struct pinctrl_gpio_range *range;
+ 	int ret = 0;
+ 	int irq, i;
+ 	int alias_idx = of_alias_get_id(np, "gpio");
+@@ -1790,14 +1802,6 @@ static int at91_gpio_probe(struct platform_device *pdev)
+ 
+ 	chip->names = (const char *const *)names;
+ 
+-	range = &at91_chip->range;
+-	range->name = chip->label;
+-	range->id = alias_idx;
+-	range->pin_base = range->base = range->id * MAX_NB_GPIO_PER_BANK;
+-
+-	range->npins = chip->ngpio;
+-	range->gc = chip;
+-
+ 	ret = gpiochip_add(chip);
+ 	if (ret)
+ 		goto gpiochip_add_err;
+-- 
+2.0.3
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
