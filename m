@@ -1,237 +1,118 @@
-From: Ley Foon Tan <lftan-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH (resend)] mailbox: Add Altera mailbox driver
-Date: Mon, 15 Dec 2014 14:22:29 +0800
-Message-ID: <CAFiDJ58uQifY7th-mzvm2mjgJdw_MWmWFFhDPYT9TomOexiVNw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Vincent Yang <vincent.yang.fujitsu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 0/8] Support for Fujitsu MB86S7X SoCs
+Date: Mon, 15 Dec 2014 14:52:49 +0800
+Message-ID: <1418626369-3004-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Vincent Yang <Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 12, 2014 at 10:38 PM, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+Hello,
 
->> +
->> +#include <linux/kernel.h>
->> +#include <linux/module.h>
->> +#include <linux/device.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/interrupt.h>
->> +#include <linux/io.h>
->> +#include <linux/of.h>
->> +#include <linux/mailbox_controller.h>
->
-> Alphabetize the headers.
-Okay.
+  Fujitsu have a series of SoC already shipping based around
+variations of 2xCA7+2xCA15 big.LITTLE architecture, and we would like
+to upstream the basic support in this series.
 
+  MB86S70 is a big.LITTLE platform with 2xCA7+2xCA15 and an additional
+CM3 as the master. MB86S73 is a simple 2xCA7 and an additional CM3
+master.
 
->> +static int altera_mbox_startup_sender(struct mbox_chan *chan)
->> +{
->> +     int ret;
->> +     struct altera_mbox *mbox = to_altera_mbox(chan);
->> +
->> +     if (mbox->intr_mode) {
->> +             ret = request_irq(mbox->irq, altera_mbox_tx_interrupt, 0,
->
-> Use devm_request_irq, since you didn't have and don't need use free_irq
-> in the shutdown function.
-We want to free_irq when it shutdown. That means nobody requests for
-that mailbox (or channel) and request_irq() again if someone requests
-for a mailbox.
+  The DT includes references to sdhci patches which are being sent to
+the mmc list at the same time.
 
->
->> +                     DRIVER_NAME, chan);
->> +             if (unlikely(ret)) {
->> +                     dev_err(mbox->dev,
->> +                             "failed to register mailbox interrupt:%d\n",
->> +                             ret);
->> +                     return ret;
->> +             }
->> +     }
->> +
->> +     return 0;
->> +}
->> +
->> +static int altera_mbox_startup_receiver(struct mbox_chan *chan)
->> +{
->> +     int ret;
->> +     struct altera_mbox *mbox = to_altera_mbox(chan);
->> +
->> +     if (mbox->intr_mode) {
->> +             ret = request_irq(mbox->irq, altera_mbox_rx_interrupt, 0,
->> +                     DRIVER_NAME, chan);
->
-> Use devm_request_irq
->
->
->> +             if (unlikely(ret)) {
->> +                     dev_err(mbox->dev,
->> +                             "failed to register mailbox interrupt:%d\n",
->> +                             ret);
->> +                     return ret;
->> +             }
->> +             altera_mbox_rx_intmask(mbox, true);
->> +     } else {
->> +             /* Setup polling timer */
->> +             setup_timer(&mbox->rxpoll_timer, altera_mbox_poll_rx,
->> +                     (unsigned long)chan);
->> +             mod_timer(&mbox->rxpoll_timer,
->> +                     jiffies + msecs_to_jiffies(MBOX_POLLING_MS));
->> +     }
->> +
->> +     return 0;
->> +}
->> +
->> +static int altera_mbox_send_data(struct mbox_chan *chan, void *data)
->> +{
->> +     struct altera_mbox *mbox = to_altera_mbox(chan);
->> +     u32 *udata = (u32 *)data;
->> +
->> +     if (!mbox || !data)
->> +             return -EINVAL;
->> +     if (!mbox->is_sender) {
->> +             dev_warn(mbox->dev,
->> +                     "failed to send. This is receiver mailbox.\n");
->> +             return -EINVAL;
->> +     }
->> +
->> +     if (altera_mbox_full(mbox))
->> +             return -EBUSY;
->> +
->> +     /* Enable interrupt before send */
->> +     altera_mbox_tx_intmask(mbox, true);
->> +
->> +     /* Pointer register must write before command register */
->> +     __raw_writel(udata[MBOX_PTR], mbox->mbox_base + MAILBOX_PTR_REG);
->> +     __raw_writel(udata[MBOX_CMD], mbox->mbox_base + MAILBOX_CMD_REG);
->> +
->> +     return 0;
->> +}
->> +
->> +static bool altera_mbox_last_tx_done(struct mbox_chan *chan)
->> +{
->> +     struct altera_mbox *mbox = to_altera_mbox(chan);
->> +
->> +     if (WARN_ON(!mbox))
->> +             return false;
->
-> Are these checks necessary? Shouldn't the driver probe function have
-> already failed?
-Will removed.
+  We welcome any comments or questions.
 
->> +
->> +     /* Return false if mailbox is full */
->> +     return altera_mbox_full(mbox) ? false : true;
->> +}
->> +
->> +static bool altera_mbox_peek_data(struct mbox_chan *chan)
->> +{
->> +     struct altera_mbox *mbox = to_altera_mbox(chan);
->> +
->> +     if (WARN_ON(!mbox))
->> +             return false;
->> +
->> +     return altera_mbox_pending(mbox) ? true : false;
->> +}
->> +
->> +static int altera_mbox_startup(struct mbox_chan *chan)
->> +{
->> +     struct altera_mbox *mbox = to_altera_mbox(chan);
->> +     int ret = 0;
->> +
->> +     if (!mbox)
->> +             return -EINVAL;
->> +
->> +     if (mbox->is_sender)
->> +             ret = altera_mbox_startup_sender(chan);
->> +     else
->> +             ret = altera_mbox_startup_receiver(chan);
->> +
->> +     return ret;
->> +}
->> +
->> +static void altera_mbox_shutdown(struct mbox_chan *chan)
->> +{
->> +     struct altera_mbox *mbox = to_altera_mbox(chan);
->> +
->> +     if (WARN_ON(!mbox))
->> +             return;
->> +
->> +     if (mbox->intr_mode) {
->> +             /* Unmask all interrupt masks */
->> +             __raw_writel(~0, mbox->mbox_base + MAILBOX_INTMASK_REG);
->> +             free_irq(mbox->irq, chan);
->> +     } else if (!mbox->is_sender)
->> +             del_timer_sync(&mbox->rxpoll_timer);
->
-> Need braces around the else as well.
-Noted.
->
->> +}
->> +
->> +static struct mbox_chan_ops altera_mbox_ops = {
->> +     .send_data = altera_mbox_send_data,
->> +     .startup = altera_mbox_startup,
->> +     .shutdown = altera_mbox_shutdown,
->> +     .last_tx_done = altera_mbox_last_tx_done,
->> +     .peek_data = altera_mbox_peek_data,
->> +};
->> +
->> +static int altera_mbox_probe(struct platform_device *pdev)
->> +{
->> +     struct altera_mbox *mbox;
->> +     struct mbox_chan *chans[1];
->
-> It would be cleaner if you use devm_kzalloc to allocate the channel here.
-Okay.
->
->> +     struct resource *regs;
->> +     int ret;
->> +
->> +     mbox = devm_kzalloc(&pdev->dev, sizeof(struct altera_mbox),
->> +             GFP_KERNEL);
->> +     if (!mbox)
->> +             return -ENOMEM;
->> +
->> +     regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +     if (!regs)
->> +             return -ENXIO;
->> +
->> +     mbox->mbox_base = devm_ioremap_resource(&pdev->dev, regs);
->> +     if (IS_ERR(mbox->mbox_base))
->> +             return PTR_ERR(mbox->mbox_base);
->> +
->> +     /* Check is it a sender or receiver? */
->> +     mbox->is_sender = altera_mbox_is_sender(mbox);
->> +
->> +     mbox->irq = platform_get_irq(pdev, 0);
->> +     if (mbox->irq >= 0)
->> +             mbox->intr_mode = true;
->> +
->> +     mbox->dev = &pdev->dev;
->> +
->> +     /* Hardware supports only one channel. */
->> +     chans[0] = &mbox->chan;
->> +     mbox->controller.dev = mbox->dev;
->> +     mbox->controller.num_chans = 1;
->> +     mbox->controller.chans =  &mbox->chan;
->> +     mbox->controller.ops = &altera_mbox_ops;
->> +
->> +     if (mbox->is_sender) {
->> +             if (mbox->intr_mode)
->> +                     mbox->controller.txdone_irq = true;
->> +             else {
->> +                     mbox->controller.txdone_poll = true;
->> +                     mbox->controller.txpoll_period = MBOX_POLLING_MS;
->> +             }
->
-> Need braces around the if as well.
-Noted.
->
+Changes since v1:
+* Thanks to Arnd, modified clock driver to populate clocks only when
+some user need them. Node name changed from "fujitsu,mb86s70-clk" to
+"fujitsu,mb86s70-crg11" . Controller+Domain+Port of a clock are now
+three cells specified by the user node.
+* aliases moved into board DTS files
+* Voltage supply moved as per-board DT node.
+* Removed default overly verbose loglevel=8
+* Specify -march=armv7-a flag for mcpm.c and smc.S that contain ARMv7
+specific code.
+* Removed wrongly put outer_flush_all(), now using standard
+v7_exit_coherency_flush() instead of platform specific macro.
+* Simplified GPIO offset calculations in gpio-mb86s70.c driver. And
+added .remove() for the driver
+* ARM MHU driver provided a .remove() to enable module unloading.
+* A few other misc cleanups suggested in v1 submission.
 
-Regards
-Ley Foon
+Thanks.
+
+Vincent Yang (8):
+  ARM: Add platform support for Fujitsu MB86S7X SoCs
+  mailbox: arm_mhu: add driver for ARM MHU controller
+  ARM: MB86S7X: Add MCPM support
+  clk: Add clock driver for mb86s7x
+  gpio: Add Fujitsu MB86S7x GPIO driver
+  dt: mb86s7x: add dt files for MB86S7x evbs
+  of: add Fujitsu vendor prefix
+  ARM: MB86S7x: Add configs
+
+ Documentation/devicetree/bindings/arm/mb86s7x.txt  |   8 +
+ .../bindings/clock/fujitsu,mb86s70-crg11.txt       |  26 +
+ .../bindings/gpio/fujitsu,mb86s70-gpio.txt         |  20 +
+ .../devicetree/bindings/mailbox/arm-mhu.txt        |  33 ++
+ .../devicetree/bindings/soc/mb86s7x/scb_mhu.txt    |  35 ++
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ MAINTAINERS                                        |   7 +
+ arch/arm/Kconfig                                   |   2 +
+ arch/arm/Makefile                                  |   1 +
+ arch/arm/boot/dts/Makefile                         |   1 +
+ arch/arm/boot/dts/mb86s70.dtsi                     |  91 ++++
+ arch/arm/boot/dts/mb86s70eb.dts                    |  59 +++
+ arch/arm/boot/dts/mb86s73.dtsi                     |  49 ++
+ arch/arm/boot/dts/mb86s73eb.dts                    |  46 ++
+ arch/arm/boot/dts/mb86s7x.dtsi                     | 140 ++++++
+ arch/arm/configs/fujitsu_defconfig                 | 232 +++++++++
+ arch/arm/configs/multi_v7_defconfig                |   5 +
+ arch/arm/mach-mb86s7x/Kconfig                      |  19 +
+ arch/arm/mach-mb86s7x/Makefile                     |   3 +
+ arch/arm/mach-mb86s7x/board.c                      |  23 +
+ arch/arm/mach-mb86s7x/mcpm.c                       | 311 ++++++++++++
+ arch/arm/mach-mb86s7x/smc.S                        |  27 ++
+ drivers/clk/Makefile                               |   1 +
+ drivers/clk/clk-mb86s7x.c                          | 379 +++++++++++++++
+ drivers/gpio/Kconfig                               |   6 +
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-mb86s7x.c                        | 231 +++++++++
+ drivers/mailbox/Kconfig                            |   7 +
+ drivers/mailbox/Makefile                           |   2 +
+ drivers/mailbox/arm_mhu.c                          | 212 +++++++++
+ drivers/soc/Makefile                               |   1 +
+ drivers/soc/mb86s7x/Makefile                       |   4 +
+ drivers/soc/mb86s7x/scb_mhu.c                      | 528 +++++++++++++++++++++
+ include/soc/mb86s7x/scb_mhu.h                      | 105 ++++
+ 34 files changed, 2616 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/mb86s7x.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/fujitsu,mb86s70-crg11.txt
+ create mode 100644 Documentation/devicetree/bindings/gpio/fujitsu,mb86s70-gpio.txt
+ create mode 100644 Documentation/devicetree/bindings/mailbox/arm-mhu.txt
+ create mode 100644 Documentation/devicetree/bindings/soc/mb86s7x/scb_mhu.txt
+ create mode 100644 arch/arm/boot/dts/mb86s70.dtsi
+ create mode 100644 arch/arm/boot/dts/mb86s70eb.dts
+ create mode 100644 arch/arm/boot/dts/mb86s73.dtsi
+ create mode 100644 arch/arm/boot/dts/mb86s73eb.dts
+ create mode 100644 arch/arm/boot/dts/mb86s7x.dtsi
+ create mode 100644 arch/arm/configs/fujitsu_defconfig
+ create mode 100644 arch/arm/mach-mb86s7x/Kconfig
+ create mode 100644 arch/arm/mach-mb86s7x/Makefile
+ create mode 100644 arch/arm/mach-mb86s7x/board.c
+ create mode 100644 arch/arm/mach-mb86s7x/mcpm.c
+ create mode 100644 arch/arm/mach-mb86s7x/smc.S
+ create mode 100644 drivers/clk/clk-mb86s7x.c
+ create mode 100644 drivers/gpio/gpio-mb86s7x.c
+ create mode 100644 drivers/mailbox/arm_mhu.c
+ create mode 100644 drivers/soc/mb86s7x/Makefile
+ create mode 100644 drivers/soc/mb86s7x/scb_mhu.c
+ create mode 100644 include/soc/mb86s7x/scb_mhu.h
+
+-- 
+1.9.0
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
