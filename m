@@ -1,136 +1,71 @@
-From: arno@natisbad.org (Arnaud Ebalard)
-Subject: Re: RFC: new dt property "can-wakeup-machine" [Was: [PATCHv0 1/5] rtc: rtc-isl12057: add alarm support to Intersil ISL12057 RTC driver]
-Date: Mon, 15 Dec 2014 21:18:01 +0100
-Message-ID: <87vblczmyu.fsf@natisbad.org>
-References: <cover.1418519430.git.arno@natisbad.org>
-	<c38e3f1a4254e0d8db409ad87ba824c3383d0998.1418519430.git.arno@natisbad.org>
-	<548F3842.1010605@kleine-koenig.org>
+From: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/3] Add support for APM X-Gene SoC AHBC IOMMU driver.
+Date: Mon, 15 Dec 2014 21:27:39 +0100
+Message-ID: <20141215202738.GG24292@8bytes.org>
+References: <1418662523-8458-1-git-send-email-stripathi@apm.com>
+	<548F3C91.3030803@redhat.com>
+	<CAOHikRB0eBnPnE+QWdmWunOMFHJOLDqU6o2ByBruQ3KC+1-XmA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <548F3842.1010605@kleine-koenig.org> ("Uwe \=\?utf-8\?Q\?Kleine-K\?\=
- \=\?utf-8\?Q\?\=C3\=B6nig\=22's\?\=
-	message of "Mon, 15 Dec 2014 20:36:34 +0100")
-Sender: linux-doc-owner@vger.kernel.org
-To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Peter Huewe <peter.huewe@infineon.com>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <treding@nvidia.com>, Mark Brown <broonie@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Darshana Padmadas <darshanapadmadas@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Rob Landley <rob@landley.net>, rtc-linux@googlegroups.com, Jason Cooper <jason@lakedaemon.net>, Guenter Roeck <linux@roeck-us.net>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAOHikRB0eBnPnE+QWdmWunOMFHJOLDqU6o2ByBruQ3KC+1-XmA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Uwe,
+Hi Suman,
 
-Thanks for bearing w/ me,
+On Tue, Dec 16, 2014 at 01:31:58AM +0530, Suman Tripathi wrote:
+> On Dec 16, 2014 1:25 AM, "Don Dutile" <ddutile-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+> =
 
-Uwe Kleine-K=C3=B6nig <uwe@kleine-koenig.org> writes:
+>     On 12/15/2014 11:55 AM, Suman Tripathi wrote:
+> =
 
-> I adapted the subject line to make the critical element in this patch
-> more obvious.
+>         This patch adds the support for the APM X-Gene SoC AHBC IOMMU dri=
+ver.
+> =
 
-thanks.
+>         Signed-off-by: Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
+>         ---
+> =
 
-> As I wouldn't be surprised to get some discussion about your approach=
- it
-> would be beneficial to split this patch into:
->
->  - add (traditional) alarm support to rtc-isl12057
->  - allow the driver to wakeup the machine without the irq being
->    reported to the CPU.
->
-> The first patch should not be controversial and the patch to discuss
-> gets smaller.
+>         Suman Tripathi (3):
+>         =A0 =A0xgene-ahbc-iommu: Add support for APM X-Gene SoC AHBC IOMM=
+U driver.
+>         =A0 =A0arm64: dts: Add the APM X-Gene AHBC IOMMU DTS node.
+>         =A0 =A0Documentation: dt-bindings: Add the binding info for APM X=
+-Gene AHBC
+>         =A0 =A0 =A0IOMMU driver.
+> =
 
-Will do that. But it would be good we end up w/ a solution for current
-in-tree users of the driver, i.e. those w/ a need for the second
-patch ;-)
+>         =A0 .../devicetree/bindings/iommu/xgene,ahbc-iommu.txt |=A0 17 ++
+>         =A0 arch/arm64/boot/dts/apm-storm.dtsi=A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0|=A0 =A05 +
+>         =A0 drivers/iommu/Kconfig=A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0 =A0 =A0 =A0 =A0 |=A0 10 +
+>         =A0 drivers/iommu/Makefile=A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 =A0 =A0 =A0|=A0 =A01 +
+>         =A0 drivers/iommu/xgene-ahbc-iommu.c=A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0 =A0 =A0| 336
+>         +++++++++++++++++++++
+>         =A0 5 files changed, 369 insertions(+)
+>         =A0 create mode 100644 Documentation/devicetree/bindings/iommu/
+>         xgene,ahbc-iommu.txt
+>         =A0 create mode 100644 drivers/iommu/xgene-ahbc-iommu.c
 
-
-> On 12/14/2014 02:42 AM, Arnaud Ebalard wrote:
->> +Example isl12057 node without IRQ#2 pin connected to the SoC but to=
- a
->> +PMIC, allowing the device to be started based on configured alarm:
->> +
->> +	isl12057: isl12057@68 {
->> +		compatible =3D "isil,isl12057";
->> +		reg =3D <0x68>;
->> +		can-wakeup-machine;
->> +	};
-> What if the IRC#1 pin wakes the machine?
-
-I handled that in details in the documentation (w/ a typo I will fix, I
-must confess). The answer is: if you put a "can-wakeup-machine" propert=
-y
-in your .dts for ISL12057, then it means IRQ#2 can wake up the machine
-BUT is not hooked up to the SoC. And only that. Alarm2 is not supported
-(it can generate an interrupt on IRQ#1 or IRQ#2) so the driver does not
-deal w/ IRQ#1 at all.
-
-That being said, one can still add support later for Alarm2 (via IRQ#1
-or IRQ#2) and the "can-wakeup-machine" property you proposed will still
-handle that w/o issue.
-
-As a side note, on our ReadyNAS, we can easily test a support for alarm=
-2
-on IRQ#2 pin. But In the end, the main problem will still be core rtc
-interface: how do you handle the existence of two alarms on a RTC chip
-using current sysfs interface, for instance?
+What are the differences between the X-Gene IOMMU and the ARM-SMMU?
 
 
-> And I wonder if there is a more sane approach for this setup that
-> wouldn't need specialized driver support.
->
-> Something like:
->
-> 	isl12057: isl12057@68 {
-> 		compatible =3D "isil,isl12057";
-> 		reg =3D <0x68>;
-> 		interrupt-parent =3D <&wakeupfoo>;
-> 		interrupts =3D <???>
-> 	};
->
-> 	wakeupfoo: ... {
-> 		/*
-> 		 * This controller cannot report irqs to the cpu, but
-> 		 * can wake it up.
-> 		 */
-> 		....
-> 	}
->
-> Hmm, the bad thing here is that this "interrupt controller" isn't
-> suitable to support "normal" interrupts. But maybe it's good enough t=
-o
-> get into a discussion for a better idea?!
-
-I agree you had a good idea in the first place not to force the rtc as
-wakeup source and make that configurable via the .dts based on specific
-system setup. But I think we should keep the knob simple.
-
-What you propose is probably more accurate w/ the existence of a PMIC
-in the device but IMHO the main purpose of the property is to tell the
-driver that IRQ#2 (associated w/ the alarm1 it supports) can wake the
-machine up. It would be more complex than needed for the driver to try
-and understand that in fact the controller and irq that are passed are
-placebo and it should the declare the device as a wakeup source.
-
-What about changing the property name from "can-wakeup-machine" to
-"isil,irq2-can-wakeup-machine" instead? It makes it clear that it is
-specific to that driver, and that it only works w/ IRQ#2.
-
-
->> diff --git a/drivers/rtc/rtc-isl12057.c b/drivers/rtc/rtc-isl12057.c
->> index 6e1fcfb5d7e6..98adc2c1bdb0 100644
->> --- a/drivers/rtc/rtc-isl12057.c
->> +++ b/drivers/rtc/rtc-isl12057.c
->> @@ -1,5 +1,5 @@
->>  /*
->> - * rtc-isl12057 - Driver for Intersil ISL12057 I2C Real Time Clock
->> + * rtc-isl12057 - Driver for Intersil ISL12057 I2C Real Time Clock =
-/ Alarm
-> I wouldn't care here to add "Alarm" at various places. Actually havin=
-g
-> an alarm is a quite usual feature of an rtc. *shrug*
-
-Will drop thoses changes.
-
-Cheers,
-
-a+
+	Joerg
