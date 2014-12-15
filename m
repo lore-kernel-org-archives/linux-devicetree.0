@@ -1,71 +1,50 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH V8 00/14] drm/exynos: few patches to enhance bridge chip
- support
-Date: Tue, 16 Dec 2014 01:37:51 +0200
-Message-ID: <3197445.qizQc0zeRb@avalon>
-References: <1416045309-13359-1-git-send-email-ajaykumar.rs@samsung.com>
- <CAEC9eQOrKw2Z1q-ztFfadXmsL3CTcAkkv9kcS2QnDOAVSh2AuQ@mail.gmail.com>
- <548ABAB6.6010200@collabora.co.uk>
+From: Arnaud Ebalard <arno@natisbad.org>
+Subject: [PATCHv1 0/3] Alarm support for ISL12057 + RFC dt property
+Date: Tue, 16 Dec 2014 00:54:13 +0100
+Message-ID: <cover.1418687005.git.arno@natisbad.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <548ABAB6.6010200@collabora.co.uk>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Sean Paul <seanpaul@google.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Ajay Kumar <ajaykumar.rs@samsung.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Ajay kumar <ajaynumb@gmail.com>, Kukjin Kim <kgene.kim@samsung.com>, Pannaga Bhushan Reddy Patel <bhushan.r@samsung.com>, Prashanth G <prashanth.g@samsung.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Andrew Morton <akpm@linux-foundation.org>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Peter Huewe <peter.huewe@infineon.com>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <treding@nvidia.com>, Mark Brown <broonie@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Darshana Padmadas <darshanapadmadas@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Rob Landley <rob@landley.net>, rtc-linux@googlegroups.com, Jason Cooper <jason@lakedaemon.net>, Guenter Roeck <linux@roeck-us.net>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgSmF2aWVyLAoKT24gRnJpZGF5IDEyIERlY2VtYmVyIDIwMTQgMTA6NTE6NTAgSmF2aWVyIE1h
-cnRpbmV6IENhbmlsbGFzIHdyb3RlOgo+IEhlbGxvLAo+IAo+IE9uIDExLzE4LzIwMTQgMDc6MjAg
-QU0sIEFqYXkga3VtYXIgd3JvdGU6Cj4gPiBPbiBTYXQsIE5vdiAxNSwgMjAxNCBhdCAzOjI0IFBN
-LCBBamF5IEt1bWFyIHdyb3RlOgo+ID4+IFRoaXMgc2VyaWVzIGlzIGJhc2VkIG9uIG1hc3RlciBi
-cmFuY2ggb2YgTGludXMgdHJlZSBhdDoKPiA+PiBnaXQ6Ly9naXQua2VybmVsLm9yZy9wdWIvc2Nt
-L2xpbnV4L2tlcm5lbC9naXQvdG9ydmFsZHMvbGludXguZ2l0Cj4gCj4gVGhpcyBzZXJpZXMgaGFz
-IGJlZW4gaW4gdGhlIG1haWxpbmcgbGlzdHMgZm9yIG1vbnRocyBhbmQgaGF2ZSBiZWVuIHRlc3Rl
-ZAo+IGJ5IG1hbnkgcGVvcGxlLiBXaGF0IGVsc2UgaXMgbWlzc2luZyBiZWZvcmUgaXQgY2FuIGJl
-IG1lcmdlZD8KPiAKPiBJdCB3b3VsZCBiZSBncmVhdCB0byBoYXZlIHByb3BlciBkaXNwbGF5IHN1
-cHBvcnQgb24gcGxhdGZvcm1zIHRoYXQgaGF2ZSBhCj4gZURQIHRvIExWRFMgYnJpZGdlIGNoaXAg
-KGUuZzogU25vdywgUGVhY2ggUGl0IGFuZCBTcHJpbmcgQ2hyb21lYm9va3MpIGFuZAo+IGV2ZXJ5
-dGhpbmcgaXMgaW4gcGxhY2UgYnV0IHRoaXMgc2VyaWVzIHdoaWNoIGhhZCBiZWVuIG1pc3Npbmcg
-bWFueSBrZXJuZWwKPiByZWxlYXNlcyBhbHJlYWR5Lgo+IAo+ID4+IENoYW5nZXMgc2luY2UgVjc6
-Cj4gPj4gICAgICAgICAtLSBBZGRyZXNzIGNvbW1lbnRzIGZyb20gVG9taSBhbmQgTGF1cmVudDoK
-PiA+PiAgICAgICAgICAgICAgICAgLS0gVXNlIHZpZGVvcG9ydHMgYW5kIGVuZHBvaW50cyB0byBy
-ZXByZXNlbnQgdGhlCj4gPj4gICAgICAgICAgICAgICAgIGNvbm5lY3Rpb24gYmV0d2Vlbgo+ID4+
-ICAgICAgICAgICAgICAgICAKPiA+PiAgICAgICAgICAgICAgICAgICAgZW5jb2RlciwgYnJpZGdl
-IGFuZCB0aGUgcGFuZWwsIGluc3RlYWQgb2YgdXNpbmcKPiA+PiAgICAgICAgICAgICAgICAgICAg
-cGhhbmRsZXMuCj4gPj4gICAgICAgICAKPiA+PiAgICAgICAgIC0tIEFkZHJlc3MgY29tbWVudHMg
-ZnJvbSBEYW5pZWw6Cj4gPj4gICAgICAgICAgICAgICAgIC0tIE1ha2UgdGhlIHBhdGNoIGRlc2Ny
-aXB0aW9uIG1vcmUgZGVzY3JpcHRpdmUuCj4gPj4gICAgICAgICAgICAgICAgIC0tIHJlbW92ZSBk
-ZXZpY2UgcG9pbnRlciBmcm9tIGRybV9icmlkZ2UsIGFuZCBqdXN0IHVzZQo+ID4+ICAgICAgICAg
-ICAgICAgICAKPiA+PiAgICAgICAgICAgICAgICAgICAgZGV2aWNlX25vZGUgaW5zdGVhZC4KPiA+
-PiAgICAgICAgICAgICAgICAgCj4gPj4gICAgICAgICAgICAgICAgIC0tIGRvbid0IHBhc3MgZW5j
-b2RlciBwb2ludGVyIHRvIGJyaWRnZV9hdHRhY2guCj4gPj4gICAgICAgICAKPiA+PiAgICAgICAg
-IC0tIEFkZHJlc3MgY29tbWVudHMgZnJvbSBTZWFuIFBhdWw6Cj4gPj4gICAgICAgICAgICAgICAg
-IC0tIFJlbW92ZSBicmlkZ2UgZnJvbSBtb2RlX2NvbmZpZywgYW5kIHB1bGwgb3V0Cj4gPj4gICAg
-ICAgICAgICAgICAgIGRybV9icmlkZ2UKPiA+PiAgICAgICAgICAgICAgICAgCj4gPj4gICAgICAg
-ICAgICAgICAgICAgIGZ1bmN0aW9ucyBmcm9tIGRybV9jcnRjLmMgdG8gZHJtX2JyaWRnZS5jCj4g
-Cj4gVG9taSBhbmQgTGF1cmVudCwKPiAKPiBZb3UgYXNrZWQgQWpheSB0byBjaGFuZ2UgaGlzIHNl
-cmllcyB0byB1c2UgdGhlIHZpZGVvIHBvcnQgYW5kIGVucG9pbnRzIERUCj4gYmluZGluZ3MgaW5z
-dGVhZCBvZiBwaGFuZGxlcywgY291bGQgeW91IHBsZWFzZSByZXZpZXcgaGlzIGxhdGVzdCB2ZXJz
-aW9uPwo+IAo+IEkgZ3Vlc3MgaXMgbm93IHRvbyBsYXRlIGZvciAzLjE5IHNpbmNlIHdlIGFyZSBp
-biB0aGUgbWlkZGxlIG9mIHRoZSBtZXJnZQo+IHdpbmRvdyBidXQgaXQgd291bGQgYmUgZ3JlYXQg
-aWYgdGhpcyBzZXJpZXMgY2FuIGF0IGxlYXN0IG1hZGUgaXQgdG8gMy4yMC4KCkkgZG9uJ3QgaGF2
-ZSB0aW1lIHRvIHJldmlldyB0aGUgc2VyaWVzIGluIGRldGFpbHMgcmlnaHQgbm93LCBidXQgSSdt
-IGhhcHB5IAp3aXRoIHRoZSBEVCBiaW5kaW5ncywgYW5kIGhhdmUgbm8gYmlnIGlzc3VlIHdpdGgg
-dGhlIHJlc3Qgb2YgdGhlIHBhdGNoZXMuIEkgCmRvbid0IHJlYWxseSBsaWtlIHRoZSBvZl9kcm1f
-ZmluZF9icmlkZ2UoKSBjb25jZXB0IGludHJvZHVjZWQgaW4gMDMvMTQgYnV0IEkgCndvbid0IG5h
-Y2sgaXQgZ2l2ZW4gbGFjayBvZiB0aW1lIHRvIGltcGxlbWVudCBhbiBhbHRlcm5hdGl2ZSBwcm9w
-b3NhbC4gSXQncyBhbiAKaW50ZXJuYWwgQVBJLCBpdCBjYW4gYWx3YXlzIGJlIHJld29ya2VkIGxh
-dGVyIGFueXdheS4KCi0tIApSZWdhcmRzLAoKTGF1cmVudCBQaW5jaGFydAoKX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlz
-dApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3Rv
-cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Hi,
+
+Changes since v0:
+
+ - Basic alarm support is now the first patch of the series with nothing
+   fancy in it: as per Uwe's request, all the "Chip IRQ#2 is not routed
+   to the SoC but device can still be woken up with the alarm" is in the
+   second patch. Uwe, can you review that one, so that Andrew can then
+   merge it if it is ok?
+ - Second patch has simple changes going on top of first patch to
+   support the use case for current in-tree users, i.e. ReadyNAS 102,
+   104 and 2120. It's a simple property with complete documentation
+   about what it does and does not.
+ - Third and last patch add that property to 102, 104 nd 2120 .dts
+   files (in a single patch as suggested by Jason)
+
+Comments welcome,
+
+Cheers,
+
+a+
+
+Arnaud Ebalard (3):
+  rtc: rtc-isl12057: add alarm support to Intersil ISL12057 RTC driver
+  rtc: rtc-isl12057: add isil,irq2-can-wakeup-machine property for in-tree users
+  ARM: mvebu: ISL12057 rtc chip can now wake up RN102, RN104 and RN2120
+
+ .../devicetree/bindings/rtc/isil,isl12057.txt      |  78 +++++
+ arch/arm/boot/dts/armada-370-netgear-rn102.dts     |   1 +
+ arch/arm/boot/dts/armada-370-netgear-rn104.dts     |   1 +
+ arch/arm/boot/dts/armada-xp-netgear-rn2120.dts     |   1 +
+ drivers/rtc/rtc-isl12057.c                         | 346 ++++++++++++++++++++-
+ 5 files changed, 419 insertions(+), 8 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/rtc/isil,isl12057.txt
+
+-- 
+2.1.1
+
