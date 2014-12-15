@@ -1,74 +1,57 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 5/8] mfd: Add ST's Low Power Controller driver
-Date: Mon, 15 Dec 2014 13:50:52 +0000
-Message-ID: <20141215135052.GC13885@x1>
-References: <1418642738-17407-1-git-send-email-lee.jones@linaro.org>
- <1418642738-17407-6-git-send-email-lee.jones@linaro.org>
- <2928949.OKYp272uiY@wuerfel>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCHv0 2/5] ARM: mvebu: ISL12057 rtc chip can be used to
+ wake up RN102
+Date: Mon, 15 Dec 2014 08:53:08 -0500
+Message-ID: <20141215135308.GB967@titan.lakedaemon.net>
+References: <cover.1418519430.git.arno@natisbad.org>
+ <b7208bdcd16dbc511d7ae6dd47aee91ab81f54f4.1418519430.git.arno@natisbad.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <2928949.OKYp272uiY@wuerfel>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <b7208bdcd16dbc511d7ae6dd47aee91ab81f54f4.1418519430.git.arno@natisbad.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Arnaud Ebalard <arno@natisbad.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>, Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Peter Huewe <peter.huewe@infineon.com>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <treding@nvidia.com>, Mark Brown <broonie@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Darshana Padmadas <darshanapadmadas@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Rob Landley <rob@landley.net>, rtc-linux@googlegroups.com, Guenter Roeck <linux@roeck-us.net>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infrade
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 15 Dec 2014, Arnd Bergmann wrote:
+On Sun, Dec 14, 2014 at 02:42:28AM +0100, Arnaud Ebalard wrote:
+> 
+> Now that alarm support for ISL12057 chip is available, let's use a
+> feature of the driver dedicated to NETGEAR ReadyNAS 102 specific
+> routing of RTC IRQ#2 pin; on the device, this pin is not connected
+> to the SoC but to a PMIC, which allows the device to be powered
+> up when RTC alarm rings.
+> 
+> For that to work, the chip needs to be explicitly marked as a
+> device wakeup source using the "can-wakeup-machine" boolean
+> property. This makes 'wakealarm' sysfs entry available to
+> configure the alarm.
+> 
+> Signed-off-by: Arnaud Ebalard <arno@natisbad.org>
+> ---
+>  arch/arm/boot/dts/armada-370-netgear-rn102.dts | 1 +
+>  1 file changed, 1 insertion(+)
 
-> On Monday 15 December 2014 11:25:35 Lee Jones wrote:
-> > +       ret =3D of_property_read_u32(np, "st,lpc-mode", &mode);
-> > +       if (ret) {
-> > +               dev_err(&pdev->dev, "An LPC mode must be selected\n=
-");
-> > +               return ret;
-> > +       }
-> > +
-> > +       switch (mode) {
-> > +       case ST_LPC_MODE_RTC:
-> > +               cell->name =3D "st-lpc-rtc";
-> > +               break;
-> > +       case ST_LPC_MODE_WDT:
-> > +               cell->name =3D "st-lpc-wdt";
-> > +               break;
-> > +       default:
-> > +               dev_err(&pdev->dev, "Unsupported mode: %d\n", mode)=
-;
-> > +               return ret;
-> > +       }
-> > +
-> > +       /* Pass resources though to selected child device. */
-> > +       cell->resources =3D pdev->resource;
-> > +       cell->num_resources =3D pdev->num_resources;
-> > +
-> > +       ret =3D mfd_add_devices(&pdev->dev, PLATFORM_DEVID_AUTO,
-> > +                             cell, 1, NULL, 0, NULL);
-> >=20
->=20
-> I don't think it's necessary to have the MFD node if only one of the
-> two modes can be used based on a DT property. It should be enough
-> to have both the rtc and the wdt driver list the same compatible
-> string and check the property in the probe function to decide if
-> they want to drive the device or not:
+Please group patches 2 - 4 into one patch.
 
-I tried that and it didn't work.  Only one driver probed.
+thx,
 
-> 	ret =3D of_property_read_u32(np, "st,lpc-mode", &mode);
-> 	if (!ret && mode !=3D ST_LPC_MODE_RTC)
-> 		return -ENXIO
->=20
->=20
-> 	Arnd
+Jason.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdo=
-g" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> diff --git a/arch/arm/boot/dts/armada-370-netgear-rn102.dts b/arch/arm/boot/dts/armada-370-netgear-rn102.dts
+> index 4e24932c6e30..3b0f2b88ce9e 100644
+> --- a/arch/arm/boot/dts/armada-370-netgear-rn102.dts
+> +++ b/arch/arm/boot/dts/armada-370-netgear-rn102.dts
+> @@ -87,6 +87,7 @@
+>  				isl12057: isl12057@68 {
+>  					compatible = "isil,isl12057";
+>  					reg = <0x68>;
+> +					can-wakeup-machine;
+>  				};
+>  
+>  				g762: g762@3e {
+> -- 
+> 2.1.1
+> 
+> 
