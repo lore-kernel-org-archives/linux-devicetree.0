@@ -1,106 +1,91 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCHv0 5/5] dt-bindings: fix isl vs isil prefix issue for
- Intersil
-Date: Mon, 15 Dec 2014 08:55:45 -0500
-Message-ID: <20141215135545.GC967@titan.lakedaemon.net>
-References: <cover.1418519430.git.arno@natisbad.org>
- <b2c34bea6fc7bd42d636c9cadfe1b7e5ec523aeb.1418519430.git.arno@natisbad.org>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [RFC 01/15] drivers/base: add track framework
+Date: Mon, 15 Dec 2014 15:00:04 +0100
+Message-ID: <548EE964.2050504@samsung.com>
+References: <548B7653.7020004@gmail.com> <20141215125557.GB11764@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <b2c34bea6fc7bd42d636c9cadfe1b7e5ec523aeb.1418519430.git.arno@natisbad.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Arnaud Ebalard <arno@natisbad.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>, Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Peter Huewe <peter.huewe@infineon.com>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <treding@nvidia.com>, Mark Brown <broonie@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Darshana Padmadas <darshanapadmadas@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Rob Landley <rob@landley.net>, rtc-linux@googlegroups.com, Guenter Roeck <linux@roeck-us.net>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infrade
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <20141215125557.GB11764@sirena.org.uk>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: Alexandre Courbot <gnurou@gmail.com>, "ARM/S5P EXYNOS AR..." <linux-samsung-soc@vger.kernel.org>, Mike Turquette <mturquette@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, GPIO SUBSYSTEM <linux-gpio@vger.kernel.org>, "OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, DRM PANEL DRIVERS <dri-devel@lists.freedesktop.org>, Grant Likely <grant.likely@linaro.org>, Russell King <linux@arm.linux.org.uk>, ARM/CLKDEV SUPPORT <linux-arm-kernel@lists.infradead.org>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Dec 14, 2014 at 02:43:15AM +0100, Arnaud Ebalard wrote:
-> 
-> When Intersil ISL12057 driver was introduced by commit 70e123373c05
-> ("rtc: Add support for Intersil ISL12057 I2C RTC chip"), the vendor
-> prefix 'isl' was used instead of the expected 'isil' (Intersil
-> NASDAQ symbol) and documented in vendor-prefixes.txt.
-> 
-> Recently, a patch from Philip Zabel (7a6540ca856a, "ARM: mvebu:
-> Change vendor prefix for Intersil Corporation to isil") fixed that
-> prefix in ReadyNAS devices .dts files (AFAICT, the only users of
-> the driver).
-> 
-> Then, commits 7c75c1d5e72b ("dt-bindings: Document deprecated device
-> vendor name to fix related warning") and b2ea3f82e798 (dt-bindings:
-> Document correct and deprecated vendor-prefix with device isl29028)
-> decided to go the other way and deprecate isil in vendor-prefixes.txt
-> and in isl29028.c staging driver.
-> 
-> While trying and merge a fix I wrote for ISL12057 drivers to finish
-> Philip's work, it conflicted with the two recently introduced commits,
-> and revealed the issue: at the moment, there are various compatible
-> strings in drivers and .dts files for Intersil products which use
-> either isl or isil:
-> 
-> $ grep -R "isil," .
-> ./Documentation/devicetree/bindings/i2c/trivial-devices.txt:isil,isl29028           (deprecated, use isl)
-> ./drivers/staging/iio/light/isl29028.c:   { .compatible = "isil,isl29028", },/* deprecated, don't use */
-> ./drivers/staging/iio/light/isl29018.c:   { .compatible = "isil,isl29018", },
-> ./drivers/staging/iio/light/isl29018.c:   { .compatible = "isil,isl29023", },
-> ./drivers/staging/iio/light/isl29018.c:   { .compatible = "isil,isl29035", },
-> ./arch/powerpc/boot/dts/p1022rdk.dts:        compatible = "isil,zl6100";
-> ./arch/powerpc/boot/dts/p1022rdk.dts:        compatible = "isil,zl6100";
-> ./arch/powerpc/boot/dts/p1022rdk.dts:        compatible = "isil,zl6100";
-> ./arch/powerpc/boot/dts/p1022rdk.dts:        compatible = "isil,zl6100";
-> ./arch/arm/boot/dts/exynos5800-peach-pi.dts: compatible = "isil,isl29018";
-> ./arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi: compatible = "isil,isl1208";
-> ./arch/arm/boot/dts/tegra20-ventana.dts:     compatible = "isil,isl29018";
-> ./arch/arm/boot/dts/tegra20-seaboard.dts:    compatible = "isil,isl29018";
-> ./arch/arm/boot/dts/armada-xp-netgear-rn2120.dts: compatible = "isil,isl12057";
-> ./arch/arm/boot/dts/armada-370-netgear-rn104.dts: compatible = "isil,isl12057";
-> ./arch/arm/boot/dts/exynos5420-peach-pit.dts:     compatible = "isil,isl29018";
-> ./arch/arm/boot/dts/armada-370-netgear-rn102.dts: compatible = "isil,isl12057";
-> 
-> $ grep -R "isl," .
-> ./Documentation/devicetree/bindings/regulator/isl9305.txt:- compatible: "isl,isl9305" or "isl,isl9305h"
-> ./Documentation/devicetree/bindings/regulator/isl9305.txt:              compatible = "isl,isl9305";
-> ./Documentation/devicetree/bindings/i2c/trivial-devices.txt:isl,isl12057      Intersil ISL12057 I2C RTC Chip
-> ./Documentation/devicetree/bindings/i2c/trivial-devices.txt:isl,isl29028      Intersil ISL29028 Ambient Light ....
-> ./drivers/regulator/isl9305.c:          { .compatible = "isl,isl9305" },
-> ./drivers/regulator/isl9305.c:          { .compatible = "isl,isl9305h" },
-> ./drivers/staging/iio/light/isl29028.c: { .compatible = "isl,isl29028", },
-> ./drivers/rtc/rtc-isl12057.c:           { .compatible = "isl,isl12057" },
-> ./drivers/rtc/rtc-isl12022.c:           { .compatible = "isl,isl12022" },
-> ./arch/arm/boot/dts/tegra30-cardhu.dtsi:   compatible = "isl,isl29028";
-> ./arch/arm/boot/dts/zynq-parallella.dts:   compatible = "isl,isl9305";
-> 
-> AFAICT, it seems it makes sense to *definitively* settle for isil as the
-> vendor prefix for Intersil, as Philip did in 7a6540ca856a: it's the NASDAQ
-> symbol and this choice requires less changes than opting for isl.
-> 
-> So, this patch changes compatible strings in .dts files to use isil where
-> isl was found before, and modify drivers w/ compatible strings using isl
-> to add one using isil. In those cases, a comment is made that the old
-> compatible string is kept for backward compatibility (w/ out-fo-tree users
-> of those drivers). Additionally, it leaves only isil as prefix in
-> vendor-prefixes.txt. Those changes should prevent any new inclusion of
-> isl compatible strings for Intersil devices due to copy-and-paste.
-> 
-> Signed-off-by: Arnaud Ebalard <arno@natisbad.org>
-> ---
->  Documentation/devicetree/bindings/i2c/trivial-devices.txt | 5 ++---
->  Documentation/devicetree/bindings/regulator/isl9305.txt   | 4 ++--
->  Documentation/devicetree/bindings/vendor-prefixes.txt     | 3 +--
-
->  arch/arm/boot/dts/tegra30-cardhu.dtsi                     | 2 +-
->  arch/arm/boot/dts/zynq-parallella.dts                     | 2 +-
-
->  drivers/regulator/isl9305.c                               | 6 ++++--
->  drivers/rtc/rtc-isl12022.c                                | 3 ++-
->  drivers/rtc/rtc-isl12057.c                                | 3 ++-
->  drivers/staging/iio/light/isl29028.c                      | 4 ++--
->  9 files changed, 17 insertions(+), 15 deletions(-)
-
-Please split the dts{i} changes out into a separate patch.  The
-different maintainers under drivers/ may want separate patches as well.
-
-thx,
-
-Jason.
+T24gMTIvMTUvMjAxNCAwMTo1NSBQTSwgTWFyayBCcm93biB3cm90ZToKPiBPbiBTYXQsIERlYyAx
+MywgMjAxNCBhdCAxMjoxMjoxOUFNICswMTAwLCBBSCB3cm90ZToKPj4gTWFyayBCcm93biB3cm90
+ZSBvbiAxMi4xMi4yMDE0IDE3OjM2Ogo+Pj4gT24gV2VkLCBEZWMgMTAsIDIwMTQgYXQgMDQ6NDg6
+MTlQTSArMDEwMCwgQW5kcnplaiBIYWpkYSB3cm90ZToKPj4+PiArCQlrZnJlZShwdGFzayk7Cj4+
+Pj4gKwo+Pj4+ICsJCWlmIChlbXB0eSkKPj4+PiArCQkJYnJlYWs7Cj4+Pj4gKwo+Pj4+ICsJCXRy
+YWNrX3Byb2Nlc3NfdGFzayh0cmFjaywgdGFzayk7Cj4+PiAuLi53ZSB0aGVuIGdvIGFuZCBkbyBz
+b21lIG90aGVyIHN0dWZmLCBpbmNsdWRpbmcgcHJvY2Vzc2luZyB0aGF0IHRhc2ssCj4+PiB3aXRo
+b3V0IHRoZSBsb2NrIG9yIG9yIGFueSBvdGhlciBtZWFucyBJIGNhbiBzZWUgb2YgZXhjbHVkaW5n
+IG90aGVyCj4+PiB1c2VycyBiZWZvcmUgZ29pbmcgcm91bmQgYW5kIHJlbW92aW5nIHRoZSB0YXNr
+LiAgVGhpcyBzZWVtcyB0byBsZWF2ZSB1cwo+Pj4gdnVsbmVyYWJsZSB0byBkb3VibGUgZXhlY3V0
+aW9uLgo+PiBObywgaWYgeW91IGxvb2sgYXQgdHJhY2tfYWRkX3Rhc2sgZnVuY3Rpb24geW91IHdp
+bGwgc2VlIHRoYXQgdGhlIHF1ZXVlIGlzCj4+IHByb2Nlc3NlZCBvbmx5IGlmIGl0IGlzIGluaXRp
+YWxseSBlbXB0eSwgb3RoZXJ3aXNlIHRoZSB0YXNrIGlzIG9ubHkgYWRkZWQgdG8KPj4gdGhlIHF1
+ZXVlLCBzbyBpdCB3aWxsIGJlIHByb2Nlc3NlZCBhZnRlciBwcm9jZXNzaW5nIGVhcmxpZXIgdGFz
+a3MuCj4+IFNvIHRoZSBydWxlIGlzIHRoYXQgaWYgc29tZW9uZSBhZGQgdGFzayB0byB0aGUgcXVl
+dWUgaXQgY2hlY2tzIGlmIHRoZSBxdWV1ZQo+PiBpcyBlbXB0eSwgaW4gc3VjaCBjYXNlIGl0IHBy
+b2Nlc3MgYWxsIHRhc2tzIGZyb20gdGhlIHF1ZXVlIHVudGlsCj4+IHRoZSBxdWV1ZSBiZWNvbWVz
+IGVtcHR5LCBldmVuIHRoZSB0YXNrcyBhZGRlZCBieSBvdGhlciBwcm9jZXNzZWQuCj4+IFRoaXMg
+d2F5IGFsbCB0YXNrcyBhcmUgc2VyaWFsaXplZC4KPiBUaGlzIGlzIGFsbCBwcmV0dHkgZmlkZGx5
+IGFuZCBzZWVtcyBmcmFnaWxlIC0gaWYgbm90aGluZyBlbHNlIHRoZSBjb2RlCj4gc2VlbXMgdW5k
+ZXJjb21tZW50ZWQgc2luY2UgdGhlIGFib3ZlIGlzIG9ubHkgZ29pbmcgdG8gYmUgYXBwYXJlbnQg
+d2l0aAo+IGZvbGxvd2luZyB0aHJvdWdoIG11bHRpcGxlIGZ1bmN0aW9ucyBhbmQgd2UncmUgcmVs
+eWluZyBvbiBib3RoIG93bmVyIGFuZAo+IGxpc3QgZW1wdGluZXNzIHdpdGggbW9yZSB0aGFuIG9u
+ZSBwbGFjZSB3aGVyZSBhIHRhc2sgY2FuIGdldCBwcm9jZXNzZWQuCgpJIGhhdmUgY2hhbmdlZCBp
+dCBhbHJlYWR5IHRvIHRlc3QgcXVldWUgb3duZXIsIHRoaXMgd2F5IGl0IHNob3VsZApiZSBtb3Jl
+IGNsZWFyLgoKPgo+Pj4gSSdtIGFsc28gdW5jbGVhciB3aGF0IGlzIHN1cHBvc2VkIHRvIGhhcHBl
+biBpZiBhZGRpbmcgYSBub3RpZmljYXRpb24KPj4+IHJhY2VzIHdpdGggcmVtb3ZpbmcgdGhlIHRo
+aW5nIGJlaW5nIHdhdGNoZWQuCj4+IFRoZSBzZXF1ZW5jZSBzaG91bGQgYmUgYWx3YXlzIGFzIGZv
+bGxvd3M6Cj4+IDEuIGNyZWF0ZSB0aGluZywgdGhlbiBjYWxsIHRyYWNrX3VwKHRoaW5nKS4KPj4g
+Li4uCj4+IDIuIGNhbGwgdHJhY2tfZG93bih0aGluZykgdGhlbiByZW1vdmUgdGhpbmcuCj4+IElm
+IHdlIHB1dCAxIGludG8gcHJvYmUgYW5kIDIgaW50byByZW1vdmUgY2FsbGJhY2sgb2YgdGhlIGRy
+aXZlciBpdCB3aWxsIGJlCj4+IHNhZmUgLSB3ZSBhcmUgc3luY2hyb25pc2VkIGJ5IGRldmljZV9s
+b2NrLiBCdXQgaWYsIGZvciBzb21lIHJlYXNvbiwgd2Ugd2FudAo+PiB0byBjcmVhdGUgb2JqZWN0
+IGFmdGVyIHByb2JlIHdlIHNob3VsZCBkbyBvd24gc3luY2hyb25pemF0aW9uIG9yIGp1c3QgcHV0
+Cj4+IGRldmljZV9sb2NrIGFyb3VuZCAxLiBUaGUgc2FtZSBhcHBsaWVzIGlmIHdlIHdhbnQgdG8g
+cmVtb3ZlCj4+IG9iamVjdCBlYXJsaWVyLiBUaGlzIGlzIHRoZSBjb21tZW50IGFib3ZlIGFib3V0
+LiBJIHdpbGwgZXhwYW5kIGl0IHRvIG1vcmUKPj4gdmVyYm9zZSBleHBsYW5hdGlvbi4KPiBZb3Ug
+Y2FuJ3QgcmVseSBvbiB0aGUgZGV2aWNlIGxvY2sgaGVyZSBzaW5jZSB0aGlzIGlzbid0IHRpZWQg
+dG8ga29iamVjdHMKPiBvciBhbnl0aGluZyBhdCBhbGwgLSBpdCdzIGEgZnJlZXN0YW5kaW5nIGlu
+dGVyZmFjZSBzb21lb25lIGNvdWxkIHBpY2sgdXAKPiBhbmQgdXNlIGluIGFub3RoZXIgY29udGV4
+dC4gIEJlc2lkZXMsIHRoYXQgaXNuJ3QgcmVhbGx5IG15IGNvbmNlcm4gLSBteQo+IGNvbmNlcm4g
+aXMgd2hhdCBoYXBwZW5zIGlmIHNvbWV0aGluZyBhc2tzIHRvIHdhaXQgZm9yIApCdXQgSSBkbyBu
+b3QgcmVseSBoZXJlIG9uIGRldmljZV9sb2NrLCBJIGp1c3QgcG9pbnQgb3V0IHRoYXQgMSBhbmQg
+MgpzaG91bGQgYmUKc3luY2hyb25pemVkIGFuZCBhcyBhIGNvbW1vbiB3YXkgaXMgdG8gcHV0IHN1
+Y2ggdGhpbmdzIGludG8gcHJvYmUKYW5kIHJlbW92ZSwgZGV2aWNlX2xvY2sgY2FuIGRvIHRoZSBz
+eW5jaHJvbml6YXRpb24gZm9yIHVzIGluIHN1Y2ggY2FzZSwKc28gbm8gbmVlZCBmb3IgYWRkaXRp
+b25hbCBzeW5jaHJvbml6YXRpb24uCgpBbmQgdG8gbWFrZSBldmVyeXRoaW5nIGNsZWFyLCB0cmFj
+a191cCB3aWxsIG5vdCBiZSBjYWxsZWQgYnkgdGhlIGRyaXZlcgpkaXJlY3RseSwKaXQgc2hhbGwg
+YmUgY2FsbGVkIGJ5IHJlc3BlY3RpdmUgcmVzb3VyY2UgZnJhbWV3b3JrIGZ1bmN0aW9ucywgZm9y
+IGV4YW1wbGUKYnkgcmVndWxhdG9yX3JlZ2lzdGVyIGFuZCByZWd1bGF0b3JfdW5yZWdpc3Rlci4K
+CkFuZCByZWdhcmRpbmcgeW91ciBpbml0aWFsL3JlYWwgY29uY2VybiwgSSBndWVzcyB5b3UgbWVh
+biB0aGlzIG9uZToKPj4gSSdtIGFsc28gdW5jbGVhciB3aGF0IGlzIHN1cHBvc2VkIHRvIGhhcHBl
+biBpZiBhZGRpbmcgYSBub3RpZmljYXRpb24KPj4gcmFjZXMgd2l0aCByZW1vdmluZyB0aGUgdGhp
+bmcgYmVpbmcgd2F0Y2hlZC4KSSBndWVzcyB5b3UgbWVhbiByZWdpc3RlcmluZyBub3RpZmllciBh
+bmQgcmVtb3ZhbCBvZiB0aGluZyBpdCBpcwpzdXBwb3NlZCB0byB3YXRjaC4KQXMgYWxsIHRyYWNr
+IHRhc2tzIGFyZSBzZXJpYWxpemVkIHRoZXNlIHR3byB3aWxsIGJlIHNlcmlhbGl6ZWQgYWxzbyBz
+bwp3ZSBjYW4gaGF2ZQpvbmx5IHR3byBzY2VuYXJpb3M6CjEuCiAgYSkgcmVnaXN0ZXIgbm90aWZp
+ZXIKICAtIHRoaW5nIGlzIHVwLCBzbyBub3RpZmllciB3aWxsIGJlIGltbWVkaWF0ZWx5IGNhbGxl
+ZCB3aXRoIGluZm8gdGhhdAp0aGUgdGhpbmcgaXMgdXAKICBiKSByZW1vdmUgdGhpbmcKICAtIHRo
+aW5nIHdpbGwgYmUgZG93biwgc28gbm90aWZpZXIgd2lsbCBiZSBjYWxsZWQgd2l0aCBpbmZvIHRo
+YXQgdGhlCnRoaW5nIHdpbGwgYmUgcmVtb3ZlZAoyLgogIGEpIHJlbW92ZSB0aGluZwogIC0gbm90
+aWZpZXIgaXMgbm90IHlldCByZWdpc3RlcmVkLCBzbyBjYWxsYmFjayB3aWxsIG5vdCBiZSBjYWxs
+ZWQsCiAgYikgcmVnaXN0ZXIgbm90aWZpZXIKICAtIHRoaW5nIGlzIGFscmVhZHkgcmVtb3ZlZCwg
+c28gY2FsbGJhY2sgd2lsbCBub3QgYmUgY2FsbGVkLgoKSSBob3BlIHRoaXMgaXMgd2hhdCB5b3Ug
+d2VyZSBhc2tpbmcgZm9yLgoKUmVnYXJkcwpBbmRyemVqCgpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZl
+bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
