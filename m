@@ -1,125 +1,35 @@
-From: Josh Wu <josh.wu@atmel.com>
-Subject: Re: [v3][PATCH 5/5] media: ov2640: dt: add the device tree binding
- document
-Date: Mon, 15 Dec 2014 18:34:06 +0800
-Message-ID: <548EB91E.2090900@atmel.com>
-References: <1418283339-16281-1-git-send-email-josh.wu@atmel.com> <1418283339-16281-6-git-send-email-josh.wu@atmel.com> <1644165.4XbSUOMUsK@avalon>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [RFC PATCH 0/6] Those patches is used for dw_hdmi audio.
+Date: Mon, 15 Dec 2014 10:38:30 +0000
+Message-ID: <20141215103830.GD11285@n2100.arm.linux.org.uk>
+References: <1418609494-15820-1-git-send-email-ykk@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1644165.4XbSUOMUsK@avalon>
-Sender: linux-media-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: linux-media@vger.kernel.org, g.liakhovetski@gmx.de, m.chehab@samsung.com, linux-arm-kernel@lists.infradead.org, s.nawrocki@samsung.com, festevam@gmail.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1418609494-15820-1-git-send-email-ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Xu Jianqun <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, =?iso-8859-1?Q?St=E9phane?= Marchesin <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>, Bard Liao <bardliao-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org>, Max Filippov <jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Oder Chiou <oder_chiou-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>, Grant
 List-Id: devicetree@vger.kernel.org
 
-Hi, Laurent
+On Mon, Dec 15, 2014 at 10:11:28AM +0800, Yakir Yang wrote:
+> 
+> rk3288 use Designware HDMI IP, Designware HDMI supports four interfaces to
+> config hdmi audio(I2S, S/PDIF, Generic Parallel Audio, AHB Audio DMA), but
+> rk3288 only support two ways to config hdmi audio(I2S, S/PDIF), So we take
+> I2S as hdmi audio operation interfaces, and then treat hdmi audio as an
+> standard ALSA devices(only got platback function).
 
-On 12/12/2014 10:17 AM, Laurent Pinchart wrote:
-> Hi Josh,
->
-> Thank you for the patch.
->
-> On Thursday 11 December 2014 15:35:39 Josh Wu wrote:
->> Add the document for ov2640 dt.
->>
->> Cc: devicetree@vger.kernel.org
->> Signed-off-by: Josh Wu <josh.wu@atmel.com>
->> ---
->> v2 -> v3:
->>    1. fix incorrect description.
->>    2. Add assigned-clocks & assigned-clock-rates.
->>    3. resetb pin should be ACTIVE_LOW.
->>
->> v1 -> v2:
->>    1. change the compatible string to be consistent with verdor file.
->>    2. change the clock and pins' name.
->>    3. add missed pinctrl in example.
->>
->>   .../devicetree/bindings/media/i2c/ov2640.txt       | 53 +++++++++++++++++++
->>   1 file changed, 53 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/media/i2c/ov2640.txt
->>
->> diff --git a/Documentation/devicetree/bindings/media/i2c/ov2640.txt
->> b/Documentation/devicetree/bindings/media/i2c/ov2640.txt new file mode
->> 100644
->> index 0000000..958e120
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/media/i2c/ov2640.txt
->> @@ -0,0 +1,53 @@
->> +* Omnivision ov2640 CMOS sensor
->> +
->> +The Omnivision OV2640 sensor support multiple resolutions output, such as
->> +CIF, SVGA, UXGA. It also can support YUV422/420, RGB565/555 or raw RGB
->> +output format.
->> +
->> +Required Properties:
->> +- compatible: Must be "ovti,ov2640"
->> +- clocks: reference to the xvclk input clock. It can be an external fixed
->> +          clock or a programmable clock from SoC.
-> It could also be a variable clock provided by something else. I would just
-> drop the second sentence.
+There is no need for dw-hdmi audio to be implemented as an ASoC
+device - as I've already sent patches to Andy with my ALSA driver
+which has been around for the last two years, and works well, and
+doesn't require any additional DT description.
 
-I mention this since these are the cases in at91 platform.
-Sure. I'll drop it.
->
->> +- clock-names: Must be "xvclk".
->> +- assigned-clocks: reference to the above 'clocks' property.
->> +- assigned-clock-rates: reference to the clock frequency of xvclk. Typical
->> +                        value is 25Mhz (25000000).
->> +                        This clock should only have single user. Specifying
->> +                        Conflicting rate configuration in multiple
->> consumer
->> +                        nodes for a shared clock is forbidden.
-> Those two properties are optional. I'm not sure they should even be mentioned
-> in the ov2640 bindings. For one thing they're not needed if the clock doesn't
-> need to be forced to a specific frequency, and the clock rate could also be
-> configured through other means depending on the platform.
-
-hmm, if the clock is fixed then this 'assigned-clock-rates' is not needed.
-And I only find one binding document mentioned the assigned-clocks. It 
-looks like a general property for all clocks. We don't need mention it 
-repeatedly.
-So I'd like to drop this two properties in next version.
-
-Thanks and Best Regards,
-Josh Wu
->
->> +
->> +Optional Properties:
->> +- resetb-gpios: reference to the GPIO connected to the resetb pin, if any.
->> +- pwdn-gpios: reference to the GPIO connected to the pwdn pin, if any.
->> +
->> +The device node must contain one 'port' child node for its digital output
->> +video port, in accordance with the video interface bindings defined in
->> +Documentation/devicetree/bindings/media/video-interfaces.txt.
->> +
->> +Example:
->> +
->> +	i2c1: i2c@f0018000 {
->> +		ov2640: camera@0x30 {
->> +			compatible = "ovti,ov2640";
->> +			reg = <0x30>;
->> +
->> +			pinctrl-names = "default";
->> +			pinctrl-0 = <&pinctrl_pck1 &pinctrl_ov2640_pwdn
-> &pinctrl_ov2640_resetb>;
->> +
->> +			resetb-gpios = <&pioE 24 GPIO_ACTIVE_LOW>;
->> +			pwdn-gpios = <&pioE 29 GPIO_ACTIVE_HIGH>;
->> +
->> +			clocks = <&pck1>;
->> +			clock-names = "xvclk";
->> +
->> +			assigned-clocks = <&pck1>;
->> +			assigned-clock-rates = <25000000>;
->> +
->> +			port {
->> +				ov2640_0: endpoint {
->> +					remote-endpoint = <&isi_0>;
->> +					bus-width = <8>;
->> +				};
->> +			};
->> +		};
->> +	};
+-- 
+FTTC broadband for 0.8mile line: currently at 9.5Mbps down 400kbps up
+according to speedtest.net.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
