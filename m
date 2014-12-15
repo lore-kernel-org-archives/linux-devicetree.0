@@ -1,54 +1,41 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v7 4/5] ARM: dts: rockchip: add rk3288 usb PHY
-Date: Mon, 15 Dec 2014 10:14:16 -0800
-Message-ID: <CAD=FV=U2C0bfG-STz0Bu9iwtzaaDOk-9K773t3VV--XnVb78hQ@mail.gmail.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v7 5/5] ARM: dts: rockchip: Enable usb PHY on rk3288-evb board
+Date: Mon, 15 Dec 2014 10:15:37 -0800
+Message-ID: <CAD=FV=V93J81SVnOpA1jciGfs9Bh9En-quda677tKzdt7sQDMg@mail.gmail.com>
 References: <1418396413-27937-1-git-send-email-lyz@rock-chips.com>
-	<1418397141-1079-1-git-send-email-lyz@rock-chips.com>
+	<1418397422-17249-1-git-send-email-lyz@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1418397141-1079-1-git-send-email-lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yunzhi Li <lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Chris <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Eddie Cai <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1418397422-17249-1-git-send-email-lyz@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yunzhi Li <lyz@rock-chips.com>
+Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, jwerner@chromium.org, Olof Johansson <olof@lixom.net>, Tao Huang <huangtao@rock-chips.com>, Chris <zyw@rock-chips.com>, Eddie Cai <cf@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
 Yunzhi,
 
-On Fri, Dec 12, 2014 at 7:12 AM, Yunzhi Li <lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
-> This patch adds a device_node for RK3288 SoC usb phy. It also
-> defines the phy to be used by three usb controllers: usb_host0/1
-> and usb_otg.
+On Fri, Dec 12, 2014 at 7:17 AM, Yunzhi Li <lyz@rock-chips.com> wrote:
+> Enable usb PHY for all usb ports on rk3288-evb.
 >
-> Signed-off-by: Yunzhi Li <lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Signed-off-by: Yunzhi Li <lyz@rock-chips.com>
 >
 > ---
 >
-> Changes in v7:
-> - Update dtsi for new usb phy driver.
->
+> Changes in v7: None
 > Changes in v6: None
-> Changes in v5:
-> - reorder the phy dt node to a correct position.
->
-> Changes in v4:
-> - Add phy subnodes.
->
+> Changes in v5: None
+> Changes in v4: None
 > Changes in v3: None
 >
->  arch/arm/boot/dts/rk3288.dtsi | 35 +++++++++++++++++++++++++++++++++++
->  1 file changed, 35 insertions(+)
+>  arch/arm/boot/dts/rk3288-evb.dtsi | 4 ++++
+>  1 file changed, 4 insertions(+)
 
-On rk3288-pinky (on a 3.14 tree with backports), I can confirm that
-this properly gets us into low power at suspend time.
+I have tested a similar change on rk3288-pinky (on a 3.14 tree with
+backports).  There I can confirm that this properly gets us into low
+power at suspend time.  I have not tested on EVB itself though, so
+leaving off my tested tag.
 
-Tested-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+This does look reasonable to me, though:
 
-
-This looks reasonable to me:
-
-Reviewed-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Reviewed-by: Doug Anderson <dianders@chromium.org>
