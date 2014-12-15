@@ -1,34 +1,37 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v5 1/3] gpio: Cygnus: define Broadcom Cygnus GPIO binding
-Date: Mon, 15 Dec 2014 22:57:36 +0100
-Message-ID: <2063145.N1Hk6vVF2S@wuerfel>
-References: <1418342706-14755-2-git-send-email-rjui@broadcom.com> <1628217.66frkAqHMc@wuerfel> <548F5433.5090901@broadcom.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <548F5433.5090901@broadcom.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Ray Jui <rjui@broadcom.com>, Alexandre Courbot <gnurou@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Scott Branden <sbranden@broadcom.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Matt Porter <mporter@linaro.org>, Joe Perches <joe@perches.com>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>
+From: Doug Anderson <dianders@chromium.org>
+Subject: [PATCH v2 3/3] ARM: dts: Specify VMMC and VQMMC on rk3288-evb
+Date: Mon, 15 Dec 2014 15:25:29 -0800
+Message-ID: <1418685929-13096-3-git-send-email-dianders@chromium.org>
+References: <1418685929-13096-1-git-send-email-dianders@chromium.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1418685929-13096-1-git-send-email-dianders@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>, Heiko Stuebner <heiko@sntech.de>, Jaehoon Chung <jh80.chung@samsung.com>, Seungwon Jeon <tgih.jun@samsung.com>
+Cc: Mark Brown <broonie@kernel.org>, Alexandru Stan <amstan@chromium.org>, Alim Akhtar <alim.akhtar@samsung.com>, Sonny Rao <sonnyrao@chromium.org>, Andrew Bresticker <abrestic@chromium.org>, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Doug Anderson <dianders@chromium.org>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 15 December 2014 13:35:47 Ray Jui wrote:
-> 
-> Like I said previously, dynamic GPIO allocation works fine in the 
-> kernel, as long as all of our GPIO clients in the kernel use gpiod based 
-> API, which is what we will enforce going forward. The only problem is 
-> with some of our customers who use GPIO through sysfs and expect fixed 
-> global GPIO numbers. Thinking about this more, it's probably not that 
-> difficult to add a script for those customers to convert/map the GPIO 
-> numbers based on readings parsed from sysfs, so I guess that's fine.
-> 
+Specifying these rails should eventually let us do UHS.
 
-I think we discussed the user space interface a number of times
-in the past, but I forgot the outcome. Either there is already
-a way to name gpio lines uniquely in sysfs, or there should be
-one.
+Signed-off-by: Doug Anderson <dianders@chromium.org>
+---
+Changes in v2:
+- Fix subject line
 
-Can you reach the gpio interfaces using /sys/devices/0001234.bus/1234566.gpiocontroller/...? 
+ arch/arm/boot/dts/rk3288-evb.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-	Arnd
+diff --git a/arch/arm/boot/dts/rk3288-evb.dtsi b/arch/arm/boot/dts/rk3288-evb.dtsi
+index 3e067dd..d660fe6 100644
+--- a/arch/arm/boot/dts/rk3288-evb.dtsi
++++ b/arch/arm/boot/dts/rk3288-evb.dtsi
+@@ -114,6 +114,8 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_cd &sdmmc_bus4>;
+ 	status = "okay";
++	vmmc-supply = <&vcc_io>;
++	vqmmc-supply = <&vccio_sd>;
+ };
+ 
+ &i2c0 {
+-- 
+2.2.0.rc0.207.ga3a616c
