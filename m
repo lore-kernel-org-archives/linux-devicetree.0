@@ -1,36 +1,156 @@
 From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 2/8] ARM: multi_v7_defconfig: Enable support for ST's LPC RTC
-Date: Mon, 15 Dec 2014 11:25:32 +0000
-Message-ID: <1418642738-17407-3-git-send-email-lee.jones@linaro.org>
+Subject: [PATCH 5/8] mfd: Add ST's Low Power Controller driver
+Date: Mon, 15 Dec 2014 11:25:35 +0000
+Message-ID: <1418642738-17407-6-git-send-email-lee.jones@linaro.org>
 References: <1418642738-17407-1-git-send-email-lee.jones@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1418642738-17407-1-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On current ST platforms the LPC controls a number of functions.  This
+patch enables possible support for the LPC Watchdog and LPC RTC devices
+and ensures only one of them operates at any one time.
+
 Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- arch/arm/configs/multi_v7_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/mfd/Kconfig  |  8 +++++
+ drivers/mfd/Makefile |  1 +
+ drivers/mfd/st-lpc.c | 88 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 97 insertions(+)
+ create mode 100644 drivers/mfd/st-lpc.c
 
-diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-index e34d5c6..09b8bce 100644
---- a/arch/arm/configs/multi_v7_defconfig
-+++ b/arch/arm/configs/multi_v7_defconfig
-@@ -344,6 +344,7 @@ CONFIG_RTC_DRV_AS3722=y
- CONFIG_RTC_DRV_DS1307=y
- CONFIG_RTC_DRV_MAX8907=y
- CONFIG_RTC_DRV_PALMAS=y
-+CONFIG_RTC_DRV_ST_LPC=y
- CONFIG_RTC_DRV_TWL4030=y
- CONFIG_RTC_DRV_TPS6586X=y
- CONFIG_RTC_DRV_TPS65910=y
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index de5abf2..75db2f2 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -752,6 +752,14 @@ config STMPE_SPI
+ 	  This is used to enable SPI interface of STMPE
+ endmenu
+ 
++config MFD_ST_LPC
++	tristate "STMicroelectronics Low-Power-Controller"
++	depends on OF
++	select MFD_CORE
++	help
++	  Say yes here to add support for ST's Low-Power-Controller (LPC).
++	  This device provides Real-Time Clock and Watchdog functionality.
++
+ config MFD_STA2X11
+ 	bool "STMicroelectronics STA2X11"
+ 	depends on STA2X11
+diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+index f001487..09aeb95 100644
+--- a/drivers/mfd/Makefile
++++ b/drivers/mfd/Makefile
+@@ -29,6 +29,7 @@ obj-$(CONFIG_MFD_STA2X11)	+= sta2x11-mfd.o
+ obj-$(CONFIG_MFD_STMPE)		+= stmpe.o
+ obj-$(CONFIG_STMPE_I2C)		+= stmpe-i2c.o
+ obj-$(CONFIG_STMPE_SPI)		+= stmpe-spi.o
++obj-$(CONFIG_MFD_ST_LPC)	+= st-lpc.o
+ obj-$(CONFIG_MFD_SUN6I_PRCM)	+= sun6i-prcm.o
+ obj-$(CONFIG_MFD_TC3589X)	+= tc3589x.o
+ obj-$(CONFIG_MFD_T7L66XB)	+= t7l66xb.o tmio_core.o
+diff --git a/drivers/mfd/st-lpc.c b/drivers/mfd/st-lpc.c
+new file mode 100644
+index 0000000..13906d9
+--- /dev/null
++++ b/drivers/mfd/st-lpc.c
+@@ -0,0 +1,88 @@
++/*
++ * st-lpc.c - ST's Low Power Controller (LPC) Multi-Function Device Driver
++ *
++ * Copyright (C) 2014 STMicroelectronics -- All Rights Reserved
++ *
++ * Author: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> for STMicroelectronics
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public Licence
++ * as published by the Free Software Foundation; either version
++ * 2 of the Licence, or (at your option) any later version.
++ */
++
++#include <linux/err.h>
++#include <linux/mfd/core.h>
++#include <linux/module.h>
++#include <linux/of_device.h>
++#include <dt-bindings/mfd/st-lpc.h>
++
++static int st_lpc_probe(struct platform_device *pdev)
++{
++	struct device_node *np = pdev->dev.of_node;
++	struct mfd_cell *cell;
++	u32 mode;
++	int ret;
++
++	cell = devm_kzalloc(&pdev->dev, sizeof(*cell), GFP_KERNEL);
++	if (!cell)
++		return -ENOMEM;
++
++	ret = of_property_read_u32(np, "st,lpc-mode", &mode);
++	if (ret) {
++		dev_err(&pdev->dev, "An LPC mode must be selected\n");
++		return ret;
++	}
++
++	switch (mode) {
++	case ST_LPC_MODE_RTC:
++		cell->name = "st-lpc-rtc";
++		break;
++	case ST_LPC_MODE_WDT:
++		cell->name = "st-lpc-wdt";
++		break;
++	default:
++		dev_err(&pdev->dev, "Unsupported mode: %d\n", mode);
++		return ret;
++	}
++
++	/* Pass resources though to selected child device. */
++	cell->resources = pdev->resource;
++	cell->num_resources = pdev->num_resources;
++
++	ret = mfd_add_devices(&pdev->dev, PLATFORM_DEVID_AUTO,
++			      cell, 1, NULL, 0, NULL);
++	if (ret) {
++		dev_err(&pdev->dev, "Failed to register child devices\n");
++		return ret;
++	}
++
++	return 0;
++}
++
++static int st_lpc_remove(struct platform_device *pdev)
++{
++	mfd_remove_devices(&pdev->dev);
++
++	return 0;
++}
++
++static const struct of_device_id st_lpc_dt_match[] = {
++	{ .compatible = "st,stih407-lpc" },
++	{ }
++};
++
++static struct platform_driver st_lpc_driver = {
++	.driver = {
++		.name = "st-lpc",
++		.of_match_table = st_lpc_dt_match,
++	},
++	.probe = st_lpc_probe,
++	.remove = st_lpc_remove,
++};
++
++module_platform_driver(st_lpc_driver);
++
++MODULE_AUTHOR("Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>");
++MODULE_DESCRIPTION("ST's Low Power Controller (LPC) Multi-Function Device");
++MODULE_LICENSE("GPL");
 -- 
 1.9.1
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
