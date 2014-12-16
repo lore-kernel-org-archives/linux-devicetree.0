@@ -1,56 +1,296 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v14 03/10] qcom: spm: Add Subsystem Power Manager driver
-Date: Tue, 16 Dec 2014 20:44:17 +0100
-Message-ID: <3424177.tKdrF8ZmHS@wuerfel>
-References: <1417541958-56907-1-git-send-email-lina.iyer@linaro.org> <2663853.2Q3kHisMT7@wuerfel> <5490857A.1000808@codeaurora.org>
+From: Suman Anna <s-anna@ti.com>
+Subject: Re: [PATCH (resend)] mailbox: Add Altera mailbox driver
+Date: Tue, 16 Dec 2014 13:53:16 -0600
+Message-ID: <54908DAC.3090009@ti.com>
+References: <1418378690-3466-1-git-send-email-lftan@altera.com>	<548AFDE9.6000909@gmail.com>	<548F4A99.7040409@ti.com> <CAFiDJ5-b9qsLKj8Qh2+yx8_Y1nv5CG1PHyn2Se0zzZLSHWTKNg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <5490857A.1000808@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Lina Iyer <lina.iyer@linaro.org>, khilman@linaro.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAFiDJ5-b9qsLKj8Qh2+yx8_Y1nv5CG1PHyn2Se0zzZLSHWTKNg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ley Foon Tan <lftan@altera.com>
+Cc: Dinh Nguyen <dinh.linux@gmail.com>, Jassi Brar <jassisinghbrar@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 16 December 2014 11:18:18 Stephen Boyd wrote:
-> On 12/16/2014 06:38 AM, Arnd Bergmann wrote:
-> > On Tuesday 16 December 2014 15:12:22 Daniel Lezcano wrote:
-> >> At the beginning, all that become from not including mach files from the 
-> >> drivers directory which make sense.
-> >>
-> >> Perhaps it is time to write a similar mechanism for the cpuidle drivers 
-> >> where we can still separate the low level PM code from the generic 
-> >> cpuidle code.
-> > That way you basically duplicate the same thing we already have, which
-> > isn't much better.
-> >
-> > In the example of drivers/soc/qcom/spm.c, just call cpuidle_register
-> > from the spm_dev_probe() function and be done with it. You already
-> > have a device that is responsible for handling this, don't try to
-> > construct more than you already need.
-> >
-> > I would assume that the same can be done for most other platforms.
-> >
-> > There are probably cases where the same piece of hardware is responsible
-> > for both cpuidle and cpufreq, but what that means is really that you
-> > should have a single driver for it that does both things. Same for
-> > SMP support: if you have one register block that does both the SMP
-> > bringup and the cpuidle stuff, then have *one* driver for this block
-> > that does it all. There are currently a few dependencies that require
-> > doing SMP bringup early during boot, but we decided years ago that those
-> > are all artificial dependencies and we should be able to boot secondary
-> > CPUs much later than we currently do.
-> >
+Hi Ley Foon,
+
+On 12/16/2014 12:33 AM, Ley Foon Tan wrote:
+> On Tue, Dec 16, 2014 at 4:54 AM, Suman Anna <s-anna@ti.com> wrote:
+>> Hi Ley Foon,
+>>
+>> On 12/12/2014 08:38 AM, Dinh Nguyen wrote:
+>>>
+>>>
+>>> On 12/12/14, 4:04 AM, Ley Foon Tan wrote:
+>>>> The Altera mailbox allows for interprocessor communication. It supports
+>>>> only one channel and work as either sender or receiver.
+>>
+>> I have a few more comments in addition to those that Dinh provided.
+>>
+>>>>
+>>>> Signed-off-by: Ley Foon Tan <lftan@altera.com>
+>>>> ---
+>>>>  .../devicetree/bindings/mailbox/altera-mailbox.txt |  49 +++
+>>>>  drivers/mailbox/Kconfig                            |   6 +
+>>>>  drivers/mailbox/Makefile                           |   2 +
+>>>>  drivers/mailbox/mailbox-altera.c                   | 404 +++++++++++++++++++++
+>>>>  4 files changed, 461 insertions(+)
+>>>>  create mode 100644 Documentation/devicetree/bindings/mailbox/altera-mailbox.txt
+>>>>  create mode 100644 drivers/mailbox/mailbox-altera.c
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/mailbox/altera-mailbox.txt b/Documentation/devicetree/bindings/mailbox/altera-mailbox.txt
+>>>> new file mode 100644
+>>>> index 0000000..c261979
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/mailbox/altera-mailbox.txt
+>>>> @@ -0,0 +1,49 @@
+>>>> +Altera Mailbox Driver
+>>>> +=====================
+>>>> +
+>>>> +Required properties:
+>>>> +- compatible :      "altr,mailbox-1.0".
+>>
+>> I am not sure on this convention, sounds like IP version number. Please
+>> check this with a DT maintainer.
+> Our other soft IPs compatible strings all have 1.0 version number. Eg:
+> altr,juart-1.0.
+> So, we want to keep it as same format.
 > 
-> +1. The SPM harware is used for hotplug, suspend, cpuidle, as well as
-> provides a regulator for a CPU, so all these things should be done in a
-> single driver. Booting secondary CPUs early is not hard here either if
-> we move the smp ops into the same driver. The only downside then is that
-> it can't be a module, but I would guess that we can work on making that
-> possible by allowing smp ops to be inserted and removed at any time.
+>>>> diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
+>>>> index c04fed9..84325f2 100644
+>>>> --- a/drivers/mailbox/Kconfig
+>>>> +++ b/drivers/mailbox/Kconfig
+>>>> @@ -45,4 +45,10 @@ config PCC
+>>>>        states). Select this driver if your platform implements the
+>>>>        PCC clients mentioned above.
+>>>>
+>>>> +config ALTERA_MBOX
+>>>> +    tristate "Altera Mailbox"
+>>
+>> You haven't used any depends on here, this driver is not applicable on
+>> all platforms, right?
+> It is a soft IP, so it is not limited to our platform only.
+> Other soft IP drivers also don't have 'depend on', so I think should be fine.
 
-Right, I don't see modular SMP operations happening any time soon,
-but it also doesn't seem like a fundamental restriction.
+Yeah, ok.
 
-	Arnd
+> 
+> 
+>>>> +
+>>>> +static inline struct altera_mbox *to_altera_mbox(struct mbox_chan *chan)
+>>>> +{
+>>>> +    if (!chan)
+>>>> +            return NULL;
+>>>> +
+>>>> +    return container_of(chan, struct altera_mbox, chan);
+>>>> +}
+>>>> +
+>>>> +static inline int altera_mbox_full(struct altera_mbox *mbox)
+>>>> +{
+>>>> +    u32 status;
+>>>> +
+>>>> +    status = __raw_readl(mbox->mbox_base + MAILBOX_STS_REG);
+>>
+>> You may want to replace all the __raw_readl/__raw_writel with regular
+>> readl/writel or its equivalent relaxed versions depending on your needs.
+> Okay.
+> 
+> 
+>>>> +static int altera_mbox_send_data(struct mbox_chan *chan, void *data)
+>>>> +{
+>>>> +    struct altera_mbox *mbox = to_altera_mbox(chan);
+>>>> +    u32 *udata = (u32 *)data;
+>>>> +
+>>>> +    if (!mbox || !data)
+>>>> +            return -EINVAL;
+>>>> +    if (!mbox->is_sender) {
+>>>> +            dev_warn(mbox->dev,
+>>>> +                    "failed to send. This is receiver mailbox.\n");
+>>>> +            return -EINVAL;
+>>>> +    }
+>>>> +
+>>>> +    if (altera_mbox_full(mbox))
+>>>> +            return -EBUSY;
+>>
+>> I think this logic in general will conflict between interrupt and poll
+>> mode. send_data is supposed to return -EBUSY only in polling mode and
+>> not in interrupt mode.
+> What is the recommended error code for this case? BTW, omap-mailbox.c
+> also return -EBUSY if mailbox is full.
+
+Looks like the mbox core doesn't care about the error, it's just
+checking for non-success case. I made that comment based on the
+documentation in last_tx_done. OMAP mailbox is always interrupt driven,
+and it is very rare that we will ever hit the mbox full because of the
+Tx-ready interrupt driven Tx ticker and also the h/w fifo.
+
+I see that your mailbox is very similar to OMAP mailbox though without
+the h/w fifo, but you do have support for both polling and interrupt
+modes in your code. OMAP mailbox can do that as well, but it's
+inefficient to use polling so the driver is strictly interrupt driven.
+
+> 
+>>>> +
+>>>> +    /* Enable interrupt before send */
+>>>> +    altera_mbox_tx_intmask(mbox, true);
+>>
+>> Is this true and required in Polling mode too?
+> Add checking for interrupt mode here.
+> 
+> 
+>>
+>> Do you even need the chans variable, don't see it getting used
+>> anywhere. You are directly using the mbox->chan during registration..
+> Will update this.
+>>
+>>>
+>>>> +    struct resource *regs;
+>>>> +    int ret;
+>>>> +
+>>>> +    mbox = devm_kzalloc(&pdev->dev, sizeof(struct altera_mbox),
+>>
+>> Use sizeof(*mbox)
+> Okay.
+> 
+>>
+>>>> +            GFP_KERNEL);
+>>
+>> You have a few "Alignment should match open parenthesis" checks
+>> generated with the --strict option on checkpatch. I am not sure if Jassi
+>> is requiring them, but I would recommend that you fix all of them.
+> Okay, will check these.
+> 
+>>
+>>>> +    if (!mbox)
+>>>> +            return -ENOMEM;
+>>>> +
+>>>> +    regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>>>> +    if (!regs)
+>>>> +            return -ENXIO;
+>>
+>> You can remove the check for regs, devm_ioremap_resource is capable
+>> of handling the error.
+> Okay.
+> 
+>>>> +
+>>>> +    mbox->mbox_base = devm_ioremap_resource(&pdev->dev, regs);
+>>>> +    if (IS_ERR(mbox->mbox_base))
+>>>> +            return PTR_ERR(mbox->mbox_base);
+>>>> +
+>>>> +    /* Check is it a sender or receiver? */
+>>>> +    mbox->is_sender = altera_mbox_is_sender(mbox);
+>>>> +
+>>>> +    mbox->irq = platform_get_irq(pdev, 0);
+>>>> +    if (mbox->irq >= 0)
+>>>> +            mbox->intr_mode = true;
+>>
+>> This seems to be a poor way of setting up the mode. Is it the same IP
+>> block but different integration on different SoCs? Or on the same SoC,
+>> and you can use it either by interrupt driven or by polling.
+> Yes, it can use interrupt or polling mode depends on hardware configurations.
+> It is a soft IP and can be configured with different hardware configurations.
+
+OK, the platform_get_irq suggests that this decision is made by having
+or not having the interrupts property in the DT node, is that the only
+way of differentiating this mode?
+
+regards
+Suman
+
+> 
+>>>> +
+>>>> +    mbox->dev = &pdev->dev;
+>>>> +
+>>>> +    /* Hardware supports only one channel. */
+>>>> +    chans[0] = &mbox->chan;
+>>>> +    mbox->controller.dev = mbox->dev;
+>>>> +    mbox->controller.num_chans = 1;
+>>>> +    mbox->controller.chans =  &mbox->chan;
+>>>> +    mbox->controller.ops = &altera_mbox_ops;
+>>>> +
+>>>> +    if (mbox->is_sender) {
+>>>> +            if (mbox->intr_mode)
+>>>> +                    mbox->controller.txdone_irq = true;
+>>>> +            else {
+>>>> +                    mbox->controller.txdone_poll = true;
+>>>> +                    mbox->controller.txpoll_period = MBOX_POLLING_MS;
+>>>> +            }
+>>>
+>>> Need braces around the if as well.
+>>>
+>>>> +    }
+>>>> +
+>>>> +    ret = mbox_controller_register(&mbox->controller);
+>>>> +    if (ret) {
+>>>> +            dev_err(&pdev->dev, "Register mailbox failed\n");
+>>>> +            goto err;
+>>>> +    }
+>>>> +
+>>>> +    platform_set_drvdata(pdev, mbox);
+>>>> +    return 0;
+>>
+>> Not required, ret should be 0 if mbox_controller_register succeeds.
+> Okay.
+>>
+>>>> +err:
+>>>> +    return ret;
+>>>> +}
+>>>> +
+>>>> +static int altera_mbox_remove(struct platform_device *pdev)
+>>>> +{
+>>>> +    struct altera_mbox *mbox = platform_get_drvdata(pdev);
+>>>> +
+>>>> +    if (!mbox)
+>>>> +            return -EINVAL;
+>>>> +
+>>>> +    mbox_controller_unregister(&mbox->controller);
+>>>> +
+>>>> +    platform_set_drvdata(pdev, NULL);
+>>
+>> This is not required.
+> Okay.
+>>
+>>>> +    return 0;
+>>>> +}
+>>>> +
+>>>> +static const struct of_device_id altera_mbox_match[] = {
+>>>> +    { .compatible = "altr,mailbox-1.0" },
+>>>> +    { /* Sentinel */ }
+>>>> +};
+>>>> +
+>>>> +MODULE_DEVICE_TABLE(of, altera_mbox_match);
+>>>> +
+>>>> +static struct platform_driver altera_mbox_driver = {
+>>>> +    .probe  = altera_mbox_probe,
+>>>> +    .remove = altera_mbox_remove,
+>>>> +    .driver = {
+>>>> +            .name   = DRIVER_NAME,
+>>>> +            .owner  = THIS_MODULE,
+>>>> +            .of_match_table = altera_mbox_match,
+>>
+>> of_match_ptr(altera_mbox_match).
+> Okay.
+>>
+>>>> +    },
+>>>> +};
+>>>> +
+>>>> +static int altera_mbox_init(void)
+>>>> +{
+>>>> +    return platform_driver_register(&altera_mbox_driver);
+>>>> +}
+>>>> +
+>>>> +static void altera_mbox_exit(void)
+>>>> +{
+>>>> +    platform_driver_unregister(&altera_mbox_driver);
+>>>> +}
+>>
+>> Use module_platform_driver here as you are using just regular platform
+>> driver register and unregister.
+>>
+> Okay.
+> 
+> Thanks for reviewing.
+> 
+> Regards.
+> 
