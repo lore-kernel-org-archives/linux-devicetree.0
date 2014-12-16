@@ -1,112 +1,129 @@
-From: =?windows-1252?Q?Uwe_Kleine-K=F6nig?= <uwe@kleine-koenig.org>
-Subject: Re: [PATCHv1 1/3] rtc: rtc-isl12057: add alarm support to Intersil
- ISL12057 RTC driver
-Date: Tue, 16 Dec 2014 11:08:57 +0100
-Message-ID: <549004B9.2060402@kleine-koenig.org>
-References: <cover.1418687005.git.arno@natisbad.org> <db1f0eecbdc5062a61232b99699ecfa6e0a2a956.1418687005.git.arno@natisbad.org>
+From: Ding Tianhong <dingtianhong@huawei.com>
+Subject: Re: [PATCH net-next v9 0/3] add hisilicon hip04 ethernet driver
+Date: Tue, 16 Dec 2014 18:08:32 +0800
+Message-ID: <549004A0.9010106@huawei.com>
+References: <1418298150-4944-1-git-send-email-dingtianhong@huawei.com> <2708715.thQWqYuW6a@wuerfel> <548FE5E1.1090300@huawei.com> <26790181.hAWQCCSkRa@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <db1f0eecbdc5062a61232b99699ecfa6e0a2a956.1418687005.git.arno@natisbad.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Arnaud Ebalard <arno@natisbad.org>, Andrew Morton <akpm@linux-foundation.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Peter Huewe <peter.huewe@infineon.com>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <treding@nvidia.com>, Mark Brown <broonie@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Darshana Padmadas <darshanapadmadas@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Rob Landley <rob@landley.net>, rtc-linux@googlegroups.com, Jason Cooper <jason@lakedaemon.net>, Guenter Roeck <linux@roeck-us.net>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <26790181.hAWQCCSkRa@wuerfel>
+Sender: netdev-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-kernel@lists.infradead.org, zhangfei.gao@linaro.org, davem@davemloft.net, linux@arm.linux.org.uk, f.fainelli@gmail.com, sergei.shtylyov@cogentembedded.com, mark.rutland@arm.com, David.Laight@aculab.com, eric.dumazet@gmail.com, xuwei5@hisilicon.com, netdev@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Arnaud,
+On 2014/12/16 16:54, Arnd Bergmann wrote:
+> On Tuesday 16 December 2014 15:57:21 Ding Tianhong wrote:
+>> On 2014/12/15 21:29, Arnd Bergmann wrote:
+>>> On Thursday 11 December 2014 19:42:27 Ding Tianhong wrote:
+>>> @@ -381,57 +392,37 @@ static void hip04_tx_reclaim(struct net_device *ndev, bool force)
+>>>  		dev_kfree_skb(priv->tx_skb[tx_tail]);
+>>>  		priv->tx_skb[tx_tail] = NULL;
+>>>  		tx_tail = TX_NEXT(tx_tail);
+>>> -		priv->tx_count--;
+>>> -
+>>> -		if (priv->tx_count <= 0)
+>>> -			break;
+>>> +		count--;
+>>>  	}
+>>>  
+> ...
+>>> -	queue_delayed_work(priv->wq, &priv->tx_clean_task, delta_in_ticks);
+>>> +	return count;
+>>
+>> I think should return pkts_compl, because may break from the loop, the
+>> pkts_compl may smaller than count.
+> 
+> The calling convention I used is to return the packets that are remaining
+> on the queue. Only if that is nonzero we need to reschedule the timer.
+> 
 
-On 12/16/2014 12:54 AM, Arnaud Ebalard wrote:
-> 
-> This patch adds alarm support to Intersil ISL12057 driver. The chip
-> supports two separate alarms:
-> 
->  - Alarm1: works up to one month in the future and accurate to the
->            second, associated w/ IRQ#2 pin
->  - Alarm2: works up to one month in the future and accurate to the
->            minute, associated w/ IRQ#1 or IRQ#2 pin (configuable).
-> 
-> This patch only adds support for Alarm1 which allows to configure
-> the chip to generate an interrupt on IRQ#2 pin when current time
-> matches the alarm.
-> 
-> This patch was tested on a Netgear ReadyNAS 102 after some soldering
-> of the IRQ#2 pin of the RTC chip to a MPP line of the SoC (the one
-> used usually handles the reset button). The test was performed using
-> a modified .dts file reflecting this change (see below) and rtc-test.c
-> program available in Documentation/rtc.txt. This test program ran as
-> expected, which validates alarm supports, including interrupt support.
-> 
-> As a side note, the ISL12057 remains in the list of trivial devices,
-> i.e. no specific DT binding being added by this patch: i2c core
-> automatically handles extraction of IRQ line info from .dts file. For
-> instance, if one wants to reference the interrupt line for the
-> alarm in its .dts file, adding interrupt and interrupt-parent
-> properties works as expected (if the primary function of your
-> interrupt pin is not GPIO, you will need some additional pinctrl
-> properties):
-> 
->           isl12057: isl12057@68 {
->                   compatible = "isil,isl12057";
->                   interrupt-parent = <&gpio0>;
->                   interrupts = <6 IRQ_TYPE_EDGE_FALLING>;
->                   reg = <0x68>;
->           };
-> 
-> FWIW, if someone is looking for a way to test alarm support this can
-> be done in the following way:
-> 
->     # echo `date '+%s' -d '+ 1 minutes'` > /sys/class/rtc/rtc0/wakealarm
->     # shutdown -h now
-> 
-> With the commands above, after a minute, the system comes back to life.
-This paragraph belongs into the 2nd patch, right?
+OK, agree.
 
-> diff --git a/drivers/rtc/rtc-isl12057.c b/drivers/rtc/rtc-isl12057.c
-> index 6e1fcfb5d7e6..3ec73ad7f2d8 100644
-> --- a/drivers/rtc/rtc-isl12057.c
-> +++ b/drivers/rtc/rtc-isl12057.c
-> @@ -79,8 +79,10 @@
->  #define ISL12057_MEM_MAP_LEN	0x10
->  
->  struct isl12057_rtc_data {
-> +	struct rtc_device *rtc;
->  	struct regmap *regmap;
->  	struct mutex lock;
-> +	int irq;
-interrupts are usually unsigned values. Hmm, I see that it simplifies a
-bit here, as the function to determine the irq returns the actual value
-or a negative error. As there would be problems anyhow for irq values >
-INT_MAX probably this comment isn't that important.
+>> and we need to add netif_tx_lock() to protect this function to avoid concurrency conflict.
+> 
+> Oh, did I miss something? The idea was that the start_xmit function only updates
+> the tx_head pointer and reads the tx_tail, while the tx_reclaim function does
+> the reverse, and writes to a different cache line, in order to allow a lockless
+> queue traversal.
+> 
+> Can you point to a specific struct member that still need to be protected by
+> the lock? Did I miss a race that would allow both functions to exit with
+> the timer disabled and entries left on the queue?
+> 
+OK, got it, no problem.
 
-> +/*
-> + * Note: as we only read from device and do not perform any update, there is
-> + * no need for an equivalent function which would try and get driver's main
-> + * lock. Here, it is safe for everyone if we just use regmap internal lock
-> + * on the device when reading.
-> + */
-> +static int _isl12057_rtc_read_time(struct device *dev, struct rtc_time *tm)
->  {
->  	struct isl12057_rtc_data *data = dev_get_drvdata(dev);
->  	u8 regs[ISL12057_RTC_SEC_LEN];
->  	unsigned int sr;
->  	int ret;
->  
-> -	mutex_lock(&data->lock);
->  	ret = regmap_read(data->regmap, ISL12057_REG_SR, &sr);
->  	if (ret) {
->  		dev_err(dev, "%s: unable to read oscillator status flag (%d)\n",
-> @@ -187,8 +222,6 @@ static int isl12057_rtc_read_time(struct device *dev, struct rtc_time *tm)
->  			__func__, ret);
->  
->  out:
-> -	mutex_unlock(&data->lock);
-> -
->  	if (ret)
->  		return ret;
->  
+>>> @@ -623,8 +648,6 @@ static int hip04_mac_stop(struct net_device *ndev)
+>>>  	struct hip04_priv *priv = netdev_priv(ndev);
+>>>  	int i;
+>>>  
+>>> -	cancel_delayed_work_sync(&priv->tx_clean_task);
+>>> -
+>> I think we should cancle the hrtimer when closed and queue the timer when open.
+> 
+> I was expecting that force-cleaning up the tx queue would be enough for that.
+> It it not?
+> 
+> I suppose it can't hurt to cancel the timer here anyway, and maybe use
+> WARN_ON() if it's still active.
+> 
 
-Is this locking update worth a separate change?
+Ok, I found no need to worry about this, when the dev is closed, the napi will disable and will not enter timer again.
 
-Best regards
-Uwe
+> Starting the timer after opening seems wrong though: at that point there are
+> no packets on the queue yet. The timer should always start ticking at the
+> exact point when the first packet is put on the queue while the timer is
+> not already pending.
+> 
+Ok.
+
+>>>  	napi_disable(&priv->napi);
+>>>  	netif_stop_queue(ndev);
+>>>  	hip04_mac_disable(ndev);
+>>> @@ -725,6 +748,7 @@ static int hip04_mac_probe(struct platform_device *pdev)
+>>>  	struct hip04_priv *priv;
+>>>  	struct resource *res;
+>>>  	unsigned int irq;
+>>> +	ktime_t txtime;
+>>>  	int ret;
+>>>  
+>>>  	ndev = alloc_etherdev(sizeof(struct hip04_priv));
+>>> @@ -751,6 +775,21 @@ static int hip04_mac_probe(struct platform_device *pdev)
+>>>  	priv->port = arg.args[0];
+>>>  	priv->chan = arg.args[1] * RX_DESC_NUM;
+>>>  
+>>> +	hrtimer_init(&priv->tx_coalesce_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+>>> +
+>>> +	/*
+>>> +	 * BQL will try to keep the TX queue as short as possible, but it can't
+>>> +	 * be faster than tx_coalesce_usecs, so we need a fast timeout here,
+>>> +	 * but also long enough to gather up enough frames to ensure we don't
+>>> +	 * get more interrupts than necessary.
+>>> +	 * 200us is enough for 16 frames of 1500 bytes at gigabit ethernet rate
+>>> +	 */
+>>> +	priv->tx_coalesce_frames = TX_DESC_NUM * 3 / 4;
+>>> +	priv->tx_coalesce_usecs = 200;
+>>> +	/* allow timer to fire after half the time at the earliest */
+>>> +	txtime = ktime_set(0, priv->tx_coalesce_usecs * NSEC_PER_USEC / 2);
+>>> +	hrtimer_set_expires_range(&priv->tx_coalesce_timer, txtime, txtime);
+>>> +
+>>
+>> I think miss the line:
+>>  priv->tx_coalesce_timer.function = tx_done;
+> 
+> Yes, good point.
+> 
+
+I will send v10 when the net-next open again, and these days will test this driver, thanks a lot.
+
+Ding
+
+> 	Arnd
+> --
+> To unsubscribe from this list: send the line "unsubscribe netdev" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> .
+> 
