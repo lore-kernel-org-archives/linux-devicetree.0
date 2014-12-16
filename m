@@ -1,60 +1,127 @@
-From: Ray Jui <rjui@broadcom.com>
-Subject: Re: [PATCH v2 2/4] PCI: iproc: Add Broadcom iProc PCIe driver
-Date: Mon, 15 Dec 2014 16:28:23 -0800
-Message-ID: <548F7CA7.8070600@broadcom.com>
-References: <1418351817-14898-3-git-send-email-rjui@broadcom.com> <1790462.K12S5vem48@wuerfel> <548F338F.9030203@broadcom.com> <2242033.mU3KpyO3Rt@wuerfel>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [RFC PATCHv3 2/7] devfreq: event: Add the list of supported
+ devfreq-event type
+Date: Tue, 16 Dec 2014 10:15:16 +0900
+Message-ID: <548F87A4.5060000@samsung.com>
+References: <1418372852-12454-1-git-send-email-cw00.choi@samsung.com>
+ <1418372852-12454-3-git-send-email-cw00.choi@samsung.com>
+ <1418655206.20866.6.camel@AMDC1943>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <2242033.mU3KpyO3Rt@wuerfel>
-Sender: linux-pci-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Hauke Mehrtens <hauke@hauke-m.de>, Lucas Stach <l.stach@pengutronix.de>, Scott Branden <sbranden@broadcom.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-reply-to: <1418655206.20866.6.camel@AMDC1943>
+Sender: linux-pm-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: myungjoo.ham@samsung.com, kyungmin.park@samsung.com, kgene.kim@samsung.com, rafael.j.wysocki@intel.com, a.kesavan@samsung.com, tomasz.figa@gmail.com, b.zolnierkie@samsung.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Krzysztof,
 
-
-On 12/15/2014 1:37 PM, Arnd Bergmann wrote:
-> On Monday 15 December 2014 11:16:31 Ray Jui wrote:
->> On 12/12/2014 9:21 AM, Arnd Bergmann wrote:
->>> On Friday 12 December 2014 09:08:48 Ray Jui wrote:
->>> One way to solve this would be by turning the driver into a library
->>> the same way as the pcie-dw driver, and have separate front-ends
->>> for it for platform_device and bcma_device.
->>>
->> I'm fine with this solution, i.e., to introduce a common pcie-iproc core
->> driver (just like pcie-designware) and have different front-ends
->> depending on the device/bus type. If we end up deciding to go with this
->> solution, I need to discuss with Hauke to come up with a plan to
->> collaborate.
->
-> Ok
->
->> But before we choose to go with that route, may I ask, what is the
->> purpose of tying a PCIe host driver to BCMA? What benefit does BCMA give
->> us? If we have a generic platform based PCIe driver that can work on all
->> iProc SoCs + BCM4708 and BCM5301X with all HW specific configurations
->> taken care of by device tree, why do we still need to use BCMA?
+On 12/15/2014 11:53 PM, Krzysztof Kozlowski wrote:
+> On pi=C4=85, 2014-12-12 at 17:27 +0900, Chanwoo Choi wrote:
+>> This patch adds the list of supported devfreq-event type as followin=
+g.
+>> Each devfreq-event device driver would support the various devfreq-e=
+vent type
+>> for devfreq governor at the same time.
+>> - DEVFREQ_EVENT_TYPE_RAW_DATA
+>> - DEVFREQ_EVENT_TYPE_UTILIZATION
+>> - DEVFREQ_EVENT_TYPE_BANDWIDTH
+>> - DEVFREQ_EVENT_TYPE_LATENCY
 >>
->> I thought all a BCMA device here does is to auto-instantiate based on
->> some register readings?
->
-> Basically, DT is a hack that we only need for nondiscoverable buses.
-> As BCMA is (mostly) discoverable, we should use that, just like we do
-> for things like PCI and USB. There are clearly some limitations to
-> BCMA as well, e.g. on bcm4708 we don't have proper IRQ numbers in
-> the device list and we need to work around that using DT, but overall
-> it still seems to have more upsides than downsides to use it.
->
-> It's also good to point other SoC makers to Broadcom as a good example
-> for how to do things they claim are impossible to do.
->
-> 	Arnd
->
-Okay. Fair enough. Let's go with your proposal to create a generic 
-driver pcie-iproc to be used by both bcma and platform bus. I'll 
-initiate another email thread with you, Hauke, Scott, and me. We can 
-discuss how to collaborate on that email thread.
+>> Cc: MyungJoo Ham <myungjoo.ham@samsung.com>
+>> Cc: Kyungmin Park <kyungmin.park@samsung.com>
+>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+>> ---
+>>  drivers/devfreq/devfreq-event.c | 44 ++++++++++++++++++++++++++++++=
++++++++----
+>>  include/linux/devfreq.h         | 29 ++++++++++++++++++++++-----
+>>  2 files changed, 64 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/drivers/devfreq/devfreq-event.c b/drivers/devfreq/devfr=
+eq-event.c
+>> index eaf59c1..9444f93 100644
+>> --- a/drivers/devfreq/devfreq-event.c
+>> +++ b/drivers/devfreq/devfreq-event.c
+>> @@ -29,6 +29,9 @@
+>>  #include <linux/of.h>
+>>  #include "governor.h"
+>> =20
+>> +#define EVENT_TYPE_RAW_DATA_MAX		U64_MAX
+>> +#define EVENT_TYPE_UTILIZATION_MAX	100
+>> +
+>>  static struct class *devfreq_event_class;
+>> =20
+>>  /* The list of all devfreq event list */
+>> @@ -144,7 +147,8 @@ EXPORT_SYMBOL_GPL(devfreq_event_is_enabled);
+>>   * Note that this function set the event to the devfreq-event devic=
+e to start
+>>   * for getting the event data which could be various event type.
+>>   */
+>> -int devfreq_event_set_event(struct devfreq_event_dev *edev)
+>> +int devfreq_event_set_event(struct devfreq_event_dev *edev,
+>> +				enum devfreq_event_type type)
+>>  {
+>>  	int ret;
+>> =20
+>> @@ -158,7 +162,15 @@ int devfreq_event_set_event(struct devfreq_even=
+t_dev *edev)
+>>  		return -EPERM;
+>> =20
+>>  	mutex_lock(&edev->lock);
+>> -	ret =3D edev->desc->ops->set_event(edev);
+>> +
+>> +	if ((edev->desc->type & type) =3D=3D 0) {
+>> +		dev_err(&edev->dev, "unsupported of devfreq-event type\n");
+>> +		mutex_unlock(&edev->lock);
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	ret =3D edev->desc->ops->set_event(edev, type);
+>> +
+>>  	mutex_unlock(&edev->lock);
+>> =20
+>>  	return ret;
+>> @@ -174,7 +186,9 @@ EXPORT_SYMBOL_GPL(devfreq_event_set_event);
+>>   * current event data and total_event should be stored in second pa=
+rameter
+>>   * (total_event).
+>>   */
+>> -u64 devfreq_event_get_event(struct devfreq_event_dev *edev, u64 *to=
+tal_event)
+>> +u64 devfreq_event_get_event(struct devfreq_event_dev *edev,
+>> +				enum devfreq_event_type type,
+>> +				u64 *total_event)
+>>  {
+>>  	u64 event;
+>> =20
+>> @@ -190,7 +204,27 @@ u64 devfreq_event_get_event(struct devfreq_even=
+t_dev *edev, u64 *total_event)
+>>  		return 0;
+>> =20
+>>  	mutex_lock(&edev->lock);
+>> -	event =3D edev->desc->ops->get_event(edev, total_event);
+>> +
+>> +	if ((edev->desc->type & type) =3D=3D 0) {
+>> +		dev_err(&edev->dev, "unsupported of devfreq-event type\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	event =3D edev->desc->ops->get_event(edev, type, total_event);
+>> +
+>> +	switch (type) {
+>> +	case DEVFREQ_EVENT_TYPE_RAW_DATA:
+>> +	case DEVFREQ_EVENT_TYPE_BANDWIDTH:
+>> +	case DEVFREQ_EVENT_TYPE_LATENCY:
+>> +		if ((event > *total_event)
+>> +			|| ((event > EVENT_TYPE_RAW_DATA_MAX) ||
+>> +				*total_event > EVENT_TYPE_RAW_DATA_MAX))
+>> +			event =3D 0;
+>=20
+> missing break here.
 
-Thanks.
+My mistake. I'll add it and 'default' case statement.
+
+Best Regards,
+Chanwoo Choi
