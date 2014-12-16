@@ -1,53 +1,64 @@
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: [PATCH v3 2/3] irqchip: vf610-mscm: dt-bindings: add MSCM bindings
-Date: Tue, 16 Dec 2014 22:45:46 +0100
-Message-ID: <1418766347-6225-3-git-send-email-stefan@agner.ch>
-References: <1418766347-6225-1-git-send-email-stefan@agner.ch>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1418766347-6225-1-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org
-Cc: u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org
+From: Stefan Agner <stefan@agner.ch>
+Subject: [PATCH v3 0/3] irqchip: vf610-mscm: add support for MSCM interrupt router
+Date: Tue, 16 Dec 2014 22:45:44 +0100
+Message-ID: <1418766347-6225-1-git-send-email-stefan@agner.ch>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com
+Cc: u.kleine-koenig@pengutronix.de, shawn.guo@linaro.org, kernel@pengutronix.de, arnd@arndb.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, stefan@agner.ch
 List-Id: devicetree@vger.kernel.org
 
-Add binding documentation for Miscellaneous System Control Module
-found in Freescale Vybrid SoC's.
+Splitted out version of the MSCM driver. My first driver based on the
+routeable domain support and was part of the Vybrid Cortex-M4 support
+patchset.
 
-Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
----
- .../bindings/arm/freescale/fsl,vf610-mscm.txt         | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+So far the MSCM interrupt router was initialized by the boot loader
+and configured all interrupts for the Cortex-A5 CPU. There are two
+use cases where a proper driver is necessary:
+- To run Linux on the Cortex-M4. When the kernel is running on the
+  non-preconfigured CPU, the interrupt router need to be configured
+  properly.
+- To support deeper sleep modes: LPSTOP clears the interrupt router
+  configuration, hence a driver needs to restore the configuration
+  on resume.
+I created a seperate patchset for that driver which hopefully makes
+it easier to get it into mergeable state.
+
+The patchset is based on the master branch of Linus as of today.
+
+Since I identified some registers likely to be used by other drivers
+(e.g. CPU ID or the CPU Generate Interrupt Register) I also added
+the "syscon" compatible string to make the registers available for
+other drivers in case needed.
+
+Changes since v2
+- Use two cell layout for MSCM interrupt router
+- Move peripheral interrupt properties to base device tree vfxxx.dtsi
+- Use generic two cell xlate (irq_domain_xlate_twocell)
+- Add syscon to compatible string
+- Remove some line breaks for better readability
+
+Changes since v1 (part of Vybrid Cortex-M4 support)
+- Rewrite with irqdomain hierarchy
+- Implemented as proper irqchip and move to driver/irqchip/
+- Doesn't work on Cortex-M4 anymore (NVIC as parent is not yet
+  implemented)
+
+Stefan Agner (3):
+  irqchip: vf610-mscm: add support for MSCM interrupt router
+  irqchip: vf610-mscm: dt-bindings: add MSCM bindings
+  ARM: dts: vf610: add Miscellaneous System Control Module (MSCM)
+
+ .../bindings/arm/freescale/fsl,vf610-mscm.txt      |  19 +++
+ arch/arm/boot/dts/vf500.dtsi                       | 128 +-------------
+ arch/arm/boot/dts/vfxxx.dtsi                       |  42 +++++
+ arch/arm/mach-imx/Kconfig                          |   1 +
+ drivers/irqchip/Kconfig                            |  11 ++
+ drivers/irqchip/Makefile                           |   1 +
+ drivers/irqchip/irq-vf610-mscm.c                   | 186 +++++++++++++++++++++
+ 7 files changed, 264 insertions(+), 124 deletions(-)
  create mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,vf610-mscm.txt
+ create mode 100644 drivers/irqchip/irq-vf610-mscm.c
 
-diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,vf610-mscm.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,vf610-mscm.txt
-new file mode 100644
-index 0000000..e051b88
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/freescale/fsl,vf610-mscm.txt
-@@ -0,0 +1,19 @@
-+Freescale Vybrid Miscellaneous System Control Module
-+
-+The MSCM IP contains Access Control and TrustZone Security hardware,
-+CPU Configuration registers and Interrupt Router control.
-+
-+Required properties:
-+- compatible : "fsl,vf610-mscm", "syscon"
-+- interrupt-controller : Identifies the node as an interrupt controller
-+- #interrupt-cells : Two cells, interrupt number and flags (IRQ type)
-+- reg : the register range of the MSCM module
-+
-+Example:
-+	mscm: mscm@40001000 {
-+		compatible = "fsl,vf610-mscm", "syscon";
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		interrupt-parent = <&intc>;
-+		reg = <0x40001000 0x1000>;
-+	}
 -- 
 2.1.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
