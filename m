@@ -1,36 +1,75 @@
-From: =?UTF-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <uwe@kleine-koenig.org>
-Subject: Re: [PATCHv1 1/3] rtc: rtc-isl12057: add alarm support to Intersil
- ISL12057 RTC driver
-Date: Tue, 16 Dec 2014 22:47:31 +0100
-Message-ID: <5490A873.1000706@kleine-koenig.org>
-References: <cover.1418687005.git.arno@natisbad.org>	<db1f0eecbdc5062a61232b99699ecfa6e0a2a956.1418687005.git.arno@natisbad.org>	<549004B9.2060402@kleine-koenig.org> <87vblbdcii.fsf@natisbad.org>
+From: Arun Ramamurthy <arun.ramamurthy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCHv1] rtc: bcm-iproc: Add support for Broadcom iproc rtc
+Date: Tue, 16 Dec 2014 13:54:04 -0800
+Message-ID: <5490A9FC.6030305@broadcom.com>
+References: <1418757750-3628-1-git-send-email-arun.ramamurthy@broadcom.com> <7947905.aK8KkUx4sY@wuerfel> <54909074.2070804@broadcom.com> <1418783023.hzNZBNCmFc@wuerfel> <549095CA.7090505@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <87vblbdcii.fsf@natisbad.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Arnaud Ebalard <arno@natisbad.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Peter Huewe <peter.huewe@infineon.com>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <treding@nvidia.com>, Mark Brown <broonie@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Darshana Padmadas <darshanapadmadas@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Rob Landley <rob@landley.net>, rtc-linux@googlegroups.com, Jason Cooper <jason@lakedaemon.net>, Guenter Roeck <linux@roeck-us.net>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <549095CA.7090505-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Arun Ramamurthy <arunrama-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Arnaud,
 
-On 12/16/2014 01:07 PM, Arnaud Ebalard wrote:
->>> FWIW, if someone is looking for a way to test alarm support this can
->>> be done in the following way:
->>>
->>>     # echo `date '+%s' -d '+ 1 minutes'` > /sys/class/rtc/rtc0/wakealarm
->>>     # shutdown -h now
->>>
->>> With the commands above, after a minute, the system comes back to life.
->> This paragraph belongs into the 2nd patch, right?
-> 
-> no, it is for this patch. I did a specific commit message for the second
-> patch. IIRC, it also has the example if it was the meaning of your
-> question.
-Is it usual that an rtc can wake up a machine from shutdown state? I
-thought it isn't.
 
-Best regards
-Uwe
+On 14-12-16 12:27 PM, Ray Jui wrote:
+>
+>
+> On 12/16/2014 12:19 PM, Arnd Bergmann wrote:
+>> On Tuesday 16 December 2014 12:05:08 Arun Ramamurthy wrote:
+>>> On 14-12-16 11:42 AM, Arnd Bergmann wrote:
+>>>> On Tuesday 16 December 2014 11:22:30 arun.ramamurthy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+>>>> wrote:
+>>>>> +       rtc: iproc_rtc@0x03026000 {
+>>>>> +               compatible = "brcm,iproc-rtc";
+>>>>> +               reg =   spru_bbl:               <0x03026000 0xC>,
+>>>>> +                       crmu_pwr_good_status:   <0x0301C02C 0x14>,
+>>>>> +                       crmu_bbl_auth:          <0x03024C74 0x8>;
+>>>>> +               interrupts = spru_rtc_periodic: <GIC_SPI 142
+>>>>> IRQ_TYPE_LEVEL_HIGH>,
+>>>>> +                            spru_alarm:        <GIC_SPI 133
+>>>>> IRQ_TYPE_LEVEL_HIGH>;
+>>>>
+>>>> The reg properties look really random, could it be that the registers
+>>>> are really part of some other device that contains multiple functions?
+>>>>
+>>> This RTC block is on a battery backed logic island and is accessed
+>>> indirectly using the spru_bbl registers. The CRMU registers are required
+>>> to read the power status and write to some authentication registers.
+>>> Without writing to these authentication
+>>> registers, we cannot access any of the spru_bbl registers. In conclusion
+>>> I don't think the CRMU register accesses can be considered as another
+>>> device access. Do you agree Arnd?
+>>
+>> It sounds like CRMU is some other unit aside from the RTC. Could this
+>> be something like a generic system controller? I think it should
+>> either have its own driver or use the syscon logic if that is what
+>> this is.
+>>
+> Giving that CRMU has scattered, miscellaneous control logic for multiple
+> different peripherals, it probably makes more sense to use the syscon
+> logic here.
+>
+Arnd, thanks for the feedback. If I was to write a separate driver for 
+the CRMU, I would have to export certain functions and create an api 
+that only this RTC driver would use. I am not sure that is efficient or 
+required. What is your opinion?
+Would it be better if I use the syson api in my current driver and move 
+the CRMU registers to separate syscon device tree entry?
+
+>>>> Also, what do you use the labels for?
+>>>>
+>>> The labels are purely to improve readability of the device tree entry
+>>
+>> Please remove them then, they don't help at all.
+>>
+Sure, I will remove the labels
+>>     Arnd
+>>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
