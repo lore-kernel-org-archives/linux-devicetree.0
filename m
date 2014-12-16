@@ -1,210 +1,149 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH] of: i2c: Add DT bindings for idle states to PCA954x mux driver
-Date: Tue, 16 Dec 2014 13:07:30 +0200
-Message-ID: <5722849.lDq3gpSIfD@avalon>
-References: <548E387E.2020502@nsn.com> <4262366.rJm0Aq2lpm@avalon> <548FE8B2.9010400@nsn.com>
+From: arno@natisbad.org (Arnaud Ebalard)
+Subject: Re: [PATCHv1 1/3] rtc: rtc-isl12057: add alarm support to Intersil ISL12057 RTC driver
+Date: Tue, 16 Dec 2014 13:07:01 +0100
+Message-ID: <87vblbdcii.fsf@natisbad.org>
+References: <cover.1418687005.git.arno@natisbad.org>
+	<db1f0eecbdc5062a61232b99699ecfa6e0a2a956.1418687005.git.arno@natisbad.org>
+	<549004B9.2060402@kleine-koenig.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <548FE8B2.9010400-OYasijW0DpE@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>
-Cc: Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Lawnick Michael 61283229 <michael.lawnick-OYasijW0DpE@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <549004B9.2060402@kleine-koenig.org> ("Uwe \=\?utf-8\?Q\?Kleine-K\?\=
+ \=\?utf-8\?Q\?\=C3\=B6nig\=22's\?\=
+	message of "Tue, 16 Dec 2014 11:08:57 +0100")
+Sender: linux-doc-owner@vger.kernel.org
+To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Peter Huewe <peter.huewe@infineon.com>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <treding@nvidia.com>, Mark Brown <broonie@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Darshana Padmadas <darshanapadmadas@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Rob Landley <rob@landley.net>, rtc-linux@googlegroups.com, Jason Cooper <jason@lakedaemon.net>, Guenter Roeck <linux@roeck-us.net>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Alexander,
+Hi Uwe,
 
-On Tuesday 16 December 2014 09:09:22 Alexander Sverdlin wrote:
-> Hello Laurent,
-> 
-> On 15/12/14 09:40, ext Laurent Pinchart wrote:
-> >> of: i2c: Add DT bindings for idle states to PCA954x mux driver
-> >> 
-> >> Introduce two new device tree bindings to specify idle state of PCA954x
-> >> 
-> >> family of I2C multiplexors:
-> >>   - idle-state: specifies particular child bus to be selected in idle;
-> >>   - idle-disconnect: signals that mux should disconnect all child buses
-> >>   in idle;
-> > 
-> > Could you please briefly explain your use case(s) for those two properties
-> > ?
+Uwe Kleine-K=C3=B6nig <uwe@kleine-koenig.org> writes:
+
+> On 12/16/2014 12:54 AM, Arnaud Ebalard wrote:
+>>=20
+>> This patch adds alarm support to Intersil ISL12057 driver. The chip
+>> supports two separate alarms:
+>>=20
+>>  - Alarm1: works up to one month in the future and accurate to the
+>>            second, associated w/ IRQ#2 pin
+>>  - Alarm2: works up to one month in the future and accurate to the
+>>            minute, associated w/ IRQ#1 or IRQ#2 pin (configuable).
+>>=20
+>> This patch only adds support for Alarm1 which allows to configure
+>> the chip to generate an interrupt on IRQ#2 pin when current time
+>> matches the alarm.
+>>=20
+>> This patch was tested on a Netgear ReadyNAS 102 after some soldering
+>> of the IRQ#2 pin of the RTC chip to a MPP line of the SoC (the one
+>> used usually handles the reset button). The test was performed using
+>> a modified .dts file reflecting this change (see below) and rtc-test=
+=2Ec
+>> program available in Documentation/rtc.txt. This test program ran as
+>> expected, which validates alarm supports, including interrupt suppor=
+t.
+>>=20
+>> As a side note, the ISL12057 remains in the list of trivial devices,
+>> i.e. no specific DT binding being added by this patch: i2c core
+>> automatically handles extraction of IRQ line info from .dts file. Fo=
+r
+>> instance, if one wants to reference the interrupt line for the
+>> alarm in its .dts file, adding interrupt and interrupt-parent
+>> properties works as expected (if the primary function of your
+>> interrupt pin is not GPIO, you will need some additional pinctrl
+>> properties):
+>>=20
+>>           isl12057: isl12057@68 {
+>>                   compatible =3D "isil,isl12057";
+>>                   interrupt-parent =3D <&gpio0>;
+>>                   interrupts =3D <6 IRQ_TYPE_EDGE_FALLING>;
+>>                   reg =3D <0x68>;
+>>           };
+>>=20
+>> FWIW, if someone is looking for a way to test alarm support this can
+>> be done in the following way:
+>>=20
+>>     # echo `date '+%s' -d '+ 1 minutes'` > /sys/class/rtc/rtc0/wakea=
+larm
+>>     # shutdown -h now
+>>=20
+>> With the commands above, after a minute, the system comes back to li=
+fe.
+> This paragraph belongs into the 2nd patch, right?
+
+no, it is for this patch. I did a specific commit message for the secon=
+d
+patch. IIRC, it also has the example if it was the meaning of your
+question.
+
+
+>> diff --git a/drivers/rtc/rtc-isl12057.c b/drivers/rtc/rtc-isl12057.c
+>> index 6e1fcfb5d7e6..3ec73ad7f2d8 100644
+>> --- a/drivers/rtc/rtc-isl12057.c
+>> +++ b/drivers/rtc/rtc-isl12057.c
+>> @@ -79,8 +79,10 @@
+>>  #define ISL12057_MEM_MAP_LEN	0x10
+>> =20
+>>  struct isl12057_rtc_data {
+>> +	struct rtc_device *rtc;
+>>  	struct regmap *regmap;
+>>  	struct mutex lock;
+>> +	int irq;
+> interrupts are usually unsigned values. Hmm, I see that it simplifies=
+ a
+> bit here, as the function to determine the irq returns the actual val=
+ue
+> or a negative error. As there would be problems anyhow for irq values=
+ >
+> INT_MAX probably this comment isn't that important.
+
+ok.
+
+>> +/*
+>> + * Note: as we only read from device and do not perform any update,=
+ there is
+>> + * no need for an equivalent function which would try and get drive=
+r's main
+>> + * lock. Here, it is safe for everyone if we just use regmap intern=
+al lock
+>> + * on the device when reading.
+>> + */
+>> +static int _isl12057_rtc_read_time(struct device *dev, struct rtc_t=
+ime *tm)
+>>  {
+>>  	struct isl12057_rtc_data *data =3D dev_get_drvdata(dev);
+>>  	u8 regs[ISL12057_RTC_SEC_LEN];
+>>  	unsigned int sr;
+>>  	int ret;
+>> =20
+>> -	mutex_lock(&data->lock);
+>>  	ret =3D regmap_read(data->regmap, ISL12057_REG_SR, &sr);
+>>  	if (ret) {
+>>  		dev_err(dev, "%s: unable to read oscillator status flag (%d)\n",
+>> @@ -187,8 +222,6 @@ static int isl12057_rtc_read_time(struct device =
+*dev, struct rtc_time *tm)
+>>  			__func__, ret);
+>> =20
+>>  out:
+>> -	mutex_unlock(&data->lock);
+>> -
+>>  	if (ret)
+>>  		return ret;
+>> =20
 >
-> idle-state specifies which bus will be connected when there is no data
-> transfer. i2c-mux-gpio also has "idle-state" (though, it can replace both
-> connect and disconnect cases in my patch). i2c-mux-pinctrl has special
-> "idle" convention, specifying idle state as last in the list of states.
-> Again, it can serve for both my properties.
-> 
-> idle-disconnect is what we actually use for some security reasons (so that
-> I2C bus of the external SFP cage is not connected to the rest of I2C bus
-> in idle).
+> Is this locking update worth a separate change?
 
-Thank you for the explanation. I would add it to the DT bindings 
-documentation, or at least to the commit message.
+I do not think it needs a separate change (to simplify bisect for
+instance) because the mutex protection can safely be removed here
+around the two tests because the first read (to check oscillator bit)
+and second read (to get time if oscillator bit is ok) we are doing on
+the device do not need to be globally protected: oscillator bit is not
+something we will update in such a way it would out of sync with the
+current state of the time value kept by the device. More precisely, in
+isl12057_rtc_set_time(), we do update the oscillator but only *after*
+the time has been set to a valid value.
 
-I understand the use cases of the idle-disconnect property. What do you use 
-idle-state for, when the idle state is different from disconnecting the bus ?
+Cheers,
 
-> >> Signed-off-by: Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>
-> >> ---
-> >> 
-> >>  .../devicetree/bindings/i2c/i2c-mux-pca954x.txt    |    3 +
-> >>  drivers/i2c/muxes/i2c-mux-pca954x.c                |   51 ++++++++++++--
-> >>  2 files changed, 48 insertions(+), 6 deletions(-)
-> >> 
-> >> diff --git a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
-> >> b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt index
-> >> 34a3fb6..1fbe287 100644
-> >> --- a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
-> >> +++ b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
-> >> 
-> >> @@ -16,6 +16,9 @@ Required Properties:
-> >>  Optional Properties:
-> >>    - reset-gpios: Reference to the GPIO connected to the reset input.
-> >> 
-> >> +  - idle-state: Child bus connected in idle state (specified by its
-> >> "reg" value)
-> >> +  - idle-disconnect: Boolean; if defined, forces mux to disconnect all
-> >> children
-> >> +    in idle state
-> >> 
-> >>  Example:
-> >> diff --git a/drivers/i2c/muxes/i2c-mux-pca954x.c
-> >> b/drivers/i2c/muxes/i2c-mux-pca954x.c index ec11b40..69cf603 100644
-> >> --- a/drivers/i2c/muxes/i2c-mux-pca954x.c
-> >> +++ b/drivers/i2c/muxes/i2c-mux-pca954x.c
-> >> @@ -43,6 +43,7 @@
-> >>  #include <linux/module.h>
-> >>  #include <linux/pm.h>
-> >>  #include <linux/slab.h>
-> >> +#include <linux/of.h>
-> > 
-> > Could you please keep headers sorted alphabetically ?
-> 
-> Yes...
-> 
-> >>  #define PCA954X_MAX_NCHANS 8
-> >> 
-> >> @@ -62,6 +63,8 @@ struct pca954x {
-> >> 
-> >>  	struct i2c_adapter *virt_adaps[PCA954X_MAX_NCHANS];
-> >>  	
-> >>  	u8 last_chan;		/* last register value */
-> >> 
-> >> +	bool idle_disconnect;
-> >> +	s8 idle_chan;		/* valid if not negative */
-> >> 
-> >>  };
-> >>  
-> >>  struct chip_desc {
-> >> 
-> >> @@ -172,10 +175,20 @@ static int pca954x_deselect_mux(struct i2c_adapter
-> >> *adap, void *client, u32 chan)
-> >> 
-> >>  {
-> >>  
-> >>  	struct pca954x *data = i2c_get_clientdata(client);
-> >> 
-> >> +	struct pca954x_platform_data *pdata =
-> >> +		dev_get_platdata(&((struct i2c_client *)client)->dev);
-> >> +
-> >> +	if ((pdata && pdata->modes[chan].deselect_on_exit) ||
-> >> +	    data->idle_disconnect) {
-> > 
-> > I would copy pdata->modes[chan].deselect_on_exit to data->idle_disconnect
-> > in the probe function, so you could avoiding accessing pdata here.
-> 
-> Unfortunately, this pdata has different (per-channel) semantics. I cannot
-> really understand, why it was done this way, but anyway it's not possible
-> to use one global bit to represent per-channel bits without changing the
-> behavior.
-> 
-> I'm not keen to brake out-of-tree code (if any), but may be it will be
-> decided to drop this per-channel deselect_on_exit, because it's not used at
-> least in the kernel tree...
-
-I'd vote for removing deselect_on_exit from platform data, but I won't insist.
-
-> >> +		/* Deselect active channel */
-> >> +		data->last_chan = 0;
-> >> +		return pca954x_reg_write(adap, client, data->last_chan);
-> >> +	}
-> >> 
-> >> -	/* Deselect active channel */
-> >> -	data->last_chan = 0;
-> >> -	return pca954x_reg_write(adap, client, data->last_chan);
-> >> +	if (data->idle_chan >= 0)
-> >> +		return pca954x_select_chan(adap, client, data->idle_chan);
-> >> +
-> >> +	return 0;
-> >>  }
-> >>  
-> >>  /*
-> >> @@ -186,6 +199,7 @@ static int pca954x_probe(struct i2c_client *client,
-> >>  {
-> >>  	struct i2c_adapter *adap = to_i2c_adapter(client->dev.parent);
-> >>  	struct pca954x_platform_data *pdata = dev_get_platdata(&client->dev);
-> >> +	struct device_node *of_node = client->dev.of_node;
-> >>  	struct gpio_desc *gpio;
-> >>  	int num, force, class;
-> >>  	struct pca954x *data;
-> >> @@ -216,6 +230,27 @@ static int pca954x_probe(struct i2c_client *client,
-> >>  	data->type = id->driver_data;
-> >>  	data->last_chan = 0;		   /* force the first selection */
-> >> 
-> >> +	data->idle_chan = -1;		   /* no forced idle state */
-> >> +
-> >> +	if (of_node) {
-> >> +		u32 ch;
-> >> +
-> >> +		if (of_property_read_bool(of_node, "idle-disconnect"))
-> >> +			data->idle_disconnect = true;
-> >> +
-> >> +		if (!of_property_read_u32_index(of_node, "idle-state", 0, &ch)) {
-> >> +			if (ch < PCA954X_MAX_NCHANS) {
-> >> +				data->idle_chan = ch;
-> >> +				/* Force idle state from the beginning */
-> >> +				ret = pca954x_select_chan(adap, client, ch);
-> >> +				if (ret)
-> >> +					return ret;
-> >> +			} else {
-> >> +				dev_warn(&client->dev,
-> >> +				         "Invalid idle-state property\n");
-> >> +			}
-> >> +		}
-> >> +	}
-> >> 
-> >>  	/* Now create an adapter for each channel */
-> >>  	for (num = 0; num < chips[data->type].nchans; num++) {
-> >> @@ -234,8 +269,7 @@ static int pca954x_probe(struct i2c_client *client,
-> >>  		data->virt_adaps[num] =
-> >>  			i2c_add_mux_adapter(adap, &client->dev, client,
-> >>  				force, num, class, pca954x_select_chan,
-> >> -				(pdata && pdata->modes[num].deselect_on_exit)
-> >> -					? pca954x_deselect_mux : NULL);
-> >> +				pca954x_deselect_mux);
-> >> 
-> >>  		if (data->virt_adaps[num] == NULL) {
-> >>  			ret = -ENODEV;
-> >> @@ -281,7 +315,12 @@ static int pca954x_resume(struct device *dev)
-> >>  	struct pca954x *data = i2c_get_clientdata(client);
-> >>  	
-> >>  	data->last_chan = 0;
-> >> 
-> >> -	return i2c_smbus_write_byte(client, 0);
-> >> +	/* Restore idle state on resume */
-> >> +	if (data->idle_chan >= 0)
-> >> +		return pca954x_select_chan(to_i2c_adapter(client->dev.parent),
-> >> +		                           client, data->idle_chan);
-> >> +	else
-> >> +		return i2c_smbus_write_byte(client, 0);
-> >> 
-> >>  }
-> >>  #endif
-
--- 
-Regards,
-
-Laurent Pinchart
+a+
