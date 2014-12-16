@@ -1,45 +1,49 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 1/2] ARM: dts: kirkwood: enable phy driver for SATA controller
- on 88f6192
-Date: Tue, 16 Dec 2014 16:46:32 +0300
-Message-ID: <549037B8.6060803@cogentembedded.com>
-References: <20141215203724.GA22936@anne>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 05/10] iommu/ipmmu-vmsa: Add device tree bindings documentation
+Date: Tue, 16 Dec 2014 14:52:39 +0100
+Message-ID: <CAMuHMdXC8C7BuTdK8-RkqaQ6dqi1bxRHFz1CttGQi3u9w6QD7Q@mail.gmail.com>
+References: <1418737457-22042-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+	<1418737457-22042-6-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141215203724.GA22936@anne>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Evgeni Dobrev <evgeni@studio-punkt.com>, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1418737457-22042-6-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Cc: iommu@lists.linux-foundation.org, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Hi Laurent,
 
-On 12/15/2014 11:37 PM, Evgeni Dobrev wrote:
+On Tue, Dec 16, 2014 at 2:44 PM, Laurent Pinchart
+<laurent.pinchart+renesas@ideasonboard.com> wrote:
+> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 
-> This patch enables the phy drivers for the SATA controller on Marvell's 88f6192. Without them it is not possible to use SATA drives attached to this processor.
+Thanks!
 
-    Please wrap the change log likes at 80 characters or less.
+Apart from the minor nit below:
+Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-> Signed-off-by: Evgeni Dobrev <evgeni@studio-punkt.com>
-> ---
->   arch/arm/boot/dts/kirkwood-6192.dtsi |    2 ++
->   1 file changed, 2 insertions(+)
+> +       ipmmu_mx: mmu@fe951800 {
 
-> diff --git a/arch/arm/boot/dts/kirkwood-6192.dtsi b/arch/arm/boot/dts/kirkwood-6192.dtsi
-> index dd81508..bed2dec 100644
-> --- a/arch/arm/boot/dts/kirkwood-6192.dtsi
-> +++ b/arch/arm/boot/dts/kirkwood-6192.dtsi
-> @@ -66,6 +66,8 @@
->   			interrupts = <21>;
->   			clocks = <&gate_clk 14>, <&gate_clk 15>;
->   			clock-names = "0", "1";
-> +                        phys = <&sata_phy0>, <&sata_phy1>;
-> +                        phy-names = "port0", "port1";
+fe951000
 
-    Please indent with tabs,  not spaces.
+(yes, having to put the same information in two places will cause discrepancies)
 
-[...]
+> +               compatible = "renasas,ipmmu-vmsa";
+> +               reg = <0 0xfe951000 0 0x1000>;
+> +               interrupts = <0 222 IRQ_TYPE_LEVEL_HIGH>,
+> +                            <0 221 IRQ_TYPE_LEVEL_HIGH>;
+> +               #iommu-cells = <1>;
+> +       };
 
-WBR, Sergei
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
