@@ -1,42 +1,77 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH 5/6] dt-bindings: Add documentation for Rockchip
- hdmi-audio
-Date: Tue, 16 Dec 2014 09:34:43 +0000
-Message-ID: <20141216093443.GN11285@n2100.arm.linux.org.uk>
-References: <1418609494-15820-1-git-send-email-ykk@rock-chips.com>
- <1418612114-19692-1-git-send-email-ykk@rock-chips.com>
- <20141215104029.GE11285@n2100.arm.linux.org.uk>
- <20141215120205.GZ11764@sirena.org.uk>
- <548EDDC2.9050104@rock-chips.com>
- <20141215161827.GE11764@sirena.org.uk>
- <548FCE8F.7090106@rock-chips.com>
+From: Stanimir Varbanov <svarbanov@mm-sol.com>
+Subject: Re: [PATCH 4/5] PCI: qcom: Add Qualcomm PCIe controller driver
+Date: Tue, 16 Dec 2014 11:43:12 +0200
+Message-ID: <548FFEB0.9080604@mm-sol.com>
+References: <1418404441-5518-1-git-send-email-svarbanov@mm-sol.com> <1418404441-5518-5-git-send-email-svarbanov@mm-sol.com> <2577563.x0mEZJNVDQ@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <548FCE8F.7090106-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Kuankuan.Yang" <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Max Filippov <jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bard Liao <bardliao-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Xu Jianqun <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Oder Chiou <oder_chiou-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org>, Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Ben Zhang <benzh-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, =?utf-8?B?U3Tvv73vv71wa
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <2577563.x0mEZJNVDQ@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, Kishon Vijay Abraham I <kishon@ti.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 16, 2014 at 02:17:51PM +0800, Kuankuan.Yang wrote:
-> hdmi-audio driver share irq with dw_hdmi driver,  for continuing AHBAUDDMA
-> or for detecting hdmi insert.
-> So maybe it's hard to switch to simple-card way,  Russell what's your
-> opinion ?
+Hi Arnd,
 
-My "opinion" is that I need to spend some time looking in depth at both
-your code and my code before I can form an idea of how to proceed.
+Thanks for the comments!
 
-However, since I seem to be spending a lot of time chasing regressions
-which have appeared in v3.18, I don't have a lot of time to look at this
-right now.
+On 12/12/2014 07:30 PM, Arnd Bergmann wrote:
+> On Friday 12 December 2014 19:14:00 Stanimir Varbanov wrote:
+>> The PCIe driver reuse the Designware common code for host
+>> and MSI initialization, and also program the Qualcomm
+>> application specific registers.
+>>
+>> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
+> 
+> Looks nice!
+> 
+>> +static int
+>> +qcom_pcie_rd_own_conf(struct pcie_port *pp, int where, int size, u32 *val)
+>> +{
+>> +	if (where == PCI_CLASS_REVISION && size == 4) {
+>> +		*val = readl(pp->dbi_base + PCI_CLASS_REVISION);
+>> +		*val &= ~(0xffff << 16);
+>> +		*val |= PCI_CLASS_BRIDGE_PCI << 16;
+>> +		return PCIBIOS_SUCCESSFUL;
+>> +	}
+>> +
+>> +	return dw_pcie_cfg_read(pp->dbi_base + (where & ~0x3), where,
+>> +				size, val);
+>> +}
+> 
+> Could you add a comment here to explain what this is for?
 
--- 
-FTTC broadband for 0.8mile line: currently at 9.5Mbps down 400kbps up
-according to speedtest.net.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sure I will add a comment. The issue is that the pci device class is not
+reported correctly from the register.
+
+> 
+>> +static int __init qcom_pcie_probe(struct platform_device *pdev)
+>> +{
+> 
+> I think it's a bug to mark this function as __init. It breaks
+> deferred probing and detaching/reattaching the device trough sysfs.
+> 
+
+My bad, I have tried to avoid mismatch section warnings came up from
+dw_pcie_host_init() which is annotated as __init. Do you think we need
+to remove __init from dw_pcie_host_init() declaration and fix the
+drivers accordingly?
+
+> After you fix that, you can remove the __refdata below.
+> 
+>> +static struct platform_driver __refdata qcom_pcie_driver = {
+>> +	.probe = qcom_pcie_probe,
+>> +	.remove = qcom_pcie_remove,
+>> +	.driver = {
+>> +		.name = "qcom-pcie",
+>> +		.of_match_table = qcom_pcie_match,
+>> +	},
+>> +};
+> 
+> 	Arnd
+> 
+
+regards,
+Stan
