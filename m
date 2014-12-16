@@ -1,128 +1,42 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCHv3 3/5] ARM: sunxi: dts: Add PS2 nodes to dtsi for A10 and
- A20
-Date: Tue, 16 Dec 2014 10:32:41 +0100
-Message-ID: <20141216093241.GN4337@lukather>
-References: <1418408748-9797-1-git-send-email-vishnupatekar0510@gmail.com>
- <1418408748-9797-4-git-send-email-vishnupatekar0510@gmail.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH 5/6] dt-bindings: Add documentation for Rockchip
+ hdmi-audio
+Date: Tue, 16 Dec 2014 09:34:43 +0000
+Message-ID: <20141216093443.GN11285@n2100.arm.linux.org.uk>
+References: <1418609494-15820-1-git-send-email-ykk@rock-chips.com>
+ <1418612114-19692-1-git-send-email-ykk@rock-chips.com>
+ <20141215104029.GE11285@n2100.arm.linux.org.uk>
+ <20141215120205.GZ11764@sirena.org.uk>
+ <548EDDC2.9050104@rock-chips.com>
+ <20141215161827.GE11764@sirena.org.uk>
+ <548FCE8F.7090106@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="wwtQuX191/I956S7"
-Return-path: <linux-input-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1418408748-9797-4-git-send-email-vishnupatekar0510@gmail.com>
-Sender: linux-input-owner@vger.kernel.org
-To: VishnuPatekar <vishnupatekar0510@gmail.com>
-Cc: linux-input@vger.kernel.org, dmitry.torokhov@gmail.com, hdegoede@redhat.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, grant.likely@linaro.org, benh@kernel.crashing.org, msalter@redhat.com, ralf@linux-mips.org, jdelvare@suse.de
+In-Reply-To: <548FCE8F.7090106-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Kuankuan.Yang" <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Max Filippov <jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bard Liao <bardliao-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Xu Jianqun <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Oder Chiou <oder_chiou-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org>, Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Ben Zhang <benzh-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, =?utf-8?B?U3Tvv73vv71wa
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Dec 16, 2014 at 02:17:51PM +0800, Kuankuan.Yang wrote:
+> hdmi-audio driver share irq with dw_hdmi driver,  for continuing AHBAUDDMA
+> or for detecting hdmi insert.
+> So maybe it's hard to switch to simple-card way,  Russell what's your
+> opinion ?
 
---wwtQuX191/I956S7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+My "opinion" is that I need to spend some time looking in depth at both
+your code and my code before I can form an idea of how to proceed.
 
-Hi Vishnu,
+However, since I seem to be spending a lot of time chasing regressions
+which have appeared in v3.18, I don't have a lot of time to look at this
+right now.
 
-On Fri, Dec 12, 2014 at 11:55:46PM +0530, VishnuPatekar wrote:
-> 1) Fixup the sun4i ps/2 nodes interrupt property, sun4i interrupts take
-> only 1 specifier
->=20
-> 2) dt bindings should use the compat string for the earliest version of t=
-he
-> hardware which has the relevant hardware block, unless there are differen=
-ces,
-> the A10 and A20 ps2 controllers are identical, so for both sun4i-a10-ps2
-> should be used as compat string, update the sun7i.dtsi ps2 entries to
-> use the sun4i-a10-ps2 compat string.
-
-This shouldn't be a changelog, but what this patch actually does.
-
-> Signed-off-by: VishnuPatekar <vishnupatekar0510@gmail.com>
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  arch/arm/boot/dts/sun4i-a10.dtsi |   17 +++++++++++++++++
->  arch/arm/boot/dts/sun7i-a20.dtsi |   18 ++++++++++++++++++
->  2 files changed, 35 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a=
-10.dtsi
-> index 7b4099f..ef9a01c 100644
-> --- a/arch/arm/boot/dts/sun4i-a10.dtsi
-> +++ b/arch/arm/boot/dts/sun4i-a10.dtsi
-> @@ -629,6 +629,7 @@
->  				allwinner,drive =3D <0>;
->  				allwinner,pull =3D <0>;
->  			};
-> +
-
-This is an uneeded change
-
->  		};
-> =20
->  		timer@01c20c00 {
-> @@ -795,5 +796,21 @@
->  			#address-cells =3D <1>;
->  			#size-cells =3D <0>;
->  		};
-> +
-> +		ps20: ps2@01c2a000 {
-> +			compatible =3D "allwinner,sun4i-a10-ps2";
-> +			reg =3D <0x01c2a000 0x400>;
-> +			interrupts =3D <62>;
-> +			clocks =3D <&apb1_gates 6>;
-> +			status =3D "disabled";
-> +		};
-> +
-> +		ps21: ps2@01c2a400 {
-> +			compatible =3D "allwinner,sun4i-a10-ps2";
-> +			reg =3D <0x01c2a400 0x400>;
-> +			interrupts =3D <63>;
-> +			clocks =3D <&apb1_gates 7>;
-> +			status =3D "disabled";
-> +		};
->  	};
->  };
-> diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a=
-20.dtsi
-> index e21ce59..6ab7714 100644
-> --- a/arch/arm/boot/dts/sun7i-a20.dtsi
-> +++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-> @@ -866,6 +866,7 @@
->  				    allwinner,drive =3D <0>;
->  				    allwinner,pull =3D <0>;
->  			};
-> +
-
-Ditto.
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---wwtQuX191/I956S7
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUj/w5AAoJEBx+YmzsjxAgtJsQALNM69R96RZTqD95JMB18/uT
-ghUxLLq2/rXKRztDrJVmAZZAhBX+WC/YNAYcJGD9RTP0R9emJyyEvQ0Kc9+abNic
-0OwbUSzIqBulbAMmapo4JENPxJ7I+oNfKpYEXFCDJawUtWgoh8PVyO5VJuniYvw0
-NCRZecZFPwleU61AOVV7OpuDUVOp5d+wDvu3P6ZMyWQf/s0tReu2hkaYIC1lR/Jj
-yqPrRLFKyf0sv7ZyMjVHiUsQJYn0haz9hO+MiWoSP+PhUONENdKNIS4fTFVonYF9
-0SkNfPAPDn137rv8hr2PquPz+ehsH5s6bPRqUFjKink89KdqvXU4vFWaJ0SAvSBa
-8OvSb+f8q7s21yLakLh5LSRDPvLs+bR1aPrfjmlzdilzUQ5mqL3Fv0/f3eBWAMv4
-5sCSdqS0A6mFOvNuzP5DHjlqVOuBC0/kDTYPPUid0FNW/iCWXpJXcknrJJVoxqpK
-IyDXA+RAvsp1sD0o9brG1WbjwILq0ea2m/lYToHJptwlK/K8qWyX7jwAJ6ST0lLn
-GCdDnHeLxU+gMl5kCfT/W6JiT3QDBuapsQorqoAZm94PE9CpZAHJCPb0ZTZqWkB5
-DmrkwaAlZf+lbP3pKHkyKlgiwJtNUpeZ+nj6hJT11WoEQ62i1TicgpNEXij4ioQH
-zctr44x/4XpAknUp2gnT
-=f35W
------END PGP SIGNATURE-----
-
---wwtQuX191/I956S7--
+-- 
+FTTC broadband for 0.8mile line: currently at 9.5Mbps down 400kbps up
+according to speedtest.net.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
