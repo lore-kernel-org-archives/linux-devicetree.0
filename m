@@ -1,129 +1,110 @@
-From: Ding Tianhong <dingtianhong@huawei.com>
-Subject: Re: [PATCH net-next v9 0/3] add hisilicon hip04 ethernet driver
-Date: Tue, 16 Dec 2014 18:08:32 +0800
-Message-ID: <549004A0.9010106@huawei.com>
-References: <1418298150-4944-1-git-send-email-dingtianhong@huawei.com> <2708715.thQWqYuW6a@wuerfel> <548FE5E1.1090300@huawei.com> <26790181.hAWQCCSkRa@wuerfel>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 3/4] arm64: dts: Add mediatek MT8173 SoC and evaluation
+ board dts and Makefile
+Date: Tue, 16 Dec 2014 10:17:15 +0000
+Message-ID: <20141216101714.GA19412@leverpostej>
+References: <1418208602-35584-1-git-send-email-eddie.huang@mediatek.com>
+ <1418208602-35584-4-git-send-email-eddie.huang@mediatek.com>
+ <20141211180245.GE28150@leverpostej>
+ <1418371705.423.31.camel@mtksdaap41>
+ <20141215125932.GF462@leverpostej>
+ <1418719615.8392.17.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <26790181.hAWQCCSkRa@wuerfel>
-Sender: netdev-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-kernel@lists.infradead.org, zhangfei.gao@linaro.org, davem@davemloft.net, linux@arm.linux.org.uk, f.fainelli@gmail.com, sergei.shtylyov@cogentembedded.com, mark.rutland@arm.com, David.Laight@aculab.com, eric.dumazet@gmail.com, xuwei5@hisilicon.com, netdev@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1418719615.8392.17.camel@mtksdaap41>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "Joe.C" <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "yh.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <yh.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "louis.yu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <louis.yu@mediatek.>
 List-Id: devicetree@vger.kernel.org
 
-On 2014/12/16 16:54, Arnd Bergmann wrote:
-> On Tuesday 16 December 2014 15:57:21 Ding Tianhong wrote:
->> On 2014/12/15 21:29, Arnd Bergmann wrote:
->>> On Thursday 11 December 2014 19:42:27 Ding Tianhong wrote:
->>> @@ -381,57 +392,37 @@ static void hip04_tx_reclaim(struct net_device *ndev, bool force)
->>>  		dev_kfree_skb(priv->tx_skb[tx_tail]);
->>>  		priv->tx_skb[tx_tail] = NULL;
->>>  		tx_tail = TX_NEXT(tx_tail);
->>> -		priv->tx_count--;
->>> -
->>> -		if (priv->tx_count <= 0)
->>> -			break;
->>> +		count--;
->>>  	}
->>>  
-> ...
->>> -	queue_delayed_work(priv->wq, &priv->tx_clean_task, delta_in_ticks);
->>> +	return count;
->>
->> I think should return pkts_compl, because may break from the loop, the
->> pkts_compl may smaller than count.
+On Tue, Dec 16, 2014 at 08:46:55AM +0000, Eddie Huang wrote:
+> Hi,
 > 
-> The calling convention I used is to return the packets that are remaining
-> on the queue. Only if that is nonzero we need to reschedule the timer.
+> On Mon, 2014-12-15 at 12:59 +0000, Mark Rutland wrote:
+> > On Fri, Dec 12, 2014 at 08:08:25AM +0000, Eddie Huang wrote:
+> > > Hi Mark,
+> > > 
+> > > On Thu, 2014-12-11 at 18:02 +0000, Mark Rutland wrote:
+> > > > Hi,
+> > > > 
+> > > > On Wed, Dec 10, 2014 at 10:50:01AM +0000, Eddie Huang wrote:
+> > > > > Add device tree support for MT8173 SoC and evalutaion board based on it.
+> > > > > 
+> > > 
+> > > > > +
+> > > > > +	psci {
+> > > > > +		compatible = "arm,psci-0.2";
+> > > > > +		method = "smc";
+> > > > > +	};
+> > > > 
+> > > > What are you using as your PSCI 0.2 implementation?
+> > > > 
+> > > > Is it fully compliant? (e.g. are the reset and power off functions
+> > > > implemented, may CPU0 be hotplugged)?
+> > > > 
+> > > > Given only portions of the GIC seem to be described below, what
+> > > > exception level is your kernel entered at? Per the spec it should be
+> > > > EL2, but given the brokenness below with the GIC I'm suspicious.
+> > > > 
+> > > 
+> > > Currently we only implement CPU boot, no power off, no CPU0 hotplug
+> > > either. And enter kernel at EL2. Actually, we run ATF in EL3, then
+> > > switch to EL2 to run lk and kernel.
+> > 
+> > Ok. In the absence of CPU_OFF, this is not yet a conforming PSCI 0.2
+> > implementation, so I'm wary of marking this as PSCI 0.2 until that is
+> > the case. Any attempt to power of CPUs will hit a BUG() in cpu_die(),
+> > and we don't want that.
 > 
+> We are still developing PSCI related functions, CPU_ON, CPU_OFF,
+> CPU_SUSPEND are ready, others are going. PSCI 0.2 is our target although
+> lacks some implements
 
-OK, agree.
+Ok. It sounds like for now you can describe this with PSCI 0.1 with
+those functions implemented.
 
->> and we need to add netif_tx_lock() to protect this function to avoid concurrency conflict.
+> > Is CPU0 hotplug planned?
 > 
-> Oh, did I miss something? The idea was that the start_xmit function only updates
-> the tx_head pointer and reads the tx_tail, while the tx_reclaim function does
-> the reverse, and writes to a different cache line, in order to allow a lockless
-> queue traversal.
-> 
-> Can you point to a specific struct member that still need to be protected by
-> the lock? Did I miss a race that would allow both functions to exit with
-> the timer disabled and entries left on the queue?
-> 
-OK, got it, no problem.
+> No
 
->>> @@ -623,8 +648,6 @@ static int hip04_mac_stop(struct net_device *ndev)
->>>  	struct hip04_priv *priv = netdev_priv(ndev);
->>>  	int i;
->>>  
->>> -	cancel_delayed_work_sync(&priv->tx_clean_task);
->>> -
->> I think we should cancle the hrtimer when closed and queue the timer when open.
-> 
-> I was expecting that force-cleaning up the tx queue would be enough for that.
-> It it not?
-> 
-> I suppose it can't hurt to cancel the timer here anyway, and maybe use
-> WARN_ON() if it's still active.
-> 
+In that case, for PSCI 0.1 you won't be able to have an enable-method of
+"psci" for CPU0 (and hence won't get CPU_SUSPEND for the moment).
 
-Ok, I found no need to worry about this, when the dev is closed, the napi will disable and will not enter timer again.
+> > If not, does your PSCI implementation report CPU0 as
+> > non-hotpluggable via MIGRATE_INFO_TYPE reporting a UP not migratable
+> > trusted OS (and MIGRATE_INFO_UP_CPU reporting CPU0 as the resident CPU)?
+> > 
+> Will check whether add this
 
-> Starting the timer after opening seems wrong though: at that point there are
-> no packets on the queue yet. The timer should always start ticking at the
-> exact point when the first packet is put on the queue while the timer is
-> not already pending.
+For PSCI 0.2 you will need to implement these if Cthere is no CPU0
+hotplug. Luckily they will only need to return constant values so this
+should be easy.
+
+We still need to implement the relevant logic in the Linux PSCI client
+code for this, but that should be small and self-contained.
+
+> > Are SYSTEM_OFF and SYSTEM_RESET available?
 > 
+> No yet
+
 Ok.
 
->>>  	napi_disable(&priv->napi);
->>>  	netif_stop_queue(ndev);
->>>  	hip04_mac_disable(ndev);
->>> @@ -725,6 +748,7 @@ static int hip04_mac_probe(struct platform_device *pdev)
->>>  	struct hip04_priv *priv;
->>>  	struct resource *res;
->>>  	unsigned int irq;
->>> +	ktime_t txtime;
->>>  	int ret;
->>>  
->>>  	ndev = alloc_etherdev(sizeof(struct hip04_priv));
->>> @@ -751,6 +775,21 @@ static int hip04_mac_probe(struct platform_device *pdev)
->>>  	priv->port = arg.args[0];
->>>  	priv->chan = arg.args[1] * RX_DESC_NUM;
->>>  
->>> +	hrtimer_init(&priv->tx_coalesce_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
->>> +
->>> +	/*
->>> +	 * BQL will try to keep the TX queue as short as possible, but it can't
->>> +	 * be faster than tx_coalesce_usecs, so we need a fast timeout here,
->>> +	 * but also long enough to gather up enough frames to ensure we don't
->>> +	 * get more interrupts than necessary.
->>> +	 * 200us is enough for 16 frames of 1500 bytes at gigabit ethernet rate
->>> +	 */
->>> +	priv->tx_coalesce_frames = TX_DESC_NUM * 3 / 4;
->>> +	priv->tx_coalesce_usecs = 200;
->>> +	/* allow timer to fire after half the time at the earliest */
->>> +	txtime = ktime_set(0, priv->tx_coalesce_usecs * NSEC_PER_USEC / 2);
->>> +	hrtimer_set_expires_range(&priv->tx_coalesce_timer, txtime, txtime);
->>> +
->>
->> I think miss the line:
->>  priv->tx_coalesce_timer.function = tx_done;
+> > Thanks,
+> > Mark.
 > 
-> Yes, good point.
-> 
+> Since we miss some PSCI-0.2 implements, I don't know whether I should
+> remove PSCI stuff in this patch.
 
-I will send v10 when the net-next open again, and these days will test this driver, thanks a lot.
+For the moment you will have to remove the PSCI 0.2 parts, as you are
+not compliant and it's trivial to break the kernel on such a
+configuration. You might get away with claiming PSCI 0.1, without an
+enable method on CPU0, but this will come with reduced functionality.
 
-Ding
-
-> 	Arnd
-> --
-> To unsubscribe from this list: send the line "unsubscribe netdev" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
-> .
-> 
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
