@@ -1,44 +1,53 @@
-From: Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>
-Subject: Re: [PATCH] of: i2c: Add DT bindings for idle states to PCA954x mux
- driver
-Date: Tue, 16 Dec 2014 21:13:47 +0100
-Message-ID: <5490927B.1010705@nsn.com>
-References: <548E387E.2020502@nsn.com> <5722849.lDq3gpSIfD@avalon> <54902A49.7030804@nsn.com> <3857435.mVCtkYnmde@avalon>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCHv1] rtc: bcm-iproc: Add support for Broadcom iproc rtc
+Date: Tue, 16 Dec 2014 21:19:05 +0100
+Message-ID: <1418783023.hzNZBNCmFc@wuerfel>
+References: <1418757750-3628-1-git-send-email-arun.ramamurthy@broadcom.com> <7947905.aK8KkUx4sY@wuerfel> <54909074.2070804@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3857435.mVCtkYnmde@avalon>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: ext Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Lawnick Michael 61283229 <michael.lawnick-OYasijW0DpE@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54909074.2070804-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Arun Ramamurthy <arun.ramamurthy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Arun Ramamurthy <arunrama-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Laurent!
+On Tuesday 16 December 2014 12:05:08 Arun Ramamurthy wrote:
+> On 14-12-16 11:42 AM, Arnd Bergmann wrote:
+> > On Tuesday 16 December 2014 11:22:30 arun.ramamurthy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org wrote:
+> >> +       rtc: iproc_rtc@0x03026000 {
+> >> +               compatible = "brcm,iproc-rtc";
+> >> +               reg =   spru_bbl:               <0x03026000 0xC>,
+> >> +                       crmu_pwr_good_status:   <0x0301C02C 0x14>,
+> >> +                       crmu_bbl_auth:          <0x03024C74 0x8>;
+> >> +               interrupts = spru_rtc_periodic: <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
+> >> +                            spru_alarm:        <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>;
+> >
+> > The reg properties look really random, could it be that the registers
+> > are really part of some other device that contains multiple functions?
+> >
+> This RTC block is on a battery backed logic island and is accessed 
+> indirectly using the spru_bbl registers. The CRMU registers are required 
+> to read the power status and write to some authentication registers. 
+> Without writing to these authentication
+> registers, we cannot access any of the spru_bbl registers. In conclusion
+> I don't think the CRMU register accesses can be considered as another 
+> device access. Do you agree Arnd?
 
-On 16/12/14 14:38, ext Laurent Pinchart wrote:
->>> I understand the use cases of the idle-disconnect property. What do you
->>> > > use idle-state for, when the idle state is different from disconnecting
->>> > > the bus ?
->> >
->> > We do not have a use case for that. It was done only for the sake of
->> > completeness. Because other MUXes actually offer user this possibility. I
->> > was initially thinking about providing this on i2c-mux level for all of
->> > them, but unfortunately they all use deselect callback in different way and
->> > pinctrl is the worst case, as idle state cannot be represented with an int,
->> > but should be a pointer.
->> > 
->> > Anyway, if you think there is no use-case for this, I can drop this part.
-> Adding a DT property without a clear use case usually makes me a bit wary. I 
-> would thus prefer going for either idle-disconnect alone, or for an idle-state 
-> property that would allow selecting disconnection as one of the possible 
-> values.
+It sounds like CRMU is some other unit aside from the RTC. Could this
+be something like a generic system controller? I think it should
+either have its own driver or use the syscon logic if that is what
+this is.
 
-I thought about this, but this would require some magic value for idle-state
-property, which would not be obvious for the readers of .dts file without
-consulting the documentation. So, I would prefer to drop the idle channel selection
-completely...
+> > Also, what do you use the labels for?
+> >
+> The labels are purely to improve readability of the device tree entry
 
--- 
-Best regards,
-Alexander Sverdlin.
+Please remove them then, they don't help at all.
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
