@@ -1,61 +1,34 @@
-From: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCHv1] rtc: bcm-iproc: Add support for Broadcom iproc rtc
-Date: Tue, 16 Dec 2014 12:27:54 -0800
-Message-ID: <549095CA.7090505@broadcom.com>
-References: <1418757750-3628-1-git-send-email-arun.ramamurthy@broadcom.com> <7947905.aK8KkUx4sY@wuerfel> <54909074.2070804@broadcom.com> <1418783023.hzNZBNCmFc@wuerfel>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH 1/2] clk: rockchip: add clock ID for usbphy480m_src
+Date: Tue, 16 Dec 2014 13:02:01 -0800
+Message-ID: <CAD=FV=WdX6YEYSUuahxGPkkyzF2ArFb7mji1PvEXiuDj6Xt1bA@mail.gmail.com>
+References: <1415863357-15680-1-git-send-email-kever.yang@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1418783023.hzNZBNCmFc@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Arun Ramamurthy <arun.ramamurthy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Arun Ramamurthy <arunrama-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1415863357-15680-1-git-send-email-kever.yang@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kever Yang <kever.yang@rock-chips.com>
+Cc: Heiko Stuebner <heiko@sntech.de>, Mike Turquette <mturquette@linaro.org>, Sonny Rao <sonnyrao@chromium.org>, Addy Ke <addy.ke@rock-chips.com>, Eddie Cai <cf@rock-chips.com>, =?UTF-8?B?5oi05YWL6ZyWIChKYWNrKQ==?= <dkl@rock-chips.com>, Tao Huang <huangtao@rock-chips.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark yao <mark.yao@rock-chips.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Kever,
 
+On Wed, Nov 12, 2014 at 11:22 PM, Kever Yang <kever.yang@rock-chips.com> wrote:
+> There are 3 different parent clock from different usbphy,
+> all of them are fixed 480MHz, it is not able to auto select
+> by clock core to the 2nd and the 3rd parent.
+> For different use case for different board, we may need to
+> select different usbphy clock out as parent manually.
+>
+> Add the clock ID for it so that we can use in dts.
+>
+> Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
+> ---
+>
+>  include/dt-bindings/clock/rk3288-cru.h | 1 +
+>  1 file changed, 1 insertion(+)
 
-On 12/16/2014 12:19 PM, Arnd Bergmann wrote:
-> On Tuesday 16 December 2014 12:05:08 Arun Ramamurthy wrote:
->> On 14-12-16 11:42 AM, Arnd Bergmann wrote:
->>> On Tuesday 16 December 2014 11:22:30 arun.ramamurthy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org wrote:
->>>> +       rtc: iproc_rtc@0x03026000 {
->>>> +               compatible = "brcm,iproc-rtc";
->>>> +               reg =   spru_bbl:               <0x03026000 0xC>,
->>>> +                       crmu_pwr_good_status:   <0x0301C02C 0x14>,
->>>> +                       crmu_bbl_auth:          <0x03024C74 0x8>;
->>>> +               interrupts = spru_rtc_periodic: <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
->>>> +                            spru_alarm:        <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>;
->>>
->>> The reg properties look really random, could it be that the registers
->>> are really part of some other device that contains multiple functions?
->>>
->> This RTC block is on a battery backed logic island and is accessed
->> indirectly using the spru_bbl registers. The CRMU registers are required
->> to read the power status and write to some authentication registers.
->> Without writing to these authentication
->> registers, we cannot access any of the spru_bbl registers. In conclusion
->> I don't think the CRMU register accesses can be considered as another
->> device access. Do you agree Arnd?
->
-> It sounds like CRMU is some other unit aside from the RTC. Could this
-> be something like a generic system controller? I think it should
-> either have its own driver or use the syscon logic if that is what
-> this is.
->
-Giving that CRMU has scattered, miscellaneous control logic for multiple 
-different peripherals, it probably makes more sense to use the syscon 
-logic here.
+Aside from clock ID collisions that Heiko can fixup, this looks good to me.
 
->>> Also, what do you use the labels for?
->>>
->> The labels are purely to improve readability of the device tree entry
->
-> Please remove them then, they don't help at all.
->
-> 	Arnd
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Reviewed-by: Doug Anderson <dianders@chromium.org>
