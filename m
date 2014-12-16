@@ -1,73 +1,40 @@
-From: Arnaud Ebalard <arno@natisbad.org>
-Subject: [PATCHv1 3/3] ARM: mvebu: ISL12057 rtc chip can now wake up RN102, RN102 and RN2120
-Date: Tue, 16 Dec 2014 00:55:07 +0100
-Message-ID: <e6f3c92501f216342ae28f48cf70f89166864bb4.1418687005.git.arno@natisbad.org>
-References: <cover.1418687005.git.arno@natisbad.org>
+From: Ray Jui <rjui@broadcom.com>
+Subject: Re: [PATCH v5 1/3] gpio: Cygnus: define Broadcom Cygnus GPIO binding
+Date: Mon, 15 Dec 2014 16:08:41 -0800
+Message-ID: <548F7809.1020303@broadcom.com>
+References: <1418342706-14755-2-git-send-email-rjui@broadcom.com> <1628217.66frkAqHMc@wuerfel> <548F5433.5090901@broadcom.com> <2063145.N1Hk6vVF2S@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <cover.1418687005.git.arno@natisbad.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Andrew Morton <akpm@linux-foundation.org>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Peter Huewe <peter.huewe@infineon.com>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <treding@nvidia.com>, Mark Brown <broonie@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Darshana Padmadas <darshanapadmadas@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Rob Landley <rob@landley.net>, rtc-linux@googlegroups.com, Jason Cooper <jason@lakedaemon.net>, Guenter Roeck <linux@roeck-us.net>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <2063145.N1Hk6vVF2S@wuerfel>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
+Cc: Alexandre Courbot <gnurou@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Scott Branden <sbranden@broadcom.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Matt Porter <mporter@linaro.org>, Joe Perches <joe@perches.com>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
 
-Now that alarm support for ISL12057 chip is available w/ the specific
-"isil,irq2-can-wakeup-machine" property, let's use that feature of the
-driver dedicated to NETGEAR ReadyNAS 102, 104 and 2120 specific
-routing of RTC Alarm IRQ#2 pin; on those devices, this pin is not
-connected to the SoC but to a PMIC, which allows the device to be
-powered up when RTC alarm rings.
 
-For that to work, the chip needs to be explicitly marked as a device
-wakeup source using this "isil,irq2-can-wakeup-machine" boolean
-property. This makes 'wakealarm' sysfs entry available to configure
-the alarm.
-
-Signed-off-by: Arnaud Ebalard <arno@natisbad.org>
----
- arch/arm/boot/dts/armada-370-netgear-rn102.dts | 1 +
- arch/arm/boot/dts/armada-370-netgear-rn104.dts | 1 +
- arch/arm/boot/dts/armada-xp-netgear-rn2120.dts | 1 +
- 3 files changed, 3 insertions(+)
-
-diff --git a/arch/arm/boot/dts/armada-370-netgear-rn102.dts b/arch/arm/boot/dts/armada-370-netgear-rn102.dts
-index 4e24932c6e30..1c83b7ce0982 100644
---- a/arch/arm/boot/dts/armada-370-netgear-rn102.dts
-+++ b/arch/arm/boot/dts/armada-370-netgear-rn102.dts
-@@ -87,6 +87,7 @@
- 				isl12057: isl12057@68 {
- 					compatible = "isil,isl12057";
- 					reg = <0x68>;
-+					isil,irq2-can-wakeup-machine;
- 				};
- 
- 				g762: g762@3e {
-diff --git a/arch/arm/boot/dts/armada-370-netgear-rn104.dts b/arch/arm/boot/dts/armada-370-netgear-rn104.dts
-index 30586e47986a..5fbfe02964dc 100644
---- a/arch/arm/boot/dts/armada-370-netgear-rn104.dts
-+++ b/arch/arm/boot/dts/armada-370-netgear-rn104.dts
-@@ -93,6 +93,7 @@
- 				isl12057: isl12057@68 {
- 					compatible = "isil,isl12057";
- 					reg = <0x68>;
-+					isil,irq2-can-wakeup-machine;
- 				};
- 
- 				g762: g762@3e {
-diff --git a/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts b/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
-index d81430aa4ab3..fc8bdfcd2348 100644
---- a/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
-+++ b/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
-@@ -100,6 +100,7 @@
- 				isl12057: isl12057@68 {
- 					compatible = "isil,isl12057";
- 					reg = <0x68>;
-+					isil,irq2-can-wakeup-machine;
- 				};
- 
- 				/* Controller for rear fan #1 of 3 (Protechnic
--- 
-2.1.1
-
+On 12/15/2014 1:57 PM, Arnd Bergmann wrote:
+> On Monday 15 December 2014 13:35:47 Ray Jui wrote:
+>>
+>> Like I said previously, dynamic GPIO allocation works fine in the
+>> kernel, as long as all of our GPIO clients in the kernel use gpiod based
+>> API, which is what we will enforce going forward. The only problem is
+>> with some of our customers who use GPIO through sysfs and expect fixed
+>> global GPIO numbers. Thinking about this more, it's probably not that
+>> difficult to add a script for those customers to convert/map the GPIO
+>> numbers based on readings parsed from sysfs, so I guess that's fine.
+>>
+>
+> I think we discussed the user space interface a number of times
+> in the past, but I forgot the outcome. Either there is already
+> a way to name gpio lines uniquely in sysfs, or there should be
+> one.
+>
+> Can you reach the gpio interfaces using /sys/devices/0001234.bus/1234566.gpiocontroller/...?
+>
+> 	Arnd
+>
+We use entries under /sys/class/gpio/ to control GPIOs. All base, label, 
+and ngpio info specific to a GPIO controller can be found there.
