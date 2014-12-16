@@ -1,107 +1,305 @@
-From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH] dm9000: Add regulator and reset support to dm9000
-Date: Tue, 16 Dec 2014 16:33:44 +0000
-Message-ID: <1418747624-2682-1-git-send-email-Zubair.Kakakhel@imgtec.com>
+From: Evgeni Dobrev <evgeni@studio-punkt.com>
+Subject: Re: [PATCH 2/2] ARM: dts: kirkwood: add dts support for Seagate
+ BlackArmor NAS220
+Date: Tue, 16 Dec 2014 17:37:14 +0100
+Message-ID: <20141216163714.GE20170@anne>
+References: <20141215203855.GA28940@anne>
+ <20141216085645.GB1450@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20141216085645.GB1450@lunn.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jason Cooper <jason@lakedaemon.net>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-In boards, the dm9000 chip's power and reset can be controlled by gpio.
+Hi Andrew,
 
-It makes sense to add them to the dm9000 driver and let dt be used to
-enable power and reset the phy.
+On Tue, Dec 16, 2014 at 09:56:45AM +0100, Andrew Lunn wrote:
+> On Mon, Dec 15, 2014 at 09:38:55PM +0100, Evgeni Dobrev wrote:
+> > This patch adds support for Seagate BlackArmor NAS220.
+> 
+> Hi Evgeni
+> 
+> Thanks for the patch. It looks good apart from a few minor comments.
+> 
+> Please could you also Cc: the mvebu maintainers, otherwise you patch
+> might net be seen by the right people. I added them.
+> 
 
-Signed-off-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
----
- .../devicetree/bindings/net/davicom-dm9000.txt     |  4 +++
- drivers/net/ethernet/davicom/dm9000.c              | 33 ++++++++++++++++++++++
- 2 files changed, 37 insertions(+)
+Thank you!
 
-diff --git a/Documentation/devicetree/bindings/net/davicom-dm9000.txt b/Documentation/devicetree/bindings/net/davicom-dm9000.txt
-index 28767ed..dba19a2 100644
---- a/Documentation/devicetree/bindings/net/davicom-dm9000.txt
-+++ b/Documentation/devicetree/bindings/net/davicom-dm9000.txt
-@@ -11,6 +11,8 @@ Required properties:
- Optional properties:
- - davicom,no-eeprom : Configuration EEPROM is not available
- - davicom,ext-phy : Use external PHY
-+- reset-gpio : phandle of gpio that will be used to reset chip during probe
-+- vcc-supply : phandle of regulator that will be used to enable power to chip
- 
- Example:
- 
-@@ -21,4 +23,6 @@ Example:
- 		interrupts = <7 4>;
- 		local-mac-address = [00 00 de ad be ef];
- 		davicom,no-eeprom;
-+		reset-gpio = <&gpf 12 GPIO_ACTIVE_LOW>;
-+		vcc-supply = <&eth0_power>;
- 	};
-diff --git a/drivers/net/ethernet/davicom/dm9000.c b/drivers/net/ethernet/davicom/dm9000.c
-index ef0bb58..7333b8d 100644
---- a/drivers/net/ethernet/davicom/dm9000.c
-+++ b/drivers/net/ethernet/davicom/dm9000.c
-@@ -36,6 +36,9 @@
- #include <linux/platform_device.h>
- #include <linux/irq.h>
- #include <linux/slab.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/gpio.h>
-+#include <linux/of_gpio.h>
- 
- #include <asm/delay.h>
- #include <asm/irq.h>
-@@ -1426,11 +1429,41 @@ dm9000_probe(struct platform_device *pdev)
- 	struct dm9000_plat_data *pdata = dev_get_platdata(&pdev->dev);
- 	struct board_info *db;	/* Point a board information structure */
- 	struct net_device *ndev;
-+	struct device *dev = &pdev->dev;
- 	const unsigned char *mac_src;
- 	int ret = 0;
- 	int iosize;
- 	int i;
- 	u32 id_val;
-+	int reset_gpio;
-+	enum of_gpio_flags flags;
-+	struct regulator *power;
-+
-+	power = devm_regulator_get(dev, "vcc");
-+	if (IS_ERR(power)) {
-+		dev_dbg(dev, "no regulator provided\n");
-+	} else if (!regulator_is_enabled(power)) {
-+		ret = regulator_enable(power);
-+		dev_dgb(dev, "regulator enabled\n");
-+	}
-+
-+	reset_gpio = of_get_named_gpio_flags(dev->of_node, "reset-gpio", 0,
-+					     &flags);
-+	if (gpio_is_valid(reset_gpio)) {
-+		ret = devm_gpio_request_one(dev, reset_gpio, flags,
-+					    "dm9000_reset");
-+		if (ret) {
-+			dev_err(dev, "failed to request reset gpio %d: %d\n",
-+				reset_gpio, ret);
-+		} else {
-+			gpio_direction_output(reset_gpio, 0);
-+			/* According to manual PWRST# Low Period Min 1ms */
-+			msleep(2);
-+			gpio_direction_output(reset_gpio, 1);
-+			/* Needs 3ms to read eeprom when PWRST is deasserted */
-+			msleep(4);
-+		}
-+	}
- 
- 	if (!pdata) {
- 		pdata = dm9000_parse_dt(&pdev->dev);
--- 
-1.9.1
+> > 
+> > The Seagate BlackArmor NAS 220 is a NAS system based on Marvell 88f6192. It has 32MB NAND and 128MB DRAM. It has two SATA slots, one Gigabit Ethernet port, two USB 2.0 ports, two buttons and three LEDs. There is a serial port available on the CN5 connector on the board (1 - TX, 4 - RX, 6 - GND).
+> > 
+> 
+> > The only functionality still not implemented is the bi-color led on
+> > the front panel (status). Pins mpp22 and mpp23 control this
+> > led. Setting mpp22 to high and mpp23 to low results in orange
+> > color. Setting mpp22 to low and mpp23 to high results in blue color.
+> 
+> Any thoughts how you are going to handle this? Can you have both blue
+> and orange at the same time be setting both high? Or are both then
+> off?
+> 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The LED can be either one of the two colors or off. Swapping the polarity 
+on the two LED pins changes the color.
+
+I am currently playing with the idea to create a multicolor LED kernel 
+driver which is being controlled via GPIOs, but I still have not found 
+the proper abstraction for it. The point is, that even though this 
+functionality must currently be handled by user space (some
+combination of sysfs writes and a shell script) at the moment, the rest
+of the system is usable.
+
+> > The third led is wired to show the SATA activity on the two drives.
+> > 
+> > Signed-off-by: Evgeni Dobrev <evgeni@studio-punkt.com>
+> > ---
+> >  arch/arm/boot/dts/Makefile            |    1 +
+> >  arch/arm/boot/dts/kirkwood-nas220.dts |  182 +++++++++++++++++++++++++++++++++
+> >  2 files changed, 183 insertions(+)
+> >  create mode 100644 arch/arm/boot/dts/kirkwood-nas220.dts
+> > 
+> > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> > index 38c89ca..8b9ad1d 100644
+> > --- a/arch/arm/boot/dts/Makefile
+> > +++ b/arch/arm/boot/dts/Makefile
+> > @@ -132,6 +132,7 @@ dtb-$(CONFIG_MACH_KIRKWOOD) += kirkwood-b3.dtb \
+> >  	kirkwood-lsxhl.dtb \
+> >  	kirkwood-mplcec4.dtb \
+> >  	kirkwood-mv88f6281gtw-ge.dtb \
+> > +	kirkwood-nas220.dtb \
+> >  	kirkwood-net2big.dtb \
+> >  	kirkwood-net5big.dtb \
+> >  	kirkwood-netgear_readynas_duo_v2.dtb \
+> > diff --git a/arch/arm/boot/dts/kirkwood-nas220.dts b/arch/arm/boot/dts/kirkwood-nas220.dts
+> > new file mode 100644
+> > index 0000000..1de2ac3
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/kirkwood-nas220.dts
+> > @@ -0,0 +1,182 @@
+> > +/*
+> > + * Device Tree file for Seagate BlackArmor NAS220
+> > + *
+> > + * Copyright (C) 2014 Evgeni Dobrev <evgeni@studio-punkt.com>
+> > + *
+> > + * Licensed under GPLv2 or later.
+> > + */
+> 
+> Gregory is in the process of changing the license for the Marvell
+> Armada SoCs. He is adding X11 license as well, so making it easier for
+> other systems to reuse the DT blob. I want to see how easy it goes
+> with Armada, but we may also do the same for Kirkwood sometime in the
+> future. So maybe you can think about this and follow the discussion.
+> 
+
+I will do that.
+
+> > +
+> > +/dts-v1/;
+> > +
+> > +#include <dt-bindings/gpio/gpio.h>
+> > +#include <dt-bindings/input/input.h>
+> > +#include "kirkwood.dtsi"
+> > +#include "kirkwood-6192.dtsi"
+> > +
+> > +/ {
+> > +	model = "Seagate NAS 220";
+> > +	compatible = "seagate,nas220", "marvell,kirkwood-88f6192", "marvell,kirkwood";
+> > +
+> > +	memory { /* 128 MB */
+> > +		device_type = "memory";
+> > +		reg = <0x00000000 0x8000000>;
+> > +	};
+> > +
+> > +        chosen {
+> > +                bootargs = "console=ttyS0,115200n8";
+> > +		stdout-path = &uart0;
+> > +        };
+> 
+> It looks like there is a mix of spaces and tabs. Please only use tabs
+> in this file.
+> 
+
+I will fix this.
+
+> > +
+> > +	ocp@f1000000 {
+> > +		pinctrl: pin-controller@10000 {
+> > +			pinctrl-0 = < &pmx_uart0
+> > +				&pmx_button_reset
+> > +				&pmx_button_power
+> > +				>;
+> > +			pinctrl-names = "default";
+> > +
+> > +                        pmx_act_sata0: pmx-act-sata0 {
+> > +                                marvell,pins = "mpp15";
+> > +                                marvell,function = "sata0";
+> > +                        };
+> > +                        pmx_act_sata1: pmx-act-sata1 {
+> > +                                marvell,pins = "mpp16";
+> > +                                marvell,function = "sata1";
+> > +                        };
+> > +                        pmx_power_sata0: pmx-power-sata0 {
+> > +                                marvell,pins = "mpp24";
+> > +                                marvell,function = "gpio";
+> > +                        };
+> > +                        pmx_power_sata1: pmx-power-sata1 {
+> > +                                marvell,pins = "mpp28";
+> > +                                marvell,function = "gpio";
+> > +                        };
+> > +                        pmx_button_reset: pmx-button-reset {
+> > +                                marvell,pins = "mpp29";
+> > +                                marvell,function = "gpio";
+> > +                        };
+> > +                        pmx_button_power: pmx-button-power {
+> > +                                marvell,pins = "mpp26";
+> > +                                marvell,function = "gpio";
+> > +                        };
+> > +		};
+> > +
+> > +		serial@12000 {
+> > +			status = "okay";
+> > +		};
+> > +
+> > +                sata@80000 {
+> > +                        nr-ports = <2>;
+> > +                        status = "okay";
+> > +                };
+> > +
+> > +		i2c@11000 {
+> > +			status = "okay";
+> > +			adt7476: adt7476a@2e {
+> > +				compatible = "adi,adt7476";
+> > +				reg = <0x2e>;
+> > +			};
+> > +		};
+> > +	};
+> > +
+> > +	gpio_poweroff {
+> > +		compatible = "gpio-poweroff";
+> > +		gpios = <&gpio0 14 GPIO_ACTIVE_LOW>;
+> > +	};
+> > +
+> > +	gpio_keys {
+> > +		compatible = "gpio-keys";
+> > +
+> > +		button@1{
+> > +			label = "Reset push button";
+> > +			linux,code = <KEY_POWER>;
+> > +			gpios = <&gpio0 29 GPIO_ACTIVE_HIGH>;
+> > +		};
+> > +		button@2{
+> > +			label = "Power push button";
+> > +			linux,code = <KEY_SLEEP>;
+> > +			gpios = <&gpio0 26 GPIO_ACTIVE_LOW>;
+> > +		};
+> > +	};
+> > +
+> > +	gpio-leds {
+> > +		compatible = "gpio-leds";
+> > +
+> > +		blue-power {
+> > +			label = "nas220:blue:power";
+> > +			gpios = <&gpio0 12 GPIO_ACTIVE_HIGH>;
+> > +			linux,default-trigger = "default-on";
+> > +		};
+> > +	};
+> > +
+> > +        regulators {
+> > +                compatible = "simple-bus";
+> > +                #address-cells = <1>;
+> > +                #size-cells = <0>;
+> > +                pinctrl-0 = <&pmx_power_sata0 &pmx_power_sata1>;
+> > +                pinctrl-names = "default";
+> > +
+> > +                sata0_power: regulator@1 {
+> > +                        compatible = "regulator-fixed";
+> > +                        reg = <1>;
+> > +                        regulator-name = "SATA0 Power";
+> > +                        regulator-min-microvolt = <5000000>;
+> > +                        regulator-max-microvolt = <5000000>;
+> > +                        enable-active-high;
+> > +                        regulator-always-on;
+> > +                        regulator-boot-on;
+> > +                        gpio = <&gpio0 24 0>;
+> > +                };
+> > +
+> > +                sata1_power: regulator@2 {
+> > +                        compatible = "regulator-fixed";
+> > +                        reg = <2>;
+> > +                        regulator-name = "SATA1 Power";
+> > +                        regulator-min-microvolt = <5000000>;
+> > +                        regulator-max-microvolt = <5000000>;
+> > +                        enable-active-high;
+> > +                        regulator-always-on;
+> > +                        regulator-boot-on;
+> > +                        gpio = <&gpio0 28 0>;
+> > +                };
+> > +        };
+> > +};
+> > +
+> > +&nand {
+> > +	status = "okay";
+> > +	partition@0 {
+> > +		label = "uboot";
+> > +		reg = <0x0 0xa0000>;
+> > +		read-only;
+> > +	};
+> > +
+> > +	partition@a0000 {
+> > +		label = "env";
+> > +		reg = <0xa0000 0x010000>;
+> > +	};
+> 
+> Is there supposed to be a gap here?
+> 
+
+I mirror the layout of the stock firmware here. Actually I was not sure
+how to handle the NAND layout. On one hand it has some merit if I keep
+the original layout (and a lot of the *plug device trees do it), 
+so that the system can be booted with it. On the other hand one can
+pass the NAND layout relevant to his installation via the bootloader 
+(either updating the DT blob, or via cmdline). Now that you ask I would 
+prefer to remove the layout and leave it for the user to decide.
+
+What would you recommend?
+
+> > +
+> > +	partition@c0000 {
+> > +		label = "uimage";
+> > +		reg = <0xc0000 0x500000>;
+> > +	};
+> > +
+> > +	partition@5c0000 {
+> > +		label = "rootfs";
+> > +		reg = <0x5c0000 0x1a40000>;
+> > +	};
+> > +};
+> > +
+> > +&mdio {
+> > +        status = "okay";
+> > +        ethphy0: ethernet-phy@8 {
+> > +                reg = <8>;
+> > +        };
+> > +};
+> > +
+> > +&eth0 {
+> > +        status = "okay";
+> > +        ethernet0-port@0 {
+> > +                phy-handle = <&ethphy0>;
+> > +        };
+> > +};
+> > +
+> > -- 
+> 
+>   Andrew
+> --
+
+Thanks for reviewing!
+
+evgeni
