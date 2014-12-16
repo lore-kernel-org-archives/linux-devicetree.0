@@ -1,71 +1,38 @@
-From: Arnaud Ebalard <arno@natisbad.org>
-Subject: [PATCHv1 5/7] regulator: isl9305: deprecate use of isl in compatible
- string for isil
-Date: Tue, 16 Dec 2014 01:24:01 +0100
-Message-ID: <910bc2f86cac0eb42e3df671c28da74542f8ba61.1418688043.git.arno@natisbad.org>
-References: <cover.1418688042.git.arno@natisbad.org>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <cover.1418688042.git.arno@natisbad.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>
-Cc: Alessandro Zummo <a.zummo@towertech.it>, Peter Huewe <peter.huewe@infineon.com>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <treding@nvidia.com>, Arnd Bergmann <arnd@arndb.de>, Darshana Padmadas <darshanapadmadas@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Stephen Warren <swarren@wwwdotorg.org>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Rob Landley <rob@landley.net>, rtc-linux@googlegroups.com, Jason Cooper <jason@lakedaemon.net>, Guenter Roeck <linux@roeck-us.net>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, linux-arm-kernel@lists.infradead.org
+From: Doug Anderson <dianders@chromium.org>
+Subject: [PATCH v3 3/3] ARM: dts: Specify VMMC and VQMMC on rk3288-evb
+Date: Mon, 15 Dec 2014 16:22:20 -0800
+Message-ID: <1418689340-29517-3-git-send-email-dianders@chromium.org>
+References: <1418689340-29517-1-git-send-email-dianders@chromium.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1418689340-29517-1-git-send-email-dianders@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>, Heiko Stuebner <heiko@sntech.de>, Jaehoon Chung <jh80.chung@samsung.com>, Seungwon Jeon <tgih.jun@samsung.com>
+Cc: Mark Brown <broonie@kernel.org>, Alexandru Stan <amstan@chromium.org>, Alim Akhtar <alim.akhtar@samsung.com>, Sonny Rao <sonnyrao@chromium.org>, Andrew Bresticker <abrestic@chromium.org>, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Doug Anderson <dianders@chromium.org>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Specifying these rails should eventually let us do UHS.
 
-"isil" and "isl" prefixes are used at various locations inside the kernel
-to reference Intersil corporation. This patch is part of a series fixing
-those locations were "isl" is used in compatible strings to use the now
-expected "isil" prefix instead (NASDAQ symbol for Intersil and most used
-version). The old compatible string is kept for backward compatibility.
-
-Signed-off-by: Arnaud Ebalard <arno@natisbad.org>
+Signed-off-by: Doug Anderson <dianders@chromium.org>
 ---
- Documentation/devicetree/bindings/regulator/isl9305.txt | 4 ++--
- drivers/regulator/isl9305.c                             | 6 ++++--
- 2 files changed, 6 insertions(+), 4 deletions(-)
+Changes in v3: None
+Changes in v2:
+- Fix subject line
 
-diff --git a/Documentation/devicetree/bindings/regulator/isl9305.txt b/Documentation/devicetree/bindings/regulator/isl9305.txt
-index a626fc1bbf0d..d6e7c9ec9413 100644
---- a/Documentation/devicetree/bindings/regulator/isl9305.txt
-+++ b/Documentation/devicetree/bindings/regulator/isl9305.txt
-@@ -2,7 +2,7 @@ Intersil ISL9305/ISL9305H voltage regulator
- 
- Required properties:
- 
--- compatible: "isl,isl9305" or "isl,isl9305h"
-+- compatible: "isil,isl9305" or "isil,isl9305h"
- - reg: I2C slave address, usually 0x68.
- - regulators: A node that houses a sub-node for each regulator within the
-   device. Each sub-node is identified using the node's name, with valid
-@@ -19,7 +19,7 @@ Optional properties:
- Example
- 
- 	pmic: isl9305@68 {
--		compatible = "isl,isl9305";
-+		compatible = "isil,isl9305";
- 		reg = <0x68>;
- 
- 		VINDCD1-supply = <&system_power>;
-diff --git a/drivers/regulator/isl9305.c b/drivers/regulator/isl9305.c
-index 92fefd98da58..6e3a15fe00f1 100644
---- a/drivers/regulator/isl9305.c
-+++ b/drivers/regulator/isl9305.c
-@@ -177,8 +177,10 @@ static int isl9305_i2c_probe(struct i2c_client *i2c,
- 
- #ifdef CONFIG_OF
- static const struct of_device_id isl9305_dt_ids[] = {
--	{ .compatible = "isl,isl9305" },
--	{ .compatible = "isl,isl9305h" },
-+	{ .compatible = "isl,isl9305" }, /* for backward compat., don't use */
-+	{ .compatible = "isil,isl9305" },
-+	{ .compatible = "isl,isl9305h" }, /* for backward compat., don't use */
-+	{ .compatible = "isil,isl9305h" },
- 	{},
+ arch/arm/boot/dts/rk3288-evb.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/arm/boot/dts/rk3288-evb.dtsi b/arch/arm/boot/dts/rk3288-evb.dtsi
+index 3e067dd..d660fe6 100644
+--- a/arch/arm/boot/dts/rk3288-evb.dtsi
++++ b/arch/arm/boot/dts/rk3288-evb.dtsi
+@@ -114,6 +114,8 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_cd &sdmmc_bus4>;
+ 	status = "okay";
++	vmmc-supply = <&vcc_io>;
++	vqmmc-supply = <&vccio_sd>;
  };
- #endif
+ 
+ &i2c0 {
 -- 
-2.1.1
-
-
+2.2.0.rc0.207.ga3a616c
