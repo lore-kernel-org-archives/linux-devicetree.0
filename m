@@ -1,38 +1,50 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: [PATCH v3 3/3] ARM: dts: Specify VMMC and VQMMC on rk3288-evb
-Date: Mon, 15 Dec 2014 16:22:20 -0800
-Message-ID: <1418689340-29517-3-git-send-email-dianders@chromium.org>
-References: <1418689340-29517-1-git-send-email-dianders@chromium.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1418689340-29517-1-git-send-email-dianders@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>, Heiko Stuebner <heiko@sntech.de>, Jaehoon Chung <jh80.chung@samsung.com>, Seungwon Jeon <tgih.jun@samsung.com>
-Cc: Mark Brown <broonie@kernel.org>, Alexandru Stan <amstan@chromium.org>, Alim Akhtar <alim.akhtar@samsung.com>, Sonny Rao <sonnyrao@chromium.org>, Andrew Bresticker <abrestic@chromium.org>, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Doug Anderson <dianders@chromium.org>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Arnaud Ebalard <arno@natisbad.org>
+Subject: [PATCHv1 6/7] arm: dts: zynq: update isl9305 compatible string to use
+ isil vendor prefix
+Date: Tue, 16 Dec 2014 01:24:24 +0100
+Message-ID: <00d11b4ecf8aad9c5480e1330384fb4a91072caf.1418688043.git.arno@natisbad.org>
+References: <cover.1418688042.git.arno@natisbad.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <cover.1418688042.git.arno@natisbad.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Michal Simek <michal.simek@xilinx.com>, =?utf-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Andrew Morton <akpm@linux-foundation.org>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>
+Cc: Alessandro Zummo <a.zummo@towertech.it>, Peter Huewe <peter.huewe@infineon.com>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <treding@nvidia.com>, Mark Brown <broonie@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Darshana Padmadas <darshanapadmadas@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Grant Likely <grant.likely@linaro.org>, linux-doc@vger.kernel.org, Rob Landley <rob@landley.net>, rtc-linux@googlegroups.com, Jason Cooper <jason@lakedaemon.net>, Guenter Roeck <linux@roeck-us.net>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
 List-Id: devicetree@vger.kernel.org
 
-Specifying these rails should eventually let us do UHS.
 
-Signed-off-by: Doug Anderson <dianders@chromium.org>
+"isil" and "isl" prefixes are used at various locations inside the kernel
+to reference Intersil corporation. This patch is part of a series fixing
+those locations were "isl" is used in compatible strings to use the now
+expected "isil" prefix instead (NASDAQ symbol for Intersil and most used
+version).
+
+Note: isl9305 is an I2C device so the patch does not in fact currently
+depend on the introduction of "isil"-based compatible string in isl9305
+driver (provided by another patch) because I2C core does not check the
+prefix yet.
+
+Signed-off-by: Arnaud Ebalard <arno@natisbad.org>
 ---
-Changes in v3: None
-Changes in v2:
-- Fix subject line
+ arch/arm/boot/dts/zynq-parallella.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- arch/arm/boot/dts/rk3288-evb.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/arm/boot/dts/rk3288-evb.dtsi b/arch/arm/boot/dts/rk3288-evb.dtsi
-index 3e067dd..d660fe6 100644
---- a/arch/arm/boot/dts/rk3288-evb.dtsi
-+++ b/arch/arm/boot/dts/rk3288-evb.dtsi
-@@ -114,6 +114,8 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_cd &sdmmc_bus4>;
+diff --git a/arch/arm/boot/dts/zynq-parallella.dts b/arch/arm/boot/dts/zynq-parallella.dts
+index ab1dc0a56cdd..174571232ea5 100644
+--- a/arch/arm/boot/dts/zynq-parallella.dts
++++ b/arch/arm/boot/dts/zynq-parallella.dts
+@@ -58,7 +58,7 @@
  	status = "okay";
-+	vmmc-supply = <&vcc_io>;
-+	vqmmc-supply = <&vccio_sd>;
- };
  
- &i2c0 {
+ 	isl9305: isl9305@68 {
+-		compatible = "isl,isl9305";
++		compatible = "isil,isl9305";
+ 		reg = <0x68>;
+ 
+ 		regulators {
 -- 
-2.2.0.rc0.207.ga3a616c
+2.1.1
+
+
