@@ -1,88 +1,48 @@
-From: Jon Loeliger <jdl@jdl.com>
-Subject: Re: [PATCH] dtc: Use quotes to include header files
-Date: Tue, 16 Dec 2014 08:44:44 -0600
-Message-ID: <E1Y0tMi-0006IS-Bu@mylo>
-References: <7947240.7yktm8fT2X@wuerfel>
- <1418696004-12829-1-git-send-email-chris.packham@alliedtelesis.co.nz>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 05/10] iommu/ipmmu-vmsa: Add device tree bindings documentation
+Date: Tue, 16 Dec 2014 17:19:32 +0200
+Message-ID: <1644235.rIIJM1Vgpl@avalon>
+References: <1418737457-22042-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <1418737457-22042-6-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <CAMuHMdXC8C7BuTdK8-RkqaQ6dqi1bxRHFz1CttGQi3u9w6QD7Q@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-reply-to: <1418696004-12829-1-git-send-email-chris.packham@alliedtelesis.co.nz>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc: devicetree@vger.kernel.org, arnd@arndb.de, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdXC8C7BuTdK8-RkqaQ6dqi1bxRHFz1CttGQi3u9w6QD7Q@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, iommu@lists.linux-foundation.org, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-So, like, Chris Packham said:
-> Hi,
+Hi Geert,
+
+On Tuesday 16 December 2014 14:52:39 Geert Uytterhoeven wrote:
+> On Tue, Dec 16, 2014 at 2:44 PM, Laurent Pinchart wrote:
+> > Signed-off-by: Laurent Pinchart
+> > <laurent.pinchart+renesas@ideasonboard.com>
 > 
-> This probably should come via git://git.jdl.com/software/dtc.git however
-> this appears to be inaccessible at the moment. Is this still the
-> canonical source for the device tree compiler and libfdt or has it been
-> moved? How much deviation from the canonical source are we prepared to
-> live with in the kernel?
-
-That is because the official DTC repository has moved to git.kernel.org!
-
-
-
-> Currently in arch and driver code that needs early access to the
-> flattened device tree it is necessary to add specific CFLAGS so that
-> when scripts/dtc/libfdt/libfdt.h is included the C preprocessor is able
-> to locate the libfdt versions of libfdt_env.h and fdt.h without
-> generating an error.
+> Thanks!
 > 
-> We already provide an alternative linux-specific
-> version of libfdt_env.h and directly include scripts/dtc/libfdt/fdt.h
-> so the inclusion by scripts/dtc/libfdt/libfdt.h is a no-op thanks to the
-> inclusion guards.
+> Apart from the minor nit below:
+> Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > 
-> By using quotes in scripts/dtc/libfdt/libfdt.h it picks up fdt.h and
-> libfdt_env.h from the source directory without needing to add CFLAGS for
-> the sources that happen to include linux/libfdt.h.
+> > +       ipmmu_mx: mmu@fe951800 {
 > 
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> ---
+> fe951000
 
-and:
+Oops :-) Fixed, and applied your ack. Thank you.
 
-> diff --git a/scripts/dtc/libfdt/libfdt.h b/scripts/dtc/libfdt/libfdt.h
-> index 73f4975..ea1ddcd 100644
-> --- a/scripts/dtc/libfdt/libfdt.h
-> +++ b/scripts/dtc/libfdt/libfdt.h
-> @@ -51,8 +51,8 @@
->   *     EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
->   */
->  
-> -#include <libfdt_env.h>
-> -#include <fdt.h>
-> +#include "libfdt_env.h"
-> +#include "fdt.h"
->  
->  #define FDT_FIRST_SUPPORTED_VERSION	0x10
->  #define FDT_LAST_SUPPORTED_VERSION	0x11
+> (yes, having to put the same information in two places will cause
+> discrepancies)
+>
+> > +               compatible = "renasas,ipmmu-vmsa";
+> > +               reg = <0 0xfe951000 0 0x1000>;
+> > +               interrupts = <0 222 IRQ_TYPE_LEVEL_HIGH>,
+> > +                            <0 221 IRQ_TYPE_LEVEL_HIGH>;
+> > +               #iommu-cells = <1>;
+> > +       };
 
+-- 
+Regards,
 
-Hmm.  I seem to recall that the use of angle brackets was intentional.
-I believe that was predicated on installing the FDT library on some
-target machine and needing it to be able to find the other header
-files in an installation, not source, directory.
+Laurent Pinchart
 
-Minor repository spelunking suggests that the angle brackets have
-been around since Day Zero:
-
-    commit 3da0f9a10dfa9b615d06c350c7b9fe29f360a6e0
-
-David?
-
-HTH?,
-jdl
