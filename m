@@ -1,77 +1,53 @@
-From: Stanimir Varbanov <svarbanov@mm-sol.com>
-Subject: Re: [PATCH 4/5] PCI: qcom: Add Qualcomm PCIe controller driver
-Date: Tue, 16 Dec 2014 11:43:12 +0200
-Message-ID: <548FFEB0.9080604@mm-sol.com>
-References: <1418404441-5518-1-git-send-email-svarbanov@mm-sol.com> <1418404441-5518-5-git-send-email-svarbanov@mm-sol.com> <2577563.x0mEZJNVDQ@wuerfel>
+From: Y Vo <yvo@apm.com>
+Subject: Re: [PATCH v1 1/3] gpio: Add APM X-Gene standby GPIO controller driver
+Date: Tue, 16 Dec 2014 16:43:02 +0700
+Message-ID: <CAL4ahLfSZjmqqbQ9Xmqae_AVfFZLiUUEN+rABMwiu2_8u4mmPQ@mail.gmail.com>
+References: <1412779948-28769-1-git-send-email-yvo@apm.com>
+ <2178918.XVCQXOyoGA@wuerfel>
+ <CAL4ahLeyPgska0AcgS756y1Nh2tEeJ4A4k4bTJrU0pzqgG08PA@mail.gmail.com>
+ <2250730.N6DdkCTXkh@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2577563.x0mEZJNVDQ@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <2250730.N6DdkCTXkh@wuerfel>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Arnd Bergmann <arnd@arndb.de>
-Cc: Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, Kishon Vijay Abraham I <kishon@ti.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Phong Vo <pvo@apm.com>, Linus Walleij <linus.walleij@linaro.org>, patches <patches@apm.com>, Tin Huynh <tnhuynh@apm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Toan Le <toanle@apm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
-
-Thanks for the comments!
-
-On 12/12/2014 07:30 PM, Arnd Bergmann wrote:
-> On Friday 12 December 2014 19:14:00 Stanimir Varbanov wrote:
->> The PCIe driver reuse the Designware common code for host
->> and MSI initialization, and also program the Qualcomm
->> application specific registers.
+On Wed, Oct 29, 2014 at 10:16 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Wednesday 29 October 2014 22:09:00 Y Vo wrote:
+>> Hi Arnd,
 >>
->> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
-> 
-> Looks nice!
-> 
->> +static int
->> +qcom_pcie_rd_own_conf(struct pcie_port *pp, int where, int size, u32 *val)
+>> Per Linus, shall we hold this driver until the GIC submission complete
+>> ? Or we will send the version without access GIC to read status in
+>> case the GPIO is configured IRQ ?
+>
+> I'm fine with it either way.
+>
+>> +static int xgene_gpio_sb_get(struct gpio_chip *gc, u32 gpio)
 >> +{
->> +	if (where == PCI_CLASS_REVISION && size == 4) {
->> +		*val = readl(pp->dbi_base + PCI_CLASS_REVISION);
->> +		*val &= ~(0xffff << 16);
->> +		*val |= PCI_CLASS_BRIDGE_PCI << 16;
->> +		return PCIBIOS_SUCCESSFUL;
->> +	}
+>> +       struct of_mm_gpio_chip *mm_gc = to_of_mm_gpio_chip(gc);
+>> +       struct xgene_gpio_sb *chip = to_xgene_gpio_sb(mm_gc);
+>> +       u32 data;
 >> +
->> +	return dw_pcie_cfg_read(pp->dbi_base + (where & ~0x3), where,
->> +				size, val);
+>> +       data = ioread32(mm_gc->regs + MPA_GPIO_IN_ADDR);
+>> +
+>> +       return (data &  GPIO_MASK(gpio)) ? 1 : 0;
 >> +}
-> 
-> Could you add a comment here to explain what this is for?
+>
+> This would be actually broken, right? Maybe it's better to change the
+> driver so that it refuses to map GPIO lines that are hardwired to
+> the interrupt controller, until we can support that.
 
-Sure I will add a comment. The issue is that the pci device class is not
-reported correctly from the register.
-
-> 
->> +static int __init qcom_pcie_probe(struct platform_device *pdev)
->> +{
-> 
-> I think it's a bug to mark this function as __init. It breaks
-> deferred probing and detaching/reattaching the device trough sysfs.
-> 
-
-My bad, I have tried to avoid mismatch section warnings came up from
-dw_pcie_host_init() which is annotated as __init. Do you think we need
-to remove __init from dw_pcie_host_init() declaration and fix the
-drivers accordingly?
-
-> After you fix that, you can remove the __refdata below.
-> 
->> +static struct platform_driver __refdata qcom_pcie_driver = {
->> +	.probe = qcom_pcie_probe,
->> +	.remove = qcom_pcie_remove,
->> +	.driver = {
->> +		.name = "qcom-pcie",
->> +		.of_match_table = qcom_pcie_match,
->> +	},
->> +};
-> 
-> 	Arnd
-> 
-
-regards,
-Stan
+It still works if they are configure as GPIO.
+Do you have any reference to resolve it ?
