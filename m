@@ -1,16 +1,13 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: Re: [PATCH V8 00/14] drm/exynos: few patches to enhance bridge chip
- support
-Date: Wed, 17 Dec 2014 10:31:41 +0100
-Message-ID: <54914D7D.9060108@collabora.co.uk>
-References: <1416045309-13359-1-git-send-email-ajaykumar.rs@samsung.com>
- <CAEC9eQOrKw2Z1q-ztFfadXmsL3CTcAkkv9kcS2QnDOAVSh2AuQ@mail.gmail.com>
- <548ABAB6.6010200@collabora.co.uk> <3197445.qizQc0zeRb@avalon>
+From: Hongzhou Yang <hongzhou.yang@mediatek.com>
+Subject: [PATCH v4 1/5] ARM: mediatek: Add config options for mediatek SoCs.
+Date: Wed, 17 Dec 2014 07:34:29 +0800
+Message-ID: <1418772873-19747-2-git-send-email-hongzhou.yang@mediatek.com>
+References: <1418772873-19747-1-git-send-email-hongzhou.yang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <3197445.qizQc0zeRb@avalon>
+In-Reply-To: <1418772873-19747-1-git-send-email-hongzhou.yang@mediatek.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,35 +17,53 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, dri-devel@lists.freedesktop.org
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Sean Paul <seanpaul@google.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Ajay kumar <ajaynumb@gmail.com>, Kukjin Kim <kgene.kim@samsung.com>, Pannaga Bhushan Reddy Patel <bhushan.r@samsung.com>, Prashanth G <prashanth.g@samsung.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Vladimir Murzin <vladimir.murzin@arm.com>, Russell King <linux@arm.linux.org.uk>, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Hongzhou Yang <hongzhou.yang@mediatek.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-kernel@vger.kernel.org, alan.cheng@mediatek.com, maoguang.meng@mediatek.com, Ashwin Chaugule <ashwin.chaugule@linaro.org>, toby.liu@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, "Joe.C" <yingjoe.chen@mediatek.com>, dandan.he@mediatek.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Laurent and Tomi,
+From: Yingjoe Chen <yingjoe.chen@mediatek.com>
 
-On 12/16/2014 12:37 AM, Laurent Pinchart wrote:
-> Hi Javier,
->> Tomi and Laurent,
->> 
->> You asked Ajay to change his series to use the video port and enpoints DT
->> bindings instead of phandles, could you please review his latest version?
->> 
->> I guess is now too late for 3.19 since we are in the middle of the merge
->> window but it would be great if this series can at least made it to 3.20.
-> 
-> I don't have time to review the series in details right now, but I'm happy 
-> with the DT bindings, and have no big issue with the rest of the patches. I 
-> don't really like the of_drm_find_bridge() concept introduced in 03/14 but I 
-> won't nack it given lack of time to implement an alternative proposal. It's an 
-> internal API, it can always be reworked later anyway.
-> 
+The upcoming MTK pinctrl driver have a big pin table for each SoC
+and we don't want to bloat the kernel binary if we don't need it.
+Add config options so we can build for one SoC only.
 
-Thanks a lot for taking the time to look at the DT bindings, then I guess
-that the series are finally ready to be merged?
+Signed-off-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Signed-off-by: Hongzhou Yang <hongzhou.yang@mediatek.com>
+---
+ arch/arm/mach-mediatek/Kconfig | 22 +++++++++++++++++++++-
+ 1 file changed, 21 insertions(+), 1 deletion(-)
 
-Ajay's series don't apply cleanly anymore because it has been a while since
-he posted it but he can rebase on top of 3.19-rc1 once it is released and
-re-resend.
-
-Best regards,
-Javier
+diff --git a/arch/arm/mach-mediatek/Kconfig b/arch/arm/mach-mediatek/Kconfig
+index f73f588..f7e463c 100644
+--- a/arch/arm/mach-mediatek/Kconfig
++++ b/arch/arm/mach-mediatek/Kconfig
+@@ -1,6 +1,26 @@
+-config ARCH_MEDIATEK
++menuconfig ARCH_MEDIATEK
+ 	bool "Mediatek MT65xx & MT81xx SoC" if ARCH_MULTI_V7
+ 	select ARM_GIC
+ 	select MTK_TIMER
+ 	help
+ 	  Support for Mediatek MT65xx & MT81xx SoCs
++
++if ARCH_MEDIATEK
++
++config MACH_MT6589
++	bool "MediaTek MT6589 SoCs support"
++	default ARCH_MEDIATEK
++
++config MACH_MT6592
++	bool "MediaTek MT6592 SoCs support"
++	default ARCH_MEDIATEK
++
++config MACH_MT8127
++	bool "MediaTek MT8127 SoCs support"
++	default ARCH_MEDIATEK
++
++config MACH_MT8135
++	bool "MediaTek MT8135 SoCs support"
++	default ARCH_MEDIATEK
++
++endif
+-- 
+1.8.1.1.dirty
