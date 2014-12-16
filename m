@@ -1,132 +1,49 @@
-From: Sneeker Yeh <sneeker.yeh@gmail.com>
-Subject: [PATCH 3/3] usb: dwc3: add a quirk for device disconnection issue in Synopsis dwc3 core
-Date: Tue, 16 Dec 2014 10:10:28 +0800
-Message-ID: <1418695828-605-4-git-send-email-Sneeker.Yeh@tw.fujitsu.com>
-References: <1418695828-605-1-git-send-email-Sneeker.Yeh@tw.fujitsu.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1418695828-605-1-git-send-email-Sneeker.Yeh@tw.fujitsu.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Grant Likely <grant.likely@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Arnd Bergmann <arnd@arndb.de>, Paul Bolle <pebolle@tiscali.nl>, Hans de Goede <hdegoede@redhat.com>, Thomas Pugliese <thomas.pugliese@gmail.com>, David Mosberger <davidm@egauge.net>, Peter Griffin <peter.griffin@linaro.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Andrew Bresticker <abrestic@chromium.org>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.
-Cc: Andy Green <andy.green@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Sneeker Yeh <Sneeker.Yeh@tw.fujitsu.com>
+From: "Kuankuan.Yang" <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH 5/6] dt-bindings: Add documentation for Rockchip hdmi-audio
+Date: Tue, 16 Dec 2014 10:14:37 +0800
+Message-ID: <548F958D.7020106@rock-chips.com>
+References: <1418609494-15820-1-git-send-email-ykk@rock-chips.com> <1418612114-19692-1-git-send-email-ykk@rock-chips.com> <20141215104029.GE11285@n2100.arm.linux.org.uk> <20141215120205.GZ11764@sirena.org.uk> <548EDDC2.9050104@rock-chips.com> <20141215161827.GE11764@sirena.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141215161827.GE11764-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Xu Jianqun <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, =?UTF-8?B?U3Tvv73vv71waGFuZSBNYXJjaGVzaW4=?= <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>, Bard Liao <bardliao-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org>, Max Filippov <jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Oder Chiou <oder_chiou-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.orgl
 List-Id: devicetree@vger.kernel.org
 
-Synopsis DesignWare USB3 IP Core integrated with a config-free
-phy needs special handling during device disconnection to avoid
-the host controller dying.
+Hi Mark :
 
-This quirk makes sure PORT_CSC is cleared after the disable slot
-command when usb device is disconnected from internal root hub,
-otherwise, Synopsis core would fall into a state that cannot use
-any endpoint command. Consequently, device disconnection procedure
-might not be finished because sometimes endpoint need to be stop
-by endpoint stop command issuing.
+Got it, it will be good to use simple-card. i will try it in next versi=
+on.
 
-Symptom usually happens when disconnected device is keyboard,
-mouse, and hub.
+Best Regards.
 
-Signed-off-by: Sneeker Yeh <Sneeker.Yeh@tw.fujitsu.com>
----
- drivers/usb/host/xhci-hub.c  |    4 ++++
- drivers/usb/host/xhci-plat.c |    5 +++++
- drivers/usb/host/xhci.c      |   29 +++++++++++++++++++++++++++++
- drivers/usb/host/xhci.h      |    7 +++++++
- 4 files changed, 45 insertions(+)
+=E5=9C=A8 2014=E5=B9=B412=E6=9C=8816=E6=97=A5 00:18, Mark Brown =E5=86=99=
+=E9=81=93:
+> On Mon, Dec 15, 2014 at 09:10:26PM +0800, Kuankuan.Yang wrote:
+>> Hi Mark & Russell:
+> Please don't top post, that way people have some context for what you=
+'re
+> saying - look at how people normally format their mails on thelist.
+>
+>> In that way, dt will only need compatible for creating sound device.=
+ is it
+>> ok  ?
+>> sound {
+>>      compatible =3D "rockchip,rk3288-hdmi-audio";
+>>      status =3D "okay";
+>> }
+>> could you give me some advises.
+> That'd be good, though the other question is if this can be made to u=
+se
+> simple-card so we can avoid having a custom driver for this.
 
-diff --git a/drivers/usb/host/xhci-hub.c b/drivers/usb/host/xhci-hub.c
-index a7865c4..3b8f7fc 100644
---- a/drivers/usb/host/xhci-hub.c
-+++ b/drivers/usb/host/xhci-hub.c
-@@ -368,6 +368,10 @@ static void xhci_clear_port_change_bit(struct xhci_hcd *xhci, u16 wValue,
- 		port_change_bit = "warm(BH) reset";
- 		break;
- 	case USB_PORT_FEAT_C_CONNECTION:
-+		if ((xhci->quirks & XHCI_DISCONNECT_QUIRK) &&
-+		    !(readl(addr) & PORT_CONNECT))
-+			return;
-+
- 		status = PORT_CSC;
- 		port_change_bit = "connect";
- 		break;
-diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
-index 08d402b..3ede6b4 100644
---- a/drivers/usb/host/xhci-plat.c
-+++ b/drivers/usb/host/xhci-plat.c
-@@ -33,6 +33,11 @@ static void xhci_plat_quirks(struct device *dev, struct xhci_hcd *xhci)
- 	 * dev struct in order to setup MSI
- 	 */
- 	xhci->quirks |= XHCI_PLAT;
-+
-+	if (dev->parent && dev->parent->parent &&
-+	    of_device_is_compatible(dev->parent->parent->of_node,
-+				    "fujitsu,mb86s70-dwc3"))
-+		xhci->quirks |= XHCI_DISCONNECT_QUIRK;
- }
- 
- /* called during probe() after chip reset completes */
-diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
-index 01fcbb5..50d757b 100644
---- a/drivers/usb/host/xhci.c
-+++ b/drivers/usb/host/xhci.c
-@@ -3584,6 +3584,33 @@ command_cleanup:
- 	return ret;
- }
- 
-+static void xhci_try_to_clear_csc(struct usb_hcd *hcd, int dev_port_num)
-+{
-+	int max_ports;
-+	struct xhci_hcd	*xhci = hcd_to_xhci(hcd);
-+	__le32 __iomem **port_array;
-+	u32 status;
-+
-+	/* print debug info */
-+	if (hcd->speed == HCD_USB3) {
-+		max_ports = xhci->num_usb3_ports;
-+		port_array = xhci->usb3_ports;
-+	} else {
-+		max_ports = xhci->num_usb2_ports;
-+		port_array = xhci->usb2_ports;
-+	}
-+
-+	if (dev_port_num > max_ports) {
-+		xhci_err(xhci, "%s() port number invalid", __func__);
-+		return;
-+	}
-+	status = readl(port_array[dev_port_num - 1]);
-+
-+	/* write 1 to clear */
-+	if (!(status & PORT_CONNECT) && (status & PORT_CSC))
-+		writel(status & PORT_CSC, port_array[0]);
-+}
-+
- /*
-  * At this point, the struct usb_device is about to go away, the device has
-  * disconnected, and all traffic has been stopped and the endpoints have been
-@@ -3649,6 +3676,8 @@ void xhci_free_dev(struct usb_hcd *hcd, struct usb_device *udev)
- 	xhci_ring_cmd_db(xhci);
- 	spin_unlock_irqrestore(&xhci->lock, flags);
- 
-+	if (xhci->quirks & XHCI_DISCONNECT_QUIRK)
-+		xhci_try_to_clear_csc(hcd, udev->portnum);
- 	/*
- 	 * Event command completion handler will free any data structures
- 	 * associated with the slot.  XXX Can free sleep?
-diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
-index cc7c5bb..e6c820c 100644
---- a/drivers/usb/host/xhci.h
-+++ b/drivers/usb/host/xhci.h
-@@ -1560,6 +1560,13 @@ struct xhci_hcd {
- #define XHCI_SPURIOUS_WAKEUP	(1 << 18)
- /* For controllers with a broken beyond repair streams implementation */
- #define XHCI_BROKEN_STREAMS	(1 << 19)
-+/*
-+ * Synopsis dwc3 core integrated with a config-free phy needs special
-+ * handling during device disconnection to avoid the host controller
-+ * dying. This quirk makes sure PORT_CSC is cleared after the disable
-+ * slot command.
-+ */
-+#define XHCI_DISCONNECT_QUIRK	(1 << 20)
- 	unsigned int		num_active_eps;
- 	unsigned int		limit_active_eps;
- 	/* There are two roothubs to keep track of bus suspend info for */
--- 
-1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
