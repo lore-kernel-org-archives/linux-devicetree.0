@@ -1,54 +1,46 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v14 03/10] qcom: spm: Add Subsystem Power Manager driver
-Date: Tue, 16 Dec 2014 11:18:18 -0800
-Message-ID: <5490857A.1000808@codeaurora.org>
-References: <1417541958-56907-1-git-send-email-lina.iyer@linaro.org> <2519415.GklIQeMgWR@wuerfel> <54903DC6.8010308@linaro.org> <2663853.2Q3kHisMT7@wuerfel>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: kirkwood: add dts support for Seagate
+ BlackArmor NAS220
+Date: Tue, 16 Dec 2014 20:20:20 +0100
+Message-ID: <20141216192020.GB12820@lunn.ch>
+References: <20141215203855.GA28940@anne>
+ <20141216085645.GB1450@lunn.ch>
+ <20141216163714.GE20170@anne>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <2663853.2Q3kHisMT7@wuerfel>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Lina Iyer <lina.iyer@linaro.org>, khilman@linaro.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20141216163714.GE20170@anne>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Evgeni Dobrev <evgeni-c3HRhe8yoGxdzLpqerNdyw@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/16/2014 06:38 AM, Arnd Bergmann wrote:
-> On Tuesday 16 December 2014 15:12:22 Daniel Lezcano wrote:
->> At the beginning, all that become from not including mach files from the 
->> drivers directory which make sense.
->>
->> Perhaps it is time to write a similar mechanism for the cpuidle drivers 
->> where we can still separate the low level PM code from the generic 
->> cpuidle code.
-> That way you basically duplicate the same thing we already have, which
-> isn't much better.
->
-> In the example of drivers/soc/qcom/spm.c, just call cpuidle_register
-> from the spm_dev_probe() function and be done with it. You already
-> have a device that is responsible for handling this, don't try to
-> construct more than you already need.
->
-> I would assume that the same can be done for most other platforms.
->
-> There are probably cases where the same piece of hardware is responsible
-> for both cpuidle and cpufreq, but what that means is really that you
-> should have a single driver for it that does both things. Same for
-> SMP support: if you have one register block that does both the SMP
-> bringup and the cpuidle stuff, then have *one* driver for this block
-> that does it all. There are currently a few dependencies that require
-> doing SMP bringup early during boot, but we decided years ago that those
-> are all artificial dependencies and we should be able to boot secondary
-> CPUs much later than we currently do.
->
+> The LED can be either one of the two colors or off. Swapping the
+> polarity on the two LED pins changes the color.
 
-+1. The SPM harware is used for hotplug, suspend, cpuidle, as well as
-provides a regulator for a CPU, so all these things should be done in a
-single driver. Booting secondary CPUs early is not hard here either if
-we move the smp ops into the same driver. The only downside then is that
-it can't be a module, but I would guess that we can work on making that
-possible by allowing smp ops to be inserted and removed at any time.
+O.K, so it is using the diode property of a Light Emitting Diode, to
+support two colours.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> I am currently playing with the idea to create a multicolor LED kernel 
+> driver which is being controlled via GPIOs, but I still have not found 
+> the proper abstraction for it.
+
+Maybe multi-colour is too far. Just support bi-colour via two gpios.
+Still, it is not so simple. As you said, the led class does not give
+too good an abstraction. I guess the best you can do is that when you
+turn one on, it automagically turns the other off.
+
+> The point is, that even though this functionality must currently be
+> handled by user space (some combination of sysfs writes and a shell
+> script) at the moment, the rest of the system is usable.
+
+Sure, we will take the DT file without support for the bicolour
+LED. It can be added later.
+
+      Andrew
+ 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
