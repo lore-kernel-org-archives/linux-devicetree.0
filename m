@@ -1,76 +1,45 @@
-From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH v2 05/10] iommu/ipmmu-vmsa: Add device tree bindings documentation
-Date: Tue, 16 Dec 2014 15:44:12 +0200
-Message-ID: <1418737457-22042-6-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-References: <1418737457-22042-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1418737457-22042-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: iommu@lists.linux-foundation.org
-Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 1/2] ARM: dts: kirkwood: enable phy driver for SATA controller
+ on 88f6192
+Date: Tue, 16 Dec 2014 16:46:32 +0300
+Message-ID: <549037B8.6060803@cogentembedded.com>
+References: <20141215203724.GA22936@anne>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20141215203724.GA22936@anne>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Evgeni Dobrev <evgeni@studio-punkt.com>, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
----
- .../bindings/iommu/renesas,ipmmu-vmsa.txt          | 41 ++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt
+Hello.
 
-Cc: devicetree@vger.kernel.org
+On 12/15/2014 11:37 PM, Evgeni Dobrev wrote:
 
-Changes compared to v1:
+> This patch enables the phy drivers for the SATA controller on Marvell's 88f6192. Without them it is not possible to use SATA drives attached to this processor.
 
-- Extend the register range over both the base registers bank and the
-  non-secure aliases
-- Specify both the secure and non-secure interrupt, when applicable
+    Please wrap the change log likes at 80 characters or less.
 
-diff --git a/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt b/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt
-new file mode 100644
-index 000000000000..ba225a091dcf
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt
-@@ -0,0 +1,41 @@
-+* Renesas VMSA-Compatible IOMMU
-+
-+The IPMMU is an IOMMU implementation compatible with the ARM VMSA page tables.
-+It provides address translation for bus masters outside of the CPU, each
-+connected to the IPMMU through a port called micro-TLB.
-+
-+
-+Required Properties:
-+
-+  - compatible: Must contain "renesas,ipmmu-vmsa".
-+  - reg: Base address and size of the IPMMU registers.
-+  - interrupts: Specifiers for the MMU fault interrupts. For instances that
-+    support secure mode two interrupts must be specified, for non-secure and
-+    secure mode, in that order. For instances that don't support secure mode a
-+    single interrupt must be specified.
-+
-+  - #iommu-cells: Must be 1.
-+
-+Each bus master connected to an IPMMU must reference the IPMMU in its device
-+node with the following property:
-+
-+  - iommus: A reference to the IPMMU in two cells. The first cell is a phandle
-+    to the IPMMU and the second cell the number of the micro-TLB that the
-+    device is connected to.
-+
-+
-+Example: R8A7791 IPMMU-MX and VSP1-D0 bus master
-+
-+	ipmmu_mx: mmu@fe951800 {
-+		compatible = "renasas,ipmmu-vmsa";
-+		reg = <0 0xfe951000 0 0x1000>;
-+		interrupts = <0 222 IRQ_TYPE_LEVEL_HIGH>,
-+			     <0 221 IRQ_TYPE_LEVEL_HIGH>;
-+		#iommu-cells = <1>;
-+	};
-+
-+	vsp1@fe928000 {
-+		...
-+		iommus = <&ipmmu_mx 13>;
-+		...
-+	};
--- 
-2.0.4
+> Signed-off-by: Evgeni Dobrev <evgeni@studio-punkt.com>
+> ---
+>   arch/arm/boot/dts/kirkwood-6192.dtsi |    2 ++
+>   1 file changed, 2 insertions(+)
 
+> diff --git a/arch/arm/boot/dts/kirkwood-6192.dtsi b/arch/arm/boot/dts/kirkwood-6192.dtsi
+> index dd81508..bed2dec 100644
+> --- a/arch/arm/boot/dts/kirkwood-6192.dtsi
+> +++ b/arch/arm/boot/dts/kirkwood-6192.dtsi
+> @@ -66,6 +66,8 @@
+>   			interrupts = <21>;
+>   			clocks = <&gate_clk 14>, <&gate_clk 15>;
+>   			clock-names = "0", "1";
+> +                        phys = <&sata_phy0>, <&sata_phy1>;
+> +                        phy-names = "port0", "port1";
+
+    Please indent with tabs,  not spaces.
+
+[...]
+
+WBR, Sergei
