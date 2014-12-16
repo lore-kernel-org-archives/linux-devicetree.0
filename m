@@ -1,39 +1,88 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v14 03/10] qcom: spm: Add Subsystem Power Manager driver
-Date: Tue, 16 Dec 2014 15:39:31 +0100
-Message-ID: <5335513.NAdy3tNNVt@wuerfel>
-References: <1417541958-56907-1-git-send-email-lina.iyer@linaro.org> <2519415.GklIQeMgWR@wuerfel> <20141205154526.GC2995@linaro.org>
+From: Jon Loeliger <jdl@jdl.com>
+Subject: Re: [PATCH] dtc: Use quotes to include header files
+Date: Tue, 16 Dec 2014 08:44:44 -0600
+Message-ID: <E1Y0tMi-0006IS-Bu@mylo>
+References: <7947240.7yktm8fT2X@wuerfel>
+ <1418696004-12829-1-git-send-email-chris.packham@alliedtelesis.co.nz>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20141205154526.GC2995@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Lina Iyer <lina.iyer@linaro.org>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, khilman@linaro.org, sboyd@codeaurora.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-reply-to: <1418696004-12829-1-git-send-email-chris.packham@alliedtelesis.co.nz>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc: devicetree@vger.kernel.org, arnd@arndb.de, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 05 December 2014 08:45:26 Lina Iyer wrote:
-> On Thu, Dec 04 2014 at 11:20 -0700, Arnd Bergmann wrote:
-> >On Thursday 04 December 2014 09:28:34 Lina Iyer wrote:
-
-> >Having all cpuidle code generally live in drivers/cpuidle is still a good
-> >idea IMO, but using a platform device just for the purpose of passing
-> >data between some platform specific code and another platform specific
-> >driver hasn't worked out that well here.
-> >
-> To achieve both, I cant think of a better way to initialize the cpuidle
-> driver without the use of reference count (0 ==>
-> platform_driver_register).
+So, like, Chris Packham said:
+> Hi,
 > 
-> I tried creating dummy platform device in the DT but something or
-> another gives in to an ugly implementation.
+> This probably should come via git://git.jdl.com/software/dtc.git however
+> this appears to be inaccessible at the moment. Is this still the
+> canonical source for the device tree compiler and libfdt or has it been
+> moved? How much deviation from the canonical source are we prepared to
+> live with in the kernel?
+
+That is because the official DTC repository has moved to git.kernel.org!
+
+
+
+> Currently in arch and driver code that needs early access to the
+> flattened device tree it is necessary to add specific CFLAGS so that
+> when scripts/dtc/libfdt/libfdt.h is included the C preprocessor is able
+> to locate the libfdt versions of libfdt_env.h and fdt.h without
+> generating an error.
 > 
-> Any other ideas?
+> We already provide an alternative linux-specific
+> version of libfdt_env.h and directly include scripts/dtc/libfdt/fdt.h
+> so the inclusion by scripts/dtc/libfdt/libfdt.h is a no-op thanks to the
+> inclusion guards.
+> 
+> By using quotes in scripts/dtc/libfdt/libfdt.h it picks up fdt.h and
+> libfdt_env.h from the source directory without needing to add CFLAGS for
+> the sources that happen to include linux/libfdt.h.
+> 
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> ---
 
-Hi Lina,
+and:
 
-sorry for missing your mail earlier, I just replied to Daniel on this
-topic, when the thread popped up again.
-	
-	Arnd
+> diff --git a/scripts/dtc/libfdt/libfdt.h b/scripts/dtc/libfdt/libfdt.h
+> index 73f4975..ea1ddcd 100644
+> --- a/scripts/dtc/libfdt/libfdt.h
+> +++ b/scripts/dtc/libfdt/libfdt.h
+> @@ -51,8 +51,8 @@
+>   *     EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+>   */
+>  
+> -#include <libfdt_env.h>
+> -#include <fdt.h>
+> +#include "libfdt_env.h"
+> +#include "fdt.h"
+>  
+>  #define FDT_FIRST_SUPPORTED_VERSION	0x10
+>  #define FDT_LAST_SUPPORTED_VERSION	0x11
+
+
+Hmm.  I seem to recall that the use of angle brackets was intentional.
+I believe that was predicated on installing the FDT library on some
+target machine and needing it to be able to find the other header
+files in an installation, not source, directory.
+
+Minor repository spelunking suggests that the angle brackets have
+been around since Day Zero:
+
+    commit 3da0f9a10dfa9b615d06c350c7b9fe29f360a6e0
+
+David?
+
+HTH?,
+jdl
