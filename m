@@ -1,39 +1,100 @@
-From: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Subject: Re: [PATCH v4 4/5] ARM: mediatek: Add EINT support to MTK pinctrl
- driver.
-Date: Wed, 17 Dec 2014 17:09:25 +0800
-Message-ID: <1418807365.6443.17.camel@mtksdaap41>
-References: <1418772873-19747-1-git-send-email-hongzhou.yang@mediatek.com>
-	 <1418772873-19747-5-git-send-email-hongzhou.yang@mediatek.com>
+From: Hongzhou Yang <hongzhou.yang@mediatek.com>
+Subject: [PATCH v4 0/5] Add Mediatek SoC Pinctrl/GPIO/EINT driver for MT8135.
+Date: Wed, 17 Dec 2014 07:34:28 +0800
+Message-ID: <1418772873-19747-1-git-send-email-hongzhou.yang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1418772873-19747-5-git-send-email-hongzhou.yang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Vladimir Murzin <vladimir.murzin@arm.com>, Russell King <linux@arm.linux.org.uk>, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, linux-kernel@vger.kernel.org, alan.cheng@mediatek.com, maoguang.meng@mediatek.com, Ashwin Chaugule <ashwin.chaugule@linaro.org>, toby.liu@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, dandan.he@mediatek.com, linux-arm-kernel@lists.infradead.org, Hongzhou Yang <hongzhou.yang@mediatek.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Vladimir Murzin <vladimir.murzin@arm.com>, Russell King <linux@arm.linux.org.uk>, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Hongzhou Yang <hongzhou.yang@mediatek.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-kernel@vger.kernel.org, alan.cheng@mediatek.com, maoguang.meng@mediatek.com, Ashwin Chaugule <ashwin.chaugule@linaro.org>, toby.liu@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, "Joe.C" <yingjoe.chen@mediatek.com>, dandan.he@mediatek.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2014-12-17 at 07:34 +0800, Hongzhou Yang wrote:
-> From: Maoguang Meng <maoguang.meng@mediatek.com>
-> 
-> MTK SoC support external interrupt(EINT) from most SoC pins.
-> Add EINT support to pinctrl driver.
-> 
-> Signed-off-by: Maoguang Meng <maoguang.meng@mediatek.com>
-> Signed-off-by: Hongzhou Yang <hongzhou.yang@mediatek.com>
+This is v4 of add Mediatek SoC Pinctrl/GPIO/EINT drvier for MT8135.
+It is based on Joe.C' basic device tree support.
+See http://lists.infradead.org/pipermail/linux-arm-kernel/2014-October/296093.html
 
-Hi Linus,
+This driver include common and MT8135 part, other Mediatek SoCs will share the common part,
+and MT8135 part only support MT8135. MT8135 has GPIO controller, it includes 203 pins.
 
-This patch add EINT support to the pinctrl driver. We've surveyed
-GPIOLIB_IRQCHIP, but we didn't use it because:
+Note:
+  - Due to MSDC requirement, we have to add EINT and pinconf feature in this version.
+  - Since I don't know the final conclusion about the device tree format, so I still keep it as original.
+  
+Changes in v4:
+  - Add EINT support to this pinctrl driver.
+  - Add input enable, SMT and drive strength support.
+  - Add special control for pull config.
+  - Use regmap_update_bits() for mux setting.
+  - Modify mtk_desc_pin struct, add mtk_desc_eint struct for EINT support.
+  - Modify pinctrl-mtk-mt8135.h, add MTK_EINT_FUNCTION node, remove NULL functions.
 
-- Not every GPIO pin support interrupt.
-- EINT use a different numbering to GPIO. eg, from the mt8135 table,
-GPIO29 is EINT158. It is more nature & efficient to use EINT number as
-hwirq.
+According to Linus' suggestion, make some following changes:
+  - Select GPIOLIB and OF_GPIO.
+  - Use pinctrl util API for pinconf map.
 
-+               MTK_EINT_FUNCTION(2, 158),
-+               MTK_FUNCTION(0, "GPIO29"),
+Changes in v3:
+  - Rebase on 3.18-rc1.
+  - Follow '[RFC] pinctrl: Provide a generic device tree binding for per-pin pin controllers', modify mediatek,pins format,
+    add config setting for each pin, the reason is that each pin may have different config.
+    The RFC link: http://lists.infradead.org/pipermail/linux-arm-kernel/2014-October/296491.html
+  - Switch to use syscon regmap.
+  - Add CLR_ADDR() and SET_ADDR() macros.
+  - Add mtk_pconf_set_ies() and mtk_pconf_set_smt() functions to deal with input-enable and input-schmitt-enable.
+  - Rename mt_gpio_devdata to mtk_pinctrl_devdata.
+  - Rename all mt_prefix to mtk_prefix.
+  - Rename mt_pconf_pull_conf() to mtk_pconf_parse_conf, add mtk_pconf_set_pull_select() to deal with pull enable and pull up/down.
+    And we will add PIN_CONFIG_DRIVE_STRENGTH to mtk_pconf_parse_conf().
+  - Add port_shf, port_mask and port_align members to mtk_pinctrl_devdata struct.
+  - Use BIT(x) instead of 1 << (x).
+  - Remove mt_pctrl_write_reg() and mt_pctrl_read_reg().
+  - Remove mt_gpio_of_xlate().
+  - Use .set_mux() instead of .enable().
+  - Add some comments.
 
-Joe.C
+Hongzhou Yang (3):
+  dt-bindings: Add pinctrl bindings for mt65xx/mt81xx.
+  ARM: mediatek: Add Pinctrl/GPIO driver for mt8135.
+  ARM: dts: mt8135: Add pinctrl/GPIO/EINT node for mt8135.
+
+Maoguang Meng (1):
+  ARM: mediatek: Add EINT support to MTK pinctrl driver.
+
+Yingjoe Chen (1):
+  ARM: mediatek: Add config options for mediatek SoCs.
+
+ .../devicetree/bindings/pinctrl/pinctrl-mt65xx.txt |  142 ++
+ arch/arm/boot/dts/mt8135-pinfunc.h                 | 1304 ++++++++++++
+ arch/arm/boot/dts/mt8135.dtsi                      |   24 +
+ arch/arm/mach-mediatek/Kconfig                     |   23 +-
+ drivers/pinctrl/Kconfig                            |    1 +
+ drivers/pinctrl/Makefile                           |    1 +
+ drivers/pinctrl/mediatek/Kconfig                   |   14 +
+ drivers/pinctrl/mediatek/Makefile                  |    5 +
+ drivers/pinctrl/mediatek/pinctrl-mt8135.c          |  373 ++++
+ drivers/pinctrl/mediatek/pinctrl-mtk-common.c      | 1169 +++++++++++
+ drivers/pinctrl/mediatek/pinctrl-mtk-common.h      |  218 ++
+ drivers/pinctrl/mediatek/pinctrl-mtk-mt8135.h      | 2116 ++++++++++++++++++++
+ include/dt-bindings/pinctrl/mt65xx.h               |   40 +
+ 13 files changed, 5429 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt
+ create mode 100644 arch/arm/boot/dts/mt8135-pinfunc.h
+ create mode 100644 drivers/pinctrl/mediatek/Kconfig
+ create mode 100644 drivers/pinctrl/mediatek/Makefile
+ create mode 100644 drivers/pinctrl/mediatek/pinctrl-mt8135.c
+ create mode 100644 drivers/pinctrl/mediatek/pinctrl-mtk-common.c
+ create mode 100644 drivers/pinctrl/mediatek/pinctrl-mtk-common.h
+ create mode 100644 drivers/pinctrl/mediatek/pinctrl-mtk-mt8135.h
+ create mode 100644 include/dt-bindings/pinctrl/mt65xx.h
+
+--
+1.8.1.1.dirty
