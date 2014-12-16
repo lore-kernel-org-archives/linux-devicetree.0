@@ -1,106 +1,69 @@
-From: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH] dtc: Use quotes to include header files
-Date: Tue, 16 Dec 2014 15:13:24 +1300
-Message-ID: <1418696004-12829-1-git-send-email-chris.packham@alliedtelesis.co.nz>
-References: <7947240.7yktm8fT2X@wuerfel>
+From: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v6 0/3] Add gpio support to Broadcom Cygnus SoC
+Date: Mon, 15 Dec 2014 18:18:24 -0800
+Message-ID: <1418696307-19392-1-git-send-email-rjui@broadcom.com>
+References: <Ray Jui <rjui@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <7947240.7yktm8fT2X@wuerfel>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, jdl@jdl.com, arnd@arndb.de, linux-kernel@vger.kernel.org, Chris Packham <chris.packham@alliedtelesis.co.nz>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Currently in arch and driver code that needs early access to the
-flattened device tree it is necessary to add specific CFLAGS so that
-when scripts/dtc/libfdt/libfdt.h is included the C preprocessor is able
-to locate the libfdt versions of libfdt_env.h and fdt.h without
-generating an error.
+This patchset contains the initial GPIO support for the Broadcom Cygnus SoC.
+Cygnus has 3 GPIO controllers: 1) the ASIU GPIO; 2) the chipCommonG GPIO;
+and 3) the ALWAYS-ON GPIO. All 3 types of GPIO controllers are supported by
+the same Cygnus GPIO driver
 
-We already provide an alternative linux-specific
-version of libfdt_env.h and directly include scripts/dtc/libfdt/fdt.h
-so the inclusion by scripts/dtc/libfdt/libfdt.h is a no-op thanks to the
-inclusion guards.
+Changes from v5:
+ - Get rid of DT property "linux,gpio-base". Use dynamic allocation for GPIO base
+   number
 
-By using quotes in scripts/dtc/libfdt/libfdt.h it picks up fdt.h and
-libfdt_env.h from the source directory without needing to add CFLAGS for
-the sources that happen to include linux/libfdt.h.
+Changes from v4:
+ - Use DT property "linux,gpio-base" to define GPIO base number
+ - factorize common code to improve code readability and reduce code size
+ - remove "bcm_" prefix on function and struct names
+ - improve debugging prints
+ - default GPIO_BCM_CYGNUS to y in Kconfig (it still depends on
+   ARCH_BCM_CYGNUS). This way we do not need to select it from the
+   arch/arm/mach-bcm/Kconfig
+ - Get rid of redundant MAINTAINER entry for this driver. It will be maintained
+   by Broadcom iProc/Cygnus maintainers
+ - Update device tree document based on driver changes
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
----
-Hi,
+Changes from v3:
+ - Fix dt property tpyo
+ - Fix incorrect GPIO compatible ID in device tree binding document example
 
-This probably should come via git://git.jdl.com/software/dtc.git however
-this appears to be inaccessible at the moment. Is this still the
-canonical source for the device tree compiler and libfdt or has it been
-moved? How much deviation from the canonical source are we prepared to
-live with in the kernel?
+Changes from v2:
+ - Consolidate different compatible IDs into "brcm,cygnus-gpio"
+ - Get rid of redundant "no-interrupt" property
 
-This came up on the arm-LKML[1]. Basically in the name of backwards
-compatibility I need to add a .dt_fixup to add some required nodes to
-the flattened device tree prior to the tree being un-flattened and
-processed. This is a trick powerpc makes use of fairly extensively and
-there are a few other instances of this.
+Changes from v1:
+ - Get rid of inline qualifier
+ - Get rid of redundant check in the ISR
+ - Other minor fixes to imrove code readability
 
-For the files that include linux/libfdt.h we currently also have to
-specify additional CFLAGS to satisfy the CPP.
-    
-  $ git grep '<linux/libfdt.h>'
-  arch/mips/cavium-octeon/octeon-platform.c:#include <linux/libfdt.h>
-  arch/mips/cavium-octeon/setup.c:#include <linux/libfdt.h>
-  arch/mips/mti-sead3/sead3-setup.c:#include <linux/libfdt.h>
-  arch/powerpc/kernel/prom.c:#include <linux/libfdt.h>
-  drivers/firmware/efi/libstub/fdt.c:#include <linux/libfdt.h>
-  drivers/of/fdt.c:#include <linux/libfdt.h>
-  drivers/of/fdt_address.c:#include <linux/libfdt.h>
+Ray Jui (3):
+  gpio: Cygnus: define Broadcom Cygnus GPIO binding
+  gpio: Cygnus: add GPIO driver
+  ARM: dts: enable GPIO for Broadcom Cygnus
 
-  $ git grep -e '-I.*dtc/libfdt'
-  arch/mips/cavium-octeon/Makefile:CFLAGS_octeon-platform.o = -I$(src)/../../../scripts/dtc/libfdt
-  arch/mips/cavium-octeon/Makefile:CFLAGS_setup.o = -I$(src)/../../../scripts/dtc/libfdt
-  arch/mips/mti-sead3/Makefile:CFLAGS_sead3-setup.o = -I$(src)/../../../scripts/dtc/libfdt
-  arch/powerpc/kernel/Makefile:CFLAGS_prom.o              = -I$(src)/../../../scripts/dtc/libfdt
-  drivers/firmware/efi/libstub/Makefile:CFLAGS_fdt.o += -I$(srctree)/scripts/dtc/libfdt/
-  drivers/of/Makefile:CFLAGS_fdt.o = -I$(src)/../../scripts/dtc/libfdt
-  drivers/of/Makefile:CFLAGS_fdt_address.o = -I$(src)/../../scripts/dtc/libfdt
-  lib/Makefile:   $(eval CFLAGS_$(file) = -I$(src)/../scripts/dtc/libfdt))
-    
-Simply by switching to using quotes we can avoid having this extra step.
+ .../devicetree/bindings/gpio/brcm,cygnus-gpio.txt  |   82 +++
+ arch/arm/boot/dts/bcm-cygnus.dtsi                  |   30 +
+ drivers/gpio/Kconfig                               |   12 +
+ drivers/gpio/Makefile                              |    1 +
+ drivers/gpio/gpio-bcm-cygnus.c                     |  607 ++++++++++++++++++++
+ 5 files changed, 732 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/brcm,cygnus-gpio.txt
+ create mode 100644 drivers/gpio/gpio-bcm-cygnus.c
 
-Assuming that this patch is acceptable a follow on clean up would be to
-remove the instances of CFLAGS_... listed above.
-
-Regards,
-Chris
---
-[1] - http://lists.infradead.org/pipermail/linux-arm-kernel/2014-December/310840.html
-
- scripts/dtc/libfdt/libfdt.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/scripts/dtc/libfdt/libfdt.h b/scripts/dtc/libfdt/libfdt.h
-index 73f4975..ea1ddcd 100644
---- a/scripts/dtc/libfdt/libfdt.h
-+++ b/scripts/dtc/libfdt/libfdt.h
-@@ -51,8 +51,8 @@
-  *     EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-  */
- 
--#include <libfdt_env.h>
--#include <fdt.h>
-+#include "libfdt_env.h"
-+#include "fdt.h"
- 
- #define FDT_FIRST_SUPPORTED_VERSION	0x10
- #define FDT_LAST_SUPPORTED_VERSION	0x11
 -- 
-2.2.0.rc0
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
