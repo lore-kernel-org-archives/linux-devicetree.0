@@ -1,85 +1,58 @@
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: Re: [PATCH 11/12] ARM: dts: add support for Vybrid running on
- Cortex-M4
-Date: Tue, 16 Dec 2014 23:19:08 +0100
-Message-ID: <b090cb361e81d2f1be5d21d1a07e9340@agner.ch>
-References: <1417565531-4507-1-git-send-email-stefan@agner.ch>
- <1417565531-4507-12-git-send-email-stefan@agner.ch>
- <2994970.DCfUQgtmcD@wuerfel>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCHv1 1/3] rtc: rtc-isl12057: add alarm support to Intersil
+ ISL12057 RTC driver
+Date: Tue, 16 Dec 2014 23:05:11 +0000
+Message-ID: <20141216230511.GV11764@sirena.org.uk>
+References: <cover.1418687005.git.arno@natisbad.org>
+ <db1f0eecbdc5062a61232b99699ecfa6e0a2a956.1418687005.git.arno@natisbad.org>
+ <549004B9.2060402@kleine-koenig.org>
+ <87vblbdcii.fsf@natisbad.org>
+ <5490A873.1000706@kleine-koenig.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2994970.DCfUQgtmcD@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="kTSzC5IcQVJlHX++"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5490A873.1000706@kleine-koenig.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>
+Cc: Arnaud Ebalard <arno@natisbad.org>, Andrew Morton <akpm@linux-foundation.org>, Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Peter Huewe <peter.huewe@infineon.com>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <treding@nvidia.com>, Arnd Bergmann <arnd@arndb.de>, Darshana Padmadas <darshanapadmadas@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Rob Landley <rob@landley.net>, rtc-linux@googlegroups.com, Jason Cooper <jason@lakedaemon.net>, Guenter Roeck <linux@roeck-us.net>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 2014-12-03 12:03, Arnd Bergmann wrote:
-> On Wednesday 03 December 2014 01:12:10 Stefan Agner wrote:
->> diff --git a/arch/arm/boot/dts/vf610m4-colibri.dts b/arch/arm/boot/dts/vf610m4-colibri.dts
->> new file mode 100644
->> index 0000000..051ee0f
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/vf610m4-colibri.dts
->> @@ -0,0 +1,52 @@
->> +/*
->> + * Device tree for Colibri VF61 Cortex-M4 support
->> + *
->> + * Copyright 2014 Stefan Agner
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License as published by
->> + * the Free Software Foundation; either version 2 of the License, or
->> + * (at your option) any later version.
->> + */
->> +
->> +/dts-v1/;
->> +#include "vf610m4.dtsi"
->> +
->> +/ {
->> +       model = "VF610 Cortex-M4";
->> +       compatible = "fsl,vf610m4";
->> +
->> +       chosen {
->> +               bootargs = "console=ttyLP2,115200 ihash_entries=64 dhash_entries=64 earlyprintk clk_ignore_unused init=/linuxrc rw";
->> +       };
->> +
-> 
-> Starting with v3.19, you should be able to use the earlycon framework on
-> arm32, so it would be better to replace earlyprintk with earlycon here
-> and add a stdout-path property in chosen that points to the console
-> uart.
 
-Hi Arnd,
+--kTSzC5IcQVJlHX++
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Just started looking in that a bit deeper and some question arose:
-Afaik, earlycon need to be supported by the uart driver. The fsl_lpuart,
-which is used for Vybrid's uart, does not support earlycon yet. However,
-earlyprink already works (see ./arch/arm/include/debug/vf.S). I
-understand that earlycon has the advantage of being able to be used on
-multiplatform. But earlyprintk is working really early (e.g. before
-locating the FDT), and it proved helpful for me when I started working
-on that Cortex-M4 stuff. Should earlycon replace earlyprintk completely?
+On Tue, Dec 16, 2014 at 10:47:31PM +0100, Uwe Kleine-K=F6nig wrote:
+> On 12/16/2014 01:07 PM, Arnaud Ebalard wrote:
 
-Maybe, on Vybrid, since it would be a good platform for automated !MMU
-testing, it would be nice to have earlycon which can be enabled in any
-case and would provide output even something blows up quite early... But
-I guess I would add earlycon support as part of a new patchset and just
-drop earlyprintk here for now.
+> > no, it is for this patch. I did a specific commit message for the second
+> > patch. IIRC, it also has the example if it was the meaning of your
+> > question.
 
-> 64 hash table entries sounds extremely small, doesn't that impact
-> performance? If you have 50MB of actual RAM available, I don't think
-> you need that.
+> Is it usual that an rtc can wake up a machine from shutdown state? I
+> thought it isn't.
 
-Agreed. I copied that from EFM32 which is under much more memory
-pressure...
+It's fairly normal when the RTC is integrated into the PMIC - the PMIC
+is typically the component initiating power on so it's easy for it to do
+so.
 
---
-Stefan
+--kTSzC5IcQVJlHX++
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUkLqnAAoJECTWi3JdVIfQ1e8H/iGD0sitYuaBmbcfm2OZm7dm
+/6Tv6YhCVbgnd6uuQLBMB5oMrwEwkiCxUe2FqBkZIta4tLdT+ydAiVecsqyGMZ0v
+cX6U/oj1mTcohyINSPUgku2b9vCY9XGrzZs6HGQRFOoXNOsWj6H86AwgVkqFkRK/
+5D+m7ZpGOtYzD0kGjoyF0Y1YYL9puqTJHzFDtlsIMV+4bdrbpyuDeGw186GXpJR5
+VQtI72ucgJ88pGFk8BozCrrbfrs15M1MArDikqE2TO99PMODTYFOnv/b24Wqvx9J
+p5M9wmUgwOWl52TpI+1JOE9qLLZ2EJNM9Ni1Tv9YUng9ATE5+7d1HOY9X8YSRCQ=
+=YQDo
+-----END PGP SIGNATURE-----
+
+--kTSzC5IcQVJlHX++--
