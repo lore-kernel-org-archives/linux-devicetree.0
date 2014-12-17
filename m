@@ -1,63 +1,68 @@
-From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Subject: [PATCH 4/5] PCI: designware: Add setup bus-related to pcie_host_ops
-Date: Wed, 17 Dec 2014 11:34:45 +0100
-Message-ID: <1418812486-12394-5-git-send-email-gabriel.fernandez@linaro.org>
-References: <1418812486-12394-1-git-send-email-gabriel.fernandez@linaro.org>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH RFC 09/15] drm: imx: Add MIPI DSI host controller driver
+Date: Wed, 17 Dec 2014 10:40:49 +0000
+Message-ID: <20141217104049.GU11285@n2100.arm.linux.org.uk>
+References: <1418200648-32656-1-git-send-email-Ying.Liu@freescale.com>
+ <1418200648-32656-10-git-send-email-Ying.Liu@freescale.com>
+ <20141210131640.GD23558@ulmo.nvidia.com>
+ <54915081.6020508@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1418812486-12394-1-git-send-email-gabriel.fernandez@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Bjorn Helgaas <bhelgaas@google.com>, Mohit Kumar <mohit.kumar@st.com>, Jingoo Han <jg1.han@samsung.com>, Grant Likely <grant.likely@linaro.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>, Fabrice Gasnier <fabrice.gasnier@st.com>, Arnd Bergmann <arnd@arndb.de>, Viresh Kumar <viresh.kumar@linaro.org>, Thierry Reding <treding@nvidia.com>, Minghuan Lian <Minghuan.Lian@freescale.com>, Magnus Damm <damm@opensource.se>, Will Deacon <will.deacon@arm.com>, Tanmay Inamdar <tinamdar@apm.com>, Murali Karicheri <m-karic>
-Cc: devicetree@vger.kernel.org, kernel@stlinux.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <54915081.6020508@freescale.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Liu Ying <Ying.Liu@freescale.com>
+Cc: devicetree@vger.kernel.org, mturquette@linaro.org, kernel@pengutronix.de, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-ST sti SoCs PCIe IPs are built around DesignWare IP Core.
-But in these SoCs PCIe IP doesn't support IO.
-
-To support this, add setup_bus() to pcie_host_ops.
-
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
----
- drivers/pci/host/pcie-designware.c | 3 +++
- drivers/pci/host/pcie-designware.h | 1 +
- 2 files changed, 4 insertions(+)
-
-diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-designware.c
-index df781cd..98e19bc 100644
---- a/drivers/pci/host/pcie-designware.c
-+++ b/drivers/pci/host/pcie-designware.c
-@@ -719,6 +719,9 @@ static int dw_pcie_setup(int nr, struct pci_sys_data *sys)
- 	pci_add_resource_offset(&sys->resources, &pp->mem, sys->mem_offset);
- 	pci_add_resource(&sys->resources, &pp->busn);
- 
-+	if (pp->ops->setup_bus)
-+		pp->ops->setup_bus(pp, sys);
-+
- 	return 1;
- }
- 
-diff --git a/drivers/pci/host/pcie-designware.h b/drivers/pci/host/pcie-designware.h
-index d0bbd27..5c13de7 100644
---- a/drivers/pci/host/pcie-designware.h
-+++ b/drivers/pci/host/pcie-designware.h
-@@ -73,6 +73,7 @@ struct pcie_host_ops {
- 	u32 (*get_msi_addr)(struct pcie_port *pp);
- 	u32 (*get_msi_data)(struct pcie_port *pp, int pos);
- 	void (*scan_bus)(struct pcie_port *pp);
-+	void (*setup_bus)(struct pcie_port *pp, struct pci_sys_data *sys);
- 	int (*msi_host_init)(struct pcie_port *pp, struct msi_controller *chip);
- };
- 
--- 
-1.9.1
+T24gV2VkLCBEZWMgMTcsIDIwMTQgYXQgMDU6NDQ6MzNQTSArMDgwMCwgTGl1IFlpbmcgd3JvdGU6
+Cj4gSGkgVGhpZXJyeSwKPiAKPiBTb3JyeSBmb3IgdGhlIGxhdGUgcmVzcG9uc2UuCj4gSSB0cmll
+ZCB0byBhZGRyZXNzIGFsbW9zdCBhbGwgeW91ciBjb21tZW50cyBsb2NhbGx5IGZpcnN0Lgo+IE1v
+cmUgZmVlZGJhY2sgYmVsb3cuCj4gCj4gT24gMTIvMTAvMjAxNCAwOToxNiBQTSwgVGhpZXJyeSBS
+ZWRpbmcgd3JvdGU6Cj4gPk9uIFdlZCwgRGVjIDEwLCAyMDE0IGF0IDA0OjM3OjIyUE0gKzA4MDAs
+IExpdSBZaW5nIHdyb3RlOgo+ID4+K3N0YXRpYyBpbnQgY2hlY2tfc3RhdHVzKHN0cnVjdCBpbXhf
+bWlwaV9kc2kgKmRzaSwgdTMyIHJlZywgdTMyIHN0YXR1cywKPiA+PisJCQlpbnQgdGltZW91dCwg
+Ym9vbCB0b19zZXQpCj4gPj4rewo+ID4+Kwl1MzIgdmFsOwo+ID4+Kwlib29sIG91dCA9IGZhbHNl
+Owo+ID4+Kwo+ID4+Kwl2YWwgPSBkc2lfcmVhZChkc2ksIHJlZyk7Cj4gPj4rCWZvciAoOzspIHsK
+PiA+PisJCW91dCA9IHRvX3NldCA/ICh2YWwgJiBzdGF0dXMpIDogISh2YWwgJiBzdGF0dXMpOwo+
+ID4+KwkJaWYgKG91dCkKPiA+PisJCQlicmVhazsKPiA+PisKPiA+PisJCWlmICghdGltZW91dC0t
+KQo+ID4+KwkJCXJldHVybiAtRUZBVUxUOwo+ID4+Kwo+ID4+KwkJbXNsZWVwKDEpOwo+ID4+KwkJ
+dmFsID0gZHNpX3JlYWQoZHNpLCByZWcpOwo+ID4+Kwl9Cj4gPj4rCXJldHVybiAwOwo+ID4+K30K
+PiA+Cj4gPllvdSBzaG91bGQgcHJvYmFibHkgdXNlIGEgcHJvcGVybHkgdGltZWQgbG9vcCBoZXJl
+LiBtc2xlZXAoKSBpc24ndAo+ID5ndWFyYW50ZWVkIHRvIHJldHVybiBhZnRlciBleGFjdGx5IG9u
+ZSBtaWxsaXNlY29uZCwgc28geW91ciB0aW1lb3V0IGlzCj4gPm5ldmVyIGdvaW5nIHRvIGJlIGFj
+Y3VyYXRlLiBTb21ldGhpbmcgbGlrZSB0aGUgZm9sbG93aW5nIHdvdWxkIGJlIGJldHRlcgo+ID5p
+biBteSBvcGluaW9uOgo+ID4KPiA+CXRpbWVvdXQgPSBqaWZmaWVzICsgbXNlY3NfdG9famlmZmll
+cyh0aW1lb3V0KTsKPiA+Cj4gPgl3aGlsZSAodGltZV9iZWZvcmUoamlmZmllcywgdGltZW91dCkp
+IHsKPiA+CQkuLi4KPiA+CX0KPiA+Cj4gPkFsc28gdGltZW91dCBzaG91bGQgYmUgdW5zaWduZWQg
+bG9uZyBpbiB0aGF0IGNhc2UuCj4gCj4gQWNjZXB0ZWQuCgpBY3R1YWxseSwgdGhhdCdzIGEgYmFk
+IGV4YW1wbGU6IHdoYXQgd2Ugd2FudCB0byBkbyBpcyB0byBhc3Nlc3Mgc3VjY2VzcwphZnRlciB3
+ZSB3YWl0LCBiZWZvcmUgd2UgZGVjaWRlIHRoYXQgc29tZXRoaW5nIGhhcyBmYWlsZWQuICBJbiBv
+dGhlcgp3b3Jkcywgd2UgZG9uJ3Qgd2FudCB0byB3YWl0LCBhbmQgZGVjaWRlIHRoYXQgd2UgZmFp
+bGVkIHdpdGhvdXQgZmlyc3QKY2hlY2tpbmcgZm9yIHN1Y2Nlc3MuCgpJbiBhbnkgY2FzZSwgcmV0
+dXJuaW5nIC1FRkFVTFQgaXMgbm90IHNhbmU6IEVGQVVMVCBkb2Vzbid0IG1lYW4gImZhdWx0Igpp
+dCBtZWFucyAiQmFkIGFkZHJlc3MiLCBhbmQgaXQgaXMgcmV0dXJuZWQgdG8gdXNlcnNwYWNlIHRv
+IG1lYW4gdGhhdAp1c2Vyc3BhY2UgcGFzc2VkIHRoZSBrZXJuZWwgYSBiYWQgYWRkcmVzcy4gIFRo
+YXQgZGVmaW5pdGlvbiBkb2VzIC9ub3QvCmZpdCB3aGF0J3MgZ29pbmcgb24gaGVyZS4KCgl0aW1l
+b3V0ID0gamlmZmllcyArIG1zZWNzX3RvX2ppZmZpZXModGltZW91dCk7CgoJZG8gewoJCXZhbCA9
+IGRzaV9yZWFkKGRzaSwgcmVnKTsKCQlvdXQgPSB0b19zZXQgPyAodmFsICYgc3RhdHVzKSA6ICEo
+dmFsICYgc3RhdHVzKTsKCQlpZiAob3V0KQoJCQlicmVhazsKCgkJaWYgKHRpbWVfaXNfYWZ0ZXJf
+amlmZmllcyh0aW1lb3V0KSkKCQkJcmV0dXJuIC1FVElNRURPVVQ7CgoJCW1zbGVlcCgxKTsKCX0g
+d2hpbGUgKDEpOwoKCXJldHVybiAwOwoKd291bGQgYmUgYmV0dGVyOiB3ZSBvbmx5IGZhaWwgaW1t
+ZWRpYXRlbHkgYWZ0ZXIgd2UgaGF2ZSBjaGVja2VkIHdoZXRoZXIKd2Ugc3VjY2VlZGVkLCBhbmQg
+d2UgYWxzbyBkbyB0aGUgZmlyc3QgY2hlY2sgaW1tZWRpYXRlbHkuCgotLSAKRlRUQyBicm9hZGJh
+bmQgZm9yIDAuOG1pbGUgbGluZTogY3VycmVudGx5IGF0IDkuNU1icHMgZG93biA0MDBrYnBzIHVw
+CmFjY29yZGluZyB0byBzcGVlZHRlc3QubmV0LgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0
+cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2RyaS1kZXZlbAo=
