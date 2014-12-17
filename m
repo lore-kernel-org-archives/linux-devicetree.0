@@ -1,81 +1,54 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 2/2] ahci_xgene: Fix the dma state machine lockup for
- the ATA_CMD_PACKET PIO mode command.
-Date: Wed, 17 Dec 2014 20:32:01 +0300
-Message-ID: <5491BE11.4070500@cogentembedded.com>
-References: <1418748575-27301-1-git-send-email-stripathi@apm.com>	<1418748575-27301-3-git-send-email-stripathi@apm.com>	<54906CF0.9010908@cogentembedded.com> <CAOHikRCRHPnVAziU8jwD9gGFODyt_5DpL1dm7Eb8uGA-WOfxOw@mail.gmail.com>
+From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH resend v2] input: Add new sun4i-lradc-keys driver
+Date: Wed, 17 Dec 2014 09:32:11 -0800
+Message-ID: <1918972.jFlKNuYrbH@dtor-glaptop>
+References: <1418827411-13265-1-git-send-email-hdegoede@redhat.com> <1418827411-13265-2-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-scsi-owner@vger.kernel.org>
-In-Reply-To: <CAOHikRCRHPnVAziU8jwD9gGFODyt_5DpL1dm7Eb8uGA-WOfxOw@mail.gmail.com>
-Sender: linux-scsi-owner@vger.kernel.org
-To: Suman Tripathi <stripathi@apm.com>
-Cc: Olof Johansson <olof@lixom.net>, Tejun Heo <tj@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Linux SCSI List <linux-scsi@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Don Dutile <ddutile@redhat.com>, Jon Masters <jcm@redhat.com>, patches@apm.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDP6N55ZUYDRBHX4Y2SAKGQEKDRZBNI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1418827411-13265-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On Wednesday, December 17, 2014 03:43:31 PM Hans de Goede wrote:
+> +       /*
+> +        * lradc supports only one keypress at a time, release does not give
+> +        * any info as to which key was released, so we cache the keycode.
+> +        */
+> +       if ((ints & CHAN0_KEYDOWN_IRQ) && lradc->chan0_keycode == 0) {
+> +               val = readl(lradc->base + LRADC_DATA0) & 0x3f;
+> +               voltage = val * lradc->vref / 63;
+> +
+> +               for (i = 0; i < lradc->chan0_map_count; i++) {
+> +                       diff = abs(lradc->chan0_map[i].voltage - voltage);
+> +                       if (diff < closest) {
+> +                               closest = diff;
+> +                               keycode = lradc->chan0_map[i].keycode;
+> +                       }
+> +               }
+> +
+> +               lradc->chan0_keycode = keycode;
+> +               input_report_key(lradc->input, lradc->chan0_keycode, 1);
+> +       }
+> +
+> +       if (ints & CHAN0_KEYUP_IRQ) {
+> +               input_report_key(lradc->input, lradc->chan0_keycode, 0);
+> +               lradc->chan0_keycode = 0;
+> +       }
 
-On 12/17/2014 08:21 AM, Suman Tripathi wrote:
+Can release and press be reported simultaneously? Should we process release 
+first?
 
->     This patch addresses the issue with ATA_CMD_PACKET pio mode
->     command for enumeration and device detection with ATAPI devices.It is the
->     same issue as in patch
+Thanks.
 
-    Ugh, HTML... Please stick to plain text when posting to the 
-'vger.kernel.org' mailing lists (HTML mails are supposed to be ignored).
-
->     www.spinics.net/lists/linux-__ide/msg49092.html
->     <http://www.spinics.net/lists/linux-ide/msg49092.html>
->
->
->     Signed-off-by: Suman Tripathi <stripathi@apm.com <mailto:stripathi@apm.com>>
->     ---
->        drivers/ata/ahci_xgene.c | 12 +++++++-----
->        1 file changed, 7 insertions(+), 5 deletions(-)
->
->
->     diff --git a/drivers/ata/ahci_xgene.c b/drivers/ata/ahci_xgene.c
->     index 0ffd3c9..9730907 100644
->     --- a/drivers/ata/ahci_xgene.c
->     +++ b/drivers/ata/ahci_xgene.c
->     @@ -125,10 +125,11 @@ static int xgene_ahci_restart_engine(__struct
->     ata_port *ap)
->         * xgene_ahci_qc_issue - Issue commands to the device
->         * @qc: Command to issue
->         *
->     - * Due to Hardware errata for IDENTIFY DEVICE command, the controller cannot
->     - * clear the BSY bit after receiving the PIO setup FIS. This results in
->     the dma
->     - * state machine goes into the CMFatalErrorUpdate state and locks up. By
->     - * restarting the dma engine, it removes the controller out of lock up state.
->     + * Due to Hardware errata for IDENTIFY DEVICE command and COMMAND PACKET
->
->
->     Just PACKET.
->
->     + * command of ATAPI protocol set, the controller cannot clear the BSY bit
->     + * after receiving the PIO setup FIS. This results in the dma state machine
->
->
->     DMA.
->
->     + * goes into the CMFatalErrorUpdate state and locks up. By restarting the
-
->     s/goes/going/.
-
-> [suman] : Didn't understand this. Do you mean to change to going ?
-
-    It's a 'sed' command to replace "goes" by "going" IIRC. Yes. Also, 
-s/locks/locking/.
-
-> It is already goes there.
-
-> [...]
-
-> Thanks,
-> with regards,
-> suman
-
-MBR, Sergei
-
+-- 
+Dmitry
