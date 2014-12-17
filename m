@@ -1,48 +1,196 @@
-From: Y Vo <yvo-qTEPVZfXA3Y@public.gmane.org>
-Subject: [PATCH v2 RESEND 3/3] arm64:dts: Add APM X-Gene standby GPIO controller DTS entries
-Date: Wed, 17 Dec 2014 12:10:50 +0700
-Message-ID: <1418793050-26927-4-git-send-email-yvo@apm.com>
-References: <1418793050-26927-1-git-send-email-yvo@apm.com>
+From: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH V2] ARM: dts: imx6sx: add i.mx6sx sabreauto board support
+Date: Wed, 17 Dec 2014 12:22:09 +0800
+Message-ID: <1418790129-12879-1-git-send-email-b20788@freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1418793050-26927-1-git-send-email-yvo-qTEPVZfXA3Y@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Y Vo <yvo-qTEPVZfXA3Y@public.gmane.org>, Phong Vo <pvo-qTEPVZfXA3Y@public.gmane.org>, Toan Le <toanle-qTEPVZfXA3Y@public.gmane.org>, patches-qTEPVZfXA3Y@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add standby domain gpio controller for APM X-Gene SoC platform.
+Add basic i.MX6SoloX Sabre Auto board support, currently
+only debug UART and uSDHC are supported on this board.
 
-Signed-off-by: Y Vo <yvo-qTEPVZfXA3Y@public.gmane.org>
+Signed-off-by: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
- arch/arm64/boot/dts/apm-storm.dtsi | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+change since V1:
+	1. correct gpio regulator node;
+	2. using macro define for GPIO active value;
+	3. improve pintctrl name;
+	4. correct the sequence of dtb files in Makefile.
+ arch/arm/boot/dts/Makefile             |   1 +
+ arch/arm/boot/dts/imx6sx-sabreauto.dts | 146 +++++++++++++++++++++++++++++++++
+ 2 files changed, 147 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6sx-sabreauto.dts
 
-diff --git a/arch/arm64/boot/dts/apm-storm.dtsi b/arch/arm64/boot/dts/apm-storm.dtsi
-index 295c72d..e2454a2 100644
---- a/arch/arm64/boot/dts/apm-storm.dtsi
-+++ b/arch/arm64/boot/dts/apm-storm.dtsi
-@@ -587,6 +587,19 @@
- 			phy-names = "sata-phy";
- 		};
- 
-+		sbgpio: sbgpio@17001000{
-+			compatible = "apm,xgene-gpio-sb";
-+			reg = <0x0 0x17001000 0x0 0x400>;
-+			#gpio-cells = <2>;
-+			gpio-controller;
-+			interrupts = 	<0x0 0x28 0x1>,
-+					<0x0 0x29 0x1>,
-+					<0x0 0x2a 0x1>,
-+					<0x0 0x2b 0x1>,
-+					<0x0 0x2c 0x1>,
-+					<0x0 0x2d 0x1>;
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 4600499..efe6c73 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -250,6 +250,7 @@ dtb-$(CONFIG_ARCH_MXC) += \
+ 	imx6q-tx6q-1020-comtft.dtb \
+ 	imx6q-tx6q-1110.dtb \
+ 	imx6sl-evk.dtb \
++	imx6sx-sabreauto.dtb \
+ 	imx6sx-sdb.dtb \
+ 	ls1021a-qds.dtb \
+ 	ls1021a-twr.dtb \
+diff --git a/arch/arm/boot/dts/imx6sx-sabreauto.dts b/arch/arm/boot/dts/imx6sx-sabreauto.dts
+new file mode 100644
+index 0000000..e3c0b63
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6sx-sabreauto.dts
+@@ -0,0 +1,146 @@
++/*
++ * Copyright (C) 2014 Freescale Semiconductor, Inc.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++/dts-v1/;
++
++#include "imx6sx.dtsi"
++
++/ {
++	model = "Freescale i.MX6 SoloX Sabre Auto Board";
++	compatible = "fsl,imx6sx-sabreauto", "fsl,imx6sx";
++
++	memory {
++		reg = <0x80000000 0x80000000>;
++	};
++
++	regulators {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		vcc_sd3: regulator@0 {
++			compatible = "regulator-fixed";
++			reg = <0>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&pinctrl_vcc_sd3>;
++			regulator-name = "VCC_SD3";
++			regulator-min-microvolt = <3000000>;
++			regulator-max-microvolt = <3000000>;
++			gpio = <&gpio2 11 GPIO_ACTIVE_HIGH>;
++			enable-active-high;
++		};
++	};
++};
++
++&uart1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart1>;
++	status = "okay";
++};
++
++&usdhc3 {
++	pinctrl-names = "default", "state_100mhz", "state_200mhz";
++	pinctrl-0 = <&pinctrl_usdhc3>;
++	pinctrl-1 = <&pinctrl_usdhc3_100mhz>;
++	pinctrl-2 = <&pinctrl_usdhc3_200mhz>;
++	bus-width = <8>;
++	cd-gpios = <&gpio7 10 GPIO_ACTIVE_HIGH>;
++	wp-gpios = <&gpio3 19 GPIO_ACTIVE_HIGH>;
++	keep-power-in-suspend;
++	enable-sdio-wakeup;
++	vmmc-supply = <&vcc_sd3>;
++	status = "okay";
++};
++
++&usdhc4 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usdhc4>;
++	bus-width = <8>;
++	cd-gpios = <&gpio7 11 GPIO_ACTIVE_HIGH>;
++	no-1-8-v;
++	keep-power-in-suspend;
++	enable-sdio-wakup;
++	status = "okay";
++};
++
++&iomuxc {
++	imx6x-sabreauto {
++		pinctrl_uart1: uart1grp {
++			fsl,pins = <
++				MX6SX_PAD_GPIO1_IO04__UART1_TX		0x1b0b1
++				MX6SX_PAD_GPIO1_IO05__UART1_RX		0x1b0b1
++			>;
 +		};
 +
- 		rtc: rtc@10510000 {
- 			compatible = "apm,xgene-rtc";
- 			reg = <0x0 0x10510000 0x0 0x400>;
++		pinctrl_usdhc3: usdhc3grp {
++			fsl,pins = <
++				MX6SX_PAD_SD3_CMD__USDHC3_CMD		0x17059
++				MX6SX_PAD_SD3_CLK__USDHC3_CLK		0x10059
++				MX6SX_PAD_SD3_DATA0__USDHC3_DATA0	0x17059
++				MX6SX_PAD_SD3_DATA1__USDHC3_DATA1	0x17059
++				MX6SX_PAD_SD3_DATA2__USDHC3_DATA2	0x17059
++				MX6SX_PAD_SD3_DATA3__USDHC3_DATA3	0x17059
++				MX6SX_PAD_SD3_DATA4__USDHC3_DATA4	0x17059
++				MX6SX_PAD_SD3_DATA5__USDHC3_DATA5	0x17059
++				MX6SX_PAD_SD3_DATA6__USDHC3_DATA6	0x17059
++				MX6SX_PAD_SD3_DATA7__USDHC3_DATA7	0x17059
++				MX6SX_PAD_KEY_COL0__GPIO2_IO_10		0x17059 /* CD */
++				MX6SX_PAD_KEY_ROW0__GPIO2_IO_15		0x17059 /* WP */
++			>;
++		};
++
++		pinctrl_usdhc3_100mhz: usdhc3grp-100mhz {
++			fsl,pins = <
++				MX6SX_PAD_SD3_CMD__USDHC3_CMD		0x170b9
++				MX6SX_PAD_SD3_CLK__USDHC3_CLK		0x100b9
++				MX6SX_PAD_SD3_DATA0__USDHC3_DATA0	0x170b9
++				MX6SX_PAD_SD3_DATA1__USDHC3_DATA1	0x170b9
++				MX6SX_PAD_SD3_DATA2__USDHC3_DATA2	0x170b9
++				MX6SX_PAD_SD3_DATA3__USDHC3_DATA3	0x170b9
++				MX6SX_PAD_SD3_DATA4__USDHC3_DATA4	0x170b9
++				MX6SX_PAD_SD3_DATA5__USDHC3_DATA5	0x170b9
++				MX6SX_PAD_SD3_DATA6__USDHC3_DATA6	0x170b9
++				MX6SX_PAD_SD3_DATA7__USDHC3_DATA7	0x170b9
++			>;
++		};
++
++		pinctrl_usdhc3_200mhz: usdhc3grp-200mhz {
++			fsl,pins = <
++				MX6SX_PAD_SD3_CMD__USDHC3_CMD		0x170f9
++				MX6SX_PAD_SD3_CLK__USDHC3_CLK		0x100f9
++				MX6SX_PAD_SD3_DATA0__USDHC3_DATA0	0x170f9
++				MX6SX_PAD_SD3_DATA1__USDHC3_DATA1	0x170f9
++				MX6SX_PAD_SD3_DATA2__USDHC3_DATA2	0x170f9
++				MX6SX_PAD_SD3_DATA3__USDHC3_DATA3	0x170f9
++				MX6SX_PAD_SD3_DATA4__USDHC3_DATA4	0x170f9
++				MX6SX_PAD_SD3_DATA5__USDHC3_DATA5	0x170f9
++				MX6SX_PAD_SD3_DATA6__USDHC3_DATA6	0x170f9
++				MX6SX_PAD_SD3_DATA7__USDHC3_DATA7	0x170f9
++			>;
++		};
++
++		pinctrl_usdhc4: usdhc4grp {
++			fsl,pins = <
++				MX6SX_PAD_SD4_CMD__USDHC4_CMD		0x17059
++				MX6SX_PAD_SD4_CLK__USDHC4_CLK		0x10059
++				MX6SX_PAD_SD4_DATA0__USDHC4_DATA0	0x17059
++				MX6SX_PAD_SD4_DATA1__USDHC4_DATA1	0x17059
++				MX6SX_PAD_SD4_DATA2__USDHC4_DATA2	0x17059
++				MX6SX_PAD_SD4_DATA3__USDHC4_DATA3	0x17059
++				MX6SX_PAD_SD4_DATA7__GPIO6_IO_21	0x17059 /* CD */
++				MX6SX_PAD_SD4_DATA6__GPIO6_IO_20	0x17059 /* WP */
++			>;
++		};
++
++		pinctrl_vcc_sd3: vccsd3grp {
++			fsl,pins = <
++				MX6SX_PAD_KEY_COL1__GPIO2_IO_11		0x17059
++			>;
++		};
++	};
++};
 -- 
-2.2.0
+1.9.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
