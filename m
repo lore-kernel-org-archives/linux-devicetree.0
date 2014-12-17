@@ -1,64 +1,61 @@
-From: Pavel Machek <pavel@denx.de>
-Subject: Re: [PATCH v5 6/6] ARM: socfpga: defconfig: enable fpga manager
-Date: Wed, 17 Dec 2014 23:00:46 +0100
-Message-ID: <20141217220045.GA30578@amd>
-References: <1418835289-15752-1-git-send-email-atull@opensource.altera.com>
- <1418835289-15752-7-git-send-email-atull@opensource.altera.com>
- <20141217173216.GA24913@kroah.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 2/5] PCI: st: Add Device Tree bindings for sti pcie
+Date: Wed, 17 Dec 2014 23:01:27 +0100
+Message-ID: <2165161.8vJctS1yVa@wuerfel>
+References: <1418812486-12394-1-git-send-email-gabriel.fernandez@linaro.org> <1418812486-12394-3-git-send-email-gabriel.fernandez@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <20141217173216.GA24913@kroah.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: mark.rutland@arm.com, linux-doc@vger.kernel.org, rubini@gnudd.com, pantelis.antoniou@konsulko.com, hpa@zytor.com, s.trumtrar@pengutronix.de, devel@driverdev.osuosl.org, sameo@linux.intel.com, nico@linaro.org, ijc+devicetree@hellion.org.uk, michal.simek@xilinx.com, kyle.teske@ni.com, jgunthorpe@obsidianresearch.com, grant.likely@linaro.org, davidb@codeaurora.org, linus.walleij@linaro.org, cesarb@cesarb.net, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, iws@ovro.caltech.edu, atull@opensource.altera.com, broonie@kernel.org, philip@balister.org, dinguyen@opensource.altera.com, monstr@monstr.eu, yvanderv@opensource.altera.com, linux-kernel@vger.kernel.org, balbi@ti.com, delicious.quinoa@gmail.com, robh+dt@kernel.org, rob@landley.net, galak@codeaurora.org, akpm@linux-foundation.org, davem@davemloft.net, m.chehab@samsung.com
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1418812486-12394-3-git-send-email-gabriel.fernandez@linaro.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Bjorn Helgaas <bhelgaas@google.com>, Mohit Kumar <mohit.kumar@st.com>, Jingoo Han <jg1.han@samsung.com>, Grant Likely <grant.likely@linaro.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>, Fabrice Gasnier <fabrice.gasnier@st.com>, Viresh Kumar <viresh.kumar@linaro.org>, Thierry Reding <treding@nvidia.com>, Minghuan Lian <Minghuan.Lian@freescale.com>, Magnus Damm <damm@opensource.se>, Will Deacon <will.deacon@arm.com>, Tanmay Inamdar <tinamdar@apm.com>, Murali Karicheri <m-karicheri2@ti.com>, Kishon
 List-Id: devicetree@vger.kernel.org
 
-On Wed 2014-12-17 09:32:16, Greg KH wrote:
-> On Wed, Dec 17, 2014 at 10:54:49AM -0600, atull@opensource.altera.com wrote:
-> > From: Alan Tull <atull@opensource.altera.com>
-> > 
-> > Enable FPGA manager for Altera socfpga.
-> > 
-> > Signed-off-by: Alan Tull <atull@opensource.altera.com>
-> > ---
-> > v5: s/CONFIG_FPGA_MGR_ALTERA/CONFIG_FPGA_MGR_SOCFPGA/
-> > ---
-> >  arch/arm/configs/socfpga_defconfig |    4 ++++
-> >  1 file changed, 4 insertions(+)
-> > 
-> > diff --git a/arch/arm/configs/socfpga_defconfig b/arch/arm/configs/socfpga_defconfig
-> > index a2956c3..f1d6a3b 100644
-> > --- a/arch/arm/configs/socfpga_defconfig
-> > +++ b/arch/arm/configs/socfpga_defconfig
-> > @@ -86,6 +86,10 @@ CONFIG_USB_DWC2=y
-> >  CONFIG_USB_DWC2_HOST=y
-> >  CONFIG_MMC=y
-> >  CONFIG_MMC_DW=y
-> > +CONFIG_STAGING=y
-> > +CONFIG_FPGA=y
-> > +CONFIG_FPGA_MGR_SYSFS=y
-> > +CONFIG_FPGA_MGR_SOCFPGA=y
-> >  CONFIG_EXT2_FS=y
-> >  CONFIG_EXT2_FS_XATTR=y
-> >  CONFIG_EXT2_FS_POSIX_ACL=y
+On Wednesday 17 December 2014 11:34:43 Gabriel FERNANDEZ wrote:
+> sti pcie is built around a Synopsis Designware PCIe IP.
 > 
-> Do defconfigs really matter anymore?
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/pci/st-pcie.txt | 53 +++++++++++++++++++++++
+>  1 file changed, 53 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/st-pcie.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/st-pcie.txt b/Documentation/devicetree/bindings/pci/st-pcie.txt
+> new file mode 100644
+> index 0000000..bd3488f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/st-pcie.txt
+> @@ -0,0 +1,53 @@
+> +STMicroelectronics STi PCIe controller
+> +
+> +This PCIe host controller is based on the Synopsis Designware PCIe IP
+> +and thus inherits all the common properties defined in designware-pcie.txt.
+> +
+> +Required properties:
+> + - compatible: "st,stih407-pcie"
+> + - reg: base address and length of the pcie controller, mem-window address
+> +   and length available to the controller.
+> + - interrupts: A list of interrupt outputs of the controller.
+> + - interrupt-names: Must include the following entries:
+> +   "msi": STi interrupt that is asserted when an MSI is received
 
-For embedded, yes they do. It should not be that way, but figuring out
-useful configuration can take hours...
-									Pavel
+You should specify that only one interrupt may be present.
+If you extend the binding, you will need to describe what the
+second one is as well.
 
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+> + - st,syscfg : should be a phandle of the syscfg node. Also contains syscfg
+> +   offset for IP configuration.
+> + - resets, reset-names: the power-down and soft-reset lines of PCIe IP.
+> +   Associated names must be "powerdown" and "softreset".
+> + - phys, phy-names: the phandle for the PHY device.
+> +   Associated name must be "pcie_phy"
+
+Names should not have underscores in them in general. "pcie-phy" would
+be fine, but just "pcie" seems good enough, unless there are existing
+drivers that have established a specific naming.
+
+
+	Arnd
