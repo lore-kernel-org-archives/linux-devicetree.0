@@ -1,12 +1,12 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v2 07/13] mfd: sun6i-prcm: Add support for the ir-clk
-Date: Wed, 17 Dec 2014 18:18:18 +0100
-Message-ID: <1418836704-15689-8-git-send-email-hdegoede@redhat.com>
+Subject: [PATCH v2 08/13] ARM: dts: sun6i: Add ir_clk node
+Date: Wed, 17 Dec 2014 18:18:19 +0100
+Message-ID: <1418836704-15689-9-git-send-email-hdegoede@redhat.com>
 References: <1418836704-15689-1-git-send-email-hdegoede@redhat.com>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORB57VY2SAKGQEMWCMOKI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDRZXY4CYYORB6XVY2SAKGQEAAUGDBQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <1418836704-15689-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,44 +19,34 @@ To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxim
 Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for the ir-clk which is part of the sun6i SoC prcm module.
+Add an ir_clk sub-node to the prcm node.
 
 Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 ---
- drivers/mfd/sun6i-prcm.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+Changes in v2:
+-Use allwinner,sun4i-a10-mod0-clk as compatible, rather then a prcm specific
+ compatible
+---
+ arch/arm/boot/dts/sun6i-a31.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/mfd/sun6i-prcm.c b/drivers/mfd/sun6i-prcm.c
-index 2f2e9f0..1911731 100644
---- a/drivers/mfd/sun6i-prcm.c
-+++ b/drivers/mfd/sun6i-prcm.c
-@@ -41,6 +41,14 @@ static const struct resource sun6i_a31_apb0_gates_clk_res[] = {
- 	},
- };
+diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
+index f47156b..1c1d255 100644
+--- a/arch/arm/boot/dts/sun6i-a31.dtsi
++++ b/arch/arm/boot/dts/sun6i-a31.dtsi
+@@ -878,6 +878,13 @@
+ 						"apb0_i2c";
+ 			};
  
-+static const struct resource sun6i_a31_ir_clk_res[] = {
-+	{
-+		.start = 0x54,
-+		.end = 0x57,
-+		.flags = IORESOURCE_MEM,
-+	},
-+};
++			ir_clk: ir_clk {
++				#clock-cells = <0>;
++				compatible = "allwinner,sun4i-a10-mod0-clk";
++				clocks = <&osc32k>, <&osc24M>;
++				clock-output-names = "ir";
++			};
 +
- static const struct resource sun6i_a31_apb0_rstc_res[] = {
- 	{
- 		.start = 0xb0,
-@@ -69,6 +77,12 @@ static const struct mfd_cell sun6i_a31_prcm_subdevs[] = {
- 		.resources = sun6i_a31_apb0_gates_clk_res,
- 	},
- 	{
-+		.name = "sun6i-a31-ir-clk",
-+		.of_compatible = "allwinner,sun4i-a10-mod0-clk",
-+		.num_resources = ARRAY_SIZE(sun6i_a31_ir_clk_res),
-+		.resources = sun6i_a31_ir_clk_res,
-+	},
-+	{
- 		.name = "sun6i-a31-apb0-clock-reset",
- 		.of_compatible = "allwinner,sun6i-a31-clock-reset",
- 		.num_resources = ARRAY_SIZE(sun6i_a31_apb0_rstc_res),
+ 			apb0_rst: apb0_rst {
+ 				compatible = "allwinner,sun6i-a31-clock-reset";
+ 				#reset-cells = <1>;
 -- 
 2.1.0
