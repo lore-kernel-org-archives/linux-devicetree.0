@@ -1,69 +1,92 @@
-From: Ley Foon Tan <lftan-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH (resend)] mailbox: Add Altera mailbox driver
-Date: Wed, 17 Dec 2014 10:30:41 +0800
-Message-ID: <CAFiDJ58etaJxO3csGzeTYq3j0a4=e-eu4MpTn3Xd8BtJmzssNA@mail.gmail.com>
-References: <1418378690-3466-1-git-send-email-lftan@altera.com>
-	<548AFDE9.6000909@gmail.com>
-	<548F4A99.7040409@ti.com>
-	<CAFiDJ5-b9qsLKj8Qh2+yx8_Y1nv5CG1PHyn2Se0zzZLSHWTKNg@mail.gmail.com>
-	<54908DAC.3090009@ti.com>
+From: Alexandre Courbot <gnurou@gmail.com>
+Subject: Re: [PATCH v5 1/3] gpio: Cygnus: define Broadcom Cygnus GPIO binding
+Date: Wed, 17 Dec 2014 11:45:01 +0900
+Message-ID: <CAAVeFuJhiten-eVLCa2sMG-nsRwjPMiZap8UJM1kNCuRyK-b1w@mail.gmail.com>
+References: <1418342706-14755-2-git-send-email-rjui@broadcom.com>
+ <1918116.UxUgDPTmcq@wuerfel> <CAAVeFuL2MKRA7YLm_wsyftNy-sxgEYPrmqBm8XTRZQb66YF-qw@mail.gmail.com>
+ <1628217.66frkAqHMc@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54908DAC.3090009-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Cc: Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1628217.66frkAqHMc@wuerfel>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Ray Jui <rjui@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Joe Perches <joe@perches.com>, Scott Branden <sbranden@broadcom.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, bcm-kernel-feedback-list@broadcom.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 17, 2014 at 3:53 AM, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org> wrote:
-
->>> I think this logic in general will conflict between interrupt and poll
->>> mode. send_data is supposed to return -EBUSY only in polling mode and
->>> not in interrupt mode.
->> What is the recommended error code for this case? BTW, omap-mailbox.c
->> also return -EBUSY if mailbox is full.
+On Sat, Dec 13, 2014 at 12:28 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Friday 12 December 2014 22:05:37 Alexandre Courbot wrote:
+>> On Fri, Dec 12, 2014 at 9:08 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+>> > On Thursday 11 December 2014 16:05:04 Ray Jui wrote:
+>> >> +
+>> >> +- linux,gpio-base:
+>> >> +    Base GPIO number of this controller
+>> >> +
+>> >>
+>> >
+>> > We've NAK'ed properties like this multiple times before, and it
+>> > doesn't get any better this time. What are you trying to achieve
+>> > here?
+>>
+>> I am to blame for suggesting using this property to Ray, and I am
+>> fully aware that this has been rejected before, but look at what
+>> people came with recently to palliate the lack of control over the
+>> GPIO number space for DT platforms:
+>>
+>> http://www.spinics.net/lists/arm-kernel/msg384847.html
+>> https://lkml.org/lkml/2014/12/10/133
+>>
+>> Right now GPIO numbering for platforms using DT is a very inconsistent
+>> process, subject to change by the simple action of adjusting the value
+>> of ARCH_NR_GPIOS (which we did recently, btw), adding a new GPIO
+>> controller, or changing the probe order of devices. For users of the
+>> integer or sysfs interfaces, this results in GPIO numbers that change,
+>> and drivers and/or user-space programs that behave incorrectly.
+>> Ironically, the only way to have consistent numbers is to use the old
+>> platform files, where you can specify the base number of a gpio_chip.
+>>
+>> DT is actually probably not such a bad place to provide consistency in
+>> GPIO numbering. It has a global vision of the system layout, including
+>> all GPIO controllers and the number of GPIOs they include, and thus
+>> can make informed decisions. It provides a consistent result
+>> regardless of probe order. And allowing it to assign GPIO bases to
+>> controllers will free us from the nonsensical dependency of some
+>> arbitrary upper-bound for GPIO numbers that ARCH_NR_GPIOS imposes on
+>> us. Also about ARCH_NR_GPIOS, the plan is to eventually remove it
+>> since we don't need it anymore after the removal of the global
+>> gpio_descs array. This will again interfere with the numbering of GPIO
+>> chips that do not have a base number provided.
+>>
+>> Note that I don't really like this, either - but the problem is the
+>> GPIO integer interface. Until everyone has upgraded to gpiod and we
+>> have a replacement for the current sysfs interface (this will take a
+>> while) we have to cope with this. This issue has been bothering users
+>> for years, so this time I'd like to try and solve it the less ugly
+>> way. If there is a better solution, of course I'm all for it.
 >
-> Looks like the mbox core doesn't care about the error, it's just
-> checking for non-success case. I made that comment based on the
-> documentation in last_tx_done. OMAP mailbox is always interrupt driven,
-> and it is very rare that we will ever hit the mbox full because of the
-> Tx-ready interrupt driven Tx ticker and also the h/w fifo.
+> I think the scheme will fail if you ever get gpio controllers that are
+> not part of the DT: We have hotpluggable devices (PCI, USB, ...) that
+> are not represented in DT and that may also provide GPIOs for internal
+> uses.
 >
-> I see that your mailbox is very similar to OMAP mailbox though without
-> the h/w fifo, but you do have support for both polling and interrupt
-> modes in your code. OMAP mailbox can do that as well, but it's
-> inefficient to use polling so the driver is strictly interrupt driven.
-Yes, you are right. So, I think -EBUSY still can use it in interrupt case.
+> The current state of affairs is definitely problematic, but defining
+> the GPIO numbers in DT properties would only be a relative improvement,
+> not a solution, and I fear it would make it harder to change the kernel
+> to remove the gpio numbers eventually.
 
+You are absolutely right that this would be only a partial solution.
+However this is a situation where there is no absolute fix (besides
+dropping the GPIO numbers completely) and the relief this property
+would brings makes it up for its shortcomings IMHO.
 
+> I wonder if we could instead come up with an approach that completely
+> randomizes the gpio numbers (as a compile-time option) to find any
+> places that still rely on specific numbers.
 
->>>>> +
->>>>> +    mbox->mbox_base = devm_ioremap_resource(&pdev->dev, regs);
->>>>> +    if (IS_ERR(mbox->mbox_base))
->>>>> +            return PTR_ERR(mbox->mbox_base);
->>>>> +
->>>>> +    /* Check is it a sender or receiver? */
->>>>> +    mbox->is_sender = altera_mbox_is_sender(mbox);
->>>>> +
->>>>> +    mbox->irq = platform_get_irq(pdev, 0);
->>>>> +    if (mbox->irq >= 0)
->>>>> +            mbox->intr_mode = true;
->>>
->>> This seems to be a poor way of setting up the mode. Is it the same IP
->>> block but different integration on different SoCs? Or on the same SoC,
->>> and you can use it either by interrupt driven or by polling.
->> Yes, it can use interrupt or polling mode depends on hardware configurations.
->> It is a soft IP and can be configured with different hardware configurations.
->
-> OK, the platform_get_irq suggests that this decision is made by having
-> or not having the interrupts property in the DT node, is that the only
-> way of differentiating this mode?
-Yes, we don't have other DTS property to identify the interrupt mode.
+A.k.a. Linus and Alex' hate mail generator. :P
 
-Regards
-Ley Foon
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Actually we are not that far from being able to do completely without
+any GPIO number, and maybe that's what we should aim for. I think the
+only remaining offender is the sysfs interface. If we could reach GPIO
+controllers through a fixed path and just export their GPIOs there, I
+believe we would have fixed the whole issue.
