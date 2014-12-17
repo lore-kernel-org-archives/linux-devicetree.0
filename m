@@ -1,42 +1,26 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2] mtd: fsl_upm: Support NAND ECC DTS properties
-Date: Tue, 16 Dec 2014 16:35:06 -0800
-Message-ID: <20141217003506.GK9759@ld-irv-0074>
-References: <71973089.5152.1415472776826.JavaMail.zimbra@xes-inc.com>
- <1854666513.5578.1415473916534.JavaMail.zimbra@xes-inc.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1854666513.5578.1415473916534.JavaMail.zimbra-AQeFf1F/bRxBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Aaron Sierra <asierra-AQeFf1F/bRxBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Jordan Friendshuh <jfriendshuh-AQeFf1F/bRxBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+From: YoungJun Cho <yj44.cho@samsung.com>
+Subject: [RESEND PATCH 0/2] ARM: dts: add display device nodes for Exynos4415
+Date: Wed, 17 Dec 2014 09:39:40 +0900
+Message-ID: <1418776782-6691-1-git-send-email-yj44.cho@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org
+Cc: devicetree@vger.kernel.org, kgene.kim@samsung.com, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, galak@codeaurora.org, kyungmin.park@samsung.com, inki.dae@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Aaron,
+This patch series adds display device nodes for Exynos4415 SoC support.
+The drm/exynos part of original patchset[1] was merged but DTS part is not yet.
 
-On Sat, Nov 08, 2014 at 01:11:56PM -0600, Aaron Sierra wrote:
-> From: Jordan Friendshuh <jfriendshuh-AQeFf1F/bRxBDgjK7y7TUQ@public.gmane.org>
-> 
-> Support the generic nand-ecc-mode and nand-ecc-strength device-tree
-> properties with the Freescale UPM NAND driver.
-> 
-> This patch preserves the default software ECC mode while adding the
-> ability to use BCH ECC for larger NAND devices.
-> 
-> Signed-off-by: Jordan Friendshuh <jfriendshuh-AQeFf1F/bRxBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Aaron Sierra <asierra-AQeFf1F/bRxBDgjK7y7TUQ@public.gmane.org>
-> ---
-> v2:
->     * Now using ECC mode and strength helpers from of_mtd.h
->     * ECC mode and strength checking is more robust
+This is based on for-next branch in linux-samsung git.
 
-Should I be expecting an update? Ezequiel made a few comments, and I'm
-not sure if you were planning any action based on them.
+[1] http://www.spinics.net/lists/linux-samsung-soc/msg38649.html
 
-Brian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+YoungJun Cho (2):
+  ARM: dts: add fimd device node to exynos4415.dtsi
+  ARM: dts: add mipi dsi device node to exynos4415.dtsi
+
+ arch/arm/boot/dts/exynos4415.dtsi | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+
+-- 
+1.9.0
