@@ -1,51 +1,61 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH V8 00/14] drm/exynos: few patches to enhance bridge chip
- support
-Date: Wed, 17 Dec 2014 13:29:05 +0200
-Message-ID: <1865286.bzxN3oUcXS@avalon>
-References: <1416045309-13359-1-git-send-email-ajaykumar.rs@samsung.com>
- <3197445.qizQc0zeRb@avalon> <54914D7D.9060108@collabora.co.uk>
+From: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
+Subject: SPDX for kernel (was Re: [PATCH v4 5/6] staging: fpga manager:
+ framework core)
+Date: Wed, 17 Dec 2014 12:54:29 +0100
+Message-ID: <20141217115429.GA21214@amd>
+References: <1418156090-23578-1-git-send-email-atull@opensource.altera.com>
+ <1418156090-23578-6-git-send-email-atull@opensource.altera.com>
+ <049ad99df824432caa190566141d1525@BN1BFFO11FD005.protection.gbl>
+ <alpine.DEB.2.02.1412121026480.27443@linuxheads99>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <54914D7D.9060108@collabora.co.uk>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Sean Paul <seanpaul@google.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, dri-devel@lists.freedesktop.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Ajay kumar <ajaynumb@gmail.com>, Kukjin Kim <kgene.kim@samsung.com>, Pannaga Bhushan Reddy Patel <bhushan.r@samsung.com>, Prashanth G <prashanth.g@samsung.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.02.1412121026480.27443@linuxheads99>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: atull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org, hpa-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org, monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, iws-lulEs6mt1IksTUYHLfqkUA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, philip-6RQC9ztksjxg9hUCZPvPmw@public.gmane.org, rubini-kaDoWcXyVrEAvxtiuMwx3w@public.gmane.org, s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, kyle.teske-acOepvfBmUk@public.gmane.org, nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, cesarb-PWySMVKUnqmsTnJN9+BGXg@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgSmF2aWVyLAoKT24gV2VkbmVzZGF5IDE3IERlY2VtYmVyIDIwMTQgMTA6MzE6NDEgSmF2aWVy
-IE1hcnRpbmV6IENhbmlsbGFzIHdyb3RlOgo+IE9uIDEyLzE2LzIwMTQgMTI6MzcgQU0sIExhdXJl
-bnQgUGluY2hhcnQgd3JvdGU6Cj4gPiBIaSBKYXZpZXIsCj4gPiAKPiA+PiBUb21pIGFuZCBMYXVy
-ZW50LAo+ID4+IAo+ID4+IFlvdSBhc2tlZCBBamF5IHRvIGNoYW5nZSBoaXMgc2VyaWVzIHRvIHVz
-ZSB0aGUgdmlkZW8gcG9ydCBhbmQgZW5wb2ludHMgRFQKPiA+PiBiaW5kaW5ncyBpbnN0ZWFkIG9m
-IHBoYW5kbGVzLCBjb3VsZCB5b3UgcGxlYXNlIHJldmlldyBoaXMgbGF0ZXN0IHZlcnNpb24/Cj4g
-Pj4gCj4gPj4gSSBndWVzcyBpcyBub3cgdG9vIGxhdGUgZm9yIDMuMTkgc2luY2Ugd2UgYXJlIGlu
-IHRoZSBtaWRkbGUgb2YgdGhlIG1lcmdlCj4gPj4gd2luZG93IGJ1dCBpdCB3b3VsZCBiZSBncmVh
-dCBpZiB0aGlzIHNlcmllcyBjYW4gYXQgbGVhc3QgbWFkZSBpdCB0byAzLjIwLgo+ID4gCj4gPiBJ
-IGRvbid0IGhhdmUgdGltZSB0byByZXZpZXcgdGhlIHNlcmllcyBpbiBkZXRhaWxzIHJpZ2h0IG5v
-dywgYnV0IEknbSBoYXBweQo+ID4gd2l0aCB0aGUgRFQgYmluZGluZ3MsIGFuZCBoYXZlIG5vIGJp
-ZyBpc3N1ZSB3aXRoIHRoZSByZXN0IG9mIHRoZSBwYXRjaGVzLgo+ID4gSQo+ID4gZG9uJ3QgcmVh
-bGx5IGxpa2UgdGhlIG9mX2RybV9maW5kX2JyaWRnZSgpIGNvbmNlcHQgaW50cm9kdWNlZCBpbiAw
-My8xNCBidXQKPiA+IEkgd29uJ3QgbmFjayBpdCBnaXZlbiBsYWNrIG9mIHRpbWUgdG8gaW1wbGVt
-ZW50IGFuIGFsdGVybmF0aXZlIHByb3Bvc2FsLgo+ID4gSXQncyBhbiBpbnRlcm5hbCBBUEksIGl0
-IGNhbiBhbHdheXMgYmUgcmV3b3JrZWQgbGF0ZXIgYW55d2F5Lgo+IAo+IFRoYW5rcyBhIGxvdCBm
-b3IgdGFraW5nIHRoZSB0aW1lIHRvIGxvb2sgYXQgdGhlIERUIGJpbmRpbmdzLAoKWW91J3JlIHdl
-bGNvbWUuIFNvcnJ5IGZvciB0aGUgbG9uZyBkZWxheS4KCj4gdGhlbiBJIGd1ZXNzIHRoYXQgdGhl
-IHNlcmllcyBhcmUgZmluYWxseSByZWFkeSB0byBiZSBtZXJnZWQ/CgpGcm9tIG15IHBvaW50IG9m
-IHZpZXcsIHllcy4KCj4gQWpheSdzIHNlcmllcyBkb24ndCBhcHBseSBjbGVhbmx5IGFueW1vcmUg
-YmVjYXVzZSBpdCBoYXMgYmVlbiBhIHdoaWxlIHNpbmNlCj4gaGUgcG9zdGVkIGl0IGJ1dCBoZSBj
-YW4gcmViYXNlIG9uIHRvcCBvZiAzLjE5LXJjMSBvbmNlIGl0IGlzIHJlbGVhc2VkIGFuZAo+IHJl
-LXJlc2VuZC4KCi0tIApSZWdhcmRzLAoKTGF1cmVudCBQaW5jaGFydAoKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
-cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5v
-cmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Hi!
+
+> > > @@ -0,0 +1,485 @@
+> > > +/*
+> > > + * FPGA Manager Core
+> > > + *
+> > > + *  Copyright (C) 2013-2014 Altera Corporation
+> > > + *
+> > > + * With code from the mailing list:
+> > > + * Copyright (C) 2013 Xilinx, Inc.
+> > > + *
+> > > + * This program is free software; you can redistribute it and/or modify it
+> > > + * under the terms and conditions of the GNU General Public License,
+> > > + * version 2, as published by the Free Software Foundation.
+> > > + *
+> > > + * This program is distributed in the hope it will be useful, but WITHOUT
+> > > + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+> > > + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+> > > + * more details.
+> > > + *
+> > > + * You should have received a copy of the GNU General Public License along with
+> > > + * this program.  If not, see <http://www.gnu.org/licenses/>.
+> > > + */
+> > 
+> > Greg, Grant: What about to use just SPDX?
+> > 
+> > SPDX-License-Identifier:     GPL-2.0
+> 
+> This is a standared GPLv2 header, we're keeping it.  Our legal dept
+> wants it.
+
+This has nothing to do with Altera here, but... SPDX works great for
+u-boot and yes, I believe it would be good idea to kernel as well.
+
+									Pavel
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
