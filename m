@@ -1,76 +1,45 @@
-From: Lina Iyer <lina.iyer@linaro.org>
-Subject: Re: [PATCH v14 03/10] qcom: spm: Add Subsystem Power Manager driver
-Date: Wed, 17 Dec 2014 08:22:35 -0700
-Message-ID: <20141217152235.GA1437@linaro.org>
-References: <1417541958-56907-1-git-send-email-lina.iyer@linaro.org>
- <2519415.GklIQeMgWR@wuerfel>
- <54903DC6.8010308@linaro.org>
- <2663853.2Q3kHisMT7@wuerfel>
- <5490857A.1000808@codeaurora.org>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 1/3] usb: host: f_usb20ho: add support for Fujitsu ehci/ohci USB 2.0 host controller
+Date: Wed, 17 Dec 2014 16:44:29 +0100
+Message-ID: <2084132.xT3x4RUEre@wuerfel>
+References: <1418695828-605-1-git-send-email-Sneeker.Yeh@tw.fujitsu.com> <94603263.7VVvg5Qn7O@wuerfel> <830AC58E49A426478AC39824BC0FA915D8BB402BB7@fmpitwmsex01.fmpi.sea.css.fujitsu.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5490857A.1000808@codeaurora.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, khilman@linaro.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <830AC58E49A426478AC39824BC0FA915D8BB402BB7-BxlyW7DJwtfE0yrG4eIIn8GT06e9YD5CS4/B3AGzWvkvtab9mdV7tw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Sneeker. Yeh" <Sneeker.Yeh-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>
+Cc: Sneeker Yeh <sneeker.yeh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Thomas Pugliese <thomas.pugliese-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Mosberger <davidm-haPfTeumbwasTnJN9+BGXg@public.gmane.org>, Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 16 2014 at 12:18 -0700, Stephen Boyd wrote:
->On 12/16/2014 06:38 AM, Arnd Bergmann wrote:
->> On Tuesday 16 December 2014 15:12:22 Daniel Lezcano wrote:
->>> At the beginning, all that become from not including mach files from the
->>> drivers directory which make sense.
->>>
->>> Perhaps it is time to write a similar mechanism for the cpuidle drivers
->>> where we can still separate the low level PM code from the generic
->>> cpuidle code.
->> That way you basically duplicate the same thing we already have, which
->> isn't much better.
->>
->> In the example of drivers/soc/qcom/spm.c, just call cpuidle_register
->> from the spm_dev_probe() function and be done with it. You already
->> have a device that is responsible for handling this, don't try to
->> construct more than you already need.
->>
->> I would assume that the same can be done for most other platforms.
->>
->> There are probably cases where the same piece of hardware is responsible
->> for both cpuidle and cpufreq, but what that means is really that you
->> should have a single driver for it that does both things. Same for
->> SMP support: if you have one register block that does both the SMP
->> bringup and the cpuidle stuff, then have *one* driver for this block
->> that does it all. There are currently a few dependencies that require
->> doing SMP bringup early during boot, but we decided years ago that those
->> are all artificial dependencies and we should be able to boot secondary
->> CPUs much later than we currently do.
->>
->
->+1. The SPM harware is used for hotplug, suspend, cpuidle, as well as
->provides a regulator for a CPU, so all these things should be done in a
->single driver. Booting secondary CPUs early is not hard here either if
->we move the smp ops into the same driver. The only downside then is that
->it can't be a module, but I would guess that we can work on making that
->possible by allowing smp ops to be inserted and removed at any time.
->
-I am not sure, just because the hardware supports multiple
-functionality, everything should go into the same file.
+On Wednesday 17 December 2014 23:33:02 Sneeker. Yeh wrote:
+> >
+> >No need for playing games with child devices, just see how the other drivers do
+> >it.
+> 
+> I am wondering if this is what you mentioned here? :
+> Hcd21: f_usb20ho {
+>         compatible = "fujitsu,f_usb20ho";
+>         ...
+>         Ehci {
+>                 compatible = "generic-ehci";
+>                 reg = <>;
+>         }
+>         ohci {
+>                 compatible = "generic-ohci";
+>                 reg = <>;
+>         }
+> }
+> By doing that, I can just use of_platform_populate() to create platform device more gracefully,
+> than using platform_device_xxx() those have been done in of_platform_populate().
+> And also, managing register offset is totally done via dts description, not in the code.
 
-If you think of a SPM driver as something that provides a service, you
-would see that all the functionality of cpuidle, hotplug, suspend, use
-the service and can have their own place to share their commonality. SPM
-h/w is not just for cpus. It could be a generic power controller (to an
-extent) for the cpu, cache, coherenency interface and pretty much any
-bus/clock exports the services of that device. There needs to be a
-distinction between an entity that provides the functionality and a one
-that uses it. You cannot build on additional functionality neatly if you
-have them all together.
+What I mean is leaving out the fujitsu,f_usb20ho node entirely, just put the
+two USB controllers on the bus directly and remove this driver.
 
-As such, I am quite appalled by the addition of the idle functions in
-the SPM driver, but seems like its the direction many want, hence went
-with it. But, please dont suggest using SPM driver as a dumping ground
-for all functionality that SPM may indirectly influence.
-
-Thanks,
-Lina
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
