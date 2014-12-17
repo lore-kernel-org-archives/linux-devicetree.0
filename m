@@ -1,91 +1,81 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [alsa-devel] [PATCH/RFC 12/14] ASoC: samsung: i2s: Add clock
- provider for the I2S internal clocks
-Date: Wed, 17 Dec 2014 18:00:10 +0100
-Message-ID: <5491B69A.6080901@samsung.com>
-References: <1418319952-10163-1-git-send-email-s.nawrocki@samsung.com>
- <1418319952-10163-13-git-send-email-s.nawrocki@samsung.com>
- <20141212200342.GV11764@sirena.org.uk>
+From: Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH (resend)] mailbox: Add Altera mailbox driver
+Date: Wed, 17 Dec 2014 11:17:04 -0600
+Message-ID: <5491BA90.9040007@gmail.com>
+References: <1418378690-3466-1-git-send-email-lftan@altera.com>	<548AFDE9.6000909@gmail.com>	<548F4A99.7040409@ti.com> <CAFiDJ5-b9qsLKj8Qh2+yx8_Y1nv5CG1PHyn2Se0zzZLSHWTKNg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <20141212200342.GV11764@sirena.org.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, padma.v@samsung.com, sbkim73@samsung.com, drake@endlessm.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAFiDJ5-b9qsLKj8Qh2+yx8_Y1nv5CG1PHyn2Se0zzZLSHWTKNg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ley Foon Tan <lftan-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Cc: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/12/14 21:03, Mark Brown wrote:
-> On Thu, Dec 11, 2014 at 06:45:50PM +0100, Sylwester Nawrocki wrote:
-> 
->> +Optional Properties:
+
+
+On 12/16/14, 12:33 AM, Ley Foon Tan wrote:
+> On Tue, Dec 16, 2014 at 4:54 AM, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org> wrote:
+>> Hi Ley Foon,
 >>
->>  - samsung,idma-addr: Internal DMA register base address of the audio
->>    sub system(used in secondary sound source).
->>  - pinctrl-0: Should specify pin control groups used for this controller.
->>  - pinctrl-names: Should contain only one value - "default".
->> +- #clock-cells: should be 1, this property must be present if the I2S device
->> +  is a clock provider in terms of the common clock bindings, described in
->> +  ../clock/clock-bindings.txt.
->> +- clock-output-names: from the common clock bindings, names of the CDCLK
->> +  I2S output clocks, suggested values are "i2s_cdclk0", "i2s_cdclk1",
->> +  "i2s_cdclk3" for the I2S0, I2S1, I2S2 devices recpectively.
->> +
-> 
-> Why not make this mandatory going forwards?  You can add a note saying
-> that older DTs may not have it.
+>> On 12/12/2014 08:38 AM, Dinh Nguyen wrote:
+>>>
+>>>
+>>> On 12/12/14, 4:04 AM, Ley Foon Tan wrote:
+>>>> The Altera mailbox allows for interprocessor communication. It supports
+>>>> only one channel and work as either sender or receiver.
+>>
+>> I have a few more comments in addition to those that Dinh provided.
+>>
+>>>>
+>>>> Signed-off-by: Ley Foon Tan <lftan-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+>>>> ---
+>>>>  .../devicetree/bindings/mailbox/altera-mailbox.txt |  49 +++
+>>>>  drivers/mailbox/Kconfig                            |   6 +
+>>>>  drivers/mailbox/Makefile                           |   2 +
+>>>>  drivers/mailbox/mailbox-altera.c                   | 404 +++++++++++++++++++++
+>>>>  4 files changed, 461 insertions(+)
+>>>>  create mode 100644 Documentation/devicetree/bindings/mailbox/altera-mailbox.txt
+>>>>  create mode 100644 drivers/mailbox/mailbox-altera.c
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/mailbox/altera-mailbox.txt b/Documentation/devicetree/bindings/mailbox/altera-mailbox.txt
+>>>> new file mode 100644
+>>>> index 0000000..c261979
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/mailbox/altera-mailbox.txt
+>>>> @@ -0,0 +1,49 @@
+>>>> +Altera Mailbox Driver
+>>>> +=====================
+>>>> +
+>>>> +Required properties:
+>>>> +- compatible :      "altr,mailbox-1.0".
+>>
 
-I guess that makes more sense, I'll move it to the mandatory properties
-section.
+<snip>
 
->> +The assignment of indices for the I2Sx clock provider is as follows:
->> + 0 - the CDCLK (CODECLKO) gate clock,
->> + 1 - the RCLK prescaler divider clock (corresponding to the IISPSR register),
->> + 2 - the RCLKSRC mux clock (corresponding to RCLKSRC bit in register IISMOD).
-> 
-> Why use the indicies here, they only seem to add obscurity?
+>>>> +static const struct of_device_id altera_mbox_match[] = {
+>>>> +    { .compatible = "altr,mailbox-1.0" },
+>>>> +    { /* Sentinel */ }
+>>>> +};
+>>>> +
+>>>> +MODULE_DEVICE_TABLE(of, altera_mbox_match);
+>>>> +
+>>>> +static struct platform_driver altera_mbox_driver = {
+>>>> +    .probe  = altera_mbox_probe,
+>>>> +    .remove = altera_mbox_remove,
+>>>> +    .driver = {
+>>>> +            .name   = DRIVER_NAME,
+>>>> +            .owner  = THIS_MODULE,
+>>>> +            .of_match_table = altera_mbox_match,
+>>
+>> of_match_ptr(altera_mbox_match).
+> Okay.
 
-I didn't want to create a separate header file, with all the GPL copyright
-notice header etc, for just this enumeration.
-Anyway I'll put these as macro definitions into include/dt-bindings/sound
-/samsung-i2s.h.
+This driver is DT-only, so of_match_ptr() is not needed.
 
->> +		clk_put(rclksrc);
->> +	}
->> +	/*
-> 
-> Missing blank line.
-> 
->> +	 * Register the mux and div clocks only if both source clocks
->> +	 * are available, i.e. for the I2S0 instance and versions with
->> +	 * QUIRK_NO_MUXPSR quirk not set.
->> +	 */
-> 
-> Why not proceed even if one is missing?  This repeats in words the if
-> statement but doesn't explain why we're doing this.
-
-Right, I should have said here that this is really to distinguish between
-I2S0 and I2S1, I2S2. So we register the mux and div clocks only for
-the IIS Multi Audio Interface (I2S0) and not for the IIS Bus Interface
-(I2S1, I2S2) instances.
-However, it seems I got confused by same compatible string set for
-I2S0..I2S2 in arch/arm/boot/dts/exynos4.dtsi - "samsung,s5pv210-i2s",
-where for I2S1, I2S2 it should be "samsung,s3c6410-i2s". So we have,
-for example, QUIRK_NO_MUXPSR set for them. There seems to be no similar
-bug in arch/arm/boot/dts/exynos5250.dtsi.
-I'll drop that mux input clock test the and fix the compatible strings
-for exynos4 in dts.
-
->> +	ret = of_clk_add_provider(dev->of_node, of_clk_src_onecell_get,
->> +				  &i2s->clk_data);
->> +	if (ret < 0) {
->> +		dev_err(dev, "failed to add clock provider\n");
-> 
-> Best practice is to print the error code.
-
-Yeah, I'll add it.
-
+Dinh
 --
-Regards,
-Sylwester
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
