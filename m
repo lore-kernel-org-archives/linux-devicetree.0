@@ -1,13 +1,16 @@
-From: Hongzhou Yang <hongzhou.yang@mediatek.com>
-Subject: [PATCH v4 2/5] dt-bindings: Add pinctrl bindings for mt65xx/mt81xx.
-Date: Wed, 17 Dec 2014 07:34:30 +0800
-Message-ID: <1418772873-19747-3-git-send-email-hongzhou.yang@mediatek.com>
-References: <1418772873-19747-1-git-send-email-hongzhou.yang@mediatek.com>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [PATCH V8 00/14] drm/exynos: few patches to enhance bridge chip
+ support
+Date: Wed, 17 Dec 2014 10:31:41 +0100
+Message-ID: <54914D7D.9060108@collabora.co.uk>
+References: <1416045309-13359-1-git-send-email-ajaykumar.rs@samsung.com>
+ <CAEC9eQOrKw2Z1q-ztFfadXmsL3CTcAkkv9kcS2QnDOAVSh2AuQ@mail.gmail.com>
+ <548ABAB6.6010200@collabora.co.uk> <3197445.qizQc0zeRb@avalon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1418772873-19747-1-git-send-email-hongzhou.yang@mediatek.com>
+In-Reply-To: <3197445.qizQc0zeRb@avalon>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,167 +20,35 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Vladimir Murzin <vladimir.murzin@arm.com>, Russell King <linux@arm.linux.org.uk>, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Hongzhou Yang <hongzhou.yang@mediatek.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-kernel@vger.kernel.org, alan.cheng@mediatek.com, maoguang.meng@mediatek.com, Ashwin Chaugule <ashwin.chaugule@linaro.org>, toby.liu@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, "Joe.C" <yingjoe.chen@mediatek.com>, dandan.he@mediatek.com, linux-arm-kernel@lists.infradead.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, dri-devel@lists.freedesktop.org
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Sean Paul <seanpaul@google.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Ajay kumar <ajaynumb@gmail.com>, Kukjin Kim <kgene.kim@samsung.com>, Pannaga Bhushan Reddy Patel <bhushan.r@samsung.com>, Prashanth G <prashanth.g@samsung.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Hongzhou Yang <hongzhou.yang@mediatek.com>
+Hello Laurent and Tomi,
 
-Add devicetree bindings for Mediatek SoC pinctrl driver.
+On 12/16/2014 12:37 AM, Laurent Pinchart wrote:
+> Hi Javier,
+>> Tomi and Laurent,
+>> 
+>> You asked Ajay to change his series to use the video port and enpoints DT
+>> bindings instead of phandles, could you please review his latest version?
+>> 
+>> I guess is now too late for 3.19 since we are in the middle of the merge
+>> window but it would be great if this series can at least made it to 3.20.
+> 
+> I don't have time to review the series in details right now, but I'm happy 
+> with the DT bindings, and have no big issue with the rest of the patches. I 
+> don't really like the of_drm_find_bridge() concept introduced in 03/14 but I 
+> won't nack it given lack of time to implement an alternative proposal. It's an 
+> internal API, it can always be reworked later anyway.
+> 
 
-Signed-off-by: Hongzhou Yang <hongzhou.yang@mediatek.com>
----
- .../devicetree/bindings/pinctrl/pinctrl-mt65xx.txt | 142 +++++++++++++++++++++
- 1 file changed, 142 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt
+Thanks a lot for taking the time to look at the DT bindings, then I guess
+that the series are finally ready to be merged?
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt
-new file mode 100644
-index 0000000..3bf34f9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt
-@@ -0,0 +1,142 @@
-+* Mediatek MT65XX Pin Controller
-+
-+The Mediatek's Pin controller is used to control SoC pins.
-+
-+Required properties:
-+- compatible: value should be either of the following.
-+    (a) "mediatek,mt8135-pinctrl", compatible with mt8135 pinctrl.
-+- mediatek,pctl-regmap: Should be a phandle of the syscfg node.
-+- gpio-controller : Marks the device node as a gpio controller.
-+- #gpio-cells: number of cells in GPIO specifier. Since the generic GPIO
-+  binding is used, the amount of cells must be specified as 2. See the below
-+  mentioned gpio binding representation for description of particular cells.
-+
-+	Eg: <&pio 6 0>
-+	<[phandle of the gpio controller node]
-+	[pin number within the gpio controller]
-+	[flags]>
-+
-+	Values for gpio specifier:
-+	- Pin number: is a value between 0 to 202.
-+	- Flags:  bit field of flags, as defined in <dt-bindings/gpio/gpio.h>.
-+            Only the following flags are supported:
-+            0 - GPIO_ACTIVE_HIGH
-+            1 - GPIO_ACTIVE_LOW
-+- reg: physicall address base for EINT registers
-+- interrupt-controller: Marks the device node as an interrupt controller
-+- #interrupt-cells: Should be two.
-+- interrupts : The interrupt outputs from the controller.
-+
-+Please refer to pinctrl-bindings.txt in this directory for details of the
-+common pinctrl bindings used by client devices.
-+
-+A pinctrl node should contain at least one subnodes representing the
-+pinctrl groups available on the machine. Each subnode will list the
-+pins it needs, and how they should be configured, with regard to muxer
-+configuration, pullups, drive strngth, input enable/disable and input schmitt.
-+
-+Required subnode-properties:
-+
-+- pins: 2 integers array, represents gpio pinmux number and config
-+  setting. The format as following
-+
-+    node {
-+     pins = <PIN_NUMBER_PINMUX>;
-+                     GENERIC_PINCONFIG;
-+    };
-+
-+    The PIN_NUMBER_PINMUX is combination of GPIO number and pinmux, it can
-+    use macros which already defind in boot/dts/mt8135-pinfunc.h directly.
-+    The GENERIC_PINCONFIG is the generic pinconfig options to use, bias-disable,
-+    bias-pull-down, bias-pull-up, input-enable, input-disable, output-low, output-high,
-+    input-schmitt-enable, input-schmitt-disable and drive-strength are valid.
-+
-+    Some special pins have extra pull up strength, there are R0 and R1 pull-up
-+    resistors available, but for user, it's only need to set R1R0 as 00, 01, 10 or 11.
-+    So when config bias-pull-up, it support arguments for those special pins.
-+    Some macros have been defined for this usage, such as MTK_PUPD_SET_R1R0_00.
-+    See dt-bindings/pinctrl/mt65xx.h.
-+
-+    When config drive-strength, it can support some arguments, such as
-+    MTK_DRIVE_4mA, MTK_DRIVE_6mA, etc. See dt-bindings/pinctrl/mt65xx.h.
-+
-+Examples:
-+
-+#include "mt8135-pinfunc.h"
-+
-+...
-+{
-+	syscfg_pctl_a: syscfg_pctl_a@10005000 {
-+		compatible = "mediatek,mt8135-pctl-a-syscfg", "syscon";
-+		reg = <0 0x10005000 0 0x1000>;
-+	};
-+
-+	syscfg_pctl_b: syscfg_pctl_b@1020C020 {
-+		compatible = "mediatek,mt8135-pctl-b-syscfg", "syscon";
-+		reg = <0 0x1020C020 0 0x1000>;
-+	};
-+
-+	pinctrl@01c20800 {
-+		compatible = "mediatek,mt8135-pinctrl";
-+		reg = <0 0x1000B000 0 0x1000>;
-+		mediatek,pctl-regmap = <&syscfg_pctl_a &syscfg_pctl_b>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
-+
-+		i2c0_pins_a: i2c0@0 {
-+			pins1 {
-+				pins = <MT8135_PIN_100_SDA0__FUNC_SDA0>,
-+						<MT8135_PIN_101_SCL0__FUNC_SCL0>;
-+				bias-disable;
-+			};
-+		};
-+
-+		i2c1_pins_a: i2c1@0 {
-+			pins {
-+				pins = <MT8135_PIN_195_SDA1__FUNC_SDA1>,
-+						<MT8135_PIN_196_SCL1__FUNC_SCL1>;
-+				bias-pull-up = <55>;
-+			};
-+		};
-+
-+		i2c2_pins_a: i2c2@0 {
-+			pins1 {
-+				pins = <MT8135_PIN_193_SDA2__FUNC_SDA2>;
-+				bias-pull-down;
-+			};
-+
-+			pins2 {
-+				pins = <MT8135_PIN_49_WATCHDOG__FUNC_GPIO49>;
-+				bias-pull-up;
-+			};
-+		};
-+
-+		i2c3_pins_a: i2c3@0 {
-+			pins1 {
-+				pins = <MT8135_PIN_40_DAC_CLK__FUNC_GPIO40>,
-+						<MT8135_PIN_41_DAC_WS__FUNC_GPIO41>;
-+				bias-pull-up = <55>;
-+			};
-+
-+			pins2 {
-+				pins = <MT8135_PIN_35_SCL3__FUNC_SCL3>,
-+						<MT8135_PIN_36_SDA3__FUNC_SDA3>;
-+				output-low;
-+				bias-pull-up = <55>;
-+			};
-+
-+			pins3 {
-+				pins = <MT8135_PIN_57_JTCK__FUNC_GPIO57>,
-+						<MT8135_PIN_60_JTDI__FUNC_JTDI>;
-+				drive-strength = <32>;
-+			};
-+		};
-+
-+		...
-+	}
-+};
--- 
-1.8.1.1.dirty
+Ajay's series don't apply cleanly anymore because it has been a while since
+he posted it but he can rebase on top of 3.19-rc1 once it is released and
+re-resend.
+
+Best regards,
+Javier
