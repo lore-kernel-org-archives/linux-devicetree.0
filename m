@@ -1,39 +1,23 @@
-From: Tony K Nadackal <tony.kn@samsung.com>
-Subject: [PATCH] arm64: dts: Add jpeg device node for Exynos7
-Date: Wed, 17 Dec 2014 13:09:36 +0530
-Message-ID: <1418801976-22820-1-git-send-email-tony.kn@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: kgene@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, a.kesavan@samsung.com, bhushan.r@samsung.com, Tony K Nadackal <tony.kn@samsung.com>
+From: Alexandre Courbot <gnurou@gmail.com>
+Subject: Re: [PATCH v6 0/3] Add gpio support to Broadcom Cygnus SoC
+Date: Wed, 17 Dec 2014 17:06:54 +0900
+Message-ID: <CAAVeFuKYDVdMYqHRij2U3fDQUOhwa8-OYDb4ZNkXevX+qWy04Q@mail.gmail.com>
+References: <rjui@broadcom.com> <1418696307-19392-1-git-send-email-rjui@broadcom.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1418696307-19392-1-git-send-email-rjui@broadcom.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Ray Jui <rjui@broadcom.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Joe Perches <joe@perches.com>, Arnd Bergmann <arnd@arndb.de>, Scott Branden <sbranden@broadcom.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, bcm-kernel-feedback-list@broadcom.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add jpeg device node for Exynos7
+On Tue, Dec 16, 2014 at 11:18 AM, Ray Jui <rjui@broadcom.com> wrote:
+> This patchset contains the initial GPIO support for the Broadcom Cygnus SoC.
+> Cygnus has 3 GPIO controllers: 1) the ASIU GPIO; 2) the chipCommonG GPIO;
+> and 3) the ALWAYS-ON GPIO. All 3 types of GPIO controllers are supported by
+> the same Cygnus GPIO driver
 
-Signed-off-by: Tony K Nadackal <tony.kn@samsung.com>
----
- arch/arm64/boot/dts/exynos/exynos7.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+No objections for this v6. The series,
 
-diff --git a/arch/arm64/boot/dts/exynos/exynos7.dtsi b/arch/arm64/boot/dts/exynos/exynos7.dtsi
-index 332537c..db3561f 100644
---- a/arch/arm64/boot/dts/exynos/exynos7.dtsi
-+++ b/arch/arm64/boot/dts/exynos/exynos7.dtsi
-@@ -562,6 +562,15 @@
- 			clocks = <&clock_peric0 PCLK_PWM>;
- 			clock-names = "timers";
- 		};
-+
-+		jpeg: jpeg_codec@15020000 {
-+			compatible = "samsung,exynos7-jpeg";
-+			reg = <0x15020000 0x1000>;
-+			interrupts = <0 434 0>;
-+			clocks = <&clock_mscl ACLK_JPEG>;
-+			clock-names = "jpeg";
-+			status = "disabled";
-+		};
- 	};
- };
- 
--- 
-2.2.0
+Reviewed-by: Alexandre Courbot <acourbot@nvidia.com>
