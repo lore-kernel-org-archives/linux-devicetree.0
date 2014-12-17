@@ -1,23 +1,60 @@
 From: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: tegra20: fix GR3D, DSI unit and reg base addresses
-Date: Wed, 17 Dec 2014 17:13:25 +0900
-Message-ID: <CAAVeFuLPs8f1ZFT4JHTar1NRmb6rvYDv2i=pp-8LBwKEFw0sjA@mail.gmail.com>
-References: <1418397559-19646-1-git-send-email-digetx@gmail.com>
+Subject: Re: [Patch v4 2/2] gpio: Document GPIO hogging mechanism
+Date: Wed, 17 Dec 2014 17:43:12 +0900
+Message-ID: <CAAVeFuK2o8nCcQSOWf2pO-0hk33CyUsw0SErqq+CdbYZhRgLmA@mail.gmail.com>
+References: <1418422051-9471-1-git-send-email-bparrot@ti.com> <1418422051-9471-3-git-send-email-bparrot@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1418397559-19646-1-git-send-email-digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dmitry Osipenko <digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stable <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1418422051-9471-3-git-send-email-bparrot-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jiri Prchal <jiri.prchal-cKCO0sOKHLPtwjQa/ONI9g@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Dec 13, 2014 at 12:19 AM, Dmitry Osipenko <digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Commit 58ecb23f64ee ("ARM: tegra: add missing unit addresses to DT") added
-> unit address and changed reg base for GR3D and DSI host1x modules, but these
-> addresses belongs to GR2D and TVO modules respectively. Fix it by changing
-> modules unit and reg base addresses to proper ones.
+A few nits:
 
-Checked with the TRM, you are absolutely correct.
+On Sat, Dec 13, 2014 at 7:07 AM, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org> wrote:
+> Add GPIO hogging documentation to gpio.txt
+>
+> Signed-off-by: Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>
+> ---
+> Changes since v3:
+>  * Renamed the "direction" DT properties to "state".
+>
+>  Documentation/devicetree/bindings/gpio/gpio.txt | 23 +++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documentation/devicetree/bindings/gpio/gpio.txt
+> index 3fb8f53..a38da91 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio.txt
+> +++ b/Documentation/devicetree/bindings/gpio/gpio.txt
+> @@ -103,6 +103,22 @@ Every GPIO controller node must contain both an empty "gpio-controller"
+>  property, and a #gpio-cells integer property, which indicates the number of
+>  cells in a gpio-specifier.
+>
+> +The GPIO chip may contain GPIO hog definitions. GPIO hogging is a mechanism
+> +providing automatic GPIO request and configuration as part of the
+> +gpio-controller's driver probe function.
+> +
+> +Each GPIO hog definition is represented as a child node of the GPIO controller.
+> +Required properties:
+> +- gpio-hog:  A property specifying that this child node represent a gpio-hog.
+
+... represent a GPIO hog.
+
+> +- gpios:     Store the gpio information (id, flags, ...). Shall contain the
+> +            number of cells specified in its parent node (GPIO controller
+> +            node).
+> +- state:     A property specifying the direction/value needed. This property
+> +            can take the folowing values: input, output-high, output-low.
+
+s/folowing/following
+
+This aside,
 
 Reviewed-by: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
