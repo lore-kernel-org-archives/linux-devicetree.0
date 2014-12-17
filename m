@@ -1,23 +1,23 @@
-From: Alexandre Courbot <gnurou@gmail.com>
-Subject: Re: [PATCH v6 0/3] Add gpio support to Broadcom Cygnus SoC
-Date: Wed, 17 Dec 2014 17:06:54 +0900
-Message-ID: <CAAVeFuKYDVdMYqHRij2U3fDQUOhwa8-OYDb4ZNkXevX+qWy04Q@mail.gmail.com>
-References: <rjui@broadcom.com> <1418696307-19392-1-git-send-email-rjui@broadcom.com>
+From: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: tegra20: fix GR3D, DSI unit and reg base addresses
+Date: Wed, 17 Dec 2014 17:13:25 +0900
+Message-ID: <CAAVeFuLPs8f1ZFT4JHTar1NRmb6rvYDv2i=pp-8LBwKEFw0sjA@mail.gmail.com>
+References: <1418397559-19646-1-git-send-email-digetx@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1418696307-19392-1-git-send-email-rjui@broadcom.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Ray Jui <rjui@broadcom.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Joe Perches <joe@perches.com>, Arnd Bergmann <arnd@arndb.de>, Scott Branden <sbranden@broadcom.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, bcm-kernel-feedback-list@broadcom.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1418397559-19646-1-git-send-email-digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dmitry Osipenko <digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stable <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 16, 2014 at 11:18 AM, Ray Jui <rjui@broadcom.com> wrote:
-> This patchset contains the initial GPIO support for the Broadcom Cygnus SoC.
-> Cygnus has 3 GPIO controllers: 1) the ASIU GPIO; 2) the chipCommonG GPIO;
-> and 3) the ALWAYS-ON GPIO. All 3 types of GPIO controllers are supported by
-> the same Cygnus GPIO driver
+On Sat, Dec 13, 2014 at 12:19 AM, Dmitry Osipenko <digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Commit 58ecb23f64ee ("ARM: tegra: add missing unit addresses to DT") added
+> unit address and changed reg base for GR3D and DSI host1x modules, but these
+> addresses belongs to GR2D and TVO modules respectively. Fix it by changing
+> modules unit and reg base addresses to proper ones.
 
-No objections for this v6. The series,
+Checked with the TRM, you are absolutely correct.
 
-Reviewed-by: Alexandre Courbot <acourbot@nvidia.com>
+Reviewed-by: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
