@@ -1,68 +1,33 @@
 From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH RFC 09/15] drm: imx: Add MIPI DSI host controller driver
-Date: Wed, 17 Dec 2014 10:40:49 +0000
-Message-ID: <20141217104049.GU11285@n2100.arm.linux.org.uk>
-References: <1418200648-32656-1-git-send-email-Ying.Liu@freescale.com>
- <1418200648-32656-10-git-send-email-Ying.Liu@freescale.com>
- <20141210131640.GD23558@ulmo.nvidia.com>
- <54915081.6020508@freescale.com>
+Subject: Re: [PATCH v5 1/3] gpio: Cygnus: define Broadcom Cygnus GPIO binding
+Date: Wed, 17 Dec 2014 10:44:28 +0000
+Message-ID: <20141217104428.GV11285@n2100.arm.linux.org.uk>
+References: <1418342706-14755-2-git-send-email-rjui@broadcom.com>
+ <1918116.UxUgDPTmcq@wuerfel>
+ <CAAVeFuL2MKRA7YLm_wsyftNy-sxgEYPrmqBm8XTRZQb66YF-qw@mail.gmail.com>
+ <1628217.66frkAqHMc@wuerfel>
+ <CAAVeFuJhiten-eVLCa2sMG-nsRwjPMiZap8UJM1kNCuRyK-b1w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <54915081.6020508@freescale.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Liu Ying <Ying.Liu@freescale.com>
-Cc: devicetree@vger.kernel.org, mturquette@linaro.org, kernel@pengutronix.de, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <CAAVeFuJhiten-eVLCa2sMG-nsRwjPMiZap8UJM1kNCuRyK-b1w@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Alexandre Courbot <gnurou@gmail.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Ray Jui <rjui@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Joe Perches <joe@perches.com>, Scott Branden <sbranden@broadcom.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, bcm-kernel-feedback-list@broadcom.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBEZWMgMTcsIDIwMTQgYXQgMDU6NDQ6MzNQTSArMDgwMCwgTGl1IFlpbmcgd3JvdGU6
-Cj4gSGkgVGhpZXJyeSwKPiAKPiBTb3JyeSBmb3IgdGhlIGxhdGUgcmVzcG9uc2UuCj4gSSB0cmll
-ZCB0byBhZGRyZXNzIGFsbW9zdCBhbGwgeW91ciBjb21tZW50cyBsb2NhbGx5IGZpcnN0Lgo+IE1v
-cmUgZmVlZGJhY2sgYmVsb3cuCj4gCj4gT24gMTIvMTAvMjAxNCAwOToxNiBQTSwgVGhpZXJyeSBS
-ZWRpbmcgd3JvdGU6Cj4gPk9uIFdlZCwgRGVjIDEwLCAyMDE0IGF0IDA0OjM3OjIyUE0gKzA4MDAs
-IExpdSBZaW5nIHdyb3RlOgo+ID4+K3N0YXRpYyBpbnQgY2hlY2tfc3RhdHVzKHN0cnVjdCBpbXhf
-bWlwaV9kc2kgKmRzaSwgdTMyIHJlZywgdTMyIHN0YXR1cywKPiA+PisJCQlpbnQgdGltZW91dCwg
-Ym9vbCB0b19zZXQpCj4gPj4rewo+ID4+Kwl1MzIgdmFsOwo+ID4+Kwlib29sIG91dCA9IGZhbHNl
-Owo+ID4+Kwo+ID4+Kwl2YWwgPSBkc2lfcmVhZChkc2ksIHJlZyk7Cj4gPj4rCWZvciAoOzspIHsK
-PiA+PisJCW91dCA9IHRvX3NldCA/ICh2YWwgJiBzdGF0dXMpIDogISh2YWwgJiBzdGF0dXMpOwo+
-ID4+KwkJaWYgKG91dCkKPiA+PisJCQlicmVhazsKPiA+PisKPiA+PisJCWlmICghdGltZW91dC0t
-KQo+ID4+KwkJCXJldHVybiAtRUZBVUxUOwo+ID4+Kwo+ID4+KwkJbXNsZWVwKDEpOwo+ID4+KwkJ
-dmFsID0gZHNpX3JlYWQoZHNpLCByZWcpOwo+ID4+Kwl9Cj4gPj4rCXJldHVybiAwOwo+ID4+K30K
-PiA+Cj4gPllvdSBzaG91bGQgcHJvYmFibHkgdXNlIGEgcHJvcGVybHkgdGltZWQgbG9vcCBoZXJl
-LiBtc2xlZXAoKSBpc24ndAo+ID5ndWFyYW50ZWVkIHRvIHJldHVybiBhZnRlciBleGFjdGx5IG9u
-ZSBtaWxsaXNlY29uZCwgc28geW91ciB0aW1lb3V0IGlzCj4gPm5ldmVyIGdvaW5nIHRvIGJlIGFj
-Y3VyYXRlLiBTb21ldGhpbmcgbGlrZSB0aGUgZm9sbG93aW5nIHdvdWxkIGJlIGJldHRlcgo+ID5p
-biBteSBvcGluaW9uOgo+ID4KPiA+CXRpbWVvdXQgPSBqaWZmaWVzICsgbXNlY3NfdG9famlmZmll
-cyh0aW1lb3V0KTsKPiA+Cj4gPgl3aGlsZSAodGltZV9iZWZvcmUoamlmZmllcywgdGltZW91dCkp
-IHsKPiA+CQkuLi4KPiA+CX0KPiA+Cj4gPkFsc28gdGltZW91dCBzaG91bGQgYmUgdW5zaWduZWQg
-bG9uZyBpbiB0aGF0IGNhc2UuCj4gCj4gQWNjZXB0ZWQuCgpBY3R1YWxseSwgdGhhdCdzIGEgYmFk
-IGV4YW1wbGU6IHdoYXQgd2Ugd2FudCB0byBkbyBpcyB0byBhc3Nlc3Mgc3VjY2VzcwphZnRlciB3
-ZSB3YWl0LCBiZWZvcmUgd2UgZGVjaWRlIHRoYXQgc29tZXRoaW5nIGhhcyBmYWlsZWQuICBJbiBv
-dGhlcgp3b3Jkcywgd2UgZG9uJ3Qgd2FudCB0byB3YWl0LCBhbmQgZGVjaWRlIHRoYXQgd2UgZmFp
-bGVkIHdpdGhvdXQgZmlyc3QKY2hlY2tpbmcgZm9yIHN1Y2Nlc3MuCgpJbiBhbnkgY2FzZSwgcmV0
-dXJuaW5nIC1FRkFVTFQgaXMgbm90IHNhbmU6IEVGQVVMVCBkb2Vzbid0IG1lYW4gImZhdWx0Igpp
-dCBtZWFucyAiQmFkIGFkZHJlc3MiLCBhbmQgaXQgaXMgcmV0dXJuZWQgdG8gdXNlcnNwYWNlIHRv
-IG1lYW4gdGhhdAp1c2Vyc3BhY2UgcGFzc2VkIHRoZSBrZXJuZWwgYSBiYWQgYWRkcmVzcy4gIFRo
-YXQgZGVmaW5pdGlvbiBkb2VzIC9ub3QvCmZpdCB3aGF0J3MgZ29pbmcgb24gaGVyZS4KCgl0aW1l
-b3V0ID0gamlmZmllcyArIG1zZWNzX3RvX2ppZmZpZXModGltZW91dCk7CgoJZG8gewoJCXZhbCA9
-IGRzaV9yZWFkKGRzaSwgcmVnKTsKCQlvdXQgPSB0b19zZXQgPyAodmFsICYgc3RhdHVzKSA6ICEo
-dmFsICYgc3RhdHVzKTsKCQlpZiAob3V0KQoJCQlicmVhazsKCgkJaWYgKHRpbWVfaXNfYWZ0ZXJf
-amlmZmllcyh0aW1lb3V0KSkKCQkJcmV0dXJuIC1FVElNRURPVVQ7CgoJCW1zbGVlcCgxKTsKCX0g
-d2hpbGUgKDEpOwoKCXJldHVybiAwOwoKd291bGQgYmUgYmV0dGVyOiB3ZSBvbmx5IGZhaWwgaW1t
-ZWRpYXRlbHkgYWZ0ZXIgd2UgaGF2ZSBjaGVja2VkIHdoZXRoZXIKd2Ugc3VjY2VlZGVkLCBhbmQg
-d2UgYWxzbyBkbyB0aGUgZmlyc3QgY2hlY2sgaW1tZWRpYXRlbHkuCgotLSAKRlRUQyBicm9hZGJh
-bmQgZm9yIDAuOG1pbGUgbGluZTogY3VycmVudGx5IGF0IDkuNU1icHMgZG93biA0MDBrYnBzIHVw
-CmFjY29yZGluZyB0byBzcGVlZHRlc3QubmV0LgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0
-cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL2RyaS1kZXZlbAo=
+On Wed, Dec 17, 2014 at 11:45:01AM +0900, Alexandre Courbot wrote:
+> Actually we are not that far from being able to do completely without
+> any GPIO number, and maybe that's what we should aim for. I think the
+> only remaining offender is the sysfs interface.
+
+And that is a user API, and there's lots of users of it (eg, on Raspberry
+Pi platforms.)  So changing it isn't going to be easy - I'd say that it's
+impractical.
+
+What you're suggesting would be like re-numbering Linux syscalls.
+
+-- 
+FTTC broadband for 0.8mile line: currently at 9.5Mbps down 400kbps up
+according to speedtest.net.
