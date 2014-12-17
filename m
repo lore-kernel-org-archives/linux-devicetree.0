@@ -1,13 +1,11 @@
 From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Subject: [PATCH 1/5] ARM: STi: Kconfig update for PCIe support
-Date: Wed, 17 Dec 2014 11:34:42 +0100
-Message-ID: <1418812486-12394-2-git-send-email-gabriel.fernandez@linaro.org>
-References: <1418812486-12394-1-git-send-email-gabriel.fernandez@linaro.org>
+Subject: [PATCH 0/5] PCI: st: provide support for dw pcie
+Date: Wed, 17 Dec 2014 11:34:41 +0100
+Message-ID: <1418812486-12394-1-git-send-email-gabriel.fernandez@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1418812486-12394-1-git-send-email-gabriel.fernandez@linaro.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,27 +19,26 @@ To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutl
 Cc: devicetree@vger.kernel.org, kernel@stlinux.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Update Kconfig:
-- MIGHT_HAVE_PCI
-- PCI_DOMAINS
+This patch-set introduces a STMicroelectronics PCIe controler.
+It's based on designware PCIe driver.
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
----
- arch/arm/mach-sti/Kconfig | 2 ++
- 1 file changed, 2 insertions(+)
+Gabriel Fernandez (5):
+  ARM: STi: Kconfig update for PCIe support
+  PCI: st: Add Device Tree bindings for sti pcie
+  PCI: st: Provide support for the sti PCIe controller
+  PCI: designware: Add setup bus-related to pcie_host_ops
+  PCI: st: disable IO support
 
-diff --git a/arch/arm/mach-sti/Kconfig b/arch/arm/mach-sti/Kconfig
-index 8825bc9..d1e563c 100644
---- a/arch/arm/mach-sti/Kconfig
-+++ b/arch/arm/mach-sti/Kconfig
-@@ -8,6 +8,8 @@ menuconfig ARCH_STI
- 	select ARCH_HAS_RESET_CONTROLLER
- 	select HAVE_ARM_SCU if SMP
- 	select ARCH_REQUIRE_GPIOLIB
-+	select PCI_DOMAINS if PCI
-+	select MIGHT_HAVE_PCI
- 	select ARM_ERRATA_754322
- 	select ARM_ERRATA_764369 if SMP
- 	select ARM_ERRATA_775420
+ Documentation/devicetree/bindings/pci/st-pcie.txt |  53 ++
+ arch/arm/mach-sti/Kconfig                         |   2 +
+ drivers/pci/host/Kconfig                          |   5 +
+ drivers/pci/host/Makefile                         |   1 +
+ drivers/pci/host/pci-st.c                         | 736 ++++++++++++++++++++++
+ drivers/pci/host/pcie-designware.c                |   3 +
+ drivers/pci/host/pcie-designware.h                |   1 +
+ 7 files changed, 801 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/st-pcie.txt
+ create mode 100644 drivers/pci/host/pci-st.c
+
 -- 
 1.9.1
