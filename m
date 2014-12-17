@@ -1,12 +1,12 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v2 08/13] ARM: dts: sun6i: Add ir_clk node
-Date: Wed, 17 Dec 2014 18:18:19 +0100
-Message-ID: <1418836704-15689-9-git-send-email-hdegoede@redhat.com>
+Subject: [PATCH v2 09/13] ARM: dts: sun6i: Add ir node
+Date: Wed, 17 Dec 2014 18:18:20 +0100
+Message-ID: <1418836704-15689-10-git-send-email-hdegoede@redhat.com>
 References: <1418836704-15689-1-git-send-email-hdegoede@redhat.com>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORB6XVY2SAKGQEAAUGDBQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDRZXY4CYYORB7HVY2SAKGQEKZ5YLVY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <1418836704-15689-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,34 +19,33 @@ To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxim
 Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add an ir_clk sub-node to the prcm node.
+Add a node for the ir receiver found on the A31.
 
 Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 ---
-Changes in v2:
--Use allwinner,sun4i-a10-mod0-clk as compatible, rather then a prcm specific
- compatible
----
- arch/arm/boot/dts/sun6i-a31.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arm/boot/dts/sun6i-a31.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
 diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
-index f47156b..1c1d255 100644
+index 1c1d255..85c6365 100644
 --- a/arch/arm/boot/dts/sun6i-a31.dtsi
 +++ b/arch/arm/boot/dts/sun6i-a31.dtsi
-@@ -878,6 +878,13 @@
- 						"apb0_i2c";
- 			};
+@@ -896,6 +896,16 @@
+ 			reg = <0x01f01c00 0x300>;
+ 		};
  
-+			ir_clk: ir_clk {
-+				#clock-cells = <0>;
-+				compatible = "allwinner,sun4i-a10-mod0-clk";
-+				clocks = <&osc32k>, <&osc24M>;
-+				clock-output-names = "ir";
-+			};
++		ir@01f02000 {
++			compatible = "allwinner,sun5i-a13-ir";
++			clocks = <&apb0_gates 1>, <&ir_clk>;
++			clock-names = "apb", "ir";
++			resets = <&apb0_rst 1>;
++			interrupts = <0 37 4>;
++			reg = <0x01f02000 0x40>;
++			status = "disabled";
++		};
 +
- 			apb0_rst: apb0_rst {
- 				compatible = "allwinner,sun6i-a31-clock-reset";
- 				#reset-cells = <1>;
+ 		r_pio: pinctrl@01f02c00 {
+ 			compatible = "allwinner,sun6i-a31-r-pinctrl";
+ 			reg = <0x01f02c00 0x400>;
 -- 
 2.1.0
