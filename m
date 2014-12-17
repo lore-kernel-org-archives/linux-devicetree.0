@@ -1,33 +1,41 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 0/3] OF overlay bug-fixes
-Date: Wed, 17 Dec 2014 13:57:46 +0000
-Message-ID: <20141217135746.EE069C4081F@trevor.secretlab.ca>
-References: <1418751927-18088-1-git-send-email-pantelis.antoniou@konsulko.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1418751927-18088-1-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+From: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
+Subject: Re: [PATCH 5/5] PCI: st: disable IO support
+Date: Wed, 17 Dec 2014 14:01:31 +0000
+Message-ID: <20141217140131.607a1ac7@lxorguk.ukuu.org.uk>
+References: <1418812486-12394-1-git-send-email-gabriel.fernandez@linaro.org>
+	<1418812486-12394-6-git-send-email-gabriel.fernandez@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1418812486-12394-6-git-send-email-gabriel.fernandez@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Bjorn Helgaas <bhelgaas@google.com>, Mohit Kumar <mohit.kumar@st.com>, Jingoo Han <jg1.han@samsung.com>, Grant Likely <grant.likely@linaro.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>, Fabrice Gasnier <fabrice.gasnier@st.com>, Arnd Bergmann <arnd@arndb.de>, Viresh Kumar <viresh.kumar@linaro.org>, Thierry Reding <treding@nvidia.com>, Minghuan Lian <Minghuan.Lian@freescale.com>, Magnus Damm <damm@opensource.se>, Will Deacon <will.deacon@arm.com>, Tanmay Inamdar <tinamdar@apm.com>, Murali Karicheri <m->
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 16 Dec 2014 19:45:24 +0200
-, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
- wrote:
-> While checking the overlay patches that ended up in mainline, I came
-> across a number of bugs that needed fixin'
+On Wed, 17 Dec 2014 11:34:46 +0100
+Gabriel FERNANDEZ <gabriel.fernandez@st.com> wrote:
+
+> sti SoCs PCIe IPs are built around DesignWare IP Core.
+> But in these SoCs, PCIe IP doesn't support IO.
+> By default, when no IO space is provided, a default one is assigned.
 > 
-> They are related to the way sub-devices are created and the use
-> of of_platform_populate() in drivers.
-> 
-> Pantelis Antoniou (3):
->   of: overlay: Do not generate duplicate nodes
->   of: platform: Handle of_populate drivers in notifier
->   of: unittest: Overlays with sub-devices tests
+> Add an empty IO resource to the bus, and disable IO by default.
 
-Applied #1 and #2, thanks. I've made some comments on #3.
+As a point of PCI pedantry I don't think this is quite sufficient. PCI
+has a weird corner case where I/O resources are implied rather than
+allocated.
 
-g.
+For IDE/SATA you may need to something like
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	if (class == PCI_CLASS_STORAGE_IDE) {
+		u8 progif;
+		pci_read_config_byte(dev, PCI_CLASS_PROG, &progif);
+		progif |= 5;
+		pci_write_config_byte(dev, PCI_CLASS_PROG, &progif);
+	}
+
+so that any adapter is kicked out of legacy mode and doesn't get implied
+I/O resources and interrupts. I don't know if that case matters for your
+usage.
