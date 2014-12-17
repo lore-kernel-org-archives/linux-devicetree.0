@@ -1,237 +1,76 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 3/4] arm64: dts: Add mediatek MT8173 SoC and evaluation
- board dts and Makefile
-Date: Wed, 17 Dec 2014 15:01:29 +0000
-Message-ID: <54919AC9.2090306@arm.com>
-References: <1418825853-10934-1-git-send-email-eddie.huang@mediatek.com> <1418825853-10934-4-git-send-email-eddie.huang@mediatek.com> <20141217143305.GC8942@leverpostej>
+From: Lina Iyer <lina.iyer@linaro.org>
+Subject: Re: [PATCH v14 03/10] qcom: spm: Add Subsystem Power Manager driver
+Date: Wed, 17 Dec 2014 08:22:35 -0700
+Message-ID: <20141217152235.GA1437@linaro.org>
+References: <1417541958-56907-1-git-send-email-lina.iyer@linaro.org>
+ <2519415.GklIQeMgWR@wuerfel>
+ <54903DC6.8010308@linaro.org>
+ <2663853.2Q3kHisMT7@wuerfel>
+ <5490857A.1000808@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141217143305.GC8942@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "Joe.C" <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5490857A.1000808@codeaurora.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, khilman@linaro.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 17/12/14 14:33, Mark Rutland wrote:
-> On Wed, Dec 17, 2014 at 02:17:32PM +0000, Eddie Huang wrote:
->> Add device tree support for MT8173 SoC and evaluation board based on it.
+On Tue, Dec 16 2014 at 12:18 -0700, Stephen Boyd wrote:
+>On 12/16/2014 06:38 AM, Arnd Bergmann wrote:
+>> On Tuesday 16 December 2014 15:12:22 Daniel Lezcano wrote:
+>>> At the beginning, all that become from not including mach files from the
+>>> drivers directory which make sense.
+>>>
+>>> Perhaps it is time to write a similar mechanism for the cpuidle drivers
+>>> where we can still separate the low level PM code from the generic
+>>> cpuidle code.
+>> That way you basically duplicate the same thing we already have, which
+>> isn't much better.
 >>
->> Signed-off-by: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
->> ---
->>  arch/arm64/boot/dts/Makefile       |   1 +
->>  arch/arm64/boot/dts/mt8173-evb.dts |  34 +++++++++
->>  arch/arm64/boot/dts/mt8173.dtsi    | 152 +++++++++++++++++++++++++++++++++++++
->>  3 files changed, 187 insertions(+)
->>  create mode 100644 arch/arm64/boot/dts/mt8173-evb.dts
->>  create mode 100644 arch/arm64/boot/dts/mt8173.dtsi
+>> In the example of drivers/soc/qcom/spm.c, just call cpuidle_register
+>> from the spm_dev_probe() function and be done with it. You already
+>> have a device that is responsible for handling this, don't try to
+>> construct more than you already need.
 >>
->> diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
->> index f8001a6..db7661e 100644
->> --- a/arch/arm64/boot/dts/Makefile
->> +++ b/arch/arm64/boot/dts/Makefile
->> @@ -1,3 +1,4 @@
->> +dtb-$(CONFIG_ARCH_MEDIATEK) += mt8173-evb.dtb
->>  dtb-$(CONFIG_ARCH_THUNDER) += thunder-88xx.dtb
->>  dtb-$(CONFIG_ARCH_VEXPRESS) += rtsm_ve-aemv8a.dtb foundation-v8.dtb
->>  dtb-$(CONFIG_ARCH_XGENE) += apm-mustang.dtb
->> diff --git a/arch/arm64/boot/dts/mt8173-evb.dts b/arch/arm64/boot/dts/mt8173-evb.dts
->> new file mode 100644
->> index 0000000..b8b2621
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/mt8173-evb.dts
->> @@ -0,0 +1,34 @@
->> +/*
->> + * Copyright (c) 2014 MediaTek Inc.
->> + * Author: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published by the Free Software Foundation.
->> + *
->> + * This program is distributed in the hope that it will be useful,
->> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + * GNU General Public License for more details.
->> + */
->> +
->> +/dts-v1/;
->> +#include "mt8173.dtsi"
->> +
->> +/ {
->> +	model = "mediatek,mt8173-evb";
->> +
->> +	aliases {
->> +		serial0 = &uart0;
->> +		serial1 = &uart1;
->> +		serial2 = &uart2;
->> +		serial3 = &uart3;
->> +	};
->> +
->> +	memory@40000000 {
->> +		device_type = "memory";
->> +		reg = <0 0x40000000 0 0x80000000>;
->> +	};
->> +
->> +	chosen { };
->> +};
->> diff --git a/arch/arm64/boot/dts/mt8173.dtsi b/arch/arm64/boot/dts/mt8173.dtsi
->> new file mode 100644
->> index 0000000..41c1441
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/mt8173.dtsi
->> @@ -0,0 +1,152 @@
->> +/*
->> + * Copyright (c) 2014 MediaTek Inc.
->> + * Author: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published by the Free Software Foundation.
->> + *
->> + * This program is distributed in the hope that it will be useful,
->> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + * GNU General Public License for more details.
->> + */
->> +
->> +/ {
->> +	compatible = "mediatek,mt8173";
->> +	interrupt-parent = <&sysirq>;
->> +	#address-cells = <2>;
->> +	#size-cells = <2>;
->> +
->> +	cpus {
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->> +
->> +		cpu-map {
->> +			cluster0 {
->> +				core0 {
->> +					cpu = <&cpu0>;
->> +				};
->> +				core1 {
->> +					cpu = <&cpu1>;
->> +				};
->> +			};
->> +
->> +			cluster1 {
->> +				core0 {
->> +					cpu = <&cpu2>;
->> +				};
->> +				core1 {
->> +					cpu = <&cpu3>;
->> +				};
->> +			};
->> +		};
->> +
->> +		cpu0: cpu@0 {
->> +			device_type = "cpu";
->> +			compatible = "arm,cortex-a53";
->> +			reg = <0x000>;
->> +		};
->> +
->> +		cpu1: cpu@1 {
->> +			device_type = "cpu";
->> +			compatible = "arm,cortex-a53";
->> +			reg = <0x001>;
->> +			enable-method = "psci";
->> +		};
->> +
->> +		cpu2: cpu@2 {
-> 
-> The unit-address should be 100 rather than 2, matching the reg property.
-> This should be 'cpu@100'.
-> 
->> +			device_type = "cpu";
->> +			compatible = "arm,cortex-a57";
->> +			reg = <0x100>;
->> +			enable-method = "psci";
->> +		};
->> +
->> +		cpu3: cpu@3 {
-> 
-> Similarly this should be 'cpu@101'.
-> 
->> +			device_type = "cpu";
->> +			compatible = "arm,cortex-a57";
->> +			reg = <0x101>;
->> +			enable-method = "psci";
->> +		};
->> +	};
->> +
->> +	psci {
->> +		compatible = "arm,psci";
->> +		method = "smc";
->> +		cpu_suspend   = <0x84000001>;
->> +		cpu_off	      = <0x84000002>;
->> +		cpu_on	      = <0x84000003>;
->> +		affinity_info = <0x84000004>;
->> +	};
-> 
-> There is no AFFINITY_INFO function prior to PSCI 0.2, and
-> 'affinity_info' does not exist in the "arm,psci" binding.
-> 
-> I take it hotplug has been tested for all but CPU0?
-> 
->> +
->> +	uart_clk: dummy26m {
->> +		compatible = "fixed-clock";
->> +		clock-frequency = <26000000>;
->> +		#clock-cells = <0>;
->> +	};
->> +
->> +	timer {
->> +		compatible = "arm,armv8-timer";
->> +		interrupt-parent = <&gic>;
->> +		interrupts = <1 13 0xf08>,
->> +			     <1 14 0xf08>,
->> +			     <1 11 0xf08>,
->> +			     <1 10 0xf08>;
->> +	};
->> +
->> +	soc {
->> +		#address-cells = <2>;
->> +		#size-cells = <2>;
->> +		compatible = "simple-bus";
->> +		ranges;
->> +
->> +		sysirq: intpol-controller@10200620 {
->> +			compatible = "mediatek,mt8173-sysirq", "mediatek,mt6577-sysirq";
->> +			interrupt-controller;
->> +			#interrupt-cells = <3>;
->> +			interrupt-parent = <&gic>;
->> +			reg = <0 0x10200620 0 0x20>;
->> +		};
->> +
->> +		gic: interrupt-controller@10220000 {
->> +			compatible = "arm,gic-400";
->> +			#interrupt-cells = <3>;
->> +			interrupt-parent = <&gic>;
->> +			interrupt-controller;
->> +			reg = <0 0x10221000 0 0x1000>,
->> +			      <0 0x10222000 0 0x1000>,
->> +			      <0 0x10224000 0 0x2000>,
->> +			      <0 0x10226000 0 0x2000>;
->> +			interrupts = <1 9 0xf04>;
->> +		};
-> 
-> I don't think these reg entries are quite right; GICC should be 8k long.
-> 
-> Marc?
+>> I would assume that the same can be done for most other platforms.
+>>
+>> There are probably cases where the same piece of hardware is responsible
+>> for both cpuidle and cpufreq, but what that means is really that you
+>> should have a single driver for it that does both things. Same for
+>> SMP support: if you have one register block that does both the SMP
+>> bringup and the cpuidle stuff, then have *one* driver for this block
+>> that does it all. There are currently a few dependencies that require
+>> doing SMP bringup early during boot, but we decided years ago that those
+>> are all artificial dependencies and we should be able to boot secondary
+>> CPUs much later than we currently do.
+>>
+>
+>+1. The SPM harware is used for hotplug, suspend, cpuidle, as well as
+>provides a regulator for a CPU, so all these things should be done in a
+>single driver. Booting secondary CPUs early is not hard here either if
+>we move the smp ops into the same driver. The only downside then is that
+>it can't be a module, but I would guess that we can work on making that
+>possible by allowing smp ops to be inserted and removed at any time.
+>
+I am not sure, just because the hardware supports multiple
+functionality, everything should go into the same file.
 
-Indeed, as described in the documentation:
-http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.ddi0471b/CHDIFAEE.html
+If you think of a SPM driver as something that provides a service, you
+would see that all the functionality of cpuidle, hotplug, suspend, use
+the service and can have their own place to share their commonality. SPM
+h/w is not just for cpus. It could be a generic power controller (to an
+extent) for the cpu, cache, coherenency interface and pretty much any
+bus/clock exports the services of that device. There needs to be a
+distinction between an entity that provides the functionality and a one
+that uses it. You cannot build on additional functionality neatly if you
+have them all together.
 
-Also it is worth noticing that given how GICV is placed, it will never
-work with 64K pages and virtualization. Pretty sad.
+As such, I am quite appalled by the addition of the idle functions in
+the SPM driver, but seems like its the direction many want, hence went
+with it. But, please dont suggest using SPM driver as a dumping ground
+for all functionality that SPM may indirectly influence.
 
 Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Lina
