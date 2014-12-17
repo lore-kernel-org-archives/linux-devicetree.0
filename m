@@ -1,68 +1,70 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 1/2] leds: add DT binding for Qualcomm PM8941 WLED block
-Date: Tue, 16 Dec 2014 17:15:53 -0800
-Message-ID: <5490D949.4@codeaurora.org>
-References: <1418084551-28946-1-git-send-email-bjorn.andersson@sonymobile.com>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [PATCH] mtd: gpmi: Remove "We support only one NAND chip" from
+ bindings doc
+Date: Tue, 16 Dec 2014 17:17:57 -0800
+Message-ID: <20141217011757.GO9759@ld-irv-0074>
+References: <1417097929-17832-1-git-send-email-sr@denx.de>
+ <20141128014832.GA3113@localhost.localdomain>
+ <54781DD5.5030801@denx.de>
+ <20141129024047.GA5056@localhost.localdomain>
+ <20141130065326.GB3608@norris-Latitude-E6410>
+ <20141130154255.GB14834@localhost.localdomain>
+ <547C3BB9.1010706@denx.de>
+ <20141202003840.GA11370@shldeISGChi005.sh.intel.com>
+ <547D6A0A.70409@denx.de>
+ <20141203003542.GA7895@shldeISGChi005.sh.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1418084551-28946-1-git-send-email-bjorn.andersson@sonymobile.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Grant Likely <grant.likely@linaro.org>
-Cc: Courtney Cavin <courtney.cavin@sonymobile.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20141203003542.GA7895@shldeISGChi005.sh.intel.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Huang Shijie <shijie.huang@intel.com>
+Cc: devicetree@vger.kernel.org, Stefan Roese <sr@denx.de>, Huang Shijie <shijie8@gmail.com>, linux-mtd@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/08/2014 04:22 PM, Bjorn Andersson wrote:
+On Wed, Dec 03, 2014 at 08:35:42AM +0800, Huang Shijie wrote:
+> On Tue, Dec 02, 2014 at 08:28:10AM +0100, Stefan Roese wrote:
+> > On 02.12.2014 01:38, Huang Shijie wrote:
+> > > On Mon, Dec 01, 2014 at 10:58:17AM +0100, Stefan Roese wrote:
+> > >> On 30.11.2014 16:42, Huang Shijie wrote:
+> > >>> On Sat, Nov 29, 2014 at 10:53:26PM -0800, Brian Norris wrote:
+> > >>>> On Sat, Nov 29, 2014 at 10:40:50AM +0800, Huang Shijie wrote:
+> > >>>>> On Fri, Nov 28, 2014 at 08:01:41AM +0100, Stefan Roese wrote:
+> > >>>>>> On 28.11.2014 02:48, Huang Shijie wrote:
+> > >>>>>>> On Thu, Nov 27, 2014 at 03:18:49PM +0100, Stefan Roese wrote:
+> > >>>>>>>> This sentence "We support only one NAND chip now" is not true any more.
+> > >>>>>>>> Multiple chips are supported. So lets remove this sentence to not
+> > >>>>>>>
+> > >>>>>>> The gpmi can only supports one chip. Of course, there are maybe two dies
+> > >>>>>>> in this single chip.
+[...]
+> If your test result can prove that the gpmi can support two chips.
+> 
+> I can ack this patch. (I ever thought the gpmi needs an extra patch to
+> support the multiple chips)
+> 
+> > 
+> > > I even did not have enough time to test the "two chips on a die" case very carefully before
+> > > I left freescale.
+> > 
+> > I see. Thanks for the hint. But this "two chips on a die" scenario did
+> > pass some basic tests, no?
+> yes. It passed the bonnie++ test.
 
-> +
-> +Optional properties:
-> +- label: The label for this led
-> +  See Documentation/devicetree/bindings/leds/common.txt
-> +- linux,default-trigger: Default trigger assigned to the LED
-> +  See Documentation/devicetree/bindings/leds/common.txt
-> +- qcom,cs-out: bool; enable current sink output
-> +- qcom,cabc: bool; enable content adaptive backlight control
-> +- qcom,ext-gen: bool; use externally generated modulator signal to dim
-> +- qcom,current-limit: mA; per-string current limit; value from 0 to 25
-> +	default: 20mA
-> +- qcom,current-boost-limit: mA; boost current limit; one of:
-> +	105, 385, 525, 805, 980, 1260, 1400, 1680
-> +	default: 805mA
-> +- qcom,switching-freq: kHz; switching frequency; one of:
-> +	600, 640, 685, 738, 800, 872, 960, 1066, 1200, 1371,
-> +	1600, 1920, 2400, 3200, 4800, 9600,
-> +	default: 1600kHz
-> +- qcom,ovp: V; Over-voltage protection limit; one of:
-> +	27, 29, 32, 35
-> +	default: 29V
+If there are no more concrete objections, I'll apply this patch.
 
-It would be nice if the units were part of the property name, i.e.
-qcom,ovp-V, qcom,current-boost-limit-mA, etc. That way the units are
-known without having to refer to the documentation.
+Brian
 
-> +- qcom,num-strings: #; number of led strings attached; value from 1 to 3
-> +	default: 2
-
-I wonder if qcom,#strings is more appropriate?
-
-> +
-> +Example:
-> +
-> +pm8941-wled@d800 {
-> +	compatible = "qcom,pm8941-wled";
-> +	reg = <0xd800>;
-> +	label = "backlight";
-> +
-> +	qcom,cs-out;
-> +	qcom,current-limit = <20>;
-> +	qcom,current-boost-limit = <805>;
-> +	qcom,switching-freq = <1600>;
-> +	qcom,ovp = <29>;
-> +	qcom,num-strings = <2>;
-> +};
-
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
