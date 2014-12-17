@@ -1,198 +1,95 @@
-From: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH V2] ARM: dts: imx6sx: add i.mx6sx sabreauto board support
-Date: Wed, 17 Dec 2014 12:22:09 +0800
-Message-ID: <1418790129-12879-1-git-send-email-b20788@freescale.com>
+From: Lyra Zhang <zhang.lyra@gmail.com>
+Subject: Re: [PATCH v4 0/5] Add Spreadtrum Sharkl64 Platform support
+Date: Wed, 17 Dec 2014 14:16:47 +0800
+Message-ID: <CAAfSe-u1PXP1KS5qGRKboCyJ7k-eDRizC76Xs3uwCsNyk7XZ9g@mail.gmail.com>
+References: <1417692860-18841-1-git-send-email-chunyan.zhang@spreadtrum.com>
+	<20141205104009.GE11889@leverpostej>
+	<CAAfSe-uz534FiZufojKa8MdBi=VFqhuoFLwof7K+FqXG--AGaw@mail.gmail.com>
+	<20141215133817.GD8264@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20141215133817.GD8264@leverpostej>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Chunyan Zhang <chunyan.zhang@spreadtrum.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "arnd@arndb.de" <arnd@arndb.de>, "gnomes@lxorguk.ukuu.org.uk" <gnomes@lxorguk.ukuu.org.uk>, "broonie@kernel.org" <broonie@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Will Deacon <Will.Deacon@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, "jslaby@suse.cz" <jslaby@suse.cz>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "heiko@sntech.de" <heiko@sntech.de>, "florian.vaussard@epfl.ch" <florian.vaussard@epfl.ch>, "andrew@lunn.ch" <andrew@lunn.ch>, "rrichter@cavium.com" <rrichter@cavium.com>, "hytszk@gmail.com" <hytszk@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>"orsonzhai@gmail.com" <or>
 List-Id: devicetree@vger.kernel.org
 
-Add basic i.MX6SoloX Sabre Auto board support, currently
-only debug UART and uSDHC are supported on this board.
+Hi, Mark
 
-Signed-off-by: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
-change since V1:
-	1. correct gpio regulator node;
-	2. using macro define for GPIO active value;
-	3. improve pintctrl name;
-	4. correct the sequence of dtb files in Makefile.
- arch/arm/boot/dts/Makefile             |   1 +
- arch/arm/boot/dts/imx6sx-sabreauto.dts | 146 +++++++++++++++++++++++++++++++++
- 2 files changed, 147 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6sx-sabreauto.dts
+On Mon, Dec 15, 2014 at 9:38 PM, Mark Rutland <mark.rutland@arm.com> wrote:
+> On Fri, Dec 05, 2014 at 12:27:23PM +0000, Lyra Zhang wrote:
+>> On Fri, Dec 5, 2014 at 6:40 PM, Mark Rutland <mark.rutland@arm.com> wrote:
+>> > Hi,
+>> >
+>> > On Thu, Dec 04, 2014 at 11:34:15AM +0000, Chunyan Zhang wrote:
+>> >> Spreadtrum is a rapid growing chip vendor providing smart phone total solutions.
+>> >>
+>> >> Sharkl64 Platform is nominated as a SoC infrastructure that supports 4G/3G/2G
+>> >> standards based on ARMv8 multiple core architecture.Now we have only one
+>> >> SoC(SC9836) based on this Platform in developing.
+>> >>
+>> >> This patchset adds Sharkl64 support in arm64 device tree and the serial driver
+>> >> of SC9836-UART.
+>> >>
+>> >> This patchset also has patches which address "sprd" prefix and DT compatible
+>> >> strings for nodes which appear un-documented.
+>> >>
+>> >> This version code was tesed both on Fast Mode and sc9836-fpga board.
+>> >> We use the latest boot-wrapper-aarch64 as the bootloader.
+>> >>
+>> >> Changes from v3:
+>> >> * Addressed review comments:
+>> >>       - Added the description of clock property for sc9836-uart
+>> >>       - Revised the size of GICC to be 8KiB
+>> >>       - Added another compatible string for psci-0.1
+>> >
+>> > I had open questions on v3 regarding your PSCI imlpementation. You
+>> > mentioned that you are using the aarch64 bootwrapper, but your DT
+>> > describes PSCI 0.2, and the (upstream) bootwrapper does not implement
+>> > PSCI 0.2. Adding the old PSCI compatible string is _not_ sufficient if
+>> > you do not have a full PSCI 0.2 implementation.
+>> >
+>> > Given that PSCI 0.2 requires more functionality to be implemented, I'd
+>> > like to know that your implementation is spec-compliant (implementing
+>> > the mandatory functions, nters the kernel in the correct state, etc),
+>> > and that it has been tested.
+>> >
+>> > Would you be able to look at my comments from the last posting please?
+>> >
+>> > Thanks,
+>> > Mark.
+>> > --
+>>
+>> Hi, Mark
+>>
+>> Ok, I'll check it again with our related engineers.
+>>
+>> Actually, I had read all of your comments carefully before sending
+>> each version of patches, and I replied you a few days early, I guess
+>> you may miss it :)
+>>
+>> If we just implemented psci-0.1 until now, can we submit this path
+>> without "compatible = "arm,psci-0.2"", but only with " compatible =
+>> "arm,psci" ".
+>
+> Elsewhere I've recommended such things are placed in the DTB by the
+> bootloader (at least for those cases where the bootlaoder is tied to the
+> firmware), as it can fill in the appropriate enable-method (and add any
+> other nodes as required).
+>
+> Having compatible = "arm,psci", and a couple of other properties for now
+> is certainly preferable to describing a not-yet-implemented PSCI 0.2.
+>
+> Thanks,
+> Mark.
+> --
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 4600499..efe6c73 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -250,6 +250,7 @@ dtb-$(CONFIG_ARCH_MXC) += \
- 	imx6q-tx6q-1020-comtft.dtb \
- 	imx6q-tx6q-1110.dtb \
- 	imx6sl-evk.dtb \
-+	imx6sx-sabreauto.dtb \
- 	imx6sx-sdb.dtb \
- 	ls1021a-qds.dtb \
- 	ls1021a-twr.dtb \
-diff --git a/arch/arm/boot/dts/imx6sx-sabreauto.dts b/arch/arm/boot/dts/imx6sx-sabreauto.dts
-new file mode 100644
-index 0000000..e3c0b63
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6sx-sabreauto.dts
-@@ -0,0 +1,146 @@
-+/*
-+ * Copyright (C) 2014 Freescale Semiconductor, Inc.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+/dts-v1/;
-+
-+#include "imx6sx.dtsi"
-+
-+/ {
-+	model = "Freescale i.MX6 SoloX Sabre Auto Board";
-+	compatible = "fsl,imx6sx-sabreauto", "fsl,imx6sx";
-+
-+	memory {
-+		reg = <0x80000000 0x80000000>;
-+	};
-+
-+	regulators {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		vcc_sd3: regulator@0 {
-+			compatible = "regulator-fixed";
-+			reg = <0>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_vcc_sd3>;
-+			regulator-name = "VCC_SD3";
-+			regulator-min-microvolt = <3000000>;
-+			regulator-max-microvolt = <3000000>;
-+			gpio = <&gpio2 11 GPIO_ACTIVE_HIGH>;
-+			enable-active-high;
-+		};
-+	};
-+};
-+
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart1>;
-+	status = "okay";
-+};
-+
-+&usdhc3 {
-+	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-+	pinctrl-0 = <&pinctrl_usdhc3>;
-+	pinctrl-1 = <&pinctrl_usdhc3_100mhz>;
-+	pinctrl-2 = <&pinctrl_usdhc3_200mhz>;
-+	bus-width = <8>;
-+	cd-gpios = <&gpio7 10 GPIO_ACTIVE_HIGH>;
-+	wp-gpios = <&gpio3 19 GPIO_ACTIVE_HIGH>;
-+	keep-power-in-suspend;
-+	enable-sdio-wakeup;
-+	vmmc-supply = <&vcc_sd3>;
-+	status = "okay";
-+};
-+
-+&usdhc4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc4>;
-+	bus-width = <8>;
-+	cd-gpios = <&gpio7 11 GPIO_ACTIVE_HIGH>;
-+	no-1-8-v;
-+	keep-power-in-suspend;
-+	enable-sdio-wakup;
-+	status = "okay";
-+};
-+
-+&iomuxc {
-+	imx6x-sabreauto {
-+		pinctrl_uart1: uart1grp {
-+			fsl,pins = <
-+				MX6SX_PAD_GPIO1_IO04__UART1_TX		0x1b0b1
-+				MX6SX_PAD_GPIO1_IO05__UART1_RX		0x1b0b1
-+			>;
-+		};
-+
-+		pinctrl_usdhc3: usdhc3grp {
-+			fsl,pins = <
-+				MX6SX_PAD_SD3_CMD__USDHC3_CMD		0x17059
-+				MX6SX_PAD_SD3_CLK__USDHC3_CLK		0x10059
-+				MX6SX_PAD_SD3_DATA0__USDHC3_DATA0	0x17059
-+				MX6SX_PAD_SD3_DATA1__USDHC3_DATA1	0x17059
-+				MX6SX_PAD_SD3_DATA2__USDHC3_DATA2	0x17059
-+				MX6SX_PAD_SD3_DATA3__USDHC3_DATA3	0x17059
-+				MX6SX_PAD_SD3_DATA4__USDHC3_DATA4	0x17059
-+				MX6SX_PAD_SD3_DATA5__USDHC3_DATA5	0x17059
-+				MX6SX_PAD_SD3_DATA6__USDHC3_DATA6	0x17059
-+				MX6SX_PAD_SD3_DATA7__USDHC3_DATA7	0x17059
-+				MX6SX_PAD_KEY_COL0__GPIO2_IO_10		0x17059 /* CD */
-+				MX6SX_PAD_KEY_ROW0__GPIO2_IO_15		0x17059 /* WP */
-+			>;
-+		};
-+
-+		pinctrl_usdhc3_100mhz: usdhc3grp-100mhz {
-+			fsl,pins = <
-+				MX6SX_PAD_SD3_CMD__USDHC3_CMD		0x170b9
-+				MX6SX_PAD_SD3_CLK__USDHC3_CLK		0x100b9
-+				MX6SX_PAD_SD3_DATA0__USDHC3_DATA0	0x170b9
-+				MX6SX_PAD_SD3_DATA1__USDHC3_DATA1	0x170b9
-+				MX6SX_PAD_SD3_DATA2__USDHC3_DATA2	0x170b9
-+				MX6SX_PAD_SD3_DATA3__USDHC3_DATA3	0x170b9
-+				MX6SX_PAD_SD3_DATA4__USDHC3_DATA4	0x170b9
-+				MX6SX_PAD_SD3_DATA5__USDHC3_DATA5	0x170b9
-+				MX6SX_PAD_SD3_DATA6__USDHC3_DATA6	0x170b9
-+				MX6SX_PAD_SD3_DATA7__USDHC3_DATA7	0x170b9
-+			>;
-+		};
-+
-+		pinctrl_usdhc3_200mhz: usdhc3grp-200mhz {
-+			fsl,pins = <
-+				MX6SX_PAD_SD3_CMD__USDHC3_CMD		0x170f9
-+				MX6SX_PAD_SD3_CLK__USDHC3_CLK		0x100f9
-+				MX6SX_PAD_SD3_DATA0__USDHC3_DATA0	0x170f9
-+				MX6SX_PAD_SD3_DATA1__USDHC3_DATA1	0x170f9
-+				MX6SX_PAD_SD3_DATA2__USDHC3_DATA2	0x170f9
-+				MX6SX_PAD_SD3_DATA3__USDHC3_DATA3	0x170f9
-+				MX6SX_PAD_SD3_DATA4__USDHC3_DATA4	0x170f9
-+				MX6SX_PAD_SD3_DATA5__USDHC3_DATA5	0x170f9
-+				MX6SX_PAD_SD3_DATA6__USDHC3_DATA6	0x170f9
-+				MX6SX_PAD_SD3_DATA7__USDHC3_DATA7	0x170f9
-+			>;
-+		};
-+
-+		pinctrl_usdhc4: usdhc4grp {
-+			fsl,pins = <
-+				MX6SX_PAD_SD4_CMD__USDHC4_CMD		0x17059
-+				MX6SX_PAD_SD4_CLK__USDHC4_CLK		0x10059
-+				MX6SX_PAD_SD4_DATA0__USDHC4_DATA0	0x17059
-+				MX6SX_PAD_SD4_DATA1__USDHC4_DATA1	0x17059
-+				MX6SX_PAD_SD4_DATA2__USDHC4_DATA2	0x17059
-+				MX6SX_PAD_SD4_DATA3__USDHC4_DATA3	0x17059
-+				MX6SX_PAD_SD4_DATA7__GPIO6_IO_21	0x17059 /* CD */
-+				MX6SX_PAD_SD4_DATA6__GPIO6_IO_20	0x17059 /* WP */
-+			>;
-+		};
-+
-+		pinctrl_vcc_sd3: vccsd3grp {
-+			fsl,pins = <
-+				MX6SX_PAD_KEY_COL1__GPIO2_IO_11		0x17059
-+			>;
-+		};
-+	};
-+};
--- 
-1.9.1
+Thank you for the replay.
+I'll still ping my colleagues to implement PSCI 0.2, and test it.
+But it perhaps would not be finished soon, because our internal
+developing code right now is based on a little old version Linux
+kernel which doesn't support  PSCI-0.2
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks again,
+Chunyan
