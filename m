@@ -1,70 +1,83 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH v5 6/6] ARM: socfpga: defconfig: enable fpga manager
-Date: Wed, 17 Dec 2014 13:46:42 -0500
-Message-ID: <20141217184642.GX967@titan.lakedaemon.net>
-References: <1418835289-15752-1-git-send-email-atull@opensource.altera.com>
- <1418835289-15752-7-git-send-email-atull@opensource.altera.com>
- <20141217173216.GA24913@kroah.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <20141217173216.GA24913@kroah.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: mark.rutland@arm.com, linux-doc@vger.kernel.org, rubini@gnudd.com, pantelis.antoniou@konsulko.com, hpa@zytor.com, s.trumtrar@pengutronix.de, devel@driverdev.osuosl.org, sameo@linux.intel.com, nico@linaro.org, ijc+devicetree@hellion.org.uk, michal.simek@xilinx.com, kyle.teske@ni.com, jgunthorpe@obsidianresearch.com, grant.likely@linaro.org, davidb@codeaurora.org, linus.walleij@linaro.org, cesarb@cesarb.net, devicetree@vger.kernel.org, pawel.moll@arm.com, iws@ovro.caltech.edu, atull@opensource.altera.com, broonie@kernel.org, philip@balister.org, dinguyen@opensource.altera.com, monstr@monstr.eu, pavel@denx.de, yvanderv@opensource.altera.com, linux-kernel@vger.kernel.org, balbi@ti.com, delicious.quinoa@gmail.com, robh+dt@kernel.org, rob@landley.net, galak@codeaurora.org, akpm@linux-foundation.org, davem@davemloft.net, m.chehab@samsung.com
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 8/8] ARM: shmobile: ape6evm dts: Move Ethernet node to BSC
+Date: Wed, 17 Dec 2014 19:49:13 +0100
+Message-ID: <1418842153-17113-9-git-send-email-geert+renesas@glider.be>
+References: <1418842153-17113-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1418842153-17113-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-pm@vger.kernel.org
+Cc: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@kernel.org>, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 17, 2014 at 09:32:16AM -0800, Greg KH wrote:
-> On Wed, Dec 17, 2014 at 10:54:49AM -0600, atull@opensource.altera.com wrote:
-> > From: Alan Tull <atull@opensource.altera.com>
-> > 
-> > Enable FPGA manager for Altera socfpga.
-> > 
-> > Signed-off-by: Alan Tull <atull@opensource.altera.com>
-> > ---
-> > v5: s/CONFIG_FPGA_MGR_ALTERA/CONFIG_FPGA_MGR_SOCFPGA/
-> > ---
-> >  arch/arm/configs/socfpga_defconfig |    4 ++++
-> >  1 file changed, 4 insertions(+)
-> > 
-> > diff --git a/arch/arm/configs/socfpga_defconfig b/arch/arm/configs/socfpga_defconfig
-> > index a2956c3..f1d6a3b 100644
-> > --- a/arch/arm/configs/socfpga_defconfig
-> > +++ b/arch/arm/configs/socfpga_defconfig
-> > @@ -86,6 +86,10 @@ CONFIG_USB_DWC2=y
-> >  CONFIG_USB_DWC2_HOST=y
-> >  CONFIG_MMC=y
-> >  CONFIG_MMC_DW=y
-> > +CONFIG_STAGING=y
-> > +CONFIG_FPGA=y
-> > +CONFIG_FPGA_MGR_SYSFS=y
-> > +CONFIG_FPGA_MGR_SOCFPGA=y
-> >  CONFIG_EXT2_FS=y
-> >  CONFIG_EXT2_FS_XATTR=y
-> >  CONFIG_EXT2_FS_POSIX_ACL=y
-> 
-> Do defconfigs really matter anymore?
+Move the Ethernet node from the ad-hoc lbsc node to the BSC node,
+as its connected to the Bus State Controller.  This allows the system to
+know the right position of the Ethernet node in the clock and PM domain
+hierarchy, and manage the clock and PM domain appropriately.
 
-Very much so.  arm-soc uses them as a standard build test target and
-boot target on their bootfarms.  Please see the arm-buildbot mailinglist
-at:
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+Untested
 
-  http://lists.linaro.org/mailman/listinfo/kernel-build-reports
+v2:
+  - New
+---
+ arch/arm/boot/dts/r8a73a4-ape6evm.dts | 35 +++++++++++++++--------------------
+ 1 file changed, 15 insertions(+), 20 deletions(-)
 
-And December's results so far:
+diff --git a/arch/arm/boot/dts/r8a73a4-ape6evm.dts b/arch/arm/boot/dts/r8a73a4-ape6evm.dts
+index 0d50bef0123449f5..44c4cac1820a4dfe 100644
+--- a/arch/arm/boot/dts/r8a73a4-ape6evm.dts
++++ b/arch/arm/boot/dts/r8a73a4-ape6evm.dts
+@@ -72,26 +72,6 @@
+ 		regulator-always-on;
+ 	};
+ 
+-	lbsc {
+-		compatible = "simple-bus";
+-		#address-cells = <1>;
+-		#size-cells = <1>;
+-		ranges = <0 0 0 0x20000000>;
+-
+-		ethernet@8000000 {
+-			compatible = "smsc,lan9220", "smsc,lan9115";
+-			reg = <0x08000000 0x1000>;
+-			interrupt-parent = <&irqc1>;
+-			interrupts = <8 IRQ_TYPE_LEVEL_HIGH>;
+-			phy-mode = "mii";
+-			reg-io-width = <4>;
+-			smsc,irq-active-high;
+-			smsc,irq-push-pull;
+-			vdd33a-supply = <&ape6evm_fixed_3v3>;
+-			vddvario-supply = <&ape6evm_fixed_1v8>;
+-		};
+-	};
+-
+ 	leds {
+ 		compatible = "gpio-leds";
+ 		led1 {
+@@ -184,6 +164,21 @@
+ 	voltage-tolerance = <1>; /* 1% */
+ };
+ 
++&bsc {
++	ethernet@8000000 {
++		compatible = "smsc,lan9220", "smsc,lan9115";
++		reg = <0x08000000 0x1000>;
++		interrupt-parent = <&irqc1>;
++		interrupts = <8 IRQ_TYPE_LEVEL_HIGH>;
++		phy-mode = "mii";
++		reg-io-width = <4>;
++		smsc,irq-active-high;
++		smsc,irq-push-pull;
++		vdd33a-supply = <&ape6evm_fixed_3v3>;
++		vddvario-supply = <&ape6evm_fixed_1v8>;
++	};
++};
++
+ &cmt1 {
+ 	status = "okay";
+ };
+-- 
+1.9.1
 
-  http://lists.linaro.org/pipermail/kernel-build-reports/2014-December/thread.html
-
-hth,
-
-Jason.
