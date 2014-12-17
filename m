@@ -1,36 +1,55 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 2/8] ARM: multi_v7_defconfig: Enable support for ST's LPC Watchdog
-Date: Wed, 17 Dec 2014 16:45:21 +0000
-Message-ID: <1418834727-1602-3-git-send-email-lee.jones@linaro.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 7/8] rtc: bindings: Provide ST bindings for ST's LPC RTC device
+Date: Wed, 17 Dec 2014 16:45:26 +0000
+Message-ID: <1418834727-1602-8-git-send-email-lee.jones@linaro.org>
 References: <1418834727-1602-1-git-send-email-lee.jones@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1418834727-1602-1-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1418834727-1602-1-git-send-email-lee.jones@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: lee.jones@linaro.org, kernel@stlinux.com, a.zummo@towertech.it, rtc-linux@googlegroups.com, wim@iguana.be, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux@roeck-us.net, arnd@arndb.de
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- arch/arm/configs/multi_v7_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+On current ST platforms the LPC controls a number of functions including
+Watchdog and Real Time Clock.  This patch provides the bindings used to
+configure LPC in RTC mode.
 
-diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-index 99a8a4a..e34d5c6 100644
---- a/arch/arm/configs/multi_v7_defconfig
-+++ b/arch/arm/configs/multi_v7_defconfig
-@@ -238,6 +238,7 @@ CONFIG_ST_THERMAL_SYSCFG=y
- CONFIG_ST_THERMAL_MEMMAP=y
- CONFIG_WATCHDOG=y
- CONFIG_ORION_WATCHDOG=y
-+CONFIG_ST_WATCHDOG=y
- CONFIG_SUNXI_WATCHDOG=y
- CONFIG_MFD_AS3722=y
- CONFIG_MFD_BCM590XX=y
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+---
+ .../devicetree/bindings/rtc/rtc-st-lpc.txt         | 25 ++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rtc/rtc-st-lpc.txt
+
+diff --git a/Documentation/devicetree/bindings/rtc/rtc-st-lpc.txt b/Documentation/devicetree/bindings/rtc/rtc-st-lpc.txt
+new file mode 100644
+index 0000000..aaf9855
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/rtc-st-lpc.txt
+@@ -0,0 +1,25 @@
++STMicroelectronics Low Power Controller (LPC) - RTC
++===================================================
++
++LPC currently supports Watchdog OR Real Time Clock functionality.
++
++[See: ../watchdog/st_lpc_wdt.txt for Watchdog options]
++
++Required properties
++
++- compatible 	: Must be one of: "st,stih407-lpc" "st,stih416-lpc"
++				  "st,stih415-lpc" "st,stid127-lpc"
++- reg		: LPC registers base address + size
++- interrupts    : LPC interrupt line number and associated flags
++- clocks	: Clock used by LPC device (See: ../clock/clock-bindings.txt)
++- st,lpc-mode	: The LPC can run either one of two modes ST_LPC_MODE_RTC [0] or
++		  ST_LPC_MODE_WDT [1].  One (and only one) mode must be
++		  selected.
++
++Example:
++	lpc@fde05000 {
++		compatible	= "st,stih416-lpc-watchdog";
++		reg		= <0xfde05000 0x1000>;
++		clocks 		= <&clk_s_d3_flexgen CLK_LPC_0>;
++		st,lpc-mode	= <ST_LPC_MODE_RTC>;
++	};
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
