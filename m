@@ -1,70 +1,52 @@
-From: Eddie Huang <eddie.huang@mediatek.com>
-Subject: [PATCH v2 4/4] arm64: mediatek: Add MT8173 SoC Kconfig and defconfig
-Date: Wed, 17 Dec 2014 22:17:33 +0800
-Message-ID: <1418825853-10934-5-git-send-email-eddie.huang@mediatek.com>
-References: <1418825853-10934-1-git-send-email-eddie.huang@mediatek.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCHv1] rtc: bcm-iproc: Add support for Broadcom iproc rtc
+Date: Wed, 17 Dec 2014 15:31:25 +0100
+Message-ID: <1603624.EMYvBCWhuM@wuerfel>
+References: <1418757750-3628-1-git-send-email-arun.ramamurthy@broadcom.com> <549095CA.7090505@broadcom.com> <5490A9FC.6030305@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1418825853-10934-1-git-send-email-eddie.huang@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Jason Cooper <jason@lakedaemon.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Mark Brown <broonie@linaro.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Robert Richter <rrichter@cavium.com>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, "Joe.C" <yingjoe.chen@mediatek.com>, Thomas Gleixner <tglx@linutronix.de>, Eddie Huang <eddie.huang@mediatek.com>, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5490A9FC.6030305-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arun Ramamurthy <arun.ramamurthy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Arun Ramamurthy <arunrama-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add MT8173 arm64 Kconfig and defconfig files
+On Tuesday 16 December 2014 13:54:04 Arun Ramamurthy wrote:
+> On 14-12-16 12:27 PM, Ray Jui wrote:
+> > On 12/16/2014 12:19 PM, Arnd Bergmann wrote:
+> >>
+> >> It sounds like CRMU is some other unit aside from the RTC. Could this
+> >> be something like a generic system controller? I think it should
+> >> either have its own driver or use the syscon logic if that is what
+> >> this is.
+> >>
+> > Giving that CRMU has scattered, miscellaneous control logic for multiple
+> > different peripherals, it probably makes more sense to use the syscon
+> > logic here.
+> >
+> Arnd, thanks for the feedback. If I was to write a separate driver for 
+> the CRMU, I would have to export certain functions and create an api 
+> that only this RTC driver would use. I am not sure that is efficient or 
+> required. What is your opinion?
+> Would it be better if I use the syson api in my current driver and move 
+> the CRMU registers to separate syscon device tree entry?
+> 
 
-Signed-off-by: Eddie Huang <eddie.huang@mediatek.com>
----
- arch/arm64/Kconfig           | 6 ++++++
- arch/arm64/configs/defconfig | 2 ++
- 2 files changed, 8 insertions(+)
+This is something that's normally up to the platform maintainers, depending
+on what works best for a given SoC. If you have a control block that
+wants to export the same high-level API for multiple drivers, that's
+fine, but if literally every register does something different, a syscon
+driver works best.
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 9532f8d..85fd1ca 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -142,6 +142,12 @@ source "kernel/Kconfig.freezer"
- 
- menu "Platform selection"
- 
-+config ARCH_MEDIATEK
-+	bool "Mediatek MT65xx & MT81xx ARMv8 SoC"
-+	select ARM_GIC
-+	help
-+	  Support for Mediatek MT65xx & MT81xx ARMv8 SoCs
-+
- config ARCH_THUNDER
- 	bool "Cavium Inc. Thunder SoC Family"
- 	help
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index dd301be..ed84d21 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -32,6 +32,7 @@ CONFIG_MODULES=y
- CONFIG_MODULE_UNLOAD=y
- # CONFIG_BLK_DEV_BSG is not set
- # CONFIG_IOSCHED_DEADLINE is not set
-+CONFIG_ARCH_MEDIATEK=y
- CONFIG_ARCH_THUNDER=y
- CONFIG_ARCH_VEXPRESS=y
- CONFIG_ARCH_XGENE=y
-@@ -87,6 +88,7 @@ CONFIG_SERIO_AMBAKMI=y
- CONFIG_LEGACY_PTY_COUNT=16
- CONFIG_SERIAL_8250=y
- CONFIG_SERIAL_8250_CONSOLE=y
-+CONFIG_SERIAL_8250_MT6577=y
- CONFIG_SERIAL_AMBA_PL011=y
- CONFIG_SERIAL_AMBA_PL011_CONSOLE=y
- CONFIG_SERIAL_OF_PLATFORM=y
--- 
-1.8.1.1.dirty
+It's also possible that some of the functions of the CRMU already have
+abstractions, like system-reset, device-reset, regulator or clock support.
+In that case, you can still use syscon but have the more other drivers
+use that for accessing the registers.
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
