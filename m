@@ -1,40 +1,56 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH 1/2] of: Add vendor prefix for Shanghai AVIC Optoelectronics
- Co., Ltd.
-Date: Thu, 18 Dec 2014 16:43:42 +0100
-Message-ID: <1418917423-26583-1-git-send-email-p.zabel@pengutronix.de>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 6/8] watchdog: st_wdt: Add new driver for ST's LPC
+ Watchdog
+Date: Thu, 18 Dec 2014 08:00:14 -0800
+Message-ID: <20141218160014.GA16015@roeck-us.net>
+References: <1418834727-1602-1-git-send-email-lee.jones@linaro.org>
+ <1418834727-1602-7-git-send-email-lee.jones@linaro.org>
+ <20141217180251.GA29914@roeck-us.net>
+ <20141218082652.GP13885@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20141218082652.GP13885@x1>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, a.zummo@towertech.it, rtc-linux@googlegroups.com, wim@iguana.be, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, arnd@arndb.de, David Paris <david.paris@st.com>
 List-Id: devicetree@vger.kernel.org
 
-U2hhbmdoYWkgQVZJQyBPcHRvZWxlY3Ryb25pY3MgQ28uLCBMdGQuIGlzIGEgc3Vic2lkaWFyeSBv
-ZiBUaWFubWEKTWljcm9lbGVjdHJvbmljcyBDby4sIEx0ZC4gYW5kIGRlc2lnbnMgYW5kIG1hbnVm
-YWN0dXJlcyBURlQgTENEcy4KClNpZ25lZC1vZmYtYnk6IFBoaWxpcHAgWmFiZWwgPHAuemFiZWxA
-cGVuZ3V0cm9uaXguZGU+Ci0tLQogRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Zl
-bmRvci1wcmVmaXhlcy50eHQgfCAxICsKIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKQoK
-ZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92ZW5kb3ItcHJl
-Zml4ZXMudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZlbmRvci1wcmVm
-aXhlcy50eHQKaW5kZXggNzhlZmViYi4uMmNlMTVhNCAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZlbmRvci1wcmVmaXhlcy50eHQKKysrIGIvRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZlbmRvci1wcmVmaXhlcy50eHQKQEAgLTIzLDYgKzIz
-LDcgQEAgYXJtYWRldXMJQVJNYWRldXMgU3lzdGVtcyBTQVJMCiBhdG1lbAlBdG1lbCBDb3Jwb3Jh
-dGlvbgogYXVvCUFVIE9wdHJvbmljcyBDb3Jwb3JhdGlvbgogYXZhZ28JQXZhZ28gVGVjaG5vbG9n
-aWVzCithdmljCVNoYW5naGFpIEFWSUMgT3B0b2VsZWN0cm9uaWNzIENvLiwgTHRkLgogYm9zY2gJ
-Qm9zY2ggU2Vuc29ydGVjIEdtYkgKIGJyY20JQnJvYWRjb20gQ29ycG9yYXRpb24KIGJ1ZmZhbG8J
-QnVmZmFsbywgSW5jLgotLSAKMi4xLjMKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
-ZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGlu
-Zm8vZHJpLWRldmVsCg==
+On Thu, Dec 18, 2014 at 08:26:52AM +0000, Lee Jones wrote:
+> On Wed, 17 Dec 2014, Guenter Roeck wrote:
+> > On Wed, Dec 17, 2014 at 04:45:25PM +0000, Lee Jones wrote:
+> > > Signed-off-by: David Paris <david.paris@st.com>
+> > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > 
+> > Hi Lee and David,
+> > 
+> > I still have a couple of comments below. Sorry I didn't catch those earlier.
+> > 
+> > Thanks,
+> > Guenter
+> > 
+> > > ---
+> > >  drivers/watchdog/Kconfig  |  13 ++
+> > >  drivers/watchdog/Makefile |   1 +
+> > >  drivers/watchdog/st_wdt.c | 323 ++++++++++++++++++++++++++++++++++++++++++++++
+> > >  3 files changed, 337 insertions(+)
+> > >  create mode 100644 drivers/watchdog/st_wdt.c
+> 
+> Chopping all the crud.
+> 
+> [...]
+> 
+> > > +static struct of_device_id st_wdog_match[] = {
+> > > +	{
+> > > +		.compatible = "st,stih407-lpc",
+> > > +		.data = (void *)&stih407_syscfg,
+> > 
+> > Nitpick: typecast to and from void * is not necessary.
+> 
+> Actually that's not true, but it is superfluous in this case.
+> 
+Point taken. Would you agree to a more detailed "typecasting a pointer
+to and from void * is not necessary" ?
+
+Guenter
