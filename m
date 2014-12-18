@@ -1,94 +1,91 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 6/7] ARM: at91: dts: sama5d3: add ov2640 camera sensor support
-Date: Thu, 18 Dec 2014 14:32:49 +0200
-Message-ID: <5518219.5PdO7T0ydL@avalon>
-References: <1418892667-27428-1-git-send-email-josh.wu@atmel.com> <1418892667-27428-7-git-send-email-josh.wu@atmel.com>
+From: Shaohui Xie <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH] [v2] power/fsl: add MDIO dt binding for FMan
+Date: Thu, 18 Dec 2014 12:53:33 +0000
+Message-ID: <DM2PR0301MB08641FB289DBA17AD59FBEA0E26A0@DM2PR0301MB0864.namprd03.prod.outlook.com>
+References: <1415958800-9867-1-git-send-email-shh.xie@gmail.com>
+ <1416966592.15957.172.camel@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1418892667-27428-7-git-send-email-josh.wu@atmel.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Josh Wu <josh.wu@atmel.com>
-Cc: nicolas.ferre@atmel.com, voice.shen@atmel.com, plagnioj@jcrosoft.com, boris.brezillon@free-electrons.com, alexandre.belloni@free-electrons.com, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-media@vger.kernel.org, g.liakhovetski@gmx.de
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shaohui Xie <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Emilian Medve <Emilian.Medve-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Josh,
-
-Thank you for the patch.
-
-On Thursday 18 December 2014 16:51:06 Josh Wu wrote:
-> According to v4l2 dt document, we add:
->   a camera host: ISI port.
->   a i2c camera sensor: ov2640 port.
-> to sama5d3xmb.dtsi.
-> 
-> In the ov2640 node, it defines the pinctrls, clocks and isi port.
-> In the ISI node, it also reference to a ov2640 port.
-> 
-> Signed-off-by: Josh Wu <josh.wu@atmel.com>
-> ---
->  arch/arm/boot/dts/sama5d3xmb.dtsi | 32 ++++++++++++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/sama5d3xmb.dtsi
-> b/arch/arm/boot/dts/sama5d3xmb.dtsi index 0aaebc6..958a528 100644
-> --- a/arch/arm/boot/dts/sama5d3xmb.dtsi
-> +++ b/arch/arm/boot/dts/sama5d3xmb.dtsi
-> @@ -52,6 +52,29 @@
->  				};
->  			};
-> 
-> +			i2c1: i2c@f0018000 {
-> +				ov2640: camera@0x30 {
-> +					compatible = "ovti,ov2640";
-> +					reg = <0x30>;
-> +					pinctrl-names = "default";
-> +					pinctrl-0 = <&pinctrl_isi_pck_as_mck
-> &pinctrl_sensor_power &pinctrl_sensor_reset>;
-> +					resetb-gpios = <&pioE 24 GPIO_ACTIVE_LOW>;
-> +					pwdn-gpios = <&pioE 29 GPIO_ACTIVE_HIGH>;
-> +					/* use pck1 for the master clock of ov2640 */
-> +					clocks = <&pck1>;
-> +					clock-names = "xvclk";
-> +					assigned-clocks = <&pck1>;
-> +					assigned-clock-rates = <25000000>;
-> +
-> +					port {
-> +						ov2640_0: endpoint {
-> +							remote-endpoint = <&isi_0>;
-> +							bus-width = <8>;
-> +						};
-> +					};
-> +				};
-> +			};
-> +
->  			usart1: serial@f0020000 {
->  				dmas = <0>, <0>;	/*  Do not use DMA for usart1 */
->  				pinctrl-names = "default";
-> @@ -60,6 +83,15 @@
->  			};
-> 
->  			isi: isi@f0034000 {
-> +				port {
-> +					#address-cells = <1>;
-> +					#size-cells = <0>;
-> +
-
-I would add the port node and those two properties to 
-arch/arm/boot/dts/sama5d3.dtsi, as the isi has a single port. The endpoint, of 
-course, should stay in this file.
-
-> +					isi_0: endpoint {
-> +						remote-endpoint = <&ov2640_0>;
-> +						bus-width = <8>;
-> +					};
-> +				};
->  			};
-> 
->  			mmc1: mmc@f8000000 {
-
--- 
-Regards,
-
-Laurent Pinchart
+UGluZy4NCg0KQmVzdCBSZWdhcmRzLCANClNoYW9odWkgWGllDQo+IC0tLS0tT3JpZ2luYWwgTWVz
+c2FnZS0tLS0tDQo+IEZyb206IFhpZSBTaGFvaHVpLUIyMTk4OQ0KPiBTZW50OiBXZWRuZXNkYXks
+IE5vdmVtYmVyIDI2LCAyMDE0IDEwOjExIEFNDQo+IFRvOiBXb29kIFNjb3R0LUIwNzQyMQ0KPiBD
+YzogbGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwu
+b3JnOyBNZWR2ZSBFbWlsaWFuLQ0KPiBFTU1FRFZFMTsgTGliZXJtYW4gSWdhbC1CMzE5NTANCj4g
+U3ViamVjdDogUkU6IFtQQVRDSF0gW3YyXSBwb3dlci9mc2w6IGFkZCBNRElPIGR0IGJpbmRpbmcg
+Zm9yIEZNYW4NCj4gDQo+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiBGcm9tOiBX
+b29kIFNjb3R0LUIwNzQyMQ0KPiA+IFNlbnQ6IFdlZG5lc2RheSwgTm92ZW1iZXIgMjYsIDIwMTQg
+OTo1MCBBTQ0KPiA+IFRvOiBzaGgueGllQGdtYWlsLmNvbQ0KPiA+IENjOiBsaW51eHBwYy1kZXZA
+bGlzdHMub3psYWJzLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IE1lZHZlDQo+ID4g
+RW1pbGlhbi1FTU1FRFZFMTsgTGliZXJtYW4gSWdhbC1CMzE5NTA7IFhpZSBTaGFvaHVpLUIyMTk4
+OQ0KPiA+IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIFt2Ml0gcG93ZXIvZnNsOiBhZGQgTURJTyBkdCBi
+aW5kaW5nIGZvciBGTWFuDQo+ID4NCj4gPiBPbiBGcmksIDIwMTQtMTEtMTQgYXQgMTc6NTMgKzA4
+MDAsIHNoaC54aWVAZ21haWwuY29tIHdyb3RlOg0KPiA+ID4gRnJvbTogU2hhb2h1aSBYaWUgPFNo
+YW9odWkuWGllQGZyZWVzY2FsZS5jb20+DQo+ID4gPg0KPiA+ID4gVGhpcyBiaW5kaW5nIGlzIGZv
+ciBGTWFuIE1ESU8sIGl0IGNvdmVycyBGTWFuIHYyICYgRk1hbiB2My4NCj4gPiA+DQo+ID4gPiBT
+aWduZWQtb2ZmLWJ5OiBTaGFvaHVpIFhpZSA8U2hhb2h1aS5YaWVAZnJlZXNjYWxlLmNvbT4NCj4g
+PiA+IC0tLQ0KPiA+ID4gY2hhbmdlcyBpbiBWMjoNCj4gPiA+IGFkZHJlc3NlZCBjb21tZW50cyBm
+cm9tIFNjb3R0IGluIFYxLg0KPiA+ID4NCj4gPiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9w
+b3dlcnBjL2ZzbC9mbWFuLnR4dCAgICAgICB8IDY5DQo+ID4gKysrKysrKysrKysrKysrKysrKysr
+Kw0KPiA+ID4gIDEgZmlsZSBjaGFuZ2VkLCA2OSBpbnNlcnRpb25zKCspDQo+ID4gPg0KPiA+ID4g
+ZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBjL2Zz
+bC9mbWFuLnR4dA0KPiA+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcG93
+ZXJwYy9mc2wvZm1hbi50eHQNCj4gPiA+IGluZGV4IGVkZWVhMTYuLjE1MjNhODcgMTAwNjQ0DQo+
+ID4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXJwYy9mc2wv
+Zm1hbi50eHQNCj4gPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9w
+b3dlcnBjL2ZzbC9mbWFuLnR4dA0KPiA+ID4gQEAgLTcsNiArNyw3IEBAIENPTlRFTlRTDQo+ID4g
+PiAgICAtIEZNYW4gTVVSQU0gTm9kZQ0KPiA+ID4gICAgLSBGTWFuIGRUU0VDL1hHRUMvbUVNQUMg
+Tm9kZQ0KPiA+ID4gICAgLSBGTWFuIElFRUUgMTU4OCBOb2RlDQo+ID4gPiArICAtIEZNYW4gTURJ
+TyBOb2RlDQo+ID4gPiAgICAtIEV4YW1wbGUNCj4gPiA+DQo+ID4gPg0KPiA+ID4gPT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT0NCj4gPiA+ID09ID09PT09PT0gQEAgLTM1Nyw2ICszNTgsNjggQEAgcHRwLXRpbWVyQGZlMDAw
+IHsgIH07DQo+ID4gPg0KPiA+ID4NCj4gPiA+ID09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09DQo+ID4gPiA9PQ0KPiA+ID4g
+PT09PT09PQ0KPiA+ID4gK0ZNYW4gTURJTyBOb2RlDQo+ID4gPiArDQo+ID4gPiArREVTQ1JJUFRJ
+T04NCj4gPiA+ICsNCj4gPiA+ICtUaGUgTURJTyBpcyBhIGJ1cyB0byB3aGljaCB0aGUgUEhZIGRl
+dmljZXMgYXJlIGNvbm5lY3RlZC4NCj4gPiA+ICsNCj4gPiA+ICtQUk9QRVJUSUVTDQo+ID4gPiAr
+DQo+ID4gPiArLSBjb21wYXRpYmxlDQo+ID4gPiArCQlVc2FnZTogcmVxdWlyZWQNCj4gPiA+ICsJ
+CVZhbHVlIHR5cGU6IDxzdHJpbmdsaXN0Pg0KPiA+ID4gKwkJRGVmaW5pdGlvbjogQSBzdGFuZGFy
+ZCBwcm9wZXJ0eS4NCj4gPiA+ICsJCU11c3QgaW5jbHVkZSAiZnNsLGZtYW4tbWRpbyIgZm9yIDEg
+R2IvcyBNRElPIGZyb20gRk1hbiB2Mi4NCj4gPiA+ICsJCU11c3QgaW5jbHVkZSAiZnNsLGZtYW4t
+eG1kaW8iIGZvciAxMCBHYi9zIE1ESU8gZnJvbSBGTWFuIHYyLg0KPiA+ID4gKwkJTXVzdCBpbmNs
+dWRlICJmc2wsZm1hbi1tZW1hYy1tZGlvIiBmb3IgMS8xMCBHYi9zIE1ESU8gZnJvbQ0KPiA+ID4g
+KwkJRk1hbiB2My4NCj4gPiA+ICsNCj4gPiA+ICstIHJlZw0KPiA+ID4gKwkJVXNhZ2U6IHJlcXVp
+cmVkDQo+ID4gPiArCQlWYWx1ZSB0eXBlOiA8cHJvcC1lbmNvZGVkLWFycmF5Pg0KPiA+ID4gKwkJ
+RGVmaW5pdGlvbjogQSBzdGFuZGFyZCBwcm9wZXJ0eS4NCj4gPiA+ICsNCj4gPiA+ICstIGJ1cy1m
+cmVxdWVuY3kNCj4gPiA+ICsJCVVzYWdlOiBvcHRpb25hbA0KPiA+ID4gKwkJVmFsdWUgdHlwZTog
+PHUzMj4NCj4gPiA+ICsJCURlZmluaXRpb246IFNwZWNpZmllcyBleHRlcm5hbCBNRElPIGJ1cyBj
+bG9jayBzcGVlZCB3aGljaCBpcw0KPiA+ID4gKwkJZGlmZmVyZW50IGZyb20gTURJTyBzdGFuZGFy
+ZCAyLjVNSHouIFNob3VsZCBiZSBkZWZpbmVkIGZvcg0KPiA+IFNvQ3MNCj4gPiA+ICsJCW9uIHdo
+aWNoIHRoZSBzdGFuZGFyZCBvbmUgY2Fubm90IHdvcmsuDQo+ID4gPiArDQo+ID4gPiArLSBpbnRl
+cnJ1cHRzDQo+ID4gPiArCQlVc2FnZTogb3B0aW9uYWwNCj4gPiA+ICsJCVZhbHVlIHR5cGU6IDxw
+cm9wLWVuY29kZWQtYXJyYXk+DQo+ID4gPiArCQlEZWZpbml0aW9uOiBFdmVudCBpbnRlcnJ1cHQg
+b2YgZXh0ZXJuYWwgTURJTyBjb250cm9sbGVyLg0KPiA+ID4gKwkJMSBHYi9zIE1ESU8gYW5kIDEw
+IEdiL3MgTURJTyBoYXMgb25lIGludGVycnVwdCByZXNwZWN0aXZlbHkuDQo+ID4gPiArDQo+ID4g
+PiArLSBmc2wsZm1hbi1pbnRlcm5hbC1tZGlvDQo+ID4gPiArCQlVc2FnZTogcmVxdWlyZWQgZm9y
+IGludGVybmFsIE1ESU8NCj4gPiA+ICsJCVZhbHVlIHR5cGU6IGJvb2xlYW4NCj4gPiA+ICsJCURl
+ZmluaXRpb246IEZtYW4gaGFzIGludGVybmFsIE1ESU8gZm9yIGludGVybmFsIFBDUyhQaHlzaWNh
+bA0KPiA+ID4gKwkJQ29kaW5nIFN1YmxheWVyKSBQSFlzIGFuZCBleHRlcm5hbCBNRElPIGZvciBl
+eHRlcm5hbCBQSFlzLg0KPiA+ID4gKwkJVGhlIHNldHRpbmdzIGFuZCBwcm9ncmFtbWluZyByb3V0
+aW5lcyBmb3IgaW50ZXJuYWwvZXh0ZXJuYWwNCj4gPiA+ICsJCU1ESU8gYXJlIGRpZmZlcmVudC4g
+TXVzdCBiZSBpbmNsdWRlZCBmb3IgaW50ZXJuYWwgTURJTy4NCj4gPiA+ICsNCj4gPiA+ICtFWEFN
+UExFDQo+ID4gPiArDQo+ID4gPiArRXhhbXBsZSBmb3IgRk1hbiB2MiBleHRlcm5hbCBNRElPOg0K
+PiA+ID4gKw0KPiA+ID4gK21kaW9AZjEwMDAgew0KPiA+ID4gKwljb21wYXRpYmxlID0gImZzbCxm
+bWFuLXhtZGlvIjsNCj4gPiA+ICsJcmVnID0gPDB4ZjEwMDAgMHgxMDAwPjsNCj4gPiA+ICsJYnVz
+LWZyZXF1ZW5jeSA9IDwyMDAwMD47DQo+ID4gPiArfTsNCj4gPg0KPiA+IFNvIHRoZSBidXMgZnJl
+cXVlbmN5IGlzIG9ubHkgMjAgS0h6PyAgT3IgaXMgdGhlIHVuaXQgc3VwcG9zZWQgdG8gYmUNCj4g
+PiBzb21ldGhpbmcgb3RoZXIgdGhhbiBIej8NCj4gW1MuSF0gaXQncyBvbmx5IGFuIGV4YW1wbGUs
+IGl0IGNvdWxkIGJlIGRpZmZlcmVudCBvbiByZWFsIFNvQ3MsIGJ1dCB0aGV5IGFsd2F5cw0KPiBs
+b3dlciB0aGFuIHRoZSBzdGFuZGFyZCBvbmUsIFRoZSBzdGFuZGFyZCBvbmUgaXMgMi41TUh6LCBJ
+IGhhdmUgdG8gdXNlIEh6IGZvciBpdC4NCj4gDQo+IFRoYW5rcyENCj4gU2hhb2h1aQ0K
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
