@@ -1,76 +1,106 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH] ARM: shmobile: r8a7791: add MLB+ clock
-Date: Thu, 18 Dec 2014 23:43:03 +0300
-Message-ID: <7846462.yepFC759KH@wasted.cogentembedded.com>
+From: atull <atull@opensource.altera.com>
+Subject: Re: [PATCH v5 3/6] staging: fpga manager: framework core
+Date: Thu, 18 Dec 2014 14:46:15 -0600
+Message-ID: <alpine.DEB.2.02.1412181440490.25208@linuxheads99>
+References: <1418835289-15752-1-git-send-email-atull@opensource.altera.com> <1418835289-15752-4-git-send-email-atull@opensource.altera.com> <05395a89d783481b8b7c06bb299b53e0@BL2FFO11FD020.protection.gbl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: horms@verge.net.au, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: linux@arm.linux.org.uk, magnus.damm@gmail.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <05395a89d783481b8b7c06bb299b53e0@BL2FFO11FD020.protection.gbl>
+Sender: linux-doc-owner@vger.kernel.org
+To: Michal Simek <michal.simek@xilinx.com>
+Cc: gregkh@linuxfoundation.org, jgunthorpe@obsidianresearch.com, hpa@zytor.com, monstr@monstr.eu, rdunlap@infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, pantelis.antoniou@konsulko.com, robh+dt@kernel.org, grant.likely@linaro.org, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, pavel@denx.de, broonie@kernel.org, philip@balister.org, rubini@gnudd.com, s.trumtrar@pengutronix.de, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, balbi@ti.com, m.chehab@samsung.com, davidb@codeaurora.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, linus.walleij@linaro.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devel@driverdev.osuosl.org, delicious.quinoa@gmail.com, dinguye
 List-Id: devicetree@vger.kernel.org
 
-From: Andrey Gusakov <andrey.gusakov@cogentembedded.com>
+On Thu, 18 Dec 2014, Michal Simek wrote:
 
-Add MLB+ clock to R8A7791 device tree.
+> Hi Alan,
+> 
+> first of all - there are these kernel-doc warnings.
+> 
+> Info(drivers/staging/fpga/fpga-mgr.c:37): Scanning doc for fpga_mgr_low_level_state
+> Warning(drivers/staging/fpga/fpga-mgr.c:43): No description found for return value of 'fpga_mgr_low_level_state'
+> Info(drivers/staging/fpga/fpga-mgr.c:51): Scanning doc for __fpga_mgr_reset
+> Warning(drivers/staging/fpga/fpga-mgr.c:55): No description found for return value of '__fpga_mgr_reset'
+> Info(drivers/staging/fpga/fpga-mgr.c:69): Scanning doc for fpga_mgr_reset
+> Warning(drivers/staging/fpga/fpga-mgr.c:73): No description found for return value of 'fpga_mgr_reset'
+> Info(drivers/staging/fpga/fpga-mgr.c:88): Scanning doc for __fpga_mgr_stage_init
+> Warning(drivers/staging/fpga/fpga-mgr.c:92): No description found for return value of '__fpga_mgr_stage_write_init'
+> Info(drivers/staging/fpga/fpga-mgr.c:108): Scanning doc for __fpga_mgr_stage_write
+> Warning(drivers/staging/fpga/fpga-mgr.c:115): No description found for return value of '__fpga_mgr_stage_write'
+> Info(drivers/staging/fpga/fpga-mgr.c:129): Scanning doc for __fpga_mgr_stage_complete
+> Warning(drivers/staging/fpga/fpga-mgr.c:133): No description found for return value of '__fpga_mgr_stage_write_complete'
+> Info(drivers/staging/fpga/fpga-mgr.c:151): Scanning doc for __fpga_mgr_write
+> Warning(drivers/staging/fpga/fpga-mgr.c:158): No description found for return value of '__fpga_mgr_write'
+> Info(drivers/staging/fpga/fpga-mgr.c:173): Scanning doc for fpga_mgr_write
+> Warning(drivers/staging/fpga/fpga-mgr.c:179): No description found for return value of 'fpga_mgr_write'
+> Info(drivers/staging/fpga/fpga-mgr.c:195): Scanning doc for fpga_mgr_firmware_write
+> Warning(drivers/staging/fpga/fpga-mgr.c:204): No description found for return value of 'fpga_mgr_firmware_write'
+> Info(drivers/staging/fpga/fpga-mgr.c:234): Scanning doc for fpga_mgr_name
+> Warning(drivers/staging/fpga/fpga-mgr.c:239): No description found for return value of 'fpga_mgr_name'
+> Info(drivers/staging/fpga/fpga-mgr.c:414): Scanning doc for fpga_mgr_register
+> Warning(drivers/staging/fpga/fpga-mgr.c:423): No description found for return value of 'fpga_mgr_register'
+> Info(drivers/staging/fpga/fpga-mgr.c:480): Scanning doc for fpga_mgr_remove
+> Warning(drivers/staging/fpga/fpga-mgr.c:484): No description found for parameter 'pdev'
+> Warning(drivers/staging/fpga/fpga-mgr.c:484): Excess function parameter 'dev' description in 'fpga_mgr_remove'
+> 
 
-Signed-off-by: Andrey Gusakov <andrey.gusakov@cogentembedded.com>
-[Sergei: rebased, renamed, added changelog]
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+I see the warnings now.  I wasn't using the '-v' option for kernel-doc.
+Fixed in v6.
 
----
-This patch is against 'renesas-devel-20141218-v3.18' tag of Simon Horman's
-'renesas.git' repo.
+> > diff --git a/drivers/staging/fpga/Makefile b/drivers/staging/fpga/Makefile
+> > new file mode 100644
+> > index 0000000..ff6c677
+> > --- /dev/null
+> > +++ b/drivers/staging/fpga/Makefile
+> > @@ -0,0 +1,10 @@
+> > +#
+> > +# Makefile for the fpga framework and fpga manager drivers.
+> > +#
+> > +
+> > +fpga-mgr-core-y += fpga-mgr.o
+> 
+> remove this line - it is unused.
+> 
 
- arch/arm/boot/dts/r8a7791.dtsi            |   10 +++++-----
- include/dt-bindings/clock/r8a7791-clock.h |    1 +
- 2 files changed, 6 insertions(+), 5 deletions(-)
+OK
 
-Index: renesas/arch/arm/boot/dts/r8a7791.dtsi
-===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7791.dtsi
-+++ renesas/arch/arm/boot/dts/r8a7791.dtsi
-@@ -1154,17 +1154,17 @@
- 		mstp8_clks: mstp8_clks@e6150990 {
- 			compatible = "renesas,r8a7791-mstp-clocks", "renesas,cpg-mstp-clocks";
- 			reg = <0 0xe6150990 0 4>, <0 0xe61509a0 0 4>;
--			clocks = <&zg_clk>, <&zg_clk>, <&zg_clk>, <&zg_clk>, <&p_clk>,
--				 <&zs_clk>, <&zs_clk>;
-+			clocks = <&hp_clk>, <&zg_clk>, <&zg_clk>, <&zg_clk>,
-+			         <&zg_clk>, <&p_clk>, <&zs_clk>, <&zs_clk>;
- 			#clock-cells = <1>;
- 			clock-indices = <
--				R8A7791_CLK_IPMMU_SGX
-+				R8A7791_CLK_IPMMU_SGX R8A7791_CLK_MLB
- 				R8A7791_CLK_VIN2 R8A7791_CLK_VIN1 R8A7791_CLK_VIN0
- 				R8A7791_CLK_ETHER R8A7791_CLK_SATA1 R8A7791_CLK_SATA0
- 			>;
- 			clock-output-names =
--				"ipmmu_sgx", "vin2", "vin1", "vin0", "ether", "sata1",
--				"sata0";
-+				"ipmmu_sgx", "mlb", "vin2", "vin1", "vin0", "ether",
-+				"sata1", "sata0";
- 		};
- 		mstp9_clks: mstp9_clks@e6150994 {
- 			compatible = "renesas,r8a7791-mstp-clocks", "renesas,cpg-mstp-clocks";
-Index: renesas/include/dt-bindings/clock/r8a7791-clock.h
-===================================================================
---- renesas.orig/include/dt-bindings/clock/r8a7791-clock.h
-+++ renesas/include/dt-bindings/clock/r8a7791-clock.h
-@@ -92,6 +92,7 @@
- 
- /* MSTP8 */
- #define R8A7791_CLK_IPMMU_SGX		0
-+#define R8A7791_CLK_MLB			2
- #define R8A7791_CLK_VIN2		9
- #define R8A7791_CLK_VIN1		10
- #define R8A7791_CLK_VIN0		11
+> > +static int __init fpga_mgr_dev_init(void)
+> > +{
+> > +	pr_info("FPGA Manager framework driver\n");
+> > +
+> > +	fpga_mgr_class = class_create(THIS_MODULE, "fpga_manager");
+> > +	if (IS_ERR(fpga_mgr_class))
+> > +		return PTR_ERR(fpga_mgr_class);
+> > +
+> > +	fpga_mgr_class->dev_groups = fpga_mgr_groups;
+> 
+> 
+> Write this here.
+>        if (IS_ENABLED(CONFIG_FPGA_MGR_SYSFS)) {
+>              fpga_mgr_class->dev_groups = fpga_mgr_groups;
+>        }
+> 
+> I have tested it and it is working just fine. You can compile this
+> driver with SYSFS=n
+> The whole code is built and config option just export it.
+> I think it is better than having #if there.
+> 
+> Greg: Is there any problem with this solution?
+> 
+
+I'm cool with this myself.  I'll add in v6.
+
+> BTW: I have pushed my branch to zero day testing system to get better coverage
+> 
+
+Michal, I've already done that with each submission.  Assuming you are
+referring to the kbuild test robot.
+
+Alan
+
+> Thanks,
+> Michal
+> 
+> 
+> 
