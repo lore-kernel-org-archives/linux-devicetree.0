@@ -1,143 +1,58 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v2 04/13] rc: sunxi-cir: Add support for an
- optional reset controller
-Date: Thu, 18 Dec 2014 10:48:00 +0800
-Message-ID: <CAGb2v65BW7NABQXK877DkMNqDdBeuZ55wQHFkTexbWACFC4zFA@mail.gmail.com>
-References: <1418836704-15689-1-git-send-email-hdegoede@redhat.com> <1418836704-15689-5-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 4/5] PCI: designware: Add setup bus-related to pcie_host_ops
+Date: Thu, 18 Dec 2014 13:58:27 +0900
+Message-ID: <000e01d01a7f$47592e20$d60b8a60$%han@samsung.com>
+References: <1418812486-12394-1-git-send-email-gabriel.fernandez@linaro.org>
+ <1418812486-12394-5-git-send-email-gabriel.fernandez@linaro.org>
+ <1507589.aeTeyNn1QF@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB5MAZGSAKGQEBQ75LOY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <1418836704-15689-5-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans De Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1507589.aeTeyNn1QF@wuerfel>
+Content-language: ko
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: 'Gabriel FERNANDEZ' <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+Cc: 'Arnd Bergmann' <arnd-r2nGTMty4D4@public.gmane.org>, 'Rob Herring' <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, 'Pawel Moll' <pawel.moll-5wv7dgnIgG8@public.gmane.org>, 'Mark Rutland' <mark.rutland-5wv7dgnIgG8@public.gmane.org>, 'Ian Campbell' <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, 'Kumar Gala' <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, 'Srinivas Kandagatla' <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, 'Maxime Coquelin' <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, 'Patrice Chotard' <patrice.chotard-qxv4g6HH51o@public.gmane.org>, 'Russell King' <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, 'Bjorn Helgaas' <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, 'Mohit Kumar' <mohit.kumar-qxv4g6HH51o@public.gmane.org>, 'Grant Likely' <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, 'Gabriel Fernandez' <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, 'Fabrice Gasnier' <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, 'Viresh Kumar' <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, 'Thierry Reding' <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, 'Minghuan Lian' <Minghuan.Lian-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, 'Magnus Damm' <damm-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>, 'Will Deacon' <will.deacon-5wv7dgnIgG8@public.gmane.org>, 'Tanmay Inamdar' <tinamdar-qTEPVZfXA3Y@public.gmane.org>, 'Murali
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thursday, December 18, 2014 7:16 AM, Arnd Bergmann wrote:
+> On Wednesday 17 December 2014 11:34:45 Gabriel FERNANDEZ wrote:
+> > ST sti SoCs PCIe IPs are built around DesignWare IP Core.
+> > But in these SoCs PCIe IP doesn't support IO.
 
-On Thu, Dec 18, 2014 at 1:18 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
-> On sun6i the cir block is attached to the reset controller, add support
-> for de-asserting the reset if a reset controller is specified in dt.
->
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> Acked-by: Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-> Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  .../devicetree/bindings/media/sunxi-ir.txt         |  2 ++
->  drivers/media/rc/sunxi-cir.c                       | 25 ++++++++++++++++++++--
->  2 files changed, 25 insertions(+), 2 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/media/sunxi-ir.txt b/Documentation/devicetree/bindings/media/sunxi-ir.txt
-> index 23dd5ad..6b70b9b 100644
-> --- a/Documentation/devicetree/bindings/media/sunxi-ir.txt
-> +++ b/Documentation/devicetree/bindings/media/sunxi-ir.txt
-> @@ -10,6 +10,7 @@ Required properties:
->
->  Optional properties:
->  - linux,rc-map-name : Remote control map name.
-> +- resets : phandle + reset specifier pair
+Hi Gabriel,
 
-Should it be optional? Or should we use a sun6i compatible with
-a mandatory reset phandle? I mean, the driver/hardware is not
-going to work with the reset missing on sun6i.
+I cannot understand how ST sti SoCs PCIe IP does not support I/O.
+As far as I know, it cannot be selected by the 'parameter'.
+Then, H/W engineers dropped out the I/O control logic?
 
-Seems we are doing it one way for some of our drivers, and
-the other (optional) way for more generic ones, like USB.
+> >
+> > To support this, add setup_bus() to pcie_host_ops.
 
-ChenYu
 
->  Example:
->
-> @@ -17,6 +18,7 @@ ir0: ir@01c21800 {
->         compatible = "allwinner,sun4i-a10-ir";
->         clocks = <&apb0_gates 6>, <&ir0_clk>;
->         clock-names = "apb", "ir";
-> +       resets = <&apb0_rst 1>;
->         interrupts = <0 5 1>;
->         reg = <0x01C21800 0x40>;
->         linux,rc-map-name = "rc-rc6-mce";
-> diff --git a/drivers/media/rc/sunxi-cir.c b/drivers/media/rc/sunxi-cir.c
-> index 340f7f5..06170e0 100644
-> --- a/drivers/media/rc/sunxi-cir.c
-> +++ b/drivers/media/rc/sunxi-cir.c
-> @@ -23,6 +23,7 @@
->  #include <linux/interrupt.h>
->  #include <linux/module.h>
->  #include <linux/of_platform.h>
-> +#include <linux/reset.h>
->  #include <media/rc-core.h>
->
->  #define SUNXI_IR_DEV "sunxi-ir"
-> @@ -95,6 +96,7 @@ struct sunxi_ir {
->         int             irq;
->         struct clk      *clk;
->         struct clk      *apb_clk;
-> +       struct reset_control *rst;
->         const char      *map_name;
->  };
->
-> @@ -166,15 +168,29 @@ static int sunxi_ir_probe(struct platform_device *pdev)
->                 return PTR_ERR(ir->clk);
->         }
->
-> +       /* Reset (optional) */
-> +       ir->rst = devm_reset_control_get_optional(dev, NULL);
-> +       if (IS_ERR(ir->rst)) {
-> +               ret = PTR_ERR(ir->rst);
-> +               if (ret == -EPROBE_DEFER)
-> +                       return ret;
-> +               ir->rst = NULL;
-> +       } else {
-> +               ret = reset_control_deassert(ir->rst);
-> +               if (ret)
-> +                       return ret;
-> +       }
-> +
->         ret = clk_set_rate(ir->clk, SUNXI_IR_BASE_CLK);
->         if (ret) {
->                 dev_err(dev, "set ir base clock failed!\n");
-> -               return ret;
-> +               goto exit_reset_assert;
->         }
->
->         if (clk_prepare_enable(ir->apb_clk)) {
->                 dev_err(dev, "try to enable apb_ir_clk failed\n");
-> -               return -EINVAL;
-> +               ret = -EINVAL;
-> +               goto exit_reset_assert;
->         }
->
->         if (clk_prepare_enable(ir->clk)) {
-> @@ -271,6 +287,9 @@ exit_clkdisable_clk:
->         clk_disable_unprepare(ir->clk);
->  exit_clkdisable_apb_clk:
->         clk_disable_unprepare(ir->apb_clk);
-> +exit_reset_assert:
-> +       if (ir->rst)
-> +               reset_control_assert(ir->rst);
->
->         return ret;
->  }
-> @@ -282,6 +301,8 @@ static int sunxi_ir_remove(struct platform_device *pdev)
->
->         clk_disable_unprepare(ir->clk);
->         clk_disable_unprepare(ir->apb_clk);
-> +       if (ir->rst)
-> +               reset_control_assert(ir->rst);
->
->         spin_lock_irqsave(&ir->ir_lock, flags);
->         /* disable IR IRQ */
-> --
-> 2.1.0
->
-> --
-> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-> For more options, visit https://groups.google.com/d/optout.
+> >
+> > Signed-off-by: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+> > Signed-off-by: Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> 
+> The dw-pcie driver should be able to tell whether the device has
+> an I/O space or not, and do the right thing based on that. Don't
+> add an implementation specific callback for that.
+
+I agree with Arnd's opinion.
+
+In addition, I have one more question.
+Then, if a device that requires I/O region is connected to
+PCIe slot of ST sti SoCs PCIe, what will happen?
+It just prints error messages?
+
+Best regards,
+Jingoo Han
+
+> 
+> 	Arnd
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
