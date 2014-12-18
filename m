@@ -1,91 +1,247 @@
-From: Shaohui Xie <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH] [v2] power/fsl: add MDIO dt binding for FMan
-Date: Thu, 18 Dec 2014 12:53:33 +0000
-Message-ID: <DM2PR0301MB08641FB289DBA17AD59FBEA0E26A0@DM2PR0301MB0864.namprd03.prod.outlook.com>
-References: <1415958800-9867-1-git-send-email-shh.xie@gmail.com>
- <1416966592.15957.172.camel@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shaohui Xie <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Emilian Medve <Emilian.Medve-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+From: Beomho Seo <beomho.seo@samsung.com>
+Subject: [PATCH 1/3] power: rt5033_battery: Add RT5033 Fuel gauge device driver
+Date: Thu, 18 Dec 2014 22:15:45 +0900
+Message-ID: <1418908547-10241-2-git-send-email-beomho.seo@samsung.com>
+References: <1418908547-10241-1-git-send-email-beomho.seo@samsung.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-reply-to: <1418908547-10241-1-git-send-email-beomho.seo@samsung.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Cc: sameo@linux.intel.com, lee.jone@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, sre@kernel.org, dbaryshkov@gmail.com, dwmw2@infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, cw00.choi@samsung.com, inki.dae@samsung.com, sw0312.kim@samsung.com, Beomho Seo <beomho.seo@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-UGluZy4NCg0KQmVzdCBSZWdhcmRzLCANClNoYW9odWkgWGllDQo+IC0tLS0tT3JpZ2luYWwgTWVz
-c2FnZS0tLS0tDQo+IEZyb206IFhpZSBTaGFvaHVpLUIyMTk4OQ0KPiBTZW50OiBXZWRuZXNkYXks
-IE5vdmVtYmVyIDI2LCAyMDE0IDEwOjExIEFNDQo+IFRvOiBXb29kIFNjb3R0LUIwNzQyMQ0KPiBD
-YzogbGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwu
-b3JnOyBNZWR2ZSBFbWlsaWFuLQ0KPiBFTU1FRFZFMTsgTGliZXJtYW4gSWdhbC1CMzE5NTANCj4g
-U3ViamVjdDogUkU6IFtQQVRDSF0gW3YyXSBwb3dlci9mc2w6IGFkZCBNRElPIGR0IGJpbmRpbmcg
-Zm9yIEZNYW4NCj4gDQo+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiBGcm9tOiBX
-b29kIFNjb3R0LUIwNzQyMQ0KPiA+IFNlbnQ6IFdlZG5lc2RheSwgTm92ZW1iZXIgMjYsIDIwMTQg
-OTo1MCBBTQ0KPiA+IFRvOiBzaGgueGllQGdtYWlsLmNvbQ0KPiA+IENjOiBsaW51eHBwYy1kZXZA
-bGlzdHMub3psYWJzLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IE1lZHZlDQo+ID4g
-RW1pbGlhbi1FTU1FRFZFMTsgTGliZXJtYW4gSWdhbC1CMzE5NTA7IFhpZSBTaGFvaHVpLUIyMTk4
-OQ0KPiA+IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIFt2Ml0gcG93ZXIvZnNsOiBhZGQgTURJTyBkdCBi
-aW5kaW5nIGZvciBGTWFuDQo+ID4NCj4gPiBPbiBGcmksIDIwMTQtMTEtMTQgYXQgMTc6NTMgKzA4
-MDAsIHNoaC54aWVAZ21haWwuY29tIHdyb3RlOg0KPiA+ID4gRnJvbTogU2hhb2h1aSBYaWUgPFNo
-YW9odWkuWGllQGZyZWVzY2FsZS5jb20+DQo+ID4gPg0KPiA+ID4gVGhpcyBiaW5kaW5nIGlzIGZv
-ciBGTWFuIE1ESU8sIGl0IGNvdmVycyBGTWFuIHYyICYgRk1hbiB2My4NCj4gPiA+DQo+ID4gPiBT
-aWduZWQtb2ZmLWJ5OiBTaGFvaHVpIFhpZSA8U2hhb2h1aS5YaWVAZnJlZXNjYWxlLmNvbT4NCj4g
-PiA+IC0tLQ0KPiA+ID4gY2hhbmdlcyBpbiBWMjoNCj4gPiA+IGFkZHJlc3NlZCBjb21tZW50cyBm
-cm9tIFNjb3R0IGluIFYxLg0KPiA+ID4NCj4gPiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9w
-b3dlcnBjL2ZzbC9mbWFuLnR4dCAgICAgICB8IDY5DQo+ID4gKysrKysrKysrKysrKysrKysrKysr
-Kw0KPiA+ID4gIDEgZmlsZSBjaGFuZ2VkLCA2OSBpbnNlcnRpb25zKCspDQo+ID4gPg0KPiA+ID4g
-ZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBjL2Zz
-bC9mbWFuLnR4dA0KPiA+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcG93
-ZXJwYy9mc2wvZm1hbi50eHQNCj4gPiA+IGluZGV4IGVkZWVhMTYuLjE1MjNhODcgMTAwNjQ0DQo+
-ID4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXJwYy9mc2wv
-Zm1hbi50eHQNCj4gPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9w
-b3dlcnBjL2ZzbC9mbWFuLnR4dA0KPiA+ID4gQEAgLTcsNiArNyw3IEBAIENPTlRFTlRTDQo+ID4g
-PiAgICAtIEZNYW4gTVVSQU0gTm9kZQ0KPiA+ID4gICAgLSBGTWFuIGRUU0VDL1hHRUMvbUVNQUMg
-Tm9kZQ0KPiA+ID4gICAgLSBGTWFuIElFRUUgMTU4OCBOb2RlDQo+ID4gPiArICAtIEZNYW4gTURJ
-TyBOb2RlDQo+ID4gPiAgICAtIEV4YW1wbGUNCj4gPiA+DQo+ID4gPg0KPiA+ID4gPT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT0NCj4gPiA+ID09ID09PT09PT0gQEAgLTM1Nyw2ICszNTgsNjggQEAgcHRwLXRpbWVyQGZlMDAw
-IHsgIH07DQo+ID4gPg0KPiA+ID4NCj4gPiA+ID09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09DQo+ID4gPiA9PQ0KPiA+ID4g
-PT09PT09PQ0KPiA+ID4gK0ZNYW4gTURJTyBOb2RlDQo+ID4gPiArDQo+ID4gPiArREVTQ1JJUFRJ
-T04NCj4gPiA+ICsNCj4gPiA+ICtUaGUgTURJTyBpcyBhIGJ1cyB0byB3aGljaCB0aGUgUEhZIGRl
-dmljZXMgYXJlIGNvbm5lY3RlZC4NCj4gPiA+ICsNCj4gPiA+ICtQUk9QRVJUSUVTDQo+ID4gPiAr
-DQo+ID4gPiArLSBjb21wYXRpYmxlDQo+ID4gPiArCQlVc2FnZTogcmVxdWlyZWQNCj4gPiA+ICsJ
-CVZhbHVlIHR5cGU6IDxzdHJpbmdsaXN0Pg0KPiA+ID4gKwkJRGVmaW5pdGlvbjogQSBzdGFuZGFy
-ZCBwcm9wZXJ0eS4NCj4gPiA+ICsJCU11c3QgaW5jbHVkZSAiZnNsLGZtYW4tbWRpbyIgZm9yIDEg
-R2IvcyBNRElPIGZyb20gRk1hbiB2Mi4NCj4gPiA+ICsJCU11c3QgaW5jbHVkZSAiZnNsLGZtYW4t
-eG1kaW8iIGZvciAxMCBHYi9zIE1ESU8gZnJvbSBGTWFuIHYyLg0KPiA+ID4gKwkJTXVzdCBpbmNs
-dWRlICJmc2wsZm1hbi1tZW1hYy1tZGlvIiBmb3IgMS8xMCBHYi9zIE1ESU8gZnJvbQ0KPiA+ID4g
-KwkJRk1hbiB2My4NCj4gPiA+ICsNCj4gPiA+ICstIHJlZw0KPiA+ID4gKwkJVXNhZ2U6IHJlcXVp
-cmVkDQo+ID4gPiArCQlWYWx1ZSB0eXBlOiA8cHJvcC1lbmNvZGVkLWFycmF5Pg0KPiA+ID4gKwkJ
-RGVmaW5pdGlvbjogQSBzdGFuZGFyZCBwcm9wZXJ0eS4NCj4gPiA+ICsNCj4gPiA+ICstIGJ1cy1m
-cmVxdWVuY3kNCj4gPiA+ICsJCVVzYWdlOiBvcHRpb25hbA0KPiA+ID4gKwkJVmFsdWUgdHlwZTog
-PHUzMj4NCj4gPiA+ICsJCURlZmluaXRpb246IFNwZWNpZmllcyBleHRlcm5hbCBNRElPIGJ1cyBj
-bG9jayBzcGVlZCB3aGljaCBpcw0KPiA+ID4gKwkJZGlmZmVyZW50IGZyb20gTURJTyBzdGFuZGFy
-ZCAyLjVNSHouIFNob3VsZCBiZSBkZWZpbmVkIGZvcg0KPiA+IFNvQ3MNCj4gPiA+ICsJCW9uIHdo
-aWNoIHRoZSBzdGFuZGFyZCBvbmUgY2Fubm90IHdvcmsuDQo+ID4gPiArDQo+ID4gPiArLSBpbnRl
-cnJ1cHRzDQo+ID4gPiArCQlVc2FnZTogb3B0aW9uYWwNCj4gPiA+ICsJCVZhbHVlIHR5cGU6IDxw
-cm9wLWVuY29kZWQtYXJyYXk+DQo+ID4gPiArCQlEZWZpbml0aW9uOiBFdmVudCBpbnRlcnJ1cHQg
-b2YgZXh0ZXJuYWwgTURJTyBjb250cm9sbGVyLg0KPiA+ID4gKwkJMSBHYi9zIE1ESU8gYW5kIDEw
-IEdiL3MgTURJTyBoYXMgb25lIGludGVycnVwdCByZXNwZWN0aXZlbHkuDQo+ID4gPiArDQo+ID4g
-PiArLSBmc2wsZm1hbi1pbnRlcm5hbC1tZGlvDQo+ID4gPiArCQlVc2FnZTogcmVxdWlyZWQgZm9y
-IGludGVybmFsIE1ESU8NCj4gPiA+ICsJCVZhbHVlIHR5cGU6IGJvb2xlYW4NCj4gPiA+ICsJCURl
-ZmluaXRpb246IEZtYW4gaGFzIGludGVybmFsIE1ESU8gZm9yIGludGVybmFsIFBDUyhQaHlzaWNh
-bA0KPiA+ID4gKwkJQ29kaW5nIFN1YmxheWVyKSBQSFlzIGFuZCBleHRlcm5hbCBNRElPIGZvciBl
-eHRlcm5hbCBQSFlzLg0KPiA+ID4gKwkJVGhlIHNldHRpbmdzIGFuZCBwcm9ncmFtbWluZyByb3V0
-aW5lcyBmb3IgaW50ZXJuYWwvZXh0ZXJuYWwNCj4gPiA+ICsJCU1ESU8gYXJlIGRpZmZlcmVudC4g
-TXVzdCBiZSBpbmNsdWRlZCBmb3IgaW50ZXJuYWwgTURJTy4NCj4gPiA+ICsNCj4gPiA+ICtFWEFN
-UExFDQo+ID4gPiArDQo+ID4gPiArRXhhbXBsZSBmb3IgRk1hbiB2MiBleHRlcm5hbCBNRElPOg0K
-PiA+ID4gKw0KPiA+ID4gK21kaW9AZjEwMDAgew0KPiA+ID4gKwljb21wYXRpYmxlID0gImZzbCxm
-bWFuLXhtZGlvIjsNCj4gPiA+ICsJcmVnID0gPDB4ZjEwMDAgMHgxMDAwPjsNCj4gPiA+ICsJYnVz
-LWZyZXF1ZW5jeSA9IDwyMDAwMD47DQo+ID4gPiArfTsNCj4gPg0KPiA+IFNvIHRoZSBidXMgZnJl
-cXVlbmN5IGlzIG9ubHkgMjAgS0h6PyAgT3IgaXMgdGhlIHVuaXQgc3VwcG9zZWQgdG8gYmUNCj4g
-PiBzb21ldGhpbmcgb3RoZXIgdGhhbiBIej8NCj4gW1MuSF0gaXQncyBvbmx5IGFuIGV4YW1wbGUs
-IGl0IGNvdWxkIGJlIGRpZmZlcmVudCBvbiByZWFsIFNvQ3MsIGJ1dCB0aGV5IGFsd2F5cw0KPiBs
-b3dlciB0aGFuIHRoZSBzdGFuZGFyZCBvbmUsIFRoZSBzdGFuZGFyZCBvbmUgaXMgMi41TUh6LCBJ
-IGhhdmUgdG8gdXNlIEh6IGZvciBpdC4NCj4gDQo+IFRoYW5rcyENCj4gU2hhb2h1aQ0K
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This patch adds device driver of Richtek PMIC.
+The driver support battery fuel gange. Fuel gauge calculates and determines the
+battery state of charge(SOC) according to battery open circuit voltage(OCV).
+Also, this driver provides battery average voltage, voltage and bettery present
+property.
+
+Cc: Sebastian Reichel <sre@kernel.org>
+Cc: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>
+Cc: David Woodhouse <dwmw2@infradead.org>
+Signed-off-by: Beomho Seo <beomho.seo@samsung.com>
+Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+---
+ drivers/power/Kconfig          |    8 ++
+ drivers/power/Makefile         |    1 +
+ drivers/power/rt5033_battery.c |  177 ++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 186 insertions(+)
+ create mode 100644 drivers/power/rt5033_battery.c
+
+diff --git a/drivers/power/Kconfig b/drivers/power/Kconfig
+index 0108c2a..da6981f 100644
+--- a/drivers/power/Kconfig
++++ b/drivers/power/Kconfig
+@@ -397,6 +397,14 @@ config BATTERY_GOLDFISH
+ 	  Say Y to enable support for the battery and AC power in the
+ 	  Goldfish emulator.
+ 
++config BATTERY_RT5033
++	tristate "RT5033 fuel gauge support"
++	depends on MFD_RT5033
++	help
++	  This adds support for battery fuel gauge in Richtek RT5033 PMIC.
++	  The fuelgauge calculates and determines the battery state of charge
++	  according to battery open circuit voltage.
++
+ source "drivers/power/reset/Kconfig"
+ 
+ endif # POWER_SUPPLY
+diff --git a/drivers/power/Makefile b/drivers/power/Makefile
+index dfa8942..b83a0c7 100644
+--- a/drivers/power/Makefile
++++ b/drivers/power/Makefile
+@@ -34,6 +34,7 @@ obj-$(CONFIG_BATTERY_DA9052)	+= da9052-battery.o
+ obj-$(CONFIG_BATTERY_MAX17040)	+= max17040_battery.o
+ obj-$(CONFIG_BATTERY_MAX17042)	+= max17042_battery.o
+ obj-$(CONFIG_BATTERY_Z2)	+= z2_battery.o
++obj-$(CONFIG_BATTERY_RT5033)	+= rt5033_battery.o
+ obj-$(CONFIG_BATTERY_S3C_ADC)	+= s3c_adc_battery.o
+ obj-$(CONFIG_BATTERY_TWL4030_MADC)	+= twl4030_madc_battery.o
+ obj-$(CONFIG_CHARGER_88PM860X)	+= 88pm860x_charger.o
+diff --git a/drivers/power/rt5033_battery.c b/drivers/power/rt5033_battery.c
+new file mode 100644
+index 0000000..7b898f4
+--- /dev/null
++++ b/drivers/power/rt5033_battery.c
+@@ -0,0 +1,177 @@
++/*
++ * Fuel gauge driver for Richtek RT5033
++ *
++ * Copyright (C) 2014 Samsung Electronics, Co., Ltd.
++ * Author: Beomho Seo <beomho.seo@samsung.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published bythe Free Software Foundation.
++ */
++
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/power_supply.h>
++#include <linux/mfd/rt5033-private.h>
++#include <linux/mfd/rt5033.h>
++
++static int rt5033_battery_get_capacity(struct i2c_client *client)
++{
++	struct rt5033_battery *battery = i2c_get_clientdata(client);
++	u32 msb;
++
++	regmap_read(battery->regmap, RT5033_FUEL_REG_SOC_H, &msb);
++
++	return msb;
++}
++
++static int rt5033_battery_get_present(struct i2c_client *client)
++{
++	struct rt5033_battery *battery = i2c_get_clientdata(client);
++	u32 val;
++
++	regmap_read(battery->regmap, RT5033_FUEL_REG_CONFIG_L, &val);
++
++	return (val & RT5033_FUEL_BAT_PRESENT) ? true : false;
++}
++
++static int rt5033_battery_get_watt_prop(struct i2c_client *client,
++		enum power_supply_property psp)
++{
++	struct rt5033_battery *battery = i2c_get_clientdata(client);
++	unsigned int regh, regl;
++	int ret;
++	u32 msb, lsb;
++
++	switch (psp) {
++	case POWER_SUPPLY_PROP_VOLTAGE_NOW:
++		regh = RT5033_FUEL_REG_VBAT_H;
++		regl = RT5033_FUEL_REG_VBAT_L;
++		break;
++	case POWER_SUPPLY_PROP_VOLTAGE_AVG:
++		regh = RT5033_FUEL_REG_AVG_VOLT_H;
++		regl = RT5033_FUEL_REG_AVG_VOLT_L;
++		break;
++	case POWER_SUPPLY_PROP_VOLTAGE_OCV:
++		regh = RT5033_FUEL_REG_OCV_H;
++		regl = RT5033_FUEL_REG_OCV_L;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	regmap_read(battery->regmap, regh, &msb);
++	regmap_read(battery->regmap, regl, &lsb);
++
++	ret = ((msb << 4) + (lsb >> 4)) * 1250 / 1000;
++
++	return ret;
++}
++
++static int rt5033_battery_get_property(struct power_supply *psy,
++		enum power_supply_property psp,
++		union power_supply_propval *val)
++{
++	struct rt5033_battery *battery = container_of(psy,
++				struct rt5033_battery, psy);
++
++	switch (psp) {
++	case POWER_SUPPLY_PROP_VOLTAGE_NOW:
++	case POWER_SUPPLY_PROP_VOLTAGE_AVG:
++	case POWER_SUPPLY_PROP_VOLTAGE_OCV:
++		val->intval = rt5033_battery_get_watt_prop(battery->client,
++									psp);
++		break;
++	case POWER_SUPPLY_PROP_PRESENT:
++		val->intval = rt5033_battery_get_present(battery->client);
++		break;
++	case POWER_SUPPLY_PROP_CAPACITY:
++		val->intval = rt5033_battery_get_capacity(battery->client);
++		break;
++	default:
++		return -EINVAL;
++	}
++	return 0;
++}
++
++static enum power_supply_property rt5033_battery_props[] = {
++	POWER_SUPPLY_PROP_VOLTAGE_NOW,
++	POWER_SUPPLY_PROP_VOLTAGE_AVG,
++	POWER_SUPPLY_PROP_VOLTAGE_OCV,
++	POWER_SUPPLY_PROP_PRESENT,
++	POWER_SUPPLY_PROP_CAPACITY,
++};
++
++static struct regmap_config rt5033_battery_regmap_config = {
++	.reg_bits	= 8,
++	.val_bits	= 8,
++	.max_register	= RT5033_FUEL_REG_END,
++};
++
++static int rt5033_battery_probe(struct i2c_client *client,
++		const struct i2c_device_id *id)
++{
++	struct i2c_adapter *adapter = to_i2c_adapter(client->dev.parent);
++	struct rt5033_battery *battery;
++	u32 ret;
++
++	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE))
++		return -EIO;
++
++	battery = devm_kzalloc(&client->dev, sizeof(*battery), GFP_KERNEL);
++	if (!battery)
++		return -EINVAL;
++
++	battery->client = client;
++	battery->regmap = devm_regmap_init_i2c(client,
++			&rt5033_battery_regmap_config);
++	if (IS_ERR(battery->regmap)) {
++		dev_err(&client->dev, "Failed to initialize regmap\n");
++		return -EINVAL;
++	}
++
++	i2c_set_clientdata(client, battery);
++
++	battery->psy.name		= "rt5033-battery";
++	battery->psy.type		= POWER_SUPPLY_TYPE_BATTERY;
++	battery->psy.get_property	= rt5033_battery_get_property;
++	battery->psy.properties		= rt5033_battery_props;
++	battery->psy.num_properties	= ARRAY_SIZE(rt5033_battery_props);
++
++	ret = power_supply_register(&client->dev, &battery->psy);
++	if (ret) {
++		dev_err(&client->dev, "Failed to register power supply\n");
++		return ret;
++	}
++
++	return 0;
++}
++
++static int rt5033_battery_remove(struct i2c_client *client)
++{
++	struct rt5033_battery *battery = i2c_get_clientdata(client);
++
++	power_supply_unregister(&battery->psy);
++
++	return 0;
++}
++
++static const struct i2c_device_id rt5033_battery_id[] = {
++	{ "rt5033-battery", },
++	{ }
++};
++MODULE_DEVICE_TABLE(platform, rt5033_battery_id);
++
++static struct i2c_driver rt5033_battery_driver = {
++	.driver = {
++		.name = "rt5033-battery",
++	},
++	.probe = rt5033_battery_probe,
++	.remove = rt5033_battery_remove,
++	.id_table = rt5033_battery_id,
++};
++module_i2c_driver(rt5033_battery_driver);
++
++MODULE_DESCRIPTION("Richtek RT5033 fuel gauge driver");
++MODULE_AUTHOR("Beomho Seo <beomho.seo@samsung.com>");
++MODULE_LICENSE("GPL");
+-- 
+1.7.9.5
+
