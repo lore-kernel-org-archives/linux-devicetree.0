@@ -1,59 +1,38 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH resend v2] input: Add new sun4i-lradc-keys driver
-Date: Thu, 18 Dec 2014 09:42:14 +0100
-Message-ID: <54929366.7050002@redhat.com>
-References: <1418827411-13265-1-git-send-email-hdegoede@redhat.com> <1418827411-13265-2-git-send-email-hdegoede@redhat.com> <1918972.jFlKNuYrbH@dtor-glaptop>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [STLinux Kernel] [PATCH 6/8] watchdog: st_wdt: Add new driver
+ for ST's LPC Watchdog
+Date: Thu, 18 Dec 2014 08:43:14 +0000
+Message-ID: <20141218084314.GA25901@griffinp-ThinkPad-X1-Carbon-2nd>
+References: <1418834727-1602-1-git-send-email-lee.jones@linaro.org>
+ <1418834727-1602-7-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <linux-sunxi+bncBDRZXY4CYYORB3VGZKSAKGQEJRM5VTY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1918972.jFlKNuYrbH@dtor-glaptop>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1418834727-1602-7-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Lee,
 
-On 17-12-14 18:32, Dmitry Torokhov wrote:
-> On Wednesday, December 17, 2014 03:43:31 PM Hans de Goede wrote:
->> +       /*
->> +        * lradc supports only one keypress at a time, release does not give
->> +        * any info as to which key was released, so we cache the keycode.
->> +        */
->> +       if ((ints & CHAN0_KEYDOWN_IRQ) && lradc->chan0_keycode == 0) {
->> +               val = readl(lradc->base + LRADC_DATA0) & 0x3f;
->> +               voltage = val * lradc->vref / 63;
->> +
->> +               for (i = 0; i < lradc->chan0_map_count; i++) {
->> +                       diff = abs(lradc->chan0_map[i].voltage - voltage);
->> +                       if (diff < closest) {
->> +                               closest = diff;
->> +                               keycode = lradc->chan0_map[i].keycode;
->> +                       }
->> +               }
->> +
->> +               lradc->chan0_keycode = keycode;
->> +               input_report_key(lradc->input, lradc->chan0_keycode, 1);
->> +       }
->> +
->> +       if (ints & CHAN0_KEYUP_IRQ) {
->> +               input_report_key(lradc->input, lradc->chan0_keycode, 0);
->> +               lradc->chan0_keycode = 0;
->> +       }
->
-> Can release and press be reported simultaneously? Should we process release
-> first?
+On Wed, 17 Dec 2014, Lee Jones wrote:
 
-Good question, I guess if we are somehow really slow with processing the interrupt
-that this may happen. So I'll do a v3 swapping the 2.
+> Signed-off-by: David Paris <david.paris-qxv4g6HH51o@public.gmane.org>
+> Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  drivers/watchdog/Kconfig  |  13 ++
+>  drivers/watchdog/Makefile |   1 +
+>  drivers/watchdog/st_wdt.c | 323 ++++++++++++++++++++++++++++++++++++++++++++++
 
-Regards,
+You don't have a patch which adds the new files created in this series into
+the STI section of the MAINTAINERS file?
 
-Hans
+regards,
+
+Peter.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
