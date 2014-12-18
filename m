@@ -1,49 +1,34 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [STLinux Kernel] [PATCH 6/8] watchdog: st_wdt: Add new driver
- for ST's LPC Watchdog
-Date: Thu, 18 Dec 2014 09:08:05 +0000
-Message-ID: <20141218090805.GV13885@x1>
-References: <1418834727-1602-1-git-send-email-lee.jones@linaro.org>
- <1418834727-1602-7-git-send-email-lee.jones@linaro.org>
- <20141218084314.GA25901@griffinp-ThinkPad-X1-Carbon-2nd>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 1/2] tty: serial: 8250_mtk: Add earlycon
+Date: Thu, 18 Dec 2014 10:12:33 +0100
+Message-ID: <1822504.xkcBG8sz41@wuerfel>
+References: <1418891601-53769-1-git-send-email-eddie.huang@mediatek.com> <1418891601-53769-2-git-send-email-eddie.huang@mediatek.com> <CABuKBe+dki5ab8PexMhq36AJFCBk_dBifV86F8FKsF_es1cmJA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20141218084314.GA25901@griffinp-ThinkPad-X1-Carbon-2nd>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CABuKBe+dki5ab8PexMhq36AJFCBk_dBifV86F8FKsF_es1cmJA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Eddie Huang <eddie.huang@mediatek.com>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, srv_heupstream <srv_heupstream@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Jiri Slaby <jslaby@suse.cz>, Alan Cox <alan@linux.intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-serial@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Yingjoe Chen <yingjoe.chen@mediatek.com>, YH Chen =?utf-8?B?KOmZs+aYseixqik=?= <yh.chen@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 18 Dec 2014, Peter Griffin wrote:
+On Thursday 18 December 2014 09:48:31 Matthias Brugger wrote:
+> > +static void __init mtk8250_serial_putc(struct uart_port *port, int c)
+> > +{
+> > +       while ((readl(port->membase + (UART_LSR << 2)) & BOTH_EMPTY) !=
+> > +               BOTH_EMPTY)
+> > +               ;
+> 
+> Please delete newline before the semicolon.
+> 
 
-> Hi Lee,
->=20
-> On Wed, 17 Dec 2014, Lee Jones wrote:
->=20
-> > Signed-off-by: David Paris <david.paris-qxv4g6HH51o@public.gmane.org>
-> > Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > ---
-> >  drivers/watchdog/Kconfig  |  13 ++
-> >  drivers/watchdog/Makefile |   1 +
-> >  drivers/watchdog/st_wdt.c | 323 ++++++++++++++++++++++++++++++++++=
-++++++++++++
->=20
-> You don't have a patch which adds the new files created in this serie=
-s into
-> the STI section of the MAINTAINERS file?
+No, that newline is best kept in there for clarity. An even better way
+to write this would be using cpu_relax():
 
-Very true.  I will supply one, thanks.
+	while ((readl(port->membase + (UART_LSR << 2)) & BOTH_EMPTY) != BOTH_EMPTY)
+		cpu_relax();
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+which the kernel convention for doing busy-loops.
+
+	Arnd
