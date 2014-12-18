@@ -1,42 +1,62 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: [RFC v1 PATCH 0/2] PCI: get DMA configuration from parent device
-Date: Thu, 18 Dec 2014 17:07:03 -0500
-Message-ID: <1418940425-2017-1-git-send-email-m-karicheri2@ti.com>
+From: <atull@opensource.altera.com>
+Subject: [PATCH v6 1/4] doc: add bindings document for altera fpga manager
+Date: Thu, 18 Dec 2014 16:29:05 -0600
+Message-ID: <1418941748-16111-2-git-send-email-atull@opensource.altera.com>
+References: <1418941748-16111-1-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: bhelgaas@google.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, grant.likely@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org, arnd@arndb.de, linux-arm-kernel@lists.infradead.org
-Cc: Murali Karicheri <m-karicheri2@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1418941748-16111-1-git-send-email-atull@opensource.altera.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: gregkh@linuxfoundation.org, jgunthorpe@obsidianresearch.com, hpa@zytor.com, monstr@monstr.eu, michal.simek@xilinx.com, rdunlap@infradead.org
+Cc: mark.rutland@arm.com, linux-doc@vger.kernel.org, rubini@gnudd.com, pantelis.antoniou@konsulko.com, s.trumtrar@pengutronix.de, devel@driverdev.osuosl.org, sameo@linux.intel.com, nico@linaro.org, ijc+devicetree@hellion.org.uk, kyle.teske@ni.com, grant.likely@linaro.org, davidb@codeaurora.org, linus.walleij@linaro.org, cesarb@cesarb.net, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, iws@ovro.caltech.edu, Alan Tull <atull@opensource.altera.com>, broonie@kernel.org, philip@balister.org, dinguyen@opensource.altera.com, pavel@denx.de, yvanderv@opensource.altera.com, linux-kernel@vger.kernel.org, balbi@ti.com, delicious.quinoa@gmail.com, robh+dt@kernel.org, rob@landley.net, galak@codeaurora.org, akpm@linux-foundation.org, davem@davemloft.net, m.chehab@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-PCI devices on Keystone doesn't have correct dma_pfn_offset set. This patch
-add capability to set the dma configuration such as dma-mask, dma_pfn_offset,
-and dma ops etc using the same information from DT. The prior RFCs and
-discussions are available at [1] and [2] below.
+From: Alan Tull <atull@opensource.altera.com>
 
-This patch make use of a recent dma API addeded to latest master and I could
-only compile this as the latest kernel doesn't boot up on Keystone platforms.
-So I am continue to send RFC version so that this gets a wider review before
-sending the formal patch.
+New bindings document for Altera fpga manager.
 
-[2] : https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg790244.html
-[1] : http://www.gossamer-threads.com/lists/linux/kernel/2024591
+Signed-off-by: Alan Tull <atull@opensource.altera.com>
+---
+v5 : Move bindings to drivers/staging/fpga/Documentation/bindings
 
-Change history:
-	v1 - updates based on the comments against initial RFC.
-	   - Added a helper function to get the OF node of the parent
-	   - Added an API in of_pci.c to update DMA configuration of the pci
-	     device.
+v6 : No change in this patch for v6 of the patch set
+---
+ .../Documentation/bindings/altera-fpga-mgr.txt     |   17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+ create mode 100644 drivers/staging/fpga/Documentation/bindings/altera-fpga-mgr.txt
 
-Murali Karicheri (2):
-  of/pci: add of_pci_dma_configure() update dma configuration
-  PCI: update dma configuration from DT
-
- drivers/of/of_pci.c    |   71 ++++++++++++++++++++++++++++++++++++++++++++++++
- drivers/pci/probe.c    |    2 ++
- include/linux/of_pci.h |   12 ++++++++
- 3 files changed, 85 insertions(+)
-
+diff --git a/drivers/staging/fpga/Documentation/bindings/altera-fpga-mgr.txt b/drivers/staging/fpga/Documentation/bindings/altera-fpga-mgr.txt
+new file mode 100644
+index 0000000..373af7b
+--- /dev/null
++++ b/drivers/staging/fpga/Documentation/bindings/altera-fpga-mgr.txt
+@@ -0,0 +1,17 @@
++Altera FPGA Manager
++
++Required properties:
++- compatible : should contain "altr,fpga-mgr"
++- reg        : base address and size for memory mapped io.
++               - The first index is for FPGA manager register access.
++               - The second index is for writing FPGA configuration data.
++- interrupts : interrupt for the FPGA Manager device.
++
++Example:
++
++	hps_0_fpgamgr: fpgamgr@0xff706000 {
++		compatible = "altr,fpga-mgr";
++		reg = <0xFF706000 0x1000
++		       0xFFB90000 0x1000>;
++		interrupts = <0 175 4>;
++	};
 -- 
 1.7.9.5
