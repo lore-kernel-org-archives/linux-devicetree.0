@@ -1,107 +1,127 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 07/13] mfd: sun6i-prcm: Add support for
- the ir-clk
-Date: Thu, 18 Dec 2014 09:19:03 +0000
-Message-ID: <20141218091903.GA4525@x1>
-References: <1418836704-15689-1-git-send-email-hdegoede@redhat.com>
- <1418836704-15689-8-git-send-email-hdegoede@redhat.com>
- <20141218084129.GT13885@x1>
- <54929602.8020002@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 5/8] watchdog: bindings: Provide ST bindings for ST's LPC
+ Watchdog device
+Date: Thu, 18 Dec 2014 09:28:44 +0000
+Message-ID: <20141218092844.GB4525@x1>
+References: <1418834727-1602-1-git-send-email-lee.jones@linaro.org>
+ <2894129.AmAkgPJPNf@wuerfel>
+ <20141218090404.GU13885@x1>
+ <1554161.vPuSVrZM0j@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDA7X7F2WUEBBDNYZKSAKGQEK6GHDQQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <54929602.8020002-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1554161.vPuSVrZM0j@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-kernel@lists.infradead.org, a.zummo@towertech.it, kernel@stlinux.com, rtc-linux@googlegroups.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, wim@iguana.be, linux@roeck-us.net, linux-watchdog@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 18 Dec 2014, Hans de Goede wrote:
+On Thu, 18 Dec 2014, Arnd Bergmann wrote:
 
-> Hi,
+> On Thursday 18 December 2014 09:04:04 Lee Jones wrote:
+> > We=20
+> > On Thu, 18 Dec 2014, Arnd Bergmann wrote:
+> >=20
+> > > On Thursday 18 December 2014 08:13:34 Lee Jones wrote:
+> > > > On Wed, 17 Dec 2014, Arnd Bergmann wrote:
+> > > >=20
+> > > > > On Wednesday 17 December 2014 16:45:24 Lee Jones wrote:
+> > > > > > +- compatible   : Must be one of: "st,stih407-lpc" "st,stih=
+416-lpc"
+> > > > > > +                                 "st,stih415-lpc" "st,stid=
+127-lpc"
+> > > > > > +- reg          : LPC registers base address + size
+> > > > > > +- interrupts    : LPC interrupt line number and associated=
+ flags
+> > > > > > +- clocks       : Clock used by LPC device (See: ../clock/c=
+lock-bindings.txt)
+> > > > > > +- st,lpc-mode  : The LPC can run either one of two modes S=
+T_LPC_MODE_RTC [0] or
+> > > > > > +                 ST_LPC_MODE_WDT [1].  One (and only one) =
+mode must be
+> > > > > > +                 selected.
+> > > > > >=20
+> > > > >=20
+> > > > > I'm glad you got it to work with two drivers for the same dev=
+ice.
+> > > > >=20
+> > > > > With this binding, I'm still a bit unhappy about the st,lpc-m=
+ode property,
+> > > > > in particular since you rely on a shared include file for som=
+ething that
+> > > > > can only be set in one way or another and always has to be pr=
+esent.
+> > > > >=20
+> > > > > Why not just use a boolean property that enforces one mode wh=
+en present
+> > > > > and another mode when absent?
+> > > >=20
+> > > > There is nothing stopping me from doing that, and it was a
+> > > > consideration.  I concluded that this method would be more expl=
+icit
+> > > > however.  Both when describing our choices in DT and at a funct=
+ional
+> > > > level within each of the drivers.
+> > > >=20
+> > > > Let me know if you fundamentally disagree and I can fix-up.
+> > >=20
+> > > I generally don't like  header files that define interfaces betwe=
+en C code
+> > > and DT nodes. There are cases where it's the least ugly solution,=
+ but I don't
+> > > think this is one of them.
+> > >=20
+> > > If you want to be more explicit about the modes, how about having=
+ one
+> > > boolean property per mode? That would also allow devices that cou=
+ld be
+> > > driven in either mode, e.g. if you have only one instance of this=
+ device.
+> >=20
+> > Isn't this was you suggested above?
 >=20
-> On 18-12-14 09:41, Lee Jones wrote:
-> >On Wed, 17 Dec 2014, Hans de Goede wrote:
-> >
-> >>Add support for the ir-clk which is part of the sun6i SoC prcm module.
-> >>
-> >>Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> >>---
-> >>  drivers/mfd/sun6i-prcm.c | 14 ++++++++++++++
-> >>  1 file changed, 14 insertions(+)
-> >
-> >Pretty standard stuff (
-> >
-> >>diff --git a/drivers/mfd/sun6i-prcm.c b/drivers/mfd/sun6i-prcm.c
-> >>index 2f2e9f0..1911731 100644
-> >>--- a/drivers/mfd/sun6i-prcm.c
-> >>+++ b/drivers/mfd/sun6i-prcm.c
-> >>@@ -41,6 +41,14 @@ static const struct resource sun6i_a31_apb0_gates_cl=
-k_res[] =3D {
-> >>  	},
-> >>  };
-> >>
-> >>+static const struct resource sun6i_a31_ir_clk_res[] =3D {
-> >>+	{
-> >>+		.start =3D 0x54,
-> >>+		.end =3D 0x57,
-> >>+		.flags =3D IORESOURCE_MEM,
-> >>+	},
-> >>+};
-> >
-> >I'm still unkeen on this registers not being defined -- but whateveer!
-> >
-> >>  static const struct resource sun6i_a31_apb0_rstc_res[] =3D {
-> >>  	{
-> >>  		.start =3D 0xb0,
-> >>@@ -69,6 +77,12 @@ static const struct mfd_cell sun6i_a31_prcm_subdevs[=
-] =3D {
-> >>  		.resources =3D sun6i_a31_apb0_gates_clk_res,
-> >>  	},
-> >>  	{
-> >>+		.name =3D "sun6i-a31-ir-clk",
-> >>+		.of_compatible =3D "allwinner,sun4i-a10-mod0-clk",
-> >>+		.num_resources =3D ARRAY_SIZE(sun6i_a31_ir_clk_res),
-> >>+		.resources =3D sun6i_a31_ir_clk_res,
-> >>+	},
-> >>+	{
-> >>  		.name =3D "sun6i-a31-apb0-clock-reset",
-> >>  		.of_compatible =3D "allwinner,sun6i-a31-clock-reset",
-> >>  		.num_resources =3D ARRAY_SIZE(sun6i_a31_apb0_rstc_res),
-> >
-> >This is all pretty standard stuff:
-> >
-> >For my own reference:
-> >
-> >Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >
-> >Do you do  you expect this patch to be handled?
+> My first suggestion was to just have one boolean property, and use on=
+e
+> driver if that is absent. The second one was to have two (or three) s=
+eparate
+> boolean properties that each refer to whether a particular driver is =
+allowed
+> to use this device or not.
 >=20
-> I've no preference for how this goes upstream. There are no compile time =
-deps
-> and runtime the ir will not work (but not explode) until all the bits are
-> in place.
+> > But as I briefly mentioned to you elsewhere, there are actually 3
+> > devices (Watchdog, RTC and Global Timer).  How would you like to
+> > handle that with a Boolean property when we introduce this new driv=
+er?
+>=20
+> Right, this would require having more than one property, but I still =
+think
+> it's better than the header file.
 
-Great, this is my kind of patch.  Applied, thanks.
+I'll put my point across just once and then become subservient once
+more.  I don't agree that defining 3 properties is better than
+creating just 1.  We have lots of properties containing indexes and
+flags.  Just because we've decided to #define them in order to read
+them easily shouldn't detract from the fact that it's a better setup.
+
+  st,lpc-mode <1|2|3>;
+
+Must be better than:
+
+    st,lpc-globaltimer-mode;
+    st,lpc-watchdog-mode;
+    st,lpc-rtc-mode;
+
+If each of the drivers only checks for it's own property and fails to
+probe if it's not present how will we detect and warn about a lack of
+any of the 3 properties without a central, all-knowing (MFD) driver?=20
+
+This is likely to cause someone [why isn't my driver probing] issues
+and subsequently waste valuable engineering time in the future.
 
 --=20
 Lee Jones
 Linaro STMicroelectronics Landing Team Lead
 Linaro.org =E2=94=82 Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+=46ollow Linaro: Facebook | Twitter | Blog
