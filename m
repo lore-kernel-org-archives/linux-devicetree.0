@@ -1,513 +1,122 @@
-From: Gyungoh Yoo <gyungoh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v10 2/6] backlight: Add support Skyworks SKY81452
- backlight driver
-Date: Thu, 18 Dec 2014 15:13:24 +0900
-Message-ID: <20141218061324.GA3107@jack-ThinkPad-T520>
-References: <1418881671-3495-1-git-send-email-jack.yoo@skyworksinc.com>
- <1418881671-3495-3-git-send-email-jack.yoo@skyworksinc.com>
- <001101d01a89$2a629590$7f27c0b0$%han@samsung.com>
+From: MyungJoo Ham <myungjoo.ham@samsung.com>
+Subject: Re: [PATCHv4 1/8] devfreq: event: Add new devfreq_event class to
+ provide basic data for devfreq governor
+Date: Thu, 18 Dec 2014 06:24:26 +0000 (GMT)
+Message-ID: <1527528755.303581418883865069.JavaMail.weblogic@epmlwas01d>
+Reply-To: myungjoo.ham@samsung.com
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <001101d01a89$2a629590$7f27c0b0$%han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org, hs-ynQEQJNshbs@public.gmane.org, stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org, matti.vaittinen-OYasijW0DpE@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, florian.vaussard-p8DiymsW2f8@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, hytszk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org, jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Transfer-Encoding: base64
+Return-path: <linux-pm-owner@vger.kernel.org>
+MIME-version: 1.0
+Sender: linux-pm-owner@vger.kernel.org
+To: =?utf-8?Q?=EC=B5=9C=EC=B0=AC=EC=9A=B0?= <cw00.choi@samsung.com>
+Cc: =?utf-8?Q?=EA=B9=80=EA=B5=AD=EC=A7=84?= <kgene.kim@samsung.com>, =?utf-8?Q?=EB=B0=95=EA=B2=BD=EB=AF=BC?= <kyungmin.park@samsung.com>, "rafael.j.wysocki@intel.com" <rafael.j.wysocki@intel.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, ABHILASH KESAVAN <a.kesavan@samsung.com>, "tomasz.figa@gmail.com" <tomasz.figa@gmail.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, =?utf-8?Q?=EB=8C=80=EC=9D=B8=EA=B8=B0?= <inki.dae@samsung.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 18, 2014 at 03:09:21PM +0900, Jingoo Han wrote:
-> On Thursday, December 18, 2014 2:48 PM, Gyungoh Yoo wrote:
-> > 
-> > From: Gyungoh Yoo <jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>
-> > 
-> > Signed-off-by: Gyungoh Yoo <jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>
-> 
-> Please add the following 'Acked-by's when you send this patch
-> next time.
-> 
-> Acked-by: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Acked-by: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+SGkgQ2hhbndvbywNCg0KSSBsb3ZlIHRoZSBpZGVhIGFuZCBJIG5vdyBoYXZlIGEgbGl0dGxlIG1l
+Y2hhbmljYWwgaXNzdWVzIGluIHlvdXIgY29kZS4NCg0KPiAtLS0NCj4gIGRyaXZlcnMvZGV2ZnJl
+cS9LY29uZmlnICAgICAgICAgfCAgIDIgKw0KPiAgZHJpdmVycy9kZXZmcmVxL01ha2VmaWxlICAg
+ICAgICB8ICAgNSArLQ0KPiAgZHJpdmVycy9kZXZmcmVxL2RldmZyZXEtZXZlbnQuYyB8IDQ0OSAr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrDQo+ICBkcml2ZXJzL2RldmZy
+ZXEvZXZlbnQvTWFrZWZpbGUgIHwgICAxICsNCj4gIGluY2x1ZGUvbGludXgvZGV2ZnJlcS5oICAg
+ICAgICAgfCAxNjAgKysrKysrKysrKysrKysNCj4gIDUgZmlsZXMgY2hhbmdlZCwgNjE2IGluc2Vy
+dGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2Rl
+dmZyZXEvZGV2ZnJlcS1ldmVudC5jDQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9kZXZm
+cmVxL2V2ZW50L01ha2VmaWxlDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9kZXZmcmVxL0tj
+b25maWcgYi9kcml2ZXJzL2RldmZyZXEvS2NvbmZpZw0KPiBpbmRleCBmYWY0ZTcwLi40ZDE1YjYy
+IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2RldmZyZXEvS2NvbmZpZw0KPiArKysgYi9kcml2ZXJz
+L2RldmZyZXEvS2NvbmZpZw0KPiBAQCAtODcsNCArODcsNiBAQCBjb25maWcgQVJNX0VYWU5PUzVf
+QlVTX0RFVkZSRVENCj4gIAkgIEl0IHJlYWRzIFBQTVUgY291bnRlcnMgb2YgbWVtb3J5IGNvbnRy
+b2xsZXJzIGFuZCBhZGp1c3RzIHRoZQ0KPiAgCSAgb3BlcmF0aW5nIGZyZXF1ZW5jaWVzIGFuZCB2
+b2x0YWdlcyB3aXRoIE9QUCBzdXBwb3J0Lg0KPiAgDQo+ICtjb21tZW50ICJERVZGUkVRIEV2ZW50
+IERyaXZlcnMiDQo+ICsNCj4gIGVuZGlmICMgUE1fREVWRlJFUQ0KPiBkaWZmIC0tZ2l0IGEvZHJp
+dmVycy9kZXZmcmVxL01ha2VmaWxlIGIvZHJpdmVycy9kZXZmcmVxL01ha2VmaWxlDQo+IGluZGV4
+IDE2MTM4YzkuLmExZmZhYmUgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvZGV2ZnJlcS9NYWtlZmls
+ZQ0KPiArKysgYi9kcml2ZXJzL2RldmZyZXEvTWFrZWZpbGUNCj4gQEAgLTEsNCArMSw0IEBADQo+
+IC1vYmotJChDT05GSUdfUE1fREVWRlJFUSkJKz0gZGV2ZnJlcS5vDQo+ICtvYmotJChDT05GSUdf
+UE1fREVWRlJFUSkJCSs9IGRldmZyZXEubyBkZXZmcmVxLWV2ZW50Lm8NCj4gIG9iai0kKENPTkZJ
+R19ERVZGUkVRX0dPVl9TSU1QTEVfT05ERU1BTkQpCSs9IGdvdmVybm9yX3NpbXBsZW9uZGVtYW5k
+Lm8NCj4gIG9iai0kKENPTkZJR19ERVZGUkVRX0dPVl9QRVJGT1JNQU5DRSkJKz0gZ292ZXJub3Jf
+cGVyZm9ybWFuY2Uubw0KPiAgb2JqLSQoQ09ORklHX0RFVkZSRVFfR09WX1BPV0VSU0FWRSkJKz0g
+Z292ZXJub3JfcG93ZXJzYXZlLm8NCj4gQEAgLTcsMyArNyw2IEBAIG9iai0kKENPTkZJR19ERVZG
+UkVRX0dPVl9VU0VSU1BBQ0UpCSs9IGdvdmVybm9yX3VzZXJzcGFjZS5vDQo+ICAjIERFVkZSRVEg
+RHJpdmVycw0KPiAgb2JqLSQoQ09ORklHX0FSTV9FWFlOT1M0X0JVU19ERVZGUkVRKQkrPSBleHlu
+b3MvDQo+ICBvYmotJChDT05GSUdfQVJNX0VYWU5PUzVfQlVTX0RFVkZSRVEpCSs9IGV4eW5vcy8N
+Cj4gKw0KPiArIyBERVZGUkVRIEV2ZW50IERyaXZlcnMNCj4gK29iai0kKENPTkZJR19QTV9ERVZG
+UkVRKQkJKz0gZXZlbnQvDQo+IA0KDQpJdCBsb29rcyBnZXR0aW5nIG1hdHVyZSBmYXN0Lg0KSG93
+ZXZlciwgSSB3b3VsZCBsaWtlIHRvIHN1Z2dlc3QgeW91IHRvDQoNCmFsbG93IG5vdCB0byBjb21w
+aWxlIGRldmZyZXEtZXZlbnQuYyBhbmQgbm90IGluY2x1ZGUgaXRzIGNvbXBpbGVkIG9iamVjdA0K
+ICBpZiBkZXZmcmVxLmMgaXMgcmVxdWlyZWQgYnV0IGRldmZyZXEtZXZlbnQuYyBpcyBub3QgcmVx
+dWlyZWQuDQogIChlLmcuLCBhZGQgQ09ORklHX1BNX0RFVkZSRVFfRVZFTlQgYW5kIGxldCBpdCBi
+ZSBlbmFibGVkIHdoZW4gbmVlZGVkKQ0KICBqdXN0IGEgbGl0dGxlIGNvbmNlcm4gZm9yIGxpZ2h0
+d2VpZ2h0IGRldmljZXMuDQogICAgKHRoaXMgY2hhbmdlIG1pZ2h0IHJlcXVpcmUgYSBiaXQgbW9y
+ZSB3b3JrIG9uIHRoZSBoZWFkZXIgYXMgd2VsbCkNCiAgLSBPciBkbyB5b3UgdGhpbmsgZGV2ZnJl
+cS1ldmVudC5jIHdpbGwgYmVjb21lIGFsbW9zdCBtYW5kYXRvcnkgZm9yDQogICBtb3N0IGRldmZy
+ZXEgZHJpdmVycz8NCg0KDQpbc25pcF0NCg0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9kZXZmcmVx
+L2RldmZyZXEtZXZlbnQuYyBiL2RyaXZlcnMvZGV2ZnJlcS9kZXZmcmVxLWV2ZW50LmMNCj4gbmV3
+IGZpbGUgbW9kZSAxMDA2NDQNCj4gaW5kZXggMDAwMDAwMC4uMGUxOTQ4ZQ0KPiAtLS0gL2Rldi9u
+dWxsDQo+ICsrKyBiL2RyaXZlcnMvZGV2ZnJlcS9kZXZmcmVxLWV2ZW50LmMNCj4gQEAgLTAsMCAr
+MSw0NDkgQEANCj4gKy8qDQo+ICsgKiBkZXZmcmVxLWV2ZW50OiBHZW5lcmljIERFVkZSRVEgRXZl
+bnQgY2xhc3MgZHJpdmVyDQoNCkRFVkZSRVEgaXMgYSBnZW5lcmljIERWRlMgbWVjaGFuaXNtIChv
+ciBzdWJzeXN0ZW0pLg0KDQpQbHVzLCBJIHRob3VnaHQgZGV2ZnJlcS1ldmVudCBpcyBjb25zaWRl
+cmVkIHRvIGJlIGEgImZyYW1ld29yayINCmZvciBkZXZmcmVxIGV2ZW50IGNsYXNzIGRyaXZlcnMu
+IEFtIEkgbWlzdGFrZW4/DQoNCltzbmlwXQ0KDQo+ICtzdHJ1Y3QgZGV2ZnJlcV9ldmVudF9kZXYg
+KmRldmZyZXFfZXZlbnRfYWRkX2VkZXYoc3RydWN0IGRldmljZSAqZGV2LA0KPiArICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzdHJ1Y3QgZGV2ZnJlcV9ldmVu
+dF9kZXNjICpkZXNjKQ0KPiArew0KPiArICAgICAgIHN0cnVjdCBkZXZmcmVxX2V2ZW50X2RldiAq
+ZWRldjsNCj4gKyAgICAgICBzdGF0aWMgYXRvbWljX3QgZXZlbnRfbm8gPSBBVE9NSUNfSU5JVCgw
+KTsNCj4gKyAgICAgICBpbnQgcmV0Ow0KPiArDQo+ICsgICAgICAgaWYgKCFkZXYgfHwgIWRlc2Mp
+DQo+ICsgICAgICAgICAgICAgICByZXR1cm4gRVJSX1BUUigtRUlOVkFMKTsNCj4gKw0KPiArICAg
+ICAgIGlmICghZGVzYy0+bmFtZSB8fCAhZGVzYy0+b3BzKQ0KPiArICAgICAgICAgICAgICAgcmV0
+dXJuIEVSUl9QVFIoLUVJTlZBTCk7DQo+ICsNCj4gKyAgICAgICBpZiAoIWRlc2MtPm9wcy0+c2V0
+X2V2ZW50IHx8ICFkZXNjLT5vcHMtPmdldF9ldmVudCkNCj4gKyAgICAgICAgICAgICAgIHJldHVy
+biBFUlJfUFRSKC1FSU5WQUwpOw0KPiArDQo+ICsgICAgICAgZWRldiA9IGRldm1fa3phbGxvYyhk
+ZXYsIHNpemVvZigqZWRldiksIEdGUF9LRVJORUwpOw0KPiArICAgICAgIGlmICghZWRldikNCj4g
+KyAgICAgICAgICAgICAgIHJldHVybiBFUlJfUFRSKC1FTk9NRU0pOw0KPiArDQo+ICsgICAgICAg
+bXV0ZXhfbG9jaygmZGV2ZnJlcV9ldmVudF9saXN0X2xvY2spOw0KDQpZb3Ugc2VlbSB0byBsb2Nr
+IHRoYXQgZ2xvYmFsIGxvY2sgdG9vIGxvbmcuIFRoYXQgbG9jayBpcyBvbmx5IHJlcXVpcmVkDQp3
+aGlsZSB5b3Ugb3BlcmF0ZSB0aGUgbGlzdC4gVGhlIGRhdGEgdG8gYmUgcHJvdGVjdGVkIGJ5IHRo
+aXMgbXV0ZXggaXMNCmRldmZyZXFfZXZlbnRfbGlzdC4gVW50aWwgdGhlIG5ldyBlbnRyeSBpcyBh
+ZGRlZCB0byB0aGUgbGlzdCwgdGhlIG5ldw0KZW50cnkgaXMgZnJlZSBmcm9tIHByb3RlY3Rpb24u
+IChtYXkgYmUgZGVsYXllZCByaWdodCBiZWZvcmUgbGlzdF9hZGQpDQoNCj4gKyAgICAgICBtdXRl
+eF9pbml0KCZlZGV2LT5sb2NrKTsNCj4gKyAgICAgICBlZGV2LT5kZXNjID0gZGVzYzsNCj4gKyAg
+ICAgICBlZGV2LT5kZXYucGFyZW50ID0gZGV2Ow0KPiArICAgICAgIGVkZXYtPmRldi5jbGFzcyA9
+IGRldmZyZXFfZXZlbnRfY2xhc3M7DQo+ICsgICAgICAgZWRldi0+ZGV2LnJlbGVhc2UgPSBkZXZm
+cmVxX2V2ZW50X3JlbGVhc2VfZWRldjsNCj4gKw0KPiArICAgICAgIGRldl9zZXRfbmFtZSgmZWRl
+di0+ZGV2LCAiZXZlbnQuJWQiLCBhdG9taWNfaW5jX3JldHVybigmZXZlbnRfbm8pIC0gMSk7DQo+
+ICsgICAgICAgcmV0ID0gZGV2aWNlX3JlZ2lzdGVyKCZlZGV2LT5kZXYpOw0KPiArICAgICAgIGlm
+IChyZXQgPCAwKSB7DQo+ICsgICAgICAgICAgICAgICBwdXRfZGV2aWNlKCZlZGV2LT5kZXYpOw0K
+PiArICAgICAgICAgICAgICAgbXV0ZXhfdW5sb2NrKCZkZXZmcmVxX2V2ZW50X2xpc3RfbG9jayk7
+DQo+ICsgICAgICAgICAgICAgICByZXR1cm4gRVJSX1BUUihyZXQpOw0KPiArICAgICAgIH0NCj4g
+KyAgICAgICBkZXZfc2V0X2RydmRhdGEoJmVkZXYtPmRldiwgZWRldik7DQo+ICsNCj4gKyAgICAg
+ICBJTklUX0xJU1RfSEVBRCgmZWRldi0+bm9kZSk7DQo+ICsgICAgICAgbGlzdF9hZGQoJmVkZXYt
+Pm5vZGUsICZkZXZmcmVxX2V2ZW50X2xpc3QpOw0KPiArICAgICAgIG11dGV4X3VubG9jaygmZGV2
+ZnJlcV9ldmVudF9saXN0X2xvY2spOw0KPiArDQo+ICsgICAgICAgcmV0dXJuIGVkZXY7DQo+ICt9
+DQoNCg0KDQpbc25pcCAvIHJldmVyc2VkIG1heWJlLi4gc29ycnldDQoNCj4gKy8qKg0KPiArICog
+ZGV2ZnJlcV9ldmVudF9pc19lbmFibGVkKCkgLSBDaGVjayB3aGV0aGVyIGRldmZyZXEtZXZlbnQg
+ZGV2IGlzIGVuYWJsZWQgb3INCj4gKyAqICAgICAgICAgICAgICAgICAgICAgICAgICAgICBub3Qu
+DQo+ICsgKiBAZWRldiAgICAgICA6IHRoZSBkZXZmcmVxLWV2ZW50IGRldmljZQ0KPiArICoNCj4g
+KyAqIE5vdGUgdGhhdCB0aGlzIGZ1bmN0aW9uIGNoZWNrIHdoZXRoZXIgZGV2ZnJlcS1ldmVudCBk
+ZXYgaXMgZW5hYmxlZCBvciBub3QuDQo+ICsgKiBJZiByZXR1cm4gdHJ1ZSwgdGhlIGRldmZyZXEt
+ZXZlbnQgZGV2IGlzIGVuYWJlbGQuIElmIHJldHVybiBmYWxzZSwgdGhlDQo+ICsgKiBkZXZmcmVx
+LWV2ZW50IGRldiBpcyBkaXNhYmxlZC4NCj4gKyAqLw0KPiArYm9vbCBkZXZmcmVxX2V2ZW50X2lz
+X2VuYWJsZWQoc3RydWN0IGRldmZyZXFfZXZlbnRfZGV2ICplZGV2KQ0KPiArew0KPiArICAgICAg
+IGJvb2wgZW5hYmxlZCA9IGZhbHNlOw0KPiArDQo+ICsgICAgICAgaWYgKCFlZGV2IHx8ICFlZGV2
+LT5kZXNjKQ0KPiArICAgICAgICAgICAgICAgcmV0dXJuIGVuYWJsZWQ7DQo+ICsNCj4gKyAgICAg
+ICBtdXRleF9sb2NrKCZlZGV2LT5sb2NrKTsNCj4gKw0KPiArICAgICAgIGlmIChlZGV2LT5lbmFi
+bGVfY291bnQgPiAwKQ0KPiArICAgICAgICAgICAgICAgZW5hYmxlZCA9IHRydWU7DQo+ICsNCj4g
+KyAgICAgICBpZiAoZWRldi0+ZGVzYy0+b3BzICYmIGVkZXYtPmRlc2MtPm9wcy0+aXNfZW5hYmxl
+ZCkNCj4gKyAgICAgICAgICAgICAgIGVuYWJsZWQgfD0gZWRldi0+ZGVzYy0+b3BzLT5pc19lbmFi
+bGVkKGVkZXYpOw0KDQpXaGF0IGRvZXMgaXQgbWVhbiB3aGVuIGVuYWJsZWRfY291bnQgPiAwIGFu
+ZCBvcHMtPmlzX2VuYWJsZWQoKSBpcyBmYWxzZT8gb3IuLg0KV2hhdCBkb2VzIGl0IG1lYW4gd2hl
+biBlbmFibGVkX2NvdW50ID0gMCBhbmQgb3BzLT5pc19lbmFibGVkKCkgaXMgdHJ1ZT8NCg0KSWYg
+eW91IGRvIGVuYWJsZV9jb3VudCBpbiB0aGUgc3Vic3lzdGVtLCB3aHkgd291bGQgd2UgcmVseSBv
+bg0Kb3BzLT5pc19lbmFibGVkKCk/IEFyZSB5b3UgYXNzdW1pbmcgdGhhdCBhIGRldmljZSBNQVkg
+dHVybiBpdHNlbGYgb2ZmDQp3aXRob3V0IGFueSBrZXJuZWwgY29udHJvbCAob3BzLT5kaXNhYmxl
+KCkpIGFuZCBpdCBpcyBzdGlsbCBhIGNvcnJlY3QNCmJlaGFiaW9yPw0KDQo+ICsNCj4gKyAgICAg
+ICBtdXRleF91bmxvY2soJmVkZXYtPmxvY2spOw0KPiArDQo+ICsgICAgICAgcmV0dXJuIGVuYWJs
+ZWQ7DQo+ICt9DQo+ICtFWFBPUlRfU1lNQk9MX0dQTChkZXZmcmVxX2V2ZW50X2lzX2VuYWJsZWQp
+Ow0KDQoNCkNoZWVycywNCk15dW5nSm9vDQoNCg==
 
-I see.
-Thank you.
 
-> 
-> Best regards,
-> Jingoo Han
-> 
-> > ---
-> > Changes v10:
-> > Removed trivial get_brightness implementations
-> > 
-> > Changes v9:
-> > Nothing
-> > 
-> > Changes v8:
-> > Renamed property names for backlight with vendor prefix
-> > Modified gpio-enable property to generic property for GPIO
-> > 
-> > Changes v7:
-> > Modified licensing text to GPLv2
-> > 
-> > Changes v6:
-> > Added new line character at the end of line of dev_err()
-> > 
-> > Changes v5:
-> > Move sky81452-backlight.h to include/linux/platform_data
-> > 
-> > Changes v4:
-> > Reordering header files for readability
-> > Removed calling to backlight_device_unregister()
-> > Removed MODULE_VERSION()
-> > Modified license to GPLv2
-> > 
-> > Changes v3:
-> > Modified DBG messages
-> > 
-> > Changes v2:
-> > Added 'compatible' attribute in the driver
-> > Added message for exception or errors
-> > 
-> >  drivers/video/backlight/Kconfig                  |  10 +
-> >  drivers/video/backlight/Makefile                 |   1 +
-> >  drivers/video/backlight/sky81452-backlight.c     | 334 +++++++++++++++++++++++
-> >  include/linux/platform_data/sky81452-backlight.h |  46 ++++
-> >  4 files changed, 391 insertions(+)
-> >  create mode 100644 drivers/video/backlight/sky81452-backlight.c
-> >  create mode 100644 include/linux/platform_data/sky81452-backlight.h
-> > 
-> > diff --git a/drivers/video/backlight/Kconfig b/drivers/video/backlight/Kconfig
-> > index 8d03924..2586fdd 100644
-> > --- a/drivers/video/backlight/Kconfig
-> > +++ b/drivers/video/backlight/Kconfig
-> > @@ -409,6 +409,16 @@ config BACKLIGHT_PANDORA
-> >  	  If you have a Pandora console, say Y to enable the
-> >  	  backlight driver.
-> > 
-> > +config BACKLIGHT_SKY81452
-> > +	tristate "Backlight driver for SKY81452"
-> > +	depends on BACKLIGHT_CLASS_DEVICE && MFD_SKY81452
-> > +	help
-> > +	  If you have a Skyworks SKY81452, say Y to enable the
-> > +	  backlight driver.
-> > +
-> > +	  To compile this driver as a module, choose M here: the module will
-> > +	  be called sky81452-backlight
-> > +
-> >  config BACKLIGHT_TPS65217
-> >  	tristate "TPS65217 Backlight"
-> >  	depends on BACKLIGHT_CLASS_DEVICE && MFD_TPS65217
-> > diff --git a/drivers/video/backlight/Makefile b/drivers/video/backlight/Makefile
-> > index fcd50b73..d67073f 100644
-> > --- a/drivers/video/backlight/Makefile
-> > +++ b/drivers/video/backlight/Makefile
-> > @@ -50,6 +50,7 @@ obj-$(CONFIG_BACKLIGHT_PANDORA)		+= pandora_bl.o
-> >  obj-$(CONFIG_BACKLIGHT_PCF50633)	+= pcf50633-backlight.o
-> >  obj-$(CONFIG_BACKLIGHT_PWM)		+= pwm_bl.o
-> >  obj-$(CONFIG_BACKLIGHT_SAHARA)		+= kb3886_bl.o
-> > +obj-$(CONFIG_BACKLIGHT_SKY81452)	+= sky81452-backlight.o
-> >  obj-$(CONFIG_BACKLIGHT_TOSA)		+= tosa_bl.o
-> >  obj-$(CONFIG_BACKLIGHT_TPS65217)	+= tps65217_bl.o
-> >  obj-$(CONFIG_BACKLIGHT_WM831X)		+= wm831x_bl.o
-> > diff --git a/drivers/video/backlight/sky81452-backlight.c b/drivers/video/backlight/sky81452-
-> > backlight.c
-> > new file mode 100644
-> > index 0000000..8105597
-> > --- /dev/null
-> > +++ b/drivers/video/backlight/sky81452-backlight.c
-> > @@ -0,0 +1,334 @@
-> > +/*
-> > + * sky81452-backlight.c	SKY81452 backlight driver
-> > + *
-> > + * Copyright 2014 Skyworks Solutions Inc.
-> > + * Author : Gyungoh Yoo <jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>
-> > + *
-> > + * This program is free software; you can redistribute it and/or modify it
-> > + * under the terms of the GNU General Public License version 2
-> > + * as published by the Free Software Foundation.
-> > + *
-> > + * This program is distributed in the hope that it will be useful, but
-> > + * WITHOUT ANY WARRANTY; without even the implied warranty of
-> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-> > + * General Public License for more details.
-> > + *
-> > + * You should have received a copy of the GNU General Public License along
-> > + * with this program; if not, see <http://www.gnu.org/licenses/>.
-> > + */
-> > +
-> > +#include <linux/backlight.h>
-> > +#include <linux/err.h>
-> > +#include <linux/gpio.h>
-> > +#include <linux/init.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of.h>
-> > +#include <linux/of_gpio.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/regmap.h>
-> > +#include <linux/platform_data/sky81452-backlight.h>
-> > +#include <linux/slab.h>
-> > +
-> > +/* registers */
-> > +#define SKY81452_REG0	0x00
-> > +#define SKY81452_REG1	0x01
-> > +#define SKY81452_REG2	0x02
-> > +#define SKY81452_REG4	0x04
-> > +#define SKY81452_REG5	0x05
-> > +
-> > +/* bit mask */
-> > +#define SKY81452_CS	0xFF
-> > +#define SKY81452_EN	0x3F
-> > +#define SKY81452_IGPW	0x20
-> > +#define SKY81452_PWMMD	0x10
-> > +#define SKY81452_PHASE	0x08
-> > +#define SKY81452_ILIM	0x04
-> > +#define SKY81452_VSHRT	0x03
-> > +#define SKY81452_OCP	0x80
-> > +#define SKY81452_OTMP	0x40
-> > +#define SKY81452_SHRT	0x3F
-> > +#define SKY81452_OPN	0x3F
-> > +
-> > +#define SKY81452_DEFAULT_NAME "lcd-backlight"
-> > +#define SKY81452_MAX_BRIGHTNESS	(SKY81452_CS + 1)
-> > +
-> > +#define CTZ(b) __builtin_ctz(b)
-> > +
-> > +static int sky81452_bl_update_status(struct backlight_device *bd)
-> > +{
-> > +	const struct sky81452_bl_platform_data *pdata =
-> > +			dev_get_platdata(bd->dev.parent);
-> > +	const unsigned int brightness = (unsigned int)bd->props.brightness;
-> > +	struct regmap *regmap = bl_get_data(bd);
-> > +	int ret;
-> > +
-> > +	if (brightness > 0) {
-> > +		ret = regmap_write(regmap, SKY81452_REG0, brightness - 1);
-> > +		if (IS_ERR_VALUE(ret))
-> > +			return ret;
-> > +
-> > +		return regmap_update_bits(regmap, SKY81452_REG1, SKY81452_EN,
-> > +					pdata->enable << CTZ(SKY81452_EN));
-> > +	}
-> > +
-> > +	return regmap_update_bits(regmap, SKY81452_REG1, SKY81452_EN, 0);
-> > +}
-> > +
-> > +static const struct backlight_ops sky81452_bl_ops = {
-> > +	.update_status = sky81452_bl_update_status,
-> > +};
-> > +
-> > +static ssize_t sky81452_bl_store_enable(struct device *dev,
-> > +		struct device_attribute *attr, const char *buf, size_t count)
-> > +{
-> > +	struct regmap *regmap = bl_get_data(to_backlight_device(dev));
-> > +	unsigned long value;
-> > +	int ret;
-> > +
-> > +	ret = kstrtoul(buf, 16, &value);
-> > +	if (IS_ERR_VALUE(ret))
-> > +		return ret;
-> > +
-> > +	ret = regmap_update_bits(regmap, SKY81452_REG1, SKY81452_EN,
-> > +					value << CTZ(SKY81452_EN));
-> > +	if (IS_ERR_VALUE(ret))
-> > +		return ret;
-> > +
-> > +	return count;
-> > +}
-> > +
-> > +static ssize_t sky81452_bl_show_open_short(struct device *dev,
-> > +		struct device_attribute *attr, char *buf)
-> > +{
-> > +	struct regmap *regmap = bl_get_data(to_backlight_device(dev));
-> > +	unsigned int reg, value = 0;
-> > +	char tmp[3];
-> > +	int i, ret;
-> > +
-> > +	reg = !strcmp(attr->attr.name, "open") ? SKY81452_REG5 : SKY81452_REG4;
-> > +	ret = regmap_read(regmap, reg, &value);
-> > +	if (IS_ERR_VALUE(ret))
-> > +		return ret;
-> > +
-> > +	if (value & SKY81452_SHRT) {
-> > +		*buf = 0;
-> > +		for (i = 0; i < 6; i++) {
-> > +			if (value & 0x01) {
-> > +				sprintf(tmp, "%d ", i + 1);
-> > +				strcat(buf, tmp);
-> > +			}
-> > +			value >>= 1;
-> > +		}
-> > +		strcat(buf, "\n");
-> > +	} else {
-> > +		strcpy(buf, "none\n");
-> > +	}
-> > +
-> > +	return strlen(buf);
-> > +}
-> > +
-> > +static ssize_t sky81452_bl_show_fault(struct device *dev,
-> > +		struct device_attribute *attr, char *buf)
-> > +{
-> > +	struct regmap *regmap = bl_get_data(to_backlight_device(dev));
-> > +	unsigned int value = 0;
-> > +	int ret;
-> > +
-> > +	ret = regmap_read(regmap, SKY81452_REG4, &value);
-> > +	if (IS_ERR_VALUE(ret))
-> > +		return ret;
-> > +
-> > +	*buf = 0;
-> > +
-> > +	if (value & SKY81452_OCP)
-> > +		strcat(buf, "over-current ");
-> > +
-> > +	if (value & SKY81452_OTMP)
-> > +		strcat(buf, "over-temperature");
-> > +
-> > +	strcat(buf, "\n");
-> > +	return strlen(buf);
-> > +}
-> > +
-> > +static DEVICE_ATTR(enable, S_IWGRP | S_IWUSR, NULL, sky81452_bl_store_enable);
-> > +static DEVICE_ATTR(open, S_IRUGO, sky81452_bl_show_open_short, NULL);
-> > +static DEVICE_ATTR(short, S_IRUGO, sky81452_bl_show_open_short, NULL);
-> > +static DEVICE_ATTR(fault, S_IRUGO, sky81452_bl_show_fault, NULL);
-> > +
-> > +static struct attribute *sky81452_bl_attribute[] = {
-> > +	&dev_attr_enable.attr,
-> > +	&dev_attr_open.attr,
-> > +	&dev_attr_short.attr,
-> > +	&dev_attr_fault.attr,
-> > +	NULL
-> > +};
-> > +
-> > +static const struct attribute_group sky81452_bl_attr_group = {
-> > +	.attrs = sky81452_bl_attribute,
-> > +};
-> > +
-> > +#ifdef CONFIG_OF
-> > +static struct sky81452_bl_platform_data *sky81452_bl_parse_dt(
-> > +							struct device *dev)
-> > +{
-> > +	struct device_node *np = of_node_get(dev->of_node);
-> > +	struct sky81452_bl_platform_data *pdata;
-> > +	int ret;
-> > +
-> > +	if (!np) {
-> > +		dev_err(dev, "backlight node not found.\n");
-> > +		return ERR_PTR(-ENODATA);
-> > +	}
-> > +
-> > +	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
-> > +	if (!pdata) {
-> > +		of_node_put(np);
-> > +		return ERR_PTR(-ENOMEM);
-> > +	}
-> > +
-> > +	of_property_read_string(np, "name", &pdata->name);
-> > +	pdata->ignore_pwm = of_property_read_bool(np, "skyworks,ignore-pwm");
-> > +	pdata->dpwm_mode = of_property_read_bool(np, "skyworks,dpwm-mode");
-> > +	pdata->phase_shift = of_property_read_bool(np, "skyworks,phase-shift");
-> > +	pdata->gpio_enable = of_get_gpio(np, 0);
-> > +
-> > +	ret = of_property_read_u32(np, "skyworks,en-channels", &pdata->enable);
-> > +	if (IS_ERR_VALUE(ret))
-> > +		pdata->enable = SKY81452_EN >> CTZ(SKY81452_EN);
-> > +
-> > +	ret = of_property_read_u32(np, "skyworks,short-detection-threshold",
-> > +			&pdata->short_detection_threshold);
-> > +	if (IS_ERR_VALUE(ret))
-> > +		pdata->short_detection_threshold = 7;
-> > +
-> > +	ret = of_property_read_u32(np, "skyworks,current-limit",
-> > +			&pdata->boost_current_limit);
-> > +	if (IS_ERR_VALUE(ret))
-> > +		pdata->boost_current_limit = 2750;
-> > +
-> > +	of_node_put(np);
-> > +	return pdata;
-> > +}
-> > +#else
-> > +static struct sky81452_bl_platform_data *sky81452_bl_parse_dt(
-> > +							struct device *dev)
-> > +{
-> > +	return ERR_PTR(-EINVAL);
-> > +}
-> > +#endif
-> > +
-> > +static int sky81452_bl_init_device(struct regmap *regmap,
-> > +		struct sky81452_bl_platform_data *pdata)
-> > +{
-> > +	unsigned int value;
-> > +
-> > +	value = pdata->ignore_pwm ? SKY81452_IGPW : 0;
-> > +	value |= pdata->dpwm_mode ? SKY81452_PWMMD : 0;
-> > +	value |= pdata->phase_shift ? 0 : SKY81452_PHASE;
-> > +
-> > +	if (pdata->boost_current_limit == 2300)
-> > +		value |= SKY81452_ILIM;
-> > +	else if (pdata->boost_current_limit != 2750)
-> > +		return -EINVAL;
-> > +
-> > +	if (pdata->short_detection_threshold < 4 ||
-> > +				pdata->short_detection_threshold > 7)
-> > +		return -EINVAL;
-> > +	value |= (7 - pdata->short_detection_threshold) << CTZ(SKY81452_VSHRT);
-> > +
-> > +	return regmap_write(regmap, SKY81452_REG2, value);
-> > +}
-> > +
-> > +static int sky81452_bl_probe(struct platform_device *pdev)
-> > +{
-> > +	struct device *dev = &pdev->dev;
-> > +	struct regmap *regmap = dev_get_drvdata(dev->parent);
-> > +	struct sky81452_bl_platform_data *pdata = dev_get_platdata(dev);
-> > +	struct backlight_device *bd;
-> > +	struct backlight_properties props;
-> > +	const char *name;
-> > +	int ret;
-> > +
-> > +	if (!pdata) {
-> > +		pdata = sky81452_bl_parse_dt(dev);
-> > +		if (IS_ERR(pdata))
-> > +			return PTR_ERR(pdata);
-> > +	}
-> > +
-> > +	if (gpio_is_valid(pdata->gpio_enable)) {
-> > +		ret = devm_gpio_request_one(dev, pdata->gpio_enable,
-> > +					GPIOF_OUT_INIT_HIGH, "sky81452-en");
-> > +		if (IS_ERR_VALUE(ret)) {
-> > +			dev_err(dev, "failed to request GPIO. err=%d\n", ret);
-> > +			return ret;
-> > +		}
-> > +	}
-> > +
-> > +	ret = sky81452_bl_init_device(regmap, pdata);
-> > +	if (IS_ERR_VALUE(ret)) {
-> > +		dev_err(dev, "failed to initialize. err=%d\n", ret);
-> > +		return ret;
-> > +	}
-> > +
-> > +	memset(&props, 0, sizeof(props));
-> > +	props.max_brightness = SKY81452_MAX_BRIGHTNESS,
-> > +	name = pdata->name ? pdata->name : SKY81452_DEFAULT_NAME;
-> > +	bd = devm_backlight_device_register(dev, name, dev, regmap,
-> > +						&sky81452_bl_ops, &props);
-> > +	if (IS_ERR(bd)) {
-> > +		dev_err(dev, "failed to register. err=%ld\n", PTR_ERR(bd));
-> > +		return PTR_ERR(bd);
-> > +	}
-> > +
-> > +	platform_set_drvdata(pdev, bd);
-> > +
-> > +	ret  = sysfs_create_group(&bd->dev.kobj, &sky81452_bl_attr_group);
-> > +	if (IS_ERR_VALUE(ret)) {
-> > +		dev_err(dev, "failed to create attribute. err=%d\n", ret);
-> > +		return ret;
-> > +	}
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +static int sky81452_bl_remove(struct platform_device *pdev)
-> > +{
-> > +	const struct sky81452_bl_platform_data *pdata =
-> > +						dev_get_platdata(&pdev->dev);
-> > +	struct backlight_device *bd = platform_get_drvdata(pdev);
-> > +
-> > +	sysfs_remove_group(&bd->dev.kobj, &sky81452_bl_attr_group);
-> > +
-> > +	bd->props.power = FB_BLANK_UNBLANK;
-> > +	bd->props.brightness = 0;
-> > +	backlight_update_status(bd);
-> > +
-> > +	if (gpio_is_valid(pdata->gpio_enable))
-> > +		gpio_set_value_cansleep(pdata->gpio_enable, 0);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +#ifdef CONFIG_OF
-> > +static const struct of_device_id sky81452_bl_of_match[] = {
-> > +	{ .compatible = "skyworks,sky81452-backlight", },
-> > +	{ }
-> > +};
-> > +MODULE_DEVICE_TABLE(of, sky81452_bl_of_match);
-> > +#endif
-> > +
-> > +static struct platform_driver sky81452_bl_driver = {
-> > +	.driver = {
-> > +		.name = "sky81452-backlight",
-> > +		.of_match_table = of_match_ptr(sky81452_bl_of_match),
-> > +	},
-> > +	.probe = sky81452_bl_probe,
-> > +	.remove = sky81452_bl_remove,
-> > +};
-> > +
-> > +module_platform_driver(sky81452_bl_driver);
-> > +
-> > +MODULE_DESCRIPTION("Skyworks SKY81452 backlight driver");
-> > +MODULE_AUTHOR("Gyungoh Yoo <jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>");
-> > +MODULE_LICENSE("GPL v2");
-> > diff --git a/include/linux/platform_data/sky81452-backlight.h b/include/linux/platform_data/sky81452-
-> > backlight.h
-> > new file mode 100644
-> > index 0000000..1231e9b
-> > --- /dev/null
-> > +++ b/include/linux/platform_data/sky81452-backlight.h
-> > @@ -0,0 +1,46 @@
-> > +/*
-> > + * sky81452.h	SKY81452 backlight driver
-> > + *
-> > + * Copyright 2014 Skyworks Solutions Inc.
-> > + * Author : Gyungoh Yoo <jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>
-> > + *
-> > + * This program is free software; you can redistribute it and/or modify it
-> > + * under the terms of the GNU General Public License version 2
-> > + * as published by the Free Software Foundation.
-> > + *
-> > + * This program is distributed in the hope that it will be useful, but
-> > + * WITHOUT ANY WARRANTY; without even the implied warranty of
-> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-> > + * General Public License for more details.
-> > + *
-> > + * You should have received a copy of the GNU General Public License along
-> > + * with this program; if not, see <http://www.gnu.org/licenses/>.
-> > + */
-> > +
-> > +#ifndef _SKY81452_BACKLIGHT_H
-> > +#define _SKY81452_BACKLIGHT_H
-> > +
-> > +/**
-> > + * struct sky81452_platform_data
-> > + * @name:	backlight driver name.
-> > +		If it is not defined, default name is lcd-backlight.
-> > + * @gpio_enable:GPIO number which control EN pin
-> > + * @enable:	Enable mask for current sink channel 1, 2, 3, 4, 5 and 6.
-> > + * @ignore_pwm:	true if DPWMI should be ignored.
-> > + * @dpwm_mode:	true is DPWM dimming mode, otherwise Analog dimming mode.
-> > + * @phase_shift:true is phase shift mode.
-> > + * @short_detecion_threshold:	It should be one of 4, 5, 6 and 7V.
-> > + * @boost_current_limit:	It should be one of 2300, 2750mA.
-> > + */
-> > +struct sky81452_bl_platform_data {
-> > +	const char *name;
-> > +	int gpio_enable;
-> > +	unsigned int enable;
-> > +	bool ignore_pwm;
-> > +	bool dpwm_mode;
-> > +	bool phase_shift;
-> > +	unsigned int short_detection_threshold;
-> > +	unsigned int boost_current_limit;
-> > +};
-> > +
-> > +#endif
-> > --
-> > 1.9.1
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
