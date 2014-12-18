@@ -1,201 +1,89 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCHv4 1/8] devfreq: event: Add new devfreq_event class to
- provide basic data for devfreq governor
-Date: Thu, 18 Dec 2014 16:23:52 +0900
-Message-ID: <54928108.5080603@samsung.com>
-References: <1527528755.303581418883865069.JavaMail.weblogic@epmlwas01d>
+From: Inha Song <ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [alsa-devel][PATCH 1/2] mfd: arizona: Add support for OUTn_MONO
+ register control
+Date: Thu, 18 Dec 2014 16:42:58 +0900
+Message-ID: <20141218164258.6785ca4e@songinha-Samsung-DeskTop-System>
+References: <1418030422-27061-1-git-send-email-ideal.song@samsung.com>
+ <1418030422-27061-2-git-send-email-ideal.song@samsung.com>
+ <20141209085717.GT3951@x1>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-reply-to: <1527528755.303581418883865069.JavaMail.weblogic@epmlwas01d>
-Sender: linux-pm-owner@vger.kernel.org
-To: myungjoo.ham@samsung.com
-Cc: =?UTF-8?B?6rmA6rWt7KeE?= <kgene.kim@samsung.com>, =?UTF-8?B?67CV6rK966+8?= <kyungmin.park@samsung.com>, "rafael.j.wysocki@intel.com" <rafael.j.wysocki@intel.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, ABHILASH KESAVAN <a.kesavan@samsung.com>, "tomasz.figa@gmail.com" <tomasz.figa@gmail.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, =?UTF-8?B?64yA7J246riw?= <inki.dae@samsung.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <20141209085717.GT3951@x1>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, ckeepax-yzvPICuk2ABX+icLlh6Yhe4GMZTVgNySAL8bYrjMMd8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Myungjoo,
+Hi,
+Sorry for the late reply.
 
-Thanks for your review.
+On Tue, 09 Dec 2014 08:57:17 +0000
+Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
 
-On 12/18/2014 03:24 PM, MyungJoo Ham wrote:
-> Hi Chanwoo,
-> 
-> I love the idea and I now have a little mechanical issues in your code.
-> 
->> ---
->>  drivers/devfreq/Kconfig         |   2 +
->>  drivers/devfreq/Makefile        |   5 +-
->>  drivers/devfreq/devfreq-event.c | 449 ++++++++++++++++++++++++++++++++++++++++
->>  drivers/devfreq/event/Makefile  |   1 +
->>  include/linux/devfreq.h         | 160 ++++++++++++++
->>  5 files changed, 616 insertions(+), 1 deletion(-)
->>  create mode 100644 drivers/devfreq/devfreq-event.c
->>  create mode 100644 drivers/devfreq/event/Makefile
->>
->> diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
->> index faf4e70..4d15b62 100644
->> --- a/drivers/devfreq/Kconfig
->> +++ b/drivers/devfreq/Kconfig
->> @@ -87,4 +87,6 @@ config ARM_EXYNOS5_BUS_DEVFREQ
->>  	  It reads PPMU counters of memory controllers and adjusts the
->>  	  operating frequencies and voltages with OPP support.
->>  
->> +comment "DEVFREQ Event Drivers"
->> +
->>  endif # PM_DEVFREQ
->> diff --git a/drivers/devfreq/Makefile b/drivers/devfreq/Makefile
->> index 16138c9..a1ffabe 100644
->> --- a/drivers/devfreq/Makefile
->> +++ b/drivers/devfreq/Makefile
->> @@ -1,4 +1,4 @@
->> -obj-$(CONFIG_PM_DEVFREQ)	+= devfreq.o
->> +obj-$(CONFIG_PM_DEVFREQ)		+= devfreq.o devfreq-event.o
->>  obj-$(CONFIG_DEVFREQ_GOV_SIMPLE_ONDEMAND)	+= governor_simpleondemand.o
->>  obj-$(CONFIG_DEVFREQ_GOV_PERFORMANCE)	+= governor_performance.o
->>  obj-$(CONFIG_DEVFREQ_GOV_POWERSAVE)	+= governor_powersave.o
->> @@ -7,3 +7,6 @@ obj-$(CONFIG_DEVFREQ_GOV_USERSPACE)	+= governor_userspace.o
->>  # DEVFREQ Drivers
->>  obj-$(CONFIG_ARM_EXYNOS4_BUS_DEVFREQ)	+= exynos/
->>  obj-$(CONFIG_ARM_EXYNOS5_BUS_DEVFREQ)	+= exynos/
->> +
->> +# DEVFREQ Event Drivers
->> +obj-$(CONFIG_PM_DEVFREQ)		+= event/
->>
-> 
-> It looks getting mature fast.
-> However, I would like to suggest you to
-> 
-> allow not to compile devfreq-event.c and not include its compiled object
->   if devfreq.c is required but devfreq-event.c is not required.
->   (e.g., add CONFIG_PM_DEVFREQ_EVENT and let it be enabled when needed)
->   just a little concern for lightweight devices.
->     (this change might require a bit more work on the header as well)
->   - Or do you think devfreq-event.c will become almost mandatory for
->    most devfreq drivers?
+> On Mon, 08 Dec 2014, Inha Song wrote:
+>=20
+> > Some boards need to set the OUTn_MONO register to configurates
+> > the output signal path as a mono differential output. This
+> > wlf,out-mono property is optional. If present, values must be
+> > specified less than or equal to the number of output signals.
+> > If values less than the number of output signals, elements
+> > that has not been specified are set to 0 by default.
+> >=20
+> > Example:
+> >  - wlf,out-mono =3D <1 0 1>; /* set OUT1,OUT3 to mono differential =
+*/
+> >=20
+> > Signed-off-by: Inha Song <ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> > ---
+> >  drivers/mfd/arizona-core.c | 10 ++++++++++
+> >  1 file changed, 10 insertions(+)
+> >=20
+> > diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.=
+c
+> > index bce7c07..117be32 100644
+> > --- a/drivers/mfd/arizona-core.c
+> > +++ b/drivers/mfd/arizona-core.c
+> > @@ -561,6 +561,16 @@ static int arizona_of_get_core_pdata(struct ar=
+izona *arizona)
+> >  		count++;
+> >  	}
+> > =20
+> > +	count =3D 0;
+> > +	of_property_for_each_u32(arizona->dev->of_node, "wlf,out-mono", p=
+rop,
+> > +				 cur, val) {
+>=20
+> Nit: Can you break after the first parameter instead?
+>=20
+> > +		if (count =3D=3D ARRAY_SIZE(arizona->pdata.out_mono))
+>=20
+> It's better practise to use ">=3D".
 
-I agree your opinion.
-I'll add CONFIG_PM_DEVFREQ_EVENT according to your comment.
-
-> 
-> 
-> [snip]
-> 
->> diff --git a/drivers/devfreq/devfreq-event.c b/drivers/devfreq/devfreq-event.c
->> new file mode 100644
->> index 0000000..0e1948e
->> --- /dev/null
->> +++ b/drivers/devfreq/devfreq-event.c
->> @@ -0,0 +1,449 @@
->> +/*
->> + * devfreq-event: Generic DEVFREQ Event class driver
-> 
-> DEVFREQ is a generic DVFS mechanism (or subsystem).
-> 
-> Plus, I thought devfreq-event is considered to be a "framework"
-> for devfreq event class drivers. Am I mistaken?
-
-You're right. just "class driver" description is not proper.
-I'll modify the description of devfreq-event.c as following:
-or If you have other opinion, would you please let me know about it?
-
-	devfreq-event: DEVFREQ-Event Framework to provide raw data of Non-CPU Devices.
-
-
-> [snip]
-> 
->> +struct devfreq_event_dev *devfreq_event_add_edev(struct device *dev,
->> +                                               struct devfreq_event_desc *desc)
->> +{
->> +       struct devfreq_event_dev *edev;
->> +       static atomic_t event_no = ATOMIC_INIT(0);
->> +       int ret;
->> +
->> +       if (!dev || !desc)
->> +               return ERR_PTR(-EINVAL);
->> +
->> +       if (!desc->name || !desc->ops)
->> +               return ERR_PTR(-EINVAL);
->> +
->> +       if (!desc->ops->set_event || !desc->ops->get_event)
->> +               return ERR_PTR(-EINVAL);
->> +
->> +       edev = devm_kzalloc(dev, sizeof(*edev), GFP_KERNEL);
->> +       if (!edev)
->> +               return ERR_PTR(-ENOMEM);
->> +
->> +       mutex_lock(&devfreq_event_list_lock);
-> 
-> You seem to lock that global lock too long. That lock is only required
-> while you operate the list. The data to be protected by this mutex is
-> devfreq_event_list. Until the new entry is added to the list, the new
-> entry is free from protection. (may be delayed right before list_add)
-
-OK. I'll move global lock right before calling list_add() on below.
-
-> 
->> +       mutex_init(&edev->lock);
->> +       edev->desc = desc;
->> +       edev->dev.parent = dev;
->> +       edev->dev.class = devfreq_event_class;
->> +       edev->dev.release = devfreq_event_release_edev;
->> +
->> +       dev_set_name(&edev->dev, "event.%d", atomic_inc_return(&event_no) - 1);
->> +       ret = device_register(&edev->dev);
->> +       if (ret < 0) {
->> +               put_device(&edev->dev);
->> +               mutex_unlock(&devfreq_event_list_lock);
->> +               return ERR_PTR(ret);
->> +       }
->> +       dev_set_drvdata(&edev->dev, edev);
->> +
->> +       INIT_LIST_HEAD(&edev->node);
->> +       list_add(&edev->node, &devfreq_event_list);
->> +       mutex_unlock(&devfreq_event_list_lock);
->> +
->> +       return edev;
->> +}
-> 
-> 
-> 
-> [snip / reversed maybe.. sorry]
-> 
->> +/**
->> + * devfreq_event_is_enabled() - Check whether devfreq-event dev is enabled or
->> + *                             not.
->> + * @edev       : the devfreq-event device
->> + *
->> + * Note that this function check whether devfreq-event dev is enabled or not.
->> + * If return true, the devfreq-event dev is enabeld. If return false, the
->> + * devfreq-event dev is disabled.
->> + */
->> +bool devfreq_event_is_enabled(struct devfreq_event_dev *edev)
->> +{
->> +       bool enabled = false;
->> +
->> +       if (!edev || !edev->desc)
->> +               return enabled;
->> +
->> +       mutex_lock(&edev->lock);
->> +
->> +       if (edev->enable_count > 0)
->> +               enabled = true;
->> +
->> +       if (edev->desc->ops && edev->desc->ops->is_enabled)
->> +               enabled |= edev->desc->ops->is_enabled(edev);
-> 
-> What does it mean when enabled_count > 0 and ops->is_enabled() is false? or..
-> What does it mean when enabled_count = 0 and ops->is_enabled() is true?
-> 
-> If you do enable_count in the subsystem, why would we rely on
-> ops->is_enabled()? Are you assuming that a device MAY turn itself off
-> without any kernel control (ops->disable()) and it is still a correct
-> behabior?
-
-You're right. devfreq_event_is_enabled() has ambiguous operation according to your comment.
-
-I'll only control the enable_count in the subsystem without ops->is_enabled()
-and then remove the is_enabled function in the structre devfreq_event_ops.
+OK, I will fix this.
 
 Best Regards,
-Chanwoo Choi
+Inha Song.
+
+>=20
+> > +			break;
+> > +
+> > +		arizona->pdata.out_mono[count] =3D !!val;
+> > +		count++;
+> > +	}
+> > +
+> >  	return 0;
+> >  }
+> > =20
+>=20
+> --=20
+> Lee Jones
+> Linaro STMicroelectronics Landing Team Lead
+> Linaro.org =E2=94=82 Open source software for ARM SoCs
+> Follow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
