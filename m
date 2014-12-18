@@ -1,7 +1,7 @@
 From: Josh Wu <josh.wu@atmel.com>
-Subject: [PATCH 6/7] ARM: at91: dts: sama5d3: add ov2640 camera sensor support
-Date: Thu, 18 Dec 2014 16:51:06 +0800
-Message-ID: <1418892667-27428-7-git-send-email-josh.wu@atmel.com>
+Subject: [PATCH 7/7] ARM: at91: sama5: enable atmel-isi and ov2640 in defconfig
+Date: Thu, 18 Dec 2014 16:51:07 +0800
+Message-ID: <1418892667-27428-8-git-send-email-josh.wu@atmel.com>
 References: <1418892667-27428-1-git-send-email-josh.wu@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,68 +12,27 @@ To: nicolas.ferre@atmel.com
 Cc: voice.shen@atmel.com, plagnioj@jcrosoft.com, boris.brezillon@free-electrons.com, alexandre.belloni@free-electrons.com, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-media@vger.kernel.org, g.liakhovetski@gmx.de, laurent.pinchart@ideasonboard.com, Josh Wu <josh.wu@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-According to v4l2 dt document, we add:
-  a camera host: ISI port.
-  a i2c camera sensor: ov2640 port.
-to sama5d3xmb.dtsi.
-
-In the ov2640 node, it defines the pinctrls, clocks and isi port.
-In the ISI node, it also reference to a ov2640 port.
-
 Signed-off-by: Josh Wu <josh.wu@atmel.com>
 ---
- arch/arm/boot/dts/sama5d3xmb.dtsi | 32 ++++++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+ arch/arm/configs/sama5_defconfig | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sama5d3xmb.dtsi b/arch/arm/boot/dts/sama5d3xmb.dtsi
-index 0aaebc6..958a528 100644
---- a/arch/arm/boot/dts/sama5d3xmb.dtsi
-+++ b/arch/arm/boot/dts/sama5d3xmb.dtsi
-@@ -52,6 +52,29 @@
- 				};
- 			};
- 
-+			i2c1: i2c@f0018000 {
-+				ov2640: camera@0x30 {
-+					compatible = "ovti,ov2640";
-+					reg = <0x30>;
-+					pinctrl-names = "default";
-+					pinctrl-0 = <&pinctrl_isi_pck_as_mck &pinctrl_sensor_power &pinctrl_sensor_reset>;
-+					resetb-gpios = <&pioE 24 GPIO_ACTIVE_LOW>;
-+					pwdn-gpios = <&pioE 29 GPIO_ACTIVE_HIGH>;
-+					/* use pck1 for the master clock of ov2640 */
-+					clocks = <&pck1>;
-+					clock-names = "xvclk";
-+					assigned-clocks = <&pck1>;
-+					assigned-clock-rates = <25000000>;
-+
-+					port {
-+						ov2640_0: endpoint {
-+							remote-endpoint = <&isi_0>;
-+							bus-width = <8>;
-+						};
-+					};
-+				};
-+			};
-+
- 			usart1: serial@f0020000 {
- 				dmas = <0>, <0>;	/*  Do not use DMA for usart1 */
- 				pinctrl-names = "default";
-@@ -60,6 +83,15 @@
- 			};
- 
- 			isi: isi@f0034000 {
-+				port {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					isi_0: endpoint {
-+						remote-endpoint = <&ov2640_0>;
-+						bus-width = <8>;
-+					};
-+				};
- 			};
- 
- 			mmc1: mmc@f8000000 {
+diff --git a/arch/arm/configs/sama5_defconfig b/arch/arm/configs/sama5_defconfig
+index b58fb32..92f1d71 100644
+--- a/arch/arm/configs/sama5_defconfig
++++ b/arch/arm/configs/sama5_defconfig
+@@ -139,6 +139,12 @@ CONFIG_POWER_RESET=y
+ CONFIG_SSB=m
+ CONFIG_REGULATOR=y
+ CONFIG_REGULATOR_ACT8865=y
++CONFIG_MEDIA_SUPPORT=y
++CONFIG_MEDIA_CAMERA_SUPPORT=y
++CONFIG_V4L_PLATFORM_DRIVERS=y
++CONFIG_SOC_CAMERA=y
++CONFIG_SOC_CAMERA_OV2640=y
++CONFIG_VIDEO_ATMEL_ISI=y
+ CONFIG_FB=y
+ CONFIG_BACKLIGHT_LCD_SUPPORT=y
+ # CONFIG_LCD_CLASS_DEVICE is not set
 -- 
 1.9.1
