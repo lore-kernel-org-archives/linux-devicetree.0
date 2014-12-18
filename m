@@ -1,56 +1,37 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH 6/8] watchdog: st_wdt: Add new driver for ST's LPC
- Watchdog
-Date: Thu, 18 Dec 2014 08:00:14 -0800
-Message-ID: <20141218160014.GA16015@roeck-us.net>
-References: <1418834727-1602-1-git-send-email-lee.jones@linaro.org>
- <1418834727-1602-7-git-send-email-lee.jones@linaro.org>
- <20141217180251.GA29914@roeck-us.net>
- <20141218082652.GP13885@x1>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20141218082652.GP13885@x1>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, a.zummo@towertech.it, rtc-linux@googlegroups.com, wim@iguana.be, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, arnd@arndb.de, David Paris <david.paris@st.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Subject: [PATCH 0/5] ARM: am43xx: enable VPFE
+Date: Thu, 18 Dec 2014 21:54:09 +0530
+Message-ID: <1418919854-16164-1-git-send-email-prabhakar.csengg@gmail.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org, LAK <linux-arm-kernel@lists.infradead.org>, OMAP <linux-omap@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 18, 2014 at 08:26:52AM +0000, Lee Jones wrote:
-> On Wed, 17 Dec 2014, Guenter Roeck wrote:
-> > On Wed, Dec 17, 2014 at 04:45:25PM +0000, Lee Jones wrote:
-> > > Signed-off-by: David Paris <david.paris@st.com>
-> > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> > 
-> > Hi Lee and David,
-> > 
-> > I still have a couple of comments below. Sorry I didn't catch those earlier.
-> > 
-> > Thanks,
-> > Guenter
-> > 
-> > > ---
-> > >  drivers/watchdog/Kconfig  |  13 ++
-> > >  drivers/watchdog/Makefile |   1 +
-> > >  drivers/watchdog/st_wdt.c | 323 ++++++++++++++++++++++++++++++++++++++++++++++
-> > >  3 files changed, 337 insertions(+)
-> > >  create mode 100644 drivers/watchdog/st_wdt.c
-> 
-> Chopping all the crud.
-> 
-> [...]
-> 
-> > > +static struct of_device_id st_wdog_match[] = {
-> > > +	{
-> > > +		.compatible = "st,stih407-lpc",
-> > > +		.data = (void *)&stih407_syscfg,
-> > 
-> > Nitpick: typecast to and from void * is not necessary.
-> 
-> Actually that's not true, but it is superfluous in this case.
-> 
-Point taken. Would you agree to a more detailed "typecasting a pointer
-to and from void * is not necessary" ?
+From: Benoit Parrot <bparrot@ti.com>
 
-Guenter
+This patch series adds hwmods and VPFE DT node entries
+for am43xx devices.
+The sensor driver is not allowed to release so the remote
+endpoint for vpfe dt nodes are commented at the moment.
+
+Benoit Parrot (4):
+  ARM: AM43xx: hwmod: add VPFE hwmod entries
+  ARM: dts: am4372: add VPFE DT node entries
+  ARM: dts: am43x-epos-evm: add VPFE device tree data
+  ARM: dts: am437x-gp-evm: add VPFE device tree data
+
+Darren Etheridge (1):
+  ARM: dts: am437x-sk-evm: add VPFE device tree data
+
+ arch/arm/boot/dts/am4372.dtsi              |  16 +++++
+ arch/arm/boot/dts/am437x-gp-evm.dts        | 106 +++++++++++++++++++++++++++++
+ arch/arm/boot/dts/am437x-sk-evm.dts        |  58 ++++++++++++++++
+ arch/arm/boot/dts/am43x-epos-evm.dts       |  53 +++++++++++++++
+ arch/arm/mach-omap2/omap_hwmod_43xx_data.c |  56 +++++++++++++++
+ arch/arm/mach-omap2/prcm43xx.h             |   3 +-
+ 6 files changed, 291 insertions(+), 1 deletion(-)
+
+-- 
+1.9.1
+
