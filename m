@@ -1,211 +1,771 @@
-From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3] input: Add new sun4i-lradc-keys driver
-Date: Thu, 18 Dec 2014 09:51:53 -0800
-Message-ID: <20141218175153.GA34618@dtor-ws>
-References: <1418898193-9160-1-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCH v5 3/6] staging: fpga manager: framework core
+Date: Thu, 18 Dec 2014 19:16:18 +0100
+Message-ID: <05395a89d783481b8b7c06bb299b53e0@BL2FFO11FD020.protection.gbl>
+References: <1418835289-15752-1-git-send-email-atull@opensource.altera.com>
+ <1418835289-15752-4-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDP6N55ZUYDRBPVIZSSAKGQEH4NZZUI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1418898193-9160-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1418835289-15752-4-git-send-email-atull@opensource.altera.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: atull@opensource.altera.com, gregkh@linuxfoundation.org, jgunthorpe@obsidianresearch.com, hpa@zytor.com, monstr@monstr.eu, michal.simek@xilinx.com, rdunlap@infradead.org
+Cc: mark.rutland@arm.com, linux-doc@vger.kernel.org, rubini@gnudd.com, pantelis.antoniou@konsulko.com, s.trumtrar@pengutronix.de, devel@driverdev.osuosl.org, sameo@linux.intel.com, nico@linaro.org, ijc+devicetree@hellion.org.uk, kyle.teske@ni.com, grant.likely@linaro.org, davidb@codeaurora.org, linus.walleij@linaro.org, cesarb@cesarb.net, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, iws@ovro.caltech.edu, broonie@kernel.org, philip@balister.org, dinguyen@opensource.altera.com, pavel@denx.de, yvanderv@opensource.altera.com, linux-kernel@vger.kernel.org, balbi@ti.com, delicious.quinoa@gmail.com, robh+dt@kernel.org, rob@landley.net, galak@codeaurora.org, akpm@linux-foundation.org, davem@davemloft.net, m.chehab@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
+Hi Alan,
 
-On Thu, Dec 18, 2014 at 11:23:13AM +0100, Hans de Goede wrote:
-> Allwinnner sunxi SoCs have a low resolution adc (called lradc) which is
-> specifically designed to have various (tablet) keys (ie home, back, search,
-> etc). attached to it using a resistor network. This adds a driver for this.
+first of all - there are these kernel-doc warnings.
+
+Info(drivers/staging/fpga/fpga-mgr.c:37): Scanning doc for fpga_mgr_low_level_state
+Warning(drivers/staging/fpga/fpga-mgr.c:43): No description found for return value of 'fpga_mgr_low_level_state'
+Info(drivers/staging/fpga/fpga-mgr.c:51): Scanning doc for __fpga_mgr_reset
+Warning(drivers/staging/fpga/fpga-mgr.c:55): No description found for return value of '__fpga_mgr_reset'
+Info(drivers/staging/fpga/fpga-mgr.c:69): Scanning doc for fpga_mgr_reset
+Warning(drivers/staging/fpga/fpga-mgr.c:73): No description found for return value of 'fpga_mgr_reset'
+Info(drivers/staging/fpga/fpga-mgr.c:88): Scanning doc for __fpga_mgr_stage_init
+Warning(drivers/staging/fpga/fpga-mgr.c:92): No description found for return value of '__fpga_mgr_stage_write_init'
+Info(drivers/staging/fpga/fpga-mgr.c:108): Scanning doc for __fpga_mgr_stage_write
+Warning(drivers/staging/fpga/fpga-mgr.c:115): No description found for return value of '__fpga_mgr_stage_write'
+Info(drivers/staging/fpga/fpga-mgr.c:129): Scanning doc for __fpga_mgr_stage_complete
+Warning(drivers/staging/fpga/fpga-mgr.c:133): No description found for return value of '__fpga_mgr_stage_write_complete'
+Info(drivers/staging/fpga/fpga-mgr.c:151): Scanning doc for __fpga_mgr_write
+Warning(drivers/staging/fpga/fpga-mgr.c:158): No description found for return value of '__fpga_mgr_write'
+Info(drivers/staging/fpga/fpga-mgr.c:173): Scanning doc for fpga_mgr_write
+Warning(drivers/staging/fpga/fpga-mgr.c:179): No description found for return value of 'fpga_mgr_write'
+Info(drivers/staging/fpga/fpga-mgr.c:195): Scanning doc for fpga_mgr_firmware_write
+Warning(drivers/staging/fpga/fpga-mgr.c:204): No description found for return value of 'fpga_mgr_firmware_write'
+Info(drivers/staging/fpga/fpga-mgr.c:234): Scanning doc for fpga_mgr_name
+Warning(drivers/staging/fpga/fpga-mgr.c:239): No description found for return value of 'fpga_mgr_name'
+Info(drivers/staging/fpga/fpga-mgr.c:414): Scanning doc for fpga_mgr_register
+Warning(drivers/staging/fpga/fpga-mgr.c:423): No description found for return value of 'fpga_mgr_register'
+Info(drivers/staging/fpga/fpga-mgr.c:480): Scanning doc for fpga_mgr_remove
+Warning(drivers/staging/fpga/fpga-mgr.c:484): No description found for parameter 'pdev'
+Warning(drivers/staging/fpga/fpga-mgr.c:484): Excess function parameter 'dev' description in 'fpga_mgr_remove'
+
+
+On 12/17/2014 05:54 PM, atull@opensource.altera.com wrote:
+> From: Alan Tull <atull@opensource.altera.com>
 > 
-> There are 2 channels, currently this driver only supports chan0 since there
-> are no boards known to use chan1.
+> Supports standard ops for low level FPGA drivers.
+> Various manufacturors' FPGAs can be supported by adding low
+> level drivers.  Each driver needs to register its ops
+> using fpga_mgr_register().
 > 
-> This has been tested on an olimex a10s-olinuxino-micro, a13-olinuxino, and
-> a20-olinuxino-micro.
+> Exports methods of doing operations to program  FPGAs. These
+> should be sufficient for individual drivers to request FPGA
+> programming directly if desired.
 > 
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> --
-> Changes in v2:
-> -Change devicetree bindings to use a per key subnode, like gpio-keys does
-> Changes in v3:
-> -Handle keyup irq flag before irqdown, in case we get both at once
+> Adds a sysfs interface.  The sysfs interface can be compiled out
+> where desired in production builds.
+> 
+> Resume is supported by calling low level driver's resume
+> function, then reloading the firmware image.
+> 
+> The following are exported as GPL:
+> * fpga_mgr_reset
+>    Reset the FGPA.
+> 
+> * fpga_mgr_write
+>    Write a image (in buffer) to the FPGA.
+> 
+> * fpga_mgr_firmware_write
+>    Request firmware by file name and write it to the FPGA.
+> 
+> * fpga_mgr_name
+>    Get name of FPGA manager.
+> 
+> * fpga_mgr_state
+>    Get a state of framework as a string.
+> 
+> * fpga_mgr_register and fpga_mgr_remove
+>    Register/unregister low level fpga manager driver.
+> 
+> The following sysfs files are created:
+> * /sys/class/fpga_manager/<fpga>/name
+>   Name of low level driver.
+> 
+> * /sys/class/fpga_manager/<fpga>/firmware
+>   Name of FPGA image file to load using firmware class.
+>   $ echo image.rbf > /sys/class/fpga_manager/<fpga>/firmware
+> 
+>   read: read back name of image file previous loaded
+>   $ cat /sys/class/fpga_manager/<fpga>/firmware
+> 
+> * /sys/class/fpga_manager/<fpga>/reset
+>   reset the FPGA
+>   $ echo 1 > /sys/class/fpga_manager/<fpga>/reset
+> 
+> * /sys/class/fpga_manager/<fpga>/state
+>   State of fpga framework state machine
+> 
+> Signed-off-by: Alan Tull <atull@opensource.altera.com>
+> ---
+> v2: s/mangager/manager/
+>     check for invalid request_nr
+>     add fpga reset interface
+>     rework the state code
+>     remove FPGA_MGR_FAIL flag
+>     add _ERR states to fpga manager states enum
+>     low level state op now returns a state enum value
+>     initialize framework state from driver state op
+>     remove unused fpga read stuff
+>     merge sysfs.c into fpga-mgr.c
+>     move suspend/resume from bus.c to fpga-mgr.c
+> 
+> v3: Add struct device to fpga_manager (not as a pointer)
+>     Add to_fpga_manager
+>     Don't get irq in fpga-mgr.c (let low level driver do it)
+>     remove from struct fpga_manager: nr, np, parent
+>     get rid of fpga_mgr_get_new_minor()
+>     simplify fpga_manager_register:
+>       reorder parameters
+>       use dev instead of pdev
+>     get rid of code that used to make more sense when this
+>       was a char driver, don't alloc_chrdev_region
+>     use a mutex instead of flags
+> 
+> v4: Move to drivers/staging
+> 
+> v5: Make some things be static
+>     Kconfig: add 'if FPGA'
+>     Makefile: s/fpga-mgr-core.o/fpga-mgr.o/
+>     clean up includes
+>     use enum fpga_mgr_states instead of int
+>     static const char *state_str
+>     use DEVICE_ATTR_RO/RW/WO and ATTRIBUTE_GROUPS
+>     return -EINVAL instead of BUG_ON
+>     move ida_simple_get after kzalloc
+>     clean up fpga_mgr_remove
+>     fpga-mgr.h: remove '#if IS_ENABLED(CONFIG_FPGA)'
+>     add kernel-doc documentation
+>     Move header to new include/linux/fpga folder
+>     static const struct fpga_mgr_ops
+>     dev_info msg simplified
+> ---
+>  drivers/staging/Kconfig         |    2 +
+>  drivers/staging/Makefile        |    1 +
+>  drivers/staging/fpga/Kconfig    |   24 ++
+>  drivers/staging/fpga/Makefile   |   10 +
+>  drivers/staging/fpga/fpga-mgr.c |  523 +++++++++++++++++++++++++++++++++++++++
+>  include/linux/fpga/fpga-mgr.h   |  124 ++++++++++
+>  6 files changed, 684 insertions(+)
+>  create mode 100644 drivers/staging/fpga/Kconfig
+>  create mode 100644 drivers/staging/fpga/Makefile
+>  create mode 100644 drivers/staging/fpga/fpga-mgr.c
+>  create mode 100644 include/linux/fpga/fpga-mgr.h
+> 
+> diff --git a/drivers/staging/Kconfig b/drivers/staging/Kconfig
+> index 4690ae9..4338a4c 100644
+> --- a/drivers/staging/Kconfig
+> +++ b/drivers/staging/Kconfig
+> @@ -108,4 +108,6 @@ source "drivers/staging/skein/Kconfig"
+>  
+>  source "drivers/staging/unisys/Kconfig"
+>  
+> +source "drivers/staging/fpga/Kconfig"
+> +
+>  endif # STAGING
+> diff --git a/drivers/staging/Makefile b/drivers/staging/Makefile
+> index c780a0e..43654a2 100644
+> --- a/drivers/staging/Makefile
+> +++ b/drivers/staging/Makefile
+> @@ -46,3 +46,4 @@ obj-$(CONFIG_MTD_SPINAND_MT29F)	+= mt29f_spinand/
+>  obj-$(CONFIG_GS_FPGABOOT)	+= gs_fpgaboot/
+>  obj-$(CONFIG_CRYPTO_SKEIN)	+= skein/
+>  obj-$(CONFIG_UNISYSSPAR)	+= unisys/
+> +obj-$(CONFIG_FPGA)		+= fpga/
+> diff --git a/drivers/staging/fpga/Kconfig b/drivers/staging/fpga/Kconfig
+> new file mode 100644
+> index 0000000..89ebafc
+> --- /dev/null
+> +++ b/drivers/staging/fpga/Kconfig
+> @@ -0,0 +1,24 @@
+> +#
+> +# FPGA framework configuration
+> +#
+> +
+> +menu "FPGA devices"
+> +
+> +config FPGA
+> +	tristate "FPGA Framework"
+> +	help
+> +	  Say Y here if you want support for configuring FPGAs from the
+> +	  kernel.  The FPGA framework adds a FPGA manager class and FPGA
+> +	  manager drivers.
+> +
+> +if FPGA
+> +
+> +config FPGA_MGR_SYSFS
+> +	bool "FPGA Manager SysFS Interface"
+> +	depends on SYSFS
+> +	help
+> +	  FPGA Manager SysFS interface.
+> +
+> +endif # FPGA
+> +
+> +endmenu
+> diff --git a/drivers/staging/fpga/Makefile b/drivers/staging/fpga/Makefile
+> new file mode 100644
+> index 0000000..ff6c677
+> --- /dev/null
+> +++ b/drivers/staging/fpga/Makefile
+> @@ -0,0 +1,10 @@
+> +#
+> +# Makefile for the fpga framework and fpga manager drivers.
+> +#
+> +
+> +fpga-mgr-core-y += fpga-mgr.o
 
-Thank you for making changes. Can you please tell me if the driver still
-works if you drop the patch below on top of it? The changes are:
+remove this line - it is unused.
 
-- split DT parsing into a separate function;
-- make sure keymap is not empty;
-- change 'ret' variable to 'error'; 
+> +
+> +# Core FPGA Manager Framework
+> +obj-$(CONFIG_FPGA)			+= fpga-mgr.o
+> +
+> +# FPGA Manager Drivers
+> diff --git a/drivers/staging/fpga/fpga-mgr.c b/drivers/staging/fpga/fpga-mgr.c
+> new file mode 100644
+> index 0000000..671b114
+> --- /dev/null
+> +++ b/drivers/staging/fpga/fpga-mgr.c
+> @@ -0,0 +1,523 @@
+> +/*
+> + * FPGA Manager Core
+> + *
+> + *  Copyright (C) 2013-2014 Altera Corporation
+> + *
+> + * With code from the mailing list:
+> + * Copyright (C) 2013 Xilinx, Inc.
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms and conditions of the GNU General Public License,
+> + * version 2, as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope it will be useful, but WITHOUT
+> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+> + * more details.
+> + *
+> + * You should have received a copy of the GNU General Public License along with
+> + * this program.  If not, see <http://www.gnu.org/licenses/>.
+> + */
+> +#include <linux/delay.h>
+> +#include <linux/firmware.h>
+> +#include <linux/fpga/fpga-mgr.h>
+> +#include <linux/idr.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/pm.h>
+> +#include <linux/slab.h>
+> +
+> +static DEFINE_MUTEX(fpga_mgr_mutex);
+> +static DEFINE_IDA(fpga_mgr_ida);
+> +static struct class *fpga_mgr_class;
+> +
+> +static LIST_HEAD(fpga_manager_list);
+> +
+> +/**
+> + * fpga_mgr_low_level_state - get FPGA state from low level driver
+> + * @mgr: fpga manager
+> + *
+> + * This will be used to initialize framework state
+> + */
+> +static enum fpga_mgr_states fpga_mgr_low_level_state(struct fpga_manager *mgr)
+> +{
+> +	if (!mgr || !mgr->mops || !mgr->mops->state)
+> +		return FPGA_MGR_STATE_UNKNOWN;
+> +
+> +	return mgr->mops->state(mgr);
+> +}
+> +
+> +/**
+> + * __fpga_mgr_reset - unlocked version of fpga_mgr_reset
+> + * @mgr: fpga manager
+> + */
+> +static int __fpga_mgr_reset(struct fpga_manager *mgr)
+> +{
+> +	int ret;
+> +
+> +	if (!mgr->mops->reset)
+> +		return -EINVAL;
+> +
+> +	ret = mgr->mops->reset(mgr);
+> +
+> +	mgr->state = fpga_mgr_low_level_state(mgr);
+> +
+> +	return ret;
+> +}
+> +
+> +/**
+> + * fpga_mgr_reset - reset the fpga
+> + * @mgr: fpga manager
+> + */
+> +int fpga_mgr_reset(struct fpga_manager *mgr)
+> +{
+> +	int ret;
+> +
+> +	if (!mutex_trylock(&mgr->lock))
+> +		return -EBUSY;
+> +
+> +	ret = __fpga_mgr_reset(mgr);
+> +
+> +	mutex_unlock(&mgr->lock);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(fpga_mgr_reset);
+> +
+> +/**
+> + * __fpga_mgr_stage_init - prepare fpga for configuration
+> + * @mgr: fpga manager
+> + */
+> +static int __fpga_mgr_stage_write_init(struct fpga_manager *mgr)
+> +{
+> +	int ret;
+> +
+> +	if (mgr->mops->write_init) {
+> +		mgr->state = FPGA_MGR_STATE_WRITE_INIT;
+> +		ret = mgr->mops->write_init(mgr);
+> +		if (ret) {
+> +			mgr->state = FPGA_MGR_STATE_WRITE_INIT_ERR;
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * __fpga_mgr_stage_write - write buffer to fpga
+> + * @mgr: fpga manager
+> + * @buf: buffer contain fpga image
+> + * @count: byte count of buf
+> + */
+> +static int __fpga_mgr_stage_write(struct fpga_manager *mgr, const char *buf,
+> +				  size_t count)
+> +{
+> +	int ret;
+> +
+> +	mgr->state = FPGA_MGR_STATE_WRITE;
+> +	ret = mgr->mops->write(mgr, buf, count);
+> +	if (ret) {
+> +		mgr->state = FPGA_MGR_STATE_WRITE_ERR;
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * __fpga_mgr_stage_complete - after writing, place fpga in operating state
+> + * @mgr: fpga manager
+> + */
+> +static int __fpga_mgr_stage_write_complete(struct fpga_manager *mgr)
+> +{
+> +	int ret;
+> +
+> +	if (mgr->mops->write_complete) {
+> +		mgr->state = FPGA_MGR_STATE_WRITE_COMPLETE;
+> +		ret = mgr->mops->write_complete(mgr);
+> +		if (ret) {
+> +			mgr->state = FPGA_MGR_STATE_WRITE_COMPLETE_ERR;
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	mgr->state = fpga_mgr_low_level_state(mgr);
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * __fpga_mgr_write - whole fpga image write cycle
+> + * @mgr: fpga manager
+> + * @buf: buffer contain fpga image
+> + * @count: byte count of buf
+> + */
+> +static int __fpga_mgr_write(struct fpga_manager *mgr, const char *buf,
+> +			    size_t count)
+> +{
+> +	int ret;
+> +
+> +	ret = __fpga_mgr_stage_write_init(mgr);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = __fpga_mgr_stage_write(mgr, buf, count);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return __fpga_mgr_stage_write_complete(mgr);
+> +}
+> +
+> +/**
+> + * fpga_mgr_write - do complete fpga image write cycle
+> + * @mgr: fpga manager
+> + * @buf: buffer contain fpga image
+> + * @count: byte count of buf
+> + */
+> +int fpga_mgr_write(struct fpga_manager *mgr, const char *buf, size_t count)
+> +{
+> +	int ret;
+> +
+> +	if (!mutex_trylock(&mgr->lock))
+> +		return -EBUSY;
+> +
+> +	dev_info(&mgr->dev, "writing buffer to %s\n", mgr->name);
+> +
+> +	ret = __fpga_mgr_write(mgr, buf, count);
+> +	mutex_unlock(&mgr->lock);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(fpga_mgr_write);
+> +
+> +/**
+> + * fpga_mgr_firmware_write - request firmware and write to fpga
+> + * @mgr: fpga manager
+> + * @image_name: name of image file on the firmware search path
+> + *
+> + * Grab lock, request firmware, and write out to the FPGA.
+> + * Update the state before each step to provide info on what step
+> + * failed if there is a failure.
+> + */
+> +int fpga_mgr_firmware_write(struct fpga_manager *mgr, const char *image_name)
+> +{
+> +	const struct firmware *fw;
+> +	int ret;
+> +
+> +	if (!mutex_trylock(&mgr->lock))
+> +		return -EBUSY;
+> +
+> +	dev_info(&mgr->dev, "writing %s to %s\n", image_name, mgr->name);
+> +
+> +	mgr->state = FPGA_MGR_STATE_FIRMWARE_REQ;
+> +	ret = request_firmware(&fw, image_name, &mgr->dev);
+> +	if (ret) {
+> +		mgr->state = FPGA_MGR_STATE_FIRMWARE_REQ_ERR;
+> +		goto fw_wr_exit;
+> +	}
+> +
+> +	ret = __fpga_mgr_write(mgr, fw->data, fw->size);
+> +	if (ret)
+> +		goto fw_wr_exit;
+> +
+> +	strcpy(mgr->image_name, image_name);
+> +
+> +fw_wr_exit:
+> +	mutex_unlock(&mgr->lock);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(fpga_mgr_firmware_write);
+> +
+> +/**
+> + * fpga_mgr_name - returns the fpga manager name
+> + * @mgr: fpga manager
+> + * @buf: buffer to receive the name
+> + */
+> +int fpga_mgr_name(struct fpga_manager *mgr, char *buf)
+> +{
+> +	if (!mgr)
+> +		return -ENODEV;
+> +
+> +	return sprintf(buf, "%s\n", mgr->name);
+> +}
+> +EXPORT_SYMBOL_GPL(fpga_mgr_name);
+> +
+> +#if IS_ENABLED(CONFIG_FPGA_MGR_SYSFS)
 
-Thanks!
+remove this line
 
--- 
-Dmitry
+> +static const char * const state_str[] = {
+> +	[FPGA_MGR_STATE_UNKNOWN] =		"unknown",
+> +	[FPGA_MGR_STATE_POWER_OFF] =		"power_off",
+> +	[FPGA_MGR_STATE_POWER_UP] =		"power_up",
+> +	[FPGA_MGR_STATE_RESET] =		"reset",
+> +
+> +	/* write sequence */
+> +	[FPGA_MGR_STATE_FIRMWARE_REQ] =		"firmware_request",
+> +	[FPGA_MGR_STATE_FIRMWARE_REQ_ERR] =	"firmware_request_err",
+> +	[FPGA_MGR_STATE_WRITE_INIT] =		"write_init",
+> +	[FPGA_MGR_STATE_WRITE_INIT_ERR] =	"write_init_err",
+> +	[FPGA_MGR_STATE_WRITE] =		"write",
+> +	[FPGA_MGR_STATE_WRITE_ERR] =		"write_err",
+> +	[FPGA_MGR_STATE_WRITE_COMPLETE] =	"write_complete",
+> +	[FPGA_MGR_STATE_WRITE_COMPLETE_ERR] =	"write_complete_err",
+> +
+> +	[FPGA_MGR_STATE_OPERATING] =		"operating",
+> +};
+> +
+> +/*
+> + * class attributes
+> + */
+> +static ssize_t name_show(struct device *dev,
+> +			 struct device_attribute *attr, char *buf)
+> +{
+> +	struct fpga_manager *mgr = to_fpga_manager(dev);
+> +
+> +	return fpga_mgr_name(mgr, buf);
+> +}
+> +
+> +static ssize_t state_show(struct device *dev,
+> +			  struct device_attribute *attr, char *buf)
+> +{
+> +	struct fpga_manager *mgr = to_fpga_manager(dev);
+> +
+> +	return sprintf(buf, "%s\n", state_str[mgr->state]);
+> +}
+> +
+> +static ssize_t firmware_show(struct device *dev,
+> +			     struct device_attribute *attr, char *buf)
+> +{
+> +	struct fpga_manager *mgr = to_fpga_manager(dev);
+> +
+> +	return sprintf(buf, "%s\n", mgr->image_name);
+> +}
+> +
+> +static ssize_t firmware_store(struct device *dev,
+> +			      struct device_attribute *attr,
+> +			      const char *buf, size_t count)
+> +{
+> +	struct fpga_manager *mgr = to_fpga_manager(dev);
+> +	unsigned int len;
+> +	char image_name[NAME_MAX];
+> +	int ret;
+> +
+> +	/* lose terminating \n */
+> +	strcpy(image_name, buf);
+> +	len = strlen(image_name);
+> +	if (image_name[len - 1] == '\n')
+> +		image_name[len - 1] = 0;
+> +
+> +	ret = fpga_mgr_firmware_write(mgr, image_name);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return count;
+> +}
+> +
+> +static ssize_t reset_store(struct device *dev,
+> +			   struct device_attribute *attr,
+> +			   const char *buf, size_t count)
+> +{
+> +	struct fpga_manager *mgr = to_fpga_manager(dev);
+> +	unsigned long val;
+> +	int ret;
+> +
+> +	ret = kstrtoul(buf, 0, &val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (val == 1) {
+> +		ret = fpga_mgr_reset(mgr);
+> +		if (ret)
+> +			return ret;
+> +	} else {
+> +		return -EINVAL;
+> +	}
+> +
+> +	return count;
+> +}
+> +
+> +static DEVICE_ATTR_RO(name);
+> +static DEVICE_ATTR_RO(state);
+> +static DEVICE_ATTR_RW(firmware);
+> +static DEVICE_ATTR_WO(reset);
+> +
+> +static struct attribute *fpga_mgr_attrs[] = {
+> +	&dev_attr_name.attr,
+> +	&dev_attr_state.attr,
+> +	&dev_attr_firmware.attr,
+> +	&dev_attr_reset.attr,
+> +	NULL,
+> +};
+> +ATTRIBUTE_GROUPS(fpga_mgr);
+> +#else
+> +#define fpga_mgr_groups NULL
+> +#endif /* CONFIG_FPGA_MGR_SYSFS */
 
-Input: sun4i-lradc-keys - misc changes
+remove these 3 lines and look below.
 
-From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> +
+> +static int fpga_mgr_suspend(struct device *dev)
+> +{
+> +	struct fpga_manager *mgr = to_fpga_manager(dev);
+> +
+> +	if (!mgr)
+> +		return -ENODEV;
+> +
+> +	if (mgr->mops->suspend)
+> +		return mgr->mops->suspend(mgr);
+> +
+> +	return 0;
+> +}
+> +
+> +static int fpga_mgr_resume(struct device *dev)
+> +{
+> +	struct fpga_manager *mgr = to_fpga_manager(dev);
+> +	int ret = 0;
+> +
+> +	if (!mgr)
+> +		return -ENODEV;
+> +
+> +	if (mgr->mops->resume) {
+> +		ret = mgr->mops->resume(mgr);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	if (strlen(mgr->image_name) != 0)
+> +		fpga_mgr_firmware_write(mgr, mgr->image_name);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct dev_pm_ops fpga_mgr_dev_pm_ops = {
+> +	.suspend	= fpga_mgr_suspend,
+> +	.resume		= fpga_mgr_resume,
+> +};
+> +
+> +static void fpga_mgr_dev_release(struct device *dev)
+> +{
+> +	struct fpga_manager *mgr = to_fpga_manager(dev);
+> +
+> +	dev_dbg(dev, "releasing '%s'\n", mgr->name);
+> +
+> +	if (mgr->mops->fpga_remove)
+> +		mgr->mops->fpga_remove(mgr);
+> +
+> +	mgr->mops = NULL;
+> +
+> +	mutex_lock(&fpga_mgr_mutex);
+> +	list_del(&mgr->list);
+> +	mutex_unlock(&fpga_mgr_mutex);
+> +
+> +	ida_simple_remove(&fpga_mgr_ida, mgr->dev.id);
+> +	kfree(mgr);
+> +}
+> +
+> +/**
+> + * fpga_mgr_register - register a low level fpga manager driver
+> + * @dev: fpga manager device
+> + * @name: fpga manager name
+> + * @mops: pointer to structure of fpga manager ops
+> + * @priv: fpga manager private data
+> + */
+> +int fpga_mgr_register(struct device *dev, const char *name,
+> +		      const struct fpga_manager_ops *mops,
+> +		      void *priv)
+> +{
+> +	struct fpga_manager *mgr;
+> +	int id, ret;
+> +
+> +	if (!mops || !name || !strlen(name))
+> +		return -EINVAL;
+> +
+> +	mgr = kzalloc(sizeof(*mgr), GFP_KERNEL);
+> +	if (!mgr)
+> +		return -ENOMEM;
+> +
+> +	id = ida_simple_get(&fpga_mgr_ida, 0, 0, GFP_KERNEL);
+> +	if (id < 0)
+> +		return id;
+> +
+> +	mutex_init(&mgr->lock);
+> +
+> +	mgr->name = name;
+> +	mgr->mops = mops;
+> +	mgr->priv = priv;
+> +
+> +	/*
+> +	 * Initialize framework state by requesting low level driver read state
+> +	 * from device.  FPGA may be in reset mode or may have been programmed
+> +	 * by bootloader or EEPROM.
+> +	 */
+> +	mgr->state = fpga_mgr_low_level_state(mgr);
+> +
+> +	INIT_LIST_HEAD(&mgr->list);
+> +	mutex_lock(&fpga_mgr_mutex);
+> +	list_add(&mgr->list, &fpga_manager_list);
+> +	mutex_unlock(&fpga_mgr_mutex);
+> +
+> +	device_initialize(&mgr->dev);
+> +	mgr->dev.class = fpga_mgr_class;
+> +	mgr->dev.parent = dev;
+> +	mgr->dev.of_node = dev->of_node;
+> +	mgr->dev.release = fpga_mgr_dev_release;
+> +	mgr->dev.id = id;
+> +	dev_set_name(&mgr->dev, "%d", id);
+> +	ret = device_add(&mgr->dev);
+> +	if (ret)
+> +		goto error_device;
+> +
+> +	dev_info(&mgr->dev, "%s registered\n", mgr->name);
+> +
+> +	return 0;
+> +
+> +error_device:
+> +	ida_simple_remove(&fpga_mgr_ida, id);
+> +	kfree(mgr);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(fpga_mgr_register);
+> +
+> +/**
+> + * fpga_mgr_remove - remove a low level fpga manager driver
+> + * @dev: fpga manager device
+> + */
+> +void fpga_mgr_remove(struct platform_device *pdev)
+> +{
+> +	struct list_head *tmp;
+> +	struct fpga_manager *mgr = NULL;
+> +
+> +	list_for_each(tmp, &fpga_manager_list) {
+> +		mgr = list_entry(tmp, struct fpga_manager, list);
+> +		if (mgr->dev.parent == &pdev->dev) {
+> +			device_unregister(&mgr->dev);
+> +			break;
+> +		}
+> +	}
+> +}
+> +EXPORT_SYMBOL_GPL(fpga_mgr_remove);
+> +
+> +static int __init fpga_mgr_dev_init(void)
+> +{
+> +	pr_info("FPGA Manager framework driver\n");
+> +
+> +	fpga_mgr_class = class_create(THIS_MODULE, "fpga_manager");
+> +	if (IS_ERR(fpga_mgr_class))
+> +		return PTR_ERR(fpga_mgr_class);
+> +
+> +	fpga_mgr_class->dev_groups = fpga_mgr_groups;
 
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- drivers/input/keyboard/sun4i-lradc-keys.c |   87 +++++++++++++++++++----------
- 1 file changed, 57 insertions(+), 30 deletions(-)
 
-diff --git a/drivers/input/keyboard/sun4i-lradc-keys.c b/drivers/input/keyboard/sun4i-lradc-keys.c
-index 06d5c69..cc8f7dd 100644
---- a/drivers/input/keyboard/sun4i-lradc-keys.c
-+++ b/drivers/input/keyboard/sun4i-lradc-keys.c
-@@ -122,11 +122,11 @@ static irqreturn_t sun4i_lradc_irq(int irq, void *dev_id)
- static int sun4i_lradc_open(struct input_dev *dev)
- {
- 	struct sun4i_lradc_data *lradc = input_get_drvdata(dev);
--	int ret;
-+	int error;
- 
--	ret = regulator_enable(lradc->vref_supply);
--	if (ret)
--		return ret;
-+	error = regulator_enable(lradc->vref_supply);
-+	if (error)
-+		return error;
- 
- 	/* lradc Vref internally is divided by 2/3 */
- 	lradc->vref = regulator_get_voltage(lradc->vref_supply) * 2 / 3;
-@@ -155,42 +155,48 @@ static void sun4i_lradc_close(struct input_dev *dev)
- 	regulator_disable(lradc->vref_supply);
- }
- 
--static int sun4i_lradc_probe(struct platform_device *pdev)
-+static int sun4i_lradc_load_dt_keymap(struct device *dev,
-+				      struct sun4i_lradc_data *lradc)
- {
--	struct sun4i_lradc_data *lradc;
--	struct device *dev = &pdev->dev;
--	struct device_node *pp, *np = dev->of_node;
--	u32 channel;
--	int i, ret;
-+	struct device_node *np, *pp;
-+	int i;
-+	int error;
- 
--	lradc = devm_kzalloc(dev, sizeof(struct sun4i_lradc_data), GFP_KERNEL);
--	if (!lradc)
--		return -ENOMEM;
-+	np = dev->of_node;
-+	if (!np)
-+		return -EINVAL;
- 
- 	lradc->chan0_map_count = of_get_child_count(np);
--	lradc->chan0_map = devm_kmalloc(dev, lradc->chan0_map_count *
--				sizeof(struct sun4i_lradc_keymap), GFP_KERNEL);
-+	if (lradc->chan0_map_count == 0) {
-+		dev_err(dev, "keymap is missing in device tree\n");
-+		return -EINVAL;
-+	}
-+
-+	lradc->chan0_map = devm_kmalloc_array(dev, lradc->chan0_map_count,
-+					      sizeof(struct sun4i_lradc_keymap),
-+					      GFP_KERNEL);
- 	if (!lradc->chan0_map)
- 		return -ENOMEM;
- 
- 	i = 0;
- 	for_each_child_of_node(np, pp) {
- 		struct sun4i_lradc_keymap *map = &lradc->chan0_map[i];
-+		u32 channel;
- 
--		ret = of_property_read_u32(pp, "channel", &channel);
--		if (ret || channel != 0) {
-+		error = of_property_read_u32(pp, "channel", &channel);
-+		if (error || channel != 0) {
- 			dev_err(dev, "%s: Inval channel prop\n", pp->name);
- 			return -EINVAL;
- 		}
- 
--		ret = of_property_read_u32(pp, "voltage", &map->voltage);
--		if (ret) {
-+		error = of_property_read_u32(pp, "voltage", &map->voltage);
-+		if (error) {
- 			dev_err(dev, "%s: Inval voltage prop\n", pp->name);
- 			return -EINVAL;
- 		}
- 
--		ret = of_property_read_u32(pp, "linux,code", &map->keycode);
--		if (ret) {
-+		error = of_property_read_u32(pp, "linux,code", &map->keycode);
-+		if (error) {
- 			dev_err(dev, "%s: Inval linux,code prop\n", pp->name);
- 			return -EINVAL;
- 		}
-@@ -198,6 +204,24 @@ static int sun4i_lradc_probe(struct platform_device *pdev)
- 		i++;
- 	}
- 
-+	return 0;
-+}
-+
-+static int sun4i_lradc_probe(struct platform_device *pdev)
-+{
-+	struct sun4i_lradc_data *lradc;
-+	struct device *dev = &pdev->dev;
-+	int i;
-+	int error;
-+
-+	lradc = devm_kzalloc(dev, sizeof(struct sun4i_lradc_data), GFP_KERNEL);
-+	if (!lradc)
-+		return -ENOMEM;
-+
-+	error = sun4i_lradc_load_dt_keymap(dev, lradc);
-+	if (error)
-+		return error;
-+
- 	lradc->vref_supply = devm_regulator_get(dev, "vref");
- 	if (IS_ERR(lradc->vref_supply))
- 		return PTR_ERR(lradc->vref_supply);
-@@ -215,9 +239,11 @@ static int sun4i_lradc_probe(struct platform_device *pdev)
- 	lradc->input->id.vendor = 0x0001;
- 	lradc->input->id.product = 0x0001;
- 	lradc->input->id.version = 0x0100;
--	lradc->input->evbit[0] =  BIT(EV_SYN) | BIT(EV_KEY);
-+
-+	__set_bit(EV_KEY, lradc->input->evbit);
- 	for (i = 0; i < lradc->chan0_map_count; i++)
--		set_bit(lradc->chan0_map[i].keycode, lradc->input->keybit);
-+		__set_bit(lradc->chan0_map[i].keycode, lradc->input->keybit);
-+
- 	input_set_drvdata(lradc->input, lradc);
- 
- 	lradc->base = devm_ioremap_resource(dev,
-@@ -225,14 +251,15 @@ static int sun4i_lradc_probe(struct platform_device *pdev)
- 	if (IS_ERR(lradc->base))
- 		return PTR_ERR(lradc->base);
- 
--	ret = devm_request_irq(dev, platform_get_irq(pdev, 0), sun4i_lradc_irq,
--			       0, "sun4i-a10-lradc-keys", lradc);
--	if (ret)
--		return ret;
-+	error = devm_request_irq(dev, platform_get_irq(pdev, 0),
-+				 sun4i_lradc_irq, 0,
-+				 "sun4i-a10-lradc-keys", lradc);
-+	if (error)
-+		return error;
- 
--	ret = input_register_device(lradc->input);
--	if (ret)
--		return ret;
-+	error = input_register_device(lradc->input);
-+	if (error)
-+		return error;
- 
- 	platform_set_drvdata(pdev, lradc);
- 	return 0;
+Write this here.
+       if (IS_ENABLED(CONFIG_FPGA_MGR_SYSFS)) {
+             fpga_mgr_class->dev_groups = fpga_mgr_groups;
+       }
+
+I have tested it and it is working just fine. You can compile this
+driver with SYSFS=n
+The whole code is built and config option just export it.
+I think it is better than having #if there.
+
+Greg: Is there any problem with this solution?
+
+BTW: I have pushed my branch to zero day testing system to get better coverage
+
+Thanks,
+Michal
