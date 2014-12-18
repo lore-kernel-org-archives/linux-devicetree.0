@@ -1,86 +1,64 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH 1/2] tty: serial: 8250_mtk: Add earlycon
-Date: Thu, 18 Dec 2014 09:48:31 +0100
-Message-ID: <CABuKBe+dki5ab8PexMhq36AJFCBk_dBifV86F8FKsF_es1cmJA@mail.gmail.com>
-References: <1418891601-53769-1-git-send-email-eddie.huang@mediatek.com>
-	<1418891601-53769-2-git-send-email-eddie.huang@mediatek.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 04/13] rc: sunxi-cir: Add support for an
+ optional reset controller
+Date: Thu, 18 Dec 2014 09:50:26 +0100
+Message-ID: <54929552.8090707@redhat.com>
+References: <1418836704-15689-1-git-send-email-hdegoede@redhat.com> <1418836704-15689-5-git-send-email-hdegoede@redhat.com> <CAGb2v65BW7NABQXK877DkMNqDdBeuZ55wQHFkTexbWACFC4zFA@mail.gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1418891601-53769-2-git-send-email-eddie.huang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eddie Huang <eddie.huang@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, srv_heupstream <srv_heupstream@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Jiri Slaby <jslaby@suse.cz>, Alan Cox <alan@linux.intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-serial@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Yingjoe Chen <yingjoe.chen@mediatek.com>, =?UTF-8?B?WUggQ2hlbiAo6Zmz5pix6LGqKQ==?= <yh.chen@mediatek.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBXNKZKSAKGQEYLL2C2Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <CAGb2v65BW7NABQXK877DkMNqDdBeuZ55wQHFkTexbWACFC4zFA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2014-12-18 9:33 GMT+01:00 Eddie Huang <eddie.huang@mediatek.com>:
-> Mediatek UART has highspeed register, but 8250_early.c doesn't
-> support this, so add earlycon in 8250_mtk.c
->
-> Signed-off-by: Eddie Huang <eddie.huang@mediatek.com>
-> ---
->  drivers/tty/serial/8250/8250_mtk.c | 33 +++++++++++++++++++++++++++++++++
->  1 file changed, 33 insertions(+)
->
-> diff --git a/drivers/tty/serial/8250/8250_mtk.c b/drivers/tty/serial/8250/8250_mtk.c
-> index de7aae5..65dd569 100644
-> --- a/drivers/tty/serial/8250/8250_mtk.c
-> +++ b/drivers/tty/serial/8250/8250_mtk.c
-> @@ -23,6 +23,7 @@
->  #include <linux/pm_runtime.h>
->  #include <linux/serial_8250.h>
->  #include <linux/serial_reg.h>
-> +#include <linux/console.h>
->
->  #include "8250.h"
->
-> @@ -289,6 +290,38 @@ static struct platform_driver mtk8250_platform_driver = {
->  };
->  module_platform_driver(mtk8250_platform_driver);
->
-> +#define BOTH_EMPTY (UART_LSR_TEMT | UART_LSR_THRE)
-> +
-> +static void __init mtk8250_serial_putc(struct uart_port *port, int c)
-> +{
-> +       while ((readl(port->membase + (UART_LSR << 2)) & BOTH_EMPTY) !=
-> +               BOTH_EMPTY)
-> +               ;
+Hi,
 
-Please delete newline before the semicolon.
-
-> +       writel(c, port->membase + (UART_TX << 2));
-> +}
-> +
-> +static void __init early_mtk8250_write(struct console *console,
-> +                                       const char *s, unsigned int count)
-> +{
-> +       struct earlycon_device *dev = console->data;
-> +
-> +       uart_console_write(&dev->port, s, count, mtk8250_serial_putc);
-> +}
-> +
-> +static int __init early_mtk8250_setup(struct earlycon_device *device,
-> +                                       const char *options)
-> +{
-> +       if (!device->port.membase)
-> +               return -ENODEV;
-> +
-> +       device->con->write = early_mtk8250_write;
-> +
-> +       return 0;
-> +}
-> +
-> +EARLYCON_DECLARE(mtk8250, early_mtk8250_setup);
-> +OF_EARLYCON_DECLARE(mtk8250, "mediatek,mt6577-uart", early_mtk8250_setup);
-> +
->  MODULE_AUTHOR("Matthias Brugger");
->  MODULE_LICENSE("GPL");
->  MODULE_DESCRIPTION("Mediatek 8250 serial port driver");
-> --
-> 1.8.1.1.dirty
+On 18-12-14 03:48, Chen-Yu Tsai wrote:
+> Hi,
 >
+> On Thu, Dec 18, 2014 at 1:18 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+>> On sun6i the cir block is attached to the reset controller, add support
+>> for de-asserting the reset if a reset controller is specified in dt.
+>>
+>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> Acked-by: Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+>> Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>> ---
+>>   .../devicetree/bindings/media/sunxi-ir.txt         |  2 ++
+>>   drivers/media/rc/sunxi-cir.c                       | 25 ++++++++++++++++++++--
+>>   2 files changed, 25 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/media/sunxi-ir.txt b/Documentation/devicetree/bindings/media/sunxi-ir.txt
+>> index 23dd5ad..6b70b9b 100644
+>> --- a/Documentation/devicetree/bindings/media/sunxi-ir.txt
+>> +++ b/Documentation/devicetree/bindings/media/sunxi-ir.txt
+>> @@ -10,6 +10,7 @@ Required properties:
+>>
+>>   Optional properties:
+>>   - linux,rc-map-name : Remote control map name.
+>> +- resets : phandle + reset specifier pair
+>
+> Should it be optional? Or should we use a sun6i compatible with
+> a mandatory reset phandle? I mean, the driver/hardware is not
+> going to work with the reset missing on sun6i.
+>
+> Seems we are doing it one way for some of our drivers, and
+> the other (optional) way for more generic ones, like USB.
 
+I do not believe that we should add a new compatible just because
+the reset line of a block is hooked up differently. It is the
+exact same ip-block. Only now the reset is not controlled
+through the apb-gate, but controlled separately.
 
+Regards,
 
--- 
-motzblog.wordpress.com
+Hans
