@@ -1,104 +1,41 @@
-From: Jonathan Richardson <jonathar@broadcom.com>
-Subject: [PATCH 2/2] Input: touchscreen-iproc: add device tree bindings
-Date: Wed, 17 Dec 2014 17:59:52 -0800
-Message-ID: <1418867992-3550-3-git-send-email-jonathar@broadcom.com>
-References: <Jonathan Richardson <jonathar@broadcom.com>
- <1418867992-3550-1-git-send-email-jonathar@broadcom.com>
+From: Ley Foon Tan <lftan-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH (resend)] mailbox: Add Altera mailbox driver
+Date: Thu, 18 Dec 2014 10:08:21 +0800
+Message-ID: <CAFiDJ59FCE1JRHaSRmE06_VWETyONj55dCbFWehV4LoCi4ZLJg@mail.gmail.com>
+References: <1418378690-3466-1-git-send-email-lftan@altera.com>
+	<548AFDE9.6000909@gmail.com>
+	<548F4A99.7040409@ti.com>
+	<CAFiDJ5-b9qsLKj8Qh2+yx8_Y1nv5CG1PHyn2Se0zzZLSHWTKNg@mail.gmail.com>
+	<5491BA90.9040007@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1418867992-3550-1-git-send-email-jonathar@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Ray Jui <rjui@broadcom.com>, Jonathan Richardson <jonathar@broadcom.com>, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5491BA90.9040007-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Documents the touchscreen device tree binding for Broadcom iProc family
-of SoCs.
+On Thu, Dec 18, 2014 at 1:17 AM, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>>> +MODULE_DEVICE_TABLE(of, altera_mbox_match);
+>>>>> +
+>>>>> +static struct platform_driver altera_mbox_driver = {
+>>>>> +    .probe  = altera_mbox_probe,
+>>>>> +    .remove = altera_mbox_remove,
+>>>>> +    .driver = {
+>>>>> +            .name   = DRIVER_NAME,
+>>>>> +            .owner  = THIS_MODULE,
+>>>>> +            .of_match_table = altera_mbox_match,
+>>>
+>>> of_match_ptr(altera_mbox_match).
+>> Okay.
+>
+> This driver is DT-only, so of_match_ptr() is not needed.
+>
+Yes, this driver is DT-only. Okay, we don't need of_match_ptr.
 
-Reviewed-by: Scott Branden <sbranden@broadcom.com>
-Tested-by: Scott Branden <sbranden@broadcom.com>
-Signed-off-by: Jonathan Richardson <jonathar@broadcom.com>
----
- .../input/touchscreen/brcm,iproc-touchscreen.txt   |   70 ++++++++++++++++++++
- 1 file changed, 70 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/touchscreen/brcm,iproc-touchscreen.txt
-
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/brcm,iproc-touchscreen.txt b/Documentation/devicetree/bindings/input/touchscreen/brcm,iproc-touchscreen.txt
-new file mode 100644
-index 0000000..eb28822
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/touchscreen/brcm,iproc-touchscreen.txt
-@@ -0,0 +1,70 @@
-+* Broadcom's IPROC Touchscreen Controller
-+
-+Required properties:
-+- compatible: must be "brcm,iproc-touchscreen"
-+- reg: physical base address of the controller and length of memory mapped
-+  region.
-+- clocks:  The clock provided by the SOC to driver the tsc
-+- clock-name:  name for the clock
-+- interrupts: The touchscreen controller's interrupt
-+
-+Optional properties:
-+- scanning_period: Time between scans. Each step is 1024 us.  Valid 1-256.
-+- debounce_timeout: Each step is 512 us.  Valid 0-255
-+- settling_timeout: The settling duration (in ms) is the amount of time
-+                    the tsc waits to allow the voltage to settle after
-+                    turning on the drivers in detection mode.
-+                    Valid values: 0-11
-+                    0 =  0.008 ms
-+                    1 =  0.01 ms
-+                    2 =  0.02 ms
-+                    3 =  0.04 ms
-+                    4 =  0.08 ms
-+                    5 =  0.16 ms
-+                    6 =  0.32 ms
-+                    7 =  0.64 ms
-+                    8 =  1.28 ms
-+                    9 =  2.56 ms
-+                   10 =  5.12 ms
-+                   11 = 10.24 ms
-+- touch_timeout: The continuous number of scan periods in which touch is
-+                not detected before the controller returns to idle state.
-+                Valid values 0-255.
-+- average_data: Number of data samples which are averaged before a final
-+                data point is placed into the FIFO
-+                Valid values 0-7
-+                0 =   1 sample
-+                1 =   2 samples
-+                2 =   4 samples
-+                3 =   8 samples
-+                4 =  16 samples
-+                5 =  32 samples
-+                6 =  64 samples
-+                7 = 128 samples
-+- fifo_threshold: Interrupt is generated whenever the number of fifo
-+                entries exceeds this value
-+                Valid values 0-31
-+- ts-rotation: Touch screen controller and display panel orientation angle.
-+		0 = Tsc x_min y_min placed at LCD x_min y_min. None
-+		1 = Tsc x_min y_max placed at LCD x_min y_min. 90 degrees
-+		2 = Tsc x_max y_max placed at LCD x_min y_min. 180 degrees
-+		3 = Tsc x_max y_min placed at LCD x_min y_min. 270 degrees
-+Example:
-+
-+	touchscreen: tsc@0x180A6000 {
-+		compatible = "brcm,iproc-touchscreen";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		reg = <0x180A6000 0x40>;
-+		clocks = <&adc_clk>;
-+		clock-names = "tsc_clk";
-+		interrupts = <GIC_SPI 164 IRQ_TYPE_LEVEL_HIGH>;
-+
-+		scanning_period = <5>;
-+		debounce_timeout = <40>;
-+		settling_timeout = <7>;
-+		touch_timeout = <10>;
-+		average_data = <5>;
-+		fifo_threshold = <1>;
-+		ts-rotation = <2>;
-+	};
--- 
-1.7.9.5
+Ley Foon
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
