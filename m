@@ -1,115 +1,41 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v10 3/6] devicetree: mfd: Add new SKY81452 mfd binding
-Date: Thu, 18 Dec 2014 08:32:22 +0000
-Message-ID: <20141218083222.GS13885@x1>
-References: <1418881671-3495-1-git-send-email-jack.yoo@skyworksinc.com>
- <1418881671-3495-4-git-send-email-jack.yoo@skyworksinc.com>
+From: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 2/2] arm64: dts: Add mediatek MT8173 earlycon support
+Date: Thu, 18 Dec 2014 16:33:21 +0800
+Message-ID: <1418891601-53769-3-git-send-email-eddie.huang@mediatek.com>
+References: <1418891601-53769-1-git-send-email-eddie.huang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1418881671-3495-4-git-send-email-jack.yoo@skyworksinc.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: gyungoh@gmail.com
-Cc: sameo@linux.intel.com, grant.likely@linaro.org, robh+dt@kernel.org, jg1.han@samsung.com, cooloney@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, trivial@kernel.org, akpm@linux-foundation.org, jic23@kernel.org, thomas.petazzoni@free-electrons.com, ktsai@capellamicro.com, hs@denx.de, stwiss.opensource@diasemi.com, matti.vaittinen@nsn.com, broonie@kernel.org, jason@lakedaemon.net, heiko@sntech.de, shawn.guo@freescale.com, florian.vaussard@epfl.ch, andrew@lunn.ch, antonynpavlov@gmail.com, hytszk@gmail.com, plagnioj@jcrosoft.com, tomi.valkeinen@ti.com, jack.yoo@skyworksinc.com, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1418891601-53769-1-git-send-email-eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Alan Cox <alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yh.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 18 Dec 2014, gyungoh@gmail.com wrote:
+Add earlycon support to mediatek MT8173 evaluation board dts.
 
-> From: Gyungoh Yoo <jack.yoo@skyworksinc.com>
->=20
-> Signed-off-by: Gyungoh Yoo <jack.yoo@skyworksinc.com>
-> ---
-> Changes v10:
-> Nothing
->=20
-> Changes v9:
-> Nothing
->=20
-> Changes v8:
-> Made up the example for backlight DT
->=20
-> Changes v7:
-> Nothing
->=20
-> Changes v6:
-> Nothing
->=20
-> Changes v5:
-> Changed DT for regulator : 'lout' node should be defined under 'regul=
-ator'
-> Removed compatible string from sky81452-regulator driver
->=20
-> Changes v4:
-> Nothing
->=20
-> Changes v3:
-> Nothing
->=20
-> Changes v2:
-> Added reg attribute for I2C slave address
->=20
->  Documentation/devicetree/bindings/mfd/sky81452.txt | 36 ++++++++++++=
-++++++++++
->  1 file changed, 36 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/sky81452.tx=
-t
->=20
-> diff --git a/Documentation/devicetree/bindings/mfd/sky81452.txt b/Doc=
-umentation/devicetree/bindings/mfd/sky81452.txt
-> new file mode 100644
-> index 0000000..ab71473
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/sky81452.txt
-> @@ -0,0 +1,36 @@
-> +SKY81452 bindings
-> +
-> +Required properties:
-> +- compatible	: Must be "skyworks,sky81452"
-> +- reg		: I2C slave address
-> +
-> +Required child nodes:
-> +- backlight	: container node for backlight following the binding
-> +		in video/backlight/sky81452-backlight.txt
-> +- regulator	: container node for regulators following the binding
-> +		in regulator/sky81452-regulator.txt
+Signed-off-by: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+---
+ arch/arm64/boot/dts/mt8173-evb.dts | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-=46or these MFD parts.
+diff --git a/arch/arm64/boot/dts/mt8173-evb.dts b/arch/arm64/boot/dts/mt8173-evb.dts
+index b8b2621..b8802fd 100644
+--- a/arch/arm64/boot/dts/mt8173-evb.dts
++++ b/arch/arm64/boot/dts/mt8173-evb.dts
+@@ -30,5 +30,7 @@
+ 		reg = <0 0x40000000 0 0x80000000>;
+ 	};
+ 
+-	chosen { };
++	chosen {
++		linux,stdout-path = &uart0;
++	};
+ };
+-- 
+1.8.1.1.dirty
 
-Acked-by: Lee Jones <lee.jones@linaro.org>
-
-[Don't forget to apply the Acks you receive on subsequent submissions]
-
-The Backlight parts need closer inspection by the DT people.
-
-> +Example:
-> +
-> +	sky81452@2c {
-> +		compatible =3D "skyworks,sky81452";
-> +		reg =3D <0x2c>;
-> +
-> +		backlight {
-> +			compatible =3D "skyworks,sky81452-backlight";
-> +			name =3D "pwm-backlight";
-> +			skyworks,en-channels =3D <0x3f>;
-> +			skyworks,ignore-pwm;
-> +			skyworks,phase-shift;
-> +			skyworks,ovp-level =3D <20>;
-> +			skyworks,current-limit =3D <2300>;
-> +		};
-> +
-> +		regulator {
-> +			lout {
-> +				regulator-name =3D "sky81452-lout";
-> +				regulator-min-microvolt =3D <4500000>;
-> +				regulator-max-microvolt =3D <8000000>;
-> +			};
-> +		};
-> +	};
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
