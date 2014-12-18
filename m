@@ -1,80 +1,77 @@
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: Re: [PATCH 11/12] ARM: dts: add support for Vybrid running on
- Cortex-M4
-Date: Thu, 18 Dec 2014 21:36:31 +0100
-Message-ID: <44e9d518da24fb0c910de464269b8551@agner.ch>
-References: <1417565531-4507-1-git-send-email-stefan@agner.ch>
- <2994970.DCfUQgtmcD@wuerfel> <6ae4dd827bf4dcc202f60e8505173d0e@agner.ch>
- <2615697.uVqMY8zKot@wuerfel>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH] ARM: shmobile: r8a7790: add MLB+ clock
+Date: Thu, 18 Dec 2014 23:41:52 +0300
+Message-ID: <2277336.BnuIY8UiP8@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2615697.uVqMY8zKot@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: horms@verge.net.au, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: linux@arm.linux.org.uk, magnus.damm@gmail.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 2014-12-17 13:31, Arnd Bergmann wrote:
-> On Wednesday 17 December 2014 00:41:33 Stefan Agner wrote:
->> On 2014-12-03 12:03, Arnd Bergmann wrote:
->> > On Wednesday 03 December 2014 01:12:10 Stefan Agner wrote:
->> >> diff --git a/arch/arm/boot/dts/vf610m4-colibri.dts b/arch/arm/boot/dts/vf610m4-colibri.dts
->> >> new file mode 100644
->> >> index 0000000..051ee0f
->> >> --- /dev/null
->> >> +++ b/arch/arm/boot/dts/vf610m4-colibri.dts
->> >> @@ -0,0 +1,52 @@
->> >> +/*
->> >> + * Device tree for Colibri VF61 Cortex-M4 support
->> >> + *
->> >> + * Copyright 2014 Stefan Agner
->> >> + *
->> >> + * This program is free software; you can redistribute it and/or modify
->> >> + * it under the terms of the GNU General Public License as published by
->> >> + * the Free Software Foundation; either version 2 of the License, or
->> >> + * (at your option) any later version.
->> >> + */
->> >> +
->> >> +/dts-v1/;
->> >> +#include "vf610m4.dtsi"
->> >> +
->> >> +/ {
->> >> +       model = "VF610 Cortex-M4";
->> >> +       compatible = "fsl,vf610m4";
->> >> +
->> >> +       chosen {
->> >> +               bootargs = "console=ttyLP2,115200 ihash_entries=64 dhash_entries=64 earlyprintk clk_ignore_unused init=/linuxrc rw";
->> >> +       };
->> >> +
->> >
->> > Starting with v3.19, you should be able to use the earlycon framework on
->> > arm32, so it would be better to replace earlyprintk with earlycon here
->> > and add a stdout-path property in chosen that points to the console
->> > uart.
->>
->> I started to implement earlycon support, but something currently fails
->> when earlycon tries to map the UART registers:
->> [    0.000000] earlycon_map: Couldn't map 0x40027000
->>
->> I traced the issue a bit further down and found that get_vm_area_caller
->> returns NULL (in __arm_ioremap_pfn_caller). This happend on Linus master
->> as of today (2dbfca5a181973558277b28b1f4c36362291f5e0). Do I miss
->> something here?
-> 
-> Hmm, I fear the arm32 FIX_EARLYCON_MEM support ended up not making it
-> into 3.19 after all. :(
+From: Andrey Gusakov <andrey.gusakov@cogentembedded.com>
 
-Is it because early_ioremap and fixmap still missing for arm32?
-According to Rob's patchset from spring fixmap is required, there is
-something in this tree:
-https://git.kernel.org/cgit/linux/kernel/git/robh/linux.git/log/?h=arm-fixmap
+Add MLB+ clock to R8A7790 device tree.
 
---
-Stefan
+Signed-off-by: Andrey Gusakov <andrey.gusakov@cogentembedded.com>
+[Sergei: rebased, renamed, added changelog]
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+---
+This patch is against 'renesas-devel-20141218-v3.18' tag of Simon Horman's
+'renesas.git' repo.
+
+ arch/arm/boot/dts/r8a7790.dtsi            |   13 +++++++------
+ include/dt-bindings/clock/r8a7790-clock.h |    1 +
+ 2 files changed, 8 insertions(+), 6 deletions(-)
+
+Index: renesas/arch/arm/boot/dts/r8a7790.dtsi
+===================================================================
+--- renesas.orig/arch/arm/boot/dts/r8a7790.dtsi
++++ renesas/arch/arm/boot/dts/r8a7790.dtsi
+@@ -1149,16 +1149,17 @@
+ 		mstp8_clks: mstp8_clks@e6150990 {
+ 			compatible = "renesas,r8a7790-mstp-clocks", "renesas,cpg-mstp-clocks";
+ 			reg = <0 0xe6150990 0 4>, <0 0xe61509a0 0 4>;
+-			clocks = <&zg_clk>, <&zg_clk>, <&zg_clk>, <&zg_clk>, <&p_clk>,
+-				 <&zs_clk>, <&zs_clk>;
++			clocks = <&hp_clk>, <&zg_clk>, <&zg_clk>, <&zg_clk>,
++			         <&zg_clk>, <&p_clk>, <&zs_clk>, <&zs_clk>;
+ 			#clock-cells = <1>;
+ 			clock-indices = <
+-				R8A7790_CLK_VIN3 R8A7790_CLK_VIN2 R8A7790_CLK_VIN1
+-				R8A7790_CLK_VIN0 R8A7790_CLK_ETHER R8A7790_CLK_SATA1
+-				R8A7790_CLK_SATA0
++				R8A7790_CLK_MLB R8A7790_CLK_VIN3 R8A7790_CLK_VIN2
++				R8A7790_CLK_VIN1 R8A7790_CLK_VIN0 R8A7790_CLK_ETHER
++				R8A7790_CLK_SATA1 R8A7790_CLK_SATA0
+ 			>;
+ 			clock-output-names =
+-				"vin3", "vin2", "vin1", "vin0", "ether", "sata1", "sata0";
++				"mlb", "vin3", "vin2", "vin1", "vin0", "ether",
++				"sata1", "sata0";
+ 		};
+ 		mstp9_clks: mstp9_clks@e6150994 {
+ 			compatible = "renesas,r8a7790-mstp-clocks", "renesas,cpg-mstp-clocks";
+Index: renesas/include/dt-bindings/clock/r8a7790-clock.h
+===================================================================
+--- renesas.orig/include/dt-bindings/clock/r8a7790-clock.h
++++ renesas/include/dt-bindings/clock/r8a7790-clock.h
+@@ -97,6 +97,7 @@
+ #define R8A7790_CLK_LVDS0		26
+ 
+ /* MSTP8 */
++#define R8A7790_CLK_MLB		2
+ #define R8A7790_CLK_VIN3		8
+ #define R8A7790_CLK_VIN2		9
+ #define R8A7790_CLK_VIN1		10
