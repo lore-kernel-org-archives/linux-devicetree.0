@@ -1,44 +1,80 @@
-From: Baruch Siach <baruch@tkos.co.il>
-Subject: [PATCH 1/3] devicetree: bindings: add Conexant vendor prefix
-Date: Thu, 18 Dec 2014 21:45:23 +0200
-Message-ID: <f16ada07bcbcaf1f32897f2577a1c321958a2130.1418930377.git.baruch@tkos.co.il>
-References: <cover.1418930377.git.baruch@tkos.co.il>
+From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Subject: Re: [PATCH 11/12] ARM: dts: add support for Vybrid running on
+ Cortex-M4
+Date: Thu, 18 Dec 2014 21:36:31 +0100
+Message-ID: <44e9d518da24fb0c910de464269b8551@agner.ch>
+References: <1417565531-4507-1-git-send-email-stefan@agner.ch>
+ <2994970.DCfUQgtmcD@wuerfel> <6ae4dd827bf4dcc202f60e8505173d0e@agner.ch>
+ <2615697.uVqMY8zKot@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <cover.1418930377.git.baruch@tkos.co.il>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
-Cc: devicetree@vger.kernel.org, Baruch Siach <baruch@tkos.co.il>, linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2615697.uVqMY8zKot@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Use "cnxt" since it once was the stock ticker of Conexant.
+On 2014-12-17 13:31, Arnd Bergmann wrote:
+> On Wednesday 17 December 2014 00:41:33 Stefan Agner wrote:
+>> On 2014-12-03 12:03, Arnd Bergmann wrote:
+>> > On Wednesday 03 December 2014 01:12:10 Stefan Agner wrote:
+>> >> diff --git a/arch/arm/boot/dts/vf610m4-colibri.dts b/arch/arm/boot/dts/vf610m4-colibri.dts
+>> >> new file mode 100644
+>> >> index 0000000..051ee0f
+>> >> --- /dev/null
+>> >> +++ b/arch/arm/boot/dts/vf610m4-colibri.dts
+>> >> @@ -0,0 +1,52 @@
+>> >> +/*
+>> >> + * Device tree for Colibri VF61 Cortex-M4 support
+>> >> + *
+>> >> + * Copyright 2014 Stefan Agner
+>> >> + *
+>> >> + * This program is free software; you can redistribute it and/or modify
+>> >> + * it under the terms of the GNU General Public License as published by
+>> >> + * the Free Software Foundation; either version 2 of the License, or
+>> >> + * (at your option) any later version.
+>> >> + */
+>> >> +
+>> >> +/dts-v1/;
+>> >> +#include "vf610m4.dtsi"
+>> >> +
+>> >> +/ {
+>> >> +       model = "VF610 Cortex-M4";
+>> >> +       compatible = "fsl,vf610m4";
+>> >> +
+>> >> +       chosen {
+>> >> +               bootargs = "console=ttyLP2,115200 ihash_entries=64 dhash_entries=64 earlyprintk clk_ignore_unused init=/linuxrc rw";
+>> >> +       };
+>> >> +
+>> >
+>> > Starting with v3.19, you should be able to use the earlycon framework on
+>> > arm32, so it would be better to replace earlyprintk with earlycon here
+>> > and add a stdout-path property in chosen that points to the console
+>> > uart.
+>>
+>> I started to implement earlycon support, but something currently fails
+>> when earlycon tries to map the UART registers:
+>> [    0.000000] earlycon_map: Couldn't map 0x40027000
+>>
+>> I traced the issue a bit further down and found that get_vm_area_caller
+>> returns NULL (in __arm_ioremap_pfn_caller). This happend on Linus master
+>> as of today (2dbfca5a181973558277b28b1f4c36362291f5e0). Do I miss
+>> something here?
+> 
+> Hmm, I fear the arm32 FIX_EARLYCON_MEM support ended up not making it
+> into 3.19 after all. :(
 
-Signed-off-by: Baruch Siach <baruch@tkos.co.il>
----
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+Is it because early_ioremap and fixmap still missing for arm32?
+According to Rob's patchset from spring fixmap is required, there is
+something in this tree:
+https://git.kernel.org/cgit/linux/kernel/git/robh/linux.git/log/?h=arm-fixmap
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index a344ec2713a5..de3e75d909b3 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -35,6 +35,7 @@ chrp	Common Hardware Reference Platform
- chunghwa	Chunghwa Picture Tubes Ltd.
- cirrus	Cirrus Logic, Inc.
- cnm	Chips&Media, Inc.
-+cnxt	Conexant Systems, Inc.
- cortina	Cortina Systems, Inc.
- crystalfontz	Crystalfontz America, Inc.
- dallas	Maxim Integrated Products (formerly Dallas Semiconductor)
--- 
-2.1.3
+--
+Stefan
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
