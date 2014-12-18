@@ -1,74 +1,214 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 6/8] watchdog: st_wdt: Add new driver for ST's LPC
- Watchdog
-Date: Thu, 18 Dec 2014 17:20:12 +0000
-Message-ID: <20141218172012.GC4525@x1>
-References: <1418834727-1602-1-git-send-email-lee.jones@linaro.org>
- <1418834727-1602-7-git-send-email-lee.jones@linaro.org>
- <20141217180251.GA29914@roeck-us.net>
- <20141218082652.GP13885@x1>
- <20141218160014.GA16015@roeck-us.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20141218160014.GA16015-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, David Paris <david.paris-qxv4g6HH51o@public.gmane.org>
+From: Doug Anderson <dianders@chromium.org>
+Subject: [PATCH v3] i2c: rk3x: Account for repeated start time requirement
+Date: Thu, 18 Dec 2014 09:44:07 -0800
+Message-ID: <1418924647-23795-1-git-send-email-dianders@chromium.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: wsa@the-dreams.de, max.schwarz@online.de
+Cc: heiko@sntech.de, u.kleine-koenig@pengutronix.de, addy.ke@rock-chips.com, hl@rock-chips.com, cyw@rock-chips.com, Doug Anderson <dianders@chromium.org>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-i2c@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 18 Dec 2014, Guenter Roeck wrote:
+On Rockchip I2C the controller drops SDA low slightly too soon to meet
+the "repeated start" requirements.
 
-> On Thu, Dec 18, 2014 at 08:26:52AM +0000, Lee Jones wrote:
-> > On Wed, 17 Dec 2014, Guenter Roeck wrote:
-> > > On Wed, Dec 17, 2014 at 04:45:25PM +0000, Lee Jones wrote:
-> > > > Signed-off-by: David Paris <david.paris-qxv4g6HH51o@public.gmane.org>
-> > > > Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > >=20
-> > > Hi Lee and David,
-> > >=20
-> > > I still have a couple of comments below. Sorry I didn't catch tho=
-se earlier.
-> > >=20
-> > > Thanks,
-> > > Guenter
-> > >=20
-> > > > ---
-> > > >  drivers/watchdog/Kconfig  |  13 ++
-> > > >  drivers/watchdog/Makefile |   1 +
-> > > >  drivers/watchdog/st_wdt.c | 323 ++++++++++++++++++++++++++++++=
-++++++++++++++++
-> > > >  3 files changed, 337 insertions(+)
-> > > >  create mode 100644 drivers/watchdog/st_wdt.c
-> >=20
-> > Chopping all the crud.
-> >=20
-> > [...]
-> >=20
-> > > > +static struct of_device_id st_wdog_match[] =3D {
-> > > > +	{
-> > > > +		.compatible =3D "st,stih407-lpc",
-> > > > +		.data =3D (void *)&stih407_syscfg,
-> > >=20
-> > > Nitpick: typecast to and from void * is not necessary.
-> >=20
-> > Actually that's not true, but it is superfluous in this case.
-> >=20
-> Point taken. Would you agree to a more detailed "typecasting a pointe=
-r
-> to and from void * is not necessary" ?
+>From my own experimentation over a number of rates:
+ - controller appears to drop SDA at .875x (7/8) programmed clk high.
+ - controller appears to keep SCL high for 2x programmed clk high.
 
-Sure, why not? ;)
+The first rule isn't enough to meet tSU;STA requirements in
+Standard-mode on the system I tested on.  The second rule is probably
+enough to meet tHD;STA requirements in nearly all cases (especially
+after accounting for the first), but it doesn't hurt to account for it
+anyway just in case.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdo=
-g" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Even though the repeated start requirement only need to be accounted
+for during a small part of the transfer, we'll adjust the timings for
+the whole transfer to meet it.  I believe that adjusting the timings
+in just the right place to switch things up for repeated start would
+require several extra interrupts and that doesn't seem terribly worth
+it.
+
+With this change and worst case rise/fall times, I see 100kHz i2c
+going to ~85kHz.  With slightly optimized rise/fall (800ns / 50ns) I
+see i2c going to ~89kHz.  Fast-mode isn't affected much because
+tSU;STA is shorter relative to tHD;STA there.
+
+As part of this change we needed to account for the SDA falling time.
+The specification indicates that this should be the same, but we'll
+follow Designware's lead and add a binding.  Note that we deviate from
+Designware and assign the default SDA falling time to be the same as
+the SCL falling time, which is incredibly likely.
+
+Signed-off-by: Doug Anderson <dianders@chromium.org>
+---
+Note: This is based on Addy's patch (i2c: rk3x: fix bug that cause
+measured high_ns doesn't meet I2C specification) that can be found at
+<https://patchwork.kernel.org/patch/5475331/>.
+
+Changes in v3:
+- Totally changed code and tested myself; now actually works
+
+Changes in v2:
+- Also multiply SCL rise time by 2 for repeated start calculation
+
+ Documentation/devicetree/bindings/i2c/i2c-rk3x.txt |  7 ++-
+ drivers/i2c/busses/i2c-rk3x.c                      | 61 +++++++++++++++-------
+ 2 files changed, 48 insertions(+), 20 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-rk3x.txt b/Documentation/devicetree/bindings/i2c/i2c-rk3x.txt
+index 1885bd8..8cc75d9 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-rk3x.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c-rk3x.txt
+@@ -21,14 +21,17 @@ Required on RK3066, RK3188 :
+ Optional properties :
+ 
+  - clock-frequency : SCL frequency to use (in Hz). If omitted, 100kHz is used.
+- - i2c-scl-rising-time-ns : Number of nanoseconds the signal takes to rise
++ - i2c-scl-rising-time-ns : Number of nanoseconds the SCL signal takes to rise
+ 	(t(r) in I2C specification). If not specified this is assumed to be
+ 	the maximum the specification allows(1000 ns for Standard-mode,
+ 	300 ns for Fast-mode) which might cause slightly slower communication.
+- - i2c-scl-falling-time-ns : Number of nanoseconds the signal takes to fall
++ - i2c-scl-falling-time-ns : Number of nanoseconds the SCL signal takes to fall
+ 	(t(f) in the I2C specification). If not specified this is assumed to
+ 	be the maximum the specification allows (300 ns) which might cause
+ 	slightly slowercommunication.
++ - i2c-sda-falling-time-ns : Number of nanoseconds the SDA signal takes to fall
++	(t(f) in the I2C specification). If not specified we'll use the SCL
++	value since they are the same in nearly all cases.
+ 
+ Example:
+ 
+diff --git a/drivers/i2c/busses/i2c-rk3x.c b/drivers/i2c/busses/i2c-rk3x.c
+index 36a9224..5f96b1b 100644
+--- a/drivers/i2c/busses/i2c-rk3x.c
++++ b/drivers/i2c/busses/i2c-rk3x.c
+@@ -102,8 +102,9 @@ struct rk3x_i2c {
+ 
+ 	/* Settings */
+ 	unsigned int scl_frequency;
+-	unsigned int rise_ns;
+-	unsigned int fall_ns;
++	unsigned int scl_rise_ns;
++	unsigned int scl_fall_ns;
++	unsigned int sda_fall_ns;
+ 
+ 	/* Synchronization & notification */
+ 	spinlock_t lock;
+@@ -437,8 +438,9 @@ out:
+  *
+  * @clk_rate: I2C input clock rate
+  * @scl_rate: Desired SCL rate
+- * @rise_ns: How many ns it takes for signals to rise.
+- * @fall_ns: How many ns it takes for signals to fall.
++ * @scl_rise_ns: How many ns it takes for SCL to rise.
++ * @scl_fall_ns: How many ns it takes for SCL to fall.
++ * @sda_fall_ns: How many ns it takes for SDA to fall.
+  * @div_low: Divider output for low
+  * @div_high: Divider output for high
+  *
+@@ -447,11 +449,13 @@ out:
+  * too high, we silently use the highest possible rate.
+  */
+ static int rk3x_i2c_calc_divs(unsigned long clk_rate, unsigned long scl_rate,
+-			      unsigned long rise_ns, unsigned long fall_ns,
++			      unsigned long scl_rise_ns,
++			      unsigned long scl_fall_ns,
++			      unsigned long sda_fall_ns,
+ 			      unsigned long *div_low, unsigned long *div_high)
+ {
+ 	unsigned long spec_min_low_ns, spec_min_high_ns;
+-	unsigned long spec_max_data_hold_ns;
++	unsigned long spec_setup_start, spec_max_data_hold_ns;
+ 	unsigned long data_hold_buffer_ns;
+ 
+ 	unsigned long min_low_ns, min_high_ns;
+@@ -490,18 +494,35 @@ static int rk3x_i2c_calc_divs(unsigned long clk_rate, unsigned long scl_rate,
+ 	if (scl_rate <= 100000) {
+ 		/* Standard-mode */
+ 		spec_min_low_ns = 4700;
++		spec_setup_start = 4700;
+ 		spec_min_high_ns = 4000;
+ 		spec_max_data_hold_ns = 3450;
+ 		data_hold_buffer_ns = 50;
+ 	} else {
+ 		/* Fast-mode */
+ 		spec_min_low_ns = 1300;
++		spec_setup_start = 600;
+ 		spec_min_high_ns = 600;
+ 		spec_max_data_hold_ns = 900;
+ 		data_hold_buffer_ns = 50;
+ 	}
+-	min_low_ns = spec_min_low_ns + fall_ns;
+-	min_high_ns = spec_min_high_ns + rise_ns;
++	min_high_ns = scl_rise_ns + spec_min_high_ns;
++
++	/*
++	 * Timings for repeated start:
++	 * - controller appears to drop SDA at .875x (7/8) programmed clk high.
++	 * - controller appears to keep SCL high for 2x programmed clk high.
++	 *
++	 * We need to account for those rules in picking our "high" time so
++	 * we meet tSU;STA and tHD;STA times.
++	 */
++	min_high_ns = max(min_high_ns,
++		DIV_ROUND_UP((scl_rise_ns + spec_setup_start) * 1000, 875));
++	min_high_ns = max(min_high_ns,
++		DIV_ROUND_UP((scl_rise_ns + spec_setup_start +
++			      sda_fall_ns + spec_min_high_ns), 2));
++
++	min_low_ns = scl_fall_ns + spec_min_low_ns;
+ 	max_low_ns = spec_max_data_hold_ns * 2 - data_hold_buffer_ns;
+ 	min_total_ns = min_low_ns + min_high_ns;
+ 
+@@ -599,9 +620,9 @@ static void rk3x_i2c_adapt_div(struct rk3x_i2c *i2c, unsigned long clk_rate)
+ 	u64 t_low_ns, t_high_ns;
+ 	int ret;
+ 
+-	ret = rk3x_i2c_calc_divs(clk_rate, i2c->scl_frequency, i2c->rise_ns,
+-				 i2c->fall_ns, &div_low, &div_high);
+-
++	ret = rk3x_i2c_calc_divs(clk_rate, i2c->scl_frequency, i2c->scl_rise_ns,
++				 i2c->scl_fall_ns, i2c->sda_fall_ns,
++				 &div_low, &div_high);
+ 	WARN_ONCE(ret != 0, "Could not reach SCL freq %u", i2c->scl_frequency);
+ 
+ 	clk_enable(i2c->clk);
+@@ -644,8 +665,9 @@ static int rk3x_i2c_clk_notifier_cb(struct notifier_block *nb, unsigned long
+ 	switch (event) {
+ 	case PRE_RATE_CHANGE:
+ 		if (rk3x_i2c_calc_divs(ndata->new_rate, i2c->scl_frequency,
+-				       i2c->rise_ns, i2c->fall_ns, &div_low,
+-				       &div_high) != 0)
++				       i2c->scl_rise_ns, i2c->scl_fall_ns,
++				       i2c->sda_fall_ns,
++				       &div_low, &div_high) != 0)
+ 			return NOTIFY_STOP;
+ 
+ 		/* scale up */
+@@ -875,15 +897,18 @@ static int rk3x_i2c_probe(struct platform_device *pdev)
+ 	 * the default maximum timing from the specification.
+ 	 */
+ 	if (of_property_read_u32(pdev->dev.of_node, "i2c-scl-rising-time-ns",
+-				 &i2c->rise_ns)) {
++				 &i2c->scl_rise_ns)) {
+ 		if (i2c->scl_frequency <= 100000)
+-			i2c->rise_ns = 1000;
++			i2c->scl_rise_ns = 1000;
+ 		else
+-			i2c->rise_ns = 300;
++			i2c->scl_rise_ns = 300;
+ 	}
+ 	if (of_property_read_u32(pdev->dev.of_node, "i2c-scl-falling-time-ns",
+-				 &i2c->fall_ns))
+-		i2c->fall_ns = 300;
++				 &i2c->scl_fall_ns))
++		i2c->scl_fall_ns = 300;
++	if (of_property_read_u32(pdev->dev.of_node, "i2c-sda-falling-time-ns",
++				 &i2c->scl_fall_ns))
++		i2c->sda_fall_ns = i2c->scl_fall_ns;
+ 
+ 	strlcpy(i2c->adap.name, "rk3x-i2c", sizeof(i2c->adap.name));
+ 	i2c->adap.owner = THIS_MODULE;
+-- 
+2.2.0.rc0.207.ga3a616c
