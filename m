@@ -1,44 +1,201 @@
-From: Liu Ying <Ying.Liu@freescale.com>
-Subject: [PATCH RFC v2 14/14] ARM: imx_v6_v7_defconfig: Add support for Himax
- HX8369A panel
-Date: Thu, 18 Dec 2014 15:11:36 +0800
-Message-ID: <1418886696-11636-15-git-send-email-Ying.Liu@freescale.com>
-References: <1418886696-11636-1-git-send-email-Ying.Liu@freescale.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCHv4 1/8] devfreq: event: Add new devfreq_event class to
+ provide basic data for devfreq governor
+Date: Thu, 18 Dec 2014 16:23:52 +0900
+Message-ID: <54928108.5080603@samsung.com>
+References: <1527528755.303581418883865069.JavaMail.weblogic@epmlwas01d>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1418886696-11636-1-git-send-email-Ying.Liu@freescale.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org
-Cc: devicetree@vger.kernel.org, linux@arm.linux.org.uk, kernel@pengutronix.de, linux-kernel@vger.kernel.org, mturquette@linaro.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-reply-to: <1527528755.303581418883865069.JavaMail.weblogic@epmlwas01d>
+Sender: linux-pm-owner@vger.kernel.org
+To: myungjoo.ham@samsung.com
+Cc: =?UTF-8?B?6rmA6rWt7KeE?= <kgene.kim@samsung.com>, =?UTF-8?B?67CV6rK966+8?= <kyungmin.park@samsung.com>, "rafael.j.wysocki@intel.com" <rafael.j.wysocki@intel.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, ABHILASH KESAVAN <a.kesavan@samsung.com>, "tomasz.figa@gmail.com" <tomasz.figa@gmail.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, =?UTF-8?B?64yA7J246riw?= <inki.dae@samsung.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBwYXRjaCBhZGRzIHN1cHBvcnQgZm9yIEhpbWF4IEhYODM2OUEgcGFuZWwuCgpUaGUgbmV3
-IGlteF92Nl92N19kZWZjb25maWcgaXMgZ2VuZXJhdGVkIGluIHRoaXMgd2F5OgoqIG1ha2UgQVJD
-SD1hcm0gaW14X3Y2X3Y3X2RlZmNvbmZpZwoqIG1ha2UgQVJDSD1hcm0gbWVudWNvbmZpZyBhbmQg
-bWFudWFsbHkgY2hvb3NlIHRvIGJ1aWxkIGluCiAgdGhlIEhpbWF4IEhYODM2OUEgcGFuZWwgZHJp
-dmVyCiogbWFrZSBBUkNIPWFybSBzYXZlZGVmY29uZmlnCiogY3AgZGVmY29uZmlnIGFyY2gvYXJt
-L2NvbmZpZ3MvaW14X3Y2X3Y3X2RlZmNvbmZpZwoKU2lnbmVkLW9mZi1ieTogTGl1IFlpbmcgPFlp
-bmcuTGl1QGZyZWVzY2FsZS5jb20+Ci0tLQp2MS0+djI6CiAqIEFkZCB0aGUgSElNQVggcHJlZml4
-IGluIHRoZSBLY29uZmlnIG5hbWUuCgogYXJjaC9hcm0vY29uZmlncy9pbXhfdjZfdjdfZGVmY29u
-ZmlnIHwgMSArCiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykKCmRpZmYgLS1naXQgYS9h
-cmNoL2FybS9jb25maWdzL2lteF92Nl92N19kZWZjb25maWcgYi9hcmNoL2FybS9jb25maWdzL2lt
-eF92Nl92N19kZWZjb25maWcKaW5kZXggM2UwZTU4OS4uMjdkYjkxYiAxMDA2NDQKLS0tIGEvYXJj
-aC9hcm0vY29uZmlncy9pbXhfdjZfdjdfZGVmY29uZmlnCisrKyBiL2FyY2gvYXJtL2NvbmZpZ3Mv
-aW14X3Y2X3Y3X2RlZmNvbmZpZwpAQCAtMTkyLDYgKzE5Miw3IEBAIENPTkZJR19TT0NfQ0FNRVJB
-X09WMjY0MD15CiBDT05GSUdfSU1YX0lQVVYzX0NPUkU9eQogQ09ORklHX0RSTT15CiBDT05GSUdf
-RFJNX1BBTkVMX1NJTVBMRT15CitDT05GSUdfRFJNX1BBTkVMX0hJTUFYX0hYODM2OUE9eQogQ09O
-RklHX0RSTV9JTVg9eQogQ09ORklHX0RSTV9JTVhfRkJfSEVMUEVSPXkKIENPTkZJR19EUk1fSU1Y
-X1BBUkFMTEVMX0RJU1BMQVk9eQotLSAKMi4xLjAKCl9fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxp
-c3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4v
-bGlzdGluZm8vZHJpLWRldmVsCg==
+Dear Myungjoo,
+
+Thanks for your review.
+
+On 12/18/2014 03:24 PM, MyungJoo Ham wrote:
+> Hi Chanwoo,
+> 
+> I love the idea and I now have a little mechanical issues in your code.
+> 
+>> ---
+>>  drivers/devfreq/Kconfig         |   2 +
+>>  drivers/devfreq/Makefile        |   5 +-
+>>  drivers/devfreq/devfreq-event.c | 449 ++++++++++++++++++++++++++++++++++++++++
+>>  drivers/devfreq/event/Makefile  |   1 +
+>>  include/linux/devfreq.h         | 160 ++++++++++++++
+>>  5 files changed, 616 insertions(+), 1 deletion(-)
+>>  create mode 100644 drivers/devfreq/devfreq-event.c
+>>  create mode 100644 drivers/devfreq/event/Makefile
+>>
+>> diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
+>> index faf4e70..4d15b62 100644
+>> --- a/drivers/devfreq/Kconfig
+>> +++ b/drivers/devfreq/Kconfig
+>> @@ -87,4 +87,6 @@ config ARM_EXYNOS5_BUS_DEVFREQ
+>>  	  It reads PPMU counters of memory controllers and adjusts the
+>>  	  operating frequencies and voltages with OPP support.
+>>  
+>> +comment "DEVFREQ Event Drivers"
+>> +
+>>  endif # PM_DEVFREQ
+>> diff --git a/drivers/devfreq/Makefile b/drivers/devfreq/Makefile
+>> index 16138c9..a1ffabe 100644
+>> --- a/drivers/devfreq/Makefile
+>> +++ b/drivers/devfreq/Makefile
+>> @@ -1,4 +1,4 @@
+>> -obj-$(CONFIG_PM_DEVFREQ)	+= devfreq.o
+>> +obj-$(CONFIG_PM_DEVFREQ)		+= devfreq.o devfreq-event.o
+>>  obj-$(CONFIG_DEVFREQ_GOV_SIMPLE_ONDEMAND)	+= governor_simpleondemand.o
+>>  obj-$(CONFIG_DEVFREQ_GOV_PERFORMANCE)	+= governor_performance.o
+>>  obj-$(CONFIG_DEVFREQ_GOV_POWERSAVE)	+= governor_powersave.o
+>> @@ -7,3 +7,6 @@ obj-$(CONFIG_DEVFREQ_GOV_USERSPACE)	+= governor_userspace.o
+>>  # DEVFREQ Drivers
+>>  obj-$(CONFIG_ARM_EXYNOS4_BUS_DEVFREQ)	+= exynos/
+>>  obj-$(CONFIG_ARM_EXYNOS5_BUS_DEVFREQ)	+= exynos/
+>> +
+>> +# DEVFREQ Event Drivers
+>> +obj-$(CONFIG_PM_DEVFREQ)		+= event/
+>>
+> 
+> It looks getting mature fast.
+> However, I would like to suggest you to
+> 
+> allow not to compile devfreq-event.c and not include its compiled object
+>   if devfreq.c is required but devfreq-event.c is not required.
+>   (e.g., add CONFIG_PM_DEVFREQ_EVENT and let it be enabled when needed)
+>   just a little concern for lightweight devices.
+>     (this change might require a bit more work on the header as well)
+>   - Or do you think devfreq-event.c will become almost mandatory for
+>    most devfreq drivers?
+
+I agree your opinion.
+I'll add CONFIG_PM_DEVFREQ_EVENT according to your comment.
+
+> 
+> 
+> [snip]
+> 
+>> diff --git a/drivers/devfreq/devfreq-event.c b/drivers/devfreq/devfreq-event.c
+>> new file mode 100644
+>> index 0000000..0e1948e
+>> --- /dev/null
+>> +++ b/drivers/devfreq/devfreq-event.c
+>> @@ -0,0 +1,449 @@
+>> +/*
+>> + * devfreq-event: Generic DEVFREQ Event class driver
+> 
+> DEVFREQ is a generic DVFS mechanism (or subsystem).
+> 
+> Plus, I thought devfreq-event is considered to be a "framework"
+> for devfreq event class drivers. Am I mistaken?
+
+You're right. just "class driver" description is not proper.
+I'll modify the description of devfreq-event.c as following:
+or If you have other opinion, would you please let me know about it?
+
+	devfreq-event: DEVFREQ-Event Framework to provide raw data of Non-CPU Devices.
+
+
+> [snip]
+> 
+>> +struct devfreq_event_dev *devfreq_event_add_edev(struct device *dev,
+>> +                                               struct devfreq_event_desc *desc)
+>> +{
+>> +       struct devfreq_event_dev *edev;
+>> +       static atomic_t event_no = ATOMIC_INIT(0);
+>> +       int ret;
+>> +
+>> +       if (!dev || !desc)
+>> +               return ERR_PTR(-EINVAL);
+>> +
+>> +       if (!desc->name || !desc->ops)
+>> +               return ERR_PTR(-EINVAL);
+>> +
+>> +       if (!desc->ops->set_event || !desc->ops->get_event)
+>> +               return ERR_PTR(-EINVAL);
+>> +
+>> +       edev = devm_kzalloc(dev, sizeof(*edev), GFP_KERNEL);
+>> +       if (!edev)
+>> +               return ERR_PTR(-ENOMEM);
+>> +
+>> +       mutex_lock(&devfreq_event_list_lock);
+> 
+> You seem to lock that global lock too long. That lock is only required
+> while you operate the list. The data to be protected by this mutex is
+> devfreq_event_list. Until the new entry is added to the list, the new
+> entry is free from protection. (may be delayed right before list_add)
+
+OK. I'll move global lock right before calling list_add() on below.
+
+> 
+>> +       mutex_init(&edev->lock);
+>> +       edev->desc = desc;
+>> +       edev->dev.parent = dev;
+>> +       edev->dev.class = devfreq_event_class;
+>> +       edev->dev.release = devfreq_event_release_edev;
+>> +
+>> +       dev_set_name(&edev->dev, "event.%d", atomic_inc_return(&event_no) - 1);
+>> +       ret = device_register(&edev->dev);
+>> +       if (ret < 0) {
+>> +               put_device(&edev->dev);
+>> +               mutex_unlock(&devfreq_event_list_lock);
+>> +               return ERR_PTR(ret);
+>> +       }
+>> +       dev_set_drvdata(&edev->dev, edev);
+>> +
+>> +       INIT_LIST_HEAD(&edev->node);
+>> +       list_add(&edev->node, &devfreq_event_list);
+>> +       mutex_unlock(&devfreq_event_list_lock);
+>> +
+>> +       return edev;
+>> +}
+> 
+> 
+> 
+> [snip / reversed maybe.. sorry]
+> 
+>> +/**
+>> + * devfreq_event_is_enabled() - Check whether devfreq-event dev is enabled or
+>> + *                             not.
+>> + * @edev       : the devfreq-event device
+>> + *
+>> + * Note that this function check whether devfreq-event dev is enabled or not.
+>> + * If return true, the devfreq-event dev is enabeld. If return false, the
+>> + * devfreq-event dev is disabled.
+>> + */
+>> +bool devfreq_event_is_enabled(struct devfreq_event_dev *edev)
+>> +{
+>> +       bool enabled = false;
+>> +
+>> +       if (!edev || !edev->desc)
+>> +               return enabled;
+>> +
+>> +       mutex_lock(&edev->lock);
+>> +
+>> +       if (edev->enable_count > 0)
+>> +               enabled = true;
+>> +
+>> +       if (edev->desc->ops && edev->desc->ops->is_enabled)
+>> +               enabled |= edev->desc->ops->is_enabled(edev);
+> 
+> What does it mean when enabled_count > 0 and ops->is_enabled() is false? or..
+> What does it mean when enabled_count = 0 and ops->is_enabled() is true?
+> 
+> If you do enable_count in the subsystem, why would we rely on
+> ops->is_enabled()? Are you assuming that a device MAY turn itself off
+> without any kernel control (ops->disable()) and it is still a correct
+> behabior?
+
+You're right. devfreq_event_is_enabled() has ambiguous operation according to your comment.
+
+I'll only control the enable_count in the subsystem without ops->is_enabled()
+and then remove the is_enabled function in the structre devfreq_event_ops.
+
+Best Regards,
+Chanwoo Choi
