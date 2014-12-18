@@ -1,79 +1,33 @@
-From: Liu Ying <Ying.Liu@freescale.com>
-Subject: Re: [PATCH RFC 09/15] drm: imx: Add MIPI DSI host controller driver
-Date: Thu, 18 Dec 2014 10:46:33 +0800
-Message-ID: <54924009.8040207@freescale.com>
-References: <1418200648-32656-1-git-send-email-Ying.Liu@freescale.com>
- <1418200648-32656-10-git-send-email-Ying.Liu@freescale.com>
- <20141210131640.GD23558@ulmo.nvidia.com> <54915081.6020508@freescale.com>
- <20141217104049.GU11285@n2100.arm.linux.org.uk>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] mtd: gpmi: Remove "We support only one NAND chip" from
+ bindings doc
+Date: Wed, 17 Dec 2014 18:45:09 -0800
+Message-ID: <20141218024509.GA9759@ld-irv-0074>
+References: <20141128014832.GA3113@localhost.localdomain>
+ <54781DD5.5030801@denx.de>
+ <20141129024047.GA5056@localhost.localdomain>
+ <20141130065326.GB3608@norris-Latitude-E6410>
+ <20141130154255.GB14834@localhost.localdomain>
+ <547C3BB9.1010706@denx.de>
+ <20141202003840.GA11370@shldeISGChi005.sh.intel.com>
+ <547D6A0A.70409@denx.de>
+ <20141203003542.GA7895@shldeISGChi005.sh.intel.com>
+ <20141217011757.GO9759@ld-irv-0074>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20141217104049.GU11285@n2100.arm.linux.org.uk>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: devicetree@vger.kernel.org, mturquette@linaro.org, kernel@pengutronix.de, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20141217011757.GO9759@ld-irv-0074>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Huang Shijie <shijie.huang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>, Huang Shijie <shijie8-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgUnVzc2VsbCwKCk9uIDEyLzE3LzIwMTQgMDY6NDAgUE0sIFJ1c3NlbGwgS2luZyAtIEFSTSBM
-aW51eCB3cm90ZToKPiBPbiBXZWQsIERlYyAxNywgMjAxNCBhdCAwNTo0NDozM1BNICswODAwLCBM
-aXUgWWluZyB3cm90ZToKPj4gSGkgVGhpZXJyeSwKPj4KPj4gU29ycnkgZm9yIHRoZSBsYXRlIHJl
-c3BvbnNlLgo+PiBJIHRyaWVkIHRvIGFkZHJlc3MgYWxtb3N0IGFsbCB5b3VyIGNvbW1lbnRzIGxv
-Y2FsbHkgZmlyc3QuCj4+IE1vcmUgZmVlZGJhY2sgYmVsb3cuCj4+Cj4+IE9uIDEyLzEwLzIwMTQg
-MDk6MTYgUE0sIFRoaWVycnkgUmVkaW5nIHdyb3RlOgo+Pj4gT24gV2VkLCBEZWMgMTAsIDIwMTQg
-YXQgMDQ6Mzc6MjJQTSArMDgwMCwgTGl1IFlpbmcgd3JvdGU6Cj4+Pj4gK3N0YXRpYyBpbnQgY2hl
-Y2tfc3RhdHVzKHN0cnVjdCBpbXhfbWlwaV9kc2kgKmRzaSwgdTMyIHJlZywgdTMyIHN0YXR1cywK
-Pj4+PiArCQkJaW50IHRpbWVvdXQsIGJvb2wgdG9fc2V0KQo+Pj4+ICt7Cj4+Pj4gKwl1MzIgdmFs
-Owo+Pj4+ICsJYm9vbCBvdXQgPSBmYWxzZTsKPj4+PiArCj4+Pj4gKwl2YWwgPSBkc2lfcmVhZChk
-c2ksIHJlZyk7Cj4+Pj4gKwlmb3IgKDs7KSB7Cj4+Pj4gKwkJb3V0ID0gdG9fc2V0ID8gKHZhbCAm
-IHN0YXR1cykgOiAhKHZhbCAmIHN0YXR1cyk7Cj4+Pj4gKwkJaWYgKG91dCkKPj4+PiArCQkJYnJl
-YWs7Cj4+Pj4gKwo+Pj4+ICsJCWlmICghdGltZW91dC0tKQo+Pj4+ICsJCQlyZXR1cm4gLUVGQVVM
-VDsKPj4+PiArCj4+Pj4gKwkJbXNsZWVwKDEpOwo+Pj4+ICsJCXZhbCA9IGRzaV9yZWFkKGRzaSwg
-cmVnKTsKPj4+PiArCX0KPj4+PiArCXJldHVybiAwOwo+Pj4+ICt9Cj4+Pgo+Pj4gWW91IHNob3Vs
-ZCBwcm9iYWJseSB1c2UgYSBwcm9wZXJseSB0aW1lZCBsb29wIGhlcmUuIG1zbGVlcCgpIGlzbid0
-Cj4+PiBndWFyYW50ZWVkIHRvIHJldHVybiBhZnRlciBleGFjdGx5IG9uZSBtaWxsaXNlY29uZCwg
-c28geW91ciB0aW1lb3V0IGlzCj4+PiBuZXZlciBnb2luZyB0byBiZSBhY2N1cmF0ZS4gU29tZXRo
-aW5nIGxpa2UgdGhlIGZvbGxvd2luZyB3b3VsZCBiZSBiZXR0ZXIKPj4+IGluIG15IG9waW5pb246
-Cj4+Pgo+Pj4gCXRpbWVvdXQgPSBqaWZmaWVzICsgbXNlY3NfdG9famlmZmllcyh0aW1lb3V0KTsK
-Pj4+Cj4+PiAJd2hpbGUgKHRpbWVfYmVmb3JlKGppZmZpZXMsIHRpbWVvdXQpKSB7Cj4+PiAJCS4u
-Lgo+Pj4gCX0KPj4+Cj4+PiBBbHNvIHRpbWVvdXQgc2hvdWxkIGJlIHVuc2lnbmVkIGxvbmcgaW4g
-dGhhdCBjYXNlLgo+Pgo+PiBBY2NlcHRlZC4KPgo+IEFjdHVhbGx5LCB0aGF0J3MgYSBiYWQgZXhh
-bXBsZTogd2hhdCB3ZSB3YW50IHRvIGRvIGlzIHRvIGFzc2VzcyBzdWNjZXNzCj4gYWZ0ZXIgd2Ug
-d2FpdCwgYmVmb3JlIHdlIGRlY2lkZSB0aGF0IHNvbWV0aGluZyBoYXMgZmFpbGVkLiAgSW4gb3Ro
-ZXIKPiB3b3Jkcywgd2UgZG9uJ3Qgd2FudCB0byB3YWl0LCBhbmQgZGVjaWRlIHRoYXQgd2UgZmFp
-bGVkIHdpdGhvdXQgZmlyc3QKPiBjaGVja2luZyBmb3Igc3VjY2Vzcy4KPgo+IEluIGFueSBjYXNl
-LCByZXR1cm5pbmcgLUVGQVVMVCBpcyBub3Qgc2FuZTogRUZBVUxUIGRvZXNuJ3QgbWVhbiAiZmF1
-bHQiCj4gaXQgbWVhbnMgIkJhZCBhZGRyZXNzIiwgYW5kIGl0IGlzIHJldHVybmVkIHRvIHVzZXJz
-cGFjZSB0byBtZWFuIHRoYXQKPiB1c2Vyc3BhY2UgcGFzc2VkIHRoZSBrZXJuZWwgYSBiYWQgYWRk
-cmVzcy4gIFRoYXQgZGVmaW5pdGlvbiBkb2VzIC9ub3QvCj4gZml0IHdoYXQncyBnb2luZyBvbiBo
-ZXJlLgo+Cj4gCXRpbWVvdXQgPSBqaWZmaWVzICsgbXNlY3NfdG9famlmZmllcyh0aW1lb3V0KTsK
-Pgo+IAlkbyB7Cj4gCQl2YWwgPSBkc2lfcmVhZChkc2ksIHJlZyk7Cj4gCQlvdXQgPSB0b19zZXQg
-PyAodmFsICYgc3RhdHVzKSA6ICEodmFsICYgc3RhdHVzKTsKPiAJCWlmIChvdXQpCj4gCQkJYnJl
-YWs7Cj4KPiAJCWlmICh0aW1lX2lzX2FmdGVyX2ppZmZpZXModGltZW91dCkpCgp0aW1lX2lzX2Fm
-dGVyX2ppZmZpZXMoYSkgaXMgZGVmaW5lZCBhcyB0aW1lX2JlZm9yZShqaWZmaWVzLCBhKS4KClNv
-LCB0aGlzIGxpbmUgc2hvdWxkIGJlIGNoYW5nZWQgdG8KCglpZiAodGltZV9hZnRlcihqaWZmaWVz
-LCB0aW1lb3V0KSkKClJpZ2h0PwoKPiAJCQlyZXR1cm4gLUVUSU1FRE9VVDsKPgo+IAkJbXNsZWVw
-KDEpOwo+IAl9IHdoaWxlICgxKTsKPgo+IAlyZXR1cm4gMDsKPgo+IHdvdWxkIGJlIGJldHRlcjog
-d2Ugb25seSBmYWlsIGltbWVkaWF0ZWx5IGFmdGVyIHdlIGhhdmUgY2hlY2tlZCB3aGV0aGVyCj4g
-d2Ugc3VjY2VlZGVkLCBhbmQgd2UgYWxzbyBkbyB0aGUgZmlyc3QgY2hlY2sgaW1tZWRpYXRlbHku
-Cj4KCkRvZXMgdGhpcyBvbmUgbG9vayBiZXR0ZXI/ICBJIHVzZSBjcHVfcmVsYXgoKSBpbnN0ZWFk
-IG9mIG1zbGVlcCgxKS4KCiAgICAgICAgIGV4cGlyZSA9IGppZmZpZXMgKyBtc2Vjc190b19qaWZm
-aWVzKHRpbWVvdXQpOwogICAgICAgICBmb3IgKDs7KSB7CiAgICAgICAgICAgICAgICAgdmFsID0g
-ZHNpX3JlYWQoZHNpLCByZWcpOwogICAgICAgICAgICAgICAgIG91dCA9IHRvX3NldCA/ICh2YWwg
-JiBzdGF0dXMpIDogISh2YWwgJiBzdGF0dXMpOwogICAgICAgICAgICAgICAgIGlmIChvdXQpCiAg
-ICAgICAgICAgICAgICAgICAgICAgICBicmVhazsKCiAgICAgICAgICAgICAgICAgaWYgKHRpbWVf
-YWZ0ZXIoamlmZmllcywgZXhwaXJlKSkKICAgICAgICAgICAgICAgICAgICAgICAgIHJldHVybiAt
-RVRJTUVET1VUOwoKICAgICAgICAgICAgICAgICBjcHVfcmVsYXgoKTsKICAgICAgICAgfQoKCXJl
-dHVybiAwOwoKUmVnYXJkcywKCkxpdSBZaW5nCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3Rz
-LmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlz
-dGluZm8vZHJpLWRldmVsCg==
+On Tue, Dec 16, 2014 at 05:17:57PM -0800, Brian Norris wrote:
+> If there are no more concrete objections, I'll apply this patch.
+
+Applied to l2-mtd.git/next.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
