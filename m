@@ -1,75 +1,93 @@
-From: Eddie Huang <eddie.huang@mediatek.com>
-Subject: [PATCH 1/2] tty: serial: 8250_mtk: Add earlycon
-Date: Thu, 18 Dec 2014 16:33:20 +0800
-Message-ID: <1418891601-53769-2-git-send-email-eddie.huang@mediatek.com>
-References: <1418891601-53769-1-git-send-email-eddie.huang@mediatek.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 07/13] mfd: sun6i-prcm: Add support for
+ the ir-clk
+Date: Thu, 18 Dec 2014 08:41:29 +0000
+Message-ID: <20141218084129.GT13885@x1>
+References: <1418836704-15689-1-git-send-email-hdegoede@redhat.com>
+ <1418836704-15689-8-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1418891601-53769-1-git-send-email-eddie.huang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: srv_heupstream@mediatek.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Jiri Slaby <jslaby@suse.cz>, Eddie Huang <eddie.huang@mediatek.com>, Alan Cox <alan@linux.intel.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, yingjoe.chen@mediatek.com, yh.chen@mediatek.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDA7X7F2WUEBBPVGZKSAKGQEEHUDRDQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1418836704-15689-8-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Mediatek UART has highspeed register, but 8250_early.c doesn't
-support this, so add earlycon in 8250_mtk.c
+On Wed, 17 Dec 2014, Hans de Goede wrote:
 
-Signed-off-by: Eddie Huang <eddie.huang@mediatek.com>
----
- drivers/tty/serial/8250/8250_mtk.c | 33 +++++++++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
+> Add support for the ir-clk which is part of the sun6i SoC prcm module.
+>=20
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> ---
+>  drivers/mfd/sun6i-prcm.c | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
 
-diff --git a/drivers/tty/serial/8250/8250_mtk.c b/drivers/tty/serial/8250/8250_mtk.c
-index de7aae5..65dd569 100644
---- a/drivers/tty/serial/8250/8250_mtk.c
-+++ b/drivers/tty/serial/8250/8250_mtk.c
-@@ -23,6 +23,7 @@
- #include <linux/pm_runtime.h>
- #include <linux/serial_8250.h>
- #include <linux/serial_reg.h>
-+#include <linux/console.h>
- 
- #include "8250.h"
- 
-@@ -289,6 +290,38 @@ static struct platform_driver mtk8250_platform_driver = {
- };
- module_platform_driver(mtk8250_platform_driver);
- 
-+#define BOTH_EMPTY (UART_LSR_TEMT | UART_LSR_THRE)
-+
-+static void __init mtk8250_serial_putc(struct uart_port *port, int c)
-+{
-+	while ((readl(port->membase + (UART_LSR << 2)) & BOTH_EMPTY) !=
-+		BOTH_EMPTY)
-+		;
-+	writel(c, port->membase + (UART_TX << 2));
-+}
-+
-+static void __init early_mtk8250_write(struct console *console,
-+					const char *s, unsigned int count)
-+{
-+	struct earlycon_device *dev = console->data;
-+
-+	uart_console_write(&dev->port, s, count, mtk8250_serial_putc);
-+}
-+
-+static int __init early_mtk8250_setup(struct earlycon_device *device,
-+					const char *options)
-+{
-+	if (!device->port.membase)
-+		return -ENODEV;
-+
-+	device->con->write = early_mtk8250_write;
-+
-+	return 0;
-+}
-+
-+EARLYCON_DECLARE(mtk8250, early_mtk8250_setup);
-+OF_EARLYCON_DECLARE(mtk8250, "mediatek,mt6577-uart", early_mtk8250_setup);
-+
- MODULE_AUTHOR("Matthias Brugger");
- MODULE_LICENSE("GPL");
- MODULE_DESCRIPTION("Mediatek 8250 serial port driver");
--- 
-1.8.1.1.dirty
+Pretty standard stuff (
+
+> diff --git a/drivers/mfd/sun6i-prcm.c b/drivers/mfd/sun6i-prcm.c
+> index 2f2e9f0..1911731 100644
+> --- a/drivers/mfd/sun6i-prcm.c
+> +++ b/drivers/mfd/sun6i-prcm.c
+> @@ -41,6 +41,14 @@ static const struct resource sun6i_a31_apb0_gates_clk_=
+res[] =3D {
+>  	},
+>  };
+> =20
+> +static const struct resource sun6i_a31_ir_clk_res[] =3D {
+> +	{
+> +		.start =3D 0x54,
+> +		.end =3D 0x57,
+> +		.flags =3D IORESOURCE_MEM,
+> +	},
+> +};
+
+I'm still unkeen on this registers not being defined -- but whateveer!
+
+>  static const struct resource sun6i_a31_apb0_rstc_res[] =3D {
+>  	{
+>  		.start =3D 0xb0,
+> @@ -69,6 +77,12 @@ static const struct mfd_cell sun6i_a31_prcm_subdevs[] =
+=3D {
+>  		.resources =3D sun6i_a31_apb0_gates_clk_res,
+>  	},
+>  	{
+> +		.name =3D "sun6i-a31-ir-clk",
+> +		.of_compatible =3D "allwinner,sun4i-a10-mod0-clk",
+> +		.num_resources =3D ARRAY_SIZE(sun6i_a31_ir_clk_res),
+> +		.resources =3D sun6i_a31_ir_clk_res,
+> +	},
+> +	{
+>  		.name =3D "sun6i-a31-apb0-clock-reset",
+>  		.of_compatible =3D "allwinner,sun6i-a31-clock-reset",
+>  		.num_resources =3D ARRAY_SIZE(sun6i_a31_apb0_rstc_res),
+
+This is all pretty standard stuff:
+
+For my own reference:
+
+Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
+Do you do  you expect this patch to be handled?
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
