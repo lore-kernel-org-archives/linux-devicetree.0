@@ -1,13 +1,11 @@
 From: <atull@opensource.altera.com>
-Subject: [PATCH v6 1/4] doc: add bindings document for altera fpga manager
-Date: Thu, 18 Dec 2014 16:29:05 -0600
-Message-ID: <1418941748-16111-2-git-send-email-atull@opensource.altera.com>
-References: <1418941748-16111-1-git-send-email-atull@opensource.altera.com>
+Subject: [PATCH v6 0/4] FPGA Manager Framework
+Date: Thu, 18 Dec 2014 16:29:04 -0600
+Message-ID: <1418941748-16111-1-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1418941748-16111-1-git-send-email-atull@opensource.altera.com>
 List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
  <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
 List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
@@ -23,40 +21,36 @@ List-Id: devicetree@vger.kernel.org
 
 From: Alan Tull <atull@opensource.altera.com>
 
-New bindings document for Altera fpga manager.
+Dropping the changes to socfpga DTS and defconfig from this
+patch set.
 
-Signed-off-by: Alan Tull <atull@opensource.altera.com>
----
-v5 : Move bindings to drivers/staging/fpga/Documentation/bindings
+Kernel doc fixes and other minor fixes as listed in the patches.
 
-v6 : No change in this patch for v6 of the patch set
----
- .../Documentation/bindings/altera-fpga-mgr.txt     |   17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+Alan
+
+Alan Tull (4):
+  doc: add bindings document for altera fpga manager
+  fpga manager: add sysfs interface document
+  staging: fpga manager: framework core
+  staging: fpga manager: add driver for socfpga fpga manager
+
+ drivers/staging/Kconfig                            |    2 +
+ drivers/staging/Makefile                           |    1 +
+ .../Documentation/ABI/sysfs-class-fpga-manager     |   38 ++
+ .../Documentation/bindings/altera-fpga-mgr.txt     |   17 +
+ drivers/staging/fpga/Kconfig                       |   29 +
+ drivers/staging/fpga/Makefile                      |    9 +
+ drivers/staging/fpga/fpga-mgr.c                    |  551 ++++++++++++++++
+ drivers/staging/fpga/socfpga.c                     |  694 ++++++++++++++++++++
+ include/linux/fpga/fpga-mgr.h                      |  124 ++++
+ 9 files changed, 1465 insertions(+)
+ create mode 100644 drivers/staging/fpga/Documentation/ABI/sysfs-class-fpga-manager
  create mode 100644 drivers/staging/fpga/Documentation/bindings/altera-fpga-mgr.txt
+ create mode 100644 drivers/staging/fpga/Kconfig
+ create mode 100644 drivers/staging/fpga/Makefile
+ create mode 100644 drivers/staging/fpga/fpga-mgr.c
+ create mode 100644 drivers/staging/fpga/socfpga.c
+ create mode 100644 include/linux/fpga/fpga-mgr.h
 
-diff --git a/drivers/staging/fpga/Documentation/bindings/altera-fpga-mgr.txt b/drivers/staging/fpga/Documentation/bindings/altera-fpga-mgr.txt
-new file mode 100644
-index 0000000..373af7b
---- /dev/null
-+++ b/drivers/staging/fpga/Documentation/bindings/altera-fpga-mgr.txt
-@@ -0,0 +1,17 @@
-+Altera FPGA Manager
-+
-+Required properties:
-+- compatible : should contain "altr,fpga-mgr"
-+- reg        : base address and size for memory mapped io.
-+               - The first index is for FPGA manager register access.
-+               - The second index is for writing FPGA configuration data.
-+- interrupts : interrupt for the FPGA Manager device.
-+
-+Example:
-+
-+	hps_0_fpgamgr: fpgamgr@0xff706000 {
-+		compatible = "altr,fpga-mgr";
-+		reg = <0xFF706000 0x1000
-+		       0xFFB90000 0x1000>;
-+		interrupts = <0 175 4>;
-+	};
 -- 
 1.7.9.5
