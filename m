@@ -1,77 +1,58 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC v1 PATCH 1/2] of/pci: add of_pci_dma_configure() update dma configuration
-Date: Thu, 18 Dec 2014 23:29:25 +0100
-Message-ID: <21520995.3ITgVmVTeV@wuerfel>
-References: <1418940425-2017-1-git-send-email-m-karicheri2@ti.com> <1418940425-2017-2-git-send-email-m-karicheri2@ti.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 11/12] ARM: dts: add support for Vybrid running on Cortex-M4
+Date: Thu, 18 Dec 2014 23:44:22 +0100
+Message-ID: <2375016.nxLFC8UMcD@wuerfel>
+References: <1417565531-4507-1-git-send-email-stefan@agner.ch> <2615697.uVqMY8zKot@wuerfel> <44e9d518da24fb0c910de464269b8551@agner.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1418940425-2017-2-git-send-email-m-karicheri2@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Murali Karicheri <m-karicheri2@ti.com>
-Cc: bhelgaas@google.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, grant.likely@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, will.deacon@arm.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <44e9d518da24fb0c910de464269b8551-XLVq0VzYD2Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 18 December 2014 17:07:04 Murali Karicheri wrote:
-> Add of_pci_dma_configure() to allow updating the dma configuration
-> of the pci device using the configuration from the parent of
-> the root bridge device.
+On Thursday 18 December 2014 21:36:31 Stefan Agner wrote:
+> On 2014-12-17 13:31, Arnd Bergmann wrote:
+> > On Wednesday 17 December 2014 00:41:33 Stefan Agner wrote:
+> >> On 2014-12-03 12:03, Arnd Bergmann wrote:
+> >> > Starting with v3.19, you should be able to use the earlycon framework on
+> >> > arm32, so it would be better to replace earlyprintk with earlycon here
+> >> > and add a stdout-path property in chosen that points to the console
+> >> > uart.
+> >>
+> >> I started to implement earlycon support, but something currently fails
+> >> when earlycon tries to map the UART registers:
+> >> [    0.000000] earlycon_map: Couldn't map 0x40027000
+> >>
+> >> I traced the issue a bit further down and found that get_vm_area_caller
+> >> returns NULL (in __arm_ioremap_pfn_caller). This happend on Linus master
+> >> as of today (2dbfca5a181973558277b28b1f4c36362291f5e0). Do I miss
+> >> something here?
+> > 
+> > Hmm, I fear the arm32 FIX_EARLYCON_MEM support ended up not making it
+> > into 3.19 after all. 
 > 
-> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+> Is it because early_ioremap and fixmap still missing for arm32?
+> According to Rob's patchset from spring fixmap is required, there is
+> something in this tree:
+> https://git.kernel.org/cgit/linux/kernel/git/robh/linux.git/log/?h=arm-fixmap
 
-Much better!
+Right, that's the one, thanks for finding that again. There are five
+patches on that branch. The first three got merged, and the one we
+need is just the last one (ARM: fixmap early permanent mapping support),
+but the implementation depends on the previous patch (arm: add
+early_ioremap support).
 
-There is one detail that we should get right from the start here,
-which is currently wrong in the platform device code, but I have so
-far not dared change it:
-
-> +	/*
-> +	 * Set default dma-mask to 32 bit. Drivers are expected to setup
-> +	 * the correct supported dma_mask.
-> +	 */
-> +	dev->coherent_dma_mask = DMA_BIT_MASK(32);
-
-The 32-bit mask is indeed correct as the default for almost all cases,
-and we must not set it larger than DMA_BIT_MASK(32). There is one
-corner case though, which happens on some shmobile machines that have
-a 31-bit mask on the PCI host, and I think we should use that as the
-default.
-
-> +	/*
-> +	 * Set it to coherent_dma_mask by default if the architecture
-> +	 * code has not set it.
-> +	 */
-> +	if (!dev->dma_mask)
-> +		dev->dma_mask = &dev->coherent_dma_mask;
-> +
-> +	ret = of_dma_get_range(parent_np, &dma_addr, &paddr, &size);
-> +	if (ret < 0) {
-> +		dma_addr = offset = 0;
-> +		size = dev->coherent_dma_mask;
-
-Can you check one thing here? I believe the size argument as returned
-from of_dma_get_range is inclusive (e.g. 0x100000000), while the coherent
-mask by definition is exlusive (e.g. 0xffffffff), so the size needs to
-be adapted here. I haven't checked all the code here though, so I may
-be wrong.
-
-> +	} else {
-> +		offset = PFN_DOWN(paddr - dma_addr);
-> +		dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", dev->dma_pfn_offset);
-> +	}
-> +	dev->dma_pfn_offset = offset;
-> +
-> +	coherent = of_dma_is_coherent(parent_np);
-> +	dev_dbg(dev, "device is%sdma coherent\n",
-> +		coherent ? " " : " not ");
-> +
-> +	arch_setup_dma_ops(dev, dma_addr, size, NULL, coherent);
-
-Basically, I would use limit the size argument we pass into
-arch_setup_dma_ops to the minimum of 'size' and 'dma_mask' here,
-after converting into the same format. We should make sure we do the
-same thing for platform_device as well, so it might be better to do
-it inside of arch_setup_dma_ops instead.
+I was hoping we'd see both of them in 3.19, but apparently Rob didn't
+submit the latest version. If you don't mind, could you try forward-porting
+them to the latest kernel and then submit them for inclusion? You could
+also try adapting the last patch to work without the early_ioremap
+support that we don't really need that urgently on arm32.
 
 	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
