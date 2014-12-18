@@ -1,64 +1,35 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 04/13] rc: sunxi-cir: Add support for an
- optional reset controller
-Date: Thu, 18 Dec 2014 09:50:26 +0100
-Message-ID: <54929552.8090707@redhat.com>
-References: <1418836704-15689-1-git-send-email-hdegoede@redhat.com> <1418836704-15689-5-git-send-email-hdegoede@redhat.com> <CAGb2v65BW7NABQXK877DkMNqDdBeuZ55wQHFkTexbWACFC4zFA@mail.gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Josh Wu <josh.wu@atmel.com>
+Subject: [PATCH 0/7] ARM: at91: dts: sama5d3: add dt support for atmel isi and ov2640 sensor
+Date: Thu, 18 Dec 2014 16:51:00 +0800
+Message-ID: <1418892667-27428-1-git-send-email-josh.wu@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBXNKZKSAKGQEYLL2C2Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <CAGb2v65BW7NABQXK877DkMNqDdBeuZ55wQHFkTexbWACFC4zFA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-media-owner@vger.kernel.org>
+Sender: linux-media-owner@vger.kernel.org
+To: nicolas.ferre@atmel.com
+Cc: voice.shen@atmel.com, plagnioj@jcrosoft.com, boris.brezillon@free-electrons.com, alexandre.belloni@free-electrons.com, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-media@vger.kernel.org, g.liakhovetski@gmx.de, laurent.pinchart@ideasonboard.com, Josh Wu <josh.wu@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This patch series add ISI and ov2640 support on dts files.
 
-On 18-12-14 03:48, Chen-Yu Tsai wrote:
-> Hi,
->
-> On Thu, Dec 18, 2014 at 1:18 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
->> On sun6i the cir block is attached to the reset controller, add support
->> for de-asserting the reset if a reset controller is specified in dt.
->>
->> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->> Acked-by: Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
->> Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->> ---
->>   .../devicetree/bindings/media/sunxi-ir.txt         |  2 ++
->>   drivers/media/rc/sunxi-cir.c                       | 25 ++++++++++++++++++++--
->>   2 files changed, 25 insertions(+), 2 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/media/sunxi-ir.txt b/Documentation/devicetree/bindings/media/sunxi-ir.txt
->> index 23dd5ad..6b70b9b 100644
->> --- a/Documentation/devicetree/bindings/media/sunxi-ir.txt
->> +++ b/Documentation/devicetree/bindings/media/sunxi-ir.txt
->> @@ -10,6 +10,7 @@ Required properties:
->>
->>   Optional properties:
->>   - linux,rc-map-name : Remote control map name.
->> +- resets : phandle + reset specifier pair
->
-> Should it be optional? Or should we use a sun6i compatible with
-> a mandatory reset phandle? I mean, the driver/hardware is not
-> going to work with the reset missing on sun6i.
->
-> Seems we are doing it one way for some of our drivers, and
-> the other (optional) way for more generic ones, like USB.
+As the ov2640 driver dt is still in review. The patch is in: https://patchwork.linuxtv.org/patch/27554/
+So I want to send this dt patch early for a review.
 
-I do not believe that we should add a new compatible just because
-the reset line of a block is hooked up differently. It is the
-exact same ip-block. Only now the reset is not controlled
-through the apb-gate, but controlled separately.
+Bo Shen (3):
+  ARM: at91: dts: sama5d3: split isi pinctrl
+  ARM: at91: dts: sama5d3: add missing pins of isi
+  ARM: at91: dts: sama5d3: move the isi mck pin to mb
 
-Regards,
+Josh Wu (4):
+  ARM: at91: dts: sama5d3: add isi clock
+  ARM: at91: dts: sama5d3: change name of pinctrl_isi_{power,reset}
+  ARM: at91: dts: sama5d3: add ov2640 camera sensor support
+  ARM: at91: sama5: enable atmel-isi and ov2640 in defconfig
 
-Hans
+ arch/arm/boot/dts/sama5d3.dtsi    | 20 +++++++++++++-----
+ arch/arm/boot/dts/sama5d3xmb.dtsi | 43 +++++++++++++++++++++++++++++++++++----
+ arch/arm/configs/sama5_defconfig  |  6 ++++++
+ 3 files changed, 60 insertions(+), 9 deletions(-)
+
+-- 
+1.9.1
