@@ -1,106 +1,62 @@
-From: atull <atull@opensource.altera.com>
-Subject: Re: [PATCH v5 3/6] staging: fpga manager: framework core
-Date: Thu, 18 Dec 2014 14:46:15 -0600
-Message-ID: <alpine.DEB.2.02.1412181440490.25208@linuxheads99>
-References: <1418835289-15752-1-git-send-email-atull@opensource.altera.com> <1418835289-15752-4-git-send-email-atull@opensource.altera.com> <05395a89d783481b8b7c06bb299b53e0@BL2FFO11FD020.protection.gbl>
+From: atull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Subject: Re: [PATCH v2 2/3] fpga manager: framework core
+Date: Thu, 18 Dec 2014 14:50:09 -0600
+Message-ID: <alpine.DEB.2.02.1412181447160.25208@linuxheads99>
+References: <1414007405-32186-1-git-send-email-atull@opensource.altera.com> <1414007405-32186-3-git-send-email-atull@opensource.altera.com> <20141024105200.GA20775@amd> <CACxGe6sa=ysJAjx5TQZH5sKoas1PkoUUR4zT=Z35+uF6rrk-vw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <05395a89d783481b8b7c06bb299b53e0@BL2FFO11FD020.protection.gbl>
-Sender: linux-doc-owner@vger.kernel.org
-To: Michal Simek <michal.simek@xilinx.com>
-Cc: gregkh@linuxfoundation.org, jgunthorpe@obsidianresearch.com, hpa@zytor.com, monstr@monstr.eu, rdunlap@infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, pantelis.antoniou@konsulko.com, robh+dt@kernel.org, grant.likely@linaro.org, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, pavel@denx.de, broonie@kernel.org, philip@balister.org, rubini@gnudd.com, s.trumtrar@pengutronix.de, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, balbi@ti.com, m.chehab@samsung.com, davidb@codeaurora.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, linus.walleij@linaro.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devel@driverdev.osuosl.org, delicious.quinoa@gmail.com, dinguye
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACxGe6sa=ysJAjx5TQZH5sKoas1PkoUUR4zT=Z35+uF6rrk-vw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, "H. Peter Anvin" <hpa-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ira Snyder <iws-lulEs6mt1IksTUYHLfqkUA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, philip-6RQC9ztksjxg9hUCZPvPmw@public.gmane.org, rubini <rubini-kaDoWcXyVrEAvxtiuMwx3w@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Jason <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, kyle.teske-acOepvfBmUk@public.gmane.org, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Balbi, Felipe" <balbi-l0cyMroinI0@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, David
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 18 Dec 2014, Michal Simek wrote:
+On Sat, 6 Dec 2014, Grant Likely wrote:
 
-> Hi Alan,
+> >> +int fpga_mgr_write(struct fpga_manager *mgr, const char *buf, size_t count)
+> >> +{
+> >> +     int ret;
+> >> +
+> >> +     if (test_and_set_bit_lock(FPGA_MGR_BUSY, &mgr->flags))
+> >> +             return -EBUSY;
+> >> +
+> >> +     dev_info(mgr->dev, "writing buffer to %s\n", mgr->name);
+> >> +
+> >> +     ret = __fpga_mgr_write(mgr, buf, count);
+> >> +     clear_bit_unlock(FPGA_MGR_BUSY, &mgr->flags);
+> >> +
+> >> +     return ret;
+> >> +}
+> >> +EXPORT_SYMBOL_GPL(fpga_mgr_write);
+> >
+> > Is the EBUSY -- userspace please try again, but you don't know when to
+> > try again -- right interface? I mean, normally kernel would wait, so
+> > that userland does not have to poll?
 > 
-> first of all - there are these kernel-doc warnings.
-> 
-> Info(drivers/staging/fpga/fpga-mgr.c:37): Scanning doc for fpga_mgr_low_level_state
-> Warning(drivers/staging/fpga/fpga-mgr.c:43): No description found for return value of 'fpga_mgr_low_level_state'
-> Info(drivers/staging/fpga/fpga-mgr.c:51): Scanning doc for __fpga_mgr_reset
-> Warning(drivers/staging/fpga/fpga-mgr.c:55): No description found for return value of '__fpga_mgr_reset'
-> Info(drivers/staging/fpga/fpga-mgr.c:69): Scanning doc for fpga_mgr_reset
-> Warning(drivers/staging/fpga/fpga-mgr.c:73): No description found for return value of 'fpga_mgr_reset'
-> Info(drivers/staging/fpga/fpga-mgr.c:88): Scanning doc for __fpga_mgr_stage_init
-> Warning(drivers/staging/fpga/fpga-mgr.c:92): No description found for return value of '__fpga_mgr_stage_write_init'
-> Info(drivers/staging/fpga/fpga-mgr.c:108): Scanning doc for __fpga_mgr_stage_write
-> Warning(drivers/staging/fpga/fpga-mgr.c:115): No description found for return value of '__fpga_mgr_stage_write'
-> Info(drivers/staging/fpga/fpga-mgr.c:129): Scanning doc for __fpga_mgr_stage_complete
-> Warning(drivers/staging/fpga/fpga-mgr.c:133): No description found for return value of '__fpga_mgr_stage_write_complete'
-> Info(drivers/staging/fpga/fpga-mgr.c:151): Scanning doc for __fpga_mgr_write
-> Warning(drivers/staging/fpga/fpga-mgr.c:158): No description found for return value of '__fpga_mgr_write'
-> Info(drivers/staging/fpga/fpga-mgr.c:173): Scanning doc for fpga_mgr_write
-> Warning(drivers/staging/fpga/fpga-mgr.c:179): No description found for return value of 'fpga_mgr_write'
-> Info(drivers/staging/fpga/fpga-mgr.c:195): Scanning doc for fpga_mgr_firmware_write
-> Warning(drivers/staging/fpga/fpga-mgr.c:204): No description found for return value of 'fpga_mgr_firmware_write'
-> Info(drivers/staging/fpga/fpga-mgr.c:234): Scanning doc for fpga_mgr_name
-> Warning(drivers/staging/fpga/fpga-mgr.c:239): No description found for return value of 'fpga_mgr_name'
-> Info(drivers/staging/fpga/fpga-mgr.c:414): Scanning doc for fpga_mgr_register
-> Warning(drivers/staging/fpga/fpga-mgr.c:423): No description found for return value of 'fpga_mgr_register'
-> Info(drivers/staging/fpga/fpga-mgr.c:480): Scanning doc for fpga_mgr_remove
-> Warning(drivers/staging/fpga/fpga-mgr.c:484): No description found for parameter 'pdev'
-> Warning(drivers/staging/fpga/fpga-mgr.c:484): Excess function parameter 'dev' description in 'fpga_mgr_remove'
+> Custom locking schemes are just wrong. A mutex is the right thing to
+> do here and then an -EBUSY isn't required.
 > 
 
-I see the warnings now.  I wasn't using the '-v' option for kernel-doc.
-Fixed in v6.
+I've changed it to a mutex in the next version.
 
-> > diff --git a/drivers/staging/fpga/Makefile b/drivers/staging/fpga/Makefile
-> > new file mode 100644
-> > index 0000000..ff6c677
-> > --- /dev/null
-> > +++ b/drivers/staging/fpga/Makefile
-> > @@ -0,0 +1,10 @@
-> > +#
-> > +# Makefile for the fpga framework and fpga manager drivers.
-> > +#
-> > +
-> > +fpga-mgr-core-y += fpga-mgr.o
+> >
+> >> +static ssize_t fpga_mgr_firmware_store(struct device *dev,
+> >> +                                    struct device_attribute *attr,
+> >> +                                    const char *buf, size_t count)
+> >> +{
+> >> +     struct fpga_manager *mgr = dev_get_drvdata(dev);
+> >> +     unsigned int len;
+> >> +     char image_name[NAME_MAX];
 > 
-> remove this line - it is unused.
+> Hard coding a string length is a warning sign. That is the sort of
+> thing that can memdup() or strdup() can handle.
 > 
 
-OK
-
-> > +static int __init fpga_mgr_dev_init(void)
-> > +{
-> > +	pr_info("FPGA Manager framework driver\n");
-> > +
-> > +	fpga_mgr_class = class_create(THIS_MODULE, "fpga_manager");
-> > +	if (IS_ERR(fpga_mgr_class))
-> > +		return PTR_ERR(fpga_mgr_class);
-> > +
-> > +	fpga_mgr_class->dev_groups = fpga_mgr_groups;
-> 
-> 
-> Write this here.
->        if (IS_ENABLED(CONFIG_FPGA_MGR_SYSFS)) {
->              fpga_mgr_class->dev_groups = fpga_mgr_groups;
->        }
-> 
-> I have tested it and it is working just fine. You can compile this
-> driver with SYSFS=n
-> The whole code is built and config option just export it.
-> I think it is better than having #if there.
-> 
-> Greg: Is there any problem with this solution?
-> 
-
-I'm cool with this myself.  I'll add in v6.
-
-> BTW: I have pushed my branch to zero day testing system to get better coverage
-> 
-
-Michal, I've already done that with each submission.  Assuming you are
-referring to the kbuild test robot.
+OK, I'll fix it using kstrdup() in v6.
 
 Alan
-
-> Thanks,
-> Michal
-> 
-> 
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
