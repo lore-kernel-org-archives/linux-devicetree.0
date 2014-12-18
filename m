@@ -1,127 +1,63 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 5/8] watchdog: bindings: Provide ST bindings for ST's LPC
- Watchdog device
-Date: Thu, 18 Dec 2014 09:28:44 +0000
-Message-ID: <20141218092844.GB4525@x1>
-References: <1418834727-1602-1-git-send-email-lee.jones@linaro.org>
- <2894129.AmAkgPJPNf@wuerfel>
- <20141218090404.GU13885@x1>
- <1554161.vPuSVrZM0j@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1554161.vPuSVrZM0j@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-kernel@lists.infradead.org, a.zummo@towertech.it, kernel@stlinux.com, rtc-linux@googlegroups.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, wim@iguana.be, linux@roeck-us.net, linux-watchdog@vger.kernel.org
+From: Lukasz Majewski <l.majewski@samsung.com>
+Subject: [PATCH 0/9] hwmon: thermal: Odroid U3: Provide support for Odroid U3
+ fan
+Date: Thu, 18 Dec 2014 11:13:02 +0100
+Message-ID: <1418897591-18332-1-git-send-email-l.majewski@samsung.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Eduardo Valentin <edubezval@gmail.com>, Kamil Debski <k.debski@samsung.com>, Jean Delvare <jdelvare@suse.de>, Guenter Roeck <linux@roeck-us.net>
+Cc: lm-sensors@lm-sensors.org, Linux PM list <linux-pm@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Lukasz Majewski <l.majewski@majess.pl>, Kukjin Kim <kgene.kim@samsung.com>, linux-kernel@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Lukasz Majewski <l.majewski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 18 Dec 2014, Arnd Bergmann wrote:
+Presented patches add support for Odroid's U3 optional CPU FAN, which uses PWM
+subsystem for low level control.
 
-> On Thursday 18 December 2014 09:04:04 Lee Jones wrote:
-> > We=20
-> > On Thu, 18 Dec 2014, Arnd Bergmann wrote:
-> >=20
-> > > On Thursday 18 December 2014 08:13:34 Lee Jones wrote:
-> > > > On Wed, 17 Dec 2014, Arnd Bergmann wrote:
-> > > >=20
-> > > > > On Wednesday 17 December 2014 16:45:24 Lee Jones wrote:
-> > > > > > +- compatible   : Must be one of: "st,stih407-lpc" "st,stih=
-416-lpc"
-> > > > > > +                                 "st,stih415-lpc" "st,stid=
-127-lpc"
-> > > > > > +- reg          : LPC registers base address + size
-> > > > > > +- interrupts    : LPC interrupt line number and associated=
- flags
-> > > > > > +- clocks       : Clock used by LPC device (See: ../clock/c=
-lock-bindings.txt)
-> > > > > > +- st,lpc-mode  : The LPC can run either one of two modes S=
-T_LPC_MODE_RTC [0] or
-> > > > > > +                 ST_LPC_MODE_WDT [1].  One (and only one) =
-mode must be
-> > > > > > +                 selected.
-> > > > > >=20
-> > > > >=20
-> > > > > I'm glad you got it to work with two drivers for the same dev=
-ice.
-> > > > >=20
-> > > > > With this binding, I'm still a bit unhappy about the st,lpc-m=
-ode property,
-> > > > > in particular since you rely on a shared include file for som=
-ething that
-> > > > > can only be set in one way or another and always has to be pr=
-esent.
-> > > > >=20
-> > > > > Why not just use a boolean property that enforces one mode wh=
-en present
-> > > > > and another mode when absent?
-> > > >=20
-> > > > There is nothing stopping me from doing that, and it was a
-> > > > consideration.  I concluded that this method would be more expl=
-icit
-> > > > however.  Both when describing our choices in DT and at a funct=
-ional
-> > > > level within each of the drivers.
-> > > >=20
-> > > > Let me know if you fundamentally disagree and I can fix-up.
-> > >=20
-> > > I generally don't like  header files that define interfaces betwe=
-en C code
-> > > and DT nodes. There are cases where it's the least ugly solution,=
- but I don't
-> > > think this is one of them.
-> > >=20
-> > > If you want to be more explicit about the modes, how about having=
- one
-> > > boolean property per mode? That would also allow devices that cou=
-ld be
-> > > driven in either mode, e.g. if you have only one instance of this=
- device.
-> >=20
-> > Isn't this was you suggested above?
->=20
-> My first suggestion was to just have one boolean property, and use on=
-e
-> driver if that is absent. The second one was to have two (or three) s=
-eparate
-> boolean properties that each refer to whether a particular driver is =
-allowed
-> to use this device or not.
->=20
-> > But as I briefly mentioned to you elsewhere, there are actually 3
-> > devices (Watchdog, RTC and Global Timer).  How would you like to
-> > handle that with a Boolean property when we introduce this new driv=
-er?
->=20
-> Right, this would require having more than one property, but I still =
-think
-> it's better than the header file.
+After successful probe it registers itself as a cooling device for thermal
+subsystem. To preserve ability to use this fan as a PWM device a stub for
+thermal_of_cooling_device_register() has been added.
 
-I'll put my point across just once and then become subservient once
-more.  I don't agree that defining 3 properties is better than
-creating just 1.  We have lots of properties containing indexes and
-flags.  Just because we've decided to #define them in order to read
-them easily shouldn't detract from the fact that it's a better setup.
+Moreover, some entries to device tree description for Exynos4412 and in
+particular Odroid U3 have been added.
 
-  st,lpc-mode <1|2|3>;
+Those patches were tested on Exynos4412 - Odroid U3 board.
 
-Must be better than:
+Patches were applied on:
 
-    st,lpc-globaltimer-mode;
-    st,lpc-watchdog-mode;
-    st,lpc-rtc-mode;
+linux-soc-thermal/next branch
+SHA1: c42c7a44c7a543dcb388c1ee1a798e6ed76ad8cf
 
-If each of the drivers only checks for it's own property and fails to
-probe if it's not present how will we detect and warn about a lack of
-any of the 3 properties without a central, all-knowing (MFD) driver?=20
+with following preceding patch series:
+'thermal: exynos: Thermal code rework to use device tree'
+http://www.spinics.net/lists/linux-samsung-soc/msg37719.html
 
-This is likely to cause someone [why isn't my driver probing] issues
-and subsequently waste valuable engineering time in the future.
+Presented code utilize reworked Exynos thermal subsystem.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+
+Kamil Debski (1):
+  ARM: dts: Add pwm-fan node to the Odroid-U3 board
+
+Lukasz Majewski (8):
+  thermal: Provide stub for thermal_of_cooling_device_register()
+    function
+  hwmon: dts: Doc: Add DTS doc to explain how to use PWM FAN as a
+    cooling device
+  hwmon: thermal: dts: Add properties to use pwm-fan device as a cooling
+    device in Odroid U3
+  hwmon: thermal: Extract __set_pwm() function to only modify PWM duty
+    cycle
+  hwmon: thermal: Read PWM FAN configuration from device tree
+  hwmon: thermal: Code for using PWM FAN as a cooling device
+  hwmon: thermal: Provide 'default-pulse-width' property to setup FAN on
+    boot
+  hwmon: thermal: dts: Disable FAN on boot on the Odroid U3
+
+ .../devicetree/bindings/hwmon/pwm-fan.txt          |  28 +++
+ arch/arm/boot/dts/exynos4.dtsi                     |   2 +-
+ arch/arm/boot/dts/exynos4412-odroidu3.dts          |  45 +++++
+ drivers/hwmon/pwm-fan.c                            | 195 +++++++++++++++++----
+ include/linux/thermal.h                            |  14 +-
+ 5 files changed, 249 insertions(+), 35 deletions(-)
+
+-- 
+2.0.0.rc2
+
