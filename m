@@ -1,34 +1,72 @@
 From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 1/2] tty: serial: 8250_mtk: Add earlycon
-Date: Thu, 18 Dec 2014 10:12:33 +0100
-Message-ID: <1822504.xkcBG8sz41@wuerfel>
-References: <1418891601-53769-1-git-send-email-eddie.huang@mediatek.com> <1418891601-53769-2-git-send-email-eddie.huang@mediatek.com> <CABuKBe+dki5ab8PexMhq36AJFCBk_dBifV86F8FKsF_es1cmJA@mail.gmail.com>
+Subject: Re: [PATCH 5/8] watchdog: bindings: Provide ST bindings for ST's LPC Watchdog device
+Date: Thu, 18 Dec 2014 10:15:24 +0100
+Message-ID: <1554161.vPuSVrZM0j@wuerfel>
+References: <1418834727-1602-1-git-send-email-lee.jones@linaro.org> <2894129.AmAkgPJPNf@wuerfel> <20141218090404.GU13885@x1>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CABuKBe+dki5ab8PexMhq36AJFCBk_dBifV86F8FKsF_es1cmJA@mail.gmail.com>
+In-Reply-To: <20141218090404.GU13885@x1>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Eddie Huang <eddie.huang@mediatek.com>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, srv_heupstream <srv_heupstream@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Jiri Slaby <jslaby@suse.cz>, Alan Cox <alan@linux.intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-serial@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Yingjoe Chen <yingjoe.chen@mediatek.com>, YH Chen =?utf-8?B?KOmZs+aYseixqik=?= <yh.chen@mediatek.com>
+To: Lee Jones <lee.jones@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, a.zummo@towertech.it, kernel@stlinux.com, rtc-linux@googlegroups.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, wim@iguana.be, linux@roeck-us.net, linux-watchdog@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 18 December 2014 09:48:31 Matthias Brugger wrote:
-> > +static void __init mtk8250_serial_putc(struct uart_port *port, int c)
-> > +{
-> > +       while ((readl(port->membase + (UART_LSR << 2)) & BOTH_EMPTY) !=
-> > +               BOTH_EMPTY)
-> > +               ;
+On Thursday 18 December 2014 09:04:04 Lee Jones wrote:
+> We 
+> On Thu, 18 Dec 2014, Arnd Bergmann wrote:
 > 
-> Please delete newline before the semicolon.
+> > On Thursday 18 December 2014 08:13:34 Lee Jones wrote:
+> > > On Wed, 17 Dec 2014, Arnd Bergmann wrote:
+> > > 
+> > > > On Wednesday 17 December 2014 16:45:24 Lee Jones wrote:
+> > > > > +- compatible   : Must be one of: "st,stih407-lpc" "st,stih416-lpc"
+> > > > > +                                 "st,stih415-lpc" "st,stid127-lpc"
+> > > > > +- reg          : LPC registers base address + size
+> > > > > +- interrupts    : LPC interrupt line number and associated flags
+> > > > > +- clocks       : Clock used by LPC device (See: ../clock/clock-bindings.txt)
+> > > > > +- st,lpc-mode  : The LPC can run either one of two modes ST_LPC_MODE_RTC [0] or
+> > > > > +                 ST_LPC_MODE_WDT [1].  One (and only one) mode must be
+> > > > > +                 selected.
+> > > > > 
+> > > > 
+> > > > I'm glad you got it to work with two drivers for the same device.
+> > > > 
+> > > > With this binding, I'm still a bit unhappy about the st,lpc-mode property,
+> > > > in particular since you rely on a shared include file for something that
+> > > > can only be set in one way or another and always has to be present.
+> > > > 
+> > > > Why not just use a boolean property that enforces one mode when present
+> > > > and another mode when absent?
+> > > 
+> > > There is nothing stopping me from doing that, and it was a
+> > > consideration.  I concluded that this method would be more explicit
+> > > however.  Both when describing our choices in DT and at a functional
+> > > level within each of the drivers.
+> > > 
+> > > Let me know if you fundamentally disagree and I can fix-up.
+> > 
+> > I generally don't like  header files that define interfaces between C code
+> > and DT nodes. There are cases where it's the least ugly solution, but I don't
+> > think this is one of them.
+> > 
+> > If you want to be more explicit about the modes, how about having one
+> > boolean property per mode? That would also allow devices that could be
+> > driven in either mode, e.g. if you have only one instance of this device.
 > 
+> Isn't this was you suggested above?
 
-No, that newline is best kept in there for clarity. An even better way
-to write this would be using cpu_relax():
+My first suggestion was to just have one boolean property, and use one
+driver if that is absent. The second one was to have two (or three) separate
+boolean properties that each refer to whether a particular driver is allowed
+to use this device or not.
 
-	while ((readl(port->membase + (UART_LSR << 2)) & BOTH_EMPTY) != BOTH_EMPTY)
-		cpu_relax();
+> But as I briefly mentioned to you elsewhere, there are actually 3
+> devices (Watchdog, RTC and Global Timer).  How would you like to
+> handle that with a Boolean property when we introduce this new driver?
 
-which the kernel convention for doing busy-loops.
+Right, this would require having more than one property, but I still think
+it's better than the header file.
 
 	Arnd
