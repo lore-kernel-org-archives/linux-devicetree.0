@@ -1,7 +1,7 @@
 From: gyungoh@gmail.com
-Subject: [PATCH v10 3/6] devicetree: mfd: Add new SKY81452 mfd binding
-Date: Thu, 18 Dec 2014 14:47:48 +0900
-Message-ID: <1418881671-3495-4-git-send-email-jack.yoo@skyworksinc.com>
+Subject: [PATCH v10 6/6] devicetree: i2c: Add SKY81452 to the Trivial Devices list
+Date: Thu, 18 Dec 2014 14:47:51 +0900
+Message-ID: <1418881671-3495-7-git-send-email-jack.yoo@skyworksinc.com>
 References: <1418881671-3495-1-git-send-email-jack.yoo@skyworksinc.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1418881671-3495-1-git-send-email-jack.yoo@skyworksinc.com>
@@ -21,7 +21,7 @@ Changes v9:
 Nothing
 
 Changes v8:
-Made up the example for backlight DT
+Nothing
 
 Changes v7:
 Nothing
@@ -30,8 +30,7 @@ Changes v6:
 Nothing
 
 Changes v5:
-Changed DT for regulator : 'lout' node should be defined under 'regulator'
-Removed compatible string from sky81452-regulator driver
+Nothing
 
 Changes v4:
 Nothing
@@ -40,53 +39,22 @@ Changes v3:
 Nothing
 
 Changes v2:
-Added reg attribute for I2C slave address
+Add SKY81452 to the Trivial Devices list
 
- Documentation/devicetree/bindings/mfd/sky81452.txt | 36 ++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/sky81452.txt
+ Documentation/devicetree/bindings/i2c/trivial-devices.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/mfd/sky81452.txt b/Documentation/devicetree/bindings/mfd/sky81452.txt
-new file mode 100644
-index 0000000..ab71473
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/sky81452.txt
-@@ -0,0 +1,36 @@
-+SKY81452 bindings
-+
-+Required properties:
-+- compatible	: Must be "skyworks,sky81452"
-+- reg		: I2C slave address
-+
-+Required child nodes:
-+- backlight	: container node for backlight following the binding
-+		in video/backlight/sky81452-backlight.txt
-+- regulator	: container node for regulators following the binding
-+		in regulator/sky81452-regulator.txt
-+
-+Example:
-+
-+	sky81452@2c {
-+		compatible = "skyworks,sky81452";
-+		reg = <0x2c>;
-+
-+		backlight {
-+			compatible = "skyworks,sky81452-backlight";
-+			name = "pwm-backlight";
-+			skyworks,en-channels = <0x3f>;
-+			skyworks,ignore-pwm;
-+			skyworks,phase-shift;
-+			skyworks,ovp-level = <20>;
-+			skyworks,current-limit = <2300>;
-+		};
-+
-+		regulator {
-+			lout {
-+				regulator-name = "sky81452-lout";
-+				regulator-min-microvolt = <4500000>;
-+				regulator-max-microvolt = <8000000>;
-+			};
-+		};
-+	};
+diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+index fbde415..122fa1e 100644
+--- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
++++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+@@ -77,6 +77,7 @@ ramtron,24c64		i2c serial eeprom  (24cxx)
+ ricoh,rs5c372a		I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
+ samsung,24ad0xd1	S524AD0XF1 (128K/256K-bit Serial EEPROM for Low Power)
+ sii,s35390a		2-wire CMOS real-time clock
++skyworks,sky81452	Skyworks SKY81452: Six-Channel White LED Driver with Touch Panel Bias Supply
+ st-micro,24c256		i2c serial eeprom  (24cxx)
+ stm,m41t00		Serial Access TIMEKEEPER
+ stm,m41t62		Serial real-time clock (RTC) with alarm
 -- 
 1.9.1
