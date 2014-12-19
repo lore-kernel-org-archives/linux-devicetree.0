@@ -1,49 +1,69 @@
-From: Bjorn Andersson <bjorn@kryo.se>
-Subject: Re: [PATCH] mmc: dt: Add property for broken hs200 quirk
-Date: Fri, 19 Dec 2014 12:01:44 -0800
-Message-ID: <CAJAp7OhSZ7CZedXAsWPf0XYv8RESQxXe4L1LZjOmVW4nGpFiHw@mail.gmail.com>
-References: <1418412516-10682-1-git-send-email-bjorn.andersson@sonymobile.com>
-	<CAPDyKFrPC_MphsLHHZ=uFjcF8SsdkVmzez9R=gas7_ihn63Q5A@mail.gmail.com>
+From: Benoit Parrot <bparrot@ti.com>
+Subject: [Patch v5 0/2] gpio: add GPIO hogging mechanism
+Date: Fri, 19 Dec 2014 14:07:49 -0600
+Message-ID: <1419019671-25377-1-git-send-email-bparrot@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFrPC_MphsLHHZ=uFjcF8SsdkVmzez9R=gas7_ihn63Q5A@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Anton Vorontsov <anton@enomsg.org>, Chris Ball <chris@printf.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "open list:SECURE DIGITAL HO..." <linux-mmc@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Alexandre Courbot <gnurou@gmail.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Jiri Prchal <jiri.prchal@aksignal.cz>, Pantelis Antoniou <panto@antoniou-consulting.com>, Benoit Parrot <bparrot@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 19, 2014 at 3:38 AM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
-> On 12 December 2014 at 20:28, Bjorn Andersson
-> <bjorn.andersson@sonymobile.com> wrote:
->
-> Some more explanation to why this needed would be good.
->
+This patch set re-introduces the gpio hogging concept first 
+presented by Boris Brezillion.
+This patch set provides a way to initially configure specific GPIO
+when the GPIO controller is probed.
 
-Because (according to the git log) some of the memories that we
-mounted in Xperia Z1 does not support HS200 even though they advertise
-they are.
+The actual DT scanning to collect the GPIO specific data is performed
+as part of of_gpiochip_add().
 
-I thought we needed for the device I'm testing with, but a couple of
-regulator_set_optimum_mode() solved that - so I have to provide a
-patch for that as well...
+The purpose of this is to allow specific GPIOs to be configured
+without any driver specific code.
+This is particularly useful because board design are getting
+increasingly complex and given SoC pins can now have more
+than 10 mux values a lot of connections are now dependent on
+external IO muxes to switch various modes.
 
->> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
->> ---
->>  Documentation/devicetree/bindings/mmc/mmc.txt | 2 ++
->
-> This file lists the generic mmc DT bindings, but you want to add a
-> specific binding for sdhci?
->
+Specific drivers should not necessarily need to be aware of
+what accounts to a specific board implementation. This board level
+"description" should be best kept as part of the dts file.
 
-Looking in sdhci_get_of_property() it's a mash of device specific
-properties, sdhci specific properties documented in mmc.txt and
-generic sdhci properties documented in device specific bindings.
+Changes since v4:
+ * Addressed review comments from Alexandre Courbot
 
-Would you like me to move it to a generic sdhci.txt binding and update
-the individual sdhci-* to reference that instead of mmc.txt? Or should
-I just add the property in the device specific bindings? Or maybe we
-could keep it as a optional property in mmc.txt?
+Changes since v3:
+ * Relocated the non-DT "hog" function to gpiolib.c.
+ * Rename some of the function to be clearer and remove _ prefixes.
+ * Replace the gpiod_request/gpiod_put usage with
+   gpiochip_request_own_desc/free_own_desc version instead.
+ * Refactor some of the logic to better handle error condition/reporting
+ * Renamed the "direction" DT properties to "state".
 
-Regards,
-Bjorn
+Changes since v2:
+ * Refactor the gpio-hog mechanism to split the DT related action
+   from the actual "hogging" operation.
+ * This allows non-DT providers to implement hogs as well.
+ * Added FLAG_IS_HOGGED to mark hogged gpio and make gpiochip removal
+   able to release hogged gpio.
+ * Similarly to the hogging, the cleanup is performed as part of
+   of_gpiochip_remove
+
+Changes since v1:
+ * Split the devicetree bindings documentation in its own patch.
+ * Refactor the gpio-hog mechanism as private functions meant to
+   be to invoked from of_gpiochip_add().
+
+Benoit Parrot (2):
+  gpio: add GPIO hogging mechanism
+  gpio: Document GPIO hogging mechanism
+
+ Documentation/devicetree/bindings/gpio/gpio.txt |  23 +++++
+ drivers/gpio/gpiolib-of.c                       | 118 ++++++++++++++++++++++
+ drivers/gpio/gpiolib.c                          | 128 ++++++++++++++++++++----
+ drivers/gpio/gpiolib.h                          |   3 +
+ 4 files changed, 252 insertions(+), 20 deletions(-)
+
+-- 
+1.8.5.1
+
