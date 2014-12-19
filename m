@@ -1,144 +1,57 @@
-From: Lukasz Majewski <l.majewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 2/9] hwmon: dts: Doc: Add DTS doc to explain how to use PWM
- FAN as a cooling device
-Date: Fri, 19 Dec 2014 17:25:58 +0100
-Message-ID: <20141219172558.6216c1cd@amdc2363>
-References: <1418897591-18332-1-git-send-email-l.majewski@samsung.com>
- <1418897591-18332-3-git-send-email-l.majewski@samsung.com>
- <5492E46C.3080100@roeck-us.net>
+From: <atull@opensource.altera.com>
+Subject: [PATCH v7 0/4] FPGA Manager Framework
+Date: Fri, 19 Dec 2014 10:45:47 -0600
+Message-ID: <1419007551-10040-1-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <5492E46C.3080100-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, Linux PM list <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lukasz Majewski <l.majewski-AM3owJQeAb5mR6Xm/wNWPw@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: gregkh@linuxfoundation.org, jgunthorpe@obsidianresearch.com, hpa@zytor.com, monstr@monstr.eu, michal.simek@xilinx.com, rdunlap@infradead.org
+Cc: mark.rutland@arm.com, linux-doc@vger.kernel.org, rubini@gnudd.com, pantelis.antoniou@konsulko.com, s.trumtrar@pengutronix.de, devel@driverdev.osuosl.org, sameo@linux.intel.com, nico@linaro.org, ijc+devicetree@hellion.org.uk, kyle.teske@ni.com, grant.likely@linaro.org, davidb@codeaurora.org, linus.walleij@linaro.org, cesarb@cesarb.net, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, iws@ovro.caltech.edu, Alan Tull <atull@opensource.altera.com>, broonie@kernel.org, philip@balister.org, dinguyen@opensource.altera.com, pavel@denx.de, yvanderv@opensource.altera.com, linux-kernel@vger.kernel.org, balbi@ti.com, delicious.quinoa@gmail.com, robh+dt@kernel.org, rob@landley.net, galak@codeaurora.org, akpm@linux-foundation.org, davem@davemloft.net, m.chehab@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Guenter,
+From: Alan Tull <atull@opensource.altera.com>
 
-> On 12/18/2014 02:13 AM, Lukasz Majewski wrote:
-> > Several new properties to allow PWM fan working as a cooling device
-> > have been combined into this single commit.
-> >
-> > Signed-off-by: Lukasz Majewski <l.majewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> > ---
-> >   .../devicetree/bindings/hwmon/pwm-fan.txt          | 28
-> > ++++++++++++++++++++++ 1 file changed, 28 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/hwmon/pwm-fan.txt
-> > b/Documentation/devicetree/bindings/hwmon/pwm-fan.txt index
-> > 610757c..3877810 100644 ---
-> > a/Documentation/devicetree/bindings/hwmon/pwm-fan.txt +++
-> > b/Documentation/devicetree/bindings/hwmon/pwm-fan.txt @@ -3,10
-> > +3,38 @@ Bindings for a fan connected to the PWM lines Required
-> > properties:
-> >   - compatible	: "pwm-fan"
-> >   - pwms		: the PWM that is used to control the PWM
-> > fan +- cooling-pwm-values      : PWM duty cycle values relative to
-> > +			    cooling-max-pwm-value correspondig to
-> > +			    proper cooling states
-> 
-> I don't understand what you mean with "relative to". Please elaborate.
-> Do you mean "associated with" ?
+For after 3.19-rc1 is out.
 
-I meant that cooling-pwm-values is no greater than
-cooling-max-pwm-value (which was present in some earlier version of
-this patch and had value of 255).
+v7 adds a one line fix from the kbuild test robot and
+Michal Simek's signoff.  
 
-This description is wrong and will be reworded.
+Thanks,
+Alan
 
-> 
-> Where is "cooling-max-pwm-value" defined, 
+Alan Tull (4):
+  doc: add bindings document for altera fpga manager
+  fpga manager: add sysfs interface document
+  staging: fpga manager: framework core
+  staging: fpga manager: add driver for socfpga fpga manager
 
-It was present in some early version of this patch.
-
-> and how is this all expected
-> to relate to the maximum duty cycle value provided by the pwm device ?
-> 
-> > +- default-pulse-width     : Property specifying default pulse
-> > width for FAN
-> > +			    at system boot (zero to disable FAN on
-> > boot).
-> > +			    Allowed range is 0 to 255
-> 
-> You'll need dt maintainer approval for the new properties.
-
-I'm wondering how this patch series will get merged. It touches three
-different subsystems (thermal, hwmon and device tree for Exynos). 
-
-For me it would be best to use thermal tree (hence Odroid U3 fan is
-supposed to work as a cooling device) with ACKs from other subsystems
-maintainers.
-
-> 
-> One thing I wonder about though is why you use "default-pulse-width"
-> and not "default-pwm". Seems to be arbitrary. I don't see
-> "pulse-width" used anywhere in the upstream kernel.
-
-Believe or not I've also considered the default-pwm name.
-
-> 
-> I am somewhat concerned that you define the new properties as
-> mandatory. That means existing configurations will fail, which does
-> not seem to be a good idea. It would be more appropriate to not
-> configure the thermal device if the new properties are not provided.
-
-Very good point. I will do that for v2.
-
-> 
-> The newly introduced semantics also conflicts with the current
-> semantics, which sets the initial duty cycle initially to the maximum
-> allowed duty cycle as reported by the pwm device itself.
-
-Ok. I will stick to above policy and then the "default-pulse-width"
-property can be removed.
-
-> 
-> Guenter
-> 
-> > +
-> > +Thorough description of the following bindings:
-> > +		cooling-min-state = <0>;
-> > +		cooling-max-state = <3>;
-> > +		#cooling-cells = <2>;
-> > +		thermal-zone {
-> > +			cpu_thermal: cpu-thermal {
-> > +			cooling-maps {
-> > +				map0 {
-> > +				     trip = <&cpu_alert1>;
-> > +				     cooling-device = <&fan0 0 1>;
-> > +				};
-> > +			};
-> > +		};
-> > +
-> > +for PWM FAN used as cooling device can be found at:
-> > +./Documentation/devicetree/bindings/thermal/thermal.txt
-> >
-> >   Example:
-> >   	pwm-fan {
-> >   		compatible = "pwm-fan";
-> >   		status = "okay";
-> >   		pwms = <&pwm 0 10000 0>;
-> > +		cooling-min-state = <0>;
-> > +		cooling-max-state = <3>;
-> > +		#cooling-cells = <2>;
-> > +		cooling-pwm-values = <0 102 170 255>;
-> > +		default-pulse-width = <0>;
-> >   	};
-> >
-> 
-
-
+ drivers/staging/Kconfig                            |    2 +
+ drivers/staging/Makefile                           |    1 +
+ .../Documentation/ABI/sysfs-class-fpga-manager     |   38 ++
+ .../Documentation/bindings/altera-fpga-mgr.txt     |   17 +
+ drivers/staging/fpga/Kconfig                       |   29 +
+ drivers/staging/fpga/Makefile                      |    9 +
+ drivers/staging/fpga/fpga-mgr.c                    |  551 ++++++++++++++++
+ drivers/staging/fpga/socfpga.c                     |  694 ++++++++++++++++++++
+ include/linux/fpga/fpga-mgr.h                      |  124 ++++
+ 9 files changed, 1465 insertions(+)
+ create mode 100644 drivers/staging/fpga/Documentation/ABI/sysfs-class-fpga-manager
+ create mode 100644 drivers/staging/fpga/Documentation/bindings/altera-fpga-mgr.txt
+ create mode 100644 drivers/staging/fpga/Kconfig
+ create mode 100644 drivers/staging/fpga/Makefile
+ create mode 100644 drivers/staging/fpga/fpga-mgr.c
+ create mode 100644 drivers/staging/fpga/socfpga.c
+ create mode 100644 include/linux/fpga/fpga-mgr.h
 
 -- 
-Best regards,
-
-Lukasz Majewski
-
-Samsung R&D Institute Poland (SRPOL) | Linux Platform Group
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.9.5
