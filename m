@@ -1,99 +1,103 @@
 From: atull <atull@opensource.altera.com>
-Subject: Re: [PATCH v6 0/4] FPGA Manager Framework
-Date: Fri, 19 Dec 2014 09:47:26 -0600
-Message-ID: <alpine.DEB.2.02.1412190945490.16892@linuxheads99>
-References: <1418941748-16111-1-git-send-email-atull@opensource.altera.com>
- <5901b1791e1c4b09b72cb22c5eca68ca@BL2FFO11FD047.protection.gbl>
- <20141219153828.GA19077@kroah.com>
+Subject: Re: [PATCH v6 4/4] staging: fpga manager: add driver for socfpga
+ fpga manager
+Date: Fri, 19 Dec 2014 09:55:34 -0600
+Message-ID: <alpine.DEB.2.02.1412190955090.16892@linuxheads99>
+References: <1418941748-16111-1-git-send-email-atull@opensource.altera.com> <1418941748-16111-5-git-send-email-atull@opensource.altera.com> <20141219085516.GF13070@pengutronix.de> <2d65a072f8c14d1e839307465f177a1a@BY2FFO11FD046.protection.gbl>
+ <20141219150714.GG13070@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20141219153828.GA19077@kroah.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: mark.rutland@arm.com, linux-doc@vger.kernel.org, rubini@gnudd.com, pantelis.antoniou@konsulko.com, hpa@zytor.com, s.trumtrar@pengutronix.de, devel@driverdev.osuosl.org, sameo@linux.intel.com, nico@linaro.org, iws@ovro.caltech.edu, Michal Simek <michal.simek@xilinx.com>, kyle.teske@ni.com, jgunthorpe@obsidianresearch.com, grant.likely@linaro.org, davidb@codeaurora.org, linus.walleij@linaro.org, cesarb@cesarb.net, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, broonie@kernel.org, philip@balister.org, akpm@linux-foundation.org, monstr@monstr.eu, pavel@denx.de, yvanderv@opensource.altera.com, linux-kernel@vger.kernel.org, balbi@ti.com, davem@davemloft.net, robh+dt@kernel.org, rob@landley.net, galak@codeaurora.org, dinguyen@opensource.altera.com, delicious.quinoa@gmail.com, m.chehab@samsung.com
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20141219150714.GG13070@pengutronix.de>
+Sender: linux-doc-owner@vger.kernel.org
+To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Cc: Michal Simek <michal.simek@xilinx.com>, gregkh@linuxfoundation.org, jgunthorpe@obsidianresearch.com, hpa@zytor.com, monstr@monstr.eu, rdunlap@infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, pantelis.antoniou@konsulko.com, robh+dt@kernel.org, grant.likely@linaro.org, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, pavel@denx.de, broonie@kernel.org, philip@balister.org, rubini@gnudd.com, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, balbi@ti.com, m.chehab@samsung.com, davidb@codeaurora.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, linus.walleij@linaro.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devel@driverdev.osuosl.org, delicious.quinoa@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 19 Dec 2014, Greg KH wrote:
+On Fri, 19 Dec 2014, Steffen Trumtrar wrote:
 
-> On Fri, Dec 19, 2014 at 03:20:59PM +0100, Michal Simek wrote:
-> > Hi Greg,
+> On Fri, Dec 19, 2014 at 03:05:50PM +0100, Michal Simek wrote:
+> > On 12/19/2014 09:55 AM, Steffen Trumtrar wrote:
+> > > Hi!
+> > > 
+> > > Just a minor nitpick, but...
+> > > 
+> > > On Thu, Dec 18, 2014 at 04:29:08PM -0600, atull@opensource.altera.com wrote:
+> > >> From: Alan Tull <atull@opensource.altera.com>
+> > >>
+> > >> Add driver to fpga manager framework to allow configuration
+> > >> of FPGA in Altera SoCFPGA parts.
+> > >>
+> > >> Signed-off-by: Alan Tull <atull@opensource.altera.com>
+> > >> Acked-by: Michal Simek <michal.simek@xilinx.com>
+> > >> ---
+> > >> v2: fpga_manager struct now contains struct device
+> > >>     fpga_manager_register parameters now take device
+> > >>
+> > >> v3: skip a version to align versions
+> > >>
+> > >> v4: move to drivers/staging
+> > >>
+> > >> v5: fix array_size.cocci warnings
+> > >>     fix platform_no_drv_owner.cocci warnings
+> > >>     Remove .owner = THIS_MODULE
+> > >>     include asm/irq.h
+> > >>     clean up list of includes
+> > >>     use altera_fpga_reset for ops
+> > >>     use enum fpga_mgr_states or u32 as needed
+> > >>     use devm_request_irq
+> > >>     check irq <= 0 instead of == NO_IRQ
+> > >>     Use ARRAY_SIZE
+> > >>     rename altera -> socfpga
+> > >>     static const socfpga_fpga_ops
+> > >>     header moved to linux/fpga/ folder
+> > >>     remove ifdef'ed code
+> > >>     use platform_get_resource and platform_get_irq
+> > >>     move .probe and .remove lines adjacent
+> > >>     use module_platform_driver
+> > >>     use __maybe_unused
+> > >>     only need to 'if (IS_ENABLED(CONFIG_REGULATOR))' in one fn
+> > >>     fix "unsigned 'mode' is never < 0"
+> > >>
+> > >> v6: return error for (unused) default of case statement
+> > >> ---
+> > >   ^^^
+> > > 
+> > > ...if you remove these, than that changelog will not land in the final
+> > > commit which I would prefer. Nobody cares for the changelog of a
+> > > patch once it is in its final state. And this is a rather noisy one.
+> > > When someone in the future looks at this, he will see two lines of
+> > > information and 10 times that of uninteresting noise.
+> > > 
+> > > Not a dealbreaker, but just something to consider for future patches.
 > > 
-> > On 12/18/2014 11:29 PM, atull@opensource.altera.com wrote:
-> > > From: Alan Tull <atull@opensource.altera.com>
-> > > 
-> > > Dropping the changes to socfpga DTS and defconfig from this
-> > > patch set.
-> > > 
-> > > Kernel doc fixes and other minor fixes as listed in the patches.
-> > > 
-> > > Alan
-> > > 
-> > > Alan Tull (4):
-> > >   doc: add bindings document for altera fpga manager
-> > >   fpga manager: add sysfs interface document
-> > >   staging: fpga manager: framework core
-> > >   staging: fpga manager: add driver for socfpga fpga manager
-> > > 
-> > >  drivers/staging/Kconfig                            |    2 +
-> > >  drivers/staging/Makefile                           |    1 +
-> > >  .../Documentation/ABI/sysfs-class-fpga-manager     |   38 ++
-> > >  .../Documentation/bindings/altera-fpga-mgr.txt     |   17 +
-> > >  drivers/staging/fpga/Kconfig                       |   29 +
-> > >  drivers/staging/fpga/Makefile                      |    9 +
-> > >  drivers/staging/fpga/fpga-mgr.c                    |  551 ++++++++++++++++
-> > >  drivers/staging/fpga/socfpga.c                     |  694 ++++++++++++++++++++
-> > >  include/linux/fpga/fpga-mgr.h                      |  124 ++++
-> > >  9 files changed, 1465 insertions(+)
-> > >  create mode 100644 drivers/staging/fpga/Documentation/ABI/sysfs-class-fpga-manager
-> > >  create mode 100644 drivers/staging/fpga/Documentation/bindings/altera-fpga-mgr.txt
-> > >  create mode 100644 drivers/staging/fpga/Kconfig
-> > >  create mode 100644 drivers/staging/fpga/Makefile
-> > >  create mode 100644 drivers/staging/fpga/fpga-mgr.c
-> > >  create mode 100644 drivers/staging/fpga/socfpga.c
-> > >  create mode 100644 include/linux/fpga/fpga-mgr.h
-> > > 
 > > 
-> > I think we have reasonable number of patches which can go to the staging
-> > and we can work on it and extend it. I have xilinx zynq driver in my repository too.
-> > Also I would try to integrate staging/gs_fpgaboot/ because they do just the same
-> > thing. Also char/xilinx_hwicap should be added to this subfolder (and clean a lot).
-> > I am not aware about any other fpga driver in the tree but I didn't grep it
-> > (IRC xillybus targets a little bit different thing). Please let me know if you are
-> > aware about different one.
+> > When you run git-am you will see that changelog is not there.
 > > 
-> > I was talking to Altera guys at ELCE and conclusion was that will be the best to
-> > maintain future drivers/fpga/ together.
-> > It means if there is no problem with this series. Do you want me to add these
-> > patches to any repository at kernel.org and send you pull request?
-> > Or you just prefer to take these patches directly to staging and we will use
-> > separate repository later?
 > 
-> We don't need a whole new repo just for a single driver or a few new
-> files, I'll take these after the new year (can't do anything until
-> 3.19-rc1 is out, and then it is vacation time.)
+> Ah, great. It seems like git-am does indeed know now how to handle this.
+> There are some commits in mainline that have this changelog added,
+> because there where two '---' lines in the patch.
 > 
-> So I'll just take them from patches, no need for a git tree at all.
+> Then go on kind sirs with whatever you where doing and don't pay any
+> attention to my comment... :-)
 > 
-> greg k-h
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Regards,
+> Steffen
 > 
 
-Hi Greg,
-
-Thanks.  There is a one line change that the kbuild test robot has
-pointed out.  I can post v7 with just that change and let that be it.
+git format-patch adds the second ---
 
 Alan
+
+> -- 
+> Pengutronix e.K.                           |                             |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
+> 
