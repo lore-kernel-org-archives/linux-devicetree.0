@@ -1,15 +1,15 @@
-From: Greg KH <gregkh@linuxfoundation.org>
+From: atull <atull@opensource.altera.com>
 Subject: Re: [PATCH v6 0/4] FPGA Manager Framework
-Date: Fri, 19 Dec 2014 07:38:28 -0800
-Message-ID: <20141219153828.GA19077@kroah.com>
+Date: Fri, 19 Dec 2014 09:47:26 -0600
+Message-ID: <alpine.DEB.2.02.1412190945490.16892@linuxheads99>
 References: <1418941748-16111-1-git-send-email-atull@opensource.altera.com>
  <5901b1791e1c4b09b72cb22c5eca68ca@BL2FFO11FD047.protection.gbl>
+ <20141219153828.GA19077@kroah.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <5901b1791e1c4b09b72cb22c5eca68ca@BL2FFO11FD047.protection.gbl>
+In-Reply-To: <20141219153828.GA19077@kroah.com>
 List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
  <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
 List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
@@ -19,67 +19,81 @@ List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driver
  <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
 Errors-To: driverdev-devel-bounces@linuxdriverproject.org
 Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Michal Simek <michal.simek@xilinx.com>
-Cc: mark.rutland@arm.com, linux-doc@vger.kernel.org, rubini@gnudd.com, pantelis.antoniou@konsulko.com, hpa@zytor.com, s.trumtrar@pengutronix.de, devel@driverdev.osuosl.org, sameo@linux.intel.com, nico@linaro.org, iws@ovro.caltech.edu, kyle.teske@ni.com, jgunthorpe@obsidianresearch.com, grant.likely@linaro.org, davidb@codeaurora.org, linus.walleij@linaro.org, cesarb@cesarb.net, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, atull@opensource.altera.com, broonie@kernel.org, philip@balister.org, akpm@linux-foundation.org, monstr@monstr.eu, pavel@denx.de, yvanderv@opensource.altera.com, linux-kernel@vger.kernel.org, balbi@ti.com, davem@davemloft.net, robh+dt@kernel.org, rob@landley.net, galak@codeaurora.org, dinguyen@opensource.altera.com, delicious.quinoa@gmail.com, m.chehab@samsung.com
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: mark.rutland@arm.com, linux-doc@vger.kernel.org, rubini@gnudd.com, pantelis.antoniou@konsulko.com, hpa@zytor.com, s.trumtrar@pengutronix.de, devel@driverdev.osuosl.org, sameo@linux.intel.com, nico@linaro.org, iws@ovro.caltech.edu, Michal Simek <michal.simek@xilinx.com>, kyle.teske@ni.com, jgunthorpe@obsidianresearch.com, grant.likely@linaro.org, davidb@codeaurora.org, linus.walleij@linaro.org, cesarb@cesarb.net, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, broonie@kernel.org, philip@balister.org, akpm@linux-foundation.org, monstr@monstr.eu, pavel@denx.de, yvanderv@opensource.altera.com, linux-kernel@vger.kernel.org, balbi@ti.com, davem@davemloft.net, robh+dt@kernel.org, rob@landley.net, galak@codeaurora.org, dinguyen@opensource.altera.com, delicious.quinoa@gmail.com, m.chehab@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 19, 2014 at 03:20:59PM +0100, Michal Simek wrote:
-> Hi Greg,
-> 
-> On 12/18/2014 11:29 PM, atull@opensource.altera.com wrote:
-> > From: Alan Tull <atull@opensource.altera.com>
-> > 
-> > Dropping the changes to socfpga DTS and defconfig from this
-> > patch set.
-> > 
-> > Kernel doc fixes and other minor fixes as listed in the patches.
-> > 
-> > Alan
-> > 
-> > Alan Tull (4):
-> >   doc: add bindings document for altera fpga manager
-> >   fpga manager: add sysfs interface document
-> >   staging: fpga manager: framework core
-> >   staging: fpga manager: add driver for socfpga fpga manager
-> > 
-> >  drivers/staging/Kconfig                            |    2 +
-> >  drivers/staging/Makefile                           |    1 +
-> >  .../Documentation/ABI/sysfs-class-fpga-manager     |   38 ++
-> >  .../Documentation/bindings/altera-fpga-mgr.txt     |   17 +
-> >  drivers/staging/fpga/Kconfig                       |   29 +
-> >  drivers/staging/fpga/Makefile                      |    9 +
-> >  drivers/staging/fpga/fpga-mgr.c                    |  551 ++++++++++++++++
-> >  drivers/staging/fpga/socfpga.c                     |  694 ++++++++++++++++++++
-> >  include/linux/fpga/fpga-mgr.h                      |  124 ++++
-> >  9 files changed, 1465 insertions(+)
-> >  create mode 100644 drivers/staging/fpga/Documentation/ABI/sysfs-class-fpga-manager
-> >  create mode 100644 drivers/staging/fpga/Documentation/bindings/altera-fpga-mgr.txt
-> >  create mode 100644 drivers/staging/fpga/Kconfig
-> >  create mode 100644 drivers/staging/fpga/Makefile
-> >  create mode 100644 drivers/staging/fpga/fpga-mgr.c
-> >  create mode 100644 drivers/staging/fpga/socfpga.c
-> >  create mode 100644 include/linux/fpga/fpga-mgr.h
-> > 
-> 
-> I think we have reasonable number of patches which can go to the staging
-> and we can work on it and extend it. I have xilinx zynq driver in my repository too.
-> Also I would try to integrate staging/gs_fpgaboot/ because they do just the same
-> thing. Also char/xilinx_hwicap should be added to this subfolder (and clean a lot).
-> I am not aware about any other fpga driver in the tree but I didn't grep it
-> (IRC xillybus targets a little bit different thing). Please let me know if you are
-> aware about different one.
-> 
-> I was talking to Altera guys at ELCE and conclusion was that will be the best to
-> maintain future drivers/fpga/ together.
-> It means if there is no problem with this series. Do you want me to add these
-> patches to any repository at kernel.org and send you pull request?
-> Or you just prefer to take these patches directly to staging and we will use
-> separate repository later?
+On Fri, 19 Dec 2014, Greg KH wrote:
 
-We don't need a whole new repo just for a single driver or a few new
-files, I'll take these after the new year (can't do anything until
-3.19-rc1 is out, and then it is vacation time.)
+> On Fri, Dec 19, 2014 at 03:20:59PM +0100, Michal Simek wrote:
+> > Hi Greg,
+> > 
+> > On 12/18/2014 11:29 PM, atull@opensource.altera.com wrote:
+> > > From: Alan Tull <atull@opensource.altera.com>
+> > > 
+> > > Dropping the changes to socfpga DTS and defconfig from this
+> > > patch set.
+> > > 
+> > > Kernel doc fixes and other minor fixes as listed in the patches.
+> > > 
+> > > Alan
+> > > 
+> > > Alan Tull (4):
+> > >   doc: add bindings document for altera fpga manager
+> > >   fpga manager: add sysfs interface document
+> > >   staging: fpga manager: framework core
+> > >   staging: fpga manager: add driver for socfpga fpga manager
+> > > 
+> > >  drivers/staging/Kconfig                            |    2 +
+> > >  drivers/staging/Makefile                           |    1 +
+> > >  .../Documentation/ABI/sysfs-class-fpga-manager     |   38 ++
+> > >  .../Documentation/bindings/altera-fpga-mgr.txt     |   17 +
+> > >  drivers/staging/fpga/Kconfig                       |   29 +
+> > >  drivers/staging/fpga/Makefile                      |    9 +
+> > >  drivers/staging/fpga/fpga-mgr.c                    |  551 ++++++++++++++++
+> > >  drivers/staging/fpga/socfpga.c                     |  694 ++++++++++++++++++++
+> > >  include/linux/fpga/fpga-mgr.h                      |  124 ++++
+> > >  9 files changed, 1465 insertions(+)
+> > >  create mode 100644 drivers/staging/fpga/Documentation/ABI/sysfs-class-fpga-manager
+> > >  create mode 100644 drivers/staging/fpga/Documentation/bindings/altera-fpga-mgr.txt
+> > >  create mode 100644 drivers/staging/fpga/Kconfig
+> > >  create mode 100644 drivers/staging/fpga/Makefile
+> > >  create mode 100644 drivers/staging/fpga/fpga-mgr.c
+> > >  create mode 100644 drivers/staging/fpga/socfpga.c
+> > >  create mode 100644 include/linux/fpga/fpga-mgr.h
+> > > 
+> > 
+> > I think we have reasonable number of patches which can go to the staging
+> > and we can work on it and extend it. I have xilinx zynq driver in my repository too.
+> > Also I would try to integrate staging/gs_fpgaboot/ because they do just the same
+> > thing. Also char/xilinx_hwicap should be added to this subfolder (and clean a lot).
+> > I am not aware about any other fpga driver in the tree but I didn't grep it
+> > (IRC xillybus targets a little bit different thing). Please let me know if you are
+> > aware about different one.
+> > 
+> > I was talking to Altera guys at ELCE and conclusion was that will be the best to
+> > maintain future drivers/fpga/ together.
+> > It means if there is no problem with this series. Do you want me to add these
+> > patches to any repository at kernel.org and send you pull request?
+> > Or you just prefer to take these patches directly to staging and we will use
+> > separate repository later?
+> 
+> We don't need a whole new repo just for a single driver or a few new
+> files, I'll take these after the new year (can't do anything until
+> 3.19-rc1 is out, and then it is vacation time.)
+> 
+> So I'll just take them from patches, no need for a git tree at all.
+> 
+> greg k-h
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
 
-So I'll just take them from patches, no need for a git tree at all.
+Hi Greg,
 
-greg k-h
+Thanks.  There is a one line change that the kbuild test robot has
+pointed out.  I can post v7 with just that change and let that be it.
+
+Alan
