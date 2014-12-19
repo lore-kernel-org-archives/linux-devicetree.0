@@ -1,232 +1,140 @@
-From: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [Patch v4 1/2] gpio: add GPIO hogging mechanism
-Date: Fri, 19 Dec 2014 15:00:52 +0900
-Message-ID: <CAAVeFuKDGEx8okVHB9YkbBB0tAao1Vho_wqvjc=U1hnbjrmrJA@mail.gmail.com>
-References: <1418422051-9471-1-git-send-email-bparrot@ti.com>
- <1418422051-9471-2-git-send-email-bparrot@ti.com> <CAAVeFuLrYovh6-RP0T4Cy8SV2Uuh4k2LD8PKmEahXgr-jKFgtg@mail.gmail.com>
- <20141218170810.GF16916@ti.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCHv4 1/8] devfreq: event: Add new devfreq_event class to
+ provide basic data for devfreq governor
+Date: Fri, 19 Dec 2014 15:46:06 +0900
+Message-ID: <5493C9AE.1020202@samsung.com>
+References: <1107836838.16761418955089663.JavaMail.weblogic@epmlwas08d>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141218170810.GF16916-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jiri Prchal <jiri.prchal-cKCO0sOKHLPtwjQa/ONI9g@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1107836838.16761418955089663.JavaMail.weblogic@epmlwas08d>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: myungjoo.ham@samsung.com
+Cc: =?UTF-8?B?6rmA6rWt7KeE?= <kgene.kim@samsung.com>, =?UTF-8?B?67CV6rK966+8?= <kyungmin.park@samsung.com>, "rafael.j.wysocki@intel.com" <rafael.j.wysocki@intel.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, ABHILASH KESAVAN <a.kesavan@samsung.com>, "tomasz.figa@gmail.com" <tomasz.figa@gmail.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, =?UTF-8?B?64yA7J246riw?= <inki.dae@samsung.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 19, 2014 at 2:08 AM, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org> wrote:
-> Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote on Wed [2014-Dec-17 17:41:51 +0900]:
->> Looks ok to me. I have a few nits below, but otherwise I am happy with
->> how it turned out:
->>
->> Reviewed-by: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> I'll add this to the next version.
->
->>
->> Thanks for your patience with this!
->>
->> On Sat, Dec 13, 2014 at 7:07 AM, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org> wrote:
->> > Based on Boris Brezillion's work this is a reworked patch
->> > of his initial GPIO hogging mechanism.
->> > This patch provides a way to initally configure specific GPIO
->>
->> s/initally/initially
->>
->> > when the gpio controller is probed.
->>
->> GPIO in capitals please.
->>
->> >
->> > The actual DT scanning to collect the GPIO specific data is performed
->> > as part of the gpiochip_add().
->>
->> d/the
->>
->> >
->> > The purpose of this is to allows specific GPIOs to be configured
->>
->> s/allows/allow
->>
->> > without any driver specific code.
->> > This particularly useful because board design are getting
->>
->> This is particularly
->>
->> > increasingly complex and given SoC pins can now have upward
->> > of
->>
->> s/upward of/up to?
->
-> well i meant more than 10 I think in some cases we have 13.
->
->>
->> > 10 mux values a lot of connections are now dependent on
->>
->> seems like a comma is missing here.
->>
->> > external IO muxes to switch various modes and combination.
->>
->> not sure what a combination is in that context.
->>
->> >
->> > Specific drivers should not necessarily need to be aware of
->> > what accounts to a specific board implementation. This board level
->> > "description" should be best kept as part of the dts file.
->> >
->> > Signed-off-by: Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>
->> > ---
->> > Changes since v3:
->> >  * Relocated the non-DT "hog" function to gpiolib.c.
->> >  * Rename some of the function to be clearer and remove _ prefixes.
->> >  * Replace the gpiod_request/gpiod_put usage with
->> >    gpiochip_request_own_desc/free_own_desc version instead.
->> >  * Refactor some of the logic to better handle error condition/reporting
->> >  * Renamed the "direction" DT properties to "state".
->> >
->> >  drivers/gpio/gpiolib-of.c | 119 ++++++++++++++++++++++++++++++++++++++++++
->> >  drivers/gpio/gpiolib.c    | 128 ++++++++++++++++++++++++++++++++++++++--------
->> >  drivers/gpio/gpiolib.h    |   3 ++
->> >  3 files changed, 230 insertions(+), 20 deletions(-)
->> >
->> > diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
->> > index 604dbe6..5422216 100644
->> > --- a/drivers/gpio/gpiolib-of.c
->> > +++ b/drivers/gpio/gpiolib-of.c
->> > @@ -22,6 +22,7 @@
->> >  #include <linux/of_gpio.h>
->> >  #include <linux/pinctrl/pinctrl.h>
->> >  #include <linux/slab.h>
->> > +#include <linux/gpio/machine.h>
->> >
->> >  #include "gpiolib.h"
->> >
->> > @@ -111,6 +112,122 @@ int of_get_named_gpio_flags(struct device_node *np, const char *list_name,
->> >  EXPORT_SYMBOL(of_get_named_gpio_flags);
->> >
->> >  /**
->> > + * of_get_gpio_hog() - Get a GPIO hog descriptor, names and flags for GPIO API
->> > + * @np:                device node to get GPIO from
->> > + * @name:      GPIO line name
->> > + * @flags:     a flags pointer to fill in
->> > + *
->> > + * Returns GPIO descriptor to use with Linux GPIO API, or one of the errno
->> > + * value on the error condition.
->> > + */
->> > +
->> > +static struct gpio_desc *of_get_gpio_hog(struct device_node *np,
->> > +                                 const char **name,
->> > +                                 enum gpio_lookup_flags *lflags,
->> > +                                 enum gpiod_flags *dflags)
->> > +{
->> > +       struct device_node *chip_np;
->> > +       enum of_gpio_flags xlate_flags;
->> > +       struct gpio_desc *desc;
->> > +       const char *dir_val;
->> > +       struct gg_data gg_data = {
->> > +               .flags = &xlate_flags,
->> > +               .out_gpio = NULL,
->>
->> out_gpio will be set to NULL if you don't specify it, so you don't
->> need this last line.
->
-> ok
->
->>
->> > +       };
->> > +       u32 tmp;
->> > +       int i, ret;
->> > +
->> > +       chip_np = np->parent;
->> > +       if (!chip_np)
->> > +               return ERR_PTR(-EINVAL);
->> > +
->> > +       xlate_flags = 0;
->> > +       *lflags = 0;
->> > +       *dflags = 0;
->> > +
->> > +       ret = of_property_read_u32(chip_np, "#gpio-cells", &tmp);
->> > +       if (ret)
->> > +               return ERR_PTR(ret);
->> > +
->> > +       if (tmp > MAX_PHANDLE_ARGS)
->> > +               return ERR_PTR(-EINVAL);
->> > +
->> > +       gg_data.gpiospec.args_count = tmp;
->> > +       gg_data.gpiospec.np = chip_np;
->> > +       for (i = 0; i < tmp; i++) {
->> > +               ret = of_property_read_u32_index(np, "gpios", i,
->> > +                                          &gg_data.gpiospec.args[i]);
->> > +               if (ret)
->> > +                       return ERR_PTR(ret);
->> > +       }
->> > +
->> > +       gpiochip_find(&gg_data, of_gpiochip_find_and_xlate);
->> > +       if (!gg_data.out_gpio) {
->> > +               if (np->parent == np)
->> > +                       return ERR_PTR(-ENXIO);
->> > +               else
->> > +                       return ERR_PTR(-EPROBE_DEFER);
->> > +       }
->> > +
->> > +       if (xlate_flags & OF_GPIO_ACTIVE_LOW)
->> > +               *lflags |= GPIO_ACTIVE_LOW;
->> > +
->> > +       if (of_property_read_string(np, "state", &dir_val)) {
->> > +               pr_warn("%s: GPIO:%d (%s): no hogging state specified, bailing out\n",
->> > +                        __func__, desc_to_gpio(gg_data.out_gpio), np->name);
->> > +               return ERR_PTR(-EINVAL);
->> > +       }
->> > +
->> > +       if (!strcmp(dir_val, "input"))
->> > +               *dflags |= GPIOD_IN;
->> > +       else if (!strcmp(dir_val, "output-low"))
->> > +               *dflags |= GPIOD_OUT_LOW;
->> > +       else if (!strcmp(dir_val, "output-high"))
->> > +               *dflags |= GPIOD_OUT_HIGH;
->> > +       else {
->> > +               pr_warn("%s: GPIO:%d (%s): invalid state '%s' requested, bailing out\n",
->> > +                        __func__, desc_to_gpio(gg_data.out_gpio),
->> > +                       np->name, dir_val);
->> > +               return ERR_PTR(-EINVAL);
->> > +       }
->> > +
->> > +       if (name && of_property_read_string(np, "line-name", name))
->> > +               *name = np->name;
->> > +
->> > +       desc = gg_data.out_gpio;
->> > +
->> > +       return desc;
->> > +}
->> > +
->> > +/**
->> > + * of_gpiochip_scan_hogs - Scan gpio-controller and apply GPIO hog as requested
->> > + * @chip:      gpio chip to act on
->> > + *
->> > + * This is only used by of_gpiochip_add to request/set GPIO initial
->> > + * configuration.
->> > + */
->> > +static void of_gpiochip_scan_hogs(struct gpio_chip *chip)
->> > +{
->> > +       struct gpio_desc *desc = NULL;
->> > +       struct device_node *np;
->> > +       const char *name;
->> > +       enum gpio_lookup_flags lflags;
->> > +       enum gpiod_flags dflags;
->> > +
->> > +       for_each_child_of_node(chip->dev->of_node, np) {
->
-> As I was backporting this to 3.14 for my own purpose.
-> I encountered a NULL pointer dereference here.
-> In 3.14 chip->dev (which is optional) is NULL at least on my platform.
-> I had to change the above line to:
->
->        for_each_child_of_node(chip->of_node, np) {
->
-> Would you recommend the same change here?
+Dear Myungjoo,
 
-That looks ok, yes. IIRC chip->of_node is precisely here because
-chip->dev might be NULL sometimes.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 12/19/2014 11:11 AM, MyungJoo Ham wrote:
+>>   
+>>  Dear Myungjoo,
+>>
+>> Thanks for your review.
+>>
+>> On 12/18/2014 03:24 PM, MyungJoo Ham wrote:
+>>> Hi Chanwoo,
+>>>
+>>> I love the idea and I now have a little mechanical issues in your code.
+>>>
+>>>> ---
+>>>>  drivers/devfreq/Kconfig         |   2 +
+>>>>  drivers/devfreq/Makefile        |   5 +-
+>>>>  drivers/devfreq/devfreq-event.c | 449 ++++++++++++++++++++++++++++++++++++++++
+>>>>  drivers/devfreq/event/Makefile  |   1 +
+>>>>  include/linux/devfreq.h         | 160 ++++++++++++++
+>>>>  5 files changed, 616 insertions(+), 1 deletion(-)
+>>>>  create mode 100644 drivers/devfreq/devfreq-event.c
+>>>>  create mode 100644 drivers/devfreq/event/Makefile
+>>>>
+> 
+> []
+> 
+>>
+>>>
+>>>
+>>> [snip]
+>>>
+>>>> diff --git a/drivers/devfreq/devfreq-event.c b/drivers/devfreq/devfreq-event.c
+>>>> new file mode 100644
+>>>> index 0000000..0e1948e
+>>>> --- /dev/null
+>>>> +++ b/drivers/devfreq/devfreq-event.c
+>>>> @@ -0,0 +1,449 @@
+>>>> +/*
+>>>> + * devfreq-event: Generic DEVFREQ Event class driver
+>>>
+>>> DEVFREQ is a generic DVFS mechanism (or subsystem).
+>>>
+>>> Plus, I thought devfreq-event is considered to be a "framework"
+>>> for devfreq event class drivers. Am I mistaken?
+>>
+>> You're right. just "class driver" description is not proper.
+>> I'll modify the description of devfreq-event.c as following:
+>> or If you have other opinion, would you please let me know about it?
+>>
+>> 	devfreq-event: DEVFREQ-Event Framework to provide raw data of Non-CPU Devices.
+> 
+> devfreq-event: a framework to provide raw data and events of devfreq devices
+> 
+> should be enough.
+
+OK, I'll modify it.
+
+> 
+> 
+> []
+>>> [snip / reversed maybe.. sorry]
+>>>
+>>>> +/**
+>>>> + * devfreq_event_is_enabled() - Check whether devfreq-event dev is enabled or
+>>>> + *                             not.
+>>>> + * @edev       : the devfreq-event device
+>>>> + *
+>>>> + * Note that this function check whether devfreq-event dev is enabled or not.
+>>>> + * If return true, the devfreq-event dev is enabeld. If return false, the
+>>>> + * devfreq-event dev is disabled.
+>>>> + */
+>>>> +bool devfreq_event_is_enabled(struct devfreq_event_dev *edev)
+>>>> +{
+>>>> +       bool enabled = false;
+>>>> +
+>>>> +       if (!edev || !edev->desc)
+>>>> +               return enabled;
+>>>> +
+>>>> +       mutex_lock(&edev->lock);
+>>>> +
+>>>> +       if (edev->enable_count > 0)
+>>>> +               enabled = true;
+>>>> +
+>>>> +       if (edev->desc->ops && edev->desc->ops->is_enabled)
+>>>> +               enabled |= edev->desc->ops->is_enabled(edev);
+>>>
+>>> What does it mean when enabled_count > 0 and ops->is_enabled() is false? or..
+>>> What does it mean when enabled_count = 0 and ops->is_enabled() is true?
+>>>
+>>> If you do enable_count in the subsystem, why would we rely on
+>>> ops->is_enabled()? Are you assuming that a device MAY turn itself off
+>>> without any kernel control (ops->disable()) and it is still a correct
+>>> behabior?
+>>
+>> You're right. devfreq_event_is_enabled() has ambiguous operation according to your comment.
+>>
+>> I'll only control the enable_count in the subsystem without ops->is_enabled()
+>> and then remove the is_enabled function in the structre devfreq_event_ops.
+>>
+>> Best Regards,
+>> Chanwoo Choi
+>>
+> 
+> [Off-Topic]
+> 
+> The name of devfreq-event may look quite intersecting with irq-driven governors,
+> which are being proposed these days.
+> 
+> Although they may look intersecting, we can have them independently;
+> this as a sub-class and that as a governor. And we can consider to
+> provide a common infrastructure for irq-driven mechanisms in devfreq or
+> devfreq-event when we irq-driven DVFS become more general, which I
+> expect in 2 ~ 3 years.
+> 
+> So for now, both can go independently.
+
+I understand your opinion.
+I want to handle the devfreq-event framework independently from irq-driven governor.
+
+After completing the devfreq-event and the support for exynos-busfreq dt,
+If you agree, I'll consider how to implement irq-driven governor as the devfreq governor.
+
+Best Regards,
+Chanwoo Choi
