@@ -1,73 +1,133 @@
-From: Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org>
-Subject: [PATCH 3/3] ARM: at91/dt: add EBI (External Bus Interface) node in at91sam9263 dtsi
-Date: Fri, 19 Dec 2014 09:51:40 +0100
-Message-ID: <1418979100-13243-4-git-send-email-alexanders83@web.de>
-References: <1418979100-13243-1-git-send-email-alexanders83@web.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1418979100-13243-1-git-send-email-alexanders83-S0/GAf8tV78@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: Re: [PATCH v6 4/4] staging: fpga manager: add driver for socfpga
+ fpga manager
+Date: Fri, 19 Dec 2014 09:55:16 +0100
+Message-ID: <20141219085516.GF13070@pengutronix.de>
+References: <1418941748-16111-1-git-send-email-atull@opensource.altera.com>
+ <1418941748-16111-5-git-send-email-atull@opensource.altera.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1418941748-16111-5-git-send-email-atull@opensource.altera.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: atull@opensource.altera.com
+Cc: gregkh@linuxfoundation.org, jgunthorpe@obsidianresearch.com, hpa@zytor.com, monstr@monstr.eu, michal.simek@xilinx.com, rdunlap@infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, pantelis.antoniou@konsulko.com, robh+dt@kernel.org, grant.likely@linaro.org, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, pavel@denx.de, broonie@kernel.org, philip@balister.org, rubini@gnudd.com, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, balbi@ti.com, m.chehab@samsung.com, davidb@codeaurora.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, linus.walleij@linaro.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devel@driverdev.osuosl.org, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com
 List-Id: devicetree@vger.kernel.org
 
-Add EBI node to at91sam9263 dtsi.
+Hi!
 
-Signed-off-by: Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org>
----
- arch/arm/boot/dts/at91sam9263.dtsi | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+Just a minor nitpick, but...
 
-diff --git a/arch/arm/boot/dts/at91sam9263.dtsi b/arch/arm/boot/dts/at91sam9263.dtsi
-index 914990b..9d9ab2a 100644
---- a/arch/arm/boot/dts/at91sam9263.dtsi
-+++ b/arch/arm/boot/dts/at91sam9263.dtsi
-@@ -994,6 +994,22 @@
- 			status = "disabled";
- 		};
- 
-+		ebi0: ebi0@10000000 {
-+			compatible = "atmel,at91sam9263-ebi0", "simple-bus";
-+			#address-cells = <2>;
-+			#size-cells = <1>;
-+			atmel,smc = <&smc0>;
-+			atmel,matrix = <&matrix>;
-+			reg = <0x10000000 0x60000000>;
-+			ranges = <0x0 0x0 0x10000000 0x10000000
-+				  0x1 0x0 0x20000000 0x10000000
-+				  0x2 0x0 0x30000000 0x10000000
-+				  0x3 0x0 0x40000000 0x10000000
-+				  0x4 0x0 0x50000000 0x10000000
-+				  0x5 0x0 0x60000000 0x10000000>;
-+			clocks = <&mck>;
-+		};
-+
- 		nand0: nand@40000000 {
- 			compatible = "atmel,at91rm9200-nand";
- 			#address-cells = <1>;
-@@ -1012,6 +1028,19 @@
- 			status = "disabled";
- 		};
- 
-+		ebi1: ebi1@70000000 {
-+			compatible = "atmel,at91sam9263-ebi1", "simple-bus";
-+			#address-cells = <2>;
-+			#size-cells = <1>;
-+			atmel,smc = <&smc1>;
-+			atmel,matrix = <&matrix>;
-+			reg = <0x70000000 0x30000000>;
-+			ranges = <0x0 0x0 0x70000000 0x10000000
-+				  0x1 0x0 0x80000000 0x10000000
-+				  0x2 0x0 0x90000000 0x10000000>;
-+			clocks = <&mck>;
-+		};
-+
- 		usb0: ohci@00a00000 {
- 			compatible = "atmel,at91rm9200-ohci", "usb-ohci";
- 			reg = <0x00a00000 0x100000>;
+On Thu, Dec 18, 2014 at 04:29:08PM -0600, atull@opensource.altera.com wrote:
+> From: Alan Tull <atull@opensource.altera.com>
+> 
+> Add driver to fpga manager framework to allow configuration
+> of FPGA in Altera SoCFPGA parts.
+> 
+> Signed-off-by: Alan Tull <atull@opensource.altera.com>
+> Acked-by: Michal Simek <michal.simek@xilinx.com>
+> ---
+> v2: fpga_manager struct now contains struct device
+>     fpga_manager_register parameters now take device
+> 
+> v3: skip a version to align versions
+> 
+> v4: move to drivers/staging
+> 
+> v5: fix array_size.cocci warnings
+>     fix platform_no_drv_owner.cocci warnings
+>     Remove .owner = THIS_MODULE
+>     include asm/irq.h
+>     clean up list of includes
+>     use altera_fpga_reset for ops
+>     use enum fpga_mgr_states or u32 as needed
+>     use devm_request_irq
+>     check irq <= 0 instead of == NO_IRQ
+>     Use ARRAY_SIZE
+>     rename altera -> socfpga
+>     static const socfpga_fpga_ops
+>     header moved to linux/fpga/ folder
+>     remove ifdef'ed code
+>     use platform_get_resource and platform_get_irq
+>     move .probe and .remove lines adjacent
+>     use module_platform_driver
+>     use __maybe_unused
+>     only need to 'if (IS_ENABLED(CONFIG_REGULATOR))' in one fn
+>     fix "unsigned 'mode' is never < 0"
+> 
+> v6: return error for (unused) default of case statement
+> ---
+  ^^^
+
+...if you remove these, than that changelog will not land in the final
+commit which I would prefer. Nobody cares for the changelog of a
+patch once it is in its final state. And this is a rather noisy one.
+When someone in the future looks at this, he will see two lines of
+information and 10 times that of uninteresting noise.
+
+Not a dealbreaker, but just something to consider for future patches.
+
+> +
+> +static u32 socfpga_fpga_readl(struct socfpga_fpga_priv *priv, u32 reg_offset)
+> +{
+> +	return readl(priv->fpga_base_addr + reg_offset);
+> +}
+> +
+> +static void socfpga_fpga_writel(struct socfpga_fpga_priv *priv, u32 reg_offset,
+> +				u32 value)
+> +{
+> +	writel(value, priv->fpga_base_addr + reg_offset);
+> +}
+> +
+> +static u32 socfpga_fpga_raw_readl(struct socfpga_fpga_priv *priv,
+> +				  u32 reg_offset)
+> +{
+> +	return __raw_readl(priv->fpga_base_addr + reg_offset);
+> +}
+> +
+> +static void socfpga_fpga_raw_writel(struct socfpga_fpga_priv *priv,
+> +				    u32 reg_offset, u32 value)
+> +{
+> +	__raw_writel(value, priv->fpga_base_addr + reg_offset);
+> +}
+> +
+> +static void socfpga_fpga_data_writel(struct socfpga_fpga_priv *priv, u32 value)
+> +{
+> +	writel(value, priv->fpga_data_addr);
+> +}
+> +
+> +static inline void socfpga_fpga_set_bitsl(struct socfpga_fpga_priv *priv,
+> +					  u32 offset, u32 bits)
+> +{
+> +	u32 val;
+> +
+> +	val = socfpga_fpga_readl(priv, offset);
+> +	val |= bits;
+> +	socfpga_fpga_writel(priv, offset, val);
+> +}
+> +
+> +static inline void socfpga_fpga_clr_bitsl(struct socfpga_fpga_priv *priv,
+> +					  u32 offset, u32 bits)
+> +{
+> +	u32 val;
+> +
+> +	val = socfpga_fpga_readl(priv, offset);
+> +	val &= ~bits;
+> +	socfpga_fpga_writel(priv, offset, val);
+> +}
+> +
+
+Please, please, please at least fix this once the driver hit staging.
+It is always a major annoyance, to follow functions, just to find out
+that their only reason of existence is to flip the arguments just for the
+hell of it. But I guess it is okay for staging...
+
+Regards,
+Steffen
+
 -- 
-2.2.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
