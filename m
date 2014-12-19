@@ -1,33 +1,111 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v6 0/4] FPGA Manager Framework
-Date: Fri, 19 Dec 2014 08:49:13 -0800
-Message-ID: <20141219164913.GA20685@kroah.com>
-References: <1418941748-16111-1-git-send-email-atull@opensource.altera.com>
- <5901b1791e1c4b09b72cb22c5eca68ca@BL2FFO11FD047.protection.gbl>
- <20141219153828.GA19077@kroah.com>
- <alpine.DEB.2.02.1412190945490.16892@linuxheads99>
+From: Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>
+Subject: [PATCH v2] of: i2c: Add idle-disconnect DT property to PCA954x mux
+ driver
+Date: Fri, 19 Dec 2014 18:00:10 +0100
+Message-ID: <5494599A.8050803@nsn.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.02.1412190945490.16892@linuxheads99>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: atull <atull@opensource.altera.com>
-Cc: mark.rutland@arm.com, linux-doc@vger.kernel.org, rubini@gnudd.com, pantelis.antoniou@konsulko.com, hpa@zytor.com, s.trumtrar@pengutronix.de, devel@driverdev.osuosl.org, sameo@linux.intel.com, nico@linaro.org, iws@ovro.caltech.edu, Michal Simek <michal.simek@xilinx.com>, kyle.teske@ni.com, jgunthorpe@obsidianresearch.com, grant.likely@linaro.org, davidb@codeaurora.org, linus.walleij@linaro.org, cesarb@cesarb.net, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, broonie@kernel.org, philip@balister.org, akpm@linux-foundation.org, monstr@monstr.eu, pavel@denx.de, yvanderv@opensource.altera.com, linux-kernel@vger.kernel.org, balbi@ti.com, davem@davemloft.net, robh+dt@kernel.org, rob@landley.net, galak@codeaurora.org, dinguyen@opensource.altera.com, delicious.quinoa@gmail.com, m.chehab@samsung.com
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jdelvare-l3A5Bk7waGM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Lawnick Michael 61283229 <michael.lawnick-OYasijW0DpE@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 19, 2014 at 09:47:26AM -0600, atull wrote:
-> Thanks.  There is a one line change that the kbuild test robot has
-> pointed out.  I can post v7 with just that change and let that be it.
+of: i2c: Add idle-disconnect DT property to PCA954x mux driver
 
-Sure, or wait a week to see if anything else falls out and resend
-then...
+Add idle-disconnect device tree property to PCA954x mux driver. The new property
+forces the multiplexer to disconnect child buses in idle state. This is used, for
+example, when there are several multiplexers on the same bus and the devices on
+the underlying buses might have same I2C addresses.
+
+At the same time old (and not used in the tree) platform data binding
+deselect_on_exit is removed to simplify the implementation. Old binding has
+different (per-channel) semantics and doesn't fit well in the new concept.
+
+Signed-off-by: Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>
+---
+
+Changes in v2:
+- dropped idle-state binding
+- headers in alphabetical order
+- removed old platform data deselect_on_exit flag
+
+ .../devicetree/bindings/i2c/i2c-mux-pca954x.txt    |    3 +++
+ drivers/i2c/muxes/i2c-mux-pca954x.c                |    9 +++++++--
+ include/linux/i2c/pca954x.h                        |    3 ---
+ 3 files changed, 10 insertions(+), 5 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
+index 34a3fb6..0272463 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
+@@ -16,6 +16,9 @@ Required Properties:
+ Optional Properties:
+ 
+   - reset-gpios: Reference to the GPIO connected to the reset input.
++  - idle-disconnect: Boolean; if defined, forces mux to disconnect all children
++    in idle state. This is necessary, for example, if there are several
++    multiplexers on the bus and the devices behind them use same I2C addresses.
+ 
+ 
+ Example:
+diff --git a/drivers/i2c/muxes/i2c-mux-pca954x.c b/drivers/i2c/muxes/i2c-mux-pca954x.c
+index ec11b40..3fe966f 100644
+--- a/drivers/i2c/muxes/i2c-mux-pca954x.c
++++ b/drivers/i2c/muxes/i2c-mux-pca954x.c
+@@ -41,6 +41,7 @@
+ #include <linux/i2c-mux.h>
+ #include <linux/i2c/pca954x.h>
+ #include <linux/module.h>
++#include <linux/of.h>
+ #include <linux/pm.h>
+ #include <linux/slab.h>
+ 
+@@ -186,6 +187,8 @@ static int pca954x_probe(struct i2c_client *client,
+ {
+ 	struct i2c_adapter *adap = to_i2c_adapter(client->dev.parent);
+ 	struct pca954x_platform_data *pdata = dev_get_platdata(&client->dev);
++	struct device_node *of_node = client->dev.of_node;
++	bool idle_disconnect;
+ 	struct gpio_desc *gpio;
+ 	int num, force, class;
+ 	struct pca954x *data;
+@@ -217,6 +220,9 @@ static int pca954x_probe(struct i2c_client *client,
+ 	data->type = id->driver_data;
+ 	data->last_chan = 0;		   /* force the first selection */
+ 
++	idle_disconnect = of_node &&
++		of_property_read_bool(of_node, "idle-disconnect");
++
+ 	/* Now create an adapter for each channel */
+ 	for (num = 0; num < chips[data->type].nchans; num++) {
+ 		force = 0;			  /* dynamic adap number */
+@@ -234,8 +240,7 @@ static int pca954x_probe(struct i2c_client *client,
+ 		data->virt_adaps[num] =
+ 			i2c_add_mux_adapter(adap, &client->dev, client,
+ 				force, num, class, pca954x_select_chan,
+-				(pdata && pdata->modes[num].deselect_on_exit)
+-					? pca954x_deselect_mux : NULL);
++				idle_disconnect ? pca954x_deselect_mux : NULL);
+ 
+ 		if (data->virt_adaps[num] == NULL) {
+ 			ret = -ENODEV;
+diff --git a/include/linux/i2c/pca954x.h b/include/linux/i2c/pca954x.h
+index 1712677..66bf1fb 100644
+--- a/include/linux/i2c/pca954x.h
++++ b/include/linux/i2c/pca954x.h
+@@ -29,13 +29,10 @@
+ 
+ /* Per channel initialisation data:
+  * @adap_id: bus number for the adapter. 0 = don't care
+- * @deselect_on_exit: set this entry to 1, if your H/W needs deselection
+- *                    of this channel after transaction.
+  *
+  */
+ struct pca954x_platform_mode {
+ 	int		adap_id;
+-	unsigned int	deselect_on_exit:1;
+ 	unsigned int	class;
+ };
+ 
