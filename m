@@ -1,91 +1,68 @@
-From: Sean Cross <xobs@kosagi.com>
-Subject: [PATCH 1/2] PCI: imx6: Add power-supply support
-Date: Fri, 19 Dec 2014 16:10:16 +0800
-Message-ID: <1418976617-833-2-git-send-email-xobs@kosagi.com>
-References: <1418976617-833-1-git-send-email-xobs@kosagi.com>
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1418976617-833-1-git-send-email-xobs@kosagi.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lucas Stach <l.stach@pengutronix.de>, Shawn Guo <shawn.guo@freescale.com>, Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, Richard Zhu <r65037@freescale.com>, Grant Likely <grant.likely@linaro.org>, linux-pci@vger.kernel.org
-Cc: bunnie@kosagi.com, Sean Cross <xobs@kosagi.com>
+From: Mugunthan V N <mugunthanvnm@ti.com>
+Subject: [PATCH 1/1] ARM: dts: dra7-evm: fix qspi device tree partition size
+Date: Fri, 19 Dec 2014 13:53:05 +0530
+Message-ID: <1418977385-7886-1-git-send-email-mugunthanvnm@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: bcousson@baylibre.com, tony@atomide.com
+Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, Mugunthan V N <mugunthanvnm@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Some PCIe ports gate power to the slot.  In order to prevent system lockup,
-these boards must enable power to the slot before attempting communication
-over the PCI bus.
+64KiB is allocated for qspi dtb partition which is not
+sufficient, so updating the partition table size to 512KiB
+for device tree partition.
 
-Signed-off-by: Sean Cross <xobs@kosagi.com>
+This also aligns the QSPI partition definitions between
+kernel and U-Boot.
+
+Fixes: dc2dd5b8 ("ARM: dts: dra7: Add qspi device")
+
+Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
 ---
- .../devicetree/bindings/pci/fsl,imx6q-pcie.txt       |  3 +++
- drivers/pci/host/pci-imx6.c                          | 20 +++++++++++++++++++-
- 2 files changed, 22 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-index 6fbba53..fe912bd 100644
---- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-+++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-@@ -13,6 +13,9 @@ Required properties:
- - clock-names: Must include the following additional entries:
- 	- "pcie_phy"
- 
-+Optional properties:
-+- power-supply: A regulator that controls power to the port
-+
- Example:
- 
- 	pcie@0x01000000 {
-diff --git a/drivers/pci/host/pci-imx6.c b/drivers/pci/host/pci-imx6.c
-index 69202d1..9c2140e 100644
---- a/drivers/pci/host/pci-imx6.c
-+++ b/drivers/pci/host/pci-imx6.c
-@@ -22,6 +22,7 @@
- #include <linux/pci.h>
- #include <linux/platform_device.h>
- #include <linux/regmap.h>
-+#include <linux/regulator/consumer.h>
- #include <linux/resource.h>
- #include <linux/signal.h>
- #include <linux/types.h>
-@@ -39,6 +40,7 @@ struct imx6_pcie {
- 	struct pcie_port	pp;
- 	struct regmap		*iomuxc_gpr;
- 	void __iomem		*mem_base;
-+	struct regulator	*power_reg;
+This patch is tested on Linux next and the boot logs at [1]
+
+[1] - http://pastebin.ubuntu.com/9567672/
+
+---
+ arch/arm/boot/dts/dra7-evm.dts | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/arch/arm/boot/dts/dra7-evm.dts b/arch/arm/boot/dts/dra7-evm.dts
+index 736092b..235d001 100644
+--- a/arch/arm/boot/dts/dra7-evm.dts
++++ b/arch/arm/boot/dts/dra7-evm.dts
+@@ -499,23 +499,23 @@
+ 		};
+ 		partition@5 {
+ 			label = "QSPI.u-boot-spl-os";
+-			reg = <0x00140000 0x00010000>;
++			reg = <0x00140000 0x00080000>;
+ 		};
+ 		partition@6 {
+ 			label = "QSPI.u-boot-env";
+-			reg = <0x00150000 0x00010000>;
++			reg = <0x001c0000 0x00010000>;
+ 		};
+ 		partition@7 {
+ 			label = "QSPI.u-boot-env.backup1";
+-			reg = <0x00160000 0x0010000>;
++			reg = <0x001d0000 0x0010000>;
+ 		};
+ 		partition@8 {
+ 			label = "QSPI.kernel";
+-			reg = <0x00170000 0x0800000>;
++			reg = <0x001e0000 0x0800000>;
+ 		};
+ 		partition@9 {
+ 			label = "QSPI.file-system";
+-			reg = <0x00970000 0x01690000>;
++			reg = <0x009e0000 0x01620000>;
+ 		};
+ 	};
  };
- 
- /* PCIe Root Complex registers (memory-mapped) */
-@@ -588,6 +590,19 @@ static int __init imx6_pcie_probe(struct platform_device *pdev)
- 		}
- 	}
- 
-+	/* Fetch power supply */
-+	imx6_pcie->power_reg = devm_regulator_get(&pdev->dev, "power");
-+	if (IS_ERR(imx6_pcie->power_reg))
-+		imx6_pcie->power_reg = 0;
-+
-+	if (imx6_pcie->power_reg) {
-+		ret = regulator_enable(imx6_pcie->power_reg);
-+		if (ret) {
-+			dev_err(&pdev->dev, "Unable to enable power regulator");
-+			return ret;
-+		}
-+	}
-+
- 	/* Fetch clocks */
- 	imx6_pcie->pcie_phy = devm_clk_get(&pdev->dev, "pcie_phy");
- 	if (IS_ERR(imx6_pcie->pcie_phy)) {
-@@ -619,8 +634,11 @@ static int __init imx6_pcie_probe(struct platform_device *pdev)
- 	}
- 
- 	ret = imx6_add_pcie_port(pp, pdev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		if (imx6_pcie->power_reg)
-+			regulator_disable(imx6_pcie->power_reg);
- 		return ret;
-+	}
- 
- 	platform_set_drvdata(pdev, imx6_pcie);
- 	return 0;
 -- 
-2.1.3
+2.2.1.62.g3f15098
+
