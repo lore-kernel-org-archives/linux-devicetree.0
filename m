@@ -1,127 +1,123 @@
 From: Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCH 1/2] PCI: imx6: Add power-supply support
-Date: Fri, 19 Dec 2014 11:19:32 +0100
-Message-ID: <1418984372.2558.1.camel@pengutronix.de>
+Subject: Re: [PATCH 2/2] ARM: dts: imx6q: add Novena board
+Date: Fri, 19 Dec 2014 11:32:59 +0100
+Message-ID: <1418985179.2558.3.camel@pengutronix.de>
 References: <1418976617-833-1-git-send-email-xobs@kosagi.com>
-	 <1418976617-833-2-git-send-email-xobs@kosagi.com>
+	 <1418976617-833-3-git-send-email-xobs@kosagi.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1418976617-833-2-git-send-email-xobs@kosagi.com>
+In-Reply-To: <1418976617-833-3-git-send-email-xobs@kosagi.com>
 Sender: linux-pci-owner@vger.kernel.org
 To: Sean Cross <xobs@kosagi.com>
 Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@freescale.com>, Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, Richard Zhu <r65037@freescale.com>, Grant Likely <grant.likely@linaro.org>, linux-pci@vger.kernel.org, bunnie@kosagi.com
 List-Id: devicetree@vger.kernel.org
 
 Am Freitag, den 19.12.2014, 16:10 +0800 schrieb Sean Cross:
-> Some PCIe ports gate power to the slot.  In order to prevent system lockup,
-> these boards must enable power to the slot before attempting communication
-> over the PCI bus.
+> Novena is an open-hardware laptop/desktop/bare board.
 > 
+> See http://www.kosagi.com/w/index.php?title=Novena_Main_Page
+> 
+> This device tree contains additional nodes for FPGA support.
+> 
+
+I only skimmed the DT for now.
+
+There are lots of occurrences of the "kosagi" vendor prefix, which is is
+not documented right now. Please add it to
+Documentation/devicetree/bindings/vendor-prefixes.txt first.
+
 > Signed-off-by: Sean Cross <xobs@kosagi.com>
 > ---
->  .../devicetree/bindings/pci/fsl,imx6q-pcie.txt       |  3 +++
->  drivers/pci/host/pci-imx6.c                          | 20 +++++++++++++++++++-
->  2 files changed, 22 insertions(+), 1 deletion(-)
+>  arch/arm/boot/dts/Makefile         |   1 +
+>  arch/arm/boot/dts/imx6q-novena.dts | 893 +++++++++++++++++++++++++++++++++++++
+>  2 files changed, 894 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/imx6q-novena.dts
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> index 6fbba53..fe912bd 100644
-> --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> @@ -13,6 +13,9 @@ Required properties:
->  - clock-names: Must include the following additional entries:
->  	- "pcie_phy"
->  
-> +Optional properties:
-> +- power-supply: A regulator that controls power to the port
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 38c89ca..b2b4770 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -234,6 +234,7 @@ dtb-$(CONFIG_ARCH_MXC) += \
+>  	imx6q-gw552x.dtb \
+>  	imx6q-hummingboard.dtb \
+>  	imx6q-nitrogen6x.dtb \
+> +	imx6q-novena.dtb \
+>  	imx6q-phytec-pbab01.dtb \
+>  	imx6q-rex-pro.dtb \
+>  	imx6q-sabreauto.dtb \
+> diff --git a/arch/arm/boot/dts/imx6q-novena.dts b/arch/arm/boot/dts/imx6q-novena.dts
+> new file mode 100644
+> index 0000000..143b3bd
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx6q-novena.dts
+> @@ -0,0 +1,893 @@
 
-This is a way too generic name. In order to provide the functionality
-you are intending, this regulator needs to supply the whole bus
-(remember not every board has just a single slot). It should be named
-accordingly.
+[...]
 
-So I would expect this to look something like the following:
+> +	fpga@1 {
+> +		compatible = "kosagi,novena-fpga";
 
-bus-supply: A regulator that controls main power to every device on the
-bus.
+This is missing a proper binding documentation.
+> +
+> +		spi-max-frequency = <30000000>;
+> +		reg = <1>;
+> +
+> +		pinctrl-names = "default", "state-eim", "state-gpio";
+> +		pinctrl-0 = <&pinctrl_fpga_gpio>;
+> +		pinctrl-1 = <&pinctrl_fpga_eim>;
+> +		pinctrl-2 = <&pinctrl_fpga_gpio>;
+> +		clocks = <&clks IMX6QDL_CLK_LVDS2_SEL>, <&clks IMX6QDL_CLK_LVDS2_GATE>, <&clks IMX6QDL_CLK_ENET_REF>, <&clks IMX6QDL_CLK_EIM_SLOW>;
+> +		clock-names = "lvds", "lvds-switch", "lvds-parent", "eim-slow";
+> +		reset-switch = <&gpio1 17 GPIO_ACTIVE_HIGH>;
+> +		power-switch = <&gpio5 7 GPIO_ACTIVE_HIGH>;
+
+Custom property names without vendor namespacing. Also I don't know what
+they should do without the binding.
 
 > +
->  Example:
->  
->  	pcie@0x01000000 {
-> diff --git a/drivers/pci/host/pci-imx6.c b/drivers/pci/host/pci-imx6.c
-> index 69202d1..9c2140e 100644
-> --- a/drivers/pci/host/pci-imx6.c
-> +++ b/drivers/pci/host/pci-imx6.c
-> @@ -22,6 +22,7 @@
->  #include <linux/pci.h>
->  #include <linux/platform_device.h>
->  #include <linux/regmap.h>
-> +#include <linux/regulator/consumer.h>
->  #include <linux/resource.h>
->  #include <linux/signal.h>
->  #include <linux/types.h>
-> @@ -39,6 +40,7 @@ struct imx6_pcie {
->  	struct pcie_port	pp;
->  	struct regmap		*iomuxc_gpr;
->  	void __iomem		*mem_base;
-> +	struct regulator	*power_reg;
->  };
->  
->  /* PCIe Root Complex registers (memory-mapped) */
-> @@ -588,6 +590,19 @@ static int __init imx6_pcie_probe(struct platform_device *pdev)
->  		}
->  	}
->  
-> +	/* Fetch power supply */
-> +	imx6_pcie->power_reg = devm_regulator_get(&pdev->dev, "power");
-
-Use devm_regulator_get_optional instead.
-
-> +	if (IS_ERR(imx6_pcie->power_reg))
-> +		imx6_pcie->power_reg = 0;
-
-This can go away if you use the above, but really? 0 to a pointer? I
-know it isn't invalid, but it's also bad style.
-
-You must handle -EPROBE_DEFER here instead.
-
+> +		kosagi,weim-cs0-timing = <0x31910BBF 0x00001000 0x09014000
+> +					  0x00000000 0x09080800 0x00000000>;
+> +		kosagi,weim-cs1-timing = <0x81910CBF 0x00001000 0x07001000
+> +					  0x00000200 0x02040400 0x00000000>;
+> +		kosagi,weim-cs-mapping = <2>;
+> +	};
+> +};
 > +
-> +	if (imx6_pcie->power_reg) {
-> +		ret = regulator_enable(imx6_pcie->power_reg);
-> +		if (ret) {
-> +			dev_err(&pdev->dev, "Unable to enable power regulator");
-> +			return ret;
-> +		}
-> +	}
-> +
-I'm not really comfortable with enabling directly at probe time, but
-given our failure paths are horrible enough as they are right now I
-agree that this is the sanest solution for now.
 
-But please move both enabling and disabling at failure into
-imx6_add_pcie_port().
+[...]
 
->  	/* Fetch clocks */
->  	imx6_pcie->pcie_phy = devm_clk_get(&pdev->dev, "pcie_phy");
->  	if (IS_ERR(imx6_pcie->pcie_phy)) {
-> @@ -619,8 +634,11 @@ static int __init imx6_pcie_probe(struct platform_device *pdev)
->  	}
->  
->  	ret = imx6_add_pcie_port(pp, pdev);
-> -	if (ret < 0)
-> +	if (ret < 0) {
-> +		if (imx6_pcie->power_reg)
-> +			regulator_disable(imx6_pcie->power_reg);
->  		return ret;
-> +	}
->  
->  	platform_set_drvdata(pdev, imx6_pcie);
->  	return 0;
+> +&ldb {
+> +	fsl,dual-channel;
+> +	status = "okay";
+> +	lvds-channel@0 {
+> +		fsl,data-mapping = "jeida";
+> +		fsl,data-width = <24>;
+> +		status = "okay";
+> +		display-timings {
+> +			1920x1080p60 {
+> +				clock-frequency = <148500000>;
+> +				hactive = <1920>;
+> +				vactive = <1080>;
+> +				hback-porch = <148>;
+> +				hfront-porch = <88>;
+> +				hsync-len = <44>;
+> +				vback-porch = <36>;
+> +				vfront-porch = <4>;
+> +				vsync-len = <5>;
+> +				hsync-active = <1>;
+> +				vsync-active = <1>;
+> +			};
+> +		};
+
+Please don't use this for new devicetrees. Add a proper panel driver
+instead. Looks like this panel can be represented with the simple-panel
+driver.
 
 Regards,
 Lucas
+
 -- 
 Pengutronix e.K.             | Lucas Stach                 |
 Industrial Linux Solutions   | http://www.pengutronix.de/  |
