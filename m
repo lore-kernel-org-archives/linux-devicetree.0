@@ -1,41 +1,42 @@
 From: Angelo Compagnucci <angelo.compagnucci-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] iio: mcp3422: Add DT binding documentation
-Date: Fri, 19 Dec 2014 18:09:40 +0100
-Message-ID: <1419008980-436-1-git-send-email-angelo.compagnucci@gmail.com>
+Subject: [PATCH] iio: ti-adc128s052: Add DT binding documentation
+Date: Fri, 19 Dec 2014 18:10:39 +0100
+Message-ID: <1419009039-1057-1-git-send-email-angelo.compagnucci@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: Angelo Compagnucci <angelo.compagnucci-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Adding binding documentation for ADC MCP3422.
+Adding binding documentation for Texas Instruments' ADC128S052 ADC chip.
 ---
- Documentation/devicetree/bindings/iio/adc/mcp3422.txt | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/mcp3422.txt
+ .../devicetree/bindings/iio/adc/ti-adc128s052.txt      | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/ti-adc128s052.txt
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/mcp3422.txt b/Documentation/devicetree/bindings/iio/adc/mcp3422.txt
+diff --git a/Documentation/devicetree/bindings/iio/adc/ti-adc128s052.txt b/Documentation/devicetree/bindings/iio/adc/ti-adc128s052.txt
 new file mode 100644
-index 0000000..d6d6eb6
+index 0000000..12132ef
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/mcp3422.txt
-@@ -0,0 +1,12 @@
-+* Microchip mcp3422/3/4/6/7/8 chip family (ADC)
++++ b/Documentation/devicetree/bindings/iio/adc/ti-adc128s052.txt
+@@ -0,0 +1,18 @@
++* Texas Instruments' ADC128S052 ADC chip
 +
 +Required properties:
-+  - compatible: Should be 
-+               "microchip,mcp3422" or
-+               "microchip,mcp3423" or
-+               "microchip,mcp3424" or
-+               "microchip,mcp3426" or
-+               "microchip,mcp3427" or
-+               "microchip,mcp3428"
-+  - reg: I2C address for the device
++  - compatible: Should be "ti,adc128s052" 
++  - reg: spi chip select number for the device
++  - vref-supply: The regulator supply ADC reference voltage.
++
++Recommended properties:
++- spi-max-frequency: Definition as per
++                     Documentation/devicetree/bindings/spi/spi-bus.txt
 +
 +Example:
 +adc@0 {
-+	compatible = "microchip,mcp3424";
-+	reg = <0x68>;
++	compatible = "ti,adc128s052";
++	reg = <0>;
++	vref-supply = <&vdd_supply>;
++	spi-max-frequency = <1000000>;
 +};
 -- 
 1.9.1
