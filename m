@@ -1,133 +1,147 @@
-From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: Re: [PATCH v6 4/4] staging: fpga manager: add driver for socfpga
- fpga manager
-Date: Fri, 19 Dec 2014 09:55:16 +0100
-Message-ID: <20141219085516.GF13070@pengutronix.de>
-References: <1418941748-16111-1-git-send-email-atull@opensource.altera.com>
- <1418941748-16111-5-git-send-email-atull@opensource.altera.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH RFC v2 08/14] drm: imx: Add MIPI DSI host controller driver
+Date: Fri, 19 Dec 2014 11:17:26 +0100
+Message-ID: <1418984246.3165.45.camel@pengutronix.de>
+References: <1418886696-11636-1-git-send-email-Ying.Liu@freescale.com>
+ <1418886696-11636-9-git-send-email-Ying.Liu@freescale.com>
+ <1418902740.4212.46.camel@pengutronix.de> <5493BD52.8070804@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1418941748-16111-5-git-send-email-atull@opensource.altera.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: atull@opensource.altera.com
-Cc: gregkh@linuxfoundation.org, jgunthorpe@obsidianresearch.com, hpa@zytor.com, monstr@monstr.eu, michal.simek@xilinx.com, rdunlap@infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, pantelis.antoniou@konsulko.com, robh+dt@kernel.org, grant.likely@linaro.org, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, pavel@denx.de, broonie@kernel.org, philip@balister.org, rubini@gnudd.com, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, balbi@ti.com, m.chehab@samsung.com, davidb@codeaurora.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, linus.walleij@linaro.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devel@driverdev.osuosl.org, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <5493BD52.8070804@freescale.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Liu Ying <Ying.Liu@freescale.com>
+Cc: devicetree@vger.kernel.org, linux@arm.linux.org.uk, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, kernel@pengutronix.de, mturquette@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi!
-
-Just a minor nitpick, but...
-
-On Thu, Dec 18, 2014 at 04:29:08PM -0600, atull@opensource.altera.com wrote:
-> From: Alan Tull <atull@opensource.altera.com>
-> 
-> Add driver to fpga manager framework to allow configuration
-> of FPGA in Altera SoCFPGA parts.
-> 
-> Signed-off-by: Alan Tull <atull@opensource.altera.com>
-> Acked-by: Michal Simek <michal.simek@xilinx.com>
-> ---
-> v2: fpga_manager struct now contains struct device
->     fpga_manager_register parameters now take device
-> 
-> v3: skip a version to align versions
-> 
-> v4: move to drivers/staging
-> 
-> v5: fix array_size.cocci warnings
->     fix platform_no_drv_owner.cocci warnings
->     Remove .owner = THIS_MODULE
->     include asm/irq.h
->     clean up list of includes
->     use altera_fpga_reset for ops
->     use enum fpga_mgr_states or u32 as needed
->     use devm_request_irq
->     check irq <= 0 instead of == NO_IRQ
->     Use ARRAY_SIZE
->     rename altera -> socfpga
->     static const socfpga_fpga_ops
->     header moved to linux/fpga/ folder
->     remove ifdef'ed code
->     use platform_get_resource and platform_get_irq
->     move .probe and .remove lines adjacent
->     use module_platform_driver
->     use __maybe_unused
->     only need to 'if (IS_ENABLED(CONFIG_REGULATOR))' in one fn
->     fix "unsigned 'mode' is never < 0"
-> 
-> v6: return error for (unused) default of case statement
-> ---
-  ^^^
-
-...if you remove these, than that changelog will not land in the final
-commit which I would prefer. Nobody cares for the changelog of a
-patch once it is in its final state. And this is a rather noisy one.
-When someone in the future looks at this, he will see two lines of
-information and 10 times that of uninteresting noise.
-
-Not a dealbreaker, but just something to consider for future patches.
-
-> +
-> +static u32 socfpga_fpga_readl(struct socfpga_fpga_priv *priv, u32 reg_offset)
-> +{
-> +	return readl(priv->fpga_base_addr + reg_offset);
-> +}
-> +
-> +static void socfpga_fpga_writel(struct socfpga_fpga_priv *priv, u32 reg_offset,
-> +				u32 value)
-> +{
-> +	writel(value, priv->fpga_base_addr + reg_offset);
-> +}
-> +
-> +static u32 socfpga_fpga_raw_readl(struct socfpga_fpga_priv *priv,
-> +				  u32 reg_offset)
-> +{
-> +	return __raw_readl(priv->fpga_base_addr + reg_offset);
-> +}
-> +
-> +static void socfpga_fpga_raw_writel(struct socfpga_fpga_priv *priv,
-> +				    u32 reg_offset, u32 value)
-> +{
-> +	__raw_writel(value, priv->fpga_base_addr + reg_offset);
-> +}
-> +
-> +static void socfpga_fpga_data_writel(struct socfpga_fpga_priv *priv, u32 value)
-> +{
-> +	writel(value, priv->fpga_data_addr);
-> +}
-> +
-> +static inline void socfpga_fpga_set_bitsl(struct socfpga_fpga_priv *priv,
-> +					  u32 offset, u32 bits)
-> +{
-> +	u32 val;
-> +
-> +	val = socfpga_fpga_readl(priv, offset);
-> +	val |= bits;
-> +	socfpga_fpga_writel(priv, offset, val);
-> +}
-> +
-> +static inline void socfpga_fpga_clr_bitsl(struct socfpga_fpga_priv *priv,
-> +					  u32 offset, u32 bits)
-> +{
-> +	u32 val;
-> +
-> +	val = socfpga_fpga_readl(priv, offset);
-> +	val &= ~bits;
-> +	socfpga_fpga_writel(priv, offset, val);
-> +}
-> +
-
-Please, please, please at least fix this once the driver hit staging.
-It is always a major annoyance, to follow functions, just to find out
-that their only reason of existence is to flip the arguments just for the
-hell of it. But I guess it is okay for staging...
-
-Regards,
-Steffen
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+SGkgTGl1LAoKQW0gRnJlaXRhZywgZGVuIDE5LjEyLjIwMTQsIDEzOjUzICswODAwIHNjaHJpZWIg
+TGl1IFlpbmc6ClsuLi5dCj4gPj4gKwltaXBpX2RzaTogbWlwaUAwMjFlMDAwMCB7Cj4gPj4gKwkJ
+I2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gPj4gKwkJI3NpemUtY2VsbHMgPSA8MD47Cj4gPj4gKwkJ
+Y29tcGF0aWJsZSA9ICJmc2wsaW14NnEtbWlwaS1kc2kiOwo+ID4+ICsJCXJlZyA9IDwweDAyMWUw
+MDAwIDB4NDAwMD47Cj4gPj4gKwkJaW50ZXJydXB0cyA9IDwwIDEwMiBJUlFfVFlQRV9MRVZFTF9I
+SUdIPjsKPiA+PiArCQlncHIgPSA8Jmdwcj47Cj4gPj4gKwkJY2xvY2tzID0gPCZjbGtzIElNWDZR
+RExfQ0xLX1ZJREVPXzI3TT4sCj4gPj4gKwkJCSA8JmNsa3MgSU1YNlFETF9DTEtfSFNJX1RYPiwK
+PiA+PiArCQkJIDwmY2xrcyBJTVg2UURMX0NMS19IU0lfVFg+Owo+ID4+ICsJCWNsb2NrLW5hbWVz
+ID0gInBsbHJlZiIsICJwbGxyZWZfZ2F0ZSIsICJjb3JlX2NmZyI7Cj4gPgo+ID4gTm90IHN1cmUg
+YWJvdXQgdGhpcy4gQXJlIHRob3NlIG5hbWVzIGZyb20gdGhlIFN5bm9wc3lzIGRvY3VtZW50YXRp
+b24/Cj4gCj4gTm8sIEkgZG9uJ3QgdGhpbmsgaXQncyBmcm9tIHRoZXJlLgoKRG8geW91IGhhdmUg
+YWNjZXNzIHRvIGl0PyBJJ2QgbGlrZSB0byBzZWUgdGhlIHByb3BlciBuYW1lcyB1c2VkIGlmCnBv
+c3NpYmxlLCBjb25zaWRlcmluZyB0aGlzIElQIGNvcmUgd2lsbCBiZSB1c2VkIG9uIG90aGVyIFNv
+Q3MsIHRvby4KCj4gPiBBY2NvcmRpbmcgdG8gVGFibGUgNDEtMSBpbiB0aGUgaS5NWDZRIFJlZmVy
+ZW5jZSBNYW51YWwsIHRoaXMgbW9kdWxlIGhhcwo+ID4gNiBjbG9jayBpbnB1dHM6Cj4gPiAgIC0g
+YWNfY2xrXzEyNW0gKGZyb20gYWhiX2Nsa19yb290KQo+ID4gICAtIHBpeGVsX2NsayAoZnJvbSBh
+eGlfY2xrX3Jvb3QpCj4gPiAgIC0gY2ZnX2NsayBhbmQgcGxsX3JlZmNsayAoZnJvbSB2aWRlb18y
+N20pCj4gPiAgIC0gaXBzX2NsayBhbmQgaXBnX2Nsa19zIChmcm9tIGlwZ19jbGtfcm9vdCkKPiA+
+IFRoZSBDQ00gY2hhcHRlciBzYXlzIHRoYXQgb2YgdGhlc2UsICJhY19jbGtfMTI1bSIsICJjZmdf
+Y2xrIiwgaXBzX2NsayIsCj4gPiBhbmQgInBsbF9yZWZjbGsiIGFyZSBnYXRlZCBieSBhIHNpbmds
+ZSBiaXQgY2FsbGVkCj4gPiAibWlwaV9jb3JlX2NmZ19jbGtfZW5hYmxlIiwgdGhhdCBpcyBjbGtb
+Q0xLX0hTSV9UWF0uCj4gPiBJZiB0aGF0IGlzIGNvcnJlY3QsIEkgc2VlIG5vIHJlYXNvbiBmb3Ig
+dGhlICJwbGxyZWZfZ2F0ZSIgY2xvY2suCj4gPiBJIHN1cHBvc2UgdHdvIGNsb2NrcyAicGxscmVm
+IiBhbmQgImNmZyIgc2hvdWxkIHN1ZmZpY2UuCj4gCj4gVXNpbmcgdGhlIHR3byBjbG9ja3MgbWFr
+ZXMgdGhlIGNvZGUgbG9vayBsaWtlIHRoaXMsIHBlcmhhcHM6Cj4gCj4gICAgICAgIGNsb2NrcyA9
+IDwmY2xrcyBJTVg2UURMX0NMS19WSURFT18yN00+LAo+ICAgICAgICAgICAgICAgICA8JmNsa3Mg
+SU1YNlFETF9DTEtfSFNJX1RYPjsKPiAgICAgICAgY2xvY2stbmFtZXMgPSAicGxscmVmIiwgImNv
+cmVfY2ZnIjsKPiAKPiBUaGVuLCBpdCBzZWVtcyB0aGF0IEkgaGF2ZSBubyB3YXkgdG8gZGlzYWJs
+ZSB0aGUgcGxscmVmIGNsb2NrIGlmCj4gdXNpbmcgdGhlIGNsb2NrIHRyZWUgYWZ0ZXIgYXBwbHlp
+bmcgdGhpcyBwYXRjaCBzZXQ/CgpDb3JyZWN0LiBJbiBteSBvcGluaW9uIHdlIHNob3VsZCBwdXQg
+YSBuZXcgZ2F0ZSBjbG9jayBpbiB0aGUgY2xvY2sgcGF0aApiZXR3ZWVuIHZpZGVvXzI3bSBhbmQg
+dGhlIHBsbHJlZiBpbnB1dCB0cmlnZ2VycyB0aGUgc2FtZSBiaXQgYXMgaHNpX3R4LApzZWUgYmVs
+b3cuCgo+IE9yLCBwZXJoYXBzLCB0aGlzIG9uZT8KPiAKPiAgICAgICAgY2xvY2tzID0gPCZjbGtz
+IElNWDZRRExfQ0xLX0hTSV9UWD4sCj4gICAgICAgICAgICAgICAgIDwmY2xrcyBJTVg2UURMX0NM
+S19IU0lfVFg+Owo+ICAgICAgICBjbG9jay1uYW1lcyA9ICJwbGxyZWYiLCAiY29yZV9jZmciOwo+
+IAo+IFRoaXMgb25seSB1c2VzIHRoZSBnYXRlIGNsb2NrIGhzaV90eC4gIFRoZSBjdXJyZW50IGNs
+b2NrIHRyZWUgc3RhdGVzCj4gdGhhdCBpdCBjb21lcyBmcm9tOgo+IAo+ICAgICAgIHBsbDNfMTIw
+bSAtPgo+ICAgICAgICAgICAgICAgICAgIHwgLT4gaHNpX3R4X3NlbCAtPiBoc2lfdHhfcG9kZiAt
+PiBoc2lfdHgKPiBwbGwyX3BmZDJfMzk2bSAtPgo+IAo+IFNvLCBJIGNhbiBub3QgZ2V0IHRoZSBj
+b3JyZWN0IHBsbHJlZiBjbG9jayBmcmVxdWVuY3kgd2l0aCB0aGlzIHRyZWUuCj4gVGhlIHBsbHJl
+ZiBjbG9jayBzaG91bGQgYmUgZGVyaXZlZCBmcm9tIHRoZSB2aWRlb18yN20gY2xvY2suCgpBY2Nv
+cmRpbmcgdG8gdGhlIGkuTVg2IHJlZmVyZW5jZSBtYW51YWwsIHRoZSBjZmcgY2xvY2sgYWxzbyBp
+cyBkZXJpdmVkCmZyb20gdmlkZW9fMjdtLCBzbyBib3RoIGhhdmUgdGhlIHdyb25nIHJhdGUgaWYg
+Y29ubmVjdGVkIHRvIGhzaV90eCAoeWVzLApmb3IgY2ZnIHdlIGRvbid0IGNhcmUgYWJvdXQgdGhl
+IHJhdGUpLgoKQ3VycmVudGx5IHdlIGhhdmUgdGhpczoKCnBsbDJfcGZkMl8zOTZtIC0+IGhzaV90
+eF9zZWwgLT4gaHNpX3R4X3BvZGYgLT4gaHNpX3R4CnBsbDNfcGZkMV81NDBtIC0+IHZpZGVvXzI3
+bSAtPiBoZG1pX2lzZnIKCi0gaHNpX3R4X3BvZGYgcmVwcmVzZW50cyB0aGUgaHNpX3R4X2Nsa19y
+b290IGF0IGl0cyBvdXRwdXQuCi0gaHNpX3R4IHJlcHJlc2VudHMgdGhlIGdhdGUgYmV0d2VlbiBo
+c2lfdHhfY2xrX3Jvb3QgYW5kIHRoZSB0eF9yZWZfY2xrCiAgaW5wdXQgdG8gdGhlIE1JUElfSFNJ
+IG1vZHVsZSwgd2hpY2ggaXMgY29udHJvbGxlZCBieSB0aGUKICBtaXBpX2NvcmVfY2ZnX2Nsa19l
+bmFibGUgYml0LgotIHZpZGVvXzI3bSByZXByZXNlbnRzIHRoZSB2aWRlb18yN21fY2xrX3Jvb3Qg
+YXQgaXRzIG91dHB1dC4KCkknZCBzYXkgd2Ugc2hvdWxkIHR1cm4gaHNpX3R4IGludG8gYSBzaGFy
+ZWQgZ2F0ZSBjbG9jayBhbmQgYWRkIGEgbmV3CnNoYXJlZCBnYXRlIGNsb2NrIHVzaW5nIHRoZSBz
+YW1lIGdhdGUgYml0LiBNYXliZSBuYW1lIGl0IG1pcGlfY29yZV9jZmcsCmFmdGVyIHRoZSBnYXRp
+bmcgYml0IGluIHRoZSBDQ00uCgpwbGwyX3BmZDJfMzk2bSAtPiBoc2lfdHhfc2VsIC0+IGhzaV90
+eF9wb2RmIC0+IGhzaV90eApwbGwzX3BmZDFfNTQwbSAtPiB2aWRlb18yN20gLT4gbWlwaV9jb3Jl
+X2NmZwpwbGwzX3BmZDFfNTQwbSAtPiB2aWRlb18yN20gLT4gaGRtaV9pc2ZyCgotIG1pcGlfY29y
+ZV9jZmcgcmVwcmVzZW50cyB0aGUgZ2F0ZSBiZXR3ZWVuIHZpZGVvXzI3X2Nsa19yb290IGFuZCB0
+aGUKICBjZmdfY2xrIGFuZCBwbGxyZWZfY2xrIGlucHV0cyB0byB0aGUgTUlQSV9EU0kgbW9kdWxl
+LCB3aGljaCBpcyBhbHNvCiAgY29udHJvbGxlZCBieSB0aGUgbWlwaV9jb3JlX2NmZ19jbGtfZW5h
+YmxlIGJpdC4KCj4gVGhlIHdheSBJIGRlY2lkZWQgdG8gdXNlIHRoZSB0aHJlZSBjbG9ja3MgaXM6
+Cj4gMSkgUExMIHJlbGF0ZWQKPiAqIHBsbHJlZiBjbG9jayBvbmx5IGNhcmVzIGFib3V0IHRoZSBw
+bGwgcmVmZXJlbmNlIHJhdGUodGhlIGZyZXF1ZW5jeSkuCj4gICAgQW5kLCB0aGUgZnJlcXVlbmN5
+IGRvZXMgbWF0dGVyIGFzIGl0IGhhcyBhbiBpbXBhY3Qgb24gdGhlIGxhbmUgY2xvY2sKPiAgICBm
+cmVxdWVuY3kuCj4gKiBwbGxyZWZfZ2F0ZSBpcyBhIGdhdGUgY2xvY2sgYW5kIGl0IG9ubHkgY2Fy
+ZXMgYWJvdXQgdGhlIGdhdGUuCj4KPiAyKSByZWdpc3RlciBjb25maWd1cmF0aW9uIHJlbGF0ZWQK
+PiAqIGNvcmVfY2ZnIGlzIGEgZ2F0ZSBjbG9jayBhbmQgaXQgb25seSBjYXJlcyBhYm91dCB0aGUg
+Z2F0ZS4KPiBVc3VhbGx5LCB0aGUgcmVnaXN0ZXIgY29uZmlndXJhdGlvbiBjbG9jayBmcmVxdWVu
+Y3kgaXMgbm90IHNvIGltcG9ydGFudAo+IGFuZCB0aGUgZ2F0ZSBpcyB3aGF0IHdlIHJlYWxseSBu
+ZWVkLgo+IAo+IEkgYW0gY3VycmVudGx5IG5vdCBzdHJvbmcgb24gdGhlIHdheSBJIHVzZWQuICBJ
+IGFtIG9wZW4gdG8gYW55IGJldHRlcgo+IHNvbHV0aW9uLgoKU2luY2UgY2ZnIGlzIGEgcmVhbCBj
+bG9jayBpbnB1dCB0byB0aGUgTUlQSSBEU0kgSVAsIHRoYXQncyBvay4gQnV0IHRoZQp0d28gcGxs
+cmVmIGVudHJpZXMgaW4gcmVhbGl0eSBhcmUgb25lIGFuZCB0aGUgc2FtZSBjbG9jayBpbnB1dC4K
+Cj4gPiBNYXliZSBIU0lfVFggc2hvdWxkIGJlIHNwbGl0IHVwIGludG8gbXVsdGlwbGUgc2hhcmVk
+IGdhdGUgY2xvY2tzIHRoYXQKPiA+IGFsbCBzZXQgdGhlIG1pcGlfY29yZV9jZmcgY2xvY2sgYml0
+cyAoc2VlIGJlbG93KS4KPiAKPiBZZXMsIG1heWJlLgo+IElmIHRoYXQncyB0aGUgY2FzZSwgZG8g
+d2UgbmVlZCB0byBhZGQgdHdvIGdhdGUgY2xvY2tzIGluIHRoZSBEVCBub2RlIHRvCj4gcmVwcmVz
+ZW50IGNmZ19nYXRlIGFuZCBwbGxyZWZfZ2F0ZSByZXNwZWN0aXZlbHk/CgpJJ2Qgc2F5IHllcy4g
+V2hpbGUgb24gaS5NWDYgaXQgY291bGQgYmUgcmVwcmVzZW50ZWQgYnkgYSBzaW5nbGUgY2xvY2sK
+YmVjYXVzZSBib3RoIGhhdmUgdGhlIHNhbWUgcmF0ZSBhbmQgdXNlIHRoZSBzYW1lIGdhdGUgYml0
+LCB0aGF0IGRvZXNuJ3QKaGF2ZSB0byBiZSB0aGUgY2FzZSBvbiBvdGhlciBTb0NzLiBXaXRoIG15
+IHN1Z2dlc3Rpb24gYWJvdmUsIHRoYXQgd291bGQKYmU6CgoJY2xvY2tzID0gPCZjbGtzIElNWDZR
+RExfQ0xLX01JUElfQ09SRV9DRkc+LAoJCSA8JmNsa3MgSU1YNlFETF9DTEtfTUlQSV9DT1JFX0NG
+Rz47CgljbG9jay1uYW1lcyA9ICJwbGxyZWYiLCAiY2ZnIjsKCj4gPj4gZGlmZiAtLWdpdCBhL2Ry
+aXZlcnMvZ3B1L2RybS9pbXgvS2NvbmZpZyBiL2RyaXZlcnMvZ3B1L2RybS9pbXgvS2NvbmZpZwpb
+Li4uXQo+ID4+ICtzdGF0aWMgaW50IGlteF9taXBpX2RzaV9iaW5kKHN0cnVjdCBkZXZpY2UgKmRl
+diwgc3RydWN0IGRldmljZSAqbWFzdGVyLCB2b2lkICpkYXRhKQo+ID4+ICt7ClsuLi5dCj4gPj4g
+Kwlkc2ktPnBsbHJlZl9jbGsgPSBkZXZtX2Nsa19nZXQoZGV2LCAicGxscmVmIik7Cj4gPj4gKwlp
+ZiAoSVNfRVJSKGRzaS0+cGxscmVmX2NsaykpIHsKPiA+PiArCQlyZXQgPSBQVFJfRVJSKGRzaS0+
+cGxscmVmX2Nsayk7Cj4gPj4gKwkJZGV2X2VycihkZXYsICJVbmFibGUgdG8gZ2V0IHBsbCByZWZl
+cmVuY2UgY2xvY2s6ICVkXG4iLCByZXQpOwo+ID4+ICsJCXJldHVybiByZXQ7Cj4gPj4gKwl9Cj4g
+Pj4gKwljbGtfcHJlcGFyZV9lbmFibGUoZHNpLT5wbGxyZWZfY2xrKTsKCldoYXQgSSBtZWFuIGJl
+bG93IGlzIHRoaXM6IEhlcmUgeW91IGVuYWJsZSBwbGxyZWYgLi4uCgpbLi4uXQo+ID4+ICsJZHNp
+LT5jZmdfY2xrID0gZGV2bV9jbGtfZ2V0KGRldiwgImNvcmVfY2ZnIik7Cj4gPj4gKwlpZiAoSVNf
+RVJSKGRzaS0+Y2ZnX2NsaykpIHsKPiA+PiArCQlyZXQgPSBQVFJfRVJSKGRzaS0+Y2ZnX2Nsayk7
+Cj4gPj4gKwkJZGV2X2VycihkZXYsICJVbmFibGUgdG8gZ2V0IGNvbmZpZ3VyYXRpb24gY2xvY2s6
+ICVkXG4iLCByZXQpOwo+ID4KPiA+IEFuZCBsZWF2ZSBwbGxyZWYgZW5hYmxlZD8KPiAKPiBBcyBJ
+IG1lbnRpb25lZCBpbiB0aGUgdjEtPiB2MiBjaGFuZ2UgbG9nLCBJIGVuYWJsZS9kaXNhYmxlIHRo
+ZSAKPiBwbGxyZWZfY2xrIGFuZCBwbGxyZWZfZ2F0ZV9jbGsgYXQgdGhlIGNvbXBvbmVudCBiaW5k
+aW5nL3VuYmluZGluZyBzdGFnZXMgCj4gdG8gaGVscCByZW1vdmUgdGhlIGZsYWcgJ2VuYWJsZWQn
+IGludHJvZHVjZWQgaW4gdjEuCj4gCj4gSSByZWZlcnJlZCB0byB0aGUgaS5NWCBIRE1JIGRyaXZl
+ciB3aGljaCBlbmFibGVzL2Rpc2FibGVzIHRoZSBpc2ZyIGNsb2NrIAo+IGFuZCB0aGUgaWFoYiBj
+bG9jayBhdCB0aGUgY29tcG9uZW50IGJpbmRpbmcvdW5iaW5kaW5nIHN0YWdlcy4KPiAKPiBJIG1h
+eSB0cnkgdG8gaGFuZGxlIHRoZSBjbG9jayBlbmFibGVtZW50L2Rpc2FibGVtZW50IG1vcmUgZGVj
+ZW50bHkgYW5kCj4gYXZvaWQgdXNpbmcgdGhlIGZsYWcgJ2VuYWJsZScuCj4gCj4gPgo+ID4+ICsJ
+CXJldHVybiByZXQ7CgouLi4gYW5kIGhlcmUgeW91IHJldHVybiB3aXRoIGFuIGVycm9yIHdpdGhv
+dXQgZGlzYWJsaW5nIHBsbHJlZiBhZ2Fpbi4gSWYKdGhlIGJpbmQgZmFpbHMsIHVuYmluZCB3b24n
+dCBiZSBjYWxsZWQsIGFuZCB0aGUgY2xvY2sgc3RheXMgZW5hYmxlZC4gRm9yCnJlZmVyZW5jZSwg
+c2VlIGhvdyBpbXgtaGRtaSB1bnByZXBhcmVfZGlzYWJsZXMgaXRzIGlhaGIvaXNmciBjbG9ja3Mg
+aW4KdGhlIGJpbmQgZnVuY3Rpb24ncyBlcnJvciBwYXRoLgoKPiA+PiArCX0KPiA+PiArCj4gPj4g
+KwljbGtfcHJlcGFyZV9lbmFibGUoZHNpLT5jZmdfY2xrKTsKPiA+PiArCXZhbCA9IGRzaV9yZWFk
+KGRzaSwgRFNJX1ZFUlNJT04pOwo+ID4+ICsJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKGRzaS0+Y2Zn
+X2Nsayk7Cj4gPj4gKwo+ID4+ICsJZGV2X2luZm8oZGV2LCAidmVyc2lvbiBudW1iZXIgaXMgMHgl
+MDh4XG4iLCB2YWwpOwo+ID4+ICsKPiA+PiArCXJldCA9IGlteF9taXBpX2RzaV9yZWdpc3Rlcihk
+cm0sIGRzaSk7Cj4gPj4gKwlpZiAocmV0KQo+ID4KPiA+IFNhbWUgaGVyZS4KPiAKPiBZb3UgbWVh
+bnQgdGhhdCB0aGUgcGxscmVmX2dhdGUgY2xvY2sgaXMgbGVmdCBlbmFibGVkIGFib3ZlLCByaWdo
+dD8KClllcy4KCj4gUmVnYXJkcywKPiBMaXUgWWluZwo+IAo+ID4KPiA+PiArCQlyZXR1cm4gcmV0
+OwoKVGhpcyByZXR1cm4gd2l0aCBhbiBlcnJvciBsZWF2ZXMgdGhlIHBsbHJlZiBlbmFibGVkLgoK
+cmVnYXJkcwpQaGlsaXBwCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
+cC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
+ZXZlbAo=
