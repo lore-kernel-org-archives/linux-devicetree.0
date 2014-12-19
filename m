@@ -1,219 +1,232 @@
-From: Liu Ying <Ying.Liu@freescale.com>
-Subject: Re: [PATCH RFC v2 08/14] drm: imx: Add MIPI DSI host controller driver
-Date: Fri, 19 Dec 2014 13:53:22 +0800
-Message-ID: <5493BD52.8070804@freescale.com>
-References: <1418886696-11636-1-git-send-email-Ying.Liu@freescale.com>
- <1418886696-11636-9-git-send-email-Ying.Liu@freescale.com>
- <1418902740.4212.46.camel@pengutronix.de>
+From: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [Patch v4 1/2] gpio: add GPIO hogging mechanism
+Date: Fri, 19 Dec 2014 15:00:52 +0900
+Message-ID: <CAAVeFuKDGEx8okVHB9YkbBB0tAao1Vho_wqvjc=U1hnbjrmrJA@mail.gmail.com>
+References: <1418422051-9471-1-git-send-email-bparrot@ti.com>
+ <1418422051-9471-2-git-send-email-bparrot@ti.com> <CAAVeFuLrYovh6-RP0T4Cy8SV2Uuh4k2LD8PKmEahXgr-jKFgtg@mail.gmail.com>
+ <20141218170810.GF16916@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1418902740.4212.46.camel@pengutronix.de>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: devicetree@vger.kernel.org, linux@arm.linux.org.uk, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, kernel@pengutronix.de, mturquette@linaro.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141218170810.GF16916-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jiri Prchal <jiri.prchal-cKCO0sOKHLPtwjQa/ONI9g@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMTIvMTgvMjAxNCAwNzozOSBQTSwgUGhpbGlwcCBaYWJlbCB3cm90ZToKPiBBbSBEb25uZXJz
-dGFnLCBkZW4gMTguMTIuMjAxNCwgMTU6MTEgKzA4MDAgc2NocmllYiBMaXUgWWluZzoKPj4gVGhp
-cyBwYXRjaCBhZGRzIGkuTVggTUlQSSBEU0kgaG9zdCBjb250cm9sbGVyIGRyaXZlciBzdXBwb3J0
-Lgo+PiBDdXJyZW50bHksIHRoZSBkcml2ZXIgc3VwcG9ydHMgdGhlIGJ1cnN0IHdpdGggc3luYyBw
-dWxzZXMgbW9kZSBvbmx5Lgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBMaXUgWWluZyA8WWluZy5MaXVA
-ZnJlZXNjYWxlLmNvbT4KPj4gLS0tCj4+IHYxLT52MjoKPj4gICAqIEFkZHJlc3MgYWxtb3N0IGFs
-bCBjb21tZW50cyBmcm9tIFRoaWVycnkgUmVkaW5nIGFuZCBSdXNzZWxsLgo+PiAgICogVXBkYXRl
-IHRoZSBEVCBkb2N1bWVudGF0aW9uIHRvIHJlbW92ZSB0aGUgZGlzcGxheS10aW1pbmdzIG5vZGUg
-aW4gdGhlIHBhbmVsIG5vZGUuCj4+ICAgKiBVcGRhdGUgdGhlIERUIGRvY3VtZW50YXRpb24gdG8g
-c3RhdGUgdGhhdCB0aGUgbm9kZXMgd2hpY2ggcmVwcmVzZW50IHRoZSBwb3NzaWJsZQo+PiAgICAg
-RFJNIENSVENzIHRoZSBjb250cm9sbGVyIG1heSBjb25uZWN0IHdpdGggc2hvdWxkIGJlIHBsYWNl
-ZCBpbiB0aGUgbm9kZSAicG9ydHMiLgo+PiAgICogUmVtb3ZlIHRoZSBmbGFnICdlbmFibGVkJyBm
-cm9tIHRoZSBzdHJ1Y3QgaW14X21pcGlfZHNpLgo+PiAgICogTW92ZSB0aGUgZm9ybWF0X3RvX2Jw
-cCgpIGZ1bmN0aW9uIGluIHYxIHRvIHRoZSBjb21tb24gRFJNIE1JUEkgRFNJIGRyaXZlci4KPj4g
-ICAqIEltcHJvdmUgdGhlIHdheSB3ZSB3YWl0IGZvciBjaGVjayBzdGF0dXMgZm9yIERQSFkgYW5k
-IGNvbW1hbmQgcGFja2V0IHRyYW5zZmVyLgo+PiAgICogSW1wcm92ZSB0aGUgRFBNUyBzdXBwb3J0
-IGZvciB0aGUgZW5jb2Rlci4KPj4gICAqIFNwbGl0IHRoZSBmdW5jdGlvbnMgb2YgLT5ob3N0X2F0
-dGFjaCgpIGFuZCAtPm1vZGVfdmFsaWQoKSBjbGVhcmx5IGFzIHN1Z2dlc3RlZCBieQo+PiAgICAg
-VGhpZXJyeSBSZWRpbmcuCj4+ICAgKiBJbXByb3ZlIHRoZSBsb2dpY3MgaW4gaW14X21pcGlfZHNp
-X2Rjc19sb25nX3dyaXRlKCkuCj4+ICAgKiBFbmFibGUvZGlzYWJsZSB0aGUgcGxscmVmX2NsayBh
-bmQgcGxscmVmX2dhdGVfY2xrIGF0IHRoZSBjb21wb25lbnQgYmluZGluZy91bmJpbmRpbmcKPj4g
-ICAgIHN0YWdlcyB0byBoZWxwIHJlbW92ZSB0aGUgZmxhZyAnZW5hYmxlZCcuCj4+ICAgKiBVcGRh
-dGUgdGhlIG1vZHVsZSBsaWNlbnNlIHRvIGJlICJHUEwiLgo+PiAgICogT3RoZXIgbWlub3IgY2hh
-bmdlcywgc3VjaCBhcyBjb2Rpbmcgc3R5bGUgaXNzdWVzIGFuZCBtYWNybyBuYW1pbmcgaXNzdWVz
-Lgo+Pgo+PiAgIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RybS9pbXgvbWlwaV9kc2kudHh0ICAg
-ICAgIHwgICA3OCArKwo+PiAgIGRyaXZlcnMvZ3B1L2RybS9pbXgvS2NvbmZpZyAgICAgICAgICAg
-ICAgICAgICAgICAgIHwgICAgNiArCj4+ICAgZHJpdmVycy9ncHUvZHJtL2lteC9NYWtlZmlsZSAg
-ICAgICAgICAgICAgICAgICAgICAgfCAgICAxICsKPj4gICBkcml2ZXJzL2dwdS9kcm0vaW14L2lt
-eC1taXBpLWRzaS5jICAgICAgICAgICAgICAgICB8IDEwNTYgKysrKysrKysrKysrKysrKysrKysK
-Pj4gICA0IGZpbGVzIGNoYW5nZWQsIDExNDEgaW5zZXJ0aW9ucygrKQo+PiAgIGNyZWF0ZSBtb2Rl
-IDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZHJtL2lteC9taXBpX2Rz
-aS50eHQKPj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2lteC9pbXgtbWlw
-aS1kc2kuYwo+Pgo+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2RybS9pbXgvbWlwaV9kc2kudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2RybS9pbXgvbWlwaV9kc2kudHh0Cj4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4+IGluZGV4
-IDAwMDAwMDAuLjg5MmVkNjIKPj4gLS0tIC9kZXYvbnVsbAo+PiArKysgYi9Eb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvZHJtL2lteC9taXBpX2RzaS50eHQKPj4gQEAgLTAsMCArMSw3
-OCBAQAo+PiArRGV2aWNlLVRyZWUgYmluZGluZ3MgZm9yIE1JUEkgRFNJIGhvc3QgY29udHJvbGxl
-cgo+PiArCj4+ICtNSVBJIERTSSBob3N0IGNvbnRyb2xsZXIKPj4gKz09PT09PT09PT09PT09PT09
-PT09PT09PQo+PiArCj4+ICtUaGUgTUlQSSBEU0kgaG9zdCBjb250cm9sbGVyIGlzIGEgU3lub3Bz
-eXMgRGVzaWduV2FyZSBJUC4KPj4gK0l0IGlzIGEgZGlnaXRhbCBjb3JlIHRoYXQgaW1wbGVtZW50
-cyBhbGwgcHJvdG9jb2wgZnVuY3Rpb25zIGRlZmluZWQKPj4gK2luIHRoZSBNSVBJIERTSSBzcGVj
-aWZpY2F0aW9uLCBwcm92aWRpbmcgYW4gaW50ZXJmYWNlIGJldHdlZW4gdGhlCj4+ICtzeXN0ZW0g
-YW5kIHRoZSBNSVBJIERQSFksIGFuZCBhbGxvd2luZyBjb21tdW5pY2F0aW9uIHdpdGggYSBNSVBJ
-IERTSQo+PiArY29tcGxpYW50IGRpc3BsYXkuCj4+ICsKPj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6
-Cj4+ICsgLSAjYWRkcmVzcy1jZWxsczogU2hvdWxkIGJlIDwxPi4KPj4gKyAtICNzaXplLWNlbGxz
-OiBTaG91bGQgYmUgPDA+Lgo+PiArIC0gY29tcGF0aWJsZTogU2hvdWxkIGJlICJmc2wsaW14NnEt
-bWlwaS1kc2kiIGZvciBpLk1YNnEvc2RsIFNvQ3MuCj4KPiBJZiB0aGlzIGlzIGEgU3lub3BzeXMg
-RGVzaWduV2FyZSBJUCBjb3JlIGFzIHRoZSBIRE1JIFRYLCBJIHRoaW5rIHRoZQo+IGNvbXBhdGli
-bGUgc2hvdWxkIHJlZmxlY3QgdGhhdC4gSG93IGFib3V0IGEgc2Vjb25kIGNvbXBhdGlibGUKPiAi
-c25wcyxkdy1taXBpLWRzaSI/CgpPaywgSSdsbCBhZGQgdGhpcyBzZWNvbmQgY29tcGF0aWJsZSBz
-dHJpbmcuCgo+Cj4+ICsgLSByZWc6IFBoeXNpY2FsIGJhc2UgYWRkcmVzcyBvZiB0aGUgY29udHJv
-bGxlciBhbmQgbGVuZ3RoIG9mIG1lbW9yeQo+PiArICAgICAgICAgbWFwcGVkIHJlZ2lvbi4KPj4g
-KyAtIGludGVycnVwdHM6IFRoZSBjb250cm9sbGVyJ3MgaW50ZXJydXB0IG51bWJlciB0byB0aGUg
-Q1BVKHMpLgo+PiArIC0gZ3ByOiBTaG91bGQgYmUgPCZncHI+Lgo+PiArICAgICAgICAgVGhlIHBo
-YW5kbGUgcG9pbnRzIHRvIHRoZSBpb211eGMtZ3ByIHJlZ2lvbiBjb250YWluaW5nIHRoZQo+PiAr
-ICAgICAgICAgbXVsdGlwbGV4ZXIgY29udHJvbCByZWdpc3RlciBmb3IgdGhlIGNvbnRyb2xsZXIu
-Cj4+ICsgLSBjbG9ja3MsIGNsb2NrLW5hbWVzOiBQaGFuZGxlcyB0byB0aGUgY29udHJvbGxlciBw
-bGxyZWYsIHBsbHJlZl9nYXRlCj4+ICsgICAgICAgICAgIGFuZCBjb3JlX2NmZyBjbG9ja3MsIGFz
-IGRlc2NyaWJlZCBpbiBbMV0gYW5kIFsyXS4KPj4gKwo+PiArUmVxdWlyZWQgc3ViLW5vZGVzOgo+
-PiArIC0gcG9ydHM6IFRoaXMgbm9kZSBtYXkgY29udGFpbiB1cCB0byBmb3VyIHBvcnQgbm9kZXMg
-d2l0aCBlbmRwb2ludAo+PiArICAgZGVmaW5pdGlvbnMgYXMgZGVmaW5lZCBpbiBbM10sIGNvcnJl
-c3BvbmRpbmcgdG8gdGhlIGZvdXIgaW5wdXRzIHRvCj4+ICsgICB0aGUgY29udHJvbGxlciBtdWx0
-aXBsZXhlci4KPj4gKyAtIEEgbm9kZSB0byByZXByZXNlbnQgYSBEU0kgcGVyaXBoZXJhbCBhcyBk
-ZXNjcmliZWQgaW4gWzRdLgo+PiArCj4+ICtbMV0gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2Nsb2NrL2Nsb2NrLWJpbmRpbmdzLnR4dAo+PiArWzJdIERvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9jbG9jay9pbXg2cS1jbG9jay50eHQKPj4gK1szXSBEb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvdmlkZW8taW50ZXJmYWNlcy50eHQKPj4gK1s0
-XSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWlwaS9kc2kvbWlwaS1kc2ktYnVz
-LnR4dAo+PiArCj4+ICtleGFtcGxlOgo+PiArCWdwcjogaW9tdXhjLWdwckAwMjBlMDAwMCB7Cj4+
-ICsJCS8qIC4uLiAqLwo+PiArCX07Cj4+ICsKPj4gKwltaXBpX2RzaTogbWlwaUAwMjFlMDAwMCB7
-Cj4+ICsJCSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+PiArCQkjc2l6ZS1jZWxscyA9IDwwPjsKPj4g
-KwkJY29tcGF0aWJsZSA9ICJmc2wsaW14NnEtbWlwaS1kc2kiOwo+PiArCQlyZWcgPSA8MHgwMjFl
-MDAwMCAweDQwMDA+Owo+PiArCQlpbnRlcnJ1cHRzID0gPDAgMTAyIElSUV9UWVBFX0xFVkVMX0hJ
-R0g+Owo+PiArCQlncHIgPSA8Jmdwcj47Cj4+ICsJCWNsb2NrcyA9IDwmY2xrcyBJTVg2UURMX0NM
-S19WSURFT18yN00+LAo+PiArCQkJIDwmY2xrcyBJTVg2UURMX0NMS19IU0lfVFg+LAo+PiArCQkJ
-IDwmY2xrcyBJTVg2UURMX0NMS19IU0lfVFg+Owo+PiArCQljbG9jay1uYW1lcyA9ICJwbGxyZWYi
-LCAicGxscmVmX2dhdGUiLCAiY29yZV9jZmciOwo+Cj4gTm90IHN1cmUgYWJvdXQgdGhpcy4gQXJl
-IHRob3NlIG5hbWVzIGZyb20gdGhlIFN5bm9wc3lzIGRvY3VtZW50YXRpb24/CgpObywgSSBkb24n
-dCB0aGluayBpdCdzIGZyb20gdGhlcmUuCgo+Cj4gQWNjb3JkaW5nIHRvIFRhYmxlIDQxLTEgaW4g
-dGhlIGkuTVg2USBSZWZlcmVuY2UgTWFudWFsLCB0aGlzIG1vZHVsZSBoYXMKPiA2IGNsb2NrIGlu
-cHV0czoKPiAgIC0gYWNfY2xrXzEyNW0gKGZyb20gYWhiX2Nsa19yb290KQo+ICAgLSBwaXhlbF9j
-bGsgKGZyb20gYXhpX2Nsa19yb290KQo+ICAgLSBjZmdfY2xrIGFuZCBwbGxfcmVmY2xrIChmcm9t
-IHZpZGVvXzI3bSkKPiAgIC0gaXBzX2NsayBhbmQgaXBnX2Nsa19zIChmcm9tIGlwZ19jbGtfcm9v
-dCkKPiBUaGUgQ0NNIGNoYXB0ZXIgc2F5cyB0aGF0IG9mIHRoZXNlLCAiYWNfY2xrXzEyNW0iLCAi
-Y2ZnX2NsayIsIGlwc19jbGsiLAo+IGFuZCAicGxsX3JlZmNsayIgYXJlIGdhdGVkIGJ5IGEgc2lu
-Z2xlIGJpdCBjYWxsZWQKPiAibWlwaV9jb3JlX2NmZ19jbGtfZW5hYmxlIiwgdGhhdCBpcyBjbGtb
-Q0xLX0hTSV9UWF0uCj4gSWYgdGhhdCBpcyBjb3JyZWN0LCBJIHNlZSBubyByZWFzb24gZm9yIHRo
-ZSAicGxscmVmX2dhdGUiIGNsb2NrLgo+IEkgc3VwcG9zZSB0d28gY2xvY2tzICJwbGxyZWYiIGFu
-ZCAiY2ZnIiBzaG91bGQgc3VmZmljZS4KClVzaW5nIHRoZSB0d28gY2xvY2tzIG1ha2VzIHRoZSBj
-b2RlIGxvb2sgbGlrZSB0aGlzLCBwZXJoYXBzOgoKICAgICAgIGNsb2NrcyA9IDwmY2xrcyBJTVg2
-UURMX0NMS19WSURFT18yN00+LAogICAgICAgICAgICAgICAgPCZjbGtzIElNWDZRRExfQ0xLX0hT
-SV9UWD47CiAgICAgICBjbG9jay1uYW1lcyA9ICJwbGxyZWYiLCAiY29yZV9jZmciOwoKVGhlbiwg
-aXQgc2VlbXMgdGhhdCBJIGhhdmUgbm8gd2F5IHRvIGRpc2FibGUgdGhlIHBsbHJlZiBjbG9jayBp
-Zgp1c2luZyB0aGUgY2xvY2sgdHJlZSBhZnRlciBhcHBseWluZyB0aGlzIHBhdGNoIHNldD8KCgpP
-ciwgcGVyaGFwcywgdGhpcyBvbmU/CgogICAgICAgY2xvY2tzID0gPCZjbGtzIElNWDZRRExfQ0xL
-X0hTSV9UWD4sCiAgICAgICAgICAgICAgICA8JmNsa3MgSU1YNlFETF9DTEtfSFNJX1RYPjsKICAg
-ICAgIGNsb2NrLW5hbWVzID0gInBsbHJlZiIsICJjb3JlX2NmZyI7CgpUaGlzIG9ubHkgdXNlcyB0
-aGUgZ2F0ZSBjbG9jayBoc2lfdHguICBUaGUgY3VycmVudCBjbG9jayB0cmVlIHN0YXRlcwp0aGF0
-IGl0IGNvbWVzIGZyb206CgogICAgICBwbGwzXzEyMG0gLT4KICAgICAgICAgICAgICAgICAgfCAt
-PiBoc2lfdHhfc2VsIC0+IGhzaV90eF9wb2RmIC0+IGhzaV90eApwbGwyX3BmZDJfMzk2bSAtPgoK
-U28sIEkgY2FuIG5vdCBnZXQgdGhlIGNvcnJlY3QgcGxscmVmIGNsb2NrIGZyZXF1ZW5jeSB3aXRo
-IHRoaXMgdHJlZS4KVGhlIHBsbHJlZiBjbG9jayBzaG91bGQgYmUgZGVyaXZlZCBmcm9tIHRoZSB2
-aWRlb18yN20gY2xvY2suCgoKVGhlIHdheSBJIGRlY2lkZWQgdG8gdXNlIHRoZSB0aHJlZSBjbG9j
-a3MgaXM6CjEpIFBMTCByZWxhdGVkCiogcGxscmVmIGNsb2NrIG9ubHkgY2FyZXMgYWJvdXQgdGhl
-IHBsbCByZWZlcmVuY2UgcmF0ZSh0aGUgZnJlcXVlbmN5KS4KICAgQW5kLCB0aGUgZnJlcXVlbmN5
-IGRvZXMgbWF0dGVyIGFzIGl0IGhhcyBhbiBpbXBhY3Qgb24gdGhlIGxhbmUgY2xvY2sKICAgZnJl
-cXVlbmN5LgoqIHBsbHJlZl9nYXRlIGlzIGEgZ2F0ZSBjbG9jayBhbmQgaXQgb25seSBjYXJlcyBh
-Ym91dCB0aGUgZ2F0ZS4KCjIpIHJlZ2lzdGVyIGNvbmZpZ3VyYXRpb24gcmVsYXRlZAoqIGNvcmVf
-Y2ZnIGlzIGEgZ2F0ZSBjbG9jayBhbmQgaXQgb25seSBjYXJlcyBhYm91dCB0aGUgZ2F0ZS4KVXN1
-YWxseSwgdGhlIHJlZ2lzdGVyIGNvbmZpZ3VyYXRpb24gY2xvY2sgZnJlcXVlbmN5IGlzIG5vdCBz
-byBpbXBvcnRhbnQKYW5kIHRoZSBnYXRlIGlzIHdoYXQgd2UgcmVhbGx5IG5lZWQuCgpJIGFtIGN1
-cnJlbnRseSBub3Qgc3Ryb25nIG9uIHRoZSB3YXkgSSB1c2VkLiAgSSBhbSBvcGVuIHRvIGFueSBi
-ZXR0ZXIKc29sdXRpb24uCgo+Cj4gTWF5YmUgSFNJX1RYIHNob3VsZCBiZSBzcGxpdCB1cCBpbnRv
-IG11bHRpcGxlIHNoYXJlZCBnYXRlIGNsb2NrcyB0aGF0Cj4gYWxsIHNldCB0aGUgbWlwaV9jb3Jl
-X2NmZyBjbG9jayBiaXRzIChzZWUgYmVsb3cpLgoKWWVzLCBtYXliZS4KSWYgdGhhdCdzIHRoZSBj
-YXNlLCBkbyB3ZSBuZWVkIHRvIGFkZCB0d28gZ2F0ZSBjbG9ja3MgaW4gdGhlIERUIG5vZGUgdG8K
-cmVwcmVzZW50IGNmZ19nYXRlIGFuZCBwbGxyZWZfZ2F0ZSByZXNwZWN0aXZlbHk/Cgo+Cj4+IGRp
-ZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vaW14L0tjb25maWcgYi9kcml2ZXJzL2dwdS9kcm0v
-aW14L0tjb25maWcKPj4gaW5kZXggODJmYjc1OC4uMDNmMDRmYiAxMDA2NDQKPj4gLS0tIGEvZHJp
-dmVycy9ncHUvZHJtL2lteC9LY29uZmlnCj4+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9pbXgvS2Nv
-bmZpZwo+PiBAQCAtNTEsMyArNTEsOSBAQCBjb25maWcgRFJNX0lNWF9IRE1JCj4+ICAgCWRlcGVu
-ZHMgb24gRFJNX0lNWAo+PiAgIAloZWxwCj4+ICAgCSAgQ2hvb3NlIHRoaXMgaWYgeW91IHdhbnQg
-dG8gdXNlIEhETUkgb24gaS5NWDYuCj4+ICsKPj4gK2NvbmZpZyBEUk1fSU1YX01JUElfRFNJCj4+
-ICsJdHJpc3RhdGUgIkZyZWVzY2FsZSBpLk1YIERSTSBNSVBJIERTSSIKPj4gKwlkZXBlbmRzIG9u
-IERSTV9JTVggJiYgTUZEX1NZU0NPTgo+PiArCWhlbHAKPj4gKwkgIENob29zZSB0aGlzIGlmIHlv
-dSB3YW50IHRvIHVzZSBNSVBJIERTSSBvbiBpLk1YNi4KPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
-Z3B1L2RybS9pbXgvTWFrZWZpbGUgYi9kcml2ZXJzL2dwdS9kcm0vaW14L01ha2VmaWxlCj4+IGlu
-ZGV4IDU4MmM0MzguLjQ1NzFkNTIgMTAwNjQ0Cj4+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9pbXgv
-TWFrZWZpbGUKPj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2lteC9NYWtlZmlsZQo+PiBAQCAtMTAs
-MyArMTAsNCBAQCBvYmotJChDT05GSUdfRFJNX0lNWF9MREIpICs9IGlteC1sZGIubwo+PiAgIGlt
-eC1pcHV2My1jcnRjLW9ianMgIDo9IGlwdXYzLWNydGMubyBpcHV2My1wbGFuZS5vCj4+ICAgb2Jq
-LSQoQ09ORklHX0RSTV9JTVhfSVBVVjMpCSs9IGlteC1pcHV2My1jcnRjLm8KPj4gICBvYmotJChD
-T05GSUdfRFJNX0lNWF9IRE1JKSArPSBpbXgtaGRtaS5vCj4+ICtvYmotJChDT05GSUdfRFJNX0lN
-WF9NSVBJX0RTSSkgKz0gaW14LW1pcGktZHNpLm8KPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1
-L2RybS9pbXgvaW14LW1pcGktZHNpLmMgYi9kcml2ZXJzL2dwdS9kcm0vaW14L2lteC1taXBpLWRz
-aS5jCj4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4+IGluZGV4IDAwMDAwMDAuLjFjYjQzMjgKPj4g
-LS0tIC9kZXYvbnVsbAo+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vaW14L2lteC1taXBpLWRzaS5j
-Cj4gWy4uLl0KPj4gK3N0YXRpYyBpbnQgaW14X21pcGlfZHNpX2JpbmQoc3RydWN0IGRldmljZSAq
-ZGV2LCBzdHJ1Y3QgZGV2aWNlICptYXN0ZXIsIHZvaWQgKmRhdGEpCj4+ICt7Cj4+ICsJc3RydWN0
-IHBsYXRmb3JtX2RldmljZSAqcGRldiA9IHRvX3BsYXRmb3JtX2RldmljZShkZXYpOwo+PiArCXN0
-cnVjdCBkcm1fZGV2aWNlICpkcm0gPSBkYXRhOwo+PiArCXN0cnVjdCBkZXZpY2Vfbm9kZSAqbnAg
-PSBkZXYtPm9mX25vZGU7Cj4+ICsJc3RydWN0IGlteF9taXBpX2RzaSAqZHNpOwo+PiArCXN0cnVj
-dCByZXNvdXJjZSAqcmVzOwo+PiArCXUzMiB2YWw7Cj4+ICsJaW50IHJldDsKPj4gKwo+PiArCWRz
-aSA9IGRldm1fa3phbGxvYyhkZXYsIHNpemVvZigqZHNpKSwgR0ZQX0tFUk5FTCk7Cj4+ICsJaWYg
-KCFkc2kpCj4+ICsJCXJldHVybiAtRU5PTUVNOwo+PiArCj4+ICsJZHNpLT5kZXYgPSBkZXY7Cj4+
-ICsJZHNpLT5kc2lfaG9zdC5vcHMgPSAmaW14X21pcGlfZHNpX2hvc3Rfb3BzOwo+PiArCWRzaS0+
-ZHNpX2hvc3QuZGV2ID0gZGV2Owo+PiArCj4+ICsJcmVzID0gcGxhdGZvcm1fZ2V0X3Jlc291cmNl
-KHBkZXYsIElPUkVTT1VSQ0VfTUVNLCAwKTsKPj4gKwlkc2ktPmJhc2UgPSBkZXZtX2lvcmVtYXBf
-cmVzb3VyY2UoZGV2LCByZXMpOwo+PiArCWlmIChJU19FUlIoZHNpLT5iYXNlKSkKPj4gKwkJcmV0
-dXJuIFBUUl9FUlIoZHNpLT5iYXNlKTsKPj4gKwo+PiArCWRzaS0+cmVnbWFwID0gc3lzY29uX3Jl
-Z21hcF9sb29rdXBfYnlfcGhhbmRsZShucCwgImdwciIpOwo+PiArCWlmIChJU19FUlIoZHNpLT5y
-ZWdtYXApKQo+PiArCQlyZXR1cm4gUFRSX0VSUihkc2ktPnJlZ21hcCk7Cj4+ICsKPj4gKwlkc2kt
-PnBsbHJlZl9jbGsgPSBkZXZtX2Nsa19nZXQoZGV2LCAicGxscmVmIik7Cj4+ICsJaWYgKElTX0VS
-Uihkc2ktPnBsbHJlZl9jbGspKSB7Cj4+ICsJCXJldCA9IFBUUl9FUlIoZHNpLT5wbGxyZWZfY2xr
-KTsKPj4gKwkJZGV2X2VycihkZXYsICJVbmFibGUgdG8gZ2V0IHBsbCByZWZlcmVuY2UgY2xvY2s6
-ICVkXG4iLCByZXQpOwo+PiArCQlyZXR1cm4gcmV0Owo+PiArCX0KPj4gKwljbGtfcHJlcGFyZV9l
-bmFibGUoZHNpLT5wbGxyZWZfY2xrKTsKPj4gKwo+PiArCWRzaS0+cGxscmVmX2dhdGVfY2xrID0g
-ZGV2bV9jbGtfZ2V0KGRldiwgInBsbHJlZl9nYXRlIik7Cj4+ICsJaWYgKElTX0VSUihkc2ktPnBs
-bHJlZl9nYXRlX2NsaykpIHsKPj4gKwkJcmV0ID0gUFRSX0VSUihkc2ktPnBsbHJlZl9nYXRlX2Ns
-ayk7Cj4+ICsJCWRldl9lcnIoZGV2LCAiVW5hYmxlIHRvIGdldCBwbGwgcmVmZXJlbmNlIGdhdGUg
-Y2xvY2s6ICVkXG4iLCByZXQpOwo+PiArCQlyZXR1cm4gcmV0Owo+PiArCX0KPj4gKwljbGtfcHJl
-cGFyZV9lbmFibGUoZHNpLT5wbGxyZWZfZ2F0ZV9jbGspOwo+Cj4gQXMgc2FpZCBhYm92ZSwgSSBk
-b24ndCB0aGluayB0aGlzIGNsb2NrIGlzIG5lZWRlZCwgb3IgaXMgaXQ/CgpQZXJoYXBzLCB3ZSBu
-ZWVkIGl0LgoKPgo+IElmIGVuYWJsaW5nIHBsbHJlZl9jbGsgZG9lc24ndCBhY3R1YWxseSBlbmFi
-bGUgdGhlIDI3bSBjbG9jayBpbnB1dCB0bwo+IHRoZSBtaXBpIGRzaSBjb3JlIGJlY2F1c2UgaXQg
-aXMgc3RpbGwgZ2F0ZWQgYnkgaHNpX3R4LCBtYXliZSB0aGUgY2xvY2sKPiB0cmVlIHNob3VsZCBi
-ZSBmaXhlZCBhbmQgaHNpX3R4IHR1cm5lZCBpbnRvIG11bHRpcGxlCj4gaW14X2Nsa19nYXRlMl9z
-aGFyZWQgY2xvY2tzLgoKQWNjb3JkaW5nIHRvIHRoZSBDQ00gY2hhcHRlciwgdGhlIHZpZGVvXzI3
-bSBjbG9jayBpcyBnYXRlZCBieSB0aGUgaHNpX3R4CmNsb2NrLiAgWW91IG1lbnRpb25lZCB0aGlz
-IGFib3ZlLCBhcyB3ZWxsLgoKPgo+PiArCj4+ICsJZHNpLT5jZmdfY2xrID0gZGV2bV9jbGtfZ2V0
-KGRldiwgImNvcmVfY2ZnIik7Cj4+ICsJaWYgKElTX0VSUihkc2ktPmNmZ19jbGspKSB7Cj4+ICsJ
-CXJldCA9IFBUUl9FUlIoZHNpLT5jZmdfY2xrKTsKPj4gKwkJZGV2X2VycihkZXYsICJVbmFibGUg
-dG8gZ2V0IGNvbmZpZ3VyYXRpb24gY2xvY2s6ICVkXG4iLCByZXQpOwo+Cj4gQW5kIGxlYXZlIHBs
-bHJlZiBlbmFibGVkPwoKQXMgSSBtZW50aW9uZWQgaW4gdGhlIHYxLT4gdjIgY2hhbmdlIGxvZywg
-SSBlbmFibGUvZGlzYWJsZSB0aGUgCnBsbHJlZl9jbGsgYW5kIHBsbHJlZl9nYXRlX2NsayBhdCB0
-aGUgY29tcG9uZW50IGJpbmRpbmcvdW5iaW5kaW5nIHN0YWdlcyAKdG8gaGVscCByZW1vdmUgdGhl
-IGZsYWcgJ2VuYWJsZWQnIGludHJvZHVjZWQgaW4gdjEuCgpJIHJlZmVycmVkIHRvIHRoZSBpLk1Y
-IEhETUkgZHJpdmVyIHdoaWNoIGVuYWJsZXMvZGlzYWJsZXMgdGhlIGlzZnIgY2xvY2sgCmFuZCB0
-aGUgaWFoYiBjbG9jayBhdCB0aGUgY29tcG9uZW50IGJpbmRpbmcvdW5iaW5kaW5nIHN0YWdlcy4K
-CkkgbWF5IHRyeSB0byBoYW5kbGUgdGhlIGNsb2NrIGVuYWJsZW1lbnQvZGlzYWJsZW1lbnQgbW9y
-ZSBkZWNlbnRseSBhbmQKYXZvaWQgdXNpbmcgdGhlIGZsYWcgJ2VuYWJsZScuCgo+Cj4+ICsJCXJl
-dHVybiByZXQ7Cj4+ICsJfQo+PiArCj4+ICsJY2xrX3ByZXBhcmVfZW5hYmxlKGRzaS0+Y2ZnX2Ns
-ayk7Cj4+ICsJdmFsID0gZHNpX3JlYWQoZHNpLCBEU0lfVkVSU0lPTik7Cj4+ICsJY2xrX2Rpc2Fi
-bGVfdW5wcmVwYXJlKGRzaS0+Y2ZnX2Nsayk7Cj4+ICsKPj4gKwlkZXZfaW5mbyhkZXYsICJ2ZXJz
-aW9uIG51bWJlciBpcyAweCUwOHhcbiIsIHZhbCk7Cj4+ICsKPj4gKwlyZXQgPSBpbXhfbWlwaV9k
-c2lfcmVnaXN0ZXIoZHJtLCBkc2kpOwo+PiArCWlmIChyZXQpCj4KPiBTYW1lIGhlcmUuCgpZb3Ug
-bWVhbnQgdGhhdCB0aGUgcGxscmVmX2dhdGUgY2xvY2sgaXMgbGVmdCBlbmFibGVkIGFib3ZlLCBy
-aWdodD8KClJlZ2FyZHMsCkxpdSBZaW5nCgo+Cj4+ICsJCXJldHVybiByZXQ7Cj4+ICsKPj4gKwlk
-ZXZfc2V0X2RydmRhdGEoZGV2LCBkc2kpOwo+PiArCj4+ICsJcmV0dXJuIG1pcGlfZHNpX2hvc3Rf
-cmVnaXN0ZXIoJmRzaS0+ZHNpX2hvc3QpOwo+PiArfQo+IFsuLi5dCj4KPiByZWdhcmRzCj4gUGhp
-bGlwcAo+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRy
-aS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRw
-Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Fri, Dec 19, 2014 at 2:08 AM, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org> wrote:
+> Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote on Wed [2014-Dec-17 17:41:51 +0900]:
+>> Looks ok to me. I have a few nits below, but otherwise I am happy with
+>> how it turned out:
+>>
+>> Reviewed-by: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> I'll add this to the next version.
+>
+>>
+>> Thanks for your patience with this!
+>>
+>> On Sat, Dec 13, 2014 at 7:07 AM, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org> wrote:
+>> > Based on Boris Brezillion's work this is a reworked patch
+>> > of his initial GPIO hogging mechanism.
+>> > This patch provides a way to initally configure specific GPIO
+>>
+>> s/initally/initially
+>>
+>> > when the gpio controller is probed.
+>>
+>> GPIO in capitals please.
+>>
+>> >
+>> > The actual DT scanning to collect the GPIO specific data is performed
+>> > as part of the gpiochip_add().
+>>
+>> d/the
+>>
+>> >
+>> > The purpose of this is to allows specific GPIOs to be configured
+>>
+>> s/allows/allow
+>>
+>> > without any driver specific code.
+>> > This particularly useful because board design are getting
+>>
+>> This is particularly
+>>
+>> > increasingly complex and given SoC pins can now have upward
+>> > of
+>>
+>> s/upward of/up to?
+>
+> well i meant more than 10 I think in some cases we have 13.
+>
+>>
+>> > 10 mux values a lot of connections are now dependent on
+>>
+>> seems like a comma is missing here.
+>>
+>> > external IO muxes to switch various modes and combination.
+>>
+>> not sure what a combination is in that context.
+>>
+>> >
+>> > Specific drivers should not necessarily need to be aware of
+>> > what accounts to a specific board implementation. This board level
+>> > "description" should be best kept as part of the dts file.
+>> >
+>> > Signed-off-by: Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>
+>> > ---
+>> > Changes since v3:
+>> >  * Relocated the non-DT "hog" function to gpiolib.c.
+>> >  * Rename some of the function to be clearer and remove _ prefixes.
+>> >  * Replace the gpiod_request/gpiod_put usage with
+>> >    gpiochip_request_own_desc/free_own_desc version instead.
+>> >  * Refactor some of the logic to better handle error condition/reporting
+>> >  * Renamed the "direction" DT properties to "state".
+>> >
+>> >  drivers/gpio/gpiolib-of.c | 119 ++++++++++++++++++++++++++++++++++++++++++
+>> >  drivers/gpio/gpiolib.c    | 128 ++++++++++++++++++++++++++++++++++++++--------
+>> >  drivers/gpio/gpiolib.h    |   3 ++
+>> >  3 files changed, 230 insertions(+), 20 deletions(-)
+>> >
+>> > diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+>> > index 604dbe6..5422216 100644
+>> > --- a/drivers/gpio/gpiolib-of.c
+>> > +++ b/drivers/gpio/gpiolib-of.c
+>> > @@ -22,6 +22,7 @@
+>> >  #include <linux/of_gpio.h>
+>> >  #include <linux/pinctrl/pinctrl.h>
+>> >  #include <linux/slab.h>
+>> > +#include <linux/gpio/machine.h>
+>> >
+>> >  #include "gpiolib.h"
+>> >
+>> > @@ -111,6 +112,122 @@ int of_get_named_gpio_flags(struct device_node *np, const char *list_name,
+>> >  EXPORT_SYMBOL(of_get_named_gpio_flags);
+>> >
+>> >  /**
+>> > + * of_get_gpio_hog() - Get a GPIO hog descriptor, names and flags for GPIO API
+>> > + * @np:                device node to get GPIO from
+>> > + * @name:      GPIO line name
+>> > + * @flags:     a flags pointer to fill in
+>> > + *
+>> > + * Returns GPIO descriptor to use with Linux GPIO API, or one of the errno
+>> > + * value on the error condition.
+>> > + */
+>> > +
+>> > +static struct gpio_desc *of_get_gpio_hog(struct device_node *np,
+>> > +                                 const char **name,
+>> > +                                 enum gpio_lookup_flags *lflags,
+>> > +                                 enum gpiod_flags *dflags)
+>> > +{
+>> > +       struct device_node *chip_np;
+>> > +       enum of_gpio_flags xlate_flags;
+>> > +       struct gpio_desc *desc;
+>> > +       const char *dir_val;
+>> > +       struct gg_data gg_data = {
+>> > +               .flags = &xlate_flags,
+>> > +               .out_gpio = NULL,
+>>
+>> out_gpio will be set to NULL if you don't specify it, so you don't
+>> need this last line.
+>
+> ok
+>
+>>
+>> > +       };
+>> > +       u32 tmp;
+>> > +       int i, ret;
+>> > +
+>> > +       chip_np = np->parent;
+>> > +       if (!chip_np)
+>> > +               return ERR_PTR(-EINVAL);
+>> > +
+>> > +       xlate_flags = 0;
+>> > +       *lflags = 0;
+>> > +       *dflags = 0;
+>> > +
+>> > +       ret = of_property_read_u32(chip_np, "#gpio-cells", &tmp);
+>> > +       if (ret)
+>> > +               return ERR_PTR(ret);
+>> > +
+>> > +       if (tmp > MAX_PHANDLE_ARGS)
+>> > +               return ERR_PTR(-EINVAL);
+>> > +
+>> > +       gg_data.gpiospec.args_count = tmp;
+>> > +       gg_data.gpiospec.np = chip_np;
+>> > +       for (i = 0; i < tmp; i++) {
+>> > +               ret = of_property_read_u32_index(np, "gpios", i,
+>> > +                                          &gg_data.gpiospec.args[i]);
+>> > +               if (ret)
+>> > +                       return ERR_PTR(ret);
+>> > +       }
+>> > +
+>> > +       gpiochip_find(&gg_data, of_gpiochip_find_and_xlate);
+>> > +       if (!gg_data.out_gpio) {
+>> > +               if (np->parent == np)
+>> > +                       return ERR_PTR(-ENXIO);
+>> > +               else
+>> > +                       return ERR_PTR(-EPROBE_DEFER);
+>> > +       }
+>> > +
+>> > +       if (xlate_flags & OF_GPIO_ACTIVE_LOW)
+>> > +               *lflags |= GPIO_ACTIVE_LOW;
+>> > +
+>> > +       if (of_property_read_string(np, "state", &dir_val)) {
+>> > +               pr_warn("%s: GPIO:%d (%s): no hogging state specified, bailing out\n",
+>> > +                        __func__, desc_to_gpio(gg_data.out_gpio), np->name);
+>> > +               return ERR_PTR(-EINVAL);
+>> > +       }
+>> > +
+>> > +       if (!strcmp(dir_val, "input"))
+>> > +               *dflags |= GPIOD_IN;
+>> > +       else if (!strcmp(dir_val, "output-low"))
+>> > +               *dflags |= GPIOD_OUT_LOW;
+>> > +       else if (!strcmp(dir_val, "output-high"))
+>> > +               *dflags |= GPIOD_OUT_HIGH;
+>> > +       else {
+>> > +               pr_warn("%s: GPIO:%d (%s): invalid state '%s' requested, bailing out\n",
+>> > +                        __func__, desc_to_gpio(gg_data.out_gpio),
+>> > +                       np->name, dir_val);
+>> > +               return ERR_PTR(-EINVAL);
+>> > +       }
+>> > +
+>> > +       if (name && of_property_read_string(np, "line-name", name))
+>> > +               *name = np->name;
+>> > +
+>> > +       desc = gg_data.out_gpio;
+>> > +
+>> > +       return desc;
+>> > +}
+>> > +
+>> > +/**
+>> > + * of_gpiochip_scan_hogs - Scan gpio-controller and apply GPIO hog as requested
+>> > + * @chip:      gpio chip to act on
+>> > + *
+>> > + * This is only used by of_gpiochip_add to request/set GPIO initial
+>> > + * configuration.
+>> > + */
+>> > +static void of_gpiochip_scan_hogs(struct gpio_chip *chip)
+>> > +{
+>> > +       struct gpio_desc *desc = NULL;
+>> > +       struct device_node *np;
+>> > +       const char *name;
+>> > +       enum gpio_lookup_flags lflags;
+>> > +       enum gpiod_flags dflags;
+>> > +
+>> > +       for_each_child_of_node(chip->dev->of_node, np) {
+>
+> As I was backporting this to 3.14 for my own purpose.
+> I encountered a NULL pointer dereference here.
+> In 3.14 chip->dev (which is optional) is NULL at least on my platform.
+> I had to change the above line to:
+>
+>        for_each_child_of_node(chip->of_node, np) {
+>
+> Would you recommend the same change here?
+
+That looks ok, yes. IIRC chip->of_node is precisely here because
+chip->dev might be NULL sometimes.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
