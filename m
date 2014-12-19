@@ -1,110 +1,56 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH v5 3/6] staging: fpga manager: framework core
-Date: Fri, 19 Dec 2014 08:22:31 +0100
-Message-ID: <28ea2232cf2d4d63b6a85a10decd4198@BN1AFFO11FD039.protection.gbl>
-References: <1418835289-15752-1-git-send-email-atull@opensource.altera.com>
- <1418835289-15752-4-git-send-email-atull@opensource.altera.com>
- <05395a89d783481b8b7c06bb299b53e0@BL2FFO11FD020.protection.gbl>
- <alpine.DEB.2.02.1412181440490.25208@linuxheads99>
+From: Shaohui Xie <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH] [v2] power/fsl: add MDIO dt binding for FMan
+Date: Fri, 19 Dec 2014 07:23:26 +0000
+Message-ID: <DM2PR0301MB0864AA31CD1A7438F476020FE26B0@DM2PR0301MB0864.namprd03.prod.outlook.com>
+References: <1415958800-9867-1-git-send-email-shh.xie@gmail.com>
+	 <1416966592.15957.172.camel@freescale.com>
+	  <DM2PR0301MB08641FB289DBA17AD59FBEA0E26A0@DM2PR0301MB0864.namprd03.prod.outlook.com>
+ <1418940078.5581.143.camel@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.02.1412181440490.25208@linuxheads99>
-Sender: linux-doc-owner@vger.kernel.org
-To: atull <atull@opensource.altera.com>, Michal Simek <michal.simek@xilinx.com>
-Cc: gregkh@linuxfoundation.org, jgunthorpe@obsidianresearch.com, hpa@zytor.com, monstr@monstr.eu, rdunlap@infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, pantelis.antoniou@konsulko.com, robh+dt@kernel.org, grant.likely@linaro.org, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, pavel@denx.de, broonie@kernel.org, philip@balister.org, rubini@gnudd.com, s.trumtrar@pengutronix.de, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, balbi@ti.com, m.chehab@samsung.com, davidb@codeaurora.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, linus.walleij@linaro.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devel@driverdev.osuosl.org, delicious.quinoa@gmail.com, dinguye
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1418940078.5581.143.camel-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Emilian Medve <Emilian.Medve-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/18/2014 09:46 PM, atull wrote:
-> On Thu, 18 Dec 2014, Michal Simek wrote:
-> 
->> Hi Alan,
->>
->> first of all - there are these kernel-doc warnings.
->>
->> Info(drivers/staging/fpga/fpga-mgr.c:37): Scanning doc for fpga_mgr_low_level_state
->> Warning(drivers/staging/fpga/fpga-mgr.c:43): No description found for return value of 'fpga_mgr_low_level_state'
->> Info(drivers/staging/fpga/fpga-mgr.c:51): Scanning doc for __fpga_mgr_reset
->> Warning(drivers/staging/fpga/fpga-mgr.c:55): No description found for return value of '__fpga_mgr_reset'
->> Info(drivers/staging/fpga/fpga-mgr.c:69): Scanning doc for fpga_mgr_reset
->> Warning(drivers/staging/fpga/fpga-mgr.c:73): No description found for return value of 'fpga_mgr_reset'
->> Info(drivers/staging/fpga/fpga-mgr.c:88): Scanning doc for __fpga_mgr_stage_init
->> Warning(drivers/staging/fpga/fpga-mgr.c:92): No description found for return value of '__fpga_mgr_stage_write_init'
->> Info(drivers/staging/fpga/fpga-mgr.c:108): Scanning doc for __fpga_mgr_stage_write
->> Warning(drivers/staging/fpga/fpga-mgr.c:115): No description found for return value of '__fpga_mgr_stage_write'
->> Info(drivers/staging/fpga/fpga-mgr.c:129): Scanning doc for __fpga_mgr_stage_complete
->> Warning(drivers/staging/fpga/fpga-mgr.c:133): No description found for return value of '__fpga_mgr_stage_write_complete'
->> Info(drivers/staging/fpga/fpga-mgr.c:151): Scanning doc for __fpga_mgr_write
->> Warning(drivers/staging/fpga/fpga-mgr.c:158): No description found for return value of '__fpga_mgr_write'
->> Info(drivers/staging/fpga/fpga-mgr.c:173): Scanning doc for fpga_mgr_write
->> Warning(drivers/staging/fpga/fpga-mgr.c:179): No description found for return value of 'fpga_mgr_write'
->> Info(drivers/staging/fpga/fpga-mgr.c:195): Scanning doc for fpga_mgr_firmware_write
->> Warning(drivers/staging/fpga/fpga-mgr.c:204): No description found for return value of 'fpga_mgr_firmware_write'
->> Info(drivers/staging/fpga/fpga-mgr.c:234): Scanning doc for fpga_mgr_name
->> Warning(drivers/staging/fpga/fpga-mgr.c:239): No description found for return value of 'fpga_mgr_name'
->> Info(drivers/staging/fpga/fpga-mgr.c:414): Scanning doc for fpga_mgr_register
->> Warning(drivers/staging/fpga/fpga-mgr.c:423): No description found for return value of 'fpga_mgr_register'
->> Info(drivers/staging/fpga/fpga-mgr.c:480): Scanning doc for fpga_mgr_remove
->> Warning(drivers/staging/fpga/fpga-mgr.c:484): No description found for parameter 'pdev'
->> Warning(drivers/staging/fpga/fpga-mgr.c:484): Excess function parameter 'dev' description in 'fpga_mgr_remove'
->>
-> 
-> I see the warnings now.  I wasn't using the '-v' option for kernel-doc.
-> Fixed in v6.
-> 
->>> diff --git a/drivers/staging/fpga/Makefile b/drivers/staging/fpga/Makefile
->>> new file mode 100644
->>> index 0000000..ff6c677
->>> --- /dev/null
->>> +++ b/drivers/staging/fpga/Makefile
->>> @@ -0,0 +1,10 @@
->>> +#
->>> +# Makefile for the fpga framework and fpga manager drivers.
->>> +#
->>> +
->>> +fpga-mgr-core-y += fpga-mgr.o
->>
->> remove this line - it is unused.
->>
-> 
-> OK
-> 
->>> +static int __init fpga_mgr_dev_init(void)
->>> +{
->>> +	pr_info("FPGA Manager framework driver\n");
->>> +
->>> +	fpga_mgr_class = class_create(THIS_MODULE, "fpga_manager");
->>> +	if (IS_ERR(fpga_mgr_class))
->>> +		return PTR_ERR(fpga_mgr_class);
->>> +
->>> +	fpga_mgr_class->dev_groups = fpga_mgr_groups;
->>
->>
->> Write this here.
->>        if (IS_ENABLED(CONFIG_FPGA_MGR_SYSFS)) {
->>              fpga_mgr_class->dev_groups = fpga_mgr_groups;
->>        }
->>
->> I have tested it and it is working just fine. You can compile this
->> driver with SYSFS=n
->> The whole code is built and config option just export it.
->> I think it is better than having #if there.
->>
->> Greg: Is there any problem with this solution?
->>
-> 
-> I'm cool with this myself.  I'll add in v6.
-> 
->> BTW: I have pushed my branch to zero day testing system to get better coverage
->>
-> 
-> Michal, I've already done that with each submission.  Assuming you are
-> referring to the kbuild test robot.
-
-Yes, Kbuild test robot.
-
-Thanks,
-Michal
-
-
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBXb29kIFNjb3R0LUIwNzQyMQ0K
+PiBTZW50OiBGcmlkYXksIERlY2VtYmVyIDE5LCAyMDE0IDY6MDEgQU0NCj4gVG86IFhpZSBTaGFv
+aHVpLUIyMTk4OQ0KPiBDYzogbGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmc7IGRldmljZXRy
+ZWVAdmdlci5rZXJuZWwub3JnOyBNZWR2ZSBFbWlsaWFuLQ0KPiBFTU1FRFZFMTsgTGliZXJtYW4g
+SWdhbC1CMzE5NTANCj4gU3ViamVjdDogUmU6IFtQQVRDSF0gW3YyXSBwb3dlci9mc2w6IGFkZCBN
+RElPIGR0IGJpbmRpbmcgZm9yIEZNYW4NCj4gDQo+IE9uIFRodSwgMjAxNC0xMi0xOCBhdCAwNjo1
+MyAtMDYwMCwgWGllIFNoYW9odWktQjIxOTg5IHdyb3RlOg0KPiA+IFBpbmcuDQo+ID4NCj4gPiBC
+ZXN0IFJlZ2FyZHMsDQo+ID4gU2hhb2h1aSBYaWUNCj4gDQo+IEkgY2FuJ3QgcHV0IHBhdGNoZXMg
+aW4gbXkgLW5leHQgdW50aWwgdGhlIG1lcmdlIHdpbmRvdyBjbG9zZXMuDQo+IA0KPiA+ID4gPiA+
+ICtFWEFNUExFDQo+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ICtFeGFtcGxlIGZvciBGTWFuIHYyIGV4
+dGVybmFsIE1ESU86DQo+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ICttZGlvQGYxMDAwIHsNCj4gPiA+
+ID4gPiArCWNvbXBhdGlibGUgPSAiZnNsLGZtYW4teG1kaW8iOw0KPiA+ID4gPiA+ICsJcmVnID0g
+PDB4ZjEwMDAgMHgxMDAwPjsNCj4gPiA+ID4gPiArCWJ1cy1mcmVxdWVuY3kgPSA8MjAwMDA+Ow0K
+PiA+ID4gPiA+ICt9Ow0KPiA+ID4gPg0KPiA+ID4gPiBTbyB0aGUgYnVzIGZyZXF1ZW5jeSBpcyBv
+bmx5IDIwIEtIej8gIE9yIGlzIHRoZSB1bml0IHN1cHBvc2VkIHRvDQo+ID4gPiA+IGJlIHNvbWV0
+aGluZyBvdGhlciB0aGFuIEh6Pw0KPiA+ID4gW1MuSF0gaXQncyBvbmx5IGFuIGV4YW1wbGUsIGl0
+IGNvdWxkIGJlIGRpZmZlcmVudCBvbiByZWFsIFNvQ3MsIGJ1dA0KPiA+ID4gdGhleSBhbHdheXMg
+bG93ZXIgdGhhbiB0aGUgc3RhbmRhcmQgb25lLCBUaGUgc3RhbmRhcmQgb25lIGlzIDIuNU1Ieiwg
+SSBoYXZlDQo+IHRvIHVzZSBIeiBmb3IgaXQuDQo+IA0KPiBJcyB0aGVyZSBhbnkgU29DIGZvciB3
+aGljaCAyMCBrSHogaXMgdGhlIHJpZ2h0IGZyZXF1ZW5jeT8gIEkganVzdCB3YW50IHRvIG1ha2UN
+Cj4gc3VyZSB0aGUgZXhhbXBsZSBpcyByZWFsaXN0aWMuDQpbUy5IXSB0aGUgY2xvY2sgZGl2aWRl
+ciBoYXMgYSBsaW1pdGF0aW9uIHRoYXQgdGhlIE1BWCB2YWx1ZSBpdCBjYW4gZ2V0IG9uIEZtYW4g
+djIgaXMgMjU1ICgweGZmLCA4IGJpdHMpLA0KT24gRm1hbiB2MyBpcyA1MTEoMHgxZmYsIDkgYml0
+cykuDQoNClNvIHRoZSBsb3dlc3QgZnJlcXVlbmN5IG9uIEZtYW4gdjIgaXM6IEZtYW5fY2xvY2sg
+LyAoMiAqIDI1NSksDQpPbiBGbWFuIHYzIGlzOiBGbWFuX2Nsb2NrIC8gKCgyICogNTExKSArIDEp
+Lg0KDQpUYWtlIGRlZmF1bHQgRm1hbiBmcmVxdWVuY3kgc2V0dGluZyBmcm9tIFNESzEuNyBhcyBl
+eGFtcGxlLCB0aGUgbG93ZXN0IGNsb2NrIHVzZWQgZm9yIEZtYW4gdjIgaXMgNTgxTUh6LA0KVGhl
+IGxvd2VzdCBjbG9jayBmb3IgRm1hbiB2MyBpcyA2MDBNSHouDQoNClRoZW4gdGhlIGxvd2VzdCBi
+dXMgZnJlcXVlbmN5IGNhbiBnZXQgaXM6DQpGbWFuIHYyOiB+MTE0MEtIeg0KRm1hbiB2MzogfjU4
+N0tIeg0KDQoyMEtIeiBpcyBub3QgcHJhY3RpY2UsIHdlIGRvbid0IGhhdmUgYSBzdWdnZXN0ZWQg
+dmFsdWUgaW4gZXJyYXRhIGRvY3VtZW50Lg0KRm9yIHRoaXMgZXhhbXBsZSwgc2hvdWxkIEkgcG9z
+dCBhIG5ldyB2ZXJzaW9uIHdpdGggYSB2YWx1ZSBsaWtlIDEyMDBLSHo/DQoNClRoYW5rcyENClNo
+YW9odWkNCg==
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
