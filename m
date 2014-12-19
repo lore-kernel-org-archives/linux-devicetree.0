@@ -1,7 +1,7 @@
 From: <atull@opensource.altera.com>
-Subject: [PATCH v7 2/4] fpga manager: add sysfs interface document
-Date: Fri, 19 Dec 2014 10:45:49 -0600
-Message-ID: <1419007551-10040-3-git-send-email-atull@opensource.altera.com>
+Subject: [PATCH v7 1/4] doc: add bindings document for altera fpga manager
+Date: Fri, 19 Dec 2014 10:45:48 -0600
+Message-ID: <1419007551-10040-2-git-send-email-atull@opensource.altera.com>
 References: <1419007551-10040-1-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,66 +23,42 @@ List-Id: devicetree@vger.kernel.org
 
 From: Alan Tull <atull@opensource.altera.com>
 
-Add documentation under drivers/staging for new fpga manager's
-sysfs interface.
+New bindings document for Altera fpga manager.
 
 Signed-off-by: Alan Tull <atull@opensource.altera.com>
 ---
-v5  : (actually second version, but keeping version numbers
-      aligned with rest of patch series)
-      Move document to drivers/staging/fpga/Documentation/ABI
+v5 : Move bindings to drivers/staging/fpga/Documentation/bindings
 
-v6  : No change in this patch for v6 of the patch set
+v6 : No change in this patch for v6 of the patch set
 
-v7  : No change in this patch for v7 of the patch set
+v7 : No change in this patch for v7 of the patch set
 ---
- .../Documentation/ABI/sysfs-class-fpga-manager     |   38 ++++++++++++++++++++
- 1 file changed, 38 insertions(+)
- create mode 100644 drivers/staging/fpga/Documentation/ABI/sysfs-class-fpga-manager
+ .../Documentation/bindings/altera-fpga-mgr.txt     |   17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+ create mode 100644 drivers/staging/fpga/Documentation/bindings/altera-fpga-mgr.txt
 
-diff --git a/drivers/staging/fpga/Documentation/ABI/sysfs-class-fpga-manager b/drivers/staging/fpga/Documentation/ABI/sysfs-class-fpga-manager
+diff --git a/drivers/staging/fpga/Documentation/bindings/altera-fpga-mgr.txt b/drivers/staging/fpga/Documentation/bindings/altera-fpga-mgr.txt
 new file mode 100644
-index 0000000..eb600f2
+index 0000000..373af7b
 --- /dev/null
-+++ b/drivers/staging/fpga/Documentation/ABI/sysfs-class-fpga-manager
-@@ -0,0 +1,38 @@
-+What:		/sys/class/fpga_manager/<fpga>/name
-+Date:		October 2014
-+KernelVersion:	3.18
-+Contact:	Alan Tull <atull@opensource.altera.com>
-+Description:	Name of low level driver.
++++ b/drivers/staging/fpga/Documentation/bindings/altera-fpga-mgr.txt
+@@ -0,0 +1,17 @@
++Altera FPGA Manager
 +
-+What:		/sys/class/fpga_manager/<fpga>/firmware
-+Date:		October 2014
-+KernelVersion:	3.18
-+Contact:	Alan Tull <atull@opensource.altera.com>
-+Description:	Name of the FPGA image file to load using firmware class.
++Required properties:
++- compatible : should contain "altr,fpga-mgr"
++- reg        : base address and size for memory mapped io.
++               - The first index is for FPGA manager register access.
++               - The second index is for writing FPGA configuration data.
++- interrupts : interrupt for the FPGA Manager device.
 +
-+What:		/sys/class/fpga_manager/<fpga>/reset
-+Date:		October 2014
-+KernelVersion:	3.18
-+Contact:	Alan Tull <atull@opensource.altera.com>
-+Description:	Write 1 to reset the FPGA
++Example:
 +
-+What:		/sys/class/fpga_manager/<fpga>/state
-+Date:		October 2014
-+KernelVersion:	3.18
-+Contact:	Alan Tull <atull@opensource.altera.com>
-+Description:	Read state of fpga framework state machine as a string.
-+		Valid states may vary by manufacturer; superset is:
-+		* unknown		= can't determine state
-+		* power_off		= FPGA power is off
-+		* power_up		= FPGA reports power is up
-+		* reset			= FPGA held in reset state
-+		* firmware_request	= firmware class request in progress
-+		* firmware_request_err	= firmware request failed
-+		* write_init		= FPGA being prepared for programming
-+		* write_init_err	= Error while preparing FPGA for
-+					  programming
-+		* write			= FPGA ready to receive image data
-+		* write_err		= Error while programming
-+		* write_complete	= Doing post programming steps
-+		* write_complete_err	= Error while doing post programming
-+		* operating		= FPGA is programmed and operating
++	hps_0_fpgamgr: fpgamgr@0xff706000 {
++		compatible = "altr,fpga-mgr";
++		reg = <0xFF706000 0x1000
++		       0xFFB90000 0x1000>;
++		interrupts = <0 175 4>;
++	};
 -- 
 1.7.9.5
