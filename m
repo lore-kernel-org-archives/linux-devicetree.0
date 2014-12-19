@@ -1,68 +1,66 @@
-From: Mugunthan V N <mugunthanvnm@ti.com>
-Subject: [PATCH 1/1] ARM: dts: dra7-evm: fix qspi device tree partition size
-Date: Fri, 19 Dec 2014 13:53:05 +0530
-Message-ID: <1418977385-7886-1-git-send-email-mugunthanvnm@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: bcousson@baylibre.com, tony@atomide.com
-Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, Mugunthan V N <mugunthanvnm@ti.com>
+From: Beomho Seo <beomho.seo@samsung.com>
+Subject: [PATCH 2/2] ARM: dts: exynos3250: replace number by macro in gpio keys
+Date: Fri, 19 Dec 2014 17:39:30 +0900
+Message-ID: <1418978370-22542-2-git-send-email-beomho.seo@samsung.com>
+References: <1418978370-22542-1-git-send-email-beomho.seo@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1418978370-22542-1-git-send-email-beomho.seo@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: kgene.kim@samsung.com, yj44.cho@samsung.com, cw00.choi@samsung.com, inki.dae@samsung.com, sw0312.kim@samsung.com, jh80.chung@samsung.com, kyungmin.park@samsung.com, beomho.seo@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-64KiB is allocated for qspi dtb partition which is not
-sufficient, so updating the partition table size to 512KiB
-for device tree partition.
+This patch replace number by macro in gpio keys for exynos 3250 boards.
 
-This also aligns the QSPI partition definitions between
-kernel and U-Boot.
-
-Fixes: dc2dd5b8 ("ARM: dts: dra7: Add qspi device")
-
-Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
+Cc: Youngjun Cho <yj44.cho@samsung.com>
+Cc: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: Beomho Seo <beomho.seo@samsung.com>
 ---
+ arch/arm/boot/dts/exynos3250-monk.dts   |    3 ++-
+ arch/arm/boot/dts/exynos3250-rinato.dts |    3 ++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
-This patch is tested on Linux next and the boot logs at [1]
-
-[1] - http://pastebin.ubuntu.com/9567672/
-
----
- arch/arm/boot/dts/dra7-evm.dts | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/arch/arm/boot/dts/dra7-evm.dts b/arch/arm/boot/dts/dra7-evm.dts
-index 736092b..235d001 100644
---- a/arch/arm/boot/dts/dra7-evm.dts
-+++ b/arch/arm/boot/dts/dra7-evm.dts
-@@ -499,23 +499,23 @@
- 		};
- 		partition@5 {
- 			label = "QSPI.u-boot-spl-os";
--			reg = <0x00140000 0x00010000>;
-+			reg = <0x00140000 0x00080000>;
- 		};
- 		partition@6 {
- 			label = "QSPI.u-boot-env";
--			reg = <0x00150000 0x00010000>;
-+			reg = <0x001c0000 0x00010000>;
- 		};
- 		partition@7 {
- 			label = "QSPI.u-boot-env.backup1";
--			reg = <0x00160000 0x0010000>;
-+			reg = <0x001d0000 0x0010000>;
- 		};
- 		partition@8 {
- 			label = "QSPI.kernel";
--			reg = <0x00170000 0x0800000>;
-+			reg = <0x001e0000 0x0800000>;
- 		};
- 		partition@9 {
- 			label = "QSPI.file-system";
--			reg = <0x00970000 0x01690000>;
-+			reg = <0x009e0000 0x01620000>;
- 		};
- 	};
- };
+diff --git a/arch/arm/boot/dts/exynos3250-monk.dts b/arch/arm/boot/dts/exynos3250-monk.dts
+index 2129ab98..792a2c7 100644
+--- a/arch/arm/boot/dts/exynos3250-monk.dts
++++ b/arch/arm/boot/dts/exynos3250-monk.dts
+@@ -15,6 +15,7 @@
+ /dts-v1/;
+ #include "exynos3250.dtsi"
+ #include <dt-bindings/input/input.h>
++#include <dt-bindings/gpio/gpio.h>
+ 
+ / {
+ 	model = "Samsung Monk board";
+@@ -37,7 +38,7 @@
+ 		compatible = "gpio-keys";
+ 
+ 		power_key {
+-			gpios = <&gpx2 7 1>;
++			gpios = <&gpx2 7 GPIO_ACTIVE_LOW>;
+ 			linux,code = <KEY_POWER>;
+ 			label = "power key";
+ 			debounce-interval = <10>;
+diff --git a/arch/arm/boot/dts/exynos3250-rinato.dts b/arch/arm/boot/dts/exynos3250-rinato.dts
+index c186ac6..3493bca 100644
+--- a/arch/arm/boot/dts/exynos3250-rinato.dts
++++ b/arch/arm/boot/dts/exynos3250-rinato.dts
+@@ -15,6 +15,7 @@
+ /dts-v1/;
+ #include "exynos3250.dtsi"
+ #include <dt-bindings/input/input.h>
++#include <dt-bindings/gpio/gpio.h>
+ 
+ / {
+ 	model = "Samsung Rinato board";
+@@ -37,7 +38,7 @@
+ 		compatible = "gpio-keys";
+ 
+ 		power_key {
+-			gpios = <&gpx2 7 1>;
++			gpios = <&gpx2 7 GPIO_ACTIVE_LOW>;
+ 			linux,code = <KEY_POWER>;
+ 			label = "power key";
+ 			debounce-interval = <10>;
 -- 
-2.2.1.62.g3f15098
-
+1.7.9.5
