@@ -1,47 +1,85 @@
-From: Angelo Compagnucci <angelo.compagnucci-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] iio: ti-adc128s052: Add DT binding documentation
-Date: Fri, 19 Dec 2014 18:10:39 +0100
-Message-ID: <1419009039-1057-1-git-send-email-angelo.compagnucci@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Angelo Compagnucci <angelo.compagnucci-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Jonathan Richardson <jonathar@broadcom.com>
+Subject: Re: [PATCH 1/2] Input: touchscreen-iproc: Add Broadcom iProc touchscreen
+ driver
+Date: Fri, 19 Dec 2014 11:51:33 -0800
+Message-ID: <549481C5.7050802@broadcom.com>
+References: <Jonathan Richardson <jonathar@broadcom.com>  <1418867992-3550-1-git-send-email-jonathar@broadcom.com>  <1418867992-3550-2-git-send-email-jonathar@broadcom.com> <1418868881.28384.8.camel@perches.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1418868881.28384.8.camel@perches.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Joe Perches <joe@perches.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Adding binding documentation for Texas Instruments' ADC128S052 ADC chip.
----
- .../devicetree/bindings/iio/adc/ti-adc128s052.txt      | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/ti-adc128s052.txt
+Thanks Joe. I'll send out a new patch set with your suggestions/fixes
+shortly.
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/ti-adc128s052.txt b/Documentation/devicetree/bindings/iio/adc/ti-adc128s052.txt
-new file mode 100644
-index 0000000..12132ef
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/ti-adc128s052.txt
-@@ -0,0 +1,18 @@
-+* Texas Instruments' ADC128S052 ADC chip
-+
-+Required properties:
-+  - compatible: Should be "ti,adc128s052" 
-+  - reg: spi chip select number for the device
-+  - vref-supply: The regulator supply ADC reference voltage.
-+
-+Recommended properties:
-+- spi-max-frequency: Definition as per
-+                     Documentation/devicetree/bindings/spi/spi-bus.txt
-+
-+Example:
-+adc@0 {
-+	compatible = "ti,adc128s052";
-+	reg = <0>;
-+	vref-supply = <&vdd_supply>;
-+	spi-max-frequency = <1000000>;
-+};
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 14-12-17 06:14 PM, Joe Perches wrote:
+> On Wed, 2014-12-17 at 17:59 -0800, Jonathan Richardson wrote:
+>> Add initial version of the Broadcom touchscreen driver.
+> 
+> trivia:
+> 
+>> diff --git a/drivers/input/touchscreen/bcm_iproc_tsc.c b/drivers/input/touchscreen/bcm_iproc_tsc.c
+> 
+>> +/* Bit values for REGCTL2 */
+>> +#define TS_CONTROLLER_EN_BIT    (1 << 16)
+>> +#define TS_CONTROLLER_AVGDATA_SHIFT 8
+>> +#define TS_CONTROLLER_AVGDATA_MASK (0x7 << TS_CONTROLLER_AVGDATA_SHIFT)
+>> +#define TS_CONTROLLER_PWR_LDO   (1<<5)
+>> +#define TS_CONTROLLER_PWR_ADC   (1<<4)
+>> +#define TS_CONTROLLER_PWR_BGP   (1<<3)
+>> +#define TS_CONTROLLER_PWR_TS    (1<<2)
+>> +#define TS_WIRE_MODE_BIT        (1<<1)
+> 
+> Be nicer to use the same spacing around <<
+> or maybe use the BIT macro.
+> 
+> []
+> 
+>> +static int get_tsc_config(struct device_node *np, struct iproc_ts_priv *priv)
+>> +{
+>> +	int ret;
+>> +	u32 val;
+>> +	struct device *dev = &priv->pdev->dev;
+>> +
+>> +	priv->cfg_params = default_config;
+>> +
+>> +	ret = of_property_read_u32(np, "scanning_period", &val);
+>> +	if (ret >= 0) {
+>> +		if ((1 <= val) && (val <= 256))
+>> +			priv->cfg_params.scanning_period = val;
+>> +		else {
+>> +			dev_err(dev, "scanning_period must be [1-256]");
+>> +			return -EINVAL;
+>> +		}
+> 
+> ret is never used so I'd probably remove it
+> from all these blocks.
+> 
+> It's probably be nicer to invert the logic ald
+> remove the else.
+> 
+> There's a missing terminating newline too.
+> 
+> Something like:
+> 
+> 	if (of_property_read_u32(np, "scanning_period", &val) >= 0) {
+> 		if (val < 1 || val > 256) {
+> 			dev_err(dev, "scanning_period must be [1-256]\n");
+> 			return -EINVAL;
+> 		}
+> 		priv->cfg_params.scanning_period = val;
+> 	}
+> 
+> etc...
+> 
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
