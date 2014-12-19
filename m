@@ -1,62 +1,155 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH] mmc: dt: Add property for broken hs200 quirk
-Date: Fri, 19 Dec 2014 12:38:07 +0100
-Message-ID: <CAPDyKFrPC_MphsLHHZ=uFjcF8SsdkVmzez9R=gas7_ihn63Q5A@mail.gmail.com>
-References: <1418412516-10682-1-git-send-email-bjorn.andersson@sonymobile.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1418412516-10682-1-git-send-email-bjorn.andersson@sonymobile.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: Anton Vorontsov <anton@enomsg.org>, Chris Ball <chris@printf.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "open list:SECURE DIGITAL HO..." <linux-mmc@vger.kernel.org>
+From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH] of: unittest: Overlays with sub-devices tests
+Date: Fri, 19 Dec 2014 14:34:34 +0200
+Message-ID: <1418992474-19416-1-git-send-email-pantelis.antoniou@konsulko.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12 December 2014 at 20:28, Bjorn Andersson
-<bjorn.andersson@sonymobile.com> wrote:
+Introduce selftests for overlays using sub-devices present
+in children nodes.
 
-Some more explanation to why this needed would be good.
+Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+---
+ drivers/of/unittest-data/tests-overlay.dtsi | 55 +++++++++++++++++++++++++++++
+ drivers/of/unittest.c                       | 39 ++++++++++++++++++++
+ 2 files changed, 94 insertions(+)
 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-> ---
->  Documentation/devicetree/bindings/mmc/mmc.txt | 2 ++
+diff --git a/drivers/of/unittest-data/tests-overlay.dtsi b/drivers/of/unittest-data/tests-overlay.dtsi
+index 75976da..a2b687d 100644
+--- a/drivers/of/unittest-data/tests-overlay.dtsi
++++ b/drivers/of/unittest-data/tests-overlay.dtsi
+@@ -176,5 +176,60 @@
+ 			};
+ 		};
+ 
++		overlay10 {
++			fragment@0 {
++				target-path = "/testcase-data/overlay-node/test-bus";
++				__overlay__ {
++
++					/* suppress DTC warning */
++					#address-cells = <1>;
++					#size-cells = <0>;
++
++					test-selftest10 {
++						compatible = "selftest";
++						status = "okay";
++						reg = <10>;
++
++						#address-cells = <1>;
++						#size-cells = <0>;
++
++						test-selftest101 {
++							compatible = "selftest";
++							status = "okay";
++							reg = <1>;
++						};
++
++					};
++				};
++			};
++		};
++
++		overlay11 {
++			fragment@0 {
++				target-path = "/testcase-data/overlay-node/test-bus";
++				__overlay__ {
++
++					/* suppress DTC warning */
++					#address-cells = <1>;
++					#size-cells = <0>;
++
++					test-selftest11 {
++						compatible = "selftest";
++						status = "okay";
++						reg = <11>;
++
++						#address-cells = <1>;
++						#size-cells = <0>;
++
++						test-selftest111 {
++							compatible = "selftest";
++							status = "okay";
++							reg = <1>;
++						};
++
++					};
++				};
++			};
++		};
+ 	};
+ };
+diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+index 844838e..41a4a13 100644
+--- a/drivers/of/unittest.c
++++ b/drivers/of/unittest.c
+@@ -978,6 +978,9 @@ static int selftest_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	dev_dbg(dev, "%s for node @%s\n", __func__, np->full_name);
++
++	of_platform_populate(np, NULL, NULL, &pdev->dev);
++
+ 	return 0;
+ }
+ 
+@@ -1385,6 +1388,39 @@ static void of_selftest_overlay_8(void)
+ 	selftest(1, "overlay test %d passed\n", 8);
+ }
+ 
++/* test insertion of a bus with parent devices */
++static void of_selftest_overlay_10(void)
++{
++	int ret;
++	char *child_path;
++
++	/* device should disable */
++	ret = of_selftest_apply_overlay_check(10, 10, 0, 1);
++	if (selftest(ret == 0, "overlay test %d failed; overlay application\n", 10))
++		return;
++
++	child_path = kasprintf(GFP_KERNEL, "%s/test-selftest101",
++			selftest_path(10));
++	if (selftest(child_path, "overlay test %d failed; kasprintf\n", 10))
++		return;
++
++	ret = of_path_platform_device_exists(child_path);
++	kfree(child_path);
++	if (selftest(ret, "overlay test %d failed; no child device\n", 10))
++		return;
++}
++
++/* test insertion of a bus with parent devices (and revert) */
++static void of_selftest_overlay_11(void)
++{
++	int ret;
++
++	/* device should disable */
++	ret = of_selftest_apply_revert_overlay_check(11, 11, 0, 1);
++	if (selftest(ret == 0, "overlay test %d failed; overlay application\n", 11))
++		return;
++}
++
+ static void __init of_selftest_overlay(void)
+ {
+ 	struct device_node *bus_np = NULL;
+@@ -1433,6 +1469,9 @@ static void __init of_selftest_overlay(void)
+ 	of_selftest_overlay_6();
+ 	of_selftest_overlay_8();
+ 
++	of_selftest_overlay_10();
++	of_selftest_overlay_11();
++
+ out:
+ 	of_node_put(bus_np);
+ }
+-- 
+1.7.12
 
-This file lists the generic mmc DT bindings, but you want to add a
-specific binding for sdhci?
-
->  drivers/mmc/host/sdhci-pltfm.c                | 3 +++
->  2 files changed, 5 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
-> index b52628b..04f80ef 100644
-> --- a/Documentation/devicetree/bindings/mmc/mmc.txt
-> +++ b/Documentation/devicetree/bindings/mmc/mmc.txt
-> @@ -22,6 +22,8 @@ Optional properties:
->  - wp-inverted: when present, polarity on the WP line is inverted. See the note
->    below for the case, when a GPIO is used for the WP line
->  - max-frequency: maximum operating clock frequency
-> +- broken-hs200: when present, denotes that eMMC HS200 modes are not supported on
-> +  this system, even if the controller claims it is.
->  - no-1-8-v: when present, denotes that 1.8v card voltage is not supported on
->    this system, even if the controller claims it is.
->  - cap-sd-highspeed: SD high-speed timing is supported
-> diff --git a/drivers/mmc/host/sdhci-pltfm.c b/drivers/mmc/host/sdhci-pltfm.c
-> index c5b01d6..570837f 100644
-> --- a/drivers/mmc/host/sdhci-pltfm.c
-> +++ b/drivers/mmc/host/sdhci-pltfm.c
-> @@ -90,6 +90,9 @@ void sdhci_get_of_property(struct platform_device *pdev)
->                 if (of_get_property(np, "broken-cd", NULL))
->                         host->quirks |= SDHCI_QUIRK_BROKEN_CARD_DETECTION;
->
-> +               if (of_get_property(np, "broken-hs200", NULL))
-> +                       host->quirks2 |= SDHCI_QUIRK2_BROKEN_HS200;
-> +
->                 if (of_get_property(np, "no-1-8-v", NULL))
->                         host->quirks2 |= SDHCI_QUIRK2_NO_1_8_V;
->
-> --
-> 1.8.2.2
->
-
-Kind regards
-Uffe
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
