@@ -1,140 +1,225 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCHv4 1/8] devfreq: event: Add new devfreq_event class to
- provide basic data for devfreq governor
-Date: Fri, 19 Dec 2014 15:46:06 +0900
-Message-ID: <5493C9AE.1020202@samsung.com>
-References: <1107836838.16761418955089663.JavaMail.weblogic@epmlwas08d>
+From: "Andy Yan" <andyshrk@163.com>
+Subject: Re:[PATCH RFC v2 00/14] Add support for i.MX MIPI DSI DRM driver
+Date: Fri, 19 Dec 2014 14:33:34 +0800 (CST)
+Message-ID: <59cf2641.8c29.14a614058be.Coremail.andyshrk@163.com>
+References: <1418886696-11636-1-git-send-email-Ying.Liu@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1107836838.16761418955089663.JavaMail.weblogic@epmlwas08d>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: myungjoo.ham@samsung.com
-Cc: =?UTF-8?B?6rmA6rWt7KeE?= <kgene.kim@samsung.com>, =?UTF-8?B?67CV6rK966+8?= <kyungmin.park@samsung.com>, "rafael.j.wysocki@intel.com" <rafael.j.wysocki@intel.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, ABHILASH KESAVAN <a.kesavan@samsung.com>, "tomasz.figa@gmail.com" <tomasz.figa@gmail.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, =?UTF-8?B?64yA7J246riw?= <inki.dae@samsung.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>
+Content-Type: multipart/mixed; boundary="===============0066627877=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1418886696-11636-1-git-send-email-Ying.Liu@freescale.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Liu Ying <Ying.Liu@freescale.com>
+Cc: devicetree@vger.kernel.org, mturquette@linaro.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, kernel@pengutronix.de, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Myungjoo,
+--===============0066627877==
+Content-Type: multipart/alternative;
+	boundary="----=_Part_143712_1171124761.1418970814653"
 
-On 12/19/2014 11:11 AM, MyungJoo Ham wrote:
->>   
->>  Dear Myungjoo,
->>
->> Thanks for your review.
->>
->> On 12/18/2014 03:24 PM, MyungJoo Ham wrote:
->>> Hi Chanwoo,
->>>
->>> I love the idea and I now have a little mechanical issues in your code.
->>>
->>>> ---
->>>>  drivers/devfreq/Kconfig         |   2 +
->>>>  drivers/devfreq/Makefile        |   5 +-
->>>>  drivers/devfreq/devfreq-event.c | 449 ++++++++++++++++++++++++++++++++++++++++
->>>>  drivers/devfreq/event/Makefile  |   1 +
->>>>  include/linux/devfreq.h         | 160 ++++++++++++++
->>>>  5 files changed, 616 insertions(+), 1 deletion(-)
->>>>  create mode 100644 drivers/devfreq/devfreq-event.c
->>>>  create mode 100644 drivers/devfreq/event/Makefile
->>>>
-> 
-> []
-> 
->>
->>>
->>>
->>> [snip]
->>>
->>>> diff --git a/drivers/devfreq/devfreq-event.c b/drivers/devfreq/devfreq-event.c
->>>> new file mode 100644
->>>> index 0000000..0e1948e
->>>> --- /dev/null
->>>> +++ b/drivers/devfreq/devfreq-event.c
->>>> @@ -0,0 +1,449 @@
->>>> +/*
->>>> + * devfreq-event: Generic DEVFREQ Event class driver
->>>
->>> DEVFREQ is a generic DVFS mechanism (or subsystem).
->>>
->>> Plus, I thought devfreq-event is considered to be a "framework"
->>> for devfreq event class drivers. Am I mistaken?
->>
->> You're right. just "class driver" description is not proper.
->> I'll modify the description of devfreq-event.c as following:
->> or If you have other opinion, would you please let me know about it?
->>
->> 	devfreq-event: DEVFREQ-Event Framework to provide raw data of Non-CPU Devices.
-> 
-> devfreq-event: a framework to provide raw data and events of devfreq devices
-> 
-> should be enough.
+------=_Part_143712_1171124761.1418970814653
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 
-OK, I'll modify it.
+SGkgTGl1IFlpbmc6CgogSSBmb3VkIFJvY2tjaGlwIFJLNjE4IChhIG1mZCBmdW5jdGlvbiBkZXZp
+Y2Ugd2l0aCBtaXBpIGRzae+8jGx2ZHMgdHJhbnNtaXR0ZXLjgIFIRE1JIFRY44CBYW5kIGF1ZGlv
+IGNvZGVj77yMYW5kCmNvbnRyb2xsZWQgYnkgdGhlIFNPQyBmcm9tIGkyYyApIGhhdmUgdGhlIHNh
+bWUgcmVnaXN0ZXIgbGF5b3V0IHdpdGggeW91ciBpLk1YIE1JUEkgRFNJ77yMd2hpY2ggbWVhbnMg
+Uks2MTggTUlQSQpEU0kgYWxzbyBoYXZlIHRoZSBTeW5vcHN5cyBjb21wYXRpYmxlIERTSSBJUOOA
+glNvIFdvdWxkIHlvdSBwbGVhc2UgbWFrZSB0aGlzIGRyaXZlcyBtb3JlIHBsYXRmb3JtIGluZGVw
+ZW5kZW5077yfCgoKCgoKCkF0IDIwMTQtMTItMTggMTU6MTE6MjIsICJMaXUgWWluZyIgPFlpbmcu
+TGl1QGZyZWVzY2FsZS5jb20+IHdyb3RlOgo+SGksCj4KPlRoaXMgc2VyaWVzIGFkZHJlc3NlZCBh
+bG1vc3QgYWxsIGNvbW1lbnRzIGZyb20gVGhpZXJyeSBSZWRkaW5nIGFuZCBSdXNzZWxsCj5vbiB2
+MS4KPgo+VGhpcyBzZXJpZXMgYWRkcyBzdXBwb3J0IGZvciBpLk1YIE1JUEkgRFNJIERSTSBkcml2
+ZXIuCj5DdXJyZW50bHksIHRoZSBNSVBJIERTSSBkcml2ZXIgb25seSBzdXBwb3J0cyB0aGUgYnVy
+c3Qgd2l0aCBzeW5jIHB1bHNlIG1vZGUuCj4KPlRoaXMgc2VyaWVzIGFsc28gaW5jbHVkZXMgYSBE
+Uk0gcGFuZWwgZHJpdmVyIGZvciB0aGUgVHJ1bHkgVEZUNDgwODAwLTE2LUUgcGFuZWwKPndoaWNo
+IGlzIGRyaXZlbiBieSB0aGUgSGltYXggSFg4MzY5QSBkcml2ZXIgSUMuICBUaGUgZHJpdmVyIElD
+IGRhdGEgc2hlZXQgY291bGQKPmJlIGZvdW5kIGF0IFsxXS4gIEFzIG1lbnRpb25lZCBieSB0aGUg
+ZGF0YSBzaGVldCwgdGhlIGRyaXZlciBJQyBzdXBwb3J0cyBzZXZlcmFsCj5pbnRlcmZhY2UgbW9k
+ZXMuICBDdXJyZW50bHksIHRoZSBEUk0gcGFuZWwgZHJpdmVyIG9ubHkgc3VwcG9ydHMgdGhlIE1J
+UEkgRFNJIHZpZGVvCj5tb2RlLiAgTmV3IGludGVyZmFjZSBtb2RlcyBjb3VsZCBiZSBhZGRlZCBs
+YXRlcihwZXJoYXBzLCBqdXN0IGxpa2UgdGhlIHdheSB0aGUgRFJNCj5zaW1wbGUgcGFuZWwgZHJp
+dmVyIHN1cHBvcnRzIGJvdGggTUlQSSBEU0kgaW50ZXJmYWNlIHBhbmVscyBhbmQgc2ltcGxlKHBh
+cmFsbGVsKQo+aW50ZXJmYWNlIHBhbmVscykuCj4KPlRoZSBNSVBJIERTSSBmZWF0dXJlIGlzIHRl
+c3RlZCBvbiBpLk1YNlEgU2FicmVTRCBib2FyZCBhbmQgaS5NWDZETCBTYWJyZVNEIGJvYXJkLgo+
+VGhlIE1JUEkgRFNJIGRpc3BsYXkgY291bGQgYmUgZW5hYmxlZCBkaXJlY3RseSBvbiBpLk1YNlEg
+U2FicmVTRCBib2FyZCBhZnRlcgo+YXBwbHlpbmcgdGhpcyBzZXJpZXMsIGJlY2F1c2UgdGhlIDI2
+LjRNSHogcGl4ZWwgY2xvY2sgdGhlIHBhbmVsIHJlcXVpcmVzIGNvdWxkIGJlCj5kZXJpdmVkIGZy
+b20gdGhlIElQVSBIU1AgY2xvY2soMjY0TUh6KSB3aXRoIGFuIGludGVnZXIgZGl2aWRlci4KPk9u
+IGkuTVg2REwgU2FicmVTRCBib2FyZCwgd2UgbmVlZCB0byBtYW51YWxseSBkaXNhYmxlIHRoZSBM
+VkRTIGFuZCBIRE1JIGRpc3BsYXlzIGluCj50aGUgZGV2aWNlIHRyZWUgYmxvYiwgc2luY2UgdGhl
+IGkuTVg2REwgSVBVIEhTUCBjbG9jayBpcyAxOThNSHogYXQgcHJlc2VudCwgd2hpY2gKPm1ha2Vz
+IHRoZSBwaXhlbCBjbG9jayBzaGFyZSB0aGUgUExMNSB2aWRlbyBjbG9jayBzb3VyY2Ugd2l0aCB0
+aGUgTFZEUyBhbmQgSERNSSwKPnRodXMsIHRoZSBwYW5lbCBjYW5ub3QgZ2V0IHRoZSBwaXhlbCBj
+bG9jayByYXRlIGl0IHdhbnRzLgo+Cj5QYXRjaCAwMS8xNSBpcyBuZWVkZWQgdG8gZ2V0IGEgcHJl
+Y2lzZSBwaXhlbCBjbG9jayByYXRlKDI2LjRNSHopIGZyb20gdGhlIFBMTDUgdmlkZW8KPmNsb2Nr
+LiAgSWYgd2UgZG9uJ3QgaGF2ZSB0aGlzIHBhdGNoLCB0aGUgcGl4ZWwgY2xvY2sgcmF0ZSBpcyBh
+Ym91dCAyME1Ieiwgd2hpY2gKPmNhdXNlcyBhIGhvcml0b25hbCBzaGlmdCBvbiB0aGUgZGlzcGxh
+eSBpbWFnZS4KPgo+VGhpcyBzZXJpZXMgY2FuIGJlIGFwcGxpZWQgb24gdGhlIGRybS1uZXh0IGJy
+YW5jaC4KPgo+WzFdIGh0dHA6Ly93d3cuYWxsc2hvcmUuY29tL3BkZi9IaW1heF9IWDgzNjktQS5w
+ZGYKPgo+TGl1IFlpbmcgKDE0KToKPiAgY2xrOiBkaXZpZGVyOiBDb3JyZWN0IHBhcmVudCBjbGsg
+cm91bmQgcmF0ZSBpZiBubyBiZXN0ZGl2IGlzIG5vcm1hbGx5Cj4gICAgZm91bmQKPiAgb2Y6IEFk
+ZCB2ZW5kb3IgcHJlZml4IGZvciBIaW1heCBUZWNobm9sb2dpZXMgSW5jLgo+ICBvZjogQWRkIHZl
+bmRvciBwcmVmaXggZm9yIFRydWx5IFNlbWljb25kdWN0b3JzIExpbWl0ZWQKPiAgQVJNOiBpbXg2
+cTogQWRkIEdQUjMgTUlQSSBtdXhpbmcgY29udHJvbCByZWdpc3RlciBmaWVsZCBzaGlmdCBiaXRz
+Cj4gICAgZGVmaW5pdGlvbgo+ICBBUk06IGlteDZxOiBjbGs6IEFkZCB0aGUgdmlkZW9fMjdtIGNs
+b2NrCj4gIEFSTTogZHRzOiBpbXg2cWRsOiBNb3ZlIGV4aXN0aW5nIE1JUEkgRFNJIHBvcnRzIGlu
+dG8gYSBuZXcgJ3BvcnRzJwo+ICAgIG5vZGUKPiAgZHJtL2RzaTogQWRkIGEgaGVscGVyIHRvIGdl
+dCBiaXRzIHBlciBwaXhlbCBvZiBNSVBJIERTSSBwaXhlbCBmb3JtYXQKPiAgZHJtOiBpbXg6IEFk
+ZCBNSVBJIERTSSBob3N0IGNvbnRyb2xsZXIgZHJpdmVyCj4gIGRybTogcGFuZWw6IEFkZCBzdXBw
+b3J0IGZvciBIaW1heCBIWDgzNjlBIE1JUEkgRFNJIHBhbmVsCj4gIEFSTTogZHRzaTogaW14NnFk
+bDogQWRkIHN1cHBvcnQgZm9yIE1JUEkgRFNJIGhvc3QgY29udHJvbGxlcgo+ICBBUk06IGR0czog
+aW14NnFkbC1zYWJyZXNkOiBBZGQgc3VwcG9ydCBmb3IgVFJVTFkgVEZUNDgwODAwLTE2LUUgTUlQ
+SQo+ICAgIERTSSBwYW5lbAo+ICBBUk06IGlteF92Nl92N19kZWZjb25maWc6IENsZWFudXAgZm9y
+IGlteCBkcm0gYmVpbmcgbW92ZWQgb3V0IG9mCj4gICAgc3RhZ2luZwo+ICBBUk06IGlteF92Nl92
+N19kZWZjb25maWc6IEFkZCBzdXBwb3J0IGZvciBNSVBJIERTSSBob3N0IGNvbnRyb2xsZXIKPiAg
+QVJNOiBpbXhfdjZfdjdfZGVmY29uZmlnOiBBZGQgc3VwcG9ydCBmb3IgSGltYXggSFg4MzY5QSBw
+YW5lbAo+Cj4gLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZHJtL2lteC9taXBpX2RzaS50eHQgICAg
+ICAgfCAgIDc4ICsrCj4gLi4uL2RldmljZXRyZWUvYmluZGluZ3MvcGFuZWwvaGltYXgsaHg4MzY5
+YS50eHQgICAgfCAgIDQxICsKPiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4
+ZXMudHh0ICAgICAgICB8ICAgIDIgKwo+IGFyY2gvYXJtL2Jvb3QvZHRzL2lteDZxLmR0c2kgICAg
+ICAgICAgICAgICAgICAgICAgIHwgICAyMCArLQo+IGFyY2gvYXJtL2Jvb3QvZHRzL2lteDZxZGwt
+c2FicmVzZC5kdHNpICAgICAgICAgICAgIHwgICAyMCArCj4gYXJjaC9hcm0vYm9vdC9kdHMvaW14
+NnFkbC5kdHNpICAgICAgICAgICAgICAgICAgICAgfCAgIDMwICstCj4gYXJjaC9hcm0vY29uZmln
+cy9pbXhfdjZfdjdfZGVmY29uZmlnICAgICAgICAgICAgICAgfCAgIDE3ICstCj4gYXJjaC9hcm0v
+bWFjaC1pbXgvY2xrLWlteDZxLmMgICAgICAgICAgICAgICAgICAgICAgfCAgICAxICsKPiBkcml2
+ZXJzL2Nsay9jbGstZGl2aWRlci5jICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgIDMgKy0K
+PiBkcml2ZXJzL2dwdS9kcm0vaW14L0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICB8ICAg
+IDYgKwo+IGRyaXZlcnMvZ3B1L2RybS9pbXgvTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAg
+IHwgICAgMSArCj4gZHJpdmVycy9ncHUvZHJtL2lteC9pbXgtbWlwaS1kc2kuYyAgICAgICAgICAg
+ICAgICAgfCAxMDU2ICsrKysrKysrKysrKysrKysrKysrCj4gZHJpdmVycy9ncHUvZHJtL3BhbmVs
+L0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgfCAgICA1ICsKPiBkcml2ZXJzL2dwdS9kcm0v
+cGFuZWwvTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICB8ICAgIDEgKwo+IGRyaXZlcnMvZ3B1
+L2RybS9wYW5lbC9wYW5lbC1oaW1heC1oeDgzNjlhLmMgICAgICAgIHwgIDU3MyArKysrKysrKysr
+Kwo+IGluY2x1ZGUvZHJtL2RybV9taXBpX2RzaS5oICAgICAgICAgICAgICAgICAgICAgICAgIHwg
+ICAxNCArCj4gaW5jbHVkZS9kdC1iaW5kaW5ncy9jbG9jay9pbXg2cWRsLWNsb2NrLmggICAgICAg
+ICAgfCAgICAzICstCj4gaW5jbHVkZS9saW51eC9tZmQvc3lzY29uL2lteDZxLWlvbXV4Yy1ncHIu
+aCAgICAgICAgfCAgICAxICsKPiAxOCBmaWxlcyBjaGFuZ2VkLCAxODQ0IGluc2VydGlvbnMoKyks
+IDI4IGRlbGV0aW9ucygtKQo+IGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvZHJtL2lteC9taXBpX2RzaS50eHQKPiBjcmVhdGUgbW9kZSAxMDA2NDQg
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BhbmVsL2hpbWF4LGh4ODM2OWEudHh0
+Cj4gY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9pbXgvaW14LW1pcGktZHNpLmMK
+PiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLWhpbWF4LWh4
+ODM2OWEuYwo+Cj4tLSAKPjIuMS4wCj4KPl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCj5kcmktZGV2ZWwgbWFpbGluZyBsaXN0Cj5kcmktZGV2ZWxAbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnCj5odHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlz
+dGluZm8vZHJpLWRldmVsCg==
+------=_Part_143712_1171124761.1418970814653
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: base64
 
-> 
-> 
-> []
->>> [snip / reversed maybe.. sorry]
->>>
->>>> +/**
->>>> + * devfreq_event_is_enabled() - Check whether devfreq-event dev is enabled or
->>>> + *                             not.
->>>> + * @edev       : the devfreq-event device
->>>> + *
->>>> + * Note that this function check whether devfreq-event dev is enabled or not.
->>>> + * If return true, the devfreq-event dev is enabeld. If return false, the
->>>> + * devfreq-event dev is disabled.
->>>> + */
->>>> +bool devfreq_event_is_enabled(struct devfreq_event_dev *edev)
->>>> +{
->>>> +       bool enabled = false;
->>>> +
->>>> +       if (!edev || !edev->desc)
->>>> +               return enabled;
->>>> +
->>>> +       mutex_lock(&edev->lock);
->>>> +
->>>> +       if (edev->enable_count > 0)
->>>> +               enabled = true;
->>>> +
->>>> +       if (edev->desc->ops && edev->desc->ops->is_enabled)
->>>> +               enabled |= edev->desc->ops->is_enabled(edev);
->>>
->>> What does it mean when enabled_count > 0 and ops->is_enabled() is false? or..
->>> What does it mean when enabled_count = 0 and ops->is_enabled() is true?
->>>
->>> If you do enable_count in the subsystem, why would we rely on
->>> ops->is_enabled()? Are you assuming that a device MAY turn itself off
->>> without any kernel control (ops->disable()) and it is still a correct
->>> behabior?
->>
->> You're right. devfreq_event_is_enabled() has ambiguous operation according to your comment.
->>
->> I'll only control the enable_count in the subsystem without ops->is_enabled()
->> and then remove the is_enabled function in the structre devfreq_event_ops.
->>
->> Best Regards,
->> Chanwoo Choi
->>
-> 
-> [Off-Topic]
-> 
-> The name of devfreq-event may look quite intersecting with irq-driven governors,
-> which are being proposed these days.
-> 
-> Although they may look intersecting, we can have them independently;
-> this as a sub-class and that as a governor. And we can consider to
-> provide a common infrastructure for irq-driven mechanisms in devfreq or
-> devfreq-event when we irq-driven DVFS become more general, which I
-> expect in 2 ~ 3 years.
-> 
-> So for now, both can go independently.
+PGRpdiBzdHlsZT0ibGluZS1oZWlnaHQ6MS43O2NvbG9yOiMwMDAwMDA7Zm9udC1zaXplOjE0cHg7
+Zm9udC1mYW1pbHk6QXJpYWwiPjxwPkhpIExpdSBZaW5nOjwvcD48ZGl2PiZuYnNwO0kgZm91ZCBS
+b2NrY2hpcCBSSzYxOCAoYSBtZmQgZnVuY3Rpb24gZGV2aWNlIHdpdGggbWlwaSBkc2nvvIxsdmRz
+IHRyYW5zbWl0dGVy44CBSERNSSBUWOOAgWFuZCBhdWRpbyBjb2RlY++8jGFuZDwvZGl2PjxkaXY+
+Y29udHJvbGxlZCBieSB0aGUgU09DIGZyb20gaTJjICkgaGF2ZSB0aGUgc2FtZSByZWdpc3RlciBs
+YXlvdXQgd2l0aCB5b3VyIGkuTVggTUlQSSBEU0nvvIx3aGljaCBtZWFucyBSSzYxOCBNSVBJPC9k
+aXY+PGRpdj5EU0kgYWxzbyBoYXZlIHRoZSBTeW5vcHN5cyBjb21wYXRpYmxlIERTSSBJUOOAglNv
+IFdvdWxkIHlvdSBwbGVhc2UgbWFrZSB0aGlzIGRyaXZlcyBtb3JlIHBsYXRmb3JtIGluZGVwZW5k
+ZW5077yfPGJyPjxicj48YnI+PC9kaXY+PGRpdj48L2Rpdj48ZGl2IGlkPSJkaXZOZXRlYXNlTWFp
+bENhcmQiPjwvZGl2PjxkaXY+PGJyPjwvZGl2PjxwcmU+PGJyPkF0IDIwMTQtMTItMTggMTU6MTE6
+MjIsICJMaXUgWWluZyIgJmx0O1lpbmcuTGl1QGZyZWVzY2FsZS5jb20mZ3Q7IHdyb3RlOgomZ3Q7
+SGksCiZndDsKJmd0O1RoaXMgc2VyaWVzIGFkZHJlc3NlZCBhbG1vc3QgYWxsIGNvbW1lbnRzIGZy
+b20gVGhpZXJyeSBSZWRkaW5nIGFuZCBSdXNzZWxsCiZndDtvbiB2MS4KJmd0OwomZ3Q7VGhpcyBz
+ZXJpZXMgYWRkcyBzdXBwb3J0IGZvciBpLk1YIE1JUEkgRFNJIERSTSBkcml2ZXIuCiZndDtDdXJy
+ZW50bHksIHRoZSBNSVBJIERTSSBkcml2ZXIgb25seSBzdXBwb3J0cyB0aGUgYnVyc3Qgd2l0aCBz
+eW5jIHB1bHNlIG1vZGUuCiZndDsKJmd0O1RoaXMgc2VyaWVzIGFsc28gaW5jbHVkZXMgYSBEUk0g
+cGFuZWwgZHJpdmVyIGZvciB0aGUgVHJ1bHkgVEZUNDgwODAwLTE2LUUgcGFuZWwKJmd0O3doaWNo
+IGlzIGRyaXZlbiBieSB0aGUgSGltYXggSFg4MzY5QSBkcml2ZXIgSUMuICBUaGUgZHJpdmVyIElD
+IGRhdGEgc2hlZXQgY291bGQKJmd0O2JlIGZvdW5kIGF0IFsxXS4gIEFzIG1lbnRpb25lZCBieSB0
+aGUgZGF0YSBzaGVldCwgdGhlIGRyaXZlciBJQyBzdXBwb3J0cyBzZXZlcmFsCiZndDtpbnRlcmZh
+Y2UgbW9kZXMuICBDdXJyZW50bHksIHRoZSBEUk0gcGFuZWwgZHJpdmVyIG9ubHkgc3VwcG9ydHMg
+dGhlIE1JUEkgRFNJIHZpZGVvCiZndDttb2RlLiAgTmV3IGludGVyZmFjZSBtb2RlcyBjb3VsZCBi
+ZSBhZGRlZCBsYXRlcihwZXJoYXBzLCBqdXN0IGxpa2UgdGhlIHdheSB0aGUgRFJNCiZndDtzaW1w
+bGUgcGFuZWwgZHJpdmVyIHN1cHBvcnRzIGJvdGggTUlQSSBEU0kgaW50ZXJmYWNlIHBhbmVscyBh
+bmQgc2ltcGxlKHBhcmFsbGVsKQomZ3Q7aW50ZXJmYWNlIHBhbmVscykuCiZndDsKJmd0O1RoZSBN
+SVBJIERTSSBmZWF0dXJlIGlzIHRlc3RlZCBvbiBpLk1YNlEgU2FicmVTRCBib2FyZCBhbmQgaS5N
+WDZETCBTYWJyZVNEIGJvYXJkLgomZ3Q7VGhlIE1JUEkgRFNJIGRpc3BsYXkgY291bGQgYmUgZW5h
+YmxlZCBkaXJlY3RseSBvbiBpLk1YNlEgU2FicmVTRCBib2FyZCBhZnRlcgomZ3Q7YXBwbHlpbmcg
+dGhpcyBzZXJpZXMsIGJlY2F1c2UgdGhlIDI2LjRNSHogcGl4ZWwgY2xvY2sgdGhlIHBhbmVsIHJl
+cXVpcmVzIGNvdWxkIGJlCiZndDtkZXJpdmVkIGZyb20gdGhlIElQVSBIU1AgY2xvY2soMjY0TUh6
+KSB3aXRoIGFuIGludGVnZXIgZGl2aWRlci4KJmd0O09uIGkuTVg2REwgU2FicmVTRCBib2FyZCwg
+d2UgbmVlZCB0byBtYW51YWxseSBkaXNhYmxlIHRoZSBMVkRTIGFuZCBIRE1JIGRpc3BsYXlzIGlu
+CiZndDt0aGUgZGV2aWNlIHRyZWUgYmxvYiwgc2luY2UgdGhlIGkuTVg2REwgSVBVIEhTUCBjbG9j
+ayBpcyAxOThNSHogYXQgcHJlc2VudCwgd2hpY2gKJmd0O21ha2VzIHRoZSBwaXhlbCBjbG9jayBz
+aGFyZSB0aGUgUExMNSB2aWRlbyBjbG9jayBzb3VyY2Ugd2l0aCB0aGUgTFZEUyBhbmQgSERNSSwK
+Jmd0O3RodXMsIHRoZSBwYW5lbCBjYW5ub3QgZ2V0IHRoZSBwaXhlbCBjbG9jayByYXRlIGl0IHdh
+bnRzLgomZ3Q7CiZndDtQYXRjaCAwMS8xNSBpcyBuZWVkZWQgdG8gZ2V0IGEgcHJlY2lzZSBwaXhl
+bCBjbG9jayByYXRlKDI2LjRNSHopIGZyb20gdGhlIFBMTDUgdmlkZW8KJmd0O2Nsb2NrLiAgSWYg
+d2UgZG9uJ3QgaGF2ZSB0aGlzIHBhdGNoLCB0aGUgcGl4ZWwgY2xvY2sgcmF0ZSBpcyBhYm91dCAy
+ME1Ieiwgd2hpY2gKJmd0O2NhdXNlcyBhIGhvcml0b25hbCBzaGlmdCBvbiB0aGUgZGlzcGxheSBp
+bWFnZS4KJmd0OwomZ3Q7VGhpcyBzZXJpZXMgY2FuIGJlIGFwcGxpZWQgb24gdGhlIGRybS1uZXh0
+IGJyYW5jaC4KJmd0OwomZ3Q7WzFdIGh0dHA6Ly93d3cuYWxsc2hvcmUuY29tL3BkZi9IaW1heF9I
+WDgzNjktQS5wZGYKJmd0OwomZ3Q7TGl1IFlpbmcgKDE0KToKJmd0OyAgY2xrOiBkaXZpZGVyOiBD
+b3JyZWN0IHBhcmVudCBjbGsgcm91bmQgcmF0ZSBpZiBubyBiZXN0ZGl2IGlzIG5vcm1hbGx5CiZn
+dDsgICAgZm91bmQKJmd0OyAgb2Y6IEFkZCB2ZW5kb3IgcHJlZml4IGZvciBIaW1heCBUZWNobm9s
+b2dpZXMgSW5jLgomZ3Q7ICBvZjogQWRkIHZlbmRvciBwcmVmaXggZm9yIFRydWx5IFNlbWljb25k
+dWN0b3JzIExpbWl0ZWQKJmd0OyAgQVJNOiBpbXg2cTogQWRkIEdQUjMgTUlQSSBtdXhpbmcgY29u
+dHJvbCByZWdpc3RlciBmaWVsZCBzaGlmdCBiaXRzCiZndDsgICAgZGVmaW5pdGlvbgomZ3Q7ICBB
+Uk06IGlteDZxOiBjbGs6IEFkZCB0aGUgdmlkZW9fMjdtIGNsb2NrCiZndDsgIEFSTTogZHRzOiBp
+bXg2cWRsOiBNb3ZlIGV4aXN0aW5nIE1JUEkgRFNJIHBvcnRzIGludG8gYSBuZXcgJ3BvcnRzJwom
+Z3Q7ICAgIG5vZGUKJmd0OyAgZHJtL2RzaTogQWRkIGEgaGVscGVyIHRvIGdldCBiaXRzIHBlciBw
+aXhlbCBvZiBNSVBJIERTSSBwaXhlbCBmb3JtYXQKJmd0OyAgZHJtOiBpbXg6IEFkZCBNSVBJIERT
+SSBob3N0IGNvbnRyb2xsZXIgZHJpdmVyCiZndDsgIGRybTogcGFuZWw6IEFkZCBzdXBwb3J0IGZv
+ciBIaW1heCBIWDgzNjlBIE1JUEkgRFNJIHBhbmVsCiZndDsgIEFSTTogZHRzaTogaW14NnFkbDog
+QWRkIHN1cHBvcnQgZm9yIE1JUEkgRFNJIGhvc3QgY29udHJvbGxlcgomZ3Q7ICBBUk06IGR0czog
+aW14NnFkbC1zYWJyZXNkOiBBZGQgc3VwcG9ydCBmb3IgVFJVTFkgVEZUNDgwODAwLTE2LUUgTUlQ
+SQomZ3Q7ICAgIERTSSBwYW5lbAomZ3Q7ICBBUk06IGlteF92Nl92N19kZWZjb25maWc6IENsZWFu
+dXAgZm9yIGlteCBkcm0gYmVpbmcgbW92ZWQgb3V0IG9mCiZndDsgICAgc3RhZ2luZwomZ3Q7ICBB
+Uk06IGlteF92Nl92N19kZWZjb25maWc6IEFkZCBzdXBwb3J0IGZvciBNSVBJIERTSSBob3N0IGNv
+bnRyb2xsZXIKJmd0OyAgQVJNOiBpbXhfdjZfdjdfZGVmY29uZmlnOiBBZGQgc3VwcG9ydCBmb3Ig
+SGltYXggSFg4MzY5QSBwYW5lbAomZ3Q7CiZndDsgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZHJt
+L2lteC9taXBpX2RzaS50eHQgICAgICAgfCAgIDc4ICsrCiZndDsgLi4uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvcGFuZWwvaGltYXgsaHg4MzY5YS50eHQgICAgfCAgIDQxICsKJmd0OyAuLi4vZGV2aWNl
+dHJlZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMudHh0ICAgICAgICB8ICAgIDIgKwomZ3Q7IGFy
+Y2gvYXJtL2Jvb3QvZHRzL2lteDZxLmR0c2kgICAgICAgICAgICAgICAgICAgICAgIHwgICAyMCAr
+LQomZ3Q7IGFyY2gvYXJtL2Jvb3QvZHRzL2lteDZxZGwtc2FicmVzZC5kdHNpICAgICAgICAgICAg
+IHwgICAyMCArCiZndDsgYXJjaC9hcm0vYm9vdC9kdHMvaW14NnFkbC5kdHNpICAgICAgICAgICAg
+ICAgICAgICAgfCAgIDMwICstCiZndDsgYXJjaC9hcm0vY29uZmlncy9pbXhfdjZfdjdfZGVmY29u
+ZmlnICAgICAgICAgICAgICAgfCAgIDE3ICstCiZndDsgYXJjaC9hcm0vbWFjaC1pbXgvY2xrLWlt
+eDZxLmMgICAgICAgICAgICAgICAgICAgICAgfCAgICAxICsKJmd0OyBkcml2ZXJzL2Nsay9jbGst
+ZGl2aWRlci5jICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgIDMgKy0KJmd0OyBkcml2ZXJz
+L2dwdS9kcm0vaW14L0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICB8ICAgIDYgKwomZ3Q7
+IGRyaXZlcnMvZ3B1L2RybS9pbXgvTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAgIHwgICAg
+MSArCiZndDsgZHJpdmVycy9ncHUvZHJtL2lteC9pbXgtbWlwaS1kc2kuYyAgICAgICAgICAgICAg
+ICAgfCAxMDU2ICsrKysrKysrKysrKysrKysrKysrCiZndDsgZHJpdmVycy9ncHUvZHJtL3BhbmVs
+L0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgfCAgICA1ICsKJmd0OyBkcml2ZXJzL2dwdS9k
+cm0vcGFuZWwvTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICB8ICAgIDEgKwomZ3Q7IGRyaXZl
+cnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1oaW1heC1oeDgzNjlhLmMgICAgICAgIHwgIDU3MyArKysr
+KysrKysrKwomZ3Q7IGluY2x1ZGUvZHJtL2RybV9taXBpX2RzaS5oICAgICAgICAgICAgICAgICAg
+ICAgICAgIHwgICAxNCArCiZndDsgaW5jbHVkZS9kdC1iaW5kaW5ncy9jbG9jay9pbXg2cWRsLWNs
+b2NrLmggICAgICAgICAgfCAgICAzICstCiZndDsgaW5jbHVkZS9saW51eC9tZmQvc3lzY29uL2lt
+eDZxLWlvbXV4Yy1ncHIuaCAgICAgICAgfCAgICAxICsKJmd0OyAxOCBmaWxlcyBjaGFuZ2VkLCAx
+ODQ0IGluc2VydGlvbnMoKyksIDI4IGRlbGV0aW9ucygtKQomZ3Q7IGNyZWF0ZSBtb2RlIDEwMDY0
+NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZHJtL2lteC9taXBpX2RzaS50eHQK
+Jmd0OyBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L3BhbmVsL2hpbWF4LGh4ODM2OWEudHh0CiZndDsgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMv
+Z3B1L2RybS9pbXgvaW14LW1pcGktZHNpLmMKJmd0OyBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVy
+cy9ncHUvZHJtL3BhbmVsL3BhbmVsLWhpbWF4LWh4ODM2OWEuYwomZ3Q7CiZndDstLSAKJmd0OzIu
+MS4wCiZndDsKJmd0O19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCiZndDtkcmktZGV2ZWwgbWFpbGluZyBsaXN0CiZndDtkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnCiZndDtodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGlu
+Zm8vZHJpLWRldmVsCjwvcHJlPjwvZGl2Pjxicj48YnI+PHNwYW4gdGl0bGU9Im5ldGVhc2Vmb290
+ZXIiPjxzcGFuIGlkPSJuZXRlYXNlX21haWxfZm9vdGVyIj48L3NwYW4+PC9zcGFuPg==
+------=_Part_143712_1171124761.1418970814653--
 
-I understand your opinion.
-I want to handle the devfreq-event framework independently from irq-driven governor.
 
-After completing the devfreq-event and the support for exynos-busfreq dt,
-If you agree, I'll consider how to implement irq-driven governor as the devfreq governor.
+--===============0066627877==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
 
-Best Regards,
-Chanwoo Choi
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0
+cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+
+--===============0066627877==--
