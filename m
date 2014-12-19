@@ -1,79 +1,38 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH 2/2] ARM: dts: exynos3250: replace number by macro in gpio
- keys
-Date: Fri, 19 Dec 2014 17:41:40 +0900
-Message-ID: <5493E4C4.8080208@samsung.com>
-References: <1418978370-22542-1-git-send-email-beomho.seo@samsung.com>
- <1418978370-22542-2-git-send-email-beomho.seo@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1418978370-22542-2-git-send-email-beomho.seo@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Beomho Seo <beomho.seo@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, kgene.kim@samsung.com, yj44.cho@samsung.com, inki.dae@samsung.com, sw0312.kim@samsung.com, jh80.chung@samsung.com, kyungmin.park@samsung.com
+From: Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org>
+Subject: [PATCH 0/3] add Atmel EBI (External Bus Interface) DT nodes for AT91SAM9263
+Date: Fri, 19 Dec 2014 09:51:37 +0100
+Message-ID: <1418979100-13243-1-git-send-email-alexanders83@web.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Beomho,
+This is based on and requires Boris' work on an EBI driver for AT91. Please
+refer to https://lkml.org/lkml/2014/12/3/806.
+The reason I added no pinctrl is that those pins from EBI1 in my case are not
+muxable. They are fixed so there is nothing I can test here.
+I used this patchset and the EBI to configure a PSRAM to be used by the
+atmel_lcdfb driver which works so far.
+This also means EBI0 is rather untested, but it should behave like EBI1 if
+the numbers are correct.
 
-On 12/19/2014 05:39 PM, Beomho Seo wrote:
-> This patch replace number by macro in gpio keys for exynos 3250 boards.
-> 
-> Cc: Youngjun Cho <yj44.cho@samsung.com>
-> Cc: Chanwoo Choi <cw00.choi@samsung.com>
-> Signed-off-by: Beomho Seo <beomho.seo@samsung.com>
+Best regards,
+Alexander
 
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+Alexander Stein (3):
+  ARM: at91/dt: add matrix node in at91sam9263 dtsi
+  ARM: at91/dt: add SMC0/1  nodes in at91sam9263 dtsi
+  ARM: at91/dt: add EBI (External Bus Interface) node in at91sam9263
+    dtsi
 
-Thanks,
-Chanwoo CHoi
+ arch/arm/boot/dts/at91sam9263.dtsi | 44 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
 
-> ---
->  arch/arm/boot/dts/exynos3250-monk.dts   |    3 ++-
->  arch/arm/boot/dts/exynos3250-rinato.dts |    3 ++-
->  2 files changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/exynos3250-monk.dts b/arch/arm/boot/dts/exynos3250-monk.dts
-> index 2129ab98..792a2c7 100644
-> --- a/arch/arm/boot/dts/exynos3250-monk.dts
-> +++ b/arch/arm/boot/dts/exynos3250-monk.dts
-> @@ -15,6 +15,7 @@
->  /dts-v1/;
->  #include "exynos3250.dtsi"
->  #include <dt-bindings/input/input.h>
-> +#include <dt-bindings/gpio/gpio.h>
->  
->  / {
->  	model = "Samsung Monk board";
-> @@ -37,7 +38,7 @@
->  		compatible = "gpio-keys";
->  
->  		power_key {
-> -			gpios = <&gpx2 7 1>;
-> +			gpios = <&gpx2 7 GPIO_ACTIVE_LOW>;
->  			linux,code = <KEY_POWER>;
->  			label = "power key";
->  			debounce-interval = <10>;
-> diff --git a/arch/arm/boot/dts/exynos3250-rinato.dts b/arch/arm/boot/dts/exynos3250-rinato.dts
-> index c186ac6..3493bca 100644
-> --- a/arch/arm/boot/dts/exynos3250-rinato.dts
-> +++ b/arch/arm/boot/dts/exynos3250-rinato.dts
-> @@ -15,6 +15,7 @@
->  /dts-v1/;
->  #include "exynos3250.dtsi"
->  #include <dt-bindings/input/input.h>
-> +#include <dt-bindings/gpio/gpio.h>
->  
->  / {
->  	model = "Samsung Rinato board";
-> @@ -37,7 +38,7 @@
->  		compatible = "gpio-keys";
->  
->  		power_key {
-> -			gpios = <&gpx2 7 1>;
-> +			gpios = <&gpx2 7 GPIO_ACTIVE_LOW>;
->  			linux,code = <KEY_POWER>;
->  			label = "power key";
->  			debounce-interval = <10>;
-> 
+-- 
+2.2.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
