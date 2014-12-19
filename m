@@ -1,109 +1,144 @@
-From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: Re: [PATCH v6 4/4] staging: fpga manager: add driver for socfpga
- fpga manager
-Date: Fri, 19 Dec 2014 17:15:49 +0100
-Message-ID: <20141219161549.GH13070@pengutronix.de>
-References: <1418941748-16111-1-git-send-email-atull@opensource.altera.com>
- <1418941748-16111-5-git-send-email-atull@opensource.altera.com>
- <20141219085516.GF13070@pengutronix.de>
- <2d65a072f8c14d1e839307465f177a1a@BY2FFO11FD046.protection.gbl>
- <20141219150714.GG13070@pengutronix.de>
- <alpine.DEB.2.02.1412190955090.16892@linuxheads99>
+From: Lukasz Majewski <l.majewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 2/9] hwmon: dts: Doc: Add DTS doc to explain how to use PWM
+ FAN as a cooling device
+Date: Fri, 19 Dec 2014 17:25:58 +0100
+Message-ID: <20141219172558.6216c1cd@amdc2363>
+References: <1418897591-18332-1-git-send-email-l.majewski@samsung.com>
+ <1418897591-18332-3-git-send-email-l.majewski@samsung.com>
+ <5492E46C.3080100@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.02.1412190955090.16892@linuxheads99>
-Sender: linux-kernel-owner@vger.kernel.org
-To: atull <atull@opensource.altera.com>
-Cc: Michal Simek <michal.simek@xilinx.com>, gregkh@linuxfoundation.org, jgunthorpe@obsidianresearch.com, hpa@zytor.com, monstr@monstr.eu, rdunlap@infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, pantelis.antoniou@konsulko.com, robh+dt@kernel.org, grant.likely@linaro.org, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, pavel@denx.de, broonie@kernel.org, philip@balister.org, rubini@gnudd.com, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, balbi@ti.com, m.chehab@samsung.com, davidb@codeaurora.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, linus.walleij@linaro.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devel@driverdev.osuosl.org, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <5492E46C.3080100-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, Linux PM list <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lukasz Majewski <l.majewski-AM3owJQeAb5mR6Xm/wNWPw@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 19, 2014 at 09:55:34AM -0600, atull wrote:
-> On Fri, 19 Dec 2014, Steffen Trumtrar wrote:
+Hi Guenter,
+
+> On 12/18/2014 02:13 AM, Lukasz Majewski wrote:
+> > Several new properties to allow PWM fan working as a cooling device
+> > have been combined into this single commit.
+> >
+> > Signed-off-by: Lukasz Majewski <l.majewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> > ---
+> >   .../devicetree/bindings/hwmon/pwm-fan.txt          | 28
+> > ++++++++++++++++++++++ 1 file changed, 28 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/hwmon/pwm-fan.txt
+> > b/Documentation/devicetree/bindings/hwmon/pwm-fan.txt index
+> > 610757c..3877810 100644 ---
+> > a/Documentation/devicetree/bindings/hwmon/pwm-fan.txt +++
+> > b/Documentation/devicetree/bindings/hwmon/pwm-fan.txt @@ -3,10
+> > +3,38 @@ Bindings for a fan connected to the PWM lines Required
+> > properties:
+> >   - compatible	: "pwm-fan"
+> >   - pwms		: the PWM that is used to control the PWM
+> > fan +- cooling-pwm-values      : PWM duty cycle values relative to
+> > +			    cooling-max-pwm-value correspondig to
+> > +			    proper cooling states
 > 
-> > On Fri, Dec 19, 2014 at 03:05:50PM +0100, Michal Simek wrote:
-> > > On 12/19/2014 09:55 AM, Steffen Trumtrar wrote:
-> > > > Hi!
-> > > > 
-> > > > Just a minor nitpick, but...
-> > > > 
-> > > > On Thu, Dec 18, 2014 at 04:29:08PM -0600, atull@opensource.altera.com wrote:
-> > > >> From: Alan Tull <atull@opensource.altera.com>
-> > > >>
-> > > >> Add driver to fpga manager framework to allow configuration
-> > > >> of FPGA in Altera SoCFPGA parts.
-> > > >>
-> > > >> Signed-off-by: Alan Tull <atull@opensource.altera.com>
-> > > >> Acked-by: Michal Simek <michal.simek@xilinx.com>
-> > > >> ---
-> > > >> v2: fpga_manager struct now contains struct device
-> > > >>     fpga_manager_register parameters now take device
-> > > >>
-> > > >> v3: skip a version to align versions
-> > > >>
-> > > >> v4: move to drivers/staging
-> > > >>
-> > > >> v5: fix array_size.cocci warnings
-> > > >>     fix platform_no_drv_owner.cocci warnings
-> > > >>     Remove .owner = THIS_MODULE
-> > > >>     include asm/irq.h
-> > > >>     clean up list of includes
-> > > >>     use altera_fpga_reset for ops
-> > > >>     use enum fpga_mgr_states or u32 as needed
-> > > >>     use devm_request_irq
-> > > >>     check irq <= 0 instead of == NO_IRQ
-> > > >>     Use ARRAY_SIZE
-> > > >>     rename altera -> socfpga
-> > > >>     static const socfpga_fpga_ops
-> > > >>     header moved to linux/fpga/ folder
-> > > >>     remove ifdef'ed code
-> > > >>     use platform_get_resource and platform_get_irq
-> > > >>     move .probe and .remove lines adjacent
-> > > >>     use module_platform_driver
-> > > >>     use __maybe_unused
-> > > >>     only need to 'if (IS_ENABLED(CONFIG_REGULATOR))' in one fn
-> > > >>     fix "unsigned 'mode' is never < 0"
-> > > >>
-> > > >> v6: return error for (unused) default of case statement
-> > > >> ---
-> > > >   ^^^
-> > > > 
-> > > > ...if you remove these, than that changelog will not land in the final
-> > > > commit which I would prefer. Nobody cares for the changelog of a
-> > > > patch once it is in its final state. And this is a rather noisy one.
-> > > > When someone in the future looks at this, he will see two lines of
-> > > > information and 10 times that of uninteresting noise.
-> > > > 
-> > > > Not a dealbreaker, but just something to consider for future patches.
-> > > 
-> > > 
-> > > When you run git-am you will see that changelog is not there.
-> > > 
-> > 
-> > Ah, great. It seems like git-am does indeed know now how to handle this.
-> > There are some commits in mainline that have this changelog added,
-> > because there where two '---' lines in the patch.
-> > 
-> > Then go on kind sirs with whatever you where doing and don't pay any
-> > attention to my comment... :-)
-> > 
-> > Regards,
-> > Steffen
-> > 
+> I don't understand what you mean with "relative to". Please elaborate.
+> Do you mean "associated with" ?
+
+I meant that cooling-pwm-values is no greater than
+cooling-max-pwm-value (which was present in some earlier version of
+this patch and had value of 255).
+
+This description is wrong and will be reworded.
+
 > 
-> git format-patch adds the second ---
+> Where is "cooling-max-pwm-value" defined, 
+
+It was present in some early version of this patch.
+
+> and how is this all expected
+> to relate to the maximum duty cycle value provided by the pwm device ?
+> 
+> > +- default-pulse-width     : Property specifying default pulse
+> > width for FAN
+> > +			    at system boot (zero to disable FAN on
+> > boot).
+> > +			    Allowed range is 0 to 255
+> 
+> You'll need dt maintainer approval for the new properties.
+
+I'm wondering how this patch series will get merged. It touches three
+different subsystems (thermal, hwmon and device tree for Exynos). 
+
+For me it would be best to use thermal tree (hence Odroid U3 fan is
+supposed to work as a cooling device) with ACKs from other subsystems
+maintainers.
+
+> 
+> One thing I wonder about though is why you use "default-pulse-width"
+> and not "default-pwm". Seems to be arbitrary. I don't see
+> "pulse-width" used anywhere in the upstream kernel.
+
+Believe or not I've also considered the default-pwm name.
+
+> 
+> I am somewhat concerned that you define the new properties as
+> mandatory. That means existing configurations will fail, which does
+> not seem to be a good idea. It would be more appropriate to not
+> configure the thermal device if the new properties are not provided.
+
+Very good point. I will do that for v2.
+
+> 
+> The newly introduced semantics also conflicts with the current
+> semantics, which sets the initial duty cycle initially to the maximum
+> allowed duty cycle as reported by the pwm device itself.
+
+Ok. I will stick to above policy and then the "default-pulse-width"
+property can be removed.
+
+> 
+> Guenter
+> 
+> > +
+> > +Thorough description of the following bindings:
+> > +		cooling-min-state = <0>;
+> > +		cooling-max-state = <3>;
+> > +		#cooling-cells = <2>;
+> > +		thermal-zone {
+> > +			cpu_thermal: cpu-thermal {
+> > +			cooling-maps {
+> > +				map0 {
+> > +				     trip = <&cpu_alert1>;
+> > +				     cooling-device = <&fan0 0 1>;
+> > +				};
+> > +			};
+> > +		};
+> > +
+> > +for PWM FAN used as cooling device can be found at:
+> > +./Documentation/devicetree/bindings/thermal/thermal.txt
+> >
+> >   Example:
+> >   	pwm-fan {
+> >   		compatible = "pwm-fan";
+> >   		status = "okay";
+> >   		pwms = <&pwm 0 10000 0>;
+> > +		cooling-min-state = <0>;
+> > +		cooling-max-state = <3>;
+> > +		#cooling-cells = <2>;
+> > +		cooling-pwm-values = <0 102 170 255>;
+> > +		default-pulse-width = <0>;
+> >   	};
+> >
 > 
 
-Yeah, of course. But where does the first one come from?
-Do you keep a changelog in your commits?
-That is what git notes is for, no?!
 
-Regards,
-Steffen
 
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Best regards,
+
+Lukasz Majewski
+
+Samsung R&D Institute Poland (SRPOL) | Linux Platform Group
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
