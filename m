@@ -1,155 +1,30 @@
-From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH] of: unittest: Overlays with sub-devices tests
-Date: Fri, 19 Dec 2014 14:34:34 +0200
-Message-ID: <1418992474-19416-1-git-send-email-pantelis.antoniou@konsulko.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+From: Padmavathi Venna <padma.v@samsung.com>
+Subject: [PATCH 0/2] Add pinctrl support for audio IPs on exynos7
+Date: Fri, 19 Dec 2014 18:40:57 +0530
+Message-ID: <1418994659-5222-1-git-send-email-padma.v@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: kgene.kim@samsung.com, linus.walleij@linaro.org, tomasz.figa@gmail.com, s.nawrocki@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Introduce selftests for overlays using sub-devices present
-in children nodes.
+Audio interface IPs I2S, PCM and SPDIF on Exynos7 requires GPIOs
+available on AUD and BUS0 pin controller blocks. So add support
+for all. 
 
-Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
----
- drivers/of/unittest-data/tests-overlay.dtsi | 55 +++++++++++++++++++++++++++++
- drivers/of/unittest.c                       | 39 ++++++++++++++++++++
- 2 files changed, 94 insertions(+)
+This patchset is dependent on BUS1 pin control support from Vivek
+in the below link
+https://patchwork.kernel.org/patch/5467321/
 
-diff --git a/drivers/of/unittest-data/tests-overlay.dtsi b/drivers/of/unittest-data/tests-overlay.dtsi
-index 75976da..a2b687d 100644
---- a/drivers/of/unittest-data/tests-overlay.dtsi
-+++ b/drivers/of/unittest-data/tests-overlay.dtsi
-@@ -176,5 +176,60 @@
- 			};
- 		};
- 
-+		overlay10 {
-+			fragment@0 {
-+				target-path = "/testcase-data/overlay-node/test-bus";
-+				__overlay__ {
-+
-+					/* suppress DTC warning */
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					test-selftest10 {
-+						compatible = "selftest";
-+						status = "okay";
-+						reg = <10>;
-+
-+						#address-cells = <1>;
-+						#size-cells = <0>;
-+
-+						test-selftest101 {
-+							compatible = "selftest";
-+							status = "okay";
-+							reg = <1>;
-+						};
-+
-+					};
-+				};
-+			};
-+		};
-+
-+		overlay11 {
-+			fragment@0 {
-+				target-path = "/testcase-data/overlay-node/test-bus";
-+				__overlay__ {
-+
-+					/* suppress DTC warning */
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					test-selftest11 {
-+						compatible = "selftest";
-+						status = "okay";
-+						reg = <11>;
-+
-+						#address-cells = <1>;
-+						#size-cells = <0>;
-+
-+						test-selftest111 {
-+							compatible = "selftest";
-+							status = "okay";
-+							reg = <1>;
-+						};
-+
-+					};
-+				};
-+			};
-+		};
- 	};
- };
-diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-index 844838e..41a4a13 100644
---- a/drivers/of/unittest.c
-+++ b/drivers/of/unittest.c
-@@ -978,6 +978,9 @@ static int selftest_probe(struct platform_device *pdev)
- 	}
- 
- 	dev_dbg(dev, "%s for node @%s\n", __func__, np->full_name);
-+
-+	of_platform_populate(np, NULL, NULL, &pdev->dev);
-+
- 	return 0;
- }
- 
-@@ -1385,6 +1388,39 @@ static void of_selftest_overlay_8(void)
- 	selftest(1, "overlay test %d passed\n", 8);
- }
- 
-+/* test insertion of a bus with parent devices */
-+static void of_selftest_overlay_10(void)
-+{
-+	int ret;
-+	char *child_path;
-+
-+	/* device should disable */
-+	ret = of_selftest_apply_overlay_check(10, 10, 0, 1);
-+	if (selftest(ret == 0, "overlay test %d failed; overlay application\n", 10))
-+		return;
-+
-+	child_path = kasprintf(GFP_KERNEL, "%s/test-selftest101",
-+			selftest_path(10));
-+	if (selftest(child_path, "overlay test %d failed; kasprintf\n", 10))
-+		return;
-+
-+	ret = of_path_platform_device_exists(child_path);
-+	kfree(child_path);
-+	if (selftest(ret, "overlay test %d failed; no child device\n", 10))
-+		return;
-+}
-+
-+/* test insertion of a bus with parent devices (and revert) */
-+static void of_selftest_overlay_11(void)
-+{
-+	int ret;
-+
-+	/* device should disable */
-+	ret = of_selftest_apply_revert_overlay_check(11, 11, 0, 1);
-+	if (selftest(ret == 0, "overlay test %d failed; overlay application\n", 11))
-+		return;
-+}
-+
- static void __init of_selftest_overlay(void)
- {
- 	struct device_node *bus_np = NULL;
-@@ -1433,6 +1469,9 @@ static void __init of_selftest_overlay(void)
- 	of_selftest_overlay_6();
- 	of_selftest_overlay_8();
- 
-+	of_selftest_overlay_10();
-+	of_selftest_overlay_11();
-+
- out:
- 	of_node_put(bus_np);
- }
+Padmavathi Venna (2):
+  pinctrl: exynos: Add AUDIO pin controller for exynos7
+  arm64: dts: Add pinctrl support for audio IPs on exynos7
+
+ .../bindings/pinctrl/samsung-pinctrl.txt           |    1 +
+ arch/arm64/boot/dts/exynos/exynos7-pinctrl.dtsi    |   56 ++++++++++++++++++++
+ arch/arm64/boot/dts/exynos/exynos7.dtsi            |    7 +++
+ drivers/pinctrl/samsung/pinctrl-exynos.c           |   10 ++++
+ 4 files changed, 74 insertions(+), 0 deletions(-)
+
 -- 
-1.7.12
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.4.4
