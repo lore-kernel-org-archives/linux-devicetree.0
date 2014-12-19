@@ -1,93 +1,138 @@
-From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: Re: [PATCH v6 4/4] staging: fpga manager: add driver for socfpga
- fpga manager
-Date: Fri, 19 Dec 2014 16:07:14 +0100
-Message-ID: <20141219150714.GG13070@pengutronix.de>
-References: <1418941748-16111-1-git-send-email-atull@opensource.altera.com>
- <1418941748-16111-5-git-send-email-atull@opensource.altera.com>
- <20141219085516.GF13070@pengutronix.de>
- <2d65a072f8c14d1e839307465f177a1a@BY2FFO11FD046.protection.gbl>
+From: Lukasz Majewski <l.majewski@samsung.com>
+Subject: Re: [PATCH 2/9] hwmon: dts: Doc: Add DTS doc to explain how to use PWM
+ FAN as a cooling device
+Date: Fri, 19 Dec 2014 16:32:24 +0100
+Message-ID: <20141219163224.34796e5d@amdc2363>
+References: <1418897591-18332-1-git-send-email-l.majewski@samsung.com>
+ <1418897591-18332-3-git-send-email-l.majewski@samsung.com>
+ <1418899337.23532.9.camel@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <2d65a072f8c14d1e839307465f177a1a@BY2FFO11FD046.protection.gbl>
+In-reply-to: <1418899337.23532.9.camel@collabora.co.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Simek <michal.simek@xilinx.com>
-Cc: atull@opensource.altera.com, gregkh@linuxfoundation.org, jgunthorpe@obsidianresearch.com, hpa@zytor.com, monstr@monstr.eu, rdunlap@infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, pantelis.antoniou@konsulko.com, robh+dt@kernel.org, grant.likely@linaro.org, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, pavel@denx.de, broonie@kernel.org, philip@balister.org, rubini@gnudd.com, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, balbi@ti.com, m.chehab@samsung.com, davidb@codeaurora.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, linus.walleij@linaro.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devel@driverdev.osuosl.org, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com
+To: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+Cc: Eduardo Valentin <edubezval@gmail.com>, Kamil Debski <k.debski@samsung.com>, Jean Delvare <jdelvare@suse.de>, Guenter Roeck <linux@roeck-us.net>, lm-sensors@lm-sensors.org, Linux PM list <linux-pm@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Lukasz Majewski <l.majewski@majess.pl>, Kukjin Kim <kgene.kim@samsung.com>, linux-kernel@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 19, 2014 at 03:05:50PM +0100, Michal Simek wrote:
-> On 12/19/2014 09:55 AM, Steffen Trumtrar wrote:
-> > Hi!
+Hi Sjoerd,
+
+Thanks for your feedback and sorry for a late reply.
+
+> On Thu, 2014-12-18 at 11:13 +0100, Lukasz Majewski wrote:
+> > Several new properties to allow PWM fan working as a cooling device
+> > have been combined into this single commit.
 > > 
-> > Just a minor nitpick, but...
+> > Signed-off-by: Lukasz Majewski <l.majewski@samsung.com>
+> > ---
+> >  .../devicetree/bindings/hwmon/pwm-fan.txt          | 28
+> > ++++++++++++++++++++++ 1 file changed, 28 insertions(+)
 > > 
-> > On Thu, Dec 18, 2014 at 04:29:08PM -0600, atull@opensource.altera.com wrote:
-> >> From: Alan Tull <atull@opensource.altera.com>
-> >>
-> >> Add driver to fpga manager framework to allow configuration
-> >> of FPGA in Altera SoCFPGA parts.
-> >>
-> >> Signed-off-by: Alan Tull <atull@opensource.altera.com>
-> >> Acked-by: Michal Simek <michal.simek@xilinx.com>
-> >> ---
-> >> v2: fpga_manager struct now contains struct device
-> >>     fpga_manager_register parameters now take device
-> >>
-> >> v3: skip a version to align versions
-> >>
-> >> v4: move to drivers/staging
-> >>
-> >> v5: fix array_size.cocci warnings
-> >>     fix platform_no_drv_owner.cocci warnings
-> >>     Remove .owner = THIS_MODULE
-> >>     include asm/irq.h
-> >>     clean up list of includes
-> >>     use altera_fpga_reset for ops
-> >>     use enum fpga_mgr_states or u32 as needed
-> >>     use devm_request_irq
-> >>     check irq <= 0 instead of == NO_IRQ
-> >>     Use ARRAY_SIZE
-> >>     rename altera -> socfpga
-> >>     static const socfpga_fpga_ops
-> >>     header moved to linux/fpga/ folder
-> >>     remove ifdef'ed code
-> >>     use platform_get_resource and platform_get_irq
-> >>     move .probe and .remove lines adjacent
-> >>     use module_platform_driver
-> >>     use __maybe_unused
-> >>     only need to 'if (IS_ENABLED(CONFIG_REGULATOR))' in one fn
-> >>     fix "unsigned 'mode' is never < 0"
-> >>
-> >> v6: return error for (unused) default of case statement
-> >> ---
-> >   ^^^
-> > 
-> > ...if you remove these, than that changelog will not land in the final
-> > commit which I would prefer. Nobody cares for the changelog of a
-> > patch once it is in its final state. And this is a rather noisy one.
-> > When someone in the future looks at this, he will see two lines of
-> > information and 10 times that of uninteresting noise.
-> > 
-> > Not a dealbreaker, but just something to consider for future patches.
+> > diff --git a/Documentation/devicetree/bindings/hwmon/pwm-fan.txt
+> > b/Documentation/devicetree/bindings/hwmon/pwm-fan.txt index
+> > 610757c..3877810 100644 ---
+> > a/Documentation/devicetree/bindings/hwmon/pwm-fan.txt +++
+> > b/Documentation/devicetree/bindings/hwmon/pwm-fan.txt @@ -3,10
+> > +3,38 @@ Bindings for a fan connected to the PWM lines Required
+> > properties:
+> >  - compatible	: "pwm-fan"
+> >  - pwms		: the PWM that is used to control the PWM fan
+> > +- cooling-pwm-values      : PWM duty cycle values relative to
+> > +			    cooling-max-pwm-value correspondig to
+> > +			    proper cooling states
+> > +- default-pulse-width     : Property specifying default pulse
+> > width for FAN
+> > +			    at system boot (zero to disable FAN on
+> > boot).
+> > +			    Allowed range is 0 to 255
+> 
+> The 0..255 range seems somewhat random. Would be nicer to either use
+> the approach of pwm-backlight (iotw, have the range go from the first
+> to the last entry of cooling-pwm-values) 
+
+I'm OK to change the default-pulse-width to be similar to
+"default-brightness-level" (as it is in
+Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt)
+
+> or simply have be the duty
+> lenght in NS as entries instead of the current indirection.
+
+I'd prefer to keep the indirection - as it is utilized in the current
+pwm-fan.c driver.
+
+> 
+> I assumed your cooling-pwm-values are a [0..255] range as well instead
+> of nanoseconds (would be good to make that more clear)?
+
+Your assumption is correct. cooling-pwm-values are indeed in the
+[0..255] range. I will add this information in v2.
+
+> 
+> Also having more consistent names would be nice.. To take
+> pwm-backlight as inspiration, cooling-levels and
+> default-cooling-level would make it more clear the second property
+> picks a default setting from the first one.
+
+I agree.
+
+> 
+> One thing i do wonder, is having an explicit default setting useful?
+> Should it not default to maximum cooling unless otherwise configured
+> by either the thermal framework or sysfs ?
+
+Enabling pan to full RPM was the default behaviour in the current
+pwm-fan.c file.
+
+To be honest, there is no need to enable fan to full RPM speed in this
+board for following reasons:
+1. In Odroid the FAN is optional (stacked on top of a heat sink) - very
+often it is just enough to only have the heat sink.
+
+2. Odroid has thermal enabled by default and IMHO it would be more
+feasible to allow thermal to control fan from the very beginning.
+
+However, I can also understand if the policy for hwmon implies a rule
+to enable by default all fans to full RPM speed.
+
 > 
 > 
-> When you run git-am you will see that changelog is not there.
+> > +Thorough description of the following bindings:
+> > +		cooling-min-state = <0>;
+> > +		cooling-max-state = <3>;
+> > +		#cooling-cells = <2>;
+> > +		thermal-zone {
+> > +			cpu_thermal: cpu-thermal {
+> > +			cooling-maps {
+> > +				map0 {
+> > +				     trip = <&cpu_alert1>;
+> > +				     cooling-device = <&fan0 0 1>;
+> > +				};
+> > +			};
+> > +		};
+> > +
+> > +for PWM FAN used as cooling device can be found at:
+> > +./Documentation/devicetree/bindings/thermal/thermal.txt
+> >  
+> >  Example:
+> >  	pwm-fan {
+> >  		compatible = "pwm-fan";
+> >  		status = "okay";
+> >  		pwms = <&pwm 0 10000 0>;
+> > +		cooling-min-state = <0>;
+> > +		cooling-max-state = <3>;
+> > +		#cooling-cells = <2>;
+> > +		cooling-pwm-values = <0 102 170 255>;
+> > +		default-pulse-width = <0>;
+> >  	};
+> 
 > 
 
-Ah, great. It seems like git-am does indeed know now how to handle this.
-There are some commits in mainline that have this changelog added,
-because there where two '---' lines in the patch.
 
-Then go on kind sirs with whatever you where doing and don't pay any
-attention to my comment... :-)
-
-Regards,
-Steffen
 
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Best regards,
+
+Lukasz Majewski
+
+Samsung R&D Institute Poland (SRPOL) | Linux Platform Group
