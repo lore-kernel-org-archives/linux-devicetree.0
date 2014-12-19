@@ -1,147 +1,127 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH RFC v2 08/14] drm: imx: Add MIPI DSI host controller driver
-Date: Fri, 19 Dec 2014 11:17:26 +0100
-Message-ID: <1418984246.3165.45.camel@pengutronix.de>
-References: <1418886696-11636-1-git-send-email-Ying.Liu@freescale.com>
- <1418886696-11636-9-git-send-email-Ying.Liu@freescale.com>
- <1418902740.4212.46.camel@pengutronix.de> <5493BD52.8070804@freescale.com>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH 1/2] PCI: imx6: Add power-supply support
+Date: Fri, 19 Dec 2014 11:19:32 +0100
+Message-ID: <1418984372.2558.1.camel@pengutronix.de>
+References: <1418976617-833-1-git-send-email-xobs@kosagi.com>
+	 <1418976617-833-2-git-send-email-xobs@kosagi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <5493BD52.8070804@freescale.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Liu Ying <Ying.Liu@freescale.com>
-Cc: devicetree@vger.kernel.org, linux@arm.linux.org.uk, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, kernel@pengutronix.de, mturquette@linaro.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1418976617-833-2-git-send-email-xobs@kosagi.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Sean Cross <xobs@kosagi.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@freescale.com>, Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, Richard Zhu <r65037@freescale.com>, Grant Likely <grant.likely@linaro.org>, linux-pci@vger.kernel.org, bunnie@kosagi.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgTGl1LAoKQW0gRnJlaXRhZywgZGVuIDE5LjEyLjIwMTQsIDEzOjUzICswODAwIHNjaHJpZWIg
-TGl1IFlpbmc6ClsuLi5dCj4gPj4gKwltaXBpX2RzaTogbWlwaUAwMjFlMDAwMCB7Cj4gPj4gKwkJ
-I2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gPj4gKwkJI3NpemUtY2VsbHMgPSA8MD47Cj4gPj4gKwkJ
-Y29tcGF0aWJsZSA9ICJmc2wsaW14NnEtbWlwaS1kc2kiOwo+ID4+ICsJCXJlZyA9IDwweDAyMWUw
-MDAwIDB4NDAwMD47Cj4gPj4gKwkJaW50ZXJydXB0cyA9IDwwIDEwMiBJUlFfVFlQRV9MRVZFTF9I
-SUdIPjsKPiA+PiArCQlncHIgPSA8Jmdwcj47Cj4gPj4gKwkJY2xvY2tzID0gPCZjbGtzIElNWDZR
-RExfQ0xLX1ZJREVPXzI3TT4sCj4gPj4gKwkJCSA8JmNsa3MgSU1YNlFETF9DTEtfSFNJX1RYPiwK
-PiA+PiArCQkJIDwmY2xrcyBJTVg2UURMX0NMS19IU0lfVFg+Owo+ID4+ICsJCWNsb2NrLW5hbWVz
-ID0gInBsbHJlZiIsICJwbGxyZWZfZ2F0ZSIsICJjb3JlX2NmZyI7Cj4gPgo+ID4gTm90IHN1cmUg
-YWJvdXQgdGhpcy4gQXJlIHRob3NlIG5hbWVzIGZyb20gdGhlIFN5bm9wc3lzIGRvY3VtZW50YXRp
-b24/Cj4gCj4gTm8sIEkgZG9uJ3QgdGhpbmsgaXQncyBmcm9tIHRoZXJlLgoKRG8geW91IGhhdmUg
-YWNjZXNzIHRvIGl0PyBJJ2QgbGlrZSB0byBzZWUgdGhlIHByb3BlciBuYW1lcyB1c2VkIGlmCnBv
-c3NpYmxlLCBjb25zaWRlcmluZyB0aGlzIElQIGNvcmUgd2lsbCBiZSB1c2VkIG9uIG90aGVyIFNv
-Q3MsIHRvby4KCj4gPiBBY2NvcmRpbmcgdG8gVGFibGUgNDEtMSBpbiB0aGUgaS5NWDZRIFJlZmVy
-ZW5jZSBNYW51YWwsIHRoaXMgbW9kdWxlIGhhcwo+ID4gNiBjbG9jayBpbnB1dHM6Cj4gPiAgIC0g
-YWNfY2xrXzEyNW0gKGZyb20gYWhiX2Nsa19yb290KQo+ID4gICAtIHBpeGVsX2NsayAoZnJvbSBh
-eGlfY2xrX3Jvb3QpCj4gPiAgIC0gY2ZnX2NsayBhbmQgcGxsX3JlZmNsayAoZnJvbSB2aWRlb18y
-N20pCj4gPiAgIC0gaXBzX2NsayBhbmQgaXBnX2Nsa19zIChmcm9tIGlwZ19jbGtfcm9vdCkKPiA+
-IFRoZSBDQ00gY2hhcHRlciBzYXlzIHRoYXQgb2YgdGhlc2UsICJhY19jbGtfMTI1bSIsICJjZmdf
-Y2xrIiwgaXBzX2NsayIsCj4gPiBhbmQgInBsbF9yZWZjbGsiIGFyZSBnYXRlZCBieSBhIHNpbmds
-ZSBiaXQgY2FsbGVkCj4gPiAibWlwaV9jb3JlX2NmZ19jbGtfZW5hYmxlIiwgdGhhdCBpcyBjbGtb
-Q0xLX0hTSV9UWF0uCj4gPiBJZiB0aGF0IGlzIGNvcnJlY3QsIEkgc2VlIG5vIHJlYXNvbiBmb3Ig
-dGhlICJwbGxyZWZfZ2F0ZSIgY2xvY2suCj4gPiBJIHN1cHBvc2UgdHdvIGNsb2NrcyAicGxscmVm
-IiBhbmQgImNmZyIgc2hvdWxkIHN1ZmZpY2UuCj4gCj4gVXNpbmcgdGhlIHR3byBjbG9ja3MgbWFr
-ZXMgdGhlIGNvZGUgbG9vayBsaWtlIHRoaXMsIHBlcmhhcHM6Cj4gCj4gICAgICAgIGNsb2NrcyA9
-IDwmY2xrcyBJTVg2UURMX0NMS19WSURFT18yN00+LAo+ICAgICAgICAgICAgICAgICA8JmNsa3Mg
-SU1YNlFETF9DTEtfSFNJX1RYPjsKPiAgICAgICAgY2xvY2stbmFtZXMgPSAicGxscmVmIiwgImNv
-cmVfY2ZnIjsKPiAKPiBUaGVuLCBpdCBzZWVtcyB0aGF0IEkgaGF2ZSBubyB3YXkgdG8gZGlzYWJs
-ZSB0aGUgcGxscmVmIGNsb2NrIGlmCj4gdXNpbmcgdGhlIGNsb2NrIHRyZWUgYWZ0ZXIgYXBwbHlp
-bmcgdGhpcyBwYXRjaCBzZXQ/CgpDb3JyZWN0LiBJbiBteSBvcGluaW9uIHdlIHNob3VsZCBwdXQg
-YSBuZXcgZ2F0ZSBjbG9jayBpbiB0aGUgY2xvY2sgcGF0aApiZXR3ZWVuIHZpZGVvXzI3bSBhbmQg
-dGhlIHBsbHJlZiBpbnB1dCB0cmlnZ2VycyB0aGUgc2FtZSBiaXQgYXMgaHNpX3R4LApzZWUgYmVs
-b3cuCgo+IE9yLCBwZXJoYXBzLCB0aGlzIG9uZT8KPiAKPiAgICAgICAgY2xvY2tzID0gPCZjbGtz
-IElNWDZRRExfQ0xLX0hTSV9UWD4sCj4gICAgICAgICAgICAgICAgIDwmY2xrcyBJTVg2UURMX0NM
-S19IU0lfVFg+Owo+ICAgICAgICBjbG9jay1uYW1lcyA9ICJwbGxyZWYiLCAiY29yZV9jZmciOwo+
-IAo+IFRoaXMgb25seSB1c2VzIHRoZSBnYXRlIGNsb2NrIGhzaV90eC4gIFRoZSBjdXJyZW50IGNs
-b2NrIHRyZWUgc3RhdGVzCj4gdGhhdCBpdCBjb21lcyBmcm9tOgo+IAo+ICAgICAgIHBsbDNfMTIw
-bSAtPgo+ICAgICAgICAgICAgICAgICAgIHwgLT4gaHNpX3R4X3NlbCAtPiBoc2lfdHhfcG9kZiAt
-PiBoc2lfdHgKPiBwbGwyX3BmZDJfMzk2bSAtPgo+IAo+IFNvLCBJIGNhbiBub3QgZ2V0IHRoZSBj
-b3JyZWN0IHBsbHJlZiBjbG9jayBmcmVxdWVuY3kgd2l0aCB0aGlzIHRyZWUuCj4gVGhlIHBsbHJl
-ZiBjbG9jayBzaG91bGQgYmUgZGVyaXZlZCBmcm9tIHRoZSB2aWRlb18yN20gY2xvY2suCgpBY2Nv
-cmRpbmcgdG8gdGhlIGkuTVg2IHJlZmVyZW5jZSBtYW51YWwsIHRoZSBjZmcgY2xvY2sgYWxzbyBp
-cyBkZXJpdmVkCmZyb20gdmlkZW9fMjdtLCBzbyBib3RoIGhhdmUgdGhlIHdyb25nIHJhdGUgaWYg
-Y29ubmVjdGVkIHRvIGhzaV90eCAoeWVzLApmb3IgY2ZnIHdlIGRvbid0IGNhcmUgYWJvdXQgdGhl
-IHJhdGUpLgoKQ3VycmVudGx5IHdlIGhhdmUgdGhpczoKCnBsbDJfcGZkMl8zOTZtIC0+IGhzaV90
-eF9zZWwgLT4gaHNpX3R4X3BvZGYgLT4gaHNpX3R4CnBsbDNfcGZkMV81NDBtIC0+IHZpZGVvXzI3
-bSAtPiBoZG1pX2lzZnIKCi0gaHNpX3R4X3BvZGYgcmVwcmVzZW50cyB0aGUgaHNpX3R4X2Nsa19y
-b290IGF0IGl0cyBvdXRwdXQuCi0gaHNpX3R4IHJlcHJlc2VudHMgdGhlIGdhdGUgYmV0d2VlbiBo
-c2lfdHhfY2xrX3Jvb3QgYW5kIHRoZSB0eF9yZWZfY2xrCiAgaW5wdXQgdG8gdGhlIE1JUElfSFNJ
-IG1vZHVsZSwgd2hpY2ggaXMgY29udHJvbGxlZCBieSB0aGUKICBtaXBpX2NvcmVfY2ZnX2Nsa19l
-bmFibGUgYml0LgotIHZpZGVvXzI3bSByZXByZXNlbnRzIHRoZSB2aWRlb18yN21fY2xrX3Jvb3Qg
-YXQgaXRzIG91dHB1dC4KCkknZCBzYXkgd2Ugc2hvdWxkIHR1cm4gaHNpX3R4IGludG8gYSBzaGFy
-ZWQgZ2F0ZSBjbG9jayBhbmQgYWRkIGEgbmV3CnNoYXJlZCBnYXRlIGNsb2NrIHVzaW5nIHRoZSBz
-YW1lIGdhdGUgYml0LiBNYXliZSBuYW1lIGl0IG1pcGlfY29yZV9jZmcsCmFmdGVyIHRoZSBnYXRp
-bmcgYml0IGluIHRoZSBDQ00uCgpwbGwyX3BmZDJfMzk2bSAtPiBoc2lfdHhfc2VsIC0+IGhzaV90
-eF9wb2RmIC0+IGhzaV90eApwbGwzX3BmZDFfNTQwbSAtPiB2aWRlb18yN20gLT4gbWlwaV9jb3Jl
-X2NmZwpwbGwzX3BmZDFfNTQwbSAtPiB2aWRlb18yN20gLT4gaGRtaV9pc2ZyCgotIG1pcGlfY29y
-ZV9jZmcgcmVwcmVzZW50cyB0aGUgZ2F0ZSBiZXR3ZWVuIHZpZGVvXzI3X2Nsa19yb290IGFuZCB0
-aGUKICBjZmdfY2xrIGFuZCBwbGxyZWZfY2xrIGlucHV0cyB0byB0aGUgTUlQSV9EU0kgbW9kdWxl
-LCB3aGljaCBpcyBhbHNvCiAgY29udHJvbGxlZCBieSB0aGUgbWlwaV9jb3JlX2NmZ19jbGtfZW5h
-YmxlIGJpdC4KCj4gVGhlIHdheSBJIGRlY2lkZWQgdG8gdXNlIHRoZSB0aHJlZSBjbG9ja3MgaXM6
-Cj4gMSkgUExMIHJlbGF0ZWQKPiAqIHBsbHJlZiBjbG9jayBvbmx5IGNhcmVzIGFib3V0IHRoZSBw
-bGwgcmVmZXJlbmNlIHJhdGUodGhlIGZyZXF1ZW5jeSkuCj4gICAgQW5kLCB0aGUgZnJlcXVlbmN5
-IGRvZXMgbWF0dGVyIGFzIGl0IGhhcyBhbiBpbXBhY3Qgb24gdGhlIGxhbmUgY2xvY2sKPiAgICBm
-cmVxdWVuY3kuCj4gKiBwbGxyZWZfZ2F0ZSBpcyBhIGdhdGUgY2xvY2sgYW5kIGl0IG9ubHkgY2Fy
-ZXMgYWJvdXQgdGhlIGdhdGUuCj4KPiAyKSByZWdpc3RlciBjb25maWd1cmF0aW9uIHJlbGF0ZWQK
-PiAqIGNvcmVfY2ZnIGlzIGEgZ2F0ZSBjbG9jayBhbmQgaXQgb25seSBjYXJlcyBhYm91dCB0aGUg
-Z2F0ZS4KPiBVc3VhbGx5LCB0aGUgcmVnaXN0ZXIgY29uZmlndXJhdGlvbiBjbG9jayBmcmVxdWVu
-Y3kgaXMgbm90IHNvIGltcG9ydGFudAo+IGFuZCB0aGUgZ2F0ZSBpcyB3aGF0IHdlIHJlYWxseSBu
-ZWVkLgo+IAo+IEkgYW0gY3VycmVudGx5IG5vdCBzdHJvbmcgb24gdGhlIHdheSBJIHVzZWQuICBJ
-IGFtIG9wZW4gdG8gYW55IGJldHRlcgo+IHNvbHV0aW9uLgoKU2luY2UgY2ZnIGlzIGEgcmVhbCBj
-bG9jayBpbnB1dCB0byB0aGUgTUlQSSBEU0kgSVAsIHRoYXQncyBvay4gQnV0IHRoZQp0d28gcGxs
-cmVmIGVudHJpZXMgaW4gcmVhbGl0eSBhcmUgb25lIGFuZCB0aGUgc2FtZSBjbG9jayBpbnB1dC4K
-Cj4gPiBNYXliZSBIU0lfVFggc2hvdWxkIGJlIHNwbGl0IHVwIGludG8gbXVsdGlwbGUgc2hhcmVk
-IGdhdGUgY2xvY2tzIHRoYXQKPiA+IGFsbCBzZXQgdGhlIG1pcGlfY29yZV9jZmcgY2xvY2sgYml0
-cyAoc2VlIGJlbG93KS4KPiAKPiBZZXMsIG1heWJlLgo+IElmIHRoYXQncyB0aGUgY2FzZSwgZG8g
-d2UgbmVlZCB0byBhZGQgdHdvIGdhdGUgY2xvY2tzIGluIHRoZSBEVCBub2RlIHRvCj4gcmVwcmVz
-ZW50IGNmZ19nYXRlIGFuZCBwbGxyZWZfZ2F0ZSByZXNwZWN0aXZlbHk/CgpJJ2Qgc2F5IHllcy4g
-V2hpbGUgb24gaS5NWDYgaXQgY291bGQgYmUgcmVwcmVzZW50ZWQgYnkgYSBzaW5nbGUgY2xvY2sK
-YmVjYXVzZSBib3RoIGhhdmUgdGhlIHNhbWUgcmF0ZSBhbmQgdXNlIHRoZSBzYW1lIGdhdGUgYml0
-LCB0aGF0IGRvZXNuJ3QKaGF2ZSB0byBiZSB0aGUgY2FzZSBvbiBvdGhlciBTb0NzLiBXaXRoIG15
-IHN1Z2dlc3Rpb24gYWJvdmUsIHRoYXQgd291bGQKYmU6CgoJY2xvY2tzID0gPCZjbGtzIElNWDZR
-RExfQ0xLX01JUElfQ09SRV9DRkc+LAoJCSA8JmNsa3MgSU1YNlFETF9DTEtfTUlQSV9DT1JFX0NG
-Rz47CgljbG9jay1uYW1lcyA9ICJwbGxyZWYiLCAiY2ZnIjsKCj4gPj4gZGlmZiAtLWdpdCBhL2Ry
-aXZlcnMvZ3B1L2RybS9pbXgvS2NvbmZpZyBiL2RyaXZlcnMvZ3B1L2RybS9pbXgvS2NvbmZpZwpb
-Li4uXQo+ID4+ICtzdGF0aWMgaW50IGlteF9taXBpX2RzaV9iaW5kKHN0cnVjdCBkZXZpY2UgKmRl
-diwgc3RydWN0IGRldmljZSAqbWFzdGVyLCB2b2lkICpkYXRhKQo+ID4+ICt7ClsuLi5dCj4gPj4g
-Kwlkc2ktPnBsbHJlZl9jbGsgPSBkZXZtX2Nsa19nZXQoZGV2LCAicGxscmVmIik7Cj4gPj4gKwlp
-ZiAoSVNfRVJSKGRzaS0+cGxscmVmX2NsaykpIHsKPiA+PiArCQlyZXQgPSBQVFJfRVJSKGRzaS0+
-cGxscmVmX2Nsayk7Cj4gPj4gKwkJZGV2X2VycihkZXYsICJVbmFibGUgdG8gZ2V0IHBsbCByZWZl
-cmVuY2UgY2xvY2s6ICVkXG4iLCByZXQpOwo+ID4+ICsJCXJldHVybiByZXQ7Cj4gPj4gKwl9Cj4g
-Pj4gKwljbGtfcHJlcGFyZV9lbmFibGUoZHNpLT5wbGxyZWZfY2xrKTsKCldoYXQgSSBtZWFuIGJl
-bG93IGlzIHRoaXM6IEhlcmUgeW91IGVuYWJsZSBwbGxyZWYgLi4uCgpbLi4uXQo+ID4+ICsJZHNp
-LT5jZmdfY2xrID0gZGV2bV9jbGtfZ2V0KGRldiwgImNvcmVfY2ZnIik7Cj4gPj4gKwlpZiAoSVNf
-RVJSKGRzaS0+Y2ZnX2NsaykpIHsKPiA+PiArCQlyZXQgPSBQVFJfRVJSKGRzaS0+Y2ZnX2Nsayk7
-Cj4gPj4gKwkJZGV2X2VycihkZXYsICJVbmFibGUgdG8gZ2V0IGNvbmZpZ3VyYXRpb24gY2xvY2s6
-ICVkXG4iLCByZXQpOwo+ID4KPiA+IEFuZCBsZWF2ZSBwbGxyZWYgZW5hYmxlZD8KPiAKPiBBcyBJ
-IG1lbnRpb25lZCBpbiB0aGUgdjEtPiB2MiBjaGFuZ2UgbG9nLCBJIGVuYWJsZS9kaXNhYmxlIHRo
-ZSAKPiBwbGxyZWZfY2xrIGFuZCBwbGxyZWZfZ2F0ZV9jbGsgYXQgdGhlIGNvbXBvbmVudCBiaW5k
-aW5nL3VuYmluZGluZyBzdGFnZXMgCj4gdG8gaGVscCByZW1vdmUgdGhlIGZsYWcgJ2VuYWJsZWQn
-IGludHJvZHVjZWQgaW4gdjEuCj4gCj4gSSByZWZlcnJlZCB0byB0aGUgaS5NWCBIRE1JIGRyaXZl
-ciB3aGljaCBlbmFibGVzL2Rpc2FibGVzIHRoZSBpc2ZyIGNsb2NrIAo+IGFuZCB0aGUgaWFoYiBj
-bG9jayBhdCB0aGUgY29tcG9uZW50IGJpbmRpbmcvdW5iaW5kaW5nIHN0YWdlcy4KPiAKPiBJIG1h
-eSB0cnkgdG8gaGFuZGxlIHRoZSBjbG9jayBlbmFibGVtZW50L2Rpc2FibGVtZW50IG1vcmUgZGVj
-ZW50bHkgYW5kCj4gYXZvaWQgdXNpbmcgdGhlIGZsYWcgJ2VuYWJsZScuCj4gCj4gPgo+ID4+ICsJ
-CXJldHVybiByZXQ7CgouLi4gYW5kIGhlcmUgeW91IHJldHVybiB3aXRoIGFuIGVycm9yIHdpdGhv
-dXQgZGlzYWJsaW5nIHBsbHJlZiBhZ2Fpbi4gSWYKdGhlIGJpbmQgZmFpbHMsIHVuYmluZCB3b24n
-dCBiZSBjYWxsZWQsIGFuZCB0aGUgY2xvY2sgc3RheXMgZW5hYmxlZC4gRm9yCnJlZmVyZW5jZSwg
-c2VlIGhvdyBpbXgtaGRtaSB1bnByZXBhcmVfZGlzYWJsZXMgaXRzIGlhaGIvaXNmciBjbG9ja3Mg
-aW4KdGhlIGJpbmQgZnVuY3Rpb24ncyBlcnJvciBwYXRoLgoKPiA+PiArCX0KPiA+PiArCj4gPj4g
-KwljbGtfcHJlcGFyZV9lbmFibGUoZHNpLT5jZmdfY2xrKTsKPiA+PiArCXZhbCA9IGRzaV9yZWFk
-KGRzaSwgRFNJX1ZFUlNJT04pOwo+ID4+ICsJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKGRzaS0+Y2Zn
-X2Nsayk7Cj4gPj4gKwo+ID4+ICsJZGV2X2luZm8oZGV2LCAidmVyc2lvbiBudW1iZXIgaXMgMHgl
-MDh4XG4iLCB2YWwpOwo+ID4+ICsKPiA+PiArCXJldCA9IGlteF9taXBpX2RzaV9yZWdpc3Rlcihk
-cm0sIGRzaSk7Cj4gPj4gKwlpZiAocmV0KQo+ID4KPiA+IFNhbWUgaGVyZS4KPiAKPiBZb3UgbWVh
-bnQgdGhhdCB0aGUgcGxscmVmX2dhdGUgY2xvY2sgaXMgbGVmdCBlbmFibGVkIGFib3ZlLCByaWdo
-dD8KClllcy4KCj4gUmVnYXJkcywKPiBMaXUgWWluZwo+IAo+ID4KPiA+PiArCQlyZXR1cm4gcmV0
-OwoKVGhpcyByZXR1cm4gd2l0aCBhbiBlcnJvciBsZWF2ZXMgdGhlIHBsbHJlZiBlbmFibGVkLgoK
-cmVnYXJkcwpQaGlsaXBwCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
-cC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
-ZXZlbAo=
+Am Freitag, den 19.12.2014, 16:10 +0800 schrieb Sean Cross:
+> Some PCIe ports gate power to the slot.  In order to prevent system lockup,
+> these boards must enable power to the slot before attempting communication
+> over the PCI bus.
+> 
+> Signed-off-by: Sean Cross <xobs@kosagi.com>
+> ---
+>  .../devicetree/bindings/pci/fsl,imx6q-pcie.txt       |  3 +++
+>  drivers/pci/host/pci-imx6.c                          | 20 +++++++++++++++++++-
+>  2 files changed, 22 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+> index 6fbba53..fe912bd 100644
+> --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+> +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+> @@ -13,6 +13,9 @@ Required properties:
+>  - clock-names: Must include the following additional entries:
+>  	- "pcie_phy"
+>  
+> +Optional properties:
+> +- power-supply: A regulator that controls power to the port
+
+This is a way too generic name. In order to provide the functionality
+you are intending, this regulator needs to supply the whole bus
+(remember not every board has just a single slot). It should be named
+accordingly.
+
+So I would expect this to look something like the following:
+
+bus-supply: A regulator that controls main power to every device on the
+bus.
+
+> +
+>  Example:
+>  
+>  	pcie@0x01000000 {
+> diff --git a/drivers/pci/host/pci-imx6.c b/drivers/pci/host/pci-imx6.c
+> index 69202d1..9c2140e 100644
+> --- a/drivers/pci/host/pci-imx6.c
+> +++ b/drivers/pci/host/pci-imx6.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/pci.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/regmap.h>
+> +#include <linux/regulator/consumer.h>
+>  #include <linux/resource.h>
+>  #include <linux/signal.h>
+>  #include <linux/types.h>
+> @@ -39,6 +40,7 @@ struct imx6_pcie {
+>  	struct pcie_port	pp;
+>  	struct regmap		*iomuxc_gpr;
+>  	void __iomem		*mem_base;
+> +	struct regulator	*power_reg;
+>  };
+>  
+>  /* PCIe Root Complex registers (memory-mapped) */
+> @@ -588,6 +590,19 @@ static int __init imx6_pcie_probe(struct platform_device *pdev)
+>  		}
+>  	}
+>  
+> +	/* Fetch power supply */
+> +	imx6_pcie->power_reg = devm_regulator_get(&pdev->dev, "power");
+
+Use devm_regulator_get_optional instead.
+
+> +	if (IS_ERR(imx6_pcie->power_reg))
+> +		imx6_pcie->power_reg = 0;
+
+This can go away if you use the above, but really? 0 to a pointer? I
+know it isn't invalid, but it's also bad style.
+
+You must handle -EPROBE_DEFER here instead.
+
+> +
+> +	if (imx6_pcie->power_reg) {
+> +		ret = regulator_enable(imx6_pcie->power_reg);
+> +		if (ret) {
+> +			dev_err(&pdev->dev, "Unable to enable power regulator");
+> +			return ret;
+> +		}
+> +	}
+> +
+I'm not really comfortable with enabling directly at probe time, but
+given our failure paths are horrible enough as they are right now I
+agree that this is the sanest solution for now.
+
+But please move both enabling and disabling at failure into
+imx6_add_pcie_port().
+
+>  	/* Fetch clocks */
+>  	imx6_pcie->pcie_phy = devm_clk_get(&pdev->dev, "pcie_phy");
+>  	if (IS_ERR(imx6_pcie->pcie_phy)) {
+> @@ -619,8 +634,11 @@ static int __init imx6_pcie_probe(struct platform_device *pdev)
+>  	}
+>  
+>  	ret = imx6_add_pcie_port(pp, pdev);
+> -	if (ret < 0)
+> +	if (ret < 0) {
+> +		if (imx6_pcie->power_reg)
+> +			regulator_disable(imx6_pcie->power_reg);
+>  		return ret;
+> +	}
+>  
+>  	platform_set_drvdata(pdev, imx6_pcie);
+>  	return 0;
+
+Regards,
+Lucas
+-- 
+Pengutronix e.K.             | Lucas Stach                 |
+Industrial Linux Solutions   | http://www.pengutronix.de/  |
