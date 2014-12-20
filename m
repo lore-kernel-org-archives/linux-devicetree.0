@@ -1,138 +1,40 @@
-From: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Subject: Re: [PATCH V5 13/23] MIPS: BMIPS: Flush the readahead cache after DMA
-Date: Sat, 20 Dec 2014 13:44:41 +0100
-Message-ID: <CAOiHx=m9RzU5n2fjJcph6u=avUAEZJYw0-mBCSMRzDJvSD5CFA@mail.gmail.com>
-References: <1418422034-17099-1-git-send-email-cernekee@gmail.com>
- <1418422034-17099-14-git-send-email-cernekee@gmail.com> <CAOiHx=nX9jJEFZmkA-1fWj47whq85wj-ZgUxnZBwpAYDUfAO4w@mail.gmail.com>
- <CAJiQ=7AZdwCX6bmLD1B4TzfmKriE3HVEEa5zP3WRnENZjGS-hA@mail.gmail.com>
+From: One Thousand Gnomes <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>
+Subject: Re: [PATCH 2/2] misc: add a driver to power on/off UART attached
+ devices.
+Date: Sat, 20 Dec 2014 12:50:20 +0000
+Message-ID: <20141220125020.49d0bba0@lxorguk.ukuu.org.uk>
+References: <20141219235827.13943.45713.stgit@notabene.brown>
+	<20141220000920.13943.50943.stgit@notabene.brown>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAJiQ=7AZdwCX6bmLD1B4TzfmKriE3HVEEa5zP3WRnENZjGS-hA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20141220000920.13943.50943.stgit-wvvUuzkyo1EYVZTmpyfIwg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, NeilBrown <neil-+NVA1uvv1dVBDLzU/O5InQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, GTA04 owners <gta04-owner-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Dec 20, 2014 at 2:39 AM, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Mon, Dec 15, 2014 at 1:43 AM, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org> wrote:
->> On Fri, Dec 12, 2014 at 11:07 PM, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>> BMIPS 3300/435x/438x CPUs have a readahead cache that is separate from
->>> the L1/L2.  During a DMA operation, accesses adjacent to a DMA buffer
->>> may cause parts of the DMA buffer to be prefetched into the RAC.  To
->>> avoid possible coherency problems, flush the RAC upon DMA completion.
->>
->> According to what I have, any cpu [d-]cache invalidate operation
->> should already flush the full RAC unless explicitly disabled in the
->> RAC configuration - is this intended as an optimization/shortcut?
->
-> Correct - performing a RAC flush instead of blasting the entire range
-> again via CACHE instructions should be considerably faster in most
-> cases.  CACHE instructions are not pipelined on BMIPS3300/43xx.
->
-> There may be a couple of old CPU versions (possibly 130nm) that don't
-> automatically perform the RAC flush on each CACHE instruction.  Also,
-> a fun bit of trivia: MVA based cache flushes on B15 do flush the RAC,
-> but index based instructions do not.
+On Sat, 20 Dec 2014 11:09:21 +1100
+NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org> wrote:
 
-Because I'm laz^W^Wstill need to do some christmas shopping, I'll ask
-a few dumb questions:
+> If a platform has a particular device permanently attached to a UART,
+> there may be out-of-band signaling necessary to power the device
+> on and off.
+> 
+> This drive controls that signalling for a number of different devices.
+> It can
+>  - enable/disable a regulator
+>  - toggle a GPIO
+>  - register an 'rfkill' which can for the device to be off.
+> 
+> When the rfkill is absent of unblocked, the device will be on when the
+> associated tty device is open, and closed otherwise.
+> 
 
-Since a RAC flush won't flush the I/D-caches themselves, I assume
-there is no cache invalidate needed for BMIPS? Also is it still needed
-if the RAC is setup to only prefetch instructions (which it seems to
-be on bcm963xx)?
+Looks sound to me. Would drivers/tty/slave/.. be a better place for
+these to collect up than "misc" ?
 
-I also fail to find any RAC flushing on either bcm963xx or bcm947xx
-SDK kernels, that's why I'm a bit wondering whether they really need
-it. But maybe they always do explicit syncs, haven't checked that.
-
-Furthermore, I see code to enable data prefetching in setup on
-bcm963xx, so I wonder if it wouldn't make sense to add the RAC as an
-extra node in DT / register/enable/configure it from bmips setup code
-(because then we can also properly setup the address range in case the
-bootloader didn't).
-
->>>  static inline int cpu_needs_post_dma_flush(struct device *dev)
->>>  {
->>
->> The place for it seems a bit misplaced; I would not expect
->> cpu_needs_post_dma_flush() to have any side effects.
->
-> Maybe we should rename the function?  To just cpu_post_dma_flush()?
-
-Hm, not sure. Add a feature flag for that, or a callback. It is
-essentially a second level cache I guess.
-
-Also while reading dma-default.c, I wonder why dma_unmap_page checks
-if cpu needs to flush, but dma_unmap_sg doesn't (disclamer: I don't
-know anything about sg).
-
->
-> (Or call a separate function from each site - but that seems unnecessary.)
->
->>> +       if (boot_cpu_type() == CPU_BMIPS3300 ||
->>> +           boot_cpu_type() == CPU_BMIPS4350 ||
->>> +           boot_cpu_type() == CPU_BMIPS4380) {
->>> +               void __iomem *cbr = BMIPS_GET_CBR();
->>> +
->>> +               /* Flush stale data out of the readahead cache */
->>> +               __raw_writel(0x100, cbr + BMIPS_RAC_CONFIG);
->>
->> Hm, according to what I have, bits [6:0] of RAC_CONFIG are R/W
->> configuration bits, and this will overwrite them:
->>
->> CFE> dm 0xff400000 4
->> ff400000: 02a07015                                        ..p.
->> CFE> sm 0xff400000 0x100 4
->> ff400000: 02a00000                                        ....
->>
->> (As far as I can tell, RAC was previously enabled for instruction
->> cache misses , and now isn't any more for anything, so effectively
->> disabled?)
->>
->> Also for BMIPS4350 (and I guess 4380) there seems to be a second
->> RAC_CONFIG register at 0x8, I guess for the second thread? Does it
->> need flushing, too?
->
-> I'll defer to Florian for the final word since he has access to the
-> documentation, but going from memory:
->
-> RAC_CONFIG should probably be a read/modify/write.  I'm pretty sure
-> there are important RW configuration bits in there.  I may have
-> incorrectly translated the "set bit 8" code from here:
->
-> https://github.com/Broadcom/stblinux-3.3/blob/master/linux/arch/mips/mm/c-brcmstb.c#L374
->
-> There is only one RAC for all CPUs, and we've never had to flush
-> anything via CBR+0x08.
-
-
-What I see in recent bcm963xx SDKs is this:
-
-void __init plat_mem_setup(void)
-{
-...
-        volatile unsigned long *cr;
-        uint32 mipsBaseAddr = MIPS_BASE;
-
-        cr = (void *)(mipsBaseAddr + MIPS_RAC_CR0);
-        *cr = *cr | RAC_D | RAC_PF_D;
-
-#if defined(MIPS_RAC_CR1)
-        cr = (void *)(mipsBaseAddr + MIPS_RAC_CR1);
-        *cr = *cr | RAC_D | RAC_PF_D;
-#endif
-}
-
-RAC_CR1 seems to be defined for BMIPS4350 based SoCs, while BMIPS3300
-ones don't (well, 6318 doesn't. The older SDKs named the address range
-register RAC_CR1, so for them this check is quite wrong :P)
-
-But no references to RAC_FLH anywhere.
-
-
-Jonas
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
