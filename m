@@ -1,87 +1,39 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH w/ acks] DT: leds: Add flash LED devices related
- properties
-Date: Sat, 20 Dec 2014 16:02:52 +0100
-Message-ID: <20141220150252.GA8777@amd>
-References: <20141120131713.GC27527@amd>
- <20141203185746.GA25267@amd>
- <CAK5ve-JDOMHyu+meKgA8Xs08pio9OENg7p1zNka4NNgy5WOejg@mail.gmail.com>
+From: Christ van Willegen <cvwillegen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [Gta04-owner] [PATCH 2/2] misc: add a driver to power on/off UART
+ attached devices.
+Date: Sat, 20 Dec 2014 17:02:04 +0100
+Message-ID: <CA+Ot1Own-g=vjYhOygzVgNPspw6FgCHZqY8wQo31=ahf62E1gA@mail.gmail.com>
+References: <20141219235827.13943.45713.stgit@notabene.brown> <20141220000920.13943.50943.stgit@notabene.brown>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAK5ve-JDOMHyu+meKgA8Xs08pio9OENg7p1zNka4NNgy5WOejg@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Bryan Wu <cooloney@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Jacek Anaszewski <j.anaszewski@samsung.com>, Sakari Ailus <sakari.ailus@iki.fi>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "rpurdie@rpsys.net" <rpurdie@rpsys.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141220000920.13943.50943.stgit-wvvUuzkyo1EYVZTmpyfIwg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: List for communicating with real GTA04 owners <gta04-owner-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, One Thousand Gnomes <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, NeilBrown <neil-+NVA1uvv1dVBDLzU/O5InQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed 2014-12-03 11:03:59, Bryan Wu wrote:
-> On Wed, Dec 3, 2014 at 10:57 AM, Pavel Machek <pavel@ucw.cz> wrote:
-> >
-> > Addition of a LED Flash class extension entails the need for flash LED
-> > specific device tree properties. The properties being added are:
-> > max-microamp, flash-max-microamp, flash-timeout-microsec.
-> >
-> > Signed-off-by: Pavel Machek <pavel@ucw.cz>
-> > Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> > Acked-by: Jacek Anaszewski <j.anaszewski@samsung.com>
-> >
-> 
-> Thanks a lot, let me wait for one ack from Device Tree maintainers, as
-> it's a pure device tree patch.
+Hi,
 
-Well, it looks like device tree maintainers don't care. But the patch
-is not obviously bad, because they'd scream bloody murder by now...
+One remark:
 
-> Rob, can you help to give a review and ack?
++config SERIAL_POWER_MANAGER
++       tristate "Power Management controller for serial-attached devices"
++       depends on TTY && OF
++       default n
++       help
++         Some devices permanently attached via a UART can benefit from
++         being power-managed when the tty device is openned or closed.
++         This driver can support several such devices with simple
++         power requirements such as enabling a regulator.
++
++         If in doubt, say 'N'
++
 
-...so can we get it in, please?
+There's a typo: openned.
 
-								Pavel
-
-> > This will allow me to add device tree support for adp1653 i2c flash
-> > LED driver, and allow Jacek Anaszewski to add support for more LED
-> > drivers..
-> >
-> >
-> > diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
-> > index 2d88816..e9acbbc 100644
-> > --- a/Documentation/devicetree/bindings/leds/common.txt
-> > +++ b/Documentation/devicetree/bindings/leds/common.txt
-> > @@ -14,6 +14,15 @@ Optional properties for child nodes:
-> >       "ide-disk" - LED indicates disk activity
-> >       "timer" - LED flashes at a fixed, configurable rate
-> >
-> > +- max-microamp : maximum intensity in microamperes of the LED
-> > +                (torch LED for flash devices)
-> > +- flash-max-microamp : maximum intensity in microamperes of the
-> > +                       flash LED; it is mandatory if the LED should
-> > +                      support the flash mode
-> > +- flash-timeout-microsec : timeout in microseconds after which the flash
-> > +                           LED is turned off
-> > +
-> > +
-> >  Examples:
-> >
-> >  system-status {
-> > @@ -21,3 +30,10 @@ system-status {
-> >         linux,default-trigger = "heartbeat";
-> >         ...
-> >  };
-> > +
-> > +camera-flash {
-> > +       label = "Flash";
-> > +       max-microamp = <50000>;
-> > +       flash-max-microamp = <320000>;
-> > +       flash-timeout-microsec = <500000>;
-> > +}
-> >
-> >
-> > --
-> > (english) http://www.livejournal.com/~pavelmachek
-> > (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
-
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+Christ van Willegen
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
