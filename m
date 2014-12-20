@@ -1,89 +1,71 @@
-From: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V5 13/23] MIPS: BMIPS: Flush the readahead cache after DMA
-Date: Fri, 19 Dec 2014 17:39:09 -0800
-Message-ID: <CAJiQ=7AZdwCX6bmLD1B4TzfmKriE3HVEEa5zP3WRnENZjGS-hA@mail.gmail.com>
-References: <1418422034-17099-1-git-send-email-cernekee@gmail.com>
- <1418422034-17099-14-git-send-email-cernekee@gmail.com> <CAOiHx=nX9jJEFZmkA-1fWj47whq85wj-ZgUxnZBwpAYDUfAO4w@mail.gmail.com>
+From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Subject: Re: [PATCH] mfd: cottula: add cottula board
+Date: Sat, 20 Dec 2014 10:43:48 +0100
+Message-ID: <8761d68xm3.fsf@free.fr>
+References: <1418598606-21352-1-git-send-email-robert.jarzmik@free.fr>
+	<4307800.p21Sk5E3dV@wuerfel> <877fxsapds.fsf@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOiHx=nX9jJEFZmkA-1fWj47whq85wj-ZgUxnZBwpAYDUfAO4w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <877fxsapds.fsf-GANU6spQydw@public.gmane.org> (Robert Jarzmik's message of "Mon, 15
+	Dec 2014 16:45:03 +0100")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 15, 2014 at 1:43 AM, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org> wrote:
-> On Fri, Dec 12, 2014 at 11:07 PM, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> BMIPS 3300/435x/438x CPUs have a readahead cache that is separate from
->> the L1/L2.  During a DMA operation, accesses adjacent to a DMA buffer
->> may cause parts of the DMA buffer to be prefetched into the RAC.  To
->> avoid possible coherency problems, flush the RAC upon DMA completion.
+Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org> writes:
+
+> Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> writes:
 >
-> According to what I have, any cpu [d-]cache invalidate operation
-> should already flush the full RAC unless explicitly disabled in the
-> RAC configuration - is this intended as an optimization/shortcut?
+>> On Monday 15 December 2014 00:10:06 Robert Jarzmik wrote:
+>>> +
+>>> +       platform_set_drvdata(pdev, cot);
+>>> +       cot->gpio0 = gpiod_get(&pdev->dev, "lubbock_irq", 0);
+>>> +       if (IS_ERR(cot->gpio0)) {
+>>> +               dev_err(&pdev->dev, "Couldn't request GPIO : ret = %d\n", ret);
+>>> +               return PTR_ERR(cot->gpio0);
+>>> +       }
+>>> +       cot->irq = gpiod_to_irq(cot->gpio0);
+>>> +       if (cot->irq < 0)
+>>> +               return cot->irq;
+>>> +
+>>> +       cot->irqdomain =
+>>> +               irq_domain_add_linear(pdev->dev.of_node, COTTULA_NB_IRQ,
+>>> +                                     &cottula_irq_domain_ops, cot);
+>>> +       if (!cot->irqdomain)
+>>> +               return -ENODEV;
+>>> +
+>>> +       ret = 0;
+>>> +       if (base_irq)
+>>> +               ret = irq_create_strict_mappings(cot->irqdomain, base_irq, 0,
+>>> +                                                COTTULA_NB_IRQ);
+>>> 
+>>
+>> This looks a bit ambiguous: You get a GPIO line for the purpose of the
+>> IRQ nesting but don't use the GPIO otherwise, and you pass the device's
+>> own irq domain start as an IORESOURCE_IRQ resource.
+>>
+>> For consistency between DT and ATAGS based uses, and with similar DT
+>> based drivers, I would instead recommend passing the parent irq (from
+>> the GPIO) as an IORESOURCE_IRQ resource instead of a gpio lookup,
+>> and passing the base_irq as platform_data for the ATAGS case.
 
-Correct - performing a RAC flush instead of blasting the entire range
-again via CACHE instructions should be considerably faster in most
-cases.  CACHE instructions are not pipelined on BMIPS3300/43xx.
+Hi Arnd,
 
-There may be a couple of old CPU versions (possibly 130nm) that don't
-automatically perform the RAC flush on each CACHE instruction.  Also,
-a fun bit of trivia: MVA based cache flushes on B15 do flush the RAC,
-but index based instructions do not.
+I thought again about the GPIO.
 
->>  static inline int cpu_needs_post_dma_flush(struct device *dev)
->>  {
->
-> The place for it seems a bit misplaced; I would not expect
-> cpu_needs_post_dma_flush() to have any side effects.
+I put in the "gpiod_get()" call to ensure proper ordering between the gpio
+probing and this driver probing. It ensured that this driver's probe will be
+defered until the gpio driver is probed, which is the main purpose of this
+patch (commit message).
 
-Maybe we should rename the function?  To just cpu_post_dma_flush()?
+If I pass an irq from the machine code, I loose this guarantee, don't I ?
 
-(Or call a separate function from each site - but that seems unnecessary.)
+Cheers.
 
->> +       if (boot_cpu_type() == CPU_BMIPS3300 ||
->> +           boot_cpu_type() == CPU_BMIPS4350 ||
->> +           boot_cpu_type() == CPU_BMIPS4380) {
->> +               void __iomem *cbr = BMIPS_GET_CBR();
->> +
->> +               /* Flush stale data out of the readahead cache */
->> +               __raw_writel(0x100, cbr + BMIPS_RAC_CONFIG);
->
-> Hm, according to what I have, bits [6:0] of RAC_CONFIG are R/W
-> configuration bits, and this will overwrite them:
->
-> CFE> dm 0xff400000 4
-> ff400000: 02a07015                                        ..p.
-> CFE> sm 0xff400000 0x100 4
-> ff400000: 02a00000                                        ....
->
-> (As far as I can tell, RAC was previously enabled for instruction
-> cache misses , and now isn't any more for anything, so effectively
-> disabled?)
->
-> Also for BMIPS4350 (and I guess 4380) there seems to be a second
-> RAC_CONFIG register at 0x8, I guess for the second thread? Does it
-> need flushing, too?
-
-I'll defer to Florian for the final word since he has access to the
-documentation, but going from memory:
-
-RAC_CONFIG should probably be a read/modify/write.  I'm pretty sure
-there are important RW configuration bits in there.  I may have
-incorrectly translated the "set bit 8" code from here:
-
-https://github.com/Broadcom/stblinux-3.3/blob/master/linux/arch/mips/mm/c-brcmstb.c#L374
-
-There is only one RAC for all CPUs, and we've never had to flush
-anything via CBR+0x08.
-
-BCM7038 had a different flush register, located out in the regular
-system bus (GISB) space, and it didn't require a R/M/W.  That might
-have been what I was thinking of.
-
-Thanks for catching that.
+-- 
+Robert
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
