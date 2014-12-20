@@ -1,83 +1,76 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH] [v2] power/fsl: add MDIO dt binding for FMan
-Date: Fri, 19 Dec 2014 17:15:55 -0600
-Message-ID: <1419030955.5581.154.camel@freescale.com>
-References: <1415958800-9867-1-git-send-email-shh.xie@gmail.com>
-	 <1416966592.15957.172.camel@freescale.com>
-	 <DM2PR0301MB08641FB289DBA17AD59FBEA0E26A0@DM2PR0301MB0864.namprd03.prod.outlook.com>
-	 <1418940078.5581.143.camel@freescale.com>
-	 <DM2PR0301MB0864AA31CD1A7438F476020FE26B0@DM2PR0301MB0864.namprd03.prod.outlook.com>
+From: NeilBrown <neilb@suse.de>
+Subject: [PATCH 0/2] tty slave devices support - version 2
+Date: Sat, 20 Dec 2014 11:09:20 +1100
+Message-ID: <20141219235827.13943.45713.stgit@notabene.brown>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <DM2PR0301MB0864AA31CD1A7438F476020FE26B0-Cwg/PA1lyPnq20u2fDgSrZwN6zqB+hSMnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Xie Shaohui-B21989 <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Medve Emilian-EMMEDVE1 <Emilian.Medve-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Liberman Igal-B31950 <Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Peter Hurley <peter@hurleysoftware.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sebastian Reichel <sre@kernel.org>, Grant Likely <grant.likely@linaro.org>, Jiri Slaby <jslaby@suse.cz>
+Cc: GTA04 owners <gta04-owner@goldelico.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2014-12-19 at 01:23 -0600, Xie Shaohui-B21989 wrote:
-> > -----Original Message-----
-> > From: Wood Scott-B07421
-> > Sent: Friday, December 19, 2014 6:01 AM
-> > To: Xie Shaohui-B21989
-> > Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Medve Emilian-
-> > EMMEDVE1; Liberman Igal-B31950
-> > Subject: Re: [PATCH] [v2] power/fsl: add MDIO dt binding for FMan
-> > 
-> > On Thu, 2014-12-18 at 06:53 -0600, Xie Shaohui-B21989 wrote:
-> > > Ping.
-> > >
-> > > Best Regards,
-> > > Shaohui Xie
-> > 
-> > I can't put patches in my -next until the merge window closes.
-> > 
-> > > > > > +EXAMPLE
-> > > > > > +
-> > > > > > +Example for FMan v2 external MDIO:
-> > > > > > +
-> > > > > > +mdio@f1000 {
-> > > > > > +	compatible = "fsl,fman-xmdio";
-> > > > > > +	reg = <0xf1000 0x1000>;
-> > > > > > +	bus-frequency = <20000>;
-> > > > > > +};
-> > > > >
-> > > > > So the bus frequency is only 20 KHz?  Or is the unit supposed to
-> > > > > be something other than Hz?
-> > > > [S.H] it's only an example, it could be different on real SoCs, but
-> > > > they always lower than the standard one, The standard one is 2.5MHz, I have
-> > to use Hz for it.
-> > 
-> > Is there any SoC for which 20 kHz is the right frequency?  I just want to make
-> > sure the example is realistic.
-> [S.H] the clock divider has a limitation that the MAX value it can get on Fman v2 is 255 (0xff, 8 bits),
-> On Fman v3 is 511(0x1ff, 9 bits).
-> 
-> So the lowest frequency on Fman v2 is: Fman_clock / (2 * 255),
-> On Fman v3 is: Fman_clock / ((2 * 511) + 1).
-> 
-> Take default Fman frequency setting from SDK1.7 as example, the lowest clock used for Fman v2 is 581MHz,
-> The lowest clock for Fman v3 is 600MHz.
-> 
-> Then the lowest bus frequency can get is:
-> Fman v2: ~1140KHz
-> Fman v3: ~587KHz
-> 
-> 20KHz is not practice, we don't have a suggested value in errata document.
-> For this example, should I post a new version with a value like 1200KHz?
+Thanks for all the great feedback.  I have incorporated a lot of it,
+though not all ... partly because there was not yet unanimity on some
+issues.
 
-This is different from how you described the problem before.  If the
-limitation is on the divider, rather than the absolute bus frequency,
-then specifiy the max divider.  Or better, since according to the above
-this correlates with fman version, just have the driver know what the
-max divider is for each fman version.
+Big changes:
+ - children of a uart are no longer automatically managed.
+   The driver for the child device must register with the tty
+   after which it will be told when the tty is opened or closed.
+   The driver can then do whatever it likes, which may involve
+   powering the device on.
 
--Scott
+ - I am now only providing a single drivers: serial-power-manager.
+   It can be used for devices which only want power management.
+   Currently it can provide this using a regulator and/or a
+   toggle GPIO.  This one driver supports both of my devices.
 
+non-changes:
+ - The interface functionality is still provided by the 'tty'
+   layer, not the 'serial' layer.  I have no strong feelings on
+   this and doubt that I would have until some other user
+   appeared for this functionality.  That would help show
+   if the current arrangement was helpful or inconvenient.
+
+ - We still treat any child node of a tty device which has a
+   'compatible' field gets allocated a device.  If there is no
+   platform driver which supports that 'compatible' value, then
+   the device will be inactive.  Specific action will only be
+   taken if there is a child node with a 'compatible' field for which
+   there is a supporting driver.
+
+small changes:
+ - proper 'compatible' names are used
+ - switch to use 'gpiod' instead of 'gpio'
+ - no longer misuse the 'tty_' prefix.
+
+
+Comments and suggestions always welcome,
+Thanks,
+NeilBrown
+
+---
+
+NeilBrown (2):
+      TTY: add support for "tty slave" devices.
+      misc: add a driver to power on/off UART attached devices.
+
+
+ .../devicetree/bindings/misc/wi2wi,w2cbw003.txt    |   19 +
+ .../devicetree/bindings/misc/wi2wi,w2sg0004.txt    |   37 +
+ .../devicetree/bindings/serial/of-serial.txt       |    4 
+ .../devicetree/bindings/vendor-prefixes.txt        |    1 
+ drivers/misc/Kconfig                               |   12 
+ drivers/misc/Makefile                              |    1 
+ drivers/misc/serial-power-manager.c                |  494 ++++++++++++++++++++
+ drivers/tty/tty_io.c                               |   73 +++
+ include/linux/tty.h                                |   16 +
+ 9 files changed, 654 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/misc/wi2wi,w2cbw003.txt
+ create mode 100644 Documentation/devicetree/bindings/misc/wi2wi,w2sg0004.txt
+ create mode 100644 drivers/misc/serial-power-manager.c
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signature
