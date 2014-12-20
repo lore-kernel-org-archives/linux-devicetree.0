@@ -1,105 +1,82 @@
-From: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V5 13/23] MIPS: BMIPS: Flush the readahead cache after DMA
-Date: Sat, 20 Dec 2014 09:28:15 -0800
-Message-ID: <CAJiQ=7CjWMELO0fL+Zrx29Q-kRzkSZYpgEPRgJgULgwJ6KNN+g@mail.gmail.com>
-References: <1418422034-17099-1-git-send-email-cernekee@gmail.com>
- <1418422034-17099-14-git-send-email-cernekee@gmail.com> <CAOiHx=nX9jJEFZmkA-1fWj47whq85wj-ZgUxnZBwpAYDUfAO4w@mail.gmail.com>
- <CAJiQ=7AZdwCX6bmLD1B4TzfmKriE3HVEEa5zP3WRnENZjGS-hA@mail.gmail.com> <CAOiHx=m9RzU5n2fjJcph6u=avUAEZJYw0-mBCSMRzDJvSD5CFA@mail.gmail.com>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH 11/12] ARM: dts: add support for Vybrid running on
+ Cortex-M4
+Date: Sat, 20 Dec 2014 19:49:32 +0100
+Message-ID: <7bc0b583d64785eab13d28132af528b0@agner.ch>
+References: <1417565531-4507-1-git-send-email-stefan@agner.ch>
+ <2615697.uVqMY8zKot@wuerfel> <44e9d518da24fb0c910de464269b8551@agner.ch>
+ <2375016.nxLFC8UMcD@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOiHx=m9RzU5n2fjJcph6u=avUAEZJYw0-mBCSMRzDJvSD5CFA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <2375016.nxLFC8UMcD@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, robh+dt@kernel.org, keescook@chromium.org
+Cc: linux-arm-kernel@lists.infradead.org, shawn.guo@linaro.org, kernel@pengutronix.de, linux@arm.linux.org.uk, u.kleine-koenig@pengutronix.de, jason@lakedaemon.net, olof@lixom.net, daniel.lezcano@linaro.org, tglx@linutronix.de, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Dec 20, 2014 at 4:44 AM, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org> wrote:
-> On Sat, Dec 20, 2014 at 2:39 AM, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On Mon, Dec 15, 2014 at 1:43 AM, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org> wrote:
->>> On Fri, Dec 12, 2014 at 11:07 PM, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>> BMIPS 3300/435x/438x CPUs have a readahead cache that is separate from
->>>> the L1/L2.  During a DMA operation, accesses adjacent to a DMA buffer
->>>> may cause parts of the DMA buffer to be prefetched into the RAC.  To
->>>> avoid possible coherency problems, flush the RAC upon DMA completion.
->>>
->>> According to what I have, any cpu [d-]cache invalidate operation
->>> should already flush the full RAC unless explicitly disabled in the
->>> RAC configuration - is this intended as an optimization/shortcut?
+On 2014-12-18 23:44, Arnd Bergmann wrote:
+> On Thursday 18 December 2014 21:36:31 Stefan Agner wrote:
+>> On 2014-12-17 13:31, Arnd Bergmann wrote:
+>> > On Wednesday 17 December 2014 00:41:33 Stefan Agner wrote:
+>> >> On 2014-12-03 12:03, Arnd Bergmann wrote:
+>> >> > Starting with v3.19, you should be able to use the earlycon framework on
+>> >> > arm32, so it would be better to replace earlyprintk with earlycon here
+>> >> > and add a stdout-path property in chosen that points to the console
+>> >> > uart.
+>> >>
+>> >> I started to implement earlycon support, but something currently fails
+>> >> when earlycon tries to map the UART registers:
+>> >> [    0.000000] earlycon_map: Couldn't map 0x40027000
+>> >>
+>> >> I traced the issue a bit further down and found that get_vm_area_caller
+>> >> returns NULL (in __arm_ioremap_pfn_caller). This happend on Linus master
+>> >> as of today (2dbfca5a181973558277b28b1f4c36362291f5e0). Do I miss
+>> >> something here?
+>> >
+>> > Hmm, I fear the arm32 FIX_EARLYCON_MEM support ended up not making it
+>> > into 3.19 after all.
 >>
->> Correct - performing a RAC flush instead of blasting the entire range
->> again via CACHE instructions should be considerably faster in most
->> cases.  CACHE instructions are not pipelined on BMIPS3300/43xx.
+>> Is it because early_ioremap and fixmap still missing for arm32?
+>> According to Rob's patchset from spring fixmap is required, there is
+>> something in this tree:
+>> https://git.kernel.org/cgit/linux/kernel/git/robh/linux.git/log/?h=arm-fixmap
+> 
+> Right, that's the one, thanks for finding that again. There are five
+> patches on that branch. The first three got merged, and the one we
+> need is just the last one (ARM: fixmap early permanent mapping support),
+> but the implementation depends on the previous patch (arm: add
+> early_ioremap support).
+> 
+> I was hoping we'd see both of them in 3.19, but apparently Rob didn't
+> submit the latest version. If you don't mind, could you try forward-porting
+> them to the latest kernel and then submit them for inclusion? You could
+> also try adapting the last patch to work without the early_ioremap
+> support that we don't really need that urgently on arm32.
 
-BTW, I forgot to mention earlier that the RAC is different from an
-L2/L3 in two important ways:
+Looked into that a bit more in depth. I tried creating a patch which
+adds just what is necessary to support FIX_EARLYCON_MEM. Fixmap seems to
+be in place, just for earlycon it would need a fixmap entry with
+FIX_EARLYCON_MEM_BASE. And I guess later during boot, it would need a
+call to create_mapping to create a permanent mapping of it.
 
- - In terms of prefetching you only need to worry about RAC blocks
-(lines) on the "edges" on the DMA buffer.  It won't randomly fill
-blocks in the middle, unlike the BMIPS5000 prefetching logic.
+Currently I'm stuck in the __set_fixmap call, on set_pte_ext call the
+kernel freezes. The arguments look fine as far as I can tell (vaddr
+ffeff000, phys 40027000, pgprot is FIXMAP_PAGE_IO, defined as in Rob's
+patchset). 
 
- - It typically isn't possible to invalidate just part of the RAC.
-The hardware flushes the whole thing at once.
+Afaik, initialization for early fixmap is missing, I guess we could do
+something which looks similar to what ARM64 has now:
 
->> There may be a couple of old CPU versions (possibly 130nm) that don't
->> automatically perform the RAC flush on each CACHE instruction.  Also,
->> a fun bit of trivia: MVA based cache flushes on B15 do flush the RAC,
->> but index based instructions do not.
->
-> Because I'm laz^W^Wstill need to do some christmas shopping, I'll ask
-> a few dumb questions:
->
-> Since a RAC flush won't flush the I/D-caches themselves, I assume
-> there is no cache invalidate needed for BMIPS?
+https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/commit/?id=af86e5974d3069bd26ebcf7c046c6e59726acaaa
 
-On unmap this is true.  The L1/L2 flush happens on map, pre-DMA.
+I'm wondering what the value is of __set_fixmap without that, as is
+right now? I still need to understand the whole MM stuff a bit more. I
+will be away the next couple of days, but will have a look into it
+towards the end of the year. But if anyone else can help make that
+happen (who might be better in the picture of fixmap than I am), I'm
+happy too :-)
 
-> Also is it still needed
-> if the RAC is setup to only prefetch instructions (which it seems to
-> be on bcm963xx)?
-
-Not sure.  Do we ever execute directly from memory that has been
-freshly populated via DMA?  If so, anything executed in the vicinity
-of that buffer could have prefetched stale data.  Keeping in mind that
-the RAC won't prefetch across 4KB boundaries.
-
-The most common RAC D$ coherency problems we've seen have involved DMA
-buffers adjacent to other structs in kernel memory, e.g. a DMA buffer
-that sits next to the wait_queue head used to sleep during the
-transfer.  If the wait_queue struct is accessed at an unfortunate
-time, the RAC could start prefetching from the DMA buffer.
-
-RAC I$ problems are probably much more rare, and subtle.
-
-> I also fail to find any RAC flushing on either bcm963xx or bcm947xx
-> SDK kernels, that's why I'm a bit wondering whether they really need
-> it. But maybe they always do explicit syncs, haven't checked that.
->
-> Furthermore, I see code to enable data prefetching in setup on
-> bcm963xx, so I wonder if it wouldn't make sense to add the RAC as an
-> extra node in DT / register/enable/configure it from bmips setup code
-> (because then we can also properly setup the address range in case the
-> bootloader didn't).
-
-Historically there has been a great deal of debate as to whether the
-RAC should be set up in the bootloader or in the kernel:
-
- - If it is set up in the bootloader, it can be part of the library
-that handles general cache/CPU initialization for the platform.  But
-the RAC does require extra flushing, so non-RAC-aware OSes can be
-caught off guard (especially if you're thinking about running a fairly
-stock image, like the ARMv7 multiplatform kernel from upstream).
-
- - If it is set up in the kernel, the kernel will be able to decide
-whether it can handle the extra flushes.  If problems are seen later,
-it is easy to just change the kernel to leave RAC disabled, at the
-expense of memcpy() performance.
-
-On BCM7xxx MIPS, the RAC is always set up from the bootloader.  On
-BCM7xxx ARM, it is currently left up to the kernel (last I heard).  On
-BCM3384 Viper it is controlled by the CM firmware on TP0.  Not sure
-about the other SoCs.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Stefan
