@@ -1,82 +1,32 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH 11/12] ARM: dts: add support for Vybrid running on
- Cortex-M4
-Date: Sat, 20 Dec 2014 19:49:32 +0100
-Message-ID: <7bc0b583d64785eab13d28132af528b0@agner.ch>
-References: <1417565531-4507-1-git-send-email-stefan@agner.ch>
- <2615697.uVqMY8zKot@wuerfel> <44e9d518da24fb0c910de464269b8551@agner.ch>
- <2375016.nxLFC8UMcD@wuerfel>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v2 3/4] arm64: dts: Add mediatek MT8173 SoC and evaluation board dts and Makefile
+Date: Sat, 20 Dec 2014 21:07:53 +0100
+Message-ID: <3669965.zfJEHTFEBI@wuerfel>
+References: <1418825853-10934-1-git-send-email-eddie.huang@mediatek.com> <20141217143305.GC8942@leverpostej> <54919AC9.2090306@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2375016.nxLFC8UMcD@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, robh+dt@kernel.org, keescook@chromium.org
-Cc: linux-arm-kernel@lists.infradead.org, shawn.guo@linaro.org, kernel@pengutronix.de, linux@arm.linux.org.uk, u.kleine-koenig@pengutronix.de, jason@lakedaemon.net, olof@lixom.net, daniel.lezcano@linaro.org, tglx@linutronix.de, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh@kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54919AC9.2090306-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Joe.C" <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2014-12-18 23:44, Arnd Bergmann wrote:
-> On Thursday 18 December 2014 21:36:31 Stefan Agner wrote:
->> On 2014-12-17 13:31, Arnd Bergmann wrote:
->> > On Wednesday 17 December 2014 00:41:33 Stefan Agner wrote:
->> >> On 2014-12-03 12:03, Arnd Bergmann wrote:
->> >> > Starting with v3.19, you should be able to use the earlycon framework on
->> >> > arm32, so it would be better to replace earlyprintk with earlycon here
->> >> > and add a stdout-path property in chosen that points to the console
->> >> > uart.
->> >>
->> >> I started to implement earlycon support, but something currently fails
->> >> when earlycon tries to map the UART registers:
->> >> [    0.000000] earlycon_map: Couldn't map 0x40027000
->> >>
->> >> I traced the issue a bit further down and found that get_vm_area_caller
->> >> returns NULL (in __arm_ioremap_pfn_caller). This happend on Linus master
->> >> as of today (2dbfca5a181973558277b28b1f4c36362291f5e0). Do I miss
->> >> something here?
->> >
->> > Hmm, I fear the arm32 FIX_EARLYCON_MEM support ended up not making it
->> > into 3.19 after all.
->>
->> Is it because early_ioremap and fixmap still missing for arm32?
->> According to Rob's patchset from spring fixmap is required, there is
->> something in this tree:
->> https://git.kernel.org/cgit/linux/kernel/git/robh/linux.git/log/?h=arm-fixmap
+On Wednesday 17 December 2014 15:01:29 Marc Zyngier wrote:
 > 
-> Right, that's the one, thanks for finding that again. There are five
-> patches on that branch. The first three got merged, and the one we
-> need is just the last one (ARM: fixmap early permanent mapping support),
-> but the implementation depends on the previous patch (arm: add
-> early_ioremap support).
+> Indeed, as described in the documentation:
+> http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.ddi0471b/CHDIFAEE.html
 > 
-> I was hoping we'd see both of them in 3.19, but apparently Rob didn't
-> submit the latest version. If you don't mind, could you try forward-porting
-> them to the latest kernel and then submit them for inclusion? You could
-> also try adapting the last patch to work without the early_ioremap
-> support that we don't really need that urgently on arm32.
+> Also it is worth noticing that given how GICV is placed, it will never
+> work with 64K pages and virtualization. Pretty sad.
 
-Looked into that a bit more in depth. I tried creating a patch which
-adds just what is necessary to support FIX_EARLYCON_MEM. Fixmap seems to
-be in place, just for earlycon it would need a fixmap entry with
-FIX_EARLYCON_MEM_BASE. And I guess later during boot, it would need a
-call to create_mapping to create a permanent mapping of it.
+Does this mean no VGIC support on this platform so you have to emulate it
+in order to run virtual machines with 64K pages, or does it mean that
+it's impossible to use that way because you can't emulate it?
 
-Currently I'm stuck in the __set_fixmap call, on set_pte_ext call the
-kernel freezes. The arguments look fine as far as I can tell (vaddr
-ffeff000, phys 40027000, pgprot is FIXMAP_PAGE_IO, defined as in Rob's
-patchset). 
-
-Afaik, initialization for early fixmap is missing, I guess we could do
-something which looks similar to what ARM64 has now:
-
-https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/commit/?id=af86e5974d3069bd26ebcf7c046c6e59726acaaa
-
-I'm wondering what the value is of __set_fixmap without that, as is
-right now? I still need to understand the whole MM stuff a bit more. I
-will be away the next couple of days, but will have a look into it
-towards the end of the year. But if anyone else can help make that
-happen (who might be better in the picture of fixmap than I am), I'm
-happy too :-)
-
+	Arnd
 --
-Stefan
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
