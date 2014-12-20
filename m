@@ -1,42 +1,34 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] mfd: cottula: add cottula board
-Date: Sat, 20 Dec 2014 21:11:59 +0100
-Message-ID: <1591685.mRlCV6MZRs@wuerfel>
-References: <1418598606-21352-1-git-send-email-robert.jarzmik@free.fr> <877fxsapds.fsf@free.fr> <8761d68xm3.fsf@free.fr>
+From: Peter Maydell <peter.maydell@linaro.org>
+Subject: Re: [PATCH v2 3/4] arm64: dts: Add mediatek MT8173 SoC and evaluation
+ board dts and Makefile
+Date: Sat, 20 Dec 2014 22:54:52 +0000
+Message-ID: <CAFEAcA-+2G_F1Qp30BipY=wq-HdXSvKv0OArOJBcp8fGg0hPMQ@mail.gmail.com>
+References: <1418825853-10934-1-git-send-email-eddie.huang@mediatek.com>
+ <20141217143305.GC8942@leverpostej> <54919AC9.2090306@arm.com> <3669965.zfJEHTFEBI@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8761d68xm3.fsf@free.fr>
+In-Reply-To: <3669965.zfJEHTFEBI@wuerfel>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Robert Jarzmik <robert.jarzmik@free.fr>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: arm-mail-list <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Mark Brown <broonie@linaro.org>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Robert Richter <rrichter@cavium.com>, "srv_heupstream@mediatek.com" <srv_heupstream@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, "Joe.C" <yingjoe.chen@mediatek.com>, Thomas Gleixner <tglx@linutronix.de>, Eddie Huang <eddie.huang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 20 December 2014 10:43:48 Robert Jarzmik wrote:
-> Robert Jarzmik <robert.jarzmik@free.fr> writes:
-> > Arnd Bergmann <arnd@arndb.de> writes:
-> >> This looks a bit ambiguous: You get a GPIO line for the purpose of the
-> >> IRQ nesting but don't use the GPIO otherwise, and you pass the device's
-> >> own irq domain start as an IORESOURCE_IRQ resource.
-> >>
-> >> For consistency between DT and ATAGS based uses, and with similar DT
-> >> based drivers, I would instead recommend passing the parent irq (from
-> >> the GPIO) as an IORESOURCE_IRQ resource instead of a gpio lookup,
-> >> and passing the base_irq as platform_data for the ATAGS case.
-> 
-> Hi Arnd,
-> 
-> I thought again about the GPIO.
-> 
-> I put in the "gpiod_get()" call to ensure proper ordering between the gpio
-> probing and this driver probing. It ensured that this driver's probe will be
-> defered until the gpio driver is probed, which is the main purpose of this
-> patch (commit message).
-> 
-> If I pass an irq from the machine code, I loose this guarantee, don't I ?
+On 20 December 2014 at 20:07, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Wednesday 17 December 2014 15:01:29 Marc Zyngier wrote:
+>> Also it is worth noticing that given how GICV is placed, it will never
+>> work with 64K pages and virtualization. Pretty sad.
+>
+> Does this mean no VGIC support on this platform so you have to emulate it
+> in order to run virtual machines with 64K pages, or does it mean that
+> it's impossible to use that way because you can't emulate it?
 
-Not sure, my guess is that it could still work the same way because
-the irq is not registered yet and request_irq or similar will fail.
+Currently having the guest use the generic timer requires an
+in-kernel GIC, because we don't provide an ABI for having the
+kernel say "here is a generic timer interrupt for the userspace
+emulated GIC". And at least for QEMU userspace the "virt" board
+doesn't provide any other kind of timer, so you'd need to add one
+if you wanted to use a userspace GIC. So for practical purposes
+"out-of-kernel GIC" is not a supported config for KVM+QEMU.
 
-	Arnd
+-- PMM
