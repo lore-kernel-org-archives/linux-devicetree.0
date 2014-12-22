@@ -1,101 +1,44 @@
-From: Shaohui Xie <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH] [v2] power/fsl: add MDIO dt binding for FMan
-Date: Mon, 22 Dec 2014 08:56:00 +0000
-Message-ID: <DM2PR0301MB0864D23661064709624F24D8E2560@DM2PR0301MB0864.namprd03.prod.outlook.com>
-References: <1415958800-9867-1-git-send-email-shh.xie@gmail.com>
-	 <1416966592.15957.172.camel@freescale.com>
-	 <DM2PR0301MB08641FB289DBA17AD59FBEA0E26A0@DM2PR0301MB0864.namprd03.prod.outlook.com>
-	 <1418940078.5581.143.camel@freescale.com>
-	 <DM2PR0301MB0864AA31CD1A7438F476020FE26B0@DM2PR0301MB0864.namprd03.prod.outlook.com>
-	 <1419030955.5581.154.camel@freescale.com>
-	 <DM2PR0301MB086427C10254A0A749CD1326E2560@DM2PR0301MB0864.namprd03.prod.outlook.com>
-	 <5497D466.9090804@Freescale.com> <1419237176.5581.159.camel@freescale.com>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2 3/4] arm64: dts: Add mediatek MT8173 SoC and evaluation
+ board dts and Makefile
+Date: Mon, 22 Dec 2014 09:07:24 +0000
+Message-ID: <5497DF4C.4000104@arm.com>
+References: <1418825853-10934-1-git-send-email-eddie.huang@mediatek.com> <20141217143305.GC8942@leverpostej> <54919AC9.2090306@arm.com> <3669965.zfJEHTFEBI@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1419237176.5581.159.camel-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <3669965.zfJEHTFEBI@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Emilian Medve <Emilian.Medve-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org" <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Joe.C" <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBXb29kIFNjb3R0LUIwNzQyMQ0K
-PiBTZW50OiBNb25kYXksIERlY2VtYmVyIDIyLCAyMDE0IDQ6MzMgUE0NCj4gVG86IE1lZHZlIEVt
-aWxpYW4tRU1NRURWRTENCj4gQ2M6IFhpZSBTaGFvaHVpLUIyMTk4OTsgbGludXhwcGMtZGV2QGxp
-c3RzLm96bGFicy5vcmc7DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBMaWJlcm1hbiBJ
-Z2FsLUIzMTk1MA0KPiBTdWJqZWN0OiBSZTogW1BBVENIXSBbdjJdIHBvd2VyL2ZzbDogYWRkIE1E
-SU8gZHQgYmluZGluZyBmb3IgRk1hbg0KPiANCj4gT24gTW9uLCAyMDE0LTEyLTIyIGF0IDAyOjIw
-IC0wNjAwLCBFbWlsIE1lZHZlIHdyb3RlOg0KPiA+IEhlbGxvIFNoYW8tSHVpLA0KPiA+DQo+ID4N
-Cj4gPiBPbiAxMi8yMS8yMDE0IDA4OjMxIFBNLCBYaWUgU2hhb2h1aS1CMjE5ODkgd3JvdGU6DQo+
-ID4gPj4gT24gRnJpLCAyMDE0LTEyLTE5IGF0IDAxOjIzIC0wNjAwLCBYaWUgU2hhb2h1aS1CMjE5
-ODkgd3JvdGU6DQo+ID4gPj4+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+ID4+Pj4g
-RnJvbTogV29vZCBTY290dC1CMDc0MjENCj4gPiA+Pj4+IFNlbnQ6IEZyaWRheSwgRGVjZW1iZXIg
-MTksIDIwMTQgNjowMSBBTQ0KPiA+ID4+Pj4gVG86IFhpZSBTaGFvaHVpLUIyMTk4OQ0KPiA+ID4+
-Pj4gQ2M6IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnOyBkZXZpY2V0cmVlQHZnZXIua2Vy
-bmVsLm9yZzsNCj4gPiA+Pj4+IE1lZHZlDQo+ID4gPj4+PiBFbWlsaWFuLSBFTU1FRFZFMTsgTGli
-ZXJtYW4gSWdhbC1CMzE5NTANCj4gPiA+Pj4+IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIFt2Ml0gcG93
-ZXIvZnNsOiBhZGQgTURJTyBkdCBiaW5kaW5nIGZvciBGTWFuDQo+ID4gPj4+Pg0KPiA+ID4+Pj4g
-T24gVGh1LCAyMDE0LTEyLTE4IGF0IDA2OjUzIC0wNjAwLCBYaWUgU2hhb2h1aS1CMjE5ODkgd3Jv
-dGU6DQo+ID4gPj4+Pj4gUGluZy4NCj4gPiA+Pj4+Pg0KPiA+ID4+Pj4+IEJlc3QgUmVnYXJkcywN
-Cj4gPiA+Pj4+PiBTaGFvaHVpIFhpZQ0KPiA+ID4+Pj4NCj4gPiA+Pj4+IEkgY2FuJ3QgcHV0IHBh
-dGNoZXMgaW4gbXkgLW5leHQgdW50aWwgdGhlIG1lcmdlIHdpbmRvdyBjbG9zZXMuDQo+ID4gPj4+
-Pg0KPiA+ID4+Pj4+Pj4+ICtFWEFNUExFDQo+ID4gPj4+Pj4+Pj4gKw0KPiA+ID4+Pj4+Pj4+ICtF
-eGFtcGxlIGZvciBGTWFuIHYyIGV4dGVybmFsIE1ESU86DQo+ID4gPj4+Pj4+Pj4gKw0KPiA+ID4+
-Pj4+Pj4+ICttZGlvQGYxMDAwIHsNCj4gPiA+Pj4+Pj4+PiArCWNvbXBhdGlibGUgPSAiZnNsLGZt
-YW4teG1kaW8iOw0KPiA+ID4+Pj4+Pj4+ICsJcmVnID0gPDB4ZjEwMDAgMHgxMDAwPjsNCj4gPiA+
-Pj4+Pj4+PiArCWJ1cy1mcmVxdWVuY3kgPSA8MjAwMDA+Ow0KPiA+ID4+Pj4+Pj4+ICt9Ow0KPiA+
-ID4+Pj4+Pj4NCj4gPiA+Pj4+Pj4+IFNvIHRoZSBidXMgZnJlcXVlbmN5IGlzIG9ubHkgMjAgS0h6
-PyAgT3IgaXMgdGhlIHVuaXQgc3VwcG9zZWQNCj4gPiA+Pj4+Pj4+IHRvIGJlIHNvbWV0aGluZyBv
-dGhlciB0aGFuIEh6Pw0KPiA+ID4+Pj4+PiBbUy5IXSBpdCdzIG9ubHkgYW4gZXhhbXBsZSwgaXQg
-Y291bGQgYmUgZGlmZmVyZW50IG9uIHJlYWwgU29DcywNCj4gPiA+Pj4+Pj4gYnV0IHRoZXkgYWx3
-YXlzIGxvd2VyIHRoYW4gdGhlIHN0YW5kYXJkIG9uZSwgVGhlIHN0YW5kYXJkIG9uZQ0KPiA+ID4+
-Pj4+PiBpcyAyLjVNSHosIEkgaGF2ZQ0KPiA+ID4+Pj4gdG8gdXNlIEh6IGZvciBpdC4NCj4gPiA+
-Pj4+DQo+ID4gPj4+PiBJcyB0aGVyZSBhbnkgU29DIGZvciB3aGljaCAyMCBrSHogaXMgdGhlIHJp
-Z2h0IGZyZXF1ZW5jeT8gIEkganVzdA0KPiA+ID4+Pj4gd2FudCB0byBtYWtlIHN1cmUgdGhlIGV4
-YW1wbGUgaXMgcmVhbGlzdGljLg0KPiA+ID4+PiBbUy5IXSB0aGUgY2xvY2sgZGl2aWRlciBoYXMg
-YSBsaW1pdGF0aW9uIHRoYXQgdGhlIE1BWCB2YWx1ZSBpdCBjYW4NCj4gPiA+Pj4gZ2V0IG9uIEZt
-YW4gdjIgaXMgMjU1ICgweGZmLCA4IGJpdHMpLCBPbiBGbWFuIHYzIGlzIDUxMSgweDFmZiwgOSBi
-aXRzKS4NCj4gPiA+Pj4NCj4gPiA+Pj4gU28gdGhlIGxvd2VzdCBmcmVxdWVuY3kgb24gRm1hbiB2
-MiBpczogRm1hbl9jbG9jayAvICgyICogMjU1KSwgT24NCj4gPiA+Pj4gRm1hbg0KPiA+ID4+PiB2
-MyBpczogRm1hbl9jbG9jayAvICgoMiAqIDUxMSkgKyAxKS4NCj4gPiA+Pj4NCj4gPiA+Pj4gVGFr
-ZSBkZWZhdWx0IEZtYW4gZnJlcXVlbmN5IHNldHRpbmcgZnJvbSBTREsxLjcgYXMgZXhhbXBsZSwg
-dGhlDQo+ID4gPj4+IGxvd2VzdCBjbG9jayB1c2VkIGZvciBGbWFuIHYyIGlzIDU4MU1IeiwgVGhl
-IGxvd2VzdCBjbG9jayBmb3IgRm1hbiB2MyBpcw0KPiA2MDBNSHouDQo+ID4gPj4+DQo+ID4gPj4+
-IFRoZW4gdGhlIGxvd2VzdCBidXMgZnJlcXVlbmN5IGNhbiBnZXQgaXM6DQo+ID4gPj4+IEZtYW4g
-djI6IH4xMTQwS0h6DQo+ID4gPj4+IEZtYW4gdjM6IH41ODdLSHoNCj4gPiA+Pj4NCj4gPiA+Pj4g
-MjBLSHogaXMgbm90IHByYWN0aWNlLCB3ZSBkb24ndCBoYXZlIGEgc3VnZ2VzdGVkIHZhbHVlIGlu
-IGVycmF0YSBkb2N1bWVudC4NCj4gPiA+Pj4gRm9yIHRoaXMgZXhhbXBsZSwgc2hvdWxkIEkgcG9z
-dCBhIG5ldyB2ZXJzaW9uIHdpdGggYSB2YWx1ZSBsaWtlIDEyMDBLSHo/DQo+ID4gPj4NCj4gPiA+
-PiBUaGlzIGlzIGRpZmZlcmVudCBmcm9tIGhvdyB5b3UgZGVzY3JpYmVkIHRoZSBwcm9ibGVtIGJl
-Zm9yZS4gIElmDQo+ID4gPj4gdGhlIGxpbWl0YXRpb24gaXMgb24gdGhlIGRpdmlkZXIsIHJhdGhl
-ciB0aGFuIHRoZSBhYnNvbHV0ZSBidXMNCj4gPiA+PiBmcmVxdWVuY3ksIHRoZW4gc3BlY2lmaXkg
-dGhlIG1heCBkaXZpZGVyLiAgT3IgYmV0dGVyLCBzaW5jZQ0KPiA+ID4+IGFjY29yZGluZyB0byB0
-aGUgYWJvdmUgdGhpcyBjb3JyZWxhdGVzIHdpdGggZm1hbiB2ZXJzaW9uLCBqdXN0IGhhdmUgdGhl
-DQo+IGRyaXZlciBrbm93IHdoYXQgdGhlIG1heCBkaXZpZGVyIGlzIGZvciBlYWNoIGZtYW4gdmVy
-c2lvbi4NCj4gPiA+IFtTLkhdIFRoZSBwcm9ibGVtIGlzIG5vdCB0aGUgZGl2aWRlciBoYXMgbGlt
-aXRhdGlvbiwgdGhlIHByb2JsZW0gaXMNCj4gPiA+IGEgZGlmZmVyZW50IGJ1cyBmcmVxdWVuY3kg
-SXMgbmVlZGVkIHdoaWNoIGlzIGxvd2VyIHRoYW4gdGhlDQo+ID4gPiBzdGFuZGFyZCwgYnV0IGR1
-ZSB0byB0aGUgZGl2aWRlciBsaW1pdGF0aW9uLCB0aGUgbG93ZXN0IGJ1cw0KPiA+ID4gZnJlcXVl
-bmN5IGFsc28gaGFzIGxpbWl0YXRpb24uIGkuZS4gd2UgbmVlZCB0byB1c2UgdGhlIGRpdmlkZXIg
-dG8gZ2V0IGENCj4gbG93ZXIgZnJlcXVlbmN5LCBidXQgaG93IG11Y2ggbG93ZXIgdGhlIHZhbHVl
-IGNvdWxkIGJlIGlzIHJlc3RyaWN0ZWQgYnkgdGhlDQo+IGRpdmlkZXIgbGltaXRhdGlvbi4NCj4g
-DQo+IFRoaXMgaXMgZGlmZmljdWx0IHRvIGZvbGxvdyAtLSBhcmUgeW91IHNheWluZyB0aGUgZXJy
-YXR1bSByZXF1aXJlcyBhIHNwZWVkIHRoYXQNCj4gaXMgbm90IGFjaGlldmFibGU/DQpbUy5IXSBU
-aGUgZXJyYXRhIG9ubHkgc3RhdGVkIHRoYXQgaXQgbmVlZCB0byB1c2UgYSBsYXJnZXIgZGl2aWRl
-ciB0byByZWR1Y2UgdGhlIGNsb2NrDQpGcmVxdWVuY3ksIGJ1dCBpdCBkaWQgbm90IHByb3ZpZGUg
-YSBzdWdnZXN0ZWQgdmFsdWUsIHdoYXQgd2Uga25vdyBpcyBzaW5jZSB0aGUgZGl2aWRlcg0KSGFz
-IGEgbGltaXRhdGlvbiwgdGhlbiBob3cgbXVjaCBsb3dlciB0aGUgY2xvY2sgZnJlcXVlbmN5IGNv
-dWxkIGJlIHJlZHVjZWQgaGFzIGEgbGltaXRhdGlvbi4NCg0KVGhhbmtzIQ0KU2hhb2h1aQ0KPiAN
-Cj4gPiBGb3IgdGhlIHB1cnBvc2Ugb2YgYW4gZXhhbXBsZSBpbiB0aGUgYmluZGluZyBkb2N1bWVu
-dCwgSSBzdWdnZXN0IHdlDQo+ID4ganVzdCBzdGljayB3aXRoIHRoZSBJRUVFIHN0YW5kYXJkIGZy
-ZXF1ZW5jeS4NCj4gDQo+IFRoZSB3aG9sZSByZWFzb24gZm9yIHRoaXMgcHJvcGVydHkgZXhpc3Rp
-bmcgaW4gdGhlIGRldmljZSB0cmVlIGlzIG5vbi1zdGFuZGFyZA0KPiBmcmVxdWVuY2llcy4NCj4g
-DQo+ID4gV2UgY2FuIGNvbnRpbnVlIHRoaXMgY29udmVyc2F0aW9uIGFib3V0IGVycmF0YSBoYW5k
-bGluZyB3aGVuIHdlIHN1Ym1pdA0KPiA+IHRoZSBjb2RlIHJlbGV2YW50IHRvIHRoaXMgYmluZGlu
-ZyAoYW5kIHRoZSBGTWFuIHYzIHN1cHBvcnQpDQo+IA0KPiBJdCBhZmZlY3RzIHRoZSBiaW5kaW5n
-LCBzbyBsZXQncyBkaXNjdXNzIGl0IG5vdyBwbGVhc2UuDQo+IA0KPiAtU2NvdHQNCj4gDQoNCg==
+On 20/12/14 20:07, Arnd Bergmann wrote:
+> On Wednesday 17 December 2014 15:01:29 Marc Zyngier wrote:
+>>
+>> Indeed, as described in the documentation:
+>> http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.ddi0471b/CHDIFAEE.html
+>>
+>> Also it is worth noticing that given how GICV is placed, it will never
+>> work with 64K pages and virtualization. Pretty sad.
+> 
+> Does this mean no VGIC support on this platform so you have to emulate it
+> in order to run virtual machines with 64K pages, or does it mean that
+> it's impossible to use that way because you can't emulate it?
+
+As Peter said, this is not a configuration we're willing to support:
+- we don't have a API to tell userspace emulation about interrupts
+generated by the generic timers
+- we could move the whole GIC emulation into the kernel (at the moment,
+only the distributor is there), but that would be a complete nightmare
+
+It really looks like a case of "let's drop a bunch of 64bit cores into
+an existing SoC". Shame people can't read integration guidelines...
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
