@@ -1,75 +1,80 @@
-From: Paul Bolle <pebolle@tiscali.nl>
-Subject: Re: [PATCH v8 2/3] mfd: qcom-rpm: Driver for the Qualcomm RPM
-Date: Mon, 22 Dec 2014 11:50:07 +0100
-Message-ID: <1419245407.30945.35.camel@x220>
-References: <1417038661-30209-1-git-send-email-bjorn.andersson@sonymobile.com>
-	 <1417038661-30209-3-git-send-email-bjorn.andersson@sonymobile.com>
+From: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH] [v2] power/fsl: add MDIO dt binding for FMan
+Date: Mon, 22 Dec 2014 05:08:27 -0600
+Message-ID: <5497FBAB.4010206@Freescale.com>
+References: <1415958800-9867-1-git-send-email-shh.xie@gmail.com>
+	 <1416966592.15957.172.camel@freescale.com>
+	 <DM2PR0301MB08641FB289DBA17AD59FBEA0E26A0@DM2PR0301MB0864.namprd03.prod.outlook.com>
+	 <1418940078.5581.143.camel@freescale.com>
+	 <DM2PR0301MB0864AA31CD1A7438F476020FE26B0@DM2PR0301MB0864.namprd03.prod.outlook.com>
+	 <1419030955.5581.154.camel@freescale.com>
+	 <DM2PR0301MB086427C10254A0A749CD1326E2560@DM2PR0301MB0864.namprd03.prod.outlook.com>
+	 <5497D466.9090804@Freescale.com> <1419237176.5581.159.camel@freescale.com>
+	 <5497E645.7010500@Freescale.com> <1419241330.5581.162.camel@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1417038661-30209-3-git-send-email-bjorn.andersson@sonymobile.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Mark Brown <broonie@kernel.org>
-Cc: Valentin Rothberg <valentinrothberg@gmail.com>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Josh Cartwright <joshc@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1419241330.5581.162.camel-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Scott Wood <scottwood-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
+Cc: Xie Shaohui-B21989 <Shaohui.Xie-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liberman Igal-B31950 <Igal.Liberman-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn,
+Hello Scott,
 
-On Wed, 2014-11-26 at 13:51 -0800, Bjorn Andersson wrote:
-> Driver for the Resource Power Manager (RPM) found in Qualcomm 8660, 8960
-> and 8064 based devices. The driver exposes resources that child drivers
-> can operate on; to implementing regulator, clock and bus frequency
-> drivers.
+
+On 12/22/2014 03:42 AM, Scott Wood wrote:
+> On Mon, 2014-12-22 at 03:37 -0600, Emil Medve wrote:
+>> Hello Scott,
+>>
+>>
+>> On 12/22/2014 02:32 AM, Scott Wood wrote:
+>>> On Mon, 2014-12-22 at 02:20 -0600, Emil Medve wrote:
+>>>> For the purpose of an example in the binding document, I suggest we just
+>>>> stick with the IEEE standard frequency.
+>>>
+>>> The whole reason for this property existing in the device tree is
+>>> non-standard frequencies.
+>>
+>> While the standard claims 2.5 MHz, most MDIO controllers and PHY devices
+>> support frequencies well beyond the standard. Specifying a lower then
+>> the standard frequency for the benefit of some errata is just one side
+>> of this property
 > 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-> ---
+> The erratum was (until now) the only claimed reason for it.  If there
+> are other reasons why one would specify a different frequency (in
+> particular, that relate to hardware description), please elaborate.
+
+>From memory, the 1 Gb/s Vitesse PHY(s) we have on some of our DS boards
+support 12.5 MHz. I can dig out more specs for specifics on other PHY(s)
+
+2.5 MHz is slow and even more so for high speed interfaces. With both
+polling and interrupts (both MDIO and/or PHY) we've noticed (or blamed)
+in the past some Ethernet performance issues on this very slowness
+
+As of right now I'm not aware of another way to specify/coordinate the
+MDC speed so setting a default (common denominator) in the DT that is
+different then the IEEE standard seems ok
+
+>>>> We can continue this conversation about errata handling when we submit
+>>>> the code relevant to this binding (and the FMan v3 support)
+>>>
+>>> It affects the binding, so let's discuss it now please.
+>>
+>> I think this specific (unpublished yet) errata has less bearing on the
+>> binding then you might believe. This is mostly about providing a
+>> common/default frequency supported by all the devices on some board
 > 
-> Lee, since your Acked-by earlier I've folded in the part of the RFC where I add
-> an extra parameter to qcom_rpm_write(). Part of that this is unchanged.
-> 
->  drivers/mfd/Kconfig          |  14 ++
->  drivers/mfd/Makefile         |   1 +
->  drivers/mfd/qcom_rpm.c       | 581 +++++++++++++++++++++++++++++++++++++++++++
->  include/linux/mfd/qcom_rpm.h |  13 +
->  4 files changed, 609 insertions(+)
->  create mode 100644 drivers/mfd/qcom_rpm.c
->  create mode 100644 include/linux/mfd/qcom_rpm.h
-> 
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index 1456ea7..b6bcb79 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -567,6 +567,20 @@ config MFD_PM8921_CORE
->  	  Say M here if you want to include support for PM8921 chip as a module.
->  	  This will build a module called "pm8921-core".
->  
-> +config MFD_QCOM_RPM
-> +	tristate "Qualcomm Resource Power Manager (RPM)"
-> +	depends on ARCH_QCOM && OF
-> +	help
-> +	  If you say yes to this option, support will be included for the
-> +	  Resource Power Manager system found in the Qualcomm 8660, 8960 and
-> +	  8064 based devices.
-> +
-> +	  This is required to access many regulators, clocks and bus
-> +	  frequencies controlled by the RPM on these devices.
-> +
-> +	  Say M here if you want to include support for the Qualcomm RPM as a
-> +	  module. This will build a module called "qcom_rpm".
-> +
+> What reason other than an erratum would there be for the standard
+> frequency not being supported?
 
-The Qualcomm RPM regulator driver (see Kconfig symbol
-REGULATOR_QCOM_RPM) was added in v3.18. It depends on the above symbol,
-so it has not yet gotten build coverage. Even manual hacks like
-    make -C ../.. M=$PWD CONFIG_REGULATOR_QCOM_RPM=m qcom_rpm-regulator.ko
-
-won't work for that driver, because it includes linux/mfd/qcom_rpm.h,
-which is not part of the tree.
-
-It seems there's no generally agreed upon guideline for situations like
-this. So I guess it's up to Mark to decide how long the tree should
-include an unbuildable driver.
+This is not about not supporting the standard frequency. This is about
+the default frequency being different then the standard
 
 
-Paul Bolle
+Cheers,
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
