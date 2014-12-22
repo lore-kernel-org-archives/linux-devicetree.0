@@ -1,71 +1,350 @@
-From: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Subject: [PATCH v5 2/7] mfd: da9150: Add DT binding documentation for core
-Date: Mon, 22 Dec 2014 16:51:09 +0000
-Message-ID: <01a6a3c7dc0e6832c635957de7f425d9cd11ad1d.1419264383.git.Adam.Thomson.Opensource@diasemi.com>
-References: <cover.1419264383.git.Adam.Thomson.Opensource@diasemi.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1419264383.git.Adam.Thomson.Opensource@diasemi.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, linux-iio@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Joe Perches <joe@perches.com>
-Cc: linux-kernel@vger.kernel.org, support.opensource@diasemi.com
+From: Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] ARM: dts: imx6dl-udoo: Add board support based off imx6q-udoo
+Date: Mon, 22 Dec 2014 11:29:21 -0600
+Message-ID: <1419269361-6095-1-git-send-email-robertcnelson@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
----
- Documentation/devicetree/bindings/mfd/da9150.txt | 43 ++++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/da9150.txt
+For more information about the Udoo boards:
+http://www.udoo.org/
 
-diff --git a/Documentation/devicetree/bindings/mfd/da9150.txt b/Documentation/devicetree/bindings/mfd/da9150.txt
+Signed-off-by: Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+CC: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+ arch/arm/boot/dts/Makefile          |   1 +
+ arch/arm/boot/dts/imx6dl-udoo.dts   |  18 +++++
+ arch/arm/boot/dts/imx6q-udoo.dts    | 124 +--------------------------------
+ arch/arm/boot/dts/imx6qdl-udoo.dtsi | 134 ++++++++++++++++++++++++++++++++++++
+ 4 files changed, 154 insertions(+), 123 deletions(-)
+ create mode 100644 arch/arm/boot/dts/imx6dl-udoo.dts
+ create mode 100644 arch/arm/boot/dts/imx6qdl-udoo.dtsi
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 91bd5bd..6a6ecdb 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -234,6 +234,7 @@ dtb-$(CONFIG_ARCH_MXC) += \
+ 	imx6dl-tx6dl-comtft.dtb \
+ 	imx6dl-tx6u-801x.dtb \
+ 	imx6dl-tx6u-811x.dtb \
++	imx6dl-udoo.dtb \
+ 	imx6dl-wandboard.dtb \
+ 	imx6dl-wandboard-revb1.dtb \
+ 	imx6q-arm2.dtb \
+diff --git a/arch/arm/boot/dts/imx6dl-udoo.dts b/arch/arm/boot/dts/imx6dl-udoo.dts
 new file mode 100644
-index 0000000..d0588ea
+index 0000000..a4d2ef2
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/da9150.txt
-@@ -0,0 +1,43 @@
-+Dialog Semiconductor DA9150 Combined Charger/Fuel-Gauge MFD bindings
++++ b/arch/arm/boot/dts/imx6dl-udoo.dts
+@@ -0,0 +1,18 @@
++/*
++ * Copyright 2013 Freescale Semiconductor, Inc.
++ *
++ * Author: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ */
++/dts-v1/;
++#include "imx6dl.dtsi"
++#include "imx6qdl-udoo.dtsi"
 +
-+DA9150 consists of a group of sub-devices:
++/ {
++	model = "Udoo i.MX6 Dual Board";
++	compatible = "udoo,imx6dl-udoo", "fsl,imx6dl";
++};
+diff --git a/arch/arm/boot/dts/imx6q-udoo.dts b/arch/arm/boot/dts/imx6q-udoo.dts
+index e3bff2a..c3e64ff 100644
+--- a/arch/arm/boot/dts/imx6q-udoo.dts
++++ b/arch/arm/boot/dts/imx6q-udoo.dts
+@@ -8,137 +8,15 @@
+  * published by the Free Software Foundation.
+  *
+  */
+-
+ /dts-v1/;
+ #include "imx6q.dtsi"
++#include "imx6qdl-udoo.dtsi"
+ 
+ / {
+ 	model = "Udoo i.MX6 Quad Board";
+ 	compatible = "udoo,imx6q-udoo", "fsl,imx6q";
+-
+-	chosen {
+-		stdout-path = &uart2;
+-	};
+-
+-	memory {
+-		reg = <0x10000000 0x40000000>;
+-	};
+-
+-	regulators {
+-		compatible = "simple-bus";
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-
+-		reg_usb_h1_vbus: regulator@0 {
+-			compatible = "regulator-fixed";
+-			reg = <0>;
+-			regulator-name = "usb_h1_vbus";
+-			regulator-min-microvolt = <5000000>;
+-			regulator-max-microvolt = <5000000>;
+-			enable-active-high;
+-			startup-delay-us = <2>; /* USB2415 requires a POR of 1 us minimum */
+-			gpio = <&gpio7 12 0>;
+-		};
+-	};
+-};
+-
+-&fec {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&pinctrl_enet>;
+-	phy-mode = "rgmii";
+-	status = "okay";
+-};
+-
+-&hdmi {
+-	ddc-i2c-bus = <&i2c2>;
+-	status = "okay";
+-};
+-
+-&i2c2 {
+-	clock-frequency = <100000>;
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&pinctrl_i2c2>;
+-	status = "okay";
+-};
+-
+-&iomuxc {
+-	imx6q-udoo {
+-		pinctrl_enet: enetgrp {
+-			fsl,pins = <
+-				MX6QDL_PAD_RGMII_RXC__RGMII_RXC		0x1b0b0
+-				MX6QDL_PAD_RGMII_RD0__RGMII_RD0		0x1b0b0
+-				MX6QDL_PAD_RGMII_RD1__RGMII_RD1		0x1b0b0
+-				MX6QDL_PAD_RGMII_RD2__RGMII_RD2		0x1b0b0
+-				MX6QDL_PAD_RGMII_RD3__RGMII_RD3		0x1b0b0
+-				MX6QDL_PAD_RGMII_RX_CTL__RGMII_RX_CTL	0x1b0b0
+-				MX6QDL_PAD_RGMII_TXC__RGMII_TXC		0x1b0b0
+-				MX6QDL_PAD_RGMII_TD0__RGMII_TD0		0x1b0b0
+-				MX6QDL_PAD_RGMII_TD1__RGMII_TD1		0x1b0b0
+-				MX6QDL_PAD_RGMII_TD2__RGMII_TD2		0x1b0b0
+-				MX6QDL_PAD_RGMII_TD3__RGMII_TD3		0x1b0b0
+-				MX6QDL_PAD_RGMII_TX_CTL__RGMII_TX_CTL	0x1b0b0
+-				MX6QDL_PAD_ENET_REF_CLK__ENET_TX_CLK	0x1b0b0
+-				MX6QDL_PAD_ENET_MDIO__ENET_MDIO		0x1b0b0
+-				MX6QDL_PAD_ENET_MDC__ENET_MDC		0x1b0b0
+-				MX6QDL_PAD_GPIO_16__ENET_REF_CLK	0x4001b0a8
+-			>;
+-		};
+-
+-		pinctrl_i2c2: i2c2grp {
+-			fsl,pins = <
+-				MX6QDL_PAD_KEY_COL3__I2C2_SCL		0x4001b8b1
+-				MX6QDL_PAD_KEY_ROW3__I2C2_SDA		0x4001b8b1
+-			>;
+-		};
+-
+-		pinctrl_uart2: uart2grp {
+-			fsl,pins = <
+-				MX6QDL_PAD_EIM_D26__UART2_TX_DATA	0x1b0b1
+-				MX6QDL_PAD_EIM_D27__UART2_RX_DATA	0x1b0b1
+-			>;
+-		};
+-
+-		pinctrl_usbh: usbhgrp {
+-			fsl,pins = <
+-				MX6QDL_PAD_GPIO_17__GPIO7_IO12 0x80000000
+-				MX6QDL_PAD_NANDF_CS2__CCM_CLKO2 0x130b0
+-			>;
+-		};
+-
+-		pinctrl_usdhc3: usdhc3grp {
+-			fsl,pins = <
+-				MX6QDL_PAD_SD3_CMD__SD3_CMD		0x17059
+-				MX6QDL_PAD_SD3_CLK__SD3_CLK		0x10059
+-				MX6QDL_PAD_SD3_DAT0__SD3_DATA0		0x17059
+-				MX6QDL_PAD_SD3_DAT1__SD3_DATA1		0x17059
+-				MX6QDL_PAD_SD3_DAT2__SD3_DATA2		0x17059
+-				MX6QDL_PAD_SD3_DAT3__SD3_DATA3		0x17059
+-			>;
+-		};
+-	};
+ };
+ 
+ &sata {
+ 	status = "okay";
+ };
+-
+-&uart2 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&pinctrl_uart2>;
+-	status = "okay";
+-};
+-
+-&usbh1 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&pinctrl_usbh>;
+-	vbus-supply = <&reg_usb_h1_vbus>;
+-	clocks = <&clks 201>;
+-	status = "okay";
+-};
+-
+-&usdhc3 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&pinctrl_usdhc3>;
+-	non-removable;
+-	status = "okay";
+-};
+diff --git a/arch/arm/boot/dts/imx6qdl-udoo.dtsi b/arch/arm/boot/dts/imx6qdl-udoo.dtsi
+new file mode 100644
+index 0000000..1211da8
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6qdl-udoo.dtsi
+@@ -0,0 +1,134 @@
++/*
++ * Copyright 2013 Freescale Semiconductor, Inc.
++ *
++ * Author: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ */
 +
-+Device			 Description
-+------			 -----------
-+da9150-gpadc		: General Purpose ADC
-+da9150-charger		: Battery Charger
++/ {
++	chosen {
++		stdout-path = &uart2;
++	};
 +
-+======
++	memory {
++		reg = <0x10000000 0x40000000>;
++	};
 +
-+Required properties:
-+- compatible : Should be "dlg,da9150"
-+- reg: Specifies the I2C slave address
-+- interrupt-parent: Specifies the phandle of the interrupt controller to which
-+  the IRQs from da9150 are delivered to.
-+- interrupts: IRQ line info for da9150 chip.
-+- interrupt-controller: da9150 has internal IRQs (own IRQ domain).
-+  (See Documentation/devicetree/bindings/interrupt-controller/interrupts.txt for
-+   further information relating to interrupt properties)
++	regulators {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <0>;
 +
-+Sub-devices:
-+- da9150-gpadc: See Documentation/devicetree/bindings/iio/adc/da9150-gpadc.txt
-+- da9150-charger: See Documentation/devicetree/bindings/power/da9150-charger.txt
-+
-+
-+Example:
-+
-+	charger_fg: da9150@58 {
-+		compatible = "dlg,da9150";
-+		reg = <0x58>;
-+		interrupt-parent = <&gpio6>;
-+		interrupts = <11 IRQ_TYPE_LEVEL_LOW>;
-+		interrupt-controller;
-+
-+		gpadc: da9150-gpadc {
-+			...
-+		};
-+
-+		da9150-charger {
-+			...
++		reg_usb_h1_vbus: regulator@0 {
++			compatible = "regulator-fixed";
++			reg = <0>;
++			regulator-name = "usb_h1_vbus";
++			regulator-min-microvolt = <5000000>;
++			regulator-max-microvolt = <5000000>;
++			enable-active-high;
++			startup-delay-us = <2>; /* USB2415 requires a POR of 1 us minimum */
++			gpio = <&gpio7 12 0>;
 +		};
 +	};
++};
++
++&fec {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_enet>;
++	phy-mode = "rgmii";
++	status = "okay";
++};
++
++&hdmi {
++	ddc-i2c-bus = <&i2c2>;
++	status = "okay";
++};
++
++&i2c2 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c2>;
++	status = "okay";
++};
++
++&iomuxc {
++	imx6q-udoo {
++		pinctrl_enet: enetgrp {
++			fsl,pins = <
++				MX6QDL_PAD_RGMII_RXC__RGMII_RXC		0x1b0b0
++				MX6QDL_PAD_RGMII_RD0__RGMII_RD0		0x1b0b0
++				MX6QDL_PAD_RGMII_RD1__RGMII_RD1		0x1b0b0
++				MX6QDL_PAD_RGMII_RD2__RGMII_RD2		0x1b0b0
++				MX6QDL_PAD_RGMII_RD3__RGMII_RD3		0x1b0b0
++				MX6QDL_PAD_RGMII_RX_CTL__RGMII_RX_CTL	0x1b0b0
++				MX6QDL_PAD_RGMII_TXC__RGMII_TXC		0x1b0b0
++				MX6QDL_PAD_RGMII_TD0__RGMII_TD0		0x1b0b0
++				MX6QDL_PAD_RGMII_TD1__RGMII_TD1		0x1b0b0
++				MX6QDL_PAD_RGMII_TD2__RGMII_TD2		0x1b0b0
++				MX6QDL_PAD_RGMII_TD3__RGMII_TD3		0x1b0b0
++				MX6QDL_PAD_RGMII_TX_CTL__RGMII_TX_CTL	0x1b0b0
++				MX6QDL_PAD_ENET_REF_CLK__ENET_TX_CLK	0x1b0b0
++				MX6QDL_PAD_ENET_MDIO__ENET_MDIO		0x1b0b0
++				MX6QDL_PAD_ENET_MDC__ENET_MDC		0x1b0b0
++				MX6QDL_PAD_GPIO_16__ENET_REF_CLK	0x4001b0a8
++			>;
++		};
++
++		pinctrl_i2c2: i2c2grp {
++			fsl,pins = <
++				MX6QDL_PAD_KEY_COL3__I2C2_SCL		0x4001b8b1
++				MX6QDL_PAD_KEY_ROW3__I2C2_SDA		0x4001b8b1
++			>;
++		};
++
++		pinctrl_uart2: uart2grp {
++			fsl,pins = <
++				MX6QDL_PAD_EIM_D26__UART2_TX_DATA	0x1b0b1
++				MX6QDL_PAD_EIM_D27__UART2_RX_DATA	0x1b0b1
++			>;
++		};
++
++		pinctrl_usbh: usbhgrp {
++			fsl,pins = <
++				MX6QDL_PAD_GPIO_17__GPIO7_IO12 0x80000000
++				MX6QDL_PAD_NANDF_CS2__CCM_CLKO2 0x130b0
++			>;
++		};
++
++		pinctrl_usdhc3: usdhc3grp {
++			fsl,pins = <
++				MX6QDL_PAD_SD3_CMD__SD3_CMD		0x17059
++				MX6QDL_PAD_SD3_CLK__SD3_CLK		0x10059
++				MX6QDL_PAD_SD3_DAT0__SD3_DATA0		0x17059
++				MX6QDL_PAD_SD3_DAT1__SD3_DATA1		0x17059
++				MX6QDL_PAD_SD3_DAT2__SD3_DATA2		0x17059
++				MX6QDL_PAD_SD3_DAT3__SD3_DATA3		0x17059
++			>;
++		};
++	};
++};
++
++&uart2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart2>;
++	status = "okay";
++};
++
++&usbh1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usbh>;
++	vbus-supply = <&reg_usb_h1_vbus>;
++	clocks = <&clks 201>;
++	status = "okay";
++};
++
++&usdhc3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usdhc3>;
++	non-removable;
++	status = "okay";
++};
+-- 
+2.1.3
+
 --
-1.9.3
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
