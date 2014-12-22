@@ -1,35 +1,69 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: [PATCH] dma-mapping: fix debug print to display correct dma_pfn_offset
-Date: Mon, 22 Dec 2014 10:35:09 -0500
-Message-ID: <1419262509-9811-1-git-send-email-m-karicheri2@ti.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH 3/3] usb: dwc3: add a quirk for device disconnection
+ issue in Synopsis dwc3 core
+Date: Mon, 22 Dec 2014 09:37:30 -0600
+Message-ID: <20141222153730.GA12815@saruman>
+References: <1418695828-605-1-git-send-email-Sneeker.Yeh@tw.fujitsu.com>
+ <1418695828-605-4-git-send-email-Sneeker.Yeh@tw.fujitsu.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="FCuugMFkClbJLl1L"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1418695828-605-4-git-send-email-Sneeker.Yeh@tw.fujitsu.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: grant.likely@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Murali Karicheri <m-karicheri2@ti.com>
+To: Sneeker Yeh <sneeker.yeh@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Grant Likely <grant.likely@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Arnd Bergmann <arnd@arndb.de>, Paul Bolle <pebolle@tiscali.nl>, Hans de Goede <hdegoede@redhat.com>, Thomas Pugliese <thomas.pugliese@gmail.com>, David Mosberger <davidm@egauge.net>, Peter Griffin <peter.griffin@linaro.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Andrew Bresticker <abrestic@chromium.org>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@
 List-Id: devicetree@vger.kernel.org
 
-fix the dev_dbg to display the offset which is the calculated
-dma_pfn_offset value and set later in the code.
+--FCuugMFkClbJLl1L
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
----
- drivers/of/platform.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Tue, Dec 16, 2014 at 10:10:28AM +0800, Sneeker Yeh wrote:
+> Synopsis DesignWare USB3 IP Core integrated with a config-free
+> phy needs special handling during device disconnection to avoid
+> the host controller dying.
+>=20
+> This quirk makes sure PORT_CSC is cleared after the disable slot
+> command when usb device is disconnected from internal root hub,
+> otherwise, Synopsis core would fall into a state that cannot use
+> any endpoint command. Consequently, device disconnection procedure
+> might not be finished because sometimes endpoint need to be stop
+> by endpoint stop command issuing.
+>=20
+> Symptom usually happens when disconnected device is keyboard,
+> mouse, and hub.
 
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index 5b33c6a..a54ec10 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -188,7 +188,7 @@ static void of_dma_configure(struct device *dev)
- 		size = dev->coherent_dma_mask;
- 	} else {
- 		offset = PFN_DOWN(paddr - dma_addr);
--		dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", dev->dma_pfn_offset);
-+		dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", offset);
- 	}
- 	dev->dma_pfn_offset = offset;
- 
--- 
-1.7.9.5
+you need to point us to the synopsys STARS ticket number. That's the
+only way to reference this specific quirk. Add it to a comment
+somewhere.
+
+--=20
+balbi
+
+--FCuugMFkClbJLl1L
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUmDq6AAoJEIaOsuA1yqREBvsQAJ5hAbSbFOq1rpAfsrVX6QIG
+V+//vvw4jxayZT/pJhEhzihGa4EPA+A7mIncZ9wZ4hqclYqUnQmZvlnYHM2o2JPu
+Yhwr/xs5YplmYK6prNU9ROUgfK7YrjoY2jj+DfHrwdg6i/bPaaH9YwvFFFklAYzL
+FqPme1iqPU0Pg8hosOpclA1ikavMXEot31RqEPipBQUwFzwjVu0Eun5rWiTHEvhI
+jqhMWv+jazCIJpBAlgVVrGc+r7nfQ4mkjhBaQcUwQ9HczYlv1Rg8tMMCzH1xB/+v
+MdTqLIRXh9xej4unzTYmE5twX9Qo7rjadVaOnB1gEN7YQh5mGOq7n4YqS5t71Gzr
+4D9E4uSlL8zqpYnYdZrXQiiAbOb3O8yDXa1LKc3ZAZ/QhhHfo8YfspO6I3QIjmtg
+8Jsk/X05dkmlgCSXEnXtQCqBc4KpddHjH+1gziHOKio8Tte3eX2MFOZGk9q12heC
+2dpUHeKokJWaEK66O6clzBIyDWWXyNQIDtEjaXZts+lUN/hzjz5GSWGv6c2Vpd71
+VMIzr/chN6AJWAFoXNc827SVdEqQBcu4ziRR6mNJ/R99fdv52j3wtYJaf7z8vsiu
+kZ8FuBW8coQZg7IapDFkbGWATLBRKxaeZl+NISFdUNl2UgPQqCe4IZlYvHqiVVZi
+sGWJjgABKtq5Bp13ct48
+=Au6Y
+-----END PGP SIGNATURE-----
+
+--FCuugMFkClbJLl1L--
