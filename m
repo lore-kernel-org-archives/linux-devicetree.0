@@ -1,168 +1,103 @@
 From: Pratyush Anand <panand@redhat.com>
-Subject: Re: [PATCH 3/5] PCI: st: Provide support for the sti PCIe controller
-Date: Mon, 22 Dec 2014 10:42:29 +0530
-Message-ID: <5497A83D.5060108@redhat.com>
-References: <1418812486-12394-1-git-send-email-gabriel.fernandez@linaro.org> <1418812486-12394-4-git-send-email-gabriel.fernandez@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Subject: [PATCH] PCIe: Designware: Do not allow config space through ranges
+Date: Mon, 22 Dec 2014 12:09:04 +0530
+Message-ID: <7dcdee69eb7db8336829e6085d736a3ac7e68ad4.1419229126.git.panand@redhat.com>
 Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1418812486-12394-4-git-send-email-gabriel.fernandez@linaro.org>
 Sender: linux-pci-owner@vger.kernel.org
-To: Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Bjorn Helgaas <bhelgaas@google.com>, Mohit Kumar <mohit.kumar@st.com>, Jingoo Han <jg1.han@samsung.com>, Grant Likely <grant.likely@linaro.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>, Fabrice Gasnier <fabrice.gasnier@st.com>, Arnd Bergmann <arnd@arndb.de>, Viresh Kumar <viresh.kumar@linaro.org>, Thierry Reding <treding@nvidia.com>, Minghuan Lian <Minghuan.Lian@freescale.com>, Magnus Damm <damm@opensource.se>, Will Deacon <will.deacon@arm.com>, Tanmay
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, linux-pci@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
+To: mohit.kumar@st.com, jg1.han@samsung.com, l.stach@pengutronix.de, shawn.guo@freescale.com
+Cc: Pratyush Anand <panand@redhat.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Config space is need to be allocated using reg property. This patch
+removes possibility of config space allocation through ranges property.
 
+To: Mohit Kumar <mohit.kumar@st.com>
+To: Jingo Han <jg1.han@samsung.com>
+To: Lucas Stach <l.stach@pengutronix.de>
+To: Shawn Guo <shawn.guo@freescale.com>
+Cc: linux-pci@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Pratyush Anand <panand@redhat.com>
+---
+ arch/arm/boot/dts/imx6qdl.dtsi     |  3 +--
+ arch/arm/boot/dts/imx6sx.dtsi      |  8 ++++----
+ drivers/pci/host/pci-imx6.c        |  2 +-
+ drivers/pci/host/pcie-designware.c | 13 -------------
+ 4 files changed, 6 insertions(+), 20 deletions(-)
 
-On Wednesday 17 December 2014 04:04 PM, Gabriel FERNANDEZ wrote:
-> sti pcie is built around a Synopsis Designware PCIe IP.
->
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
-> ---
->   drivers/pci/host/Kconfig  |   5 +
->   drivers/pci/host/Makefile |   1 +
->   drivers/pci/host/pci-st.c | 713 ++++++++++++++++++++++++++++++++++++++++++++++
->   3 files changed, 719 insertions(+)
->   create mode 100644 drivers/pci/host/pci-st.c
->
-
-[...]
-
-> +static int st_pcie_abort_handler(unsigned long addr, unsigned int fsr,
-> +				 struct pt_regs *regs)
-> +{
-> +	return 0;
-> +}
-> +
-
-You should have modification here to populate registers having cfg read 
-values by 0xFFFFFFFF.
-
-I would suggest to have a look here:
-drivers/pci/host/pci-keystone.c:keystone_pcie_fault
-
-> +/*
-> + * The PCI express core IP expects the following arrangement on it's address
-> + * bus (slv_haddr) when driving config cycles.
-> + * bus_number		[31:24]
-> + * dev_number		[23:19]
-> + * func_number		[18:16]
-> + * unused		[15:12]
-> + * ext_reg_number	[11:8]
-> + * reg_number		[7:2]
-> + *
-> + * Bits [15:12] are unused.
-> + *
-> + * In the glue logic there is a 64K region of address space that can be
-> + * written/read to generate config cycles. The base address of this is
-> + * controlled by CFG_BASE_ADDRESS. There are 8 16 bit registers called
-> + * FUNC0_BDF_NUM to FUNC8_BDF_NUM. These split the bottom half of the 64K
-> + * window into 8 regions at 4K boundaries. These control the bus,device and
-> + * function number you are trying to talk to.
-> + *
-> + * The decision on whether to generate a type 0 or type 1 access is controlled
-> + * by bits 15:12 of the address you write to.  If they are zero, then a type 0
-> + * is generated, if anything else it will be a type 1. Thus the bottom 4K
-> + * region controlled by FUNC0_BDF_NUM can only generate type 0, all the others
-> + * can only generate type 1.
-> + *
-> + * We only use FUNC0_BDF_NUM and FUNC1_BDF_NUM. Which one you use is selected
-> + * by bit 12 of the address you write to. The selected register is then used
-> + * for the top 16 bits of the slv_haddr to form the bus/dev/func, bit 15:12 are
-> + * wired to zero, and bits 11:2 form the address of the register you want to
-> + * read in config space.
-> + *
-> + * We always write FUNC0_BDF_NUM as a 32 bit write. So if we want type 1
-> + * accesses we have to shift by 16 so in effect we are writing to FUNC1_BDF_NUM
-> + */
-> +static inline u32 bdf_num(int bus, int devfn, int is_root_bus)
-> +{
-> +	return ((bus << 8) | devfn) << (is_root_bus ? 0 : 16);
-> +}
-> +
-> +static inline unsigned config_addr(int where, int is_root_bus)
-> +{
-> +	return (where & ~3) | (!is_root_bus << 12);
-> +}
-> +
-> +static int st_pcie_rd_other_conf(struct pcie_port *pp, struct pci_bus *bus,
-> +				 unsigned int devfn, int where, int size,
-> +				 u32 *val)
-> +{
-> +	u32 data;
-> +	u32 bdf;
-> +	struct st_pcie *pcie = to_st_pcie(pp);
-> +	int is_root_bus = pci_is_root_bus(bus);
-> +	int retry_count = 0;
-> +	int ret;
-> +	void __iomem *addr;
-> +
-> +	/*
-> +	 * Prerequisite
-> +	 * PCI express devices will respond to all config type 0 cycles, since
-> +	 * they are point to point links. Thus to avoid probing for multiple
-> +	 * devices on the root, dw-pcie already check for us if it is on the
-> +	 * root bus / other slots. Also, dw-pcie checks for the link being up
-> +	 * as we will hang if we issue a config request and the link is down.
-> +	 * A switch will reject requests for slots it knows do not exist.
-> +	 */
-> +	bdf = bdf_num(bus->number, devfn, is_root_bus);
-> +	addr = pcie->config_area + config_addr(where,
-> +			bus->parent->number == pp->root_bus_nr);
-> +retry:
-> +	/* Set the config packet devfn */
-> +	writel_relaxed(bdf, pp->dbi_base + FUNC0_BDF_NUM);
-> +	readl_relaxed(pp->dbi_base + FUNC0_BDF_NUM);
-> +
-> +	ret = dw_pcie_cfg_read(addr, where, size, &data);
-> +
-> +	/*
-> +	 * This is intended to help with when we are probing the bus. The
-> +	 * problem is that the wrapper logic doesn't have any way to
-> +	 * interrogate if the configuration request failed or not.
-> +	 * On the ARM we actually get a real bus error.
-> +	 *
-> +	 * Unfortunately this means it is impossible to tell the difference
-> +	 * between when a device doesn't exist (the switch will return a UR
-> +	 * completion) or the device does exist but isn't yet ready to accept
-> +	 * configuration requests (the device will return a CRS completion)
-> +	 *
-> +	 * The result of this is that we will miss devices when probing.
-> +	 *
-> +	 * So if we are trying to read the dev/vendor id on devfn 0 and we
-> +	 * appear to get zero back, then we retry the request.  We know that
-> +	 * zero can never be a valid device/vendor id. The specification says
-> +	 * we must retry for up to a second before we decide the device is
-
-Not sure if retry has to be part of software. This might already be done 
-by hardware.
-
-> +	 * dead. If we are still dead then we assume there is nothing there and
-> +	 * return ~0
-> +	 *
-> +	 * The downside of this is that we incur a delay of 1s for every pci
-> +	 * express link that doesn't have a device connected.
-> +	 */
-> +	if (((where & ~3) == 0) && devfn == 0 && (data == 0 || data == ~0)) {
-> +		if (retry_count++ < 1000) {
-> +			mdelay(1);
-> +			goto retry;
-> +		} else {
-> +			*val = ~0;
-> +			return PCIBIOS_DEVICE_NOT_FOUND;
-> +		}
-> +	}
-
-Have you found a situation with any of the card when your retry_count > 
-0 and  < 1000 at this point. If not then, I think modifying abort 
-handler will solve your issue.
-
-> +
-> +	*val = data;
-> +	return ret;
-> +}
-> +
-
-~Pratyush
+diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+index 4fc03b7f1cee..f21570847d08 100644
+--- a/arch/arm/boot/dts/imx6qdl.dtsi
++++ b/arch/arm/boot/dts/imx6qdl.dtsi
+@@ -143,8 +143,7 @@
+ 			#address-cells = <3>;
+ 			#size-cells = <2>;
+ 			device_type = "pci";
+-			ranges = <0x00000800 0 0x01f00000 0x01f00000 0 0x00080000 /* configuration space */
+-				  0x81000000 0 0          0x01f80000 0 0x00010000 /* downstream I/O */
++			ranges = 0x81000000 0 0          0x01f80000 0 0x00010000 /* downstream I/O */
+ 				  0x82000000 0 0x01000000 0x01000000 0 0x00f00000>; /* non-prefetchable memory */
+ 			num-lanes = <1>;
+ 			interrupts = <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>;
+diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
+index 7a24fee1e7ae..72593a77455e 100644
+--- a/arch/arm/boot/dts/imx6sx.dtsi
++++ b/arch/arm/boot/dts/imx6sx.dtsi
+@@ -1197,14 +1197,14 @@
+ 
+ 		pcie: pcie@0x08000000 {
+ 			compatible = "fsl,imx6sx-pcie", "snps,dw-pcie";
+-			reg = <0x08ffc000 0x4000>; /* DBI */
++			reg = <0x08ffc000 0x4000>, /* DBI */
++				<0x08f00000 0x80000>;
++			reg-names = "dbi", "config";
+ 			#address-cells = <3>;
+ 			#size-cells = <2>;
+ 			device_type = "pci";
+-				  /* configuration space */
+-			ranges = <0x00000800 0 0x08f00000 0x08f00000 0 0x00080000
+ 				  /* downstream I/O */
+-				  0x81000000 0 0          0x08f80000 0 0x00010000
++			ranges =  0x81000000 0 0          0x08f80000 0 0x00010000
+ 				  /* non-prefetchable memory */
+ 				  0x82000000 0 0x08000000 0x08000000 0 0x00f00000>;
+ 			num-lanes = <1>;
+diff --git a/drivers/pci/host/pci-imx6.c b/drivers/pci/host/pci-imx6.c
+index fdb95367721e..dae452984ed3 100644
+--- a/drivers/pci/host/pci-imx6.c
++++ b/drivers/pci/host/pci-imx6.c
+@@ -572,7 +572,7 @@ static int __init imx6_pcie_probe(struct platform_device *pdev)
+ 	hook_fault_code(16 + 6, imx6q_pcie_abort_handler, SIGBUS, 0,
+ 		"imprecise external abort");
+ 
+-	dbi_base = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	dbi_base = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
+ 	pp->dbi_base = devm_ioremap_resource(&pdev->dev, dbi_base);
+ 	if (IS_ERR(pp->dbi_base))
+ 		return PTR_ERR(pp->dbi_base);
+diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-designware.c
+index df781cdf13c1..0b22b42e1ff9 100644
+--- a/drivers/pci/host/pcie-designware.c
++++ b/drivers/pci/host/pcie-designware.c
+@@ -409,19 +409,6 @@ int __init dw_pcie_host_init(struct pcie_port *pp)
+ 			pp->mem_mod_base = of_read_number(parser.range -
+ 							  parser.np + na, ns);
+ 		}
+-		if (restype == 0) {
+-			of_pci_range_to_resource(&range, np, &pp->cfg);
+-			pp->cfg0_size = resource_size(&pp->cfg)/2;
+-			pp->cfg1_size = resource_size(&pp->cfg)/2;
+-			pp->cfg0_base = pp->cfg.start;
+-			pp->cfg1_base = pp->cfg.start + pp->cfg0_size;
+-
+-			/* Find the untranslated configuration space address */
+-			pp->cfg0_mod_base = of_read_number(parser.range -
+-							   parser.np + na, ns);
+-			pp->cfg1_mod_base = pp->cfg0_mod_base +
+-					    pp->cfg0_size;
+-		}
+ 	}
+ 
+ 	ret = of_pci_parse_bus_range(np, &pp->busn);
+-- 
+2.1.0
