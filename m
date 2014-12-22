@@ -1,57 +1,73 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH] mmc: dt: Add property for broken hs200 quirk
-Date: Mon, 22 Dec 2014 11:04:42 +0100
-Message-ID: <CAPDyKFoGN49usQg5Ezv_AaWcKf3mRmZ=VJ8Rc4HDYh62ukiwXQ@mail.gmail.com>
-References: <1418412516-10682-1-git-send-email-bjorn.andersson@sonymobile.com>
-	<CAPDyKFrPC_MphsLHHZ=uFjcF8SsdkVmzez9R=gas7_ihn63Q5A@mail.gmail.com>
-	<CAJAp7OhSZ7CZedXAsWPf0XYv8RESQxXe4L1LZjOmVW4nGpFiHw@mail.gmail.com>
+From: Josh Wu <josh.wu@atmel.com>
+Subject: Re: [PATCH v4 5/5] media: ov2640: dt: add the device tree binding
+ document
+Date: Mon, 22 Dec 2014 18:32:07 +0800
+Message-ID: <5497F327.4040903@atmel.com>
+References: <1418869646-17071-1-git-send-email-josh.wu@atmel.com> <1418869646-17071-6-git-send-email-josh.wu@atmel.com> <5492C4E3.4050401@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJAp7OhSZ7CZedXAsWPf0XYv8RESQxXe4L1LZjOmVW4nGpFiHw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn@kryo.se>
-Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Anton Vorontsov <anton@enomsg.org>, Chris Ball <chris@printf.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "open list:SECURE DIGITAL HO..." <linux-mmc@vger.kernel.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <5492C4E3.4050401@samsung.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: linux-media@vger.kernel.org, g.liakhovetski@gmx.de, m.chehab@samsung.com, linux-arm-kernel@lists.infradead.org, laurent.pinchart@ideasonboard.com, festevam@gmail.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 19 December 2014 at 21:01, Bjorn Andersson <bjorn@kryo.se> wrote:
-> On Fri, Dec 19, 2014 at 3:38 AM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
->> On 12 December 2014 at 20:28, Bjorn Andersson
->> <bjorn.andersson@sonymobile.com> wrote:
->>
->> Some more explanation to why this needed would be good.
->>
+Hi, Sylwester
+
+On 12/18/2014 8:13 PM, Sylwester Nawrocki wrote:
+> Hi Josh,
 >
-> Because (according to the git log) some of the memories that we
-> mounted in Xperia Z1 does not support HS200 even though they advertise
-> they are.
-
-I see. How about using an mmc card quirk instead of a DT binding then?
-
-Kind regards
-Uffe
+> On 18/12/14 03:27, Josh Wu wrote:
+>> Add the document for ov2640 dt.
+>>
+>> Cc: devicetree@vger.kernel.org
+>> Signed-off-by: Josh Wu <josh.wu@atmel.com>
+> Acked-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Thanks.
 
 >
-> I thought we needed for the device I'm testing with, but a couple of
-> regulator_set_optimum_mode() solved that - so I have to provide a
-> patch for that as well...
+> It seems "ovti" is not in the list of vendor prefixes. You may want
+> to send a patch adding it to Documentation/devicetree/bindings/
+> vendor-prefixes.txt.
 >
->>> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
->>> ---
->>>  Documentation/devicetree/bindings/mmc/mmc.txt | 2 ++
+> Just few minor comments below..
+>
+>>   .../devicetree/bindings/media/i2c/ov2640.txt       | 46 ++++++++++++++++++++++
+>>   1 file changed, 46 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/media/i2c/ov2640.txt
 >>
->> This file lists the generic mmc DT bindings, but you want to add a
->> specific binding for sdhci?
->>
+>> diff --git a/Documentation/devicetree/bindings/media/i2c/ov2640.txt b/Documentation/devicetree/bindings/media/i2c/ov2640.txt
+>> new file mode 100644
+>> index 0000000..de11ebb
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/media/i2c/ov2640.txt
+>> @@ -0,0 +1,46 @@
+>> +* Omnivision ov2640 CMOS sensor
+> s/ov2640/OV2640 ?
+
+OK.
 >
-> Looking in sdhci_get_of_property() it's a mash of device specific
-> properties, sdhci specific properties documented in mmc.txt and
-> generic sdhci properties documented in device specific bindings.
+>> +
+>> +The Omnivision OV2640 sensor support multiple resolutions output, such as
+>> +CIF, SVGA, UXGA. It also can support YUV422/420, RGB565/555 or raw RGB
+>> +output format.
+>> +
+>> +Required Properties:
+>> +- compatible: Must be "ovti,ov2640"
+> I believe it is preferred to put it as "Should contain", rather than
+> "Must be".
+I don't have a strong opinion here. After check many documents, it seems 
+many people use "Should be".
+Is it okay?
+
+Best Regards,
+Josh Wu
+
 >
-> Would you like me to move it to a generic sdhci.txt binding and update
-> the individual sdhci-* to reference that instead of mmc.txt? Or should
-> I just add the property in the device specific bindings? Or maybe we
-> could keep it as a optional property in mmc.txt?
->
+>> +- clocks: reference to the xvclk input clock.
+>> +- clock-names: Must be "xvclk".
+> --
 > Regards,
-> Bjorn
+> Sylwester
