@@ -1,55 +1,46 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH] ARM: shmobile: r8a7790: add MLB+ clock
-Date: Tue, 23 Dec 2014 00:43:13 +0300
-Message-ID: <54989071.2060509@cogentembedded.com>
-References: <2277336.BnuIY8UiP8@wasted.cogentembedded.com> <20141222000610.GG29188@verge.net.au>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFC v1 PATCH 1/2] of/pci: add of_pci_dma_configure() update dma configuration
+Date: Mon, 22 Dec 2014 23:24:33 +0100
+Message-ID: <2285493.QXo0OxClZ5@wuerfel>
+References: <1418940425-2017-1-git-send-email-m-karicheri2@ti.com> <11285984.OK9CqQGmjZ@wuerfel> <54988FDB.8000108@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20141222000610.GG29188@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <54988FDB.8000108@ti.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Murali Karicheri <m-karicheri2@ti.com>
+Cc: bhelgaas@google.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, grant.likely@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, will.deacon@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On 12/22/2014 03:06 AM, Simon Horman wrote:
+On Monday 22 December 2014 16:40:43 Murali Karicheri wrote:
+> >> +++ b/arch/arm/mm/dma-mapping.c
+> >> @@ -2052,9 +2052,10 @@ void arch_setup_dma_ops(struct device *dev, u64
+> >> dma_base, u64 size,
+> >>                           struct iommu_ops *iommu, bool coherent)
+> >>    {
+> >>           struct dma_map_ops *dma_ops;
+> >> +       u64 temp_size = min((*(dev->dma_mask) + 1), size);
+> >>
+> >>           dev->archdata.dma_coherent = coherent;
+> >> -       if (arm_setup_iommu_dma_ops(dev, dma_base, size, iommu))
+> >> +       if (arm_setup_iommu_dma_ops(dev, dma_base, temp_size, iommu))
+> >>
+> >> If you agree, I will post v1 of the patch with these updates. Let me
+> >> know. I did some basic tests on Keystone with these changes and it works
+> >> fine.
+> >
+> > It's not exactly what I meant. My main point was that we need to limit
+> > dev->dma_mask to (size-1) here, but you are not touching that.
+> 
+> if you mean overriding the dev->dma_mask to min((*dev->dma_mask), 
+> size-1), then I am getting the error "Coherent DMA mask 0x7fffffff (pfn 
+> 0x780000-0x800000) covers a smaller range of system memory than the DMA 
+> zone pfn 0x0-0x880000) when the devices on Keystone tries to set the dma 
+> mask. Something wrong and I need to look into the code.
 
->> From: Andrey Gusakov <andrey.gusakov@cogentembedded.com>
+Right, it sounds like the offset was applied incorrectly at some point.
 
->> Add MLB+ clock to R8A7790 device tree.
+What are the DMA zone size and the phys-offset?
 
->> Signed-off-by: Andrey Gusakov <andrey.gusakov@cogentembedded.com>
->> [Sergei: rebased, renamed, added changelog]
->> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-
->> ---
->> This patch is against 'renesas-devel-20141218-v3.18' tag of Simon Horman's
->> 'renesas.git' repo.
-
-> Thanks, I have queued this up.
-
-    Oops, just saw a formatting issue in this patch...
-
-[...]
->> Index: renesas/include/dt-bindings/clock/r8a7790-clock.h
->> ===================================================================
->> --- renesas.orig/include/dt-bindings/clock/r8a7790-clock.h
->> +++ renesas/include/dt-bindings/clock/r8a7790-clock.h
->> @@ -97,6 +97,7 @@
->>   #define R8A7790_CLK_LVDS0		26
->>
->>   /* MSTP8 */
->> +#define R8A7790_CLK_MLB		2
-
-    Need one more tab here.
-
->>   #define R8A7790_CLK_VIN3		8
->>   #define R8A7790_CLK_VIN2		9
->>   #define R8A7790_CLK_VIN1		10
-
-    Perhaps you still can fix it up, or I can resend? I'm not seeing this 
-patch in the 'devel' branch yet...
-
-WBR, Sergei
-
+	Arnd
