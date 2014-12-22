@@ -1,110 +1,150 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH 3/4] ARM: shmobile: koelsch: Add DA9063 PMIC device node
- for system restart
-Date: Mon, 22 Dec 2014 14:21:37 +0100
-Message-ID: <CAMuHMdXtYT9LnDm4-PUw=oU_ixi0L7hMO6yS3uAjN-sH7qus_g@mail.gmail.com>
-References: <1418124169-7123-1-git-send-email-geert+renesas@glider.be>
-	<1418124169-7123-4-git-send-email-geert+renesas@glider.be>
-	<20141221105133.GA30697@verge.net.au>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 12/13] ARM: dts: sun6i: Add sun6i-a31s.dtsi
+Date: Mon, 22 Dec 2014 14:46:12 +0100
+Message-ID: <549820A4.9090900@redhat.com>
+References: <1418836704-15689-1-git-send-email-hdegoede@redhat.com> <1418836704-15689-13-git-send-email-hdegoede@redhat.com> <20141219183450.GZ4820@lukather> <54954E77.4070302@redhat.com> <20141221223941.GC4820@lukather>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141221105133.GA30697-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Support Opensource <support.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux Watchdog Mailing List <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux I2C <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBLGB4CSAKGQED7TT5IA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20141221223941.GC4820@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
+Hi,
 
-On Sun, Dec 21, 2014 at 11:52 AM, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org> wrote:
-> On Tue, Dec 09, 2014 at 12:22:48PM +0100, Geert Uytterhoeven wrote:
->> Add a minimal device node for the DA9063 PMIC, which is connected to i2c6.
->> This allows the system to be restarted when the watchdog timer times
->> out, or when a system restart is requested.
+On 21-12-14 23:39, Maxime Ripard wrote:
+> On Sat, Dec 20, 2014 at 11:24:55AM +0100, Hans de Goede wrote:
+>> Hi,
 >>
->> Regulator support is not yet included, as no DT support code nor DT
->> binding documentation exists for the regulator functionality.
+>> On 19-12-14 19:34, Maxime Ripard wrote:
+>>> On Wed, Dec 17, 2014 at 06:18:23PM +0100, Hans de Goede wrote:
+>>>> Add a dtsi file for A31s based boards.
+>>>>
+>>>> Since the  A31s is the same die as the A31 in a different package, this dtsi
+>>>> simply includes sun6i-a31.dtsi and then overrides the pinctrl compatible to
+>>>> reflect the different package, everything else is identical.
+>>>>
+>>>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>>>> ---
+>>>> Changes in v2:
+>>>> -include sun6i-a31.dtsi and override the pinctrl compatible, rather then
+>>>>   copying everything
+>>>> ---
+>>>>   arch/arm/boot/dts/sun6i-a31s.dtsi | 62 +++++++++++++++++++++++++++++++++++++++
+>>>>   1 file changed, 62 insertions(+)
+>>>>   create mode 100644 arch/arm/boot/dts/sun6i-a31s.dtsi
+>>>>
+>>>> diff --git a/arch/arm/boot/dts/sun6i-a31s.dtsi b/arch/arm/boot/dts/sun6i-a31s.dtsi
+>>>> new file mode 100644
+>>>> index 0000000..d0bd2b9
+>>>> --- /dev/null
+>>>> +++ b/arch/arm/boot/dts/sun6i-a31s.dtsi
+>>>> @@ -0,0 +1,62 @@
+>>>> +/*
+>>>> + * Copyright 2014 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>>>> + *
+>>>> + * This file is dual-licensed: you can use it either under the terms
+>>>> + * of the GPL or the X11 license, at your option. Note that this dual
+>>>> + * licensing only applies to this file, and not this project as a
+>>>> + * whole.
+>>>> + *
+>>>> + *  a) This library is free software; you can redistribute it and/or
+>>>> + *     modify it under the terms of the GNU General Public License as
+>>>> + *     published by the Free Software Foundation; either version 2 of the
+>>>> + *     License, or (at your option) any later version.
+>>>> + *
+>>>> + *     This library is distributed in the hope that it will be useful,
+>>>> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+>>>> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>>>> + *     GNU General Public License for more details.
+>>>> + *
+>>>> + *     You should have received a copy of the GNU General Public
+>>>> + *     License along with this library; if not, write to the Free
+>>>> + *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+>>>> + *     MA 02110-1301 USA
+>>>> + *
+>>>> + * Or, alternatively,
+>>>> + *
+>>>> + *  b) Permission is hereby granted, free of charge, to any person
+>>>> + *     obtaining a copy of this software and associated documentation
+>>>> + *     files (the "Software"), to deal in the Software without
+>>>> + *     restriction, including without limitation the rights to use,
+>>>> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+>>>> + *     sell copies of the Software, and to permit persons to whom the
+>>>> + *     Software is furnished to do so, subject to the following
+>>>> + *     conditions:
+>>>> + *
+>>>> + *     The above copyright notice and this permission notice shall be
+>>>> + *     included in all copies or substantial portions of the Software.
+>>>> + *
+>>>> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+>>>> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+>>>> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+>>>> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+>>>> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+>>>> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+>>>> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>>>> + *     OTHER DEALINGS IN THE SOFTWARE.
+>>>> + */
+>>>> +
+>>>> +/*
+>>>> + * The A31s is the same die as the A31 in a different package, this is
+>>>> + * reflected by it having different pinctrl compatible everything else is
+>>>> + * identical.
+>>>> + */
+>>>> +
+>>>> +/include/ "sun6i-a31.dtsi"
+>>>> +
+>>>> +/ {
+>>>> +	soc@01c00000 {
+>>>> +		pio: pinctrl@01c20800 {
+>>>> +			compatible = "allwinner,sun6i-a31s-pinctrl";
+>>>> +		};
+>>>> +	};
+>>>> +};
+>>>
+>>> Given your previous changes, you should also update the enable-method.
 >>
->> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
->> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> I've not added a new compatible for the enable-method, given that
+>> this is the exact same die, so the 2 are 100?% compatible, just like you
+>> insisted that "allwinner,sun4i-a10-mod0-clk" should be used for the ir-clk
+>> since it was 100% compatible to that I believe that the enable method
+>> should use the existing compatible and not invent a new one for something
+>> which is 100% compatible.
 >
-> Hi,
->
-> I had this queued up for v3.20, however, when rebasing on top
-> of v3.19-rca (previous base was v3.18) I noticed that this patch
-> appears to cause booting koelsch with shmobile_defconfig to
-> stop at:
->
-> rcar_sound ec500000.rcar_sound: can't get dma channel
-> rcar_sound ec500000.rcar_sound: src[3] (Gen2) failed
-> rcar_sound ec500000.rcar_sound: ssi[1] fallback to PIO mode
-> rcar_sound ec500000.rcar_sound: probed
-> TCP: cubic registered
-> NET: Registered protocol family 10
-> da9063 6-0058: Failed to read IRQ status: -6
-> sit: IPv6 over IPv4 tunneling driver
-> NET: Registered protocol family 17
-> Key type dns_resolver registered
-> random: nonblocking pool is initializered
+> Yeah, you have a point and I agree, but your patch 3 does add a
+> CPU_METHOD_OF_DECLARE for the A31s.
 
-I could reproduce the issue on both renesas-devel-20141221-v3.19-rc1
-and renesas-drivers-2014-12-22-v3.19-rc1.
-It doesn't happen on every boot, though.
+Ah right, it does, my bad.
 
-What does happen on every boot is that the da9063-irq value in
-/proc/interrupts is increasing fast. After a while, the kernel complains:
+> Since I was going to push the branch now that 3.19-rc1 is out, do you
+> want me to edit your patch before doing so?
 
-    irq 125: nobody cared (try booting with the "irqpoll" option)
-    ...
-    Disabling IRQ #125
+Yes, please drop the addition of the extra CPU_METHOD_OF_DECLARE, or let
+me know if you want a new version instead.
 
-None of the above happen in my local development branch...
-
-It turns out I don't see the problem because I (still) have code to disable all
-unused MSTP clocks during startup.
-If MSTP407 (IRQC) is disabled, everything works fine.
-If it's left enabled, spurious interrupts are coming in.
-
-Changing the interrupt to IRQ_TYPE_LEVEL_HIGH doesn't help, and
-irq-renesas-irqc.c does use irq_domain_xlate_twocell, so I'm a bit lost...
-
-> I have (hopefully temporarily) dropped this patch accordingly.
->
->> ---
->> Restart by watchdog timeout is working now.
->> Manual system restart depends on "[PATCH 1/4] watchdog: da9063: Add restart
->> handler support".
->> ---
->>  arch/arm/boot/dts/r8a7791-koelsch.dts | 7 +++++++
->>  1 file changed, 7 insertions(+)
+>>> Also, for this patch and the next one, Arnd just warned me that we
+>>> shouldn't duplicate the DT path, and that we should switch to the new
+>>> trend on using label references (like what TI or Amlogic does for
+>>> example).
 >>
->> diff --git a/arch/arm/boot/dts/r8a7791-koelsch.dts b/arch/arm/boot/dts/r8a7791-koelsch.dts
->> index 6938377d3798644b..a400c27a813f1a8b 100644
->> --- a/arch/arm/boot/dts/r8a7791-koelsch.dts
->> +++ b/arch/arm/boot/dts/r8a7791-koelsch.dts
->> @@ -524,6 +524,13 @@
->>               regulator-boot-on;
->>               regulator-always-on;
->>       };
->> +
->> +     pmic@58 {
->> +             compatible = "dlg,da9063";
->> +             reg = <0x58>;
->> +             interrupt-parent = <&irqc0>;
->> +             interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
->> +     };
->>  };
+>> Ok, so something like this, right ?  :
 >>
->>  &pci0 {
+>> &pio {
+>> 	compatible = "allwinner,sun6i-a31s-pinctrl";
+>> };
+>
+> Yep.
 
-Gr{oetje,eeting}s,
+Regards,
 
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Hans
