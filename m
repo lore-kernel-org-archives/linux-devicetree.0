@@ -1,7 +1,7 @@
 From: Sean Cross <xobs@kosagi.com>
-Subject: [PATCH v2 3/4] PCI: imx6: Add power-supply support
-Date: Mon, 22 Dec 2014 16:32:06 +0800
-Message-ID: <1419237127-21763-4-git-send-email-xobs@kosagi.com>
+Subject: [PATCH v2 1/4] drm/panel: simple: Add Innolux N133HSE panel support
+Date: Mon, 22 Dec 2014 16:32:04 +0800
+Message-ID: <1419237127-21763-2-git-send-email-xobs@kosagi.com>
 References: <1419237127-21763-1-git-send-email-xobs@kosagi.com>
 Return-path: <linux-pci-owner@vger.kernel.org>
 In-Reply-To: <1419237127-21763-1-git-send-email-xobs@kosagi.com>
@@ -10,98 +10,59 @@ To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutl
 Cc: bunnie@kosagi.com, Sean Cross <xobs@kosagi.com>
 List-Id: devicetree@vger.kernel.org
 
-Some PCIe ports gate power to the slot.  In order to prevent system lockup,
-these boards must enable power to the slot before attempting communication
-over the PCI bus.
+The Innolux N133HSE panel is a 13.3" 1920x1080 panel that contains an
+integrated backlight, and connects via eDP.
+
+It is used in the Kosagi Novena.
 
 Signed-off-by: Sean Cross <xobs@kosagi.com>
 ---
- .../devicetree/bindings/pci/fsl,imx6q-pcie.txt     |  3 +++
- drivers/pci/host/pci-imx6.c                        | 27 ++++++++++++++++++++++
- 2 files changed, 30 insertions(+)
+ drivers/gpu/drm/panel/panel-simple.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-index 6fbba53..a806b68 100644
---- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-+++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-@@ -13,6 +13,9 @@ Required properties:
- - clock-names: Must include the following additional entries:
- 	- "pcie_phy"
- 
-+Optional properties:
-+- bus-supply: A regulator that controls power to the entire bus
-+
- Example:
- 
- 	pcie@0x01000000 {
-diff --git a/drivers/pci/host/pci-imx6.c b/drivers/pci/host/pci-imx6.c
-index 69202d1..8e4f957 100644
---- a/drivers/pci/host/pci-imx6.c
-+++ b/drivers/pci/host/pci-imx6.c
-@@ -22,6 +22,7 @@
- #include <linux/pci.h>
- #include <linux/platform_device.h>
- #include <linux/regmap.h>
-+#include <linux/regulator/consumer.h>
- #include <linux/resource.h>
- #include <linux/signal.h>
- #include <linux/types.h>
-@@ -39,6 +40,7 @@ struct imx6_pcie {
- 	struct pcie_port	pp;
- 	struct regmap		*iomuxc_gpr;
- 	void __iomem		*mem_base;
-+	struct regulator	*bus_supply;
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index 23de22f..1e16568 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -566,6 +566,29 @@ static const struct panel_desc innolux_n116bge = {
+ 	},
  };
  
- /* PCIe Root Complex registers (memory-mapped) */
-@@ -523,6 +525,7 @@ static struct pcie_host_ops imx6_pcie_host_ops = {
- static int __init imx6_add_pcie_port(struct pcie_port *pp,
- 			struct platform_device *pdev)
- {
-+	struct imx6_pcie *imx6_pcie = to_imx6_pcie(pp);
- 	int ret;
- 
- 	if (IS_ENABLED(CONFIG_PCI_MSI)) {
-@@ -544,9 +547,22 @@ static int __init imx6_add_pcie_port(struct pcie_port *pp,
- 	pp->root_bus_nr = -1;
- 	pp->ops = &imx6_pcie_host_ops;
- 
-+	if (imx6_pcie->bus_supply) {
-+		ret = regulator_enable(imx6_pcie->bus_supply);
-+		if (ret) {
-+			dev_err(pp->dev,
-+				"unable to enable bus supply: %d\n", ret);
-+			return ret;
-+		}
-+	}
++static const struct drm_display_mode innolux_n133hse_ea1_mode = {
++	.clock = 138500,
++	.hdisplay = 1920,
++	.hsync_start = 1920 + 46,
++	.hsync_end = 1920 + 46 + 30,
++	.htotal = 1920 + 160,
++	.vdisplay = 1080,
++	.vsync_start = 1080 + 2,
++	.vsync_end = 1080 + 2 + 4,
++	.vtotal = 1080 + 32,
++	.vrefresh = 60,
++};
 +
- 	ret = dw_pcie_host_init(pp);
- 	if (ret) {
- 		dev_err(&pdev->dev, "failed to initialize host\n");
++static const struct panel_desc innolux_n133hse_ea1 = {
++	.modes = &innolux_n133hse_ea1_mode,
++	.num_modes = 1,
++	.bpc = 8,
++	.size = {
++		.width = 293,
++		.height = 165,
++	},
++};
 +
-+		if (imx6_pcie->bus_supply)
-+			regulator_disable(imx6_pcie->bus_supply);
-+
- 		return ret;
- 	}
- 
-@@ -588,6 +604,17 @@ static int __init imx6_pcie_probe(struct platform_device *pdev)
- 		}
- 	}
- 
-+	/* Fetch bus supply */
-+	imx6_pcie->bus_supply = devm_regulator_get_optional(&pdev->dev, "bus");
-+	if (IS_ERR(imx6_pcie->bus_supply)) {
-+		ret = PTR_ERR(imx6_pcie->bus_supply);
-+		if (ret == -EPROBE_DEFER)
-+			return ret;
-+
-+		dev_err(&pdev->dev, "unable to get bus-supply\n");
-+		return ret;
-+	}
-+
- 	/* Fetch clocks */
- 	imx6_pcie->pcie_phy = devm_clk_get(&pdev->dev, "pcie_phy");
- 	if (IS_ERR(imx6_pcie->pcie_phy)) {
+ static const struct drm_display_mode innolux_n156bge_l21_mode = {
+ 	.clock = 69300,
+ 	.hdisplay = 1366,
+@@ -670,6 +693,9 @@ static const struct of_device_id platform_of_match[] = {
+ 		.compatible = "innolux,n116bge",
+ 		.data = &innolux_n116bge,
+ 	}, {
++		.compatible = "innolux,n133hse-ea1",
++		.data = &innolux_n133hse_ea1,
++	}, {
+ 		.compatible = "innolux,n156bge-l21",
+ 		.data = &innolux_n156bge_l21,
+ 	}, {
 -- 
 2.1.3
