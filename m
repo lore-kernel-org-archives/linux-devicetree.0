@@ -1,59 +1,99 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3] ASoC: add xtensa xtfpga I2S interface and platform
-Date: Mon, 22 Dec 2014 13:48:23 +0000
-Message-ID: <20141222134823.GP17800@sirena.org.uk>
-References: <1417914095-26553-1-git-send-email-jcmvbkbc@gmail.com>
- <CAMo8BfJCPU_ZM0w2Ry9kjU3O+HcWEmp_wgZ44oC7gBLW8DV5jw@mail.gmail.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH 2/2] phy: ti-pipe3: Fix SATA across suspend/resume
+Date: Mon, 22 Dec 2014 19:22:28 +0530
+Message-ID: <5498221C.6010701@ti.com>
+References: <1418990720-3638-1-git-send-email-rogerq@ti.com> <1418990720-3638-3-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="5/6IVfYouxg+lu1D"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAMo8BfJCPU_ZM0w2Ry9kjU3O+HcWEmp_wgZ44oC7gBLW8DV5jw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Max Filippov <jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-xtensa-PjhNF2WwrV/0Sa2dR60CXw@public.gmane.org" <linux-xtensa-PjhNF2WwrV/0Sa2dR60CXw@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1418990720-3638-3-git-send-email-rogerq@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>, tony@atomide.com, devicetree <devicetree@vger.kernel.org>
+Cc: nm@ti.com, balbi@ti.com, george.cherian@ti.com, nsekhar@ti.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Roger,
 
---5/6IVfYouxg+lu1D
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Friday 19 December 2014 05:35 PM, Roger Quadros wrote:
+> Failed test case: Boot without SATA drive connected. Suspend/resume
+> the board and then connect SATA drive. It fails to enumerate.
+> 
+> Due to Errata i783 "SATA Lockup After SATA DPLL Unlock/Relock"
+> we can't allow SATA DPLL to be in the unlocked state.
+> The SATA refclk (sata_ref_clk) is the source of the SATA_DPLL.
+> Till now this clock was controlled by the AHCI SATA driver and was being
+> shut off  during system suspend (if the SATA drive was not already attached)
+> causing the SATA DPLL to be unlocked and so causing errata i783.
+> 
+> To prevent sata_ref_clk from being disabled, we move the control of
+> this clock from the SATA AHCI driver to the SATA PHY driver and prevent
+> it from being disabled.
+> 
+> This also fixes the issue of SATA not working on OMAP5/DRA7 when
+> AHCI platform driver is built as a module.
+> 
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> ---
+>  arch/arm/boot/dts/dra7.dtsi  |  4 ++--
+>  arch/arm/boot/dts/omap5.dtsi |  4 ++--
+>  drivers/phy/phy-ti-pipe3.c   | 53 +++++++++++++++++++++++++++++++-------------
+>  3 files changed, 41 insertions(+), 20 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+> index 63bf99b..8c35b84 100644
+> --- a/arch/arm/boot/dts/dra7.dtsi
+> +++ b/arch/arm/boot/dts/dra7.dtsi
+> @@ -1090,8 +1090,8 @@
+>  				      <0x4A096800 0x40>; /* pll_ctrl */
+>  				reg-names = "phy_rx", "phy_tx", "pll_ctrl";
+>  				ctrl-module = <&omap_control_sata>;
+> -				clocks = <&sys_clkin1>;
+> -				clock-names = "sysclk";
+> +				clocks = <&sys_clkin1>, <&sata_ref_clk>;
+> +				clock-names = "sysclk", "refclk";
+>  				#phy-cells = <0>;
+>  			};
+>  
+> diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
+> index b321fdf..bb498e7 100644
+> --- a/arch/arm/boot/dts/omap5.dtsi
+> +++ b/arch/arm/boot/dts/omap5.dtsi
+> @@ -929,8 +929,8 @@
+>  				      <0x4A096800 0x40>; /* pll_ctrl */
+>  				reg-names = "phy_rx", "phy_tx", "pll_ctrl";
+>  				ctrl-module = <&omap_control_sata>;
+> -				clocks = <&sys_clkin>;
+> -				clock-names = "sysclk";
+> +				clocks = <&sys_clkin>, <&sata_ref_clk>;
+> +				clock-names = "sysclk", "refclk";
+>  				#phy-cells = <0>;
+>  			};
+>  		};
+> diff --git a/drivers/phy/phy-ti-pipe3.c b/drivers/phy/phy-ti-pipe3.c
+> index e60ff14..e08edd9 100644
+> --- a/drivers/phy/phy-ti-pipe3.c
+> +++ b/drivers/phy/phy-ti-pipe3.c
+> @@ -85,6 +85,7 @@ struct ti_pipe3 {
+>  	struct pipe3_dpll_map	*dpll_map;
+>  	u8			id;
+>  	bool enabled;
+> +	bool refclk_enabled;	/* this flag is needed specifically for SATA */
+>  	spinlock_t lock;	/* serialize clock enable/disable */
+>  };
+>  
+> @@ -333,21 +334,20 @@ static int ti_pipe3_probe(struct platform_device *pdev)
+>  		}
+>  	}
+>  
+> +	phy->refclk = devm_clk_get(phy->dev, "refclk");
+> +	if (IS_ERR(phy->refclk)) {
+> +		dev_err(&pdev->dev, "unable to get refclk\n");
+> +		return PTR_ERR(phy->refclk);
+> +	}
 
-On Mon, Dec 22, 2014 at 11:39:40AM +0300, Max Filippov wrote:
-> On Sun, Dec 7, 2014 at 4:01 AM, Max Filippov <jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > XTFPGA boards provides an audio subsystem that consists of TI CDCE706
-> > clock synthesizer, I2S transmitter and TLV320AIC23 audio codec.
+This will break older dtbs. AFAIK, newer kernels should be compatible with
+older dtbs too. cc'ed devicetree@vger.kernel.org for clarification.
 
-> > I2S transmitter has MMIO-based interface that resembles that of the
-> > OpenCores I2S transmitter. I2S transmitter is always a master on I2S
-> > bus. There's no specialized audio DMA, sample data are transferred to
-> > I2S transmitter FIFO by CPU through memory-mapped queue interface.
-
-> Ping?
-
-Don't send contentless quoted pings; they only add noise - if the patch
-has been lost they can't be applied, if it's waiting for review then
-a nag is just yet more e-mail to read.
-
---5/6IVfYouxg+lu1D
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUmCEmAAoJECTWi3JdVIfQ4lEH/1VozZEL0nqvPHrMlH4eDs82
-hYxbairXMdVhdcUY0uKrCyve6XVWYhCKwSODlWoDKTUaaPmzSTNLj8wHC6vh1xEL
-ta2GJdKcE8JBW1dTlGNi3qjE6I+apvfleg36bDLfGZOm3Gy4G51OHoO3gbxGsMtb
-hpFZJc/yvLTiawJ/rXlpHPTIg1o7zW2d8bd6Jip9XkGTKSD4kMWS4yW9hSYxDT+N
-TLF7kJBnEprf3Xycv3EyK7xRm6Y/f59xtb7thhCwdLH/6dqax0TRjkbp/d7bl0H7
-KIgOnlJxSmX8sm0Ha8aB1F/VjVWaGgjlpneCxnMRgFAqEjZsgzQWZRDjgT0+A74=
-=Nabw
------END PGP SIGNATURE-----
-
---5/6IVfYouxg+lu1D--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks
+Kishon
