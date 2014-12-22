@@ -1,103 +1,100 @@
-From: Pratyush Anand <panand@redhat.com>
-Subject: [PATCH] PCIe: Designware: Do not allow config space through ranges
-Date: Mon, 22 Dec 2014 12:09:04 +0530
-Message-ID: <7dcdee69eb7db8336829e6085d736a3ac7e68ad4.1419229126.git.panand@redhat.com>
-Return-path: <linux-pci-owner@vger.kernel.org>
-Sender: linux-pci-owner@vger.kernel.org
-To: mohit.kumar@st.com, jg1.han@samsung.com, l.stach@pengutronix.de, shawn.guo@freescale.com
-Cc: Pratyush Anand <panand@redhat.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
+From: Josh Wu <josh.wu@atmel.com>
+Subject: Re: [PATCH 6/7] ARM: at91: dts: sama5d3: add ov2640 camera sensor
+ support
+Date: Mon, 22 Dec 2014 15:06:07 +0800
+Message-ID: <5497C2DF.2040202@atmel.com>
+References: <1418892667-27428-1-git-send-email-josh.wu@atmel.com> <1418892667-27428-7-git-send-email-josh.wu@atmel.com> <20141219210509.GC4885@piout.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20141219210509.GC4885@piout.net>
+Sender: linux-media-owner@vger.kernel.org
+To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: nicolas.ferre@atmel.com, voice.shen@atmel.com, plagnioj@jcrosoft.com, boris.brezillon@free-electrons.com, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-media@vger.kernel.org, g.liakhovetski@gmx.de, laurent.pinchart@ideasonboard.com
 List-Id: devicetree@vger.kernel.org
 
-Config space is need to be allocated using reg property. This patch
-removes possibility of config space allocation through ranges property.
+Hi, Alexandre
 
-To: Mohit Kumar <mohit.kumar@st.com>
-To: Jingo Han <jg1.han@samsung.com>
-To: Lucas Stach <l.stach@pengutronix.de>
-To: Shawn Guo <shawn.guo@freescale.com>
-Cc: linux-pci@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Pratyush Anand <panand@redhat.com>
----
- arch/arm/boot/dts/imx6qdl.dtsi     |  3 +--
- arch/arm/boot/dts/imx6sx.dtsi      |  8 ++++----
- drivers/pci/host/pci-imx6.c        |  2 +-
- drivers/pci/host/pcie-designware.c | 13 -------------
- 4 files changed, 6 insertions(+), 20 deletions(-)
+Thanks for the review.
 
-diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-index 4fc03b7f1cee..f21570847d08 100644
---- a/arch/arm/boot/dts/imx6qdl.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl.dtsi
-@@ -143,8 +143,7 @@
- 			#address-cells = <3>;
- 			#size-cells = <2>;
- 			device_type = "pci";
--			ranges = <0x00000800 0 0x01f00000 0x01f00000 0 0x00080000 /* configuration space */
--				  0x81000000 0 0          0x01f80000 0 0x00010000 /* downstream I/O */
-+			ranges = 0x81000000 0 0          0x01f80000 0 0x00010000 /* downstream I/O */
- 				  0x82000000 0 0x01000000 0x01000000 0 0x00f00000>; /* non-prefetchable memory */
- 			num-lanes = <1>;
- 			interrupts = <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>;
-diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
-index 7a24fee1e7ae..72593a77455e 100644
---- a/arch/arm/boot/dts/imx6sx.dtsi
-+++ b/arch/arm/boot/dts/imx6sx.dtsi
-@@ -1197,14 +1197,14 @@
- 
- 		pcie: pcie@0x08000000 {
- 			compatible = "fsl,imx6sx-pcie", "snps,dw-pcie";
--			reg = <0x08ffc000 0x4000>; /* DBI */
-+			reg = <0x08ffc000 0x4000>, /* DBI */
-+				<0x08f00000 0x80000>;
-+			reg-names = "dbi", "config";
- 			#address-cells = <3>;
- 			#size-cells = <2>;
- 			device_type = "pci";
--				  /* configuration space */
--			ranges = <0x00000800 0 0x08f00000 0x08f00000 0 0x00080000
- 				  /* downstream I/O */
--				  0x81000000 0 0          0x08f80000 0 0x00010000
-+			ranges =  0x81000000 0 0          0x08f80000 0 0x00010000
- 				  /* non-prefetchable memory */
- 				  0x82000000 0 0x08000000 0x08000000 0 0x00f00000>;
- 			num-lanes = <1>;
-diff --git a/drivers/pci/host/pci-imx6.c b/drivers/pci/host/pci-imx6.c
-index fdb95367721e..dae452984ed3 100644
---- a/drivers/pci/host/pci-imx6.c
-+++ b/drivers/pci/host/pci-imx6.c
-@@ -572,7 +572,7 @@ static int __init imx6_pcie_probe(struct platform_device *pdev)
- 	hook_fault_code(16 + 6, imx6q_pcie_abort_handler, SIGBUS, 0,
- 		"imprecise external abort");
- 
--	dbi_base = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	dbi_base = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
- 	pp->dbi_base = devm_ioremap_resource(&pdev->dev, dbi_base);
- 	if (IS_ERR(pp->dbi_base))
- 		return PTR_ERR(pp->dbi_base);
-diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-designware.c
-index df781cdf13c1..0b22b42e1ff9 100644
---- a/drivers/pci/host/pcie-designware.c
-+++ b/drivers/pci/host/pcie-designware.c
-@@ -409,19 +409,6 @@ int __init dw_pcie_host_init(struct pcie_port *pp)
- 			pp->mem_mod_base = of_read_number(parser.range -
- 							  parser.np + na, ns);
- 		}
--		if (restype == 0) {
--			of_pci_range_to_resource(&range, np, &pp->cfg);
--			pp->cfg0_size = resource_size(&pp->cfg)/2;
--			pp->cfg1_size = resource_size(&pp->cfg)/2;
--			pp->cfg0_base = pp->cfg.start;
--			pp->cfg1_base = pp->cfg.start + pp->cfg0_size;
--
--			/* Find the untranslated configuration space address */
--			pp->cfg0_mod_base = of_read_number(parser.range -
--							   parser.np + na, ns);
--			pp->cfg1_mod_base = pp->cfg0_mod_base +
--					    pp->cfg0_size;
--		}
- 	}
- 
- 	ret = of_pci_parse_bus_range(np, &pp->busn);
--- 
-2.1.0
+On 12/20/2014 5:05 AM, Alexandre Belloni wrote:
+> On 18/12/2014 at 16:51:06 +0800, Josh Wu wrote :
+>> According to v4l2 dt document, we add:
+>>    a camera host: ISI port.
+>>    a i2c camera sensor: ov2640 port.
+>> to sama5d3xmb.dtsi.
+>>
+>> In the ov2640 node, it defines the pinctrls, clocks and isi port.
+>> In the ISI node, it also reference to a ov2640 port.
+>>
+>> Signed-off-by: Josh Wu <josh.wu@atmel.com>
+>> ---
+>>   arch/arm/boot/dts/sama5d3xmb.dtsi | 32 ++++++++++++++++++++++++++++++++
+>>   1 file changed, 32 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/sama5d3xmb.dtsi b/arch/arm/boot/dts/sama5d3xmb.dtsi
+>> index 0aaebc6..958a528 100644
+>> --- a/arch/arm/boot/dts/sama5d3xmb.dtsi
+>> +++ b/arch/arm/boot/dts/sama5d3xmb.dtsi
+>> @@ -52,6 +52,29 @@
+>>   				};
+>>   			};
+>>   
+>> +			i2c1: i2c@f0018000 {
+>> +				ov2640: camera@0x30 {
+>> +					compatible = "ovti,ov2640";
+>> +					reg = <0x30>;
+>> +					pinctrl-names = "default";
+>> +					pinctrl-0 = <&pinctrl_isi_pck_as_mck &pinctrl_sensor_power &pinctrl_sensor_reset>;
+> I've acked your previous patch but maybe it should be named
+> pinctrl_isi_pck1_as_mck to be clearer (you used the handle to pck1
+> below).
+It's a good idea. Maybe I prefer to use the name: pinctrl_pck1_as_isi_mck ?
+If you are ok with this name, in next version, I will add one more patch 
+in the series to do this.
+And I will keep your acked-by in my previous patch.
+
+Best Regards,
+Josh Wu
+
+>
+>> +					resetb-gpios = <&pioE 24 GPIO_ACTIVE_LOW>;
+>> +					pwdn-gpios = <&pioE 29 GPIO_ACTIVE_HIGH>;
+>> +					/* use pck1 for the master clock of ov2640 */
+>> +					clocks = <&pck1>;
+>> +					clock-names = "xvclk";
+>> +					assigned-clocks = <&pck1>;
+>> +					assigned-clock-rates = <25000000>;
+>> +
+>> +					port {
+>> +						ov2640_0: endpoint {
+>> +							remote-endpoint = <&isi_0>;
+>> +							bus-width = <8>;
+>> +						};
+>> +					};
+>> +				};
+>> +			};
+>> +
+>>   			usart1: serial@f0020000 {
+>>   				dmas = <0>, <0>;	/*  Do not use DMA for usart1 */
+>>   				pinctrl-names = "default";
+>> @@ -60,6 +83,15 @@
+>>   			};
+>>   
+>>   			isi: isi@f0034000 {
+>> +				port {
+>> +					#address-cells = <1>;
+>> +					#size-cells = <0>;
+>> +
+>> +					isi_0: endpoint {
+>> +						remote-endpoint = <&ov2640_0>;
+>> +						bus-width = <8>;
+>> +					};
+>> +				};
+>>   			};
+>>   
+>>   			mmc1: mmc@f8000000 {
+>> -- 
+>> 1.9.1
+>>
