@@ -1,59 +1,64 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v7 1/4] doc: add bindings document for altera fpga manager
-Date: Sun, 21 Dec 2014 20:38:13 -0600
-Message-ID: <CAL_Jsq+bwnA14RALT9WWZ=wzt7akjPOJ8s5878CcgkU4EDRC4Q@mail.gmail.com>
-References: <1419007551-10040-1-git-send-email-atull@opensource.altera.com> <1419007551-10040-2-git-send-email-atull@opensource.altera.com>
+From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3] input: Add new sun4i-lradc-keys driver
+Date: Sun, 21 Dec 2014 18:51:41 -0800
+Message-ID: <20141222025141.GC30082@dtor-ws>
+References: <1418898193-9160-1-git-send-email-hdegoede@redhat.com>
+ <20141218175153.GA34618@dtor-ws>
+ <54955315.3030603@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1419007551-10040-2-git-send-email-atull@opensource.altera.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Alan Tull <atull@opensource.altera.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, "H. Peter Anvin" <hpa@zytor.com>, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Randy Dunlap <rdunlap@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, iws@ovro.caltech.edu, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Pavel Machek <pavel@denx.de>, Mark Brown <broonie@kernel.org>, Philip Balister <philip@balister.org>, Alessandro Rubini <rubini@gnudd.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Jason Cooper <jason@lakedaemon.net>, Kyle Teske <kyle.teske@ni.com>, Nicolas Pitre <nico@linaro.org>, Felipe Balbi <balbi>
+Return-path: <linux-sunxi+bncBDP6N55ZUYDRBQMO32SAKGQEJM63M7A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <54955315.3030603-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 19, 2014 at 10:45 AM,  <atull@opensource.altera.com> wrote:
-> From: Alan Tull <atull@opensource.altera.com>
->
-> New bindings document for Altera fpga manager.
->
-> Signed-off-by: Alan Tull <atull@opensource.altera.com>
-> ---
-> v5 : Move bindings to drivers/staging/fpga/Documentation/bindings
->
-> v6 : No change in this patch for v6 of the patch set
->
-> v7 : No change in this patch for v7 of the patch set
-> ---
->  .../Documentation/bindings/altera-fpga-mgr.txt     |   17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
->  create mode 100644 drivers/staging/fpga/Documentation/bindings/altera-fpga-mgr.txt
->
-> diff --git a/drivers/staging/fpga/Documentation/bindings/altera-fpga-mgr.txt b/drivers/staging/fpga/Documentation/bindings/altera-fpga-mgr.txt
-> new file mode 100644
-> index 0000000..373af7b
-> --- /dev/null
-> +++ b/drivers/staging/fpga/Documentation/bindings/altera-fpga-mgr.txt
-> @@ -0,0 +1,17 @@
-> +Altera FPGA Manager
-> +
-> +Required properties:
-> +- compatible : should contain "altr,fpga-mgr"
-> +- reg        : base address and size for memory mapped io.
-> +               - The first index is for FPGA manager register access.
-> +               - The second index is for writing FPGA configuration data.
-> +- interrupts : interrupt for the FPGA Manager device.
-> +
-> +Example:
-> +
-> +       hps_0_fpgamgr: fpgamgr@0xff706000 {
-> +               compatible = "altr,fpga-mgr";
+On Sat, Dec 20, 2014 at 11:44:37AM +0100, Hans de Goede wrote:
+> Hi Dmitry,
+> 
+> On 18-12-14 18:51, Dmitry Torokhov wrote:
+> >Hi Hans,
+> >
+> >On Thu, Dec 18, 2014 at 11:23:13AM +0100, Hans de Goede wrote:
+> >>Allwinnner sunxi SoCs have a low resolution adc (called lradc) which is
+> >>specifically designed to have various (tablet) keys (ie home, back, search,
+> >>etc). attached to it using a resistor network. This adds a driver for this.
+> >>
+> >>There are 2 channels, currently this driver only supports chan0 since there
+> >>are no boards known to use chan1.
+> >>
+> >>This has been tested on an olimex a10s-olinuxino-micro, a13-olinuxino, and
+> >>a20-olinuxino-micro.
+> >>
+> >>Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> >>--
+> >>Changes in v2:
+> >>-Change devicetree bindings to use a per key subnode, like gpio-keys does
+> >>Changes in v3:
+> >>-Handle keyup irq flag before irqdown, in case we get both at once
+> >
+> >Thank you for making changes. Can you please tell me if the driver still
+> >works if you drop the patch below on top of it? The changes are:
+> >
+> >- split DT parsing into a separate function;
+> >- make sure keymap is not empty;
+> >- change 'ret' variable to 'error';
+> 
+> The proposed changes look good, and I've given them a test-spin and everything
+> still works fine.
 
-Is "FPGA Manager" what the block is called or the name for the Linux
-subsystem?" The name should reflect the h/w block name. Also, is the
-block the same in every chip?
+Excellent, folded and applied.
 
-This binding doesn't look complex or likely to change, so it can be
-out of staging unless you expect it to change.
+Thanks.
 
-Rob
+-- 
+Dmitry
