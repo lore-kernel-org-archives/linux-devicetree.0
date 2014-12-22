@@ -1,33 +1,31 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH 3/4] clk: samsung: exynos7: add clocks for audio block
-Date: Mon, 22 Dec 2014 16:08:26 +0100
-Message-ID: <549833EA.8040506@samsung.com>
-References: <1418995427-7712-1-git-send-email-padma.v@samsung.com>
- <1418995427-7712-4-git-send-email-padma.v@samsung.com>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] dma: imx-dma.c:  Remove unused function
+Date: Mon, 22 Dec 2014 21:05:17 +0530
+Message-ID: <20141222153517.GO16827@intel.com>
+References: <1419182302-9672-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1418995427-7712-4-git-send-email-padma.v@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Padmavathi Venna <padma.v@samsung.com>, devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, mturquette@linaro.org, tomasz.figa@gmail.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1419182302-9672-1-git-send-email-rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
+Cc: Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Sun, Dec 21, 2014 at 06:18:22PM +0100, Rickard Strandqvist wrote:
+> Remove the function is_imx21_dma() that is not used anywhere.
+> 
+> This was partially found by using a static code analysis program called cppcheck.
+> 
+Please ensure you use *right* subsystem name
 
-On 19/12/14 14:23, Padmavathi Venna wrote:
-> Add required clk support for I2S,PCM amd SPDIF
-
-There is a non-trivial conflict with the MSCL CMU patch, could you
-please resend rebased onto my exynos7 branch:
-
-git://linuxtv.org/snawrocki/samsung.git for-v3.20/clk/exynos7 ?
-
-Is exynos7420 documentation applicable to this ?
-Would be nice to have someone else who has access to the SoC
-documentation replied with a Reviewed-by tag.
+Applied, thanks
 
 -- 
-Thanks,
-Sylwester
+~Vinod
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
