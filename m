@@ -1,46 +1,70 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC v1 PATCH 1/2] of/pci: add of_pci_dma_configure() update dma configuration
-Date: Mon, 22 Dec 2014 23:24:33 +0100
-Message-ID: <2285493.QXo0OxClZ5@wuerfel>
-References: <1418940425-2017-1-git-send-email-m-karicheri2@ti.com> <11285984.OK9CqQGmjZ@wuerfel> <54988FDB.8000108@ti.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: [PATCHv3] DT: leds: Add flash LED devices related properties (fwd)
+ (fwd)
+Date: Mon, 22 Dec 2014 23:27:29 +0100
+Message-ID: <20141222222729.GA19981@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <54988FDB.8000108@ti.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Murali Karicheri <m-karicheri2@ti.com>
-Cc: bhelgaas@google.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, grant.likely@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, will.deacon@arm.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: linux-doc-owner@vger.kernel.org
+To: j.anaszewski@samsung.com, sakari.ailus@iki.fi, devicetree@vger.kernel.org, linux-leds@vger.kernel.org, linux-doc@vger.kernel.org, cooloney@gmail.com, rpurdie@rpsys.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net
 List-Id: devicetree@vger.kernel.org
 
-On Monday 22 December 2014 16:40:43 Murali Karicheri wrote:
-> >> +++ b/arch/arm/mm/dma-mapping.c
-> >> @@ -2052,9 +2052,10 @@ void arch_setup_dma_ops(struct device *dev, u64
-> >> dma_base, u64 size,
-> >>                           struct iommu_ops *iommu, bool coherent)
-> >>    {
-> >>           struct dma_map_ops *dma_ops;
-> >> +       u64 temp_size = min((*(dev->dma_mask) + 1), size);
-> >>
-> >>           dev->archdata.dma_coherent = coherent;
-> >> -       if (arm_setup_iommu_dma_ops(dev, dma_base, size, iommu))
-> >> +       if (arm_setup_iommu_dma_ops(dev, dma_base, temp_size, iommu))
-> >>
-> >> If you agree, I will post v1 of the patch with these updates. Let me
-> >> know. I did some basic tests on Keystone with these changes and it works
-> >> fine.
-> >
-> > It's not exactly what I meant. My main point was that we need to limit
-> > dev->dma_mask to (size-1) here, but you are not touching that.
-> 
-> if you mean overriding the dev->dma_mask to min((*dev->dma_mask), 
-> size-1), then I am getting the error "Coherent DMA mask 0x7fffffff (pfn 
-> 0x780000-0x800000) covers a smaller range of system memory than the DMA 
-> zone pfn 0x0-0x880000) when the devices on Keystone tries to set the dma 
-> mask. Something wrong and I need to look into the code.
+Addition of a LED Flash class extension entails the need for flash LED
+specific device tree properties. The properties being added are:
+max-microamp, flash-max-microamp, flash-timeout-microsec.
 
-Right, it sounds like the offset was applied incorrectly at some point.
+Signed-off-by: Pavel Machek <pavel@ucw.cz>
+Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Acked-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+Acked-by: Rob Herring <robh@kernel.org>
 
-What are the DMA zone size and the phys-offset?
+---
 
-	Arnd
+This will allow me to add device tree support for adp1653 i2c flash
+LED driver, and allow Jacek Anaszewski to add support for more LED
+drivers..
+
+Rob Herring requested to change microsec to us.
+
+Yes, microamp vs. us does look inconsistent, but that's what other
+subsystems do, and what Rob asked.
+
+
+diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
+index 2d88816..e9acbbc 100644
+--- a/Documentation/devicetree/bindings/leds/common.txt
++++ b/Documentation/devicetree/bindings/leds/common.txt
+@@ -14,6 +14,15 @@ Optional properties for child nodes:
+      "ide-disk" - LED indicates disk activity
+      "timer" - LED flashes at a fixed, configurable rate
+ 
++- max-microamp : maximum intensity in microamperes of the LED
++  	         (torch LED for flash devices)
++- flash-max-microamp : maximum intensity in microamperes of the
++                       flash LED; it is mandatory if the LED should
++		       support the flash mode
++- flash-timeout-us : timeout in microseconds after which the flash
++                     LED is turned off
++
++
+ Examples:
+ 
+ system-status {
+@@ -21,3 +30,10 @@ system-status {
+ 	linux,default-trigger = "heartbeat";
+ 	...
+ };
++
++camera-flash {
++	label = "Flash";
++	max-microamp = <50000>;
++	flash-max-microamp = <320000>;
++	flash-timeout-us = <500000>;
++}
+
+
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
