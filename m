@@ -1,33 +1,76 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] scripts: dtc: libfdt: fdt_rw.c: Remove some unused functions
-Date: Sun, 21 Dec 2014 17:22:02 -0600
-Message-ID: <CAL_JsqJnR5b-xoxxVV1R6PrCSz-uziKyUOWR8QoyTizmBEUGyg@mail.gmail.com>
-References: <1419183632-10349-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] ARM: shmobile: r8a7790: add MLB+ clock
+Date: Mon, 22 Dec 2014 09:06:12 +0900
+Message-ID: <20141222000610.GG29188@verge.net.au>
+References: <2277336.BnuIY8UiP8@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1419183632-10349-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <2277336.BnuIY8UiP8@wasted.cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Dec 21, 2014 at 11:40 AM, Rickard Strandqvist
-<rickard_strandqvist@spectrumdigital.se> wrote:
-> Removes some functions that are not used anywhere:
-> fdt_delprop() fdt_add_mem_rsv()
->
-> This was partially found by using a static code analysis program called cppcheck.
->
-> Signed-off-by: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
+On Thu, Dec 18, 2014 at 11:41:52PM +0300, Sergei Shtylyov wrote:
+> From: Andrey Gusakov <andrey.gusakov@cogentembedded.com>
+> 
+> Add MLB+ clock to R8A7790 device tree.
+> 
+> Signed-off-by: Andrey Gusakov <andrey.gusakov@cogentembedded.com>
+> [Sergei: rebased, renamed, added changelog]
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> 
 > ---
->  scripts/dtc/libfdt/fdt_rw.c |   32 -----------------------------
->  scripts/dtc/libfdt/libfdt.h |   48 -------------------------------------------
->  2 files changed, 80 deletions(-)
+> This patch is against 'renesas-devel-20141218-v3.18' tag of Simon Horman's
+> 'renesas.git' repo.
 
-These sources are just imported unmodified from libfdt, so we don't
-want to be changing them in the kernel. Also, I think these functions
-could be needed at some point. Getting -ffunction-sections to work
-with the kernel would be the right way to solve this IMHO.
+Thanks, I have queued this up.
 
-Rob
+> 
+>  arch/arm/boot/dts/r8a7790.dtsi            |   13 +++++++------
+>  include/dt-bindings/clock/r8a7790-clock.h |    1 +
+>  2 files changed, 8 insertions(+), 6 deletions(-)
+> 
+> Index: renesas/arch/arm/boot/dts/r8a7790.dtsi
+> ===================================================================
+> --- renesas.orig/arch/arm/boot/dts/r8a7790.dtsi
+> +++ renesas/arch/arm/boot/dts/r8a7790.dtsi
+> @@ -1149,16 +1149,17 @@
+>  		mstp8_clks: mstp8_clks@e6150990 {
+>  			compatible = "renesas,r8a7790-mstp-clocks", "renesas,cpg-mstp-clocks";
+>  			reg = <0 0xe6150990 0 4>, <0 0xe61509a0 0 4>;
+> -			clocks = <&zg_clk>, <&zg_clk>, <&zg_clk>, <&zg_clk>, <&p_clk>,
+> -				 <&zs_clk>, <&zs_clk>;
+> +			clocks = <&hp_clk>, <&zg_clk>, <&zg_clk>, <&zg_clk>,
+> +			         <&zg_clk>, <&p_clk>, <&zs_clk>, <&zs_clk>;
+>  			#clock-cells = <1>;
+>  			clock-indices = <
+> -				R8A7790_CLK_VIN3 R8A7790_CLK_VIN2 R8A7790_CLK_VIN1
+> -				R8A7790_CLK_VIN0 R8A7790_CLK_ETHER R8A7790_CLK_SATA1
+> -				R8A7790_CLK_SATA0
+> +				R8A7790_CLK_MLB R8A7790_CLK_VIN3 R8A7790_CLK_VIN2
+> +				R8A7790_CLK_VIN1 R8A7790_CLK_VIN0 R8A7790_CLK_ETHER
+> +				R8A7790_CLK_SATA1 R8A7790_CLK_SATA0
+>  			>;
+>  			clock-output-names =
+> -				"vin3", "vin2", "vin1", "vin0", "ether", "sata1", "sata0";
+> +				"mlb", "vin3", "vin2", "vin1", "vin0", "ether",
+> +				"sata1", "sata0";
+>  		};
+>  		mstp9_clks: mstp9_clks@e6150994 {
+>  			compatible = "renesas,r8a7790-mstp-clocks", "renesas,cpg-mstp-clocks";
+> Index: renesas/include/dt-bindings/clock/r8a7790-clock.h
+> ===================================================================
+> --- renesas.orig/include/dt-bindings/clock/r8a7790-clock.h
+> +++ renesas/include/dt-bindings/clock/r8a7790-clock.h
+> @@ -97,6 +97,7 @@
+>  #define R8A7790_CLK_LVDS0		26
+>  
+>  /* MSTP8 */
+> +#define R8A7790_CLK_MLB		2
+>  #define R8A7790_CLK_VIN3		8
+>  #define R8A7790_CLK_VIN2		9
+>  #define R8A7790_CLK_VIN1		10
+> 
