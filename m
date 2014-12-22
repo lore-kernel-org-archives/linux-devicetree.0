@@ -1,31 +1,35 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] dma: imx-dma.c:  Remove unused function
-Date: Mon, 22 Dec 2014 21:05:17 +0530
-Message-ID: <20141222153517.GO16827@intel.com>
-References: <1419182302-9672-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: [PATCH] dma-mapping: fix debug print to display correct dma_pfn_offset
+Date: Mon, 22 Dec 2014 10:35:09 -0500
+Message-ID: <1419262509-9811-1-git-send-email-m-karicheri2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1419182302-9672-1-git-send-email-rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
-Cc: Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: grant.likely@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Murali Karicheri <m-karicheri2@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Dec 21, 2014 at 06:18:22PM +0100, Rickard Strandqvist wrote:
-> Remove the function is_imx21_dma() that is not used anywhere.
-> 
-> This was partially found by using a static code analysis program called cppcheck.
-> 
-Please ensure you use *right* subsystem name
+fix the dev_dbg to display the offset which is the calculated
+dma_pfn_offset value and set later in the code.
 
-Applied, thanks
+Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+---
+ drivers/of/platform.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index 5b33c6a..a54ec10 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -188,7 +188,7 @@ static void of_dma_configure(struct device *dev)
+ 		size = dev->coherent_dma_mask;
+ 	} else {
+ 		offset = PFN_DOWN(paddr - dma_addr);
+-		dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", dev->dma_pfn_offset);
++		dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", offset);
+ 	}
+ 	dev->dma_pfn_offset = offset;
+ 
 -- 
-~Vinod
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.9.5
