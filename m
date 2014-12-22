@@ -1,97 +1,61 @@
-From: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH] [v2] power/fsl: add MDIO dt binding for FMan
-Date: Mon, 22 Dec 2014 02:20:54 -0600
-Message-ID: <5497D466.9090804@Freescale.com>
-References: <1415958800-9867-1-git-send-email-shh.xie@gmail.com>
-	 <1416966592.15957.172.camel@freescale.com>
-	 <DM2PR0301MB08641FB289DBA17AD59FBEA0E26A0@DM2PR0301MB0864.namprd03.prod.outlook.com>
-	 <1418940078.5581.143.camel@freescale.com>
-	 <DM2PR0301MB0864AA31CD1A7438F476020FE26B0@DM2PR0301MB0864.namprd03.prod.outlook.com>
- <1419030955.5581.154.camel@freescale.com>
- <DM2PR0301MB086427C10254A0A749CD1326E2560@DM2PR0301MB0864.namprd03.prod.outlook.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] PCIe: Designware: Do not allow config space through ranges
+Date: Mon, 22 Dec 2014 09:30:13 +0100
+Message-ID: <5459567.EisgEvQXh9@wuerfel>
+References: <7dcdee69eb7db8336829e6085d736a3ac7e68ad4.1419229126.git.panand@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <DM2PR0301MB086427C10254A0A749CD1326E2560-Cwg/PA1lyPnq20u2fDgSrZwN6zqB+hSMnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Xie Shaohui-B21989 <Shaohui.Xie-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>, Wood Scott-B07421 <scottwood-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
-Cc: "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liberman Igal-B31950 <Igal.Liberman-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <7dcdee69eb7db8336829e6085d736a3ac7e68ad4.1419229126.git.panand@redhat.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Pratyush Anand <panand@redhat.com>
+Cc: mohit.kumar@st.com, jg1.han@samsung.com, l.stach@pengutronix.de, shawn.guo@freescale.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Shao-Hui,
+On Monday 22 December 2014 12:09:04 Pratyush Anand wrote:
+> Config space is need to be allocated using reg property. This patch
+> removes possibility of config space allocation through ranges property.
+> 
+> To: Mohit Kumar <mohit.kumar@st.com>
+> To: Jingo Han <jg1.han@samsung.com>
+> To: Lucas Stach <l.stach@pengutronix.de>
+> To: Shawn Guo <shawn.guo@freescale.com>
+> Cc: linux-pci@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Pratyush Anand <panand@redhat.com>
+> ---
+>  arch/arm/boot/dts/imx6qdl.dtsi     |  3 +--
+>  arch/arm/boot/dts/imx6sx.dtsi      |  8 ++++----
 
+changing the DT files is probably ok.
 
-On 12/21/2014 08:31 PM, Xie Shaohui-B21989 wrote:
->> On Fri, 2014-12-19 at 01:23 -0600, Xie Shaohui-B21989 wrote:
->>>> -----Original Message-----
->>>> From: Wood Scott-B07421
->>>> Sent: Friday, December 19, 2014 6:01 AM
->>>> To: Xie Shaohui-B21989
->>>> Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Medve
->>>> Emilian- EMMEDVE1; Liberman Igal-B31950
->>>> Subject: Re: [PATCH] [v2] power/fsl: add MDIO dt binding for FMan
->>>>
->>>> On Thu, 2014-12-18 at 06:53 -0600, Xie Shaohui-B21989 wrote:
->>>>> Ping.
->>>>>
->>>>> Best Regards,
->>>>> Shaohui Xie
->>>>
->>>> I can't put patches in my -next until the merge window closes.
->>>>
->>>>>>>> +EXAMPLE
->>>>>>>> +
->>>>>>>> +Example for FMan v2 external MDIO:
->>>>>>>> +
->>>>>>>> +mdio@f1000 {
->>>>>>>> +	compatible = "fsl,fman-xmdio";
->>>>>>>> +	reg = <0xf1000 0x1000>;
->>>>>>>> +	bus-frequency = <20000>;
->>>>>>>> +};
->>>>>>>
->>>>>>> So the bus frequency is only 20 KHz?  Or is the unit supposed
->>>>>>> to be something other than Hz?
->>>>>> [S.H] it's only an example, it could be different on real SoCs,
->>>>>> but they always lower than the standard one, The standard one is
->>>>>> 2.5MHz, I have
->>>> to use Hz for it.
->>>>
->>>> Is there any SoC for which 20 kHz is the right frequency?  I just
->>>> want to make sure the example is realistic.
->>> [S.H] the clock divider has a limitation that the MAX value it can get
->>> on Fman v2 is 255 (0xff, 8 bits), On Fman v3 is 511(0x1ff, 9 bits).
->>>
->>> So the lowest frequency on Fman v2 is: Fman_clock / (2 * 255), On Fman
->>> v3 is: Fman_clock / ((2 * 511) + 1).
->>>
->>> Take default Fman frequency setting from SDK1.7 as example, the lowest
->>> clock used for Fman v2 is 581MHz, The lowest clock for Fman v3 is 600MHz.
->>>
->>> Then the lowest bus frequency can get is:
->>> Fman v2: ~1140KHz
->>> Fman v3: ~587KHz
->>>
->>> 20KHz is not practice, we don't have a suggested value in errata document.
->>> For this example, should I post a new version with a value like 1200KHz?
->>
->> This is different from how you described the problem before.  If the limitation
->> is on the divider, rather than the absolute bus frequency, then specifiy the max
->> divider.  Or better, since according to the above this correlates with fman
->> version, just have the driver know what the max divider is for each fman version.
-> [S.H] The problem is not the divider has limitation, the problem is a different bus frequency 
-> Is needed which is lower than the standard, but due to the divider limitation, the lowest
-> bus frequency also has limitation. i.e. we need to use the divider to get a lower frequency,
-> but how much lower the value could be is restricted by the divider limitation.
+> diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-designware.c
+> index df781cdf13c1..0b22b42e1ff9 100644
+> --- a/drivers/pci/host/pcie-designware.c
+> +++ b/drivers/pci/host/pcie-designware.c
+> @@ -409,19 +409,6 @@ int __init dw_pcie_host_init(struct pcie_port *pp)
+>  			pp->mem_mod_base = of_read_number(parser.range -
+>  							  parser.np + na, ns);
+>  		}
+> -		if (restype == 0) {
+> -			of_pci_range_to_resource(&range, np, &pp->cfg);
+> -			pp->cfg0_size = resource_size(&pp->cfg)/2;
+> -			pp->cfg1_size = resource_size(&pp->cfg)/2;
+> -			pp->cfg0_base = pp->cfg.start;
+> -			pp->cfg1_base = pp->cfg.start + pp->cfg0_size;
+> -
+> -			/* Find the untranslated configuration space address */
+> -			pp->cfg0_mod_base = of_read_number(parser.range -
+> -							   parser.np + na, ns);
+> -			pp->cfg1_mod_base = pp->cfg0_mod_base +
+> -					    pp->cfg0_size;
+> -		}
+>  	}
 
-For the purpose of an example in the binding document, I suggest we just
-stick with the IEEE standard frequency. We can continue this
-conversation about errata handling when we submit the code relevant to
-this binding (and the FMan v3 support)
+Since we've allowed this for so long, it may be better to leave this
+in for compatibility with old dts files. It would however be good to
+print a warning message. We could also limit it to those machines that
+are known to have been used with this property in the past.
 
-
-Cheers,
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
