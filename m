@@ -1,44 +1,31 @@
-From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 0/4] clk: mediatek: Add common clock support for
- Mediatek MT8135.
-Date: Mon, 22 Dec 2014 15:46:59 +0800
-Message-ID: <1419234419.24116.7.camel@mtksdaap41>
-References: <1417675942-10502-1-git-send-email-jamesjj.liao@mediatek.com>
+From: Evgeni Dobrev <evgeni-c3HRhe8yoGxdzLpqerNdyw@public.gmane.org>
+Subject: [PATCH v2 0/1] add support for Seagate BlackArmor NAS220
+Date: Mon, 22 Dec 2014 09:04:00 +0100
+Message-ID: <20141222080400.GA15278@anne>
+References: <20141215203855.GA28940@anne>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1417675942-10502-1-git-send-email-jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20141215203855.GA28940@anne>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yingjoe Chen <Yingjoe.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, HenryC Chen <HenryC.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+v2:	indent with tabs only
+	removed NAND layout
 
-On Thu, 2014-12-04 at 14:52 +0800, James Liao wrote:
-> This patchset contains the initial common clock support for Mediatek SoCs.
-> Mediatek SoC's clock architecture comprises of various PLLs, dividers,
-> muxes and clock gates.
-> 
-> This patchset also contains a basic clock support for Mediatek MT8135.
-> 
-> This driver is based on 3.18-rc1 + MT8135 basic support.
-> 
-> James Liao (4):
->   clk: dts: mediatek: add Mediatek MT8135 clock bindings
->   clk: mediatek: Add initial common clock support for Mediatek SoCs.
->   clk: mediatek: Add basic clocks for Mediatek MT8135.
->   dts: mediatek: Enable clock support for Mediatek MT8135.
-> 
+Evgeni Dobrev (1):
+  add support for Seagate BlackArmor NAS220
 
-Hi,
+ arch/arm/boot/dts/Makefile            |    1 +
+ arch/arm/boot/dts/kirkwood-nas220.dts |  158 +++++++++++++++++++++++++++++++++
+ 2 files changed, 159 insertions(+)
+ create mode 100644 arch/arm/boot/dts/kirkwood-nas220.dts
 
-Any comment for this patchset?
-
-
-Best regards,
-James
-
+-- 
+1.7.10.4
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
