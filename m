@@ -1,49 +1,35 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: [PATCH 1/2] DT: mxs-lradc: fix ranges of ts properties
-Date: Mon, 22 Dec 2014 12:14:35 +0000
-Message-ID: <1419250476-2393-2-git-send-email-stefan.wahren@i2se.com>
-References: <1419250476-2393-1-git-send-email-stefan.wahren@i2se.com>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1419250476-2393-1-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kristina.martsenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+From: Evgeni Dobrev <evgeni-c3HRhe8yoGxdzLpqerNdyw@public.gmane.org>
+Subject: [PATCH v3 0/1] add support for Seagate BlackArmor NAS220
+Date: Mon, 22 Dec 2014 13:57:35 +0100
+Message-ID: <20141222125735.GA29062@anne>
+References: <20141215203855.GA28940@anne>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20141215203855.GA28940@anne>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch fixes off-by-one issues in the devicetree binding of
-mxs-lradc.
+v3:	documented UART pinout in dts
 
-According to the i.MX23 and i.MX28 reference manuals [1][2] the range of
-NUM_SAMPLES is 0..31, but property ave-ctrl is substracted by 1 before used.
+v2:	indent with tabs only
+	removed NAND layout
 
-Considering all limitations the range of DELAY is 1..2047, but also
-property ave-delay is substracted by 1 before used.
+Evgeni Dobrev (1):
+  add support for Seagate BlackArmor NAS220
 
-The patch has been suggested by Hartmut Knaack and Kristina Martsenko.
+ arch/arm/boot/dts/Makefile            |    1 +
+ arch/arm/boot/dts/kirkwood-nas220.dts |  166 +++++++++++++++++++++++++++++++++
+ 2 files changed, 167 insertions(+)
+ create mode 100644 arch/arm/boot/dts/kirkwood-nas220.dts
 
-[1] - http://cache.freescale.com/files/dsp/doc/ref_manual/IMX23RM.pdf
-[2] - http://cache.freescale.com/files/dsp/doc/ref_manual/MCIMX28RM.pdf
-
-Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
----
- .../bindings/staging/iio/adc/mxs-lradc.txt         |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt b/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
-index ee05dc3..3075377 100644
---- a/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
-+++ b/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
-@@ -12,9 +12,9 @@ Optional properties:
-                                property is not present, then the touchscreen is
-                                disabled. 5 wires is valid for i.MX28 SoC only.
- - fsl,ave-ctrl: number of samples per direction to calculate an average value.
--                Allowed value is 1 ... 31, default is 4
-+                Allowed value is 1 ... 32, default is 4
- - fsl,ave-delay: delay between consecutive samples. Allowed value is
--                 1 ... 2047. It is used if 'fsl,ave-ctrl' > 1, counts at
-+                 2 ... 2048. It is used if 'fsl,ave-ctrl' > 1, counts at
-                  2 kHz and its default is 2 (= 1 ms)
- - fsl,settling: delay between plate switch to next sample. Allowed value is
-                 1 ... 2047. It counts at 2 kHz and its default is
 -- 
-1.7.9.5
+1.7.10.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
