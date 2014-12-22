@@ -1,214 +1,97 @@
-From: Evgeni Dobrev <evgeni@studio-punkt.com>
-Subject: [PATCH v2 1/1] add support for Seagate BlackArmor NAS220
-Date: Mon, 22 Dec 2014 09:04:45 +0100
-Message-ID: <20141222080445.GA15292@anne>
-References: <20141215203855.GA28940@anne>
+From: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH] [v2] power/fsl: add MDIO dt binding for FMan
+Date: Mon, 22 Dec 2014 02:20:54 -0600
+Message-ID: <5497D466.9090804@Freescale.com>
+References: <1415958800-9867-1-git-send-email-shh.xie@gmail.com>
+	 <1416966592.15957.172.camel@freescale.com>
+	 <DM2PR0301MB08641FB289DBA17AD59FBEA0E26A0@DM2PR0301MB0864.namprd03.prod.outlook.com>
+	 <1418940078.5581.143.camel@freescale.com>
+	 <DM2PR0301MB0864AA31CD1A7438F476020FE26B0@DM2PR0301MB0864.namprd03.prod.outlook.com>
+ <1419030955.5581.154.camel@freescale.com>
+ <DM2PR0301MB086427C10254A0A749CD1326E2560@DM2PR0301MB0864.namprd03.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20141215203855.GA28940@anne>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@googlemail.com>, Gregory Clement <gregory.clement@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <DM2PR0301MB086427C10254A0A749CD1326E2560-Cwg/PA1lyPnq20u2fDgSrZwN6zqB+hSMnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Xie Shaohui-B21989 <Shaohui.Xie-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>, Wood Scott-B07421 <scottwood-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
+Cc: "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liberman Igal-B31950 <Igal.Liberman-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for Seagate BlackArmor NAS220.
+Hello Shao-Hui,
 
-The Seagate BlackArmor NAS 220 is a NAS system based on Marvell 88f6192. It has
-32MB NAND and 128MB DRAM. It has two SATA slots, one Gigabit Ethernet port, two
-USB 2.0 ports, two buttons and three LEDs. There is a serial port available on
-the CN5 connector on the board (1 - TX, 4 - RX, 6 - GND).
 
-The only functionality still not implemented is the bi-color led on the front
-panel (status). Pins mpp22 and mpp23 control this led. Setting mpp22 to high and
-mpp23 to low results in orange color. Setting mpp22 to low and mpp23 to high
-results in blue color.
+On 12/21/2014 08:31 PM, Xie Shaohui-B21989 wrote:
+>> On Fri, 2014-12-19 at 01:23 -0600, Xie Shaohui-B21989 wrote:
+>>>> -----Original Message-----
+>>>> From: Wood Scott-B07421
+>>>> Sent: Friday, December 19, 2014 6:01 AM
+>>>> To: Xie Shaohui-B21989
+>>>> Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Medve
+>>>> Emilian- EMMEDVE1; Liberman Igal-B31950
+>>>> Subject: Re: [PATCH] [v2] power/fsl: add MDIO dt binding for FMan
+>>>>
+>>>> On Thu, 2014-12-18 at 06:53 -0600, Xie Shaohui-B21989 wrote:
+>>>>> Ping.
+>>>>>
+>>>>> Best Regards,
+>>>>> Shaohui Xie
+>>>>
+>>>> I can't put patches in my -next until the merge window closes.
+>>>>
+>>>>>>>> +EXAMPLE
+>>>>>>>> +
+>>>>>>>> +Example for FMan v2 external MDIO:
+>>>>>>>> +
+>>>>>>>> +mdio@f1000 {
+>>>>>>>> +	compatible = "fsl,fman-xmdio";
+>>>>>>>> +	reg = <0xf1000 0x1000>;
+>>>>>>>> +	bus-frequency = <20000>;
+>>>>>>>> +};
+>>>>>>>
+>>>>>>> So the bus frequency is only 20 KHz?  Or is the unit supposed
+>>>>>>> to be something other than Hz?
+>>>>>> [S.H] it's only an example, it could be different on real SoCs,
+>>>>>> but they always lower than the standard one, The standard one is
+>>>>>> 2.5MHz, I have
+>>>> to use Hz for it.
+>>>>
+>>>> Is there any SoC for which 20 kHz is the right frequency?  I just
+>>>> want to make sure the example is realistic.
+>>> [S.H] the clock divider has a limitation that the MAX value it can get
+>>> on Fman v2 is 255 (0xff, 8 bits), On Fman v3 is 511(0x1ff, 9 bits).
+>>>
+>>> So the lowest frequency on Fman v2 is: Fman_clock / (2 * 255), On Fman
+>>> v3 is: Fman_clock / ((2 * 511) + 1).
+>>>
+>>> Take default Fman frequency setting from SDK1.7 as example, the lowest
+>>> clock used for Fman v2 is 581MHz, The lowest clock for Fman v3 is 600MHz.
+>>>
+>>> Then the lowest bus frequency can get is:
+>>> Fman v2: ~1140KHz
+>>> Fman v3: ~587KHz
+>>>
+>>> 20KHz is not practice, we don't have a suggested value in errata document.
+>>> For this example, should I post a new version with a value like 1200KHz?
+>>
+>> This is different from how you described the problem before.  If the limitation
+>> is on the divider, rather than the absolute bus frequency, then specifiy the max
+>> divider.  Or better, since according to the above this correlates with fman
+>> version, just have the driver know what the max divider is for each fman version.
+> [S.H] The problem is not the divider has limitation, the problem is a different bus frequency 
+> Is needed which is lower than the standard, but due to the divider limitation, the lowest
+> bus frequency also has limitation. i.e. we need to use the divider to get a lower frequency,
+> but how much lower the value could be is restricted by the divider limitation.
 
-The third led is wired to show the SATA activity on the two drives.
+For the purpose of an example in the binding document, I suggest we just
+stick with the IEEE standard frequency. We can continue this
+conversation about errata handling when we submit the code relevant to
+this binding (and the FMan v3 support)
 
-Signed-off-by: Evgeni Dobrev <evgeni@studio-punkt.com>
----
- arch/arm/boot/dts/Makefile            |    1 +
- arch/arm/boot/dts/kirkwood-nas220.dts |  158 +++++++++++++++++++++++++++++++++
- 2 files changed, 159 insertions(+)
- create mode 100644 arch/arm/boot/dts/kirkwood-nas220.dts
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 38c89ca..8b9ad1d 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -132,6 +132,7 @@ dtb-$(CONFIG_MACH_KIRKWOOD) += kirkwood-b3.dtb \
- 	kirkwood-lsxhl.dtb \
- 	kirkwood-mplcec4.dtb \
- 	kirkwood-mv88f6281gtw-ge.dtb \
-+	kirkwood-nas220.dtb \
- 	kirkwood-net2big.dtb \
- 	kirkwood-net5big.dtb \
- 	kirkwood-netgear_readynas_duo_v2.dtb \
-diff --git a/arch/arm/boot/dts/kirkwood-nas220.dts b/arch/arm/boot/dts/kirkwood-nas220.dts
-new file mode 100644
-index 0000000..43c9bbc
---- /dev/null
-+++ b/arch/arm/boot/dts/kirkwood-nas220.dts
-@@ -0,0 +1,158 @@
-+/*
-+ * Device Tree file for Seagate BlackArmor NAS220
-+ *
-+ * Copyright (C) 2014 Evgeni Dobrev <evgeni@studio-punkt.com>
-+ *
-+ * Licensed under GPLv2 or later.
-+ */
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include "kirkwood.dtsi"
-+#include "kirkwood-6192.dtsi"
-+
-+/ {
-+	model = "Seagate NAS 220";
-+	compatible = "seagate,nas220","marvell,kirkwood-88f6192","marvell,kirkwood";
-+
-+	memory { /* 128 MB */
-+		device_type = "memory";
-+		reg = <0x00000000 0x8000000>;
-+	};
-+
-+	chosen {
-+		bootargs = "console=ttyS0,115200n8";
-+		stdout-path = &uart0;
-+	};
-+
-+	ocp@f1000000 {
-+		pinctrl: pin-controller@10000 {
-+			pinctrl-0 = <&pmx_uart0
-+				     &pmx_button_reset
-+				     &pmx_button_power>;
-+			pinctrl-names = "default";
-+
-+			pmx_act_sata0: pmx-act-sata0 {
-+				marvell,pins = "mpp15";
-+				marvell,function = "sata0";
-+			};
-+			pmx_act_sata1: pmx-act-sata1 {
-+				marvell,pins = "mpp16";
-+				marvell,function = "sata1";
-+			};
-+			pmx_power_sata0: pmx-power-sata0 {
-+				marvell,pins = "mpp24";
-+				marvell,function = "gpio";
-+			};
-+			pmx_power_sata1: pmx-power-sata1 {
-+				marvell,pins = "mpp28";
-+				marvell,function = "gpio";
-+			};
-+			pmx_button_reset: pmx-button-reset {
-+				marvell,pins = "mpp29";
-+				marvell,function = "gpio";
-+			};
-+			pmx_button_power: pmx-button-power {
-+				marvell,pins = "mpp26";
-+				marvell,function = "gpio";
-+			};
-+		};
-+
-+		serial@12000 {
-+			status = "okay";
-+		};
-+
-+		sata@80000 {
-+			status = "okay";
-+			nr-ports = <2>;
-+		};
-+
-+		i2c@11000 {
-+			status = "okay";
-+			adt7476: adt7476a@2e {
-+				compatible = "adi,adt7476";
-+				reg = <0x2e>;
-+			};
-+		};
-+	};
-+
-+	gpio_poweroff {
-+		compatible = "gpio-poweroff";
-+		gpios = <&gpio0 14 GPIO_ACTIVE_LOW>;
-+	};
-+
-+	gpio_keys {
-+		compatible = "gpio-keys";
-+		button@1{
-+			label = "Reset push button";
-+			linux,code = <KEY_POWER>;
-+			gpios = <&gpio0 29 GPIO_ACTIVE_HIGH>;
-+		};
-+		button@2{
-+			label = "Power push button";
-+			linux,code = <KEY_SLEEP>;
-+			gpios = <&gpio0 26 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+
-+	gpio-leds {
-+		compatible = "gpio-leds";
-+		blue-power {
-+			label = "nas220:blue:power";
-+			gpios = <&gpio0 12 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "default-on";
-+		};
-+	};
-+
-+	regulators {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		pinctrl-0 = <&pmx_power_sata0 &pmx_power_sata1>;
-+		pinctrl-names = "default";
-+
-+		sata0_power: regulator@1 {
-+			compatible = "regulator-fixed";
-+			reg = <1>;
-+			regulator-name = "SATA0 Power";
-+			regulator-min-microvolt = <5000000>;
-+			regulator-max-microvolt = <5000000>;
-+			enable-active-high;
-+			regulator-always-on;
-+			regulator-boot-on;
-+			gpio = <&gpio0 24 0>;
-+		};
-+
-+		sata1_power: regulator@2 {
-+			compatible = "regulator-fixed";
-+			reg = <2>;
-+			regulator-name = "SATA1 Power";
-+			regulator-min-microvolt = <5000000>;
-+			regulator-max-microvolt = <5000000>;
-+			enable-active-high;
-+			regulator-always-on;
-+			regulator-boot-on;
-+			gpio = <&gpio0 28 0>;
-+		};
-+	};
-+};
-+
-+&nand {
-+	status = "okay";
-+};
-+
-+&mdio {
-+	status = "okay";
-+	ethphy0: ethernet-phy@8 {
-+		 reg = <8>;
-+	 };
-+};
-+
-+&eth0 {
-+	status = "okay";
-+	ethernet0-port@0 {
-+		phy-handle = <&ethphy0>;
-+	};
-+};
--- 
-1.7.10.4
+Cheers,
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
