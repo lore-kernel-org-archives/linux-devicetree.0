@@ -1,87 +1,122 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH] [v2] power/fsl: add MDIO dt binding for FMan
-Date: Mon, 22 Dec 2014 15:25:51 -0600
-Message-ID: <1419283551.5581.172.camel@freescale.com>
-References: <1415958800-9867-1-git-send-email-shh.xie@gmail.com>
-	 <1416966592.15957.172.camel@freescale.com>
-	 <DM2PR0301MB08641FB289DBA17AD59FBEA0E26A0@DM2PR0301MB0864.namprd03.prod.outlook.com>
-	 <1418940078.5581.143.camel@freescale.com>
-	 <DM2PR0301MB0864AA31CD1A7438F476020FE26B0@DM2PR0301MB0864.namprd03.prod.outlook.com>
-	 <1419030955.5581.154.camel@freescale.com>
-	 <DM2PR0301MB086427C10254A0A749CD1326E2560@DM2PR0301MB0864.namprd03.prod.outlook.com>
-	 <5497D466.9090804@Freescale.com> <1419237176.5581.159.camel@freescale.com>
-	 <5497E645.7010500@Freescale.com> <1419241330.5581.162.camel@freescale.com>
-	 <5497FBAB.4010206@Freescale.com>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: Re: [RFC v1 PATCH 1/2] of/pci: add of_pci_dma_configure() update
+ dma configuration
+Date: Mon, 22 Dec 2014 16:40:43 -0500
+Message-ID: <54988FDB.8000108@ti.com>
+References: <1418940425-2017-1-git-send-email-m-karicheri2@ti.com> <21520995.3ITgVmVTeV@wuerfel> <549858E4.4050500@ti.com> <11285984.OK9CqQGmjZ@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5497FBAB.4010206-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
-Cc: Xie Shaohui-B21989 <Shaohui.Xie-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liberman Igal-B31950 <Igal.Liberman-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <11285984.OK9CqQGmjZ@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: bhelgaas@google.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, grant.likely@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, will.deacon@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2014-12-22 at 05:08 -0600, Emil Medve wrote:
-> Hello Scott,
-> 
-> 
-> On 12/22/2014 03:42 AM, Scott Wood wrote:
-> > On Mon, 2014-12-22 at 03:37 -0600, Emil Medve wrote:
-> >> Hello Scott,
-> >>
-> >>
-> >> On 12/22/2014 02:32 AM, Scott Wood wrote:
-> >>> On Mon, 2014-12-22 at 02:20 -0600, Emil Medve wrote:
-> >>>> For the purpose of an example in the binding document, I suggest we just
-> >>>> stick with the IEEE standard frequency.
-> >>>
-> >>> The whole reason for this property existing in the device tree is
-> >>> non-standard frequencies.
-> >>
-> >> While the standard claims 2.5 MHz, most MDIO controllers and PHY devices
-> >> support frequencies well beyond the standard. Specifying a lower then
-> >> the standard frequency for the benefit of some errata is just one side
-> >> of this property
-> > 
-> > The erratum was (until now) the only claimed reason for it.  If there
-> > are other reasons why one would specify a different frequency (in
-> > particular, that relate to hardware description), please elaborate.
-> 
-> From memory, the 1 Gb/s Vitesse PHY(s) we have on some of our DS boards
-> support 12.5 MHz. I can dig out more specs for specifics on other PHY(s)
-> 
-> 2.5 MHz is slow and even more so for high speed interfaces. With both
-> polling and interrupts (both MDIO and/or PHY) we've noticed (or blamed)
-> in the past some Ethernet performance issues on this very slowness
-> 
-> As of right now I'm not aware of another way to specify/coordinate the
-> MDC speed so setting a default (common denominator) in the DT that is
-> different then the IEEE standard seems ok
+On 12/22/2014 02:43 PM, Arnd Bergmann wrote:
+> On Monday 22 December 2014 12:46:12 Murali Karicheri wrote:
+>> On 12/18/2014 05:29 PM, Arnd Bergmann wrote:
+>>> On Thursday 18 December 2014 17:07:04 Murali Karicheri wrote:
+>>>> Add of_pci_dma_configure() to allow updating the dma configuration
+>>>> of the pci device using the configuration from the parent of
+>>>> the root bridge device.
+>>>> +	/*
+>>>> +	 * Set it to coherent_dma_mask by default if the architecture
+>>>> +	 * code has not set it.
+>>>> +	 */
+>>>> +	if (!dev->dma_mask)
+>>>> +		dev->dma_mask =&dev->coherent_dma_mask;
+>>>> +
+>>>> +	ret = of_dma_get_range(parent_np,&dma_addr,&paddr,&size);
+>>>> +	if (ret<   0) {
+>>>> +		dma_addr = offset = 0;
+>>>> +		size = dev->coherent_dma_mask;
+>>>
+>>> Can you check one thing here? I believe the size argument as returned
+>>> from of_dma_get_range is inclusive (e.g. 0x100000000), while the coherent
+>>> mask by definition is exlusive (e.g. 0xffffffff), so the size needs to
+>>> be adapted here. I haven't checked all the code here though, so I may
+>>> be wrong.
+>>
+>> size returned by of_dma_get_range() is inclusive as you indicated. Fromt
+>> the grep of dma-ranges in arch/arm/boot/dts, I see
+>>
+>> arch/arm/boot/dts/keystone.dtsi:		dma-ranges =<0x80000000 0x8
+>> 0x00000000 0x80000000>;
+>> arch/arm/boot/dts/keystone.dtsi:			dma-ranges;
+>> arch/arm/boot/dts/r8a7790.dtsi:		dma-ranges =<0x42000000 0 0x40000000 0
+>> 0x40000000 0 0x80000000
+>> arch/arm/boot/dts/integratorap.dts:	dma-ranges =<0x80000000 0x0
+>> 0x80000000>;
+>> arch/arm/boot/dts/r8a7791.dtsi:		dma-ranges =<0x42000000 0 0x40000000 0
+>> 0x40000000 0 0x80000000
+>>
+>> So I guess I need to change the code to
+>>
+>>   >>  +	ret = of_dma_get_range(parent_np,&dma_addr,&paddr,&size);
+>>   >>  +	if (ret<   0) {
+>>   >>  +		dma_addr = offset = 0;
+>>   >>  +		size = dev->coherent_dma_mask + 1;
 >
-> >>>> We can continue this conversation about errata handling when we submit
-> >>>> the code relevant to this binding (and the FMan v3 support)
-> >>>
-> >>> It affects the binding, so let's discuss it now please.
-> >>
-> >> I think this specific (unpublished yet) errata has less bearing on the
-> >> binding then you might believe. This is mostly about providing a
-> >> common/default frequency supported by all the devices on some board
-> > 
-> > What reason other than an erratum would there be for the standard
-> > frequency not being supported?
-> 
-> This is not about not supporting the standard frequency. This is about
-> the default frequency being different then the standard
+> Right.
+>
+>>>> +	} else {
+>>>> +		offset = PFN_DOWN(paddr - dma_addr);
+>>>> +		dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", dev->dma_pfn_offset);
+>>>> +	}
+>>>> +	dev->dma_pfn_offset = offset;
+>>>> +
+>>>> +	coherent = of_dma_is_coherent(parent_np);
+>>>> +	dev_dbg(dev, "device is%sdma coherent\n",
+>>>> +		coherent ? " " : " not ");
+>>>> +
+>>>> +	arch_setup_dma_ops(dev, dma_addr, size, NULL, coherent);
+>>>
+>>> Basically, I would use limit the size argument we pass into
+>>> arch_setup_dma_ops to the minimum of 'size' and 'dma_mask' here,
+>>> after converting into the same format. We should make sure we do the
+>>> same thing for platform_device as well, so it might be better to do
+>>> it inside of arch_setup_dma_ops instead.
+>>
+>> Do you think following changes will work?
+>>
+>> +++ b/arch/arm/mm/dma-mapping.c
+>> @@ -2052,9 +2052,10 @@ void arch_setup_dma_ops(struct device *dev, u64
+>> dma_base, u64 size,
+>>                           struct iommu_ops *iommu, bool coherent)
+>>    {
+>>           struct dma_map_ops *dma_ops;
+>> +       u64 temp_size = min((*(dev->dma_mask) + 1), size);
+>>
+>>           dev->archdata.dma_coherent = coherent;
+>> -       if (arm_setup_iommu_dma_ops(dev, dma_base, size, iommu))
+>> +       if (arm_setup_iommu_dma_ops(dev, dma_base, temp_size, iommu))
+>>
+>> If you agree, I will post v1 of the patch with these updates. Let me
+>> know. I did some basic tests on Keystone with these changes and it works
+>> fine.
+>
+> It's not exactly what I meant. My main point was that we need to limit
+> dev->dma_mask to (size-1) here, but you are not touching that.
 
-OK, though rather than talk about defaults I'd phrase it as indicating
-that a higher frequency than standard is supported, or that a lower
-frequency than standard is required.
+if you mean overriding the dev->dma_mask to min((*dev->dma_mask), 
+size-1), then I am getting the error "Coherent DMA mask 0x7fffffff (pfn 
+0x780000-0x800000) covers a smaller range of system memory than the DMA 
+zone pfn 0x0-0x880000) when the devices on Keystone tries to set the dma 
+mask. Something wrong and I need to look into the code.
 
--Scott
+> either change the two functions in which we first assign the dma_mask
+> (platform and pci bus), or set it again in arch_setup_dma_ops (on each
+> architecture implementing it), either way would work. Someone else
+> might have a stronger opinion on that matter.
+>
+> For arm_setup_iommu_dma_ops, passing the original size is probably
+> best.
+>
+> 	Arnd
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Murali Karicheri
+Linux Kernel, Texas Instruments
