@@ -1,60 +1,78 @@
-From: Liu Ying <Ying.Liu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH RFC v3 11/18] drm/bridge: Add Synopsys DesignWare MIPI
- DSI host controller driver
-Date: Tue, 23 Dec 2014 17:03:41 +0800
-Message-ID: <54992FED.5080908@freescale.com>
-References: <1419306399-9387-1-git-send-email-Ying.Liu@freescale.com>
- <1419306399-9387-12-git-send-email-Ying.Liu@freescale.com>
- <1770602566.921194.1419323596151.JavaMail.open-xchange@oxbaltgw08.schlund.de>
+From: <shh.xie@gmail.com>
+Subject: [PATCH] [v3] power/fsl: add MDIO dt binding for FMan
+Date: Tue, 23 Dec 2014 15:57:46 +0800
+Message-ID: <1419321466-5575-1-git-send-email-shh.xie@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1770602566.921194.1419323596151.JavaMail.open-xchange-h4m1HHXQYNHc2Cnrm9MUdsgmgJlYmuWJ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, andyshrk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, scottwood@freescale.com
+Cc: Shaohui Xie <Shaohui.Xie@freescale.com>, Emilian.Medve@freescale.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Stefan,
-
-On 12/23/2014 04:33 PM, Stefan Wahren wrote:
-> Hi Liu,
->
->> Liu Ying <Ying.Liu-KZfg59tc24xl57MIdRCFDg@public.gmane.org> hat am 23. Dezember 2014 um 04:46
->> geschrieben:
->>
->>
->> This patch adds Synopsys DesignWare MIPI DSI host controller driver support.
->> Currently, the driver supports the burst with sync pulses mode only.
->>
->> Signed-off-by: Liu Ying <Ying.Liu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->> ---
->> v2->v3:
->> * Newly introduced in v3 to address Andy Yan's comment. This is based on
->> the i.MX MIPI DSI driver in v2. To make the Synopsys DesignWare MIPI DSI
->> host controller driver less platform-dependant, this patch places it at
->> the drm/bridge directory as a DRM bridge driver.
->>
->> .../devicetree/bindings/drm/bridge/dw_mipi_dsi.txt | 72 ++
->
-> please take care of [1] and send the Documentation part as a separate patch.
-> This should also apply to all the other patches from your series.
-
-All right, I'll do that.
-
-Thanks,
-Liu Ying
-
->
-> Thanks
->
-> Stefan
->
-> [1] -
-> http://lxr.free-electrons.com/source/Documentation/devicetree/bindings/submitting-patches.txt
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+RnJvbTogU2hhb2h1aSBYaWUgPFNoYW9odWkuWGllQGZyZWVzY2FsZS5jb20+CgpUaGlzIGJpbmRp
+bmcgaXMgZm9yIEZNYW4gTURJTywgaXQgY292ZXJzIEZNYW4gdjIgJiBGTWFuIHYzLgoKU2lnbmVk
+LW9mZi1ieTogU2hhb2h1aSBYaWUgPFNoYW9odWkuWGllQGZyZWVzY2FsZS5jb20+Ci0tLQpjaGFu
+Z2VzIGluIHYzOgpyZXBocmFzZSB0aGUgJ0RlZmluaXRpb24nIG9mIHByb3BlcnR5ICdidXMtZnJl
+cXVlbmN5JywgZG9uJ3QgaW5jbHVkZSB0aGUKcHJvcGVydHkgaW4gZXhhbXBsZS4KCmNoYW5nZXMg
+aW4gdjI6CmFkZHJlc3NlZCBjb21tZW50cyBmcm9tIFNjb3R0IGluIFYxLgoKIC4uLi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL3Bvd2VycGMvZnNsL2ZtYW4udHh0ICAgICAgIHwgNjkgKysrKysrKysrKysr
+KysrKysrKysrKwogMSBmaWxlIGNoYW5nZWQsIDY5IGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQg
+YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXJwYy9mc2wvZm1hbi50eHQg
+Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXJwYy9mc2wvZm1hbi50eHQK
+aW5kZXggZWRlZWExNi4uNzM3YWE0YyAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL3Bvd2VycGMvZnNsL2ZtYW4udHh0CisrKyBiL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9mbWFuLnR4dApAQCAtNyw2ICs3LDcgQEAgQ09O
+VEVOVFMKICAgLSBGTWFuIE1VUkFNIE5vZGUKICAgLSBGTWFuIGRUU0VDL1hHRUMvbUVNQUMgTm9k
+ZQogICAtIEZNYW4gSUVFRSAxNTg4IE5vZGUKKyAgLSBGTWFuIE1ESU8gTm9kZQogICAtIEV4YW1w
+bGUKIAogPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT0KQEAgLTM1Nyw2ICszNTgsNjkgQEAgcHRwLXRpbWVy
+QGZlMDAwIHsKIH07CiAKID09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09CitGTWFuIE1ESU8gTm9kZQorCitE
+RVNDUklQVElPTgorCitUaGUgTURJTyBpcyBhIGJ1cyB0byB3aGljaCB0aGUgUEhZIGRldmljZXMg
+YXJlIGNvbm5lY3RlZC4KKworUFJPUEVSVElFUworCistIGNvbXBhdGlibGUKKwkJVXNhZ2U6IHJl
+cXVpcmVkCisJCVZhbHVlIHR5cGU6IDxzdHJpbmdsaXN0PgorCQlEZWZpbml0aW9uOiBBIHN0YW5k
+YXJkIHByb3BlcnR5LgorCQlNdXN0IGluY2x1ZGUgImZzbCxmbWFuLW1kaW8iIGZvciAxIEdiL3Mg
+TURJTyBmcm9tIEZNYW4gdjIuCisJCU11c3QgaW5jbHVkZSAiZnNsLGZtYW4teG1kaW8iIGZvciAx
+MCBHYi9zIE1ESU8gZnJvbSBGTWFuIHYyLgorCQlNdXN0IGluY2x1ZGUgImZzbCxmbWFuLW1lbWFj
+LW1kaW8iIGZvciAxLzEwIEdiL3MgTURJTyBmcm9tCisJCUZNYW4gdjMuCisKKy0gcmVnCisJCVVz
+YWdlOiByZXF1aXJlZAorCQlWYWx1ZSB0eXBlOiA8cHJvcC1lbmNvZGVkLWFycmF5PgorCQlEZWZp
+bml0aW9uOiBBIHN0YW5kYXJkIHByb3BlcnR5LgorCistIGJ1cy1mcmVxdWVuY3kKKwkJVXNhZ2U6
+IG9wdGlvbmFsCisJCVZhbHVlIHR5cGU6IDx1MzI+CisJCURlZmluaXRpb246IFNwZWNpZmllcyB0
+aGUgZXh0ZXJuYWwgTURJTyBidXMgY2xvY2sgc3BlZWQgdG8KKwkJYmUgdXNlZCwgaWYgZGlmZmVy
+ZW50IGZyb20gdGhlIHN0YW5kYXJkIDIuNSBNSHouCisJCVRoaXMgbWF5IGJlIGR1ZSB0byB0aGUg
+c3RhbmRhcmQgc3BlZWQgYmVpbmcgdW5zdXBwb3J0ZWQgKGUuZy4KKwkJZHVlIHRvIGEgaGFyZHdh
+cmUgcHJvYmxlbSksIG9yIHRvIGFkdmVydGlzZSB0aGF0IGFsbCByZWxldmFudAorCQljb21wb25l
+bnRzIGluIHRoZSBzeXN0ZW0gc3VwcG9ydCBhIGZhc3RlciBzcGVlZC4KKworLSBpbnRlcnJ1cHRz
+CisJCVVzYWdlOiBvcHRpb25hbAorCQlWYWx1ZSB0eXBlOiA8cHJvcC1lbmNvZGVkLWFycmF5Pgor
+CQlEZWZpbml0aW9uOiBFdmVudCBpbnRlcnJ1cHQgb2YgZXh0ZXJuYWwgTURJTyBjb250cm9sbGVy
+LgorCQkxIEdiL3MgTURJTyBhbmQgMTAgR2IvcyBNRElPIGhhcyBvbmUgaW50ZXJydXB0IHJlc3Bl
+Y3RpdmVseS4KKworLSBmc2wsZm1hbi1pbnRlcm5hbC1tZGlvCisJCVVzYWdlOiByZXF1aXJlZCBm
+b3IgaW50ZXJuYWwgTURJTworCQlWYWx1ZSB0eXBlOiBib29sZWFuCisJCURlZmluaXRpb246IEZt
+YW4gaGFzIGludGVybmFsIE1ESU8gZm9yIGludGVybmFsIFBDUyhQaHlzaWNhbAorCQlDb2Rpbmcg
+U3VibGF5ZXIpIFBIWXMgYW5kIGV4dGVybmFsIE1ESU8gZm9yIGV4dGVybmFsIFBIWXMuCisJCVRo
+ZSBzZXR0aW5ncyBhbmQgcHJvZ3JhbW1pbmcgcm91dGluZXMgZm9yIGludGVybmFsL2V4dGVybmFs
+CisJCU1ESU8gYXJlIGRpZmZlcmVudC4gTXVzdCBiZSBpbmNsdWRlZCBmb3IgaW50ZXJuYWwgTURJ
+Ty4KKworRVhBTVBMRQorCitFeGFtcGxlIGZvciBGTWFuIHYyIGV4dGVybmFsIE1ESU86CisKK21k
+aW9AZjEwMDAgeworCWNvbXBhdGlibGUgPSAiZnNsLGZtYW4teG1kaW8iOworCXJlZyA9IDwweGYx
+MDAwIDB4MTAwMD47Cit9OworCitFeGFtcGxlIGZvciBGTWFuIHYzIGludGVybmFsIE1ESU86CisK
+K21kaW9AZjEwMDAgeworCWNvbXBhdGlibGUgPSAiZnNsLGZtYW4tbWVtYWMtbWRpbyI7CisJcmVn
+ID0gPDB4ZjEwMDAgMHgxMDAwPjsKKwlmc2wsZm1hbi1pbnRlcm5hbC1tZGlvOworfTsKKworPT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT0KIEV4YW1wbGUKIAogZm1hbkA0MDAwMDAgewpAQCAtNTMxLDQgKzU5
+NSw5IEBAIGZtYW5ANDAwMDAwIHsKIAkJY29tcGF0aWJsZSA9ICJmc2wsZm1hbi1wdHAtdGltZXIi
+OwogCQlyZWcgPSA8MHhmZTAwMCAweDEwMDA+OwogCX07CisKKwltZGlvQGYxMDAwIHsKKwkJY29t
+cGF0aWJsZSA9ICJmc2wsZm1hbi14bWRpbyI7CisJCXJlZyA9IDwweGYxMDAwIDB4MTAwMD47CisJ
+fTsKIH07Ci0tIAoxLjguNC4xCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpMaW51eHBwYy1kZXYgbWFpbGluZyBsaXN0CkxpbnV4cHBjLWRldkBsaXN0cy5v
+emxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9saW51eHBwYy1kZXY=
