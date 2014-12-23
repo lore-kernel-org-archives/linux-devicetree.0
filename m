@@ -1,75 +1,63 @@
-From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH 2/2] iio: mxs-lradc: check ranges of ts properties
-Date: Tue, 23 Dec 2014 14:37:22 +0100
-Message-ID: <201412231437.22809.marex@denx.de>
-References: <1419250476-2393-1-git-send-email-stefan.wahren@i2se.com> <1419250476-2393-3-git-send-email-stefan.wahren@i2se.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] PCIe: Designware: Do not allow config space through ranges
+Date: Tue, 23 Dec 2014 21:31:01 +0100
+Message-ID: <3330424.GRa0M3NfZG@wuerfel>
+References: <7dcdee69eb7db8336829e6085d736a3ac7e68ad4.1419229126.git.panand@redhat.com> <5459567.EisgEvQXh9@wuerfel> <5498D97A.8030105@redhat.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1419250476-2393-3-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kristina.martsenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <5498D97A.8030105@redhat.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Pratyush Anand <panand@redhat.com>
+Cc: mohit.kumar@st.com, jg1.han@samsung.com, l.stach@pengutronix.de, shawn.guo@freescale.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, Sean Cross <xobs@kosagi.com>, Murali Karicheri <m-karicheri2@ti.com>, Minghuan Lian <Minghuan.Lian@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Monday, December 22, 2014 at 01:14:36 PM, Stefan Wahren wrote:
-> The devicetree binding for mxs-lradc defines ranges for the
-> touchscreen properties. In order to avoid unexpected behavior like
-> division by zero, we better check these ranges during probe and
-> abort in error case.
+On Tuesday 23 December 2014 08:24:50 Pratyush Anand wrote:
+> On Monday 22 December 2014 02:00 PM, Arnd Bergmann wrote:
+> > On Monday 22 December 2014 12:09:04 Pratyush Anand wrote:
+
+> >> diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-designware.c
+> >> index df781cdf13c1..0b22b42e1ff9 100644
+> >> --- a/drivers/pci/host/pcie-designware.c
+> >> +++ b/drivers/pci/host/pcie-designware.c
+> >> @@ -409,19 +409,6 @@ int __init dw_pcie_host_init(struct pcie_port *pp)
+> >>                      pp->mem_mod_base = of_read_number(parser.range -
+> >>                                                        parser.np + na, ns);
+> >>              }
+> >> -            if (restype == 0) {
+> >> -                    of_pci_range_to_resource(&range, np, &pp->cfg);
+> >> -                    pp->cfg0_size = resource_size(&pp->cfg)/2;
+> >> -                    pp->cfg1_size = resource_size(&pp->cfg)/2;
+> >> -                    pp->cfg0_base = pp->cfg.start;
+> >> -                    pp->cfg1_base = pp->cfg.start + pp->cfg0_size;
+> >> -
+> >> -                    /* Find the untranslated configuration space address */
+> >> -                    pp->cfg0_mod_base = of_read_number(parser.range -
+> >> -                                                       parser.np + na, ns);
+> >> -                    pp->cfg1_mod_base = pp->cfg0_mod_base +
+> >> -                                        pp->cfg0_size;
+> >> -            }
+> >>      }
+> >
+> > Since we've allowed this for so long, it may be better to leave this
+> > in for compatibility with old dts files. It would however be good to
+> > print a warning message. We could also limit it to those machines that
+> > are known to have been used with this property in the past.
 > 
-> Additionally this patch adds an important note from the reference
-> manual about the range of sample delay.
-> 
-> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-> ---
->  drivers/staging/iio/adc/mxs-lradc.c |   44
-> +++++++++++++++++++++++++++-------- 1 file changed, 34 insertions(+), 10
-> deletions(-)
-> 
-> diff --git a/drivers/staging/iio/adc/mxs-lradc.c
-> b/drivers/staging/iio/adc/mxs-lradc.c index f053535..990e945 100644
-> --- a/drivers/staging/iio/adc/mxs-lradc.c
-> +++ b/drivers/staging/iio/adc/mxs-lradc.c
-> @@ -436,7 +436,13 @@ static void mxs_lradc_setup_ts_channel(struct
-> mxs_lradc *lradc, unsigned ch) */
->  	mxs_lradc_reg_clear(lradc, LRADC_CH_VALUE_MASK, LRADC_CH(ch));
-> 
-> -	/* prepare the delay/loop unit according to the oversampling count */
-> +	/* prepare the delay/loop unit according to the oversampling count
+> I think, only imx6 is using "config from ranges", for which I made the 
+> change in this patch. Modification need to be tested and acked by IMX6 
+> maintainers.
+> I do not see any other driver using it. However, I have kept all 
+> designware user in CC here.
 
-Very minor coding style flub in this comment above. Multi-line comments should
-start with /* and a newline after that ;-)
+The change to look at the 'reg' property for config space was introduced
+in 4dd964df36d ("PCI: designware: Look for configuration space in 'reg',
+not 'ranges'"), and at the time, we had Exynos5440 and i.MX as users,
+which is only a small subset of what we have now. If we are sure that
+on both architectures we don't need to support backwards compatibility
+for the existing dtbs, then we can do it, but that would be hard to
+prove, unless we know for sure that the platforms are already broken
+for any user that has old dtb files.
 
-> +	 * from the datasheet:
-> +	 * "The DELAY fields in HW_LRADC_DELAY0, HW_LRADC_DELAY1,
-> +	 * HW_LRADC_DELAY2, and HW_LRADC_DELAY3 must be non-zero; otherwise,
-> +	 * the LRADC will not trigger the delay group."
-> +	 */
->  	mxs_lradc_reg_wrt(lradc, LRADC_DELAY_TRIGGER(1 << ch) |
->  		LRADC_DELAY_TRIGGER_DELAYS(0) |
->  		LRADC_DELAY_LOOP(lradc->over_sample_cnt - 1) |
-> @@ -1495,20 +1501,38 @@ static int mxs_lradc_probe_touchscreen(struct
-> mxs_lradc *lradc, return -EINVAL;
->  	}
-> 
-> -	lradc->over_sample_cnt = 4;
-> -	ret = of_property_read_u32(lradc_node, "fsl,ave-ctrl", &adapt);
-> -	if (ret == 0)
-> +	if (of_property_read_u32(lradc_node, "fsl,ave-ctrl", &adapt)) {
-> +		lradc->over_sample_cnt = 4;
-> +	} else {
-> +		if (adapt < 1 || adapt > 32) {
-
-This is just an idea, but do we not have some kind of a 
-"of_property_read_u32_range()" thingie, which would include this kind of range 
-checking ? Would it be worth implementing such thing ? What do you think
-please ?
-
-[...]
-
-Otherwise,
-
-Reviewed-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+	Arnd
