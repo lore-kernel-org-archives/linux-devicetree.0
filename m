@@ -1,65 +1,59 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH RFC v3 02/18] of: Add vendor prefix for Himax
- Technologies Inc.
-Date: Tue, 23 Dec 2014 09:09:12 +0100 (CET)
-Message-ID: <789433791.920346.1419322152848.JavaMail.open-xchange@oxbaltgw08.schlund.de>
-References: <1419306399-9387-1-git-send-email-Ying.Liu@freescale.com> <1419306399-9387-3-git-send-email-Ying.Liu@freescale.com>
-Reply-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+From: Shaohui Xie <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH] [v2] power/fsl: add MDIO dt binding for FMan
+Date: Tue, 23 Dec 2014 08:17:06 +0000
+Message-ID: <DM2PR0301MB0864B0B8C1648A0ED8B0EB9AE2570@DM2PR0301MB0864.namprd03.prod.outlook.com>
+References: <1415958800-9867-1-git-send-email-shh.xie@gmail.com>
+	 <1416966592.15957.172.camel@freescale.com>
+	 <DM2PR0301MB08641FB289DBA17AD59FBEA0E26A0@DM2PR0301MB0864.namprd03.prod.outlook.com>
+	 <1418940078.5581.143.camel@freescale.com>
+	 <DM2PR0301MB0864AA31CD1A7438F476020FE26B0@DM2PR0301MB0864.namprd03.prod.outlook.com>
+	 <1419030955.5581.154.camel@freescale.com>
+	 <DM2PR0301MB086427C10254A0A749CD1326E2560@DM2PR0301MB0864.namprd03.prod.outlook.com>
+	 <5497D466.9090804@Freescale.com> <1419237176.5581.159.camel@freescale.com>
+	 <5497E645.7010500@Freescale.com> <1419241330.5581.162.camel@freescale.com>
+	 <5497FBAB.4010206@Freescale.com> <1419283551.5581.172.camel@freescale.com>
+	 <DM2PR0301MB08642FFDB6207DE205731547E2570@DM2PR0301MB0864.namprd03.prod.outlook.com>
+ <1419322085.5581.182.camel@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1419306399-9387-3-git-send-email-Ying.Liu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+In-Reply-To: <1419322085.5581.182.camel-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Liu Ying <Ying.Liu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, andyshrk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Emilian Medve <Emilian.Medve-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Liu,
-
-> Liu Ying <Ying.Liu-KZfg59tc24xl57MIdRCFDg@public.gmane.org> hat am 23. Dezember 2014 um 04:46
-> geschrieben:
->
->
-> Signed-off-by: Liu Ying <Ying.Liu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
-> v2->v3:
-> * None.
->
-> v1->v2:
-> * None.
->
-> Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
-> 1 file changed, 1 insertion(+)
->
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index 78efebb..3cee528 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -69,6 +69,7 @@ hannstar HannStar Display Corporation
-> haoyu Haoyu Microelectronic Co. Ltd.
-> hisilicon Hisilicon Limited.
-> hit Hitachi Ltd.
-> +himax Himax Technologies, Inc.
-
-please fix the ordering. himax comes before hisilicon.
-
-Thanks
-
-Stefan
-
-> honeywell Honeywell
-> hp Hewlett Packard
-> i2se I2SE GmbH
-> --
-> 2.1.0
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBXb29kIFNjb3R0LUIwNzQyMQ0K
+PiBTZW50OiBUdWVzZGF5LCBEZWNlbWJlciAyMywgMjAxNCA0OjA4IFBNDQo+IFRvOiBYaWUgU2hh
+b2h1aS1CMjE5ODkNCj4gQ2M6IE1lZHZlIEVtaWxpYW4tRU1NRURWRTE7IGxpbnV4cHBjLWRldkBs
+aXN0cy5vemxhYnMub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgTGliZXJtYW4g
+SWdhbC1CMzE5NTANCj4gU3ViamVjdDogUmU6IFtQQVRDSF0gW3YyXSBwb3dlci9mc2w6IGFkZCBN
+RElPIGR0IGJpbmRpbmcgZm9yIEZNYW4NCj4gDQo+IE9uIFR1ZSwgMjAxNC0xMi0yMyBhdCAwMToz
+NSAtMDYwMCwgWGllIFNoYW9odWktQjIxOTg5IHdyb3RlOg0KPiA+ICstIGJ1cy1mcmVxdWVuY3kN
+Cj4gPiArCQlVc2FnZTogb3B0aW9uYWwNCj4gPiArCQlWYWx1ZSB0eXBlOiA8dTMyPg0KPiA+ICsJ
+CURlZmluaXRpb246IFNwZWNpZmllcyBleHRlcm5hbCBNRElPIGJ1cyBjbG9jayBzcGVlZCB3aGlj
+aCBpcw0KPiA+ICsJCWRpZmZlcmVudCBmcm9tIE1ESU8gc3RhbmRhcmQgMi41TUh6LiBTaG91bGQg
+YmUgZGVmaW5lZCBmb3INCj4gU29Dcw0KPiA+ICsJCW9uIHdoaWNoIHRoZSBzdGFuZGFyZCBvbmUg
+Y2Fubm90IHdvcmsuDQo+ID4NCj4gPiBXaGF0IHNob3VsZCBJIHJlcGhyYXNlIGl0PyBSZXBsYWNl
+IHRoZSBsYXN0IHNlbnRlbmNlIHdpdGggIlNob3VsZCBiZQ0KPiA+IGRlZmluZWQgRm9yIFNvQ3Mg
+b24gd2hpY2ggYSBsb3dlciBmcmVxdWVuY3kgdGhhbiB0aGUgc3RhbmRhcmQgaXMNCj4gcmVxdWly
+ZWQuIj8NCj4gDQo+IE5laXRoZXIgb2YgdGhlc2Ugd29yayB3aXRoIEVtaWwncyBzY2VuYXJpbyBv
+ZiBhIHN5c3RlbSB0aGF0IGFsbG93cyBhDQo+IGZhc3Rlci10aGFuLXN0YW5kYXJkIHNwZWVkLg0K
+PiANCj4gSG93IGFib3V0OiAiRGVmaW5pdGlvbjogU3BlY2lmaWVzIHRoZSBleHRlcm5hbCBNRElP
+IGJ1cyBjbG9jayBzcGVlZCB0byBiZQ0KPiB1c2VkLCBpZiBkaWZmZXJlbnQgZnJvbSB0aGUgc3Rh
+bmRhcmQgMi41IE1Iei4gIFRoaXMgbWF5IGJlIGR1ZSB0byB0aGUNCj4gc3RhbmRhcmQgc3BlZWQg
+YmVpbmcgdW5zdXBwb3J0ZWQgKGUuZy4gZHVlIHRvIGEgaGFyZHdhcmUgcHJvYmxlbSksIG9yIHRv
+DQo+IGFkdmVydGlzZSB0aGF0IGFsbCByZWxldmFudCBjb21wb25lbnRzIGluIHRoZSBzeXN0ZW0g
+c3VwcG9ydCBhIGZhc3Rlcg0KPiBzcGVlZC4iDQpbUy5IXSBPSy4gSSdsbCB1c2UgdGhpcyBpbiBW
+My4NCg0KPiANCj4gPiBIb3cgYWJvdXQgdGhlIHZhbHVlIHVzZWQgaW4gZXhhbXBsZT8NCj4gPiBT
+aG91bGQgMi41TUh6IGJlIHVzZWQgb3IgYSBsb3dlciBvbmU/DQo+IA0KPiBJZiB5b3UgZG9uJ3Qg
+aGF2ZSBhIHJlYWxpc3RpYyBleGFtcGxlIHRvIHVzZSwgZG9uJ3QgcHV0IGl0IGluIHRoZSBleGFt
+cGxlDQo+IGF0IGFsbC4gIDIuNU1IeiBpcyB0aGUgd29yc3QgZXhhbXBsZSB0byB1c2UgYmVjYXVz
+ZSB0aGF0J3MgdGhlIGRlZmF1bHQNCj4gYW5kIHRoZXJlJ2QgYmUgbm8gcmVhc29uIHRvIHVzZSB0
+aGUgcHJvcGVydHkgYXQgYWxsLg0KW1MuSF0gT0suIFRoZSBWMyB3aWxsIG5vdCBoYXZlIHRoaXMg
+aW4gZXhhbXBsZS4NCg0KVGhhbmsgeW91IGFsbCBmb3IgcmV2aWV3aW5nIQ0KU2hhb2h1aQ0K
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
