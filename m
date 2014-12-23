@@ -1,177 +1,112 @@
-From: Varka Bhadram <varkabhadram@gmail.com>
-Subject: Re: [PATCHv5 3/9] devfreq: event: Add exynos-ppmu devfreq-event driver
-Date: Tue, 23 Dec 2014 09:10:20 +0530
-Message-ID: <CAEUmHyYnb8_HNnuz8BLhMOh01+gpXfTv63P-ubYE1DK9uptonA@mail.gmail.com>
-References: <1419304697-14789-1-git-send-email-cw00.choi@samsung.com>
-	<1419304697-14789-4-git-send-email-cw00.choi@samsung.com>
+From: Liu Ying <Ying.Liu@freescale.com>
+Subject: [PATCH RFC v3 00/18] Add support for i.MX MIPI DSI DRM driver
+Date: Tue, 23 Dec 2014 11:46:21 +0800
+Message-ID: <1419306399-9387-1-git-send-email-Ying.Liu@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1419304697-14789-4-git-send-email-cw00.choi@samsung.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: myungjoo.ham@samsung.com, kgene.kim@samsung.com, Kyungmin Park <kyungmin.park@samsung.com>, rafael.j.wysocki@intel.com, Mark Rutland <mark.rutland@arm.com>, a.kesavan@samsung.com, tomasz.figa@gmail.com, k.kozlowski@samsung.com, inki.dae@samsung.com, linux-pm@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org
+Cc: devicetree@vger.kernel.org, linux@arm.linux.org.uk, kernel@pengutronix.de, linux-kernel@vger.kernel.org, mturquette@linaro.org, linux-arm-kernel@lists.infradead.org, andyshrk@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 23, 2014 at 8:48 AM, Chanwoo Choi <cw00.choi@samsung.com> wrote:
-> This patch adds exynos-ppmu devfreq-event driver to get performance data
-> of each IP for Samsung Exynos SoC. These event from Exynos PPMU provide
-> useful information about the behavior of the SoC that you can use when
-> analyzing system performance, and made visible and can be counted using
-> logic in each IP.
->
-> This patch is based on existing drivers/devfreq/exynos/exynos-ppmu.c
->
-> Cc: MyungJoo Ham <myungjoo.ham@samsung.com>
-> Cc: Kyungmin Park <kyungmin.park@samsung.com>
-> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-
-(...)
-> +static int exynos_ppmu_parse_dt(struct exynos_ppmu_data *data)
-> +{
-> +       struct device *dev = data->dev;
-> +       struct device_node *np = dev->of_node;
-> +       int ret = 0;
-> +
-> +       if (!np) {
-> +               dev_err(dev, "failed to find devicetree node\n");
-> +               return -EINVAL;
-> +       }
-> +
-> +       /* Maps the memory mapped IO to control PPMU register */
-> +       data->ppmu.base = of_iomap(np, 0);
-> +       if (IS_ERR_OR_NULL(data->ppmu.base)) {
-> +               dev_err(dev, "failed to map memory region\n");
-> +               return -EINVAL;
--ENOMEM or -ENXIO is the proper error return value..?
-
-> +       }
-> +
-> +       data->clk_ppmu = devm_clk_get(dev, "ppmu");
-> +       if (IS_ERR(data->clk_ppmu)) {
-> +               data->clk_ppmu = NULL;
-> +               dev_warn(dev, "failed to get PPMU clock\n");
-> +       }
-If PPMU clk get fails..?  return PTR_ERR(data->clk_ppmu)
-> +
-> +       ret = of_get_devfreq_events(np, data);
-> +       if (ret < 0) {
-> +               dev_err(dev, "failed to parse exynos ppmu dt node\n");
-> +               goto err;
-> +       }
-> +
-> +       return 0;
-> +
-> +err:
-> +       iounmap(data->ppmu.base);
-> +
-> +       return ret;
-> +}
-> +
-> +static int exynos_ppmu_probe(struct platform_device *pdev)
-> +{
-> +       struct exynos_ppmu_data *data;
-> +       struct devfreq_event_dev **edev;
-> +       struct devfreq_event_desc *desc;
-> +       int i, ret = 0, size;
-> +
-> +       data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-> +       if (!data)
-> +               return -ENOMEM;
-> +
-> +       mutex_init(&data->lock);
-> +       data->dev = &pdev->dev;
-> +
-> +       /* Parse dt data to get resource */
-> +       ret = exynos_ppmu_parse_dt(data);
-> +       if (ret < 0) {
-> +               dev_err(&pdev->dev,
-> +                       "failed to parse devicetree for resource\n");
-> +               return ret;
-> +       }
-> +       desc = data->desc;
-> +
-> +       size = sizeof(struct devfreq_event_dev *) * data->num_events;
-> +       data->edev = devm_kzalloc(&pdev->dev, size, GFP_KERNEL);
-> +       if (!data->edev) {
-> +               dev_err(&pdev->dev,
-> +                       "failed to allocate memory devfreq-event devices\n");
-> +               return -ENOMEM;
-> +       }
-> +       edev = data->edev;
-> +       platform_set_drvdata(pdev, data);
-> +
-> +       for (i = 0; i < data->num_events; i++) {
-> +               edev[i] = devfreq_event_add_edev(&pdev->dev, &desc[i]);
-> +               if (IS_ERR(edev)) {
-> +                       ret = PTR_ERR(edev);
-> +                       dev_err(&pdev->dev,
-> +                               "failed to add devfreq-event device\n");
-> +                       goto err;
-> +               }
-> +       }
-> +
-> +       clk_prepare_enable(data->clk_ppmu);
-> +
-> +       return 0;
-> +err:
-> +       iounmap(data->ppmu.base);
-> +
-> +       return ret;
-> +}
-> +
-> +static int exynos_ppmu_remove(struct platform_device *pdev)
-> +{
-> +       struct exynos_ppmu_data *data = platform_get_drvdata(pdev);
-> +       int i, ret = 0;
-> +
-> +       for (i = 0; i < data->num_events; i++) {
-> +               ret = devfreq_event_remove_edev(data->edev[i]);
-> +               if (ret < 0) {
-> +                       dev_err(&pdev->dev,
-> +                               "failed to remove devfreq-event device\n");
-> +                       goto err;
-> +               }
-> +       }
-> +
-> +err:
-> +       clk_disable_unprepare(data->clk_ppmu);
-> +       iounmap(data->ppmu.base);
-> +
-> +       return ret;
-> +}
-> +
-> +static struct of_device_id exynos_ppmu_id_match[] = {
-> +       { .compatible = "samsung,exynos-ppmu", },
-> +       { /* sentinel */ },
-> +};
-> +
-> +static struct platform_driver exynos_ppmu_driver = {
-> +       .probe  = exynos_ppmu_probe,
-> +       .remove = exynos_ppmu_remove,
-> +       .driver = {
-> +               .name   = "exynos-ppmu",
-> +               .owner  = THIS_MODULE,
-remove owner field. It will be populate by driver core.
-> +               .of_match_table = exynos_ppmu_id_match,
-> +       },
-> +};
-> +module_platform_driver(exynos_ppmu_driver);
-> +
-> +MODULE_DESCRIPTION("Exynos PPMU(Platform Performance Monitoring Unit) driver");
-> +MODULE_AUTHOR("Chanwoo Choi <cw00.choi@samsung.com>");
-> +MODULE_LICENSE("GPL");
-> +MODULE_ALIAS("platform:exynos-ppmu");
-> --
-> 1.8.5.5
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
-
-
--- 
-Thanks and Regards,
-Varka Bhadram.
+SGksCgpUaGlzIHNlcmllcyBhZGRyZXNzZXMgY29tbWVudHMgZnJvbSBQaGlsaXBwIFphYmVsIGFu
+ZCBBbmR5IFlhbiBvbiB2Mi4KClRoZSBpLk1YIE1JUEkgRFNJIGlzIGEgU3lub3BzeXMgRGVzaWdu
+V2FyZSBNSVBJIERTSSBob3N0IGNvbnRyb2xsZXIgSVAuClRoaXMgc2VyaWVzIGFkZHMgc3VwcG9y
+dCBmb3IgYSBTeW5vcHN5cyBEZXNpZ25XYXJlIE1JUEkgRFNJIGhvc3QgY29udHJvbGxlcgpEUk0g
+YnJpZGdlIGRyaXZlciBhbmQgYSBpLk1YIE1JUEkgRFNJIHNwZWNpZmljIERSTSBkcml2ZXIuCkN1
+cnJlbnRseSwgdGhlIE1JUEkgRFNJIGRyaXZlcnMgb25seSBzdXBwb3J0IHRoZSBidXJzdCB3aXRo
+IHN5bmMgcHVsc2UgbW9kZS4KClRoaXMgc2VyaWVzIGFsc28gaW5jbHVkZXMgYSBEUk0gcGFuZWwg
+ZHJpdmVyIGZvciB0aGUgVHJ1bHkgVEZUNDgwODAwLTE2LUUgcGFuZWwKd2hpY2ggaXMgZHJpdmVu
+IGJ5IHRoZSBIaW1heCBIWDgzNjlBIGRyaXZlciBJQy4gIFRoZSBkcml2ZXIgSUMgZGF0YSBzaGVl
+dCBjb3VsZApiZSBmb3VuZCBhdCBbMV0uICBBcyBtZW50aW9uZWQgYnkgdGhlIGRhdGEgc2hlZXQs
+IHRoZSBkcml2ZXIgSUMgc3VwcG9ydHMgc2V2ZXJhbAppbnRlcmZhY2UgbW9kZXMuICBDdXJyZW50
+bHksIHRoZSBEUk0gcGFuZWwgZHJpdmVyIG9ubHkgc3VwcG9ydHMgdGhlIE1JUEkgRFNJIHZpZGVv
+Cm1vZGUuICBOZXcgaW50ZXJmYWNlIG1vZGVzIGNvdWxkIGJlIGFkZGVkIGxhdGVyKHBlcmhhcHMs
+IGp1c3QgbGlrZSB0aGUgd2F5IHRoZSBEUk0Kc2ltcGxlIHBhbmVsIGRyaXZlciBzdXBwb3J0cyBi
+b3RoIE1JUEkgRFNJIGludGVyZmFjZSBwYW5lbHMgYW5kIHNpbXBsZShwYXJhbGxlbCkKaW50ZXJm
+YWNlIHBhbmVscykuCgpUaGUgTUlQSSBEU0kgZmVhdHVyZSBpcyB0ZXN0ZWQgb24gaS5NWDZRIFNh
+YnJlU0QgYm9hcmQgYW5kIGkuTVg2REwgU2FicmVTRCBib2FyZC4KVGhlIE1JUEkgRFNJIGRpc3Bs
+YXkgY291bGQgYmUgZW5hYmxlZCBkaXJlY3RseSBvbiBpLk1YNlEgU2FicmVTRCBib2FyZCBhZnRl
+cgphcHBseWluZyB0aGlzIHNlcmllcywgYmVjYXVzZSB0aGUgMjYuNE1IeiBwaXhlbCBjbG9jayB0
+aGUgcGFuZWwgcmVxdWlyZXMgY291bGQgYmUKZGVyaXZlZCBmcm9tIHRoZSBJUFUgSFNQIGNsb2Nr
+KDI2NE1Ieikgd2l0aCBhbiBpbnRlZ2VyIGRpdmlkZXIuCk9uIGkuTVg2REwgU2FicmVTRCBib2Fy
+ZCwgd2UgbmVlZCB0byBtYW51YWxseSBkaXNhYmxlIHRoZSBMVkRTIGFuZCBIRE1JIGRpc3BsYXlz
+IGluCnRoZSBkZXZpY2UgdHJlZSBibG9iLCBzaW5jZSB0aGUgaS5NWDZETCBJUFUgSFNQIGNsb2Nr
+IGlzIDE5OE1IeiBhdCBwcmVzZW50LCB3aGljaAptYWtlcyB0aGUgcGl4ZWwgY2xvY2sgc2hhcmUg
+dGhlIFBMTDUgdmlkZW8gY2xvY2sgc291cmNlIHdpdGggdGhlIExWRFMgYW5kIEhETUksCnRodXMs
+IHRoZSBwYW5lbCBjYW5ub3QgZ2V0IHRoZSBwaXhlbCBjbG9jayByYXRlIGl0IHdhbnRzLgoKUGF0
+Y2ggMDEvMTggaXMgbmVlZGVkIHRvIGdldCBhIHByZWNpc2UgcGl4ZWwgY2xvY2sgcmF0ZSgyNi40
+TUh6KSBmcm9tIHRoZSBQTEw1IHZpZGVvCmNsb2NrLiAgSWYgd2UgZG9uJ3QgaGF2ZSB0aGlzIHBh
+dGNoLCB0aGUgcGl4ZWwgY2xvY2sgcmF0ZSBpcyBhYm91dCAyME1Ieiwgd2hpY2gKY2F1c2VzIGEg
+aG9yaXRvbmFsIHNoaWZ0IG9uIHRoZSBkaXNwbGF5IGltYWdlLgoKVGhpcyBzZXJpZXMgY2FuIGJl
+IGFwcGxpZWQgb24gdGhlIGRybS1uZXh0IGJyYW5jaC4KClsxXSBodHRwOi8vd3d3LmFsbHNob3Jl
+LmNvbS9wZGYvSGltYXhfSFg4MzY5LUEucGRmCgpMaXUgWWluZyAoMTgpOgogIGNsazogZGl2aWRl
+cjogQ29ycmVjdCBwYXJlbnQgY2xrIHJvdW5kIHJhdGUgaWYgbm8gYmVzdGRpdiBpcyBub3JtYWxs
+eQogICAgZm91bmQKICBvZjogQWRkIHZlbmRvciBwcmVmaXggZm9yIEhpbWF4IFRlY2hub2xvZ2ll
+cyBJbmMuCiAgb2Y6IEFkZCB2ZW5kb3IgcHJlZml4IGZvciBUcnVseSBTZW1pY29uZHVjdG9ycyBM
+aW1pdGVkCiAgQVJNOiBpbXg2cTogQWRkIEdQUjMgTUlQSSBtdXhpbmcgY29udHJvbCByZWdpc3Rl
+ciBmaWVsZCBzaGlmdCBiaXRzCiAgICBkZWZpbml0aW9uCiAgQVJNOiBpbXg2cTogY2xrOiBBZGQg
+dGhlIHZpZGVvXzI3bSBjbG9jawogIEFSTTogaW14NnE6IGNsazogQ2hhbmdlIGhkbWlfaXNmciBj
+bG9jaydzIHBhcmVudCB0byBiZSB2aWRlb18yN20gY2xvY2sKICBBUk06IGlteDZxOiBjbGs6IENo
+YW5nZSBoc2lfdHggY2xvY2sgdG8gYmUgYSBzaGFyZWQgY2xvY2sgZ2F0ZQogIEFSTTogaW14NnE6
+IGNsazogQWRkIHN1cHBvcnQgZm9yIG1pcGlfY29yZV9jZmcgY2xvY2sgYXMgYSBzaGFyZWQgY2xv
+Y2sKICAgIGdhdGUKICBBUk06IGR0czogaW14NnFkbDogTW92ZSBleGlzdGluZyBNSVBJIERTSSBw
+b3J0cyBpbnRvIGEgbmV3ICdwb3J0cycKICAgIG5vZGUKICBkcm0vZHNpOiBBZGQgYSBoZWxwZXIg
+dG8gZ2V0IGJpdHMgcGVyIHBpeGVsIG9mIE1JUEkgRFNJIHBpeGVsIGZvcm1hdAogIGRybS9icmlk
+Z2U6IEFkZCBTeW5vcHN5cyBEZXNpZ25XYXJlIE1JUEkgRFNJIGhvc3QgY29udHJvbGxlciBkcml2
+ZXIKICBkcm06IGlteDogU3VwcG9ydCBTeW5vcHN5cyBEZXNpZ25XYXJlIE1JUEkgRFNJIGhvc3Qg
+Y29udHJvbGxlcgogIGRybTogcGFuZWw6IEFkZCBzdXBwb3J0IGZvciBIaW1heCBIWDgzNjlBIE1J
+UEkgRFNJIHBhbmVsCiAgQVJNOiBkdHNpOiBpbXg2cWRsOiBBZGQgc3VwcG9ydCBmb3IgTUlQSSBE
+U0kgaG9zdCBjb250cm9sbGVyCiAgQVJNOiBkdHM6IGlteDZxZGwtc2FicmVzZDogQWRkIHN1cHBv
+cnQgZm9yIFRSVUxZIFRGVDQ4MDgwMC0xNi1FIE1JUEkKICAgIERTSSBwYW5lbAogIEFSTTogaW14
+X3Y2X3Y3X2RlZmNvbmZpZzogQ2xlYW51cCBmb3IgaW14IGRybSBiZWluZyBtb3ZlZCBvdXQgb2YK
+ICAgIHN0YWdpbmcKICBBUk06IGlteF92Nl92N19kZWZjb25maWc6IEFkZCBzdXBwb3J0IGZvciBN
+SVBJIERTSSBob3N0IGNvbnRyb2xsZXIKICBBUk06IGlteF92Nl92N19kZWZjb25maWc6IEFkZCBz
+dXBwb3J0IGZvciBIaW1heCBIWDgzNjlBIHBhbmVsCgogLi4uL2RldmljZXRyZWUvYmluZGluZ3Mv
+ZHJtL2JyaWRnZS9kd19taXBpX2RzaS50eHQgfCAgNzIgKysKIC4uLi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2RybS9pbXgvbWlwaV9kc2kudHh0ICAgICAgIHwgIDc1ICsrCiAuLi4vZGV2aWNldHJlZS9i
+aW5kaW5ncy9wYW5lbC9oaW1heCxoeDgzNjlhLnR4dCAgICB8ICA0MSArCiAuLi4vZGV2aWNldHJl
+ZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMudHh0ICAgICAgICB8ICAgMiArCiBhcmNoL2FybS9i
+b290L2R0cy9pbXg2cS5kdHNpICAgICAgICAgICAgICAgICAgICAgICB8ICAyMCArLQogYXJjaC9h
+cm0vYm9vdC9kdHMvaW14NnFkbC1zYWJyZXNkLmR0c2kgICAgICAgICAgICAgfCAgMjAgKwogYXJj
+aC9hcm0vYm9vdC9kdHMvaW14NnFkbC5kdHNpICAgICAgICAgICAgICAgICAgICAgfCAgMjkgKy0K
+IGFyY2gvYXJtL2NvbmZpZ3MvaW14X3Y2X3Y3X2RlZmNvbmZpZyAgICAgICAgICAgICAgIHwgIDE3
+ICstCiBhcmNoL2FybS9tYWNoLWlteC9jbGstaW14NnEuYyAgICAgICAgICAgICAgICAgICAgICB8
+ICAgNyArLQogZHJpdmVycy9jbGsvY2xrLWRpdmlkZXIuYyAgICAgICAgICAgICAgICAgICAgICAg
+ICAgfCAgIDMgKy0KIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvS2NvbmZpZyAgICAgICAgICAgICAg
+ICAgICAgIHwgICA1ICsKIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvTWFrZWZpbGUgICAgICAgICAg
+ICAgICAgICAgIHwgICAxICsKIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvZHdfbWlwaV9kc2kuYyAg
+ICAgICAgICAgICAgIHwgOTk4ICsrKysrKysrKysrKysrKysrKysrKwogZHJpdmVycy9ncHUvZHJt
+L2lteC9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDcgKwogZHJpdmVycy9ncHUv
+ZHJtL2lteC9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICAgfCAgIDEgKwogZHJpdmVycy9n
+cHUvZHJtL2lteC9kd19taXBpX2RzaS1pbXguYyAgICAgICAgICAgICAgfCAyMjYgKysrKysKIGRy
+aXZlcnMvZ3B1L2RybS9wYW5lbC9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgIHwgICA1ICsK
+IGRyaXZlcnMvZ3B1L2RybS9wYW5lbC9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgIHwgICAx
+ICsKIGRyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1oaW1heC1oeDgzNjlhLmMgICAgICAgIHwg
+NTczICsrKysrKysrKysrKwogaW5jbHVkZS9kcm0vYnJpZGdlL2R3X21pcGlfZHNpLmggICAgICAg
+ICAgICAgICAgICAgfCAgMjcgKwogaW5jbHVkZS9kcm0vZHJtX21pcGlfZHNpLmggICAgICAgICAg
+ICAgICAgICAgICAgICAgfCAgMTQgKwogaW5jbHVkZS9kdC1iaW5kaW5ncy9jbG9jay9pbXg2cWRs
+LWNsb2NrLmggICAgICAgICAgfCAgIDQgKy0KIGluY2x1ZGUvbGludXgvbWZkL3N5c2Nvbi9pbXg2
+cS1pb211eGMtZ3ByLmggICAgICAgIHwgICAxICsKIDIzIGZpbGVzIGNoYW5nZWQsIDIxMTkgaW5z
+ZXJ0aW9ucygrKSwgMzAgZGVsZXRpb25zKC0pCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RybS9icmlkZ2UvZHdfbWlwaV9kc2kudHh0CiBjcmVh
+dGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RybS9pbXgv
+bWlwaV9kc2kudHh0CiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL3BhbmVsL2hpbWF4LGh4ODM2OWEudHh0CiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJp
+dmVycy9ncHUvZHJtL2JyaWRnZS9kd19taXBpX2RzaS5jCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJp
+dmVycy9ncHUvZHJtL2lteC9kd19taXBpX2RzaS1pbXguYwogY3JlYXRlIG1vZGUgMTAwNjQ0IGRy
+aXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1oaW1heC1oeDgzNjlhLmMKIGNyZWF0ZSBtb2RlIDEw
+MDY0NCBpbmNsdWRlL2RybS9icmlkZ2UvZHdfbWlwaV9kc2kuaAoKLS0gCjIuMS4wCgpfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGlu
+ZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVk
+ZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
