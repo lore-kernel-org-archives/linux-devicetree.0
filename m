@@ -1,12 +1,12 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH resend 1/3] ARM: dts: sun4i: Add lradc node
-Date: Tue, 23 Dec 2014 11:13:20 +0100
-Message-ID: <1419329602-11552-2-git-send-email-hdegoede@redhat.com>
+Subject: [PATCH resend 3/3] ARM: dts: sun7i: Add lradc node
+Date: Tue, 23 Dec 2014 11:13:22 +0100
+Message-ID: <1419329602-11552-4-git-send-email-hdegoede@redhat.com>
 References: <1419329602-11552-1-git-send-email-hdegoede@redhat.com>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBSUA4WSAKGQEVIE2AOA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBTMA4WSAKGQETTDVLKA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <1419329602-11552-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -21,26 +21,104 @@ List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm/boot/dts/sun4i-a10.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts | 59 ++++++++++++++++++++++++-
+ arch/arm/boot/dts/sun7i-a20.dtsi                |  7 +++
+ 2 files changed, 64 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
-index 952a56c..e8cd6db 100644
---- a/arch/arm/boot/dts/sun4i-a10.dtsi
-+++ b/arch/arm/boot/dts/sun4i-a10.dtsi
-@@ -688,6 +688,13 @@
+diff --git a/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts b/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts
+index 9d669cdf..c00badd 100644
+--- a/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts
++++ b/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts
+@@ -12,8 +12,9 @@
+  */
+ 
+ /dts-v1/;
+-/include/ "sun7i-a20.dtsi"
+-/include/ "sunxi-common-regulators.dtsi"
++#include "sun7i-a20.dtsi"
++#include "sunxi-common-regulators.dtsi"
++#include <dt-bindings/input/input.h>
+ 
+ / {
+ 	model = "Olimex A20-Olinuxino Micro";
+@@ -100,6 +101,60 @@
+ 			};
+ 		};
+ 
++		lradc: lradc@01c22800 {
++			vref-supply = <&reg_vcc3v0>;
++			status = "okay";
++
++			button@191 {
++				label = "Volume Up";
++				linux,code = <KEY_VOLUMEUP>;
++				channel = <0>;
++				voltage = <191274>;
++			};
++
++			button@392 {
++				label = "Volume Down";
++				linux,code = <KEY_VOLUMEDOWN>;
++				channel = <0>;
++				voltage = <392644>;
++			};
++
++			button@601 {
++				label = "Menu";
++				linux,code = <KEY_MENU>;
++				channel = <0>;
++				voltage = <601151>;
++			};
++
++			button@795 {
++				label = "Search";
++				linux,code = <KEY_SEARCH>;
++				channel = <0>;
++				voltage = <795090>;
++			};
++
++			button@987 {
++				label = "Home";
++				linux,code = <KEY_HOMEPAGE>;
++				channel = <0>;
++				voltage = <987387>;
++			};
++
++			button@1184 {
++				label = "Esc";
++				linux,code = <KEY_ESC>;
++				channel = <0>;
++				voltage = <1184678>;
++			};
++
++			button@1398 {
++				label = "Enter";
++				linux,code = <KEY_ENTER>;
++				channel = <0>;
++				voltage = <1398804>;
++			};
++		};
++
+ 		uart0: serial@01c28000 {
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&uart0_pins_a>;
+diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
+index e558125..e24f7cc 100644
+--- a/arch/arm/boot/dts/sun7i-a20.dtsi
++++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+@@ -930,6 +930,13 @@
  			status = "disabled";
  		};
  
 +		lradc: lradc@01c22800 {
 +			compatible = "allwinner,sun4i-a10-lradc-keys";
 +			reg = <0x01c22800 0x100>;
-+			interrupts = <31>;
++			interrupts = <0 31 4>;
 +			status = "disabled";
 +		};
 +
  		sid: eeprom@01c23800 {
- 			compatible = "allwinner,sun4i-a10-sid";
- 			reg = <0x01c23800 0x10>;
+ 			compatible = "allwinner,sun7i-a20-sid";
+ 			reg = <0x01c23800 0x200>;
 -- 
 2.1.0
