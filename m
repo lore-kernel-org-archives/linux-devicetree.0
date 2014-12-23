@@ -1,122 +1,75 @@
-From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
-Subject: Re: [RFC v1 PATCH 1/2] of/pci: add of_pci_dma_configure() update
- dma configuration
-Date: Tue, 23 Dec 2014 12:42:05 -0500
-Message-ID: <5499A96D.4010704@ti.com>
-References: <1418940425-2017-1-git-send-email-m-karicheri2@ti.com> <54989DDE.3060409@ti.com> <1723662.JYr5muIJha@wuerfel> <5090769.jqAkiDgYu7@wuerfel>
+From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH 2/2] iio: mxs-lradc: check ranges of ts properties
+Date: Tue, 23 Dec 2014 14:37:22 +0100
+Message-ID: <201412231437.22809.marex@denx.de>
+References: <1419250476-2393-1-git-send-email-stefan.wahren@i2se.com> <1419250476-2393-3-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: Text/Plain;
+  charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5090769.jqAkiDgYu7@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1419250476-2393-3-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kristina.martsenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/22/2014 06:07 PM, Arnd Bergmann wrote:
-> On Monday 22 December 2014 23:44:52 Arnd Bergmann wrote:
->> On Monday 22 December 2014 17:40:30 Murali Karicheri wrote:
->>> On 12/22/2014 05:24 PM, Arnd Bergmann wrote:
->>>> On Monday 22 December 2014 16:40:43 Murali Karicheri wrote:
->>>>>>> +++ b/arch/arm/mm/dma-mapping.c
->>>>>>> @@ -2052,9 +2052,10 @@ void arch_setup_dma_ops(struct device *dev, u64
->>>>>>> dma_base, u64 size,
->>>>>>>                             struct iommu_ops *iommu, bool coherent)
->>>>>>>      {
->>>>>>>             struct dma_map_ops *dma_ops;
->>>>>>> +       u64 temp_size = min((*(dev->dma_mask) + 1), size);
->>>>>>>
->>>>>>>             dev->archdata.dma_coherent = coherent;
->>>>>>> -       if (arm_setup_iommu_dma_ops(dev, dma_base, size, iommu))
->>>>>>> +       if (arm_setup_iommu_dma_ops(dev, dma_base, temp_size, iommu))
->>>>>>>
->>>>>>> If you agree, I will post v1 of the patch with these updates. Let me
->>>>>>> know. I did some basic tests on Keystone with these changes and it works
->>>>>>> fine.
->>>>>>
->>>>>> It's not exactly what I meant. My main point was that we need to limit
->>>>>> dev->dma_mask to (size-1) here, but you are not touching that.
->>>>>
->>>>> if you mean overriding the dev->dma_mask to min((*dev->dma_mask),
->>>>> size-1), then I am getting the error "Coherent DMA mask 0x7fffffff (pfn
->>>>> 0x780000-0x800000) covers a smaller range of system memory than the DMA
->>>>> zone pfn 0x0-0x880000) when the devices on Keystone tries to set the dma
->>>>> mask. Something wrong and I need to look into the code.
->>>>
->>>> Right, it sounds like the offset was applied incorrectly at some point.
->>>>
->>>> What are the DMA zone size and the phys-offset?
->>> 2G and 0x8_0000_0000. This limit the usable DMA size to 2G on Keystone,
->>> I believe you shouldn't be limiting the dma mask to size-1 in this case,
->>> right? The DT setup the dma-range to have a size of 2G (0x80000000).
->>
->> No, the problem is something else: the pfn range that we calculate for the
->> coherent DMA mask should have been 0x800000-0x880000, not 0x780000-0x800000,
->> so we would exactly match the ZONE_DMA.
->
-> I gave it some more thought, and concluded that the size that gets passed
-> down is not really the right value to be compared to a mask if the dma-capable
-> area starts at a nonzero bus address.
->
-> In your case, bus addresses 0x80000000-0xffffffff are valid for DMA, so
-> the mask must be 0xffffffff to forbid any DMA to addresses larger than
-> 0x100000000, not 0x7fffffff which would not be enough to cover any RAM.
->
-> I guess the dma_mask should be 'min((*dev->dma_mask), dma_base + size - 1)'
-> here.
+On Monday, December 22, 2014 at 01:14:36 PM, Stefan Wahren wrote:
+> The devicetree binding for mxs-lradc defines ranges for the
+> touchscreen properties. In order to avoid unexpected behavior like
+> division by zero, we better check these ranges during probe and
+> abort in error case.
+> 
+> Additionally this patch adds an important note from the reference
+> manual about the range of sample delay.
+> 
+> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+> ---
+>  drivers/staging/iio/adc/mxs-lradc.c |   44
+> +++++++++++++++++++++++++++-------- 1 file changed, 34 insertions(+), 10
+> deletions(-)
+> 
+> diff --git a/drivers/staging/iio/adc/mxs-lradc.c
+> b/drivers/staging/iio/adc/mxs-lradc.c index f053535..990e945 100644
+> --- a/drivers/staging/iio/adc/mxs-lradc.c
+> +++ b/drivers/staging/iio/adc/mxs-lradc.c
+> @@ -436,7 +436,13 @@ static void mxs_lradc_setup_ts_channel(struct
+> mxs_lradc *lradc, unsigned ch) */
+>  	mxs_lradc_reg_clear(lradc, LRADC_CH_VALUE_MASK, LRADC_CH(ch));
+> 
+> -	/* prepare the delay/loop unit according to the oversampling count */
+> +	/* prepare the delay/loop unit according to the oversampling count
 
-Arnd,
+Very minor coding style flub in this comment above. Multi-line comments should
+start with /* and a newline after that ;-)
 
-I guess so. Besides we need to keep the default coherent dma mask to 
-32bit 0xffffffffull as well to work on Keystone and also in sync with 
-current defaults used in pci_device_add() so that we don't break this 
-behavior.
+> +	 * from the datasheet:
+> +	 * "The DELAY fields in HW_LRADC_DELAY0, HW_LRADC_DELAY1,
+> +	 * HW_LRADC_DELAY2, and HW_LRADC_DELAY3 must be non-zero; otherwise,
+> +	 * the LRADC will not trigger the delay group."
+> +	 */
+>  	mxs_lradc_reg_wrt(lradc, LRADC_DELAY_TRIGGER(1 << ch) |
+>  		LRADC_DELAY_TRIGGER_DELAYS(0) |
+>  		LRADC_DELAY_LOOP(lradc->over_sample_cnt - 1) |
+> @@ -1495,20 +1501,38 @@ static int mxs_lradc_probe_touchscreen(struct
+> mxs_lradc *lradc, return -EINVAL;
+>  	}
+> 
+> -	lradc->over_sample_cnt = 4;
+> -	ret = of_property_read_u32(lradc_node, "fsl,ave-ctrl", &adapt);
+> -	if (ret == 0)
+> +	if (of_property_read_u32(lradc_node, "fsl,ave-ctrl", &adapt)) {
+> +		lradc->over_sample_cnt = 4;
+> +	} else {
+> +		if (adapt < 1 || adapt > 32) {
 
-Here is the summary of changes need to make on top of my existing patch.
+This is just an idea, but do we not have some kind of a 
+"of_property_read_u32_range()" thingie, which would include this kind of range 
+checking ? Would it be worth implementing such thing ? What do you think
+please ?
 
-1. of_dma_configure() - change size = dev->coherent_dma_mask to size = 
-dev->coherent_dma_mask + 1. This is a new patch to fix existing code.
+[...]
 
-2. Do the above change to of_pci_dma_configure() as well.
+Otherwise,
 
-3. in arch_setup_dma_ops() update the DMA mask to min((*dev->dma_mask), 
-dma_base + size - 1) as
-
-
-diff --git a/arch/arm/mm/dma-mapping.c b/arch/arm/mm/dma-mapping.c
-index c17f6a9..88b4769 100644
---- a/arch/arm/mm/dma-mapping.c
-+++ b/arch/arm/mm/dma-mapping.c
-@@ -2053,8 +2053,13 @@ void arch_setup_dma_ops(struct device *dev, u64 
-dma_base, u64 size,
-  {
-         struct dma_map_ops *dma_ops;
-
-+
-+       *dev->dma_mask = min((*dev->dma_mask), (dma_base + size - 1));
-
-I have tested this on keystone and it works fine with rootfs on PCI SATA 
-harddisk. I will be doing more tests with this change. If you are in 
-agreement with the above changes, I will re-spin the patch to accomodate 
-them and send v1 of the same.
-
-Regards,
-
-Murali
-
->
-> 	Arnd
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
-
--- 
-Murali Karicheri
-Linux Kernel, Texas Instruments
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Reviewed-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
