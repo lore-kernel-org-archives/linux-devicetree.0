@@ -1,60 +1,51 @@
-From: Shaohui Xie <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH] [v2] power/fsl: add MDIO dt binding for FMan
-Date: Tue, 23 Dec 2014 08:17:06 +0000
-Message-ID: <DM2PR0301MB0864B0B8C1648A0ED8B0EB9AE2570@DM2PR0301MB0864.namprd03.prod.outlook.com>
-References: <1415958800-9867-1-git-send-email-shh.xie@gmail.com>
-	 <1416966592.15957.172.camel@freescale.com>
-	 <DM2PR0301MB08641FB289DBA17AD59FBEA0E26A0@DM2PR0301MB0864.namprd03.prod.outlook.com>
-	 <1418940078.5581.143.camel@freescale.com>
-	 <DM2PR0301MB0864AA31CD1A7438F476020FE26B0@DM2PR0301MB0864.namprd03.prod.outlook.com>
-	 <1419030955.5581.154.camel@freescale.com>
-	 <DM2PR0301MB086427C10254A0A749CD1326E2560@DM2PR0301MB0864.namprd03.prod.outlook.com>
-	 <5497D466.9090804@Freescale.com> <1419237176.5581.159.camel@freescale.com>
-	 <5497E645.7010500@Freescale.com> <1419241330.5581.162.camel@freescale.com>
-	 <5497FBAB.4010206@Freescale.com> <1419283551.5581.172.camel@freescale.com>
-	 <DM2PR0301MB08642FFDB6207DE205731547E2570@DM2PR0301MB0864.namprd03.prod.outlook.com>
- <1419322085.5581.182.camel@freescale.com>
+From: Liu Ying <Ying.Liu@freescale.com>
+Subject: Re: [PATCH RFC v3 02/18] of: Add vendor prefix for Himax Technologies
+ Inc.
+Date: Tue, 23 Dec 2014 16:26:37 +0800
+Message-ID: <5499273D.3040900@freescale.com>
+References: <1419306399-9387-1-git-send-email-Ying.Liu@freescale.com>
+ <1419306399-9387-3-git-send-email-Ying.Liu@freescale.com>
+ <789433791.920346.1419322152848.JavaMail.open-xchange@oxbaltgw08.schlund.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1419322085.5581.182.camel-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Emilian Medve <Emilian.Medve-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <789433791.920346.1419322152848.JavaMail.open-xchange@oxbaltgw08.schlund.de>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Stefan Wahren <stefan.wahren@i2se.com>, dri-devel@lists.freedesktop.org
+Cc: devicetree@vger.kernel.org, linux@arm.linux.org.uk, andyshrk@gmail.com, mturquette@linaro.org, linux-kernel@vger.kernel.org, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBXb29kIFNjb3R0LUIwNzQyMQ0K
-PiBTZW50OiBUdWVzZGF5LCBEZWNlbWJlciAyMywgMjAxNCA0OjA4IFBNDQo+IFRvOiBYaWUgU2hh
-b2h1aS1CMjE5ODkNCj4gQ2M6IE1lZHZlIEVtaWxpYW4tRU1NRURWRTE7IGxpbnV4cHBjLWRldkBs
-aXN0cy5vemxhYnMub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgTGliZXJtYW4g
-SWdhbC1CMzE5NTANCj4gU3ViamVjdDogUmU6IFtQQVRDSF0gW3YyXSBwb3dlci9mc2w6IGFkZCBN
-RElPIGR0IGJpbmRpbmcgZm9yIEZNYW4NCj4gDQo+IE9uIFR1ZSwgMjAxNC0xMi0yMyBhdCAwMToz
-NSAtMDYwMCwgWGllIFNoYW9odWktQjIxOTg5IHdyb3RlOg0KPiA+ICstIGJ1cy1mcmVxdWVuY3kN
-Cj4gPiArCQlVc2FnZTogb3B0aW9uYWwNCj4gPiArCQlWYWx1ZSB0eXBlOiA8dTMyPg0KPiA+ICsJ
-CURlZmluaXRpb246IFNwZWNpZmllcyBleHRlcm5hbCBNRElPIGJ1cyBjbG9jayBzcGVlZCB3aGlj
-aCBpcw0KPiA+ICsJCWRpZmZlcmVudCBmcm9tIE1ESU8gc3RhbmRhcmQgMi41TUh6LiBTaG91bGQg
-YmUgZGVmaW5lZCBmb3INCj4gU29Dcw0KPiA+ICsJCW9uIHdoaWNoIHRoZSBzdGFuZGFyZCBvbmUg
-Y2Fubm90IHdvcmsuDQo+ID4NCj4gPiBXaGF0IHNob3VsZCBJIHJlcGhyYXNlIGl0PyBSZXBsYWNl
-IHRoZSBsYXN0IHNlbnRlbmNlIHdpdGggIlNob3VsZCBiZQ0KPiA+IGRlZmluZWQgRm9yIFNvQ3Mg
-b24gd2hpY2ggYSBsb3dlciBmcmVxdWVuY3kgdGhhbiB0aGUgc3RhbmRhcmQgaXMNCj4gcmVxdWly
-ZWQuIj8NCj4gDQo+IE5laXRoZXIgb2YgdGhlc2Ugd29yayB3aXRoIEVtaWwncyBzY2VuYXJpbyBv
-ZiBhIHN5c3RlbSB0aGF0IGFsbG93cyBhDQo+IGZhc3Rlci10aGFuLXN0YW5kYXJkIHNwZWVkLg0K
-PiANCj4gSG93IGFib3V0OiAiRGVmaW5pdGlvbjogU3BlY2lmaWVzIHRoZSBleHRlcm5hbCBNRElP
-IGJ1cyBjbG9jayBzcGVlZCB0byBiZQ0KPiB1c2VkLCBpZiBkaWZmZXJlbnQgZnJvbSB0aGUgc3Rh
-bmRhcmQgMi41IE1Iei4gIFRoaXMgbWF5IGJlIGR1ZSB0byB0aGUNCj4gc3RhbmRhcmQgc3BlZWQg
-YmVpbmcgdW5zdXBwb3J0ZWQgKGUuZy4gZHVlIHRvIGEgaGFyZHdhcmUgcHJvYmxlbSksIG9yIHRv
-DQo+IGFkdmVydGlzZSB0aGF0IGFsbCByZWxldmFudCBjb21wb25lbnRzIGluIHRoZSBzeXN0ZW0g
-c3VwcG9ydCBhIGZhc3Rlcg0KPiBzcGVlZC4iDQpbUy5IXSBPSy4gSSdsbCB1c2UgdGhpcyBpbiBW
-My4NCg0KPiANCj4gPiBIb3cgYWJvdXQgdGhlIHZhbHVlIHVzZWQgaW4gZXhhbXBsZT8NCj4gPiBT
-aG91bGQgMi41TUh6IGJlIHVzZWQgb3IgYSBsb3dlciBvbmU/DQo+IA0KPiBJZiB5b3UgZG9uJ3Qg
-aGF2ZSBhIHJlYWxpc3RpYyBleGFtcGxlIHRvIHVzZSwgZG9uJ3QgcHV0IGl0IGluIHRoZSBleGFt
-cGxlDQo+IGF0IGFsbC4gIDIuNU1IeiBpcyB0aGUgd29yc3QgZXhhbXBsZSB0byB1c2UgYmVjYXVz
-ZSB0aGF0J3MgdGhlIGRlZmF1bHQNCj4gYW5kIHRoZXJlJ2QgYmUgbm8gcmVhc29uIHRvIHVzZSB0
-aGUgcHJvcGVydHkgYXQgYWxsLg0KW1MuSF0gT0suIFRoZSBWMyB3aWxsIG5vdCBoYXZlIHRoaXMg
-aW4gZXhhbXBsZS4NCg0KVGhhbmsgeW91IGFsbCBmb3IgcmV2aWV3aW5nIQ0KU2hhb2h1aQ0K
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgU3RlZmFuLAoKT24gMTIvMjMvMjAxNCAwNDowOSBQTSwgU3RlZmFuIFdhaHJlbiB3cm90ZToK
+PiBIaSBMaXUsCj4KPj4gTGl1IFlpbmcgPFlpbmcuTGl1QGZyZWVzY2FsZS5jb20+IGhhdCBhbSAy
+My4gRGV6ZW1iZXIgMjAxNCB1bSAwNDo0Ngo+PiBnZXNjaHJpZWJlbjoKPj4KPj4KPj4gU2lnbmVk
+LW9mZi1ieTogTGl1IFlpbmcgPFlpbmcuTGl1QGZyZWVzY2FsZS5jb20+Cj4+IC0tLQo+PiB2Mi0+
+djM6Cj4+ICogTm9uZS4KPj4KPj4gdjEtPnYyOgo+PiAqIE5vbmUuCj4+Cj4+IERvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMudHh0IHwgMSArCj4+IDEgZmls
+ZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKQo+Pgo+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZlbmRvci1wcmVmaXhlcy50eHQKPj4gYi9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmVuZG9yLXByZWZpeGVzLnR4dAo+PiBpbmRleCA3OGVm
+ZWJiLi4zY2VlNTI4IDEwMDY0NAo+PiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvdmVuZG9yLXByZWZpeGVzLnR4dAo+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvdmVuZG9yLXByZWZpeGVzLnR4dAo+PiBAQCAtNjksNiArNjksNyBAQCBoYW5u
+c3RhciBIYW5uU3RhciBEaXNwbGF5IENvcnBvcmF0aW9uCj4+IGhhb3l1IEhhb3l1IE1pY3JvZWxl
+Y3Ryb25pYyBDby4gTHRkLgo+PiBoaXNpbGljb24gSGlzaWxpY29uIExpbWl0ZWQuCj4+IGhpdCBI
+aXRhY2hpIEx0ZC4KPj4gK2hpbWF4IEhpbWF4IFRlY2hub2xvZ2llcywgSW5jLgo+Cj4gcGxlYXNl
+IGZpeCB0aGUgb3JkZXJpbmcuIGhpbWF4IGNvbWVzIGJlZm9yZSBoaXNpbGljb24uCgpZZXMuIEkn
+bGwgZml4IHRoYXQuCgpUaGFua3MsCkxpdSBZaW5nCgo+Cj4gVGhhbmtzCj4KPiBTdGVmYW4KPgo+
+PiBob25leXdlbGwgSG9uZXl3ZWxsCj4+IGhwIEhld2xldHQgUGFja2FyZAo+PiBpMnNlIEkyU0Ug
+R21iSAo+PiAtLQo+PiAyLjEuMAo+Pgo+Pgo+PiBfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fXwo+PiBsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdAo+PiBs
+aW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKPj4gaHR0cDovL2xpc3RzLmluZnJh
+ZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
+ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
