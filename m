@@ -1,45 +1,67 @@
-From: Andrew Bresticker <abrestic@chromium.org>
-Subject: [PATCH 2/2] MIPS: Add dtbs_install target
-Date: Mon, 22 Dec 2014 15:27:43 -0800
-Message-ID: <1419290863-19788-2-git-send-email-abrestic@chromium.org>
-References: <1419290863-19788-1-git-send-email-abrestic@chromium.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1419290863-19788-1-git-send-email-abrestic@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ralf Baechle <ralf@linux-mips.org>
-Cc: linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Bresticker <abrestic@chromium.org>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] ARM: shmobile: r8a7790: add MLB+ clock
+Date: Tue, 23 Dec 2014 09:23:53 +0900
+Message-ID: <20141223002353.GD2817@verge.net.au>
+References: <2277336.BnuIY8UiP8@wasted.cogentembedded.com>
+ <20141222000610.GG29188@verge.net.au>
+ <54989071.2060509@cogentembedded.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <54989071.2060509@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add the dtbs_install Makefile target to install the dtb files into
-$INSTALL_DTBS_PATH.
+Hi Sergei,
 
-Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
----
- arch/mips/Makefile | 5 +++++
- 1 file changed, 5 insertions(+)
+On Tue, Dec 23, 2014 at 12:43:13AM +0300, Sergei Shtylyov wrote:
+> On 12/22/2014 03:06 AM, Simon Horman wrote:
+> 
+> >>From: Andrey Gusakov <andrey.gusakov@cogentembedded.com>
+> 
+> >>Add MLB+ clock to R8A7790 device tree.
+> 
+> >>Signed-off-by: Andrey Gusakov <andrey.gusakov@cogentembedded.com>
+> >>[Sergei: rebased, renamed, added changelog]
+> >>Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> 
+> >>---
+> >>This patch is against 'renesas-devel-20141218-v3.18' tag of Simon Horman's
+> >>'renesas.git' repo.
+> 
+> >Thanks, I have queued this up.
+> 
+>    Oops, just saw a formatting issue in this patch...
+> 
+> [...]
+> >>Index: renesas/include/dt-bindings/clock/r8a7790-clock.h
+> >>===================================================================
+> >>--- renesas.orig/include/dt-bindings/clock/r8a7790-clock.h
+> >>+++ renesas/include/dt-bindings/clock/r8a7790-clock.h
+> >>@@ -97,6 +97,7 @@
+> >>  #define R8A7790_CLK_LVDS0		26
+> >>
+> >>  /* MSTP8 */
+> >>+#define R8A7790_CLK_MLB		2
+> 
+>    Need one more tab here.
+> 
+> >>  #define R8A7790_CLK_VIN3		8
+> >>  #define R8A7790_CLK_VIN2		9
+> >>  #define R8A7790_CLK_VIN1		10
+> 
+>    Perhaps you still can fix it up, or I can resend? I'm not seeing this
+> patch in the 'devel' branch yet...
 
-diff --git a/arch/mips/Makefile b/arch/mips/Makefile
-index 9c4b9c8..6ff26bc 100644
---- a/arch/mips/Makefile
-+++ b/arch/mips/Makefile
-@@ -356,6 +356,10 @@ PHONY += dtbs
- dtbs: scripts
- 	$(Q)$(MAKE) $(build)=arch/mips/boot/dts
- 
-+PHONY += dtbs_install
-+dtbs_install:
-+	$(Q)$(MAKE) $(dtbinst)=arch/mips/boot/dts
-+
- archprepare:
- ifdef CONFIG_MIPS32_N32
- 	@echo '  Checking missing-syscalls for N32'
-@@ -392,6 +396,7 @@ define archhelp
- 	echo '  uImage               - U-Boot image'
- 	echo '  uImage.gz            - U-Boot image (gzip)'
- 	echo '  dtbs                 - Device-tree blobs for enabled boards'
-+	echo '  dtbs_install         - Install dtbs to $(INSTALL_DTBS_PATH)'
- 	echo
- 	echo '  These will be default as appropriate for a configured platform.'
- endef
--- 
-2.2.0.rc0.207.ga3a616c
+Thanks for following up on this.
+
+I had the patch queued up locally but it seems that I forgot to push them.
+
+I have fixed up this patch by adding an extra tab and pushed the result.
+The result should be in renesas-devel-20141223-v3.19-rc1
+(But kernel.org seems slow today).
+
+Please let me know if I messed things up somehow.
