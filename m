@@ -1,77 +1,91 @@
-From: Eddie Huang <eddie.huang@mediatek.com>
-Subject: Re: [PATCH v2 3/4] arm64: dts: Add mediatek MT8173 SoC and
- evaluation board dts and Makefile
-Date: Tue, 23 Dec 2014 15:30:16 +0800
-Message-ID: <1419319816.14341.6.camel@mtksdaap41>
-References: <1418825853-10934-1-git-send-email-eddie.huang@mediatek.com>
- <1418825853-10934-4-git-send-email-eddie.huang@mediatek.com>
- <20141217143305.GC8942@leverpostej>
+From: Shaohui Xie <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH] [v2] power/fsl: add MDIO dt binding for FMan
+Date: Tue, 23 Dec 2014 07:35:01 +0000
+Message-ID: <DM2PR0301MB08642FFDB6207DE205731547E2570@DM2PR0301MB0864.namprd03.prod.outlook.com>
+References: <1415958800-9867-1-git-send-email-shh.xie@gmail.com>
+	 <1416966592.15957.172.camel@freescale.com>
+	 <DM2PR0301MB08641FB289DBA17AD59FBEA0E26A0@DM2PR0301MB0864.namprd03.prod.outlook.com>
+	 <1418940078.5581.143.camel@freescale.com>
+	 <DM2PR0301MB0864AA31CD1A7438F476020FE26B0@DM2PR0301MB0864.namprd03.prod.outlook.com>
+	 <1419030955.5581.154.camel@freescale.com>
+	 <DM2PR0301MB086427C10254A0A749CD1326E2560@DM2PR0301MB0864.namprd03.prod.outlook.com>
+	 <5497D466.9090804@Freescale.com> <1419237176.5581.159.camel@freescale.com>
+	 <5497E645.7010500@Freescale.com> <1419241330.5581.162.camel@freescale.com>
+	 <5497FBAB.4010206@Freescale.com> <1419283551.5581.172.camel@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20141217143305.GC8942@leverpostej>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, marc.zyngier@arm.com, Catalin Marinas <Catalin.Marinas@arm.com>, Olof Johansson <olof@lixom.net>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Robert Richter <rrichter@cavium.com>, "srv_heupstream@mediatek.com" <srv_heupstream@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, "Joe.C" <yingjoe.chen@mediatek.com>, Thomas Gleixner <tglx@linutronix.de>, Mark Brown <broonie@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1419283551.5581.172.camel-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Emilian Medve <Emilian.Medve-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2014-12-17 at 14:33 +0000, Mark Rutland wrote:
-> On Wed, Dec 17, 2014 at 02:17:32PM +0000, Eddie Huang wrote:
-> > Add device tree support for MT8173 SoC and evaluation board based on it.
-> > 
-> > Signed-off-by: Eddie Huang <eddie.huang@mediatek.com>
-> > ---
-> >  arch/arm64/boot/dts/Makefile       |   1 +
-> >  arch/arm64/boot/dts/mt8173-evb.dts |  34 +++++++++
-> >  arch/arm64/boot/dts/mt8173.dtsi    | 152 +++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 187 insertions(+)
-> >  create mode 100644 arch/arm64/boot/dts/mt8173-evb.dts
-> >  create mode 100644 arch/arm64/boot/dts/mt8173.dtsi
-> > 
-> > +	psci {
-> > +		compatible = "arm,psci";
-> > +		method = "smc";
-> > +		cpu_suspend   = <0x84000001>;
-> > +		cpu_off	      = <0x84000002>;
-> > +		cpu_on	      = <0x84000003>;
-> > +		affinity_info = <0x84000004>;
-> > +	};
-> 
-> There is no AFFINITY_INFO function prior to PSCI 0.2, and
-> 'affinity_info' does not exist in the "arm,psci" binding.
-> 
-> I take it hotplug has been tested for all but CPU0?
-> 
-
-Yes, hotplug is ok except CPU0
-
-> > +
-> > +		gic: interrupt-controller@10220000 {
-> > +			compatible = "arm,gic-400";
-> > +			#interrupt-cells = <3>;
-> > +			interrupt-parent = <&gic>;
-> > +			interrupt-controller;
-> > +			reg = <0 0x10221000 0 0x1000>,
-> > +			      <0 0x10222000 0 0x1000>,
-> > +			      <0 0x10224000 0 0x2000>,
-> > +			      <0 0x10226000 0 0x2000>;
-> > +			interrupts = <1 9 0xf04>;
-> > +		};
-> 
-> I don't think these reg entries are quite right; GICC should be 8k long.
-> 
-> Marc?
-> 
-> Thanks,
-> Mark.
-
-Yes, GICC should be 8K long.
+DQoNCkJlc3QgUmVnYXJkcywgDQpTaGFvaHVpIFhpZQ0KDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNz
+YWdlLS0tLS0NCj4gRnJvbTogV29vZCBTY290dC1CMDc0MjENCj4gU2VudDogVHVlc2RheSwgRGVj
+ZW1iZXIgMjMsIDIwMTQgNToyNiBBTQ0KPiBUbzogTWVkdmUgRW1pbGlhbi1FTU1FRFZFMQ0KPiBD
+YzogWGllIFNoYW9odWktQjIxOTg5OyBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZzsNCj4g
+ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IExpYmVybWFuIElnYWwtQjMxOTUwDQo+IFN1Ympl
+Y3Q6IFJlOiBbUEFUQ0hdIFt2Ml0gcG93ZXIvZnNsOiBhZGQgTURJTyBkdCBiaW5kaW5nIGZvciBG
+TWFuDQo+IA0KPiBPbiBNb24sIDIwMTQtMTItMjIgYXQgMDU6MDggLTA2MDAsIEVtaWwgTWVkdmUg
+d3JvdGU6DQo+ID4gSGVsbG8gU2NvdHQsDQo+ID4NCj4gPg0KPiA+IE9uIDEyLzIyLzIwMTQgMDM6
+NDIgQU0sIFNjb3R0IFdvb2Qgd3JvdGU6DQo+ID4gPiBPbiBNb24sIDIwMTQtMTItMjIgYXQgMDM6
+MzcgLTA2MDAsIEVtaWwgTWVkdmUgd3JvdGU6DQo+ID4gPj4gSGVsbG8gU2NvdHQsDQo+ID4gPj4N
+Cj4gPiA+Pg0KPiA+ID4+IE9uIDEyLzIyLzIwMTQgMDI6MzIgQU0sIFNjb3R0IFdvb2Qgd3JvdGU6
+DQo+ID4gPj4+IE9uIE1vbiwgMjAxNC0xMi0yMiBhdCAwMjoyMCAtMDYwMCwgRW1pbCBNZWR2ZSB3
+cm90ZToNCj4gPiA+Pj4+IEZvciB0aGUgcHVycG9zZSBvZiBhbiBleGFtcGxlIGluIHRoZSBiaW5k
+aW5nIGRvY3VtZW50LCBJIHN1Z2dlc3QNCj4gPiA+Pj4+IHdlIGp1c3Qgc3RpY2sgd2l0aCB0aGUg
+SUVFRSBzdGFuZGFyZCBmcmVxdWVuY3kuDQo+ID4gPj4+DQo+ID4gPj4+IFRoZSB3aG9sZSByZWFz
+b24gZm9yIHRoaXMgcHJvcGVydHkgZXhpc3RpbmcgaW4gdGhlIGRldmljZSB0cmVlIGlzDQo+ID4g
+Pj4+IG5vbi1zdGFuZGFyZCBmcmVxdWVuY2llcy4NCj4gPiA+Pg0KPiA+ID4+IFdoaWxlIHRoZSBz
+dGFuZGFyZCBjbGFpbXMgMi41IE1IeiwgbW9zdCBNRElPIGNvbnRyb2xsZXJzIGFuZCBQSFkNCj4g
+PiA+PiBkZXZpY2VzIHN1cHBvcnQgZnJlcXVlbmNpZXMgd2VsbCBiZXlvbmQgdGhlIHN0YW5kYXJk
+LiBTcGVjaWZ5aW5nIGENCj4gPiA+PiBsb3dlciB0aGVuIHRoZSBzdGFuZGFyZCBmcmVxdWVuY3kg
+Zm9yIHRoZSBiZW5lZml0IG9mIHNvbWUgZXJyYXRhIGlzDQo+ID4gPj4ganVzdCBvbmUgc2lkZSBv
+ZiB0aGlzIHByb3BlcnR5DQo+ID4gPg0KPiA+ID4gVGhlIGVycmF0dW0gd2FzICh1bnRpbCBub3cp
+IHRoZSBvbmx5IGNsYWltZWQgcmVhc29uIGZvciBpdC4gIElmDQo+ID4gPiB0aGVyZSBhcmUgb3Ro
+ZXIgcmVhc29ucyB3aHkgb25lIHdvdWxkIHNwZWNpZnkgYSBkaWZmZXJlbnQgZnJlcXVlbmN5DQo+
+ID4gPiAoaW4gcGFydGljdWxhciwgdGhhdCByZWxhdGUgdG8gaGFyZHdhcmUgZGVzY3JpcHRpb24p
+LCBwbGVhc2UNCj4gZWxhYm9yYXRlLg0KPiA+DQo+ID4gRnJvbSBtZW1vcnksIHRoZSAxIEdiL3Mg
+Vml0ZXNzZSBQSFkocykgd2UgaGF2ZSBvbiBzb21lIG9mIG91ciBEUw0KPiA+IGJvYXJkcyBzdXBw
+b3J0IDEyLjUgTUh6LiBJIGNhbiBkaWcgb3V0IG1vcmUgc3BlY3MgZm9yIHNwZWNpZmljcyBvbg0K
+PiA+IG90aGVyIFBIWShzKQ0KPiA+DQo+ID4gMi41IE1IeiBpcyBzbG93IGFuZCBldmVuIG1vcmUg
+c28gZm9yIGhpZ2ggc3BlZWQgaW50ZXJmYWNlcy4gV2l0aCBib3RoDQo+ID4gcG9sbGluZyBhbmQg
+aW50ZXJydXB0cyAoYm90aCBNRElPIGFuZC9vciBQSFkpIHdlJ3ZlIG5vdGljZWQgKG9yDQo+ID4g
+YmxhbWVkKSBpbiB0aGUgcGFzdCBzb21lIEV0aGVybmV0IHBlcmZvcm1hbmNlIGlzc3VlcyBvbiB0
+aGlzIHZlcnkNCj4gPiBzbG93bmVzcw0KPiA+DQo+ID4gQXMgb2YgcmlnaHQgbm93IEknbSBub3Qg
+YXdhcmUgb2YgYW5vdGhlciB3YXkgdG8gc3BlY2lmeS9jb29yZGluYXRlIHRoZQ0KPiA+IE1EQyBz
+cGVlZCBzbyBzZXR0aW5nIGEgZGVmYXVsdCAoY29tbW9uIGRlbm9taW5hdG9yKSBpbiB0aGUgRFQg
+dGhhdCBpcw0KPiA+IGRpZmZlcmVudCB0aGVuIHRoZSBJRUVFIHN0YW5kYXJkIHNlZW1zIG9rDQo+
+ID4NCj4gPiA+Pj4+IFdlIGNhbiBjb250aW51ZSB0aGlzIGNvbnZlcnNhdGlvbiBhYm91dCBlcnJh
+dGEgaGFuZGxpbmcgd2hlbiB3ZQ0KPiA+ID4+Pj4gc3VibWl0IHRoZSBjb2RlIHJlbGV2YW50IHRv
+IHRoaXMgYmluZGluZyAoYW5kIHRoZSBGTWFuIHYzDQo+ID4gPj4+PiBzdXBwb3J0KQ0KPiA+ID4+
+Pg0KPiA+ID4+PiBJdCBhZmZlY3RzIHRoZSBiaW5kaW5nLCBzbyBsZXQncyBkaXNjdXNzIGl0IG5v
+dyBwbGVhc2UuDQo+ID4gPj4NCj4gPiA+PiBJIHRoaW5rIHRoaXMgc3BlY2lmaWMgKHVucHVibGlz
+aGVkIHlldCkgZXJyYXRhIGhhcyBsZXNzIGJlYXJpbmcgb24NCj4gPiA+PiB0aGUgYmluZGluZyB0
+aGVuIHlvdSBtaWdodCBiZWxpZXZlLiBUaGlzIGlzIG1vc3RseSBhYm91dCBwcm92aWRpbmcNCj4g
+PiA+PiBhIGNvbW1vbi9kZWZhdWx0IGZyZXF1ZW5jeSBzdXBwb3J0ZWQgYnkgYWxsIHRoZSBkZXZp
+Y2VzIG9uIHNvbWUNCj4gPiA+PiBib2FyZA0KPiA+ID4NCj4gPiA+IFdoYXQgcmVhc29uIG90aGVy
+IHRoYW4gYW4gZXJyYXR1bSB3b3VsZCB0aGVyZSBiZSBmb3IgdGhlIHN0YW5kYXJkDQo+ID4gPiBm
+cmVxdWVuY3kgbm90IGJlaW5nIHN1cHBvcnRlZD8NCj4gPg0KPiA+IFRoaXMgaXMgbm90IGFib3V0
+IG5vdCBzdXBwb3J0aW5nIHRoZSBzdGFuZGFyZCBmcmVxdWVuY3kuIFRoaXMgaXMgYWJvdXQNCj4g
+PiB0aGUgZGVmYXVsdCBmcmVxdWVuY3kgYmVpbmcgZGlmZmVyZW50IHRoZW4gdGhlIHN0YW5kYXJk
+DQo+IA0KPiBPSywgdGhvdWdoIHJhdGhlciB0aGFuIHRhbGsgYWJvdXQgZGVmYXVsdHMgSSdkIHBo
+cmFzZSBpdCBhcyBpbmRpY2F0aW5nDQo+IHRoYXQgYSBoaWdoZXIgZnJlcXVlbmN5IHRoYW4gc3Rh
+bmRhcmQgaXMgc3VwcG9ydGVkLCBvciB0aGF0IGEgbG93ZXINCj4gZnJlcXVlbmN5IHRoYW4gc3Rh
+bmRhcmQgaXMgcmVxdWlyZWQuDQpbUy5IXSBiZWxvdyBpcyB0aGUgc3RhdGVtZW50IGluIHYyOg0K
+DQorLSBidXMtZnJlcXVlbmN5DQorCQlVc2FnZTogb3B0aW9uYWwNCisJCVZhbHVlIHR5cGU6IDx1
+MzI+DQorCQlEZWZpbml0aW9uOiBTcGVjaWZpZXMgZXh0ZXJuYWwgTURJTyBidXMgY2xvY2sgc3Bl
+ZWQgd2hpY2ggaXMNCisJCWRpZmZlcmVudCBmcm9tIE1ESU8gc3RhbmRhcmQgMi41TUh6LiBTaG91
+bGQgYmUgZGVmaW5lZCBmb3IgU29Dcw0KKwkJb24gd2hpY2ggdGhlIHN0YW5kYXJkIG9uZSBjYW5u
+b3Qgd29yay4NCg0KV2hhdCBzaG91bGQgSSByZXBocmFzZSBpdD8gUmVwbGFjZSB0aGUgbGFzdCBz
+ZW50ZW5jZSB3aXRoICJTaG91bGQgYmUgZGVmaW5lZA0KRm9yIFNvQ3Mgb24gd2hpY2ggYSBsb3dl
+ciBmcmVxdWVuY3kgdGhhbiB0aGUgc3RhbmRhcmQgaXMgcmVxdWlyZWQuIj8NCg0KSG93IGFib3V0
+IHRoZSB2YWx1ZSB1c2VkIGluIGV4YW1wbGU/DQpTaG91bGQgMi41TUh6IGJlIHVzZWQgb3IgYSBs
+b3dlciBvbmU/DQoNClRoYW5rcyENClNoYW9odWkNCg==
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
