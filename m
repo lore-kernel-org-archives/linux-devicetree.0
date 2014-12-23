@@ -1,98 +1,63 @@
-From: Aleksey Makarov <aleksey.makarov@auriga.com>
-Subject: [PATCH 3/3] MIPS: OCTEON: Use device tree to probe for flash chips.
-Date: Tue, 23 Dec 2014 15:27:01 +0300
-Message-ID: <1419337623-16101-4-git-send-email-aleksey.makarov@auriga.com>
-References: <1419337623-16101-1-git-send-email-aleksey.makarov@auriga.com>
+From: Kedareswara rao Appana <appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH] net: xilinx: Remove unnecessary temac_property in the driver
+Date: Tue, 23 Dec 2014 18:07:55 +0530
+Message-ID: <072fa5b149374b09b3f6d5d767714d3e@BN1AFFO11FD010.protection.gbl>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1419337623-16101-1-git-send-email-aleksey.makarov@auriga.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mips@linux-mips.org
-Cc: linux-kernel@vger.kernel.org, David Daney <david.daney@cavium.com>, Aleksey Makarov <aleksey.makarov@auriga.com>, Ralf Baechle <ralf@linux-mips.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, John.Linn-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kedareswara rao Appana <appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: David Daney <david.daney@cavium.com>
+This property is no longer used in the code yet the code looks for it in the device tree.
+It does not cause an error if it's not in the tree.
 
-Don't assume they are there, the device tree will tell us.
-
-Signed-off-by: David Daney <david.daney@cavium.com>
-Signed-off-by: Aleksey Makarov <aleksey.makarov@auriga.com>
+Signed-off-by: Kedareswara rao Appana <appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 ---
- arch/mips/cavium-octeon/flash_setup.c | 42 ++++++++++++++++++++++++++++++-----
- 1 file changed, 37 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/xilinx/xilinx_axienet.h      |    2 --
+ drivers/net/ethernet/xilinx/xilinx_axienet_main.c |    4 ----
+ 2 files changed, 0 insertions(+), 6 deletions(-)
 
-diff --git a/arch/mips/cavium-octeon/flash_setup.c b/arch/mips/cavium-octeon/flash_setup.c
-index 39e26df..8eb81e2 100644
---- a/arch/mips/cavium-octeon/flash_setup.c
-+++ b/arch/mips/cavium-octeon/flash_setup.c
-@@ -8,10 +8,11 @@
-  * Copyright (C) 2007, 2008 Cavium Networks
-  */
- #include <linux/kernel.h>
--#include <linux/export.h>
-+#include <linux/module.h>
- #include <linux/semaphore.h>
- #include <linux/mtd/mtd.h>
- #include <linux/mtd/map.h>
-+#include <linux/of_platform.h>
- #include <linux/mtd/partitions.h>
+diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet.h b/drivers/net/ethernet/xilinx/xilinx_axienet.h
+index 44b8d2b..4c9b4fa 100644
+--- a/drivers/net/ethernet/xilinx/xilinx_axienet.h
++++ b/drivers/net/ethernet/xilinx/xilinx_axienet.h
+@@ -388,7 +388,6 @@ struct axidma_bd {
+  * @dma_err_tasklet: Tasklet structure to process Axi DMA errors
+  * @tx_irq:	Axidma TX IRQ number
+  * @rx_irq:	Axidma RX IRQ number
+- * @temac_type:	axienet type to identify between soft and hard temac
+  * @phy_type:	Phy type to identify between MII/GMII/RGMII/SGMII/1000 Base-X
+  * @options:	AxiEthernet option word
+  * @last_link:	Phy link state in which the PHY was negotiated earlier
+@@ -431,7 +430,6 @@ struct axienet_local {
  
- #include <asm/octeon/octeon.h>
-@@ -66,14 +67,22 @@ static void octeon_flash_map_copy_to(struct map_info *map, unsigned long to,
-  *
-  * Returns Zero on success
-  */
--static int __init flash_init(void)
-+static int octeon_flash_probe(struct platform_device *pdev)
- {
-+	union cvmx_mio_boot_reg_cfgx region_cfg;
-+	u32 cs;
-+	int r;
-+	struct device_node *np = pdev->dev.of_node;
-+
-+	r = of_property_read_u32(np, "reg", &cs);
-+	if (r)
-+		return r;
-+
- 	/*
- 	 * Read the bootbus region 0 setup to determine the base
- 	 * address of the flash.
- 	 */
--	union cvmx_mio_boot_reg_cfgx region_cfg;
--	region_cfg.u64 = cvmx_read_csr(CVMX_MIO_BOOT_REG_CFGX(0));
-+	region_cfg.u64 = cvmx_read_csr(CVMX_MIO_BOOT_REG_CFGX(cs));
- 	if (region_cfg.s.en) {
- 		/*
- 		 * The bootloader always takes the flash and sets its
-@@ -109,4 +118,27 @@ static int __init flash_init(void)
- 	return 0;
- }
+ 	int tx_irq;
+ 	int rx_irq;
+-	u32 temac_type;
+ 	u32 phy_type;
  
--late_initcall(flash_init);
-+static struct of_device_id of_flash_match[] = {
-+	{
-+		.compatible	= "cfi-flash",
-+	},
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, of_flash_match);
-+
-+static struct platform_driver of_flash_driver = {
-+	.driver = {
-+		.name = "octeon-of-flash",
-+		.owner = THIS_MODULE,
-+		.of_match_table = of_flash_match,
-+	},
-+	.probe		= octeon_flash_probe,
-+};
-+
-+static int octeon_flash_init(void)
-+{
-+	return platform_driver_register(&of_flash_driver);
-+}
-+late_initcall(octeon_flash_init);
-+
-+MODULE_LICENSE("GPL");
+ 	u32 options;			/* Current options word */
+diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+index 4ea2d4e..c18a0c6 100644
+--- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
++++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+@@ -1555,10 +1555,6 @@ static int axienet_of_probe(struct platform_device *op)
+ 		if ((be32_to_cpup(p)) >= 0x4000)
+ 			lp->jumbo_support = 1;
+ 	}
+-	p = (__be32 *) of_get_property(op->dev.of_node, "xlnx,temac-type",
+-				       NULL);
+-	if (p)
+-		lp->temac_type = be32_to_cpup(p);
+ 	p = (__be32 *) of_get_property(op->dev.of_node, "xlnx,phy-type", NULL);
+ 	if (p)
+ 		lp->phy_type = be32_to_cpup(p);
 -- 
-2.1.3
+1.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
