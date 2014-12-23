@@ -1,63 +1,97 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] PCIe: Designware: Do not allow config space through ranges
-Date: Tue, 23 Dec 2014 21:31:01 +0100
-Message-ID: <3330424.GRa0M3NfZG@wuerfel>
-References: <7dcdee69eb7db8336829e6085d736a3ac7e68ad4.1419229126.git.panand@redhat.com> <5459567.EisgEvQXh9@wuerfel> <5498D97A.8030105@redhat.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH] media: i2c/adp1653: devicetree support for adp1653
+Date: Tue, 23 Dec 2014 21:49:04 +0100
+Message-ID: <20141223204903.GA1780@amd>
+References: <20141203214641.GA1390@amd>
+ <20141223152325.75e8cb4a@concha.lan.sisa.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <5498D97A.8030105@redhat.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Pratyush Anand <panand@redhat.com>
-Cc: mohit.kumar@st.com, jg1.han@samsung.com, l.stach@pengutronix.de, shawn.guo@freescale.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, Sean Cross <xobs@kosagi.com>, Murali Karicheri <m-karicheri2@ti.com>, Minghuan Lian <Minghuan.Lian@freescale.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20141223152325.75e8cb4a@concha.lan.sisa.samsung.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
+Cc: pali.rohar@gmail.com, sre@debian.org, sre@ring0.de, kernel list <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-omap@vger.kernel.org, tony@atomide.com, khilman@kernel.org, aaro.koskinen@iki.fi, freemangordon@abv.bg, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, bcousson@baylibre.com, sakari.ailus@iki.fi, devicetree@vger.kernel.org, linux-media@vger.kernel.org, j.anaszewski@samsung.com, apw@canonical.com, joe@perches.com
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 23 December 2014 08:24:50 Pratyush Anand wrote:
-> On Monday 22 December 2014 02:00 PM, Arnd Bergmann wrote:
-> > On Monday 22 December 2014 12:09:04 Pratyush Anand wrote:
-
-> >> diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-designware.c
-> >> index df781cdf13c1..0b22b42e1ff9 100644
-> >> --- a/drivers/pci/host/pcie-designware.c
-> >> +++ b/drivers/pci/host/pcie-designware.c
-> >> @@ -409,19 +409,6 @@ int __init dw_pcie_host_init(struct pcie_port *pp)
-> >>                      pp->mem_mod_base = of_read_number(parser.range -
-> >>                                                        parser.np + na, ns);
-> >>              }
-> >> -            if (restype == 0) {
-> >> -                    of_pci_range_to_resource(&range, np, &pp->cfg);
-> >> -                    pp->cfg0_size = resource_size(&pp->cfg)/2;
-> >> -                    pp->cfg1_size = resource_size(&pp->cfg)/2;
-> >> -                    pp->cfg0_base = pp->cfg.start;
-> >> -                    pp->cfg1_base = pp->cfg.start + pp->cfg0_size;
-> >> -
-> >> -                    /* Find the untranslated configuration space address */
-> >> -                    pp->cfg0_mod_base = of_read_number(parser.range -
-> >> -                                                       parser.np + na, ns);
-> >> -                    pp->cfg1_mod_base = pp->cfg0_mod_base +
-> >> -                                        pp->cfg0_size;
-> >> -            }
-> >>      }
-> >
-> > Since we've allowed this for so long, it may be better to leave this
-> > in for compatibility with old dts files. It would however be good to
-> > print a warning message. We could also limit it to those machines that
-> > are known to have been used with this property in the past.
+On Tue 2014-12-23 15:23:25, Mauro Carvalho Chehab wrote:
+> Em Wed, 3 Dec 2014 22:46:41 +0100
+> Pavel Machek <pavel@ucw.cz> escreveu:
 > 
-> I think, only imx6 is using "config from ranges", for which I made the 
-> change in this patch. Modification need to be tested and acked by IMX6 
-> maintainers.
-> I do not see any other driver using it. However, I have kept all 
-> designware user in CC here.
+> > 
+> > We are moving to device tree support on OMAP3, but that currently
+> > breaks ADP1653 driver. This adds device tree support, plus required
+> > documentation.
+> > 
+> > Signed-off-by: Pavel Machek <pavel@ucw.cz>
+> 
+> Please be sure to check your patch with checkpatch. There are several
+> issues on it:
 
-The change to look at the 'reg' property for config space was introduced
-in 4dd964df36d ("PCI: designware: Look for configuration space in 'reg',
-not 'ranges'"), and at the time, we had Exynos5440 and i.MX as users,
-which is only a small subset of what we have now. If we are sure that
-on both architectures we don't need to support backwards compatibility
-for the existing dtbs, then we can do it, but that would be hard to
-prove, unless we know for sure that the platforms are already broken
-for any user that has old dtb files.
+> WARNING: DT compatible string "adi,adp1653" appears un-documented -- check ./Documentation/devicetree/bindings/
+> #78: FILE: arch/arm/boot/dts/omap3-n900.dts:572:
+> +		compatible = "adi,adp1653";
 
-	Arnd
+Hmm. Take a look at part quoted below. Someone needs to fix
+checkpatch. Ccing authors.
+
+> ERROR: trailing whitespace
+> WARNING: line over 80 characters
+
+Will fix.
+
+> ERROR: trailing statements should be on next line
+> #177: FILE: drivers/media/i2c/adp1653.c:454:
+> +	if (!child) return -EINVAL;
+
+I actually did these on purporse... the function is trivial, and by
+keeping returns on one line it fits into screen. I see you want it
+fixed below, so I'll do that for next version.
+
+								Pavel
+
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/media/i2c/adp1653.txt
+> > @@ -0,0 +1,38 @@
+> > +* Analog Devices ADP1653 flash LED driver
+> > +
+> > +Required Properties:
+> > +
+> > +  - compatible: Must contain one of the following
+> > +    - "adi,adp1653"
+> > +
+> > +  - reg: I2C slave address
+> > +
+> > +  - gpios: References to the GPIO that controls the power for the chip.
+> > +
+> > +There are two led outputs available - flash and indicator. One led is
+> > +represented by one child node, nodes need to be named "flash" and "indicator".
+> > +
+> > +Required properties of the LED child node:
+> > +- max-microamp : see Documentation/devicetree/bindings/leds/common.txt
+> > +
+> > +Required properties of the flash LED child node:
+> > +
+> > +- flash-max-microamp : see Documentation/devicetree/bindings/leds/common.txt
+> > +- flash-timeout-microsec : see Documentation/devicetree/bindings/leds/common.txt
+> > +
+> > +Example:
+> > +
+> > +        adp1653: led-controller@30 {
+> > +                compatible = "adi,adp1653";
+> > +		reg = <0x30>;
+> > +                gpios = <&gpio3 24 GPIO_ACTIVE_HIGH>; /* 88 */
+> > +
+> > +		flash {
+> > +                        flash-timeout-microsec = <500000>;
+> > +                        flash-max-microamp = <320000>;
+> > +                        max-microamp = <50000>;
+> > +		};
+> > +                indicator {
+> > +                        max-microamp = <17500>;
+> > +		};
+> > +        };
+
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
