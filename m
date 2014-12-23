@@ -1,60 +1,59 @@
-From: Eddie Huang <eddie.huang@mediatek.com>
-Subject: Re: [PATCH v2 3/4] arm64: dts: Add mediatek MT8173 SoC and
- evaluation board dts and Makefile
-Date: Tue, 23 Dec 2014 16:02:03 +0800
-Message-ID: <1419321723.14341.38.camel@mtksdaap41>
-References: <1418825853-10934-1-git-send-email-eddie.huang@mediatek.com>
- <20141217143305.GC8942@leverpostej> <54919AC9.2090306@arm.com>
- <3669965.zfJEHTFEBI@wuerfel>  <5497DF4C.4000104@arm.com>
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH] [v2] power/fsl: add MDIO dt binding for FMan
+Date: Tue, 23 Dec 2014 02:08:05 -0600
+Message-ID: <1419322085.5581.182.camel@freescale.com>
+References: <1415958800-9867-1-git-send-email-shh.xie@gmail.com>
+	 <1416966592.15957.172.camel@freescale.com>
+	 <DM2PR0301MB08641FB289DBA17AD59FBEA0E26A0@DM2PR0301MB0864.namprd03.prod.outlook.com>
+	 <1418940078.5581.143.camel@freescale.com>
+	 <DM2PR0301MB0864AA31CD1A7438F476020FE26B0@DM2PR0301MB0864.namprd03.prod.outlook.com>
+	 <1419030955.5581.154.camel@freescale.com>
+	 <DM2PR0301MB086427C10254A0A749CD1326E2560@DM2PR0301MB0864.namprd03.prod.outlook.com>
+	 <5497D466.9090804@Freescale.com> <1419237176.5581.159.camel@freescale.com>
+	 <5497E645.7010500@Freescale.com> <1419241330.5581.162.camel@freescale.com>
+	 <5497FBAB.4010206@Freescale.com> <1419283551.5581.172.camel@freescale.com>
+	 <DM2PR0301MB08642FFDB6207DE205731547E2570@DM2PR0301MB0864.namprd03.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5497DF4C.4000104@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <Catalin.Marinas@arm.com>, Mark Brown <broonie@linaro.org>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, yh.chen@mediatek.com, Robert Richter <rrichter@cavium.com>, "srv_heupstream@mediatek.com" <srv_heupstream@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, "Joe.C" <yingjoe.chen@mediatek.com>, Thomas Gleixner <tglx@linutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Jason Cooper <jason@lakedaemon.net>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <DM2PR0301MB08642FFDB6207DE205731547E2570-Cwg/PA1lyPnq20u2fDgSrZwN6zqB+hSMnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Xie Shaohui-B21989 <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Medve Emilian-EMMEDVE1 <Emilian.Medve-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liberman Igal-B31950 <Igal.Liberman-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Tue, 2014-12-23 at 01:35 -0600, Xie Shaohui-B21989 wrote:
+> +- bus-frequency
+> +		Usage: optional
+> +		Value type: <u32>
+> +		Definition: Specifies external MDIO bus clock speed which is
+> +		different from MDIO standard 2.5MHz. Should be defined for SoCs
+> +		on which the standard one cannot work.
+> 
+> What should I rephrase it? Replace the last sentence with "Should be defined
+> For SoCs on which a lower frequency than the standard is required."?
 
-On Mon, 2014-12-22 at 09:07 +0000, Marc Zyngier wrote:
-> On 20/12/14 20:07, Arnd Bergmann wrote:
-> > On Wednesday 17 December 2014 15:01:29 Marc Zyngier wrote:
-> >>
-> >> Indeed, as described in the documentation:
-> >> http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.ddi0471b/CHDIFAEE.html
-> >>
-> >> Also it is worth noticing that given how GICV is placed, it will never
-> >> work with 64K pages and virtualization. Pretty sad.
-> > 
-> > Does this mean no VGIC support on this platform so you have to emulate it
-> > in order to run virtual machines with 64K pages, or does it mean that
-> > it's impossible to use that way because you can't emulate it?
-> 
-> As Peter said, this is not a configuration we're willing to support:
-> - we don't have a API to tell userspace emulation about interrupts
-> generated by the generic timers
-> - we could move the whole GIC emulation into the kernel (at the moment,
-> only the distributor is there), but that would be a complete nightmare
-> 
-> It really looks like a case of "let's drop a bunch of 64bit cores into
-> an existing SoC". Shame people can't read integration guidelines...
-> 
-> 	M.
+Neither of these work with Emil's scenario of a system that allows a
+faster-than-standard speed.
 
-MT8173 use GIC-400. We check GIC-400 TRM that VGIC address is not 64KB
-alignment. but GIC-500 (GICv3) VGIC base address is. We also check
-3.19-rc1 arm64 device tree, amd-seattle-soc.dtsi VGIC is 64KB alignment,
-but arm juno.dts is not, they are both GIC-400. So we are a little
-confused, and still try to figure out what is the correct address.
-Neverthless, MT8173 SoC already use 0x10224000 and 0x10225000 as VGIC
-base address.
+How about: "Definition: Specifies the external MDIO bus clock speed to
+be used, if different from the standard 2.5 MHz.  This may be due to the
+standard speed being unsupported (e.g. due to a hardware problem), or to
+advertise that all relevant components in the system support a faster
+speed."
+
+> How about the value used in example?
+> Should 2.5MHz be used or a lower one?
+
+If you don't have a realistic example to use, don't put it in the
+example at all.  2.5MHz is the worst example to use because that's the
+default and there'd be no reason to use the property at all.
+
+-Scott
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
