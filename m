@@ -1,92 +1,68 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH] i2c-qoriq: modified compatibility for correct prescaler
-Date: Tue, 23 Dec 2014 14:49:40 +0100
-Message-ID: <20141223134940.GA1925@katana>
-References: <1414537731.23458.120.camel@snotra.buserror.net>
- <5450AC85.40302@keymile.com>
- <20141113003418.GE2062@katana>
- <5465B285.7070005@keymile.com>
- <20141114082832.GA2180@katana>
- <1416274083.15957.96.camel@freescale.com>
- <20141125181347.GC9716@katana>
- <1416966097.15957.171.camel@freescale.com>
- <54899FB4.9010207@keymile.com>
- <54996CB5.8030808@keymile.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="1yeeQ81UyVL57Vl7"
+From: Andrew Jackson <andrew.jackson-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH v4 4/5] ASoC: dwc: Add documentation for I2S DT
+Date: Tue, 23 Dec 2014 13:56:26 +0000
+Message-ID: <ffbfb442b3ba3d7dec5a7ba3e0e596678d4e74e5.1419342218.git.Andrew.Jackson@arm.com>
+References: <cover.1419342218.git.Andrew.Jackson@arm.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <54996CB5.8030808-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <cover.1419342218.git.Andrew.Jackson-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <cover.1419342218.git.Andrew.Jackson-5wv7dgnIgG8@public.gmane.org>
+References: <cover.1419342218.git.Andrew.Jackson-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
-Cc: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Linux PowerPC Kernel <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Linux device trees <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux I2C <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Brunck, Holger" <Holger.Brunck-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>, "Boschung, Rainer" <Rainer.Boschung-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>, danielle.costantino-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+To: Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rajeev Kumar <rajeevkumar.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Jackson <Andrew.Jackson-5wv7dgnIgG8@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+From: Andrew Jackson <Andrew.Jackson-5wv7dgnIgG8@public.gmane.org>
 
---1yeeQ81UyVL57Vl7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Add documentation for Designware I2S hardware block.  The block requires
+one clock (for audio sampling) and DMA channels for receive and transmit.
 
-On Tue, Dec 23, 2014 at 02:23:01PM +0100, Valentin Longchamp wrote:
-> Wolfgang, Scott,
+Signed-off-by: Andrew Jackson <Andrew.Jackson-5wv7dgnIgG8@public.gmane.org>
+---
+ .../devicetree/bindings/sound/designware-i2s.txt   |   31 ++++++++++++++++++++
+ 1 files changed, 31 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/designware-i2s.txt
 
-Wolfram, please.
+diff --git a/Documentation/devicetree/bindings/sound/designware-i2s.txt b/Documentation/devicetree/bindings/sound/designware-i2s.txt
+new file mode 100644
+index 0000000..7bb5424
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/designware-i2s.txt
+@@ -0,0 +1,31 @@
++DesignWare I2S controller
++
++Required properties:
++ - compatible : Must be "snps,designware-i2s"
++ - reg : Must contain the I2S core's registers location and length
++ - clocks : Pairs of phandle and specifier referencing the controller's
++   clocks. The controller expects one clock: the clock used as the sampling
++   rate reference clock sample.
++ - clock-names : "i2sclk" for the sample rate reference clock.
++ - dmas: Pairs of phandle and specifier for the DMA channels that are used by
++   the core. The core expects one or two dma channels: one for transmit and
++   one for receive.
++ - dma-names : "tx" for the transmit channel, "rx" for the receive channel.
++
++For more details on the 'dma', 'dma-names', 'clock' and 'clock-names'
++properties please check:
++	* resource-names.txt
++	* clock/clock-bindings.txt
++	* dma/dma.txt
++
++Example:
++
++	soc_i2s: i2s@7ff90000 {
++		compatible = "snps,designware-i2s";
++		reg = <0x0 0x7ff90000 0x0 0x1000>;
++		clocks = <&scpi_i2sclk 0>;
++		clock-names = "i2sclk";
++		#sound-dai-cells = <0>;
++		dmas = <&dma0 5>;
++		dma-names = "tx";
++	};
+-- 
+1.7.1
 
-> > What is then the agreement here ? Add a clock-div to the device trees ?=
- Or do
-> > something similar to  mpc_i2c_get_sec_cfg_8xxx() ?
-> >=20
-> > I think the clock-div property is better according to Freescale's AN 29=
-19
-> > section 3.1 Source clock. All the source clocks are fixed (with a clock=
--div of 2
-> > in case of mpc8536/43/45/47/48/67/68/72, plus p2020) except for the mpc=
-8533/44
-> > where it can be 2 or 3, and that's what mpc_i2c_get_sec_cfg_8xxx() dete=
-rmines.
-> >=20
-> > So mpc_i2c_get_sec_cfg_8xxx() should remain the exception and the other
-> > prescaler values should be derived from an additional clock-div that mu=
-st be
-> > added in the respective device trees (at least for the qoriq devices, b=
-ecause
-> > for instance mpc8543 already has the correct prescaler thanks to
-> > mpc_i2c_data_8543 from i2c-mpc.c).
-> >=20
->=20
-> Do you have an opinion on the above ?
-
-I don't mind. I'll leave it to PowerPC experts to judge if a new binding
-is apropriate or reading SVR is the way to go. If it is going to be a
-new binding, then please look around before if there is already
-something similar around...
-
-
---1yeeQ81UyVL57Vl7
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUmXL0AAoJEBQN5MwUoCm2CcgQAKV5sdN8lTA+hbf/QsQO7ubF
-Ia+rTM8zopsChRAA1VwAj9qU3LSUnSxHraT+2+lOxr1UwERvacMRcTpEWzWHDABM
-8O+K/QDu+FhAsarFvcBs/qgUrSRka9nesPYIs6DGVo0ggK5dN9ZEvsJCyrJIvbRa
-dOCZbVHKhAfrXHSuGr5UrLuHwOvdGZr6L0giCxNM00riU1RxFYKnNnNXH6JVhfDG
-ztjUjelgpUiPW0pMikpcfSxI/KTFxe81j4wIM7tD+foaSPusBEsTpFPdVvkZWvRH
-MV6YQPPO30lLh7jjZp7T5RAvrsRsJ9kiM3OvADnWwGGXvaGtRMvvEN8RBr2Do/MF
-HJux3tdV1m6aVcyUZqQZXEkOikNsBKvbPSl+oS4tpmoH3x2JeXq3eyVfh3/ovwK2
-EXqgTvhXKRecm3Rj7qjsqfUO09KTZnxrqVBcntViSh3IbF/06qpp9q5ago4tH9vp
-aTipo6RUpVRgk8dUCY+j/sbBXJ7G9abHWeZqZCxYUtpJYuDUQwytqNosZA7me0YY
-mCtqgXoOsoXzdV9TLh4pQRscMhInDGiAN50HsxLonrx2IobNWr30GCZanoMxeh2m
-noKZAvY13Tedl6fWpjIuJ9Pyx9Dcd3nQnvRoXrWrdObqJfZh4pQhcBgE1/ii3SSt
-eY4WVC0kuiry2wHpZr/B
-=qYRd
------END PGP SIGNATURE-----
-
---1yeeQ81UyVL57Vl7--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
