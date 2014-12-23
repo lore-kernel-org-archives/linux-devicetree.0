@@ -1,97 +1,29 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH] media: i2c/adp1653: devicetree support for adp1653
-Date: Tue, 23 Dec 2014 21:49:04 +0100
-Message-ID: <20141223204903.GA1780@amd>
-References: <20141203214641.GA1390@amd>
- <20141223152325.75e8cb4a@concha.lan.sisa.samsung.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 0/8] ARM: Conexant Digicolor CX92755 SoC support
+Date: Tue, 23 Dec 2014 22:03:51 +0100
+Message-ID: <5183218.RAoFSdq3OI@wuerfel>
+References: <cover.1419318109.git.baruch@tkos.co.il>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20141223152325.75e8cb4a@concha.lan.sisa.samsung.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
-Cc: pali.rohar@gmail.com, sre@debian.org, sre@ring0.de, kernel list <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-omap@vger.kernel.org, tony@atomide.com, khilman@kernel.org, aaro.koskinen@iki.fi, freemangordon@abv.bg, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, bcousson@baylibre.com, sakari.ailus@iki.fi, devicetree@vger.kernel.org, linux-media@vger.kernel.org, j.anaszewski@samsung.com, apw@canonical.com, joe@perches.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1419318109.git.baruch@tkos.co.il>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Baruch Siach <baruch@tkos.co.il>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue 2014-12-23 15:23:25, Mauro Carvalho Chehab wrote:
-> Em Wed, 3 Dec 2014 22:46:41 +0100
-> Pavel Machek <pavel@ucw.cz> escreveu:
+On Tuesday 23 December 2014 09:58:37 Baruch Siach wrote:
+> This series adds initial support for the Conexant CX92755 SoC. The CX92755 is
+> one of the Digicolor series of SoCs, all sharing many of the same peripherals.
+> The code was tested on the CX92755 evaluation kit, AKA Equinox.
 > 
-> > 
-> > We are moving to device tree support on OMAP3, but that currently
-> > breaks ADP1653 driver. This adds device tree support, plus required
-> > documentation.
-> > 
-> > Signed-off-by: Pavel Machek <pavel@ucw.cz>
+> Uses attempting to try this code will most likely also want the UART/console
+> driver available from https://patchwork.kernel.org/patch/5515861/.
 > 
-> Please be sure to check your patch with checkpatch. There are several
-> issues on it:
 
-> WARNING: DT compatible string "adi,adp1653" appears un-documented -- check ./Documentation/devicetree/bindings/
-> #78: FILE: arch/arm/boot/dts/omap3-n900.dts:572:
-> +		compatible = "adi,adp1653";
+Looks very nice overall!
 
-Hmm. Take a look at part quoted below. Someone needs to fix
-checkpatch. Ccing authors.
+I have replied to two of the patches, the rest looks fine to me.
 
-> ERROR: trailing whitespace
-> WARNING: line over 80 characters
-
-Will fix.
-
-> ERROR: trailing statements should be on next line
-> #177: FILE: drivers/media/i2c/adp1653.c:454:
-> +	if (!child) return -EINVAL;
-
-I actually did these on purporse... the function is trivial, and by
-keeping returns on one line it fits into screen. I see you want it
-fixed below, so I'll do that for next version.
-
-								Pavel
-
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/media/i2c/adp1653.txt
-> > @@ -0,0 +1,38 @@
-> > +* Analog Devices ADP1653 flash LED driver
-> > +
-> > +Required Properties:
-> > +
-> > +  - compatible: Must contain one of the following
-> > +    - "adi,adp1653"
-> > +
-> > +  - reg: I2C slave address
-> > +
-> > +  - gpios: References to the GPIO that controls the power for the chip.
-> > +
-> > +There are two led outputs available - flash and indicator. One led is
-> > +represented by one child node, nodes need to be named "flash" and "indicator".
-> > +
-> > +Required properties of the LED child node:
-> > +- max-microamp : see Documentation/devicetree/bindings/leds/common.txt
-> > +
-> > +Required properties of the flash LED child node:
-> > +
-> > +- flash-max-microamp : see Documentation/devicetree/bindings/leds/common.txt
-> > +- flash-timeout-microsec : see Documentation/devicetree/bindings/leds/common.txt
-> > +
-> > +Example:
-> > +
-> > +        adp1653: led-controller@30 {
-> > +                compatible = "adi,adp1653";
-> > +		reg = <0x30>;
-> > +                gpios = <&gpio3 24 GPIO_ACTIVE_HIGH>; /* 88 */
-> > +
-> > +		flash {
-> > +                        flash-timeout-microsec = <500000>;
-> > +                        flash-max-microamp = <320000>;
-> > +                        max-microamp = <50000>;
-> > +		};
-> > +                indicator {
-> > +                        max-microamp = <17500>;
-> > +		};
-> > +        };
-
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+	Arnd
