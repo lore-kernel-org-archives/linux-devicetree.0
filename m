@@ -1,7 +1,7 @@
 From: Baruch Siach <baruch@tkos.co.il>
-Subject: [PATCH 8/8] clocksource: devicetree: document Conexant Digicolor timer binding
-Date: Tue, 23 Dec 2014 09:58:45 +0200
-Message-ID: <f2e3c6e9975ad08b63d7643caba79a06f7616d95.1419318109.git.baruch@tkos.co.il>
+Subject: [PATCH 4/8] ARM: devicetree: document supported Conexant Digicolor SoC
+Date: Tue, 23 Dec 2014 09:58:41 +0200
+Message-ID: <bde46039e9390f0aa49a296bcea28086f03f1002.1419318109.git.baruch@tkos.co.il>
 References: <cover.1419318109.git.baruch@tkos.co.il>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1419318109.git.baruch@tkos.co.il>
@@ -12,33 +12,21 @@ List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Baruch Siach <baruch@tkos.co.il>
 ---
- .../devicetree/bindings/timer/digicolor-timer.txt      | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/timer/digicolor-timer.txt
+ Documentation/devicetree/bindings/arm/digicolor.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/digicolor.txt
 
-diff --git a/Documentation/devicetree/bindings/timer/digicolor-timer.txt b/Documentation/devicetree/bindings/timer/digicolor-timer.txt
+diff --git a/Documentation/devicetree/bindings/arm/digicolor.txt b/Documentation/devicetree/bindings/arm/digicolor.txt
 new file mode 100644
-index 000000000000..623812da03b4
+index 000000000000..658553f40b23
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/digicolor-timer.txt
-@@ -0,0 +1,18 @@
-+Conexant Digicolor SoCs Timer Controller
++++ b/Documentation/devicetree/bindings/arm/digicolor.txt
+@@ -0,0 +1,6 @@
++Conexant Digicolor Platforms Device Tree Bindings
 +
-+Required properties:
++Each device tree must specify which Conexant Digicolor SoC it uses.
++Must be the following compatible string:
 +
-+- compatible : should be "cnxt,cx92755-timer"
-+- reg : Specifies base physical address and size of the MISC area, that is
-+  where the "Agent Communication" registers are located
-+- interrupts : Contains 8 interrupts, one for each timer
-+- clocks: phandle to the main clock
-+
-+Example:
-+
-+	timer@f0000000 {
-+		compatible = "cnxt,cx92755-timer";
-+		reg = <0xf0000000 0x1000>;
-+		interrupts = <19>, <31>, <34>, <35>, <52>, <53>, <54>, <55>;
-+		clocks = <&main_clk>;
-+	};
++  cnxt,cx92755
 -- 
 2.1.3
