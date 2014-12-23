@@ -1,75 +1,76 @@
-From: Pratyush Anand <panand@redhat.com>
-Subject: Re: [PATCH] PCIe: Designware: Do not allow config space through ranges
-Date: Tue, 23 Dec 2014 08:24:50 +0530
-Message-ID: <5498D97A.8030105@redhat.com>
-References: <7dcdee69eb7db8336829e6085d736a3ac7e68ad4.1419229126.git.panand@redhat.com> <5459567.EisgEvQXh9@wuerfel>
+From: NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>
+Subject: Re: [Gta04-owner] [PATCH 2/2] misc: add a driver to power on/off
+ UART attached devices.
+Date: Tue, 23 Dec 2014 14:17:12 +1100
+Message-ID: <20141223141712.74941672@notabene.brown>
+References: <20141219235827.13943.45713.stgit@notabene.brown>
+	<20141220000920.13943.50943.stgit@notabene.brown>
+	<CA+Ot1Own-g=vjYhOygzVgNPspw6FgCHZqY8wQo31=ahf62E1gA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <5459567.EisgEvQXh9@wuerfel>
-Sender: linux-pci-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: mohit.kumar@st.com, jg1.han@samsung.com, l.stach@pengutronix.de, shawn.guo@freescale.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, Sean Cross <xobs@kosagi.com>, Murali Karicheri <m-karicheri2@ti.com>, Minghuan Lian <Minghuan.Lian@freescale.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ boundary="Sig_/U6bHm36iY.Aa7Lm6V=uhK9J"; protocol="application/pgp-signature"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CA+Ot1Own-g=vjYhOygzVgNPspw6FgCHZqY8wQo31=ahf62E1gA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Christ van Willegen <cvwillegen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: List for communicating with real GTA04 owners <gta04-owner-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, One Thousand Gnomes <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+--Sig_/U6bHm36iY.Aa7Lm6V=uhK9J
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+On Sat, 20 Dec 2014 17:02:04 +0100 Christ van Willegen <cvwillegen-Re5JQEeQqe8@public.gmane.org=
+m>
+wrote:
 
-On Monday 22 December 2014 02:00 PM, Arnd Bergmann wrote:
-> On Monday 22 December 2014 12:09:04 Pratyush Anand wrote:
->> Config space is need to be allocated using reg property. This patch
->> removes possibility of config space allocation through ranges property.
->>
->> To: Mohit Kumar <mohit.kumar@st.com>
->> To: Jingo Han <jg1.han@samsung.com>
->> To: Lucas Stach <l.stach@pengutronix.de>
->> To: Shawn Guo <shawn.guo@freescale.com>
->> Cc: linux-pci@vger.kernel.org
->> Cc: devicetree@vger.kernel.org
->> Signed-off-by: Pratyush Anand <panand@redhat.com>
->> ---
->>   arch/arm/boot/dts/imx6qdl.dtsi     |  3 +--
->>   arch/arm/boot/dts/imx6sx.dtsi      |  8 ++++----
->
-> changing the DT files is probably ok.
->
->> diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-designware.c
->> index df781cdf13c1..0b22b42e1ff9 100644
->> --- a/drivers/pci/host/pcie-designware.c
->> +++ b/drivers/pci/host/pcie-designware.c
->> @@ -409,19 +409,6 @@ int __init dw_pcie_host_init(struct pcie_port *pp)
->>   			pp->mem_mod_base = of_read_number(parser.range -
->>   							  parser.np + na, ns);
->>   		}
->> -		if (restype == 0) {
->> -			of_pci_range_to_resource(&range, np, &pp->cfg);
->> -			pp->cfg0_size = resource_size(&pp->cfg)/2;
->> -			pp->cfg1_size = resource_size(&pp->cfg)/2;
->> -			pp->cfg0_base = pp->cfg.start;
->> -			pp->cfg1_base = pp->cfg.start + pp->cfg0_size;
->> -
->> -			/* Find the untranslated configuration space address */
->> -			pp->cfg0_mod_base = of_read_number(parser.range -
->> -							   parser.np + na, ns);
->> -			pp->cfg1_mod_base = pp->cfg0_mod_base +
->> -					    pp->cfg0_size;
->> -		}
->>   	}
->
-> Since we've allowed this for so long, it may be better to leave this
-> in for compatibility with old dts files. It would however be good to
-> print a warning message. We could also limit it to those machines that
-> are known to have been used with this property in the past.
+> Hi,
+>=20
+> One remark:
+>=20
+> +config SERIAL_POWER_MANAGER
+> +       tristate "Power Management controller for serial-attached devices"
+> +       depends on TTY && OF
+> +       default n
+> +       help
+> +         Some devices permanently attached via a UART can benefit from
+> +         being power-managed when the tty device is openned or closed.
+> +         This driver can support several such devices with simple
+> +         power requirements such as enabling a regulator.
+> +
+> +         If in doubt, say 'N'
+> +
+>=20
+> There's a typo: openned.
 
-I think, only imx6 is using "config from ranges", for which I made the 
-change in this patch. Modification need to be tested and acked by IMX6 
-maintainers.
-I do not see any other driver using it. However, I have kept all 
-designware user in CC here.
+Thanks - I've fix that now.
 
-~Pratyush
+NeilBrown
 
+--Sig_/U6bHm36iY.Aa7Lm6V=uhK9J
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
->
-> 	Arnd
->
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIVAwUBVJjeuDnsnt1WYoG5AQJdEw/+OyPHCqkMVZjxihrT7ftkBU5cWQINGUyE
+wFFJQKwm2Bbs/UEbzmTXMyiPOQVcXoarbBWXq9i86Oad0XaNx7bmIXuMsiXkjW7m
+yNTrATs7alWQyT3Q7m0Rw77LO8gAjEWNCnugLizZKzv1zIk70fahQ4mDU6XJU5UD
+3Bsml62x/IahfZfWv32cxiWXJzcF6oHFefF5n8yxHqCnNdZjGaDDRyG6mGAvjzbI
+4eqZ8mZSfuMlg5G6ioaFB7LYGMoT55vx0YUafgZdsdasB4KVHvAE+iihs1uMEjY+
+1AbPYZfvhmXUkaxI/dON5uOHTWNKP+Mj8eZW5/4DQM8CahSErU101V548/hHMT/a
+nalwX4irPfPLrWXatSA0ZgLYmmzZGvSJ7RsI5HLQp0JQ8ggbYK6HsvFH4TuSCw12
+svflBNwYFt8c5Wlt2L0NMftwOU/P7Dv5e7OpIBW/1Lt08GHOIXY5HtZdW/G0Qa7h
+wZwyYgH9+bazV6zbzZD4/oJJiSsTzd0gobO0+63zadnz1sY4xmoskOZEshtuUINQ
+O8tneL5hGT4qOaDXXqIYb9keLMgSLx3RhurcA/pH/s2bk+UpZaJM3RTTYcJ6B2qJ
+1b9/anQ68F0+6LHi4s/OHgeNTv5RN+VB/+DkMERWDtBCyR5pKF15b4u4EZk5Mprd
+Fqf8d/DlfMY=
+=6CCR
+-----END PGP SIGNATURE-----
+
+--Sig_/U6bHm36iY.Aa7Lm6V=uhK9J--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
