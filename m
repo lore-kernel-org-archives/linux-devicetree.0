@@ -1,48 +1,63 @@
 From: Liu Ying <Ying.Liu@freescale.com>
-Subject: [PATCH RFC v4 10/21] drm/dsi: Add a helper to get bits per pixel of
- MIPI DSI pixel format
-Date: Tue, 23 Dec 2014 18:02:08 +0800
-Message-ID: <1419328939-22758-11-git-send-email-Ying.Liu@freescale.com>
+Subject: [PATCH RFC v4 08/21] ARM: imx6q: clk: Add support for mipi_core_cfg clock as a shared clock gate
+Date: Tue, 23 Dec 2014 18:02:06 +0800
+Message-ID: <1419328939-22758-9-git-send-email-Ying.Liu@freescale.com>
 References: <1419328939-22758-1-git-send-email-Ying.Liu@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1419328939-22758-1-git-send-email-Ying.Liu@freescale.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: dri-devel@lists.freedesktop.org
-Cc: stefan.wahren@i2se.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, kernel@pengutronix.de, linux-kernel@vger.kernel.org, mturquette@linaro.org, linux-arm-kernel@lists.infradead.org, andyshrk@gmail.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux@arm.linux.org.uk, kernel@pengutronix.de, p.zabel@pengutronix.de, thierry.reding@gmail.com, shawn.guo@linaro.org, mturquette@linaro.org, airlied@linux.ie, andyshrk@gmail.com, stefan.wahren@i2se.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-U2lnbmVkLW9mZi1ieTogTGl1IFlpbmcgPFlpbmcuTGl1QGZyZWVzY2FsZS5jb20+Ci0tLQp2My0+
-djQ6CiAqIE5vbmUuCgp2Mi0+djM6CiAqIE5vbmUuCgp2MS0+djI6CiAqIFRoaWVycnkgUmVkaW5n
-IHN1Z2dlc3RlZCB0aGF0IHRoZSBtaXBpX2RzaV9waXhlbF9mb3JtYXRfdG9fYnBwKCkgZnVuY3Rp
-b24KICAgY291bGQgYmUgcGxhY2VkIGF0IHRoZSBjb21tb24gRFJNIE1JUEkgRFNJIGRyaXZlci4K
-ICAgVGhpcyBwYXRjaCBpcyBuZXdseSBhZGRlZC4KCiBpbmNsdWRlL2RybS9kcm1fbWlwaV9kc2ku
-aCB8IDE0ICsrKysrKysrKysrKysrCiAxIGZpbGUgY2hhbmdlZCwgMTQgaW5zZXJ0aW9ucygrKQoK
-ZGlmZiAtLWdpdCBhL2luY2x1ZGUvZHJtL2RybV9taXBpX2RzaS5oIGIvaW5jbHVkZS9kcm0vZHJt
-X21pcGlfZHNpLmgKaW5kZXggZjFkOGQwZC4uMGY1MjEwYyAxMDA2NDQKLS0tIGEvaW5jbHVkZS9k
-cm0vZHJtX21pcGlfZHNpLmgKKysrIGIvaW5jbHVkZS9kcm0vZHJtX21pcGlfZHNpLmgKQEAgLTE2
-Myw2ICsxNjMsMjAgQEAgc3RhdGljIGlubGluZSBzdHJ1Y3QgbWlwaV9kc2lfZGV2aWNlICp0b19t
-aXBpX2RzaV9kZXZpY2Uoc3RydWN0IGRldmljZSAqZGV2KQogCXJldHVybiBjb250YWluZXJfb2Yo
-ZGV2LCBzdHJ1Y3QgbWlwaV9kc2lfZGV2aWNlLCBkZXYpOwogfQogCitzdGF0aWMgaW5saW5lIGlu
-dCBtaXBpX2RzaV9waXhlbF9mb3JtYXRfdG9fYnBwKGVudW0gbWlwaV9kc2lfcGl4ZWxfZm9ybWF0
-IGZvcm1hdCkKK3sKKwlzd2l0Y2ggKGZvcm1hdCkgeworCWNhc2UgTUlQSV9EU0lfRk1UX1JHQjg4
-ODoKKwljYXNlIE1JUElfRFNJX0ZNVF9SR0I2NjY6CisJCXJldHVybiAyNDsKKwljYXNlIE1JUElf
-RFNJX0ZNVF9SR0I2NjZfUEFDS0VEOgorCQlyZXR1cm4gMTg7CisJY2FzZSBNSVBJX0RTSV9GTVRf
-UkdCNTY1OgorCQlyZXR1cm4gMTY7CisJfQorCXJldHVybiAtRUlOVkFMOworfQorCiBzdHJ1Y3Qg
-bWlwaV9kc2lfZGV2aWNlICpvZl9maW5kX21pcGlfZHNpX2RldmljZV9ieV9ub2RlKHN0cnVjdCBk
-ZXZpY2Vfbm9kZSAqbnApOwogaW50IG1pcGlfZHNpX2F0dGFjaChzdHJ1Y3QgbWlwaV9kc2lfZGV2
-aWNlICpkc2kpOwogaW50IG1pcGlfZHNpX2RldGFjaChzdHJ1Y3QgbWlwaV9kc2lfZGV2aWNlICpk
-c2kpOwotLSAKMi4xLjAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
-Lm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRl
-dmVsCg==
+The CG8 field of the CCM CCGR3 register is named as 'mipi_core_cfg' clock,
+according to the i.MX6q/sdl reference manuals.  This clock is actually the
+gate for several clocks, including the hsi_tx_sel clock's output and the
+video_27m clock's output.  The MIPI DSI host controller embedded in the
+i.MX6q/sdl SoCs uses the video_27m clock to generate PLL reference clock and
+MIPI core configuration clock.  In order to gate/ungate the two MIPI DSI
+host controller relevant clocks, this patch adds the mipi_core_cfg clock as
+a shared clock gate.
+
+Suggested-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Liu Ying <Ying.Liu@freescale.com>
+---
+v3->v4:
+ * None.
+
+v2->v3:
+ * Newly introduced in v3.
+
+ arch/arm/mach-imx/clk-imx6q.c             | 1 +
+ include/dt-bindings/clock/imx6qdl-clock.h | 3 ++-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/mach-imx/clk-imx6q.c b/arch/arm/mach-imx/clk-imx6q.c
+index 080d5b7..9815d8d 100644
+--- a/arch/arm/mach-imx/clk-imx6q.c
++++ b/arch/arm/mach-imx/clk-imx6q.c
+@@ -418,6 +418,7 @@ static void __init imx6q_clocks_init(struct device_node *ccm_node)
+ 	clk[IMX6QDL_CLK_LDB_DI1]      = imx_clk_gate2("ldb_di1",       "ldb_di1_podf",      base + 0x74, 14);
+ 	clk[IMX6QDL_CLK_IPU2_DI1]     = imx_clk_gate2("ipu2_di1",      "ipu2_di1_sel",      base + 0x74, 10);
+ 	clk[IMX6QDL_CLK_HSI_TX]       = imx_clk_gate2_shared("hsi_tx", "hsi_tx_podf",       base + 0x74, 16, &share_count_mipi_core_cfg);
++	clk[IMX6QDL_CLK_MIPI_CORE_CFG]= imx_clk_gate2_shared("mipi_core_cfg","video_27m",   base + 0x74, 16, &share_count_mipi_core_cfg);
+ 	if (cpu_is_imx6dl())
+ 		/*
+ 		 * The multiplexer and divider of the imx6q clock gpu2d get
+diff --git a/include/dt-bindings/clock/imx6qdl-clock.h b/include/dt-bindings/clock/imx6qdl-clock.h
+index 25625bf..dbc828c 100644
+--- a/include/dt-bindings/clock/imx6qdl-clock.h
++++ b/include/dt-bindings/clock/imx6qdl-clock.h
+@@ -249,6 +249,7 @@
+ #define IMX6QDL_PLL7_BYPASS			236
+ #define IMX6QDL_CLK_GPT_3M			237
+ #define IMX6QDL_CLK_VIDEO_27M			238
+-#define IMX6QDL_CLK_END				239
++#define IMX6QDL_CLK_MIPI_CORE_CFG		239
++#define IMX6QDL_CLK_END				240
+ 
+ #endif /* __DT_BINDINGS_CLOCK_IMX6QDL_H */
+-- 
+2.1.0
