@@ -1,317 +1,122 @@
-From: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
-Subject: Re: [PATCH] media: i2c/adp1653: devicetree support for adp1653
-Date: Tue, 23 Dec 2014 15:23:25 -0200
-Message-ID: <20141223152325.75e8cb4a@concha.lan.sisa.samsung.com>
-References: <20141203214641.GA1390@amd>
+From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+Subject: Re: [RFC v1 PATCH 1/2] of/pci: add of_pci_dma_configure() update
+ dma configuration
+Date: Tue, 23 Dec 2014 12:42:05 -0500
+Message-ID: <5499A96D.4010704@ti.com>
+References: <1418940425-2017-1-git-send-email-m-karicheri2@ti.com> <54989DDE.3060409@ti.com> <1723662.JYr5muIJha@wuerfel> <5090769.jqAkiDgYu7@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141203214641.GA1390@amd>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: pali.rohar@gmail.com, sre@debian.org, sre@ring0.de, kernel list <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-omap@vger.kernel.org, tony@atomide.com, khilman@kernel.org, aaro.koskinen@iki.fi, freemangordon@abv.bg, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, bcousson@baylibre.com, sakari.ailus@iki.fi, devicetree@vger.kernel.org, linux-media@vger.kernel.org, j.anaszewski@samsung.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5090769.jqAkiDgYu7@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Em Wed, 3 Dec 2014 22:46:41 +0100
-Pavel Machek <pavel@ucw.cz> escreveu:
+On 12/22/2014 06:07 PM, Arnd Bergmann wrote:
+> On Monday 22 December 2014 23:44:52 Arnd Bergmann wrote:
+>> On Monday 22 December 2014 17:40:30 Murali Karicheri wrote:
+>>> On 12/22/2014 05:24 PM, Arnd Bergmann wrote:
+>>>> On Monday 22 December 2014 16:40:43 Murali Karicheri wrote:
+>>>>>>> +++ b/arch/arm/mm/dma-mapping.c
+>>>>>>> @@ -2052,9 +2052,10 @@ void arch_setup_dma_ops(struct device *dev, u64
+>>>>>>> dma_base, u64 size,
+>>>>>>>                             struct iommu_ops *iommu, bool coherent)
+>>>>>>>      {
+>>>>>>>             struct dma_map_ops *dma_ops;
+>>>>>>> +       u64 temp_size = min((*(dev->dma_mask) + 1), size);
+>>>>>>>
+>>>>>>>             dev->archdata.dma_coherent = coherent;
+>>>>>>> -       if (arm_setup_iommu_dma_ops(dev, dma_base, size, iommu))
+>>>>>>> +       if (arm_setup_iommu_dma_ops(dev, dma_base, temp_size, iommu))
+>>>>>>>
+>>>>>>> If you agree, I will post v1 of the patch with these updates. Let me
+>>>>>>> know. I did some basic tests on Keystone with these changes and it works
+>>>>>>> fine.
+>>>>>>
+>>>>>> It's not exactly what I meant. My main point was that we need to limit
+>>>>>> dev->dma_mask to (size-1) here, but you are not touching that.
+>>>>>
+>>>>> if you mean overriding the dev->dma_mask to min((*dev->dma_mask),
+>>>>> size-1), then I am getting the error "Coherent DMA mask 0x7fffffff (pfn
+>>>>> 0x780000-0x800000) covers a smaller range of system memory than the DMA
+>>>>> zone pfn 0x0-0x880000) when the devices on Keystone tries to set the dma
+>>>>> mask. Something wrong and I need to look into the code.
+>>>>
+>>>> Right, it sounds like the offset was applied incorrectly at some point.
+>>>>
+>>>> What are the DMA zone size and the phys-offset?
+>>> 2G and 0x8_0000_0000. This limit the usable DMA size to 2G on Keystone,
+>>> I believe you shouldn't be limiting the dma mask to size-1 in this case,
+>>> right? The DT setup the dma-range to have a size of 2G (0x80000000).
+>>
+>> No, the problem is something else: the pfn range that we calculate for the
+>> coherent DMA mask should have been 0x800000-0x880000, not 0x780000-0x800000,
+>> so we would exactly match the ZONE_DMA.
+>
+> I gave it some more thought, and concluded that the size that gets passed
+> down is not really the right value to be compared to a mask if the dma-capable
+> area starts at a nonzero bus address.
+>
+> In your case, bus addresses 0x80000000-0xffffffff are valid for DMA, so
+> the mask must be 0xffffffff to forbid any DMA to addresses larger than
+> 0x100000000, not 0x7fffffff which would not be enough to cover any RAM.
+>
+> I guess the dma_mask should be 'min((*dev->dma_mask), dma_base + size - 1)'
+> here.
 
-> 
-> We are moving to device tree support on OMAP3, but that currently
-> breaks ADP1653 driver. This adds device tree support, plus required
-> documentation.
-> 
-> Signed-off-by: Pavel Machek <pavel@ucw.cz>
+Arnd,
 
-Please be sure to check your patch with checkpatch. There are several
-issues on it:
+I guess so. Besides we need to keep the default coherent dma mask to 
+32bit 0xffffffffull as well to work on Keystone and also in sync with 
+current defaults used in pci_device_add() so that we don't break this 
+behavior.
 
-WARNING: DT compatible string "adi,adp1653" appears un-documented -- check ./Documentation/devicetree/bindings/
-#78: FILE: arch/arm/boot/dts/omap3-n900.dts:572:
-+		compatible = "adi,adp1653";
+Here is the summary of changes need to make on top of my existing patch.
 
-ERROR: trailing whitespace
-#136: FILE: drivers/media/i2c/adp1653.c:332:
-+^I^I^I$
+1. of_dma_configure() - change size = dev->coherent_dma_mask to size = 
+dev->coherent_dma_mask + 1. This is a new patch to fix existing code.
 
-ERROR: trailing whitespace
-#159: FILE: drivers/media/i2c/adp1653.c:436:
-+static int adp1653_of_init(struct i2c_client *client, struct adp1653_flash *flash, $
+2. Do the above change to of_pci_dma_configure() as well.
 
-WARNING: line over 80 characters
-#159: FILE: drivers/media/i2c/adp1653.c:436:
-+static int adp1653_of_init(struct i2c_client *client, struct adp1653_flash *flash, 
+3. in arch_setup_dma_ops() update the DMA mask to min((*dev->dma_mask), 
+dma_base + size - 1) as
 
-ERROR: trailing statements should be on next line
-#177: FILE: drivers/media/i2c/adp1653.c:454:
-+	if (!child) return -EINVAL;
 
-WARNING: line over 80 characters
-#178: FILE: drivers/media/i2c/adp1653.c:455:
-+	if (of_property_read_u32(child, "flash-timeout-microsec", &val)) return -EINVAL;
+diff --git a/arch/arm/mm/dma-mapping.c b/arch/arm/mm/dma-mapping.c
+index c17f6a9..88b4769 100644
+--- a/arch/arm/mm/dma-mapping.c
++++ b/arch/arm/mm/dma-mapping.c
+@@ -2053,8 +2053,13 @@ void arch_setup_dma_ops(struct device *dev, u64 
+dma_base, u64 size,
+  {
+         struct dma_map_ops *dma_ops;
 
-ERROR: trailing statements should be on next line
-#178: FILE: drivers/media/i2c/adp1653.c:455:
-+	if (of_property_read_u32(child, "flash-timeout-microsec", &val)) return -EINVAL;
++
++       *dev->dma_mask = min((*dev->dma_mask), (dma_base + size - 1));
 
-WARNING: line over 80 characters
-#180: FILE: drivers/media/i2c/adp1653.c:457:
-+	if (of_property_read_u32(child, "flash-max-microamp", &val)) return -EINVAL;
+I have tested this on keystone and it works fine with rootfs on PCI SATA 
+harddisk. I will be doing more tests with this change. If you are in 
+agreement with the above changes, I will re-spin the patch to accomodate 
+them and send v1 of the same.
 
-ERROR: trailing statements should be on next line
-#180: FILE: drivers/media/i2c/adp1653.c:457:
-+	if (of_property_read_u32(child, "flash-max-microamp", &val)) return -EINVAL;
+Regards,
 
-ERROR: trailing statements should be on next line
-#182: FILE: drivers/media/i2c/adp1653.c:459:
-+	if (of_property_read_u32(child, "max-microamp", &val)) return -EINVAL;
+Murali
 
-ERROR: trailing statements should be on next line
-#186: FILE: drivers/media/i2c/adp1653.c:463:
-+	if (!child) return -EINVAL;
-
-ERROR: trailing statements should be on next line
-#187: FILE: drivers/media/i2c/adp1653.c:464:
-+	if (of_property_read_u32(child, "max-microamp", &val)) return -EINVAL;
-
-ERROR: trailing whitespace
-#197: FILE: drivers/media/i2c/adp1653.c:474:
-+^I^Idev_err(&client->dev, "Error getting GPIO\n"); $
-
-total: 9 errors, 4 warnings, 199 lines checked
-
-NOTE: whitespace errors detected, you may wish to use scripts/cleanpatch or
-      scripts/cleanfile
-
-> 
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/adp1653.txt
-> @@ -0,0 +1,38 @@
-> +* Analog Devices ADP1653 flash LED driver
-> +
-> +Required Properties:
-> +
-> +  - compatible: Must contain one of the following
-> +    - "adi,adp1653"
-> +
-> +  - reg: I2C slave address
-> +
-> +  - gpios: References to the GPIO that controls the power for the chip.
-> +
-> +There are two led outputs available - flash and indicator. One led is
-> +represented by one child node, nodes need to be named "flash" and "indicator".
-> +
-> +Required properties of the LED child node:
-> +- max-microamp : see Documentation/devicetree/bindings/leds/common.txt
-> +
-> +Required properties of the flash LED child node:
-> +
-> +- flash-max-microamp : see Documentation/devicetree/bindings/leds/common.txt
-> +- flash-timeout-microsec : see Documentation/devicetree/bindings/leds/common.txt
-> +
-> +Example:
-> +
-> +        adp1653: led-controller@30 {
-> +                compatible = "adi,adp1653";
-> +		reg = <0x30>;
-> +                gpios = <&gpio3 24 GPIO_ACTIVE_HIGH>; /* 88 */
-> +
-> +		flash {
-> +                        flash-timeout-microsec = <500000>;
-> +                        flash-max-microamp = <320000>;
-> +                        max-microamp = <50000>;
-> +		};
-> +                indicator {
-> +                        max-microamp = <17500>;
-> +		};
-> +        };
-> diff --git a/arch/arm/boot/dts/omap3-n900.dts b/arch/arm/boot/dts/omap3-n900.dts
-> index cfddc3d..11d8afd 100644
-> --- a/arch/arm/boot/dts/omap3-n900.dts
-> +++ b/arch/arm/boot/dts/omap3-n900.dts
-> @@ -560,6 +567,22 @@
->  
->  		ti,usb-charger-detection = <&isp1704>;
->  	};
-> +
-> +	adp1653: led-controller@30 {
-> +		compatible = "adi,adp1653";
-> +		reg = <0x30>;
-> +		gpios = <&gpio3 24 GPIO_ACTIVE_HIGH>; /* 88 */
-> +
-> +		flash {
-> +			flash-timeout-microsec = <500000>;
-> +			flash-max-microamp = <320000>;
-> +			max-microamp = <50000>;
-> +		};
-> +
-> +		indicator {
-> +			max-microamp = <17500>;
-> +		};
-> +	};
->  };
->  
->  &i2c3 {
-> diff --git a/drivers/media/i2c/adp1653.c b/drivers/media/i2c/adp1653.c
-> index 873fe19..62601b2 100644
-> --- a/drivers/media/i2c/adp1653.c
-> +++ b/drivers/media/i2c/adp1653.c
-> @@ -8,6 +8,7 @@
->   * Contributors:
->   *	Sakari Ailus <sakari.ailus@iki.fi>
->   *	Tuukka Toivonen <tuukkat76@gmail.com>
-> + *      Pavel Machek <pavel@ucw.cz>
->   *
->   * This program is free software; you can redistribute it and/or
->   * modify it under the terms of the GNU General Public License
-> @@ -34,9 +35,11 @@
->  #include <linux/module.h>
->  #include <linux/i2c.h>
->  #include <linux/slab.h>
-> +#include <linux/of_gpio.h>
-> +#include <linux/gpio.h>
->  #include <media/adp1653.h>
->  #include <media/v4l2-device.h>
->  
->  #define TIMEOUT_MAX		820000
->  #define TIMEOUT_STEP		54600
->  #define TIMEOUT_MIN		(TIMEOUT_MAX - ADP1653_REG_CONFIG_TMR_SET_MAX \
-> @@ -306,9 +318,18 @@ adp1653_init_device(struct adp1653_flash *flash)
->  static int
->  __adp1653_set_power(struct adp1653_flash *flash, int on)
->  {
-> -	int ret;
-> +	int ret = 0;
->  
-> -	ret = flash->platform_data->power(&flash->subdev, on);
-> +	if (flash->platform_data->power)
-> +		ret = flash->platform_data->power(&flash->subdev, on);
-> +	else {
-> +		gpio_set_value(flash->platform_data->power_gpio, on);
-> +		if (on) {
-> +			/* Some delay is apparently required. */
-> +			udelay(20);
-> +		}
-> +	}
-> +			
->  	if (ret < 0)
->  		return ret;
->  
-> @@ -316,8 +337,13 @@ __adp1653_set_power(struct adp1653_flash *flash, int on)
->  		return 0;
->  
->  	ret = adp1653_init_device(flash);
-> -	if (ret < 0)
-> +	if (ret >= 0)
-> +		return ret;
-> +
-> +	if (flash->platform_data->power)
->  		flash->platform_data->power(&flash->subdev, 0);
-> +	else
-> +		gpio_set_value(flash->platform_data->power_gpio, 0);
->  
->  	return ret;
->  }
-> @@ -407,21 +433,69 @@ static int adp1653_resume(struct device *dev)
->  
->  #endif /* CONFIG_PM */
->  
-> +static int adp1653_of_init(struct i2c_client *client, struct adp1653_flash *flash, 
-> +			   struct device_node *node)
-> +{
-> +	u32 val;
-> +	struct adp1653_platform_data *pd;
-> +	enum of_gpio_flags flags;
-> +	int gpio;
-> +	struct device_node *child;
-> +
-> +	if (!node)
-> +		return -EINVAL;
-> +
-> +	pd = devm_kzalloc(&client->dev, sizeof(*pd), GFP_KERNEL);
-> +	if (!pd)
-> +		return -ENOMEM;
-> +	flash->platform_data = pd;
-> +
-> +	child = of_get_child_by_name(node, "flash");
-> +	if (!child) return -EINVAL;
-
-One statement per line, please. Same for other lines below.
-
-> +	if (of_property_read_u32(child, "flash-timeout-microsec", &val)) return -EINVAL;
-> +	pd->max_flash_timeout = val;
-> +	if (of_property_read_u32(child, "flash-max-microamp", &val)) return -EINVAL;
-> +	pd->max_flash_intensity = val/1000;
-> +	if (of_property_read_u32(child, "max-microamp", &val)) return -EINVAL;
-> +	pd->max_torch_intensity = val/1000;
-> +
-> +	child = of_get_child_by_name(node, "indicator");
-> +	if (!child) return -EINVAL;
-> +	if (of_property_read_u32(child, "max-microamp", &val)) return -EINVAL;
-> +	pd->max_indicator_intensity = val;
-> +
-> +	if (!of_find_property(node, "gpios", NULL)) {
-> +		dev_err(&client->dev, "No gpio node\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	gpio = of_get_gpio_flags(node, 0, &flags);
-> +	if (gpio < 0) {
-> +		dev_err(&client->dev, "Error getting GPIO\n"); 
-> +		return -EINVAL;
-> +	}
-> +
-> +	pd->power_gpio = gpio;
-> +	return 0;
-> +}
-> +
-> +
->  static int adp1653_probe(struct i2c_client *client,
->  			 const struct i2c_device_id *devid)
->  {
->  	struct adp1653_flash *flash;
->  	int ret;
->  
-> -	/* we couldn't work without platform data */
-> -	if (client->dev.platform_data == NULL)
-> -		return -ENODEV;
-> -
->  	flash = devm_kzalloc(&client->dev, sizeof(*flash), GFP_KERNEL);
->  	if (flash == NULL)
->  		return -ENOMEM;
->  
->  	flash->platform_data = client->dev.platform_data;
-> +	if (!flash->platform_data) {
-> +		ret = adp1653_of_init(client, flash, client->dev.of_node);
-> +		if (ret)
-> +			return ret;
-> +	}
->  
->  	mutex_init(&flash->power_lock);
->  
-> diff --git a/include/media/adp1653.h b/include/media/adp1653.h
-> index 1d9b48a..b556580 100644
-> --- a/include/media/adp1653.h
-> +++ b/include/media/adp1653.h
-> @@ -100,9 +100,11 @@ struct adp1653_platform_data {
->  	int (*power)(struct v4l2_subdev *sd, int on);
->  
->  	u32 max_flash_timeout;		/* flash light timeout in us */
-> -	u32 max_flash_intensity;	/* led intensity, flash mode */
-> -	u32 max_torch_intensity;	/* led intensity, torch mode */
-> -	u32 max_indicator_intensity;	/* indicator led intensity */
-> +	u32 max_flash_intensity;	/* led intensity, flash mode, mA */
-> +	u32 max_torch_intensity;	/* led intensity, torch mode, mA */
-> +	u32 max_indicator_intensity;	/* indicator led intensity, uA */
-> +
-> +	int power_gpio;			/* for device-tree based boot */
->  };
->  
->  #define to_adp1653_flash(sd)	container_of(sd, struct adp1653_flash, subdev)
-> 
+>
+> 	Arnd
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
 
 -- 
-
-Cheers,
-Mauro
+Murali Karicheri
+Linux Kernel, Texas Instruments
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
