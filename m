@@ -1,76 +1,54 @@
-From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
-Subject: Re: [RFC v1 PATCH 1/2] of/pci: add of_pci_dma_configure() update
- dma configuration
-Date: Tue, 23 Dec 2014 17:55:22 -0500
-Message-ID: <5499F2DA.2090407@ti.com>
-References: <1418940425-2017-1-git-send-email-m-karicheri2@ti.com> <5090769.jqAkiDgYu7@wuerfel> <5499A96D.4010704@ti.com> <4513569.xuD4xkPOuC@wuerfel>
+From: Dylan Reid <dgreid@chromium.org>
+Subject: Re: [alsa-devel] [PATCH 2/2] ASoC: rockchip: i2s: set TDL and RDL to
+ 16 bits
+Date: Tue, 23 Dec 2014 15:06:26 -0800
+Message-ID: <CAEUnVG79MOHUufRnJVe98ZTC4vouUNAEWtPsryEKWLc+Qpdjuw@mail.gmail.com>
+References: <1419325709-15374-1-git-send-email-jay.xu@rock-chips.com> <1419325709-15374-3-git-send-email-jay.xu@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4513569.xuD4xkPOuC@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, Russell King <rmk-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1419325709-15374-3-git-send-email-jay.xu@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jianqun Xu <jay.xu@rock-chips.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Mark Brown <broonie@kernel.org>, perex@perex.cz, Takashi Iwai <tiwai@suse.de>, Sonny Rao <sonnyrao@chromium.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/23/2014 05:42 PM, Arnd Bergmann wrote:
-> On Tuesday 23 December 2014 12:42:05 Murali Karicheri wrote:
->>> here.
->>
->> Arnd,
->>
->> I guess so. Besides we need to keep the default coherent dma mask to
->> 32bit 0xffffffffull as well to work on Keystone and also in sync with
->> current defaults used in pci_device_add() so that we don't break this
->> behavior.
->>
->> Here is the summary of changes need to make on top of my existing patch.
->>
->> 1. of_dma_configure() - change size = dev->coherent_dma_mask to size =
->> dev->coherent_dma_mask + 1. This is a new patch to fix existing code.
->
-> ok
->
->> 2. Do the above change to of_pci_dma_configure() as well.
->
-> ok
->
->> 3. in arch_setup_dma_ops() update the DMA mask to min((*dev->dma_mask),
->> dma_base + size - 1) as
->>
->>
->> diff --git a/arch/arm/mm/dma-mapping.c b/arch/arm/mm/dma-mapping.c
->> index c17f6a9..88b4769 100644
->> --- a/arch/arm/mm/dma-mapping.c
->> +++ b/arch/arm/mm/dma-mapping.c
->> @@ -2053,8 +2053,13 @@ void arch_setup_dma_ops(struct device *dev, u64
->> dma_base, u64 size,
->>    {
->>           struct dma_map_ops *dma_ops;
->>
->> +
->> +       *dev->dma_mask = min((*dev->dma_mask), (dma_base + size - 1));
->>
->> I have tested this on keystone and it works fine with rootfs on PCI SATA
->> harddisk. I will be doing more tests with this change. If you are in
->> agreement with the above changes, I will re-spin the patch to accomodate
->> them and send v1 of the same.
->
-> Ok, sounds good. I noticed that you did not put Russell into the Cc list
-> for the emails. Please do so when you send it again, as he may have some
-> additional comments.
-Ok. Will do.
+On Tue, Dec 23, 2014 at 1:08 AM, Jianqun Xu <jay.xu@rock-chips.com> wrote:
+> Set Transmit Data Level(TDL) and Receive Data Level(RDL) to 16 bits.
+> Without this setting, the TDL is default to be 0x00 (means 1 bit),
+> and the RDL is default to be 0x1f (means 16 bits).
 
-Murali
+My impression from the TRM was that TDL and RDL were measured in
+samples.  Are you sure it's 'bits'?
+
 >
-> 	Arnd
-
-
--- 
-Murali Karicheri
-Linux Kernel, Texas Instruments
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> This patch is helpful to fix pop sound, tested on rk3288 board.
+>
+> Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
+> ---
+>  sound/soc/rockchip/rockchip_i2s.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/sound/soc/rockchip/rockchip_i2s.c b/sound/soc/rockchip/rockchip_i2s.c
+> index c74ba37..1cd7efc 100644
+> --- a/sound/soc/rockchip/rockchip_i2s.c
+> +++ b/sound/soc/rockchip/rockchip_i2s.c
+> @@ -247,6 +247,10 @@ static int rockchip_i2s_hw_params(struct snd_pcm_substream *substream,
+>
+>         regmap_update_bits(i2s->regmap, I2S_TXCR, I2S_TXCR_VDW_MASK, val);
+>         regmap_update_bits(i2s->regmap, I2S_RXCR, I2S_RXCR_VDW_MASK, val);
+> +       regmap_update_bits(i2s->regmap, I2S_DMACR, I2S_DMACR_TDL_MASK,
+> +                          I2S_DMACR_TDL(16));
+> +       regmap_update_bits(i2s->regmap, I2S_DMACR, I2S_DMACR_RDL_MASK,
+> +                          I2S_DMACR_RDL(16));
+>
+>         return 0;
+>  }
+> --
+> 1.9.1
+>
+>
+> _______________________________________________
+> Alsa-devel mailing list
+> Alsa-devel@alsa-project.org
+> http://mailman.alsa-project.org/mailman/listinfo/alsa-devel
