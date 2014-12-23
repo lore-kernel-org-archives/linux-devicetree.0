@@ -1,183 +1,318 @@
-From: Andrew Jackson <andrew.jackson@arm.com>
-Subject: [PATCH v4 3/5] ASoC: dwc: Read I2S block configuration from registers
-Date: Tue, 23 Dec 2014 13:56:25 +0000
-Message-ID: <a29eb9e5b4b6f68f9f42f2382fa49c6a03eebda3.1419342218.git.Andrew.Jackson@arm.com>
-References: <cover.1419342218.git.Andrew.Jackson@arm.com>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] MIPS: Move device-trees into vendor sub-directories
+Date: Tue, 23 Dec 2014 08:07:49 -0800
+Message-ID: <CAGVrzcZPODEbQBF8Z+_r-6H3A_S-4Mi=1ALBf87ZmEngWzDpyw@mail.gmail.com>
+References: <1419290863-19788-1-git-send-email-abrestic@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <cover.1419342218.git.Andrew.Jackson@arm.com>
-In-Reply-To: <cover.1419342218.git.Andrew.Jackson@arm.com>
-References: <cover.1419342218.git.Andrew.Jackson@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, Mark Brown <broonie@kernel.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Lars-Peter Clausen <lars@metafoo.de>, pawel.moll@arm.com, Arnd Bergmann <arnd@arndb.de>, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, Andrew Jackson <Andrew.Jackson@arm.com>, Liviu Dudau <Liviu.Dudau@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Rajeev Kumar <rajeevkumar.linux@gmail.com>, robh+dt@kernel.org, galak@codeaurora.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1419290863-19788-1-git-send-email-abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Linux-MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Andrew Jackson <Andrew.Jackson@arm.com>
+2014-12-22 15:27 GMT-08:00 Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>:
+> Move the MIPS device-trees into the appropriate vendor sub-directories.
+>
+> Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> ---
+>  arch/mips/Makefile                                 |  2 +-
+>  arch/mips/boot/dts/Makefile                        | 33 ++++++++--------------
+>  arch/mips/boot/dts/bcm/Makefile                    |  9 ++++++
+>  arch/mips/boot/dts/{ => bcm}/bcm3384.dtsi          |  0
+>  arch/mips/boot/dts/{ => bcm}/bcm93384wvg.dts       |  0
 
-The I2S block provides component parameter registers which
-describe how the block is instantiated.  Use these registers
-to extract the block's configuration rather than relying on
-platform data.
+Let's use brcm here, which is the DT vendor prefix, or go full name
+with broadcom, there has been enough debate in the past about this ;)
 
-Signed-off-by: Andrew Jackson <Andrew.Jackson@arm.com>
----
- sound/soc/dwc/designware_i2s.c |   96 +++++++++++++++++++++++++++++++++++----
- 1 files changed, 86 insertions(+), 10 deletions(-)
+Thanks!
 
-diff --git a/sound/soc/dwc/designware_i2s.c b/sound/soc/dwc/designware_i2s.c
-index b3dc535..c89b9eb 100644
---- a/sound/soc/dwc/designware_i2s.c
-+++ b/sound/soc/dwc/designware_i2s.c
-@@ -54,6 +54,31 @@
- #define I2S_COMP_VERSION	0x01F8
- #define I2S_COMP_TYPE		0x01FC
- 
-+/*
-+ * Component parameter register fields - define the I2S block's
-+ * configuration.
-+ */
-+#define	COMP1_TX_WORDSIZE_3(r)	(((r) & GENMASK(27, 25)) >> 25)
-+#define	COMP1_TX_WORDSIZE_2(r)	(((r) & GENMASK(24, 22)) >> 22)
-+#define	COMP1_TX_WORDSIZE_1(r)	(((r) & GENMASK(21, 19)) >> 19)
-+#define	COMP1_TX_WORDSIZE_0(r)	(((r) & GENMASK(18, 16)) >> 16)
-+#define	COMP1_TX_CHANNELS(r)	(((r) & GENMASK(10, 9)) >> 9)
-+#define	COMP1_RX_CHANNELS(r)	(((r) & GENMASK(8, 7)) >> 7)
-+#define	COMP1_RX_ENABLED(r)	(((r) & BIT(6)) >> 6)
-+#define	COMP1_TX_ENABLED(r)	(((r) & BIT(5)) >> 5)
-+#define	COMP1_MODE_EN(r)	(((r) & BIT(4)) >> 4)
-+#define	COMP1_FIFO_DEPTH_GLOBAL(r)	(((r) & GENMASK(3, 2)) >> 2)
-+#define	COMP1_APB_DATA_WIDTH(r)	(((r) & GENMASK(1, 0)) >> 0)
-+
-+#define	COMP2_RX_WORDSIZE_3(r)	(((r) & GENMASK(12, 10)) >> 10)
-+#define	COMP2_RX_WORDSIZE_2(r)	(((r) & GENMASK(9, 7)) >> 7)
-+#define	COMP2_RX_WORDSIZE_1(r)	(((r) & GENMASK(5, 3)) >> 3)
-+#define	COMP2_RX_WORDSIZE_0(r)	(((r) & GENMASK(2, 0)) >> 0)
-+
-+/* Number of entries in WORDSIZE and DATA_WIDTH parameter registers */
-+#define	COMP_MAX_WORDSIZE	(1 << 3)
-+#define	COMP_MAX_DATA_WIDTH	(1 << 2)
-+
- #define MAX_CHANNEL_NUM		8
- #define MIN_CHANNEL_NUM		2
- 
-@@ -335,11 +360,50 @@ static int dw_i2s_resume(struct snd_soc_dai *dai)
- #define dw_i2s_resume	NULL
- #endif
- 
--static void dw_configure_dai_by_pd(struct dw_i2s_dev *dev,
-+/*
-+ * The following tables allow a direct lookup of various parameters
-+ * defined in the I2S block's configuration in terms of sound system
-+ * parameters.  Each table is sized to the number of entries possible
-+ * according to the number of configuration bits describing an I2S
-+ * block parameter.
-+ */
-+
-+/* Width of (DMA) bus */
-+static const u32 bus_widths[COMP_MAX_DATA_WIDTH] = {
-+	DMA_SLAVE_BUSWIDTH_1_BYTE,
-+	DMA_SLAVE_BUSWIDTH_2_BYTES,
-+	DMA_SLAVE_BUSWIDTH_4_BYTES,
-+	DMA_SLAVE_BUSWIDTH_UNDEFINED
-+};
-+
-+/* PCM format to support channel resolution */
-+static const u32 formats[COMP_MAX_WORDSIZE] = {
-+	SNDRV_PCM_FMTBIT_S16_LE,
-+	SNDRV_PCM_FMTBIT_S16_LE,
-+	SNDRV_PCM_FMTBIT_S24_LE,
-+	SNDRV_PCM_FMTBIT_S24_LE,
-+	SNDRV_PCM_FMTBIT_S32_LE,
-+	0,
-+	0,
-+	0
-+};
-+
-+static int dw_configure_dai_by_pd(struct dw_i2s_dev *dev,
- 				   struct snd_soc_dai_driver *dw_i2s_dai,
- 				   struct resource *res,
- 				   const struct i2s_platform_data *pdata)
- {
-+	/*
-+	 * Read component parameter registers to extract
-+	 * the I2S block's configuration.
-+	 */
-+	u32 comp1 = i2s_read_reg(dev->i2s_base, I2S_COMP_PARAM_1);
-+	u32 comp2 = i2s_read_reg(dev->i2s_base, I2S_COMP_PARAM_2);
-+	u32 idx = COMP1_APB_DATA_WIDTH(comp1);
-+
-+	if (WARN_ON(idx >= ARRAY_SIZE(bus_widths)))
-+		return -EINVAL;
-+
- 	/* Set DMA slaves info */
- 
- 	dev->play_dma_data.data = pdata->play_dma_data;
-@@ -348,26 +412,36 @@ static void dw_configure_dai_by_pd(struct dw_i2s_dev *dev,
- 	dev->capture_dma_data.addr = res->start + I2S_RXDMA;
- 	dev->play_dma_data.max_burst = 16;
- 	dev->capture_dma_data.max_burst = 16;
--	dev->play_dma_data.addr_width = DMA_SLAVE_BUSWIDTH_2_BYTES;
--	dev->capture_dma_data.addr_width = DMA_SLAVE_BUSWIDTH_2_BYTES;
-+	dev->play_dma_data.addr_width = bus_widths[idx];
-+	dev->capture_dma_data.addr_width = bus_widths[idx];
- 	dev->play_dma_data.filter = pdata->filter;
- 	dev->capture_dma_data.filter = pdata->filter;
- 
--	if (pdata->cap & DWC_I2S_PLAY) {
-+	if (COMP1_TX_ENABLED(comp1)) {
- 		dev_dbg(dev->dev, " designware: play supported\n");
-+		idx = COMP1_TX_WORDSIZE_0(comp1);
-+		if (WARN_ON(idx >= ARRAY_SIZE(formats)))
-+			return -EINVAL;
- 		dw_i2s_dai->playback.channels_min = MIN_CHANNEL_NUM;
--		dw_i2s_dai->playback.channels_max = pdata->channel;
--		dw_i2s_dai->playback.formats = pdata->snd_fmts;
-+		dw_i2s_dai->playback.channels_max =
-+				1 << (COMP1_TX_CHANNELS(comp1) + 1);
-+		dw_i2s_dai->playback.formats = formats[idx];
- 		dw_i2s_dai->playback.rates = pdata->snd_rates;
- 	}
- 
--	if (pdata->cap & DWC_I2S_RECORD) {
-+	if (COMP1_RX_ENABLED(comp1)) {
- 		dev_dbg(dev->dev, "designware: record supported\n");
-+		idx = COMP2_RX_WORDSIZE_0(comp2);
-+		if (WARN_ON(idx >= ARRAY_SIZE(formats)))
-+			return -EINVAL;
- 		dw_i2s_dai->capture.channels_min = MIN_CHANNEL_NUM;
--		dw_i2s_dai->capture.channels_max = pdata->channel;
--		dw_i2s_dai->capture.formats = pdata->snd_fmts;
-+		dw_i2s_dai->capture.channels_max =
-+				1 << (COMP1_RX_CHANNELS(comp1) + 1);
-+		dw_i2s_dai->capture.formats = formats[idx];
- 		dw_i2s_dai->capture.rates = pdata->snd_rates;
- 	}
-+
-+	return 0;
- }
- 
- static int dw_i2s_probe(struct platform_device *pdev)
-@@ -403,7 +477,9 @@ static int dw_i2s_probe(struct platform_device *pdev)
- 		return PTR_ERR(dev->i2s_base);
- 
- 	dev->dev = &pdev->dev;
--	dw_configure_dai_by_pd(dev, dw_i2s_dai, res, pdata);
-+	ret = dw_configure_dai_by_pd(dev, dw_i2s_dai, res, pdata);
-+	if (ret < 0)
-+		return ret;
- 
- 	dev->capability = pdata->cap;
- 	dev->i2s_clk_cfg = pdata->i2s_clk_cfg;
+>  arch/mips/boot/dts/cavium-octeon/Makefile          |  9 ++++++
+>  .../boot/dts/{ => cavium-octeon}/octeon_3xxx.dts   |  0
+>  .../boot/dts/{ => cavium-octeon}/octeon_68xx.dts   |  0
+>  arch/mips/boot/dts/lantiq/Makefile                 |  9 ++++++
+>  arch/mips/boot/dts/{ => lantiq}/danube.dtsi        |  0
+>  arch/mips/boot/dts/{ => lantiq}/easy50712.dts      |  0
+>  arch/mips/boot/dts/mti/Makefile                    |  9 ++++++
+>  arch/mips/boot/dts/{ => mti}/sead3.dts             |  0
+>  arch/mips/boot/dts/netlogic/Makefile               | 12 ++++++++
+>  arch/mips/boot/dts/{ => netlogic}/xlp_evp.dts      |  0
+>  arch/mips/boot/dts/{ => netlogic}/xlp_fvp.dts      |  0
+>  arch/mips/boot/dts/{ => netlogic}/xlp_gvp.dts      |  0
+>  arch/mips/boot/dts/{ => netlogic}/xlp_svp.dts      |  0
+>  arch/mips/boot/dts/ralink/Makefile                 | 12 ++++++++
+>  arch/mips/boot/dts/{ => ralink}/mt7620a.dtsi       |  0
+>  arch/mips/boot/dts/{ => ralink}/mt7620a_eval.dts   |  0
+>  arch/mips/boot/dts/{ => ralink}/rt2880.dtsi        |  0
+>  arch/mips/boot/dts/{ => ralink}/rt2880_eval.dts    |  0
+>  arch/mips/boot/dts/{ => ralink}/rt3050.dtsi        |  0
+>  arch/mips/boot/dts/{ => ralink}/rt3052_eval.dts    |  0
+>  arch/mips/boot/dts/{ => ralink}/rt3883.dtsi        |  0
+>  arch/mips/boot/dts/{ => ralink}/rt3883_eval.dts    |  0
+>  27 files changed, 73 insertions(+), 22 deletions(-)
+>  create mode 100644 arch/mips/boot/dts/bcm/Makefile
+>  rename arch/mips/boot/dts/{ => bcm}/bcm3384.dtsi (100%)
+>  rename arch/mips/boot/dts/{ => bcm}/bcm93384wvg.dts (100%)
+>  create mode 100644 arch/mips/boot/dts/cavium-octeon/Makefile
+>  rename arch/mips/boot/dts/{ => cavium-octeon}/octeon_3xxx.dts (100%)
+>  rename arch/mips/boot/dts/{ => cavium-octeon}/octeon_68xx.dts (100%)
+>  create mode 100644 arch/mips/boot/dts/lantiq/Makefile
+>  rename arch/mips/boot/dts/{ => lantiq}/danube.dtsi (100%)
+>  rename arch/mips/boot/dts/{ => lantiq}/easy50712.dts (100%)
+>  create mode 100644 arch/mips/boot/dts/mti/Makefile
+>  rename arch/mips/boot/dts/{ => mti}/sead3.dts (100%)
+>  create mode 100644 arch/mips/boot/dts/netlogic/Makefile
+>  rename arch/mips/boot/dts/{ => netlogic}/xlp_evp.dts (100%)
+>  rename arch/mips/boot/dts/{ => netlogic}/xlp_fvp.dts (100%)
+>  rename arch/mips/boot/dts/{ => netlogic}/xlp_gvp.dts (100%)
+>  rename arch/mips/boot/dts/{ => netlogic}/xlp_svp.dts (100%)
+>  create mode 100644 arch/mips/boot/dts/ralink/Makefile
+>  rename arch/mips/boot/dts/{ => ralink}/mt7620a.dtsi (100%)
+>  rename arch/mips/boot/dts/{ => ralink}/mt7620a_eval.dts (100%)
+>  rename arch/mips/boot/dts/{ => ralink}/rt2880.dtsi (100%)
+>  rename arch/mips/boot/dts/{ => ralink}/rt2880_eval.dts (100%)
+>  rename arch/mips/boot/dts/{ => ralink}/rt3050.dtsi (100%)
+>  rename arch/mips/boot/dts/{ => ralink}/rt3052_eval.dts (100%)
+>  rename arch/mips/boot/dts/{ => ralink}/rt3883.dtsi (100%)
+>  rename arch/mips/boot/dts/{ => ralink}/rt3883_eval.dts (100%)
+>
+> diff --git a/arch/mips/Makefile b/arch/mips/Makefile
+> index 37fce70..9c4b9c8 100644
+> --- a/arch/mips/Makefile
+> +++ b/arch/mips/Makefile
+> @@ -354,7 +354,7 @@ core-$(CONFIG_BUILTIN_DTB) += arch/mips/boot/dts/
+>
+>  PHONY += dtbs
+>  dtbs: scripts
+> -       $(Q)$(MAKE) $(build)=arch/mips/boot/dts dtbs
+> +       $(Q)$(MAKE) $(build)=arch/mips/boot/dts
+>
+>  archprepare:
+>  ifdef CONFIG_MIPS32_N32
+> diff --git a/arch/mips/boot/dts/Makefile b/arch/mips/boot/dts/Makefile
+> index 4f49fa4..90d1fbc 100644
+> --- a/arch/mips/boot/dts/Makefile
+> +++ b/arch/mips/boot/dts/Makefile
+> @@ -1,21 +1,12 @@
+> -dtb-$(CONFIG_BCM3384)                  += bcm93384wvg.dtb
+> -dtb-$(CONFIG_CAVIUM_OCTEON_SOC)                += octeon_3xxx.dtb octeon_68xx.dtb
+> -dtb-$(CONFIG_DT_EASY50712)             += easy50712.dtb
+> -dtb-$(CONFIG_DT_XLP_EVP)               += xlp_evp.dtb
+> -dtb-$(CONFIG_DT_XLP_SVP)               += xlp_svp.dtb
+> -dtb-$(CONFIG_DT_XLP_FVP)               += xlp_fvp.dtb
+> -dtb-$(CONFIG_DT_XLP_GVP)               += xlp_gvp.dtb
+> -dtb-$(CONFIG_DTB_RT2880_EVAL)          += rt2880_eval.dtb
+> -dtb-$(CONFIG_DTB_RT305X_EVAL)          += rt3052_eval.dtb
+> -dtb-$(CONFIG_DTB_RT3883_EVAL)          += rt3883_eval.dtb
+> -dtb-$(CONFIG_DTB_MT7620A_EVAL)         += mt7620a_eval.dtb
+> -dtb-$(CONFIG_MIPS_SEAD3)               += sead3.dtb
+> -
+> -obj-y          += $(patsubst %.dtb, %.dtb.o, $(dtb-y))
+> -
+> -targets                += dtbs
+> -targets                += $(dtb-y)
+> -
+> -dtbs: $(addprefix $(obj)/, $(dtb-y))
+> -
+> -clean-files    += *.dtb *.dtb.S
+> +dts-dirs       += bcm
+> +dts-dirs       += cavium-octeon
+> +dts-dirs       += lantiq
+> +dts-dirs       += mti
+> +dts-dirs       += netlogic
+> +dts-dirs       += ralink
+> +
+> +obj-y          := $(addsuffix /, $(dts-dirs))
+> +
+> +always         := $(dtb-y)
+> +subdir-y       := $(dts-dirs)
+> +clean-files    := *.dtb *.dtb.S
+> diff --git a/arch/mips/boot/dts/bcm/Makefile b/arch/mips/boot/dts/bcm/Makefile
+> new file mode 100644
+> index 0000000..a353d4e
+> --- /dev/null
+> +++ b/arch/mips/boot/dts/bcm/Makefile
+> @@ -0,0 +1,9 @@
+> +dtb-$(CONFIG_BCM3384)          += bcm93384wvg.dtb
+> +
+> +obj-y                          += $(patsubst %.dtb, %.dtb.o, $(dtb-y))
+> +
+> +# Force kbuild to make empty built-in.o if necessary
+> +obj-                           += dummy.o
+> +
+> +always                         := $(dtb-y)
+> +clean-files                    := *.dtb *.dtb.S
+> diff --git a/arch/mips/boot/dts/bcm3384.dtsi b/arch/mips/boot/dts/bcm/bcm3384.dtsi
+> similarity index 100%
+> rename from arch/mips/boot/dts/bcm3384.dtsi
+> rename to arch/mips/boot/dts/bcm/bcm3384.dtsi
+> diff --git a/arch/mips/boot/dts/bcm93384wvg.dts b/arch/mips/boot/dts/bcm/bcm93384wvg.dts
+> similarity index 100%
+> rename from arch/mips/boot/dts/bcm93384wvg.dts
+> rename to arch/mips/boot/dts/bcm/bcm93384wvg.dts
+> diff --git a/arch/mips/boot/dts/cavium-octeon/Makefile b/arch/mips/boot/dts/cavium-octeon/Makefile
+> new file mode 100644
+> index 0000000..5b99c40
+> --- /dev/null
+> +++ b/arch/mips/boot/dts/cavium-octeon/Makefile
+> @@ -0,0 +1,9 @@
+> +dtb-$(CONFIG_CAVIUM_OCTEON_SOC)        += octeon_3xxx.dtb octeon_68xx.dtb
+> +
+> +obj-y                          += $(patsubst %.dtb, %.dtb.o, $(dtb-y))
+> +
+> +# Force kbuild to make empty built-in.o if necessary
+> +obj-                           += dummy.o
+> +
+> +always                         := $(dtb-y)
+> +clean-files                    := *.dtb *.dtb.S
+> diff --git a/arch/mips/boot/dts/octeon_3xxx.dts b/arch/mips/boot/dts/cavium-octeon/octeon_3xxx.dts
+> similarity index 100%
+> rename from arch/mips/boot/dts/octeon_3xxx.dts
+> rename to arch/mips/boot/dts/cavium-octeon/octeon_3xxx.dts
+> diff --git a/arch/mips/boot/dts/octeon_68xx.dts b/arch/mips/boot/dts/cavium-octeon/octeon_68xx.dts
+> similarity index 100%
+> rename from arch/mips/boot/dts/octeon_68xx.dts
+> rename to arch/mips/boot/dts/cavium-octeon/octeon_68xx.dts
+> diff --git a/arch/mips/boot/dts/lantiq/Makefile b/arch/mips/boot/dts/lantiq/Makefile
+> new file mode 100644
+> index 0000000..0906c62
+> --- /dev/null
+> +++ b/arch/mips/boot/dts/lantiq/Makefile
+> @@ -0,0 +1,9 @@
+> +dtb-$(CONFIG_DT_EASY50712)     += easy50712.dtb
+> +
+> +obj-y                          += $(patsubst %.dtb, %.dtb.o, $(dtb-y))
+> +
+> +# Force kbuild to make empty built-in.o if necessary
+> +obj-                           += dummy.o
+> +
+> +always                         := $(dtb-y)
+> +clean-files                    := *.dtb *.dtb.S
+> diff --git a/arch/mips/boot/dts/danube.dtsi b/arch/mips/boot/dts/lantiq/danube.dtsi
+> similarity index 100%
+> rename from arch/mips/boot/dts/danube.dtsi
+> rename to arch/mips/boot/dts/lantiq/danube.dtsi
+> diff --git a/arch/mips/boot/dts/easy50712.dts b/arch/mips/boot/dts/lantiq/easy50712.dts
+> similarity index 100%
+> rename from arch/mips/boot/dts/easy50712.dts
+> rename to arch/mips/boot/dts/lantiq/easy50712.dts
+> diff --git a/arch/mips/boot/dts/mti/Makefile b/arch/mips/boot/dts/mti/Makefile
+> new file mode 100644
+> index 0000000..ef1f3db
+> --- /dev/null
+> +++ b/arch/mips/boot/dts/mti/Makefile
+> @@ -0,0 +1,9 @@
+> +dtb-$(CONFIG_MIPS_SEAD3)       += sead3.dtb
+> +
+> +obj-y                          += $(patsubst %.dtb, %.dtb.o, $(dtb-y))
+> +
+> +# Force kbuild to make empty built-in.o if necessary
+> +obj-                           += dummy.o
+> +
+> +always                         := $(dtb-y)
+> +clean-files                    := *.dtb *.dtb.S
+> diff --git a/arch/mips/boot/dts/sead3.dts b/arch/mips/boot/dts/mti/sead3.dts
+> similarity index 100%
+> rename from arch/mips/boot/dts/sead3.dts
+> rename to arch/mips/boot/dts/mti/sead3.dts
+> diff --git a/arch/mips/boot/dts/netlogic/Makefile b/arch/mips/boot/dts/netlogic/Makefile
+> new file mode 100644
+> index 0000000..e126cd3
+> --- /dev/null
+> +++ b/arch/mips/boot/dts/netlogic/Makefile
+> @@ -0,0 +1,12 @@
+> +dtb-$(CONFIG_DT_XLP_EVP)       += xlp_evp.dtb
+> +dtb-$(CONFIG_DT_XLP_SVP)       += xlp_svp.dtb
+> +dtb-$(CONFIG_DT_XLP_FVP)       += xlp_fvp.dtb
+> +dtb-$(CONFIG_DT_XLP_GVP)       += xlp_gvp.dtb
+> +
+> +obj-y                          += $(patsubst %.dtb, %.dtb.o, $(dtb-y))
+> +
+> +# Force kbuild to make empty built-in.o if necessary
+> +obj-                           += dummy.o
+> +
+> +always                         := $(dtb-y)
+> +clean-files                    := *.dtb *.dtb.S
+> diff --git a/arch/mips/boot/dts/xlp_evp.dts b/arch/mips/boot/dts/netlogic/xlp_evp.dts
+> similarity index 100%
+> rename from arch/mips/boot/dts/xlp_evp.dts
+> rename to arch/mips/boot/dts/netlogic/xlp_evp.dts
+> diff --git a/arch/mips/boot/dts/xlp_fvp.dts b/arch/mips/boot/dts/netlogic/xlp_fvp.dts
+> similarity index 100%
+> rename from arch/mips/boot/dts/xlp_fvp.dts
+> rename to arch/mips/boot/dts/netlogic/xlp_fvp.dts
+> diff --git a/arch/mips/boot/dts/xlp_gvp.dts b/arch/mips/boot/dts/netlogic/xlp_gvp.dts
+> similarity index 100%
+> rename from arch/mips/boot/dts/xlp_gvp.dts
+> rename to arch/mips/boot/dts/netlogic/xlp_gvp.dts
+> diff --git a/arch/mips/boot/dts/xlp_svp.dts b/arch/mips/boot/dts/netlogic/xlp_svp.dts
+> similarity index 100%
+> rename from arch/mips/boot/dts/xlp_svp.dts
+> rename to arch/mips/boot/dts/netlogic/xlp_svp.dts
+> diff --git a/arch/mips/boot/dts/ralink/Makefile b/arch/mips/boot/dts/ralink/Makefile
+> new file mode 100644
+> index 0000000..2a72259
+> --- /dev/null
+> +++ b/arch/mips/boot/dts/ralink/Makefile
+> @@ -0,0 +1,12 @@
+> +dtb-$(CONFIG_DTB_RT2880_EVAL)  += rt2880_eval.dtb
+> +dtb-$(CONFIG_DTB_RT305X_EVAL)  += rt3052_eval.dtb
+> +dtb-$(CONFIG_DTB_RT3883_EVAL)  += rt3883_eval.dtb
+> +dtb-$(CONFIG_DTB_MT7620A_EVAL) += mt7620a_eval.dtb
+> +
+> +obj-y                          += $(patsubst %.dtb, %.dtb.o, $(dtb-y))
+> +
+> +# Force kbuild to make empty built-in.o if necessary
+> +obj-                           += dummy.o
+> +
+> +always                         := $(dtb-y)
+> +clean-files                    := *.dtb *.dtb.S
+> diff --git a/arch/mips/boot/dts/mt7620a.dtsi b/arch/mips/boot/dts/ralink/mt7620a.dtsi
+> similarity index 100%
+> rename from arch/mips/boot/dts/mt7620a.dtsi
+> rename to arch/mips/boot/dts/ralink/mt7620a.dtsi
+> diff --git a/arch/mips/boot/dts/mt7620a_eval.dts b/arch/mips/boot/dts/ralink/mt7620a_eval.dts
+> similarity index 100%
+> rename from arch/mips/boot/dts/mt7620a_eval.dts
+> rename to arch/mips/boot/dts/ralink/mt7620a_eval.dts
+> diff --git a/arch/mips/boot/dts/rt2880.dtsi b/arch/mips/boot/dts/ralink/rt2880.dtsi
+> similarity index 100%
+> rename from arch/mips/boot/dts/rt2880.dtsi
+> rename to arch/mips/boot/dts/ralink/rt2880.dtsi
+> diff --git a/arch/mips/boot/dts/rt2880_eval.dts b/arch/mips/boot/dts/ralink/rt2880_eval.dts
+> similarity index 100%
+> rename from arch/mips/boot/dts/rt2880_eval.dts
+> rename to arch/mips/boot/dts/ralink/rt2880_eval.dts
+> diff --git a/arch/mips/boot/dts/rt3050.dtsi b/arch/mips/boot/dts/ralink/rt3050.dtsi
+> similarity index 100%
+> rename from arch/mips/boot/dts/rt3050.dtsi
+> rename to arch/mips/boot/dts/ralink/rt3050.dtsi
+> diff --git a/arch/mips/boot/dts/rt3052_eval.dts b/arch/mips/boot/dts/ralink/rt3052_eval.dts
+> similarity index 100%
+> rename from arch/mips/boot/dts/rt3052_eval.dts
+> rename to arch/mips/boot/dts/ralink/rt3052_eval.dts
+> diff --git a/arch/mips/boot/dts/rt3883.dtsi b/arch/mips/boot/dts/ralink/rt3883.dtsi
+> similarity index 100%
+> rename from arch/mips/boot/dts/rt3883.dtsi
+> rename to arch/mips/boot/dts/ralink/rt3883.dtsi
+> diff --git a/arch/mips/boot/dts/rt3883_eval.dts b/arch/mips/boot/dts/ralink/rt3883_eval.dts
+> similarity index 100%
+> rename from arch/mips/boot/dts/rt3883_eval.dts
+> rename to arch/mips/boot/dts/ralink/rt3883_eval.dts
+> --
+> 2.2.0.rc0.207.ga3a616c
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
+
 -- 
-1.7.1
+Florian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
