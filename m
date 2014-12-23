@@ -1,51 +1,49 @@
-From: Liu Ying <Ying.Liu@freescale.com>
-Subject: Re: [PATCH RFC v3 02/18] of: Add vendor prefix for Himax Technologies
- Inc.
-Date: Tue, 23 Dec 2014 16:26:37 +0800
-Message-ID: <5499273D.3040900@freescale.com>
-References: <1419306399-9387-1-git-send-email-Ying.Liu@freescale.com>
- <1419306399-9387-3-git-send-email-Ying.Liu@freescale.com>
- <789433791.920346.1419322152848.JavaMail.open-xchange@oxbaltgw08.schlund.de>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: Re: [PATCH RFC v3 11/18] drm/bridge: Add Synopsys DesignWare MIPI
+ DSI host controller driver
+Date: Tue, 23 Dec 2014 09:33:16 +0100 (CET)
+Message-ID: <1770602566.921194.1419323596151.JavaMail.open-xchange@oxbaltgw08.schlund.de>
+References: <1419306399-9387-1-git-send-email-Ying.Liu@freescale.com> <1419306399-9387-12-git-send-email-Ying.Liu@freescale.com>
+Reply-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <789433791.920346.1419322152848.JavaMail.open-xchange@oxbaltgw08.schlund.de>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Stefan Wahren <stefan.wahren@i2se.com>, dri-devel@lists.freedesktop.org
-Cc: devicetree@vger.kernel.org, linux@arm.linux.org.uk, andyshrk@gmail.com, mturquette@linaro.org, linux-kernel@vger.kernel.org, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1419306399-9387-12-git-send-email-Ying.Liu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Liu Ying <Ying.Liu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, andyshrk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgU3RlZmFuLAoKT24gMTIvMjMvMjAxNCAwNDowOSBQTSwgU3RlZmFuIFdhaHJlbiB3cm90ZToK
-PiBIaSBMaXUsCj4KPj4gTGl1IFlpbmcgPFlpbmcuTGl1QGZyZWVzY2FsZS5jb20+IGhhdCBhbSAy
-My4gRGV6ZW1iZXIgMjAxNCB1bSAwNDo0Ngo+PiBnZXNjaHJpZWJlbjoKPj4KPj4KPj4gU2lnbmVk
-LW9mZi1ieTogTGl1IFlpbmcgPFlpbmcuTGl1QGZyZWVzY2FsZS5jb20+Cj4+IC0tLQo+PiB2Mi0+
-djM6Cj4+ICogTm9uZS4KPj4KPj4gdjEtPnYyOgo+PiAqIE5vbmUuCj4+Cj4+IERvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMudHh0IHwgMSArCj4+IDEgZmls
-ZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKQo+Pgo+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZlbmRvci1wcmVmaXhlcy50eHQKPj4gYi9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmVuZG9yLXByZWZpeGVzLnR4dAo+PiBpbmRleCA3OGVm
-ZWJiLi4zY2VlNTI4IDEwMDY0NAo+PiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvdmVuZG9yLXByZWZpeGVzLnR4dAo+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvdmVuZG9yLXByZWZpeGVzLnR4dAo+PiBAQCAtNjksNiArNjksNyBAQCBoYW5u
-c3RhciBIYW5uU3RhciBEaXNwbGF5IENvcnBvcmF0aW9uCj4+IGhhb3l1IEhhb3l1IE1pY3JvZWxl
-Y3Ryb25pYyBDby4gTHRkLgo+PiBoaXNpbGljb24gSGlzaWxpY29uIExpbWl0ZWQuCj4+IGhpdCBI
-aXRhY2hpIEx0ZC4KPj4gK2hpbWF4IEhpbWF4IFRlY2hub2xvZ2llcywgSW5jLgo+Cj4gcGxlYXNl
-IGZpeCB0aGUgb3JkZXJpbmcuIGhpbWF4IGNvbWVzIGJlZm9yZSBoaXNpbGljb24uCgpZZXMuIEkn
-bGwgZml4IHRoYXQuCgpUaGFua3MsCkxpdSBZaW5nCgo+Cj4gVGhhbmtzCj4KPiBTdGVmYW4KPgo+
-PiBob25leXdlbGwgSG9uZXl3ZWxsCj4+IGhwIEhld2xldHQgUGFja2FyZAo+PiBpMnNlIEkyU0Ug
-R21iSAo+PiAtLQo+PiAyLjEuMAo+Pgo+Pgo+PiBfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwo+PiBsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdAo+PiBs
-aW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKPj4gaHR0cDovL2xpc3RzLmluZnJh
-ZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
-ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Hi Liu,
+
+> Liu Ying <Ying.Liu-KZfg59tc24xl57MIdRCFDg@public.gmane.org> hat am 23. Dezember 2014 um 04:46
+> geschrieben:
+>
+>
+> This patch adds Synopsys DesignWare MIPI DSI host controller driver support.
+> Currently, the driver supports the burst with sync pulses mode only.
+>
+> Signed-off-by: Liu Ying <Ying.Liu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+> v2->v3:
+> * Newly introduced in v3 to address Andy Yan's comment. This is based on
+> the i.MX MIPI DSI driver in v2. To make the Synopsys DesignWare MIPI DSI
+> host controller driver less platform-dependant, this patch places it at
+> the drm/bridge directory as a DRM bridge driver.
+>
+> .../devicetree/bindings/drm/bridge/dw_mipi_dsi.txt | 72 ++
+
+please take care of [1] and send the Documentation part as a separate patch.
+This should also apply to all the other patches from your series.
+
+Thanks
+
+Stefan
+
+[1] -
+http://lxr.free-electrons.com/source/Documentation/devicetree/bindings/submitting-patches.txt
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
