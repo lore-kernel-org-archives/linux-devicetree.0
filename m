@@ -1,40 +1,38 @@
-From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH] dma-mapping: limit dma_mask in arch_setup_dma_ops()
-Date: Wed, 24 Dec 2014 16:55:39 -0500
-Message-ID: <1419458139-4034-1-git-send-email-m-karicheri2@ti.com>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: [PATCH] dma-mapping: fix size when of_dma_get_range() fails
+Date: Wed, 24 Dec 2014 16:56:50 -0500
+Message-ID: <1419458210-4079-1-git-send-email-m-karicheri2@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, arnd@arndb.de, will.deacon@arm.com, grant.likely@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org
+Cc: Murali Karicheri <m-karicheri2@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-dma_mask should be limited to minimum of the default dma mask
-and dma-range size configured in DT for proper operation.
+When call to of_dma_get_range() fails, the code currently set size
+to dev->coherent_dma_mask instead of dev->coherent_dma_mask + 1. Fix this
+to make the code consistent with the case when size is obtained from
+dma-range property.
 
-Signed-off-by: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
-Reviewed-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
 ---
- arch/arm/mm/dma-mapping.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/of/platform.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/mm/dma-mapping.c b/arch/arm/mm/dma-mapping.c
-index 7864797..5cea1fc 100644
---- a/arch/arm/mm/dma-mapping.c
-+++ b/arch/arm/mm/dma-mapping.c
-@@ -2053,6 +2053,7 @@ void arch_setup_dma_ops(struct device *dev, u64 dma_base, u64 size,
- {
- 	struct dma_map_ops *dma_ops;
- 
-+	*dev->dma_mask = min((*dev->dma_mask), (dma_base + size - 1));
- 	dev->archdata.dma_coherent = coherent;
- 	if (arm_setup_iommu_dma_ops(dev, dma_base, size, iommu))
- 		dma_ops = arm_get_iommu_dma_map_ops(coherent);
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index a54ec10..af9aef1 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -185,7 +185,7 @@ static void of_dma_configure(struct device *dev)
+ 	ret = of_dma_get_range(dev->of_node, &dma_addr, &paddr, &size);
+ 	if (ret < 0) {
+ 		dma_addr = offset = 0;
+-		size = dev->coherent_dma_mask;
++		size = dev->coherent_dma_mask + 1;
+ 	} else {
+ 		offset = PFN_DOWN(paddr - dma_addr);
+ 		dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", offset);
 -- 
 1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
