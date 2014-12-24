@@ -1,92 +1,143 @@
-From: Jianqun <xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH 2/2] ASoC: rockchip: i2s: set TDL and RDL
- to 16 bits
-Date: Wed, 24 Dec 2014 08:36:19 +0800
-Message-ID: <549A0A83.7040606@rock-chips.com>
-References: <1419325709-15374-1-git-send-email-jay.xu@rock-chips.com> <1419325709-15374-3-git-send-email-jay.xu@rock-chips.com> <CAEUnVG79MOHUufRnJVe98ZTC4vouUNAEWtPsryEKWLc+Qpdjuw@mail.gmail.com>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH V3 2/2] dmaengine: Add driver for IMG MDC
+Date: Wed, 24 Dec 2014 10:52:18 +0530
+Message-ID: <20141224052218.GR16827@intel.com>
+References: <1418338757-10022-1-git-send-email-abrestic@chromium.org>
+ <1418338757-10022-3-git-send-email-abrestic@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAEUnVG79MOHUufRnJVe98ZTC4vouUNAEWtPsryEKWLc+Qpdjuw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, perex-/Fr2/VpizcU@public.gmane.org, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1418338757-10022-3-git-send-email-abrestic@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Bresticker <abrestic@chromium.org>
+Cc: Dan Williams <dan.j.williams@intel.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, James Hartley <james.hartley@imgtec.com>, James Hogan <james.hogan@imgtec.com>, Ezequiel Garcia <ezequiel.garcia@imgtec.com>, Damien Horsley <Damien.Horsley@imgtec.com>, Arnd Bergmann <arnd@arndb.de>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Dec 11, 2014 at 02:59:17PM -0800, Andrew Bresticker wrote:
+> Add support for the IMG Multi-threaded DMA Controller (MDC) found on
+> certain IMG SoCs.  Currently this driver supports the variant present
+> on the MIPS-based Pistachio SoC.a
+
+Overall looks okay. I also need some review by DT folks on the bindings
+
+> +static void mdc_list_desc_config(struct mdc_chan *mchan,
+> +				 struct mdc_hw_list_desc *ldesc,
+> +				 enum dma_transfer_direction dir,
+> +				 dma_addr_t src, dma_addr_t dst, size_t len)
+> +{
+> +	struct mdc_dma *mdma = mchan->mdma;
+> +	unsigned int max_burst, burst_size;
+> +
+> +	ldesc->gen_conf = MDC_GENERAL_CONFIG_IEN | MDC_GENERAL_CONFIG_LIST_IEN |
+> +		MDC_GENERAL_CONFIG_LEVEL_INT | MDC_GENERAL_CONFIG_PHYSICAL_W |
+> +		MDC_GENERAL_CONFIG_PHYSICAL_R;
+> +	ldesc->readport_conf =
+> +		(mchan->thread << MDC_READ_PORT_CONFIG_STHREAD_SHIFT) |
+> +		(mchan->thread << MDC_READ_PORT_CONFIG_RTHREAD_SHIFT) |
+> +		(mchan->thread << MDC_READ_PORT_CONFIG_WTHREAD_SHIFT);
+> +	ldesc->read_addr = src;
+> +	ldesc->write_addr = dst;
+> +	ldesc->xfer_size = len - 1;
+> +	ldesc->node_addr = 0;
+> +	ldesc->cmds_done = 0;
+> +	ldesc->ctrl_status = MDC_CONTROL_AND_STATUS_LIST_EN |
+> +		MDC_CONTROL_AND_STATUS_EN;
+> +	ldesc->next_desc = NULL;
+> +
+> +	if (IS_ALIGNED(dst, mdma->bus_width) &&
+> +	    IS_ALIGNED(src, mdma->bus_width))
+> +		max_burst = mdma->bus_width * mdma->max_burst_mult;
+> +	else
+> +		max_burst = mdma->bus_width * (mdma->max_burst_mult - 1);
+> +
+> +	if (dir == DMA_MEM_TO_DEV) {
+> +		ldesc->gen_conf |= MDC_GENERAL_CONFIG_INC_R;
+> +		ldesc->readport_conf |= MDC_READ_PORT_CONFIG_DREQ_ENABLE;
+> +		mdc_set_read_width(ldesc, mdma->bus_width);
+> +		mdc_set_write_width(ldesc, mchan->config.dst_addr_width);
+> +		burst_size = min(max_burst, mchan->config.dst_maxburst *
+> +				 mchan->config.dst_addr_width);
+why is this calculation done for burst size? Shouldn't we take the
+config.dst_maxburst value configured by client?
 
 
-=E5=9C=A8 12/24/2014 07:06 AM, Dylan Reid =E5=86=99=E9=81=93:
-> On Tue, Dec 23, 2014 at 1:08 AM, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org> w=
-rote:
->> Set Transmit Data Level(TDL) and Receive Data Level(RDL) to 16 bits.
->> Without this setting, the TDL is default to be 0x00 (means 1 bit),
->> and the RDL is default to be 0x1f (means 16 bits).
->=20
-> My impression from the TRM was that TDL and RDL were measured in
-> samples.  Are you sure it's 'bits'?
-You are right, I'll modify the commit message next version, thank you
->=20
->>
->> This patch is helpful to fix pop sound, tested on rk3288 board.
->>
->> Signed-off-by: Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->> ---
->>  sound/soc/rockchip/rockchip_i2s.c | 4 ++++
->>  1 file changed, 4 insertions(+)
->>
->> diff --git a/sound/soc/rockchip/rockchip_i2s.c b/sound/soc/rockchip/=
-rockchip_i2s.c
->> index c74ba37..1cd7efc 100644
->> --- a/sound/soc/rockchip/rockchip_i2s.c
->> +++ b/sound/soc/rockchip/rockchip_i2s.c
->> @@ -247,6 +247,10 @@ static int rockchip_i2s_hw_params(struct snd_pc=
-m_substream *substream,
->>
->>         regmap_update_bits(i2s->regmap, I2S_TXCR, I2S_TXCR_VDW_MASK,=
- val);
->>         regmap_update_bits(i2s->regmap, I2S_RXCR, I2S_RXCR_VDW_MASK,=
- val);
->> +       regmap_update_bits(i2s->regmap, I2S_DMACR, I2S_DMACR_TDL_MAS=
-K,
->> +                          I2S_DMACR_TDL(16));
->> +       regmap_update_bits(i2s->regmap, I2S_DMACR, I2S_DMACR_RDL_MAS=
-K,
->> +                          I2S_DMACR_RDL(16));
->>
->>         return 0;
->>  }
->> --
->> 1.9.1
->>
->>
->> _______________________________________________
->> Alsa-devel mailing list
->> Alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
->> http://mailman.alsa-project.org/mailman/listinfo/alsa-devel
->=20
->=20
->=20
+> +static struct dma_async_tx_descriptor *mdc_prep_slave_sg(
+> +	struct dma_chan *chan, struct scatterlist *sgl,
+> +	unsigned int sg_len, enum dma_transfer_direction dir,
+> +	unsigned long flags, void *context)
+> +{
+> +	struct mdc_chan *mchan = to_mdc_chan(chan);
+> +	struct mdc_dma *mdma = mchan->mdma;
+> +	struct mdc_tx_desc *mdesc;
+> +	struct scatterlist *sg;
+> +	struct mdc_hw_list_desc *curr, *prev = NULL;
+> +	dma_addr_t curr_phys, prev_phys;
+> +	unsigned int i;
+> +
+> +	if (!sgl)
+> +		return NULL;
+> +
+> +	if (!is_slave_direction(dir))
+> +		return NULL;
+> +
+> +	if (mdc_check_slave_width(mchan, dir) < 0)
+> +		return NULL;
+> +
+> +	mdesc = kzalloc(sizeof(*mdesc), GFP_NOWAIT);
+> +	if (!mdesc)
+> +		return NULL;
+> +	mdesc->chan = mchan;
+> +
+> +	for_each_sg(sgl, sg, sg_len, i) {
+> +		dma_addr_t buf = sg_dma_address(sg);
+> +		size_t buf_len = sg_dma_len(sg);
+> +
+> +		while (buf_len > 0) {
+> +			size_t xfer_size;
+> +
+> +			curr = dma_pool_alloc(mdma->desc_pool, GFP_NOWAIT,
+> +					      &curr_phys);
+> +			if (!curr)
+> +				goto free_desc;
+> +
+> +			if (!prev) {
+> +				mdesc->list_phys = curr_phys;
+> +				mdesc->list = curr;
+> +			} else {
+> +				prev->node_addr = curr_phys;
+> +				prev->next_desc = curr;
+> +			}
+> +
+> +			xfer_size = min_t(size_t, mdma->max_xfer_size,
+> +					  buf_len);
+> +
+> +			if (dir == DMA_MEM_TO_DEV) {
+> +				mdc_list_desc_config(mchan, curr, dir, buf,
+> +						     mchan->config.dst_addr,
+> +						     xfer_size);
+> +			} else {
+> +				mdc_list_desc_config(mchan, curr, dir,
+> +						     mchan->config.src_addr,
+> +						     buf, xfer_size);
+> +			}
+> +
+> +			prev = curr;
+> +			prev_phys = curr_phys;
+> +
+> +			mdesc->list_len++;
+> +			mdesc->list_xfer_size += xfer_size;
+> +			buf += xfer_size;
+> +			buf_len -= xfer_size;
+i see this pattern is repeat in all the .prepare calls, can we make it bit
+generic and use that in the these three calls..
 
---=20
-Jianqun Xu
+> +	dma_cap_zero(mdma->dma_dev.cap_mask);
+> +	dma_cap_set(DMA_SLAVE, mdma->dma_dev.cap_mask);
+> +	dma_cap_set(DMA_PRIVATE, mdma->dma_dev.cap_mask);
+> +	dma_cap_set(DMA_CYCLIC, mdma->dma_dev.cap_mask);
+and you dont seen to support pause/resume, though not a blocker but is it
+not supported in HW or driver doesn't?
 
-***********************************************************************=
-*****
-*IMPORTANT NOTICE:*This email is from Fuzhou Rockchip Electronics Co.,
-Ltd .The contents of this email and any attachments may contain
-information that is privileged, confidential and/or exempt from
-disclosure under applicable law and relevant NDA. If you are not the
-intended recipient, you are hereby notified that any disclosure,
-copying, distribution, or use of the information is STRICTLY PROHIBITED=
-=2E
-Please immediately contact the sender as soon as possible and destroy
-the material in its entirety in any format. Thank you.
-***********************************************************************=
-*****
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+~Vinod
