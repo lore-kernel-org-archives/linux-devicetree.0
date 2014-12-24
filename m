@@ -1,50 +1,72 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 0/3] ASoC: rockchip: i2s: fix watermark to 16 and
- maxburst to 4
-Date: Wed, 24 Dec 2014 12:43:51 +0000
-Message-ID: <20141224124351.GA17800@sirena.org.uk>
-References: <1419325709-15374-1-git-send-email-jay.xu@rock-chips.com>
- <1419413822-11539-1-git-send-email-jay.xu@rock-chips.com>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH] thermal: ti-soc-thermal: ti-bandgap.c:  Remove unused
+ function
+Date: Wed, 24 Dec 2014 08:57:14 -0600
+Message-ID: <549AD44A.8010603@ti.com>
+References: <1419183823-10787-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="cyl6hb1YSGs8e3xM"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1419413822-11539-1-git-send-email-jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1419183823-10787-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>, Eduardo Valentin <edubezval@gmail.com>, Zhang Rui <rui.zhang@intel.com>, Tero Kristo <t-kristo@ti.com>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap <linux-omap@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On 12/21/2014 11:43 AM, Rickard Strandqvist wrote:
+> Remove the function ti_bandgap_write_thot() that is not used anywhere.
+> 
+> This was partially found by using a static code analysis program called cppcheck.
+> 
+> Signed-off-by: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
+> ---
+>  drivers/thermal/ti-soc-thermal/ti-bandgap.c |   13 -------------
+>  drivers/thermal/ti-soc-thermal/ti-bandgap.h |    1 -
+>  2 files changed, 14 deletions(-)
+> 
+> diff --git a/drivers/thermal/ti-soc-thermal/ti-bandgap.c b/drivers/thermal/ti-soc-thermal/ti-bandgap.c
+> index 634b6ce..cbb6a5f 100644
+> --- a/drivers/thermal/ti-soc-thermal/ti-bandgap.c
+> +++ b/drivers/thermal/ti-soc-thermal/ti-bandgap.c
+> @@ -611,19 +611,6 @@ int ti_bandgap_read_thot(struct ti_bandgap *bgp, int id, int *thot)
+>  }
+>  
+>  /**
+> - * ti_bandgap_write_thot() - sets sensor current thot
+> - * @bgp: pointer to bandgap instance
+> - * @id: sensor id
+> - * @val: desired thot value
+> - *
+> - * Return: 0 on success or the proper error code
+> - */
+> -int ti_bandgap_write_thot(struct ti_bandgap *bgp, int id, int val)
+> -{
+> -	return _ti_bandgap_write_threshold(bgp, id, val, true);
+> -}
+> -
+> -/**
+>   * ti_bandgap_read_tcold() - reads sensor current tcold
+>   * @bgp: pointer to bandgap instance
+>   * @id: sensor id
+> diff --git a/drivers/thermal/ti-soc-thermal/ti-bandgap.h b/drivers/thermal/ti-soc-thermal/ti-bandgap.h
+> index b3adf72..976afc0 100644
+> --- a/drivers/thermal/ti-soc-thermal/ti-bandgap.h
+> +++ b/drivers/thermal/ti-soc-thermal/ti-bandgap.h
+> @@ -371,7 +371,6 @@ struct ti_bandgap_data {
+>  };
+>  
+>  int ti_bandgap_read_thot(struct ti_bandgap *bgp, int id, int *thot);
+> -int ti_bandgap_write_thot(struct ti_bandgap *bgp, int id, int val);
+>  int ti_bandgap_read_tcold(struct ti_bandgap *bgp, int id, int *tcold);
+>  int ti_bandgap_write_tcold(struct ti_bandgap *bgp, int id, int val);
+>  int ti_bandgap_read_update_interval(struct ti_bandgap *bgp, int id,
+> 
 
---cyl6hb1YSGs8e3xM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Not sure if removing support for programming of hot threshold is a
+good idea. how about ti_bandgap_write_tcold then?
 
-On Wed, Dec 24, 2014 at 05:36:59PM +0800, Jianqun Xu wrote:
-> To make Bus DMA works more efficiency, DMA may work in burst mode,
->    we set the watermark of transmit and receive reach to 16 bits.
 
-Applied all, thanks.
-
---cyl6hb1YSGs8e3xM
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUmrUGAAoJECTWi3JdVIfQtnUH/jlUIaFclxbl8kbSp3+66qUd
-tZmX+3g/aZl5X0D+LrfEzi2AbpZkA39YO+8E9qUT2lITmRQ+ubq0NLcLp5DyTZqu
-Hy4hsYkky+Rf3hCEZUfNteusKJAYZx46cebpYZTQh88CRv5OU/OfGNjyk8f8IVJr
-EsDzXMcSOTxGWrjPgoPLctkRzOqLq1p0WHEGcB6xTSIYmQ7IWAf8TinGL97RXEYw
-1SHb+i8L0RaWsrHSA35NxKk0wqCoV52QxCwUII7VIsRdtBC+PGEnufOvgrjtWNkP
-1MjbSd2NguOMu/XSuFtb1u7MXVyGkirmE82mzHNOtp3SmHiED4MjLQR169+L5u4=
-=9RR4
------END PGP SIGNATURE-----
-
---cyl6hb1YSGs8e3xM--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Regards,
+Nishanth Menon
