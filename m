@@ -1,78 +1,85 @@
-From: <thloh-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v8 1/2] drivers/gpio: Altera soft IP GPIO driver device tree binding
-Date: Wed, 24 Dec 2014 00:22:24 -0800
-Message-ID: <1419409345-8297-2-git-send-email-thloh@altera.com>
-References: <1419409345-8297-1-git-send-email-thloh@altera.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Zhou Wang <wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2] mtd: hisilicon: add device tree node for NAND controller
+Date: Wed, 24 Dec 2014 17:31:19 +0800
+Message-ID: <1419413479-32083-1-git-send-email-wangzhou.bry@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1419409345-8297-1-git-send-email-thloh-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, Tien Hock Loh <thloh-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+To: haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Zhou Wang <wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Tien Hock Loh <thloh-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+This patch add dts support for NAND flash controller of Hisilicon Soc Hip04
 
-Adds a new driver device tree binding for Altera soft GPIO IP
+Changes in v2:
+- Base on v3.19-rc1
+- Use nand-ecc-strength, nand-ecc-step-size to replace hisi,nand-ecc-bits
+Changes in v1:
+- Move partition and other board related information into board dts file:
+  hip04-d01.dts
 
-Signed-off-by: Tien Hock Loh <thloh-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Zhou Wang <wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- .../devicetree/bindings/gpio/gpio-altera.txt       |   43 ++++++++++++++++++++
- 1 files changed, 43 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-altera.txt
+ arch/arm/boot/dts/hip04-d01.dts |   27 +++++++++++++++++++++++++++
+ arch/arm/boot/dts/hip04.dtsi    |    7 +++++++
+ 2 files changed, 34 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-altera.txt b/Documentation/devicetree/bindings/gpio/gpio-altera.txt
-new file mode 100644
-index 0000000..649fa02
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-altera.txt
-@@ -0,0 +1,43 @@
-+Altera GPIO controller bindings
+diff --git a/arch/arm/boot/dts/hip04-d01.dts b/arch/arm/boot/dts/hip04-d01.dts
+index 40a9e33..ba04dd5 100644
+--- a/arch/arm/boot/dts/hip04-d01.dts
++++ b/arch/arm/boot/dts/hip04-d01.dts
+@@ -28,5 +28,32 @@
+ 		uart0: uart@4007000 {
+ 			status = "ok";
+ 		};
 +
-+Required properties:
-+- compatible:
-+  - "altr,pio-1.0"
-+- reg: Physical base address and length of the controller's registers.
-+- #gpio-cells : Should be 2
-+  - The first cell is the gpio offset number.
-+  - The second cell is reserved and is currently unused.
-+- gpio-controller : Marks the device node as a GPIO controller.
-+- interrupt-controller: Mark the device node as an interrupt controller
-+- #interrupt-cells : Should be 1. The interrupt type is fixed in the hardware.
-+  - The first cell is the GPIO offset number within the GPIO controller.
-+- interrupts: Specify the interrupt.
-+- altr,interrupt-trigger: Specifies the interrupt trigger type the GPIO
-+  hardware is synthesized. This field is required if the Altera GPIO controller
-+  used has IRQ enabled as the interrupt type is not software controlled,
-+  but hardware synthesized. Required if GPIO is used as an interrupt
-+  controller. The value is defined in <dt-bindings/interrupt-controller/irq.h>
-+  Only the following flags are supported:
-+    IRQ_TYPE_EDGE_RISING
-+    IRQ_TYPE_EDGE_FALLING
-+    IRQ_TYPE_EDGE_BOTH
-+    IRQ_TYPE_LEVEL_HIGH
++		nand: nand@4020000 {
++			nand-bus-width = <8>;
++			nand-ecc-mode = "hw";
++			nand-ecc-strength = <16>;
++			nand-ecc-step-size = <1024>;
 +
-+Optional properties:
-+- altr,ngpio: Width of the GPIO bank. This defines how many pins the
-+  GPIO device has. Ranges between 1-32. Optional and defaults to 32 is not
-+  specified.
++			partition@0 {
++				label = "nand_text";
++				reg = <0x00000000 0x00400000>;
++			};
 +
-+Example:
++			partition@00400000 {
++				label = "nand_monitor";
++				reg = <0x00400000 0x00400000>;
++			};
 +
-+gpio_altr: gpio@0xff200000 {
-+	compatible = "altr,pio-1.0";
-+	reg = <0xff200000 0x10>;
-+	interrupts = <0 45 4>;
-+	altr,ngpio = <32>;
-+	altr,interrupt_trigger = <IRQ_TYPE_EDGE_RISING>;
-+	#gpio-cells = <1>;
-+	gpio-controller;
-+	#interrupt-cells = <1>;
-+	interrupt-controller;
-+};
++			partition@00800000 {
++				label = "nand_kernel";
++				reg = <0x00800000 0x00800000>;
++			};
++
++			partition@01000000 {
++				label = "nand_fs";
++				reg = <0x01000000 0x1f000000>;
++			};
++		};
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/hip04.dtsi b/arch/arm/boot/dts/hip04.dtsi
+index 2388145..ac32fce 100644
+--- a/arch/arm/boot/dts/hip04.dtsi
++++ b/arch/arm/boot/dts/hip04.dtsi
+@@ -269,6 +269,13 @@
+ 			interrupts = <0 372 4>;
+ 		};
+ 
++		nand: nand@4020000 {
++			compatible = "hisilicon,504-nfc";
++			reg = <0x4020000 0x10000>, <0x5000000 0x1000>;
++			interrupts = <0 379 4>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++		};
+ 	};
+ 
+ 	etb@0,e3c42000 {
 -- 
-1.7.1
+1.7.9.5
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
