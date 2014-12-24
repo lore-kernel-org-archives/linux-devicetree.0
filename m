@@ -1,55 +1,45 @@
-From: Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH v2 1/4] arm64: defconfig: increase NR_CPUS range to 2-128
-Date: Wed, 24 Dec 2014 18:03:44 +0530
-Message-ID: <CAFpQJXXVn2ohjdLPOOYfTynUD4++Y_Cbjgn-EEFHUJcv=Umbag@mail.gmail.com>
-References: <1416605010-10442-1-git-send-email-ganapatrao.kulkarni@caviumnetworks.com>
-	<3519779.ILzEnWe9lP@wuerfel>
-	<CAMDttNe33ie9vgyEn8GHz+8isadaDfXXUJcp5mQM-42_mx3Pbw@mail.gmail.com>
-	<2054688.iIEQnOEqVy@wuerfel>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 3/8] regulator: MT6397: Add support for MT6397
+ regulator
+Date: Wed, 24 Dec 2014 12:41:26 +0000
+Message-ID: <20141224124126.GY17800@sirena.org.uk>
+References: <1417752479-4749-1-git-send-email-flora.fu@mediatek.com>
+ <1417752479-4749-4-git-send-email-flora.fu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2054688.iIEQnOEqVy@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Zi Shen Lim <zlim.lnx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ganapatrao Kulkarni <ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Steve Capper <steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Roy Franz <roy.franz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="BjOm3tsK/2NdfZj2"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1417752479-4749-4-git-send-email-flora.fu@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Flora Fu <flora.fu@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, arm@kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Dongdong Cheng <dongdong.cheng@mediatek.com>, HenryC Chen <henryc.chen@mediatek.com>, Menghui Lin <menghui.lin@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 9, 2014 at 1:57 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Monday 08 December 2014 17:57:03 Zi Shen Lim wrote:
->> Hi Arnd,
->>
->> On Mon, Nov 24, 2014 at 3:53 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
->> >
->> > On Saturday 22 November 2014 02:53:27 Ganapatrao Kulkarni wrote:
->> > > Raising the maximum limit to 128. This is needed for Cavium's
->> > > Thunder system that will have 96 cores on Multi-node system.
->> > >
->> > > Signed-off-by: Ganapatrao Kulkarni <ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
->> > >
->> >
->> > Could we please raise the compile-time limit to the highest number that
->> > you are able to boot successfully on some existing machine?
->> >
->> > There isn't much point in doubling this every few months.
->>
->> Agreed. If we look back at [1], Mark Rutland has actually compiled and
->> boot-tested NR_CPUS=4096 on Juno.
->>
->> [1] https://lkml.org/lkml/2014/9/8/537
->
-> Ok, 4096 sounds like a good NR_CPUS limit then, it should last for a while.
-Ok, will set range to 2-4096.
->
-> For the defconfig, we probably want a much smaller value, either one that
-> covers all known machines (96 at this time), or something that covers
-> 95% of all users (maybe 32?) and does not have an serious impact on
-> memory consumption or performance on small machines.
->
->         Arnd
-thanks
-Ganapat
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+--BjOm3tsK/2NdfZj2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Fri, Dec 05, 2014 at 12:07:54PM +0800, Flora Fu wrote:
+> Add MT6397 regulator driver.
+
+Applied, thanks.
+
+--BjOm3tsK/2NdfZj2
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUmrR2AAoJECTWi3JdVIfQXQUH/0pUphKQ4tKSkbfl9zJWuCsY
+SFteEDOt97K5HfZWHi2mCw9Bb8XleCejldj0hCW1jyRR4gUiM38HtpkG8HqQf0dp
+HPtTMBhg1VBNeEC20h1AMPP7Ze9pxGgu/XIDt/0huAS3mND4vvDkEFYyQHf235gN
+jDPFfKklLv6nwFfMLKR3FG/7/cZgTyic/bx9FXQtOlAH8LXIfBxG+xUgps8qooHg
+o2+bqK47BBee9qCPfy5a/1GAgBIWk7Mx5VZ5q8ydmURIeczBrOE3gpQe+AZ3FevT
+TPWyfkc5UAEco6vGqFAxgUVq2d1ltftugzzwTbpAPzJ/3jPS2/TLmOppvZjP6O0=
+=as7q
+-----END PGP SIGNATURE-----
+
+--BjOm3tsK/2NdfZj2--
