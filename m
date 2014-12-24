@@ -1,87 +1,66 @@
-From: Zhou Wang <wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2] mtd: hisilicon: add device tree node for NAND controller
-Date: Wed, 24 Dec 2014 17:31:19 +0800
-Message-ID: <1419413479-32083-1-git-send-email-wangzhou.bry@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Zhou Wang <wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Jianqun Xu <jay.xu@rock-chips.com>
+Subject: [PATCH v2 1/3] ASoC: rockchip: i2s: fix error
+	defination of transmit data level
+Date: Wed, 24 Dec 2014 17:37:00 +0800
+Message-ID: <1419413822-11539-2-git-send-email-jay.xu@rock-chips.com>
+References: <1419325709-15374-1-git-send-email-jay.xu@rock-chips.com>
+ <1419413822-11539-1-git-send-email-jay.xu@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1419413822-11539-1-git-send-email-jay.xu@rock-chips.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: lgirdwood@gmail.com, heiko@sntech.de, broonie@kernel.org, perex@perex.cz, tiwai@suse.de, sonnyrao@chromium.org
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Jianqun Xu <jay.xu@rock-chips.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch add dts support for NAND flash controller of Hisilicon Soc Hip04
+According to description about "Transmit Data Level",
 
-Changes in v2:
-- Base on v3.19-rc1
-- Use nand-ecc-strength, nand-ecc-step-size to replace hisi,nand-ecc-bits
-Changes in v1:
-- Move partition and other board related information into board dts file:
-  hip04-d01.dts
+This bit field controls the level at which a DMA request
+is made by the transmit logic.
 
-Signed-off-by: Zhou Wang <wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+It is equal to the watermark level.
+
+That is, the dma_tx_req signal is generated when the number
+of valid data entries in the TXFIFO
+(TXFIFO0 if CSR=00
+ TXFIFO1 if CSR=01
+ TXFIFO2 if CSR=10
+ TXFIFO3 if CSR=11)
+is equal to or below this field value.
+
+Different to receive data level, transmit data level does not need
+to "-1".
+
+Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
 ---
- arch/arm/boot/dts/hip04-d01.dts |   27 +++++++++++++++++++++++++++
- arch/arm/boot/dts/hip04.dtsi    |    7 +++++++
- 2 files changed, 34 insertions(+)
+changes since v1:
+- none
 
-diff --git a/arch/arm/boot/dts/hip04-d01.dts b/arch/arm/boot/dts/hip04-d01.dts
-index 40a9e33..ba04dd5 100644
---- a/arch/arm/boot/dts/hip04-d01.dts
-+++ b/arch/arm/boot/dts/hip04-d01.dts
-@@ -28,5 +28,32 @@
- 		uart0: uart@4007000 {
- 			status = "ok";
- 		};
-+
-+		nand: nand@4020000 {
-+			nand-bus-width = <8>;
-+			nand-ecc-mode = "hw";
-+			nand-ecc-strength = <16>;
-+			nand-ecc-step-size = <1024>;
-+
-+			partition@0 {
-+				label = "nand_text";
-+				reg = <0x00000000 0x00400000>;
-+			};
-+
-+			partition@00400000 {
-+				label = "nand_monitor";
-+				reg = <0x00400000 0x00400000>;
-+			};
-+
-+			partition@00800000 {
-+				label = "nand_kernel";
-+				reg = <0x00800000 0x00800000>;
-+			};
-+
-+			partition@01000000 {
-+				label = "nand_fs";
-+				reg = <0x01000000 0x1f000000>;
-+			};
-+		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/hip04.dtsi b/arch/arm/boot/dts/hip04.dtsi
-index 2388145..ac32fce 100644
---- a/arch/arm/boot/dts/hip04.dtsi
-+++ b/arch/arm/boot/dts/hip04.dtsi
-@@ -269,6 +269,13 @@
- 			interrupts = <0 372 4>;
- 		};
+ sound/soc/rockchip/rockchip_i2s.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/sound/soc/rockchip/rockchip_i2s.h b/sound/soc/rockchip/rockchip_i2s.h
+index 89a5d8b..93f456f 100644
+--- a/sound/soc/rockchip/rockchip_i2s.h
++++ b/sound/soc/rockchip/rockchip_i2s.h
+@@ -127,7 +127,7 @@
+ #define I2S_DMACR_TDE_DISABLE	(0 << I2S_DMACR_TDE_SHIFT)
+ #define I2S_DMACR_TDE_ENABLE	(1 << I2S_DMACR_TDE_SHIFT)
+ #define I2S_DMACR_TDL_SHIFT	0
+-#define I2S_DMACR_TDL(x)	((x - 1) << I2S_DMACR_TDL_SHIFT)
++#define I2S_DMACR_TDL(x)	((x) << I2S_DMACR_TDL_SHIFT)
+ #define I2S_DMACR_TDL_MASK	(0x1f << I2S_DMACR_TDL_SHIFT)
  
-+		nand: nand@4020000 {
-+			compatible = "hisilicon,504-nfc";
-+			reg = <0x4020000 0x10000>, <0x5000000 0x1000>;
-+			interrupts = <0 379 4>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+		};
- 	};
- 
- 	etb@0,e3c42000 {
+ /*
 -- 
-1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
