@@ -1,72 +1,100 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: Re: [RFC v1 PATCH 1/2] of/pci: add of_pci_dma_configure() update
- dma configuration
-Date: Wed, 24 Dec 2014 10:57:39 -0500
-Message-ID: <549AE273.1040407@ti.com>
-References: <1418940425-2017-1-git-send-email-m-karicheri2@ti.com> <5090769.jqAkiDgYu7@wuerfel> <5499A96D.4010704@ti.com> <4513569.xuD4xkPOuC@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <4513569.xuD4xkPOuC@wuerfel>
-Sender: linux-pci-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, will.deacon@arm.com, linux-kernel@vger.kernel.org, grant.likely@linaro.org, robh+dt@kernel.org, bhelgaas@google.com, Russell King <rmk@arm.linux.org.uk>
+From: Kenneth Westfield <kwestfie@codeaurora.org>
+Subject: [Patch V3 00/10] ASoC: QCOM: Add support for ipq806x SOC
+Date: Wed, 24 Dec 2014 08:42:00 -0800
+Message-ID: <1419439330-2303-1-git-send-email-kwestfie@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.de>, Liam Girdwood <lgirdwood@gmail.com>, David Brown <davidb@codeaurora.org>, Bryan Huntsman <bryanh@codeaurora.org>, Greg KH <gregkh@linuxfoundation.org>, Banajit Goswami <bgoswami@codeaurora.org>, Patrick Lai <plai@codeaurora.org>
+Cc: ALSA Mailing List <alsa-devel@alsa-project.org>, MSM Mailing List <linux-arm-msm@vger.kernel.org>, Device Tree Mailing List <devicetree@vger.kernel.org>, Kenneth Westfield <kwestfie@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/23/2014 05:42 PM, Arnd Bergmann wrote:
-> On Tuesday 23 December 2014 12:42:05 Murali Karicheri wrote:
->>> here.
->>
->> Arnd,
->>
->> I guess so. Besides we need to keep the default coherent dma mask to
->> 32bit 0xffffffffull as well to work on Keystone and also in sync with
->> current defaults used in pci_device_add() so that we don't break this
->> behavior.
->>
->> Here is the summary of changes need to make on top of my existing patch.
->>
->> 1. of_dma_configure() - change size = dev->coherent_dma_mask to size =
->> dev->coherent_dma_mask + 1. This is a new patch to fix existing code.
->
-> ok
->
->> 2. Do the above change to of_pci_dma_configure() as well.
->
-> ok
->
->> 3. in arch_setup_dma_ops() update the DMA mask to min((*dev->dma_mask),
->> dma_base + size - 1) as
->>
->>
->> diff --git a/arch/arm/mm/dma-mapping.c b/arch/arm/mm/dma-mapping.c
->> index c17f6a9..88b4769 100644
->> --- a/arch/arm/mm/dma-mapping.c
->> +++ b/arch/arm/mm/dma-mapping.c
->> @@ -2053,8 +2053,13 @@ void arch_setup_dma_ops(struct device *dev, u64
->> dma_base, u64 size,
->>    {
->>           struct dma_map_ops *dma_ops;
->>
->> +
->> +       *dev->dma_mask = min((*dev->dma_mask), (dma_base + size - 1));
->>
->> I have tested this on keystone and it works fine with rootfs on PCI SATA
->> harddisk. I will be doing more tests with this change. If you are in
->> agreement with the above changes, I will re-spin the patch to accomodate
->> them and send v1 of the same.
->
-> Ok, sounds good. I noticed that you did not put Russell into the Cc list
-> for the emails. Please do so when you send it again, as he may have some
-> additional comments.
->
-> 	Arnd
-Arnd,
+From: Kenneth Westfield <kwestfie@codeaurora.org>
 
-Can I add "Reviewed-by: Arnd Bergmann <arnd@arndb.de>" when I send the 
-v2 of the patch? I want to send this today. So please respond.
+This set of patches adds support for audio on the Qualcomm Technologies
+ipq806x SOC.
+
+The ipq806x SOC has audio-related hardware blocks in its low-power audio
+subsystem (or LPASS).  One of the relevant blocks in the LPASS is its low-power
+audio interface (or LPAIF).  This encapsulates the MI2S port, which is what
+these drivers are configured to use.  The I2S pins are connected to an external
+DAC/amp chip.  In addition, a single GPIO is connected to the same DAC/amp,
+which gives the SOC enable/disable control.
+
+The specific drivers added are:
+ - a Codec DAI driver that controls the SOC external pins
+ - a CPU DAI driver for controlling the LPASS-LPAIF block
+ - a PCM MI2S platform driver
+
+These drivers, together, are used by simple-audio-card to complete the audio
+implementation.  Corresponding additions to the device tree for the ipq806x and
+its documentation has also been added.  Also, as this is a new directory, the
+MAINTAINERS file has been updated as well.
+
+== Updates from my previous post:
+
+[Patch v2 00/11] ASoC: QCOM: Add support for ipq806x SOC
+http://thread.gmane.org/gmane.linux.ports.arm.msm/10989
+
+ - Removed the PCM platform driver from the DTS platform and tied it to the
+   CPU DAI driver.
+ - Changed I2S pinctrl to use generic naming convention and moved control to
+   CPU DAI driver.  It should be controlled now by soc-core's pinctrl_pm_*
+   functionality.
+ - Added stub DAPM support in codec driver.  As the DAC GPIO needs to be
+   enabled last when starting playback, and disabled first when stopping
+   playback, it seems as though the trigger function may be the place for this.  
+   Suggestions are welcome for a better place to put this.
+ - Removed machine driver and tied DAI drivers to simple-audio-card.
+ - Packaged the build files and Maxim codec files together in one change.
+ - Removed QCOM as vendor from Maxim code and documentation.
+ - Separated the SOC and board definitions into the correct DTS files.
+ - Update device tree documentation to reflect changes.
+ - General code cleanup.
+
+== Additional patch series upon which this patch series has device-tree
+   dependencies (lcc)
+
+[PATCH v2 0/8] qcom audio clock control drivers
+http://thread.gmane.org/gmane.linux.ports.arm.msm/10793
+
+
+Kenneth Westfield (10):
+  MAINTAINERS: Add QCOM audio ASoC maintainer
+  ASoC: qcom: Document MAX98357A bindings
+  ASoC: qcom: Document LPASS CPU bindings
+  ASoC: codec: Add MAX98357A codec driver
+  ASoC: ipq806x: add LPASS header files
+  ASoC: ipq806x: Add LPASS CPU DAI driver
+  ASoC: ipq806x: Add I2S PCM platform driver
+  ASoC: qcom: Add ability to build QCOM drivers
+  ASoC: Allow for building QCOM drivers
+  ARM: dts: Model IPQ LPASS audio hardware
+
+ .../devicetree/bindings/sound/max98357a.txt        |  14 +
+ .../bindings/sound/qcom,lpass-cpu-mi2s.txt         |  42 ++
+ MAINTAINERS                                        |   7 +
+ arch/arm/boot/dts/qcom-ipq8064.dtsi                |  23 +
+ sound/soc/Kconfig                                  |   1 +
+ sound/soc/Makefile                                 |   1 +
+ sound/soc/codecs/Kconfig                           |   4 +
+ sound/soc/codecs/Makefile                          |   2 +
+ sound/soc/codecs/max98357a.c                       | 136 ++++++
+ sound/soc/qcom/Kconfig                             |  27 ++
+ sound/soc/qcom/Makefile                            |   6 +
+ sound/soc/qcom/lpass-cpu-mi2s.c                    | 378 ++++++++++++++++
+ sound/soc/qcom/lpass-lpaif-reg.h                   | 155 +++++++
+ sound/soc/qcom/lpass-mi2s.h                        |  34 ++
+ sound/soc/qcom/lpass-pcm-mi2s.c                    | 486 +++++++++++++++++++++
+ 15 files changed, 1316 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/max98357a.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/qcom,lpass-cpu-mi2s.txt
+ create mode 100644 sound/soc/codecs/max98357a.c
+ create mode 100644 sound/soc/qcom/Kconfig
+ create mode 100644 sound/soc/qcom/Makefile
+ create mode 100644 sound/soc/qcom/lpass-cpu-mi2s.c
+ create mode 100644 sound/soc/qcom/lpass-lpaif-reg.h
+ create mode 100644 sound/soc/qcom/lpass-mi2s.h
+ create mode 100644 sound/soc/qcom/lpass-pcm-mi2s.c
 
 -- 
-Murali Karicheri
-Linux Kernel, Texas Instruments
+1.8.2.1
