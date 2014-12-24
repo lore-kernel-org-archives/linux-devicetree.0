@@ -1,72 +1,72 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH] thermal: ti-soc-thermal: ti-bandgap.c:  Remove unused
- function
-Date: Wed, 24 Dec 2014 08:57:14 -0600
-Message-ID: <549AD44A.8010603@ti.com>
-References: <1419183823-10787-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: Re: [RFC v1 PATCH 1/2] of/pci: add of_pci_dma_configure() update
+ dma configuration
+Date: Wed, 24 Dec 2014 10:57:39 -0500
+Message-ID: <549AE273.1040407@ti.com>
+References: <1418940425-2017-1-git-send-email-m-karicheri2@ti.com> <5090769.jqAkiDgYu7@wuerfel> <5499A96D.4010704@ti.com> <4513569.xuD4xkPOuC@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1419183823-10787-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>, Eduardo Valentin <edubezval@gmail.com>, Zhang Rui <rui.zhang@intel.com>, Tero Kristo <t-kristo@ti.com>
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap <linux-omap@vger.kernel.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <4513569.xuD4xkPOuC@wuerfel>
+Sender: linux-pci-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, will.deacon@arm.com, linux-kernel@vger.kernel.org, grant.likely@linaro.org, robh+dt@kernel.org, bhelgaas@google.com, Russell King <rmk@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On 12/21/2014 11:43 AM, Rickard Strandqvist wrote:
-> Remove the function ti_bandgap_write_thot() that is not used anywhere.
-> 
-> This was partially found by using a static code analysis program called cppcheck.
-> 
-> Signed-off-by: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
-> ---
->  drivers/thermal/ti-soc-thermal/ti-bandgap.c |   13 -------------
->  drivers/thermal/ti-soc-thermal/ti-bandgap.h |    1 -
->  2 files changed, 14 deletions(-)
-> 
-> diff --git a/drivers/thermal/ti-soc-thermal/ti-bandgap.c b/drivers/thermal/ti-soc-thermal/ti-bandgap.c
-> index 634b6ce..cbb6a5f 100644
-> --- a/drivers/thermal/ti-soc-thermal/ti-bandgap.c
-> +++ b/drivers/thermal/ti-soc-thermal/ti-bandgap.c
-> @@ -611,19 +611,6 @@ int ti_bandgap_read_thot(struct ti_bandgap *bgp, int id, int *thot)
->  }
->  
->  /**
-> - * ti_bandgap_write_thot() - sets sensor current thot
-> - * @bgp: pointer to bandgap instance
-> - * @id: sensor id
-> - * @val: desired thot value
-> - *
-> - * Return: 0 on success or the proper error code
-> - */
-> -int ti_bandgap_write_thot(struct ti_bandgap *bgp, int id, int val)
-> -{
-> -	return _ti_bandgap_write_threshold(bgp, id, val, true);
-> -}
-> -
-> -/**
->   * ti_bandgap_read_tcold() - reads sensor current tcold
->   * @bgp: pointer to bandgap instance
->   * @id: sensor id
-> diff --git a/drivers/thermal/ti-soc-thermal/ti-bandgap.h b/drivers/thermal/ti-soc-thermal/ti-bandgap.h
-> index b3adf72..976afc0 100644
-> --- a/drivers/thermal/ti-soc-thermal/ti-bandgap.h
-> +++ b/drivers/thermal/ti-soc-thermal/ti-bandgap.h
-> @@ -371,7 +371,6 @@ struct ti_bandgap_data {
->  };
->  
->  int ti_bandgap_read_thot(struct ti_bandgap *bgp, int id, int *thot);
-> -int ti_bandgap_write_thot(struct ti_bandgap *bgp, int id, int val);
->  int ti_bandgap_read_tcold(struct ti_bandgap *bgp, int id, int *tcold);
->  int ti_bandgap_write_tcold(struct ti_bandgap *bgp, int id, int val);
->  int ti_bandgap_read_update_interval(struct ti_bandgap *bgp, int id,
-> 
+On 12/23/2014 05:42 PM, Arnd Bergmann wrote:
+> On Tuesday 23 December 2014 12:42:05 Murali Karicheri wrote:
+>>> here.
+>>
+>> Arnd,
+>>
+>> I guess so. Besides we need to keep the default coherent dma mask to
+>> 32bit 0xffffffffull as well to work on Keystone and also in sync with
+>> current defaults used in pci_device_add() so that we don't break this
+>> behavior.
+>>
+>> Here is the summary of changes need to make on top of my existing patch.
+>>
+>> 1. of_dma_configure() - change size = dev->coherent_dma_mask to size =
+>> dev->coherent_dma_mask + 1. This is a new patch to fix existing code.
+>
+> ok
+>
+>> 2. Do the above change to of_pci_dma_configure() as well.
+>
+> ok
+>
+>> 3. in arch_setup_dma_ops() update the DMA mask to min((*dev->dma_mask),
+>> dma_base + size - 1) as
+>>
+>>
+>> diff --git a/arch/arm/mm/dma-mapping.c b/arch/arm/mm/dma-mapping.c
+>> index c17f6a9..88b4769 100644
+>> --- a/arch/arm/mm/dma-mapping.c
+>> +++ b/arch/arm/mm/dma-mapping.c
+>> @@ -2053,8 +2053,13 @@ void arch_setup_dma_ops(struct device *dev, u64
+>> dma_base, u64 size,
+>>    {
+>>           struct dma_map_ops *dma_ops;
+>>
+>> +
+>> +       *dev->dma_mask = min((*dev->dma_mask), (dma_base + size - 1));
+>>
+>> I have tested this on keystone and it works fine with rootfs on PCI SATA
+>> harddisk. I will be doing more tests with this change. If you are in
+>> agreement with the above changes, I will re-spin the patch to accomodate
+>> them and send v1 of the same.
+>
+> Ok, sounds good. I noticed that you did not put Russell into the Cc list
+> for the emails. Please do so when you send it again, as he may have some
+> additional comments.
+>
+> 	Arnd
+Arnd,
 
-Not sure if removing support for programming of hot threshold is a
-good idea. how about ti_bandgap_write_tcold then?
-
+Can I add "Reviewed-by: Arnd Bergmann <arnd@arndb.de>" when I send the 
+v2 of the patch? I want to send this today. So please respond.
 
 -- 
-Regards,
-Nishanth Menon
+Murali Karicheri
+Linux Kernel, Texas Instruments
