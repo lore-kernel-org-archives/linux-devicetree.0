@@ -1,39 +1,88 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH] media: i2c/adp1653: devicetree support for adp1653
-Date: Wed, 24 Dec 2014 23:35:16 +0100
-Message-ID: <20141224223516.GB20669@amd>
-References: <20141203214641.GA1390@amd>
- <20141223152325.75e8cb4a@concha.lan.sisa.samsung.com>
- <20141223204903.GA1780@amd>
+From: Walter Lozano <walter-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+Subject: Re: [PATCH] ARM: socfpga: dts: Add adxl34x
+Date: Wed, 24 Dec 2014 20:11:00 -0300
+Message-ID: <CABxpGwC=swEFq-APo2B9u+PHP5DMEOiYgOuF1pKqxqWQEhyUZg@mail.gmail.com>
+References: <1419339862-29852-1-git-send-email-walter@vanguardiasur.com.ar>
+	<20141224094516.GI13070@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20141223204903.GA1780@amd>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
-Cc: pali.rohar@gmail.com, sre@debian.org, sre@ring0.de, kernel list <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-omap@vger.kernel.org, tony@atomide.com, khilman@kernel.org, aaro.koskinen@iki.fi, freemangordon@abv.bg, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, bcousson@baylibre.com, sakari.ailus@iki.fi, devicetree@vger.kernel.org, linux-media@vger.kernel.org, j.anaszewski@samsung.com, apw@canonical.com, joe@perches.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141224094516.GI13070-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue 2014-12-23 21:49:04, Pavel Machek wrote:
-> On Tue 2014-12-23 15:23:25, Mauro Carvalho Chehab wrote:
-> > Em Wed, 3 Dec 2014 22:46:41 +0100
-> > Pavel Machek <pavel@ucw.cz> escreveu:
-> > 
-> > > 
-> > > We are moving to device tree support on OMAP3, but that currently
-> > > breaks ADP1653 driver. This adds device tree support, plus required
-> > > documentation.
-> > > 
-> > > Signed-off-by: Pavel Machek <pavel@ucw.cz>
-> > 
-> > Please be sure to check your patch with checkpatch. There are several
-> > issues on it:
+On Wed, Dec 24, 2014 at 6:45 AM, Steffen Trumtrar
+<s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> Hi!
+>
+> On Tue, Dec 23, 2014 at 10:04:22AM -0300, Walter Lozano wrote:
+>> This patch adds the DTS bindings for the adxl34x digital
+>> accelerometer.
+>>
+>
+> Thanks for doing this. Does the ADXL34 work now? Last time I
+> tried it, I didn't get any interrupts, but as I didn't really
+> care for the accelerometer I didn't dig deeper.
 
-Ok, you should have fixed version in your inbox.
+Yes, now it works. There was a problem with the interrupts as the gpio was
+probed after i2c. I have done some patches to fix this but some else
+did a better job
+deferring the probe so now it work out of the box.
 
-Happy holidays!
-									Pavel
+>> Signed-off-by: Walter Lozano <walter-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/socfpga_cyclone5_sockit.dts |   17 +++++++++++++++++
+>>  1 file changed, 17 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts b/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
+>> index 16ea6f5..f99d7dec 100644
+>> --- a/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
+>> +++ b/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
+>> @@ -68,3 +68,20 @@
+>>  &usb1 {
+>>       status = "okay";
+>>  };
+>> +
+>> +&gpio2 {
+>> +     status = "okay";
+>> +};
+>> +
+>> +&i2c1{
+>        ^^^
+>
+> Add a space here and ...
+>
+>> +     status = "okay";
+>> +
+>> +     accel1: accel1@53{
+>                         ^^^
+> here. Also, this should be accelerometer@53.
+>
+>> +             compatible = "adxl34x";
+>> +             reg = <0x53>;
+>> +
+>> +             interrupt-parent = < &portc >;
+>                                    ^^^    ^^^
+> Please remove the spaces here.
+>> +             interrupts = <3 2>;
+>> +
+>> +     };
+>> +};
+>
+> Finally, please sort the nodes alphabetically and not just append them.
+
+Great, no problem at all. Thanks for the corrections.
+
+Regards,
+
+Walter
+
 -- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+Walter Lozano, VanguardiaSur
+www.vanguardiasur.com.ar
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
