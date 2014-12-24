@@ -1,52 +1,80 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v2 3/4] arm64: dts: Add mediatek MT8173 SoC and  evaluation board dts and Makefile
-Date: Wed, 24 Dec 2014 08:47:36 +0000
-Message-ID: <823671a45699c6b7ca6db5243f111d0b@www.loen.fr>
-References: <1418825853-10934-1-git-send-email-eddie.huang@mediatek.com>
- <1419321723.14341.38.camel@mtksdaap41>
- <72aa7f4069a000c6e39c53e328015aa3@www.loen.fr> <1947751.D0rZorCFoT@wuerfel>
+From: <thloh-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v8 1/2] drivers/gpio: Altera soft IP GPIO driver device tree binding
+Date: Wed, 24 Dec 2014 00:22:24 -0800
+Message-ID: <1419409345-8297-2-git-send-email-thloh@altera.com>
+References: <1419409345-8297-1-git-send-email-thloh@altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1947751.D0rZorCFoT@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Mark Brown <broonie@linaro.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Robert Richter <rrichter@cavium.com>, Olof Johansson <olof@lixom.net>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, "Joe.C" <yingjoe.chen@mediatek.com>, Thomas Gleixner <tglx@linutronix.de>, Eddie Huang <eddie.huang@mediatek.com>, Jason Cooper <jason@lakedaemon.net>, linux-arm-kernel@lists.infradead.org, yh.chen@mediatek.com
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1419409345-8297-1-git-send-email-thloh-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, Tien Hock Loh <thloh-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2014-12-23 21:07, Arnd Bergmann wrote:
-> On Tuesday 23 December 2014 08:43:55 Marc Zyngier wrote:
->>
->> > Neverthless, MT8173 SoC already use 0x10224000 and 0x10225000 as 
->> VGIC
->> > base address.
->>
->> Then its fate is sealed virtualization wise.
->
-> It should still work with 4kb pages on the host, right? Would that 
-> still
-> allow you to have 64kb pages on the guest, or does the guest page 
-> size
-> have to be smaller or equal to the host?
+From: Tien Hock Loh <thloh-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
 
-Of course, it will still work with 4kB pages, and the guest can still 
-use
-whatever page size it wants, including 64kB. Not very good from a 
-performance
-point of view, but it will work.
+Adds a new driver device tree binding for Altera soft GPIO IP
 
-My main worry is that we're already starting to see more and more 
-platforms
-having divergent requirements in their MM setup, and distributions are 
-going
-to struggle to provide a full-featured single kernel image, specially 
-as some
-feel the need to push 64kB pages down to everybody's throat.
+Signed-off-by: Tien Hock Loh <thloh-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+---
+ .../devicetree/bindings/gpio/gpio-altera.txt       |   43 ++++++++++++++++++++
+ 1 files changed, 43 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-altera.txt
 
-Thanks,
-
-         M.
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-altera.txt b/Documentation/devicetree/bindings/gpio/gpio-altera.txt
+new file mode 100644
+index 0000000..649fa02
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/gpio-altera.txt
+@@ -0,0 +1,43 @@
++Altera GPIO controller bindings
++
++Required properties:
++- compatible:
++  - "altr,pio-1.0"
++- reg: Physical base address and length of the controller's registers.
++- #gpio-cells : Should be 2
++  - The first cell is the gpio offset number.
++  - The second cell is reserved and is currently unused.
++- gpio-controller : Marks the device node as a GPIO controller.
++- interrupt-controller: Mark the device node as an interrupt controller
++- #interrupt-cells : Should be 1. The interrupt type is fixed in the hardware.
++  - The first cell is the GPIO offset number within the GPIO controller.
++- interrupts: Specify the interrupt.
++- altr,interrupt-trigger: Specifies the interrupt trigger type the GPIO
++  hardware is synthesized. This field is required if the Altera GPIO controller
++  used has IRQ enabled as the interrupt type is not software controlled,
++  but hardware synthesized. Required if GPIO is used as an interrupt
++  controller. The value is defined in <dt-bindings/interrupt-controller/irq.h>
++  Only the following flags are supported:
++    IRQ_TYPE_EDGE_RISING
++    IRQ_TYPE_EDGE_FALLING
++    IRQ_TYPE_EDGE_BOTH
++    IRQ_TYPE_LEVEL_HIGH
++
++Optional properties:
++- altr,ngpio: Width of the GPIO bank. This defines how many pins the
++  GPIO device has. Ranges between 1-32. Optional and defaults to 32 is not
++  specified.
++
++Example:
++
++gpio_altr: gpio@0xff200000 {
++	compatible = "altr,pio-1.0";
++	reg = <0xff200000 0x10>;
++	interrupts = <0 45 4>;
++	altr,ngpio = <32>;
++	altr,interrupt_trigger = <IRQ_TYPE_EDGE_RISING>;
++	#gpio-cells = <1>;
++	gpio-controller;
++	#interrupt-cells = <1>;
++	interrupt-controller;
++};
 -- 
-Fast, cheap, reliable. Pick two.
+1.7.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
