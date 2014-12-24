@@ -1,46 +1,50 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 6/8] dt-bindings: Add document for MT6397 regulator
-Date: Wed, 24 Dec 2014 12:41:34 +0000
-Message-ID: <20141224124134.GZ17800@sirena.org.uk>
-References: <1417752479-4749-1-git-send-email-flora.fu@mediatek.com>
- <1417752479-4749-7-git-send-email-flora.fu@mediatek.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 0/3] ASoC: rockchip: i2s: fix watermark to 16 and
+ maxburst to 4
+Date: Wed, 24 Dec 2014 12:43:51 +0000
+Message-ID: <20141224124351.GA17800@sirena.org.uk>
+References: <1419325709-15374-1-git-send-email-jay.xu@rock-chips.com>
+ <1419413822-11539-1-git-send-email-jay.xu@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="L7j14VgZ+PGuoIvj"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="cyl6hb1YSGs8e3xM"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1417752479-4749-7-git-send-email-flora.fu@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Flora Fu <flora.fu@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, arm@kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Dongdong Cheng <dongdong.cheng@mediatek.com>, HenryC Chen <henryc.chen@mediatek.com>, Menghui Lin <menghui.lin@mediatek.com>
+In-Reply-To: <1419413822-11539-1-git-send-email-jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---L7j14VgZ+PGuoIvj
+--cyl6hb1YSGs8e3xM
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Dec 05, 2014 at 12:07:57PM +0800, Flora Fu wrote:
->=20
-> Signed-off-by: Flora Fu <flora.fu@mediatek.com>
+On Wed, Dec 24, 2014 at 05:36:59PM +0800, Jianqun Xu wrote:
+> To make Bus DMA works more efficiency, DMA may work in burst mode,
+>    we set the watermark of transmit and receive reach to 16 bits.
 
-Applied, thanks.
+Applied all, thanks.
 
---L7j14VgZ+PGuoIvj
+--cyl6hb1YSGs8e3xM
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBAgAGBQJUmrR+AAoJECTWi3JdVIfQ4ecH/3nLVm84X5ezzvLjAtWfCcoo
-oLUYdHmI3lAr3/9SrmFsHUM+upAi8t64wOzT6UAFMK3qGPtA76QZHf9pu7fRiKqR
-RYM5TZZhi1s0Uj4YdzFwCcDz6bPttpevwOXYplHpT9pS6FVfYwNPknOC//s1vV/2
-cRjLGTAxdJyePY7blSi3F8b53ZGmVcw0skcBRL6/q1QZKIz2j9vF2P/XFFKI/9Uy
-7wxEWhyw8xMc7ImojjCimUdWeJ8h6SbJ8ajKYSvPAfnyqYEJlgmEZHx/a/ttqCL/
-smlfv6LoUsqyM3gjhTo4yXC+054eD7HB8Pog+tYuG65O6JcAIgDds3QcHC6HuTk=
-=0kAT
+iQEcBAEBAgAGBQJUmrUGAAoJECTWi3JdVIfQtnUH/jlUIaFclxbl8kbSp3+66qUd
+tZmX+3g/aZl5X0D+LrfEzi2AbpZkA39YO+8E9qUT2lITmRQ+ubq0NLcLp5DyTZqu
+Hy4hsYkky+Rf3hCEZUfNteusKJAYZx46cebpYZTQh88CRv5OU/OfGNjyk8f8IVJr
+EsDzXMcSOTxGWrjPgoPLctkRzOqLq1p0WHEGcB6xTSIYmQ7IWAf8TinGL97RXEYw
+1SHb+i8L0RaWsrHSA35NxKk0wqCoV52QxCwUII7VIsRdtBC+PGEnufOvgrjtWNkP
+1MjbSd2NguOMu/XSuFtb1u7MXVyGkirmE82mzHNOtp3SmHiED4MjLQR169+L5u4=
+=9RR4
 -----END PGP SIGNATURE-----
 
---L7j14VgZ+PGuoIvj--
+--cyl6hb1YSGs8e3xM--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
