@@ -1,169 +1,40 @@
-From: James Hartley <James.Hartley@imgtec.com>
-Subject: Re: [PATCH V3 2/2] dmaengine: Add driver for IMG MDC
-Date: Wed, 24 Dec 2014 20:06:25 +0000
-Message-ID: <DCB85CE8-D4D7-41B2-8C56-ADD675DB131E@imgtec.com>
-References: <1418338757-10022-1-git-send-email-abrestic@chromium.org>
-	<1418338757-10022-3-git-send-email-abrestic@chromium.org>
-	<20141224052218.GR16827@intel.com>,<CAL1qeaGRUEZ0tF+fgH4aJK2S70aacJkwKZNJHvDU_NaiwYbChQ@mail.gmail.com>
+From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH] dma-mapping: limit dma_mask in arch_setup_dma_ops()
+Date: Wed, 24 Dec 2014 16:55:39 -0500
+Message-ID: <1419458139-4034-1-git-send-email-m-karicheri2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL1qeaGRUEZ0tF+fgH4aJK2S70aacJkwKZNJHvDU_NaiwYbChQ@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Bresticker <abrestic@chromium.org>
-Cc: Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, James Hogan <James.Hogan@imgtec.com>, Ezequiel Garcia <Ezequiel.Garcia@imgtec.com>, Damien Horsley <Damien.Horsley@imgtec.com>, Arnd Bergmann <arnd@arndb.de>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+dma_mask should be limited to minimum of the default dma mask
+and dma-range size configured in DT for proper operation.
 
+Signed-off-by: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+Reviewed-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+---
+ arch/arm/mm/dma-mapping.c |    1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/arch/arm/mm/dma-mapping.c b/arch/arm/mm/dma-mapping.c
+index 7864797..5cea1fc 100644
+--- a/arch/arm/mm/dma-mapping.c
++++ b/arch/arm/mm/dma-mapping.c
+@@ -2053,6 +2053,7 @@ void arch_setup_dma_ops(struct device *dev, u64 dma_base, u64 size,
+ {
+ 	struct dma_map_ops *dma_ops;
+ 
++	*dev->dma_mask = min((*dev->dma_mask), (dma_base + size - 1));
+ 	dev->archdata.dma_coherent = coherent;
+ 	if (arm_setup_iommu_dma_ops(dev, dma_base, size, iommu))
+ 		dma_ops = arm_get_iommu_dma_map_ops(coherent);
+-- 
+1.7.9.5
 
-> On 24 Dec 2014, at 17:21, Andrew Bresticker <abrestic@chromium.org> wrote:
-> 
->> On Tue, Dec 23, 2014 at 9:22 PM, Vinod Koul <vinod.koul@intel.com> wrote:
->>> On Thu, Dec 11, 2014 at 02:59:17PM -0800, Andrew Bresticker wrote:
->>> Add support for the IMG Multi-threaded DMA Controller (MDC) found on
->>> certain IMG SoCs.  Currently this driver supports the variant present
->>> on the MIPS-based Pistachio SoC.a
-> 
->> Overall looks okay. I also need some review by DT folks on the bindings
-> 
-> Arnd has ack'ed the DT bindings, do you need someone else to review
-> them as well?
-> 
->>> +static void mdc_list_desc_config(struct mdc_chan *mchan,
->>> +                              struct mdc_hw_list_desc *ldesc,
->>> +                              enum dma_transfer_direction dir,
->>> +                              dma_addr_t src, dma_addr_t dst, size_t len)
->>> +{
->>> +     struct mdc_dma *mdma = mchan->mdma;
->>> +     unsigned int max_burst, burst_size;
->>> +
->>> +     ldesc->gen_conf = MDC_GENERAL_CONFIG_IEN | MDC_GENERAL_CONFIG_LIST_IEN |
->>> +             MDC_GENERAL_CONFIG_LEVEL_INT | MDC_GENERAL_CONFIG_PHYSICAL_W |
->>> +             MDC_GENERAL_CONFIG_PHYSICAL_R;
->>> +     ldesc->readport_conf =
->>> +             (mchan->thread << MDC_READ_PORT_CONFIG_STHREAD_SHIFT) |
->>> +             (mchan->thread << MDC_READ_PORT_CONFIG_RTHREAD_SHIFT) |
->>> +             (mchan->thread << MDC_READ_PORT_CONFIG_WTHREAD_SHIFT);
->>> +     ldesc->read_addr = src;
->>> +     ldesc->write_addr = dst;
->>> +     ldesc->xfer_size = len - 1;
->>> +     ldesc->node_addr = 0;
->>> +     ldesc->cmds_done = 0;
->>> +     ldesc->ctrl_status = MDC_CONTROL_AND_STATUS_LIST_EN |
->>> +             MDC_CONTROL_AND_STATUS_EN;
->>> +     ldesc->next_desc = NULL;
->>> +
->>> +     if (IS_ALIGNED(dst, mdma->bus_width) &&
->>> +         IS_ALIGNED(src, mdma->bus_width))
->>> +             max_burst = mdma->bus_width * mdma->max_burst_mult;
->>> +     else
->>> +             max_burst = mdma->bus_width * (mdma->max_burst_mult - 1);
->>> +
->>> +     if (dir == DMA_MEM_TO_DEV) {
->>> +             ldesc->gen_conf |= MDC_GENERAL_CONFIG_INC_R;
->>> +             ldesc->readport_conf |= MDC_READ_PORT_CONFIG_DREQ_ENABLE;
->>> +             mdc_set_read_width(ldesc, mdma->bus_width);
->>> +             mdc_set_write_width(ldesc, mchan->config.dst_addr_width);
->>> +             burst_size = min(max_burst, mchan->config.dst_maxburst *
->>> +                              mchan->config.dst_addr_width);
-> 
->> why is this calculation done for burst size? Shouldn't we take the
->> config.dst_maxburst value configured by client?
-> 
-> It's possible that the client could select a burst size that is too
-> large (i.e. it exceeds the max_burst calculated above), so we cap it
-> here to max_burst.
-> 
->>> +static struct dma_async_tx_descriptor *mdc_prep_slave_sg(
->>> +     struct dma_chan *chan, struct scatterlist *sgl,
->>> +     unsigned int sg_len, enum dma_transfer_direction dir,
->>> +     unsigned long flags, void *context)
->>> +{
->>> +     struct mdc_chan *mchan = to_mdc_chan(chan);
->>> +     struct mdc_dma *mdma = mchan->mdma;
->>> +     struct mdc_tx_desc *mdesc;
->>> +     struct scatterlist *sg;
->>> +     struct mdc_hw_list_desc *curr, *prev = NULL;
->>> +     dma_addr_t curr_phys, prev_phys;
->>> +     unsigned int i;
->>> +
->>> +     if (!sgl)
->>> +             return NULL;
->>> +
->>> +     if (!is_slave_direction(dir))
->>> +             return NULL;
->>> +
->>> +     if (mdc_check_slave_width(mchan, dir) < 0)
->>> +             return NULL;
->>> +
->>> +     mdesc = kzalloc(sizeof(*mdesc), GFP_NOWAIT);
->>> +     if (!mdesc)
->>> +             return NULL;
->>> +     mdesc->chan = mchan;
->>> +
->>> +     for_each_sg(sgl, sg, sg_len, i) {
->>> +             dma_addr_t buf = sg_dma_address(sg);
->>> +             size_t buf_len = sg_dma_len(sg);
->>> +
->>> +             while (buf_len > 0) {
->>> +                     size_t xfer_size;
->>> +
->>> +                     curr = dma_pool_alloc(mdma->desc_pool, GFP_NOWAIT,
->>> +                                           &curr_phys);
->>> +                     if (!curr)
->>> +                             goto free_desc;
->>> +
->>> +                     if (!prev) {
->>> +                             mdesc->list_phys = curr_phys;
->>> +                             mdesc->list = curr;
->>> +                     } else {
->>> +                             prev->node_addr = curr_phys;
->>> +                             prev->next_desc = curr;
->>> +                     }
->>> +
->>> +                     xfer_size = min_t(size_t, mdma->max_xfer_size,
->>> +                                       buf_len);
->>> +
->>> +                     if (dir == DMA_MEM_TO_DEV) {
->>> +                             mdc_list_desc_config(mchan, curr, dir, buf,
->>> +                                                  mchan->config.dst_addr,
->>> +                                                  xfer_size);
->>> +                     } else {
->>> +                             mdc_list_desc_config(mchan, curr, dir,
->>> +                                                  mchan->config.src_addr,
->>> +                                                  buf, xfer_size);
->>> +                     }
->>> +
->>> +                     prev = curr;
->>> +                     prev_phys = curr_phys;
->>> +
->>> +                     mdesc->list_len++;
->>> +                     mdesc->list_xfer_size += xfer_size;
->>> +                     buf += xfer_size;
->>> +                     buf_len -= xfer_size;
-> 
->> i see this pattern is repeat in all the .prepare calls, can we make it bit
->> generic and use that in the these three calls..
-> 
-> I've pulled out almost all of the common stuff into
-> mdc_list_desc_config().  I suppose the list manipulation could be
-> moved there as well, but the rest is all slightly different in each
-> case.
-> 
->>> +     dma_cap_zero(mdma->dma_dev.cap_mask);
->>> +     dma_cap_set(DMA_SLAVE, mdma->dma_dev.cap_mask);
->>> +     dma_cap_set(DMA_PRIVATE, mdma->dma_dev.cap_mask);
->>> +     dma_cap_set(DMA_CYCLIC, mdma->dma_dev.cap_mask);
-> 
->> and you dont seen to support pause/resume, though not a blocker but is it
->> not supported in HW or driver doesn't?
-> 
-> Someone from IMG can correct me if I'm wrong, but I don't think the HW
-> supports it.
-
-Pause / resume is not supported by the MDC hardware. 
-
-James. 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
