@@ -1,48 +1,176 @@
-From: Kevin Cernekee <cernekee@gmail.com>
-Subject: [PATCH V6 03/25] MIPS: Add dtbs_install target
-Date: Thu, 25 Dec 2014 09:48:58 -0800
-Message-ID: <1419529760-9520-4-git-send-email-cernekee@gmail.com>
+From: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH V6 17/25] MIPS: BMIPS: Rewrite DMA code to use "dma-ranges" property
+Date: Thu, 25 Dec 2014 09:49:12 -0800
+Message-ID: <1419529760-9520-18-git-send-email-cernekee@gmail.com>
 References: <1419529760-9520-1-git-send-email-cernekee@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1419529760-9520-1-git-send-email-cernekee@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: ralf@linux-mips.org
-Cc: f.fainelli@gmail.com, jaedon.shin@gmail.com, abrestic@chromium.org, tglx@linutronix.de, jason@lakedaemon.net, jogo@openwrt.org, arnd@arndb.de, computersforpeace@gmail.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1419529760-9520-1-git-send-email-cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+Cc: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Andrew Bresticker <abrestic@chromium.org>
+This is a more standardized way of handling DMA remapping, and it is
+suitable for the memory map found on BCM3384.
 
-Add the dtbs_install Makefile target to install the dtb files into
-$INSTALL_DTBS_PATH.
-
-Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
-Tested-by: Kevin Cernekee <cernekee@gmail.com>
+Signed-off-by: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/mips/Makefile | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/mips/bmips/dma.c | 100 ++++++++++++++++++++++++++++++++++----------------
+ 1 file changed, 68 insertions(+), 32 deletions(-)
 
-diff --git a/arch/mips/Makefile b/arch/mips/Makefile
-index 269db7e..6aadefb 100644
---- a/arch/mips/Makefile
-+++ b/arch/mips/Makefile
-@@ -352,6 +352,10 @@ PHONY += dtbs
- dtbs: scripts
- 	$(Q)$(MAKE) $(build)=arch/mips/boot/dts
+diff --git a/arch/mips/bmips/dma.c b/arch/mips/bmips/dma.c
+index ea42012..04790f4 100644
+--- a/arch/mips/bmips/dma.c
++++ b/arch/mips/bmips/dma.c
+@@ -6,76 +6,112 @@
+  * Copyright (C) 2014 Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+  */
  
-+PHONY += dtbs_install
-+dtbs_install:
-+	$(Q)$(MAKE) $(dtbinst)=arch/mips/boot/dts
++#define pr_fmt(fmt)		"bmips-dma: " fmt
 +
- archprepare:
- ifdef CONFIG_MIPS32_N32
- 	@echo '  Checking missing-syscalls for N32'
-@@ -388,6 +392,7 @@ define archhelp
- 	echo '  uImage               - U-Boot image'
- 	echo '  uImage.gz            - U-Boot image (gzip)'
- 	echo '  dtbs                 - Device-tree blobs for enabled boards'
-+	echo '  dtbs_install         - Install dtbs to $(INSTALL_DTBS_PATH)'
- 	echo
- 	echo '  These will be default as appropriate for a configured platform.'
- endef
+ #include <linux/device.h>
+ #include <linux/dma-direction.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/init.h>
+-#include <linux/mm.h>
++#include <linux/io.h>
+ #include <linux/of.h>
+-#include <linux/pci.h>
++#include <linux/printk.h>
++#include <linux/slab.h>
+ #include <linux/types.h>
+ #include <dma-coherence.h>
+ 
+ /*
+- * BCM3384 has configurable address translation windows which allow the
++ * BCM338x has configurable address translation windows which allow the
+  * peripherals' DMA addresses to be different from the Zephyr-visible
+  * physical addresses.  e.g. usb_dma_addr = zephyr_pa ^ 0x08000000
+  *
+- * If our DT "memory" node has a "dma-xor-mask" property we will enable this
+- * translation using the provided offset.
++ * If the "brcm,ubus" node has a "dma-ranges" property we will enable this
++ * translation globally using the provided information.  This implements a
++ * very limited subset of "dma-ranges" support and it will probably be
++ * replaced by a more generic version later.
+  */
+-static u32 bcm3384_dma_xor_mask;
+-static u32 bcm3384_dma_xor_limit = 0xffffffff;
+ 
+-/*
+- * PCI collapses the memory hole at 0x10000000 - 0x1fffffff.
+- * On systems with a dma-xor-mask, this range is guaranteed to live above
+- * the dma-xor-limit.
+- */
+-#define BCM3384_MEM_HOLE_PA	0x10000000
+-#define BCM3384_MEM_HOLE_SIZE	0x10000000
++struct bmips_dma_range {
++	u32			child_addr;
++	u32			parent_addr;
++	u32			size;
++};
+ 
+-static dma_addr_t bcm3384_phys_to_dma(struct device *dev, phys_addr_t pa)
++static struct bmips_dma_range *bmips_dma_ranges;
++
++#define FLUSH_RAC		0x100
++
++static dma_addr_t bmips_phys_to_dma(struct device *dev, phys_addr_t pa)
+ {
+-	if (dev && dev_is_pci(dev) &&
+-	    pa >= (BCM3384_MEM_HOLE_PA + BCM3384_MEM_HOLE_SIZE))
+-		return pa - BCM3384_MEM_HOLE_SIZE;
+-	if (pa <= bcm3384_dma_xor_limit)
+-		return pa ^ bcm3384_dma_xor_mask;
++	struct bmips_dma_range *r;
++
++	for (r = bmips_dma_ranges; r && r->size; r++) {
++		if (pa >= r->child_addr &&
++		    pa < (r->child_addr + r->size))
++			return pa - r->child_addr + r->parent_addr;
++	}
+ 	return pa;
+ }
+ 
+ dma_addr_t plat_map_dma_mem(struct device *dev, void *addr, size_t size)
+ {
+-	return bcm3384_phys_to_dma(dev, virt_to_phys(addr));
++	return bmips_phys_to_dma(dev, virt_to_phys(addr));
+ }
+ 
+ dma_addr_t plat_map_dma_mem_page(struct device *dev, struct page *page)
+ {
+-	return bcm3384_phys_to_dma(dev, page_to_phys(page));
++	return bmips_phys_to_dma(dev, page_to_phys(page));
+ }
+ 
+ unsigned long plat_dma_addr_to_phys(struct device *dev, dma_addr_t dma_addr)
+ {
+-	if (dev && dev_is_pci(dev) &&
+-	    dma_addr >= BCM3384_MEM_HOLE_PA)
+-		return dma_addr + BCM3384_MEM_HOLE_SIZE;
+-	if ((dma_addr ^ bcm3384_dma_xor_mask) <= bcm3384_dma_xor_limit)
+-		return dma_addr ^ bcm3384_dma_xor_mask;
++	struct bmips_dma_range *r;
++
++	for (r = bmips_dma_ranges; r && r->size; r++) {
++		if (dma_addr >= r->parent_addr &&
++		    dma_addr < (r->parent_addr + r->size))
++			return dma_addr - r->parent_addr + r->child_addr;
++	}
+ 	return dma_addr;
+ }
+ 
+-static int __init bcm3384_init_dma_xor(void)
++static int __init bmips_init_dma_ranges(void)
+ {
+-	struct device_node *np = of_find_node_by_type(NULL, "memory");
++	struct device_node *np =
++		of_find_compatible_node(NULL, NULL, "brcm,ubus");
++	const __be32 *data;
++	struct bmips_dma_range *r;
++	int len;
+ 
+ 	if (!np)
+ 		return 0;
+ 
+-	of_property_read_u32(np, "dma-xor-mask", &bcm3384_dma_xor_mask);
+-	of_property_read_u32(np, "dma-xor-limit", &bcm3384_dma_xor_limit);
++	data = of_get_property(np, "dma-ranges", &len);
++	if (!data)
++		goto out_good;
++
++	len /= sizeof(*data) * 3;
++	if (!len)
++		goto out_bad;
++
++	/* add a dummy (zero) entry at the end as a sentinel */
++	bmips_dma_ranges = kzalloc(sizeof(struct bmips_dma_range) * (len + 1),
++				   GFP_KERNEL);
++	if (!bmips_dma_ranges)
++		goto out_bad;
+ 
++	for (r = bmips_dma_ranges; len; len--, r++) {
++		r->child_addr = be32_to_cpup(data++);
++		r->parent_addr = be32_to_cpup(data++);
++		r->size = be32_to_cpup(data++);
++	}
++
++out_good:
+ 	of_node_put(np);
+ 	return 0;
++
++out_bad:
++	pr_err("error parsing dma-ranges property\n");
++	of_node_put(np);
++	return -EINVAL;
+ }
+-arch_initcall(bcm3384_init_dma_xor);
++arch_initcall(bmips_init_dma_ranges);
 -- 
 2.1.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
