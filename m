@@ -1,75 +1,126 @@
-From: Kevin Cernekee <cernekee@gmail.com>
-Subject: [PATCH V6 16/25] MIPS: BMIPS: Document the firmware->kernel DTB interface
-Date: Thu, 25 Dec 2014 09:49:11 -0800
-Message-ID: <1419529760-9520-17-git-send-email-cernekee@gmail.com>
-References: <1419529760-9520-1-git-send-email-cernekee@gmail.com>
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <1419529760-9520-1-git-send-email-cernekee@gmail.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: ralf@linux-mips.org
-Cc: f.fainelli@gmail.com, jaedon.shin@gmail.com, abrestic@chromium.org, tglx@linutronix.de, jason@lakedaemon.net, jogo@openwrt.org, arnd@arndb.de, computersforpeace@gmail.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH] clk-rcar-gen2: ADSP clock support
+Date: Fri, 26 Dec 2014 01:55:26 +0300
+Message-ID: <2616097.6QI9oiZ0Bl@wasted.cogentembedded.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: mturquette@linaro.org, linux-kernel@vger.kernel.org, sboyd@codeaurora.org, robh+dt@kernel.org
+Cc: linux-sh@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add a new section covering the Generic BMIPS machine type.
+Add the ADSP clock support to the R-Car generation 2 CPG driver.  This clock
+gets derived from  PLL1.  The layout of the ADSPCKCR register is  similar to
+those of the clocks supported by the 'clk-div6' driver but the divider encoding
+is non-linear, so can't be supported by that driver...
 
-Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
+Based on the original patch by Konstantin Kozhevnikov
+<konstantin.kozhevnikov@cogentembedded.com>.
+
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+
 ---
- Documentation/devicetree/booting-without-of.txt | 28 +++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+The patch is against the 'clk-next' branch of Mike Turquette's 'linux.git' repo
+plus the RCAN clock support posted yesterday.
 
-diff --git a/Documentation/devicetree/booting-without-of.txt b/Documentation/devicetree/booting-without-of.txt
-index 7768518..e49e423 100644
---- a/Documentation/devicetree/booting-without-of.txt
-+++ b/Documentation/devicetree/booting-without-of.txt
-@@ -15,6 +15,7 @@ Table of Contents
-     1) Entry point for arch/arm
-     2) Entry point for arch/powerpc
-     3) Entry point for arch/x86
-+    4) Entry point for arch/mips/bmips
+ Documentation/devicetree/bindings/clock/renesas,rcar-gen2-cpg-clocks.txt |    5 -
+ drivers/clk/shmobile/clk-rcar-gen2.c                                     |   48 ++++++++++
+ 2 files changed, 51 insertions(+), 2 deletions(-)
+
+Index: linux/Documentation/devicetree/bindings/clock/renesas,rcar-gen2-cpg-clocks.txt
+===================================================================
+--- linux.orig/Documentation/devicetree/bindings/clock/renesas,rcar-gen2-cpg-clocks.txt
++++ linux/Documentation/devicetree/bindings/clock/renesas,rcar-gen2-cpg-clocks.txt
+@@ -16,7 +16,8 @@ Required Properties:
+   - clocks: Reference to the parent clock
+   - #clock-cells: Must be 1
+   - clock-output-names: The names of the clocks. Supported clocks are "main",
+-    "pll0", "pll1", "pll3", "lb", "qspi", "sdh", "sd0", "sd1", "z", and "rcan"
++    "pll0", "pll1", "pll3", "lb", "qspi", "sdh", "sd0", "sd1", "z", "adsp", and
++    "rcan"
  
-   II - The DT block format
-     1) Header
-@@ -288,6 +289,33 @@ it with special cases.
-   or initrd address. It simply holds information which can not be retrieved
-   otherwise like interrupt routing or a list of devices behind an I2C bus.
  
-+4) Entry point for arch/mips/bmips
-+----------------------------------
-+
-+  Some bootloaders only support a single entry point, at the start of the
-+  kernel image.  Other bootloaders will jump to the ELF start address.
-+  Both schemes are supported; CONFIG_BOOT_RAW=y and CONFIG_NO_EXCEPT_FILL=y,
-+  so the first instruction immediately jumps to kernel_entry().
-+
-+  Similar to the arch/arm case (b), a DT-aware bootloader is expected to
-+  set up the following registers:
-+
-+         a0 : 0
-+
-+         a1 : 0xffffffff
-+
-+         a2 : Physical pointer to the device tree block (defined in chapter
-+         II) in RAM.  The device tree can be located anywhere in the first
-+         512MB of the physical address space (0x00000000 - 0x1fffffff),
-+         aligned on a 64 bit boundary.
-+
-+  Legacy bootloaders do not use this convention, and they do not pass in a
-+  DT block.  In this case, Linux will look for a builtin DTB, selected via
-+  CONFIG_DT_*.
-+
-+  This convention is defined for 32-bit systems only, as there are not
-+  currently any 64-bit BMIPS implementations.
-+
- II - The DT block format
- ========================
+ Example
+@@ -30,5 +31,5 @@ Example
+ 		#clock-cells = <1>;
+ 		clock-output-names = "main", "pll0, "pll1", "pll3",
+ 				     "lb", "qspi", "sdh", "sd0", "sd1", "z",
+-				     "rcan";
++				     "adsp", "rcan";
+ 	};
+Index: linux/drivers/clk/shmobile/clk-rcar-gen2.c
+===================================================================
+--- linux.orig/drivers/clk/shmobile/clk-rcar-gen2.c
++++ linux/drivers/clk/shmobile/clk-rcar-gen2.c
+@@ -33,6 +33,7 @@ struct rcar_gen2_cpg {
+ #define CPG_FRQCRC			0x000000e0
+ #define CPG_FRQCRC_ZFC_MASK		(0x1f << 8)
+ #define CPG_FRQCRC_ZFC_SHIFT		8
++#define CPG_ADSPCKCR			0x0000025c
+ #define CPG_RCANCKCR			0x00000270
  
--- 
-2.1.1
+ /* -----------------------------------------------------------------------------
+@@ -162,6 +163,51 @@ static struct clk * __init cpg_z_clk_reg
+ 	return clk;
+ }
+ 
++/* ADSP divisors */
++static const struct clk_div_table cpg_adsp_div_table[] = {
++	{  1,  3 }, {  2,  4 }, {  3,  6 }, {  4,  8 },
++	{  5, 12 }, {  6, 16 }, {  7, 18 }, {  8, 24 },
++	{ 10, 36 }, { 11, 48 }, {  0,  0 },
++};
++
++static struct clk * __init cpg_adsp_clk_register(struct rcar_gen2_cpg *cpg)
++{
++	const char *parent_name = "pll1";
++	struct clk_divider *div;
++	struct clk_gate *gate;
++	struct clk *clk;
++
++	div = kzalloc(sizeof(*div), GFP_KERNEL);
++	if (!div)
++		return ERR_PTR(-ENOMEM);
++
++	div->reg = cpg->reg + CPG_ADSPCKCR;
++	div->width = 4;
++	div->table = cpg_adsp_div_table;
++	div->lock = &cpg->lock;
++
++	gate = kzalloc(sizeof(*gate), GFP_KERNEL);
++	if (!gate) {
++		kfree(div);
++		return ERR_PTR(-ENOMEM);
++	}
++
++	gate->reg = cpg->reg + CPG_RCANCKCR;
++	gate->bit_idx = 8;
++	gate->flags = CLK_GATE_SET_TO_DISABLE;
++	gate->lock = &cpg->lock;
++
++	clk = clk_register_composite(NULL, "adsp", &parent_name, 1, NULL, NULL,
++				     &div->hw, &clk_divider_ops,
++				     &gate->hw, &clk_gate_ops, 0);
++	if (IS_ERR(clk)) {
++		kfree(gate);
++		kfree(div);
++	}
++
++	return clk;
++}
++
+ static struct clk * __init cpg_rcan_clk_register(struct rcar_gen2_cpg *cpg,
+ 						 struct device_node *np)
+ {
+@@ -301,6 +347,8 @@ rcar_gen2_cpg_register_clock(struct devi
+ 		shift = 0;
+ 	} else if (!strcmp(name, "z")) {
+ 		return cpg_z_clk_register(cpg);
++	} else if (!strcmp(name, "adsp")) {
++		return cpg_adsp_clk_register(cpg);
+ 	} else if (!strcmp(name, "rcan")) {
+ 		return cpg_rcan_clk_register(cpg, np);
+ 	} else {
+
