@@ -1,306 +1,177 @@
 From: Kevin Cernekee <cernekee@gmail.com>
-Subject: [PATCH V6 02/25] MIPS: Move device-trees into vendor sub-directories
-Date: Thu, 25 Dec 2014 09:48:57 -0800
-Message-ID: <1419529760-9520-3-git-send-email-cernekee@gmail.com>
+Subject: [PATCH V6 05/25] MIPS: bcm3384: Rename "bcm3384" target to "bmips"
+Date: Thu, 25 Dec 2014 09:49:00 -0800
+Message-ID: <1419529760-9520-6-git-send-email-cernekee@gmail.com>
 References: <1419529760-9520-1-git-send-email-cernekee@gmail.com>
-Return-path: <linux-mips-bounce@linux-mips.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1419529760-9520-1-git-send-email-cernekee@gmail.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+Sender: linux-kernel-owner@vger.kernel.org
 To: ralf@linux-mips.org
 Cc: f.fainelli@gmail.com, jaedon.shin@gmail.com, abrestic@chromium.org, tglx@linutronix.de, jason@lakedaemon.net, jogo@openwrt.org, arnd@arndb.de, computersforpeace@gmail.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Andrew Bresticker <abrestic@chromium.org>
+This platform is configured primarily through device tree, and we can
+reuse the same code to support a bunch of other chips.  Change the name
+to reflect this.
 
-Move the MIPS device-trees into the appropriate vendor sub-directories.
-
-Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
-Tested-by: Kevin Cernekee <cernekee@gmail.com>
+Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
 ---
- arch/mips/Makefile                                 |  2 +-
- arch/mips/boot/dts/Makefile                        | 33 ++++++++--------------
- arch/mips/boot/dts/brcm/Makefile                   |  9 ++++++
- arch/mips/boot/dts/{ => brcm}/bcm3384.dtsi         |  0
- arch/mips/boot/dts/{ => brcm}/bcm93384wvg.dts      |  0
- arch/mips/boot/dts/cavium-octeon/Makefile          |  9 ++++++
- .../boot/dts/{ => cavium-octeon}/octeon_3xxx.dts   |  0
- .../boot/dts/{ => cavium-octeon}/octeon_68xx.dts   |  0
- arch/mips/boot/dts/lantiq/Makefile                 |  9 ++++++
- arch/mips/boot/dts/{ => lantiq}/danube.dtsi        |  0
- arch/mips/boot/dts/{ => lantiq}/easy50712.dts      |  0
- arch/mips/boot/dts/mti/Makefile                    |  9 ++++++
- arch/mips/boot/dts/{ => mti}/sead3.dts             |  0
- arch/mips/boot/dts/netlogic/Makefile               | 12 ++++++++
- arch/mips/boot/dts/{ => netlogic}/xlp_evp.dts      |  0
- arch/mips/boot/dts/{ => netlogic}/xlp_fvp.dts      |  0
- arch/mips/boot/dts/{ => netlogic}/xlp_gvp.dts      |  0
- arch/mips/boot/dts/{ => netlogic}/xlp_svp.dts      |  0
- arch/mips/boot/dts/ralink/Makefile                 | 12 ++++++++
- arch/mips/boot/dts/{ => ralink}/mt7620a.dtsi       |  0
- arch/mips/boot/dts/{ => ralink}/mt7620a_eval.dts   |  0
- arch/mips/boot/dts/{ => ralink}/rt2880.dtsi        |  0
- arch/mips/boot/dts/{ => ralink}/rt2880_eval.dts    |  0
- arch/mips/boot/dts/{ => ralink}/rt3050.dtsi        |  0
- arch/mips/boot/dts/{ => ralink}/rt3052_eval.dts    |  0
- arch/mips/boot/dts/{ => ralink}/rt3883.dtsi        |  0
- arch/mips/boot/dts/{ => ralink}/rt3883_eval.dts    |  0
- 27 files changed, 73 insertions(+), 22 deletions(-)
- create mode 100644 arch/mips/boot/dts/brcm/Makefile
- rename arch/mips/boot/dts/{ => brcm}/bcm3384.dtsi (100%)
- rename arch/mips/boot/dts/{ => brcm}/bcm93384wvg.dts (100%)
- create mode 100644 arch/mips/boot/dts/cavium-octeon/Makefile
- rename arch/mips/boot/dts/{ => cavium-octeon}/octeon_3xxx.dts (100%)
- rename arch/mips/boot/dts/{ => cavium-octeon}/octeon_68xx.dts (100%)
- create mode 100644 arch/mips/boot/dts/lantiq/Makefile
- rename arch/mips/boot/dts/{ => lantiq}/danube.dtsi (100%)
- rename arch/mips/boot/dts/{ => lantiq}/easy50712.dts (100%)
- create mode 100644 arch/mips/boot/dts/mti/Makefile
- rename arch/mips/boot/dts/{ => mti}/sead3.dts (100%)
- create mode 100644 arch/mips/boot/dts/netlogic/Makefile
- rename arch/mips/boot/dts/{ => netlogic}/xlp_evp.dts (100%)
- rename arch/mips/boot/dts/{ => netlogic}/xlp_fvp.dts (100%)
- rename arch/mips/boot/dts/{ => netlogic}/xlp_gvp.dts (100%)
- rename arch/mips/boot/dts/{ => netlogic}/xlp_svp.dts (100%)
- create mode 100644 arch/mips/boot/dts/ralink/Makefile
- rename arch/mips/boot/dts/{ => ralink}/mt7620a.dtsi (100%)
- rename arch/mips/boot/dts/{ => ralink}/mt7620a_eval.dts (100%)
- rename arch/mips/boot/dts/{ => ralink}/rt2880.dtsi (100%)
- rename arch/mips/boot/dts/{ => ralink}/rt2880_eval.dts (100%)
- rename arch/mips/boot/dts/{ => ralink}/rt3050.dtsi (100%)
- rename arch/mips/boot/dts/{ => ralink}/rt3052_eval.dts (100%)
- rename arch/mips/boot/dts/{ => ralink}/rt3883.dtsi (100%)
- rename arch/mips/boot/dts/{ => ralink}/rt3883_eval.dts (100%)
+ arch/mips/Kbuild.platforms                                   |  2 +-
+ arch/mips/Kconfig                                            | 12 ++++++------
+ arch/mips/bcm3384/Platform                                   |  7 -------
+ arch/mips/{bcm3384 => bmips}/Makefile                        |  0
+ arch/mips/bmips/Platform                                     |  7 +++++++
+ arch/mips/{bcm3384 => bmips}/dma.c                           |  0
+ arch/mips/{bcm3384 => bmips}/irq.c                           |  0
+ arch/mips/{bcm3384 => bmips}/setup.c                         |  2 +-
+ arch/mips/boot/dts/brcm/Makefile                             |  2 +-
+ arch/mips/configs/{bcm3384_defconfig => bmips_be_defconfig}  |  2 +-
+ .../include/asm/{mach-bcm3384 => mach-bmips}/dma-coherence.h |  6 +++---
+ 11 files changed, 20 insertions(+), 20 deletions(-)
+ delete mode 100644 arch/mips/bcm3384/Platform
+ rename arch/mips/{bcm3384 => bmips}/Makefile (100%)
+ create mode 100644 arch/mips/bmips/Platform
+ rename arch/mips/{bcm3384 => bmips}/dma.c (100%)
+ rename arch/mips/{bcm3384 => bmips}/irq.c (100%)
+ rename arch/mips/{bcm3384 => bmips}/setup.c (98%)
+ rename arch/mips/configs/{bcm3384_defconfig => bmips_be_defconfig} (98%)
+ rename arch/mips/include/asm/{mach-bcm3384 => mach-bmips}/dma-coherence.h (90%)
 
-diff --git a/arch/mips/Makefile b/arch/mips/Makefile
-index 2563a08..269db7e 100644
---- a/arch/mips/Makefile
-+++ b/arch/mips/Makefile
-@@ -350,7 +350,7 @@ core-$(CONFIG_BUILTIN_DTB) += arch/mips/boot/dts/
+diff --git a/arch/mips/Kbuild.platforms b/arch/mips/Kbuild.platforms
+index e5fc463..a4d1e4f 100644
+--- a/arch/mips/Kbuild.platforms
++++ b/arch/mips/Kbuild.platforms
+@@ -4,9 +4,9 @@ platforms += alchemy
+ platforms += ar7
+ platforms += ath25
+ platforms += ath79
+-platforms += bcm3384
+ platforms += bcm47xx
+ platforms += bcm63xx
++platforms += bmips
+ platforms += cavium-octeon
+ platforms += cobalt
+ platforms += dec
+diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+index 3289969..31bbec0 100644
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -130,8 +130,8 @@ config ATH79
+ 	help
+ 	  Support for the Atheros AR71XX/AR724X/AR913X SoCs.
  
- PHONY += dtbs
- dtbs: scripts
--	$(Q)$(MAKE) $(build)=arch/mips/boot/dts dtbs
-+	$(Q)$(MAKE) $(build)=arch/mips/boot/dts
+-config BCM3384
+-	bool "Broadcom BCM3384 based boards"
++config BMIPS_GENERIC
++	bool "Broadcom Generic BMIPS kernel"
+ 	select BOOT_RAW
+ 	select NO_EXCEPT_FILL
+ 	select USE_OF
+@@ -151,10 +151,10 @@ config BCM3384
+ 	select USB_OHCI_BIG_ENDIAN_DESC
+ 	select USB_OHCI_BIG_ENDIAN_MMIO
+ 	help
+-	  Support for BCM3384 based boards.  BCM3384/BCM33843 is a cable modem
+-	  chipset with a Linux application processor that is often used to
+-	  provide Samba services, a CUPS print server, and/or advanced routing
+-	  features.
++	  Build a generic DT-based kernel image that boots on select
++	  BCM33xx cable modem chips, BCM63xx DSL chips, and BCM7xxx set-top
++	  box chips.  Note that CONFIG_CPU_BIG_ENDIAN/CONFIG_CPU_LITTLE_ENDIAN
++	  must be set appropriately for your board.
  
- archprepare:
- ifdef CONFIG_MIPS32_N32
-diff --git a/arch/mips/boot/dts/Makefile b/arch/mips/boot/dts/Makefile
-index 4f49fa4..5d95e4b 100644
---- a/arch/mips/boot/dts/Makefile
-+++ b/arch/mips/boot/dts/Makefile
-@@ -1,21 +1,12 @@
--dtb-$(CONFIG_BCM3384)			+= bcm93384wvg.dtb
--dtb-$(CONFIG_CAVIUM_OCTEON_SOC)		+= octeon_3xxx.dtb octeon_68xx.dtb
--dtb-$(CONFIG_DT_EASY50712)		+= easy50712.dtb
--dtb-$(CONFIG_DT_XLP_EVP)		+= xlp_evp.dtb
--dtb-$(CONFIG_DT_XLP_SVP)		+= xlp_svp.dtb
--dtb-$(CONFIG_DT_XLP_FVP)		+= xlp_fvp.dtb
--dtb-$(CONFIG_DT_XLP_GVP)		+= xlp_gvp.dtb
--dtb-$(CONFIG_DTB_RT2880_EVAL)		+= rt2880_eval.dtb
--dtb-$(CONFIG_DTB_RT305X_EVAL)		+= rt3052_eval.dtb
--dtb-$(CONFIG_DTB_RT3883_EVAL)		+= rt3883_eval.dtb
--dtb-$(CONFIG_DTB_MT7620A_EVAL)		+= mt7620a_eval.dtb
--dtb-$(CONFIG_MIPS_SEAD3)		+= sead3.dtb
--
--obj-y		+= $(patsubst %.dtb, %.dtb.o, $(dtb-y))
--
--targets		+= dtbs
--targets		+= $(dtb-y)
--
--dtbs: $(addprefix $(obj)/, $(dtb-y))
--
--clean-files	+= *.dtb *.dtb.S
-+dts-dirs	+= brcm
-+dts-dirs	+= cavium-octeon
-+dts-dirs	+= lantiq
-+dts-dirs	+= mti
-+dts-dirs	+= netlogic
-+dts-dirs	+= ralink
-+
-+obj-y		:= $(addsuffix /, $(dts-dirs))
-+
-+always		:= $(dtb-y)
-+subdir-y	:= $(dts-dirs)
-+clean-files	:= *.dtb *.dtb.S
+ config BCM47XX
+ 	bool "Broadcom BCM47XX based boards"
+diff --git a/arch/mips/bcm3384/Platform b/arch/mips/bcm3384/Platform
+deleted file mode 100644
+index 8e1ca08..0000000
+diff --git a/arch/mips/bcm3384/Makefile b/arch/mips/bmips/Makefile
+similarity index 100%
+rename from arch/mips/bcm3384/Makefile
+rename to arch/mips/bmips/Makefile
+diff --git a/arch/mips/bmips/Platform b/arch/mips/bmips/Platform
+new file mode 100644
+index 0000000..5f127fd
+--- /dev/null
++++ b/arch/mips/bmips/Platform
+@@ -0,0 +1,7 @@
++#
++# Broadcom Generic BMIPS kernel
++#
++platform-$(CONFIG_BMIPS_GENERIC)	+= bmips/
++cflags-$(CONFIG_BMIPS_GENERIC)		+=				\
++		-I$(srctree)/arch/mips/include/asm/mach-bmips/
++load-$(CONFIG_BMIPS_GENERIC)		:= 0xffffffff80010000
+diff --git a/arch/mips/bcm3384/dma.c b/arch/mips/bmips/dma.c
+similarity index 100%
+rename from arch/mips/bcm3384/dma.c
+rename to arch/mips/bmips/dma.c
+diff --git a/arch/mips/bcm3384/irq.c b/arch/mips/bmips/irq.c
+similarity index 100%
+rename from arch/mips/bcm3384/irq.c
+rename to arch/mips/bmips/irq.c
+diff --git a/arch/mips/bcm3384/setup.c b/arch/mips/bmips/setup.c
+similarity index 98%
+rename from arch/mips/bcm3384/setup.c
+rename to arch/mips/bmips/setup.c
+index d84b840..5099109 100644
+--- a/arch/mips/bcm3384/setup.c
++++ b/arch/mips/bmips/setup.c
+@@ -33,7 +33,7 @@ void __init prom_free_prom_memory(void)
+ 
+ const char *get_system_type(void)
+ {
+-	return "BCM3384";
++	return "Generic BMIPS kernel";
+ }
+ 
+ void __init plat_time_init(void)
 diff --git a/arch/mips/boot/dts/brcm/Makefile b/arch/mips/boot/dts/brcm/Makefile
-new file mode 100644
-index 0000000..a353d4e
---- /dev/null
+index a353d4e..530ed23 100644
+--- a/arch/mips/boot/dts/brcm/Makefile
 +++ b/arch/mips/boot/dts/brcm/Makefile
-@@ -0,0 +1,9 @@
-+dtb-$(CONFIG_BCM3384)		+= bcm93384wvg.dtb
-+
-+obj-y				+= $(patsubst %.dtb, %.dtb.o, $(dtb-y))
-+
-+# Force kbuild to make empty built-in.o if necessary
-+obj-				+= dummy.o
-+
-+always				:= $(dtb-y)
-+clean-files			:= *.dtb *.dtb.S
-diff --git a/arch/mips/boot/dts/bcm3384.dtsi b/arch/mips/boot/dts/brcm/bcm3384.dtsi
-similarity index 100%
-rename from arch/mips/boot/dts/bcm3384.dtsi
-rename to arch/mips/boot/dts/brcm/bcm3384.dtsi
-diff --git a/arch/mips/boot/dts/bcm93384wvg.dts b/arch/mips/boot/dts/brcm/bcm93384wvg.dts
-similarity index 100%
-rename from arch/mips/boot/dts/bcm93384wvg.dts
-rename to arch/mips/boot/dts/brcm/bcm93384wvg.dts
-diff --git a/arch/mips/boot/dts/cavium-octeon/Makefile b/arch/mips/boot/dts/cavium-octeon/Makefile
-new file mode 100644
-index 0000000..5b99c40
---- /dev/null
-+++ b/arch/mips/boot/dts/cavium-octeon/Makefile
-@@ -0,0 +1,9 @@
-+dtb-$(CONFIG_CAVIUM_OCTEON_SOC)	+= octeon_3xxx.dtb octeon_68xx.dtb
-+
-+obj-y				+= $(patsubst %.dtb, %.dtb.o, $(dtb-y))
-+
-+# Force kbuild to make empty built-in.o if necessary
-+obj-				+= dummy.o
-+
-+always				:= $(dtb-y)
-+clean-files			:= *.dtb *.dtb.S
-diff --git a/arch/mips/boot/dts/octeon_3xxx.dts b/arch/mips/boot/dts/cavium-octeon/octeon_3xxx.dts
-similarity index 100%
-rename from arch/mips/boot/dts/octeon_3xxx.dts
-rename to arch/mips/boot/dts/cavium-octeon/octeon_3xxx.dts
-diff --git a/arch/mips/boot/dts/octeon_68xx.dts b/arch/mips/boot/dts/cavium-octeon/octeon_68xx.dts
-similarity index 100%
-rename from arch/mips/boot/dts/octeon_68xx.dts
-rename to arch/mips/boot/dts/cavium-octeon/octeon_68xx.dts
-diff --git a/arch/mips/boot/dts/lantiq/Makefile b/arch/mips/boot/dts/lantiq/Makefile
-new file mode 100644
-index 0000000..0906c62
---- /dev/null
-+++ b/arch/mips/boot/dts/lantiq/Makefile
-@@ -0,0 +1,9 @@
-+dtb-$(CONFIG_DT_EASY50712)	+= easy50712.dtb
-+
-+obj-y				+= $(patsubst %.dtb, %.dtb.o, $(dtb-y))
-+
-+# Force kbuild to make empty built-in.o if necessary
-+obj-				+= dummy.o
-+
-+always				:= $(dtb-y)
-+clean-files			:= *.dtb *.dtb.S
-diff --git a/arch/mips/boot/dts/danube.dtsi b/arch/mips/boot/dts/lantiq/danube.dtsi
-similarity index 100%
-rename from arch/mips/boot/dts/danube.dtsi
-rename to arch/mips/boot/dts/lantiq/danube.dtsi
-diff --git a/arch/mips/boot/dts/easy50712.dts b/arch/mips/boot/dts/lantiq/easy50712.dts
-similarity index 100%
-rename from arch/mips/boot/dts/easy50712.dts
-rename to arch/mips/boot/dts/lantiq/easy50712.dts
-diff --git a/arch/mips/boot/dts/mti/Makefile b/arch/mips/boot/dts/mti/Makefile
-new file mode 100644
-index 0000000..ef1f3db
---- /dev/null
-+++ b/arch/mips/boot/dts/mti/Makefile
-@@ -0,0 +1,9 @@
-+dtb-$(CONFIG_MIPS_SEAD3)	+= sead3.dtb
-+
-+obj-y				+= $(patsubst %.dtb, %.dtb.o, $(dtb-y))
-+
-+# Force kbuild to make empty built-in.o if necessary
-+obj-				+= dummy.o
-+
-+always				:= $(dtb-y)
-+clean-files			:= *.dtb *.dtb.S
-diff --git a/arch/mips/boot/dts/sead3.dts b/arch/mips/boot/dts/mti/sead3.dts
-similarity index 100%
-rename from arch/mips/boot/dts/sead3.dts
-rename to arch/mips/boot/dts/mti/sead3.dts
-diff --git a/arch/mips/boot/dts/netlogic/Makefile b/arch/mips/boot/dts/netlogic/Makefile
-new file mode 100644
-index 0000000..e126cd3
---- /dev/null
-+++ b/arch/mips/boot/dts/netlogic/Makefile
-@@ -0,0 +1,12 @@
-+dtb-$(CONFIG_DT_XLP_EVP)	+= xlp_evp.dtb
-+dtb-$(CONFIG_DT_XLP_SVP)	+= xlp_svp.dtb
-+dtb-$(CONFIG_DT_XLP_FVP)	+= xlp_fvp.dtb
-+dtb-$(CONFIG_DT_XLP_GVP)	+= xlp_gvp.dtb
-+
-+obj-y				+= $(patsubst %.dtb, %.dtb.o, $(dtb-y))
-+
-+# Force kbuild to make empty built-in.o if necessary
-+obj-				+= dummy.o
-+
-+always				:= $(dtb-y)
-+clean-files			:= *.dtb *.dtb.S
-diff --git a/arch/mips/boot/dts/xlp_evp.dts b/arch/mips/boot/dts/netlogic/xlp_evp.dts
-similarity index 100%
-rename from arch/mips/boot/dts/xlp_evp.dts
-rename to arch/mips/boot/dts/netlogic/xlp_evp.dts
-diff --git a/arch/mips/boot/dts/xlp_fvp.dts b/arch/mips/boot/dts/netlogic/xlp_fvp.dts
-similarity index 100%
-rename from arch/mips/boot/dts/xlp_fvp.dts
-rename to arch/mips/boot/dts/netlogic/xlp_fvp.dts
-diff --git a/arch/mips/boot/dts/xlp_gvp.dts b/arch/mips/boot/dts/netlogic/xlp_gvp.dts
-similarity index 100%
-rename from arch/mips/boot/dts/xlp_gvp.dts
-rename to arch/mips/boot/dts/netlogic/xlp_gvp.dts
-diff --git a/arch/mips/boot/dts/xlp_svp.dts b/arch/mips/boot/dts/netlogic/xlp_svp.dts
-similarity index 100%
-rename from arch/mips/boot/dts/xlp_svp.dts
-rename to arch/mips/boot/dts/netlogic/xlp_svp.dts
-diff --git a/arch/mips/boot/dts/ralink/Makefile b/arch/mips/boot/dts/ralink/Makefile
-new file mode 100644
-index 0000000..2a72259
---- /dev/null
-+++ b/arch/mips/boot/dts/ralink/Makefile
-@@ -0,0 +1,12 @@
-+dtb-$(CONFIG_DTB_RT2880_EVAL)	+= rt2880_eval.dtb
-+dtb-$(CONFIG_DTB_RT305X_EVAL)	+= rt3052_eval.dtb
-+dtb-$(CONFIG_DTB_RT3883_EVAL)	+= rt3883_eval.dtb
-+dtb-$(CONFIG_DTB_MT7620A_EVAL)	+= mt7620a_eval.dtb
-+
-+obj-y				+= $(patsubst %.dtb, %.dtb.o, $(dtb-y))
-+
-+# Force kbuild to make empty built-in.o if necessary
-+obj-				+= dummy.o
-+
-+always				:= $(dtb-y)
-+clean-files			:= *.dtb *.dtb.S
-diff --git a/arch/mips/boot/dts/mt7620a.dtsi b/arch/mips/boot/dts/ralink/mt7620a.dtsi
-similarity index 100%
-rename from arch/mips/boot/dts/mt7620a.dtsi
-rename to arch/mips/boot/dts/ralink/mt7620a.dtsi
-diff --git a/arch/mips/boot/dts/mt7620a_eval.dts b/arch/mips/boot/dts/ralink/mt7620a_eval.dts
-similarity index 100%
-rename from arch/mips/boot/dts/mt7620a_eval.dts
-rename to arch/mips/boot/dts/ralink/mt7620a_eval.dts
-diff --git a/arch/mips/boot/dts/rt2880.dtsi b/arch/mips/boot/dts/ralink/rt2880.dtsi
-similarity index 100%
-rename from arch/mips/boot/dts/rt2880.dtsi
-rename to arch/mips/boot/dts/ralink/rt2880.dtsi
-diff --git a/arch/mips/boot/dts/rt2880_eval.dts b/arch/mips/boot/dts/ralink/rt2880_eval.dts
-similarity index 100%
-rename from arch/mips/boot/dts/rt2880_eval.dts
-rename to arch/mips/boot/dts/ralink/rt2880_eval.dts
-diff --git a/arch/mips/boot/dts/rt3050.dtsi b/arch/mips/boot/dts/ralink/rt3050.dtsi
-similarity index 100%
-rename from arch/mips/boot/dts/rt3050.dtsi
-rename to arch/mips/boot/dts/ralink/rt3050.dtsi
-diff --git a/arch/mips/boot/dts/rt3052_eval.dts b/arch/mips/boot/dts/ralink/rt3052_eval.dts
-similarity index 100%
-rename from arch/mips/boot/dts/rt3052_eval.dts
-rename to arch/mips/boot/dts/ralink/rt3052_eval.dts
-diff --git a/arch/mips/boot/dts/rt3883.dtsi b/arch/mips/boot/dts/ralink/rt3883.dtsi
-similarity index 100%
-rename from arch/mips/boot/dts/rt3883.dtsi
-rename to arch/mips/boot/dts/ralink/rt3883.dtsi
-diff --git a/arch/mips/boot/dts/rt3883_eval.dts b/arch/mips/boot/dts/ralink/rt3883_eval.dts
-similarity index 100%
-rename from arch/mips/boot/dts/rt3883_eval.dts
-rename to arch/mips/boot/dts/ralink/rt3883_eval.dts
+@@ -1,4 +1,4 @@
+-dtb-$(CONFIG_BCM3384)		+= bcm93384wvg.dtb
++dtb-$(CONFIG_BMIPS_GENERIC)	+= bcm93384wvg.dtb
+ 
+ obj-y				+= $(patsubst %.dtb, %.dtb.o, $(dtb-y))
+ 
+diff --git a/arch/mips/configs/bcm3384_defconfig b/arch/mips/configs/bmips_be_defconfig
+similarity index 98%
+rename from arch/mips/configs/bcm3384_defconfig
+rename to arch/mips/configs/bmips_be_defconfig
+index 88711c2..36af5af 100644
+--- a/arch/mips/configs/bcm3384_defconfig
++++ b/arch/mips/configs/bmips_be_defconfig
+@@ -1,4 +1,4 @@
+-CONFIG_BCM3384=y
++CONFIG_BMIPS_GENERIC=y
+ CONFIG_HIGHMEM=y
+ CONFIG_SMP=y
+ CONFIG_NR_CPUS=4
+diff --git a/arch/mips/include/asm/mach-bcm3384/dma-coherence.h b/arch/mips/include/asm/mach-bmips/dma-coherence.h
+similarity index 90%
+rename from arch/mips/include/asm/mach-bcm3384/dma-coherence.h
+rename to arch/mips/include/asm/mach-bmips/dma-coherence.h
+index a3be8e5..65e95b0 100644
+--- a/arch/mips/include/asm/mach-bcm3384/dma-coherence.h
++++ b/arch/mips/include/asm/mach-bmips/dma-coherence.h
+@@ -12,8 +12,8 @@
+  * GNU General Public License for more details.
+  */
+ 
+-#ifndef __ASM_MACH_BCM3384_DMA_COHERENCE_H
+-#define __ASM_MACH_BCM3384_DMA_COHERENCE_H
++#ifndef __ASM_MACH_BMIPS_DMA_COHERENCE_H
++#define __ASM_MACH_BMIPS_DMA_COHERENCE_H
+ 
+ struct device;
+ 
+@@ -45,4 +45,4 @@ static inline int plat_device_is_coherent(struct device *dev)
+ 	return 0;
+ }
+ 
+-#endif /* __ASM_MACH_BCM3384_DMA_COHERENCE_H */
++#endif /* __ASM_MACH_BMIPS_DMA_COHERENCE_H */
 -- 
 2.1.1
