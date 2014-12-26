@@ -1,36 +1,108 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH 2/2] iio: mxs-lradc: check ranges of ts properties
-Date: Fri, 26 Dec 2014 21:50:37 +0100 (CET)
-Message-ID: <1377154085.658607.1419627037868.JavaMail.open-xchange@oxbaltgw05.schlund.de>
-References: <1419250476-2393-1-git-send-email-stefan.wahren@i2se.com> <1419250476-2393-3-git-send-email-stefan.wahren@i2se.com> <549D2905.4050801@kernel.org>
-Reply-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCHv2] media: i2c/adp1653: devicetree support for adp1653
+Date: Fri, 26 Dec 2014 14:52:40 -0600
+Message-ID: <CAL_JsqJ4tsRfvb1XrGmwBJaFUGwMVGTjNp1mBykFBJDJF1uHbA@mail.gmail.com>
+References: <20141203214641.GA1390@amd> <20141224223434.GA20669@amd>
+ <CAL_JsqJsDqYm-xfEM1CqNzJxfZY6vnYxaBYpT+3t4+gV2F3M1A@mail.gmail.com> <20141226203340.GA1791@amd>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <549D2905.4050801-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: kristina.martsenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20141226203340.GA1791@amd>
+Sender: linux-omap-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Bryan Wu <cooloney@gmail.com>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, Sebastian Reichel <sre@debian.org>, Sebastian Reichel <sre@ring0.de>, kernel list <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-omap <linux-omap@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, khilman@kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>, freemangordon@abv.bg, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Benoit Cousson <bcousson@baylibre.com>, sakari.ailus@iki.fi, Mauro Carvalho Chehab <m.chehab@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, Jacek Anaszewski <j.anaszewski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jonathan,
-
-> Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> hat am 26. Dezember 2014 um 10:23
-> geschrieben:
+On Fri, Dec 26, 2014 at 2:33 PM, Pavel Machek <pavel@ucw.cz> wrote:
+> Hi!
 >
-> [...]
-> >
-> > - lradc->over_sample_delay = 2;
-> > - ret = of_property_read_u32(lradc_node, "fsl,ave-delay", &adapt);
-> > - if (ret == 0)
-> > + if (of_property_read_u32(lradc_node, "fsl,ave-delay", &adapt)) {
-> > + lradc->over_sample_delay = 2;
-> > + } else {
-> > + if (adapt < 2 || adapt > LRADC_DELAY_DELAY_MASK+1) {
-> please run checkpatch.pl over these. Should be spaces around the +
+>> > We are moving to device tree support on OMAP3, but that currently
+>> > breaks ADP1653 driver. This adds device tree support, plus required
+>> > documentation.
+>> >
+>> > Signed-off-by: Pavel Machek <pavel@ucw.cz>
+>> >
+>> > ---
+>> >
+>> > Changed -microsec to -us, as requested by devicetree people.
+>> >
+>> > Fixed checkpatch issues.
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
+>> > index 2d88816..2c6c7c5 100644
+>> > --- a/Documentation/devicetree/bindings/leds/common.txt
+>> > +++ b/Documentation/devicetree/bindings/leds/common.txt
+>> > @@ -14,6 +14,15 @@ Optional properties for child nodes:
+>> >       "ide-disk" - LED indicates disk activity
+>> >       "timer" - LED flashes at a fixed, configurable rate
+>> >
+>> > +- max-microamp : maximum intensity in microamperes of the LED
+>> > +                (torch LED for flash devices)
+>> > +- flash-max-microamp : maximum intensity in microamperes of the
+>> > +                       flash LED; it is mandatory if the LED should
+>> > +                      support the flash mode
+>> > +- flash-timeout-microsec : timeout in microseconds after which the flash
+>> > +                           LED is turned off
+>>
+>> Doesn't all this go in your flash led binding patch?
+>
+> No, I should not have included this part.
+>
+>> > +Example:
+>> > +
+>> > +        adp1653: led-controller@30 {
+>> > +                compatible = "adi,adp1653";
+>> > +               reg = <0x30>;
+>> > +                gpios = <&gpio3 24 GPIO_ACTIVE_HIGH>; /* 88 */
+>> > +
+>> > +               flash {
+>> > +                        flash-timeout-us = <500000>;
+>> > +                        flash-max-microamp = <320000>;
+>> > +                        max-microamp = <50000>;
+>> > +               };
+>> > +                indicator {
+>>
+>> These are different LEDs or different modes?
+>
+> flash & indicator are different LEDs. One is white, one is red. Flash
+> can be used as a flash and as a torch.
+>
+>> > +                        max-microamp = <17500>;
+>>
+>> This is a bit inconsistent. The binding says this is for flash LEDs
+>> torch mode, but I see no reason why it can't be common. Can you update
+>> the binding doc to be clear here.
+>
+> By inconsisnent, you mean you want patch below?
 
-i'm afraid my checkpatch.pl doesn't find this issue. I'll fix it in the next
-version.
+Yes.
 
-Stefan
+>> Also, aren't you missing label properties?
+>
+> label is optional, and as my driver does not yet use it, I forgot
+> about it.
+
+Based on your node names, there are obviously user defined functions
+for them already. So they should have labels whether or not the driver
+uses them.
+
+Rob
+
+> Signed-off-by: Pavel Machek <pavel@ucw.cz>
+>
+> index 2c6c7c5..92d4dac 100644
+> --- a/Documentation/devicetree/bindings/leds/common.txt
+> +++ b/Documentation/devicetree/bindings/leds/common.txt
+> @@ -15,7 +15,6 @@ Optional properties for child nodes:
+>       "timer" - LED flashes at a fixed, configurable rate
+>
+>  - max-microamp : maximum intensity in microamperes of the LED
+> -                (torch LED for flash devices)
+>  - flash-max-microamp : maximum intensity in microamperes of the
+>                         flash LED; it is mandatory if the LED should
+>                        support the flash mode
+>
+>
+> --
+> (english) http://www.livejournal.com/~pavelmachek
+> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
