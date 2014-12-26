@@ -1,98 +1,191 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] iio: mxs-lradc: check ranges of ts properties
-Date: Fri, 26 Dec 2014 09:23:17 +0000
-Message-ID: <549D2905.4050801@kernel.org>
-References: <1419250476-2393-1-git-send-email-stefan.wahren@i2se.com> <1419250476-2393-3-git-send-email-stefan.wahren@i2se.com>
+From: Josh Wu <josh.wu@atmel.com>
+Subject: Re: [PATCH 1/4] mtd: nand: atmel: Rework driver to separate nfc and
+ nand nodes
+Date: Fri, 26 Dec 2014 17:28:08 +0800
+Message-ID: <549D2A28.7000606@atmel.com>
+References: <1417732214-3292-1-git-send-email-boris.brezillon@free-electrons.com> <1417732214-3292-2-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1419250476-2393-3-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Cc: festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kristina.martsenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1417732214-3292-2-git-send-email-boris.brezillon@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, linux-mtd@lists.infradead.org, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 22/12/14 12:14, Stefan Wahren wrote:
-> The devicetree binding for mxs-lradc defines ranges for the
-> touchscreen properties. In order to avoid unexpected behavior like
-> division by zero, we better check these ranges during probe and
-> abort in error case.
-> 
-> Additionally this patch adds an important note from the reference
-> manual about the range of sample delay.
-> 
-> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Hi, Boris
+
+On 12/5/2014 6:30 AM, Boris Brezillon wrote:
+> mtd: nand: atmel: Update DT documentation after splitting NFC and NAND
+>
+> The NAND and NFC (NAND Flash Controller) were linked together with a
+> parent <-> child relationship.
+>
+> This model has several drawbacks:
+> - it does not allow for multiple NAND chip handling while the controller
+>    support multi-chip (even though the driver is not ready yet)
+> - it mixes NAND partitions and NFC nodes at the same level (which is a bit
+>    disturbing)
+> - the introduction of the EBI bus implies defining NAND chips under the
+>    EBI node, and the ranges available under the EBI node should be
+>    restricted to EBI address space, while the NFC references several
+>    registers outside of these EBI ranges.
+>
+> Move the NFC node outside of the NAND node, to get a more future-proof
+> DT representation.
+>
+> Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
+I'm fine with this patch.
+Acked-by: Josh Wu <josh.wu@atmel.com>
+
+Best Regards,
+Josh Wu
+
 > ---
->  drivers/staging/iio/adc/mxs-lradc.c |   44 +++++++++++++++++++++++++++--------
->  1 file changed, 34 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/staging/iio/adc/mxs-lradc.c b/drivers/staging/iio/adc/mxs-lradc.c
-> index f053535..990e945 100644
-> --- a/drivers/staging/iio/adc/mxs-lradc.c
-> +++ b/drivers/staging/iio/adc/mxs-lradc.c
-> @@ -436,7 +436,13 @@ static void mxs_lradc_setup_ts_channel(struct mxs_lradc *lradc, unsigned ch)
->  	 */
->  	mxs_lradc_reg_clear(lradc, LRADC_CH_VALUE_MASK, LRADC_CH(ch));
->  
-> -	/* prepare the delay/loop unit according to the oversampling count */
-> +	/* prepare the delay/loop unit according to the oversampling count
-> +	 *
-> +	 * from the datasheet:
-> +	 * "The DELAY fields in HW_LRADC_DELAY0, HW_LRADC_DELAY1,
-> +	 * HW_LRADC_DELAY2, and HW_LRADC_DELAY3 must be non-zero; otherwise,
-> +	 * the LRADC will not trigger the delay group."
+>   drivers/mtd/nand/atmel_nand.c | 76 ++++++++++++++++++++++++++++++++++---------
+>   1 file changed, 61 insertions(+), 15 deletions(-)
+>
+> diff --git a/drivers/mtd/nand/atmel_nand.c b/drivers/mtd/nand/atmel_nand.c
+> index 19d1e9d..0239fe6 100644
+> --- a/drivers/mtd/nand/atmel_nand.c
+> +++ b/drivers/mtd/nand/atmel_nand.c
+> @@ -123,6 +123,7 @@ struct atmel_nand_host {
+>   	struct dma_chan		*dma_chan;
+>   
+>   	struct atmel_nfc	*nfc;
+> +	bool			wait_for_nfc;
+>   
+>   	bool			has_pmecc;
+>   	u8			pmecc_corr_cap;
+> @@ -1423,6 +1424,12 @@ static void atmel_nand_hwctl(struct mtd_info *mtd, int mode)
+>   		ecc_writel(host->ecc, CR, ATMEL_ECC_RST);
+>   }
+>   
+> +static const struct of_device_id atmel_nand_nfc_match[] = {
+> +	{ .compatible = "atmel,sama5d3-nfc" },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, atmel_nand_nfc_match);
+> +
+>   static int atmel_of_init_port(struct atmel_nand_host *host,
+>   			      struct device_node *np)
+>   {
+> @@ -1431,6 +1438,7 @@ static int atmel_of_init_port(struct atmel_nand_host *host,
+>   	int ecc_mode;
+>   	struct atmel_nand_data *board = &host->board;
+>   	enum of_gpio_flags flags = 0;
+> +	struct device_node *child;
+>   
+>   	if (of_property_read_u32(np, "atmel,nand-addr-offset", &val) == 0) {
+>   		if (val >= 32) {
+> @@ -1467,8 +1475,30 @@ static int atmel_of_init_port(struct atmel_nand_host *host,
+>   
+>   	host->has_pmecc = of_property_read_bool(np, "atmel,has-pmecc");
+>   
+> -	/* load the nfc driver if there is */
+> -	of_platform_populate(np, NULL, NULL, host->dev);
+> +	/*
+> +	 * Backward compatibility with DTs defining the NFC node as their
+> +	 * child.
+> +	 * The new model reference the NFC so that we can define several
+> +	 * chip controlled by the same controller.
 > +	 */
->  	mxs_lradc_reg_wrt(lradc, LRADC_DELAY_TRIGGER(1 << ch) |
->  		LRADC_DELAY_TRIGGER_DELAYS(0) |
->  		LRADC_DELAY_LOOP(lradc->over_sample_cnt - 1) |
-> @@ -1495,20 +1501,38 @@ static int mxs_lradc_probe_touchscreen(struct mxs_lradc *lradc,
->  		return -EINVAL;
->  	}
->  
-> -	lradc->over_sample_cnt = 4;
-> -	ret = of_property_read_u32(lradc_node, "fsl,ave-ctrl", &adapt);
-> -	if (ret == 0)
-> +	if (of_property_read_u32(lradc_node, "fsl,ave-ctrl", &adapt)) {
-> +		lradc->over_sample_cnt = 4;
-> +	} else {
-> +		if (adapt < 1 || adapt > 32) {
-> +			dev_err(lradc->dev, "Invalid sample count (%lu)\n",
-> +				adapt);
-> +			return -EINVAL;
+> +	for_each_available_child_of_node(np, child) {
+> +		/*
+> +		 * If we find an NFC node under the NAND node, then populate
+> +		 * the device so that it can be probed, and wait for it.
+> +		 */
+> +		if (of_match_node(atmel_nand_nfc_match, child)) {
+> +			of_platform_populate(np, NULL, NULL, host->dev);
+> +			host->wait_for_nfc = true;
+> +			break;
 > +		}
->  		lradc->over_sample_cnt = adapt;
 > +	}
->  
-> -	lradc->over_sample_delay = 2;
-> -	ret = of_property_read_u32(lradc_node, "fsl,ave-delay", &adapt);
-> -	if (ret == 0)
-> +	if (of_property_read_u32(lradc_node, "fsl,ave-delay", &adapt)) {
-> +		lradc->over_sample_delay = 2;
-> +	} else {
-> +		if (adapt < 2 || adapt > LRADC_DELAY_DELAY_MASK+1) {
-please run checkpatch.pl over these.  Should be spaces around the +
-> +			dev_err(lradc->dev, "Invalid sample delay (%u)\n",
-> +				adapt);
-> +			return -EINVAL;
-> +		}
->  		lradc->over_sample_delay = adapt;
-> +	}
->  
-> -	lradc->settling_delay = 10;
-> -	ret = of_property_read_u32(lradc_node, "fsl,settling", &adapt);
-> -	if (ret == 0)
-> +	if (of_property_read_u32(lradc_node, "fsl,settling", &adapt)) {
-> +		lradc->settling_delay = 10;
-> +	} else {
-> +		if (adapt < 1 || adapt > LRADC_DELAY_DELAY_MASK) {
-> +			dev_err(lradc->dev, "Invalid settling delay (%u)\n",
-> +				adapt);
-> +			return -EINVAL;
-> +		}
->  		lradc->settling_delay = adapt;
-> +	}
->  
->  	return 0;
->  }
-> 
+> +
+> +	/*
+> +	 * If there's an atmel,nfc property we should access the NAND
+> +	 * through the NFC.
+> +	 */
+> +	if (of_property_read_bool(np, "atmel,nfc"))
+> +		host->wait_for_nfc = true;
+>   
+>   	if (!(board->ecc_mode == NAND_ECC_HW) || !host->has_pmecc)
+>   		return 0;	/* Not using PMECC */
+> @@ -2032,10 +2062,6 @@ static int atmel_nand_probe(struct platform_device *pdev)
+>   	if (!host)
+>   		return -ENOMEM;
+>   
+> -	res = platform_driver_register(&atmel_nand_nfc_driver);
+> -	if (res)
+> -		dev_err(&pdev->dev, "atmel_nand: can't register NFC driver\n");
+> -
+>   	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>   	host->io_base = devm_ioremap_resource(&pdev->dev, mem);
+>   	if (IS_ERR(host->io_base)) {
+> @@ -2089,6 +2115,13 @@ static int atmel_nand_probe(struct platform_device *pdev)
+>   			goto err_nand_ioremap;
+>   		}
+>   	} else {
+> +		/*
+> +		 * If the NFC is not initialized (or not probed) and the device
+> +		 * is asking to be accessed through the NFC then defer the
+> +		 * probe.
+> +		 */
+> +		if (host->wait_for_nfc)
+> +			return -EPROBE_DEFER;
+>   		res = atmel_nand_set_enable_ready_pins(mtd);
+>   		if (res)
+>   			goto err_nand_ioremap;
+> @@ -2230,8 +2263,6 @@ static int atmel_nand_remove(struct platform_device *pdev)
+>   	if (host->dma_chan)
+>   		dma_release_channel(host->dma_chan);
+>   
+> -	platform_driver_unregister(&atmel_nand_nfc_driver);
+> -
+>   	return 0;
+>   }
+>   
+> @@ -2303,12 +2334,6 @@ static int atmel_nand_nfc_remove(struct platform_device *pdev)
+>   	return 0;
+>   }
+>   
+> -static const struct of_device_id atmel_nand_nfc_match[] = {
+> -	{ .compatible = "atmel,sama5d3-nfc" },
+> -	{ /* sentinel */ }
+> -};
+> -MODULE_DEVICE_TABLE(of, atmel_nand_nfc_match);
+> -
+>   static struct platform_driver atmel_nand_nfc_driver = {
+>   	.driver = {
+>   		.name = "atmel_nand_nfc",
+> @@ -2329,7 +2354,28 @@ static struct platform_driver atmel_nand_driver = {
+>   	},
+>   };
+>   
+> -module_platform_driver(atmel_nand_driver);
+> +static int __init atmel_nand_init(void)
+> +{
+> +	int ret;
+> +
+> +	ret = platform_driver_register(&atmel_nand_nfc_driver);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = platform_driver_register(&atmel_nand_driver);
+> +	if (ret)
+> +		platform_driver_unregister(&atmel_nand_nfc_driver);
+> +
+> +	return ret;
+> +}
+> +module_init(atmel_nand_init);
+> +
+> +static void __exit atmel_nand_exit(void)
+> +{
+> +	platform_driver_unregister(&atmel_nand_driver);
+> +	platform_driver_unregister(&atmel_nand_nfc_driver);
+> +}
+> +module_exit(atmel_nand_exit);
+>   
+>   MODULE_LICENSE("GPL");
+>   MODULE_AUTHOR("Rick Bronson");
