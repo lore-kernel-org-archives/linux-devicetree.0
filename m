@@ -1,280 +1,122 @@
-From: Eddie Huang <eddie.huang@mediatek.com>
-Subject: [PATCH v3 3/4] arm64: dts: Add mediatek MT8173 SoC and evaluation
- board dts and Makefile
-Date: Fri, 26 Dec 2014 16:26:56 +0800
-Message-ID: <1419582417-4448-4-git-send-email-eddie.huang@mediatek.com>
-References: <1419582417-4448-1-git-send-email-eddie.huang@mediatek.com>
+From: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v2 3/3] ARM: dts: berlin: correct BG2Q's SM GPIO location.
+Date: Fri, 26 Dec 2014 16:58:01 +0800
+Message-ID: <1419584281-4811-4-git-send-email-jszhang@marvell.com>
+References: <1419584281-4811-1-git-send-email-jszhang@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1419582417-4448-1-git-send-email-eddie.huang@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Jason Cooper <jason@lakedaemon.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, marc.zyngier@arm.com, Catalin Marinas <catalin.marinas@arm.com>, Mark Brown <broonie@linaro.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Robert Richter <rrichter@cavium.com>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, "Joe.C" <yingjoe.chen@mediatek.com>, Thomas Gleixner <tglx@linutronix.de>, Eddie Huang <eddie.huang@mediatek.com>, peter.maydell@linaro.org, linux-arm-kernel@lists.infradead.org, yh.chen@mediatek.com
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1419584281-4811-1-git-send-email-jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree support for MT8173 SoC and evaluation board based on it.
+The gpio4 and gpio5 are in 0xf7fc0000 apb which is located in the SM domain.
+This patch moves gpio4 and gpio5 to the correct location. This patch also
+renames them as the following to match the names we internally used in
+marvell:
+	gpio4 -> sm_gpio1
+	gpio5 -> sm_gpio0
+	porte -> portf
+	portf -> porte
 
-Signed-off-by: Eddie Huang <eddie.huang@mediatek.com>
+This also matches what we did for BG2 and BG2CD's SM GPIO.
+
+Signed-off-by: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 ---
- arch/arm64/boot/dts/Makefile                |   1 +
- arch/arm64/boot/dts/mediatek/Makefile       |   5 +
- arch/arm64/boot/dts/mediatek/mt8173-evb.dts |  34 ++++++
- arch/arm64/boot/dts/mediatek/mt8173.dtsi    | 159 ++++++++++++++++++++++++++++
- 4 files changed, 199 insertions(+)
- create mode 100644 arch/arm64/boot/dts/mediatek/Makefile
- create mode 100644 arch/arm64/boot/dts/mediatek/mt8173-evb.dts
- create mode 100644 arch/arm64/boot/dts/mediatek/mt8173.dtsi
+ arch/arm/boot/dts/berlin2q.dtsi | 60 ++++++++++++++++++++---------------------
+ 1 file changed, 30 insertions(+), 30 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
-index 3b8d427..89124e4 100644
---- a/arch/arm64/boot/dts/Makefile
-+++ b/arch/arm64/boot/dts/Makefile
-@@ -2,6 +2,7 @@ dts-dirs += amd
- dts-dirs += apm
- dts-dirs += arm
- dts-dirs += cavium
-+dts-dirs += mediatek
+diff --git a/arch/arm/boot/dts/berlin2q.dtsi b/arch/arm/boot/dts/berlin2q.dtsi
+index 41a683f..f0ddbec 100644
+--- a/arch/arm/boot/dts/berlin2q.dtsi
++++ b/arch/arm/boot/dts/berlin2q.dtsi
+@@ -356,36 +356,6 @@
+ 				interrupt-parent = <&gic>;
+ 				interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
+ 			};
+-
+-			gpio4: gpio@5000 {
+-				compatible = "snps,dw-apb-gpio";
+-				reg = <0x5000 0x400>;
+-				#address-cells = <1>;
+-				#size-cells = <0>;
+-
+-				porte: gpio-port@4 {
+-					compatible = "snps,dw-apb-gpio-port";
+-					gpio-controller;
+-					#gpio-cells = <2>;
+-					snps,nr-gpios = <32>;
+-					reg = <0>;
+-				};
+-			};
+-
+-			gpio5: gpio@c000 {
+-				compatible = "snps,dw-apb-gpio";
+-				reg = <0xc000 0x400>;
+-				#address-cells = <1>;
+-				#size-cells = <0>;
+-
+-				portf: gpio-port@5 {
+-					compatible = "snps,dw-apb-gpio-port";
+-					gpio-controller;
+-					#gpio-cells = <2>;
+-					snps,nr-gpios = <32>;
+-					reg = <0>;
+-				};
+-			};
+ 		};
  
- always		:= $(dtb-y)
- subdir-y	:= $(dts-dirs)
-diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
-new file mode 100644
-index 0000000..3ce2462
---- /dev/null
-+++ b/arch/arm64/boot/dts/mediatek/Makefile
-@@ -0,0 +1,5 @@
-+dtb-$(CONFIG_ARCH_MEDIATEK) += mt8173-evb.dtb
+ 		chip: chip-control@ea0000 {
+@@ -474,6 +444,21 @@
+ 			ranges = <0 0xfc0000 0x10000>;
+ 			interrupt-parent = <&sic>;
+ 
++			sm_gpio1: gpio@5000 {
++				compatible = "snps,dw-apb-gpio";
++				reg = <0x5000 0x400>;
++				#address-cells = <1>;
++				#size-cells = <0>;
 +
-+always		:= $(dtb-y)
-+subdir-y	:= $(dts-dirs)
-+clean-files	:= *.dtb
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-new file mode 100644
-index 0000000..b8b2621
---- /dev/null
-+++ b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-@@ -0,0 +1,34 @@
-+/*
-+ * Copyright (c) 2014 MediaTek Inc.
-+ * Author: Eddie Huang <eddie.huang@mediatek.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+/dts-v1/;
-+#include "mt8173.dtsi"
-+
-+/ {
-+	model = "mediatek,mt8173-evb";
-+
-+	aliases {
-+		serial0 = &uart0;
-+		serial1 = &uart1;
-+		serial2 = &uart2;
-+		serial3 = &uart3;
-+	};
-+
-+	memory@40000000 {
-+		device_type = "memory";
-+		reg = <0 0x40000000 0 0x80000000>;
-+	};
-+
-+	chosen { };
-+};
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-new file mode 100644
-index 0000000..a4ea0b3
---- /dev/null
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -0,0 +1,159 @@
-+/*
-+ * Copyright (c) 2014 MediaTek Inc.
-+ * Author: Eddie Huang <eddie.huang@mediatek.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+/ {
-+	compatible = "mediatek,mt8173";
-+	interrupt-parent = <&sysirq>;
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu-map {
-+			cluster0 {
-+				core0 {
-+					cpu = <&cpu0>;
-+				};
-+				core1 {
-+					cpu = <&cpu1>;
++				portf: gpio-port@5 {
++					compatible = "snps,dw-apb-gpio-port";
++					gpio-controller;
++					#gpio-cells = <2>;
++					snps,nr-gpios = <32>;
++					reg = <0>;
 +				};
 +			};
 +
-+			cluster1 {
-+				core0 {
-+					cpu = <&cpu2>;
-+				};
-+				core1 {
-+					cpu = <&cpu3>;
+ 			i2c2: i2c@7000 {
+ 				compatible = "snps,designware-i2c";
+ 				#address-cells = <1>;
+@@ -524,6 +509,21 @@
+ 				status = "disabled";
+ 			};
+ 
++			sm_gpio0: gpio@c000 {
++				compatible = "snps,dw-apb-gpio";
++				reg = <0xc000 0x400>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				porte: gpio-port@4 {
++					compatible = "snps,dw-apb-gpio-port";
++					gpio-controller;
++					#gpio-cells = <2>;
++					snps,nr-gpios = <32>;
++					reg = <0>;
 +				};
 +			};
-+		};
 +
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			reg = <0x000>;
-+		};
-+
-+		cpu1: cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			reg = <0x001>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu2: cpu@100 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a57";
-+			reg = <0x100>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu3: cpu@101 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a57";
-+			reg = <0x101>;
-+			enable-method = "psci";
-+		};
-+	};
-+
-+	psci {
-+		compatible = "arm,psci";
-+		method = "smc";
-+		cpu_suspend   = <0x84000001>;
-+		cpu_off	      = <0x84000002>;
-+		cpu_on	      = <0x84000003>;
-+	};
-+
-+	uart_clk: dummy26m {
-+		compatible = "fixed-clock";
-+		clock-frequency = <26000000>;
-+		#clock-cells = <0>;
-+	};
-+
-+	timer {
-+		compatible = "arm,armv8-timer";
-+		interrupt-parent = <&gic>;
-+		interrupts = <GIC_PPI 13
-+			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 14
-+			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 11
-+			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 10
-+			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
-+	};
-+
-+	soc {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		compatible = "simple-bus";
-+		ranges;
-+
-+		sysirq: intpol-controller@10200620 {
-+			compatible = "mediatek,mt8173-sysirq", "mediatek,mt6577-sysirq";
-+			interrupt-controller;
-+			#interrupt-cells = <3>;
-+			interrupt-parent = <&gic>;
-+			reg = <0 0x10200620 0 0x20>;
-+		};
-+
-+		gic: interrupt-controller@10220000 {
-+			compatible = "arm,gic-400";
-+			#interrupt-cells = <3>;
-+			interrupt-parent = <&gic>;
-+			interrupt-controller;
-+			reg = <0 0x10221000 0 0x1000>,
-+			      <0 0x10222000 0 0x2000>,
-+			      <0 0x10224000 0 0x2000>,
-+			      <0 0x10226000 0 0x2000>;
-+			interrupts = <GIC_PPI 9
-+				(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
-+		};
-+
-+		uart0: serial@11002000 {
-+			compatible = "mediatek,mt8173-uart","mediatek,mt6577-uart";
-+			reg = <0 0x11002000 0 0x400>;
-+			interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_LOW>;
-+			clocks = <&uart_clk>;
-+		};
-+
-+		uart1: serial@11003000 {
-+			compatible = "mediatek,mt8173-uart","mediatek,mt6577-uart";
-+			reg = <0 0x11003000 0 0x400>;
-+			interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_LOW>;
-+			clocks = <&uart_clk>;
-+		};
-+
-+		uart2: serial@11004000 {
-+			compatible = "mediatek,mt8173-uart","mediatek,mt6577-uart";
-+			reg = <0 0x11004000 0 0x400>;
-+			interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_LOW>;
-+			clocks = <&uart_clk>;
-+		};
-+
-+		uart3: serial@11005000 {
-+			compatible = "mediatek,mt8173-uart","mediatek,mt6577-uart";
-+			reg = <0 0x11005000 0 0x400>;
-+			interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_LOW>;
-+			clocks = <&uart_clk>;
-+		};
-+	};
-+
-+};
-+
+ 			sysctrl: pin-controller@d000 {
+ 				compatible = "marvell,berlin2q-system-ctrl";
+ 				reg = <0xd000 0x100>;
 -- 
-1.8.1.1
+2.1.4
 
-************* Email Confidentiality Notice ********************
-The information contained in this e-mail message (including any 
-attachments) may be confidential, proprietary, privileged, or otherwise
-exempt from disclosure under applicable laws. It is intended to be 
-conveyed only to the designated recipient(s). Any use, dissemination, 
-distribution, printing, retaining or copying of this e-mail (including its 
-attachments) by unintended recipient(s) is strictly prohibited and may 
-be unlawful. If you are not an intended recipient of this e-mail, or believe 
-that you have received this e-mail in error, please notify the sender 
-immediately (by replying to this e-mail), delete any and all copies of 
-this e-mail (including any attachments) from your system, and do not
-disclose the content of this e-mail to any other person. Thank you!
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
