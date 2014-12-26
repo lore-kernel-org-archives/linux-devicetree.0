@@ -1,104 +1,67 @@
-From: Flora Fu <flora.fu@mediatek.com>
-Subject: [PATCH v4 4/6] dt-bindings: Add document for MT6397 MFD
-Date: Fri, 26 Dec 2014 15:09:26 +0800
-Message-ID: <1419577768-12037-5-git-send-email-flora.fu@mediatek.com>
-References: <1419577768-12037-1-git-send-email-flora.fu@mediatek.com>
+From: Eddie Huang <eddie.huang@mediatek.com>
+Subject: [PATCH v3 1/4] Document: DT: Add bindings for mediatek MT8173 Soc
+ Platform
+Date: Fri, 26 Dec 2014 16:26:54 +0800
+Message-ID: <1419582417-4448-2-git-send-email-eddie.huang@mediatek.com>
+References: <1419582417-4448-1-git-send-email-eddie.huang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1419577768-12037-1-git-send-email-flora.fu@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, arm@kernel.org, Arnd Bergmann <arnd@arndb.de>
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Olof Johansson <olof@lixom.net>, Flora Fu <flora.fu@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Dongdong Cheng <dongdong.cheng@mediatek.com>, HenryC Chen <henryc.chen@mediatek.com>, Menghui Lin <menghui.lin@mediatek.com>, Chen Zhong <chen.zhong@mediatek.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1419582417-4448-1-git-send-email-eddie.huang@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Jason Cooper <jason@lakedaemon.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, marc.zyngier@arm.com, Catalin Marinas <catalin.marinas@arm.com>, Mark Brown <broonie@linaro.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Robert Richter <rrichter@cavium.com>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, "Joe.C" <yingjoe.chen@mediatek.com>, Thomas Gleixner <tglx@linutronix.de>, Eddie Huang <eddie.huang@mediatek.com>, peter.maydell@linaro.org, linux-arm-kernel@lists.infradead.org, yh.chen@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
+Add the devicetree binding document for mediatek MT8173 SoC.
+This is a 64-bit four core Soc.
+And mt8173-evb is a evaluation board based on mt8173.
 
-Signed-off-by: Flora Fu <flora.fu@mediatek.com>
+Signed-off-by: Eddie Huang <eddie.huang@mediatek.com>
 ---
- Documentation/devicetree/bindings/mfd/mt6397.txt | 75 ++++++++++++++++++++++++
- 1 file changed, 75 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/mt6397.txt
+ Documentation/devicetree/bindings/arm/mediatek.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mfd/mt6397.txt b/Documentation/devicetree/bindings/mfd/mt6397.txt
-new file mode 100644
-index 0000000..64ef408
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/mt6397.txt
-@@ -0,0 +1,75 @@
-+MediaTek MT6397 Multifunction Device Driver
-+
-+MT6397 is a multifunction device with the following sub modules:
-+- Regulator
-+- RTC
-+- Audio codec
-+- GPIO
-+- Clock
-+
-+It is interfaced to host controller using SPI interface by a proprietary hardware
-+called PMIC wrapper or pwrap. MT6397 MFD is a child device of pwrap.
-+See the following for pwarp node definitions:
-+Documentation/devicetree/bindings/soc/mediatek,mt8135-pwrap.txt
-+
-+This document describes the binding for mfd device and its sub module.
-+
-+Required properties:
-+compatible: "mediatek,mt6397"
-+
-+Optional properties:
-+- codec: Audio codec
-+- pinctrl: GPIO in mt6397
-+- rtc: RTC
-+- clock: clocks in mt6397
-+- regulators: regulators in mt6397
-+
-+Example:
-+	pwrap: pwrap@1000f000 {
-+		compatible = "mediatek,mt8135-pwrap";
-+		reg = <0 0x1000f000 0 0x1000>,
-+			<0 0x11017000 0 0x1000>;
-+		reg-names = "pwrap-base", "pwrap-bridge-base";
-+		interrupts = <GIC_SPI 128 IRQ_TYPE_LEVEL_HIGH>;
-+		resets = <&infrarst MT8135_INFRA_PMIC_WRAP_RST>,
-+				<&perirst MT8135_PERI_PWRAP_BRIDGE_SW_RST>;
-+		reset-names = "infra-pwrap-rst",
-+				"peri-pwrap-bridge-rst";
-+		clocks = <&pmicspi_sel>, <&clk26m>;
-+		clock-names = "pmicspi-sel", "pmicspi-parent";
-+
-+		pmic {
-+			compatible = "mediatek,mt6397";
-+
-+			codec: mt6397codec {
-+				compatible = "mediatek,mt6397-codec";
-+			};
-+
-+			pinctrl@0x0000C000 {
-+				compatible = "mediatek,mt6397-pinctrl";
-+				reg = <0 0x0000C000 0 0x0108>;
-+				gpio-controller;
-+			};
-+
-+			mt6397regulator: mt6397regulator {
-+				compatible = "mediatek,mt6397-regulator";
-+
-+				mt6397_vpca15_reg: buck_vpca15 {
-+					regulator-compatible = "buck_vpca15";
-+					regulator-name = "vpca15";
-+					regulator-min-microvolt = < 850000>;
-+					regulator-max-microvolt = <1400000>;
-+					regulator-ramp-delay = <12500>;
-+					regulator-always-on;
-+				};
-+
-+				mt6397_vgp4_reg: ldo_vgp4 {
-+					regulator-compatible = "ldo_vgp4";
-+					regulator-name = "vgp4";
-+					regulator-min-microvolt = <1200000>;
-+					regulator-max-microvolt = <3300000>;
-+					regulator-enable-ramp-delay = <218>;
-+				};
-+			};
-+		};
-+	};
+diff --git a/Documentation/devicetree/bindings/arm/mediatek.txt b/Documentation/devicetree/bindings/arm/mediatek.txt
+index 3be4013..dd7550a 100644
+--- a/Documentation/devicetree/bindings/arm/mediatek.txt
++++ b/Documentation/devicetree/bindings/arm/mediatek.txt
+@@ -9,6 +9,7 @@ compatible: Must contain one of
+    "mediatek,mt6592"
+    "mediatek,mt8127"
+    "mediatek,mt8135"
++   "mediatek,mt8173"
+ 
+ 
+ Supported boards:
+@@ -25,3 +26,6 @@ Supported boards:
+ - MTK mt8135 tablet EVB:
+     Required root node properties:
+       - compatible = "mediatek,mt8135-evbp1", "mediatek,mt8135";
++- MTK mt8173 tablet EVB:
++    Required root node properties:
++      - compatible = "mediatek,mt8173-evb", "mediatek,mt8173";
 -- 
-1.8.1.1.dirty
+1.8.1.1
+
+************* Email Confidentiality Notice ********************
+The information contained in this e-mail message (including any 
+attachments) may be confidential, proprietary, privileged, or otherwise
+exempt from disclosure under applicable laws. It is intended to be 
+conveyed only to the designated recipient(s). Any use, dissemination, 
+distribution, printing, retaining or copying of this e-mail (including its 
+attachments) by unintended recipient(s) is strictly prohibited and may 
+be unlawful. If you are not an intended recipient of this e-mail, or believe 
+that you have received this e-mail in error, please notify the sender 
+immediately (by replying to this e-mail), delete any and all copies of 
+this e-mail (including any attachments) from your system, and do not
+disclose the content of this e-mail to any other person. Thank you!
