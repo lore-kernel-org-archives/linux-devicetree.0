@@ -1,41 +1,121 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: [PATCH 2/5] mfd: tps65218: make INT1 our status_base register
-Date: Fri, 26 Dec 2014 13:28:21 -0600
-Message-ID: <1419622104-25812-3-git-send-email-balbi@ti.com>
-References: <1419622104-25812-1-git-send-email-balbi@ti.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v2 1/2] of/pci: add of_pci_dma_configure() update dma configuration
+Date: Fri, 26 Dec 2014 13:33:23 -0600
+Message-ID: <CAL_JsqJtVnP_5zAiUvMwL00JQV0mjw-R_hEkxiv13ZuNrQ8nAA@mail.gmail.com>
+References: <1419459099-6667-1-git-send-email-m-karicheri2@ti.com> <1419459099-6667-2-git-send-email-m-karicheri2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <1419622104-25812-1-git-send-email-balbi@ti.com>
-Sender: stable-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>
-Cc: Linux OMAP Mailing List <linux-omap@vger.kernel.org>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>, Felipe Balbi <balbi@ti.com>, stable@vger.kernel.org, Keerthy <j-keerthy@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1419459099-6667-2-git-send-email-m-karicheri2@ti.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Murali Karicheri <m-karicheri2@ti.com>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Will Deacon <will.deacon@arm.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-If we don't tell regmap-irq that our first status
-register is at offset 1, it will try to read offset
-zero, which is the chipid register.
+On Wed, Dec 24, 2014 at 4:11 PM, Murali Karicheri <m-karicheri2@ti.com> wrote:
+> Add of_pci_dma_configure() to allow updating the dma configuration
+> of the pci device using the configuration from DT of the parent of
+> the root bridge device.
+>
+> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+> ---
+>  drivers/of/of_pci.c    |   73 ++++++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/of_pci.h |   12 ++++++++
+>  2 files changed, 85 insertions(+)
+>
+> diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
+> index 88471d3..6d43f59 100644
+> --- a/drivers/of/of_pci.c
+> +++ b/drivers/of/of_pci.c
+> @@ -229,6 +229,79 @@ parse_failed:
+>         return err;
+>  }
+>  EXPORT_SYMBOL_GPL(of_pci_get_host_bridge_resources);
+> +
+> +/**
+> + * of_get_pci_root_bridge_parent - Helper function to get the OF node of
+> + *             the root bridge's parent
 
-Fixes: 44b4dc6 mfd: tps65218: Add driver for the TPS65218 PMIC
-Cc: <stable@vger.kernel.org> # v3.15+
-Cc: Keerthy <j-keerthy@ti.com>
-Cc: Lee Jones <lee.jones@linaro.org>
-Signed-off-by: Felipe Balbi <balbi@ti.com>
----
- drivers/mfd/tps65218.c | 1 +
- 1 file changed, 1 insertion(+)
+I believe this has to be a one line description for DocBook.
 
-diff --git a/drivers/mfd/tps65218.c b/drivers/mfd/tps65218.c
-index 2243f75..d6b7643 100644
---- a/drivers/mfd/tps65218.c
-+++ b/drivers/mfd/tps65218.c
-@@ -204,6 +204,7 @@ static struct regmap_irq_chip tps65218_irq_chip = {
- 
- 	.num_regs = 2,
- 	.mask_base = TPS65218_REG_INT_MASK1,
-+	.status_base = TPS65218_REG_INT1,
- };
- 
- static const struct of_device_id of_tps65218_match_table[] = {
--- 
-2.2.0
+> + * @dev: ptr to pci_dev struct of the pci device
+> + *
+> + * This function will traverse the bus up to the root bus starting with
+> + * the child and return the of node ptr to bridge device's parent device.
+> + */
+> +struct device_node *of_get_pci_root_bridge_parent(struct pci_dev *dev)
+> +{
+> +       struct pci_bus *bus = dev->bus;
+> +       struct device *bridge;
+> +
+> +       while (!pci_is_root_bus(bus))
+> +               bus = bus->parent;
+> +       bridge = bus->bridge;
+> +
+> +       return bridge->parent->of_node;
+> +}
+> +EXPORT_SYMBOL_GPL(of_get_pci_root_bridge_parent);
+> +
+> +/**
+> + * of_pci_dma_configure - Setup DMA configuration
+> + * @dev: ptr to pci_dev struct of the pci device
+> + *
+> + * Try to get PCI devices's DMA configuration from DT and update it
+> + * accordingly. This is similar to of_dma_configure() in of/platform.c
+> + */
+> +void of_pci_dma_configure(struct pci_dev *pci_dev)
+> +{
+> +       struct device *dev = &pci_dev->dev;
+> +       u64 dma_addr, paddr, size;
+> +       struct device_node *parent_np;
+> +       unsigned long offset;
+> +       bool coherent;
+> +       int ret;
+> +
+> +       parent_np = of_get_pci_root_bridge_parent(pci_dev);
+> +
+> +       if (parent_np) {
+
+Save a level of indentation and do:
+
+if (!parent_np)
+  return;
+
+> +               /*
+> +                * Set default dma-mask to 32 bit. Drivers are expected to setup
+> +                * the correct supported dma_mask.
+> +                */
+> +               dev->coherent_dma_mask = DMA_BIT_MASK(32);
+> +
+> +               /*
+> +                * Set it to coherent_dma_mask by default if the architecture
+> +                * code has not set it.
+> +                */
+> +               if (!dev->dma_mask)
+> +                       dev->dma_mask = &dev->coherent_dma_mask;
+> +
+> +               ret = of_dma_get_range(parent_np, &dma_addr, &paddr, &size);
+> +               if (ret < 0) {
+> +                       dma_addr = offset = 0;
+> +                       size = dev->coherent_dma_mask + 1;
+> +               } else {
+> +                       offset = PFN_DOWN(paddr - dma_addr);
+> +                       dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", offset);
+> +               }
+> +               dev->dma_pfn_offset = offset;
+> +
+> +               coherent = of_dma_is_coherent(parent_np);
+> +               dev_dbg(dev, "device is%sdma coherent\n",
+> +                       coherent ? " " : " not ");
+> +
+> +               arch_setup_dma_ops(dev, dma_addr, size, NULL, coherent);
+
+This is the same code as of_dma_configure. The only difference I see
+is which node ptr is passed to of_dma_get_range. You need to make that
+a function param of of_dma_configure.
+
+of_dma_configure also has iommu handling now. You will probably need
+something similar for PCI in that you setup an iommu based on the root
+bus DT properties.
+
+Rob
