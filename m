@@ -1,37 +1,67 @@
-From: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v2 0/3] ARM: dts: berlin: add PMU and twd's cpu mask and fix GPIO locations
-Date: Fri, 26 Dec 2014 16:57:58 +0800
-Message-ID: <1419584281-4811-1-git-send-email-jszhang@marvell.com>
+From: Jisheng Zhang <jszhang@marvell.com>
+Subject: [PATCH v2 2/3] ARM: dts: berlin: add PPI cpu mask to twd timer interrupts
+Date: Fri, 26 Dec 2014 16:58:00 +0800
+Message-ID: <1419584281-4811-3-git-send-email-jszhang@marvell.com>
+References: <1419584281-4811-1-git-send-email-jszhang@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1419584281-4811-1-git-send-email-jszhang@marvell.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, sebastian.hesselbarth@gmail.com, antoine.tenart@free-electrons.com, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jisheng Zhang <jszhang@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-These patches try to improve dts for berlin. One of them enables PMU support
-to BG2Q and BG2CD SoCs. One of them adds the missing PPI cpu mask to twd timer
-interrupts. The last one corrects the SM GPIOs' location for BG2Q SoC.
+According to the gic binding document, "bits[15:8] PPI interrupt cpu
+mask.  Each bit corresponds to each of the 8 possible cpus attached to
+the GIC.  A bit set to '1' indicated the interrupt is wired to that
+CPU." This patch wants to add the PPI cpu mask for completeness.
 
-Changes since v1:
- - Adds some text to the log of the second commit
- - Adds the patch to fix SM GPIO locations
+Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
+---
+ arch/arm/boot/dts/berlin2.dtsi   | 2 +-
+ arch/arm/boot/dts/berlin2cd.dtsi | 2 +-
+ arch/arm/boot/dts/berlin2q.dtsi  | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-Jisheng Zhang (3):
-  ARM: dts: berlin: add pmu node for BG2Q and BG2CD
-  ARM: dts: berlin: add PPI cpu mask to twd timer interrupts
-  ARM: dts: berlin: correct BG2Q's SM GPIO location.
-
- arch/arm/boot/dts/berlin2.dtsi   |  2 +-
- arch/arm/boot/dts/berlin2cd.dtsi |  7 +++-
- arch/arm/boot/dts/berlin2q.dtsi  | 70 ++++++++++++++++++++++------------------
- 3 files changed, 46 insertions(+), 33 deletions(-)
-
+diff --git a/arch/arm/boot/dts/berlin2.dtsi b/arch/arm/boot/dts/berlin2.dtsi
+index 015a06c..63d00a6 100644
+--- a/arch/arm/boot/dts/berlin2.dtsi
++++ b/arch/arm/boot/dts/berlin2.dtsi
+@@ -104,7 +104,7 @@
+ 		local-timer@ad0600 {
+ 			compatible = "arm,cortex-a9-twd-timer";
+ 			reg = <0xad0600 0x20>;
+-			interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_HIGH)>;
+ 			clocks = <&chip CLKID_TWD>;
+ 		};
+ 
+diff --git a/arch/arm/boot/dts/berlin2cd.dtsi b/arch/arm/boot/dts/berlin2cd.dtsi
+index a318bc3..81b670a 100644
+--- a/arch/arm/boot/dts/berlin2cd.dtsi
++++ b/arch/arm/boot/dts/berlin2cd.dtsi
+@@ -76,7 +76,7 @@
+ 		local-timer@ad0600 {
+ 			compatible = "arm,cortex-a9-twd-timer";
+ 			reg = <0xad0600 0x20>;
+-			interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_HIGH)>;
+ 			clocks = <&chip CLKID_TWD>;
+ 		};
+ 
+diff --git a/arch/arm/boot/dts/berlin2q.dtsi b/arch/arm/boot/dts/berlin2q.dtsi
+index 933dcbb..41a683f 100644
+--- a/arch/arm/boot/dts/berlin2q.dtsi
++++ b/arch/arm/boot/dts/berlin2q.dtsi
+@@ -112,7 +112,7 @@
+ 			compatible = "arm,cortex-a9-twd-timer";
+ 			reg = <0xad0600 0x20>;
+ 			clocks = <&chip CLKID_TWD>;
+-			interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
+ 		};
+ 
+ 		gic: interrupt-controller@ad1000 {
 -- 
 2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
