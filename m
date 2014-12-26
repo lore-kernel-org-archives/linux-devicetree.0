@@ -1,14 +1,11 @@
 From: Eddie Huang <eddie.huang@mediatek.com>
-Subject: [PATCH v3 2/4] irqchip: mtk-sysirq: Get irq number from register
- resource size
-Date: Fri, 26 Dec 2014 16:26:55 +0800
-Message-ID: <1419582417-4448-3-git-send-email-eddie.huang@mediatek.com>
-References: <1419582417-4448-1-git-send-email-eddie.huang@mediatek.com>
+Subject: [PATCH v3 0/4] Add basic support for Mediatek MT8173 SoC
+Date: Fri, 26 Dec 2014 16:26:53 +0800
+Message-ID: <1419582417-4448-1-git-send-email-eddie.huang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1419582417-4448-1-git-send-email-eddie.huang@mediatek.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,75 +19,49 @@ To: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>,
 Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, marc.zyngier@arm.com, Catalin Marinas <catalin.marinas@arm.com>, Mark Brown <broonie@linaro.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Robert Richter <rrichter@cavium.com>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, "Joe.C" <yingjoe.chen@mediatek.com>, Thomas Gleixner <tglx@linutronix.de>, Eddie Huang <eddie.huang@mediatek.com>, peter.maydell@linaro.org, linux-arm-kernel@lists.infradead.org, yh.chen@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-From: Yingjoe Chen <yingjoe.chen@mediatek.com>
+MT8173 is a SoC based on 64bit ARMv8 architecture. It contains 2 CA53 + 2 CA57 cores.
+MT8173 share many HW IP with MT8135 and other MT65xx series. This patchset was tested
+on MT8173 engineer sample, and boot to shell ok.
 
-Originally mtk-sysirq hardcoded supported irq number to 224. This
-was fine since all SoCs before support the same number of irqs for
-intpol.
+This series contains document bindings, device tree, defconfig, and one sysirq
+modification for MT8173.
 
-However MT8173 intpol support 32 more irq pins, changes to get
-irq number from register resource size to suppor MT8173 properly.
+Changes in v3:
 
-Signed-off-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Signed-off-by: Eddie Huang <eddie.huang@mediatek.com>
----
- drivers/irqchip/irq-mtk-sysirq.c | 18 +++++++++++-------
- 1 file changed, 11 insertions(+), 7 deletions(-)
+1. Modify mt8173.dtsi according Mark Rutland review comment, CPU ID, PSCI and GIC address.
+2. Include interrupt dt-binding header files, replace interrupt number by enum value.
+3. Rebase to 3.19-rc1, create arch/arm64/boot/dts/mediatek folder to put mt8173.dtsi.
 
-diff --git a/drivers/irqchip/irq-mtk-sysirq.c b/drivers/irqchip/irq-mtk-sysirq.c
-index 0b0d2c0..fadd865 100644
---- a/drivers/irqchip/irq-mtk-sysirq.c
-+++ b/drivers/irqchip/irq-mtk-sysirq.c
-@@ -23,8 +23,6 @@
- 
- #include "irqchip.h"
- 
--#define MT6577_SYS_INTPOL_NUM	(224)
--
- struct mtk_sysirq_chip_data {
- 	spinlock_t lock;
- 	void __iomem *intpol_base;
-@@ -124,7 +122,8 @@ static int __init mtk_sysirq_of_init(struct device_node *node,
- {
- 	struct irq_domain *domain, *domain_parent;
- 	struct mtk_sysirq_chip_data *chip_data;
--	int ret = 0;
-+	struct resource res;
-+	int ret, size, intpol_num;
- 
- 	domain_parent = irq_find_host(parent);
- 	if (!domain_parent) {
-@@ -132,19 +131,24 @@ static int __init mtk_sysirq_of_init(struct device_node *node,
- 		return -EINVAL;
- 	}
- 
-+	ret = of_address_to_resource(node, 0, &res);
-+	if (ret)
-+		return ret;
-+
- 	chip_data = kzalloc(sizeof(*chip_data), GFP_KERNEL);
- 	if (!chip_data)
- 		return -ENOMEM;
- 
--	chip_data->intpol_base = of_io_request_and_map(node, 0, "intpol");
--	if (IS_ERR(chip_data->intpol_base)) {
-+	size = resource_size(&res);
-+	intpol_num = size * 8;
-+	chip_data->intpol_base = ioremap(res.start, size);
-+	if (!chip_data->intpol_base) {
- 		pr_err("mtk_sysirq: unable to map sysirq register\n");
- 		ret = PTR_ERR(chip_data->intpol_base);
- 		goto out_free;
- 	}
- 
--	domain = irq_domain_add_hierarchy(domain_parent, 0,
--					  MT6577_SYS_INTPOL_NUM, node,
-+	domain = irq_domain_add_hierarchy(domain_parent, 0, intpol_num, node,
- 					  &sysirq_domain_ops, chip_data);
- 	if (!domain) {
- 		ret = -ENOMEM;
--- 
-1.8.1.1
+This patch base on 3.19-rc1, Joe's sysirq patch [1] and test boot to shell with
+Catalin Marinas's arch_timer virtual counter patch [2]
+
+[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-December/310335.html
+[2] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-December/309856.html
+
+Eddie Huang (3):
+  Document: DT: Add bindings for mediatek MT8173 Soc Platform
+  arm64: dts: Add mediatek MT8173 SoC and evaluation board dts and
+    Makefile
+  arm64: mediatek: Add MT8173 SoC Kconfig and defconfig
+
+Yingjoe Chen (1):
+  irqchip: mtk-sysirq: Get irq number from register resource size
+
+ Documentation/devicetree/bindings/arm/mediatek.txt |   4 +
+ arch/arm64/Kconfig                                 |   6 +
+ arch/arm64/boot/dts/Makefile                       |   1 +
+ arch/arm64/boot/dts/mediatek/Makefile              |   5 +
+ arch/arm64/boot/dts/mediatek/mt8173-evb.dts        |  34 +++++
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi           | 159 +++++++++++++++++++++
+ arch/arm64/configs/defconfig                       |   2 +
+ drivers/irqchip/irq-mtk-sysirq.c                   |  18 ++-
+ 8 files changed, 222 insertions(+), 7 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/mediatek/Makefile
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8173-evb.dts
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8173.dtsi
+
+--
+1.8.1.1.dirty
 
 ************* Email Confidentiality Notice ********************
 The information contained in this e-mail message (including any 
