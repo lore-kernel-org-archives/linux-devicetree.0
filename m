@@ -1,121 +1,214 @@
-From: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/4] mtd: nand: atmel: Update DT documentation after splitting
- NFC and NAND
-Date: Fri, 26 Dec 2014 17:30:05 +0800
-Message-ID: <549D2A9D.50407@atmel.com>
-References: <1417732214-3292-1-git-send-email-boris.brezillon@free-electrons.com> <1417732214-3292-3-git-send-email-boris.brezillon@free-electrons.com>
+From: Josh Wu <josh.wu@atmel.com>
+Subject: Re: [PATCH 4/4] ARM: at91/dt: sama5: move NAND nodes into board dts/dtsi
+Date: Fri, 26 Dec 2014 17:45:51 +0800
+Message-ID: <549D2E4F.4090705@atmel.com>
+References: <1417732214-3292-1-git-send-email-boris.brezillon@free-electrons.com> <1417732214-3292-5-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1417732214-3292-3-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1417732214-3292-5-git-send-email-boris.brezillon@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, linux-mtd@lists.infradead.org, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Hi, Boris
 
-Thanks for the patch.
+On 12/5/2014 6:30 AM, Boris Brezillon wrote:
+> sama5d3 and sama5d4 SoCs provides several CS to interface with external
+> memories, and in particular NAND chips.
+> The NAND flash controller embedded in the these SoCs can connect to any of
+> the available CS (each CS is assigned a memory range, hence the nand@xxx
+> you're seeing in the DT), thus the NAND chip definition should be part of
+> the board description because we cannot guess at the SoC level which CS
+> will be chosen by the board designer.
+>
+> Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
+> ---
+>   arch/arm/boot/dts/at91-sama5d3_xplained.dts | 18 +++++++++++++++++-
+>   arch/arm/boot/dts/at91-sama5d4ek.dts        | 16 +++++++++++++++-
+>   arch/arm/boot/dts/sama5d3.dtsi              | 21 ---------------------
+>   arch/arm/boot/dts/sama5d3xcm.dtsi           | 18 +++++++++++++++++-
+>   arch/arm/boot/dts/sama5d4.dtsi              | 19 -------------------
+>   5 files changed, 49 insertions(+), 43 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/at91-sama5d3_xplained.dts b/arch/arm/boot/dts/at91-sama5d3_xplained.dts
+> index fec1fca..860258b 100644
+> --- a/arch/arm/boot/dts/at91-sama5d3_xplained.dts
+> +++ b/arch/arm/boot/dts/at91-sama5d3_xplained.dts
+> @@ -213,13 +213,29 @@
+>   		};
+>   
+>   		nand0: nand@60000000 {
+> +			compatible = "atmel,at91rm9200-nand";
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges;
+it would be better to leave this part to the sama5d3.dtsi.
 
-You need to rebase on the top of current mtd-l2 git tree. As I had some 
-change on the binding document.
+> +			reg = <	0x60000000 0x01000000	/* EBI CS3 */
+> +				0xffffc070 0x00000490	/* SMC PMECC regs */
+> +				0xffffc500 0x00000100	/* SMC PMECC Error Location regs */
+> +				0x00110000 0x00018000	/* ROM code */
+> +				>;
+> +			interrupts = <5 IRQ_TYPE_LEVEL_HIGH 6>;
+ditto.
+> +			atmel,nand-addr-offset = <21>;
+> +			atmel,nand-cmd-offset = <22>;
+> +			atmel,nand-has-dma;
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&pinctrl_nand0_ale_cle>;
+> +			atmel,pmecc-lookup-table-offset = <0x0 0x8000>;
+ditto.
 
+> +			atmel,nfc = <&nfc>;
+>   			nand-bus-width = <8>;
+>   			nand-ecc-mode = "hw";
+>   			atmel,has-pmecc;
+>   			atmel,pmecc-cap = <4>;
+>   			atmel,pmecc-sector-size = <512>;
+>   			nand-on-flash-bbt;
+> -			status = "okay";
+>   
+>   			at91bootstrap@0 {
+>   				label = "at91bootstrap";
+> diff --git a/arch/arm/boot/dts/at91-sama5d4ek.dts b/arch/arm/boot/dts/at91-sama5d4ek.dts
+> index b5b8400..5de0d2d 100644
+> --- a/arch/arm/boot/dts/at91-sama5d4ek.dts
+> +++ b/arch/arm/boot/dts/at91-sama5d4ek.dts
+> @@ -204,11 +204,25 @@
+>   		};
+>   
+>   		nand0: nand@80000000 {
+> +			compatible = "atmel,at91rm9200-nand";
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges;
+it would be better to leave this part to the sama5d4.dtsi.
+
+> +			reg = <	0x80000000 0x08000000	/* EBI CS3 */
+> +				0xfc05c070 0x00000490	/* SMC PMECC regs */
+> +				0xfc05c500 0x00000100	/* SMC PMECC Error Location regs */
+> +				>;
+> +			interrupts = <22 IRQ_TYPE_LEVEL_HIGH 6>;
+ditto.
+
+> +			atmel,nand-addr-offset = <21>;
+> +			atmel,nand-cmd-offset = <22>;
+> +			atmel,nand-has-dma;
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&pinctrl_nand>;
+> +			atmel,nfc = <&nfc>;
+>   			nand-bus-width = <8>;
+>   			nand-ecc-mode = "hw";
+>   			nand-on-flash-bbt;
+>   			atmel,has-pmecc;
+> -			status = "okay";
+>   
+>   			at91bootstrap@0 {
+>   				label = "at91bootstrap";
+> diff --git a/arch/arm/boot/dts/sama5d3.dtsi b/arch/arm/boot/dts/sama5d3.dtsi
+> index 1749853..0a944e0 100644
+> --- a/arch/arm/boot/dts/sama5d3.dtsi
+> +++ b/arch/arm/boot/dts/sama5d3.dtsi
+> @@ -1397,27 +1397,6 @@
+>   			status = "disabled";
+>   		};
+>   
+> -		nand0: nand@60000000 {
+> -			compatible = "atmel,at91rm9200-nand";
+> -			#address-cells = <1>;
+> -			#size-cells = <1>;
+> -			ranges;
+> -			reg = <	0x60000000 0x01000000	/* EBI CS3 */
+> -				0xffffc070 0x00000490	/* SMC PMECC regs */
+> -				0xffffc500 0x00000100	/* SMC PMECC Error Location regs */
+> -				0x00110000 0x00018000	/* ROM code */
+> -				>;
+> -			interrupts = <5 IRQ_TYPE_LEVEL_HIGH 6>;
+> -			atmel,nand-addr-offset = <21>;
+> -			atmel,nand-cmd-offset = <22>;
+> -			atmel,nand-has-dma;
+> -			pinctrl-names = "default";
+> -			pinctrl-0 = <&pinctrl_nand0_ale_cle>;
+> -			atmel,pmecc-lookup-table-offset = <0x0 0x8000>;
+> -			atmel,nfc = <&nfc>;
+> -			status = "disabled";
+> -		};
+> -
+>   		nfc: nfc@70000000 {
+>   			compatible = "atmel,sama5d3-nfc";
+>   			reg = <0x70000000 0x10000000	/* NFC Command Registers */
+> diff --git a/arch/arm/boot/dts/sama5d3xcm.dtsi b/arch/arm/boot/dts/sama5d3xcm.dtsi
+> index cfcd200..e6c2aec 100644
+> --- a/arch/arm/boot/dts/sama5d3xcm.dtsi
+> +++ b/arch/arm/boot/dts/sama5d3xcm.dtsi
+> @@ -76,13 +76,29 @@
+>   		};
+>   
+>   		nand0: nand@60000000 {
+> +			compatible = "atmel,at91rm9200-nand";
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges;
+it would be better to leave this part to the sama5d3.dtsi.
+
+> +			reg = <	0x60000000 0x01000000	/* EBI CS3 */
+> +				0xffffc070 0x00000490	/* SMC PMECC regs */
+> +				0xffffc500 0x00000100	/* SMC PMECC Error Location regs */
+> +				0x00110000 0x00018000	/* ROM code */
+> +				>;
+> +			interrupts = <5 IRQ_TYPE_LEVEL_HIGH 6>;
+ditto.
+> +			atmel,nand-addr-offset = <21>;
+> +			atmel,nand-cmd-offset = <22>;
+> +			atmel,nand-has-dma;
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&pinctrl_nand0_ale_cle>;
+> +			atmel,pmecc-lookup-table-offset = <0x0 0x8000>;
+ditto.
+
+> +			atmel,nfc = <&nfc>;
+>   			nand-bus-width = <8>;
+>   			nand-ecc-mode = "hw";
+>   			atmel,has-pmecc;
+>   			atmel,pmecc-cap = <4>;
+>   			atmel,pmecc-sector-size = <512>;
+>   			nand-on-flash-bbt;
+> -			status = "okay";
+>   
+>   			at91bootstrap@0 {
+>   				label = "at91bootstrap";
+> diff --git a/arch/arm/boot/dts/sama5d4.dtsi b/arch/arm/boot/dts/sama5d4.dtsi
+> index 3b5e9f1..8647eb3 100644
+> --- a/arch/arm/boot/dts/sama5d4.dtsi
+> +++ b/arch/arm/boot/dts/sama5d4.dtsi
+> @@ -265,25 +265,6 @@
+>   			cache-level = <2>;
+>   		};
+>   
+> -		nand0: nand@80000000 {
+> -			compatible = "atmel,at91rm9200-nand";
+> -			#address-cells = <1>;
+> -			#size-cells = <1>;
+> -			ranges;
+> -			reg = <	0x80000000 0x08000000	/* EBI CS3 */
+> -				0xfc05c070 0x00000490	/* SMC PMECC regs */
+> -				0xfc05c500 0x00000100	/* SMC PMECC Error Location regs */
+> -				>;
+> -			interrupts = <22 IRQ_TYPE_LEVEL_HIGH 6>;
+> -			atmel,nand-addr-offset = <21>;
+> -			atmel,nand-cmd-offset = <22>;
+> -			atmel,nand-has-dma;
+> -			pinctrl-names = "default";
+> -			pinctrl-0 = <&pinctrl_nand>;
+> -			atmel,nfc = <&nfc>;
+> -			status = "disabled";
+> -		};
+> -
+>   		nfc: nfc@90000000 {
+>   			compatible = "atmel,sama5d3-nfc";
+>   			reg = <0x90000000 0x10000000	/* NFC Command Registers */
 Best Regards,
 Josh Wu
-
-On 12/5/2014 6:30 AM, Boris Brezillon wrote:
-> The NAND and NFC (NAND Flash Controller) were linked together with a
-> parent <-> child relationship.
->
-> This model has several drawbacks:
-> - it does not allow for multiple NAND chip handling while the controller
->    support multi-chip (even though the driver is not ready yet)
-> - it mixes NAND partitions and NFC nodes at the same level (which is a bit
->    disturbing)
-> - the introduction of the EBI bus implies defining NAND chips under the
->    EBI node, and the ranges available under the EBI node should be
->    restricted to EBI address space, while the NFC references several
->    registers outside of these EBI ranges.
->
-> Move the NFC node outside of the NAND node, to get a more future-proof
-> model.
->
-> Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->   .../devicetree/bindings/mtd/atmel-nand.txt         | 46 ++++++++++++----------
->   1 file changed, 26 insertions(+), 20 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/mtd/atmel-nand.txt b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
-> index 6edc3b6..8896850 100644
-> --- a/Documentation/devicetree/bindings/mtd/atmel-nand.txt
-> +++ b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
-> @@ -30,15 +30,19 @@ Optional properties:
->     sector size 1024.
->   - nand-bus-width : 8 or 16 bus width if not present 8
->   - nand-on-flash-bbt: boolean to enable on flash bbt option if not present false
-> -- Nand Flash Controller(NFC) is a slave driver under Atmel nand flash
-> -  - Required properties:
-> -    - compatible : "atmel,sama5d3-nfc".
-> -    - reg : should specify the address and size used for NFC command registers,
-> -            NFC registers and NFC Sram. NFC Sram address and size can be absent
-> -            if don't want to use it.
-> -    - clocks: phandle to the peripheral clock
-> -  - Optional properties:
-> -    - atmel,write-by-sram: boolean to enable NFC write by sram.
-> +- atmel,nfc: phandle referencing the NAND Flash Controller, if available.
-> +
-> +The NAND Flash Controller (NFC) is an advanced NAND controller and should be
-> +used in conjunction with the NAND flash device.
-> +Required properties:
-> + - compatible : "atmel,sama5d3-nfc".
-> + - reg : should specify the address and size used for NFC command registers,
-> +         NFC registers and NFC Sram. NFC Sram address and size can be absent
-> +         if you don't want to use it.
-> + - clocks: phandle to the peripheral clock
-> +
-> +Optional properties:
-> + - atmel,write-by-sram: boolean to enable NFC write by sram.
->   
->   Examples:
->   nand0: nand@40000000,0 {
-> @@ -89,21 +93,23 @@ nand0: nand@40000000 {
->   };
->   
->   /* for NFC supported chips */
-> +nfc: nfc@70000000 {
-> +	compatible = "atmel,sama5d3-nfc";
-> +	#address-cells = <1>;
-> +	#size-cells = <1>;
-> +	clocks = <&hsmc_clk>
-> +	reg = <
-> +		0x70000000 0x10000000	/* NFC Command Registers */
-> +		0xffffc000 0x00000070	/* NFC HSMC regs */
-> +		0x00200000 0x00100000	/* NFC SRAM banks */
-> +	>;
-> +};
-> +
->   nand0: nand@40000000 {
->   	compatible = "atmel,at91rm9200-nand";
->   	#address-cells = <1>;
->   	#size-cells = <1>;
->   	ranges;
-> +	atmel,nfc = <&nfc>;
->           ...
-> -        nfc@70000000 {
-> -		compatible = "atmel,sama5d3-nfc";
-> -		#address-cells = <1>;
-> -		#size-cells = <1>;
-> -		clocks = <&hsmc_clk>
-> -		reg = <
-> -			0x70000000 0x10000000	/* NFC Command Registers */
-> -			0xffffc000 0x00000070	/* NFC HSMC regs */
-> -			0x00200000 0x00100000	/* NFC SRAM banks */
-> -		>;
-> -	};
->   };
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
