@@ -1,141 +1,76 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [Patch V3 07/10] ASoC: ipq806x: Add I2S PCM platform driver
-Date: Fri, 26 Dec 2014 17:03:40 +0000
-Message-ID: <20141226170340.GH17800@sirena.org.uk>
-References: <1419439330-2303-1-git-send-email-kwestfie@codeaurora.org>
- <1419439330-2303-8-git-send-email-kwestfie@codeaurora.org>
+From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Subject: Re: [PATCH 1/3] DT Binding for omap3 temperature sensor
+Date: Fri, 26 Dec 2014 18:19:44 +0100
+Message-ID: <20141226171944.GA24756@amd>
+References: <20141226102933.GA28778@amd>
+ <1419597294-21487-1-git-send-email-sre@kernel.org>
+ <1419597294-21487-2-git-send-email-sre@kernel.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="vxNpRqk6sR1V+qwt"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1419439330-2303-8-git-send-email-kwestfie@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Kenneth Westfield <kwestfie@codeaurora.org>
-Cc: Takashi Iwai <tiwai@suse.de>, Liam Girdwood <lgirdwood@gmail.com>, David Brown <davidb@codeaurora.org>, Bryan Huntsman <bryanh@codeaurora.org>, Greg KH <gregkh@linuxfoundation.org>, Banajit Goswami <bgoswami@codeaurora.org>, Patrick Lai <plai@codeaurora.org>, ALSA Mailing List <alsa-devel@alsa-project.org>, MSM Mailing List <linux-arm-msm@vger.kernel.org>, Device Tree Mailing List <devicetree@vger.kernel.org>
+In-Reply-To: <1419597294-21487-2-git-send-email-sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Pali Rohar <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---vxNpRqk6sR1V+qwt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Wed, Dec 24, 2014 at 08:42:07AM -0800, Kenneth Westfield wrote:
-
-> +static inline u32 lpass_lpaif_int_retrieve(struct snd_soc_platform *platform)
-> +{
-> +	struct lpass_mi2s_data *drvdata =
-> +		snd_soc_platform_get_drvdata(platform);
-> +	u32 status_offset = LPAIF_DMAIRQ_STAT(LPAIF_IRQ_RECV_HOST);
-> +	u32 clear_offset = LPAIF_DMAIRQ_CLEAR(LPAIF_IRQ_RECV_HOST);
-> +	u32 chan_bitmask = LPAIF_DMAIRQ_ALL(LPAIF_DMA_RD_CH_MI2S);
-> +	u32 value;
+On Fri 2014-12-26 13:34:52, Sebastian Reichel wrote:
+> OMAP34xx and OMAP36xx processors contain a register in the syscon area,
+> which can be used to determine the SoCs temperature. This provides a
+> DT binding specification for the temperature monitor.
+> 
+> Signed-off-by: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+>  .../bindings/hwmon/omap3-temperature.txt           | 25 ++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/omap3-temperature.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/hwmon/omap3-temperature.txt b/Documentation/devicetree/bindings/hwmon/omap3-temperature.txt
+> new file mode 100644
+> index 0000000..99631ad
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/hwmon/omap3-temperature.txt
+> @@ -0,0 +1,25 @@
+> +* OMAP3 temperature sensor
 > +
-> +	value = readl(drvdata->base + status_offset);
-> +	value &= chan_bitmask;
-> +	writel(value, drvdata->base + clear_offset);
+> +The OMAP34xx and OMAP36xx processors contain a register in the syscon area,
+> +which can be used to determine the SoCs temperature.
 > +
-> +	return value;
-> +}
+> +Requires node properties:
+> +- compatible :	should contain one of
+> +	- "ti,omap34xx-temperature-sensor" for OMAP34xx
+> +	- "ti,omap36xx-temperature-sensor" for OMAP36xx
+> +- syscon :	Should be a phandle to system configuration node which
+> +		encompases the temperature register
+> +- clocks :	Should contain 32KHz fclk clock specifier
+> +- clock-names :	Should contain clock names
+> +	- "fck" for the 32KHz fclk clock specifier
 
-More of these tiny inline functions in this driver, and in this case
-there's a definite readability problem since this is not just
-"retrieve", it's reading and acking the interrupts which means that...
+I don't quite get it. The temperature sensor is internal on the CPU,
+right? Why do we need device tree to describe it? As soon as we have
+CPU that is compatible to ti,omap3430, we know everything we need to
+know, no?
 
-> +static irqreturn_t lpass_pcm_mi2s_irq(int irq, void *data)
-> +{
-> +	struct snd_pcm_substream *substream = data;
-> +	struct snd_pcm_runtime *runtime = substream->runtime;
-> +	struct snd_soc_pcm_runtime *soc_runtime = substream->private_data;
-> +	struct lpass_mi2s_data *drvdata =
-> +		snd_soc_platform_get_drvdata(soc_runtime->platform);
-> +	u32 xrun_bitmask = LPAIF_DMAIRQ_XRUN(LPAIF_DMA_RD_CH_MI2S);
-> +	u32 period_bitmask = LPAIF_DMAIRQ_PER(LPAIF_DMA_RD_CH_MI2S);
-> +	u32 error_bitmask = LPAIF_DMAIRQ_ERR(LPAIF_DMA_RD_CH_MI2S);
-> +	u32 pending;
-> +	irqreturn_t ret = IRQ_NONE;
+> +Example for omap34xx:
 > +
-> +	pending = lpass_lpaif_int_retrieve(soc_runtime->platform);
-> +
-> +	if (unlikely(pending & xrun_bitmask) && snd_pcm_running(substream)) {
-> +		dev_warn(soc_runtime->dev, "%s: xrun warning\n", __func__);
-> +		snd_pcm_stop(substream, SNDRV_PCM_STATE_XRUN);
-> +		pending &= ~xrun_bitmask;
-> +		ret = IRQ_HANDLED;
-> +	}
-
-...all this code working out if we actually handled an interrupt might
-be lying.
-
-> +	if (pending & period_bitmask) {
-> +		if (++drvdata->period_index >= runtime->periods)
-> +			drvdata->period_index = 0;
-> +		snd_pcm_period_elapsed(substream);
-> +		pending &= ~period_bitmask;
-> +		ret = IRQ_HANDLED;
-> +	}
-
-If we miss an interrupt then...
-
-> +static snd_pcm_uframes_t lpass_pcm_mi2s_pointer(
-> +		struct snd_pcm_substream *substream)
-> +{
-> +	struct snd_pcm_runtime *runtime = substream->runtime;
-> +	struct snd_soc_pcm_runtime *soc_runtime = substream->private_data;
-> +	struct lpass_mi2s_data *drvdata =
-> +		snd_soc_platform_get_drvdata(soc_runtime->platform);
-> +	snd_pcm_uframes_t offset;
-> +
-> +	offset = drvdata->period_index * runtime->period_size;
-> +
-> +	return offset >= (runtime->buffer_size) ? 0 : offset;
-> +}
-
-...this will be broken.  Why is the pointer operation not reading from
-the hardware?
-
-> +static struct snd_pcm_ops lpass_pcm_mi2s_soc_ops = {
-> +	.open		= lpass_pcm_mi2s_open,
-> +	.hw_params	= lpass_pcm_mi2s_hw_params,
-> +	.hw_free	= lpass_pcm_mi2s_hw_free,
-> +	.prepare	= lpass_pcm_mi2s_prepare,
-> +	.mmap		= lpass_pcm_mi2s_mmap,
-> +	.pointer	= lpass_pcm_mi2s_pointer,
-> +	.ioctl		= snd_pcm_lib_ioctl,
+> +/ {
+> +	temperature-sensor {
+> +		compatible = "ti,omap34xx-temperature-sensor";
+> +		syscon = <&omap3_scm_general>;
+> +		clocks = <&ts_fck>;
+> +		clock-names = "fck";
+> +	};
 > +};
 
-Again the start and stopn are misplaced and should be in the trigger
-like with other drivers.
+Or is there something that depends on the board there? Or do we want
+to do it like this to be consistent with existing bindings?
 
-> +static void lpass_pcm_mi2s_soc_free(struct snd_pcm *pcm)
-> +{
-> +	struct snd_pcm_substream *substream =
-> +		pcm->streams[SNDRV_PCM_STREAM_PLAYBACK].substream;
-> +	struct snd_soc_pcm_runtime *soc_runtime = substream->private_data;
-> +	struct lpass_mi2s_data *drvdata =
-> +		snd_soc_platform_get_drvdata(soc_runtime->platform);
-> +
-> +	lpass_pcm_mi2s_free_buffer(pcm, SNDRV_PCM_STREAM_PLAYBACK);
-> +
-> +	disable_irq(drvdata->irqnum);
-> +	free_irq(drvdata->irqnum, NULL);
-
-This is weird, why the manual disable_irq()?
-
---vxNpRqk6sR1V+qwt
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUnZTrAAoJECTWi3JdVIfQhmUH/jAKoDUgn1Hhprb4T2fxI5OU
-zKtSh4BuJgiURIkaImmPGErh0r05XfOIP+bvVYnLSykV4lI9rmFSu//CdMFjtB2g
-v72mp0ct9JhOuC/z8HdoiZDpz+dJGLw2OzS59v3KOBv1YTByoYXCisnYM2Z5kHyK
-ZCY90sMvBzwGDP1QRzkgYHfwWDZGGPccTa25rmpq7qUSQmER8+3lFlmX8rrwTZHP
-rNHQxSJqe+tzTb11wACBaVnddmcHmY7pxgquQv9ctsyfGYUjeRxuOgrPi6eJ4rL7
-Z2D69i49XbcO7y4D/HeQ749lf4TUc2bvhbNUtrqo9svgY+sSZUCFghXEWuJrRzA=
-=WBVZ
------END PGP SIGNATURE-----
-
---vxNpRqk6sR1V+qwt--
+									Pavel
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
