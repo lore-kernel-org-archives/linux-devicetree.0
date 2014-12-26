@@ -1,126 +1,123 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH] clk-rcar-gen2: ADSP clock support
-Date: Fri, 26 Dec 2014 01:55:26 +0300
-Message-ID: <2616097.6QI9oiZ0Bl@wasted.cogentembedded.com>
+From: Flora Fu <flora.fu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v4 0/6] Add Support for MediaTek PMIC MT6397 MFD Core and Regulator
+Date: Fri, 26 Dec 2014 15:09:22 +0800
+Message-ID: <1419577768-12037-1-git-send-email-flora.fu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: mturquette@linaro.org, linux-kernel@vger.kernel.org, sboyd@codeaurora.org, robh+dt@kernel.org
-Cc: linux-sh@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Flora Fu <flora.fu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Dongdong Cheng <dongdong.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, HenryC Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Menghui Lin <menghui.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Chen Zhong <chen.zhong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the ADSP clock support to the R-Car generation 2 CPG driver.  This clock
-gets derived from  PLL1.  The layout of the ADSPCKCR register is  similar to
-those of the clocks supported by the 'clk-div6' driver but the divider encoding
-is non-linear, so can't be supported by that driver...
+Hi,
 
-Based on the original patch by Konstantin Kozhevnikov
-<konstantin.kozhevnikov@cogentembedded.com>.
+The patch sets add support for MediaTek PMIC MT6397 MFD core and its regulator driver.
+This is hardware layout for access PMIC MT6397 from AP SoC MT8135.
+Between PMIC MT6397 and MT8135, the physical signal channel is SPI bus.
+A specific hardware called PMIC Wrapper or PWRAP to handle access protocols in both PMIC and AP side.
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
++-----------------+           +---------------+
+|                 |           |               |
+| Mediatek AP SoC |           |               |
+| (ex. MT8135)    |           |    MT6397     |
+|                 |           |               |
+|      +--------+ | (SPI bus) | +--------+    |
+|      |        | |-----------| |        |    |
+|      |  PMIC  | |-----------| |  PMIC  |    |
+|      | Wrapper| |-----------| | Wrapper|    |
+|      |        | |-----------| |        |    |
+|      +--------+ |           | +--------+    |
+|                 |           |               |
++-----------------+           +---------------+
 
----
-The patch is against the 'clk-next' branch of Mike Turquette's 'linux.git' repo
-plus the RCAN clock support posted yesterday.
+This driver is based on kernel release 3.19.
 
- Documentation/devicetree/bindings/clock/renesas,rcar-gen2-cpg-clocks.txt |    5 -
- drivers/clk/shmobile/clk-rcar-gen2.c                                     |   48 ++++++++++
- 2 files changed, 51 insertions(+), 2 deletions(-)
+Changes since v3
+================
+(1) Patch 1/6: PMIC Wrapper is the parent of MT6397 MFD. Use auxdata to pass regmap pointer as MFD's platform data.
+(2) Patch 2/6: Update MT6397 MFD implmentation according to patch 1/6. Update MFD cells table: rtc, codec, clock for sub modules.
+(3) Patch 4/6: Document for MT8135 PMIC wrapper.
+(4) Patch 5/6: Document for MT6397 MFD.
+(5) Patch 7/6: Device tree for MT8135 PMIC wrapper in mt8135.dtsi.
+			   - nodes of clocks depend on mt8135 clocks 
+			   - nodes of resets depend on mt8135 reset controllers:
+                 https://lkml.org/lkml/2014/11/3/134
+                 https://lkml.org/lkml/2014/11/5/283
+(6) Patch 6/6: Add device tree for MT6397 MFD and regulators in mt8135 board file.
+v3:
+https://lkml.org/lkml/2014/12/4/924
 
-Index: linux/Documentation/devicetree/bindings/clock/renesas,rcar-gen2-cpg-clocks.txt
-===================================================================
---- linux.orig/Documentation/devicetree/bindings/clock/renesas,rcar-gen2-cpg-clocks.txt
-+++ linux/Documentation/devicetree/bindings/clock/renesas,rcar-gen2-cpg-clocks.txt
-@@ -16,7 +16,8 @@ Required Properties:
-   - clocks: Reference to the parent clock
-   - #clock-cells: Must be 1
-   - clock-output-names: The names of the clocks. Supported clocks are "main",
--    "pll0", "pll1", "pll3", "lb", "qspi", "sdh", "sd0", "sd1", "z", and "rcan"
-+    "pll0", "pll1", "pll3", "lb", "qspi", "sdh", "sd0", "sd1", "z", "adsp", and
-+    "rcan"
- 
- 
- Example
-@@ -30,5 +31,5 @@ Example
- 		#clock-cells = <1>;
- 		clock-output-names = "main", "pll0, "pll1", "pll3",
- 				     "lb", "qspi", "sdh", "sd0", "sd1", "z",
--				     "rcan";
-+				     "adsp", "rcan";
- 	};
-Index: linux/drivers/clk/shmobile/clk-rcar-gen2.c
-===================================================================
---- linux.orig/drivers/clk/shmobile/clk-rcar-gen2.c
-+++ linux/drivers/clk/shmobile/clk-rcar-gen2.c
-@@ -33,6 +33,7 @@ struct rcar_gen2_cpg {
- #define CPG_FRQCRC			0x000000e0
- #define CPG_FRQCRC_ZFC_MASK		(0x1f << 8)
- #define CPG_FRQCRC_ZFC_SHIFT		8
-+#define CPG_ADSPCKCR			0x0000025c
- #define CPG_RCANCKCR			0x00000270
- 
- /* -----------------------------------------------------------------------------
-@@ -162,6 +163,51 @@ static struct clk * __init cpg_z_clk_reg
- 	return clk;
- }
- 
-+/* ADSP divisors */
-+static const struct clk_div_table cpg_adsp_div_table[] = {
-+	{  1,  3 }, {  2,  4 }, {  3,  6 }, {  4,  8 },
-+	{  5, 12 }, {  6, 16 }, {  7, 18 }, {  8, 24 },
-+	{ 10, 36 }, { 11, 48 }, {  0,  0 },
-+};
-+
-+static struct clk * __init cpg_adsp_clk_register(struct rcar_gen2_cpg *cpg)
-+{
-+	const char *parent_name = "pll1";
-+	struct clk_divider *div;
-+	struct clk_gate *gate;
-+	struct clk *clk;
-+
-+	div = kzalloc(sizeof(*div), GFP_KERNEL);
-+	if (!div)
-+		return ERR_PTR(-ENOMEM);
-+
-+	div->reg = cpg->reg + CPG_ADSPCKCR;
-+	div->width = 4;
-+	div->table = cpg_adsp_div_table;
-+	div->lock = &cpg->lock;
-+
-+	gate = kzalloc(sizeof(*gate), GFP_KERNEL);
-+	if (!gate) {
-+		kfree(div);
-+		return ERR_PTR(-ENOMEM);
-+	}
-+
-+	gate->reg = cpg->reg + CPG_RCANCKCR;
-+	gate->bit_idx = 8;
-+	gate->flags = CLK_GATE_SET_TO_DISABLE;
-+	gate->lock = &cpg->lock;
-+
-+	clk = clk_register_composite(NULL, "adsp", &parent_name, 1, NULL, NULL,
-+				     &div->hw, &clk_divider_ops,
-+				     &gate->hw, &clk_gate_ops, 0);
-+	if (IS_ERR(clk)) {
-+		kfree(gate);
-+		kfree(div);
-+	}
-+
-+	return clk;
-+}
-+
- static struct clk * __init cpg_rcan_clk_register(struct rcar_gen2_cpg *cpg,
- 						 struct device_node *np)
- {
-@@ -301,6 +347,8 @@ rcar_gen2_cpg_register_clock(struct devi
- 		shift = 0;
- 	} else if (!strcmp(name, "z")) {
- 		return cpg_z_clk_register(cpg);
-+	} else if (!strcmp(name, "adsp")) {
-+		return cpg_adsp_clk_register(cpg);
- 	} else if (!strcmp(name, "rcan")) {
- 		return cpg_rcan_clk_register(cpg, np);
- 	} else {
+Changes since v2
+================
+(1) Patch 1/8: Update kernel config of MT8135 PMIC Wrapper. It needs to select REGMAP.
+(2) Patch 2/8: Update patch of MT6397 MFD driver to fix defeat of coding styles.
+(3) Patch 3/8: Update MT6397 regulator driver
+	- use standard helpers for ops ".set_voltage_sel", ".get_voltage_sel" and ".is_enabled"
+	- remove regulator's DT matching codes in the driver.  
+	- fix defeat of coding styles.
+(4) Patch 4/8: Update document for MT8135 PMIC wrapper.
+(5) Patch 5/8: Update document for MT6397 MFD.
+(6) Patch 6/8: Update document for MT6397 regulators.
+(7) Patch 7/8: Update device tree for MT8135 PMIC wrapper in mt8135.dtsi.
+(8) Patch 8/8: Add device tree for MT6397 MFD and regulators in mt8135-evbp1.dts board file.
+v2:
+http://lists.infradead.org/pipermail/linux-arm-kernel/2014-November/307069.html
 
+Changes since v1
+================
+(1) Patch 1/8: Add MT8135 PMIC wrapper driver for SoC's proprietary hardware.
+(2) Patch 2/8: Update patch of MT6397 MFD driver to contain only MFD related codes and fix defeat of coding styles.
+(3) Patch 3/8: Update MT6397 regulator driver
+	- use helpers and standard ways for specifying data in regulator description.
+	- add more comments to explaining why the driver implement its own regulator_ops for ".is_enabled", ".set_voltage_sel" and ".get_voltage_sel".
+	- update driver implement for coding styles.
+(4) Patch 4/8: Add document for MT8135 PMIC wrapper.
+(5) Patch 5/8: Update document for MT6397 MFD.
+(6) Patch 6/8: Update document for MT6397 regulators.
+(7) Patch 7/8: Add device tree for MT6397 MFD in mt8135.dtsi.
+(8) Patch 8/8: Update device tree for MT6397 regulators in mt8135.dtsi.
+Initial version (v1):
+http://lists.infradead.org/pipermail/linux-arm-kernel/2014-November/302984.html
+
+Flora Fu (6):
+  soc: mediatek: Add PMIC wrapper for MT8135 and MT6397 SoC
+  mfd: MT6397: Add support for PMIC MT6397 MFD
+  dt-bindings:: Add document for MT8135 PMIC Wrapper
+  dt-bindings: Add document for MT6397 MFD
+  arm: dts: mt8135: Add support for MT8135 PMIC wrapper
+  arm: dts: mt8135: Add support for MT6397 MFD and regulator
+
+ Documentation/devicetree/bindings/mfd/mt6397.txt   |  75 ++
+ .../soc/mediatek/mediatek,mt8135-pwrap.txt         |  51 ++
+ arch/arm/boot/dts/mt8135-evbp1.dts                 | 193 +++++
+ arch/arm/boot/dts/mt8135.dtsi                      |  14 +
+ drivers/mfd/Kconfig                                |  10 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/mt6397-core.c                          |  94 +++
+ drivers/soc/Kconfig                                |   1 +
+ drivers/soc/Makefile                               |   1 +
+ drivers/soc/mediatek/Kconfig                       |  12 +
+ drivers/soc/mediatek/Makefile                      |   1 +
+ drivers/soc/mediatek/mt8135-pmic-wrap.c            | 855 +++++++++++++++++++++
+ drivers/soc/mediatek/mt8135-pmic-wrap.h            | 138 ++++
+ include/linux/mfd/mt6397/core.h                    |  23 +
+ include/linux/mfd/mt6397/registers.h               | 362 +++++++++
+ 15 files changed, 1831 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/mt6397.txt
+ create mode 100644 Documentation/devicetree/bindings/soc/mediatek/mediatek,mt8135-pwrap.txt
+ create mode 100644 drivers/mfd/mt6397-core.c
+ create mode 100644 drivers/soc/mediatek/Kconfig
+ create mode 100644 drivers/soc/mediatek/Makefile
+ create mode 100644 drivers/soc/mediatek/mt8135-pmic-wrap.c
+ create mode 100644 drivers/soc/mediatek/mt8135-pmic-wrap.h
+ create mode 100644 include/linux/mfd/mt6397/core.h
+ create mode 100644 include/linux/mfd/mt6397/registers.h
+
+--
+1.8.1.1.dirty
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
