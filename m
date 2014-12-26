@@ -1,58 +1,99 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH 3/5] input: misc: add tps65218 power button driver
-Date: Fri, 26 Dec 2014 13:33:28 -0600
-Message-ID: <20141226193327.GK17430@saruman>
-References: <1419622104-25812-1-git-send-email-balbi@ti.com>
- <1419622104-25812-4-git-send-email-balbi@ti.com>
-Reply-To: <balbi@ti.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: Device Tree Child Node Parsing Question
+Date: Fri, 26 Dec 2014 13:40:47 -0600
+Message-ID: <CAL_JsqLzbEuQgNZoBbzr4R=Nj9_Qs=60uLhzENbZzTaaTgxnZg@mail.gmail.com>
+References: <549999A7.2010608@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="OOq1TgGhe8eTwFBO"
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1419622104-25812-4-git-send-email-balbi@ti.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <549999A7.2010608-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---OOq1TgGhe8eTwFBO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue, Dec 23, 2014 at 10:34 AM, Thor Thayer
+<tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org> wrote:
+> Hi,
+>
+> What is the best way to queue devicetree child nodes so the node is passed
+> in the platform_device pointer to the probe() function?
+>
+> Documentation/devicetree/usage-model.txt has the following:
+>
+> "For Linux DT support, the generic behaviour is for child devices to be
+> registered by the parent's device driver at driver .probe() time."
+>
+> "Actually, it turns out that registering children of some platform_devices
+> as more platform_devices is a common pattern, and the
+> device tree support code reflects that and makes the above example
+> simpler.  The second argument to of_platform_populate() is an
+> of_device_id table, and any node that matches an entry in that table
+> will also get its child nodes registered."
+>
+>
+> I tried calling of_platform_populate() in the probe of the a10_sysctl node
+> but it doesn't appear to setup the platform device data properly for the
+> sub-child nodes.
+>
+> The top child node (a10_sysctl) is probed properly and has a valid of_node
+> passed in. However, the sub-child nodes such as gpio4 have null passed in
+> for pdev->dev.of_node (gpio4 probe prototype is int
+> a10sycon_gpio_probe(struct platform_device *pdev).
+>
+> My current solution is to call of_find_matching_node() in
+> a10sycon_gpio_probe() to get a valid node pointer but other examples tend to
+> dereference pdev->dev.of_node.
+>
+> Thank you in advance for your insight.
 
-Hi,
+This should work. There are quite a few users already including unit
+tests. Can you tell what you are doing differently from those users?
 
-On Fri, Dec 26, 2014 at 01:28:22PM -0600, Felipe Balbi wrote:
-> +static struct of_device_id of_tps65218_pwr_match[] =3D {
-> +	{ .compatible =3D "ti,tps65218-pwrbutton" },
+Rob
 
-forgot to document this compatible. I'll add it localy but still wait a
-a few days before resending so people have time to review.
-
---=20
-balbi
-
---OOq1TgGhe8eTwFBO
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUnbgHAAoJEIaOsuA1yqREadQP/AiMWX5PIe54mikIHG8uSnVA
-Frjf6SwGz3ub7121/gC5GFCIML6YqbNKygQ5iFuSLt81u7aKLP8tk8CZ7tQ1PFCr
-2rSd5e5abfp0B/9Xkxx/+5ISCd9KBQ+0ChJPoNH8kyx/KbU5rhYbqHU/mq63DsLB
-VFFEjnPL7hzwTJa7qlco/uls8bHlYCM/mo+p9ZlZU1EjDLrSuQ0qJ/KMC5SECyaa
-lM9wiXduGVW6P1/SqRCwyeKKwd/Rbr/n212DsvMJJdwMV/sSwo9nao3EGr89xk6l
-3VcCeX2uvfSjS2moM5B3AN1M4dUW9pIVhJJTgfGwe2JLkOV4KFT5IYZGT/c88oOJ
-d6+jmxM9ZmYwm6XuZKV4CLNetyQK2ygx4rEdAP6z/n2NtFYuNYd27cuReccZO1ef
-T1GWkUQrE4gpDIviDwDamQ0EEA6uOileDgMlM94kcbHn3TBx9pR7oyuPKnQNYpQj
-m5o5XoAmyb51Xgoj2g8DYofki3/k8ufjq+JpjoRO0NE0sdngLp6+We5N0wDPB+7i
-3KpINcclLFi0+RMgfHWt6O9H+TuqEwwHy/0PzkSRP0O80boC7F0eak9VCe0ueNqF
-iFMbm5SvG5M8trdk1YWJlmcH3hmFb1fJT3IEDDO9+RMC6S4G0eFv1Clr+gCbU22I
-DE+DZJCWayDjq4jdAzSr
-=LtIz
------END PGP SIGNATURE-----
-
---OOq1TgGhe8eTwFBO--
+>
+> Thor
+>
+>
+> My device tree looks like this:
+>
+> / {
+>     soc {
+>         spi0: spi@fff00000 {
+>              compatible = "snps,dw-spi-mmio";
+>              #address-cells = <1>;
+>              #size-cells = <0>;
+>              reg = <0xfff00000 0x1000>;
+>              interrupts = <0 154 4>;
+>              num-chipselect = <4>;
+>              clocks = <&per_base_clk>;
+>              status = "okay";
+>
+>              a10_sysctl: a10_sysctl@0 {
+>                 compatible = "altr,a10sycon";
+>                 reg = <0>;
+>                 interrupt-parent = <&gpio2>;
+>                 /* low-level active IRQ at GPIO2_24 */
+>                 interrupts = <24 0x8>;
+>                 interrupt-controller;
+>                 #interrupt-cells = <2>;
+>                 spi-max-frequency = <100000>;
+>
+>                 gpio4: gpio-controller {
+>                         compatible = "altr,a10sycon-gpio";
+>                         gpio-controller;
+>                         #gpio-cells = <2>;
+>                         ngpios = <16>;
+>                 };
+>
+>                 a10rst: a10rst {
+>                         compatible = "altr,a10sycon-reset";
+>                         #reset-cells = <1>;
+>                 };
+>             };
+>         };
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
