@@ -1,41 +1,36 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: [PATCH 2/2] MAINTAINERS: Update DT website and git repository
-Date: Fri, 26 Dec 2014 14:43:56 -0600
-Message-ID: <1419626636-7130-2-git-send-email-robherring2@gmail.com>
-References: <1419626636-7130-1-git-send-email-robherring2@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1419626636-7130-1-git-send-email-robherring2@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Rob Herring <robh@kernel.org>, Grant Likely <grant.likely@linaro.org>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: Re: [PATCH 2/2] iio: mxs-lradc: check ranges of ts properties
+Date: Fri, 26 Dec 2014 21:50:37 +0100 (CET)
+Message-ID: <1377154085.658607.1419627037868.JavaMail.open-xchange@oxbaltgw05.schlund.de>
+References: <1419250476-2393-1-git-send-email-stefan.wahren@i2se.com> <1419250476-2393-3-git-send-email-stefan.wahren@i2se.com> <549D2905.4050801@kernel.org>
+Reply-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <549D2905.4050801-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: kristina.martsenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Rob Herring <robh@kernel.org>
+Hi Jonathan,
 
-Per Grant, secretlab.ca is defunct and he has no plans to resurect it,
-so update the DT website and git tree. devicetree.org needs work, but
-is better than "Internal Server Error" that secretlab.ca returns.
+> Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> hat am 26. Dezember 2014 um 10:23
+> geschrieben:
+>
+> [...]
+> >
+> > - lradc->over_sample_delay = 2;
+> > - ret = of_property_read_u32(lradc_node, "fsl,ave-delay", &adapt);
+> > - if (ret == 0)
+> > + if (of_property_read_u32(lradc_node, "fsl,ave-delay", &adapt)) {
+> > + lradc->over_sample_delay = 2;
+> > + } else {
+> > + if (adapt < 2 || adapt > LRADC_DELAY_DELAY_MASK+1) {
+> please run checkpatch.pl over these. Should be spaces around the +
 
-Cc: Grant Likely <grant.likely@linaro.org>
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- MAINTAINERS | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+i'm afraid my checkpatch.pl doesn't find this issue. I'll fix it in the next
+version.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index fa9ae27..7c6c4df 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6977,8 +6977,8 @@ OPEN FIRMWARE AND FLATTENED DEVICE TREE
- M:	Grant Likely <grant.likely@linaro.org>
- M:	Rob Herring <robh+dt@kernel.org>
- L:	devicetree@vger.kernel.org
--W:	http://fdt.secretlab.ca
--T:	git git://git.secretlab.ca/git/linux-2.6.git
-+W:	http://www.devicetree.org/
-+T:	git git://git.kernel.org/pub/scm/linux/kernel/git/glikely/linux.git
- S:	Maintained
- F:	drivers/of/
- F:	include/linux/of*.h
--- 
-2.1.0
+Stefan
