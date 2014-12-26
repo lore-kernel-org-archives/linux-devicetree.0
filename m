@@ -1,99 +1,55 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Device Tree Child Node Parsing Question
-Date: Fri, 26 Dec 2014 13:40:47 -0600
-Message-ID: <CAL_JsqLzbEuQgNZoBbzr4R=Nj9_Qs=60uLhzENbZzTaaTgxnZg@mail.gmail.com>
-References: <549999A7.2010608@opensource.altera.com>
+From: Bjorn Andersson <bjorn@kryo.se>
+Subject: Re: [PATCH v8 2/3] mfd: qcom-rpm: Driver for the Qualcomm RPM
+Date: Fri, 26 Dec 2014 12:11:42 -0800
+Message-ID: <CAJAp7OiEkuz8wjdix-=BHU2Eu6Yzbn1P52F8zzjO6wA_cpEWng@mail.gmail.com>
+References: <1417038661-30209-1-git-send-email-bjorn.andersson@sonymobile.com>
+	<1417038661-30209-3-git-send-email-bjorn.andersson@sonymobile.com>
+	<1419245407.30945.35.camel@x220>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <549999A7.2010608-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1419245407.30945.35.camel@x220>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Paul Bolle <pebolle@tiscali.nl>, Lee Jones <lee.jones@linaro.org>
+Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Mark Brown <broonie@kernel.org>, Valentin Rothberg <valentinrothberg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Josh Cartwright <joshc@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 23, 2014 at 10:34 AM, Thor Thayer
-<tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org> wrote:
-> Hi,
+On Mon, Dec 22, 2014 at 2:50 AM, Paul Bolle <pebolle@tiscali.nl> wrote:
+> Hi Bjorn,
 >
-> What is the best way to queue devicetree child nodes so the node is passed
-> in the platform_device pointer to the probe() function?
->
-> Documentation/devicetree/usage-model.txt has the following:
->
-> "For Linux DT support, the generic behaviour is for child devices to be
-> registered by the parent's device driver at driver .probe() time."
->
-> "Actually, it turns out that registering children of some platform_devices
-> as more platform_devices is a common pattern, and the
-> device tree support code reflects that and makes the above example
-> simpler.  The second argument to of_platform_populate() is an
-> of_device_id table, and any node that matches an entry in that table
-> will also get its child nodes registered."
->
->
-> I tried calling of_platform_populate() in the probe of the a10_sysctl node
-> but it doesn't appear to setup the platform device data properly for the
-> sub-child nodes.
->
-> The top child node (a10_sysctl) is probed properly and has a valid of_node
-> passed in. However, the sub-child nodes such as gpio4 have null passed in
-> for pdev->dev.of_node (gpio4 probe prototype is int
-> a10sycon_gpio_probe(struct platform_device *pdev).
->
-> My current solution is to call of_find_matching_node() in
-> a10sycon_gpio_probe() to get a valid node pointer but other examples tend to
-> dereference pdev->dev.of_node.
->
-> Thank you in advance for your insight.
 
-This should work. There are quite a few users already including unit
-tests. Can you tell what you are doing differently from those users?
+Hi Paul
 
-Rob
+[..]
+>
+> The Qualcomm RPM regulator driver (see Kconfig symbol
+> REGULATOR_QCOM_RPM) was added in v3.18. It depends on the above symbol,
+> so it has not yet gotten build coverage. Even manual hacks like
+>     make -C ../.. M=$PWD CONFIG_REGULATOR_QCOM_RPM=m qcom_rpm-regulator.ko
+>
+> won't work for that driver, because it includes linux/mfd/qcom_rpm.h,
+> which is not part of the tree.
+>
 
+Correct, but unfortunately Lee Jones awaits devicetree maintainers ack
+(or any comment) and have been doing so for months now. I did send out
+a ping a few weeks ago, but might have done so when they where
+occupied by the merge window.
+
+
+Lee, the Qualcomm RPM binding is not for a subsystem and is limited to
+Qualcomm devices. Could we apply this in accordance with II.2 in
+Documentation/devicetree/bindings/submitting-patches.txt or is there
+anything I could do to make you feel comfortable doing so?
+
+> It seems there's no generally agreed upon guideline for situations like
+> this. So I guess it's up to Mark to decide how long the tree should
+> include an unbuildable driver.
 >
-> Thor
->
->
-> My device tree looks like this:
->
-> / {
->     soc {
->         spi0: spi@fff00000 {
->              compatible = "snps,dw-spi-mmio";
->              #address-cells = <1>;
->              #size-cells = <0>;
->              reg = <0xfff00000 0x1000>;
->              interrupts = <0 154 4>;
->              num-chipselect = <4>;
->              clocks = <&per_base_clk>;
->              status = "okay";
->
->              a10_sysctl: a10_sysctl@0 {
->                 compatible = "altr,a10sycon";
->                 reg = <0>;
->                 interrupt-parent = <&gpio2>;
->                 /* low-level active IRQ at GPIO2_24 */
->                 interrupts = <24 0x8>;
->                 interrupt-controller;
->                 #interrupt-cells = <2>;
->                 spi-max-frequency = <100000>;
->
->                 gpio4: gpio-controller {
->                         compatible = "altr,a10sycon-gpio";
->                         gpio-controller;
->                         #gpio-cells = <2>;
->                         ngpios = <16>;
->                 };
->
->                 a10rst: a10rst {
->                         compatible = "altr,a10sycon-reset";
->                         #reset-cells = <1>;
->                 };
->             };
->         };
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+I haven't seen any guidelines, but appreciate Mark's way of working in
+this matter - as we've been able to run our devices with fewer
+out-of-tree patches.
+
+Regards,
+Bjorn
