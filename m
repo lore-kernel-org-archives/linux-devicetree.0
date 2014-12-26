@@ -1,121 +1,58 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v2 1/2] of/pci: add of_pci_dma_configure() update dma configuration
-Date: Fri, 26 Dec 2014 13:33:23 -0600
-Message-ID: <CAL_JsqJtVnP_5zAiUvMwL00JQV0mjw-R_hEkxiv13ZuNrQ8nAA@mail.gmail.com>
-References: <1419459099-6667-1-git-send-email-m-karicheri2@ti.com> <1419459099-6667-2-git-send-email-m-karicheri2@ti.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH 3/5] input: misc: add tps65218 power button driver
+Date: Fri, 26 Dec 2014 13:33:28 -0600
+Message-ID: <20141226193327.GK17430@saruman>
+References: <1419622104-25812-1-git-send-email-balbi@ti.com>
+ <1419622104-25812-4-git-send-email-balbi@ti.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1419459099-6667-2-git-send-email-m-karicheri2@ti.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Murali Karicheri <m-karicheri2@ti.com>
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Will Deacon <will.deacon@arm.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="OOq1TgGhe8eTwFBO"
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1419622104-25812-4-git-send-email-balbi@ti.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Felipe Balbi <balbi@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 24, 2014 at 4:11 PM, Murali Karicheri <m-karicheri2@ti.com> wrote:
-> Add of_pci_dma_configure() to allow updating the dma configuration
-> of the pci device using the configuration from DT of the parent of
-> the root bridge device.
->
-> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
-> ---
->  drivers/of/of_pci.c    |   73 ++++++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/of_pci.h |   12 ++++++++
->  2 files changed, 85 insertions(+)
->
-> diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
-> index 88471d3..6d43f59 100644
-> --- a/drivers/of/of_pci.c
-> +++ b/drivers/of/of_pci.c
-> @@ -229,6 +229,79 @@ parse_failed:
->         return err;
->  }
->  EXPORT_SYMBOL_GPL(of_pci_get_host_bridge_resources);
-> +
-> +/**
-> + * of_get_pci_root_bridge_parent - Helper function to get the OF node of
-> + *             the root bridge's parent
+--OOq1TgGhe8eTwFBO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I believe this has to be a one line description for DocBook.
+Hi,
 
-> + * @dev: ptr to pci_dev struct of the pci device
-> + *
-> + * This function will traverse the bus up to the root bus starting with
-> + * the child and return the of node ptr to bridge device's parent device.
-> + */
-> +struct device_node *of_get_pci_root_bridge_parent(struct pci_dev *dev)
-> +{
-> +       struct pci_bus *bus = dev->bus;
-> +       struct device *bridge;
-> +
-> +       while (!pci_is_root_bus(bus))
-> +               bus = bus->parent;
-> +       bridge = bus->bridge;
-> +
-> +       return bridge->parent->of_node;
-> +}
-> +EXPORT_SYMBOL_GPL(of_get_pci_root_bridge_parent);
-> +
-> +/**
-> + * of_pci_dma_configure - Setup DMA configuration
-> + * @dev: ptr to pci_dev struct of the pci device
-> + *
-> + * Try to get PCI devices's DMA configuration from DT and update it
-> + * accordingly. This is similar to of_dma_configure() in of/platform.c
-> + */
-> +void of_pci_dma_configure(struct pci_dev *pci_dev)
-> +{
-> +       struct device *dev = &pci_dev->dev;
-> +       u64 dma_addr, paddr, size;
-> +       struct device_node *parent_np;
-> +       unsigned long offset;
-> +       bool coherent;
-> +       int ret;
-> +
-> +       parent_np = of_get_pci_root_bridge_parent(pci_dev);
-> +
-> +       if (parent_np) {
+On Fri, Dec 26, 2014 at 01:28:22PM -0600, Felipe Balbi wrote:
+> +static struct of_device_id of_tps65218_pwr_match[] =3D {
+> +	{ .compatible =3D "ti,tps65218-pwrbutton" },
 
-Save a level of indentation and do:
+forgot to document this compatible. I'll add it localy but still wait a
+a few days before resending so people have time to review.
 
-if (!parent_np)
-  return;
+--=20
+balbi
 
-> +               /*
-> +                * Set default dma-mask to 32 bit. Drivers are expected to setup
-> +                * the correct supported dma_mask.
-> +                */
-> +               dev->coherent_dma_mask = DMA_BIT_MASK(32);
-> +
-> +               /*
-> +                * Set it to coherent_dma_mask by default if the architecture
-> +                * code has not set it.
-> +                */
-> +               if (!dev->dma_mask)
-> +                       dev->dma_mask = &dev->coherent_dma_mask;
-> +
-> +               ret = of_dma_get_range(parent_np, &dma_addr, &paddr, &size);
-> +               if (ret < 0) {
-> +                       dma_addr = offset = 0;
-> +                       size = dev->coherent_dma_mask + 1;
-> +               } else {
-> +                       offset = PFN_DOWN(paddr - dma_addr);
-> +                       dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", offset);
-> +               }
-> +               dev->dma_pfn_offset = offset;
-> +
-> +               coherent = of_dma_is_coherent(parent_np);
-> +               dev_dbg(dev, "device is%sdma coherent\n",
-> +                       coherent ? " " : " not ");
-> +
-> +               arch_setup_dma_ops(dev, dma_addr, size, NULL, coherent);
+--OOq1TgGhe8eTwFBO
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-This is the same code as of_dma_configure. The only difference I see
-is which node ptr is passed to of_dma_get_range. You need to make that
-a function param of of_dma_configure.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-of_dma_configure also has iommu handling now. You will probably need
-something similar for PCI in that you setup an iommu based on the root
-bus DT properties.
+iQIcBAEBAgAGBQJUnbgHAAoJEIaOsuA1yqREadQP/AiMWX5PIe54mikIHG8uSnVA
+Frjf6SwGz3ub7121/gC5GFCIML6YqbNKygQ5iFuSLt81u7aKLP8tk8CZ7tQ1PFCr
+2rSd5e5abfp0B/9Xkxx/+5ISCd9KBQ+0ChJPoNH8kyx/KbU5rhYbqHU/mq63DsLB
+VFFEjnPL7hzwTJa7qlco/uls8bHlYCM/mo+p9ZlZU1EjDLrSuQ0qJ/KMC5SECyaa
+lM9wiXduGVW6P1/SqRCwyeKKwd/Rbr/n212DsvMJJdwMV/sSwo9nao3EGr89xk6l
+3VcCeX2uvfSjS2moM5B3AN1M4dUW9pIVhJJTgfGwe2JLkOV4KFT5IYZGT/c88oOJ
+d6+jmxM9ZmYwm6XuZKV4CLNetyQK2ygx4rEdAP6z/n2NtFYuNYd27cuReccZO1ef
+T1GWkUQrE4gpDIviDwDamQ0EEA6uOileDgMlM94kcbHn3TBx9pR7oyuPKnQNYpQj
+m5o5XoAmyb51Xgoj2g8DYofki3/k8ufjq+JpjoRO0NE0sdngLp6+We5N0wDPB+7i
+3KpINcclLFi0+RMgfHWt6O9H+TuqEwwHy/0PzkSRP0O80boC7F0eak9VCe0ueNqF
+iFMbm5SvG5M8trdk1YWJlmcH3hmFb1fJT3IEDDO9+RMC6S4G0eFv1Clr+gCbU22I
+DE+DZJCWayDjq4jdAzSr
+=LtIz
+-----END PGP SIGNATURE-----
 
-Rob
+--OOq1TgGhe8eTwFBO--
