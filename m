@@ -1,302 +1,316 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH v2 6/6] arm: pxa: Transition pxa27x to clk framework
-Date: Fri, 26 Dec 2014 11:56:33 +0200
-Message-ID: <2303917.o2xPYRxhCJ@avalon>
-References: <1405353263-13424-1-git-send-email-robert.jarzmik@free.fr> <1405353263-13424-7-git-send-email-robert.jarzmik@free.fr>
+From: Evgeni Dobrev <evgeni-c3HRhe8yoGxdzLpqerNdyw@public.gmane.org>
+Subject: Re: [PATCH v3 1/1] add support for Seagate BlackArmor NAS220
+Date: Fri, 26 Dec 2014 12:06:49 +0100
+Message-ID: <20141226110649.GC4700@anne>
+References: <20141215203855.GA28940@anne>
+ <20141222125750.GA29163@anne>
+ <549C0C3C.8060601@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1405353263-13424-7-git-send-email-robert.jarzmik-GANU6spQydw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <549C0C3C.8060601-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Robert,
+Hello Sebastian,
 
-What happened to this patch ? It looks like the rest of the series got merged, 
-but this one seems to be missing.
+On Thu, Dec 25, 2014 at 02:08:12PM +0100, Sebastian Hesselbarth wrote:
+> On 22.12.2014 13:57, Evgeni Dobrev wrote:
+> >This patch adds support for Seagate BlackArmor NAS220.
+> >
+> >The Seagate BlackArmor NAS 220 is a NAS system based on Marvell 88f6192. It has
+> >32MB NAND and 128MB DRAM. It has two SATA slots, one Gigabit Ethernet port, two
+> >USB 2.0 ports, two buttons and three LEDs. There is a serial port available on
+> >the CN5 connector on the board (1 - TX, 4 - RX, 6 - GND).
+> >
+> >The only functionality still not implemented is the bi-color led on the front
+> >panel (status). Pins mpp22 and mpp23 control this led. Setting mpp22 to high and
+> >mpp23 to low results in orange color. Setting mpp22 to low and mpp23 to high
+> >results in blue color.
+> >
+> >The third led is wired to show the SATA activity on the two drives.
+> >
+> >Signed-off-by: Evgeni Dobrev <evgeni-c3HRhe8yoGxdzLpqerNdyw@public.gmane.org>
+> 
+> Evgeni,
+> 
+> sorry for the late review, but I do have some nits that should
+> remove some inconsistencies. If we don't do it now, we'd never
+> change that later.
+> 
 
-On Monday 14 July 2014 17:54:23 Robert Jarzmik wrote:
-> Transition the PXA27x CPUs to the clock framework.
-> This transition still enables legacy platforms to run without device
-> tree as before, ie relying on platform data encoded in board specific
-> files.
-> 
-> Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-> ---
->  arch/arm/Kconfig           |   1 +
->  arch/arm/mach-pxa/Makefile |   8 +-
->  arch/arm/mach-pxa/pxa27x.c | 186 +++---------------------------------------
->  3 files changed, 17 insertions(+), 178 deletions(-)
-> 
-> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-> index 87b63fd..96bdc7b 100644
-> --- a/arch/arm/Kconfig
-> +++ b/arch/arm/Kconfig
-> @@ -642,6 +642,7 @@ config ARCH_PXA
->  	select ARCH_REQUIRE_GPIOLIB
->  	select ARM_CPU_SUSPEND if PM
->  	select AUTO_ZRELADDR
-> +	select COMMON_CLK if PXA27x
->  	select CLKDEV_LOOKUP
->  	select CLKSRC_MMIO
->  	select GENERIC_CLOCKEVENTS
-> diff --git a/arch/arm/mach-pxa/Makefile b/arch/arm/mach-pxa/Makefile
-> index 648867a..ce15823 100644
-> --- a/arch/arm/mach-pxa/Makefile
-> +++ b/arch/arm/mach-pxa/Makefile
-> @@ -3,16 +3,16 @@
->  #
-> 
->  # Common support (must be linked before board specific support)
-> -obj-y				+= clock.o devices.o generic.o irq.o \
-> +obj-y				+= devices.o generic.o irq.o \
->  				   time.o reset.o
->  obj-$(CONFIG_PM)		+= pm.o sleep.o standby.o
-> 
->  # Generic drivers that other drivers may depend upon
-> 
->  # SoC-specific code
-> -obj-$(CONFIG_PXA25x)		+= mfp-pxa2xx.o clock-pxa2xx.o pxa2xx.o 
-pxa25x.o
-> -obj-$(CONFIG_PXA27x)		+= mfp-pxa2xx.o clock-pxa2xx.o pxa2xx.o 
-pxa27x.o
-> -obj-$(CONFIG_PXA3xx)		+= mfp-pxa3xx.o clock-pxa3xx.o pxa3xx.o smemc.o
-> pxa3xx-ulpi.o +obj-$(CONFIG_PXA25x)		+= mfp-pxa2xx.o clock.o clock-
-pxa2xx.o
-> pxa2xx.o pxa25x.o +obj-$(CONFIG_PXA27x)		+= mfp-pxa2xx.o pxa2xx.o pxa27x.o
-> +obj-$(CONFIG_PXA3xx)		+= mfp-pxa3xx.o clock.o clock-pxa3xx.o pxa3xx.o
-> smemc.o pxa3xx-ulpi.o obj-$(CONFIG_CPU_PXA300)	+= pxa300.o
->  obj-$(CONFIG_CPU_PXA320)	+= pxa320.o
->  obj-$(CONFIG_CPU_PXA930)	+= pxa930.o
-> diff --git a/arch/arm/mach-pxa/pxa27x.c b/arch/arm/mach-pxa/pxa27x.c
-> index 301471a..6beb32cd 100644
-> --- a/arch/arm/mach-pxa/pxa27x.c
-> +++ b/arch/arm/mach-pxa/pxa27x.c
-> @@ -37,7 +37,8 @@
-> 
->  #include "generic.h"
->  #include "devices.h"
-> -#include "clock.h"
-> +#include <linux/clk-provider.h>
-> +#include <linux/clkdev.h>
-> 
->  void pxa27x_clear_otgph(void)
->  {
-> @@ -73,174 +74,6 @@ void pxa27x_configure_ac97reset(int reset_gpio, bool
-> to_gpio) }
->  EXPORT_SYMBOL_GPL(pxa27x_configure_ac97reset);
-> 
-> -/* Crystal clock: 13MHz */
-> -#define BASE_CLK	13000000
-> -
-> -/*
-> - * Get the clock frequency as reflected by CCSR and the turbo flag.
-> - * We assume these values have been applied via a fcs.
-> - * If info is not 0 we also display the current settings.
-> - */
-> -unsigned int pxa27x_get_clk_frequency_khz(int info)
-> -{
-> -	unsigned long ccsr, clkcfg;
-> -	unsigned int l, L, m, M, n2, N, S;
-> -       	int cccr_a, t, ht, b;
-> -
-> -	ccsr = CCSR;
-> -	cccr_a = CCCR & (1 << 25);
-> -
-> -	/* Read clkcfg register: it has turbo, b, half-turbo (and f) */
-> -	asm( "mrc\tp14, 0, %0, c6, c0, 0" : "=r" (clkcfg) );
-> -	t  = clkcfg & (1 << 0);
-> -	ht = clkcfg & (1 << 2);
-> -	b  = clkcfg & (1 << 3);
-> -
-> -	l  = ccsr & 0x1f;
-> -	n2 = (ccsr>>7) & 0xf;
-> -	m  = (l <= 10) ? 1 : (l <= 20) ? 2 : 4;
-> -
-> -	L  = l * BASE_CLK;
-> -	N  = (L * n2) / 2;
-> -	M  = (!cccr_a) ? (L/m) : ((b) ? L : (L/2));
-> -	S  = (b) ? L : (L/2);
-> -
-> -	if (info) {
-> -		printk( KERN_INFO "Run Mode clock: %d.%02dMHz (*%d)\n",
-> -			L / 1000000, (L % 1000000) / 10000, l );
-> -		printk( KERN_INFO "Turbo Mode clock: %d.%02dMHz (*%d.%d, 
-%sactive)\n",
-> -			N / 1000000, (N % 1000000)/10000, n2 / 2, (n2 % 2)*5,
-> -			(t) ? "" : "in" );
-> -		printk( KERN_INFO "Memory clock: %d.%02dMHz (/%d)\n",
-> -			M / 1000000, (M % 1000000) / 10000, m );
-> -		printk( KERN_INFO "System bus clock: %d.%02dMHz \n",
-> -			S / 1000000, (S % 1000000) / 10000 );
-> -	}
-> -
-> -	return (t) ? (N/1000) : (L/1000);
-> -}
-> -
-> -/*
-> - * Return the current mem clock frequency as reflected by CCCR[A], B, and L
-> - */
-> -static unsigned long clk_pxa27x_mem_getrate(struct clk *clk)
-> -{
-> -	unsigned long ccsr, clkcfg;
-> -	unsigned int l, L, m, M;
-> -       	int cccr_a, b;
-> -
-> -	ccsr = CCSR;
-> -	cccr_a = CCCR & (1 << 25);
-> -
-> -	/* Read clkcfg register: it has turbo, b, half-turbo (and f) */
-> -	asm( "mrc\tp14, 0, %0, c6, c0, 0" : "=r" (clkcfg) );
-> -	b = clkcfg & (1 << 3);
-> -
-> -	l = ccsr & 0x1f;
-> -	m = (l <= 10) ? 1 : (l <= 20) ? 2 : 4;
-> -
-> -	L = l * BASE_CLK;
-> -	M = (!cccr_a) ? (L/m) : ((b) ? L : (L/2));
-> -
-> -	return M;
-> -}
-> -
-> -static const struct clkops clk_pxa27x_mem_ops = {
-> -	.enable		= clk_dummy_enable,
-> -	.disable	= clk_dummy_disable,
-> -	.getrate	= clk_pxa27x_mem_getrate,
-> -};
-> -
-> -/*
-> - * Return the current LCD clock frequency in units of 10kHz as
-> - */
-> -static unsigned int pxa27x_get_lcdclk_frequency_10khz(void)
-> -{
-> -	unsigned long ccsr;
-> -	unsigned int l, L, k, K;
-> -
-> -	ccsr = CCSR;
-> -
-> -	l = ccsr & 0x1f;
-> -	k = (l <= 7) ? 1 : (l <= 16) ? 2 : 4;
-> -
-> -	L = l * BASE_CLK;
-> -	K = L / k;
-> -
-> -	return (K / 10000);
-> -}
-> -
-> -static unsigned long clk_pxa27x_lcd_getrate(struct clk *clk)
-> -{
-> -	return pxa27x_get_lcdclk_frequency_10khz() * 10000;
-> -}
-> -
-> -static const struct clkops clk_pxa27x_lcd_ops = {
-> -	.enable		= clk_pxa2xx_cken_enable,
-> -	.disable	= clk_pxa2xx_cken_disable,
-> -	.getrate	= clk_pxa27x_lcd_getrate,
-> -};
-> -
-> -static DEFINE_PXA2_CKEN(pxa27x_ffuart, FFUART, 14857000, 1);
-> -static DEFINE_PXA2_CKEN(pxa27x_btuart, BTUART, 14857000, 1);
-> -static DEFINE_PXA2_CKEN(pxa27x_stuart, STUART, 14857000, 1);
-> -static DEFINE_PXA2_CKEN(pxa27x_i2s, I2S, 14682000, 0);
-> -static DEFINE_PXA2_CKEN(pxa27x_i2c, I2C, 32842000, 0);
-> -static DEFINE_PXA2_CKEN(pxa27x_usb, USB, 48000000, 5);
-> -static DEFINE_PXA2_CKEN(pxa27x_mmc, MMC, 19500000, 0);
-> -static DEFINE_PXA2_CKEN(pxa27x_ficp, FICP, 48000000, 0);
-> -static DEFINE_PXA2_CKEN(pxa27x_usbhost, USBHOST, 48000000, 0);
-> -static DEFINE_PXA2_CKEN(pxa27x_pwri2c, PWRI2C, 13000000, 0);
-> -static DEFINE_PXA2_CKEN(pxa27x_keypad, KEYPAD, 32768, 0);
-> -static DEFINE_PXA2_CKEN(pxa27x_ssp1, SSP1, 13000000, 0);
-> -static DEFINE_PXA2_CKEN(pxa27x_ssp2, SSP2, 13000000, 0);
-> -static DEFINE_PXA2_CKEN(pxa27x_ssp3, SSP3, 13000000, 0);
-> -static DEFINE_PXA2_CKEN(pxa27x_pwm0, PWM0, 13000000, 0);
-> -static DEFINE_PXA2_CKEN(pxa27x_pwm1, PWM1, 13000000, 0);
-> -static DEFINE_PXA2_CKEN(pxa27x_ac97, AC97, 24576000, 0);
-> -static DEFINE_PXA2_CKEN(pxa27x_ac97conf, AC97CONF, 24576000, 0);
-> -static DEFINE_PXA2_CKEN(pxa27x_msl, MSL, 48000000, 0);
-> -static DEFINE_PXA2_CKEN(pxa27x_usim, USIM, 48000000, 0);
-> -static DEFINE_PXA2_CKEN(pxa27x_memstk, MEMSTK, 19500000, 0);
-> -static DEFINE_PXA2_CKEN(pxa27x_im, IM, 0, 0);
-> -static DEFINE_PXA2_CKEN(pxa27x_memc, MEMC, 0, 0);
-> -
-> -static DEFINE_CK(pxa27x_lcd, LCD, &clk_pxa27x_lcd_ops);
-> -static DEFINE_CK(pxa27x_camera, CAMERA, &clk_pxa27x_lcd_ops);
-> -static DEFINE_CLK(pxa27x_mem, &clk_pxa27x_mem_ops, 0, 0);
-> -
-> -static struct clk_lookup pxa27x_clkregs[] = {
-> -	INIT_CLKREG(&clk_pxa27x_lcd, "pxa2xx-fb", NULL),
-> -	INIT_CLKREG(&clk_pxa27x_camera, "pxa27x-camera.0", NULL),
-> -	INIT_CLKREG(&clk_pxa27x_ffuart, "pxa2xx-uart.0", NULL),
-> -	INIT_CLKREG(&clk_pxa27x_btuart, "pxa2xx-uart.1", NULL),
-> -	INIT_CLKREG(&clk_pxa27x_stuart, "pxa2xx-uart.2", NULL),
-> -	INIT_CLKREG(&clk_pxa27x_i2s, "pxa2xx-i2s", NULL),
-> -	INIT_CLKREG(&clk_pxa27x_i2c, "pxa2xx-i2c.0", NULL),
-> -	INIT_CLKREG(&clk_pxa27x_usb, "pxa27x-udc", NULL),
-> -	INIT_CLKREG(&clk_pxa27x_mmc, "pxa2xx-mci.0", NULL),
-> -	INIT_CLKREG(&clk_pxa27x_stuart, "pxa2xx-ir", "UARTCLK"),
-> -	INIT_CLKREG(&clk_pxa27x_ficp, "pxa2xx-ir", "FICPCLK"),
-> -	INIT_CLKREG(&clk_pxa27x_usbhost, "pxa27x-ohci", NULL),
-> -	INIT_CLKREG(&clk_pxa27x_pwri2c, "pxa2xx-i2c.1", NULL),
-> -	INIT_CLKREG(&clk_pxa27x_keypad, "pxa27x-keypad", NULL),
-> -	INIT_CLKREG(&clk_pxa27x_ssp1, "pxa27x-ssp.0", NULL),
-> -	INIT_CLKREG(&clk_pxa27x_ssp2, "pxa27x-ssp.1", NULL),
-> -	INIT_CLKREG(&clk_pxa27x_ssp3, "pxa27x-ssp.2", NULL),
-> -	INIT_CLKREG(&clk_pxa27x_pwm0, "pxa27x-pwm.0", NULL),
-> -	INIT_CLKREG(&clk_pxa27x_pwm1, "pxa27x-pwm.1", NULL),
-> -	INIT_CLKREG(&clk_pxa27x_ac97, NULL, "AC97CLK"),
-> -	INIT_CLKREG(&clk_pxa27x_ac97conf, NULL, "AC97CONFCLK"),
-> -	INIT_CLKREG(&clk_pxa27x_msl, NULL, "MSLCLK"),
-> -	INIT_CLKREG(&clk_pxa27x_usim, NULL, "USIMCLK"),
-> -	INIT_CLKREG(&clk_pxa27x_memstk, NULL, "MSTKCLK"),
-> -	INIT_CLKREG(&clk_pxa27x_im, NULL, "IMCLK"),
-> -	INIT_CLKREG(&clk_pxa27x_memc, NULL, "MEMCLK"),
-> -	INIT_CLKREG(&clk_pxa27x_mem, "pxa2xx-pcmcia", NULL),
-> -	INIT_CLKREG(&clk_dummy, "pxa27x-gpio", NULL),
-> -	INIT_CLKREG(&clk_dummy, "sa1100-rtc", NULL),
-> -};
-> -
->  #ifdef CONFIG_PM
-> 
->  #define SAVE(x)		sleep_save[SLEEP_SAVE_##x] = x
-> @@ -460,8 +293,6 @@ static int __init pxa27x_init(void)
-> 
->  		reset_status = RCSR;
-> 
-> -		clkdev_add_table(pxa27x_clkregs, ARRAY_SIZE(pxa27x_clkregs));
-> -
->  		if ((ret = pxa_init_dma(IRQ_DMA, 32)))
->  			return ret;
-> 
-> @@ -469,10 +300,17 @@ static int __init pxa27x_init(void)
-> 
->  		register_syscore_ops(&pxa_irq_syscore_ops);
->  		register_syscore_ops(&pxa2xx_mfp_syscore_ops);
-> -		register_syscore_ops(&pxa2xx_clock_syscore_ops);
-> 
-> -		pxa_register_device(&pxa27x_device_gpio, &pxa27x_gpio_info);
-> -		ret = platform_add_devices(devices, ARRAY_SIZE(devices));
-> +		if (!of_have_populated_dt()) {
-> +			ret = clk_register_clkdev(NULL, NULL,
-> +						  "pxa27x-gpio");
-> +			if (!ret)
-> +				pxa_register_device(&pxa27x_device_gpio,
-> +						    &pxa27x_gpio_info);
-> +			if (!ret)
-> +				ret = platform_add_devices(devices,
-> +							   ARRAY_SIZE(devices));
-> +		}
->  	}
-> 
->  	return ret;
+thank you for your review. I will make the changes you suggest and resubmit.
 
--- 
-Regards,
+> >---
+> >  arch/arm/boot/dts/Makefile            |    1 +
+> >  arch/arm/boot/dts/kirkwood-nas220.dts |  166 +++++++++++++++++++++++++++++++++
+> >  2 files changed, 167 insertions(+)
+> >  create mode 100644 arch/arm/boot/dts/kirkwood-nas220.dts
+> >
+> >diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> >index 38c89ca..8b9ad1d 100644
+> >--- a/arch/arm/boot/dts/Makefile
+> >+++ b/arch/arm/boot/dts/Makefile
+> >@@ -132,6 +132,7 @@ dtb-$(CONFIG_MACH_KIRKWOOD) += kirkwood-b3.dtb \
+> >  	kirkwood-lsxhl.dtb \
+> >  	kirkwood-mplcec4.dtb \
+> >  	kirkwood-mv88f6281gtw-ge.dtb \
+> >+	kirkwood-nas220.dtb \
+> 
+> I am not too happy with choosing "nas220" as the base name for the
+> board. Can we make it a little bit more specific like
+> "seagate-nas220" or "blackarmor-nas220" ?
+> 
+> >  	kirkwood-net2big.dtb \
+> >  	kirkwood-net5big.dtb \
+> >  	kirkwood-netgear_readynas_duo_v2.dtb \
+> >diff --git a/arch/arm/boot/dts/kirkwood-nas220.dts b/arch/arm/boot/dts/kirkwood-nas220.dts
+> >new file mode 100644
+> >index 0000000..8175f3d
+> >--- /dev/null
+> >+++ b/arch/arm/boot/dts/kirkwood-nas220.dts
+> >@@ -0,0 +1,166 @@
+> >+/*
+> >+ * Device Tree file for Seagate BlackArmor NAS220
+> >+ *
+> >+ * Copyright (C) 2014 Evgeni Dobrev <evgeni-c3HRhe8yoGxdzLpqerNdyw@public.gmane.org>
+> >+ *
+> >+ * Licensed under GPLv2 or later.
+> >+ */
+> >+
+> >+/dts-v1/;
+> >+
+> >+#include <dt-bindings/gpio/gpio.h>
+> >+#include <dt-bindings/input/input.h>
+> >+#include "kirkwood.dtsi"
+> >+#include "kirkwood-6192.dtsi"
+> >+
+> >+/ {
+> >+	model = "Seagate NAS 220";
+> 
+> model = "Seagate BlackArmor NAS220";
+> 
+> i.e. choose the same spelling in comment above and model name here.
+> 
+> >+	compatible = "seagate,nas220","marvell,kirkwood-88f6192","marvell,kirkwood";
+> 
+> compatible should reflect the chosen base name above.
+> 
+> >+
+> >+	memory { /* 128 MB */
+> >+		device_type = "memory";
+> >+		reg = <0x00000000 0x8000000>;
+> >+	};
+> >+
+> >+	chosen {
+> >+		bootargs = "console=ttyS0,115200n8";
+> >+		stdout-path = &uart0;
+> >+	};
+> >+
+> >+	ocp@f1000000 {
+> >+		pinctrl: pin-controller@10000 {
+> 
+> v3.19 should already have a label for the common pinctrl node.
+> Please do not replay the bus structure but use a node reference
+> like &nand and friends below.
+> 
+> >+			pinctrl-0 = <&pmx_uart0
+> >+				     &pmx_button_reset
+> >+				     &pmx_button_power>;
+> >+			pinctrl-names = "default";
+> >+
+> >+			pmx_act_sata0: pmx-act-sata0 {
+> >+				marvell,pins = "mpp15";
+> >+				marvell,function = "sata0";
+> >+			};
+> 
+> Insert a blank line between each of the pmx_foo nodes?
+> 
+> >+			pmx_act_sata1: pmx-act-sata1 {
+> >+				marvell,pins = "mpp16";
+> >+				marvell,function = "sata1";
+> >+			};
+> >+			pmx_power_sata0: pmx-power-sata0 {
+> >+				marvell,pins = "mpp24";
+> >+				marvell,function = "gpio";
+> >+			};
+> >+			pmx_power_sata1: pmx-power-sata1 {
+> >+				marvell,pins = "mpp28";
+> >+				marvell,function = "gpio";
+> >+			};
+> >+			pmx_button_reset: pmx-button-reset {
+> >+				marvell,pins = "mpp29";
+> >+				marvell,function = "gpio";
+> >+			};
+> >+			pmx_button_power: pmx-button-power {
+> >+				marvell,pins = "mpp26";
+> >+				marvell,function = "gpio";
+> >+			};
+> >+		};
+> >+
+> >+
+> 
+> Remove extra blank line.
+> 
+> >+		/*
+> >+		 * Serial port routed to connector CN5
+> >+		 *
+> >+		 * pin 1 - TX
+> >+		 * pin 4 - RX
+> >+		 * pin 6 - GND
+> >+		 */
+> 
+> Nice! Can you also clarify if TX/RX are as seen from the SoC or
+> remote end?
+> 
+> >+		serial@12000 {
+> 
+> Please use node references where possible, IIRC v3.19 should have
+> labels for serial, sata, and i2c. Avoid to replay the bus structure.
+> 
+> >+			status = "okay";
+> >+		};
+> >+
+> >+		sata@80000 {
+> >+			status = "okay";
+> >+			nr-ports = <2>;
+> 
+> I need some update from the other mvebu guys here: Do we have SATA
+> PHY nodes in v3.19 for Kirkwood already? If so, please update to the
+> new binding.
+> 
+> >+		};
+> >+
+> >+		i2c@11000 {
+> >+			status = "okay";
+> >+			adt7476: adt7476a@2e {
+> 
+> I know we have a lot of bad examples, but: node names should reflect
+> device function, not device name, i.e.
+> 
+> adt7476: thermal@2e {
+> 	...
+> };
+> 
+> >+				compatible = "adi,adt7476";
+> >+				reg = <0x2e>;
+> >+			};
+> >+		};
+> >+	};
+> >+
+> >+	gpio_poweroff {
+> >+		compatible = "gpio-poweroff";
+> >+		gpios = <&gpio0 14 GPIO_ACTIVE_LOW>;
+> >+	};
+> >+
+> >+	gpio_keys {
+> >+		compatible = "gpio-keys";
+> 
+> Add a blank line between nodes.
+> 
+> >+		button@1{
+> >+			label = "Reset push button";
+> 
+> Reduce label to "Reset" and "Power" below.
+> 
+> >+			linux,code = <KEY_POWER>;
+> >+			gpios = <&gpio0 29 GPIO_ACTIVE_HIGH>;
+> >+		};
+> >+		button@2{
+> >+			label = "Power push button";
+> >+			linux,code = <KEY_SLEEP>;
+> >+			gpios = <&gpio0 26 GPIO_ACTIVE_LOW>;
+> >+		};
+> >+	};
+> >+
+> >+	gpio-leds {
+> >+		compatible = "gpio-leds";
+> 
+> Add a blank line between nodes.
+> 
+> >+		blue-power {
+> >+			label = "nas220:blue:power";
+> >+			gpios = <&gpio0 12 GPIO_ACTIVE_HIGH>;
+> >+			linux,default-trigger = "default-on";
+> >+		};
+> >+	};
+> >+
+> >+	regulators {
+> >+		compatible = "simple-bus";
+> >+		#address-cells = <1>;
+> >+		#size-cells = <0>;
+> >+		pinctrl-0 = <&pmx_power_sata0 &pmx_power_sata1>;
+> >+		pinctrl-names = "default";
+> >+
+> >+		sata0_power: regulator@1 {
+> >+			compatible = "regulator-fixed";
+> >+			reg = <1>;
+> >+			regulator-name = "SATA0 Power";
+> >+			regulator-min-microvolt = <5000000>;
+> >+			regulator-max-microvolt = <5000000>;
+> >+			enable-active-high;
+> >+			regulator-always-on;
+> >+			regulator-boot-on;
+> >+			gpio = <&gpio0 24 0>;
+> 
+> Hmm, do you need "regulator-always-on" when it is GPIO controlled?
+> Also, gpio property could use GPIO_ACTIVE_HIGH/LOW here too.
+> 
+> >+		};
+> >+
+> >+		sata1_power: regulator@2 {
+> >+			compatible = "regulator-fixed";
+> >+			reg = <2>;
+> >+			regulator-name = "SATA1 Power";
+> >+			regulator-min-microvolt = <5000000>;
+> >+			regulator-max-microvolt = <5000000>;
+> >+			enable-active-high;
+> >+			regulator-always-on;
+> >+			regulator-boot-on;
+> >+			gpio = <&gpio0 28 0>;
+> 
+> ditto.
+> 
+> >+		};
+> >+	};
+> >+};
+> >+
+> >+&nand {
+> >+	status = "okay";
+> >+};
+> >+
+> >+&mdio {
+> >+	status = "okay";
+> >+	ethphy0: ethernet-phy@8 {
+> >+		 reg = <8>;
+> >+	 };
+> 
+> Remove extra space before brace.
+> 
+> >+};
+> >+
+> >+&eth0 {
+> >+	status = "okay";
+> >+	ethernet0-port@0 {
+> >+		phy-handle = <&ethphy0>;
+> >+	};
+> >+};
+> >
+> 
+> Overall, this look fine to me, with the nits taken care of
+> 
+> Acked-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> 
+> Thanks!
+> 
 
-Laurent Pinchart
+Thanks,
 
+evgeni
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
