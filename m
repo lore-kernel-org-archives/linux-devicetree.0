@@ -1,51 +1,30 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH] i2c-qoriq: modified compatibility for correct prescaler
-Date: Fri, 26 Dec 2014 20:43:40 -0600
-Message-ID: <1419648220.5581.192.camel@freescale.com>
-References: <1414537731.23458.120.camel@snotra.buserror.net>
-	 <5450AC85.40302@keymile.com> <20141113003418.GE2062@katana>
-	 <5465B285.7070005@keymile.com> <20141114082832.GA2180@katana>
-	 <1416274083.15957.96.camel@freescale.com> <20141125181347.GC9716@katana>
-	 <1416966097.15957.171.camel@freescale.com> <54899FB4.9010207@keymile.com>
-	 <54996CB5.8030808@keymile.com> <20141223134940.GA1925@katana>
+From: "Jennifer Shaw" <sales2-IkqozLVQK+GWbvRemg0rlA@public.gmane.org>
+Subject: RE:Providing Premiums
+Date: Sat, 27 Dec 2014 11:06:04 +0800
+Message-ID: <201412271106049746678@a.408g.com>
+Reply-To: sales2-IkqozLVQK+GWbvRemg0rlA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141223134940.GA1925@katana>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>, Linux PowerPC Kernel <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Linux device trees <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux I2C <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Brunck, Holger" <Holger.Brunck-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>, "Boschung, Rainer" <Rainer.Boschung-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>, danielle.costantino-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain;
+	charset="GB2312"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2014-12-23 at 14:49 +0100, Wolfram Sang wrote:
-> On Tue, Dec 23, 2014 at 02:23:01PM +0100, Valentin Longchamp wrote:
-> > Wolfgang, Scott,
-> 
-> Wolfram, please.
-> 
-> > > What is then the agreement here ? Add a clock-div to the device trees ? Or do
-> > > something similar to  mpc_i2c_get_sec_cfg_8xxx() ?
-> > > 
-> > > I think the clock-div property is better according to Freescale's AN 2919
-> > > section 3.1 Source clock. All the source clocks are fixed (with a clock-div of 2
-> > > in case of mpc8536/43/45/47/48/67/68/72, plus p2020) except for the mpc8533/44
-> > > where it can be 2 or 3, and that's what mpc_i2c_get_sec_cfg_8xxx() determines.
-> > > 
-> > > So mpc_i2c_get_sec_cfg_8xxx() should remain the exception and the other
-> > > prescaler values should be derived from an additional clock-div that must be
-> > > added in the respective device trees (at least for the qoriq devices, because
-> > > for instance mpc8543 already has the correct prescaler thanks to
-> > > mpc_i2c_data_8543 from i2c-mpc.c).
-> > > 
-> > 
-> > Do you have an opinion on the above ?
-> 
-> I don't mind. I'll leave it to PowerPC experts to judge if a new binding
-> is apropriate or reading SVR is the way to go. If it is going to be a
-> new binding, then please look around before if there is already
-> something similar around...
-
-I'd rather use SVR so things work with existing device trees.
-
--Scott
+SGVsbG8gU2lyL01hZGFtLA0KDQpXZSBoYXZlIG1hbnVmYWN0dXJlZCBmb3IgdGhlIHBpbnMgYW5k
+IG90aGVyIHByZW1pdW1zIGxpa2UgYmFkZ2VzLHRpZSBjbGlwcyxjb2lucyxldGMgbW9yZSB0aGFu
+IDExIHllYXJzLiAgVGhlcmUgYXJlICAyNSBwZW9wbGVzIGluIG91ciBzYWxlcyB0ZWFtLCAyNCBo
+b3VycyBmb3IgeW91IHNlcnZpY2VzLg0KT3VyIG1haW4gY2xpZW50cyBmcm9tIEV1cm9wZSwgVVMg
+YW5kIENhbmFkYS5Gb3IgbW9yZSBkZW1hbmRzLCBwbGVhc2UgZG9uoa90IGhlc2l0YXRlIHRvIG1h
+aWwgdXMsIEkgYW0gSmVubmlmZXIsIGxvb2tpbmcgZm9yd2FyZCB0byB5b3VyIHJlcGx5LiBUaGFu
+a3MgZm9yIHlvdXIgdGltZS4NCg0KDQpNZXJyeSBDaHJpc3RtYXMsIA0KSmVubmlmZXIgU2hhdw0K
+U2FsZXMgcmVwcmVzZW50YXRpdmUgIFNreXBlIElEOiBzaGF3Lmplbm5pZmVyMQ0KU29uaWVyIFBp
+bnMgQ28uLEx0ZA0KQWRkOiBOby4yLCBKaVhpIFNodW5DaGVuZyBDZW50ZXIsIA0KWGlhb2xhbiBU
+b3duLCBaaG9uZ3NoYW4gQ2l0eSA1Mjg0MTUsR3Vhbmdkb25nLENoaW5hIC4NClRlbKO6o6g4NiAt
+NzYwo6kyMjEyMzY4MCAgIEZheKO6o6g4NiAtNzYwo6kyMjEyMjkxNg0KRW1haWw6IHNhbGVzMkBz
+b25pZXItcGlucy5jb20gICBXZWJzaXRlOiB3d3cuc29uaWVyLXBpbnMuY29t
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
