@@ -1,182 +1,69 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH] ARM: dts: sunxi: Add simplefb nodes for
- de_be0-lcd0, de_be0-lcd0-tve0 pipelines
-Date: Sat, 27 Dec 2014 17:09:00 +0100
-Message-ID: <1419696540-15680-2-git-send-email-hdegoede@redhat.com>
-References: <1419696540-15680-1-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBJFT7OSAKGQETREE2UQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1419696540-15680-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+From: Aaro Koskinen <aaro.koskinen@iki.fi>
+Subject: [PATCH 2/7] mfd: menelaus: drop support for SW controller VCORE
+Date: Sat, 27 Dec 2014 19:52:54 +0200
+Message-ID: <1419702779-16001-3-git-send-email-aaro.koskinen@iki.fi>
+References: <1419702779-16001-1-git-send-email-aaro.koskinen@iki.fi>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1419702779-16001-1-git-send-email-aaro.koskinen@iki.fi>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Aaro Koskinen <aaro.koskinen@iki.fi>
 List-Id: devicetree@vger.kernel.org
 
-Add simplefb nodes for "de_be0-lcd0" and "de_be0-lcd0-tve0" display pipeline
-for when u-boot has set up a pipeline to drive a LCD panel / VGA output rather
-then the HDMI output.
+Drop support for SW controlled VCORE, nobody uses it.
 
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Aaro Koskinen <aaro.koskinen@iki.fi>
 ---
- arch/arm/boot/dts/sun4i-a10.dtsi  | 17 +++++++++++++++++
- arch/arm/boot/dts/sun5i-a10s.dtsi |  8 ++++++++
- arch/arm/boot/dts/sun5i-a13.dtsi  | 14 ++++++++++++++
- arch/arm/boot/dts/sun6i-a31.dtsi  |  8 ++++++++
- arch/arm/boot/dts/sun7i-a20.dtsi  | 17 +++++++++++++++++
- arch/arm/boot/dts/sun8i-a23.dtsi  | 14 ++++++++++++++
- 6 files changed, 78 insertions(+)
+ drivers/mfd/menelaus.c       | 23 -----------------------
+ include/linux/mfd/menelaus.h |  1 -
+ 2 files changed, 24 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
-index ff08bb4..e3a8bc3 100644
---- a/arch/arm/boot/dts/sun4i-a10.dtsi
-+++ b/arch/arm/boot/dts/sun4i-a10.dtsi
-@@ -39,6 +39,23 @@
- 				 <&ahb_gates 44>;
- 			status = "disabled";
- 		};
-+
-+		framebuffer@1 {
-+			compatible = "allwinner,simple-framebuffer",
-+				     "simple-framebuffer";
-+			allwinner,pipeline = "de_be0-lcd0";
-+			clocks = <&pll5 1>, <&ahb_gates 36>, <&ahb_gates 44>;
-+			status = "disabled";
-+		};
-+
-+		framebuffer@2 {
-+			compatible = "allwinner,simple-framebuffer",
-+				     "simple-framebuffer";
-+			allwinner,pipeline = "de_be0-lcd0-tve0";
-+			clocks = <&pll5 1>, <&ahb_gates 34>, <&ahb_gates 36>,
-+				 <&ahb_gates 44>;
-+			status = "disabled";
-+		};
- 	};
+diff --git a/drivers/mfd/menelaus.c b/drivers/mfd/menelaus.c
+index 9f01aef..917fa86 100644
+--- a/drivers/mfd/menelaus.c
++++ b/drivers/mfd/menelaus.c
+@@ -532,29 +532,6 @@ static const struct menelaus_vtg_value vcore_values[] = {
+ 	{ 1450, 18 },
+ };
  
- 	cpus {
-diff --git a/arch/arm/boot/dts/sun5i-a10s.dtsi b/arch/arm/boot/dts/sun5i-a10s.dtsi
-index 1dfd024..d971534 100644
---- a/arch/arm/boot/dts/sun5i-a10s.dtsi
-+++ b/arch/arm/boot/dts/sun5i-a10s.dtsi
-@@ -36,6 +36,14 @@
- 				 <&ahb_gates 44>;
- 			status = "disabled";
- 		};
-+
-+		framebuffer@1 {
-+			compatible = "allwinner,simple-framebuffer",
-+				     "simple-framebuffer";
-+			allwinner,pipeline = "de_be0-lcd0";
-+			clocks = <&pll5 1>, <&ahb_gates 36>, <&ahb_gates 44>;
-+			status = "disabled";
-+		};
- 	};
+-int menelaus_set_vcore_sw(unsigned int mV)
+-{
+-	int val, ret;
+-	struct i2c_client *c = the_menelaus->client;
+-
+-	val = menelaus_get_vtg_value(mV, vcore_values,
+-				     ARRAY_SIZE(vcore_values));
+-	if (val < 0)
+-		return -EINVAL;
+-
+-	dev_dbg(&c->dev, "Setting VCORE to %d mV (val 0x%02x)\n", mV, val);
+-
+-	/* Set SW mode and the voltage in one go. */
+-	mutex_lock(&the_menelaus->lock);
+-	ret = menelaus_write_reg(MENELAUS_VCORE_CTRL1, val);
+-	if (ret == 0)
+-		the_menelaus->vcore_hw_mode = 0;
+-	mutex_unlock(&the_menelaus->lock);
+-	msleep(1);
+-
+-	return ret;
+-}
+-
+ int menelaus_set_vcore_hw(unsigned int roof_mV, unsigned int floor_mV)
+ {
+ 	int fval, rval, val, ret;
+diff --git a/include/linux/mfd/menelaus.h b/include/linux/mfd/menelaus.h
+index a1e12bf3..9e85ac0 100644
+--- a/include/linux/mfd/menelaus.h
++++ b/include/linux/mfd/menelaus.h
+@@ -24,7 +24,6 @@ extern int menelaus_set_vaux(unsigned int mV);
+ extern int menelaus_set_vdcdc(int dcdc, unsigned int mV);
+ extern int menelaus_set_slot_sel(int enable);
+ extern int menelaus_get_slot_pin_states(void);
+-extern int menelaus_set_vcore_sw(unsigned int mV);
+ extern int menelaus_set_vcore_hw(unsigned int roof_mV, unsigned int floor_mV);
  
- 	cpus {
-diff --git a/arch/arm/boot/dts/sun5i-a13.dtsi b/arch/arm/boot/dts/sun5i-a13.dtsi
-index 0306d59..771badf 100644
---- a/arch/arm/boot/dts/sun5i-a13.dtsi
-+++ b/arch/arm/boot/dts/sun5i-a13.dtsi
-@@ -21,6 +21,20 @@
- 		serial1 = &uart3;
- 	};
- 
-+	chosen {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		framebuffer@0 {
-+			compatible = "allwinner,simple-framebuffer",
-+				     "simple-framebuffer";
-+			allwinner,pipeline = "de_be0-lcd0";
-+			clocks = <&pll5 1>, <&ahb_gates 36>, <&ahb_gates 44>;
-+			status = "disabled";
-+		};
-+	};
-+
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
-index 9e9504c..26dfe4d 100644
---- a/arch/arm/boot/dts/sun6i-a31.dtsi
-+++ b/arch/arm/boot/dts/sun6i-a31.dtsi
-@@ -73,6 +73,14 @@
- 			clocks = <&pll6 0>;
- 			status = "disabled";
- 		};
-+
-+		framebuffer@1 {
-+			compatible = "allwinner,simple-framebuffer",
-+				     "simple-framebuffer";
-+			allwinner,pipeline = "de_be0-lcd0";
-+			clocks = <&pll6 0>;
-+			status = "disabled";
-+		};
- 	};
- 
- 	cpus {
-diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
-index d54d684..9b5ac12 100644
---- a/arch/arm/boot/dts/sun7i-a20.dtsi
-+++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-@@ -76,6 +76,23 @@
- 				 <&ahb_gates 44>;
- 			status = "disabled";
- 		};
-+
-+		framebuffer@1 {
-+			compatible = "allwinner,simple-framebuffer",
-+				     "simple-framebuffer";
-+			allwinner,pipeline = "de_be0-lcd0";
-+			clocks = <&pll5 1>, <&ahb_gates 36>, <&ahb_gates 44>;
-+			status = "disabled";
-+		};
-+
-+		framebuffer@2 {
-+			compatible = "allwinner,simple-framebuffer",
-+				     "simple-framebuffer";
-+			allwinner,pipeline = "de_be0-lcd0-tve0";
-+			clocks = <&pll5 1>, <&ahb_gates 34>, <&ahb_gates 36>,
-+				 <&ahb_gates 44>;
-+			status = "disabled";
-+		};
- 	};
- 
- 	cpus {
-diff --git a/arch/arm/boot/dts/sun8i-a23.dtsi b/arch/arm/boot/dts/sun8i-a23.dtsi
-index 0746cd1..496a6c2 100644
---- a/arch/arm/boot/dts/sun8i-a23.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a23.dtsi
-@@ -61,6 +61,20 @@
- 		serial5 = &r_uart;
- 	};
- 
-+	chosen {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		framebuffer@0 {
-+			compatible = "allwinner,simple-framebuffer",
-+				     "simple-framebuffer";
-+			allwinner,pipeline = "de_be0-lcd0";
-+			clocks = <&pll6 0>;
-+			status = "disabled";
-+		};
-+	};
-+
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
+ #define EN_VPLL_SLEEP	(1 << 7)
 -- 
-2.1.0
+2.2.0
+
