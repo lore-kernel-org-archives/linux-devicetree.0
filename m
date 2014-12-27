@@ -1,52 +1,94 @@
 From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 0/3] Add Armada 385 General Purpose Development Board support
-Date: Sat, 27 Dec 2014 12:00:32 +0100
-Message-ID: <1419678035-10658-1-git-send-email-gregory.clement@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Subject: [PATCH 1/3] ARM: mvebu: a38x: Fix node names
+Date: Sat, 27 Dec 2014 12:00:33 +0100
+Message-ID: <1419678035-10658-2-git-send-email-gregory.clement@free-electrons.com>
+References: <1419678035-10658-1-git-send-email-gregory.clement@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1419678035-10658-1-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-this patch set adds the support for the Armada 385 GP board, this board
-is pretty close to the Armada 385 RD one. It comes with a new revision
-of the Armada 385 SoC (B0).
+Some nodes in the DTs have a reg property but no unit name in their node name.
 
-I added a patch from Maxime's serie to support the AP board to this
-series.
+This contradicts the way the ePAPR defines the node names. Fix this.
 
-Thanks,
+Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ arch/arm/boot/dts/armada-385-db.dts | 2 +-
+ arch/arm/boot/dts/armada-385-rd.dts | 2 +-
+ arch/arm/boot/dts/armada-385.dtsi   | 2 +-
+ arch/arm/boot/dts/armada-38x.dtsi   | 4 ++--
+ 4 files changed, 5 insertions(+), 5 deletions(-)
 
-Gr=C3=A9gory
-
-
-Gregory CLEMENT (2):
-  ARM: mvebu: a38x: Add the pinctrl alias
-  ARM: mvebu: Add Armada 385 General Purpose Development Board support
-
-Maxime Ripard (1):
-  ARM: mvebu: a38x: Fix node names
-
- arch/arm/boot/dts/Makefile          |   1 +
- arch/arm/boot/dts/armada-385-db.dts |   2 +-
- arch/arm/boot/dts/armada-385-gp.dts | 380 ++++++++++++++++++++++++++++=
-++++++++
- arch/arm/boot/dts/armada-385-rd.dts |   2 +-
- arch/arm/boot/dts/armada-385.dtsi   |   2 +-
- arch/arm/boot/dts/armada-38x.dtsi   |   4 +-
- 6 files changed, 386 insertions(+), 5 deletions(-)
- create mode 100644 arch/arm/boot/dts/armada-385-gp.dts
-
---=20
+diff --git a/arch/arm/boot/dts/armada-385-db.dts b/arch/arm/boot/dts/armada-385-db.dts
+index 2aaa9d2ac284..212605ccc7b6 100644
+--- a/arch/arm/boot/dts/armada-385-db.dts
++++ b/arch/arm/boot/dts/armada-385-db.dts
+@@ -74,7 +74,7 @@
+ 				phy-mode = "rgmii-id";
+ 			};
+ 
+-			mdio {
++			mdio@72004 {
+ 				phy0: ethernet-phy@0 {
+ 					reg = <0>;
+ 				};
+diff --git a/arch/arm/boot/dts/armada-385-rd.dts b/arch/arm/boot/dts/armada-385-rd.dts
+index aaca2861dc87..74a3bfe6efd7 100644
+--- a/arch/arm/boot/dts/armada-385-rd.dts
++++ b/arch/arm/boot/dts/armada-385-rd.dts
+@@ -67,7 +67,7 @@
+ 			};
+ 
+ 
+-			mdio {
++			mdio@72004 {
+ 				phy0: ethernet-phy@0 {
+ 					reg = <0>;
+ 				};
+diff --git a/arch/arm/boot/dts/armada-385.dtsi b/arch/arm/boot/dts/armada-385.dtsi
+index 6283d7912f71..5249a4d3c207 100644
+--- a/arch/arm/boot/dts/armada-385.dtsi
++++ b/arch/arm/boot/dts/armada-385.dtsi
+@@ -37,7 +37,7 @@
+ 
+ 	soc {
+ 		internal-regs {
+-			pinctrl {
++			pinctrl@18000 {
+ 				compatible = "marvell,mv88f6820-pinctrl";
+ 				reg = <0x18000 0x20>;
+ 			};
+diff --git a/arch/arm/boot/dts/armada-38x.dtsi b/arch/arm/boot/dts/armada-38x.dtsi
+index 74391dace9e7..ada1f206028b 100644
+--- a/arch/arm/boot/dts/armada-38x.dtsi
++++ b/arch/arm/boot/dts/armada-38x.dtsi
+@@ -193,7 +193,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			pinctrl {
++			pinctrl@18000 {
+ 				compatible = "marvell,mv88f6820-pinctrl";
+ 				reg = <0x18000 0x20>;
+ 			};
+@@ -373,7 +373,7 @@
+ 				status = "disabled";
+ 			};
+ 
+-			mdio {
++			mdio@72004 {
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 				compatible = "marvell,orion-mdio";
+-- 
 1.9.1
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
