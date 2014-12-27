@@ -1,96 +1,158 @@
-From: He YunLei <heyunlei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: Re: Device Tree Child Node Parsing Question
-Date: Sat, 27 Dec 2014 12:15:42 +0800
-Message-ID: <549E326E.7020206@huawei.com>
-References: <549999A7.2010608@opensource.altera.com>
+From: Siarhei Siamashka <siarhei.siamashka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 1/2] ARM: dts: sun6i: Add dts file for MSI
+ Primo81 tablet
+Date: Sat, 27 Dec 2014 09:37:20 +0200
+Message-ID: <1419665841-22629-1-git-send-email-siarhei.siamashka@gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <549999A7.2010608-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCH4DA7NUEBBBNGD7GSAKGQE7LRK7EA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2014/12/24 0:34, Thor Thayer wrote:
-> Hi,
->
-> What is the best way to queue devicetree child nodes so the node is passed in the platform_device pointer to the probe() function?
->
-> Documentation/devicetree/usage-model.txt has the following:
->
-> "For Linux DT support, the generic behaviour is for child devices to be registered by the parent's device driver at driver .probe() time."
->
-> "Actually, it turns out that registering children of some platform_devices as more platform_devices is a common pattern, and the
-> device tree support code reflects that and makes the above example
-> simpler.  The second argument to of_platform_populate() is an
-> of_device_id table, and any node that matches an entry in that table
-> will also get its child nodes registered."
->
->
-> I tried calling of_platform_populate() in the probe of the a10_sysctl node but it doesn't appear to setup the platform device data properly for the sub-child nodes.
->
-> The top child node (a10_sysctl) is probed properly and has a valid of_node passed in. However, the sub-child nodes such as gpio4 have null passed in for pdev->dev.of_node (gpio4 probe prototype is int a10sycon_gpio_probe(struct platform_device *pdev).
+The MSI Primo81 is an A31s based tablet, with 1G RAM, 16G NAND,
+1024x768 IPS LCD display, mono speaker, 0.3 MP front camera, 2.0 MP
+rear camera, 3500 mAh battery, gt911 touchscreen, mma8452 accelerometer
+and rtl8188etv usb wifi. Has "power", "volume+" and "volume-" buttons
+(both volume buttons are also connected to the UBOOT_SEL pin). The
+external connectors are represented by MicroSD slot, MiniHDMI, MicroUSB
+OTG and 3.5mm headphone jack. More details are available at
+    http://linux-sunxi.org/MSI_Primo81
 
-Gpio4 is the child node of a10_sysctl?  You call of_platform_populate() in the probe of the a10_sysctl node,
-this action does no matter with gpio4.
+This initial dts file only provides support for mmc, wifi and uart
+(there is no external connector for uart though). Graphics can be used
+via simplefb. However, without usb otg, there are no reasonable means
+to handle user input yet.
 
-Yours,
-Yunlei
->
-> My current solution is to call of_find_matching_node() in a10sycon_gpio_probe() to get a valid node pointer but other examples tend to dereference pdev->dev.of_node.
->
-> Thank you in advance for your insight.
->
-> Thor
->
->
-> My device tree looks like this:
->
-> / {
->      soc {
->          spi0: spi@fff00000 {
->           compatible = "snps,dw-spi-mmio";
->           #address-cells = <1>;
->           #size-cells = <0>;
->           reg = <0xfff00000 0x1000>;
->           interrupts = <0 154 4>;
->           num-chipselect = <4>;
->           clocks = <&per_base_clk>;
->           status = "okay";
->
->               a10_sysctl: a10_sysctl@0 {
->          compatible = "altr,a10sycon";
->          reg = <0>;
->          interrupt-parent = <&gpio2>;
->          /* low-level active IRQ at GPIO2_24 */
->          interrupts = <24 0x8>;
->          interrupt-controller;
->          #interrupt-cells = <2>;
->          spi-max-frequency = <100000>;
->
->          gpio4: gpio-controller {
->              compatible = "altr,a10sycon-gpio";
->              gpio-controller;
->              #gpio-cells = <2>;
->              ngpios = <16>;
->          };
->
->          a10rst: a10rst {
->              compatible = "altr,a10sycon-reset";
->              #reset-cells = <1>;
->          };
->          };
->      };
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
->
+Signed-off-by: Siarhei Siamashka <siarhei.siamashka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/Makefile               |  3 +-
+ arch/arm/boot/dts/sun6i-a31s-primo81.dts | 95 ++++++++++++++++++++++++++++++++
+ 2 files changed, 97 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/sun6i-a31s-primo81.dts
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index c486545..f363938 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -464,7 +464,8 @@ dtb-$(CONFIG_MACH_SUN6I) += \
+ 	sun6i-a31-colombus.dtb \
+ 	sun6i-a31-hummingbird.dtb \
+ 	sun6i-a31-m9.dtb \
+-	sun6i-a31s-cs908.dtb
++	sun6i-a31s-cs908.dtb \
++	sun6i-a31s-primo81.dtb
+ dtb-$(CONFIG_MACH_SUN7I) += \
+ 	sun7i-a20-bananapi.dtb \
+ 	sun7i-a20-bootsetup.dtb \
+diff --git a/arch/arm/boot/dts/sun6i-a31s-primo81.dts b/arch/arm/boot/dts/sun6i-a31s-primo81.dts
+new file mode 100644
+index 0000000..a5e8562
+--- /dev/null
++++ b/arch/arm/boot/dts/sun6i-a31s-primo81.dts
+@@ -0,0 +1,95 @@
++/*
++ * Copyright 2014 Siarhei Siamashka <siarhei.siamashka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This library is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This library is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ *     You should have received a copy of the GNU General Public
++ *     License along with this library; if not, write to the Free
++ *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
++ *     MA 02110-1301 USA
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++/include/ "sun6i-a31s.dtsi"
++/include/ "sunxi-common-regulators.dtsi"
++
++/ {
++	model = "MSI Primo81 tablet";
++	compatible = "msi,primo81", "allwinner,sun6i-a31s";
++
++	chosen {
++		bootargs = "earlyprintk console=ttyS0,115200";
++	};
++
++	soc@01c00000 {
++		mmc0: mmc@01c0f000 {
++			pinctrl-names = "default";
++			pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_primo81>;
++			vmmc-supply = <&reg_vcc3v0>;
++			bus-width = <4>;
++			cd-gpios = <&pio 0 8 0>; /* PA8 */
++			cd-inverted;
++			status = "okay";
++		};
++
++		usbphy: phy@01c19400 {
++			status = "okay";
++		};
++
++		ehci0: usb@01c1a000 {
++			/* rtl8188etv wifi is connected here */
++			status = "okay";
++		};
++
++		pio: pinctrl@01c20800 {
++			mmc0_cd_pin_primo81: mmc0_cd_pin@0 {
++				allwinner,pins = "PA8";
++				allwinner,function = "gpio_in";
++				allwinner,drive = <0>;
++				allwinner,pull = <1>;
++			};
++		};
++
++		uart0: serial@01c28000 {
++			pinctrl-names = "default";
++			pinctrl-0 = <&uart0_pins_a>;
++			status = "okay";
++		};
++	};
++};
+-- 
+2.0.4
