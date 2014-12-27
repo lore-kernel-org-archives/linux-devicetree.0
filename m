@@ -1,56 +1,29 @@
-From: Nicholas Mc Guire <der.herr@hofr.at>
-Subject: [PATCH v2 -next] i2c: imx: fix handling of wait_for_completion_timeout result
-Date: Sat, 27 Dec 2014 08:33:53 -0500
-Message-ID: <1419687233-10498-1-git-send-email-der.herr@hofr.at>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Yao Yuan <yao.yuan@freescale.com>, Fugang Duan <B38611@freescale.com>, Fabio Estevam <fabio.estevam@freescale.com>, Jingoo Han <jg1.han@samsung.com>, Kaushal Butala <kaushalkernelmailinglist@gmail.com>, Sedat Dilek <sedat.dilek@gmail.com>, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Nicholas Mc Guire <der.herr@hofr.at>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 2/3] ARM: mvebu: a38x: Add the pinctrl alias
+Date: Sat, 27 Dec 2014 17:46:48 +0300
+Message-ID: <549EC658.3060204@cogentembedded.com>
+References: <1419678035-10658-1-git-send-email-gregory.clement@free-electrons.com> <1419678035-10658-3-git-send-email-gregory.clement@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1419678035-10658-3-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-wait_for_completion_timeout does not return negative values so 
-"result" handling here should be simplified to cover the actually
-possible cases only.
+Hello.
 
-patch was only compile tested for imx_v6_v7_defconfig 
+On 12/27/2014 2:00 PM, Gregory CLEMENT wrote:
 
-V2 spellchecked this time and proper labeling as 
-   suggested by Sedat Dilek <sedat.dilek@gmail.com>
+    You're not adding an alias. It's a label.
 
-patch is against linux-next 3.19.0-rc1 -next-20141226 
+> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-Signed-off-by: Nicholas Mc Guire <der.herr@hofr.at>
----
- drivers/i2c/busses/i2c-imx.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+WBR, Sergei
 
-diff --git a/drivers/i2c/busses/i2c-imx.c b/drivers/i2c/busses/i2c-imx.c
-index 7f3a9fe..2be7d9d 100644
---- a/drivers/i2c/busses/i2c-imx.c
-+++ b/drivers/i2c/busses/i2c-imx.c
-@@ -628,9 +628,9 @@ static int i2c_imx_dma_write(struct imx_i2c_struct *i2c_imx,
- 	result = wait_for_completion_timeout(
- 				&i2c_imx->dma->cmd_complete,
- 				msecs_to_jiffies(DMA_TIMEOUT));
--	if (result <= 0) {
-+	if (result == 0) {
- 		dmaengine_terminate_all(dma->chan_using);
--		return result ?: -ETIMEDOUT;
-+		return -ETIMEDOUT;
- 	}
- 
- 	/* Waiting for transfer complete. */
-@@ -686,9 +686,9 @@ static int i2c_imx_dma_read(struct imx_i2c_struct *i2c_imx,
- 	result = wait_for_completion_timeout(
- 				&i2c_imx->dma->cmd_complete,
- 				msecs_to_jiffies(DMA_TIMEOUT));
--	if (result <= 0) {
-+	if (result == 0) {
- 		dmaengine_terminate_all(dma->chan_using);
--		return result ?: -ETIMEDOUT;
-+		return -ETIMEDOUT;
- 	}
- 
- 	/* waiting for transfer complete. */
--- 
-1.7.10.4
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
