@@ -1,433 +1,53 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM: mvebu: Add Armada 385 General Purpose
- Development Board support
-Date: Sat, 27 Dec 2014 12:50:29 +0100
-Message-ID: <20141227115029.GD21001@lunn.ch>
-References: <1419678035-10658-1-git-send-email-gregory.clement@free-electrons.com>
- <1419678035-10658-4-git-send-email-gregory.clement@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1419678035-10658-4-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Nicholas Mc Guire <der.herr@hofr.at>
+Subject: [PATCH] fix handling of wait_for_completion_timeout result
+Date: Sat, 27 Dec 2014 06:48:50 -0500
+Message-ID: <1419680930-9052-1-git-send-email-der.herr@hofr.at>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Yao Yuan <yao.yuan@freescale.com>, Fugang Duan <B38611@freescale.com>, Fabio Estevam <fabio.estevam@freescale.com>, Jingoo Han <jg1.han@samsung.com>, Kaushal Butala <kaushalkernelmailinglist@gmail.com>, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Nicholas Mc Guire <der.herr@hofr.at>
 List-Id: devicetree@vger.kernel.org
 
-> @@ -0,0 +1,380 @@
-> +/*
-> + * Device Tree file for Marvell Armada 385 development board
-> + * (RD-88F6820-GP)
-> + *
-> + * Copyright (C) 2014 Marvell
-> + *
-> + * Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This file is licensed under the terms of the GNU General Public
-> + *     License version 2.  This program is licensed "as is" without
-> + *     any warranty of any kind, whether express or implied.
-> + *
-> + * Or, alternatively,
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use,
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + */
-> +
-> +/dts-v1/;
-> +#include "armada-385.dtsi"
-> +#include <dt-bindings/gpio/gpio.h>
-> +
-> +/ {
-> +	model = "Marvell Armada 385 GP";
-> +	compatible = "marvell,a385-gp", "marvell,armada385", "marvell,armada380";
-> +
-> +	chosen {
-> +		bootargs = "console=ttyS0,115200 earlyprintk";
-> +	};
-> +
-> +	memory {
-> +		device_type = "memory";
-> +		reg = <0x00000000 0x80000000>; /* 2 GB */
-> +	};
-> +
-> +	soc {
-> +		ranges = <MBUS_ID(0xf0, 0x01) 0 0xf1000000 0x100000
-> +			  MBUS_ID(0x01, 0x1d) 0 0xfff00000 0x100000>;
-> +
-> +		internal-regs {
-> +			spi@10600 {
-> +				status = "okay";
-> +
-> +				spi-flash@0 {
-> +					#address-cells = <1>;
-> +					#size-cells = <1>;
-> +					compatible = "st,m25p128";
-> +					reg = <0>; /* Chip select 0 */
-> +					spi-max-frequency = <50000000>;
-> +					m25p,fast-read;
-> +				};
-> +			};
-> +
-> +			i2c@11000 {
-> +				status = "okay";
-> +				clock-frequency = <100000>;
-> +
-> +				pca9555_0: pca9555@20 {
+wati_for_completion_timeout does not return negative values so 
+"result" handlin here should be simplified to cover the actually
+possible cases only.
 
-I think Sebastian will come along and ask this is called gpio, not
-pca9555_0. See the review he made of the Seagate Black NAS box.
+patch was only compile tested for imx_v6_v7_defconfig 
 
-> +					compatible = "nxp,pca9555";
-> +					pinctrl-names = "default";
-> +					pinctrl-0 = <&pca0_pins>;
-> +					interrupt-parent = <&gpio0>;
-> +					interrupts = <18 IRQ_TYPE_EDGE_FALLING>;
-> +					gpio-controller;
-> +					#gpio-cells = <2>;
-> +					interrupt-controller;
-> +					#interrupt-cells = <2>;
-> +					reg = <0x20>;
-> +				};
-> +
-> +				pca9555_1: pca9555@21 {
-> +					compatible = "nxp,pca9555";
-> +					pinctrl-names = "default";
-> +					interrupt-parent = <&gpio0>;
-> +					interrupts = <18 IRQ_TYPE_EDGE_FALLING>;
-> +
-> +					gpio-controller;
-> +					#gpio-cells = <2>;
-> +					interrupt-controller;
-> +					#interrupt-cells = <2>;
-> +
+patch is against 3.19.0-rc1 -next-20141226
 
-Maybe remove the blank lines here, to make it similar to the previous
-one?
+Signed-off-by: Nicholas Mc Guire <der.herr@hofr.at>
+---
+ drivers/i2c/busses/i2c-imx.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-> +					reg = <0x21>;
-> +				};
-> +
-
-Maybe remove this blank line?
-
-> +			};
-> +
-> +			serial@12000 {
-> +				status = "okay";
-> +			};
-
-It would be nice if you can document the connector number and the
-pinout of the serial port, if it is not on the silk screen.
-
-> +
-> +			ethernet@30000 {
-> +				status = "okay";
-> +				phy = <&phy0>;
-> +				phy-mode = "rgmii-id";
-> +			};
-> +
-> +			usb@50000 {
-> +				vcc-supply = <&reg_usb2_0_vbus>;
-> +				status = "okay";
-> +			};
-> +
-> +			ethernet@70000 {
-> +				status = "okay";
-> +				phy = <&phy1>;
-> +				phy-mode = "rgmii-id";
-> +			};
-> +
-> +
-> +			mdio@72004 {
-> +				phy0: ethernet-phy@0 {
-> +					reg = <0>;
-> +				};
-> +
-> +				phy1: ethernet-phy@1 {
-> +					reg = <1>;
-> +				};
-> +			};
-> +
-> +			sata@a8000 {
-> +				nr-ports = <2>;
-> +				status = "okay";
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				sata0: sata-port@0 {
-> +					reg = <0>;
-> +					target-supply = <&reg_5v_sata0>;
-> +				};
-> +
-> +				sata1: sata-port@1 {
-> +					reg = <1>;
-> +					target-supply = <&reg_5v_sata1>;
-> +				};
-> +			};
-> +
-> +			sata@e0000 {
-> +				nr-ports = <2>;
-> +				status = "okay";
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				sata2: sata-port@0 {
-> +					reg = <0>;
-> +					target-supply = <&reg_5v_sata2>;
-> +				};
-> +
-> +				sata3: sata-port@1 {
-> +					reg = <1>;
-> +					target-supply = <&reg_5v_sata3>;
-> +				};
-> +			};
-> +
-> +			sdhci@d8000 {
-> +				clock-frequency = <200000000>;
-> +				cd-gpios = <&pca9555_0 5 GPIO_ACTIVE_LOW>;
-> +				no-1-8-v;
-> +				wp-inverted;
-> +				bus-width = <8>;
-> +				status = "okay";
-> +			};
-> +
-> +			usb3@f0000 {
-> +				vcc-supply = <&reg_usb2_1_vbus>;
-> +				status = "okay";
-> +			};
-> +
-> +			usb3@f8000 {
-> +				vcc-supply = <&reg_usb3_vbus>;
-> +				status = "okay";
-> +			};
-> +		};
-> +
-> +		pcie-controller {
-> +			status = "okay";
-> +			/*
-> +			 * One PCIe units is accessible through
-> +			 * standard PCIe slot on the board.
-> +			 */
-> +			pcie@1,0 {
-> +				/* Port 0, Lane 0 */
-> +				status = "okay";
-> +			};
-> +
-> +			/*
-> +			 * The two other PCIe units are accessible
-> +			 * through mini PCIe slot on the board.
-> +			 */
-> +			pcie@2,0 {
-> +				/* Port 1, Lane 0 */
-> +				status = "okay";
-> +			};
-> +			pcie@3,0 {
-> +				/* Port 2, Lane 0 */
-> +				status = "okay";
-> +			};
-> +		};
-> +
-> +		gpio-fan {
-> +			compatible = "gpio-fan";
-> +			gpios = <&pca9555_1 3 GPIO_ACTIVE_HIGH>;
-> +			gpio-fan,speed-map = <0 0 3000 1>;
-
-It would be nice to format this with a newline between the two map
-entries.
-
-> +		};
-> +	};
-> +
-> +	reg_usb3_vbus: usb3-vbus {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "usb3-vbus";
-> +		regulator-min-microvolt = <5000000>;
-> +		regulator-max-microvolt = <5000000>;
-> +		enable-active-high;
-> +		regulator-always-on;
-> +		gpio = <&pca9555_1 15 GPIO_ACTIVE_HIGH>;
-> +	};
-> +
-> +	reg_usb2_0_vbus: v5-vbus0 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "v5.0-vbus0";
-> +		regulator-min-microvolt = <5000000>;
-> +		regulator-max-microvolt = <5000000>;
-> +		enable-active-high;
-> +		regulator-always-on;
-> +		gpio = <&pca9555_1 14 GPIO_ACTIVE_HIGH>;
-> +	};
-> +
-> +	reg_usb2_1_vbus: v5-vbus1 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "v5.0-vbus1";
-> +		regulator-min-microvolt = <5000000>;
-> +		regulator-max-microvolt = <5000000>;
-> +		enable-active-high;
-> +		regulator-always-on;
-> +		gpio = <&pca9555_0 4 GPIO_ACTIVE_HIGH>;
-> +	};
-> +
-> +	reg_usb2_1_vbus: v5-vbus1 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "v5.0-vbus1";
-> +		regulator-min-microvolt = <5000000>;
-> +		regulator-max-microvolt = <5000000>;
-> +		enable-active-high;
-> +		regulator-always-on;
-> +		gpio = <&pca9555_0 4 GPIO_ACTIVE_HIGH>;
-> +	};
-> +
-> +	reg_sata0: pwr-sata0 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "pwr_en_sata0";
-> +		enable-active-high;
-> +		regulator-always-on;
-> +
-> +	};
-> +
-> +	reg_5v_sata0: v5-sata0 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "v5.0-sata0";
-> +		regulator-min-microvolt = <5000000>;
-> +		regulator-max-microvolt = <5000000>;
-> +		regulator-always-on;
-> +		vin-supply = <&reg_sata0>;
-> +	};
-> +
-> +	reg_12v_sata0: v12-sata0 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "v12.0-sata0";
-> +		regulator-min-microvolt = <12000000>;
-> +		regulator-max-microvolt = <12000000>;
-> +		regulator-always-on;
-> +		vin-supply = <&reg_sata0>;
-> +	};
-> +
-> +	reg_sata1: pwr-sata1 {
-> +		regulator-name = "pwr_en_sata1";
-> +		compatible = "regulator-fixed";
-> +		regulator-min-microvolt = <12000000>;
-> +		regulator-max-microvolt = <12000000>;
-> +		enable-active-high;
-> +		regulator-always-on;
-> +		gpio = <&pca9555_0 3 GPIO_ACTIVE_HIGH>;
-> +	};
-> +
-> +	reg_5v_sata1: v5-sata1 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "v5.0-sata1";
-> +		regulator-min-microvolt = <5000000>;
-> +		regulator-max-microvolt = <5000000>;
-> +		regulator-always-on;
-> +		vin-supply = <&reg_sata1>;
-> +	};
-> +
-> +	reg_12v_sata1: v12-sata1 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "v12.0-sata1";
-> +		regulator-min-microvolt = <12000000>;
-> +		regulator-max-microvolt = <12000000>;
-> +		regulator-always-on;
-> +		vin-supply = <&reg_sata1>;
-> +	};
-> +
-> +	reg_sata2: pwr-sata2 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "pwr_en_sata2";
-> +		enable-active-high;
-> +		regulator-always-on;
-> +		gpio = <&pca9555_0 11 GPIO_ACTIVE_HIGH>;
-> +	};
-> +
-> +	reg_5v_sata2: v5-sata2 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "v5.0-sata2";
-> +		regulator-min-microvolt = <5000000>;
-> +		regulator-max-microvolt = <5000000>;
-> +		regulator-always-on;
-> +		vin-supply = <&reg_sata2>;
-> +	};
-> +
-> +	reg_12v_sata2: v12-sata2 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "v12.0-sata2";
-> +		regulator-min-microvolt = <12000000>;
-> +		regulator-max-microvolt = <12000000>;
-> +		regulator-always-on;
-> +		vin-supply = <&reg_sata2>;
-> +	};
-> +
-> +	reg_sata3: pwr-sata3 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "pwr_en_sata3";
-> +		enable-active-high;
-> +		regulator-always-on;
-> +		gpio = <&pca9555_0 12 GPIO_ACTIVE_HIGH>;
-> +	};
-> +
-> +	reg_5v_sata3: v5-sata3 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "v5.0-sata3";
-> +		regulator-min-microvolt = <5000000>;
-> +		regulator-max-microvolt = <5000000>;
-> +		regulator-always-on;
-> +		vin-supply = <&reg_sata3>;
-> +	};
-> +
-> +	reg_12v_sata3: v12-sata3 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "v12.0-sata3";
-> +		regulator-min-microvolt = <12000000>;
-> +		regulator-max-microvolt = <12000000>;
-> +		regulator-always-on;
-> +		vin-supply = <&reg_sata3>;
-> +	};
-> +};
-
-What is the quality of the power supply? What you often see if that
-SATA drives are spun up sequentially, in order to not strain the power
-supply with the current draw of them all starting at the same
-time. There is a property, startup-delay-us, which can be used for
-this.
-
-	Andrew
-
-> +
-> +&pinctrl {
-> +	pca0_pins: pca0_pins {
-> +		marvell,pins = "mpp18";
-> +		marvell,function = "gpio";
-> +	};
-> +};
-> -- 
-> 1.9.1
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/i2c/busses/i2c-imx.c b/drivers/i2c/busses/i2c-imx.c
+index 7f3a9fe..2be7d9d 100644
+--- a/drivers/i2c/busses/i2c-imx.c
++++ b/drivers/i2c/busses/i2c-imx.c
+@@ -628,9 +628,9 @@ static int i2c_imx_dma_write(struct imx_i2c_struct *i2c_imx,
+ 	result = wait_for_completion_timeout(
+ 				&i2c_imx->dma->cmd_complete,
+ 				msecs_to_jiffies(DMA_TIMEOUT));
+-	if (result <= 0) {
++	if (result == 0) {
+ 		dmaengine_terminate_all(dma->chan_using);
+-		return result ?: -ETIMEDOUT;
++		return -ETIMEDOUT;
+ 	}
+ 
+ 	/* Waiting for transfer complete. */
+@@ -686,9 +686,9 @@ static int i2c_imx_dma_read(struct imx_i2c_struct *i2c_imx,
+ 	result = wait_for_completion_timeout(
+ 				&i2c_imx->dma->cmd_complete,
+ 				msecs_to_jiffies(DMA_TIMEOUT));
+-	if (result <= 0) {
++	if (result == 0) {
+ 		dmaengine_terminate_all(dma->chan_using);
+-		return result ?: -ETIMEDOUT;
++		return -ETIMEDOUT;
+ 	}
+ 
+ 	/* waiting for transfer complete. */
+-- 
+1.7.10.4
