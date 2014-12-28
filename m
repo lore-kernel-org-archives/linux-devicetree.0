@@ -1,152 +1,43 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH 2/3] hwmon: Driver for OMAP3 temperature sensor
-Date: Sun, 28 Dec 2014 11:07:29 +0100
-Message-ID: <20141228100716.GA5581@earth.universe>
-References: <20141226102933.GA28778@amd>
- <1419597294-21487-1-git-send-email-sre@kernel.org>
- <1419597294-21487-3-git-send-email-sre@kernel.org>
- <20141227195825.GF10007@amd> <20141227223516.GA18455@amd>
- <20141228082447.GA31346@roeck-us.net>
+From: Evgeni Dobrev <evgeni-c3HRhe8yoGxdzLpqerNdyw@public.gmane.org>
+Subject: [PATCH v4 0/1] add support for Seagate BlackArmor NAS220
+Date: Sun, 28 Dec 2014 11:46:27 +0100
+Message-ID: <20141228104627.GA11475@anne>
+References: <20141215203855.GA28940@anne>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1472819071115156077=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20141228082447.GA31346@roeck-us.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pavel Machek <pavel@ucw.cz>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Tony Lindgren <tony@atomide.com>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, lm-sensors@lm-sensors.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Pali Rohar <pali.rohar@gmail.com>, linux-omap@vger.kernel.org, Jean Delvare <jdelvare@suse.de>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20141215203855.GA28940@anne>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+v4:	rename basename to blackarmor-nas220
+	use "Seagate Blackarmor NAS220" as model name
+	use node references instead of repeating the bus structure
+	separate nodes with blank lines
+	adt7476's node name reflects device function (i.e. thermal)
+	reduce button labels to "Reset" and "Power"
+	use GPIO_ACTIVE_LOW for regulator's gpio property
 
---===============1472819071115156077==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="45Z9DzgjV8m4Oswq"
-Content-Disposition: inline
+v3:	documented UART pinout in dts
 
+v2:	indent with tabs only
+	removed NAND layout
 
---45Z9DzgjV8m4Oswq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Evgeni Dobrev (1):
+  add support for Seagate BlackArmor NAS220
 
-On Sun, Dec 28, 2014 at 12:24:47AM -0800, Guenter Roeck wrote:
-> On Sat, Dec 27, 2014 at 11:35:16PM +0100, Pavel Machek wrote:
-> > On Sat 2014-12-27 20:58:25, Pavel Machek wrote:
-> > > On Fri 2014-12-26 13:34:53, Sebastian Reichel wrote:
-> > > > OMAP34xx and OMAP36xx processors contain a register in the syscon a=
-rea,
-> > > > which can be used to determine the SoCs temperature. This patch pro=
-vides
-> > > > a DT based driver for the temperature sensor based on an older driv=
-er
-> > > > written by Peter De Schrijver for the Nokia N900 and N9.
-> > > >=20
-> > > > Signed-off-by: Sebastian Reichel <sre@kernel.org>
-> > > > ---
-> > > >  drivers/hwmon/Kconfig      |   8 ++
-> > > >  drivers/hwmon/Makefile     |   1 +
-> > > >  drivers/hwmon/omap3-temp.c | 307 +++++++++++++++++++++++++++++++++=
-++++++++++++
-> > > >  3 files changed, 316 insertions(+)
-> > > >  create mode 100644 drivers/hwmon/omap3-temp.c
-> > >=20
-> > > When it hangs, it loops here:
-> > >=20
-> > > do {
-> > > regmap_read(data->syscon, SYSCON_TEMP_REG,&temp_sensor_reg);
-> > > if ((temp_sensor_reg & eocz_mask) =3D=3D level)
-> > >    return true;
-> > > printk("=3D");
-> > > }
-> > > while (ktime_us_delta(expire, ktime_get()) > 0);
-> >=20
-> > And this fixes the hang, and makes level handling more readable.
-> >=20
-> > Fix the timeout code, now it actually works. Driver still fails after
-> > a while.
-> >=20
-> > Signed-off-by: Pavel Machek <pavel@ucw.cz>
-> >=20
-> > diff --git a/drivers/hwmon/omap3-temp.c b/drivers/hwmon/omap3-temp.c
-> > index 8a69604..1b8c768 100644
-> > --- a/drivers/hwmon/omap3-temp.c
-> > +++ b/drivers/hwmon/omap3-temp.c
-> > @@ -130,9 +130,7 @@ static inline bool wait_for_eocz(struct omap3_temp_=
-data *data,
-> >  	ktime_t timeout, expire;
-> >  	u32 temp_sensor_reg, eocz_mask;
-> > =20
-> >  	eocz_mask =3D BIT(data->hwdata->eocz_bit);
-> > -	level &=3D 1;
-> > -	level *=3D eocz_mask;
-> > =20
-> >  	expire =3D ktime_add_ns(ktime_get(), max_delay);
-> >  	timeout =3D ktime_set(0, min_delay);
-> > @@ -140,9 +141,9 @@ static inline bool wait_for_eocz(struct omap3_temp_=
-data *data,
-> >  	schedule_hrtimeout(&timeout, HRTIMER_MODE_REL);
-> >  	do {
-> >  		regmap_read(data->syscon, SYSCON_TEMP_REG, &temp_sensor_reg);
-> > -		if ((temp_sensor_reg & eocz_mask) =3D=3D level)
-> > +		if (!!(temp_sensor_reg & eocz_mask) =3D=3D level)
-> >  			return true;
-> > -	} while (ktime_us_delta(expire, ktime_get()) > 0);
-> > +	} while (ktime_after(expire, ktime_get()));
-> > =20
-> Does this have to be a hard loop, without sleep ? I am a bit concerned th=
-at it
-> may loop for more than a ms.
->=20
-> Other than that, I assume we'll see an updated version with the coding st=
-yle
-> issues and hang-up problems fixed.
+ arch/arm/boot/dts/Makefile                       |    1 +
+ arch/arm/boot/dts/kirkwood-blackarmor-nas220.dts |  172 ++++++++++++++++++++++
+ 2 files changed, 173 insertions(+)
+ create mode 100644 arch/arm/boot/dts/kirkwood-blackarmor-nas220.dts
 
-I will send a v2 patchset with Pavels change requests. It may take a
-few days though, since I'm currently at a conference (31C3).
+-- 
+1.7.10.4
 
--- Sebastian
-
---45Z9DzgjV8m4Oswq
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJUn9ZRAAoJENju1/PIO/qaeZQP/jEjABne9+ymh3zDYNP5i8bO
-tbnsRthwdlFCwxBD2rxR0PgbBU0NnhNMTwy0wekMDsQrlRFVSI56ixO0iudcyyiD
-6A9IRJKGf0t8T9TrPJztG6hMuBfJMxqNfY7aDM2lsKWmhn1l1XLPyStvPkW1uFLl
-jm8qvBY9jS3ckkh2yaT9Z7QVdd7FjtaxDiqAZ7RvHPiIEKDTyjfv7y4KB3DHqdvg
-SajlLw5HsqYa296HYC/x/rFybtzeJX1iAolH3h4RK+1B0yuFUK59O5Mn2IHE3or2
-yumnjjviZOazj/mKuOpTAuTSc7z3zGLGZ5/pnOxfWT2nX7zw7vzHXT0wVYfpJC3E
-wpcyjL9aibTxUo1pTNq5ZFh9jWYPu+ld7nSnyB6XHag6TRkpMHfp+gLZPsLYuSKc
-quwSYjzTFJ9JpPy5BDm0FWtxFuYQsCa4G07rUoaWMXcYG+W9UlrhSV0pPPm97CX5
-wUAJdOvPH2zvhk6Faaa3KQ0z2iBAvgGY7CVh02cuPHId17FvwM3nEPM/4OS0a6GM
-nTrWwhCPdbKjJpMmU3BFaeN+Zd4NjAkL8v/uUrR6q7lj0UqS0jXNaiPzsWPaAUMJ
-JED8KKwz8Q0krwGJuHwcZ9a3E52OkbIeQUviagE2dCIbDMgojLCSpSKWtYA4AVVm
-QKV3kiXxlcXuawTBT9Xw
-=VMkA
------END PGP SIGNATURE-----
-
---45Z9DzgjV8m4Oswq--
-
-
---===============1472819071115156077==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============1472819071115156077==--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
