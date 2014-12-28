@@ -1,233 +1,48 @@
-From: Evgeni Dobrev <evgeni-c3HRhe8yoGxdzLpqerNdyw@public.gmane.org>
-Subject: [PATCH v4 1/1] add support for Seagate BlackArmor NAS220
-Date: Sun, 28 Dec 2014 11:46:54 +0100
-Message-ID: <20141228104654.GA11638@anne>
-References: <20141215203855.GA28940@anne>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH v3 3/5] pinctrl: exynos: add exynos5410 SoC specific data
+Date: Sun, 28 Dec 2014 20:16:24 +0900
+Message-ID: <549FE688.1060601@gmail.com>
+References: <547104D5.4030803@suse.de> <1416695185-5198-1-git-send-email-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20141215203855.GA28940@anne>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1416695185-5198-1-git-send-email-afaerber@suse.de>
+Sender: linux-gpio-owner@vger.kernel.org
+To: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>, linux-samsung-soc@vger.kernel.org
+Cc: Kukjin Kim <kgene@kernel.org>, =?UTF-8?B?6rmA7ZWZ7KO8?= <ruppi.kim@hardkernel.com>, Humberto Naves <hsnaves@gmail.com>, Jan Kiszka <jan.kiszka@siemens.com>, Johann Pfefferl <johann.pfefferl@siemens.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Thomas Abraham <thomas.abraham@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "open list:PIN CONTROL SUBSY..." <linux-gpio@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for Seagate BlackArmor NAS220.
+Hi Andreas,
 
-The Seagate BlackArmor NAS 220 is a NAS system based on Marvell 88f6192. It has
-32MB NAND and 128MB DRAM. It has two SATA slots, one Gigabit Ethernet port, two
-USB 2.0 ports, two buttons and three LEDs. There is a serial port available on
-the CN5 connector on the board (1 - TX, 4 - RX, 6 - GND).
+On 23.11.2014 07:26, Andreas F=C3=A4rber wrote:
+> From: Hakjoo Kim <ruppi.kim@hardkernel.com>
+>
+> Add Samsung EXYNOS5410 SoC specific data to enable pinctrl
+> support for all platforms based on EXYNOS5410.
+>
+> Signed-off-by: Hakjoo Kim <ruppi.kim@hardkernel.com>
+> [AF: Rebased onto Exynos5260 and irq_chip consolidation]
+> Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
+> ---
+>   v2 -> v3:
+>   * Rebased (.svc, .{g,w}eint_{con,mask,pend} fields dropped)
+>
+>   v1 -> v2:
+>   * Filled in Sob from Hakjoo Kim
 
-The only functionality still not implemented is the bi-color led on the front
-panel (status). Pins mpp22 and mpp23 control this led. Setting mpp22 to high and
-mpp23 to low results in orange color. Setting mpp22 to low and mpp23 to high
-results in blue color.
+Any news on this patch? I'd like to ACK it, but apparently it is waitin=
+g=20
+for a rebase.
 
-The third led is wired to show the SATA activity on the two drives.
+Sorry for the delay, unfortunately things are a little bit busy on my=20
+side nowadays.
 
-Signed-off-by: Evgeni Dobrev <evgeni-c3HRhe8yoGxdzLpqerNdyw@public.gmane.org>
----
- arch/arm/boot/dts/Makefile                       |    1 +
- arch/arm/boot/dts/kirkwood-blackarmor-nas220.dts |  172 ++++++++++++++++++++++
- 2 files changed, 173 insertions(+)
- create mode 100644 arch/arm/boot/dts/kirkwood-blackarmor-nas220.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 38c89ca..780bf29 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -100,6 +100,7 @@ dtb-$(CONFIG_ARCH_KEYSTONE) += k2hk-evm.dtb \
- 	k2l-evm.dtb \
- 	k2e-evm.dtb
- dtb-$(CONFIG_MACH_KIRKWOOD) += kirkwood-b3.dtb \
-+	kirkwood-blackarmor-nas220.dtb \
- 	kirkwood-cloudbox.dtb \
- 	kirkwood-d2net.dtb \
- 	kirkwood-db-88f6281.dtb \
-diff --git a/arch/arm/boot/dts/kirkwood-blackarmor-nas220.dts b/arch/arm/boot/dts/kirkwood-blackarmor-nas220.dts
-new file mode 100644
-index 0000000..27fe2f9
---- /dev/null
-+++ b/arch/arm/boot/dts/kirkwood-blackarmor-nas220.dts
-@@ -0,0 +1,172 @@
-+/*
-+ * Device Tree file for Seagate Blackarmor NAS220
-+ *
-+ * Copyright (C) 2014 Evgeni Dobrev <evgeni-c3HRhe8yoGxdzLpqerNdyw@public.gmane.org>
-+ *
-+ * Licensed under GPLv2 or later.
-+ */
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include "kirkwood.dtsi"
-+#include "kirkwood-6192.dtsi"
-+
-+/ {
-+	model = "Seagate Blackarmor NAS220";
-+	compatible = "seagate,blackarmor-nas220","marvell,kirkwood-88f6192","marvell,kirkwood";
-+
-+	memory { /* 128 MB */
-+		device_type = "memory";
-+		reg = <0x00000000 0x8000000>;
-+	};
-+
-+	chosen {
-+		bootargs = "console=ttyS0,115200n8";
-+		stdout-path = &uart0;
-+	};
-+
-+	gpio_poweroff {
-+		compatible = "gpio-poweroff";
-+		gpios = <&gpio0 14 GPIO_ACTIVE_LOW>;
-+	};
-+
-+	gpio_keys {
-+		compatible = "gpio-keys";
-+
-+		button@1{
-+			label = "Reset";
-+			linux,code = <KEY_POWER>;
-+			gpios = <&gpio0 29 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		button@2{
-+			label = "Power";
-+			linux,code = <KEY_SLEEP>;
-+			gpios = <&gpio0 26 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+
-+	gpio-leds {
-+		compatible = "gpio-leds";
-+
-+		blue-power {
-+			label = "nas220:blue:power";
-+			gpios = <&gpio0 12 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "default-on";
-+		};
-+	};
-+
-+	regulators {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		pinctrl-0 = <&pmx_power_sata0 &pmx_power_sata1>;
-+		pinctrl-names = "default";
-+
-+		sata0_power: regulator@1 {
-+			compatible = "regulator-fixed";
-+			reg = <1>;
-+			regulator-name = "SATA0 Power";
-+			regulator-min-microvolt = <5000000>;
-+			regulator-max-microvolt = <5000000>;
-+			enable-active-high;
-+			regulator-always-on;
-+			regulator-boot-on;
-+			gpio = <&gpio0 24 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		sata1_power: regulator@2 {
-+			compatible = "regulator-fixed";
-+			reg = <2>;
-+			regulator-name = "SATA1 Power";
-+			regulator-min-microvolt = <5000000>;
-+			regulator-max-microvolt = <5000000>;
-+			enable-active-high;
-+			regulator-always-on;
-+			regulator-boot-on;
-+			gpio = <&gpio0 28 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+};
-+
-+/*
-+ * Serial port routed to connector CN5
-+ *
-+ * pin 1 - TX (CPU's TX)
-+ * pin 4 - RX (CPU's RX)
-+ * pin 6 - GND
-+ */
-+&uart0 {
-+	status = "okay";
-+};
-+
-+&pinctrl {
-+	pinctrl-0 = <&pmx_button_reset &pmx_button_power>;
-+	pinctrl-names = "default";
-+
-+	pmx_act_sata0: pmx-act-sata0 {
-+		marvell,pins = "mpp15";
-+		marvell,function = "sata0";
-+	};
-+
-+	pmx_act_sata1: pmx-act-sata1 {
-+		marvell,pins = "mpp16";
-+		marvell,function = "sata1";
-+	};
-+
-+	pmx_power_sata0: pmx-power-sata0 {
-+		marvell,pins = "mpp24";
-+		marvell,function = "gpio";
-+	};
-+
-+	pmx_power_sata1: pmx-power-sata1 {
-+		marvell,pins = "mpp28";
-+		marvell,function = "gpio";
-+	};
-+
-+	pmx_button_reset: pmx-button-reset {
-+		marvell,pins = "mpp29";
-+		marvell,function = "gpio";
-+	};
-+
-+	pmx_button_power: pmx-button-power {
-+		marvell,pins = "mpp26";
-+		marvell,function = "gpio";
-+	};
-+};
-+
-+&sata {
-+	status = "okay";
-+	nr-ports = <2>;
-+};
-+		
-+&i2c0 {
-+	status = "okay";
-+
-+	adt7476: thermal@2e {
-+		compatible = "adi,adt7476";
-+		reg = <0x2e>;
-+	};
-+};
-+
-+&nand {
-+	status = "okay";
-+};
-+
-+&mdio {
-+	status = "okay";
-+
-+	ethphy0: ethernet-phy@8 {
-+		 reg = <8>;
-+	};
-+};
-+
-+&eth0 {
-+	status = "okay";
-+
-+	ethernet0-port@0 {
-+		phy-handle = <&ethphy0>;
-+	};
-+};
--- 
-1.7.10.4
-
+Best regards,
+Tomasz
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+n
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
