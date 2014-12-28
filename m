@@ -1,16 +1,16 @@
-From: Dmitry Lifshitz <lifshitz-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+From: Dmitry Lifshitz <lifshitz@compulab.co.il>
 Subject: [PATCH] ARM: dts: cm-t3x: add NAND support
-Date: Sun, 28 Dec 2014 13:37:24 +0200
-Message-ID: <1419766644-31026-1-git-send-email-lifshitz@compulab.co.il>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Dmitry Lifshitz <lifshitz-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+Date: Sun, 28 Dec 2014 15:15:03 +0200
+Message-ID: <1419772503-11671-1-git-send-email-lifshitz@compulab.co.il>
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Dmitry Lifshitz <lifshitz@compulab.co.il>
 List-Id: devicetree@vger.kernel.org
 
 Add NAND support
 
-Signed-off-by: Dmitry Lifshitz <lifshitz-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+Signed-off-by: Dmitry Lifshitz <lifshitz@compulab.co.il>
 ---
  arch/arm/boot/dts/omap3-cm-t3x.dtsi   |   58 +++++++++++++++++++++++++++++++++
  arch/arm/boot/dts/omap3-sbc-t3517.dts |    4 ++
@@ -137,7 +137,3 @@ index 5bdddf2..73c7bf4 100644
 -- 
 1.7.5.4
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
