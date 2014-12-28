@@ -1,34 +1,41 @@
-From: Igor Grinberg <grinberg@compulab.co.il>
-Subject: Re: [PATCH] ARM: dts: cm-t3x: add NAND support
-Date: Sun, 28 Dec 2014 15:55:34 +0200
-Message-ID: <54A00BD6.8010507@compulab.co.il>
-References: <1419772503-11671-1-git-send-email-lifshitz@compulab.co.il>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH 1/3] TTY: add support for "tty slave" devices.
+Date: Sun, 28 Dec 2014 15:20:10 +0100
+Message-ID: <20141228142010.GA3922@amd>
+References: <20141211214801.4127.93914.stgit@notabene.brown>
+ <20141211215943.4127.24792.stgit@notabene.brown>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1419772503-11671-1-git-send-email-lifshitz@compulab.co.il>
-Sender: linux-omap-owner@vger.kernel.org
-To: Dmitry Lifshitz <lifshitz@compulab.co.il>, =?windows-1252?Q?Beno=EEt_?= =?windows-1252?Q?Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20141211215943.4127.24792.stgit@notabene.brown>
+Sender: linux-kernel-owner@vger.kernel.org
+To: NeilBrown <neilb@suse.de>
+Cc: Grant Likely <grant.likely@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Jiri Slaby <jslaby@suse.cz>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Dima,
+Hi!
 
-On 12/28/14 15:15, Dmitry Lifshitz wrote:
-> Add NAND support
-> 
-> Signed-off-by: Dmitry Lifshitz <lifshitz@compulab.co.il>
-> ---
->  arch/arm/boot/dts/omap3-cm-t3x.dtsi   |   58 +++++++++++++++++++++++++++++++++
->  arch/arm/boot/dts/omap3-sbc-t3517.dts |    4 ++
->  arch/arm/boot/dts/omap3-sbc-t3530.dts |   10 ++----
->  arch/arm/boot/dts/omap3-sbc-t3730.dts |    5 ++-
->  4 files changed, 68 insertions(+), 9 deletions(-)
+> index 8c4fd0332028..b59501ee2f21 100644
+> --- a/Documentation/devicetree/bindings/serial/of-serial.txt
+> +++ b/Documentation/devicetree/bindings/serial/of-serial.txt
+> @@ -39,6 +39,10 @@ Optional properties:
+>    driver is allowed to detect support for the capability even without this
+>    property.
+>  
+> +Optional child node:
+> +- a platform device listed as a child node will be probed and
+> +  powered-on whenever the tty is in use (open).
+> +
+>  Example:
+>  
+>  	uart@80230000 {
 
-It seems that you have missed the omap3-cm-t3x30.dtsi.
-If after this patch you build omap3-cm-t3530.dts or omap3-cm-t3730.dts,
-it will not have NAND, while they should get it as well.
-
+Hmm. Other devices may want it the other way around: probe the device
+behind the uart, make it control power and open/close of the uart, and
+hide the /dev/ttyXX from userspace...
+								Pavel
+								
 -- 
-Regards,
-Igor.
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
