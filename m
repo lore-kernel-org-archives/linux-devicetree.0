@@ -1,83 +1,119 @@
-From: Eddie Huang <eddie.huang@mediatek.com>
-Subject: Re: [PATCH 1/2] tty: serial: 8250_mtk: Add earlycon
-Date: Mon, 29 Dec 2014 12:24:56 +0800
-Message-ID: <1419827096.6184.128.camel@mtksdaap41>
-References: <1418891601-53769-1-git-send-email-eddie.huang@mediatek.com>
-	 <1418891601-53769-2-git-send-email-eddie.huang@mediatek.com>
-	 <CAL_JsqKp+1ZWPK4rB4_vxrx-dtNCy7Hc3S67uQ9VHdAby8erjg@mail.gmail.com>
+From: Liu Ying <Ying.Liu@freescale.com>
+Subject: [PATCH RFC v6 00/21] Add support for i.MX MIPI DSI DRM driver
+Date: Mon, 29 Dec 2014 14:39:07 +0800
+Message-ID: <1419835168-9034-1-git-send-email-Ying.Liu@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKp+1ZWPK4rB4_vxrx-dtNCy7Hc3S67uQ9VHdAby8erjg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Matthias Brugger <matthias.bgg@gmail.com>, srv_heupstream@mediatek.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Jiri Slaby <jslaby@suse.cz>, Alan Cox <alan@linux.intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>, yingjoe.chen@mediatek.com, yh.chen@mediatek.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org
+Cc: stefan.wahren@i2se.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, kernel@pengutronix.de, linux-kernel@vger.kernel.org, a.hajda@samsung.com, mturquette@linaro.org, linux-arm-kernel@lists.infradead.org, andyshrk@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On Fri, 2014-12-26 at 15:24 -0600, Rob Herring wrote:
-> On Thu, Dec 18, 2014 at 2:33 AM, Eddie Huang <eddie.huang@mediatek.com> wrote:
-> > Mediatek UART has highspeed register, but 8250_early.c doesn't
-> > support this, so add earlycon in 8250_mtk.c
-> 
-> I don't see any highspeed register setup here. More generically,
-> aren't you just skipping any UART setup? That may be useful on other
-> platforms with 8250s, too. With the kernel command line version, you
-> could perhaps add a "noinit" flag. The DT case is harder, and I'm not
-> sure how we should handle that. We could perhaps add a
-> "stdout-path-initialized" flag to chosen.
-> 
-
-Yes, I skipped UART setup same as msm_serial.c and amba-pl011.c
-(although they are standalone serial driver). Just like earlyprintk, I
-think earlycon should reuse UART setting in loader. Since some other
-platforms with 8250 already depend on this, it's ok to add flags to
-distinguish whether 8250 earlycon driver should init hw or not. As you
-said, add "noinit" flag is simple, but "stdout-path-initialized" need
-more discussion. 
-
-> >
-> > Signed-off-by: Eddie Huang <eddie.huang@mediatek.com>
-> > ---
-> >  drivers/tty/serial/8250/8250_mtk.c | 33 +++++++++++++++++++++++++++++++++
-> >  1 file changed, 33 insertions(+)
-> >
-> > diff --git a/drivers/tty/serial/8250/8250_mtk.c b/drivers/tty/serial/8250/8250_mtk.c
-> > index de7aae5..65dd569 100644
-> > --- a/drivers/tty/serial/8250/8250_mtk.c
-> > +++ b/drivers/tty/serial/8250/8250_mtk.c
-> > @@ -23,6 +23,7 @@
-> >  #include <linux/pm_runtime.h>
-> >  #include <linux/serial_8250.h>
-> >  #include <linux/serial_reg.h>
-> > +#include <linux/console.h>
-> >
-> >  #include "8250.h"
-> >
-> > @@ -289,6 +290,38 @@ static struct platform_driver mtk8250_platform_driver = {
-> >  };
-> >  module_platform_driver(mtk8250_platform_driver);
-> >
-> > +#define BOTH_EMPTY (UART_LSR_TEMT | UART_LSR_THRE)
-> > +
-> > +static void __init mtk8250_serial_putc(struct uart_port *port, int c)
-> > +{
-> > +       while ((readl(port->membase + (UART_LSR << 2)) & BOTH_EMPTY) !=
-> > +               BOTH_EMPTY)
-> > +               ;
-> > +       writel(c, port->membase + (UART_TX << 2));
-> > +}
-> > +
-> > +static void __init early_mtk8250_write(struct console *console,
-> > +                                       const char *s, unsigned int count)
-> 
-> Is there a reason early_serial8250_write can't work for you other than
-> it is currently static?
-> 
-> Rob
-> 
-
-The reason is only static. I want to keep 8250_early.c untouchable, all
-modifications in 8250_mtk.c
+SGksCgpUaGlzIHZlcnNpb24gZG9lcyBzb21lIG1pbm9yIGNoYW5nZXMgdG8gaW1wcm92ZSB0aGUg
+Y29kZSBxdWFsaXR5LgpUaGUgY2hlY2twYXRjaC5wbCBzY3JpcHQgaXMgaGFwcGllciBub3cgb24g
+dGhpcyB2ZXJzaW9uLgpGb3IgZGV0YWlsIGNoYW5nZSBsb2csIHBsZWFzZSBmaW5kIHRoZW0gaW4g
+ZWFjaCBzdGFuZGFsb25lIHBhdGNoLgoKVGhlIGkuTVggTUlQSSBEU0kgaXMgYSBTeW5vcHN5cyBE
+ZXNpZ25XYXJlIE1JUEkgRFNJIGhvc3QgY29udHJvbGxlciBJUC4KVGhpcyBzZXJpZXMgYWRkcyBz
+dXBwb3J0IGZvciBhIFN5bm9wc3lzIERlc2lnbldhcmUgTUlQSSBEU0kgaG9zdCBjb250cm9sbGVy
+CkRSTSBicmlkZ2UgZHJpdmVyIGFuZCBhIGkuTVggTUlQSSBEU0kgc3BlY2lmaWMgRFJNIGRyaXZl
+ci4KQ3VycmVudGx5LCB0aGUgTUlQSSBEU0kgZHJpdmVycyBvbmx5IHN1cHBvcnQgdGhlIGJ1cnN0
+IHdpdGggc3luYyBwdWxzZSBtb2RlLgoKVGhpcyBzZXJpZXMgYWxzbyBpbmNsdWRlcyBhIERSTSBw
+YW5lbCBkcml2ZXIgZm9yIHRoZSBUcnVseSBURlQ0ODA4MDAtMTYtRSBwYW5lbAp3aGljaCBpcyBk
+cml2ZW4gYnkgdGhlIEhpbWF4IEhYODM2OUEgZHJpdmVyIElDLiAgVGhlIGRyaXZlciBJQyBkYXRh
+IHNoZWV0IGNvdWxkCmJlIGZvdW5kIGF0IFsxXS4gIEFzIG1lbnRpb25lZCBieSB0aGUgZGF0YSBz
+aGVldCwgdGhlIGRyaXZlciBJQyBzdXBwb3J0cyBzZXZlcmFsCmludGVyZmFjZSBtb2Rlcy4gIEN1
+cnJlbnRseSwgdGhlIERSTSBwYW5lbCBkcml2ZXIgb25seSBzdXBwb3J0cyB0aGUgTUlQSSBEU0kg
+dmlkZW8KbW9kZS4gIE5ldyBpbnRlcmZhY2UgbW9kZXMgY291bGQgYmUgYWRkZWQgbGF0ZXIocGVy
+aGFwcywganVzdCBsaWtlIHRoZSB3YXkgdGhlIERSTQpzaW1wbGUgcGFuZWwgZHJpdmVyIHN1cHBv
+cnRzIGJvdGggTUlQSSBEU0kgaW50ZXJmYWNlIHBhbmVscyBhbmQgc2ltcGxlKHBhcmFsbGVsKQpp
+bnRlcmZhY2UgcGFuZWxzKS4KClRoZSBNSVBJIERTSSBmZWF0dXJlIGlzIHRlc3RlZCBvbiBpLk1Y
+NlEgU2FicmVTRCBib2FyZCBhbmQgaS5NWDZETCBTYWJyZVNEIGJvYXJkLgpUaGUgTUlQSSBEU0kg
+ZGlzcGxheSBjb3VsZCBiZSBlbmFibGVkIGRpcmVjdGx5IG9uIGkuTVg2USBTYWJyZVNEIGJvYXJk
+IGFmdGVyCmFwcGx5aW5nIHRoaXMgc2VyaWVzLCBiZWNhdXNlIHRoZSAyNi40TUh6IHBpeGVsIGNs
+b2NrIHRoZSBwYW5lbCByZXF1aXJlcyBjb3VsZCBiZQpkZXJpdmVkIGZyb20gdGhlIElQVSBIU1Ag
+Y2xvY2soMjY0TUh6KSB3aXRoIGFuIGludGVnZXIgZGl2aWRlci4KT24gaS5NWDZETCBTYWJyZVNE
+IGJvYXJkLCB3ZSBuZWVkIHRvIG1hbnVhbGx5IGRpc2FibGUgdGhlIExWRFMgYW5kIEhETUkgZGlz
+cGxheXMgaW4KdGhlIGRldmljZSB0cmVlIGJsb2IsIHNpbmNlIHRoZSBpLk1YNkRMIElQVSBIU1Ag
+Y2xvY2sgaXMgMTk4TUh6IGF0IHByZXNlbnQsIHdoaWNoCm1ha2VzIHRoZSBwaXhlbCBjbG9jayBz
+aGFyZSB0aGUgUExMNSB2aWRlbyBjbG9jayBzb3VyY2Ugd2l0aCB0aGUgTFZEUyBhbmQgSERNSSwK
+dGh1cywgdGhlIHBhbmVsIGNhbm5vdCBnZXQgdGhlIHBpeGVsIGNsb2NrIHJhdGUgaXQgd2FudHMu
+CgpQYXRjaCAwMS8yMSBpcyBuZWVkZWQgdG8gZ2V0IGEgcHJlY2lzZSBwaXhlbCBjbG9jayByYXRl
+KDI2LjRNSHopIGZyb20gdGhlIFBMTDUgdmlkZW8KY2xvY2suICBJZiB3ZSBkb24ndCBoYXZlIHRo
+aXMgcGF0Y2gsIHRoZSBwaXhlbCBjbG9jayByYXRlIGlzIGFib3V0IDIwTUh6LCB3aGljaApjYXVz
+ZXMgYSBob3JpdG9uYWwgc2hpZnQgb24gdGhlIGRpc3BsYXkgaW1hZ2UuCgpUaGlzIHNlcmllcyBj
+YW4gYmUgYXBwbGllZCBvbiB0aGUgZHJtLW5leHQgYnJhbmNoLgoKWzFdIGh0dHA6Ly93d3cuYWxs
+c2hvcmUuY29tL3BkZi9IaW1heF9IWDgzNjktQS5wZGYKCkxpdSBZaW5nICgyMSk6CiAgY2xrOiBk
+aXZpZGVyOiBDb3JyZWN0IHBhcmVudCBjbGsgcm91bmQgcmF0ZSBpZiBubyBiZXN0ZGl2IGlzIG5v
+cm1hbGx5CiAgICBmb3VuZAogIG9mOiBBZGQgdmVuZG9yIHByZWZpeCBmb3IgSGltYXggVGVjaG5v
+bG9naWVzIEluYy4KICBvZjogQWRkIHZlbmRvciBwcmVmaXggZm9yIFRydWx5IFNlbWljb25kdWN0
+b3JzIExpbWl0ZWQKICBBUk06IGlteDZxOiBBZGQgR1BSMyBNSVBJIG11eGluZyBjb250cm9sIHJl
+Z2lzdGVyIGZpZWxkIHNoaWZ0IGJpdHMKICAgIGRlZmluaXRpb24KICBBUk06IGlteDZxOiBjbGs6
+IEFkZCB0aGUgdmlkZW9fMjdtIGNsb2NrCiAgQVJNOiBpbXg2cTogY2xrOiBDaGFuZ2UgaGRtaV9p
+c2ZyIGNsb2NrJ3MgcGFyZW50IHRvIGJlIHZpZGVvXzI3bSBjbG9jawogIEFSTTogaW14NnE6IGNs
+azogQ2hhbmdlIGhzaV90eCBjbG9jayB0byBiZSBhIHNoYXJlZCBjbG9jayBnYXRlCiAgQVJNOiBp
+bXg2cTogY2xrOiBBZGQgc3VwcG9ydCBmb3IgbWlwaV9jb3JlX2NmZyBjbG9jayBhcyBhIHNoYXJl
+ZCBjbG9jawogICAgZ2F0ZQogIEFSTTogZHRzOiBpbXg2cWRsOiBNb3ZlIGV4aXN0aW5nIE1JUEkg
+RFNJIHBvcnRzIGludG8gYSBuZXcgJ3BvcnRzJwogICAgbm9kZQogIGRybS9kc2k6IEFkZCBhIGhl
+bHBlciB0byBnZXQgYml0cyBwZXIgcGl4ZWwgb2YgTUlQSSBEU0kgcGl4ZWwgZm9ybWF0CiAgRG9j
+dW1lbnRhdGlvbjogZHQtYmluZGluZ3M6IEFkZCBiaW5kaW5ncyBmb3IgU3lub3BzeXMgRFcgTUlQ
+SSBEU0kgRFJNCiAgICBicmlkZ2UgZHJpdmVyCiAgZHJtL2JyaWRnZTogQWRkIFN5bm9wc3lzIERl
+c2lnbldhcmUgTUlQSSBEU0kgaG9zdCBjb250cm9sbGVyIGRyaXZlcgogIERvY3VtZW50YXRpb246
+IGR0LWJpbmRpbmdzOiBBZGQgYmluZGluZ3MgZm9yIGkuTVggc3BlY2lmaWMgU3lub3BzeXMgRFcK
+ICAgIE1JUEkgRFNJIGRyaXZlcgogIGRybTogaW14OiBTdXBwb3J0IFN5bm9wc3lzIERlc2lnbldh
+cmUgTUlQSSBEU0kgaG9zdCBjb250cm9sbGVyCiAgRG9jdW1lbnRhdGlvbjogZHQtYmluZGluZ3M6
+IEFkZCBiaW5kaW5ncyBmb3IgSGltYXggSFg4MzY5QSBEUk0gcGFuZWwKICAgIGRyaXZlcgogIGRy
+bTogcGFuZWw6IEFkZCBzdXBwb3J0IGZvciBIaW1heCBIWDgzNjlBIE1JUEkgRFNJIHBhbmVsCiAg
+QVJNOiBkdHNpOiBpbXg2cWRsOiBBZGQgc3VwcG9ydCBmb3IgTUlQSSBEU0kgaG9zdCBjb250cm9s
+bGVyCiAgQVJNOiBkdHM6IGlteDZxZGwtc2FicmVzZDogQWRkIHN1cHBvcnQgZm9yIFRSVUxZIFRG
+VDQ4MDgwMC0xNi1FIE1JUEkKICAgIERTSSBwYW5lbAogIEFSTTogaW14X3Y2X3Y3X2RlZmNvbmZp
+ZzogQ2xlYW51cCBmb3IgaW14IGRybSBiZWluZyBtb3ZlZCBvdXQgb2YKICAgIHN0YWdpbmcKICBB
+Uk06IGlteF92Nl92N19kZWZjb25maWc6IEFkZCBzdXBwb3J0IGZvciBNSVBJIERTSSBob3N0IGNv
+bnRyb2xsZXIKICBBUk06IGlteF92Nl92N19kZWZjb25maWc6IEFkZCBzdXBwb3J0IGZvciBIaW1h
+eCBIWDgzNjlBIHBhbmVsCgogLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZHJtL2JyaWRnZS9kd19t
+aXBpX2RzaS50eHQgfCAgNzMgKysKIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RybS9pbXgvbWlw
+aV9kc2kudHh0ICAgICAgIHwgIDc4ICsrCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9wYW5lbC9o
+aW1heCxoeDgzNjlhLnR4dCAgICB8ICAzOSArCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy92ZW5k
+b3ItcHJlZml4ZXMudHh0ICAgICAgICB8ICAgMiArCiBhcmNoL2FybS9ib290L2R0cy9pbXg2cS5k
+dHNpICAgICAgICAgICAgICAgICAgICAgICB8ICAyMCArLQogYXJjaC9hcm0vYm9vdC9kdHMvaW14
+NnFkbC1zYWJyZXNkLmR0c2kgICAgICAgICAgICAgfCAgMjAgKwogYXJjaC9hcm0vYm9vdC9kdHMv
+aW14NnFkbC5kdHNpICAgICAgICAgICAgICAgICAgICAgfCAgMjkgKy0KIGFyY2gvYXJtL2NvbmZp
+Z3MvaW14X3Y2X3Y3X2RlZmNvbmZpZyAgICAgICAgICAgICAgIHwgIDE3ICstCiBhcmNoL2FybS9t
+YWNoLWlteC9jbGstaW14NnEuYyAgICAgICAgICAgICAgICAgICAgICB8ICAgNyArLQogZHJpdmVy
+cy9jbGsvY2xrLWRpdmlkZXIuYyAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDMgKy0KIGRy
+aXZlcnMvZ3B1L2RybS9icmlkZ2UvS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgIHwgICA1ICsK
+IGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgIHwgICAx
+ICsKIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvZHdfbWlwaV9kc2kuYyAgICAgICAgICAgICAgIHwg
+OTk2ICsrKysrKysrKysrKysrKysrKysrKwogZHJpdmVycy9ncHUvZHJtL2lteC9LY29uZmlnICAg
+ICAgICAgICAgICAgICAgICAgICAgfCAgIDcgKwogZHJpdmVycy9ncHUvZHJtL2lteC9NYWtlZmls
+ZSAgICAgICAgICAgICAgICAgICAgICAgfCAgIDEgKwogZHJpdmVycy9ncHUvZHJtL2lteC9kd19t
+aXBpX2RzaS1pbXguYyAgICAgICAgICAgICAgfCAyMzAgKysrKysKIGRyaXZlcnMvZ3B1L2RybS9w
+YW5lbC9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgIHwgICA1ICsKIGRyaXZlcnMvZ3B1L2Ry
+bS9wYW5lbC9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgIHwgICAxICsKIGRyaXZlcnMvZ3B1
+L2RybS9wYW5lbC9wYW5lbC1oaW1heC1oeDgzNjlhLmMgICAgICAgIHwgNjE0ICsrKysrKysrKysr
+KysKIGluY2x1ZGUvZHJtL2JyaWRnZS9kd19taXBpX2RzaS5oICAgICAgICAgICAgICAgICAgIHwg
+IDI3ICsKIGluY2x1ZGUvZHJtL2RybV9taXBpX2RzaS5oICAgICAgICAgICAgICAgICAgICAgICAg
+IHwgIDE0ICsKIGluY2x1ZGUvZHQtYmluZGluZ3MvY2xvY2svaW14NnFkbC1jbG9jay5oICAgICAg
+ICAgIHwgICA0ICstCiBpbmNsdWRlL2xpbnV4L21mZC9zeXNjb24vaW14NnEtaW9tdXhjLWdwci5o
+ICAgICAgICB8ICAgMSArCiAyMyBmaWxlcyBjaGFuZ2VkLCAyMTY0IGluc2VydGlvbnMoKyksIDMw
+IGRlbGV0aW9ucygtKQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9kcm0vYnJpZGdlL2R3X21pcGlfZHNpLnR4dAogY3JlYXRlIG1vZGUgMTAwNjQ0
+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kcm0vaW14L21pcGlfZHNpLnR4dAog
+Y3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wYW5l
+bC9oaW1heCxoeDgzNjlhLnR4dAogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9i
+cmlkZ2UvZHdfbWlwaV9kc2kuYwogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9p
+bXgvZHdfbWlwaV9kc2ktaW14LmMKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0v
+cGFuZWwvcGFuZWwtaGltYXgtaHg4MzY5YS5jCiBjcmVhdGUgbW9kZSAxMDA2NDQgaW5jbHVkZS9k
+cm0vYnJpZGdlL2R3X21pcGlfZHNpLmgKCi0tIAoyLjEuMAoKX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2
+ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
