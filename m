@@ -1,122 +1,63 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: [PATCHv6 5/9] ARM: dts: Add PPMU dt node for Exynos3250 SoC
-Date: Mon, 29 Dec 2014 09:04:09 +0900
-Message-ID: <1419811453-16160-6-git-send-email-cw00.choi@samsung.com>
-References: <1419811453-16160-1-git-send-email-cw00.choi@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1419811453-16160-1-git-send-email-cw00.choi@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: myungjoo.ham@samsung.com
-Cc: kgene.kim@samsung.com, kyungmin.park@samsung.com, rafael.j.wysocki@intel.com, mark.rutland@arm.com, a.kesavan@samsung.com, tomasz.figa@gmail.com, k.kozlowski@samsung.com, cw00.choi@samsung.com, inki.dae@samsung.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+From: Eddie Huang <eddie.huang@mediatek.com>
+Subject: Re: [PATCH v3 0/4] Add basic support for Mediatek MT8173 SoC
+Date: Mon, 29 Dec 2014 09:51:50 +0800
+Message-ID: <1419817910.2371.8.camel@mtksdaap41>
+References: <1419582417-4448-1-git-send-email-eddie.huang@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1419582417-4448-1-git-send-email-eddie.huang@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Jason Cooper <jason@lakedaemon.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, marc.zyngier@arm.com, Catalin Marinas <catalin.marinas@arm.com>, Mark Brown <broonie@linaro.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Robert Richter <rrichter@cavium.com>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, "Joe.C" <yingjoe.chen@mediatek.com>, Thomas Gleixner <tglx@linutronix.de>, peter.maydell@linaro.org, linux-arm-kernel@lists.infradead.org, yh.chen@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-This patch add PPMU (Platform Performance Monitoring Unit) dt node
-to estimate the utilization of each IP in Exynos SoC throught DEVFREQ Event
-subsystem.
+Hi,
 
-This patch adds following PPMU dt nodes:
-- PPMU_DMC0     0x106a0000
-- PPMU_DMC1     0x106b0000
-- PPMU_RIGHTBUS 0x112A0000
-- PPMU_LEFTBUS  0x116A0000
-- PPMU_CAMIF    0x11AC0000
-- PPMU_LCD0     0x11E40000
-- PPMU_FSYS     0x12630000
-- PPMU_3D       0x13220000
-- PPMU_MFC      0x13660000
-- PPMU_CPU      0x106c0000
+Sorry for my IT setting issue that accidentally add mediatek
+confidential notice in the tail of this mail series.
+Please skip it, and if anyone have concern, I can resend it.
 
-Cc: Kukjin Kim <kgene.kim@samsung.com>
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
----
- arch/arm/boot/dts/exynos3250.dtsi | 74 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 74 insertions(+)
-
-diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
-index 2246549..9ed1260 100644
---- a/arch/arm/boot/dts/exynos3250.dtsi
-+++ b/arch/arm/boot/dts/exynos3250.dtsi
-@@ -515,6 +515,80 @@
- 			compatible = "arm,cortex-a7-pmu";
- 			interrupts = <0 18 0>, <0 19 0>;
- 		};
-+
-+		ppmu_dmc0: ppmu_dmc0@106a0000 {
-+			compatible = "samsung,exynos-ppmu";
-+			reg = <0x106a0000 0x2000>;
-+			status = "disabled";
-+		};
-+
-+		ppmu_dmc1: ppmu_dmc1@106b0000 {
-+			compatible = "samsung,exynos-ppmu";
-+			reg = <0x106b0000 0x2000>;
-+			status = "disabled";
-+		};
-+
-+		ppmu_cpu: ppmu_cpu@106c0000 {
-+			compatible = "samsung,exynos-ppmu";
-+			reg = <0x106c0000 0x2000>;
-+			status = "disabled";
-+		};
-+
-+		ppmu_rightbus: ppmu_rightbus@112a0000 {
-+			compatible = "samsung,exynos-ppmu";
-+			reg = <0x112a0000 0x2000>;
-+			clocks = <&cmu CLK_PPMURIGHT>;
-+			clock-names = "ppmu";
-+			status = "disabled";
-+		};
-+
-+		ppmu_leftbus: ppmu_leftbus0@116a0000 {
-+			compatible = "samsung,exynos-ppmu";
-+			reg = <0x116a0000 0x2000>;
-+			clocks = <&cmu CLK_PPMULEFT>;
-+			clock-names = "ppmu";
-+			status = "disabled";
-+		};
-+
-+		ppmu_camif: ppmu_camif@11ac0000 {
-+			compatible = "samsung,exynos-ppmu";
-+			reg = <0x11ac0000 0x2000>;
-+			clocks = <&cmu CLK_PPMUCAMIF>;
-+			clock-names = "ppmu";
-+			status = "disabled";
-+		};
-+
-+		ppmu_lcd0: ppmu_lcd0@11e40000 {
-+			compatible = "samsung,exynos-ppmu";
-+			reg = <0x11e40000 0x2000>;
-+			clocks = <&cmu CLK_PPMULCD0>;
-+			clock-names = "ppmu";
-+			status = "disabled";
-+		};
-+
-+		ppmu_fsys: ppmu_fsys@12630000 {
-+			compatible = "samsung,exynos-ppmu";
-+			reg = <0x12630000 0x2000>;
-+			clocks = <&cmu CLK_PPMUFILE>;
-+			clock-names = "ppmu";
-+			status = "disabled";
-+		};
-+
-+		ppmu_g3d: ppmu_g3d@13220000 {
-+			compatible = "samsung,exynos-ppmu";
-+			reg = <0x13220000 0x2000>;
-+			clocks = <&cmu CLK_PPMUG3D>;
-+			clock-names = "ppmu";
-+			status = "disabled";
-+		};
-+
-+		ppmu_mfc: ppmu_mfc@13660000 {
-+			compatible = "samsung,exynos-ppmu";
-+			reg = <0x13660000 0x2000>;
-+			clocks = <&cmu CLK_PPMUMFC_L>;
-+			clock-names = "ppmu";
-+			status = "disabled";
-+		};
- 	};
- };
- 
--- 
-1.8.5.5
+> 
+>  Documentation/devicetree/bindings/arm/mediatek.txt |   4 +
+>  arch/arm64/Kconfig                                 |   6 +
+>  arch/arm64/boot/dts/Makefile                       |   1 +
+>  arch/arm64/boot/dts/mediatek/Makefile              |   5 +
+>  arch/arm64/boot/dts/mediatek/mt8173-evb.dts        |  34 +++++
+>  arch/arm64/boot/dts/mediatek/mt8173.dtsi           | 159 +++++++++++++++++++++
+>  arch/arm64/configs/defconfig                       |   2 +
+>  drivers/irqchip/irq-mtk-sysirq.c                   |  18 ++-
+>  8 files changed, 222 insertions(+), 7 deletions(-)
+>  create mode 100644 arch/arm64/boot/dts/mediatek/Makefile
+>  create mode 100644 arch/arm64/boot/dts/mediatek/mt8173-evb.dts
+>  create mode 100644 arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> 
+> --
+> 1.8.1.1.dirty
+> 
+> ************* Email Confidentiality Notice ********************
+> The information contained in this e-mail message (including any 
+> attachments) may be confidential, proprietary, privileged, or otherwise
+> exempt from disclosure under applicable laws. It is intended to be 
+> conveyed only to the designated recipient(s). Any use, dissemination, 
+> distribution, printing, retaining or copying of this e-mail (including its 
+> attachments) by unintended recipient(s) is strictly prohibited and may 
+> be unlawful. If you are not an intended recipient of this e-mail, or believe 
+> that you have received this e-mail in error, please notify the sender 
+> immediately (by replying to this e-mail), delete any and all copies of 
+> this e-mail (including any attachments) from your system, and do not
+> disclose the content of this e-mail to any other person. Thank you!
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
