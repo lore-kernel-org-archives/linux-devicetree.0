@@ -1,56 +1,83 @@
-From: Suman Tripathi <stripathi@apm.com>
-Subject: [PATCH v3 2/2] ahci_xgene: Fix the DMA state machine lockup for the ATA_CMD_PACKET PIO mode command.
-Date: Mon, 29 Dec 2014 08:52:47 +0530
-Message-ID: <1419823367-11279-3-git-send-email-stripathi@apm.com>
-References: <1419823367-11279-1-git-send-email-stripathi@apm.com>
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <1419823367-11279-1-git-send-email-stripathi@apm.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: olof@lixom.net, tj@kernel.org, arnd@arndb.de
-Cc: linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mlangsdo@redhat.com, jcm@redhat.com, patches@apm.com, Suman Tripathi <stripathi@apm.com>
+From: Eddie Huang <eddie.huang@mediatek.com>
+Subject: Re: [PATCH 1/2] tty: serial: 8250_mtk: Add earlycon
+Date: Mon, 29 Dec 2014 12:24:56 +0800
+Message-ID: <1419827096.6184.128.camel@mtksdaap41>
+References: <1418891601-53769-1-git-send-email-eddie.huang@mediatek.com>
+	 <1418891601-53769-2-git-send-email-eddie.huang@mediatek.com>
+	 <CAL_JsqKp+1ZWPK4rB4_vxrx-dtNCy7Hc3S67uQ9VHdAby8erjg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqKp+1ZWPK4rB4_vxrx-dtNCy7Hc3S67uQ9VHdAby8erjg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Matthias Brugger <matthias.bgg@gmail.com>, srv_heupstream@mediatek.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Jiri Slaby <jslaby@suse.cz>, Alan Cox <alan@linux.intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>, yingjoe.chen@mediatek.com, yh.chen@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-This patch addresses the issue with ATA_CMD_PACKET pio mode
-command for enumeration and device detection with ATAPI devices.
-The X-Gene AHCI controller has an errata in which it cannot clear
-the BSY bit after the PIO setup FIS. The dma state machine enters
-CMFatalErrorUpdate state and locks up.
+Hi Rob,
 
-Signed-off-by: Suman Tripathi <stripathi@apm.com>
----
- drivers/ata/ahci_xgene.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+On Fri, 2014-12-26 at 15:24 -0600, Rob Herring wrote:
+> On Thu, Dec 18, 2014 at 2:33 AM, Eddie Huang <eddie.huang@mediatek.com> wrote:
+> > Mediatek UART has highspeed register, but 8250_early.c doesn't
+> > support this, so add earlycon in 8250_mtk.c
+> 
+> I don't see any highspeed register setup here. More generically,
+> aren't you just skipping any UART setup? That may be useful on other
+> platforms with 8250s, too. With the kernel command line version, you
+> could perhaps add a "noinit" flag. The DT case is harder, and I'm not
+> sure how we should handle that. We could perhaps add a
+> "stdout-path-initialized" flag to chosen.
+> 
 
-diff --git a/drivers/ata/ahci_xgene.c b/drivers/ata/ahci_xgene.c
-index 0ffd3c9..d332161 100644
---- a/drivers/ata/ahci_xgene.c
-+++ b/drivers/ata/ahci_xgene.c
-@@ -125,10 +125,11 @@ static int xgene_ahci_restart_engine(struct ata_port *ap)
-  * xgene_ahci_qc_issue - Issue commands to the device
-  * @qc: Command to issue
-  *
-- * Due to Hardware errata for IDENTIFY DEVICE command, the controller cannot
-- * clear the BSY bit after receiving the PIO setup FIS. This results in the dma
-- * state machine goes into the CMFatalErrorUpdate state and locks up. By
-- * restarting the dma engine, it removes the controller out of lock up state.
-+ * Due to Hardware errata for IDENTIFY DEVICE command and PACKET
-+ * command of ATAPI protocol set, the controller cannot clear the BSY bit
-+ * after receiving the PIO setup FIS. This results in the DMA state machine
-+ * going into the CMFatalErrorUpdate state and locks up. By restarting the
-+ * DMA engine, it removes the controller out of lock up state.
-  */
- static unsigned int xgene_ahci_qc_issue(struct ata_queued_cmd *qc)
- {
-@@ -137,7 +138,8 @@ static unsigned int xgene_ahci_qc_issue(struct ata_queued_cmd *qc)
- 	struct xgene_ahci_context *ctx = hpriv->plat_data;
- 	int rc = 0;
+Yes, I skipped UART setup same as msm_serial.c and amba-pl011.c
+(although they are standalone serial driver). Just like earlyprintk, I
+think earlycon should reuse UART setting in loader. Since some other
+platforms with 8250 already depend on this, it's ok to add flags to
+distinguish whether 8250 earlycon driver should init hw or not. As you
+said, add "noinit" flag is simple, but "stdout-path-initialized" need
+more discussion. 
 
--	if (unlikely(ctx->last_cmd[ap->port_no] == ATA_CMD_ID_ATA))
-+	if (unlikely((ctx->last_cmd[ap->port_no] == ATA_CMD_ID_ATA) ||
-+	    (ctx->last_cmd[ap->port_no] == ATA_CMD_PACKET)))
- 		xgene_ahci_restart_engine(ap);
+> >
+> > Signed-off-by: Eddie Huang <eddie.huang@mediatek.com>
+> > ---
+> >  drivers/tty/serial/8250/8250_mtk.c | 33 +++++++++++++++++++++++++++++++++
+> >  1 file changed, 33 insertions(+)
+> >
+> > diff --git a/drivers/tty/serial/8250/8250_mtk.c b/drivers/tty/serial/8250/8250_mtk.c
+> > index de7aae5..65dd569 100644
+> > --- a/drivers/tty/serial/8250/8250_mtk.c
+> > +++ b/drivers/tty/serial/8250/8250_mtk.c
+> > @@ -23,6 +23,7 @@
+> >  #include <linux/pm_runtime.h>
+> >  #include <linux/serial_8250.h>
+> >  #include <linux/serial_reg.h>
+> > +#include <linux/console.h>
+> >
+> >  #include "8250.h"
+> >
+> > @@ -289,6 +290,38 @@ static struct platform_driver mtk8250_platform_driver = {
+> >  };
+> >  module_platform_driver(mtk8250_platform_driver);
+> >
+> > +#define BOTH_EMPTY (UART_LSR_TEMT | UART_LSR_THRE)
+> > +
+> > +static void __init mtk8250_serial_putc(struct uart_port *port, int c)
+> > +{
+> > +       while ((readl(port->membase + (UART_LSR << 2)) & BOTH_EMPTY) !=
+> > +               BOTH_EMPTY)
+> > +               ;
+> > +       writel(c, port->membase + (UART_TX << 2));
+> > +}
+> > +
+> > +static void __init early_mtk8250_write(struct console *console,
+> > +                                       const char *s, unsigned int count)
+> 
+> Is there a reason early_serial8250_write can't work for you other than
+> it is currently static?
+> 
+> Rob
+> 
 
- 	rc = ahci_qc_issue(qc);
---
-1.8.2.1
-
+The reason is only static. I want to keep 8250_early.c untouchable, all
+modifications in 8250_mtk.c
