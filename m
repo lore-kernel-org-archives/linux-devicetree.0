@@ -1,53 +1,49 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 2/2] ahci_xgene: Fix the dma state machine lockup for
- the ATA_CMD_PACKET PIO mode command.
-Date: Mon, 29 Dec 2014 13:09:04 +0300
-Message-ID: <54A12840.90703@cogentembedded.com>
-References: <1418748575-27301-1-git-send-email-stripathi@apm.com>	<1418748575-27301-3-git-send-email-stripathi@apm.com>	<54906CF0.9010908@cogentembedded.com>	<CAOHikRCRHPnVAziU8jwD9gGFODyt_5DpL1dm7Eb8uGA-WOfxOw@mail.gmail.com>	<5491BE11.4070500@cogentembedded.com> <CAOHikRAH3rrNw_+_DYx=Fc13BBQMq1Wg0zGyqrxLhNk7TSKqhw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-scsi-owner@vger.kernel.org>
-In-Reply-To: <CAOHikRAH3rrNw_+_DYx=Fc13BBQMq1Wg0zGyqrxLhNk7TSKqhw@mail.gmail.com>
-Sender: linux-scsi-owner@vger.kernel.org
-To: Suman Tripathi <stripathi@apm.com>
-Cc: Olof Johansson <olof@lixom.net>, Tejun Heo <tj@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Linux SCSI List <linux-scsi@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Don Dutile <ddutile@redhat.com>, Jon Masters <jcm@redhat.com>, patches@apm.com
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: [PATCH V2 1/2] DT: mxs-lradc: fix ranges of ts properties
+Date: Mon, 29 Dec 2014 10:27:20 +0000
+Message-ID: <1419848841-12749-2-git-send-email-stefan.wahren@i2se.com>
+References: <1419848841-12749-1-git-send-email-stefan.wahren@i2se.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1419848841-12749-1-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kristina.martsenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+This patch fixes off-by-one issues in the devicetree binding of
+mxs-lradc.
 
-On 12/29/2014 8:35 AM, Suman Tripathi wrote:
+According to the i.MX23 and i.MX28 reference manuals [1][2] the range of
+NUM_SAMPLES is 0..31, but property ave-ctrl is substracted by 1 before used.
 
->          This patch addresses the issue with ATA_CMD_PACKET pio mode
->          command for enumeration and device detection with ATAPI devices.It is the
->          same issue as in patch
+Considering all limitations the range of DELAY is 1..2047, but also
+property ave-delay is substracted by 1 before used.
 
+The patch has been suggested by Hartmut Knaack and Kristina Martsenko.
 
->     Ugh, HTML... Please stick to plain text when posting to the
-> 'vger.kernel.org <http://vger.kernel.org/>' mailing lists (HTML mails are
-> supposed to be ignored).
+[1] - http://cache.freescale.com/files/dsp/doc/ref_manual/IMX23RM.pdf
+[2] - http://cache.freescale.com/files/dsp/doc/ref_manual/MCIMX28RM.pdf
 
->     www.spinics.net/lists/linux-____ide/msg49092.html
->     <http://www.spinics.net/lists/linux-__ide/msg49092.html>
->          <http://www.spinics.net/lists/__linux-ide/msg49092.html
->     <http://www.spinics.net/lists/linux-ide/msg49092.html>>
+Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+---
+ .../bindings/staging/iio/adc/mxs-lradc.txt         |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> This is something strange. I posted it in plain text only. Because when I do
-> show original of the patch in gmail, it shows me the plaintext.
-> Please help me out to figure the issue. I saw many other patches referred in
-> the same way. I am sending the patch through git-send-email  that sends in
-> plain text format only,
-
-    The patch was OK, but your replies do use HTML (as well as plain text).
-
->          Signed-off-by: Suman Tripathi <stripathi@apm.com
->     <mailto:stripathi@apm.com> <mailto:stripathi@apm.com
->     <mailto:stripathi@apm.com>>>
-
-> --
-> Thanks,
-> with regards,
-> Suman Tripathi
-
-MBR, Sergei
-
+diff --git a/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt b/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
+index ee05dc3..3075377 100644
+--- a/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
++++ b/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
+@@ -12,9 +12,9 @@ Optional properties:
+                                property is not present, then the touchscreen is
+                                disabled. 5 wires is valid for i.MX28 SoC only.
+ - fsl,ave-ctrl: number of samples per direction to calculate an average value.
+-                Allowed value is 1 ... 31, default is 4
++                Allowed value is 1 ... 32, default is 4
+ - fsl,ave-delay: delay between consecutive samples. Allowed value is
+-                 1 ... 2047. It is used if 'fsl,ave-ctrl' > 1, counts at
++                 2 ... 2048. It is used if 'fsl,ave-ctrl' > 1, counts at
+                  2 kHz and its default is 2 (= 1 ms)
+ - fsl,settling: delay between plate switch to next sample. Allowed value is
+                 1 ... 2047. It counts at 2 kHz and its default is
+-- 
+1.7.9.5
