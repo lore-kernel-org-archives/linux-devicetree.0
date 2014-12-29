@@ -1,45 +1,73 @@
-From: Liu Ying <Ying.Liu@freescale.com>
-Subject: [PATCH RFC v6 21/21] ARM: imx_v6_v7_defconfig: Add support for Himax
- HX8369A panel
-Date: Mon, 29 Dec 2014 14:39:28 +0800
-Message-ID: <1419835168-9034-22-git-send-email-Ying.Liu@freescale.com>
-References: <1419835168-9034-1-git-send-email-Ying.Liu@freescale.com>
+From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH] arch: arm: common: edma.c:  Remove some unused functions
+Date: Mon, 29 Dec 2014 09:53:12 +0200
+Message-ID: <54A10868.70001@ti.com>
+References: <1417906406-5527-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1419835168-9034-1-git-send-email-Ying.Liu@freescale.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org
-Cc: stefan.wahren@i2se.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, kernel@pengutronix.de, linux-kernel@vger.kernel.org, a.hajda@samsung.com, mturquette@linaro.org, linux-arm-kernel@lists.infradead.org, andyshrk@gmail.com
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1417906406-5527-1-git-send-email-rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBwYXRjaCBhZGRzIHN1cHBvcnQgZm9yIEhpbWF4IEhYODM2OUEgcGFuZWwuCgpUaGUgbmV3
-IGlteF92Nl92N19kZWZjb25maWcgaXMgZ2VuZXJhdGVkIGluIHRoaXMgd2F5OgoqIG1ha2UgQVJD
-SD1hcm0gaW14X3Y2X3Y3X2RlZmNvbmZpZwoqIG1ha2UgQVJDSD1hcm0gbWVudWNvbmZpZyBhbmQg
-bWFudWFsbHkgY2hvb3NlIHRvIGJ1aWxkIGluCiAgdGhlIEhpbWF4IEhYODM2OUEgcGFuZWwgZHJp
-dmVyCiogbWFrZSBBUkNIPWFybSBzYXZlZGVmY29uZmlnCiogY3AgZGVmY29uZmlnIGFyY2gvYXJt
-L2NvbmZpZ3MvaW14X3Y2X3Y3X2RlZmNvbmZpZwoKU2lnbmVkLW9mZi1ieTogTGl1IFlpbmcgPFlp
-bmcuTGl1QGZyZWVzY2FsZS5jb20+Ci0tLQp2NS0+djY6CiAqIE5vbmUuCgp2NC0+djU6CiAqIE5v
-bmUuCgp2My0+djQ6CiAqIE5vbmUuCgp2Mi0+djM6CiAqIE5vbmUuCgp2MS0+djI6CiAqIEFkZCB0
-aGUgSElNQVggcHJlZml4IGluIHRoZSBLY29uZmlnIG5hbWUuCgogYXJjaC9hcm0vY29uZmlncy9p
-bXhfdjZfdjdfZGVmY29uZmlnIHwgMSArCiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykK
-CmRpZmYgLS1naXQgYS9hcmNoL2FybS9jb25maWdzL2lteF92Nl92N19kZWZjb25maWcgYi9hcmNo
-L2FybS9jb25maWdzL2lteF92Nl92N19kZWZjb25maWcKaW5kZXggM2UwZTU4OS4uMjdkYjkxYiAx
-MDA2NDQKLS0tIGEvYXJjaC9hcm0vY29uZmlncy9pbXhfdjZfdjdfZGVmY29uZmlnCisrKyBiL2Fy
-Y2gvYXJtL2NvbmZpZ3MvaW14X3Y2X3Y3X2RlZmNvbmZpZwpAQCAtMTkyLDYgKzE5Miw3IEBAIENP
-TkZJR19TT0NfQ0FNRVJBX09WMjY0MD15CiBDT05GSUdfSU1YX0lQVVYzX0NPUkU9eQogQ09ORklH
-X0RSTT15CiBDT05GSUdfRFJNX1BBTkVMX1NJTVBMRT15CitDT05GSUdfRFJNX1BBTkVMX0hJTUFY
-X0hYODM2OUE9eQogQ09ORklHX0RSTV9JTVg9eQogQ09ORklHX0RSTV9JTVhfRkJfSEVMUEVSPXkK
-IENPTkZJR19EUk1fSU1YX1BBUkFMTEVMX0RJU1BMQVk9eQotLSAKMi4xLjAKCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
-c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On 12/07/2014 12:53 AM, Rickard Strandqvist wrote:
+> Removes some functions that are not used anywhere:
+> edma_shadow0_read() edma_or_array()
+>=20
+> This was partially found by using a static code analysis program call=
+ed cppcheck.
+
+Acked-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+
+>=20
+> Signed-off-by: Rickard Strandqvist <rickard_strandqvist@spectrumdigit=
+al.se>
+> ---
+>  arch/arm/common/edma.c |    8 --------
+>  1 file changed, 8 deletions(-)
+>=20
+> diff --git a/arch/arm/common/edma.c b/arch/arm/common/edma.c
+> index d86771a..163273d 100644
+> --- a/arch/arm/common/edma.c
+> +++ b/arch/arm/common/edma.c
+> @@ -160,10 +160,6 @@ static inline void edma_modify_array(unsigned ct=
+lr, int offset, int i,
+>  {
+>  	edma_modify(ctlr, offset + (i << 2), and, or);
+>  }
+> -static inline void edma_or_array(unsigned ctlr, int offset, int i, u=
+nsigned or)
+> -{
+> -	edma_or(ctlr, offset + (i << 2), or);
+> -}
+>  static inline void edma_or_array2(unsigned ctlr, int offset, int i, =
+int j,
+>  		unsigned or)
+>  {
+> @@ -174,10 +170,6 @@ static inline void edma_write_array2(unsigned ct=
+lr, int offset, int i, int j,
+>  {
+>  	edma_write(ctlr, offset + ((i*2 + j) << 2), val);
+>  }
+> -static inline unsigned int edma_shadow0_read(unsigned ctlr, int offs=
+et)
+> -{
+> -	return edma_read(ctlr, EDMA_SHADOW0 + offset);
+> -}
+>  static inline unsigned int edma_shadow0_read_array(unsigned ctlr, in=
+t offset,
+>  		int i)
+>  {
+>=20
+
+
+--=20
+P=E9ter
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
