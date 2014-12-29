@@ -1,7 +1,7 @@
 From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH v2 08/12] ARM: allow MULTIPLATFORM with !MMU
-Date: Tue, 30 Dec 2014 00:32:11 +0100
-Message-ID: <1419895935-22966-9-git-send-email-stefan@agner.ch>
+Subject: [PATCH v2 02/12] irqchip: nvic: support hierarchy irq domain
+Date: Tue, 30 Dec 2014 00:32:05 +0100
+Message-ID: <1419895935-22966-3-git-send-email-stefan@agner.ch>
 References: <1419895935-22966-1-git-send-email-stefan@agner.ch>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1419895935-22966-1-git-send-email-stefan@agner.ch>
@@ -10,103 +10,60 @@ To: shawn.guo@linaro.org, kernel@pengutronix.de, linux@arm.linux.org.uk, u.klein
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
 List-Id: devicetree@vger.kernel.org
 
-In order to support SoC with heterogenous CPU architectures (such
-as Freescale Vybrid/i.MXSX) it is preferable to use the same
-architecture (ARCH_MXC in this case) for the MMU enabled and !MMU
-CPU. Hence allow to select MULTIPLATFORM even without MMU.
+Add support for hierarchy irq domain. Use to support the interrupt
+router found in Vybrid SoC, which is between the NVIC and the
+peripherals.
 
 Signed-off-by: Stefan Agner <stefan@agner.ch>
 ---
- arch/arm/Kconfig | 21 ++++++++++-----------
- 1 file changed, 10 insertions(+), 11 deletions(-)
+ drivers/irqchip/irq-nvic.c | 28 +++++++++++++++++++++++++++-
+ 1 file changed, 27 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 97d07ed..95007b9 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -228,7 +228,7 @@ config VECTORS_BASE
- 	  in size.
+diff --git a/drivers/irqchip/irq-nvic.c b/drivers/irqchip/irq-nvic.c
+index 4ff0805..5fac910 100644
+--- a/drivers/irqchip/irq-nvic.c
++++ b/drivers/irqchip/irq-nvic.c
+@@ -49,6 +49,31 @@ nvic_handle_irq(irq_hw_number_t hwirq, struct pt_regs *regs)
+ 	handle_IRQ(irq, regs);
+ }
  
- config ARM_PATCH_PHYS_VIRT
--	bool "Patch physical to virtual translations at runtime" if EMBEDDED
-+	bool "Patch physical to virtual translations at runtime" if EMBEDDED || (ARCH_MULTIPLATFORM && MMU)
- 	default y
- 	depends on !XIP_KERNEL && MMU
- 	depends on !ARCH_REALVIEW || !SPARSEMEM
-@@ -303,15 +303,12 @@ config MMU
- #
- choice
- 	prompt "ARM system type"
--	default ARCH_VERSATILE if !MMU
--	default ARCH_MULTIPLATFORM if MMU
-+	default ARCH_MULTIPLATFORM
++static int nvic_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
++				unsigned int nr_irqs, void *arg)
++{
++	int i, ret;
++	irq_hw_number_t hwirq;
++	unsigned int type = IRQ_TYPE_NONE;
++	struct of_phandle_args *irq_data = arg;
++
++	ret = irq_domain_xlate_onecell(domain, irq_data->np, irq_data->args,
++				   irq_data->args_count, &hwirq, &type);
++	if (ret)
++		return ret;
++
++	for (i = 0; i < nr_irqs; i++)
++		irq_map_generic_chip(domain, virq + i, hwirq + i);
++
++	return 0;
++}
++
++static const struct irq_domain_ops nvic_irq_domain_ops = {
++	.xlate = irq_domain_xlate_onecell,
++	.alloc = nvic_irq_domain_alloc,
++	.free = irq_domain_free_irqs_top,
++};
++
+ static int __init nvic_of_init(struct device_node *node,
+ 			       struct device_node *parent)
+ {
+@@ -70,7 +95,8 @@ static int __init nvic_of_init(struct device_node *node,
+ 		irqs = NVIC_MAX_IRQ;
  
- config ARCH_MULTIPLATFORM
- 	bool "Allow multiple platforms to be selected"
--	depends on MMU
- 	select ARCH_WANT_OPTIONAL_GPIOLIB
- 	select ARM_HAS_SG_CHAIN
--	select ARM_PATCH_PHYS_VIRT
- 	select AUTO_ZRELADDR
- 	select CLKSRC_OF
- 	select COMMON_CLK
-@@ -783,13 +780,13 @@ comment "CPU Core family selection"
- 
- config ARCH_MULTI_V4
- 	bool "ARMv4 based platforms (FA526)"
--	depends on !ARCH_MULTI_V6_V7
-+	depends on !ARCH_MULTI_V6_V7 && MMU
- 	select ARCH_MULTI_V4_V5
- 	select CPU_FA526
- 
- config ARCH_MULTI_V4T
- 	bool "ARMv4T based platforms (ARM720T, ARM920T, ...)"
--	depends on !ARCH_MULTI_V6_V7
-+	depends on !ARCH_MULTI_V6_V7 && MMU
- 	select ARCH_MULTI_V4_V5
- 	select CPU_ARM920T if !(CPU_ARM7TDMI || CPU_ARM720T || \
- 		CPU_ARM740T || CPU_ARM9TDMI || CPU_ARM922T || \
-@@ -797,7 +794,7 @@ config ARCH_MULTI_V4T
- 
- config ARCH_MULTI_V5
- 	bool "ARMv5 based platforms (ARM926T, XSCALE, PJ1, ...)"
--	depends on !ARCH_MULTI_V6_V7
-+	depends on !ARCH_MULTI_V6_V7 && MMU
- 	select ARCH_MULTI_V4_V5
- 	select CPU_ARM926T if !(CPU_ARM946E || CPU_ARM1020 || \
- 		CPU_ARM1020E || CPU_ARM1022 || CPU_ARM1026 || \
-@@ -808,11 +805,13 @@ config ARCH_MULTI_V4_V5
- 
- config ARCH_MULTI_V6
- 	bool "ARMv6 based platforms (ARM11)"
-+	depends on MMU
- 	select ARCH_MULTI_V6_V7
- 	select CPU_V6K
- 
- config ARCH_MULTI_V7
--	bool "ARMv7 based platforms (Cortex-A, PJ4, Scorpion, Krait)"
-+	bool "ARMv7-A based platforms (Cortex-A, PJ4, Scorpion, Krait)"
-+	depends on MMU
- 	default y
- 	select ARCH_MULTI_V6_V7
- 	select CPU_V7
-@@ -823,7 +822,7 @@ config ARCH_MULTI_V6_V7
- 	select MIGHT_HAVE_CACHE_L2X0
- 
- config ARCH_MULTI_CPU_AUTO
--	def_bool !(ARCH_MULTI_V4 || ARCH_MULTI_V4T || ARCH_MULTI_V6_V7)
-+	def_bool !(ARCH_MULTI_V4 || ARCH_MULTI_V4T || ARCH_MULTI_V6_V7) && MMU
- 	select ARCH_MULTI_V5
- 
- endmenu
-@@ -1960,7 +1959,7 @@ endchoice
- 
- config XIP_KERNEL
- 	bool "Kernel Execute-In-Place from ROM"
--	depends on !ARM_LPAE && !ARCH_MULTIPLATFORM
-+	depends on !ARM_LPAE && (!ARCH_MULTIPLATFORM || ARCH_MULTI_V7M)
- 	help
- 	  Execute-In-Place allows the kernel to run from non-volatile storage
- 	  directly addressable by the CPU, such as NOR flash. This saves RAM
+ 	nvic_irq_domain =
+-		irq_domain_add_linear(node, irqs, &irq_generic_chip_ops, NULL);
++		irq_domain_add_linear(node, irqs, &nvic_irq_domain_ops, NULL);
++
+ 	if (!nvic_irq_domain) {
+ 		pr_warn("Failed to allocate irq domain\n");
+ 		return -ENOMEM;
 -- 
 2.2.1
