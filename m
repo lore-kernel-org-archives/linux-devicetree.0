@@ -1,56 +1,44 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH] ARM: shmobile: r8a7791: add ADSP clocks
-Date: Tue, 30 Dec 2014 01:13:17 +0300
-Message-ID: <54A1D1FD.7010006@cogentembedded.com>
-References: <1937156.Ii2YrGkOFy@wasted.cogentembedded.com>	<CAMuHMdUqC5v-d95Sk2NewSE-EBKS49vn7jPKpixF2djg6NOmVw@mail.gmail.com>	<54A1BABF.5070208@cogentembedded.com> <CAMuHMdWwx3So77Zuz7JrpJbBZe2oKN3YnkZL3m0gUCHZGu6SEg@mail.gmail.com>
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Subject: Re: [PATCH] mmc: dt: Add property for broken hs200 quirk
+Date: Mon, 29 Dec 2014 14:37:39 -0800
+Message-ID: <20141229223739.GB25436@sonymobile.com>
+References: <1418412516-10682-1-git-send-email-bjorn.andersson@sonymobile.com>
+ <CAPDyKFrPC_MphsLHHZ=uFjcF8SsdkVmzez9R=gas7_ihn63Q5A@mail.gmail.com>
+ <CAJAp7OhSZ7CZedXAsWPf0XYv8RESQxXe4L1LZjOmVW4nGpFiHw@mail.gmail.com>
+ <CAPDyKFoGN49usQg5Ezv_AaWcKf3mRmZ=VJ8Rc4HDYh62ukiwXQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdWwx3So77Zuz7JrpJbBZe2oKN3YnkZL3m0gUCHZGu6SEg@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Simon Horman <horms@verge.net.au>, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAPDyKFoGN49usQg5Ezv_AaWcKf3mRmZ=VJ8Rc4HDYh62ukiwXQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Bjorn Andersson <bjorn@kryo.se>, Anton Vorontsov <anton@enomsg.org>, Chris Ball <chris@printf.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "open list:SECURE DIGITAL HO..." <linux-mmc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/30/2014 12:23 AM, Geert Uytterhoeven wrote:
+On Mon 22 Dec 02:04 PST 2014, Ulf Hansson wrote:
 
->>>> --- renesas.orig/include/dt-bindings/clock/r8a7791-clock.h
->>>> +++ renesas/include/dt-bindings/clock/r8a7791-clock.h
+> On 19 December 2014 at 21:01, Bjorn Andersson <bjorn@kryo.se> wrote:
+> > On Fri, Dec 19, 2014 at 3:38 AM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+> >> On 12 December 2014 at 20:28, Bjorn Andersson
+> >> <bjorn.andersson@sonymobile.com> wrote:
+> >>
+> >> Some more explanation to why this needed would be good.
+> >>
+> >
+> > Because (according to the git log) some of the memories that we
+> > mounted in Xperia Z1 does not support HS200 even though they advertise
+> > they are.
+> 
+> I see. How about using an mmc card quirk instead of a DT binding then?
+> 
 
->>>> -#define R8A7791_CLK_RCAN               9
->>>> +#define R8A7791_CLK_ADSP               9
->>>> +#define R8A7791_CLK_RCAN               10
+I've missed the fact that you can have card specific quirks as well, that looks
+more sound than having to specify it separately in dt.
 
->>> R8A7791_CLK_RCAN is changed?
+Let's drop this and I'll see if I can find some details about what memory this
+might have been so I can add such a quirk. If I can find the information I'll
+give it a try and send you a new patch.
 
->>     Yes. It shouldn't be?
-
-> All definitions in include/dt-bindings/ are part of the DT ABI, and cannot be
-> changed without breaking the DT binding.
-
-> Hence when adding new entries, they must be added at the end of the list,
-> using a new available value.
-
-    Oh, OK...
-
-> Apart from that, what happens if you boot a new DTS on a kernel with an old
-> clk-rcar-gen2 driver that doesn't know about the new CPG clock?
-> Does it just fail to initialize and find that single clock,
-
-    Yes, exactly. The driver will cuss loudly but will continue to work.
-
-> or does the whole CPG driver fail?
-
-    No.
-
-> I wanted to check that after seeing the RCAN CPG patch, but haven't gotten to it
-> yet due to Xmas and NY holidays.
-
-    No holidays yet here. There will be long holidays starting from January 1st...
-
-> Gr{oetje,eeting}s,
->                          Geert
-
-WBR, Sergei
-
+Regards,
+Bjorn
