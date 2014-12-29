@@ -1,112 +1,110 @@
 From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH v2 11/12] ARM: dts: add support for Vybrid running on Cortex-M4
-Date: Tue, 30 Dec 2014 00:32:14 +0100
-Message-ID: <1419895935-22966-12-git-send-email-stefan@agner.ch>
+Subject: [PATCH v2 04/12] irqchip: nvic: increase number of external
+ interrupts to 112
+Date: Tue, 30 Dec 2014 00:32:07 +0100
+Message-ID: <1419895935-22966-5-git-send-email-stefan@agner.ch>
 References: <1419895935-22966-1-git-send-email-stefan@agner.ch>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1419895935-22966-1-git-send-email-stefan@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: shawn.guo@linaro.org, kernel@pengutronix.de, linux@arm.linux.org.uk, u.kleine-koenig@pengutronix.de, jason@lakedaemon.net, olof@lixom.net, arnd@arndb.de, daniel.lezcano@linaro.org, tglx@linutronix.de, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, marc.zyngier@arm.com
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
+Cc: devicetree@vger.kernel.org, Stefan Agner <stefan@agner.ch>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This adds an initial device tree to run Linux on the Cortex-M4 on
-the Vybrid based Colibri VF61.
+So far, only vectors for up to 48 external interrupts have been
+allocated in the vector table. The first 16 vectors of the vector
+table are reserved for internal exceptions (Reset, SVC...). The
+external interrupts start at offset 16. Hence, by increasing the
+vector table to 128 vectors, we increase the amount of vectors
+reserved for external interrupts to 112. Also, only register the
+amount of IRQ's we have vectors available for.
+
+Note: the vector table must align to the number of entries in the
+vector table, hence increase the alignment to 0x200.
 
 Signed-off-by: Stefan Agner <stefan@agner.ch>
 ---
- arch/arm/boot/dts/Makefile            |  1 +
- arch/arm/boot/dts/vf610m4-colibri.dts | 52 +++++++++++++++++++++++++++++++++++
- arch/arm/boot/dts/vf610m4.dtsi        | 10 +++++++
- 3 files changed, 63 insertions(+)
- create mode 100644 arch/arm/boot/dts/vf610m4-colibri.dts
- create mode 100644 arch/arm/boot/dts/vf610m4.dtsi
+When I started developing, I added UART0 with IRQ 61 to the device
+tree. The framework happily accepted that, even though only 48
+vectors for external interrupts were available. This was the
+initial reason I added the WARN (in v1). However, when thinking
+about it, just registering the amount of IRQ's actually supported
+according to the vector table makes much more sense, since this
+would warn the user on the offending IRQ's request call...
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 91bd5bd..4211dfb 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -271,6 +271,7 @@ dtb-$(CONFIG_ARCH_MXC) += \
- 	ls1021a-twr.dtb \
- 	vf500-colibri-eval-v3.dtb \
- 	vf610-colibri-eval-v3.dtb \
-+	vf610m4-colibri.dtb \
- 	vf610-cosmic.dtb \
- 	vf610-twr.dtb
- dtb-$(CONFIG_ARCH_MXS) += imx23-evk.dtb \
-diff --git a/arch/arm/boot/dts/vf610m4-colibri.dts b/arch/arm/boot/dts/vf610m4-colibri.dts
-new file mode 100644
-index 0000000..ebff03e
---- /dev/null
-+++ b/arch/arm/boot/dts/vf610m4-colibri.dts
-@@ -0,0 +1,52 @@
+ arch/arm/kernel/entry-v7m.S | 8 ++++----
+ drivers/irqchip/irq-nvic.c  | 9 +++++++++
+ 2 files changed, 13 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm/kernel/entry-v7m.S b/arch/arm/kernel/entry-v7m.S
+index 2260f18..c38a5e5 100644
+--- a/arch/arm/kernel/entry-v7m.S
++++ b/arch/arm/kernel/entry-v7m.S
+@@ -115,9 +115,9 @@ ENTRY(__switch_to)
+ ENDPROC(__switch_to)
+ 
+ 	.data
+-	.align	8
++	.align	9
+ /*
+- * Vector table (64 words => 256 bytes natural alignment)
++ * Vector table (128 words => 512 bytes natural alignment)
+  */
+ ENTRY(vector_table)
+ 	.long	0			@ 0 - Reset stack pointer
+@@ -136,6 +136,6 @@ ENTRY(vector_table)
+ 	.long	__invalid_entry		@ 13 - Reserved
+ 	.long	__pendsv_entry		@ 14 - PendSV
+ 	.long	__invalid_entry		@ 15 - SysTick
+-	.rept	64 - 16
+-	.long	__irq_entry		@ 16..64 - External Interrupts
++	.rept	128 - 16
++	.long	__irq_entry		@ 16..128 - External Interrupts
+ 	.endr
+diff --git a/drivers/irqchip/irq-nvic.c b/drivers/irqchip/irq-nvic.c
+index 5fac910..740cc55 100644
+--- a/drivers/irqchip/irq-nvic.c
++++ b/drivers/irqchip/irq-nvic.c
+@@ -38,6 +38,11 @@
+  * 16 irqs.
+  */
+ #define NVIC_MAX_IRQ		((NVIC_MAX_BANKS - 1) * 32 + 16)
 +/*
-+ * Device tree for Colibri VF61 Cortex-M4 support
-+ *
-+ * Copyright 2014 Stefan Agner
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
++ * Number of IRQ's supported is limited by the size of the vector table
++ * defined in entry-v7m.S
 + */
++#define NVIC_MAX_IRQ_VECTORS	(128 - 16)
+ 
+ static struct irq_domain *nvic_irq_domain;
+ 
+@@ -46,6 +51,8 @@ nvic_handle_irq(irq_hw_number_t hwirq, struct pt_regs *regs)
+ {
+ 	unsigned int irq = irq_linear_revmap(nvic_irq_domain, hwirq);
+ 
++	BUG_ON(hwirq >= NVIC_MAX_IRQ_VECTORS);
 +
-+/dts-v1/;
-+#include "vf610m4.dtsi"
-+
-+/ {
-+	model = "VF610 Cortex-M4";
-+	compatible = "fsl,vf610m4";
-+
-+	chosen {
-+		bootargs = "console=ttyLP2,115200 clk_ignore_unused init=/linuxrc rw";
-+	};
-+
-+	memory {
-+		reg = <0x8c000000 0x3000000>;
-+	};
-+};
-+
-+&esdhc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_esdhc1>;
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	status = "okay";
-+};
-+
-+&iomuxc {
-+	vf610-colibri {
-+		pinctrl_esdhc1: esdhc1grp {
-+			fsl,pins = <
-+				VF610_PAD_PTA24__ESDHC1_CLK	0x31ef
-+				VF610_PAD_PTA25__ESDHC1_CMD	0x31ef
-+				VF610_PAD_PTA26__ESDHC1_DAT0	0x31ef
-+				VF610_PAD_PTA27__ESDHC1_DAT1	0x31ef
-+				VF610_PAD_PTA28__ESDHC1_DATA2	0x31ef
-+				VF610_PAD_PTA29__ESDHC1_DAT3	0x31ef
-+				VF610_PAD_PTB20__GPIO_42	0x219d
-+			>;
-+		};
-+	};
-+};
-diff --git a/arch/arm/boot/dts/vf610m4.dtsi b/arch/arm/boot/dts/vf610m4.dtsi
-new file mode 100644
-index 0000000..3d8fa02
---- /dev/null
-+++ b/arch/arm/boot/dts/vf610m4.dtsi
-@@ -0,0 +1,10 @@
-+/*
-+ * Device tree for VF6xx Cortex-M4 support
-+ */
-+
-+#include "armv7-m.dtsi"
-+#include "vfxxx.dtsi"
-+
-+&mscm {
-+	interrupt-parent = <&nvic>;
-+};
+ 	handle_IRQ(irq, regs);
+ }
+ 
+@@ -93,6 +100,8 @@ static int __init nvic_of_init(struct device_node *node,
+ 	irqs = numbanks * 32;
+ 	if (irqs > NVIC_MAX_IRQ)
+ 		irqs = NVIC_MAX_IRQ;
++	if (irqs > NVIC_MAX_IRQ_VECTORS)
++		irqs = NVIC_MAX_IRQ_VECTORS;
+ 
+ 	nvic_irq_domain =
+ 		irq_domain_add_linear(node, irqs, &nvic_irq_domain_ops, NULL);
 -- 
 2.2.1
