@@ -1,16 +1,16 @@
 From: Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org>
-Subject: [PATCH v3] ARM: at91/dt: sam9263: Add ac97 device node
-Date: Mon, 29 Dec 2014 13:08:41 +0100
-Message-ID: <1419854922-29338-3-git-send-email-alexanders83@web.de>
+Subject: [PATCH v3] dt: atmel_ac97c: Add device tree documentation
+Date: Mon, 29 Dec 2014 13:08:40 +0100
+Message-ID: <1419854922-29338-2-git-send-email-alexanders83@web.de>
 References: <1419854922-29338-1-git-send-email-alexanders83@web.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1419854922-29338-1-git-send-email-alexanders83-S0/GAf8tV78@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds the device node for the ac97 controller.
+This adds the bindings for AC97 controller device tree support.
 
 Signed-off-by: Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org>
 Acked-By Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
@@ -19,48 +19,39 @@ Changes in v3:
 * Renamed the compatible string to atmel,at91sam9263-ac97c
 * Added 'Acked-By Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>'
 
- arch/arm/boot/dts/at91sam9263.dtsi | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+Changes in v2:
+* Split from commit adding actual code
 
-diff --git a/arch/arm/boot/dts/at91sam9263.dtsi b/arch/arm/boot/dts/at91sam9263.dtsi
-index 6283785..2e67e38 100644
---- a/arch/arm/boot/dts/at91sam9263.dtsi
-+++ b/arch/arm/boot/dts/at91sam9263.dtsi
-@@ -700,6 +700,16 @@
- 					};
- 				};
- 
-+				ac97 {
-+					pinctrl_ac97: ac97-0 {
-+						atmel,pins =
-+							<AT91_PIOB 0 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PB12 periph A AC97FS pin */
-+							 AT91_PIOB 1 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PB13 periph A AC97CK pin */
-+							 AT91_PIOB 2 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PB14 periph A AC97TX pin */
-+							 AT91_PIOB 3 AT91_PERIPH_A AT91_PINCTRL_NONE>;	/* PB14 periph A AC97RX pin */
-+					};
-+				};
+ .../devicetree/bindings/sound/atmel_ac97c.txt        | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/atmel_ac97c.txt
+
+diff --git a/Documentation/devicetree/bindings/sound/atmel_ac97c.txt b/Documentation/devicetree/bindings/sound/atmel_ac97c.txt
+new file mode 100644
+index 0000000..b151bd9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/atmel_ac97c.txt
+@@ -0,0 +1,20 @@
++* Atmel AC97 controller
 +
- 				pioA: gpio@fffff200 {
- 					compatible = "atmel,at91rm9200-gpio";
- 					reg = <0xfffff200 0x200>;
-@@ -828,6 +838,17 @@
- 				status = "disabled";
- 			};
- 
-+			ac97: sound@fffa0000 {
-+				compatible = "atmel,at91sam9263-ac97c";
-+				reg = <0xfffa0000 0x4000>;
-+				interrupts = <18 IRQ_TYPE_LEVEL_HIGH 5>;
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&pinctrl_ac97>;
-+				clocks = <&ac97_clk>;
-+				clock-names = "ac97_clk";
-+				status = "disabled";
-+			};
++Required properties:
++  - compatible: "atmel,at91sam9263-ac97c"
++  - reg: Address and length of the register set for the device
++  - interrupts: Should contain AC97 interrupt
++  - ac97-gpios: Please refer to soc-ac97link.txt, only ac97-reset is used
++Optional properties:
++  - pinctrl-names, pinctrl-0: Please refer to pinctrl-bindings.txt
 +
- 			macb0: ethernet@fffbc000 {
- 				compatible = "cdns,at32ap7000-macb", "cdns,macb";
- 				reg = <0xfffbc000 0x100>;
++Example:
++sound@fffa0000 {
++       compatible = "atmel,at91sam9263-ac97c";
++       pinctrl-names = "default";
++       pinctrl-0 = <&pinctrl_ac97>;
++       reg = <0xfffa0000 0x4000>;
++       interrupts = <18 IRQ_TYPE_LEVEL_HIGH 5>;
++
++       ac97-gpios = <&pioB 0 0 &pioB 2 0 &pioC 29 GPIO_ACTIVE_LOW>;
++};
 -- 
 2.2.1
 
