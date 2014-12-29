@@ -1,44 +1,112 @@
-From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Subject: Re: [PATCH] mmc: dt: Add property for broken hs200 quirk
-Date: Mon, 29 Dec 2014 14:37:39 -0800
-Message-ID: <20141229223739.GB25436@sonymobile.com>
-References: <1418412516-10682-1-git-send-email-bjorn.andersson@sonymobile.com>
- <CAPDyKFrPC_MphsLHHZ=uFjcF8SsdkVmzez9R=gas7_ihn63Q5A@mail.gmail.com>
- <CAJAp7OhSZ7CZedXAsWPf0XYv8RESQxXe4L1LZjOmVW4nGpFiHw@mail.gmail.com>
- <CAPDyKFoGN49usQg5Ezv_AaWcKf3mRmZ=VJ8Rc4HDYh62ukiwXQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+From: Stefan Agner <stefan@agner.ch>
+Subject: [PATCH v2 08/12] ARM: allow MULTIPLATFORM with !MMU
+Date: Tue, 30 Dec 2014 00:32:11 +0100
+Message-ID: <1419895935-22966-9-git-send-email-stefan@agner.ch>
+References: <1419895935-22966-1-git-send-email-stefan@agner.ch>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAPDyKFoGN49usQg5Ezv_AaWcKf3mRmZ=VJ8Rc4HDYh62ukiwXQ@mail.gmail.com>
+In-Reply-To: <1419895935-22966-1-git-send-email-stefan@agner.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Bjorn Andersson <bjorn@kryo.se>, Anton Vorontsov <anton@enomsg.org>, Chris Ball <chris@printf.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "open list:SECURE DIGITAL HO..." <linux-mmc@vger.kernel.org>
+To: shawn.guo@linaro.org, kernel@pengutronix.de, linux@arm.linux.org.uk, u.kleine-koenig@pengutronix.de, jason@lakedaemon.net, olof@lixom.net, arnd@arndb.de, daniel.lezcano@linaro.org, tglx@linutronix.de, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, marc.zyngier@arm.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
 List-Id: devicetree@vger.kernel.org
 
-On Mon 22 Dec 02:04 PST 2014, Ulf Hansson wrote:
+In order to support SoC with heterogenous CPU architectures (such
+as Freescale Vybrid/i.MXSX) it is preferable to use the same
+architecture (ARCH_MXC in this case) for the MMU enabled and !MMU
+CPU. Hence allow to select MULTIPLATFORM even without MMU.
 
-> On 19 December 2014 at 21:01, Bjorn Andersson <bjorn@kryo.se> wrote:
-> > On Fri, Dec 19, 2014 at 3:38 AM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
-> >> On 12 December 2014 at 20:28, Bjorn Andersson
-> >> <bjorn.andersson@sonymobile.com> wrote:
-> >>
-> >> Some more explanation to why this needed would be good.
-> >>
-> >
-> > Because (according to the git log) some of the memories that we
-> > mounted in Xperia Z1 does not support HS200 even though they advertise
-> > they are.
-> 
-> I see. How about using an mmc card quirk instead of a DT binding then?
-> 
+Signed-off-by: Stefan Agner <stefan@agner.ch>
+---
+ arch/arm/Kconfig | 21 ++++++++++-----------
+ 1 file changed, 10 insertions(+), 11 deletions(-)
 
-I've missed the fact that you can have card specific quirks as well, that looks
-more sound than having to specify it separately in dt.
-
-Let's drop this and I'll see if I can find some details about what memory this
-might have been so I can add such a quirk. If I can find the information I'll
-give it a try and send you a new patch.
-
-Regards,
-Bjorn
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index 97d07ed..95007b9 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -228,7 +228,7 @@ config VECTORS_BASE
+ 	  in size.
+ 
+ config ARM_PATCH_PHYS_VIRT
+-	bool "Patch physical to virtual translations at runtime" if EMBEDDED
++	bool "Patch physical to virtual translations at runtime" if EMBEDDED || (ARCH_MULTIPLATFORM && MMU)
+ 	default y
+ 	depends on !XIP_KERNEL && MMU
+ 	depends on !ARCH_REALVIEW || !SPARSEMEM
+@@ -303,15 +303,12 @@ config MMU
+ #
+ choice
+ 	prompt "ARM system type"
+-	default ARCH_VERSATILE if !MMU
+-	default ARCH_MULTIPLATFORM if MMU
++	default ARCH_MULTIPLATFORM
+ 
+ config ARCH_MULTIPLATFORM
+ 	bool "Allow multiple platforms to be selected"
+-	depends on MMU
+ 	select ARCH_WANT_OPTIONAL_GPIOLIB
+ 	select ARM_HAS_SG_CHAIN
+-	select ARM_PATCH_PHYS_VIRT
+ 	select AUTO_ZRELADDR
+ 	select CLKSRC_OF
+ 	select COMMON_CLK
+@@ -783,13 +780,13 @@ comment "CPU Core family selection"
+ 
+ config ARCH_MULTI_V4
+ 	bool "ARMv4 based platforms (FA526)"
+-	depends on !ARCH_MULTI_V6_V7
++	depends on !ARCH_MULTI_V6_V7 && MMU
+ 	select ARCH_MULTI_V4_V5
+ 	select CPU_FA526
+ 
+ config ARCH_MULTI_V4T
+ 	bool "ARMv4T based platforms (ARM720T, ARM920T, ...)"
+-	depends on !ARCH_MULTI_V6_V7
++	depends on !ARCH_MULTI_V6_V7 && MMU
+ 	select ARCH_MULTI_V4_V5
+ 	select CPU_ARM920T if !(CPU_ARM7TDMI || CPU_ARM720T || \
+ 		CPU_ARM740T || CPU_ARM9TDMI || CPU_ARM922T || \
+@@ -797,7 +794,7 @@ config ARCH_MULTI_V4T
+ 
+ config ARCH_MULTI_V5
+ 	bool "ARMv5 based platforms (ARM926T, XSCALE, PJ1, ...)"
+-	depends on !ARCH_MULTI_V6_V7
++	depends on !ARCH_MULTI_V6_V7 && MMU
+ 	select ARCH_MULTI_V4_V5
+ 	select CPU_ARM926T if !(CPU_ARM946E || CPU_ARM1020 || \
+ 		CPU_ARM1020E || CPU_ARM1022 || CPU_ARM1026 || \
+@@ -808,11 +805,13 @@ config ARCH_MULTI_V4_V5
+ 
+ config ARCH_MULTI_V6
+ 	bool "ARMv6 based platforms (ARM11)"
++	depends on MMU
+ 	select ARCH_MULTI_V6_V7
+ 	select CPU_V6K
+ 
+ config ARCH_MULTI_V7
+-	bool "ARMv7 based platforms (Cortex-A, PJ4, Scorpion, Krait)"
++	bool "ARMv7-A based platforms (Cortex-A, PJ4, Scorpion, Krait)"
++	depends on MMU
+ 	default y
+ 	select ARCH_MULTI_V6_V7
+ 	select CPU_V7
+@@ -823,7 +822,7 @@ config ARCH_MULTI_V6_V7
+ 	select MIGHT_HAVE_CACHE_L2X0
+ 
+ config ARCH_MULTI_CPU_AUTO
+-	def_bool !(ARCH_MULTI_V4 || ARCH_MULTI_V4T || ARCH_MULTI_V6_V7)
++	def_bool !(ARCH_MULTI_V4 || ARCH_MULTI_V4T || ARCH_MULTI_V6_V7) && MMU
+ 	select ARCH_MULTI_V5
+ 
+ endmenu
+@@ -1960,7 +1959,7 @@ endchoice
+ 
+ config XIP_KERNEL
+ 	bool "Kernel Execute-In-Place from ROM"
+-	depends on !ARM_LPAE && !ARCH_MULTIPLATFORM
++	depends on !ARM_LPAE && (!ARCH_MULTIPLATFORM || ARCH_MULTI_V7M)
+ 	help
+ 	  Execute-In-Place allows the kernel to run from non-volatile storage
+ 	  directly addressable by the CPU, such as NOR flash. This saves RAM
+-- 
+2.2.1
