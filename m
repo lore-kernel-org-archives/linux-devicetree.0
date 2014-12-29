@@ -1,51 +1,103 @@
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: [PATCH v2 01/12] genirq: generic chip: support hierarchy domain
-Date: Tue, 30 Dec 2014 00:32:04 +0100
-Message-ID: <1419895935-22966-2-git-send-email-stefan@agner.ch>
+From: Stefan Agner <stefan@agner.ch>
+Subject: [PATCH v2 03/12] irqchip: vf610-mscm: support NVIC parent
+Date: Tue, 30 Dec 2014 00:32:06 +0100
+Message-ID: <1419895935-22966-4-git-send-email-stefan@agner.ch>
 References: <1419895935-22966-1-git-send-email-stefan@agner.ch>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1419895935-22966-1-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1419895935-22966-1-git-send-email-stefan@agner.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: shawn.guo@linaro.org, kernel@pengutronix.de, linux@arm.linux.org.uk, u.kleine-koenig@pengutronix.de, jason@lakedaemon.net, olof@lixom.net, arnd@arndb.de, daniel.lezcano@linaro.org, tglx@linutronix.de, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, marc.zyngier@arm.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
 List-Id: devicetree@vger.kernel.org
 
-Use the new helper function irq_domain_set_info to make sure the
-function irq_domain_set_hwirq_and_chip is being called, which is
-crucial to save irqdomain specific data to irq_data.
+Support the NVIC interrupt controller as node parent of the MSCM
+interrupt router. On the dual-core variants of Vybird (VF6xx), the
+NVIC interrupt controller is used by the Cortex-M4. To support
+running Linux on this core too, MSCM needs NVIC parent support too.
 
-Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Signed-off-by: Stefan Agner <stefan@agner.ch>
 ---
- kernel/irq/generic-chip.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/irqchip/irq-vf610-mscm.c | 31 +++++++++++++++++++++++++------
+ 1 file changed, 25 insertions(+), 6 deletions(-)
 
-diff --git a/kernel/irq/generic-chip.c b/kernel/irq/generic-chip.c
-index 61024e8..15b370d 100644
---- a/kernel/irq/generic-chip.c
-+++ b/kernel/irq/generic-chip.c
-@@ -360,7 +360,7 @@ static struct lock_class_key irq_nested_lock_class;
- int irq_map_generic_chip(struct irq_domain *d, unsigned int virq,
- 			 irq_hw_number_t hw_irq)
- {
--	struct irq_data *data = irq_get_irq_data(virq);
-+	struct irq_data *data = irq_domain_get_irq_data(d, virq);
- 	struct irq_domain_chip_generic *dgc = d->gc;
- 	struct irq_chip_generic *gc;
- 	struct irq_chip_type *ct;
-@@ -405,8 +405,7 @@ int irq_map_generic_chip(struct irq_domain *d, unsigned int virq,
- 	else
- 		data->mask = 1 << idx;
+diff --git a/drivers/irqchip/irq-vf610-mscm.c b/drivers/irqchip/irq-vf610-mscm.c
+index 7a284d5..f4f7d78 100644
+--- a/drivers/irqchip/irq-vf610-mscm.c
++++ b/drivers/irqchip/irq-vf610-mscm.c
+@@ -30,6 +30,7 @@ struct vf610_mscm_chip_data {
+ 	void __iomem *mscm_base;
+ 	u16 cpu_mask;
+ 	u16 saved_irsprc[MSCM_IRSPRC_NUM];
++	bool is_nvic;
+ };
  
--	irq_set_chip_and_handler(virq, chip, ct->handler);
--	irq_set_chip_data(virq, gc);
-+	irq_domain_set_info(d, virq, hw_irq, chip, gc, ct->handler, NULL, NULL);
- 	irq_modify_status(virq, dgc->irq_flags_to_clear, dgc->irq_flags_to_set);
- 	return 0;
+ static struct vf610_mscm_chip_data *mscm_data;
+@@ -74,6 +75,7 @@ static void vf610_mscm_enable(struct irq_data *data)
+ {
+ 	irq_hw_number_t hwirq = data->hwirq;
+ 	struct vf610_mscm_chip_data *chip_data = data->chip_data;
++	struct irq_data *parent = data->parent_data;
+ 	u16 irsprc;
+ 
+ 	irsprc = readw_relaxed(chip_data->mscm_base + MSCM_IRSPRC(hwirq));
+@@ -84,17 +86,24 @@ static void vf610_mscm_enable(struct irq_data *data)
+ 	writew_relaxed(chip_data->cpu_mask,
+ 		       chip_data->mscm_base + MSCM_IRSPRC(hwirq));
+ 
+-	irq_chip_unmask_parent(data);
++	if (parent->chip->irq_enable)
++		parent->chip->irq_enable(parent);
++	else
++		parent->chip->irq_unmask(parent);
  }
+ 
+ static void vf610_mscm_disable(struct irq_data *data)
+ {
+ 	irq_hw_number_t hwirq = data->hwirq;
+ 	struct vf610_mscm_chip_data *chip_data = data->chip_data;
++	struct irq_data *parent = data->parent_data;
+ 
+ 	writew_relaxed(0x0, chip_data->mscm_base + MSCM_IRSPRC(hwirq));
+ 
+-	irq_chip_mask_parent(data);
++	if (parent->chip->irq_enable)
++		parent->chip->irq_disable(parent);
++	else
++		parent->chip->irq_mask(parent);
+ }
+ 
+ static struct irq_chip vf610_mscm_irq_chip = {
+@@ -126,10 +135,17 @@ static int vf610_mscm_domain_alloc(struct irq_domain *domain, unsigned int virq,
+ 					      domain->host_data);
+ 
+ 	gic_data.np = domain->parent->of_node;
+-	gic_data.args_count = 3;
+-	gic_data.args[0] = GIC_SPI;
+-	gic_data.args[1] = irq_data->args[0];
+-	gic_data.args[2] = irq_data->args[1];
++
++	if (mscm_data->is_nvic) {
++		gic_data.args_count = 1;
++		gic_data.args[0] = irq_data->args[0];
++	} else {
++		gic_data.args_count = 3;
++		gic_data.args[0] = GIC_SPI;
++		gic_data.args[1] = irq_data->args[0];
++		gic_data.args[2] = irq_data->args[1];
++	}
++
+ 	return irq_domain_alloc_irqs_parent(domain, virq, nr_irqs, &gic_data);
+ }
+ 
+@@ -171,6 +187,9 @@ static int __init vf610_mscm_of_init(struct device_node *node,
+ 		goto out_unmap;
+ 	}
+ 
++	if (of_device_is_compatible(domain->parent->of_node, "arm,armv7m-nvic"))
++		mscm_data->is_nvic = true;
++
+ 	mscm_data->cpu_mask = 0x1 << readl_relaxed(mscm_data->mscm_base + MSCM_CPxNUM);
+ 
+ 	cpu_pm_register_notifier(&mscm_notifier_block);
 -- 
 2.2.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
