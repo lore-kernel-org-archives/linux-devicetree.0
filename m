@@ -1,177 +1,121 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [RFC] OPP: Redefine bindings to overcome shortcomings
-Date: Mon, 29 Dec 2014 11:05:55 -0600
-Message-ID: <CAL_JsqJabcXe7-juTnJDcVdzpnFokYmt-N=bjZt5a+32Fzr_vg@mail.gmail.com>
-References: <52c403454c3b8fc201abe7ac74cf657638479311.1417691389.git.viresh.kumar@linaro.org>
- <CAKohpokUXvhqt+z4EPC9k=O8ZnQOqNSGGi8w6w4shYtbvv8mTw@mail.gmail.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v8 1/2] ASoC: hdmi: Add a transmitter interface to the
+ HDMI CODEC
+Date: Mon, 29 Dec 2014 17:08:18 +0000
+Message-ID: <20141229170818.GB17800@sirena.org.uk>
+References: <cover.1414053169.git.moinejf@free.fr>
+ <d63bb11d345ab1f1b7723ce5f82d42f56b0f1715.1414053169.git.moinejf@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAKohpokUXvhqt+z4EPC9k=O8ZnQOqNSGGi8w6w4shYtbvv8mTw@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Rafael Wysocki <rjw@rjwysocki.net>, Arnd Bergmann <arnd.bergmann@linaro.org>, Rob Herring <rob.herring@linaro.org>, Grant Likely <grant.likely@linaro.org>, "olof@lixom.net" <olof@lixom.net>, Nishanth Menon <nm@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Lists linaro-kernel <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, santosh shilimkar <santosh.shilimkar@oracle.com>, Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mike.turquette@linaro.org>, Sudeep Holla <Sudeep.Holla@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="HqU/NDEOKApT+6Er"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <d63bb11d345ab1f1b7723ce5f82d42f56b0f1715.1414053169.git.moinejf-GANU6spQydw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Jackson <Andrew.Jackson-5wv7dgnIgG8@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 9, 2014 at 9:51 AM, Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> On 4 December 2014 at 16:44, Viresh Kumar <viresh.kumar@linaro.org> wrote:
->> The shortcomings we are trying to solve here:
->>
->> - Some kind of compatibility string to probe the right cpufreq driver for
->>   platforms, when multiple drivers are available. For example: how to choose
->>   between cpufreq-dt and arm_big_little drivers.
->>
->> - Getting clock sharing information between CPUs. Single shared clock vs.
->>   independent clock per core vs. shared clock per cluster.
->>
->> - Support for turbo modes
->>
->> - Other per OPP settings: transition latencies, disabled status, etc.?
->
-> Some updates on the structure of bindings which I got up to with help of Arnd
-> and Rob over IRC, have got better examples to show how things would look
-> like:
->
-> diff --git a/Documentation/devicetree/bindings/power/opp.txt
-> b/Documentation/devicetree/bindings/power/opp.txt
-> index 74499e5033fc..8ae574b84650 100644
-> --- a/Documentation/devicetree/bindings/power/opp.txt
-> +++ b/Documentation/devicetree/bindings/power/opp.txt
-> @@ -1,9 +1,292 @@
-> -* Generic OPP Interface
-> +Generic OPP (Operating Performance Points) Interface
-> +----------------------------------------------------
->
->  SoCs have a standard set of tuples consisting of frequency and
->  voltage pairs that the device will support per voltage domain. These
->  are called Operating Performance Points or OPPs.
->
-> +This documents defines OPP bindings with its required/optional properties.
-> +OPPs can be defined for any device, this file uses CPU device as an example to
-> +illustrate how to define OPPs.
+
+--HqU/NDEOKApT+6Er
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Oct 23, 2014 at 09:09:35AM +0200, Jean-Francois Moine wrote:
+
+> +struct hdmi_data {
+> +	int (*get_audio)(struct device *dev,
+> +			 int *max_channels,
+> +			 int *rate_mask,
+> +			 int *fmt);
+> +	void (*audio_switch)(struct device *dev,
+> +			     int port_index,
+> +			     unsigned sample_rate,
+> +			     int sample_format);
+
+I can't really tell from these function names what these functions are
+supposed to do.  I think get_audio() should be get_audio_caps() or
+similar since it reads the capabilities and audio_switch() is supposed
+to be set_audio_params() or similar to set the settings for the running
+stream.
+
+> +	snd_pcm_hw_constraint_list(runtime, 0,
+> +				   SNDRV_PCM_HW_PARAM_RATE,
+> +				   rate_constraints);
 > +
-> +opp nodes and opp-lists
+> +	formats =3D 0;
+> +	if (fmt & 1)
+> +		formats |=3D SNDRV_PCM_FMTBIT_S16_LE;
+> +	if (fmt & 2)
+> +		formats |=3D SNDRV_PCM_FMTBIT_S20_3LE;
+> +	if (fmt & 4)
+> +		formats |=3D SNDRV_PCM_FMTBIT_S24_LE |
+> +			   SNDRV_PCM_FMTBIT_S24_3LE |
+> +			   SNDRV_PCM_FMTBIT_S32_LE;
+
+Magic numbers here - can't we have some constants defined?
+
+> +	priv->hdmi_data.audio_switch(dai->dev, dai->id,
+> +				     params_rate(params),
+> +				     params_format(params));
+
+I'd be happier if this were able to return an error; even if the
+constraints are satisfied perhaps something changed or some operation
+fails for some reason.
+
+> +static void hdmi_shutdown(struct snd_pcm_substream *substream,
+> +			  struct snd_soc_dai *dai)
+> +{
+> +	struct device *cdev;
+> +	struct hdmi_priv *priv;
 > +
-> +- opp-listN:
-> +  List of nodes defining performance points. Following belong to the nodes
-> +  within the opp-lists.
+> +	cdev =3D hdmi_get_cdev(dai->dev);
+> +	if (!cdev)
+> +		return;
+> +	priv =3D dev_get_drvdata(cdev);
 > +
-> +  Required properties:
-> +  - frequency-kHz: Frequency in kHz
+> +	priv->hdmi_data.audio_switch(dai->dev, -1, 0, 0);	/* stop */
+> +}
 
-s/kHz/khz/
+So the set parameters operation has to support these magic values as
+being "off" - why not have an explicit shutdown operation here?
 
-> +  - voltage-uV: voltage in micro Volts
-
--microvolt is more consistent with regulator binding.
-
-The names are a bit redundant. perhaps opp-khz and opp-microvolt instead.
-
+> +static int hdmi_codec_probe(struct snd_soc_codec *codec)
+> +{
+> +	struct hdmi_priv *priv;
+> +	struct device *dev =3D codec->dev;	/* encoder device */
+> +	struct device *cdev;			/* codec device */
 > +
-> +  Optional properties:
-> +  - turbo-mode: Marks the volt-freq pair as turbo pair.
-> +  - status: Marks the node enabled/disabled.
-> +
-> +- oppN:
-> +  Operating performance point node per device. Devices using it should have its
-> +  phandle in their "operating-points-v2" property.
-> +
-> +  Required properties:
-> +  - compatible: allow OPPs to express their compatibility
-> +  - opp-list: phandle to opp-list defined above.
-> +
-> +  Optional properties:
-> +  - clocks: Tuple of clock providers
-> +  - clock-names: Clock names
-> +  - opp-supply: phandle to the parent supply/regulator node
-> +  - voltage-tolerance: Specify the CPU voltage tolerance in percentage.
-> +  - clock-latency: Specify the possible maximum transition latency for clock,
-> +    in unit of nanoseconds.
-> +
-> +Example 1: Simple case of dual-core cortex A9-single cluster, sharing
-> clock line.
-> +
-> +/ {
-> +       cpus {
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +
-> +               cpu@0 {
-> +                       compatible = "arm,cortex-a9";
-> +                       reg = <0>;
-> +                       next-level-cache = <&L2>;
-> +                       operating-points-v2 = <&opp0>;
-> +
-> +                       opp0: opp0 {
+> +	cdev =3D hdmi_get_cdev(dev);
+> +	if (!cdev)
+> +		return -ENODEV;
 
-I don't really like having this under cpu0 when it applies to all
-cpus. I would move it out of /cpus.
+This is (I think) only called for cases where the driver is being used
+=66rom a parent device with ops but the name makes it sound like it should
+be called all the time so errors like that shouldn't happen.  This
+should be clearer, or perhaps we should just have a separate device
+(perhaps rename the existing one to say that it's for a dumb device with
+no control?).
 
-> +                               compatible = "linux,cpu-dvfs";
+--HqU/NDEOKApT+6Er
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-This should not be linux specific. Probably not cpu specific either.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-> +                               clocks = <&clk-controller 0>;
-> +                               clock-names = "cpu";
+iQEcBAEBAgAGBQJUoYqBAAoJECTWi3JdVIfQu8UH/30bGmCST0NnrWXxo4iph7LT
+P1WK69Bg2+E+BgihILZ9v/RFDA6lw8PI/dLmfVaF2gpiJoxMphalPhvRFpksCkLb
+5hAHWCwA+j7lcQ9+4YmweOqVSiDHhoP186Zxtv5z6vKGAKwIXpY0nfQrzJV+WHxI
+1YzwLSGpQH0RWeU8YJjEK3VLXlmqQxP0ApicOe0sVH+JAzFVsqI2Nj8RW75RydVp
+Jk+2xxy6mJqu3uD0NNHPWqNQ7VJINejon9AWvdgmNMn7NQHPWjN2qY/fdk5Y8dmF
+1wiZJyOESU2kz3KeiYvlHhrf36cS9ZQTZkoSh9vf83pDycPk7ynZyW1YAHARAew=
+=5C1c
+-----END PGP SIGNATURE-----
 
-clocks are an input to the cpu, not really an opp. You could have a an
-OPP which uses a different parent clock, but that is most likely a
-switch within the clock controller rather than 2 clock inputs to the
-cpu.
-
-I think the clock binding for cpus should stand on its own independent of OPPs.
-
-> +                               opp-supply = <&cpu-supply0>;
-
-Same comment as clocks applies here.
-
-> +                               voltage-tolerance = <2>; /* percentage */
-> +                               clock-latency = <300000>;
-
-These could be per entry. I'm not sure it is worth the savings to not
-just always specify them per entry.
-
-We should append units (-us) to clock-latency unless there is a good
-reason to maintain compatibility.
-
-> +                               opp-list = <&opplist0>;
-
-With the above changes, having this list is unnecessary.
-
-So, what I envision is like this:
-
-/cpus {
-  cpu@0 {
-    clocks = <...>;
-    cpu-supply = <...>;
-    operating-point-v2 = <&cpu0-opp>;
-   };
-  cpu@1 {
-    clocks = <...>;
-    cpu-supply = <...>;
-    operating-point-v2 = <&cpu1-opp>;
-   };
-};
-
-cpu0-opp : opp0 {
-  compatible = "operating-point-table";
-  entry0 {
-    opp-khz = <500000>;
-    opp-microvolt = <900000>;
-  };
-  entry1 {
-    opp-khz = <1000000>;
-    opp-microvolt = <1000000>;
-    turbo-mode;
-  };
-};
-
-cpu1-opp : opp1 {
-  compatible = "operating-point-table";
-...
-};
-
-We need to also consider if this all works for other non-cpu OPPs like
-GPUs or DRAM/bus.
-
-Rob
+--HqU/NDEOKApT+6Er--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
