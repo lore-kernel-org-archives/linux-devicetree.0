@@ -1,69 +1,177 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v8 0/2] ASoC: tda998x: add a codec to the HDMI transmitter
-Date: Mon, 29 Dec 2014 16:52:46 +0000
-Message-ID: <20141229165246.GZ17800@sirena.org.uk>
-References: <cover.1414053169.git.moinejf@free.fr>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [RFC] OPP: Redefine bindings to overcome shortcomings
+Date: Mon, 29 Dec 2014 11:05:55 -0600
+Message-ID: <CAL_JsqJabcXe7-juTnJDcVdzpnFokYmt-N=bjZt5a+32Fzr_vg@mail.gmail.com>
+References: <52c403454c3b8fc201abe7ac74cf657638479311.1417691389.git.viresh.kumar@linaro.org>
+ <CAKohpokUXvhqt+z4EPC9k=O8ZnQOqNSGGi8w6w4shYtbvv8mTw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="cqgibCT2eNae4+Dl"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <cover.1414053169.git.moinejf-GANU6spQydw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Jackson <Andrew.Jackson-5wv7dgnIgG8@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAKohpokUXvhqt+z4EPC9k=O8ZnQOqNSGGi8w6w4shYtbvv8mTw@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Rafael Wysocki <rjw@rjwysocki.net>, Arnd Bergmann <arnd.bergmann@linaro.org>, Rob Herring <rob.herring@linaro.org>, Grant Likely <grant.likely@linaro.org>, "olof@lixom.net" <olof@lixom.net>, Nishanth Menon <nm@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Lists linaro-kernel <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, santosh shilimkar <santosh.shilimkar@oracle.com>, Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mike.turquette@linaro.org>, Sudeep Holla <Sudeep.Holla@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Dec 9, 2014 at 9:51 AM, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> On 4 December 2014 at 16:44, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>> The shortcomings we are trying to solve here:
+>>
+>> - Some kind of compatibility string to probe the right cpufreq driver for
+>>   platforms, when multiple drivers are available. For example: how to choose
+>>   between cpufreq-dt and arm_big_little drivers.
+>>
+>> - Getting clock sharing information between CPUs. Single shared clock vs.
+>>   independent clock per core vs. shared clock per cluster.
+>>
+>> - Support for turbo modes
+>>
+>> - Other per OPP settings: transition latencies, disabled status, etc.?
+>
+> Some updates on the structure of bindings which I got up to with help of Arnd
+> and Rob over IRC, have got better examples to show how things would look
+> like:
+>
+> diff --git a/Documentation/devicetree/bindings/power/opp.txt
+> b/Documentation/devicetree/bindings/power/opp.txt
+> index 74499e5033fc..8ae574b84650 100644
+> --- a/Documentation/devicetree/bindings/power/opp.txt
+> +++ b/Documentation/devicetree/bindings/power/opp.txt
+> @@ -1,9 +1,292 @@
+> -* Generic OPP Interface
+> +Generic OPP (Operating Performance Points) Interface
+> +----------------------------------------------------
+>
+>  SoCs have a standard set of tuples consisting of frequency and
+>  voltage pairs that the device will support per voltage domain. These
+>  are called Operating Performance Points or OPPs.
+>
+> +This documents defines OPP bindings with its required/optional properties.
+> +OPPs can be defined for any device, this file uses CPU device as an example to
+> +illustrate how to define OPPs.
+> +
+> +opp nodes and opp-lists
+> +
+> +- opp-listN:
+> +  List of nodes defining performance points. Following belong to the nodes
+> +  within the opp-lists.
+> +
+> +  Required properties:
+> +  - frequency-kHz: Frequency in kHz
 
---cqgibCT2eNae4+Dl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+s/kHz/khz/
 
-On Thu, Oct 23, 2014 at 10:32:49AM +0200, Jean-Francois Moine wrote:
-> The NXP TDA998x HDMI transmitter may transmit audio to the HDMI link
-> from 2 different sources, I2S and S/PDIF.
+> +  - voltage-uV: voltage in micro Volts
 
-So, I'm not seeing *any* interest here from any other HDMI users.  This
-is a continuing theme with HDMI patches and is really very concerning,
-everyone appears to be working in their own bubbles coming up with their
-own things and ignoring everyone else's work - what little review I'm
-seeing seems to be happening only after I explicitly prompt it.  I'm
-following up to Jean-Francois' patches here but this isn't specific to
-them, it seems like a general thing with HDMI code.
+-microvolt is more consistent with regulator binding.
 
-This in turn makes me think there's some abstraction problems with
-what's going on and we're going to have to go through yet more
-refactorings to fix things up as we do manage to come up with better
-abstractions.  What I'd really like to see as a bare minimum is some
-visible conversation about what we're doing and sign that people are
-at least keeping in mind generic solutions when working on HDMI code.
-Some commentary on the similarities and differences between hardware
-and which abstractions work with which devices would also be really
-helpful in working out if we're going in the right direction.
+The names are a bit redundant. perhaps opp-khz and opp-microvolt instead.
 
-Basically at the minute I'm worried that we may be making the problems
-we've got here worse not better, I've not personally had the time to sit
-down and study the hardware sufficiently to form a firm impression
-myself which isn't helping.
+> +
+> +  Optional properties:
+> +  - turbo-mode: Marks the volt-freq pair as turbo pair.
+> +  - status: Marks the node enabled/disabled.
+> +
+> +- oppN:
+> +  Operating performance point node per device. Devices using it should have its
+> +  phandle in their "operating-points-v2" property.
+> +
+> +  Required properties:
+> +  - compatible: allow OPPs to express their compatibility
+> +  - opp-list: phandle to opp-list defined above.
+> +
+> +  Optional properties:
+> +  - clocks: Tuple of clock providers
+> +  - clock-names: Clock names
+> +  - opp-supply: phandle to the parent supply/regulator node
+> +  - voltage-tolerance: Specify the CPU voltage tolerance in percentage.
+> +  - clock-latency: Specify the possible maximum transition latency for clock,
+> +    in unit of nanoseconds.
+> +
+> +Example 1: Simple case of dual-core cortex A9-single cluster, sharing
+> clock line.
+> +
+> +/ {
+> +       cpus {
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +
+> +               cpu@0 {
+> +                       compatible = "arm,cortex-a9";
+> +                       reg = <0>;
+> +                       next-level-cache = <&L2>;
+> +                       operating-points-v2 = <&opp0>;
+> +
+> +                       opp0: opp0 {
 
---cqgibCT2eNae4+Dl
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+I don't really like having this under cpu0 when it applies to all
+cpus. I would move it out of /cpus.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+> +                               compatible = "linux,cpu-dvfs";
 
-iQEcBAEBAgAGBQJUoYbZAAoJECTWi3JdVIfQkIEH/2fiNrgDHQawYRxNQhcbJwSy
-ITPRwYBq4D3kay1+XiR7FfxVtHaOJO7sRRQmjeB41tBzMjuir5b238ZaIfYKJK3k
-YEPB46yaSXAbW4DbjDaLO5ul+4ZlW6rZRAiungYq3QAROrvfS2kjM5tM1fDSyd/a
-NHRYB0NxvWCd9tfZFChGWIIsupHeHtNF7lFfwgrR0ve02ACbgLpN0Su7DScu0NJ2
-csTwwcdNWT5lP5Op67GO5igshLBuZF/3Z4olTwTsguhWji1KuIeP5Sac49pbpdm4
-qayMSgWnb2FRJx5EZHhdnvnpfa2+Bwka0n5dFmsvXwHfmMx8t3id3KqMGMlX0vE=
-=3ShM
------END PGP SIGNATURE-----
+This should not be linux specific. Probably not cpu specific either.
 
---cqgibCT2eNae4+Dl--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +                               clocks = <&clk-controller 0>;
+> +                               clock-names = "cpu";
+
+clocks are an input to the cpu, not really an opp. You could have a an
+OPP which uses a different parent clock, but that is most likely a
+switch within the clock controller rather than 2 clock inputs to the
+cpu.
+
+I think the clock binding for cpus should stand on its own independent of OPPs.
+
+> +                               opp-supply = <&cpu-supply0>;
+
+Same comment as clocks applies here.
+
+> +                               voltage-tolerance = <2>; /* percentage */
+> +                               clock-latency = <300000>;
+
+These could be per entry. I'm not sure it is worth the savings to not
+just always specify them per entry.
+
+We should append units (-us) to clock-latency unless there is a good
+reason to maintain compatibility.
+
+> +                               opp-list = <&opplist0>;
+
+With the above changes, having this list is unnecessary.
+
+So, what I envision is like this:
+
+/cpus {
+  cpu@0 {
+    clocks = <...>;
+    cpu-supply = <...>;
+    operating-point-v2 = <&cpu0-opp>;
+   };
+  cpu@1 {
+    clocks = <...>;
+    cpu-supply = <...>;
+    operating-point-v2 = <&cpu1-opp>;
+   };
+};
+
+cpu0-opp : opp0 {
+  compatible = "operating-point-table";
+  entry0 {
+    opp-khz = <500000>;
+    opp-microvolt = <900000>;
+  };
+  entry1 {
+    opp-khz = <1000000>;
+    opp-microvolt = <1000000>;
+    turbo-mode;
+  };
+};
+
+cpu1-opp : opp1 {
+  compatible = "operating-point-table";
+...
+};
+
+We need to also consider if this all works for other non-cpu OPPs like
+GPUs or DRAM/bus.
+
+Rob
