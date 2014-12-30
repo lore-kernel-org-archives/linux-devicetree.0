@@ -1,76 +1,63 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v8 0/2] ASoC: tda998x: add a codec to the HDMI transmitter
-Date: Tue, 30 Dec 2014 17:00:01 +0000
-Message-ID: <20141230170001.GO17800@sirena.org.uk>
-References: <cover.1414053169.git.moinejf@free.fr>
- <20141229165246.GZ17800@sirena.org.uk>
- <54A19151.3090506@ti.com>
+From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Subject: Re: [PATCH 2/3] hwmon: Driver for OMAP3 temperature sensor
+Date: Tue, 30 Dec 2014 19:00:02 +0100
+Message-ID: <20141230180002.GC23142@amd>
+References: <20141226102933.GA28778@amd>
+ <1419597294-21487-1-git-send-email-sre@kernel.org>
+ <1419597294-21487-3-git-send-email-sre@kernel.org>
+ <CANOLnON6rAQ2+jJEFDKseH2Htu6bqRkURDioGt7zp1Ze73f8Pw@mail.gmail.com>
+ <CAGo_u6qO0ok+GBnm7SQtw6dJuwGN2OuP7CpKDEWawS3V2go4KA@mail.gmail.com>
+ <20141229181556.GA26926@amd>
+ <54A1BB2B.9060204@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="sv7CUYPyUbxygwr6"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <54A19151.3090506-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <54A1BB2B.9060204-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
-Cc: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Jackson <Andrew.Jackson-5wv7dgnIgG8@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Cc: Grazvydas Ignotas <notasas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dt list <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Pali Rohar <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon 2014-12-29 14:35:55, Nishanth Menon wrote:
+> On 12/29/2014 12:15 PM, Pavel Machek wrote:
+> > On Mon 2014-12-29 12:01:03, Nishanth Menon wrote:
+> >> On Mon, Dec 29, 2014 at 11:52 AM, Grazvydas Ignotas <notasas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> >>> On Fri, Dec 26, 2014 at 2:34 PM, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> >>>> OMAP34xx and OMAP36xx processors contain a register in the syscon area,
+> >>>> which can be used to determine the SoCs temperature. This patch provides
+> >>>> a DT based driver for the temperature sensor based on an older driver
+> >>>> written by Peter De Schrijver for the Nokia N900 and N9.
+> >>>
+> >>> The sensor looks like an earlier iteration of sensors used in newer
+> >>> OMAPs, which are already supported by maybe
+> >>> drivers/thermal/ti-soc-thermal/ , maybe it would make sense to update
+> >>> that driver instead?
+> >>
+> >> Just to be clear - OMAP4 is the first time that the sensors were
+> >> reliable enough to be used.
+> > 
+> > When testing initial version of the patch, they seem to work very well
+> > in the omap3 case.
+> 
+> Just be careful when you try to make thermal policy like decisions
+> based on this sensor. Placement of the sensor w.r.t the actual logic
 
---sv7CUYPyUbxygwr6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I guess we won't do that, certainly not anytime soon.
 
-On Mon, Dec 29, 2014 at 07:37:21PM +0200, Jyri Sarha wrote:
-> On 12/29/2014 06:52 PM, Mark Brown wrote:
+> Also notice http://www.ti.com/lit/er/sprz278f/sprz278f.pdf "Advisory
+> 3.1.1.186 MMC OCP Clock Not Gated When Thermal Sensor Is Used" I think
+> there were accuracy issues at certain values etc.. So remember to do a
+> off mode type PM tests as well before you consider requesting these to
+> be merged.
 
-> >So, I'm not seeing *any* interest here from any other HDMI users.  This
-> >is a continuing theme with HDMI patches and is really very concerning,
-> >everyone appears to be working in their own bubbles coming up with their
-> >own things and ignoring everyone else's work - what little review I'm
-
-> I have not seen any significant new development since v7 of these patches.
-> My comments for v6 were mostly[1] addressed and I can live with these
-> changes, even develop this approach further if it gets merged.
-
-OK, so this sort of feedback is really useful - even a qualified
-Reviwed-by is useful.  Total silence could mean anything.
-
-> However, as a general note I see a need for a generic ASoC hdmi codec
-> abstraction and I don't think this is generic enough. More of the audio
-> specific implementation and HDMI standard specific things should be pushed
-> away from the hdmi encoder driver (tda998x in this case) to the generic ASoC
-> side hdmi codec driver (or library).
-
-This is something I'm expecting, yes - what I don't have is a clear
-enough picture of how consistent the different hardware is in how it
-models these things.
-
-> [1] I personally do not like the hdmi_get_cdev() approach. I would rather go
-> with only a library for registering from ASoC codec component under the HDMI
-> encoder device or a completely separate device with only a reference to the
-> HDMI encoder.
-
-It does seem somewhat complicated, yes.  I don't know if matches idioms
-for DRM somehow?
-
---sv7CUYPyUbxygwr6
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUotoRAAoJECTWi3JdVIfQkfAH/AvhxX4Sb7Mf5MMIWLdFevna
-F79I11qORhxkOPMVUrccJPrN6wzkSqbecH8N3b8wkjqBhlO9h3hI0rfXXKbmqpCd
-RTrTBRhQYYHm0zlpy4LhW0HLA11icoj+vTeYEonjn/gr9Vnz3f9bmgDSKfIKjZzr
-+j9uyXLGTDCIWG6AkwvAjVq3MZ0H8TtWoNLd/jlmxFJG8tURcW545WQiECUJyzMo
-y0eC9j3UWS4oPGxIVx9wjDoBVelY/rtJICYqmYEDkcNOReS/TtZ2JFqQff5RvvD4
-fSGao+eEaK9MpkfvEZb3+gRUXt/wznP06wi5FzXCYH0/BD9sHCXMlhcrhUqjeWY=
-=uivE
------END PGP SIGNATURE-----
-
---sv7CUYPyUbxygwr6--
+Thanks a lot for a pointer. 3x 100uA power draw when you enable
+temperature sensor, because it also errorneously enables MMC. I wonder
+how the solution would look in the device tree...
+									Pavel
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
