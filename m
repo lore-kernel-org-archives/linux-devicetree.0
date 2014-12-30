@@ -1,38 +1,32 @@
 From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 7/9] ARM: versatile: move mach includes into mach directory
-Date: Tue, 30 Dec 2014 23:05:57 +0100
-Message-ID: <4692855.QAqGntT4PC@wuerfel>
-References: <1419967718-26909-1-git-send-email-robherring2@gmail.com> <1419967718-26909-8-git-send-email-robherring2@gmail.com>
+Subject: Re: [PATCH 0/9] ARM Versatile multi-platform support
+Date: Tue, 30 Dec 2014 23:08:03 +0100
+Message-ID: <5504415.vqcrleXQ36@wuerfel>
+References: <1419967718-26909-1-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1419967718-26909-8-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1419967718-26909-1-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Maydell <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 30 December 2014 13:28:36 Rob Herring wrote:
+On Tuesday 30 December 2014 13:28:29 Rob Herring wrote:
 > From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 > 
-> In preparation for multi-platform support, move platform.h and
-> hardware.h into mach-versatile directory. Combine them into a single
-> file in the process.
-> 
-> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-> Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  arch/arm/mach-versatile/core.c                     |  3 +-
->  arch/arm/mach-versatile/include/mach/hardware.h    | 32 ----------------------
->  .../mach-versatile/{include/mach => }/platform.h   |  5 ++++
->  3 files changed, 6 insertions(+), 34 deletions(-)
-> 
+> This series converts ARM Versatile platform to multi-platform. I started 
+> this some time ago and some pieces were already merged. The primary 
+> piece remaining is converting the PCI host to DT which I was waiting for 
+> the common PCI DT parsing to get settled. Now that that is in place as 
+> well as a few other pieces are in place like multi-platform fixes for 
+> CLCD, we can fully convert Versatile to DT and multi-platform.
 
-If I read this right, there is only one file left that includes this
-header after patch 9, so how about moving the contents into versatile_dt.c
-directly?
+Hi Rob, thanks for picking this up again, looks great overall!
+
+I've replied to a few individual patches with minor questions, but
+none of them are show-stoppers.
 
 	Arnd
 --
