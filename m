@@ -1,157 +1,88 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 8/9] ARM: versatile: convert to multi-platform
-Date: Tue, 30 Dec 2014 13:28:37 -0600
-Message-ID: <1419967718-26909-9-git-send-email-robherring2@gmail.com>
-References: <1419967718-26909-1-git-send-email-robherring2@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1419967718-26909-1-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter Maydell <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH v2] ARM: shmobile: r8a7791: add ADSP clocks
+Date: Tue, 30 Dec 2014 23:20:34 +0300
+Message-ID: <4692589.Khlcz7yVTN@wasted.cogentembedded.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: horms@verge.net.au, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Add the ADSP clocks to the CPG and MSTP5 nodes of the R8A7791 device tree.
 
-Now that all the prerequisites are in place, we can enable Versatile
-boards for multi-platform kernels.
+Based on the original patch by Konstantin Kozhevnikov
+<konstantin.kozhevnikov@cogentembedded.com>.
 
-Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+
 ---
- arch/arm/Kconfig                                  | 21 +----------
- arch/arm/mach-versatile/Kconfig                   | 14 +++++++
- arch/arm/mach-versatile/Makefile.boot             |  4 --
- arch/arm/mach-versatile/include/mach/uncompress.h | 45 -----------------------
- 4 files changed, 16 insertions(+), 68 deletions(-)
- create mode 100644 arch/arm/mach-versatile/Kconfig
- delete mode 100644 arch/arm/mach-versatile/Makefile.boot
- delete mode 100644 arch/arm/mach-versatile/include/mach/uncompress.h
+The patch is against 'renesas-devel-20141229-v3.19-rc2' tag of Simon Horman's
+'renesas.git' repo plus the R8A7791 CAN patches posted last week. It depends on
+the patch adding the ADSP clock support to  the 'clk-rcar-gen2' driver in order
+to work.
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 7816b54..4d9858f 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -337,25 +337,6 @@ config ARCH_REALVIEW
- 	help
- 	  This enables support for ARM Ltd RealView boards.
- 
--config ARCH_VERSATILE
--	bool "ARM Ltd. Versatile family"
--	select ARCH_WANT_OPTIONAL_GPIOLIB
--	select ARM_AMBA
--	select ARM_TIMER_SP804
--	select ARM_VIC
--	select CLKSRC_VERSATILE
--	select COMMON_CLK
--	select COMMON_CLK_VERSATILE
--	select CPU_ARM926T
--	select GENERIC_CLOCKEVENTS
--	select ICST
--	select MIGHT_HAVE_PCI
--	select SPARSE_IRQ
--	select USE_OF
--	select VERSATILE_FPGA_IRQ
--	help
--	  This enables support for ARM Ltd Versatile board.
--
- config ARCH_AT91
- 	bool "Atmel AT91"
- 	select ARCH_REQUIRE_GPIOLIB
-@@ -956,6 +937,8 @@ source "arch/arm/mach-u300/Kconfig"
- 
- source "arch/arm/mach-ux500/Kconfig"
- 
-+source "arch/arm/mach-versatile/Kconfig"
-+
- source "arch/arm/mach-vexpress/Kconfig"
- source "arch/arm/plat-versatile/Kconfig"
- 
-diff --git a/arch/arm/mach-versatile/Kconfig b/arch/arm/mach-versatile/Kconfig
-new file mode 100644
-index 0000000..1d6a8b2
---- /dev/null
-+++ b/arch/arm/mach-versatile/Kconfig
-@@ -0,0 +1,14 @@
-+config ARCH_VERSATILE
-+	bool "ARM Ltd. Versatile family" if ARCH_MULTI_V5
-+	select ARM_AMBA
-+	select ARM_TIMER_SP804
-+	select ARM_VIC
-+	select CLKSRC_VERSATILE
-+	select COMMON_CLK_VERSATILE
-+	select CPU_ARM926T
-+	select ICST
-+	select MIGHT_HAVE_PCI
-+	select VERSATILE_FPGA_IRQ
-+	help
-+	  This enables support for ARM Ltd Versatile board.
-+
-diff --git a/arch/arm/mach-versatile/Makefile.boot b/arch/arm/mach-versatile/Makefile.boot
-deleted file mode 100644
-index ff0a4b5..0000000
---- a/arch/arm/mach-versatile/Makefile.boot
-+++ /dev/null
-@@ -1,4 +0,0 @@
--   zreladdr-y	+= 0x00008000
--params_phys-y	:= 0x00000100
--initrd_phys-y	:= 0x00800000
--
-diff --git a/arch/arm/mach-versatile/include/mach/uncompress.h b/arch/arm/mach-versatile/include/mach/uncompress.h
-deleted file mode 100644
-index 986e3d3..0000000
---- a/arch/arm/mach-versatile/include/mach/uncompress.h
-+++ /dev/null
-@@ -1,45 +0,0 @@
--/*
-- *  arch/arm/mach-versatile/include/mach/uncompress.h
-- *
-- *  Copyright (C) 2003 ARM Limited
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License as published by
-- * the Free Software Foundation; either version 2 of the License, or
-- * (at your option) any later version.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program; if not, write to the Free Software
-- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-- */
--#define AMBA_UART_DR	(*(volatile unsigned char *)0x101F1000)
--#define AMBA_UART_LCRH	(*(volatile unsigned char *)0x101F102C)
--#define AMBA_UART_CR	(*(volatile unsigned char *)0x101F1030)
--#define AMBA_UART_FR	(*(volatile unsigned char *)0x101F1018)
--
--/*
-- * This does not append a newline
-- */
--static inline void putc(int c)
--{
--	while (AMBA_UART_FR & (1 << 5))
--		barrier();
--
--	AMBA_UART_DR = c;
--}
--
--static inline void flush(void)
--{
--	while (AMBA_UART_FR & (1 << 3))
--		barrier();
--}
--
--/*
-- * nothing to do
-- */
--#define arch_decomp_setup()
--- 
-2.1.0
+Changes in version 2:
+- avoided changing #define R8A7791_CLK_RCAN, so had to swap "adsp" and "rcan" in
+  the "clock-output-names" property of the CPG node.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ arch/arm/boot/dts/r8a7791.dtsi            |   11 +++++++----
+ include/dt-bindings/clock/r8a7791-clock.h |    2 ++
+ 2 files changed, 9 insertions(+), 4 deletions(-)
+
+Index: renesas/arch/arm/boot/dts/r8a7791.dtsi
+===================================================================
+--- renesas.orig/arch/arm/boot/dts/r8a7791.dtsi
++++ renesas/arch/arm/boot/dts/r8a7791.dtsi
+@@ -909,7 +909,7 @@
+ 			#clock-cells = <1>;
+ 			clock-output-names = "main", "pll0", "pll1", "pll3",
+ 					     "lb", "qspi", "sdh", "sd0", "z",
+-					     "rcan";
++					     "rcan", "adsp";
+ 		};
+ 
+ 		/* Variable factor clocks */
+@@ -1164,13 +1164,16 @@
+ 		mstp5_clks: mstp5_clks@e6150144 {
+ 			compatible = "renesas,r8a7791-mstp-clocks", "renesas,cpg-mstp-clocks";
+ 			reg = <0 0xe6150144 0 4>, <0 0xe615003c 0 4>;
+-			clocks = <&hp_clk>, <&hp_clk>, <&extal_clk>, <&p_clk>;
++			clocks = <&hp_clk>, <&hp_clk>, <&cpg_clocks R8A7791_CLK_ADSP>,
++				 <&extal_clk>, <&p_clk>;
+ 			#clock-cells = <1>;
+ 			clock-indices = <
+ 				R8A7791_CLK_AUDIO_DMAC0 R8A7791_CLK_AUDIO_DMAC1
+-				R8A7791_CLK_THERMAL R8A7791_CLK_PWM
++				R8A7791_CLK_ADSP_MOD R8A7791_CLK_THERMAL
++				R8A7791_CLK_PWM
+ 			>;
+-			clock-output-names = "audmac0", "audmac1", "thermal", "pwm";
++			clock-output-names = "audmac0", "audmac1", "adsp_mod",
++					     "thermal", "pwm";
+ 		};
+ 		mstp7_clks: mstp7_clks@e615014c {
+ 			compatible = "renesas,r8a7791-mstp-clocks", "renesas,cpg-mstp-clocks";
+Index: renesas/include/dt-bindings/clock/r8a7791-clock.h
+===================================================================
+--- renesas.orig/include/dt-bindings/clock/r8a7791-clock.h
++++ renesas/include/dt-bindings/clock/r8a7791-clock.h
+@@ -21,6 +21,7 @@
+ #define R8A7791_CLK_SD0			7
+ #define R8A7791_CLK_Z			8
+ #define R8A7791_CLK_RCAN		9
++#define R8A7791_CLK_ADSP		10
+ 
+ /* MSTP0 */
+ #define R8A7791_CLK_MSIOF0		0
+@@ -72,6 +73,7 @@
+ /* MSTP5 */
+ #define R8A7791_CLK_AUDIO_DMAC1		1
+ #define R8A7791_CLK_AUDIO_DMAC0		2
++#define R8A7791_CLK_ADSP_MOD		6
+ #define R8A7791_CLK_THERMAL		22
+ #define R8A7791_CLK_PWM			23
+ 
+
