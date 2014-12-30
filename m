@@ -1,234 +1,52 @@
-From: Dmitry Lifshitz <lifshitz@compulab.co.il>
-Subject: Re: [PATCH v2] ARM: dts: cm-t3x: add NAND support
-Date: Tue, 30 Dec 2014 09:39:02 +0200
-Message-ID: <54A25696.80608@compulab.co.il>
-References: <54A00BD6.8010507@compulab.co.il> <1419777049-25271-1-git-send-email-lifshitz@compulab.co.il> <54A151F2.9010904@ti.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 2/3] usb: dwc3: add Fujitsu Specific Glue layer
+Date: Tue, 30 Dec 2014 11:12:51 +0100
+Message-ID: <1456155.YPH2fYoGgF@wuerfel>
+References: <1418695828-605-1-git-send-email-Sneeker.Yeh@tw.fujitsu.com> <20141222155936.GB12815@saruman> <CAJ1gpc0uniw3F3O9nxTLHp9M2boxrOACYDB=fgruhLOLdqg9yA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <54A151F2.9010904@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: =?windows-1252?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, grinberg@compulab.co.il
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAJ1gpc0uniw3F3O9nxTLHp9M2boxrOACYDB=fgruhLOLdqg9yA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sneeker Yeh <sneeker.yeh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Thomas Pugliese <thomas.pugliese-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Mosberger <davidm-haPfTeumbwasTnJN9+BGXg@public.gmane.org>, Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-fy+rA21nqHI@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Roger,
+On Monday 29 December 2014 01:52:04 Sneeker Yeh wrote:
+> > > +static int dwc3_mb86s70_remove_child(struct device *dev, void *unused)
+> > > +{
+> > > +     struct platform_device *pdev = to_platform_device(dev);
+> > > +
+> > > +     of_device_unregister(pdev);
+> > > +
+> > > +     return 0;
+> > > +}
+> > > +
+> > > +static u64 dwc3_mb86s70_dma_mask = DMA_BIT_MASK(32);
+> >
+> > why ? Use dma_coerce_mask_and_coherent().
+> >
+> 
+> okay.
 
-On 12/29/2014 03:06 PM, Roger Quadros wrote:
-> Hi Dmitry,
->
-> On 28/12/14 16:30, Dmitry Lifshitz wrote:
->> CM-T3517, CM-T3530 and CM-T3730 features NAND storage chip connected to
->> GPMC bus.
->>
->> Add GPMC DT entry into the root DT file omap3-cm-t3x.dtsi, common for
->> all three modules.
->>
->> NAND timings are calculated to be safe for CM-T3x devices as it works
->> now in non DT boot (in this case the timings are updated by U-Boot).
->
-> I didn't get this part. You provide the GPMC timings in the DT now so they will override
-> u-boot configured timings.
->
+Actually that is still wrong: we use dma_coerce_mask_and_coherent() to
+annotate drivers that have traditionally been forcing their own dma mask
+by some other means and that need to be changed to something proper (after
+finding out why they did it in the first place).
 
-In the board files for CM-T3x modules we did not override NAND timings 
-configured in U-Boot. Now, with DT boot, we do not want to rely on boot 
-loader settings wherever is possible. So, we specify the timings 
-explicitly.
+Since this is about a child device, the correct interface is to use
+platform_device_register_full().
 
-In order to avoid regression, the timings setup is the same as we do in 
-U-Boot.
+Note that this will still only work on machines that have no dma offset,
+iommu, swiotlb, special coherency requirements, or ones that need a
+platform specific dma_map_ops. To make any of those work, the driver
+would need to be changed to pass the correct device pointer into any
+dma-mapping interfaces, so the settings can get set by the platform
+code. We will need to do that for arm64 I assume.
 
->>
->> Update GPMC ranges in boards DT files to include all connected devices.
->>
->> Signed-off-by: Dmitry Lifshitz <lifshitz@compulab.co.il>
->> ---
->>
->> v2 * Update GPMC ranges with NAND values in omap3-cm-t3x30.dtsi.
->>     * Add commit message details
->>
->>   arch/arm/boot/dts/omap3-cm-t3x.dtsi   |   58 +++++++++++++++++++++++++++++++++
->>   arch/arm/boot/dts/omap3-cm-t3x30.dtsi |    3 +-
->>   arch/arm/boot/dts/omap3-sbc-t3517.dts |    4 ++
->>   arch/arm/boot/dts/omap3-sbc-t3530.dts |   10 ++----
->>   arch/arm/boot/dts/omap3-sbc-t3730.dts |    5 ++-
->>   5 files changed, 70 insertions(+), 10 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/omap3-cm-t3x.dtsi b/arch/arm/boot/dts/omap3-cm-t3x.dtsi
->> index 6ea6d46..4d091ca 100644
->> --- a/arch/arm/boot/dts/omap3-cm-t3x.dtsi
->> +++ b/arch/arm/boot/dts/omap3-cm-t3x.dtsi
->> @@ -259,3 +259,61 @@
->>   	pinctrl-names = "default";
->>   	pinctrl-0 = <&mcbsp2_pins>;
->>   };
->> +
->> +&gpmc {
->> +	ranges = <0 0 0x00000000 0x01000000>;
->
-> Isn't this ranges property redundant as it will be overridden by the board specific dts?
->
->> +
->> +	nand@0,0 {
->> +		reg = <0 0 4>;	/* CS0, offset 0, IO size 4 */
->> +		nand-bus-width = <8>;
->> +		gpmc,device-width = <1>;
->> +		ti,nand-ecc-opt = "sw";
->
-> any particular reason for sticking with "sw"? Isn't it better to use at least "ham1"
-> or migrate to stronger schemes like "bch4" or "bch8"?
->
-> "ham1" scheme is compatible with ROM loader so the boot partition could be flashed from Linux.
-> For bch4/8 you will have to keep boot partition/s locked from Linux access as we don't yet
-> support mixed ECC schemes among partitions.
->
-
-The regression issue should be considered here. Our customers have 
-thousands of boards running rootfs with "sw" ecc. Updating the kernel is 
-not a reason for reformatting the NAND.
-
->> +
->> +		gpmc,cs-on-ns = <0>;
->> +		gpmc,cs-rd-off-ns = <120>;
->> +		gpmc,cs-wr-off-ns = <120>;
->> +
->> +		gpmc,adv-on-ns = <0>;
->> +		gpmc,adv-rd-off-ns = <120>;
->> +		gpmc,adv-wr-off-ns = <120>;
->> +
->> +		gpmc,we-on-ns = <6>;
->> +		gpmc,we-off-ns = <90>;
->> +
->> +		gpmc,oe-on-ns = <6>;
->> +		gpmc,oe-off-ns = <90>;
->> +
->> +		gpmc,page-burst-access-ns = <6>;
->> +		gpmc,access-ns = <72>;
->> +		gpmc,cycle2cycle-delay-ns = <60>;
->> +
->> +		gpmc,rd-cycle-ns = <120>;
->> +		gpmc,wr-cycle-ns = <120>;
->> +		gpmc,wr-access-ns = <186>;
->> +		gpmc,wr-data-mux-bus-ns = <90>;
->> +
->> +		#address-cells = <1>;
->> +		#size-cells = <1>;
->> +
->> +		partition@0 {
->> +			label = "xloader";
->> +			reg = <0 0x80000>;
->> +		};
->> +		partition@0x80000 {
->> +			label = "uboot";
->> +			reg = <0x80000 0x1e0000>;
->> +		};
->> +		partition@0x260000 {
->> +			label = "uboot environment";
->> +			reg = <0x260000 0x40000>;
->> +		};
->> +		partition@0x2a0000 {
->> +			label = "linux";
->> +			reg = <0x2a0000 0x400000>;
->> +		};
->> +		partition@0x6a0000 {
->> +			label = "rootfs";
->> +			reg = <0x6a0000 0x1f880000>;
->> +		};
->> +	};
->> +};
->> diff --git a/arch/arm/boot/dts/omap3-cm-t3x30.dtsi b/arch/arm/boot/dts/omap3-cm-t3x30.dtsi
->> index 9a4a3ab..d9e92b6 100644
->> --- a/arch/arm/boot/dts/omap3-cm-t3x30.dtsi
->> +++ b/arch/arm/boot/dts/omap3-cm-t3x30.dtsi
->> @@ -50,7 +50,8 @@
->>   #include "omap-gpmc-smsc911x.dtsi"
->>
->>   &gpmc {
->> -	ranges = <5 0 0x2c000000 0x01000000>;
->> +	ranges = <5 0 0x2c000000 0x01000000>, /* CM-T3x30 SMSC9x Eth */
->> +		 <0 0 0x00000000 0x01000000>; /* CM-T3x NAND */
->
-> Isn't this ranges property redundant as it will anyways be overridden by the board specific dts?
->
-
-The ranges are specified here (and other files below) by design.
-
-We built a tree like structure to organize DT files -
-d234e4239 "ARM: dts: sbc-t3x: refactor DT support"
-
-It allows to inherit/override properties common for different boards.
-
-Our customers do not have to deal with a correct GPMC ranges settings, 
-once they base on omap3-cm-t3x.dts core module DT file (in case they do 
-not connect additional device to the bus).
-
-This is the point of Igor's comment to the previous patch version.
-
->>
->>   	smsc1: ethernet@gpmc {
->>   		compatible = "smsc,lan9221", "smsc,lan9115";
->> diff --git a/arch/arm/boot/dts/omap3-sbc-t3517.dts b/arch/arm/boot/dts/omap3-sbc-t3517.dts
->> index 1798653..c2d5c28 100644
->> --- a/arch/arm/boot/dts/omap3-sbc-t3517.dts
->> +++ b/arch/arm/boot/dts/omap3-sbc-t3517.dts
->> @@ -69,3 +69,7 @@
->>   	};
->>   };
->>
->> +&gpmc {
->> +	ranges = <4 0 0x2d000000 0x01000000>,	/* SB-T35 SMSC9x Eth */
->> +		 <0 0 0x00000000 0x01000000>;	/* CM-T3x NAND */
->> +};
->> diff --git a/arch/arm/boot/dts/omap3-sbc-t3530.dts b/arch/arm/boot/dts/omap3-sbc-t3530.dts
->> index c994f0f..834bc78 100644
->> --- a/arch/arm/boot/dts/omap3-sbc-t3530.dts
->> +++ b/arch/arm/boot/dts/omap3-sbc-t3530.dts
->> @@ -26,14 +26,10 @@
->>   	};
->>   };
->>
->> -/*
->> - * The following ranges correspond to SMSC9x eth chips on CM-T3530 CoM and
->> - * SB-T35 baseboard respectively.
->> - * This setting includes both chips in SBC-T3530 board device tree.
->> - */
->>   &gpmc {
->> -	ranges = <5 0 0x2c000000 0x01000000>,
->> -		 <4 0 0x2d000000 0x01000000>;
->> +	ranges = <5 0 0x2c000000 0x01000000>,	/* CM-T3x30 SMSC9x Eth */
->> +		 <4 0 0x2d000000 0x01000000>,	/* SB-T35 SMSC9x Eth */
->> +		 <0 0 0x00000000 0x01000000>;	/* CM-T3x NAND */
->>   };
->>
->>   &mmc1 {
->> diff --git a/arch/arm/boot/dts/omap3-sbc-t3730.dts b/arch/arm/boot/dts/omap3-sbc-t3730.dts
->> index 5bdddf2..73c7bf4 100644
->> --- a/arch/arm/boot/dts/omap3-sbc-t3730.dts
->> +++ b/arch/arm/boot/dts/omap3-sbc-t3730.dts
->> @@ -27,8 +27,9 @@
->>   };
->>
->>   &gpmc {
->> -	ranges = <5 0 0x2c000000 0x01000000>,
->> -		 <4 0 0x2d000000 0x01000000>;
->> +	ranges = <5 0 0x2c000000 0x01000000>,	/* CM-T3x30 SMSC9x Eth */
->> +		 <4 0 0x2d000000 0x01000000>,	/* SB-T35 SMSC9x Eth */
->> +		 <0 0 0x00000000 0x01000000>;	/* CM-T3x NAND */
->>   };
->>
->>   &dss {
->>
->
-> cheers,
-> -roger
->
->
->
-
-
-Thanks,
-
-Dmitry
-
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
