@@ -1,129 +1,38 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v2] clk-rcar-gen2: ADSP clock support
-Date: Tue, 30 Dec 2014 23:51:53 +0300
-Message-ID: <30876083.4tlAgq9Aak@wasted.cogentembedded.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 3/9] ARM: versatile: add DT based PCI detection
+Date: Tue, 30 Dec 2014 22:37:01 +0100
+Message-ID: <13417872.31IhE1RbAx@wuerfel>
+References: <1419967718-26909-1-git-send-email-robherring2@gmail.com> <1419967718-26909-4-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: mturquette@linaro.org, linux-kernel@vger.kernel.org, sboyd@codeaurora.org
-Cc: robh+dt@kernel.org, linux-sh@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1419967718-26909-4-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Maydell <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the ADSP clock support to the R-Car generation 2 CPG driver.  This clock
-gets derived from  PLL1.  The layout of the ADSPCKCR register is  similar to
-those of the clocks supported by the 'clk-div6' driver but the divider encoding
-is non-linear, so can't be supported by that driver...
+On Tuesday 30 December 2014 13:28:32 Rob Herring wrote:
+> From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> 
+> Disable the Versatile PCI DT node when no PCI backplane is detected. This
+> will prevent the Versatile PCI driver from probing when PCI is not
+> populated.
 
-Based on the original patch by Konstantin Kozhevnikov
-<konstantin.kozhevnikov@cogentembedded.com>.
+Can you explain why the check is done in platform code instead of the PCI
+driver probe function itself?
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> +	/* Check if PCI backplane is detected */
+> +	val = __raw_readl(base + VERSATILE_SYS_PCICTL_OFFSET);
+> +	if (val & 1)
+> +		goto err;
 
----
-The patch is against the 'clk-next' branch of Mike Turquette's 'linux.git' repo
-plus the RCAN clock support patch posted last week.
+Using __raw_readl prevents this from working with big-endian kernels, so just
+use readl here.
 
-Changes in version 2:
-- swapped "adsp" and "rcan" in the binding document.
-
- Documentation/devicetree/bindings/clock/renesas,rcar-gen2-cpg-clocks.txt |    5 -
- drivers/clk/shmobile/clk-rcar-gen2.c                                     |   48 ++++++++++
- 2 files changed, 51 insertions(+), 2 deletions(-)
-
-Index: linux/Documentation/devicetree/bindings/clock/renesas,rcar-gen2-cpg-clocks.txt
-===================================================================
---- linux.orig/Documentation/devicetree/bindings/clock/renesas,rcar-gen2-cpg-clocks.txt
-+++ linux/Documentation/devicetree/bindings/clock/renesas,rcar-gen2-cpg-clocks.txt
-@@ -16,7 +16,8 @@ Required Properties:
-   - clocks: Reference to the parent clock
-   - #clock-cells: Must be 1
-   - clock-output-names: The names of the clocks. Supported clocks are "main",
--    "pll0", "pll1", "pll3", "lb", "qspi", "sdh", "sd0", "sd1", "z", and "rcan"
-+    "pll0", "pll1", "pll3", "lb", "qspi", "sdh", "sd0", "sd1", "z", "rcan", and
-+    "adsp"
- 
- 
- Example
-@@ -30,5 +31,5 @@ Example
- 		#clock-cells = <1>;
- 		clock-output-names = "main", "pll0, "pll1", "pll3",
- 				     "lb", "qspi", "sdh", "sd0", "sd1", "z",
--				     "rcan";
-+				     "rcan", "adsp";
- 	};
-Index: linux/drivers/clk/shmobile/clk-rcar-gen2.c
-===================================================================
---- linux.orig/drivers/clk/shmobile/clk-rcar-gen2.c
-+++ linux/drivers/clk/shmobile/clk-rcar-gen2.c
-@@ -33,6 +33,7 @@ struct rcar_gen2_cpg {
- #define CPG_FRQCRC			0x000000e0
- #define CPG_FRQCRC_ZFC_MASK		(0x1f << 8)
- #define CPG_FRQCRC_ZFC_SHIFT		8
-+#define CPG_ADSPCKCR			0x0000025c
- #define CPG_RCANCKCR			0x00000270
- 
- /* -----------------------------------------------------------------------------
-@@ -162,6 +163,51 @@ static struct clk * __init cpg_z_clk_reg
- 	return clk;
- }
- 
-+/* ADSP divisors */
-+static const struct clk_div_table cpg_adsp_div_table[] = {
-+	{  1,  3 }, {  2,  4 }, {  3,  6 }, {  4,  8 },
-+	{  5, 12 }, {  6, 16 }, {  7, 18 }, {  8, 24 },
-+	{ 10, 36 }, { 11, 48 }, {  0,  0 },
-+};
-+
-+static struct clk * __init cpg_adsp_clk_register(struct rcar_gen2_cpg *cpg)
-+{
-+	const char *parent_name = "pll1";
-+	struct clk_divider *div;
-+	struct clk_gate *gate;
-+	struct clk *clk;
-+
-+	div = kzalloc(sizeof(*div), GFP_KERNEL);
-+	if (!div)
-+		return ERR_PTR(-ENOMEM);
-+
-+	div->reg = cpg->reg + CPG_ADSPCKCR;
-+	div->width = 4;
-+	div->table = cpg_adsp_div_table;
-+	div->lock = &cpg->lock;
-+
-+	gate = kzalloc(sizeof(*gate), GFP_KERNEL);
-+	if (!gate) {
-+		kfree(div);
-+		return ERR_PTR(-ENOMEM);
-+	}
-+
-+	gate->reg = cpg->reg + CPG_RCANCKCR;
-+	gate->bit_idx = 8;
-+	gate->flags = CLK_GATE_SET_TO_DISABLE;
-+	gate->lock = &cpg->lock;
-+
-+	clk = clk_register_composite(NULL, "adsp", &parent_name, 1, NULL, NULL,
-+				     &div->hw, &clk_divider_ops,
-+				     &gate->hw, &clk_gate_ops, 0);
-+	if (IS_ERR(clk)) {
-+		kfree(gate);
-+		kfree(div);
-+	}
-+
-+	return clk;
-+}
-+
- static struct clk * __init cpg_rcan_clk_register(struct rcar_gen2_cpg *cpg,
- 						 struct device_node *np)
- {
-@@ -301,6 +347,8 @@ rcar_gen2_cpg_register_clock(struct devi
- 		shift = 0;
- 	} else if (!strcmp(name, "z")) {
- 		return cpg_z_clk_register(cpg);
-+	} else if (!strcmp(name, "adsp")) {
-+		return cpg_adsp_clk_register(cpg);
- 	} else if (!strcmp(name, "rcan")) {
- 		return cpg_rcan_clk_register(cpg, np);
- 	} else {
-
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
