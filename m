@@ -1,52 +1,45 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 2/3] usb: dwc3: add Fujitsu Specific Glue layer
-Date: Tue, 30 Dec 2014 11:12:51 +0100
-Message-ID: <1456155.YPH2fYoGgF@wuerfel>
-References: <1418695828-605-1-git-send-email-Sneeker.Yeh@tw.fujitsu.com> <20141222155936.GB12815@saruman> <CAJ1gpc0uniw3F3O9nxTLHp9M2boxrOACYDB=fgruhLOLdqg9yA@mail.gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v2 07/12] ARM: imx: depend MXC debug board on 3DS machines
+Date: Tue, 30 Dec 2014 13:42:29 +0300
+Message-ID: <54A28195.4070102@cogentembedded.com>
+References: <1419895935-22966-1-git-send-email-stefan@agner.ch> <1419895935-22966-8-git-send-email-stefan@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAJ1gpc0uniw3F3O9nxTLHp9M2boxrOACYDB=fgruhLOLdqg9yA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sneeker Yeh <sneeker.yeh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Thomas Pugliese <thomas.pugliese-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Mosberger <davidm-haPfTeumbwasTnJN9+BGXg@public.gmane.org>, Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-fy+rA21nqHI@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1419895935-22966-8-git-send-email-stefan@agner.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefan Agner <stefan@agner.ch>, shawn.guo@linaro.org, kernel@pengutronix.de, linux@arm.linux.org.uk, u.kleine-koenig@pengutronix.de, jason@lakedaemon.net, olof@lixom.net, arnd@arndb.de, daniel.lezcano@linaro.org, tglx@linutronix.de, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, marc.zyngier@arm.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 29 December 2014 01:52:04 Sneeker Yeh wrote:
-> > > +static int dwc3_mb86s70_remove_child(struct device *dev, void *unused)
-> > > +{
-> > > +     struct platform_device *pdev = to_platform_device(dev);
-> > > +
-> > > +     of_device_unregister(pdev);
-> > > +
-> > > +     return 0;
-> > > +}
-> > > +
-> > > +static u64 dwc3_mb86s70_dma_mask = DMA_BIT_MASK(32);
-> >
-> > why ? Use dma_coerce_mask_and_coherent().
-> >
-> 
-> okay.
+Hello.
 
-Actually that is still wrong: we use dma_coerce_mask_and_coherent() to
-annotate drivers that have traditionally been forcing their own dma mask
-by some other means and that need to be changed to something proper (after
-finding out why they did it in the first place).
+On 12/30/2014 2:32 AM, Stefan Agner wrote:
 
-Since this is about a child device, the correct interface is to use
-platform_device_register_full().
+> Depend the MXC debug board on machines which actually support it.
 
-Note that this will still only work on machines that have no dma offset,
-iommu, swiotlb, special coherency requirements, or ones that need a
-platform specific dma_map_ops. To make any of those work, the driver
-would need to be changed to pass the correct device pointer into any
-dma-mapping interfaces, so the settings can get set by the platform
-code. We will need to do that for arm64 I assume.
+> Signed-off-by: Stefan Agner <stefan@agner.ch>
+> ---
+> This configuration appeared lonely when I enabled ARCH_MULTI_V7M.
+> Afaik, the selection of it only makes sense with one of the supported
+> boards...
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>   arch/arm/mach-imx/Kconfig | 1 +
+>   1 file changed, 1 insertion(+)
+
+> diff --git a/arch/arm/mach-imx/Kconfig b/arch/arm/mach-imx/Kconfig
+> index 3c5859e..96c8eb8 100644
+> --- a/arch/arm/mach-imx/Kconfig
+> +++ b/arch/arm/mach-imx/Kconfig
+> @@ -21,6 +21,7 @@ config MXC_AVIC
+>
+>   config MXC_DEBUG_BOARD
+>   	bool "Enable MXC debug board(for 3-stack)"
+> +	depends on CONFIG_MACH_MX27_3DS || CONFIG_MACH_MX31_3DS || CONFIG_MACH_MX35_3DS
+
+    CONFIG_ prefixes are not needed in Kconfig.
+
+[...]
+
+WBR, Sergei
