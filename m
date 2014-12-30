@@ -1,66 +1,47 @@
-From: Andrew Jackson <andrew.jackson@arm.com>
-Subject: [PATCH v5 1/6] ASoC: dwc: Switch to managed clock resource
-Date: Tue, 30 Dec 2014 10:55:43 +0000
-Message-ID: <af6e23a9f11ead4b8abd1f70dbf634964253b37f.1419936132.git.Andrew.Jackson@arm.com>
-References: <cover.1419936132.git.Andrew.Jackson@arm.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v5 2/6] ASoC: dwc: Prepare clock before use
+Date: Tue, 30 Dec 2014 15:39:48 +0300
+Message-ID: <54A29D14.6000705@cogentembedded.com>
+References: <cover.1419936132.git.Andrew.Jackson@arm.com> <faa0193d388fe808c2fae461954bb1730ba29244.1419936132.git.Andrew.Jackson@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1419936132.git.Andrew.Jackson@arm.com>
-In-Reply-To: <cover.1419936132.git.Andrew.Jackson@arm.com>
-References: <cover.1419936132.git.Andrew.Jackson@arm.com>
+In-Reply-To: <faa0193d388fe808c2fae461954bb1730ba29244.1419936132.git.Andrew.Jackson@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, Mark Brown <broonie@kernel.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Rajeev Kumar <rajeevkumar.linux@gmail.com>, Andrew Jackson <Andrew.Jackson@arm.com>, Liviu Dudau <Liviu.Dudau@arm.com>, Lars-Peter Clausen <lars@metafoo.de>, Arnd Bergmann <arnd@arndb.de>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Andrew Jackson <andrew.jackson@arm.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, Mark Brown <broonie@kernel.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Lars-Peter Clausen <lars@metafoo.de>, pawel.moll@arm.com, Arnd Bergmann <arnd@arndb.de>, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, Liviu Dudau <Liviu.Dudau@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Rajeev Kumar <rajeevkumar.linux@gmail.com>, robh+dt@kernel.org, galak@codeaurora.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Andrew Jackson <Andrew.Jackson@arm.com>
+Hello.
 
-Simplify error handling during probe by using managed clock
-resources.
+On 12/30/2014 1:55 PM, Andrew Jackson wrote:
 
-Signed-off-by: Andrew Jackson <Andrew.Jackson@arm.com>
----
- sound/soc/dwc/designware_i2s.c |   10 ++--------
- 1 files changed, 2 insertions(+), 8 deletions(-)
+> From: Andrew Jackson <Andrew.Jackson@arm.com>
 
-diff --git a/sound/soc/dwc/designware_i2s.c b/sound/soc/dwc/designware_i2s.c
-index 06d3a34..5e9d163 100644
---- a/sound/soc/dwc/designware_i2s.c
-+++ b/sound/soc/dwc/designware_i2s.c
-@@ -407,13 +407,13 @@ static int dw_i2s_probe(struct platform_device *pdev)
- 
- 	dev->capability = pdata->cap;
- 	dev->i2s_clk_cfg = pdata->i2s_clk_cfg;
--	dev->clk = clk_get(&pdev->dev, NULL);
-+	dev->clk = devm_clk_get(&pdev->dev, NULL);
- 	if (IS_ERR(dev->clk))
- 		return  PTR_ERR(dev->clk);
- 
- 	ret = clk_enable(dev->clk);
- 	if (ret < 0)
--		goto err_clk_put;
-+		return ret;
- 
- 	dev_set_drvdata(&pdev->dev, dev);
- 	ret = snd_soc_register_component(&pdev->dev, &dw_i2s_component,
-@@ -427,19 +427,13 @@ static int dw_i2s_probe(struct platform_device *pdev)
- 
- err_clk_disable:
- 	clk_disable(dev->clk);
--err_clk_put:
--	clk_put(dev->clk);
- 	return ret;
- }
- 
- static int dw_i2s_remove(struct platform_device *pdev)
- {
--	struct dw_i2s_dev *dev = dev_get_drvdata(&pdev->dev);
--
- 	snd_soc_unregister_component(&pdev->dev);
- 
--	clk_put(dev->clk);
--
- 	return 0;
- }
- 
--- 
-1.7.1
+> Some I2S clocks may require some time to get the clock ready
+> for operation and so need to be prepared before they are enabled.
+> So, prepare the clock as well as enabling it, but combine the
+> two through clk_prepare_enable.
+
+> Signed-off-by: Andrew Jackson <Andrew.Jackson@arm.com>
+> ---
+>   sound/soc/dwc/designware_i2s.c |    7 +++++--
+>   1 files changed, 5 insertions(+), 2 deletions(-)
+
+> diff --git a/sound/soc/dwc/designware_i2s.c b/sound/soc/dwc/designware_i2s.c
+> index 5e9d163..08608c1 100644
+> --- a/sound/soc/dwc/designware_i2s.c
+> +++ b/sound/soc/dwc/designware_i2s.c
+[...]
+> @@ -426,13 +426,16 @@ static int dw_i2s_probe(struct platform_device *pdev)
+[...]
+>   static int dw_i2s_remove(struct platform_device *pdev)
+>   {
+> +	struct dw_i2s_dev *dev = dev_get_drvdata(&pdev->dev);
+
+    Why not just platform_get_drvdata(pdev)?
+
+[...]
+
+WBR, Sergei
