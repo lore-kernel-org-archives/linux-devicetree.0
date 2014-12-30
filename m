@@ -1,64 +1,371 @@
-From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Subject: Re: [PATCH 2/3] hwmon: Driver for OMAP3 temperature sensor
-Date: Tue, 30 Dec 2014 19:00:02 +0100
-Message-ID: <20141230180002.GC23142@amd>
-References: <20141226102933.GA28778@amd>
- <1419597294-21487-1-git-send-email-sre@kernel.org>
- <1419597294-21487-3-git-send-email-sre@kernel.org>
- <CANOLnON6rAQ2+jJEFDKseH2Htu6bqRkURDioGt7zp1Ze73f8Pw@mail.gmail.com>
- <CAGo_u6qO0ok+GBnm7SQtw6dJuwGN2OuP7CpKDEWawS3V2go4KA@mail.gmail.com>
- <20141229181556.GA26926@amd>
- <54A1BB2B.9060204@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <54A1BB2B.9060204-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Cc: Grazvydas Ignotas <notasas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dt list <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Pali Rohar <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Rob Herring <robherring2@gmail.com>
+Subject: [PATCH 4/9] pci: add DT based ARM Versatile PCI host driver
+Date: Tue, 30 Dec 2014 13:28:33 -0600
+Message-ID: <1419967718-26909-5-git-send-email-robherring2@gmail.com>
+References: <1419967718-26909-1-git-send-email-robherring2@gmail.com>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1419967718-26909-1-git-send-email-robherring2@gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Peter Maydell <peter.maydell@linaro.org>, arm@kernel.org, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon 2014-12-29 14:35:55, Nishanth Menon wrote:
-> On 12/29/2014 12:15 PM, Pavel Machek wrote:
-> > On Mon 2014-12-29 12:01:03, Nishanth Menon wrote:
-> >> On Mon, Dec 29, 2014 at 11:52 AM, Grazvydas Ignotas <notasas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> >>> On Fri, Dec 26, 2014 at 2:34 PM, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> >>>> OMAP34xx and OMAP36xx processors contain a register in the syscon area,
-> >>>> which can be used to determine the SoCs temperature. This patch provides
-> >>>> a DT based driver for the temperature sensor based on an older driver
-> >>>> written by Peter De Schrijver for the Nokia N900 and N9.
-> >>>
-> >>> The sensor looks like an earlier iteration of sensors used in newer
-> >>> OMAPs, which are already supported by maybe
-> >>> drivers/thermal/ti-soc-thermal/ , maybe it would make sense to update
-> >>> that driver instead?
-> >>
-> >> Just to be clear - OMAP4 is the first time that the sensors were
-> >> reliable enough to be used.
-> > 
-> > When testing initial version of the patch, they seem to work very well
-> > in the omap3 case.
-> 
-> Just be careful when you try to make thermal policy like decisions
-> based on this sensor. Placement of the sensor w.r.t the actual logic
+From: Rob Herring <robh@kernel.org>
 
-I guess we won't do that, certainly not anytime soon.
+This converts the Versatile PCI host code to a platform driver using
+the commom DT parsing and setup. The driver uses only an empty ARM
+pci_sys_data struct and does not use pci_common_init_dev init function.
+The old host code will be removed in a subsequent commit when Versatile
+is completely converted to DT.
 
-> Also notice http://www.ti.com/lit/er/sprz278f/sprz278f.pdf "Advisory
-> 3.1.1.186 MMC OCP Clock Not Gated When Thermal Sensor Is Used" I think
-> there were accuracy issues at certain values etc.. So remember to do a
-> off mode type PM tests as well before you consider requesting these to
-> be merged.
+I've tested this on QEMU with the sym53c8xx driver in both i/o and
+memory mapped modes.
 
-Thanks a lot for a pointer. 3x 100uA power draw when you enable
-temperature sensor, because it also errorneously enables MMC. I wonder
-how the solution would look in the device tree...
-									Pavel
+Signed-off-by: Rob Herring <robh@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org
+Cc: Russell King <linux@arm.linux.org.uk>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Peter Maydell <peter.maydell@linaro.org>
+---
+ drivers/pci/host/Kconfig         |   4 +
+ drivers/pci/host/Makefile        |   1 +
+ drivers/pci/host/pci-versatile.c | 305 +++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 310 insertions(+)
+ create mode 100644 drivers/pci/host/pci-versatile.c
+
+diff --git a/drivers/pci/host/Kconfig b/drivers/pci/host/Kconfig
+index c4b6568..7b892a9 100644
+--- a/drivers/pci/host/Kconfig
++++ b/drivers/pci/host/Kconfig
+@@ -102,4 +102,8 @@ config PCI_LAYERSCAPE
+ 	help
+ 	  Say Y here if you want PCIe controller support on Layerscape SoCs.
+ 
++config PCI_VERSATILE
++	bool "ARM Versatile PB PCI controller"
++	depends on ARCH_VERSATILE
++
+ endmenu
+diff --git a/drivers/pci/host/Makefile b/drivers/pci/host/Makefile
+index 44c2699..e61d91c 100644
+--- a/drivers/pci/host/Makefile
++++ b/drivers/pci/host/Makefile
+@@ -12,3 +12,4 @@ obj-$(CONFIG_PCI_KEYSTONE) += pci-keystone-dw.o pci-keystone.o
+ obj-$(CONFIG_PCIE_XILINX) += pcie-xilinx.o
+ obj-$(CONFIG_PCI_XGENE) += pci-xgene.o
+ obj-$(CONFIG_PCI_LAYERSCAPE) += pci-layerscape.o
++obj-$(CONFIG_PCI_VERSATILE) += pci-versatile.o
+diff --git a/drivers/pci/host/pci-versatile.c b/drivers/pci/host/pci-versatile.c
+new file mode 100644
+index 0000000..a3e7bc5
+--- /dev/null
++++ b/drivers/pci/host/pci-versatile.c
+@@ -0,0 +1,305 @@
++/*
++ * Copyright 2004 Koninklijke Philips Electronics NV
++ *
++ * Conversion to platform driver and DT:
++ * Copyright 2014 Linaro Ltd.
++ *
++ * This software is licensed under the terms of the GNU General Public
++ * License version 2, as published by the Free Software Foundation, and
++ * may be copied, distributed, and modified under those terms.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * 14/04/2005 Initial version, colin.king@philips.com
++ */
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/of_address.h>
++#include <linux/of_pci.h>
++#include <linux/of_platform.h>
++#include <linux/pci.h>
++#include <linux/platform_device.h>
++
++static void __iomem *versatile_pci_base;
++static void __iomem *versatile_cfg_base[2];
++
++#define PCI_IMAP(m)		(versatile_pci_base + ((m) * 4))
++#define PCI_SMAP(m)		(versatile_pci_base + 0x14 + ((m) * 4))
++#define PCI_SELFID		(versatile_pci_base + 0xc)
++
++#define VP_PCI_DEVICE_ID		0x030010ee
++#define VP_PCI_CLASS_ID			0x0b400000
++
++static u32 pci_slot_ignore;
++
++static int __init versatile_pci_slot_ignore(char *str)
++{
++	int retval;
++	int slot;
++
++	while ((retval = get_option(&str, &slot))) {
++		if ((slot < 0) || (slot > 31))
++			pr_err("Illegal slot value: %d\n", slot);
++		else
++			pci_slot_ignore |= (1 << slot);
++	}
++	return 1;
++}
++__setup("pci_slot_ignore=", versatile_pci_slot_ignore);
++
++
++static void __iomem *__pci_addr(struct pci_bus *bus,
++				unsigned int devfn, int offset)
++{
++	unsigned int busnr = bus->number;
++
++	/*
++	 * Trap out illegal values
++	 */
++	BUG_ON(offset > 255);
++	BUG_ON(busnr > 255);
++	BUG_ON(devfn > 255);
++
++	return versatile_cfg_base[1] + ((busnr << 16) |
++		(PCI_SLOT(devfn) << 11) | (PCI_FUNC(devfn) << 8) | offset);
++}
++
++static int versatile_read_config(struct pci_bus *bus, unsigned int devfn,
++				 int where, int size, u32 *val)
++{
++	void __iomem *addr = __pci_addr(bus, devfn, where & ~3);
++	u32 v;
++	int slot = PCI_SLOT(devfn);
++
++	if (pci_slot_ignore & (1 << slot)) {
++		/* Ignore this slot */
++		v = (1 << (8 * size)) - 1;
++	} else {
++		switch (size) {
++		case 1:
++			v = readl(addr);
++			if (where & 2)
++				v >>= 16;
++			if (where & 1)
++				v >>= 8;
++			v &= 0xff;
++			break;
++
++		case 2:
++			v = readl(addr);
++			if (where & 2)
++				v >>= 16;
++			v &= 0xffff;
++			break;
++
++		default:
++			v = readl(addr);
++			break;
++		}
++	}
++
++	*val = v;
++	return PCIBIOS_SUCCESSFUL;
++}
++
++static int versatile_write_config(struct pci_bus *bus, unsigned int devfn,
++				  int where, int size, u32 val)
++{
++	void __iomem *addr = __pci_addr(bus, devfn, where);
++	int slot = PCI_SLOT(devfn);
++
++	if (pci_slot_ignore & (1 << slot))
++		return PCIBIOS_SUCCESSFUL;
++
++	switch (size) {
++	case 1:
++		writeb((u8)val, addr);
++		break;
++
++	case 2:
++		writew((u16)val, addr);
++		break;
++
++	case 4:
++		writel(val, addr);
++		break;
++	}
++
++	return PCIBIOS_SUCCESSFUL;
++}
++
++static struct pci_ops pci_versatile_ops = {
++	.read	= versatile_read_config,
++	.write	= versatile_write_config,
++};
++
++static int versatile_pci_parse_request_of_pci_ranges(struct device *dev,
++						     struct list_head *res)
++{
++	int err, mem = 1, res_valid = 0;
++	struct device_node *np = dev->of_node;
++	resource_size_t iobase;
++	struct pci_host_bridge_window *win;
++
++	err = of_pci_get_host_bridge_resources(np, 0, 0xff, res, &iobase);
++	if (err)
++		return err;
++
++	list_for_each_entry(win, res, list) {
++		struct resource *parent, *res = win->res;
++
++		switch (resource_type(res)) {
++		case IORESOURCE_IO:
++			parent = &ioport_resource;
++			err = pci_remap_iospace(res, iobase);
++			if (err) {
++				dev_warn(dev, "error %d: failed to map resource %pR\n",
++					 err, res);
++				continue;
++			}
++			break;
++		case IORESOURCE_MEM:
++			parent = &iomem_resource;
++			res_valid |= !(res->flags & IORESOURCE_PREFETCH);
++
++			writel(res->start >> 28, PCI_IMAP(mem));
++			writel(PHYS_OFFSET >> 28, PCI_SMAP(mem));
++			mem++;
++
++			break;
++		case IORESOURCE_BUS:
++		default:
++			continue;
++		}
++
++		err = devm_request_resource(dev, parent, res);
++		if (err)
++			goto out_release_res;
++	}
++
++	if (!res_valid) {
++		dev_err(dev, "non-prefetchable memory resource required\n");
++		err = -EINVAL;
++		goto out_release_res;
++	}
++
++	return 0;
++
++out_release_res:
++	pci_free_resource_list(res);
++	return err;
++}
++
++/* Unused, temporary to satisfy ARM arch code */
++struct pci_sys_data sys;
++
++static int versatile_pci_probe(struct platform_device *pdev)
++{
++	struct resource *res;
++	int ret, i, myslot = -1;
++	u32 val;
++	void __iomem *local_pci_cfg_base;
++	struct pci_bus *bus;
++	LIST_HEAD(pci_res);
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	if (!res)
++		return -ENODEV;
++	versatile_pci_base = devm_ioremap_resource(&pdev->dev, res);
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
++	if (!res)
++		return -ENODEV;
++	versatile_cfg_base[0] = devm_ioremap_resource(&pdev->dev, res);
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 2);
++	if (!res)
++		return -ENODEV;
++	versatile_cfg_base[1] = devm_ioremap_resource(&pdev->dev, res);
++
++	ret = versatile_pci_parse_request_of_pci_ranges(&pdev->dev, &pci_res);
++	if (ret)
++		return ret;
++
++	/*
++	 *  We need to discover the PCI core first to configure itself
++	 *  before the main PCI probing is performed
++	 */
++	for (i = 0; i < 32; i++) {
++		if ((readl(versatile_cfg_base[0] + (i << 11) + PCI_VENDOR_ID) == VP_PCI_DEVICE_ID) &&
++		    (readl(versatile_cfg_base[0] + (i << 11) + PCI_CLASS_REVISION) == VP_PCI_CLASS_ID)) {
++			myslot = i;
++			break;
++		}
++	}
++	if (myslot == -1) {
++		dev_err(&pdev->dev, "Cannot find PCI core!\n");
++		return -EIO;
++	}
++	/*
++	 * Do not to map Versatile FPGA PCI device into memory space
++	 */
++	pci_slot_ignore |= (1 << myslot);
++
++	dev_info(&pdev->dev, "PCI core found (slot %d)\n", myslot);
++
++	writel(myslot, PCI_SELFID);
++	local_pci_cfg_base = versatile_cfg_base[1] + (myslot << 11);
++
++	val = readl(local_pci_cfg_base + PCI_COMMAND);
++	val |= PCI_COMMAND_MEMORY | PCI_COMMAND_MASTER | PCI_COMMAND_INVALIDATE;
++	writel(val, local_pci_cfg_base + PCI_COMMAND);
++
++	/*
++	 * Configure the PCI inbound memory windows to be 1:1 mapped to SDRAM
++	 */
++	writel(PHYS_OFFSET, local_pci_cfg_base + PCI_BASE_ADDRESS_0);
++	writel(PHYS_OFFSET, local_pci_cfg_base + PCI_BASE_ADDRESS_1);
++	writel(PHYS_OFFSET, local_pci_cfg_base + PCI_BASE_ADDRESS_2);
++
++	/*
++	 * For many years the kernel and QEMU were symbiotically buggy
++	 * in that they both assumed the same broken IRQ mapping.
++	 * QEMU therefore attempts to auto-detect old broken kernels
++	 * so that they still work on newer QEMU as they did on old
++	 * QEMU. Since we now use the correct (ie matching-hardware)
++	 * IRQ mapping we write a definitely different value to a
++	 * PCI_INTERRUPT_LINE register to tell QEMU that we expect
++	 * real hardware behaviour and it need not be backwards
++	 * compatible for us. This write is harmless on real hardware.
++	 */
++	writel(0, versatile_cfg_base[0] + PCI_INTERRUPT_LINE);
++
++	pci_add_flags(PCI_ENABLE_PROC_DOMAINS);
++	pci_add_flags(PCI_REASSIGN_ALL_BUS | PCI_REASSIGN_ALL_RSRC);
++
++	bus = pci_scan_root_bus(&pdev->dev, 0, &pci_versatile_ops, &sys, &pci_res);
++	if (!bus)
++		return -ENOMEM;
++
++	pci_fixup_irqs(pci_common_swizzle, of_irq_parse_and_map_pci);
++	pci_assign_unassigned_bus_resources(bus);
++
++	return 0;
++}
++
++static const struct of_device_id versatile_pci_of_match[] = {
++	{ .compatible = "arm,versatile-pci", },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, versatile_pci_of_match);
++
++static struct platform_driver versatile_pci_driver = {
++	.driver = {
++		.name = "versatile-pci",
++		.of_match_table = versatile_pci_of_match,
++	},
++	.probe = versatile_pci_probe,
++};
++module_platform_driver(versatile_pci_driver);
++
++MODULE_DESCRIPTION("Versatile PCI driver");
++MODULE_LICENSE("GPLv2");
 -- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.1.0
