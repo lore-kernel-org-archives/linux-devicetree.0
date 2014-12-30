@@ -1,45 +1,184 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v2 07/12] ARM: imx: depend MXC debug board on 3DS machines
-Date: Tue, 30 Dec 2014 13:42:29 +0300
-Message-ID: <54A28195.4070102@cogentembedded.com>
-References: <1419895935-22966-1-git-send-email-stefan@agner.ch> <1419895935-22966-8-git-send-email-stefan@agner.ch>
+From: Andrew Jackson <andrew.jackson@arm.com>
+Subject: [PATCH v5 3/6] ASoC: dwc: Read I2S block configuration
+	from registers
+Date: Tue, 30 Dec 2014 10:55:45 +0000
+Message-ID: <8bfc76c519c6234bb7c91997aa7385abeb5a013a.1419936132.git.Andrew.Jackson@arm.com>
+References: <cover.1419936132.git.Andrew.Jackson@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1419895935-22966-8-git-send-email-stefan@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Agner <stefan@agner.ch>, shawn.guo@linaro.org, kernel@pengutronix.de, linux@arm.linux.org.uk, u.kleine-koenig@pengutronix.de, jason@lakedaemon.net, olof@lixom.net, arnd@arndb.de, daniel.lezcano@linaro.org, tglx@linutronix.de, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, marc.zyngier@arm.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <cover.1419936132.git.Andrew.Jackson@arm.com>
+In-Reply-To: <cover.1419936132.git.Andrew.Jackson@arm.com>
+References: <cover.1419936132.git.Andrew.Jackson@arm.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, Mark Brown <broonie@kernel.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Lars-Peter Clausen <lars@metafoo.de>, pawel.moll@arm.com, Arnd Bergmann <arnd@arndb.de>, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, Andrew Jackson <Andrew.Jackson@arm.com>, Liviu Dudau <Liviu.Dudau@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Rajeev Kumar <rajeevkumar.linux@gmail.com>, robh+dt@kernel.org, galak@codeaurora.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+From: Andrew Jackson <Andrew.Jackson@arm.com>
 
-On 12/30/2014 2:32 AM, Stefan Agner wrote:
+The I2S block provides component parameter registers which
+describe how the block is instantiated.  Use these registers
+to extract the block's configuration rather than relying on
+platform data.
 
-> Depend the MXC debug board on machines which actually support it.
+Signed-off-by: Andrew Jackson <Andrew.Jackson@arm.com>
+---
+ sound/soc/dwc/designware_i2s.c |   96 +++++++++++++++++++++++++++++++++++----
+ 1 files changed, 86 insertions(+), 10 deletions(-)
 
-> Signed-off-by: Stefan Agner <stefan@agner.ch>
-> ---
-> This configuration appeared lonely when I enabled ARCH_MULTI_V7M.
-> Afaik, the selection of it only makes sense with one of the supported
-> boards...
-
->   arch/arm/mach-imx/Kconfig | 1 +
->   1 file changed, 1 insertion(+)
-
-> diff --git a/arch/arm/mach-imx/Kconfig b/arch/arm/mach-imx/Kconfig
-> index 3c5859e..96c8eb8 100644
-> --- a/arch/arm/mach-imx/Kconfig
-> +++ b/arch/arm/mach-imx/Kconfig
-> @@ -21,6 +21,7 @@ config MXC_AVIC
->
->   config MXC_DEBUG_BOARD
->   	bool "Enable MXC debug board(for 3-stack)"
-> +	depends on CONFIG_MACH_MX27_3DS || CONFIG_MACH_MX31_3DS || CONFIG_MACH_MX35_3DS
-
-    CONFIG_ prefixes are not needed in Kconfig.
-
-[...]
-
-WBR, Sergei
+diff --git a/sound/soc/dwc/designware_i2s.c b/sound/soc/dwc/designware_i2s.c
+index 08608c1..b3e7567 100644
+--- a/sound/soc/dwc/designware_i2s.c
++++ b/sound/soc/dwc/designware_i2s.c
+@@ -54,6 +54,31 @@
+ #define I2S_COMP_VERSION	0x01F8
+ #define I2S_COMP_TYPE		0x01FC
+ 
++/*
++ * Component parameter register fields - define the I2S block's
++ * configuration.
++ */
++#define	COMP1_TX_WORDSIZE_3(r)	(((r) & GENMASK(27, 25)) >> 25)
++#define	COMP1_TX_WORDSIZE_2(r)	(((r) & GENMASK(24, 22)) >> 22)
++#define	COMP1_TX_WORDSIZE_1(r)	(((r) & GENMASK(21, 19)) >> 19)
++#define	COMP1_TX_WORDSIZE_0(r)	(((r) & GENMASK(18, 16)) >> 16)
++#define	COMP1_TX_CHANNELS(r)	(((r) & GENMASK(10, 9)) >> 9)
++#define	COMP1_RX_CHANNELS(r)	(((r) & GENMASK(8, 7)) >> 7)
++#define	COMP1_RX_ENABLED(r)	(((r) & BIT(6)) >> 6)
++#define	COMP1_TX_ENABLED(r)	(((r) & BIT(5)) >> 5)
++#define	COMP1_MODE_EN(r)	(((r) & BIT(4)) >> 4)
++#define	COMP1_FIFO_DEPTH_GLOBAL(r)	(((r) & GENMASK(3, 2)) >> 2)
++#define	COMP1_APB_DATA_WIDTH(r)	(((r) & GENMASK(1, 0)) >> 0)
++
++#define	COMP2_RX_WORDSIZE_3(r)	(((r) & GENMASK(12, 10)) >> 10)
++#define	COMP2_RX_WORDSIZE_2(r)	(((r) & GENMASK(9, 7)) >> 7)
++#define	COMP2_RX_WORDSIZE_1(r)	(((r) & GENMASK(5, 3)) >> 3)
++#define	COMP2_RX_WORDSIZE_0(r)	(((r) & GENMASK(2, 0)) >> 0)
++
++/* Number of entries in WORDSIZE and DATA_WIDTH parameter registers */
++#define	COMP_MAX_WORDSIZE	(1 << 3)
++#define	COMP_MAX_DATA_WIDTH	(1 << 2)
++
+ #define MAX_CHANNEL_NUM		8
+ #define MIN_CHANNEL_NUM		2
+ 
+@@ -335,11 +360,50 @@ static int dw_i2s_resume(struct snd_soc_dai *dai)
+ #define dw_i2s_resume	NULL
+ #endif
+ 
+-static void dw_configure_dai_by_pd(struct dw_i2s_dev *dev,
++/*
++ * The following tables allow a direct lookup of various parameters
++ * defined in the I2S block's configuration in terms of sound system
++ * parameters.  Each table is sized to the number of entries possible
++ * according to the number of configuration bits describing an I2S
++ * block parameter.
++ */
++
++/* Width of (DMA) bus */
++static const u32 bus_widths[COMP_MAX_DATA_WIDTH] = {
++	DMA_SLAVE_BUSWIDTH_1_BYTE,
++	DMA_SLAVE_BUSWIDTH_2_BYTES,
++	DMA_SLAVE_BUSWIDTH_4_BYTES,
++	DMA_SLAVE_BUSWIDTH_UNDEFINED
++};
++
++/* PCM format to support channel resolution */
++static const u32 formats[COMP_MAX_WORDSIZE] = {
++	SNDRV_PCM_FMTBIT_S16_LE,
++	SNDRV_PCM_FMTBIT_S16_LE,
++	SNDRV_PCM_FMTBIT_S24_LE,
++	SNDRV_PCM_FMTBIT_S24_LE,
++	SNDRV_PCM_FMTBIT_S32_LE,
++	0,
++	0,
++	0
++};
++
++static int dw_configure_dai_by_pd(struct dw_i2s_dev *dev,
+ 				   struct snd_soc_dai_driver *dw_i2s_dai,
+ 				   struct resource *res,
+ 				   const struct i2s_platform_data *pdata)
+ {
++	/*
++	 * Read component parameter registers to extract
++	 * the I2S block's configuration.
++	 */
++	u32 comp1 = i2s_read_reg(dev->i2s_base, I2S_COMP_PARAM_1);
++	u32 comp2 = i2s_read_reg(dev->i2s_base, I2S_COMP_PARAM_2);
++	u32 idx = COMP1_APB_DATA_WIDTH(comp1);
++
++	if (WARN_ON(idx >= ARRAY_SIZE(bus_widths)))
++		return -EINVAL;
++
+ 	/* Set DMA slaves info */
+ 
+ 	dev->play_dma_data.data = pdata->play_dma_data;
+@@ -348,26 +412,36 @@ static void dw_configure_dai_by_pd(struct dw_i2s_dev *dev,
+ 	dev->capture_dma_data.addr = res->start + I2S_RXDMA;
+ 	dev->play_dma_data.max_burst = 16;
+ 	dev->capture_dma_data.max_burst = 16;
+-	dev->play_dma_data.addr_width = DMA_SLAVE_BUSWIDTH_2_BYTES;
+-	dev->capture_dma_data.addr_width = DMA_SLAVE_BUSWIDTH_2_BYTES;
++	dev->play_dma_data.addr_width = bus_widths[idx];
++	dev->capture_dma_data.addr_width = bus_widths[idx];
+ 	dev->play_dma_data.filter = pdata->filter;
+ 	dev->capture_dma_data.filter = pdata->filter;
+ 
+-	if (pdata->cap & DWC_I2S_PLAY) {
++	if (COMP1_TX_ENABLED(comp1)) {
+ 		dev_dbg(dev->dev, " designware: play supported\n");
++		idx = COMP1_TX_WORDSIZE_0(comp1);
++		if (WARN_ON(idx >= ARRAY_SIZE(formats)))
++			return -EINVAL;
+ 		dw_i2s_dai->playback.channels_min = MIN_CHANNEL_NUM;
+-		dw_i2s_dai->playback.channels_max = pdata->channel;
+-		dw_i2s_dai->playback.formats = pdata->snd_fmts;
++		dw_i2s_dai->playback.channels_max =
++				1 << (COMP1_TX_CHANNELS(comp1) + 1);
++		dw_i2s_dai->playback.formats = formats[idx];
+ 		dw_i2s_dai->playback.rates = pdata->snd_rates;
+ 	}
+ 
+-	if (pdata->cap & DWC_I2S_RECORD) {
++	if (COMP1_RX_ENABLED(comp1)) {
+ 		dev_dbg(dev->dev, "designware: record supported\n");
++		idx = COMP2_RX_WORDSIZE_0(comp2);
++		if (WARN_ON(idx >= ARRAY_SIZE(formats)))
++			return -EINVAL;
+ 		dw_i2s_dai->capture.channels_min = MIN_CHANNEL_NUM;
+-		dw_i2s_dai->capture.channels_max = pdata->channel;
+-		dw_i2s_dai->capture.formats = pdata->snd_fmts;
++		dw_i2s_dai->capture.channels_max =
++				1 << (COMP1_RX_CHANNELS(comp1) + 1);
++		dw_i2s_dai->capture.formats = formats[idx];
+ 		dw_i2s_dai->capture.rates = pdata->snd_rates;
+ 	}
++
++	return 0;
+ }
+ 
+ static int dw_i2s_probe(struct platform_device *pdev)
+@@ -403,7 +477,9 @@ static int dw_i2s_probe(struct platform_device *pdev)
+ 		return PTR_ERR(dev->i2s_base);
+ 
+ 	dev->dev = &pdev->dev;
+-	dw_configure_dai_by_pd(dev, dw_i2s_dai, res, pdata);
++	ret = dw_configure_dai_by_pd(dev, dw_i2s_dai, res, pdata);
++	if (ret < 0)
++		return ret;
+ 
+ 	dev->capability = pdata->cap;
+ 	dev->i2s_clk_cfg = pdata->i2s_clk_cfg;
+-- 
+1.7.1
