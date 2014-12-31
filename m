@@ -1,41 +1,42 @@
-From: Peter Maydell <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0/9] ARM Versatile multi-platform support
-Date: Wed, 31 Dec 2014 09:25:41 +0000
-Message-ID: <CAFEAcA9pKdRNQ-fgKumQhjTjei-4NJ-OB1gSOxTCnCjShy10jw@mail.gmail.com>
-References: <1419967718-26909-1-git-send-email-robherring2@gmail.com>
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 0/3] Add Armada 385 General Purpose Development Board
+ support
+Date: Wed, 31 Dec 2014 10:57:20 +0100
+Message-ID: <20141231105720.24e6983f@free-electrons.com>
+References: <1419678035-10658-1-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1419967718-26909-1-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1419678035-10658-1-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: arm-mail-list <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 30 December 2014 at 19:28, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> This has been tested on QEMU. A previous version was tested on
-> Versatile/AB by Linus Walleij. Linus reported a problem with the
-> display panel detection. Investigation on h/w is needed still as I have
-> not been able to identify the issue by inspection and the display
-> detection seems to work correctly on QEMU.
->
-> Linus had also mentioned to me that QEMU users may have some issue with
-> removing non-DT code as the work flow has to change somewhat.
+Dear Gregory CLEMENT,
 
-As long as you call out the requirement for a DT now in whatever
-your equivalent of release notes is that should be fine. (Does
-the kernel provide a useful message to serial in the absence of a
-DT or does it now not have enough platform knowledge to do that?)
+On Sat, 27 Dec 2014 12:00:32 +0100, Gregory CLEMENT wrote:
 
-> Copying
-> Peter Maydell here for comment (and there's rumors he may have actual PB
-> h/w with PCI as well).
+> this patch set adds the support for the Armada 385 GP board, this board
+> is pretty close to the Armada 385 RD one. It comes with a new revision
+> of the Armada 385 SoC (B0).
 
-Will Deacon and Marc Zyngier are currently in possession of that h/w.
-I'm sure they'd be delighted to pull it out of the cupboard and
-give it a spin :-)
+Unless I'm wrong, it actually comes with an A0 revision, not a B0. But
+it's indeed different from the Z1 revision we have been using until now.
 
--- PMM
+At least, my Armada XP GP says:
+
+Board: DB-88F6820-GP
+SoC:   MV88F6828 Rev A0
+
+Thanks,
+
+Thomas
+-- 
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
