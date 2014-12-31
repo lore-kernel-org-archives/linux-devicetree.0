@@ -1,46 +1,37 @@
-From: Liu Ying <Ying.Liu@freescale.com>
-Subject: [PATCH RFC v8 21/21] ARM: imx_v6_v7_defconfig: Add support for Himax
- HX8369A panel
-Date: Wed, 31 Dec 2014 16:23:39 +0800
-Message-ID: <1420014219-915-22-git-send-email-Ying.Liu@freescale.com>
-References: <1420014219-915-1-git-send-email-Ying.Liu@freescale.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/2] Input: gpio_keys - allow separating gpio and irq in
+ device tree
+Date: Wed, 31 Dec 2014 09:22:27 +0100
+Message-ID: <CACRpkdZ3PHGRG400Y9zo9RKGyyFm9qF7rZZa8PGpT6AStjUhYA@mail.gmail.com>
+References: <20141208071930.GA20802@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1420014219-915-1-git-send-email-Ying.Liu@freescale.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org
-Cc: stefan.wahren@i2se.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, kernel@pengutronix.de, linux-kernel@vger.kernel.org, a.hajda@samsung.com, mturquette@linaro.org, linux-arm-kernel@lists.infradead.org, andyshrk@gmail.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20141208071930.GA20802@dtor-ws>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Linux Input <linux-input@vger.kernel.org>, Alexander Stein <alexander.stein@systec-electronic.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Alexander Shiyan <shc_work@mail.ru>, Laxman Dewangan <ldewangan@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBwYXRjaCBhZGRzIHN1cHBvcnQgZm9yIEhpbWF4IEhYODM2OUEgcGFuZWwuCgpUaGUgbmV3
-IGlteF92Nl92N19kZWZjb25maWcgaXMgZ2VuZXJhdGVkIGluIHRoaXMgd2F5OgoqIG1ha2UgQVJD
-SD1hcm0gaW14X3Y2X3Y3X2RlZmNvbmZpZwoqIG1ha2UgQVJDSD1hcm0gbWVudWNvbmZpZyBhbmQg
-bWFudWFsbHkgY2hvb3NlIHRvIGJ1aWxkIGluCiAgdGhlIEhpbWF4IEhYODM2OUEgcGFuZWwgZHJp
-dmVyCiogbWFrZSBBUkNIPWFybSBzYXZlZGVmY29uZmlnCiogY3AgZGVmY29uZmlnIGFyY2gvYXJt
-L2NvbmZpZ3MvaW14X3Y2X3Y3X2RlZmNvbmZpZwoKU2lnbmVkLW9mZi1ieTogTGl1IFlpbmcgPFlp
-bmcuTGl1QGZyZWVzY2FsZS5jb20+Ci0tLQp2Ny0+djg6CiAqIE5vbmUuCgp2Ni0+djc6CiAqIE5v
-bmUuCgp2NS0+djY6CiAqIE5vbmUuCgp2NC0+djU6CiAqIE5vbmUuCgp2My0+djQ6CiAqIE5vbmUu
-Cgp2Mi0+djM6CiAqIE5vbmUuCgp2MS0+djI6CiAqIEFkZCB0aGUgSElNQVggcHJlZml4IGluIHRo
-ZSBLY29uZmlnIG5hbWUuCgogYXJjaC9hcm0vY29uZmlncy9pbXhfdjZfdjdfZGVmY29uZmlnIHwg
-MSArCiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykKCmRpZmYgLS1naXQgYS9hcmNoL2Fy
-bS9jb25maWdzL2lteF92Nl92N19kZWZjb25maWcgYi9hcmNoL2FybS9jb25maWdzL2lteF92Nl92
-N19kZWZjb25maWcKaW5kZXggM2UwZTU4OS4uMjdkYjkxYiAxMDA2NDQKLS0tIGEvYXJjaC9hcm0v
-Y29uZmlncy9pbXhfdjZfdjdfZGVmY29uZmlnCisrKyBiL2FyY2gvYXJtL2NvbmZpZ3MvaW14X3Y2
-X3Y3X2RlZmNvbmZpZwpAQCAtMTkyLDYgKzE5Miw3IEBAIENPTkZJR19TT0NfQ0FNRVJBX09WMjY0
-MD15CiBDT05GSUdfSU1YX0lQVVYzX0NPUkU9eQogQ09ORklHX0RSTT15CiBDT05GSUdfRFJNX1BB
-TkVMX1NJTVBMRT15CitDT05GSUdfRFJNX1BBTkVMX0hJTUFYX0hYODM2OUE9eQogQ09ORklHX0RS
-TV9JTVg9eQogQ09ORklHX0RSTV9JTVhfRkJfSEVMUEVSPXkKIENPTkZJR19EUk1fSU1YX1BBUkFM
-TEVMX0RJU1BMQVk9eQotLSAKMi4xLjAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
-ZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGlu
-Zm8vZHJpLWRldmVsCg==
+On Mon, Dec 8, 2014 at 8:19 AM, Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
+
+> This change allows specify interrupt for buttons separately form gpio,
+> potentially allowing to form several "clusters" of buttons on
+> different interrupts.
+>
+> Button defined without both gpio and irq in device tree is a hared error
+
+hared?
+
+> instead of a warning now.
+>
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+
+...but it would be nice if it could also be converted to use GPIO
+descriptors internally at some point.
+
+Yours,
+Linus Walleij
