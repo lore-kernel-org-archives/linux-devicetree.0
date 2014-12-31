@@ -1,37 +1,37 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 1/2] Input: gpio_keys - allow separating gpio and irq in
- device tree
-Date: Wed, 31 Dec 2014 09:22:27 +0100
-Message-ID: <CACRpkdZ3PHGRG400Y9zo9RKGyyFm9qF7rZZa8PGpT6AStjUhYA@mail.gmail.com>
-References: <20141208071930.GA20802@dtor-ws>
+From: Jisheng Zhang <jszhang@marvell.com>
+Subject: [PATCH 0/3] fix non-working eMMC on Marvell BG2Q DMP board
+Date: Wed, 31 Dec 2014 16:57:49 +0800
+Message-ID: <1420016272-6789-1-git-send-email-jszhang@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141208071930.GA20802@dtor-ws>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Linux Input <linux-input@vger.kernel.org>, Alexander Stein <alexander.stein@systec-electronic.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Alexander Shiyan <shc_work@mail.ru>, Laxman Dewangan <ldewangan@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <stable-owner@vger.kernel.org>
+Sender: stable-owner@vger.kernel.org
+To: sebastian.hesselbarth@gmail.com, mturquette@linaro.org, sboyd@codeaurora.org, alexandre.belloni@free-electrons.com, antoine.tenart@free-electrons.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org, Jisheng Zhang <jszhang@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 8, 2014 at 8:19 AM, Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
+The eMMC on Marvell BG2Q DMP board doesn't work due to the following reasons:
 
-> This change allows specify interrupt for buttons separately form gpio,
-> potentially allowing to form several "clusters" of buttons on
-> different interrupts.
->
-> Button defined without both gpio and irq in device tree is a hared error
+ 1. the sdhci2 host needs "core" clk to work.
+ 2. there's no card detection for the eMMC.
+ 3. the non-exist "smemc" clk occpuies the enable bit for nfc clock which is
+    use for the sdhci2's "core" clk.
 
-hared?
+These pathes fix them.
 
-> instead of a warning now.
->
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Please consider for stable as well.
 
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+Jisheng Zhang (3):
+  ARM: dts: berlin: fix io clk and add missing core clk for BG2Q sdhci2
+    host
+  ARM: berlin: add broken-cd and set bus width for eMMC in Marvell DMP
+    DT
+  clk: berlin: bg2q: remove non-exist "smemc" gate clock
 
-...but it would be nice if it could also be converted to use GPIO
-descriptors internally at some point.
+ arch/arm/boot/dts/berlin2q-marvell-dmp.dts | 2 ++
+ arch/arm/boot/dts/berlin2q.dtsi            | 3 ++-
+ drivers/clk/berlin/bg2q.c                  | 1 -
+ 3 files changed, 4 insertions(+), 2 deletions(-)
 
-Yours,
-Linus Walleij
+-- 
+2.1.4
