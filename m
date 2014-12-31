@@ -1,39 +1,44 @@
-From: Jisheng Zhang <jszhang@marvell.com>
-Subject: [PATCH 3/3] clk: berlin: bg2q: remove non-exist "smemc" gate clock
-Date: Wed, 31 Dec 2014 16:57:52 +0800
-Message-ID: <1420016272-6789-4-git-send-email-jszhang@marvell.com>
+From: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 1/3] ARM: dts: berlin: fix io clk and add missing core clk for BG2Q sdhci2 host
+Date: Wed, 31 Dec 2014 16:57:50 +0800
+Message-ID: <1420016272-6789-2-git-send-email-jszhang@marvell.com>
 References: <1420016272-6789-1-git-send-email-jszhang@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <1420016272-6789-1-git-send-email-jszhang@marvell.com>
-Sender: stable-owner@vger.kernel.org
-To: sebastian.hesselbarth@gmail.com, mturquette@linaro.org, sboyd@codeaurora.org, alexandre.belloni@free-electrons.com, antoine.tenart@free-electrons.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org, Jisheng Zhang <jszhang@marvell.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1420016272-6789-1-git-send-email-jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The "smemc" clock is removed on BG2Q SoCs. In fact, bit19 of clkenable
-register is for nfc. Current code use bit19 for non-exist "smemc"
-incorrectly, this prevents eMMC from working due to the sdhci's
-"core" clk is still gated.
+On BG2Q, the sdhci2 host uses nfcecc for "io" clk and nfc for "core" clk.
+The shdci2 can't work Without this patch due to the "core" clk is gated.
 
-Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
-Cc: stable@vger.kernel.org # 3.16+
+Signed-off-by: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Cc: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org # 3.16+
 ---
- drivers/clk/berlin/bg2q.c | 1 -
- 1 file changed, 1 deletion(-)
+ arch/arm/boot/dts/berlin2q.dtsi | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clk/berlin/bg2q.c b/drivers/clk/berlin/bg2q.c
-index 21784e4..440ef81 100644
---- a/drivers/clk/berlin/bg2q.c
-+++ b/drivers/clk/berlin/bg2q.c
-@@ -285,7 +285,6 @@ static const struct berlin2_gate_data bg2q_gates[] __initconst = {
- 	{ "pbridge",	"perif",	15, CLK_IGNORE_UNUSED },
- 	{ "sdio",	"perif",	16, CLK_IGNORE_UNUSED },
- 	{ "nfc",	"perif",	18 },
--	{ "smemc",	"perif",	19 },
- 	{ "pcie",	"perif",	22 },
- };
+diff --git a/arch/arm/boot/dts/berlin2q.dtsi b/arch/arm/boot/dts/berlin2q.dtsi
+index 35253c9..903f3bb 100644
+--- a/arch/arm/boot/dts/berlin2q.dtsi
++++ b/arch/arm/boot/dts/berlin2q.dtsi
+@@ -83,7 +83,8 @@
+ 			compatible = "mrvl,pxav3-mmc";
+ 			reg = <0xab1000 0x200>;
+ 			interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&chip CLKID_SDIO1XIN>;
++			clocks = <&chip CLKID_NFC_ECC>, <&chip CLKID_NFC>;
++			clock-names = "io", "core";
+ 			status = "disabled";
+ 		};
  
 -- 
 2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
