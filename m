@@ -1,93 +1,166 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: ARM: dts: sun9i: Allwinner A80 dtsi - missing clock-frequency property
-Date: Wed, 31 Dec 2014 11:18:56 +0800
-Message-ID: <CAGb2v65TOm6WGNB0yVF4Ujnc7RDime7jVenWSTXtysXNuT0-=g@mail.gmail.com>
-References: <1412773376-25212-1-git-send-email-wens@csie.org>
- <1412773376-25212-3-git-send-email-wens@csie.org> <54A34538.2020802@gmx.de>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [RFC] OPP: Redefine bindings to overcome shortcomings
+Date: Wed, 31 Dec 2014 10:17:02 +0530
+Message-ID: <CAKohpo=HkixETTSsrRPHhUtWPVgn_7w0E2jYTokAYQRT5awk8Q@mail.gmail.com>
+References: <52c403454c3b8fc201abe7ac74cf657638479311.1417691389.git.viresh.kumar@linaro.org>
+	<CAKohpokUXvhqt+z4EPC9k=O8ZnQOqNSGGi8w6w4shYtbvv8mTw@mail.gmail.com>
+	<CAL_JsqJabcXe7-juTnJDcVdzpnFokYmt-N=bjZt5a+32Fzr_vg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54A34538.2020802-Mmb7MZpHnFY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, Meng Zhang <kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqJabcXe7-juTnJDcVdzpnFokYmt-N=bjZt5a+32Fzr_vg@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Rafael Wysocki <rjw@rjwysocki.net>, Arnd Bergmann <arnd.bergmann@linaro.org>, Rob Herring <rob.herring@linaro.org>, Grant Likely <grant.likely@linaro.org>, "olof@lixom.net" <olof@lixom.net>, Nishanth Menon <nm@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Lists linaro-kernel <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, santosh shilimkar <santosh.shilimkar@oracle.com>, Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mike.turquette@linaro.org>, Sudeep Holla <Sudeep.Holla@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 31, 2014 at 8:37 AM, Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org> wrote:
-> When booting Linux 3.19-rc2 on a Merrii Optimusboard using
-> arch/arm/boot/dts/sun9i-a80-optimus.dts adn arch/arm/boot/dts/sun9i-a80.dtsi
-> I get errors
-> [    0.061192] /cpus/cpu@0 missing clock-frequency property
-> [    0.061209] /cpus/cpu@1 missing clock-frequency property
-> [    0.061223] /cpus/cpu@2 missing clock-frequency property
-> [    0.061237] /cpus/cpu@3 missing clock-frequency property
-> [    0.061251] /cpus/cpu@100 missing clock-frequency property
-> [    0.061266] /cpus/cpu@101 missing clock-frequency property
-> [    0.061283] /cpus/cpu@102 missing clock-frequency property
-> [    0.061300] /cpus/cpu@103 missing clock-frequency property
-
-The clock-frequency property is in no way connected to clocks
-or cpufreq on Linux. It is solely used to generate a topology
-map for multi-cluster systems. Personally I prefer the
-cpu-topology bindings on arm64, but this is what we have.
-
-> The dtsi was provided by patch
-> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=4ab328f06e305bf3ea254f4e3c94bb4d820998c1
+On 29 December 2014 at 22:35, Rob Herring <robherring2@gmail.com> wrote:
+>> +  - frequency-kHz: Frequency in kHz
 >
-> According to file pack/chips/sun9iw1p1/optimus/sys_config.fex supplied in
-> the OptimusBoard SDK the big cluster can run at up to 1800 MHz, and
-> the LITTLE cluster can run at up to 1200 MHz,depending on the CPU voltage:
+> s/kHz/khz/
 >
-> big
-> 1.08V (1608Mhz, 1800Mhz]
-> 1.00V (1536Mhz, 1608Mhz]
-> 0.96V (1440Mhz, 1536Mhz]
-> 0.90V (1296Mhz, 1440Mhz]
-> 0.84V (   0Mhz, 1296Mhz]
+>> +  - voltage-uV: voltage in micro Volts
 >
-> LITTLE
-> 1.02V (1128Mhz, 1200Mhz]
-> 0.96V (1008Mhz, 1128Mhz]
-> 0.90V ( 864Mhz, 1008Mhz]
-> 0.84V (   0Mhz,  864Mhz]
+> -microvolt is more consistent with regulator binding.
 >
-> I guess the proper way to specify the data is the one described in
-> Documentation/devicetree/bindings/cpufreq/arm_big_little_dt.txt
+> The names are a bit redundant. perhaps opp-khz and opp-microvolt instead.
 
-cpufreq requires a bit more than just specifying the operating
-points. Moreover, SMP is not supported on sun9i yet. For DVFS
-we also need support for the PMICs.
+All accepted.
 
-> Other boards might run at other frequencies. Hence we might want to put this
-> information into the board file
-> arch/arm/boot/dts/sun9i-a80-optimus.dts.
-
-We can also give a default set of OPP in the dtsi, and any boards
-having special voltage requirements can override them or use the
-voltage-derivation property (not sure that's the name).
-
-> Documentation/devicetree/bindings/cpufreq/arm_big_little_dt.txt,
-> arch/arm/boot/dts/exynos5260.dtsi, and
-> arch/arm/boot/dts/exynos5420.dtsi, all assume that
-> cpu@0-cpu@3 are A15 (big) and cpu@101-cpu@103 are A7 (LITTLE).
+>> +Example 1: Simple case of dual-core cortex A9-single cluster, sharing
+>> clock line.
+>> +
+>> +/ {
+>> +       cpus {
+>> +               #address-cells = <1>;
+>> +               #size-cells = <0>;
+>> +
+>> +               cpu@0 {
+>> +                       compatible = "arm,cortex-a9";
+>> +                       reg = <0>;
+>> +                       next-level-cache = <&L2>;
+>> +                       operating-points-v2 = <&opp0>;
+>> +
+>> +                       opp0: opp0 {
 >
-> Shouldn't arch/arm/boot/dts/sun9i-a80.dtsi stick to this convention?
+> I don't really like having this under cpu0 when it applies to all
+> cpus. I would move it out of /cpus.
 
-This is not some convention. The values match what the hardware
-says in the MPIDR.
+That's how I had it initially, but then Arnd didn't like it much.
 
+>> +                               compatible = "linux,cpu-dvfs";
+>
+> This should not be linux specific. Probably not cpu specific either.
 
-ChenYu
+This was just an example of one of the bindings and there will be others
+as well.
 
-> The scripts to create the uImage and to reproduce the problem are in
-> https://github.com/xypron/kernel-optimusboard/tree/35d06c020f6584b5023e0e4bef67cc5a625f65bb
+'linux' here doesn't mean linux specific, but just that its first used by
+Linux. That's what my understanding is atleast.
+
+>> +                               clocks = <&clk-controller 0>;
+>> +                               clock-names = "cpu";
 >
-> Best regards
+> clocks are an input to the cpu, not really an opp. You could have a an
+> OPP which uses a different parent clock, but that is most likely a
+> switch within the clock controller rather than 2 clock inputs to the
+> cpu.
 >
-> Heinrich Schuchardt
+> I think the clock binding for cpus should stand on its own independent of OPPs.
 >
+>> +                               opp-supply = <&cpu-supply0>;
 >
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Same comment as clocks applies here.
+
+Both will be kept in the cpu node where they were initially.
+
+>> +                               voltage-tolerance = <2>; /* percentage */
+>> +                               clock-latency = <300000>;
+>
+> These could be per entry. I'm not sure it is worth the savings to not
+> just always specify them per entry.
+
+Done.
+
+> We should append units (-us) to clock-latency unless there is a good
+> reason to maintain compatibility.
+
+So you meant something like this:
+
+clock-latency-us = <300000>;
+
+right?
+
+>> +                               opp-list = <&opplist0>;
+>
+> With the above changes, having this list is unnecessary.
+
+It might be for the use case I mentioned earlier about something
+like Krait.
+
+> So, what I envision is like this:
+>
+> /cpus {
+>   cpu@0 {
+>     clocks = <...>;
+>     cpu-supply = <...>;
+>     operating-point-v2 = <&cpu0-opp>;
+>    };
+>   cpu@1 {
+>     clocks = <...>;
+>     cpu-supply = <...>;
+>     operating-point-v2 = <&cpu1-opp>;
+>    };
+> };
+
+Looks fine..
+
+> cpu0-opp : opp0 {
+>   compatible = "operating-point-table";
+>   entry0 {
+>     opp-khz = <500000>;
+>     opp-microvolt = <900000>;
+>   };
+>   entry1 {
+>     opp-khz = <1000000>;
+>     opp-microvolt = <1000000>;
+>     turbo-mode;
+>   };
+> };
+> cpu1-opp : opp1 {
+>   compatible = "operating-point-table";
+> ...
+> };
+
+What about something like Krait which wants to use exactly same
+bindings for all CPUs but want to specify they are controlled separately.
+
+So I had it like:
+
+cpu0-opp : opp0 {
+  compatible = "operating-point-table";
+  opp-list = <&opplist0>;
+
+  opplist0: opp-list0 {
+          entry0 {
+            opp-khz = <500000>;
+            opp-microvolt = <900000>;
+          };
+          entry1 {
+            opp-khz = <1000000>;
+            opp-microvolt = <1000000>;
+            turbo-mode;
+          };
+  };
+};
+
+cpu1-opp : opp1 {
+  compatible = "operating-point-table";
+  opp-list = <&opplist0>;
+};
+
+> We need to also consider if this all works for other non-cpu OPPs like
+> GPUs or DRAM/bus.
+
+Do you any input here? Or if you know somebody who can give inputs
+about them?
