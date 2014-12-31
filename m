@@ -1,166 +1,54 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [RFC] OPP: Redefine bindings to overcome shortcomings
-Date: Wed, 31 Dec 2014 10:17:02 +0530
-Message-ID: <CAKohpo=HkixETTSsrRPHhUtWPVgn_7w0E2jYTokAYQRT5awk8Q@mail.gmail.com>
-References: <52c403454c3b8fc201abe7ac74cf657638479311.1417691389.git.viresh.kumar@linaro.org>
-	<CAKohpokUXvhqt+z4EPC9k=O8ZnQOqNSGGi8w6w4shYtbvv8mTw@mail.gmail.com>
-	<CAL_JsqJabcXe7-juTnJDcVdzpnFokYmt-N=bjZt5a+32Fzr_vg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJabcXe7-juTnJDcVdzpnFokYmt-N=bjZt5a+32Fzr_vg@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Rafael Wysocki <rjw@rjwysocki.net>, Arnd Bergmann <arnd.bergmann@linaro.org>, Rob Herring <rob.herring@linaro.org>, Grant Likely <grant.likely@linaro.org>, "olof@lixom.net" <olof@lixom.net>, Nishanth Menon <nm@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Lists linaro-kernel <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, santosh shilimkar <santosh.shilimkar@oracle.com>, Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mike.turquette@linaro.org>, Sudeep Holla <Sudeep.Holla@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Alim Akhtar <alim.akhtar@samsung.com>
+Subject: [PATCH v3 0/4] mmc: dw_mmc: exynos: Add HS400 support
+Date: Wed, 31 Dec 2014 12:13:01 +0530
+Message-ID: <1420008185-24758-1-git-send-email-alim.akhtar@samsung.com>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: linux-mmc@vger.kernel.org
+Cc: chris@printf.net, ulf.hansson@linaro.org, jh80.chung@samsung.com, tgih.jun@samsung.com, dianders@chromium.org, alim.akhtar@gmail.com, kgene@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, a.kesavan@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On 29 December 2014 at 22:35, Rob Herring <robherring2@gmail.com> wrote:
->> +  - frequency-kHz: Frequency in kHz
->
-> s/kHz/khz/
->
->> +  - voltage-uV: voltage in micro Volts
->
-> -microvolt is more consistent with regulator binding.
->
-> The names are a bit redundant. perhaps opp-khz and opp-microvolt instead.
+This serise is second part of [1] which was posted by Seungwon Jeon few months back.
+This adds HS400 mode support for exynos dw_mmc host controller.
 
-All accepted.
+Currently tested on Exynos5800-peach-pi platform and exynos7 platform for HS400 mode.
 
->> +Example 1: Simple case of dual-core cortex A9-single cluster, sharing
->> clock line.
->> +
->> +/ {
->> +       cpus {
->> +               #address-cells = <1>;
->> +               #size-cells = <0>;
->> +
->> +               cpu@0 {
->> +                       compatible = "arm,cortex-a9";
->> +                       reg = <0>;
->> +                       next-level-cache = <&L2>;
->> +                       operating-points-v2 = <&opp0>;
->> +
->> +                       opp0: opp0 {
->
-> I don't really like having this under cpu0 when it applies to all
-> cpus. I would move it out of /cpus.
+Appreciate testing on other exynos5 platform which supports emmc5.0
 
-That's how I had it initially, but then Arnd didn't like it much.
+[1] http://www.spinics.net/lists/linux-mmc/msg25599.html
 
->> +                               compatible = "linux,cpu-dvfs";
->
-> This should not be linux specific. Probably not cpu specific either.
+Changes in V3:
+	rebased on ulf's next (commit: 607b448 mmc: core: Make tuning block patterns static)
 
-This was just an example of one of the bindings and there will be others
-as well.
+Seungwon Jeon (4):
+  mmc: dw_mmc: exynos: incorporate ciu_div into timing property
+  mmc: dw_mmc: exynos: support eMMC's HS400 mode
+  ARM: dts: drop dw-mshc-ciu-div property from Exynos
+  ARM: dts: add HS400 support for Exynos5420 and exynos5800
 
-'linux' here doesn't mean linux specific, but just that its first used by
-Linux. That's what my understanding is atleast.
+ .../devicetree/bindings/mmc/exynos-dw-mshc.txt     |   21 +-
+ arch/arm/boot/dts/exynos3250-monk.dts              |    5 +-
+ arch/arm/boot/dts/exynos3250-rinato.dts            |    5 +-
+ arch/arm/boot/dts/exynos4412-odroid-common.dtsi    |    5 +-
+ arch/arm/boot/dts/exynos4412-origen.dts            |    5 +-
+ arch/arm/boot/dts/exynos4412-trats2.dts            |    5 +-
+ arch/arm/boot/dts/exynos5250-arndale.dts           |   10 +-
+ arch/arm/boot/dts/exynos5250-smdk5250.dts          |   10 +-
+ arch/arm/boot/dts/exynos5250-snow.dts              |   15 +-
+ arch/arm/boot/dts/exynos5250-spring.dts            |   10 +-
+ arch/arm/boot/dts/exynos5260-xyref5260.dts         |   10 +-
+ arch/arm/boot/dts/exynos5410-smdk5410.dts          |   10 +-
+ arch/arm/boot/dts/exynos5420-arndale-octa.dts      |   10 +-
+ arch/arm/boot/dts/exynos5420-peach-pit.dts         |   15 +-
+ arch/arm/boot/dts/exynos5420-pinctrl.dtsi          |    7 +
+ arch/arm/boot/dts/exynos5420-smdk5420.dts          |   15 +-
+ arch/arm/boot/dts/exynos5800-peach-pi.dts          |   15 +-
+ drivers/mmc/host/dw_mmc-exynos.c                   |  242 +++++++++++++++-----
+ drivers/mmc/host/dw_mmc-exynos.h                   |   18 +-
+ drivers/mmc/host/dw_mmc.c                          |   16 +-
+ drivers/mmc/host/dw_mmc.h                          |    2 +
+ 21 files changed, 308 insertions(+), 143 deletions(-)
 
->> +                               clocks = <&clk-controller 0>;
->> +                               clock-names = "cpu";
->
-> clocks are an input to the cpu, not really an opp. You could have a an
-> OPP which uses a different parent clock, but that is most likely a
-> switch within the clock controller rather than 2 clock inputs to the
-> cpu.
->
-> I think the clock binding for cpus should stand on its own independent of OPPs.
->
->> +                               opp-supply = <&cpu-supply0>;
->
-> Same comment as clocks applies here.
+-- 
+1.7.9.5
 
-Both will be kept in the cpu node where they were initially.
-
->> +                               voltage-tolerance = <2>; /* percentage */
->> +                               clock-latency = <300000>;
->
-> These could be per entry. I'm not sure it is worth the savings to not
-> just always specify them per entry.
-
-Done.
-
-> We should append units (-us) to clock-latency unless there is a good
-> reason to maintain compatibility.
-
-So you meant something like this:
-
-clock-latency-us = <300000>;
-
-right?
-
->> +                               opp-list = <&opplist0>;
->
-> With the above changes, having this list is unnecessary.
-
-It might be for the use case I mentioned earlier about something
-like Krait.
-
-> So, what I envision is like this:
->
-> /cpus {
->   cpu@0 {
->     clocks = <...>;
->     cpu-supply = <...>;
->     operating-point-v2 = <&cpu0-opp>;
->    };
->   cpu@1 {
->     clocks = <...>;
->     cpu-supply = <...>;
->     operating-point-v2 = <&cpu1-opp>;
->    };
-> };
-
-Looks fine..
-
-> cpu0-opp : opp0 {
->   compatible = "operating-point-table";
->   entry0 {
->     opp-khz = <500000>;
->     opp-microvolt = <900000>;
->   };
->   entry1 {
->     opp-khz = <1000000>;
->     opp-microvolt = <1000000>;
->     turbo-mode;
->   };
-> };
-> cpu1-opp : opp1 {
->   compatible = "operating-point-table";
-> ...
-> };
-
-What about something like Krait which wants to use exactly same
-bindings for all CPUs but want to specify they are controlled separately.
-
-So I had it like:
-
-cpu0-opp : opp0 {
-  compatible = "operating-point-table";
-  opp-list = <&opplist0>;
-
-  opplist0: opp-list0 {
-          entry0 {
-            opp-khz = <500000>;
-            opp-microvolt = <900000>;
-          };
-          entry1 {
-            opp-khz = <1000000>;
-            opp-microvolt = <1000000>;
-            turbo-mode;
-          };
-  };
-};
-
-cpu1-opp : opp1 {
-  compatible = "operating-point-table";
-  opp-list = <&opplist0>;
-};
-
-> We need to also consider if this all works for other non-cpu OPPs like
-> GPUs or DRAM/bus.
-
-Do you any input here? Or if you know somebody who can give inputs
-about them?
