@@ -1,60 +1,41 @@
 From: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
-Subject: [PATCH] power: ab8500_fg.c:  Remove unused function
-Date: Thu,  1 Jan 2015 18:04:52 +0100
-Message-ID: <1420131892-31486-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
-Return-path: <linux-pm-owner@vger.kernel.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>
-Cc: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>, David Woodhouse <dwmw2@infradead.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH] mfd: db8500-prcmu:  Remove unused function
+Date: Thu,  1 Jan 2015 18:49:53 +0100
+Message-ID: <1420134593-690-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>
+Cc: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Remove the function ab8500_fg_reinit() that is not used anywhere.
+Remove the function prcmu_get_boot_status() that is not used anywhere.
 
 This was partially found by using a static code analysis program called cppcheck.
 
 Signed-off-by: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
 ---
- drivers/power/ab8500_fg.c            |   14 --------------
- include/linux/mfd/abx500/ab8500-bm.h |    1 -
- 2 files changed, 15 deletions(-)
+ drivers/mfd/db8500-prcmu.c |    9 ---------
+ 1 file changed, 9 deletions(-)
 
-diff --git a/drivers/power/ab8500_fg.c b/drivers/power/ab8500_fg.c
-index 217da4b..72c82ab 100644
---- a/drivers/power/ab8500_fg.c
-+++ b/drivers/power/ab8500_fg.c
-@@ -2434,20 +2434,6 @@ static void ab8500_fg_reinit_work(struct work_struct *work)
- 	}
+diff --git a/drivers/mfd/db8500-prcmu.c b/drivers/mfd/db8500-prcmu.c
+index 193cf16..b517501 100644
+--- a/drivers/mfd/db8500-prcmu.c
++++ b/drivers/mfd/db8500-prcmu.c
+@@ -675,15 +675,6 @@ bool prcmu_has_arm_maxopp(void)
  }
  
--/**
-- * ab8500_fg_reinit() - forces FG algorithm to reinitialize with current values
-- *
-- * This function can be used to force the FG algorithm to recalculate a new
-- * voltage based battery capacity.
+ /**
+- * prcmu_get_boot_status - PRCMU boot status checking
+- * Returns: the current PRCMU boot status
 - */
--void ab8500_fg_reinit(void)
+-int prcmu_get_boot_status(void)
 -{
--	struct ab8500_fg *di = ab8500_fg_get();
--	/* User won't be notified if a null pointer returned. */
--	if (di != NULL)
--		queue_delayed_work(di->fg_wq, &di->fg_reinit_work, 0);
+-	return readb(tcdm_base + PRCM_BOOT_STATUS);
 -}
 -
- /* Exposure to the sysfs interface */
- 
- struct ab8500_fg_sysfs_entry {
-diff --git a/include/linux/mfd/abx500/ab8500-bm.h b/include/linux/mfd/abx500/ab8500-bm.h
-index cc892a8..12a5b39 100644
---- a/include/linux/mfd/abx500/ab8500-bm.h
-+++ b/include/linux/mfd/abx500/ab8500-bm.h
-@@ -461,7 +461,6 @@ struct ab8500_fg;
- #ifdef CONFIG_AB8500_BM
- extern struct abx500_bm_data ab8500_bm_data;
- 
--void ab8500_fg_reinit(void);
- void ab8500_charger_usb_state_changed(u8 bm_usb_state, u16 mA);
- struct ab8500_btemp *ab8500_btemp_get(void);
- int ab8500_btemp_get_batctrl_temp(struct ab8500_btemp *btemp);
+-/**
+  * prcmu_set_rc_a2p - This function is used to run few power state sequences
+  * @val: Value to be set, i.e. transition requested
+  * Returns: 0 on success, -EINVAL on invalid argument
 -- 
 1.7.10.4
-
