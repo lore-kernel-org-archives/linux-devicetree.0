@@ -1,107 +1,60 @@
-From: Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
-Subject: [PATCH] media: i2c: adv7604.c:  Remove some unused functions
-Date: Thu,  1 Jan 2015 17:13:20 +0100
-Message-ID: <1420128800-28746-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
+Subject: [PATCH] power: ab8500_fg.c:  Remove unused function
+Date: Thu,  1 Jan 2015 18:04:52 +0100
+Message-ID: <1420131892-31486-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>
+Cc: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>, David Woodhouse <dwmw2@infradead.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Removes some functions that are not used anywhere:
-vblanking() hblanking()
+Remove the function ab8500_fg_reinit() that is not used anywhere.
 
 This was partially found by using a static code analysis program called cppcheck.
 
-Signed-off-by: Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
+Signed-off-by: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
 ---
- drivers/media/i2c/adv7604.c |   10 ----------
- drivers/media/i2c/adv7842.c |   10 ----------
- drivers/media/i2c/ths8200.c |   10 ----------
- 3 files changed, 30 deletions(-)
+ drivers/power/ab8500_fg.c            |   14 --------------
+ include/linux/mfd/abx500/ab8500-bm.h |    1 -
+ 2 files changed, 15 deletions(-)
 
-diff --git a/drivers/media/i2c/adv7604.c b/drivers/media/i2c/adv7604.c
-index 47795ff..0ecca94 100644
---- a/drivers/media/i2c/adv7604.c
-+++ b/drivers/media/i2c/adv7604.c
-@@ -333,21 +333,11 @@ static inline struct adv7604_state *to_state(struct v4l2_subdev *sd)
- 	return container_of(sd, struct adv7604_state, sd);
+diff --git a/drivers/power/ab8500_fg.c b/drivers/power/ab8500_fg.c
+index 217da4b..72c82ab 100644
+--- a/drivers/power/ab8500_fg.c
++++ b/drivers/power/ab8500_fg.c
+@@ -2434,20 +2434,6 @@ static void ab8500_fg_reinit_work(struct work_struct *work)
+ 	}
  }
  
--static inline unsigned hblanking(const struct v4l2_bt_timings *t)
+-/**
+- * ab8500_fg_reinit() - forces FG algorithm to reinitialize with current values
+- *
+- * This function can be used to force the FG algorithm to recalculate a new
+- * voltage based battery capacity.
+- */
+-void ab8500_fg_reinit(void)
 -{
--	return V4L2_DV_BT_BLANKING_WIDTH(t);
+-	struct ab8500_fg *di = ab8500_fg_get();
+-	/* User won't be notified if a null pointer returned. */
+-	if (di != NULL)
+-		queue_delayed_work(di->fg_wq, &di->fg_reinit_work, 0);
 -}
 -
- static inline unsigned htotal(const struct v4l2_bt_timings *t)
- {
- 	return V4L2_DV_BT_FRAME_WIDTH(t);
- }
+ /* Exposure to the sysfs interface */
  
--static inline unsigned vblanking(const struct v4l2_bt_timings *t)
--{
--	return V4L2_DV_BT_BLANKING_HEIGHT(t);
--}
--
- static inline unsigned vtotal(const struct v4l2_bt_timings *t)
- {
- 	return V4L2_DV_BT_FRAME_HEIGHT(t);
-diff --git a/drivers/media/i2c/adv7842.c b/drivers/media/i2c/adv7842.c
-index 48b628b..d89898c 100644
---- a/drivers/media/i2c/adv7842.c
-+++ b/drivers/media/i2c/adv7842.c
-@@ -220,21 +220,11 @@ static inline struct v4l2_subdev *to_sd(struct v4l2_ctrl *ctrl)
- 	return &container_of(ctrl->handler, struct adv7842_state, hdl)->sd;
- }
+ struct ab8500_fg_sysfs_entry {
+diff --git a/include/linux/mfd/abx500/ab8500-bm.h b/include/linux/mfd/abx500/ab8500-bm.h
+index cc892a8..12a5b39 100644
+--- a/include/linux/mfd/abx500/ab8500-bm.h
++++ b/include/linux/mfd/abx500/ab8500-bm.h
+@@ -461,7 +461,6 @@ struct ab8500_fg;
+ #ifdef CONFIG_AB8500_BM
+ extern struct abx500_bm_data ab8500_bm_data;
  
--static inline unsigned hblanking(const struct v4l2_bt_timings *t)
--{
--	return V4L2_DV_BT_BLANKING_WIDTH(t);
--}
--
- static inline unsigned htotal(const struct v4l2_bt_timings *t)
- {
- 	return V4L2_DV_BT_FRAME_WIDTH(t);
- }
- 
--static inline unsigned vblanking(const struct v4l2_bt_timings *t)
--{
--	return V4L2_DV_BT_BLANKING_HEIGHT(t);
--}
--
- static inline unsigned vtotal(const struct v4l2_bt_timings *t)
- {
- 	return V4L2_DV_BT_FRAME_HEIGHT(t);
-diff --git a/drivers/media/i2c/ths8200.c b/drivers/media/i2c/ths8200.c
-index 656d889..4ebd329 100644
---- a/drivers/media/i2c/ths8200.c
-+++ b/drivers/media/i2c/ths8200.c
-@@ -58,21 +58,11 @@ static inline struct ths8200_state *to_state(struct v4l2_subdev *sd)
- 	return container_of(sd, struct ths8200_state, sd);
- }
- 
--static inline unsigned hblanking(const struct v4l2_bt_timings *t)
--{
--	return V4L2_DV_BT_BLANKING_WIDTH(t);
--}
--
- static inline unsigned htotal(const struct v4l2_bt_timings *t)
- {
- 	return V4L2_DV_BT_FRAME_WIDTH(t);
- }
- 
--static inline unsigned vblanking(const struct v4l2_bt_timings *t)
--{
--	return V4L2_DV_BT_BLANKING_HEIGHT(t);
--}
--
- static inline unsigned vtotal(const struct v4l2_bt_timings *t)
- {
- 	return V4L2_DV_BT_FRAME_HEIGHT(t);
+-void ab8500_fg_reinit(void);
+ void ab8500_charger_usb_state_changed(u8 bm_usb_state, u16 mA);
+ struct ab8500_btemp *ab8500_btemp_get(void);
+ int ab8500_btemp_get_batctrl_temp(struct ab8500_btemp *btemp);
 -- 
 1.7.10.4
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
