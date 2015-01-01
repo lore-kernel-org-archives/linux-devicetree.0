@@ -1,46 +1,106 @@
-From: Peter Maydell <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/9] ARM: versatile: add DT based PCI detection
-Date: Thu, 1 Jan 2015 15:52:05 +0000
-Message-ID: <CAFEAcA8Y9PY1q=oO35jcz+VRXYKDAfkgTL7Tv=Uztr6RpWZy8g@mail.gmail.com>
-References: <1419967718-26909-1-git-send-email-robherring2@gmail.com>
- <CAL_JsqLBCeCc2VKvHAdG5bBJt=2qmX5BnosdGd_2n+Pb9BhuZQ@mail.gmail.com>
- <CAFEAcA-=2GGEAdnO9+8EV+8OkwUHj3tRiMYWvS4b-cpy6P6rYg@mail.gmail.com> <2544305.Bn9s67VML8@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
+Subject: [PATCH] media: i2c: adv7604.c:  Remove some unused functions
+Date: Thu,  1 Jan 2015 17:13:20 +0100
+Message-ID: <1420128800-28746-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2544305.Bn9s67VML8@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+To: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 1 January 2015 at 15:35, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> But that is exactly the point: While we try to ask the hardware about
-> anything that can be reasonably queried through an in-kernel interface
-> that talks to the hardware, it works less well when that hardware interface
-> is rather obscure and (like this one) only used on a few special machines.
+Removes some functions that are not used anywhere:
+vblanking() hblanking()
 
-"We put this random collection of status bits in to a register somewhere
-because it was convenient for the h/w engineers" is pretty common, I think.
+This was partially found by using a static code analysis program called cppcheck.
 
-> Similar examples are Marvell's SoC ID register, which you have to read by
-> powering on the PCI host bridge and reading the Vendor/Device ID registers
-> for the root bus, or the 'nvram' on Broadcom's wifi router chips that is
-> in reality a partition on either NOR or NAND flash. Accessing those at
-> early boot from a random device driver is a real pain, and it would be
-> much nicer to have the boot loader read them and put the data into the
-> DT for us if we had the option. Unfortunately we have to deal with legacy
-> boot loaders that don't change the DTB.
+Signed-off-by: Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
+---
+ drivers/media/i2c/adv7604.c |   10 ----------
+ drivers/media/i2c/adv7842.c |   10 ----------
+ drivers/media/i2c/ths8200.c |   10 ----------
+ 3 files changed, 30 deletions(-)
 
-I don't think it's going to be any easier for the boot loader, which
-is quite possibly totally uninterested in PCI and would have
-no reason to need to prod this location on the versatilepb. I also trust
-the kernel much more to get bugfixes and be easily updatable. I appreciate
-that it's more work for you if you can't just say "punt this nastiness
-to the bootloader", but I think it's also the better (more robust
-and self-contained) design.
+diff --git a/drivers/media/i2c/adv7604.c b/drivers/media/i2c/adv7604.c
+index 47795ff..0ecca94 100644
+--- a/drivers/media/i2c/adv7604.c
++++ b/drivers/media/i2c/adv7604.c
+@@ -333,21 +333,11 @@ static inline struct adv7604_state *to_state(struct v4l2_subdev *sd)
+ 	return container_of(sd, struct adv7604_state, sd);
+ }
+ 
+-static inline unsigned hblanking(const struct v4l2_bt_timings *t)
+-{
+-	return V4L2_DV_BT_BLANKING_WIDTH(t);
+-}
+-
+ static inline unsigned htotal(const struct v4l2_bt_timings *t)
+ {
+ 	return V4L2_DV_BT_FRAME_WIDTH(t);
+ }
+ 
+-static inline unsigned vblanking(const struct v4l2_bt_timings *t)
+-{
+-	return V4L2_DV_BT_BLANKING_HEIGHT(t);
+-}
+-
+ static inline unsigned vtotal(const struct v4l2_bt_timings *t)
+ {
+ 	return V4L2_DV_BT_FRAME_HEIGHT(t);
+diff --git a/drivers/media/i2c/adv7842.c b/drivers/media/i2c/adv7842.c
+index 48b628b..d89898c 100644
+--- a/drivers/media/i2c/adv7842.c
++++ b/drivers/media/i2c/adv7842.c
+@@ -220,21 +220,11 @@ static inline struct v4l2_subdev *to_sd(struct v4l2_ctrl *ctrl)
+ 	return &container_of(ctrl->handler, struct adv7842_state, hdl)->sd;
+ }
+ 
+-static inline unsigned hblanking(const struct v4l2_bt_timings *t)
+-{
+-	return V4L2_DV_BT_BLANKING_WIDTH(t);
+-}
+-
+ static inline unsigned htotal(const struct v4l2_bt_timings *t)
+ {
+ 	return V4L2_DV_BT_FRAME_WIDTH(t);
+ }
+ 
+-static inline unsigned vblanking(const struct v4l2_bt_timings *t)
+-{
+-	return V4L2_DV_BT_BLANKING_HEIGHT(t);
+-}
+-
+ static inline unsigned vtotal(const struct v4l2_bt_timings *t)
+ {
+ 	return V4L2_DV_BT_FRAME_HEIGHT(t);
+diff --git a/drivers/media/i2c/ths8200.c b/drivers/media/i2c/ths8200.c
+index 656d889..4ebd329 100644
+--- a/drivers/media/i2c/ths8200.c
++++ b/drivers/media/i2c/ths8200.c
+@@ -58,21 +58,11 @@ static inline struct ths8200_state *to_state(struct v4l2_subdev *sd)
+ 	return container_of(sd, struct ths8200_state, sd);
+ }
+ 
+-static inline unsigned hblanking(const struct v4l2_bt_timings *t)
+-{
+-	return V4L2_DV_BT_BLANKING_WIDTH(t);
+-}
+-
+ static inline unsigned htotal(const struct v4l2_bt_timings *t)
+ {
+ 	return V4L2_DV_BT_FRAME_WIDTH(t);
+ }
+ 
+-static inline unsigned vblanking(const struct v4l2_bt_timings *t)
+-{
+-	return V4L2_DV_BT_BLANKING_HEIGHT(t);
+-}
+-
+ static inline unsigned vtotal(const struct v4l2_bt_timings *t)
+ {
+ 	return V4L2_DV_BT_FRAME_HEIGHT(t);
+-- 
+1.7.10.4
 
--- PMM
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
