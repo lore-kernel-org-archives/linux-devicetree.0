@@ -1,67 +1,80 @@
-From: Jonathan Richardson <jonathar@broadcom.com>
-Subject: Re: [PATCH v2 1/2] Input: touchscreen-iproc: Add Broadcom iProc touchscreen
- driver
-Date: Wed, 31 Dec 2014 16:55:29 -0800
-Message-ID: <54A49B01.6020002@broadcom.com>
-References: <Jonathan Richardson <jonathar@broadcom.com>  <1419027470-7969-1-git-send-email-jonathar@broadcom.com>  <1419027470-7969-2-git-send-email-jonathar@broadcom.com> <1419028015.25129.14.camel@perches.com> <5494AEB8.8060606@broadcom.com>
+From: Jeremiah Mahler <jmmahler@gmail.com>
+Subject: Re: [PATCH V1 1/1] iio: Added Capella cm3232 ambient light sensor
+ driver.
+Date: Wed, 31 Dec 2014 19:38:56 -0800
+Message-ID: <20150101033856.GB10710@hudson.localdomain>
+References: <1420071030-888-1-git-send-email-ktsai@capellamicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <5494AEB8.8060606@broadcom.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Joe Perches <joe@perches.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1420071030-888-1-git-send-email-ktsai@capellamicro.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kevin Tsai <ktsai@capellamicro.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Grant Likely <grant.likely@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Joe Perches <joe@perches.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Antti Palosaari <crope@iki.fi>, Daniel Baluta <daniel.baluta@intel.com>, Archana Patni <archana.patni@linux.intel.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Kevin,
 
-Would anyone be able to look at this to help us move forward? Thanks.
+On Wed, Dec 31, 2014 at 04:10:30PM -0800, Kevin Tsai wrote:
+> CM3232 is an advanced ambient light sensor with I2C protocol interface.
+> The I2C slave address is internally hardwired as 0x10 (7-bit).  Writing
+> to configure register is byte mode, but reading ALS register requests to
+> use word mode for 16-bit resolution.
+> 
+> Signed-off-by: Kevin Tsai <ktsai@capellamicro.com>
+> ---
+>  .../devicetree/bindings/i2c/trivial-devices.txt    |   1 +
+>  MAINTAINERS                                        |   6 +
+>  drivers/iio/light/Kconfig                          |  11 +
+[...]
+> +static int cm3232_get_lux(struct cm3232_chip *chip);
+> +static int cm3232_read_als_it(struct cm3232_chip *chip, int *val2);
+> +
+> +/**
+> + * cm3232_reg_init() - Initialize CM3232 registers
+> + * @chip:	pointer of struct cm3232.
+> + *
+> + * Initialize CM3232 ambient light sensor register to default values.
+> + *
+> +  Return: 0 for success; otherwise for error code.
+Is a '*' missing?
 
-On 14-12-19 03:03 PM, Jonathan Richardson wrote:
-> On 14-12-19 02:26 PM, Joe Perches wrote:
->> On Fri, 2014-12-19 at 14:17 -0800, Jonathan Richardson wrote:
->>> Add initial version of the Broadcom touchscreen driver.
->>
->> more trivia:
->>
->>> diff --git a/drivers/input/touchscreen/bcm_iproc_tsc.c b/drivers/input/touchscreen/bcm_iproc_tsc.c
->> []
->>> +static int get_tsc_config(struct device_node *np, struct iproc_ts_priv *priv)
->>> +{
->>> +	u32 val;
->> []
->>> +	if (of_property_read_u32(np, "debounce_timeout", &val) >= 0) {
->>> +		if (val < 0 || val > 255) {
->>> +			dev_err(dev, "debounce_timeout must be [0-255]\n");
->>> +			return -EINVAL;
->>> +		}
->>> +		priv->cfg_params.debounce_timeout = val;
->>
->> Doesn't the compiler generate a warning message
->> about an impossible "unsigned < 0" test for all
->> of these "val < 0" uses?
->>
-> 
-> Actually no it doesn't. The gcc output shows that neither -Wtype-limits
-> nor -Wextra are used to compile that file. I assume this is because
-> there would be just too many warnings.
-> 
-> 
->>> +	}
->>> +
->>> +	if (of_property_read_u32(np, "settling_timeout", &val) >= 0) {
->>> +		if (val < 0 || val > 11) {
->> []
->>> +	if (of_property_read_u32(np, "touch_timeout", &val) >= 0) {
->>> +		if (val < 0 || val > 255) {
->> []
->>> +	if (of_property_read_u32(np, "average_data", &val) >= 0) {
->>> +		if (val < 0 || val > 8) {
->> []
->>> +	if (of_property_read_u32(np, "fifo_threshold", &val) >= 0) {
->>> +		if (val < 0 || val > 31) {
->>
->>
-> 
+> + */
+> +static int cm3232_reg_init(struct cm3232_chip *chip)
+> +{
+> +	struct i2c_client *client = chip->client;
+> +	struct cm3232_als_info *als_info;
+> +	s32 ret;
+> +
+> +	/* Identify device */
+[...]
+> +
+> +	/* Calculate mlux per bit based on als_it */
+> +	ret = cm3232_read_als_it(chip, &als_it);
+> +	if (ret < 0)
+> +		return -EINVAL;
+> +	tmp = (__force u64)als_info->mlux_per_bit;
+> +	tmp *= als_info->mlux_per_bit_base_it;
+> +	tmp = div_u64 (tmp, als_it);
+                 ^
+         no space after function
+> +
+> +	/* Get als_raw */
+> +	als_info->als_raw = i2c_smbus_read_word_data(
+> +				client,
+> +				CM3232_REG_ADDR_ALS);
+> +	if (als_info->als_raw < 0)
+> +		return als_info->als_raw;
+> +
+> +	tmp *= als_info->als_raw;
+> +	tmp *= als_info->calibscale;
+> +	tmp = div_u64(tmp, CM3232_CALIBSCALE_RESOLUTION);
+> +	tmp = div_u64(tmp, CM3232_MLUX_PER_LUX);
+[...]
 
+It builds clean and there are no checkpatch or sparse errors.
+Overall it looks good.
+
+-- 
+- Jeremiah Mahler
