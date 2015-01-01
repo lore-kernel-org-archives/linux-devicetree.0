@@ -1,59 +1,88 @@
-From: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
-Subject: [PATCH] video: fbdev: omap2: dss: dss.c:  Remove unused function
-Date: Thu,  1 Jan 2015 16:34:58 +0100
-Message-ID: <1420126498-27648-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>
-Cc: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Archit Taneja <archit@ti.com>, Tony Lindgren <tony@atomide.com>, Jingoo Han <jg1.han@samsung.com>, Sathya Prakash M R <sathyap@ti.com>, Fabian Frederick <fabf@skynet.be>, linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 3/9] ARM: versatile: add DT based PCI detection
+Date: Thu, 01 Jan 2015 16:35:42 +0100
+Message-ID: <2544305.Bn9s67VML8@wuerfel>
+References: <1419967718-26909-1-git-send-email-robherring2@gmail.com> <CAL_JsqLBCeCc2VKvHAdG5bBJt=2qmX5BnosdGd_2n+Pb9BhuZQ@mail.gmail.com> <CAFEAcA-=2GGEAdnO9+8EV+8OkwUHj3tRiMYWvS4b-cpy6P6rYg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAFEAcA-=2GGEAdnO9+8EV+8OkwUHj3tRiMYWvS4b-cpy6P6rYg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Maydell <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Remove the function dss_get_hdmi_venc_clk_source() that is not used anywhere.
+On Wednesday 31 December 2014 21:07:25 Peter Maydell wrote:
+> On 31 December 2014 at 19:22, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > On Wed, Dec 31, 2014 at 10:13 AM, Peter Maydell
+> > <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> >> Why would you want to get the bootloader to do this for you when
+> >> the hardware provides a perfectly good mechanism for probing
+> >> for the existence of the hardware? "Ask the hardware" is always
+> >> going to be a more reliable and foolproof way to get the answer
+> >> if you can do it -- device tree should just be for the cases where
+> >> there is no way to probe. In any case the only way for the boot
+> >> loader to determine the correct value to put into the device tree
+> >> would be to read the register itself.
+> >
+> > Only that it is nice to hide all the ugly bits in the
+> > bootloader/firmware and DT already provides a standard way to enable
+> > or disable h/w. This h/w is not probeable in any sort of standard way.
+> 
+> This is an embedded system, you were expecting some kind of
+> standard?
 
-This was partially found by using a static code analysis program called cppcheck.
+But that is exactly the point: While we try to ask the hardware about
+anything that can be reasonably queried through an in-kernel interface
+that talks to the hardware, it works less well when that hardware interface
+is rather obscure and (like this one) only used on a few special machines.
 
-Signed-off-by: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
----
- drivers/video/fbdev/omap2/dss/dss.c |   14 --------------
- drivers/video/fbdev/omap2/dss/dss.h |    1 -
- 2 files changed, 15 deletions(-)
+Similar examples are Marvell's SoC ID register, which you have to read by
+powering on the PCI host bridge and reading the Vendor/Device ID registers
+for the root bus, or the 'nvram' on Broadcom's wifi router chips that is
+in reality a partition on either NOR or NAND flash. Accessing those at
+early boot from a random device driver is a real pain, and it would be
+much nicer to have the boot loader read them and put the data into the
+DT for us if we had the option. Unfortunately we have to deal with legacy
+boot loaders that don't change the DTB.
 
-diff --git a/drivers/video/fbdev/omap2/dss/dss.c b/drivers/video/fbdev/omap2/dss/dss.c
-index 14bcd6c..d9482c8 100644
---- a/drivers/video/fbdev/omap2/dss/dss.c
-+++ b/drivers/video/fbdev/omap2/dss/dss.c
-@@ -550,20 +550,6 @@ void dss_select_hdmi_venc_clk_source(enum dss_hdmi_venc_clk_source_select src)
- 		REG_FLD_MOD(DSS_CONTROL, src, 15, 15);	/* VENC_HDMI_SWITCH */
- }
- 
--enum dss_hdmi_venc_clk_source_select dss_get_hdmi_venc_clk_source(void)
--{
--	enum omap_display_type displays;
--
--	displays = dss_feat_get_supported_displays(OMAP_DSS_CHANNEL_DIGIT);
--	if ((displays & OMAP_DISPLAY_TYPE_HDMI) == 0)
--		return DSS_VENC_TV_CLK;
--
--	if ((displays & OMAP_DISPLAY_TYPE_VENC) == 0)
--		return DSS_HDMI_M_PCLK;
--
--	return REG_GET(DSS_CONTROL, 15, 15);
--}
--
- static int dss_dpi_select_source_omap2_omap3(enum omap_channel channel)
- {
- 	if (channel != OMAP_DSS_CHANNEL_LCD)
-diff --git a/drivers/video/fbdev/omap2/dss/dss.h b/drivers/video/fbdev/omap2/dss/dss.h
-index 8ff22c1..f4bb25b 100644
---- a/drivers/video/fbdev/omap2/dss/dss.h
-+++ b/drivers/video/fbdev/omap2/dss/dss.h
-@@ -211,7 +211,6 @@ void dss_uninit_platform_driver(void);
- unsigned long dss_get_dispc_clk_rate(void);
- int dss_dpi_select_source(enum omap_channel channel);
- void dss_select_hdmi_venc_clk_source(enum dss_hdmi_venc_clk_source_select);
--enum dss_hdmi_venc_clk_source_select dss_get_hdmi_venc_clk_source(void);
- const char *dss_get_generic_clk_source_name(enum omap_dss_clk_source clk_src);
- void dss_dump_clocks(struct seq_file *s);
- 
--- 
-1.7.10.4
+> > From Table 4.4, I came to the conclusion that the write wasn't really necessary:
+> >
+> > SYS_PCICTL  0x10000044  Read only  -Read returns a HIGH in bit [0] if
+> > a PCI board is present in the expansion backplane.
+> >
+> > I'll add it back.
+> 
+> The self-contradictory VersatilePB docs strike again, I see.
+> Interestingly, in the PB1176 docs this register is documented
+> as definitely read/only:
+> 
+> # [1]Read only: Reserved.
+> #
+> # Note
+> #
+> # On the RealView Platform Baseboard for ARM926EJ-S, this bit
+> # was PCICONTROLIN signal and indicated that 66MHz mode was
+> # enabled. The PB1176JZF-S only supports 33MHz operation.
+> #
+> # [0]Read only: Status of P_DETECT pin.
+> 
+> ...and in passing provides some info about the 926 board that
+> isn't in the docs for the 926!
+> 
+> A little digging suggests that it may in fact be the case
+> that the 1176 docs are correct and the write to bit 0 does
+> nothing. However the safest thing here is to keep doing
+> what the old kernel did, I think.
+
+Agreed. This also means that we need a way to access that register
+anyway, and any discussion about finding a way to move the read
+access for probing the device elsewhere is moot. A syscon device node
+would probably be best, but the current approach also works.
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
