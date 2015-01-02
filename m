@@ -1,164 +1,320 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [RFC PATCH v3 4/4] arm64:numa: adding numa support for arm64 platforms.
-Date: Fri, 02 Jan 2015 12:34:23 +0100
-Message-ID: <2567036.PyXYpC5d2K@wuerfel>
-References: <1420011208-7051-1-git-send-email-ganapatrao.kulkarni@caviumnetworks.com> <1420011208-7051-5-git-send-email-ganapatrao.kulkarni@caviumnetworks.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC 2/4] PCI: generic: Add support for ARM64 and MSI(x)
+Date: Fri, 2 Jan 2015 11:55:33 +0000
+Message-ID: <20150102115533.GA25573@red-moon>
+References: <1411937610-22125-1-git-send-email-suravee.suthikulpanit@amd.com>
+ <2148776.X8NPqiYA6S@wuerfel>
+ <20141023091309.GF25302@e106497-lin.cambridge.arm.com>
+ <2355100.WsW1DXh57P@wuerfel>
+ <54A1AC5C.7000903@amd.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1420011208-7051-5-git-send-email-ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <54A1AC5C.7000903-5C7GfCeVMHo@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ganapatrao Kulkarni <ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Cc: inux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Will.Deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, roy.franz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+To: Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org" <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org" <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 31 December 2014 13:03:28 Ganapatrao Kulkarni wrote:
-> Adding numa support for arm64 based platforms.
-> Adding dt node pasring for numa topology using property arm,associativity.
+Hi Suravee,
+
+On Mon, Dec 29, 2014 at 07:32:44PM +0000, Suravee Suthikulpanit wrote:
+> Hi,
 > 
-> Signed-off-by: Ganapatrao Kulkarni <ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+> I am not sure if this thread is still alive. I'm trying to see what I
+> can do to help clean up/convert to make the PCI GHC also works for arm64
+> w/ zero or minimal ifdefs.
+> 
+> Please let me know if someone is already working on this. I noticed that
+> Lorenzo's patches has already been in 3.19-rc1, and in Bjorn's
+> pci/domain branch. Otherwise, I'll try to continue the work based on the
+> sample patch from Arnd here.
 
-Maybe the parts that are common with powerpc can be moved to drivers/of/numa.c?
-We can always look for both arm,associativity and ibm,associativity, I don't
-think we should be worried about any conflicts that way.
+If I am not mistaken, the only bit missing to remove pci_sys_data (and so
+having a generic host controller driver that works on ARM32/64) is generic
+MSI management.
 
-> +#define MAX_DISTANCE_REF_POINTS 4
+I know for certain Marc is working on it, and the solution is WIP,
+I think we should prevent adding more churn to pci_sys_data, since
+I managed to remove most of the dependencies (domain, mem_offset).
 
-I think we should use 8 here like powerpc, four levels might get exceeded
-on complex SoCs.
+So to sum it up, to have a generic host controller driver for ARM32/64
+we just need to work out how to handle the MSI data, patches will be
+on the lists shortly to handle that, please review.
 
-> +int dt_get_cpu_node_id(int cpu)
-> +{
-> +	struct device_node *dn = NULL;
-> +
-> +	while ((dn = of_find_node_by_type(dn, "cpu"))) {
-> +		const u32 *cell;
-> +		u64 hwid;
-> +
-> +		/*
-> +		 * A cpu node with missing "reg" property is
-> +		 * considered invalid to build a cpu_logical_map
-> +		 * entry.
-> +		 */
-> +		cell = of_get_property(dn, "reg", NULL);
-> +		if (!cell) {
-> +			pr_err("%s: missing reg property\n", dn->full_name);
-> +			return default_nid;
-> +		}
-> +		hwid = of_read_number(cell, of_n_addr_cells(dn));
-> +
-> +		if (cpu_logical_map(cpu) == hwid)
-> +		return of_node_to_nid_single(dn);
-> +	}
-> +	return NUMA_NO_NODE;
-> +}
-> +EXPORT_SYMBOL(dt_get_cpu_node_id);
+Thanks,
+Lorenzo
 
-Maybe just expose a function to the device node for a CPU ID here, and
-expect callers to use of_node_to_nid?
-
-> +
-> +/**
-> + * early_init_dt_scan_numa_map - parse memory node and map nid to memory range.
-> + */
-> +int __init early_init_dt_scan_numa_map(unsigned long node, const char *uname,
-> +				     int depth, void *data)
-> +{
-> +	const char *type = of_get_flat_dt_prop(node, "device_type", NULL);
-> +
-> +	/* We are scanning "numa-map" nodes only */
-
-a stale comment?
-
-> +/* DT node mapping is done already early_init_dt_scan_memory */
-> +int __init arm64_dt_numa_init(void)
-> +{
-> +	int i;
-> +	u32 nodea, nodeb, distance, node_count = 0;
-> +
-> +	of_scan_flat_dt(early_init_dt_scan_numa_map, NULL);
-> +
-> +	for_each_node_mask(i, numa_nodes_parsed)
-> +		node_count = i;
-> +	node_count++;
-> +
-> +	for (nodea =  0; nodea < node_count; nodea++) {
-> +		for (nodeb = 0; nodeb < node_count; nodeb++) {
-> +			distance = dt_get_node_distance(nodea, nodeb);
-> +			numa_set_distance(nodea, nodeb, distance);
-> +		}
-> +	}
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL(arm64_dt_numa_init);
-
-No need to export functions that are called only be architecture code.
-Since this works on the flattened device tree format, you can never
-have loadable modules calling it.
-
-> @@ -461,7 +464,12 @@ static int c_show(struct seq_file *m, void *v)
->  		 * "processor".  Give glibc what it expects.
->  		 */
->  #ifdef CONFIG_SMP
-> +	if (IS_ENABLED(CONFIG_NUMA)) {
-> +		seq_printf(m, "processor\t: %d", i);
-> +		seq_printf(m, " [nid: %d]\n", cpu_to_node(i));
-> +	} else {
->  		seq_printf(m, "processor\t: %d\n", i);
-> +	}
->  #endif
->  	}
-
-Do we need to make this conditional? I think we can just always
-print the node number, even if it's going to be zero for systems
-without the associativity properties.
-
-> +
-> +int cpu_to_node_map[NR_CPUS];
-> +EXPORT_SYMBOL(cpu_to_node_map);
-
-This seems to be x86 specific, do we need it?
-
-> +/*
-> + *  Set the cpu to node and mem mapping
-> + */
-> +void numa_store_cpu_info(int cpu)
-> +{
-> +#ifdef CONFIG_ARM64_DT_NUMA
-> +	node_cpu_hwid[cpu].node_id  =  dt_get_cpu_node_id(cpu);
-> +#endif
-
-I would try to avoid the #ifdef here, by providing a stub function of
-dt_get_cpu_node_id or whichever function we end up calling here when
-NUMA is disabled.
-
-> +
-> +/**
-> + * arm64_numa_init - Initialize NUMA
-> + *
-> + * Try each configured NUMA initialization method until one succeeds.  The
-> + * last fallback is dummy single node config encomapssing whole memory and
-> + * never fails.
-> + */
-> +void __init arm64_numa_init(void)
-> +{
-> +	if (!numa_off) {
-> +#ifdef CONFIG_ARM64_DT_NUMA
-> +		if (!numa_init(arm64_dt_numa_init))
-> +			return;
-> +#endif
-> +	}
-> +
-> +	numa_init(dummy_numa_init);
-> +}
-
-I don't think we need the CONFIG_ARM64_DT_NUMA=n case here, it should just
-not be conditional, and the arm64_dt_numa_init should fall back to doing
-something reasonable when numa is turned off or there are no associativity
-properties.
-
-	Arnd
+> On 10/23/14 08:33, Arnd Bergmann wrote:
+> > [...]
+> > diff --git a/drivers/pci/host/pci-host-generic.c b/drivers/pci/host/pci-host-generic.c
+> > index 3d2076f59911..3542a7b740e5 100644
+> > --- a/drivers/pci/host/pci-host-generic.c
+> > +++ b/drivers/pci/host/pci-host-generic.c
+> > @@ -40,16 +40,20 @@ struct gen_pci_cfg_windows {
+> >
+> >   struct gen_pci {
+> >       struct pci_host_bridge                  host;
+> > +     struct pci_sys_data                     sys;
+> >       struct gen_pci_cfg_windows              cfg;
+> > -     struct list_head                        resources;
+> >   };
+> 
+> Arnd, based on the patch here, if we are trying to use the
+> pci-host-generic driver on arm64, this means that we are going to have
+> to introduce struct pci_sys_data for the arm64 as well (e.g move the
+> struct from include/asm/mach/pci.h to include/linux/pci.h). Is this also
+> your intention?
+> 
+> Thanks,
+> 
+> Suravee
+> 
+> >
+> > +static inline struct gen_pci *gen_pci_from_sys(struct pci_sys_data *sys)
+> > +{
+> > +     return container_of(sys, struct gen_pci, sys);
+> > +}
+> > +
+> >   static void __iomem *gen_pci_map_cfg_bus_cam(struct pci_bus *bus,
+> >                                            unsigned int devfn,
+> >                                            int where)
+> >   {
+> > -     struct pci_sys_data *sys = bus->sysdata;
+> > -     struct gen_pci *pci = sys->private_data;
+> > +     struct gen_pci *pci = gen_pci_from_sys(bus->sysdata);
+> >       resource_size_t idx = bus->number - pci->cfg.bus_range.start;
+> >
+> >       return pci->cfg.win[idx] + ((devfn << 8) | where);
+> > @@ -64,8 +68,7 @@ static void __iomem *gen_pci_map_cfg_bus_ecam(struct pci_bus *bus,
+> >                                             unsigned int devfn,
+> >                                             int where)
+> >   {
+> > -     struct pci_sys_data *sys = bus->sysdata;
+> > -     struct gen_pci *pci = sys->private_data;
+> > +     struct gen_pci *pci = gen_pci_from_sys(bus->sysdata);
+> >       resource_size_t idx = bus->number - pci->cfg.bus_range.start;
+> >
+> >       return pci->cfg.win[idx] + ((devfn << 12) | where);
+> > @@ -80,8 +83,7 @@ static int gen_pci_config_read(struct pci_bus *bus, unsigned int devfn,
+> >                               int where, int size, u32 *val)
+> >   {
+> >       void __iomem *addr;
+> > -     struct pci_sys_data *sys = bus->sysdata;
+> > -     struct gen_pci *pci = sys->private_data;
+> > +     struct gen_pci *pci = gen_pci_from_sys(bus->sysdata);
+> >
+> >       addr = pci->cfg.ops->map_bus(bus, devfn, where);
+> >
+> > @@ -103,8 +105,7 @@ static int gen_pci_config_write(struct pci_bus *bus, unsigned int devfn,
+> >                                int where, int size, u32 val)
+> >   {
+> >       void __iomem *addr;
+> > -     struct pci_sys_data *sys = bus->sysdata;
+> > -     struct gen_pci *pci = sys->private_data;
+> > +     struct gen_pci *pci = gen_pci_from_sys(bus->sysdata);
+> >
+> >       addr = pci->cfg.ops->map_bus(bus, devfn, where);
+> >
+> > @@ -181,10 +182,10 @@ static void gen_pci_release_of_pci_ranges(struct gen_pci *pci)
+> >   {
+> >       struct pci_host_bridge_window *win;
+> >
+> > -     list_for_each_entry(win, &pci->resources, list)
+> > +     list_for_each_entry(win, &pci->sys.resources, list)
+> >               release_resource(win->res);
+> >
+> > -     pci_free_resource_list(&pci->resources);
+> > +     pci_free_resource_list(&pci->sys.resources);
+> >   }
+> >
+> >   static int gen_pci_parse_request_of_pci_ranges(struct gen_pci *pci)
+> > @@ -237,7 +238,7 @@ static int gen_pci_parse_request_of_pci_ranges(struct gen_pci *pci)
+> >               if (err)
+> >                       goto out_release_res;
+> >
+> > -             pci_add_resource_offset(&pci->resources, res, offset);
+> > +             pci_add_resource_offset(&pci->sys.resources, res, offset);
+> >       }
+> >
+> >       if (!res_valid) {
+> > @@ -306,17 +307,10 @@ static int gen_pci_parse_map_cfg_windows(struct gen_pci *pci)
+> >       }
+> >
+> >       /* Register bus resource */
+> > -     pci_add_resource(&pci->resources, bus_range);
+> > +     pci_add_resource(&pci->sys.resources, bus_range);
+> >       return 0;
+> >   }
+> >
+> > -static int gen_pci_setup(int nr, struct pci_sys_data *sys)
+> > -{
+> > -     struct gen_pci *pci = sys->private_data;
+> > -     list_splice_init(&pci->resources, &sys->resources);
+> > -     return 1;
+> > -}
+> > -
+> >   static int gen_pci_probe(struct platform_device *pdev)
+> >   {
+> >       int err;
+> > @@ -326,17 +320,12 @@ static int gen_pci_probe(struct platform_device *pdev)
+> >       struct device *dev = &pdev->dev;
+> >       struct device_node *np = dev->of_node;
+> >       struct gen_pci *pci = devm_kzalloc(dev, sizeof(*pci), GFP_KERNEL);
+> > -     struct hw_pci hw = {
+> > -             .nr_controllers = 1,
+> > -             .private_data   = (void **)&pci,
+> > -             .setup          = gen_pci_setup,
+> > -             .map_irq        = of_irq_parse_and_map_pci,
+> > -             .ops            = &gen_pci_ops,
+> > -     };
+> >
+> >       if (!pci)
+> >               return -ENOMEM;
+> >
+> > +     pci->sys.map_irq        = of_irq_parse_and_map_pci,
+> > +
+> >       type = of_get_property(np, "device_type", NULL);
+> >       if (!type || strcmp(type, "pci")) {
+> >               dev_err(dev, "invalid \"device_type\" %s\n", type);
+> > @@ -355,7 +344,7 @@ static int gen_pci_probe(struct platform_device *pdev)
+> >       pci->cfg.ops = of_id->data;
+> >       pci->host.dev.parent = dev;
+> >       INIT_LIST_HEAD(&pci->host.windows);
+> > -     INIT_LIST_HEAD(&pci->resources);
+> > +     INIT_LIST_HEAD(&pci->sys.resources);
+> >
+> >       /* Parse our PCI ranges and request their resources */
+> >       err = gen_pci_parse_request_of_pci_ranges(pci);
+> > @@ -369,8 +358,12 @@ static int gen_pci_probe(struct platform_device *pdev)
+> >               return err;
+> >       }
+> >
+> > -     pci_common_init_dev(dev, &hw);
+> > -     return 0;
+> > +     pci_add_flags(PCI_REASSIGN_ALL_RSRC);
+> > +     err = pci_init_single(dev, &pci->sys, NULL, &gen_pci_ops);
+> > +     if (err)
+> > +             gen_pci_release_of_pci_ranges(pci);
+> > +
+> > +     return err;
+> >   }
+> >
+> >   static struct platform_driver gen_pci_driver = {
+> > diff --git a/drivers/pci/host/pci-mvebu.c b/drivers/pci/host/pci-mvebu.c
+> > index b1315e197ffb..e1381c0699be 100644
+> > --- a/drivers/pci/host/pci-mvebu.c
+> > +++ b/drivers/pci/host/pci-mvebu.c
+> > @@ -99,6 +99,7 @@ struct mvebu_pcie_port;
+> >   struct mvebu_pcie {
+> >       struct platform_device *pdev;
+> >       struct mvebu_pcie_port *ports;
+> > +     struct pci_sys_data sysdata;
+> >       struct msi_chip *msi;
+> >       struct resource io;
+> >       char io_name[30];
+> > @@ -611,7 +612,7 @@ static int mvebu_sw_pci_bridge_write(struct mvebu_pcie_port *port,
+> >
+> >   static inline struct mvebu_pcie *sys_to_pcie(struct pci_sys_data *sys)
+> >   {
+> > -     return sys->private_data;
+> > +     return container_of(sys, struct mvebu_pcie, sysdata);
+> >   }
+> >
+> >   static struct mvebu_pcie_port *mvebu_pcie_find_port(struct mvebu_pcie *pcie,
+> > @@ -718,11 +719,26 @@ static struct pci_ops mvebu_pcie_ops = {
+> >       .write = mvebu_pcie_wr_conf,
+> >   };
+> >
+> > -static int mvebu_pcie_setup(int nr, struct pci_sys_data *sys)
+> > +/* FIXME: move the code around to avoid these */
+> > +static struct pci_bus *mvebu_pcie_scan_bus(int nr, struct pci_sys_data *sys);
+> > +static void mvebu_pcie_add_bus(struct pci_bus *bus);
+> > +static resource_size_t mvebu_pcie_align_resource(struct pci_dev *dev,
+> > +                                              const struct resource *res,
+> > +                                              resource_size_t start,
+> > +                                              resource_size_t size,
+> > +                                              resource_size_t align);
+> > +
+> > +static int mvebu_pcie_enable(struct mvebu_pcie *pcie)
+> >   {
+> > -     struct mvebu_pcie *pcie = sys_to_pcie(sys);
+> >       int i;
+> >       int domain = 0;
+> > +     struct pci_sys_data *sys = &pcie->sysdata;
+> > +
+> > +     pcie->sysdata = (struct pci_sys_data) {
+> > +             .map_irq        = of_irq_parse_and_map_pci,
+> > +             .align_resource = mvebu_pcie_align_resource,
+> > +             .add_bus        = mvebu_pcie_add_bus,
+> > +     };
+> >
+> >   #ifdef CONFIG_PCI_DOMAINS
+> >       domain = sys->domain;
+> > @@ -738,11 +754,13 @@ static int mvebu_pcie_setup(int nr, struct pci_sys_data *sys)
+> >       if (request_resource(&iomem_resource, &pcie->mem))
+> >               return 0;
+> >
+> > +     INIT_LIST_HEAD(&sys->resources);
+> >       if (resource_size(&pcie->realio) != 0) {
+> >               if (request_resource(&ioport_resource, &pcie->realio)) {
+> >                       release_resource(&pcie->mem);
+> >                       return 0;
+> >               }
+> > +
+> >               pci_add_resource_offset(&sys->resources, &pcie->realio,
+> >                                       sys->io_offset);
+> >       }
+> > @@ -756,7 +774,9 @@ static int mvebu_pcie_setup(int nr, struct pci_sys_data *sys)
+> >               mvebu_pcie_setup_hw(port);
+> >       }
+> >
+> > -     return 1;
+> > +     pci_add_flags(PCI_REASSIGN_ALL_RSRC);
+> > +     return pci_init_single(&pcie->pdev->dev, &pcie->sysdata,
+> > +                            mvebu_pcie_scan_bus, &mvebu_pcie_ops);
+> >   }
+> >
+> >   static struct pci_bus *mvebu_pcie_scan_bus(int nr, struct pci_sys_data *sys)
+> > @@ -810,24 +830,6 @@ static resource_size_t mvebu_pcie_align_resource(struct pci_dev *dev,
+> >               return start;
+> >   }
+> >
+> > -static void mvebu_pcie_enable(struct mvebu_pcie *pcie)
+> > -{
+> > -     struct hw_pci hw;
+> > -
+> > -     memset(&hw, 0, sizeof(hw));
+> > -
+> > -     hw.nr_controllers = 1;
+> > -     hw.private_data   = (void **)&pcie;
+> > -     hw.setup          = mvebu_pcie_setup;
+> > -     hw.scan           = mvebu_pcie_scan_bus;
+> > -     hw.map_irq        = of_irq_parse_and_map_pci;
+> > -     hw.ops            = &mvebu_pcie_ops;
+> > -     hw.align_resource = mvebu_pcie_align_resource;
+> > -     hw.add_bus        = mvebu_pcie_add_bus;
+> > -
+> > -     pci_common_init(&hw);
+> > -}
+> > -
+> >   /*
+> >    * Looks up the list of register addresses encoded into the reg =
+> >    * <...> property for one that matches the given port/lane. Once
+> > @@ -1066,9 +1068,7 @@ static int mvebu_pcie_probe(struct platform_device *pdev)
+> >               pci_ioremap_io(i, pcie->io.start + i);
+> >
+> >       mvebu_pcie_msi_enable(pcie);
+> > -     mvebu_pcie_enable(pcie);
+> > -
+> > -     return 0;
+> > +     return mvebu_pcie_enable(pcie);
+> >   }
+> >
+> >   static const struct of_device_id mvebu_pcie_of_match_table[] = {
+> >
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
