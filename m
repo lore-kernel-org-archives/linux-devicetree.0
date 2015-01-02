@@ -1,57 +1,26 @@
-From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: Re: [PATCH v7 2/4] fpga manager: add sysfs interface document
-Date: Fri, 2 Jan 2015 12:50:10 +0200
-Message-ID: <20FF5ACF-DA9F-4FBA-AA87-490A73D02A2E@konsulko.com>
-References: <1419007551-10040-1-git-send-email-atull@opensource.altera.com> <1419007551-10040-3-git-send-email-atull@opensource.altera.com> <20150102051200.GI4873@amd>
-Mime-Version: 1.0 (Mac OS X Mail 8.1 \(1993\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150102051200.GI4873@amd>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@denx.de>
-Cc: atull <atull@opensource.altera.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, jgunthorpe@obsidianresearch.com, hpa@zytor.com, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, rdunlap@infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, grant.likely@linaro.org, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, broonie@kernel.org, philip@balister.org, rubini@gnudd.com, s.trumtrar@pengutronix.de, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, balbi@ti.com, m.chehab@samsung.com, davidb@codeaurora.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, linus.walleij@linaro.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devel@driverdev.osuosl.org, delicious.quinoa@gmail.com, dinguyen@op
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [RFC PATCH v3 1/4] arm64: defconfig: increase NR_CPUS range to 2-4096.
+Date: Fri, 02 Jan 2015 11:49:42 +0100
+Message-ID: <3387270.71kc4ipni9@wuerfel>
+References: <1420011208-7051-1-git-send-email-ganapatrao.kulkarni@caviumnetworks.com> <1420011208-7051-2-git-send-email-ganapatrao.kulkarni@caviumnetworks.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1420011208-7051-2-git-send-email-ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ganapatrao Kulkarni <ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Cc: inux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Will.Deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, roy.franz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Pavel,
+On Wednesday 31 December 2014 13:03:25 Ganapatrao Kulkarni wrote:
+> Raising the maximum limit to 4096.
+> This is to accomadate up-coming higher multi-core platforms.
+> 
+> Signed-off-by: Ganapatrao Kulkarni <ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
 
-> On Jan 2, 2015, at 07:12 , Pavel Machek <pavel@denx.de> wrote:
->=20
->=20
->> +What:		/sys/class/fpga_manager/<fpga>/firmware
->> +Date:		October 2014
->> +KernelVersion:	3.18
->> +Contact:	Alan Tull <atull@opensource.altera.com>
->> +Description:	Name of the FPGA image file to load using firmware cla=
-ss.
->=20
-> This is wrong interface, right? The only use of this string is to pas=
-s
-> it to udev. We should simply pass "fpga-0" as a firware name, and let
-> udev figure it out, no need to to prepare name in separate component,
-> then pass it to kernel, which passes it back to udev.
->=20
-
-No. No dependencies on udev please. This should hook directly to the fi=
-rmware
-loader interface which does not rely on userspace at all.
-
->> +What:		/sys/class/fpga_manager/<fpga>/reset
->> +Date:		October 2014
->> +KernelVersion:	3.18
->> +Contact:	Alan Tull <atull@opensource.altera.com>
->> +Description:	Write 1 to reset the FPGA
->=20
-> Does 0 need to be written there to pull the fpga out of reset? Is thi=
-s
-> a suitable interface?
->=20
-> 								Pavel
-> --=20
-> (english) http://www.livejournal.com/~pavelmachek
-> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/hors=
-es/blog.html
-
-Regards
-
-=E2=80=94 Pantelis
+Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
