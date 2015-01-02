@@ -1,139 +1,87 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH 4/9] pci: add DT based ARM Versatile PCI host driver
-Date: Fri, 2 Jan 2015 12:14:43 -0600
-Message-ID: <CAL_JsqJbUHkr0zXYKTvS0WPGs7mNqkppsn4i0LuWz5Wv12Unmw@mail.gmail.com>
-References: <1419967718-26909-1-git-send-email-robherring2@gmail.com>
- <1419967718-26909-5-git-send-email-robherring2@gmail.com> <2308474.mrIrUSfiTv@wuerfel>
+From: Suravee Suthikulanit <suravee.suthikulpanit@amd.com>
+Subject: Re: [RFC 2/4] PCI: generic: Add support for ARM64 and MSI(x)
+Date: Fri, 2 Jan 2015 12:18:06 -0600
+Message-ID: <54A6E0DE.6090309@amd.com>
+References: <1411937610-22125-1-git-send-email-suravee.suthikulpanit@amd.com>
+ <2148776.X8NPqiYA6S@wuerfel>
+ <20141023091309.GF25302@e106497-lin.cambridge.arm.com>
+ <2355100.WsW1DXh57P@wuerfel> <54A1AC5C.7000903@amd.com>
+ <20150102115533.GA25573@red-moon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <2308474.mrIrUSfiTv@wuerfel>
-Sender: linux-pci-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Peter Maydell <peter.maydell@linaro.org>, Russell King <linux@arm.linux.org.uk>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, "arm@kernel.org" <arm@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150102115533.GA25573@red-moon>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Liviu Dudau <Liviu.Dudau@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Marc Zyngier <Marc.Zyngier@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "tglx@linutronix.de" <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 30, 2014 at 3:58 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Tuesday 30 December 2014 13:28:33 Rob Herring wrote:
->> From: Rob Herring <robh@kernel.org>
->>
->> This converts the Versatile PCI host code to a platform driver using
->> the commom DT parsing and setup. The driver uses only an empty ARM
->> pci_sys_data struct and does not use pci_common_init_dev init function.
->> The old host code will be removed in a subsequent commit when Versatile
->> is completely converted to DT.
->>
->> I've tested this on QEMU with the sym53c8xx driver in both i/o and
->> memory mapped modes.
+On 1/2/2015 5:55 AM, Lorenzo Pieralisi wrote:
+> Hi Suravee,
 >
-> Ah, this is quite clever, I think you tried to explain to me what you
-> did with the pci_sys_data before, but I didn't get it then.
+> On Mon, Dec 29, 2014 at 07:32:44PM +0000, Suravee Suthikulpanit wrote:
+>> >Hi,
+>> >
+>> >I am not sure if this thread is still alive. I'm trying to see what I
+>> >can do to help clean up/convert to make the PCI GHC also works for arm64
+>> >w/ zero or minimal ifdefs.
+>> >
+>> >Please let me know if someone is already working on this. I noticed that
+>> >Lorenzo's patches has already been in 3.19-rc1, and in Bjorn's
+>> >pci/domain branch. Otherwise, I'll try to continue the work based on the
+>> >sample patch from Arnd here.
+> If I am not mistaken, the only bit missing to remove pci_sys_data (and so
+> having a generic host controller driver that works on ARM32/64) is generic
+> MSI management.
+
+Lorenzo,
+
+Do you mean to remove pci_sys_data from pci-host-generic.c or removing 
+it completely? I assume the former case.
+
+So, looking at the current code in the pci-host-generic.c, my 
+understanding is that the:
+     *gen_pci = pci_bus->sysdata->private_data
+will be changed to:
+     *gen_pci = pci_bus->sysdata
+
+Then, we can simply just call pci_scan_root_bus() directly since we no 
+longer need to declare hw_pci for calling pci_common_init_dev().
+
+> I know for certain Marc is working on it, and the solution is WIP,
+> I think we should prevent adding more churn to pci_sys_data, since
+> I managed to remove most of the dependencies (domain, mem_offset).
+
+Thanks for cleaning up the domain and mem_offset.
+
+I saw Marc's irq/msi_domain patch series 
+(http://git.kernel.org/cgit/linux/kernel/git/maz/arm-platforms.git/log/?h=irq/msi_domain). 
+
+
+My understanding is that deals with associating the newly introduced 
+msi_domain to each device, which replaces the need for pci_bus->msi and 
+hw_pci->msi_ctrl when configure with CONFIG_PCI_MSI_IRQ_DOMAIN (not sure 
+if this would be the plan for all arm32).  For ARM32, if not define 
+CONFIG_PCI_MSI_IRQ_DOMAIN, it would still fall back to using the 
+[pci_sys_data|hw_pci]->msi_ctrl.
+
+However, I noticed that the hw_pci->msi_controller is not even used for 
+the pci-host-generic. So, this should not be blocking the work to free 
+pci-host-generic from pci_sys_data and hw_pci, as the MSI stuff can go 
+in separately. Am I missing something?
+
+> So to sum it up, to have a generic host controller driver for ARM32/64
+> we just need to work out how to handle the MSI data, patches will be
+> on the lists shortly to handle that, please review.
 >
->> +
->> +static void __iomem *__pci_addr(struct pci_bus *bus,
->> +                             unsigned int devfn, int offset)
->> +{
->> +     unsigned int busnr = bus->number;
->> +
->> +     /*
->> +      * Trap out illegal values
->> +      */
->> +     BUG_ON(offset > 255);
->> +     BUG_ON(busnr > 255);
->> +     BUG_ON(devfn > 255);
+> Thanks,
+> Lorenzo
 >
-> Isn't an offset>255 something that can be triggered by a non-broken
-> driver or even user space?
 
-I don't know. I just copied what the old driver did. Are these checks
-even host controller specific?
+Thanks for the update and the summary. I'll help review/test the MSI 
+patch once posted.
 
-> Maybe just return PCIBIOS_BAD_REGISTER_NUMBER in this case?
+Thanks,
 
-Perhaps. We could probably simplify the config space read/write
-functions and just provide the PCI core a bus/devfn/offset to config
-address translation function. That would not work in all cases, but
-propably most that have memory mapped config space.
-
->> +static int versatile_pci_parse_request_of_pci_ranges(struct device *dev,
->> +                                                  struct list_head *res)
->> +{
->> +     int err, mem = 1, res_valid = 0;
->> +     struct device_node *np = dev->of_node;
->> +     resource_size_t iobase;
->> +     struct pci_host_bridge_window *win;
->> +
->> +     err = of_pci_get_host_bridge_resources(np, 0, 0xff, res, &iobase);
->> +     if (err)
->> +             return err;
->> +
->> +     list_for_each_entry(win, res, list) {
->> +             struct resource *parent, *res = win->res;
->> +
->> +             switch (resource_type(res)) {
->> +             case IORESOURCE_IO:
->> +                     parent = &ioport_resource;
->> +                     err = pci_remap_iospace(res, iobase);
->> +                     if (err) {
->> +                             dev_warn(dev, "error %d: failed to map resource %pR\n",
->> +                                      err, res);
->> +                             continue;
->> +                     }
->> +                     break;
->> +             case IORESOURCE_MEM:
->> +                     parent = &iomem_resource;
->> +                     res_valid |= !(res->flags & IORESOURCE_PREFETCH);
->> +
->> +                     writel(res->start >> 28, PCI_IMAP(mem));
->> +                     writel(PHYS_OFFSET >> 28, PCI_SMAP(mem));
->> +                     mem++;
->> +
->> +                     break;
->> +             case IORESOURCE_BUS:
->> +             default:
->> +                     continue;
->> +             }
->> +
->> +             err = devm_request_resource(dev, parent, res);
->> +             if (err)
->> +                     goto out_release_res;
->> +     }
->
-> I wonder if we should also request the physical resource for the I/O space
-> window to have it show up in /proc/iomem. We are rather inconsistent in this
-> regard between drivers.
-
-It's a little complicated now because we don't have that as a struct
-resource any more. We could reconstruct it from iobase and the i/o
-resource size.
-
->
->> +     pci_add_flags(PCI_ENABLE_PROC_DOMAINS);
->> +     pci_add_flags(PCI_REASSIGN_ALL_BUS | PCI_REASSIGN_ALL_RSRC);
->> +
->> +     bus = pci_scan_root_bus(&pdev->dev, 0, &pci_versatile_ops, &sys, &pci_res);
->> +     if (!bus)
->> +             return -ENOMEM;
->> +
->> +     pci_fixup_irqs(pci_common_swizzle, of_irq_parse_and_map_pci);
->> +     pci_assign_unassigned_bus_resources(bus);
->> +
->> +     return 0;
->
-> One general question, mainly for Bjorn: pci_scan_root_bus adds all the devices
-> at the Linux driver level by calling pci_bus_add_devices(), but then we call
-> pci_fixup_irqs and pci_assign_unassigned_bus_resources after that, which will
-> change the devices again. Is this how it's meant to work? How do we ensure
-> that we have the correct irq number and resources by the time we enter the
-> probe() function of the PCI device driver that gets bound to a device here?
-
-I'm a bit puzzled myself. I think that the devices are not probed
-until after pci_assign_unassigned_bus_resources. It certainly doesn't
-work without that call. Really, I think of_irq_parse_and_map_pci
-should be the default if no one else has set the device's irq (and the
-host has a device node of course).
-
-It also seems to be a bit of random set of pci functions that are
-called here. It would be nice to simplify this chunk of code.
-
-Rob
+Suravee
