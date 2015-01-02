@@ -1,81 +1,57 @@
-From: Jyri Sarha <jsarha@ti.com>
-Subject: Re: [PATCH v8 0/2] ASoC: tda998x: add a codec to the
-	HDMI transmitter
-Date: Fri, 2 Jan 2015 12:09:45 +0200
-Message-ID: <54A66E69.8020506@ti.com>
-References: <cover.1414053169.git.moinejf@free.fr>
- <20141229165246.GZ17800@sirena.org.uk> <54A19151.3090506@ti.com>
- <20141230170001.GO17800@sirena.org.uk>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v8 3/4] ARM: mediatek: Add sysirq in mt6589/mt8135/mt8127 dtsi
+Date: Fri, 2 Jan 2015 11:16:10 +0100
+Message-ID: <CABuKBeKj_+-7r-bUe_vuDdyE2V-uugfZ03dMwcbaqnNz8fLEXA@mail.gmail.com>
+References: <1416902662-19281-1-git-send-email-yingjoe.chen@mediatek.com>
+	<1416902662-19281-4-git-send-email-yingjoe.chen@mediatek.com>
+	<1419473469.7238.0.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20141230170001.GO17800@sirena.org.uk>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Jean-Francois Moine <moinejf@free.fr>, alsa-devel@alsa-project.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, Andrew Jackson <Andrew.Jackson@arm.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Dave Airlie <airlied@gmail.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1419473469.7238.0.camel@mtksdaap41>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, HC Yen <hc.yen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, =?UTF-8?B?WUggQ2hlbiAo6Zmz5pix6LGqKQ==?= <yh.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Yijing Wang <wangyijing-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nathan Chung <nathan.chung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, huang eddie <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWMMKQXVYFwzLw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/30/2014 07:00 PM, Mark Brown wrote:
-> On Mon, Dec 29, 2014 at 07:37:21PM +0200, Jyri Sarha wrote:
->> On 12/29/2014 06:52 PM, Mark Brown wrote:
+Hi Joe,
+
+2014-12-25 3:11 GMT+01:00 Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>:
 >
->>> So, I'm not seeing *any* interest here from any other HDMI users.  This
->>> is a continuing theme with HDMI patches and is really very concerning,
->>> everyone appears to be working in their own bubbles coming up with their
->>> own things and ignoring everyone else's work - what little review I'm
+> Hi Matthias,
 >
->> I have not seen any significant new development since v7 of these patches.
->> My comments for v6 were mostly[1] addressed and I can live with these
->> changes, even develop this approach further if it gets merged.
+> On Tue, 2014-11-25 at 16:04 +0800, Yingjoe Chen wrote:
+>> Add sysirq settings for mt6589/mt8135/mt8127
+>> This also correct timer interrupt flag. The old setting works
+>> because boot loader already set polarity for timer interrupt.
+>> Without intpol support, the setting was not changed so gic
+>> can get the irq correctly.
+>>
+>> Signed-off-by: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/mt6589.dtsi | 14 ++++++++++++--
+>>  arch/arm/boot/dts/mt8127.dtsi | 14 ++++++++++++--
+>>  arch/arm/boot/dts/mt8135.dtsi | 14 ++++++++++++--
+>>  3 files changed, 36 insertions(+), 6 deletions(-)
 >
-> OK, so this sort of feedback is really useful - even a qualified
-> Reviwed-by is useful.  Total silence could mean anything.
+> It seems this patch is not merged in 3.19-rc1. This do have dependency
+> on other patches, and all the other patches in this series are merged.
 >
->> However, as a general note I see a need for a generic ASoC hdmi codec
->> abstraction and I don't think this is generic enough. More of the audio
->> specific implementation and HDMI standard specific things should be pushed
->> away from the hdmi encoder driver (tda998x in this case) to the generic ASoC
->> side hdmi codec driver (or library).
+> Is this planed to merge later or do we need to send additional pull
+> request for it?
+
+This patch got somehow lost, sorry for that. I apply it for v3.20.
+
 >
-> This is something I'm expecting, yes - what I don't have is a clear
-> enough picture of how consistent the different hardware is in how it
-> models these things.
+> Joe.C
+>
 >
 
-After taking another look the patchesthere is not much functionality 
-that could be moved away from tda998x. It is just that the ASoC side 
-(and tda998x) could do more in terms of HDMI standard, but that is fine 
-because all that stuff can be added later if/when needed. However, 
-instantiating snd_soc_dai_driver etc. in DRM side makes a nasty 
-dependency between DRM and ASoC. All that stuff could be in ASoC side 
-and simple enum/bitfield parameters defining i2s/spdif selection could 
-be passed between DRM and ASoC side.
 
 
->> [1] I personally do not like the hdmi_get_cdev() approach. I would rather go
->> with only a library for registering from ASoC codec component under the HDMI
->> encoder device or a completely separate device with only a reference to the
->> HDMI encoder.
->
-> It does seem somewhat complicated, yes.  I don't know if matches idioms
-> for DRM somehow?
->
-
-Me neither. A more straight forward option would be adding an "audio 
-header" to the beginning of hdmi encoders drvdata. However, it would be 
-tempting to add a pointer for drvdata to snd_soc_dai_driver to add audio 
-specific driver data to any device that provides a DAI in addition to 
-other functionality. It could even simplify drivers for some audio only 
-devices with multiple DAIs.
-
-Best regards,
-Jyri
+-- 
+motzblog.wordpress.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
