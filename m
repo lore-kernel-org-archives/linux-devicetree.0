@@ -1,127 +1,166 @@
-From: NeilBrown <neilb@suse.de>
-Subject: Re: [PATCH 1/3] TTY: add support for "tty slave" devices.
-Date: Sat, 3 Jan 2015 10:33:57 +1300
-Message-ID: <20150103103357.2406fc23@notabene.brown>
-References: <20141211214801.4127.93914.stgit@notabene.brown>
- <20141211215943.4127.24792.stgit@notabene.brown>
- <20141228142010.GA3922@amd>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: Re: [PATCH v2 1/2] of/pci: add of_pci_dma_configure() update dma
+ configuration
+Date: Fri, 2 Jan 2015 17:33:53 -0500
+Message-ID: <54A71CD1.4070107@ti.com>
+References: <1419459099-6667-1-git-send-email-m-karicheri2@ti.com> <1419459099-6667-2-git-send-email-m-karicheri2@ti.com> <CAL_JsqJtVnP_5zAiUvMwL00JQV0mjw-R_hEkxiv13ZuNrQ8nAA@mail.gmail.com> <54A6D375.6050604@ti.com> <CAL_Jsq+krOUA3BPvMCdaOBhALoi+pzWbw3YndXqR8x52OJogZg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- boundary="Sig_/=KJcYShUfD=bzjiCpEP2ocb"; protocol="application/pgp-signature"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20141228142010.GA3922@amd>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Grant Likely <grant.likely@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Jiri Slaby <jslaby@suse.cz>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+krOUA3BPvMCdaOBhALoi+pzWbw3YndXqR8x52OJogZg@mail.gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>, Will Deacon <will.deacon@arm.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
---Sig_/=KJcYShUfD=bzjiCpEP2ocb
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 01/02/2015 03:45 PM, Rob Herring wrote:
+> On Fri, Jan 2, 2015 at 11:20 AM, Murali Karicheri<m-karicheri2@ti.com>  wrote:
+>> Rob,
+>>
+>> See my response below. Arnd and Will, please review this as well.
+>>
+>> On 12/26/2014 02:33 PM, Rob Herring wrote:
+>>>
+>>> On Wed, Dec 24, 2014 at 4:11 PM, Murali Karicheri<m-karicheri2@ti.com>
+>>> wrote:
+>>>>
+>>>> Add of_pci_dma_configure() to allow updating the dma configuration
+>>>> of the pci device using the configuration from DT of the parent of
+>>>> the root bridge device.
+>>>>
+>>>> Signed-off-by: Murali Karicheri<m-karicheri2@ti.com>
+>>>> ---
+>>>>    drivers/of/of_pci.c    |   73
+>>>> ++++++++++++++++++++++++++++++++++++++++++++++++
+>>>>    include/linux/of_pci.h |   12 ++++++++
+>>>>    2 files changed, 85 insertions(+)
+>>>>
+>
+> [...]
+>
+>>>> +               coherent = of_dma_is_coherent(parent_np);
+>>>> +               dev_dbg(dev, "device is%sdma coherent\n",
+>>>> +                       coherent ? " " : " not ");
+>>>> +
+>>>> +               arch_setup_dma_ops(dev, dma_addr, size, NULL, coherent);
+>>>
+>>>
+>>> This is the same code as of_dma_configure. The only difference I see
+>>> is which node ptr is passed to of_dma_get_range. You need to make that
+>>> a function param of of_dma_configure.
+>>>
+>>> of_dma_configure also has iommu handling now. You will probably need
+>>> something similar for PCI in that you setup an iommu based on the root
+>>> bus DT properties.
+>>>
+>> Initially I had the same idea to re-use the existing function
+>> of_dma_configure() for this. I wanted to defer this until we have an
+>> agreement on the changes required for the subject functionality. My quick
+>> review of the code suggestio this would require additional API changes as
+>> below. I did a quick test of the changes and it works for Keystone, but need
+>> to be reviewed by everyone as I touch the IOMMU functionality here and I
+>> don't have a platform with IOMMU. Need test by someone to make sure I don't
+>> break anything.
+>
+> The IOMMU changes look trivial. We may want to address the comment in
+> of_iommu_configure about parent nodes. We should be sure these changes
+> work with how we would do searching parent nodes.
 
-On Sun, 28 Dec 2014 15:20:10 +0100 Pavel Machek <pavel@ucw.cz> wrote:
+I have no experience with IOMMU and may not offer much help here as I 
+originally wrote above. Will Deacon has added this API and probably able 
+to offer some help in this discussion.
 
-> Hi!
->=20
-> > index 8c4fd0332028..b59501ee2f21 100644
-> > --- a/Documentation/devicetree/bindings/serial/of-serial.txt
-> > +++ b/Documentation/devicetree/bindings/serial/of-serial.txt
-> > @@ -39,6 +39,10 @@ Optional properties:
-> >    driver is allowed to detect support for the capability even without =
-this
-> >    property.
-> > =20
-> > +Optional child node:
-> > +- a platform device listed as a child node will be probed and
-> > +  powered-on whenever the tty is in use (open).
-> > +
-> >  Example:
-> > =20
-> >  	uart@80230000 {
->=20
-> Hmm. Other devices may want it the other way around: probe the device
-> behind the uart, make it control power and open/close of the uart, and
-> hide the /dev/ttyXX from userspace...
-> 								Pavel
-> 							=09
+Will Deacon,
 
-I've been thinking a bit about this.
+Any comment?
 
-The current "tty" seems to be a combination of two things:
- - a line discipline
- - a char_dev
+Looking at the iommu documentation and of_iommu.c, I get a feeling that 
+this API is not really used at present as there are no callers of 
+of_iommu_set_ops() and I assume this is a WIP. I believe the way it is 
+expected to work is to have the iommu driver of the master IOMMU devices 
+call of_iommu_set_ops(). The device node of this master IOMMU device is 
+specified as a phandle in the OF node of the device (various bus devices 
+such as platform, PCI etc). This allow to retrieve the iommu ops though 
+the of_iommu_configure() API and use it in arch_setup_dma_ops(). So my 
+gut feeling is that for PCI devices, as there are no DT node, the root 
+bus node may specify iommus phandle to IOMMU master OF nodes.
 
-But some line disciplines don't really want the char_dev.
-N_MOUSE wants a serio device.
-N_HCI wants an HCI device
-N_GSM07010 wants 63 different tty char_devs.
-N_IRDA and N_PPP ultimately want a net_dev.
-etc.
+W.r.t your comment "We may want to address the comment in
+of_iommu_configure about parent nodes. We should be sure these changes 
+work with how we would do searching parent nodes",
 
-It would be really nice if the uart would register the line disciple as a
-child device, then the line discipline would register whatever it wants.
+I believe, the parent node search itself should work the same way in the 
+case of PCI as with platform bus case. PCI's case, we are providing the 
+OF node of the root bus host bridge. Why should this be any different in 
+terms of search?
 
-Then if a uart had no children, it would register the 'N_TTY' line discipli=
-ne
-and get a tty char_dev.  If it had a child, it would probe the child device
-and leave it to register and appropriate line discipline.
+I see a potential issue with dma-ranges as described in the notes below.
+As noted below the usage of dma-range for iommu is to be determined. For 
+keystone, the of_iommu_configure() always return false as we don't use 
+the iommu. But don't know if this has any consequences for other 
+platforms. Or I got your questions wrong. Any help here from others on 
+the list?
 
-The child device could interpose itself in the control flow somehow so my
-driver could add power control at open/close.
+========================================================================
+One possible extension to the above is to use an "iommus" property along 
+with a "dma-ranges" property in a bus device node (such as PCI host 
+bridges). This can be useful to describe how children on the bus relate 
+to the IOMMU if they are not explicitly listed in the device tree (e.g. 
+PCI devices). However, the requirements of that use-case haven't been 
+fully determined yet. Implementing this is therefore not recommended 
+without further discussion and extension of this binding.
+=========================================================================
 
-But that isn't how it works.  The line discipline doesn't talk to the uart.
-Rather the tty layer talks to the uart (through tty_operations) and to the
-line discipline (through tty_ldisc_ops) and also registers the char_dev.
+The code is
 
-One of the several difficulties with allowing a child device to select a li=
-ne
-discipline is the different line disciplines activate differently.
+struct iommu_ops *of_iommu_configure(struct device *dev)
+{
+	struct of_phandle_args iommu_spec;
+	struct device_node *np;
+	struct iommu_ops *ops = NULL;
+	int idx = 0;
 
-N_HCI activates (registers the hci dev) on HCIUARTSETPROTO ioctl.  A child
-  device would need a way to specify the protocol I resume.
-N_MOUSE activates on a 'read' on the tty - and deactivates when the read
-  completes.
-N_GSM0710 activates immediately that the ldisc is activated, as does N_IRDA
-N_PPP seems to want a PPPIOCNEWUNIT ioctl to fully register.
+	/*
+	 * We don't currently walk up the tree looking for
+	 * a parent IOMMU. See the `Notes:' section of
+	 * Documentation/devicetree/bindings/iommu/iommu.txt
+	 */
+	while (!of_parse_phandle_with_args(dev->of_node, "iommus",
+					   "#iommu-cells", idx,
+					   &iommu_spec)) {
+		np = iommu_spec.np;
+		ops = of_iommu_get_ops(np);
 
-Doing any of these in a driver for a uart slave device would certainly be
-possible.  I wonder if it is something we really want to do in the kernel
-though.  What is the gain over providing sufficient information in the
-KOBJ_ADD uevent so that udev can do the required work in user-space?
+		if (!ops || !ops->of_xlate || ops->of_xlate(dev, &iommu_spec))
+			goto err_put_node;
 
-I'm not against the idea, I am just finding it hard to justify.
+		of_node_put(np);
+		idx++;
+	}
 
-However I do like the idea of having the UART probe the child instead of
-registering a tty.  It could pass the tty_operations structure to the child,
-and the child could then register a tty with a slightly different
-tty_operations structure, allowing it to capture any operations that it wan=
-ts
-to capture (such as open/close).
-I might try coding that and see what it looks like...
+	return ops;
 
-Thanks,
-NeilBrown
+err_put_node:
+	of_node_put(np);
+	return NULL;
+}
 
---Sig_/=KJcYShUfD=bzjiCpEP2ocb
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+>> that calls of_dma_configure() as
+>> of_dma_configure(dev, dev->of_node). All existing calls converted to this
+>> wrapper.
+>
+> There's only a few callers of of_dma_configure, so I don't think this
+> is necessary. The only thing platform bus specific is who is calling
+> the function.
 
-iQIVAwUBVKcOzDnsnt1WYoG5AQIAVg/9E/l1EHik+sHxcMgzTbXJvOYGeAVQrAQX
-opbo9CPFmjUARlVKP7SAEi7URCJ7mUmLWlZ2HY9EltCxYXUfedUsCFK8BGaJ/mfX
-bxReJkGQfIBmMcDUcbrIJZ1yiEY3CHAETNQzxygXb2Hztbd1kXc1bcIr35FnQ5+F
-KygtxfHBsh6RlP2eYtxQk6zsokWKOxayEx56G9IefQwYPNnbZpi6UWuxN/Djk+m9
-ftAWNoKgg9Y+w4EMSyOmCNVu5RrzZnBT0OzoXAhLoIMghaBwX8ykRhEsJLg8rofE
-Q6ZO0ojXStzOF/d+VobXhpPltbBdlX0JqFMncgAD7rjxxMdUScqLInC8lAPuzpl9
-TLlk/6R3/Br1rg4+MulUl9P/CkAkwR0mHso4ouZg0HCcDH6nbjgy4nhRyVNp7fFe
-W4JGc3dNe+rHMnIz5eQV6PgMwxg2TkHruMOQxJ4WZG8xkgsAMst8GVKR1tvzp7yK
-g3yyLnPuljBtprHNt3HVUlgtkwk/LuorVDoAe8qPdwAC33TRlUezZ4lZzIpgTVqR
-/mFqQDkeYaPukNcWavhrIGBM8ekm7BAhuNDr7R08QHIcnpkltPfJBv6DRnN2hRk+
-Ptn5CHbz/J558oAlsAeHW4O/QXpoDE6lZotN7NksT8NI3kzL/Ts3wGMAa8PSYK/l
-1T2YgklM27Q=
-=PfUb
------END PGP SIGNATURE-----
+Ok.
 
---Sig_/=KJcYShUfD=bzjiCpEP2ocb--
+>
+> Rob
+
+
+-- 
+Murali Karicheri
+Linux Kernel, Texas Instruments
