@@ -1,62 +1,253 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: Add mediatek SoC UART support in defconfig
-Date: Fri, 2 Jan 2015 11:27:55 +0100
-Message-ID: <CABuKBeLJBjvjYs18b45f6LY33EyofRVJX8Fj2dTEtLpT3F7ZKQ@mail.gmail.com>
-References: <1419587701-13451-1-git-send-email-eddie.huang@mediatek.com>
-	<1419587701-13451-3-git-send-email-eddie.huang@mediatek.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v3 1/4] mmc: dw_mmc: exynos: incorporate ciu_div into
+ timing property
+Date: Fri, 2 Jan 2015 11:30:44 +0100
+Message-ID: <CAPDyKFrXzU0DA0GrQxBNRY0hPm6t=Y9i5Fuc516ZHkUFZKEnjw@mail.gmail.com>
+References: <1420008185-24758-1-git-send-email-alim.akhtar@samsung.com>
+	<1420008185-24758-2-git-send-email-alim.akhtar@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1419587701-13451-3-git-send-email-eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1420008185-24758-2-git-send-email-alim.akhtar@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Alim Akhtar <alim.akhtar@samsung.com>
+Cc: linux-mmc <linux-mmc@vger.kernel.org>, Chris Ball <chris@printf.net>, Jaehoon Chung <jh80.chung@samsung.com>, "tgih.jun@samsung.com" <tgih.jun@samsung.com>, Doug Anderson <dianders@chromium.org>, Alim Akhtar <alim.akhtar@gmail.com>, Kukjin Kim <kgene@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, ABHILASH KESAVAN <a.kesavan@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-2014-12-26 10:55 GMT+01:00 Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>:
-> Add mediatek SoC UART support in multi_v7_defconfig
+On 31 December 2014 at 07:43, Alim Akhtar <alim.akhtar@samsung.com> wrote:
+> From: Seungwon Jeon <tgih.jun@samsung.com>
 >
-> Signed-off-by: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ciu_div may not be common value for all speed mode.
+> So, it needs to be attached to CLKSEL timing.
+> This also introduce a new compatibale 'dw-mshc-hs200-timing'
+> for selecting hs200 timing value
+
+According to the patch you are adding a new DT property not a
+"compatible". Please update the commit message.
+
+The rest looks good to me.
+
+Kind regards
+Uffe
+
+>
+> Signed-off-by: Seungwon Jeon <tgih.jun@samsung.com>
+> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
 > ---
->  arch/arm/configs/multi_v7_defconfig | 1 +
->  1 file changed, 1 insertion(+)
+>  .../devicetree/bindings/mmc/exynos-dw-mshc.txt     |   15 ++--
+>  drivers/mmc/host/dw_mmc-exynos.c                   |   81 ++++++++++++++------
+>  drivers/mmc/host/dw_mmc-exynos.h                   |    1 +
+>  3 files changed, 67 insertions(+), 30 deletions(-)
 >
-> diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-> index 2328fe7..fd0ff95 100644
-> --- a/arch/arm/configs/multi_v7_defconfig
-> +++ b/arch/arm/configs/multi_v7_defconfig
-> @@ -195,6 +195,7 @@ CONFIG_SERIO_AMBAKMI=y
->  CONFIG_SERIAL_8250=y
->  CONFIG_SERIAL_8250_CONSOLE=y
->  CONFIG_SERIAL_8250_DW=y
-> +CONFIG_SERIAL_8250_MT6577=y
->  CONFIG_SERIAL_AMBA_PL011=y
->  CONFIG_SERIAL_AMBA_PL011_CONSOLE=y
->  CONFIG_SERIAL_MESON=y
+> diff --git a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+> index ee4fc05..06455de 100644
+> --- a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+> @@ -23,10 +23,6 @@ Required Properties:
+>         - "samsung,exynos7-dw-mshc-smu": for controllers with Samsung Exynos7
+>           specific extensions having an SMU.
+>
+> -* samsung,dw-mshc-ciu-div: Specifies the divider value for the card interface
+> -  unit (ciu) clock. This property is applicable only for Exynos5 SoC's and
+> -  ignored for Exynos4 SoC's. The valid range of divider value is 0 to 7.
+> -
+>  * samsung,dw-mshc-sdr-timing: Specifies the value of CIU clock phase shift value
+>    in transmit mode and CIU clock phase shift value in receive mode for single
+>    data rate mode operation. Refer notes below for the order of the cells and the
+> @@ -37,11 +33,16 @@ Required Properties:
+>    data rate mode operation. Refer notes below for the order of the cells and the
+>    valid values.
+>
+> +* samsung,dw-mshc-hs200-timing: Similar with dw-mshc-sdr-timing.
+> +
+>    Notes for the sdr-timing and ddr-timing values:
+>
+>      The order of the cells should be
+>        - First Cell: CIU clock phase shift value for tx mode.
+>        - Second Cell: CIU clock phase shift value for rx mode.
+> +      - Thrid Cell: Specifies the divider value for the card interface
+> +        unit (ciu) clock. This property is applicable only for Exynos5 SoC's and
+> +        ignored for Exynos4 SoC's. The valid range of divider value is 0 to 7.
+>
+>      Valid values for SDR and DDR CIU clock timing for Exynos5250:
+>        - valid value for tx phase shift and rx phase shift is 0 to 7.
+> @@ -79,8 +80,8 @@ Example:
+>                 broken-cd;
+>                 fifo-depth = <0x80>;
+>                 card-detect-delay = <200>;
+> -               samsung,dw-mshc-ciu-div = <3>;
+> -               samsung,dw-mshc-sdr-timing = <2 3>;
+> -               samsung,dw-mshc-ddr-timing = <1 2>;
+> +               samsung,dw-mshc-sdr-timing = <2 3 3>;
+> +               samsung,dw-mshc-ddr-timing = <1 2 3>;
+> +               samsung,dw-mshc-hs200-timing = <0 2 3>;
+>                 bus-width = <8>;
+>         };
+> diff --git a/drivers/mmc/host/dw_mmc-exynos.c b/drivers/mmc/host/dw_mmc-exynos.c
+> index 12a5eaa..be6530e 100644
+> --- a/drivers/mmc/host/dw_mmc-exynos.c
+> +++ b/drivers/mmc/host/dw_mmc-exynos.c
+> @@ -40,6 +40,7 @@ struct dw_mci_exynos_priv_data {
+>         u8                              ciu_div;
+>         u32                             sdr_timing;
+>         u32                             ddr_timing;
+> +       u32                             hs200_timing;
+>         u32                             cur_speed;
+>  };
+>
+> @@ -71,6 +72,21 @@ static struct dw_mci_exynos_compatible {
+>         },
+>  };
+>
+> +static inline u8 dw_mci_exynos_get_ciu_div(struct dw_mci *host)
+> +{
+> +       struct dw_mci_exynos_priv_data *priv = host->priv;
+> +
+> +       if (priv->ctrl_type == DW_MCI_TYPE_EXYNOS4412)
+> +               return EXYNOS4412_FIXED_CIU_CLK_DIV;
+> +       else if (priv->ctrl_type == DW_MCI_TYPE_EXYNOS4210)
+> +               return EXYNOS4210_FIXED_CIU_CLK_DIV;
+> +       else if (priv->ctrl_type == DW_MCI_TYPE_EXYNOS7 ||
+> +                       priv->ctrl_type == DW_MCI_TYPE_EXYNOS7_SMU)
+> +               return SDMMC_CLKSEL_GET_DIV(mci_readl(host, CLKSEL64)) + 1;
+> +       else
+> +               return SDMMC_CLKSEL_GET_DIV(mci_readl(host, CLKSEL)) + 1;
+> +}
+> +
+>  static int dw_mci_exynos_priv_init(struct dw_mci *host)
+>  {
+>         struct dw_mci_exynos_priv_data *priv = host->priv;
+> @@ -85,6 +101,8 @@ static int dw_mci_exynos_priv_init(struct dw_mci *host)
+>                            SDMMC_MPSCTRL_NON_SECURE_WRITE_BIT);
+>         }
+>
+> +       priv->ciu_div = dw_mci_exynos_get_ciu_div(host);
+> +
+>         return 0;
+>  }
+>
+> @@ -92,7 +110,7 @@ static int dw_mci_exynos_setup_clock(struct dw_mci *host)
+>  {
+>         struct dw_mci_exynos_priv_data *priv = host->priv;
+>
+> -       host->bus_hz /= (priv->ciu_div + 1);
+> +       host->bus_hz /= priv->ciu_div;
+>
+>         return 0;
+>  }
+> @@ -177,9 +195,14 @@ static void dw_mci_exynos_set_ios(struct dw_mci *host, struct mmc_ios *ios)
+>         struct dw_mci_exynos_priv_data *priv = host->priv;
+>         unsigned int wanted = ios->clock;
+>         unsigned long actual;
+> -       u8 div = priv->ciu_div + 1;
+>
+> -       if (ios->timing == MMC_TIMING_MMC_DDR52) {
+> +       if (ios->timing == MMC_TIMING_MMC_HS200) {
+> +               if (priv->ctrl_type == DW_MCI_TYPE_EXYNOS7 ||
+> +                       priv->ctrl_type == DW_MCI_TYPE_EXYNOS7_SMU)
+> +                       mci_writel(host, CLKSEL64, priv->hs200_timing);
+> +               else
+> +                       mci_writel(host, CLKSEL, priv->hs200_timing);
+> +       } else if (ios->timing == MMC_TIMING_MMC_DDR52) {
+>                 if (priv->ctrl_type == DW_MCI_TYPE_EXYNOS7 ||
+>                         priv->ctrl_type == DW_MCI_TYPE_EXYNOS7_SMU)
+>                         mci_writel(host, CLKSEL64, priv->ddr_timing);
+> @@ -208,6 +231,7 @@ static void dw_mci_exynos_set_ios(struct dw_mci *host, struct mmc_ios *ios)
+>                 wanted = EXYNOS_CCLKIN_MIN;
+>
+>         if (wanted != priv->cur_speed) {
+> +               u8 div = dw_mci_exynos_get_ciu_div(host);
+>                 int ret = clk_set_rate(host->ciu_clk, wanted * div);
+>                 if (ret)
+>                         dev_warn(host->dev,
+> @@ -220,14 +244,34 @@ static void dw_mci_exynos_set_ios(struct dw_mci *host, struct mmc_ios *ios)
+>         }
+>  }
+>
+> +static int dw_mci_exynos_dt_populate_timing(struct dw_mci *host,
+> +                                           unsigned int ctrl_type,
+> +                                           const char *propname,
+> +                                           u32 *out_values)
+> +{
+> +       struct device_node *np = host->dev->of_node;
+> +       u32 timing[3];
+> +       int ret;
+> +
+> +       ret = of_property_read_u32_array(np, propname, timing, 3);
+> +       if (ret)
+> +               return ret;
+> +
+> +       if (ctrl_type == DW_MCI_TYPE_EXYNOS4412 ||
+> +           ctrl_type == DW_MCI_TYPE_EXYNOS4210)
+> +               timing[2] = 0;
+> +
+> +       *out_values = SDMMC_CLKSEL_TIMING(timing[0], timing[1], timing[2]);
+> +
+> +       return 0;
+> +}
+> +
+> +
+>  static int dw_mci_exynos_parse_dt(struct dw_mci *host)
+>  {
+>         struct dw_mci_exynos_priv_data *priv;
+>         struct device_node *np = host->dev->of_node;
+> -       u32 timing[2];
+> -       u32 div = 0;
+> -       int idx;
+> -       int ret;
+> +       int idx, ret;
+>
+>         priv = devm_kzalloc(host->dev, sizeof(*priv), GFP_KERNEL);
+>         if (!priv)
+> @@ -238,29 +282,20 @@ static int dw_mci_exynos_parse_dt(struct dw_mci *host)
+>                         priv->ctrl_type = exynos_compat[idx].ctrl_type;
+>         }
+>
+> -       if (priv->ctrl_type == DW_MCI_TYPE_EXYNOS4412)
+> -               priv->ciu_div = EXYNOS4412_FIXED_CIU_CLK_DIV - 1;
+> -       else if (priv->ctrl_type == DW_MCI_TYPE_EXYNOS4210)
+> -               priv->ciu_div = EXYNOS4210_FIXED_CIU_CLK_DIV - 1;
+> -       else {
+> -               of_property_read_u32(np, "samsung,dw-mshc-ciu-div", &div);
+> -               priv->ciu_div = div;
+> -       }
+> -
+> -       ret = of_property_read_u32_array(np,
+> -                       "samsung,dw-mshc-sdr-timing", timing, 2);
+> +       ret = dw_mci_exynos_dt_populate_timing(host, priv->ctrl_type,
+> +                       "samsung,dw-mshc-sdr-timing", &priv->sdr_timing);
+>         if (ret)
+>                 return ret;
+>
+> -       priv->sdr_timing = SDMMC_CLKSEL_TIMING(timing[0], timing[1], div);
+> -
+> -       ret = of_property_read_u32_array(np,
+> -                       "samsung,dw-mshc-ddr-timing", timing, 2);
+> +       ret = dw_mci_exynos_dt_populate_timing(host, priv->ctrl_type,
+> +                       "samsung,dw-mshc-ddr-timing", &priv->ddr_timing);
+>         if (ret)
+>                 return ret;
+>
+> -       priv->ddr_timing = SDMMC_CLKSEL_TIMING(timing[0], timing[1], div);
+> +       dw_mci_exynos_dt_populate_timing(host, priv->ctrl_type,
+> +               "samsung,dw-mshc-hs200-timing", &priv->hs200_timing);
+>         host->priv = priv;
+> +
+>         return 0;
+>  }
+>
+> diff --git a/drivers/mmc/host/dw_mmc-exynos.h b/drivers/mmc/host/dw_mmc-exynos.h
+> index 7872ce5..c04ecef 100644
+> --- a/drivers/mmc/host/dw_mmc-exynos.h
+> +++ b/drivers/mmc/host/dw_mmc-exynos.h
+> @@ -21,6 +21,7 @@
+>  #define SDMMC_CLKSEL_CCLK_DRIVE(x)     (((x) & 7) << 16)
+>  #define SDMMC_CLKSEL_CCLK_DIVIDER(x)   (((x) & 7) << 24)
+>  #define SDMMC_CLKSEL_GET_DRV_WD3(x)    (((x) >> 16) & 0x7)
+> +#define SDMMC_CLKSEL_GET_DIV(x)                (((x) >> 24) & 0x7)
+>  #define SDMMC_CLKSEL_TIMING(x, y, z)   (SDMMC_CLKSEL_CCLK_SAMPLE(x) |  \
+>                                          SDMMC_CLKSEL_CCLK_DRIVE(y) |   \
+>                                          SDMMC_CLKSEL_CCLK_DIVIDER(z))
 > --
-> 1.8.1.1
-
-Applied, thanks.
-
+> 1.7.9.5
 >
-> ************* Email Confidentiality Notice ********************
-> The information contained in this e-mail message (including any
-> attachments) may be confidential, proprietary, privileged, or otherwise
-> exempt from disclosure under applicable laws. It is intended to be
-> conveyed only to the designated recipient(s). Any use, dissemination,
-> distribution, printing, retaining or copying of this e-mail (including its
-> attachments) by unintended recipient(s) is strictly prohibited and may
-> be unlawful. If you are not an intended recipient of this e-mail, or believe
-> that you have received this e-mail in error, please notify the sender
-> immediately (by replying to this e-mail), delete any and all copies of
-> this e-mail (including any attachments) from your system, and do not
-> disclose the content of this e-mail to any other person. Thank you!
-
-
-
--- 
-motzblog.wordpress.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
