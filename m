@@ -1,83 +1,167 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC 2/4] PCI: generic: Add support for ARM64 and MSI(x)
-Date: Fri, 02 Jan 2015 22:09:33 +0100
-Message-ID: <30239600.UAZhntKiNS@wuerfel>
-References: <1411937610-22125-1-git-send-email-suravee.suthikulpanit@amd.com> <20150102115533.GA25573@red-moon> <54A6E0DE.6090309@amd.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [RFC PATCH v3 4/4] arm64:numa: adding numa support for arm64 platforms.
+Date: Fri, 02 Jan 2015 22:10:37 +0100
+Message-ID: <1849719.f6Z6RhZjTc@wuerfel>
+References: <1420011208-7051-1-git-send-email-ganapatrao.kulkarni@caviumnetworks.com> <1420011208-7051-5-git-send-email-ganapatrao.kulkarni@caviumnetworks.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <54A6E0DE.6090309@amd.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Suravee Suthikulanit <suravee.suthikulpanit@amd.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Liviu Dudau <Liviu.Dudau@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Marc Zyngier <Marc.Zyngier@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "tglx@linutronix.de" <tglx@linutronix.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1420011208-7051-5-git-send-email-ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ganapatrao Kulkarni <ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Will.Deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, roy.franz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 02 January 2015 12:18:06 Suravee Suthikulanit wrote:
-> On 1/2/2015 5:55 AM, Lorenzo Pieralisi wrote:
-> > Hi Suravee,
-> >
-> > On Mon, Dec 29, 2014 at 07:32:44PM +0000, Suravee Suthikulpanit wrote:
-> >> >Hi,
-> >> >
-> >> >I am not sure if this thread is still alive. I'm trying to see what I
-> >> >can do to help clean up/convert to make the PCI GHC also works for arm64
-> >> >w/ zero or minimal ifdefs.
-> >> >
-> >> >Please let me know if someone is already working on this. I noticed that
-> >> >Lorenzo's patches has already been in 3.19-rc1, and in Bjorn's
-> >> >pci/domain branch. Otherwise, I'll try to continue the work based on the
-> >> >sample patch from Arnd here.
-> > If I am not mistaken, the only bit missing to remove pci_sys_data (and so
-> > having a generic host controller driver that works on ARM32/64) is generic
-> > MSI management.
-> 
-> Lorenzo,
-> 
-> Do you mean to remove pci_sys_data from pci-host-generic.c or removing 
-> it completely? I assume the former case.
+[re-sent with correct mailing list address]
 
-Something inbetween: We should be able to remove pci_sys_data and
-pci_common_init_dev from all drivers in drivers/pci/host/, but keep them
-for all drivers in arch/arm/*/pci.c
-
-> So, looking at the current code in the pci-host-generic.c, my 
-> understanding is that the:
->      *gen_pci = pci_bus->sysdata->private_data
-> will be changed to:
->      *gen_pci = pci_bus->sysdata
+On Wednesday 31 December 2014 13:03:28 Ganapatrao Kulkarni wrote:
+> Adding numa support for arm64 based platforms.
+> Adding dt node pasring for numa topology using property arm,associativity.
 > 
-> Then, we can simply just call pci_scan_root_bus() directly since we no 
-> longer need to declare hw_pci for calling pci_common_init_dev().
+> Signed-off-by: Ganapatrao Kulkarni <ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
 
-Right.
+Maybe the parts that are common with powerpc can be moved to drivers/of/numa.c?
+We can always look for both arm,associativity and ibm,associativity, I don't
+think we should be worried about any conflicts that way.
 
-> > I know for certain Marc is working on it, and the solution is WIP,
-> > I think we should prevent adding more churn to pci_sys_data, since
-> > I managed to remove most of the dependencies (domain, mem_offset).
-> 
-> Thanks for cleaning up the domain and mem_offset.
-> 
-> I saw Marc's irq/msi_domain patch series 
-> (http://git.kernel.org/cgit/linux/kernel/git/maz/arm-platforms.git/log/?h=irq/msi_domain). 
-> 
-> 
-> My understanding is that deals with associating the newly introduced 
-> msi_domain to each device, which replaces the need for pci_bus->msi and 
-> hw_pci->msi_ctrl when configure with CONFIG_PCI_MSI_IRQ_DOMAIN (not sure 
-> if this would be the plan for all arm32).  For ARM32, if not define 
-> CONFIG_PCI_MSI_IRQ_DOMAIN, it would still fall back to using the 
-> [pci_sys_data|hw_pci]->msi_ctrl.
+> +#define MAX_DISTANCE_REF_POINTS 4
 
-For all I can tell, we have two cases on ARM regarding MSI:
+I think we should use 8 here like powerpc, four levels might get exceeded
+on complex SoCs.
 
-- arch/arm/mach-iop13xx/pci.c uses its own
-  arch_setup_msi_irq/arch_teardown_msi_irq implementation and does not
-  use pci_bus->msi.
+> +int dt_get_cpu_node_id(int cpu)
+> +{
+> +	struct device_node *dn = NULL;
+> +
+> +	while ((dn = of_find_node_by_type(dn, "cpu"))) {
+> +		const u32 *cell;
+> +		u64 hwid;
+> +
+> +		/*
+> +		 * A cpu node with missing "reg" property is
+> +		 * considered invalid to build a cpu_logical_map
+> +		 * entry.
+> +		 */
+> +		cell = of_get_property(dn, "reg", NULL);
+> +		if (!cell) {
+> +			pr_err("%s: missing reg property\n", dn->full_name);
+> +			return default_nid;
+> +		}
+> +		hwid = of_read_number(cell, of_n_addr_cells(dn));
+> +
+> +		if (cpu_logical_map(cpu) == hwid)
+> +		return of_node_to_nid_single(dn);
+> +	}
+> +	return NUMA_NO_NODE;
+> +}
+> +EXPORT_SYMBOL(dt_get_cpu_node_id);
 
-- everything else that supports MSI has a modern driver with multiplatform
-  support and uses msi_controller. If any platform wants to support GICv2m,
-  we have to use CONFIG_PCI_MSI_IRQ_DOMAIN for all of them, and that
-  seems like the best way forward.
+Maybe just expose a function to the device node for a CPU ID here, and
+expect callers to use of_node_to_nid?
+
+> +
+> +/**
+> + * early_init_dt_scan_numa_map - parse memory node and map nid to memory range.
+> + */
+> +int __init early_init_dt_scan_numa_map(unsigned long node, const char *uname,
+> +				     int depth, void *data)
+> +{
+> +	const char *type = of_get_flat_dt_prop(node, "device_type", NULL);
+> +
+> +	/* We are scanning "numa-map" nodes only */
+
+a stale comment?
+
+> +/* DT node mapping is done already early_init_dt_scan_memory */
+> +int __init arm64_dt_numa_init(void)
+> +{
+> +	int i;
+> +	u32 nodea, nodeb, distance, node_count = 0;
+> +
+> +	of_scan_flat_dt(early_init_dt_scan_numa_map, NULL);
+> +
+> +	for_each_node_mask(i, numa_nodes_parsed)
+> +		node_count = i;
+> +	node_count++;
+> +
+> +	for (nodea =  0; nodea < node_count; nodea++) {
+> +		for (nodeb = 0; nodeb < node_count; nodeb++) {
+> +			distance = dt_get_node_distance(nodea, nodeb);
+> +			numa_set_distance(nodea, nodeb, distance);
+> +		}
+> +	}
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL(arm64_dt_numa_init);
+
+No need to export functions that are called only be architecture code.
+Since this works on the flattened device tree format, you can never
+have loadable modules calling it.
+
+> @@ -461,7 +464,12 @@ static int c_show(struct seq_file *m, void *v)
+>  		 * "processor".  Give glibc what it expects.
+>  		 */
+>  #ifdef CONFIG_SMP
+> +	if (IS_ENABLED(CONFIG_NUMA)) {
+> +		seq_printf(m, "processor\t: %d", i);
+> +		seq_printf(m, " [nid: %d]\n", cpu_to_node(i));
+> +	} else {
+>  		seq_printf(m, "processor\t: %d\n", i);
+> +	}
+>  #endif
+>  	}
+
+Do we need to make this conditional? I think we can just always
+print the node number, even if it's going to be zero for systems
+without the associativity properties.
+
+> +
+> +int cpu_to_node_map[NR_CPUS];
+> +EXPORT_SYMBOL(cpu_to_node_map);
+
+This seems to be x86 specific, do we need it?
+
+> +/*
+> + *  Set the cpu to node and mem mapping
+> + */
+> +void numa_store_cpu_info(int cpu)
+> +{
+> +#ifdef CONFIG_ARM64_DT_NUMA
+> +	node_cpu_hwid[cpu].node_id  =  dt_get_cpu_node_id(cpu);
+> +#endif
+
+I would try to avoid the #ifdef here, by providing a stub function of
+dt_get_cpu_node_id or whichever function we end up calling here when
+NUMA is disabled.
+
+> +
+> +/**
+> + * arm64_numa_init - Initialize NUMA
+> + *
+> + * Try each configured NUMA initialization method until one succeeds.  The
+> + * last fallback is dummy single node config encomapssing whole memory and
+> + * never fails.
+> + */
+> +void __init arm64_numa_init(void)
+> +{
+> +	if (!numa_off) {
+> +#ifdef CONFIG_ARM64_DT_NUMA
+> +		if (!numa_init(arm64_dt_numa_init))
+> +			return;
+> +#endif
+> +	}
+> +
+> +	numa_init(dummy_numa_init);
+> +}
+
+I don't think we need the CONFIG_ARM64_DT_NUMA=n case here, it should just
+not be conditional, and the arm64_dt_numa_init should fall back to doing
+something reasonable when numa is turned off or there are no associativity
+properties.
 
 	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
