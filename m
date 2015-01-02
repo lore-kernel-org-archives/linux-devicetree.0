@@ -1,141 +1,98 @@
-From: Eduardo Valentin <edubezval@gmail.com>
-Subject: Re: [PATCH v2 1/8] thermal: Provide stub for
- thermal_of_cooling_device_register() function
-Date: Fri, 2 Jan 2015 15:03:41 -0400
-Message-ID: <20150102190339.GA22356@developer>
-References: <1418897591-18332-1-git-send-email-l.majewski@samsung.com>
- <1419265668-32283-1-git-send-email-l.majewski@samsung.com>
- <1419265668-32283-2-git-send-email-l.majewski@samsung.com>
- <20150102185426.GC12485@developer>
+From: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 1/3] ARM: OMAP2+: Use pdata-quirks for wkup_m3 deassert_hardreset
+Date: Fri, 2 Jan 2015 13:51:57 -0600
+Message-ID: <1420228319-41085-2-git-send-email-d-gerlach@ti.com>
+References: <1420228319-41085-1-git-send-email-d-gerlach@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="IS0zKkzwUGydFO0o"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150102185426.GC12485@developer>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Lukasz Majewski <l.majewski@samsung.com>
-Cc: Kamil Debski <k.debski@samsung.com>, Jean Delvare <jdelvare@suse.de>, Guenter Roeck <linux@roeck-us.net>, lm-sensors@lm-sensors.org, Linux PM list <linux-pm@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Lukasz Majewski <l.majewski@majess.pl>, Kukjin Kim <kgene.kim@samsung.com>, linux-kernel@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Abhilash Kesavan <a.kesavan@samsung.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1420228319-41085-1-git-send-email-d-gerlach-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Use pdata-quirks to provide platform data required for reset
+of the wkup_m3 during boot.
 
---IS0zKkzwUGydFO0o
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
+---
+ arch/arm/mach-omap2/pdata-quirks.c    | 13 +++++++++++++
+ include/linux/platform_data/wkup_m3.h | 23 +++++++++++++++++++++++
+ 2 files changed, 36 insertions(+)
+ create mode 100644 include/linux/platform_data/wkup_m3.h
 
-On Fri, Jan 02, 2015 at 02:54:28PM -0400, Eduardo Valentin wrote:
-> On Mon, Dec 22, 2014 at 05:27:41PM +0100, Lukasz Majewski wrote:
-> > Odroid U3 fan can work without being registered as OF cooling device
-> > (with CONFIG_THERMAL_OF disabled).
-> > In this situation it can be controlled via PWM entry at
-> > /sys/class/hwmon/hwmon0/pwm1.
-> >=20
-> > Therefore, the thermal_of_cooling_device_register() function needs a st=
-ub
-> > to allow clean compilation.
-> >=20
-> > Signed-off-by: Lukasz Majewski <l.majewski@samsung.com>
->=20
-> Acked-by: Eduardo Valentin <edubezval@gmail.com>
+diff --git a/arch/arm/mach-omap2/pdata-quirks.c b/arch/arm/mach-omap2/pdata-quirks.c
+index 3d7eee1..b0c5916 100644
+--- a/arch/arm/mach-omap2/pdata-quirks.c
++++ b/arch/arm/mach-omap2/pdata-quirks.c
+@@ -18,6 +18,7 @@
+ 
+ #include <linux/platform_data/pinctrl-single.h>
+ #include <linux/platform_data/iommu-omap.h>
++#include <linux/platform_data/wkup_m3.h>
+ 
+ #include "am35xx.h"
+ #include "common.h"
+@@ -288,6 +289,14 @@ static void __init omap3_tao3530_legacy_init(void)
+ }
+ #endif /* CONFIG_ARCH_OMAP3 */
+ 
++#ifdef CONFIG_SOC_AM33XX
++static struct wkup_m3_platform_data wkup_m3_data = {
++	.reset_name = "wkup_m3",
++	.assert_reset = omap_device_assert_hardreset,
++	.deassert_reset = omap_device_deassert_hardreset,
++};
++#endif
++
+ #ifdef CONFIG_ARCH_OMAP4
+ static void __init omap4_sdp_legacy_init(void)
+ {
+@@ -383,6 +392,10 @@ struct of_dev_auxdata omap_auxdata_lookup[] __initdata = {
+ 	OF_DEV_AUXDATA("ti,am3517-emac", 0x5c000000, "davinci_emac.0",
+ 		       &am35xx_emac_pdata),
+ #endif
++#ifdef CONFIG_SOC_AM33XX
++	OF_DEV_AUXDATA("ti,am3353-wkup-m3", 0x44d00000, "44d00000.wkup_m3",
++		       &wkup_m3_data),
++#endif
+ #ifdef CONFIG_ARCH_OMAP4
+ 	OF_DEV_AUXDATA("ti,omap4-padconf", 0x4a100040, "4a100040.pinmux", &pcs_pdata),
+ 	OF_DEV_AUXDATA("ti,omap4-padconf", 0x4a31e040, "4a31e040.pinmux", &pcs_pdata),
+diff --git a/include/linux/platform_data/wkup_m3.h b/include/linux/platform_data/wkup_m3.h
+new file mode 100644
+index 0000000..6ee33d7
+--- /dev/null
++++ b/include/linux/platform_data/wkup_m3.h
+@@ -0,0 +1,23 @@
++/*
++ * omap wkup_m3: platform data
++ *
++ * Copyright (C) 2014 Texas Instruments, Inc.
++ *
++ * Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#ifndef _LINUX_PLATFORM_DATA_WKUP_M3_H
++#define _LINUX_PLATFORM_DATA_WKUP_M3_H
++
++struct wkup_m3_platform_data {
++	const char *reset_name;
++
++	int (*assert_reset)(struct platform_device *pdev, const char *name);
++	int (*deassert_reset)(struct platform_device *pdev, const char *name);
++};
++
++#endif /* _LINUX_PLATFORM_DATA_WKUP_M3_H */
+-- 
+2.1.0
 
-Sorry, too fast,
-
-This is actually
-Nacked-by: Eduardo Valentin <edubezval@gmail.com>
-
-:-)
-
-I get this error:
-drivers/thermal/thermal_core.c:1210:1: error: redefinition of
-=E2=80=98thermal_of_cooling_device_register=E2=80=99
- thermal_of_cooling_device_register(struct device_node *np,
-  ^
-  In file included from drivers/thermal/thermal_core.c:34:0:
-  include/linux/thermal.h:321:1: note: previous definition of
-  =E2=80=98thermal_of_cooling_device_register=E2=80=99 was here
-   thermal_of_cooling_device_register(struct device_node *np,
-    ^
-
-
-We provide the function in thermal core even if CONFIG_THERMAL_OF is not
-set.
->=20
-> > ---
-> > Changes for v2:
-> > - None
-> > ---
-> >  include/linux/thermal.h | 14 +++++++++++---
-> >  1 file changed, 11 insertions(+), 3 deletions(-)
-> >=20
-> > diff --git a/include/linux/thermal.h b/include/linux/thermal.h
-> > index 2de3d9e..871123c 100644
-> > --- a/include/linux/thermal.h
-> > +++ b/include/linux/thermal.h
-> > @@ -328,6 +328,10 @@ thermal_zone_of_sensor_register(struct device *dev=
-, int id, void *data,
-> >  				const struct thermal_zone_of_device_ops *ops);
-> >  void thermal_zone_of_sensor_unregister(struct device *dev,
-> >  				       struct thermal_zone_device *tz);
-> > +struct thermal_cooling_device *
-> > +thermal_of_cooling_device_register(struct device_node *np,
-> > +				   char *type, void *devdata,
-> > +				   const struct thermal_cooling_device_ops *);
-> >  #else
-> >  static inline struct thermal_zone_device *
-> >  thermal_zone_of_sensor_register(struct device *dev, int id, void *data,
-> > @@ -342,6 +346,13 @@ void thermal_zone_of_sensor_unregister(struct devi=
-ce *dev,
-> >  {
-> >  }
-> > =20
-> > +static inline struct thermal_cooling_device *
-> > +thermal_of_cooling_device_register(struct device_node *np,
-> > +				   char *type, void *devdata,
-> > +				   const struct thermal_cooling_device_ops *ops)
-> > +{
-> > +	return NULL;
-> > +}
-> >  #endif
-> >  struct thermal_zone_device *thermal_zone_device_register(const char *,=
- int, int,
-> >  		void *, struct thermal_zone_device_ops *,
-> > @@ -357,9 +368,6 @@ void thermal_zone_device_update(struct thermal_zone=
-_device *);
-> > =20
-> >  struct thermal_cooling_device *thermal_cooling_device_register(char *,=
- void *,
-> >  		const struct thermal_cooling_device_ops *);
-> > -struct thermal_cooling_device *
-> > -thermal_of_cooling_device_register(struct device_node *np, char *, voi=
-d *,
-> > -				   const struct thermal_cooling_device_ops *);
-> >  void thermal_cooling_device_unregister(struct thermal_cooling_device *=
-);
-> >  struct thermal_zone_device *thermal_zone_get_zone_by_name(const char *=
-name);
-> >  int thermal_zone_get_temp(struct thermal_zone_device *tz, unsigned lon=
-g *temp);
-> > --=20
-> > 2.0.0.rc2
-> >=20
-
-
-
---IS0zKkzwUGydFO0o
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUpuuBAAoJEMLUO4d9pOJW2YAH/2SAbMixX3p86V9hVE8xI6Pd
-uBhGvlnOIcA1uB7zZpdp3e/gnXa5gIB9deHIyH8xtWcFoFGFk53ySv5cGMRnMjDs
-6JDNgXkS8/XdFHc4wwB172CtzxFkKRsFDjt4wGeymOTQcSBr1lF49x0x1CNw7bbM
-GynJ3MJ23gfijGmoC3v/DBGUp/gnqBCu2suGA8p7OlICFrE/9Qed6vmdj8vk6pKd
-G2K85OqKcGzy4zoDiv7nkyZhy7w8U4/W6mNhQZExclpONrXJ0rjzdC8NgU1B0xIG
-0RevLKqXtxYh1pugHqWvHxTdPVt49R7MT1wxi8vhIJRlY0scKRYsuyNJQsersrY=
-=N8H8
------END PGP SIGNATURE-----
-
---IS0zKkzwUGydFO0o--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
