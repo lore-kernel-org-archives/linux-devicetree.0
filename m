@@ -1,100 +1,125 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v5 4/6] ARM: dts: AM335x: Make charge delay a DT
- parameter for TSC
-Date: Fri, 2 Jan 2015 09:09:33 -0800
-Message-ID: <20150102170933.GB3298@atomide.com>
-References: <1419404619-10744-1-git-send-email-vigneshr@ti.com>
- <1419404619-10744-5-git-send-email-vigneshr@ti.com>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: Re: [PATCH v2 1/2] of/pci: add of_pci_dma_configure() update dma
+ configuration
+Date: Fri, 2 Jan 2015 12:20:53 -0500
+Message-ID: <54A6D375.6050604@ti.com>
+References: <1419459099-6667-1-git-send-email-m-karicheri2@ti.com> <1419459099-6667-2-git-send-email-m-karicheri2@ti.com> <CAL_JsqJtVnP_5zAiUvMwL00JQV0mjw-R_hEkxiv13ZuNrQ8nAA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1419404619-10744-5-git-send-email-vigneshr-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Brad Griffis <bgriffis-l0cyMroinI0@public.gmane.org>, Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>, Sanjeev Sharma <sanjeev_sharma-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Jan Kardell <jan.kardell-KSZdJiTw9mzQT0dZR+AlfA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap@vger.
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqJtVnP_5zAiUvMwL00JQV0mjw-R_hEkxiv13ZuNrQ8nAA@mail.gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Will Deacon <will.deacon@arm.com>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-* Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org> [141223 23:07]:
-> The charge delay value is by default 0x400. But it can be set to lower
-> values on some boards, as long as false pen-ups are avoided. Lowering the
-> value increases the sampling rate (though current sampling rate is
-> sufficient for TSC operation). In some boards, the value has to be
-> increased to avoid false pen-up events. Hence, charge delay has been
-> made a DT parameter.
-> 
-> Signed-off-by: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
+Rob,
 
-Assuming this binding makes sense for the input people, there should
-be no conflicts merging this patch along with the rest of the series
-via the input tree.
+See my response below. Arnd and Will, please review this as well.
 
-Sounds like this value probably depends on the size of the touchscreen
-for the capacitance, so a numeric value is really needed here. Of course
-I would personally prefer generic bindings in general, but in any case
-please feel free to merge along with the other input patches:
+On 12/26/2014 02:33 PM, Rob Herring wrote:
+> On Wed, Dec 24, 2014 at 4:11 PM, Murali Karicheri<m-karicheri2@ti.com>  wrote:
+>> Add of_pci_dma_configure() to allow updating the dma configuration
+>> of the pci device using the configuration from DT of the parent of
+>> the root bridge device.
+>>
+>> Signed-off-by: Murali Karicheri<m-karicheri2@ti.com>
+>> ---
+>>   drivers/of/of_pci.c    |   73 ++++++++++++++++++++++++++++++++++++++++++++++++
+>>   include/linux/of_pci.h |   12 ++++++++
+>>   2 files changed, 85 insertions(+)
+>>
+----------------------CUT--------------------------------------------
+>> +       unsigned long offset;
+>> +       bool coherent;
+>> +       int ret;
+>> +
+>> +       parent_np = of_get_pci_root_bridge_parent(pci_dev);
+>> +
+>> +       if (parent_np) {
+>
+> Save a level of indentation and do:
+>
+> if (!parent_np)
+>    return;
 
-Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Agree. This will not be needed if I go with changes proposed by your 
+next comment below.
+>
+>> +               /*
+-------CUT------------------------------------------------------
+>> +
+>> +               coherent = of_dma_is_coherent(parent_np);
+>> +               dev_dbg(dev, "device is%sdma coherent\n",
+>> +                       coherent ? " " : " not ");
+>> +
+>> +               arch_setup_dma_ops(dev, dma_addr, size, NULL, coherent);
+>
+> This is the same code as of_dma_configure. The only difference I see
+> is which node ptr is passed to of_dma_get_range. You need to make that
+> a function param of of_dma_configure.
+>
+> of_dma_configure also has iommu handling now. You will probably need
+> something similar for PCI in that you setup an iommu based on the root
+> bus DT properties.
+>
+Initially I had the same idea to re-use the existing function 
+of_dma_configure() for this. I wanted to defer this until we have an 
+agreement on the changes required for the subject functionality. My 
+quick review of the code suggestio this would require additional API 
+changes as below. I did a quick test of the changes and it works for 
+Keystone, but need to be reviewed by everyone as I touch the IOMMU 
+functionality here and I don't have a platform with IOMMU. Need test by 
+someone to make sure I don't break anything.
+
+Here are the changes required to implement this suggestion.
+
+1. Move the of_dma_configure() to drivers/of/device.c (include the API 
+in of_device.h) and make it global (using proper EXPORT macro). 
+Otherwise, we will have to include of_platform.h in drivers/of/of_pci.c 
+assuming the prototype is defined in of_platform.h which doesn't look 
+appropriate to me. Would require following additional include files in 
+drivers/of/device.c as well.
+
++#include <linux/of_address.h>
++#include <linux/of_iommu.h>
++#include <linux/dma-mapping.h>
+
+2. drivers/iommu/of_iommu.c. This is needed so that of_iommu_configure() 
+can take confuguration from the root bus DT as you have suggested.
+
+-struct iommu_ops *of_iommu_configure(struct device *dev)
++struct iommu_ops *of_iommu_configure(struct device *dev, struct 
+device_node *node)
+  {
+         struct of_phandle_args iommu_spec;
+         struct device_node *np;
+@@ -145,7 +145,7 @@ struct iommu_ops *of_iommu_configure(struct device *dev)
+          * See the `Notes:' section of
+          * Documentation/devicetree/bindings/iommu/iommu.txt
+          */
+-       while (!of_parse_phandle_with_args(dev->of_node, "iommus",
++       while (!of_parse_phandle_with_args(node, "iommus",
+                                            "#iommu-cells", idx,
+                                            &iommu_spec)) {
+
+3. drivers/of/of_pci.c. The existing function (added in this patch) will 
+make call to of_dma_configure() as
+
+parent_np = of_get_pci_root_bridge_parent(pci_dev);
+of_dma_configure(dev, parent_np);
+
+4. drivers/of/platform.c. Add a wrapper function 
+of_platform_dma_configure() that calls of_dma_configure() as
+of_dma_configure(dev, dev->of_node). All existing calls converted to 
+this wrapper.
+
+If the above looks good, I can post v3 of the patch with these changes.
+
+> Rob
 
 
-> ---
-> v4:
->  - Set charge delay to 0x400 as default. Most devices function normally
->    at this value
-> 
->  .../devicetree/bindings/input/touchscreen/ti-tsc-adc.txt  | 15 +++++++++++++++
->  arch/arm/boot/dts/am335x-evm.dts                          |  1 +
->  2 files changed, 16 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt b/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt
-> index 878549ba814d..6df5028a4ad3 100644
-> --- a/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt
-> +++ b/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt
-> @@ -28,6 +28,20 @@ Required properties:
->  	ti,adc-channels: List of analog inputs available for ADC.
->  			 AIN0 = 0, AIN1 = 1 and so on till AIN7 = 7.
->  
-> +Optional properties:
-> +- child "tsc"
-> +	ti,charge-delay: Length of touch screen charge delay step in terms of
-> +			 ADC clock cycles. Charge delay value should be large
-> +			 in order to avoid false pen-up events. This value
-> +			 affects the overall sampling speed, hence need to be
-> +			 kept as low as possible, while avoiding false pen-up
-> +			 event. Start from a lower value, say 0x400, and
-> +			 increase value until false pen-up events are avoided.
-> +			 The pen-up detection happens immediately after the
-> +			 charge step, so this does in fact function as a
-> +			 hardware knob for adjusting the amount of "settling
-> +			 time".
-> +
->  Example:
->  	tscadc: tscadc@44e0d000 {
->  		compatible = "ti,am3359-tscadc";
-> @@ -36,6 +50,7 @@ Example:
->  			ti,x-plate-resistance = <200>;
->  			ti,coordiante-readouts = <5>;
->  			ti,wire-config = <0x00 0x11 0x22 0x33>;
-> +			ti,charge-delay = <0x400>;
->  		};
->  
->  		adc {
-> diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
-> index 54f118c08db8..66342515df20 100644
-> --- a/arch/arm/boot/dts/am335x-evm.dts
-> +++ b/arch/arm/boot/dts/am335x-evm.dts
-> @@ -648,6 +648,7 @@
->  		ti,x-plate-resistance = <200>;
->  		ti,coordinate-readouts = <5>;
->  		ti,wire-config = <0x00 0x11 0x22 0x33>;
-> +		ti,charge-delay = <0x400>;
->  	};
->  
->  	adc {
-> -- 
-> 1.9.1
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Murali Karicheri
+Linux Kernel, Texas Instruments
