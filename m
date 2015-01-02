@@ -1,482 +1,633 @@
-From: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>
-Subject: Re: [PATCH v5 3/7] iio: Add support for DA9150 GPADC
-Date: Thu, 01 Jan 2015 21:51:04 +0100
-Message-ID: <54A5B338.1020103@gmx.de>
-References: <cover.1419264383.git.Adam.Thomson.Opensource@diasemi.com> <58b7b001b38662c36595412f96c7d2eb5c3adcad.1419264383.git.Adam.Thomson.Opensource@diasemi.com>
+From: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>
+Subject: [PATCH v7] edac: synps: Added EDAC support for zynq ddr ecc controller
+Date: Fri, 2 Jan 2015 09:52:20 +0530
+Message-ID: <d71411fd1be84d99af5936138cbcc9c7@BL2FFO11FD014.protection.gbl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <58b7b001b38662c36595412f96c7d2eb5c3adcad.1419264383.git.Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Adam Thomson <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, support.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: dougthompson@xmission.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org, michal.simek@xilinx.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, bp@alien8.de
+Cc: kpc528@gmail.com, punnaia@xilinx.com, kalluripunnaiahchoudary@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Adam Thomson schrieb am 22.12.2014 um 17:51:
-> This patch adds support for DA9150 Charger & Fuel-Gauge IC GPADC.
-> 
-> Signed-off-by: Adam Thomson <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Reviewed-by: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>
-> ---
->  drivers/iio/adc/Kconfig        |   9 +
->  drivers/iio/adc/Makefile       |   1 +
->  drivers/iio/adc/da9150-gpadc.c | 409 +++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 419 insertions(+)
->  create mode 100644 drivers/iio/adc/da9150-gpadc.c
-> 
-> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-> index 0f79e47..6e00b81 100644
-> --- a/drivers/iio/adc/Kconfig
-> +++ b/drivers/iio/adc/Kconfig
-> @@ -135,6 +135,15 @@ config AXP288_ADC
->  	  device. Depending on platform configuration, this general purpose ADC can
->  	  be used for sampling sensors such as thermal resistors.
-> 
-> +config DA9150_GPADC
-> +	tristate "Dialog DA9150 GPADC driver support"
-> +	depends on MFD_DA9150
-> +	help
-> +	  Say yes here to build support for Dialog DA9150 GPADC.
-> +
-> +	  This driver can also be built as a module. If chosen, the module name
-> +	  will be da9150-gpadc.
-> +
->  config EXYNOS_ADC
->  	tristate "Exynos ADC driver support"
->  	depends on ARCH_EXYNOS || ARCH_S3C24XX || ARCH_S3C64XX || (OF && COMPILE_TEST)
-> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
-> index 701fdb7..d56ee9b 100644
-> --- a/drivers/iio/adc/Makefile
-> +++ b/drivers/iio/adc/Makefile
-> @@ -15,6 +15,7 @@ obj-$(CONFIG_AD7887) += ad7887.o
->  obj-$(CONFIG_AD799X) += ad799x.o
->  obj-$(CONFIG_AT91_ADC) += at91_adc.o
->  obj-$(CONFIG_AXP288_ADC) += axp288_adc.o
-> +obj-$(CONFIG_DA9150_GPADC) += da9150-gpadc.o
->  obj-$(CONFIG_EXYNOS_ADC) += exynos_adc.o
->  obj-$(CONFIG_LP8788_ADC) += lp8788_adc.o
->  obj-$(CONFIG_MAX1027) += max1027.o
-> diff --git a/drivers/iio/adc/da9150-gpadc.c b/drivers/iio/adc/da9150-gpadc.c
-> new file mode 100644
-> index 0000000..3f7bc81
-> --- /dev/null
-> +++ b/drivers/iio/adc/da9150-gpadc.c
-> @@ -0,0 +1,409 @@
-> +/*
-> + * DA9150 GPADC Driver
-> + *
-> + * Copyright (c) 2014 Dialog Semiconductor
-> + *
-> + * Author: Adam Thomson <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute  it and/or modify it
-> + * under  the terms of  the GNU General  Public License as published by the
-> + * Free Software Foundation;  either version 2 of the  License, or (at your
-> + * option) any later version.
-> + */
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/slab.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/mutex.h>
-> +#include <linux/completion.h>
-> +#include <linux/iio/iio.h>
-> +#include <linux/iio/machine.h>
-> +#include <linux/iio/driver.h>
-> +#include <linux/mfd/da9150/core.h>
-> +#include <linux/mfd/da9150/registers.h>
-> +
-> +/* Channels */
-> +enum da9150_gpadc_hw_channel {
-> +	DA9150_GPADC_HW_CHAN_GPIOA_2V = 0,
-> +	DA9150_GPADC_HW_CHAN_GPIOA_2V_,
-> +	DA9150_GPADC_HW_CHAN_GPIOB_2V,
-> +	DA9150_GPADC_HW_CHAN_GPIOB_2V_,
-> +	DA9150_GPADC_HW_CHAN_GPIOC_2V,
-> +	DA9150_GPADC_HW_CHAN_GPIOC_2V_,
-> +	DA9150_GPADC_HW_CHAN_GPIOD_2V,
-> +	DA9150_GPADC_HW_CHAN_GPIOD_2V_,
-> +	DA9150_GPADC_HW_CHAN_IBUS_SENSE,
-> +	DA9150_GPADC_HW_CHAN_IBUS_SENSE_,
-> +	DA9150_GPADC_HW_CHAN_VBUS_DIV,
-> +	DA9150_GPADC_HW_CHAN_VBUS_DIV_,
-> +	DA9150_GPADC_HW_CHAN_ID,
-> +	DA9150_GPADC_HW_CHAN_ID_,
-> +	DA9150_GPADC_HW_CHAN_VSYS,
-> +	DA9150_GPADC_HW_CHAN_VSYS_,
-> +	DA9150_GPADC_HW_CHAN_GPIOA_6V,
-> +	DA9150_GPADC_HW_CHAN_GPIOA_6V_,
-> +	DA9150_GPADC_HW_CHAN_GPIOB_6V,
-> +	DA9150_GPADC_HW_CHAN_GPIOB_6V_,
-> +	DA9150_GPADC_HW_CHAN_GPIOC_6V,
-> +	DA9150_GPADC_HW_CHAN_GPIOC_6V_,
-> +	DA9150_GPADC_HW_CHAN_GPIOD_6V,
-> +	DA9150_GPADC_HW_CHAN_GPIOD_6V_,
-> +	DA9150_GPADC_HW_CHAN_VBAT,
-> +	DA9150_GPADC_HW_CHAN_VBAT_,
-> +	DA9150_GPADC_HW_CHAN_TBAT,
-> +	DA9150_GPADC_HW_CHAN_TBAT_,
-> +	DA9150_GPADC_HW_CHAN_TJUNC_CORE,
-> +	DA9150_GPADC_HW_CHAN_TJUNC_CORE_,
-> +	DA9150_GPADC_HW_CHAN_TJUNC_OVP,
-> +	DA9150_GPADC_HW_CHAN_TJUNC_OVP_,
-> +};
-> +
-> +enum da9150_gpadc_channel {
-> +	DA9150_GPADC_CHAN_GPIOA = 0,
-> +	DA9150_GPADC_CHAN_GPIOB,
-> +	DA9150_GPADC_CHAN_GPIOC,
-> +	DA9150_GPADC_CHAN_GPIOD,
-> +	DA9150_GPADC_CHAN_IBUS,
-> +	DA9150_GPADC_CHAN_VBUS,
-> +	DA9150_GPADC_CHAN_ID,
-> +	DA9150_GPADC_CHAN_VSYS,
-> +	DA9150_GPADC_CHAN_VBAT,
-> +	DA9150_GPADC_CHAN_TBAT,
-> +	DA9150_GPADC_CHAN_TJUNC_CORE,
-> +	DA9150_GPADC_CHAN_TJUNC_OVP,
-> +};
-> +
-> +/* Private data */
-> +struct da9150_gpadc {
-> +	struct da9150 *da9150;
-> +	struct device *dev;
-> +
-> +	struct mutex lock;
-> +	struct completion complete;
-> +};
-> +
-> +
-> +static irqreturn_t da9150_gpadc_irq(int irq, void *data)
-> +{
-> +
-> +	struct da9150_gpadc *gpadc = data;
-> +
-> +	complete(&gpadc->complete);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static int da9150_gpadc_read_adc(struct da9150_gpadc *gpadc, int hw_chan)
-> +{
-> +	u8 result_regs[2];
-> +	int result;
-> +
-> +	mutex_lock(&gpadc->lock);
-> +
-> +	/* Set channel & enable measurement */
-> +	da9150_reg_write(gpadc->da9150, DA9150_GPADC_MAN,
-> +			 (DA9150_GPADC_EN_MASK |
-> +			  hw_chan << DA9150_GPADC_MUX_SHIFT));
-> +
-> +	/* Consume left-over completion from a previous timeout */
-> +	try_wait_for_completion(&gpadc->complete);
-> +
-> +	/* Check for actual completion */
-> +	wait_for_completion_timeout(&gpadc->complete, msecs_to_jiffies(5));
-> +
-> +	/* Read result and status from device */
-> +	da9150_bulk_read(gpadc->da9150, DA9150_GPADC_RES_A, 2, result_regs);
-> +
-> +	mutex_unlock(&gpadc->lock);
-> +
-> +	/* Check to make sure device really has completed reading */
-> +	if (result_regs[1] & DA9150_GPADC_RUN_MASK) {
-> +		dev_err(gpadc->dev, "Timeout on channel %d of GPADC\n",
-> +			hw_chan);
-> +		return -ETIMEDOUT;
-> +	}
-> +
-> +	/* LSBs - 2 bits */
-> +	result = (result_regs[1] & DA9150_GPADC_RES_L_MASK) >>
-> +		 DA9150_GPADC_RES_L_SHIFT;
-> +	/* MSBs - 8 bits */
-> +	result |= result_regs[0] << DA9150_GPADC_RES_L_BITS;
-> +
-> +	return result;
-> +}
-> +
-> +static inline int da9150_gpadc_gpio_6v_voltage_now(int raw_val)
-> +{
-> +	/* Convert to mV */
-> +	return (6 * ((raw_val * 1000) + 500)) / 1024;
-> +}
-> +
-> +static inline int da9150_gpadc_ibus_current_avg(int raw_val)
-> +{
-> +	/* Convert to mA */
-> +	return (4 * ((raw_val * 1000) + 500)) / 2048;
-> +}
-> +
-> +static inline int da9150_gpadc_vbus_21v_voltage_now(int raw_val)
-> +{
-> +	/* Convert to mV */
-> +	return (21 * ((raw_val * 1000) + 500)) / 1024;
-> +}
-> +
-> +static inline int da9150_gpadc_vsys_6v_voltage_now(int raw_val)
-> +{
-> +	/* Convert to mV */
-> +	return (3 * ((raw_val * 1000) + 500)) / 512;
-> +}
-> +
-> +static int da9150_gpadc_read_processed(struct da9150_gpadc *gpadc, int channel,
-> +				       int hw_chan, int *val)
-> +{
-> +	int raw_val;
-> +
-> +	raw_val = da9150_gpadc_read_adc(gpadc, hw_chan);
-> +	if (raw_val < 0)
-> +		return raw_val;
-> +
-> +	switch (channel) {
-> +	case DA9150_GPADC_CHAN_GPIOA:
-> +	case DA9150_GPADC_CHAN_GPIOB:
-> +	case DA9150_GPADC_CHAN_GPIOC:
-> +	case DA9150_GPADC_CHAN_GPIOD:
-> +		*val = da9150_gpadc_gpio_6v_voltage_now(raw_val);
-> +		break;
-> +	case DA9150_GPADC_CHAN_IBUS:
-> +		*val = da9150_gpadc_ibus_current_avg(raw_val);
-> +		break;
-> +	case DA9150_GPADC_CHAN_VBUS:
-> +		*val = da9150_gpadc_vbus_21v_voltage_now(raw_val);
-> +		break;
-> +	case DA9150_GPADC_CHAN_VSYS:
-> +		*val = da9150_gpadc_vsys_6v_voltage_now(raw_val);
-> +		break;
-> +	default:
-> +		/* No processing for other channels so return raw value */
-> +		*val = raw_val;
-> +		break;
-> +	}
-> +
-> +	return IIO_VAL_INT;
-> +}
-> +
-> +static int da9150_gpadc_read_scale(int channel, int *val, int *val2)
-> +{
-> +	switch (channel) {
-> +	case DA9150_GPADC_CHAN_VBAT:
-> +		*val = 2932;
-> +		*val2 = 1000;
-> +		return IIO_VAL_FRACTIONAL;
-> +	case DA9150_GPADC_CHAN_TJUNC_CORE:
-> +	case DA9150_GPADC_CHAN_TJUNC_OVP:
-> +		*val = 1000000;
-> +		*val2 = 4420;
-> +		return IIO_VAL_FRACTIONAL;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +static int da9150_gpadc_read_offset(int channel, int *val)
-> +{
-> +	switch (channel) {
-> +	case DA9150_GPADC_CHAN_VBAT:
-> +		*val = 1500000 / 2932;
-> +		return IIO_VAL_INT;
-> +	case DA9150_GPADC_CHAN_TJUNC_CORE:
-> +	case DA9150_GPADC_CHAN_TJUNC_OVP:
-> +		*val = -144;
-> +		return IIO_VAL_INT;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +static int da9150_gpadc_read_raw(struct iio_dev *indio_dev,
-> +				 struct iio_chan_spec const *chan,
-> +				 int *val, int *val2, long mask)
-> +{
-> +	struct da9150_gpadc *gpadc = iio_priv(indio_dev);
-> +
-> +	if ((chan->channel < DA9150_GPADC_CHAN_GPIOA) ||
-> +	    (chan->channel > DA9150_GPADC_CHAN_TJUNC_OVP))
-> +		return -EINVAL;
-> +
-> +	switch (mask) {
-> +	case IIO_CHAN_INFO_RAW:
-> +	case IIO_CHAN_INFO_PROCESSED:
-> +		return da9150_gpadc_read_processed(gpadc, chan->channel,
-> +						   chan->address, val);
-> +	case IIO_CHAN_INFO_SCALE:
-> +		return da9150_gpadc_read_scale(chan->channel, val, val2);
-> +	case IIO_CHAN_INFO_OFFSET:
-> +		return da9150_gpadc_read_offset(chan->channel, val);
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +static const struct iio_info da9150_gpadc_info = {
-> +	.read_raw = &da9150_gpadc_read_raw,
-> +	.driver_module = THIS_MODULE,
-> +};
-> +
-> +#define DA9150_GPADC_CHANNEL(_id, _hw_id, _type, chan_info,	\
-> +			     _ext_name) {			\
-> +	.type = _type,						\
-> +	.indexed = 1,						\
-> +	.channel = DA9150_GPADC_CHAN_##_id,			\
-> +	.address = DA9150_GPADC_HW_CHAN_##_hw_id,		\
-> +	.info_mask_separate = chan_info,			\
-> +	.extend_name = _ext_name,				\
-> +	.datasheet_name = #_id,					\
-> +}
-> +
-> +#define DA9150_GPADC_CHANNEL_RAW(_id, _hw_id, _type, _ext_name)	\
-> +	DA9150_GPADC_CHANNEL(_id, _hw_id, _type,		\
-> +			     BIT(IIO_CHAN_INFO_RAW), _ext_name)
-> +
-> +#define DA9150_GPADC_CHANNEL_SCALED(_id, _hw_id, _type, _ext_name)	\
-> +	DA9150_GPADC_CHANNEL(_id, _hw_id, _type,			\
-> +			     BIT(IIO_CHAN_INFO_RAW) |			\
-> +			     BIT(IIO_CHAN_INFO_SCALE) |			\
-> +			     BIT(IIO_CHAN_INFO_OFFSET),			\
-> +			     _ext_name)
-> +
-> +#define DA9150_GPADC_CHANNEL_PROCESSED(_id, _hw_id, _type, _ext_name)	\
-> +	DA9150_GPADC_CHANNEL(_id, _hw_id, _type,			\
-> +			     BIT(IIO_CHAN_INFO_PROCESSED), _ext_name)
-> +
-> +/* Supported channels */
-> +static const struct iio_chan_spec da9150_gpadc_channels[] = {
-> +	DA9150_GPADC_CHANNEL_PROCESSED(GPIOA, GPIOA_6V, IIO_VOLTAGE, "GPIOA"),
-> +	DA9150_GPADC_CHANNEL_PROCESSED(GPIOB, GPIOB_6V, IIO_VOLTAGE, "GPIOB"),
-> +	DA9150_GPADC_CHANNEL_PROCESSED(GPIOC, GPIOC_6V, IIO_VOLTAGE, "GPIOC"),
-> +	DA9150_GPADC_CHANNEL_PROCESSED(GPIOD, GPIOD_6V, IIO_VOLTAGE, "GPIOD"),
-> +	DA9150_GPADC_CHANNEL_PROCESSED(IBUS, IBUS_SENSE, IIO_CURRENT, "IBUS"),
-> +	DA9150_GPADC_CHANNEL_PROCESSED(VBUS, VBUS_DIV_, IIO_VOLTAGE, "VBUS"),
-> +	DA9150_GPADC_CHANNEL_RAW(ID, ID, IIO_VOLTAGE, "ID"),
-> +	DA9150_GPADC_CHANNEL_PROCESSED(VSYS, VSYS, IIO_VOLTAGE, "VSYS"),
-> +	DA9150_GPADC_CHANNEL_SCALED(VBAT, VBAT, IIO_VOLTAGE, "VBAT"),
-> +	DA9150_GPADC_CHANNEL_RAW(TBAT, TBAT, IIO_VOLTAGE, "TBAT"),
-> +	DA9150_GPADC_CHANNEL_SCALED(TJUNC_CORE, TJUNC_CORE, IIO_TEMP,
-> +				    "TJUNC_CORE"),
-> +	DA9150_GPADC_CHANNEL_SCALED(TJUNC_OVP, TJUNC_OVP, IIO_TEMP,
-> +				    "TJUNC_OVP"),
-> +};
-> +
-> +/* Default maps used by da9150-charger */
-> +static struct iio_map da9150_gpadc_default_maps[] = {
-> +	{
-> +		.consumer_dev_name = "da9150-charger",
-> +		.consumer_channel = "CHAN_IBUS",
-> +		.adc_channel_label = "IBUS",
-> +	},
-> +	{
-> +		.consumer_dev_name = "da9150-charger",
-> +		.consumer_channel = "CHAN_VBUS",
-> +		.adc_channel_label = "VBUS",
-> +	},
-> +	{
-> +		.consumer_dev_name = "da9150-charger",
-> +		.consumer_channel = "CHAN_TJUNC",
-> +		.adc_channel_label = "TJUNC_CORE",
-> +	},
-> +	{
-> +		.consumer_dev_name = "da9150-charger",
-> +		.consumer_channel = "CHAN_VBAT",
-> +		.adc_channel_label = "VBAT",
-> +	},
-> +	{},
-> +};
-> +
-> +static int da9150_gpadc_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct da9150 *da9150 = dev_get_drvdata(dev->parent);
-> +	struct da9150_gpadc *gpadc;
-> +	struct iio_dev *indio_dev;
-> +	int irq, ret;
-> +
-> +	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*gpadc));
-> +	if (!indio_dev) {
-> +		dev_err(&pdev->dev, "Failed to allocate IIO device\n");
-> +		return -ENOMEM;
-> +	}
-> +	gpadc = iio_priv(indio_dev);
-> +
-> +	platform_set_drvdata(pdev, indio_dev);
-> +	gpadc->da9150 = da9150;
-> +	gpadc->dev = dev;
-> +	mutex_init(&gpadc->lock);
-> +	init_completion(&gpadc->complete);
-> +
-> +	irq = platform_get_irq_byname(pdev, "GPADC");
-> +	if (irq < 0) {
-> +		dev_err(dev, "Failed to get IRQ: %d\n", irq);
-> +		return irq;
-> +	}
-> +
-> +	ret = devm_request_threaded_irq(dev, irq, NULL, da9150_gpadc_irq,
-> +					IRQF_ONESHOT, "GPADC", gpadc);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to request IRQ %d: %d\n", irq, ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = iio_map_array_register(indio_dev, da9150_gpadc_default_maps);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to register IIO maps: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	indio_dev->name = dev_name(dev);
-> +	indio_dev->dev.parent = dev;
-> +	indio_dev->dev.of_node = pdev->dev.of_node;
-> +	indio_dev->info = &da9150_gpadc_info;
-> +	indio_dev->modes = INDIO_DIRECT_MODE;
-> +	indio_dev->channels = da9150_gpadc_channels;
-> +	indio_dev->num_channels = ARRAY_SIZE(da9150_gpadc_channels);
-> +
-> +	ret = iio_device_register(indio_dev);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to register IIO device: %d\n", ret);
-> +		goto iio_map_unreg;
-> +	}
-> +
-> +	return 0;
-> +
-> +iio_map_unreg:
-> +	iio_map_array_unregister(indio_dev);
-> +
-> +	return ret;
-> +}
-> +
-> +static int da9150_gpadc_remove(struct platform_device *pdev)
-> +{
-> +	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
-> +
-> +	iio_device_unregister(indio_dev);
-> +	iio_map_array_unregister(indio_dev);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct platform_driver da9150_gpadc_driver = {
-> +	.driver = {
-> +		.name = "da9150-gpadc",
-> +	},
-> +	.probe = da9150_gpadc_probe,
-> +	.remove = da9150_gpadc_remove,
-> +};
-> +
-> +module_platform_driver(da9150_gpadc_driver);
-> +
-> +MODULE_DESCRIPTION("GPADC Driver for DA9150");
-> +MODULE_AUTHOR("Adam Thomson <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>");
-> +MODULE_LICENSE("GPL");
-> --
-> 1.9.3
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+Added EDAC support for reporting the ecc errors of synopsys ddr controller.
+The ddr ecc controller corrects single bit errors and detects double bit
+errors.
+
+Signed-off-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
+---
+Changes for v7:
+- Fixed indentation and removed insignificant comments
+- I have not taken care of spliting synps_edac_geterror_info function as
+  it adds additional indentation levels and moreover the existing changes were
+  made as part of the v2 review comments
+Changes for v6:
+- Fixed indentation and typo errors 
+- Corrected the function and structure headers
+Changes for v5:
+- Removed dt binding info as already there is a binding info available
+   under memorycontroller. so, updated ecc info there.
+- corrected the ip version and function return types
+Changes for v4:
+- Shorten the macro definitions
+- Corrected the ddr ip version
+- Reverted the file name change
+Changes for v3:
+- Updated maintainer information
+- Driver cleanup as per the review comments
+- Shortened the prefix "sysnopsys" to "synps"
+Changes for v2:
+- Updated the commit header and message
+- Renamed the filenames to synopsys_edac
+- Corrected the compatilble string, commnets
+- Renamed the macros,fucntions and data structures
+---
+ MAINTAINERS                  |    1 +
+ drivers/edac/Kconfig         |    7 +
+ drivers/edac/Makefile        |    1 +
+ drivers/edac/synopsys_edac.c |  528 ++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 537 insertions(+), 0 deletions(-)
+ create mode 100644 drivers/edac/synopsys_edac.c
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 0ff630d..7601298 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1556,6 +1556,7 @@ N:	xilinx
+ F:	drivers/clocksource/cadence_ttc_timer.c
+ F:	drivers/i2c/busses/i2c-cadence.c
+ F:	drivers/mmc/host/sdhci-of-arasan.c
++F:	drivers/edac/synopsys_edac.c
+ 
+ ARM SMMU DRIVER
+ M:	Will Deacon <will.deacon@arm.com>
+diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
+index 7072c28..b7b6691 100644
+--- a/drivers/edac/Kconfig
++++ b/drivers/edac/Kconfig
+@@ -385,4 +385,11 @@ config EDAC_ALTERA_MC
+ 	  preloader must initialize the SDRAM before loading
+ 	  the kernel.
+ 
++config EDAC_SYNOPSYS
++	tristate "Synopsys DDR Memory Controller"
++	depends on EDAC_MM_EDAC && ARCH_ZYNQ
++	help
++	  Support for error detection and correction on the Synopsys DDR
++	  memory controller.
++
+ endif # EDAC
+diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
+index 359aa49..9b5a095 100644
+--- a/drivers/edac/Makefile
++++ b/drivers/edac/Makefile
+@@ -67,3 +67,4 @@ obj-$(CONFIG_EDAC_OCTEON_LMC)		+= octeon_edac-lmc.o
+ obj-$(CONFIG_EDAC_OCTEON_PCI)		+= octeon_edac-pci.o
+ 
+ obj-$(CONFIG_EDAC_ALTERA_MC)		+= altera_edac.o
++obj-$(CONFIG_EDAC_SYNOPSYS)		+= synopsys_edac.o
+diff --git a/drivers/edac/synopsys_edac.c b/drivers/edac/synopsys_edac.c
+new file mode 100644
+index 0000000..fa0e6fa
+--- /dev/null
++++ b/drivers/edac/synopsys_edac.c
+@@ -0,0 +1,528 @@
++/*
++ * Synopsys DDR ECC Driver
++ * This driver is based on ppc4xx_edac.c drivers
++ *
++ * Copyright (C) 2012 - 2014 Xilinx, Inc.
++ *
++ * This program is free software: you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation, either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * This file is subject to the terms and conditions of the GNU General Public
++ * License.  See the file "COPYING" in the main directory of this archive
++ * for more details
++ */
++
++#include <linux/edac.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++
++#include "edac_core.h"
++
++/* Number of cs_rows needed per memory controller */
++#define SYNPS_EDAC_NR_CSROWS	1
++
++/* Number of channels per memory controller */
++#define SYNPS_EDAC_NR_CHANS	1
++
++/* Granularity of reported error in bytes */
++#define SYNPS_EDAC_ERR_GRAIN	1
++
++#define SYNPS_EDAC_MSG_SIZE	256
++
++#define SYNPS_EDAC_MOD_STRING	"synps_edac"
++#define SYNPS_EDAC_MOD_VER	"1"
++
++/* Synopsys DDR memory controller registers that are relevant to ECC */
++#define CTRL_OFST		0x0
++#define T_ZQ_OFST		0xA4
++
++/* ECC control register */
++#define ECC_CTRL_OFST		0xC4
++/* ECC log register */
++#define CE_LOG_OFST		0xC8
++/* ECC address register */
++#define CE_ADDR_OFST		0xCC
++/* ECC data[31:0] register */
++#define CE_DATA_31_0_OFST	0xD0
++
++/* Uncorrectable error info registers */
++#define UE_LOG_OFST		0xDC
++#define UE_ADDR_OFST		0xE0
++#define UE_DATA_31_0_OFST	0xE4
++
++#define STAT_OFST		0xF0
++#define SCRUB_OFST		0xF4
++
++/* Control register bit field definitions */
++#define CTRL_BW_MASK		0xC
++#define CTRL_BW_SHIFT		2
++
++#define DDRCTL_WDTH_16		1
++#define DDRCTL_WDTH_32		0
++
++/* ZQ register bit field definitions */
++#define T_ZQ_DDRMODE_MASK	0x2
++
++/* ECC control register bit field definitions */
++#define ECC_CTRL_CLR_CE_ERR	0x2
++#define ECC_CTRL_CLR_UE_ERR	0x1
++
++/* ECC correctable/uncorrectable error log register definitions */
++#define LOG_VALID		0x1
++#define CE_LOG_BITPOS_MASK	0xFE
++#define CE_LOG_BITPOS_SHIFT	1
++
++/* ECC correctable/uncorrectable error address register definitions */
++#define ADDR_COL_MASK		0xFFF
++#define ADDR_ROW_MASK		0xFFFF000
++#define ADDR_ROW_SHIFT		12
++#define ADDR_BANK_MASK		0x70000000
++#define ADDR_BANK_SHIFT		28
++
++/* ECC statistic register definitions */
++#define STAT_UECNT_MASK		0xFF
++#define STAT_CECNT_MASK		0xFF00
++#define STAT_CECNT_SHIFT	8
++
++/* ECC scrub register definitions */
++#define SCRUB_MODE_MASK		0x7
++#define SCRUB_MODE_SECDED	0x4
++
++/**
++ * struct ecc_error_info - ECC error log information
++ * @row:	Row number
++ * @col:	Column number
++ * @bank:	Bank number
++ * @bitpos:	Bit position
++ * @data:	Data causing the error
++ */
++struct ecc_error_info {
++	u32 row;
++	u32 col;
++	u32 bank;
++	u32 bitpos;
++	u32 data;
++};
++
++/**
++ * struct synps_ecc_status - ECC status information to report
++ * @ce_cnt:	Correctable error count
++ * @ue_cnt:	Uncorrectable error count
++ * @ceinfo:	Correctable error log information
++ * @ueinfo:	Uncorrectable error log information
++ */
++struct synps_ecc_status {
++	u32 ce_cnt;
++	u32 ue_cnt;
++	struct ecc_error_info ceinfo;
++	struct ecc_error_info ueinfo;
++};
++
++/**
++ * struct synps_edac_priv - DDR memory controller private instance data
++ * @baseaddr:		Base address of the DDR controller
++ * @ce_cnt:		Correctable Error count
++ * @ue_cnt:		Uncorrectable Error count
++ */
++struct synps_edac_priv {
++	void __iomem *baseaddr;
++	u32 ce_cnt;
++	u32 ue_cnt;
++};
++
++/**
++ * synps_edac_geterror_info - Get the current ecc error info
++ * @base:	Pointer to the base address of the ddr memory controller
++ * @p:		Pointer to the synopsys ecc status structure
++ *
++ * Determines there is any ecc error or not
++ *
++ * Return: one if there is no error otherwise returns zero
++ */
++static int synps_edac_geterror_info(void __iomem *base,
++				    struct synps_ecc_status *p)
++{
++	u32 regval, clearval = 0;
++
++	regval = readl(base + STAT_OFST);
++	if (!regval)
++		return 1;
++
++	memset(p, 0, sizeof(*p));
++
++	p->ce_cnt = (regval & STAT_CECNT_MASK) >> STAT_CECNT_SHIFT;
++	p->ue_cnt = regval & STAT_UECNT_MASK;
++
++	regval = readl(base + CE_LOG_OFST);
++	if (!(p->ce_cnt && (regval & LOG_VALID)))
++		goto ue_err;
++
++	p->ceinfo.bitpos = (regval & CE_LOG_BITPOS_MASK) >> CE_LOG_BITPOS_SHIFT;
++	regval = readl(base + CE_ADDR_OFST);
++	p->ceinfo.row = (regval & ADDR_ROW_MASK) >> ADDR_ROW_SHIFT;
++	p->ceinfo.col = regval & ADDR_COL_MASK;
++	p->ceinfo.bank = (regval & ADDR_BANK_MASK) >> ADDR_BANK_SHIFT;
++	p->ceinfo.data = readl(base + CE_DATA_31_0_OFST);
++	edac_dbg(3, "ce bit position: %d data: %d\n", p->ceinfo.bitpos,
++		 p->ceinfo.data);
++	clearval = ECC_CTRL_CLR_CE_ERR;
++
++ue_err:
++	regval = readl(base + UE_LOG_OFST);
++	if (!(p->ue_cnt && (regval & LOG_VALID)))
++		goto out;
++
++	regval = readl(base + UE_ADDR_OFST);
++	p->ueinfo.row = (regval & ADDR_ROW_MASK) >> ADDR_ROW_SHIFT;
++	p->ueinfo.col = regval & ADDR_COL_MASK;
++	p->ueinfo.bank = (regval & ADDR_BANK_MASK) >> ADDR_BANK_SHIFT;
++	p->ueinfo.data = readl(base + UE_DATA_31_0_OFST);
++	clearval |= ECC_CTRL_CLR_UE_ERR;
++
++out:
++	writel(clearval, base + ECC_CTRL_OFST);
++	writel(0x0, base + ECC_CTRL_OFST);
++
++	return 0;
++}
++
++/**
++ * synps_edac_handle_error - Handle controller error types CE and UE
++ * @mci:	Pointer to the edac memory controller instance
++ * @p:		Pointer to the synopsys ecc status structure
++ *
++ * Handles the controller ECC correctable and un correctable error.
++ */
++static void synps_edac_handle_error(struct mem_ctl_info *mci,
++				    struct synps_ecc_status *p)
++{
++	char message[SYNPS_EDAC_MSG_SIZE];
++	struct ecc_error_info *pinf;
++
++	if (p->ce_cnt) {
++		pinf = &p->ceinfo;
++		snprintf(message, SYNPS_EDAC_MSG_SIZE,
++			 "DDR ECC error type :%s Row %d Bank %d Col %d ",
++			 "CE", pinf->row, pinf->bank, pinf->col);
++		edac_mc_handle_error(HW_EVENT_ERR_CORRECTED, mci,
++				     p->ce_cnt, 0, 0, 0, 0, 0, -1,
++				     message, "");
++	}
++
++	if (p->ue_cnt) {
++		pinf = &p->ueinfo;
++		snprintf(message, SYNPS_EDAC_MSG_SIZE,
++			 "DDR ECC error type :%s Row %d Bank %d Col %d ",
++			 "UE", pinf->row, pinf->bank, pinf->col);
++		edac_mc_handle_error(HW_EVENT_ERR_UNCORRECTED, mci,
++				     p->ue_cnt, 0, 0, 0, 0, 0, -1,
++				     message, "");
++	}
++}
++
++/**
++ * synps_edac_check - Check controller for ECC errors
++ * @mci:	Pointer to the edac memory controller instance
++ *
++ * Used to check and post ECC errors. Called by the polling thread
++ */
++static void synps_edac_check(struct mem_ctl_info *mci)
++{
++	struct synps_edac_priv *priv = mci->pvt_info;
++	struct synps_ecc_status stat;
++	int status;
++
++	status = synps_edac_geterror_info(priv->baseaddr, &stat);
++	if (status)
++		return;
++
++	priv->ce_cnt += stat.ce_cnt;
++	priv->ue_cnt += stat.ue_cnt;
++	synps_edac_handle_error(mci, &stat);
++
++	edac_dbg(3, "Total error count ce %d ue %d\n",
++		 priv->ce_cnt, priv->ue_cnt);
++}
++
++/**
++ * synps_edac_get_dtype - Return the controller memory width
++ * @base:	Pointer to the ddr memory controller base address
++ *
++ * Get the EDAC device type width appropriate for the current controller
++ * configuration.
++ *
++ * Return: a device type width enumeration.
++ */
++static enum dev_type synps_edac_get_dtype(const void __iomem *base)
++{
++	enum dev_type dt;
++	u32 width;
++
++	width = readl(base + CTRL_OFST);
++	width = (width & CTRL_BW_MASK) >> CTRL_BW_SHIFT;
++
++	switch (width) {
++	case DDRCTL_WDTH_16:
++		dt = DEV_X2;
++		break;
++	case DDRCTL_WDTH_32:
++		dt = DEV_X4;
++		break;
++	default:
++		dt = DEV_UNKNOWN;
++	}
++
++	return dt;
++}
++
++/**
++ * synps_edac_get_eccstate - Return the controller ecc enable/disable status
++ * @base:	Pointer to the ddr memory controller base address
++ *
++ * Get the ECC enable/disable status for the controller
++ *
++ * Return: a ecc status boolean i.e true/false - enabled/disabled.
++ */
++static bool synps_edac_get_eccstate(void __iomem *base)
++{
++	enum dev_type dt;
++	u32 ecctype;
++	bool state = false;
++
++	dt = synps_edac_get_dtype(base);
++	if (dt == DEV_UNKNOWN)
++		return state;
++
++	ecctype = readl(base + SCRUB_OFST) & SCRUB_MODE_MASK;
++	if ((ecctype == SCRUB_MODE_SECDED) && (dt == DEV_X2))
++		state = true;
++
++	return state;
++}
++
++/**
++ * synps_edac_get_memsize - reads the size of the attached memory device
++ *
++ * Return: the memory size in bytes
++ */
++static u32 synps_edac_get_memsize(void)
++{
++	struct sysinfo inf;
++
++	si_meminfo(&inf);
++
++	return inf.totalram * inf.mem_unit;
++}
++
++/**
++ * synps_edac_get_mtype - Returns controller memory type
++ * @base:	pointer to the synopsys ecc status structure
++ *
++ * Get the EDAC memory type appropriate for the current controller
++ * configuration.
++ *
++ * Return: a memory type enumeration.
++ */
++static enum mem_type synps_edac_get_mtype(const void __iomem *base)
++{
++	enum mem_type mt;
++	u32 memtype;
++
++	memtype = readl(base + T_ZQ_OFST);
++
++	if (memtype & T_ZQ_DDRMODE_MASK)
++		mt = MEM_DDR3;
++	else
++		mt = MEM_DDR2;
++
++	return mt;
++}
++
++/**
++ * synps_edac_init_csrows - Initialize the cs row data
++ * @mci:	Pointer to the edac memory controller instance
++ *
++ * Initializes the chip select rows associated with the EDAC memory
++ * controller instance
++ *
++ * Return: Unconditionally 0.
++ */
++static int synps_edac_init_csrows(struct mem_ctl_info *mci)
++{
++	struct csrow_info *csi;
++	struct dimm_info *dimm;
++	struct synps_edac_priv *priv = mci->pvt_info;
++	u32 size;
++	int row, j;
++
++	for (row = 0; row < mci->nr_csrows; row++) {
++		csi = mci->csrows[row];
++		size = synps_edac_get_memsize();
++
++		for (j = 0; j < csi->nr_channels; j++) {
++			dimm            = csi->channels[j]->dimm;
++			dimm->edac_mode = EDAC_FLAG_SECDED;
++			dimm->mtype     = synps_edac_get_mtype(priv->baseaddr);
++			dimm->nr_pages  = (size >> PAGE_SHIFT) / csi->nr_channels;
++			dimm->grain     = SYNPS_EDAC_ERR_GRAIN;
++			dimm->dtype     = synps_edac_get_dtype(priv->baseaddr);
++		}
++	}
++
++	return 0;
++}
++
++/**
++ * synps_edac_mc_init - Initialize driver instance
++ * @mci:	Pointer to the edac memory controller instance
++ * @pdev:	Pointer to the platform_device struct
++ *
++ * Performs initialization of the EDAC memory controller instance and
++ * related driver-private data associated with the memory controller the
++ * instance is bound to.
++ *
++ * Return: Always zero.
++ */
++static int synps_edac_mc_init(struct mem_ctl_info *mci,
++				 struct platform_device *pdev)
++{
++	int status;
++	struct synps_edac_priv *priv;
++
++	mci->pdev = &pdev->dev;
++	priv = mci->pvt_info;
++	platform_set_drvdata(pdev, mci);
++
++	/* Initialize controller capabilities and configuration */
++	mci->mtype_cap = MEM_FLAG_DDR3 | MEM_FLAG_DDR2;
++	mci->edac_ctl_cap = EDAC_FLAG_NONE | EDAC_FLAG_SECDED;
++	mci->scrub_cap = SCRUB_HW_SRC;
++	mci->scrub_mode = SCRUB_NONE;
++
++	mci->edac_cap = EDAC_FLAG_SECDED;
++	mci->ctl_name = "synps_ddr_controller";
++	mci->dev_name = SYNPS_EDAC_MOD_STRING;
++	mci->mod_name = SYNPS_EDAC_MOD_VER;
++	mci->mod_ver = "1";
++
++	edac_op_state = EDAC_OPSTATE_POLL;
++	mci->edac_check = synps_edac_check;
++	mci->ctl_page_to_phys = NULL;
++
++	status = synps_edac_init_csrows(mci);
++
++	return status;
++}
++
++/**
++ * synps_edac_mc_probe - Check controller and bind driver
++ * @pdev:	Pointer to the platform_device struct
++ *
++ * Probes a specific controller instance for binding with the driver.
++ *
++ * Return: 0 if the controller instance was successfully bound to the
++ * driver; otherwise, < 0 on error.
++ */
++static int synps_edac_mc_probe(struct platform_device *pdev)
++{
++	struct mem_ctl_info *mci;
++	struct edac_mc_layer layers[2];
++	struct synps_edac_priv *priv;
++	int rc;
++	struct resource *res;
++	void __iomem *baseaddr;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	baseaddr = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(baseaddr))
++		return PTR_ERR(baseaddr);
++
++	if (!synps_edac_get_eccstate(baseaddr)) {
++		edac_printk(KERN_INFO, EDAC_MC, "ECC not enabled\n");
++		return -ENXIO;
++	}
++
++	layers[0].type = EDAC_MC_LAYER_CHIP_SELECT;
++	layers[0].size = SYNPS_EDAC_NR_CSROWS;
++	layers[0].is_virt_csrow = true;
++	layers[1].type = EDAC_MC_LAYER_CHANNEL;
++	layers[1].size = SYNPS_EDAC_NR_CHANS;
++	layers[1].is_virt_csrow = false;
++
++	mci = edac_mc_alloc(0, ARRAY_SIZE(layers), layers,
++			    sizeof(struct synps_edac_priv));
++	if (!mci) {
++		edac_printk(KERN_ERR, EDAC_MC,
++			    "Failed memory allocation for mc instance\n");
++		return -ENOMEM;
++	}
++
++	priv = mci->pvt_info;
++	priv->baseaddr = baseaddr;
++	rc = synps_edac_mc_init(mci, pdev);
++	if (rc) {
++		edac_printk(KERN_ERR, EDAC_MC,
++			    "Failed to initialize instance\n");
++		goto free_edac_mc;
++	}
++
++	rc = edac_mc_add_mc(mci);
++	if (rc) {
++		edac_printk(KERN_ERR, EDAC_MC,
++			    "Failed to register with EDAC core\n");
++		goto free_edac_mc;
++	}
++
++	writel(0x0, baseaddr + ECC_CTRL_OFST);
++	return rc;
++
++free_edac_mc:
++	edac_mc_free(mci);
++
++	return rc;
++}
++
++/**
++ * synps_edac_mc_remove - Unbind driver from controller
++ * @pdev:	Pointer to the platform_device struct
++ *
++ * Return: Unconditionally 0
++ */
++static int synps_edac_mc_remove(struct platform_device *pdev)
++{
++	struct mem_ctl_info *mci = platform_get_drvdata(pdev);
++
++	edac_mc_del_mc(&pdev->dev);
++	edac_mc_free(mci);
++
++	return 0;
++}
++
++static struct of_device_id synps_edac_match[] = {
++	{ .compatible = "xlnx,zynq-ddrc-a05", },
++	{ /* end of table */ }
++};
++
++MODULE_DEVICE_TABLE(of, synps_edac_match);
++
++static struct platform_driver synps_edac_mc_driver = {
++	.driver = {
++		   .name = "synopsys-edac",
++		   .of_match_table = synps_edac_match,
++		   },
++	.probe = synps_edac_mc_probe,
++	.remove = synps_edac_mc_remove,
++};
++
++module_platform_driver(synps_edac_mc_driver);
++
++MODULE_AUTHOR("Xilinx Inc");
++MODULE_DESCRIPTION("Synopsys DDR ECC driver");
++MODULE_LICENSE("GPL v2");
+-- 
+1.7.4
