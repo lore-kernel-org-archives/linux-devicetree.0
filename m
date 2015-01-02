@@ -1,72 +1,122 @@
-From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 2/3] soc: ti: Add wkup_m3_ipc driver
-Date: Fri, 2 Jan 2015 14:33:20 -0600
-Message-ID: <20150102203320.GF4920@saruman>
-References: <1420228817-41310-1-git-send-email-d-gerlach@ti.com>
- <1420228817-41310-3-git-send-email-d-gerlach@ti.com>
- <20150102201643.GE4920@saruman>
-Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v2 1/2] of/pci: add of_pci_dma_configure() update dma configuration
+Date: Fri, 2 Jan 2015 14:45:50 -0600
+Message-ID: <CAL_Jsq+krOUA3BPvMCdaOBhALoi+pzWbw3YndXqR8x52OJogZg@mail.gmail.com>
+References: <1419459099-6667-1-git-send-email-m-karicheri2@ti.com>
+ <1419459099-6667-2-git-send-email-m-karicheri2@ti.com> <CAL_JsqJtVnP_5zAiUvMwL00JQV0mjw-R_hEkxiv13ZuNrQ8nAA@mail.gmail.com>
+ <54A6D375.6050604@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ULyIDA2m8JTe+TiX"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150102201643.GE4920@saruman>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Cc: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <54A6D375.6050604@ti.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Murali Karicheri <m-karicheri2@ti.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Will Deacon <will.deacon@arm.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
---ULyIDA2m8JTe+TiX
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Fri, Jan 2, 2015 at 11:20 AM, Murali Karicheri <m-karicheri2@ti.com> wrote:
+> Rob,
+>
+> See my response below. Arnd and Will, please review this as well.
+>
+> On 12/26/2014 02:33 PM, Rob Herring wrote:
+>>
+>> On Wed, Dec 24, 2014 at 4:11 PM, Murali Karicheri<m-karicheri2@ti.com>
+>> wrote:
+>>>
+>>> Add of_pci_dma_configure() to allow updating the dma configuration
+>>> of the pci device using the configuration from DT of the parent of
+>>> the root bridge device.
+>>>
+>>> Signed-off-by: Murali Karicheri<m-karicheri2@ti.com>
+>>> ---
+>>>   drivers/of/of_pci.c    |   73
+>>> ++++++++++++++++++++++++++++++++++++++++++++++++
+>>>   include/linux/of_pci.h |   12 ++++++++
+>>>   2 files changed, 85 insertions(+)
+>>>
 
-On Fri, Jan 02, 2015 at 02:16:43PM -0600, Felipe Balbi wrote:
-> On Fri, Jan 02, 2015 at 02:00:16PM -0600, Dave Gerlach wrote:
-> > Introduce a wkup_m3_ipc driver to handle communication between the MPU
-> > and Cortex M3 wkup_m3 present on am335x.
-> >=20
-> > This driver is responsible for actually booting the wkup_m3_rproc and
-> > also handling all IPC which is done using the IPC registers in the cont=
-rol
-> > module, a mailbox, and a separate interrupt back from the wkup_m3. A sm=
-all
-> > API is exposed for executing specific power commands, which include
-> > configuring for low power mode, request a transition to a low power mod=
-e,
-> > and status info on a previous transition.
+[...]
 
-another comment is that no user of such API is provided, so it's very
-difficult to verify that there's no other way of implementing this.
+>>> +               coherent = of_dma_is_coherent(parent_np);
+>>> +               dev_dbg(dev, "device is%sdma coherent\n",
+>>> +                       coherent ? " " : " not ");
+>>> +
+>>> +               arch_setup_dma_ops(dev, dma_addr, size, NULL, coherent);
+>>
+>>
+>> This is the same code as of_dma_configure. The only difference I see
+>> is which node ptr is passed to of_dma_get_range. You need to make that
+>> a function param of of_dma_configure.
+>>
+>> of_dma_configure also has iommu handling now. You will probably need
+>> something similar for PCI in that you setup an iommu based on the root
+>> bus DT properties.
+>>
+> Initially I had the same idea to re-use the existing function
+> of_dma_configure() for this. I wanted to defer this until we have an
+> agreement on the changes required for the subject functionality. My quick
+> review of the code suggestio this would require additional API changes as
+> below. I did a quick test of the changes and it works for Keystone, but need
+> to be reviewed by everyone as I touch the IOMMU functionality here and I
+> don't have a platform with IOMMU. Need test by someone to make sure I don't
+> break anything.
 
---=20
-balbi
+The IOMMU changes look trivial. We may want to address the comment in
+of_iommu_configure about parent nodes. We should be sure these changes
+work with how we would do searching parent nodes.
 
---ULyIDA2m8JTe+TiX
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+> Here are the changes required to implement this suggestion.
+>
+> 1. Move the of_dma_configure() to drivers/of/device.c (include the API in
+> of_device.h) and make it global (using proper EXPORT macro). Otherwise, we
+> will have to include of_platform.h in drivers/of/of_pci.c assuming the
+> prototype is defined in of_platform.h which doesn't look appropriate to me.
+> Would require following additional include files in drivers/of/device.c as
+> well.
+>
+> +#include <linux/of_address.h>
+> +#include <linux/of_iommu.h>
+> +#include <linux/dma-mapping.h>
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Okay.
 
-iQIcBAEBAgAGBQJUpwCQAAoJEIaOsuA1yqREvggP/1asB6h3YrByu8+OGhCJyXEc
-xTx38v1xEuQ+OKdU2+NXW+/PBOfFe6riiJxYbK2Lk7ylq8Wu9lFFpzqQanGXNWJY
-Gec7hCkOMmy0MrNBHDVlMvwzL+O5V/Om4VdtEP/6z0cFRMq3IlmJHPBMkpqTlJ72
-8ICsljnEwH2d5xjYJ/JrXApG/8bNQdoGeVR6zt6Wm9lezd1MlVANQPTd/HRYyQFU
-Mk8P+ALBZb6oc4CKMKgxNBW85ufr2IQw3Z/I75mPoWl/KjgWa6tSaSH1iuiwlXcl
-SL1B/P6IS0FiJZ48HHgIAJWC2fgQSMGDQWEaqU3pn0DZ4ZJOqpYlGSQpSUH0e6oj
-cyFXrZL+qOgSmN4FfR3zpoWykgOV09+BHTj+o/7n/QFRjOpvY79juSKr8IpxKe5h
-wRsl39m964sCItaYAWzUGL8ITgbclZ14j59CX2OuHKW7xNYvWxYfUz400NWuRzew
-SjhwaBB3Ob31KWmhyrfl8w7Krelpve2D/mf5HXebiylUVDEV4f13xcP4pp3/X0iP
-i0dNLI5PX5JhUNVPwslGM/w+AXcGDUM4hdFudXWmnSAHwfSXwnDfxVI79ON9qASi
-DnuDIE+P14xbPIIpaXyXwejKEwOl6gt07Isla0UFqK1ctm+j5t8LNxbcRXE3EOfE
-AHFQoWO3U40MGkvrwMIy
-=3hJe
------END PGP SIGNATURE-----
+> 2. drivers/iommu/of_iommu.c. This is needed so that of_iommu_configure() can
+> take confuguration from the root bus DT as you have suggested.
+>
+> -struct iommu_ops *of_iommu_configure(struct device *dev)
+> +struct iommu_ops *of_iommu_configure(struct device *dev, struct device_node
+> *node)
+>  {
+>         struct of_phandle_args iommu_spec;
+>         struct device_node *np;
+> @@ -145,7 +145,7 @@ struct iommu_ops *of_iommu_configure(struct device *dev)
+>          * See the `Notes:' section of
+>          * Documentation/devicetree/bindings/iommu/iommu.txt
+>          */
+> -       while (!of_parse_phandle_with_args(dev->of_node, "iommus",
+> +       while (!of_parse_phandle_with_args(node, "iommus",
+>                                            "#iommu-cells", idx,
+>                                            &iommu_spec)) {
+>
 
---ULyIDA2m8JTe+TiX--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Seems safe enough.
+
+> 3. drivers/of/of_pci.c. The existing function (added in this patch) will
+> make call to of_dma_configure() as
+>
+> parent_np = of_get_pci_root_bridge_parent(pci_dev);
+> of_dma_configure(dev, parent_np);
+
+Okay.
+
+> 4. drivers/of/platform.c. Add a wrapper function of_platform_dma_configure()
+> that calls of_dma_configure() as
+> of_dma_configure(dev, dev->of_node). All existing calls converted to this
+> wrapper.
+
+There's only a few callers of of_dma_configure, so I don't think this
+is necessary. The only thing platform bus specific is who is calling
+the function.
+
+Rob
