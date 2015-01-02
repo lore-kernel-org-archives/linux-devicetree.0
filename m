@@ -1,87 +1,150 @@
-From: Suravee Suthikulanit <suravee.suthikulpanit@amd.com>
-Subject: Re: [RFC 2/4] PCI: generic: Add support for ARM64 and MSI(x)
-Date: Fri, 2 Jan 2015 12:18:06 -0600
-Message-ID: <54A6E0DE.6090309@amd.com>
-References: <1411937610-22125-1-git-send-email-suravee.suthikulpanit@amd.com>
- <2148776.X8NPqiYA6S@wuerfel>
- <20141023091309.GF25302@e106497-lin.cambridge.arm.com>
- <2355100.WsW1DXh57P@wuerfel> <54A1AC5C.7000903@amd.com>
- <20150102115533.GA25573@red-moon>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH 2/3] ARM: mediatek: add UART dts for mt8127 and mt8135
+Date: Fri, 2 Jan 2015 19:21:21 +0100
+Message-ID: <CABuKBe+WeL7AOP0U9dtujUVr=cO2EDmz8rBSnscC9_LpxB7+yg@mail.gmail.com>
+References: <1413983529-21887-1-git-send-email-eddie.huang@mediatek.com>
+	<1413983529-21887-3-git-send-email-eddie.huang@mediatek.com>
+	<CABuKBeJ-bBiJSbh9jKH1+T2MhKCjxnkryStrhG_kFX7HuBnevQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150102115533.GA25573@red-moon>
+In-Reply-To: <CABuKBeJ-bBiJSbh9jKH1+T2MhKCjxnkryStrhG_kFX7HuBnevQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Liviu Dudau <Liviu.Dudau@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Marc Zyngier <Marc.Zyngier@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "tglx@linutronix.de" <tglx@linutronix.de>
+To: Eddie Huang <eddie.huang@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Jiri Slaby <jslaby@suse.cz>, Alan Cox <alan@linux.intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-serial@vger.kernel.org, =?UTF-8?B?WUggQ2hlbiAo6Zmz5pix6LGqKQ==?= <yh.chen@mediatek.com>, HC Yen <hc.yen@mediatek.com>, Nathan Chung <nathan.chung@mediatek.com>, srv_heupstream <srv_heupstream@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On 1/2/2015 5:55 AM, Lorenzo Pieralisi wrote:
-> Hi Suravee,
+2015-01-02 11:23 GMT+01:00 Matthias Brugger <matthias.bgg@gmail.com>:
+> 2014-10-22 15:12 GMT+02:00 Eddie Huang <eddie.huang@mediatek.com>:
+>> This add dts support for mt8127 and mt8135 SOC UART
+>>
+>> Signed-off-by: Eddie Huang <eddie.huang@mediatek.com>
+>> ---
+>>  arch/arm/boot/dts/mt8127.dtsi | 34 ++++++++++++++++++++++++++++++++++
+>>  arch/arm/boot/dts/mt8135.dtsi | 36 ++++++++++++++++++++++++++++++++++++
+>>  2 files changed, 70 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/mt8127.dtsi b/arch/arm/boot/dts/mt8127.dtsi
+>> index 25c9f69..249c218 100644
+>> --- a/arch/arm/boot/dts/mt8127.dtsi
+>> +++ b/arch/arm/boot/dts/mt8127.dtsi
+>> @@ -64,6 +64,12 @@
+>>                         clock-frequency = <32000>;
+>>                         #clock-cells = <0>;
+>>                 };
+>> +
+>> +               uart_clk: dummy26m {
+>> +                       compatible = "fixed-clock";
+>> +                       clock-frequency = <26000000>;
+>> +                       #clock-cells = <0>;
+>> +                };
+>>         };
+>>
+>>         soc {
+>> @@ -89,5 +95,33 @@
+>>                               <0 0x10214000 0 0x2000>,
+>>                               <0 0x10216000 0 0x2000>;
+>>                 };
+>> +
+>> +               uart0: serial@11006000 {
+>> +                       compatible = "mediatek,mt8127-uart","mediatek,mt6577-uart";
+>> +                       reg = <0 0x11002000 0 0x400>;
+>> +                       interrupts = <GIC_SPI 51 IRQ_TYPE_LEVEL_LOW>;
+>> +                       clocks = <&uart_clk>;
+>> +               };
+
+I just realized that you forgot to disable the uart ports by default
+in the dtsi.
+I fixed that for you, but please send a patch enabling the necessary
+ports in the board dts file.
+It depends on the board which uarts will be enabled rather then on the SoC.
+
+>> +
+>> +               uart1: serial@11007000 {
+>> +                       compatible = "mediatek,mt8127-uart","mediatek,mt6577-uart";
+>> +                       reg = <0 0x11003000 0 0x400>;
+>> +                       interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_LOW>;
+>> +                       clocks = <&uart_clk>;
+>> +               };
+>> +
+>> +               uart2: serial@11008000 {
+>> +                       compatible = "mediatek,mt8127-uart","mediatek,mt6577-uart";
+>> +                       reg = <0 0x11004000 0 0x400>;
+>> +                       interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_LOW>;
+>> +                       clocks = <&uart_clk>;
+>> +               };
+>> +
+>> +               uart3: serial@11009000 {
+>> +                       compatible = "mediatek,mt8127-uart","mediatek,mt6577-uart";
+>> +                       reg = <0 0x11005000 0 0x400>;
+>> +                       interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_LOW>;
+>> +                       clocks = <&uart_clk>;
+>> +               };
+>>         };
+>>  };
+>> diff --git a/arch/arm/boot/dts/mt8135.dtsi b/arch/arm/boot/dts/mt8135.dtsi
+>> index 90a56ad..683b761 100644
+>> --- a/arch/arm/boot/dts/mt8135.dtsi
+>> +++ b/arch/arm/boot/dts/mt8135.dtsi
+>> @@ -86,6 +86,13 @@
+>>                         clock-frequency = <32000>;
+>>                         #clock-cells = <0>;
+>>                 };
+>> +
+>> +               uart_clk: dummy26m {
+>> +                       compatible = "fixed-clock";
+>> +                       clock-frequency = <26000000>;
+>> +                       #clock-cells = <0>;
+>> +               };
+>> +
+>>         };
+>>
+>>         soc {
+>> @@ -111,5 +118,34 @@
+>>                               <0 0x10214000 0 0x2000>,
+>>                               <0 0x10216000 0 0x2000>;
+>>                 };
+>> +
+>> +               uart0: serial@11006000 {
+>> +                       compatible = "mediatek,mt8135-uart","mediatek,mt6577-uart";
+>> +                       reg = <0 0x11006000 0 0x400>;
+>> +                       interrupts = <GIC_SPI 51 IRQ_TYPE_LEVEL_LOW>;
+>> +                       clocks = <&uart_clk>;
+>> +               };
+>> +
+>> +               uart1: serial@11007000 {
+>> +                       compatible = "mediatek,mt8135-uart","mediatek,mt6577-uart";
+>> +                       reg = <0 0x11007000 0 0x400>;
+>> +                       interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_LOW>;
+>> +                       clocks = <&uart_clk>;
+>> +               };
+>> +
+>> +               uart2: serial@11008000 {
+>> +                       compatible = "mediatek,mt8135-uart","mediatek,mt6577-uart";
+>> +                       reg = <0 0x11008000 0 0x400>;
+>> +                       interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_LOW>;
+>> +                       clocks = <&uart_clk>;
+>> +               };
+>> +
+>> +               uart3: serial@11009000 {
+>> +                       compatible = "mediatek,mt8135-uart","mediatek,mt6577-uart";
+>> +                       reg = <0 0x11009000 0 0x400>;
+>> +                       interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_LOW>;
+>> +                       clocks = <&uart_clk>;
+>> +               };
+>> +
+>>         };
+>>  };
+>> --
+>> 1.8.1.1.dirty
+>>
 >
-> On Mon, Dec 29, 2014 at 07:32:44PM +0000, Suravee Suthikulpanit wrote:
->> >Hi,
->> >
->> >I am not sure if this thread is still alive. I'm trying to see what I
->> >can do to help clean up/convert to make the PCI GHC also works for arm64
->> >w/ zero or minimal ifdefs.
->> >
->> >Please let me know if someone is already working on this. I noticed that
->> >Lorenzo's patches has already been in 3.19-rc1, and in Bjorn's
->> >pci/domain branch. Otherwise, I'll try to continue the work based on the
->> >sample patch from Arnd here.
-> If I am not mistaken, the only bit missing to remove pci_sys_data (and so
-> having a generic host controller driver that works on ARM32/64) is generic
-> MSI management.
-
-Lorenzo,
-
-Do you mean to remove pci_sys_data from pci-host-generic.c or removing 
-it completely? I assume the former case.
-
-So, looking at the current code in the pci-host-generic.c, my 
-understanding is that the:
-     *gen_pci = pci_bus->sysdata->private_data
-will be changed to:
-     *gen_pci = pci_bus->sysdata
-
-Then, we can simply just call pci_scan_root_bus() directly since we no 
-longer need to declare hw_pci for calling pci_common_init_dev().
-
-> I know for certain Marc is working on it, and the solution is WIP,
-> I think we should prevent adding more churn to pci_sys_data, since
-> I managed to remove most of the dependencies (domain, mem_offset).
-
-Thanks for cleaning up the domain and mem_offset.
-
-I saw Marc's irq/msi_domain patch series 
-(http://git.kernel.org/cgit/linux/kernel/git/maz/arm-platforms.git/log/?h=irq/msi_domain). 
-
-
-My understanding is that deals with associating the newly introduced 
-msi_domain to each device, which replaces the need for pci_bus->msi and 
-hw_pci->msi_ctrl when configure with CONFIG_PCI_MSI_IRQ_DOMAIN (not sure 
-if this would be the plan for all arm32).  For ARM32, if not define 
-CONFIG_PCI_MSI_IRQ_DOMAIN, it would still fall back to using the 
-[pci_sys_data|hw_pci]->msi_ctrl.
-
-However, I noticed that the hw_pci->msi_controller is not even used for 
-the pci-host-generic. So, this should not be blocking the work to free 
-pci-host-generic from pci_sys_data and hw_pci, as the MSI stuff can go 
-in separately. Am I missing something?
-
-> So to sum it up, to have a generic host controller driver for ARM32/64
-> we just need to work out how to handle the MSI data, patches will be
-> on the lists shortly to handle that, please review.
+> Applied to v3.20-next/dts, thanks.
 >
-> Thanks,
-> Lorenzo
->
+> --
+> motzblog.wordpress.com
 
-Thanks for the update and the summary. I'll help review/test the MSI 
-patch once posted.
 
-Thanks,
 
-Suravee
+-- 
+motzblog.wordpress.com
