@@ -1,73 +1,83 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: [PATCH V3] ARM: dts: am57xx-beagle-x15: Add GPIO controlled fan node
-Date: Sat, 3 Jan 2015 12:30:26 -0600
-Message-ID: <1420309826-7904-1-git-send-email-nm@ti.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] of/pci: add of_pci_dma_configure() update dma configuration
+Date: Sat, 03 Jan 2015 22:37:09 +0100
+Message-ID: <2019516.ehiuEv0rdL@wuerfel>
+References: <1419459099-6667-1-git-send-email-m-karicheri2@ti.com> <CAL_Jsq+krOUA3BPvMCdaOBhALoi+pzWbw3YndXqR8x52OJogZg@mail.gmail.com> <54A71CD1.4070107@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, Nishanth Menon <nm@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54A71CD1.4070107-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-TPS gpio now controls a 5v 500mA TL5209 regulator which may be supply
-a fan (such as AFB02505HHB) over J1 connector for various purposes.
-Provide device tree node to enable the same.
+On Friday 02 January 2015 17:33:53 Murali Karicheri wrote:
+> 
+> I have no experience with IOMMU and may not offer much help here as I 
+> originally wrote above. Will Deacon has added this API and probably able 
+> to offer some help in this discussion.
+> 
+> Will Deacon,
+> 
+> Any comment?
 
-Signed-off-by: Nishanth Menon <nm@ti.com>
----
-V3: Rebased to v3.19-rc1, added label for GPIO fan (for future cooling device
-    reference)
-V2: https://patchwork.kernel.org/patch/5445111/
-V1: https://patchwork.kernel.org/patch/5444911/
+It's complicated :(
 
-Enable and disable can be controlled by (post the RPM, it finds
-closest match - even a 1 will do)
+> Looking at the iommu documentation and of_iommu.c, I get a feeling that 
+> this API is not really used at present as there are no callers of 
+> of_iommu_set_ops() and I assume this is a WIP.
 
-echo '13000' > /sys/class/hwmon/hwmon0/fan1_target
-and
-echo '0' > /sys/class/hwmon/hwmon0/fan1_target
+Right, but we have patches for some iommu drivers based on this API,
+and we should migrate all of them eventually.
 
-Test log: http://slexy.org/view/s2T0ajh46z
+> I believe the way it is 
+> expected to work is to have the iommu driver of the master IOMMU devices 
+> call of_iommu_set_ops(). The device node of this master IOMMU device is 
+> specified as a phandle in the OF node of the device (various bus devices 
+> such as platform, PCI etc). This allow to retrieve the iommu ops though 
+> the of_iommu_configure() API and use it in arch_setup_dma_ops(). So my 
+> gut feeling is that for PCI devices, as there are no DT node, the root 
+> bus node may specify iommus phandle to IOMMU master OF nodes.
 
-requires CONFIG_GPIO_PALMAS and CONFIG_SENSORS_GPIO_FAN to be operational
-Applies on v3.19-rc1
+Yes, but we also need to pass a PCI device specific identifier along
+with the root bus node, because some iommu drivers take the PCI
+bus/device/function number into account for creating per-function
+i/o page tables.
 
- arch/arm/boot/dts/am57xx-beagle-x15.dts |   14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+> W.r.t your comment "We may want to address the comment in
+> of_iommu_configure about parent nodes. We should be sure these changes 
+> work with how we would do searching parent nodes",
+> 
+> I believe, the parent node search itself should work the same way in the 
+> case of PCI as with platform bus case. PCI's case, we are providing the 
+> OF node of the root bus host bridge. Why should this be any different in 
+> terms of search?
+> 
+> I see a potential issue with dma-ranges as described in the notes below.
+> As noted below the usage of dma-range for iommu is to be determined. For 
+> keystone, the of_iommu_configure() always return false as we don't use 
+> the iommu. But don't know if this has any consequences for other 
+> platforms. Or I got your questions wrong. Any help here from others on 
+> the list?
+> 
+> ========================================================================
+> One possible extension to the above is to use an "iommus" property along 
+> with a "dma-ranges" property in a bus device node (such as PCI host 
+> bridges). This can be useful to describe how children on the bus relate 
+> to the IOMMU if they are not explicitly listed in the device tree (e.g. 
+> PCI devices). However, the requirements of that use-case haven't been 
+> fully determined yet. Implementing this is therefore not recommended 
+> without further discussion and extension of this binding.
+> =========================================================================
 
-diff --git a/arch/arm/boot/dts/am57xx-beagle-x15.dts b/arch/arm/boot/dts/am57xx-beagle-x15.dts
-index 6c2e8e4..c171720 100644
---- a/arch/arm/boot/dts/am57xx-beagle-x15.dts
-+++ b/arch/arm/boot/dts/am57xx-beagle-x15.dts
-@@ -80,6 +80,14 @@
- 			default-state = "off";
- 		};
- 	};
-+
-+	gpio_fan: gpio_fan {
-+		/* Based on 5v 500mA AFB02505HHB */
-+		compatible = "gpio-fan";
-+		gpios =  <&tps659038_gpio 1 GPIO_ACTIVE_HIGH>;
-+		gpio-fan,speed-map = <0    0
-+				      13000 1>;
-+	};
- };
- 
- &dra7_pmx_core {
-@@ -394,6 +402,12 @@
- 			wakeup-source;
- 			ti,palmas-long-press-seconds = <12>;
- 		};
-+
-+		tps659038_gpio: tps659038_gpio {
-+			compatible = "ti,palmas-gpio";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+		};
- 	};
- 
- 	tmp102: tmp102@48 {
--- 
-1.7.9.5
+This probably won't ever apply to PCI devices, so let's ignore it for now.
+For the moment (and for PCI), we should assume that we either configure
+an iommu directly or we use dma-ranges if no iommu is in use.
 
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
