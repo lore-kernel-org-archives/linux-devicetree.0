@@ -1,83 +1,288 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] of/pci: add of_pci_dma_configure() update dma configuration
-Date: Sat, 03 Jan 2015 22:37:09 +0100
-Message-ID: <2019516.ehiuEv0rdL@wuerfel>
-References: <1419459099-6667-1-git-send-email-m-karicheri2@ti.com> <CAL_Jsq+krOUA3BPvMCdaOBhALoi+pzWbw3YndXqR8x52OJogZg@mail.gmail.com> <54A71CD1.4070107@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54A71CD1.4070107-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Robert Jarzmik <robert.jarzmik@free.fr>
+Subject: [PATCH v2] mfd: lubbock_io: add lubbock_io board
+Date: Sat,  3 Jan 2015 23:35:15 +0100
+Message-ID: <1420324515-7444-1-git-send-email-robert.jarzmik@free.fr>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Robert Jarzmik <robert.jarzmik@free.fr>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 02 January 2015 17:33:53 Murali Karicheri wrote:
-> 
-> I have no experience with IOMMU and may not offer much help here as I 
-> originally wrote above. Will Deacon has added this API and probably able 
-> to offer some help in this discussion.
-> 
-> Will Deacon,
-> 
-> Any comment?
+Lubbock () board is the IO motherboard of the Intel PXA25x Development
+Platform, which supports the Lubbock pxa25x soc board.
 
-It's complicated :(
+Historically, this support was in arch/arm/mach-pxa/lubbock.c. When
+gpio-pxa was moved to drivers/pxa, it became a driver, and its
+initialization and probing happened at postcore initcall. The lubbock
+code used to install the chained lubbock interrupt handler at init_irq()
+time.
 
-> Looking at the iommu documentation and of_iommu.c, I get a feeling that 
-> this API is not really used at present as there are no callers of 
-> of_iommu_set_ops() and I assume this is a WIP.
+The consequence of the gpio-pxa change is that the installed chained irq
+handler lubbock_irq_handler() was overwritten in pxa_gpio_probe(_dt)(),
+removing :
+ - the handler
+ - the falling edge detection setting of GPIO0, which revealed the
+   interrupt request from the lubbock IO board.
 
-Right, but we have patches for some iommu drivers based on this API,
-and we should migrate all of them eventually.
+As a fix, move the gpio0 chained handler setup to a place where we have
+the guarantee that pxa_gpio_probe() was called before, so that lubbock
+handler becomes the true IRQ chained handler of GPIO0, demuxing the
+lubbock IO board interrupts.
 
-> I believe the way it is 
-> expected to work is to have the iommu driver of the master IOMMU devices 
-> call of_iommu_set_ops(). The device node of this master IOMMU device is 
-> specified as a phandle in the OF node of the device (various bus devices 
-> such as platform, PCI etc). This allow to retrieve the iommu ops though 
-> the of_iommu_configure() API and use it in arch_setup_dma_ops(). So my 
-> gut feeling is that for PCI devices, as there are no DT node, the root 
-> bus node may specify iommus phandle to IOMMU master OF nodes.
+This patch moves all that handling to a mfd driver. It's only purpose
+for the time being is the interrupt handling, but in the future it
+should encompass all the motherboard CPLDs handling :
+ - leds
+ - switches
+ - hexleds
 
-Yes, but we also need to pass a PCI device specific identifier along
-with the root bus node, because some iommu drivers take the PCI
-bus/device/function number into account for creating per-function
-i/o page tables.
+Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
+---
+Since v1: change the name from cottula to lubbock_io
+            Dmitry pointed out the Cottula was the pxa25x family name,
+	    lubbock was the pxa25x development board name. Therefore the
+	    name was changed to lubbock_io (lubbock IO board)
+	  change the resources to bi-irq ioresource
+	    Discussion between Arnd and Robert to change the gpio
+	    request by a irq request.
+---
+ drivers/mfd/Kconfig   |  10 +++
+ drivers/mfd/Makefile  |   1 +
+ drivers/mfd/lubbock.c | 193 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 204 insertions(+)
+ create mode 100644 drivers/mfd/lubbock.c
 
-> W.r.t your comment "We may want to address the comment in
-> of_iommu_configure about parent nodes. We should be sure these changes 
-> work with how we would do searching parent nodes",
-> 
-> I believe, the parent node search itself should work the same way in the 
-> case of PCI as with platform bus case. PCI's case, we are providing the 
-> OF node of the root bus host bridge. Why should this be any different in 
-> terms of search?
-> 
-> I see a potential issue with dma-ranges as described in the notes below.
-> As noted below the usage of dma-range for iommu is to be determined. For 
-> keystone, the of_iommu_configure() always return false as we don't use 
-> the iommu. But don't know if this has any consequences for other 
-> platforms. Or I got your questions wrong. Any help here from others on 
-> the list?
-> 
-> ========================================================================
-> One possible extension to the above is to use an "iommus" property along 
-> with a "dma-ranges" property in a bus device node (such as PCI host 
-> bridges). This can be useful to describe how children on the bus relate 
-> to the IOMMU if they are not explicitly listed in the device tree (e.g. 
-> PCI devices). However, the requirements of that use-case haven't been 
-> fully determined yet. Implementing this is therefore not recommended 
-> without further discussion and extension of this binding.
-> =========================================================================
-
-This probably won't ever apply to PCI devices, so let's ignore it for now.
-For the moment (and for PCI), we should assume that we either configure
-an iommu directly or we use dma-ranges if no iommu is in use.
-
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index 2e6b731..4d8939f 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -91,6 +91,16 @@ config MFD_AXP20X
+ 	  components like regulators or the PEK (Power Enable Key) under the
+ 	  corresponding menus.
+ 
++config MFD_LUBBOCK
++	bool "Lubbock Motherboard"
++	def_bool ARCH_LUBBOCK
++	select MFD_CORE
++	help
++	  This driver supports the Lubbock multifunction chip found on the
++	  pxa25x development platform system (named Lubbock). This IO board
++	  supports the interrupts handling, ethernet controller, flash chips,
++	  etc ...
++
+ config MFD_CROS_EC
+ 	tristate "ChromeOS Embedded Controller"
+ 	select MFD_CORE
+diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+index 53467e2..aff1f4f 100644
+--- a/drivers/mfd/Makefile
++++ b/drivers/mfd/Makefile
+@@ -9,6 +9,7 @@ obj-$(CONFIG_MFD_88PM805)	+= 88pm805.o 88pm80x.o
+ obj-$(CONFIG_MFD_SM501)		+= sm501.o
+ obj-$(CONFIG_MFD_ASIC3)		+= asic3.o tmio_core.o
+ obj-$(CONFIG_MFD_BCM590XX)	+= bcm590xx.o
++obj-$(CONFIG_MFD_LUBBOCK)	+= lubbock.o
+ obj-$(CONFIG_MFD_CROS_EC)	+= cros_ec.o
+ obj-$(CONFIG_MFD_CROS_EC_I2C)	+= cros_ec_i2c.o
+ obj-$(CONFIG_MFD_CROS_EC_SPI)	+= cros_ec_spi.o
+diff --git a/drivers/mfd/lubbock.c b/drivers/mfd/lubbock.c
+new file mode 100644
+index 0000000..c6ce82c
+--- /dev/null
++++ b/drivers/mfd/lubbock.c
+@@ -0,0 +1,193 @@
++/*
++ * Intel Cotulla MFD - lubbock motherboard
++ *
++ * Copyright (C) 2014 Robert Jarzmik
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * Lubbock motherboard driver, supporting lubbock (aka. pxa25x) soc board.
++ *
++ */
++
++#include <linux/bitops.h>
++#include <linux/gpio.h>
++#include <linux/gpio/consumer.h>
++#include <linux/interrupt.h>
++#include <linux/io.h>
++#include <linux/irq.h>
++#include <linux/irqdomain.h>
++#include <linux/mfd/core.h>
++#include <linux/module.h>
++#include <linux/of_platform.h>
++
++#define COT_IRQ_MASK_EN 0xc0
++#define COT_IRQ_SET_CLR 0xd0
++
++#define LUBBOCK_NB_IRQ	8
++
++struct lubbock {
++	void __iomem	*base;
++	int irq;
++	unsigned int irq_mask;
++	struct gpio_desc *gpio0;
++	struct irq_domain *irqdomain;
++};
++
++static irqreturn_t lubbock_irq_handler(int in_irq, void *d)
++{
++	struct lubbock *cot = d;
++	unsigned long pending;
++	unsigned int bit;
++
++	pending = readl(cot->base + COT_IRQ_SET_CLR) & cot->irq_mask;
++	for_each_set_bit(bit, &pending, LUBBOCK_NB_IRQ)
++		generic_handle_irq(irq_find_mapping(cot->irqdomain, bit));
++	return IRQ_HANDLED;
++}
++
++static void lubbock_irq_mask_ack(struct irq_data *d)
++{
++	struct lubbock *cot = irq_data_get_irq_chip_data(d);
++	unsigned int lubbock_irq = irqd_to_hwirq(d);
++	unsigned int set, bit = BIT(lubbock_irq);
++
++	cot->irq_mask &= ~bit;
++	writel(cot->irq_mask, cot->base + COT_IRQ_MASK_EN);
++	set = readl(cot->base + COT_IRQ_SET_CLR);
++	writel(set & ~bit, cot->base + COT_IRQ_SET_CLR);
++}
++
++static void lubbock_irq_unmask(struct irq_data *d)
++{
++	struct lubbock *cot = irq_data_get_irq_chip_data(d);
++	unsigned int lubbock_irq = irqd_to_hwirq(d);
++	unsigned int bit = BIT(lubbock_irq);
++
++	cot->irq_mask |= bit;
++	writel(cot->irq_mask, cot->base + COT_IRQ_MASK_EN);
++}
++
++static struct irq_chip lubbock_irq_chip = {
++	.name		= "lubbock",
++	.irq_mask_ack	= lubbock_irq_mask_ack,
++	.irq_unmask	= lubbock_irq_unmask,
++	.flags		= IRQCHIP_MASK_ON_SUSPEND | IRQCHIP_SKIP_SET_WAKE,
++};
++
++static int lubbock_irq_domain_map(struct irq_domain *d, unsigned int irq,
++				   irq_hw_number_t hwirq)
++{
++	struct lubbock *cot = d->host_data;
++
++	irq_set_chip_and_handler(irq, &lubbock_irq_chip, handle_level_irq);
++	irq_set_chip_data(irq, cot);
++	return 0;
++}
++
++static const struct irq_domain_ops lubbock_irq_domain_ops = {
++	.xlate = irq_domain_xlate_twocell,
++	.map = lubbock_irq_domain_map,
++};
++
++static int lubbock_resume(struct platform_device *pdev)
++{
++	struct lubbock *cot = platform_get_drvdata(pdev);
++
++	writel(cot->irq_mask, cot->base + COT_IRQ_MASK_EN);
++	return 0;
++}
++
++static int lubbock_probe(struct platform_device *pdev)
++{
++	struct resource *res;
++	struct lubbock *cot;
++	int ret;
++	unsigned int base_irq = 0;
++
++	cot = devm_kzalloc(&pdev->dev, sizeof(*cot), GFP_KERNEL);
++	if (!cot)
++		return -ENOMEM;
++	res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
++	if (res)
++		cot->irq = (unsigned int)res->start;
++	if (!cot->irq)
++		return -ENODEV;
++
++	res = platform_get_resource(pdev, IORESOURCE_IRQ, 1);
++	if (res)
++		base_irq = (unsigned int)res->start;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	cot->base = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(cot->base))
++		return PTR_ERR(cot->base);
++
++	platform_set_drvdata(pdev, cot);
++
++	writel(cot->irq_mask, cot->base + COT_IRQ_MASK_EN);
++	writel(0, cot->base + COT_IRQ_SET_CLR);
++	ret = devm_request_irq(&pdev->dev, cot->irq, lubbock_irq_handler, 0,
++			       dev_name(&pdev->dev), cot);
++	if (ret == -ENOSYS)
++		return -EPROBE_DEFER;
++	if (ret) {
++		dev_err(&pdev->dev, "Couldn't request GPIO : ret = %d\n", ret);
++		return ret;
++	}
++	irq_set_irq_type(cot->irq, IRQ_TYPE_EDGE_FALLING);
++	irq_set_irq_wake(cot->irq, 1);
++
++	cot->irqdomain =
++		irq_domain_add_linear(pdev->dev.of_node, LUBBOCK_NB_IRQ,
++				      &lubbock_irq_domain_ops, cot);
++	if (!cot->irqdomain)
++		return -ENODEV;
++
++	ret = 0;
++	if (base_irq)
++		ret = irq_create_strict_mappings(cot->irqdomain, base_irq, 0,
++						 LUBBOCK_NB_IRQ);
++	if (ret) {
++		dev_err(&pdev->dev, "Couldn't create the irq mapping %d..%d\n",
++			base_irq, base_irq + LUBBOCK_NB_IRQ);
++		return ret;
++	}
++
++	dev_info(&pdev->dev, "base=%p, irq=%d, base_irq=%d\n",
++		 cot->base, cot->irq, base_irq);
++
++	return 0;
++}
++
++static int lubbock_remove(struct platform_device *pdev)
++{
++	struct lubbock *cot = platform_get_drvdata(pdev);
++
++	irq_set_chip_and_handler(cot->irq, NULL, NULL);
++	return 0;
++}
++
++static const struct of_device_id lubbock_id_table[] = {
++	{ .compatible = "marvell,lubbock_io", },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, lubbock_id_table);
++
++static struct platform_driver lubbock_driver = {
++	.driver		= {
++		.name	= "lubbock_io",
++		.of_match_table = of_match_ptr(lubbock_id_table),
++	},
++	.probe		= lubbock_probe,
++	.remove		= lubbock_remove,
++	.resume		= lubbock_resume,
++};
++
++module_platform_driver(lubbock_driver);
++
++MODULE_DESCRIPTION("Lubbock driver");
++MODULE_AUTHOR("Robert Jarzmik");
++MODULE_LICENSE("GPL");
+-- 
+2.1.0
