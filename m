@@ -1,69 +1,63 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH 1/3] TTY: add support for "tty slave" devices.
-Date: Sun, 4 Jan 2015 11:18:47 +0100
-Message-ID: <20150104101847.GA6122@amd>
-References: <20141211214801.4127.93914.stgit@notabene.brown>
- <20141211215943.4127.24792.stgit@notabene.brown>
- <20141228142010.GA3922@amd>
- <20150103103357.2406fc23@notabene.brown>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V2 1/2] DT: mxs-lradc: fix ranges of ts properties
+Date: Sun, 04 Jan 2015 11:14:38 +0000
+Message-ID: <54A9209E.2080707@kernel.org>
+References: <1419848841-12749-1-git-send-email-stefan.wahren@i2se.com> <1419848841-12749-2-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150103103357.2406fc23@notabene.brown>
-Sender: linux-kernel-owner@vger.kernel.org
-To: NeilBrown <neilb@suse.de>
-Cc: Grant Likely <grant.likely@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Jiri Slaby <jslaby@suse.cz>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1419848841-12749-2-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Cc: festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kristina.martsenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi!
-
-> > > +Optional child node:
-> > > +- a platform device listed as a child node will be probed and
-> > > +  powered-on whenever the tty is in use (open).
-> > > +
-> > >  Example:
-> > >  
-> > >  	uart@80230000 {
-> > 
-
-> But some line disciplines don't really want the char_dev.
-> N_MOUSE wants a serio device.
-> N_HCI wants an HCI device
-> N_GSM07010 wants 63 different tty char_devs.
-> N_IRDA and N_PPP ultimately want a net_dev.
-> etc.
+On 29/12/14 10:27, Stefan Wahren wrote:
+> This patch fixes off-by-one issues in the devicetree binding of
+> mxs-lradc.
 > 
-> It would be really nice if the uart would register the line disciple as a
-> child device, then the line discipline would register whatever it wants.
-
-Yes.
-
-> N_HCI activates (registers the hci dev) on HCIUARTSETPROTO ioctl.  A child
->   device would need a way to specify the protocol I resume.
-> N_MOUSE activates on a 'read' on the tty - and deactivates when the read
->   completes.
-> N_GSM0710 activates immediately that the ldisc is activated, as does N_IRDA
-> N_PPP seems to want a PPPIOCNEWUNIT ioctl to fully register.
+> According to the i.MX23 and i.MX28 reference manuals [1][2] the range of
+> NUM_SAMPLES is 0..31, but property ave-ctrl is substracted by 1 before used.
 > 
-> Doing any of these in a driver for a uart slave device would certainly be
-> possible.  I wonder if it is something we really want to do in the kernel
-> though.  What is the gain over providing sufficient information in the
-> KOBJ_ADD uevent so that udev can do the required work in user-space?
+> Considering all limitations the range of DELAY is 1..2047, but also
+> property ave-delay is substracted by 1 before used.
+> 
+> The patch has been suggested by Hartmut Knaack and Kristina Martsenko.
+> 
+> [1] - http://cache.freescale.com/files/dsp/doc/ref_manual/IMX23RM.pdf
+> [2] - http://cache.freescale.com/files/dsp/doc/ref_manual/MCIMX28RM.pdf
+> 
+> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Hmm.  I debated whether to take these through the fixes tree.  Whilst they
+are technically fixing the driver, it is only a fashion that makes it a little
+more flexible and the devicetree binding more resilient.  Good stuff, but
+can probably wait a cycle.
 
-Consistency. If you have bluetooth on USB, it automatically works,
-without userspace help. If we have mouse on USB, it automatically
-works, etc...
+Anyhow, as such - applied to the togreg branch of iio.git.
+Initially pushed out as testing for the autobuilders to play.
 
-> However I do like the idea of having the UART probe the child instead of
-> registering a tty.  It could pass the tty_operations structure to the child,
-> and the child could then register a tty with a slightly different
-> tty_operations structure, allowing it to capture any operations that it wants
-> to capture (such as open/close).
-> I might try coding that and see what it looks like...
+Thanks,
 
-Lets have a look...
-									Pavel
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+Jonathan
+> ---
+>  .../bindings/staging/iio/adc/mxs-lradc.txt         |    4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt b/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
+> index ee05dc3..3075377 100644
+> --- a/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
+> +++ b/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
+> @@ -12,9 +12,9 @@ Optional properties:
+>                                 property is not present, then the touchscreen is
+>                                 disabled. 5 wires is valid for i.MX28 SoC only.
+>  - fsl,ave-ctrl: number of samples per direction to calculate an average value.
+> -                Allowed value is 1 ... 31, default is 4
+> +                Allowed value is 1 ... 32, default is 4
+>  - fsl,ave-delay: delay between consecutive samples. Allowed value is
+> -                 1 ... 2047. It is used if 'fsl,ave-ctrl' > 1, counts at
+> +                 2 ... 2048. It is used if 'fsl,ave-ctrl' > 1, counts at
+>                   2 kHz and its default is 2 (= 1 ms)
+>  - fsl,settling: delay between plate switch to next sample. Allowed value is
+>                  1 ... 2047. It counts at 2 kHz and its default is
+> 
