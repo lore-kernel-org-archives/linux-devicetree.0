@@ -1,63 +1,53 @@
 From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V2 1/2] DT: mxs-lradc: fix ranges of ts properties
-Date: Sun, 04 Jan 2015 11:14:38 +0000
-Message-ID: <54A9209E.2080707@kernel.org>
-References: <1419848841-12749-1-git-send-email-stefan.wahren@i2se.com> <1419848841-12749-2-git-send-email-stefan.wahren@i2se.com>
+Subject: Re: [PATCH RFC] iio: iadc: wait_for_completion_timeout time in jiffies
+Date: Sun, 04 Jan 2015 11:16:59 +0000
+Message-ID: <54A9212B.8050709@kernel.org>
+References: <1420016386-19638-1-git-send-email-der.herr@hofr.at>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1419848841-12749-2-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
+In-Reply-To: <1420016386-19638-1-git-send-email-der.herr-kA1LtwSENNE@public.gmane.org>
 Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Cc: festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kristina.martsenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nicholas Mc Guire <der.herr-kA1LtwSENNE@public.gmane.org>
+Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 29/12/14 10:27, Stefan Wahren wrote:
-> This patch fixes off-by-one issues in the devicetree binding of
-> mxs-lradc.
+On 31/12/14 08:59, Nicholas Mc Guire wrote:
+> The timeout value to wait_for_completion_timeout is in jiffies but
+> the value being passed seems like it was intended to by microseconds
+> Note that the timeout was extremely long thus it might be too short
+> now. In any case it probably should be passed through usecs_to_jiffies()
+> or msecs_to_jiffies()
 > 
-> According to the i.MX23 and i.MX28 reference manuals [1][2] the range of
-> NUM_SAMPLES is 0..31, but property ave-ctrl is substracted by 1 before used.
+> patch is against linux-next 3.19.0-rc1 -next-20141226
 > 
-> Considering all limitations the range of DELAY is 1..2047, but also
-> property ave-delay is substracted by 1 before used.
+> patch was only compile-tested x86_64_defcofnig + CONFIG_SPMI=m
+> CONFIG_IIO=m, CONFIG_QCOM_SPMI_IADC=m
 > 
-> The patch has been suggested by Hartmut Knaack and Kristina Martsenko.
-> 
-> [1] - http://cache.freescale.com/files/dsp/doc/ref_manual/IMX23RM.pdf
-> [2] - http://cache.freescale.com/files/dsp/doc/ref_manual/MCIMX28RM.pdf
-> 
-> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Hmm.  I debated whether to take these through the fixes tree.  Whilst they
-are technically fixing the driver, it is only a fashion that makes it a little
-more flexible and the devicetree binding more resilient.  Good stuff, but
-can probably wait a cycle.
-
-Anyhow, as such - applied to the togreg branch of iio.git.
-Initially pushed out as testing for the autobuilders to play.
+> Signed-off-by: Nicholas Mc Guire <der.herr-kA1LtwSENNE@public.gmane.org>
+Certainly suspicious and I'd draw the same conclusion you did!
+Anyhow just waiting for Ivan to take a look as it's his driver.
 
 Thanks,
 
 Jonathan
 > ---
->  .../bindings/staging/iio/adc/mxs-lradc.txt         |    4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  drivers/iio/adc/qcom-spmi-iadc.c |    3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt b/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
-> index ee05dc3..3075377 100644
-> --- a/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
-> +++ b/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
-> @@ -12,9 +12,9 @@ Optional properties:
->                                 property is not present, then the touchscreen is
->                                 disabled. 5 wires is valid for i.MX28 SoC only.
->  - fsl,ave-ctrl: number of samples per direction to calculate an average value.
-> -                Allowed value is 1 ... 31, default is 4
-> +                Allowed value is 1 ... 32, default is 4
->  - fsl,ave-delay: delay between consecutive samples. Allowed value is
-> -                 1 ... 2047. It is used if 'fsl,ave-ctrl' > 1, counts at
-> +                 2 ... 2048. It is used if 'fsl,ave-ctrl' > 1, counts at
->                   2 kHz and its default is 2 (= 1 ms)
->  - fsl,settling: delay between plate switch to next sample. Allowed value is
->                  1 ... 2047. It counts at 2 kHz and its default is
+> diff --git a/drivers/iio/adc/qcom-spmi-iadc.c b/drivers/iio/adc/qcom-spmi-iadc.c
+> index b9666f2..3080562 100644
+> --- a/drivers/iio/adc/qcom-spmi-iadc.c
+> +++ b/drivers/iio/adc/qcom-spmi-iadc.c
+> @@ -296,7 +296,8 @@ static int iadc_do_conversion(struct iadc_chip *iadc, int chan, u16 *data)
+>  	if (iadc->poll_eoc) {
+>  		ret = iadc_poll_wait_eoc(iadc, wait);
+>  	} else {
+> -		ret = wait_for_completion_timeout(&iadc->complete, wait);
+> +		ret = wait_for_completion_timeout(&iadc->complete,
+> +			usecs_to_jiffies(wait));
+>  		if (!ret)
+>  			ret = -ETIMEDOUT;
+>  		else
 > 
