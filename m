@@ -1,245 +1,224 @@
 Return-Path: <sneeker.yeh@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20150105170921.GH19336@saruman>
+In-Reply-To: <20141229160641.GD29379@saruman>
 References: <1418695828-605-1-git-send-email-Sneeker.Yeh@tw.fujitsu.com>
 	<1418695828-605-4-git-send-email-Sneeker.Yeh@tw.fujitsu.com>
 	<20141222153730.GA12815@saruman>
 	<CAJ1gpc3jVpz=5ME4+wCJDW5NKihvB4xYzwi0co=UuPtG9Ubmjg@mail.gmail.com>
 	<CAJ1gpc3-Wjtm54WOhO6RXjZft9BMngzyYC0-S-XnTacV-qKgMg@mail.gmail.com>
 	<20141229160641.GD29379@saruman>
-	<CAJ1gpc0Uu4vS2iA_o_W5NaE_QBWDYFZJio7yKvhpaR5f=qWcGA@mail.gmail.com>
-	<20150105170921.GH19336@saruman>
-Date: Sun, 11 Jan 2015 23:19:55 +0800
-Message-ID: <CAJ1gpc3RZnqizhiasrwS8uy1H_wQAi_T0mPcS8LAK4FhmBRJ6A@mail.gmail.com>
+Date: Sun, 4 Jan 2015 20:55:01 +0800
+Message-ID: <CAJ1gpc0Uu4vS2iA_o_W5NaE_QBWDYFZJio7yKvhpaR5f=qWcGA@mail.gmail.com>
 Subject: Re: [PATCH 3/3] usb: dwc3: add a quirk for device disconnection issue
  in Synopsis dwc3 core
 From: Sneeker Yeh <sneeker.yeh@gmail.com>
-Content-Type: multipart/alternative; boundary=047d7b67018314547c050c61ec84
+Content-Type: multipart/alternative; boundary=001a113958c8fc0a11050bd314eb
 To: Felipe Balbi <balbi@ti.com>
 Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Grant Likely <grant.likely@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Arnd Bergmann <arnd@arndb.de>, Paul Bolle <pebolle@tiscali.nl>, Hans de Goede <hdegoede@redhat.com>, Thomas Pugliese <thomas.pugliese@gmail.com>, David Mosberger <davidm@egauge.net>, Peter Griffin <peter.griffin@linaro.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Andrew Bresticker <abrestic@chromium.org>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, Andy Green <andy.green@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Sneeker Yeh <Sneeker.Yeh@tw.fujitsu.com>
 List-ID: <devicetree@vger.kernel.org>
 
---047d7b67018314547c050c61ec84
+--001a113958c8fc0a11050bd314eb
 Content-Type: text/plain; charset=UTF-8
 
-Hi,
+Hi Balbi,
 
-2015-01-06 1:09 GMT+08:00 Felipe Balbi <balbi@ti.com>:
+thanks for your review,
+
+2014-12-30 0:06 GMT+08:00 Felipe Balbi <balbi@ti.com>:
 
 > Hi,
 >
-> On Sun, Jan 04, 2015 at 08:55:01PM +0800, Sneeker Yeh wrote:
-> > > > So far Fujitsu Semiconductor got Synopsys internal case id , that is
-> "
-> > > > Case: 8000679552".
-> > > > However the contents belongs this id cannot be referred except
-> Fujitsu
-> > > > Semiconductor and Synopsys.
-> > > > Synopsis decide the official errata (STAR information) will be
-> disclosed
-> > > > next February.
-> > > >
-> > > > Would you suggest if this quirk can be accepted with this case ID,
-> or can
-> > > > only be accepted with STARS ticket number?
-> > >
-> > > The thing is that without the STARS number I can't really verify which
-> > > versions of the IP would be affected. Clearly, it's not only your setup
-> > > and I think it's pretty unfair to have "is_compatible("fujitsu")" to
-> > >
+> On Mon, Dec 29, 2014 at 04:07:50PM +0800, Sneeker Yeh wrote:
+> > Hi,
 > >
-> > just found some way of quirk injection i miss,
-> > does it looks more reasonable if i have to decide to use it via Kconfig?
-> :
-> > 20f6fdd01c2c0de9cc1109083222edded24c5350
-> > b2f463e1300016785d63475c56f5807e2be00934
->
-> We will only use Kconfig for those which can't be detected in runtime.
-> LPM is one such case as there's no way for SW to detect that core was
-> configured with LPM Errata, IIRC.
->
-
-Super thanks, I see.
-
-
->
-> > > enable the quirk only for you. Isn't there a better way of enabling the
-> > > quirk based off of revision detection couple with a look on GHWPARAMS*
-> > > registers ?
-> > >
-> > > What's tricking me is this claim that only config-free PHYs would be
-> > > affected, why ?
-> > >
+> > 2014-12-29 14:41 GMT+08:00 Sneeker Yeh <sneeker.yeh@gmail.com>:
 > >
-> > i'm still struggling now to try to get more information about this.
-> > some security policy inside Fujitsu make me unable to access full
-> > information of this errata today.
+> > > Hi,
+> > >
+> > > 2014-12-22 23:37 GMT+08:00 Felipe Balbi <balbi@ti.com>:
+> > >
+> > >> On Tue, Dec 16, 2014 at 10:10:28AM +0800, Sneeker Yeh wrote:
+> > >> > Synopsis DesignWare USB3 IP Core integrated with a config-free
+> > >> > phy needs special handling during device disconnection to avoid
+> > >> > the host controller dying.
+> > >> >
+> > >> > This quirk makes sure PORT_CSC is cleared after the disable slot
+> > >> > command when usb device is disconnected from internal root hub,
+> > >> > otherwise, Synopsis core would fall into a state that cannot use
+> > >> > any endpoint command. Consequently, device disconnection procedure
+> > >> > might not be finished because sometimes endpoint need to be stop
+> > >> > by endpoint stop command issuing.
+> > >> >
+> > >> > Symptom usually happens when disconnected device is keyboard,
+> > >> > mouse, and hub.
+> > >>
+> > >> you need to point us to the synopsys STARS ticket number. That's the
+> > >> only way to reference this specific quirk. Add it to a comment
+> > >> somewhere.
+> > >>
+> > >
+> > > Thanks, we're still waiting for Synopsis STARS ticket number.
+> > > I'll add it to comment later.
+> > >
+> > >
+> > Sorry I didn't express myself clearly.
 > >
-> > Someday after i get enough information,
-> > i shall take your suggestion here that seems better to incur quirk
-> > dynamically via GHWPARAMS,
-> > and then send it here again.
+> > So far Fujitsu Semiconductor got Synopsys internal case id , that is "
+> > Case: 8000679552".
+> > However the contents belongs this id cannot be referred except Fujitsu
+> > Semiconductor and Synopsys.
+> > Synopsis decide the official errata (STAR information) will be disclosed
+> > next February.
+> >
+> > Would you suggest if this quirk can be accepted with this case ID, or can
+> > only be accepted with STARS ticket number?
 >
-> ok, hopefully you'll find a way ;-)
+> The thing is that without the STARS number I can't really verify which
+> versions of the IP would be affected. Clearly, it's not only your setup
+> and I think it's pretty unfair to have "is_compatible("fujitsu")" to
 >
-> I got some update information here finally~
-in case i express unclearly i also put a pdf:
-https://drive.google.com/file/d/0B18MmcvvKjNNbDF6eEdHSzZCazA/view
 
-This issue is defined by a two-way race at disconnect, between
-1) class driver interrupt endpoint resheduling attempts if the ISR gave an
-ep error event due to device detach (it would try 3 times)
-2) Disconnect interrupt on PORTSC_CSC, which is cleared by hub thread
-asynchronously
-3) The hardware IP was configured in silicon with
-       - DWC_USB3_SUSPEND_ON_DISCONNECT_EN=1 (this is an IP configuration
-port whose state cannot be checked from software)
-       - Synopsys IP version is < 3.00a
-       The IP will auto-suspend itself on device detach with some
-phy-specific interval after CSC is cleared by 2)
+just found some way of quirk injection i miss,
+does it looks more reasonable if i have to decide to use it via Kconfig? :
+20f6fdd01c2c0de9cc1109083222edded24c5350
+b2f463e1300016785d63475c56f5807e2be00934
 
-If 2) and 3) complete before 1), the interrupts it expects will not be
-generated by the autosuspended IP, leading to a deadlock. Even later
-disconnection procedure would detect that corresponding urb is still
-in-progress and issue a ep stop command, auto-suspended IP still won't
-respond to that command.
 
-this defect would result in this when device detached:
--------------------
-[   99.603544] usb 4-1: USB disconnect, device number 2
-[  104.615254] xhci-hcd xhci-hcd.0.auto: xHCI host not responding to stop
-endpoint command.
-[  104.623362] xhci-hcd xhci-hcd.0.auto: Assuming host is dying, halting
-host.
-[  104.653261] xhci-hcd xhci-hcd.0.auto: Host not halted after 16000
-microseconds.
-[  104.660584] xhci-hcd xhci-hcd.0.auto: Non-responsive xHCI host is not
-halting.
-[  104.667817] xhci-hcd xhci-hcd.0.auto: Completing active URBs anyway.
-[  104.674198] xhci-hcd xhci-hcd.0.auto: HC died; cleaning up
---------------------
-As a result, when device detached, we desired to postpone "PORTCSC clear"
-behind "disable slot". it's found that all executed ep command related to
-disconnetion, are executed before "disable slot".
+> enable the quirk only for you. Isn't there a better way of enabling the
+> quirk based off of revision detection couple with a look on GHWPARAMS*
+> registers ?
+>
+> What's tricking me is this claim that only config-free PHYs would be
+> affected, why ?
+>
 
-BR,
+i'm still struggling now to try to get more information about this.
+some security policy inside Fujitsu make me unable to access full
+information of this errata today.
+
+Someday after i get enough information,
+i shall take your suggestion here that seems better to incur quirk
+dynamically via GHWPARAMS,
+and then send it here again.
+
+Much appreciate,
 Sneeker
 
 
+> I still have many questions about this patch which are not answered by
+> commit log nor can I poke around on Synopsys solvnet for answers :-s
+>
 > --
 > balbi
 >
 
---047d7b67018314547c050c61ec84
+--001a113958c8fc0a11050bd314eb
 Content-Type: text/html; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr">Hi,=C2=A0<br><div class=3D"gmail_extra"><br><div class=3D"=
-gmail_quote">2015-01-06 1:09 GMT+08:00 Felipe Balbi <span dir=3D"ltr">&lt;<=
-a href=3D"mailto:balbi@ti.com" target=3D"_blank">balbi@ti.com</a>&gt;</span=
->:<br><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;b=
-order-left-width:1px;border-left-color:rgb(204,204,204);border-left-style:s=
-olid;padding-left:1ex">Hi,<br>
-<span class=3D""><br>
-On Sun, Jan 04, 2015 at 08:55:01PM +0800, Sneeker Yeh wrote:<br>
-&gt; &gt; &gt; So far Fujitsu Semiconductor got Synopsys internal case id ,=
- that is &quot;<br>
-&gt; &gt; &gt; Case: 8000679552&quot;.<br>
-&gt; &gt; &gt; However the contents belongs this id cannot be referred exce=
-pt Fujitsu<br>
-&gt; &gt; &gt; Semiconductor and Synopsys.<br>
-&gt; &gt; &gt; Synopsis decide the official errata (STAR information) will =
-be disclosed<br>
-&gt; &gt; &gt; next February.<br>
-&gt; &gt; &gt;<br>
-&gt; &gt; &gt; Would you suggest if this quirk can be accepted with this ca=
-se ID, or can<br>
-&gt; &gt; &gt; only be accepted with STARS ticket number?<br>
-&gt; &gt;<br>
-&gt; &gt; The thing is that without the STARS number I can&#39;t really ver=
-ify which<br>
-&gt; &gt; versions of the IP would be affected. Clearly, it&#39;s not only =
-your setup<br>
-&gt; &gt; and I think it&#39;s pretty unfair to have &quot;is_compatible(&q=
-uot;fujitsu&quot;)&quot; to<br>
-&gt; &gt;<br>
+<div dir=3D"ltr"><div>Hi Balbi,<br><br></div>thanks for your review,<br><di=
+v><div><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">2014-12-30=
+ 0:06 GMT+08:00 Felipe Balbi <span dir=3D"ltr">&lt;<a href=3D"mailto:balbi@=
+ti.com" target=3D"_blank">balbi@ti.com</a>&gt;</span>:<br><blockquote class=
+=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rg=
+b(204,204,204);padding-left:1ex">Hi,<br>
+<div><div class=3D"h5"><br>
+On Mon, Dec 29, 2014 at 04:07:50PM +0800, Sneeker Yeh wrote:<br>
+&gt; Hi,<br>
 &gt;<br>
-&gt; just found some way of quirk injection i miss,<br>
-&gt; does it looks more reasonable if i have to decide to use it via Kconfi=
-g? :<br>
-&gt; 20f6fdd01c2c0de9cc1109083222edded24c5350<br>
-&gt; b2f463e1300016785d63475c56f5807e2be00934<br>
+&gt; 2014-12-29 14:41 GMT+08:00 Sneeker Yeh &lt;<a href=3D"mailto:sneeker.y=
+eh@gmail.com">sneeker.yeh@gmail.com</a>&gt;:<br>
+&gt;<br>
+&gt; &gt; Hi,<br>
+&gt; &gt;<br>
+&gt; &gt; 2014-12-22 23:37 GMT+08:00 Felipe Balbi &lt;<a href=3D"mailto:bal=
+bi@ti.com">balbi@ti.com</a>&gt;:<br>
+&gt; &gt;<br>
+&gt; &gt;&gt; On Tue, Dec 16, 2014 at 10:10:28AM +0800, Sneeker Yeh wrote:<=
+br>
+&gt; &gt;&gt; &gt; Synopsis DesignWare USB3 IP Core integrated with a confi=
+g-free<br>
+&gt; &gt;&gt; &gt; phy needs special handling during device disconnection t=
+o avoid<br>
+&gt; &gt;&gt; &gt; the host controller dying.<br>
+&gt; &gt;&gt; &gt;<br>
+&gt; &gt;&gt; &gt; This quirk makes sure PORT_CSC is cleared after the disa=
+ble slot<br>
+&gt; &gt;&gt; &gt; command when usb device is disconnected from internal ro=
+ot hub,<br>
+&gt; &gt;&gt; &gt; otherwise, Synopsis core would fall into a state that ca=
+nnot use<br>
+&gt; &gt;&gt; &gt; any endpoint command. Consequently, device disconnection=
+ procedure<br>
+&gt; &gt;&gt; &gt; might not be finished because sometimes endpoint need to=
+ be stop<br>
+&gt; &gt;&gt; &gt; by endpoint stop command issuing.<br>
+&gt; &gt;&gt; &gt;<br>
+&gt; &gt;&gt; &gt; Symptom usually happens when disconnected device is keyb=
+oard,<br>
+&gt; &gt;&gt; &gt; mouse, and hub.<br>
+&gt; &gt;&gt;<br>
+&gt; &gt;&gt; you need to point us to the synopsys STARS ticket number. Tha=
+t&#39;s the<br>
+&gt; &gt;&gt; only way to reference this specific quirk. Add it to a commen=
+t<br>
+&gt; &gt;&gt; somewhere.<br>
+&gt; &gt;&gt;<br>
+&gt; &gt;<br>
+&gt; &gt; Thanks, we&#39;re still waiting for Synopsis STARS ticket number.=
 <br>
-</span>We will only use Kconfig for those which can&#39;t be detected in ru=
-ntime.<br>
-LPM is one such case as there&#39;s no way for SW to detect that core was<b=
-r>
-configured with LPM Errata, IIRC.<br></blockquote><div><br></div><div>Super=
- thanks, I see.</div><div>=C2=A0</div><blockquote class=3D"gmail_quote" sty=
-le=3D"margin:0px 0px 0px 0.8ex;border-left-width:1px;border-left-color:rgb(=
-204,204,204);border-left-style:solid;padding-left:1ex">
-<span class=3D""><br>
-&gt; &gt; enable the quirk only for you. Isn&#39;t there a better way of en=
-abling the<br>
-&gt; &gt; quirk based off of revision detection couple with a look on GHWPA=
-RAMS*<br>
-&gt; &gt; registers ?<br>
+&gt; &gt; I&#39;ll add it to comment later.<br>
 &gt; &gt;<br>
-&gt; &gt; What&#39;s tricking me is this claim that only config-free PHYs w=
-ould be<br>
-&gt; &gt; affected, why ?<br>
 &gt; &gt;<br>
+&gt; Sorry I didn&#39;t express myself clearly.<br>
 &gt;<br>
-&gt; i&#39;m still struggling now to try to get more information about this=
-.<br>
-&gt; some security policy inside Fujitsu make me unable to access full<br>
-&gt; information of this errata today.<br>
-&gt;<br>
-&gt; Someday after i get enough information,<br>
-&gt; i shall take your suggestion here that seems better to incur quirk<br>
-&gt; dynamically via GHWPARAMS,<br>
-&gt; and then send it here again.<br>
+&gt; So far Fujitsu Semiconductor got Synopsys internal case id , that is &=
+quot;<br>
+&gt; Case: 8000679552&quot;.<br>
+&gt; However the contents belongs this id cannot be referred except Fujitsu=
 <br>
-</span>ok, hopefully you&#39;ll find a way ;-)<br>
-<span class=3D""><font color=3D"#888888"><br></font></span></blockquote><di=
-v>I got some update information here finally~</div><div>in case i express u=
-nclearly i also put a pdf:</div><div><a href=3D"https://drive.google.com/fi=
-le/d/0B18MmcvvKjNNbDF6eEdHSzZCazA/view">https://drive.google.com/file/d/0B1=
-8MmcvvKjNNbDF6eEdHSzZCazA/view</a><br></div><div><br></div><div><div>This i=
-ssue is defined by a two-way race at disconnect, between</div><div>1) class=
- driver interrupt endpoint resheduling attempts if the ISR gave an ep error=
- event due to device detach (it would try 3 times)</div><div>2) Disconnect =
-interrupt on PORTSC_CSC, which is cleared by hub thread asynchronously</div=
-><div>3) The hardware IP was configured in silicon with</div><div>=C2=A0 =
-=C2=A0 =C2=A0 =C2=A0- DWC_USB3_SUSPEND_ON_DISCONNECT_EN=3D1 (this is an IP =
-configuration port whose state cannot be checked from software)</div><div>=
-=C2=A0 =C2=A0 =C2=A0 =C2=A0- Synopsys IP version is &lt; 3.00a</div><div>=
-=C2=A0 =C2=A0 =C2=A0 =C2=A0The IP will auto-suspend itself on device detach=
- with some phy-specific interval after CSC is cleared by 2)</div><div><br><=
-/div><div>If 2) and 3) complete before 1), the interrupts it expects will n=
-ot be generated by the autosuspended IP, leading to a deadlock. Even later =
-disconnection procedure would detect that corresponding urb is still in-pro=
-gress and issue a ep stop command, auto-suspended IP still won&#39;t respon=
-d to that command.</div><div><br></div><div>this defect would result in thi=
-s when device detached:</div><div>-------------------</div><div>[ =C2=A0 99=
-.603544] usb 4-1: USB disconnect, device number 2</div><div>[ =C2=A0104.615=
-254] xhci-hcd xhci-hcd.0.auto: xHCI host not responding to stop endpoint co=
-mmand.</div><div>[ =C2=A0104.623362] xhci-hcd xhci-hcd.0.auto: Assuming hos=
-t is dying, halting host.</div><div>[ =C2=A0104.653261] xhci-hcd xhci-hcd.0=
-.auto: Host not halted after 16000 microseconds.</div><div>[ =C2=A0104.6605=
-84] xhci-hcd xhci-hcd.0.auto: Non-responsive xHCI host is not halting.</div=
-><div>[ =C2=A0104.667817] xhci-hcd xhci-hcd.0.auto: Completing active URBs =
-anyway.</div><div>[ =C2=A0104.674198] xhci-hcd xhci-hcd.0.auto: HC died; cl=
-eaning up</div><div>--------------------</div><div>As a result, when device=
- detached, we desired to postpone &quot;PORTCSC clear&quot; behind &quot;di=
-sable slot&quot;. it&#39;s found that all executed ep command related to di=
-sconnetion, are executed before &quot;disable slot&quot;.</div><div><br></d=
-iv><div>BR,</div><div>Sneeker</div></div><div>=C2=A0</div><blockquote class=
-=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left-width:1px;bo=
-rder-left-color:rgb(204,204,204);border-left-style:solid;padding-left:1ex">=
-<span class=3D""><font color=3D"#888888">
+&gt; Semiconductor and Synopsys.<br>
+&gt; Synopsis decide the official errata (STAR information) will be disclos=
+ed<br>
+&gt; next February.<br>
+&gt;<br>
+&gt; Would you suggest if this quirk can be accepted with this case ID, or =
+can<br>
+&gt; only be accepted with STARS ticket number?<br>
+<br>
+</div></div>The thing is that without the STARS number I can&#39;t really v=
+erify which<br>
+versions of the IP would be affected. Clearly, it&#39;s not only your setup=
+<br>
+and I think it&#39;s pretty unfair to have &quot;is_compatible(&quot;fujits=
+u&quot;)&quot; to<br></blockquote><div><br>just found some way of quirk inj=
+ection i miss,<br>does it looks more reasonable if i have to decide to use =
+it via Kconfig? :<br>20f6fdd01c2c0de9cc1109083222edded24c5350<br>b2f463e130=
+0016785d63475c56f5807e2be00934<br>=C2=A0</div><blockquote class=3D"gmail_qu=
+ote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,20=
+4);padding-left:1ex">
+enable the quirk only for you. Isn&#39;t there a better way of enabling the=
+<br>
+quirk based off of revision detection couple with a look on GHWPARAMS*<br>
+registers ?<br>
+<br>
+What&#39;s tricking me is this claim that only config-free PHYs would be<br=
+>
+affected, why ?<br></blockquote><div><br></div><div>i&#39;m still strugglin=
+g now to try to get more information about this.<br></div><div>some securit=
+y policy inside Fujitsu make me unable to access full information of this e=
+rrata today.<br><br></div><div>Someday after i get enough information,<br>i=
+ shall take your suggestion here that seems better to incur quirk dynamical=
+ly via GHWPARAMS,<br></div><div>and then send it here again.<br></div><div>=
+=C2=A0<br></div><div>Much appreciate,<br></div><div>Sneeker<br></div><div><=
+br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8e=
+x;border-left:1px solid rgb(204,204,204);padding-left:1ex">
+<br>
+I still have many questions about this patch which are not answered by<br>
+commit log nor can I poke around on Synopsys solvnet for answers :-s<br>
+<span class=3D""><font color=3D"#888888"><br>
 --<br>
 balbi<br>
-</font></span></blockquote></div><br></div></div>
+</font></span></blockquote></div><br></div></div></div></div>
 
---047d7b67018314547c050c61ec84--
+--001a113958c8fc0a11050bd314eb--
