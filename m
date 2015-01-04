@@ -1,69 +1,35 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH 0/4] mmc: core: Add support for MMC power sequences
-Date: Sun, 04 Jan 2015 20:20:15 +0100
-Message-ID: <54A9926F.9090607@redhat.com>
-References: <1420215248-20650-1-git-send-email-ulf.hansson@linaro.org> <20150102181423.GS11285@n2100.arm.linux.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20150102181423.GS11285@n2100.arm.linux.org.uk>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>, Ulf Hansson <ulf.hansson@linaro.org>
-Cc: linux-mmc@vger.kernel.org, Chris Ball <chris@printf.net>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Alexandre Courbot <gnurou@gmail.com>, Arend van Spriel <arend@broadcom.com>, Sascha Hauer <s.hauer@pengutronix.de>, Olof Johansson <olof@lixom.net>, Doug Anderson <dianders@chromium.org>, NeilBrown <neilb@suse.de>
+From: Lucas Stach <dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>
+Subject: [PATCH 2/4] clk: tegra20: init NDFLASH clock to sensible rate
+Date: Sun,  4 Jan 2015 21:39:18 +0100
+Message-ID: <1420403960-26626-2-git-send-email-dev@lynxeye.de>
+References: <1420403960-26626-1-git-send-email-dev@lynxeye.de>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1420403960-26626-1-git-send-email-dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Russell,
+Set up the NAND Flash controller clock to run at 150MHz
+instead of the rate set by the bootloader. This is a
+conservative rate which also yields good performance.
 
-On 02-01-15 19:14, Russell King - ARM Linux wrote:
-> On Fri, Jan 02, 2015 at 05:14:04PM +0100, Ulf Hansson wrote:
->> To be able to handle these SOC specific power sequences, we add a MMC power
->> sequence interface, which helps the mmc core to deal with such.
->
-> I think this should be done differently - part of that is with hind sight
-> given that we now have a range of interface types.
->
-> One of my early design mistakes with MMC was to incorporate the power up
-> and initialisation protocol (the 74 clocks business) into the core code.
-> This was wrong, because it is a detail which only applies to dumb host
-> interfaces.  More inteligent interfaces do not need that complexity as
-> they handle that in hardware.
->
-> Rather than MMC ending up with more layers and more infrastructure like
-> this - turning it more into the turd which is sdhci - I would like to see
-> some proper thought put into design, specifically addressing the above
-> design issue.
->
-> What should be done is to move away from the opaque "set_ios" method into
-> something more appropriate - a set of callbacks which describe what we
-> want to achieve.
+Signed-off-by: Lucas Stach <dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>
+---
+ drivers/clk/tegra/clk-tegra20.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-I think you misunderstand what this patch-set tries to do, this patch-set
-is intended for use with on board sdio devices, which typically may need
-a number of resources initialized before the can be probed over the sd
-bus at all. E.g. a regulator enabled, a reset de-asserted, a clk configured
-and provided, etc. So this is about sequencing of events before even
-trying to talk to the device at the basic spi compatible layer.
-
-Your ideas seem like a good idea to improve the mmc subsys, but this
-is somewhat unrelated, in a way this could apply equally to say an usb
-attached device, or basically any discoverable bus, where some onboard
-devices may need some form of enabling (or power up) before they can be
-discovered.
-
-Which is why the original patchset Ulf references in the cover letter was
-trying to be more generic, since the got nowhere Ulf now is trying with
-something mmc specific, since the direct need for this functionality is
-with sdio devices.
-
-Note that this is a real world problem which has been hacked around a lot
-in vendor kernels, so although getting the design right as always is
-important, it is also important to at some point come up with something
-workable, and if you look at previous threads on this topic, you will see
-that has already been discussed a lot, and always seems to get stuck on
-people trying to find the "perfect. 100% generic" solution, a typical
-example of perfect being the enemy of good.
-
-Regards,
-
-Hans
+diff --git a/drivers/clk/tegra/clk-tegra20.c b/drivers/clk/tegra/clk-tegra20.c
+index 41272dc..f20424d 100644
+--- a/drivers/clk/tegra/clk-tegra20.c
++++ b/drivers/clk/tegra/clk-tegra20.c
+@@ -1063,6 +1063,7 @@ static struct tegra_clk_init_table init_table[] __initdata = {
+ 	{TEGRA20_CLK_DISP2, TEGRA20_CLK_PLL_P, 600000000, 0},
+ 	{TEGRA20_CLK_GR2D, TEGRA20_CLK_PLL_C, 300000000, 0},
+ 	{TEGRA20_CLK_GR3D, TEGRA20_CLK_PLL_C, 300000000, 0},
++	{TEGRA20_CLK_NDFLASH, TEGRA20_CLK_PLL_P, 150000000, 0},
+ 	{TEGRA20_CLK_CLK_MAX, TEGRA20_CLK_CLK_MAX, 0, 0}, /* This MUST be the last entry */
+ };
+ 
+-- 
+2.1.0
