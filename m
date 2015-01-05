@@ -1,69 +1,55 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH net-next v10 3/3] net: hisilicon: new hip04 ethernet driver
-Date: Mon, 05 Jan 2015 09:56:56 +0100
-Message-ID: <5940412.J23835FKcW@wuerfel>
-References: <1420440691-20928-1-git-send-email-dingtianhong@huawei.com> <1420440691-20928-4-git-send-email-dingtianhong@huawei.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2] clk-rcar-gen2: RCAN clock support
+Date: Mon, 05 Jan 2015 10:58:12 +0200
+Message-ID: <2588771.7HSTAuAcWR@avalon>
+References: <3007073.i0ghnTEhxV@wasted.cogentembedded.com> <1550804.XpyQtHjy2T@avalon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1420440691-20928-4-git-send-email-dingtianhong@huawei.com>
-Sender: netdev-owner@vger.kernel.org
-To: Ding Tianhong <dingtianhong@huawei.com>
-Cc: robh+dt@kernel.org, davem@davemloft.net, grant.likely@linaro.org, sergei.shtylyov@cogentembedded.com, linux-arm-kernel@lists.infradead.org, eric.dumazet@gmail.com, xuwei5@hisilicon.com, zhangfei.gao@linaro.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux@arm.linux.org.uk
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1550804.XpyQtHjy2T@avalon>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: mturquette@linaro.org, linux-kernel@vger.kernel.org, sboyd@codeaurora.org, linux-sh@vger.kernel.org, vksavl@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 05 January 2015 14:51:31 Ding Tianhong wrote:
-> Support Hisilicon hip04 ethernet driver, including 100M / 1000M controller.
-> The controller has no tx done interrupt, reclaim xmitted buffer in the poll.
+Hi Sergei,
+
+On Monday 05 January 2015 10:53:02 Laurent Pinchart wrote:
+> On Thursday 25 December 2014 01:17:29 Sergei Shtylyov wrote:
+> > Add the RCAN clock support to the R-Car generation 2 CPG driver.  This
+> > clock gets derived from  the USB_EXTAL clock, dividing  it by 6.  The
+> > layout of the RCANCKCR register is similar to those of the clocks
+> > supported by the 'clk-div6' driver but has no divider field, and so can't
+> > be supported by that driver...
+> > 
+> > Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> > 
+> > ---
+> > The patch is against the 'clk-next' branch of Mike Turquette's 'linux.git'
+> > repo.
+> > 
+> > Changes in version 2:
+> > - switched to using the composite clock driver with the fixed factor and
+> > gated clock component drivers;
+> > - removed *static* from 'parent_name' definition, switching from
+> > assignment to initializer;
+> > - modified the binding document;
+> > - modified the changelog.
+> > 
+> >  Documentation/devicetree/bindings/clock/renesas,rcar-gen2-cpg-clocks.txt
+> >  | 5 -
+> >  drivers/clk/shmobile/clk-rcar-gen2.c                    |   40 ++++++++++
 > 
-> According David Miller and Arnd Bergmann's suggestion, add some modification
-> for v9 version:
-> - drop the workqueue
-> - batch cleanup based on tx_coalesce_frames/usecs for better throughput
-> - use a reasonable default tx timeout (200us, could be shorted
->   based on measurements) with a range timer
-> - fix napi poll function return value
-> - use a lockless queue for cleanup
+> Could you please also add a #define for the RCAN clock in include/dt-
+> bindings/clock/r8a779*-clock.h ? Same comment for the ADSP clock in "[PATCH]
+> clk-rcar-gen2: ADSP clock support".
 
-The driver looks ok to me now, but it would be good if you could list
-any test results you got. Did the performance improve over the previous
-versions? What is the maximum latency you get now?
+Scratch that, I see you add the #define's in the patches that add the 
+corresponding MSTP clocks.
 
-> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
-> Signed-off-by: Ding Tianhong <dingtianhong@huawei.com>
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+-- 
+Regards,
 
-Adding my "Signed-off-by:" below yours is not the correct attribution here,
-I only contributed a small part, and the last line should always list
-the name of the person sending the patch. It would be ok if you change the
-order of the lines to have yours last, or you could leave me out here entirely
-and just mention me in the description.
+Laurent Pinchart
 
-> +
-> +	/* FIXME: make these adjustable through ethtool */
-> +	int tx_coalesce_frames;
-> +	int tx_coalesce_usecs;
-> +	struct hrtimer tx_coalesce_timer;
-
-The FIXME comment that I added was meant as a suggestion for you to look
-into implementing that after you got the driver working. Did you try it
-out, or do you have plans to do that as a follow-up patch?
-
-I would assume that doing so would help in the performance evaluation and
-to find good default values. The numbers I used were really just guessing
-as I have no insight into how the hardware behaves in real-world systems.
-
-> +
-> +	/* FIXME: eliminate this mmio access if xmit_more is set */
-> +	hip04_set_xmit_desc(priv, phys);
-> +	priv->tx_head = TX_NEXT(tx_head);
-> +	count++;
-> +	netdev_sent_queue(ndev, skb->len);
-
-Same thing here. I would assume that implementing xmit_more support can
-boost tx performance significantly, but I don't have access to the hardware
-data sheet, so I don't know what kind of interaction with the hardware
-is required when you want to submit multiple tx frames at once.
-
-	Arnd
