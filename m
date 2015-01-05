@@ -1,56 +1,70 @@
-From: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH] ARM: mediatek: dts: Add UART dts for MT8127 and MT8135 boards
-Date: Mon, 5 Jan 2015 20:28:38 +0800
-Message-ID: <1420460918-24380-1-git-send-email-eddie.huang@mediatek.com>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH 2/2] ARM: mediatek: dts: Add uart to Aquaris5
+Date: Mon, 5 Jan 2015 13:28:49 +0100
+Message-ID: <20150105122849.GF4544@pengutronix.de>
+References: <1420224485-11043-1-git-send-email-matthias.bgg@gmail.com>
+ <1420224485-11043-3-git-send-email-matthias.bgg@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yh.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1420224485-11043-3-git-send-email-matthias.bgg@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch enable UART for MT8127 moose board and MT8135 evalution board.
-Adding the dts, these two boards can show log and shell prompts.
-This patch base on my previous MT8135/MT8127 SoC UART dtsi patch [1] and
-Matthias's modification to disable SoC UART by default.
+Hi Matthias,
 
-[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-December/312311.html
+On Fri, Jan 02, 2015 at 07:48:05PM +0100, Matthias Brugger wrote:
+> This patch enables uart port for the Aquaris5 mobile phone.
+> 
+> Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+> ---
+>  arch/arm/boot/dts/mt6589-aquaris5.dts | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/mt6589-aquaris5.dts b/arch/arm/boot/dts/mt6589-aquaris5.dts
+> index 0da0470..d5cbfda 100644
+> --- a/arch/arm/boot/dts/mt6589-aquaris5.dts
+> +++ b/arch/arm/boot/dts/mt6589-aquaris5.dts
+> @@ -21,10 +21,16 @@
+>  	compatible = "mundoreader,bq-aquaris5", "mediatek,mt6589";
+>  
+>  	chosen {
+> -		bootargs = "earlyprintk";
+> +		bootargs = "console=ttyS0,921600n8 earlyprintk";
+>  	};
 
-Signed-off-by: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
- arch/arm/boot/dts/mt8127-moose.dts | 4 ++++
- arch/arm/boot/dts/mt8135-evbp1.dts | 4 ++++
- 2 files changed, 8 insertions(+)
+		stdout-path = &uart0;
 
-diff --git a/arch/arm/boot/dts/mt8127-moose.dts b/arch/arm/boot/dts/mt8127-moose.dts
-index 13cba0e..073e295 100644
---- a/arch/arm/boot/dts/mt8127-moose.dts
-+++ b/arch/arm/boot/dts/mt8127-moose.dts
-@@ -23,3 +23,7 @@
- 		reg = <0 0x80000000 0 0x40000000>;
- 	};
- };
-+
-+&uart0 {
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/mt8135-evbp1.dts b/arch/arm/boot/dts/mt8135-evbp1.dts
-index a5adf97..3667738 100644
---- a/arch/arm/boot/dts/mt8135-evbp1.dts
-+++ b/arch/arm/boot/dts/mt8135-evbp1.dts
-@@ -23,3 +23,7 @@
- 		reg = <0 0x80000000 0 0x40000000>;
- 	};
- };
-+
-+&uart3 {
-+	status = "okay";
-+};
+Should work aswell and makes you independent from the way the kernel
+decides to number the UARTs.
+
+>  
+>  	memory {
+>  		reg = <0x80000000 0x40000000>;
+>  	};
+> +
+> +	soc {
+> +		uart0: serial@11006000 {
+> +			status = "okay";
+> +		};
+> +	};
+
+By using the & notation you don't have to resemble the tree structure in
+the board file, like this:
+
+&uart0 {
+	status = "okay";
+};
+
+See for example the omap, i.MX or other dts files.
+
+Sascha
+
 -- 
-1.8.1.1.dirty
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
