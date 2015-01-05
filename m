@@ -1,59 +1,42 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: GIC_CPU_MASK_SIMPLE(8)" on big.LITTLE?
-Date: Mon, 5 Jan 2015 11:37:47 +0100
-Message-ID: <CAMuHMdWQQBECdXT1pbChT31y8YdHzcjvTGR1A2HhtdtwpRmdPQ@mail.gmail.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH] Documentation: of: fix typo in graph bindings
+Date: Mon, 05 Jan 2015 11:37:31 +0100
+Message-ID: <1420454251.3180.20.camel@pengutronix.de>
+References: <1420452136-76466-1-git-send-email-xiakaixu@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: Liviu Dudau <Liviu.Dudau@arm.com>, Arnd Bergmann <arnd@arndb.de>, Marc Zyngier <Marc.Zyngier@arm.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1420452136-76466-1-git-send-email-xiakaixu@huawei.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kaixu Xia <xiakaixu@huawei.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kaixu.xia@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-A while ago, I wondered:
+Am Montag, den 05.01.2015, 18:02 +0800 schrieb Kaixu Xia:
+> Just fix a minor typo about the example path.
+> 
+> Signed-off-by: Kaixu Xia <xiakaixu@huawei.com>
 
-| It's my understanding GIC_CPU_MASK_SIMPLE should reflect the actual number
-| of CPU cores the interrupt is wired too. Is that correct?
-|
-| [Fixes for incorrect masks on shmobile]
-|
-| Should it be "GIC_CPU_MASK_SIMPLE(8)" on big.LITTLE configurations
-| with four Cortex-A15 cores and four Cortex-A7 cores?
-| Or should the interrupts be delivered to the four Cortex-A15 cores
-| only by default?
-|
-| Note that incorrect masks for GIC PPI interrupts are not limited to
-| shmobile. Presumably the interrupt specifiers got copied around a lot,
-| cfr. the proliferation of "GIC_CPU_MASK_SIMPLE(4)" (and the older
-| hardcoded "0xf0x" variant) in various dtsi files, not always limited to
-| quad-core CPUs.
+Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
 
-In the mean time, arch/arm64/boot/dts/arm/juno.dts got added, which has 2 A57
-cores and 4 A53 cores, and uses GIC_CPU_MASK_SIMPLE(6), so it seems like
-my two RFC patches to use GIC_CPU_MASK_SIMPLE(8) for 4 A15 cores and 4
-A7 cores are actually correct?
+thanks
+Philipp
 
-Thanks for your comments!
-
-References:
-  1. Original RFC series:
-     [PATCH/RFC 0/4] ARM: shmobile: Correct masks for GIC PPI interrupts
-     http://lists.infradead.org/pipermail/linux-arm-kernel/2014-November/306743.html
-  2. RFC patches:
-       a. [PATCH/RFC 3/4] ARM: shmobile: r8a7790: Correct mask for GIC
-PPI interrupts
-          http://lists.infradead.org/pipermail/linux-arm-kernel/2014-November/306741.html
-       b. [PATCH/RFC 4/4] ARM: shmobile: r8a73a4: Correct mask for GIC
-PPI interrupts
-          http://lists.infradead.org/pipermail/linux-arm-kernel/2014-November/306740.html
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> ---
+>  Documentation/devicetree/bindings/graph.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/graph.txt b/Documentation/devicetree/bindings/graph.txt
+> index 1a69c07..fcb1c6a 100644
+> --- a/Documentation/devicetree/bindings/graph.txt
+> +++ b/Documentation/devicetree/bindings/graph.txt
+> @@ -19,7 +19,7 @@ type of the connections, they just map their existence. Specific properties
+>  may be described by specialized bindings depending on the type of connection.
+>  
+>  To see how this binding applies to video pipelines, for example, see
+> -Documentation/device-tree/bindings/media/video-interfaces.txt.
+> +Documentation/devicetree/bindings/media/video-interfaces.txt.
+>  Here the ports describe data interfaces, and the links between them are
+>  the connecting data buses. A single port with multiple connections can
+>  correspond to multiple devices being connected to the same physical bus.
