@@ -1,26 +1,36 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V2] ARM: dts: imx6sx: add i.mx6sx sabreauto board support
-Date: Mon, 5 Jan 2015 21:30:27 +0800
-Message-ID: <20150105133025.GE24511@dragon>
-References: <1418790129-12879-1-git-send-email-b20788@freescale.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 1/2] ARM: shmobile: r8a7790: add CAN clocks
+Date: Mon, 5 Jan 2015 14:30:55 +0100
+Message-ID: <CAMuHMdWq5+KNwV4K0gfiv0RFmJzfUktJdr=AKgsHZgkfDdQsjg@mail.gmail.com>
+References: <2616635.bsb7mLynhA@wasted.cogentembedded.com>
+	<7045264.74zTCWbb7p@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1418790129-12879-1-git-send-email-b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <7045264.74zTCWbb7p@wasted.cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Simon Horman <horms@verge.net.au>, Linux-sh list <linux-sh@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 17, 2014 at 12:22:09PM +0800, Anson Huang wrote:
-> Add basic i.MX6SoloX Sabre Auto board support, currently
-> only debug UART and uSDHC are supported on this board.
-> 
-> Signed-off-by: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+On Mon, Dec 29, 2014 at 11:04 PM, Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+> The R-Car CAN controllers can derive the CAN bus clock not only from their
+> peripheral clock input (clkp1) but also from the other internal clock (clkp2)
+> and external clock fed on CAN_CLK pin.  Describe those clocks in the device
+> tree,  along with  the USB_EXTAL clock  from which clkp2 is derived.
+>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-Applied, thanks.
+Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
