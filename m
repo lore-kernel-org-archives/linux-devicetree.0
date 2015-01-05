@@ -1,111 +1,60 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v2] clk-rcar-gen2: ADSP clock support
-Date: Mon, 05 Jan 2015 17:00:01 +0300
-Message-ID: <54AA98E1.704@cogentembedded.com>
-References: <30876083.4tlAgq9Aak@wasted.cogentembedded.com> <CAMuHMdXW=_bYbdUGB2TBPFNfz9gBB+AyD1mWyoKD9eFxebma5w@mail.gmail.com>
+From: Suman Tripathi <stripathi@apm.com>
+Subject: Re: [PATCH 2/2] ahci_xgene: Implement the workaround to support PMP
+ enumeration and discovery for APM X-Gene SoC AHCI SATA Host Controller driver.
+Date: Mon, 5 Jan 2015 19:33:06 +0530
+Message-ID: <CAOHikRBedNy=CrrHA+7UYQJpL3t1BhU0VFixz80bPeSE28iHGw@mail.gmail.com>
+References: <1420453305-15986-1-git-send-email-stripathi@apm.com>
+	<1420453305-15986-3-git-send-email-stripathi@apm.com>
+	<20150105133005.GB15833@htj.dyndns.org>
+	<20150105135950.GE15833@htj.dyndns.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdXW=_bYbdUGB2TBPFNfz9gBB+AyD1mWyoKD9eFxebma5w@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Mike Turquette <mturquette@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <20150105135950.GE15833@htj.dyndns.org>
+Sender: linux-ide-owner@vger.kernel.org
+To: Tejun Heo <tj@kernel.org>
+Cc: Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Linux SCSI List <linux-scsi@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Mark Langsdorf <mlangsdo@redhat.com>, Jon Masters <jcm@redhat.com>, patches@apm.com
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Reverted due to conflicts with the endian fix patches.  Please rebase
+these two on top of them.
 
-On 1/5/2015 4:13 PM, Geert Uytterhoeven wrote:
+Will do that .. I should have wait for the endian patch getting
+accepted. Sorry for that.
 
->> Add the ADSP clock support to the R-Car generation 2 CPG driver.  This clock
->> gets derived from  PLL1.  The layout of the ADSPCKCR register is  similar to
->> those of the clocks supported by the 'clk-div6' driver but the divider encoding
->> is non-linear, so can't be supported by that driver...
-
->> Based on the original patch by Konstantin Kozhevnikov
->> <konstantin.kozhevnikov@cogentembedded.com>.
-
->> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-
->> ---
->> The patch is against the 'clk-next' branch of Mike Turquette's 'linux.git' repo
->> plus the RCAN clock support patch posted last week.
-
->> Changes in version 2:
->> - swapped "adsp" and "rcan" in the binding document.
-
->> +++ linux/drivers/clk/shmobile/clk-rcar-gen2.c
->> @@ -33,6 +33,7 @@ struct rcar_gen2_cpg {
-[...]
->> @@ -162,6 +163,51 @@ static struct clk * __init cpg_z_clk_reg
->>          return clk;
->>   }
+On Mon, Jan 5, 2015 at 7:29 PM, Tejun Heo <tj@kernel.org> wrote:
+> On Mon, Jan 05, 2015 at 08:30:05AM -0500, Tejun Heo wrote:
+>> On Mon, Jan 05, 2015 at 03:51:45PM +0530, Suman Tripathi wrote:
+>> > Due to H/W errata, the controller is unable to save the PMP
+>> > field fetched from command header before sending the H2D FIS.
+>> > When the device returns the PMP port field in the D2H FIS, there is
+>> > a mismatch and results in command completion failure. The workaround
+>> > is to write the pmp value to PxFBS.DEV field before issuing any command
+>> > to PMP.
+>> >
+>> > Signed-off-by: Suman Tripathi <stripathi@apm.com>
 >>
->> +/* ADSP divisors */
->> +static const struct clk_div_table cpg_adsp_div_table[] = {
->> +       {  1,  3 }, {  2,  4 }, {  3,  6 }, {  4,  8 },
->> +       {  5, 12 }, {  6, 16 }, {  7, 18 }, {  8, 24 },
->> +       { 10, 36 }, { 11, 48 }, {  0,  0 },
->> +};
->> +
->> +static struct clk * __init cpg_adsp_clk_register(struct rcar_gen2_cpg *cpg)
->> +{
->> +       const char *parent_name = "pll1";
->> +       struct clk_divider *div;
->> +       struct clk_gate *gate;
->> +       struct clk *clk;
->> +
->> +       div = kzalloc(sizeof(*div), GFP_KERNEL);
->> +       if (!div)
->> +               return ERR_PTR(-ENOMEM);
->> +
->> +       div->reg = cpg->reg + CPG_ADSPCKCR;
->> +       div->width = 4;
->> +       div->table = cpg_adsp_div_table;
->> +       div->lock = &cpg->lock;
->> +
->> +       gate = kzalloc(sizeof(*gate), GFP_KERNEL);
->> +       if (!gate) {
->> +               kfree(div);
->> +               return ERR_PTR(-ENOMEM);
->> +       }
->> +
->> +       gate->reg = cpg->reg + CPG_RCANCKCR;
+>> Applied 1-2 to libata/for-3.20.
+>
+> Reverted due to conflicts with the endian fix patches.  Please rebase
+> these two on top of them.
+>
+> Thanks.
+>
+> --
+> tejun
 
-> Shouldn't this be CPG_ADSPCKCR?
 
-    Oops! At least I did it right for the divider component. :-)
 
->> +       gate->bit_idx = 8;
->> +       gate->flags = CLK_GATE_SET_TO_DISABLE;
->> +       gate->lock = &cpg->lock;
->> +
->> +       clk = clk_register_composite(NULL, "adsp", &parent_name, 1, NULL, NULL,
->> +                                    &div->hw, &clk_divider_ops,
->> +                                    &gate->hw, &clk_gate_ops, 0);
->> +       if (IS_ERR(clk)) {
->> +               kfree(gate);
->> +               kfree(div);
->> +       }
->> +
->> +       return clk;
->> +}
+-- 
+Thanks,
+with regards,
+Suman Tripathi
+CONFIDENTIALITY NOTICE: This e-mail message, including any attachments, 
+is for the sole use of the intended recipient(s) and contains information
+that is confidential and proprietary to Applied Micro Circuits Corporation or its subsidiaries. 
+It is to be used solely for the purpose of furthering the parties' business relationship. 
+All unauthorized review, use, disclosure or distribution is prohibited. 
+If you are not the intended recipient, please contact the sender by reply e-mail 
+and destroy all copies of the original message.
 
-> Please insert the adsp code after the rcan code, to match the clock order
-> in bindings and #defines.
-
-    OK. I placed it basing on the register offset...
-
-[...]
->> @@ -301,6 +347,8 @@ rcar_gen2_cpg_register_clock(struct devi
->>                  shift = 0;
->>          } else if (!strcmp(name, "z")) {
->>                  return cpg_z_clk_register(cpg);
->> +       } else if (!strcmp(name, "adsp")) {
->> +               return cpg_adsp_clk_register(cpg);
-
-> Please insert the adsp code after the rcan code.
-
-    OK.
-
-WBR, Sergei
