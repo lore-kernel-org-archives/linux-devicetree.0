@@ -1,51 +1,229 @@
-From: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH V1 1/1] iio: Added Capella cm3232 ambient light sensor
- driver.
-Date: Mon, 05 Jan 2015 08:42:46 -0800
-Message-ID: <1420476166.2652.14.camel@perches.com>
-References: <1420071030-888-1-git-send-email-ktsai@capellamicro.com>
-	 <CAEnQRZBD2NMYRp1cW0J2ssT4CT=0jSM=X6ByHQiUrA0ueV8fRA@mail.gmail.com>
-	 <1420463396.2652.8.camel@perches.com>
-	 <CAEnQRZBmwurFCJU4E4ArO8waU+YcGWrRYr3DRVxq9haduX2t=w@mail.gmail.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM: mvebu: Add Armada 385 General Purpose Development
+ Board support
+Date: Mon, 05 Jan 2015 18:06:58 +0100
+Message-ID: <54AAC4B2.8040401@free-electrons.com>
+References: <1419678035-10658-1-git-send-email-gregory.clement@free-electrons.com>	<1419678035-10658-4-git-send-email-gregory.clement@free-electrons.com> <20141231113250.6ae98b19@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAEnQRZBmwurFCJU4E4ArO8waU+YcGWrRYr3DRVxq9haduX2t=w@mail.gmail.com>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, Archana Patni <archana.patni-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20141231113250.6ae98b19-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2015-01-05 at 16:20 +0200, Daniel Baluta wrote:
-> On Mon, Jan 5, 2015 at 3:09 PM, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org> wrote:
-> > On Mon, 2015-01-05 at 12:51 +0200, Daniel Baluta wrote:
-> >> On Thu, Jan 1, 2015 at 2:10 AM, Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org> wrote:
-> >> > CM3232 is an advanced ambient light sensor with I2C protocol interface.
-> >> > The I2C slave address is internally hardwired as 0x10 (7-bit).  Writing
-> >> > to configure register is byte mode, but reading ALS register requests to
-> >> > use word mode for 16-bit resolution.
-[]
-> >> You could directly return i2c_smbus_write_byte_data(..).
-> >
-> > Sometimes it's better to return a specific value
-> > for the error instead of depending on correctness
-> > of all the indirect functions in the call chain.
-> >
-> > In this case, all the smbus_xfer functions must
-> > return 0 on success.  Do they?
-> 
-> Yes.
-> 
-> http://lxr.free-electrons.com/source/drivers/i2c/i2c-core.c#L2845
+Hi Thomas,
 
-This doesn't show that adapter->algo->smbus_xfer()
-returns 0, you have to look at the code for that
-indirectly called function. 
-
-> Also, I guess kbuild test robot will complain about it, like here:
+On 31/12/2014 11:32, Thomas Petazzoni wrote:
+> Dear Gregory CLEMENT,
 > 
-> http://marc.info/?l=linux-kernel&m=141963536230419&w=2
+> On Sat, 27 Dec 2014 12:00:35 +0100, Gregory CLEMENT wrote:
+> 
+>> +				spi-flash@0 {
+>> +					#address-cells = <1>;
+>> +					#size-cells = <1>;
+>> +					compatible = "st,m25p128";
+>> +					reg = <0>; /* Chip select 0 */
+>> +					spi-max-frequency = <50000000>;
+> 
+> According to the m25p128 datasheet,  the max frequency is 54 Mhz.
 
-Is the kbuild test robot now submitting patches for all
-possible coccinelle simplifications?  I don't think so.
+It is the  max frequency for the 65nm devices, but the one on the GP board
+is a M25P128-VMF6P. As there was no 'B' in the part number then it was a
+130nm device which is limited to 50MHz.
+
+> 
+>> +			i2c@11000 {
+>> +				status = "okay";
+>> +				clock-frequency = <100000>;
+>> +
+>> +				pca9555_0: pca9555@20 {
+>> +					compatible = "nxp,pca9555";
+>> +					pinctrl-names = "default";
+>> +					pinctrl-0 = <&pca0_pins>;
+>> +					interrupt-parent = <&gpio0>;
+>> +					interrupts = <18 IRQ_TYPE_EDGE_FALLING>;
+>> +					gpio-controller;
+>> +					#gpio-cells = <2>;
+>> +					interrupt-controller;
+>> +					#interrupt-cells = <2>;
+>> +					reg = <0x20>;
+>> +				};
+>> +
+>> +				pca9555_1: pca9555@21 {
+>> +					compatible = "nxp,pca9555";
+>> +					pinctrl-names = "default";
+>> +					interrupt-parent = <&gpio0>;
+>> +					interrupts = <18 IRQ_TYPE_EDGE_FALLING>;
+>> +
+>> +					gpio-controller;
+>> +					#gpio-cells = <2>;
+>> +					interrupt-controller;
+>> +					#interrupt-cells = <2>;
+>> +
+>> +					reg = <0x21>;
+>> +				};
+> 
+> It would be good to align both description in terms of empty new lines.
+> 
+> Also, in the second controller, you have pinctrl-names, but no
+> pinctrl-0, so it doesn't make much sense.
+> 
+
+Yes it was a left over of from a previous version, I will remove it.
+
+>> +			ethernet@70000 {
+>> +				status = "okay";
+>> +				phy = <&phy1>;
+>> +				phy-mode = "rgmii-id";
+>> +			};
+>> +
+>> +
+> 
+> One too many empty new line.
+> 
+>> +			mdio@72004 {
+>> +				phy0: ethernet-phy@0 {
+>> +					reg = <0>;
+>> +				};
+>> +
+>> +				phy1: ethernet-phy@1 {
+>> +					reg = <1>;
+>> +				};
+>> +			};
+> 
+> Maybe this is confusing, but it seems like the port 0 (i.e the one at
+> 0x70000) is connected to the PHY at address 1, while the port 1 (i.e
+> the one at 0x30000) is connected to the PHY at address 0. According to
+> U-Boot:
+> 
+> | egiga0 |   RGMII   |     0x01     |
+> | egiga1 |   RGMII   |     0x00     |
+> 
+> So maybe we should have:
+> 
+> 	ethernet@30000 {
+> 		phy = <&phy1>;
+> 	};
+> 
+> 	ethernet@70000 {
+> 		phy = <&phy0>;
+> 	};
+> 
+> 	mdio@72004 {
+> 		phy0: ethernet-phy@1 {
+> 			reg = <1>;
+> 		};
+> 
+> 		phy1: ethernet-phy@0 {
+> 			reg = <0>;
+> 		};
+> 	};
+> 
+> To reflect this, no?
+
+
+
+> 
+>> +			sata@a8000 {
+>> +				nr-ports = <2>;
+>> +				status = "okay";
+>> +				#address-cells = <1>;
+>> +				#size-cells = <0>;
+>> +
+>> +				sata0: sata-port@0 {
+>> +					reg = <0>;
+>> +					target-supply = <&reg_5v_sata0>;
+>> +				};
+>> +
+>> +				sata1: sata-port@1 {
+>> +					reg = <1>;
+>> +					target-supply = <&reg_5v_sata1>;
+>> +				};
+> 
+> Doesn't this part depends on the patches you have submitted to the AHCI
+> driver? If so, it would be good to state this in the cover letter, so
+> that the dependencies are known. Or for the moment, to not handle the
+> SATA part, until the DT binding for describing per-SATA port regulators
+> is sorted out (I saw that the feedback from Mark Brown on your patches
+> indicate that some rework will be needed).
+
+It was the same kind of DT binding which was used for PHY that I used for
+the regulator, I didn't imagine that it couldn't be accepted. But I was
+wrong DT bindings seems to be really dependent of each maintainers.
+
+I will move the regulator part of the SATA in a different patch.
+
+> 
+> Also, having a reg property into a child node that isn't part of a bus
+> looks wrong.
+
+But according to the binding documentation:
+Documentation/devicetree/bindings/ata/ahci-platform.txt, the reg property is a
+required property. If it is wrong that means that the bindings should be changed,
+but it also should be stable.
+
+> 
+>> +			};
+>> +
+>> +			sata@e0000 {
+>> +				nr-ports = <2>;
+>> +				status = "okay";
+>> +				#address-cells = <1>;
+>> +				#size-cells = <0>;
+>> +
+>> +				sata2: sata-port@0 {
+>> +					reg = <0>;
+>> +					target-supply = <&reg_5v_sata2>;
+>> +				};
+>> +
+>> +				sata3: sata-port@1 {
+>> +					reg = <1>;
+>> +					target-supply = <&reg_5v_sata3>;
+>> +				};
+>> +			};
+> 
+> Ditto.
+> 
+>> +			sdhci@d8000 {
+>> +				clock-frequency = <200000000>;
+> 
+> Why? There is already a 'clocks' property in armada-38x.dtsi. However,
+> the clock is actually 250 Mhz, not 200 Mhz. Any reason why you forced
+> 200 Mhz here?
+> 
+
+It was copied from the 385 DB dts before the patch "ARM: mvebu: remove
+clock-frequency from Armada 38x SDHCI Device Tree node" was applied. I will
+remove it
+
+
+>> +				cd-gpios = <&pca9555_0 5 GPIO_ACTIVE_LOW>;
+>> +				no-1-8-v;
+>> +				wp-inverted;
+> 
+> Why do you have a wp-inverted property, with no wp-gpios property? If I
+> understand the DT binding correctly, wp-inverted only makes sense when
+> wp-gpios is used.
+
+This part came also from the 385 DB board as the connector was similar. I
+thought you had introduced it on purpose so I kept it.
+
+
+Thanks,
+
+Gregory
+
+
+
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
