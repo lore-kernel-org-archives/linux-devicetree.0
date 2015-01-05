@@ -1,51 +1,73 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH 1/3] TTY: add support for "tty slave" devices.
-Date: Mon, 5 Jan 2015 17:28:34 +0100
-Message-ID: <20150105162833.GA20821@amd>
-References: <20141211214801.4127.93914.stgit@notabene.brown>
- <20141211215943.4127.24792.stgit@notabene.brown>
- <20141228142010.GA3922@amd>
- <20150103103357.2406fc23@notabene.brown>
- <20150105154141.6f191cd5@lxorguk.ukuu.org.uk>
+From: Nishanth Menon <nm@ti.com>
+Subject: [PATCH V4] ARM: dts: am57xx-beagle-x15: Add GPIO controlled fan node
+Date: Mon, 5 Jan 2015 10:32:29 -0600
+Message-ID: <1420475549-28492-1-git-send-email-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150105154141.6f191cd5@lxorguk.ukuu.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
-Cc: NeilBrown <neilb@suse.de>, Grant Likely <grant.likely@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Jiri Slaby <jslaby@suse.cz>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, sre@kernel.org, Nishanth Menon <nm@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon 2015-01-05 15:41:41, One Thousand Gnomes wrote:
-> > It would be really nice if the uart would register the line disciple as a
-> > child device, then the line discipline would register whatever it wants.
-> 
-> For almost every case this doesn't work. You need a tty interface as well
-> because thats how you manage it.
-> 
-> > But that isn't how it works.  The line discipline doesn't talk to the uart.
-> > Rather the tty layer talks to the uart (through tty_operations) and to the
-> > line discipline (through tty_ldisc_ops) and also registers the char_dev.
-> 
-> This is intentional. An ldisc has no business knowing what it's connected
-> to. Try running bluetooth over a tty/pty pair remotely to a dongle - and
-> you can do it or faking a GSM mux over a tty/pty pair for testing.
+TPS gpio now controls a 5v 500mA TL5209 regulator which may be supply
+a fan (such as AFB02505HHB) over J1 connector for various purposes.
+Provide device tree node to enable the same.
 
-Not all cases are like that. IIRC Neil's hardware uses CTS/RTS in an
-interesting way. bc2048 is connected to serial+clocks+gpios...
+Signed-off-by: Nishanth Menon <nm@ti.com>
+---
+V4: Change format of the speed-map used.
+V3: https://patchwork.kernel.org/patch/5562121/
+V2: https://patchwork.kernel.org/patch/5445111/
+V1: https://patchwork.kernel.org/patch/5444911/
 
-> There are lots of cases where we know the correct ldisc from information
-> in the ACPI, DT or even USB identifiers in order to plug in the right
-> ldisc and daemon but I think that pretty much has to be in user space.
-> The kernel might be able to set an ldisc but it can't go around starting
-> bluetooth daemons, doing modem chats to go into mux mode or firing up
-> JMRI and java when it sees a Sprog. That's a job for systemd/udev.
+Enable and disable can be controlled by (post the RPM, it finds
+closest match - even a 1 will do)
 
-No need to start bluetooth daemons: userspace can start them
-itself. Just like in btusb case.
+echo '13000' > /sys/class/hwmon/hwmon0/fan1_target
+and
+echo '0' > /sys/class/hwmon/hwmon0/fan1_target
 
-									Pavel
+Test log: http://slexy.org/view/s2T0ajh46z
+
+requires CONFIG_GPIO_PALMAS and CONFIG_SENSORS_GPIO_FAN to be operational
+Applies on v3.19-rc1
+
+ arch/arm/boot/dts/am57xx-beagle-x15.dts |   14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/arch/arm/boot/dts/am57xx-beagle-x15.dts b/arch/arm/boot/dts/am57xx-beagle-x15.dts
+index 6c2e8e4..c5d4cea 100644
+--- a/arch/arm/boot/dts/am57xx-beagle-x15.dts
++++ b/arch/arm/boot/dts/am57xx-beagle-x15.dts
+@@ -80,6 +80,14 @@
+ 			default-state = "off";
+ 		};
+ 	};
++
++	gpio_fan: gpio_fan {
++		/* Based on 5v 500mA AFB02505HHB */
++		compatible = "gpio-fan";
++		gpios =  <&tps659038_gpio 1 GPIO_ACTIVE_HIGH>;
++		gpio-fan,speed-map = <0     0>,
++				     <13000 1>;
++	};
+ };
+ 
+ &dra7_pmx_core {
+@@ -394,6 +402,12 @@
+ 			wakeup-source;
+ 			ti,palmas-long-press-seconds = <12>;
+ 		};
++
++		tps659038_gpio: tps659038_gpio {
++			compatible = "ti,palmas-gpio";
++			gpio-controller;
++			#gpio-cells = <2>;
++		};
+ 	};
+ 
+ 	tmp102: tmp102@48 {
 -- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+1.7.9.5
+
