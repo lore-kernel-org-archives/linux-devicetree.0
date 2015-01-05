@@ -1,84 +1,91 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v2 2/3] drm/panel: add s6e63j0x03 LCD panel driver
-Date: Mon, 5 Jan 2015 15:19:58 +0100
-Message-ID: <20150105141957.GC12010@ulmo.nvidia.com>
-References: <1418117346-9078-1-git-send-email-human.hwang@samsung.com>
- <1418117346-9078-3-git-send-email-human.hwang@samsung.com>
- <54A3D2E7.1000900@samsung.com>
+From: Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V1 1/1] iio: Added Capella cm3232 ambient light sensor driver.
+Date: Mon, 5 Jan 2015 16:20:02 +0200
+Message-ID: <CAEnQRZBmwurFCJU4E4ArO8waU+YcGWrRYr3DRVxq9haduX2t=w@mail.gmail.com>
+References: <1420071030-888-1-git-send-email-ktsai@capellamicro.com>
+	<CAEnQRZBD2NMYRp1cW0J2ssT4CT=0jSM=X6ByHQiUrA0ueV8fRA@mail.gmail.com>
+	<1420463396.2652.8.camel@perches.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1872243041=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <54A3D2E7.1000900@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Inki Dae <inki.dae@samsung.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, dri-devel@lists.freedesktop.org, a.hajda@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org, Hyungwon Hwang <human.hwang@samsung.com>, galak@codeaurora.org, Kukjin Kim <kgene.kim@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1420463396.2652.8.camel-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
+Cc: Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, Archana Patni <archana.patni-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Jan 5, 2015 at 3:09 PM, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org> wrote:
+> On Mon, 2015-01-05 at 12:51 +0200, Daniel Baluta wrote:
+>> On Thu, Jan 1, 2015 at 2:10 AM, Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org> wrote:
+>> > CM3232 is an advanced ambient light sensor with I2C protocol interface.
+>> > The I2C slave address is internally hardwired as 0x10 (7-bit).  Writing
+>> > to configure register is byte mode, but reading ALS register requests to
+>> > use word mode for 16-bit resolution.
+>>
+>> This looks good to me.  Few comments inline.
+> []
+>> > diff --git a/drivers/iio/light/cm3232.c b/drivers/iio/light/cm3232.c
+> []
+>> > +/**
+>> > + * cm3232_reg_init() - Initialize CM3232 registers
+>> > + * @chip:      pointer of struct cm3232.
+>> > + *
+>> > + * Initialize CM3232 ambient light sensor register to default values.
+>> > + *
+>> > +  Return: 0 for success; otherwise for error code.
+>> > + */
+>> > +static int cm3232_reg_init(struct cm3232_chip *chip)
+>> > +{
+>> > +       struct i2c_client *client = chip->client;
+>> > +       struct cm3232_als_info *als_info;
+>> > +       s32 ret;
+>> > +
+>> > +       /* Identify device */
+>> > +       ret = i2c_smbus_read_word_data(client, CM3232_REG_ADDR_ID);
+>> > +       if (ret < 0)
+>> > +               return ret;
+>> > +       if ((ret & 0xFF) != 0x32)
+>> > +               return -ENODEV;
+>> > +
+>> > +       /* Disable and reset device */
+>> > +       chip->regs_cmd = CM3232_CMD_ALS_DISABLE | CM3232_CMD_ALS_RESET;
+>> > +       ret = i2c_smbus_write_byte_data(client, CM3232_REG_ADDR_CMD,
+>> > +                               chip->regs_cmd);
+>> > +       if (ret < 0)
+>> > +               return ret;
+>> > +
+>> > +       /* Initialization */
+>> > +       als_info = chip->als_info = &cm3232_als_info_default;
+>> > +       chip->regs_cmd = CM3232_CMD_DEFAULT;
+>> > +
+>> > +       /* Configure register */
+>> > +       ret = i2c_smbus_write_byte_data(client, CM3232_REG_ADDR_CMD,
+>> > +                               chip->regs_cmd);
+>>
+>> You could directly return i2c_smbus_write_byte_data(..).
+>
+> Sometimes it's better to return a specific value
+> for the error instead of depending on correctness
+> of all the indirect functions in the call chain.
+>
+> In this case, all the smbus_xfer functions must
+> return 0 on success.  Do they?
 
---===============1872243041==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="hYooF8G/hrfVAmum"
-Content-Disposition: inline
+Yes.
 
+http://lxr.free-electrons.com/source/drivers/i2c/i2c-core.c#L2845
 
---hYooF8G/hrfVAmum
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+>
+> Inspecting the codebase for correctness or not
+> depending on that correctness is sometimes better
+> to avoid doing.
 
-On Wed, Dec 31, 2014 at 07:41:43PM +0900, Inki Dae wrote:
-> Hi Thierry,
->=20
-> Ping~.
->=20
-> Or is it ok to pick up this patch to my tree, exynos-drm-next? It
-> doesn't seem to care for a long time.
+You have a valid point. Anyhow, AFAIK the code from IIO
+prefers a direct return.
 
-I don't seem to have a copy of the v2 2/3 patch. All I found in my inbox
-is the v2 0/3 cover-letter. Please resend with me in Cc so that I can
-properly review (and apply) the patch.
+Also, I guess kbuild test robot will complain about it, like here:
 
-Thierry
+http://marc.info/?l=linux-kernel&m=141963536230419&w=2
 
---hYooF8G/hrfVAmum
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJUqp2NAAoJEN0jrNd/PrOh92cQAIUvwfKhcC84dxEpjwW3jHlK
-d4g+MYi4VlRX30TB1yZhNAEtr0rMINUeFHN+QxqXsuneTTE7VIAvvBesCFPWGuml
-Rvdy5lKBN9FxgAdOo1Rcf9p6DZ/WL9GbfGmbwXUs77drjOHYEL0iyENpx2xaOyEY
-SqgUWoIwCPI0z4OV0dwJnpA+ZeonlvCZMuz7/vAvUiD40A1apQoaqCiWxX3jQ6jm
-F5bV3fSvIjXxTS421tNpAuVbhfzPxc+SukPyve33lVTGEa7kuEj/2ZWyqIovN2dG
-FzL36N9xrk8nkBSfRRCSY0Y0WQwPsECPYkTZC4Fv3JXhqgUoQNcB3JQoF9d2dC11
-d6H/TXFrn7sYKdYkgHp66X1T5958Awmnn2jkX8p9THZNoe46Y9P6kmHnwiFOzhwE
-5vdH/k23G+EvbwhB3R2ng9zyXcoUxpcyyp2vDvJjYprRcQzsdduYt8N2Ws1Bl+Ok
-QCdRowmCHSpkEGzcfSp6DfUFrCbFXt90xwPFLKJAUhMcxTmafGQcMVNq8aUAf2zv
-lhKTv+P6Bo3YrbNp/cEzRMh6fjIu5cCExhOWLU/bvj4eNUFhp/0cbubMC/UGK+tj
-+rUfVE9FEMFUAK8nnzGQH24kKNJIPh+96ns8nOjdeAQc53/agS8ZTArVw8lc1hRQ
-oQS7QkdSZWoMpIS6kqdk
-=/6KF
------END PGP SIGNATURE-----
-
---hYooF8G/hrfVAmum--
-
---===============1872243041==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
-
---===============1872243041==--
+thanks,
+Daniel.
