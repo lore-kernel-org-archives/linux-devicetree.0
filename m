@@ -1,326 +1,131 @@
-From: Dave Gerlach <d-gerlach@ti.com>
-Subject: Re: [PATCH 3/3] remoteproc: wkup_m3: Add wkup_m3 remote proc driver
-Date: Mon, 5 Jan 2015 14:10:14 -0600
-Message-ID: <54AAEFA6.3080603@ti.com>
-References: <1420228319-41085-1-git-send-email-d-gerlach@ti.com>
- <1420228319-41085-4-git-send-email-d-gerlach@ti.com>
- <20150102200424.GD4920@saruman>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH v3] clk-rcar-gen2: RCAN clock support
+Date: Mon, 05 Jan 2015 23:10:43 +0300
+Message-ID: <1678262.gW7XrkflEf@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20150102200424.GD4920@saruman>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: balbi@ti.com
-Cc: Ohad Ben-Cohen <ohad@wizery.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, Kevin Hilman <khilman@linaro.org>, Benoit Cousson <bcousson@baylibre.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: mturquette@linaro.org, linux-kernel@vger.kernel.org, sboyd@codeaurora.org
+Cc: linux-sh@vger.kernel.org, vksavl@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Felipe,
-On 01/02/2015 02:04 PM, Felipe Balbi wrote:
-> On Fri, Jan 02, 2015 at 01:51:59PM -0600, Dave Gerlach wrote:
->> Add a remoteproc driver to load the firmware for and boot the wkup_m3
->> present on am33xx. The wkup_m3 is an integrated Cortex M3 that allows
->> the SoC to enter the lowest possible power state by taking control from
->> the MPU after it has gone into its own low power state and shutting off
->> any additional peripherals.
->>
->> The driver expects a resource table to be present in the wkup_m3
->> firmware to define the required memory resources needed by the wkup_m3,
->> at least the data memory so that the firmware can be copied to the proper
->> place for execution.
->>
->> Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
->> ---
->>  drivers/remoteproc/Kconfig         |  12 +++
->>  drivers/remoteproc/Makefile        |   1 +
->>  drivers/remoteproc/wkup_m3_rproc.c | 175 +++++++++++++++++++++++++++++++++++++
->>  3 files changed, 188 insertions(+)
->>  create mode 100644 drivers/remoteproc/wkup_m3_rproc.c
->>
->> diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
->> index 5e343ba..7fbdb53 100644
->> --- a/drivers/remoteproc/Kconfig
->> +++ b/drivers/remoteproc/Kconfig
->> @@ -41,6 +41,18 @@ config STE_MODEM_RPROC
->>  	  This can be either built-in or a loadable module.
->>  	  If unsure say N.
->>  
->> +config WKUP_M3_RPROC
->> +	bool "AM33xx wkup-m3 remoteproc support"
-> 
-> it would be nicer if this could be a loadable module.
+Add the RCAN clock support to the R-Car generation 2 CPG driver.  This clock
+gets derived from  the USB_EXTAL clock, dividing  it by 6.  The layout of the
+RCANCKCR register is similar to those of the clocks supported by the 'clk-div6'
+driver but has no divider field, and so can't be supported by that driver...
 
-Do we really want that though? This is required for core PM functionality like
-CPUIdle and Suspend/resume, I feel that it should always be built in for am335x.
-I had been taking this approach with all of the PM dependencies.
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-> 
->> +	depends on SOC_AM33XX
->> +	select REMOTEPROC
->> +	help
->> +	  Say y here to support AM33xx wkup-m3.
->> +
->> +	  Required for Suspend-to-ram and CPUIdle on AM33xx. Allows for
->> +	  loading of firmware of CM3 PM coprocessor that is present
->> +	  on AM33xx family of SoCs
->> +	  If unsure say N.
->> +
->>  config DA8XX_REMOTEPROC
->>  	tristate "DA8xx/OMAP-L13x remoteproc support"
->>  	depends on ARCH_DAVINCI_DA8XX
->> diff --git a/drivers/remoteproc/Makefile b/drivers/remoteproc/Makefile
->> index ac2ff75..81b04d1 100644
->> --- a/drivers/remoteproc/Makefile
->> +++ b/drivers/remoteproc/Makefile
->> @@ -9,4 +9,5 @@ remoteproc-y				+= remoteproc_virtio.o
->>  remoteproc-y				+= remoteproc_elf_loader.o
->>  obj-$(CONFIG_OMAP_REMOTEPROC)		+= omap_remoteproc.o
->>  obj-$(CONFIG_STE_MODEM_RPROC)	 	+= ste_modem_rproc.o
->> +obj-$(CONFIG_WKUP_M3_RPROC)		+= wkup_m3_rproc.o
->>  obj-$(CONFIG_DA8XX_REMOTEPROC)		+= da8xx_remoteproc.o
->> diff --git a/drivers/remoteproc/wkup_m3_rproc.c b/drivers/remoteproc/wkup_m3_rproc.c
->> new file mode 100644
->> index 0000000..8686ca2
->> --- /dev/null
->> +++ b/drivers/remoteproc/wkup_m3_rproc.c
->> @@ -0,0 +1,175 @@
->> +/*
->> + * AMx3 Wkup M3 Remote Processor driver
->> + *
->> + * Copyright (C) 2014 Texas Instruments, Inc.
->> + *
->> + * Dave Gerlach <d-gerlach@ti.com>
->> + *
->> + * This program is free software; you can redistribute it and/or
->> + * modify it under the terms of the GNU General Public License
->> + * version 2 as published by the Free Software Foundation.
->> + *
->> + * This program is distributed in the hope that it will be useful,
->> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + * GNU General Public License for more details.
->> + */
->> +
->> +#include <linux/err.h>
->> +#include <linux/kernel.h>
->> +#include <linux/interrupt.h>
->> +#include <linux/module.h>
->> +#include <linux/of_device.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/pm_runtime.h>
->> +#include <linux/remoteproc.h>
->> +
->> +#include <linux/platform_data/wkup_m3.h>
->> +
->> +#include "remoteproc_internal.h"
->> +
->> +struct wkup_m3_rproc {
->> +	struct rproc *rproc;
->> +	struct platform_device *pdev;
->> +};
->> +
->> +static int wkup_m3_rproc_start(struct rproc *rproc)
->> +{
->> +	struct wkup_m3_rproc *m3_rproc = rproc->priv;
->> +	struct platform_device *pdev = m3_rproc->pdev;
->> +	struct device *dev = &pdev->dev;
->> +	struct wkup_m3_platform_data *pdata = dev->platform_data;
->> +	int ret;
->> +
->> +	ret = pdata->deassert_reset(pdev, pdata->reset_name);
-> 
-> looks like here you should assert, wait, deassert. What if soemthing
-> else used wkup_m3 before this loads ?
-> 
+---
+Changes in version 3:
+- added the USB_EXTAL clock reference to the binding document.
 
-Hmm, that's unlikely but not impossible, and if the wkup_m3 is not properly
-reset after firmware loading it won't boot, which kills all PM on am335x. I'll
-look into doing that.
+Changes in version 2:
+- switched to using the composite clock driver with the fixed factor and gated
+  clock component drivers;
+- removed *static* from 'parent_name' definition, switching from assignment to
+  initializer;
+- modified the binding document;
+- modified the changelog.
 
->> +	if (ret) {
->> +		dev_err(dev, "Unable to reset wkup_m3!\n");
->> +		return -ENODEV;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static int wkup_m3_rproc_stop(struct rproc *rproc)
->> +{
->> +	struct wkup_m3_rproc *m3_rproc = rproc->priv;
->> +	struct platform_device *pdev = m3_rproc->pdev;
->> +	struct device *dev = &pdev->dev;
->> +	struct wkup_m3_platform_data *pdata = dev->platform_data;
->> +	int ret;
->> +
->> +	ret = pdata->assert_reset(pdev, pdata->reset_name);
->> +	if (ret) {
->> +		dev_err(dev, "Unable to assert reset of wkup_m3!\n");
->> +		return -ENODEV;
->> +	}
->> +	return 0;
->> +}
->> +
->> +static struct rproc_ops wkup_m3_rproc_ops = {
->> +	.start		= wkup_m3_rproc_start,
->> +	.stop		= wkup_m3_rproc_stop,
->> +};
->> +
->> +static const struct of_device_id wkup_m3_rproc_of_match[] = {
->> +	{
->> +		.compatible = "ti,am3353-wkup-m3",
->> +		.data = (void *)"am335x-pm-firmware.elf",
-> 
-> do you know of anybody else who might want to different firmware image
-> name ? Otherwise why pass it as driver_data ?
+ Documentation/devicetree/bindings/clock/renesas,rcar-gen2-cpg-clocks.txt |   10 +-
+ drivers/clk/shmobile/clk-rcar-gen2.c                                     |   40 ++++++++++
+ 2 files changed, 46 insertions(+), 4 deletions(-)
 
-I suppose we could pass the name in the devicetree. I do not know of any other
-users of other firmware but it's probably better to keep things flexible.
-
-> 
->> +	},
->> +	{},
->> +};
->> +
->> +static int wkup_m3_rproc_probe(struct platform_device *pdev)
->> +{
->> +	struct device *dev = &pdev->dev;
->> +	const char *fw_name;
->> +	struct wkup_m3_platform_data *pdata = dev->platform_data;
->> +	struct wkup_m3_rproc *m3_rproc;
->> +	const struct of_device_id *match;
->> +	struct rproc *rproc;
->> +	int ret;
->> +
->> +	if (!(pdata && pdata->deassert_reset && pdata->assert_reset &&
->> +	      pdata->reset_name)) {
->> +		dev_err(dev, "Platform data missing!\n");
->> +		return -ENODEV;
->> +	}
-> 
-> if pdata is missing, couldn't you assume the thing has been reset and
-> try to load anyway ?
-
-Probably not, we MUST reset after loading the firmware as that is what boots the
-wkup_m3.
-
-> 
->> +	match = of_match_device(wkup_m3_rproc_of_match, &pdev->dev);
->> +	if (!match)
->> +		return -ENODEV;
->> +	fw_name = (char *)match->data;
->> +
->> +	pm_runtime_enable(&pdev->dev);
->> +
->> +	ret = pm_runtime_get_sync(&pdev->dev);
->> +	if (IS_ERR_VALUE(ret)) {
->> +		dev_err(&pdev->dev, "pm_runtime_get_sync() failed\n");
->> +		return ret;
-> 
-> this is wrong for two reasons:
-> 
-> a) you need to pm_runtime_disable();
-> b) even if pm_runtime_get*() fails, you _must_ call
-> 	pm_runtime_put_sync();
-
-Ok I will fix this and the following pm_runtime issues. Didn't realize you still
-had to call put_sync after a failed get_sync.
-
-> 
->> +	}
->> +
->> +	rproc = rproc_alloc(dev, "wkup_m3", &wkup_m3_rproc_ops,
->> +			    fw_name, sizeof(*m3_rproc));
->> +	if (!rproc)
->> +		return -ENOMEM;
->> +
->> +	m3_rproc = rproc->priv;
->> +	m3_rproc->rproc = rproc;
->> +	m3_rproc->pdev = pdev;
->> +
->> +	dev_set_drvdata(dev, rproc);
->> +
->> +	/* Register as a remoteproc device */
->> +	ret = rproc_add(rproc);
->> +	if (ret) {
->> +		dev_err(dev, "rproc_add failed\n");
->> +		goto err;
->> +	}
->> +
->> +	return 0;
->> +
->> +err:
->> +	rproc_put(rproc);
->> +	pm_runtime_put_sync(&pdev->dev);
-> 
-> missing pm_runtime_disable();
-> 
->> +	return ret;
->> +}
->> +
->> +static int wkup_m3_rproc_remove(struct platform_device *pdev)
->> +{
->> +	struct rproc *rproc = platform_get_drvdata(pdev);
->> +
->> +	rproc_del(rproc);
->> +	rproc_put(rproc);
->> +	pm_runtime_put_sync(&pdev->dev);
-> 
-> missing pm_runtime_disable();
-> 
->> +
->> +	return 0;
->> +}
->> +
->> +static int wkup_m3_rpm_suspend(struct device *dev)
->> +{
->> +	return -EBUSY;
->> +}
-> 
-> looks like this is just coping with omap_device bogosity, no ?
->
-
-Yes, without this omap_device shuts down ther wkup_m3 during suspend, which of
-course prevents the wkup_m3 from finishing suspend process or waking SoC back
-up. Haven't found a better solution for the problem than this.
-
->> +
->> +static int wkup_m3_rpm_resume(struct device *dev)
->> +{
->> +	return 0;
->> +}
->> +
->> +static const struct dev_pm_ops wkup_m3_rproc_pm_ops = {
->> +	SET_RUNTIME_PM_OPS(wkup_m3_rpm_suspend, wkup_m3_rpm_resume, NULL)
->> +};
->> +
->> +static struct platform_driver wkup_m3_rproc_driver = {
->> +	.probe = wkup_m3_rproc_probe,
->> +	.remove = wkup_m3_rproc_remove,
->> +	.driver = {
->> +		.name = "wkup_m3",
->> +		.of_match_table = wkup_m3_rproc_of_match,
->> +		.pm = &wkup_m3_rproc_pm_ops,
->> +	},
->> +};
->> +
->> +module_platform_driver(wkup_m3_rproc_driver);
->> +
->> +MODULE_LICENSE("GPL v2");
->> +MODULE_DESCRIPTION("wkup m3 remote processor control driver");
-> 
-> do you want to add MODULE_AUTHOR() ?
-> 
-
-Yes. Thanks for the comments.
-
-Regards,
-Dave
+Index: renesas/Documentation/devicetree/bindings/clock/renesas,rcar-gen2-cpg-clocks.txt
+===================================================================
+--- renesas.orig/Documentation/devicetree/bindings/clock/renesas,rcar-gen2-cpg-clocks.txt
++++ renesas/Documentation/devicetree/bindings/clock/renesas,rcar-gen2-cpg-clocks.txt
+@@ -13,10 +13,11 @@ Required Properties:
+ 
+   - reg: Base address and length of the memory resource used by the CPG
+ 
+-  - clocks: Reference to the parent clock
++  - clocks: References to the parent clocks: first to the EXTAL clock, second
++    to the USB_EXTAL clock
+   - #clock-cells: Must be 1
+   - clock-output-names: The names of the clocks. Supported clocks are "main",
+-    "pll0", "pll1", "pll3", "lb", "qspi", "sdh", "sd0", "sd1" and "z"
++    "pll0", "pll1", "pll3", "lb", "qspi", "sdh", "sd0", "sd1", "z", and "rcan"
+ 
+ 
+ Example
+@@ -26,8 +27,9 @@ Example
+ 		compatible = "renesas,r8a7790-cpg-clocks",
+ 			     "renesas,rcar-gen2-cpg-clocks";
+ 		reg = <0 0xe6150000 0 0x1000>;
+-		clocks = <&extal_clk>;
++		clocks = <&extal_clk &usb_extal_clk>;
+ 		#clock-cells = <1>;
+ 		clock-output-names = "main", "pll0, "pll1", "pll3",
+-				     "lb", "qspi", "sdh", "sd0", "sd1", "z";
++				     "lb", "qspi", "sdh", "sd0", "sd1", "z",
++				     "rcan";
+ 	};
+Index: renesas/drivers/clk/shmobile/clk-rcar-gen2.c
+===================================================================
+--- renesas.orig/drivers/clk/shmobile/clk-rcar-gen2.c
++++ renesas/drivers/clk/shmobile/clk-rcar-gen2.c
+@@ -33,6 +33,7 @@ struct rcar_gen2_cpg {
+ #define CPG_FRQCRC			0x000000e0
+ #define CPG_FRQCRC_ZFC_MASK		(0x1f << 8)
+ #define CPG_FRQCRC_ZFC_SHIFT		8
++#define CPG_RCANCKCR			0x00000270
+ 
+ /* -----------------------------------------------------------------------------
+  * Z Clock
+@@ -161,6 +162,43 @@ static struct clk * __init cpg_z_clk_reg
+ 	return clk;
+ }
+ 
++static struct clk * __init cpg_rcan_clk_register(struct rcar_gen2_cpg *cpg,
++						 struct device_node *np)
++{
++	const char *parent_name = of_clk_get_parent_name(np, 1);
++	struct clk_fixed_factor *fixed;
++	struct clk_gate *gate;
++	struct clk *clk;
++
++	fixed = kzalloc(sizeof(*fixed), GFP_KERNEL);
++	if (!fixed)
++		return ERR_PTR(-ENOMEM);
++
++	fixed->mult = 1;
++	fixed->div = 6;
++
++	gate = kzalloc(sizeof(*gate), GFP_KERNEL);
++	if (!gate) {
++		kfree(fixed);
++		return ERR_PTR(-ENOMEM);
++	}
++
++	gate->reg = cpg->reg + CPG_RCANCKCR;
++	gate->bit_idx = 8;
++	gate->flags = CLK_GATE_SET_TO_DISABLE;
++	gate->lock = &cpg->lock;
++
++	clk = clk_register_composite(NULL, "rcan", &parent_name, 1, NULL, NULL,
++				     &fixed->hw, &clk_fixed_factor_ops,
++				     &gate->hw, &clk_gate_ops, 0);
++	if (IS_ERR(clk)) {
++		kfree(gate);
++		kfree(fixed);
++	}
++
++	return clk;
++}
++
+ /* -----------------------------------------------------------------------------
+  * CPG Clock Data
+  */
+@@ -263,6 +301,8 @@ rcar_gen2_cpg_register_clock(struct devi
+ 		shift = 0;
+ 	} else if (!strcmp(name, "z")) {
+ 		return cpg_z_clk_register(cpg);
++	} else if (!strcmp(name, "rcan")) {
++		return cpg_rcan_clk_register(cpg, np);
+ 	} else {
+ 		return ERR_PTR(-EINVAL);
+ 	}
