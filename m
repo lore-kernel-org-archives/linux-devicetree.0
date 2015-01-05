@@ -1,31 +1,28 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2] clk-rcar-gen2: RCAN clock support
-Date: Mon, 5 Jan 2015 14:23:46 +0100
-Message-ID: <CAMuHMdUPyVxvVQPitJXOaqWC9_SPkzDUx+sg2mD2yHHZSyE=Xw@mail.gmail.com>
-References: <3007073.i0ghnTEhxV@wasted.cogentembedded.com>
+Subject: Re: [PATCH v4 1/3] ARM: shmobile: r8a7791: add CAN clocks
+Date: Mon, 5 Jan 2015 14:29:28 +0100
+Message-ID: <CAMuHMdXmKV2_npgjaC+t4wDD6we8VCBFSzHFfkRHwELO30BMmQ@mail.gmail.com>
+References: <6830301.90YaDPuTpx@wasted.cogentembedded.com>
+	<2098987.LzjA3c0AUx@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <3007073.i0ghnTEhxV@wasted.cogentembedded.com>
+In-Reply-To: <2098987.LzjA3c0AUx@wasted.cogentembedded.com>
 Sender: linux-sh-owner@vger.kernel.org
 To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Mike Turquette <mturquette@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Linux-sh list <linux-sh@vger.kernel.org>, Pavel Kiryukhin <vksavl@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: Simon Horman <horms@verge.net.au>, Linux-sh list <linux-sh@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
-
-On Wed, Dec 24, 2014 at 11:17 PM, Sergei Shtylyov
+On Sat, Dec 27, 2014 at 12:18 AM, Sergei Shtylyov
 <sergei.shtylyov@cogentembedded.com> wrote:
-> Add the RCAN clock support to the R-Car generation 2 CPG driver.  This clock
-> gets derived from  the USB_EXTAL clock, dividing  it by 6.  The layout of the
-> RCANCKCR register is similar to those of the clocks supported by the 'clk-div6'
-> driver but has no divider field, and so can't be supported by that driver...
-
-Thanks, looks fine to me.
-
+> The R-Car CAN controllers can derive the CAN bus clock not only from their
+> peripheral clock input (clkp1) but also from the other internal clock (clkp2)
+> and external clock fed on CAN_CLK pin.  Describe those clocks in the device
+> tree,  along with  the USB_EXTAL clock  from which clkp2 is derived.
+>
 > Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: arch/arm/boot/dts/r8a7790.dtsi
 
 Gr{oetje,eeting}s,
 
