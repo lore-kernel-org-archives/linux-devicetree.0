@@ -1,228 +1,106 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM: mvebu: Add Armada 385 General Purpose Development
- Board support
-Date: Mon, 05 Jan 2015 18:06:58 +0100
-Message-ID: <54AAC4B2.8040401@free-electrons.com>
-References: <1419678035-10658-1-git-send-email-gregory.clement@free-electrons.com>	<1419678035-10658-4-git-send-email-gregory.clement@free-electrons.com> <20141231113250.6ae98b19@free-electrons.com>
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 3/3] usb: dwc3: add a quirk for device disconnection
+ issue in Synopsis dwc3 core
+Date: Mon, 5 Jan 2015 11:09:21 -0600
+Message-ID: <20150105170921.GH19336@saruman>
+References: <1418695828-605-1-git-send-email-Sneeker.Yeh@tw.fujitsu.com>
+ <1418695828-605-4-git-send-email-Sneeker.Yeh@tw.fujitsu.com>
+ <20141222153730.GA12815@saruman>
+ <CAJ1gpc3jVpz=5ME4+wCJDW5NKihvB4xYzwi0co=UuPtG9Ubmjg@mail.gmail.com>
+ <CAJ1gpc3-Wjtm54WOhO6RXjZft9BMngzyYC0-S-XnTacV-qKgMg@mail.gmail.com>
+ <20141229160641.GD29379@saruman>
+ <CAJ1gpc0Uu4vS2iA_o_W5NaE_QBWDYFZJio7yKvhpaR5f=qWcGA@mail.gmail.com>
+Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="KscVNZbUup0vZz0f"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141231113250.6ae98b19-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAJ1gpc0Uu4vS2iA_o_W5NaE_QBWDYFZJio7yKvhpaR5f=qWcGA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sneeker Yeh <sneeker.yeh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Thomas Pugliese <thomas.pugliese-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Mosberger <davidm-haPfTeumbwasTnJN9+BGXg@public.gmane.org>, Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb
 List-Id: devicetree@vger.kernel.org
 
-Hi Thomas,
+--KscVNZbUup0vZz0f
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 31/12/2014 11:32, Thomas Petazzoni wrote:
-> Dear Gregory CLEMENT,
-> 
-> On Sat, 27 Dec 2014 12:00:35 +0100, Gregory CLEMENT wrote:
-> 
->> +				spi-flash@0 {
->> +					#address-cells = <1>;
->> +					#size-cells = <1>;
->> +					compatible = "st,m25p128";
->> +					reg = <0>; /* Chip select 0 */
->> +					spi-max-frequency = <50000000>;
-> 
-> According to the m25p128 datasheet,  the max frequency is 54 Mhz.
+Hi,
 
-It is the  max frequency for the 65nm devices, but the one on the GP board
-is a M25P128-VMF6P. As there was no 'B' in the part number then it was a
-130nm device which is limited to 50MHz.
+On Sun, Jan 04, 2015 at 08:55:01PM +0800, Sneeker Yeh wrote:
+> > > So far Fujitsu Semiconductor got Synopsys internal case id , that is "
+> > > Case: 8000679552".
+> > > However the contents belongs this id cannot be referred except Fujitsu
+> > > Semiconductor and Synopsys.
+> > > Synopsis decide the official errata (STAR information) will be disclo=
+sed
+> > > next February.
+> > >
+> > > Would you suggest if this quirk can be accepted with this case ID, or=
+ can
+> > > only be accepted with STARS ticket number?
+> >
+> > The thing is that without the STARS number I can't really verify which
+> > versions of the IP would be affected. Clearly, it's not only your setup
+> > and I think it's pretty unfair to have "is_compatible("fujitsu")" to
+> >
+>=20
+> just found some way of quirk injection i miss,
+> does it looks more reasonable if i have to decide to use it via Kconfig? :
+> 20f6fdd01c2c0de9cc1109083222edded24c5350
+> b2f463e1300016785d63475c56f5807e2be00934
 
-> 
->> +			i2c@11000 {
->> +				status = "okay";
->> +				clock-frequency = <100000>;
->> +
->> +				pca9555_0: pca9555@20 {
->> +					compatible = "nxp,pca9555";
->> +					pinctrl-names = "default";
->> +					pinctrl-0 = <&pca0_pins>;
->> +					interrupt-parent = <&gpio0>;
->> +					interrupts = <18 IRQ_TYPE_EDGE_FALLING>;
->> +					gpio-controller;
->> +					#gpio-cells = <2>;
->> +					interrupt-controller;
->> +					#interrupt-cells = <2>;
->> +					reg = <0x20>;
->> +				};
->> +
->> +				pca9555_1: pca9555@21 {
->> +					compatible = "nxp,pca9555";
->> +					pinctrl-names = "default";
->> +					interrupt-parent = <&gpio0>;
->> +					interrupts = <18 IRQ_TYPE_EDGE_FALLING>;
->> +
->> +					gpio-controller;
->> +					#gpio-cells = <2>;
->> +					interrupt-controller;
->> +					#interrupt-cells = <2>;
->> +
->> +					reg = <0x21>;
->> +				};
-> 
-> It would be good to align both description in terms of empty new lines.
-> 
-> Also, in the second controller, you have pinctrl-names, but no
-> pinctrl-0, so it doesn't make much sense.
-> 
+We will only use Kconfig for those which can't be detected in runtime.
+LPM is one such case as there's no way for SW to detect that core was
+configured with LPM Errata, IIRC.
 
-Yes it was a left over of from a previous version, I will remove it.
+> > enable the quirk only for you. Isn't there a better way of enabling the
+> > quirk based off of revision detection couple with a look on GHWPARAMS*
+> > registers ?
+> >
+> > What's tricking me is this claim that only config-free PHYs would be
+> > affected, why ?
+> >
+>=20
+> i'm still struggling now to try to get more information about this.
+> some security policy inside Fujitsu make me unable to access full
+> information of this errata today.
+>=20
+> Someday after i get enough information,
+> i shall take your suggestion here that seems better to incur quirk
+> dynamically via GHWPARAMS,
+> and then send it here again.
 
->> +			ethernet@70000 {
->> +				status = "okay";
->> +				phy = <&phy1>;
->> +				phy-mode = "rgmii-id";
->> +			};
->> +
->> +
-> 
-> One too many empty new line.
-> 
->> +			mdio@72004 {
->> +				phy0: ethernet-phy@0 {
->> +					reg = <0>;
->> +				};
->> +
->> +				phy1: ethernet-phy@1 {
->> +					reg = <1>;
->> +				};
->> +			};
-> 
-> Maybe this is confusing, but it seems like the port 0 (i.e the one at
-> 0x70000) is connected to the PHY at address 1, while the port 1 (i.e
-> the one at 0x30000) is connected to the PHY at address 0. According to
-> U-Boot:
-> 
-> | egiga0 |   RGMII   |     0x01     |
-> | egiga1 |   RGMII   |     0x00     |
-> 
-> So maybe we should have:
-> 
-> 	ethernet@30000 {
-> 		phy = <&phy1>;
-> 	};
-> 
-> 	ethernet@70000 {
-> 		phy = <&phy0>;
-> 	};
-> 
-> 	mdio@72004 {
-> 		phy0: ethernet-phy@1 {
-> 			reg = <1>;
-> 		};
-> 
-> 		phy1: ethernet-phy@0 {
-> 			reg = <0>;
-> 		};
-> 	};
-> 
-> To reflect this, no?
+ok, hopefully you'll find a way ;-)
 
+--=20
+balbi
 
+--KscVNZbUup0vZz0f
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> 
->> +			sata@a8000 {
->> +				nr-ports = <2>;
->> +				status = "okay";
->> +				#address-cells = <1>;
->> +				#size-cells = <0>;
->> +
->> +				sata0: sata-port@0 {
->> +					reg = <0>;
->> +					target-supply = <&reg_5v_sata0>;
->> +				};
->> +
->> +				sata1: sata-port@1 {
->> +					reg = <1>;
->> +					target-supply = <&reg_5v_sata1>;
->> +				};
-> 
-> Doesn't this part depends on the patches you have submitted to the AHCI
-> driver? If so, it would be good to state this in the cover letter, so
-> that the dependencies are known. Or for the moment, to not handle the
-> SATA part, until the DT binding for describing per-SATA port regulators
-> is sorted out (I saw that the feedback from Mark Brown on your patches
-> indicate that some rework will be needed).
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-It was the same kind of DT binding which was used for PHY that I used for
-the regulator, I didn't imagine that it couldn't be accepted. But I was
-wrong DT bindings seems to be really dependent of each maintainers.
+iQIcBAEBAgAGBQJUqsVBAAoJEIaOsuA1yqREKv0P/Ru1Q/EYlXFalvHJeVmouThA
+tBV5RQXIQVBgUYnSKgFmr8dDfSEmY4hw/M3QTEA/v9aHzUBCSzcIWPda4dXrSrI2
+i0edd3jGppso9Of5W/v8ruXP5eXIiGOuBCgZ/n2Ew1o16cOArwUu2taSrnBhEvkD
+77rBEclp6S4TmtME5TXl+xRpc9zfRd+NMCRKrJU4zh2N3Ny667x7fwHdax3GBoQ2
+wctUul5EiWFG3/axEzLiKGs4DPXpbeuOMOCuQdnwnCW03GVoiCM/Z5iJHSO0vyUv
+jpD4pAX68KIeHE6hAqblgxNpkJwMmT6239pRyeHDNyXkx7U5jQGwdBmoYK5k6Wyt
+ILbax5mWhxi4sLAPOaot2WJjvEcaNYZxMkSDfDTm18arh9qWnwpOVvJ7sClfC5vE
+NNJuSAJ65nbtvZB8utVfbB4/PsJ/mOSG9iYNalAVjS6eFQkU9qr3mIpgCX5FaGh+
+AJ2k/7MezmiRI1F4IcBrzsfCn32f7mPb4dN3lLQiXqfsSNYBnF27gB1JwzvEa1v4
+Yy4MJtsGr+Aj2XJYJKF42JWofK9nbP2IjRc0PqCT6kc2heA2i4se1cFtX/Qi5fWh
+XL23pM1mg12nnKdZ/ZmeACY1KrcfFTGyRycWo1kOY9KEXlC1uXWKrwkpA3M67TQe
+bG9cNDvCrlUKE8l/pCcS
+=S/CV
+-----END PGP SIGNATURE-----
 
-I will move the regulator part of the SATA in a different patch.
-
-> 
-> Also, having a reg property into a child node that isn't part of a bus
-> looks wrong.
-
-But according to the binding documentation:
-Documentation/devicetree/bindings/ata/ahci-platform.txt, the reg property is a
-required property. If it is wrong that means that the bindings should be changed,
-but it also should be stable.
-
-> 
->> +			};
->> +
->> +			sata@e0000 {
->> +				nr-ports = <2>;
->> +				status = "okay";
->> +				#address-cells = <1>;
->> +				#size-cells = <0>;
->> +
->> +				sata2: sata-port@0 {
->> +					reg = <0>;
->> +					target-supply = <&reg_5v_sata2>;
->> +				};
->> +
->> +				sata3: sata-port@1 {
->> +					reg = <1>;
->> +					target-supply = <&reg_5v_sata3>;
->> +				};
->> +			};
-> 
-> Ditto.
-> 
->> +			sdhci@d8000 {
->> +				clock-frequency = <200000000>;
-> 
-> Why? There is already a 'clocks' property in armada-38x.dtsi. However,
-> the clock is actually 250 Mhz, not 200 Mhz. Any reason why you forced
-> 200 Mhz here?
-> 
-
-It was copied from the 385 DB dts before the patch "ARM: mvebu: remove
-clock-frequency from Armada 38x SDHCI Device Tree node" was applied. I will
-remove it
-
-
->> +				cd-gpios = <&pca9555_0 5 GPIO_ACTIVE_LOW>;
->> +				no-1-8-v;
->> +				wp-inverted;
-> 
-> Why do you have a wp-inverted property, with no wp-gpios property? If I
-> understand the DT binding correctly, wp-inverted only makes sense when
-> wp-gpios is used.
-
-This part came also from the 385 DB board as the connector was similar. I
-thought you had introduced it on purpose so I kept it.
-
-
-Thanks,
-
-Gregory
-
-
-
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+--KscVNZbUup0vZz0f--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
