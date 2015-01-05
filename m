@@ -1,92 +1,131 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 4/9] pci: add DT based ARM Versatile PCI host driver
-Date: Mon, 05 Jan 2015 10:35:32 +0100
-Message-ID: <29010664.sxfpXiecGs@wuerfel>
-References: <1419967718-26909-1-git-send-email-robherring2@gmail.com> <5205206.j8Q9x4GQsU@wuerfel> <CAL_JsqKj3KCwgtb8SViiAFSqhOS0gSq2gLQU1G3kFmV6o=q5iQ@mail.gmail.com>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH] PCIe: Designware: Do not allow config space through
+ ranges
+Date: Mon, 05 Jan 2015 10:39:58 +0100
+Message-ID: <1420450798.3024.3.camel@pengutronix.de>
+References: <7dcdee69eb7db8336829e6085d736a3ac7e68ad4.1419229126.git.panand@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKj3KCwgtb8SViiAFSqhOS0gSq2gLQU1G3kFmV6o=q5iQ@mail.gmail.com>
+In-Reply-To: <7dcdee69eb7db8336829e6085d736a3ac7e68ad4.1419229126.git.panand@redhat.com>
 Sender: linux-pci-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Rob Herring <robherring2@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Peter Maydell <peter.maydell@linaro.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, "arm@kernel.org" <arm@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
+To: Pratyush Anand <panand@redhat.com>
+Cc: mohit.kumar@st.com, jg1.han@samsung.com, shawn.guo@freescale.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 02 January 2015 17:13:19 Rob Herring wrote:
-> On Fri, Jan 2, 2015 at 2:52 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> > On Friday 02 January 2015 12:14:43 Rob Herring wrote:
-> >> On Tue, Dec 30, 2014 at 3:58 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> >> > On Tuesday 30 December 2014 13:28:33 Rob Herring wrote:
-
-> >> > Maybe just return PCIBIOS_BAD_REGISTER_NUMBER in this case?
-> >>
-> >> Perhaps. We could probably simplify the config space read/write
-> >> functions and just provide the PCI core a bus/devfn/offset to config
-> >> address translation function. That would not work in all cases, but
-> >> propably most that have memory mapped config space.
-> >
-> > Actually, thinking about this some more, the implementation seems to
-> > be "CAM" compliant, and we could share the confic space accessors with
-> > the ones from drivers/pci/host/pci-host-generic.c.
+Am Montag, den 22.12.2014, 12:09 +0530 schrieb Pratyush Anand:
+> Config space is need to be allocated using reg property. This patch
+> removes possibility of config space allocation through ranges property.
 > 
-> Almost. It uses readl for all size accesses. Yet writes support
-> different access sizes. I would guess that the h/w can support byte
-> and word reads if writes are supported, but I can't really verify.
-> Dword-only sized reads or reads and writes seem to be the main
-> variations for config space accesses. There's a few hosts with more
-> complex config space access setup, but quite a few only vary in
-> address decode.
+> To: Mohit Kumar <mohit.kumar@st.com>
+> To: Jingo Han <jg1.han@samsung.com>
+> To: Lucas Stach <l.stach@pengutronix.de>
+> To: Shawn Guo <shawn.guo@freescale.com>
+> Cc: linux-pci@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Pratyush Anand <panand@redhat.com>
 
-It was probably just done the current way because it seemed simpler
-at the time, but I agree that we can just keep it like this if there
-is any chance it's required as a workaround for a hardware glitch.
+This patch gets a clear NACK from me.
 
-With your other patch you just posted, it really becomes trivial
-to do.
+While removing the config space from the ranges in the relevant DTs is
+ok you are breaking DT compatibility for the sake of it.
+I don't see how this patch improves anything. We already warn loudly in
+the designware driver if config space isn't available in the regs
+property.
 
-> >> I'm a bit puzzled myself. I think that the devices are not probed
-> >> until after pci_assign_unassigned_bus_resources. It certainly doesn't
-> >> work without that call. Really, I think of_irq_parse_and_map_pci
-> >> should be the default if no one else has set the device's irq (and the
-> >> host has a device node of course).
-> >>
-> >> It also seems to be a bit of random set of pci functions that are
-> >> called here. It would be nice to simplify this chunk of code.
-> >
-> > Yes, and we recently had some attempts at creating a better interface posted
-> > on the mailing list, not sure what the latest status on it is. I think we
-> > want to end up with a two-stage interface along the lines of:
-> >
-> >         /* allocate a pci_host_bridge, scan DT, set default operations, map
-> >            I/O space if necessary, request all resources ... */
-> >         phb = pci_host_bridge_create(parent, ..., sizeof(struct my_pci_private));
+We already had a break in DT compatibility on imx6 to get the bindings
+right and I will not allow another one to happen unless there is a clear
+benefit.
+
+Regards,
+Lucas
+
+> ---
+>  arch/arm/boot/dts/imx6qdl.dtsi     |  3 +--
+>  arch/arm/boot/dts/imx6sx.dtsi      |  8 ++++----
+>  drivers/pci/host/pci-imx6.c        |  2 +-
+>  drivers/pci/host/pcie-designware.c | 13 -------------
+>  4 files changed, 6 insertions(+), 20 deletions(-)
 > 
-> Humm, I wondered what happened to pci_host_bridge_create and thought
-> we had abandoned it. It wasn't too clear reading thru the threads. The
-> host drivers generally still have to walk thru the resources anyway to
-> setup inbound and outbound windows, so we don't gain too much moving
-> that out. 
-I think the discussion has not ended yet, I'm still in favor of
-doing it like that. The current of_pci_get_host_bridge_resources()
-function is indeed lacking a bit because it just returns the resources
-that are needed for setting up the PCI side, but it doesn't
-provide a list of the host side windows that may need to get programmed
-into hardware registers on machines without a firmware that has set them
-up in advance (i.e. most ARM32 and MIPS32 machines).
+> diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+> index 4fc03b7f1cee..f21570847d08 100644
+> --- a/arch/arm/boot/dts/imx6qdl.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl.dtsi
+> @@ -143,8 +143,7 @@
+>  			#address-cells = <3>;
+>  			#size-cells = <2>;
+>  			device_type = "pci";
+> -			ranges = <0x00000800 0 0x01f00000 0x01f00000 0 0x00080000 /* configuration space */
+> -				  0x81000000 0 0          0x01f80000 0 0x00010000 /* downstream I/O */
+> +			ranges = 0x81000000 0 0          0x01f80000 0 0x00010000 /* downstream I/O */
+>  				  0x82000000 0 0x01000000 0x01000000 0 0x00f00000>; /* non-prefetchable memory */
+>  			num-lanes = <1>;
+>  			interrupts = <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>;
+> diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
+> index 7a24fee1e7ae..72593a77455e 100644
+> --- a/arch/arm/boot/dts/imx6sx.dtsi
+> +++ b/arch/arm/boot/dts/imx6sx.dtsi
+> @@ -1197,14 +1197,14 @@
+>  
+>  		pcie: pcie@0x08000000 {
+>  			compatible = "fsl,imx6sx-pcie", "snps,dw-pcie";
+> -			reg = <0x08ffc000 0x4000>; /* DBI */
+> +			reg = <0x08ffc000 0x4000>, /* DBI */
+> +				<0x08f00000 0x80000>;
+> +			reg-names = "dbi", "config";
+>  			#address-cells = <3>;
+>  			#size-cells = <2>;
+>  			device_type = "pci";
+> -				  /* configuration space */
+> -			ranges = <0x00000800 0 0x08f00000 0x08f00000 0 0x00080000
+>  				  /* downstream I/O */
+> -				  0x81000000 0 0          0x08f80000 0 0x00010000
+> +			ranges =  0x81000000 0 0          0x08f80000 0 0x00010000
+>  				  /* non-prefetchable memory */
+>  				  0x82000000 0 0x08000000 0x08000000 0 0x00f00000>;
+>  			num-lanes = <1>;
+> diff --git a/drivers/pci/host/pci-imx6.c b/drivers/pci/host/pci-imx6.c
+> index fdb95367721e..dae452984ed3 100644
+> --- a/drivers/pci/host/pci-imx6.c
+> +++ b/drivers/pci/host/pci-imx6.c
+> @@ -572,7 +572,7 @@ static int __init imx6_pcie_probe(struct platform_device *pdev)
+>  	hook_fault_code(16 + 6, imx6q_pcie_abort_handler, SIGBUS, 0,
+>  		"imprecise external abort");
+>  
+> -	dbi_base = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	dbi_base = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
 
-We could add another exported function to return those, or we could
-find a way to pass those back through the pci_host_bridge pointer
-from the common function.
+Additionally to the change below this is also breaking existing DTs.
 
-Setting up the PCI side by itself does seem useful to me though, mainly
-to prevent host controller drivers from getting it wrong.
+>  	pp->dbi_base = devm_ioremap_resource(&pdev->dev, dbi_base);
+>  	if (IS_ERR(pp->dbi_base))
+>  		return PTR_ERR(pp->dbi_base);
+> diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-designware.c
+> index df781cdf13c1..0b22b42e1ff9 100644
+> --- a/drivers/pci/host/pcie-designware.c
+> +++ b/drivers/pci/host/pcie-designware.c
+> @@ -409,19 +409,6 @@ int __init dw_pcie_host_init(struct pcie_port *pp)
+>  			pp->mem_mod_base = of_read_number(parser.range -
+>  							  parser.np + na, ns);
+>  		}
+> -		if (restype == 0) {
+> -			of_pci_range_to_resource(&range, np, &pp->cfg);
+> -			pp->cfg0_size = resource_size(&pp->cfg)/2;
+> -			pp->cfg1_size = resource_size(&pp->cfg)/2;
+> -			pp->cfg0_base = pp->cfg.start;
+> -			pp->cfg1_base = pp->cfg.start + pp->cfg0_size;
+> -
+> -			/* Find the untranslated configuration space address */
+> -			pp->cfg0_mod_base = of_read_number(parser.range -
+> -							   parser.np + na, ns);
+> -			pp->cfg1_mod_base = pp->cfg0_mod_base +
+> -					    pp->cfg0_size;
+> -		}
+>  	}
+>  
+>  	ret = of_pci_parse_bus_range(np, &pp->busn);
 
-> And the error clean-up gets complicated too.
-
-In what way? I would hope that we could come up with a way to make
-pci_host_bridge_create() able to roll-back, so it does nothing in
-case of an error, and allocate all resources using devm_* so it
-all gets undone if probe() fails for another reason.
-
-	Arnd
+-- 
+Pengutronix e.K.             | Lucas Stach                 |
+Industrial Linux Solutions   | http://www.pengutronix.de/  |
