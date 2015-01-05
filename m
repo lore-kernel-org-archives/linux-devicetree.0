@@ -1,117 +1,52 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCH v2 3/4] PCI: imx6: Add power-supply support
-Date: Mon, 05 Jan 2015 10:46:01 +0100
-Message-ID: <1420451161.3024.5.camel@pengutronix.de>
-References: <1419237127-21763-1-git-send-email-xobs@kosagi.com>
-	 <1419237127-21763-4-git-send-email-xobs@kosagi.com>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 0/9] ARM Versatile multi-platform support
+Date: Mon, 05 Jan 2015 09:50:52 +0000
+Message-ID: <54AA5E7C.1040706@arm.com>
+References: <1419967718-26909-1-git-send-email-robherring2@gmail.com> <CAFEAcA9pKdRNQ-fgKumQhjTjei-4NJ-OB1gSOxTCnCjShy10jw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1419237127-21763-4-git-send-email-xobs@kosagi.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Sean Cross <xobs@kosagi.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@freescale.com>, Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, Richard Zhu <r65037@freescale.com>, Grant Likely <grant.likely@linaro.org>, linux-pci@vger.kernel.org, bunnie@kosagi.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAFEAcA9pKdRNQ-fgKumQhjTjei-4NJ-OB1gSOxTCnCjShy10jw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Maydell <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: arm-mail-list <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, den 22.12.2014, 16:32 +0800 schrieb Sean Cross:
-> Some PCIe ports gate power to the slot.  In order to prevent system lockup,
-> these boards must enable power to the slot before attempting communication
-> over the PCI bus.
+On 31/12/14 09:25, Peter Maydell wrote:
+> On 30 December 2014 at 19:28, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> This has been tested on QEMU. A previous version was tested on
+>> Versatile/AB by Linus Walleij. Linus reported a problem with the
+>> display panel detection. Investigation on h/w is needed still as I have
+>> not been able to identify the issue by inspection and the display
+>> detection seems to work correctly on QEMU.
+>>
+>> Linus had also mentioned to me that QEMU users may have some issue with
+>> removing non-DT code as the work flow has to change somewhat.
 > 
-> Signed-off-by: Sean Cross <xobs@kosagi.com>
-
-Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
-
-> ---
->  .../devicetree/bindings/pci/fsl,imx6q-pcie.txt     |  3 +++
->  drivers/pci/host/pci-imx6.c                        | 27 ++++++++++++++++++++++
->  2 files changed, 30 insertions(+)
+> As long as you call out the requirement for a DT now in whatever
+> your equivalent of release notes is that should be fine. (Does
+> the kernel provide a useful message to serial in the absence of a
+> DT or does it now not have enough platform knowledge to do that?)
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> index 6fbba53..a806b68 100644
-> --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> @@ -13,6 +13,9 @@ Required properties:
->  - clock-names: Must include the following additional entries:
->  	- "pcie_phy"
->  
-> +Optional properties:
-> +- bus-supply: A regulator that controls power to the entire bus
-> +
->  Example:
->  
->  	pcie@0x01000000 {
-> diff --git a/drivers/pci/host/pci-imx6.c b/drivers/pci/host/pci-imx6.c
-> index 69202d1..8e4f957 100644
-> --- a/drivers/pci/host/pci-imx6.c
-> +++ b/drivers/pci/host/pci-imx6.c
-> @@ -22,6 +22,7 @@
->  #include <linux/pci.h>
->  #include <linux/platform_device.h>
->  #include <linux/regmap.h>
-> +#include <linux/regulator/consumer.h>
->  #include <linux/resource.h>
->  #include <linux/signal.h>
->  #include <linux/types.h>
-> @@ -39,6 +40,7 @@ struct imx6_pcie {
->  	struct pcie_port	pp;
->  	struct regmap		*iomuxc_gpr;
->  	void __iomem		*mem_base;
-> +	struct regulator	*bus_supply;
->  };
->  
->  /* PCIe Root Complex registers (memory-mapped) */
-> @@ -523,6 +525,7 @@ static struct pcie_host_ops imx6_pcie_host_ops = {
->  static int __init imx6_add_pcie_port(struct pcie_port *pp,
->  			struct platform_device *pdev)
->  {
-> +	struct imx6_pcie *imx6_pcie = to_imx6_pcie(pp);
->  	int ret;
->  
->  	if (IS_ENABLED(CONFIG_PCI_MSI)) {
-> @@ -544,9 +547,22 @@ static int __init imx6_add_pcie_port(struct pcie_port *pp,
->  	pp->root_bus_nr = -1;
->  	pp->ops = &imx6_pcie_host_ops;
->  
-> +	if (imx6_pcie->bus_supply) {
-> +		ret = regulator_enable(imx6_pcie->bus_supply);
-> +		if (ret) {
-> +			dev_err(pp->dev,
-> +				"unable to enable bus supply: %d\n", ret);
-> +			return ret;
-> +		}
-> +	}
-> +
->  	ret = dw_pcie_host_init(pp);
->  	if (ret) {
->  		dev_err(&pdev->dev, "failed to initialize host\n");
-> +
-> +		if (imx6_pcie->bus_supply)
-> +			regulator_disable(imx6_pcie->bus_supply);
-> +
->  		return ret;
->  	}
->  
-> @@ -588,6 +604,17 @@ static int __init imx6_pcie_probe(struct platform_device *pdev)
->  		}
->  	}
->  
-> +	/* Fetch bus supply */
-> +	imx6_pcie->bus_supply = devm_regulator_get_optional(&pdev->dev, "bus");
-> +	if (IS_ERR(imx6_pcie->bus_supply)) {
-> +		ret = PTR_ERR(imx6_pcie->bus_supply);
-> +		if (ret == -EPROBE_DEFER)
-> +			return ret;
-> +
-> +		dev_err(&pdev->dev, "unable to get bus-supply\n");
-> +		return ret;
-> +	}
-> +
->  	/* Fetch clocks */
->  	imx6_pcie->pcie_phy = devm_clk_get(&pdev->dev, "pcie_phy");
->  	if (IS_ERR(imx6_pcie->pcie_phy)) {
+>> Copying
+>> Peter Maydell here for comment (and there's rumors he may have actual PB
+>> h/w with PCI as well).
+> 
+> Will Deacon and Marc Zyngier are currently in possession of that h/w.
+> I'm sure they'd be delighted to pull it out of the cupboard and
+> give it a spin :-)
 
+I'll try to find some time (or a victim to do the testing... ;-). To
+those interested, I have a few extra PCI backplanes (just the PCB, not
+the huge noisy carrier rack) I could be convinced to part with...
+
+Thanks,
+
+	M.
 -- 
-Pengutronix e.K.             | Lucas Stach                 |
-Industrial Linux Solutions   | http://www.pengutronix.de/  |
+Jazz is not dead. It just smells funny...
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
