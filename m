@@ -1,49 +1,145 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 0/9] ARM Versatile multi-platform support
-Date: Mon, 05 Jan 2015 11:19:00 +0000
-Message-ID: <87y4ph79wb.fsf@approximate.cambridge.arm.com>
-References: <1419967718-26909-1-git-send-email-robherring2@gmail.com>
-	<CAFEAcA9pKdRNQ-fgKumQhjTjei-4NJ-OB1gSOxTCnCjShy10jw@mail.gmail.com>
-	<54AA5E7C.1040706@arm.com>
-	<CAFEAcA8Nq6BPOerN7EhHpT_oa9W3+2Y_=5+zBuQD_c5fh0Yb1A@mail.gmail.com>
+From: Shaohui Xie <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH] [v3] power/fsl: add MDIO dt binding for FMan
+Date: Mon, 5 Jan 2015 11:21:20 +0000
+Message-ID: <DM2PR0301MB08640979E5088618D1395CFAE2580@DM2PR0301MB0864.namprd03.prod.outlook.com>
+References: <1419321466-5575-1-git-send-email-shh.xie@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAFEAcA8Nq6BPOerN7EhHpT_oa9W3+2Y_=5+zBuQD_c5fh0Yb1A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-	(Peter Maydell's message of "Mon, 5 Jan 2015 10:08:18 +0000")
+In-Reply-To: <1419321466-5575-1-git-send-email-shh.xie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Maydell <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, arm-mail-list <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "arm@kernel.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>
+To: "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Emilian Medve <Emilian.Medve-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 05 2015 at 10:08:18 am GMT, Peter Maydell <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On 5 January 2015 at 09:50, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> wrote:
->> On 31/12/14 09:25, Peter Maydell wrote:
->>> Will Deacon and Marc Zyngier are currently in possession of that h/w.
->>> I'm sure they'd be delighted to pull it out of the cupboard and
->>> give it a spin :-)
->>
->> I'll try to find some time (or a victim to do the testing... ;-)
->
-> To save you some time in trying to debug things which didn't work
-> before this patchset, the status last time I tested on h/w was:
->  * PCI MMIO accesses work
->  * PCI IO accesses work
->  * PCI bus-master (DMA) doesn't work
->
-> with the failure symptom for DMA being that the card wrote to
-> the correct area of memory but only every other word, so you
-> got strings like "HellXXXXrld" with the Xs being garbage.
-> This feels to me like a h/w issue rather than a driver problem.
+Hello Scott,
 
-Looks like some 64bit address decoding getting in the way. Or
-something.... Do you remember the exact platform you tried this on (I
-have PB926, PB1176, and a bunch of RealViews with an odd mix of
-tiles...)?
+Is this v3 OK?
 
-	M.
--- 
-Jazz is not dead. It just smells funny.
+Best Regards, 
+Shaohui Xie
+> -----Original Message-----
+> From: shh.xie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org [mailto:shh.xie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org]
+> Sent: Tuesday, December 23, 2014 3:58 PM
+> To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Wood Scott-B07421
+> Cc: Medve Emilian-EMMEDVE1; Xie Shaohui-B21989
+> Subject: [PATCH] [v3] power/fsl: add MDIO dt binding for FMan
+> 
+> From: Shaohui Xie <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> 
+> This binding is for FMan MDIO, it covers FMan v2 & FMan v3.
+> 
+> Signed-off-by: Shaohui Xie <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+> changes in v3:
+> rephrase the 'Definition' of property 'bus-frequency', don't include the
+> property in example.
+> 
+> changes in v2:
+> addressed comments from Scott in V1.
+> 
+>  .../devicetree/bindings/powerpc/fsl/fman.txt       | 69 ++++++++++++++++++++++
+>  1 file changed, 69 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
+> b/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
+> index edeea16..737aa4c 100644
+> --- a/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
+> +++ b/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
+> @@ -7,6 +7,7 @@ CONTENTS
+>    - FMan MURAM Node
+>    - FMan dTSEC/XGEC/mEMAC Node
+>    - FMan IEEE 1588 Node
+> +  - FMan MDIO Node
+>    - Example
+> 
+>  =============================================================================
+> @@ -357,6 +358,69 @@ ptp-timer@fe000 {
+>  };
+> 
+>  =============================================================================
+> +FMan MDIO Node
+> +
+> +DESCRIPTION
+> +
+> +The MDIO is a bus to which the PHY devices are connected.
+> +
+> +PROPERTIES
+> +
+> +- compatible
+> +		Usage: required
+> +		Value type: <stringlist>
+> +		Definition: A standard property.
+> +		Must include "fsl,fman-mdio" for 1 Gb/s MDIO from FMan v2.
+> +		Must include "fsl,fman-xmdio" for 10 Gb/s MDIO from FMan v2.
+> +		Must include "fsl,fman-memac-mdio" for 1/10 Gb/s MDIO from
+> +		FMan v3.
+> +
+> +- reg
+> +		Usage: required
+> +		Value type: <prop-encoded-array>
+> +		Definition: A standard property.
+> +
+> +- bus-frequency
+> +		Usage: optional
+> +		Value type: <u32>
+> +		Definition: Specifies the external MDIO bus clock speed to
+> +		be used, if different from the standard 2.5 MHz.
+> +		This may be due to the standard speed being unsupported (e.g.
+> +		due to a hardware problem), or to advertise that all relevant
+> +		components in the system support a faster speed.
+> +
+> +- interrupts
+> +		Usage: optional
+> +		Value type: <prop-encoded-array>
+> +		Definition: Event interrupt of external MDIO controller.
+> +		1 Gb/s MDIO and 10 Gb/s MDIO has one interrupt respectively.
+> +
+> +- fsl,fman-internal-mdio
+> +		Usage: required for internal MDIO
+> +		Value type: boolean
+> +		Definition: Fman has internal MDIO for internal PCS(Physical
+> +		Coding Sublayer) PHYs and external MDIO for external PHYs.
+> +		The settings and programming routines for internal/external
+> +		MDIO are different. Must be included for internal MDIO.
+> +
+> +EXAMPLE
+> +
+> +Example for FMan v2 external MDIO:
+> +
+> +mdio@f1000 {
+> +	compatible = "fsl,fman-xmdio";
+> +	reg = <0xf1000 0x1000>;
+> +};
+> +
+> +Example for FMan v3 internal MDIO:
+> +
+> +mdio@f1000 {
+> +	compatible = "fsl,fman-memac-mdio";
+> +	reg = <0xf1000 0x1000>;
+> +	fsl,fman-internal-mdio;
+> +};
+> +
+> +=======================================================================
+> +======
+>  Example
+> 
+>  fman@400000 {
+> @@ -531,4 +595,9 @@ fman@400000 {
+>  		compatible = "fsl,fman-ptp-timer";
+>  		reg = <0xfe000 0x1000>;
+>  	};
+> +
+> +	mdio@f1000 {
+> +		compatible = "fsl,fman-xmdio";
+> +		reg = <0xf1000 0x1000>;
+> +	};
+>  };
+> --
+> 1.8.4.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
