@@ -1,55 +1,84 @@
-From: Peter Maydell <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0/9] ARM Versatile multi-platform support
-Date: Mon, 5 Jan 2015 17:41:05 +0000
-Message-ID: <CAFEAcA8qqAe-eauy65_EtOO6HaXC9QoG=YgpgsiUJvAB52=+Yg@mail.gmail.com>
-References: <1419967718-26909-1-git-send-email-robherring2@gmail.com>
- <CAFEAcA9pKdRNQ-fgKumQhjTjei-4NJ-OB1gSOxTCnCjShy10jw@mail.gmail.com>
- <54AA5E7C.1040706@arm.com> <CAFEAcA8Nq6BPOerN7EhHpT_oa9W3+2Y_=5+zBuQD_c5fh0Yb1A@mail.gmail.com>
- <87y4ph79wb.fsf@approximate.cambridge.arm.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH V4] ARM: dts: am57xx-beagle-x15: Add GPIO controlled fan
+ node
+Date: Mon, 5 Jan 2015 11:45:33 -0600
+Message-ID: <20150105174533.GL19336@saruman>
+References: <1420475549-28492-1-git-send-email-nm@ti.com>
+ <20150105172737.GK19336@saruman>
+ <54AACAFE.7050609@ti.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87y4ph79wb.fsf-BgpFEFc6EmV6Fr0h90IsVGS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, arm-mail-list <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="L1EIGrW/+75u5Nmw"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <54AACAFE.7050609@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>
+Cc: balbi@ti.com, Tony Lindgren <tony@atomide.com>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, sre@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 5 January 2015 at 11:19, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> wrote:
-> On Mon, Jan 05 2015 at 10:08:18 am GMT, Peter Maydell <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> On 5 January 2015 at 09:50, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> wrote:
->>> On 31/12/14 09:25, Peter Maydell wrote:
->>>> Will Deacon and Marc Zyngier are currently in possession of that h/w.
->>>> I'm sure they'd be delighted to pull it out of the cupboard and
->>>> give it a spin :-)
->>>
->>> I'll try to find some time (or a victim to do the testing... ;-)
->>
->> To save you some time in trying to debug things which didn't work
->> before this patchset, the status last time I tested on h/w was:
->>  * PCI MMIO accesses work
->>  * PCI IO accesses work
->>  * PCI bus-master (DMA) doesn't work
->>
->> with the failure symptom for DMA being that the card wrote to
->> the correct area of memory but only every other word, so you
->> got strings like "HellXXXXrld" with the Xs being garbage.
->> This feels to me like a h/w issue rather than a driver problem.
->
-> Looks like some 64bit address decoding getting in the way. Or
-> something.... Do you remember the exact platform you tried this on (I
-> have PB926, PB1176, and a bunch of RealViews with an odd mix of
-> tiles...)?
+--L1EIGrW/+75u5Nmw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-According to my coverletter email from the last time I did anything
-with versatile PCI:
-http://lists.infradead.org/pipermail/linux-arm-kernel/2013-August/193990.html
-it was a PB926 (and an rtl8139 network card). I'm pretty sure I
-flashed the board with the latest IO FPGA image too.
+On Mon, Jan 05, 2015 at 11:33:50AM -0600, Nishanth Menon wrote:
+> On 01/05/2015 11:27 AM, Felipe Balbi wrote:
+> > On Mon, Jan 05, 2015 at 10:32:29AM -0600, Nishanth Menon wrote:
+> >> TPS gpio now controls a 5v 500mA TL5209 regulator which may be supply
+> >> a fan (such as AFB02505HHB) over J1 connector for various purposes.
+> >> Provide device tree node to enable the same.
+> >>
+> >> Signed-off-by: Nishanth Menon <nm@ti.com>
+> >> ---
+> >> V4: Change format of the speed-map used.
+> >> V3: https://patchwork.kernel.org/patch/5562121/
+> >> V2: https://patchwork.kernel.org/patch/5445111/
+> >> V1: https://patchwork.kernel.org/patch/5444911/
+> >>
+> >> Enable and disable can be controlled by (post the RPM, it finds
+> >> closest match - even a 1 will do)
+> >>
+> >> echo '13000' > /sys/class/hwmon/hwmon0/fan1_target
+> >> and
+> >> echo '0' > /sys/class/hwmon/hwmon0/fan1_target
+> >>
+> >> Test log: http://slexy.org/view/s2T0ajh46z
+> >>
+> >> requires CONFIG_GPIO_PALMAS and CONFIG_SENSORS_GPIO_FAN to be operatio=
+nal
+> >=20
+> > oh, perhaps add these as modules to omap2plus_defconfig ?
+> >=20
+>=20
+> In a different patch I suppose if Tony wants it that way.
 
-thanks
--- PMM
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+right, different patch :-)
+
+--=20
+balbi
+
+--L1EIGrW/+75u5Nmw
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUqs29AAoJEIaOsuA1yqREQUEP/jyT0lyDVTONa1EoYyE74kEU
+lo8GGXjzRuNTTRM42388uryBOxg0ui0eLyqhLvUo4WYNgmjZRvgskDjgvOD80uCR
+XirSUainPX0Crg4I0AC686IWRCA6JnmP2K+GzVqPvZFqv7ad+2uSLqob6tE1qhs7
+8B//LHtbmzWKbwlmMBoNENsbEr6SSEMhcuWjKIuOa+cH29tq6v2lxp1qmHcf2dBk
+RFUOhaBNLcO10BHCNl8kndwePzn6c483ErzOo4VDsd8YOSvUqxoTTwUOUGOT79yq
+zq0xLECkUKRciIbVsSQQ2dcYJ5nZwn80TG6oG8SWZ5Fvdsj1Q5sUeFk4/NX4GJ6c
+8KwAW+Lo2OeZ9bLPsChAA4hzHy3ndERPZ/67Q6SR+bQ6I0opeWXoJrXPgx3K9XuG
+xUeZV93zWYFN9uHcl8nW/4lFSZZP3yXd33qJ2LAgEx3fGzmO4awd6AEhqbasJr/4
+DZZXEXxo71KAxPPixiMmG/BeppwdnuUGzA//8YSlcjHDLiXJAGorRR4MvXvfT61J
+RQ1TVxNOPCJqjpCROrKQpGrPi3/dRNYyZ1dmHrfyKSdpN5DWXOep2gtKsYRBBZ6E
+5ya52hVJvtDicEBwoX+BkU4kjwv7ukRvTbrmHHTw2bLhedrwEvBLPlgVUUO/4MJP
+iABvYFqPw10msyi6fMfh
+=UdJx
+-----END PGP SIGNATURE-----
+
+--L1EIGrW/+75u5Nmw--
