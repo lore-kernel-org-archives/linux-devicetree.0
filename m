@@ -1,91 +1,60 @@
-From: Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V1 1/1] iio: Added Capella cm3232 ambient light sensor driver.
-Date: Mon, 5 Jan 2015 16:20:02 +0200
-Message-ID: <CAEnQRZBmwurFCJU4E4ArO8waU+YcGWrRYr3DRVxq9haduX2t=w@mail.gmail.com>
-References: <1420071030-888-1-git-send-email-ktsai@capellamicro.com>
-	<CAEnQRZBD2NMYRp1cW0J2ssT4CT=0jSM=X6ByHQiUrA0ueV8fRA@mail.gmail.com>
-	<1420463396.2652.8.camel@perches.com>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM: mvebu: Add Armada 385 General Purpose
+ Development Board support
+Date: Mon, 5 Jan 2015 15:24:45 +0100
+Message-ID: <20150105142445.GB9142@lunn.ch>
+References: <1419678035-10658-1-git-send-email-gregory.clement@free-electrons.com>
+ <1419678035-10658-4-git-send-email-gregory.clement@free-electrons.com>
+ <20141227113401.GC21001@lunn.ch>
+ <54AA99BA.9060300@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1420463396.2652.8.camel-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-Cc: Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, Archana Patni <archana.patni-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <54AA99BA.9060300-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 5, 2015 at 3:09 PM, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org> wrote:
-> On Mon, 2015-01-05 at 12:51 +0200, Daniel Baluta wrote:
->> On Thu, Jan 1, 2015 at 2:10 AM, Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org> wrote:
->> > CM3232 is an advanced ambient light sensor with I2C protocol interface.
->> > The I2C slave address is internally hardwired as 0x10 (7-bit).  Writing
->> > to configure register is byte mode, but reading ALS register requests to
->> > use word mode for 16-bit resolution.
->>
->> This looks good to me.  Few comments inline.
-> []
->> > diff --git a/drivers/iio/light/cm3232.c b/drivers/iio/light/cm3232.c
-> []
->> > +/**
->> > + * cm3232_reg_init() - Initialize CM3232 registers
->> > + * @chip:      pointer of struct cm3232.
->> > + *
->> > + * Initialize CM3232 ambient light sensor register to default values.
->> > + *
->> > +  Return: 0 for success; otherwise for error code.
->> > + */
->> > +static int cm3232_reg_init(struct cm3232_chip *chip)
->> > +{
->> > +       struct i2c_client *client = chip->client;
->> > +       struct cm3232_als_info *als_info;
->> > +       s32 ret;
->> > +
->> > +       /* Identify device */
->> > +       ret = i2c_smbus_read_word_data(client, CM3232_REG_ADDR_ID);
->> > +       if (ret < 0)
->> > +               return ret;
->> > +       if ((ret & 0xFF) != 0x32)
->> > +               return -ENODEV;
->> > +
->> > +       /* Disable and reset device */
->> > +       chip->regs_cmd = CM3232_CMD_ALS_DISABLE | CM3232_CMD_ALS_RESET;
->> > +       ret = i2c_smbus_write_byte_data(client, CM3232_REG_ADDR_CMD,
->> > +                               chip->regs_cmd);
->> > +       if (ret < 0)
->> > +               return ret;
->> > +
->> > +       /* Initialization */
->> > +       als_info = chip->als_info = &cm3232_als_info_default;
->> > +       chip->regs_cmd = CM3232_CMD_DEFAULT;
->> > +
->> > +       /* Configure register */
->> > +       ret = i2c_smbus_write_byte_data(client, CM3232_REG_ADDR_CMD,
->> > +                               chip->regs_cmd);
->>
->> You could directly return i2c_smbus_write_byte_data(..).
->
-> Sometimes it's better to return a specific value
-> for the error instead of depending on correctness
-> of all the indirect functions in the call chain.
->
-> In this case, all the smbus_xfer functions must
-> return 0 on success.  Do they?
+On Mon, Jan 05, 2015 at 03:03:38PM +0100, Gregory CLEMENT wrote:
+> Hi Andrew,
+> 
+> >> + * Device Tree file for Marvell Armada 385 development board
+> >> + * (RD-88F6820-GP)
+> >> + *
+> >> + * Copyright (C) 2014 Marvell
+> >> + *
+> >> + * Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> >> + *
+> >> + * This file is dual-licensed: you can use it either under the terms
+> >> + * of the GPL or the X11 license, at your option. Note that this dual
+> >> + * licensing only applies to this file, and not this project as a
+> >> + * whole.
+> > 
+> > Hi Gregory
+> > 
+> > I'm guessing here...
+> > 
+> > The file says Copyright Marvell. I guess Marvell released it GPL? Not
+> > Dual license? So it would be nice to have a Signed-off-by: from
+> > somebody in Marvell that they are O.K. with the dual license.
+> > 
+> 
+> I wrote it from scratch and in the same time Marvell is aware and agrees
+> about the Dual license. Until now all the files we wrote have the Marvell
+> copyright but without any  Signed-off-by: from anyone in Marvell so I don't
+> think we need it now.
 
-Yes.
+Hi Gregory
 
-http://lxr.free-electrons.com/source/drivers/i2c/i2c-core.c#L2845
+Thanks for the explanation. I guess wrong about where the Copyright
+came from. So this is O.K.
 
->
-> Inspecting the codebase for correctness or not
-> depending on that correctness is sometimes better
-> to avoid doing.
+Thanks
+	Andrew
 
-You have a valid point. Anyhow, AFAIK the code from IIO
-prefers a direct return.
-
-Also, I guess kbuild test robot will complain about it, like here:
-
-http://marc.info/?l=linux-kernel&m=141963536230419&w=2
-
-thanks,
-Daniel.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
