@@ -1,59 +1,37 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v5 3/3] ARM: shmobile: henninger: add CAN0 DT support
-Date: Tue, 06 Jan 2015 01:26:45 +0300
-Message-ID: <2483119.HjgsDbcomx@wasted.cogentembedded.com>
-References: <1652479.NHBlqJ9OaR@wasted.cogentembedded.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 1/2] of/pci: add of_pci_dma_configure() update dma configuration
+Date: Mon, 05 Jan 2015 23:26:15 +0100
+Message-ID: <1671700.LL29F8Iz6R@wuerfel>
+References: <1419459099-6667-1-git-send-email-m-karicheri2@ti.com> <2019516.ehiuEv0rdL@wuerfel> <54AAEEE1.7020607@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1652479.NHBlqJ9OaR@wasted.cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <54AAEEE1.7020607@ti.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Murali Karicheri <m-karicheri2@ti.com>
+Cc: Rob Herring <robherring2@gmail.com>, Will Deacon <will.deacon@arm.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Define the Henninger board dependent part of the CAN0 device node.
+On Monday 05 January 2015 15:06:57 Murali Karicheri wrote:
+> On 01/03/2015 04:37 PM, Arnd Bergmann wrote:
+> > Yes, but we also need to pass a PCI device specific identifier along
+> > with the root bus node, because some iommu drivers take the PCI
+> > bus/device/function number into account for creating per-function
+> > i/o page tables.
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> ...
 
----
-Changes in version 4:
-- refreshed the patch.
+> I will post v3 of the patch with what is agreed before in my response 
+> and I understand there is no additional change required based on this 
+> particular discussion about iommu. Right?
 
-Changes in version 3:
-- changed "can0_data_a" to "can0_data", removed "can_clk_d" in the
-  "renesas,groups" property;
-- moved CAN0 node to go after all others;
-- refreshed the patch.
+Actually regarding the bit I wrote above, it might be helpful to pass
+the PCI_DEVID() into both of_iommu_configure and of_dma_configure.
 
- arch/arm/boot/dts/r8a7791-henninger.dts |   11 +++++++++++
- 1 file changed, 11 insertions(+)
+While this may or may not be sufficient, I think there is no question
+about it being needed for the ARM SMMU with PCI, so we may as well add
+it at the point when you touch the same lines already. In the platform
+bus case, just pass zero here.
 
-Index: renesas/arch/arm/boot/dts/r8a7791-henninger.dts
-===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7791-henninger.dts
-+++ renesas/arch/arm/boot/dts/r8a7791-henninger.dts
-@@ -147,6 +147,11 @@
- 		renesas,groups = "vin0_data8", "vin0_clk";
- 		renesas,function = "vin0";
- 	};
-+
-+	can0_pins: can0 {
-+		renesas,groups = "can0_data";
-+		renesas,function = "can0";
-+	};
- };
- 
- &scif0 {
-@@ -321,3 +326,9 @@
- 		};
- 	};
- };
-+
-+&can0 {
-+	pinctrl-0 = <&can0_pins>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+};
-
+	Arnd
