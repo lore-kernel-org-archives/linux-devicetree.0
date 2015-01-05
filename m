@@ -1,84 +1,49 @@
-From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH] simplefb: Fix build failure on Sparc
-Date: Mon, 5 Jan 2015 13:17:31 +0200
-Message-ID: <54AA72CB.1020303@ti.com>
-References: <1420445716-13468-1-git-send-email-hdegoede@redhat.com>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 0/9] ARM Versatile multi-platform support
+Date: Mon, 05 Jan 2015 11:19:00 +0000
+Message-ID: <87y4ph79wb.fsf@approximate.cambridge.arm.com>
+References: <1419967718-26909-1-git-send-email-robherring2@gmail.com>
+	<CAFEAcA9pKdRNQ-fgKumQhjTjei-4NJ-OB1gSOxTCnCjShy10jw@mail.gmail.com>
+	<54AA5E7C.1040706@arm.com>
+	<CAFEAcA8Nq6BPOerN7EhHpT_oa9W3+2Y_=5+zBuQD_c5fh0Yb1A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="vTvWVt2awebnRcqIACkW39TkgaI2Q0sIX"
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1420445716-13468-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <CAFEAcA8Nq6BPOerN7EhHpT_oa9W3+2Y_=5+zBuQD_c5fh0Yb1A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+	(Peter Maydell's message of "Mon, 5 Jan 2015 10:08:18 +0000")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: kbuild test robot <fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Peter Maydell <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, arm-mail-list <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "arm@kernel.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---vTvWVt2awebnRcqIACkW39TkgaI2Q0sIX
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: quoted-printable
+On Mon, Jan 05 2015 at 10:08:18 am GMT, Peter Maydell <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On 5 January 2015 at 09:50, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> wrote:
+>> On 31/12/14 09:25, Peter Maydell wrote:
+>>> Will Deacon and Marc Zyngier are currently in possession of that h/w.
+>>> I'm sure they'd be delighted to pull it out of the cupboard and
+>>> give it a spin :-)
+>>
+>> I'll try to find some time (or a victim to do the testing... ;-)
+>
+> To save you some time in trying to debug things which didn't work
+> before this patchset, the status last time I tested on h/w was:
+>  * PCI MMIO accesses work
+>  * PCI IO accesses work
+>  * PCI bus-master (DMA) doesn't work
+>
+> with the failure symptom for DMA being that the card wrote to
+> the correct area of memory but only every other word, so you
+> got strings like "HellXXXXrld" with the Xs being garbage.
+> This feels to me like a h/w issue rather than a driver problem.
 
-On 05/01/15 10:15, Hans de Goede wrote:
-> of_platform_device_create is only defined when CONFIG_OF_ADDRESS is set=
-,
-> which is normally always the case when CONFIG_OF is defined, except on =
-Sparc,
-> so explicitly check for CONFIG_OF_ADDRESS rather then for CONFIG_OF.
->=20
-> Reported-by: kbuild test robot <fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> ---
->  drivers/video/fbdev/simplefb.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/video/fbdev/simplefb.c b/drivers/video/fbdev/simpl=
-efb.c
-> index 92cac80..1085c04 100644
-> --- a/drivers/video/fbdev/simplefb.c
-> +++ b/drivers/video/fbdev/simplefb.c
-> @@ -402,7 +402,7 @@ static int __init simplefb_init(void)
->  	if (ret)
->  		return ret;
-> =20
-> -	if (IS_ENABLED(CONFIG_OF) && of_chosen) {
-> +	if (IS_ENABLED(CONFIG_OF_ADDRESS) && of_chosen) {
->  		for_each_child_of_node(of_chosen, np) {
->  			if (of_device_is_compatible(np, "simple-framebuffer"))
->  				of_platform_device_create(np, NULL, NULL);
->=20
+Looks like some 64bit address decoding getting in the way. Or
+something.... Do you remember the exact platform you tried this on (I
+have PB926, PB1176, and a bunch of RealViews with an odd mix of
+tiles...)?
 
-Doesn't this depend on the compiler optimizing the
-of_platform_device_create call away? Isn't that rather dangerous assumpti=
-on?
-
- Tomi
-
-
-
---vTvWVt2awebnRcqIACkW39TkgaI2Q0sIX
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUqnLLAAoJEPo9qoy8lh718WsP/2rmMtL256X0HzeZte1SEZ9y
-dqe1y0fzUo12tk4csUsup7ApXnqDn74ouF6Jqps4DqmxMfa03U2FmAQjim3Jelh6
-6uo35SdsZbDymuVB7YgjEpzBBD09sKUZO0jXfttIRcPzaYGPqO0jom+vZkUk4h0a
-u6z7tEm5/C8xkNiW5c1gGv+kh+dSVCNcFDUxqY9tom6fF4WrCzf3mxHzngpqbUhc
-e0XwyukspCibHFPe6sV8nwgZTCD2ZF6P9fOqAjupaiV6TEirUlGxNInt7PYOZTyt
-N3qU8IgYlK5hIzsfuHR89dCiWmRp/tsPVwg/zldUhoDcqccqPg4g7CyhyMXlGRx6
-FQsURuX5xeLSUeyU9V/EGQuEZ6ahYarjBgRTONOuzut3yt57hVYkNfXc0tzFFVFF
-5OIjb4Af6DujNn9zX3o8Dwjg9KnpuHL3jhUiogLkZ2jGdbhibeoWoWMN/CTltR3A
-gsntJr4VAVJltZ/vuJrt1J2YxPx7RPu9L1J1yYIlAFOVuXp8rR6hYidGnHx8KU6a
-+/8JridWyYbSv+boazTwyu5s9tlkO0PkB5OnHS4bx7lyeCyEV+HISjoaa/B6gzM/
-aaLNFYR0QyeSmxpzMLtrt+uvG6LM6z5q4bZUxIi/VsCSbzW59JlHf4NK6wLqHAJE
-zzGetdzPQxH12Jw9CAlC
-=lJUW
------END PGP SIGNATURE-----
-
---vTvWVt2awebnRcqIACkW39TkgaI2Q0sIX--
+	M.
+-- 
+Jazz is not dead. It just smells funny.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
