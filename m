@@ -1,88 +1,126 @@
-From: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH V1 1/1] iio: Added Capella cm3232 ambient light sensor
- driver.
-Date: Mon, 05 Jan 2015 05:09:56 -0800
-Message-ID: <1420463396.2652.8.camel@perches.com>
-References: <1420071030-888-1-git-send-email-ktsai@capellamicro.com>
-	 <CAEnQRZBD2NMYRp1cW0J2ssT4CT=0jSM=X6ByHQiUrA0ueV8fRA@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2] clk-rcar-gen2: ADSP clock support
+Date: Mon, 5 Jan 2015 14:13:55 +0100
+Message-ID: <CAMuHMdXW=_bYbdUGB2TBPFNfz9gBB+AyD1mWyoKD9eFxebma5w@mail.gmail.com>
+References: <30876083.4tlAgq9Aak@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAEnQRZBD2NMYRp1cW0J2ssT4CT=0jSM=X6ByHQiUrA0ueV8fRA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, Archana Patni <archana.patni-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <30876083.4tlAgq9Aak@wasted.cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Mike Turquette <mturquette@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2015-01-05 at 12:51 +0200, Daniel Baluta wrote:
-> On Thu, Jan 1, 2015 at 2:10 AM, Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org> wrote:
-> > CM3232 is an advanced ambient light sensor with I2C protocol interface.
-> > The I2C slave address is internally hardwired as 0x10 (7-bit).  Writing
-> > to configure register is byte mode, but reading ALS register requests to
-> > use word mode for 16-bit resolution.
-> 
-> This looks good to me.  Few comments inline.
-[]
-> > diff --git a/drivers/iio/light/cm3232.c b/drivers/iio/light/cm3232.c
-[]
-> > +/**
-> > + * cm3232_reg_init() - Initialize CM3232 registers
-> > + * @chip:      pointer of struct cm3232.
-> > + *
-> > + * Initialize CM3232 ambient light sensor register to default values.
-> > + *
-> > +  Return: 0 for success; otherwise for error code.
-> > + */
-> > +static int cm3232_reg_init(struct cm3232_chip *chip)
-> > +{
-> > +       struct i2c_client *client = chip->client;
-> > +       struct cm3232_als_info *als_info;
-> > +       s32 ret;
-> > +
-> > +       /* Identify device */
-> > +       ret = i2c_smbus_read_word_data(client, CM3232_REG_ADDR_ID);
-> > +       if (ret < 0)
-> > +               return ret;
-> > +       if ((ret & 0xFF) != 0x32)
-> > +               return -ENODEV;
-> > +
-> > +       /* Disable and reset device */
-> > +       chip->regs_cmd = CM3232_CMD_ALS_DISABLE | CM3232_CMD_ALS_RESET;
-> > +       ret = i2c_smbus_write_byte_data(client, CM3232_REG_ADDR_CMD,
-> > +                               chip->regs_cmd);
-> > +       if (ret < 0)
-> > +               return ret;
-> > +
-> > +       /* Initialization */
-> > +       als_info = chip->als_info = &cm3232_als_info_default;
-> > +       chip->regs_cmd = CM3232_CMD_DEFAULT;
-> > +
-> > +       /* Configure register */
-> > +       ret = i2c_smbus_write_byte_data(client, CM3232_REG_ADDR_CMD,
-> > +                               chip->regs_cmd);
-> 
-> You could directly return i2c_smbus_write_byte_data(..).
+Hi Sergei,
 
-Sometimes it's better to return a specific value
-for the error instead of depending on correctness
-of all the indirect functions in the call chain.
+On Tue, Dec 30, 2014 at 9:51 PM, Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+> Add the ADSP clock support to the R-Car generation 2 CPG driver.  This clock
+> gets derived from  PLL1.  The layout of the ADSPCKCR register is  similar to
+> those of the clocks supported by the 'clk-div6' driver but the divider encoding
+> is non-linear, so can't be supported by that driver...
+>
+> Based on the original patch by Konstantin Kozhevnikov
+> <konstantin.kozhevnikov@cogentembedded.com>.
+>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>
+> ---
+> The patch is against the 'clk-next' branch of Mike Turquette's 'linux.git' repo
+> plus the RCAN clock support patch posted last week.
+>
+> Changes in version 2:
+> - swapped "adsp" and "rcan" in the binding document.
 
-In this case, all the smbus_xfer functions must
-return 0 on success.  Do they?
+> +++ linux/drivers/clk/shmobile/clk-rcar-gen2.c
+> @@ -33,6 +33,7 @@ struct rcar_gen2_cpg {
+>  #define CPG_FRQCRC                     0x000000e0
+>  #define CPG_FRQCRC_ZFC_MASK            (0x1f << 8)
+>  #define CPG_FRQCRC_ZFC_SHIFT           8
+> +#define CPG_ADSPCKCR                   0x0000025c
+>  #define CPG_RCANCKCR                   0x00000270
+>
+>  /* -----------------------------------------------------------------------------
+> @@ -162,6 +163,51 @@ static struct clk * __init cpg_z_clk_reg
+>         return clk;
+>  }
+>
+> +/* ADSP divisors */
+> +static const struct clk_div_table cpg_adsp_div_table[] = {
+> +       {  1,  3 }, {  2,  4 }, {  3,  6 }, {  4,  8 },
+> +       {  5, 12 }, {  6, 16 }, {  7, 18 }, {  8, 24 },
+> +       { 10, 36 }, { 11, 48 }, {  0,  0 },
+> +};
+> +
+> +static struct clk * __init cpg_adsp_clk_register(struct rcar_gen2_cpg *cpg)
+> +{
+> +       const char *parent_name = "pll1";
+> +       struct clk_divider *div;
+> +       struct clk_gate *gate;
+> +       struct clk *clk;
+> +
+> +       div = kzalloc(sizeof(*div), GFP_KERNEL);
+> +       if (!div)
+> +               return ERR_PTR(-ENOMEM);
+> +
+> +       div->reg = cpg->reg + CPG_ADSPCKCR;
+> +       div->width = 4;
+> +       div->table = cpg_adsp_div_table;
+> +       div->lock = &cpg->lock;
+> +
+> +       gate = kzalloc(sizeof(*gate), GFP_KERNEL);
+> +       if (!gate) {
+> +               kfree(div);
+> +               return ERR_PTR(-ENOMEM);
+> +       }
+> +
+> +       gate->reg = cpg->reg + CPG_RCANCKCR;
 
-Inspecting the codebase for correctness or not
-depending on that correctness is sometimes better
-to avoid doing.
+Shouldn't this be CPG_ADSPCKCR?
 
-> > +       if (ret < 0)
-> > +               return ret;
-> > +
-> > +       return 0;
-> > +}
+> +       gate->bit_idx = 8;
+> +       gate->flags = CLK_GATE_SET_TO_DISABLE;
+> +       gate->lock = &cpg->lock;
+> +
+> +       clk = clk_register_composite(NULL, "adsp", &parent_name, 1, NULL, NULL,
+> +                                    &div->hw, &clk_divider_ops,
+> +                                    &gate->hw, &clk_gate_ops, 0);
+> +       if (IS_ERR(clk)) {
+> +               kfree(gate);
+> +               kfree(div);
+> +       }
+> +
+> +       return clk;
+> +}
 
+Please insert the adsp code after the rcan code, to match the clock order
+in bindings and #defines.
+
+> +
+>  static struct clk * __init cpg_rcan_clk_register(struct rcar_gen2_cpg *cpg,
+>                                                  struct device_node *np)
+>  {
+> @@ -301,6 +347,8 @@ rcar_gen2_cpg_register_clock(struct devi
+>                 shift = 0;
+>         } else if (!strcmp(name, "z")) {
+>                 return cpg_z_clk_register(cpg);
+> +       } else if (!strcmp(name, "adsp")) {
+> +               return cpg_adsp_clk_register(cpg);
+
+Please insert the adsp code after the rcan code.
+
+>         } else if (!strcmp(name, "rcan")) {
+>                 return cpg_rcan_clk_register(cpg, np);
+>         } else {
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
