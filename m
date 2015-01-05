@@ -1,194 +1,105 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: [PATCH v5 3/5] regulator: max77686: Add GPIO control
-Date: Mon, 05 Jan 2015 12:48:43 +0100
-Message-ID: <1420458525-22576-4-git-send-email-k.kozlowski@samsung.com>
-References: <1420458525-22576-1-git-send-email-k.kozlowski@samsung.com>
+From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH] simplefb: Fix build failure on Sparc
+Date: Mon, 5 Jan 2015 14:13:06 +0200
+Message-ID: <54AA7FD2.7040701@ti.com>
+References: <1420445716-13468-1-git-send-email-hdegoede@redhat.com> <54AA72CB.1020303@ti.com> <54AA73D1.3@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-reply-to: <1420458525-22576-1-git-send-email-k.kozlowski@samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
-Cc: Kyungmin Park <kyungmin.park@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="2s9He6u5Xxb0QaJBxqmOP5L2paBIlaHKA"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54AA73D1.3-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: kbuild test robot <fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add enable control over GPIO for regulators supporting this: LDO20,
-LDO21, LDO22, buck8 and buck9.
+--2s9He6u5Xxb0QaJBxqmOP5L2paBIlaHKA
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: quoted-printable
 
-This is needed for proper (and full) configuration of the Maxim 77686
-PMIC without creating redundant 'regulator-fixed' entries.
+On 05/01/15 13:21, Hans de Goede wrote:
+> Hi,
+>=20
+> On 05-01-15 12:17, Tomi Valkeinen wrote:
+>> On 05/01/15 10:15, Hans de Goede wrote:
+>>> of_platform_device_create is only defined when CONFIG_OF_ADDRESS is s=
+et,
+>>> which is normally always the case when CONFIG_OF is defined, except
+>>> on Sparc,
+>>> so explicitly check for CONFIG_OF_ADDRESS rather then for CONFIG_OF.
+>>>
+>>> Reported-by: kbuild test robot <fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+>>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>>> ---
+>>>   drivers/video/fbdev/simplefb.c | 2 +-
+>>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/video/fbdev/simplefb.c
+>>> b/drivers/video/fbdev/simplefb.c
+>>> index 92cac80..1085c04 100644
+>>> --- a/drivers/video/fbdev/simplefb.c
+>>> +++ b/drivers/video/fbdev/simplefb.c
+>>> @@ -402,7 +402,7 @@ static int __init simplefb_init(void)
+>>>       if (ret)
+>>>           return ret;
+>>>
+>>> -    if (IS_ENABLED(CONFIG_OF) && of_chosen) {
+>>> +    if (IS_ENABLED(CONFIG_OF_ADDRESS) && of_chosen) {
+>>>           for_each_child_of_node(of_chosen, np) {
+>>>               if (of_device_is_compatible(np, "simple-framebuffer"))
+>>>                   of_platform_device_create(np, NULL, NULL);
+>>>
+>>
+>> Doesn't this depend on the compiler optimizing the
+>> of_platform_device_create call away?
+>=20
+> Yes it does.
+>=20
+>> Isn't that rather dangerous assumption?
+>=20
+> The kernel relies on being build with optimization enabled in various
+> places,
+> this specific construction was suggested during review (by Grant Likely=
 
-Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
----
- drivers/regulator/max77686.c | 70 ++++++++++++++++++++++++++++++++++++++++----
- 1 file changed, 65 insertions(+), 5 deletions(-)
+> IIRC)
+> I initially had an #ifdef here. Note that this construction is used in
+> various
+> places throughout the kernel and it seems to be used more and more ofte=
+n.
 
-diff --git a/drivers/regulator/max77686.c b/drivers/regulator/max77686.c
-index 10d206266ac2..15fb1416bfbd 100644
---- a/drivers/regulator/max77686.c
-+++ b/drivers/regulator/max77686.c
-@@ -26,6 +26,7 @@
- #include <linux/bug.h>
- #include <linux/err.h>
- #include <linux/gpio.h>
-+#include <linux/of_gpio.h>
- #include <linux/slab.h>
- #include <linux/platform_device.h>
- #include <linux/regulator/driver.h>
-@@ -46,6 +47,11 @@
- #define MAX77686_DVS_UVSTEP	12500
- 
- /*
-+ * Value for configuring buck[89] and LDO{20,21,22} as GPIO control.
-+ * It is the same as 'off' for other regulators.
-+ */
-+#define MAX77686_GPIO_CONTROL		0x0
-+/*
-  * Values used for configuring LDOs and bucks.
-  * Forcing low power mode: LDO1, 3-5, 9, 13, 17-26
-  */
-@@ -82,6 +88,8 @@ enum max77686_ramp_rate {
- };
- 
- struct max77686_data {
-+	u64 gpio_enabled:MAX77686_REGULATORS;
-+
- 	/* Array indexed by regulator id */
- 	unsigned int opmode[MAX77686_REGULATORS];
- };
-@@ -100,6 +108,26 @@ static unsigned int max77686_get_opmode_shift(int id)
- 	}
- }
- 
-+/*
-+ * When regulator is configured for GPIO control then it
-+ * replaces "normal" mode. Any change from low power mode to normal
-+ * should actually change to GPIO control.
-+ * Map normal mode to proper value for such regulators.
-+ */
-+static unsigned int max77686_map_normal_mode(struct max77686_data *max77686,
-+					     int id)
-+{
-+	switch (id) {
-+	case MAX77686_BUCK8:
-+	case MAX77686_BUCK9:
-+	case MAX77686_LDO20 ... MAX77686_LDO22:
-+		if (max77686->gpio_enabled & (1 << id))
-+			return MAX77686_GPIO_CONTROL;
-+	}
-+
-+	return MAX77686_NORMAL;
-+}
-+
- /* Some BUCKs and LDOs supports Normal[ON/OFF] mode during suspend */
- static int max77686_set_suspend_disable(struct regulator_dev *rdev)
- {
-@@ -136,7 +164,7 @@ static int max77686_set_suspend_mode(struct regulator_dev *rdev,
- 		val = MAX77686_LDO_LOWPOWER_PWRREQ;
- 		break;
- 	case REGULATOR_MODE_NORMAL:			/* ON in Normal Mode */
--		val = MAX77686_NORMAL;
-+		val = max77686_map_normal_mode(max77686, id);
- 		break;
- 	default:
- 		pr_warn("%s: regulator_suspend_mode : 0x%x not supported\n",
-@@ -160,7 +188,7 @@ static int max77686_ldo_set_suspend_mode(struct regulator_dev *rdev,
- {
- 	unsigned int val;
- 	struct max77686_data *max77686 = rdev_get_drvdata(rdev);
--	int ret;
-+	int ret, id = rdev_get_id(rdev);
- 
- 	switch (mode) {
- 	case REGULATOR_MODE_STANDBY:			/* switch off */
-@@ -170,7 +198,7 @@ static int max77686_ldo_set_suspend_mode(struct regulator_dev *rdev,
- 		val = MAX77686_LDO_LOWPOWER_PWRREQ;
- 		break;
- 	case REGULATOR_MODE_NORMAL:			/* ON in Normal Mode */
--		val = MAX77686_NORMAL;
-+		val = max77686_map_normal_mode(max77686, id);
- 		break;
- 	default:
- 		pr_warn("%s: regulator_suspend_mode : 0x%x not supported\n",
-@@ -184,7 +212,7 @@ static int max77686_ldo_set_suspend_mode(struct regulator_dev *rdev,
- 	if (ret)
- 		return ret;
- 
--	max77686->opmode[rdev_get_id(rdev)] = val;
-+	max77686->opmode[id] = val;
- 	return 0;
- }
- 
-@@ -197,7 +225,7 @@ static int max77686_enable(struct regulator_dev *rdev)
- 	shift = max77686_get_opmode_shift(id);
- 
- 	if (max77686->opmode[id] == MAX77686_OFF_PWRREQ)
--		max77686->opmode[id] = MAX77686_NORMAL;
-+		max77686->opmode[id] = max77686_map_normal_mode(max77686, id);
- 
- 	return regmap_update_bits(rdev->regmap, rdev->desc->enable_reg,
- 				  rdev->desc->enable_mask,
-@@ -229,6 +257,36 @@ static int max77686_set_ramp_delay(struct regulator_dev *rdev, int ramp_delay)
- 				  MAX77686_RAMP_RATE_MASK, ramp_value << 6);
- }
- 
-+static int max77686_of_parse_cb(struct device_node *np,
-+		const struct regulator_desc *desc,
-+		struct regulator_config *config)
-+{
-+	struct max77686_data *max77686 = config->driver_data;
-+
-+	switch (desc->id) {
-+	case MAX77686_BUCK8:
-+	case MAX77686_BUCK9:
-+	case MAX77686_LDO20 ... MAX77686_LDO22:
-+		config->ena_gpio = of_get_named_gpio(np,
-+					"maxim,ena-gpios", 0);
-+		config->ena_gpio_flags = GPIOF_OUT_INIT_HIGH;
-+		config->ena_gpio_initialized = true;
-+		break;
-+	default:
-+		return 0;
-+	}
-+
-+	if (gpio_is_valid(config->ena_gpio)) {
-+		max77686->gpio_enabled |= (1 << desc->id);
-+
-+		return regmap_update_bits(config->regmap, desc->enable_reg,
-+					  desc->enable_mask,
-+					  MAX77686_GPIO_CONTROL);
-+	}
-+
-+	return 0;
-+}
-+
- static struct regulator_ops max77686_ops = {
- 	.list_voltage		= regulator_list_voltage_linear,
- 	.map_voltage		= regulator_map_voltage_linear,
-@@ -283,6 +341,7 @@ static struct regulator_ops max77686_buck_dvs_ops = {
- 	.name		= "LDO"#num,					\
- 	.of_match	= of_match_ptr("LDO"#num),			\
- 	.regulators_node	= of_match_ptr("voltage-regulators"),	\
-+	.of_parse_cb	= max77686_of_parse_cb,				\
- 	.id		= MAX77686_LDO##num,				\
- 	.ops		= &max77686_ops,				\
- 	.type		= REGULATOR_VOLTAGE,				\
-@@ -355,6 +414,7 @@ static struct regulator_ops max77686_buck_dvs_ops = {
- 	.name		= "BUCK"#num,					\
- 	.of_match	= of_match_ptr("BUCK"#num),			\
- 	.regulators_node	= of_match_ptr("voltage-regulators"),	\
-+	.of_parse_cb	= max77686_of_parse_cb,				\
- 	.id		= MAX77686_BUCK##num,				\
- 	.ops		= &max77686_ops,				\
- 	.type		= REGULATOR_VOLTAGE,				\
--- 
-1.9.1
+Ok. Well, I can't say I'm very happy about that, but if that's the
+common accepted way, I'm fine. I'll queue this for fbdev fixes.
+
+ Tomi
+
+
+
+--2s9He6u5Xxb0QaJBxqmOP5L2paBIlaHKA
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUqn/SAAoJEPo9qoy8lh712FIP/0Q9axkBLxpbGzd4MvYGckmn
+w0n7id+8hzF1NzXOIB1zBy2AvzQ0p4bURMklqEYYFW1Vdm1xjO+AZnBrmWJ8p/Vq
+Apwx7jC4NAcYS4wP0utEeKENoiEsxUUAbuOwM62lYKj4nBIFUJdUqCWccgF1Gg0j
+xtTElcXeYa9ch7r2/uD5UTzdCqyKcGEC7mp8B4cPf73cI0Ewy25u9ICAl0DAIRRy
+r9AOSAHrYYMFASX2T3GapShhKttJGTwJqFab3GVRgT33l7F7dpv2hC/wMol6uTOJ
+oWBuaSDkHoHhNLYuY/yyVVqhduiq4cwz1ZNm0vMqwG6DuFslVjd1XevT63ZhLFqh
+26s2NIkj4gmQgfOhmz/QTFZvJrMD4Y329hnzWXLdyY0u99k8v0A+DPzZiktJJaGO
+Fcfv8mJUuhXh6uxttABC+1qmE7G6sOWdl4FAPidyYUUEKyNpG9B7CFPAeCEnuoOa
+2qbYg6qhop+lptPTTA25zvQ2ohRLmOI7XSzdFLx9qfsDHr9IrygpzKXKfxi47Vj3
+CJLRSoeKqqRkVwXXSsIuiR31Xs7kAsUWWg62o9pk7YG1dnyrX66WPHH7kcoAo7Zs
+7GhCM9gTXDhpC4Y39SgywXYDiPuw14lvTjdIV7L5SR99Icn7TAQ2yrYo5s6nynmL
+k0Qnozm3vf/wW9vjuJ10
+=VB5N
+-----END PGP SIGNATURE-----
+
+--2s9He6u5Xxb0QaJBxqmOP5L2paBIlaHKA--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
