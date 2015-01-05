@@ -1,28 +1,34 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
 Subject: Re: [PATCH v4 1/3] ARM: shmobile: r8a7791: add CAN clocks
-Date: Mon, 5 Jan 2015 14:29:28 +0100
-Message-ID: <CAMuHMdXmKV2_npgjaC+t4wDD6we8VCBFSzHFfkRHwELO30BMmQ@mail.gmail.com>
+Date: Mon, 5 Jan 2015 14:30:04 +0100
+Message-ID: <CAMuHMdUFrOeuR8N67pcp6kPEE1G94DUgU7iDLX2QRL3GbvkXtA@mail.gmail.com>
 References: <6830301.90YaDPuTpx@wasted.cogentembedded.com>
 	<2098987.LzjA3c0AUx@wasted.cogentembedded.com>
+	<CAMuHMdXmKV2_npgjaC+t4wDD6we8VCBFSzHFfkRHwELO30BMmQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <2098987.LzjA3c0AUx@wasted.cogentembedded.com>
+In-Reply-To: <CAMuHMdXmKV2_npgjaC+t4wDD6we8VCBFSzHFfkRHwELO30BMmQ@mail.gmail.com>
 Sender: linux-sh-owner@vger.kernel.org
 To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 Cc: Simon Horman <horms@verge.net.au>, Linux-sh list <linux-sh@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Dec 27, 2014 at 12:18 AM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> The R-Car CAN controllers can derive the CAN bus clock not only from their
-> peripheral clock input (clkp1) but also from the other internal clock (clkp2)
-> and external clock fed on CAN_CLK pin.  Describe those clocks in the device
-> tree,  along with  the USB_EXTAL clock  from which clkp2 is derived.
+On Mon, Jan 5, 2015 at 2:29 PM, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> On Sat, Dec 27, 2014 at 12:18 AM, Sergei Shtylyov
+> <sergei.shtylyov@cogentembedded.com> wrote:
+>> The R-Car CAN controllers can derive the CAN bus clock not only from their
+>> peripheral clock input (clkp1) but also from the other internal clock (clkp2)
+>> and external clock fed on CAN_CLK pin.  Describe those clocks in the device
+>> tree,  along with  the USB_EXTAL clock  from which clkp2 is derived.
+>>
+>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 >
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> Acked-by: arch/arm/boot/dts/r8a7790.dtsi
 
-Acked-by: arch/arm/boot/dts/r8a7790.dtsi
+Bummer...
+
+Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
 Gr{oetje,eeting}s,
 
