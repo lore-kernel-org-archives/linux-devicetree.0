@@ -1,67 +1,107 @@
-From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: Re: Device Tree Child Node Parsing Question
-Date: Mon, 5 Jan 2015 08:48:33 -0600
-Message-ID: <54AAA441.2060607@opensource.altera.com>
-References: <549999A7.2010608@opensource.altera.com> <CAL_JsqLzbEuQgNZoBbzr4R=Nj9_Qs=60uLhzENbZzTaaTgxnZg@mail.gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 1/2] ahci_xgene: Fix the xgene_ahci_restart_engine function
+ to support Port Multiplier for APM X-Gene SoC AHCI SATA host controller driver.
+Date: Mon, 05 Jan 2015 17:50:23 +0300
+Message-ID: <54AAA4AF.8030503@cogentembedded.com>
+References: <1420453305-15986-1-git-send-email-stripathi@apm.com> <1420453305-15986-2-git-send-email-stripathi@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqLzbEuQgNZoBbzr4R=Nj9_Qs=60uLhzENbZzTaaTgxnZg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <1420453305-15986-2-git-send-email-stripathi@apm.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Suman Tripathi <stripathi@apm.com>, olof@lixom.net, tj@kernel.org, arnd@arndb.de
+Cc: linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mlangsdo@redhat.com, jcm@redhat.com, patches@apm.com
 List-Id: devicetree@vger.kernel.org
 
-On 12/26/2014 01:40 PM, Rob Herring wrote:
-> On Tue, Dec 23, 2014 at 10:34 AM, Thor Thayer
-> <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org> wrote:
->> Hi,
->>
->> What is the best way to queue devicetree child nodes so the node is passed
->> in the platform_device pointer to the probe() function?
->>
->> Documentation/devicetree/usage-model.txt has the following:
->>
->> "For Linux DT support, the generic behaviour is for child devices to be
->> registered by the parent's device driver at driver .probe() time."
->>
->> "Actually, it turns out that registering children of some platform_devices
->> as more platform_devices is a common pattern, and the
->> device tree support code reflects that and makes the above example
->> simpler.  The second argument to of_platform_populate() is an
->> of_device_id table, and any node that matches an entry in that table
->> will also get its child nodes registered."
->>
->>
->> I tried calling of_platform_populate() in the probe of the a10_sysctl node
->> but it doesn't appear to setup the platform device data properly for the
->> sub-child nodes.
->>
+Hello.
 
-<snip>
+On 1/5/2015 1:21 PM, Suman Tripathi wrote:
+
+    Your patch summary seems too long.
+
+> This patch implements the function xgene_ahci_poll_reg_val to poll
+> PxCI for multiple IDENTIFY DEVICE commands to finish before
+> restarting the DMA engine in case of Port Multiplier.
+
+> Signed-off-by: Suman Tripathi <stripathi@apm.com>
+> ---
+>   drivers/ata/ahci_xgene.c | 56 ++++++++++++++++++++++++++++++++++++++++++++++--
+>   1 file changed, 54 insertions(+), 2 deletions(-)
+
+> diff --git a/drivers/ata/ahci_xgene.c b/drivers/ata/ahci_xgene.c
+> index 0f8538f..2180223 100644
+> --- a/drivers/ata/ahci_xgene.c
+> +++ b/drivers/ata/ahci_xgene.c
+> @@ -105,17 +105,69 @@ static int xgene_ahci_init_memram(struct xgene_ahci_context *ctx)
+>   }
 >
-> This should work. There are quite a few users already including unit
-> tests. Can you tell what you are doing differently from those users?
+>   /**
+> + * xgene_ahci_poll_reg_val- Poll a register on a specific value.
+> + * @ap : ATA port of interest.
+> + * @reg : Register of interest.
+> + * @val : Value to be attained.
+> + * @interval : waiting interval for polling.
+> + * @timeout : timeout for achieving the value.
+> + */
+> +static int xgene_ahci_poll_reg_val(struct ata_port *ap,
+> +				   void __iomem *reg, unsigned
+> +				   int val, unsigned long interval,
+> +				   unsigned long timeout)
+> +{
+> +	unsigned long deadline;
+> +	unsigned int tmp;
+> +
+> +	tmp = ioread32(reg);
+> +	deadline = ata_deadline(jiffies, timeout);
+> +
+> +	while ((tmp != val) && (time_before(jiffies, deadline))) {
+
+    Parens around the operands of && are not needed, especially around the 
+right one.
+
+> +		ata_msleep(ap, interval);
+> +		tmp = ioread32(reg);
+> +	}
+> +
+> +	return tmp;
+> +}
+> +
+> +/**
+>    * xgene_ahci_restart_engine - Restart the dma engine.
+>    * @ap : ATA port of interest
+>    *
+> - * Restarts the dma engine inside the controller.
+> + * Waits for completion of multiple commands and restarts
+> + * the DMA engine inside the controller.
+>    */
+>   static int xgene_ahci_restart_engine(struct ata_port *ap)
+>   {
+>   	struct ahci_host_priv *hpriv = ap->host->private_data;
+> +	struct ahci_port_priv *pp = ap->private_data;
+> +	void __iomem *port_mmio = ahci_port_base(ap);
+> +	u32 fbs;
+> +
+> +	/*
+> +	 * In case of PMP multiple IDENTIFY DEVICE commands can be
+> +	 * issued inside PxCI. So need to poll PxCI for the
+> +	 * completion of outstanding IDENTIFY DEVICE commands before
+> +	 * we restart the DMA engine.
+> +	 */
+> +	if (xgene_ahci_poll_reg_val(ap, port_mmio +
+> +				    PORT_CMD_ISSUE, 0x0, 1, 100))
+> +		  return -EBUSY;
 >
-> Rob
->
->>
+>   	ahci_stop_engine(ap);
+>   	ahci_start_fis_rx(ap);
+> +
+> +	/*
+> +	 * Enable the PxFBS.FBS_EN bit as it
+> +	 * gets cleared due to stop engine.
 
-<snip>
+    s/stop/stopping the/.
 
-Just to tie up this conversation in case anyone else has an issue, it 
-ended up being my debug issue. The of_platform_populate() was working 
-properly. The issue was that I was also calling a mfd_add_devices() 
-using a devices table and I was watching the mfd_add_devices() probe. 
-Simply removing the mfd_add_devices() and the table and using 
-of_platform_populate() as below worked.
+[...]
 
-of_platform_populate(spi->dev.of_node, a10sycon_spi_of_match,
-		     NULL, &spi->dev);
+MBR, Sergei
 
-Thanks!
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
