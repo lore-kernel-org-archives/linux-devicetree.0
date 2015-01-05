@@ -1,42 +1,68 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2] clk-rcar-gen2: RCAN clock support
-Date: Mon, 5 Jan 2015 14:33:41 +0100
-Message-ID: <CAMuHMdX7Efi1s1bt+X8rbqN4=J9JHWh1cHpvZmnC6NCkF4JVGA@mail.gmail.com>
-References: <3007073.i0ghnTEhxV@wasted.cogentembedded.com>
+Subject: Re: [PATCH v4 2/3] ARM: shmobile: r8a7791: add CAN DT support
+Date: Mon, 5 Jan 2015 14:36:52 +0100
+Message-ID: <CAMuHMdVuabRxKdpynaX0zaB-CvW8+dRb4TBtm7byT7znk6hxYQ@mail.gmail.com>
+References: <6830301.90YaDPuTpx@wasted.cogentembedded.com>
+	<2080620.GIKTJkNfbk@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <3007073.i0ghnTEhxV@wasted.cogentembedded.com>
+In-Reply-To: <2080620.GIKTJkNfbk@wasted.cogentembedded.com>
 Sender: linux-sh-owner@vger.kernel.org
 To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Mike Turquette <mturquette@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Linux-sh list <linux-sh@vger.kernel.org>, Pavel Kiryukhin <vksavl@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: Simon Horman <horms@verge.net.au>, Linux-sh list <linux-sh@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 24, 2014 at 11:17 PM, Sergei Shtylyov
+On Sat, Dec 27, 2014 at 12:20 AM, Sergei Shtylyov
 <sergei.shtylyov@cogentembedded.com> wrote:
-> Add the RCAN clock support to the R-Car generation 2 CPG driver.  This clock
-> gets derived from  the USB_EXTAL clock, dividing  it by 6.  The layout of the
-> RCANCKCR register is similar to those of the clocks supported by the 'clk-div6'
-> driver but has no divider field, and so can't be supported by that driver...
+> Define the generic R8A7791 parts of the CAN0/1 device nodes.
 >
 > Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-Sorry, forgot something...
+Apart from the minor nit below:
 
-> Index: linux/Documentation/devicetree/bindings/clock/renesas,rcar-gen2-cpg-clocks.txt
-> ===================================================================
-> --- linux.orig/Documentation/devicetree/bindings/clock/renesas,rcar-gen2-cpg-clocks.txt
-> +++ linux/Documentation/devicetree/bindings/clock/renesas,rcar-gen2-cpg-clocks.txt
-> @@ -16,7 +16,7 @@ Required Properties:
->    - clocks: Reference to the parent clock
+Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-If the "rcan" clock is to be used, there should be two parent clocks.
+> --- renesas.orig/arch/arm/boot/dts/r8a7791.dtsi
+> +++ renesas/arch/arm/boot/dts/r8a7791.dtsi
+> @@ -816,6 +816,26 @@
+>                 };
+>         };
+>
+> +       can0: can@e6e80000 {
+> +               compatible = "renesas,can-r8a7791";
+> +               reg = <0 0xe6e80000 0 0x1000>;
+> +               interrupts = <0 186 IRQ_TYPE_LEVEL_HIGH>;
+> +               clocks = <&mstp9_clks R8A7791_CLK_RCAN0>,
+> +                        <&cpg_clocks R8A7791_CLK_RCAN>, <&can_clk>;
 
->    - #clock-cells: Must be 1
->    - clock-output-names: The names of the clocks. Supported clocks are "main",
-> -    "pll0", "pll1", "pll3", "lb", "qspi", "sdh", "sd0", "sd1" and "z"
-> +    "pll0", "pll1", "pll3", "lb", "qspi", "sdh", "sd0", "sd1", "z", and "rcan"
+.git/rebase-apply/patch:18: space before tab in indent.
+      <&cpg_clocks R8A7790_CLK_RCAN>, <&can_clk>;
 
+> +               clock-names = "clkp1", "clkp2", "can_clk";
+> +               status = "disabled";
+> +       };
+> +
+> +       can1: can@e6e88000 {
+> +               compatible = "renesas,can-r8a7791";
+> +               reg = <0 0xe6e88000 0 0x1000>;
+> +               interrupts = <0 187 IRQ_TYPE_LEVEL_HIGH>;
+> +               clocks = <&mstp9_clks R8A7791_CLK_RCAN1>,
+> +                        <&cpg_clocks R8A7791_CLK_RCAN>, <&can_clk>;
+
+.git/rebase-apply/patch:28: space before tab in indent.
+      <&cpg_clocks R8A7790_CLK_RCAN>, <&can_clk>;
+warning: 2 lines add whitespace errors.
+
+> +               clock-names = "clkp1", "clkp2", "can_clk";
+> +               status = "disabled";
+> +       };
+> +
+
+
+
+
+-- 
 Gr{oetje,eeting}s,
 
                         Geert
