@@ -1,71 +1,55 @@
-From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH RFC] iio: iadc: wait_for_completion_timeout time in
- jiffies
-Date: Mon, 05 Jan 2015 17:33:16 +0200
-Message-ID: <1420471996.2090.9.camel@mm-sol.com>
-References: <1420016386-19638-1-git-send-email-der.herr@hofr.at>
-	 <54A9212B.8050709@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+From: Bart Tanghe <bart.tanghe-2dq7lIxLGp5qkBXjtECzWg@public.gmane.org>
+Subject: [PATCH]dts: add bcm2835-pwm bindings
+Date: Mon,  5 Jan 2015 16:33:03 +0100
+Message-ID: <1420471983-29945-1-git-send-email-bart.tanghe@thomasmore.be>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54A9212B.8050709-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Nicholas Mc Guire <der.herr-kA1LtwSENNE@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bart.tanghe-2dq7lIxLGp5qkBXjtECzWg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+To probe the bcm2835-pwm driver properly, this dts bindings has to be added 
+to the bcm2835 dtsi file.
+In expectation of a bcm2835 clock driver, I've added fixed-clock clock binding.
+To change the status of the gpio pins into pwm output pins, some additional 
+bindings has to be added but this has not to be done automatically.
+Is it possible to document this bindings somewhere?
 
-On Sun, 2015-01-04 at 11:16 +0000, Jonathan Cameron wrote:
-> On 31/12/14 08:59, Nicholas Mc Guire wrote:
-> > The timeout value to wait_for_completion_timeout is in jiffies but
-> > the value being passed seems like it was intended to by microseconds
-> > Note that the timeout was extremely long thus it might be too short
-> > now. In any case it probably should be passed through usecs_to_jiffies()
-> > or msecs_to_jiffies()
-> > 
-> > patch is against linux-next 3.19.0-rc1 -next-20141226
-> > 
-> > patch was only compile-tested x86_64_defcofnig + CONFIG_SPMI=m
-> > CONFIG_IIO=m, CONFIG_QCOM_SPMI_IADC=m
-> > 
-> > Signed-off-by: Nicholas Mc Guire herr-kA1LtwSENNE@public.gmane.org>
-> Certainly suspicious and I'd draw the same conclusion you did!
-> Anyhow just waiting for Ivan to take a look as it's his driver.
+Signed-off-by: Bart Tanghe <bart.tanghe-2dq7lIxLGp5qkBXjtECzWg@public.gmane.org>
 
-Oops, true. Timeout is calculated in microseconds and have to 
-be converted to jiffies.
-
-Thanks.
-
-Acked-by: Ivan T. Ivanov <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-
-
-> 
-> Thanks,
-> 
-> Jonathan
-> > ---
-> >  drivers/iio/adc/qcom-spmi-iadc.c |    3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/iio/adc/qcom-spmi-iadc.c b/drivers/iio/adc/qcom-spmi-iadc.c
-> > index b9666f2..3080562 100644
-> > --- a/drivers/iio/adc/qcom-spmi-iadc.c
-> > +++ b/drivers/iio/adc/qcom-spmi-iadc.c
-> > @@ -296,7 +296,8 @@ static int iadc_do_conversion(struct iadc_chip *iadc, int chan, u16 *data)
-> >         if (iadc->poll_eoc) {
-> >                 ret = iadc_poll_wait_eoc(iadc, wait);
-> >         } else {
-> > -               ret = wait_for_completion_timeout(&iadc->complete, wait);
-> > +               ret = wait_for_completion_timeout(&iadc->complete,
-> > +                       usecs_to_jiffies(wait));
-> >                 if (!ret)
-> >                         ret = -ETIMEDOUT;
-> >                 else
-> > 
-> 
-> 
+diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835.dtsi
+index 3342cb1..ba76bb4 100644
+--- a/arch/arm/boot/dts/bcm2835.dtsi
++++ b/arch/arm/boot/dts/bcm2835.dtsi
+@@ -146,6 +147,14 @@
+ 			interrupts = <1 9>;
+ 		};
+ 
++		pwm: pwm@7E20C000 {
++			compatible = "brcm,bcm2835-pwm";
++			reg = <0x7e20c000 0x28>;
++			clocks = <&clk_pwm>;
++			#pwm-cells = <2>;
++			status = "ok";
++		};
++
+ 		arm-pmu {
+ 			compatible = "arm,arm1176-pmu";
+ 		};
+@@ -179,5 +188,13 @@
+ 			clock-output-names = "spi";
+ 			clock-frequency = <250000000>;
+ 		};
++
++		clk_pwm: pwm@3 {
++			compatible = "fixed-clock";
++			reg = <3>;
++			#clock-cells = <0>;
++			clock-output-names = "pwm";
++			clock-frequency = <9200000>;
++		};
+ 	};
+ };
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
