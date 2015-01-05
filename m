@@ -1,56 +1,40 @@
-From: Bart Tanghe <bart.tanghe-2dq7lIxLGp5qkBXjtECzWg@public.gmane.org>
-Subject: [PATCH]dts: add bcm2835-pwm bindings
-Date: Mon,  5 Jan 2015 16:33:03 +0100
-Message-ID: <1420471983-29945-1-git-send-email-bart.tanghe@thomasmore.be>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bart.tanghe-2dq7lIxLGp5qkBXjtECzWg@public.gmane.org
+From: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
+Subject: Re: [PATCH 1/3] TTY: add support for "tty slave" devices.
+Date: Mon, 5 Jan 2015 15:41:41 +0000
+Message-ID: <20150105154141.6f191cd5@lxorguk.ukuu.org.uk>
+References: <20141211214801.4127.93914.stgit@notabene.brown>
+	<20141211215943.4127.24792.stgit@notabene.brown>
+	<20141228142010.GA3922@amd>
+	<20150103103357.2406fc23@notabene.brown>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150103103357.2406fc23@notabene.brown>
+Sender: linux-kernel-owner@vger.kernel.org
+To: NeilBrown <neilb@suse.de>
+Cc: Pavel Machek <pavel@ucw.cz>, Grant Likely <grant.likely@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Jiri Slaby <jslaby@suse.cz>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-To probe the bcm2835-pwm driver properly, this dts bindings has to be added 
-to the bcm2835 dtsi file.
-In expectation of a bcm2835 clock driver, I've added fixed-clock clock binding.
-To change the status of the gpio pins into pwm output pins, some additional 
-bindings has to be added but this has not to be done automatically.
-Is it possible to document this bindings somewhere?
+> It would be really nice if the uart would register the line disciple as a
+> child device, then the line discipline would register whatever it wants.
 
-Signed-off-by: Bart Tanghe <bart.tanghe-2dq7lIxLGp5qkBXjtECzWg@public.gmane.org>
+For almost every case this doesn't work. You need a tty interface as well
+because thats how you manage it.
 
-diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835.dtsi
-index 3342cb1..ba76bb4 100644
---- a/arch/arm/boot/dts/bcm2835.dtsi
-+++ b/arch/arm/boot/dts/bcm2835.dtsi
-@@ -146,6 +147,14 @@
- 			interrupts = <1 9>;
- 		};
- 
-+		pwm: pwm@7E20C000 {
-+			compatible = "brcm,bcm2835-pwm";
-+			reg = <0x7e20c000 0x28>;
-+			clocks = <&clk_pwm>;
-+			#pwm-cells = <2>;
-+			status = "ok";
-+		};
-+
- 		arm-pmu {
- 			compatible = "arm,arm1176-pmu";
- 		};
-@@ -179,5 +188,13 @@
- 			clock-output-names = "spi";
- 			clock-frequency = <250000000>;
- 		};
-+
-+		clk_pwm: pwm@3 {
-+			compatible = "fixed-clock";
-+			reg = <3>;
-+			#clock-cells = <0>;
-+			clock-output-names = "pwm";
-+			clock-frequency = <9200000>;
-+		};
- 	};
- };
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> But that isn't how it works.  The line discipline doesn't talk to the uart.
+> Rather the tty layer talks to the uart (through tty_operations) and to the
+> line discipline (through tty_ldisc_ops) and also registers the char_dev.
+
+This is intentional. An ldisc has no business knowing what it's connected
+to. Try running bluetooth over a tty/pty pair remotely to a dongle - and
+you can do it or faking a GSM mux over a tty/pty pair for testing.
+
+There are lots of cases where we know the correct ldisc from information
+in the ACPI, DT or even USB identifiers in order to plug in the right
+ldisc and daemon but I think that pretty much has to be in user space.
+The kernel might be able to set an ldisc but it can't go around starting
+bluetooth daemons, doing modem chats to go into mux mode or firing up
+JMRI and java when it sees a Sprog. That's a job for systemd/udev.
+
+Alan
