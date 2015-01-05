@@ -1,73 +1,51 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: [PATCH V4] ARM: dts: am57xx-beagle-x15: Add GPIO controlled fan node
-Date: Mon, 5 Jan 2015 10:32:29 -0600
-Message-ID: <1420475549-28492-1-git-send-email-nm@ti.com>
+From: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH V1 1/1] iio: Added Capella cm3232 ambient light sensor
+ driver.
+Date: Mon, 05 Jan 2015 08:42:46 -0800
+Message-ID: <1420476166.2652.14.camel@perches.com>
+References: <1420071030-888-1-git-send-email-ktsai@capellamicro.com>
+	 <CAEnQRZBD2NMYRp1cW0J2ssT4CT=0jSM=X6ByHQiUrA0ueV8fRA@mail.gmail.com>
+	 <1420463396.2652.8.camel@perches.com>
+	 <CAEnQRZBmwurFCJU4E4ArO8waU+YcGWrRYr3DRVxq9haduX2t=w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, sre@kernel.org, Nishanth Menon <nm@ti.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAEnQRZBmwurFCJU4E4ArO8waU+YcGWrRYr3DRVxq9haduX2t=w@mail.gmail.com>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, Archana Patni <archana.patni-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-TPS gpio now controls a 5v 500mA TL5209 regulator which may be supply
-a fan (such as AFB02505HHB) over J1 connector for various purposes.
-Provide device tree node to enable the same.
+On Mon, 2015-01-05 at 16:20 +0200, Daniel Baluta wrote:
+> On Mon, Jan 5, 2015 at 3:09 PM, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org> wrote:
+> > On Mon, 2015-01-05 at 12:51 +0200, Daniel Baluta wrote:
+> >> On Thu, Jan 1, 2015 at 2:10 AM, Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org> wrote:
+> >> > CM3232 is an advanced ambient light sensor with I2C protocol interface.
+> >> > The I2C slave address is internally hardwired as 0x10 (7-bit).  Writing
+> >> > to configure register is byte mode, but reading ALS register requests to
+> >> > use word mode for 16-bit resolution.
+[]
+> >> You could directly return i2c_smbus_write_byte_data(..).
+> >
+> > Sometimes it's better to return a specific value
+> > for the error instead of depending on correctness
+> > of all the indirect functions in the call chain.
+> >
+> > In this case, all the smbus_xfer functions must
+> > return 0 on success.  Do they?
+> 
+> Yes.
+> 
+> http://lxr.free-electrons.com/source/drivers/i2c/i2c-core.c#L2845
 
-Signed-off-by: Nishanth Menon <nm@ti.com>
----
-V4: Change format of the speed-map used.
-V3: https://patchwork.kernel.org/patch/5562121/
-V2: https://patchwork.kernel.org/patch/5445111/
-V1: https://patchwork.kernel.org/patch/5444911/
+This doesn't show that adapter->algo->smbus_xfer()
+returns 0, you have to look at the code for that
+indirectly called function. 
 
-Enable and disable can be controlled by (post the RPM, it finds
-closest match - even a 1 will do)
+> Also, I guess kbuild test robot will complain about it, like here:
+> 
+> http://marc.info/?l=linux-kernel&m=141963536230419&w=2
 
-echo '13000' > /sys/class/hwmon/hwmon0/fan1_target
-and
-echo '0' > /sys/class/hwmon/hwmon0/fan1_target
-
-Test log: http://slexy.org/view/s2T0ajh46z
-
-requires CONFIG_GPIO_PALMAS and CONFIG_SENSORS_GPIO_FAN to be operational
-Applies on v3.19-rc1
-
- arch/arm/boot/dts/am57xx-beagle-x15.dts |   14 ++++++++++++++
- 1 file changed, 14 insertions(+)
-
-diff --git a/arch/arm/boot/dts/am57xx-beagle-x15.dts b/arch/arm/boot/dts/am57xx-beagle-x15.dts
-index 6c2e8e4..c5d4cea 100644
---- a/arch/arm/boot/dts/am57xx-beagle-x15.dts
-+++ b/arch/arm/boot/dts/am57xx-beagle-x15.dts
-@@ -80,6 +80,14 @@
- 			default-state = "off";
- 		};
- 	};
-+
-+	gpio_fan: gpio_fan {
-+		/* Based on 5v 500mA AFB02505HHB */
-+		compatible = "gpio-fan";
-+		gpios =  <&tps659038_gpio 1 GPIO_ACTIVE_HIGH>;
-+		gpio-fan,speed-map = <0     0>,
-+				     <13000 1>;
-+	};
- };
- 
- &dra7_pmx_core {
-@@ -394,6 +402,12 @@
- 			wakeup-source;
- 			ti,palmas-long-press-seconds = <12>;
- 		};
-+
-+		tps659038_gpio: tps659038_gpio {
-+			compatible = "ti,palmas-gpio";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+		};
- 	};
- 
- 	tmp102: tmp102@48 {
--- 
-1.7.9.5
-
+Is the kbuild test robot now submitting patches for all
+possible coccinelle simplifications?  I don't think so.
