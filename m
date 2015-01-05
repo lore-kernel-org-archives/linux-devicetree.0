@@ -1,59 +1,35 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM: mvebu: Add Armada 385 General Purpose Development
- Board support
-Date: Mon, 05 Jan 2015 15:03:38 +0100
-Message-ID: <54AA99BA.9060300@free-electrons.com>
-References: <1419678035-10658-1-git-send-email-gregory.clement@free-electrons.com> <1419678035-10658-4-git-send-email-gregory.clement@free-electrons.com> <20141227113401.GC21001@lunn.ch>
+From: Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH 2/2] ahci_xgene: Implement the workaround to support PMP
+ enumeration and discovery for APM X-Gene SoC AHCI SATA Host Controller
+ driver.
+Date: Mon, 5 Jan 2015 09:05:29 -0500
+Message-ID: <20150105140529.GG15833@htj.dyndns.org>
+References: <1420453305-15986-1-git-send-email-stripathi@apm.com>
+ <1420453305-15986-3-git-send-email-stripathi@apm.com>
+ <20150105133005.GB15833@htj.dyndns.org>
+ <20150105135950.GE15833@htj.dyndns.org>
+ <CAOHikRBedNy=CrrHA+7UYQJpL3t1BhU0VFixz80bPeSE28iHGw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20141227113401.GC21001-g2DYL2Zd6BY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-ide-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAOHikRBedNy=CrrHA+7UYQJpL3t1BhU0VFixz80bPeSE28iHGw@mail.gmail.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Suman Tripathi <stripathi@apm.com>
+Cc: Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Linux SCSI List <linux-scsi@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Mark Langsdorf <mlangsdo@redhat.com>, Jon Masters <jcm@redhat.com>, patches@apm.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew,
-
->> + * Device Tree file for Marvell Armada 385 development board
->> + * (RD-88F6820-GP)
->> + *
->> + * Copyright (C) 2014 Marvell
->> + *
->> + * Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->> + *
->> + * This file is dual-licensed: you can use it either under the terms
->> + * of the GPL or the X11 license, at your option. Note that this dual
->> + * licensing only applies to this file, and not this project as a
->> + * whole.
+On Mon, Jan 05, 2015 at 07:33:06PM +0530, Suman Tripathi wrote:
+> Reverted due to conflicts with the endian fix patches.  Please rebase
+> these two on top of them.
 > 
-> Hi Gregory
-> 
-> I'm guessing here...
-> 
-> The file says Copyright Marvell. I guess Marvell released it GPL? Not
-> Dual license? So it would be nice to have a Signed-off-by: from
-> somebody in Marvell that they are O.K. with the dual license.
-> 
+> Will do that .. I should have wait for the endian patch getting
+> accepted. Sorry for that.
 
-I wrote it from scratch and in the same time Marvell is aware and agrees
-about the Dual license. Until now all the files we wrote have the Marvell
-copyright but without any  Signed-off-by: from anyone in Marvell so I don't
-think we need it now.
+Ooh, please don't be sorry.  It's completely fine.  These things
+happen.
 
-Thanks,
-
-Gregory
-
-
+Thanks.
 
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+tejun
