@@ -1,149 +1,36 @@
-From: Inha Song <ideal.song@samsung.com>
-Subject: Re: [alsa-devel] [PATCH 1/3] ASoC: samsung: Add machine driver for
- Trats2
-Date: Mon, 05 Jan 2015 21:40:39 +0900
-Message-ID: <20150105214039.2f6065fe@songinha-Samsung-DeskTop-System>
-References: <1420457117-11030-1-git-send-email-ideal.song@samsung.com>
- <1420457117-11030-2-git-send-email-ideal.song@samsung.com>
- <54AA7A0B.2070004@metafoo.de>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH V3] ARM: dts: am57xx-beagle-x15: Add GPIO controlled fan
+ node
+Date: Mon, 05 Jan 2015 06:47:39 -0600
+Message-ID: <54AA87EB.1000004@ti.com>
+References: <1420309826-7904-1-git-send-email-nm@ti.com> <20150103233949.GA4108@earth.universe>
+Reply-To: nm@ti.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <54AA7A0B.2070004@metafoo.de>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Lars-Peter Clausen <lars@metafoo.de>
-Cc: alsa-devel@alsa-project.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sbkim73@samsung.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, lgirdwood@gmail.com, tiwai@suse.de, broonie@kernel.org, kgene@kernel.org, s.nawrocki@samsung.com, galak@codeaurora.org, grant.likely@linaro.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150103233949.GA4108@earth.universe>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>
+Cc: devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, =?windows-1252?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 01/03/2015 05:39 PM, Sebastian Reichel wrote:
 
-Thanks for your comments.
+> On Sat, Jan 03, 2015 at 12:30:26PM -0600, Nishanth Menon wrote:
+>> [...]
+>> +		gpio-fan,speed-map = <0    0
+>> +				      13000 1>;
+>> [...]
+>
+> iirc DT maintainers prefer this format:
+>
+> gpio-fan,speed-map = <0     0>,
+>                       <13000 1>;
+>
+> This should result in the same .dtb, but is a bit easier to read.
+>
+yes indeed.. :( Thanks for catching it. will repost.
 
-
-> Hi,
-> 
-> A few small comments inline.
-> 
-> On 01/05/2015 12:25 PM, Inha Song wrote:
-> > --- /dev/null
-> > +++ b/sound/soc/samsung/trats2_wm1811.c
-> > @@ -0,0 +1,216 @@
-> >[...]
-> > +#include <linux/of.h>
-> > +#include <linux/module.h>
-> > +#include <linux/clk.h>
-> > +#include <sound/soc.h>
-> > +#include <sound/pcm_params.h>
-> > +#include "i2s.h"
-> > +#include "i2s-regs.h"
-> 
-> You probably don't need i2s-regs.h
-
-OK, I will remove.
-
-> 
-> > +#include "../codecs/wm8994.h"
-> > +
-> > +struct trats2_machine_priv {
-> > +	struct clk *clk_mclk;
-> > +};
-> > +
-> > +static struct trats2_machine_priv trats2_wm1811_priv;
-> > +
-> > +static const struct snd_kcontrol_new trats2_controls[] = {
-> > +	SOC_DAPM_PIN_SWITCH("SPK"),
-> > +};
-> > +
-> > +const struct snd_soc_dapm_widget trats2_dapm_widgets[] = {
-> 
-> static
-
-Sorry for my mistake.
-
-> 
-> > +	SND_SOC_DAPM_SPK("SPK", NULL),
-> > +};
-> > +
-> > +static int trats2_aif1_hw_params(struct snd_pcm_substream *substream,
-> > +				 struct snd_pcm_hw_params *params)
-> > +{
-> > +	struct snd_soc_pcm_runtime *rtd = substream->private_data;
-> > +	struct snd_soc_dai *cpu_dai = rtd->cpu_dai;
-> > +	struct snd_soc_dai *codec_dai = rtd->codec_dai;
-> > +	struct trats2_machine_priv *priv = snd_soc_card_get_drvdata(rtd->card);
-> > +	unsigned int sysclk_rate;
-> > +	unsigned int mclk_rate =
-> > +			(unsigned int)clk_get_rate(priv->clk_mclk);
-> > +	int ret;
-> > +
-> > +	/* Set the codec DAI configuration to Master*/
-> > +	ret = snd_soc_dai_set_fmt(codec_dai, SND_SOC_DAIFMT_I2S
-> > +					| SND_SOC_DAIFMT_NB_NF
-> > +					| SND_SOC_DAIFMT_CBM_CFM);
-> > +	if (ret < 0) {
-> > +		dev_err(codec_dai->dev,
-> > +			"Failed to set codec dai format: %d\n", ret);
-> > +		return ret;
-> > +	}
-> > +
-> > +	/* Set the cpu DAI configuration to Slave */
-> > +	ret = snd_soc_dai_set_fmt(cpu_dai, SND_SOC_DAIFMT_I2S
-> > +					| SND_SOC_DAIFMT_NB_NF
-> > +					| SND_SOC_DAIFMT_CBM_CFM);
-> > +	if (ret < 0) {
-> > +		dev_err(cpu_dai->dev,
-> > +			"Failed to set cpu dai format: %d\n", ret);
-> > +		return ret;
-> > +	}
-> 
-> 
-> Use the dai_fmt field in the dai_link struct to setup the DAI link format. 
-> This will configure both the CPU and the CODEC DAI with the specified 
-> format, no need to do it manually.
-
-Ok, move to dai_fmt.
-
-> 
-> >[...]
-> > +static struct snd_soc_ops trats2_aif1_ops = {
-> 
-> const
-
-I will fix this.
-
-> 
-> > +	.hw_params = trats2_aif1_hw_params,
-> > +};
-> > +
-> > +static int trats2_init_paiftx(struct snd_soc_pcm_runtime *rtd)
-> > +{
-> > +	struct snd_soc_codec *codec = rtd->codec;
-> > +	struct snd_soc_card *card = rtd->card;
-> > +	struct trats2_machine_priv *priv = snd_soc_card_get_drvdata(card);
-> > +	int ret;
-> > +
-> > +	ret = clk_prepare_enable(priv->clk_mclk);
-> 
-> Maybe just do this in the platform device probe handler and you should have 
-> a matching disable call somewhere.
-
-Ok, I will move clk_prepare_enable call to snd_soc_ops->startup
-and clk_disable_unprepare call to snd_soc_ops->shutdown.
-
-Best Regards,
-Inha Song.
-
-> 
-> > +	if (ret) {
-> > +		dev_err(codec->dev, "Failed to enable mclk: %d\n", ret);
-> > +		return ret;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> >[...]
-> _______________________________________________
-> Alsa-devel mailing list
-> Alsa-devel@alsa-project.org
-> http://mailman.alsa-project.org/mailman/listinfo/alsa-devel
+Regards,
+Nishanth Menon
