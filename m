@@ -1,84 +1,149 @@
-From: Ding Tianhong <dingtianhong@huawei.com>
-Subject: Re: [PATCH net-next v10 3/3] net: hisilicon: new hip04 ethernet driver
-Date: Mon, 5 Jan 2015 20:30:53 +0800
-Message-ID: <54AA83FD.9070008@huawei.com>
-References: <1420440691-20928-1-git-send-email-dingtianhong@huawei.com> <1420440691-20928-4-git-send-email-dingtianhong@huawei.com> <5940412.J23835FKcW@wuerfel>
+From: Inha Song <ideal.song@samsung.com>
+Subject: Re: [alsa-devel] [PATCH 1/3] ASoC: samsung: Add machine driver for
+ Trats2
+Date: Mon, 05 Jan 2015 21:40:39 +0900
+Message-ID: <20150105214039.2f6065fe@songinha-Samsung-DeskTop-System>
+References: <1420457117-11030-1-git-send-email-ideal.song@samsung.com>
+ <1420457117-11030-2-git-send-email-ideal.song@samsung.com>
+ <54AA7A0B.2070004@metafoo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <5940412.J23835FKcW@wuerfel>
-Sender: netdev-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: robh+dt@kernel.org, davem@davemloft.net, grant.likely@linaro.org, sergei.shtylyov@cogentembedded.com, linux-arm-kernel@lists.infradead.org, eric.dumazet@gmail.com, xuwei5@hisilicon.com, zhangfei.gao@linaro.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux@arm.linux.org.uk
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <54AA7A0B.2070004@metafoo.de>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Lars-Peter Clausen <lars@metafoo.de>
+Cc: alsa-devel@alsa-project.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sbkim73@samsung.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, lgirdwood@gmail.com, tiwai@suse.de, broonie@kernel.org, kgene@kernel.org, s.nawrocki@samsung.com, galak@codeaurora.org, grant.likely@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 2015/1/5 16:56, Arnd Bergmann wrote:
-> On Monday 05 January 2015 14:51:31 Ding Tianhong wrote:
->> Support Hisilicon hip04 ethernet driver, including 100M / 1000M controller.
->> The controller has no tx done interrupt, reclaim xmitted buffer in the poll.
->>
->> According David Miller and Arnd Bergmann's suggestion, add some modification
->> for v9 version:
->> - drop the workqueue
->> - batch cleanup based on tx_coalesce_frames/usecs for better throughput
->> - use a reasonable default tx timeout (200us, could be shorted
->>   based on measurements) with a range timer
->> - fix napi poll function return value
->> - use a lockless queue for cleanup
-> 
-> The driver looks ok to me now, but it would be good if you could list
-> any test results you got. Did the performance improve over the previous
-> versions? What is the maximum latency you get now?
-> 
-Really I miss it, I could get it and add them in next version.
+Hi,
 
->> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
->> Signed-off-by: Ding Tianhong <dingtianhong@huawei.com>
->> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> 
-> Adding my "Signed-off-by:" below yours is not the correct attribution here,
-> I only contributed a small part, and the last line should always list
-> the name of the person sending the patch. It would be ok if you change the
-> order of the lines to have yours last, or you could leave me out here entirely
-> and just mention me in the description.
-> 
-Ok.
+Thanks for your comments.
 
->> +
->> +	/* FIXME: make these adjustable through ethtool */
->> +	int tx_coalesce_frames;
->> +	int tx_coalesce_usecs;
->> +	struct hrtimer tx_coalesce_timer;
-> 
-> The FIXME comment that I added was meant as a suggestion for you to look
-> into implementing that after you got the driver working. Did you try it
-> out, or do you have plans to do that as a follow-up patch?
-> 
-> I would assume that doing so would help in the performance evaluation and
-> to find good default values. The numbers I used were really just guessing
-> as I have no insight into how the hardware behaves in real-world systems.
-> 
-Yes, I was preparing another series patches when these patches is applied, or
-I could fix them in the next version for this patch.
 
->> +
->> +	/* FIXME: eliminate this mmio access if xmit_more is set */
->> +	hip04_set_xmit_desc(priv, phys);
->> +	priv->tx_head = TX_NEXT(tx_head);
->> +	count++;
->> +	netdev_sent_queue(ndev, skb->len);
+> Hi,
 > 
-> Same thing here. I would assume that implementing xmit_more support can
-> boost tx performance significantly, but I don't have access to the hardware
-> data sheet, so I don't know what kind of interaction with the hardware
-> is required when you want to submit multiple tx frames at once.
+> A few small comments inline.
 > 
-Ok, thanks.
+> On 01/05/2015 12:25 PM, Inha Song wrote:
+> > --- /dev/null
+> > +++ b/sound/soc/samsung/trats2_wm1811.c
+> > @@ -0,0 +1,216 @@
+> >[...]
+> > +#include <linux/of.h>
+> > +#include <linux/module.h>
+> > +#include <linux/clk.h>
+> > +#include <sound/soc.h>
+> > +#include <sound/pcm_params.h>
+> > +#include "i2s.h"
+> > +#include "i2s-regs.h"
+> 
+> You probably don't need i2s-regs.h
 
-Ding
+OK, I will remove.
 
-> 	Arnd
 > 
-> .
+> > +#include "../codecs/wm8994.h"
+> > +
+> > +struct trats2_machine_priv {
+> > +	struct clk *clk_mclk;
+> > +};
+> > +
+> > +static struct trats2_machine_priv trats2_wm1811_priv;
+> > +
+> > +static const struct snd_kcontrol_new trats2_controls[] = {
+> > +	SOC_DAPM_PIN_SWITCH("SPK"),
+> > +};
+> > +
+> > +const struct snd_soc_dapm_widget trats2_dapm_widgets[] = {
 > 
+> static
+
+Sorry for my mistake.
+
+> 
+> > +	SND_SOC_DAPM_SPK("SPK", NULL),
+> > +};
+> > +
+> > +static int trats2_aif1_hw_params(struct snd_pcm_substream *substream,
+> > +				 struct snd_pcm_hw_params *params)
+> > +{
+> > +	struct snd_soc_pcm_runtime *rtd = substream->private_data;
+> > +	struct snd_soc_dai *cpu_dai = rtd->cpu_dai;
+> > +	struct snd_soc_dai *codec_dai = rtd->codec_dai;
+> > +	struct trats2_machine_priv *priv = snd_soc_card_get_drvdata(rtd->card);
+> > +	unsigned int sysclk_rate;
+> > +	unsigned int mclk_rate =
+> > +			(unsigned int)clk_get_rate(priv->clk_mclk);
+> > +	int ret;
+> > +
+> > +	/* Set the codec DAI configuration to Master*/
+> > +	ret = snd_soc_dai_set_fmt(codec_dai, SND_SOC_DAIFMT_I2S
+> > +					| SND_SOC_DAIFMT_NB_NF
+> > +					| SND_SOC_DAIFMT_CBM_CFM);
+> > +	if (ret < 0) {
+> > +		dev_err(codec_dai->dev,
+> > +			"Failed to set codec dai format: %d\n", ret);
+> > +		return ret;
+> > +	}
+> > +
+> > +	/* Set the cpu DAI configuration to Slave */
+> > +	ret = snd_soc_dai_set_fmt(cpu_dai, SND_SOC_DAIFMT_I2S
+> > +					| SND_SOC_DAIFMT_NB_NF
+> > +					| SND_SOC_DAIFMT_CBM_CFM);
+> > +	if (ret < 0) {
+> > +		dev_err(cpu_dai->dev,
+> > +			"Failed to set cpu dai format: %d\n", ret);
+> > +		return ret;
+> > +	}
+> 
+> 
+> Use the dai_fmt field in the dai_link struct to setup the DAI link format. 
+> This will configure both the CPU and the CODEC DAI with the specified 
+> format, no need to do it manually.
+
+Ok, move to dai_fmt.
+
+> 
+> >[...]
+> > +static struct snd_soc_ops trats2_aif1_ops = {
+> 
+> const
+
+I will fix this.
+
+> 
+> > +	.hw_params = trats2_aif1_hw_params,
+> > +};
+> > +
+> > +static int trats2_init_paiftx(struct snd_soc_pcm_runtime *rtd)
+> > +{
+> > +	struct snd_soc_codec *codec = rtd->codec;
+> > +	struct snd_soc_card *card = rtd->card;
+> > +	struct trats2_machine_priv *priv = snd_soc_card_get_drvdata(card);
+> > +	int ret;
+> > +
+> > +	ret = clk_prepare_enable(priv->clk_mclk);
+> 
+> Maybe just do this in the platform device probe handler and you should have 
+> a matching disable call somewhere.
+
+Ok, I will move clk_prepare_enable call to snd_soc_ops->startup
+and clk_disable_unprepare call to snd_soc_ops->shutdown.
+
+Best Regards,
+Inha Song.
+
+> 
+> > +	if (ret) {
+> > +		dev_err(codec->dev, "Failed to enable mclk: %d\n", ret);
+> > +		return ret;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> >[...]
+> _______________________________________________
+> Alsa-devel mailing list
+> Alsa-devel@alsa-project.org
+> http://mailman.alsa-project.org/mailman/listinfo/alsa-devel
