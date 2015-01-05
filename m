@@ -1,54 +1,30 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: [PATCH] arm: dts: am335x-bone-common: add collision and carrier sense pinmux
-Date: Mon, 5 Jan 2015 15:44:14 -0600
-Message-ID: <1420494254-24314-1-git-send-email-balbi@ti.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v5 0/3] Add R8A7791/Henninger board CAN DT support
+Date: Tue, 06 Jan 2015 01:22:34 +0300
+Message-ID: <1652479.NHBlqJ9OaR@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <stable-owner@vger.kernel.org>
-Sender: stable-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Linux OMAP Mailing List <linux-omap@vger.kernel.org>, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Schuyler Patton <spatton@ti.com>, Koen Kooi <koen@dominion.thruhere.net>, Tom Rini <trini@ti.com>, Kevin Hilman <khilman@linaro.org>, stable@vger.kernel.org, Felipe Balbi <balbi@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Schuyler Patton <spatton@ti.com>
+Hello.
 
-Added pin mux definitions for collision and carrier sense errors coming
-from the ethernet phy. Without these two signals the MAC ends up ignoring
-the errors detected by the PHY which end up causing a lower throughput
-problem when the phy is in half duplex mode such as connected through a hub.
+   Here's the set of 3 patches against Simon Horman's 'renesas.git' repo,
+'renesas-devel-20141231-v3.19-rc2' tag. Here we add the CAN device tree support
+for the R8A7791-based Henninger board. It depends on the clk driver RCAN clock
+patch reposted today in order to work.
 
-Fixes: 2ba3549 (ARM: dts: am335x-bone*: add DT for BeagleBone Black)
-Cc: Koen Kooi <koen@dominion.thruhere.net>
-Cc: Tom Rini <trini@ti.com>
-Cc: Kevin Hilman <khilman@linaro.org>
-Cc: <stable@vger.kernel.org> # v3.13+
-Signed-off-by: Schuyler Patton <spatton@ti.com>
-Signed-off-by: Felipe Balbi <balbi@ti.com>
----
- arch/arm/boot/dts/am335x-bone-common.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+[1/3] ARM: shmobile: r8a7791: add CAN clocks
+[2/3] ARM: shmobile: r8a7791: add CAN DT support
+[3/3] ARM: shmobile: henninger: add CAN0 DT support
 
-diff --git a/arch/arm/boot/dts/am335x-bone-common.dtsi b/arch/arm/boot/dts/am335x-bone-common.dtsi
-index 6cc25ed..4b29fad 100644
---- a/arch/arm/boot/dts/am335x-bone-common.dtsi
-+++ b/arch/arm/boot/dts/am335x-bone-common.dtsi
-@@ -97,6 +97,8 @@
- 	cpsw_default: cpsw_default {
- 		pinctrl-single,pins = <
- 			/* Slave 1 */
-+			0x108 (PIN_INPUT | MUX_MODE0)		/* mii1_col.mii1_col */
-+			0x10c (PIN_INPUT | MUX_MODE0)		/* mii1_crs.mii1_crs */
- 			0x110 (PIN_INPUT_PULLUP | MUX_MODE0)	/* mii1_rxerr.mii1_rxerr */
- 			0x114 (PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* mii1_txen.mii1_txen */
- 			0x118 (PIN_INPUT_PULLUP | MUX_MODE0)	/* mii1_rxdv.mii1_rxdv */
-@@ -116,6 +118,8 @@
- 	cpsw_sleep: cpsw_sleep {
- 		pinctrl-single,pins = <
- 			/* Slave 1 reset value */
-+			0x108 (PIN_INPUT_PULLDOWN | MUX_MODE7)
-+			0x10c (PIN_INPUT_PULLDOWN | MUX_MODE7)
- 			0x110 (PIN_INPUT_PULLDOWN | MUX_MODE7)
- 			0x114 (PIN_INPUT_PULLDOWN | MUX_MODE7)
- 			0x118 (PIN_INPUT_PULLDOWN | MUX_MODE7)
--- 
-2.2.0
+WBR, Sergei
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
