@@ -1,39 +1,103 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v4 1/1] add support for Seagate BlackArmor NAS220
-Date: Mon, 5 Jan 2015 19:05:31 +0100
-Message-ID: <20150105180531.GA13910@lunn.ch>
-References: <20141215203855.GA28940@anne>
- <20141228104654.GA11638@anne>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: Re: [PATCH v2 1/2] of/pci: add of_pci_dma_configure() update dma
+ configuration
+Date: Mon, 5 Jan 2015 15:06:57 -0500
+Message-ID: <54AAEEE1.7020607@ti.com>
+References: <1419459099-6667-1-git-send-email-m-karicheri2@ti.com>
+ <CAL_Jsq+krOUA3BPvMCdaOBhALoi+pzWbw3YndXqR8x52OJogZg@mail.gmail.com>
+ <54A71CD1.4070107@ti.com> <2019516.ehiuEv0rdL@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20141228104654.GA11638@anne>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Evgeni Dobrev <evgeni@studio-punkt.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@googlemail.com>, Gregory Clement <gregory.clement@free-electrons.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <2019516.ehiuEv0rdL@wuerfel>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Dec 28, 2014 at 11:46:54AM +0100, Evgeni Dobrev wrote:
-> This patch adds support for Seagate BlackArmor NAS220.
-> 
-> The Seagate BlackArmor NAS 220 is a NAS system based on Marvell 88f6192. It has
-> 32MB NAND and 128MB DRAM. It has two SATA slots, one Gigabit Ethernet port, two
-> USB 2.0 ports, two buttons and three LEDs. There is a serial port available on
-> the CN5 connector on the board (1 - TX, 4 - RX, 6 - GND).
-> 
-> The only functionality still not implemented is the bi-color led on the front
-> panel (status). Pins mpp22 and mpp23 control this led. Setting mpp22 to high and
-> mpp23 to low results in orange color. Setting mpp22 to low and mpp23 to high
-> results in blue color.
-> 
-> The third led is wired to show the SATA activity on the two drives.
-> 
-> Signed-off-by: Evgeni Dobrev <evgeni@studio-punkt.com>
+On 01/03/2015 04:37 PM, Arnd Bergmann wrote:
+> On Friday 02 January 2015 17:33:53 Murali Karicheri wrote:
+>>
+>> I have no experience with IOMMU and may not offer much help here as I
+>> originally wrote above. Will Deacon has added this API and probably able
+>> to offer some help in this discussion.
+>>
+>> Will Deacon,
+>>
+>> Any comment?
+>
+> It's complicated :(
+>
+>> Looking at the iommu documentation and of_iommu.c, I get a feeling that
+>> this API is not really used at present as there are no callers of
+>> of_iommu_set_ops() and I assume this is a WIP.
+>
+> Right, but we have patches for some iommu drivers based on this API,
+> and we should migrate all of them eventually.
+>
+>> I believe the way it is
+>> expected to work is to have the iommu driver of the master IOMMU devices
+>> call of_iommu_set_ops(). The device node of this master IOMMU device is
+>> specified as a phandle in the OF node of the device (various bus devices
+>> such as platform, PCI etc). This allow to retrieve the iommu ops though
+>> the of_iommu_configure() API and use it in arch_setup_dma_ops(). So my
+>> gut feeling is that for PCI devices, as there are no DT node, the root
+>> bus node may specify iommus phandle to IOMMU master OF nodes.
+>
+> Yes, but we also need to pass a PCI device specific identifier along
+> with the root bus node, because some iommu drivers take the PCI
+> bus/device/function number into account for creating per-function
+> i/o page tables.
+>
+>> W.r.t your comment "We may want to address the comment in
+>> of_iommu_configure about parent nodes. We should be sure these changes
+>> work with how we would do searching parent nodes",
+>>
+>> I believe, the parent node search itself should work the same way in the
+>> case of PCI as with platform bus case. PCI's case, we are providing the
+>> OF node of the root bus host bridge. Why should this be any different in
+>> terms of search?
+>>
+>> I see a potential issue with dma-ranges as described in the notes below.
+>> As noted below the usage of dma-range for iommu is to be determined. For
+>> keystone, the of_iommu_configure() always return false as we don't use
+>> the iommu. But don't know if this has any consequences for other
+>> platforms. Or I got your questions wrong. Any help here from others on
+>> the list?
+>>
+>> ========================================================================
+>> One possible extension to the above is to use an "iommus" property along
+>> with a "dma-ranges" property in a bus device node (such as PCI host
+>> bridges). This can be useful to describe how children on the bus relate
+>> to the IOMMU if they are not explicitly listed in the device tree (e.g.
+>> PCI devices). However, the requirements of that use-case haven't been
+>> fully determined yet. Implementing this is therefore not recommended
+>> without further discussion and extension of this binding.
+>> =========================================================================
+>
+> This probably won't ever apply to PCI devices, so let's ignore it for now.
+> For the moment (and for PCI), we should assume that we either configure
+> an iommu directly or we use dma-ranges if no iommu is in use.
+>
+Thanks Arnd,
 
-Hi Evgeni
+I will post v3 of the patch with what is agreed before in my response 
+and I understand there is no additional change required based on this 
+particular discussion about iommu. Right?
 
-I added this to mvebu/dt and will submit it for the next merge window.
+Murali
+> 	Arnd
 
-Thanks
-	Andrew
+
+-- 
+Murali Karicheri
+Linux Kernel, Texas Instruments
