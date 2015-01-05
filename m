@@ -1,35 +1,70 @@
-From: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v7] edac: synps: Added EDAC support for zynq ddr ecc
- controller
-Date: Mon, 5 Jan 2015 11:15:46 +0100
-Message-ID: <20150105101546.GA19655@pd.tnic>
-References: <d71411fd1be84d99af5936138cbcc9c7@BL2FFO11FD014.protection.gbl>
- <20150102105008.GA31364@pd.tnic>
- <CAGnW=BbrpMoMGSVmFXUAYsnyOPGpkz=HbL6mRzB7PqRhbq5HTA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAGnW=BbrpMoMGSVmFXUAYsnyOPGpkz=HbL6mRzB7PqRhbq5HTA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: punnaiah choudary kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Punnaiah Choudary <kpc528-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v4 0/4] power: Add max77693 charger driver
+Date: Mon, 05 Jan 2015 11:16:55 +0100
+Message-ID: <1420453019-28614-1-git-send-email-k.kozlowski@samsung.com>
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jan 03, 2015 at 08:01:29AM +0530, punnaiah choudary kalluri wrote:
-> p is pointing to the stack memory.
 
-So you could go and allocate all that memory at driver init time and
-reuse it each time you handle an error instead of on the stack. This way
-your error handling paths are lean and fast.
+Hi,
+
+
+Changes since v3
+================
+1. Patch 3/4: Don't create platform data structure for charger settings
+   because driver won't be used on non-DT SoCs (its for Exynos based
+   Trats2).
+2. Patch 3/4: Drop Sebastian's ack [1] because of change above.
+
+Changes since v2
+================
+1. Add ack from Sebastian Reichel (charger driver).
+2. Drop patch "mfd: max77693: Map charger device to its own of_node"
+   (applied by Lee Jones).
+
+
+Changes since v1
+================
+1. Add patch 2/5: mfd: max77693: Map charger device to its own of_node
+   (forgot to send it in v1)
+2. Remove patches for DTS and configs. I'll send them later.
+3. Add ack from Lee Jones (patch 3/5).
+
+
+Description
+===========
+The patchset adds max77693 charger driver present on Trats2 board
+(and Galaxy S III). The driver configures battery charger and exposes
+power supply interface.
+
+Driver is necessary to provide full charging stack on Trats2 device
+(extcon, charger-manager etc.).
+
+[1] https://lkml.org/lkml/2014/10/27/774
+
+
+Best regards,
+Krzysztof
+
+
+
+Krzysztof Kozlowski (4):
+  devicetree: power/mfd: max77693: Document new bindings for charger
+  mfd: max77693: Add defines for MAX77693 charger driver
+  power: max77693: Add charger driver for Maxim 77693
+  Documentation: power: max77693-charger: Document exported sysfs entry
+
+ Documentation/ABI/testing/sysfs-class-power        |  42 ++
+ Documentation/devicetree/bindings/mfd/max77693.txt |  45 ++
+ drivers/power/Kconfig                              |   6 +
+ drivers/power/Makefile                             |   1 +
+ drivers/power/max77693_charger.c                   | 758 +++++++++++++++++++++
+ include/linux/mfd/max77693-private.h               | 108 +++
+ 6 files changed, 960 insertions(+)
+ create mode 100644 drivers/power/max77693_charger.c
 
 -- 
-Regards/Gruss,
-    Boris.
-
-Sent from a fat crate under my desk. Formatting is fine.
---
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
