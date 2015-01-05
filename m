@@ -1,349 +1,241 @@
-From: Joonyoung Shim <jy0922.shim@samsung.com>
-Subject: Re: [PATCH v2] ARM: dts: Add dts file for odroid XU3 board
-Date: Mon, 05 Jan 2015 17:18:46 +0900
-Message-ID: <54AA48E6.3040404@samsung.com>
-References: <1417721269-19342-1-git-send-email-sjoerd.simons@collabora.co.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1417721269-19342-1-git-send-email-sjoerd.simons@collabora.co.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Kukjin Kim <kgene.kim@samsung.com>, Kevin Hilman <khilman@kernel.org>, Tyler Baker <tyler.baker@linaro.org>, Heesub Shin <heesub.shin@samsung.com>
-Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Addy Ke <addy.ke@rock-chips.com>
+Subject: [PATCH v5] mmc: dw_mmc: add quirk for broken data transfer over scheme
+Date: Mon,  5 Jan 2015 16:21:28 +0800
+Message-ID: <1420446088-15710-1-git-send-email-addy.ke@rock-chips.com>
+References: <1419585223-8214-1-git-send-email-addy.ke@rock-chips.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1419585223-8214-1-git-send-email-addy.ke@rock-chips.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, tgih.jun@samsung.com, jh80.chung@samsung.com, chris@printf.net, ulf.hansson@linaro.org, dinguyen@altera.com, heiko@sntech.de, olof@lixom.net, dianders@chromium.org, sonnyrao@chromium.org, amstan@chromium.org
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, zhenfu.fang@rock-chips.com, cf@rock-chips.com, lintao@rock-chips.com, chenfen@rock-chips.com, zyf@rock-chips.com, xjq@rock-chips.com, huangtao@rock-chips.com, zyw@rock-chips.com, yzq@rock-chips.com, hj@rock-chips.com, kever.yang@rock-chips.com, zhangqing@rock-chips.com, hl@rock-chips.com, Addy Ke <addy.ke@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sjoerd,
+This patch add a new quirk to add a s/w timer to notify the driver
+to terminate current transfer and report a data timeout to the core,
+if DTO interrupt does NOT come within the given time.
 
-On 12/05/2014 04:27 AM, Sjoerd Simons wrote:
-> Add DTS for the Hardkernel Odroid XU3. The name of the DTS file is kept the
-> same as the vendors naming, which means it's prefixed with exynos5422
-> instead of exynos5800 as the SoC name even though it includes the
-> exyno5800 dtsi.
-> 
-> Signed-off-by: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
-> ---
-> Changes since v1:
->   * Add chosen/linux,stdout-path to point the serial console device
->   * Change memory start offset to 0x40000000 to match the vendors DTS (pointed
->     out by Heesub Shin)
->   * Declare base address & size for the memory banks to be used by the MFC
-> 
-> Kevin, Tyler, even though the changes are small i didn't want to just stick
-> your Tested-By on. Could you both be so kind to retest this on your XU3's ?
-> 
-> Heesub, I would still love to know the reason for having the memory start
-> address at 0x40000000 for this board?
-> 
->  arch/arm/boot/dts/Makefile                 |   1 +
->  arch/arm/boot/dts/exynos5422-odroidxu3.dts | 332 +++++++++++++++++++++++++++++
->  2 files changed, 333 insertions(+)
->  create mode 100644 arch/arm/boot/dts/exynos5422-odroidxu3.dts
-> 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 38c89ca..0a898cc 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -86,6 +86,7 @@ dtb-$(CONFIG_ARCH_EXYNOS) += exynos4210-origen.dtb \
->  	exynos5420-arndale-octa.dtb \
->  	exynos5420-peach-pit.dtb \
->  	exynos5420-smdk5420.dtb \
-> +	exynos5422-odroidxu3.dtb \
->  	exynos5440-sd5v1.dtb \
->  	exynos5440-ssdk5440.dtb \
->  	exynos5800-peach-pi.dtb
-> diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3.dts b/arch/arm/boot/dts/exynos5422-odroidxu3.dts
-> new file mode 100644
-> index 0000000..0dc9cf8
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/exynos5422-odroidxu3.dts
-> @@ -0,0 +1,332 @@
-> +/*
-> + * Hardkernel Odroid XU3 board device tree source
-> + *
-> + * Copyright (c) 2014 Collabora Ltd.
-> + * Copyright (c) 2013 Samsung Electronics Co., Ltd.
-> + *		http://www.samsung.com
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> +*/
-> +
-> +/dts-v1/;
-> +#include "exynos5800.dtsi"
-> +
-> +/ {
-> +	model = "Hardkernel Odroid XU3";
-> +	compatible = "hardkernel,odroid-xu3", "samsung,exynos5800", "samsung,exynos5";
-> +
-> +	memory {
-> +		reg = <0x40000000 0x80000000>;
-> +	};
-> +
-> +	chosen {
-> +		linux,stdout-path = &serial_2;
-> +	};
-> +
-> +	fimd@14400000 {
-> +		status = "okay";
-> +	};
-> +
-> +	firmware@02073000 {
-> +		compatible = "samsung,secure-firmware";
-> +		reg = <0x02073000 0x1000>;
-> +	};
-> +
-> +	fixed-rate-clocks {
-> +		oscclk {
-> +			compatible = "samsung,exynos5420-oscclk";
-> +			clock-frequency = <24000000>;
-> +		};
-> +	};
-> +
-> +	hsi2c_4: i2c@12CA0000 {
-> +		status = "okay";
-> +
-> +		s2mps11_pmic@66 {
-> +			compatible = "samsung,s2mps11-pmic";
-> +			reg = <0x66>;
-> +			s2mps11,buck2-ramp-delay = <12>;
-> +			s2mps11,buck34-ramp-delay = <12>;
-> +			s2mps11,buck16-ramp-delay = <12>;
-> +			s2mps11,buck6-ramp-enable = <1>;
-> +			s2mps11,buck2-ramp-enable = <1>;
-> +			s2mps11,buck3-ramp-enable = <1>;
-> +			s2mps11,buck4-ramp-enable = <1>;
-> +
-> +			s2mps11_osc: clocks {
-> +				#clock-cells = <1>;
-> +				clock-output-names = "s2mps11_ap",
-> +						"s2mps11_cp", "s2mps11_bt";
-> +			};
-> +
-> +			regulators {
-> +				ldo1_reg: LDO1 {
-> +					regulator-name = "vdd_ldo1";
-> +					regulator-min-microvolt = <1000000>;
-> +					regulator-max-microvolt = <1000000>;
-> +					regulator-always-on;
-> +				};
-> +
-> +				ldo3_reg: LDO3 {
-> +					regulator-name = "vdd_ldo3";
-> +					regulator-min-microvolt = <1800000>;
-> +					regulator-max-microvolt = <1800000>;
-> +					regulator-always-on;
-> +				};
-> +
-> +				ldo5_reg: LDO5 {
-> +					regulator-name = "vdd_ldo5";
-> +					regulator-min-microvolt = <1800000>;
-> +					regulator-max-microvolt = <1800000>;
-> +					regulator-always-on;
-> +				};
-> +
-> +				ldo6_reg: LDO6 {
-> +					regulator-name = "vdd_ldo6";
-> +					regulator-min-microvolt = <1000000>;
-> +					regulator-max-microvolt = <1000000>;
-> +					regulator-always-on;
-> +				};
-> +
-> +				ldo7_reg: LDO7 {
-> +					regulator-name = "vdd_ldo7";
-> +					regulator-min-microvolt = <1800000>;
-> +					regulator-max-microvolt = <1800000>;
-> +					regulator-always-on;
-> +				};
-> +
-> +				ldo8_reg: LDO8 {
-> +					regulator-name = "vdd_ldo8";
-> +					regulator-min-microvolt = <1800000>;
-> +					regulator-max-microvolt = <1800000>;
-> +					regulator-always-on;
-> +				};
-> +
-> +				ldo9_reg: LDO9 {
-> +					regulator-name = "vdd_ldo9";
-> +					regulator-min-microvolt = <3000000>;
-> +					regulator-max-microvolt = <3000000>;
-> +					regulator-always-on;
-> +				};
-> +
-> +				ldo10_reg: LDO10 {
-> +					regulator-name = "vdd_ldo10";
-> +					regulator-min-microvolt = <1800000>;
-> +					regulator-max-microvolt = <1800000>;
-> +					regulator-always-on;
-> +				};
-> +
-> +				ldo11_reg: LDO11 {
-> +					regulator-name = "vdd_ldo11";
-> +					regulator-min-microvolt = <1000000>;
-> +					regulator-max-microvolt = <1000000>;
-> +					regulator-always-on;
-> +				};
-> +
-> +				ldo12_reg: LDO12 {
-> +					regulator-name = "vdd_ldo12";
-> +					regulator-min-microvolt = <1800000>;
-> +					regulator-max-microvolt = <1800000>;
-> +					regulator-always-on;
-> +				};
-> +
-> +				ldo13_reg: LDO13 {
-> +					regulator-name = "vdd_ldo13";
-> +					regulator-min-microvolt = <2800000>;
-> +					regulator-max-microvolt = <2800000>;
-> +					regulator-always-on;
-> +				};
-> +
-> +				ldo15_reg: LDO15 {
-> +					regulator-name = "vdd_ldo15";
-> +					regulator-min-microvolt = <3100000>;
-> +					regulator-max-microvolt = <3100000>;
-> +					regulator-always-on;
-> +				};
-> +
-> +				ldo16_reg: LDO16 {
-> +					regulator-name = "vdd_ldo16";
-> +					regulator-min-microvolt = <2200000>;
-> +					regulator-max-microvolt = <2200000>;
-> +					regulator-always-on;
-> +				};
-> +
-> +				ldo17_reg: LDO17 {
-> +					regulator-name = "tsp_avdd";
-> +					regulator-min-microvolt = <3300000>;
-> +					regulator-max-microvolt = <3300000>;
-> +					regulator-always-on;
-> +				};
-> +
-> +				ldo19_reg: LDO19 {
-> +					regulator-name = "vdd_sd";
-> +					regulator-min-microvolt = <2800000>;
-> +					regulator-max-microvolt = <2800000>;
-> +					regulator-always-on;
-> +				};
-> +
-> +				ldo24_reg: LDO24 {
-> +					regulator-name = "tsp_io";
-> +					regulator-min-microvolt = <2800000>;
-> +					regulator-max-microvolt = <2800000>;
-> +					regulator-always-on;
-> +				};
-> +
-> +				buck1_reg: BUCK1 {
-> +					regulator-name = "vdd_mif";
-> +					regulator-min-microvolt = <800000>;
-> +					regulator-max-microvolt = <1300000>;
-> +					regulator-always-on;
-> +					regulator-boot-on;
-> +				};
-> +
-> +				buck2_reg: BUCK2 {
-> +					regulator-name = "vdd_arm";
-> +					regulator-min-microvolt = <800000>;
-> +					regulator-max-microvolt = <1500000>;
-> +					regulator-always-on;
-> +					regulator-boot-on;
-> +				};
-> +
-> +				buck3_reg: BUCK3 {
-> +					regulator-name = "vdd_int";
-> +					regulator-min-microvolt = <800000>;
-> +					regulator-max-microvolt = <1400000>;
-> +					regulator-always-on;
-> +					regulator-boot-on;
-> +				};
-> +
-> +				buck4_reg: BUCK4 {
-> +					regulator-name = "vdd_g3d";
-> +					regulator-min-microvolt = <800000>;
-> +					regulator-max-microvolt = <1400000>;
-> +					regulator-always-on;
-> +					regulator-boot-on;
-> +				};
-> +
-> +				buck5_reg: BUCK5 {
-> +					regulator-name = "vdd_mem";
-> +					regulator-min-microvolt = <800000>;
-> +					regulator-max-microvolt = <1400000>;
-> +					regulator-always-on;
-> +					regulator-boot-on;
-> +				};
-> +
-> +				buck6_reg: BUCK6 {
-> +					regulator-name = "vdd_kfc";
-> +					regulator-min-microvolt = <800000>;
-> +					regulator-max-microvolt = <1500000>;
-> +					regulator-always-on;
-> +					regulator-boot-on;
-> +				};
-> +
-> +				buck7_reg: BUCK7 {
-> +					regulator-name = "vdd_1.0v_ldo";
-> +					regulator-min-microvolt = <800000>;
-> +					regulator-max-microvolt = <1500000>;
-> +					regulator-always-on;
-> +					regulator-boot-on;
-> +				};
-> +
-> +				buck8_reg: BUCK8 {
-> +					regulator-name = "vdd_1.8v_ldo";
-> +					regulator-min-microvolt = <800000>;
-> +					regulator-max-microvolt = <1500000>;
-> +					regulator-always-on;
-> +					regulator-boot-on;
-> +				};
-> +
-> +				buck9_reg: BUCK9 {
-> +					regulator-name = "vdd_2.8v_ldo";
-> +					regulator-min-microvolt = <3000000>;
-> +					regulator-max-microvolt = <3750000>;
-> +					regulator-always-on;
-> +					regulator-boot-on;
-> +				};
-> +
-> +				buck10_reg: BUCK10 {
-> +					regulator-name = "vdd_vmem";
-> +					regulator-min-microvolt = <2850000>;
-> +					regulator-max-microvolt = <2850000>;
-> +					regulator-always-on;
-> +					regulator-boot-on;
-> +				};
-> +			};
-> +		};
-> +	};
-> +
-> +	i2c_2: i2c@12C80000 {
-> +		samsung,i2c-sda-delay = <100>;
-> +		samsung,i2c-max-bus-freq = <66000>;
-> +		status = "okay";
-> +
-> +		hdmiddc@50 {
-> +			compatible = "samsung,exynos4210-hdmiddc";
-> +			reg = <0x50>;
-> +		};
-> +	};
-> +
-> +	rtc@101E0000 {
-> +		status = "okay";
-> +	};
-> +};
-> +
-> +&hdmi {
-> +	status = "okay";
-> +	hpd-gpio = <&gpx3 7 0>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&hdmi_hpd_irq>;
-> +
-> +	vdd_osc-supply = <&ldo10_reg>;
-> +	vdd_pll-supply = <&ldo8_reg>;
-> +	vdd-supply = <&ldo8_reg>;
+dw_mmc call mmc_request_done func to finish transfer depends on
+DTO interrupt. If DTO interrupt does not come in sending data state,
+the current transfer will be blocked.
 
-ldo10 and ldo8 are right? I think ldo7 and ldo6 are related with hdmi
-from schematic.
+We got the reply from synopsys:
+There are two counters but both use the same value of [31:8] bits.
+Data timeout counter doesn't wait for stop clock and you should get
+DRTO even when the clock is not stopped.
+Host Starvation timeout counter is triggered with stop clock condition.
 
-Thanks.
+This means that host should get DRTO and DTO interrupt.
+
+But this case really exists, when driver reads tuning data from
+card on RK3288-pink2 board. I measured waveforms by oscilloscope
+and found that card clock was always on and data lines were always
+holded high level in sending data state.
+
+There are two possibility that data over interrupt doesn't come in
+reading data state on RK3X SoCs:
+- get command done interrupt, but doesn't get any data-related interrupt.
+- get data error interrupt, but doesn't get data over interrupt.
+
+We don't know why we have this problem, but we need it to fix this problem now.
+And I will post a follow up change when we find the root cause.
+
+Signed-off-by: Addy Ke <addy.ke@rock-chips.com>
+---
+Changes in v2:
+- fix some typo.
+- remove extra timeout value (250ms).
+- remove dw_mci_dto_start_monitor func.
+- use "broken-dto" for new quirk and change Subject for it.
+
+Changes in v3:
+- Remove dts for broken-dto, just add this quirk in dw_mci_rockchip_init
+
+Changes in v4:
+- fix bug that may cause 32 bit overflow by (drto_clks * 1000).
+- doesn't call mod_timer in writing data state, becase TMOUT register only
+  for reading data.
+
+Changes in v5:
+- fix some typo.
+- add a buffer for drto_ms.
+- move drto_ms related code to a helper function.
+
+ drivers/mmc/host/dw_mmc-rockchip.c |  3 ++
+ drivers/mmc/host/dw_mmc.c          | 71 ++++++++++++++++++++++++++++++++++++--
+ include/linux/mmc/dw_mmc.h         |  5 +++
+ 3 files changed, 77 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/mmc/host/dw_mmc-rockchip.c b/drivers/mmc/host/dw_mmc-rockchip.c
+index 5650ac4..ba92ebd 100644
+--- a/drivers/mmc/host/dw_mmc-rockchip.c
++++ b/drivers/mmc/host/dw_mmc-rockchip.c
+@@ -73,6 +73,9 @@ static int dw_mci_rockchip_init(struct dw_mci *host)
+ 	/* It is slot 8 on Rockchip SoCs */
+ 	host->sdio_id0 = 8;
+ 
++	/* It needs this quirk on all Rockchip SoCs */
++	host->pdata->quirks |= DW_MCI_QUIRK_BROKEN_DTO;
++
+ 	return 0;
+ }
+ 
+diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+index 6e4d864..ace4b40 100644
+--- a/drivers/mmc/host/dw_mmc.c
++++ b/drivers/mmc/host/dw_mmc.c
+@@ -1468,6 +1468,20 @@ static int dw_mci_data_complete(struct dw_mci *host, struct mmc_data *data)
+ 	return data->error;
+ }
+ 
++static unsigned int dw_mci_get_drto_ms(struct dw_mci *host)
++{
++	unsigned int drto_clks;
++	unsigned int drto_ms;
++
++	drto_clks = mci_readl(host, TMOUT) >> 8;
++	drto_ms = DIV_ROUND_UP(drto_clks, host->bus_hz / 1000);
++
++	/* add a buffer */
++	drto_ms += 10;
++
++	return drto_ms;
++}
++
+ static void dw_mci_tasklet_func(unsigned long priv)
+ {
+ 	struct dw_mci *host = (struct dw_mci *)priv;
+@@ -1477,6 +1491,7 @@ static void dw_mci_tasklet_func(unsigned long priv)
+ 	enum dw_mci_state state;
+ 	enum dw_mci_state prev_state;
+ 	unsigned int err;
++	unsigned int drto_ms;
+ 
+ 	spin_lock(&host->lock);
+ 
+@@ -1542,8 +1557,19 @@ static void dw_mci_tasklet_func(unsigned long priv)
+ 			}
+ 
+ 			if (!test_and_clear_bit(EVENT_XFER_COMPLETE,
+-						&host->pending_events))
++						&host->pending_events)) {
++				/*
++				 * If all data-related interrupts don't come
++				 * within the given time in reading data state.
++				 */
++				if ((host->quirks & DW_MCI_QUIRK_BROKEN_DTO) &&
++				    (host->dir_status == DW_MCI_RECV_STATUS)) {
++					drto_ms = dw_mci_get_drto_ms(host);
++					mod_timer(&host->dto_timer, jiffies +
++						  msecs_to_jiffies(drto_ms));
++				}
+ 				break;
++			}
+ 
+ 			set_bit(EVENT_XFER_COMPLETE, &host->completed_events);
+ 
+@@ -1573,8 +1599,20 @@ static void dw_mci_tasklet_func(unsigned long priv)
+ 
+ 		case STATE_DATA_BUSY:
+ 			if (!test_and_clear_bit(EVENT_DATA_COMPLETE,
+-						&host->pending_events))
++						&host->pending_events)) {
++				/*
++				 * If data error interrupt comes but data over
++				 * interrupt doesn't come within the given time.
++				 * in reading data state.
++				 */
++				if ((host->quirks & DW_MCI_QUIRK_BROKEN_DTO) &&
++				    (host->dir_status == DW_MCI_RECV_STATUS)) {
++					drto_ms = dw_mci_get_drto_ms(host);
++					mod_timer(&host->dto_timer, jiffies +
++						  msecs_to_jiffies(drto_ms));
++				}
+ 				break;
++			}
+ 
+ 			host->data = NULL;
+ 			set_bit(EVENT_DATA_COMPLETE, &host->completed_events);
+@@ -2135,6 +2173,9 @@ static irqreturn_t dw_mci_interrupt(int irq, void *dev_id)
+ 		}
+ 
+ 		if (pending & SDMMC_INT_DATA_OVER) {
++			if (host->quirks & DW_MCI_QUIRK_BROKEN_DTO)
++				del_timer(&host->dto_timer);
++
+ 			mci_writel(host, RINTSTS, SDMMC_INT_DATA_OVER);
+ 			if (!host->data_status)
+ 				host->data_status = pending;
+@@ -2522,6 +2563,28 @@ ciu_out:
+ 	return ret;
+ }
+ 
++static void dw_mci_dto_timer(unsigned long arg)
++{
++	struct dw_mci *host = (struct dw_mci *)arg;
++
++	switch (host->state) {
++	case STATE_SENDING_DATA:
++	case STATE_DATA_BUSY:
++		/*
++		 * If DTO interrupt does NOT come in sending data state,
++		 * we should notify the driver to terminate current transfer
++		 * and report a data timeout to the core.
++		 */
++		host->data_status = SDMMC_INT_DRTO;
++		set_bit(EVENT_DATA_ERROR, &host->pending_events);
++		set_bit(EVENT_DATA_COMPLETE, &host->pending_events);
++		tasklet_schedule(&host->tasklet);
++		break;
++	default:
++		break;
++	}
++}
++
+ #ifdef CONFIG_OF
+ static struct dw_mci_of_quirks {
+ 	char *quirk;
+@@ -2670,6 +2733,10 @@ int dw_mci_probe(struct dw_mci *host)
+ 
+ 	host->quirks = host->pdata->quirks;
+ 
++	if (host->quirks & DW_MCI_QUIRK_BROKEN_DTO)
++		setup_timer(&host->dto_timer,
++			    dw_mci_dto_timer, (unsigned long)host);
++
+ 	spin_lock_init(&host->lock);
+ 	spin_lock_init(&host->irq_lock);
+ 	INIT_LIST_HEAD(&host->queue);
+diff --git a/include/linux/mmc/dw_mmc.h b/include/linux/mmc/dw_mmc.h
+index 471fb31..2ece0dd 100644
+--- a/include/linux/mmc/dw_mmc.h
++++ b/include/linux/mmc/dw_mmc.h
+@@ -98,6 +98,7 @@ struct mmc_data;
+  * @irq_flags: The flags to be passed to request_irq.
+  * @irq: The irq value to be passed to request_irq.
+  * @sdio_id0: Number of slot0 in the SDIO interrupt registers.
++ * @dto_timer: Timer for broken data transfer over scheme.
+  *
+  * Locking
+  * =======
+@@ -202,6 +203,8 @@ struct dw_mci {
+ 	int			irq;
+ 
+ 	int			sdio_id0;
++
++	struct timer_list       dto_timer;
+ };
+ 
+ /* DMA ops for Internal/External DMAC interface */
+@@ -226,6 +229,8 @@ struct dw_mci_dma_ops {
+ #define DW_MCI_QUIRK_BROKEN_CARD_DETECTION	BIT(3)
+ /* No write protect */
+ #define DW_MCI_QUIRK_NO_WRITE_PROTECT		BIT(4)
++/* Timer for broken data transfer over scheme */
++#define DW_MCI_QUIRK_BROKEN_DTO			BIT(5)
+ 
+ /* Slot level quirks */
+ /* This slot has no write protect */
+-- 
+1.8.3.2
+
+
