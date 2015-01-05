@@ -1,84 +1,57 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH V4] ARM: dts: am57xx-beagle-x15: Add GPIO controlled fan
- node
-Date: Mon, 5 Jan 2015 11:45:33 -0600
-Message-ID: <20150105174533.GL19336@saruman>
-References: <1420475549-28492-1-git-send-email-nm@ti.com>
- <20150105172737.GK19336@saruman>
- <54AACAFE.7050609@ti.com>
-Reply-To: <balbi@ti.com>
+From: Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V1 1/1] iio: Added Capella cm3232 ambient light sensor driver.
+Date: Mon, 5 Jan 2015 19:50:32 +0200
+Message-ID: <CAEnQRZA6=FK8CaJvh7kxOEAyDLQQE77xZ02UofLUUT67yZG8bg@mail.gmail.com>
+References: <1420071030-888-1-git-send-email-ktsai@capellamicro.com>
+	<CAEnQRZBD2NMYRp1cW0J2ssT4CT=0jSM=X6ByHQiUrA0ueV8fRA@mail.gmail.com>
+	<1420463396.2652.8.camel@perches.com>
+	<CAEnQRZBmwurFCJU4E4ArO8waU+YcGWrRYr3DRVxq9haduX2t=w@mail.gmail.com>
+	<1420476166.2652.14.camel@perches.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="L1EIGrW/+75u5Nmw"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <54AACAFE.7050609@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: balbi@ti.com, Tony Lindgren <tony@atomide.com>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, sre@kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1420476166.2652.14.camel-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
+Cc: Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, Archana Patni <archana.patni-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux
 List-Id: devicetree@vger.kernel.org
 
---L1EIGrW/+75u5Nmw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Mon, Jan 5, 2015 at 6:42 PM, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org> wrote:
+> On Mon, 2015-01-05 at 16:20 +0200, Daniel Baluta wrote:
+>> On Mon, Jan 5, 2015 at 3:09 PM, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org> wrote:
+>> > On Mon, 2015-01-05 at 12:51 +0200, Daniel Baluta wrote:
+>> >> On Thu, Jan 1, 2015 at 2:10 AM, Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org> wrote:
+>> >> > CM3232 is an advanced ambient light sensor with I2C protocol interface.
+>> >> > The I2C slave address is internally hardwired as 0x10 (7-bit).  Writing
+>> >> > to configure register is byte mode, but reading ALS register requests to
+>> >> > use word mode for 16-bit resolution.
+> []
+>> >> You could directly return i2c_smbus_write_byte_data(..).
+>> >
+>> > Sometimes it's better to return a specific value
+>> > for the error instead of depending on correctness
+>> > of all the indirect functions in the call chain.
+>> >
+>> > In this case, all the smbus_xfer functions must
+>> > return 0 on success.  Do they?
+>>
+>> Yes.
+>>
+>> http://lxr.free-electrons.com/source/drivers/i2c/i2c-core.c#L2845
+>
+> This doesn't show that adapter->algo->smbus_xfer()
+> returns 0, you have to look at the code for that
+> indirectly called function.
 
-On Mon, Jan 05, 2015 at 11:33:50AM -0600, Nishanth Menon wrote:
-> On 01/05/2015 11:27 AM, Felipe Balbi wrote:
-> > On Mon, Jan 05, 2015 at 10:32:29AM -0600, Nishanth Menon wrote:
-> >> TPS gpio now controls a 5v 500mA TL5209 regulator which may be supply
-> >> a fan (such as AFB02505HHB) over J1 connector for various purposes.
-> >> Provide device tree node to enable the same.
-> >>
-> >> Signed-off-by: Nishanth Menon <nm@ti.com>
-> >> ---
-> >> V4: Change format of the speed-map used.
-> >> V3: https://patchwork.kernel.org/patch/5562121/
-> >> V2: https://patchwork.kernel.org/patch/5445111/
-> >> V1: https://patchwork.kernel.org/patch/5444911/
-> >>
-> >> Enable and disable can be controlled by (post the RPM, it finds
-> >> closest match - even a 1 will do)
-> >>
-> >> echo '13000' > /sys/class/hwmon/hwmon0/fan1_target
-> >> and
-> >> echo '0' > /sys/class/hwmon/hwmon0/fan1_target
-> >>
-> >> Test log: http://slexy.org/view/s2T0ajh46z
-> >>
-> >> requires CONFIG_GPIO_PALMAS and CONFIG_SENSORS_GPIO_FAN to be operatio=
-nal
-> >=20
-> > oh, perhaps add these as modules to omap2plus_defconfig ?
-> >=20
->=20
-> In a different patch I suppose if Tony wants it that way.
+I based my answer on the comment at the top of the function:
 
-right, different patch :-)
+2845  * This executes an SMBus protocol operation, and returns a negative
+2846  * errno code else zero on success.
 
---=20
-balbi
-
---L1EIGrW/+75u5Nmw
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUqs29AAoJEIaOsuA1yqREQUEP/jyT0lyDVTONa1EoYyE74kEU
-lo8GGXjzRuNTTRM42388uryBOxg0ui0eLyqhLvUo4WYNgmjZRvgskDjgvOD80uCR
-XirSUainPX0Crg4I0AC686IWRCA6JnmP2K+GzVqPvZFqv7ad+2uSLqob6tE1qhs7
-8B//LHtbmzWKbwlmMBoNENsbEr6SSEMhcuWjKIuOa+cH29tq6v2lxp1qmHcf2dBk
-RFUOhaBNLcO10BHCNl8kndwePzn6c483ErzOo4VDsd8YOSvUqxoTTwUOUGOT79yq
-zq0xLECkUKRciIbVsSQQ2dcYJ5nZwn80TG6oG8SWZ5Fvdsj1Q5sUeFk4/NX4GJ6c
-8KwAW+Lo2OeZ9bLPsChAA4hzHy3ndERPZ/67Q6SR+bQ6I0opeWXoJrXPgx3K9XuG
-xUeZV93zWYFN9uHcl8nW/4lFSZZP3yXd33qJ2LAgEx3fGzmO4awd6AEhqbasJr/4
-DZZXEXxo71KAxPPixiMmG/BeppwdnuUGzA//8YSlcjHDLiXJAGorRR4MvXvfT61J
-RQ1TVxNOPCJqjpCROrKQpGrPi3/dRNYyZ1dmHrfyKSdpN5DWXOep2gtKsYRBBZ6E
-5ya52hVJvtDicEBwoX+BkU4kjwv7ukRvTbrmHHTw2bLhedrwEvBLPlgVUUO/4MJP
-iABvYFqPw10msyi6fMfh
-=UdJx
------END PGP SIGNATURE-----
-
---L1EIGrW/+75u5Nmw--
+>
+>> Also, I guess kbuild test robot will complain about it, like here:
+>>
+>> http://marc.info/?l=linux-kernel&m=141963536230419&w=2
+>
+> Is the kbuild test robot now submitting patches for all
+> possible coccinelle simplifications?  I don't think so.
