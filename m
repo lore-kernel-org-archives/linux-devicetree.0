@@ -1,49 +1,117 @@
-From: Pankaj Dubey <pankaj.dubey@samsung.com>
-Subject: Re: [PATCH] ARM: samsung: add exynos-chipid binding information
-Date: Mon, 05 Jan 2015 15:15:01 +0530
-Message-ID: <54AA5D1D.9000409@samsung.com>
-References: <1417592664-10672-1-git-send-email-pankaj.dubey@samsung.com>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH v2 3/4] PCI: imx6: Add power-supply support
+Date: Mon, 05 Jan 2015 10:46:01 +0100
+Message-ID: <1420451161.3024.5.camel@pengutronix.de>
+References: <1419237127-21763-1-git-send-email-xobs@kosagi.com>
+	 <1419237127-21763-4-git-send-email-xobs@kosagi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1417592664-10672-1-git-send-email-pankaj.dubey@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
-Cc: kgene.kim@samsung.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, pawel.moll@arm.com, thomas.ab@samsung.com
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1419237127-21763-4-git-send-email-xobs@kosagi.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Sean Cross <xobs@kosagi.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@freescale.com>, Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, Richard Zhu <r65037@freescale.com>, Grant Likely <grant.likely@linaro.org>, linux-pci@vger.kernel.org, bunnie@kosagi.com
 List-Id: devicetree@vger.kernel.org
 
-Gentle Ping.
+Am Montag, den 22.12.2014, 16:32 +0800 schrieb Sean Cross:
+> Some PCIe ports gate power to the slot.  In order to prevent system lockup,
+> these boards must enable power to the slot before attempting communication
+> over the PCI bus.
+> 
+> Signed-off-by: Sean Cross <xobs@kosagi.com>
 
-On Wednesday 03 December 2014 01:14 PM, Pankaj Dubey wrote:
-> Exynos SoC's DT files are using Chipid device nodes, but it's binding
-> information is missing. This patch adds exynos-chipid binding information.
->
-> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
+
 > ---
->   .../bindings/arm/samsung/exynos-chipid.txt         |   12 ++++++++++++
->   1 file changed, 12 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/arm/samsung/exynos-chipid.txt
->
-> diff --git a/Documentation/devicetree/bindings/arm/samsung/exynos-chipid.txt b/Documentation/devicetree/bindings/arm/samsung/exynos-chipid.txt
-> new file mode 100644
-> index 0000000..85c5dfd
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/samsung/exynos-chipid.txt
-> @@ -0,0 +1,12 @@
-> +SAMSUNG Exynos SoCs Chipid driver.
+>  .../devicetree/bindings/pci/fsl,imx6q-pcie.txt     |  3 +++
+>  drivers/pci/host/pci-imx6.c                        | 27 ++++++++++++++++++++++
+>  2 files changed, 30 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+> index 6fbba53..a806b68 100644
+> --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+> +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+> @@ -13,6 +13,9 @@ Required properties:
+>  - clock-names: Must include the following additional entries:
+>  	- "pcie_phy"
+>  
+> +Optional properties:
+> +- bus-supply: A regulator that controls power to the entire bus
 > +
-> +Required properties:
-> +- compatible : Should at least contain "samsung,exynos4210-chipid".
+>  Example:
+>  
+>  	pcie@0x01000000 {
+> diff --git a/drivers/pci/host/pci-imx6.c b/drivers/pci/host/pci-imx6.c
+> index 69202d1..8e4f957 100644
+> --- a/drivers/pci/host/pci-imx6.c
+> +++ b/drivers/pci/host/pci-imx6.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/pci.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/regmap.h>
+> +#include <linux/regulator/consumer.h>
+>  #include <linux/resource.h>
+>  #include <linux/signal.h>
+>  #include <linux/types.h>
+> @@ -39,6 +40,7 @@ struct imx6_pcie {
+>  	struct pcie_port	pp;
+>  	struct regmap		*iomuxc_gpr;
+>  	void __iomem		*mem_base;
+> +	struct regulator	*bus_supply;
+>  };
+>  
+>  /* PCIe Root Complex registers (memory-mapped) */
+> @@ -523,6 +525,7 @@ static struct pcie_host_ops imx6_pcie_host_ops = {
+>  static int __init imx6_add_pcie_port(struct pcie_port *pp,
+>  			struct platform_device *pdev)
+>  {
+> +	struct imx6_pcie *imx6_pcie = to_imx6_pcie(pp);
+>  	int ret;
+>  
+>  	if (IS_ENABLED(CONFIG_PCI_MSI)) {
+> @@ -544,9 +547,22 @@ static int __init imx6_add_pcie_port(struct pcie_port *pp,
+>  	pp->root_bus_nr = -1;
+>  	pp->ops = &imx6_pcie_host_ops;
+>  
+> +	if (imx6_pcie->bus_supply) {
+> +		ret = regulator_enable(imx6_pcie->bus_supply);
+> +		if (ret) {
+> +			dev_err(pp->dev,
+> +				"unable to enable bus supply: %d\n", ret);
+> +			return ret;
+> +		}
+> +	}
 > +
-> +- reg: offset and length of the register set
+>  	ret = dw_pcie_host_init(pp);
+>  	if (ret) {
+>  		dev_err(&pdev->dev, "failed to initialize host\n");
 > +
-> +Example:
-> +	chipid@10000000 {
-> +		compatible = "samsung,exynos4210-chipid";
-> +		reg = <0x10000000 0x100>;
-> +	};
->
+> +		if (imx6_pcie->bus_supply)
+> +			regulator_disable(imx6_pcie->bus_supply);
+> +
+>  		return ret;
+>  	}
+>  
+> @@ -588,6 +604,17 @@ static int __init imx6_pcie_probe(struct platform_device *pdev)
+>  		}
+>  	}
+>  
+> +	/* Fetch bus supply */
+> +	imx6_pcie->bus_supply = devm_regulator_get_optional(&pdev->dev, "bus");
+> +	if (IS_ERR(imx6_pcie->bus_supply)) {
+> +		ret = PTR_ERR(imx6_pcie->bus_supply);
+> +		if (ret == -EPROBE_DEFER)
+> +			return ret;
+> +
+> +		dev_err(&pdev->dev, "unable to get bus-supply\n");
+> +		return ret;
+> +	}
+> +
+>  	/* Fetch clocks */
+>  	imx6_pcie->pcie_phy = devm_clk_get(&pdev->dev, "pcie_phy");
+>  	if (IS_ERR(imx6_pcie->pcie_phy)) {
 
-Thanks,
-Pankaj Dubey
+-- 
+Pengutronix e.K.             | Lucas Stach                 |
+Industrial Linux Solutions   | http://www.pengutronix.de/  |
