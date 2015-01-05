@@ -1,109 +1,86 @@
-From: Eduardo Valentin <edubezval@gmail.com>
-Subject: Re: [PATCH] thermal: ti-soc-thermal: ti-bandgap.c:  Remove unused
- function
-Date: Mon, 5 Jan 2015 17:33:06 -0400
-Message-ID: <20150105213304.GC31536@developer>
-References: <1419183823-10787-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
- <549AD44A.8010603@ti.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH v2 1/2] ARM: shmobile: r8a7790: add CAN clocks
+Date: Tue, 06 Jan 2015 00:33:25 +0300
+Message-ID: <1948350.BT8VM0CPFC@wasted.cogentembedded.com>
+References: <28994794.h3WeokSSG3@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="da4uJneut+ArUgXk"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <549AD44A.8010603@ti.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>, Zhang Rui <rui.zhang@intel.com>, Tero Kristo <t-kristo@ti.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap <linux-omap@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <28994794.h3WeokSSG3@wasted.cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: horms@verge.net.au
+Cc: linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+The R-Car CAN controllers can derive the CAN bus clock not only from their
+peripheral clock input (clkp1) but also from the other internal clock (clkp2)
+and external clock fed on CAN_CLK pin.  Describe those clocks in the device
+tree,  along with  the USB_EXTAL clock  from which clkp2 is derived.
 
---da4uJneut+ArUgXk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-On Wed, Dec 24, 2014 at 08:57:14AM -0600, Nishanth Menon wrote:
-> On 12/21/2014 11:43 AM, Rickard Strandqvist wrote:
-> > Remove the function ti_bandgap_write_thot() that is not used anywhere.
-> >=20
-> > This was partially found by using a static code analysis program called=
- cppcheck.
-> >=20
-> > Signed-off-by: Rickard Strandqvist <rickard_strandqvist@spectrumdigital=
-=2Ese>
-> > ---
-> >  drivers/thermal/ti-soc-thermal/ti-bandgap.c |   13 -------------
-> >  drivers/thermal/ti-soc-thermal/ti-bandgap.h |    1 -
-> >  2 files changed, 14 deletions(-)
-> >=20
-> > diff --git a/drivers/thermal/ti-soc-thermal/ti-bandgap.c b/drivers/ther=
-mal/ti-soc-thermal/ti-bandgap.c
-> > index 634b6ce..cbb6a5f 100644
-> > --- a/drivers/thermal/ti-soc-thermal/ti-bandgap.c
-> > +++ b/drivers/thermal/ti-soc-thermal/ti-bandgap.c
-> > @@ -611,19 +611,6 @@ int ti_bandgap_read_thot(struct ti_bandgap *bgp, i=
-nt id, int *thot)
-> >  }
-> > =20
-> >  /**
-> > - * ti_bandgap_write_thot() - sets sensor current thot
-> > - * @bgp: pointer to bandgap instance
-> > - * @id: sensor id
-> > - * @val: desired thot value
-> > - *
-> > - * Return: 0 on success or the proper error code
-> > - */
-> > -int ti_bandgap_write_thot(struct ti_bandgap *bgp, int id, int val)
-> > -{
-> > -	return _ti_bandgap_write_threshold(bgp, id, val, true);
-> > -}
-> > -
-> > -/**
-> >   * ti_bandgap_read_tcold() - reads sensor current tcold
-> >   * @bgp: pointer to bandgap instance
-> >   * @id: sensor id
-> > diff --git a/drivers/thermal/ti-soc-thermal/ti-bandgap.h b/drivers/ther=
-mal/ti-soc-thermal/ti-bandgap.h
-> > index b3adf72..976afc0 100644
-> > --- a/drivers/thermal/ti-soc-thermal/ti-bandgap.h
-> > +++ b/drivers/thermal/ti-soc-thermal/ti-bandgap.h
-> > @@ -371,7 +371,6 @@ struct ti_bandgap_data {
-> >  };
-> > =20
-> >  int ti_bandgap_read_thot(struct ti_bandgap *bgp, int id, int *thot);
-> > -int ti_bandgap_write_thot(struct ti_bandgap *bgp, int id, int val);
-> >  int ti_bandgap_read_tcold(struct ti_bandgap *bgp, int id, int *tcold);
-> >  int ti_bandgap_write_tcold(struct ti_bandgap *bgp, int id, int val);
-> >  int ti_bandgap_read_update_interval(struct ti_bandgap *bgp, int id,
-> >=20
->=20
-> Not sure if removing support for programming of hot threshold is a
-> good idea. how about ti_bandgap_write_tcold then?
+---
+Changes in version 2:
+- fixed spelling in the comment to the CAN_CLK node;
+- added Geert's ACK.
 
+ arch/arm/boot/dts/r8a7790.dtsi            |   22 ++++++++++++++++++++--
+ include/dt-bindings/clock/r8a7790-clock.h |    1 +
+ 2 files changed, 21 insertions(+), 2 deletions(-)
 
-Agreed here. I believe the right thing to do is to use those functions
-to update the thresholds when necessary.
+Index: renesas/arch/arm/boot/dts/r8a7790.dtsi
+===================================================================
+--- renesas.orig/arch/arm/boot/dts/r8a7790.dtsi
++++ renesas/arch/arm/boot/dts/r8a7790.dtsi
+@@ -838,16 +838,34 @@
+ 			clock-output-names = "audio_clk_c";
+ 		};
+ 
++		/* External USB clock - can be overridden by the board */
++		usb_extal_clk: usb_extal_clk {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <48000000>;
++			clock-output-names = "usb_extal";
++		};
++
++		/* External CAN clock */
++		can_clk: can_clk {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			/* This value must be overridden by the board. */
++			clock-frequency = <0>;
++			clock-output-names = "can_clk";
++			status = "disabled";
++		};
++
+ 		/* Special CPG clocks */
+ 		cpg_clocks: cpg_clocks@e6150000 {
+ 			compatible = "renesas,r8a7790-cpg-clocks",
+ 				     "renesas,rcar-gen2-cpg-clocks";
+ 			reg = <0 0xe6150000 0 0x1000>;
+-			clocks = <&extal_clk>;
++			clocks = <&extal_clk &usb_extal_clk>;
+ 			#clock-cells = <1>;
+ 			clock-output-names = "main", "pll0", "pll1", "pll3",
+ 					     "lb", "qspi", "sdh", "sd0", "sd1",
+-					     "z";
++					     "z", "rcan";
+ 		};
+ 
+ 		/* Variable factor clocks */
+Index: renesas/include/dt-bindings/clock/r8a7790-clock.h
+===================================================================
+--- renesas.orig/include/dt-bindings/clock/r8a7790-clock.h
++++ renesas/include/dt-bindings/clock/r8a7790-clock.h
+@@ -21,6 +21,7 @@
+ #define R8A7790_CLK_SD0			7
+ #define R8A7790_CLK_SD1			8
+ #define R8A7790_CLK_Z			9
++#define R8A7790_CLK_RCAN		10
+ 
+ /* MSTP0 */
+ #define R8A7790_CLK_MSIOF0		0
 
->=20
->=20
-> --=20
-> Regards,
-> Nishanth Menon
-
---da4uJneut+ArUgXk
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUqwMIAAoJEMLUO4d9pOJWQGkH/2tQKSp5Uk0u8BGQJ7T9Xyfn
-XFH/kh9aY+FeGqBOirdDVVkvEXSzYfw6w6Ooo8Yqk+DzIGAFI9cg0EYfr4+TdwDi
-c4ucrapUBRnFBnGrLNgkdE7MXHHwvEqZKNVkJhTyKYmxbbYDd/PcQHAzhHXubaR3
-Xpugs8WSKfO7LBsVP6ctJ0X1oiCvwEc59vyynPA0ygJAX/j0OJ1Bxm4S6/3rEd+o
-E9ltQZL9W3Ou6dUZm6GTCn3VIUWwz0f3n5p3c9/5eeErhsVwbCe0llF+TGTdkuk1
-hERFgD/nHclkHaZy2Q39iZV0R29jKGR9zcxw7APW4zaM9dOZjOlPRMi+xP9MdbI=
-=Hfew
------END PGP SIGNATURE-----
-
---da4uJneut+ArUgXk--
