@@ -1,51 +1,26 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [alsa-devel] [PATCH 2/3] ASoC: samsung: Document Trats2 audio
- subsystem bindings
-Date: Mon, 5 Jan 2015 15:29:18 +0000
-Message-ID: <20150105152918.GT11764@sirena.org.uk>
-References: <1420457117-11030-1-git-send-email-ideal.song@samsung.com>
- <1420457117-11030-3-git-send-email-ideal.song@samsung.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 3/4] PCI: imx6: Add power-supply support
+Date: Mon, 05 Jan 2015 16:31:04 +0100
+Message-ID: <1760521.28f6F6lDZm@wuerfel>
+References: <1419237127-21763-1-git-send-email-xobs@kosagi.com> <1419237127-21763-4-git-send-email-xobs@kosagi.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="QkB+3dXt7G8Wz8Uy"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1420457117-11030-3-git-send-email-ideal.song@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Inha Song <ideal.song@samsung.com>
-Cc: alsa-devel@alsa-project.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, s.nawrocki@samsung.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, kgene@kernel.org, sbkim73@samsung.com, lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.de, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1419237127-21763-4-git-send-email-xobs@kosagi.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Sean Cross <xobs@kosagi.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lucas Stach <l.stach@pengutronix.de>, Shawn Guo <shawn.guo@freescale.com>, Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, Richard Zhu <r65037@freescale.com>, Grant Likely <grant.likely@linaro.org>, linux-pci@vger.kernel.org, bunnie@kosagi.com
 List-Id: devicetree@vger.kernel.org
 
+On Monday 22 December 2014 16:32:06 Sean Cross wrote:
+> Some PCIe ports gate power to the slot.  In order to prevent system lockup,
+> these boards must enable power to the slot before attempting communication
+> over the PCI bus.
+> 
+> Signed-off-by: Sean Cross <xobs@kosagi.com>
 
---QkB+3dXt7G8Wz8Uy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Could this be moved to the common pcie-designware driver? It doesn't seem
+to be imx6 specific and other drivers might need the same thing.
 
-On Mon, Jan 05, 2015 at 08:25:16PM +0900, Inha Song wrote:
-
-> + - clocks : Reference to the codec master clock
-> + - clock-names : The clock should be named "mclk"
-
-This should be done in the CODEC driver, not in the machine driver - the
-CODEC always needs the clock, it's not something specific to this
-machine.  Even if we decide that for Linux the best thing to do is to
-manage the clock in the machine driver it should be described in the DT
-as being attached to the CODEC.
-
---QkB+3dXt7G8Wz8Uy
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUqq3NAAoJECTWi3JdVIfQ8cAH/2pVZixTXEAT+S4w4GyZmGNe
-TzjisRZtOWzl+8G5QN5EEZqHsyXh9BZHz9hmNndCWUjZT96e4IKZPmriNK+rPbOF
-QRYzloUrlTPhXsTIiBGOuoLWjam0MJqFoidhQ5wJ3TwuGZ6G18U9n9kPXcfCeJMD
-2OO8uPei+xOy1UX95fZBeQAnrx25+ZgGscNZh6gZXtFNeXoGAMoCQFh8yk2VwL/T
-qtO7yTjgQ4Ubis7MsJPmvUHtxxLU4faLhDD3b+j2WQ/NrDHC/p9500492EGR5Ze8
-nx0tI6za/gewfzuMGzFWgXCROPVxMLt+eYLHdwmOCiEImZ+wz3Rlwi2WIQjA+a4=
-=T/eS
------END PGP SIGNATURE-----
-
---QkB+3dXt7G8Wz8Uy--
+	Arnd
