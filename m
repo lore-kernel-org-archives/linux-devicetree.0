@@ -1,71 +1,122 @@
-From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Subject: Re: [PATCH 1/3] TTY: add support for "tty slave" devices.
-Date: Mon, 5 Jan 2015 14:43:23 +0100
-Message-ID: <20150105134323.GA27863@amd>
-References: <20141211214801.4127.93914.stgit@notabene.brown>
- <20141211215943.4127.24792.stgit@notabene.brown>
- <20141228142010.GA3922@amd>
- <20150103103357.2406fc23@notabene.brown>
- <20150104101847.GA6122@amd>
- <20150105200936.2ba8f596@notabene.brown>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH V8 00/14] drm/exynos: few patches to enhance bridge chip
+ support
+Date: Mon, 5 Jan 2015 14:50:16 +0100
+Message-ID: <20150105135015.GA12010@ulmo.nvidia.com>
+References: <1416045309-13359-1-git-send-email-ajaykumar.rs@samsung.com>
+ <CAEC9eQOrKw2Z1q-ztFfadXmsL3CTcAkkv9kcS2QnDOAVSh2AuQ@mail.gmail.com>
+ <548ABAB6.6010200@collabora.co.uk> <3197445.qizQc0zeRb@avalon>
+ <54914D7D.9060108@collabora.co.uk>
+ <CAPj87rN4HZzDt5JBLyTRmKZs7XcOG=0ha7ZQf9hmjPAFgTyhYQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150105200936.2ba8f596-wvvUuzkyo1EYVZTmpyfIwg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============1981909144=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAPj87rN4HZzDt5JBLyTRmKZs7XcOG=0ha7ZQf9hmjPAFgTyhYQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Daniel Stone <daniel@fooishbar.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Sean Paul <seanpaul@google.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, dri-devel <dri-devel@lists.freedesktop.org>, Ajay Kumar <ajaykumar.rs@samsung.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Ajay kumar <ajaynumb@gmail.com>, Kukjin Kim <kgene.kim@samsung.com>, Pannaga Bhushan Reddy Patel <bhushan.r@samsung.com>, Prashanth G <prashanth.g@samsung.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi!
 
-> > > N_HCI activates (registers the hci dev) on HCIUARTSETPROTO ioctl.  A child
-> > >   device would need a way to specify the protocol I resume.
-> > > N_MOUSE activates on a 'read' on the tty - and deactivates when the read
-> > >   completes.
-> > > N_GSM0710 activates immediately that the ldisc is activated, as does N_IRDA
-> > > N_PPP seems to want a PPPIOCNEWUNIT ioctl to fully register.
-> > > 
-> > > Doing any of these in a driver for a uart slave device would certainly be
-> > > possible.  I wonder if it is something we really want to do in the kernel
-> > > though.  What is the gain over providing sufficient information in the
-> > > KOBJ_ADD uevent so that udev can do the required work in user-space?
-> > 
-> > Consistency. If you have bluetooth on USB, it automatically works,
-> > without userspace help. If we have mouse on USB, it automatically
-> > works, etc...
-> 
-> My point is: why is the kernel/userspace distinction important?  As long as
-> it "automatically works", does it really matter where the code is?
-
-For some cases, it does, as "devices needed during boot". Someone is
-going to attach keyboard or something powermanagement related, sooner
-or later.
-
-> We can put a little bit of code in the kernel (to report the details of the
-> attached device) and a little bit of code in udev (to run hciattach) and it
-> will still be automatic.
-
-Of course, that's also possible. There will be parameters such as
-speed / parity / flow control that will need to be passed, and
-userland will still see /dev/ttySX device that it perhaps does not
-need to see.
-
-And there will be problems with devices such as bcm2048 on Nokia,
-which is connected by a serial line and (interrupt capable) GPIO lines
-and clocks. Rather than extending hciattach to pass the neccessary
-GPIO/clock information and extending udev to pass GPIO/clock
-information to hciattach (and extending kernel to pass it to udev and
-accept from hciattach), it makes sense to just do it internally.
-									Pavel
-									
+--===============1981909144==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="T4sUOijqQbZv57TR"
+Content-Disposition: inline
 
 
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--T4sUOijqQbZv57TR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Jan 02, 2015 at 01:10:14PM +0000, Daniel Stone wrote:
+> Hi Ajay,
+>=20
+> On 17 December 2014 at 09:31, Javier Martinez Canillas <
+> javier.martinez@collabora.co.uk> wrote:
+>=20
+> > On 12/16/2014 12:37 AM, Laurent Pinchart wrote:
+> > >> You asked Ajay to change his series to use the video port and enpoin=
+ts
+> > DT
+> > >> bindings instead of phandles, could you please review his latest
+> > version?
+> > >>
+> > >> I guess is now too late for 3.19 since we are in the middle of the m=
+erge
+> > >> window but it would be great if this series can at least made it to
+> > 3.20.
+> > >
+> > > I don't have time to review the series in details right now, but I'm
+> > happy
+> > > with the DT bindings, and have no big issue with the rest of the
+> > patches. I
+> > > don't really like the of_drm_find_bridge() concept introduced in 03/14
+> > but I
+> > > won't nack it given lack of time to implement an alternative proposal.
+> > It's an
+> > > internal API, it can always be reworked later anyway.
+> >
+> > Thanks a lot for taking the time to look at the DT bindings, then I gue=
+ss
+> > that the series are finally ready to be merged?
+> >
+> > Ajay's series don't apply cleanly anymore because it has been a while s=
+ince
+> > he posted it but he can rebase on top of 3.19-rc1 once it is released a=
+nd
+> > re-resend.
+> >
+>=20
+> Do you have any plans to rebase this so it's ready for merging?
+>=20
+> Thierry, Daniel, Dave - whose tree would this be best to merge through?
+
+The plan is for me to take the bridge patches through the drm/panel
+tree. I'm going to look at these patches again later this week but from
+a very quick peek there don't seem to be any major issues left.
+
+Thierry
+
+--T4sUOijqQbZv57TR
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJUqpaXAAoJEN0jrNd/PrOhM0gP/3LQ4ubyf8oC1nAytarOZon5
+LTY3O2gTDPx8PKkhCdyy7h99CU/X06eNIDb1tko017peRZbFdMCfJCBZ/DtilvCk
+DZxt5OWu2wv6Xk5tq8S32tjYT2sKiAmSlcdJEZikLanJFzSWHjCEcAtu379tO2cM
+1obhJrFYLBuIIBrDFYPnOOlKu6yXWaAW3cuSp0qGiNayCDkHigbimsIrusLCV5an
+Ypv6soIUbk+ZiIv7vNkZvVkjc/2mb0AsaWVoXb4wzZxOSEBU/AyiMwKeRQOtdRIL
+1Em2/De4SCwDgZVmouaT0xON532AEbn16fUJDjoAnc8JrzruPY6DWnOL5x0OhFTb
+8ZNh+oK7u9pT0CL4jzjCQ6BsWmCEP4epapzAKasQYMS6YHHxB5eQ5DJvZvsS7BmN
+JIpg61FcPLuSyEnOHBi+ZltH2MfbVXiKrbEuJfT+nd7Bakp4rErC+T5j3AXq2QvR
+FQiqhFY9lean21zCLATx/LtGHj75+riaOEmV2QRx2geWlx8gh8AD01b5AFsl7eZD
+vIBD0kHgGhIbtSwy+9sZ99MKZP7vGfJQkEbwCqF3s7UCQ3WtWoQ/aLexaxGV8l0e
+53ncq7wdzTCcd1n7NJZA1D62hJsWubn214thqJkDSLnmu9hDmzSAaHJco8j+/ZyT
+3OlQJD3eyVELEcDcZk7O
+=trO7
+-----END PGP SIGNATURE-----
+
+--T4sUOijqQbZv57TR--
+
+--===============1981909144==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0
+cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+
+--===============1981909144==--
