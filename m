@@ -1,60 +1,54 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v2 2/2] ARM: shmobile: r8a7790: add CAN DT support
-Date: Tue, 06 Jan 2015 00:34:42 +0300
-Message-ID: <2103349.lorm0h2Cbt@wasted.cogentembedded.com>
-References: <28994794.h3WeokSSG3@wasted.cogentembedded.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: [PATCH] arm: dts: am335x-bone-common: add collision and carrier sense pinmux
+Date: Mon, 5 Jan 2015 15:44:14 -0600
+Message-ID: <1420494254-24314-1-git-send-email-balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <28994794.h3WeokSSG3@wasted.cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: horms@verge.net.au
-Cc: linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <stable-owner@vger.kernel.org>
+Sender: stable-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Linux OMAP Mailing List <linux-omap@vger.kernel.org>, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Schuyler Patton <spatton@ti.com>, Koen Kooi <koen@dominion.thruhere.net>, Tom Rini <trini@ti.com>, Kevin Hilman <khilman@linaro.org>, stable@vger.kernel.org, Felipe Balbi <balbi@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Define the generic R8A7790 parts of the CAN0/1 device nodes.
+From: Schuyler Patton <spatton@ti.com>
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Added pin mux definitions for collision and carrier sense errors coming
+from the ethernet phy. Without these two signals the MAC ends up ignoring
+the errors detected by the PHY which end up causing a lower throughput
+problem when the phy is in half duplex mode such as connected through a hub.
 
+Fixes: 2ba3549 (ARM: dts: am335x-bone*: add DT for BeagleBone Black)
+Cc: Koen Kooi <koen@dominion.thruhere.net>
+Cc: Tom Rini <trini@ti.com>
+Cc: Kevin Hilman <khilman@linaro.org>
+Cc: <stable@vger.kernel.org> # v3.13+
+Signed-off-by: Schuyler Patton <spatton@ti.com>
+Signed-off-by: Felipe Balbi <balbi@ti.com>
 ---
-Changes in version 2:
-- fixed whitespace errors/warnings given by checkpatch.pl;
-- added Geert's ACK.
+ arch/arm/boot/dts/am335x-bone-common.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
- arch/arm/boot/dts/r8a7790.dtsi |   20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
-
-Index: renesas/arch/arm/boot/dts/r8a7790.dtsi
-===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7790.dtsi
-+++ renesas/arch/arm/boot/dts/r8a7790.dtsi
-@@ -792,6 +792,26 @@
- 		};
- 	};
- 
-+	can0: can@e6e80000 {
-+		compatible = "renesas,can-r8a7790";
-+		reg = <0 0xe6e80000 0 0x1000>;
-+		interrupts = <0 186 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&mstp9_clks R8A7790_CLK_RCAN0>,
-+			 <&cpg_clocks R8A7790_CLK_RCAN>, <&can_clk>;
-+		clock-names = "clkp1", "clkp2", "can_clk";
-+		status = "disabled";
-+	};
-+
-+	can1: can@e6e88000 {
-+		compatible = "renesas,can-r8a7790";
-+		reg = <0 0xe6e88000 0 0x1000>;
-+		interrupts = <0 187 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&mstp9_clks R8A7790_CLK_RCAN1>,
-+			 <&cpg_clocks R8A7790_CLK_RCAN>, <&can_clk>;
-+		clock-names = "clkp1", "clkp2", "can_clk";
-+		status = "disabled";
-+	};
-+
- 	clocks {
- 		#address-cells = <2>;
- 		#size-cells = <2>;
-
+diff --git a/arch/arm/boot/dts/am335x-bone-common.dtsi b/arch/arm/boot/dts/am335x-bone-common.dtsi
+index 6cc25ed..4b29fad 100644
+--- a/arch/arm/boot/dts/am335x-bone-common.dtsi
++++ b/arch/arm/boot/dts/am335x-bone-common.dtsi
+@@ -97,6 +97,8 @@
+ 	cpsw_default: cpsw_default {
+ 		pinctrl-single,pins = <
+ 			/* Slave 1 */
++			0x108 (PIN_INPUT | MUX_MODE0)		/* mii1_col.mii1_col */
++			0x10c (PIN_INPUT | MUX_MODE0)		/* mii1_crs.mii1_crs */
+ 			0x110 (PIN_INPUT_PULLUP | MUX_MODE0)	/* mii1_rxerr.mii1_rxerr */
+ 			0x114 (PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* mii1_txen.mii1_txen */
+ 			0x118 (PIN_INPUT_PULLUP | MUX_MODE0)	/* mii1_rxdv.mii1_rxdv */
+@@ -116,6 +118,8 @@
+ 	cpsw_sleep: cpsw_sleep {
+ 		pinctrl-single,pins = <
+ 			/* Slave 1 reset value */
++			0x108 (PIN_INPUT_PULLDOWN | MUX_MODE7)
++			0x10c (PIN_INPUT_PULLDOWN | MUX_MODE7)
+ 			0x110 (PIN_INPUT_PULLDOWN | MUX_MODE7)
+ 			0x114 (PIN_INPUT_PULLDOWN | MUX_MODE7)
+ 			0x118 (PIN_INPUT_PULLDOWN | MUX_MODE7)
+-- 
+2.2.0
