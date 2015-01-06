@@ -1,67 +1,66 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH v18 12/12] drm: bridge/dw_hdmi: add rockchip rk3288 support
-Date: Tue, 6 Jan 2015 13:51:29 +0000
-Message-ID: <20150106135129.GG12302@n2100.arm.linux.org.uk>
-References: <1417760564-16858-1-git-send-email-andy.yan@rock-chips.com>
- <1417761259-17429-1-git-send-email-andy.yan@rock-chips.com>
- <CAGS+omA1Gf8yqrd4Bu=Pm1OBdsJBHg0gt+TP_6vi88Zz+O3jHA@mail.gmail.com>
- <6479148.dVz0vTNYfK@phil>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 1/2] mmc: host: arasan: Add addition of-arasan quirks and add IOMMU support.
+Date: Tue, 06 Jan 2015 14:55:51 +0100
+Message-ID: <3924494.iNyoV2USme@wuerfel>
+References: <1418662867-9210-1-git-send-email-stripathi@apm.com> <3866536.C6OiUcuGCr@wuerfel> <CAOHikRCV7RaxJz-A_s6g++ueg3CDe9Jrqcog1Lc2_+KXR9QqnQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <6479148.dVz0vTNYfK@phil>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>, Andy Yan <andy.yan@rock-chips.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, David Airlie <airlied@linux.ie>, Daniel Kurtz <djkurtz@chromium.org>, Yakir Yang <ykk@rock-chips.com>, devel@driverdev.osuosl.org, Pawel Moll <pawel.moll@arm.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, Xu Jianqun <jay.xu@rock-chips.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sean Paul <seanpaul@chromium.org>, dri-devel <dri-devel@lists.freedesktop.org>, "mark.yao@rock-chips.com" <mark.yao@rock-chips.com>, fabio.estevam@freescale.com, Josh Boyer <jwboyer@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.o>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CAOHikRCV7RaxJz-A_s6g++ueg3CDe9Jrqcog1Lc2_+KXR9QqnQ@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Suman Tripathi <stripathi@apm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jon Masters <jcm@redhat.com>, anton@enomsg.org, linux-mmc@vger.kernel.org, chris@printf.net, patches@apm.com, Don Dutile <ddutile@redhat.com>, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 11, 2014 at 12:24:15PM +0100, Heiko St=FCbner wrote:
-> Past practices suggest that having the dw in the name is a sane solution =
-too, =
+On Tuesday 06 January 2015 17:10:29 Suman Tripathi wrote:
+> Hi Arnd,
+> > On Monday 15 December 2014 22:31:06 Suman Tripathi wrote:
+> > > @@ -162,6 +206,16 @@ static int sdhci_arasan_probe(struct
+> > > platform_device *pdev)> > > 
+> > >                 goto clk_dis_ahb;
+> > >         
+> > >         }
+> > > 
+> > > +#if defined(CONFIG_IOMMU_SUPPORT)
+> > > +       sdhci_arasan->domain = iommu_domain_alloc(&amba_bustype);
+> > > +       if (!sdhci_arasan->domain) {
+> > > +               dev_err(&pdev->dev, "Unable to allocate iommu
+> > > domain\n");
+> > > +               return PTR_ERR(sdhci_arasan->domain);
+> > > +       }
+> > > +
+> > > +       iommu_attach_device(sdhci_arasan->domain, &pdev->dev);
+> > > +#endif
+> > > +
+> > 
+> > Device drivers should never care about the implementation details
+> > of the iommu. Please change the code to use the regular dma_map_*
+> > interfaces that will work both with and without IOMMU.
+>
+> After refer to iommu binding , there is a service that allows "Remap
+> address space to allow devices to access physical memory ranges that
+> they otherwise wouldn't be capable of accessing." eg : 32-bit to 64
+> bit DMA .
+> 
+> So do we have any existing driver that uses this service ? Just asking
+> for suggestions.
 
-> like in dw_mmc-foo (mmc/host), dwmac-foo (net/ethernet/stmicro/stmmac).
-> =
+The interface is completely transparent to device drivers, it is
+implemented as a separate 'struct dma_map_ops' that is normally
+architecture independent, and that handles all sorts of DMA remapping
+issues for the driver, including
 
-> And personally I'd keep to this already established naming scheme ... i.e=
-. not =
+- address space limits
+- offsets between CPU and device addresses for the same memory
+- cache flushes
+- bus-level synchronization
 
-> hiding the dw heritage.
-> =
+On arm32, we currently support six sets of dma_map_ops including
+two for IOMMU (coherent and noncoherent). On arm64, we currently
+always use swiotlb, which solves your problem by copying memory to
+bounce buffers. This is rather inefficient, and a new implementation
+is being worked on, based on the arm32 implementation to support
+IOMMUs in a generic way.
 
-> And also it looks like other involved parties like Philipp and Russell se=
-emed =
-
-> to be ok with the naming through the revisions till now.
-
-I don't have much of a preference when it comes to this.  I was disappointed
-that the original imx-hdmi driver did not use "dw" in its filename, as the
-documentation clearly stated in several places that it was a designware
-part, and as we all know, they're a company which sells IP, so their
-designs are going to crop up in different places.
-
-So I welcome this patch set - and I've also tested it on a SolidRun
-Hummingboard i2ex along with all my CEC and audio patches, where it
-seems to be fine.  So for the set:
-
-Tested-by: Russell King <rmk+kernel@arm.linux.org.uk>
-
-Apart from the two minor items I've pointed out in separate replies:
-
-Acked-by: Russell King <rmk+kernel@arm.linux.org.uk>
-
-Thanks.
-
--- =
-
-FTTC broadband for 0.8mile line: currently at 9.5Mbps down 400kbps up
-according to speedtest.net.
+	Arnd
