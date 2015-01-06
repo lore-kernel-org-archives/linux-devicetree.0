@@ -1,79 +1,70 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v3] mfd: syscon: add child device support
-Date: Tue,  6 Jan 2015 16:54:34 +0100
-Message-ID: <1420559674-9772-1-git-send-email-p.zabel@pengutronix.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Flora Fu <flora.fu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+From: atull <atull@opensource.altera.com>
+Subject: Re: [PATCH v7 1/4] doc: add bindings document for altera fpga
+ manager
+Date: Tue, 6 Jan 2015 10:04:49 -0600
+Message-ID: <alpine.DEB.2.02.1501061001520.1089@linuxheads99>
+References: <1419007551-10040-1-git-send-email-atull@opensource.altera.com> <1419007551-10040-2-git-send-email-atull@opensource.altera.com> <CAL_Jsq+bwnA14RALT9WWZ=wzt7akjPOJ8s5878CcgkU4EDRC4Q@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+bwnA14RALT9WWZ=wzt7akjPOJ8s5878CcgkU4EDRC4Q@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, "H. Peter Anvin" <hpa@zytor.com>, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Randy Dunlap <rdunlap@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, iws@ovro.caltech.edu, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Pavel Machek <pavel@denx.de>, Mark Brown <broonie@kernel.org>, Philip Balister <philip@balister.org>, Alessandro Rubini <rubini@gnudd.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Jason Cooper <jason@lakedaemon.net>, Kyle Teske <kyle.teske@ni.com>, Nicolas Pitre <nico@linaro.org>Felipe Balbi <bal>
 List-Id: devicetree@vger.kernel.org
 
-For devices which have a complete register for themselves, it is possible to
-place them next to the syscon device with overlapping reg ranges. The same is
-not possible for devices which only occupy bitfields in registers shared with
-other users.
-For devices that are completely controlled by bitfields in the syscon address
-range, such as multiplexers or voltage regulators, allow to put child devices
-into the syscon device node.
+On Mon, 22 Dec 2014, Rob Herring wrote:
 
-Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Tested-by: Flora Fu <flora.fu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
-Changes since v2:
- - Added Tested-by: Flora Fu
----
- Documentation/devicetree/bindings/mfd/syscon.txt | 13 +++++++++++++
- drivers/mfd/syscon.c                             |  3 +++
- 2 files changed, 16 insertions(+)
+> On Fri, Dec 19, 2014 at 10:45 AM,  <atull@opensource.altera.com> wrote:
+> > From: Alan Tull <atull@opensource.altera.com>
+> >
+> > New bindings document for Altera fpga manager.
+> >
+> > Signed-off-by: Alan Tull <atull@opensource.altera.com>
+> > ---
+> > v5 : Move bindings to drivers/staging/fpga/Documentation/bindings
+> >
+> > v6 : No change in this patch for v6 of the patch set
+> >
+> > v7 : No change in this patch for v7 of the patch set
+> > ---
+> >  .../Documentation/bindings/altera-fpga-mgr.txt     |   17 +++++++++++++++++
+> >  1 file changed, 17 insertions(+)
+> >  create mode 100644 drivers/staging/fpga/Documentation/bindings/altera-fpga-mgr.txt
+> >
+> > diff --git a/drivers/staging/fpga/Documentation/bindings/altera-fpga-mgr.txt b/drivers/staging/fpga/Documentation/bindings/altera-fpga-mgr.txt
+> > new file mode 100644
+> > index 0000000..373af7b
+> > --- /dev/null
+> > +++ b/drivers/staging/fpga/Documentation/bindings/altera-fpga-mgr.txt
+> > @@ -0,0 +1,17 @@
+> > +Altera FPGA Manager
+> > +
+> > +Required properties:
+> > +- compatible : should contain "altr,fpga-mgr"
+> > +- reg        : base address and size for memory mapped io.
+> > +               - The first index is for FPGA manager register access.
+> > +               - The second index is for writing FPGA configuration data.
+> > +- interrupts : interrupt for the FPGA Manager device.
+> > +
+> > +Example:
+> > +
+> > +       hps_0_fpgamgr: fpgamgr@0xff706000 {
+> > +               compatible = "altr,fpga-mgr";
+> 
+> Is "FPGA Manager" what the block is called or the name for the Linux
+> subsystem?" The name should reflect the h/w block name. Also, is the
+> block the same in every chip?
 
-diff --git a/Documentation/devicetree/bindings/mfd/syscon.txt b/Documentation/devicetree/bindings/mfd/syscon.txt
-index fe8150b..0c6b497 100644
---- a/Documentation/devicetree/bindings/mfd/syscon.txt
-+++ b/Documentation/devicetree/bindings/mfd/syscon.txt
-@@ -9,12 +9,25 @@ using a specific compatible value), interrogate the node (or associated
- OS driver) to determine the location of the registers, and access the
- registers directly.
- 
-+Optionally, devices that are controlled exclusively through syscon registers,
-+or even bitfields in shared syscon registers, can also be added as child nodes
-+to the syscon device node. These devices can implicitly assume their parent
-+node is a syscon provider without referencing it explicitly via phandle.
-+In this case, the syscon node should have #address-cells = <1> and
-+#size-cells = <0> or <1> and no ranges property.
-+
- Required properties:
- - compatible: Should contain "syscon".
- - reg: the register region can be accessed from syscon
- 
-+Optional properties:
-+- #address-cells: Should be 1.
-+- #size-cells: Should be 0 or 1.
-+
- Examples:
- gpr: iomuxc-gpr@020e0000 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
- 	compatible = "fsl,imx6q-iomuxc-gpr", "syscon";
- 	reg = <0x020e0000 0x38>;
- };
-diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
-index 176bf0f..d2280d6 100644
---- a/drivers/mfd/syscon.c
-+++ b/drivers/mfd/syscon.c
-@@ -208,6 +208,9 @@ static int syscon_probe(struct platform_device *pdev)
- 
- 	dev_dbg(dev, "regmap %pR registered\n", res);
- 
-+	if (!of_device_is_compatible(pdev->dev.of_node, "simple-bus"))
-+		of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
-+
- 	return 0;
- }
- 
--- 
-2.1.4
+I see what you are saying.  The subsystem is 'fpga manager'.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I should change this to "altr,socfpga-fpga-mgr" so that it is the
+fpga manager block that is specific to SOCFPGA chips.  Also I should
+change the filename of the binding document accordingly.
+
+> 
+> This binding doesn't look complex or likely to change, so it can be
+> out of staging unless you expect it to change.
+> 
+> Rob
+> 
