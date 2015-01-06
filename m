@@ -1,56 +1,83 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v3 3/3] ARM: dts: Specify VMMC and VQMMC on rk3288-evb
-Date: Tue, 06 Jan 2015 18:44:13 +0100
-Message-ID: <1798568.RumoICfKOO@phil>
-References: <1418689340-29517-1-git-send-email-dianders@chromium.org>
- <1418689340-29517-3-git-send-email-dianders@chromium.org>
+From: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v5 1/2] Devicetree: Add pl353 smc controller devicetree binding information
+Date: Tue, 6 Jan 2015 23:19:16 +0530
+Message-ID: <b283a3652d324536a0b1ebcf4b87a7ee@BY2FFO11FD035.protection.gbl>
+References: <1420566557-19846-1-git-send-email-punnaia@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1418689340-29517-3-git-send-email-dianders@chromium.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, linux@arm.linux.org.uk, Alexandru Stan <amstan@chromium.org>, pawel.moll@arm.com, linux-rockchip@lists.infradead.org, Seungwon Jeon <tgih.jun@samsung.com>, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, Jaehoon Chung <jh80.chung@samsung.com>, Andrew Bresticker <abrestic@chromium.org>, Mark Brown <broonie@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, galak@codeaurora.org, Sonny Rao <sonnyrao@chromium.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1420566557-19846-1-git-send-email-punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, pekon-l0cyMroinI0@public.gmane.org, jussi.kivilinna-X3B1VOXEql0@public.gmane.org, acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, ivan.khoronzhuk-l0cyMroinI0@public.gmane.org, joern-PCqxUs/MD9bYtjvyW6yDsg@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kpc528-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kalluripunnaiahchoudary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Doug,
+Add pl353 static memory controller devicetree binding information.
 
-Am Montag, 15. Dezember 2014, 16:22:20 schrieb Doug Anderson:
-> Specifying these rails should eventually let us do UHS.
-> 
-> Signed-off-by: Doug Anderson <dianders@chromium.org>
-> ---
-> Changes in v3: None
-> Changes in v2:
-> - Fix subject line
-> 
->  arch/arm/boot/dts/rk3288-evb.dtsi | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/rk3288-evb.dtsi
-> b/arch/arm/boot/dts/rk3288-evb.dtsi index 3e067dd..d660fe6 100644
-> --- a/arch/arm/boot/dts/rk3288-evb.dtsi
-> +++ b/arch/arm/boot/dts/rk3288-evb.dtsi
-> @@ -114,6 +114,8 @@
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_cd &sdmmc_bus4>;
->  	status = "okay";
-> +	vmmc-supply = <&vcc_io>;
+Signed-off-by: Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+---
+Changes in v5:
+ - Removed timing properties
+Changes in v4:
+ - none
+Changes in v3:
+ - none
+Changes in v2:
+ - modified timing binding info as per onfi timing parameters
+ - add suffix nano second as timing unit
+ - modified the clock names as per the IP spec
+---
+ .../bindings/memory-controllers/pl353-smc.txt      |   37 ++++++++++++++++++++
+ 1 files changed, 37 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/memory-controllers/pl353-smc.txt
 
-according to the schematics there is a switch between the card and vcc_io with 
-a controlling pin called SDMMC_PWR providing a supply called vcc_sd.
+diff --git a/Documentation/devicetree/bindings/memory-controllers/pl353-smc.txt b/Documentation/devicetree/bindings/memory-controllers/pl353-smc.txt
+new file mode 100644
+index 0000000..a868f94
+--- /dev/null
++++ b/Documentation/devicetree/bindings/memory-controllers/pl353-smc.txt
+@@ -0,0 +1,37 @@
++Device tree bindings for ARM PL353 static memory controller
++
++PL353 static memory controller supports two kinds of memory
++interfaces. i.e NAND and SRAM/NOR interfaces.
++The actual devices are instantiated from the child nodes of pl353 smc node.
++
++Required properties:
++- compatible		: Should be "arm,pl353-smc-r2p1"
++- reg			: Controller registers map and length.
++- clock-names		: List of input clock names - "memclk", "aclk"
++			  (See clock bindings for details).
++- clocks		: Clock phandles (see clock bindings for details).
++- address-cells	: Address cells, must be 1.
++- size-cells		: Size cells. Must be 1.
++
++Child nodes:
++ For NAND the "arm,pl353-nand-r2p1" and for NOR the "cfi-flash" drivers are
++supported as child nodes.
++
++for nand partition information please refer the below file
++Documentation/devicetree/bindings/mtd/partition.txt
++
++Example:
++	pl353smcc_0: pl353smcc@e000e000 {
++			compatible = "arm,pl353-smcc-r2p1"
++			clock-names = "memclk", "aclk";
++			clocks = <&clkc 11>, <&clkc 44>;
++			reg = <0xe000e000 0x1000>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges;
++			nand_0: nand@e1000000 {
++				compatible = "arm,pl353-nand-r2p1"
++				reg = <0xe1000000 0x1000000>;
++				(...)
++			};
++	};
+-- 
+1.7.4
 
-So there should probably be a fixed-regulator get introduced for this, like the 
-older rockchip boards do.
-
-
-Heiko
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
