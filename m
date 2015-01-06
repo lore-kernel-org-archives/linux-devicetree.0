@@ -1,112 +1,90 @@
-From: Suman Tripathi <stripathi@apm.com>
-Subject: Re: [PATCH v1 0/2] Add the PMP support for APM X-Gene SoC AHCI SATA
- Host Controller driver.
-Date: Tue, 6 Jan 2015 19:10:31 +0530
-Message-ID: <CAOHikRAcSnD=5gvNkNZz8vUXTjkXQo8W4-KQcGajMeajxd73HQ@mail.gmail.com>
-References: <1420538536-32165-1-git-send-email-stripathi@apm.com>
-	<20150106125252.GB3077@htj.dyndns.org>
-	<CAOHikRBs=tH+MTPTmhDkEpV67grLWJK+6a-i8qeMyx_dJ9oyeA@mail.gmail.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v3 0/2] ARM: mediatek: Add driver for Mediatek I2C
+ controller
+Date: Tue, 6 Jan 2015 14:37:53 +0100
+Message-ID: <20150106133753.GA3754@katana>
+References: <1416821928-11453-1-git-send-email-xudong.chen@mediatek.com>
+ <20141124121555.GG3733@katana>
+ <1417096856.12707.59.camel@mtksdaap41>
+ <20141127164536.GC5667@katana>
+ <1418352022.4994.44.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <CAOHikRBs=tH+MTPTmhDkEpV67grLWJK+6a-i8qeMyx_dJ9oyeA@mail.gmail.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Tejun Heo <tj@kernel.org>
-Cc: Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Linux SCSI List <linux-scsi@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Mark Langsdorf <mlangsdo@redhat.com>, Jon Masters <jcm@redhat.com>, patches@apm.com
+Content-Type: multipart/mixed; boundary="===============9055770944649252648=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1418352022.4994.44.camel@mtksdaap41>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, linux-i2c@vger.kernel.org, Jean Delvare <jdelvare@suse.de>, Xudong Chen <xudong.chen@mediatek.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, YH Chen <yh.chen@mediatek.com>, Liguo Zhang <Liguo.Zhang@mediatek.com>, Nathan Chung <nathan.chung@mediatek.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Eddie Huang <eddie.huang@mediatek.com>, linux-arm-kernel@lists.infradead.org, srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi ,
 
-For more info here is the git log output before applying the patch.
-
-git log
-
-commit b84b25cb0900b99b28c742dd33101be779f58259
-Merge: 0628ee7 36aae28
-Author: Tejun Heo <tj@kernel.org>
-Date:   Tue Jan 6 07:48:24 2015 -0500
- Merge branch 'for-3.19-fixes' of git://git.kernel.org/pub/scm/linux/kernel/g
-
-    Pull to receive the following two ahci_xgene fixes for the planned
-    xgene PMP support patches.
-
-     5c0b8e0de76a8 ("ahci_xgene: Fix the endianess issue in APM X-Gene SoC AHCI
-     1102407bb714d ("ahci_xgene: Fix the DMA state machine lockup for the ATA_CM
-
-    Signed-off-by: Tejun Heo <tj@kernel.org>
-
-commit 36aae28e3df4127e296f2680d65cb6310ce61021
-Author: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Date:   Fri Dec 12 17:16:31 2014 +0200
-
-    libata: export ata_get_cmd_descript()
-
-    The driver sata_dwc_460ex is using this symbol. To build it as a
-    module we have to have the symbol exported. This patch adds
-Broken pipe
+--===============9055770944649252648==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="a8Wt8u1KmwUX3Y2C"
+Content-Disposition: inline
 
 
-On Tue, Jan 6, 2015 at 7:06 PM, Suman Tripathi <stripathi@apm.com> wrote:
-> Hi ,
->
-> On Tue, Jan 06, 2015 at 03:32:14PM +0530, Suman Tripathi wrote:
->> This patch set implements the PMP support for APM X-Gene SoC AHCI SATA Host Controller driver.
->
-> Hmm... still doesn't apply to for-3.20 after pulling in
-> for-3.19-fixes.
->
->  git://git.kernel.org/pub/scm/linux/kernel/git/tj/libata.git for-3.20
->
-> What am I doing wrong?
->
-> I just again cloned git://git.kernel.org/pub/scm/linux/kernel/git/tj/libata.git
->
-> switched to remotes/origin/for-3.20
->
-> git apply 0001-ahci_xgene-Implement-the-xgene_ahci_poll_reg_val-to-.patch
-> git apply 0002-ahci_xgene-Implement-the-workaround-to-support-PMP-e.patch
->
-> Even tried with
->
-> patch -p1 < 0001-ahci_xgene-Implement-the-xgene_ahci_poll_reg_val-to-.patch
-> patch -p1 <  0002-ahci_xgene-Implement-the-workaround-to-support-PMP-e.patch
->
-> Both are working fine. Not sure what's wrong with your environment.
->
-> On Tue, Jan 6, 2015 at 6:22 PM, Tejun Heo <tj@kernel.org> wrote:
->> On Tue, Jan 06, 2015 at 03:32:14PM +0530, Suman Tripathi wrote:
->>> This patch set implements the PMP support for APM X-Gene SoC AHCI SATA Host Controller driver.
->>
->> Hmm... still doesn't apply to for-3.20 after pulling in
->> for-3.19-fixes.
->>
->>  git://git.kernel.org/pub/scm/linux/kernel/git/tj/libata.git for-3.20
->>
->> What am I doing wrong?
->>
->> Thanks.
->>
->> --
->> tejun
->
->
->
-> --
-> Thanks,
-> with regards,
-> Suman Tripathi
+--a8Wt8u1KmwUX3Y2C
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
 
+> We've started upstream work for MT8173[1].
+>=20
+> We've fixed these issues for new SoC, and we believe it is fully I2C
+> compatible now. We'll add mt8173 support to this driver, so this driver
+> will support both fully I2C compatible SoC and the current one.
 
--- 
-Thanks,
-with regards,
-Suman Tripathi
-CONFIDENTIALITY NOTICE: This e-mail message, including any attachments, 
-is for the sole use of the intended recipient(s) and contains information
-that is confidential and proprietary to Applied Micro Circuits Corporation or its subsidiaries. 
-It is to be used solely for the purpose of furthering the parties' business relationship. 
-All unauthorized review, use, disclosure or distribution is prohibited. 
-If you are not the intended recipient, please contact the sender by reply e-mail 
-and destroy all copies of the original message.
+=46rom what you tell, I'd rather add the MT8173 support incrementally.
+Let's get first the limited support properly implemented, then add
+another controller.
 
+I'll send out my draft for describing the quirks later today.
+
+
+--a8Wt8u1KmwUX3Y2C
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUq+UwAAoJEBQN5MwUoCm2904QAI0JJRo+RFWevqWId5sZ3byr
+n6GPy7NT2eZQT54hemxWgDK1fM7DX6QE8GIkx9PDfxjly6UXA2inrWao9YZv41he
+84C4vA4IUtZEm+xKNi0B3CzzggRHhJ5b8hePMMZ/E6QmLkwh9vUYhXE780q8QBM5
+rf6dDieuj30efM4eFngEjqrfrpqMbRYoK6mAIxImMcYaue84hpkaGIvIR/DIMZT2
+J+WBM/H6WtAmU11DQhRQAkeAAKmgtIRxs3+tSVjuhd/W1aPdhRy8K3ROb6V2unFP
+f1uIXfDgpGJ7+CcgqNx353b17UYsXqfjlz38gX+XCwP4EhSjkZAVyAERl4fi33+4
+oQDD/uCOzL975A5GbCnTWwmnDVdR/FhxfgvdUJsHwk04n5auRZ4zk58pJ/BRl4Fb
+RnoDLyWxggWULSMlfjsZSrZqDYupR3Ww1lYw2WH3ZjI4EBepR5xBu73g+Chy5LtM
+vQQATtPkpGEjdJJOlpE6QdzuJvUuGjJWuLuNLpmluK6kS/exS7HDc5ZAEBSLq5lm
+Y33doHc7llymtDoI7w1xKRntfrrjBa2cE//lB3x9b6LfIz0nEziuHgmJpNBjKzEK
+oWb4FJ0SxlHk8Qj+nnE8opuP6J7/Q0rThoFZEro8FXA+oiAbRWLHeWXD44fJVG1x
+KkLAAFsukPhC8/FykSbT
+=bNyr
+-----END PGP SIGNATURE-----
+
+--a8Wt8u1KmwUX3Y2C--
+
+
+--===============9055770944649252648==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============9055770944649252648==--
