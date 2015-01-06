@@ -1,135 +1,68 @@
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: Re: [PATCH] ARM: vexpress: bindings: Add generic PD awareness to the
- spc controller
-Date: Tue, 6 Jan 2015 11:36:03 -0700
-Message-ID: <CANLsYkz_tx0MAnssO1JmgGzeaj12oU64FJjiKKyEOyXuUKk8jQ@mail.gmail.com>
-References: <1420562732-4353-1-git-send-email-mathieu.poirier@linaro.org>
-	<CAL_JsqJwauxNNojhAaYEr7oQTm6fwYwtByv_s6-tHiXYA214AQ@mail.gmail.com>
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH v2 1/2] of/pci: add of_pci_dma_configure() update dma
+ configuration
+Date: Tue, 6 Jan 2015 19:50:33 +0000
+Message-ID: <20150106195033.GH32449@arm.com>
+References: <1419459099-6667-1-git-send-email-m-karicheri2@ti.com>
+ <1419459099-6667-2-git-send-email-m-karicheri2@ti.com>
+ <CAL_JsqJtVnP_5zAiUvMwL00JQV0mjw-R_hEkxiv13ZuNrQ8nAA@mail.gmail.com>
+ <54A6D375.6050604@ti.com>
+ <CAL_Jsq+krOUA3BPvMCdaOBhALoi+pzWbw3YndXqR8x52OJogZg@mail.gmail.com>
+ <54A71CD1.4070107@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJwauxNNojhAaYEr7oQTm6fwYwtByv_s6-tHiXYA214AQ@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <54A71CD1.4070107@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Murali Karicheri <m-karicheri2@ti.com>
+Cc: Rob Herring <robherring2@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 6 January 2015 at 10:02, Rob Herring <robherring2@gmail.com> wrote:
-> On Tue, Jan 6, 2015 at 10:45 AM,  <mathieu.poirier@linaro.org> wrote:
->> From: Mathieu Poirier <mathieu.poirier@linaro.org>
->>
->> Among other things, the serial power controller (SPC) controls power to
->> the A7 and A15 clusters.  Theses clusters also happen to contains the
->> coresight tracers used for HW assisted tracing.
->>
->> By modellling these to power domains in a way that is comprehensible to
->> the generic power domain sub-system and using the runtime PM API in the
->> coresight drivers, we can prevent power to the domains from being
->> turned off while tracing related operations are still pending.
->>
->> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
->> ---
->>  .../bindings/arm/vexpress-power-controller.txt     | 54 ++++++++++++++++++++++
->>  1 file changed, 54 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/arm/vexpress-power-controller.txt
->>
->> diff --git a/Documentation/devicetree/bindings/arm/vexpress-power-controller.txt b/Documentation/devicetree/bindings/arm/vexpress-power-controller.txt
->> new file mode 100644
->> index 000000000000..3af5624dc5cb
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/arm/vexpress-power-controller.txt
->> @@ -0,0 +1,54 @@
->> +ARM Versatile Express Power Controller
->> +--------------------------------------
->> +
->> +This binding models the serial power controller (SPC) in a way that is
->> +intelligible to the generic power domain subsystem and in accordance
->> +with the guidelines from:
->> +
->> +Documentation/devicetree/bindings/power/power_domain.txt
->> +
->> +The binding doesn't have a '<reg>' property as the base address for HW
->> +access is provided by the vexpress-scc sub-system.
->> +
->> +Required node properties:
->> +- compatible value : = "arm,vexpress-power-controller";
->> +- #power-domain-cells : = Number of cells in a PM domain specifier, as
->> +  specified in "power_domain.txt" referenced above.
->> +
->> +Example:
->> +       A7_A15_cluster_pd: A7-A15-cluster-pd {
->
-> This is more a description of the power domain than the power
-> controller IP block.
+On Fri, Jan 02, 2015 at 10:33:53PM +0000, Murali Karicheri wrote:
+> On 01/02/2015 03:45 PM, Rob Herring wrote:
+> > On Fri, Jan 2, 2015 at 11:20 AM, Murali Karicheri<m-karicheri2@ti.com>  wrote:
+> >> On 12/26/2014 02:33 PM, Rob Herring wrote:
+> >>> On Wed, Dec 24, 2014 at 4:11 PM, Murali Karicheri<m-karicheri2@ti.com>
+> >>>> +               coherent = of_dma_is_coherent(parent_np);
+> >>>> +               dev_dbg(dev, "device is%sdma coherent\n",
+> >>>> +                       coherent ? " " : " not ");
+> >>>> +
+> >>>> +               arch_setup_dma_ops(dev, dma_addr, size, NULL, coherent);
+> >>>
+> >>>
+> >>> This is the same code as of_dma_configure. The only difference I see
+> >>> is which node ptr is passed to of_dma_get_range. You need to make that
+> >>> a function param of of_dma_configure.
+> >>>
+> >>> of_dma_configure also has iommu handling now. You will probably need
+> >>> something similar for PCI in that you setup an iommu based on the root
+> >>> bus DT properties.
+> >>>
+> >> Initially I had the same idea to re-use the existing function
+> >> of_dma_configure() for this. I wanted to defer this until we have an
+> >> agreement on the changes required for the subject functionality. My quick
+> >> review of the code suggestio this would require additional API changes as
+> >> below. I did a quick test of the changes and it works for Keystone, but need
+> >> to be reviewed by everyone as I touch the IOMMU functionality here and I
+> >> don't have a platform with IOMMU. Need test by someone to make sure I don't
+> >> break anything.
+> >
+> > The IOMMU changes look trivial. We may want to address the comment in
+> > of_iommu_configure about parent nodes. We should be sure these changes
+> > work with how we would do searching parent nodes.
+> 
+> I have no experience with IOMMU and may not offer much help here as I 
+> originally wrote above. Will Deacon has added this API and probably able 
+> to offer some help in this discussion.
+> 
+> Will Deacon,
+> 
+> Any comment?
 
-This one is a little tricky - the controller itself (SPC) is accessed
-via registers mapped by another driver (SCC) and have two completely
-separate files.  The SPC driver itself is not DT'ed, simply because it
-doesn't have too,  hence writing things the way I did.
+Sorry for the delay; I'm still catching up on email after the Christmas
+break, but I *will* get around to looking at this. If you have a new version
+to post based on the comments from Rob and Arnd, feel free to send that and
+I'll look at that instead.
 
-I will ask the vexpress maintainers where they want to see this code
-going.  Would you accept this binding as part of the existing
-"arm,vexpress-sysreg" [1] or even "arm,vexpress-scc" [2]?
-
-[1]. Documentation/devicetree/bindings/arm/vexpress-sysreg.txt
-[2]. Documentation/devicetree/bindings/arm/vexpress-scc.txt
-
->
->> +               compatible = "arm,vexpress-power-controller";
->> +               #power-domain-cells = <1>;
->
-> You need to define what goes in the cell. That is specific to the
-> power controller. It could be generic in that N corresponds to power
-> domain N in the controller if the controller is generic in that way
-> (i.e. all the register accesses are just indexed).
-
-That is exactly how things are - one controller and two power domains.
-Based on what the generic power domain code does #power-domain-cells
-is the argument indicating what domain a device should be added to.
->From what I read this is also how things are (sparsely) explained in
-"power_domain.txt".  As such I'm not exactly sure of what you'd like
-to see modified - enlightenment would be appreciated.
-
->
->> +        };
->> +
->> +       ....
->> +
->> +       ptm@0,2201d000 {
->
-> Drop the comma.
->
->> +               compatible = "arm,coresight-etm3x", "arm,primecell";
->> +               reg = <0 0x2201d000 0 0x1000>;
->> +
->> +               cpu = <&cpu1>;
->> +               clocks = <&oscclk6a>;
->> +               clock-names = "apb_pclk";
->> +               power-domains = <&A7_A15_cluster_pd 0>;
->> +               port {
->> +                       ptm1_out_port: endpoint {
->> +                               remote-endpoint = <&funnel_in_port1>;
->> +                       };
->> +               };
->> +       };
->> +
->> +       etm@0,2203c000 {
->
-> ditto
->
->> +               compatible = "arm,coresight-etm3x", "arm,primecell";
->> +               reg = <0 0x2203c000 0 0x1000>;
->> +
->> +               cpu = <&cpu2>;
->> +               clocks = <&oscclk6a>;
->> +               clock-names = "apb_pclk";
->> +               power-domains = <&A7_A15_cluster_pd 1>;
->> +               port {
->> +                       etm0_out_port: endpoint {
->> +                               remote-endpoint = <&funnel_in_port2>;
->> +                       };
->> +               };
->> +       };
->> --
->> 1.9.1
->>
+Will
