@@ -1,33 +1,61 @@
-From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH v2 RESEND 2/2] mfd: arizona: Update DT
-	binding to support OUTn_MONO init_data
-Date: Tue, 6 Jan 2015 09:17:50 +0000
-Message-ID: <20150106091750.GO14516@opensource.wolfsonmicro.com>
-References: <1420185829-24886-1-git-send-email-ideal.song@samsung.com> <1420185829-24886-3-git-send-email-ideal.song@samsung.com>
+From: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Subject: Re: [PATCH v4 4/5] ARM: mediatek: Add EINT support to MTK pinctrl
+ driver.
+Date: Tue, 6 Jan 2015 17:16:57 +0800
+Message-ID: <1420535817.17567.10.camel@mtksdaap41>
+References: <1418772873-19747-1-git-send-email-hongzhou.yang@mediatek.com>
+ <1418772873-19747-5-git-send-email-hongzhou.yang@mediatek.com>
+ <1418807365.6443.17.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1420185829-24886-3-git-send-email-ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Inha Song <ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1418807365.6443.17.camel@mtksdaap41>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Vladimir Murzin <vladimir.murzin@arm.com>, maoguang.meng@mediatek.com, Russell King <linux@arm.linux.org.uk>, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Hongzhou Yang <hongzhou.yang@mediatek.com>, Catalin Marinas <catalin.marinas@arm.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, alan.cheng@mediatek.com, toby.liu@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, dandan.he@mediatek.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 02, 2015 at 05:03:49PM +0900, Inha Song wrote:
-> This patch update DT binding to support OUTn_MONO init_data. Each
-> output signal can be configurated as a mono differential output.
-> The mono differential configuration is selected using the OUTn_MONO
-> registers.
+On Wed, 2014-12-17 at 17:09 +0800, Yingjoe Chen wrote:
+> On Wed, 2014-12-17 at 07:34 +0800, Hongzhou Yang wrote:
+> > From: Maoguang Meng <maoguang.meng@mediatek.com>
+> > 
+> > MTK SoC support external interrupt(EINT) from most SoC pins.
+> > Add EINT support to pinctrl driver.
+> > 
+> > Signed-off-by: Maoguang Meng <maoguang.meng@mediatek.com>
+> > Signed-off-by: Hongzhou Yang <hongzhou.yang@mediatek.com>
 > 
-> Signed-off-by: Inha Song <ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
+> Hi Linus,
+> 
+> This patch add EINT support to the pinctrl driver. We've surveyed
+> GPIOLIB_IRQCHIP, but we didn't use it because:
+> 
+> - Not every GPIO pin support interrupt.
+> - EINT use a different numbering to GPIO. eg, from the mt8135 table,
+> GPIO29 is EINT158. It is more nature & efficient to use EINT number as
+> hwirq.
+> 
+> +               MTK_EINT_FUNCTION(2, 158),
+> +               MTK_FUNCTION(0, "GPIO29"),
 
-Acked-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
 
-Thanks,
-Charles
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hi Linus,
+
+After further looking into this, we could use GPIOLIB_IRQCHIP if we add
+an extension gpiochip_irqchip_add() to accept interrupt numbers and
+custom .to_irq function for our SoC. We could still reuse other code
+GPIOLIB_IRQCHIP provide.
+
+Please let me know what you think about this idea.
+Thanks.
+
+Joe.C
