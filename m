@@ -1,187 +1,105 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] spi: orion: Add multiple chip select support for Armada
- 370 and 375
-Date: Tue, 06 Jan 2015 23:00:54 +0100
-Message-ID: <54AC5B16.9020206@free-electrons.com>
-References: <1420579846-31962-1-git-send-email-ken.wilson@opengear.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] ARM: vexpress: bindings: Add generic PD awareness to the
+ spc controller
+Date: Tue, 6 Jan 2015 16:01:03 -0600
+Message-ID: <CAL_JsqLv8Q4eS_bwuLbEOBSxjU7uff4__KcSi3qwAvgmjhQKHw@mail.gmail.com>
+References: <1420562732-4353-1-git-send-email-mathieu.poirier@linaro.org>
+ <CAL_JsqJwauxNNojhAaYEr7oQTm6fwYwtByv_s6-tHiXYA214AQ@mail.gmail.com> <CANLsYkz_tx0MAnssO1JmgGzeaj12oU64FJjiKKyEOyXuUKk8jQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1420579846-31962-1-git-send-email-ken.wilson-xg7Pnmy8KxlWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ken Wilson <ken.wilson-xg7Pnmy8KxlWk0Htik3J/w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, gerg-JBU5SbJe1FlAfugRpC6u6w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CANLsYkz_tx0MAnssO1JmgGzeaj12oU64FJjiKKyEOyXuUKk8jQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ken,
+On Tue, Jan 6, 2015 at 12:36 PM, Mathieu Poirier
+<mathieu.poirier@linaro.org> wrote:
+> On 6 January 2015 at 10:02, Rob Herring <robherring2@gmail.com> wrote:
+>> On Tue, Jan 6, 2015 at 10:45 AM,  <mathieu.poirier@linaro.org> wrote:
+>>> From: Mathieu Poirier <mathieu.poirier@linaro.org>
+>>>
+>>> Among other things, the serial power controller (SPC) controls power to
+>>> the A7 and A15 clusters.  Theses clusters also happen to contains the
+>>> coresight tracers used for HW assisted tracing.
+>>>
+>>> By modellling these to power domains in a way that is comprehensible to
+>>> the generic power domain sub-system and using the runtime PM API in the
+>>> coresight drivers, we can prevent power to the domains from being
+>>> turned off while tracing related operations are still pending.
+>>>
+>>> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+>>> ---
+>>>  .../bindings/arm/vexpress-power-controller.txt     | 54 ++++++++++++++++++++++
+>>>  1 file changed, 54 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/arm/vexpress-power-controller.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/arm/vexpress-power-controller.txt b/Documentation/devicetree/bindings/arm/vexpress-power-controller.txt
+>>> new file mode 100644
+>>> index 000000000000..3af5624dc5cb
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/arm/vexpress-power-controller.txt
+>>> @@ -0,0 +1,54 @@
+>>> +ARM Versatile Express Power Controller
+>>> +--------------------------------------
+>>> +
+>>> +This binding models the serial power controller (SPC) in a way that is
+>>> +intelligible to the generic power domain subsystem and in accordance
+>>> +with the guidelines from:
+>>> +
+>>> +Documentation/devicetree/bindings/power/power_domain.txt
+>>> +
+>>> +The binding doesn't have a '<reg>' property as the base address for HW
+>>> +access is provided by the vexpress-scc sub-system.
+>>> +
+>>> +Required node properties:
+>>> +- compatible value : = "arm,vexpress-power-controller";
+>>> +- #power-domain-cells : = Number of cells in a PM domain specifier, as
+>>> +  specified in "power_domain.txt" referenced above.
+>>> +
+>>> +Example:
+>>> +       A7_A15_cluster_pd: A7-A15-cluster-pd {
+>>
+>> This is more a description of the power domain than the power
+>> controller IP block.
+>
+> This one is a little tricky - the controller itself (SPC) is accessed
+> via registers mapped by another driver (SCC) and have two completely
+> separate files.  The SPC driver itself is not DT'ed, simply because it
+> doesn't have too,  hence writing things the way I did.
+>
+> I will ask the vexpress maintainers where they want to see this code
+> going.  Would you accept this binding as part of the existing
+> "arm,vexpress-sysreg" [1] or even "arm,vexpress-scc" [2]?
+>
+> [1]. Documentation/devicetree/bindings/arm/vexpress-sysreg.txt
+> [2]. Documentation/devicetree/bindings/arm/vexpress-scc.txt
 
-On 06/01/2015 22:30, Ken Wilson wrote:
-> Create a new dt binding for the Armada 375 that supports up to
-> 3 chip selects but uses the same prescaler values and algorithm
-> as the basic orion binding.
+Yes, that makes sense. I think either you could have sub node for the
+SPC or just use the sysreg node phandle directly. Given the
+simplicity, I'd probably go for the latter, but I haven't looked
+closely at these drivers and will defer to VExpress maintainers.
 
-There was already a patch that have been sent for this:
-http://thread.gmane.org/gmane.linux.kernel.spi.devel/17808/focus=17809
+>
+>>
+>>> +               compatible = "arm,vexpress-power-controller";
+>>> +               #power-domain-cells = <1>;
+>>
+>> You need to define what goes in the cell. That is specific to the
+>> power controller. It could be generic in that N corresponds to power
+>> domain N in the controller if the controller is generic in that way
+>> (i.e. all the register accesses are just indexed).
+>
+> That is exactly how things are - one controller and two power domains.
+> Based on what the generic power domain code does #power-domain-cells
+> is the argument indicating what domain a device should be added to.
+> From what I read this is also how things are (sparsely) explained in
+> "power_domain.txt".  As such I'm not exactly sure of what you'd like
+> to see modified - enlightenment would be appreciated.
 
-but in the end it has not been merged. The last email on the thread was
-about doing the manipulation in set_cs and not in setup_transfer(). And I
-didn't find a newer version.
+I wasn't sure if there are more domains you didn't add. If what 0 and
+1 correspond to varies by board, then it's probably fine as it. If
+they are always cluster 0 and cluster 1, then just say that.
 
-Maybe it just fell through the cracks.
-Thomas did you remember of it?
-
-Gregory
-
-> 
-> Update the Armada 370 so that it supports up to 4 chip selects.
-> 
-> This has been tested on the Armada 375 with multiple SPI-NOR chips.
-> 
-> Signed-off-by: Ken Wilson <ken.wilson-xg7Pnmy8KxlWk0Htik3J/w@public.gmane.org>
-> ---
->  .../devicetree/bindings/spi/spi-orion.txt          |  3 ++-
->  arch/arm/boot/dts/armada-375.dtsi                  |  4 +--
->  drivers/spi/spi-orion.c                            | 29 +++++++++++++++++++---
->  3 files changed, 29 insertions(+), 7 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/spi/spi-orion.txt b/Documentation/devicetree/bindings/spi/spi-orion.txt
-> index 50c3a3d..2aeeb85 100644
-> --- a/Documentation/devicetree/bindings/spi/spi-orion.txt
-> +++ b/Documentation/devicetree/bindings/spi/spi-orion.txt
-> @@ -1,7 +1,8 @@
->  Marvell Orion SPI device
->  
->  Required properties:
-> -- compatible : should be "marvell,orion-spi" or "marvell,armada-370-spi".
-> +- compatible : should be "marvell,orion-spi", "marvell,armada-370-spi",
-> +	or "marvell,armada-375-spi".
->  - reg : offset and length of the register set for the device
->  - cell-index : Which of multiple SPI controllers is this.
->  Optional properties:
-> diff --git a/arch/arm/boot/dts/armada-375.dtsi b/arch/arm/boot/dts/armada-375.dtsi
-> index de65714..f7a5ce2 100644
-> --- a/arch/arm/boot/dts/armada-375.dtsi
-> +++ b/arch/arm/boot/dts/armada-375.dtsi
-> @@ -192,7 +192,7 @@
->  			};
->  
->  			spi0: spi@10600 {
-> -				compatible = "marvell,orion-spi";
-> +				compatible = "marvell,armada-375-spi", "marvell,orion-spi";
->  				reg = <0x10600 0x50>;
->  				#address-cells = <1>;
->  				#size-cells = <0>;
-> @@ -203,7 +203,7 @@
->  			};
->  
->  			spi1: spi@10680 {
-> -				compatible = "marvell,orion-spi";
-> +				compatible = "marvell,armada-375-spi", "marvell,orion-spi";
->  				reg = <0x10680 0x50>;
->  				#address-cells = <1>;
->  				#size-cells = <0>;
-> diff --git a/drivers/spi/spi-orion.c b/drivers/spi/spi-orion.c
-> index c76b7d7..4129c37 100644
-> --- a/drivers/spi/spi-orion.c
-> +++ b/drivers/spi/spi-orion.c
-> @@ -28,7 +28,6 @@
->  /* Runtime PM autosuspend timeout: PM is fairly light on this driver */
->  #define SPI_AUTOSUSPEND_TIMEOUT		200
->  
-> -#define ORION_NUM_CHIPSELECTS		1 /* only one slave is supported*/
->  #define ORION_SPI_WAIT_RDY_MAX_LOOP	2000 /* in usec */
->  
->  #define ORION_SPI_IF_CTRL_REG		0x00
-> @@ -44,6 +43,7 @@
->  #define ARMADA_SPI_CLK_PRESCALE_MASK	0xDF
->  #define ORION_SPI_MODE_MASK		(ORION_SPI_MODE_CPOL | \
->  					 ORION_SPI_MODE_CPHA)
-> +#define ORION_SPI_CS_MASK	0x1C
->  
->  enum orion_spi_type {
->  	ORION_SPI,
-> @@ -55,6 +55,7 @@ struct orion_spi_dev {
->  	unsigned int		min_divisor;
->  	unsigned int		max_divisor;
->  	u32			prescale_mask;
-> +	u8			num_cs;
->  };
->  
->  struct orion_spi {
-> @@ -201,6 +202,13 @@ orion_spi_setup_transfer(struct spi_device *spi, struct spi_transfer *t)
->  
->  	orion_spi_mode_set(spi);
->  
-> +	if (orion_spi->master->num_chipselect > 1) {
-> +		orion_spi_clrbits(orion_spi, ORION_SPI_IF_CTRL_REG,
-> +				ORION_SPI_CS_MASK);
-> +		orion_spi_setbits(orion_spi, ORION_SPI_IF_CTRL_REG,
-> +				(spi->chip_select) << 2);
-> +	}
-> +
->  	rc = orion_spi_baudrate_set(spi, speed);
->  	if (rc)
->  		return rc;
-> @@ -398,18 +406,31 @@ static const struct orion_spi_dev orion_spi_dev_data = {
->  	.min_divisor = 4,
->  	.max_divisor = 30,
->  	.prescale_mask = ORION_SPI_CLK_PRESCALE_MASK,
-> +	.num_cs = 1,
->  };
->  
-> -static const struct orion_spi_dev armada_spi_dev_data = {
-> +static const struct orion_spi_dev armada_370_spi_dev_data = {
->  	.typ = ARMADA_SPI,
->  	.min_divisor = 1,
->  	.max_divisor = 1920,
->  	.prescale_mask = ARMADA_SPI_CLK_PRESCALE_MASK,
-> +	.num_cs = 4,
-> +};
-> +
-> +static const struct orion_spi_dev armada_375_spi_dev_data = {
-> +	.typ = ORION_SPI,
-> +	.min_divisor = 4,
-> +	.max_divisor = 30,
-> +	.prescale_mask = ORION_SPI_CLK_PRESCALE_MASK,
-> +	.num_cs = 3,
->  };
->  
->  static const struct of_device_id orion_spi_of_match_table[] = {
->  	{ .compatible = "marvell,orion-spi", .data = &orion_spi_dev_data, },
-> -	{ .compatible = "marvell,armada-370-spi", .data = &armada_spi_dev_data, },
-> +	{ .compatible = "marvell,armada-370-spi",
-> +		.data = &armada_370_spi_dev_data, },
-> +	{ .compatible = "marvell,armada-375-spi",
-> +		.data = &armada_375_spi_dev_data, },
->  	{}
->  };
->  MODULE_DEVICE_TABLE(of, orion_spi_of_match_table);
-> @@ -444,7 +465,6 @@ static int orion_spi_probe(struct platform_device *pdev)
->  	master->mode_bits = SPI_CPHA | SPI_CPOL;
->  
->  	master->transfer_one_message = orion_spi_transfer_one_message;
-> -	master->num_chipselect = ORION_NUM_CHIPSELECTS;
->  	master->bits_per_word_mask = SPI_BPW_MASK(8) | SPI_BPW_MASK(16);
->  	master->auto_runtime_pm = true;
->  
-> @@ -470,6 +490,7 @@ static int orion_spi_probe(struct platform_device *pdev)
->  	tclk_hz = clk_get_rate(spi->clk);
->  	master->max_speed_hz = DIV_ROUND_UP(tclk_hz, devdata->min_divisor);
->  	master->min_speed_hz = DIV_ROUND_UP(tclk_hz, devdata->max_divisor);
-> +	master->num_chipselect = devdata->num_cs;
->  
->  	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->  	spi->base = devm_ioremap_resource(&pdev->dev, r);
-> 
-
-
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
