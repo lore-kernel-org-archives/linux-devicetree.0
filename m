@@ -1,47 +1,50 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 3/3] ARM: dts: sun6i: Add dts file for
- CSQ CS908 board
-Date: Tue, 6 Jan 2015 11:05:49 +0100
-Message-ID: <20150106100549.GJ7853@lukather>
-References: <1419851366-21945-1-git-send-email-hdegoede@redhat.com>
- <1419851366-21945-3-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="VIOdPewhitSMo36n"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB7HIV2SQKGQE3F7ILMI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1419851366-21945-3-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Subject: [PATCH 4/4] ARM: tegra: remove wp-gpios from the generic nyan dtsi
+Date: Tue,  6 Jan 2015 11:37:29 +0100
+Message-ID: <1420540653-14816-5-git-send-email-tomeu.vizoso@collabora.com>
+References: <1420540653-14816-1-git-send-email-tomeu.vizoso@collabora.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1420540653-14816-1-git-send-email-tomeu.vizoso@collabora.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-tegra@vger.kernel.org
+Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---VIOdPewhitSMo36n
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+As the nyan-blaze has a micro-sd slot, as opposed to nyan-big, which has a full SD
+slot.
 
-On Mon, Dec 29, 2014 at 12:09:26PM +0100, Hans de Goede wrote:
-> The CSQ CS908 is an A31s based top-set box, with 1G RAM, 8G NAND,
-> rtl8188etv usb wifi, 2 USB A receptacles (1 connected through the OTG
-> controller), ethernet, 3.5 mm jack with a/v out and hdmi out.
-> 
-> Note it has no sdcard slot and therefore can only be fel booted.
-> 
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+---
+ arch/arm/boot/dts/tegra124-nyan-big.dts | 4 ++++
+ arch/arm/boot/dts/tegra124-nyan.dtsi    | 1 -
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
-Applied, thanks!
-
-Maxime
-
+diff --git a/arch/arm/boot/dts/tegra124-nyan-big.dts b/arch/arm/boot/dts/tegra124-nyan-big.dts
+index 2041077..598c090 100644
+--- a/arch/arm/boot/dts/tegra124-nyan-big.dts
++++ b/arch/arm/boot/dts/tegra124-nyan-big.dts
+@@ -6,6 +6,10 @@
+ 	model = "Acer Chromebook 13 CB5-311";
+ 	compatible = "google,nyan-big", "google,nyan", "nvidia,tegra124";
+ 
++	sdhci@0,700b0400 { /* SD Card on this bus */
++		wp-gpios = <&gpio TEGRA_GPIO(Q, 4) GPIO_ACTIVE_LOW>;
++	};
++
+ 	sound {
+ 		nvidia,model = "Acer Chromebook 13 CB5-311";
+ 	};
+diff --git a/arch/arm/boot/dts/tegra124-nyan.dtsi b/arch/arm/boot/dts/tegra124-nyan.dtsi
+index 4c68658..12d757e 100644
+--- a/arch/arm/boot/dts/tegra124-nyan.dtsi
++++ b/arch/arm/boot/dts/tegra124-nyan.dtsi
+@@ -820,7 +820,6 @@
+ 		status = "okay";
+ 		cd-gpios = <&gpio TEGRA_GPIO(V, 2) GPIO_ACTIVE_LOW>;
+ 		power-gpios = <&gpio TEGRA_GPIO(R, 0) GPIO_ACTIVE_HIGH>;
+-		wp-gpios = <&gpio TEGRA_GPIO(Q, 4) GPIO_ACTIVE_LOW>;
+ 		bus-width = <4>;
+ 		no-1-8-v;
+ 		vqmmc-supply = <&vddio_sdmmc3>;
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---VIOdPewhitSMo36n--
+1.9.3
