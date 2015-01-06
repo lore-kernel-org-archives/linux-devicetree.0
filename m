@@ -1,290 +1,46 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: [PATCH] clockevents: rockchip: Add rockchip timer for rk3288
-Date: Tue,  6 Jan 2015 12:03:53 +0100
-Message-ID: <1420542233-16897-1-git-send-email-daniel.lezcano@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: tglx@linutronix.de, heiko@sntech.de
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: imx6dl-udoo: Add board support based off
+ imx6q-udoo
+Date: Tue, 6 Jan 2015 19:09:16 +0800
+Message-ID: <20150106110913.GJ24511@dragon>
+References: <1419269361-6095-1-git-send-email-robertcnelson@gmail.com>
+ <CAOMZO5ByFrTFoPUeRPBYxjB74Xn1BPQXzDxSaa+SiW_Ks5JZOw@mail.gmail.com>
+ <CAOCHtYgr3uXkmZgBmmy_KDQxjCrnbE5WyR5d+ONRXJABj=xNUg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAOCHtYgr3uXkmZgBmmy_KDQxjCrnbE5WyR5d+ONRXJABj=xNUg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The rk3288 board uses the architected timers and these ones are shutdown when
-the cpu is powered down. There is a need of a broadcast timer in this case to
-ensure proper wakeup when the cpus are in sleep mode and a timer expires.
+On Mon, Dec 22, 2014 at 11:48:19AM -0600, Robert Nelson wrote:
+> On Mon, Dec 22, 2014 at 11:41 AM, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > On Mon, Dec 22, 2014 at 3:29 PM, Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> >
+> >> +/dts-v1/;
+> >> +#include "imx6dl.dtsi"
+> >> +#include "imx6qdl-udoo.dtsi"
+> >> +
+> >> +/ {
+> >> +       model = "Udoo i.MX6 Dual Board";
+> >
+> > It would be better to use "Udoo i.MX6 Dual-lite Board" in order to
+> > avoid confusion with the i.MX6 Dual variant.
+> >
+> > Other than that:
+> >
+> > Reviewed-by: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> 
+> True! That would correctly match the other dual-lite boards on mainline too.
+> 
+> Shawn, if you want me to respin the patch i will, otherwise can you
+> tweak that line?
 
-This driver provides the basic timer functionnality as a backup for the local
-timers at sleep time.
-
-The timer belongs to the alive subsystem. It includes two programmables 64 bits
-timer channels but the driver only uses 32bits. It works with two operations
-mode: free running and user defined count.
-
-Programing sequence:
-
-1. Timer initialization:
- * Disable the timer by writing '0' to the CONTROLREG register
- * Program the timer mode by writing the mode to the CONTROLREG register
- * Set the interrupt mask
-
-2. Setting the count value:
- * Load the count value to the registers COUNT0 and COUNT1 (not used).
-
-3. Enable the timer
- * Write '1' to the CONTROLREG register with the mode (free running or user)
-
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
----
- .../bindings/timer/rockchip,rk3288-timer.txt       |  15 ++
- arch/arm/boot/dts/rk3288.dtsi                      |   7 +
- arch/arm/mach-rockchip/Kconfig                     |   1 +
- drivers/clocksource/Kconfig                        |   4 +
- drivers/clocksource/Makefile                       |   1 +
- drivers/clocksource/rockchip_timer.c               | 158 +++++++++++++++++++++
- 6 files changed, 186 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/timer/rockchip,rk3288-timer.txt
- create mode 100644 drivers/clocksource/rockchip_timer.c
-
-diff --git a/Documentation/devicetree/bindings/timer/rockchip,rk3288-timer.txt b/Documentation/devicetree/bindings/timer/rockchip,rk3288-timer.txt
-new file mode 100644
-index 0000000..54ef747
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/rockchip,rk3288-timer.txt
-@@ -0,0 +1,15 @@
-+Rockchip rk3288 timer
-+
-+Required properties:
-+- compatible: shall be "rockchip,rk3288-timer"
-+- reg: base address of the timer register starting with TIMERS CONTROL register
-+- interrupts: should contain the interrupts for Timer0
-+- clock-frequency: the frequency the timer is running
-+
-+Example:
-+	timer: timer@ff810000 {
-+		compatible = "rockchip,rk3288-timer";
-+		reg = <0xff810000 0x20>;
-+		interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;
-+		clock-frequency = <24000000>;
-+	};
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index 2a878a3..7a7db48 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -149,6 +149,13 @@
- 		clock-frequency = <24000000>;
- 	};
- 
-+	timer: timer@ff810000 {
-+		compatible = "rockchip,rk3288-timer";
-+		reg = <0xff810000 0x20>;
-+		interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;
-+		clock-frequency = <24000000>;
-+	};
-+
- 	sdmmc: dwmmc@ff0c0000 {
- 		compatible = "rockchip,rk3288-dw-mshc";
- 		clock-freq-min-max = <400000 150000000>;
-diff --git a/arch/arm/mach-rockchip/Kconfig b/arch/arm/mach-rockchip/Kconfig
-index ac5803c..4c3fa7e 100644
---- a/arch/arm/mach-rockchip/Kconfig
-+++ b/arch/arm/mach-rockchip/Kconfig
-@@ -11,6 +11,7 @@ config ARCH_ROCKCHIP
- 	select HAVE_ARM_SCU if SMP
- 	select HAVE_ARM_TWD if SMP
- 	select DW_APB_TIMER_OF
-+	select RK3288_TIMER
- 	select ARM_GLOBAL_TIMER
- 	select CLKSRC_ARM_GLOBAL_TIMER_SCHED_CLOCK
- 	help
-diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-index fc01ec2..6ed97a6 100644
---- a/drivers/clocksource/Kconfig
-+++ b/drivers/clocksource/Kconfig
-@@ -26,6 +26,10 @@ config DW_APB_TIMER_OF
- 	select DW_APB_TIMER
- 	select CLKSRC_OF
- 
-+config RK3288_TIMER
-+	bool
-+	select CLKSRC_OF
-+
- config ARMADA_370_XP_TIMER
- 	bool
- 	select CLKSRC_OF
-diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
-index 94d90b2..39e4f77 100644
---- a/drivers/clocksource/Makefile
-+++ b/drivers/clocksource/Makefile
-@@ -12,6 +12,7 @@ obj-$(CONFIG_CLKBLD_I8253)	+= i8253.o
- obj-$(CONFIG_CLKSRC_MMIO)	+= mmio.o
- obj-$(CONFIG_DW_APB_TIMER)	+= dw_apb_timer.o
- obj-$(CONFIG_DW_APB_TIMER_OF)	+= dw_apb_timer_of.o
-+obj-$(CONFIG_RK3288_TIMER)      += rockchip_timer.o
- obj-$(CONFIG_CLKSRC_NOMADIK_MTU)	+= nomadik-mtu.o
- obj-$(CONFIG_CLKSRC_DBX500_PRCMU)	+= clksrc-dbx500-prcmu.o
- obj-$(CONFIG_ARMADA_370_XP_TIMER)	+= time-armada-370-xp.o
-diff --git a/drivers/clocksource/rockchip_timer.c b/drivers/clocksource/rockchip_timer.c
-new file mode 100644
-index 0000000..00e24bd
---- /dev/null
-+++ b/drivers/clocksource/rockchip_timer.c
-@@ -0,0 +1,158 @@
-+/*
-+ * Rockchip timer support
-+ *
-+ * Copyright (C) Daniel Lezcano <daniel.lezcano@linaro.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+#include <linux/init.h>
-+#include <linux/interrupt.h>
-+#include <linux/clockchips.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+
-+#define TIMER_NAME "rk_timer"
-+
-+#define TIMER_LOAD_COUNT0               0x00
-+#define TIMER_LOAD_COUNT1               0x04
-+#define TIMER_CONTROL_REG               0x10
-+#define TIMER_INT_STATUS                0x18
-+
-+#define TIMER_DISABLE                   0x0
-+#define TIMER_ENABLE                    0x1
-+#define TIMER_MODE_FREE_RUNNING         (0 << 1)
-+#define TIMER_MODE_USER_DEFINED_COUNT   (1 << 1)
-+#define TIMER_INT_UNMASK                (1 << 2)
-+
-+struct bc_timer {
-+	struct clock_event_device ce;
-+	void __iomem *base;
-+	u32 freq;
-+};
-+
-+static struct bc_timer bc_timer;
-+
-+static inline struct bc_timer *rk_timer(struct clock_event_device *ce)
-+{
-+	return container_of(ce, struct bc_timer, ce);
-+}
-+
-+static inline void __iomem *rk_base(struct clock_event_device *ce)
-+{
-+	return rk_timer(ce)->base;
-+}
-+
-+static inline void rk_timer_disable(struct clock_event_device *ce)
-+{
-+	writel_relaxed(TIMER_DISABLE, rk_base(ce) + TIMER_CONTROL_REG);
-+	dsb();
-+}
-+
-+static inline void rk_timer_enable(struct clock_event_device *ce, u32 flags)
-+{
-+	writel_relaxed(TIMER_ENABLE | TIMER_INT_UNMASK | flags,
-+		       rk_base(ce) + TIMER_CONTROL_REG);
-+	dsb();
-+}
-+
-+static void rk_timer_update_counter(unsigned long cycles,
-+				    struct clock_event_device *ce)
-+{
-+	writel_relaxed(cycles, rk_base(ce) + TIMER_LOAD_COUNT0);
-+	writel_relaxed(0, rk_base(ce) + TIMER_LOAD_COUNT1);
-+	dsb();
-+}
-+
-+static void rk_timer_interrupt_clear(struct clock_event_device *ce)
-+{
-+	writel_relaxed(1, rk_base(ce) + TIMER_INT_STATUS);
-+	dsb();
-+}
-+
-+static inline int rk_timer_set_next_event(unsigned long cycles,
-+					  struct clock_event_device *ce)
-+{
-+	rk_timer_disable(ce);
-+	rk_timer_update_counter(cycles, ce);
-+	rk_timer_enable(ce, TIMER_MODE_USER_DEFINED_COUNT);
-+	return 0;
-+}
-+
-+static inline void rk_timer_set_mode(enum clock_event_mode mode,
-+				     struct clock_event_device *ce)
-+{
-+	switch (mode) {
-+	case CLOCK_EVT_MODE_PERIODIC:
-+		rk_timer_disable(ce);
-+		rk_timer_update_counter(rk_timer(ce)->freq / HZ - 1, ce);
-+		rk_timer_enable(ce, TIMER_MODE_FREE_RUNNING);
-+	case CLOCK_EVT_MODE_ONESHOT:
-+	case CLOCK_EVT_MODE_RESUME:
-+		break;
-+	case CLOCK_EVT_MODE_UNUSED:
-+	case CLOCK_EVT_MODE_SHUTDOWN:
-+		rk_timer_disable(ce);
-+		break;
-+	}
-+}
-+
-+static irqreturn_t rk_timer_interrupt(int irq, void *dev_id)
-+{
-+	struct clock_event_device *ce = dev_id;
-+
-+	rk_timer_interrupt_clear(ce);
-+
-+	if (ce->mode == CLOCK_EVT_MODE_ONESHOT) {
-+		rk_timer_disable(ce);
-+	}
-+
-+	ce->event_handler(ce);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static void __init rk_timer_init(struct device_node *np)
-+{
-+	struct clock_event_device *ce = &bc_timer.ce;
-+	int ret, irq;
-+
-+	bc_timer.base = of_iomap(np, 0);
-+	if (!bc_timer.base) {
-+		pr_err("Failed to get base address for '%s'\n", TIMER_NAME);
-+		return;
-+	}
-+
-+	irq = irq_of_parse_and_map(np, 0);
-+	if (irq == NO_IRQ) {
-+                pr_err("Failed to map interrupts for '%s'\n", TIMER_NAME);
-+                return;
-+        }
-+
-+        if (of_property_read_u32(np, "clock-frequency", &bc_timer.freq)) {
-+		pr_err("Failed to read the frequency for '%s'\n", TIMER_NAME);
-+		return;
-+	}
-+
-+	ce->name = TIMER_NAME;
-+	ce->features = CLOCK_EVT_FEAT_PERIODIC | CLOCK_EVT_FEAT_ONESHOT;
-+	ce->set_next_event = rk_timer_set_next_event;
-+	ce->set_mode = rk_timer_set_mode;
-+	ce->irq = irq;
-+	ce->cpumask = cpumask_of(0);
-+	ce->rating = 250;
-+
-+	rk_timer_interrupt_clear(ce);
-+	rk_timer_disable(ce);
-+
-+	ret = request_irq(irq, rk_timer_interrupt, IRQF_TIMER, TIMER_NAME, ce);
-+	if (ret) {
-+		pr_err("Failed to initialize '%s': %d\n", TIMER_NAME, ret);
-+		return;
-+	}
-+
-+	clockevents_config_and_register(ce, bc_timer.freq, 1, UINT_MAX);
-+}
-+CLOCKSOURCE_OF_DECLARE(rk_timer, "rockchip,rk3288-timer", rk_timer_init);
--- 
-1.9.1
+Fixed it up and applied.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
