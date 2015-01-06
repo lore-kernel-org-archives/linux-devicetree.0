@@ -1,89 +1,175 @@
-From: mathieu.poirier@linaro.org
-Subject: [PATCH] ARM: vexpress: bindings: Add generic PD awareness to the spc controller
-Date: Tue,  6 Jan 2015 09:45:32 -0700
-Message-ID: <1420562732-4353-1-git-send-email-mathieu.poirier@linaro.org>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH RESEND 3/3] Documentation: Add documentation for rt5033
+ multifunction device
+Date: Tue, 6 Jan 2015 10:54:01 -0600
+Message-ID: <CAL_Jsq+Sz_iCkaDWzssA6DFeLX8fQ2hqKut0Gv6i5P706bmvpA@mail.gmail.com>
+References: <1420523117-6814-1-git-send-email-beomho.seo@samsung.com> <1420523117-6814-4-git-send-email-beomho.seo@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1420523117-6814-4-git-send-email-beomho.seo@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mathieu.poirier@linaro.org
+To: Beomho Seo <beomho.seo@samsung.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, lee.jone@linaro.org, Mark Brown <broonie@kernel.org>, Sebastian Reichel <sre@kernel.org>, dbaryshkov@gmail.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Chanwoo Choi <cw00.choi@samsung.com>, InKi Dae <inki.dae@samsung.com>, sw0312.kim@samsung.com, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
+On Mon, Jan 5, 2015 at 11:45 PM, Beomho Seo <beomho.seo@samsung.com> wrote:
+> This patch device tree binding documentation for rt5033 multifunction device.
+>
+> Cc: Sebastian Reichel <sre@kernel.org>
+> Cc: Lee Jones <lee.jones@linaro.org>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Ian campbell <ijc+devicetree@hellion.org.uk>
+> Cc: Kumar Gala <galak@codeaurora.org>
+> Signed-off-by: Beomho Seo <beomho.seo@samsung.com>
+> Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+> ---
+>  Documentation/devicetree/bindings/mfd/rt5033.txt   |  108 ++++++++++++++++++++
+>  .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+>  2 files changed, 109 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/rt5033.txt
+>
+> diff --git a/Documentation/devicetree/bindings/mfd/rt5033.txt b/Documentation/devicetree/bindings/mfd/rt5033.txt
+> new file mode 100644
+> index 0000000..52a6d33
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/rt5033.txt
+> @@ -0,0 +1,108 @@
+> +Richtek RT5033 Power management Integrated Circuit
+> +
+> +RT5033 is a Multifunction device which includes battery charger, fuel gauge,
+> +flash LED current source, LDO and synchronous Buck converter for portable
+> +applications. It is interfaced to host controller using i2c interface.
+> +
+> +Required properties:
+> +- compatible : Must be "richtek,rt5033"
+> +- reg : Specifies the i2c slave address of general part.
+> +- interrupts : This i2c devices has an IRQ line connected to the main SoC.
+> +- interrupt-parent : The parent interrupt controller.
+> +
+> +Optional node:
+> +Regulators: The regulators of RT5033 have to be instantiated under sub-node
+> +named "regulators" usinge the following format.
 
-Among other things, the serial power controller (SPC) controls power to
-the A7 and A15 clusters.  Theses clusters also happen to contains the
-coresight tracers used for HW assisted tracing.
+s/usinge/using/
 
-By modellling these to power domains in a way that is comprehensible to
-the generic power domain sub-system and using the runtime PM API in the
-coresight drivers, we can prevent power to the domains from being
-turned off while tracing related operations are still pending.
+> +
+> +       regulators {
+> +               regulator-name {
+> +                       regulator-name = LDO/BUCK
+> +                       regulator subnodes called X, Y and Z
+> +               };
+> +       };
+> +       refer Documentation/devicetree/bindings/regulator/regulator.txt
+> +
+> +
+> +Battery charger: There battery charger of RT5033 have to be instantiated under
+> +sub-node named "charger" using the following format.
+> +
+> +Required properties:
+> +- compatible : Must be "richtek,rt5033-charger".
+> +- richtek,pre-uamp : Current of pre-charge mode. The pre-charge current levels
+> +  are 350 mA to 650 mA programmed by I2C per 100 mA.
+> +- richtek,pre-threshold-uvolt : Voltage of threshold pre-charge mode. Battery
+> +  voltage is below pre-charge threshold voltage, the charger is in pre-charge
+> +  mode with pre-charge current. Its levels are 2.3 V  to 3.8 V programmed
+> +  by I2C per 0.1 V.
+> +- richtek,fast-uamp : Current of fast-charge mode. The fast-charge current
+> +  levels are 700 mA to 2000 mA programmed by I2C per 100 mA.
+> +- richtek,const-uvolt :  Battery regulation voltage of constant voltage mode.
+> +  This voltage level 3.65 V to 4.4 V bye I2C per 0.025 V.
+> +- richtek,eoc-uamp : This property is end of charge current. Its level 150 mA
+> +  to 200 mA.
 
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
----
- .../bindings/arm/vexpress-power-controller.txt     | 54 ++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/vexpress-power-controller.txt
+Please align -uamp and -uvolt names with regulator binding suffixes.
 
-diff --git a/Documentation/devicetree/bindings/arm/vexpress-power-controller.txt b/Documentation/devicetree/bindings/arm/vexpress-power-controller.txt
-new file mode 100644
-index 000000000000..3af5624dc5cb
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/vexpress-power-controller.txt
-@@ -0,0 +1,54 @@
-+ARM Versatile Express Power Controller
-+--------------------------------------
-+
-+This binding models the serial power controller (SPC) in a way that is
-+intelligible to the generic power domain subsystem and in accordance
-+with the guidelines from:
-+
-+Documentation/devicetree/bindings/power/power_domain.txt
-+
-+The binding doesn't have a '<reg>' property as the base address for HW
-+access is provided by the vexpress-scc sub-system.
-+
-+Required node properties:
-+- compatible value : = "arm,vexpress-power-controller";
-+- #power-domain-cells : = Number of cells in a PM domain specifier, as
-+  specified in "power_domain.txt" referenced above.
-+
-+Example:
-+	A7_A15_cluster_pd: A7-A15-cluster-pd {
-+		compatible = "arm,vexpress-power-controller";
-+		#power-domain-cells = <1>;
-+        };
-+
-+	....
-+
-+	ptm@0,2201d000 {
-+		compatible = "arm,coresight-etm3x", "arm,primecell";
-+		reg = <0 0x2201d000 0 0x1000>;
-+
-+		cpu = <&cpu1>;
-+		clocks = <&oscclk6a>;
-+		clock-names = "apb_pclk";
-+		power-domains = <&A7_A15_cluster_pd 0>;
-+		port {
-+			ptm1_out_port: endpoint {
-+				remote-endpoint = <&funnel_in_port1>;
-+			};
-+		};
-+	};
-+
-+	etm@0,2203c000 {
-+		compatible = "arm,coresight-etm3x", "arm,primecell";
-+		reg = <0 0x2203c000 0 0x1000>;
-+
-+		cpu = <&cpu2>;
-+		clocks = <&oscclk6a>;
-+		clock-names = "apb_pclk";
-+		power-domains = <&A7_A15_cluster_pd 1>;
-+		port {
-+			etm0_out_port: endpoint {
-+				remote-endpoint = <&funnel_in_port2>;
-+			};
-+		};
-+	};
--- 
-1.9.1
+> +       charger {
+> +               compatible = "richtek,rt5033-charger";
+> +               richtek,pre-uamp = <350000>;
+> +               richtek,pre-threshold-uvolt = <3400000>;
+> +               richtek,fast-uamp = <2000000>;
+> +               richtek,const-uvolt = <4350000>;
+> +               richtek,eoc-uamp = <250000>;
+> +       };
+> +
+> +
+> +Fuelgauge: There fuelgauge of RT5033 to be instantiated node named "fuelgauge"
+> +using the following format.
+> +
+> +Required properties:
+> +- compatible = Must be "richtek,rt5033-battery".
+> +
+> +       i2c_fuel: i2c@1 {
+
+Drop the @1.
+
+> +               compatible = "i2c-gpio";
+> +               standard i2c-gpio constraints...
+> +               fuelgauge {
+> +                       compatible = "richtek,rt5033-battery".
+> +               };
+> +       };
+
+I'm a bit confused by this. The fuelgauge is an i2c device hanging off
+the rt5033 or a 2nd i2c slave on the rt5033?
+
+> +
+> +
+> +Example:
+> +
+> +               rt5033@34 {
+> +                       compatible = "richtek,rt5033";
+> +                       reg = <0x34>;
+> +                       interrupt-parent = <&gpx1>;
+> +                       interrupts = <5 0>;
+> +
+> +                       regulators {
+> +                               buck_reg: BUCK {
+> +                                       regulator-name = "BUCK";
+> +                                       regulator-min-microvolt = <1200000>;
+> +                                       regulator-max-microvolt = <1200000>;
+> +                                       regulator-always-on;
+> +                               };
+> +                       };
+> +
+> +                       charger {
+> +                               compatible = "richtek,rt5033-charger";
+> +                               richtek,pre-uamp = <350000>;
+> +                               richtek,pre-threshold-uvolt = <3400000>;
+> +                               richtek,fast-uamp = <2000000>;
+> +                               richtek,const-uvolt = <4350000>;
+> +                               richtek,eoc-uamp = <250000>;
+> +                       };
+> +
+> +               };
+> +
+> +               i2c_fuel: i2c@10 {
+> +                       compatible = "i2c-gpio";
+> +                       gpios = <&gpm3 1 0
+> +                               &gpm3 0 0>;
+> +
+> +                       fuel: rt5033-battery@35 {
+> +                               compatible = "richtek,rt5033-battery";
+> +                               interrupt-parent = <&gpx2>;
+> +                               interrupts = <3 0>;
+> +                               reg = <0x35>;
+> +                       };
+> +               };
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 723999d..611b543 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -124,6 +124,7 @@ ralink      Mediatek/Ralink Technology Corp.
+>  ramtron        Ramtron International
+>  realtek Realtek Semiconductor Corp.
+>  renesas        Renesas Electronics Corporation
+> +richtek        Richtek Technology Corporation
+>  ricoh  Ricoh Co. Ltd.
+>  rockchip       Fuzhou Rockchip Electronics Co., Ltd
+>  samsung        Samsung Semiconductor
+> --
+> 1.7.9.5
+>
