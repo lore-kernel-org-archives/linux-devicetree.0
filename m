@@ -1,86 +1,80 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 4/4] ARM: tegra: remove wp-gpios from the generic nyan dtsi
-Date: Tue, 6 Jan 2015 14:08:39 +0100
-Message-ID: <20150106130838.GG31830@ulmo.nvidia.com>
-References: <1420540653-14816-1-git-send-email-tomeu.vizoso@collabora.com>
- <1420540653-14816-5-git-send-email-tomeu.vizoso@collabora.com>
+From: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v7 0/2] watchdog: ImgTec PDC Watchdog Timer Driver
+Date: Tue, 6 Jan 2015 10:19:33 -0300
+Message-ID: <1420550375-22867-1-git-send-email-ezequiel.garcia@imgtec.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4899963192451004141=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1420540653-14816-5-git-send-email-tomeu.vizoso@collabora.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-tegra@vger.kernel.org, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Here's the seventh round for IMG PDC Watchdog driver.
+The series is based on v3.19-rc3.
 
---===============4899963192451004141==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Cgrdyab2wu3Akvjd"
-Content-Disposition: inline
+Thanks!
 
+Changes from v6:
 
---Cgrdyab2wu3Akvjd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+  * Reworked set_timeout function to get rid of the min_delay field.
+  * Addressed a few comments made by Guenter Roeck.
+  * Added a description of the clocks to the devicetree binding doc.
 
-On Tue, Jan 06, 2015 at 11:37:29AM +0100, Tomeu Vizoso wrote:
-> As the nyan-blaze has a micro-sd slot, as opposed to nyan-big, which has =
-a full SD
-> slot.
->=20
-> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-> ---
->  arch/arm/boot/dts/tegra124-nyan-big.dts | 4 ++++
->  arch/arm/boot/dts/tegra124-nyan.dtsi    | 1 -
->  2 files changed, 4 insertions(+), 1 deletion(-)
+Changes from v5:
 
-Shouldn't this be squashed into patch 2/4?
+ * Removed unused struct pdc_wdt_dev variables.
+ * Removed out_wdt label in probe function.
 
-Thierry
+Changes from v4:
 
---Cgrdyab2wu3Akvjd
-Content-Type: application/pgp-signature
+ * Added warning message if initial timeout value exceeds maximum timeout.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Changes from v3:
 
-iQIcBAEBAgAGBQJUq95WAAoJEN0jrNd/PrOhGkUP/RVd0lzrU1Z9J2jgQ2K6olr9
-ymDvixWY34FKUkcU6PDnKz+aJQU5lqYXHIqXcD1foHOeEJ2CDABlA8c82aG9EeIl
-1JquIn4HafGniC1HJWj7YInbAmex9lRqhm0OMcE21F24bjo2QzW10gTc9OdEuYuM
-f2veiGqGft7TNzktE+HjTPo1V3dvw1ZeJWzlyujMbrF4FkGQwYhrmD9M5UD9w1fu
-blAaEXUAiycc0Sa0guQR+CrSH1+zxfIzMtaznAyhowv8SWb59adVBUGu9c65jvuM
-vFHYPRqBvHllkiEcBtGZiT/aWnr8L4zySU6OFNKmKEEGlpXwlGYER/ewVdmhA6rk
-Cq54D79/iGUgPCbIj+pVbq638p6JFRI6/uJ38+APHibCoOlg1SmTEexmrgex99yN
-HOHL/DVAh2IRYsEKvYKCuNnyOBQ6HMr66HiiQODTEib90NZ3KA98fEOVqbumCocB
-rSJNxNhEQvonD3/+9HUt0+Aoa9IGpmsseYME0kWrTsvor3PoYjXkpS3zmJy8XvQj
-akqafP0IqhCqo7BZ0Jzpj6QRAMAKxhJXPrAVrA2j/9GNMWA7bw79znIrn/AcEnhF
-jRhNnOiqspox3NNiM3wMp6S5jnWpXk6buhKfczmheWUxQfQ2aPlBit/glM7ch5Q0
-Q7ZjT0neySd4RwxJEX2o
-=Na4a
------END PGP SIGNATURE-----
+ * Removed PDC_WD_MAX_DELAY.
+ * Removed spinlock.
+ * Removed timeout check inside pdc_wdt_set_timeout function.
+ * Changed identity to IMG PDC Watchdog.
+ * Removed pdc_wdt_set_timeout call from the probe function.
+ * Removed pdc_wdt_shutdown function call from pdc_wdt_remove function
+   and added pdc_wdt_stop function call instead.
 
---Cgrdyab2wu3Akvjd--
+Changes from v2:
 
+ * Removed interrupt.h header file.
 
---===============4899963192451004141==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Changes from v1:
 
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+ * Arranged all include files in alphabetical order.
+ * Arranged register field masks/shifts defines next to their
+   corresponding register
+ * Registered clock rate-change notifier callback.
+ * Removed all references to 32 kHz fixed clock rate.
+   Now the clock rate is read dynamically using clk_get_rate().
+ * Defined a macro PDC_WD_CONFIG_ENABLE.
+ * Added code for getting system clock.
+ * Moved module_param stuffs next to the corresponding variable defines.
+ * Added code in the function pdc_wdt_remove for stopping watchdog.
+ * Removed MODULE_ALIAS.
+ * Removed few unwanted spaces and unwanted blank lines.
 
---===============4899963192451004141==--
+Naidu Tellapati (2):
+  watchdog: ImgTec PDC Watchdog Timer Driver
+  DT: watchdog: Add ImgTec PDC Watchdog Timer binding documentation
+
+ .../devicetree/bindings/watchdog/imgpdc-wdt.txt    |  19 ++
+ drivers/watchdog/Kconfig                           |  11 +
+ drivers/watchdog/Makefile                          |   1 +
+ drivers/watchdog/imgpdc_wdt.c                      | 289 +++++++++++++++++++++
+ 4 files changed, 320 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/imgpdc-wdt.txt
+ create mode 100644 drivers/watchdog/imgpdc_wdt.c
+
+-- 
+2.2.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
