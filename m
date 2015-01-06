@@ -1,12 +1,12 @@
 From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v2] clk-rcar-gen2: ADSP clock support
-Date: Wed, 07 Jan 2015 01:38:47 +0300
-Message-ID: <9065678.vTTCEInOk7@wasted.cogentembedded.com>
+Subject: [PATCH v3 resend] clk-rcar-gen2: ADSP clock support
+Date: Wed, 07 Jan 2015 01:39:52 +0300
+Message-ID: <355163371.fkynKV0U5x@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
 To: mturquette@linaro.org, linux-kernel@vger.kernel.org, sboyd@codeaurora.org
 Cc: robh+dt@kernel.org, linux-sh@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
@@ -22,6 +22,8 @@ Based on the original patch by Konstantin Kozhevnikov
 Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
 ---
+Re-sending with the correct version tag...
+
 The patch is against the 'clk-next' branch of Mike Turquette's 'linux.git' repo
 plus the RCAN clock support patch reposted yesterday.
 
