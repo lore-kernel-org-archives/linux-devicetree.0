@@ -1,60 +1,54 @@
 From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [RFC PATCH v3 4/4] arm64:numa: adding numa support for arm64 platforms.
-Date: Tue, 06 Jan 2015 20:59:04 +0100
-Message-ID: <2425557.4DHPZVafv4@wuerfel>
-References: <1420011208-7051-1-git-send-email-ganapatrao.kulkarni@caviumnetworks.com> <1849719.f6Z6RhZjTc@wuerfel> <CAFpQJXVQnRY9wZRk-83bQLw0m=41ZxH2v-YZCHdF0fvC8LS_Tw@mail.gmail.com>
+Subject: Re: [RFC PATCH v3 3/4] arm64:thunder: Add initial dts for Cavium's Thunder SoC in 2 Node topology.
+Date: Tue, 06 Jan 2015 21:02:18 +0100
+Message-ID: <3372289.4AUgcSNZN5@wuerfel>
+References: <1420011208-7051-1-git-send-email-ganapatrao.kulkarni@caviumnetworks.com> <1741288.B6kbjm5Uq5@wuerfel> <CAFpQJXXnM==4AmmNHf8yp2x0aK4Lnp2cy-4JpzuxsgXX3A=J4A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAFpQJXVQnRY9wZRk-83bQLw0m=41ZxH2v-YZCHdF0fvC8LS_Tw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <CAFpQJXXnM==4AmmNHf8yp2x0aK4Lnp2cy-4JpzuxsgXX3A=J4A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Ganapatrao Kulkarni <ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Roy Franz <roy.franz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Steve Capper <steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Ganapatrao Kulkarni <ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Roy Franz <roy.franz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Steve Capper <steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 06 January 2015 14:55:53 Ganapatrao Kulkarni wrote:
-> On Sat, Jan 3, 2015 at 2:40 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> >> +int dt_get_cpu_node_id(int cpu)
-> >> +{
-> >> +     struct device_node *dn = NULL;
-> >> +
-> >> +     while ((dn = of_find_node_by_type(dn, "cpu"))) {
-> >> +             const u32 *cell;
-> >> +             u64 hwid;
-> >> +
-> >> +             /*
-> >> +              * A cpu node with missing "reg" property is
-> >> +              * considered invalid to build a cpu_logical_map
-> >> +              * entry.
-> >> +              */
-> >> +             cell = of_get_property(dn, "reg", NULL);
-> >> +             if (!cell) {
-> >> +                     pr_err("%s: missing reg property\n", dn->full_name);
-> >> +                     return default_nid;
-> >> +             }
-> >> +             hwid = of_read_number(cell, of_n_addr_cells(dn));
-> >> +
-> >> +             if (cpu_logical_map(cpu) == hwid)
-> >> +             return of_node_to_nid_single(dn);
-> >> +     }
-> >> +     return NUMA_NO_NODE;
-> >> +}
-> >> +EXPORT_SYMBOL(dt_get_cpu_node_id);
+On Tuesday 06 January 2015 15:04:26 Ganapatrao Kulkarni wrote:
+> On Sat, Jan 3, 2015 at 2:47 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> > On Wednesday 31 December 2014 13:03:27 Ganapatrao Kulkarni wrote:
+> >> +             cpu@00f {
+> >> +                     device_type = "cpu";
+> >> +                     compatible = "cavium,thunder", "arm,armv8";
+> >> +                     reg = <0x0 0x00f>;
+> >> +                     enable-method = "psci";
+> >> +                     arm,associativity = <0 0 0x00f>;
+> >> +             };
+> >> +             cpu@100 {
+> >> +                     device_type = "cpu";
+> >> +                     compatible = "cavium,thunder", "arm,armv8";
+> >> +                     reg = <0x0 0x100>;
+> >> +                     enable-method = "psci";
+> >> +                     arm,associativity = <0 0 0x100>;
+> >> +             };
 > >
-> > Maybe just expose a function to the device node for a CPU ID here, and
-> > expect callers to use of_node_to_nid?
-> shall i make this wrapper function in dt_numa.c, which will use
-> functions _of_node_to_nid and  _of_cpu_to_node(cpu)
+> > What is the 0x100 offset in the last-level topology field? Does this have
+> > no significance to topology at all? I would expect that to be something
+> > like cluster number that is relevant to caching and should be represented
+> > as a separate level.
+>
+> i did not understand, can you please explain little more about "
+> should be represented as a separate level."
+> at present, i have put the hwid of a cpu.
 
-Yes, I guess that would work.
+>From what I undertand, the hwid of the CPU contains the "cluster" number in
+this bit position, so you typically have a shared L2 or L3 cache between
+all cores within a cluster, but separate caches in other clusters.
 
-> And,  this function can be a weak function in numa.c which returns 0.
-
-No, please don't use weak functions. You can either use IS_ENABLED()
-tricks to remove function calls at compile-time, or in the header
-file provide an inline function as an alternative to the extern
-declaration, based on a configuration symbol.
+If this is the case, there will be a measurable difference in performance
+between two processes sharing memory when running on the same cluster,
+or when running on different clusters on the same socket. If the
+performance difference is relevant, it should be described as a separate
+level in the associativity property.
 
 	Arnd
 --
