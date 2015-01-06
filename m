@@ -1,105 +1,70 @@
 From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] ARM: vexpress: bindings: Add generic PD awareness to the
- spc controller
-Date: Tue, 6 Jan 2015 16:01:03 -0600
-Message-ID: <CAL_JsqLv8Q4eS_bwuLbEOBSxjU7uff4__KcSi3qwAvgmjhQKHw@mail.gmail.com>
-References: <1420562732-4353-1-git-send-email-mathieu.poirier@linaro.org>
- <CAL_JsqJwauxNNojhAaYEr7oQTm6fwYwtByv_s6-tHiXYA214AQ@mail.gmail.com> <CANLsYkz_tx0MAnssO1JmgGzeaj12oU64FJjiKKyEOyXuUKk8jQ@mail.gmail.com>
+Subject: Re: [PATCH v8 1/4] doc: add bindings document for altera fpga manager
+Date: Tue, 6 Jan 2015 16:05:37 -0600
+Message-ID: <CAL_JsqKRe2YquSmi01wa5b=Ctns+1ek-PdSHDLuxyCfKasTw5g@mail.gmail.com>
+References: <1420575219-27061-1-git-send-email-atull@opensource.altera.com> <1420575219-27061-2-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CANLsYkz_tx0MAnssO1JmgGzeaj12oU64FJjiKKyEOyXuUKk8jQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1420575219-27061-2-git-send-email-atull@opensource.altera.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Alan Tull <atull@opensource.altera.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, "H. Peter Anvin" <hpa@zytor.com>, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Randy Dunlap <rdunlap@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, iws@ovro.caltech.edu, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Pavel Machek <pavel@denx.de>, Mark Brown <broonie@kernel.org>, Philip Balister <philip@balister.org>, Alessandro Rubini <rubini@gnudd.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Jason Cooper <jason@lakedaemon.net>, Kyle Teske <kyle.teske@ni.com>, Nicolas Pitre <nico@linaro.org>, Felipe Balbi <balbi>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 6, 2015 at 12:36 PM, Mathieu Poirier
-<mathieu.poirier@linaro.org> wrote:
-> On 6 January 2015 at 10:02, Rob Herring <robherring2@gmail.com> wrote:
->> On Tue, Jan 6, 2015 at 10:45 AM,  <mathieu.poirier@linaro.org> wrote:
->>> From: Mathieu Poirier <mathieu.poirier@linaro.org>
->>>
->>> Among other things, the serial power controller (SPC) controls power to
->>> the A7 and A15 clusters.  Theses clusters also happen to contains the
->>> coresight tracers used for HW assisted tracing.
->>>
->>> By modellling these to power domains in a way that is comprehensible to
->>> the generic power domain sub-system and using the runtime PM API in the
->>> coresight drivers, we can prevent power to the domains from being
->>> turned off while tracing related operations are still pending.
->>>
->>> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
->>> ---
->>>  .../bindings/arm/vexpress-power-controller.txt     | 54 ++++++++++++++++++++++
->>>  1 file changed, 54 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/arm/vexpress-power-controller.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/arm/vexpress-power-controller.txt b/Documentation/devicetree/bindings/arm/vexpress-power-controller.txt
->>> new file mode 100644
->>> index 000000000000..3af5624dc5cb
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/arm/vexpress-power-controller.txt
->>> @@ -0,0 +1,54 @@
->>> +ARM Versatile Express Power Controller
->>> +--------------------------------------
->>> +
->>> +This binding models the serial power controller (SPC) in a way that is
->>> +intelligible to the generic power domain subsystem and in accordance
->>> +with the guidelines from:
->>> +
->>> +Documentation/devicetree/bindings/power/power_domain.txt
->>> +
->>> +The binding doesn't have a '<reg>' property as the base address for HW
->>> +access is provided by the vexpress-scc sub-system.
->>> +
->>> +Required node properties:
->>> +- compatible value : = "arm,vexpress-power-controller";
->>> +- #power-domain-cells : = Number of cells in a PM domain specifier, as
->>> +  specified in "power_domain.txt" referenced above.
->>> +
->>> +Example:
->>> +       A7_A15_cluster_pd: A7-A15-cluster-pd {
->>
->> This is more a description of the power domain than the power
->> controller IP block.
+On Tue, Jan 6, 2015 at 2:13 PM,  <atull@opensource.altera.com> wrote:
+> From: Alan Tull <atull@opensource.altera.com>
 >
-> This one is a little tricky - the controller itself (SPC) is accessed
-> via registers mapped by another driver (SCC) and have two completely
-> separate files.  The SPC driver itself is not DT'ed, simply because it
-> doesn't have too,  hence writing things the way I did.
+> New bindings document for Altera fpga manager.
 >
-> I will ask the vexpress maintainers where they want to see this code
-> going.  Would you accept this binding as part of the existing
-> "arm,vexpress-sysreg" [1] or even "arm,vexpress-scc" [2]?
->
-> [1]. Documentation/devicetree/bindings/arm/vexpress-sysreg.txt
-> [2]. Documentation/devicetree/bindings/arm/vexpress-scc.txt
+> Signed-off-by: Alan Tull <atull@opensource.altera.com>
 
-Yes, that makes sense. I think either you could have sub node for the
-SPC or just use the sysreg node phandle directly. Given the
-simplicity, I'd probably go for the latter, but I haven't looked
-closely at these drivers and will defer to VExpress maintainers.
+Acked-by: Rob Herring <robh@kernel.org>
 
->
->>
->>> +               compatible = "arm,vexpress-power-controller";
->>> +               #power-domain-cells = <1>;
->>
->> You need to define what goes in the cell. That is specific to the
->> power controller. It could be generic in that N corresponds to power
->> domain N in the controller if the controller is generic in that way
->> (i.e. all the register accesses are just indexed).
->
-> That is exactly how things are - one controller and two power domains.
-> Based on what the generic power domain code does #power-domain-cells
-> is the argument indicating what domain a device should be added to.
-> From what I read this is also how things are (sparsely) explained in
-> "power_domain.txt".  As such I'm not exactly sure of what you'd like
-> to see modified - enlightenment would be appreciated.
-
-I wasn't sure if there are more domains you didn't add. If what 0 and
-1 correspond to varies by board, then it's probably fine as it. If
-they are always cluster 0 and cluster 1, then just say that.
+Like I said, this binding doesn't look like it will change other than
+perhaps additional optional properties, so it can go into
+Documentation. Perhaps .../bindings/fpga/. I'm happy to merge this
+thru DT tree if you want.
 
 Rob
+
+> ---
+> v5 : Move bindings to drivers/staging/fpga/Documentation/bindings
+>
+> v6 : No change in this patch for v6 of the patch set
+>
+> v7 : No change in this patch for v7 of the patch set
+>
+> v8 : Make compatible string and name of bindings doc more chip
+>      specific
+> ---
+>  .../bindings/altera-socfpga-fpga-mgr.txt           |   17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+>  create mode 100644 drivers/staging/fpga/Documentation/bindings/altera-socfpga-fpga-mgr.txt
+>
+> diff --git a/drivers/staging/fpga/Documentation/bindings/altera-socfpga-fpga-mgr.txt b/drivers/staging/fpga/Documentation/bindings/altera-socfpga-fpga-mgr.txt
+> new file mode 100644
+> index 0000000..9b027a6
+> --- /dev/null
+> +++ b/drivers/staging/fpga/Documentation/bindings/altera-socfpga-fpga-mgr.txt
+> @@ -0,0 +1,17 @@
+> +Altera SOCFPGA FPGA Manager
+> +
+> +Required properties:
+> +- compatible : should contain "altr,socfpga-fpga-mgr"
+> +- reg        : base address and size for memory mapped io.
+> +               - The first index is for FPGA manager register access.
+> +               - The second index is for writing FPGA configuration data.
+> +- interrupts : interrupt for the FPGA Manager device.
+> +
+> +Example:
+> +
+> +       hps_0_fpgamgr: fpgamgr@0xff706000 {
+> +               compatible = "altr,socfpga-fpga-mgr";
+> +               reg = <0xFF706000 0x1000
+> +                      0xFFB90000 0x1000>;
+> +               interrupts = <0 175 4>;
+> +       };
+> --
+> 1.7.9.5
+>
