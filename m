@@ -1,175 +1,90 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH RESEND 3/3] Documentation: Add documentation for rt5033
- multifunction device
-Date: Tue, 6 Jan 2015 10:54:01 -0600
-Message-ID: <CAL_Jsq+Sz_iCkaDWzssA6DFeLX8fQ2hqKut0Gv6i5P706bmvpA@mail.gmail.com>
-References: <1420523117-6814-1-git-send-email-beomho.seo@samsung.com> <1420523117-6814-4-git-send-email-beomho.seo@samsung.com>
+From: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v6 2/3] DT: iio: adc: Add CC_10001 binding documentation
+Date: Tue, 6 Jan 2015 13:59:24 -0300
+Message-ID: <54AC146C.9030502@imgtec.com>
+References: <1420558143-26276-1-git-send-email-ezequiel.garcia@imgtec.com> <1420558143-26276-3-git-send-email-ezequiel.garcia@imgtec.com> <CAL_Jsq+PwSjuqvfr6TfwwNzriRx9Nb1GHWWvWGFKK9zvOOORKA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1420523117-6814-4-git-send-email-beomho.seo@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Beomho Seo <beomho.seo@samsung.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, lee.jone@linaro.org, Mark Brown <broonie@kernel.org>, Sebastian Reichel <sre@kernel.org>, dbaryshkov@gmail.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Chanwoo Choi <cw00.choi@samsung.com>, InKi Dae <inki.dae@samsung.com>, sw0312.kim@samsung.com, Lee Jones <lee.jones@linaro.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_Jsq+PwSjuqvfr6TfwwNzriRx9Nb1GHWWvWGFKK9zvOOORKA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, knaack.h-Mmb7MZpHnFY@public.gmane.org, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Phani Movva <Phani.Movva-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 5, 2015 at 11:45 PM, Beomho Seo <beomho.seo@samsung.com> wrote:
-> This patch device tree binding documentation for rt5033 multifunction device.
->
-> Cc: Sebastian Reichel <sre@kernel.org>
-> Cc: Lee Jones <lee.jones@linaro.org>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Pawel Moll <pawel.moll@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Ian campbell <ijc+devicetree@hellion.org.uk>
-> Cc: Kumar Gala <galak@codeaurora.org>
-> Signed-off-by: Beomho Seo <beomho.seo@samsung.com>
-> Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
-> ---
->  Documentation/devicetree/bindings/mfd/rt5033.txt   |  108 ++++++++++++++++++++
->  .../devicetree/bindings/vendor-prefixes.txt        |    1 +
->  2 files changed, 109 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/rt5033.txt
->
-> diff --git a/Documentation/devicetree/bindings/mfd/rt5033.txt b/Documentation/devicetree/bindings/mfd/rt5033.txt
-> new file mode 100644
-> index 0000000..52a6d33
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/rt5033.txt
-> @@ -0,0 +1,108 @@
-> +Richtek RT5033 Power management Integrated Circuit
-> +
-> +RT5033 is a Multifunction device which includes battery charger, fuel gauge,
-> +flash LED current source, LDO and synchronous Buck converter for portable
-> +applications. It is interfaced to host controller using i2c interface.
-> +
-> +Required properties:
-> +- compatible : Must be "richtek,rt5033"
-> +- reg : Specifies the i2c slave address of general part.
-> +- interrupts : This i2c devices has an IRQ line connected to the main SoC.
-> +- interrupt-parent : The parent interrupt controller.
-> +
-> +Optional node:
-> +Regulators: The regulators of RT5033 have to be instantiated under sub-node
-> +named "regulators" usinge the following format.
+Hi Rob,
 
-s/usinge/using/
+Thanks a lot for the comments.
 
-> +
-> +       regulators {
-> +               regulator-name {
-> +                       regulator-name = LDO/BUCK
-> +                       regulator subnodes called X, Y and Z
-> +               };
-> +       };
-> +       refer Documentation/devicetree/bindings/regulator/regulator.txt
-> +
-> +
-> +Battery charger: There battery charger of RT5033 have to be instantiated under
-> +sub-node named "charger" using the following format.
-> +
-> +Required properties:
-> +- compatible : Must be "richtek,rt5033-charger".
-> +- richtek,pre-uamp : Current of pre-charge mode. The pre-charge current levels
-> +  are 350 mA to 650 mA programmed by I2C per 100 mA.
-> +- richtek,pre-threshold-uvolt : Voltage of threshold pre-charge mode. Battery
-> +  voltage is below pre-charge threshold voltage, the charger is in pre-charge
-> +  mode with pre-charge current. Its levels are 2.3 V  to 3.8 V programmed
-> +  by I2C per 0.1 V.
-> +- richtek,fast-uamp : Current of fast-charge mode. The fast-charge current
-> +  levels are 700 mA to 2000 mA programmed by I2C per 100 mA.
-> +- richtek,const-uvolt :  Battery regulation voltage of constant voltage mode.
-> +  This voltage level 3.65 V to 4.4 V bye I2C per 0.025 V.
-> +- richtek,eoc-uamp : This property is end of charge current. Its level 150 mA
-> +  to 200 mA.
+On 01/06/2015 01:30 PM, Rob Herring wrote:
+> On Tue, Jan 6, 2015 at 9:29 AM, Ezequiel Garcia
+> <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
+>> From: Phani Movva <Phani.Movva-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+>>
+>> Add the devicetree binding document for Cosmic Circuits 10001 ADC device.
+>>
+>> Signed-off-by: Phani Movva <Phani.Movva-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+>> Signed-off-by: Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+>> [Ezequiel: minor style cleaning]
+>> Signed-off-by: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/iio/adc/cc10001_adc.txt    | 22 ++++++++++++++++++++++
+>>  1 file changed, 22 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/iio/adc/cc10001_adc.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/iio/adc/cc10001_adc.txt b/Documentation/devicetree/bindings/iio/adc/cc10001_adc.txt
+>> new file mode 100644
+>> index 0000000..b7ba558
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/iio/adc/cc10001_adc.txt
+>> @@ -0,0 +1,22 @@
+>> +* Cosmic Circuits - Analog to Digital Converter (CC-10001-ADC)
+>> +
+>> +Required properties:
+>> +  - compatible: Should be "cosmic,10001-adc"
+>> +  - reg: Should contain adc registers location and length.
+>> +  - clock-names: Should contain "adc".
+>> +  - clocks: Should contain a clock specifier for each entry in clock-names
+>> +  - vref-supply: The regulator supply ADC reference voltage.
+>> +
+>> +Optional properties:
+>> +  - cosmic,adc-reserved-channels: Bitmask of reserved channels,
+>> +    i.e. channels that cannot be used by the OS.
+> 
+> Seems like this could be pretty common for any ADC as well as having
+> the number of channels, so you can drop the vendor prefix. Do we have
+> any similar properties already in other drivers?
 
-Please align -uamp and -uvolt names with regulator binding suffixes.
+Well, it seems the AT91 ADC has a similar property called
+adc-channels-used. Not sure if it means the same as here. We are not
+using it to model a hardware availability but the channels being
+reserved for another core or OS. See [1].
 
-> +       charger {
-> +               compatible = "richtek,rt5033-charger";
-> +               richtek,pre-uamp = <350000>;
-> +               richtek,pre-threshold-uvolt = <3400000>;
-> +               richtek,fast-uamp = <2000000>;
-> +               richtek,const-uvolt = <4350000>;
-> +               richtek,eoc-uamp = <250000>;
-> +       };
-> +
-> +
-> +Fuelgauge: There fuelgauge of RT5033 to be instantiated node named "fuelgauge"
-> +using the following format.
-> +
-> +Required properties:
-> +- compatible = Must be "richtek,rt5033-battery".
-> +
-> +       i2c_fuel: i2c@1 {
+> I'd reverse the
+> polarity to be enabled channels, then the number of available channels
+> is the top set bit plus 1. You could count channels as is, but then
+> people have to remember to set the high bits on non-existent channels.
 
-Drop the @1.
+Hm, isn't this too cumbersome? If we really need to pass the number of
+channels, shouldn't we have a separate property for that? Note that no
+driver currently needs it.
 
-> +               compatible = "i2c-gpio";
-> +               standard i2c-gpio constraints...
-> +               fuelgauge {
-> +                       compatible = "richtek,rt5033-battery".
-> +               };
-> +       };
+> Absence of the property could still mean you know how many channels
+> and all are enabled.
+> 
 
-I'm a bit confused by this. The fuelgauge is an i2c device hanging off
-the rt5033 or a 2nd i2c slave on the rt5033?
+This property was originally proposed to be "called
+cosmic,adc-available-channels". Andrew suggested to reverse the
+polarity, and be explicit about absence of property meaning no reserved
+channels (also in [1]).
 
-> +
-> +
-> +Example:
-> +
-> +               rt5033@34 {
-> +                       compatible = "richtek,rt5033";
-> +                       reg = <0x34>;
-> +                       interrupt-parent = <&gpx1>;
-> +                       interrupts = <5 0>;
-> +
-> +                       regulators {
-> +                               buck_reg: BUCK {
-> +                                       regulator-name = "BUCK";
-> +                                       regulator-min-microvolt = <1200000>;
-> +                                       regulator-max-microvolt = <1200000>;
-> +                                       regulator-always-on;
-> +                               };
-> +                       };
-> +
-> +                       charger {
-> +                               compatible = "richtek,rt5033-charger";
-> +                               richtek,pre-uamp = <350000>;
-> +                               richtek,pre-threshold-uvolt = <3400000>;
-> +                               richtek,fast-uamp = <2000000>;
-> +                               richtek,const-uvolt = <4350000>;
-> +                               richtek,eoc-uamp = <250000>;
-> +                       };
-> +
-> +               };
-> +
-> +               i2c_fuel: i2c@10 {
-> +                       compatible = "i2c-gpio";
-> +                       gpios = <&gpm3 1 0
-> +                               &gpm3 0 0>;
-> +
-> +                       fuel: rt5033-battery@35 {
-> +                               compatible = "richtek,rt5033-battery";
-> +                               interrupt-parent = <&gpx2>;
-> +                               interrupts = <3 0>;
-> +                               reg = <0x35>;
-> +                       };
-> +               };
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index 723999d..611b543 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -124,6 +124,7 @@ ralink      Mediatek/Ralink Technology Corp.
->  ramtron        Ramtron International
->  realtek Realtek Semiconductor Corp.
->  renesas        Renesas Electronics Corporation
-> +richtek        Richtek Technology Corporation
->  ricoh  Ricoh Co. Ltd.
->  rockchip       Fuzhou Rockchip Electronics Co., Ltd
->  samsung        Samsung Semiconductor
-> --
-> 1.7.9.5
->
+I'm fine either way.
+
+[1] http://www.spinics.net/lists/linux-iio/msg15578.html
+-- 
+Ezequiel
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
