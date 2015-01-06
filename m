@@ -1,90 +1,85 @@
-From: <atull@opensource.altera.com>
-Subject: [PATCH v8 2/4] fpga manager: add sysfs interface document
-Date: Tue, 6 Jan 2015 14:13:37 -0600
-Message-ID: <1420575219-27061-3-git-send-email-atull@opensource.altera.com>
-References: <1420575219-27061-1-git-send-email-atull@opensource.altera.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 4/5] clk: cygnus: add clock support for Broadcom Cygnus
+Date: Tue, 06 Jan 2015 21:21:02 +0100
+Message-ID: <2048376.BFrtW5tszK@wuerfel>
+References: <1420500076-18302-5-git-send-email-rjui@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1420575219-27061-1-git-send-email-atull@opensource.altera.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: gregkh@linuxfoundation.org, jgunthorpe@obsidianresearch.com, hpa@zytor.com, monstr@monstr.eu, michal.simek@xilinx.com, rdunlap@infradead.org
-Cc: mark.rutland@arm.com, linux-doc@vger.kernel.org, rubini@gnudd.com, pantelis.antoniou@konsulko.com, s.trumtrar@pengutronix.de, devel@driverdev.osuosl.org, sameo@linux.intel.com, nico@linaro.org, ijc+devicetree@hellion.org.uk, kyle.teske@ni.com, grant.likely@linaro.org, davidb@codeaurora.org, linus.walleij@linaro.org, cesarb@cesarb.net, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, iws@ovro.caltech.edu, Alan Tull <atull@opensource.altera.com>, broonie@kernel.org, philip@balister.org, dinguyen@opensource.altera.com, pavel@denx.de, yvanderv@opensource.altera.com, linux-kernel@vger.kernel.org, balbi@ti.com, delicious.quinoa@gmail.com, robh+dt@kernel.org, rob@landley.net, galak@codeaurora.org, akpm@linux-foundation.org, davem@davemloft.net, m.chehab@samsung.com
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1420500076-18302-5-git-send-email-rjui@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Ray Jui <rjui@broadcom.com>, Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Matt Porter <mporter@linaro.org>, Alex Elder <elder@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, Scott Branden <sbranden@broadcom.com>, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-From: Alan Tull <atull@opensource.altera.com>
+On Monday 05 January 2015 15:21:15 Ray Jui wrote:
+> +static const struct iproc_clk_ctrl mipipll_clk[BCM_CYGNUS_NUM_MIPIPLL_CLKS] = {
+> +	[BCM_CYGNUS_MIPIPLL_CH0_UNUSED] = {
+> +		.channel = BCM_CYGNUS_MIPIPLL_CH0_UNUSED,
+> +		.enable = enable_val(0x4, 12, 6, 18),
+> +		.mdiv = reg_val(0x20, 0, 8),
+> +	},
+> +	[BCM_CYGNUS_MIPIPLL_CH1_LCD] = {
+> +		.channel = BCM_CYGNUS_MIPIPLL_CH1_LCD,
+> +		.enable = enable_val(0x4, 13, 7, 19),
+> +		.mdiv = reg_val(0x20, 10, 8),
+> +	},
+> +	[BCM_CYGNUS_MIPIPLL_CH2_UNUSED] = {
+> +		.channel = BCM_CYGNUS_MIPIPLL_CH2_UNUSED,
+> +		.enable = enable_val(0x4, 14, 8, 20),
+> +		.mdiv = reg_val(0x20, 20, 8),
+> +	},
+> +	[BCM_CYGNUS_MIPIPLL_CH3_UNUSED] = {
+> +		.channel = BCM_CYGNUS_MIPIPLL_CH3_UNUSED,
+> +		.enable = enable_val(0x4, 15, 9, 21),
+> +		.mdiv = reg_val(0x24, 0, 8),
+> +	},
+> +	[BCM_CYGNUS_MIPIPLL_CH4_UNUSED] = {
+> +		.channel = BCM_CYGNUS_MIPIPLL_CH4_UNUSED,
+> +		.enable = enable_val(0x4, 16, 10, 22),
+> +		.mdiv = reg_val(0x24, 10, 8),
+> +	},
+> +	[BCM_CYGNUS_MIPIPLL_CH5_UNUSED] = {
+> +		.channel = BCM_CYGNUS_MIPIPLL_CH5_UNUSED,
+> +		.enable = enable_val(0x4, 17, 11, 23),
+> +		.mdiv = reg_val(0x24, 20, 8),
+> +	},
+> +};
 
-Add documentation under drivers/staging for new fpga manager's
-sysfs interface.
+The tables look fairly regular. Is it possible that it's common
+to all iproc variants with a standard way to derive all other
+values from the channel index?
 
-Signed-off-by: Alan Tull <atull@opensource.altera.com>
----
-v5  : (actually second version, but keeping version numbers
-      aligned with rest of patch series)
-      Move document to drivers/staging/fpga/Documentation/ABI
+> +static const struct iproc_asiu_gate asiu_gate[BCM_CYGNUS_NUM_ASIU_CLKS] = {
+> +	[BCM_CYGNUS_ASIU_KEYPAD_CLK] =
+> +		asiu_gate_val(0x0, 7),
+> +	[BCM_CYGNUS_ASIU_ADC_CLK] =
+> +		asiu_gate_val(0x0, 9),
+> +	[BCM_CYGNUS_ASIU_PWM_CLK] =
+> +		asiu_gate_val(IPROC_CLK_INVALID_OFFSET, 0),
+> +};
 
-v6  : No change in this patch for v6 of the patch set
+Here I think a better binding would be to pass the gate value in the
+clock specifier, rather than an artificial index. That would let
+you get rid of the BCM_CYGNUS_ASIU_KEYPAD_CLK/BCM_CYGNUS_ASIU_ADC_CLK
+macros.
 
-v7  : No change in this patch for v7 of the patch set
+> +static void __init cygnus_armpll_init(struct device_node *node)
+> +{
+> +	iproc_armpll_setup(node);
+> +}
+> +CLK_OF_DECLARE(cygnus_armpll, "brcm,cygnus-armpll", cygnus_armpll_init);
 
-v8  : No change in this patch for v8 of the patch set
----
- .../Documentation/ABI/sysfs-class-fpga-manager     |   38 ++++++++++++++++++++
- 1 file changed, 38 insertions(+)
- create mode 100644 drivers/staging/fpga/Documentation/ABI/sysfs-class-fpga-manager
+How about moving all of these directly next to the tables, to keep
+each clock controller?
 
-diff --git a/drivers/staging/fpga/Documentation/ABI/sysfs-class-fpga-manager b/drivers/staging/fpga/Documentation/ABI/sysfs-class-fpga-manager
-new file mode 100644
-index 0000000..eb600f2
---- /dev/null
-+++ b/drivers/staging/fpga/Documentation/ABI/sysfs-class-fpga-manager
-@@ -0,0 +1,38 @@
-+What:		/sys/class/fpga_manager/<fpga>/name
-+Date:		October 2014
-+KernelVersion:	3.18
-+Contact:	Alan Tull <atull@opensource.altera.com>
-+Description:	Name of low level driver.
-+
-+What:		/sys/class/fpga_manager/<fpga>/firmware
-+Date:		October 2014
-+KernelVersion:	3.18
-+Contact:	Alan Tull <atull@opensource.altera.com>
-+Description:	Name of the FPGA image file to load using firmware class.
-+
-+What:		/sys/class/fpga_manager/<fpga>/reset
-+Date:		October 2014
-+KernelVersion:	3.18
-+Contact:	Alan Tull <atull@opensource.altera.com>
-+Description:	Write 1 to reset the FPGA
-+
-+What:		/sys/class/fpga_manager/<fpga>/state
-+Date:		October 2014
-+KernelVersion:	3.18
-+Contact:	Alan Tull <atull@opensource.altera.com>
-+Description:	Read state of fpga framework state machine as a string.
-+		Valid states may vary by manufacturer; superset is:
-+		* unknown		= can't determine state
-+		* power_off		= FPGA power is off
-+		* power_up		= FPGA reports power is up
-+		* reset			= FPGA held in reset state
-+		* firmware_request	= firmware class request in progress
-+		* firmware_request_err	= firmware request failed
-+		* write_init		= FPGA being prepared for programming
-+		* write_init_err	= Error while preparing FPGA for
-+					  programming
-+		* write			= FPGA ready to receive image data
-+		* write_err		= Error while programming
-+		* write_complete	= Doing post programming steps
-+		* write_complete_err	= Error while doing post programming
-+		* operating		= FPGA is programmed and operating
--- 
-1.7.9.5
+> +static void __init cygnus_genpll_clk_init(struct device_node *node)
+> +{
+> +	iproc_clk_setup(node, genpll_clk, BCM_CYGNUS_NUM_GENPLL_CLKS);
+> +}
+
+If you use ARRAY_SIZE here, you can remove the BCM_CYGNUS_NUM_GENPLL_CLKS
+macro that is not useful to the DT binding.
+
+	Arnd
