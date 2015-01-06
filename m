@@ -1,68 +1,63 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH v2 1/2] of/pci: add of_pci_dma_configure() update dma
- configuration
-Date: Tue, 6 Jan 2015 19:50:33 +0000
-Message-ID: <20150106195033.GH32449@arm.com>
-References: <1419459099-6667-1-git-send-email-m-karicheri2@ti.com>
- <1419459099-6667-2-git-send-email-m-karicheri2@ti.com>
- <CAL_JsqJtVnP_5zAiUvMwL00JQV0mjw-R_hEkxiv13ZuNrQ8nAA@mail.gmail.com>
- <54A6D375.6050604@ti.com>
- <CAL_Jsq+krOUA3BPvMCdaOBhALoi+pzWbw3YndXqR8x52OJogZg@mail.gmail.com>
- <54A71CD1.4070107@ti.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [RFC PATCH v3 4/4] arm64:numa: adding numa support for arm64 platforms.
+Date: Tue, 06 Jan 2015 20:59:04 +0100
+Message-ID: <2425557.4DHPZVafv4@wuerfel>
+References: <1420011208-7051-1-git-send-email-ganapatrao.kulkarni@caviumnetworks.com> <1849719.f6Z6RhZjTc@wuerfel> <CAFpQJXVQnRY9wZRk-83bQLw0m=41ZxH2v-YZCHdF0fvC8LS_Tw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <54A71CD1.4070107@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Murali Karicheri <m-karicheri2@ti.com>
-Cc: Rob Herring <robherring2@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAFpQJXVQnRY9wZRk-83bQLw0m=41ZxH2v-YZCHdF0fvC8LS_Tw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Ganapatrao Kulkarni <ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Roy Franz <roy.franz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Steve Capper <steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 02, 2015 at 10:33:53PM +0000, Murali Karicheri wrote:
-> On 01/02/2015 03:45 PM, Rob Herring wrote:
-> > On Fri, Jan 2, 2015 at 11:20 AM, Murali Karicheri<m-karicheri2@ti.com>  wrote:
-> >> On 12/26/2014 02:33 PM, Rob Herring wrote:
-> >>> On Wed, Dec 24, 2014 at 4:11 PM, Murali Karicheri<m-karicheri2@ti.com>
-> >>>> +               coherent = of_dma_is_coherent(parent_np);
-> >>>> +               dev_dbg(dev, "device is%sdma coherent\n",
-> >>>> +                       coherent ? " " : " not ");
-> >>>> +
-> >>>> +               arch_setup_dma_ops(dev, dma_addr, size, NULL, coherent);
-> >>>
-> >>>
-> >>> This is the same code as of_dma_configure. The only difference I see
-> >>> is which node ptr is passed to of_dma_get_range. You need to make that
-> >>> a function param of of_dma_configure.
-> >>>
-> >>> of_dma_configure also has iommu handling now. You will probably need
-> >>> something similar for PCI in that you setup an iommu based on the root
-> >>> bus DT properties.
-> >>>
-> >> Initially I had the same idea to re-use the existing function
-> >> of_dma_configure() for this. I wanted to defer this until we have an
-> >> agreement on the changes required for the subject functionality. My quick
-> >> review of the code suggestio this would require additional API changes as
-> >> below. I did a quick test of the changes and it works for Keystone, but need
-> >> to be reviewed by everyone as I touch the IOMMU functionality here and I
-> >> don't have a platform with IOMMU. Need test by someone to make sure I don't
-> >> break anything.
+On Tuesday 06 January 2015 14:55:53 Ganapatrao Kulkarni wrote:
+> On Sat, Jan 3, 2015 at 2:40 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> >> +int dt_get_cpu_node_id(int cpu)
+> >> +{
+> >> +     struct device_node *dn = NULL;
+> >> +
+> >> +     while ((dn = of_find_node_by_type(dn, "cpu"))) {
+> >> +             const u32 *cell;
+> >> +             u64 hwid;
+> >> +
+> >> +             /*
+> >> +              * A cpu node with missing "reg" property is
+> >> +              * considered invalid to build a cpu_logical_map
+> >> +              * entry.
+> >> +              */
+> >> +             cell = of_get_property(dn, "reg", NULL);
+> >> +             if (!cell) {
+> >> +                     pr_err("%s: missing reg property\n", dn->full_name);
+> >> +                     return default_nid;
+> >> +             }
+> >> +             hwid = of_read_number(cell, of_n_addr_cells(dn));
+> >> +
+> >> +             if (cpu_logical_map(cpu) == hwid)
+> >> +             return of_node_to_nid_single(dn);
+> >> +     }
+> >> +     return NUMA_NO_NODE;
+> >> +}
+> >> +EXPORT_SYMBOL(dt_get_cpu_node_id);
 > >
-> > The IOMMU changes look trivial. We may want to address the comment in
-> > of_iommu_configure about parent nodes. We should be sure these changes
-> > work with how we would do searching parent nodes.
-> 
-> I have no experience with IOMMU and may not offer much help here as I 
-> originally wrote above. Will Deacon has added this API and probably able 
-> to offer some help in this discussion.
-> 
-> Will Deacon,
-> 
-> Any comment?
+> > Maybe just expose a function to the device node for a CPU ID here, and
+> > expect callers to use of_node_to_nid?
+> shall i make this wrapper function in dt_numa.c, which will use
+> functions _of_node_to_nid and  _of_cpu_to_node(cpu)
 
-Sorry for the delay; I'm still catching up on email after the Christmas
-break, but I *will* get around to looking at this. If you have a new version
-to post based on the comments from Rob and Arnd, feel free to send that and
-I'll look at that instead.
+Yes, I guess that would work.
 
-Will
+> And,  this function can be a weak function in numa.c which returns 0.
+
+No, please don't use weak functions. You can either use IS_ENABLED()
+tricks to remove function calls at compile-time, or in the header
+file provide an inline function as an alternative to the extern
+declaration, based on a configuration symbol.
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
