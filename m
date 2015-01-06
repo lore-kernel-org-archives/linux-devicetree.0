@@ -1,58 +1,89 @@
-From: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v7 2/3] DT: iio: adc: Add CC_10001 binding documentation
-Date: Tue, 6 Jan 2015 17:47:36 -0300
-Message-ID: <1420577257-10846-3-git-send-email-ezequiel.garcia@imgtec.com>
-References: <1420577257-10846-1-git-send-email-ezequiel.garcia@imgtec.com>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: Re: [PATCH v2 1/2] of/pci: add of_pci_dma_configure() update dma
+ configuration
+Date: Tue, 6 Jan 2015 16:08:43 -0500
+Message-ID: <54AC4EDB.1000400@ti.com>
+References: <1419459099-6667-1-git-send-email-m-karicheri2@ti.com>
+ <1419459099-6667-2-git-send-email-m-karicheri2@ti.com>
+ <CAL_JsqJtVnP_5zAiUvMwL00JQV0mjw-R_hEkxiv13ZuNrQ8nAA@mail.gmail.com>
+ <54A6D375.6050604@ti.com>
+ <CAL_Jsq+krOUA3BPvMCdaOBhALoi+pzWbw3YndXqR8x52OJogZg@mail.gmail.com>
+ <54A71CD1.4070107@ti.com> <20150106195033.GH32449@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1420577257-10846-1-git-send-email-ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Mark.Rutland-5wv7dgnIgG8@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel.Moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Phani Movva <Phani.Movva-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20150106195033.GH32449@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Will Deacon <will.deacon@arm.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Phani Movva <Phani.Movva-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+On 01/06/2015 02:50 PM, Will Deacon wrote:
+> On Fri, Jan 02, 2015 at 10:33:53PM +0000, Murali Karicheri wrote:
+>> On 01/02/2015 03:45 PM, Rob Herring wrote:
+>>> On Fri, Jan 2, 2015 at 11:20 AM, Murali Karicheri<m-karicheri2@ti.com>   wrote:
+>>>> On 12/26/2014 02:33 PM, Rob Herring wrote:
+>>>>> On Wed, Dec 24, 2014 at 4:11 PM, Murali Karicheri<m-karicheri2@ti.com>
+>>>>>> +               coherent = of_dma_is_coherent(parent_np);
+>>>>>> +               dev_dbg(dev, "device is%sdma coherent\n",
+>>>>>> +                       coherent ? " " : " not ");
+>>>>>> +
+>>>>>> +               arch_setup_dma_ops(dev, dma_addr, size, NULL, coherent);
+>>>>>
+>>>>>
+>>>>> This is the same code as of_dma_configure. The only difference I see
+>>>>> is which node ptr is passed to of_dma_get_range. You need to make that
+>>>>> a function param of of_dma_configure.
+>>>>>
+>>>>> of_dma_configure also has iommu handling now. You will probably need
+>>>>> something similar for PCI in that you setup an iommu based on the root
+>>>>> bus DT properties.
+>>>>>
+>>>> Initially I had the same idea to re-use the existing function
+>>>> of_dma_configure() for this. I wanted to defer this until we have an
+>>>> agreement on the changes required for the subject functionality. My quick
+>>>> review of the code suggestio this would require additional API changes as
+>>>> below. I did a quick test of the changes and it works for Keystone, but need
+>>>> to be reviewed by everyone as I touch the IOMMU functionality here and I
+>>>> don't have a platform with IOMMU. Need test by someone to make sure I don't
+>>>> break anything.
+>>>
+>>> The IOMMU changes look trivial. We may want to address the comment in
+>>> of_iommu_configure about parent nodes. We should be sure these changes
+>>> work with how we would do searching parent nodes.
+>>
+>> I have no experience with IOMMU and may not offer much help here as I
+>> originally wrote above. Will Deacon has added this API and probably able
+>> to offer some help in this discussion.
+>>
+>> Will Deacon,
+>>
+>> Any comment?
+>
+> Sorry for the delay; I'm still catching up on email after the Christmas
+> break, but I *will* get around to looking at this. If you have a new version
+> to post based on the comments from Rob and Arnd, feel free to send that and
+> I'll look at that instead.
+>
+> Will
+Will,
 
-Add the devicetree binding document for Cosmic Circuits 10001 ADC device.
+I will be posting v3 of the patch tomorrow and you can review that.
 
-Reviewed-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Phani Movva <Phani.Movva-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
----
- .../devicetree/bindings/iio/adc/cc10001_adc.txt    | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/cc10001_adc.txt
+Regards,
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/cc10001_adc.txt b/Documentation/devicetree/bindings/iio/adc/cc10001_adc.txt
-new file mode 100644
-index 0000000..904f76d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/cc10001_adc.txt
-@@ -0,0 +1,22 @@
-+* Cosmic Circuits - Analog to Digital Converter (CC-10001-ADC)
-+
-+Required properties:
-+  - compatible: Should be "cosmic,10001-adc"
-+  - reg: Should contain adc registers location and length.
-+  - clock-names: Should contain "adc".
-+  - clocks: Should contain a clock specifier for each entry in clock-names
-+  - vref-supply: The regulator supply ADC reference voltage.
-+
-+Optional properties:
-+  - adc-reserved-channels: Bitmask of reserved channels,
-+    i.e. channels that cannot be used by the OS.
-+
-+Example:
-+adc: adc@18101600 {
-+	compatible = "cosmic,10001-adc";
-+	reg = <0x18101600 0x24>;
-+	adc-reserved-channels = <0x2>;
-+	clocks = <&adc_clk>;
-+	clock-names = "adc";
-+	vref-supply = <&reg_1v8>;
-+};
+Murali
+
+
 -- 
-2.2.1
+Murali Karicheri
+Linux Kernel, Texas Instruments
