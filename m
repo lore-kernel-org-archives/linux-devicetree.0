@@ -1,198 +1,55 @@
-From: Suman Tripathi <stripathi@apm.com>
-Subject: [PATCH v1 2/2] ahci_xgene: Implement the workaround to support PMP enumeration and discovery.
-Date: Tue,  6 Jan 2015 15:32:16 +0530
-Message-ID: <1420538536-32165-3-git-send-email-stripathi@apm.com>
-References: <1420538536-32165-1-git-send-email-stripathi@apm.com>
-Return-path: <linux-scsi-owner@vger.kernel.org>
-In-Reply-To: <1420538536-32165-1-git-send-email-stripathi@apm.com>
-Sender: linux-scsi-owner@vger.kernel.org
-To: olof@lixom.net, tj@kernel.org, arnd@arndb.de
-Cc: linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mlangsdo@redhat.com, jcm@redhat.com, patches@apm.com, Suman Tripathi <stripathi@apm.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 12/13] ARM: dts: sun6i: Add sun6i-a31s.dtsi
+Date: Tue, 6 Jan 2015 11:03:57 +0100
+Message-ID: <20150106100357.GH7853@lukather>
+References: <1418836704-15689-1-git-send-email-hdegoede@redhat.com>
+ <1418836704-15689-13-git-send-email-hdegoede@redhat.com>
+ <20141219183450.GZ4820@lukather>
+ <54954E77.4070302@redhat.com>
+ <20141221223941.GC4820@lukather>
+ <549820A4.9090900@redhat.com>
+ <20150105090825.GA31311@lukather>
+ <54AA59D9.7030909@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Q6STzHxy03qt/hK9"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBT7GV2SQKGQE4YJA2UI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <54AA59D9.7030909-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Due to H/W errata, the controller is unable to save the PMP
-field fetched from command header before sending the H2D FIS.
-When the device returns the PMP port field in the D2H FIS, there is
-a mismatch and results in command completion failure. The workaround
-is to write the pmp value to PxFBS.DEV field before issuing any command
-to PMP.
+--Q6STzHxy03qt/hK9
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Signed-off-by: Suman Tripathi <stripathi@apm.com>
----
- drivers/ata/ahci_xgene.c | 133 +++++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 128 insertions(+), 5 deletions(-)
+Hi,
 
-diff --git a/drivers/ata/ahci_xgene.c b/drivers/ata/ahci_xgene.c
-index afa9c03..7f68875 100644
---- a/drivers/ata/ahci_xgene.c
-+++ b/drivers/ata/ahci_xgene.c
-@@ -85,6 +85,7 @@ struct xgene_ahci_context {
- 	struct ahci_host_priv *hpriv;
- 	struct device *dev;
- 	u8 last_cmd[MAX_AHCI_CHN_PERCTR]; /* tracking the last command issued*/
-+	u32 class[MAX_AHCI_CHN_PERCTR]; /* tracking the class of device */
- 	void __iomem *csr_core;		/* Core CSR address of IP */
- 	void __iomem *csr_diag;		/* Diag CSR address of IP */
- 	void __iomem *csr_axi;		/* AXI CSR address of IP */
-@@ -177,11 +178,17 @@ static int xgene_ahci_restart_engine(struct ata_port *ap)
-  * xgene_ahci_qc_issue - Issue commands to the device
-  * @qc: Command to issue
-  *
-- * Due to Hardware errata for IDENTIFY DEVICE command and PACKET
-- * command of ATAPI protocol set, the controller cannot clear the BSY bit
-- * after receiving the PIO setup FIS. This results in the DMA state machine
-- * going into the CMFatalErrorUpdate state and locks up. By restarting the
-- * DMA engine, it removes the controller out of lock up state.
-+ * Due to Hardware errata for IDENTIFY DEVICE command, the controller cannot
-+ * clear the BSY bit after receiving the PIO setup FIS. This results in the dma
-+ * state machine goes into the CMFatalErrorUpdate state and locks up. By
-+ * restarting the dma engine, it removes the controller out of lock up state.
-+ *
-+ * Due to H/W errata, the controller is unable to save the PMP
-+ * field fetched from command header before sending the H2D FIS.
-+ * When the device returns the PMP port field in the D2H FIS, there is
-+ * a mismatch and results in command completion failure. The
-+ * workaround is to write the pmp value to PxFBS.DEV field before issuing
-+ * any command to PMP.
-  */
- static unsigned int xgene_ahci_qc_issue(struct ata_queued_cmd *qc)
- {
-@@ -189,6 +196,19 @@ static unsigned int xgene_ahci_qc_issue(struct ata_queued_cmd *qc)
- 	struct ahci_host_priv *hpriv = ap->host->private_data;
- 	struct xgene_ahci_context *ctx = hpriv->plat_data;
- 	int rc = 0;
-+	u32 port_fbs;
-+	void *port_mmio = ahci_port_base(ap);
-+
-+	/*
-+	 * Write the pmp value to PxFBS.DEV
-+	 * for case of Port Mulitplier.
-+	 */
-+	if (ctx->class[ap->port_no] == ATA_DEV_PMP) {
-+		port_fbs = readl(port_mmio + PORT_FBS);
-+		port_fbs &= ~PORT_FBS_DEV_MASK;
-+		port_fbs |= qc->dev->link->pmp << PORT_FBS_DEV_OFFSET;
-+		writel(port_fbs, port_mmio + PORT_FBS);
-+	}
+On Mon, Jan 05, 2015 at 10:31:05AM +0100, Hans de Goede wrote:
+> Thanks, while looking at your dt-for-3.20 branch I noticed that you've
+> merged v2 of "ARM: dts: sun6i: Add ir node", I did a v3 adding an ir:
+> label to the node, which I noticed was missing because you asked me to
+> move the a31s dt stuff to moving label references, can you fix this up, or
+> do you want me to do a follow up patch ?
+> 
+> Note that having this fixed is a pre-req for the csq-cs908 dts patch.
 
- 	if (unlikely((ctx->last_cmd[ap->port_no] == ATA_CMD_ID_ATA) ||
- 	    (ctx->last_cmd[ap->port_no] == ATA_CMD_PACKET)))
-@@ -417,12 +437,115 @@ static void xgene_ahci_host_stop(struct ata_host *host)
- 	ahci_platform_disable_resources(hpriv);
- }
+Ah, right. I edited your previous patch to add the label.
 
-+/**
-+ * xgene_ahci_pmp_softreset - Issue the softreset to the drives connected
-+ *                            to Port Multiplier.
-+ * @link: link to reset
-+ * @class: Return value to indicate class of device
-+ * @deadline: deadline jiffies for the operation
-+ *
-+ * Due to H/W errata, the controller is unable to save the PMP
-+ * field fetched from command header before sending the H2D FIS.
-+ * When the device returns the PMP port field in the D2H FIS, there is
-+ * a mismatch and results in command completion failure. The workaround
-+ * is to write the pmp value to PxFBS.DEV field before issuing any command
-+ * to PMP.
-+ */
-+static int xgene_ahci_pmp_softreset(struct ata_link *link, unsigned int *class,
-+			  unsigned long deadline)
-+{
-+	int pmp = sata_srst_pmp(link);
-+	struct ata_port *ap = link->ap;
-+	u32 rc;
-+	void *port_mmio = ahci_port_base(ap);
-+	u32 port_fbs;
-+
-+	/*
-+	 * Set PxFBS.DEV field with pmp
-+	 * value.
-+	 */
-+	port_fbs = readl(port_mmio + PORT_FBS);
-+	port_fbs &= ~PORT_FBS_DEV_MASK;
-+	port_fbs |= pmp << PORT_FBS_DEV_OFFSET;
-+	writel(port_fbs, port_mmio + PORT_FBS);
-+
-+	rc = ahci_do_softreset(link, class, pmp, deadline, ahci_check_ready);
-+
-+	return rc;
-+}
-+
-+/**
-+ * xgene_ahci_softreset - Issue the softreset to the drive.
-+ * @link: link to reset
-+ * @class: Return value to indicate class of device
-+ * @deadline: deadline jiffies for the operation
-+ *
-+ * Due to H/W errata, the controller is unable to save the PMP
-+ * field fetched from command header before sending the H2D FIS.
-+ * When the device returns the PMP port field in the D2H FIS, there is
-+ * a mismatch and results in command completion failure. The workaround
-+ * is to write the pmp value to PxFBS.DEV field before issuing any command
-+ * to PMP. Here is the algorithm to detect PMP :
-+ *
-+ * 1. Save the PxFBS value
-+ * 2. Program PxFBS.DEV with pmp value send by framework. Framework sends
-+ *    0xF for both PMP/NON-PMP initially
-+ * 3. Issue softreset
-+ * 4. If signature class is PMP goto 6
-+ * 5. restore the original PxFBS and goto 3
-+ * 6. return
-+ */
-+static int xgene_ahci_softreset(struct ata_link *link, unsigned int *class,
-+			  unsigned long deadline)
-+{
-+	int pmp = sata_srst_pmp(link);
-+	struct ata_port *ap = link->ap;
-+	struct ahci_host_priv *hpriv = ap->host->private_data;
-+	struct xgene_ahci_context *ctx = hpriv->plat_data;
-+	void *port_mmio = ahci_port_base(ap);
-+	u32 port_fbs;
-+	u32 port_fbs_save;
-+	u32 retry = 1;
-+	u32 rc;
-+
-+	port_fbs_save = readl(port_mmio + PORT_FBS);
-+
-+	/*
-+	 * Set PxFBS.DEV field with pmp
-+	 * value.
-+	 */
-+	port_fbs = readl(port_mmio + PORT_FBS);
-+	port_fbs &= ~PORT_FBS_DEV_MASK;
-+	port_fbs |= pmp << PORT_FBS_DEV_OFFSET;
-+	writel(port_fbs, port_mmio + PORT_FBS);
-+
-+softreset_retry:
-+	rc = ahci_do_softreset(link, class, pmp,
-+			       deadline, ahci_check_ready);
-+
-+	ctx->class[ap->port_no] = *class;
-+	if (*class != ATA_DEV_PMP) {
-+		/*
-+		 * Retry for normal drives without
-+		 * setting PxFBS.DEV field with pmp value.
-+		 */
-+		if (retry--) {
-+			writel(port_fbs_save, port_mmio + PORT_FBS);
-+			goto softreset_retry;
-+		}
-+	}
-+
-+	return rc;
-+}
-+
- static struct ata_port_operations xgene_ahci_ops = {
- 	.inherits = &ahci_ops,
- 	.host_stop = xgene_ahci_host_stop,
- 	.hardreset = xgene_ahci_hardreset,
- 	.read_id = xgene_ahci_read_id,
- 	.qc_issue = xgene_ahci_qc_issue,
-+	.softreset = xgene_ahci_softreset,
-+	.pmp_softreset = xgene_ahci_pmp_softreset
- };
+Thanks!
+Maxime
 
- static const struct ata_port_info xgene_ahci_port_info = {
---
-1.8.2.1
-
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--Q6STzHxy03qt/hK9--
