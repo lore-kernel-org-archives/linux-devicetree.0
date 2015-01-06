@@ -1,16 +1,17 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] ARM: dts: sun6i: Add sun6i-a31s.dtsi
-Date: Tue, 6 Jan 2015 11:05:05 +0100
-Message-ID: <20150106100505.GI7853@lukather>
+Subject: Re: [PATCH v3 3/3] ARM: dts: sun6i: Add dts file for
+ CSQ CS908 board
+Date: Tue, 6 Jan 2015 11:05:49 +0100
+Message-ID: <20150106100549.GJ7853@lukather>
 References: <1419851366-21945-1-git-send-email-hdegoede@redhat.com>
- <1419851366-21945-2-git-send-email-hdegoede@redhat.com>
+ <1419851366-21945-3-git-send-email-hdegoede@redhat.com>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="7SrMUQONj8Rl9QNG"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB67IV2SQKGQEU7UE42Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="VIOdPewhitSMo36n"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB7HIV2SQKGQE3F7ILMI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1419851366-21945-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1419851366-21945-3-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi
@@ -22,16 +23,16 @@ To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---7SrMUQONj8Rl9QNG
+--VIOdPewhitSMo36n
 Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
 
-On Mon, Dec 29, 2014 at 12:09:25PM +0100, Hans de Goede wrote:
-> Add a dtsi file for A31s based boards.
+On Mon, Dec 29, 2014 at 12:09:26PM +0100, Hans de Goede wrote:
+> The CSQ CS908 is an A31s based top-set box, with 1G RAM, 8G NAND,
+> rtl8188etv usb wifi, 2 USB A receptacles (1 connected through the OTG
+> controller), ethernet, 3.5 mm jack with a/v out and hdmi out.
 > 
-> Since the  A31s is the same die as the A31 in a different package, this dtsi
-> simply includes sun6i-a31.dtsi and then overrides the pinctrl compatible to
-> reflect the different package, everything else is identical.
+> Note it has no sdcard slot and therefore can only be fel booted.
 > 
 > Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
@@ -43,4 +44,4 @@ Maxime
 Maxime Ripard, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
---7SrMUQONj8Rl9QNG--
+--VIOdPewhitSMo36n--
