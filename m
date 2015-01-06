@@ -1,82 +1,44 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH 2/5] mfd: tps65218: make INT1 our status_base register
-Date: Tue, 6 Jan 2015 11:37:40 -0600
-Message-ID: <20150106173740.GM6502@saruman>
-References: <1419622104-25812-1-git-send-email-balbi@ti.com>
- <1419622104-25812-3-git-send-email-balbi@ti.com>
-Reply-To: <balbi@ti.com>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH 2/4] ARM: tegra: Move out nyan-generic parts out from the
+ nyan-big DT
+Date: Tue, 6 Jan 2015 09:40:10 -0800
+Message-ID: <CAOesGMj5EFr89SvskxjwjG8UdVPMJLO4-Up_5WLPUabqyqmXNw@mail.gmail.com>
+References: <1420540653-14816-1-git-send-email-tomeu.vizoso@collabora.com>
+	<1420540653-14816-3-git-send-email-tomeu.vizoso@collabora.com>
+	<20150106130656.GF31830@ulmo.nvidia.com>
+	<CAL1qeaETERAm6aTwWycCat-RzQz8UmixWtc-uK4dFsu7wL8HAg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="lbQeYSs6J2ITmUo7"
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1419622104-25812-3-git-send-email-balbi@ti.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>, stable@vger.kernel.org, Keerthy <j-keerthy@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL1qeaETERAm6aTwWycCat-RzQz8UmixWtc-uK4dFsu7wL8HAg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Bresticker <abrestic-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---lbQeYSs6J2ITmUo7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue, Jan 6, 2015 at 9:30 AM, Andrew Bresticker <abrestic-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org> wrote:
+> On Tue, Jan 6, 2015 at 5:06 AM, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-On Fri, Dec 26, 2014 at 01:28:21PM -0600, Felipe Balbi wrote:
-> If we don't tell regmap-irq that our first status
-> register is at offset 1, it will try to read offset
-> zero, which is the chipid register.
->=20
-> Fixes: 44b4dc6 mfd: tps65218: Add driver for the TPS65218 PMIC
-> Cc: <stable@vger.kernel.org> # v3.15+
-> Cc: Keerthy <j-keerthy@ti.com>
-> Cc: Lee Jones <lee.jones@linaro.org>
-> Signed-off-by: Felipe Balbi <balbi@ti.com>
+>>
+>> Back when we merged the nyan-big DTS there was some discussion and it
+>> was concluded that the devices are very similar, with the panel being
+>> one notable exception. So I think that this belongs in the nyan-big
+>> DTS and you need to add a similar property to the nyan-blaze DTS with
+>> the compatible for the panel used in the design. And you might need
+>> to add an entry for the panel in the panel-simple driver, too.
+>
+> That's correct.  There are also variants of big and blaze with 1080p
+> panels, so those will definitely need their own panel nodes as well.
+>
+> Other than that,
+>
+> Acked-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 
-ping
+Shame on both of you for not pruning the patch when replying -- the
+emails go too long for gmail to show them by default. :) :P
 
-> ---
->  drivers/mfd/tps65218.c | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/drivers/mfd/tps65218.c b/drivers/mfd/tps65218.c
-> index 2243f75..d6b7643 100644
-> --- a/drivers/mfd/tps65218.c
-> +++ b/drivers/mfd/tps65218.c
-> @@ -204,6 +204,7 @@ static struct regmap_irq_chip tps65218_irq_chip =3D {
-> =20
->  	.num_regs =3D 2,
->  	.mask_base =3D TPS65218_REG_INT_MASK1,
-> +	.status_base =3D TPS65218_REG_INT1,
->  };
-> =20
->  static const struct of_device_id of_tps65218_match_table[] =3D {
-> --=20
-> 2.2.0
->=20
+And yeah, this split looks reasonable to me (with the panel comment fixed)
 
---=20
-balbi
+Feel free to carry:
 
---lbQeYSs6J2ITmUo7
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUrB1kAAoJEIaOsuA1yqREbIwQAKFbW/mGnM8mjE33chmFyqpy
-OIQy9ABEXu023jPX8umnkQ2DKspPQS1AGftaQ/sKWtTVApXg3BErqm40htRDueBa
-GOQ/qNyO3FtZuSokksj6iYfphRJ4myds7gTBZxjEk4EIRZKMGNfK2HFS4/gsiHPi
-TXIvqJUBuYBULF7faLkuXHw/xVLnJf37xx1JEIr0WpxTP9xshdiJ1m8lfF8T96Lf
-Rq0UzRbszy2Sl73wXELgxrBVMXWWN9Dwwg83A7zGOPmGNAIQj1HdrFYuEK6fXGs9
-HcQ9wCaKveMJIvRN9Zk6Lx2v/XkJolUmHNjdizYWb66RV1las58mFE+Qyt/alrDi
-sCQxFilF7nTEwVjfHSJnJ0ZTZ8CVjywupygmiwCiJi/KZRC3O3Lvi1+HMQqQr4JN
-5lWvrZeS7IYuKoqps81nPsBj4HrUy1YsoqKnpxnClIQMZnHSXYHBxtNeABGLgcHO
-P3hS096uRtjDND6hsQsyBqwsQGdow+QpqQR8n4g14TqJDQSv1jrtIxMH61Kqon4B
-ci+y4LS8stuObl2gmWwaOmkbmOOJ8dK9PEaHGg39+OCtc982xyJzDR9JL8XlE61f
-EgmCXKfXKVGaY2dacDAJYab21ZjQ1G4vOiI6P4UTBfbwmUsBr8Q3Jj/V9eUkgd28
-iSim5SPsMWHnng+BfRfF
-=OJyK
------END PGP SIGNATURE-----
-
---lbQeYSs6J2ITmUo7--
+Acked-by: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
