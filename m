@@ -1,89 +1,115 @@
-From: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v6 2/3] DT: iio: adc: Add CC_10001 binding documentation
-Date: Tue, 6 Jan 2015 13:59:24 -0300
-Message-ID: <54AC146C.9030502@imgtec.com>
-References: <1420558143-26276-1-git-send-email-ezequiel.garcia@imgtec.com> <1420558143-26276-3-git-send-email-ezequiel.garcia@imgtec.com> <CAL_Jsq+PwSjuqvfr6TfwwNzriRx9Nb1GHWWvWGFKK9zvOOORKA@mail.gmail.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: vexpress: bindings: Add generic PD awareness to the
+ spc controller
+Date: Tue, 6 Jan 2015 11:02:35 -0600
+Message-ID: <CAL_JsqJwauxNNojhAaYEr7oQTm6fwYwtByv_s6-tHiXYA214AQ@mail.gmail.com>
+References: <1420562732-4353-1-git-send-email-mathieu.poirier@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_Jsq+PwSjuqvfr6TfwwNzriRx9Nb1GHWWvWGFKK9zvOOORKA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1420562732-4353-1-git-send-email-mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, knaack.h-Mmb7MZpHnFY@public.gmane.org, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Phani Movva <Phani.Movva-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+To: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Tue, Jan 6, 2015 at 10:45 AM,  <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> From: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>
+> Among other things, the serial power controller (SPC) controls power to
+> the A7 and A15 clusters.  Theses clusters also happen to contains the
+> coresight tracers used for HW assisted tracing.
+>
+> By modellling these to power domains in a way that is comprehensible to
+> the generic power domain sub-system and using the runtime PM API in the
+> coresight drivers, we can prevent power to the domains from being
+> turned off while tracing related operations are still pending.
+>
+> Signed-off-by: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  .../bindings/arm/vexpress-power-controller.txt     | 54 ++++++++++++++++++++++
+>  1 file changed, 54 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/vexpress-power-controller.txt
+>
+> diff --git a/Documentation/devicetree/bindings/arm/vexpress-power-controller.txt b/Documentation/devicetree/bindings/arm/vexpress-power-controller.txt
+> new file mode 100644
+> index 000000000000..3af5624dc5cb
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/vexpress-power-controller.txt
+> @@ -0,0 +1,54 @@
+> +ARM Versatile Express Power Controller
+> +--------------------------------------
+> +
+> +This binding models the serial power controller (SPC) in a way that is
+> +intelligible to the generic power domain subsystem and in accordance
+> +with the guidelines from:
+> +
+> +Documentation/devicetree/bindings/power/power_domain.txt
+> +
+> +The binding doesn't have a '<reg>' property as the base address for HW
+> +access is provided by the vexpress-scc sub-system.
+> +
+> +Required node properties:
+> +- compatible value : = "arm,vexpress-power-controller";
+> +- #power-domain-cells : = Number of cells in a PM domain specifier, as
+> +  specified in "power_domain.txt" referenced above.
+> +
+> +Example:
+> +       A7_A15_cluster_pd: A7-A15-cluster-pd {
 
-Thanks a lot for the comments.
+This is more a description of the power domain than the power
+controller IP block.
 
-On 01/06/2015 01:30 PM, Rob Herring wrote:
-> On Tue, Jan 6, 2015 at 9:29 AM, Ezequiel Garcia
-> <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
->> From: Phani Movva <Phani.Movva-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
->>
->> Add the devicetree binding document for Cosmic Circuits 10001 ADC device.
->>
->> Signed-off-by: Phani Movva <Phani.Movva-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
->> Signed-off-by: Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
->> [Ezequiel: minor style cleaning]
->> Signed-off-by: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
->> ---
->>  .../devicetree/bindings/iio/adc/cc10001_adc.txt    | 22 ++++++++++++++++++++++
->>  1 file changed, 22 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/iio/adc/cc10001_adc.txt
->>
->> diff --git a/Documentation/devicetree/bindings/iio/adc/cc10001_adc.txt b/Documentation/devicetree/bindings/iio/adc/cc10001_adc.txt
->> new file mode 100644
->> index 0000000..b7ba558
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/iio/adc/cc10001_adc.txt
->> @@ -0,0 +1,22 @@
->> +* Cosmic Circuits - Analog to Digital Converter (CC-10001-ADC)
->> +
->> +Required properties:
->> +  - compatible: Should be "cosmic,10001-adc"
->> +  - reg: Should contain adc registers location and length.
->> +  - clock-names: Should contain "adc".
->> +  - clocks: Should contain a clock specifier for each entry in clock-names
->> +  - vref-supply: The regulator supply ADC reference voltage.
->> +
->> +Optional properties:
->> +  - cosmic,adc-reserved-channels: Bitmask of reserved channels,
->> +    i.e. channels that cannot be used by the OS.
-> 
-> Seems like this could be pretty common for any ADC as well as having
-> the number of channels, so you can drop the vendor prefix. Do we have
-> any similar properties already in other drivers?
+> +               compatible = "arm,vexpress-power-controller";
+> +               #power-domain-cells = <1>;
 
-Well, it seems the AT91 ADC has a similar property called
-adc-channels-used. Not sure if it means the same as here. We are not
-using it to model a hardware availability but the channels being
-reserved for another core or OS. See [1].
+You need to define what goes in the cell. That is specific to the
+power controller. It could be generic in that N corresponds to power
+domain N in the controller if the controller is generic in that way
+(i.e. all the register accesses are just indexed).
 
-> I'd reverse the
-> polarity to be enabled channels, then the number of available channels
-> is the top set bit plus 1. You could count channels as is, but then
-> people have to remember to set the high bits on non-existent channels.
+> +        };
+> +
+> +       ....
+> +
+> +       ptm@0,2201d000 {
 
-Hm, isn't this too cumbersome? If we really need to pass the number of
-channels, shouldn't we have a separate property for that? Note that no
-driver currently needs it.
+Drop the comma.
 
-> Absence of the property could still mean you know how many channels
-> and all are enabled.
-> 
+> +               compatible = "arm,coresight-etm3x", "arm,primecell";
+> +               reg = <0 0x2201d000 0 0x1000>;
+> +
+> +               cpu = <&cpu1>;
+> +               clocks = <&oscclk6a>;
+> +               clock-names = "apb_pclk";
+> +               power-domains = <&A7_A15_cluster_pd 0>;
+> +               port {
+> +                       ptm1_out_port: endpoint {
+> +                               remote-endpoint = <&funnel_in_port1>;
+> +                       };
+> +               };
+> +       };
+> +
+> +       etm@0,2203c000 {
 
-This property was originally proposed to be "called
-cosmic,adc-available-channels". Andrew suggested to reverse the
-polarity, and be explicit about absence of property meaning no reserved
-channels (also in [1]).
+ditto
 
-I'm fine either way.
-
-[1] http://www.spinics.net/lists/linux-iio/msg15578.html
--- 
-Ezequiel
+> +               compatible = "arm,coresight-etm3x", "arm,primecell";
+> +               reg = <0 0x2203c000 0 0x1000>;
+> +
+> +               cpu = <&cpu2>;
+> +               clocks = <&oscclk6a>;
+> +               clock-names = "apb_pclk";
+> +               power-domains = <&A7_A15_cluster_pd 1>;
+> +               port {
+> +                       etm0_out_port: endpoint {
+> +                               remote-endpoint = <&funnel_in_port2>;
+> +                       };
+> +               };
+> +       };
+> --
+> 1.9.1
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
