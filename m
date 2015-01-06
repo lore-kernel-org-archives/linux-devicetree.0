@@ -1,71 +1,47 @@
 From: Stanimir Varbanov <svarbanov@mm-sol.com>
-Subject: Re: [PATCH] dmaengine: qcom_bam_dma: add one more optional clock
-Date: Tue, 06 Jan 2015 17:19:15 +0200
-Message-ID: <54ABFCF3.4000508@mm-sol.com>
-References: <1410112547-363-1-git-send-email-svarbanov@mm-sol.com>
+Subject: Re: [PATCH 5/5] ARM: qcom: Add Qualcomm APQ8084 SoC
+Date: Tue, 06 Jan 2015 17:24:22 +0200
+Message-ID: <54ABFE26.9010208@mm-sol.com>
+References: <1418404441-5518-1-git-send-email-svarbanov@mm-sol.com> <1418404441-5518-6-git-send-email-svarbanov@mm-sol.com> <1671186.DiHNtkP1SP@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1410112547-363-1-git-send-email-svarbanov@mm-sol.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <agross@codeaurora.org>
-Cc: Stanimir Varbanov <svarbanov@mm-sol.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1671186.DiHNtkP1SP@wuerfel>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, Kishon Vijay Abraham I <kishon@ti.com>, Russell King <linux@arm.linux.org.uk>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andy,
+Hi Arnd,
 
-On 09/07/2014 08:55 PM, Stanimir Varbanov wrote:
-> The BAM is tightly coupled with the peripheral to which it
-> belongs. In that sprit to access the BAM configuration
-> registers the driver needs to enable some peripheral
-> clocks. Currently the DT node enables bamclk which seems
-> is not enough for some peripherals (for example the crypto
-> engine wants core and iface clocks). This change attempts
-> to solve this issue by adding one more optional clock
-> in bam_dma driver.
+Thanks for the comments!
+
+On 12/12/2014 07:33 PM, Arnd Bergmann wrote:
+> On Friday 12 December 2014 19:14:01 Stanimir Varbanov wrote:
+>> +config ARCH_APQ8084
+>> +       bool "Enable support for APQ8084"
+>> +       select HAVE_ARM_ARCH_TIMER
+>> +       select PCI
+>> +       select PCI_DOMAINS
+>> +       select PCI_MSI
+>> +
 > 
-
-What is your opinion on this patch?
-
-> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
-> ---
->  .../devicetree/bindings/dma/qcom_bam_dma.txt       | 12 ++++--
->  drivers/dma/qcom_bam_dma.c                         | 44 +++++++++++++++-------
->  2 files changed, 38 insertions(+), 18 deletions(-)
+> I would prefer not to see 'select PCI' here. Also the driver is written
+> to work without PCI_MSI, so I'd be much happier with just
 > 
-> diff --git a/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt b/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
-> index d75a9d7..2376897 100644
-> --- a/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
-> +++ b/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
-> @@ -6,8 +6,11 @@ Required properties:
->  - interrupts: Should contain the one interrupt shared by all channels
->  - #dma-cells: must be <1>, the cell in the dmas property of the client device
->    represents the channel number
-> -- clocks: required clock
-> -- clock-names: must contain "bam_clk" entry
-> +- clocks: list of required clock plus one optional clock. The optional clock
-> +          is needed for some peripherals and can be omitted.
-> +- clock-names: must contain "core" clock name representing the required clock
-> +               plus the optional "iface" clock name depending on
-> +               peripheral needs.
->  - qcom,ee : indicates the active Execution Environment identifier (0-7) used in
->    the secure world.
->  
-> @@ -17,8 +20,9 @@ Example:
->  		compatible = "qcom,bam-v1.4.0";
->  		reg = <0xf9984000 0x15000>;
->  		interrupts = <0 94 0>;
-> -		clocks = <&gcc GCC_BAM_DMA_AHB_CLK>;
-> -		clock-names = "bam_clk";
-> +		clocks = <&gcc GCC_BLSP1_UART2_APPS_CLK>,
-> +			 <&gcc GCC_BLSP1_AHB_CLK>;
-> +		clock-names = "core", "iface";
->  		#dma-cells = <1>;
->  		qcom,ee = <0>;
->  	};
+> config ARCH_APQ8084
+> 	bool "Enable support for APQ8084"
+> 	select HAVE_ARM_ARCH_TIMER
+> 	select PCI_DOMAINS if PCI
 
+What about this
 
+config ARCH_APQ8084
+	bool "Enable support for APQ8084"
+	select HAVE_ARM_ARCH_TIMER
+	select MIGHT_HAVE_PCI
+	select PCI_DOMAINS if PCI
 
 -- 
 regards,
