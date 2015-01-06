@@ -1,75 +1,111 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun6i: ippo-q8h-v5: Fix serial0 alias
-Date: Tue, 6 Jan 2015 10:54:10 +0100
-Message-ID: <20150106095410.GG7853@lukather>
-References: <1419510319-32400-1-git-send-email-hdegoede@redhat.com>
- <1419510319-32400-2-git-send-email-hdegoede@redhat.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="O8XZ+2Hy8Kj8wLPZ"
+From: Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
+Subject: [PATCH v1 1/2] ahci_xgene: Implement the xgene_ahci_poll_reg_val to support PMP.
+Date: Tue,  6 Jan 2015 15:32:15 +0530
+Message-ID: <1420538536-32165-2-git-send-email-stripathi@apm.com>
+References: <1420538536-32165-1-git-send-email-stripathi@apm.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1419510319-32400-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1420538536-32165-1-git-send-email-stripathi-qTEPVZfXA3Y@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+To: olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+Cc: linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mlangsdo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+This patch implements the function xgene_ahci_poll_reg_val
+to poll PxCI for multiple IDENTIFY DEVICE commands to finish before
+restarting the DMA engine.
 
---O8XZ+2Hy8Kj8wLPZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>
+---
+ drivers/ata/ahci_xgene.c | 56 ++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 54 insertions(+), 2 deletions(-)
 
-On Thu, Dec 25, 2014 at 01:25:19PM +0100, Hans de Goede wrote:
-> The Ippo q8h has its serial console connected to the r-uart. Adjust the
-> serial0 alias to match.
->=20
-> This fixes the kernel serial console no longer working since 3.19-rc1, be=
-cause
-> 8250_dw.c now honors dt aliases, causing the serial console to be ttyS5 r=
-ather
-> then being ttyS0, as it was in 3.18 and before.
->=20
-> Note that adjusting bootargs instead is not an acceptable fix, because
-> console=3DttyS0,115200 is used by a lot of bootscripts, etc. and this sho=
-uld
-> continue to work.
->=20
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+diff --git a/drivers/ata/ahci_xgene.c b/drivers/ata/ahci_xgene.c
+index cbcd208..afa9c03 100644
+--- a/drivers/ata/ahci_xgene.c
++++ b/drivers/ata/ahci_xgene.c
+@@ -105,17 +105,69 @@ static int xgene_ahci_init_memram(struct xgene_ahci_context *ctx)
+ }
 
-Applied, thanks!
+ /**
++ * xgene_ahci_poll_reg_val- Poll a register on a specific value.
++ * @ap : ATA port of interest.
++ * @reg : Register of interest.
++ * @val : Value to be attained.
++ * @interval : waiting interval for polling.
++ * @timeout : timeout for achieving the value.
++ */
++static int xgene_ahci_poll_reg_val(struct ata_port *ap,
++				   void __iomem *reg, unsigned
++				   int val, unsigned long interval,
++				   unsigned long timeout)
++{
++	unsigned long deadline;
++	unsigned int tmp;
++
++	tmp = ioread32(reg);
++	deadline = ata_deadline(jiffies, timeout);
++
++	while (tmp != val && time_before(jiffies, deadline)) {
++		ata_msleep(ap, interval);
++		tmp = ioread32(reg);
++	}
++
++	return tmp;
++}
++
++/**
+  * xgene_ahci_restart_engine - Restart the dma engine.
+  * @ap : ATA port of interest
+  *
+- * Restarts the dma engine inside the controller.
++ * Waits for completion of multiple commands and restarts
++ * the DMA engine inside the controller.
+  */
+ static int xgene_ahci_restart_engine(struct ata_port *ap)
+ {
+ 	struct ahci_host_priv *hpriv = ap->host->private_data;
++	struct ahci_port_priv *pp = ap->private_data;
++	void __iomem *port_mmio = ahci_port_base(ap);
++	u32 fbs;
++
++	/*
++	 * In case of PMP multiple IDENTIFY DEVICE commands can be
++	 * issued inside PxCI. So need to poll PxCI for the
++	 * completion of outstanding IDENTIFY DEVICE commands before
++	 * we restart the DMA engine.
++	 */
++	if (xgene_ahci_poll_reg_val(ap, port_mmio +
++				    PORT_CMD_ISSUE, 0x0, 1, 100))
++		  return -EBUSY;
 
-Maxime
+ 	ahci_stop_engine(ap);
+ 	ahci_start_fis_rx(ap);
++
++	/*
++	 * Enable the PxFBS.FBS_EN bit as it
++	 * gets cleared due to stopping the engine.
++	 */
++	if (pp->fbs_supported) {
++		fbs = readl(port_mmio + PORT_FBS);
++		writel(fbs | PORT_FBS_EN, port_mmio + PORT_FBS);
++		fbs = readl(port_mmio + PORT_FBS);
++	}
++
+ 	hpriv->start_engine(ap);
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+ 	return 0;
+@@ -374,7 +426,7 @@ static struct ata_port_operations xgene_ahci_ops = {
+ };
 
---O8XZ+2Hy8Kj8wLPZ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+ static const struct ata_port_info xgene_ahci_port_info = {
+-	.flags = AHCI_FLAG_COMMON,
++	.flags = AHCI_FLAG_COMMON | ATA_FLAG_PMP,
+ 	.pio_mask = ATA_PIO4,
+ 	.udma_mask = ATA_UDMA6,
+ 	.port_ops = &xgene_ahci_ops,
+--
+1.8.2.1
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUq7DCAAoJEBx+YmzsjxAg6ccP/1M1uRphwRZHWtwo/0U+4Z0L
-BCDBMJ6xSuDqCbzhB8611llX5vIrcHa6g7m5T7+O7ahkIuzHqaWgFZnI59InGkNO
-nk319f8IJm2QyvKx8sZHhndgUdekyPJZZq4cvdVHac1ceY7CfsxdVd5ESPlNHgpu
-8+zbHsGWheSlZ+PpMJIR2/WrIo5gOs+C2a6DcDyd5m0X0ztbeBQQ9LX01RY5RJMl
-2kQB/0/vSLOJcfjnSdh5xd2vuuLik5gGP8jD1T/4Bh0CJVIm/T9hP3KNBmTsboh+
-4gE9+TC5/gI3ftJMvVsASxmdflJETxSgeDNaEN4wm8MnsqbxfVLm5fkATAz7jXV4
-1fmHoD1ybB/pmqs0wyZM5vWGUCxTsjzLXRdI54/67R3wv6JCM4+DNx5w3ekaGXq3
-ZEstZLAlGFPeS5YthsCmxIw0t8yNAoiCcEMOv9Fp3tWFLRqgXY1Y2yolW7qZacRP
-diSPbANVUHknLNEaHBU/C0XkhJ1Btm9n2OB40wjygJ84S9gtl09kEfP9d5AKPNs0
-jN/QuGulIYiLJO4Y7L1KXZF+cxICEJ5kgdPzf9wGTvz72tqNsuat8KYP/8VBh6/k
-+tAOLOzBzb6NOepmzMsZJsRe0/fwbt9MT5ANDdFe+QCKPV6OJDcdgk7e4jYPtcf3
-wEJudgN24QJw4iXh5ndN
-=NC+5
------END PGP SIGNATURE-----
-
---O8XZ+2Hy8Kj8wLPZ--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
