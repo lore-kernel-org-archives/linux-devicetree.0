@@ -1,7 +1,7 @@
 From: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>
-Subject: [PATCH v5 3/3] Documentation: nand: pl353: Add documentation for controller and driver
-Date: Tue, 6 Jan 2015 23:21:12 +0530
-Message-ID: <66c2f1c72cc848d1bd89adad8f0c608d@BY2FFO11FD025.protection.gbl>
+Subject: [PATCH v5 2/3] nand: pl353: Add software ecc support
+Date: Tue, 6 Jan 2015 23:21:11 +0530
+Message-ID: <90461bcb47ac434a9ef9ef9968879825@BN1AFFO11FD019.protection.gbl>
 References: <1420566672-6870-1-git-send-email-punnaia@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,117 +12,221 @@ To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree
 Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, kpc528@gmail.com, kalluripunnaiahchoudary@gmail.com, Punnaiah Choudary Kalluri <punnaia@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Added notes about the controller and driver
+Added software ecc support.
 
 Signed-off-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
 ---
 Changes in v5:
-- Fixed the review comments
-Changes in v4:
 - None
+Changes in v4:
+- Updated the driver to sync with pl353_smc driver APIs
 ---
- Documentation/mtd/nand/pl353-nand.txt |   92 +++++++++++++++++++++++++++++++++
- 1 files changed, 92 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/mtd/nand/pl353-nand.txt
+ drivers/mtd/nand/pl353_nand.c |  164 +++++++++++++++++++++++++++++++++++++++++
+ 1 files changed, 164 insertions(+), 0 deletions(-)
 
-diff --git a/Documentation/mtd/nand/pl353-nand.txt b/Documentation/mtd/nand/pl353-nand.txt
-new file mode 100644
-index 0000000..4deac94
---- /dev/null
-+++ b/Documentation/mtd/nand/pl353-nand.txt
-@@ -0,0 +1,92 @@
-+This documents provides some notes about the ARM pl353 smc controller used in
-+Zynq SOC and confined to NAND specific details.
+diff --git a/drivers/mtd/nand/pl353_nand.c b/drivers/mtd/nand/pl353_nand.c
+index 622d94f..ef5f6d2 100644
+--- a/drivers/mtd/nand/pl353_nand.c
++++ b/drivers/mtd/nand/pl353_nand.c
+@@ -327,6 +327,71 @@ static int pl353_nand_write_oob(struct mtd_info *mtd, struct nand_chip *chip,
+ }
+ 
+ /**
++ * pl353_nand_read_page_raw - [Intern] read raw page data without ecc
++ * @mtd:		Pointer to the mtd info structure
++ * @chip:		Pointer to the NAND chip info structure
++ * @buf:		Pointer to the data buffer
++ * @oob_required:	Caller requires OOB data read to chip->oob_poi
++ * @page:		Page number to read
++ *
++ * Return:	Always return zero
++ */
++static int pl353_nand_read_page_raw(struct mtd_info *mtd,
++				struct nand_chip *chip,
++				uint8_t *buf, int oob_required, int page)
++{
++	unsigned long data_phase_addr;
++	uint8_t *p;
 +
-+Overview of the controller
-+==========================
-+	The SMC (PL353) supports two memory interfaces:
-+	Interface 0 type SRAM.
-+	Interface 1 type NAND.
-+	This configuration supports the following configurable options:
-+	   . 32-bit or 64-bit AXI data width
-+	   . 8-bit, 16-bit, or 32-bit memory data width for interface 0
-+	   . 8-bit, or 16-bit memory data width for interface 1
-+	   . 1-4 chip selects on each interface
-+	   . SLC ECC block for interface 1
++	chip->read_buf(mtd, buf, mtd->writesize);
 +
-+For more information, refer the below link for TRM
-+http://infocenter.arm.com/help/topic/com.arm.doc.ddi0380g/
-+DDI0380G_smc_pl350_series_r2p1_trm.pdf
++	p = chip->oob_poi;
++	chip->read_buf(mtd, p,
++			(mtd->oobsize - PL353_NAND_LAST_TRANSFER_LENGTH));
++	p += (mtd->oobsize - PL353_NAND_LAST_TRANSFER_LENGTH);
 +
-+NAND memory accesses
-+====================
-+	. Two phase NAND accesses
-+	. NAND command phase transfers
-+	. NAND data phase transfers
++	data_phase_addr = (unsigned long __force)chip->IO_ADDR_R;
++	data_phase_addr |= PL353_NAND_CLEAR_CS;
++	chip->IO_ADDR_R = (void __iomem * __force)data_phase_addr;
 +
-+Two phase NAND accesses
-+	The SMC defines two phases of commands when transferring data to or from
-+NAND flash.
++	chip->read_buf(mtd, p, PL353_NAND_LAST_TRANSFER_LENGTH);
++	return 0;
++}
 +
-+Command phase
-+	Commands and optional address information are written to the NAND flash.
-+The command and address can be associated with either a data phase operation to
-+write to or read from the array, or a status/ID register transfer.
++/**
++ * pl353_nand_write_page_raw - [Intern] raw page write function
++ * @mtd:		Pointer to the mtd info structure
++ * @chip:		Pointer to the NAND chip info structure
++ * @buf:		Pointer to the data buffer
++ * @oob_required:	Caller requires OOB data read to chip->oob_poi
++ *
++ * Return:	Always return zero
++ */
++static int pl353_nand_write_page_raw(struct mtd_info *mtd,
++				    struct nand_chip *chip,
++				    const uint8_t *buf, int oob_required)
++{
++	unsigned long data_phase_addr;
++	uint8_t *p;
 +
-+Data phase
-+ Data is either written to or read from the NAND flash. This data can be either
-+data transferred to or from the array, or status/ID register information.
++	chip->write_buf(mtd, buf, mtd->writesize);
 +
-+NAND AXI address setup
-+       AXI address      Command phase      Data phase
-+	[31:24]         Chip address       Chip address
-+	[23]            NoOfAddCycles_2    Reserved
-+	[22]            NoOfAddCycles_1    Reserved
-+	[21]            NoOfAddCycles_0    ClearCS
-+	[20]            End command valid  End command valid
-+	[19]            0                  1
-+	[18:11]         End command        End command
-+	[10:3]          Start command      [10] ECC Last
-+					   [9:3] Reserved
-+	[2:0]           Reserved           Reserved
++	p = chip->oob_poi;
++	chip->write_buf(mtd, p,
++			(mtd->oobsize - PL353_NAND_LAST_TRANSFER_LENGTH));
++	p += (mtd->oobsize - PL353_NAND_LAST_TRANSFER_LENGTH);
 +
-+ECC
-+===
-+    It operates on a number of 512 byte blocks of NAND memory and can be
-+programmed to store the ECC codes after the data in memory. For writes,
-+the ECC is written to the spare area of the page. For reads, the result of
-+a block ECC check are made available to the device driver.
++	data_phase_addr = (unsigned long __force)chip->IO_ADDR_W;
++	data_phase_addr |= PL353_NAND_CLEAR_CS;
++	data_phase_addr |= (1 << END_CMD_VALID_SHIFT);
++	chip->IO_ADDR_W = (void __iomem * __force)data_phase_addr;
 +
-+------------------------------------------------------------------------
-+|               n * 512 blocks                  | extra  | ecc    |     |
-+|                                               | block  | codes  |     |
-+------------------------------------------------------------------------
++	chip->write_buf(mtd, p, PL353_NAND_LAST_TRANSFER_LENGTH);
 +
-+The ECC calculation uses a simple Hamming code, using 1-bit correction 2-bit
-+detection. It starts when a valid read or write command with a 512 byte aligned
-+address is detected on the memory interface.
++	return 0;
++}
 +
-+Driver details
-+==============
-+	The NAND driver has dependancy with the pl353_smc memory controller
-+driver for intializing the nand timing parameters, bus width, ECC modes,
-+control and status information.
++/**
+  * nand_write_page_hwecc - Hardware ECC based page write function
+  * @mtd:		Pointer to the mtd info structure
+  * @chip:		Pointer to the NAND chip info structure
+@@ -392,6 +457,39 @@ static int pl353_nand_write_page_hwecc(struct mtd_info *mtd,
+ }
+ 
+ /**
++ * pl353_nand_write_page_swecc - [REPLACABLE] software ecc based page write
++ * function
++ * @mtd:		Pointer to the mtd info structure
++ * @chip:		Pointer to the NAND chip info structure
++ * @buf:		Pointer to the data buffer
++ * @oob_required:	Caller requires OOB data read to chip->oob_poi
++ *
++ * Return:	Always return zero
++ */
++static int pl353_nand_write_page_swecc(struct mtd_info *mtd,
++				    struct nand_chip *chip, const uint8_t *buf,
++				    int oob_required)
++{
++	int i, eccsize = chip->ecc.size;
++	int eccbytes = chip->ecc.bytes;
++	int eccsteps = chip->ecc.steps;
++	uint8_t *ecc_calc = chip->buffers->ecccalc;
++	const uint8_t *p = buf;
++	uint32_t *eccpos = chip->ecc.layout->eccpos;
 +
-+Since the controller expects that the chipselect bit should be cleared for the
-+last data transfer i.e last 4 data bytes, the existing nandbase page
-+read/write routines for soft ecc and ecc none modes will not work. So, inorder
-+to make this driver work, it always updates the ecc mode as HW ECC and
-+implemented the page read/write functions for supporting the SW ECC.
++	/* Software ecc calculation */
++	for (i = 0; eccsteps; eccsteps--, i += eccbytes, p += eccsize)
++		chip->ecc.calculate(mtd, p, &ecc_calc[i]);
 +
-+HW ECC mode:
-+	Upto 2K page size is supported and beyond that it retuns
-+-ENOSUPPORT error. If the flsh has ONDIE ecc controller then the
-+priority has given to the ONDIE ecc controller. Also the current
-+implementation has support for upto 64 byte oob area
++	for (i = 0; i < chip->ecc.total; i++)
++		chip->oob_poi[eccpos[i]] = ecc_calc[i];
 +
-+SW ECC mode:
-+	It supports all the pgae sizes. But since, zynq soc bootrom uses
-+HW ECC for the devices that have pgae size <=2K so, to avoid any ecc related
-+issues during boot, prefer HW ECC over SW ECC.
++	chip->ecc.write_page_raw(mtd, chip, buf, 1);
 +
-+For devicetree binding information please refer the below dt binding file
-+Documentation/devicetree/bindings/memory-controllers/pl353-smc.txt
++	return 0;
++}
++
++/**
+  * pl353_nand_read_page_hwecc - Hardware ECC based page read function
+  * @mtd:		Pointer to the mtd info structure
+  * @chip:		Pointer to the NAND chip info structure
+@@ -473,6 +571,52 @@ static int pl353_nand_read_page_hwecc(struct mtd_info *mtd,
+ }
+ 
+ /**
++ * pl353_nand_read_page_swecc - [REPLACABLE] software ecc based page read
++ * function
++ * @mtd:		Pointer to the mtd info structure
++ * @chip:		Pointer to the NAND chip info structure
++ * @buf:		Pointer to the buffer to store read data
++ * @oob_required:	Caller requires OOB data read to chip->oob_poi
++ * @page:		Page number to read
++ *
++ * Return:	Always return zero
++ */
++static int pl353_nand_read_page_swecc(struct mtd_info *mtd,
++				     struct nand_chip *chip,
++				     uint8_t *buf,  int oob_required, int page)
++{
++	int i, eccsize = chip->ecc.size;
++	int eccbytes = chip->ecc.bytes;
++	int eccsteps = chip->ecc.steps;
++	uint8_t *p = buf;
++	uint8_t *ecc_calc = chip->buffers->ecccalc;
++	uint8_t *ecc_code = chip->buffers->ecccode;
++	uint32_t *eccpos = chip->ecc.layout->eccpos;
++
++	chip->ecc.read_page_raw(mtd, chip, buf, page, 1);
++
++	for (i = 0; eccsteps; eccsteps--, i += eccbytes, p += eccsize)
++		chip->ecc.calculate(mtd, p, &ecc_calc[i]);
++
++	for (i = 0; i < chip->ecc.total; i++)
++		ecc_code[i] = chip->oob_poi[eccpos[i]];
++
++	eccsteps = chip->ecc.steps;
++	p = buf;
++
++	for (i = 0 ; eccsteps; eccsteps--, i += eccbytes, p += eccsize) {
++		int stat;
++
++		stat = chip->ecc.correct(mtd, p, &ecc_code[i], &ecc_calc[i]);
++		if (stat < 0)
++			mtd->ecc_stats.failed++;
++		else
++			mtd->ecc_stats.corrected += stat;
++	}
++	return 0;
++}
++
++/**
+  * pl353_nand_select_chip - Select the flash device
+  * @mtd:	Pointer to the mtd info structure
+  * @chip:	Pointer to the NAND chip info structure
+@@ -697,6 +841,8 @@ static int pl353_nand_ecc_init(struct mtd_info *mtd)
+ 	nand_chip->ecc.read_oob = pl353_nand_read_oob;
+ 	nand_chip->ecc.write_oob = pl353_nand_write_oob;
+ 	nand_chip->ecc.strength = 1;
++	nand_chip->ecc.read_page_raw = pl353_nand_read_page_raw;
++	nand_chip->ecc.write_page_raw = pl353_nand_write_page_raw;
+ 
+ 	switch (xnand->ecc_mode) {
+ 	case NAND_ECC_HW:
+@@ -723,6 +869,24 @@ static int pl353_nand_ecc_init(struct mtd_info *mtd)
+ 			nand_chip->ecc.layout = &nand_oob_64;
+ 
+ 		break;
++	case NAND_ECC_SOFT:
++		/*
++		 * The software ECC routines won't work with the
++		 * SMC controller
++		 */
++		nand_chip->ecc.mode = NAND_ECC_HW;
++		nand_chip->ecc.calculate = nand_calculate_ecc;
++		nand_chip->ecc.correct = nand_correct_data;
++		nand_chip->ecc.read_page = pl353_nand_read_page_swecc;
++		nand_chip->ecc.write_page = pl353_nand_write_page_swecc;
++		nand_chip->ecc.size = 256;
++		nand_chip->ecc.bytes = 3;
++		/* Bypass the controller ECC block */
++		pl353_smc_set_ecc_pg_size(mtd->dev.parent, mtd->writesize);
++		pl353_smc_set_ecc_mode(mtd->dev.parent,
++					PL353_SMC_ECCMODE_BYPASS);
++
++		break;
+ 	default:
+ 		return -ENOTSUPP;
+ 	}
 -- 
 1.7.4
 
