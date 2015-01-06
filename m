@@ -1,57 +1,29 @@
-From: Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH v1 0/2] Add the PMP support for APM X-Gene SoC AHCI SATA
- Host Controller driver.
-Date: Tue, 6 Jan 2015 08:41:54 -0500
-Message-ID: <20150106134154.GC3077@htj.dyndns.org>
-References: <1420538536-32165-1-git-send-email-stripathi@apm.com>
- <20150106125252.GB3077@htj.dyndns.org>
- <CAOHikRBs=tH+MTPTmhDkEpV67grLWJK+6a-i8qeMyx_dJ9oyeA@mail.gmail.com>
- <CAOHikRAcSnD=5gvNkNZz8vUXTjkXQo8W4-KQcGajMeajxd73HQ@mail.gmail.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH v18 04/12] drm: imx: imx-hdmi: split phy configuration to
+ platform driver
+Date: Tue, 6 Jan 2015 13:44:07 +0000
+Message-ID: <20150106134407.GF12302@n2100.arm.linux.org.uk>
+References: <1417760564-16858-1-git-send-email-andy.yan@rock-chips.com>
+ <1417760750-17047-1-git-send-email-andy.yan@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-ide-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAOHikRAcSnD=5gvNkNZz8vUXTjkXQo8W4-KQcGajMeajxd73HQ@mail.gmail.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Suman Tripathi <stripathi@apm.com>
-Cc: Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Linux SCSI List <linux-scsi@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Mark Langsdorf <mlangsdo@redhat.com>, Jon Masters <jcm@redhat.com>, patches@apm.com
+In-Reply-To: <1417760750-17047-1-git-send-email-andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: airlied-cv59FeDIM0c@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Josh Boyer <jwboyer-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dave Airlie <airlied-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak@codeaur>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 06, 2015 at 07:10:31PM +0530, Suman Tripathi wrote:
-> Hi ,
-> 
-> For more info here is the git log output before applying the patch.
-> 
-> git log
-> 
-> commit b84b25cb0900b99b28c742dd33101be779f58259
-> Merge: 0628ee7 36aae28
-> Author: Tejun Heo <tj@kernel.org>
-> Date:   Tue Jan 6 07:48:24 2015 -0500
->  Merge branch 'for-3.19-fixes' of git://git.kernel.org/pub/scm/linux/kernel/g
-> 
->     Pull to receive the following two ahci_xgene fixes for the planned
->     xgene PMP support patches.
-> 
->      5c0b8e0de76a8 ("ahci_xgene: Fix the endianess issue in APM X-Gene SoC AHCI
->      1102407bb714d ("ahci_xgene: Fix the DMA state machine lockup for the ATA_CM
-> 
->     Signed-off-by: Tejun Heo <tj@kernel.org>
-> 
-> commit 36aae28e3df4127e296f2680d65cb6310ce61021
-> Author: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Date:   Fri Dec 12 17:16:31 2014 +0200
-> 
->     libata: export ata_get_cmd_descript()
-> 
->     The driver sata_dwc_460ex is using this symbol. To build it as a
->     module we have to have the symbol exported. This patch adds
-> Broken pipe
+On Fri, Dec 05, 2014 at 02:25:50PM +0800, Andy Yan wrote:
+> hdmi phy configuration is platform specific, which can be adusted
 
-Ah, this was me being stupid.  I was using the old patches.  Sorry
-about that.  Applied to libata/for-3.20.
-
-Thanks.
+Minor typo: adjusted
 
 -- 
-tejun
+FTTC broadband for 0.8mile line: currently at 9.5Mbps down 400kbps up
+according to speedtest.net.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
