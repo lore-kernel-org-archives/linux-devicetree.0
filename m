@@ -1,69 +1,33 @@
-From: Howard Chen <howard.chen@linaro.org>
-Subject: [PATCH 1/2] Add sysirq device node for mt6592, also correct the timer interrupt.
-Date: Tue,  6 Jan 2015 16:42:30 +0800
-Message-ID: <1420533751-23999-1-git-send-email-howard.chen@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: matthias.bgg@gmail.com
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "moderated list:ARM/Mediatek
-	SoC..." <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: Re: [alsa-devel] [PATCH v2 RESEND 2/2] mfd: arizona: Update DT
+	binding to support OUTn_MONO init_data
+Date: Tue, 6 Jan 2015 09:17:50 +0000
+Message-ID: <20150106091750.GO14516@opensource.wolfsonmicro.com>
+References: <1420185829-24886-1-git-send-email-ideal.song@samsung.com> <1420185829-24886-3-git-send-email-ideal.song@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1420185829-24886-3-git-send-email-ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Inha Song <ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Howard Chen <howard.chen@linaro.org>
----
- arch/arm/boot/dts/mt6592.dtsi | 21 +++++++++++++++++----
- 1 file changed, 17 insertions(+), 4 deletions(-)
+On Fri, Jan 02, 2015 at 05:03:49PM +0900, Inha Song wrote:
+> This patch update DT binding to support OUTn_MONO init_data. Each
+> output signal can be configurated as a mono differential output.
+> The mono differential configuration is selected using the OUTn_MONO
+> registers.
+> 
+> Signed-off-by: Inha Song <ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
 
-diff --git a/arch/arm/boot/dts/mt6592.dtsi b/arch/arm/boot/dts/mt6592.dtsi
-index 31e5a09..1db453f 100644
---- a/arch/arm/boot/dts/mt6592.dtsi
-+++ b/arch/arm/boot/dts/mt6592.dtsi
-@@ -18,7 +18,7 @@
- 
- / {
- 	compatible = "mediatek,mt6592";
--	interrupt-parent = <&gic>;
-+	interrupt-parent = <&sysirq>;
- 
- 	cpus {
- 		#address-cells = <1>;
-@@ -78,21 +78,34 @@
- 		#clock-cells = <0>;
- 	};
- 
-+	uart_clk: uart_clk {
-+		compatible = "fixed-clock";
-+		clock-frequency = <26000000>;
-+		#clock-cells = <0>;
-+	};
-+
- 	timer: timer@10008000 {
- 		compatible = "mediatek,mt6577-timer";
- 		reg = <0x10008000 0x80>;
--		interrupts = <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupts = <GIC_SPI 144 IRQ_TYPE_LEVEL_LOW>;
- 		clocks = <&system_clk>, <&rtc_clk>;
- 		clock-names = "system-clk", "rtc-clk";
- 	};
- 
-+	sysirq: interrupt-controller@10200220 {
-+		compatible = "mediatek,mt6592-sysirq", "mediatek,mt6577-sysirq";
-+		interrupt-controller;
-+		#interrupt-cells = <3>;
-+		interrupt-parent = <&gic>;
-+		reg = <0x10200220 0x1c>;
-+	};
-+
- 	gic: interrupt-controller@10211000 {
- 		compatible = "arm,cortex-a7-gic";
- 		interrupt-controller;
- 		#interrupt-cells = <3>;
-+		interrupt-parent = <&gic>;
- 		reg = <0x10211000 0x1000>,
- 		      <0x10212000 0x1000>;
- 	};
--
- };
--
--- 
-1.9.1
+Acked-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+
+Thanks,
+Charles
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
