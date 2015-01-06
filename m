@@ -1,137 +1,198 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v3 resend] clk-rcar-gen2: ADSP clock support
-Date: Wed, 07 Jan 2015 01:39:52 +0300
-Message-ID: <355163371.fkynKV0U5x@wasted.cogentembedded.com>
+From: Beomho Seo <beomho.seo@samsung.com>
+Subject: Re: [PATCH RESEND 3/3] Documentation: Add documentation for rt5033
+ multifunction device
+Date: Wed, 07 Jan 2015 08:34:57 +0900
+Message-ID: <54AC7121.60303@samsung.com>
+References: <1420523117-6814-1-git-send-email-beomho.seo@samsung.com>
+ <1420523117-6814-4-git-send-email-beomho.seo@samsung.com>
+ <CAL_Jsq+Sz_iCkaDWzssA6DFeLX8fQ2hqKut0Gv6i5P706bmvpA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: mturquette@linaro.org, linux-kernel@vger.kernel.org, sboyd@codeaurora.org
-Cc: robh+dt@kernel.org, linux-sh@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-reply-to: <CAL_Jsq+Sz_iCkaDWzssA6DFeLX8fQ2hqKut0Gv6i5P706bmvpA@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, lee.jone@linaro.org, Mark Brown <broonie@kernel.org>, Sebastian Reichel <sre@kernel.org>, dbaryshkov@gmail.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Chanwoo Choi <cw00.choi@samsung.com>, InKi Dae <inki.dae@samsung.com>, sw0312.kim@samsung.com, Lee Jones <lee.jones@linaro.org>, beomho.seo@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Add the ADSP clock support to the R-Car generation 2 CPG driver.  This clock
-gets derived from  PLL1.  The layout of the ADSPCKCR register is  similar to
-those of the clocks supported by the 'clk-div6' driver but the divider encoding
-is non-linear, so can't be supported by that driver...
+Thank you for review.
 
-Based on the original patch by Konstantin Kozhevnikov
-<konstantin.kozhevnikov@cogentembedded.com>.
+On 01/07/2015 01:54 AM, Rob Herring wrote:
+> On Mon, Jan 5, 2015 at 11:45 PM, Beomho Seo <beomho.seo@samsung.com> wrote:
+>> This patch device tree binding documentation for rt5033 multifunction device.
+>>
+>> Cc: Sebastian Reichel <sre@kernel.org>
+>> Cc: Lee Jones <lee.jones@linaro.org>
+>> Cc: Mark Brown <broonie@kernel.org>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Cc: Pawel Moll <pawel.moll@arm.com>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: Ian campbell <ijc+devicetree@hellion.org.uk>
+>> Cc: Kumar Gala <galak@codeaurora.org>
+>> Signed-off-by: Beomho Seo <beomho.seo@samsung.com>
+>> Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+>> ---
+>>  Documentation/devicetree/bindings/mfd/rt5033.txt   |  108 ++++++++++++++++++++
+>>  .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+>>  2 files changed, 109 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/mfd/rt5033.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/mfd/rt5033.txt b/Documentation/devicetree/bindings/mfd/rt5033.txt
+>> new file mode 100644
+>> index 0000000..52a6d33
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mfd/rt5033.txt
+>> @@ -0,0 +1,108 @@
+>> +Richtek RT5033 Power management Integrated Circuit
+>> +
+>> +RT5033 is a Multifunction device which includes battery charger, fuel gauge,
+>> +flash LED current source, LDO and synchronous Buck converter for portable
+>> +applications. It is interfaced to host controller using i2c interface.
+>> +
+>> +Required properties:
+>> +- compatible : Must be "richtek,rt5033"
+>> +- reg : Specifies the i2c slave address of general part.
+>> +- interrupts : This i2c devices has an IRQ line connected to the main SoC.
+>> +- interrupt-parent : The parent interrupt controller.
+>> +
+>> +Optional node:
+>> +Regulators: The regulators of RT5033 have to be instantiated under sub-node
+>> +named "regulators" usinge the following format.
+> 
+> s/usinge/using/
+> 
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+I will fix wrong typo.
 
----
-Re-sending with the correct version tag...
+>> +
+>> +       regulators {
+>> +               regulator-name {
+>> +                       regulator-name = LDO/BUCK
+>> +                       regulator subnodes called X, Y and Z
+>> +               };
+>> +       };
+>> +       refer Documentation/devicetree/bindings/regulator/regulator.txt
+>> +
+>> +
+>> +Battery charger: There battery charger of RT5033 have to be instantiated under
+>> +sub-node named "charger" using the following format.
+>> +
+>> +Required properties:
+>> +- compatible : Must be "richtek,rt5033-charger".
+>> +- richtek,pre-uamp : Current of pre-charge mode. The pre-charge current levels
+>> +  are 350 mA to 650 mA programmed by I2C per 100 mA.
+>> +- richtek,pre-threshold-uvolt : Voltage of threshold pre-charge mode. Battery
+>> +  voltage is below pre-charge threshold voltage, the charger is in pre-charge
+>> +  mode with pre-charge current. Its levels are 2.3 V  to 3.8 V programmed
+>> +  by I2C per 0.1 V.
+>> +- richtek,fast-uamp : Current of fast-charge mode. The fast-charge current
+>> +  levels are 700 mA to 2000 mA programmed by I2C per 100 mA.
+>> +- richtek,const-uvolt :  Battery regulation voltage of constant voltage mode.
+>> +  This voltage level 3.65 V to 4.4 V bye I2C per 0.025 V.
+>> +- richtek,eoc-uamp : This property is end of charge current. Its level 150 mA
+>> +  to 200 mA.
+> 
+> Please align -uamp and -uvolt names with regulator binding suffixes.
+> 
 
-The patch is against the 'clk-next' branch of Mike Turquette's 'linux.git' repo
-plus the RCAN clock support patch reposted yesterday.
+OK. I will fix it.
 
-Changes in version 3:
-- fixed the gated clock register address in cpg_adsp_clk_register();
-- moved cpg_adsp_clk_register() and cpg_adsp_div_table[] to be after
-  cpg_rcan_clk_register();
-- moved cpg_adsp_clk_register() call after cpg_rcan_clk_register() call;
-- refreshed the patch.
+>> +       charger {
+>> +               compatible = "richtek,rt5033-charger";
+>> +               richtek,pre-uamp = <350000>;
+>> +               richtek,pre-threshold-uvolt = <3400000>;
+>> +               richtek,fast-uamp = <2000000>;
+>> +               richtek,const-uvolt = <4350000>;
+>> +               richtek,eoc-uamp = <250000>;
+>> +       };
+>> +
+>> +
+>> +Fuelgauge: There fuelgauge of RT5033 to be instantiated node named "fuelgauge"
+>> +using the following format.
+>> +
+>> +Required properties:
+>> +- compatible = Must be "richtek,rt5033-battery".
+>> +
+>> +       i2c_fuel: i2c@1 {
+> 
+> Drop the @1.
+> 
 
-Changes in version 2:
-- swapped "adsp" and "rcan" in the binding document.
+OK. I will fix it.
 
- Documentation/devicetree/bindings/clock/renesas,rcar-gen2-cpg-clocks.txt |    5 -
- drivers/clk/shmobile/clk-rcar-gen2.c                                     |   48 ++++++++++
- 2 files changed, 51 insertions(+), 2 deletions(-)
+>> +               compatible = "i2c-gpio";
+>> +               standard i2c-gpio constraints...
+>> +               fuelgauge {
+>> +                       compatible = "richtek,rt5033-battery".
+>> +               };
+>> +       };
+> 
+> I'm a bit confused by this. The fuelgauge is an i2c device hanging off
+> the rt5033 or a 2nd i2c slave on the rt5033?
+>
 
-Index: linux/Documentation/devicetree/bindings/clock/renesas,rcar-gen2-cpg-clocks.txt
-===================================================================
---- linux.orig/Documentation/devicetree/bindings/clock/renesas,rcar-gen2-cpg-clocks.txt
-+++ linux/Documentation/devicetree/bindings/clock/renesas,rcar-gen2-cpg-clocks.txt
-@@ -17,7 +17,8 @@ Required Properties:
-     to the USB_EXTAL clock
-   - #clock-cells: Must be 1
-   - clock-output-names: The names of the clocks. Supported clocks are "main",
--    "pll0", "pll1", "pll3", "lb", "qspi", "sdh", "sd0", "sd1", "z", and "rcan"
-+    "pll0", "pll1", "pll3", "lb", "qspi", "sdh", "sd0", "sd1", "z", "rcan", and
-+    "adsp"
- 
- 
- Example
-@@ -31,5 +32,5 @@ Example
- 		#clock-cells = <1>;
- 		clock-output-names = "main", "pll0, "pll1", "pll3",
- 				     "lb", "qspi", "sdh", "sd0", "sd1", "z",
--				     "rcan";
-+				     "rcan", "adsp";
- 	};
-Index: linux/drivers/clk/shmobile/clk-rcar-gen2.c
-===================================================================
---- linux.orig/drivers/clk/shmobile/clk-rcar-gen2.c
-+++ linux/drivers/clk/shmobile/clk-rcar-gen2.c
-@@ -33,6 +33,7 @@ struct rcar_gen2_cpg {
- #define CPG_FRQCRC			0x000000e0
- #define CPG_FRQCRC_ZFC_MASK		(0x1f << 8)
- #define CPG_FRQCRC_ZFC_SHIFT		8
-+#define CPG_ADSPCKCR			0x0000025c
- #define CPG_RCANCKCR			0x00000270
- 
- /* -----------------------------------------------------------------------------
-@@ -199,6 +200,51 @@ static struct clk * __init cpg_rcan_clk_
- 	return clk;
- }
- 
-+/* ADSP divisors */
-+static const struct clk_div_table cpg_adsp_div_table[] = {
-+	{  1,  3 }, {  2,  4 }, {  3,  6 }, {  4,  8 },
-+	{  5, 12 }, {  6, 16 }, {  7, 18 }, {  8, 24 },
-+	{ 10, 36 }, { 11, 48 }, {  0,  0 },
-+};
-+
-+static struct clk * __init cpg_adsp_clk_register(struct rcar_gen2_cpg *cpg)
-+{
-+	const char *parent_name = "pll1";
-+	struct clk_divider *div;
-+	struct clk_gate *gate;
-+	struct clk *clk;
-+
-+	div = kzalloc(sizeof(*div), GFP_KERNEL);
-+	if (!div)
-+		return ERR_PTR(-ENOMEM);
-+
-+	div->reg = cpg->reg + CPG_ADSPCKCR;
-+	div->width = 4;
-+	div->table = cpg_adsp_div_table;
-+	div->lock = &cpg->lock;
-+
-+	gate = kzalloc(sizeof(*gate), GFP_KERNEL);
-+	if (!gate) {
-+		kfree(div);
-+		return ERR_PTR(-ENOMEM);
-+	}
-+
-+	gate->reg = cpg->reg + CPG_ADSPCKCR;
-+	gate->bit_idx = 8;
-+	gate->flags = CLK_GATE_SET_TO_DISABLE;
-+	gate->lock = &cpg->lock;
-+
-+	clk = clk_register_composite(NULL, "adsp", &parent_name, 1, NULL, NULL,
-+				     &div->hw, &clk_divider_ops,
-+				     &gate->hw, &clk_gate_ops, 0);
-+	if (IS_ERR(clk)) {
-+		kfree(gate);
-+		kfree(div);
-+	}
-+
-+	return clk;
-+}
-+
- /* -----------------------------------------------------------------------------
-  * CPG Clock Data
-  */
-@@ -303,6 +349,8 @@ rcar_gen2_cpg_register_clock(struct devi
- 		return cpg_z_clk_register(cpg);
- 	} else if (!strcmp(name, "rcan")) {
- 		return cpg_rcan_clk_register(cpg, np);
-+	} else if (!strcmp(name, "adsp")) {
-+		return cpg_adsp_clk_register(cpg);
- 	} else {
- 		return ERR_PTR(-EINVAL);
- 	}
+It is 2nd i2c slave on the rt5033.
+
+>> +
+>> +
+>> +Example:
+>> +
+>> +               rt5033@34 {
+>> +                       compatible = "richtek,rt5033";
+>> +                       reg = <0x34>;
+>> +                       interrupt-parent = <&gpx1>;
+>> +                       interrupts = <5 0>;
+>> +
+>> +                       regulators {
+>> +                               buck_reg: BUCK {
+>> +                                       regulator-name = "BUCK";
+>> +                                       regulator-min-microvolt = <1200000>;
+>> +                                       regulator-max-microvolt = <1200000>;
+>> +                                       regulator-always-on;
+>> +                               };
+>> +                       };
+>> +
+>> +                       charger {
+>> +                               compatible = "richtek,rt5033-charger";
+>> +                               richtek,pre-uamp = <350000>;
+>> +                               richtek,pre-threshold-uvolt = <3400000>;
+>> +                               richtek,fast-uamp = <2000000>;
+>> +                               richtek,const-uvolt = <4350000>;
+>> +                               richtek,eoc-uamp = <250000>;
+>> +                       };
+>> +
+>> +               };
+>> +
+>> +               i2c_fuel: i2c@10 {
+>> +                       compatible = "i2c-gpio";
+>> +                       gpios = <&gpm3 1 0
+>> +                               &gpm3 0 0>;
+>> +
+>> +                       fuel: rt5033-battery@35 {
+>> +                               compatible = "richtek,rt5033-battery";
+>> +                               interrupt-parent = <&gpx2>;
+>> +                               interrupts = <3 0>;
+>> +                               reg = <0x35>;
+>> +                       };
+>> +               };
+>> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+>> index 723999d..611b543 100644
+>> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+>> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+>> @@ -124,6 +124,7 @@ ralink      Mediatek/Ralink Technology Corp.
+>>  ramtron        Ramtron International
+>>  realtek Realtek Semiconductor Corp.
+>>  renesas        Renesas Electronics Corporation
+>> +richtek        Richtek Technology Corporation
+>>  ricoh  Ricoh Co. Ltd.
+>>  rockchip       Fuzhou Rockchip Electronics Co., Ltd
+>>  samsung        Samsung Semiconductor
+>> --
+>> 1.7.9.5
+>>
+> 
+
+Best regards,
+Beomho Seo
+
