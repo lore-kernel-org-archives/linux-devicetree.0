@@ -1,54 +1,81 @@
-From: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>
-Subject: [PATCH v5 0/3] Add arm pl353 smc nand driver for xilinx zynq soc
-Date: Tue, 6 Jan 2015 23:21:09 +0530
-Message-ID: <d537113998df4d7887bbca61f990df7f@BY2FFO11FD004.protection.gbl>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 06/16] ASoC: samsung: i2s: Move clk
+ enable to the platform driver probe()
+Date: Tue, 6 Jan 2015 18:06:19 +0000
+Message-ID: <20150106180619.GN2634@sirena.org.uk>
+References: <1418997336-17777-1-git-send-email-s.nawrocki@samsung.com>
+ <1418997336-17777-7-git-send-email-s.nawrocki@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, michal.simek@xilinx.com, grant.likely@linaro.org, gregkh@linuxfoundation.org, jason@lakedaemon.net, ezequiel.garcia@free-electrons.com, arnd@arndb.de, dwmw2@infradead.org, computersforpeace@gmail.com, artem.bityutskiy@linux.intel.com, pekon@ti.com, jussi.kivilinna@iki.fi, acourbot@nvidia.com, ivan.khoronzhuk@ti.com, joern@logfs.org
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, kalluripunnaiahchoudary@gmail.com, kpc528@gmail.com, Punnaiah Choudary Kalluri <punnaia@xilinx.com>
+Content-Type: multipart/mixed; boundary="===============4761836745454779082=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1418997336-17777-7-git-send-email-s.nawrocki@samsung.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, padma.v@samsung.com, sbkim73@samsung.com, drake@endlessm.com, kgene@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The following patches add arm pl353 static memory controller driver for
-xilinx zynq soc. The arm pl353 smc supports two interfaces i.e nand and
-nor/sram memory interfaces. The current implementation supports only a
-single SMC instance and nand specific configuration.
 
-xilinx zynq TRM link:
-http://www.xilinx.com/support/documentation/user_guides/ug585-Zynq-7000-TRM.pdf
-
-ARM pl353 smc TRM link:
-http://infocenter.arm.com/help/topic/com.arm.doc.ddi0380g/
-DDI0380G_smc_pl350_series_r2p1_trm.pdf
-
-Punnaiah Choudary Kalluri (3):
-  nand: pl353: Add basic driver for arm pl353 smc nand interface
-  nand: pl353: Add software ecc support
-  Documentation: nand: pl353: Add documentation for controller and
-    driver
-
- Documentation/mtd/nand/pl353-nand.txt |   92 +++
- drivers/mtd/nand/Kconfig              |    7 +
- drivers/mtd/nand/Makefile             |    1 +
- drivers/mtd/nand/pl353_nand.c         | 1055 +++++++++++++++++++++++++++++++++
- 4 files changed, 1155 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/mtd/nand/pl353-nand.txt
- create mode 100644 drivers/mtd/nand/pl353_nand.c
-
--- 
-1.7.4
+--===============4761836745454779082==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="sA8oU60uXPLxwof5"
+Content-Disposition: inline
 
 
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+--sA8oU60uXPLxwof5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Fri, Dec 19, 2014 at 02:55:26PM +0100, Sylwester Nawrocki wrote:
+> Gating the I2S bus clock in the driver's runtime PM callbacks has
+> currently really no effect since the clock is being enabled
+> in the DAI's probe() and thus is permanently turned on. Now we just
+> move the enable to the platform driver's probe(), which doesn't
+> change the situation much. It will allow us to register a clock
+> provider already in samsung_i2s_probe() function.
+
+That doesn't sound quite right - the normal idiom for this stuff is to
+enable on probe, mark the device as active then if runtime PM is enabled
+it can idle the device and turn off the clock.  That way if runtime PM
+is disabled things continue to run.  I've not checked to see if this is
+actually happening correctly all the way through but that's what's
+supposed to happen and means that enabling in the probe should still
+result in working clock management.
+
+It will as things currently stand be broken for the dual DAI case so
+this is a fix for that (the dual DAI case will double enable if both
+links are in use) but the analysis isn't quite correct.
+
+--sA8oU60uXPLxwof5
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUrCQaAAoJECTWi3JdVIfQlIUH/RYdJ2VwQHhaRl9ov9rsuiHx
+bxF8VH2rHFlfBq4wccmY8OrTmBopXo21gVDgaML23FJkMwsLhuydc+GNL9NfHB7z
+PXh0UGWlzJJLVNyzMUmAHj0KmZxQhRxqZzdSs2PwlC54XqsMdBw0Hhp2gO1PRHou
+kf16wAe4tKDKXblgDncG4t8vHNYu4ETk7sH/PfyfItihlKek1XllA2l2nCAWZqO8
+IuqRx+ZUpZdceOVXrXzo/HHloKQ4dwbyrE2aFm5u4vHroyInV3kR4HZsO7vpVwTV
+sMUw720/nApvU1dQp06mztQT0+xtVbF+eqIJWiZDaLBR1pFtSabqH/OSAFm1DDo=
+=N9kF
+-----END PGP SIGNATURE-----
+
+--sA8oU60uXPLxwof5--
+
+--===============4761836745454779082==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============4761836745454779082==--
