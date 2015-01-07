@@ -1,56 +1,63 @@
-From: Mayuresh Chitale <mchitale-qTEPVZfXA3Y@public.gmane.org>
-Subject: Re: [PATCH 2/4] Documentation: dt-bindings: Add the binding info for
- APM X-Gene PCIe DMA driver
-Date: Wed, 7 Jan 2015 16:12:36 +0530
-Message-ID: <CAL-zptOMnD_c_HPOke_27O4bfmg_W7jgfBNvUccykWneyv0JUw@mail.gmail.com>
+From: Mayuresh Chitale <mchitale@apm.com>
+Subject: Re: [PATCH 3/4] arm64: dts: Add APM X-Gene PCIe DMA device tree nodes
+Date: Wed, 7 Jan 2015 16:15:54 +0530
+Message-ID: <CAL-zptPDU2qoot-aZMDwRmPQ_4QoCsqtQZ=kc-fN-Ts68qrVDQ@mail.gmail.com>
 References: <1420608537-12296-1-git-send-email-mchitale@apm.com>
-	<1420608537-12296-3-git-send-email-mchitale@apm.com>
-	<2098807.VbUeJKFBVr@wuerfel>
+ <1420608537-12296-4-git-send-email-mchitale@apm.com>
+ <6884775.IcL8KCPQhi@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2098807.VbUeJKFBVr@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: "dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "ddutile-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <ddutile-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <6884775.IcL8KCPQhi@wuerfel>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "vinod.koul@intel.com" <vinod.koul@intel.com>, "jcm@redhat.com" <jcm@redhat.com>, "patches@apm.com" <patches@apm.com>, "ddutile@redhat.com" <ddutile@redhat.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
 Hi Arnd,
 
-Thanks for you comments. Please see inline.
+Actually the addresses are different. For e.g port 0 base address is
+1F2B0000 and port 1 base address is 1F2C0000 and so on.
 
---Mayuresh.
+Thanks,
+Mayuresh.
 
-On Wed, Jan 7, 2015 at 2:00 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Wednesday 07 January 2015 10:58:55 Mayuresh Chitale wrote:
->> +Required properties:
->> +- compatible :
->> +       - "apm,xgene-pciedma" for pcie DMA on X-Gene SoC
->> +- interrupts : An interrupt-specifier which is used to handle DMA interrupts
->> +
->> +Examples:
->> +               pciedma0 {
+On Wed, Jan 7, 2015 at 2:07 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Wednesday 07 January 2015 10:58:56 Mayuresh Chitale wrote:
+>>
+>> +               xpdma0: dma0@1f2b0154 {
 >> +                       status = "disabled";
 >> +                       compatible = "apm,xgene-pciedma";
->> +                       reg = < 0x0 0x1F2B0154 0x0 0xC
->> +                               0x0 0x1F2B0058 0x0 0x8>;
->> +                       reg-names = "cfg", "intr";
->> +                       interrupts = <0x0 0xC6 0x4>;
+>> +                       reg = < 0x0 0x1f2b0154 0x0 0xc
+>> +                               0x0 0x1f2b0058 0x0 0x8>;
+>> +                       interrupts = <0x0 0xc6 0x4>;
 >> +               };
+>> +
+>> +               xpdma1: dma1@1f2c0154 {
+>> +                       status = "disabled";
+>> +                       compatible = "apm,xgene-pciedma";
+>> +                       reg = < 0x0 0x1f2c0154 0x0 0xc
+>> +                               0x0 0x1f2c0058 0x0 0x8>;
+>> +                       interrupts = <0x0 0xcc 0x4>;
+>> +               };
+>> +
 >>
 >
-> The example contains a "reg-names" property that is neither listed
-> as optional nor mandatory, and that is not used by the driver.
-> Bettter drop that from the example.
->
-> The 'reg' property is not documented in the binding. Please
-> document which register each index refers to.
-
-Ok. I will make those changes.
-
+> Something's wrong here: you have the same addresses for
+> all the nodes but use different names. Please change the names
+> to all say 'dma' and set the correct addresses.
 >
 >         Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> --
+> To unsubscribe from this list: send the line "unsubscribe dmaengine" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
