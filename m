@@ -1,68 +1,63 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: [PATCH] ARM: dts: exynos4412-trats2: Add Maxim 77693 fuel gauge node
-Date: Wed, 07 Jan 2015 10:50:32 +0100
-Message-ID: <1420624232-31238-1-git-send-email-k.kozlowski@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH v2 1/2] [media] s5p-jpeg: Fix modification sequence of
+ interrupt enable register
+Date: Wed, 07 Jan 2015 11:08:11 +0100
+Message-ID: <54AD058B.6070900@samsung.com>
+References: <1418974680-5837-1-git-send-email-tony.kn@samsung.com>
+ <1418974680-5837-2-git-send-email-tony.kn@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-reply-to: <1418974680-5837-2-git-send-email-tony.kn@samsung.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Tony K Nadackal <tony.kn@samsung.com>
+Cc: linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, mchehab@osg.samsung.com, kgene@kernel.org, k.debski@samsung.com, s.nawrocki@samsung.com, robh+dt@kernel.org, mark.rutland@arm.com, bhushan.r@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Add node for fuel gauge present in Maxim 77693 PMIC. This allows control
-over battery charging state on Trats2 board.
+Hi Tony,
 
-The fuel gauge is compatible with max17042 battery driver (Maxim
-17042/17047/17050).  Although datasheet rev 2.2 for MAX77693 describes
-fuel gauge as Maxim 17042-like, the chip on Trats2 board identifies
-itself as Maxim 17047-like.
+On 12/19/2014 08:37 AM, Tony K Nadackal wrote:
+> Fix the bug in modifying the interrupt enable register.
 
-Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
----
- arch/arm/boot/dts/exynos4412-trats2.dts | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+For Exynos4 this was not a bug as there are only five bit fields
+used in the EXYNOS4_INT_EN_REG - all of them enable related
+interrupt signal and EXYNOS4_INT_EN_ALL value is 0x1f which
+just sets these bit fields to 1.
 
-diff --git a/arch/arm/boot/dts/exynos4412-trats2.dts b/arch/arm/boot/dts/exynos4412-trats2.dts
-index 496a05faca37..7b3e58d781d8 100644
---- a/arch/arm/boot/dts/exynos4412-trats2.dts
-+++ b/arch/arm/boot/dts/exynos4412-trats2.dts
-@@ -15,6 +15,7 @@
- /dts-v1/;
- #include "exynos4412.dtsi"
- #include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
- 
- / {
- 	model = "Samsung Trats 2 based on Exynos4412";
-@@ -24,6 +25,7 @@
- 		i2c9 = &i2c_ak8975;
- 		i2c10 = &i2c_cm36651;
- 		i2c11 = &i2c_max77693;
-+		i2c12 = &i2c_max77693_fuel;
- 	};
- 
- 	memory {
-@@ -562,6 +564,22 @@
- 		};
- 	};
- 
-+	i2c_max77693_fuel: i2c-gpio-3 {
-+		compatible = "i2c-gpio";
-+		gpios = <&gpf1 5 GPIO_ACTIVE_HIGH>, <&gpf1 4 GPIO_ACTIVE_HIGH>;
-+		i2c-gpio,delay-us = <2>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		status = "okay";
-+
-+		max77693-fuel-gauge@36 {
-+			compatible = "maxim,max17047";
-+			interrupt-parent = <&gpx2>;
-+			interrupts = <3 IRQ_TYPE_EDGE_FALLING>;
-+			reg = <0x36>;
-+		};
-+	};
-+
- 	mmc@12550000 {
- 		num-slots = <1>;
- 		broken-cd;
+If for Exynos7 there are other bit fields in this register
+and it has to be read prior setting to find out current
+state then I'd parametrize this function with version argument
+as you do it in the patch adding support for Exynos7, but
+for Exynos4 case I'd left the behaviour as it is currenlty, i.e.
+avoid reading the register and do it only for Exynos7 case.
+Effectively, this patch is not required, as it doesn't fix
+anything but adds redundant call to readl.
+
+> Signed-off-by: Tony K Nadackal <tony.kn@samsung.com>
+> ---
+>   drivers/media/platform/s5p-jpeg/jpeg-hw-exynos4.c | 5 ++++-
+>   1 file changed, 4 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/media/platform/s5p-jpeg/jpeg-hw-exynos4.c b/drivers/media/platform/s5p-jpeg/jpeg-hw-exynos4.c
+> index e53f13a..a61ff7e 100644
+> --- a/drivers/media/platform/s5p-jpeg/jpeg-hw-exynos4.c
+> +++ b/drivers/media/platform/s5p-jpeg/jpeg-hw-exynos4.c
+> @@ -155,7 +155,10 @@ void exynos4_jpeg_set_enc_out_fmt(void __iomem *base, unsigned int out_fmt)
+>
+>   void exynos4_jpeg_set_interrupt(void __iomem *base)
+>   {
+> -	writel(EXYNOS4_INT_EN_ALL, base + EXYNOS4_INT_EN_REG);
+> +	unsigned int reg;
+> +
+> +	reg = readl(base + EXYNOS4_INT_EN_REG) & ~EXYNOS4_INT_EN_MASK;
+> +	writel(reg | EXYNOS4_INT_EN_ALL, base + EXYNOS4_INT_EN_REG);
+>   }
+>
+>   unsigned int exynos4_jpeg_get_int_status(void __iomem *base)
+>
+
+
 -- 
-1.9.1
+Best Regards,
+Jacek Anaszewski
