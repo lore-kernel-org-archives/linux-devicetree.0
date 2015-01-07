@@ -1,100 +1,133 @@
-From: Ray Jui <rjui@broadcom.com>
-Subject: Re: [PATCH v2 4/5] clk: cygnus: add clock support for Broadcom Cygnus
-Date: Tue, 6 Jan 2015 18:29:07 -0800
-Message-ID: <54AC99F3.8040703@broadcom.com>
-References: <1420500076-18302-5-git-send-email-rjui@broadcom.com> <2048376.BFrtW5tszK@wuerfel>
+From: Liu Ying <Ying.Liu@freescale.com>
+Subject: Re: [PATCH v18 0/12] dw-hdmi: convert imx hdmi to bridge/dw_hdmi
+Date: Wed, 7 Jan 2015 10:39:30 +0800
+Message-ID: <54AC9C62.3030203@freescale.com>
+References: <1417760564-16858-1-git-send-email-andy.yan@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2048376.BFrtW5tszK@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
-Cc: Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Matt Porter <mporter@linaro.org>, Alex Elder <elder@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, Scott Branden <sbranden@broadcom.com>, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1417760564-16858-1-git-send-email-andy.yan@rock-chips.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Andy Yan <andy.yan@rock-chips.com>, airlied@linux.ie, Philipp Zabel <p.zabel@pengutronix.de>, heiko@sntech.de, fabio.estevam@freescale.com, rmk+kernel@arm.linux.org.uk
+Cc: Mark Rutland <mark.rutland@arm.com>, devel@driverdev.osuosl.org, Zubair.Kakakhel@imgtec.com, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Josh Boyer <jwboyer@redhat.com>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, djkurtz@google.com, ykk@rock-chips.com, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, Kumar Gala <galak@codeaurora.org>, jay.xu@rock-chips.com, vladimir_zapolskiy@mentor.com, mark.yao@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 1/6/2015 12:21 PM, Arnd Bergmann wrote:
-> On Monday 05 January 2015 15:21:15 Ray Jui wrote:
->> +static const struct iproc_clk_ctrl mipipll_clk[BCM_CYGNUS_NUM_MIPIPLL_CLKS] = {
->> +	[BCM_CYGNUS_MIPIPLL_CH0_UNUSED] = {
->> +		.channel = BCM_CYGNUS_MIPIPLL_CH0_UNUSED,
->> +		.enable = enable_val(0x4, 12, 6, 18),
->> +		.mdiv = reg_val(0x20, 0, 8),
->> +	},
->> +	[BCM_CYGNUS_MIPIPLL_CH1_LCD] = {
->> +		.channel = BCM_CYGNUS_MIPIPLL_CH1_LCD,
->> +		.enable = enable_val(0x4, 13, 7, 19),
->> +		.mdiv = reg_val(0x20, 10, 8),
->> +	},
->> +	[BCM_CYGNUS_MIPIPLL_CH2_UNUSED] = {
->> +		.channel = BCM_CYGNUS_MIPIPLL_CH2_UNUSED,
->> +		.enable = enable_val(0x4, 14, 8, 20),
->> +		.mdiv = reg_val(0x20, 20, 8),
->> +	},
->> +	[BCM_CYGNUS_MIPIPLL_CH3_UNUSED] = {
->> +		.channel = BCM_CYGNUS_MIPIPLL_CH3_UNUSED,
->> +		.enable = enable_val(0x4, 15, 9, 21),
->> +		.mdiv = reg_val(0x24, 0, 8),
->> +	},
->> +	[BCM_CYGNUS_MIPIPLL_CH4_UNUSED] = {
->> +		.channel = BCM_CYGNUS_MIPIPLL_CH4_UNUSED,
->> +		.enable = enable_val(0x4, 16, 10, 22),
->> +		.mdiv = reg_val(0x24, 10, 8),
->> +	},
->> +	[BCM_CYGNUS_MIPIPLL_CH5_UNUSED] = {
->> +		.channel = BCM_CYGNUS_MIPIPLL_CH5_UNUSED,
->> +		.enable = enable_val(0x4, 17, 11, 23),
->> +		.mdiv = reg_val(0x24, 20, 8),
->> +	},
->> +};
-> 
-> The tables look fairly regular. Is it possible that it's common
-> to all iproc variants with a standard way to derive all other
-> values from the channel index?
-> 
-Ah no. Not only it's different between different iproc variants, it's
-also different between plls on the same soc.
-
->> +static const struct iproc_asiu_gate asiu_gate[BCM_CYGNUS_NUM_ASIU_CLKS] = {
->> +	[BCM_CYGNUS_ASIU_KEYPAD_CLK] =
->> +		asiu_gate_val(0x0, 7),
->> +	[BCM_CYGNUS_ASIU_ADC_CLK] =
->> +		asiu_gate_val(0x0, 9),
->> +	[BCM_CYGNUS_ASIU_PWM_CLK] =
->> +		asiu_gate_val(IPROC_CLK_INVALID_OFFSET, 0),
->> +};
-> 
-> Here I think a better binding would be to pass the gate value in the
-> clock specifier, rather than an artificial index. That would let
-> you get rid of the BCM_CYGNUS_ASIU_KEYPAD_CLK/BCM_CYGNUS_ASIU_ADC_CLK
-> macros.
-> 
-You meant to pass in both the gate register offset and its bit shift
-through the clock specifier? But isn't the current ASIU clock code much
-more consistent with the rest of the iProc clock code?
-
->> +static void __init cygnus_armpll_init(struct device_node *node)
->> +{
->> +	iproc_armpll_setup(node);
->> +}
->> +CLK_OF_DECLARE(cygnus_armpll, "brcm,cygnus-armpll", cygnus_armpll_init);
-> 
-> How about moving all of these directly next to the tables, to keep
-> each clock controller?
-> 
-Good suggestion. That would make it more clear and easier to read. Will do.
-
->> +static void __init cygnus_genpll_clk_init(struct device_node *node)
->> +{
->> +	iproc_clk_setup(node, genpll_clk, BCM_CYGNUS_NUM_GENPLL_CLKS);
->> +}
-> 
-> If you use ARRAY_SIZE here, you can remove the BCM_CYGNUS_NUM_GENPLL_CLKS
-> macro that is not useful to the DT binding.
-> 
-Agreed. Will do this for all iproc clock setup calls. Thanks.
-
-> 	Arnd
-> 
+Ck9uIDEyLzA1LzIwMTQgMDI6MjIgUE0sIEFuZHkgWWFuIHdyb3RlOgo+Cj4gV2UgZm91bmQgRnJl
+ZXNjYWxlIGlteDYgYW5kIFJvY2tjaGlwIHJrMzI4OCBhbmQgSW5nZW5pYyBKWjQ3ODAgKFhidXJz
+dC9NSVBTKQo+IHVzZSB0aGUgaW50ZXJmYWNlIGNvbXBhdGlibGUgRGVzaWdud2FyZSBIRE1JIElQ
+LCBidXQgdGhleSBhbHNvIGhhdmUgc29tZQo+IGxpZ2h0bHkgZGlmZmVyZW5jZXMsIHN1Y2ggYXMg
+cGh5IHBsbCBjb25maWd1cmF0aW9uLCByZWdpc3RlciB3aWR0aChpbXggaGRtaQo+IHJlZ2lzdGVy
+IGlzIG9uZSBieXRlLCBidXQgcmszMjg4IGlzIDQgYnl0ZXMgd2lkdGggYW5kIGNhbiBvbmx5IGJl
+IGFjY2Vzc2VkCj4gYnkgd29yZCksIDRLIHN1cHBvcnQoaW14NiBkb2Vzbid0IHN1cHBvcnQgNGss
+IGJ1dCByazMyODggZG9lcyksIGFuZCBIRE1JMi4wCj4gc3VwcG9ydC4KPgo+IFRvIHJldXNlIHRo
+ZSBpbXgtaGRtaSBkcml2ZXIsIHdlIG1ha2UgdGhpcyBwYXRjaCBzZXQ6Cj4gKDEpOiBmaXggc29t
+ZSBDb2RpbmdTdHlsZSB3YXJuaW5nIHRvIG1ha2UgY2hlY2twYXRjaCBoYXBweQo+ICgyKTogY29u
+dmVydCBpbXgtaGRtaSB0byBkcm1fYnJpZGdlCj4gKDMpOiBzcGxpdCBwbGF0Zm9ybSBzcGVjaWZp
+YyBjb2RlCj4gKDQpOiBtb3ZlIGlteC1oZG1pIHRvIGJyaWRnZS9kd19oZG1pCj4gKDUpOiBleHRl
+bmQgZHdfaGRtaS5jIHRvIHN1cHBvcnQgcmszMjg4IGhkbWkKPiAoNik6IGFkZCByb2NrY2hpcCBy
+azMyODggcGxhdGZvcm0gc3BlY2lmaWMgY29kZSBkd19oZG1pLXJvY2tjaGlwLmMKPgo+IENoYW5n
+ZXMgaW4gdjE4Ogo+IC0gcmVtb3ZlIGEgbXVsdGlwbGUgYmxhbmsgbGluZXMgaW4gaW14LWhkbWku
+Ywo+IC0gZml4IGEgY2hlY2twYXRjaCB3YXJuaW5nIGluIGlteC1oZG1pX3BsdGZtLmMKPiAtIGFk
+ZCBwb3J0IGJpbmRpbmdzCj4gLSBjb3JyZWN0IHNvbWUgc3BlbGxpbmcgbWlzdGFrZXMgaW4gZHdf
+aGRtaSBiaW5kaW5ncyBkb2MKPiAtIGNvcnJlY3Qgc29tZSBzcGVsbGluZyBtaXN0YWtlcyBpbiBk
+d19oZG1pLXJvY2tjaGlwIGJpbmRpbmdzIGRvYwo+Cj4gQ2hhbmdlcyBpbiB2MTc6Cj4gLSByZW1v
+dmUgcGxhdGZvcm0gZGV2aWNlIHN0dWZmLCBhZHZpY2VkIGJ5IFJ1c3NlbGwgS2luZwo+IC0gcmVt
+b3ZlIHByb21wdCBtZXNzYWdlIG9mIGR3X2hkbWksIGFkdmljZWQgYnkgUnVzc2VsIEtpbmcKPiAt
+IHBhcnNlIHJlc291cmNlIGFuZCBpcnEgaW4gcGxhdGZvcm0gZHJpdmVyCj4KPiBDaGFuZ2VzIGlu
+IHYxNjoKPiAtIHVzZSB0aGUgY29tbW9uIGJpbmRpbmcgZm9yIHRoZSBjbG9ja3MKPiAtIGRlc2Ny
+aWJlIGRkYy1pMmMtYnVzIGFzIG9wdGlvbmFsCj4gLSBhZGQgY29tbW9uIGNsb2NrcyBiaW5kaW5n
+cwo+IC0gbW9kaWZ5IGNsb2NrcyBiaW5kaW5ncwo+IC0gZGVzY3JiaWUgZGRjLWkyYy1idXMgYXMg
+b3B0aW9uYWwKPgo+IENoYW5nZXMgaW4gdjE1Ogo+IC0gYWRkIHByZWZpeCBkd19oZG1pL0RXX0hE
+TUkgZm9yIHB1YmxpYyB1c2VkIGR3X2hkbWkgc3RydWN0cwo+ICAgIGFkdmljZWQgYnkgUGhpbGlw
+cCBaYWJlbAo+IC0gcmVtb3ZlIFRISVNfTU9EVUxFIGluIHBsYXRmb3JtIGRyaXZlcgo+IC0gcmVt
+b3ZlIHVuaW8gb2YgdGhlIG11bHRpLWJ5dGUgcmVnaXN0ZXIgYWNjZXNzLCBhZHZpY2VkIGJ5IFBo
+aWxpcHAgWmFiZWwKPiAtIHJlbW92ZSBUSElTX01PRFVMRSBpbiBwbGF0Zm9ybSBkcml2ZXIKPgo+
+IENoYW5nZXMgaW4gdjE0Ogo+IC0gYWRkIGRlZmVyIHByb2JpbmcsIGFkdmljZWQgYnkgUGhpbGlw
+cCBaYWJlbAo+IC0gcmVtb3ZlIGRybV9jb25uZWN0b3JfcmVnaXN0ZXIsIGJlY2F1c2UgaW14LWRy
+bSBjb3JlIGhhcyByZWdpc3RlcmVkCj4gY29ubmVjdG9yCj4KPiBDaGFuZ2VzIGluIHYxMzoKPiAt
+IHBhdGNoIGFnYWluc3QgZHJtLW5leHQKPiAtIHNwbGl0IHBsYXRmb3JtIHNwZWNpZmljIHBoeSBj
+b25maWd1cmF0aW9uCj4gLSBzcGxpdCBwaHkgY29uZmlndXJhdGlvbiBmcm9tIHBhdGNoIzQKPgo+
+IENoYW5nZXMgaW4gdjEyOgo+IC0gcmVmYWN0b3Igb2Zfbm9kZV9wdXQoZGRjX25vZGUpCj4gLSBz
+cXVhc2ggcGF0Y2ggPGNvbnZlcnQgZHdfaGRtaSB0byBkcm1fYnJpZGdlPgo+IC0gYWRkIGNvbW1l
+bnQgZm9yIHRoZSBkZXBlbmQgb24gcGF0Y2gKPgo+IENoYW5nZXMgaW4gdjExOgo+IC0gc3F1YXNo
+IHBhdGNoICA8c3BsaXQgc29tZSBwaHkgY29uZmlndXJhdGlvbiB0byBwbGF0Zm9ybSBkcml2ZXI+
+Cj4KPiBDaGFuZ2VzIGluIHYxMDoKPiAtIHNwbGl0IGdlbmVyaWMgZHdfaGRtaS5jIGltcHJvdmVt
+ZW50cyBmcm9tIHBhdGNoIzExIChhZGQgcmszMjg4IHN1cHBvcnQpCj4gLSBhZGQgbW9yZSBkaXNw
+bGF5IG1vZGUgc3VwcG9ydCBtcGxsIGNvbmZpZ3VyYXRpb24gZm9yIHJrMzI4OAo+Cj4gQ2hhbmdl
+cyBpbiB2OToKPiAtIG1vdmUgc29tZSBwaHkgY29uZmlndXJhdGlvbiB0byBwbGF0Zm9ybSBkcml2
+ZXIKPgo+IENoYW5nZXMgaW4gdjg6Cj4gLSBjb3JyZWN0IHNvbWUgc3BlbGxpbmcgbWlzdGFrZQo+
+IC0gbW9kaWZ5IGRkYy1pMmMtYnVzIGFuZCBpbnRlcnJ1cHQgZGVzY3JpcHRpb24KPiAtIEFkZCBk
+b2N1bWVudGF0aW9uIGZvciByb2NrY2hpcCBkdyBoZG1pCj4KPiBDaGFuZ2VzIGluIHY3Ogo+IC0g
+cmVtb3ZlIHVudXNlZCB2YXJpYWJsZXMgZnJvbSBzdHJ1Y3R1cmUgZHdfaGRtaQo+IC0gcmVtb3Zl
+IGEgd3JvbmcgbW9kaWZpY2F0aW9uCj4gLSBhZGQgY29weXJpZ2h0cyBmb3IgZHdfaGRtaS1pbXgu
+Ywo+Cj4gQ2hhbmdlcyBpbiB2NjoKPiAtIHJlYXJyYW5nZSB0aGUgcGF0Y2ggb3JkZXIKPiAtIHJl
+ZmFjdG9yIHJlZ2lzdGVyIGFjY2VzcyB3aXRob3V0IHJlZ19zaGlmdAo+Cj4gQ2hhbmdlcyBpbiB2
+NToKPiAtIHJlZmFjdG9yIHJlZy1pby13aWR0aAo+Cj4gQ2hhbmdlcyBpbiB2NDoKPiAtIGZpeCBj
+aGVja3BhdGNoIENIRUNLCj4gLSBkZWZlciBwcm9iZSBkZGMgaTJjIGFkYXB0ZXIKPgo+IENoYW5n
+ZXMgaW4gdjM6Cj4gLSBzcGxpdCBtdWx0aS1yZWdpc3RlciBhY2Nlc3MgdG8gb25lIGluZGVwZW50
+IHBhdGNoCj4KPiBBbmR5IFlhbiAoMTIpOgo+ICAgIGRybTogaW14OiBpbXgtaGRtaTogbWFrZSBj
+aGVja3BhdGNoIGhhcHB5Cj4gICAgZHJtOiBpbXg6IGlteC1oZG1pOiByZXR1cm4gZGVmZXIgaWYg
+Y2FuJ3QgZ2V0IGRkYyBpMmMgYWRhcHRlcgo+ICAgIGRybTogaW14OiBpbXgtaGRtaTogY29udmVy
+dCBpbXgtaGRtaSB0byBkcm1fYnJpZGdlIG1vZGUKPiAgICBkcm06IGlteDogaW14LWhkbWk6IHNw
+bGl0IHBoeSBjb25maWd1cmF0aW9uIHRvIHBsYXRmb3JtIGRyaXZlcgo+ICAgIGRybTogaW14OiBp
+bXgtaGRtaTogbW92ZSBpbXgtaGRtaSB0byBicmlkZ2UvZHdfaGRtaQo+ICAgIGR0LWJpbmRpbmdz
+OiBhZGQgZG9jdW1lbnQgZm9yIGR3X2hkbWkKPiAgICBkcm06IGJyaWRnZS9kd19oZG1pOiBhZGQg
+c3VwcG9ydCBmb3IgbXVsdGktYnl0ZSByZWdpc3RlciB3aWR0aCBhY2Nlc3MKPiAgICBkcm06IGJy
+aWRnZS9kd19oZG1pOiBhZGQgbW9kZV92YWxpZCBzdXBwb3J0Cj4gICAgZHJtOiBicmlkZ2UvZHdf
+aGRtaTogY2xlYXIgaTJjbXBoeV9zdGF0MCByZWcgaW4gaGRtaV9waHlfd2FpdF9pMmNfZG9uZQo+
+ICAgIGRybTogYnJpZGdlL2R3X2hkbWk6IGFkZCBmdW5jdGlvbiBkd19oZG1pX3BoeV9lbmFibGVf
+c3BhcmUKPiAgICBkdC1iaW5kaW5nczogQWRkIGRvY3VtZW50YXRpb24gZm9yIHJvY2tjaGlwIGR3
+IGhkbWkKPiAgICBkcm06IGJyaWRnZS9kd19oZG1pOiBhZGQgcm9ja2NoaXAgcmszMjg4IHN1cHBv
+cnQKPgo+ICAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZHJtL2JyaWRnZS9kd19oZG1pLnR4dCAg
+ICAgfCAgNTAgKysKPiAgIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZpZGVvL2R3X2hkbWktcm9j
+a2NoaXAudHh0IHwgIDQ2ICsrCj4gICBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL0tjb25maWcgICAg
+ICAgICAgICAgICAgICAgICB8ICAgNSArCj4gICBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL01ha2Vm
+aWxlICAgICAgICAgICAgICAgICAgICB8ICAgMSArCj4gICAuLi4vZ3B1L2RybS97aW14L2lteC1o
+ZG1pLmMgPT4gYnJpZGdlL2R3X2hkbWkuY30gICB8IDcxNyArKysrKysrKysrLS0tLS0tLS0tLS0K
+PiAgIC4uLi9ncHUvZHJtL3tpbXgvaW14LWhkbWkuaCA9PiBicmlkZ2UvZHdfaGRtaS5ofSAgIHwg
+ICA0ICstCj4gICBkcml2ZXJzL2dwdS9kcm0vaW14L0tjb25maWcgICAgICAgICAgICAgICAgICAg
+ICAgICB8ICAgMSArCj4gICBkcml2ZXJzL2dwdS9kcm0vaW14L01ha2VmaWxlICAgICAgICAgICAg
+ICAgICAgICAgICB8ICAgMiArLQo+ICAgZHJpdmVycy9ncHUvZHJtL2lteC9kd19oZG1pLWlteC5j
+ICAgICAgICAgICAgICAgICAgfCAyNTggKysrKysrKysKPiAgIGRyaXZlcnMvZ3B1L2RybS9yb2Nr
+Y2hpcC9LY29uZmlnICAgICAgICAgICAgICAgICAgIHwgIDEwICsKPiAgIGRyaXZlcnMvZ3B1L2Ry
+bS9yb2NrY2hpcC9NYWtlZmlsZSAgICAgICAgICAgICAgICAgIHwgICAyICsKPiAgIGRyaXZlcnMv
+Z3B1L2RybS9yb2NrY2hpcC9kd19oZG1pLXJvY2tjaGlwLmMgICAgICAgIHwgMzQxICsrKysrKysr
+KysKPiAgIGluY2x1ZGUvZHJtL2JyaWRnZS9kd19oZG1pLmggICAgICAgICAgICAgICAgICAgICAg
+IHwgIDYxICsrCj4gICAxMyBmaWxlcyBjaGFuZ2VkLCAxMTExIGluc2VydGlvbnMoKyksIDM4NyBk
+ZWxldGlvbnMoLSkKPiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvZHJtL2JyaWRnZS9kd19oZG1pLnR4dAo+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0
+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92aWRlby9kd19oZG1pLXJvY2tjaGlw
+LnR4dAo+ICAgcmVuYW1lIGRyaXZlcnMvZ3B1L2RybS97aW14L2lteC1oZG1pLmMgPT4gYnJpZGdl
+L2R3X2hkbWkuY30gKDcyJSkKPiAgIHJlbmFtZSBkcml2ZXJzL2dwdS9kcm0ve2lteC9pbXgtaGRt
+aS5oID0+IGJyaWRnZS9kd19oZG1pLmh9ICg5OSUpCj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJp
+dmVycy9ncHUvZHJtL2lteC9kd19oZG1pLWlteC5jCj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJp
+dmVycy9ncHUvZHJtL3JvY2tjaGlwL2R3X2hkbWktcm9ja2NoaXAuYwo+ICAgY3JlYXRlIG1vZGUg
+MTAwNjQ0IGluY2x1ZGUvZHJtL2JyaWRnZS9kd19oZG1pLmgKPgoKQWZ0ZXIgYXBwbHlpbmcgdGhp
+cyBzZXJpZXMsIEkgZmluZCB0aGVyZSBpcyBhIGJ1aWxkIGJyZWFrIGlzc3VlIHdpdGggdGhlCmFs
+bG1vZGNvbmZpZyBjb25maWd1cmF0aW9uIGZvciB0aGUgQVJNIGFyY2hpdGVjdHVyZS4KUGxlYXNl
+IGZpeCB0aGlzLgoKZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2R3X2hkbWktcm9ja2NoaXAuYzoy
+NDM6MTogZXJyb3I6IArigJhfX21vZF9vZl9fZHdfaGRtaV9yb2NrY2hpcF9kdF9pZHNfZGV2aWNl
+X3RhYmxl4oCZIGFsaWFzZWQgdG8gdW5kZWZpbmVkIApzeW1ib2wg4oCYZHdfaGRtaV9yb2NrY2hp
+cF9kdF9pZHPigJkKc2NyaXB0cy9NYWtlZmlsZS5idWlsZDoyNTc6IHJlY2lwZSBmb3IgdGFyZ2V0
+IAonZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2R3X2hkbWktcm9ja2NoaXAubycgZmFpbGVkCm1h
+a2VbNF06ICoqKiBbZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2R3X2hkbWktcm9ja2NoaXAub10g
+RXJyb3IgMQpzY3JpcHRzL01ha2VmaWxlLmJ1aWxkOjQwMjogcmVjaXBlIGZvciB0YXJnZXQgJ2Ry
+aXZlcnMvZ3B1L2RybS9yb2NrY2hpcCcgCmZhaWxlZAptYWtlWzNdOiAqKiogW2RyaXZlcnMvZ3B1
+L2RybS9yb2NrY2hpcF0gRXJyb3IgMgpzY3JpcHRzL01ha2VmaWxlLmJ1aWxkOjQwMjogcmVjaXBl
+IGZvciB0YXJnZXQgJ2RyaXZlcnMvZ3B1L2RybScgZmFpbGVkCm1ha2VbMl06ICoqKiBbZHJpdmVy
+cy9ncHUvZHJtXSBFcnJvciAyCnNjcmlwdHMvTWFrZWZpbGUuYnVpbGQ6NDAyOiByZWNpcGUgZm9y
+IHRhcmdldCAnZHJpdmVycy9ncHUnIGZhaWxlZAptYWtlWzFdOiAqKiogW2RyaXZlcnMvZ3B1XSBF
+cnJvciAyCk1ha2VmaWxlOjkzNzogcmVjaXBlIGZvciB0YXJnZXQgJ2RyaXZlcnMnIGZhaWxlZApt
+YWtlOiAqKiogW2RyaXZlcnNdIEVycm9yIDIKClJlZ2FyZHMsCkxpdSBZaW5nCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRldmVsIG1haWxpbmcgbGlzdApk
+ZXZlbEBsaW51eGRyaXZlcnByb2plY3Qub3JnCmh0dHA6Ly9kcml2ZXJkZXYubGludXhkcml2ZXJw
+cm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaXZlcmRldi1kZXZlbAo=
