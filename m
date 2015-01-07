@@ -1,119 +1,234 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 4/4] dts: mediatek: Enable clock support for Mediatek MT8135.
-Date: Wed, 7 Jan 2015 17:25:41 +0100
-Message-ID: <CABuKBeL34hV63t+zDy3Nbz_V4qAvCF87+=hV=eUUCTrKybBFjA@mail.gmail.com>
-References: <1420601123-25859-1-git-send-email-jamesjj.liao@mediatek.com>
-	<1420601123-25859-5-git-send-email-jamesjj.liao@mediatek.com>
+From: Walter Lozano <walter-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+Subject: Re: [PATCH 1/2] Input: adxl34x - add OF support
+Date: Wed, 7 Jan 2015 13:25:54 -0300
+Message-ID: <CABxpGwAKZp728gL5DFkuBA4nU_5fGRvxu_-vROpw5BfVuxjoDA@mail.gmail.com>
+References: <1420599537-28740-1-git-send-email-walter@vanguardiasur.com.ar>
+	<20150107080159.GF5256@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1420601123-25859-5-git-send-email-jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <20150107080159.GF5256@dtor-ws>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, huang eddie <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, HenryC Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Joe.C" <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-2015-01-07 4:25 GMT+01:00 James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>:
-> This patch adds MT8135 clock controllers into device tree.
->
-> Change-Id: I9c5bab9289bbd6eb444aad97d015b8f26ca88a8a
-> Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/mt8135.dtsi | 47 +++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 47 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/mt8135.dtsi b/arch/arm/boot/dts/mt8135.dtsi
-> index ec83e69..09fcf0d 100644
-> --- a/arch/arm/boot/dts/mt8135.dtsi
-> +++ b/arch/arm/boot/dts/mt8135.dtsi
-> @@ -12,6 +12,7 @@
->   * GNU General Public License for more details.
->   */
->
-> +#include <dt-bindings/clock/mt8135-clk.h>
->  #include <dt-bindings/interrupt-controller/irq.h>
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
->  #include "skeleton64.dtsi"
-> @@ -92,6 +93,24 @@
->                         clock-frequency = <26000000>;
->                         #clock-cells = <0>;
->                 };
-> +
-> +               clk_null: clk_null {
-> +                       compatible = "fixed-clock";
-> +                       #clock-cells = <0>;
-> +                       clock-frequency = <0>;
-> +               };
-> +
-> +               clk26m: clk26m {
-> +                       compatible = "fixed-clock";
-> +                       #clock-cells = <0>;
-> +                       clock-frequency = <26000000>;
-> +               };
-> +
-> +               rtc32k: rtc32k {
-> +                       compatible = "fixed-clock";
-> +                       #clock-cells = <0>;
-> +                       clock-frequency = <32000>;
-> +               };
+Hi Dimitry,
 
-Why do you add this clocks here?
-This clocks are not represented by the clock tree? If so, what are the
-consumers of this clocks?
+First of all, thanks for your feedback
 
->         };
+On Wed, Jan 7, 2015 at 5:01 AM, Dmitry Torokhov
+<dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Hi Walter,
 >
->         soc {
-> @@ -100,6 +119,28 @@
->                 compatible = "simple-bus";
->                 ranges;
+> On Tue, Jan 06, 2015 at 11:58:56PM -0300, Walter Lozano wrote:
+>> This patch adds the missing support for OF to the adxl34x digital
+>> accelerometer. This is a basic version which supports the main
+>> optional parameters. This implementation copies the default values
+>> to the adxl34x_platform_data structure and overrides the values
+>> that are passed from the device tree.
+>>
+>> Signed-off-by: Walter Lozano <walter-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+>> ---
+>>  drivers/input/misc/adxl34x.c |  108 +++++++++++++++++++++++++++++++++++++++++-
+>>  1 file changed, 107 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/input/misc/adxl34x.c b/drivers/input/misc/adxl34x.c
+>> index 2b2d02f..b3e06a3 100644
+>> --- a/drivers/input/misc/adxl34x.c
+>> +++ b/drivers/input/misc/adxl34x.c
+>> @@ -16,6 +16,8 @@
+>>  #include <linux/workqueue.h>
+>>  #include <linux/input/adxl34x.h>
+>>  #include <linux/module.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_device.h>
+>>
+>>  #include "adxl34x.h"
+>>
+>> @@ -688,13 +690,113 @@ static void adxl34x_input_close(struct input_dev *input)
+>>       mutex_unlock(&ac->mutex);
+>>  }
+>>
+>> +void adxl34x_parse_dt(struct device *dev, struct adxl34x_platform_data *pdata){
+>> +     if (!dev->of_node)
+>> +             return;
+>> +
+>> +     pdata =  kzalloc(sizeof(*pdata), GFP_KERNEL);
+>> +
+>> +     memcpy(pdata, &adxl34x_default_init, sizeof(struct adxl34x_platform_data));
+>> +
+>> +     of_property_read_u8(dev->of_node, "adi,tap-axis-control",
+>> +              &pdata->tap_axis_control);
+>> +
+>> +     of_property_read_u8(dev->of_node, "adi,tap-threshold",
+>> +              &pdata->tap_threshold);
+>> +
+>> +     of_property_read_u8(dev->of_node, "adi,tap-duration",
+>> +              &pdata->tap_duration);
+>> +
+>> +     of_property_read_u8(dev->of_node, "adi,tap-latency",
+>> +              &pdata->tap_latency);
+>> +
+>> +     of_property_read_u8(dev->of_node, "adi,tap-window",
+>> +              &pdata->tap_window);
+>> +
+>> +     of_property_read_u8(dev->of_node, "adi,act-axis-control",
+>> +              &pdata->act_axis_control);
+>> +
+>> +     of_property_read_u8(dev->of_node, "adi,activity-threshold",
+>> +              &pdata->activity_threshold);
+>> +
+>> +     of_property_read_u8(dev->of_node, "adi,inactivity-threshold",
+>> +              &pdata->inactivity_threshold);
+>> +
+>> +     of_property_read_u8(dev->of_node, "adi,inactivity-time",
+>> +              &pdata->inactivity_time);
+>> +
+>> +     of_property_read_u8(dev->of_node, "adi,free-fall-threshold",
+>> +              &pdata->free_fall_threshold);
+>> +
+>> +     of_property_read_u8(dev->of_node, "adi,free-fall-time",
+>> +              &pdata->free_fall_time);
+>> +
+>> +     of_property_read_u8(dev->of_node, "adi,data-rate",
+>> +              &pdata->data_rate);
+>> +
+>> +     of_property_read_u8(dev->of_node, "adi,data-range",
+>> +              &pdata->data_range);
+>> +
+>> +     of_property_read_u8(dev->of_node, "adi,low-power-mode",
+>> +              &pdata->low_power_mode);
+>> +
+>> +     of_property_read_u8(dev->of_node, "adi,power-mode",
+>> +              &pdata->power_mode);
+>> +
+>> +     of_property_read_u8(dev->of_node, "adi,fifo-mode",
+>> +              &pdata->fifo_mode);
+>> +
+>> +     of_property_read_u8(dev->of_node, "adi,watermark",
+>> +              &pdata->watermark);
+>> +
+>> +     of_property_read_u8(dev->of_node, "adi,use-int2",
+>> +              &pdata->use_int2);
+>> +
+>> +     of_property_read_u8(dev->of_node, "adi,orientation-enable",
+>> +              &pdata->orientation_enable);
+>> +
+>> +     of_property_read_u8(dev->of_node, "adi,deadzone-angle",
+>> +              &pdata->deadzone_angle);
+>> +
+>> +     of_property_read_u8(dev->of_node, "adi,divisor-length",
+>> +              &pdata->divisor_length);
+>> +
+>> +     of_property_read_u32(dev->of_node, "adi,ev-type",
+>> +              &pdata->ev_type);
 >
-> +               topckgen: topckgen@10000000 {
-> +                       compatible = "mediatek,mt8135-topckgen";
-> +                       reg = <0 0x10000000 0 0x1000>;
-> +                       #clock-cells = <1>;
-> +               };
-> +
-> +               infracfg: syscon@10001000 {
-> +                       #address-cells = <1>;
-> +                       #size-cells = <1>;
-> +                       compatible = "mediatek,mt8135-infracfg", "syscon";
-> +                       reg = <0 0x10001000 0 0x1000>;
-> +                       #clock-cells = <1>;
-> +               };
-> +
-> +               pericfg: syscon@10003000 {
-> +                       #address-cells = <1>;
-> +                       #size-cells = <1>;
-> +                       compatible = "mediatek,mt8135-pericfg", "syscon";
-> +                       reg = <0 0x10003000 0 0x1000>;
-> +                       #clock-cells = <1>;
-> +               };
-> +
->                 timer: timer@10008000 {
->                         compatible = "mediatek,mt8135-timer",
->                                         "mediatek,mt6577-timer";
-> @@ -128,6 +169,12 @@
->                               <0 0x10216000 0 0x2000>;
->                 };
+> All these ev* properties are Linux-specific so should have linux prefix
+> and not adi.
+
+Yes, I have many doubts about these parameters. First I'm not sure if anybody
+will need to change them as the accelerometer reports absolute values.
+I was thinking
+about omitting them but I would like someone else opinion.
+
+The default values for these parameters are
+
+    .ev_type = EV_ABS,
+    .ev_code_x = ABS_X, /* EV_REL */
+    .ev_code_y = ABS_Y, /* EV_REL */
+    .ev_code_z = ABS_Z, /* EV_REL */
+
+    .ev_code_tap = {BTN_TOUCH, BTN_TOUCH, BTN_TOUCH}, /* EV_KEY {x,y,z} */
+
+In case if it is worthy should I add nodes for each different event?
+
+For example
+
+       axisx{
+            label = "Axis X";
+            linux,code = <0>;
+        }
+
+>> +
+>> +     of_property_read_u32(dev->of_node, "adi,ev-code-x",
+>> +              &pdata->ev_code_x);
+>> +
+>> +     of_property_read_u32(dev->of_node, "adi,ev-code-y",
+>> +              &pdata->ev_code_y);
+>> +
+>> +     of_property_read_u32(dev->of_node, "adi,ev-code-z",
+>> +              &pdata->ev_code_z);
+>> +
+>> +     of_property_read_u32_array(dev->of_node, "adi,ev-code-tap",
+>> +              pdata->ev_code_tap, 3);
+>> +
+>> +     of_property_read_u32(dev->of_node, "adi,ev-code-ff",
+>> +              &pdata->ev_code_ff);
+>> +
+>> +     of_property_read_u32(dev->of_node, "adi,ev-code-act-inactivity",
+>> +              &pdata->ev_code_act_inactivity);
+>> +
+>> +     of_property_read_u32_array(dev->of_node, "adi,ev-codes-orient-2d",
+>> +              pdata->ev_codes_orient_2d, 4);
+>> +
+>> +     of_property_read_u32_array(dev->of_node, "adi,ev-codes-orient-3d",
+>> +              pdata->ev_codes_orient_3d, 6);
+>> +
+>> +}
+>> +
+>>  struct adxl34x *adxl34x_probe(struct device *dev, int irq,
+>>                             bool fifo_delay_default,
+>>                             const struct adxl34x_bus_ops *bops)
+>>  {
+>>       struct adxl34x *ac;
+>>       struct input_dev *input_dev;
+>> -     const struct adxl34x_platform_data *pdata;
+>> +     struct adxl34x_platform_data *pdata;
+>>       int err, range, i;
+>>       unsigned char revid;
+>>
+>> @@ -714,6 +816,10 @@ struct adxl34x *adxl34x_probe(struct device *dev, int irq,
+>>       ac->fifo_delay = fifo_delay_default;
+>>
+>>       pdata = dev_get_platdata(dev);
+>> +
+>> +     if (!pdata && dev->of_node)
+>> +             adxl34x_parse_dt(dev, pdata);
+>> +
+>>       if (!pdata) {
 >
-> +               apmixedsys: apmixedsys@10209000 {
-> +                       compatible = "mediatek,mt8135-apmixedsys";
-> +                       reg = <0 0x10209000 0 0x1000>;
-> +                       #clock-cells = <1>;
-> +               };
-> +
->                 uart0: serial@11006000 {
->                         compatible = "mediatek,mt8135-uart","mediatek,mt6577-uart";
->                         reg = <0 0x11006000 0 0x400>;
-> --
-> 1.8.1.1.dirty
+> Umm, what's changing data pointer? Was this tested?
 >
 
+You are right. I've tested a previous version, but then I make some changes as
+I have some doubts about how is the better way to handle the compatibility
+with board files.
 
+My initial intention was to keep the original code as much as I can, so in case
+of using board files the pdata is set to adxl34x_default_init, but if
+DT is used,
+memory is allocated and the default parameters are copied. Then in the remove,
+only if DT is used free the memory (not included in this patch).
+
+So as I wasn't quite sure if this was the best approach I send this patch to get
+some comments. Probably I should send a RFC...
+
+>>               dev_dbg(dev,
+>>                       "No platform data: Using default initialization\n");
+>> --
+>> 1.7.10.4
+>>
+
+Thanks again for your time and comments.
+
+Regards,
+
+Walter
 
 -- 
-motzblog.wordpress.com
+Walter Lozano, VanguardiaSur
+www.vanguardiasur.com.ar
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
