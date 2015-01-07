@@ -1,186 +1,63 @@
-From: Andrew Jackson <Andrew.Jackson@arm.com>
-Subject: Re: [PATCH v9 1/4] drm/i2c: tda998x: Add DT support
-	for audio
-Date: Wed, 07 Jan 2015 14:39:13 +0000
-Message-ID: <54AD4511.30702@arm.com>
-References: <cover.1420628786.git.moinejf@free.fr>
- <0084acea5a3475a77531d6a77483f36d3469111a.1420628786.git.moinejf@free.fr>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: tegra20: fix GR3D, DSI unit and reg base
+ addresses
+Date: Wed, 7 Jan 2015 15:40:42 +0100
+Message-ID: <20150107144041.GE1621@ulmo>
+References: <1418397559-19646-1-git-send-email-digetx@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <0084acea5a3475a77531d6a77483f36d3469111a.1420628786.git.moinejf@free.fr>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Jean-Francois Moine <moinejf@free.fr>, Mark Brown <broonie@kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Jyri Sarha <jsarha@ti.com>, Dave Airlie <airlied@gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="84ND8YJRMFlzkrP4"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1418397559-19646-1-git-send-email-digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dmitry Osipenko <digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/07/15 09:10, Jean-Francois Moine wrote:
-> This patch permits the definition of the audio ports from the device tree.
-> 
-> Signed-off-by: Jean-Francois Moine <moinejf@free.fr>
+
+--84ND8YJRMFlzkrP4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Dec 12, 2014 at 06:19:19PM +0300, Dmitry Osipenko wrote:
+> Commit 58ecb23f64ee ("ARM: tegra: add missing unit addresses to DT") added
+> unit address and changed reg base for GR3D and DSI host1x modules, but th=
+ese
+> addresses belongs to GR2D and TVO modules respectively. Fix it by changing
+> modules unit and reg base addresses to proper ones.
+>=20
+> Signed-off-by: Dmitry Osipenko <digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Fixes: 58ecb23f64ee (ARM: tegra: add missing unit addresses to DT)
+> Cc: <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org> # v3.13+
 > ---
->  .../devicetree/bindings/drm/i2c/tda998x.txt        | 18 +++++++
->  drivers/gpu/drm/i2c/tda998x_drv.c                  | 60 ++++++++++++++++++----
->  2 files changed, 69 insertions(+), 9 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/drm/i2c/tda998x.txt b/Documentation/devicetree/bindings/drm/i2c/tda998x.txt
-> index e9e4bce..e50e7cd 100644
-> --- a/Documentation/devicetree/bindings/drm/i2c/tda998x.txt
-> +++ b/Documentation/devicetree/bindings/drm/i2c/tda998x.txt
-> @@ -17,6 +17,20 @@ Optional properties:
->    - video-ports: 24 bits value which defines how the video controller
->  	output is wired to the TDA998x input - default: <0x230145>
->  
-> +  - audio-ports: must contain one or two values selecting the source
-> +	in the audio port.
-> +	The source type is given by the corresponding entry in
-> +	the audio-port-names property.
+>  arch/arm/boot/dts/tegra20.dtsi | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 
-I think that this entry might benefit from a little more explanation.
-The value specified here selects which pins on the chip provide the
-audio input doesn't it?  In the outline datasheet that I have these are
-listed in table 17:
+Applied, thanks.
 
-Audio port 	Input configuration
-		S/PDIF 		I2S-bus
-AP0 		- 		WS (word select)
-AP1 		S/PDIF input 	I2S-bus channel 0
-AP2 		S/PDIF input 	I2S-bus channel 1
-AP3[1] 				I2S-bus channel 2
-AP4[1] 				I2S-bus channel 3
-ACLK 		- 		SCK (I2S-bus clock)
+Thierry
 
-[1] Depending on package.
+--84ND8YJRMFlzkrP4
+Content-Type: application/pgp-signature
 
-	Andrew
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-> +
-> +  - audio-port-names: must contain entries matching the entries in
-> +	the audio-ports property.
-> +	Each value may be "i2s" or "spdif", giving the type of
-> +	the audio source.
-> +
-> +  - #sound-dai-cells: must be set to <1> for use with the simple-card.
-> +	The TDA998x audio CODEC always defines two DAIs.
-> +	The DAI 0 is the S/PDIF input and the DAI 1 is the I2S input.
-> +
->  Example:
->  
->  	tda998x: hdmi-encoder {
-> @@ -26,4 +40,8 @@ Example:
->  		interrupts = <27 2>;		/* falling edge */
->  		pinctrl-0 = <&pmx_camera>;
->  		pinctrl-names = "default";
-> +
-> +		audio-ports = <0x04>, <0x03>;
-> +		audio-port-names = "spdif", "i2s";
-> +		#sound-dai-cells = <1>;
->  	};
-> diff --git a/drivers/gpu/drm/i2c/tda998x_drv.c b/drivers/gpu/drm/i2c/tda998x_drv.c
-> index 70658af..9d9b072 100644
-> --- a/drivers/gpu/drm/i2c/tda998x_drv.c
-> +++ b/drivers/gpu/drm/i2c/tda998x_drv.c
-> @@ -20,6 +20,7 @@
->  #include <linux/module.h>
->  #include <linux/irq.h>
->  #include <sound/asoundef.h>
-> +#include <linux/platform_device.h>
->  
->  #include <drm/drmP.h>
->  #include <drm/drm_crtc_helper.h>
-> @@ -44,6 +45,8 @@ struct tda998x_priv {
->  	wait_queue_head_t wq_edid;
->  	volatile int wq_edid_wait;
->  	struct drm_encoder *encoder;
-> +
-> +	u8 audio_ports[2];
->  };
->  
->  #define to_tda998x_priv(x)  ((struct tda998x_priv *)to_encoder_slave(x)->slave_priv)
-> @@ -1254,12 +1257,16 @@ static int tda998x_create(struct i2c_client *client, struct tda998x_priv *priv)
->  {
->  	struct device_node *np = client->dev.of_node;
->  	u32 video;
-> -	int rev_lo, rev_hi, ret;
-> +	int i, rev_lo, rev_hi, ret;
-> +	const char *p;
->  
->  	priv->vip_cntrl_0 = VIP_CNTRL_0_SWAP_A(2) | VIP_CNTRL_0_SWAP_B(3);
->  	priv->vip_cntrl_1 = VIP_CNTRL_1_SWAP_C(0) | VIP_CNTRL_1_SWAP_D(1);
->  	priv->vip_cntrl_2 = VIP_CNTRL_2_SWAP_E(4) | VIP_CNTRL_2_SWAP_F(5);
->  
-> +	priv->params.audio_frame[1] = 1;		/* channels - 1 */
-> +	priv->params.audio_sample_rate = 48000;		/* 48kHz */
-> +
->  	priv->current_page = 0xff;
->  	priv->hdmi = client;
->  	priv->cec = i2c_new_dummy(client->adapter, 0x34);
-> @@ -1351,15 +1358,50 @@ static int tda998x_create(struct i2c_client *client, struct tda998x_priv *priv)
->  	/* enable EDID read irq: */
->  	reg_set(priv, REG_INT_FLAGS_2, INT_FLAGS_2_EDID_BLK_RD);
->  
-> -	if (!np)
-> -		return 0;		/* non-DT */
-> +	/* get the device tree parameters */
-> +	if (np) {
-> +
-> +		/* optional video properties */
-> +		ret = of_property_read_u32(np, "video-ports", &video);
-> +		if (ret == 0) {
-> +			priv->vip_cntrl_0 = video >> 16;
-> +			priv->vip_cntrl_1 = video >> 8;
-> +			priv->vip_cntrl_2 = video;
-> +		}
-> +
-> +		/* optional audio properties */
-> +		for (i = 0; i < 2; i++) {
-> +			u32 port;
->  
-> -	/* get the optional video properties */
-> -	ret = of_property_read_u32(np, "video-ports", &video);
-> -	if (ret == 0) {
-> -		priv->vip_cntrl_0 = video >> 16;
-> -		priv->vip_cntrl_1 = video >> 8;
-> -		priv->vip_cntrl_2 = video;
-> +			ret = of_property_read_u32_index(np, "audio-ports", i, &port);
-> +			if (ret)
-> +				break;
-> +			ret = of_property_read_string_index(np, "audio-port-names",
-> +							i, &p);
-> +			if (ret) {
-> +				dev_err(&client->dev,
-> +					"missing audio-port-names[%d]\n", i);
-> +				break;
-> +			}
-> +			if (strcmp(p, "spdif") == 0) {
-> +				priv->audio_ports[0] = port;
-> +			} else if (strcmp(p, "i2s") == 0) {
-> +				priv->audio_ports[1] = port;
-> +			} else {
-> +				dev_err(&client->dev,
-> +					"bad audio-port-names '%s'\n", p);
-> +				break;
-> +			}
-> +		}
-> +		if (priv->audio_ports[0]) {
-> +			priv->params.audio_cfg = priv->audio_ports[0];
-> +			priv->params.audio_format = AFMT_SPDIF;
-> +			priv->params.audio_clk_cfg = 0;
-> +		} else {
-> +			priv->params.audio_cfg = priv->audio_ports[1];
-> +			priv->params.audio_format = AFMT_I2S;
-> +			priv->params.audio_clk_cfg = 1;
-> +		}
->  	}
->  
->  	return 0;
-> 
+iQIcBAEBAgAGBQJUrUVpAAoJEN0jrNd/PrOhdDwP/jfeCTVNYT7ZzmmuHp9XA7Va
+YCOFCqX/fCjWhas7XmJbjIesTBf3GhuabfkcCR8XBCRhPcUxyHrCP9WLZonB3D66
+Kt64zUr94ygkdA9kpQeE54L77zVoRlE8BpSyCIyntID+o5itBQFyDG0PJk0RtBvB
+I8ntvqtML40ADc+6Lqehv47c5iPNfYkl+QqcrAC+4ch2ZxoFnN3OFvgYJbTkktH6
+K1pU93GT49b0NlMT7e6kLrDtJv/i36uURLsmZdtVXX2yIAcCraFN8idv6qSKMp6+
+/07TQqDDU0L/xPrwBF2M3ffzaqzH19CSOdyTcsxzJXnHN833GkT9LMR4NiXorvpf
+OBk804clSbDJXJdg5joWfwERkdUocVrp3zzD70tDiEM4/wQS3ju2TtJ45oV+Vmie
++i2niBylKQKwZiwu1t1eOKqAkJW+JQODQgA9+Z1WUntpJbcHQ3iBNjqfKpw06Z+7
+FmnZnobAAED3xVmvWti9OhZfDdcTnnZ3uV9wQHbV6wdXdSUrmoL3uxSC2ymfJBkO
+Kl2F4PZW2OsqAr8D4VBErzXGj8QhjHKjhueeigO7J98amB8iSwpobZ5LHAGTAGit
+KkUj4A2fXBu5nfrnUeoi3c/wuIGcslh5f/Umo3NP7+VU0koYym1g+oB7UQ2T5+wO
+ZnG9hoSgQ0gJp5bi57HA
+=Msuw
+-----END PGP SIGNATURE-----
+
+--84ND8YJRMFlzkrP4--
