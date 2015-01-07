@@ -1,73 +1,136 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH 3/3] clk: berlin: bg2q: remove non-exist "smemc" gate
- clock
-Date: Wed, 07 Jan 2015 15:30:55 +0100
-Message-ID: <54AD431F.6060403@gmail.com>
-References: <1420016272-6789-1-git-send-email-jszhang@marvell.com> <1420016272-6789-4-git-send-email-jszhang@marvell.com> <54AD3EAE.6090009@gmail.com> <20150107222209.64ed24a0@xhacker>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150107222209.64ed24a0@xhacker>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jisheng Zhang <jszhang@marvell.com>
-Cc: "mturquette@linaro.org" <mturquette@linaro.org>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "alexandre.belloni@free-electrons.com" <alexandre.belloni@free-electrons.com>, "antoine.tenart@free-electrons.com" <antoine.tenart@free-electrons.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "stable@vger.kernel.org" <stable@vger.kernel.org>
+From: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: vexpress: bindings: Add generic PD awareness to the
+ spc controller
+Date: Wed, 7 Jan 2015 07:33:38 -0700
+Message-ID: <CANLsYkxbMT1cYquZzbcYuo+=5xNBUhS6jJePovErwkaDDef_Gg@mail.gmail.com>
+References: <1420562732-4353-1-git-send-email-mathieu.poirier@linaro.org>
+	<CAL_JsqJwauxNNojhAaYEr7oQTm6fwYwtByv_s6-tHiXYA214AQ@mail.gmail.com>
+	<CANLsYkz_tx0MAnssO1JmgGzeaj12oU64FJjiKKyEOyXuUKk8jQ@mail.gmail.com>
+	<CAL_JsqLv8Q4eS_bwuLbEOBSxjU7uff4__KcSi3qwAvgmjhQKHw@mail.gmail.com>
+	<20150107105438.GA7256@e102568-lin.cambridge.arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150107105438.GA7256-7AyDDHkRsp3ZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07.01.2015 15:22, Jisheng Zhang wrote:
-> Dear Sebastian,
+On 7 January 2015 at 03:54, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org> wrote:
+> On Tue, Jan 06, 2015 at 10:01:03PM +0000, Rob Herring wrote:
+>> On Tue, Jan 6, 2015 at 12:36 PM, Mathieu Poirier
+>> <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> > On 6 January 2015 at 10:02, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> >> On Tue, Jan 6, 2015 at 10:45 AM,  <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> >>> From: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> >>>
+>> >>> Among other things, the serial power controller (SPC) controls power to
+>> >>> the A7 and A15 clusters.  Theses clusters also happen to contains the
 >
-> On Wed, 7 Jan 2015 06:11:58 -0800
-> Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com> wrote:
+> "These clusters also happen to contain"
 >
->> On 31.12.2014 09:57, Jisheng Zhang wrote:
->>> The "smemc" clock is removed on BG2Q SoCs. In fact, bit19 of clkenable
->>> register is for nfc. Current code use bit19 for non-exist "smemc"
->>> incorrectly, this prevents eMMC from working due to the sdhci's
->>> "core" clk is still gated.
->>>
->>> Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
->>> Cc: stable@vger.kernel.org # 3.16+
->>> ---
->>>    drivers/clk/berlin/bg2q.c | 1 -
->>>    1 file changed, 1 deletion(-)
->>>
->>> diff --git a/drivers/clk/berlin/bg2q.c b/drivers/clk/berlin/bg2q.c
->>> index 21784e4..440ef81 100644
->>> --- a/drivers/clk/berlin/bg2q.c
->>> +++ b/drivers/clk/berlin/bg2q.c
->>> @@ -285,7 +285,6 @@ static const struct berlin2_gate_data bg2q_gates[]
->>> __initconst = { { "pbridge",	"perif",	15,
->>> CLK_IGNORE_UNUSED }, { "sdio",	"perif",	16,
->>> CLK_IGNORE_UNUSED }, { "nfc",	"perif",	18 },
+>> >>> coresight tracers used for HW assisted tracing.
+>> >>>
+>> >>> By modellling these to power domains in a way that is comprehensible to
+>                ^ too many l
 >
-> The nfc here is really confusing, we call it as nfccore internally. Is it better
-> to rename it as nfccore?
+>> >>> the generic power domain sub-system and using the runtime PM API in the
+>> >>> coresight drivers, we can prevent power to the domains from being
+>> >>> turned off while tracing related operations are still pending.
+>> >>>
+>> >>> Signed-off-by: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> >>> ---
+>> >>>  .../bindings/arm/vexpress-power-controller.txt     | 54 ++++++++++++++++++++++
+>> >>>  1 file changed, 54 insertions(+)
+>> >>>  create mode 100644 Documentation/devicetree/bindings/arm/vexpress-power-controller.txt
+>> >>>
+>> >>> diff --git a/Documentation/devicetree/bindings/arm/vexpress-power-controller.txt b/Documentation/devicetree/bindings/arm/vexpress-power-controller.txt
+>> >>> new file mode 100644
+>> >>> index 000000000000..3af5624dc5cb
+>> >>> --- /dev/null
+>> >>> +++ b/Documentation/devicetree/bindings/arm/vexpress-power-controller.txt
+>> >>> @@ -0,0 +1,54 @@
+>> >>> +ARM Versatile Express Power Controller
+>> >>> +--------------------------------------
+>> >>> +
+>> >>> +This binding models the serial power controller (SPC) in a way that is
+>> >>> +intelligible to the generic power domain subsystem and in accordance
+>> >>> +with the guidelines from:
+>> >>> +
+>> >>> +Documentation/devicetree/bindings/power/power_domain.txt
+>> >>> +
+>> >>> +The binding doesn't have a '<reg>' property as the base address for HW
+>> >>> +access is provided by the vexpress-scc sub-system.
+>> >>> +
+>> >>> +Required node properties:
+>> >>> +- compatible value : = "arm,vexpress-power-controller";
+>> >>> +- #power-domain-cells : = Number of cells in a PM domain specifier, as
+>> >>> +  specified in "power_domain.txt" referenced above.
+>> >>> +
+>> >>> +Example:
+>> >>> +       A7_A15_cluster_pd: A7-A15-cluster-pd {
+>> >>
+>> >> This is more a description of the power domain than the power
+>> >> controller IP block.
+>> >
+>> > This one is a little tricky - the controller itself (SPC) is accessed
+>> > via registers mapped by another driver (SCC) and have two completely
+>> > separate files.  The SPC driver itself is not DT'ed, simply because it
+>> > doesn't have too,  hence writing things the way I did.
+>> >
+>> > I will ask the vexpress maintainers where they want to see this code
+>> > going.  Would you accept this binding as part of the existing
+>> > "arm,vexpress-sysreg" [1] or even "arm,vexpress-scc" [2]?
+>
+> We are not CC'ed :). [2] is my answer, see below.
 
-I guess it comes from some early Marvell BSP code, if there is no
-issues with the name, e.g. something already depends on "nfc", feel
-free to rename it to something more meaningful.
+Thanks for the review - does it also mean you'd like to see the
+creation of the generic power domains moved to tc2_pm.c ?
 
->>> -	{ "smemc",	"perif",	19 },
+>
+>> > [1]. Documentation/devicetree/bindings/arm/vexpress-sysreg.txt
+>> > [2]. Documentation/devicetree/bindings/arm/vexpress-scc.txt
 >>
->> Jisheng,
+>> Yes, that makes sense. I think either you could have sub node for the
+>> SPC or just use the sysreg node phandle directly. Given the
+>> simplicity, I'd probably go for the latter, but I haven't looked
+>> closely at these drivers and will defer to VExpress maintainers.
+>
+> There is no such a thing as "vexpress-power-controller", SCC (and SPC)
+> are testchip specific, adding the bindings to [2] is what I would like to
+> see, with a compatible string that is testchip specific, please refer
+> to the bindings for details (ie arm,vexpress-scc,v2p-ca15_a7).
+>
 >>
->> if bit 19 is for nfc, how does that work out with bit 18 which is
->> still assigned to nfc? Can you re-evaluate clkenable registers for
+>> >
+>> >>
+>> >>> +               compatible = "arm,vexpress-power-controller";
+>> >>> +               #power-domain-cells = <1>;
+>> >>
+>> >> You need to define what goes in the cell. That is specific to the
+>> >> power controller. It could be generic in that N corresponds to power
+>> >> domain N in the controller if the controller is generic in that way
+>> >> (i.e. all the register accesses are just indexed).
+>> >
+>> > That is exactly how things are - one controller and two power domains.
+>> > Based on what the generic power domain code does #power-domain-cells
+>> > is the argument indicating what domain a device should be added to.
+>> > From what I read this is also how things are (sparsely) explained in
+>> > "power_domain.txt".  As such I'm not exactly sure of what you'd like
+>> > to see modified - enlightenment would be appreciated.
+>>
+>> I wasn't sure if there are more domains you didn't add. If what 0 and
+>> 1 correspond to varies by board, then it's probably fine as it. If
+>> they are always cluster 0 and cluster 1, then just say that.
 >
-> bit 19 is for nfcEcc, the "io" clock; bit 18 is for nfcCore, the "core" clock.
-
-Ok, then both bits should be dealt with accordingly, i.e. rename
-"smemc" to "nfcecc" and use it in the corresponding dts node.
-
-If this clk_gate just disables a clock that is fed into another
-gateable clock module, I can live with removing it - although I
-still think it is best to leave the clk_gate in place and pick
-another name that does not collide with any other clock name.
-
->> BG2Q and fix it up accordingly? I'd suggest to still disable as many
+> It is testchip specific (see above), and it should be documented as
+> such. You should define what the cell number corresponds to (eg cell == 0 A15
+> cluster power domain, cell == 1 A7 cluster power domain).
 >
-> I'll recheck the clk driver for BG2Q.
-
-Ok, thanks a lot!
-
-Sebastian
+> Lorenzo
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
