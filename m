@@ -1,99 +1,58 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: [RFC PATCH 1/3] of/device: manage resources similar to
- platform_device_add
-Date: Wed, 7 Jan 2015 11:30:52 -0600
-Message-ID: <1420651854-17768-2-git-send-email-s-anna@ti.com>
-References: <1420651854-17768-1-git-send-email-s-anna@ti.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v9 1/4] drm/i2c: tda998x: Add DT support for audio
+Date: Wed, 7 Jan 2015 17:33:51 +0000
+Message-ID: <20150107173351.GB2634@sirena.org.uk>
+References: <cover.1420628786.git.moinejf@free.fr>
+ <0084acea5a3475a77531d6a77483f36d3469111a.1420628786.git.moinejf@free.fr>
+ <54AD4511.30702@arm.com>
+ <20150107180825.52334d4f@armhf>
+ <54AD6A5C.60903@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1420651854-17768-1-git-send-email-s-anna@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, linux-kernel@vger.kernel.org, Felipe Balbi <balbi@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="yTfYsguFsV8cp5cf"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <54AD6A5C.60903@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Jackson <Andrew.Jackson@arm.com>
+Cc: Jean-Francois Moine <moinejf@free.fr>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Dave Airlie <airlied@gmail.com>, Jyri Sarha <jsarha@ti.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Drivers can use of_platform_populate() to create platform devices
-for children of the device main node, and a complementary API
-of_platform_depopulate() is provided to delete these child platform
-devices. The of_platform_depopulate() leverages the platform API
-for performing the cleanup of these devices.
 
-The platform device resources are managed differently between
-of_device_add and platform_device_add, and this asymmetry causes
-a kernel oops in platform_device_del during removal of the resources.
-Manage the platform device resources similar to platform_device_add
-to fix this kernel oops.
+--yTfYsguFsV8cp5cf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Suman Anna <s-anna@ti.com>
----
- drivers/of/device.c | 38 +++++++++++++++++++++++++++++++++++++-
- 1 file changed, 37 insertions(+), 1 deletion(-)
+On Wed, Jan 07, 2015 at 05:18:20PM +0000, Andrew Jackson wrote:
 
-diff --git a/drivers/of/device.c b/drivers/of/device.c
-index 46d6c75c1404..fa27c1c71f29 100644
---- a/drivers/of/device.c
-+++ b/drivers/of/device.c
-@@ -50,6 +50,8 @@ EXPORT_SYMBOL(of_dev_put);
- 
- int of_device_add(struct platform_device *ofdev)
- {
-+	int i, ret;
-+
- 	BUG_ON(ofdev->dev.of_node == NULL);
- 
- 	/* name and id have to be set so that the platform bus doesn't get
-@@ -63,7 +65,41 @@ int of_device_add(struct platform_device *ofdev)
- 	if (!ofdev->dev.parent)
- 		set_dev_node(&ofdev->dev, of_node_to_nid(ofdev->dev.of_node));
- 
--	return device_add(&ofdev->dev);
-+	for (i = 0; i < ofdev->num_resources; i++) {
-+		struct resource *p, *r = &ofdev->resource[i];
-+
-+		if (!r->name)
-+			r->name = dev_name(&ofdev->dev);
-+
-+		p = r->parent;
-+		if (!p) {
-+			if (resource_type(r) == IORESOURCE_MEM)
-+				p = &iomem_resource;
-+			else if (resource_type(r) == IORESOURCE_IO)
-+				p = &ioport_resource;
-+		}
-+
-+		if (p && insert_resource(p, r)) {
-+			dev_err(&ofdev->dev, "failed to claim resource %d\n",
-+				i);
-+			ret = -EBUSY;
-+			goto failed;
-+		}
-+	}
-+
-+	ret = device_add(&ofdev->dev);
-+	if (ret == 0)
-+		return ret;
-+
-+failed:
-+	while (--i >= 0) {
-+		struct resource *r = &ofdev->resource[i];
-+		unsigned long type = resource_type(r);
-+
-+		if (type == IORESOURCE_MEM || type == IORESOURCE_IO)
-+			release_resource(r);
-+	}
-+	return ret;
- }
- 
- int of_device_register(struct platform_device *pdev)
--- 
-2.2.1
+> I understand your difficulty!  I was just wanting something to clarify th=
+e=20
+> meaning of the value without reference to the driver source.
+
+> You could add something like this to your existing explanation: "The value
+> describes which audio input pins are selected; this varies depending
+> on chip type so consult the section on audio port configuration in the=20
+> relevant datasheet.". =20
+
+This is commonly done by just saying that the value will be written into
+a given bitfield for such and such a purpose and then relying on the
+chip documentation for that; it's a more direct way of saying the above.
+
+--yTfYsguFsV8cp5cf
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUrW3+AAoJECTWi3JdVIfQlX0H/RX+ohGKBgKyWlTMPcFZFEB6
+tMppOk1zQhdIqxs4qWJPsRDC2ZXWRXgk2WI621PSjkxWrhAO9H2Jju0G9fnmdynq
+5WSZsWe1s1yDjOYMLnbhUIOwWzDqCHYf+bH3CeDzvWPIG+SmujHRnKI6AS/whzPv
+jQrGnS7T2u3IV+3IK2TgJohIU9JMdft2KsTk4D4YpXDPS1BatvcitM6UfX/en/U6
+SawZUl6NGSzT+efmQWOastopkjn6r0bA6odaGI0DjaXnmq+ymCj9BqOb1Qb0EhSf
+0vv5GdPfZYDukvlU2FuLP/iWHNixU7N9h2pcvJsC82/Np85l2Im7VqIBNDWIcQY=
+=7iDb
+-----END PGP SIGNATURE-----
+
+--yTfYsguFsV8cp5cf--
