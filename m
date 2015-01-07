@@ -1,50 +1,120 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 4/4] dma: X-Gene PCIE DMA Driver
-Date: Wed, 07 Jan 2015 17:22:14 +0100
-Message-ID: <1765004.TVkcxIlmTg@wuerfel>
-References: <1420608537-12296-1-git-send-email-mchitale@apm.com>
- <9430055.pMHRTP0RMA@wuerfel>
- <CAL-zptNW81KwWXnMcsh_S5KQFMNGysm=ATmixMge6RXj_U-_zQ@mail.gmail.com>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 4/4] dts: mediatek: Enable clock support for Mediatek MT8135.
+Date: Wed, 7 Jan 2015 17:25:41 +0100
+Message-ID: <CABuKBeL34hV63t+zDy3Nbz_V4qAvCF87+=hV=eUUCTrKybBFjA@mail.gmail.com>
+References: <1420601123-25859-1-git-send-email-jamesjj.liao@mediatek.com>
+	<1420601123-25859-5-git-send-email-jamesjj.liao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL-zptNW81KwWXnMcsh_S5KQFMNGysm=ATmixMge6RXj_U-_zQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mayuresh Chitale <mchitale@apm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "vinod.koul@intel.com" <vinod.koul@intel.com>, "jcm@redhat.com" <jcm@redhat.com>, "patches@apm.com" <patches@apm.com>, "ddutile@redhat.com" <ddutile@redhat.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1420601123-25859-5-git-send-email-jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, huang eddie <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, HenryC Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Joe.C" <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 07 January 2015 21:35:22 Mayuresh Chitale wrote:
-> >
-> > I think I'm missing something important here. What exactly is the
-> > interaction with PCI here? Is it possible to use the dmaengine
-> > driver at all when the PCI host controller is not in endpoint mode?
-> Yes. Dmaengine driver can be used when port is configured as RC or EP.
-> >
-> > Does the dmaengine show up as a PCI device when the PCI controller is
-> > in host mode?
-> No. It sits between AXI and PCI interfaces but it needs to be
-> programmed via the config bar.
+2015-01-07 4:25 GMT+01:00 James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>:
+> This patch adds MT8135 clock controllers into device tree.
+>
+> Change-Id: I9c5bab9289bbd6eb444aad97d015b8f26ca88a8a
+> Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/mt8135.dtsi | 47 +++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 47 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/mt8135.dtsi b/arch/arm/boot/dts/mt8135.dtsi
+> index ec83e69..09fcf0d 100644
+> --- a/arch/arm/boot/dts/mt8135.dtsi
+> +++ b/arch/arm/boot/dts/mt8135.dtsi
+> @@ -12,6 +12,7 @@
+>   * GNU General Public License for more details.
+>   */
+>
+> +#include <dt-bindings/clock/mt8135-clk.h>
+>  #include <dt-bindings/interrupt-controller/irq.h>
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  #include "skeleton64.dtsi"
+> @@ -92,6 +93,24 @@
+>                         clock-frequency = <26000000>;
+>                         #clock-cells = <0>;
+>                 };
+> +
+> +               clk_null: clk_null {
+> +                       compatible = "fixed-clock";
+> +                       #clock-cells = <0>;
+> +                       clock-frequency = <0>;
+> +               };
+> +
+> +               clk26m: clk26m {
+> +                       compatible = "fixed-clock";
+> +                       #clock-cells = <0>;
+> +                       clock-frequency = <26000000>;
+> +               };
+> +
+> +               rtc32k: rtc32k {
+> +                       compatible = "fixed-clock";
+> +                       #clock-cells = <0>;
+> +                       clock-frequency = <32000>;
+> +               };
 
-Ok, I see. So in RC mode, it sounds like this is a regular DMA engine
-that could be used with arbitrary slaves, but in EP mode it would
-actually be controlled by the remote host, right?
+Why do you add this clocks here?
+This clocks are not represented by the clock tree? If so, what are the
+consumers of this clocks?
 
-When we are in RC mode, who sets up that BAR? If this is set up by
-the firmware, we can just have the register appear in the DT as well,
-as it's known, and when we are in EP mode, it sounds like we would
-not even use the dmaengine because it's owned by the other host.
+>         };
+>
+>         soc {
+> @@ -100,6 +119,28 @@
+>                 compatible = "simple-bus";
+>                 ranges;
+>
+> +               topckgen: topckgen@10000000 {
+> +                       compatible = "mediatek,mt8135-topckgen";
+> +                       reg = <0 0x10000000 0 0x1000>;
+> +                       #clock-cells = <1>;
+> +               };
+> +
+> +               infracfg: syscon@10001000 {
+> +                       #address-cells = <1>;
+> +                       #size-cells = <1>;
+> +                       compatible = "mediatek,mt8135-infracfg", "syscon";
+> +                       reg = <0 0x10001000 0 0x1000>;
+> +                       #clock-cells = <1>;
+> +               };
+> +
+> +               pericfg: syscon@10003000 {
+> +                       #address-cells = <1>;
+> +                       #size-cells = <1>;
+> +                       compatible = "mediatek,mt8135-pericfg", "syscon";
+> +                       reg = <0 0x10003000 0 0x1000>;
+> +                       #clock-cells = <1>;
+> +               };
+> +
+>                 timer: timer@10008000 {
+>                         compatible = "mediatek,mt8135-timer",
+>                                         "mediatek,mt6577-timer";
+> @@ -128,6 +169,12 @@
+>                               <0 0x10216000 0 0x2000>;
+>                 };
+>
+> +               apmixedsys: apmixedsys@10209000 {
+> +                       compatible = "mediatek,mt8135-apmixedsys";
+> +                       reg = <0 0x10209000 0 0x1000>;
+> +                       #clock-cells = <1>;
+> +               };
+> +
+>                 uart0: serial@11006000 {
+>                         compatible = "mediatek,mt8135-uart","mediatek,mt6577-uart";
+>                         reg = <0 0x11006000 0 0x400>;
+> --
+> 1.8.1.1.dirty
+>
 
-Or is there a way that in EP mode, both sides would access the
-dma engine simultaneously?
 
-	Arnd
+
+-- 
+motzblog.wordpress.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
