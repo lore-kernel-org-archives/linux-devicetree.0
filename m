@@ -1,52 +1,72 @@
-From: Ray Jui <rjui@broadcom.com>
-Subject: Re: [PATCH v2 4/5] clk: cygnus: add clock support for Broadcom Cygnus
-Date: Wed, 7 Jan 2015 09:33:25 -0800
-Message-ID: <54AD6DE5.20601@broadcom.com>
-References: <1420500076-18302-5-git-send-email-rjui@broadcom.com> <2048376.BFrtW5tszK@wuerfel> <54AC99F3.8040703@broadcom.com> <2938966.fY2WjearG6@wuerfel>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v9 3/4] ASoC: tda998x: add a codec to the
+	HDMI transmitter
+Date: Wed, 7 Jan 2015 17:34:50 +0000
+Message-ID: <20150107173450.GC2634@sirena.org.uk>
+References: <cover.1420628786.git.moinejf@free.fr>
+ <23b36acc1f769418a06f3e929eba288b5911da12.1420628786.git.moinejf@free.fr>
+ <54AD4C77.5000401@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2938966.fY2WjearG6@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-kernel@lists.infradead.org, Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Matt Porter <mporter@linaro.org>, Alex Elder <elder@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, Scott Branden <sbranden@broadcom.com>, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+Content-Type: multipart/mixed; boundary="===============3087035058244160773=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <54AD4C77.5000401@arm.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Andrew Jackson <Andrew.Jackson@arm.com>
+Cc: Jean-Francois Moine <moinejf@free.fr>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Dave Airlie <airlied@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
 
+--===============3087035058244160773==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="E4bwVoblQmO+UfRy"
+Content-Disposition: inline
 
-On 1/7/2015 1:11 AM, Arnd Bergmann wrote:
-> On Tuesday 06 January 2015 18:29:07 Ray Jui wrote:
->> On 1/6/2015 12:21 PM, Arnd Bergmann wrote:
->>> On Monday 05 January 2015 15:21:15 Ray Jui wrote:
->>>> +static const struct iproc_asiu_gate asiu_gate[BCM_CYGNUS_NUM_ASIU_CLKS] = {
->>>> +	[BCM_CYGNUS_ASIU_KEYPAD_CLK] =
->>>> +		asiu_gate_val(0x0, 7),
->>>> +	[BCM_CYGNUS_ASIU_ADC_CLK] =
->>>> +		asiu_gate_val(0x0, 9),
->>>> +	[BCM_CYGNUS_ASIU_PWM_CLK] =
->>>> +		asiu_gate_val(IPROC_CLK_INVALID_OFFSET, 0),
->>>> +};
->>>
->>> Here I think a better binding would be to pass the gate value in the
->>> clock specifier, rather than an artificial index. That would let
->>> you get rid of the BCM_CYGNUS_ASIU_KEYPAD_CLK/BCM_CYGNUS_ASIU_ADC_CLK
->>> macros.
->>>
->> You meant to pass in both the gate register offset and its bit shift
->> through the clock specifier? But isn't the current ASIU clock code much
->> more consistent with the rest of the iProc clock code?
-> 
-> For simple devices that don't need an index macro, I would always
-> prefer not defining them, because they are a pain to maintain.
-> For a simple gate clock controller, we could compute both the offset
-> and bit number from a single integer.
-> 
-> However, I now saw upon taking a closer look that the asiu has both
-> a gate and a divider, and the latter one is not as simple, so
-> my comment doesn't apply here.
-> 
-> 	Arnd
-> 
-Okay. I'll leave this as it is and make other changes based on the
-review. Thanks!
+
+--E4bwVoblQmO+UfRy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Jan 07, 2015 at 03:10:47PM +0000, Andrew Jackson wrote:
+> On 01/07/15 10:51, Jean-Francois Moine wrote:
+> > This patch adds a CODEC to the NXP TDA998x HDMI transmitter.
+> >=20
+> > The CODEC handles both I2S and S/PDIF inputs.
+
+Please delete unneeded context from your messages, it makes it much
+easier to find any new content you've added.
+
+--E4bwVoblQmO+UfRy
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUrW45AAoJECTWi3JdVIfQYOYIAIBRRUG56ED979cEIDEh/gIN
+C1/F6sbniZUcLBjliiKVo2rWZ6MZgzMzyNdlwTB5f1VN+0YwuPRn2ac23+cUqdDg
+dqVbiGd6wYPEjnqyVC28cBg2x41CnZCcF3Qn7zbMO7q6lIsxH2QHhfl6/kviK1Co
+y6PksCAD8bFgq+ux0pXVQCphl+1iMlbDKw2ykAM8iDszuz3mdsk02EmA/rmK1egO
+5xbN+Y+nBxB/CWGem6TlseT3xAmXkD31O8ZCn9rauvuwoJKL0nthC6w1WZvo5ASn
+PcPd6fWL2hB86nZdsBKc0LKvNjytepgbFWLjjgnDKYZ+dIEKI33j8ILMYc8UdOA=
+=+QeS
+-----END PGP SIGNATURE-----
+
+--E4bwVoblQmO+UfRy--
+
+--===============3087035058244160773==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============3087035058244160773==--
