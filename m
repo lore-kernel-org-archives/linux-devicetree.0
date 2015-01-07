@@ -1,167 +1,76 @@
-From: Laszlo Ersek <lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v5 2/2] devicetree: document ARM bindings for QEMU's Firmware Config interface
-Date: Wed,  7 Jan 2015 18:42:54 +0100
-Message-ID: <1420652574-5897-3-git-send-email-lersek@redhat.com>
-References: <1420652574-5897-1-git-send-email-lersek@redhat.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1420652574-5897-1-git-send-email-lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, drjones-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, pbonzini-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, agraf-l3A5Bk7waGM@public.gmane.org, lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+From: Jean-Francois Moine <moinejf@free.fr>
+Subject: Re: [PATCH v9 3/4] ASoC: tda998x: add a codec to the HDMI
+ transmitter
+Date: Wed, 7 Jan 2015 19:02:41 +0100
+Message-ID: <20150107190241.27ebac8b@armhf>
+References: <cover.1420628786.git.moinejf@free.fr>
+	<23b36acc1f769418a06f3e929eba288b5911da12.1420628786.git.moinejf@free.fr>
+	<54AD4C77.5000401@arm.com>
+	<20150107154138.GL12302@n2100.arm.linux.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150107154138.GL12302@n2100.arm.linux.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Andrew Jackson <Andrew.Jackson@arm.com>, Mark Brown <broonie@kernel.org>, Dave Airlie <airlied@gmail.com>, Jyri Sarha <jsarha@ti.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Peter Maydell suggested that we describe new devices / DTB nodes in the
-kernel Documentation tree that we expose to arm "virt" guests in QEMU.
+On Wed, 7 Jan 2015 15:41:38 +0000
+Russell King - ARM Linux <linux@arm.linux.org.uk> wrote:
 
-Although the kernel is not required to access the fw_cfg interface,
-"Documentation/devicetree/bindings/arm" is probably the best central spot
-to keep the fw_cfg description in.
+> On Wed, Jan 07, 2015 at 03:10:47PM +0000, Andrew Jackson wrote:
+> > On 01/07/15 10:51, Jean-Francois Moine wrote:
+> > > diff --git a/drivers/gpu/drm/i2c/Kconfig b/drivers/gpu/drm/i2c/Kc=
+onfig
+> > > index 22c7ed6..24fc975 100644
+> > > --- a/drivers/gpu/drm/i2c/Kconfig
+> > > +++ b/drivers/gpu/drm/i2c/Kconfig
+> > > @@ -28,6 +28,7 @@ config DRM_I2C_SIL164
+> > >  config DRM_I2C_NXP_TDA998X
+> > >         tristate "NXP Semiconductors TDA998X HDMI encoder"
+> > >         default m if DRM_TILCDC
+> > > +       select SND_SOC_TDA998X
+> >=20
+> > Do you need this since sound/soc/codecs/Kconfig conditionally bring=
+s in the
+> > CODEC driver?
 
-Suggested-by: Peter Maydell <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Signed-off-by: Laszlo Ersek <lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
----
+=46or SND_SOC_ALL_CODECS only.
 
-Notes:
-    v5:
-    - The data register has no endianness at all, because it doesn't
-      transfer integers (unlike the selector register) -- it transfers
-      blobs. The interpretation of blobs is a separate question from their
-      transfer. The language actually made this clear even in v4, but I made
-      a mindless mistake that v5 corrects. See the word diff against v4:
-    
-      > diff --git a/Documentation/devicetree/bindings/arm/fw-cfg.txt b/Documentation/devicetree/bindings/arm/fw-cfg.txt
-      > index 9ea6322..953fb64 100644
-      > --- a/Documentation/devicetree/bindings/arm/fw-cfg.txt
-      > +++ b/Documentation/devicetree/bindings/arm/fw-cfg.txt
-      > @@ -21,7 +21,7 @@ The selector register takes keys in big endian byte order.
-      > The data register allows accesses with 8, 16, 32 and 64-bit width (only at
-      > offset 0 of the register). Accesses larger than a byte are interpreted as
-      > arrays, bundled together only for better performance. The bytes constituting
-      > such a word, in [-decreasing-]{+increasing+} address order, correspond to the bytes that would
-      > have been transferred by byte-wide accesses in chronological order.
-      >
-      > The interface allows guest firmware to download various parameters and blobs
-    
-      That is, v5 changes one word (two characters actually).
-    
-      Please refer to
-      <http://thread.gmane.org/gmane.comp.emulators.qemu/312419> for more
-      details.
-    
-    - I've kept Arnd's v4 ACK.
-    
-    v4:
-    - selector and data registers are big endian
-    - spell out that the data register must be accessed at its offset 0
-    
-    v3:
-    - advertise the exact size of the region in the DTB [Peter Maydell, Arnd
-      Bergmann]
-    - update to 64-bit wide data register
-    - describe corresponding new region layout
-    - describe endianness
-    - describe key 0x0000 (signature check) and 0x0001 (interface revision /
-      feature bitmap)
-    - matches <http://thread.gmane.org/gmane.comp.emulators.qemu/309641>:
-      [PATCH v3 0/7] fw_cfg, bootorder, and UEFI+'-kernel' on arm/virt
-    
-    v2:
-    - more info on what the fw_cfg device is used for, versioning, blobs etc
-      [Mark Rutland]
-    - drop generic statements about DTB [Mark Rutland]
-    - drop uint64_t language [Mark Rutland]
-    - cover both registers with one contiguous region, of size 0x1000 [Mark
-      Rutland, Arnd Bergmann]
-    - specify "qemu,fw-cfg-mmio" for the "compatible" property [Mark
-      Rutland, Arnd Bergmann]
-    - reorder DTS snippet so that "compatible" come first [Mark Rutland]
+> More importantly, it's broken, because it'll cause Kconfig to complai=
+n
+> if you enable DRM_I2C_NXP_TDA998X, but have ASoC disabled.
+>=20
+> Moreover, if you decide you want the sound and ASoC built as a module=
+,
+> but want to build in DRM and TDA998x support (so you can get video
+> output working on boot before initramfs/rootfs), Kconfig may well
+> complain.
 
- Documentation/devicetree/bindings/arm/fw-cfg.txt | 72 ++++++++++++++++++++++++
- 1 file changed, 72 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/fw-cfg.txt
+	select SND_SOC_TDA998X if SND_SOC
 
-diff --git a/Documentation/devicetree/bindings/arm/fw-cfg.txt b/Documentation/devicetree/bindings/arm/fw-cfg.txt
-new file mode 100644
-index 0000000..953fb64
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/fw-cfg.txt
-@@ -0,0 +1,72 @@
-+* QEMU Firmware Configuration bindings for ARM
-+
-+QEMU's arm-softmmu and aarch64-softmmu emulation / virtualization targets
-+provide the following Firmware Configuration interface on the "virt" machine
-+type:
-+
-+- A write-only, 16-bit wide selector (or control) register,
-+- a read-write, 64-bit wide data register.
-+
-+QEMU exposes the control and data register to ARM guests as memory mapped
-+registers; their location is communicated to the guest's UEFI firmware in the
-+DTB that QEMU places at the bottom of the guest's DRAM.
-+
-+The guest writes a selector value (a key) to the selector register, and then
-+can read the corresponding data (produced by QEMU) via the data register. If
-+the selected entry is writable, the guest can rewrite it through the data
-+register.
-+
-+The selector register takes keys in big endian byte order.
-+
-+The data register allows accesses with 8, 16, 32 and 64-bit width (only at
-+offset 0 of the register). Accesses larger than a byte are interpreted as
-+arrays, bundled together only for better performance. The bytes constituting
-+such a word, in increasing address order, correspond to the bytes that would
-+have been transferred by byte-wide accesses in chronological order.
-+
-+The interface allows guest firmware to download various parameters and blobs
-+that affect how the firmware works and what tables it installs for the guest
-+OS. For example, boot order of devices, ACPI tables, SMBIOS tables, kernel and
-+initrd images for direct kernel booting, virtual machine UUID, SMP information,
-+virtual NUMA topology, and so on.
-+
-+The authoritative registry of the valid selector values and their meanings is
-+the QEMU source code; the structure of the data blobs corresponding to the
-+individual key values is also defined in the QEMU source code.
-+
-+The presence of the registers can be verified by selecting the "signature" blob
-+with key 0x0000, and reading four bytes from the data register. The returned
-+signature is "QEMU".
-+
-+The outermost protocol (involving the write / read sequences of the control and
-+data registers) is expected to be versioned, and/or described by feature bits.
-+The interface revision / feature bitmap can be retrieved with key 0x0001. The
-+blob to be read from the data register has size 4, and it is to be interpreted
-+as a uint32_t value in little endian byte order. The current value
-+(corresponding to the above outer protocol) is zero.
-+
-+The guest kernel is not expected to use these registers (although it is
-+certainly allowed to); the device tree bindings are documented here because
-+this is where device tree bindings reside in general.
-+
-+Required properties:
-+
-+- compatible: "qemu,fw-cfg-mmio".
-+
-+- reg: the MMIO region used by the device.
-+  * Bytes 0x0 to 0x7 cover the data register.
-+  * Bytes 0x8 to 0x9 cover the selector register.
-+  * Further registers may be appended to the region in case of future interface
-+    revisions / feature bits.
-+
-+Example:
-+
-+/ {
-+	#size-cells = <0x2>;
-+	#address-cells = <0x2>;
-+
-+	fw-cfg@9020000 {
-+		compatible = "qemu,fw-cfg-mmio";
-+		reg = <0x0 0x9020000 0x0 0xa>;
-+	};
-+};
--- 
-1.8.3.1
+should work in all cases.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > > +static int __init tda998x_codec_init(void)
+> > > +{
+> > > +       return 0;
+> > > +}
+> > > +static void __exit tda998x_codec_exit(void)
+> > > +{
+> > > +}
+> > > +module_init(tda998x_codec_init);
+> > > +module_exit(tda998x_codec_exit);
+>=20
+> There's no need for these if they remain as the above.  Modules can h=
+ave
+> both init/exit functions, or neither, and they are still unloadable.
+> Only modules which provide only an init function get locked in on loa=
+d.
+
+Thanks.
+
+--=20
+Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
+Jef		|		http://moinejf.free.fr/
