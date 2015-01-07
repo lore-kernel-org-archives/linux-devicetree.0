@@ -1,97 +1,44 @@
-From: Shaohui Xie <Shaohui.Xie@freescale.com>
-Subject: RE: [PATCH] [v3] power/fsl: add MDIO dt binding for FMan
-Date: Wed, 7 Jan 2015 05:29:16 +0000
-Message-ID: <DM2PR0301MB08645ABD93708FFE011EF362E2460@DM2PR0301MB0864.namprd03.prod.outlook.com>
-References: <1419321466-5575-1-git-send-email-shh.xie@gmail.com>
- <DM2PR0301MB08640979E5088618D1395CFAE2580@DM2PR0301MB0864.namprd03.prod.outlook.com>
- <1420590520.4961.38.camel@freescale.com>
+From: Mayuresh Chitale <mchitale@apm.com>
+Subject: [PATCH 0/4] APM X-Gene PCIe DMA driver
+Date: Wed,  7 Jan 2015 10:58:53 +0530
+Message-ID: <1420608537-12296-1-git-send-email-mchitale@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1420590520.4961.38.camel@freescale.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
-To: Scott Wood <scottwood@freescale.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Emilian Medve <Emilian.Medve@freescale.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: dan.j.williams@intel.com, vinod.koul@intel.com, dmaengine@vger.kernel.org
+Cc: devicetree@vger.kernel.org, arnd@arndb.de, jcm@redhat.com, patches@apm.com, Mayuresh Chitale <mchitale@apm.com>, ddutile@redhat.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-PiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+IEZyb206IHNoaC54aWVAZ21h
-aWwuY29tIFttYWlsdG86c2hoLnhpZUBnbWFpbC5jb21dDQo+ID4gPiBTZW50OiBUdWVzZGF5LCBE
-ZWNlbWJlciAyMywgMjAxNCAzOjU4IFBNDQo+ID4gPiBUbzogbGludXhwcGMtZGV2QGxpc3RzLm96
-bGFicy5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBXb29kDQo+ID4gPiBTY290dC1C
-MDc0MjENCj4gPiA+IENjOiBNZWR2ZSBFbWlsaWFuLUVNTUVEVkUxOyBYaWUgU2hhb2h1aS1CMjE5
-ODkNCj4gPiA+IFN1YmplY3Q6IFtQQVRDSF0gW3YzXSBwb3dlci9mc2w6IGFkZCBNRElPIGR0IGJp
-bmRpbmcgZm9yIEZNYW4NCj4gPiA+DQo+ID4gPiBGcm9tOiBTaGFvaHVpIFhpZSA8U2hhb2h1aS5Y
-aWVAZnJlZXNjYWxlLmNvbT4NCj4gPiA+DQo+ID4gPiBUaGlzIGJpbmRpbmcgaXMgZm9yIEZNYW4g
-TURJTywgaXQgY292ZXJzIEZNYW4gdjIgJiBGTWFuIHYzLg0KPiA+ID4NCj4gPiA+IFNpZ25lZC1v
-ZmYtYnk6IFNoYW9odWkgWGllIDxTaGFvaHVpLlhpZUBmcmVlc2NhbGUuY29tPg0KPiA+ID4gLS0t
-DQo+ID4gPiBjaGFuZ2VzIGluIHYzOg0KPiA+ID4gcmVwaHJhc2UgdGhlICdEZWZpbml0aW9uJyBv
-ZiBwcm9wZXJ0eSAnYnVzLWZyZXF1ZW5jeScsIGRvbid0IGluY2x1ZGUNCj4gPiA+IHRoZSBwcm9w
-ZXJ0eSBpbiBleGFtcGxlLg0KPiA+ID4NCj4gPiA+IGNoYW5nZXMgaW4gdjI6DQo+ID4gPiBhZGRy
-ZXNzZWQgY29tbWVudHMgZnJvbSBTY290dCBpbiBWMS4NCj4gPiA+DQo+ID4gPiAgLi4uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvcG93ZXJwYy9mc2wvZm1hbi50eHQgICAgICAgfCA2OQ0KPiArKysrKysr
-KysrKysrKysrKysrKysrDQo+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDY5IGluc2VydGlvbnMoKykN
-Cj4gPiA+DQo+ID4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL3Bvd2VycGMvZnNsL2ZtYW4udHh0DQo+ID4gPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9mbWFuLnR4dA0KPiA+ID4gaW5kZXggZWRlZWExNi4uNzM3
-YWE0YyAxMDA2NDQNCj4gPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9wb3dlcnBjL2ZzbC9mbWFuLnR4dA0KPiA+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL3Bvd2VycGMvZnNsL2ZtYW4udHh0DQo+ID4gPiBAQCAtNyw2ICs3LDcgQEAg
-Q09OVEVOVFMNCj4gPiA+ICAgIC0gRk1hbiBNVVJBTSBOb2RlDQo+ID4gPiAgICAtIEZNYW4gZFRT
-RUMvWEdFQy9tRU1BQyBOb2RlDQo+ID4gPiAgICAtIEZNYW4gSUVFRSAxNTg4IE5vZGUNCj4gPiA+
-ICsgIC0gRk1hbiBNRElPIE5vZGUNCj4gPiA+ICAgIC0gRXhhbXBsZQ0KPiA+ID4NCj4gPiA+DQo+
-ID4gPiA9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PQ0KPiA+ID4gPT09PT09PT09IEBAIC0zNTcsNiArMzU4LDY5IEBAIHB0
-cC10aW1lckBmZTAwMCB7ICB9Ow0KPiA+ID4NCj4gPiA+DQo+ID4gPiA9PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQ0KPiA+
-ID4gPT09PT09PT09DQo+ID4gPiArRk1hbiBNRElPIE5vZGUNCj4gPiA+ICsNCj4gPiA+ICtERVND
-UklQVElPTg0KPiA+ID4gKw0KPiA+ID4gK1RoZSBNRElPIGlzIGEgYnVzIHRvIHdoaWNoIHRoZSBQ
-SFkgZGV2aWNlcyBhcmUgY29ubmVjdGVkLg0KPiA+ID4gKw0KPiA+ID4gK1BST1BFUlRJRVMNCj4g
-PiA+ICsNCj4gPiA+ICstIGNvbXBhdGlibGUNCj4gPiA+ICsJCVVzYWdlOiByZXF1aXJlZA0KPiA+
-ID4gKwkJVmFsdWUgdHlwZTogPHN0cmluZ2xpc3Q+DQo+ID4gPiArCQlEZWZpbml0aW9uOiBBIHN0
-YW5kYXJkIHByb3BlcnR5Lg0KPiA+ID4gKwkJTXVzdCBpbmNsdWRlICJmc2wsZm1hbi1tZGlvIiBm
-b3IgMSBHYi9zIE1ESU8gZnJvbSBGTWFuIHYyLg0KPiA+ID4gKwkJTXVzdCBpbmNsdWRlICJmc2ws
-Zm1hbi14bWRpbyIgZm9yIDEwIEdiL3MgTURJTyBmcm9tIEZNYW4gdjIuDQo+ID4gPiArCQlNdXN0
-IGluY2x1ZGUgImZzbCxmbWFuLW1lbWFjLW1kaW8iIGZvciAxLzEwIEdiL3MgTURJTyBmcm9tDQo+
-ID4gPiArCQlGTWFuIHYzLg0KPiA+ID4gKw0KPiA+ID4gKy0gcmVnDQo+ID4gPiArCQlVc2FnZTog
-cmVxdWlyZWQNCj4gPiA+ICsJCVZhbHVlIHR5cGU6IDxwcm9wLWVuY29kZWQtYXJyYXk+DQo+ID4g
-PiArCQlEZWZpbml0aW9uOiBBIHN0YW5kYXJkIHByb3BlcnR5Lg0KPiA+ID4gKw0KPiA+ID4gKy0g
-YnVzLWZyZXF1ZW5jeQ0KPiA+ID4gKwkJVXNhZ2U6IG9wdGlvbmFsDQo+ID4gPiArCQlWYWx1ZSB0
-eXBlOiA8dTMyPg0KPiA+ID4gKwkJRGVmaW5pdGlvbjogU3BlY2lmaWVzIHRoZSBleHRlcm5hbCBN
-RElPIGJ1cyBjbG9jayBzcGVlZCB0bw0KPiA+ID4gKwkJYmUgdXNlZCwgaWYgZGlmZmVyZW50IGZy
-b20gdGhlIHN0YW5kYXJkIDIuNSBNSHouDQo+ID4gPiArCQlUaGlzIG1heSBiZSBkdWUgdG8gdGhl
-IHN0YW5kYXJkIHNwZWVkIGJlaW5nIHVuc3VwcG9ydGVkIChlLmcuDQo+ID4gPiArCQlkdWUgdG8g
-YSBoYXJkd2FyZSBwcm9ibGVtKSwgb3IgdG8gYWR2ZXJ0aXNlIHRoYXQgYWxsIHJlbGV2YW50DQo+
-ID4gPiArCQljb21wb25lbnRzIGluIHRoZSBzeXN0ZW0gc3VwcG9ydCBhIGZhc3RlciBzcGVlZC4N
-Cj4gPiA+ICsNCj4gPiA+ICstIGludGVycnVwdHMNCj4gPiA+ICsJCVVzYWdlOiBvcHRpb25hbA0K
-PiA+ID4gKwkJVmFsdWUgdHlwZTogPHByb3AtZW5jb2RlZC1hcnJheT4NCj4gPiA+ICsJCURlZmlu
-aXRpb246IEV2ZW50IGludGVycnVwdCBvZiBleHRlcm5hbCBNRElPIGNvbnRyb2xsZXIuDQo+ID4g
-PiArCQkxIEdiL3MgTURJTyBhbmQgMTAgR2IvcyBNRElPIGhhcyBvbmUgaW50ZXJydXB0IHJlc3Bl
-Y3RpdmVseS4NCj4gDQo+IEknbSBjb25mdXNlZCBieSAicmVzcGVjdGl2ZWx5IiBoZXJlLiAgRG9l
-cyBmc2wsZm1hbi1tZW1hYy1tZGlvIGhhdmUgdHdvDQo+IGludGVycnVwdHMgKG9uZSBmb3IgMSBH
-Yi9zIGFuZCBvbmUgZm9yIDEwIEdiL3MpPw0KW1MuSF0gV2UgdXNlIHR3byBNRElPIGNvbnRyb2xs
-ZXJzIGZvciBleHRlcm5hbCBQSFkgbWFuYWdlbWVudC4gT25lIGZvciAxIEdiL3MsDQpPbmUgZm9y
-IDEwIEdiL3MsIGFuZCB0d28gTURJTyBpbnRlcnJ1cHRzIGNvbm5lY3RlZCB0byBNUElDLg0KDQog
-IElmIHRoZXJlJ3Mgb25seSAoYXQNCj4gbW9zdCkgb25lIGludGVycnVwdCBwZXIgTURJTyBjb250
-cm9sbGVyIHRoZW4ganVzdCBkZWxldGUgdGhpcyBsaW5lLg0KPiANCj4gV2hhdCBpbnRlcnJ1cHQg
-aXMgdXNlZCBmb3IgaW50ZXJuYWwgTURJTz8NCltTLkhdIGludGVybmFsIE1ESU8gaGFzIG5vIGlu
-dGVycnVwdC4NCg0KICBEb2VzICJvcHRpb25hbCIgbWVhbiBpdCdzIHVzZWQgaWYgYW5kDQo+IG9u
-bHkgaWYgZXh0ZXJuYWwgTURJTyBpcyB1c2VkLCBvciBpcyBpdCBvcHRpb25hbCBldmVuIHdpdGgg
-ZXh0ZXJuYWwgTURJTz8gIEkgc2VlDQo+IGl0J3Mgbm90IHByZXNlbnQgaW4gdGhlIGV4YW1wbGUg
-LS0gZG8gd2Ugbm90IGhhdmUgYSByZWFsIGV4YW1wbGUgdGhhdCBoYXMgdGhlDQo+IGludGVycnVw
-dD8NCltTLkhdICJvcHRpb25hbCIgbWVhbnMgaXQncyBhdmFpbGFibGUgb24gaGFyZHdhcmUsIGJ1
-dCBNRElPIGRyaXZlciBkb2VzIG5vdCB1c2UgaW50ZXJydXB0LiANClNvIHdlIGRvbid0IGhhdmUg
-YSByZWFsIGV4YW1wbGUuDQoNClRoYW5rcyENClNoYW9odWkNCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4cHBjLWRldiBtYWlsaW5nIGxpc3QKTGlu
-dXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3Rp
-bmZvL2xpbnV4cHBjLWRldg==
+This patch adds the APM X-Gene SOC PCIe DMA driver.
+It can be used to transfer data between PCIe RC and PCIe 
+endpoints. It supports only dma slave transfers.
+
+Mayuresh Chitale (4):
+  MAINTAINERS: Add entry for X-Gene PCIE DMA driver
+  Documentation: dt-bindings: Add the binding info for APM X-Gene PCIe
+    DMA driver
+  arm64: dts: Add APM X-Gene PCIe DMA device tree nodes
+  dma: X-Gene PCIE DMA Driver
+
+ .../devicetree/bindings/dma/xgene-pciedma.txt      |  16 +
+ MAINTAINERS                                        |   8 +
+ arch/arm64/boot/dts/apm/apm-storm.dtsi             |  40 ++
+ drivers/dma/Kconfig                                |  11 +
+ drivers/dma/Makefile                               |   1 +
+ drivers/dma/xgene-pcie-dma.c                       | 709 +++++++++++++++++++++
+ 6 files changed, 785 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/xgene-pciedma.txt
+ create mode 100644 drivers/dma/xgene-pcie-dma.c
+
+-- 
+2.2.1.212.gc5b9256
