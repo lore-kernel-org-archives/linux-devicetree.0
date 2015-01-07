@@ -1,65 +1,100 @@
-From: gyungoh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [PATCH v10 6/6] devicetree: i2c: Add SKY81452 to the Trivial Devices list
-Date: Wed,  7 Jan 2015 11:19:27 +0900
-Message-ID: <1420597167-3188-7-git-send-email-jack.yoo@skyworksinc.com>
-References: <1420597167-3188-1-git-send-email-jack.yoo@skyworksinc.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1420597167-3188-1-git-send-email-jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org, hs-ynQEQJNshbs@public.gmane.org, stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org, matti.vaittinen-OYasijW0DpE@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, florian.vaussard-p8DiymsW2f8@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, hytszk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org, jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Ray Jui <rjui@broadcom.com>
+Subject: Re: [PATCH v2 4/5] clk: cygnus: add clock support for Broadcom Cygnus
+Date: Tue, 6 Jan 2015 18:29:07 -0800
+Message-ID: <54AC99F3.8040703@broadcom.com>
+References: <1420500076-18302-5-git-send-email-rjui@broadcom.com> <2048376.BFrtW5tszK@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <2048376.BFrtW5tszK@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
+Cc: Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Matt Porter <mporter@linaro.org>, Alex Elder <elder@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, Scott Branden <sbranden@broadcom.com>, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-From: Gyungoh Yoo <jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>
 
-Signed-off-by: Gyungoh Yoo <jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>
----
-Changes v10:
-Nothing
 
-Changes v9:
-Nothing
+On 1/6/2015 12:21 PM, Arnd Bergmann wrote:
+> On Monday 05 January 2015 15:21:15 Ray Jui wrote:
+>> +static const struct iproc_clk_ctrl mipipll_clk[BCM_CYGNUS_NUM_MIPIPLL_CLKS] = {
+>> +	[BCM_CYGNUS_MIPIPLL_CH0_UNUSED] = {
+>> +		.channel = BCM_CYGNUS_MIPIPLL_CH0_UNUSED,
+>> +		.enable = enable_val(0x4, 12, 6, 18),
+>> +		.mdiv = reg_val(0x20, 0, 8),
+>> +	},
+>> +	[BCM_CYGNUS_MIPIPLL_CH1_LCD] = {
+>> +		.channel = BCM_CYGNUS_MIPIPLL_CH1_LCD,
+>> +		.enable = enable_val(0x4, 13, 7, 19),
+>> +		.mdiv = reg_val(0x20, 10, 8),
+>> +	},
+>> +	[BCM_CYGNUS_MIPIPLL_CH2_UNUSED] = {
+>> +		.channel = BCM_CYGNUS_MIPIPLL_CH2_UNUSED,
+>> +		.enable = enable_val(0x4, 14, 8, 20),
+>> +		.mdiv = reg_val(0x20, 20, 8),
+>> +	},
+>> +	[BCM_CYGNUS_MIPIPLL_CH3_UNUSED] = {
+>> +		.channel = BCM_CYGNUS_MIPIPLL_CH3_UNUSED,
+>> +		.enable = enable_val(0x4, 15, 9, 21),
+>> +		.mdiv = reg_val(0x24, 0, 8),
+>> +	},
+>> +	[BCM_CYGNUS_MIPIPLL_CH4_UNUSED] = {
+>> +		.channel = BCM_CYGNUS_MIPIPLL_CH4_UNUSED,
+>> +		.enable = enable_val(0x4, 16, 10, 22),
+>> +		.mdiv = reg_val(0x24, 10, 8),
+>> +	},
+>> +	[BCM_CYGNUS_MIPIPLL_CH5_UNUSED] = {
+>> +		.channel = BCM_CYGNUS_MIPIPLL_CH5_UNUSED,
+>> +		.enable = enable_val(0x4, 17, 11, 23),
+>> +		.mdiv = reg_val(0x24, 20, 8),
+>> +	},
+>> +};
+> 
+> The tables look fairly regular. Is it possible that it's common
+> to all iproc variants with a standard way to derive all other
+> values from the channel index?
+> 
+Ah no. Not only it's different between different iproc variants, it's
+also different between plls on the same soc.
 
-Changes v8:
-Nothing
+>> +static const struct iproc_asiu_gate asiu_gate[BCM_CYGNUS_NUM_ASIU_CLKS] = {
+>> +	[BCM_CYGNUS_ASIU_KEYPAD_CLK] =
+>> +		asiu_gate_val(0x0, 7),
+>> +	[BCM_CYGNUS_ASIU_ADC_CLK] =
+>> +		asiu_gate_val(0x0, 9),
+>> +	[BCM_CYGNUS_ASIU_PWM_CLK] =
+>> +		asiu_gate_val(IPROC_CLK_INVALID_OFFSET, 0),
+>> +};
+> 
+> Here I think a better binding would be to pass the gate value in the
+> clock specifier, rather than an artificial index. That would let
+> you get rid of the BCM_CYGNUS_ASIU_KEYPAD_CLK/BCM_CYGNUS_ASIU_ADC_CLK
+> macros.
+> 
+You meant to pass in both the gate register offset and its bit shift
+through the clock specifier? But isn't the current ASIU clock code much
+more consistent with the rest of the iProc clock code?
 
-Changes v7:
-Nothing
+>> +static void __init cygnus_armpll_init(struct device_node *node)
+>> +{
+>> +	iproc_armpll_setup(node);
+>> +}
+>> +CLK_OF_DECLARE(cygnus_armpll, "brcm,cygnus-armpll", cygnus_armpll_init);
+> 
+> How about moving all of these directly next to the tables, to keep
+> each clock controller?
+> 
+Good suggestion. That would make it more clear and easier to read. Will do.
 
-Changes v6:
-Nothing
+>> +static void __init cygnus_genpll_clk_init(struct device_node *node)
+>> +{
+>> +	iproc_clk_setup(node, genpll_clk, BCM_CYGNUS_NUM_GENPLL_CLKS);
+>> +}
+> 
+> If you use ARRAY_SIZE here, you can remove the BCM_CYGNUS_NUM_GENPLL_CLKS
+> macro that is not useful to the DT binding.
+> 
+Agreed. Will do this for all iproc clock setup calls. Thanks.
 
-Changes v5:
-Nothing
-
-Changes v4:
-Nothing
-
-Changes v3:
-Nothing
-
-Changes v2:
-Add SKY81452 to the Trivial Devices list
-
- Documentation/devicetree/bindings/i2c/trivial-devices.txt | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-index fbde415..122fa1e 100644
---- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-+++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-@@ -77,6 +77,7 @@ ramtron,24c64		i2c serial eeprom  (24cxx)
- ricoh,rs5c372a		I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
- samsung,24ad0xd1	S524AD0XF1 (128K/256K-bit Serial EEPROM for Low Power)
- sii,s35390a		2-wire CMOS real-time clock
-+skyworks,sky81452	Skyworks SKY81452: Six-Channel White LED Driver with Touch Panel Bias Supply
- st-micro,24c256		i2c serial eeprom  (24cxx)
- stm,m41t00		Serial Access TIMEKEEPER
- stm,m41t62		Serial real-time clock (RTC) with alarm
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 	Arnd
+> 
