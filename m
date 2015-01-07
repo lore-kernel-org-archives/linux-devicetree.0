@@ -1,75 +1,47 @@
-From: James Liao <jamesjj.liao@mediatek.com>
-Subject: [PATCH v3 0/4] clk: mediatek: Add common clock support for Mediatek
- MT8135.
-Date: Wed, 7 Jan 2015 11:25:19 +0800
-Message-ID: <1420601123-25859-1-git-send-email-jamesjj.liao@mediatek.com>
+From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH 1/4] ARM: tegra: rely on bootloader pinmux programming on nyan-big
+Date: Tue, 6 Jan 2015 19:37:04 -0800
+Message-ID: <CAL1qeaG4S89Ndgd6QpD+PMj7p5iWhamyoznN1avs9uPjUmzT4A@mail.gmail.com>
+References: <1420540653-14816-1-git-send-email-tomeu.vizoso@collabora.com>
+	<1420540653-14816-2-git-send-email-tomeu.vizoso@collabora.com>
+	<54AC16B0.5050703@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Mike Turquette <mturquette@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, jamesjj.liao@mediatek.com, Vladimir Murzin <vladimir.murzin@arm.com>, Russell King <linux@arm.linux.org.uk>, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, linux-kernel@vger.kernel.org, henryc.chen@mediatek.com, devicetree@vger.kernel.org, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, "Joe.C" <yingjoe.chen@mediatek.com>, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54AC16B0.5050703-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patchset contains the initial common clock support for Mediatek SoCs.
-Mediatek SoC's clock architecture comprises of various PLLs, dividers,
-muxes and clock gates.
+On Tue, Jan 6, 2015 at 9:09 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+> On 01/06/2015 03:37 AM, Tomeu Vizoso wrote:
+>>
+>> Following 6dbaff2b, the kernel expects that the bootloader has correctly
+>> programmed the Tegra pinmux.
+>>
+>> DTs for the Jetson and the Venice2 had been updated already but this one
+>> was left behind.
+>
+>
+> So this setup is true for NVIDIA-controlled development/reference boards
+> where we've ensured that the bootloader sets up 100% of the pinmux.
+>
+> However, I know that Coreboot on this board doesn't set up everything in the
+> pinmux, and since it's in r/o flash never will. As such, I'm not sure this
+> change is safe for this board. That is, unless you want to force upstream
+> kernels to be booted via a chain-loaded path: Coreboot (r/o) -> U-Boot (r/w
+> with full pinmux setup) -> kernel.
 
-This patchset also contains a basic clock support for Mediatek MT8135.
-
-This driver is based on 3.19-rc1 + MT8135 basic support.
-
-Changes in v2:
-- Re-ordered patchset. Fold include/dt-bindings and DT document in 1st
-patch.
-
-Changes in v3:
-- Rebase to 3.19-rc1.
-- Refine code. Remove unneed functions, debug logs and comments, and fine tune
-error logs.
-
-James Liao (4):
-  clk: dts: mediatek: add Mediatek MT8135 clock bindings
-  clk: mediatek: Add initial common clock support for Mediatek SoCs.
-  clk: mediatek: Add basic clocks for Mediatek MT8135.
-  dts: mediatek: Enable clock support for Mediatek MT8135.
-
- .../bindings/clock/mediatek,mt8135-clock.txt       |  36 +
- arch/arm/boot/dts/mt8135.dtsi                      |  47 +
- drivers/clk/Makefile                               |   1 +
- drivers/clk/mediatek/Makefile                      |   2 +
- drivers/clk/mediatek/clk-gate.c                    | 150 ++++
- drivers/clk/mediatek/clk-gate.h                    |  48 +
- drivers/clk/mediatek/clk-mt8135-pll.c              | 902 +++++++++++++++++++
- drivers/clk/mediatek/clk-mt8135-pll.h              |  28 +
- drivers/clk/mediatek/clk-mt8135.c                  | 974 +++++++++++++++++++++
- drivers/clk/mediatek/clk-mtk.c                     |  89 ++
- drivers/clk/mediatek/clk-mtk.h                     |  47 +
- drivers/clk/mediatek/clk-pll.c                     |  59 ++
- drivers/clk/mediatek/clk-pll.h                     |  50 ++
- include/dt-bindings/clock/mt8135-clk.h             | 190 ++++
- 14 files changed, 2623 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/mediatek,mt8135-clock.txt
- create mode 100644 drivers/clk/mediatek/Makefile
- create mode 100644 drivers/clk/mediatek/clk-gate.c
- create mode 100644 drivers/clk/mediatek/clk-gate.h
- create mode 100644 drivers/clk/mediatek/clk-mt8135-pll.c
- create mode 100644 drivers/clk/mediatek/clk-mt8135-pll.h
- create mode 100644 drivers/clk/mediatek/clk-mt8135.c
- create mode 100644 drivers/clk/mediatek/clk-mtk.c
- create mode 100644 drivers/clk/mediatek/clk-mtk.h
- create mode 100644 drivers/clk/mediatek/clk-pll.c
- create mode 100644 drivers/clk/mediatek/clk-pll.h
- create mode 100644 include/dt-bindings/clock/mt8135-clk.h
-
+That's correct.  We did have a patch floating around to configure all
+the pinmux settings in coreboot, but that never made it in.  While we
+could issue a R/W firmware update to apply the pinmux settings
+(unlikely to happen), it would still result in pinmux settings being
+applied in two separate locations - which, IIRC, was exactly what
+Stephen was trying to avoid by moving pinmux out of the device-trees.
+So I'd agree that pulling the pinmux settings out of the nyan*
+device-trees is not a good idea.
 --
-1.8.1.1.dirty
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
