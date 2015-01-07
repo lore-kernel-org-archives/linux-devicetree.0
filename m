@@ -1,39 +1,70 @@
-From: Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
-Subject: [PATCH v2 0/3] dmaengine: APM X-Gene SoC DMA engine driver support
-Date: Wed,  7 Jan 2015 16:39:38 +0530
-Message-ID: <1420628981-22774-1-git-send-email-rsahu@apm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
-Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ddutile-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+From: Tony K Nadackal <tony.kn@samsung.com>
+Subject: RE: [PATCH v2 2/2] [media] s5p-jpeg: Adding Exynos7 JPEG variant
+Date: Wed, 07 Jan 2015 16:52:51 +0530
+Message-ID: <000801d02a6c$59fdbc60$0df93520$@samsung.com>
+References: <1418974680-5837-1-git-send-email-tony.kn@samsung.com>
+ <1418974680-5837-3-git-send-email-tony.kn@samsung.com>
+ <54AD068F.8030001@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <54AD068F.8030001@samsung.com>
+Content-language: en-us
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Jacek Anaszewski' <j.anaszewski@samsung.com>
+Cc: linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, mchehab@osg.samsung.com, kgene@kernel.org, k.debski@samsung.com, s.nawrocki@samsung.com, robh+dt@kernel.org, mark.rutland@arm.com, bhushan.r@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-This patch set implements the APM X-Gene SoC DMA driver
-support to offload the DMA operations such as memory copy(memcpy),
-scatter gathering.
+Hi Jacek,
 
-Signed-off-by: Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
-Signed-off-by: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
----
+On  Wednesday, January 07, 2015 3:43 PM : Jacek Anaszewski wrote,
 
-Rameshwar Prasad Sahu (3):
-  dmaengine: Add support for APM X-Gene SoC DMA engine driver
-  arm64: dts: Add APM X-Gene DMA device and DMA clock DTS nodes
-  Documentation: dma: Add APM X-Gene SoC DMA engine driver documentation
+> Hi Tony,
+> 
+> On 12/19/2014 08:38 AM, Tony K Nadackal wrote:
+> > Fimp_jpeg used in Exynos7 is a revised version. Some register
+> > configurations are slightly different from JPEG in Exynos4.
+> > Added one more variant SJPEG_EXYNOS7 to handle these differences.
+> >
+> > Signed-off-by: Tony K Nadackal <tony.kn@samsung.com>
+> > ---
+> >   .../bindings/media/exynos-jpeg-codec.txt           |  2 +-
+> >   drivers/media/platform/s5p-jpeg/jpeg-core.c        | 61
+++++++++++++++++++-
+> ---
+> >   drivers/media/platform/s5p-jpeg/jpeg-core.h        | 10 ++--
+> >   drivers/media/platform/s5p-jpeg/jpeg-hw-exynos4.c  | 32 ++++++------
+> >   drivers/media/platform/s5p-jpeg/jpeg-hw-exynos4.h  |  8 +--
+> >   drivers/media/platform/s5p-jpeg/jpeg-regs.h        | 17 ++++--
+> >   6 files changed, 93 insertions(+), 37 deletions(-)
+> >
+> > diff --git
+> > a/Documentation/devicetree/bindings/media/exynos-jpeg-codec.txt
+> > b/Documentation/devicetree/bindings/media/exynos-jpeg-codec.txt
+> > index bf52ed4..cd19417 100644
+> > --- a/Documentation/devicetree/bindings/media/exynos-jpeg-codec.txt
+> > +++ b/Documentation/devicetree/bindings/media/exynos-jpeg-codec.txt
+> > @@ -4,7 +4,7 @@ Required properties:
+> >
+> >   - compatible	: should be one of:
+> >   		  "samsung,s5pv210-jpeg", "samsung,exynos4210-jpeg",
+> > -		  "samsung,exynos3250-jpeg";
+> > +		  "samsung,exynos3250-jpeg", "samsung,exynos7-jpeg";
+> >   - reg		: address and length of the JPEG codec IP register set;
+> >   - interrupts	: specifies the JPEG codec IP interrupt;
+> >   - clock-names   : should contain:
+> 
+> This should be put in a separate patch.
 
- .../devicetree/bindings/dma/apm-xgene-dma.txt      |   49 +
- arch/arm64/boot/dts/apm/apm-storm.dtsi             |   25 +
- drivers/dma/Kconfig                                |    8 +
- drivers/dma/Makefile                               |    1 +
- drivers/dma/xgene-dma.c                            | 1500 ++++++++++++++++++++
- 5 files changed, 1583 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/apm-xgene-dma.txt
- create mode 100644 drivers/dma/xgene-dma.c
+Checkpatch gives warning if this change is not there.
+If that is ok with you, I will make this change a separate patch. 
 
---
-1.8.2.1
+[snip]
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> --
+> Best Regards,
+> Jacek Anaszewski
+
+Thanks and Regards,
+Tony
