@@ -1,79 +1,155 @@
-From: Emil Medve <Emilian.Medve@Freescale.com>
-Subject: Re: [PATCH] [v3] power/fsl: add MDIO dt binding for FMan
-Date: Wed, 7 Jan 2015 13:44:10 -0600
-Message-ID: <54AD8C8A.8070100@Freescale.com>
-References: <1419321466-5575-1-git-send-email-shh.xie@gmail.com>
- <DM2PR0301MB08640979E5088618D1395CFAE2580@DM2PR0301MB0864.namprd03.prod.outlook.com>
- <1420590520.4961.38.camel@freescale.com>
- <DM2PR0301MB08645ABD93708FFE011EF362E2460@DM2PR0301MB0864.namprd03.prod.outlook.com>
- <1420653934.4961.58.camel@freescale.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 1/3] ARM: dts: sun4i: Add dts file for Chuwi V7
+ CW0825 tablet
+Date: Wed,  7 Jan 2015 21:16:13 +0100
+Message-ID: <1420661775-20424-1-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1420653934.4961.58.camel@freescale.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Scott Wood <scottwood@Freescale.com>, Xie Shaohui-B21989 <Shaohui.Xie@Freescale.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBFVIW2SQKGQELHOWTCQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8gU2NvdHQsCgoKT24gMDEvMDcvMjAxNSAxMjowNSBQTSwgU2NvdHQgV29vZCB3cm90ZToK
-PiBPbiBUdWUsIDIwMTUtMDEtMDYgYXQgMjM6MjkgLTA2MDAsIFhpZSBTaGFvaHVpLUIyMTk4OSB3
-cm90ZToKPj4+Pj4gKy0gaW50ZXJydXB0cwo+Pj4+PiArCQlVc2FnZTogb3B0aW9uYWwKPj4+Pj4g
-KwkJVmFsdWUgdHlwZTogPHByb3AtZW5jb2RlZC1hcnJheT4KPj4+Pj4gKwkJRGVmaW5pdGlvbjog
-RXZlbnQgaW50ZXJydXB0IG9mIGV4dGVybmFsIE1ESU8gY29udHJvbGxlci4KPj4+Pj4gKwkJMSBH
-Yi9zIE1ESU8gYW5kIDEwIEdiL3MgTURJTyBoYXMgb25lIGludGVycnVwdCByZXNwZWN0aXZlbHku
-Cj4+Pgo+Pj4gSSdtIGNvbmZ1c2VkIGJ5ICJyZXNwZWN0aXZlbHkiIGhlcmUuICBEb2VzIGZzbCxm
-bWFuLW1lbWFjLW1kaW8gaGF2ZSB0d28KPj4+IGludGVycnVwdHMgKG9uZSBmb3IgMSBHYi9zIGFu
-ZCBvbmUgZm9yIDEwIEdiL3MpPwo+PiBbUy5IXSBXZSB1c2UgdHdvIE1ESU8gY29udHJvbGxlcnMg
-Zm9yIGV4dGVybmFsIFBIWSBtYW5hZ2VtZW50LiBPbmUgZm9yIDEgR2IvcywKPj4gT25lIGZvciAx
-MCBHYi9zLCBhbmQgdHdvIE1ESU8gaW50ZXJydXB0cyBjb25uZWN0ZWQgdG8gTVBJQy4KPiAKPiBJ
-ZiB0aGVyZSBjYW4gYmUgdHdvIGludGVycnVwdHMgeW91IG5lZWQgdG8gbWFrZSB0aGF0IGNsZWFy
-IGFuZCBzcGVjaWZ5Cj4gdGhlIG9yZGVyLgo+IAo+IElzIGl0IHBvc3NpYmxlIGZvciBvbmUgTURJ
-TyBjb250cm9sbGVyIHRvIGhhdmUgYW4gaW50ZXJydXB0IGNvbm5lY3RlZAo+IGJ1dCBub3QgdGhl
-IG90aGVyLCBvbiB0aGUgc2FtZSBzeXN0ZW0/ICBIb3cgd291bGQgeW91IHJlcHJlc2VudCB0aGF0
-IGluCj4gdGhlIGRldmljZSB0cmVlPyAgSWYgdGhlcmUgYXJlIHR3byBNRElPIGNvbnRyb2xsZXJz
-IHdoeSBhcmUgdGhleSBpbiB0aGUKPiBzYW1lIG5vZGU/CgpIaXN0b3JpY2FsbHkgKEZNYW4gdjIg
-YW5kIGV2ZW4gYmVmb3JlL2xlZ2FjeSkgd2UndmUgaGFkIGVhY2ggTUFDIGluY2x1ZGUKYW4gTURJ
-TyBjb250cm9sbGVyLCBidXQgb25seSBvbmUgTURJTyBjb250cm9sbGVyIHBlciBNQUMgdHlwZS9z
-cGVlZCAoMQpHYi9zIHZzIDEwIEdiL3MpIGlzIHBpbm5lZCBvdXQgYW5kIGFsbCB0aGUgc2FtZSBz
-cGVlZCBQSFkocykgYXJlCmNvbm5lY3RlZCB0byB0aGUgcmVzcGVjdGl2ZSBNRElPIGNvbnRyb2xs
-ZXJzLiBBcyBzdWNoIHRoZSBmaXJzdCAxIEdiL3MKTUFDL01ESU8gY29udHJvbGxlciBpcyB1c2Vk
-IHRvIG1hbmFnZSBhbGwgdGhlIDEgR2IvcyBQSFkocykgYW5kIHRoZQpmaXJzdCAxMCBHYi9zIE1B
-Qy9NRElPIGNvbnRyb2xsZXIgaXMgdXNlZCB0byBtYW5hZ2UgYWxsIHRoZSAxMCBHYi9zClBIWShz
-KS4gRWFjaCBNRElPIGNvbnRyb2xsZXIgaGFzIHRoZSBhYmlsaXR5IHRvIGdlbmVyYXRlIGludGVy
-cnVwdHMgYnV0Cm9ubHkgcGlubmVkIG91dCBNRElPIGNvbnRyb2xsZXJzIGFyZSBob29rZWQgdXAg
-dG8gdGhlIE1QSUMgKGFzIHN1Y2ggdGhlCnRhbGsgYWJvdXQgdHdvIGludGVycnVwdHMpCgooRWFj
-aCBNQUMgaGFzIGFsc28gaW50ZWdyYXRlZCBhIFNFUkRFUy9UQkkvImludGVybmFsIiBQSFkgdGhh
-dCBpcwpjb25uZWN0ZWQgdG8gdGhlICJsb2NhbCIgTURJTyBjb250cm9sbGVyKQoKQXMgeW91IGNh
-biBpbWFnaW5lIHRoaXMgY3JlYXRlcyBhIG51bWJlciBvZiBwcm9ibGVtcyBpbiBhIHBhcnRpdGlv
-bmluZwpzY2VuYXJpbyAoYW5kIG5vdCBqdXN0LCBpbWFnaW5lIFJDV3Mgd2hlcmUgdGhlIGZpcnN0
-IE1BQyBpcyBub3QKdXNlZC9lbmFibGVkKS4gSW4gb3JkZXIgdG8gaGVscCBhIGJpdCAoYnV0IG5v
-dCBxdWl0ZSBlbm91Z2gpLCBpbiBGTWFuCnYzLCB0d28gYWRkaXRpb25hbCBNRElPIGNvbnRyb2xs
-ZXJzIChvbmUgZm9yIDEgdGhlIEdiL3MgUEhZKHMpIGFuZCBvbmUKZm9yIDEgdGhlIDEwIEdiL3Mg
-UEhZKHMpKSBoYXZlIGJlZW4gaW50ZWdyYXRlZCB0aGF0IGFyZSBub3QgYXNzb2NpYXRlZAp3aXRo
-IGFueSBNQUMgYW5kIHRoZXNlIGFyZSB0aGUgcGlubmVkIG91dCBNRElPIGNvbnRyb2xsZXJzIG9u
-IHN1Y2gKU29DKHMpIChjaGFzc2lzIHYyKQoKPj4gICBEb2VzICJvcHRpb25hbCIgbWVhbiBpdCdz
-IHVzZWQgaWYgYW5kCj4+PiBvbmx5IGlmIGV4dGVybmFsIE1ESU8gaXMgdXNlZCwgb3IgaXMgaXQg
-b3B0aW9uYWwgZXZlbiB3aXRoIGV4dGVybmFsIE1ESU8/ICBJIHNlZQo+Pj4gaXQncyBub3QgcHJl
-c2VudCBpbiB0aGUgZXhhbXBsZSAtLSBkbyB3ZSBub3QgaGF2ZSBhIHJlYWwgZXhhbXBsZSB0aGF0
-IGhhcyB0aGUKPj4+IGludGVycnVwdD8KPj4gW1MuSF0gIm9wdGlvbmFsIiBtZWFucyBpdCdzIGF2
-YWlsYWJsZSBvbiBoYXJkd2FyZSwgYnV0IE1ESU8gZHJpdmVyIGRvZXMgbm90IHVzZSBpbnRlcnJ1
-cHQuIAo+PiBTbyB3ZSBkb24ndCBoYXZlIGEgcmVhbCBleGFtcGxlLgo+IAo+IDxyZWNvcmQgdHlw
-ZT0iYnJva2VuIj5UaGUgZGV2aWNlIHRyZWUgZGVzY3JpYmVzIHRoZSBoYXJkd2FyZSwgbm90IHRo
-ZQo+IGRyaXZlcjwvcmVjb3JkPgoKQW55d2F5LCBvbmx5IHR3byBNRElPIG5vZGVzIChvdXQgb2Yg
-NCB0byAxNCkgd291bGQgaGF2ZSBhbiBpbnRlcnJ1cHQKcHJvcGVydHkgZGVzY3JpYmluZyBleGFj
-dGx5IG9uZSBpbnRlcnJ1cHQuIFdoYXQgbGFuZ3VhZ2Ugc2hvdWxkIHdlIHVzZQp0byBjb252ZXkg
-dGhpcyBzaXR1YXRpb24KCgpDaGVlcnMsCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18KTGludXhwcGMtZGV2IG1haWxpbmcgbGlzdApMaW51eHBwYy1kZXZA
-bGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vbGludXhw
-cGMtZGV2
+The Chuwi V7 is an A10 (sun4i) based tablet with 1G of RAM, 16G of nand flash,
+microsd slot, 7" 1024x768 lvds ips panel, mini hdmi out, headphones out,
+stereo speakers, front & back camera and usb wifi.
+
+It is clearly marked "CHUWI", "V7" and "Model: CW0825" on the back of the
+tablet.
+
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+ arch/arm/boot/dts/Makefile                      |   1 +
+ arch/arm/boot/dts/sun4i-a10-chuwi-v7-cw0825.dts | 101 ++++++++++++++++++++++++
+ 2 files changed, 102 insertions(+)
+ create mode 100644 arch/arm/boot/dts/sun4i-a10-chuwi-v7-cw0825.dts
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index a86f232..548520f 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -445,6 +445,7 @@ dtb-$(CONFIG_ARCH_STI)+= stih407-b2120.dtb \
+ dtb-$(CONFIG_MACH_SUN4I) += \
+ 	sun4i-a10-a1000.dtb \
+ 	sun4i-a10-ba10-tvbox.dtb \
++	sun4i-a10-chuwi-v7-cw0825.dtb \
+ 	sun4i-a10-cubieboard.dtb \
+ 	sun4i-a10-mini-xplus.dtb \
+ 	sun4i-a10-hackberry.dtb \
+diff --git a/arch/arm/boot/dts/sun4i-a10-chuwi-v7-cw0825.dts b/arch/arm/boot/dts/sun4i-a10-chuwi-v7-cw0825.dts
+new file mode 100644
+index 0000000..1960985
+--- /dev/null
++++ b/arch/arm/boot/dts/sun4i-a10-chuwi-v7-cw0825.dts
+@@ -0,0 +1,101 @@
++/*
++ * Copyright 2015 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ *     You should have received a copy of the GNU General Public
++ *     License along with this file; if not, write to the Free
++ *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
++ *     MA 02110-1301 USA
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++/include/ "sun4i-a10.dtsi"
++/include/ "sunxi-common-regulators.dtsi"
++
++/ {
++	model = "Chuwi V7 CW0825";
++	compatible = "chuwi,v7-cw0825", "allwinner,sun4i-a10";
++
++	soc@01c00000 {
++		mmc0: mmc@01c0f000 {
++			pinctrl-names = "default";
++			pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
++			vmmc-supply = <&reg_vcc3v3>;
++			bus-width = <4>;
++			cd-gpios = <&pio 7 1 0>; /* PH1 */
++			cd-inverted;
++			status = "okay";
++		};
++
++		uart0: serial@01c28000 {
++			pinctrl-names = "default";
++			pinctrl-0 = <&uart0_pins_a>;
++			status = "okay";
++		};
++
++		usbphy: phy@01c13400 {
++			usb2_vbus-supply = <&reg_usb2_vbus>;
++			status = "okay";
++		};
++
++		ehci1: usb@01c1c000 {
++			status = "okay";
++		};
++
++		i2c0: i2c@01c2ac00 {
++			pinctrl-names = "default";
++			pinctrl-0 = <&i2c0_pins_a>;
++			status = "okay";
++
++			axp209: pmic@34 {
++				compatible = "x-powers,axp209";
++				reg = <0x34>;
++				interrupts = <0>;
++
++				interrupt-controller;
++				#interrupt-cells = <1>;
++			};
++		};
++	};
++
++	reg_usb2_vbus: usb2-vbus {
++		status = "okay";
++	};
++};
+-- 
+2.1.0
