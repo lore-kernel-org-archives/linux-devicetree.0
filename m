@@ -1,27 +1,79 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v3 0/5] Add common clock support for Broadcom iProc architecture
-Date: Wed, 07 Jan 2015 20:26:22 +0100
-Message-ID: <3144204.or2m7FRv17@wuerfel>
-References: <1420658568-22879-1-git-send-email-rjui@broadcom.com>
+From: Emil Medve <Emilian.Medve@Freescale.com>
+Subject: Re: [PATCH] [v3] power/fsl: add MDIO dt binding for FMan
+Date: Wed, 7 Jan 2015 13:44:10 -0600
+Message-ID: <54AD8C8A.8070100@Freescale.com>
+References: <1419321466-5575-1-git-send-email-shh.xie@gmail.com>
+ <DM2PR0301MB08640979E5088618D1395CFAE2580@DM2PR0301MB0864.namprd03.prod.outlook.com>
+ <1420590520.4961.38.camel@freescale.com>
+ <DM2PR0301MB08645ABD93708FFE011EF362E2460@DM2PR0301MB0864.namprd03.prod.outlook.com>
+ <1420653934.4961.58.camel@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1420658568-22879-1-git-send-email-rjui@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ray Jui <rjui@broadcom.com>
-Cc: Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Matt Porter <mporter@linaro.org>, Alex Elder <elder@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Scott Branden <sbranden@broadcom.com>, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1420653934.4961.58.camel@freescale.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Scott Wood <scottwood@Freescale.com>, Xie Shaohui-B21989 <Shaohui.Xie@Freescale.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 07 January 2015 11:22:43 Ray Jui wrote:
-> This patchset contains the initial common clock support for Broadcom's iProc
-> family of SoCs. The iProc clock architecture comprises of various PLLs, e.g.,
-> ARMPLL, GENPLL, LCPLL0, MIPIPLL, and etc. An onboard crystal serves as the
-> basic reference clock for these PLLs. Each PLL may have several leaf clocks.
-> One special group of clocks is the ASIU clocks, which are dervied directly
-> from the crystal reference clock.
-> 
-
-Looks good to me now.
-
-	Arnd
+SGVsbG8gU2NvdHQsCgoKT24gMDEvMDcvMjAxNSAxMjowNSBQTSwgU2NvdHQgV29vZCB3cm90ZToK
+PiBPbiBUdWUsIDIwMTUtMDEtMDYgYXQgMjM6MjkgLTA2MDAsIFhpZSBTaGFvaHVpLUIyMTk4OSB3
+cm90ZToKPj4+Pj4gKy0gaW50ZXJydXB0cwo+Pj4+PiArCQlVc2FnZTogb3B0aW9uYWwKPj4+Pj4g
+KwkJVmFsdWUgdHlwZTogPHByb3AtZW5jb2RlZC1hcnJheT4KPj4+Pj4gKwkJRGVmaW5pdGlvbjog
+RXZlbnQgaW50ZXJydXB0IG9mIGV4dGVybmFsIE1ESU8gY29udHJvbGxlci4KPj4+Pj4gKwkJMSBH
+Yi9zIE1ESU8gYW5kIDEwIEdiL3MgTURJTyBoYXMgb25lIGludGVycnVwdCByZXNwZWN0aXZlbHku
+Cj4+Pgo+Pj4gSSdtIGNvbmZ1c2VkIGJ5ICJyZXNwZWN0aXZlbHkiIGhlcmUuICBEb2VzIGZzbCxm
+bWFuLW1lbWFjLW1kaW8gaGF2ZSB0d28KPj4+IGludGVycnVwdHMgKG9uZSBmb3IgMSBHYi9zIGFu
+ZCBvbmUgZm9yIDEwIEdiL3MpPwo+PiBbUy5IXSBXZSB1c2UgdHdvIE1ESU8gY29udHJvbGxlcnMg
+Zm9yIGV4dGVybmFsIFBIWSBtYW5hZ2VtZW50LiBPbmUgZm9yIDEgR2IvcywKPj4gT25lIGZvciAx
+MCBHYi9zLCBhbmQgdHdvIE1ESU8gaW50ZXJydXB0cyBjb25uZWN0ZWQgdG8gTVBJQy4KPiAKPiBJ
+ZiB0aGVyZSBjYW4gYmUgdHdvIGludGVycnVwdHMgeW91IG5lZWQgdG8gbWFrZSB0aGF0IGNsZWFy
+IGFuZCBzcGVjaWZ5Cj4gdGhlIG9yZGVyLgo+IAo+IElzIGl0IHBvc3NpYmxlIGZvciBvbmUgTURJ
+TyBjb250cm9sbGVyIHRvIGhhdmUgYW4gaW50ZXJydXB0IGNvbm5lY3RlZAo+IGJ1dCBub3QgdGhl
+IG90aGVyLCBvbiB0aGUgc2FtZSBzeXN0ZW0/ICBIb3cgd291bGQgeW91IHJlcHJlc2VudCB0aGF0
+IGluCj4gdGhlIGRldmljZSB0cmVlPyAgSWYgdGhlcmUgYXJlIHR3byBNRElPIGNvbnRyb2xsZXJz
+IHdoeSBhcmUgdGhleSBpbiB0aGUKPiBzYW1lIG5vZGU/CgpIaXN0b3JpY2FsbHkgKEZNYW4gdjIg
+YW5kIGV2ZW4gYmVmb3JlL2xlZ2FjeSkgd2UndmUgaGFkIGVhY2ggTUFDIGluY2x1ZGUKYW4gTURJ
+TyBjb250cm9sbGVyLCBidXQgb25seSBvbmUgTURJTyBjb250cm9sbGVyIHBlciBNQUMgdHlwZS9z
+cGVlZCAoMQpHYi9zIHZzIDEwIEdiL3MpIGlzIHBpbm5lZCBvdXQgYW5kIGFsbCB0aGUgc2FtZSBz
+cGVlZCBQSFkocykgYXJlCmNvbm5lY3RlZCB0byB0aGUgcmVzcGVjdGl2ZSBNRElPIGNvbnRyb2xs
+ZXJzLiBBcyBzdWNoIHRoZSBmaXJzdCAxIEdiL3MKTUFDL01ESU8gY29udHJvbGxlciBpcyB1c2Vk
+IHRvIG1hbmFnZSBhbGwgdGhlIDEgR2IvcyBQSFkocykgYW5kIHRoZQpmaXJzdCAxMCBHYi9zIE1B
+Qy9NRElPIGNvbnRyb2xsZXIgaXMgdXNlZCB0byBtYW5hZ2UgYWxsIHRoZSAxMCBHYi9zClBIWShz
+KS4gRWFjaCBNRElPIGNvbnRyb2xsZXIgaGFzIHRoZSBhYmlsaXR5IHRvIGdlbmVyYXRlIGludGVy
+cnVwdHMgYnV0Cm9ubHkgcGlubmVkIG91dCBNRElPIGNvbnRyb2xsZXJzIGFyZSBob29rZWQgdXAg
+dG8gdGhlIE1QSUMgKGFzIHN1Y2ggdGhlCnRhbGsgYWJvdXQgdHdvIGludGVycnVwdHMpCgooRWFj
+aCBNQUMgaGFzIGFsc28gaW50ZWdyYXRlZCBhIFNFUkRFUy9UQkkvImludGVybmFsIiBQSFkgdGhh
+dCBpcwpjb25uZWN0ZWQgdG8gdGhlICJsb2NhbCIgTURJTyBjb250cm9sbGVyKQoKQXMgeW91IGNh
+biBpbWFnaW5lIHRoaXMgY3JlYXRlcyBhIG51bWJlciBvZiBwcm9ibGVtcyBpbiBhIHBhcnRpdGlv
+bmluZwpzY2VuYXJpbyAoYW5kIG5vdCBqdXN0LCBpbWFnaW5lIFJDV3Mgd2hlcmUgdGhlIGZpcnN0
+IE1BQyBpcyBub3QKdXNlZC9lbmFibGVkKS4gSW4gb3JkZXIgdG8gaGVscCBhIGJpdCAoYnV0IG5v
+dCBxdWl0ZSBlbm91Z2gpLCBpbiBGTWFuCnYzLCB0d28gYWRkaXRpb25hbCBNRElPIGNvbnRyb2xs
+ZXJzIChvbmUgZm9yIDEgdGhlIEdiL3MgUEhZKHMpIGFuZCBvbmUKZm9yIDEgdGhlIDEwIEdiL3Mg
+UEhZKHMpKSBoYXZlIGJlZW4gaW50ZWdyYXRlZCB0aGF0IGFyZSBub3QgYXNzb2NpYXRlZAp3aXRo
+IGFueSBNQUMgYW5kIHRoZXNlIGFyZSB0aGUgcGlubmVkIG91dCBNRElPIGNvbnRyb2xsZXJzIG9u
+IHN1Y2gKU29DKHMpIChjaGFzc2lzIHYyKQoKPj4gICBEb2VzICJvcHRpb25hbCIgbWVhbiBpdCdz
+IHVzZWQgaWYgYW5kCj4+PiBvbmx5IGlmIGV4dGVybmFsIE1ESU8gaXMgdXNlZCwgb3IgaXMgaXQg
+b3B0aW9uYWwgZXZlbiB3aXRoIGV4dGVybmFsIE1ESU8/ICBJIHNlZQo+Pj4gaXQncyBub3QgcHJl
+c2VudCBpbiB0aGUgZXhhbXBsZSAtLSBkbyB3ZSBub3QgaGF2ZSBhIHJlYWwgZXhhbXBsZSB0aGF0
+IGhhcyB0aGUKPj4+IGludGVycnVwdD8KPj4gW1MuSF0gIm9wdGlvbmFsIiBtZWFucyBpdCdzIGF2
+YWlsYWJsZSBvbiBoYXJkd2FyZSwgYnV0IE1ESU8gZHJpdmVyIGRvZXMgbm90IHVzZSBpbnRlcnJ1
+cHQuIAo+PiBTbyB3ZSBkb24ndCBoYXZlIGEgcmVhbCBleGFtcGxlLgo+IAo+IDxyZWNvcmQgdHlw
+ZT0iYnJva2VuIj5UaGUgZGV2aWNlIHRyZWUgZGVzY3JpYmVzIHRoZSBoYXJkd2FyZSwgbm90IHRo
+ZQo+IGRyaXZlcjwvcmVjb3JkPgoKQW55d2F5LCBvbmx5IHR3byBNRElPIG5vZGVzIChvdXQgb2Yg
+NCB0byAxNCkgd291bGQgaGF2ZSBhbiBpbnRlcnJ1cHQKcHJvcGVydHkgZGVzY3JpYmluZyBleGFj
+dGx5IG9uZSBpbnRlcnJ1cHQuIFdoYXQgbGFuZ3VhZ2Ugc2hvdWxkIHdlIHVzZQp0byBjb252ZXkg
+dGhpcyBzaXR1YXRpb24KCgpDaGVlcnMsCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18KTGludXhwcGMtZGV2IG1haWxpbmcgbGlzdApMaW51eHBwYy1kZXZA
+bGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vbGludXhw
+cGMtZGV2
