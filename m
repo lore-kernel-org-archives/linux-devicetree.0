@@ -1,36 +1,59 @@
-From: Laszlo Ersek <lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v4 0/2] devicetree: document ARM bindings for QEMU's Firmware
- Config interface
-Date: Wed, 07 Jan 2015 17:33:03 +0100
-Message-ID: <54AD5FBF.3080108@redhat.com>
-References: <1418849386-25857-1-git-send-email-lersek@redhat.com> <CAL_JsqL+ued8mZj_MONKf0j2MO0zmE+H=mahQC30aV8vki0mvQ@mail.gmail.com>
+From: Jean-Francois Moine <moinejf@free.fr>
+Subject: Re: [PATCH v9 1/4] drm/i2c: tda998x: Add DT support
+	for audio
+Date: Wed, 7 Jan 2015 18:08:25 +0100
+Message-ID: <20150107180825.52334d4f@armhf>
+References: <cover.1420628786.git.moinejf@free.fr>
+ <0084acea5a3475a77531d6a77483f36d3469111a.1420628786.git.moinejf@free.fr>
+ <54AD4511.30702@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqL+ued8mZj_MONKf0j2MO0zmE+H=mahQC30aV8vki0mvQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter Maydell <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, drjones-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Paolo Bonzini <pbonzini-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Alexander Graf <agraf-l3A5Bk7waGM@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <54AD4511.30702@arm.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Andrew Jackson <Andrew.Jackson@arm.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>, Mark Brown <broonie@kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Dave Airlie <airlied@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 01/07/15 16:43, Rob Herring wrote:
-> On Wed, Dec 17, 2014 at 2:49 PM, Laszlo Ersek <lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
->> The qemu patchset has been turned upside down on qemu-devel during
->> review (many thanks for that!); one outcome is that now both the
->> selector and the data registers are big endian. This series has been
->> updated accordingly.
-> 
-> I'm assuming this is now settled on the QEMU side and will apply.
-
-Actually I have a small update for this text file. I thought people
-forgot about it and I didn't want to make more noise. If you're still
-willing to apply it, then I can post an incremental patch or a new version.
-
-Thanks!
-Laszlo
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gV2VkLCAwNyBKYW4gMjAxNSAxNDozOToxMyArMDAwMApBbmRyZXcgSmFja3NvbiA8QW5kcmV3
+LkphY2tzb25AYXJtLmNvbT4gd3JvdGU6Cgo+ID4gKyAgLSBhdWRpby1wb3J0czogbXVzdCBjb250
+YWluIG9uZSBvciB0d28gdmFsdWVzIHNlbGVjdGluZyB0aGUgc291cmNlCj4gPiArCWluIHRoZSBh
+dWRpbyBwb3J0Lgo+ID4gKwlUaGUgc291cmNlIHR5cGUgaXMgZ2l2ZW4gYnkgdGhlIGNvcnJlc3Bv
+bmRpbmcgZW50cnkgaW4KPiA+ICsJdGhlIGF1ZGlvLXBvcnQtbmFtZXMgcHJvcGVydHkuICAKPiAK
+PiBJIHRoaW5rIHRoYXQgdGhpcyBlbnRyeSBtaWdodCBiZW5lZml0IGZyb20gYSBsaXR0bGUgbW9y
+ZSBleHBsYW5hdGlvbi4KPiBUaGUgdmFsdWUgc3BlY2lmaWVkIGhlcmUgc2VsZWN0cyB3aGljaCBw
+aW5zIG9uIHRoZSBjaGlwIHByb3ZpZGUgdGhlCj4gYXVkaW8gaW5wdXQgZG9lc24ndCBpdD8gIElu
+IHRoZSBvdXRsaW5lIGRhdGFzaGVldCB0aGF0IEkgaGF2ZSB0aGVzZSBhcmUKPiBsaXN0ZWQgaW4g
+dGFibGUgMTc6Cj4gCj4gQXVkaW8gcG9ydCAJSW5wdXQgY29uZmlndXJhdGlvbgo+IAkJUy9QRElG
+IAkJSTJTLWJ1cwo+IEFQMCAJCS0gCQlXUyAod29yZCBzZWxlY3QpCj4gQVAxIAkJUy9QRElGIGlu
+cHV0IAlJMlMtYnVzIGNoYW5uZWwgMAo+IEFQMiAJCVMvUERJRiBpbnB1dCAJSTJTLWJ1cyBjaGFu
+bmVsIDEKPiBBUDNbMV0gCQkJCUkyUy1idXMgY2hhbm5lbCAyCj4gQVA0WzFdIAkJCQlJMlMtYnVz
+IGNoYW5uZWwgMwo+IEFDTEsgCQktIAkJU0NLIChJMlMtYnVzIGNsb2NrKQo+IAo+IFsxXSBEZXBl
+bmRpbmcgb24gcGFja2FnZS4KCllvdXIgdGFibGUgaXMgY2xvc2UgdG8gdGhlIG9uZSBpbiB0aGUg
+VERBOTk4M0IgZG9jdW1lbnRhdGlvbiBJIGhhdmUsCmJ1dCB0aGUgcGlucyBhcmUgbm90IGV4YWN0
+bHkgdGhlIHNhbWU6CgpBUDAgCQlXUyAod29yZCBzZWxlY3QpCkFQMSAJCUkyUy1idXMgcG9ydCAw
+CkFQMiAJCUkyUy1idXMgcG9ydCAxCkFQMyAJCUkyUy1idXMgcG9ydCAyCkFQNCAJCUkyUy1idXMg
+cG9ydCAzCkFQNQkJTUNMSyAobWFzdGVyIGNsb2NrIGZvciBTL1BESUYpCkFQNgkJUy9QRElGIGlu
+cHV0CkFQNwkJQVVYIChpbnRlcm5hbCB0ZXN0KQpBQ0xLIAkJU0NLIChJMlMtYnVzIGNsb2NrKQoK
+VGhhdCdzIHdoeSBJIGRpZCBub3Qga25vdyBjbGVhcmx5IHdoeSBJIGhhZCB0byBzZXQgQVAyIGZv
+ciBTL1BESUYgaW5wdXQKYW5kIChBUDAgKyBBUDEpIGZvciBJMlMgaW5wdXQgaW4gdGhlIEN1Ym94
+LgoKVGhlbiwgdGhlIG9ubHkgbW9yZSBleHBsYW5hdGlvbiBJIGNvdWxkIGdpdmUgaXMgImhhdmUg
+YSBsb29rIGF0IHRoZQphdWRpbyBpbnB1dCBmb3JtYXQgYW5kIGF0IHRoZSByZWdpc3RlciAweDFl
+IHBhZ2UgMCBpbiB0aGUgZG9jdW1lbnRhdGlvbgpvZiB0aGUgVERBOTk4eCBjaGlwIi4KCkJUVywg
+dGhlIHRkYTk5OHggZHJpdmVyIHN1cHBvcnRzIG9ubHkgdGhlIFREQTk5ODksIFREQTE5OTg4IGFu
+ZApUREExOTk4OSBjaGlwcy4gSWYgdGhlIFREQTk5ODNCIHdvdWxkIGJlIHN1cHBvcnRlZCwgdGhl
+IGF1ZGlvIHBvcnQKZGVmaW5pdGlvbnMgd291bGQgYmUgb2Ygbm8gdXNlLgoKU28sIHdoYXQgd291
+bGQgeW91IHNlZSBhcyBhbiBleHBsYW5hdGlvbj8KCi0tIApLZW4gYXIgYydoZW50YcOxCXwJICAg
+ICAgKiogQnJlaXpoIGhhIExpbnV4IGF0YXYhICoqCkplZgkJfAkJaHR0cDovL21vaW5lamYuZnJl
+ZS5mci8KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KQWxz
+YS1kZXZlbCBtYWlsaW5nIGxpc3QKQWxzYS1kZXZlbEBhbHNhLXByb2plY3Qub3JnCmh0dHA6Ly9t
+YWlsbWFuLmFsc2EtcHJvamVjdC5vcmcvbWFpbG1hbi9saXN0aW5mby9hbHNhLWRldmVsCg==
