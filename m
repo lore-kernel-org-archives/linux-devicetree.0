@@ -1,80 +1,165 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: [RFC PATCH 0/3] drivers: port PCIe designware to new DT parsing API
-Date: Wed,  7 Jan 2015 15:29:28 +0000
-Message-ID: <1420644571-18928-1-git-send-email-lorenzo.pieralisi@arm.com>
-Return-path: <linux-pci-owner@vger.kernel.org>
-Sender: linux-pci-owner@vger.kernel.org
-To: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Arnd Bergmann <arnd@arndb.de>, Liviu Dudau <liviu.dudau@arm.com>, Mohit Kumar <mohit.kumar@st.com>, Jingoo Han <jg1.han@samsung.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] Removes OF_UNITTEST dependency on OF_DYNAMIC config symbol
+Date: Wed, 7 Jan 2015 09:37:19 -0600
+Message-ID: <CAL_JsqLpWyQ3KVORZAuEE0ULOG=hg8q6hcbG6u+TV1qhHLYPkw@mail.gmail.com>
+References: <1419147049-3998-1-git-send-email-gaurav.minocha.os@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1419147049-3998-1-git-send-email-gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The introduction of the DT API:
+On Sun, Dec 21, 2014 at 1:30 AM, Gaurav Minocha
+<gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> This patch intends to remove the unittests dependency on
+> the fuctions defined in dynamic.c. So, rather than calling
 
-of_pci_get_host_bridge_resources()
+s/fuctions/functions/
 
-allows to retrieve PCI resources from the device tree in a generic way.
+> of_attach_node defined in dynamic.c, minimal functionality
+> required to attach a new node is re-defined in unittest.c.
+> Also, now after executing the tests the test data is not
+> removed from the device tree so there is no need to call
+> of_detach_node.
+>
+> Tested with and without OF_DYNAMIC enabled on ppc, arm and
+> x86
+>
+> Signed-off-by: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  drivers/of/Kconfig    |  1 -
+>  drivers/of/unittest.c | 69 +++++++++------------------------------------------
+>  2 files changed, 12 insertions(+), 58 deletions(-)
 
-Some PCI host controllers, in addition to standard IO and MEM resources and
-corresponding CPU addresses, require to retrieve the addresses that are used
-for bus routing of IO/MEM regions as seen at the bus level corresponding
-to the bus segment the host controller is sitting on, so that the host
-controller can programme its inbound/outbound memory regions correctly to
-respond to bus transactions coming from the CPU on the host controller bus
-ports.
+One minor thing below, otherwise looks good to me.
 
-The DT generic layer provides functions that carry out the PCI
-ranges <-> resources translation from PCI addresses to CPU addresses (as
-seen at the CPU top level bus, through all required hierarchical bus layers),
-but there is no generic API to retrieve the PCI range CPU untranslated
-addresses, so PCI host controllers have to do it in a driver specific way
-through the DT property parsing methods.
+> diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+> index b5e0c87..38d1c51 100644
+> --- a/drivers/of/Kconfig
+> +++ b/drivers/of/Kconfig
+> @@ -10,7 +10,6 @@ menu "Device Tree and Open Firmware support"
+>  config OF_UNITTEST
+>         bool "Device Tree runtime unit tests"
+>         depends on OF_IRQ && OF_EARLY_FLATTREE
+> -       select OF_DYNAMIC
+>         select OF_RESOLVE
+>         help
+>           This option builds in test cases for the device tree infrastructure
+> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+> index 844838e..920b3fb 100644
+> --- a/drivers/of/unittest.c
+> +++ b/drivers/of/unittest.c
+> @@ -822,6 +822,7 @@ static void update_node_properties(struct device_node *np,
+>  static int attach_node_and_children(struct device_node *np)
+>  {
+>         struct device_node *next, *dup, *child;
+> +       unsigned long flags;
+>
+>         dup = of_find_node_by_path(np->full_name);
+>         if (dup) {
+> @@ -839,7 +840,17 @@ static int attach_node_and_children(struct device_node *np)
+>         child = np->child;
+>         np->child = NULL;
+>         np->sibling = NULL;
 
-This patchset converts the PCIe designware host controller driver to
-use the API:
+This is unnecessary.
 
-of_pci_get_host_bridge_resources()
-
-in order to retrieve the PCI regions resources. To achieve generality, it
-also augments the parsing API so that a new DT struct is created out of
-PCI ranges, that contains the PCI resource and the range parser itself
-so that it can be passed back to PCI host controllers drivers that
-can, if needed, use it to parse the CPU untranslated addresses
-corresponding to the resource in question.
-
-The first patch in the series is a fix/update for the parsing function:
-
-of_pci_get_host_bridge_resources()
-
-It is part of the RFC series since it is a controversial fix to be
-discussed before getting merged.
-
-Patch [2-3] augment the parsing API and convert the PCIe designware
-driver code.
-
-The current API stays unchanged, so that the existing drivers using it
-do not need patching and changes are limited.
-
-Tested on an iMX6 Sabrelite board.
-
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Liviu Dudau <liviu.dudau@arm.com>
-Cc: Mohit Kumar <mohit.kumar@st.com>
-Cc: Jingoo Han <jg1.han@samsung.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-
-Lorenzo Pieralisi (3):
-  drivers: of: fix resources freeing in
-    of_pci_get_host_bridge_resources()
-  drivers: of: of_pci_get_host_bridge_resources() range parsing update
-  drivers: pci: host: update the pcie designware driver to new range
-    parsing API
-
- drivers/of/of_pci.c                |  36 +++++++--
- drivers/pci/host/pcie-designware.c | 145 +++++++++++++++++--------------------
- drivers/pci/host/pcie-designware.h |   5 +-
- include/linux/of_address.h         |   5 ++
- 4 files changed, 104 insertions(+), 87 deletions(-)
-
--- 
-2.2.1
+> -       of_attach_node(np);
+> +
+> +       mutex_lock(&of_mutex);
+> +       raw_spin_lock_irqsave(&devtree_lock, flags);
+> +       np->sibling = np->parent->child;
+> +       np->parent->child = np;
+> +       of_node_clear_flag(np, OF_DETACHED);
+> +       raw_spin_unlock_irqrestore(&devtree_lock, flags);
+> +
+> +       __of_attach_node_sysfs(np);
+> +       mutex_unlock(&of_mutex);
+> +
+>         while (child) {
+>                 next = child->sibling;
+>                 attach_node_and_children(child);
+> @@ -911,59 +922,6 @@ static int __init selftest_data_add(void)
+>         return 0;
+>  }
+>
+> -/**
+> - *     detach_node_and_children - detaches node
+> - *     and its children from live tree
+> - *
+> - *     @np:    Node to detach from live tree
+> - */
+> -static void detach_node_and_children(struct device_node *np)
+> -{
+> -       while (np->child)
+> -               detach_node_and_children(np->child);
+> -       of_detach_node(np);
+> -}
+> -
+> -/**
+> - *     selftest_data_remove - removes the selftest data
+> - *     nodes from the live tree
+> - */
+> -static void selftest_data_remove(void)
+> -{
+> -       struct device_node *np;
+> -       struct property *prop;
+> -
+> -       if (selftest_live_tree) {
+> -               of_node_put(of_aliases);
+> -               of_node_put(of_chosen);
+> -               of_aliases = NULL;
+> -               of_chosen = NULL;
+> -               for_each_child_of_node(of_root, np)
+> -                       detach_node_and_children(np);
+> -               __of_detach_node_sysfs(of_root);
+> -               of_root = NULL;
+> -               return;
+> -       }
+> -
+> -       while (last_node_index-- > 0) {
+> -               if (nodes[last_node_index]) {
+> -                       np = of_find_node_by_path(nodes[last_node_index]->full_name);
+> -                       if (np == nodes[last_node_index]) {
+> -                               if (of_aliases == np) {
+> -                                       of_node_put(of_aliases);
+> -                                       of_aliases = NULL;
+> -                               }
+> -                               detach_node_and_children(np);
+> -                       } else {
+> -                               for_each_property_of_node(np, prop) {
+> -                                       if (strcmp(prop->name, "testcase-alias") == 0)
+> -                                               of_remove_property(np, prop);
+> -                               }
+> -                       }
+> -               }
+> -       }
+> -}
+> -
+>  #ifdef CONFIG_OF_OVERLAY
+>
+>  static int selftest_probe(struct platform_device *pdev)
+> @@ -1475,9 +1433,6 @@ static int __init of_selftest(void)
+>         of_selftest_platform_populate();
+>         of_selftest_overlay();
+>
+> -       /* removing selftest data from live tree */
+> -       selftest_data_remove();
+> -
+>         /* Double check linkage after removing testcase data */
+>         of_selftest_check_tree_linkage();
+>
+> --
+> 2.1.0
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
