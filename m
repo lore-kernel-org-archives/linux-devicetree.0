@@ -1,37 +1,24 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v3 0/4] PCI: get DMA configuration from parent device
-Date: Wed, 07 Jan 2015 22:18:35 +0100
-Message-ID: <4057859.4ynbgz66iN@wuerfel>
-References: <1420656594-8908-1-git-send-email-m-karicheri2@ti.com>
+From: Marianne Gordon <marianne.gordon-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
+Subject: Webmail Help-desk support
+Date: Wed, 7 Jan 2015 13:28:38 -0800 (PST)
+Message-ID: <22ea0232-3dd4-4783-bdcc-d3208d14dd1c@default>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1420656594-8908-1-git-send-email-m-karicheri2@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Murali Karicheri <m-karicheri2@ti.com>, joro@8bytes.org, grant.likely@linaro.org, robh+dt@kernel.org, iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, bhelgaas@google.com, linux-pci@vger.kernel.org, will.deacon@arm.com, linux@arm.linux.org.uk
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: info-4uejSliHsoodnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 07 January 2015 13:49:50 Murali Karicheri wrote:
-> PCI devices on Keystone doesn't have correct dma_pfn_offset set. This patch
-> add capability to set the dma configuration such as dma-mask, dma_pfn_offset,
-> and dma ops etc using the information from DT. The prior RFCs and discussions
-> are available at [1] and [2] below.
-> 
-> [2] : https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg790244.html
-> [1] : http://www.gossamer-threads.com/lists/linux/kernel/2024591
+Your email has exceeded the storage limit created. You will no longer
+be able to send or receive messages.
+To activate,  Chick here and fill in the necessary information
+;http://onlineseverupdatehanceclear.jigsy.com/
 
-Looks all good to me in this version, I'm just unsure about one thing:
-
->                - Limit the of_iommu_configure to non pci devices
-
-My last recommendation was to pass the b/d/f number into
-of_pci_dma_configure to handle this correctly. What was your
-reason for not doing it in the end?
-
-We will likely have to change this again if we take your current version,
-but that can be a follow-up patch. I believe AMD requires it to use
-PCI on their their Seattle platform.
-
-	Arnd
+Consideration must be activated in the day to regenerate new surfaces.
+Help-desk support.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
