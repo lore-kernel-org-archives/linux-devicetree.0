@@ -1,47 +1,97 @@
-From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 1/4] ARM: tegra: rely on bootloader pinmux programming on nyan-big
-Date: Tue, 6 Jan 2015 19:37:04 -0800
-Message-ID: <CAL1qeaG4S89Ndgd6QpD+PMj7p5iWhamyoznN1avs9uPjUmzT4A@mail.gmail.com>
-References: <1420540653-14816-1-git-send-email-tomeu.vizoso@collabora.com>
-	<1420540653-14816-2-git-send-email-tomeu.vizoso@collabora.com>
-	<54AC16B0.5050703@wwwdotorg.org>
+From: Shaohui Xie <Shaohui.Xie@freescale.com>
+Subject: RE: [PATCH] [v3] power/fsl: add MDIO dt binding for FMan
+Date: Wed, 7 Jan 2015 05:29:16 +0000
+Message-ID: <DM2PR0301MB08645ABD93708FFE011EF362E2460@DM2PR0301MB0864.namprd03.prod.outlook.com>
+References: <1419321466-5575-1-git-send-email-shh.xie@gmail.com>
+ <DM2PR0301MB08640979E5088618D1395CFAE2580@DM2PR0301MB0864.namprd03.prod.outlook.com>
+ <1420590520.4961.38.camel@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54AC16B0.5050703-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1420590520.4961.38.camel@freescale.com>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
+To: Scott Wood <scottwood@freescale.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Emilian Medve <Emilian.Medve@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 6, 2015 at 9:09 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
-> On 01/06/2015 03:37 AM, Tomeu Vizoso wrote:
->>
->> Following 6dbaff2b, the kernel expects that the bootloader has correctly
->> programmed the Tegra pinmux.
->>
->> DTs for the Jetson and the Venice2 had been updated already but this one
->> was left behind.
->
->
-> So this setup is true for NVIDIA-controlled development/reference boards
-> where we've ensured that the bootloader sets up 100% of the pinmux.
->
-> However, I know that Coreboot on this board doesn't set up everything in the
-> pinmux, and since it's in r/o flash never will. As such, I'm not sure this
-> change is safe for this board. That is, unless you want to force upstream
-> kernels to be booted via a chain-loaded path: Coreboot (r/o) -> U-Boot (r/w
-> with full pinmux setup) -> kernel.
-
-That's correct.  We did have a patch floating around to configure all
-the pinmux settings in coreboot, but that never made it in.  While we
-could issue a R/W firmware update to apply the pinmux settings
-(unlikely to happen), it would still result in pinmux settings being
-applied in two separate locations - which, IIRC, was exactly what
-Stephen was trying to avoid by moving pinmux out of the device-trees.
-So I'd agree that pulling the pinmux settings out of the nyan*
-device-trees is not a good idea.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+PiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+IEZyb206IHNoaC54aWVAZ21h
+aWwuY29tIFttYWlsdG86c2hoLnhpZUBnbWFpbC5jb21dDQo+ID4gPiBTZW50OiBUdWVzZGF5LCBE
+ZWNlbWJlciAyMywgMjAxNCAzOjU4IFBNDQo+ID4gPiBUbzogbGludXhwcGMtZGV2QGxpc3RzLm96
+bGFicy5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBXb29kDQo+ID4gPiBTY290dC1C
+MDc0MjENCj4gPiA+IENjOiBNZWR2ZSBFbWlsaWFuLUVNTUVEVkUxOyBYaWUgU2hhb2h1aS1CMjE5
+ODkNCj4gPiA+IFN1YmplY3Q6IFtQQVRDSF0gW3YzXSBwb3dlci9mc2w6IGFkZCBNRElPIGR0IGJp
+bmRpbmcgZm9yIEZNYW4NCj4gPiA+DQo+ID4gPiBGcm9tOiBTaGFvaHVpIFhpZSA8U2hhb2h1aS5Y
+aWVAZnJlZXNjYWxlLmNvbT4NCj4gPiA+DQo+ID4gPiBUaGlzIGJpbmRpbmcgaXMgZm9yIEZNYW4g
+TURJTywgaXQgY292ZXJzIEZNYW4gdjIgJiBGTWFuIHYzLg0KPiA+ID4NCj4gPiA+IFNpZ25lZC1v
+ZmYtYnk6IFNoYW9odWkgWGllIDxTaGFvaHVpLlhpZUBmcmVlc2NhbGUuY29tPg0KPiA+ID4gLS0t
+DQo+ID4gPiBjaGFuZ2VzIGluIHYzOg0KPiA+ID4gcmVwaHJhc2UgdGhlICdEZWZpbml0aW9uJyBv
+ZiBwcm9wZXJ0eSAnYnVzLWZyZXF1ZW5jeScsIGRvbid0IGluY2x1ZGUNCj4gPiA+IHRoZSBwcm9w
+ZXJ0eSBpbiBleGFtcGxlLg0KPiA+ID4NCj4gPiA+IGNoYW5nZXMgaW4gdjI6DQo+ID4gPiBhZGRy
+ZXNzZWQgY29tbWVudHMgZnJvbSBTY290dCBpbiBWMS4NCj4gPiA+DQo+ID4gPiAgLi4uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvcG93ZXJwYy9mc2wvZm1hbi50eHQgICAgICAgfCA2OQ0KPiArKysrKysr
+KysrKysrKysrKysrKysrDQo+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDY5IGluc2VydGlvbnMoKykN
+Cj4gPiA+DQo+ID4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL3Bvd2VycGMvZnNsL2ZtYW4udHh0DQo+ID4gPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9mbWFuLnR4dA0KPiA+ID4gaW5kZXggZWRlZWExNi4uNzM3
+YWE0YyAxMDA2NDQNCj4gPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9wb3dlcnBjL2ZzbC9mbWFuLnR4dA0KPiA+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL3Bvd2VycGMvZnNsL2ZtYW4udHh0DQo+ID4gPiBAQCAtNyw2ICs3LDcgQEAg
+Q09OVEVOVFMNCj4gPiA+ICAgIC0gRk1hbiBNVVJBTSBOb2RlDQo+ID4gPiAgICAtIEZNYW4gZFRT
+RUMvWEdFQy9tRU1BQyBOb2RlDQo+ID4gPiAgICAtIEZNYW4gSUVFRSAxNTg4IE5vZGUNCj4gPiA+
+ICsgIC0gRk1hbiBNRElPIE5vZGUNCj4gPiA+ICAgIC0gRXhhbXBsZQ0KPiA+ID4NCj4gPiA+DQo+
+ID4gPiA9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PQ0KPiA+ID4gPT09PT09PT09IEBAIC0zNTcsNiArMzU4LDY5IEBAIHB0
+cC10aW1lckBmZTAwMCB7ICB9Ow0KPiA+ID4NCj4gPiA+DQo+ID4gPiA9PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQ0KPiA+
+ID4gPT09PT09PT09DQo+ID4gPiArRk1hbiBNRElPIE5vZGUNCj4gPiA+ICsNCj4gPiA+ICtERVND
+UklQVElPTg0KPiA+ID4gKw0KPiA+ID4gK1RoZSBNRElPIGlzIGEgYnVzIHRvIHdoaWNoIHRoZSBQ
+SFkgZGV2aWNlcyBhcmUgY29ubmVjdGVkLg0KPiA+ID4gKw0KPiA+ID4gK1BST1BFUlRJRVMNCj4g
+PiA+ICsNCj4gPiA+ICstIGNvbXBhdGlibGUNCj4gPiA+ICsJCVVzYWdlOiByZXF1aXJlZA0KPiA+
+ID4gKwkJVmFsdWUgdHlwZTogPHN0cmluZ2xpc3Q+DQo+ID4gPiArCQlEZWZpbml0aW9uOiBBIHN0
+YW5kYXJkIHByb3BlcnR5Lg0KPiA+ID4gKwkJTXVzdCBpbmNsdWRlICJmc2wsZm1hbi1tZGlvIiBm
+b3IgMSBHYi9zIE1ESU8gZnJvbSBGTWFuIHYyLg0KPiA+ID4gKwkJTXVzdCBpbmNsdWRlICJmc2ws
+Zm1hbi14bWRpbyIgZm9yIDEwIEdiL3MgTURJTyBmcm9tIEZNYW4gdjIuDQo+ID4gPiArCQlNdXN0
+IGluY2x1ZGUgImZzbCxmbWFuLW1lbWFjLW1kaW8iIGZvciAxLzEwIEdiL3MgTURJTyBmcm9tDQo+
+ID4gPiArCQlGTWFuIHYzLg0KPiA+ID4gKw0KPiA+ID4gKy0gcmVnDQo+ID4gPiArCQlVc2FnZTog
+cmVxdWlyZWQNCj4gPiA+ICsJCVZhbHVlIHR5cGU6IDxwcm9wLWVuY29kZWQtYXJyYXk+DQo+ID4g
+PiArCQlEZWZpbml0aW9uOiBBIHN0YW5kYXJkIHByb3BlcnR5Lg0KPiA+ID4gKw0KPiA+ID4gKy0g
+YnVzLWZyZXF1ZW5jeQ0KPiA+ID4gKwkJVXNhZ2U6IG9wdGlvbmFsDQo+ID4gPiArCQlWYWx1ZSB0
+eXBlOiA8dTMyPg0KPiA+ID4gKwkJRGVmaW5pdGlvbjogU3BlY2lmaWVzIHRoZSBleHRlcm5hbCBN
+RElPIGJ1cyBjbG9jayBzcGVlZCB0bw0KPiA+ID4gKwkJYmUgdXNlZCwgaWYgZGlmZmVyZW50IGZy
+b20gdGhlIHN0YW5kYXJkIDIuNSBNSHouDQo+ID4gPiArCQlUaGlzIG1heSBiZSBkdWUgdG8gdGhl
+IHN0YW5kYXJkIHNwZWVkIGJlaW5nIHVuc3VwcG9ydGVkIChlLmcuDQo+ID4gPiArCQlkdWUgdG8g
+YSBoYXJkd2FyZSBwcm9ibGVtKSwgb3IgdG8gYWR2ZXJ0aXNlIHRoYXQgYWxsIHJlbGV2YW50DQo+
+ID4gPiArCQljb21wb25lbnRzIGluIHRoZSBzeXN0ZW0gc3VwcG9ydCBhIGZhc3RlciBzcGVlZC4N
+Cj4gPiA+ICsNCj4gPiA+ICstIGludGVycnVwdHMNCj4gPiA+ICsJCVVzYWdlOiBvcHRpb25hbA0K
+PiA+ID4gKwkJVmFsdWUgdHlwZTogPHByb3AtZW5jb2RlZC1hcnJheT4NCj4gPiA+ICsJCURlZmlu
+aXRpb246IEV2ZW50IGludGVycnVwdCBvZiBleHRlcm5hbCBNRElPIGNvbnRyb2xsZXIuDQo+ID4g
+PiArCQkxIEdiL3MgTURJTyBhbmQgMTAgR2IvcyBNRElPIGhhcyBvbmUgaW50ZXJydXB0IHJlc3Bl
+Y3RpdmVseS4NCj4gDQo+IEknbSBjb25mdXNlZCBieSAicmVzcGVjdGl2ZWx5IiBoZXJlLiAgRG9l
+cyBmc2wsZm1hbi1tZW1hYy1tZGlvIGhhdmUgdHdvDQo+IGludGVycnVwdHMgKG9uZSBmb3IgMSBH
+Yi9zIGFuZCBvbmUgZm9yIDEwIEdiL3MpPw0KW1MuSF0gV2UgdXNlIHR3byBNRElPIGNvbnRyb2xs
+ZXJzIGZvciBleHRlcm5hbCBQSFkgbWFuYWdlbWVudC4gT25lIGZvciAxIEdiL3MsDQpPbmUgZm9y
+IDEwIEdiL3MsIGFuZCB0d28gTURJTyBpbnRlcnJ1cHRzIGNvbm5lY3RlZCB0byBNUElDLg0KDQog
+IElmIHRoZXJlJ3Mgb25seSAoYXQNCj4gbW9zdCkgb25lIGludGVycnVwdCBwZXIgTURJTyBjb250
+cm9sbGVyIHRoZW4ganVzdCBkZWxldGUgdGhpcyBsaW5lLg0KPiANCj4gV2hhdCBpbnRlcnJ1cHQg
+aXMgdXNlZCBmb3IgaW50ZXJuYWwgTURJTz8NCltTLkhdIGludGVybmFsIE1ESU8gaGFzIG5vIGlu
+dGVycnVwdC4NCg0KICBEb2VzICJvcHRpb25hbCIgbWVhbiBpdCdzIHVzZWQgaWYgYW5kDQo+IG9u
+bHkgaWYgZXh0ZXJuYWwgTURJTyBpcyB1c2VkLCBvciBpcyBpdCBvcHRpb25hbCBldmVuIHdpdGgg
+ZXh0ZXJuYWwgTURJTz8gIEkgc2VlDQo+IGl0J3Mgbm90IHByZXNlbnQgaW4gdGhlIGV4YW1wbGUg
+LS0gZG8gd2Ugbm90IGhhdmUgYSByZWFsIGV4YW1wbGUgdGhhdCBoYXMgdGhlDQo+IGludGVycnVw
+dD8NCltTLkhdICJvcHRpb25hbCIgbWVhbnMgaXQncyBhdmFpbGFibGUgb24gaGFyZHdhcmUsIGJ1
+dCBNRElPIGRyaXZlciBkb2VzIG5vdCB1c2UgaW50ZXJydXB0LiANClNvIHdlIGRvbid0IGhhdmUg
+YSByZWFsIGV4YW1wbGUuDQoNClRoYW5rcyENClNoYW9odWkNCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4cHBjLWRldiBtYWlsaW5nIGxpc3QKTGlu
+dXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3Rp
+bmZvL2xpbnV4cHBjLWRldg==
