@@ -1,314 +1,256 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 2/3] ARM: dts: sun7i: Add dts file for Bananapro board
-Date: Wed,  7 Jan 2015 21:16:14 +0100
-Message-ID: <1420661775-20424-2-git-send-email-hdegoede@redhat.com>
-References: <1420661775-20424-1-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH] (gpio-fan): Add thermal control hooks
+Date: Wed, 7 Jan 2015 12:52:33 -0800
+Message-ID: <20150107205233.GA28564@roeck-us.net>
+References: <1420653674-23855-1-git-send-email-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBF5IW2SQKGQEE3FUEIQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1420661775-20424-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1420653674-23855-1-git-send-email-nm@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>
+Cc: Jean Delvare <jdelvare@suse.de>, Eduardo Valentin <edubezval@gmail.com>, lm-sensors@lm-sensors.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for the new Bananapro A20 development board from lemaker.org.
-This board features 1G RAM, 2 USB A receptacles, 1 micro USB receptacle for
-OTG, 1 micro USB receptacle for power, HDMI, sata, Gbit ethernet, ir receiver,
-3.5 mm jack for a/v out, on board microphone, 40 gpio pins and sdio wifi.
+On Wed, Jan 07, 2015 at 12:01:14PM -0600, Nishanth Menon wrote:
+> Allow gpio-fan to be used as thermal cooling device for platforms that
+> use GPIO maps to control fans.
+> 
+> Signed-off-by: Nishanth Menon <nm@ti.com>
+> ---
+> 
+> Based on v3.19-rc3
+> 
+>  .../devicetree/bindings/gpio/gpio-fan.txt          |   14 +++
+>  drivers/hwmon/gpio-fan.c                           |   93 ++++++++++++++++++--
+>  2 files changed, 100 insertions(+), 7 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-fan.txt b/Documentation/devicetree/bindings/gpio/gpio-fan.txt
+> index 2dd457a3469a..046f2f400dbb 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio-fan.txt
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-fan.txt
+> @@ -11,6 +11,9 @@ Required properties:
+>  Optional properties:
+>  - alarm-gpios: This pin going active indicates something is wrong with
+>    the fan, and a udev event will be fired.
+> +- cooling-cells: If used as a cooling device, must be <2>
+> +  Also see: Documentation/devicetree/bindings/thermal/thermal.txt
+> +  min and max states are derived from the speed-map of the fan.
+>  
+>  Examples:
+>  
+> @@ -23,3 +26,14 @@ Examples:
+>  				      6000 2>;
+>  		alarm-gpios = <&gpio1 15 1>;
+>  	};
+> +
 
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
- arch/arm/boot/dts/Makefile                |   1 +
- arch/arm/boot/dts/sun7i-a20-bananapro.dts | 261 ++++++++++++++++++++++++++++++
- 2 files changed, 262 insertions(+)
- create mode 100644 arch/arm/boot/dts/sun7i-a20-bananapro.dts
+Unnecessary second empty line.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 548520f..4142831 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -467,6 +467,7 @@ dtb-$(CONFIG_MACH_SUN6I) += \
- 	sun6i-a31s-cs908.dtb
- dtb-$(CONFIG_MACH_SUN7I) += \
- 	sun7i-a20-bananapi.dtb \
-+	sun7i-a20-bananapro.dtb \
- 	sun7i-a20-cubieboard2.dtb \
- 	sun7i-a20-cubietruck.dtb \
- 	sun7i-a20-hummingbird.dtb \
-diff --git a/arch/arm/boot/dts/sun7i-a20-bananapro.dts b/arch/arm/boot/dts/sun7i-a20-bananapro.dts
-new file mode 100644
-index 0000000..3b4764d
---- /dev/null
-+++ b/arch/arm/boot/dts/sun7i-a20-bananapro.dts
-@@ -0,0 +1,261 @@
-+/*
-+ * Copyright 2015 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ *     You should have received a copy of the GNU General Public
-+ *     License along with this file; if not, write to the Free
-+ *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
-+ *     MA 02110-1301 USA
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+/include/ "sun7i-a20.dtsi"
-+/include/ "sunxi-common-regulators.dtsi"
-+
-+/ {
-+	model = "LeMaker Banana Pro";
-+	compatible = "lemaker,bananapro", "allwinner,sun7i-a20";
-+
-+	soc@01c00000 {
-+		spi0: spi@01c05000 {
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&spi0_pins_a>;
-+			status = "okay";
-+		};
-+
-+		mmc0: mmc@01c0f000 {
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_bananapi>;
-+			vmmc-supply = <&reg_vcc3v3>;
-+			bus-width = <4>;
-+			cd-gpios = <&pio 7 10 0>; /* PH10 */
-+			cd-inverted;
-+			status = "okay";
-+		};
-+
-+		mmc3: mmc@01c12000 {
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&mmc3_pins_a>;
-+			vmmc-supply = <&reg_vmmc3>;
-+			bus-width = <4>;
-+			non-removable;
-+			status = "okay";
-+		};
-+
-+		usbphy: phy@01c13400 {
-+			usb1_vbus-supply = <&reg_usb1_vbus>;
-+			usb2_vbus-supply = <&reg_usb2_vbus>;
-+			status = "okay";
-+		};
-+
-+		ehci0: usb@01c14000 {
-+			status = "okay";
-+		};
-+
-+		ohci0: usb@01c14400 {
-+			status = "okay";
-+		};
-+
-+		ahci: sata@01c18000 {
-+			status = "okay";
-+		};
-+
-+		ehci1: usb@01c1c000 {
-+			status = "okay";
-+		};
-+
-+		ohci1: usb@01c1c400 {
-+			status = "okay";
-+		};
-+
-+		pinctrl@01c20800 {
-+			usb1_vbus_pin_bananapro: usb1_vbus_pin@0 {
-+				allwinner,pins = "PH0";
-+				allwinner,function = "gpio_out";
-+				allwinner,drive = <0>;
-+				allwinner,pull = <0>;
-+			};
-+
-+			usb2_vbus_pin_bananapro: usb2_vbus_pin@0 {
-+				allwinner,pins = "PH1";
-+				allwinner,function = "gpio_out";
-+				allwinner,drive = <0>;
-+				allwinner,pull = <0>;
-+			};
-+
-+			mmc0_cd_pin_bananapi: mmc0_cd_pin@0 {
-+				allwinner,pins = "PH10";
-+				allwinner,function = "gpio_in";
-+				allwinner,drive = <0>;
-+				allwinner,pull = <1>;
-+			};
-+
-+			vmmc3_pin_bananapro: vmmc3_pin@0 {
-+				allwinner,pins = "PH22";
-+				allwinner,function = "gpio_out";
-+				allwinner,drive = <0>;
-+				allwinner,pull = <0>;
-+			};
-+
-+			gmac_power_pin_bananapi: gmac_power_pin@0 {
-+				allwinner,pins = "PH23";
-+				allwinner,function = "gpio_out";
-+				allwinner,drive = <0>;
-+				allwinner,pull = <0>;
-+			};
-+
-+			led_pins_bananapi: led_pins@0 {
-+				allwinner,pins = "PH24", "PG2";
-+				allwinner,function = "gpio_out";
-+				allwinner,drive = <0>;
-+				allwinner,pull = <0>;
-+			};
-+		};
-+
-+		ir0: ir@01c21800 {
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&ir0_pins_a>;
-+			status = "okay";
-+		};
-+
-+		uart0: serial@01c28000 {
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&uart0_pins_a>;
-+			status = "okay";
-+		};
-+
-+		uart2: serial@01c28800 {
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&uart2_pins_a>;
-+			status = "okay";
-+		};
-+
-+		uart7: serial@01c29c00 {
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&uart7_pins_a>;
-+			status = "okay";
-+		};
-+
-+		i2c0: i2c@01c2ac00 {
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&i2c0_pins_a>;
-+			status = "okay";
-+
-+			axp209: pmic@34 {
-+				compatible = "x-powers,axp209";
-+				reg = <0x34>;
-+				interrupt-parent = <&nmi_intc>;
-+				interrupts = <0 8>;
-+
-+				interrupt-controller;
-+				#interrupt-cells = <1>;
-+			};
-+		};
-+
-+		i2c2: i2c@01c2b400 {
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&i2c2_pins_a>;
-+			status = "okay";
-+		};
-+
-+		gmac: ethernet@01c50000 {
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&gmac_pins_rgmii_a>;
-+			phy = <&phy1>;
-+			phy-mode = "rgmii";
-+			phy-supply = <&reg_gmac_3v3>;
-+			status = "okay";
-+
-+			phy1: ethernet-phy@1 {
-+				reg = <1>;
-+			};
-+		};
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&led_pins_bananapi>;
-+
-+		green {
-+			label = "bananapi:green:usr";
-+			gpios = <&pio 7 24 0>;
-+		};
-+		blue {
-+			label = "bananapi:blue:usr";
-+			gpios = <&pio 6 2 0>;
-+		};
-+	};
-+
-+	reg_usb1_vbus: usb1-vbus {
-+		pinctrl-0 = <&usb1_vbus_pin_bananapro>;
-+		gpio = <&pio 7 0 0>; /* PH0 */
-+		status = "okay";
-+	};
-+
-+	reg_usb2_vbus: usb2-vbus {
-+		pinctrl-0 = <&usb2_vbus_pin_bananapro>;
-+		gpio = <&pio 7 1 0>; /* PH1 */
-+		status = "okay";
-+	};
-+
-+	reg_gmac_3v3: gmac-3v3 {
-+		compatible = "regulator-fixed";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&gmac_power_pin_bananapi>;
-+		regulator-name = "gmac-3v3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		startup-delay-us = <100000>;
-+		enable-active-high;
-+		gpio = <&pio 7 23 0>;
-+	};
-+
-+	reg_vmmc3: vmmc3 {
-+		compatible = "regulator-fixed";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&vmmc3_pin_bananapro>;
-+		regulator-name = "vmmc3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		enable-active-high;
-+		gpio = <&pio 7 22 0>;
-+	};
-+};
--- 
-2.1.0
+> +	gpio_fan_cool: gpio_fan {
+> +		compatible = "gpio-fan";
+> +		gpios = <&gpio2 14 1
+> +			 &gpio2 13 1>;
+> +		gpio-fan,speed-map = <0    0
+> +				      3000 1
+> +				      6000 2>;
+> +		alarm-gpios = <&gpio1 15 1>;
+> +		#cooling-cells = <2>; /* min followed by max */
+> +	};
+> diff --git a/drivers/hwmon/gpio-fan.c b/drivers/hwmon/gpio-fan.c
+> index 36abf814b8c7..089914c4f574 100644
+> --- a/drivers/hwmon/gpio-fan.c
+> +++ b/drivers/hwmon/gpio-fan.c
+> @@ -34,10 +34,14 @@
+>  #include <linux/of.h>
+>  #include <linux/of_platform.h>
+>  #include <linux/of_gpio.h>
+> +#include <linux/thermal.h>
+> +
+
+Unnecessary additional empty line.
+
+>  
+>  struct gpio_fan_data {
+>  	struct platform_device	*pdev;
+>  	struct device		*hwmon_dev;
+> +	/* Cooling device if any */
+> +	struct thermal_cooling_device *cdev;
+>  	struct mutex		lock; /* lock GPIOs operations. */
+>  	int			num_ctrl;
+>  	unsigned		*ctrl;
+> @@ -387,12 +391,63 @@ static int fan_ctrl_init(struct gpio_fan_data *fan_data,
+>  	return 0;
+>  }
+>  
+> +static int gpio_fan_get_max_state(struct thermal_cooling_device *cdev,
+> +				  unsigned long *state)
+> +{
+> +	struct gpio_fan_data *fan_data = cdev->devdata;
+> +
+> +	if (!fan_data)
+> +		return -EINVAL;
+> +
+> +	*state = fan_data->num_speed - 1;
+> +	return 0;
+> +}
+> +
+> +static int gpio_fan_get_cur_state(struct thermal_cooling_device *cdev,
+> +				  unsigned long *state)
+> +{
+> +	struct gpio_fan_data *fan_data = cdev->devdata;
+> +	int r;
+> +
+> +	if (!fan_data)
+> +		return -EINVAL;
+> +
+> +	r = get_fan_speed_index(fan_data);
+> +	if (r < 0)
+> +		return r;
+> +
+> +	*state = r;
+> +	return 0;
+> +
+Unnecessary empty line.
+
+> +}
+> +
+> +static int gpio_fan_set_cur_state(struct thermal_cooling_device *cdev,
+> +				  unsigned long state)
+> +{
+> +	struct gpio_fan_data *fan_data = cdev->devdata;
+> +
+> +	if (!fan_data)
+> +		return -EINVAL;
+> +
+> +	set_fan_speed(fan_data, state);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct thermal_cooling_device_ops gpio_fan_cooling_ops = {
+> +	.get_max_state = gpio_fan_get_max_state,
+> +	.get_cur_state = gpio_fan_get_cur_state,
+> +	.set_cur_state = gpio_fan_set_cur_state,
+> +
+Unnecessary empty line (checkpatch!!!)
+
+> +};
+> +
+>  #ifdef CONFIG_OF_GPIO
+>  /*
+>   * Translate OpenFirmware node properties into platform_data
+>   */
+>  static int gpio_fan_get_of_pdata(struct device *dev,
+> -			    struct gpio_fan_platform_data *pdata)
+> +			         struct gpio_fan_platform_data *pdata,
+> +				 struct gpio_fan_data *fan_data)
+>  {
+>  	struct device_node *node;
+>  	struct gpio_fan_speed *speed;
+> @@ -480,6 +535,12 @@ static int gpio_fan_get_of_pdata(struct device *dev,
+>  		pdata->alarm = alarm;
+>  	}
+>  
+> +	fan_data->cdev = thermal_of_cooling_device_register(node, "gpio-fan",
+> +							    fan_data,
+> +						    &gpio_fan_cooling_ops);
+
+Just use one continuation line here, with no spaces up front but only tabs.
+
+> +	if (IS_ERR(fan_data->cdev))
+> +		dev_dbg(dev, "gpio-fan has no valid cooling DT property\n");
+> +
+The property is optional. Why does this warrant even a debug message ?
+
+>  	return 0;
+>  }
+>  
+> @@ -495,6 +556,11 @@ static int gpio_fan_probe(struct platform_device *pdev)
+>  	struct gpio_fan_data *fan_data;
+>  	struct gpio_fan_platform_data *pdata = dev_get_platdata(&pdev->dev);
+>  
+> +	fan_data = devm_kzalloc(&pdev->dev, sizeof(struct gpio_fan_data),
+> +				GFP_KERNEL);
+> +	if (!fan_data)
+> +		return -ENOMEM;
+> +
+>  #ifdef CONFIG_OF_GPIO
+>  	if (!pdata) {
+>  		pdata = devm_kzalloc(&pdev->dev,
+> @@ -503,20 +569,19 @@ static int gpio_fan_probe(struct platform_device *pdev)
+>  		if (!pdata)
+>  			return -ENOMEM;
+>  
+> -		err = gpio_fan_get_of_pdata(&pdev->dev, pdata);
+> +		err = gpio_fan_get_of_pdata(&pdev->dev, pdata, fan_data);
+
+It is inconsistent with the code below to call
+thermal_of_cooling_device_register in gpio_fan_get_of_pdata
+(and to pass fan_data just for that purpose). Please call it from here. 
+
+>  		if (err)
+>  			return err;
+>  	}
+>  #else /* CONFIG_OF_GPIO */
+>  	if (!pdata)
+>  		return -EINVAL;
+> +	/* Optional cooling device register for non Device tree platforms */
+> +	fan_data->cdev = thermal_cooling_device_register("gpio-fan",
+> +							 fan_data,
+> +							 &gpio_fan_cooling_ops);
+>  #endif /* CONFIG_OF_GPIO */
+>  
+> -	fan_data = devm_kzalloc(&pdev->dev, sizeof(struct gpio_fan_data),
+> -				GFP_KERNEL);
+> -	if (!fan_data)
+> -		return -ENOMEM;
+> -
+>  	fan_data->pdev = pdev;
+>  	platform_set_drvdata(pdev, fan_data);
+>  	mutex_init(&fan_data->lock);
+> @@ -550,10 +615,23 @@ static int gpio_fan_probe(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> +static int gpio_fan_remove(struct platform_device *pdev)
+> +{
+> +       struct gpio_fan_data *fan_data = platform_get_drvdata(pdev);
+
+Indentation is problematic. Actually, checkpatch shows several whitespace
+problems as well as an unnecessary empty line. Please ensure that your patch
+passes checkpatch --strict.
+
+> +
+> +	if (!IS_ERR(fan_data->cdev))
+> +		thermal_cooling_device_unregister(fan_data->cdev);
+> +
+> +       return 0;
+> +}
+> +
+>  static void gpio_fan_shutdown(struct platform_device *pdev)
+>  {
+>  	struct gpio_fan_data *fan_data = dev_get_drvdata(&pdev->dev);
+>  
+> +	if (!IS_ERR(fan_data->cdev))
+> +		thermal_cooling_device_unregister(fan_data->cdev);
+> +
+
+Instead of having this conditional call twice, you might as well call
+gpio_fan_remove() from here.
+
+>  	if (fan_data->ctrl)
+>  		set_fan_speed(fan_data, 0);
+>  }
+> @@ -589,6 +667,7 @@ static SIMPLE_DEV_PM_OPS(gpio_fan_pm, gpio_fan_suspend, gpio_fan_resume);
+>  
+>  static struct platform_driver gpio_fan_driver = {
+>  	.probe		= gpio_fan_probe,
+> +	.remove		= gpio_fan_remove,
+>  	.shutdown	= gpio_fan_shutdown,
+>  	.driver	= {
+>  		.name	= "gpio-fan",
+> -- 
+> 1.7.9.5
+> 
