@@ -1,50 +1,45 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/3] ARM: dts: berlin: fix io clk and add missing core
- clk for BG2Q sdhci2 host
-Date: Wed, 07 Jan 2015 15:22:30 +0100
-Message-ID: <54AD4126.6030807@gmail.com>
-References: <1420016272-6789-1-git-send-email-jszhang@marvell.com> <1420016272-6789-2-git-send-email-jszhang@marvell.com>
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH 2/3] ARM: berlin: add broken-cd and set bus width for
+ eMMC in Marvell DMP DT
+Date: Wed, 07 Jan 2015 15:22:50 +0100
+Message-ID: <54AD413A.8030208@gmail.com>
+References: <1420016272-6789-1-git-send-email-jszhang@marvell.com> <1420016272-6789-3-git-send-email-jszhang@marvell.com>
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1420016272-6789-2-git-send-email-jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1420016272-6789-3-git-send-email-jszhang@marvell.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jisheng Zhang <jszhang@marvell.com>, mturquette@linaro.org, sboyd@codeaurora.org, alexandre.belloni@free-electrons.com, antoine.tenart@free-electrons.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 On 31.12.2014 09:57, Jisheng Zhang wrote:
-> On BG2Q, the sdhci2 host uses nfcecc for "io" clk and nfc for "core" clk.
-> The shdci2 can't work Without this patch due to the "core" clk is gated.
+> There's no card detection for the eMMC, so this patch adds the missing
+> broken-cd property. This patch also sets bus width as 8 to add
+> MMC_CAP_8_BIT_DATA in the Host capabilities.
 >
-> Signed-off-by: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-> Cc: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org # 3.16+
+> Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
+> Cc: stable@vger.kernel.org # 3.16+
 
 Applied to berlin/fixes.
 
 Thanks!
 
 > ---
->   arch/arm/boot/dts/berlin2q.dtsi | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
+>   arch/arm/boot/dts/berlin2q-marvell-dmp.dts | 2 ++
+>   1 file changed, 2 insertions(+)
 >
-> diff --git a/arch/arm/boot/dts/berlin2q.dtsi b/arch/arm/boot/dts/berlin2q.dtsi
-> index 35253c9..903f3bb 100644
-> --- a/arch/arm/boot/dts/berlin2q.dtsi
-> +++ b/arch/arm/boot/dts/berlin2q.dtsi
-> @@ -83,7 +83,8 @@
->   			compatible = "mrvl,pxav3-mmc";
->   			reg = <0xab1000 0x200>;
->   			interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
-> -			clocks = <&chip CLKID_SDIO1XIN>;
-> +			clocks = <&chip CLKID_NFC_ECC>, <&chip CLKID_NFC>;
-> +			clock-names = "io", "core";
->   			status = "disabled";
->   		};
+> diff --git a/arch/arm/boot/dts/berlin2q-marvell-dmp.dts b/arch/arm/boot/dts/berlin2q-marvell-dmp.dts
+> index 28e7e20..a98ac1b 100644
+> --- a/arch/arm/boot/dts/berlin2q-marvell-dmp.dts
+> +++ b/arch/arm/boot/dts/berlin2q-marvell-dmp.dts
+> @@ -65,6 +65,8 @@
+>   };
 >
+>   &sdhci2 {
+> +	broken-cd;
+> +	bus-width = <8>;
+>   	non-removable;
+>   	status = "okay";
+>   };
 >
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
