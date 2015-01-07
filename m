@@ -1,234 +1,35 @@
-From: Walter Lozano <walter-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
-Subject: Re: [PATCH 1/2] Input: adxl34x - add OF support
-Date: Wed, 7 Jan 2015 13:25:54 -0300
-Message-ID: <CABxpGwAKZp728gL5DFkuBA4nU_5fGRvxu_-vROpw5BfVuxjoDA@mail.gmail.com>
-References: <1420599537-28740-1-git-send-email-walter@vanguardiasur.com.ar>
-	<20150107080159.GF5256@dtor-ws>
+From: Laszlo Ersek <lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v4 0/2] devicetree: document ARM bindings for QEMU's Firmware
+ Config interface
+Date: Wed, 07 Jan 2015 17:33:03 +0100
+Message-ID: <54AD5FBF.3080108@redhat.com>
+References: <1418849386-25857-1-git-send-email-lersek@redhat.com> <CAL_JsqL+ued8mZj_MONKf0j2MO0zmE+H=mahQC30aV8vki0mvQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150107080159.GF5256@dtor-ws>
+In-Reply-To: <CAL_JsqL+ued8mZj_MONKf0j2MO0zmE+H=mahQC30aV8vki0mvQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter Maydell <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, drjones-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Paolo Bonzini <pbonzini-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Alexander Graf <agraf-l3A5Bk7waGM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Dimitry,
+On 01/07/15 16:43, Rob Herring wrote:
+> On Wed, Dec 17, 2014 at 2:49 PM, Laszlo Ersek <lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+>> The qemu patchset has been turned upside down on qemu-devel during
+>> review (many thanks for that!); one outcome is that now both the
+>> selector and the data registers are big endian. This series has been
+>> updated accordingly.
+> 
+> I'm assuming this is now settled on the QEMU side and will apply.
 
-First of all, thanks for your feedback
+Actually I have a small update for this text file. I thought people
+forgot about it and I didn't want to make more noise. If you're still
+willing to apply it, then I can post an incremental patch or a new version.
 
-On Wed, Jan 7, 2015 at 5:01 AM, Dmitry Torokhov
-<dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Hi Walter,
->
-> On Tue, Jan 06, 2015 at 11:58:56PM -0300, Walter Lozano wrote:
->> This patch adds the missing support for OF to the adxl34x digital
->> accelerometer. This is a basic version which supports the main
->> optional parameters. This implementation copies the default values
->> to the adxl34x_platform_data structure and overrides the values
->> that are passed from the device tree.
->>
->> Signed-off-by: Walter Lozano <walter-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
->> ---
->>  drivers/input/misc/adxl34x.c |  108 +++++++++++++++++++++++++++++++++++++++++-
->>  1 file changed, 107 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/input/misc/adxl34x.c b/drivers/input/misc/adxl34x.c
->> index 2b2d02f..b3e06a3 100644
->> --- a/drivers/input/misc/adxl34x.c
->> +++ b/drivers/input/misc/adxl34x.c
->> @@ -16,6 +16,8 @@
->>  #include <linux/workqueue.h>
->>  #include <linux/input/adxl34x.h>
->>  #include <linux/module.h>
->> +#include <linux/of.h>
->> +#include <linux/of_device.h>
->>
->>  #include "adxl34x.h"
->>
->> @@ -688,13 +690,113 @@ static void adxl34x_input_close(struct input_dev *input)
->>       mutex_unlock(&ac->mutex);
->>  }
->>
->> +void adxl34x_parse_dt(struct device *dev, struct adxl34x_platform_data *pdata){
->> +     if (!dev->of_node)
->> +             return;
->> +
->> +     pdata =  kzalloc(sizeof(*pdata), GFP_KERNEL);
->> +
->> +     memcpy(pdata, &adxl34x_default_init, sizeof(struct adxl34x_platform_data));
->> +
->> +     of_property_read_u8(dev->of_node, "adi,tap-axis-control",
->> +              &pdata->tap_axis_control);
->> +
->> +     of_property_read_u8(dev->of_node, "adi,tap-threshold",
->> +              &pdata->tap_threshold);
->> +
->> +     of_property_read_u8(dev->of_node, "adi,tap-duration",
->> +              &pdata->tap_duration);
->> +
->> +     of_property_read_u8(dev->of_node, "adi,tap-latency",
->> +              &pdata->tap_latency);
->> +
->> +     of_property_read_u8(dev->of_node, "adi,tap-window",
->> +              &pdata->tap_window);
->> +
->> +     of_property_read_u8(dev->of_node, "adi,act-axis-control",
->> +              &pdata->act_axis_control);
->> +
->> +     of_property_read_u8(dev->of_node, "adi,activity-threshold",
->> +              &pdata->activity_threshold);
->> +
->> +     of_property_read_u8(dev->of_node, "adi,inactivity-threshold",
->> +              &pdata->inactivity_threshold);
->> +
->> +     of_property_read_u8(dev->of_node, "adi,inactivity-time",
->> +              &pdata->inactivity_time);
->> +
->> +     of_property_read_u8(dev->of_node, "adi,free-fall-threshold",
->> +              &pdata->free_fall_threshold);
->> +
->> +     of_property_read_u8(dev->of_node, "adi,free-fall-time",
->> +              &pdata->free_fall_time);
->> +
->> +     of_property_read_u8(dev->of_node, "adi,data-rate",
->> +              &pdata->data_rate);
->> +
->> +     of_property_read_u8(dev->of_node, "adi,data-range",
->> +              &pdata->data_range);
->> +
->> +     of_property_read_u8(dev->of_node, "adi,low-power-mode",
->> +              &pdata->low_power_mode);
->> +
->> +     of_property_read_u8(dev->of_node, "adi,power-mode",
->> +              &pdata->power_mode);
->> +
->> +     of_property_read_u8(dev->of_node, "adi,fifo-mode",
->> +              &pdata->fifo_mode);
->> +
->> +     of_property_read_u8(dev->of_node, "adi,watermark",
->> +              &pdata->watermark);
->> +
->> +     of_property_read_u8(dev->of_node, "adi,use-int2",
->> +              &pdata->use_int2);
->> +
->> +     of_property_read_u8(dev->of_node, "adi,orientation-enable",
->> +              &pdata->orientation_enable);
->> +
->> +     of_property_read_u8(dev->of_node, "adi,deadzone-angle",
->> +              &pdata->deadzone_angle);
->> +
->> +     of_property_read_u8(dev->of_node, "adi,divisor-length",
->> +              &pdata->divisor_length);
->> +
->> +     of_property_read_u32(dev->of_node, "adi,ev-type",
->> +              &pdata->ev_type);
->
-> All these ev* properties are Linux-specific so should have linux prefix
-> and not adi.
+Thanks!
+Laszlo
 
-Yes, I have many doubts about these parameters. First I'm not sure if anybody
-will need to change them as the accelerometer reports absolute values.
-I was thinking
-about omitting them but I would like someone else opinion.
-
-The default values for these parameters are
-
-    .ev_type = EV_ABS,
-    .ev_code_x = ABS_X, /* EV_REL */
-    .ev_code_y = ABS_Y, /* EV_REL */
-    .ev_code_z = ABS_Z, /* EV_REL */
-
-    .ev_code_tap = {BTN_TOUCH, BTN_TOUCH, BTN_TOUCH}, /* EV_KEY {x,y,z} */
-
-In case if it is worthy should I add nodes for each different event?
-
-For example
-
-       axisx{
-            label = "Axis X";
-            linux,code = <0>;
-        }
-
->> +
->> +     of_property_read_u32(dev->of_node, "adi,ev-code-x",
->> +              &pdata->ev_code_x);
->> +
->> +     of_property_read_u32(dev->of_node, "adi,ev-code-y",
->> +              &pdata->ev_code_y);
->> +
->> +     of_property_read_u32(dev->of_node, "adi,ev-code-z",
->> +              &pdata->ev_code_z);
->> +
->> +     of_property_read_u32_array(dev->of_node, "adi,ev-code-tap",
->> +              pdata->ev_code_tap, 3);
->> +
->> +     of_property_read_u32(dev->of_node, "adi,ev-code-ff",
->> +              &pdata->ev_code_ff);
->> +
->> +     of_property_read_u32(dev->of_node, "adi,ev-code-act-inactivity",
->> +              &pdata->ev_code_act_inactivity);
->> +
->> +     of_property_read_u32_array(dev->of_node, "adi,ev-codes-orient-2d",
->> +              pdata->ev_codes_orient_2d, 4);
->> +
->> +     of_property_read_u32_array(dev->of_node, "adi,ev-codes-orient-3d",
->> +              pdata->ev_codes_orient_3d, 6);
->> +
->> +}
->> +
->>  struct adxl34x *adxl34x_probe(struct device *dev, int irq,
->>                             bool fifo_delay_default,
->>                             const struct adxl34x_bus_ops *bops)
->>  {
->>       struct adxl34x *ac;
->>       struct input_dev *input_dev;
->> -     const struct adxl34x_platform_data *pdata;
->> +     struct adxl34x_platform_data *pdata;
->>       int err, range, i;
->>       unsigned char revid;
->>
->> @@ -714,6 +816,10 @@ struct adxl34x *adxl34x_probe(struct device *dev, int irq,
->>       ac->fifo_delay = fifo_delay_default;
->>
->>       pdata = dev_get_platdata(dev);
->> +
->> +     if (!pdata && dev->of_node)
->> +             adxl34x_parse_dt(dev, pdata);
->> +
->>       if (!pdata) {
->
-> Umm, what's changing data pointer? Was this tested?
->
-
-You are right. I've tested a previous version, but then I make some changes as
-I have some doubts about how is the better way to handle the compatibility
-with board files.
-
-My initial intention was to keep the original code as much as I can, so in case
-of using board files the pdata is set to adxl34x_default_init, but if
-DT is used,
-memory is allocated and the default parameters are copied. Then in the remove,
-only if DT is used free the memory (not included in this patch).
-
-So as I wasn't quite sure if this was the best approach I send this patch to get
-some comments. Probably I should send a RFC...
-
->>               dev_dbg(dev,
->>                       "No platform data: Using default initialization\n");
->> --
->> 1.7.10.4
->>
-
-Thanks again for your time and comments.
-
-Regards,
-
-Walter
-
--- 
-Walter Lozano, VanguardiaSur
-www.vanguardiasur.com.ar
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
