@@ -1,41 +1,57 @@
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v8] edac: synps: Added EDAC support for zynq ddr ecc
- controller
-Date: Wed, 7 Jan 2015 11:54:30 +0100
-Message-ID: <20150107105430.GA3984@pd.tnic>
-References: <a728a8d4678f4dbf9de189a480297c3d@BY2FFO11FD034.protection.gbl>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <a728a8d4678f4dbf9de189a480297c3d@BY2FFO11FD034.protection.gbl>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, linux-doc@vger.kernel.org, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, michal.simek@xilinx.com, punnaia@xilinx.com, kalluripunnaiahchoudary@gmail.com, robh+dt@kernel.org, rob@landley.net, dougthompson@xmission.com, kpc528@gmail.com, galak@codeaurora.org, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
+From: Bart Tanghe <bart.tanghe-2dq7lIxLGp5qkBXjtECzWg@public.gmane.org>
+Subject: [PATCH v2] ARM: dts: add bcm2835-pwm bindings
+Date: Wed,  7 Jan 2015 12:00:58 +0100
+Message-ID: <1420628458-11459-1-git-send-email-bart.tanghe@thomasmore.be>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bart Tanghe <bart.tanghe-2dq7lIxLGp5qkBXjtECzWg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 06, 2015 at 11:13:47PM +0530, Punnaiah Choudary Kalluri wrote:
-> Added EDAC support for reporting the ecc errors of synopsys ddr controller.
-> The ddr ecc controller corrects single bit errors and detects double bit
-> errors.
-> 
-> Signed-off-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
+To probe the bcm2835-pwm driver properly, this dts bindings has to be added 
+to the bcm2835 dtsi file.
+In expectation of a bcm2835 clock driver, I've added fixed-clock clock binding.
+---
+Changes in v2:
+ - status set to disabled
+ - follow the clock naming convention
 
-Applied and queued for 3.20,
-thanks.
+Signed-off-by: Bart Tanghe <bart.tanghe-2dq7lIxLGp5qkBXjtECzWg@public.gmane.org>
 
--- 
-Regards/Gruss,
-    Boris.
-
-Sent from a fat crate under my desk. Formatting is fine.
+diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835.dtsi
+index 3342cb1..ba76bb4 100644
+--- a/arch/arm/boot/dts/bcm2835.dtsi
++++ b/arch/arm/boot/dts/bcm2835.dtsi
+@@ -146,6 +147,14 @@
+ 			interrupts = <1 9>;
+ 		};
+ 
++		pwm: pwm@7e20e000 {
++			compatible = "brcm,bcm2835-pwm";
++			reg = <0x7e20c000 0x28>;
++			clocks = <&clk_pwm>;
++			#pwm-cells = <2>;
++			status = "disabled";
++		};
++
+ 		arm-pmu {
+ 			compatible = "arm,arm1176-pmu";
+ 		};
+@@ -179,5 +188,13 @@
+ 			clock-output-names = "spi";
+ 			clock-frequency = <250000000>;
+ 		};
++
++		clk_pwm: clock@3 {
++			compatible = "fixed-clock";
++			reg = <3>;
++			#clock-cells = <0>;
++			clock-output-names = "pwm";
++			clock-frequency = <9200000>;
++		};
+ 	};
+ };
 --
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
