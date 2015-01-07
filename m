@@ -1,92 +1,40 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH V2] ARM: dts: am57xx-beagle-x15: Add GPIO controlled fan
- node
-Date: Wed, 7 Jan 2015 15:44:42 -0800
-Message-ID: <20150107234442.GI13010@atomide.com>
-References: <1417800739-13146-1-git-send-email-nm@ti.com>
- <1417801732-24620-1-git-send-email-nm@ti.com>
+From: Jonathan Stone -SISA <j.stone@samsung.com>
+Subject: RE: [PATCH v2] ARM: dts: Add dts file for odroid XU3 board
+Date: Wed, 07 Jan 2015 23:49:22 +0000
+Message-ID: <6203C077F070A646AA0FCB4B5F1795D248114CA6@sisaex01sj>
+References: <1417721269-19342-1-git-send-email-sjoerd.simons@collabora.co.uk>
+ <54AA48E6.3040404@samsung.com> <1420470469.15910.134.camel@collabora.co.uk>
+ <69242715.30115.1420655868687.JavaMail.yahoo@jws10659.mail.bf1.yahoo.com>
+ <1420670333.6075.2.camel@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1417801732-24620-1-git-send-email-nm@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, balbi@ti.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1420670333.6075.2.camel@collabora.co.uk>
+Content-language: en-US
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Anand Moon <moon.linux@yahoo.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Joonyoung Shim <jy0922.shim@samsung.com>, Kevin Hilman <khilman@kernel.org>, Tyler Baker <tyler.baker@linaro.org>, Heesub Shin <heesub.shin@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-* Nishanth Menon <nm@ti.com> [141205 09:51]:
-> TPS gpio now controls a 5v 500mA TL5209 regulator which may be supply
-> a fan (such as AFB02505HHB) over J1 connector for various purposes.
-> Provide device tree node to enable the same.
-> 
-> Signed-off-by: Nishanth Menon <nm@ti.com>
-
-Applying into omap-for-v3.20/dt thanks.
-
-Tony
-
-> ---
-> 
-> V2: review comment updates
-> 	review comments update
-> 		- Sanitized outlook-ified name back to normal ;) 
-> 		- removed unnecessary pinctrl-names property.
-> V1: https://patchwork.kernel.org/patch/5444911/
-> 
-> 
-> Depends on the following:
-> https://patchwork.kernel.org/patch/5439201/
-> https://patchwork.kernel.org/patch/5439191/
-> 
-> enable and disable can be controlled by (post the RPM, it finds
-> closest match - even a 1 will do)
-> 
-> echo '13000' > /sys/class/hwmon/hwmon0/fan1_target
-> and
-> echo '0' > /sys/class/hwmon/hwmon0/fan1_target
-> 
-> Test log: http://slexy.org/view/s2T0ajh46z
-> 
-> requires CONFIG_GPIO_PALMAS and CONFIG_SENSORS_GPIO_FAN to be operational
-> Applies on 
-> https://git.kernel.org/cgit/linux/kernel/git/tmlind/linux-omap.git/log/?h=omap-for-v3.19/dt-v2
-> 
->  arch/arm/boot/dts/am57xx-beagle-x15.dts |   14 ++++++++++++++
->  1 file changed, 14 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/am57xx-beagle-x15.dts b/arch/arm/boot/dts/am57xx-beagle-x15.dts
-> index 49edbda..4e55e94 100644
-> --- a/arch/arm/boot/dts/am57xx-beagle-x15.dts
-> +++ b/arch/arm/boot/dts/am57xx-beagle-x15.dts
-> @@ -80,6 +80,14 @@
->  			default-state = "off";
->  		};
->  	};
-> +
-> +	gpio_fan {
-> +		/* Based on 5v 500mA AFB02505HHB */
-> +		compatible = "gpio-fan";
-> +		gpios =  <&tps659038_gpio 1 GPIO_ACTIVE_HIGH>;
-> +		gpio-fan,speed-map = <0    0
-> +				      13000 1>;
-> +	};
->  };
->  
->  &dra7_pmx_core {
-> @@ -314,6 +322,12 @@
->  			wakeup-source;
->  			ti,palmas-long-press-seconds = <12>;
->  		};
-> +
-> +		tps659038_gpio: tps659038_gpio {
-> +			compatible = "ti,palmas-gpio";
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +		};
->  	};
->  
->  	tmp102: tmp102@48 {
-> -- 
-> 1.7.9.5
-> 
+DQpPbiBPbiBXZWQsIDIwMTUtMDEtMDcgYXQgMTg6MzcgKzAwMDAsIFNqb2VyZCBTaW1vbnMgd3Jp
+dGVzIHdyb3RlOg0KPk9uIFdlZCwgMjAxNS0wMS0wNyBhdCAxODozNyArMDAwMCwgQW5hbmQgTW9v
+biB3cm90ZTo+DQpbLi4uXQ0KDQo+PiBPbmx5IDQgY29yZSBjcHUncyBhcmUgb24gbXkgYm9hcmQu
+IEFsc28gQ3B1RnJlcSBpcyBub3Qgd29ya2luZy4NCj4gDQo+IENhbiB5b3Ugc2hhcmUgc29tZSBw
+b2ludCBvbiB0aGlzLg0KDQo+VGhlIGRlZmNvbmZpZyBpcyB1c2luZyB0aGUgYkwgc3dpdGNoZXIs
+IHdoaWNoIHBhaXJzIHVwIGJpZyBhbmQgbGl0dGxlIGNvcmVzIHRvIG1ha2UgdGhlbSBhcHBlYXIg
+YXMgb25lIGNvcmUuLiBTbyBmb3IgOCByZWFsIGNvcmVzLCB5b3UnbGwgZ2V0DQo+NCAidmlydHVh
+bCBjb3JlcyIuDQoNClRoYXQgY29uZmlndXJhdGlvbiBpcyBhcHByb3ByaWF0ZSBmb3IgdGhlIDU0
+MjAsIHdoaWNoIGFsbGVnZWRseSBoYXMgYSBoYXJkd2FyZSBidWcgaW4gdGhlIGNhY2hlLWNvaGVy
+ZW5jZSBiZXR3ZWVuIHRoZSBDb3J0ZXgtQTcgYmxvY2sgYW5kIHRoZSBDb3J0ZXgtQTE1IGJsb2Nr
+Lg0KTmV3ZXIgRXh5bm9zIDUgU29DcyAtLSA1NDIyLzU4MDAsIDU2MjAsIGV0YyAtLSBkb24ndCBo
+YXZlIHRoYXQgYnVnLiBUaGUgc2NoZWR1bGVyIHNob3VsZCBjb25maWd1cmVkIHRvICBkbyBITVAg
+b24gYWxsIDggKG9yIDYpIGNvcmVzLg0KSSBkb24ndCBoYXZlIGEgNTQxMCwgYnV0IEkgYXNzdW1l
+IGl0IGhhcyB0aGUgc2FtZSBidWcgYXMgdGhlIDU0MjAuDQoNClRoZSBYVTMga2VybmVsIHN1cHBs
+aWVkIGJ5IEhhcmRLZXJuZWwgc2hvd3MgYWxsIDggY29yZXMsIGFuZCBkb2VzIEhNUCBzY2hlZHVs
+aW5nIGFjcm9zcyBhbGwgOC4NCg0KSSB0cmllZCB2MS4wIG9mIHRoZSBPZHJvaWQtWFUzIERUQiBw
+YXRjaCwgYXBwbGllZCB0byBsaW51eC1uZXh0IDIwMTUwMTA3LiAgSSdtIG9ubHkgc2VlaW5nIDEg
+Y29yZSBydW5uaW5nIG9uIG15IE9kcm9pZC1YVTMuICBUaGUgVVNCIDMuMCBwb3J0IHdvcmtzIChn
+cmVhdCEpIGJ1dCBJJ20gbm90IGdldHRpbmcgYW55IEhETUkgb3V0cHV0LiAgSSBkaWRuJ3QgdHJ5
+IERpc3BsYXlQb3J0LiAgIEknbGwgZ2xhZGx5IHRyeSB2MiBvZiB0aGUgcGF0Y2ggb24gYW4gWFUz
+OyBpcyB0aGVyZSBhIGJldHRlciBiYXNlIHRvIGFwcGx5IHRoZSBwYXRjaCB0bz8NCg0KDQo=
