@@ -1,136 +1,129 @@
-From: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: vexpress: bindings: Add generic PD awareness to the
- spc controller
-Date: Wed, 7 Jan 2015 07:33:38 -0700
-Message-ID: <CANLsYkxbMT1cYquZzbcYuo+=5xNBUhS6jJePovErwkaDDef_Gg@mail.gmail.com>
-References: <1420562732-4353-1-git-send-email-mathieu.poirier@linaro.org>
-	<CAL_JsqJwauxNNojhAaYEr7oQTm6fwYwtByv_s6-tHiXYA214AQ@mail.gmail.com>
-	<CANLsYkz_tx0MAnssO1JmgGzeaj12oU64FJjiKKyEOyXuUKk8jQ@mail.gmail.com>
-	<CAL_JsqLv8Q4eS_bwuLbEOBSxjU7uff4__KcSi3qwAvgmjhQKHw@mail.gmail.com>
-	<20150107105438.GA7256@e102568-lin.cambridge.arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150107105438.GA7256-7AyDDHkRsp3ZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH v2 3/3] ARM: dts: berlin: correct BG2Q's SM GPIO location.
+Date: Wed, 07 Jan 2015 15:38:32 +0100
+Message-ID: <54AD44E8.5000105@gmail.com>
+References: <1419584281-4811-1-git-send-email-jszhang@marvell.com> <1419584281-4811-4-git-send-email-jszhang@marvell.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1419584281-4811-4-git-send-email-jszhang@marvell.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jisheng Zhang <jszhang@marvell.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, antoine.tenart@free-electrons.com, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 7 January 2015 at 03:54, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org> wrote:
-> On Tue, Jan 06, 2015 at 10:01:03PM +0000, Rob Herring wrote:
->> On Tue, Jan 6, 2015 at 12:36 PM, Mathieu Poirier
->> <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> > On 6 January 2015 at 10:02, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> >> On Tue, Jan 6, 2015 at 10:45 AM,  <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> >>> From: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> >>>
->> >>> Among other things, the serial power controller (SPC) controls power to
->> >>> the A7 and A15 clusters.  Theses clusters also happen to contains the
+On 26.12.2014 09:58, Jisheng Zhang wrote:
+> The gpio4 and gpio5 are in 0xf7fc0000 apb which is located in the SM domain.
+> This patch moves gpio4 and gpio5 to the correct location. This patch also
+> renames them as the following to match the names we internally used in
+> marvell:
+> 	gpio4 -> sm_gpio1
+> 	gpio5 -> sm_gpio0
+> 	porte -> portf
+> 	portf -> porte
 >
-> "These clusters also happen to contain"
+> This also matches what we did for BG2 and BG2CD's SM GPIO.
 >
->> >>> coresight tracers used for HW assisted tracing.
->> >>>
->> >>> By modellling these to power domains in a way that is comprehensible to
->                ^ too many l
->
->> >>> the generic power domain sub-system and using the runtime PM API in the
->> >>> coresight drivers, we can prevent power to the domains from being
->> >>> turned off while tracing related operations are still pending.
->> >>>
->> >>> Signed-off-by: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> >>> ---
->> >>>  .../bindings/arm/vexpress-power-controller.txt     | 54 ++++++++++++++++++++++
->> >>>  1 file changed, 54 insertions(+)
->> >>>  create mode 100644 Documentation/devicetree/bindings/arm/vexpress-power-controller.txt
->> >>>
->> >>> diff --git a/Documentation/devicetree/bindings/arm/vexpress-power-controller.txt b/Documentation/devicetree/bindings/arm/vexpress-power-controller.txt
->> >>> new file mode 100644
->> >>> index 000000000000..3af5624dc5cb
->> >>> --- /dev/null
->> >>> +++ b/Documentation/devicetree/bindings/arm/vexpress-power-controller.txt
->> >>> @@ -0,0 +1,54 @@
->> >>> +ARM Versatile Express Power Controller
->> >>> +--------------------------------------
->> >>> +
->> >>> +This binding models the serial power controller (SPC) in a way that is
->> >>> +intelligible to the generic power domain subsystem and in accordance
->> >>> +with the guidelines from:
->> >>> +
->> >>> +Documentation/devicetree/bindings/power/power_domain.txt
->> >>> +
->> >>> +The binding doesn't have a '<reg>' property as the base address for HW
->> >>> +access is provided by the vexpress-scc sub-system.
->> >>> +
->> >>> +Required node properties:
->> >>> +- compatible value : = "arm,vexpress-power-controller";
->> >>> +- #power-domain-cells : = Number of cells in a PM domain specifier, as
->> >>> +  specified in "power_domain.txt" referenced above.
->> >>> +
->> >>> +Example:
->> >>> +       A7_A15_cluster_pd: A7-A15-cluster-pd {
->> >>
->> >> This is more a description of the power domain than the power
->> >> controller IP block.
->> >
->> > This one is a little tricky - the controller itself (SPC) is accessed
->> > via registers mapped by another driver (SCC) and have two completely
->> > separate files.  The SPC driver itself is not DT'ed, simply because it
->> > doesn't have too,  hence writing things the way I did.
->> >
->> > I will ask the vexpress maintainers where they want to see this code
->> > going.  Would you accept this binding as part of the existing
->> > "arm,vexpress-sysreg" [1] or even "arm,vexpress-scc" [2]?
->
-> We are not CC'ed :). [2] is my answer, see below.
+> Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
 
-Thanks for the review - does it also mean you'd like to see the
-creation of the generic power domains moved to tc2_pm.c ?
+Jisheng,
 
+please do not add unrelated patches to an existing patch set.
+
+Anyway, applied to berlin/fixes. It will also be Cc'd to stable
+from 3.16 onwards due to the broken gpio base address.
+
+Thanks!
+
+Sebastian
+
+> ---
+>   arch/arm/boot/dts/berlin2q.dtsi | 60 ++++++++++++++++++++---------------------
+>   1 file changed, 30 insertions(+), 30 deletions(-)
 >
->> > [1]. Documentation/devicetree/bindings/arm/vexpress-sysreg.txt
->> > [2]. Documentation/devicetree/bindings/arm/vexpress-scc.txt
->>
->> Yes, that makes sense. I think either you could have sub node for the
->> SPC or just use the sysreg node phandle directly. Given the
->> simplicity, I'd probably go for the latter, but I haven't looked
->> closely at these drivers and will defer to VExpress maintainers.
+> diff --git a/arch/arm/boot/dts/berlin2q.dtsi b/arch/arm/boot/dts/berlin2q.dtsi
+> index 41a683f..f0ddbec 100644
+> --- a/arch/arm/boot/dts/berlin2q.dtsi
+> +++ b/arch/arm/boot/dts/berlin2q.dtsi
+> @@ -356,36 +356,6 @@
+>   				interrupt-parent = <&gic>;
+>   				interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
+>   			};
+> -
+> -			gpio4: gpio@5000 {
+> -				compatible = "snps,dw-apb-gpio";
+> -				reg = <0x5000 0x400>;
+> -				#address-cells = <1>;
+> -				#size-cells = <0>;
+> -
+> -				porte: gpio-port@4 {
+> -					compatible = "snps,dw-apb-gpio-port";
+> -					gpio-controller;
+> -					#gpio-cells = <2>;
+> -					snps,nr-gpios = <32>;
+> -					reg = <0>;
+> -				};
+> -			};
+> -
+> -			gpio5: gpio@c000 {
+> -				compatible = "snps,dw-apb-gpio";
+> -				reg = <0xc000 0x400>;
+> -				#address-cells = <1>;
+> -				#size-cells = <0>;
+> -
+> -				portf: gpio-port@5 {
+> -					compatible = "snps,dw-apb-gpio-port";
+> -					gpio-controller;
+> -					#gpio-cells = <2>;
+> -					snps,nr-gpios = <32>;
+> -					reg = <0>;
+> -				};
+> -			};
+>   		};
 >
-> There is no such a thing as "vexpress-power-controller", SCC (and SPC)
-> are testchip specific, adding the bindings to [2] is what I would like to
-> see, with a compatible string that is testchip specific, please refer
-> to the bindings for details (ie arm,vexpress-scc,v2p-ca15_a7).
+>   		chip: chip-control@ea0000 {
+> @@ -474,6 +444,21 @@
+>   			ranges = <0 0xfc0000 0x10000>;
+>   			interrupt-parent = <&sic>;
 >
->>
->> >
->> >>
->> >>> +               compatible = "arm,vexpress-power-controller";
->> >>> +               #power-domain-cells = <1>;
->> >>
->> >> You need to define what goes in the cell. That is specific to the
->> >> power controller. It could be generic in that N corresponds to power
->> >> domain N in the controller if the controller is generic in that way
->> >> (i.e. all the register accesses are just indexed).
->> >
->> > That is exactly how things are - one controller and two power domains.
->> > Based on what the generic power domain code does #power-domain-cells
->> > is the argument indicating what domain a device should be added to.
->> > From what I read this is also how things are (sparsely) explained in
->> > "power_domain.txt".  As such I'm not exactly sure of what you'd like
->> > to see modified - enlightenment would be appreciated.
->>
->> I wasn't sure if there are more domains you didn't add. If what 0 and
->> 1 correspond to varies by board, then it's probably fine as it. If
->> they are always cluster 0 and cluster 1, then just say that.
+> +			sm_gpio1: gpio@5000 {
+> +				compatible = "snps,dw-apb-gpio";
+> +				reg = <0x5000 0x400>;
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				portf: gpio-port@5 {
+> +					compatible = "snps,dw-apb-gpio-port";
+> +					gpio-controller;
+> +					#gpio-cells = <2>;
+> +					snps,nr-gpios = <32>;
+> +					reg = <0>;
+> +				};
+> +			};
+> +
+>   			i2c2: i2c@7000 {
+>   				compatible = "snps,designware-i2c";
+>   				#address-cells = <1>;
+> @@ -524,6 +509,21 @@
+>   				status = "disabled";
+>   			};
 >
-> It is testchip specific (see above), and it should be documented as
-> such. You should define what the cell number corresponds to (eg cell == 0 A15
-> cluster power domain, cell == 1 A7 cluster power domain).
+> +			sm_gpio0: gpio@c000 {
+> +				compatible = "snps,dw-apb-gpio";
+> +				reg = <0xc000 0x400>;
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				porte: gpio-port@4 {
+> +					compatible = "snps,dw-apb-gpio-port";
+> +					gpio-controller;
+> +					#gpio-cells = <2>;
+> +					snps,nr-gpios = <32>;
+> +					reg = <0>;
+> +				};
+> +			};
+> +
+>   			sysctrl: pin-controller@d000 {
+>   				compatible = "marvell,berlin2q-system-ctrl";
+>   				reg = <0xd000 0x100>;
 >
-> Lorenzo
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
