@@ -1,107 +1,199 @@
-From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v3 1/4] of: iommu: add ptr to OF node arg to of_iommu_configure()
-Date: Wed, 7 Jan 2015 13:49:51 -0500
-Message-ID: <1420656594-8908-2-git-send-email-m-karicheri2@ti.com>
-References: <1420656594-8908-1-git-send-email-m-karicheri2@ti.com>
+From: Anand Moon <moon.linux@yahoo.com>
+Subject: Re: [PATCH v2] ARM: dts: Add dts file for odroid XU3 board
+Date: Wed, 7 Jan 2015 18:37:48 +0000 (UTC)
+Message-ID: <69242715.30115.1420655868687.JavaMail.yahoo@jws10659.mail.bf1.yahoo.com>
+References: <1417721269-19342-1-git-send-email-sjoerd.simons@collabora.co.uk>
+ <54AA48E6.3040404@samsung.com> <1420470469.15910.134.camel@collabora.co.uk>
+Reply-To: Anand Moon <moon.linux@yahoo.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1420656594-8908-1-git-send-email-m-karicheri2-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
-Cc: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1420470469.15910.134.camel@collabora.co.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Joonyoung Shim <jy0922.shim@samsung.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Kevin Hilman <khilman@kernel.org>, Tyler Baker <tyler.baker@linaro.org>, Heesub Shin <heesub.shin@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Function of_iommu_configure() is called from of_dma_configure() to
-setup iommu ops using DT property. This API is currently used for
-platform devices for which DMA configuration (including iommu ops)
-may come from device's parent. To extend this functionality for PCI
-devices, this API need to take a parent node ptr as an argument
-instead of assuming device's parent. This is needed since for PCI, the
-dma configuration may be defined in the DT node of the root bus bridge's
-parent device. Currently only dma-range is used for PCI and iommu is not
-supported. So return error if the device is PCI.
+Hi Sjoerd,
 
-Signed-off-by: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
----
- drivers/iommu/of_iommu.c |   10 ++++++++--
- drivers/of/platform.c    |    2 +-
- include/linux/of_iommu.h |    6 ++++--
- 3 files changed, 13 insertions(+), 5 deletions(-)
+I am using 3.18.0 kernel on my odroidxu3 board.
+Using exynos_defconfig I am able to boot the board.
 
-diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
-index af1dc6a..396bc77 100644
---- a/drivers/iommu/of_iommu.c
-+++ b/drivers/iommu/of_iommu.c
-@@ -133,19 +133,25 @@ struct iommu_ops *of_iommu_get_ops(struct device_node *np)
- 	return ops;
- }
- 
--struct iommu_ops *of_iommu_configure(struct device *dev)
-+struct iommu_ops *of_iommu_configure(struct device *dev,
-+				     struct device_node *node)
- {
- 	struct of_phandle_args iommu_spec;
- 	struct device_node *np;
- 	struct iommu_ops *ops = NULL;
- 	int idx = 0;
- 
-+	if (dev_is_pci(dev)) {
-+		dev_err(dev, "iommu is currently not supported for PCI\n");
-+		return NULL;
-+	}
-+
- 	/*
- 	 * We don't currently walk up the tree looking for a parent IOMMU.
- 	 * See the `Notes:' section of
- 	 * Documentation/devicetree/bindings/iommu/iommu.txt
- 	 */
--	while (!of_parse_phandle_with_args(dev->of_node, "iommus",
-+	while (!of_parse_phandle_with_args(node, "iommus",
- 					   "#iommu-cells", idx,
- 					   &iommu_spec)) {
- 		np = iommu_spec.np;
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index a54ec10..7675b79 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -196,7 +196,7 @@ static void of_dma_configure(struct device *dev)
- 	dev_dbg(dev, "device is%sdma coherent\n",
- 		coherent ? " " : " not ");
- 
--	iommu = of_iommu_configure(dev);
-+	iommu = of_iommu_configure(dev, dev->of_node);
- 	dev_dbg(dev, "device is%sbehind an iommu\n",
- 		iommu ? " " : " not ");
- 
-diff --git a/include/linux/of_iommu.h b/include/linux/of_iommu.h
-index 16c7554..3258cbb 100644
---- a/include/linux/of_iommu.h
-+++ b/include/linux/of_iommu.h
-@@ -12,7 +12,8 @@ extern int of_get_dma_window(struct device_node *dn, const char *prefix,
- 			     size_t *size);
- 
- extern void of_iommu_init(void);
--extern struct iommu_ops *of_iommu_configure(struct device *dev);
-+extern struct iommu_ops *of_iommu_configure(struct device *dev,
-+					struct device_node *np);
- 
- #else
- 
-@@ -24,7 +25,8 @@ static inline int of_get_dma_window(struct device_node *dn, const char *prefix,
- }
- 
- static inline void of_iommu_init(void) { }
--static inline struct iommu_ops *of_iommu_configure(struct device *dev)
-+static inline struct iommu_ops *of_iommu_configure(struct device *dev,
-+					 struct device_node *np)
- {
- 	return NULL;
- }
+Are you able to get all the 8 core CPU up and running ?
+
+
+Only 4 core cpu's are on my board. Also CpuFreq is not working.
+
+Can you share some point on this.
+
+
+root@odroid-xu3:/usr/src/odroidxu3-3.18.y-debug# cat /proc/cpuinfo | grep processor
+processor : 0
+processor : 5
+processor : 6
+processor : 7
+
+
+Below are the logs of the board.
+
+[    9.720905] Registering SWP/SWPB emulation handler
+[    9.725457] big.LITTLE switcher initializing
+[    9.729518] CPU0 paired with CPU4
+[    9.732805] CPU5 paired with CPU3
+[    9.736069] CPU6 paired with CPU2
+[    9.739386] CPU7 paired with CPU1
+[    9.742688] GIC ID for CPU 0 cluster 1 is 4
+[    9.746816] GIC ID for CPU 0 cluster 0 is 0
+[    9.800575] IRQ153 no longer affine to CPU1
+[    9.803065] CPU1: shutdown
+[    9.813482] GIC ID for CPU 1 cluster 0 is 1
+[    9.869776] IRQ154 no longer affine to CPU2
+[    9.872218] CPU2: shutdown
+[    9.879985] GIC ID for CPU 2 cluster 0 is 2
+[    9.924656] IRQ155 no longer affine to CPU3
+[    9.927094] CPU3: shutdown
+[    9.935544] GIC ID for CPU 3 cluster 0 is 3
+[    9.989578] IRQ160 no longer affine to CPU4
+[    9.991787] CPU4: shutdown
+[   10.001003] GIC ID for CPU 1 cluster 1 is 5
+[   10.003812] GIC ID for CPU 2 cluster 1 is 6
+[   10.007976] GIC ID for CPU 3 cluster 1 is 7
+[   10.015308] big.LITTLE switcher initialized
+[   10.031368] registered taskstats version 1
+[   10.038110] pinctrl core: add 2 pinmux maps
+[   10.038374] samsung-pinctrl 13400000.pinctrl: found group selector 39 for gpx3-7
+[   10.038541] samsung-pinctrl 13400000.pinctrl: found group selector 39 for gpx3-7
+[   10.038586] samsung-pinctrl 13400000.pinctrl: request pin 39 (gpx3-7) for 14530000.hdmi
+[   10.039440] of_get_named_gpiod_flags: parsed 'hpd-gpio' property of node '/hdmi@14530000[0]' - status (0)
+[   10.040227] exynos-hdmi 14530000.hdmi: Looking up vdd-supply from device tree
+[   10.042869] exynos-hdmi 14530000.hdmi: Looking up vdd_osc-supply from device tree
+[   10.044700] exynos-hdmi 14530000.hdmi: Looking up vdd_pll-supply from device tree
+[   10.046528] exynos-hdmi 14530000.hdmi: Looking up hdmi-en-supply from device tree
+[   10.046558] exynos-hdmi 14530000.hdmi: Looking up hdmi-en-supply property in node /hdmi@14530000 failed
+[   10.048281] samsung-pinctrl 13400000.pinctrl: request pin 39 (gpx3-7) for gpx3:39
+[   10.071915] exynos-mixer 14450000.mixer: probe start
+[   10.076942] exynos-sysmmu 14650000.sysmmu: Enabled
+[   10.076975] exynos-mixer 14450000.mixer: exynos_iommu_attach_device: Attached IOMMU with pgtable 0x42264000
+[   10.077570] exynos-drm exynos-drm: bound 14450000.mixer (ops mixer_component_ops)
+[   10.089655] exynos-drm exynos-drm: bound 14530000.hdmi (ops hdmi_component_ops)
+[   10.095639] [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
+[   10.102242] [drm] No driver support for vblank timestamp query.
+[   10.161814] cma: cma_alloc(cma c11c3218, count 2025, align 8)
+[   10.256074] cma: cma_alloc(): returned ef6cd400
+[   10.457934] Console: switching to colour frame buffer device 274x77
+[   10.511095] exynos-drm exynos-drm: fb0:  frame buffer device
+[   10.516212] exynos-drm exynos-drm: registered panic notifier
+[   10.537871] [drm] Initialized exynos 1.0.0 20110530 on minor 0
+[   10.545873] s3c-rtc 101e0000.rtc: setting system clock to 2015-01-07 17:50:09 UTC (1420653009)
+[   10.553979] power-domain: Power-off latency exceeded, new value 388375 ns
+[   10.560076] power-domain: Power-off latency exceeded, new value 6221750 ns
+[   10.567225] power-domain: Power-off latency exceeded, new value 248791 ns
+[   10.573666] power-domain: Power-off latency exceeded, new value 6502916 ns
+[   11.093083] MAIN_DC: disabling
+[   11.099738] ALSA device list:
+[   11.101347]   No soundcards found.
+[   11.117975] Freeing unused kernel memory: 1732K (c079b000 - c094c000)
+[   11.775702] systemd-udevd[1676]: starting version 204
+[   15.298783] EXT4-fs (mmcblk0p2): mounted filesystem with ordered data mode. Opts: (null)
+[   17.878286] init: plymouth-upstart-bridge main process (1732) terminated with status 1
+[   17.885458] init: plymouth-upstart-bridge main process ended, respawning
+[   18.211733] init: plymouth-upstart-bridge main process (1741) terminated with status 1
+[   18.219007] init: plymouth-upstart-bridge main process ended, respawning
+[   18.432104] init: plymouth-upstart-bridge main process (1745) terminated with status 1
+[   18.439365] init: plymouth-upstart-bridge main process ended, respawning
+[   22.612268] EXT4-fs (mmcblk0p2): re-mounted. Opts: errors=remount-ro
+[   26.072597] systemd-udevd[1923]: starting version 204
+[   32.854190] Bluetooth: Core ver 2.19
+[   32.856710] NET: Registered protocol family 31
+[   32.856733] Bluetooth: HCI device and connection manager initialized
+[   32.857604] Bluetooth: HCI socket layer initialized
+[   32.877598] Bluetooth: L2CAP socket layer initialized
+[   32.879515] Bluetooth: SCO socket layer initialized
+[   33.282331] Bluetooth: BNEP (Ethernet Emulation) ver 1.3
+[   33.282356] Bluetooth: BNEP filters: protocol multicast
+[   33.282600] Bluetooth: BNEP socket layer initialized
+[   33.371899] _cpu_up: attempt to bring up CPU 2 failed
+[   33.380836] Bluetooth: RFCOMM TTY layer initialized
+[   33.381088] Bluetooth: RFCOMM socket layer initialized
+[   33.381439] Bluetooth: RFCOMM ver 1.11
+[   33.410276] _cpu_up: attempt to bring up CPU 3 failed
+[   33.414848] _cpu_up: attempt to bring up CPU 4 failed
+[   33.419857] _cpu_up: attempt to bring up CPU 1 failed
+[   38.518916] NET: Registered protocol family 10
+[   46.590494] init: failsafe main process (2550) killed by TERM signal
+[   50.596528] smsc95xx 5-1.1:1.0 eth0: hardware isn't capable of remote wakeup
+
+
+-Anand Moon
+
+
+
+On Monday, January 5, 2015 9:00 PM, Sjoerd Simons <sjoerd.simons@collabora.co.uk> wrote:
+On Mon, 2015-01-05 at 17:18 +0900, Joonyoung Shim wrote:
+> Hi Sjoerd,
+> 
+> On 12/05/2014 04:27 AM, Sjoerd Simons wrote:
+> > Add DTS for the Hardkernel Odroid XU3. The name of the DTS file is kept the
+> > same as the vendors naming, which means it's prefixed with exynos5422
+> > instead of exynos5800 as the SoC name even though it includes the
+> > exyno5800 dtsi.
+> > 
+> > Signed-off-by: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+> > ---
+> > Changes since v1:
+> >   * Add chosen/linux,stdout-path to point the serial console device
+> >   * Change memory start offset to 0x40000000 to match the vendors DTS (pointed
+> >     out by Heesub Shin)
+> >   * Declare base address & size for the memory banks to be used by the MFC
+> > 
+> > Kevin, Tyler, even though the changes are small i didn't want to just stick
+> > your Tested-By on. Could you both be so kind to retest this on your XU3's ?
+> > 
+> > Heesub, I would still love to know the reason for having the memory start
+> > address at 0x40000000 for this board?
+> > 
+> >  arch/arm/boot/dts/Makefile                 |   1 +
+> >  arch/arm/boot/dts/exynos5422-odroidxu3.dts | 332 +++++++++++++++++++++++++++++
+> >  2 files changed, 333 insertions(+)
+> >  create mode 100644 arch/arm/boot/dts/exynos5422-odroidxu3.dts
+> > 
+> > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> > index 38c89ca..0a898cc 100644
+
+
+> > +
+> > +&hdmi {
+> > +    status = "okay";
+> > +    hpd-gpio = <&gpx3 7 0>;
+> > +    pinctrl-names = "default";
+> > +    pinctrl-0 = <&hdmi_hpd_irq>;
+> > +
+> > +    vdd_osc-supply = <&ldo10_reg>;
+> > +    vdd_pll-supply = <&ldo8_reg>;
+> > +    vdd-supply = <&ldo8_reg>;
+> 
+> ldo10 and ldo8 are right? I think ldo7 and ldo6 are related with hdmi
+> from schematic.
+
+Nice catch. I followed hardkernels dts here, which refers to ldo10 &
+ldo8, however double-checking the schematics indeed indicate that ldo7
+and ldo6 are used the HDMI supplies. 
+
+I'll do some testing and follow-up
+
 -- 
-1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+Collabora Ltd.
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
