@@ -1,42 +1,77 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v3 resend] clk-rcar-gen2: ADSP clock support
-Date: Wed, 7 Jan 2015 09:19:48 +0100
-Message-ID: <CAMuHMdUui=Ucjo-dxtjkBF2faF4mbvV4EAAT+CyZ_2ix9Nxp+Q@mail.gmail.com>
-References: <355163371.fkynKV0U5x@wasted.cogentembedded.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFC PATCH v3 3/4] arm64:thunder: Add initial dts for Cavium's
+ Thunder SoC in 2 Node topology.
+Date: Wed, 07 Jan 2015 09:18:50 +0100
+Message-ID: <2298510.9qAQRQ2lzi@wuerfel>
+References: <1420011208-7051-1-git-send-email-ganapatrao.kulkarni@caviumnetworks.com>
+ <3372289.4AUgcSNZN5@wuerfel>
+ <CAFpQJXUB8=XhmAn9-SPKaRHoTaTDynfD8xd-mVJOYrAwo50Rzg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <355163371.fkynKV0U5x-gHKXc3Y1Z8zGSmamagVegGFoWSdPRAKMAL8bYrjMMd8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAFpQJXUB8=XhmAn9-SPKaRHoTaTDynfD8xd-mVJOYrAwo50Rzg@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ganapatrao Kulkarni <gpkulkarni@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Steve Capper <steve.capper@linaro.org>, Al Stone <al.stone@linaro.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Leif Lindholm <leif.lindholm@linaro.org>, Roy Franz <roy.franz@linaro.org>, Rob Herring <robh+dt@kernel.org>, Ganapatrao Kulkarni <ganapatrao.kulkarni@caviumnetworks.com>, msalter@redhat.com, Grant Likely <grant.likely@linaro.org>, jchandra@broadcom.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Hanjun Guo <hanjun.guo@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 6, 2015 at 11:39 PM, Sergei Shtylyov
-<sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
-> Add the ADSP clock support to the R-Car generation 2 CPG driver.  This clock
-> gets derived from  PLL1.  The layout of the ADSPCKCR register is  similar to
-> those of the clocks supported by the 'clk-div6' driver but the divider encoding
-> is non-linear, so can't be supported by that driver...
->
-> Based on the original patch by Konstantin Kozhevnikov
-> <konstantin.kozhevnikov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>.
->
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+On Wednesday 07 January 2015 12:37:51 Ganapatrao Kulkarni wrote:
+> Hi Arnd,
+> 
+> On Wed, Jan 7, 2015 at 1:32 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> > On Tuesday 06 January 2015 15:04:26 Ganapatrao Kulkarni wrote:
+> >> On Sat, Jan 3, 2015 at 2:47 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> >> > On Wednesday 31 December 2014 13:03:27 Ganapatrao Kulkarni wrote:
+> >> >> +             cpu@00f {
+> >> >> +                     device_type = "cpu";
+> >> >> +                     compatible = "cavium,thunder", "arm,armv8";
+> >> >> +                     reg = <0x0 0x00f>;
+> >> >> +                     enable-method = "psci";
+> >> >> +                     arm,associativity = <0 0 0x00f>;
+> >> >> +             };
+> >> >> +             cpu@100 {
+> >> >> +                     device_type = "cpu";
+> >> >> +                     compatible = "cavium,thunder", "arm,armv8";
+> >> >> +                     reg = <0x0 0x100>;
+> >> >> +                     enable-method = "psci";
+> >> >> +                     arm,associativity = <0 0 0x100>;
+> >> >> +             };
+> >> >
+> >> > What is the 0x100 offset in the last-level topology field? Does this have
+> >> > no significance to topology at all? I would expect that to be something
+> >> > like cluster number that is relevant to caching and should be represented
+> >> > as a separate level.
+> >>
+> >> i did not understand, can you please explain little more about "
+> >> should be represented as a separate level."
+> >> at present, i have put the hwid of a cpu.
+> >
+> > From what I undertand, the hwid of the CPU contains the "cluster" number in
+> > this bit position, so you typically have a shared L2 or L3 cache between
+> > all cores within a cluster, but separate caches in other clusters.
+> >
+> > If this is the case, there will be a measurable difference in performance
+> > between two processes sharing memory when running on the same cluster,
+> > or when running on different clusters on the same socket. If the
+> > performance difference is relevant, it should be described as a separate
+> > level in the associativity property.
+> you mean, the associativity as array of  <board> <socket> <cluster>
 
-Acked-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+No, that would leave out the core number, which is required to identify
+the individual thread. I meant adding an extra level such as
 
-Gr{oetje,eeting}s,
+<board> <socket> <cluster> <core>
 
-                        Geert
+A lot of machines will leave out the <board> number because they are
+built with SoCs that don't have a long-distance coherency protocol.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
