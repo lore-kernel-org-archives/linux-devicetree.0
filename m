@@ -1,37 +1,67 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 0/2] devicetree: document ARM bindings for QEMU's
- Firmware Config interface
-Date: Wed, 7 Jan 2015 11:12:55 -0600
-Message-ID: <CAL_JsqKcwrB3pN0t-nF6Qfb0m1-nA=zzNsz5j820vP7U=rh_-Q@mail.gmail.com>
-References: <1418849386-25857-1-git-send-email-lersek@redhat.com>
- <CAL_JsqL+ued8mZj_MONKf0j2MO0zmE+H=mahQC30aV8vki0mvQ@mail.gmail.com> <54AD5FBF.3080108@redhat.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 1/4] ARM: tegra: rely on bootloader pinmux programming
+ on nyan-big
+Date: Wed, 07 Jan 2015 10:15:56 -0700
+Message-ID: <54AD69CC.7010902@wwwdotorg.org>
+References: <1420540653-14816-1-git-send-email-tomeu.vizoso@collabora.com> <1420540653-14816-2-git-send-email-tomeu.vizoso@collabora.com> <54AC16B0.5050703@wwwdotorg.org> <CAAObsKB1gMcLZ=n8Mc6JSLQHn5-6VWOhERLgYTdi6nit6yCj5w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54AD5FBF.3080108-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laszlo Ersek <lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter Maydell <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, drjones-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Paolo Bonzini <pbonzini-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Alexander Graf <agraf-l3A5Bk7waGM@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAAObsKB1gMcLZ=n8Mc6JSLQHn5-6VWOhERLgYTdi6nit6yCj5w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Cc: "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 7, 2015 at 10:33 AM, Laszlo Ersek <lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
-> On 01/07/15 16:43, Rob Herring wrote:
->> On Wed, Dec 17, 2014 at 2:49 PM, Laszlo Ersek <lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
->>> The qemu patchset has been turned upside down on qemu-devel during
->>> review (many thanks for that!); one outcome is that now both the
->>> selector and the data registers are big endian. This series has been
->>> updated accordingly.
+On 01/07/2015 01:06 AM, Tomeu Vizoso wrote:
+> On 6 January 2015 at 18:09, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+>> On 01/06/2015 03:37 AM, Tomeu Vizoso wrote:
+>>>
+>>> Following 6dbaff2b, the kernel expects that the bootloader has correctly
+>>> programmed the Tegra pinmux.
+>>>
+>>> DTs for the Jetson and the Venice2 had been updated already but this one
+>>> was left behind.
 >>
->> I'm assuming this is now settled on the QEMU side and will apply.
+>>
+>> So this setup is true for NVIDIA-controlled development/reference boards
+>> where we've ensured that the bootloader sets up 100% of the pinmux.
+>>
+>> However, I know that Coreboot on this board doesn't set up everything in the
+>> pinmux, and since it's in r/o flash never will. As such, I'm not sure this
+>> change is safe for this board. That is, unless you want to force upstream
+>> kernels to be booted via a chain-loaded path: Coreboot (r/o) -> U-Boot (r/w
+>> with full pinmux setup) -> kernel.
+>>
+>>> Have tested this with the stock vendor firmware (coreboot) and have found
+>>> no
+>>> issues.
+>>
+>>
+>> There are presumably a bunch of features which aren't yet supported
+>> upstream, and hence you couldn't test though? That means we might find that
+>> parts of the pinmux aren't yet programmed but need to be to enable those
+>> features.
 >
-> Actually I have a small update for this text file. I thought people
-> forgot about it and I didn't want to make more noise. If you're still
-> willing to apply it, then I can post an incremental patch or a new version.
+> Sure, there's no chance that my testing could have been extensive enough.
+>
+> Following Andrew's feedback, I will be looking at getting the pinmux
+> programming right in the DTs.
 
-Please send a new version.
+As an FYI, the way this typically works (for NVIDIA reference boards, 
+and many/most customer boards) is that NVIDIA syseng publishes an Excel 
+spreadsheet that can be edited to define the board's pinmux, and which 
+performs some error checks. This spreadsheet can directly generate (via 
+Excel macros/...) pinmux data tables and/or DT files for our 
+product/internal/downstream Android and L4T kernels. For recent SoCs, 
+the tegra-pinmux-scripts project[1] can take a CSV representation of the 
+spreadsheet and generate both a U-Boot header file (for upstream or L4T; 
+they're the same) and upstream Linux kernel DT files that represent the 
+pinmux.
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+So, your best bet is to see if such a spreadsheet exists for these 
+platforms, and import it into tegra-pinmux-scripts. That will save a lot 
+of work if the spreadsheet exists (and is up-to-date).
+
+[1] https://github.com/NVIDIA/tegra-pinmux-scripts
