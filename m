@@ -1,165 +1,67 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] Removes OF_UNITTEST dependency on OF_DYNAMIC config symbol
-Date: Wed, 7 Jan 2015 09:37:19 -0600
-Message-ID: <CAL_JsqLpWyQ3KVORZAuEE0ULOG=hg8q6hcbG6u+TV1qhHLYPkw@mail.gmail.com>
-References: <1419147049-3998-1-git-send-email-gaurav.minocha.os@gmail.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH v9 3/4] ASoC: tda998x: add a codec to the
+	HDMI transmitter
+Date: Wed, 7 Jan 2015 15:41:38 +0000
+Message-ID: <20150107154138.GL12302@n2100.arm.linux.org.uk>
+References: <cover.1420628786.git.moinejf@free.fr>
+ <23b36acc1f769418a06f3e929eba288b5911da12.1420628786.git.moinejf@free.fr>
+ <54AD4C77.5000401@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1419147049-3998-1-git-send-email-gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Disposition: inline
+In-Reply-To: <54AD4C77.5000401@arm.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Andrew Jackson <Andrew.Jackson@arm.com>
+Cc: Jean-Francois Moine <moinejf@free.fr>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>, Mark Brown <broonie@kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Dave Airlie <airlied@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Dec 21, 2014 at 1:30 AM, Gaurav Minocha
-<gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> This patch intends to remove the unittests dependency on
-> the fuctions defined in dynamic.c. So, rather than calling
+On Wed, Jan 07, 2015 at 03:10:47PM +0000, Andrew Jackson wrote:
+> On 01/07/15 10:51, Jean-Francois Moine wrote:
+> > diff --git a/drivers/gpu/drm/i2c/Kconfig b/drivers/gpu/drm/i2c/Kconfig
+> > index 22c7ed6..24fc975 100644
+> > --- a/drivers/gpu/drm/i2c/Kconfig
+> > +++ b/drivers/gpu/drm/i2c/Kconfig
+> > @@ -28,6 +28,7 @@ config DRM_I2C_SIL164
+> >  config DRM_I2C_NXP_TDA998X
+> >         tristate "NXP Semiconductors TDA998X HDMI encoder"
+> >         default m if DRM_TILCDC
+> > +       select SND_SOC_TDA998X
+> 
+> Do you need this since sound/soc/codecs/Kconfig conditionally brings in the
+> CODEC driver?
 
-s/fuctions/functions/
+More importantly, it's broken, because it'll cause Kconfig to complain
+if you enable DRM_I2C_NXP_TDA998X, but have ASoC disabled.
 
-> of_attach_node defined in dynamic.c, minimal functionality
-> required to attach a new node is re-defined in unittest.c.
-> Also, now after executing the tests the test data is not
-> removed from the device tree so there is no need to call
-> of_detach_node.
->
-> Tested with and without OF_DYNAMIC enabled on ppc, arm and
-> x86
->
-> Signed-off-by: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  drivers/of/Kconfig    |  1 -
->  drivers/of/unittest.c | 69 +++++++++------------------------------------------
->  2 files changed, 12 insertions(+), 58 deletions(-)
+Moreover, if you decide you want the sound and ASoC built as a module,
+but want to build in DRM and TDA998x support (so you can get video
+output working on boot before initramfs/rootfs), Kconfig may well
+complain.
 
-One minor thing below, otherwise looks good to me.
+> > +static int __init tda998x_codec_init(void)
+> > +{
+> > +       return 0;
+> > +}
+> > +static void __exit tda998x_codec_exit(void)
+> > +{
+> > +}
+> > +module_init(tda998x_codec_init);
+> > +module_exit(tda998x_codec_exit);
 
-> diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-> index b5e0c87..38d1c51 100644
-> --- a/drivers/of/Kconfig
-> +++ b/drivers/of/Kconfig
-> @@ -10,7 +10,6 @@ menu "Device Tree and Open Firmware support"
->  config OF_UNITTEST
->         bool "Device Tree runtime unit tests"
->         depends on OF_IRQ && OF_EARLY_FLATTREE
-> -       select OF_DYNAMIC
->         select OF_RESOLVE
->         help
->           This option builds in test cases for the device tree infrastructure
-> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-> index 844838e..920b3fb 100644
-> --- a/drivers/of/unittest.c
-> +++ b/drivers/of/unittest.c
-> @@ -822,6 +822,7 @@ static void update_node_properties(struct device_node *np,
->  static int attach_node_and_children(struct device_node *np)
->  {
->         struct device_node *next, *dup, *child;
-> +       unsigned long flags;
->
->         dup = of_find_node_by_path(np->full_name);
->         if (dup) {
-> @@ -839,7 +840,17 @@ static int attach_node_and_children(struct device_node *np)
->         child = np->child;
->         np->child = NULL;
->         np->sibling = NULL;
+There's no need for these if they remain as the above.  Modules can have
+both init/exit functions, or neither, and they are still unloadable.
+Only modules which provide only an init function get locked in on load.
 
-This is unnecessary.
-
-> -       of_attach_node(np);
-> +
-> +       mutex_lock(&of_mutex);
-> +       raw_spin_lock_irqsave(&devtree_lock, flags);
-> +       np->sibling = np->parent->child;
-> +       np->parent->child = np;
-> +       of_node_clear_flag(np, OF_DETACHED);
-> +       raw_spin_unlock_irqrestore(&devtree_lock, flags);
-> +
-> +       __of_attach_node_sysfs(np);
-> +       mutex_unlock(&of_mutex);
-> +
->         while (child) {
->                 next = child->sibling;
->                 attach_node_and_children(child);
-> @@ -911,59 +922,6 @@ static int __init selftest_data_add(void)
->         return 0;
->  }
->
-> -/**
-> - *     detach_node_and_children - detaches node
-> - *     and its children from live tree
-> - *
-> - *     @np:    Node to detach from live tree
-> - */
-> -static void detach_node_and_children(struct device_node *np)
-> -{
-> -       while (np->child)
-> -               detach_node_and_children(np->child);
-> -       of_detach_node(np);
-> -}
-> -
-> -/**
-> - *     selftest_data_remove - removes the selftest data
-> - *     nodes from the live tree
-> - */
-> -static void selftest_data_remove(void)
-> -{
-> -       struct device_node *np;
-> -       struct property *prop;
-> -
-> -       if (selftest_live_tree) {
-> -               of_node_put(of_aliases);
-> -               of_node_put(of_chosen);
-> -               of_aliases = NULL;
-> -               of_chosen = NULL;
-> -               for_each_child_of_node(of_root, np)
-> -                       detach_node_and_children(np);
-> -               __of_detach_node_sysfs(of_root);
-> -               of_root = NULL;
-> -               return;
-> -       }
-> -
-> -       while (last_node_index-- > 0) {
-> -               if (nodes[last_node_index]) {
-> -                       np = of_find_node_by_path(nodes[last_node_index]->full_name);
-> -                       if (np == nodes[last_node_index]) {
-> -                               if (of_aliases == np) {
-> -                                       of_node_put(of_aliases);
-> -                                       of_aliases = NULL;
-> -                               }
-> -                               detach_node_and_children(np);
-> -                       } else {
-> -                               for_each_property_of_node(np, prop) {
-> -                                       if (strcmp(prop->name, "testcase-alias") == 0)
-> -                                               of_remove_property(np, prop);
-> -                               }
-> -                       }
-> -               }
-> -       }
-> -}
-> -
->  #ifdef CONFIG_OF_OVERLAY
->
->  static int selftest_probe(struct platform_device *pdev)
-> @@ -1475,9 +1433,6 @@ static int __init of_selftest(void)
->         of_selftest_platform_populate();
->         of_selftest_overlay();
->
-> -       /* removing selftest data from live tree */
-> -       selftest_data_remove();
-> -
->         /* Double check linkage after removing testcase data */
->         of_selftest_check_tree_linkage();
->
-> --
-> 2.1.0
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+FTTC broadband for 0.8mile line: currently at 9.5Mbps down 400kbps up
+according to speedtest.net.
