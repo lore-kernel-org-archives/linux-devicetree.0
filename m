@@ -1,143 +1,95 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 4/4] dma: X-Gene PCIE DMA Driver
-Date: Wed, 07 Jan 2015 13:46:10 +0100
-Message-ID: <9430055.pMHRTP0RMA@wuerfel>
-References: <1420608537-12296-1-git-send-email-mchitale@apm.com>
- <4187918.PUaMnn04Vq@wuerfel>
- <CAL-zptNyLVBEvMBjSUbhE0WEj7-E81g7PF7_WFX1nM4AdYj7_g@mail.gmail.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH 1/2] Add sysirq device node for mt6592, also correct the
+ timer interrupt.
+Date: Wed, 7 Jan 2015 14:12:51 +0100
+Message-ID: <CABuKBeJFa=70ZRKhq9_2dZRTPGsFBqNtUCSkUkUPYrZD8HTmYg@mail.gmail.com>
+References: <1420533751-23999-1-git-send-email-howard.chen@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL-zptNyLVBEvMBjSUbhE0WEj7-E81g7PF7_WFX1nM4AdYj7_g@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mayuresh Chitale <mchitale@apm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "vinod.koul@intel.com" <vinod.koul@intel.com>, "jcm@redhat.com" <jcm@redhat.com>, "patches@apm.com" <patches@apm.com>, "ddutile@redhat.com" <ddutile@redhat.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1420533751-23999-1-git-send-email-howard.chen@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Howard Chen <howard.chen@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "moderated list:ARM/Mediatek SoC..." <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 07 January 2015 16:55:33 Mayuresh Chitale wrote:
-> 
-> On Wed, Jan 7, 2015 at 2:05 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> > On Wednesday 07 January 2015 10:58:57 Mayuresh Chitale wrote:
-> >> This patch implements DMA engine API for DMA controller on APM
-> >> X-Gene PCIe controller. DMA engine can support up to 4 channels per port
-> >> and up to 2048 outstanding requests per channel.  This is intended
-> >> to be used on ports that are configured in EP mode or to transfer
-> >> data from a RC port that is connected to a X-Gene EP port.
-> >
-> > Linux currently does not support PCIe endpoints. Do you plan to submit
-> > a driver for that as well?
-> >
-> >> +
-> >> +static void xpdma_setup_dma_dev(struct dma_device *dev)
-> >> +{
-> >> +     dma_cap_zero(dev->cap_mask);
-> >> +     dma_cap_set(DMA_SLAVE, dev->cap_mask);
-> >> +     dma_cap_set(DMA_PRIVATE, dev->cap_mask);
-> >> +
-> >> +     dev->device_alloc_chan_resources = xpdma_alloc_chan_resources;
-> >> +     dev->device_free_chan_resources = xpdma_free_chan_resources;
-> >> +     dev->device_tx_status = xpdma_tx_status;
-> >> +     dev->device_issue_pending = xpdma_issue_pending;
-> >> +     dev->device_prep_slave_sg = xpdma_prep_slave_sg;
-> >> +     dev->device_control = xpdma_device_control;
-> >> +}
-> >
-> > You are setting up DMA_SLAVE here but do not use the DT binding
-> > for slave DMA. Can your driver handle slave DMA? If it can,
-> > you should use the appropriate binding, if not then don't
-> > set DMA_SLAVE here.
-> 
-> Are you referring to  DT DMA helpers? If so, I will add it.
+Hi Howard,
 
-Yes, you will need a '#dma-cells' property in the device node,
-and call of_dma_controller_register with an appropriate xlate
-function so a slave can find the right channel.
+2015-01-06 9:42 GMT+01:00 Howard Chen <howard.chen@linaro.org>:
+> Signed-off-by: Howard Chen <howard.chen@linaro.org>
+> ---
+>  arch/arm/boot/dts/mt6592.dtsi | 21 +++++++++++++++++----
+>  1 file changed, 17 insertions(+), 4 deletions(-)
 
-> >> +static int xpdma_setup_dma_channel(struct platform_device *pdev,
-> >> +             struct xpdma_port *port)
-> >> +{
-> >> +     int i, ret = 0;
-> >> +     struct xpdma_chan *chan;
-> >> +     resource_size_t dma_base;
-> >> +
-> >> +     dma_base = MAKE_U64(readl(port->cfg + PORT_CFG_HI), readl(port->cfg)) +
-> >> +             CHAN_REG_BASE;
-> >> +     port->dma = devm_ioremap(&pdev->dev, dma_base,
-> >> +                     CHAN_REG_SIZE * MAX_DMA_CHAN);
-> >> +     if (port->dma == NULL) {
-> >> +             dev_err(&pdev->dev, "Could not get base addressc$\n");
-> >> +             return -ENOMEM;
-> >> +     }
-> >
-> > The registers are not listed in the 'reg' property. Why is that?
-> Actually these registers have to accessed via the PCIe config space
-> region for that port. Since the config space base address is
-> programmed by host controller driver we can know the base address only
-> by reading the corresponding config space bar at runtime.
+Please use in the subject "ARM: mediatek: " prefix and please add a
+commit message to your patch. From my point of view it's OK if you
+explain in the commit message why we can/should change the timer
+interrupt, please do so.
 
-I think I'm missing something important here. What exactly is the
-interaction with PCI here? Is it possible to use the dmaengine
-driver at all when the PCI host controller is not in endpoint mode?
+>
+> diff --git a/arch/arm/boot/dts/mt6592.dtsi b/arch/arm/boot/dts/mt6592.dtsi
+> index 31e5a09..1db453f 100644
+> --- a/arch/arm/boot/dts/mt6592.dtsi
+> +++ b/arch/arm/boot/dts/mt6592.dtsi
+> @@ -18,7 +18,7 @@
+>
+>  / {
+>         compatible = "mediatek,mt6592";
+> -       interrupt-parent = <&gic>;
+> +       interrupt-parent = <&sysirq>;
+>
+>         cpus {
+>                 #address-cells = <1>;
+> @@ -78,21 +78,34 @@
+>                 #clock-cells = <0>;
+>         };
+>
+> +       uart_clk: uart_clk {
+> +               compatible = "fixed-clock";
+> +               clock-frequency = <26000000>;
+> +               #clock-cells = <0>;
+> +       };
+> +
 
-Does the dmaengine show up as a PCI device when the PCI controller is
-in host mode?
+Please delete the uart clock, it has nothing to do with the sysirq in
+the first place.
 
-> > You should probably use devm_request_mem_region or devm_ioremap_resource
-> > here to ensure manage the mmio range.
-> >
-> >> +static int xpdma_probe(struct platform_device *pdev)
-> >> +{
-> >> +     int err;
-> >> +     u32 mask;
-> >> +     struct resource *res;
-> >> +     struct xpdma_port *port;
-> >> +
-> >> +     port = devm_kzalloc(&pdev->dev, sizeof(*port), GFP_KERNEL);
-> >> +     if (!port)
-> >> +             return -ENOMEM;
-> >> +
-> >> +     port->dma_dev.dev = &pdev->dev;
-> >> +     res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> >> +     if (!res) {
-> >> +             dev_err(&pdev->dev, "No cfg resource\n");
-> >> +             return -EINVAL;
-> >> +     }
-> >> +
-> >> +     port->cfg = devm_ioremap(&pdev->dev, res->start, resource_size(res));
-> >> +     if (IS_ERR(port->cfg))
-> >> +             return PTR_ERR(port->cfg);
-> >> +
-> >> +     res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> >> +     if (!res) {
-> >> +             dev_err(&pdev->dev, "No intr resource\n");
-> >> +             return -EINVAL;
-> >> +     }
-> >
-> > from binding, these two register ranges look like they are part of
-> > another device. Which device is that:
-> >
-> > +                       reg = < 0x0 0x1f2b0154 0x0 0xc
-> > +                               0x0 0x1f2b0058 0x0 0x8>;
-> 
-> These are registers inside PCIe host controller that contains
-> information required such as the dma base address, interrupt
-> configuration. So this will be used for the channels. I am not aware
-> about syscon but will see if it better represents these registers.
+Thanks,
+Matthias
 
-If the dmaengine is tightly connected to the PCI host controller
-and only usable in endpoint mode, maybe it's better to use a completely
-different model here, depending on how the PCI endpoint programming
-model will look like in the end. We are in fact in need of a generic
-abstraction for endpoints. There are some beginnings in drivers/ntb,
-and maybe it should build on that instead?
+>         timer: timer@10008000 {
+>                 compatible = "mediatek,mt6577-timer";
+>                 reg = <0x10008000 0x80>;
+> -               interrupts = <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>;
+> +               interrupts = <GIC_SPI 144 IRQ_TYPE_LEVEL_LOW>;
+>                 clocks = <&system_clk>, <&rtc_clk>;
+>                 clock-names = "system-clk", "rtc-clk";
+>         };
+>
+> +       sysirq: interrupt-controller@10200220 {
+> +               compatible = "mediatek,mt6592-sysirq", "mediatek,mt6577-sysirq";
+> +               interrupt-controller;
+> +               #interrupt-cells = <3>;
+> +               interrupt-parent = <&gic>;
+> +               reg = <0x10200220 0x1c>;
+> +       };
+> +
+>         gic: interrupt-controller@10211000 {
+>                 compatible = "arm,cortex-a7-gic";
+>                 interrupt-controller;
+>                 #interrupt-cells = <3>;
+> +               interrupt-parent = <&gic>;
+>                 reg = <0x10211000 0x1000>,
+>                       <0x10212000 0x1000>;
+>         };
+> -
+>  };
+> -
+> --
+> 1.9.1
+>
 
-	Arnd
+
+
+-- 
+motzblog.wordpress.com
