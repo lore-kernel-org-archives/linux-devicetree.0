@@ -1,14 +1,12 @@
 From: James Liao <jamesjj.liao@mediatek.com>
-Subject: [PATCH v3 2/4] clk: mediatek: Add initial common clock support for
- Mediatek SoCs.
-Date: Wed, 7 Jan 2015 11:25:21 +0800
-Message-ID: <1420601123-25859-3-git-send-email-jamesjj.liao@mediatek.com>
-References: <1420601123-25859-1-git-send-email-jamesjj.liao@mediatek.com>
+Subject: [PATCH v3 0/4] clk: mediatek: Add common clock support for Mediatek
+ MT8135.
+Date: Wed, 7 Jan 2015 11:25:19 +0800
+Message-ID: <1420601123-25859-1-git-send-email-jamesjj.liao@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1420601123-25859-1-git-send-email-jamesjj.liao@mediatek.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,504 +20,56 @@ To: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
 Cc: Mark Rutland <mark.rutland@arm.com>, jamesjj.liao@mediatek.com, Vladimir Murzin <vladimir.murzin@arm.com>, Russell King <linux@arm.linux.org.uk>, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, linux-kernel@vger.kernel.org, henryc.chen@mediatek.com, devicetree@vger.kernel.org, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, "Joe.C" <yingjoe.chen@mediatek.com>, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds common clock support for Mediatek SoCs, including plls,
+This patchset contains the initial common clock support for Mediatek SoCs.
+Mediatek SoC's clock architecture comprises of various PLLs, dividers,
 muxes and clock gates.
 
-Change-Id: I19b5f02615610b8825fd7e028bc9b87133181bf0
-Signed-off-by: James Liao <jamesjj.liao@mediatek.com>
----
- drivers/clk/mediatek/clk-gate.c | 150 ++++++++++++++++++++++++++++++++++++++++
- drivers/clk/mediatek/clk-gate.h |  48 +++++++++++++
- drivers/clk/mediatek/clk-mtk.c  |  89 ++++++++++++++++++++++++
- drivers/clk/mediatek/clk-mtk.h  |  47 +++++++++++++
- drivers/clk/mediatek/clk-pll.c  |  59 ++++++++++++++++
- drivers/clk/mediatek/clk-pll.h  |  50 ++++++++++++++
- 6 files changed, 443 insertions(+)
+This patchset also contains a basic clock support for Mediatek MT8135.
+
+This driver is based on 3.19-rc1 + MT8135 basic support.
+
+Changes in v2:
+- Re-ordered patchset. Fold include/dt-bindings and DT document in 1st
+patch.
+
+Changes in v3:
+- Rebase to 3.19-rc1.
+- Refine code. Remove unneed functions, debug logs and comments, and fine tune
+error logs.
+
+James Liao (4):
+  clk: dts: mediatek: add Mediatek MT8135 clock bindings
+  clk: mediatek: Add initial common clock support for Mediatek SoCs.
+  clk: mediatek: Add basic clocks for Mediatek MT8135.
+  dts: mediatek: Enable clock support for Mediatek MT8135.
+
+ .../bindings/clock/mediatek,mt8135-clock.txt       |  36 +
+ arch/arm/boot/dts/mt8135.dtsi                      |  47 +
+ drivers/clk/Makefile                               |   1 +
+ drivers/clk/mediatek/Makefile                      |   2 +
+ drivers/clk/mediatek/clk-gate.c                    | 150 ++++
+ drivers/clk/mediatek/clk-gate.h                    |  48 +
+ drivers/clk/mediatek/clk-mt8135-pll.c              | 902 +++++++++++++++++++
+ drivers/clk/mediatek/clk-mt8135-pll.h              |  28 +
+ drivers/clk/mediatek/clk-mt8135.c                  | 974 +++++++++++++++++++++
+ drivers/clk/mediatek/clk-mtk.c                     |  89 ++
+ drivers/clk/mediatek/clk-mtk.h                     |  47 +
+ drivers/clk/mediatek/clk-pll.c                     |  59 ++
+ drivers/clk/mediatek/clk-pll.h                     |  50 ++
+ include/dt-bindings/clock/mt8135-clk.h             | 190 ++++
+ 14 files changed, 2623 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/mediatek,mt8135-clock.txt
+ create mode 100644 drivers/clk/mediatek/Makefile
  create mode 100644 drivers/clk/mediatek/clk-gate.c
  create mode 100644 drivers/clk/mediatek/clk-gate.h
+ create mode 100644 drivers/clk/mediatek/clk-mt8135-pll.c
+ create mode 100644 drivers/clk/mediatek/clk-mt8135-pll.h
+ create mode 100644 drivers/clk/mediatek/clk-mt8135.c
  create mode 100644 drivers/clk/mediatek/clk-mtk.c
  create mode 100644 drivers/clk/mediatek/clk-mtk.h
  create mode 100644 drivers/clk/mediatek/clk-pll.c
  create mode 100644 drivers/clk/mediatek/clk-pll.h
+ create mode 100644 include/dt-bindings/clock/mt8135-clk.h
 
-diff --git a/drivers/clk/mediatek/clk-gate.c b/drivers/clk/mediatek/clk-gate.c
-new file mode 100644
-index 0000000..2a694b1
---- /dev/null
-+++ b/drivers/clk/mediatek/clk-gate.c
-@@ -0,0 +1,150 @@
-+/*
-+ * Copyright (c) 2014 MediaTek Inc.
-+ * Author: James Liao <jamesjj.liao@mediatek.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+
-+#include <linux/io.h>
-+#include <linux/slab.h>
-+#include <linux/delay.h>
-+#include <linux/clkdev.h>
-+
-+#include "clk-mtk.h"
-+#include "clk-gate.h"
-+
-+static void cg_set_mask(struct mtk_clk_gate *cg, u32 mask)
-+{
-+	u32 r;
-+
-+	if (cg->flags & CLK_GATE_NO_SETCLR_REG) {
-+		r = readl_relaxed(cg->sta_addr) | mask;
-+		writel_relaxed(r, cg->sta_addr);
-+	} else
-+		writel_relaxed(mask, cg->set_addr);
-+}
-+
-+static void cg_clr_mask(struct mtk_clk_gate *cg, u32 mask)
-+{
-+	u32 r;
-+
-+	if (cg->flags & CLK_GATE_NO_SETCLR_REG) {
-+		r = readl_relaxed(cg->sta_addr) & ~mask;
-+		writel_relaxed(r, cg->sta_addr);
-+	} else
-+		writel_relaxed(mask, cg->clr_addr);
-+}
-+
-+static int cg_enable(struct clk_hw *hw)
-+{
-+	unsigned long flags = 0;
-+	struct mtk_clk_gate *cg = to_clk_gate(hw);
-+	u32 mask = BIT(cg->bit);
-+
-+	pr_debug("%s(): %s, bit: %u\n",
-+		__func__, __clk_get_name(hw->clk), cg->bit);
-+
-+	mtk_clk_lock(flags);
-+
-+	if (cg->flags & CLK_GATE_INVERSE)
-+		cg_set_mask(cg, mask);
-+	else
-+		cg_clr_mask(cg, mask);
-+
-+	mtk_clk_unlock(flags);
-+
-+	return 0;
-+}
-+
-+static void cg_disable(struct clk_hw *hw)
-+{
-+	unsigned long flags = 0;
-+	struct mtk_clk_gate *cg = to_clk_gate(hw);
-+	u32 mask = BIT(cg->bit);
-+
-+	pr_debug("%s(): %s, bit: %u\n",
-+		__func__, __clk_get_name(hw->clk), cg->bit);
-+
-+	mtk_clk_lock(flags);
-+
-+	if (cg->flags & CLK_GATE_INVERSE)
-+		cg_clr_mask(cg, mask);
-+	else
-+		cg_set_mask(cg, mask);
-+
-+	mtk_clk_unlock(flags);
-+}
-+
-+static int cg_is_enabled(struct clk_hw *hw)
-+{
-+	struct mtk_clk_gate *cg = to_clk_gate(hw);
-+	u32 mask;
-+	u32 val;
-+	int r;
-+
-+	mask = BIT(cg->bit);
-+	val = mask & readl(cg->sta_addr);
-+
-+	r = (cg->flags & CLK_GATE_INVERSE) ? (val != 0) : (val == 0);
-+
-+	pr_debug("%s(): %d, %s, bit[%d]\n",
-+		__func__, r, __clk_get_name(hw->clk), (int)cg->bit);
-+
-+	return r;
-+}
-+
-+static const struct clk_ops mtk_clk_gate_ops = {
-+	.is_enabled	= cg_is_enabled,
-+	.enable		= cg_enable,
-+	.disable	= cg_disable,
-+};
-+
-+struct clk *mtk_clk_register_gate(
-+		const char *name,
-+		const char *parent_name,
-+		void __iomem *set_addr,
-+		void __iomem *clr_addr,
-+		void __iomem *sta_addr,
-+		u8 bit,
-+		u32 flags)
-+{
-+	struct mtk_clk_gate *cg;
-+	struct clk *clk;
-+	struct clk_init_data init;
-+
-+	pr_debug("%s(): name: %s, bit: %d\n", __func__, name, (int)bit);
-+
-+	cg = kzalloc(sizeof(*cg), GFP_KERNEL);
-+	if (!cg)
-+		return ERR_PTR(-ENOMEM);
-+
-+	init.name = name;
-+	init.flags = CLK_IGNORE_UNUSED;
-+	init.parent_names = parent_name ? &parent_name : NULL;
-+	init.num_parents = parent_name ? 1 : 0;
-+	init.ops = &mtk_clk_gate_ops;
-+
-+	cg->set_addr = set_addr;
-+	cg->clr_addr = clr_addr;
-+	cg->sta_addr = sta_addr;
-+	cg->bit = bit;
-+	cg->flags = flags;
-+
-+	cg->hw.init = &init;
-+
-+	clk = clk_register(NULL, &cg->hw);
-+	if (IS_ERR(clk))
-+		kfree(cg);
-+
-+	return clk;
-+}
-diff --git a/drivers/clk/mediatek/clk-gate.h b/drivers/clk/mediatek/clk-gate.h
-new file mode 100644
-index 0000000..0d71aad
---- /dev/null
-+++ b/drivers/clk/mediatek/clk-gate.h
-@@ -0,0 +1,48 @@
-+/*
-+ * Copyright (c) 2014 MediaTek Inc.
-+ * Author: James Liao <jamesjj.liao@mediatek.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#ifndef __DRV_CLK_GATE_H
-+#define __DRV_CLK_GATE_H
-+
-+/*
-+ * This is a private header file. DO NOT include it except clk-*.c.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/clk-provider.h>
-+
-+struct mtk_clk_gate {
-+	struct clk_hw	hw;
-+	void __iomem	*set_addr;
-+	void __iomem	*clr_addr;
-+	void __iomem	*sta_addr;
-+	u8		bit;
-+	u32		flags;
-+};
-+
-+#define to_clk_gate(_hw) container_of(_hw, struct mtk_clk_gate, hw)
-+
-+#define CLK_GATE_INVERSE	BIT(0)
-+#define CLK_GATE_NO_SETCLR_REG	BIT(1)
-+
-+struct clk *mtk_clk_register_gate(
-+		const char *name,
-+		const char *parent_name,
-+		void __iomem *set_addr,
-+		void __iomem *clr_addr,
-+		void __iomem *sta_addr,
-+		u8 bit,
-+		u32 flags);
-+
-+#endif /* __DRV_CLK_GATE_H */
-diff --git a/drivers/clk/mediatek/clk-mtk.c b/drivers/clk/mediatek/clk-mtk.c
-new file mode 100644
-index 0000000..b137ca9
---- /dev/null
-+++ b/drivers/clk/mediatek/clk-mtk.c
-@@ -0,0 +1,89 @@
-+/*
-+ * Copyright (c) 2014 MediaTek Inc.
-+ * Author: James Liao <jamesjj.liao@mediatek.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+
-+#include <linux/io.h>
-+#include <linux/slab.h>
-+#include <linux/delay.h>
-+#include <linux/clkdev.h>
-+
-+#include "clk-mtk.h"
-+
-+static DEFINE_SPINLOCK(clk_ops_lock);
-+
-+spinlock_t *get_mtk_clk_lock(void)
-+{
-+	return &clk_ops_lock;
-+}
-+
-+struct clk *mtk_clk_register_mux(
-+		const char *name,
-+		const char **parent_names,
-+		u8 num_parents,
-+		void __iomem *base_addr,
-+		u8 shift,
-+		u8 width,
-+		u8 gate_bit)
-+{
-+	struct clk *clk;
-+	struct clk_mux *mux;
-+	struct clk_gate *gate = NULL;
-+	struct clk_hw *gate_hw = NULL;
-+	const struct clk_ops *gate_ops = NULL;
-+	u32 mask = BIT(width) - 1;
-+
-+	pr_debug("%s(): name: %s, num_parents: %d, gate_bit: %d\n",
-+		__func__, name, (int)num_parents, (int)gate_bit);
-+
-+	mux = kzalloc(sizeof(struct clk_mux), GFP_KERNEL);
-+	if (!mux)
-+		return ERR_PTR(-ENOMEM);
-+
-+	mux->reg = base_addr;
-+	mux->mask = mask;
-+	mux->shift = shift;
-+	mux->flags = 0;
-+	mux->lock = &clk_ops_lock;
-+
-+	if (gate_bit <= MAX_MUX_GATE_BIT) {
-+		gate = kzalloc(sizeof(struct clk_gate), GFP_KERNEL);
-+		if (!gate) {
-+			kfree(mux);
-+			return ERR_PTR(-ENOMEM);
-+		}
-+
-+		gate->reg = base_addr;
-+		gate->bit_idx = gate_bit;
-+		gate->flags = CLK_GATE_SET_TO_DISABLE;
-+		gate->lock = &clk_ops_lock;
-+
-+		gate_hw = &gate->hw;
-+		gate_ops = &clk_gate_ops;
-+	}
-+
-+	clk = clk_register_composite(NULL, name, parent_names, num_parents,
-+		&mux->hw, &clk_mux_ops,
-+		NULL, NULL,
-+		gate_hw, gate_ops,
-+		CLK_IGNORE_UNUSED);
-+
-+	if (IS_ERR(clk)) {
-+		kfree(gate);
-+		kfree(mux);
-+	}
-+
-+	return clk;
-+}
-diff --git a/drivers/clk/mediatek/clk-mtk.h b/drivers/clk/mediatek/clk-mtk.h
-new file mode 100644
-index 0000000..b69245d
---- /dev/null
-+++ b/drivers/clk/mediatek/clk-mtk.h
-@@ -0,0 +1,47 @@
-+/*
-+ * Copyright (c) 2014 MediaTek Inc.
-+ * Author: James Liao <jamesjj.liao@mediatek.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#ifndef __DRV_CLK_MTK_H
-+#define __DRV_CLK_MTK_H
-+
-+/*
-+ * This is a private header file. DO NOT include it except clk-*.c.
-+ */
-+
-+#include <linux/bitops.h>
-+#include <linux/clk.h>
-+#include <linux/clk-provider.h>
-+
-+#define CLK_DEBUG		0
-+#define DUMMY_REG_TEST		0
-+
-+extern spinlock_t *get_mtk_clk_lock(void);
-+
-+#define mtk_clk_lock(flags)	spin_lock_irqsave(get_mtk_clk_lock(), flags)
-+#define mtk_clk_unlock(flags)	\
-+	spin_unlock_irqrestore(get_mtk_clk_lock(), flags)
-+
-+#define MAX_MUX_GATE_BIT	31
-+#define INVALID_MUX_GATE_BIT	(MAX_MUX_GATE_BIT + 1)
-+
-+struct clk *mtk_clk_register_mux(
-+		const char *name,
-+		const char **parent_names,
-+		u8 num_parents,
-+		void __iomem *base_addr,
-+		u8 shift,
-+		u8 width,
-+		u8 gate_bit);
-+
-+#endif /* __DRV_CLK_MTK_H */
-diff --git a/drivers/clk/mediatek/clk-pll.c b/drivers/clk/mediatek/clk-pll.c
-new file mode 100644
-index 0000000..c48630b
---- /dev/null
-+++ b/drivers/clk/mediatek/clk-pll.c
-@@ -0,0 +1,59 @@
-+/*
-+ * Copyright (c) 2014 MediaTek Inc.
-+ * Author: James Liao <jamesjj.liao@mediatek.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/io.h>
-+#include <linux/slab.h>
-+#include <linux/clkdev.h>
-+
-+#include "clk-mtk.h"
-+#include "clk-pll.h"
-+
-+struct clk *mtk_clk_register_pll(
-+		const char *name,
-+		const char *parent_name,
-+		u32 *base_addr,
-+		u32 *pwr_addr,
-+		u32 en_mask,
-+		u32 flags,
-+		const struct clk_ops *ops)
-+{
-+	struct mtk_clk_pll *pll;
-+	struct clk_init_data init;
-+	struct clk *clk;
-+
-+	pr_debug("%s(): name: %s\n", __func__, name);
-+
-+	pll = kzalloc(sizeof(*pll), GFP_KERNEL);
-+	if (!pll)
-+		return ERR_PTR(-ENOMEM);
-+
-+	pll->base_addr = base_addr;
-+	pll->pwr_addr = pwr_addr;
-+	pll->en_mask = en_mask;
-+	pll->flags = flags;
-+	pll->hw.init = &init;
-+
-+	init.name = name;
-+	init.ops = ops;
-+	init.flags = CLK_IGNORE_UNUSED;
-+	init.parent_names = &parent_name;
-+	init.num_parents = 1;
-+
-+	clk = clk_register(NULL, &pll->hw);
-+
-+	if (IS_ERR(clk))
-+		kfree(pll);
-+
-+	return clk;
-+}
-diff --git a/drivers/clk/mediatek/clk-pll.h b/drivers/clk/mediatek/clk-pll.h
-new file mode 100644
-index 0000000..cb7f335
---- /dev/null
-+++ b/drivers/clk/mediatek/clk-pll.h
-@@ -0,0 +1,50 @@
-+/*
-+ * Copyright (c) 2014 MediaTek Inc.
-+ * Author: James Liao <jamesjj.liao@mediatek.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#ifndef __DRV_CLK_PLL_H
-+#define __DRV_CLK_PLL_H
-+
-+/*
-+ * This is a private header file. DO NOT include it except clk-*.c.
-+ */
-+
-+#include <linux/bitops.h>
-+#include <linux/clk.h>
-+#include <linux/clk-provider.h>
-+
-+struct mtk_clk_pll {
-+	struct clk_hw	hw;
-+	void __iomem	*base_addr;
-+	void __iomem	*pwr_addr;
-+	u32		en_mask;
-+	u32		flags;
-+};
-+
-+#define to_mtk_clk_pll(_hw) container_of(_hw, struct mtk_clk_pll, hw)
-+
-+#define HAVE_RST_BAR	BIT(0)
-+#define HAVE_PLL_HP	BIT(1)
-+#define HAVE_FIX_FRQ	BIT(2)
-+#define PLL_AO		BIT(3)
-+
-+struct clk *mtk_clk_register_pll(
-+		const char *name,
-+		const char *parent_name,
-+		u32 *base_addr,
-+		u32 *pwr_addr,
-+		u32 en_mask,
-+		u32 flags,
-+		const struct clk_ops *ops);
-+
-+#endif /* __DRV_CLK_PLL_H */
--- 
+--
 1.8.1.1.dirty
