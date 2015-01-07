@@ -1,167 +1,113 @@
-From: Walter Lozano <walter-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
-Subject: [PATCH 1/2] Input: adxl34x - add OF support
-Date: Tue,  6 Jan 2015 23:58:56 -0300
-Message-ID: <1420599537-28740-1-git-send-email-walter@vanguardiasur.com.ar>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Walter Lozano <walter-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+From: James Liao <jamesjj.liao@mediatek.com>
+Subject: [PATCH v3 4/4] dts: mediatek: Enable clock support for Mediatek
+ MT8135.
+Date: Wed, 7 Jan 2015 11:25:23 +0800
+Message-ID: <1420601123-25859-5-git-send-email-jamesjj.liao@mediatek.com>
+References: <1420601123-25859-1-git-send-email-jamesjj.liao@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1420601123-25859-1-git-send-email-jamesjj.liao@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Mike Turquette <mturquette@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, jamesjj.liao@mediatek.com, Vladimir Murzin <vladimir.murzin@arm.com>, Russell King <linux@arm.linux.org.uk>, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, linux-kernel@vger.kernel.org, henryc.chen@mediatek.com, devicetree@vger.kernel.org, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, "Joe.C" <yingjoe.chen@mediatek.com>, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the missing support for OF to the adxl34x digital
-accelerometer. This is a basic version which supports the main
-optional parameters. This implementation copies the default values
-to the adxl34x_platform_data structure and overrides the values
-that are passed from the device tree.
+This patch adds MT8135 clock controllers into device tree.
 
-Signed-off-by: Walter Lozano <walter-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+Change-Id: I9c5bab9289bbd6eb444aad97d015b8f26ca88a8a
+Signed-off-by: James Liao <jamesjj.liao@mediatek.com>
 ---
- drivers/input/misc/adxl34x.c |  108 +++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 107 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/mt8135.dtsi | 47 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 47 insertions(+)
 
-diff --git a/drivers/input/misc/adxl34x.c b/drivers/input/misc/adxl34x.c
-index 2b2d02f..b3e06a3 100644
---- a/drivers/input/misc/adxl34x.c
-+++ b/drivers/input/misc/adxl34x.c
-@@ -16,6 +16,8 @@
- #include <linux/workqueue.h>
- #include <linux/input/adxl34x.h>
- #include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
+diff --git a/arch/arm/boot/dts/mt8135.dtsi b/arch/arm/boot/dts/mt8135.dtsi
+index ec83e69..09fcf0d 100644
+--- a/arch/arm/boot/dts/mt8135.dtsi
++++ b/arch/arm/boot/dts/mt8135.dtsi
+@@ -12,6 +12,7 @@
+  * GNU General Public License for more details.
+  */
  
- #include "adxl34x.h"
++#include <dt-bindings/clock/mt8135-clk.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include "skeleton64.dtsi"
+@@ -92,6 +93,24 @@
+ 			clock-frequency = <26000000>;
+ 			#clock-cells = <0>;
+ 		};
++
++		clk_null: clk_null {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <0>;
++		};
++
++		clk26m: clk26m {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <26000000>;
++		};
++
++		rtc32k: rtc32k {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <32000>;
++		};
+ 	};
  
-@@ -688,13 +690,113 @@ static void adxl34x_input_close(struct input_dev *input)
- 	mutex_unlock(&ac->mutex);
- }
+ 	soc {
+@@ -100,6 +119,28 @@
+ 		compatible = "simple-bus";
+ 		ranges;
  
-+void adxl34x_parse_dt(struct device *dev, struct adxl34x_platform_data *pdata){
-+	if (!dev->of_node)
-+		return;
++		topckgen: topckgen@10000000 {
++			compatible = "mediatek,mt8135-topckgen";
++			reg = <0 0x10000000 0 0x1000>;
++			#clock-cells = <1>;
++		};
 +
-+	pdata =  kzalloc(sizeof(*pdata), GFP_KERNEL);
++		infracfg: syscon@10001000 {
++			#address-cells = <1>;
++			#size-cells = <1>;
++			compatible = "mediatek,mt8135-infracfg", "syscon";
++			reg = <0 0x10001000 0 0x1000>;
++			#clock-cells = <1>;
++		};
 +
-+	memcpy(pdata, &adxl34x_default_init, sizeof(struct adxl34x_platform_data));
++		pericfg: syscon@10003000 {
++			#address-cells = <1>;
++			#size-cells = <1>;
++			compatible = "mediatek,mt8135-pericfg", "syscon";
++			reg = <0 0x10003000 0 0x1000>;
++			#clock-cells = <1>;
++		};
 +
-+	of_property_read_u8(dev->of_node, "adi,tap-axis-control",
-+		 &pdata->tap_axis_control);
-+
-+	of_property_read_u8(dev->of_node, "adi,tap-threshold",
-+		 &pdata->tap_threshold);
-+
-+	of_property_read_u8(dev->of_node, "adi,tap-duration",
-+		 &pdata->tap_duration);
-+
-+	of_property_read_u8(dev->of_node, "adi,tap-latency",
-+		 &pdata->tap_latency);
-+
-+	of_property_read_u8(dev->of_node, "adi,tap-window",
-+		 &pdata->tap_window);
-+
-+	of_property_read_u8(dev->of_node, "adi,act-axis-control",
-+		 &pdata->act_axis_control);
-+
-+	of_property_read_u8(dev->of_node, "adi,activity-threshold",
-+		 &pdata->activity_threshold);
-+
-+	of_property_read_u8(dev->of_node, "adi,inactivity-threshold",
-+		 &pdata->inactivity_threshold);
-+
-+	of_property_read_u8(dev->of_node, "adi,inactivity-time",
-+		 &pdata->inactivity_time);
-+
-+	of_property_read_u8(dev->of_node, "adi,free-fall-threshold",
-+		 &pdata->free_fall_threshold);
-+
-+	of_property_read_u8(dev->of_node, "adi,free-fall-time",
-+		 &pdata->free_fall_time);
-+
-+	of_property_read_u8(dev->of_node, "adi,data-rate",
-+		 &pdata->data_rate);
-+
-+	of_property_read_u8(dev->of_node, "adi,data-range",
-+		 &pdata->data_range);
-+
-+	of_property_read_u8(dev->of_node, "adi,low-power-mode",
-+		 &pdata->low_power_mode);
-+
-+	of_property_read_u8(dev->of_node, "adi,power-mode",
-+		 &pdata->power_mode);
-+
-+	of_property_read_u8(dev->of_node, "adi,fifo-mode",
-+		 &pdata->fifo_mode);
-+
-+	of_property_read_u8(dev->of_node, "adi,watermark",
-+		 &pdata->watermark);
-+
-+	of_property_read_u8(dev->of_node, "adi,use-int2",
-+		 &pdata->use_int2);
-+
-+	of_property_read_u8(dev->of_node, "adi,orientation-enable",
-+		 &pdata->orientation_enable);
-+
-+	of_property_read_u8(dev->of_node, "adi,deadzone-angle",
-+		 &pdata->deadzone_angle);
-+
-+	of_property_read_u8(dev->of_node, "adi,divisor-length",
-+		 &pdata->divisor_length);
-+
-+	of_property_read_u32(dev->of_node, "adi,ev-type",
-+		 &pdata->ev_type);
-+
-+	of_property_read_u32(dev->of_node, "adi,ev-code-x",
-+		 &pdata->ev_code_x);
-+
-+	of_property_read_u32(dev->of_node, "adi,ev-code-y",
-+		 &pdata->ev_code_y);
-+
-+	of_property_read_u32(dev->of_node, "adi,ev-code-z",
-+		 &pdata->ev_code_z);
-+
-+	of_property_read_u32_array(dev->of_node, "adi,ev-code-tap",
-+		 pdata->ev_code_tap, 3);
-+
-+	of_property_read_u32(dev->of_node, "adi,ev-code-ff",
-+		 &pdata->ev_code_ff);
-+
-+	of_property_read_u32(dev->of_node, "adi,ev-code-act-inactivity",
-+		 &pdata->ev_code_act_inactivity);
-+
-+	of_property_read_u32_array(dev->of_node, "adi,ev-codes-orient-2d",
-+		 pdata->ev_codes_orient_2d, 4);
-+
-+	of_property_read_u32_array(dev->of_node, "adi,ev-codes-orient-3d",
-+		 pdata->ev_codes_orient_3d, 6);
-+
-+}
-+
- struct adxl34x *adxl34x_probe(struct device *dev, int irq,
- 			      bool fifo_delay_default,
- 			      const struct adxl34x_bus_ops *bops)
- {
- 	struct adxl34x *ac;
- 	struct input_dev *input_dev;
--	const struct adxl34x_platform_data *pdata;
-+	struct adxl34x_platform_data *pdata;
- 	int err, range, i;
- 	unsigned char revid;
+ 		timer: timer@10008000 {
+ 			compatible = "mediatek,mt8135-timer",
+ 					"mediatek,mt6577-timer";
+@@ -128,6 +169,12 @@
+ 			      <0 0x10216000 0 0x2000>;
+ 		};
  
-@@ -714,6 +816,10 @@ struct adxl34x *adxl34x_probe(struct device *dev, int irq,
- 	ac->fifo_delay = fifo_delay_default;
- 
- 	pdata = dev_get_platdata(dev);
++		apmixedsys: apmixedsys@10209000 {
++			compatible = "mediatek,mt8135-apmixedsys";
++			reg = <0 0x10209000 0 0x1000>;
++			#clock-cells = <1>;
++		};
 +
-+	if (!pdata && dev->of_node)
-+		adxl34x_parse_dt(dev, pdata);
-+
- 	if (!pdata) {
- 		dev_dbg(dev,
- 			"No platform data: Using default initialization\n");
+ 		uart0: serial@11006000 {
+ 			compatible = "mediatek,mt8135-uart","mediatek,mt6577-uart";
+ 			reg = <0 0x11006000 0 0x400>;
 -- 
-1.7.10.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.8.1.1.dirty
