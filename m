@@ -1,141 +1,465 @@
-From: Andy Yan <andy.yan@rock-chips.com>
-Subject: Re: [PATCH v18 0/12] dw-hdmi: convert imx hdmi to bridge/dw_hdmi
-Date: Wed, 07 Jan 2015 15:17:44 +0800
-Message-ID: <54ACDD98.1060305@rock-chips.com>
-References: <1417760564-16858-1-git-send-email-andy.yan@rock-chips.com>
- <54AC9C62.3030203@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <54AC9C62.3030203@freescale.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Liu Ying <Ying.Liu@freescale.com>, airlied@linux.ie, Philipp Zabel <p.zabel@pengutronix.de>, heiko@sntech.de, fabio.estevam@freescale.com, rmk+kernel@arm.linux.org.uk
-Cc: Mark Rutland <mark.rutland@arm.com>, devel@driverdev.osuosl.org, Zubair.Kakakhel@imgtec.com, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Josh Boyer <jwboyer@redhat.com>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, djkurtz@google.com, ykk@rock-chips.com, Grant Likely <grant.likely@linaro.org>, Dave Airlie <airlied@redhat.com>, Kumar Gala <galak@codeaurora.org>, jay.xu@rock-chips.com, vladimir_zapolskiy@mentor.com, mark.yao@rock-chips.com
+From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v18 12/12] drm: bridge/dw_hdmi: add rockchip rk3288 support
+Date: Wed,  7 Jan 2015 15:48:27 +0800
+Message-ID: <1420616907-24010-1-git-send-email-andy.yan@rock-chips.com>
+References: <1417761259-17429-1-git-send-email-andy.yan@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1417761259-17429-1-git-send-email-andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: airlied-cv59FeDIM0c@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, --cc=Ying.Liu-KZfg59tc24xl57MIdRCFDg@public.gmane.org, mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTGl1IFlpbmcgLCBQaGlsaXBwOgoKT24gMjAxNeW5tDAx5pyIMDfml6UgMTA6MzksIExpdSBZ
-aW5nIHdyb3RlOgo+Cj4gT24gMTIvMDUvMjAxNCAwMjoyMiBQTSwgQW5keSBZYW4gd3JvdGU6Cj4+
-Cj4+IFdlIGZvdW5kIEZyZWVzY2FsZSBpbXg2IGFuZCBSb2NrY2hpcCByazMyODggYW5kIEluZ2Vu
-aWMgSlo0NzgwIAo+PiAoWGJ1cnN0L01JUFMpCj4+IHVzZSB0aGUgaW50ZXJmYWNlIGNvbXBhdGli
-bGUgRGVzaWdud2FyZSBIRE1JIElQLCBidXQgdGhleSBhbHNvIGhhdmUgc29tZQo+PiBsaWdodGx5
-IGRpZmZlcmVuY2VzLCBzdWNoIGFzIHBoeSBwbGwgY29uZmlndXJhdGlvbiwgcmVnaXN0ZXIgCj4+
-IHdpZHRoKGlteCBoZG1pCj4+IHJlZ2lzdGVyIGlzIG9uZSBieXRlLCBidXQgcmszMjg4IGlzIDQg
-Ynl0ZXMgd2lkdGggYW5kIGNhbiBvbmx5IGJlIAo+PiBhY2Nlc3NlZAo+PiBieSB3b3JkKSwgNEsg
-c3VwcG9ydChpbXg2IGRvZXNuJ3Qgc3VwcG9ydCA0aywgYnV0IHJrMzI4OCBkb2VzKSwgYW5kIAo+
-PiBIRE1JMi4wCj4+IHN1cHBvcnQuCj4+Cj4+IFRvIHJldXNlIHRoZSBpbXgtaGRtaSBkcml2ZXIs
-IHdlIG1ha2UgdGhpcyBwYXRjaCBzZXQ6Cj4+ICgxKTogZml4IHNvbWUgQ29kaW5nU3R5bGUgd2Fy
-bmluZyB0byBtYWtlIGNoZWNrcGF0Y2ggaGFwcHkKPj4gKDIpOiBjb252ZXJ0IGlteC1oZG1pIHRv
-IGRybV9icmlkZ2UKPj4gKDMpOiBzcGxpdCBwbGF0Zm9ybSBzcGVjaWZpYyBjb2RlCj4+ICg0KTog
-bW92ZSBpbXgtaGRtaSB0byBicmlkZ2UvZHdfaGRtaQo+PiAoNSk6IGV4dGVuZCBkd19oZG1pLmMg
-dG8gc3VwcG9ydCByazMyODggaGRtaQo+PiAoNik6IGFkZCByb2NrY2hpcCByazMyODggcGxhdGZv
-cm0gc3BlY2lmaWMgY29kZSBkd19oZG1pLXJvY2tjaGlwLmMKPj4KPj4gQ2hhbmdlcyBpbiB2MTg6
-Cj4+IC0gcmVtb3ZlIGEgbXVsdGlwbGUgYmxhbmsgbGluZXMgaW4gaW14LWhkbWkuYwo+PiAtIGZp
-eCBhIGNoZWNrcGF0Y2ggd2FybmluZyBpbiBpbXgtaGRtaV9wbHRmbS5jCj4+IC0gYWRkIHBvcnQg
-YmluZGluZ3MKPj4gLSBjb3JyZWN0IHNvbWUgc3BlbGxpbmcgbWlzdGFrZXMgaW4gZHdfaGRtaSBi
-aW5kaW5ncyBkb2MKPj4gLSBjb3JyZWN0IHNvbWUgc3BlbGxpbmcgbWlzdGFrZXMgaW4gZHdfaGRt
-aS1yb2NrY2hpcCBiaW5kaW5ncyBkb2MKPj4KPj4gQ2hhbmdlcyBpbiB2MTc6Cj4+IC0gcmVtb3Zl
-IHBsYXRmb3JtIGRldmljZSBzdHVmZiwgYWR2aWNlZCBieSBSdXNzZWxsIEtpbmcKPj4gLSByZW1v
-dmUgcHJvbXB0IG1lc3NhZ2Ugb2YgZHdfaGRtaSwgYWR2aWNlZCBieSBSdXNzZWwgS2luZwo+PiAt
-IHBhcnNlIHJlc291cmNlIGFuZCBpcnEgaW4gcGxhdGZvcm0gZHJpdmVyCj4+Cj4+IENoYW5nZXMg
-aW4gdjE2Ogo+PiAtIHVzZSB0aGUgY29tbW9uIGJpbmRpbmcgZm9yIHRoZSBjbG9ja3MKPj4gLSBk
-ZXNjcmliZSBkZGMtaTJjLWJ1cyBhcyBvcHRpb25hbAo+PiAtIGFkZCBjb21tb24gY2xvY2tzIGJp
-bmRpbmdzCj4+IC0gbW9kaWZ5IGNsb2NrcyBiaW5kaW5ncwo+PiAtIGRlc2NyYmllIGRkYy1pMmMt
-YnVzIGFzIG9wdGlvbmFsCj4+Cj4+IENoYW5nZXMgaW4gdjE1Ogo+PiAtIGFkZCBwcmVmaXggZHdf
-aGRtaS9EV19IRE1JIGZvciBwdWJsaWMgdXNlZCBkd19oZG1pIHN0cnVjdHMKPj4gICAgYWR2aWNl
-ZCBieSBQaGlsaXBwIFphYmVsCj4+IC0gcmVtb3ZlIFRISVNfTU9EVUxFIGluIHBsYXRmb3JtIGRy
-aXZlcgo+PiAtIHJlbW92ZSB1bmlvIG9mIHRoZSBtdWx0aS1ieXRlIHJlZ2lzdGVyIGFjY2Vzcywg
-YWR2aWNlZCBieSBQaGlsaXBwIAo+PiBaYWJlbAo+PiAtIHJlbW92ZSBUSElTX01PRFVMRSBpbiBw
-bGF0Zm9ybSBkcml2ZXIKPj4KPj4gQ2hhbmdlcyBpbiB2MTQ6Cj4+IC0gYWRkIGRlZmVyIHByb2Jp
-bmcsIGFkdmljZWQgYnkgUGhpbGlwcCBaYWJlbAo+PiAtIHJlbW92ZSBkcm1fY29ubmVjdG9yX3Jl
-Z2lzdGVyLCBiZWNhdXNlIGlteC1kcm0gY29yZSBoYXMgcmVnaXN0ZXJlZAo+PiBjb25uZWN0b3IK
-Pj4KPj4gQ2hhbmdlcyBpbiB2MTM6Cj4+IC0gcGF0Y2ggYWdhaW5zdCBkcm0tbmV4dAo+PiAtIHNw
-bGl0IHBsYXRmb3JtIHNwZWNpZmljIHBoeSBjb25maWd1cmF0aW9uCj4+IC0gc3BsaXQgcGh5IGNv
-bmZpZ3VyYXRpb24gZnJvbSBwYXRjaCM0Cj4+Cj4+IENoYW5nZXMgaW4gdjEyOgo+PiAtIHJlZmFj
-dG9yIG9mX25vZGVfcHV0KGRkY19ub2RlKQo+PiAtIHNxdWFzaCBwYXRjaCA8Y29udmVydCBkd19o
-ZG1pIHRvIGRybV9icmlkZ2U+Cj4+IC0gYWRkIGNvbW1lbnQgZm9yIHRoZSBkZXBlbmQgb24gcGF0
-Y2gKPj4KPj4gQ2hhbmdlcyBpbiB2MTE6Cj4+IC0gc3F1YXNoIHBhdGNoICA8c3BsaXQgc29tZSBw
-aHkgY29uZmlndXJhdGlvbiB0byBwbGF0Zm9ybSBkcml2ZXI+Cj4+Cj4+IENoYW5nZXMgaW4gdjEw
-Ogo+PiAtIHNwbGl0IGdlbmVyaWMgZHdfaGRtaS5jIGltcHJvdmVtZW50cyBmcm9tIHBhdGNoIzEx
-IChhZGQgcmszMjg4IAo+PiBzdXBwb3J0KQo+PiAtIGFkZCBtb3JlIGRpc3BsYXkgbW9kZSBzdXBw
-b3J0IG1wbGwgY29uZmlndXJhdGlvbiBmb3IgcmszMjg4Cj4+Cj4+IENoYW5nZXMgaW4gdjk6Cj4+
-IC0gbW92ZSBzb21lIHBoeSBjb25maWd1cmF0aW9uIHRvIHBsYXRmb3JtIGRyaXZlcgo+Pgo+PiBD
-aGFuZ2VzIGluIHY4Ogo+PiAtIGNvcnJlY3Qgc29tZSBzcGVsbGluZyBtaXN0YWtlCj4+IC0gbW9k
-aWZ5IGRkYy1pMmMtYnVzIGFuZCBpbnRlcnJ1cHQgZGVzY3JpcHRpb24KPj4gLSBBZGQgZG9jdW1l
-bnRhdGlvbiBmb3Igcm9ja2NoaXAgZHcgaGRtaQo+Pgo+PiBDaGFuZ2VzIGluIHY3Ogo+PiAtIHJl
-bW92ZSB1bnVzZWQgdmFyaWFibGVzIGZyb20gc3RydWN0dXJlIGR3X2hkbWkKPj4gLSByZW1vdmUg
-YSB3cm9uZyBtb2RpZmljYXRpb24KPj4gLSBhZGQgY29weXJpZ2h0cyBmb3IgZHdfaGRtaS1pbXgu
-Ywo+Pgo+PiBDaGFuZ2VzIGluIHY2Ogo+PiAtIHJlYXJyYW5nZSB0aGUgcGF0Y2ggb3JkZXIKPj4g
-LSByZWZhY3RvciByZWdpc3RlciBhY2Nlc3Mgd2l0aG91dCByZWdfc2hpZnQKPj4KPj4gQ2hhbmdl
-cyBpbiB2NToKPj4gLSByZWZhY3RvciByZWctaW8td2lkdGgKPj4KPj4gQ2hhbmdlcyBpbiB2NDoK
-Pj4gLSBmaXggY2hlY2twYXRjaCBDSEVDSwo+PiAtIGRlZmVyIHByb2JlIGRkYyBpMmMgYWRhcHRl
-cgo+Pgo+PiBDaGFuZ2VzIGluIHYzOgo+PiAtIHNwbGl0IG11bHRpLXJlZ2lzdGVyIGFjY2VzcyB0
-byBvbmUgaW5kZXBlbnQgcGF0Y2gKPj4KPj4gQW5keSBZYW4gKDEyKToKPj4gICAgZHJtOiBpbXg6
-IGlteC1oZG1pOiBtYWtlIGNoZWNrcGF0Y2ggaGFwcHkKPj4gICAgZHJtOiBpbXg6IGlteC1oZG1p
-OiByZXR1cm4gZGVmZXIgaWYgY2FuJ3QgZ2V0IGRkYyBpMmMgYWRhcHRlcgo+PiAgICBkcm06IGlt
-eDogaW14LWhkbWk6IGNvbnZlcnQgaW14LWhkbWkgdG8gZHJtX2JyaWRnZSBtb2RlCj4+ICAgIGRy
-bTogaW14OiBpbXgtaGRtaTogc3BsaXQgcGh5IGNvbmZpZ3VyYXRpb24gdG8gcGxhdGZvcm0gZHJp
-dmVyCj4+ICAgIGRybTogaW14OiBpbXgtaGRtaTogbW92ZSBpbXgtaGRtaSB0byBicmlkZ2UvZHdf
-aGRtaQo+PiAgICBkdC1iaW5kaW5nczogYWRkIGRvY3VtZW50IGZvciBkd19oZG1pCj4+ICAgIGRy
-bTogYnJpZGdlL2R3X2hkbWk6IGFkZCBzdXBwb3J0IGZvciBtdWx0aS1ieXRlIHJlZ2lzdGVyIHdp
-ZHRoIGFjY2Vzcwo+PiAgICBkcm06IGJyaWRnZS9kd19oZG1pOiBhZGQgbW9kZV92YWxpZCBzdXBw
-b3J0Cj4+ICAgIGRybTogYnJpZGdlL2R3X2hkbWk6IGNsZWFyIGkyY21waHlfc3RhdDAgcmVnIGlu
-IAo+PiBoZG1pX3BoeV93YWl0X2kyY19kb25lCj4+ICAgIGRybTogYnJpZGdlL2R3X2hkbWk6IGFk
-ZCBmdW5jdGlvbiBkd19oZG1pX3BoeV9lbmFibGVfc3BhcmUKPj4gICAgZHQtYmluZGluZ3M6IEFk
-ZCBkb2N1bWVudGF0aW9uIGZvciByb2NrY2hpcCBkdyBoZG1pCj4+ICAgIGRybTogYnJpZGdlL2R3
-X2hkbWk6IGFkZCByb2NrY2hpcCByazMyODggc3VwcG9ydAo+Pgo+PiAgIC4uLi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2RybS9icmlkZ2UvZHdfaGRtaS50eHQgICAgIHwgIDUwICsrCj4+ICAgLi4uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvdmlkZW8vZHdfaGRtaS1yb2NrY2hpcC50eHQgfCAgNDYgKysKPj4g
-ICBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL0tjb25maWcgICAgICAgICAgICAgICAgICAgICB8ICAg
-NSArCj4+ICAgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9NYWtlZmlsZSAgICAgICAgICAgICAgICAg
-ICAgfCAgIDEgKwo+PiAgIC4uLi9ncHUvZHJtL3tpbXgvaW14LWhkbWkuYyA9PiBicmlkZ2UvZHdf
-aGRtaS5jfSAgIHwgNzE3IAo+PiArKysrKysrKysrLS0tLS0tLS0tLS0KPj4gICAuLi4vZ3B1L2Ry
-bS97aW14L2lteC1oZG1pLmggPT4gYnJpZGdlL2R3X2hkbWkuaH0gICB8ICAgNCArLQo+PiAgIGRy
-aXZlcnMvZ3B1L2RybS9pbXgvS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgICAgIHwgICAxICsK
-Pj4gICBkcml2ZXJzL2dwdS9kcm0vaW14L01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAgICB8
-ICAgMiArLQo+PiAgIGRyaXZlcnMvZ3B1L2RybS9pbXgvZHdfaGRtaS1pbXguYyAgICAgICAgICAg
-ICAgICAgIHwgMjU4ICsrKysrKysrCj4+ICAgZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL0tjb25m
-aWcgICAgICAgICAgICAgICAgICAgfCAgMTAgKwo+PiAgIGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hp
-cC9NYWtlZmlsZSAgICAgICAgICAgICAgICAgIHwgICAyICsKPj4gICBkcml2ZXJzL2dwdS9kcm0v
-cm9ja2NoaXAvZHdfaGRtaS1yb2NrY2hpcC5jICAgICAgICB8IDM0MSArKysrKysrKysrCj4+ICAg
-aW5jbHVkZS9kcm0vYnJpZGdlL2R3X2hkbWkuaCAgICAgICAgICAgICAgICAgICAgICAgfCAgNjEg
-KysKPj4gICAxMyBmaWxlcyBjaGFuZ2VkLCAxMTExIGluc2VydGlvbnMoKyksIDM4NyBkZWxldGlv
-bnMoLSkKPj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgCj4+IERvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9kcm0vYnJpZGdlL2R3X2hkbWkudHh0Cj4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0
-IAo+PiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmlkZW8vZHdfaGRtaS1yb2Nr
-Y2hpcC50eHQKPj4gICByZW5hbWUgZHJpdmVycy9ncHUvZHJtL3tpbXgvaW14LWhkbWkuYyA9PiBi
-cmlkZ2UvZHdfaGRtaS5jfSAoNzIlKQo+PiAgIHJlbmFtZSBkcml2ZXJzL2dwdS9kcm0ve2lteC9p
-bXgtaGRtaS5oID0+IGJyaWRnZS9kd19oZG1pLmh9ICg5OSUpCj4+ICAgY3JlYXRlIG1vZGUgMTAw
-NjQ0IGRyaXZlcnMvZ3B1L2RybS9pbXgvZHdfaGRtaS1pbXguYwo+PiAgIGNyZWF0ZSBtb2RlIDEw
-MDY0NCBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvZHdfaGRtaS1yb2NrY2hpcC5jCj4+ICAgY3Jl
-YXRlIG1vZGUgMTAwNjQ0IGluY2x1ZGUvZHJtL2JyaWRnZS9kd19oZG1pLmgKPj4KPgo+IEFmdGVy
-IGFwcGx5aW5nIHRoaXMgc2VyaWVzLCBJIGZpbmQgdGhlcmUgaXMgYSBidWlsZCBicmVhayBpc3N1
-ZSB3aXRoIHRoZQo+IGFsbG1vZGNvbmZpZyBjb25maWd1cmF0aW9uIGZvciB0aGUgQVJNIGFyY2hp
-dGVjdHVyZS4KPiBQbGVhc2UgZml4IHRoaXMuCj4KPiBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAv
-ZHdfaGRtaS1yb2NrY2hpcC5jOjI0MzoxOiBlcnJvcjogCj4g4oCYX19tb2Rfb2ZfX2R3X2hkbWlf
-cm9ja2NoaXBfZHRfaWRzX2RldmljZV90YWJsZeKAmSBhbGlhc2VkIHRvIHVuZGVmaW5lZCAKPiBz
-eW1ib2wg4oCYZHdfaGRtaV9yb2NrY2hpcF9kdF9pZHPigJkKPiBzY3JpcHRzL01ha2VmaWxlLmJ1
-aWxkOjI1NzogcmVjaXBlIGZvciB0YXJnZXQgCj4gJ2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9k
-d19oZG1pLXJvY2tjaGlwLm8nIGZhaWxlZAo+IG1ha2VbNF06ICoqKiBbZHJpdmVycy9ncHUvZHJt
-L3JvY2tjaGlwL2R3X2hkbWktcm9ja2NoaXAub10gRXJyb3IgMQo+IHNjcmlwdHMvTWFrZWZpbGUu
-YnVpbGQ6NDAyOiByZWNpcGUgZm9yIHRhcmdldCAKPiAnZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlw
-JyBmYWlsZWQKPiBtYWtlWzNdOiAqKiogW2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcF0gRXJyb3Ig
-Mgo+IHNjcmlwdHMvTWFrZWZpbGUuYnVpbGQ6NDAyOiByZWNpcGUgZm9yIHRhcmdldCAnZHJpdmVy
-cy9ncHUvZHJtJyBmYWlsZWQKPiBtYWtlWzJdOiAqKiogW2RyaXZlcnMvZ3B1L2RybV0gRXJyb3Ig
-Mgo+IHNjcmlwdHMvTWFrZWZpbGUuYnVpbGQ6NDAyOiByZWNpcGUgZm9yIHRhcmdldCAnZHJpdmVy
-cy9ncHUnIGZhaWxlZAo+IG1ha2VbMV06ICoqKiBbZHJpdmVycy9ncHVdIEVycm9yIDIKPiBNYWtl
-ZmlsZTo5Mzc6IHJlY2lwZSBmb3IgdGFyZ2V0ICdkcml2ZXJzJyBmYWlsZWQKPiBtYWtlOiAqKiog
-W2RyaXZlcnNdIEVycm9yIDIKPgo+IFJlZ2FyZHMsCj4gTGl1IFlpbmcKPgo+Cj4KICBWZXJ5IHNv
-cnJ5IGZvciB0aGVzZSBpc3N1ZSwgdGhhbmsgeW91IGZvciBwb2ludGluZyBvdXQgaXQuCiAgSSB3
-aWxsIHNlbmQgW1BBVENIIFYxOC4xIDEyLzEyXSBmb3IgYSBmaXguCgoKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZGV2ZWwgbWFpbGluZyBsaXN0CmRldmVs
-QGxpbnV4ZHJpdmVycHJvamVjdC5vcmcKaHR0cDovL2RyaXZlcmRldi5saW51eGRyaXZlcnByb2pl
-Y3Qub3JnL21haWxtYW4vbGlzdGluZm8vZHJpdmVyZGV2LWRldmVsCg==
+Rockchip RK3288 hdmi is compatible with dw_hdmi
+
+Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+
+---
+
+Changes in v18:
+- fix two compile errors when build as module
+
+Changes in v17:
+- parse resource and irq in platform driver
+
+Changes in v16: None
+Changes in v15:
+- remove THIS_MODULE in platform driver
+
+Changes in v14: None
+Changes in v13: None
+Changes in v12:
+- add comment for the depend on patch
+
+Changes in v11: None
+Changes in v10:
+- add more display mode support mpll configuration for rk3288
+
+Changes in v9:
+- move some phy configuration to platform driver
+
+Changes in v8: None
+Changes in v7: None
+Changes in v6: None
+Changes in v5: None
+Changes in v4: None
+Changes in v3: None
+
+ drivers/gpu/drm/bridge/dw_hdmi.c            |   3 +
+ drivers/gpu/drm/rockchip/Kconfig            |  10 +
+ drivers/gpu/drm/rockchip/Makefile           |   2 +
+ drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c | 341 ++++++++++++++++++++++++++++
+ include/drm/bridge/dw_hdmi.h                |   1 +
+ 5 files changed, 357 insertions(+)
+ create mode 100644 drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
+
+diff --git a/drivers/gpu/drm/bridge/dw_hdmi.c b/drivers/gpu/drm/bridge/dw_hdmi.c
+index cecc46a..01c95a8 100644
+--- a/drivers/gpu/drm/bridge/dw_hdmi.c
++++ b/drivers/gpu/drm/bridge/dw_hdmi.c
+@@ -852,6 +852,9 @@ static int hdmi_phy_configure(struct dw_hdmi *hdmi, unsigned char prep,
+ 	dw_hdmi_phy_gen2_txpwron(hdmi, 1);
+ 	dw_hdmi_phy_gen2_pddq(hdmi, 0);
+ 
++	if (hdmi->dev_type == RK3288_HDMI)
++		dw_hdmi_phy_enable_spare(hdmi, 1);
++
+ 	/*Wait for PHY PLL lock */
+ 	msec = 5;
+ 	do {
+diff --git a/drivers/gpu/drm/rockchip/Kconfig b/drivers/gpu/drm/rockchip/Kconfig
+index ca9f085..6ebebe8 100644
+--- a/drivers/gpu/drm/rockchip/Kconfig
++++ b/drivers/gpu/drm/rockchip/Kconfig
+@@ -15,3 +15,13 @@ config DRM_ROCKCHIP
+ 	  management to userspace. This driver does not provide
+ 	  2D or 3D acceleration; acceleration is performed by other
+ 	  IP found on the SoC.
++
++config ROCKCHIP_DW_HDMI
++        bool "Rockchip specific extensions for Synopsys DW HDMI"
++        depends on DRM_ROCKCHIP
++        select DRM_DW_HDMI
++        help
++	  This selects support for Rockchip SoC specific extensions
++	  for the Synopsys DesignWare HDMI driver. If you want to
++	  enable HDMI on RK3288 based SoC, you should selet this
++	  option.
+diff --git a/drivers/gpu/drm/rockchip/Makefile b/drivers/gpu/drm/rockchip/Makefile
+index 2cb0672..f3d8a19 100644
+--- a/drivers/gpu/drm/rockchip/Makefile
++++ b/drivers/gpu/drm/rockchip/Makefile
+@@ -5,4 +5,6 @@
+ rockchipdrm-y := rockchip_drm_drv.o rockchip_drm_fb.o rockchip_drm_fbdev.o \
+ 		rockchip_drm_gem.o
+ 
++obj-$(CONFIG_ROCKCHIP_DW_HDMI) += dw_hdmi-rockchip.o
++
+ obj-$(CONFIG_DRM_ROCKCHIP) += rockchipdrm.o rockchip_drm_vop.o
+diff --git a/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c b/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
+new file mode 100644
+index 0000000..d236faa
+--- /dev/null
++++ b/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
+@@ -0,0 +1,341 @@
++/*
++ * Copyright (c) 2014, Fuzhou Rockchip Electronics Co., Ltd
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ */
++
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/mfd/syscon.h>
++#include <linux/regmap.h>
++#include <drm/drm_of.h>
++#include <drm/drmP.h>
++#include <drm/drm_crtc_helper.h>
++#include <drm/drm_edid.h>
++#include <drm/drm_encoder_slave.h>
++#include <drm/bridge/dw_hdmi.h>
++
++#include "rockchip_drm_drv.h"
++#include "rockchip_drm_vop.h"
++
++#define GRF_SOC_CON6                    0x025c
++#define HDMI_SEL_VOP_LIT                (1 << 4)
++
++struct rockchip_hdmi {
++	struct device *dev;
++	struct regmap *regmap;
++	struct drm_encoder encoder;
++};
++
++#define to_rockchip_hdmi(x)	container_of(x, struct rockchip_hdmi, x)
++
++static const struct dw_hdmi_mpll_config rockchip_mpll_cfg[] = {
++	{
++		27000000, {
++			{ 0x00b3, 0x0000},
++			{ 0x2153, 0x0000},
++			{ 0x40f3, 0x0000}
++		},
++	}, {
++		36000000, {
++			{ 0x00b3, 0x0000},
++			{ 0x2153, 0x0000},
++			{ 0x40f3, 0x0000}
++		},
++	}, {
++		40000000, {
++			{ 0x00b3, 0x0000},
++			{ 0x2153, 0x0000},
++			{ 0x40f3, 0x0000}
++		},
++	}, {
++		54000000, {
++			{ 0x0072, 0x0001},
++			{ 0x2142, 0x0001},
++			{ 0x40a2, 0x0001},
++		},
++	}, {
++		65000000, {
++			{ 0x0072, 0x0001},
++			{ 0x2142, 0x0001},
++			{ 0x40a2, 0x0001},
++		},
++	}, {
++		66000000, {
++			{ 0x013e, 0x0003},
++			{ 0x217e, 0x0002},
++			{ 0x4061, 0x0002}
++		},
++	}, {
++		74250000, {
++			{ 0x0072, 0x0001},
++			{ 0x2145, 0x0002},
++			{ 0x4061, 0x0002}
++		},
++	}, {
++		83500000, {
++			{ 0x0072, 0x0001},
++		},
++	}, {
++		108000000, {
++			{ 0x0051, 0x0002},
++			{ 0x2145, 0x0002},
++			{ 0x4061, 0x0002}
++		},
++	}, {
++		106500000, {
++			{ 0x0051, 0x0002},
++			{ 0x2145, 0x0002},
++			{ 0x4061, 0x0002}
++		},
++	}, {
++		146250000, {
++			{ 0x0051, 0x0002},
++			{ 0x2145, 0x0002},
++			{ 0x4061, 0x0002}
++		},
++	}, {
++		148500000, {
++			{ 0x0051, 0x0003},
++			{ 0x214c, 0x0003},
++			{ 0x4064, 0x0003}
++		},
++	}, {
++		~0UL, {
++			{ 0x00a0, 0x000a },
++			{ 0x2001, 0x000f },
++			{ 0x4002, 0x000f },
++		},
++	}
++};
++
++static const struct dw_hdmi_curr_ctrl rockchip_cur_ctr[] = {
++	/*      pixelclk    bpp8    bpp10   bpp12 */
++	{
++		40000000,  { 0x0018, 0x0018, 0x0018 },
++	}, {
++		65000000,  { 0x0028, 0x0028, 0x0028 },
++	}, {
++		66000000,  { 0x0038, 0x0038, 0x0038 },
++	}, {
++		74250000,  { 0x0028, 0x0038, 0x0038 },
++	}, {
++		83500000,  { 0x0028, 0x0038, 0x0038 },
++	}, {
++		146250000, { 0x0038, 0x0038, 0x0038 },
++	}, {
++		148500000, { 0x0000, 0x0038, 0x0038 },
++	}, {
++		~0UL,      { 0x0000, 0x0000, 0x0000},
++	}
++};
++
++static const struct dw_hdmi_sym_term rockchip_sym_term[] = {
++	/*pixelclk   symbol   term*/
++	{ 74250000,  0x8009, 0x0004 },
++	{ 148500000, 0x8029, 0x0004 },
++	{ 297000000, 0x8039, 0x0005 },
++	{ ~0UL,	     0x0000, 0x0000 }
++};
++
++static int rockchip_hdmi_parse_dt(struct rockchip_hdmi *hdmi)
++{
++	struct device_node *np = hdmi->dev->of_node;
++
++	hdmi->regmap = syscon_regmap_lookup_by_phandle(np, "rockchip,grf");
++	if (IS_ERR(hdmi->regmap)) {
++		dev_err(hdmi->dev, "Unable to get rockchip,grf\n");
++		return PTR_ERR(hdmi->regmap);
++	}
++
++	return 0;
++}
++
++static enum drm_mode_status
++dw_hdmi_rockchip_mode_valid(struct drm_connector *connector,
++			    struct drm_display_mode *mode)
++{
++	const struct dw_hdmi_mpll_config *mpll_cfg = rockchip_mpll_cfg;
++	int pclk = mode->clock * 1000;
++	bool valid = false;
++	int i;
++
++	for (i = 0; mpll_cfg[i].mpixelclock != (~0UL); i++) {
++		if (pclk == mpll_cfg[i].mpixelclock) {
++			valid = true;
++			break;
++		}
++	}
++
++	return (valid) ? MODE_OK : MODE_BAD;
++}
++
++static struct drm_encoder_funcs dw_hdmi_rockchip_encoder_funcs = {
++	.destroy = drm_encoder_cleanup,
++};
++
++static void dw_hdmi_rockchip_encoder_disable(struct drm_encoder *encoder)
++{
++}
++
++static bool
++dw_hdmi_rockchip_encoder_mode_fixup(struct drm_encoder *encoder,
++				    const struct drm_display_mode *mode,
++				    struct drm_display_mode *adj_mode)
++{
++	return true;
++}
++
++static void dw_hdmi_rockchip_encoder_mode_set(struct drm_encoder *encoder,
++					      struct drm_display_mode *mode,
++					      struct drm_display_mode *adj_mode)
++{
++}
++
++static void dw_hdmi_rockchip_encoder_commit(struct drm_encoder *encoder)
++{
++	struct rockchip_hdmi *hdmi = to_rockchip_hdmi(encoder);
++	u32 val;
++	int mux;
++
++	mux = rockchip_drm_encoder_get_mux_id(hdmi->dev->of_node, encoder);
++	if (mux)
++		val = HDMI_SEL_VOP_LIT | (HDMI_SEL_VOP_LIT << 16);
++	else
++		val = HDMI_SEL_VOP_LIT << 16;
++
++	regmap_write(hdmi->regmap, GRF_SOC_CON6, val);
++	dev_dbg(hdmi->dev, "vop %s output to hdmi\n",
++		(mux) ? "LIT" : "BIG");
++}
++
++static void dw_hdmi_rockchip_encoder_prepare(struct drm_encoder *encoder)
++{
++	rockchip_drm_crtc_mode_config(encoder->crtc, DRM_MODE_CONNECTOR_HDMIA,
++				      ROCKCHIP_OUT_MODE_AAAA);
++}
++
++static struct drm_encoder_helper_funcs dw_hdmi_rockchip_encoder_helper_funcs = {
++	.mode_fixup = dw_hdmi_rockchip_encoder_mode_fixup,
++	.mode_set   = dw_hdmi_rockchip_encoder_mode_set,
++	.prepare    = dw_hdmi_rockchip_encoder_prepare,
++	.commit     = dw_hdmi_rockchip_encoder_commit,
++	.disable    = dw_hdmi_rockchip_encoder_disable,
++};
++
++static const struct dw_hdmi_plat_data rockchip_hdmi_drv_data = {
++	.mode_valid = dw_hdmi_rockchip_mode_valid,
++	.mpll_cfg   = rockchip_mpll_cfg,
++	.cur_ctr    = rockchip_cur_ctr,
++	.sym_term   = rockchip_sym_term,
++	.dev_type   = RK3288_HDMI,
++};
++
++static const struct of_device_id dw_hdmi_rockchip_dt_ids[] = {
++	{ .compatible = "rockchip,rk3288-dw-hdmi",
++	  .data = &rockchip_hdmi_drv_data
++	},
++	{},
++};
++MODULE_DEVICE_TABLE(of, dw_hdmi_rockchip_dt_ids);
++
++static int dw_hdmi_rockchip_bind(struct device *dev, struct device *master,
++				 void *data)
++{
++	struct platform_device *pdev = to_platform_device(dev);
++	const struct dw_hdmi_plat_data *plat_data;
++	const struct of_device_id *match;
++	struct drm_device *drm = data;
++	struct drm_encoder *encoder;
++	struct rockchip_hdmi *hdmi;
++	struct resource *iores;
++	int irq;
++	int ret;
++
++	if (!pdev->dev.of_node)
++		return -ENODEV;
++
++	hdmi = devm_kzalloc(&pdev->dev, sizeof(*hdmi), GFP_KERNEL);
++	if (!hdmi)
++		return -ENOMEM;
++
++	match = of_match_node(dw_hdmi_rockchip_dt_ids, pdev->dev.of_node);
++	plat_data = match->data;
++	hdmi->dev = &pdev->dev;
++	encoder = &hdmi->encoder;
++
++	irq = platform_get_irq(pdev, 0);
++	if (irq < 0)
++		return irq;
++
++	iores = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	if (!iores)
++		return -ENXIO;
++
++	platform_set_drvdata(pdev, hdmi);
++
++	encoder->possible_crtcs = drm_of_find_possible_crtcs(drm, dev->of_node);
++	/*
++	 * If we failed to find the CRTC(s) which this encoder is
++	 * supposed to be connected to, it's because the CRTC has
++	 * not been registered yet.  Defer probing, and hope that
++	 * the required CRTC is added later.
++	 */
++	if (encoder->possible_crtcs == 0)
++		return -EPROBE_DEFER;
++
++	ret = rockchip_hdmi_parse_dt(hdmi);
++	if (ret) {
++		dev_err(hdmi->dev, "Unable to parse OF data\n");
++		return ret;
++	}
++
++	drm_encoder_helper_add(encoder, &dw_hdmi_rockchip_encoder_helper_funcs);
++	drm_encoder_init(drm, encoder, &dw_hdmi_rockchip_encoder_funcs,
++			 DRM_MODE_ENCODER_TMDS);
++
++	return dw_hdmi_bind(dev, master, data, encoder, iores, irq, plat_data);
++}
++
++static void dw_hdmi_rockchip_unbind(struct device *dev, struct device *master,
++				    void *data)
++{
++	return dw_hdmi_unbind(dev, master, data);
++}
++
++static const struct component_ops dw_hdmi_rockchip_ops = {
++	.bind	= dw_hdmi_rockchip_bind,
++	.unbind	= dw_hdmi_rockchip_unbind,
++};
++
++static int dw_hdmi_rockchip_probe(struct platform_device *pdev)
++{
++	return component_add(&pdev->dev, &dw_hdmi_rockchip_ops);
++}
++
++static int dw_hdmi_rockchip_remove(struct platform_device *pdev)
++{
++	component_del(&pdev->dev, &dw_hdmi_rockchip_ops);
++
++	return 0;
++}
++
++static struct platform_driver dw_hdmi_rockchip_pltfm_driver = {
++	.probe  = dw_hdmi_rockchip_probe,
++	.remove = dw_hdmi_rockchip_remove,
++	.driver = {
++		.name = "dwhdmi-rockchip",
++		.of_match_table = dw_hdmi_rockchip_dt_ids,
++	},
++};
++
++module_platform_driver(dw_hdmi_rockchip_pltfm_driver);
++
++MODULE_AUTHOR("Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>");
++MODULE_AUTHOR("Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>");
++MODULE_DESCRIPTION("Rockchip Specific DW-HDMI Driver Extension");
++MODULE_LICENSE("GPL");
++MODULE_ALIAS("platform:dwhdmi-rockchip");
+diff --git a/include/drm/bridge/dw_hdmi.h b/include/drm/bridge/dw_hdmi.h
+index b64e58a..5a4f490 100644
+--- a/include/drm/bridge/dw_hdmi.h
++++ b/include/drm/bridge/dw_hdmi.h
+@@ -22,6 +22,7 @@ enum {
+ enum dw_hdmi_devtype {
+ 	IMX6Q_HDMI,
+ 	IMX6DL_HDMI,
++	RK3288_HDMI,
+ };
+ 
+ struct dw_hdmi_mpll_config {
+-- 
+1.9.1
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
