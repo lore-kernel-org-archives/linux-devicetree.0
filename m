@@ -1,55 +1,216 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH] [v3] power/fsl: add MDIO dt binding for FMan
-Date: Wed, 7 Jan 2015 12:05:34 -0600
-Message-ID: <1420653934.4961.58.camel@freescale.com>
-References: <1419321466-5575-1-git-send-email-shh.xie@gmail.com>
-	 <DM2PR0301MB08640979E5088618D1395CFAE2580@DM2PR0301MB0864.namprd03.prod.outlook.com>
-	 <1420590520.4961.38.camel@freescale.com>
-	 <DM2PR0301MB08645ABD93708FFE011EF362E2460@DM2PR0301MB0864.namprd03.prod.outlook.com>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: [PATCH v3 2/4] of: move of_dma_configure() to device,c to help re-use
+Date: Wed, 7 Jan 2015 13:49:52 -0500
+Message-ID: <1420656594-8908-3-git-send-email-m-karicheri2@ti.com>
+References: <1420656594-8908-1-git-send-email-m-karicheri2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <DM2PR0301MB08645ABD93708FFE011EF362E2460-Cwg/PA1lyPnq20u2fDgSrZwN6zqB+hSMnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Xie Shaohui-B21989 <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Medve Emilian-EMMEDVE1 <Emilian.Medve-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1420656594-8908-1-git-send-email-m-karicheri2@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: joro@8bytes.org, grant.likely@linaro.org, robh+dt@kernel.org, iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, bhelgaas@google.com, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, will.deacon@arm.com, linux@arm.linux.org.uk, arnd@arndb.de
+Cc: Murali Karicheri <m-karicheri2@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2015-01-06 at 23:29 -0600, Xie Shaohui-B21989 wrote:
-> > > > +- interrupts
-> > > > +		Usage: optional
-> > > > +		Value type: <prop-encoded-array>
-> > > > +		Definition: Event interrupt of external MDIO controller.
-> > > > +		1 Gb/s MDIO and 10 Gb/s MDIO has one interrupt respectively.
-> > 
-> > I'm confused by "respectively" here.  Does fsl,fman-memac-mdio have two
-> > interrupts (one for 1 Gb/s and one for 10 Gb/s)?
-> [S.H] We use two MDIO controllers for external PHY management. One for 1 Gb/s,
-> One for 10 Gb/s, and two MDIO interrupts connected to MPIC.
+Move of_dma_configure() to device.c so that same function can be re-used
+for PCI devices to obtain DMA configuration from DT. Also add a second
+argument so that for PCI, DT node of root bus host bridge can be used to
+obtain the DMA configuration for the slave PCI device. Additionally fix
+the dma-range size when the DT attribute is missing. i.e  set size to
+dev->coherent_dma_mask + 1 instead of dev->coherent_dma_mask.
 
-If there can be two interrupts you need to make that clear and specify
-the order.
+Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+---
+ drivers/of/device.c       |   58 +++++++++++++++++++++++++++++++++++++++++++++
+ drivers/of/platform.c     |   58 ++-------------------------------------------
+ include/linux/of_device.h |    2 ++
+ 3 files changed, 62 insertions(+), 56 deletions(-)
 
-Is it possible for one MDIO controller to have an interrupt connected
-but not the other, on the same system?  How would you represent that in
-the device tree?  If there are two MDIO controllers why are they in the
-same node?
-
->   Does "optional" mean it's used if and
-> > only if external MDIO is used, or is it optional even with external MDIO?  I see
-> > it's not present in the example -- do we not have a real example that has the
-> > interrupt?
-> [S.H] "optional" means it's available on hardware, but MDIO driver does not use interrupt. 
-> So we don't have a real example.
-
-<record type="broken">The device tree describes the hardware, not the
-driver</record>
-
--Scott
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/of/device.c b/drivers/of/device.c
+index 46d6c75c..ccbc958 100644
+--- a/drivers/of/device.c
++++ b/drivers/of/device.c
+@@ -2,6 +2,9 @@
+ #include <linux/kernel.h>
+ #include <linux/of.h>
+ #include <linux/of_device.h>
++#include <linux/of_address.h>
++#include <linux/of_iommu.h>
++#include <linux/dma-mapping.h>
+ #include <linux/init.h>
+ #include <linux/module.h>
+ #include <linux/mod_devicetable.h>
+@@ -66,6 +69,61 @@ int of_device_add(struct platform_device *ofdev)
+ 	return device_add(&ofdev->dev);
+ }
+ 
++/**
++ * of_dma_configure - Setup DMA configuration
++ * @dev:	Device to apply DMA configuration
++ * @np:		ptr to of node having dma configuration
++ *
++ * Try to get devices's DMA configuration from DT and update it
++ * accordingly.
++ *
++ * In case if platform code need to use own special DMA configuration,it
++ * can use Platform bus notifier and handle BUS_NOTIFY_ADD_DEVICE event
++ * to fix up DMA configuration.
++ */
++void of_dma_configure(struct device *dev, struct device_node *np)
++{
++	u64 dma_addr, paddr, size;
++	int ret;
++	bool coherent;
++	unsigned long offset;
++	struct iommu_ops *iommu;
++
++	/*
++	 * Set default dma-mask to 32 bit. Drivers are expected to setup
++	 * the correct supported dma_mask.
++	 */
++	dev->coherent_dma_mask = DMA_BIT_MASK(32);
++
++	/*
++	 * Set it to coherent_dma_mask by default if the architecture
++	 * code has not set it.
++	 */
++	if (!dev->dma_mask)
++		dev->dma_mask = &dev->coherent_dma_mask;
++
++	ret = of_dma_get_range(np, &dma_addr, &paddr, &size);
++	if (ret < 0) {
++		dma_addr = offset = 0;
++		size = dev->coherent_dma_mask + 1;
++	} else {
++		offset = PFN_DOWN(paddr - dma_addr);
++		dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", offset);
++	}
++	dev->dma_pfn_offset = offset;
++
++	coherent = of_dma_is_coherent(np);
++	dev_dbg(dev, "device is%sdma coherent\n",
++		coherent ? " " : " not ");
++
++	iommu = of_iommu_configure(dev, np);
++	dev_dbg(dev, "device is%sbehind an iommu\n",
++		iommu ? " " : " not ");
++
++	arch_setup_dma_ops(dev, dma_addr, size, iommu, coherent);
++}
++EXPORT_SYMBOL_GPL(of_dma_configure);
++
+ int of_device_register(struct platform_device *pdev)
+ {
+ 	device_initialize(&pdev->dev);
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index 7675b79..6403501 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -19,7 +19,6 @@
+ #include <linux/slab.h>
+ #include <linux/of_address.h>
+ #include <linux/of_device.h>
+-#include <linux/of_iommu.h>
+ #include <linux/of_irq.h>
+ #include <linux/of_platform.h>
+ #include <linux/platform_device.h>
+@@ -150,59 +149,6 @@ struct platform_device *of_device_alloc(struct device_node *np,
+ }
+ EXPORT_SYMBOL(of_device_alloc);
+ 
+-/**
+- * of_dma_configure - Setup DMA configuration
+- * @dev:	Device to apply DMA configuration
+- *
+- * Try to get devices's DMA configuration from DT and update it
+- * accordingly.
+- *
+- * In case if platform code need to use own special DMA configuration,it
+- * can use Platform bus notifier and handle BUS_NOTIFY_ADD_DEVICE event
+- * to fix up DMA configuration.
+- */
+-static void of_dma_configure(struct device *dev)
+-{
+-	u64 dma_addr, paddr, size;
+-	int ret;
+-	bool coherent;
+-	unsigned long offset;
+-	struct iommu_ops *iommu;
+-
+-	/*
+-	 * Set default dma-mask to 32 bit. Drivers are expected to setup
+-	 * the correct supported dma_mask.
+-	 */
+-	dev->coherent_dma_mask = DMA_BIT_MASK(32);
+-
+-	/*
+-	 * Set it to coherent_dma_mask by default if the architecture
+-	 * code has not set it.
+-	 */
+-	if (!dev->dma_mask)
+-		dev->dma_mask = &dev->coherent_dma_mask;
+-
+-	ret = of_dma_get_range(dev->of_node, &dma_addr, &paddr, &size);
+-	if (ret < 0) {
+-		dma_addr = offset = 0;
+-		size = dev->coherent_dma_mask;
+-	} else {
+-		offset = PFN_DOWN(paddr - dma_addr);
+-		dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", offset);
+-	}
+-	dev->dma_pfn_offset = offset;
+-
+-	coherent = of_dma_is_coherent(dev->of_node);
+-	dev_dbg(dev, "device is%sdma coherent\n",
+-		coherent ? " " : " not ");
+-
+-	iommu = of_iommu_configure(dev, dev->of_node);
+-	dev_dbg(dev, "device is%sbehind an iommu\n",
+-		iommu ? " " : " not ");
+-
+-	arch_setup_dma_ops(dev, dma_addr, size, iommu, coherent);
+-}
+-
+ static void of_dma_deconfigure(struct device *dev)
+ {
+ 	arch_teardown_dma_ops(dev);
+@@ -236,7 +182,7 @@ static struct platform_device *of_platform_device_create_pdata(
+ 
+ 	dev->dev.bus = &platform_bus_type;
+ 	dev->dev.platform_data = platform_data;
+-	of_dma_configure(&dev->dev);
++	of_dma_configure(&dev->dev, dev->dev.of_node);
+ 
+ 	if (of_device_add(dev) != 0) {
+ 		of_dma_deconfigure(&dev->dev);
+@@ -299,7 +245,7 @@ static struct amba_device *of_amba_device_create(struct device_node *node,
+ 		dev_set_name(&dev->dev, "%s", bus_id);
+ 	else
+ 		of_device_make_bus_id(&dev->dev);
+-	of_dma_configure(&dev->dev);
++	of_dma_configure(&dev->dev, dev->dev.of_node);
+ 
+ 	/* Allow the HW Peripheral ID to be overridden */
+ 	prop = of_get_property(node, "arm,primecell-periphid", NULL);
+diff --git a/include/linux/of_device.h b/include/linux/of_device.h
+index ef37021..c661496 100644
+--- a/include/linux/of_device.h
++++ b/include/linux/of_device.h
+@@ -53,6 +53,7 @@ static inline struct device_node *of_cpu_device_node_get(int cpu)
+ 	return of_node_get(cpu_dev->of_node);
+ }
+ 
++void of_dma_configure(struct device *dev, struct device_node *np);
+ #else /* CONFIG_OF */
+ 
+ static inline int of_driver_match_device(struct device *dev,
+@@ -90,6 +91,7 @@ static inline struct device_node *of_cpu_device_node_get(int cpu)
+ {
+ 	return NULL;
+ }
++void of_dma_configure(struct device *dev, struct device_node *np) { }
+ #endif /* CONFIG_OF */
+ 
+ #endif /* _LINUX_OF_DEVICE_H */
+-- 
+1.7.9.5
