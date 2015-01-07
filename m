@@ -1,58 +1,55 @@
-From: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Subject: Re: [PATCH 1/4] ARM: tegra: rely on bootloader pinmux programming on nyan-big
-Date: Wed, 7 Jan 2015 09:06:30 +0100
-Message-ID: <CAAObsKB1gMcLZ=n8Mc6JSLQHn5-6VWOhERLgYTdi6nit6yCj5w@mail.gmail.com>
-References: <1420540653-14816-1-git-send-email-tomeu.vizoso@collabora.com>
- <1420540653-14816-2-git-send-email-tomeu.vizoso@collabora.com> <54AC16B0.5050703@wwwdotorg.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54AC16B0.5050703-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Ken Wilson <ken.wilson@opengear.com>
+Subject: Re: [PATCH] spi: orion: Add multiple chip select support for Armada
+ 370 and 375
+Date: Wed, 7 Jan 2015 18:08:29 +1000
+Message-ID: <DA2CCB3A-D11B-4861-8DE1-7316C16E561D@opengear.com>
+References: <1420579846-31962-1-git-send-email-ken.wilson@opengear.com>
+ <54AC5B16.9020206@free-electrons.com>
+ <20150107074154.1334b5c0@free-electrons.com>
+Mime-Version: 1.0 (Mac OS X Mail 8.0 \(1990.1\))
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20150107074154.1334b5c0@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-spi@vger.kernel.org, broonie@kernel.org, ezequiel.garcia@free-electrons.com, gerg@uclinux.org, Gregory CLEMENT <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 6 January 2015 at 18:09, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
-> On 01/06/2015 03:37 AM, Tomeu Vizoso wrote:
->>
->> Following 6dbaff2b, the kernel expects that the bootloader has correctly
->> programmed the Tegra pinmux.
->>
->> DTs for the Jetson and the Venice2 had been updated already but this one
->> was left behind.
->
->
-> So this setup is true for NVIDIA-controlled development/reference boards
-> where we've ensured that the bootloader sets up 100% of the pinmux.
->
-> However, I know that Coreboot on this board doesn't set up everything in the
-> pinmux, and since it's in r/o flash never will. As such, I'm not sure this
-> change is safe for this board. That is, unless you want to force upstream
-> kernels to be booted via a chain-loaded path: Coreboot (r/o) -> U-Boot (r/w
-> with full pinmux setup) -> kernel.
->
->> Have tested this with the stock vendor firmware (coreboot) and have found
->> no
->> issues.
->
->
-> There are presumably a bunch of features which aren't yet supported
-> upstream, and hence you couldn't test though? That means we might find that
-> parts of the pinmux aren't yet programmed but need to be to enable those
-> features.
-
-Sure, there's no chance that my testing could have been extensive enough.
-
-Following Andrew's feedback, I will be looking at getting the pinmux
-programming right in the DTs.
-
-Thanks,
-
-Tomeu
-
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+SGkgVGhvbWFzLAo+IE9uIDcgSmFuIDIwMTUsIGF0IDQ6NDEgcG0sIFRob21hcyBQZXRhenpvbmkg
+PHRob21hcy5wZXRhenpvbmlAZnJlZS1lbGVjdHJvbnMuY29tPiB3cm90ZToKPiAKPiBEZWFyIEdy
+ZWdvcnkgQ0xFTUVOVCwKPiAKPiBPbiBUdWUsIDA2IEphbiAyMDE1IDIzOjAwOjU0ICswMTAwLCBH
+cmVnb3J5IENMRU1FTlQgd3JvdGU6Cj4gCj4+IE9uIDA2LzAxLzIwMTUgMjI6MzAsIEtlbiBXaWxz
+b24gd3JvdGU6Cj4+PiBDcmVhdGUgYSBuZXcgZHQgYmluZGluZyBmb3IgdGhlIEFybWFkYSAzNzUg
+dGhhdCBzdXBwb3J0cyB1cCB0bwo+Pj4gMyBjaGlwIHNlbGVjdHMgYnV0IHVzZXMgdGhlIHNhbWUg
+cHJlc2NhbGVyIHZhbHVlcyBhbmQgYWxnb3JpdGhtCj4+PiBhcyB0aGUgYmFzaWMgb3Jpb24gYmlu
+ZGluZy4KPj4gCj4+IFRoZXJlIHdhcyBhbHJlYWR5IGEgcGF0Y2ggdGhhdCBoYXZlIGJlZW4gc2Vu
+dCBmb3IgdGhpczoKPj4gaHR0cDovL3RocmVhZC5nbWFuZS5vcmcvZ21hbmUubGludXgua2VybmVs
+LnNwaS5kZXZlbC8xNzgwOC9mb2N1cz0xNzgwOQo+PiAKPj4gYnV0IGluIHRoZSBlbmQgaXQgaGFz
+IG5vdCBiZWVuIG1lcmdlZC4gVGhlIGxhc3QgZW1haWwgb24gdGhlIHRocmVhZCB3YXMKPj4gYWJv
+dXQgZG9pbmcgdGhlIG1hbmlwdWxhdGlvbiBpbiBzZXRfY3MgYW5kIG5vdCBpbiBzZXR1cF90cmFu
+c2ZlcigpLiBBbmQgSQo+PiBkaWRuJ3QgZmluZCBhIG5ld2VyIHZlcnNpb24uCj4+IAo+PiBNYXli
+ZSBpdCBqdXN0IGZlbGwgdGhyb3VnaCB0aGUgY3JhY2tzLgo+PiBUaG9tYXMgZGlkIHlvdSByZW1l
+bWJlciBvZiBpdD8KPiAKPiBZZXMsIGl0IGlzIHN0aWxsIG9uIG15IFRPRE8tbGlzdCwgYnV0IEkg
+aGF2ZW4ndCB5ZXQgZ290dGVuIGFyb3VuZCB0bwo+IHN1Ym1pdHRpbmcgYSBuZXcgdmVyc2lvbi4g
+U28gSSBoYXZlbid0IGxvb2tlZCBhdCBLZW4ncyBjb250cmlidXRpb24sCj4gYnV0IGlmIEtlbiBp
+cyB3aWxsaW5nIHRvIGJyaW5nIGl0IHVwIHRvIGEgc3RhdGUgd2hlcmUgaXQgY2FuIGJlCj4gbWFp
+bmxpbmVkLCB0aGF0IHdvdWxkIGRlZmluaXRlbHkgYmUgd2VsY29tZS4KCknigJltIGhhcHB5IHRv
+IGRvIHRoYXQKClRoYW5rcywKS2VuCgo+IAo+IFRoYW5rcywKPiAKPiBUaG9tYXMKPiAtLSAKPiBU
+aG9tYXMgUGV0YXp6b25pLCBDVE8sIEZyZWUgRWxlY3Ryb25zCj4gRW1iZWRkZWQgTGludXgsIEtl
+cm5lbCBhbmQgQW5kcm9pZCBlbmdpbmVlcmluZwo+IGh0dHA6Ly9mcmVlLWVsZWN0cm9ucy5jb20K
+PiAKPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwo+IGxp
+bnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0Cj4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
+YWRlYWQub3JnCj4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9s
+aW51eC1hcm0ta2VybmVsCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBs
+aXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlz
+dGluZm8vbGludXgtYXJtLWtlcm5lbAo=
