@@ -1,87 +1,61 @@
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: [PATCH] [v3] power/fsl: add MDIO dt binding for FMan
-Date: Tue, 6 Jan 2015 18:28:40 -0600
-Message-ID: <1420590520.4961.38.camel@freescale.com>
-References: <1419321466-5575-1-git-send-email-shh.xie@gmail.com>
- <DM2PR0301MB08640979E5088618D1395CFAE2580@DM2PR0301MB0864.namprd03.prod.outlook.com>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: DeviceTree.org
+Date: Tue, 06 Jan 2015 17:12:17 -0800
+Message-ID: <54AC87F1.4000005@gmail.com>
+References: <CACD22W45kjVd4uKUEyS0MBR+7CKkXuPaMv383S7t=T=vRJ-ZMA@mail.gmail.com>
+Reply-To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <DM2PR0301MB08640979E5088618D1395CFAE2580@DM2PR0301MB0864.namprd03.prod.outlook.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Xie Shaohui-B21989 <Shaohui.Xie@freescale.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Medve Emilian-EMMEDVE1 <Emilian.Medve@freescale.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACD22W45kjVd4uKUEyS0MBR+7CKkXuPaMv383S7t=T=vRJ-ZMA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Braun <idrathernot2010-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCAyMDE1LTAxLTA1IGF0IDA1OjIxIC0wNjAwLCBYaWUgU2hhb2h1aS1CMjE5ODkgd3Jv
-dGU6Cj4gSGVsbG8gU2NvdHQsCj4gCj4gSXMgdGhpcyB2MyBPSz8KPiAKPiBCZXN0IFJlZ2FyZHMs
-IAo+IFNoYW9odWkgWGllCj4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQo+ID4gRnJvbTog
-c2hoLnhpZUBnbWFpbC5jb20gW21haWx0bzpzaGgueGllQGdtYWlsLmNvbV0KPiA+IFNlbnQ6IFR1
-ZXNkYXksIERlY2VtYmVyIDIzLCAyMDE0IDM6NTggUE0KPiA+IFRvOiBsaW51eHBwYy1kZXZAbGlz
-dHMub3psYWJzLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IFdvb2QgU2NvdHQtQjA3
-NDIxCj4gPiBDYzogTWVkdmUgRW1pbGlhbi1FTU1FRFZFMTsgWGllIFNoYW9odWktQjIxOTg5Cj4g
-PiBTdWJqZWN0OiBbUEFUQ0hdIFt2M10gcG93ZXIvZnNsOiBhZGQgTURJTyBkdCBiaW5kaW5nIGZv
-ciBGTWFuCj4gPiAKPiA+IEZyb206IFNoYW9odWkgWGllIDxTaGFvaHVpLlhpZUBmcmVlc2NhbGUu
-Y29tPgo+ID4gCj4gPiBUaGlzIGJpbmRpbmcgaXMgZm9yIEZNYW4gTURJTywgaXQgY292ZXJzIEZN
-YW4gdjIgJiBGTWFuIHYzLgo+ID4gCj4gPiBTaWduZWQtb2ZmLWJ5OiBTaGFvaHVpIFhpZSA8U2hh
-b2h1aS5YaWVAZnJlZXNjYWxlLmNvbT4KPiA+IC0tLQo+ID4gY2hhbmdlcyBpbiB2MzoKPiA+IHJl
-cGhyYXNlIHRoZSAnRGVmaW5pdGlvbicgb2YgcHJvcGVydHkgJ2J1cy1mcmVxdWVuY3knLCBkb24n
-dCBpbmNsdWRlIHRoZQo+ID4gcHJvcGVydHkgaW4gZXhhbXBsZS4KPiA+IAo+ID4gY2hhbmdlcyBp
-biB2MjoKPiA+IGFkZHJlc3NlZCBjb21tZW50cyBmcm9tIFNjb3R0IGluIFYxLgo+ID4gCj4gPiAg
-Li4uL2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXJwYy9mc2wvZm1hbi50eHQgICAgICAgfCA2OSAr
-KysrKysrKysrKysrKysrKysrKysrCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDY5IGluc2VydGlvbnMo
-KykKPiA+IAo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9wb3dlcnBjL2ZzbC9mbWFuLnR4dAo+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvcG93ZXJwYy9mc2wvZm1hbi50eHQKPiA+IGluZGV4IGVkZWVhMTYuLjczN2FhNGMgMTAw
-NjQ0Cj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXJwYy9m
-c2wvZm1hbi50eHQKPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9w
-b3dlcnBjL2ZzbC9mbWFuLnR4dAo+ID4gQEAgLTcsNiArNyw3IEBAIENPTlRFTlRTCj4gPiAgICAt
-IEZNYW4gTVVSQU0gTm9kZQo+ID4gICAgLSBGTWFuIGRUU0VDL1hHRUMvbUVNQUMgTm9kZQo+ID4g
-ICAgLSBGTWFuIElFRUUgMTU4OCBOb2RlCj4gPiArICAtIEZNYW4gTURJTyBOb2RlCj4gPiAgICAt
-IEV4YW1wbGUKPiA+IAo+ID4gID09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09Cj4gPiBAQCAtMzU3LDYgKzM1
-OCw2OSBAQCBwdHAtdGltZXJAZmUwMDAgewo+ID4gIH07Cj4gPiAKPiA+ICA9PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PQo+ID4gK0ZNYW4gTURJTyBOb2RlCj4gPiArCj4gPiArREVTQ1JJUFRJT04KPiA+ICsK
-PiA+ICtUaGUgTURJTyBpcyBhIGJ1cyB0byB3aGljaCB0aGUgUEhZIGRldmljZXMgYXJlIGNvbm5l
-Y3RlZC4KPiA+ICsKPiA+ICtQUk9QRVJUSUVTCj4gPiArCj4gPiArLSBjb21wYXRpYmxlCj4gPiAr
-CQlVc2FnZTogcmVxdWlyZWQKPiA+ICsJCVZhbHVlIHR5cGU6IDxzdHJpbmdsaXN0Pgo+ID4gKwkJ
-RGVmaW5pdGlvbjogQSBzdGFuZGFyZCBwcm9wZXJ0eS4KPiA+ICsJCU11c3QgaW5jbHVkZSAiZnNs
-LGZtYW4tbWRpbyIgZm9yIDEgR2IvcyBNRElPIGZyb20gRk1hbiB2Mi4KPiA+ICsJCU11c3QgaW5j
-bHVkZSAiZnNsLGZtYW4teG1kaW8iIGZvciAxMCBHYi9zIE1ESU8gZnJvbSBGTWFuIHYyLgo+ID4g
-KwkJTXVzdCBpbmNsdWRlICJmc2wsZm1hbi1tZW1hYy1tZGlvIiBmb3IgMS8xMCBHYi9zIE1ESU8g
-ZnJvbQo+ID4gKwkJRk1hbiB2My4KPiA+ICsKPiA+ICstIHJlZwo+ID4gKwkJVXNhZ2U6IHJlcXVp
-cmVkCj4gPiArCQlWYWx1ZSB0eXBlOiA8cHJvcC1lbmNvZGVkLWFycmF5Pgo+ID4gKwkJRGVmaW5p
-dGlvbjogQSBzdGFuZGFyZCBwcm9wZXJ0eS4KPiA+ICsKPiA+ICstIGJ1cy1mcmVxdWVuY3kKPiA+
-ICsJCVVzYWdlOiBvcHRpb25hbAo+ID4gKwkJVmFsdWUgdHlwZTogPHUzMj4KPiA+ICsJCURlZmlu
-aXRpb246IFNwZWNpZmllcyB0aGUgZXh0ZXJuYWwgTURJTyBidXMgY2xvY2sgc3BlZWQgdG8KPiA+
-ICsJCWJlIHVzZWQsIGlmIGRpZmZlcmVudCBmcm9tIHRoZSBzdGFuZGFyZCAyLjUgTUh6Lgo+ID4g
-KwkJVGhpcyBtYXkgYmUgZHVlIHRvIHRoZSBzdGFuZGFyZCBzcGVlZCBiZWluZyB1bnN1cHBvcnRl
-ZCAoZS5nLgo+ID4gKwkJZHVlIHRvIGEgaGFyZHdhcmUgcHJvYmxlbSksIG9yIHRvIGFkdmVydGlz
-ZSB0aGF0IGFsbCByZWxldmFudAo+ID4gKwkJY29tcG9uZW50cyBpbiB0aGUgc3lzdGVtIHN1cHBv
-cnQgYSBmYXN0ZXIgc3BlZWQuCj4gPiArCj4gPiArLSBpbnRlcnJ1cHRzCj4gPiArCQlVc2FnZTog
-b3B0aW9uYWwKPiA+ICsJCVZhbHVlIHR5cGU6IDxwcm9wLWVuY29kZWQtYXJyYXk+Cj4gPiArCQlE
-ZWZpbml0aW9uOiBFdmVudCBpbnRlcnJ1cHQgb2YgZXh0ZXJuYWwgTURJTyBjb250cm9sbGVyLgo+
-ID4gKwkJMSBHYi9zIE1ESU8gYW5kIDEwIEdiL3MgTURJTyBoYXMgb25lIGludGVycnVwdCByZXNw
-ZWN0aXZlbHkuCgpJJ20gY29uZnVzZWQgYnkgInJlc3BlY3RpdmVseSIgaGVyZS4gIERvZXMgZnNs
-LGZtYW4tbWVtYWMtbWRpbyBoYXZlIHR3bwppbnRlcnJ1cHRzIChvbmUgZm9yIDEgR2IvcyBhbmQg
-b25lIGZvciAxMCBHYi9zKT8gIElmIHRoZXJlJ3Mgb25seSAoYXQKbW9zdCkgb25lIGludGVycnVw
-dCBwZXIgTURJTyBjb250cm9sbGVyIHRoZW4ganVzdCBkZWxldGUgdGhpcyBsaW5lLgoKV2hhdCBp
-bnRlcnJ1cHQgaXMgdXNlZCBmb3IgaW50ZXJuYWwgTURJTz8gIERvZXMgIm9wdGlvbmFsIiBtZWFu
-IGl0J3MKdXNlZCBpZiBhbmQgb25seSBpZiBleHRlcm5hbCBNRElPIGlzIHVzZWQsIG9yIGlzIGl0
-IG9wdGlvbmFsIGV2ZW4gd2l0aApleHRlcm5hbCBNRElPPyAgSSBzZWUgaXQncyBub3QgcHJlc2Vu
-dCBpbiB0aGUgZXhhbXBsZSAtLSBkbyB3ZSBub3QgaGF2ZQphIHJlYWwgZXhhbXBsZSB0aGF0IGhh
-cyB0aGUgaW50ZXJydXB0PwoKLVNjb3R0CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18KTGludXhwcGMtZGV2IG1haWxpbmcgbGlzdApMaW51eHBwYy1kZXZA
-bGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vbGludXhw
-cGMtZGV2
+On 12/22/2014 3:19 AM, David Braun wrote:
+> Hi,
+> What is the status of
+> 
+>    * devicetree.org
+
+Out of date.  But still some useful info.
+
+Another useful wiki (not very active, but more up to date) is
+
+   http://elinux.org/Device_Tree
+
+Look at the section "Presentations and Papers".  A very good starting
+point is the "Device Tree for Dummies" presentation.
+
+
+>    * devucetree-discuss (ozlabs.org mailing list)
+
+devicetree-discuss moved to kernel.org:
+
+ http://vger.kernel.org/vger-lists.html#devicetree
+ archive: http://www.spinics.net/lists/devicetree/
+
+>    * IEEE 1275
+>    * playground.sun.com
+>    * Open Firmware device trees
+> 
+> This list hasn't anything past 2013 posted in its archive
+> IEEE Std 1275 is withdrawn
+> playground.sun.com doesn't respond
+> and I haven't a clue about Open Firmware - gave up before going there
+> 
+> I trying to understand device trees so I can modify one
+> 
+> Dave
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
