@@ -1,109 +1,227 @@
 From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v4 00/12]  Add Armada 38x GP and AP boards support
-Date: Thu,  8 Jan 2015 18:38:02 +0100
-Message-ID: <1420738694-6163-1-git-send-email-gregory.clement@free-electrons.com>
+Subject: [PATCH v4 07/12] ARM: mvebu: Add Armada 385 Access Point Development Board support
+Date: Thu,  8 Jan 2015 18:38:09 +0100
+Message-ID: <1420738694-6163-8-git-send-email-gregory.clement@free-electrons.com>
+References: <1420738694-6163-1-git-send-email-gregory.clement@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1420738694-6163-1-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-This set of patches adds the support for the Armada 385 AP and GP
-boards. It introduce the bindings for the Armada388 SoC variants and
-also adds a few clean ups here and there, a few missing pin functions
-needed for the board, etc.
+The A385-AP is a board produced by Marvell that holds 3 mPCIe slot, a 16MB
+SPI-NOR, 3 Gigabit Ethernet ports, USB3 and NAND flash storage.
 
-It follows the v3 of the AP patch set:
-http://thread.gmane.org/gmane.linux.ports.arm.kernel/383709
-and the v2 of the GP patch set:
-http://www.spinics.net/lists/arm-kernel/msg389259.html.
+[gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org: switch the license to the dual
+X11/GPL with the agreement of the author]
 
-Thanks,
-
-Gregory
-
-AP changelog:
-Changes from v3:
-  - Switched the dts license to the dual one X11/GPL
-
-Changes from v2:
-  - Removed the i2c1 bus that is not used
-  - Added comments for the i2c0 and the UARTs
-  - Removed the i2c clk-frequency property
-  - Fixed the SPI-NOR maximum frequency
-  - Fixed the phy nodes unit addresses
-  - Add the /chosen/stdout-path property
-  - Changed the filename to match the board compatible
-
-Changes from v1:
-  - Removed USB3 support. This required some additional patches for
-    the phy and USB drivers that are not really related to this
-    serie. This will be submitted as a separate one.
-  - Removed earlyprintk from the default bootargs
-  - Removed two unneeded ranges
-  - Changed the phy pins node name to mdio
-  - Moved most of the pinctrl nodes to the DTSI
-  - Added a comment to mention why the phy reference clock is needed.
-  - Rebased on top of 3.19-rc1
-
-GP Changelog:
-v2 -> v4:
-  - fixed the indentation of the speed-map of gpio-fan
-  - moved the 2ns SATA controller node in the armada388.dtsi file
-  - converted the DB and RD board to the Armada 388 SoC
-
-v1 -> v2:
-  - removed the earlyprintk in the command line
-  - added the stdout-path for the bootloader
-  - added the pinctrl configuration for all the node that need it
-  - renamed pca9555_ into expander
-  - added comment about the connector
-  - switched the PHY address to match the hardware
-  - removed the nr-ports property which is specific to the mv-sata and
-    not the ahci
-  - removed the clock-frequency property of the sdhci node
-  - formatted the speed-map of gpio-fan with a newline between the map
-      entries
-  - removed the SATA regulators
-  - added the dtsi for the Armada 388 variant
-
-Gregory CLEMENT (5):
-  ARM: mvebu: a38x: Add more pinctrl functions
-  ARM: mvebu: a38x: Add missing labels
-  ARM: mvebu: Document the Device Tree binding for the Armada 388 SoC
-  ARM: mvebu: Add Device Tree description of the Armada 388 SoC
-  ARM: mvebu: Add Armada 388 General Purpose Development Board support
-
-Maxime Ripard (7):
-  ARM: mvebu: Rename DEBUG_LL to indicate UART index
-  ARM: mvebu: Add UART1 as DEBUG_LL possible target
-  ARM: mvebu: a38x: Fix node names
-  pinctrl: mvebu: a38x: Add UART1 muxing options
-  ARM: mvebu: A38x: Remove redundant pinctrl informations
-  ARM: mvebu: Add a number of pinctrl functions
-  ARM: mvebu: Add Armada 385 Access Point Development Board support
-
- .../devicetree/bindings/arm/armada-38x.txt         |   7 +
- arch/arm/Kconfig.debug                             |  35 ++-
- arch/arm/boot/dts/Makefile                         |   6 +-
- arch/arm/boot/dts/armada-380.dtsi                  |   3 +-
- arch/arm/boot/dts/armada-385-db-ap.dts             | 178 +++++++++++++
- arch/arm/boot/dts/armada-385-gp.dts                | 288 +++++++++++++++++++++
- arch/arm/boot/dts/armada-385.dtsi                  |   3 +-
- .../dts/{armada-385-db.dts => armada-388-db.dts}   |   9 +-
- .../dts/{armada-385-rd.dts => armada-388-rd.dts}   |   9 +-
- arch/arm/boot/dts/armada-388.dtsi                  |  70 +++++
- arch/arm/boot/dts/armada-38x.dtsi                  |  93 ++++++-
- drivers/pinctrl/mvebu/pinctrl-armada-38x.c         |   6 +-
- 12 files changed, 678 insertions(+), 29 deletions(-)
+Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ arch/arm/boot/dts/Makefile             |   1 +
+ arch/arm/boot/dts/armada-385-db-ap.dts | 178 +++++++++++++++++++++++++++++++++
+ 2 files changed, 179 insertions(+)
  create mode 100644 arch/arm/boot/dts/armada-385-db-ap.dts
- create mode 100644 arch/arm/boot/dts/armada-385-gp.dts
- rename arch/arm/boot/dts/{armada-385-db.dts => armada-388-db.dts} (92%)
- rename arch/arm/boot/dts/{armada-385-rd.dts => armada-388-rd.dts} (88%)
- create mode 100644 arch/arm/boot/dts/armada-388.dtsi
 
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 91bd5bd62857..ce7bc221fae7 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -535,6 +535,7 @@ dtb-$(CONFIG_MACH_ARMADA_375) += \
+ 	armada-375-db.dtb
+ dtb-$(CONFIG_MACH_ARMADA_38X) += \
+ 	armada-385-db.dtb \
++	armada-385-db-ap.dtb \
+ 	armada-385-rd.dtb
+ dtb-$(CONFIG_MACH_ARMADA_XP) += \
+ 	armada-xp-axpwifiap.dtb \
+diff --git a/arch/arm/boot/dts/armada-385-db-ap.dts b/arch/arm/boot/dts/armada-385-db-ap.dts
+new file mode 100644
+index 000000000000..57b9119fb3e0
+--- /dev/null
++++ b/arch/arm/boot/dts/armada-385-db-ap.dts
+@@ -0,0 +1,178 @@
++/*
++ * Device Tree file for Marvell Armada 385 Access Point Development board
++ * (DB-88F6820-AP)
++ *
++ *  Copyright (C) 2014 Marvell
++ *
++ * Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is licensed under the terms of the GNU General Public
++ *     License version 2.  This program is licensed "as is" without
++ *     any warranty of any kind, whether express or implied.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++#include "armada-385.dtsi"
++
++#include <dt-bindings/gpio/gpio.h>
++
++/ {
++	model = "Marvell Armada 385 Access Point Development Board";
++	compatible = "marvell,a385-db-ap", "marvell,armada385", "marvell,armada38x";
++
++	chosen {
++		bootargs = "console=ttyS0,115200";
++		stdout-path = &uart1;
++	};
++
++	memory {
++		device_type = "memory";
++		reg = <0x00000000 0x80000000>; /* 2GB */
++	};
++
++	soc {
++		ranges = <MBUS_ID(0xf0, 0x01) 0 0xf1000000 0x100000
++			  MBUS_ID(0x01, 0x1d) 0 0xfff00000 0x100000>;
++
++		internal-regs {
++			spi1: spi@10680 {
++				pinctrl-names = "default";
++				pinctrl-0 = <&spi1_pins>;
++				status = "okay";
++
++				spi-flash@0 {
++					#address-cells = <1>;
++					#size-cells = <1>;
++					compatible = "st,m25p128";
++					reg = <0>; /* Chip select 0 */
++					spi-max-frequency = <54000000>;
++				};
++			};
++
++			i2c0: i2c@11000 {
++				pinctrl-names = "default";
++				pinctrl-0 = <&i2c0_pins>;
++				status = "okay";
++
++				/*
++				 * This bus is wired to two EEPROM
++				 * sockets, one of which holding the
++				 * board ID used by the	bootloader.
++				 * Erasing this EEPROM's content will
++				 * brick the board.
++				 * Use this bus with caution.
++				 */
++			};
++
++			mdio@72004 {
++				pinctrl-names = "default";
++				pinctrl-0 = <&mdio_pins>;
++
++				phy0: ethernet-phy@1 {
++					reg = <1>;
++				};
++
++				phy1: ethernet-phy@4 {
++					reg = <4>;
++				};
++
++				phy2: ethernet-phy@6 {
++					reg = <6>;
++				};
++			};
++
++			/* UART0 is exposed through the JP8 connector */
++			uart0: serial@12000 {
++				pinctrl-names = "default";
++				pinctrl-0 = <&uart0_pins>;
++				status = "okay";
++			};
++
++			/*
++			 * UART1 is exposed through a FTDI chip
++			 * wired to the mini-USB connector
++			 */
++			uart1: serial@12100 {
++				pinctrl-names = "default";
++				pinctrl-0 = <&uart1_pins>;
++				status = "okay";
++			};
++
++			ethernet@30000 {
++				status = "okay";
++				phy = <&phy2>;
++				phy-mode = "sgmii";
++			};
++
++			ethernet@34000 {
++				status = "okay";
++				phy = <&phy1>;
++				phy-mode = "sgmii";
++			};
++
++			ethernet@70000 {
++				pinctrl-names = "default";
++
++				/*
++				 * The Reference Clock 0 is used to
++				 * provide a clock to the PHY
++				 */
++				pinctrl-0 = <&ge0_rgmii_pins>, <&ref_clk0_pins>;
++				status = "okay";
++				phy = <&phy0>;
++				phy-mode = "rgmii-id";
++			};
++		};
++
++		pcie-controller {
++			status = "okay";
++
++			/*
++			 * The three PCIe units are accessible through
++			 * standard mini-PCIe slots on the board.
++			 */
++			pcie@1,0 {
++				/* Port 0, Lane 0 */
++				status = "okay";
++			};
++
++			pcie@2,0 {
++				/* Port 1, Lane 0 */
++				status = "okay";
++			};
++
++			pcie@3,0 {
++				/* Port 2, Lane 0 */
++				status = "okay";
++			};
++		};
++	};
++};
 -- 
 1.9.1
 
