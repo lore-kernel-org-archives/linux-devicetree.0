@@ -1,119 +1,36 @@
-From: Ezequiel Garcia <ezequiel.garcia@imgtec.com>
-Subject: Re: [PATCH v7 1/4] pwm: Imagination Technologies PWM DAC driver
-Date: Thu, 8 Jan 2015 14:41:44 -0300
-Message-ID: <54AEC158.5070109@imgtec.com>
-References: <1420651215-3836-1-git-send-email-ezequiel.garcia@imgtec.com> <1420651215-3836-2-git-send-email-ezequiel.garcia@imgtec.com> <54AEA727.40100@mentor.com>
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v4 07/12] ARM: mvebu: Add Armada 385 Access Point
+ Development Board support
+Date: Thu, 8 Jan 2015 18:44:16 +0100
+Message-ID: <20150108184416.3feb0e02@free-electrons.com>
+References: <1420738694-6163-1-git-send-email-gregory.clement@free-electrons.com>
+	<1420738694-6163-8-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <54AEA727.40100@mentor.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Andrew Bresticker <abrestic@chromium.org>, Thierry Reding <thierry.reding@gmail.com>, James Hartley <james.hartley@imgtec.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, Naidu Tellapati <Naidu.Tellapati@imgtec.com>, Sai Masarapu <Sai.Masarapu@imgtec.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1420738694-6163-8-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Dear Gregory CLEMENT,
 
+On Thu,  8 Jan 2015 18:38:09 +0100, Gregory CLEMENT wrote:
 
-On 01/08/2015 12:49 PM, Vladimir Zapolskiy wrote:
-> Hi Ezequiel,
-> 
-> On 07.01.2015 19:20, Ezequiel Garcia wrote:
->> From: Naidu Tellapati <Naidu.Tellapati@imgtec.com>
->>
->> The Pistachio SOC from Imagination Technologies includes a Pulse Width
->> Modulation DAC which produces 1 to 4 digital bit-outputs which represent
->> digital waveforms. These PWM outputs are primarily in charge of controlling
->> backlight LED devices.
->>
->> Reviewed-by: Andrew Bresticker <abrestic@chromium.org>
->> Signed-off-by: Naidu Tellapati <Naidu.Tellapati@imgtec.com>
->> Signed-off-by: Sai Masarapu <Sai.Masarapu@imgtec.com>
->> Signed-off-by: Ezequiel Garcia <ezequiel.garcia@imgtec.com>
->> ---
->>  drivers/pwm/Kconfig   |  13 +++
->>  drivers/pwm/Makefile  |   1 +
->>  drivers/pwm/pwm-img.c | 250 ++++++++++++++++++++++++++++++++++++++++++++++++++
->>  3 files changed, 264 insertions(+)
->>  create mode 100644 drivers/pwm/pwm-img.c
->>
-> 
-> [snip]
-> 
->> +static int img_pwm_probe(struct platform_device *pdev)
->> +{
->> +	int ret;
->> +	struct resource *res;
->> +	struct img_pwm_chip *pwm;
->> +
->> +	pwm = devm_kzalloc(&pdev->dev, sizeof(*pwm), GFP_KERNEL);
->> +	if (!pwm)
->> +		return -ENOMEM;
->> +
->> +	pwm->dev = &pdev->dev;
->> +
->> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +	pwm->base = devm_ioremap_resource(&pdev->dev, res);
->> +	if (IS_ERR(pwm->base))
->> +		return PTR_ERR(pwm->base);
->> +
->> +	pwm->periph_regs = syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
->> +							   "img,cr-periph");
->> +	if (IS_ERR(pwm->periph_regs))
->> +		return PTR_ERR(pwm->periph_regs);
->> +
->> +	pwm->sys_clk = devm_clk_get(&pdev->dev, "sys");
->> +	if (IS_ERR(pwm->sys_clk)) {
->> +		dev_err(&pdev->dev, "failed to get system clock\n");
->> +		return PTR_ERR(pwm->sys_clk);
->> +	}
->> +
->> +	pwm->pwm_clk = devm_clk_get(&pdev->dev, "pwm");
->> +	if (IS_ERR(pwm->pwm_clk)) {
->> +		dev_err(&pdev->dev, "failed to get pwm clock\n");
->> +		return PTR_ERR(pwm->pwm_clk);
->> +	}
->> +
->> +	ret = clk_prepare_enable(pwm->sys_clk);
->> +	if (ret < 0) {
->> +		dev_err(&pdev->dev, "could not prepare or enable sys clock\n");
->> +		return ret;
->> +	}
->> +
->> +	ret = clk_prepare_enable(pwm->pwm_clk);
->> +	if (ret < 0) {
->> +		dev_err(&pdev->dev, "could not prepare or enable pwm clock\n");
->> +		goto disable_sysclk;
->> +	}
->> +
->> +	pwm->chip.dev = &pdev->dev;
->> +	pwm->chip.ops = &img_pwm_ops;
->> +	pwm->chip.base = -1;
->> +	pwm->chip.npwm = 4;
->> +
->> +	ret = pwmchip_add(&pwm->chip);
->> +	if (ret < 0) {
->> +		dev_err(&pdev->dev, "pwmchip_add failed: %d\n", ret);
->> +		goto disable_pwmclk;
->> +	}
->> +
->> +	platform_set_drvdata(pdev, pwm);
->> +
->> +disable_pwmclk:
->> +	clk_disable_unprepare(pwm->pwm_clk);
->> +disable_sysclk:
->> +	clk_disable_unprepare(pwm->sys_clk);
->> +
->> +	return 0;
-> 
-> return ret on error paths?
-> 
-> Also should you reenable sys and pwm clocks after successful driver
-> registration?
-> 
+> +#include "armada-385.dtsi"
 
-Argh, that's definitely bogus. I must have missed it.
+Is it an Armada 385 or an Armada 388 ?
 
-Thanks for the catch!
+Thanks,
+
+Thomas
 -- 
-Ezequiel
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
