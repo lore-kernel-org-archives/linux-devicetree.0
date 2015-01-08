@@ -1,66 +1,53 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [PATCH 1/1] ARM: at91/dt: sam9263: Add missing clocks to lcdc node
-Date: Thu, 8 Jan 2015 10:59:18 +0100
-Message-ID: <20150108095918.GE2447@piout.net>
-References: <1417786299-14026-1-git-send-email-alexanders83@web.de>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v2] ARM: dts: cm-t3x: add NAND support
+Date: Thu, 8 Jan 2015 12:30:23 +0200
+Message-ID: <54AE5C3F.7010306@ti.com>
+References: <54A00BD6.8010507@compulab.co.il> <1419777049-25271-1-git-send-email-lifshitz@compulab.co.il> <54A151F2.9010904@ti.com> <54A25696.80608@compulab.co.il> <20150108001648.GQ13010@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1417786299-14026-1-git-send-email-alexanders83@web.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Alexander Stein <alexanders83@web.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20150108001648.GQ13010@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, Dmitry Lifshitz <lifshitz@compulab.co.il>
+Cc: =?windows-1252?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, grinberg@compulab.co.il
 List-Id: devicetree@vger.kernel.org
 
-On 05/12/2014 at 14:31:39 +0100, Alexander Stein wrote :
-> atmel_lcdfb needs also uses hclk clock, but AT91SAM9263 doesn't have that
-> specific clock, so use lcd_clk twice. The same is done in
-
-I would say "was done" ;)
-
-> arch/arm/mach-at91/at91sam9263.c
+On 08/01/15 02:16, Tony Lindgren wrote:
+> * Dmitry Lifshitz <lifshitz@compulab.co.il> [141229 23:42]:
+>> On 12/29/2014 03:06 PM, Roger Quadros wrote:
+>>> On 28/12/14 16:30, Dmitry Lifshitz wrote:
+>>>> --- a/arch/arm/boot/dts/omap3-cm-t3x30.dtsi
+>>>> +++ b/arch/arm/boot/dts/omap3-cm-t3x30.dtsi
+>>>> @@ -50,7 +50,8 @@
+>>>>  #include "omap-gpmc-smsc911x.dtsi"
+>>>>
+>>>>  &gpmc {
+>>>> -	ranges = <5 0 0x2c000000 0x01000000>;
+>>>> +	ranges = <5 0 0x2c000000 0x01000000>, /* CM-T3x30 SMSC9x Eth */
+>>>> +		 <0 0 0x00000000 0x01000000>; /* CM-T3x NAND */
+>>>
+>>> Isn't this ranges property redundant as it will anyways be overridden by the board specific dts?
+>>>
+>>
+>> The ranges are specified here (and other files below) by design.
+>>
+>> We built a tree like structure to organize DT files -
+>> d234e4239 "ARM: dts: sbc-t3x: refactor DT support"
+>>
+>> It allows to inherit/override properties common for different boards.
+>>
+>> Our customers do not have to deal with a correct GPMC ranges settings, once
+>> they base on omap3-cm-t3x.dts core module DT file (in case they do not
+>> connect additional device to the bus).
+>>
+>> This is the point of Igor's comment to the previous patch version.
 > 
-> Signed-off-by: Alexander Stein <alexanders83@web.de>
+> Roger, do you still have pending issues with this patch?
 
-Acked-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Sorry missed this one. Thanks for the explanations Dmitry.
 
-> ---
->  arch/arm/boot/dts/at91sam9263.dtsi | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/at91sam9263.dtsi b/arch/arm/boot/dts/at91sam9263.dtsi
-> index 635f871..7989756 100644
-> --- a/arch/arm/boot/dts/at91sam9263.dtsi
-> +++ b/arch/arm/boot/dts/at91sam9263.dtsi
-> @@ -932,6 +932,8 @@
->  			interrupts = <26 IRQ_TYPE_LEVEL_HIGH 3>;
->  			pinctrl-names = "default";
->  			pinctrl-0 = <&pinctrl_fb>;
-> +			clocks = <&lcd_clk>, <&lcd_clk>;
-> +			clock-names = "lcdc_clk", "hclk";
->  			status = "disabled";
->  		};
->  
-> -- 
-> 2.2.0
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Acked-by: Roger Quadros <rogerq@ti.com>
 
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+cheers,
+-roger
