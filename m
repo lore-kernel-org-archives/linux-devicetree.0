@@ -1,186 +1,56 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: [PATCH v2 2/2] phy: ti-pipe3: Fix SATA across suspend/resume
-Date: Thu, 8 Jan 2015 13:17:44 +0200
-Message-ID: <54AE6758.7030501@ti.com>
-References: <1418990720-3638-1-git-send-email-rogerq@ti.com> <1418990720-3638-3-git-send-email-rogerq@ti.com>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/2] dt-bindings: add mt6592 compatible string for
+ mediatek sysirq
+Date: Thu, 8 Jan 2015 13:28:45 +0100
+Message-ID: <CABuKBeLFD4D8MB14o206Bs2t5sqhatsLzhV26rHkFrt5dd8+Qw@mail.gmail.com>
+References: <1420698191-10878-1-git-send-email-howard.chen@linaro.org>
+	<1420698191-10878-2-git-send-email-howard.chen@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1418990720-3638-3-git-send-email-rogerq@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: kishon@ti.com, tony@atomide.com
-Cc: nm@ti.com, balbi@ti.com, george.cherian@ti.com, nsekhar@ti.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Roger Quadros <rogerq@ti.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1420698191-10878-2-git-send-email-howard.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Howard Chen <howard.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM/Mediatek SoC..." <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Failed test case: Boot without SATA drive connected. Suspend/resume
-the board and then connect SATA drive. It fails to enumerate.
+Hi Howard,
 
-Due to Errata i783 "SATA Lockup After SATA DPLL Unlock/Relock"
-we can't allow SATA DPLL to be in the unlocked state.
-The SATA refclk (sata_ref_clk) is the source of the SATA_DPLL.
-Till now this clock was controlled by the AHCI SATA driver and was being
-shut off  during system suspend (if the SATA drive was not already attached)
-causing the SATA DPLL to be unlocked and so causing errata i783.
+2015-01-08 7:23 GMT+01:00 Howard Chen <howard.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
+> Signed-off-by: Howard Chen <howard.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
-To prevent sata_ref_clk from being disabled, we move the control of
-this clock from the SATA AHCI driver to the SATA PHY driver and prevent
-it from being disabled.
+This patch lacks a description of what it does. I added a description
+and applied both to my tree. Please remember the next time to add a
+description to all patches.
 
-This also fixes the issue of SATA not working on OMAP5/DRA7 when
-AHCI platform driver is built as a module.
+Thanks,
+Matthias
 
-Signed-off-by: Roger Quadros <rogerq@ti.com>
----
-v2: don't bail out for missing refclk on SATA phy to work with older broken DTBs.
+>
+> diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt
+> index d680b07..4cd6f7b 100644
+> --- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt
+> +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt
+> @@ -7,6 +7,7 @@ Required properties:
+>  - compatible: should be one of:
+>         "mediatek,mt8135-sysirq"
+>         "mediatek,mt8127-sysirq"
+> +       "mediatek,mt6592-sysirq"
+>         "mediatek,mt6589-sysirq"
+>         "mediatek,mt6582-sysirq"
+>         "mediatek,mt6577-sysirq"
+> --
+> 1.9.1
+>
 
- arch/arm/boot/dts/dra7.dtsi  |  4 ++--
- arch/arm/boot/dts/omap5.dtsi |  4 ++--
- drivers/phy/phy-ti-pipe3.c   | 57 +++++++++++++++++++++++++++++++-------------
- 3 files changed, 45 insertions(+), 20 deletions(-)
 
-diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-index 22771bc..8d2a635 100644
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -1090,8 +1090,8 @@
- 				      <0x4A096800 0x40>; /* pll_ctrl */
- 				reg-names = "phy_rx", "phy_tx", "pll_ctrl";
- 				ctrl-module = <&omap_control_sata>;
--				clocks = <&sys_clkin1>;
--				clock-names = "sysclk";
-+				clocks = <&sys_clkin1>, <&sata_ref_clk>;
-+				clock-names = "sysclk", "refclk";
- 				#phy-cells = <0>;
- 			};
- 
-diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
-index b321fdf..bb498e7 100644
---- a/arch/arm/boot/dts/omap5.dtsi
-+++ b/arch/arm/boot/dts/omap5.dtsi
-@@ -929,8 +929,8 @@
- 				      <0x4A096800 0x40>; /* pll_ctrl */
- 				reg-names = "phy_rx", "phy_tx", "pll_ctrl";
- 				ctrl-module = <&omap_control_sata>;
--				clocks = <&sys_clkin>;
--				clock-names = "sysclk";
-+				clocks = <&sys_clkin>, <&sata_ref_clk>;
-+				clock-names = "sysclk", "refclk";
- 				#phy-cells = <0>;
- 			};
- 		};
-diff --git a/drivers/phy/phy-ti-pipe3.c b/drivers/phy/phy-ti-pipe3.c
-index e60ff14..456dec2 100644
---- a/drivers/phy/phy-ti-pipe3.c
-+++ b/drivers/phy/phy-ti-pipe3.c
-@@ -85,6 +85,7 @@ struct ti_pipe3 {
- 	struct pipe3_dpll_map	*dpll_map;
- 	u8			id;
- 	bool enabled;
-+	bool refclk_enabled;	/* this flag is needed specifically for SATA */
- 	spinlock_t lock;	/* serialize clock enable/disable */
- };
- 
-@@ -333,21 +334,24 @@ static int ti_pipe3_probe(struct platform_device *pdev)
- 		}
- 	}
- 
-+	phy->refclk = devm_clk_get(phy->dev, "refclk");
-+	if (IS_ERR(phy->refclk)) {
-+		dev_err(&pdev->dev, "unable to get refclk\n");
-+		/* older DTBs have missing refclk in SATA PHY
-+		 * so don't bail out in case of SATA PHY.
-+		 */
-+		if (!of_device_is_compatible(node, "ti,phy-pipe3-sata"))
-+			return PTR_ERR(phy->refclk);
-+	}
-+
- 	if (!of_device_is_compatible(node, "ti,phy-pipe3-sata")) {
- 		phy->wkupclk = devm_clk_get(phy->dev, "wkupclk");
- 		if (IS_ERR(phy->wkupclk)) {
- 			dev_err(&pdev->dev, "unable to get wkupclk\n");
- 			return PTR_ERR(phy->wkupclk);
- 		}
--
--		phy->refclk = devm_clk_get(phy->dev, "refclk");
--		if (IS_ERR(phy->refclk)) {
--			dev_err(&pdev->dev, "unable to get refclk\n");
--			return PTR_ERR(phy->refclk);
--		}
- 	} else {
- 		phy->wkupclk = ERR_PTR(-ENODEV);
--		phy->refclk = ERR_PTR(-ENODEV);
- 	}
- 
- 	if (of_device_is_compatible(node, "ti,phy-pipe3-pcie")) {
-@@ -428,6 +432,29 @@ static int ti_pipe3_remove(struct platform_device *pdev)
- }
- 
- #ifdef CONFIG_PM
-+static int ti_pipe3_enable_refclk(struct ti_pipe3 *phy)
-+{
-+	if (!IS_ERR(phy->refclk) && !phy->refclk_enabled) {
-+		int ret;
-+
-+		ret = clk_prepare_enable(phy->refclk);
-+		if (ret) {
-+			dev_err(phy->dev, "Failed to enable refclk %d\n", ret);
-+			return ret;
-+		}
-+		phy->refclk_enabled = true;
-+	}
-+
-+	return 0;
-+}
-+
-+static void ti_pipe3_disable_refclk(struct ti_pipe3 *phy)
-+{
-+	if (!IS_ERR(phy->refclk))
-+		clk_disable_unprepare(phy->refclk);
-+
-+	phy->refclk_enabled = false;
-+}
- 
- static int ti_pipe3_enable_clocks(struct ti_pipe3 *phy)
- {
-@@ -438,13 +465,9 @@ static int ti_pipe3_enable_clocks(struct ti_pipe3 *phy)
- 	if (phy->enabled)
- 		goto err1;
- 
--	if (!IS_ERR(phy->refclk)) {
--		ret = clk_prepare_enable(phy->refclk);
--		if (ret) {
--			dev_err(phy->dev, "Failed to enable refclk %d\n", ret);
--			goto err1;
--		}
--	}
-+	ret = ti_pipe3_enable_refclk(phy);
-+	if (ret)
-+		goto err1;
- 
- 	if (!IS_ERR(phy->wkupclk)) {
- 		ret = clk_prepare_enable(phy->wkupclk);
-@@ -474,6 +497,7 @@ err2:
- 	if (!IS_ERR(phy->refclk))
- 		clk_disable_unprepare(phy->refclk);
- 
-+	ti_pipe3_disable_refclk(phy);
- err1:
- 	spin_unlock_irqrestore(&phy->lock, flags);
- 	return ret;
-@@ -491,8 +515,9 @@ static void ti_pipe3_disable_clocks(struct ti_pipe3 *phy)
- 
- 	if (!IS_ERR(phy->wkupclk))
- 		clk_disable_unprepare(phy->wkupclk);
--	if (!IS_ERR(phy->refclk))
--		clk_disable_unprepare(phy->refclk);
-+	/* Don't disable refclk for SATA PHY due to Errata i783 */
-+	if (!of_device_is_compatible(phy->dev->of_node, "ti,phy-pipe3-sata"))
-+		ti_pipe3_disable_refclk(phy);
- 	if (!IS_ERR(phy->div_clk))
- 		clk_disable_unprepare(phy->div_clk);
- 	phy->enabled = false;
+
 -- 
-2.1.0
-
-
+motzblog.wordpress.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
