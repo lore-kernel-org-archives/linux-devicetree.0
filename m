@@ -1,7 +1,7 @@
 From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v4 06/12] ARM: mvebu: Add a number of pinctrl functions
-Date: Thu,  8 Jan 2015 18:38:08 +0100
-Message-ID: <1420738694-6163-7-git-send-email-gregory.clement@free-electrons.com>
+Subject: [PATCH v4 04/12] pinctrl: mvebu: a38x: Add UART1 muxing options
+Date: Thu,  8 Jan 2015 18:38:06 +0100
+Message-ID: <1420738694-6163-5-git-send-email-gregory.clement@free-electrons.com>
 References: <1420738694-6163-1-git-send-email-gregory.clement@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1420738694-6163-1-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
@@ -12,67 +12,41 @@ List-Id: devicetree@vger.kernel.org
 
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-Some pinctrl functions can be shared with all DTS out there, since they are
-generic, SoC-wide muxing options. Add a number of these to the DTSI to avoid
-duplication.
+The MPP19 and MMP20 pins also have the ability to be muxed to the uart1
+function.
+
+Add this case to the pinctrl driver.
 
 Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Acked-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Acked-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- arch/arm/boot/dts/armada-38x.dtsi | 39 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+ drivers/pinctrl/mvebu/pinctrl-armada-38x.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/armada-38x.dtsi b/arch/arm/boot/dts/armada-38x.dtsi
-index 40200084c6c8..98885c58be29 100644
---- a/arch/arm/boot/dts/armada-38x.dtsi
-+++ b/arch/arm/boot/dts/armada-38x.dtsi
-@@ -195,6 +195,45 @@
- 
- 			pinctrl@18000 {
- 				reg = <0x18000 0x20>;
-+
-+				ge0_rgmii_pins: ge-rgmii-pins-0 {
-+					marvell,pins = "mpp6", "mpp7", "mpp8",
-+						       "mpp9", "mpp10", "mpp11",
-+						       "mpp12", "mpp13", "mpp14",
-+						       "mpp15", "mpp16", "mpp17";
-+					marvell,function = "ge0";
-+				};
-+
-+				i2c0_pins: i2c-pins-0 {
-+					marvell,pins = "mpp2", "mpp3";
-+					marvell,function = "i2c0";
-+				};
-+
-+				mdio_pins: mdio-pins {
-+					marvell,pins = "mpp4", "mpp5";
-+					marvell,function = "ge";
-+				};
-+
-+				ref_clk0_pins: ref-clk-pins-0 {
-+					marvell,pins = "mpp45";
-+					marvell,function = "ref";
-+				};
-+
-+				spi1_pins: spi-pins-1 {
-+					marvell,pins = "mpp56", "mpp57", "mpp58",
-+						       "mpp59";
-+					marvell,function = "spi1";
-+				};
-+
-+				uart0_pins: uart-pins-0 {
-+					marvell,pins = "mpp0", "mpp1";
-+					marvell,function = "ua0";
-+				};
-+
-+				uart1_pins: uart-pins-1 {
-+					marvell,pins = "mpp19", "mpp20";
-+					marvell,function = "ua1";
-+				};
- 			};
- 
- 			gpio0: gpio@18100 {
+diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-38x.c b/drivers/pinctrl/mvebu/pinctrl-armada-38x.c
+index 224c6cff6aa2..7302f66f4f19 100644
+--- a/drivers/pinctrl/mvebu/pinctrl-armada-38x.c
++++ b/drivers/pinctrl/mvebu/pinctrl-armada-38x.c
+@@ -145,14 +145,16 @@ static struct mvebu_mpp_mode armada_38x_mpp_modes[] = {
+ 		 MPP_VAR_FUNCTION(2, "ptp",   "event_req",  V_88F6810_PLUS),
+ 		 MPP_VAR_FUNCTION(3, "pcie0", "clkreq",     V_88F6810_PLUS),
+ 		 MPP_VAR_FUNCTION(4, "sata1", "prsnt",      V_88F6810_PLUS),
+-		 MPP_VAR_FUNCTION(5, "ua0",   "cts",        V_88F6810_PLUS)),
++		 MPP_VAR_FUNCTION(5, "ua0",   "cts",        V_88F6810_PLUS),
++		 MPP_VAR_FUNCTION(6, "ua1",   "rxd",        V_88F6810_PLUS)),
+ 	MPP_MODE(20,
+ 		 MPP_VAR_FUNCTION(0, "gpio",  NULL,         V_88F6810_PLUS),
+ 		 MPP_VAR_FUNCTION(1, "ge0",   "txclk",      V_88F6810_PLUS),
+ 		 MPP_VAR_FUNCTION(2, "ptp",   "clk",        V_88F6810_PLUS),
+ 		 MPP_VAR_FUNCTION(3, "pcie1", "rstout",     V_88F6820_PLUS),
+ 		 MPP_VAR_FUNCTION(4, "sata0", "prsnt",      V_88F6810_PLUS),
+-		 MPP_VAR_FUNCTION(5, "ua0",   "rts",        V_88F6810_PLUS)),
++		 MPP_VAR_FUNCTION(5, "ua0",   "rts",        V_88F6810_PLUS),
++		 MPP_VAR_FUNCTION(6, "ua1",   "txd",        V_88F6810_PLUS)),
+ 	MPP_MODE(21,
+ 		 MPP_VAR_FUNCTION(0, "gpio",  NULL,         V_88F6810_PLUS),
+ 		 MPP_VAR_FUNCTION(1, "spi0",  "cs1",        V_88F6810_PLUS),
 -- 
 1.9.1
 
