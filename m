@@ -1,45 +1,37 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH v2 0/8] Add Simple Power-Managed Bus Support
-Date: Fri, 09 Jan 2015 00:51:23 +0200
-Message-ID: <10372546.9gL7hIlFWP@avalon>
-References: <1418842153-17113-1-git-send-email-geert+renesas@glider.be> <CAMuHMdVeEmKiqGTOmevaBDbJ=nBTbSi6d6Xrm0eyvbMTtyU=sA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdVeEmKiqGTOmevaBDbJ=nBTbSi6d6Xrm0eyvbMTtyU=sA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux PM list <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ulrich Hecht <ulrich.hecht+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Andy Gross <agross@codeaurora.org>
+Subject: [PATCH 0/2] Add Qualcomm TCSR driver
+Date: Thu,  8 Jan 2015 16:52:55 -0600
+Message-ID: <1420757577-20425-1-git-send-email-agross@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: linux-arm-msm@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Andy Gross <agross@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
+This patch set adds a driver for the TCSR (Top Control and Status Register)
+block that is present in the IPQ8064, APQ8064, and some later processors.  The
+TCSR is responsible for accessing configuration and mux settings for a variety
+of peripherals.
 
-On Thursday 08 January 2015 20:28:45 Geert Uytterhoeven wrote:
-> On Wed, Dec 17, 2014 at 7:49 PM, Geert Uytterhoeven wrote:
-> > The Renesas Bus State Controller (BSC) provides an external bus for
-> > connecting multiple external devices to an SoC, driving several chip
-> > select lines, for e.g. NOR FLASH, Ethernet and USB.
-> > On the kzm9g and ape6evm development boards, an smsc9220 Ethernet
-> > controller is connnected to the BSC of an SH-Mobile AG5 (sh73a0) resp.
-> > R-Mobile APE6 (r8a73a4) SoC.
-> 
-> [...]
-> 
-> > This was tested on sh73a0/kzm9g-multiplatform. Without this, Ethernet
-> > doesn't work, as the ZB clock is disabled by clk_disable_unused().
-> > Testing on r8a73a4/ape6evm-multiplatform would be appreciated.
-> 
-> Has anyone tried this on r8a73a4/ape6evm-multiplatform?
+The initial version of this driver exposes configuration settings for the USB
+PHY selection and ADM DMA CRCI muxing.
 
-I'm afraid I can't help there, as I have no APE6EVM board.
+Andy Gross (2):
+  soc: qcom: Add TCSR driver
+  soc: qcom: Add device tree binding for TCSR
+
+ .../devicetree/bindings/soc/qcom/qcom,tcsr.txt     |   33 ++++++++
+ drivers/soc/qcom/Kconfig                           |    7 ++
+ drivers/soc/qcom/Makefile                          |    1 +
+ drivers/soc/qcom/qcom_tcsr.c                       |   83 ++++++++++++++++++++
+ include/dt-bindings/soc/qcom,tcsr.h                |   34 ++++++++
+ include/soc/qcom/qcom_tcsr.h                       |   21 +++++
+ 6 files changed, 179 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,tcsr.txt
+ create mode 100644 drivers/soc/qcom/qcom_tcsr.c
+ create mode 100644 include/dt-bindings/soc/qcom,tcsr.h
+ create mode 100644 include/soc/qcom/qcom_tcsr.h
 
 -- 
-Regards,
-
-Laurent Pinchart
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
