@@ -1,53 +1,47 @@
 From: Feng Kan <fkan@apm.com>
-Subject: [PATCH V3 1/7] arm64: dts: Add APM X-Gene USB DTS node
-Date: Wed,  7 Jan 2015 17:33:32 -0700
-Message-ID: <1420677218-30743-2-git-send-email-fkan@apm.com>
+Subject: [PATCH V3 4/7] arm64: dts: Add Designware GPIO dts binding to APM X-Gene platform
+Date: Wed,  7 Jan 2015 17:33:35 -0700
+Message-ID: <1420677218-30743-5-git-send-email-fkan@apm.com>
 References: <1420677218-30743-1-git-send-email-fkan@apm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1420677218-30743-1-git-send-email-fkan@apm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: patches@apm.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Feng Kan <fkan@apm.com>, Bao Truong <btruong@apm.com>
+Cc: Feng Kan <fkan@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-This parch adds the device tree nodes for APM X-Gnene USB host controller.
-Since X-Gene SOC supports maximum 2 USB ports, 2 dts node are added.
+Add Designware GPIO dts binding to APM X-Gene platform
 
-Signed-off-by: Bao Truong <btruong@apm.com>
 Signed-off-by: Feng Kan <fkan@apm.com>
 ---
- arch/arm64/boot/dts/apm/apm-storm.dtsi |   19 +++++++++++++++++++
- 1 files changed, 19 insertions(+), 0 deletions(-)
+ arch/arm64/boot/dts/apm/apm-storm.dtsi |   15 +++++++++++++++
+ 1 files changed, 15 insertions(+), 0 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/apm/apm-storm.dtsi b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-index f1ad9c2..4b2ec83 100644
+index f31e8df..a58f9a2 100644
 --- a/arch/arm64/boot/dts/apm/apm-storm.dtsi
 +++ b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-@@ -587,6 +587,25 @@
- 			phy-names = "sata-phy";
+@@ -525,6 +525,21 @@
+ 			interrupts = <0x0 0x4f 0x4>;
  		};
  
-+		/*
-+		 * Do not change dwusb name, coded for backward compatibility
-+		 */
-+		usb0: dwusb@19000000 {
-+			status = "disabled";
-+			compatible = "xhci-platform";
-+			reg =  <0x0 0x19000000 0x0 0x100000>;
-+			interrupts = <0x0 0x89 0x4>;
-+			dma-coherent;
++		dwgpio: gpio@1c024000 {
++			compatible = "snps,dw-apb-gpio";
++			reg = <0x0 0x1c024000 0x0 0x1000>;
++			reg-io-width = <4>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			porta: gpio-controller@0 {
++				compatible = "snps,dw-apb-gpio-port";
++				gpio-controller;
++				snps,nr-gpios = <32>;
++				reg = <0>;
++			};
 +		};
 +
-+		usb1: dwusb@19800000 {
-+			status = "disabled";
-+			compatible = "xhci-platform";
-+			reg =  <0x0 0x19800000 0x0 0x100000>;
-+			interrupts = <0x0 0x8a 0x4>;
-+			dma-coherent;
-+		};
-+
- 		rtc: rtc@10510000 {
- 			compatible = "apm,xgene-rtc";
- 			reg = <0x0 0x10510000 0x0 0x400>;
+ 		phy1: phy@1f21a000 {
+ 			compatible = "apm,xgene-phy";
+ 			reg = <0x0 0x1f21a000 0x0 0x100>;
 -- 
 1.7.1
