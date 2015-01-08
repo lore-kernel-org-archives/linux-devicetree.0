@@ -1,129 +1,99 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v1 2/4] gpio: add parameter to allow the use named gpios
-Date: Wed, 7 Jan 2015 16:15:37 -0800
-Message-ID: <20150108001537.GA8570@dtor-ws>
-References: <1420621722-7428-1-git-send-email-oliver+list@schinagl.nl>
- <1420621722-7428-3-git-send-email-oliver+list@schinagl.nl>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2] arm: boot: dts: am437x-idk: add gpio-based power key
+Date: Wed, 7 Jan 2015 16:12:31 -0800
+Message-ID: <20150108001231.GP13010@atomide.com>
+References: <1419626116-12833-1-git-send-email-balbi@ti.com>
+ <1419627193-20838-1-git-send-email-balbi@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1420621722-7428-3-git-send-email-oliver+list@schinagl.nl>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Olliver Schinagl <oliver+list@schinagl.nl>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Olliver Schinagl <oliver@schinagl.nl>, Robin Gong <b38343@freescale.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Aaron Lu <aaron.lu@intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Grant Likely <grant.likely@linaro.org>, Wolfram Sang <wsa@the-dreams.de>, Alexander Shiyan <shc_work@mail.ru>, Jingoo Han <jg1.han@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, linux-leds@vger.kernel.org
+In-Reply-To: <1419627193-20838-1-git-send-email-balbi-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Cc: Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 07, 2015 at 10:08:40AM +0100, Olliver Schinagl wrote:
-> From: Olliver Schinagl <oliver@schinagl.nl>
+* Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> [141226 12:56]:
+> AM437x IDK board has a User Switch which we can
+> program to whatever we want. Because this board
+> doesn't have a PMIC which can give us power button
+> presses, let's use this user switch as a gpio-keys
+> power button.
 > 
-> The gpio binding document says that new code should always use named
-> gpios. Patch 40b73183 added support to parse a list of gpios from child
-> nodes, but does not make it possible to use named gpios. This patch adds
-> the con_id property and implements it is done in gpiolib.c, where the
-> old-style of using unnamed gpios still works.
-> 
-> Signed-off-by: Olliver Schinagl <oliver@schinagl.nl>
+> Signed-off-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+
+Applying into omap-for-v3.20/dt thanks.
+
+Tony
+
 > ---
->  drivers/gpio/devres.c                     | 16 +++++++++++++++-
->  drivers/input/keyboard/gpio_keys_polled.c |  2 +-
->  drivers/leds/leds-gpio.c                  |  2 +-
->  include/linux/gpio/consumer.h             |  1 +
->  4 files changed, 18 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/gpio/devres.c b/drivers/gpio/devres.c
-> index 13dbd3d..b7fbe1c 100644
-> --- a/drivers/gpio/devres.c
-> +++ b/drivers/gpio/devres.c
-> @@ -111,23 +111,37 @@ EXPORT_SYMBOL(__devm_gpiod_get_index);
->  /**
->   * devm_get_gpiod_from_child - get a GPIO descriptor from a device's child node
->   * @dev:	GPIO consumer
-> + * @con_id:	function within the GPIO consumer
->   * @child:	firmware node (child of @dev)
->   *
->   * GPIO descriptors returned from this function are automatically disposed on
->   * driver detach.
->   */
->  struct gpio_desc *devm_get_gpiod_from_child(struct device *dev,
-> +					    const char *con_id,
->  					    struct fwnode_handle *child)
->  {
-> +	static const char const *suffixes[] = { "gpios", "gpio" };
-> +	char prop_name[32]; /* 32 is max size of property name */
->  	struct gpio_desc **dr;
->  	struct gpio_desc *desc;
-> +	unsigned int i;
->  
->  	dr = devres_alloc(devm_gpiod_release, sizeof(struct gpio_desc *),
->  			  GFP_KERNEL);
->  	if (!dr)
->  		return ERR_PTR(-ENOMEM);
->  
-> -	desc = fwnode_get_named_gpiod(child, "gpios");
-> +	for (i = 0; i < ARRAY_SIZE(suffixes); i++) {
-> +		if (con_id)
-> +			snprintf(prop_name, 32, "%s-%s", con_id, suffixes[i]);
-
-sizeof(prop_name) instead of hard-coding 32 would be better.
-
-> +		else
-> +			snprintf(prop_name, 32, "%s", suffixes[i]);
+> Changes since v1:
+> 	- Add explicit pinctrl data.
+> 	  (note that ball reset state is already MUX_MODE7, and even
+> 	   though it was already working before, as can be seen from
+> 	   v1's boot logs, it's best that we cope with possibly broken
+> 	   bootloaders)
+> 
+> depends on [1]. Boot logs at [2]. Note that this can rather easily
+> be folded into the original patch if so desired.
+> 
+> [1] http://marc.info/?l=linux-omap&m=141928747902983&w=2
+> [2] http://hastebin.com/qezicehunu
+> 
+>  arch/arm/boot/dts/am437x-idk-evm.dts | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/am437x-idk-evm.dts b/arch/arm/boot/dts/am437x-idk-evm.dts
+> index b52dd0a..f9a17e2 100644
+> --- a/arch/arm/boot/dts/am437x-idk-evm.dts
+> +++ b/arch/arm/boot/dts/am437x-idk-evm.dts
+> @@ -96,9 +96,29 @@
+>  		regulator-boot-on;
+>  		vin-supply = <&v1_5dreg>;
+>  	};
 > +
-> +		desc = fwnode_get_named_gpiod(child, prop_name);
-> +		if (!IS_ERR(desc) || (PTR_ERR(desc) == -EPROBE_DEFER))
-> +			break;
-> +	}
->  	if (IS_ERR(desc)) {
->  		devres_free(dr);
->  		return desc;
-> diff --git a/drivers/input/keyboard/gpio_keys_polled.c b/drivers/input/keyboard/gpio_keys_polled.c
-> index 90df4df..097d721 100644
-> --- a/drivers/input/keyboard/gpio_keys_polled.c
-> +++ b/drivers/input/keyboard/gpio_keys_polled.c
-> @@ -125,7 +125,7 @@ static struct gpio_keys_platform_data *gpio_keys_polled_get_devtree_pdata(struct
->  	device_for_each_child_node(dev, child) {
->  		struct gpio_desc *desc;
+> +	gpio_keys: gpio_keys {
+> +		compatible = "gpio-keys";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&gpio_keys_pins_default>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		switch@0 {
+> +			label = "power-button";
+> +			linux,code = <KEY_POWER>;
+> +			gpios = <&gpio4 2 GPIO_ACTIVE_LOW>;
+> +		};
+> +	};
+>  };
 >  
-> -		desc = devm_get_gpiod_from_child(dev, child);
-> +		desc = devm_get_gpiod_from_child(dev, NULL, child);
-
-I guess the number of users is small enough that we can do this API
-change in one step if gpio overlords are happy with it.
-
->  		if (IS_ERR(desc)) {
->  			error = PTR_ERR(desc);
->  			if (error != -EPROBE_DEFER)
-> diff --git a/drivers/leds/leds-gpio.c b/drivers/leds/leds-gpio.c
-> index 7ea1ea42..8e5af69 100644
-> --- a/drivers/leds/leds-gpio.c
-> +++ b/drivers/leds/leds-gpio.c
-> @@ -184,7 +184,7 @@ static struct gpio_leds_priv *gpio_leds_create(struct platform_device *pdev)
->  		struct gpio_led led = {};
->  		const char *state = NULL;
+>  &am43xx_pinmux {
+> +	gpio_keys_pins_default: gpio_keys_pins_default {
+> +		pinctrl-single,pins = <
+> +			0x1b8 (PIN_INPUT | MUX_MODE7)	/* cam0_field.gpio4_2 */
+> +		>;
+> +	};
+> +
+>  	i2c0_pins_default: i2c0_pins_default {
+>  		pinctrl-single,pins = <
+>  			0x188 (PIN_INPUT | SLEWCTRL_FAST | MUX_MODE0) /* i2c0_sda.i2c0_sda */
+> @@ -282,6 +302,10 @@
+>  	status = "okay";
+>  };
 >  
-> -		led.gpiod = devm_get_gpiod_from_child(dev, child);
-> +		led.gpiod = devm_get_gpiod_from_child(dev, NULL, child);
->  		if (IS_ERR(led.gpiod)) {
->  			fwnode_handle_put(child);
->  			goto err;
-> diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
-> index 45afc2d..ed20759 100644
-> --- a/include/linux/gpio/consumer.h
-> +++ b/include/linux/gpio/consumer.h
-> @@ -110,6 +110,7 @@ struct fwnode_handle;
->  struct gpio_desc *fwnode_get_named_gpiod(struct fwnode_handle *fwnode,
->  					 const char *propname);
->  struct gpio_desc *devm_get_gpiod_from_child(struct device *dev,
-> +					    const char *con_id,
->  					    struct fwnode_handle *child);
->  #else /* CONFIG_GPIOLIB */
->  
+> +&gpio4 {
+> +	status = "okay";
+> +};
+> +
+>  &gpio5 {
+>  	status = "okay";
+>  };
 > -- 
-> 2.1.4
+> 2.2.0
 > 
-
-Thanks.
-
--- 
-Dmitry
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
