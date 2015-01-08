@@ -1,47 +1,57 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v9 0/4] ASoC: tda998x: add a codec to the HDMI transmitter
-Date: Thu, 8 Jan 2015 20:05:26 +0000
-Message-ID: <20150108200526.GD2634@sirena.org.uk>
-References: <cover.1420628786.git.moinejf@free.fr>
- <54AE99D0.1050205@ti.com>
+From: Walter Lozano <walter-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+Subject: Re: [PATCH 2/2] Input: adxl34x - add device tree documentation
+Date: Thu, 8 Jan 2015 17:15:09 -0300
+Message-ID: <CABxpGwCG56zmKYC8mGun9DYkgR4xS1L0F0fhF7Ze_0oHCxA4AA@mail.gmail.com>
+References: <1420599537-28740-1-git-send-email-walter@vanguardiasur.com.ar>
+	<1420599537-28740-2-git-send-email-walter@vanguardiasur.com.ar>
+	<CAMuHMdVfqzTf034vyDPEYrnZ7+3iE+h2H+7Cs-ifJrePDrw-rg@mail.gmail.com>
+	<CABxpGwDw_bE+UxypWGz3scxh3zVuxZ-1TTG2o-hEgT_mvwVatQ@mail.gmail.com>
+	<CAMuHMdWwVmjkg-4pNvHgtBtc34+FzMKtF6e77YMqM4uRYfS+eg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="+GUUlqgaeopBXFm2"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <54AE99D0.1050205@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jyri Sarha <jsarha@ti.com>
-Cc: Jean-Francois Moine <moinejf@free.fr>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Dave Airlie <airlied@gmail.com>, Andrew Jackson <Andrew.Jackson@arm.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdWwVmjkg-4pNvHgtBtc34+FzMKtF6e77YMqM4uRYfS+eg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Jan 8, 2015 at 3:51 PM, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
+> On Thu, Jan 8, 2015 at 6:40 PM, Walter Lozano
+> <walter-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org> wrote:
+>> On Wed, Jan 7, 2015 at 6:42 AM, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
+>>> On Wed, Jan 7, 2015 at 3:58 AM, Walter Lozano
+>>> <walter-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org> wrote:
+>>>> diff --git a/Documentation/devicetree/bindings/input/adxl34x.txt b/Documentation/devicetree/bindings/input/adxl34x.txt
+>>>> new file mode 100644
+>>>> index 0000000..0774f7e
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/input/adxl34x.txt
+>>>> @@ -0,0 +1,53 @@
+>>>> +Device Tree bindings for adxl34x digital accelerometer, both spi and i2c.
+>>>> +
+>>>> +Depending on the interface this node should be a child of a spi or i2c bus.
+>>>> +
+>>>> +Required properties:
+>>>> +- compatible: "adxl34x"
+>>>
+>>> "adi,adxl34x"?
+>>
+>> Great, thanks for your feedback.
+>
+> BTW, did you see "[PATCH] input: adxl34x: Add OF match support"
+> (http://www.spinics.net/lists/linux-i2c/msg18107.html)?
 
---+GUUlqgaeopBXFm2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Yes, I have already seen it. Thanks for you time.
 
-On Thu, Jan 08, 2015 at 04:53:04PM +0200, Jyri Sarha wrote:
+Regards,
 
-> BTW, the HDMI codec is now completely unused, since my OMAP4+ HDMI audio
-> patches were merged (it uses dummy codec) and my BBB HDMI audio patches were
-> never merged.
+Walter
 
-Might those BBB ones turn up sometime?
-
---+GUUlqgaeopBXFm2
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUruMGAAoJECTWi3JdVIfQjHoH/2oaAt473gReYyBehArdf4+w
-6ZYuguD+XWCOkT7jc89as4OWImBrUEto84a/N176LvONHRzeXKEzgpMma3RZo9w6
-x/dC5iojTUdwtfVM6tFjBu3lkca7H0NqDILjEOtiyQ8mJmqGmALa27s9dkHtjg5W
-R9nNCjLGgO+dhXdsxc5/o6Su5NgwsGTkt76vP+nQegpe5nmvydUo57sPYJFl2Vy8
-Lpz62Nad2O+kvX5WeQBdXbIKVowzBtCoQm2T1P7OtFrhHjRdVfHdc8f4yXCcdohG
-wGFR4t8NW/mLqJsCbGuP+2zlFWepsSUnsdCWy5/5I5QLBR+Bfwm0DvOG+qBUg2E=
-=NzMt
------END PGP SIGNATURE-----
-
---+GUUlqgaeopBXFm2--
+-- 
+Walter Lozano, VanguardiaSur
+www.vanguardiasur.com.ar
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
