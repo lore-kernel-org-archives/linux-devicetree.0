@@ -1,112 +1,104 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v3 0/4] PCI: get DMA configuration from parent device
-Date: Thu, 08 Jan 2015 09:56:39 +0100
-Message-ID: <1934001.D0JfDRp1gF@wuerfel>
-References: <1420656594-8908-1-git-send-email-m-karicheri2@ti.com>
-	<4057859.4ynbgz66iN@wuerfel> <54ADBB89.8070503@ti.com>
+From: Emil Medve <Emilian.Medve@Freescale.com>
+Subject: Re: [PATCH] [v3] power/fsl: add MDIO dt binding for FMan
+Date: Thu, 8 Jan 2015 03:31:45 -0600
+Message-ID: <54AE4E81.4040507@Freescale.com>
+References: <1419321466-5575-1-git-send-email-shh.xie@gmail.com>
+ <DM2PR0301MB08640979E5088618D1395CFAE2580@DM2PR0301MB0864.namprd03.prod.outlook.com>
+ <1420590520.4961.38.camel@freescale.com>
+ <DM2PR0301MB08645ABD93708FFE011EF362E2460@DM2PR0301MB0864.namprd03.prod.outlook.com>
+ <1420653934.4961.58.camel@freescale.com> <54AD8C8A.8070100@Freescale.com>
+ <1420679558.4961.64.camel@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <54ADBB89.8070503-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1420679558.4961.64.camel@freescale.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Scott Wood <scottwood@Freescale.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Xie Shaohui-B21989 <Shaohui.Xie@Freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 07 January 2015 18:04:41 Murali Karicheri wrote:
-> On 01/07/2015 04:18 PM, Arnd Bergmann wrote:
-> > On Wednesday 07 January 2015 13:49:50 Murali Karicheri wrote:
-> >> PCI devices on Keystone doesn't have correct dma_pfn_offset set. This patch
-> >> add capability to set the dma configuration such as dma-mask, dma_pfn_offset,
-> >> and dma ops etc using the information from DT. The prior RFCs and discussions
-> >> are available at [1] and [2] below.
-> >>
-> >> [2] : https://www.mail-archive.com/linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg790244.html
-> >> [1] : http://www.gossamer-threads.com/lists/linux/kernel/2024591
-> >
-> > Looks all good to me in this version, I'm just unsure about one thing:
-> >
-> >>                 - Limit the of_iommu_configure to non pci devices
-> >
-> > My last recommendation was to pass the b/d/f number into
-> > of_pci_dma_configure to handle this correctly. What was your
-> > reason for not doing it in the end?
-> Arnd,
-> 
-> I had responded to this already on the list and reproduced below your 
-> remark and my response below from that thread.
-
-Ah right, sorry for missing a reply on that.
-
-> ---------------cut-------------------------------------------------------
->  > Actually regarding the bit I wrote above, it might be helpful to pass
->  > the PCI_DEVID() into both of_iommu_configure and of_dma_configure.
->  >
->  > While this may or may not be sufficient, I think there is no question
->  > about it being needed for the ARM SMMU with PCI, so we may as well add
->  > it at the point when you touch the same lines already. In the platform
->  > bus case, just pass zero here.
-> 
-> PCI_DEVID() is defined as
-> 
-> #define PCI_DEVID(bus, devfn)  ((((u16)(bus)) << 8) | (devfn))
-> 
-> So PCI_DEVID of 0 is a valid PCI DEVID.
-
-I think that is ok: the idea would be that we always just list the
-first ID of the range and then let the iommu driver add the offset
-in the appropriate way.
-
-> How about checking if the device is PCI in of_iommu_configure() using 
-> dev_is_pci(dev) macro and return immediately for PCI? Need to include 
-> pci.h in this file though.
-> 
-> Some of the iommu drivers already include this.
-
-I guess you are right, but the driver can even handle the PCI
-device correctly without the extra parameter:
-
-	devid = 0;
-	if (dev_is_pci(dev)) {
-		struct pci_dev *pdev = to_pci_dev(dev);
-		devid = PCI_DEVID(pdev->bus->number, pdev->devfn);
-	}
-
-	streamid += devid;
-
-Other IOMMUs won't even care about the devid, so they will just work.
-
-> This will allow us to re-visit this later for IOMMU support for PCI 
-> without polluting the API.
->
-> -----------------------cut-end---------------------------------------
-> 
-> I assumed you want to use value of zero for b/d/f to indicate it is for
-> platform. Also use the non zero value to skip the DT attribute parsing 
-> for IOMMU DT attribute in of_iommu_configure() for PCI.
-> I did dev_is_pci() for skipping the processing for PCI. I thought it is 
-> better to add the b/d/f argument later when this is re-visited later.
-
-I'd say just keep the iommu setup for PCI now and let drivers handle
-this under the covers.
-
-There is another interesting case, which is a USB host controller or
-something similar behind a PCI bus. These are quite common and also
-need to be handled in some form. Let's do just PCI first for now, but
-be aware that this will come next. Should we assume that the ID that
-is required for a device is either known from the device node, or
-that it comes from a PCI device? That means for the USB case, we will
-likely need to have some custom logic. There seems to be an implicit
-assumption all over the kernel that all devices have the same IOMMU
-instance, but we can't really rely on that here.
-
-	Arnd
+SGVsbG8gU2NvdHQsCgoKT24gMDEvMDcvMjAxNSAwNzoxMiBQTSwgU2NvdHQgV29vZCB3cm90ZToK
+PiBPbiBXZWQsIDIwMTUtMDEtMDcgYXQgMTM6NDQgLTA2MDAsIEVtaWwgTWVkdmUgd3JvdGU6Cj4+
+IEhlbGxvIFNjb3R0LAo+Pgo+Pgo+PiBPbiAwMS8wNy8yMDE1IDEyOjA1IFBNLCBTY290dCBXb29k
+IHdyb3RlOgo+Pj4gT24gVHVlLCAyMDE1LTAxLTA2IGF0IDIzOjI5IC0wNjAwLCBYaWUgU2hhb2h1
+aS1CMjE5ODkgd3JvdGU6Cj4+Pj4+Pj4gKy0gaW50ZXJydXB0cwo+Pj4+Pj4+ICsJCVVzYWdlOiBv
+cHRpb25hbAo+Pj4+Pj4+ICsJCVZhbHVlIHR5cGU6IDxwcm9wLWVuY29kZWQtYXJyYXk+Cj4+Pj4+
+Pj4gKwkJRGVmaW5pdGlvbjogRXZlbnQgaW50ZXJydXB0IG9mIGV4dGVybmFsIE1ESU8gY29udHJv
+bGxlci4KPj4+Pj4+PiArCQkxIEdiL3MgTURJTyBhbmQgMTAgR2IvcyBNRElPIGhhcyBvbmUgaW50
+ZXJydXB0IHJlc3BlY3RpdmVseS4KPj4+Pj4KPj4+Pj4gSSdtIGNvbmZ1c2VkIGJ5ICJyZXNwZWN0
+aXZlbHkiIGhlcmUuICBEb2VzIGZzbCxmbWFuLW1lbWFjLW1kaW8gaGF2ZSB0d28KPj4+Pj4gaW50
+ZXJydXB0cyAob25lIGZvciAxIEdiL3MgYW5kIG9uZSBmb3IgMTAgR2Ivcyk/Cj4+Pj4gW1MuSF0g
+V2UgdXNlIHR3byBNRElPIGNvbnRyb2xsZXJzIGZvciBleHRlcm5hbCBQSFkgbWFuYWdlbWVudC4g
+T25lIGZvciAxIEdiL3MsCj4+Pj4gT25lIGZvciAxMCBHYi9zLCBhbmQgdHdvIE1ESU8gaW50ZXJy
+dXB0cyBjb25uZWN0ZWQgdG8gTVBJQy4KPj4+Cj4+PiBJZiB0aGVyZSBjYW4gYmUgdHdvIGludGVy
+cnVwdHMgeW91IG5lZWQgdG8gbWFrZSB0aGF0IGNsZWFyIGFuZCBzcGVjaWZ5Cj4+PiB0aGUgb3Jk
+ZXIuCj4+Pgo+Pj4gSXMgaXQgcG9zc2libGUgZm9yIG9uZSBNRElPIGNvbnRyb2xsZXIgdG8gaGF2
+ZSBhbiBpbnRlcnJ1cHQgY29ubmVjdGVkCj4+PiBidXQgbm90IHRoZSBvdGhlciwgb24gdGhlIHNh
+bWUgc3lzdGVtPyAgSG93IHdvdWxkIHlvdSByZXByZXNlbnQgdGhhdCBpbgo+Pj4gdGhlIGRldmlj
+ZSB0cmVlPyAgSWYgdGhlcmUgYXJlIHR3byBNRElPIGNvbnRyb2xsZXJzIHdoeSBhcmUgdGhleSBp
+biB0aGUKPj4+IHNhbWUgbm9kZT8KPj4KPj4gSGlzdG9yaWNhbGx5IChGTWFuIHYyIGFuZCBldmVu
+IGJlZm9yZS9sZWdhY3kpIHdlJ3ZlIGhhZCBlYWNoIE1BQyBpbmNsdWRlCj4+IGFuIE1ESU8gY29u
+dHJvbGxlciwgYnV0IG9ubHkgb25lIE1ESU8gY29udHJvbGxlciBwZXIgTUFDIHR5cGUvc3BlZWQg
+KDEKPj4gR2IvcyB2cyAxMCBHYi9zKSBpcyBwaW5uZWQgb3V0IGFuZCBhbGwgdGhlIHNhbWUgc3Bl
+ZWQgUEhZKHMpIGFyZQo+PiBjb25uZWN0ZWQgdG8gdGhlIHJlc3BlY3RpdmUgTURJTyBjb250cm9s
+bGVycy4gQXMgc3VjaCB0aGUgZmlyc3QgMSBHYi9zCj4+IE1BQy9NRElPIGNvbnRyb2xsZXIgaXMg
+dXNlZCB0byBtYW5hZ2UgYWxsIHRoZSAxIEdiL3MgUEhZKHMpIGFuZCB0aGUKPj4gZmlyc3QgMTAg
+R2IvcyBNQUMvTURJTyBjb250cm9sbGVyIGlzIHVzZWQgdG8gbWFuYWdlIGFsbCB0aGUgMTAgR2Iv
+cwo+PiBQSFkocykuIEVhY2ggTURJTyBjb250cm9sbGVyIGhhcyB0aGUgYWJpbGl0eSB0byBnZW5l
+cmF0ZSBpbnRlcnJ1cHRzIGJ1dAo+PiBvbmx5IHBpbm5lZCBvdXQgTURJTyBjb250cm9sbGVycyBh
+cmUgaG9va2VkIHVwIHRvIHRoZSBNUElDIChhcyBzdWNoIHRoZQo+PiB0YWxrIGFib3V0IHR3byBp
+bnRlcnJ1cHRzKQo+Pgo+PiAoRWFjaCBNQUMgaGFzIGFsc28gaW50ZWdyYXRlZCBhIFNFUkRFUy9U
+QkkvImludGVybmFsIiBQSFkgdGhhdCBpcwo+PiBjb25uZWN0ZWQgdG8gdGhlICJsb2NhbCIgTURJ
+TyBjb250cm9sbGVyKQo+Pgo+PiBBcyB5b3UgY2FuIGltYWdpbmUgdGhpcyBjcmVhdGVzIGEgbnVt
+YmVyIG9mIHByb2JsZW1zIGluIGEgcGFydGl0aW9uaW5nCj4+IHNjZW5hcmlvIChhbmQgbm90IGp1
+c3QsIGltYWdpbmUgUkNXcyB3aGVyZSB0aGUgZmlyc3QgTUFDIGlzIG5vdAo+PiB1c2VkL2VuYWJs
+ZWQpLiBJbiBvcmRlciB0byBoZWxwIGEgYml0IChidXQgbm90IHF1aXRlIGVub3VnaCksIGluIEZN
+YW4KPj4gdjMsIHR3byBhZGRpdGlvbmFsIE1ESU8gY29udHJvbGxlcnMgKG9uZSBmb3IgMSB0aGUg
+R2IvcyBQSFkocykgYW5kIG9uZQo+PiBmb3IgMSB0aGUgMTAgR2IvcyBQSFkocykpIGhhdmUgYmVl
+biBpbnRlZ3JhdGVkIHRoYXQgYXJlIG5vdCBhc3NvY2lhdGVkCj4+IHdpdGggYW55IE1BQyBhbmQg
+dGhlc2UgYXJlIHRoZSBwaW5uZWQgb3V0IE1ESU8gY29udHJvbGxlcnMgb24gc3VjaAo+PiBTb0Mo
+cykgKGNoYXNzaXMgdjIpCj4gCj4gSSdtIGhhcHB5IHRvIGhlYXIgdGhhdC4gIElzIHRoYXQgd2hh
+dCBpcyBtZWFudCBieSAiZXh0ZXJuYWwiIGhlcmU/CgoiRXh0ZXJuYWwiIGRvZXNuJ3QgbWVhbiBl
+eHRlcm5hbCB0byB0aGUgTUFDIG5vZGVzLiAiRXh0ZXJuYWwiIGRvZXNuJ3QKZXZlbiBwcm9wZXJs
+eSBhcHBseSB0byB0aGUgTURJTyBjb250cm9sbGVyKHMpIGF0IGFsbCBidXQgdG8gdGhlIFBIWShz
+KS4KCj4gSSB0aG91Z2h0IGl0IG1lYW50IGV4dGVybmFsIHRvIHRoZSBTb0MuICBJcyB0aGlzIHRo
+ZSB0ZXJtIHVzZWQgYnkKPiBoYXJkd2FyZSBkb2N1bWVudGF0aW9uPwoKVGhlIGRvY3VtZW50YXRp
+b24gKG1vc3RseSBjaGlwIGVycmF0YSBkb2N1bWVudHMpIHJlZmVycyB0bwpleHRlcm5hbC9pbnRl
+cm5hbCBNRElPIGFjY2Vzc2VzIGFuZCBhcyBvbiBGTWFuIHYzIGV4dGVybmFsIFBIWSBhY2Nlc3Nl
+cwphcmUgYWx3YXlzIG1hZGUgdmlhIHRoZXNlIGV4dHJhIE1ESU8gY29udHJvbGxlcnMgKHBpbm5l
+ZCBvdWQpIGFuZCB0aGUKaW50ZXJuYWwgU0VSREVTIFBIWSBhY2Nlc3NlcyBhcmUgYWx3YXlzIG1h
+ZGUgdmlhIHRoZSBpbi1NQUMgTURJTwpjb250cm9sbGVycyBzb21lIGxldmVsIG9mIGNvbmZ1c2lv
+biBpcyBlYXN5IHRvIGJlIGFjaGlldmVkLiBBbGwgdGhlIE1ESU8KY29udHJvbGxlcnMgYXJlIGlk
+ZW50aWNhbCB3aGV0aGVyIHRoZXkgYXJlIGluLU1BQyBvciBzdGFuZGFsb25lCgo+IEknZCBoYXZl
+IGNhbGxlZCBpdCAiaW5kZXBlbmRlbnQiIG9yIHNpbWlsYXIuCgpUbyBtYWtlIHRoaW5ncyBldmVu
+IG1vcmUgY29uZnVzaW5nLCBzb21lIGRvY3VtZW50cyBjYWxsIHRoZXNlIGV4dHJhIE1ESU8KY29u
+dHJvbGxlcnMgImRlZGljYXRlZCIKCgpDaGVlcnMsCgoKPj4+PiAgIERvZXMgIm9wdGlvbmFsIiBt
+ZWFuIGl0J3MgdXNlZCBpZiBhbmQKPj4+Pj4gb25seSBpZiBleHRlcm5hbCBNRElPIGlzIHVzZWQs
+IG9yIGlzIGl0IG9wdGlvbmFsIGV2ZW4gd2l0aCBleHRlcm5hbCBNRElPPyAgSSBzZWUKPj4+Pj4g
+aXQncyBub3QgcHJlc2VudCBpbiB0aGUgZXhhbXBsZSAtLSBkbyB3ZSBub3QgaGF2ZSBhIHJlYWwg
+ZXhhbXBsZSB0aGF0IGhhcyB0aGUKPj4+Pj4gaW50ZXJydXB0Pwo+Pj4+IFtTLkhdICJvcHRpb25h
+bCIgbWVhbnMgaXQncyBhdmFpbGFibGUgb24gaGFyZHdhcmUsIGJ1dCBNRElPIGRyaXZlciBkb2Vz
+IG5vdCB1c2UgaW50ZXJydXB0LiAKPj4+PiBTbyB3ZSBkb24ndCBoYXZlIGEgcmVhbCBleGFtcGxl
+Lgo+Pj4KPj4+IDxyZWNvcmQgdHlwZT0iYnJva2VuIj5UaGUgZGV2aWNlIHRyZWUgZGVzY3JpYmVz
+IHRoZSBoYXJkd2FyZSwgbm90IHRoZQo+Pj4gZHJpdmVyPC9yZWNvcmQ+Cj4+Cj4+IEFueXdheSwg
+b25seSB0d28gTURJTyBub2RlcyAob3V0IG9mIDQgdG8gMTQpIHdvdWxkIGhhdmUgYW4gaW50ZXJy
+dXB0Cj4+IHByb3BlcnR5IGRlc2NyaWJpbmcgZXhhY3RseSBvbmUgaW50ZXJydXB0LiBXaGF0IGxh
+bmd1YWdlIHNob3VsZCB3ZSB1c2UKPj4gdG8gY29udmV5IHRoaXMgc2l0dWF0aW9uCj4gCj4gU28g
+dGhlIGFuc3dlciBpcyB0aGF0IHRoZXJlIHdpbGwgbm90IGJlIG1vcmUgdGhhbiBvbmUgTURJTyBj
+b250cm9sbGVyCj4gcGVyIE1ESU8gbm9kZSwgb3IgbW9yZSB0aGFuIG9uZSBpbnRlcnJ1cHQgcGVy
+IE1ESU8gbm9kZT8gIEluIHRoYXQgY2FzZQo+IGp1c3QgZ2V0IHJpZCBvZiB0aGUgY29uZnVzaW5n
+ICJyZXNwZWN0aXZlbHkiIHNlbnRlbmNlIC0tIGFuZCBhbHdheXMKPiBkZXNjcmliZSB0aGUgaW50
+ZXJydXB0IGlmIGl0IGV4aXN0cyBpbiBoYXJkd2FyZS4KPiAKPiAtU2NvdHQKPiAKPiAKPiAuCj4g
+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eHBw
+Yy1kZXYgbWFpbGluZyBsaXN0CkxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8v
+bGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9saW51eHBwYy1kZXY=
