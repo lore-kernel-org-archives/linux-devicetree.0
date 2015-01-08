@@ -1,88 +1,113 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH v3 3/4] of/pci: add of_pci_dma_configure() update dma
- configuration
-Date: Thu, 8 Jan 2015 16:06:26 +0000
-Message-ID: <20150108160626.GN11583@arm.com>
-References: <1420656594-8908-1-git-send-email-m-karicheri2@ti.com>
- <1420656594-8908-4-git-send-email-m-karicheri2@ti.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH 1/5] mfd: tps65218: make INT[12] and STATUS registers
+ volatile
+Date: Thu, 8 Jan 2015 10:25:12 -0600
+Message-ID: <20150108162512.GC31926@saruman>
+References: <1419622104-25812-1-git-send-email-balbi@ti.com>
+ <1419622104-25812-2-git-send-email-balbi@ti.com>
+ <20150106173734.GL6502@saruman>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="5QAgd0e35j3NYeGe"
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1420656594-8908-4-git-send-email-m-karicheri2@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Murali Karicheri <m-karicheri2@ti.com>
-Cc: "joro@8bytes.org" <joro@8bytes.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "arnd@arndb.de" <arnd@arndb.de>
+In-Reply-To: <20150106173734.GL6502@saruman>
+Sender: linux-omap-owner@vger.kernel.org
+To: Felipe Balbi <balbi@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>, stable@vger.kernel.org, Keerthy <j-keerthy@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 07, 2015 at 06:49:53PM +0000, Murali Karicheri wrote:
-> Add of_pci_dma_configure() to allow updating the dma configuration
-> of the pci device using the configuration from DT of the parent of
-> the root bridge device.
-> 
-> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
-> ---
->  drivers/of/of_pci.c    |   39 +++++++++++++++++++++++++++++++++++++++
->  include/linux/of_pci.h |   12 ++++++++++++
->  2 files changed, 51 insertions(+)
-> 
-> diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
-> index 88471d3..34878c9 100644
-> --- a/drivers/of/of_pci.c
-> +++ b/drivers/of/of_pci.c
-> @@ -2,6 +2,7 @@
->  #include <linux/export.h>
->  #include <linux/of.h>
->  #include <linux/of_address.h>
-> +#include <linux/of_device.h>
->  #include <linux/of_pci.h>
->  #include <linux/slab.h>
->  
-> @@ -229,6 +230,44 @@ parse_failed:
->  	return err;
->  }
->  EXPORT_SYMBOL_GPL(of_pci_get_host_bridge_resources);
-> +
-> +/**
-> + * of_get_pci_root_bridge_parent - get the OF node of the root bridge's parent
-> + * @dev: ptr to pci_dev struct of the pci device
-> + *
-> + * This function will traverse the bus up to the root bus starting with
-> + * the child and return the OF node ptr to root bridge device's parent device.
-> + */
-> +struct device_node *of_get_pci_root_bridge_parent(struct pci_dev *dev)
-> +{
-> +	struct pci_bus *bus = dev->bus;
-> +	struct device *bridge;
-> +
-> +	while (!pci_is_root_bus(bus))
-> +		bus = bus->parent;
-> +	bridge = bus->bridge;
-> +
-> +	return bridge->parent->of_node;
-> +}
-> +EXPORT_SYMBOL_GPL(of_get_pci_root_bridge_parent);
-> +
-> +/**
-> + * of_pci_dma_configure - Setup DMA configuration
-> + * @dev: ptr to pci_dev struct of the pci device
-> + *
-> + * Function to update PCI devices's DMA configuration using the same
-> + * info from the OF node of root host bridge's parent.
-> + */
-> +void of_pci_dma_configure(struct pci_dev *pci_dev)
-> +{
-> +	struct device *dev = &pci_dev->dev;
-> +	struct device_node *parent_np;
-> +
-> +	parent_np = of_get_pci_root_bridge_parent(pci_dev);
-> +	of_dma_configure(dev, parent_np);
-> +}
-> +EXPORT_SYMBOL_GPL(of_pci_dma_configure);
+--5QAgd0e35j3NYeGe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Whilst I think this is the right overall structure, I think this function
-should determine the set of DMA aliases for the device and pass that through
-to the IOMMU (as mentioned in my reply to the cover letter). Then we just
-need to work out what we're doing for groups.
+On Tue, Jan 06, 2015 at 11:37:34AM -0600, Felipe Balbi wrote:
+> On Fri, Dec 26, 2014 at 01:28:20PM -0600, Felipe Balbi wrote:
+> > STATUS register can be modified by the HW, so we
+> > should bypass cache because of that.
+> >=20
+> > In the case of INT[12] registers, they are the ones
+> > that actually clear the IRQ source at the time they
+> > are read. If we rely on the cache for them, we will
+> > never be able to clear the interrupt, which will cause
+> > our IRQ line to be disabled due to IRQ throttling.
+> >=20
+> > Fixes: 44b4dc6 mfd: tps65218: Add driver for the TPS65218 PMIC
+> > Cc: <stable@vger.kernel.org> # v3.15+
+> > Cc: Keerthy <j-keerthy@ti.com>
+> > Cc: Lee Jones <lee.jones@linaro.org>
+> > Signed-off-by: Felipe Balbi <balbi@ti.com>
+>=20
+> ping
 
-Will
+another ping. Without this and the following patch TPS65218 power button
+driver which was already applied by Dmitry, won't work.
+
+> > ---
+> >  drivers/mfd/tps65218.c | 11 +++++++++++
+> >  1 file changed, 11 insertions(+)
+> >=20
+> > diff --git a/drivers/mfd/tps65218.c b/drivers/mfd/tps65218.c
+> > index 0d256cb..2243f75 100644
+> > --- a/drivers/mfd/tps65218.c
+> > +++ b/drivers/mfd/tps65218.c
+> > @@ -125,10 +125,21 @@ int tps65218_clear_bits(struct tps65218 *tps, uns=
+igned int reg,
+> >  }
+> >  EXPORT_SYMBOL_GPL(tps65218_clear_bits);
+> > =20
+> > +static const struct regmap_range tps65218_yes_ranges[] =3D {
+> > +	regmap_reg_range(TPS65218_REG_INT1, TPS65218_REG_INT2),
+> > +	regmap_reg_range(TPS65218_REG_STATUS, TPS65218_REG_STATUS),
+> > +};
+> > +
+> > +static const struct regmap_access_table tps65218_volatile_table =3D {
+> > +	.yes_ranges =3D tps65218_yes_ranges,
+> > +	.n_yes_ranges =3D ARRAY_SIZE(tps65218_yes_ranges),
+> > +};
+> > +
+> >  static struct regmap_config tps65218_regmap_config =3D {
+> >  	.reg_bits =3D 8,
+> >  	.val_bits =3D 8,
+> >  	.cache_type =3D REGCACHE_RBTREE,
+> > +	.volatile_table =3D &tps65218_volatile_table,
+> >  };
+> > =20
+> >  static const struct regmap_irq tps65218_irqs[] =3D {
+> > --=20
+> > 2.2.0
+> >=20
+>=20
+> --=20
+> balbi
+
+
+
+--=20
+balbi
+
+--5QAgd0e35j3NYeGe
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUrq9oAAoJEIaOsuA1yqREmdAQALGlZ6yhVNQt4o3Vwb7qjwkM
+0Ipz4/196hi0q0gkoQQCh7hyR5p8oATFPbDPfOjuTEQ1Bg5csdxm6Ow1NtOWZK1f
+NZqi3qBugqd052ntBd0795gPHiUTe4ARntVgdh8cHEWiKVRWdq6nFYkKBpAC6p3n
+byGFZOtwQkE1x9t+wWtxWzXmk2+Yh11NH8jGk0YBTdPZFMpZeWle6aeOxpMvAES3
+taEpz/wmuWJj2z/cUck51Ha+k1fv5Nd73jRS1Dre45XGMoCIDCJqZwEw7lL5kZho
+3X4fbX6kthTUSMn++WwNf0pab5drDP/zcrf2fNpR4t16E3wW7YGJk+e961uV2lKB
+V9X86X879stnsWm5lCMf6cSXWcrNamFxZX8yvaufxLX+qHurD5JFG7g2lMVdq8Jq
+COoaObnc8n7be5fdSxcn9e0m+4fQkFPfAKxdBMr9vxZFxOyta7YAabarYBiKKkJm
+uF/2VPE5DcXAkn6F6MEN023wusmjEqRAQ+BwBMZ359XLJfaCRZI8Kg8+I2/nnNg0
+/pJKOXql2ky6Euxsgwej5yGZWBEAbT5c68hvr00qWRq2NAQ8SeAWuah8kGPeF55j
+bOsOpg1V2F9mlVg3oU7QCEfiL5YOVGaleSqGFjEvwi8m1IFD1KUON/4ln4jGRJeW
+CI8YH00hYkgAR7aTdVJl
+=/k33
+-----END PGP SIGNATURE-----
+
+--5QAgd0e35j3NYeGe--
