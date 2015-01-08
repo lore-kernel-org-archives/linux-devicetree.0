@@ -1,77 +1,76 @@
-From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Subject: Re: [PATCH v9 1/4] drm/i2c: tda998x: Add DT support for audio
-Date: Thu, 8 Jan 2015 17:42:57 +0100
-Message-ID: <20150108174257.557f7ea5@armhf>
-References: <cover.1420628786.git.moinejf@free.fr>
-	<0084acea5a3475a77531d6a77483f36d3469111a.1420628786.git.moinejf@free.fr>
-	<54AE99F5.1010404@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v4 02/12] ARM: mvebu: Add UART1 as DEBUG_LL possible target
+Date: Thu,  8 Jan 2015 18:38:04 +0100
+Message-ID: <1420738694-6163-3-git-send-email-gregory.clement@free-electrons.com>
+References: <1420738694-6163-1-git-send-email-gregory.clement@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54AE99F5.1010404-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <1420738694-6163-1-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Jackson <Andrew.Jackson-5wv7dgnIgG8@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 8 Jan 2015 16:53:41 +0200
-Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org> wrote:
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-> > +  - audio-ports: must contain one or two values selecting the sour=
-ce
-> > +	in the audio port.
-> > +	The source type is given by the corresponding entry in
-> > +	the audio-port-names property.
-> > + =20
->=20
-> This binding does not allow multi channel i2s setups with multiple i2=
-s=20
-> pins. It would be nice to support that in the DT binding, even if the=
-=20
-> code is not yet ready for it.
->=20
-> How about having these two optional properties instead of audio-ports=
-=20
-> and audio-port-names:
->=20
-> audio-port-i2s: Upto 4 values for selecting pins for i2s port
-> audio-port-spdif: Value for selecting input pin for spdif port
->=20
-> Presence of one of the properties would be mandatory and both are all=
-owed.
->=20
-> Sorry to notice this only now, but I have not yet looked the drm side=
-=20
-> changes too closely.
+Some mvebu boards have the UART1 more easily accessible than the other UARTs
+found on the system.
 
-=46rom Andrew's datasheet, the TDA998x's which are handled by the tda99=
-8x
-driver have only 4 input audio pins, the first two ones being either
-S/PDIF or I2s, the last ones being I2S only.
+Add a debug_ll option for this case.
 
-So, the DT description could be reduced to a simple list indexed by
-the pin number (=3D DAI number) and defining the protocol type.
+Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Acked-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Acked-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ arch/arm/Kconfig.debug | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-Examples:
+diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
+index eb3991cf63ab..7bd1bbccc43c 100644
+--- a/arch/arm/Kconfig.debug
++++ b/arch/arm/Kconfig.debug
+@@ -489,6 +489,21 @@ choice
+ 		  when u-boot hands over to the kernel, the system
+ 		  silently crashes, with no serial output at all.
+ 
++	config DEBUG_MVEBU_UART1_ALTERNATE
++		bool "Kernel low-level debugging messages via MVEBU UART1 (new bootloaders)"
++		depends on ARCH_MVEBU
++		select DEBUG_UART_8250
++		help
++		  Say Y here if you want kernel low-level debugging support
++		  on MVEBU based platforms on UART1.
++
++		  This option should be used with the new bootloaders
++		  that remap the internal registers at 0xf1000000.
++
++		  If the wrong DEBUG_MVEBU_UART* option is selected,
++		  when u-boot hands over to the kernel, the system
++		  silently crashes, with no serial output at all.
++
+ 	config DEBUG_VF_UART
+ 		bool "Vybrid UART"
+ 		depends on SOC_VF610
+@@ -1297,6 +1312,7 @@ config DEBUG_UART_PHYS
+ 	default 0xf0000be0 if ARCH_EBSA110
+ 	default 0xf040ab00 if DEBUG_BRCMSTB_UART
+ 	default 0xf1012000 if DEBUG_MVEBU_UART0_ALTERNATE
++	default 0xf1012100 if DEBUG_MVEBU_UART1_ALTERNATE
+ 	default 0xf1012000 if ARCH_DOVE || ARCH_MV78XX0 || \
+ 				ARCH_ORION5X
+ 	default 0xf7fc9000 if DEBUG_BERLIN_UART
+@@ -1378,6 +1394,7 @@ config DEBUG_UART_VIRT
+ 	default 0xfeb31000 if DEBUG_KEYSTONE_UART1
+ 	default 0xfec02000 if DEBUG_SOCFPGA_UART
+ 	default 0xfec12000 if DEBUG_MVEBU_UART0 || DEBUG_MVEBU_UART0_ALTERNATE
++	default 0xfec12100 if DEBUG_MVEBU_UART1_ALTERNATE
+ 	default 0xfec20000 if DEBUG_DAVINCI_DMx_UART0
+ 	default 0xfec90000 if DEBUG_RK32_UART2
+ 	default 0xfed0c000 if DEBUG_DAVINCI_DA8XX_UART1
+-- 
+1.9.1
 
-- for the Cubox:
-
-	audio-inputs =3D "i2s", "spdif";
-
-- for some other board with I2S on the pins 3 and 4 only:
-
-	audio-inputs =3D "none", "none", "i2s", "i2s";
-
-- for a fully wired TDA9983B (no driver yet):
-
-	audio-inputs =3D "i2s", "i2s", "i2s", "i2s", "spdif";
-
---=20
-Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
-Jef		|		http://moinejf.free.fr/
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
