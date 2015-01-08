@@ -1,57 +1,44 @@
-From: Mayuresh Chitale <mchitale-qTEPVZfXA3Y@public.gmane.org>
-Subject: Re: [PATCH 4/4] dma: X-Gene PCIE DMA Driver
-Date: Thu, 8 Jan 2015 12:00:45 +0530
-Message-ID: <CAL-zptM0+K7NLGVankeUDwSwxBEuhhjJqCNsjTrps5WOZYNQ_Q@mail.gmail.com>
-References: <1420608537-12296-1-git-send-email-mchitale@apm.com>
-	<9430055.pMHRTP0RMA@wuerfel>
-	<CAL-zptNW81KwWXnMcsh_S5KQFMNGysm=ATmixMge6RXj_U-_zQ@mail.gmail.com>
-	<1765004.TVkcxIlmTg@wuerfel>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v3 2/4] of: move of_dma_configure() to device,
+	c to help re-use
+Date: Thu, 08 Jan 2015 09:40:10 +0100
+Message-ID: <3861625.CJ6m15sZMh@wuerfel>
+References: <1420656594-8908-1-git-send-email-m-karicheri2@ti.com>
+	<1420656594-8908-3-git-send-email-m-karicheri2@ti.com>
+	<CAL_Jsq+pKeXuGnZV_NYHn6iZgeOs404OPhcUb0FJs=-7j2P1Ug@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1765004.TVkcxIlmTg@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, "ddutile-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <ddutile-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <CAL_Jsq+pKeXuGnZV_NYHn6iZgeOs404OPhcUb0FJs=-7j2P1Ug-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 7, 2015 at 9:52 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Wednesday 07 January 2015 21:35:22 Mayuresh Chitale wrote:
->> >
->> > I think I'm missing something important here. What exactly is the
->> > interaction with PCI here? Is it possible to use the dmaengine
->> > driver at all when the PCI host controller is not in endpoint mode?
->> Yes. Dmaengine driver can be used when port is configured as RC or EP.
->> >
->> > Does the dmaengine show up as a PCI device when the PCI controller is
->> > in host mode?
->> No. It sits between AXI and PCI interfaces but it needs to be
->> programmed via the config bar.
->
-> Ok, I see. So in RC mode, it sounds like this is a regular DMA engine
-> that could be used with arbitrary slaves, but in EP mode it would
-> actually be controlled by the remote host, right?
-No. EP can configure its own DMA engine via config bar, same as RC.
-There could be a dependency on RC in terms of which memory region
-the EP is allowed to DMA to but I think that is outside the scope of this
-driver.
->
-> When we are in RC mode, who sets up that BAR? If this is set up by
-> the firmware, we can just have the register appear in the DT as well,
-> as it's known, and when we are in EP mode, it sounds like we would
-> not even use the dmaengine because it's owned by the other host.
-The config bar is setup by host controller driver. For e.g you can see
-cfg reg in pcie@1f2b0000 node in arch/arm64/boot/dts/apm/apm-storm.dtsi.
-The dmaengine driver is simply going to read this reg to know the config base
-and access its own registers accordingly.  In this patch config base
-register is present in each node.
-For e.g for port0 it is 0x1f2b0154.
->
-> Or is there a way that in EP mode, both sides would access the
-> dma engine simultaneously?
->
->         Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Wednesday 07 January 2015 17:37:56 Rob Herring wrote:
+> On Wed, Jan 7, 2015 at 12:49 PM, Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org> wrote:
+> 
+> > +       ret = of_dma_get_range(np, &dma_addr, &paddr, &size);
+> > +       if (ret < 0) {
+> > +               dma_addr = offset = 0;
+> > +               size = dev->coherent_dma_mask + 1;
+> 
+> If coherent_dma_mask is DMA_BIT_MASK(64), then you will overflow and
+> have a size of 0. There may also be a problem when the mask is only
+> 32-bit type.
+
+The mask is always a 64-bit type, it's not optional. But you are right,
+the 64-bit mask case is broken, so I guess we have to fix it differently
+by always passing the smaller value into arch_setup_dma_ops and
+adapting that function instead.
+
+	Arnd
