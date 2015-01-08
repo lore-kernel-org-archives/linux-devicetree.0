@@ -1,106 +1,116 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 7/8] ARM: mvebu: Add Device Tree description of the
- Armada 388 SoC
-Date: Thu, 08 Jan 2015 16:41:12 +0100
-Message-ID: <54AEA518.2080506@free-electrons.com>
-References: <1420714305-7496-1-git-send-email-gregory.clement@free-electrons.com>	<1420714305-7496-8-git-send-email-gregory.clement@free-electrons.com> <20150108155410.576bae03@free-electrons.com>
+From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+Subject: Re: [PATCH v7 1/4] pwm: Imagination Technologies PWM DAC driver
+Date: Thu, 8 Jan 2015 17:49:59 +0200
+Message-ID: <54AEA727.40100@mentor.com>
+References: <1420651215-3836-1-git-send-email-ezequiel.garcia@imgtec.com> <1420651215-3836-2-git-send-email-ezequiel.garcia@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150108155410.576bae03-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1420651215-3836-2-git-send-email-ezequiel.garcia@imgtec.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ezequiel Garcia <ezequiel.garcia@imgtec.com>, Andrew Bresticker <abrestic@chromium.org>, Thierry Reding <thierry.reding@gmail.com>, James Hartley <james.hartley@imgtec.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, Naidu Tellapati <Naidu.Tellapati@imgtec.com>, Sai Masarapu <Sai.Masarapu@imgtec.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Thomas,
+Hi Ezequiel,
 
-On 08/01/2015 15:54, Thomas Petazzoni wrote:
-> Dear Gregory CLEMENT,
+On 07.01.2015 19:20, Ezequiel Garcia wrote:
+> From: Naidu Tellapati <Naidu.Tellapati@imgtec.com>
 > 
-> On Thu,  8 Jan 2015 11:51:44 +0100, Gregory CLEMENT wrote:
->> This SoC belongs to the Armada 38x family. The main difference with
->> the Armada 385 is that the 388 can handle two more SATA
->> ports. Currently the only consequence is the use of a different
->> compatible string for the pinctrl node, in order to be able to use the
->> pins associated to this 2 new SATA ports.
+> The Pistachio SOC from Imagination Technologies includes a Pulse Width
+> Modulation DAC which produces 1 to 4 digital bit-outputs which represent
+> digital waveforms. These PWM outputs are primarily in charge of controlling
+> backlight LED devices.
 > 
-> I am not sure the pinmux is the only difference. Read on below.
+> Reviewed-by: Andrew Bresticker <abrestic@chromium.org>
+> Signed-off-by: Naidu Tellapati <Naidu.Tellapati@imgtec.com>
+> Signed-off-by: Sai Masarapu <Sai.Masarapu@imgtec.com>
+> Signed-off-by: Ezequiel Garcia <ezequiel.garcia@imgtec.com>
+> ---
+>  drivers/pwm/Kconfig   |  13 +++
+>  drivers/pwm/Makefile  |   1 +
+>  drivers/pwm/pwm-img.c | 250 ++++++++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 264 insertions(+)
+>  create mode 100644 drivers/pwm/pwm-img.c
 > 
->> +#include "armada-385.dtsi"
->> +
->> +/ {
->> +	model = "Marvell Armada 388 family SoC";
->> +	compatible = "marvell,armada388", "marvell,armada380";
->> +	soc {
-> 
-> Please, one empty new line between the last property (compatible) and
-> the "soc" node.
-> 
->> +		internal-regs {
->> +			pinctrl@18000 {
->> +				compatible = "marvell,mv88f6828-pinctrl";
->> +			};
->> +		};
->> +	};
->> +};
-> 
-> So, the 380 and 385 have two SATA ports, presumably ports 0 and 1.
-> According to the Functional Specifications, section 3.1 (Internal
-> Address map), those two ports are located at 0xA8000. Ports 2 and 3,
-> which are only available on Armada 388, are located at 0xE0100 and
-> 0xE0180 according to the same datasheet. So I believe that the node:
-> 
-> 			sata@a8000 {
-> 				compatible = "marvell,armada-380-ahci";
-> 				reg = <0xa8000 0x2000>;
-> 				interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
-> 				clocks = <&gateclk 15>;
-> 				status = "disabled";
-> 			};
-> 
-> should stay where it is in armada-38x.dtsi.
-> 
-> However, the node:
-> 
-> 			sata@e0000 {
-> 				compatible = "marvell,armada-380-ahci";
-> 				reg = <0xe0000 0x2000>;
-> 				interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
-> 				clocks = <&gateclk 30>;
-> 				status = "disabled";
-> 			};
-> 
-> should probably move into armada-388.dtsi, since it covers ports 2 and
-> 3.
 
-I will do this.
+[snip]
 
-> 
-> In addition, I believe that the existing armada-385-db.dts and
-> armada-385-rd.dts should be renamed to armada-388-db.dts and
-> armada-388-rd.dts, and they should include armada-388.dtsi instead. At
-> least it's sure for the DB (which has both SATA controllers enabled).
-> For the RD, it remains to be confirmed, but in general most Marvell
-> development platforms use the superset SoC, which has all the
-> functionalities.
+> +static int img_pwm_probe(struct platform_device *pdev)
+> +{
+> +	int ret;
+> +	struct resource *res;
+> +	struct img_pwm_chip *pwm;
+> +
+> +	pwm = devm_kzalloc(&pdev->dev, sizeof(*pwm), GFP_KERNEL);
+> +	if (!pwm)
+> +		return -ENOMEM;
+> +
+> +	pwm->dev = &pdev->dev;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	pwm->base = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(pwm->base))
+> +		return PTR_ERR(pwm->base);
+> +
+> +	pwm->periph_regs = syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
+> +							   "img,cr-periph");
+> +	if (IS_ERR(pwm->periph_regs))
+> +		return PTR_ERR(pwm->periph_regs);
+> +
+> +	pwm->sys_clk = devm_clk_get(&pdev->dev, "sys");
+> +	if (IS_ERR(pwm->sys_clk)) {
+> +		dev_err(&pdev->dev, "failed to get system clock\n");
+> +		return PTR_ERR(pwm->sys_clk);
+> +	}
+> +
+> +	pwm->pwm_clk = devm_clk_get(&pdev->dev, "pwm");
+> +	if (IS_ERR(pwm->pwm_clk)) {
+> +		dev_err(&pdev->dev, "failed to get pwm clock\n");
+> +		return PTR_ERR(pwm->pwm_clk);
+> +	}
+> +
+> +	ret = clk_prepare_enable(pwm->sys_clk);
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev, "could not prepare or enable sys clock\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = clk_prepare_enable(pwm->pwm_clk);
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev, "could not prepare or enable pwm clock\n");
+> +		goto disable_sysclk;
+> +	}
+> +
+> +	pwm->chip.dev = &pdev->dev;
+> +	pwm->chip.ops = &img_pwm_ops;
+> +	pwm->chip.base = -1;
+> +	pwm->chip.npwm = 4;
+> +
+> +	ret = pwmchip_add(&pwm->chip);
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev, "pwmchip_add failed: %d\n", ret);
+> +		goto disable_pwmclk;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, pwm);
+> +
+> +disable_pwmclk:
+> +	clk_disable_unprepare(pwm->pwm_clk);
+> +disable_sysclk:
+> +	clk_disable_unprepare(pwm->sys_clk);
+> +
+> +	return 0;
 
-The RD also uses 4 SATA ports and also the pin which are only associated
-to the Armada 388, so it seems also be this Soc. I will convert them.
+return ret on error paths?
 
+Also should you reenable sys and pwm clocks after successful driver
+registration?
 
-Thanks,
+> +}
+> +
 
-Gregory
-
-
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+With best wishes,
+Vladimir
