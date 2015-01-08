@@ -1,52 +1,87 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 2/2] ARM: mediatek: dts: Add uart to Aquaris5
-Date: Thu,  8 Jan 2015 12:03:44 +0100
-Message-ID: <1420715024-27738-3-git-send-email-matthias.bgg@gmail.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: [PATCH v2 1/2] ARM: mediatek: dts: Add uart to mt6589
+Date: Thu,  8 Jan 2015 12:03:43 +0100
+Message-ID: <1420715024-27738-2-git-send-email-matthias.bgg@gmail.com>
 References: <1420715024-27738-1-git-send-email-matthias.bgg@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1420715024-27738-1-git-send-email-matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1420715024-27738-1-git-send-email-matthias.bgg@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, matthias.bgg@gmail.com
+Cc: devicetree@vger.kernel.org, s.hauer@pengutronix.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch enables uart port for the Aquaris5 mobile phone.
+This patch adds the uart ports to the device tree of Mediatek mt6589 SoC.
 
-Signed-off-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
 ---
- arch/arm/boot/dts/mt6589-aquaris5.dts | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/mt6589.dtsi | 38 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
 
-diff --git a/arch/arm/boot/dts/mt6589-aquaris5.dts b/arch/arm/boot/dts/mt6589-aquaris5.dts
-index 0da0470..594a6f3 100644
---- a/arch/arm/boot/dts/mt6589-aquaris5.dts
-+++ b/arch/arm/boot/dts/mt6589-aquaris5.dts
-@@ -21,10 +21,20 @@
- 	compatible = "mundoreader,bq-aquaris5", "mediatek,mt6589";
- 
- 	chosen {
--		bootargs = "earlyprintk";
-+		bootargs = "console=ttyS0,921600n8 earlyprintk";
-+		stdout-path = &uart0;
+diff --git a/arch/arm/boot/dts/mt6589.dtsi b/arch/arm/boot/dts/mt6589.dtsi
+index c91b2a9..106b61b 100644
+--- a/arch/arm/boot/dts/mt6589.dtsi
++++ b/arch/arm/boot/dts/mt6589.dtsi
+@@ -65,6 +65,12 @@
+ 			clock-frequency = <32000>;
+ 			#clock-cells = <0>;
+ 		};
++
++		uart_clk: dummy26m {
++			compatible = "fixed-clock";
++			clock-frequency = <26000000>;
++			#clock-cells = <0>;
++		};
  	};
  
- 	memory {
- 		reg = <0x80000000 0x40000000>;
+ 	soc {
+@@ -100,5 +106,37 @@
+ 			      <0x10214000 0x2000>,
+ 			      <0x10216000 0x2000>;
+ 		};
++
++		uart0: serial@11006000 {
++			compatible = "mediatek,mt6577-uart";
++			reg = <0x11006000 0x400>;
++			interrupts = <GIC_SPI 51 IRQ_TYPE_LEVEL_LOW>;
++			clocks = <&uart_clk>;
++			status = "disabled";
++		};
++
++		uart1: serial@11007000 {
++			compatible = "mediatek,mt6577-uart";
++			reg = <0x11007000 0x400>;
++			interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_LOW>;
++			clocks = <&uart_clk>;
++			status = "disabled";
++		};
++
++		uart2: serial@11008000 {
++			compatible = "mediatek,mt6577-uart";
++			reg = <0x11008000 0x400>;
++			interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_LOW>;
++			clocks = <&uart_clk>;
++			status = "disabled";
++		};
++
++		uart3: serial@11009000 {
++			compatible = "mediatek,mt6577-uart";
++			reg = <0x11009000 0x400>;
++			interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_LOW>;
++			clocks = <&uart_clk>;
++			status = "disabled";
++		};
  	};
-+
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
-+
-+&uart3 {
-+	status = "okay";
  };
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
