@@ -1,447 +1,269 @@
 From: Jaehoon Chung <jh80.chung@samsung.com>
-Subject: Re: [PATCH  v3 2/4] mmc: dw_mmc: exynos: support eMMC's HS400 mode
-Date: Thu, 08 Jan 2015 10:46:32 +0900
-Message-ID: <54ADE178.10100@samsung.com>
-References: <1420008185-24758-1-git-send-email-alim.akhtar@samsung.com>
- <1420008185-24758-3-git-send-email-alim.akhtar@samsung.com>
+Subject: Re: [PATCH v5] mmc: dw_mmc: add quirk for broken data transfer over
+ scheme
+Date: Thu, 08 Jan 2015 10:58:07 +0900
+Message-ID: <54ADE42F.9070200@samsung.com>
+References: <1419585223-8214-1-git-send-email-addy.ke@rock-chips.com>
+ <1420446088-15710-1-git-send-email-addy.ke@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1420008185-24758-3-git-send-email-alim.akhtar@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Alim Akhtar <alim.akhtar@samsung.com>, linux-mmc@vger.kernel.org
-Cc: chris@printf.net, ulf.hansson@linaro.org, tgih.jun@samsung.com, dianders@chromium.org, alim.akhtar@gmail.com, kgene@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, a.kesavan@samsung.com
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1420446088-15710-1-git-send-email-addy.ke@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Addy Ke <addy.ke@rock-chips.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, tgih.jun@samsung.com, chris@printf.net, ulf.hansson@linaro.org, dinguyen@altera.com, heiko@sntech.de, olof@lixom.net, dianders@chromium.org, sonnyrao@chromium.org, amstan@chromium.org
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, zhenfu.fang@rock-chips.com, cf@rock-chips.com, lintao@rock-chips.com, chenfen@rock-chips.com, zyf@rock-chips.com, xjq@rock-chips.com, huangtao@rock-chips.com, zyw@rock-chips.com, yzq@rock-chips.com, hj@rock-chips.com, kever.yang@rock-chips.com, zhangqing@rock-chips.com, hl@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On 12/31/2014 03:43 PM, Alim Akhtar wrote:
-> From: Seungwon Jeon <tgih.jun@samsung.com>
+Hi, Addy.
+
+On 01/05/2015 05:21 PM, Addy Ke wrote:
+> This patch add a new quirk to add a s/w timer to notify the driver
+> to terminate current transfer and report a data timeout to the core,
+> if DTO interrupt does NOT come within the given time.
 > 
-> Implements HS400 support for exynos host driver.
-> And this patch includes some updates as new mode is added.
+> dw_mmc call mmc_request_done func to finish transfer depends on
+> DTO interrupt. If DTO interrupt does not come in sending data state,
+> the current transfer will be blocked.
 > 
-> Signed-off-by: Seungwon Jeon <tgih.jun@samsung.com>
-> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+> We got the reply from synopsys:
+> There are two counters but both use the same value of [31:8] bits.
+> Data timeout counter doesn't wait for stop clock and you should get
+> DRTO even when the clock is not stopped.
+> Host Starvation timeout counter is triggered with stop clock condition.
+> 
+> This means that host should get DRTO and DTO interrupt.
+> 
+> But this case really exists, when driver reads tuning data from
+> card on RK3288-pink2 board. I measured waveforms by oscilloscope
+> and found that card clock was always on and data lines were always
+> holded high level in sending data state.
+> 
+> There are two possibility that data over interrupt doesn't come in
+> reading data state on RK3X SoCs:
+> - get command done interrupt, but doesn't get any data-related interrupt.
+> - get data error interrupt, but doesn't get data over interrupt.
+> 
+> We don't know why we have this problem, but we need it to fix this problem now.
+> And I will post a follow up change when we find the root cause.
+> 
+> Signed-off-by: Addy Ke <addy.ke@rock-chips.com>
 > ---
->  .../devicetree/bindings/mmc/exynos-dw-mshc.txt     |    6 +
->  drivers/mmc/host/dw_mmc-exynos.c                   |  177 +++++++++++++++-----
->  drivers/mmc/host/dw_mmc-exynos.h                   |   17 +-
->  drivers/mmc/host/dw_mmc.c                          |   16 +-
->  drivers/mmc/host/dw_mmc.h                          |    2 +
->  5 files changed, 178 insertions(+), 40 deletions(-)
+> Changes in v2:
+> - fix some typo.
+> - remove extra timeout value (250ms).
+> - remove dw_mci_dto_start_monitor func.
+> - use "broken-dto" for new quirk and change Subject for it.
 > 
-> diff --git a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
-> index 06455de..be30c94 100644
-> --- a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
-> +++ b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
-> @@ -34,6 +34,7 @@ Required Properties:
->    valid values.
+> Changes in v3:
+> - Remove dts for broken-dto, just add this quirk in dw_mci_rockchip_init
+> 
+> Changes in v4:
+> - fix bug that may cause 32 bit overflow by (drto_clks * 1000).
+> - doesn't call mod_timer in writing data state, becase TMOUT register only
+>   for reading data.
+> 
+> Changes in v5:
+> - fix some typo.
+> - add a buffer for drto_ms.
+> - move drto_ms related code to a helper function.
+> 
+>  drivers/mmc/host/dw_mmc-rockchip.c |  3 ++
+>  drivers/mmc/host/dw_mmc.c          | 71 ++++++++++++++++++++++++++++++++++++--
+>  include/linux/mmc/dw_mmc.h         |  5 +++
+>  3 files changed, 77 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/mmc/host/dw_mmc-rockchip.c b/drivers/mmc/host/dw_mmc-rockchip.c
+> index 5650ac4..ba92ebd 100644
+> --- a/drivers/mmc/host/dw_mmc-rockchip.c
+> +++ b/drivers/mmc/host/dw_mmc-rockchip.c
+> @@ -73,6 +73,9 @@ static int dw_mci_rockchip_init(struct dw_mci *host)
+>  	/* It is slot 8 on Rockchip SoCs */
+>  	host->sdio_id0 = 8;
 >  
->  * samsung,dw-mshc-hs200-timing: Similar with dw-mshc-sdr-timing.
-> +* samsung,dw-mshc-hs400-timing: Similar with dw-mshc-ddr-timing.
->  
->    Notes for the sdr-timing and ddr-timing values:
->  
-> @@ -51,6 +52,9 @@ Required Properties:
->        - if CIU clock divider value is 0 (that is divide by 1), both tx and rx
->          phase shift clocks should be 0.
->  
-> +* read-strobe-delay: RCLK (Data strobe) delay to control HS400 mode
-> +  (Latency value for delay line in Read path)
+> +	/* It needs this quirk on all Rockchip SoCs */
+> +	host->pdata->quirks |= DW_MCI_QUIRK_BROKEN_DTO;
 > +
->  Required properties for a slot (Deprecated - Recommend to use one slot per host):
->  
->  * gpios: specifies a list of gpios used for command, clock and data bus. The
-> @@ -83,5 +87,7 @@ Example:
->  		samsung,dw-mshc-sdr-timing = <2 3 3>;
->  		samsung,dw-mshc-ddr-timing = <1 2 3>;
->  		samsung,dw-mshc-hs200-timing = <0 2 3>;
-> +		samsung,dw-mshc-hs400-timing = <0 2 1>;
-> +		read-strobe-delay = <90>;
->  		bus-width = <8>;
->  	};
-> diff --git a/drivers/mmc/host/dw_mmc-exynos.c b/drivers/mmc/host/dw_mmc-exynos.c
-> index be6530e..d37a631 100644
-> --- a/drivers/mmc/host/dw_mmc-exynos.c
-> +++ b/drivers/mmc/host/dw_mmc-exynos.c
-> @@ -41,7 +41,12 @@ struct dw_mci_exynos_priv_data {
->  	u32				sdr_timing;
->  	u32				ddr_timing;
->  	u32				hs200_timing;
-> +	u32				hs400_timing;
-> +	u32				tuned_sample;
->  	u32				cur_speed;
-> +	u32				dqs_delay;
-> +	u32				saved_dqs_en;
-> +	u32				saved_strobe_ctrl;
->  };
->  
->  static struct dw_mci_exynos_compatible {
-> @@ -101,6 +106,16 @@ static int dw_mci_exynos_priv_init(struct dw_mci *host)
->  			   SDMMC_MPSCTRL_NON_SECURE_WRITE_BIT);
->  	}
->  
-> +	if (priv->ctrl_type >= DW_MCI_TYPE_EXYNOS5420) {
-> +		priv->saved_strobe_ctrl = mci_readl(host, HS400_DLINE_CTRL);
-> +		priv->saved_dqs_en = mci_readl(host, HS400_DQS_EN);
-> +		priv->saved_dqs_en |= AXI_NON_BLOCKING_WR;
-> +		mci_writel(host, HS400_DQS_EN, priv->saved_dqs_en);
-> +		if (!priv->dqs_delay)
-> +			priv->dqs_delay =
-> +				DQS_CTRL_GET_RD_DELAY(priv->saved_strobe_ctrl);
-> +	}
-> +
->  	priv->ciu_div = dw_mci_exynos_get_ciu_div(host);
->  
->  	return 0;
-> @@ -115,6 +130,25 @@ static int dw_mci_exynos_setup_clock(struct dw_mci *host)
 >  	return 0;
 >  }
 >  
-> +static void dw_mci_exynos_set_clksel_timing(struct dw_mci *host, u32 timing)
-> +{
-> +	struct dw_mci_exynos_priv_data *priv = host->priv;
-> +	u32 clksel;
-> +
-> +	if (priv->ctrl_type == DW_MCI_TYPE_EXYNOS7 ||
-> +		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7_SMU)
-> +		clksel = mci_readl(host, CLKSEL64);
-> +	else
-> +		clksel = mci_readl(host, CLKSEL);
-> +
-> +	clksel = (clksel & ~SDMMC_CLKSEL_TIMING_MASK) | timing;
-> +	if (priv->ctrl_type == DW_MCI_TYPE_EXYNOS7 ||
-> +		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7_SMU)
-> +		mci_writel(host, CLKSEL64, clksel);
-> +	else
-> +		mci_writel(host, CLKSEL, clksel);
-> +}
-> +
->  #ifdef CONFIG_PM_SLEEP
->  static int dw_mci_exynos_suspend(struct device *dev)
->  {
-> @@ -190,35 +224,37 @@ static void dw_mci_exynos_prepare_command(struct dw_mci *host, u32 *cmdr)
->  	}
+> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+> index 6e4d864..ace4b40 100644
+> --- a/drivers/mmc/host/dw_mmc.c
+> +++ b/drivers/mmc/host/dw_mmc.c
+> @@ -1468,6 +1468,20 @@ static int dw_mci_data_complete(struct dw_mci *host, struct mmc_data *data)
+>  	return data->error;
 >  }
 >  
-> -static void dw_mci_exynos_set_ios(struct dw_mci *host, struct mmc_ios *ios)
-> +static void dw_mci_exynos_config_hs400(struct dw_mci *host, u32 timing)
->  {
->  	struct dw_mci_exynos_priv_data *priv = host->priv;
-> -	unsigned int wanted = ios->clock;
-> -	unsigned long actual;
-> +	u32 dqs, strobe;
->  
-> -	if (ios->timing == MMC_TIMING_MMC_HS200) {
-> -		if (priv->ctrl_type == DW_MCI_TYPE_EXYNOS7 ||
-> -			priv->ctrl_type == DW_MCI_TYPE_EXYNOS7_SMU)
-> -			mci_writel(host, CLKSEL64, priv->hs200_timing);
-> -		else
-> -			mci_writel(host, CLKSEL, priv->hs200_timing);
-> -	} else if (ios->timing == MMC_TIMING_MMC_DDR52) {
-> -		if (priv->ctrl_type == DW_MCI_TYPE_EXYNOS7 ||
-> -			priv->ctrl_type == DW_MCI_TYPE_EXYNOS7_SMU)
-> -			mci_writel(host, CLKSEL64, priv->ddr_timing);
-> -		else
-> -			mci_writel(host, CLKSEL, priv->ddr_timing);
-> -		/* Should be double rate for DDR mode */
-> -		if (ios->bus_width == MMC_BUS_WIDTH_8)
-> -			wanted <<= 1;
-> +	/*
-> +	 * Exynos5420 and above controller supports HS400 mode
-> +	 */
-> +	if (priv->ctrl_type < DW_MCI_TYPE_EXYNOS5420)
-> +		return;
-> +
-> +	dqs = priv->saved_dqs_en;
-> +	strobe = priv->saved_strobe_ctrl;
-> +
-> +	if (timing == MMC_TIMING_MMC_HS400) {
-> +		dqs |= DATA_STROBE_EN;
-> +		strobe = DQS_CTRL_RD_DELAY(strobe, priv->dqs_delay);
->  	} else {
-> -		if (priv->ctrl_type == DW_MCI_TYPE_EXYNOS7 ||
-> -			priv->ctrl_type == DW_MCI_TYPE_EXYNOS7_SMU)
-> -			mci_writel(host, CLKSEL64, priv->sdr_timing);
-> -		else
-> -			mci_writel(host, CLKSEL, priv->sdr_timing);
-> +		dqs &= ~DATA_STROBE_EN;
->  	}
->  
-> +	mci_writel(host, HS400_DQS_EN, dqs);
-> +	mci_writel(host, HS400_DLINE_CTRL, strobe);
-> +}
-> +
-> +static void dw_mci_exynos_adjust_clock(struct dw_mci *host, unsigned int wanted)
+> +static unsigned int dw_mci_get_drto_ms(struct dw_mci *host)
 > +{
-> +	struct dw_mci_exynos_priv_data *priv = host->priv;
-> +	unsigned long actual;
-> +	u8 div;
-> +	int ret;
->  	/*
->  	 * Don't care if wanted clock is zero or
->  	 * ciu clock is unavailable
-> @@ -230,18 +266,55 @@ static void dw_mci_exynos_set_ios(struct dw_mci *host, struct mmc_ios *ios)
->  	if (wanted < EXYNOS_CCLKIN_MIN)
->  		wanted = EXYNOS_CCLKIN_MIN;
->  
-> -	if (wanted != priv->cur_speed) {
-> -		u8 div = dw_mci_exynos_get_ciu_div(host);
-> -		int ret = clk_set_rate(host->ciu_clk, wanted * div);
-> -		if (ret)
-> -			dev_warn(host->dev,
-> -				"failed to set clk-rate %u error: %d\n",
-> -				 wanted * div, ret);
-> -		actual = clk_get_rate(host->ciu_clk);
-> -		host->bus_hz = actual / div;
-> -		priv->cur_speed = wanted;
-> -		host->current_speed = 0;
-> +	if (wanted == priv->cur_speed)
-> +		return;
+> +	unsigned int drto_clks;
+> +	unsigned int drto_ms;
 > +
-> +	div = dw_mci_exynos_get_ciu_div(host);
-> +	ret = clk_set_rate(host->ciu_clk, wanted * div);
-> +	if (ret)
-> +		dev_warn(host->dev,
-> +			"failed to set clk-rate %u error: %d\n",
-> +			wanted * div, ret);
-> +	actual = clk_get_rate(host->ciu_clk);
-> +	host->bus_hz = actual / div;
-> +	priv->cur_speed = wanted;
-> +	host->current_speed = 0;
+> +	drto_clks = mci_readl(host, TMOUT) >> 8;
+> +	drto_ms = DIV_ROUND_UP(drto_clks, host->bus_hz / 1000);
+> +
+> +	/* add a buffer */
+> +	drto_ms += 10;
+
+Add a buffer? What means?
+
+> +
+> +	return drto_ms;
 > +}
-> +
-> +static void dw_mci_exynos_set_ios(struct dw_mci *host, struct mmc_ios *ios)
-> +{
-> +	struct dw_mci_exynos_priv_data *priv = host->priv;
-> +	unsigned int wanted = ios->clock;
-> +	u32 timing = ios->timing, clksel;
-> +
-> +	switch (timing) {
-> +	case MMC_TIMING_MMC_HS400:
-> +		/* Update tuned sample timing */
-> +		clksel = SDMMC_CLKSEL_UP_SAMPLE(
-> +				priv->hs400_timing, priv->tuned_sample);
-> +		wanted <<= 1;
-> +		break;
-> +	case MMC_TIMING_MMC_HS200:
-> +		clksel = priv->hs200_timing;
-> +		break;
-> +	case MMC_TIMING_MMC_DDR52:
-> +		clksel = priv->ddr_timing;
-> +		/* Should be double rate for DDR mode */
-> +		if (ios->bus_width == MMC_BUS_WIDTH_8)
-> +			wanted <<= 1;
-> +		break;
-> +	default:
-> +		clksel = priv->sdr_timing;
->  	}
-> +
-> +	/* Set clock timing for the requested speed mode*/
-> +	dw_mci_exynos_set_clksel_timing(host, clksel);
-> +
-> +	/* Configure setting for HS400 */
-> +	dw_mci_exynos_config_hs400(host, timing);
-> +
-> +	/* Configure clock rate */
-> +	dw_mci_exynos_adjust_clock(host, wanted);
->  }
->  
->  static int dw_mci_exynos_dt_populate_timing(struct dw_mci *host,
-> @@ -294,6 +367,14 @@ static int dw_mci_exynos_parse_dt(struct dw_mci *host)
->  
->  	dw_mci_exynos_dt_populate_timing(host, priv->ctrl_type,
->  		"samsung,dw-mshc-hs200-timing", &priv->hs200_timing);
-> +
-> +	ret = dw_mci_exynos_dt_populate_timing(host, priv->ctrl_type,
-> +			"samsung,dw-mshc-hs400-timing", &priv->hs400_timing);
-> +	if (!ret && of_property_read_u32(np,
-> +				"read-strobe-delay", &priv->dqs_delay))
-> +		dev_info(host->dev,
-> +			"read-strobe-delay is not found, assuming usage of default value\n");
-> +
->  	host->priv = priv;
->  
->  	return 0;
-> @@ -320,7 +401,9 @@ static inline void dw_mci_exynos_set_clksmpl(struct dw_mci *host, u8 sample)
->  		clksel = mci_readl(host, CLKSEL64);
->  	else
->  		clksel = mci_readl(host, CLKSEL);
-> -	clksel = (clksel & ~0x7) | SDMMC_CLKSEL_CCLK_SAMPLE(sample);
-> +
-> +	clksel = SDMMC_CLKSEL_UP_SAMPLE(clksel, sample);
-> +
->  	if (priv->ctrl_type == DW_MCI_TYPE_EXYNOS7 ||
->  		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7_SMU)
->  		mci_writel(host, CLKSEL64, clksel);
-> @@ -339,13 +422,16 @@ static inline u8 dw_mci_exynos_move_next_clksmpl(struct dw_mci *host)
->  		clksel = mci_readl(host, CLKSEL64);
->  	else
->  		clksel = mci_readl(host, CLKSEL);
-> +
->  	sample = (clksel + 1) & 0x7;
-> -	clksel = (clksel & ~0x7) | sample;
-> +	clksel = SDMMC_CLKSEL_UP_SAMPLE(clksel, sample);
-> +
->  	if (priv->ctrl_type == DW_MCI_TYPE_EXYNOS7 ||
->  		priv->ctrl_type == DW_MCI_TYPE_EXYNOS7_SMU)
->  		mci_writel(host, CLKSEL64, clksel);
->  	else
->  		mci_writel(host, CLKSEL, clksel);
-> +
->  	return sample;
->  }
->  
-> @@ -378,6 +464,7 @@ out:
->  static int dw_mci_exynos_execute_tuning(struct dw_mci_slot *slot)
->  {
->  	struct dw_mci *host = slot->host;
-> +	struct dw_mci_exynos_priv_data *priv = host->priv;
->  	struct mmc_host *mmc = slot->mmc;
->  	u8 start_smpl, smpl, candiates = 0;
->  	s8 found = -1;
-> @@ -395,14 +482,27 @@ static int dw_mci_exynos_execute_tuning(struct dw_mci_slot *slot)
->  	} while (start_smpl != smpl);
->  
->  	found = dw_mci_exynos_get_best_clksmpl(candiates);
-> -	if (found >= 0)
-> +	if (found >= 0) {
->  		dw_mci_exynos_set_clksmpl(host, found);
-> -	else
-> +		priv->tuned_sample = found;
-> +	} else {
->  		ret = -EIO;
-> +	}
->  
->  	return ret;
->  }
->  
-> +int dw_mci_exynos_prepare_hs400_tuning(struct dw_mci *host,
-> +					struct mmc_ios *ios)
-> +{
-> +	struct dw_mci_exynos_priv_data *priv = host->priv;
-> +
-> +	dw_mci_exynos_set_clksel_timing(host, priv->hs400_timing);
-> +	dw_mci_exynos_adjust_clock(host, (ios->clock) << 1);
-> +
-> +	return 0;
-> +}
-> +
->  /* Common capabilities of Exynos4/Exynos5 SoC */
->  static unsigned long exynos_dwmmc_caps[4] = {
->  	MMC_CAP_1_8V_DDR | MMC_CAP_8_BIT_DATA | MMC_CAP_CMD23,
-> @@ -419,6 +519,7 @@ static const struct dw_mci_drv_data exynos_drv_data = {
->  	.set_ios		= dw_mci_exynos_set_ios,
->  	.parse_dt		= dw_mci_exynos_parse_dt,
->  	.execute_tuning		= dw_mci_exynos_execute_tuning,
-> +	.prepare_hs400_tuning	= dw_mci_exynos_prepare_hs400_tuning,
->  };
->  
->  static const struct of_device_id dw_mci_exynos_match[] = {
-> diff --git a/drivers/mmc/host/dw_mmc-exynos.h b/drivers/mmc/host/dw_mmc-exynos.h
-> index c04ecef..e7faffe 100644
-> --- a/drivers/mmc/host/dw_mmc-exynos.h
-> +++ b/drivers/mmc/host/dw_mmc-exynos.h
-> @@ -12,21 +12,36 @@
->  #ifndef _DW_MMC_EXYNOS_H_
->  #define _DW_MMC_EXYNOS_H_
->  
-> -/* Extended Register's Offset */
->  #define SDMMC_CLKSEL			0x09C
->  #define SDMMC_CLKSEL64			0x0A8
->  
-> +/* Extended Register's Offset */
-> +#define SDMMC_HS400_DQS_EN		0x180
-> +#define SDMMC_HS400_ASYNC_FIFO_CTRL	0x184
-> +#define SDMMC_HS400_DLINE_CTRL		0x188
-> +
->  /* CLKSEL register defines */
->  #define SDMMC_CLKSEL_CCLK_SAMPLE(x)	(((x) & 7) << 0)
->  #define SDMMC_CLKSEL_CCLK_DRIVE(x)	(((x) & 7) << 16)
->  #define SDMMC_CLKSEL_CCLK_DIVIDER(x)	(((x) & 7) << 24)
->  #define SDMMC_CLKSEL_GET_DRV_WD3(x)	(((x) >> 16) & 0x7)
->  #define SDMMC_CLKSEL_GET_DIV(x)		(((x) >> 24) & 0x7)
-> +#define SDMMC_CLKSEL_UP_SAMPLE(x, y)	(((x) & ~SDMMC_CLKSEL_CCLK_SAMPLE(7)) |\
-> +					 SDMMC_CLKSEL_CCLK_SAMPLE(y))
->  #define SDMMC_CLKSEL_TIMING(x, y, z)	(SDMMC_CLKSEL_CCLK_SAMPLE(x) |	\
->  					 SDMMC_CLKSEL_CCLK_DRIVE(y) |	\
->  					 SDMMC_CLKSEL_CCLK_DIVIDER(z))
-> +#define SDMMC_CLKSEL_TIMING_MASK	SDMMC_CLKSEL_TIMING(0x7, 0x7, 0x7)
->  #define SDMMC_CLKSEL_WAKEUP_INT		BIT(11)
->  
-> +/* HS400 control defines */
-> +#define DATA_STROBE_EN			BIT(0)
-Add comment "xxx register defines."
 
-> +#define AXI_NON_BLOCKING_WR	BIT(7)
+dw_mci_set_drto() instead of dw_mci_get_drto_ms().
 
-I can't find this bit and comment..where?
+Then you can include the codes relevant to broken-dto.
 
-> +
-> +/* Delay Line Control defines */
-> +#define DQS_CTRL_RD_DELAY(x, y)		(((x) & ~0x3FF) | ((y) & 0x3FF))
+static unsigned int (or void) dw_mci_set_drto(struct dw_mci *host) {
 
-I'm not understanding this define... clear and set?
+	if (!(host->quirks & DW_MCI_QUIRK_BROKEN_DTO))
+		return;
+
+	... 
+	add codes relevant to broken-dtop (mod_timer) at here.
+}
+
+If you need to start timer, you have only to call dw_mci_set_drto().
+how about?
 
 Best Regards,
 Jaehoon Chung
 
-> +#define DQS_CTRL_GET_RD_DELAY(x)	((x) & 0x3FF)
 > +
->  /* Protector Register */
->  #define SDMMC_EMMCP_BASE	0x1000
->  #define SDMMC_MPSECURITY	(SDMMC_EMMCP_BASE + 0x0010)
-> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
-> index 2e8abc8..43a3a5b 100644
-> --- a/drivers/mmc/host/dw_mmc.c
-> +++ b/drivers/mmc/host/dw_mmc.c
-> @@ -1084,7 +1084,8 @@ static void dw_mci_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
->  	regs = mci_readl(slot->host, UHS_REG);
+>  static void dw_mci_tasklet_func(unsigned long priv)
+>  {
+>  	struct dw_mci *host = (struct dw_mci *)priv;
+> @@ -1477,6 +1491,7 @@ static void dw_mci_tasklet_func(unsigned long priv)
+>  	enum dw_mci_state state;
+>  	enum dw_mci_state prev_state;
+>  	unsigned int err;
+> +	unsigned int drto_ms;
 >  
->  	/* DDR mode set */
-> -	if (ios->timing == MMC_TIMING_MMC_DDR52)
-> +	if (ios->timing == MMC_TIMING_MMC_DDR52 ||
-> +	    ios->timing == MMC_TIMING_MMC_HS400)
->  		regs |= ((0x1 << slot->id) << 16);
->  	else
->  		regs &= ~((0x1 << slot->id) << 16);
-> @@ -1321,6 +1322,18 @@ static int dw_mci_execute_tuning(struct mmc_host *mmc, u32 opcode)
->  	return err;
+>  	spin_lock(&host->lock);
+>  
+> @@ -1542,8 +1557,19 @@ static void dw_mci_tasklet_func(unsigned long priv)
+>  			}
+>  
+>  			if (!test_and_clear_bit(EVENT_XFER_COMPLETE,
+> -						&host->pending_events))
+> +						&host->pending_events)) {
+> +				/*
+> +				 * If all data-related interrupts don't come
+> +				 * within the given time in reading data state.
+> +				 */
+> +				if ((host->quirks & DW_MCI_QUIRK_BROKEN_DTO) &&
+> +				    (host->dir_status == DW_MCI_RECV_STATUS)) {
+> +					drto_ms = dw_mci_get_drto_ms(host);
+> +					mod_timer(&host->dto_timer, jiffies +
+> +						  msecs_to_jiffies(drto_ms));
+> +				}
+>  				break;
+> +			}
+>  
+>  			set_bit(EVENT_XFER_COMPLETE, &host->completed_events);
+>  
+> @@ -1573,8 +1599,20 @@ static void dw_mci_tasklet_func(unsigned long priv)
+>  
+>  		case STATE_DATA_BUSY:
+>  			if (!test_and_clear_bit(EVENT_DATA_COMPLETE,
+> -						&host->pending_events))
+> +						&host->pending_events)) {
+> +				/*
+> +				 * If data error interrupt comes but data over
+> +				 * interrupt doesn't come within the given time.
+> +				 * in reading data state.
+> +				 */
+> +				if ((host->quirks & DW_MCI_QUIRK_BROKEN_DTO) &&
+> +				    (host->dir_status == DW_MCI_RECV_STATUS)) {
+> +					drto_ms = dw_mci_get_drto_ms(host);
+> +					mod_timer(&host->dto_timer, jiffies +
+> +						  msecs_to_jiffies(drto_ms));
+> +				}
+>  				break;
+> +			}
+>  
+>  			host->data = NULL;
+>  			set_bit(EVENT_DATA_COMPLETE, &host->completed_events);
+> @@ -2135,6 +2173,9 @@ static irqreturn_t dw_mci_interrupt(int irq, void *dev_id)
+>  		}
+>  
+>  		if (pending & SDMMC_INT_DATA_OVER) {
+> +			if (host->quirks & DW_MCI_QUIRK_BROKEN_DTO)
+> +				del_timer(&host->dto_timer);
+> +
+>  			mci_writel(host, RINTSTS, SDMMC_INT_DATA_OVER);
+>  			if (!host->data_status)
+>  				host->data_status = pending;
+> @@ -2522,6 +2563,28 @@ ciu_out:
+>  	return ret;
 >  }
 >  
-> +int dw_mci_prepare_hs400_tuning(struct mmc_host *mmc, struct mmc_ios *ios)
+> +static void dw_mci_dto_timer(unsigned long arg)
 > +{
-> +	struct dw_mci_slot *slot = mmc_priv(mmc);
-> +	struct dw_mci *host = slot->host;
-> +	const struct dw_mci_drv_data *drv_data = host->drv_data;
+> +	struct dw_mci *host = (struct dw_mci *)arg;
 > +
-> +	if (drv_data && drv_data->prepare_hs400_tuning)
-> +		return drv_data->prepare_hs400_tuning(host, ios);
-> +
-> +	return 0;
+> +	switch (host->state) {
+> +	case STATE_SENDING_DATA:
+> +	case STATE_DATA_BUSY:
+> +		/*
+> +		 * If DTO interrupt does NOT come in sending data state,
+> +		 * we should notify the driver to terminate current transfer
+> +		 * and report a data timeout to the core.
+> +		 */
+> +		host->data_status = SDMMC_INT_DRTO;
+> +		set_bit(EVENT_DATA_ERROR, &host->pending_events);
+> +		set_bit(EVENT_DATA_COMPLETE, &host->pending_events);
+> +		tasklet_schedule(&host->tasklet);
+> +		break;
+> +	default:
+> +		break;
+> +	}
 > +}
 > +
->  static const struct mmc_host_ops dw_mci_ops = {
->  	.request		= dw_mci_request,
->  	.pre_req		= dw_mci_pre_req,
-> @@ -1333,6 +1346,7 @@ static const struct mmc_host_ops dw_mci_ops = {
->  	.card_busy		= dw_mci_card_busy,
->  	.start_signal_voltage_switch = dw_mci_switch_voltage,
->  	.init_card		= dw_mci_init_card,
-> +	.prepare_hs400_tuning	= dw_mci_prepare_hs400_tuning,
+>  #ifdef CONFIG_OF
+>  static struct dw_mci_of_quirks {
+>  	char *quirk;
+> @@ -2670,6 +2733,10 @@ int dw_mci_probe(struct dw_mci *host)
+>  
+>  	host->quirks = host->pdata->quirks;
+>  
+> +	if (host->quirks & DW_MCI_QUIRK_BROKEN_DTO)
+> +		setup_timer(&host->dto_timer,
+> +			    dw_mci_dto_timer, (unsigned long)host);
+> +
+>  	spin_lock_init(&host->lock);
+>  	spin_lock_init(&host->irq_lock);
+>  	INIT_LIST_HEAD(&host->queue);
+> diff --git a/include/linux/mmc/dw_mmc.h b/include/linux/mmc/dw_mmc.h
+> index 471fb31..2ece0dd 100644
+> --- a/include/linux/mmc/dw_mmc.h
+> +++ b/include/linux/mmc/dw_mmc.h
+> @@ -98,6 +98,7 @@ struct mmc_data;
+>   * @irq_flags: The flags to be passed to request_irq.
+>   * @irq: The irq value to be passed to request_irq.
+>   * @sdio_id0: Number of slot0 in the SDIO interrupt registers.
+> + * @dto_timer: Timer for broken data transfer over scheme.
+>   *
+>   * Locking
+>   * =======
+> @@ -202,6 +203,8 @@ struct dw_mci {
+>  	int			irq;
+>  
+>  	int			sdio_id0;
+> +
+> +	struct timer_list       dto_timer;
 >  };
 >  
->  static void dw_mci_request_end(struct dw_mci *host, struct mmc_request *mrq)
-> diff --git a/drivers/mmc/host/dw_mmc.h b/drivers/mmc/host/dw_mmc.h
-> index 18c4afe..d239867 100644
-> --- a/drivers/mmc/host/dw_mmc.h
-> +++ b/drivers/mmc/host/dw_mmc.h
-> @@ -271,5 +271,7 @@ struct dw_mci_drv_data {
->  	void		(*set_ios)(struct dw_mci *host, struct mmc_ios *ios);
->  	int		(*parse_dt)(struct dw_mci *host);
->  	int		(*execute_tuning)(struct dw_mci_slot *slot);
-> +	int		(*prepare_hs400_tuning)(struct dw_mci *host,
-> +						struct mmc_ios *ios);
->  };
->  #endif /* _DW_MMC_H_ */
+>  /* DMA ops for Internal/External DMAC interface */
+> @@ -226,6 +229,8 @@ struct dw_mci_dma_ops {
+>  #define DW_MCI_QUIRK_BROKEN_CARD_DETECTION	BIT(3)
+>  /* No write protect */
+>  #define DW_MCI_QUIRK_NO_WRITE_PROTECT		BIT(4)
+> +/* Timer for broken data transfer over scheme */
+> +#define DW_MCI_QUIRK_BROKEN_DTO			BIT(5)
+>  
+>  /* Slot level quirks */
+>  /* This slot has no write protect */
 > 
