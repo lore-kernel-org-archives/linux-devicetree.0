@@ -1,15 +1,15 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCH v2 7/8] ARM: mvebu: Add Device Tree description of the
- Armada 388 SoC
-Date: Thu, 8 Jan 2015 15:54:10 +0100
-Message-ID: <20150108155410.576bae03@free-electrons.com>
-References: <1420714305-7496-1-git-send-email-gregory.clement@free-electrons.com>
- <1420714305-7496-8-git-send-email-gregory.clement@free-electrons.com>
+From: Zoltan HERPAI <wigyori@uid0.hu>
+Subject: Re: [PATCH 1/1] ARM: dts: pcduino: Enable user LED and button support
+ for pcDuino
+Date: Thu, 8 Jan 2015 16:12:27 +0100 (CET)
+Message-ID: <alpine.DEB.2.02.1501081518370.29083@trabant.deployis.eu>
+References: <1420709664-12687-1-git-send-email-wigyori@uid0.hu>
+ <20150108135953.GU7853@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1420714305-7496-8-git-send-email-gregory.clement@free-electrons.com>
+In-Reply-To: <20150108135953.GU7853@lukather>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,80 +19,43 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Tawfik Bayouk <tawfik@marvell.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Mark Rutland <mark.rutland@arm.com>, Nadav Haklai <nadavh@marvell.com>, devicetree@vger.kernel.org, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, hdegoede@redhat.com
 List-Id: devicetree@vger.kernel.org
 
-Dear Gregory CLEMENT,
+Hi Maxime,
 
-On Thu,  8 Jan 2015 11:51:44 +0100, Gregory CLEMENT wrote:
-> This SoC belongs to the Armada 38x family. The main difference with
-> the Armada 385 is that the 388 can handle two more SATA
-> ports. Currently the only consequence is the use of a different
-> compatible string for the pinctrl node, in order to be able to use the
-> pins associated to this 2 new SATA ports.
+On Thu, 8 Jan 2015, Maxime Ripard wrote:
 
-I am not sure the pinmux is the only difference. Read on below.
+>> +	gpio_keys {
+>> +		compatible = "gpio-keys";
+>> +		pinctrl-names = "default";
+>> +		pinctrl-0 = <&key_pins_pcduino>;
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +		button@0 {
+>> +			label = "Key Back";
+>> +			linux,code = <KEY_BACK>;
+>> +			gpios = <&pio 7 17 GPIO_ACTIVE_LOW>;
+>> +		};
+>> +		button@1 {
+>> +			label = "Key Home";
+>> +			linux,code = <KEY_HOME>;
+>> +			gpios = <&pio 7 18 GPIO_ACTIVE_LOW>;
+>> +		};
+>> +		button@2 {
+>> +			label = "Key Menu";
+>> +			linux,code = <KEY_MENU>;
+>> +			gpios = <&pio 7 19 GPIO_ACTIVE_LOW>;
+>> +		};
+>> +	};
+>
+> Some newlines here would have been nice between the button nodes. I
+> added them and applied the patch.
 
-> +#include "armada-385.dtsi"
-> +
-> +/ {
-> +	model = "Marvell Armada 388 family SoC";
-> +	compatible = "marvell,armada388", "marvell,armada380";
-> +	soc {
+First I did it with newlines between the nodes, then spotted that many of 
+the button specs in other DTSes are without them, so I just removed them. 
+Thanks for applying anyway!
 
-Please, one empty new line between the last property (compatible) and
-the "soc" node.
-
-> +		internal-regs {
-> +			pinctrl@18000 {
-> +				compatible = "marvell,mv88f6828-pinctrl";
-> +			};
-> +		};
-> +	};
-> +};
-
-So, the 380 and 385 have two SATA ports, presumably ports 0 and 1.
-According to the Functional Specifications, section 3.1 (Internal
-Address map), those two ports are located at 0xA8000. Ports 2 and 3,
-which are only available on Armada 388, are located at 0xE0100 and
-0xE0180 according to the same datasheet. So I believe that the node:
-
-			sata@a8000 {
-				compatible = "marvell,armada-380-ahci";
-				reg = <0xa8000 0x2000>;
-				interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
-				clocks = <&gateclk 15>;
-				status = "disabled";
-			};
-
-should stay where it is in armada-38x.dtsi.
-
-However, the node:
-
-			sata@e0000 {
-				compatible = "marvell,armada-380-ahci";
-				reg = <0xe0000 0x2000>;
-				interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
-				clocks = <&gateclk 30>;
-				status = "disabled";
-			};
-
-should probably move into armada-388.dtsi, since it covers ports 2 and
-3.
-
-In addition, I believe that the existing armada-385-db.dts and
-armada-385-rd.dts should be renamed to armada-388-db.dts and
-armada-388-rd.dts, and they should include armada-388.dtsi instead. At
-least it's sure for the DB (which has both SATA controllers enabled).
-For the RD, it remains to be confirmed, but in general most Marvell
-development platforms use the superset SoC, which has all the
-functionalities.
-
-Thanks,
-
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+Regards,
+Zoltan H
