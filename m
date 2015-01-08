@@ -1,44 +1,205 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4 07/12] ARM: mvebu: Add Armada 385 Access Point Development
- Board support
-Date: Thu, 08 Jan 2015 18:47:45 +0100
-Message-ID: <54AEC2C1.2080408@free-electrons.com>
-References: <1420738694-6163-1-git-send-email-gregory.clement@free-electrons.com>	<1420738694-6163-8-git-send-email-gregory.clement@free-electrons.com> <20150108184416.3feb0e02@free-electrons.com>
+From: Nishanth Menon <nm@ti.com>
+Subject: [PATCH V2] (gpio-fan): Add thermal control hooks
+Date: Thu, 8 Jan 2015 12:05:03 -0600
+Message-ID: <1420740303-12529-1-git-send-email-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150108184416.3feb0e02-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>, Jean Delvare <jdelvare@suse.de>, Eduardo Valentin <edubezval@gmail.com>
+Cc: lm-sensors@lm-sensors.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Nishanth Menon <nm@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Thomas,
+Allow gpio-fan to be used as thermal cooling device for platforms that
+use GPIO maps to control fans.
 
-On 08/01/2015 18:44, Thomas Petazzoni wrote:
-> Dear Gregory CLEMENT,
-> 
-> On Thu,  8 Jan 2015 18:38:09 +0100, Gregory CLEMENT wrote:
-> 
->> +#include "armada-385.dtsi"
-> 
-> Is it an Armada 385 or an Armada 388 ?
+As part of this change, we make the shutdown and remove logic the same
+as well.
 
-I checked it and there is no SATA ports on the board and the SoC presented
-itself as an Armada 385: the revision ID is 0x6820.
+Signed-off-by: Nishanth Menon <nm@ti.com>
+---
 
-Thanks,
+Changes since v1:
+	- review comments incorporated (hopefully correct)
+	- checkpatch verified
+	- retested :).
 
-Gregory
+V1: https://patchwork.kernel.org/patch/5587061/
 
+ .../devicetree/bindings/gpio/gpio-fan.txt          |   13 +++
+ drivers/hwmon/gpio-fan.c                           |   83 ++++++++++++++++++--
+ 2 files changed, 89 insertions(+), 7 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-fan.txt b/Documentation/devicetree/bindings/gpio/gpio-fan.txt
+index 2dd457a3469a..43ca2a45b862 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-fan.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio-fan.txt
+@@ -11,6 +11,9 @@ Required properties:
+ Optional properties:
+ - alarm-gpios: This pin going active indicates something is wrong with
+   the fan, and a udev event will be fired.
++- cooling-cells: If used as a cooling device, must be <2>
++  Also see: Documentation/devicetree/bindings/thermal/thermal.txt
++  min and max states are derived from the speed-map of the fan.
+ 
+ Examples:
+ 
+@@ -23,3 +26,13 @@ Examples:
+ 				      6000 2>;
+ 		alarm-gpios = <&gpio1 15 1>;
+ 	};
++	gpio_fan_cool: gpio_fan {
++		compatible = "gpio-fan";
++		gpios = <&gpio2 14 1
++			 &gpio2 13 1>;
++		gpio-fan,speed-map =	<0    0>,
++					<3000 1>,
++					<6000 2>;
++		alarm-gpios = <&gpio2 15 1>;
++		#cooling-cells = <2>; /* min followed by max */
++	};
+diff --git a/drivers/hwmon/gpio-fan.c b/drivers/hwmon/gpio-fan.c
+index 36abf814b8c7..20232c11b579 100644
+--- a/drivers/hwmon/gpio-fan.c
++++ b/drivers/hwmon/gpio-fan.c
+@@ -34,10 +34,13 @@
+ #include <linux/of.h>
+ #include <linux/of_platform.h>
+ #include <linux/of_gpio.h>
++#include <linux/thermal.h>
+ 
+ struct gpio_fan_data {
+ 	struct platform_device	*pdev;
+ 	struct device		*hwmon_dev;
++	/* Cooling device if any */
++	struct thermal_cooling_device *cdev;
+ 	struct mutex		lock; /* lock GPIOs operations. */
+ 	int			num_ctrl;
+ 	unsigned		*ctrl;
+@@ -387,6 +390,53 @@ static int fan_ctrl_init(struct gpio_fan_data *fan_data,
+ 	return 0;
+ }
+ 
++static int gpio_fan_get_max_state(struct thermal_cooling_device *cdev,
++				  unsigned long *state)
++{
++	struct gpio_fan_data *fan_data = cdev->devdata;
++
++	if (!fan_data)
++		return -EINVAL;
++
++	*state = fan_data->num_speed - 1;
++	return 0;
++}
++
++static int gpio_fan_get_cur_state(struct thermal_cooling_device *cdev,
++				  unsigned long *state)
++{
++	struct gpio_fan_data *fan_data = cdev->devdata;
++	int r;
++
++	if (!fan_data)
++		return -EINVAL;
++
++	r = get_fan_speed_index(fan_data);
++	if (r < 0)
++		return r;
++
++	*state = r;
++	return 0;
++}
++
++static int gpio_fan_set_cur_state(struct thermal_cooling_device *cdev,
++				  unsigned long state)
++{
++	struct gpio_fan_data *fan_data = cdev->devdata;
++
++	if (!fan_data)
++		return -EINVAL;
++
++	set_fan_speed(fan_data, state);
++	return 0;
++}
++
++static const struct thermal_cooling_device_ops gpio_fan_cool_ops = {
++	.get_max_state = gpio_fan_get_max_state,
++	.get_cur_state = gpio_fan_get_cur_state,
++	.set_cur_state = gpio_fan_set_cur_state,
++};
++
+ #ifdef CONFIG_OF_GPIO
+ /*
+  * Translate OpenFirmware node properties into platform_data
+@@ -495,6 +545,11 @@ static int gpio_fan_probe(struct platform_device *pdev)
+ 	struct gpio_fan_data *fan_data;
+ 	struct gpio_fan_platform_data *pdata = dev_get_platdata(&pdev->dev);
+ 
++	fan_data = devm_kzalloc(&pdev->dev, sizeof(struct gpio_fan_data),
++				GFP_KERNEL);
++	if (!fan_data)
++		return -ENOMEM;
++
+ #ifdef CONFIG_OF_GPIO
+ 	if (!pdata) {
+ 		pdata = devm_kzalloc(&pdev->dev,
+@@ -506,17 +561,20 @@ static int gpio_fan_probe(struct platform_device *pdev)
+ 		err = gpio_fan_get_of_pdata(&pdev->dev, pdata);
+ 		if (err)
+ 			return err;
++		/* Optional cooling device register for Device tree platforms */
++		fan_data->cdev =
++			thermal_of_cooling_device_register(pdev->dev.of_node,
++							   "gpio-fan", fan_data,
++							   &gpio_fan_cool_ops);
+ 	}
+ #else /* CONFIG_OF_GPIO */
+ 	if (!pdata)
+ 		return -EINVAL;
++	/* Optional cooling device register for non Device tree platforms */
++	fan_data->cdev = thermal_cooling_device_register("gpio-fan", fan_data,
++							 &gpio_fan_cool_ops);
+ #endif /* CONFIG_OF_GPIO */
+ 
+-	fan_data = devm_kzalloc(&pdev->dev, sizeof(struct gpio_fan_data),
+-				GFP_KERNEL);
+-	if (!fan_data)
+-		return -ENOMEM;
+-
+ 	fan_data->pdev = pdev;
+ 	platform_set_drvdata(pdev, fan_data);
+ 	mutex_init(&fan_data->lock);
+@@ -550,12 +608,22 @@ static int gpio_fan_probe(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
+-static void gpio_fan_shutdown(struct platform_device *pdev)
++static int gpio_fan_remove(struct platform_device *pdev)
+ {
+-	struct gpio_fan_data *fan_data = dev_get_drvdata(&pdev->dev);
++	struct gpio_fan_data *fan_data = platform_get_drvdata(pdev);
++
++	if (!IS_ERR(fan_data->cdev))
++		thermal_cooling_device_unregister(fan_data->cdev);
+ 
+ 	if (fan_data->ctrl)
+ 		set_fan_speed(fan_data, 0);
++
++	return 0;
++}
++
++static void gpio_fan_shutdown(struct platform_device *pdev)
++{
++	gpio_fan_remove(pdev);
+ }
+ 
+ #ifdef CONFIG_PM_SLEEP
+@@ -589,6 +657,7 @@ static SIMPLE_DEV_PM_OPS(gpio_fan_pm, gpio_fan_suspend, gpio_fan_resume);
+ 
+ static struct platform_driver gpio_fan_driver = {
+ 	.probe		= gpio_fan_probe,
++	.remove		= gpio_fan_remove,
+ 	.shutdown	= gpio_fan_shutdown,
+ 	.driver	= {
+ 		.name	= "gpio-fan",
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.9.5
