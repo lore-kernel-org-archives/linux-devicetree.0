@@ -1,51 +1,51 @@
-From: James Liao <jamesjj.liao@mediatek.com>
-Subject: Re: [PATCH v3 3/4] clk: mediatek: Add basic clocks for Mediatek
- MT8135.
-Date: Thu, 8 Jan 2015 10:59:41 +0800
-Message-ID: <1420685981.27952.49.camel@mtksdaap41>
-References: <1420601123-25859-1-git-send-email-jamesjj.liao@mediatek.com>
- <1420601123-25859-4-git-send-email-jamesjj.liao@mediatek.com>
- <CABuKBeJGpYRT6XKM--H80u=cWpE5k97wdsSzWz4sTOwp33yCDQ@mail.gmail.com>
+From: Ezequiel Garcia <ezequiel.garcia@imgtec.com>
+Subject: Re: [PATCH 3/3] mtd: spi-nand: add devicetree binding
+Date: Thu, 8 Jan 2015 00:15:59 -0300
+Message-ID: <54ADF66F.7090400@imgtec.com>
+References: <87F60714EC601C4C83DFF1D2E3D390A04AB425@NTXXIAMBX02.xacn.micron.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CABuKBeJGpYRT6XKM--H80u=cWpE5k97wdsSzWz4sTOwp33yCDQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Vladimir Murzin <vladimir.murzin@arm.com>, Mike Turquette <mturquette@linaro.org>, Pawel Moll <pawel.moll@arm.com>, srv_heupstream <srv_heupstream@mediatek.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, HenryC Chen <henryc.chen@mediatek.com>, "Joe.C" <yingjoe.chen@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, jamesjj.liao@mediatek.com, Russell King <linux@arm.linux.org.uk>, huang eddie <eddie.huang@mediatek.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=gbk
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <87F60714EC601C4C83DFF1D2E3D390A04AB425@NTXXIAMBX02.xacn.micron.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?gbk?Q?=22Peter_Pan_=C5=CB=B6=B0_=28peterpandong=29=22?= <peterpandong@micron.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "dwmw2@infradead.org" <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, =?gbk?Q?=22Qi_Wang_=CD=F5=C6=F0_=28qiwang=29=22?= <qiwang@micron.com>, =?gbk?Q?=22Frank_Liu_=C1=F5=C8=BA_=28frankliu=29=22?= <frankliu@micron.com>, =?gbk?Q?=22Melanie_Zhang_=D5=C5=D1=E0_=28me?= =?gbk?Q?laniezhang=29=22?= <melaniezhang@micron.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Matthias,
-
-On Wed, 2015-01-07 at 18:31 +0100, Matthias Brugger wrote:
-> 2015-01-07 4:25 GMT+01:00 James Liao <jamesjj.liao@mediatek.com>:
-> > +++ b/drivers/clk/Makefile
-> > @@ -47,6 +47,7 @@ obj-$(CONFIG_ARCH_HI3xxx)             += hisilicon/
-> >  obj-$(CONFIG_ARCH_HIP04)               += hisilicon/
-> >  obj-$(CONFIG_ARCH_HIX5HD2)             += hisilicon/
-> >  obj-$(CONFIG_COMMON_CLK_KEYSTONE)      += keystone/
-> > +obj-$(CONFIG_ARCH_MEDIATEK)            += mediatek/
-> 
-> This should be part of patch 2 instead of 3.
-> 
-> > +++ b/drivers/clk/mediatek/Makefile
-> > @@ -0,0 +1,2 @@
-> > +obj-y += clk-mtk.o clk-pll.o clk-gate.o
-> 
-> This should be in patch 2 instead of 3.
-
-OK. I'll separate common codes and platform codes in next patch.
 
 
-Best regards,
+On 01/07/2015 09:52 PM, Peter Pan =C5=CB=B6=B0 (peterpandong) wrote:
+> This commit adds the devicetree binding document that specifies the
+> spi nand devices support.
+>=20
+> Signed-off-by: Peter Pan <peterpandong@micron.com>
+> ---
+>  Documentation/devicetree/bindings/mtd/spi-nand.txt | 22 ++++++++++++=
+++++++++++
+>  1 file changed, 22 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/spi-nand.tx=
+t
+>=20
+> diff --git a/Documentation/devicetree/bindings/mtd/spi-nand.txt b/Doc=
+umentation/devicetree/bindings/mtd/spi-nand.txt
+> new file mode 100644
+> index 0000000..9dd3efd
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mtd/spi-nand.txt
+> @@ -0,0 +1,22 @@
+> +* NAND driver for MT29F, GD5F and similar SPI NAND flash chips
+> +
+> +Required properties:
+> +- #address-cells, #size-cells : Must be present if the device has su=
+b-nodes
+> +  representing partitions.
+> +- compatible : Should be the manufacturer and the name of the chip. =
+Bear in mind
+>=20
 
-James
+Unless I'm mistaken, we don't need the chip ID here, as SPI NAND allows
+to autodetect the device. Any reason why we can't just use a generic
+compatible "spi-nand" here?
+--=20
+Ezequiel
