@@ -1,40 +1,47 @@
-From: =?gb2312?B?UGV0ZXIgUGFuIMXLtrAgKHBldGVycGFuZG9uZyk=?=
-	<peterpandong@micron.com>
-Subject: [PATCH 3/3] mtd: spi-nand: add devicetree binding
-Date: Thu, 8 Jan 2015 00:52:26 +0000
-Message-ID: <87F60714EC601C4C83DFF1D2E3D390A04AB425@NTXXIAMBX02.xacn.micron.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 5/5] arm: omap2plus_defconfig: enable TPS65218 power
+ button
+Date: Wed, 7 Jan 2015 16:55:09 -0800
+Message-ID: <20150108005508.GU13010@atomide.com>
+References: <1419622104-25812-1-git-send-email-balbi@ti.com>
+ <1419622104-25812-6-git-send-email-balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "dwmw2@infradead.org" <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Ezequiel Garcia <ezequiel.garcia@imgtec.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, =?gb2312?B?UWkgV2FuZyDN9cbwIChxaXdhbmcp?= <qiwang@micron.com>, =?gb2312?B?RnJhbmsgTGl1IMH1yLogKGZyYW5rbGl1KQ==?= <frankliu@micron.com>, =?gb2312?B?TWVsYW5pZSBaaGFuZyDVxdHgIChtZWxhbmllemhhbmcp?= <melaniezhang@micron.com>, =?gb2312?B?UGV0ZXIgUGFuIMXLtrAgKHBldGVycGFuZG9uZyk=?= <peterpandong@micron.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1419622104-25812-6-git-send-email-balbi@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Felipe Balbi <balbi@ti.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBjb21taXQgYWRkcyB0aGUgZGV2aWNldHJlZSBiaW5kaW5nIGRvY3VtZW50IHRoYXQgc3Bl
-Y2lmaWVzIHRoZQ0Kc3BpIG5hbmQgZGV2aWNlcyBzdXBwb3J0Lg0KDQpTaWduZWQtb2ZmLWJ5OiBQ
-ZXRlciBQYW4gPHBldGVycGFuZG9uZ0BtaWNyb24uY29tPg0KLS0tDQogRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9zcGktbmFuZC50eHQgfCAyMiArKysrKysrKysrKysrKysr
-KysrKysrDQogMSBmaWxlIGNoYW5nZWQsIDIyIGluc2VydGlvbnMoKykNCiBjcmVhdGUgbW9kZSAx
-MDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9zcGktbmFuZC50eHQN
-Cg0KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvc3Bp
-LW5hbmQudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9zcGktbmFu
-ZC50eHQNCm5ldyBmaWxlIG1vZGUgMTAwNjQ0DQppbmRleCAwMDAwMDAwLi45ZGQzZWZkDQotLS0g
-L2Rldi9udWxsDQorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbXRkL3Nw
-aS1uYW5kLnR4dA0KQEAgLTAsMCArMSwyMiBAQA0KKyogTkFORCBkcml2ZXIgZm9yIE1UMjlGLCBH
-RDVGIGFuZCBzaW1pbGFyIFNQSSBOQU5EIGZsYXNoIGNoaXBzDQorDQorUmVxdWlyZWQgcHJvcGVy
-dGllczoNCistICNhZGRyZXNzLWNlbGxzLCAjc2l6ZS1jZWxscyA6IE11c3QgYmUgcHJlc2VudCBp
-ZiB0aGUgZGV2aWNlIGhhcyBzdWItbm9kZXMNCisgIHJlcHJlc2VudGluZyBwYXJ0aXRpb25zLg0K
-Ky0gY29tcGF0aWJsZSA6IFNob3VsZCBiZSB0aGUgbWFudWZhY3R1cmVyIGFuZCB0aGUgbmFtZSBv
-ZiB0aGUgY2hpcC4gQmVhciBpbiBtaW5kDQorICAgICAgICAgICAgICAgdGhlIERUIGJpbmRpbmcg
-aXMgbm90IExpbnV4LW9ubHksIGJ1dCBpbiBjYXNlIG9mIExpbnV4LCBzZWUgdGhlDQorICAgICAg
-ICAgICAgICAgInNwaV9uYW5kX2lkX3RhYmxlIiBhcnJheSBpbiBkcml2ZXJzL210ZC9zcGktbmFu
-ZC9zcGktbmFuZC1kZXZpY2UuYw0KKyAgICAgICAgICAgICAgIGZvciB0aGUgbGlzdCBvZiBzdXBw
-b3J0ZWQgY2hpcHMuDQorLSByZWcgOiBDaGlwLVNlbGVjdCBudW1iZXINCistIHNwaS1tYXgtZnJl
-cXVlbmN5IDogTWF4aW11bSBmcmVxdWVuY3kgb2YgdGhlIFNQSSBidXMgdGhlIGNoaXAgY2FuIG9w
-ZXJhdGUgYXQNCisNCitFeGFtcGxlOg0KKw0KKwlmbGFzaDogZmxhc2hAMCB7DQorCQkjYWRkcmVz
-cy1jZWxscyA9IDwxPjsNCisJCSNzaXplLWNlbGxzID0gPDE+Ow0KKwkJY29tcGF0aWJsZSA9ICJt
-aWNyb24sbXQyOWYiOw0KKwkJcmVnID0gPDA+Ow0KKwkJc3BpLW1heC1mcmVxdWVuY3kgPSA8NTAw
-MDAwMDA+Ow0KKwl9Ow0KKw0KLS0gDQoxLjkuMQ0K
+* Felipe Balbi <balbi@ti.com> [141226 11:31]:
+> Enable tps65218 power button driver by default as
+> a dynamically linked module so AM437x SK can report
+> power button presses.
+> 
+> Signed-off-by: Felipe Balbi <balbi@ti.com>
+
+Applying this into omap-for-v3.20/defconfig thanks.
+
+Tony
+
+> ---
+>  arch/arm/configs/omap2plus_defconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm/configs/omap2plus_defconfig b/arch/arm/configs/omap2plus_defconfig
+> index c2c3a85..f4a4b2f 100644
+> --- a/arch/arm/configs/omap2plus_defconfig
+> +++ b/arch/arm/configs/omap2plus_defconfig
+> @@ -183,6 +183,7 @@ CONFIG_TOUCHSCREEN_EDT_FT5X06=m
+>  CONFIG_TOUCHSCREEN_TSC2005=m
+>  CONFIG_TOUCHSCREEN_TSC2007=m
+>  CONFIG_INPUT_MISC=y
+> +CONFIG_INPUT_TPS65218_PWRBUTTON=m
+>  CONFIG_INPUT_TWL4030_PWRBUTTON=y
+>  # CONFIG_LEGACY_PTYS is not set
+>  CONFIG_SERIAL_8250=y
+> -- 
+> 2.2.0
+> 
