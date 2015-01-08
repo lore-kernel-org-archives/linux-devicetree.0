@@ -1,93 +1,84 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 3/3] mtd: spi-nand: add devicetree binding
-Date: Thu, 8 Jan 2015 14:35:42 +0000
-Message-ID: <20150108143542.GF10537@leverpostej>
-References: <87F60714EC601C4C83DFF1D2E3D390A04AB425@NTXXIAMBX02.xacn.micron.com>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: Re: [PATCH v9 0/4] ASoC: tda998x: add a codec to the HDMI transmitter
+Date: Thu, 8 Jan 2015 16:53:04 +0200
+Message-ID: <54AE99D0.1050205@ti.com>
+References: <cover.1420628786.git.moinejf@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <87F60714EC601C4C83DFF1D2E3D390A04AB425-xjs9rfTec9KBtk7LW/CC8tTcztV8WXajQQ4Iyu8u01E@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Pan =?utf-8?B?5r2Y5qCLIChwZXRlcnBhbmRvbmcp?= <peterpandong-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org>
-Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Qi Wang =?utf-8?B?546L6LW3IChxaXdhbmcp?= <qiwang-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org>, Frank Liu =?utf-8?B?5YiY576kIChmcmFua2xpdSk=?= <frankliu-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org>, Melanie Zhang =?utf-8?B?5byg54eVIChtZWxhbmllemhhbmcp?= <melaniezhang-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1420628786.git.moinejf@free.fr>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jean-Francois Moine <moinejf@free.fr>, Mark Brown <broonie@kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Dave Airlie <airlied@gmail.com>, Andrew Jackson <Andrew.Jackson@arm.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 08, 2015 at 12:52:26AM +0000, Peter Pan =E6=BD=98=E6=A0=8B =
-(peterpandong) wrote:
-> This commit adds the devicetree binding document that specifies the
-> spi nand devices support.
->=20
-> Signed-off-by: Peter Pan <peterpandong-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/mtd/spi-nand.txt | 22 ++++++++++++=
-++++++++++
->  1 file changed, 22 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/spi-nand.tx=
-t
->=20
-> diff --git a/Documentation/devicetree/bindings/mtd/spi-nand.txt b/Doc=
-umentation/devicetree/bindings/mtd/spi-nand.txt
-> new file mode 100644
-> index 0000000..9dd3efd
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mtd/spi-nand.txt
-> @@ -0,0 +1,22 @@
-> +* NAND driver for MT29F, GD5F and similar SPI NAND flash chips
-> +
-> +Required properties:
-> +- #address-cells, #size-cells : Must be present if the device has su=
-b-nodes
-> +  representing partitions.
 
-Can we refer to the binding document for that?
+On 01/07/2015 01:06 PM, Jean-Francois Moine wrote:
+> Based on 3.19.0-rc3.
+>
+> v9:
+> 	- back to a TDA998x specific CODEC
 
-> +- compatible : Should be the manufacturer and the name of the chip. =
-Bear in mind
-> +               the DT binding is not Linux-only, but in case of Linu=
-x, see the
-> +               "spi_nand_id_table" array in drivers/mtd/spi-nand/spi=
--nand-device.c
-> +               for the list of supported chips.
+I did not mean that you could not make your shot at generic codec. It 
+will just need more work before it is generic enough for other HDMI 
+encoders to fully utilize it.
 
-NAK for referring to Linux internals from a binding document.
+BTW, the HDMI codec is now completely unused, since my OMAP4+ HDMI audio 
+patches were merged (it uses dummy codec) and my BBB HDMI audio patches 
+were never merged.
 
-The list of compatible string should be defined in this binding
-document.
+But then again if you'll rather make a tda998x specific codec for now, I 
+am fine with that. Let's see later when(/if) I get my generic HDMI codec 
+ready - I'll eventually need something for SiI9022 - if it makes sense 
+to start using it with tda998x too.
 
-> +- reg : Chip-Select number
-> +- spi-max-frequency : Maximum frequency of the SPI bus the chip can =
-operate at
-> +
-> +Example:
-> +
-> +	flash: flash@0 {
-> +		#address-cells =3D <1>;
-> +		#size-cells =3D <1>;
+Best regards,
+Jyri
 
-These aren't necessary as no partitions are defined here.
+> 	- more comments
+> 	- change magic values to constants
+> v8:
+> 	- change some comments about the patches
+> v7:
+> 	- remove the change of the K predivider (Jyri Sarha)
+> 	- add S24_3LE and S32_LE as possible audio formats (Jyri Sarha)
+> 	- don't move the struct priv2 definition and use the
+> 	  slave encoder private data as the device private data
+> 	  (Russell King)
+> 	- remove the useless request_module (Russell King/Mark Brown)
+> 	- don't lock the HDMI module (Russell King)
+> 	- use platform_device_unregister to remove the codec
+> 	  (Russell King)
+> v6:
+> 	- extend the HDMI CODEC instead of using a specific CODEC
+> v5:
+> 	- use the TDA998x private data instead of a specific area
+> 	  for the CODEC interface
+> 	- the CODEC is TDA998x specific (Mark Brown)
+> v4:
+> 	- remove all the TDA998x specific stuff from the CODEC
+> 	- move the EDID scan from the CODEC to the TDA998x
+> 	- move the CODEC to sound/soc (Mark Brown)
+> 	- update the audio_sample_rate from the EDID (Andrew Jackson)
+> v3: fix bad rate (Andrew Jackson)int drm_edid_to_sad(struct edid *edid, struct cea_sad **sads);
 
-Otherwise, this looks ok.
-
-Thanks,
-Mark.
-
-> +		compatible =3D "micron,mt29f";
-> +		reg =3D <0>;
-> +		spi-max-frequency =3D <50000000>;
-> +	};
-> +
-> --=20
-> 1.9.1
-> N=E5=AB=A5=E5=8F=89=E9=9D=A3=E7=AC=A1y=EE=8C=B7=E6=B0=8Ab=E7=9E=82=EE=
-=83=91=E5=8D=83v=E8=B1=9D?=E8=97=93{.n?=E5=A3=8F=E6=BC=BD=E9=B4=BEz=E8=B0=
-=B5z)=E9=9F=B0=E9=AA=85w*=1Fjg=EE=83=8C?=E7=A7=B9=E6=AE=A0=E5=A8=B8=EE=95=
-=90/=E4=BE=81=E9=8B=A4=E7=BD=90=E6=9E=88?=E5=A8=B9=E6=AB=92=E7=92=80??=E6=
-=91=BA=E7=8E=9C=E5=9B=A4=7F=EE=92=BF=1E=E7=93=BD=E7=8F=B4=E9=96=94?=E9=8E=
-=97:+v=E5=A2=BE=E5=A6=9B=E9=91=B6=E4=BD=B6
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> v2: check double stream start (Mark Brown)
+>
+> Jean-Francois Moine (4):
+>    drm/i2c: tda998x: Add DT support for audio
+>    drm/i2c: tda998x: Change drvdata for audio extension
+>    ASoC: tda998x: add a codec to the HDMI transmitter
+>    drm/i2c: tda998x: set cts_n according to the sample width
+>
+>   .../devicetree/bindings/drm/i2c/tda998x.txt        |  18 ++
+>   drivers/gpu/drm/i2c/Kconfig                        |   1 +
+>   drivers/gpu/drm/i2c/tda998x_drv.c                  | 213 +++++++++++++++++++--
+>   include/sound/tda998x.h                            |  23 +++
+>   sound/soc/codecs/Kconfig                           |   4 +
+>   sound/soc/codecs/Makefile                          |   2 +
+>   sound/soc/codecs/tda998x.c                         | 175 +++++++++++++++++
+>   7 files changed, 424 insertions(+), 12 deletions(-)
+>   create mode 100644 include/sound/tda998x.h
+>   create mode 100644 sound/soc/codecs/tda998x.c
+>
