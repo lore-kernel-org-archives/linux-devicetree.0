@@ -1,51 +1,96 @@
-From: Ezequiel Garcia <ezequiel.garcia@imgtec.com>
-Subject: Re: [PATCH 3/3] mtd: spi-nand: add devicetree binding
-Date: Thu, 8 Jan 2015 00:15:59 -0300
-Message-ID: <54ADF66F.7090400@imgtec.com>
-References: <87F60714EC601C4C83DFF1D2E3D390A04AB425@NTXXIAMBX02.xacn.micron.com>
+From: Shaohui Xie <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH] [v3] power/fsl: add MDIO dt binding for FMan
+Date: Thu, 8 Jan 2015 03:58:51 +0000
+Message-ID: <DM2PR0301MB0864C5EA92550EE46419DFC1E2470@DM2PR0301MB0864.namprd03.prod.outlook.com>
+References: <1419321466-5575-1-git-send-email-shh.xie@gmail.com>
+	 <DM2PR0301MB08640979E5088618D1395CFAE2580@DM2PR0301MB0864.namprd03.prod.outlook.com>
+	 <1420590520.4961.38.camel@freescale.com>
+	 <DM2PR0301MB08645ABD93708FFE011EF362E2460@DM2PR0301MB0864.namprd03.prod.outlook.com>
+	 <1420653934.4961.58.camel@freescale.com> <54AD8C8A.8070100@Freescale.com>
+ <1420679558.4961.64.camel@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=gbk
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87F60714EC601C4C83DFF1D2E3D390A04AB425@NTXXIAMBX02.xacn.micron.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?gbk?Q?=22Peter_Pan_=C5=CB=B6=B0_=28peterpandong=29=22?= <peterpandong@micron.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "dwmw2@infradead.org" <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, =?gbk?Q?=22Qi_Wang_=CD=F5=C6=F0_=28qiwang=29=22?= <qiwang@micron.com>, =?gbk?Q?=22Frank_Liu_=C1=F5=C8=BA_=28frankliu=29=22?= <frankliu@micron.com>, =?gbk?Q?=22Melanie_Zhang_=D5=C5=D1=E0_=28me?= =?gbk?Q?laniezhang=29=22?= <melaniezhang@micron.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1420679558.4961.64.camel-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Emilian Medve <Emilian.Medve-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 01/07/2015 09:52 PM, Peter Pan =C5=CB=B6=B0 (peterpandong) wrote:
-> This commit adds the devicetree binding document that specifies the
-> spi nand devices support.
->=20
-> Signed-off-by: Peter Pan <peterpandong@micron.com>
-> ---
->  Documentation/devicetree/bindings/mtd/spi-nand.txt | 22 ++++++++++++=
-++++++++++
->  1 file changed, 22 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/spi-nand.tx=
-t
->=20
-> diff --git a/Documentation/devicetree/bindings/mtd/spi-nand.txt b/Doc=
-umentation/devicetree/bindings/mtd/spi-nand.txt
-> new file mode 100644
-> index 0000000..9dd3efd
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mtd/spi-nand.txt
-> @@ -0,0 +1,22 @@
-> +* NAND driver for MT29F, GD5F and similar SPI NAND flash chips
-> +
-> +Required properties:
-> +- #address-cells, #size-cells : Must be present if the device has su=
-b-nodes
-> +  representing partitions.
-> +- compatible : Should be the manufacturer and the name of the chip. =
-Bear in mind
->=20
-
-Unless I'm mistaken, we don't need the chip ID here, as SPI NAND allows
-to autodetect the device. Any reason why we can't just use a generic
-compatible "spi-nand" here?
---=20
-Ezequiel
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBXb29kIFNjb3R0LUIwNzQyMQ0K
+PiBTZW50OiBUaHVyc2RheSwgSmFudWFyeSAwOCwgMjAxNSA5OjEzIEFNDQo+IFRvOiBNZWR2ZSBF
+bWlsaWFuLUVNTUVEVkUxDQo+IENjOiBYaWUgU2hhb2h1aS1CMjE5ODk7IGxpbnV4cHBjLWRldkBs
+aXN0cy5vemxhYnMub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0
+OiBSZTogW1BBVENIXSBbdjNdIHBvd2VyL2ZzbDogYWRkIE1ESU8gZHQgYmluZGluZyBmb3IgRk1h
+bg0KPiANCj4gT24gV2VkLCAyMDE1LTAxLTA3IGF0IDEzOjQ0IC0wNjAwLCBFbWlsIE1lZHZlIHdy
+b3RlOg0KPiA+IEhlbGxvIFNjb3R0LA0KPiA+DQo+ID4NCj4gPiBPbiAwMS8wNy8yMDE1IDEyOjA1
+IFBNLCBTY290dCBXb29kIHdyb3RlOg0KPiA+ID4gT24gVHVlLCAyMDE1LTAxLTA2IGF0IDIzOjI5
+IC0wNjAwLCBYaWUgU2hhb2h1aS1CMjE5ODkgd3JvdGU6DQo+ID4gPj4+Pj4gKy0gaW50ZXJydXB0
+cw0KPiA+ID4+Pj4+ICsJCVVzYWdlOiBvcHRpb25hbA0KPiA+ID4+Pj4+ICsJCVZhbHVlIHR5cGU6
+IDxwcm9wLWVuY29kZWQtYXJyYXk+DQo+ID4gPj4+Pj4gKwkJRGVmaW5pdGlvbjogRXZlbnQgaW50
+ZXJydXB0IG9mIGV4dGVybmFsIE1ESU8gY29udHJvbGxlci4NCj4gPiA+Pj4+PiArCQkxIEdiL3Mg
+TURJTyBhbmQgMTAgR2IvcyBNRElPIGhhcyBvbmUgaW50ZXJydXB0IHJlc3BlY3RpdmVseS4NCj4g
+PiA+Pj4NCj4gPiA+Pj4gSSdtIGNvbmZ1c2VkIGJ5ICJyZXNwZWN0aXZlbHkiIGhlcmUuICBEb2Vz
+IGZzbCxmbWFuLW1lbWFjLW1kaW8NCj4gPiA+Pj4gaGF2ZSB0d28gaW50ZXJydXB0cyAob25lIGZv
+ciAxIEdiL3MgYW5kIG9uZSBmb3IgMTAgR2Ivcyk/DQo+ID4gPj4gW1MuSF0gV2UgdXNlIHR3byBN
+RElPIGNvbnRyb2xsZXJzIGZvciBleHRlcm5hbCBQSFkgbWFuYWdlbWVudC4gT25lDQo+ID4gPj4g
+Zm9yIDEgR2IvcywgT25lIGZvciAxMCBHYi9zLCBhbmQgdHdvIE1ESU8gaW50ZXJydXB0cyBjb25u
+ZWN0ZWQgdG8gTVBJQy4NCj4gPiA+DQo+ID4gPiBJZiB0aGVyZSBjYW4gYmUgdHdvIGludGVycnVw
+dHMgeW91IG5lZWQgdG8gbWFrZSB0aGF0IGNsZWFyIGFuZA0KPiA+ID4gc3BlY2lmeSB0aGUgb3Jk
+ZXIuDQo+ID4gPg0KPiA+ID4gSXMgaXQgcG9zc2libGUgZm9yIG9uZSBNRElPIGNvbnRyb2xsZXIg
+dG8gaGF2ZSBhbiBpbnRlcnJ1cHQNCj4gPiA+IGNvbm5lY3RlZCBidXQgbm90IHRoZSBvdGhlciwg
+b24gdGhlIHNhbWUgc3lzdGVtPyAgSG93IHdvdWxkIHlvdQ0KPiA+ID4gcmVwcmVzZW50IHRoYXQg
+aW4gdGhlIGRldmljZSB0cmVlPyAgSWYgdGhlcmUgYXJlIHR3byBNRElPDQo+ID4gPiBjb250cm9s
+bGVycyB3aHkgYXJlIHRoZXkgaW4gdGhlIHNhbWUgbm9kZT8NCj4gPg0KPiA+IEhpc3RvcmljYWxs
+eSAoRk1hbiB2MiBhbmQgZXZlbiBiZWZvcmUvbGVnYWN5KSB3ZSd2ZSBoYWQgZWFjaCBNQUMNCj4g
+PiBpbmNsdWRlIGFuIE1ESU8gY29udHJvbGxlciwgYnV0IG9ubHkgb25lIE1ESU8gY29udHJvbGxl
+ciBwZXIgTUFDDQo+ID4gdHlwZS9zcGVlZCAoMSBHYi9zIHZzIDEwIEdiL3MpIGlzIHBpbm5lZCBv
+dXQgYW5kIGFsbCB0aGUgc2FtZSBzcGVlZA0KPiA+IFBIWShzKSBhcmUgY29ubmVjdGVkIHRvIHRo
+ZSByZXNwZWN0aXZlIE1ESU8gY29udHJvbGxlcnMuIEFzIHN1Y2ggdGhlDQo+ID4gZmlyc3QgMSBH
+Yi9zIE1BQy9NRElPIGNvbnRyb2xsZXIgaXMgdXNlZCB0byBtYW5hZ2UgYWxsIHRoZSAxIEdiL3MN
+Cj4gPiBQSFkocykgYW5kIHRoZSBmaXJzdCAxMCBHYi9zIE1BQy9NRElPIGNvbnRyb2xsZXIgaXMg
+dXNlZCB0byBtYW5hZ2UgYWxsDQo+ID4gdGhlIDEwIEdiL3MgUEhZKHMpLiBFYWNoIE1ESU8gY29u
+dHJvbGxlciBoYXMgdGhlIGFiaWxpdHkgdG8gZ2VuZXJhdGUNCj4gPiBpbnRlcnJ1cHRzIGJ1dCBv
+bmx5IHBpbm5lZCBvdXQgTURJTyBjb250cm9sbGVycyBhcmUgaG9va2VkIHVwIHRvIHRoZQ0KPiA+
+IE1QSUMgKGFzIHN1Y2ggdGhlIHRhbGsgYWJvdXQgdHdvIGludGVycnVwdHMpDQo+ID4NCj4gPiAo
+RWFjaCBNQUMgaGFzIGFsc28gaW50ZWdyYXRlZCBhIFNFUkRFUy9UQkkvImludGVybmFsIiBQSFkg
+dGhhdCBpcw0KPiA+IGNvbm5lY3RlZCB0byB0aGUgImxvY2FsIiBNRElPIGNvbnRyb2xsZXIpDQo+
+ID4NCj4gPiBBcyB5b3UgY2FuIGltYWdpbmUgdGhpcyBjcmVhdGVzIGEgbnVtYmVyIG9mIHByb2Js
+ZW1zIGluIGEgcGFydGl0aW9uaW5nDQo+ID4gc2NlbmFyaW8gKGFuZCBub3QganVzdCwgaW1hZ2lu
+ZSBSQ1dzIHdoZXJlIHRoZSBmaXJzdCBNQUMgaXMgbm90DQo+ID4gdXNlZC9lbmFibGVkKS4gSW4g
+b3JkZXIgdG8gaGVscCBhIGJpdCAoYnV0IG5vdCBxdWl0ZSBlbm91Z2gpLCBpbiBGTWFuDQo+ID4g
+djMsIHR3byBhZGRpdGlvbmFsIE1ESU8gY29udHJvbGxlcnMgKG9uZSBmb3IgMSB0aGUgR2IvcyBQ
+SFkocykgYW5kIG9uZQ0KPiA+IGZvciAxIHRoZSAxMCBHYi9zIFBIWShzKSkgaGF2ZSBiZWVuIGlu
+dGVncmF0ZWQgdGhhdCBhcmUgbm90IGFzc29jaWF0ZWQNCj4gPiB3aXRoIGFueSBNQUMgYW5kIHRo
+ZXNlIGFyZSB0aGUgcGlubmVkIG91dCBNRElPIGNvbnRyb2xsZXJzIG9uIHN1Y2gNCj4gPiBTb0Mo
+cykgKGNoYXNzaXMgdjIpDQo+IA0KPiBJJ20gaGFwcHkgdG8gaGVhciB0aGF0LiAgSXMgdGhhdCB3
+aGF0IGlzIG1lYW50IGJ5ICJleHRlcm5hbCIgaGVyZT8gIEkgdGhvdWdodCBpdA0KPiBtZWFudCBl
+eHRlcm5hbCB0byB0aGUgU29DLiAgSXMgdGhpcyB0aGUgdGVybSB1c2VkIGJ5IGhhcmR3YXJlIGRv
+Y3VtZW50YXRpb24/DQpbUy5IXSBZZXMuICJleHRlcm5hbCIgJiAiaW50ZXJuYWwiIGFyZSB1c2Vk
+IGJ5IGhhcmR3YXJlIGRvY3VtZW50YXRpb24uDQoNCj4gSSdkIGhhdmUgY2FsbGVkIGl0ICJpbmRl
+cGVuZGVudCIgb3Igc2ltaWxhci4NCj4gDQo+ID4gPj4gICBEb2VzICJvcHRpb25hbCIgbWVhbiBp
+dCdzIHVzZWQgaWYgYW5kDQo+ID4gPj4+IG9ubHkgaWYgZXh0ZXJuYWwgTURJTyBpcyB1c2VkLCBv
+ciBpcyBpdCBvcHRpb25hbCBldmVuIHdpdGgNCj4gPiA+Pj4gZXh0ZXJuYWwgTURJTz8gIEkgc2Vl
+IGl0J3Mgbm90IHByZXNlbnQgaW4gdGhlIGV4YW1wbGUgLS0gZG8gd2Ugbm90DQo+ID4gPj4+IGhh
+dmUgYSByZWFsIGV4YW1wbGUgdGhhdCBoYXMgdGhlIGludGVycnVwdD8NCj4gPiA+PiBbUy5IXSAi
+b3B0aW9uYWwiIG1lYW5zIGl0J3MgYXZhaWxhYmxlIG9uIGhhcmR3YXJlLCBidXQgTURJTyBkcml2
+ZXIgZG9lcyBub3QNCj4gdXNlIGludGVycnVwdC4NCj4gPiA+PiBTbyB3ZSBkb24ndCBoYXZlIGEg
+cmVhbCBleGFtcGxlLg0KPiA+ID4NCj4gPiA+IDxyZWNvcmQgdHlwZT0iYnJva2VuIj5UaGUgZGV2
+aWNlIHRyZWUgZGVzY3JpYmVzIHRoZSBoYXJkd2FyZSwgbm90DQo+ID4gPiB0aGUgZHJpdmVyPC9y
+ZWNvcmQ+DQo+ID4NCj4gPiBBbnl3YXksIG9ubHkgdHdvIE1ESU8gbm9kZXMgKG91dCBvZiA0IHRv
+IDE0KSB3b3VsZCBoYXZlIGFuIGludGVycnVwdA0KPiA+IHByb3BlcnR5IGRlc2NyaWJpbmcgZXhh
+Y3RseSBvbmUgaW50ZXJydXB0LiBXaGF0IGxhbmd1YWdlIHNob3VsZCB3ZSB1c2UNCj4gPiB0byBj
+b252ZXkgdGhpcyBzaXR1YXRpb24NCj4gDQo+IFNvIHRoZSBhbnN3ZXIgaXMgdGhhdCB0aGVyZSB3
+aWxsIG5vdCBiZSBtb3JlIHRoYW4gb25lIE1ESU8gY29udHJvbGxlciBwZXIgTURJTw0KPiBub2Rl
+LCBvciBtb3JlIHRoYW4gb25lIGludGVycnVwdCBwZXIgTURJTyBub2RlPyANCltTLkhdIFllcywg
+b25lIE1ESU8gY29udHJvbGxlciBwZXIgTURJTyBub2RlLCBhbmQgb25lIGludGVycnVwdCBwZXIg
+ImV4dGVybmFsIg0KTURJTyBub2RlLg0KDQogSW4gdGhhdCBjYXNlIGp1c3QgZ2V0IHJpZCBvZg0K
+PiB0aGUgY29uZnVzaW5nICJyZXNwZWN0aXZlbHkiIHNlbnRlbmNlIC0tIGFuZCBhbHdheXMgZGVz
+Y3JpYmUgdGhlIGludGVycnVwdCBpZiBpdA0KPiBleGlzdHMgaW4gaGFyZHdhcmUuDQpbUy5IXSBP
+Sy4NCg0KVGhhbmtzIQ0KU2hhb2h1aQ0K
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
