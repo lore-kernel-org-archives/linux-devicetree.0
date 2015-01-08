@@ -1,70 +1,72 @@
-From: Ezequiel Garcia <ezequiel.garcia@imgtec.com>
-Subject: Re: [PATCH 3/3] mtd: spi-nand: add devicetree binding
-Date: Thu, 8 Jan 2015 12:12:20 -0300
-Message-ID: <54AE9E54.2010506@imgtec.com>
-References: <87F60714EC601C4C83DFF1D2E3D390A04AB425@NTXXIAMBX02.xacn.micron.com> <54ADF66F.7090400@imgtec.com> <87F60714EC601C4C83DFF1D2E3D390A04AB4EA@NTXXIAMBX02.xacn.micron.com>
+From: Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: Add dts file for odroid XU3 board
+Date: Fri, 09 Jan 2015 00:29:25 +0900
+Message-ID: <54AEA255.1000100@kernel.org>
+References: <1417721269-19342-1-git-send-email-sjoerd.simons@collabora.co.uk>	 <54AA48E6.3040404@samsung.com> <1420470469.15910.134.camel@collabora.co.uk>	 <69242715.30115.1420655868687.JavaMail.yahoo@jws10659.mail.bf1.yahoo.com>	 <1420670333.6075.2.camel@collabora.co.uk>	 <6203C077F070A646AA0FCB4B5F1795D248114CA6@sisaex01sj> <1420706948.6075.17.camel@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=gbk
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87F60714EC601C4C83DFF1D2E3D390A04AB4EA@NTXXIAMBX02.xacn.micron.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?gbk?Q?=22Peter_Pan_=C5=CB=B6=B0_=28peterpandong=29=22?= <peterpandong@micron.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "dwmw2@infradead.org" <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, =?gbk?Q?=22Qi_Wang_=CD=F5=C6=F0_=28qiwang=29=22?= <qiwang@micron.com>, =?gbk?Q?=22Frank_Liu_=C1=F5=C8=BA_=28frankliu=29=22?= <frankliu@micron.com>, =?gbk?Q?=22Melanie_Zhang_=D5=C5=D1=E0_=28me?= =?gbk?Q?laniezhang=29=22?= <melaniezhang@micron.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1420706948.6075.17.camel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Cc: Jonathan Stone -SISA <j.stone-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Anand Moon <moon.linux-/E1597aS9LQAvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Joonyoung Shim <jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Heesub Shin <heesub.shin-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 01/08/2015 02:04 AM, Peter Pan =C5=CB=B6=B0 (peterpandong) wrote:
->>> This commit adds the devicetree binding document that specifies the
->>> spi nand devices support.
->>>
->>> Signed-off-by: Peter Pan <peterpandong@micron.com>
->>> ---
->>>  Documentation/devicetree/bindings/mtd/spi-nand.txt | 22
->> ++++++++++++++++++++++
->>>  1 file changed, 22 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/mtd/spi-
->> nand.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/mtd/spi-nand.txt
->> b/Documentation/devicetree/bindings/mtd/spi-nand.txt
->>> new file mode 100644
->>> index 0000000..9dd3efd
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/mtd/spi-nand.txt
->>> @@ -0,0 +1,22 @@
->>> +* NAND driver for MT29F, GD5F and similar SPI NAND flash chips
->>> +
->>> +Required properties:
->>> +- #address-cells, #size-cells : Must be present if the device has
->> sub-nodes
->>> +  representing partitions.
->>> +- compatible : Should be the manufacturer and the name of the chip=
-=2E
->> Bear in mind
->>>
+On 01/08/15 17:49, Sjoerd Simons wrote:
+> On Wed, 2015-01-07 at 23:49 +0000, Jonathan Stone -SISA wrote:
 >>
->> Unless I'm mistaken, we don't need the chip ID here, as SPI NAND all=
-ows
->> to autodetect the device. Any reason why we can't just use a generic
->> compatible "spi-nand" here?
->> --
->> Ezequiel
->=20
-> In fact, I don't know how to autodetect the SPI NAND device. Micron d=
-evice and
-> Gigadevice device have different read ID functions. The Chip ID here =
-is used to
-> determine which function to use.
->=20
+>> On On Wed, 2015-01-07 at 18:37 +0000, Sjoerd Simons writes wrote:
+>>> On Wed, 2015-01-07 at 18:37 +0000, Anand Moon wrote:>
+>> [...]
+>>
+>>>> Only 4 core cpu's are on my board. Also CpuFreq is not working.
+>>>
+>>> Can you share some point on this.
+>>
+>>> The defconfig is using the bL switcher, which pairs up big and little cores to make them appear as one core.. So for 8 real cores, you'll get
+>>> 4 "virtual cores".
+>>
+>> That configuration is appropriate for the 5420, which allegedly has a hardware bug in the cache-coherence between the Cortex-A7 block and the Cortex-A15 block.
+>> Newer Exynos 5 SoCs -- 5422/5800, 5620, etc -- don't have that bug. The scheduler should configured to  do HMP on all 8 (or 6) cores.
+>> I don't have a 5410, but I assume it has the same bug as the 5420.
+> 
+> Yes the kernel/scheduler could be configured like that, but
+> exynos_defconfig turns on bL rather then HMP. 
+> 
+> Now it's not unthinkable to add code/dts properties to select the
+> right/preferred scheduling strategy depending on the board (HMP vs. bL).
+> But proper HMP scheduling is still a work in progress in mainline and
+> iirc specifically on the XU3 there are open issue wrt. MCPM and its
+> secure firmware. I've added Kevin to the CC as he's been working on this
+> topic so should know the status a lot better then i do.
+> 
+>> The XU3 kernel supplied by HardKernel shows all 8 cores, and does HMP scheduling across all 8.
+> 
+> Yes, that's independant of the dts though as mentioned above. Also there
+> are still opne issues to booting up all cores on an XU3 afaik. See 
+>    http://www.spinics.net/lists/linux-samsung-soc/msg39523.html
+> 
+>> I tried v1.0 of the Odroid-XU3 DTB patch, applied to linux-next
+>> 20150107.  I'm only seeing 1 core running on my Odroid-XU3.  The USB
+>> 3.0 port works (great!) but I'm not getting any HDMI output. I didn't
+>> try DisplayPort.   I'll gladly try v2 of the patch on an XU3; is there
+>> a better base to apply the patch to?
+> 
+> HDMI output is broken on all exynos boards in mainline atm. For exynos
+> 5, see the thread here:
+>  http://www.spinics.net/lists/linux-samsung-soc/msg40708.html
+> 
+> As far as a i know with the DTS as posted (just posted v3 with a small
+> improvement), all base functionality that can work on mainline (MMC/SD,
+> network, USB2, USB3) works. Some less important bits (fan control &
+> power sensors) are outstanding, but that really shouldn't block the
+> merge of the DTS.
+> 
+Sjoerd, thanks. I'll take your updated patch once you submit version3.
 
-Isn't the difference between the Read ID very minor? One of the vendor
-needs a 2-byte ID read, and the other one needs a 3-byte ID read.
-
-So you can just try with 2-byte, and if that fails (no vendor ID is
-found on the first byte), you can try with the 3-byte command.
-
-It's not the most elegant solution, but it's not super awful either.
---=20
-Ezequiel
+- Kukjin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
