@@ -1,54 +1,60 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 0/5] regulator: Allow parsing custom DT properties
- with simplified DT parse
-Date: Thu, 8 Jan 2015 20:16:36 +0000
-Message-ID: <20150108201636.GE2634@sirena.org.uk>
-References: <1420458525-22576-1-git-send-email-k.kozlowski@samsung.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/9] ARM: versatile: add DT based PCI detection
+Date: Thu, 8 Jan 2015 15:34:08 -0600
+Message-ID: <CAL_JsqKN_4pvKH-jau6fFuLx86FD8BznDoiRFhBm6A2aW7d0yQ@mail.gmail.com>
+References: <1419967718-26909-1-git-send-email-robherring2@gmail.com>
+ <1419967718-26909-4-git-send-email-robherring2@gmail.com> <CACRpkdYEHwXhw3nEPHp7+4rtzXyh9Qb2QCpsRMfopxNoaX3rLA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="JLqpAN9gGHZowk+m"
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1420458525-22576-1-git-send-email-k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <CACRpkdYEHwXhw3nEPHp7+4rtzXyh9Qb2QCpsRMfopxNoaX3rLA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Peter Maydell <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Jan 8, 2015 at 1:37 PM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Tue, Dec 30, 2014 at 8:28 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>
+>> From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>
+>> Disable the Versatile PCI DT node when no PCI backplane is detected. This
+>> will prevent the Versatile PCI driver from probing when PCI is not
+>> populated.
+>>
+>> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+>> Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>
+> (...)
+>> +       /* Check if PCI backplane is detected */
+>> +       val = __raw_readl(base + VERSATILE_SYS_PCICTL_OFFSET);
+>
+> I think this kind of random syscon register access should be handled
+> using the mfd/syscon.c hub and looked up in some way to be used
+> by the driver.
 
---JLqpAN9gGHZowk+m
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Perhaps, but I've not figured out how much of VExpress syscon can be
+used for Versatile. I looked at it briefly, but it appeared to be more
+work that I have time for ATM. We still have other accesses to system
+registers in Versatile as well. So if we want to merge all this
+anytime soon, the options are:
 
-On Mon, Jan 05, 2015 at 12:48:40PM +0100, Krzysztof Kozlowski wrote:
-> Hi,
->=20
->=20
-> The patchset adds:
-> 1. a way of parsing custom DT properties by the driver when simplified
->    DT parsing method is used,
-> 2. GPIO enable control to the max77686 driver.
+- this patch
+- Create a versatilepb-pci.dts which includes versatilepb.dts and enables PCI
+- Default to PCI enabled (for QEMU) in the dts and users have to
+disable in their dts if they don't have a PCI backplane.
 
-Applied 1-4, thanks.
+> I'm thinking along the pattern of adding code in drivers/*
+> by the pattern of e.g.
+> drivers/video/fbdev/amba-clcd-versatile.c
+> i.e. an add-on that gets compiled-in only for those platform
+> but still married to the main driver.
 
---JLqpAN9gGHZowk+m
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+One difference here is the PCI driver is pretty much only ever going
+to be for a single platform.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUruWjAAoJECTWi3JdVIfQd/IH/RuLGU10FeNFRf6CWJoXQ5go
-BjTGJl4L5OnKyWv0WSpO8UmBl22y1Q11SoTBLGzxKpkDEZXtRiA9kZLEVugTjHXW
-AJauBic/edRCVOZX5PbrUBkS416zcgGBxALk2TthUVydXcKhCwUJTLrKgxDQZlsk
-+fNG8/5UpuwHyR2dhOrCdpPVTXG8An6KofE6c0X6l591vwzR2oVZ/ntVQw2xqP3q
-T0tmzfTjdmc1vlhZbenSsWWmCxbm3fBCavofeYr5LVm3/EPC4qHmbrMnzw1NElnr
-8jT6PDvIGEh07b6LCb4EVN7Ens6jNT2FoH0HzDKOYIJZDju/ToA9/kRWJf/Ppm4=
-=K8HL
------END PGP SIGNATURE-----
-
---JLqpAN9gGHZowk+m--
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
