@@ -1,94 +1,49 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3] ARM: at91/dt: sam9263: Add ac97 device node
-Date: Thu, 8 Jan 2015 20:16:03 +0100
-Message-ID: <20150108191603.GF2447@piout.net>
-References: <1419854922-29338-1-git-send-email-alexanders83@web.de>
- <1419854922-29338-3-git-send-email-alexanders83@web.de>
- <2066438.if5qXaBWRu@kongar>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: Re: [PATCH v3 2/4] of: move of_dma_configure() to device,c to help
+ re-use
+Date: Thu, 8 Jan 2015 14:26:36 -0500
+Message-ID: <54AED9EC.1020703@ti.com>
+References: <1420656594-8908-1-git-send-email-m-karicheri2@ti.com> <1420656594-8908-3-git-send-email-m-karicheri2@ti.com> <CAL_Jsq+pKeXuGnZV_NYHn6iZgeOs404OPhcUb0FJs=-7j2P1Ug@mail.gmail.com> <3861625.CJ6m15sZMh@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <2066438.if5qXaBWRu@kongar>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org>
-Cc: Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <3861625.CJ6m15sZMh@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Rob Herring <robherring2@gmail.com>, Joerg Roedel <joro@8bytes.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Linux IOMMU <iommu@lists.linux-foundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Will Deacon <will.deacon@arm.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 01/08/2015 03:40 AM, Arnd Bergmann wrote:
+> On Wednesday 07 January 2015 17:37:56 Rob Herring wrote:
+>> On Wed, Jan 7, 2015 at 12:49 PM, Murali Karicheri<m-karicheri2@ti.com>  wrote:
+>>
+>>> +       ret = of_dma_get_range(np,&dma_addr,&paddr,&size);
+>>> +       if (ret<  0) {
+>>> +               dma_addr = offset = 0;
+>>> +               size = dev->coherent_dma_mask + 1;
+>>
+>> If coherent_dma_mask is DMA_BIT_MASK(64), then you will overflow and
+>> have a size of 0. There may also be a problem when the mask is only
+>> 32-bit type.
+>
+> The mask is always a 64-bit type, it's not optional. But you are right,
+> the 64-bit mask case is broken, so I guess we have to fix it differently
+> by always passing the smaller value into arch_setup_dma_ops and
+> adapting that function instead.
+Arnd,
 
+What is the smaller value you are referring to in the below code? 
+between *dev->dma_mask and size from DT? But overflow can still happen 
+when size is to be calculated in arch_setup_dma_ops() for Non DT case or 
+when DT size is configured to be equivalent of DMA_BIT_MASK(64) + 1. Can 
+we discuss the code change you have in mind when you get a chance?
 
-On 08/01/2015 at 20:12:04 +0100, Alexander Stein wrote :
-> Now that the implementation has been applied to sound/for-next (https://git.kernel.org/cgit/linux/kernel/git/tiwai/sound.git/log/?h=for-next
-> ), who is going to pick the related patches (this one and the other two adding documentation and default config)?
-> 
+Murali
+>
+> 	Arnd
 
-Nicolas will do it but he has not yet started to create a branch for
-3.20.
-
-> Best regards,
-> Alexander
-> 
-> On Monday 29 December 2014, 13:08:41 wrote Alexander Stein:
-> > This adds the device node for the ac97 controller.
-> > 
-> > Signed-off-by: Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org>
-> > Acked-By Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> > ---
-> > Changes in v3:
-> > * Renamed the compatible string to atmel,at91sam9263-ac97c
-> > * Added 'Acked-By Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>'
-> > 
-> >  arch/arm/boot/dts/at91sam9263.dtsi | 21 +++++++++++++++++++++
-> >  1 file changed, 21 insertions(+)
-> > 
-> > diff --git a/arch/arm/boot/dts/at91sam9263.dtsi b/arch/arm/boot/dts/at91sam9263.dtsi
-> > index 6283785..2e67e38 100644
-> > --- a/arch/arm/boot/dts/at91sam9263.dtsi
-> > +++ b/arch/arm/boot/dts/at91sam9263.dtsi
-> > @@ -700,6 +700,16 @@
-> >  					};
-> >  				};
-> >  
-> > +				ac97 {
-> > +					pinctrl_ac97: ac97-0 {
-> > +						atmel,pins =
-> > +							<AT91_PIOB 0 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PB12 periph A AC97FS pin */
-> > +							 AT91_PIOB 1 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PB13 periph A AC97CK pin */
-> > +							 AT91_PIOB 2 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PB14 periph A AC97TX pin */
-> > +							 AT91_PIOB 3 AT91_PERIPH_A AT91_PINCTRL_NONE>;	/* PB14 periph A AC97RX pin */
-> > +					};
-> > +				};
-> > +
-> >  				pioA: gpio@fffff200 {
-> >  					compatible = "atmel,at91rm9200-gpio";
-> >  					reg = <0xfffff200 0x200>;
-> > @@ -828,6 +838,17 @@
-> >  				status = "disabled";
-> >  			};
-> >  
-> > +			ac97: sound@fffa0000 {
-> > +				compatible = "atmel,at91sam9263-ac97c";
-> > +				reg = <0xfffa0000 0x4000>;
-> > +				interrupts = <18 IRQ_TYPE_LEVEL_HIGH 5>;
-> > +				pinctrl-names = "default";
-> > +				pinctrl-0 = <&pinctrl_ac97>;
-> > +				clocks = <&ac97_clk>;
-> > +				clock-names = "ac97_clk";
-> > +				status = "disabled";
-> > +			};
-> > +
-> >  			macb0: ethernet@fffbc000 {
-> >  				compatible = "cdns,at32ap7000-macb", "cdns,macb";
-> >  				reg = <0xfffbc000 0x100>;
-> > 
-> 
 
 -- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Murali Karicheri
+Linux Kernel, Texas Instruments
