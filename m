@@ -1,113 +1,77 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH 1/5] mfd: tps65218: make INT[12] and STATUS registers
- volatile
-Date: Thu, 8 Jan 2015 10:25:12 -0600
-Message-ID: <20150108162512.GC31926@saruman>
-References: <1419622104-25812-1-git-send-email-balbi@ti.com>
- <1419622104-25812-2-git-send-email-balbi@ti.com>
- <20150106173734.GL6502@saruman>
-Reply-To: <balbi@ti.com>
+From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Subject: Re: [PATCH v9 1/4] drm/i2c: tda998x: Add DT support for audio
+Date: Thu, 8 Jan 2015 17:42:57 +0100
+Message-ID: <20150108174257.557f7ea5@armhf>
+References: <cover.1420628786.git.moinejf@free.fr>
+	<0084acea5a3475a77531d6a77483f36d3469111a.1420628786.git.moinejf@free.fr>
+	<54AE99F5.1010404@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="5QAgd0e35j3NYeGe"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150106173734.GL6502@saruman>
-Sender: linux-omap-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>, stable@vger.kernel.org, Keerthy <j-keerthy@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54AE99F5.1010404-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Jackson <Andrew.Jackson-5wv7dgnIgG8@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---5QAgd0e35j3NYeGe
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Thu, 8 Jan 2015 16:53:41 +0200
+Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org> wrote:
 
-On Tue, Jan 06, 2015 at 11:37:34AM -0600, Felipe Balbi wrote:
-> On Fri, Dec 26, 2014 at 01:28:20PM -0600, Felipe Balbi wrote:
-> > STATUS register can be modified by the HW, so we
-> > should bypass cache because of that.
-> >=20
-> > In the case of INT[12] registers, they are the ones
-> > that actually clear the IRQ source at the time they
-> > are read. If we rely on the cache for them, we will
-> > never be able to clear the interrupt, which will cause
-> > our IRQ line to be disabled due to IRQ throttling.
-> >=20
-> > Fixes: 44b4dc6 mfd: tps65218: Add driver for the TPS65218 PMIC
-> > Cc: <stable@vger.kernel.org> # v3.15+
-> > Cc: Keerthy <j-keerthy@ti.com>
-> > Cc: Lee Jones <lee.jones@linaro.org>
-> > Signed-off-by: Felipe Balbi <balbi@ti.com>
+> > +  - audio-ports: must contain one or two values selecting the sour=
+ce
+> > +	in the audio port.
+> > +	The source type is given by the corresponding entry in
+> > +	the audio-port-names property.
+> > + =20
 >=20
-> ping
-
-another ping. Without this and the following patch TPS65218 power button
-driver which was already applied by Dmitry, won't work.
-
-> > ---
-> >  drivers/mfd/tps65218.c | 11 +++++++++++
-> >  1 file changed, 11 insertions(+)
-> >=20
-> > diff --git a/drivers/mfd/tps65218.c b/drivers/mfd/tps65218.c
-> > index 0d256cb..2243f75 100644
-> > --- a/drivers/mfd/tps65218.c
-> > +++ b/drivers/mfd/tps65218.c
-> > @@ -125,10 +125,21 @@ int tps65218_clear_bits(struct tps65218 *tps, uns=
-igned int reg,
-> >  }
-> >  EXPORT_SYMBOL_GPL(tps65218_clear_bits);
-> > =20
-> > +static const struct regmap_range tps65218_yes_ranges[] =3D {
-> > +	regmap_reg_range(TPS65218_REG_INT1, TPS65218_REG_INT2),
-> > +	regmap_reg_range(TPS65218_REG_STATUS, TPS65218_REG_STATUS),
-> > +};
-> > +
-> > +static const struct regmap_access_table tps65218_volatile_table =3D {
-> > +	.yes_ranges =3D tps65218_yes_ranges,
-> > +	.n_yes_ranges =3D ARRAY_SIZE(tps65218_yes_ranges),
-> > +};
-> > +
-> >  static struct regmap_config tps65218_regmap_config =3D {
-> >  	.reg_bits =3D 8,
-> >  	.val_bits =3D 8,
-> >  	.cache_type =3D REGCACHE_RBTREE,
-> > +	.volatile_table =3D &tps65218_volatile_table,
-> >  };
-> > =20
-> >  static const struct regmap_irq tps65218_irqs[] =3D {
-> > --=20
-> > 2.2.0
-> >=20
+> This binding does not allow multi channel i2s setups with multiple i2=
+s=20
+> pins. It would be nice to support that in the DT binding, even if the=
+=20
+> code is not yet ready for it.
 >=20
-> --=20
-> balbi
+> How about having these two optional properties instead of audio-ports=
+=20
+> and audio-port-names:
+>=20
+> audio-port-i2s: Upto 4 values for selecting pins for i2s port
+> audio-port-spdif: Value for selecting input pin for spdif port
+>=20
+> Presence of one of the properties would be mandatory and both are all=
+owed.
+>=20
+> Sorry to notice this only now, but I have not yet looked the drm side=
+=20
+> changes too closely.
 
+=46rom Andrew's datasheet, the TDA998x's which are handled by the tda99=
+8x
+driver have only 4 input audio pins, the first two ones being either
+S/PDIF or I2s, the last ones being I2S only.
 
+So, the DT description could be reduced to a simple list indexed by
+the pin number (=3D DAI number) and defining the protocol type.
+
+Examples:
+
+- for the Cubox:
+
+	audio-inputs =3D "i2s", "spdif";
+
+- for some other board with I2S on the pins 3 and 4 only:
+
+	audio-inputs =3D "none", "none", "i2s", "i2s";
+
+- for a fully wired TDA9983B (no driver yet):
+
+	audio-inputs =3D "i2s", "i2s", "i2s", "i2s", "spdif";
 
 --=20
-balbi
-
---5QAgd0e35j3NYeGe
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUrq9oAAoJEIaOsuA1yqREmdAQALGlZ6yhVNQt4o3Vwb7qjwkM
-0Ipz4/196hi0q0gkoQQCh7hyR5p8oATFPbDPfOjuTEQ1Bg5csdxm6Ow1NtOWZK1f
-NZqi3qBugqd052ntBd0795gPHiUTe4ARntVgdh8cHEWiKVRWdq6nFYkKBpAC6p3n
-byGFZOtwQkE1x9t+wWtxWzXmk2+Yh11NH8jGk0YBTdPZFMpZeWle6aeOxpMvAES3
-taEpz/wmuWJj2z/cUck51Ha+k1fv5Nd73jRS1Dre45XGMoCIDCJqZwEw7lL5kZho
-3X4fbX6kthTUSMn++WwNf0pab5drDP/zcrf2fNpR4t16E3wW7YGJk+e961uV2lKB
-V9X86X879stnsWm5lCMf6cSXWcrNamFxZX8yvaufxLX+qHurD5JFG7g2lMVdq8Jq
-COoaObnc8n7be5fdSxcn9e0m+4fQkFPfAKxdBMr9vxZFxOyta7YAabarYBiKKkJm
-uF/2VPE5DcXAkn6F6MEN023wusmjEqRAQ+BwBMZ359XLJfaCRZI8Kg8+I2/nnNg0
-/pJKOXql2ky6Euxsgwej5yGZWBEAbT5c68hvr00qWRq2NAQ8SeAWuah8kGPeF55j
-bOsOpg1V2F9mlVg3oU7QCEfiL5YOVGaleSqGFjEvwi8m1IFD1KUON/4ln4jGRJeW
-CI8YH00hYkgAR7aTdVJl
-=/k33
------END PGP SIGNATURE-----
-
---5QAgd0e35j3NYeGe--
+Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
+Jef		|		http://moinejf.free.fr/
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
