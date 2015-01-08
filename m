@@ -1,84 +1,62 @@
-From: Jyri Sarha <jsarha@ti.com>
-Subject: Re: [PATCH v9 0/4] ASoC: tda998x: add a codec to the HDMI transmitter
-Date: Thu, 8 Jan 2015 16:53:04 +0200
-Message-ID: <54AE99D0.1050205@ti.com>
-References: <cover.1420628786.git.moinejf@free.fr>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v1 4/4] leds: no longer use unnamed gpios
+Date: Thu, 8 Jan 2015 08:40:20 -0600
+Message-ID: <CAL_JsqJE_PCXrejHO3vfdbbtC4FGyuPhJ8W-A=8nZMcu6aBxCw@mail.gmail.com>
+References: <1420621722-7428-1-git-send-email-oliver+list@schinagl.nl>
+ <1420621722-7428-5-git-send-email-oliver+list@schinagl.nl>
+ <20150107235522.GA6670@dtor-ws> <54AE43A9.3020309@schinagl.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1420628786.git.moinejf@free.fr>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jean-Francois Moine <moinejf@free.fr>, Mark Brown <broonie@kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Dave Airlie <airlied@gmail.com>, Andrew Jackson <Andrew.Jackson@arm.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <54AE43A9.3020309@schinagl.nl>
+Sender: linux-input-owner@vger.kernel.org
+To: Olliver Schinagl <oliver@schinagl.nl>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Olliver Schinagl <oliver+list@schinagl.nl>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Robin Gong <b38343@freescale.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Aaron Lu <aaron.lu@intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Grant Likely <grant.likely@linaro.org>, Wolfram Sang <wsa@the-dreams.de>, Alexander Shiyan <shc_work@mail.ru>, Jingoo Han <jg1.han@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-gpio@vger.ker
 List-Id: devicetree@vger.kernel.org
 
-
-On 01/07/2015 01:06 PM, Jean-Francois Moine wrote:
-> Based on 3.19.0-rc3.
+On Thu, Jan 8, 2015 at 2:45 AM, Olliver Schinagl <oliver@schinagl.nl> wrote:
+> Hey Dmitry,
 >
-> v9:
-> 	- back to a TDA998x specific CODEC
-
-I did not mean that you could not make your shot at generic codec. It 
-will just need more work before it is generic enough for other HDMI 
-encoders to fully utilize it.
-
-BTW, the HDMI codec is now completely unused, since my OMAP4+ HDMI audio 
-patches were merged (it uses dummy codec) and my BBB HDMI audio patches 
-were never merged.
-
-But then again if you'll rather make a tda998x specific codec for now, I 
-am fine with that. Let's see later when(/if) I get my generic HDMI codec 
-ready - I'll eventually need something for SiI9022 - if it makes sense 
-to start using it with tda998x too.
-
-Best regards,
-Jyri
-
-> 	- more comments
-> 	- change magic values to constants
-> v8:
-> 	- change some comments about the patches
-> v7:
-> 	- remove the change of the K predivider (Jyri Sarha)
-> 	- add S24_3LE and S32_LE as possible audio formats (Jyri Sarha)
-> 	- don't move the struct priv2 definition and use the
-> 	  slave encoder private data as the device private data
-> 	  (Russell King)
-> 	- remove the useless request_module (Russell King/Mark Brown)
-> 	- don't lock the HDMI module (Russell King)
-> 	- use platform_device_unregister to remove the codec
-> 	  (Russell King)
-> v6:
-> 	- extend the HDMI CODEC instead of using a specific CODEC
-> v5:
-> 	- use the TDA998x private data instead of a specific area
-> 	  for the CODEC interface
-> 	- the CODEC is TDA998x specific (Mark Brown)
-> v4:
-> 	- remove all the TDA998x specific stuff from the CODEC
-> 	- move the EDID scan from the CODEC to the TDA998x
-> 	- move the CODEC to sound/soc (Mark Brown)
-> 	- update the audio_sample_rate from the EDID (Andrew Jackson)
-> v3: fix bad rate (Andrew Jackson)int drm_edid_to_sad(struct edid *edid, struct cea_sad **sads);
-
-> v2: check double stream start (Mark Brown)
 >
-> Jean-Francois Moine (4):
->    drm/i2c: tda998x: Add DT support for audio
->    drm/i2c: tda998x: Change drvdata for audio extension
->    ASoC: tda998x: add a codec to the HDMI transmitter
->    drm/i2c: tda998x: set cts_n according to the sample width
+> On 08-01-15 00:55, Dmitry Torokhov wrote:
+>>
+>> On Wed, Jan 07, 2015 at 10:08:42AM +0100, Olliver Schinagl wrote:
+>>>
+>>> From: Olliver Schinagl <oliver@schinagl.nl>
+>>>
+>>> The gpio document says we should not use unnamed bindings for gpios.
+>>> This patch uses the 'led-' prefix to the gpios and updates code and
+>>> documents. Because the devm_get_gpiod_from_child() falls back to using
+>>> old-style unnamed gpios, we can update the code first, and update
+>>> dts files as time allows.
+
+[...]
+
+>>> --- a/drivers/leds/leds-gpio.c
+>>> +++ b/drivers/leds/leds-gpio.c
+>>> @@ -184,7 +184,7 @@ static struct gpio_leds_priv *gpio_leds_create(struct
+>>> platform_device *pdev)
+>>>                 struct gpio_led led = {};
+>>>                 const char *state = NULL;
+>>>   -             led.gpiod = devm_get_gpiod_from_child(dev, NULL, child);
+>>> +               led.gpiod = devm_get_gpiod_from_child(dev, "led", child);
+>>
+>> Would not this break existing boards using old bindings? You need to
+>> handle both cases: if you can't located "led-gpios" then you will have to
+>> try just "gpios".
 >
->   .../devicetree/bindings/drm/i2c/tda998x.txt        |  18 ++
->   drivers/gpu/drm/i2c/Kconfig                        |   1 +
->   drivers/gpu/drm/i2c/tda998x_drv.c                  | 213 +++++++++++++++++++--
->   include/sound/tda998x.h                            |  23 +++
->   sound/soc/codecs/Kconfig                           |   4 +
->   sound/soc/codecs/Makefile                          |   2 +
->   sound/soc/codecs/tda998x.c                         | 175 +++++++++++++++++
->   7 files changed, 424 insertions(+), 12 deletions(-)
->   create mode 100644 include/sound/tda998x.h
->   create mode 100644 sound/soc/codecs/tda998x.c
->
+> Very true. I was rather even hoping we could update all bindings, I don't
+> mind going through the available dts files to fix them ... But need to know
+> that that's the proper way to go before doing the work ;)
+
+That will not work. You cannot make changes that require a new dtb
+with a new kernel. This would also break for the other way around
+(i.e. a new dtb and old kernel).
+
+You would have to search for both led-gpios and gpios. I'm not sure if
+we can do that generically for all GPIOs. If you had a node with both
+"blah-gpios" and "gpios", it would break. I would hope there are no
+such cases like that. We also now have to consider how ACPI identifies
+GPIOs and whether this makes sense.
+
+Rob
