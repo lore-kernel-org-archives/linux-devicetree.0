@@ -1,134 +1,159 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2] mfd: lubbock_io: add lubbock_io board
-Date: Thu, 8 Jan 2015 13:34:05 +0000
-Message-ID: <20150108133404.GE10537@leverpostej>
-References: <1420324515-7444-1-git-send-email-robert.jarzmik@free.fr>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/1] ARM: dts: pcduino: Enable user LED and button
+ support for pcDuino
+Date: Thu, 8 Jan 2015 14:59:53 +0100
+Message-ID: <20150108135953.GU7853@lukather>
+References: <1420709664-12687-1-git-send-email-wigyori@uid0.hu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="OxWh+UR3R7TveXYN"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1420324515-7444-1-git-send-email-robert.jarzmik@free.fr>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Robert Jarzmik <robert.jarzmik@free.fr>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+In-Reply-To: <1420709664-12687-1-git-send-email-wigyori-1V5s5g7wVVk@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Zoltan HERPAI <wigyori-1V5s5g7wVVk@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Robert,
 
-On Sat, Jan 03, 2015 at 10:35:15PM +0000, Robert Jarzmik wrote:
-> Lubbock () board is the IO motherboard of the Intel PXA25x Development
-> Platform, which supports the Lubbock pxa25x soc board.
-> 
-> Historically, this support was in arch/arm/mach-pxa/lubbock.c. When
-> gpio-pxa was moved to drivers/pxa, it became a driver, and its
-> initialization and probing happened at postcore initcall. The lubbock
-> code used to install the chained lubbock interrupt handler at init_irq()
-> time.
-> 
-> The consequence of the gpio-pxa change is that the installed chained irq
-> handler lubbock_irq_handler() was overwritten in pxa_gpio_probe(_dt)(),
-> removing :
->  - the handler
->  - the falling edge detection setting of GPIO0, which revealed the
->    interrupt request from the lubbock IO board.
-> 
-> As a fix, move the gpio0 chained handler setup to a place where we have
-> the guarantee that pxa_gpio_probe() was called before, so that lubbock
-> handler becomes the true IRQ chained handler of GPIO0, demuxing the
-> lubbock IO board interrupts.
-> 
-> This patch moves all that handling to a mfd driver. It's only purpose
-> for the time being is the interrupt handling, but in the future it
-> should encompass all the motherboard CPLDs handling :
->  - leds
->  - switches
->  - hexleds
+--OxWh+UR3R7TveXYN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Given the addition of an of_device_id table and some (implicit) property
-parsing, this requires a device tree binding document.
+Hi,
 
-[...]
+On Thu, Jan 08, 2015 at 10:34:24AM +0100, Zoltan HERPAI wrote:
+> The pcDuino board has LEDs connected to PH15/PH16, and back/home/menu
+> buttons to PH17/18/19 respectively. Enable these via gpio-leds and
+> gpio-keys. This is shared across the v1 and v2 versions of the board.
+>=20
+> Tested on a v2 and verified against the schematics of a v1.
+>=20
+> Signed-off-by: Zoltan HERPAI <wigyori-1V5s5g7wVVk@public.gmane.org>
+> Acked-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>=20
+> ---
+>  arch/arm/boot/dts/sun4i-a10-pcduino.dts |   57 +++++++++++++++++++++++++=
+++++++
+>  1 file changed, 57 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/sun4i-a10-pcduino.dts b/arch/arm/boot/dts/=
+sun4i-a10-pcduino.dts
+> index 48161ad..c26a6bb 100644
+> --- a/arch/arm/boot/dts/sun4i-a10-pcduino.dts
+> +++ b/arch/arm/boot/dts/sun4i-a10-pcduino.dts
+> @@ -51,6 +51,8 @@
+>  #include "sunxi-common-regulators.dtsi"
+> =20
+>  #include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/input/input.h>
+> +#include <dt-bindings/pinctrl/sun4i-a10.h>
+> =20
+>  / {
+>  	model =3D "LinkSprite pcDuino";
+> @@ -64,6 +66,22 @@
+>  			status =3D "okay";
+>  		};
+> =20
+> +		pinctrl@01c20800 {
+> +			led_pins_pcduino: led_pins@0 {
+> +				allwinner,pins =3D "PH15", "PH16";
+> +				allwinner,function =3D "gpio_out";
+> +				allwinner,drive =3D <SUN4I_PINCTRL_10_MA>;
+> +				allwinner,pull =3D <SUN4I_PINCTRL_NO_PULL>;
+> +			};
+> +
+> +			key_pins_pcduino: key_pins@0 {
+> +				allwinner,pins =3D "PH17", "PH18", "PH19";
+> +				allwinner,function =3D "gpio_in";
+> +				allwinner,drive =3D <SUN4I_PINCTRL_10_MA>;
+> +				allwinner,pull =3D <SUN4I_PINCTRL_NO_PULL>;
+> +			};
+> +		};
+> +
+>  		mdio@01c0b080 {
+>  			status =3D "okay";
+> =20
+> @@ -126,6 +144,45 @@
+>  		};
+>  	};
+> =20
+> +	leds {
+> +		compatible =3D "gpio-leds";
+> +		pinctrl-names =3D "default";
+> +		pinctrl-0 =3D <&led_pins_pcduino>;
+> +
+> +		tx {
+> +			label =3D "pcduino:green:tx";
+> +			gpios =3D <&pio 7 15 GPIO_ACTIVE_LOW>;
+> +		};
+> +
+> +		rx {
+> +			label =3D "pcduino:green:rx";
+> +			gpios =3D <&pio 7 16 GPIO_ACTIVE_LOW>;
+> +		};
+> +	};
+> +
+> +	gpio_keys {
+> +		compatible =3D "gpio-keys";
+> +		pinctrl-names =3D "default";
+> +		pinctrl-0 =3D <&key_pins_pcduino>;
+> +		#address-cells =3D <1>;
+> +		#size-cells =3D <0>;
+> +		button@0 {
+> +			label =3D "Key Back";
+> +			linux,code =3D <KEY_BACK>;
+> +			gpios =3D <&pio 7 17 GPIO_ACTIVE_LOW>;
+> +		};
+> +		button@1 {
+> +			label =3D "Key Home";
+> +			linux,code =3D <KEY_HOME>;
+> +			gpios =3D <&pio 7 18 GPIO_ACTIVE_LOW>;
+> +		};
+> +		button@2 {
+> +			label =3D "Key Menu";
+> +			linux,code =3D <KEY_MENU>;
+> +			gpios =3D <&pio 7 19 GPIO_ACTIVE_LOW>;
+> +		};
+> +	};
 
-> +static int lubbock_probe(struct platform_device *pdev)
-> +{
-> +	struct resource *res;
-> +	struct lubbock *cot;
-> +	int ret;
-> +	unsigned int base_irq = 0;
-> +
-> +	cot = devm_kzalloc(&pdev->dev, sizeof(*cot), GFP_KERNEL);
-> +	if (!cot)
-> +		return -ENOMEM;
-> +	res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
-> +	if (res)
-> +		cot->irq = (unsigned int)res->start;
-> +	if (!cot->irq)
-> +		return -ENODEV;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_IRQ, 1);
-> +	if (res)
-> +		base_irq = (unsigned int)res->start;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	cot->base = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(cot->base))
-> +		return PTR_ERR(cot->base);
-> +
-> +	platform_set_drvdata(pdev, cot);
-> +
-> +	writel(cot->irq_mask, cot->base + COT_IRQ_MASK_EN);
-> +	writel(0, cot->base + COT_IRQ_SET_CLR);
-> +	ret = devm_request_irq(&pdev->dev, cot->irq, lubbock_irq_handler, 0,
-> +			       dev_name(&pdev->dev), cot);
-> +	if (ret == -ENOSYS)
-> +		return -EPROBE_DEFER;
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Couldn't request GPIO : ret = %d\n", ret);
-> +		return ret;
-> +	}
-> +	irq_set_irq_type(cot->irq, IRQ_TYPE_EDGE_FALLING);
+Some newlines here would have been nice between the button nodes. I
+added them and applied the patch.
 
-Shouldn't that be in the interrupt-specifier when using DT?
+Thanks!
 
-> +	irq_set_irq_wake(cot->irq, 1);
-> +
-> +	cot->irqdomain =
-> +		irq_domain_add_linear(pdev->dev.of_node, LUBBOCK_NB_IRQ,
-> +				      &lubbock_irq_domain_ops, cot);
-> +	if (!cot->irqdomain)
-> +		return -ENODEV;
-> +
-> +	ret = 0;
-> +	if (base_irq)
-> +		ret = irq_create_strict_mappings(cot->irqdomain, base_irq, 0,
-> +						 LUBBOCK_NB_IRQ);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Couldn't create the irq mapping %d..%d\n",
-> +			base_irq, base_irq + LUBBOCK_NB_IRQ);
-> +		return ret;
-> +	}
-> +
-> +	dev_info(&pdev->dev, "base=%p, irq=%d, base_irq=%d\n",
-> +		 cot->base, cot->irq, base_irq);
-> +
-> +	return 0;
-> +}
-> +
-> +static int lubbock_remove(struct platform_device *pdev)
-> +{
-> +	struct lubbock *cot = platform_get_drvdata(pdev);
-> +
-> +	irq_set_chip_and_handler(cot->irq, NULL, NULL);
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id lubbock_id_table[] = {
-> +	{ .compatible = "marvell,lubbock_io", },
+Maxime
 
-When PXA25x it was Intel, not Marvell. So I think the vendor prefix
-should be "intel".
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 
-Also s/_/-/ in property names and compatible strings please.
+--OxWh+UR3R7TveXYN
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Thanks,
-Mark.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUro1ZAAoJEBx+YmzsjxAghyMQALapvgashw03q3oOK9N32pTU
+ZaJ+lUXPL33+BBzfoEGG8buKgfMVwUE7/UdfeLBTlL9OcwXZOYKpNNw9DT0L0Qzc
+P7BhKkyo5YSiZUijEIz1+ts5S5p930L55iILHLcfMT10QankYBHORChuKKHorbDt
+LZXkWM7aXC2LiJVOY1qhURNtEPABqVIv0r7vOAzvezjBtIZeMlDaI4IstnRTTrpm
+S2GR/EUBSVHHvzfvX05UOKeBzv+CRA6g5DOBfnzWOg2YZRo37843FCiKnYZb0m8n
+hEMETEecd8t9DRPI9ifA8Sr0exXzPC66QGTTHS0xmMHFd78Dlg43b0aLkNHphtKh
+lACy1Xwxd7BSIsCnmbT4IBwTmioOGC9brtoTSBKtoMR1MYCVCrMrGncWOUXN6aMK
+IBz9FKpaPhnTMglHfINnABvw50YizzTUv9Qlv9hhDPv/6iOrq/WBR5Hy0tQLeaR0
+94BOX0PZOfl/bN8WZPOAFlbZHII5DDkAdn3KdsKma+lADfLH63OZpmSOjvi/TG0y
+0r+B4vNbA5myrwvyDgkWiXaRrhYemgG1beBBeNPjDxVm+8X8CcQJ1cEDBgU3VpLq
+yQCC0AovasFuBFbLzFM8mkCq96JRvgoq0IcQ8YLpgZzYVu7ZlvyohZBJxX14Kr2Q
+xxNkIfzBJ9JQ1swXfTzF
+=8M5+
+-----END PGP SIGNATURE-----
+
+--OxWh+UR3R7TveXYN--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
