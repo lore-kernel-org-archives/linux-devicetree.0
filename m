@@ -1,7 +1,7 @@
 From: Feng Kan <fkan@apm.com>
-Subject: [PATCH V3 4/7] arm64: dts: Add Designware GPIO dts binding to APM X-Gene platform
-Date: Wed,  7 Jan 2015 17:33:35 -0700
-Message-ID: <1420677218-30743-5-git-send-email-fkan@apm.com>
+Subject: [PATCH V3 5/7] arm64: dts: Add APM X-Gene SoC GFC GPIO controller DTS entries
+Date: Wed,  7 Jan 2015 17:33:36 -0700
+Message-ID: <1420677218-30743-6-git-send-email-fkan@apm.com>
 References: <1420677218-30743-1-git-send-email-fkan@apm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1420677218-30743-1-git-send-email-fkan@apm.com>
@@ -10,34 +10,26 @@ To: patches@apm.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, lin
 Cc: Feng Kan <fkan@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-Add Designware GPIO dts binding to APM X-Gene platform
+Add the flash controller muxed gpio dts node for APM X-Gene SoC platform.
 
 Signed-off-by: Feng Kan <fkan@apm.com>
 ---
- arch/arm64/boot/dts/apm/apm-storm.dtsi |   15 +++++++++++++++
- 1 files changed, 15 insertions(+), 0 deletions(-)
+ arch/arm64/boot/dts/apm/apm-storm.dtsi |    7 +++++++
+ 1 files changed, 7 insertions(+), 0 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/apm/apm-storm.dtsi b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-index f31e8df..a58f9a2 100644
+index a58f9a2..adea254 100644
 --- a/arch/arm64/boot/dts/apm/apm-storm.dtsi
 +++ b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-@@ -525,6 +525,21 @@
- 			interrupts = <0x0 0x4f 0x4>;
+@@ -540,6 +540,13 @@
+ 			};
  		};
  
-+		dwgpio: gpio@1c024000 {
-+			compatible = "snps,dw-apb-gpio";
-+			reg = <0x0 0x1c024000 0x0 0x1000>;
-+			reg-io-width = <4>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			porta: gpio-controller@0 {
-+				compatible = "snps,dw-apb-gpio-port";
-+				gpio-controller;
-+				snps,nr-gpios = <32>;
-+				reg = <0>;
-+			};
++		gfcgpio: gpio0@1701c000 {
++			compatible = "apm,xgene-gpio";
++			reg = <0x0 0x1701c000 0x0 0x40>;
++			gpio-controller;
++			#gpio-cells = <2>;
 +		};
 +
  		phy1: phy@1f21a000 {
