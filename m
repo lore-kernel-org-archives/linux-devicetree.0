@@ -1,51 +1,40 @@
-From: Feng Kan <fkan@apm.com>
-Subject: [PATCH V3 3/7] arm64: dts: Add X-Gene reboot driver dts node
-Date: Wed,  7 Jan 2015 17:33:34 -0700
-Message-ID: <1420677218-30743-4-git-send-email-fkan@apm.com>
-References: <1420677218-30743-1-git-send-email-fkan@apm.com>
+From: =?gb2312?B?UGV0ZXIgUGFuIMXLtrAgKHBldGVycGFuZG9uZyk=?=
+	<peterpandong@micron.com>
+Subject: [PATCH 3/3] mtd: spi-nand: add devicetree binding
+Date: Thu, 8 Jan 2015 00:52:26 +0000
+Message-ID: <87F60714EC601C4C83DFF1D2E3D390A04AB425@NTXXIAMBX02.xacn.micron.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1420677218-30743-1-git-send-email-fkan@apm.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: patches@apm.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Feng Kan <fkan@apm.com>
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "dwmw2@infradead.org" <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Ezequiel Garcia <ezequiel.garcia@imgtec.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, =?gb2312?B?UWkgV2FuZyDN9cbwIChxaXdhbmcp?= <qiwang@micron.com>, =?gb2312?B?RnJhbmsgTGl1IMH1yLogKGZyYW5rbGl1KQ==?= <frankliu@micron.com>, =?gb2312?B?TWVsYW5pZSBaaGFuZyDVxdHgIChtZWxhbmllemhhbmcp?= <melaniezhang@micron.com>, =?gb2312?B?UGV0ZXIgUGFuIMXLtrAgKHBldGVycGFuZG9uZyk=?= <peterpandong@micron.com>
 List-Id: devicetree@vger.kernel.org
 
-Add X-Gene platform reboot driver dts node.
-
-Signed-off-by: Feng Kan <fkan@apm.com>
----
- arch/arm64/boot/dts/apm/apm-storm.dtsi |   12 ++++++++++++
- 1 files changed, 12 insertions(+), 0 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/apm/apm-storm.dtsi b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-index 4b2ec83..f31e8df 100644
---- a/arch/arm64/boot/dts/apm/apm-storm.dtsi
-+++ b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-@@ -103,6 +103,11 @@
- 		#size-cells = <2>;
- 		ranges;
- 
-+		scu: system-clk-controller@17000000 {
-+			compatible = "apm,xgene-scu","syscon";
-+			reg = <0x0 0x17000000 0x0 0x400>;
-+		};
-+
- 		clocks {
- 			#address-cells = <2>;
- 			#size-cells = <2>;
-@@ -354,6 +359,13 @@
- 			};
- 		};
- 
-+		reboot: reboot@17000014 {
-+			compatible = "syscon-reboot";
-+			regmap = <&scu>;
-+			offset = <0x14>;
-+			mask = <0x1>;
-+		};
-+
- 		pcie0: pcie@1f2b0000 {
- 			status = "disabled";
- 			device_type = "pci";
--- 
-1.7.1
+VGhpcyBjb21taXQgYWRkcyB0aGUgZGV2aWNldHJlZSBiaW5kaW5nIGRvY3VtZW50IHRoYXQgc3Bl
+Y2lmaWVzIHRoZQ0Kc3BpIG5hbmQgZGV2aWNlcyBzdXBwb3J0Lg0KDQpTaWduZWQtb2ZmLWJ5OiBQ
+ZXRlciBQYW4gPHBldGVycGFuZG9uZ0BtaWNyb24uY29tPg0KLS0tDQogRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9zcGktbmFuZC50eHQgfCAyMiArKysrKysrKysrKysrKysr
+KysrKysrDQogMSBmaWxlIGNoYW5nZWQsIDIyIGluc2VydGlvbnMoKykNCiBjcmVhdGUgbW9kZSAx
+MDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9zcGktbmFuZC50eHQN
+Cg0KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvc3Bp
+LW5hbmQudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9zcGktbmFu
+ZC50eHQNCm5ldyBmaWxlIG1vZGUgMTAwNjQ0DQppbmRleCAwMDAwMDAwLi45ZGQzZWZkDQotLS0g
+L2Rldi9udWxsDQorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbXRkL3Nw
+aS1uYW5kLnR4dA0KQEAgLTAsMCArMSwyMiBAQA0KKyogTkFORCBkcml2ZXIgZm9yIE1UMjlGLCBH
+RDVGIGFuZCBzaW1pbGFyIFNQSSBOQU5EIGZsYXNoIGNoaXBzDQorDQorUmVxdWlyZWQgcHJvcGVy
+dGllczoNCistICNhZGRyZXNzLWNlbGxzLCAjc2l6ZS1jZWxscyA6IE11c3QgYmUgcHJlc2VudCBp
+ZiB0aGUgZGV2aWNlIGhhcyBzdWItbm9kZXMNCisgIHJlcHJlc2VudGluZyBwYXJ0aXRpb25zLg0K
+Ky0gY29tcGF0aWJsZSA6IFNob3VsZCBiZSB0aGUgbWFudWZhY3R1cmVyIGFuZCB0aGUgbmFtZSBv
+ZiB0aGUgY2hpcC4gQmVhciBpbiBtaW5kDQorICAgICAgICAgICAgICAgdGhlIERUIGJpbmRpbmcg
+aXMgbm90IExpbnV4LW9ubHksIGJ1dCBpbiBjYXNlIG9mIExpbnV4LCBzZWUgdGhlDQorICAgICAg
+ICAgICAgICAgInNwaV9uYW5kX2lkX3RhYmxlIiBhcnJheSBpbiBkcml2ZXJzL210ZC9zcGktbmFu
+ZC9zcGktbmFuZC1kZXZpY2UuYw0KKyAgICAgICAgICAgICAgIGZvciB0aGUgbGlzdCBvZiBzdXBw
+b3J0ZWQgY2hpcHMuDQorLSByZWcgOiBDaGlwLVNlbGVjdCBudW1iZXINCistIHNwaS1tYXgtZnJl
+cXVlbmN5IDogTWF4aW11bSBmcmVxdWVuY3kgb2YgdGhlIFNQSSBidXMgdGhlIGNoaXAgY2FuIG9w
+ZXJhdGUgYXQNCisNCitFeGFtcGxlOg0KKw0KKwlmbGFzaDogZmxhc2hAMCB7DQorCQkjYWRkcmVz
+cy1jZWxscyA9IDwxPjsNCisJCSNzaXplLWNlbGxzID0gPDE+Ow0KKwkJY29tcGF0aWJsZSA9ICJt
+aWNyb24sbXQyOWYiOw0KKwkJcmVnID0gPDA+Ow0KKwkJc3BpLW1heC1mcmVxdWVuY3kgPSA8NTAw
+MDAwMDA+Ow0KKwl9Ow0KKw0KLS0gDQoxLjkuMQ0K
