@@ -1,38 +1,53 @@
 From: Feng Kan <fkan@apm.com>
-Subject: [PATCH V3 7/7] arm64: dts: Add PMU node for APM X-Gene Storm SOC
-Date: Wed,  7 Jan 2015 17:33:38 -0700
-Message-ID: <1420677218-30743-8-git-send-email-fkan@apm.com>
+Subject: [PATCH V3 1/7] arm64: dts: Add APM X-Gene USB DTS node
+Date: Wed,  7 Jan 2015 17:33:32 -0700
+Message-ID: <1420677218-30743-2-git-send-email-fkan@apm.com>
 References: <1420677218-30743-1-git-send-email-fkan@apm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1420677218-30743-1-git-send-email-fkan@apm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: patches@apm.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Feng Kan <fkan@apm.com>, Vinayak Kale <vkale@apm.com>
+Cc: Feng Kan <fkan@apm.com>, Bao Truong <btruong@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the PMU device tree node for APM X-Gene Storm SOC.
+This parch adds the device tree nodes for APM X-Gnene USB host controller.
+Since X-Gene SOC supports maximum 2 USB ports, 2 dts node are added.
 
-Signed-off-by: Vinayak Kale <vkale@apm.com>
+Signed-off-by: Bao Truong <btruong@apm.com>
 Signed-off-by: Feng Kan <fkan@apm.com>
 ---
- arch/arm64/boot/dts/apm/apm-storm.dtsi |    5 +++++
- 1 files changed, 5 insertions(+), 0 deletions(-)
+ arch/arm64/boot/dts/apm/apm-storm.dtsi |   19 +++++++++++++++++++
+ 1 files changed, 19 insertions(+), 0 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/apm/apm-storm.dtsi b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-index adea254..9d00dd4 100644
+index f1ad9c2..4b2ec83 100644
 --- a/arch/arm64/boot/dts/apm/apm-storm.dtsi
 +++ b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-@@ -97,6 +97,11 @@
- 		clock-frequency = <50000000>;
- 	};
+@@ -587,6 +587,25 @@
+ 			phy-names = "sata-phy";
+ 		};
  
-+	pmu {
-+		compatible = "apm,potenza-pmu", "arm,armv8-pmuv3";
-+		interrupts = <1 12 0xff04>;
-+	};
++		/*
++		 * Do not change dwusb name, coded for backward compatibility
++		 */
++		usb0: dwusb@19000000 {
++			status = "disabled";
++			compatible = "xhci-platform";
++			reg =  <0x0 0x19000000 0x0 0x100000>;
++			interrupts = <0x0 0x89 0x4>;
++			dma-coherent;
++		};
 +
- 	soc {
- 		compatible = "simple-bus";
- 		#address-cells = <2>;
++		usb1: dwusb@19800000 {
++			status = "disabled";
++			compatible = "xhci-platform";
++			reg =  <0x0 0x19800000 0x0 0x100000>;
++			interrupts = <0x0 0x8a 0x4>;
++			dma-coherent;
++		};
++
+ 		rtc: rtc@10510000 {
+ 			compatible = "apm,xgene-rtc";
+ 			reg = <0x0 0x10510000 0x0 0x400>;
 -- 
 1.7.1
