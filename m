@@ -1,32 +1,57 @@
-From: Howard Chen <howard.chen@linaro.org>
-Subject: [PATCH 2/2] dt-bindings: add mt6592 compatible string for mediatek sysirq
-Date: Thu,  8 Jan 2015 14:23:11 +0800
-Message-ID: <1420698191-10878-2-git-send-email-howard.chen@linaro.org>
-References: <1420698191-10878-1-git-send-email-howard.chen@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1420698191-10878-1-git-send-email-howard.chen@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: matthias.bgg@gmail.com
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Jason Cooper <jason@lakedaemon.net>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "moderated list:ARM/Mediatek
-	SoC..." <linux-arm-kernel@lists.infradead.org>
+From: Mayuresh Chitale <mchitale-qTEPVZfXA3Y@public.gmane.org>
+Subject: Re: [PATCH 4/4] dma: X-Gene PCIE DMA Driver
+Date: Thu, 8 Jan 2015 12:00:45 +0530
+Message-ID: <CAL-zptM0+K7NLGVankeUDwSwxBEuhhjJqCNsjTrps5WOZYNQ_Q@mail.gmail.com>
+References: <1420608537-12296-1-git-send-email-mchitale@apm.com>
+	<9430055.pMHRTP0RMA@wuerfel>
+	<CAL-zptNW81KwWXnMcsh_S5KQFMNGysm=ATmixMge6RXj_U-_zQ@mail.gmail.com>
+	<1765004.TVkcxIlmTg@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1765004.TVkcxIlmTg@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, "ddutile-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <ddutile-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Howard Chen <howard.chen@linaro.org>
----
- Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt
-index d680b07..4cd6f7b 100644
---- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt
-+++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt
-@@ -7,6 +7,7 @@ Required properties:
- - compatible: should be one of:
- 	"mediatek,mt8135-sysirq"
- 	"mediatek,mt8127-sysirq"
-+	"mediatek,mt6592-sysirq"
- 	"mediatek,mt6589-sysirq"
- 	"mediatek,mt6582-sysirq"
- 	"mediatek,mt6577-sysirq"
--- 
-1.9.1
+On Wed, Jan 7, 2015 at 9:52 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Wednesday 07 January 2015 21:35:22 Mayuresh Chitale wrote:
+>> >
+>> > I think I'm missing something important here. What exactly is the
+>> > interaction with PCI here? Is it possible to use the dmaengine
+>> > driver at all when the PCI host controller is not in endpoint mode?
+>> Yes. Dmaengine driver can be used when port is configured as RC or EP.
+>> >
+>> > Does the dmaengine show up as a PCI device when the PCI controller is
+>> > in host mode?
+>> No. It sits between AXI and PCI interfaces but it needs to be
+>> programmed via the config bar.
+>
+> Ok, I see. So in RC mode, it sounds like this is a regular DMA engine
+> that could be used with arbitrary slaves, but in EP mode it would
+> actually be controlled by the remote host, right?
+No. EP can configure its own DMA engine via config bar, same as RC.
+There could be a dependency on RC in terms of which memory region
+the EP is allowed to DMA to but I think that is outside the scope of this
+driver.
+>
+> When we are in RC mode, who sets up that BAR? If this is set up by
+> the firmware, we can just have the register appear in the DT as well,
+> as it's known, and when we are in EP mode, it sounds like we would
+> not even use the dmaengine because it's owned by the other host.
+The config bar is setup by host controller driver. For e.g you can see
+cfg reg in pcie@1f2b0000 node in arch/arm64/boot/dts/apm/apm-storm.dtsi.
+The dmaengine driver is simply going to read this reg to know the config base
+and access its own registers accordingly.  In this patch config base
+register is present in each node.
+For e.g for port0 it is 0x1f2b0154.
+>
+> Or is there a way that in EP mode, both sides would access the
+> dma engine simultaneously?
+>
+>         Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
