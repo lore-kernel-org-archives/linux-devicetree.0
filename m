@@ -1,95 +1,278 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH] [v3] power/fsl: add MDIO dt binding for FMan
-Date: Wed, 7 Jan 2015 19:12:38 -0600
-Message-ID: <1420679558.4961.64.camel@freescale.com>
-References: <1419321466-5575-1-git-send-email-shh.xie@gmail.com>
-	 <DM2PR0301MB08640979E5088618D1395CFAE2580@DM2PR0301MB0864.namprd03.prod.outlook.com>
-	 <1420590520.4961.38.camel@freescale.com>
-	 <DM2PR0301MB08645ABD93708FFE011EF362E2460@DM2PR0301MB0864.namprd03.prod.outlook.com>
-	 <1420653934.4961.58.camel@freescale.com> <54AD8C8A.8070100@Freescale.com>
+From: Jaehoon Chung <jh80.chung@samsung.com>
+Subject: Re: [PATCH v3 1/4] mmc: dw_mmc: exynos: incorporate ciu_div into
+ timing property
+Date: Thu, 08 Jan 2015 10:36:32 +0900
+Message-ID: <54ADDF20.8000807@samsung.com>
+References: <1420008185-24758-1-git-send-email-alim.akhtar@samsung.com>
+ <1420008185-24758-2-git-send-email-alim.akhtar@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54AD8C8A.8070100-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
-Cc: Xie Shaohui-B21989 <Shaohui.Xie-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-reply-to: <1420008185-24758-2-git-send-email-alim.akhtar@samsung.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Alim Akhtar <alim.akhtar@samsung.com>, linux-mmc@vger.kernel.org
+Cc: chris@printf.net, ulf.hansson@linaro.org, tgih.jun@samsung.com, dianders@chromium.org, alim.akhtar@gmail.com, kgene@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, a.kesavan@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2015-01-07 at 13:44 -0600, Emil Medve wrote:
-> Hello Scott,
-> 
-> 
-> On 01/07/2015 12:05 PM, Scott Wood wrote:
-> > On Tue, 2015-01-06 at 23:29 -0600, Xie Shaohui-B21989 wrote:
-> >>>>> +- interrupts
-> >>>>> +		Usage: optional
-> >>>>> +		Value type: <prop-encoded-array>
-> >>>>> +		Definition: Event interrupt of external MDIO controller.
-> >>>>> +		1 Gb/s MDIO and 10 Gb/s MDIO has one interrupt respectively.
-> >>>
-> >>> I'm confused by "respectively" here.  Does fsl,fman-memac-mdio have two
-> >>> interrupts (one for 1 Gb/s and one for 10 Gb/s)?
-> >> [S.H] We use two MDIO controllers for external PHY management. One for 1 Gb/s,
-> >> One for 10 Gb/s, and two MDIO interrupts connected to MPIC.
-> > 
-> > If there can be two interrupts you need to make that clear and specify
-> > the order.
-> > 
-> > Is it possible for one MDIO controller to have an interrupt connected
-> > but not the other, on the same system?  How would you represent that in
-> > the device tree?  If there are two MDIO controllers why are they in the
-> > same node?
-> 
-> Historically (FMan v2 and even before/legacy) we've had each MAC include
-> an MDIO controller, but only one MDIO controller per MAC type/speed (1
-> Gb/s vs 10 Gb/s) is pinned out and all the same speed PHY(s) are
-> connected to the respective MDIO controllers. As such the first 1 Gb/s
-> MAC/MDIO controller is used to manage all the 1 Gb/s PHY(s) and the
-> first 10 Gb/s MAC/MDIO controller is used to manage all the 10 Gb/s
-> PHY(s). Each MDIO controller has the ability to generate interrupts but
-> only pinned out MDIO controllers are hooked up to the MPIC (as such the
-> talk about two interrupts)
-> 
-> (Each MAC has also integrated a SERDES/TBI/"internal" PHY that is
-> connected to the "local" MDIO controller)
-> 
-> As you can imagine this creates a number of problems in a partitioning
-> scenario (and not just, imagine RCWs where the first MAC is not
-> used/enabled). In order to help a bit (but not quite enough), in FMan
-> v3, two additional MDIO controllers (one for 1 the Gb/s PHY(s) and one
-> for 1 the 10 Gb/s PHY(s)) have been integrated that are not associated
-> with any MAC and these are the pinned out MDIO controllers on such
-> SoC(s) (chassis v2)
+Hi, 
 
-I'm happy to hear that.  Is that what is meant by "external" here?  I
-thought it meant external to the SoC.  Is this the term used by hardware
-documentation?  I'd have called it "independent" or similar.
-
-> >>   Does "optional" mean it's used if and
-> >>> only if external MDIO is used, or is it optional even with external MDIO?  I see
-> >>> it's not present in the example -- do we not have a real example that has the
-> >>> interrupt?
-> >> [S.H] "optional" means it's available on hardware, but MDIO driver does not use interrupt. 
-> >> So we don't have a real example.
-> > 
-> > <record type="broken">The device tree describes the hardware, not the
-> > driver</record>
+On 12/31/2014 03:43 PM, Alim Akhtar wrote:
+> From: Seungwon Jeon <tgih.jun@samsung.com>
 > 
-> Anyway, only two MDIO nodes (out of 4 to 14) would have an interrupt
-> property describing exactly one interrupt. What language should we use
-> to convey this situation
+> ciu_div may not be common value for all speed mode.
+> So, it needs to be attached to CLKSEL timing.
+> This also introduce a new compatibale 'dw-mshc-hs200-timing'
+> for selecting hs200 timing value
+> 
+> Signed-off-by: Seungwon Jeon <tgih.jun@samsung.com>
+> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+> ---
+>  .../devicetree/bindings/mmc/exynos-dw-mshc.txt     |   15 ++--
+>  drivers/mmc/host/dw_mmc-exynos.c                   |   81 ++++++++++++++------
+>  drivers/mmc/host/dw_mmc-exynos.h                   |    1 +
+>  3 files changed, 67 insertions(+), 30 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+> index ee4fc05..06455de 100644
+> --- a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+> @@ -23,10 +23,6 @@ Required Properties:
+>  	- "samsung,exynos7-dw-mshc-smu": for controllers with Samsung Exynos7
+>  	  specific extensions having an SMU.
+>  
+> -* samsung,dw-mshc-ciu-div: Specifies the divider value for the card interface
+> -  unit (ciu) clock. This property is applicable only for Exynos5 SoC's and
+> -  ignored for Exynos4 SoC's. The valid range of divider value is 0 to 7.
+> -
+>  * samsung,dw-mshc-sdr-timing: Specifies the value of CIU clock phase shift value
+>    in transmit mode and CIU clock phase shift value in receive mode for single
+>    data rate mode operation. Refer notes below for the order of the cells and the
+> @@ -37,11 +33,16 @@ Required Properties:
+>    data rate mode operation. Refer notes below for the order of the cells and the
+>    valid values.
+>  
+> +* samsung,dw-mshc-hs200-timing: Similar with dw-mshc-sdr-timing.
 
-So the answer is that there will not be more than one MDIO controller
-per MDIO node, or more than one interrupt per MDIO node?  In that case
-just get rid of the confusing "respectively" sentence -- and always
-describe the interrupt if it exists in hardware.
+What does this comment mean? "Similar with dw-mshc-sdr-timing"
+how about adding the comment "optional"?
 
--Scott
+And i think this timing doesn't need, we can reuse the sdr-timing or ddr-timing.
+Because it's re-configurated at tuning time, isn't?
+
+> +
+>    Notes for the sdr-timing and ddr-timing values:
+>  
+>      The order of the cells should be
+>        - First Cell: CIU clock phase shift value for tx mode.
+>        - Second Cell: CIU clock phase shift value for rx mode.
+> +      - Thrid Cell: Specifies the divider value for the card interface
+> +        unit (ciu) clock. This property is applicable only for Exynos5 SoC's and
+> +        ignored for Exynos4 SoC's. The valid range of divider value is 0 to 7.
+>  
+>      Valid values for SDR and DDR CIU clock timing for Exynos5250:
+>        - valid value for tx phase shift and rx phase shift is 0 to 7.
+> @@ -79,8 +80,8 @@ Example:
+>  		broken-cd;
+>  		fifo-depth = <0x80>;
+>  		card-detect-delay = <200>;
+> -		samsung,dw-mshc-ciu-div = <3>;
+> -		samsung,dw-mshc-sdr-timing = <2 3>;
+> -		samsung,dw-mshc-ddr-timing = <1 2>;
+> +		samsung,dw-mshc-sdr-timing = <2 3 3>;
+> +		samsung,dw-mshc-ddr-timing = <1 2 3>;
+> +		samsung,dw-mshc-hs200-timing = <0 2 3>;
+>  		bus-width = <8>;
+>  	};
+> diff --git a/drivers/mmc/host/dw_mmc-exynos.c b/drivers/mmc/host/dw_mmc-exynos.c
+> index 12a5eaa..be6530e 100644
+> --- a/drivers/mmc/host/dw_mmc-exynos.c
+> +++ b/drivers/mmc/host/dw_mmc-exynos.c
+> @@ -40,6 +40,7 @@ struct dw_mci_exynos_priv_data {
+>  	u8				ciu_div;
+>  	u32				sdr_timing;
+>  	u32				ddr_timing;
+> +	u32				hs200_timing;
+>  	u32				cur_speed;
+>  };
+>  
+> @@ -71,6 +72,21 @@ static struct dw_mci_exynos_compatible {
+>  	},
+>  };
+>  
+> +static inline u8 dw_mci_exynos_get_ciu_div(struct dw_mci *host)
+> +{
+> +	struct dw_mci_exynos_priv_data *priv = host->priv;
+> +
+> +	if (priv->ctrl_type == DW_MCI_TYPE_EXYNOS4412)
+> +		return EXYNOS4412_FIXED_CIU_CLK_DIV;
+> +	else if (priv->ctrl_type == DW_MCI_TYPE_EXYNOS4210)
+> +		return EXYNOS4210_FIXED_CIU_CLK_DIV;
+> +	else if (priv->ctrl_type == DW_MCI_TYPE_EXYNOS7 ||
+> +			priv->ctrl_type == DW_MCI_TYPE_EXYNOS7_SMU)
+> +		return SDMMC_CLKSEL_GET_DIV(mci_readl(host, CLKSEL64)) + 1;
+> +	else
+> +		return SDMMC_CLKSEL_GET_DIV(mci_readl(host, CLKSEL)) + 1;
+
+If need this, I think more readable that use the switch-case statement. how about?
+
+       switch (priv->ctrl_type) {
+       case DW_MCI_TYPE_EXYNOS4412:
+                return EXYNOS4412_FIXED_CIU_CLK_DIV;
+       case DW_MCI_TYPE_EXYNOS4210:
+                return EXYNOS4210_FIXED_CIU_CLK_DIV;
+       case DW_MCI_TYPE_EXYNOS7:
+       case DW_MCI_TYPE_EXYNOS7_SMU:
+                return SDMMC_CLKSEL_GET_DIV(mci_readl(host, CLKSEL64)) + 1;
+       default:
+                return SDMMC_CLKSEL_GET_DIV(mci_readl(host, CLKSEL)) + 1;
+       }
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +}
+> +
+>  static int dw_mci_exynos_priv_init(struct dw_mci *host)
+>  {
+>  	struct dw_mci_exynos_priv_data *priv = host->priv;
+> @@ -85,6 +101,8 @@ static int dw_mci_exynos_priv_init(struct dw_mci *host)
+>  			   SDMMC_MPSCTRL_NON_SECURE_WRITE_BIT);
+>  	}
+>  
+> +	priv->ciu_div = dw_mci_exynos_get_ciu_div(host);
+> +
+>  	return 0;
+>  }
+>  
+> @@ -92,7 +110,7 @@ static int dw_mci_exynos_setup_clock(struct dw_mci *host)
+>  {
+>  	struct dw_mci_exynos_priv_data *priv = host->priv;
+>  
+> -	host->bus_hz /= (priv->ciu_div + 1);
+> +	host->bus_hz /= priv->ciu_div;
+>  
+>  	return 0;
+>  }
+> @@ -177,9 +195,14 @@ static void dw_mci_exynos_set_ios(struct dw_mci *host, struct mmc_ios *ios)
+>  	struct dw_mci_exynos_priv_data *priv = host->priv;
+>  	unsigned int wanted = ios->clock;
+>  	unsigned long actual;
+> -	u8 div = priv->ciu_div + 1;
+>  
+> -	if (ios->timing == MMC_TIMING_MMC_DDR52) {
+> +	if (ios->timing == MMC_TIMING_MMC_HS200) {
+> +		if (priv->ctrl_type == DW_MCI_TYPE_EXYNOS7 ||
+> +			priv->ctrl_type == DW_MCI_TYPE_EXYNOS7_SMU)
+> +			mci_writel(host, CLKSEL64, priv->hs200_timing);
+> +		else
+> +			mci_writel(host, CLKSEL, priv->hs200_timing);
+> +	} else if (ios->timing == MMC_TIMING_MMC_DDR52) {
+>  		if (priv->ctrl_type == DW_MCI_TYPE_EXYNOS7 ||
+>  			priv->ctrl_type == DW_MCI_TYPE_EXYNOS7_SMU)
+>  			mci_writel(host, CLKSEL64, priv->ddr_timing);
+> @@ -208,6 +231,7 @@ static void dw_mci_exynos_set_ios(struct dw_mci *host, struct mmc_ios *ios)
+>  		wanted = EXYNOS_CCLKIN_MIN;
+>  
+>  	if (wanted != priv->cur_speed) {
+> +		u8 div = dw_mci_exynos_get_ciu_div(host);
+>  		int ret = clk_set_rate(host->ciu_clk, wanted * div);
+>  		if (ret)
+>  			dev_warn(host->dev,
+> @@ -220,14 +244,34 @@ static void dw_mci_exynos_set_ios(struct dw_mci *host, struct mmc_ios *ios)
+>  	}
+>  }
+>  
+> +static int dw_mci_exynos_dt_populate_timing(struct dw_mci *host,
+> +					    unsigned int ctrl_type,
+> +					    const char *propname,
+> +					    u32 *out_values)
+> +{
+> +	struct device_node *np = host->dev->of_node;
+> +	u32 timing[3];
+> +	int ret;
+> +
+> +	ret = of_property_read_u32_array(np, propname, timing, 3);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (ctrl_type == DW_MCI_TYPE_EXYNOS4412 ||
+> +	    ctrl_type == DW_MCI_TYPE_EXYNOS4210)
+> +		timing[2] = 0;
+
+Is it set to 0 into dt-file?
+
+> +
+> +	*out_values = SDMMC_CLKSEL_TIMING(timing[0], timing[1], timing[2]);
+> +
+> +	return 0;
+> +}
+> +
+> +
+>  static int dw_mci_exynos_parse_dt(struct dw_mci *host)
+>  {
+>  	struct dw_mci_exynos_priv_data *priv;
+>  	struct device_node *np = host->dev->of_node;
+> -	u32 timing[2];
+> -	u32 div = 0;
+> -	int idx;
+> -	int ret;
+> +	int idx, ret;
+>  
+>  	priv = devm_kzalloc(host->dev, sizeof(*priv), GFP_KERNEL);
+>  	if (!priv)
+> @@ -238,29 +282,20 @@ static int dw_mci_exynos_parse_dt(struct dw_mci *host)
+>  			priv->ctrl_type = exynos_compat[idx].ctrl_type;
+>  	}
+>  
+> -	if (priv->ctrl_type == DW_MCI_TYPE_EXYNOS4412)
+> -		priv->ciu_div = EXYNOS4412_FIXED_CIU_CLK_DIV - 1;
+> -	else if (priv->ctrl_type == DW_MCI_TYPE_EXYNOS4210)
+> -		priv->ciu_div = EXYNOS4210_FIXED_CIU_CLK_DIV - 1;
+> -	else {
+> -		of_property_read_u32(np, "samsung,dw-mshc-ciu-div", &div);
+> -		priv->ciu_div = div;
+> -	}
+> -
+> -	ret = of_property_read_u32_array(np,
+> -			"samsung,dw-mshc-sdr-timing", timing, 2);
+> +	ret = dw_mci_exynos_dt_populate_timing(host, priv->ctrl_type,
+> +			"samsung,dw-mshc-sdr-timing", &priv->sdr_timing);
+>  	if (ret)
+>  		return ret;
+>  
+> -	priv->sdr_timing = SDMMC_CLKSEL_TIMING(timing[0], timing[1], div);
+> -
+> -	ret = of_property_read_u32_array(np,
+> -			"samsung,dw-mshc-ddr-timing", timing, 2);
+> +	ret = dw_mci_exynos_dt_populate_timing(host, priv->ctrl_type,
+> +			"samsung,dw-mshc-ddr-timing", &priv->ddr_timing);
+>  	if (ret)
+>  		return ret;
+>  
+> -	priv->ddr_timing = SDMMC_CLKSEL_TIMING(timing[0], timing[1], div);
+> +	dw_mci_exynos_dt_populate_timing(host, priv->ctrl_type,
+> +		"samsung,dw-mshc-hs200-timing", &priv->hs200_timing);
+
+hs200-timing is optional, so it needs not to check return value, right?
+
+Best Regards,
+Jaehoon Chung
+
+>  	host->priv = priv;
+> +
+>  	return 0;
+>  }
+>  
+> diff --git a/drivers/mmc/host/dw_mmc-exynos.h b/drivers/mmc/host/dw_mmc-exynos.h
+> index 7872ce5..c04ecef 100644
+> --- a/drivers/mmc/host/dw_mmc-exynos.h
+> +++ b/drivers/mmc/host/dw_mmc-exynos.h
+> @@ -21,6 +21,7 @@
+>  #define SDMMC_CLKSEL_CCLK_DRIVE(x)	(((x) & 7) << 16)
+>  #define SDMMC_CLKSEL_CCLK_DIVIDER(x)	(((x) & 7) << 24)
+>  #define SDMMC_CLKSEL_GET_DRV_WD3(x)	(((x) >> 16) & 0x7)
+> +#define SDMMC_CLKSEL_GET_DIV(x)		(((x) >> 24) & 0x7)
+>  #define SDMMC_CLKSEL_TIMING(x, y, z)	(SDMMC_CLKSEL_CCLK_SAMPLE(x) |	\
+>  					 SDMMC_CLKSEL_CCLK_DRIVE(y) |	\
+>  					 SDMMC_CLKSEL_CCLK_DIVIDER(z))
+> 
+
