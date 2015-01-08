@@ -1,178 +1,98 @@
-From: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v9 1/4] drm/i2c: tda998x: Add DT support for audio
-Date: Thu, 8 Jan 2015 16:53:41 +0200
-Message-ID: <54AE99F5.1010404@ti.com>
-References: <cover.1420628786.git.moinejf@free.fr> <0084acea5a3475a77531d6a77483f36d3469111a.1420628786.git.moinejf@free.fr>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCH v2 7/8] ARM: mvebu: Add Device Tree description of the
+ Armada 388 SoC
+Date: Thu, 8 Jan 2015 15:54:10 +0100
+Message-ID: <20150108155410.576bae03@free-electrons.com>
+References: <1420714305-7496-1-git-send-email-gregory.clement@free-electrons.com>
+ <1420714305-7496-8-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <0084acea5a3475a77531d6a77483f36d3469111a.1420628786.git.moinejf-GANU6spQydw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Jackson <Andrew.Jackson-5wv7dgnIgG8@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1420714305-7496-8-git-send-email-gregory.clement@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Tawfik Bayouk <tawfik@marvell.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Mark Rutland <mark.rutland@arm.com>, Nadav Haklai <nadavh@marvell.com>, devicetree@vger.kernel.org, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 01/07/2015 11:10 AM, Jean-Francois Moine wrote:
-> This patch permits the definition of the audio ports from the device tree.
->
-> Signed-off-by: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-> ---
->   .../devicetree/bindings/drm/i2c/tda998x.txt        | 18 +++++++
->   drivers/gpu/drm/i2c/tda998x_drv.c                  | 60 ++++++++++++++++++----
->   2 files changed, 69 insertions(+), 9 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/drm/i2c/tda998x.txt b/Documentation/devicetree/bindings/drm/i2c/tda998x.txt
-> index e9e4bce..e50e7cd 100644
-> --- a/Documentation/devicetree/bindings/drm/i2c/tda998x.txt
-> +++ b/Documentation/devicetree/bindings/drm/i2c/tda998x.txt
-> @@ -17,6 +17,20 @@ Optional properties:
->     - video-ports: 24 bits value which defines how the video controller
->   	output is wired to the TDA998x input - default: <0x230145>
->
-> +  - audio-ports: must contain one or two values selecting the source
-> +	in the audio port.
-> +	The source type is given by the corresponding entry in
-> +	the audio-port-names property.
-> +
+Dear Gregory CLEMENT,
 
-This binding does not allow multi channel i2s setups with multiple i2s 
-pins. It would be nice to support that in the DT binding, even if the 
-code is not yet ready for it.
+On Thu,  8 Jan 2015 11:51:44 +0100, Gregory CLEMENT wrote:
+> This SoC belongs to the Armada 38x family. The main difference with
+> the Armada 385 is that the 388 can handle two more SATA
+> ports. Currently the only consequence is the use of a different
+> compatible string for the pinctrl node, in order to be able to use the
+> pins associated to this 2 new SATA ports.
 
-How about having these two optional properties instead of audio-ports 
-and audio-port-names:
+I am not sure the pinmux is the only difference. Read on below.
 
-audio-port-i2s: Upto 4 values for selecting pins for i2s port
-audio-port-spdif: Value for selecting input pin for spdif port
+> +#include "armada-385.dtsi"
+> +
+> +/ {
+> +	model = "Marvell Armada 388 family SoC";
+> +	compatible = "marvell,armada388", "marvell,armada380";
+> +	soc {
 
-Presence of one of the properties would be mandatory and both are allowed.
+Please, one empty new line between the last property (compatible) and
+the "soc" node.
 
-Sorry to notice this only now, but I have not yet looked the drm side 
-changes too closely.
+> +		internal-regs {
+> +			pinctrl@18000 {
+> +				compatible = "marvell,mv88f6828-pinctrl";
+> +			};
+> +		};
+> +	};
+> +};
 
-> +  - audio-port-names: must contain entries matching the entries in
-> +	the audio-ports property.
-> +	Each value may be "i2s" or "spdif", giving the type of
-> +	the audio source.
-> +
-> +  - #sound-dai-cells: must be set to <1> for use with the simple-card.
-> +	The TDA998x audio CODEC always defines two DAIs.
-> +	The DAI 0 is the S/PDIF input and the DAI 1 is the I2S input.
-> +
->   Example:
->
->   	tda998x: hdmi-encoder {
-> @@ -26,4 +40,8 @@ Example:
->   		interrupts = <27 2>;		/* falling edge */
->   		pinctrl-0 = <&pmx_camera>;
->   		pinctrl-names = "default";
-> +
-> +		audio-ports = <0x04>, <0x03>;
-> +		audio-port-names = "spdif", "i2s";
-> +		#sound-dai-cells = <1>;
->   	};
-> diff --git a/drivers/gpu/drm/i2c/tda998x_drv.c b/drivers/gpu/drm/i2c/tda998x_drv.c
-> index 70658af..9d9b072 100644
-> --- a/drivers/gpu/drm/i2c/tda998x_drv.c
-> +++ b/drivers/gpu/drm/i2c/tda998x_drv.c
-> @@ -20,6 +20,7 @@
->   #include <linux/module.h>
->   #include <linux/irq.h>
->   #include <sound/asoundef.h>
-> +#include <linux/platform_device.h>
->
->   #include <drm/drmP.h>
->   #include <drm/drm_crtc_helper.h>
-> @@ -44,6 +45,8 @@ struct tda998x_priv {
->   	wait_queue_head_t wq_edid;
->   	volatile int wq_edid_wait;
->   	struct drm_encoder *encoder;
-> +
-> +	u8 audio_ports[2];
->   };
->
->   #define to_tda998x_priv(x)  ((struct tda998x_priv *)to_encoder_slave(x)->slave_priv)
-> @@ -1254,12 +1257,16 @@ static int tda998x_create(struct i2c_client *client, struct tda998x_priv *priv)
->   {
->   	struct device_node *np = client->dev.of_node;
->   	u32 video;
-> -	int rev_lo, rev_hi, ret;
-> +	int i, rev_lo, rev_hi, ret;
-> +	const char *p;
->
->   	priv->vip_cntrl_0 = VIP_CNTRL_0_SWAP_A(2) | VIP_CNTRL_0_SWAP_B(3);
->   	priv->vip_cntrl_1 = VIP_CNTRL_1_SWAP_C(0) | VIP_CNTRL_1_SWAP_D(1);
->   	priv->vip_cntrl_2 = VIP_CNTRL_2_SWAP_E(4) | VIP_CNTRL_2_SWAP_F(5);
->
-> +	priv->params.audio_frame[1] = 1;		/* channels - 1 */
-> +	priv->params.audio_sample_rate = 48000;		/* 48kHz */
-> +
->   	priv->current_page = 0xff;
->   	priv->hdmi = client;
->   	priv->cec = i2c_new_dummy(client->adapter, 0x34);
-> @@ -1351,15 +1358,50 @@ static int tda998x_create(struct i2c_client *client, struct tda998x_priv *priv)
->   	/* enable EDID read irq: */
->   	reg_set(priv, REG_INT_FLAGS_2, INT_FLAGS_2_EDID_BLK_RD);
->
-> -	if (!np)
-> -		return 0;		/* non-DT */
-> +	/* get the device tree parameters */
-> +	if (np) {
-> +
-> +		/* optional video properties */
-> +		ret = of_property_read_u32(np, "video-ports", &video);
-> +		if (ret == 0) {
-> +			priv->vip_cntrl_0 = video >> 16;
-> +			priv->vip_cntrl_1 = video >> 8;
-> +			priv->vip_cntrl_2 = video;
-> +		}
-> +
-> +		/* optional audio properties */
-> +		for (i = 0; i < 2; i++) {
-> +			u32 port;
->
-> -	/* get the optional video properties */
-> -	ret = of_property_read_u32(np, "video-ports", &video);
-> -	if (ret == 0) {
-> -		priv->vip_cntrl_0 = video >> 16;
-> -		priv->vip_cntrl_1 = video >> 8;
-> -		priv->vip_cntrl_2 = video;
-> +			ret = of_property_read_u32_index(np, "audio-ports", i, &port);
-> +			if (ret)
-> +				break;
-> +			ret = of_property_read_string_index(np, "audio-port-names",
-> +							i, &p);
-> +			if (ret) {
-> +				dev_err(&client->dev,
-> +					"missing audio-port-names[%d]\n", i);
-> +				break;
-> +			}
-> +			if (strcmp(p, "spdif") == 0) {
-> +				priv->audio_ports[0] = port;
-> +			} else if (strcmp(p, "i2s") == 0) {
-> +				priv->audio_ports[1] = port;
-> +			} else {
-> +				dev_err(&client->dev,
-> +					"bad audio-port-names '%s'\n", p);
-> +				break;
-> +			}
-> +		}
-> +		if (priv->audio_ports[0]) {
-> +			priv->params.audio_cfg = priv->audio_ports[0];
-> +			priv->params.audio_format = AFMT_SPDIF;
-> +			priv->params.audio_clk_cfg = 0;
-> +		} else {
-> +			priv->params.audio_cfg = priv->audio_ports[1];
-> +			priv->params.audio_format = AFMT_I2S;
-> +			priv->params.audio_clk_cfg = 1;
-> +		}
->   	}
->
->   	return 0;
->
+So, the 380 and 385 have two SATA ports, presumably ports 0 and 1.
+According to the Functional Specifications, section 3.1 (Internal
+Address map), those two ports are located at 0xA8000. Ports 2 and 3,
+which are only available on Armada 388, are located at 0xE0100 and
+0xE0180 according to the same datasheet. So I believe that the node:
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+			sata@a8000 {
+				compatible = "marvell,armada-380-ahci";
+				reg = <0xa8000 0x2000>;
+				interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
+				clocks = <&gateclk 15>;
+				status = "disabled";
+			};
+
+should stay where it is in armada-38x.dtsi.
+
+However, the node:
+
+			sata@e0000 {
+				compatible = "marvell,armada-380-ahci";
+				reg = <0xe0000 0x2000>;
+				interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
+				clocks = <&gateclk 30>;
+				status = "disabled";
+			};
+
+should probably move into armada-388.dtsi, since it covers ports 2 and
+3.
+
+In addition, I believe that the existing armada-385-db.dts and
+armada-385-rd.dts should be renamed to armada-388-db.dts and
+armada-388-rd.dts, and they should include armada-388.dtsi instead. At
+least it's sure for the DB (which has both SATA controllers enabled).
+For the RD, it remains to be confirmed, but in general most Marvell
+development platforms use the superset SoC, which has all the
+functionalities.
+
+Thanks,
+
+Thomas
+-- 
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
