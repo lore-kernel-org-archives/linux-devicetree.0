@@ -1,192 +1,66 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: dts: sun6i: Add dts file for MSI
- Primo81 tablet
-Date: Thu, 8 Jan 2015 10:52:13 +0100
-Message-ID: <20150108095213.GR7853@lukather>
-References: <1419665841-22629-1-git-send-email-siarhei.siamashka@gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [PATCH 1/1] ARM: at91/dt: sam9263: Add missing clocks to lcdc node
+Date: Thu, 8 Jan 2015 10:59:18 +0100
+Message-ID: <20150108095918.GE2447@piout.net>
+References: <1417786299-14026-1-git-send-email-alexanders83@web.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="R4k3HSW7UfPFhwix"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB55HXGSQKGQE7GYK3WQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1419665841-22629-1-git-send-email-siarhei.siamashka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Siarhei Siamashka <siarhei.siamashka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1417786299-14026-1-git-send-email-alexanders83@web.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Alexander Stein <alexanders83@web.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
---R4k3HSW7UfPFhwix
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+On 05/12/2014 at 14:31:39 +0100, Alexander Stein wrote :
+> atmel_lcdfb needs also uses hclk clock, but AT91SAM9263 doesn't have that
+> specific clock, so use lcd_clk twice. The same is done in
 
-Hi Siarhei,
+I would say "was done" ;)
 
-On Sat, Dec 27, 2014 at 09:37:20AM +0200, Siarhei Siamashka wrote:
-> The MSI Primo81 is an A31s based tablet, with 1G RAM, 16G NAND,
-> 1024x768 IPS LCD display, mono speaker, 0.3 MP front camera, 2.0 MP
-> rear camera, 3500 mAh battery, gt911 touchscreen, mma8452 accelerometer
-> and rtl8188etv usb wifi. Has "power", "volume+" and "volume-" buttons
-> (both volume buttons are also connected to the UBOOT_SEL pin). The
-> external connectors are represented by MicroSD slot, MiniHDMI, MicroUSB
-> OTG and 3.5mm headphone jack. More details are available at
->     http://linux-sunxi.org/MSI_Primo81
+> arch/arm/mach-at91/at91sam9263.c
 > 
-> This initial dts file only provides support for mmc, wifi and uart
-> (there is no external connector for uart though). Graphics can be used
-> via simplefb. However, without usb otg, there are no reasonable means
-> to handle user input yet.
-> 
-> Signed-off-by: Siarhei Siamashka <siarhei.siamashka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Alexander Stein <alexanders83@web.de>
+
+Acked-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+
 > ---
->  arch/arm/boot/dts/Makefile               |  3 +-
->  arch/arm/boot/dts/sun6i-a31s-primo81.dts | 95 ++++++++++++++++++++++++++++++++
->  2 files changed, 97 insertions(+), 1 deletion(-)
->  create mode 100644 arch/arm/boot/dts/sun6i-a31s-primo81.dts
+>  arch/arm/boot/dts/at91sam9263.dtsi | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index c486545..f363938 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -464,7 +464,8 @@ dtb-$(CONFIG_MACH_SUN6I) += \
->  	sun6i-a31-colombus.dtb \
->  	sun6i-a31-hummingbird.dtb \
->  	sun6i-a31-m9.dtb \
-> -	sun6i-a31s-cs908.dtb
-> +	sun6i-a31s-cs908.dtb \
-> +	sun6i-a31s-primo81.dtb
->  dtb-$(CONFIG_MACH_SUN7I) += \
->  	sun7i-a20-bananapi.dtb \
->  	sun7i-a20-bootsetup.dtb \
-> diff --git a/arch/arm/boot/dts/sun6i-a31s-primo81.dts b/arch/arm/boot/dts/sun6i-a31s-primo81.dts
-> new file mode 100644
-> index 0000000..a5e8562
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/sun6i-a31s-primo81.dts
-> @@ -0,0 +1,95 @@
-> +/*
-> + * Copyright 2014 Siarhei Siamashka <siarhei.siamashka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This library is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License as
-> + *     published by the Free Software Foundation; either version 2 of the
-> + *     License, or (at your option) any later version.
-> + *
-> + *     This library is distributed in the hope that it will be useful,
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + *     You should have received a copy of the GNU General Public
-> + *     License along with this library; if not, write to the Free
-> + *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
-> + *     MA 02110-1301 USA
-> + *
-> + * Or, alternatively,
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use,
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + */
-> +
-> +/dts-v1/;
-> +/include/ "sun6i-a31s.dtsi"
-> +/include/ "sunxi-common-regulators.dtsi"
->
-> +
-> +/ {
-> +	model = "MSI Primo81 tablet";
-> +	compatible = "msi,primo81", "allwinner,sun6i-a31s";
-> +
-> +	chosen {
-> +		bootargs = "earlyprintk console=ttyS0,115200";
-> +	};
-> +
-> +	soc@01c00000 {
-> +		mmc0: mmc@01c0f000 {
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_primo81>;
-> +			vmmc-supply = <&reg_vcc3v0>;
-> +			bus-width = <4>;
-> +			cd-gpios = <&pio 0 8 0>; /* PA8 */
-> +			cd-inverted;
-> +			status = "okay";
-> +		};
-> +
-> +		usbphy: phy@01c19400 {
-> +			status = "okay";
-> +		};
-> +
-> +		ehci0: usb@01c1a000 {
-> +			/* rtl8188etv wifi is connected here */
-> +			status = "okay";
-> +		};
-> +
-> +		pio: pinctrl@01c20800 {
-> +			mmc0_cd_pin_primo81: mmc0_cd_pin@0 {
-> +				allwinner,pins = "PA8";
-> +				allwinner,function = "gpio_in";
-> +				allwinner,drive = <0>;
-> +				allwinner,pull = <1>;
-> +			};
-> +		};
-> +
-> +		uart0: serial@01c28000 {
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&uart0_pins_a>;
-> +			status = "okay";
-> +		};
-> +	};
-> +};
+> diff --git a/arch/arm/boot/dts/at91sam9263.dtsi b/arch/arm/boot/dts/at91sam9263.dtsi
+> index 635f871..7989756 100644
+> --- a/arch/arm/boot/dts/at91sam9263.dtsi
+> +++ b/arch/arm/boot/dts/at91sam9263.dtsi
+> @@ -932,6 +932,8 @@
+>  			interrupts = <26 IRQ_TYPE_LEVEL_HIGH 3>;
+>  			pinctrl-names = "default";
+>  			pinctrl-0 = <&pinctrl_fb>;
+> +			clocks = <&lcd_clk>, <&lcd_clk>;
+> +			clock-names = "lcdc_clk", "hclk";
+>  			status = "disabled";
+>  		};
+>  
 > -- 
-> 2.0.4
+> 2.2.0
 > 
-
-These two patches look very good overall. 
-
-There's two things about the two of them though:
-  - We just switched to using the DT includes, please use them for
-    your GPIO flags and pinctrl drive strength and pull
-    configurations.
-  - We will switch soon to using the kind of syntax used for example
-    by TI in their DTSes (you can look at the beaglebone black for an
-    good example.), it would be great if you could use that in your
-    two DTSes, in order to avoid changing everything again in a near
-    future.
-
-Thanks!
-Maxime
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
 -- 
-Maxime Ripard, Free Electrons
+Alexandre Belloni, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
---R4k3HSW7UfPFhwix--
