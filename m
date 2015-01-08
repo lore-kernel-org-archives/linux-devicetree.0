@@ -1,142 +1,114 @@
-From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 2/4] of: move of_dma_configure() to device,c to help
- re-use
-Date: Thu, 8 Jan 2015 18:44:31 -0500
-Message-ID: <54AF165F.7070909@ti.com>
-References: <1420656594-8908-1-git-send-email-m-karicheri2@ti.com> <3861625.CJ6m15sZMh@wuerfel> <54AED9EC.1020703@ti.com> <2083932.v1GzgAfexK@wuerfel>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 5/9] dts: versatile: add sysregs nodes
+Date: Thu, 8 Jan 2015 17:53:15 -0600
+Message-ID: <CAL_JsqKBLx03E1w0NMH8CH+Pm_L8yQvnR6VTTDxqnpOwAoDhXg@mail.gmail.com>
+References: <1419967718-26909-1-git-send-email-robherring2@gmail.com>
+ <1419967718-26909-6-git-send-email-robherring2@gmail.com> <CACRpkdbinR3Uvi5zZmQJFxJgnWfvE6JZouMVxxRRGVtMNXkBQQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2083932.v1GzgAfexK@wuerfel>
+In-Reply-To: <CACRpkdbinR3Uvi5zZmQJFxJgnWfvE6JZouMVxxRRGVtMNXkBQQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Peter Maydell <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/08/2015 05:24 PM, Arnd Bergmann wrote:
-> On Thursday 08 January 2015 14:26:36 Murali Karicheri wrote:
->> On 01/08/2015 03:40 AM, Arnd Bergmann wrote:
->>> On Wednesday 07 January 2015 17:37:56 Rob Herring wrote:
->>>> On Wed, Jan 7, 2015 at 12:49 PM, Murali Karicheri<m-karicheri2-l0cyMroinI0@public.gmane.org>   wrote:
->>>>
->>>>> +       ret = of_dma_get_range(np,&dma_addr,&paddr,&size);
->>>>> +       if (ret<   0) {
->>>>> +               dma_addr = offset = 0;
->>>>> +               size = dev->coherent_dma_mask + 1;
->>>>
->>>> If coherent_dma_mask is DMA_BIT_MASK(64), then you will overflow and
->>>> have a size of 0. There may also be a problem when the mask is only
->>>> 32-bit type.
->>>
->>> The mask is always a 64-bit type, it's not optional. But you are right,
->>> the 64-bit mask case is broken, so I guess we have to fix it differently
->>> by always passing the smaller value into arch_setup_dma_ops and
->>> adapting that function instead.
->> Arnd,
+Adding VExpress maintainers...
+
+On Thu, Jan 8, 2015 at 1:44 PM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Tue, Dec 30, 2014 at 8:28 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>
+>> From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 >>
->> What is the smaller value you are referring to in the below code?
->> between *dev->dma_mask and size from DT? But overflow can still happen
->> when size is to be calculated in arch_setup_dma_ops() for Non DT case or
->> when DT size is configured to be equivalent of DMA_BIT_MASK(64) + 1. Can
->> we discuss the code change you have in mind when you get a chance?
+>> The Versatile boards have the same sysregs as other ARM Ltd boards. Add
+>> the nodes in preparation to enable support for 24MHz counter as
+>> sched_clock and MMC card detect and write protect support.
+>>
+>> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+>> Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/versatile-ab.dts | 23 +++++++++++++++++++++++
+>>  1 file changed, 23 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/versatile-ab.dts b/arch/arm/boot/dts/versatile-ab.dts
+>> index 27d0d9c..62f04b0 100644
+>> --- a/arch/arm/boot/dts/versatile-ab.dts
+>> +++ b/arch/arm/boot/dts/versatile-ab.dts
+>> @@ -252,6 +252,29 @@
+>>                         #size-cells = <1>;
+>>                         ranges = <0 0x10000000 0x10000>;
+>>
+>> +                       sysreg@0 {
+>> +                               compatible = "arm,vexpress-sysreg";
 >
-> I meant changing every function that the size values gets passed into
-> to take a mask like 0xffffffff instead of a size like 0x100000000, so
-> we can represent a 64-bit capable bus correctly.
+> vexpress? No...
 
-The function here refers to  arch_setup_dma_ops() and anything that is 
-called by this API, right?
+Compatible with yes. Should perhaps be '"arm,versatile-sysreg",
+"arm,vexpress-sysreg"' instead. Kind of backwards, as really the
+versatile came first, but it would work. Or we just need another match
+entry in the kernel.
+
+I copied this whole chunk as is from VExpress and verified these sub
+nodes are all the same hence why it is here.
+
+> compatible = "syscon";
+
+maybe? VExpress is missing that then...
+
+>> +                               reg = <0x00000 0x1000>;
+>> +
+>> +                               v2m_led_gpios: sys_led@08 {
+>> +                                       compatible = "arm,vexpress-sysreg,sys_led";
+>> +                                       gpio-controller;
+>> +                                       #gpio-cells = <2>;
+>> +                               };
 >
-> This means we also need to adapt the value returned from of_dma_get_range.
-> A minor complication here is that the DT properties sometimes already
-> contain the mask value, in particular when we want to represent a
-> full mapping like
+> These are not GPIOs. These are LED registers really.
+
+A register bit that controls an i/o signal sounds like a GPIO to me.
+
+> see how to use LEDs from drivers/leds/leds-syscon.c and bindings.
+> example in:
+> arch/arm/boot/dts/integrator.dtsi
 >
-The grep of dma-ranges for arch/arm shows the size used is mask + 1 as
+> Very straight-forward I think.
 
-./boot/dts/keystone.dtsi:		dma-ranges = <0x80000000 0x8 0x00000000 
-0x80000000>;
-./boot/dts/keystone.dtsi:			dma-ranges;
-./boot/dts/keystone.dtsi:			dma-ranges;
-./boot/dts/r8a7790.dtsi:		dma-ranges = <0x42000000 0 0x40000000 0 
-0x40000000 0 0x80000000
-./boot/dts/integratorap.dts:	dma-ranges = <0x80000000 0x0 0x80000000>;
-./boot/dts/r8a7791.dtsi:		dma-ranges = <0x42000000 0 0x40000000 0 
-0x40000000 0 0x80000000
-./boot/dts/.k2hk-evm.dtb.dts.tmp:  dma-ranges = <0x80000000 0x8 
-0x00000000 0x80000000>;
-./boot/dts/.k2hk-evm.dtb.dts.tmp:   dma-ranges;
-./boot/dts/.k2l-evm.dtb.dts.tmp:  dma-ranges = <0x80000000 0x8 
-0x00000000 0x80000000>;
-./boot/dts/.k2l-evm.dtb.dts.tmp:   dma-ranges;
-./boot/dts/.k2e-evm.dtb.dts.tmp:  dma-ranges = <0x80000000 0x8 
-0x00000000 0x80000000>;
-./boot/dts/.k2e-evm.dtb.dts.tmp:   dma-ranges;
-./boot/dts/.k2e-evm.dtb.dts.tmp:   dma-ranges;
-./boot/dts/k2e.dtsi:			dma-ranges;
-./boot/dts/k2e.dtsi:			dma-ranges;
+So we have 2 implementations and bindings for roughly the same hardware? Great!
 
-So for ARM 32 the below case doesn't seem to apply.
-
-> 	bus {
-> 		#address-cells =<1>;
-> 		#size-cells =<1>;
-> 		dma-ranges =<0 0 0xffffffff>; /* all 4 GB, DMA_BIT_MASK(32) */
-> 	};
+>> +                               v2m_mmc_gpios: sys_mci@48 {
+>> +                                       compatible = "arm,vexpress-sysreg,sys_mci";
+>> +                                       gpio-controller;
+>> +                                       #gpio-cells = <2>;
+>> +                               };
+>> +
+>> +                               v2m_flash_gpios: sys_flash@4c {
+>> +                                       compatible = "arm,vexpress-sysreg,sys_flash";
+>> +                                       gpio-controller;
+>> +                                       #gpio-cells = <2>;
+>> +                               };
 >
-> as opposed to
+> I don't have drivers for these "gpio controllers" and I don't think they are
+> GPIOs either, since they are not general purpose at all.
+
+They are only general purpose until you connect the i/o lines to
+something. But yes, if we went around making every misc internal
+control line in SOCs a 1-bit GPIO controller that would be pretty
+crazy.
+
+Anyway, most of this is not actually used ATM on Versatile, but it is
+present in VExpress. I added it only for sched_clock. We need to
+resolve this with VExpress platforms, but it's already in use for MMC
+and LEDs.
+
+Rob
+
+> For the latter I have some code boiling for the Integrators:
+> https://git.kernel.org/cgit/linux/kernel/git/linusw/linux-integrator.git/commit/?h=multiplatform&id=9c28e114ec957fadf1dade382d8e8b8aa43c8426
+> https://git.kernel.org/cgit/linux/kernel/git/linusw/linux-integrator.git/commit/?h=multiplatform&id=a3d4512abb85de290cdca0586bcff9147833917f
 >
-
-A search under arch/arm64 and arch/powerpc showed another format for 
-dma-ranges for PCI. Now I am bit nervous on how of_pci_dma_configure() 
-behave for these platforms as PCI nodes on these platforms may have 
-dma-ranges in a different format than that in platform bus nodes. These 
-DT property has additional cell for resource identification (example 
-0x42000000 as the first cell). Also one of them, amd-seattle-soc.dtsi 
-uses the format of size (0x7fffffffff) similar to what you refered above.
-
-./boot/dts/apm/apm-storm.dtsi:			dma-ranges = <0x42000000 0x80 
-0x00000000 0x80 0x00000000 0x00 0x80000000
-./boot/dts/apm/apm-storm.dtsi:			dma-ranges = <0x42000000 0x80 
-0x00000000 0x80 0x00000000 0x00 0x80000000
-./boot/dts/apm/apm-storm.dtsi:			dma-ranges = <0x42000000 0x80 
-0x00000000 0x80 0x00000000 0x00 0x80000000
-./boot/dts/apm/apm-storm.dtsi:			dma-ranges = <0x42000000 0x80 
-0x00000000 0x80 0x00000000 0x00 0x80000000
-./boot/dts/apm/apm-storm.dtsi:			dma-ranges = <0x42000000 0x80 
-0x00000000 0x80 0x00000000 0x00 0x80000000
-./boot/dts/amd/amd-seattle-soc.dtsi:		dma-ranges = <0x80 0x0 0x80 0x0 
-0x7f 0xffffffff>;
-./boot/dts/amd/amd-seattle-soc.dtsi:			dma-ranges = <0x43000000 0x80 0x0 
-0x80 0x0 0x7f 0xffffffff>;
-
-Or I got this wrong. Any comment?
-
-For ARM 32, DT size value can be extracted and size-1 can be passed to 
-arch_setup_dma_ops() provided it handles this value properly.
-
-> 	bus {
-> 		#address-cells =<1>;
-> 		#size-cells =<1>;
-> 		dma-ranges =<0 0 0x80000000>; /* only lower 2GB, DMA_BIT_MASK(31) */
-> 	};
->
-> or
->
-> 	bus {
-> 		#address-cells =<2>;
-> 		#size-cells =<2>;
-> 		dma-ranges =<0 0 0x0000000100000000>; /* 4GB of 64-bit address space */
-> 	};
->
->
-> 	Arnd
-
-
--- 
-Murali Karicheri
-Linux Kernel, Texas Instruments
+> Yours,
+> Linus Walleij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
