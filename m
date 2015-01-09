@@ -1,85 +1,70 @@
-From: Soren Brinkmann <soren.brinkmann@xilinx.com>
-Subject: [PATCH v4 1/7] pinctrl: pinconf-generic: Infer map type from DT
- property
-Date: Fri,  9 Jan 2015 07:43:45 -0800
-Message-ID: <1420818231-13451-2-git-send-email-soren.brinkmann@xilinx.com>
-References: <1420818231-13451-1-git-send-email-soren.brinkmann@xilinx.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v2 2/4] Documentation: bindings: Add the regulator property
+ to the sub-nodes AHCI bindings
+Date: Fri, 09 Jan 2015 16:46:43 +0100
+Message-ID: <54AFF7E3.4070506@redhat.com>
+References: <1420799989-10645-1-git-send-email-gregory.clement@free-electrons.com> <1420799989-10645-3-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1420818231-13451-1-git-send-email-soren.brinkmann@xilinx.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Heiko Stuebner <heiko@sntech.de>, linux-sh@vger.kernel.org, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, Beniamino Galvani <b.galvani@gmail.com>, linux-rockchip@lists.infradead.org, =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann@xilinx.com>, "Ivan T. Ivanov" <iivanov@mm-sol.com>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org, Alessandro Rubini <rubini@unipv.it>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1420799989-10645-3-git-send-email-gregory.clement@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>, Tejun Heo <tj@kernel.org>, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: =?windows-1252?Q?Antoine_T=E9nart?= <antoine.tenart@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-V2l0aCB0aGUgbmV3ICdncm91cHMnIHByb3BlcnR5LCB0aGUgRFQgcGFyc2VyIGNhbiBpbmZlciB0
-aGUgbWFwIHR5cGUKZnJvbSB0aGUgZmFjdCB3aGV0aGVyICdwaW5zJyBvciAnZ3JvdXBzJyBpcyB1
-c2VkIHRvIHNwZWNpZnkgdGhlIHBpbgpncm91cCB0byB3b3JrIG9uLgpUbyBtYWludGFpbiBiYWNr
-d2FyZHMgY29tcGF0aWJpdGxpeSB3aXRoIGN1cnJlbnQgdXNhZ2Ugb2YgdGhlIERUCmJpbmRpbmcs
-IHRoaXMgaXMgb25seSBkb25lIHdoZW4gUElOX01BUF9UWVBFX0lOVkFMSUQgaXMgcGFzc2VkIHRv
-IHRoZQpwYXJzaW5nIGZ1bmN0aW9uIGFzIHR5cGUuCkFsc28sIGEgbmV3IGhlbHBlciAncGluY29u
-Zl9nZW5lcmljX2R0X25vZGVfdG9fbWFwX2FsbCgpJyBpcyBpbnRyb2R1Y2VkLAp3aGljaCBjYW4g
-YmUgdXNlZCBieSBkcml2ZXJzIGFzIGdlbmVyaWMgY2FsbGJhY2sgZm9yIGR0X25vZGVfdG9fbWFw
-KCkgdG8KbGV2ZXJhZ2UgdGhlIG5ldyBmZWF0dXJlLgoKU2lnbmVkLW9mZi1ieTogU29yZW4gQnJp
-bmttYW5uIDxzb3Jlbi5icmlua21hbm5AeGlsaW54LmNvbT4KVGVzdGVkLWJ5OiBBbmRyZWFzIEbD
-pHJiZXIgPGFmYWVyYmVyQHN1c2UuZGU+Ci0tLQpDaGFuZ2VzIHNpbmNlIHYyOgogLSByZW5hbWUg
-ZHRfcGluX3NwZWNpZmllciB0byBzdWJub2RlX3RhcmdldF90eXBlCiAtIGFkZCBhZGRpdGlvbmFs
-IGNvbW1lbnQgaW4gaGVhZGVyIGZpbGUgZXhwbGFpbmluZyBwYXNzaW5nIGFuIGludmFsaWQKICAg
-bWFwIHR5cGUKIC0gbWVudGlvbiBtYXBfYWxsKCkgaGVscGVyIGluIGNvbW1pdCBtZXNzYWdlCkNo
-YW5nZXMgc2luY2UgUkZDIHYyOgogLSBub25lCi0tLQogZHJpdmVycy9waW5jdHJsL3BpbmNvbmYt
-Z2VuZXJpYy5jICAgICAgIHwgMTcgKysrKysrKysrKysrKystLS0KIGluY2x1ZGUvbGludXgvcGlu
-Y3RybC9waW5jb25mLWdlbmVyaWMuaCB8IDExICsrKysrKysrKysrCiAyIGZpbGVzIGNoYW5nZWQs
-IDI1IGluc2VydGlvbnMoKyksIDMgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9w
-aW5jdHJsL3BpbmNvbmYtZ2VuZXJpYy5jIGIvZHJpdmVycy9waW5jdHJsL3BpbmNvbmYtZ2VuZXJp
-Yy5jCmluZGV4IGY3OGI0MTZkNzk4NC4uMjFiM2Q5MGViYjJkIDEwMDY0NAotLS0gYS9kcml2ZXJz
-L3BpbmN0cmwvcGluY29uZi1nZW5lcmljLmMKKysrIGIvZHJpdmVycy9waW5jdHJsL3BpbmNvbmYt
-Z2VuZXJpYy5jCkBAIC0yNjQsNiArMjY0LDcgQEAgaW50IHBpbmNvbmZfZ2VuZXJpY19kdF9zdWJu
-b2RlX3RvX21hcChzdHJ1Y3QgcGluY3RybF9kZXYgKnBjdGxkZXYsCiAJdW5zaWduZWQgcmVzZXJ2
-ZTsKIAlzdHJ1Y3QgcHJvcGVydHkgKnByb3A7CiAJY29uc3QgY2hhciAqZ3JvdXA7CisJY29uc3Qg
-Y2hhciAqc3Vibm9kZV90YXJnZXRfdHlwZSA9ICJwaW5zIjsKIAogCXJldCA9IG9mX3Byb3BlcnR5
-X3JlYWRfc3RyaW5nKG5wLCAiZnVuY3Rpb24iLCAmZnVuY3Rpb24pOwogCWlmIChyZXQgPCAwKSB7
-CkBAIC0yODQsMTAgKzI4NSwyMCBAQCBpbnQgcGluY29uZl9nZW5lcmljX2R0X3N1Ym5vZGVfdG9f
-bWFwKHN0cnVjdCBwaW5jdHJsX2RldiAqcGN0bGRldiwKIAkJcmVzZXJ2ZSsrOwogCWlmIChudW1f
-Y29uZmlncykKIAkJcmVzZXJ2ZSsrOworCiAJcmV0ID0gb2ZfcHJvcGVydHlfY291bnRfc3RyaW5n
-cyhucCwgInBpbnMiKTsKIAlpZiAocmV0IDwgMCkgewotCQlkZXZfZXJyKGRldiwgImNvdWxkIG5v
-dCBwYXJzZSBwcm9wZXJ0eSBwaW5zXG4iKTsKLQkJZ290byBleGl0OworCQlyZXQgPSBvZl9wcm9w
-ZXJ0eV9jb3VudF9zdHJpbmdzKG5wLCAiZ3JvdXBzIik7CisJCWlmIChyZXQgPCAwKSB7CisJCQlk
-ZXZfZXJyKGRldiwgImNvdWxkIG5vdCBwYXJzZSBwcm9wZXJ0eSBwaW5zL2dyb3Vwc1xuIik7CisJ
-CQlnb3RvIGV4aXQ7CisJCX0KKwkJaWYgKHR5cGUgPT0gUElOX01BUF9UWVBFX0lOVkFMSUQpCisJ
-CQl0eXBlID0gUElOX01BUF9UWVBFX0NPTkZJR1NfR1JPVVA7CisJCXN1Ym5vZGVfdGFyZ2V0X3R5
-cGUgPSAiZ3JvdXBzIjsKKwl9IGVsc2UgeworCQlpZiAodHlwZSA9PSBQSU5fTUFQX1RZUEVfSU5W
-QUxJRCkKKwkJCXR5cGUgPSBQSU5fTUFQX1RZUEVfQ09ORklHU19QSU47CiAJfQogCXJlc2VydmUg
-Kj0gcmV0OwogCkBAIC0yOTYsNyArMzA3LDcgQEAgaW50IHBpbmNvbmZfZ2VuZXJpY19kdF9zdWJu
-b2RlX3RvX21hcChzdHJ1Y3QgcGluY3RybF9kZXYgKnBjdGxkZXYsCiAJaWYgKHJldCA8IDApCiAJ
-CWdvdG8gZXhpdDsKIAotCW9mX3Byb3BlcnR5X2Zvcl9lYWNoX3N0cmluZyhucCwgInBpbnMiLCBw
-cm9wLCBncm91cCkgeworCW9mX3Byb3BlcnR5X2Zvcl9lYWNoX3N0cmluZyhucCwgc3Vibm9kZV90
-YXJnZXRfdHlwZSwgcHJvcCwgZ3JvdXApIHsKIAkJaWYgKGZ1bmN0aW9uKSB7CiAJCQlyZXQgPSBw
-aW5jdHJsX3V0aWxzX2FkZF9tYXBfbXV4KHBjdGxkZXYsIG1hcCwKIAkJCQkJcmVzZXJ2ZWRfbWFw
-cywgbnVtX21hcHMsIGdyb3VwLApkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9waW5jdHJsL3Bp
-bmNvbmYtZ2VuZXJpYy5oIGIvaW5jbHVkZS9saW51eC9waW5jdHJsL3BpbmNvbmYtZ2VuZXJpYy5o
-CmluZGV4IGQ1NzhhNjBlZmYyMy4uODNjODlmNWFiNzA1IDEwMDY0NAotLS0gYS9pbmNsdWRlL2xp
-bnV4L3BpbmN0cmwvcGluY29uZi1nZW5lcmljLmgKKysrIGIvaW5jbHVkZS9saW51eC9waW5jdHJs
-L3BpbmNvbmYtZ2VuZXJpYy5oCkBAIC0xNzQsNiArMTc0LDE3IEBAIHN0YXRpYyBpbmxpbmUgaW50
-IHBpbmNvbmZfZ2VuZXJpY19kdF9ub2RlX3RvX21hcF9waW4oCiAJCQlQSU5fTUFQX1RZUEVfQ09O
-RklHU19QSU4pOwogfQogCitzdGF0aWMgaW5saW5lIGludCBwaW5jb25mX2dlbmVyaWNfZHRfbm9k
-ZV90b19tYXBfYWxsKAorCQlzdHJ1Y3QgcGluY3RybF9kZXYgKnBjdGxkZXYsIHN0cnVjdCBkZXZp
-Y2Vfbm9kZSAqbnBfY29uZmlnLAorCQlzdHJ1Y3QgcGluY3RybF9tYXAgKiptYXAsIHVuc2lnbmVk
-ICpudW1fbWFwcykKK3sKKwkvKgorCSAqIHBhc3NpbmcgdGhlIHR5cGUgYXMgUElOX01BUF9UWVBF
-X0lOVkFMSUQgY2F1c2VzIHRoZSB1bmRlcmx5aW5nIHBhcnNlcgorCSAqIHRvIGluZmVyIHRoZSBt
-YXAgdHlwZSBmcm9tIHRoZSBEVCBwcm9wZXJ0aWVzIHVzZWQuCisJICovCisJcmV0dXJuIHBpbmNv
-bmZfZ2VuZXJpY19kdF9ub2RlX3RvX21hcChwY3RsZGV2LCBucF9jb25maWcsIG1hcCwgbnVtX21h
-cHMsCisJCQlQSU5fTUFQX1RZUEVfSU5WQUxJRCk7Cit9CiAjZW5kaWYKIAogI2VuZGlmIC8qIENP
-TkZJR19HRU5FUklDX1BJTkNPTkYgKi8KLS0gCjIuMi4xLjEuZ2I0MmNjODEKCgpfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1h
-aWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xp
-c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Hi,
+
+On 09-01-15 11:39, Gregory CLEMENT wrote:
+> It is now possible to use a regulator property for each port of the
+> AHCI controller.
+>
+> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+> ---
+>   Documentation/devicetree/bindings/ata/ahci-platform.txt | 9 ++++++---
+>   1 file changed, 6 insertions(+), 3 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/ata/ahci-platform.txt b/Documentation/devicetree/bindings/ata/ahci-platform.txt
+> index 4ab09f2202d4..87416d71c758 100644
+> --- a/Documentation/devicetree/bindings/ata/ahci-platform.txt
+> +++ b/Documentation/devicetree/bindings/ata/ahci-platform.txt
+> @@ -37,9 +37,10 @@ Required properties when using sub-nodes:
+>
+>
+>   Sub-nodes required properties:
+> -- reg               : the port number
+> -- phys              : reference to the SATA PHY node
+> -
+> +- reg					: the port number
+> +And at least one of the following properties:
+> +- phys              	: reference to the SATA PHY node
+> +- target-port<n>-supply	: regulator for SATA target power for port <n>
+>
+>   Examples:
+>           sata@ffe08000 {
+> @@ -68,10 +69,12 @@ With sub-nodes:
+>   		sata0: sata-port@0 {
+>   			reg = <0>;
+>   			phys = <&sata_phy 0>;
+> +			target-port0-supply = <&reg_sata0>;
+>   		};
+>
+
+I'm sorry, but I've to NAK this, I did not follow the regulator discussion.,
+thinking that it was just about the use of some utility function vs diy or
+some such, I had no idea this would impact the dt-binding.
+
+The -port%d- bit is completely unnecessary from a dt pov. Devicetree is
+supposed to be OS agnostic, we cannot make the dt-binding ugly just because
+the regulator subsys in Linux does not provide the necessary functionality.
+
+I'm afraid you will have to get back to the regulator subsys people and tell
+them that we really need an of_regulator_get, so that we can tell the
+regulator subsys we want a regulator from a specific of_node.
+
+Please CC me when you re-open the discussion with the regulator people.
+
+Regards,
+
+Hans
