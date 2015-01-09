@@ -1,60 +1,42 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 2/4] Documentation: bindings: Add the regulator
- property to the sub-nodes AHCI bindings
-Date: Fri, 9 Jan 2015 17:11:31 +0000
-Message-ID: <20150109171131.GH2634@sirena.org.uk>
-References: <1420799989-10645-1-git-send-email-gregory.clement@free-electrons.com>
- <1420799989-10645-3-git-send-email-gregory.clement@free-electrons.com>
- <54AFF7E3.4070506@redhat.com>
- <54AFFFDC.7020307@free-electrons.com>
- <CAGb2v674q4Cjp9qy9CbUXe2j5pT_ez98CKxXHC8u4Diap2TT1A@mail.gmail.com>
+From: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] soc: qcom: Add TCSR driver
+Date: Fri, 9 Jan 2015 11:13:56 -0600
+Message-ID: <20150109171356.GC16970@qualcomm.com>
+References: <1420757577-20425-1-git-send-email-agross@codeaurora.org>
+ <1420757577-20425-2-git-send-email-agross@codeaurora.org>
+ <4757751.7cLGsvPiZX@wuerfel>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="FOk1sPzRVyI5JND9"
-Return-path: <linux-ide-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAGb2v674q4Cjp9qy9CbUXe2j5pT_ez98CKxXHC8u4Diap2TT1A@mail.gmail.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Gregory CLEMENT <gregory.clement@free-electrons.com>, Hans de Goede <hdegoede@redhat.com>, linux-kernel <linux-kernel@vger.kernel.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Tawfik Bayouk <tawfik@marvell.com>, Andrew Lunn <andrew@lunn.ch>, devicetree <devicetree@vger.kernel.org>, Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart@free-electrons.com>, Mark Rutland <mark.rutland@arm.com>, Nadav Haklai <nadavh@marvell.com>, linux-ide@vger.kernel.org, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Tejun Heo <tj@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Ulf Hansson <ulf.hansson@linaro.org>
+In-Reply-To: <4757751.7cLGsvPiZX@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Jan 09, 2015 at 01:06:56AM +0100, Arnd Bergmann wrote:
+> On Thursday 08 January 2015 16:52:56 Andy Gross wrote:
+> > This patch adds support for the TCSR (Top Control and Status Register) IP block
+> > that is present in the Qualcomm IPQ8064, APQ8064, and some later processors.
+> > This block contains additional configuration and mux settings for various
+> > peripherals in the system, including the ADM DMA block and USB controller.
+> > 
+> > Signed-off-by: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> > 
+> 
+> It sounds like this is a collection of random registers. Have you considered
+> making it a syscon node instead?
 
---FOk1sPzRVyI5JND9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+That's a capital idea and solves my probe_defer issue more cleanly.  I'll rework
+and resend.
 
-On Sat, Jan 10, 2015 at 12:29:32AM +0800, Chen-Yu Tsai wrote:
+-- 
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
-> Since the AHCI library code already supports the generic phy subsystem,
-> with one phy possible for each port node, you could possibly add a
-> generic phy that just takes a regulator, and hook it up that way.
-
-> I don't know if the extra layer of indirection is good or not.
-> Just offering an alternative.
-
-Or if the supply is for the device at the other end of the link (which
-is what it sounded like) then use that.  This just sounds like the same
-problem we have for all the enumerable buses in embedded systems where
-we need to be able to understand that the device exists prior to it
-being fully ready to appear in the system.  Having the link/slot be a
-device in Linux does indeed seem to be a common way people think about
-doing this, it sounds like for this one it might be the most direct.
-
---FOk1sPzRVyI5JND9
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUsAvCAAoJECTWi3JdVIfQTM4H/2UO7wLAPT10oLokFxKC8HXb
-KP7QN4TELOy1HDifgnj3/qSDMrRehT51hVPq90sFgdzzop/FxEupk+AabC71nm32
-w9ggTQejndTbFqr2rRHEKLiMLSvlPWi7kjXTvTSLb3nR0+CTR9cr82dvAbzUgyKo
-FqvJNZ0DAZrvRnia0roNSslFrVsjZmf+jMFLSA9CbmQ2hKOD1BqIUpe0L4L2R+w9
-W/hzs/R89kBcwTfHTvoPD11Omqzz0yT2gIiwGTA5Kh/cKAt5hlclwkmbQagjNGKE
-sUdte9p/y32SLpS90qT3hYrQsFk5tYTzlFlKkpIBRpFFk4Fh1kaRpO0FDs8+vHo=
-=4wRN
------END PGP SIGNATURE-----
-
---FOk1sPzRVyI5JND9--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
