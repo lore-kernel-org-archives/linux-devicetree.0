@@ -1,31 +1,53 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH/RFC v10 05/19] mfd: max77693: Modify flash cell name
- identifiers
-Date: Fri, 9 Jan 2015 18:53:04 +0100
-Message-ID: <20150109175304.GG18076@amd>
-References: <1420816989-1808-1-git-send-email-j.anaszewski@samsung.com>
- <1420816989-1808-6-git-send-email-j.anaszewski@samsung.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] drivers: of: Export of_reserved_mem_device_{init,release}
+Date: Fri, 9 Jan 2015 11:53:01 -0600
+Message-ID: <CAL_JsqJaT-Y7DHQS5ZZ0TP6r0iPDbUZwU-Kec5MSE7DOPgZxCg@mail.gmail.com>
+References: <1420813745-130341-1-git-send-email-george_davis@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1420816989-1808-6-git-send-email-j.anaszewski@samsung.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, b.zolnierkie@samsung.com, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com, Chanwoo Choi <cw00.choi@samsung.com>, Lee Jones <lee.jones@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1420813745-130341-1-git-send-email-george_davis@mentor.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "George G. Davis" <ggdavisiv@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, "George G. Davis" <george_davis@mentor.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri 2015-01-09 16:22:55, Jacek Anaszewski wrote:
-> Change flash cell identifiers from max77693-flash to max77693-led
-> to avoid confusion with NOR/NAND Flash.
-> 
-> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
-> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
-> Cc: Chanwoo Choi <cw00.choi@samsung.com>
-> Cc: Lee Jones <lee.jones@linaro.org>
+On Fri, Jan 9, 2015 at 8:29 AM, George G. Davis <ggdavisiv@gmail.com> wrote:
+> Export of_reserved_mem_device_{init,release} so that modules
+> can initialize and release their assigned per-device cma_area.
 
-Acked-by: Pavel Machek <pavel@ucw.cz>
+I believe the original intent was for the core bus code to call these
+functions. While the commit adding them says "automated assignment"
+that part did not go in. As it stands, there are no in tree users of
+these functions.
 
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+Marek, comments?
+
+Rob
+
+>
+> Signed-off-by: George G. Davis <george_davis@mentor.com>
+> ---
+>  drivers/of/of_reserved_mem.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
+> index dc566b3..5eeb5b2 100644
+> --- a/drivers/of/of_reserved_mem.c
+> +++ b/drivers/of/of_reserved_mem.c
+> @@ -265,6 +265,7 @@ int of_reserved_mem_device_init(struct device *dev)
+>
+>         return ret;
+>  }
+> +EXPORT_SYMBOL(of_reserved_mem_device_init);
+>
+>  /**
+>   * of_reserved_mem_device_release() - release reserved memory device structures
+> @@ -289,3 +290,4 @@ void of_reserved_mem_device_release(struct device *dev)
+>
+>         rmem->ops->device_release(rmem, dev);
+>  }
+> +EXPORT_SYMBOL(of_reserved_mem_device_release);
+> --
+> 1.9.3
+>
