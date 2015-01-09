@@ -1,71 +1,93 @@
-From: Andrew Jackson <Andrew.Jackson@arm.com>
-Subject: Re: [PATCH v9 1/4] drm/i2c: tda998x: Add DT support
-	for audio
-Date: Fri, 09 Jan 2015 09:25:40 +0000
-Message-ID: <54AF9E94.7080601@arm.com>
-References: <cover.1420628786.git.moinejf@free.fr>
- <0084acea5a3475a77531d6a77483f36d3469111a.1420628786.git.moinejf@free.fr>
- <54AE99F5.1010404@ti.com> <20150108174257.557f7ea5@armhf>
- <20150108200421.GC2634@sirena.org.uk>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/4] pinctrl: Broadcom Cygnus pinctrl device tree binding
+Date: Fri, 9 Jan 2015 11:12:16 +0100
+Message-ID: <CACRpkdb5pNMbXmWGjrGpAYNLLwv6pWWOJQy0C6BLetNcStFM6A@mail.gmail.com>
+References: <rjui@broadcom.com>
+	<1417131990-17954-1-git-send-email-rjui@broadcom.com>
+	<1417131990-17954-2-git-send-email-rjui@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20150108200421.GC2634@sirena.org.uk>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>, Jean-Francois Moine <moinejf@free.fr>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Jyri Sarha <jsarha@ti.com>, Dave Airlie <airlied@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1417131990-17954-2-git-send-email-rjui@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ray Jui <rjui@broadcom.com>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Scott Branden <sbranden@broadcom.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/08/15 20:04, Mark Brown wrote:
-> On Thu, Jan 08, 2015 at 05:42:57PM +0100, Jean-Francois Moine wrote:
-> 
->> Examples:
-> 
->> - for the Cubox:
-> 
->> 	audio-inputs = "i2s", "spdif";
-> 
->> - for some other board with I2S on the pins 3 and 4 only:
-> 
->> 	audio-inputs = "none", "none", "i2s", "i2s";
-> 
->> - for a fully wired TDA9983B (no driver yet):
-> 
->> 	audio-inputs = "i2s", "i2s", "i2s", "i2s", "spdif";
-> 
-> I think that mostly works, though I do wonder if we need a way to
-> specify the ordering of the pins (if you can make pin 3 be the first two
-> I2S channels for example)?  Someone might choose a strange mapping for
-> board routing reasons for example.
-> 
+On Fri, Nov 28, 2014 at 12:46 AM, Ray Jui <rjui@broadcom.com> wrote:
 
-If it helps, I've collated the pin assignments given in the various TDA datasheets that I can find:
+> Device tree binding documentation for Broadcom Cygnus pinctrl driver
+>
+> Signed-off-by: Ray Jui <rjui@broadcom.com>
+> Reviewed-by: Scott Branden <sbranden@broadcom.com>
+> ---
+>  .../bindings/pinctrl/brcm,cygnus-pinctrl.txt       |   92 ++++++++++=
+++++++++++
+>  1 file changed, 92 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,cy=
+gnus-pinctrl.txt
+>
+> diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,cygnus-pi=
+nctrl.txt b/Documentation/devicetree/bindings/pinctrl/brcm,cygnus-pinct=
+rl.txt
+> new file mode 100644
+> index 0000000..86e4579
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/brcm,cygnus-pinctrl.t=
+xt
+> @@ -0,0 +1,92 @@
+> +Broadcom Cygnus Pin Controller
+> +
+> +The Cygnus pin controller supports setting the alternate functions o=
+f groups
+> +of pins. Pinmux configuration on individual pins is not supported by=
+ the
+> +Cygnus A0 SoC.
+> +
+> +Required properties:
+> +
+> +- compatible:
+> +    Must be "brcm,cygnus-pinctrl"
+> +
+> +- reg:
+> +    Define the base and range of the I/O address space that contain =
+the Cygnus
+> +pin control registers
 
-Chip>	9983B	9989		19988		19989	
-Mode>	-	S/PDIF	I2S	S/PDIF	I2S	S/PDIF	I2S
-Pin
-AP0	WS	-	WS	-	WS	-	WS
-AP1	I2S#0	S/PDIF	I2S#0	S/PDIF	I2S#0	S/PDIF	I2S#0
-AP2	I2S#1	-	-	S/PDIF	I2S#1	S/PDIF	I2S#1
-AP3	I2S#2	-	-	-	I2S#2*	MCLK	-
-AP4	I2S#3	-	-	-	I2S#3*	-	-
-AP5	MCLK	-	-	-	-	-	-
-AP6	S/PDIF	-	-	-	-	-	-
-AP7	AUX	-	-	-	-	-	-
+The following is subnodes. Indicate clearly in the binding that these a=
+re
+*not* properties of the main node, but individual subnodes.
 
-WS = I2S Word Select
-* Depends on package
+> +- brcm,groups:
+> +    This can be strings of one or more group names. This defines the=
+ group(s)
+> +that one wants to configure
+> +
+> +- brcm,function:
+> +    This is the alternate function that one wants to configure to. V=
+alid
+> +alternate functions are "alt1", "alt2", "alt3", "alt4"
 
-The 9983B differs from the other devices in that the I2S and S/PDIF functionality is not multiplexed 
-onto various pins.
+NAK. We have standardized bindings for groups and functions,
+and there are pending patches from S=C3=B6ren Brinkmann adding
+this to the pinctrl DT parsing core.
 
-	Andrew
+Just use "groups" and "function" and refer to
+Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+
+Then "alt1", "alt2" etc are non-functional names of functions.
+Use the real function names, like "spi0" or so. This
+alt-business seems to be just a shortcut to make it
+simple, don't do that.
+
+Then you use e.g. "spi0" as a group name. I prefer you
+call that "spi0_grp" or something to say it is a group of
+pins associated with spi0, as spi0 is actually the
+function.
+
+If unsure of the definitions of group and function, refer
+to Documentation/pinctrl.txt
+
+Yours,
+Linus Walleij
