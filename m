@@ -1,50 +1,99 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 4/6] i2c: busses: add SLIMpro I2C device driver on APM X-Gene platform
-Date: Fri, 09 Jan 2015 20:42:28 +0100
-Message-ID: <15808906.L2zUs54agU@wuerfel>
-References: <1412726809-7525-1-git-send-email-fkan@apm.com> <1894616.4yY7dajl4R@wuerfel> <CAL85gmCOXKiHEO=URrAGBNZpJpen5P5PH1xDoF1-jasj0iDg4Q@mail.gmail.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH v9 1/4] drm/i2c: tda998x: Add DT support for audio
+Date: Fri, 9 Jan 2015 20:01:27 +0000
+Message-ID: <20150109200127.GD12302@n2100.arm.linux.org.uk>
+References: <54AE99F5.1010404@ti.com> <20150108174257.557f7ea5@armhf>
+ <54AFA9B0.6040405@ti.com> <20150109123036.4bc4bbf6@armhf>
+ <20150109114529.GH12302@n2100.arm.linux.org.uk>
+ <20150109135401.5b270d46@armhf>
+ <20150109130725.GN12302@n2100.arm.linux.org.uk>
+ <54AFDE8D.3000504@arm.com>
+ <20150109145741.GP12302@n2100.arm.linux.org.uk>
+ <20150109183857.53d701a4@armhf>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL85gmCOXKiHEO=URrAGBNZpJpen5P5PH1xDoF1-jasj0iDg4Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hieu Le <hnle-qTEPVZfXA3Y@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20150109183857.53d701a4@armhf>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jean-Francois Moine <moinejf@free.fr>, Philipp Zabel <p.zabel@pengutronix.de>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Andrew Jackson <Andrew.Jackson@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>, Mark Brown <broonie@kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 09 January 2015 10:56:51 Feng Kan wrote:
-> On Tue, Nov 11, 2014 at 1:51 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> > On Tuesday 07 October 2014 17:06:47 Feng Kan wrote:
-> >> diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
-> >> index 2e45ae3..a03042c 100644
-> >> --- a/drivers/i2c/busses/Kconfig
-> >> +++ b/drivers/i2c/busses/Kconfig
-> >> @@ -1009,6 +1009,15 @@ config I2C_CROS_EC_TUNNEL
-> >>         connected there. This will work whatever the interface used to
-> >>         talk to the EC (SPI, I2C or LPC).
-> >>
-> >> +config I2C_XGENE_SLIMPRO
-> >> +     tristate "APM X-Gene SoC I2C SLIMpro devices support"
-> >> +     depends on ARCH_XGENE && XGENE_SLIMPRO_MBOX
-> >
-> > Why this dependency on XGENE_SLIMPRO_MBOX?
-> >
-> > Better replace it with a dependency on MAILBOX.
-> Arnd, just a question. Is this because this possibly help with future
-> compatibility by choosing a more broad dependency?
-
-The dependency should ideally describe build-time dependencies,
-to make it possible to build on other architectures for static
-code analysis purposes. If the driver makes no sense on other
-platforms you can also use
-
-	depends on ARCH_XGENE || COMPILE_TEST
-	depends on MAILBOX
-
-to cover both the build-time and run-time dependencies. But the
-dependency on XGENE_SLIMPRO_MBOX just shouldn't be there, the driver
-will work with any mailbox implementation if someone puts the same
-hardware into a different SoC.
-
-	Arnd
+T24gRnJpLCBKYW4gMDksIDIwMTUgYXQgMDY6Mzg6NTdQTSArMDEwMCwgSmVhbi1GcmFuY29pcyBN
+b2luZSB3cm90ZToKPiBPbiBGcmksIDkgSmFuIDIwMTUgMTQ6NTc6NDEgKzAwMDAKPiBSdXNzZWxs
+IEtpbmcgLSBBUk0gTGludXggPGxpbnV4QGFybS5saW51eC5vcmcudWs+IHdyb3RlOgo+ID4gV2hh
+dCB3ZSBkbyBrbm93IGlzIHRoYXQgdGhlcmUgaXMgYSBmaXhlZCBtYXBwaW5nIGJldHdlZW4gQVAg
+cGlucyBhbmQgSTJTCj4gPiBjaGFubmVscyAod2hpY2ggYXJlIG5vdCBQQ00gY2hhbm5lbHMpLCBi
+dXQgYXMgeW91IHBvaW50IG91dCwgd2UgZG9uJ3QKPiA+IGhhdmUgYW55IGRvY3VtZW50YXRpb24g
+d2hpY2ggZGVzY3JpYmVzIGhvdyB0aGUgSTJTIGNoYW5uZWxzIChlYWNoIHdpdGgKPiA+IHRoZWly
+IG93biBMK1Igd29yZHMpIG1hcCB0byB0aGUgUENNIGNoYW5uZWxzIC0gYW5kIHdlIGRvbid0IGtu
+b3cgd2hldGhlcgo+ID4gdGhlIENBX0kyUyBiaXRzIGluIHRoYXQgc2FtZSByZWdpc3RlciBpbiB0
+aGUgVERBOTk4eCBoYXZlIGFuIGVmZmVjdCBvbgo+ID4gdGhpcy4KPiAKPiBIRE1JIHRhbGtzIGFi
+b3V0IExQQ00gKExpbmVhciBQQ00pIGNoYW5uZWxzIGFuZCBUREExOTk4OCB0YWxrcyBhYm91dAo+
+IEkyUy1idXMgKHN0ZXJlbykgY2hhbm5lbHMuIEZvciBtZSwgaXQgc2VlbXMgb2J2aW91cyB0aGF0
+IHRoZXNlIGNoYW5uZWxzCj4gYXJlIGNvcnJlbGF0ZWQ6Cj4gLSBMUENNLTAgaXMgSTJTLWJ1cy0w
+LWxlZnQgKEZMKQo+IC0gTFBDTS0xIGlzIEkyUy1idXMtMC1yaWdodCAoRlIpCj4gLSBMUENNLTIg
+aXMgSTJTLWJ1cy0xLWxlZnQgKExGRSkKPiAtIExQQ00tMyBpcyBJMlMtYnVzLTEtcmlnaHQgKEZD
+KQo+IC4uLgoKVGhhdCdzIGNlcnRhaW5seSBhIHJlYXNvbmFibGUgcG9zc2liaWxpdHksIGJ1dCB3
+ZSBkb24ndCBoYXZlIGEgd2F5IHRvCmNvbmZpcm0gaXQgYXMgSSBkb24ndCB0aGluayBhbnlvbmUg
+aGFzIGFjY2VzcyB0byBhIHNldHVwIHdoaWNoIHVzZXMKSTJTIGJ1cyAxLgoKPiA+IERvZXMgYW55
+b25lIGhhdmUgYSBUREE5OTh4IHNldHVwIHdoaWNoIGhhcyBhbiBJMlMgc291cmNlIGNvbm5lY3Rl
+ZCB0bwo+ID4gdGhlIFREQTk5OHggSTJTIGNoYW5uZWwgMSwgYW5kIHdobyBoYXMgYSBIRE1JIHNp
+bmsgd2hpY2ggd2lsbCBhY2NlcHQKPiA+IHRoZSBMRkUvRkMgY2hhbm5lbHM/ICBJZiBzbywgcHJv
+ZHVjaW5nIGEgZGVzY3JpcHRpb24gb2YgaG93IHRoZSBDQV9JMlMKPiA+IGJpdHMgYW5kIGVuYWJs
+aW5nIEkyUyBpbnB1dCBwaW5zIGluZmx1ZW5jZXMgdGhlIG1hcHBpbmcgd291bGQgYmUgYSBnb29k
+Cj4gPiBpZGVhLgo+IAo+IEkgY291bGQgbm90IGZpbmQgYSBkZXNjcmlwdGlvbiBvZiB0aGVzZSBD
+QV9JMlMgYml0cy4KCkknbSB3aWxsaW5nIHRvIGJldCB0aGF0IHdoZW4gdGhlIGF1ZGlvIGlzIGNv
+bmZpZ3VyZWQgZm9yIGxheW91dCAxLCBDQV9JMlMKYWZmZWN0cyB0aGUgbWFwcGluZyBvZiBpbmRp
+dmlkdWFsIEkyUyBjaGFubmVscyAod2hhdCBJIGNhbGwgIndvcmRzIikgdG8KdGhlIEhETUkgY2hh
+bm5lbHMuCgo+ID4gSWYgd2UgZG9uJ3QgaGF2ZSB0aGF0LCBJJ2QgcmVjb21tZW5kIHNwbGl0dGlu
+ZyB0aGUgRFQgcHJvcGVydHkgaW50bwo+ID4gImF1ZGlvIGlucHV0cyBmb3IgSTJTIiBhbmQgImF1
+ZGlvIGlucHV0IGZvciBTUERJRiIgKG9ubHkgb25lIGNhbiBiZQo+ID4gYWN0aXZlIHdpdGggU1BE
+SUYpLgo+ID4gCj4gPiBJZiB3ZSB3YW50IHRvIHN1cHBvcnQgbW9yZSB0aGFuIG9uZSBTUERJRiBp
+bnB1dCAod2hpY2ggbXVzdCBiZSBtdXR1YWxseQo+ID4gZXhjbHVzaXZlKSBJJ2QgcmVjb21tZW5k
+IHRvIGxvb2sgYXQgdGhlIE9GIGdyYXBoIHN0dWZmIHdlIHVzZSBpbiBEUk0gLQo+ID4gb25lIHBv
+cnQgZm9yIGVhY2ggIm1vZGUiIC0gZWcsIEkyUywgU1BESUYgaW4gb24gQVAyLCBTUERJRiBpbiBv
+biBBUDMuCj4gPiBFYWNoIHBvcnQgbm9kZSBjYW4gc3BlY2lmeSB0aGUgQVAgcGlucyB3aGljaCBz
+aG91bGQgYmUgZW5hYmxlZC4KPiAKPiBJIGFncmVlLiBUaGVyZSBhcmUgb25lIFMvUERJRiBwb3J0
+IGFuZCBvbmUgSTJTIHBvcnQuCj4gCj4gU28sIHdoaWNoIHN5bnRheD8KPiAKPiBJIHByb3Bvc2Vk
+Ogo+IAo+IAlhdWRpby1wb3J0cyA9IDwweDA0PiwgPDB4MDM+Owo+IAlhdWRpby1wb3J0LW5hbWVz
+ID0gInNwZGlmIiwgImkycyI7Cj4gCj4gRG8geW91IGJldHRlciBsaWtlOgo+IAo+IAlhdWRpby1z
+cGRpZi1wb3J0ID0gPDB4MDQ+Owo+IAlhdWRpby1pMnMtcG9ydCA9IDwweDAzPjsKCk5laXRoZXI7
+IHdlIGtub3cgdGhhdCB0aGVyZSBhcmUgVERBOTk4eCBkZXZpY2VzIHdoaWNoIGFsbG93IFNQRElG
+IHRvIGJlCmlucHV0IHZpYSB0d28gc2VwYXJhdGUgcGlucywgYnV0IG9ubHkgb25lIHRvIGJlIGFj
+dGl2ZSBhdCBhbnkgb25lIHRpbWUuCkdpdmVuIHRoYXQgdGhlIGhhcmR3YXJlIGlzIGZsZXhpYmxl
+IGluIHRoYXQgcmVnYXJkLCBhIGJpbmRpbmcgd2hpY2gKYXJ0aWZpY2lhbGx5IHJlc3RyaWN0cyB0
+aGF0IGZsZXhpYmlsaXR5IHdvdWxkIHNlZW0gdW53aXNlLgoKSWYgd2Ugd2VyZSB0byBjb21lIGFj
+cm9zcyBhIHNldHVwIHdoaWNoIGRpZCByb3V0ZSB0d28gU1BESUYgc3RyZWFtcyB0bwp0aGUgVERB
+OTk4eCwgYW5kIHdlIGhhZCB0byBtYWtlIHRoZSBkZWNpc2lvbiBhdCBydW4gdGltZSB3aGljaCB0
+byByb3V0ZQp0byB0aGUgSERNSSBzaW5rLCB3ZSdkIGhhdmUgdG8gcmV3b3JrIHRoZSBiaW5kaW5n
+LCBhbmQgd2UnZCBoYXZlIHRvCnN1cHBvcnQgdGhlIG5ldyBiaW5kaW5nIGFuZCB0aGUgb2xkIGJp
+bmRpbmcgaW4gdGhlIGRyaXZlci4KCkNhbiB5b3UgcGxlYXNlIGxvb2sgYXQgRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dyYXBoLnR4dCA/CgpJIHRoaW5rIHdlIG1heSBiZSBhYmxl
+IHRvIHVzZSBzb21ldGhpbmcgbGlrZSB0aGlzOgoKdGRhOTk4eDogaGRtaS1lbmNvZGVyIHsKCWNv
+bXBhdGlibGUgPSAibnhwLHRkYTk5OHgiOwoJcmVnID0gPDB4NzA+OwoJdmlkZW8tcG9ydHMgPSA8
+MHgyMzQ1MDE+OwoKCXBvcnQgewoJCXRkYTk5OHhfdmlkZW86IGVuZHBvaW50IHsKCQkJcmVtb3Rl
+LWVuZHBvaW50ID0gPCZsY2QwX3JnYj47CgkJfTsKCX07CgoJcG9ydCB7CgkJI2FkZHJlc3MtY2Vs
+bHMgPSA8MT47CgkJI3NpemUtY2VsbHMgPSA8MD47CgoJCXRkYTk5OHhfc3BkaWYwOiBlbmRwb2lu
+dEAwMiB7CgkJCXJlZyA9IDwweDAyPjsKCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZzcGRpZjA+OwoJ
+CX07CgoJCXRkYTk5OHhfc3BkaWYxOiBlbmRwb2ludEAwNCB7CgkJCXJlZyA9IDwweDA0PjsKCQkJ
+cmVtb3RlLWVuZHBvaW50ID0gPCZzcGRpZjA+OwoJCX07CgoJCXRkYTk5OHhfaTJzOiBlbmRwb2lu
+dEAwMyB7CgkJCXJlZyA9IDwweDAzPjsKCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZpMnM+OwoJCX07
+Cgl9Owp9OwoKSSdtIGFkZGluZyBQaGlsaXBwIFphYmVsIGZvciBjb21tZW50LiAgVGhlIGlzc3Vl
+IEkgc2VlIHdpdGggdGhpcyBpcyB0aGF0CndlIGhhdmUgdHdvIHBvcnRzIGhlcmUgd2hpY2ggYXJl
+IG5vdCBtdXR1YWxseSBleGNsdXNpdmUsIGFuZCBpdCdzIG5vdApvYnZpb3VzIGhvdyB0aGV5IGFy
+ZSBkZWFsdCB3aXRoLgoKLS0gCkZUVEMgYnJvYWRiYW5kIGZvciAwLjhtaWxlIGxpbmU6IGN1cnJl
+bnRseSBhdCAxMC41TWJwcyBkb3duIDQwMGticHMgdXAKYWNjb3JkaW5nIHRvIHNwZWVkdGVzdC5u
+ZXQuCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1k
+ZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8v
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
