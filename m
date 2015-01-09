@@ -1,26 +1,27 @@
-From: Gyungoh Yoo <gyungoh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v10 3/6] devicetree: mfd: Add new SKY81452 mfd binding
-Date: Fri, 9 Jan 2015 10:30:36 +0900
-Message-ID: <20150109013036.GA2907@jack-ThinkPad-T520>
+From: Gyungoh Yoo <gyungoh@gmail.com>
+Subject: Re: [PATCH v10 4/6] devicetree: backlight: Add new SKY81452
+ backlight binding
+Date: Fri, 9 Jan 2015 10:31:19 +0900
+Message-ID: <20150109013119.GB2907@jack-ThinkPad-T520>
 References: <1420597167-3188-1-git-send-email-jack.yoo@skyworksinc.com>
- <1420597167-3188-4-git-send-email-jack.yoo@skyworksinc.com>
+ <1420597167-3188-5-git-send-email-jack.yoo@skyworksinc.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1420597167-3188-4-git-send-email-jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org, hs-ynQEQJNshbs@public.gmane.org, stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org, matti.vaittinen-OYasijW0DpE@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, florian.vaussard-p8DiymsW2f8@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, hytszk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org, jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1420597167-3188-5-git-send-email-jack.yoo@skyworksinc.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: sameo@linux.intel.com, lee.jones@linaro.org, grant.likely@linaro.org, robh+dt@kernel.org, jg1.han@samsung.com, cooloney@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, trivial@kernel.org
+Cc: akpm@linux-foundation.org, jic23@kernel.org, thomas.petazzoni@free-electrons.com, ktsai@capellamicro.com, hs@denx.de, stwiss.opensource@diasemi.com, matti.vaittinen@nsn.com, broonie@kernel.org, jason@lakedaemon.net, heiko@sntech.de, shawn.guo@freescale.com, florian.vaussard@epfl.ch, andrew@lunn.ch, antonynpavlov@gmail.com, hytszk@gmail.com, plagnioj@jcrosoft.com, tomi.valkeinen@ti.com, jack.yoo@skyworksinc.com, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 DT Ack please.
 
-On Wed, Jan 07, 2015 at 11:19:24AM +0900, gyungoh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> From: Gyungoh Yoo <jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>
+On Wed, Jan 07, 2015 at 11:19:25AM +0900, gyungoh@gmail.com wrote:
+> From: Gyungoh Yoo <jack.yoo@skyworksinc.com>
 > 
-> Signed-off-by: Gyungoh Yoo <jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>
-> Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Gyungoh Yoo <jack.yoo@skyworksinc.com>
+> Acked-by: Bryan Wu <cooloney@gmail.com>
 > ---
 > Changes v10:
 > Nothing
@@ -29,6 +30,8 @@ On Wed, Jan 07, 2015 at 11:19:24AM +0900, gyungoh-Re5JQEeQqe8AvxtiuMwx3w@public.
 > Nothing
 > 
 > Changes v8:
+> Renamed property names for backlight with vendor prefix
+> Modified gpio-enable property to generic property for GPIO
 > Made up the example for backlight DT
 > 
 > Changes v7:
@@ -38,8 +41,7 @@ On Wed, Jan 07, 2015 at 11:19:24AM +0900, gyungoh-Re5JQEeQqe8AvxtiuMwx3w@public.
 > Nothing
 > 
 > Changes v5:
-> Changed DT for regulator : 'lout' node should be defined under 'regulator'
-> Removed compatible string from sky81452-regulator driver
+> Nothing
 > 
 > Changes v4:
 > Nothing
@@ -50,56 +52,45 @@ On Wed, Jan 07, 2015 at 11:19:24AM +0900, gyungoh-Re5JQEeQqe8AvxtiuMwx3w@public.
 > Changes v2:
 > Added reg attribute for I2C slave address
 > 
->  Documentation/devicetree/bindings/mfd/sky81452.txt | 36 ++++++++++++++++++++++
->  1 file changed, 36 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/sky81452.txt
+>  .../video/backlight/sky81452-backlight.txt         | 29 ++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/video/backlight/sky81452-backlight.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/mfd/sky81452.txt b/Documentation/devicetree/bindings/mfd/sky81452.txt
+> diff --git a/Documentation/devicetree/bindings/video/backlight/sky81452-backlight.txt b/Documentation/devicetree/bindings/video/backlight/sky81452-backlight.txt
 > new file mode 100644
-> index 0000000..ab71473
+> index 0000000..8daebf5
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/sky81452.txt
-> @@ -0,0 +1,36 @@
-> +SKY81452 bindings
+> +++ b/Documentation/devicetree/bindings/video/backlight/sky81452-backlight.txt
+> @@ -0,0 +1,29 @@
+> +SKY81452-backlight bindings
 > +
 > +Required properties:
-> +- compatible	: Must be "skyworks,sky81452"
-> +- reg		: I2C slave address
+> +- compatible		: Must be "skyworks,sky81452-backlight"
 > +
-> +Required child nodes:
-> +- backlight	: container node for backlight following the binding
-> +		in video/backlight/sky81452-backlight.txt
-> +- regulator	: container node for regulators following the binding
-> +		in regulator/sky81452-regulator.txt
+> +Optional properties:
+> +- name			: Name of backlight device. Default is 'lcd-backlight'.
+> +- gpios			: GPIO to use to EN pin.
+> +			See Documentation/devicetree/bindings/gpio/gpio.txt
+> +- skyworks,en-channels	: Enable mask for current sink channel 1 to 6.
+> +- skyworks,ignore-pwm	: Ignore both PWM input
+> +- skyworks,dpwm-mode	: Enable DPWM dimming mode, otherwise Analog dimming.
+> +- skyworks,phase-shift	: Enable phase shift mode
+> +- skyworks,ovp-level	: Over-voltage protection level.
+> +			Should be between 14 or 28V.
+> +- skyworks,short-detection-threshold	: It should be one of 4, 5, 6 and 7V.
+> +- skyworks,current-limit	: It should be 2300mA or 2750mA.
 > +
 > +Example:
 > +
-> +	sky81452@2c {
-> +		compatible = "skyworks,sky81452";
-> +		reg = <0x2c>;
-> +
-> +		backlight {
-> +			compatible = "skyworks,sky81452-backlight";
-> +			name = "pwm-backlight";
-> +			skyworks,en-channels = <0x3f>;
-> +			skyworks,ignore-pwm;
-> +			skyworks,phase-shift;
-> +			skyworks,ovp-level = <20>;
-> +			skyworks,current-limit = <2300>;
-> +		};
-> +
-> +		regulator {
-> +			lout {
-> +				regulator-name = "sky81452-lout";
-> +				regulator-min-microvolt = <4500000>;
-> +				regulator-max-microvolt = <8000000>;
-> +			};
-> +		};
+> +	backlight {
+> +		compatible = "skyworks,sky81452-backlight";
+> +		name = "pwm-backlight";
+> +		skyworks,en-channels = <0x3f>;
+> +		skyworks,ignore-pwm;
+> +		skyworks,phase-shift;
+> +		skyworks,ovp-level = <20>;
+> +		skyworks,current-limit = <2300>;
 > +	};
 > -- 
 > 1.9.1
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
