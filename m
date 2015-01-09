@@ -1,40 +1,40 @@
-From: Beomho Seo <beomho.seo@samsung.com>
-Subject: [PATCH v2 0/3] power: rt5033: Add Richtek RT533 drivers
-Date: Fri, 09 Jan 2015 17:45:10 +0900
-Message-ID: <1420793114-20586-1-git-send-email-beomho.seo@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, sre@kernel.org
-Cc: lee.jone@linaro.org, broonie@kernel.org, dbaryshkov@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, cw00.choi@samsung.com, inki.dae@samsung.com, sw0312.kim@samsung.com, Beomho Seo <beomho.seo@samsung.com>
+From: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] ARM: at91: sama5d3: dt: correct the sound route
+Date: Fri, 9 Jan 2015 17:18:16 +0800
+Message-ID: <1420795096-8944-1-git-send-email-voice.shen@atmel.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patchset adds driver for Richtek rt5033 chip The chip contains
-switching charge mode Li-Ion/Li-Polymer battery charger, fuelgauge.
-Additionally, This includes document for device tree of RT5033 device.
+The MICBIAS is a supply, should route to MIC while not IN1L.
 
-RT5033 core driver is applied by Lee Jones.
-RT5033 regulator driver have been merged by Mark Brown. commit is below,
+Signed-off-by: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+---
 
-commit b1917578fd5d8efa67afa05a0d6d7e323f2802da
+ arch/arm/boot/dts/sama5d3xmb.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Changes in v2:
-- Revise binding documentation..
+diff --git a/arch/arm/boot/dts/sama5d3xmb.dtsi b/arch/arm/boot/dts/sama5d3xmb.dtsi
+index 0399be6..83d0598 100644
+--- a/arch/arm/boot/dts/sama5d3xmb.dtsi
++++ b/arch/arm/boot/dts/sama5d3xmb.dtsi
+@@ -176,7 +176,7 @@
+ 			"Headphone Jack", "HPOUTR",
+ 			"IN2L", "Line In Jack",
+ 			"IN2R", "Line In Jack",
+-			"MICBIAS", "IN1L",
++			"Mic", "MICBIAS",
+ 			"IN1L", "Mic";
  
-Beomho Seo (3):
-  power: rt5033_battery: Add RT5033 Fuel gauge device driver
-  power: rt5033_charger: Add RT5033 charger device driver
-  Documentation: Add documentation for rt5033 multifunction device
-
- Documentation/devicetree/bindings/mfd/rt5033.txt   |  101 ++++
- .../devicetree/bindings/vendor-prefixes.txt        |    1 +
- drivers/power/Kconfig                              |   16 +
- drivers/power/Makefile                             |    2 +
- drivers/power/rt5033_battery.c                     |  177 +++++++
- drivers/power/rt5033_charger.c                     |  485 ++++++++++++++++++++
- 6 files changed, 782 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/rt5033.txt
- create mode 100644 drivers/power/rt5033_battery.c
- create mode 100644 drivers/power/rt5033_charger.c
-
+ 		atmel,ssc-controller = <&ssc0>;
 -- 
-1.7.9.5
+2.1.0.24.g4109c28
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
