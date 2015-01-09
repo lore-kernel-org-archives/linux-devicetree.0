@@ -1,69 +1,99 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 5/9] dts: versatile: add sysregs nodes
-Date: Fri, 9 Jan 2015 11:53:37 +0000
-Message-ID: <20150109115337.GA18609@red-moon>
-References: <1419967718-26909-1-git-send-email-robherring2@gmail.com>
- <1419967718-26909-6-git-send-email-robherring2@gmail.com>
- <CACRpkdbinR3Uvi5zZmQJFxJgnWfvE6JZouMVxxRRGVtMNXkBQQ@mail.gmail.com>
- <CAL_JsqKBLx03E1w0NMH8CH+Pm_L8yQvnR6VTTDxqnpOwAoDhXg@mail.gmail.com>
- <CACRpkdZFxToT5L0sJXap-NQGtjkryn4KTZVnweKCxXL9WvFLEg@mail.gmail.com>
+From: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 3/3] clk: berlin: bg2q: remove non-exist "smemc" gate
+ clock
+Date: Fri, 9 Jan 2015 20:13:06 +0800
+Message-ID: <20150109201306.4d1a296b@xhacker>
+References: <1420016272-6789-1-git-send-email-jszhang@marvell.com>
+	<1420016272-6789-4-git-send-email-jszhang@marvell.com>
+	<54AD3EAE.6090009@gmail.com>
+	<20150107222209.64ed24a0@xhacker>
+	<54AD431F.6060403@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdZFxToT5L0sJXap-NQGtjkryn4KTZVnweKCxXL9WvFLEg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <54AD431F.6060403-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Peter Maydell <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, pawel.moll-5wv7dgnIgG8@public.gmane.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Cc'ing Pawel since he wrote the sysreg code
+Dear Sebastian,
 
-On Fri, Jan 09, 2015 at 07:10:36AM +0000, Linus Walleij wrote:
-> On Fri, Jan 9, 2015 at 12:53 AM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > On Thu, Jan 8, 2015 at 1:44 PM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> 
-> >> On Tue, Dec 30, 2014 at 8:28 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> >> compatible = "syscon";
+On Wed, 7 Jan 2015 06:30:55 -0800
+Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+
+> On 07.01.2015 15:22, Jisheng Zhang wrote:
+> > Dear Sebastian,
 > >
-> > maybe? VExpress is missing that then...
+> > On Wed, 7 Jan 2015 06:11:58 -0800
+> > Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> >
+> >> On 31.12.2014 09:57, Jisheng Zhang wrote:
+> >>> The "smemc" clock is removed on BG2Q SoCs. In fact, bit19 of clkenable
+> >>> register is for nfc. Current code use bit19 for non-exist "smemc"
+> >>> incorrectly, this prevents eMMC from working due to the sdhci's
+> >>> "core" clk is still gated.
+> >>>
+> >>> Signed-off-by: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+> >>> Cc: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org # 3.16+
+> >>> ---
+> >>>    drivers/clk/berlin/bg2q.c | 1 -
+> >>>    1 file changed, 1 deletion(-)
+> >>>
+> >>> diff --git a/drivers/clk/berlin/bg2q.c b/drivers/clk/berlin/bg2q.c
+> >>> index 21784e4..440ef81 100644
+> >>> --- a/drivers/clk/berlin/bg2q.c
+> >>> +++ b/drivers/clk/berlin/bg2q.c
+> >>> @@ -285,7 +285,6 @@ static const struct berlin2_gate_data bg2q_gates[]
+> >>> __initconst = { { "pbridge",	"perif",	15,
+> >>> CLK_IGNORE_UNUSED }, { "sdio",	"perif",	16,
+> >>> CLK_IGNORE_UNUSED }, { "nfc",	"perif",	18 },
+> >
+> > The nfc here is really confusing, we call it as nfccore internally. Is it
+> > better to rename it as nfccore?
 > 
-> I don't like the way some vexpress stuff has been done I think, just
-> not enough reviewing power :(
+> I guess it comes from some early Marvell BSP code, if there is no
+> issues with the name, e.g. something already depends on "nfc", feel
+> free to rename it to something more meaningful.
 
-I think that "syscon" is not meant to be there in the first place and it
-was done on purpose for vexpress but I need Pawel to confirm and shed
-light on this.
+In BG2, mrvl call the clock as nfccore. The code use "nfc" for it.
+The situation is similar for usbcore, satacore etc. So keep the name here,
+what do you think?
 
-> I've tried to make an as clean separation as possible in the Integrator
-> as it has been refactored with a minimum of time pressure and
-> I tried to make it as reusable as possible. But it doesn't necessarily
-> mean I did the right thing all the time ...
 > 
-> >>> +                               reg = <0x00000 0x1000>;
-> >>> +
-> >>> +                               v2m_led_gpios: sys_led@08 {
-> >>> +                                       compatible = "arm,vexpress-sysreg,sys_led";
-> >>> +                                       gpio-controller;
-> >>> +                                       #gpio-cells = <2>;
-> >>> +                               };
+> >>> -	{ "smemc",	"perif",	19 },
 > >>
-> >> These are not GPIOs. These are LED registers really.
+> >> Jisheng,
+> >>
+> >> if bit 19 is for nfc, how does that work out with bit 18 which is
+> >> still assigned to nfc? Can you re-evaluate clkenable registers for
 > >
-> > A register bit that controls an i/o signal sounds like a GPIO to me.
+> > bit 19 is for nfcEcc, the "io" clock; bit 18 is for nfcCore, the "core"
+> > clock.
 > 
-> Are they described as general purpose in the manual for the
-> board?
+> Ok, then both bits should be dealt with accordingly, i.e. rename
+> "smemc" to "nfcecc" and use it in the corresponding dts node.
 > 
-> In the ARM reference design manuals I've seen these bits are
-> described as for one purpose only. I mean you can claim the
-> memory RE signal is "a bit that controls an I/O signal" as well,
-> but we have to think about the abstraction here.
+> If this clk_gate just disables a clock that is fed into another
+> gateable clock module, I can live with removing it - although I
+> still think it is best to leave the clk_gate in place and pick
+> another name that does not collide with any other clock name.
 
-I will have a look into this.
+The nfcecc is already defined in the bg2q_divs, the gate bit is correct there.
+
+> 
+> >> BG2Q and fix it up accordingly? I'd suggest to still disable as many
+> >
+> > I'll recheck the clk driver for BG2Q.
+> 
+
+I checked the clk driver for BG2Q one by one. The only problem is the "smemc"
+issue. Removing it is the only thing we need to do. So I think we can use the
+patch I sent.
 
 Thanks,
-Lorenzo
+Jisheng
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
