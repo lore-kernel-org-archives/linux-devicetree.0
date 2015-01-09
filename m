@@ -1,52 +1,193 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] ethernet: atheros: Add nss-gmac driver
-Date: Fri, 9 Jan 2015 13:50:45 +0000
-Message-ID: <20150109135045.GE12942@leverpostej>
-References: <y>
- <1420754626-30121-1-git-send-email-wstephen@codeaurora.org>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v2 2/2] phy: ti-pipe3: Fix SATA across suspend/resume
+Date: Fri, 9 Jan 2015 19:29:21 +0530
+Message-ID: <54AFDEB9.3060402@ti.com>
+References: <1418990720-3638-1-git-send-email-rogerq@ti.com> <1418990720-3638-3-git-send-email-rogerq@ti.com> <54AE6758.7030501@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1420754626-30121-1-git-send-email-wstephen-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Wang <wstephen-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: "jcliburn-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jcliburn-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <54AE6758.7030501@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>, tony@atomide.com
+Cc: nm@ti.com, balbi@ti.com, george.cherian@ti.com, nsekhar@ti.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 08, 2015 at 10:03:46PM +0000, Stephen Wang wrote:
-> This driver adds support for the internal GMACs on IPQ806x SoCs.
-> It supports the device-tree and will register up to 4 ethernet
-> interfaces.
+Hi Roger,
+
+On Thursday 08 January 2015 04:47 PM, Roger Quadros wrote:
+> Failed test case: Boot without SATA drive connected. Suspend/resume
+> the board and then connect SATA drive. It fails to enumerate.
 > 
-> Signed-off-by: Stephen Wang <wstephen-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Due to Errata i783 "SATA Lockup After SATA DPLL Unlock/Relock"
+> we can't allow SATA DPLL to be in the unlocked state.
+> The SATA refclk (sata_ref_clk) is the source of the SATA_DPLL.
+> Till now this clock was controlled by the AHCI SATA driver and was being
+> shut off  during system suspend (if the SATA drive was not already attached)
+> causing the SATA DPLL to be unlocked and so causing errata i783.
+> 
+> To prevent sata_ref_clk from being disabled, we move the control of
+> this clock from the SATA AHCI driver to the SATA PHY driver and prevent
+> it from being disabled.
+> 
+> This also fixes the issue of SATA not working on OMAP5/DRA7 when
+> AHCI platform driver is built as a module.
+
+I feel the dt patches and the PHY patches can go separately. Can you split and
+re-send?
+
+Thanks
+Kishon
+
+> 
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
 > ---
->  drivers/net/ethernet/atheros/Kconfig               |   10 +
->  drivers/net/ethernet/atheros/Makefile              |    1 +
->  drivers/net/ethernet/atheros/nss-gmac/LICENSE.txt  |   14 +
->  drivers/net/ethernet/atheros/nss-gmac/Makefile     |   19 +
->  .../atheros/nss-gmac/exports/nss_gmac_api_if.h     |  126 ++
->  .../atheros/nss-gmac/include/msm_nss_gmac.h        |  338 ++++
->  .../atheros/nss-gmac/include/msm_nss_macsec.h      |   73 +
->  .../atheros/nss-gmac/include/nss_gmac_clocks.h     |  100 +
->  .../atheros/nss-gmac/include/nss_gmac_dev.h        | 2136 ++++++++++++++++++++
->  .../nss-gmac/include/nss_gmac_network_interface.h  |   63 +
->  .../net/ethernet/atheros/nss-gmac/nss_gmac_ctrl.c  | 1210 +++++++++++
->  .../net/ethernet/atheros/nss-gmac/nss_gmac_dev.c   | 1963 ++++++++++++++++++
->  .../ethernet/atheros/nss-gmac/nss_gmac_ethtool.c   |  526 +++++
->  .../net/ethernet/atheros/nss-gmac/nss_gmac_init.c  | 1131 +++++++++++
->  .../ethernet/atheros/nss-gmac/nss_gmac_mdiobus.c   |  187 ++
->  .../atheros/nss-gmac/nss_gmac_tx_rx_offload.c      | 1175 +++++++++++
-
-Device tree bindings _must_ be documented, yet this standalone patch
-adds nothing to Documentation/devicetree/bindings per the diffstat
-above. So trivial NAK until there's a patch documenting that.
-
-See Documentation/devicetree/bindings/submitting-patches.txt 
-
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> v2: don't bail out for missing refclk on SATA phy to work with older broken DTBs.
+> 
+>  arch/arm/boot/dts/dra7.dtsi  |  4 ++--
+>  arch/arm/boot/dts/omap5.dtsi |  4 ++--
+>  drivers/phy/phy-ti-pipe3.c   | 57 +++++++++++++++++++++++++++++++-------------
+>  3 files changed, 45 insertions(+), 20 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+> index 22771bc..8d2a635 100644
+> --- a/arch/arm/boot/dts/dra7.dtsi
+> +++ b/arch/arm/boot/dts/dra7.dtsi
+> @@ -1090,8 +1090,8 @@
+>  				      <0x4A096800 0x40>; /* pll_ctrl */
+>  				reg-names = "phy_rx", "phy_tx", "pll_ctrl";
+>  				ctrl-module = <&omap_control_sata>;
+> -				clocks = <&sys_clkin1>;
+> -				clock-names = "sysclk";
+> +				clocks = <&sys_clkin1>, <&sata_ref_clk>;
+> +				clock-names = "sysclk", "refclk";
+>  				#phy-cells = <0>;
+>  			};
+>  
+> diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
+> index b321fdf..bb498e7 100644
+> --- a/arch/arm/boot/dts/omap5.dtsi
+> +++ b/arch/arm/boot/dts/omap5.dtsi
+> @@ -929,8 +929,8 @@
+>  				      <0x4A096800 0x40>; /* pll_ctrl */
+>  				reg-names = "phy_rx", "phy_tx", "pll_ctrl";
+>  				ctrl-module = <&omap_control_sata>;
+> -				clocks = <&sys_clkin>;
+> -				clock-names = "sysclk";
+> +				clocks = <&sys_clkin>, <&sata_ref_clk>;
+> +				clock-names = "sysclk", "refclk";
+>  				#phy-cells = <0>;
+>  			};
+>  		};
+> diff --git a/drivers/phy/phy-ti-pipe3.c b/drivers/phy/phy-ti-pipe3.c
+> index e60ff14..456dec2 100644
+> --- a/drivers/phy/phy-ti-pipe3.c
+> +++ b/drivers/phy/phy-ti-pipe3.c
+> @@ -85,6 +85,7 @@ struct ti_pipe3 {
+>  	struct pipe3_dpll_map	*dpll_map;
+>  	u8			id;
+>  	bool enabled;
+> +	bool refclk_enabled;	/* this flag is needed specifically for SATA */
+>  	spinlock_t lock;	/* serialize clock enable/disable */
+>  };
+>  
+> @@ -333,21 +334,24 @@ static int ti_pipe3_probe(struct platform_device *pdev)
+>  		}
+>  	}
+>  
+> +	phy->refclk = devm_clk_get(phy->dev, "refclk");
+> +	if (IS_ERR(phy->refclk)) {
+> +		dev_err(&pdev->dev, "unable to get refclk\n");
+> +		/* older DTBs have missing refclk in SATA PHY
+> +		 * so don't bail out in case of SATA PHY.
+> +		 */
+> +		if (!of_device_is_compatible(node, "ti,phy-pipe3-sata"))
+> +			return PTR_ERR(phy->refclk);
+> +	}
+> +
+>  	if (!of_device_is_compatible(node, "ti,phy-pipe3-sata")) {
+>  		phy->wkupclk = devm_clk_get(phy->dev, "wkupclk");
+>  		if (IS_ERR(phy->wkupclk)) {
+>  			dev_err(&pdev->dev, "unable to get wkupclk\n");
+>  			return PTR_ERR(phy->wkupclk);
+>  		}
+> -
+> -		phy->refclk = devm_clk_get(phy->dev, "refclk");
+> -		if (IS_ERR(phy->refclk)) {
+> -			dev_err(&pdev->dev, "unable to get refclk\n");
+> -			return PTR_ERR(phy->refclk);
+> -		}
+>  	} else {
+>  		phy->wkupclk = ERR_PTR(-ENODEV);
+> -		phy->refclk = ERR_PTR(-ENODEV);
+>  	}
+>  
+>  	if (of_device_is_compatible(node, "ti,phy-pipe3-pcie")) {
+> @@ -428,6 +432,29 @@ static int ti_pipe3_remove(struct platform_device *pdev)
+>  }
+>  
+>  #ifdef CONFIG_PM
+> +static int ti_pipe3_enable_refclk(struct ti_pipe3 *phy)
+> +{
+> +	if (!IS_ERR(phy->refclk) && !phy->refclk_enabled) {
+> +		int ret;
+> +
+> +		ret = clk_prepare_enable(phy->refclk);
+> +		if (ret) {
+> +			dev_err(phy->dev, "Failed to enable refclk %d\n", ret);
+> +			return ret;
+> +		}
+> +		phy->refclk_enabled = true;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void ti_pipe3_disable_refclk(struct ti_pipe3 *phy)
+> +{
+> +	if (!IS_ERR(phy->refclk))
+> +		clk_disable_unprepare(phy->refclk);
+> +
+> +	phy->refclk_enabled = false;
+> +}
+>  
+>  static int ti_pipe3_enable_clocks(struct ti_pipe3 *phy)
+>  {
+> @@ -438,13 +465,9 @@ static int ti_pipe3_enable_clocks(struct ti_pipe3 *phy)
+>  	if (phy->enabled)
+>  		goto err1;
+>  
+> -	if (!IS_ERR(phy->refclk)) {
+> -		ret = clk_prepare_enable(phy->refclk);
+> -		if (ret) {
+> -			dev_err(phy->dev, "Failed to enable refclk %d\n", ret);
+> -			goto err1;
+> -		}
+> -	}
+> +	ret = ti_pipe3_enable_refclk(phy);
+> +	if (ret)
+> +		goto err1;
+>  
+>  	if (!IS_ERR(phy->wkupclk)) {
+>  		ret = clk_prepare_enable(phy->wkupclk);
+> @@ -474,6 +497,7 @@ err2:
+>  	if (!IS_ERR(phy->refclk))
+>  		clk_disable_unprepare(phy->refclk);
+>  
+> +	ti_pipe3_disable_refclk(phy);
+>  err1:
+>  	spin_unlock_irqrestore(&phy->lock, flags);
+>  	return ret;
+> @@ -491,8 +515,9 @@ static void ti_pipe3_disable_clocks(struct ti_pipe3 *phy)
+>  
+>  	if (!IS_ERR(phy->wkupclk))
+>  		clk_disable_unprepare(phy->wkupclk);
+> -	if (!IS_ERR(phy->refclk))
+> -		clk_disable_unprepare(phy->refclk);
+> +	/* Don't disable refclk for SATA PHY due to Errata i783 */
+> +	if (!of_device_is_compatible(phy->dev->of_node, "ti,phy-pipe3-sata"))
+> +		ti_pipe3_disable_refclk(phy);
+>  	if (!IS_ERR(phy->div_clk))
+>  		clk_disable_unprepare(phy->div_clk);
+>  	phy->enabled = false;
+> 
