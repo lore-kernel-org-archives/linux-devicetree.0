@@ -1,32 +1,145 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH/RFC v10 07/19] mfd: max77693: Adjust FLASH_EN_SHIFT and
- TORCH_EN_SHIFT macros
-Date: Fri, 9 Jan 2015 18:59:47 +0100
-Message-ID: <20150109175947.GI18076@amd>
-References: <1420816989-1808-1-git-send-email-j.anaszewski@samsung.com>
- <1420816989-1808-8-git-send-email-j.anaszewski@samsung.com>
+From: Ray Jui <rjui@broadcom.com>
+Subject: Re: [PATCH 1/4] pinctrl: Broadcom Cygnus pinctrl device tree binding
+Date: Fri, 9 Jan 2015 10:26:12 -0800
+Message-ID: <54B01D44.5080601@broadcom.com>
+References: <rjui@broadcom.com>	<1417131990-17954-1-git-send-email-rjui@broadcom.com>	<1417131990-17954-2-git-send-email-rjui@broadcom.com> <CACRpkdb5pNMbXmWGjrGpAYNLLwv6pWWOJQy0C6BLetNcStFM6A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-leds-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1420816989-1808-8-git-send-email-j.anaszewski@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, b.zolnierkie@samsung.com, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com, Chanwoo Choi <cw00.choi@samsung.com>, Lee Jones <lee.jones@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdb5pNMbXmWGjrGpAYNLLwv6pWWOJQy0C6BLetNcStFM6A@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Scott Branden <sbranden@broadcom.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri 2015-01-09 16:22:57, Jacek Anaszewski wrote:
-> Modify FLASH_EN_SHIFT and TORCH_EN_SHIFT macros to work properly
-> when passed enum max77693_fled values (0 for FLED1 and 1 for FLED2)
-> from leds-max77693 driver.
-> 
-> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
-> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
-> Cc: Chanwoo Choi <cw00.choi@samsung.com>
-> Cc: Lee Jones <lee.jones@linaro.org>
 
-Acked-by: Pavel Machek <pavel@ucw.cz>
 
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+On 1/9/2015 2:12 AM, Linus Walleij wrote:
+> On Fri, Nov 28, 2014 at 12:46 AM, Ray Jui <rjui@broadcom.com> wrote:
+>=20
+>> Device tree binding documentation for Broadcom Cygnus pinctrl driver
+>>
+>> Signed-off-by: Ray Jui <rjui@broadcom.com>
+>> Reviewed-by: Scott Branden <sbranden@broadcom.com>
+>> ---
+>>  .../bindings/pinctrl/brcm,cygnus-pinctrl.txt       |   92 +++++++++=
++++++++++++
+>>  1 file changed, 92 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,c=
+ygnus-pinctrl.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,cygnus-p=
+inctrl.txt b/Documentation/devicetree/bindings/pinctrl/brcm,cygnus-pinc=
+trl.txt
+>> new file mode 100644
+>> index 0000000..86e4579
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pinctrl/brcm,cygnus-pinctrl.=
+txt
+>> @@ -0,0 +1,92 @@
+>> +Broadcom Cygnus Pin Controller
+>> +
+>> +The Cygnus pin controller supports setting the alternate functions =
+of groups
+>> +of pins. Pinmux configuration on individual pins is not supported b=
+y the
+>> +Cygnus A0 SoC.
+>> +
+>> +Required properties:
+>> +
+>> +- compatible:
+>> +    Must be "brcm,cygnus-pinctrl"
+>> +
+>> +- reg:
+>> +    Define the base and range of the I/O address space that contain=
+ the Cygnus
+>> +pin control registers
+>=20
+> The following is subnodes. Indicate clearly in the binding that these=
+ are
+> *not* properties of the main node, but individual subnodes.
+>=20
+Right. I'll fix the document.
+
+>> +- brcm,groups:
+>> +    This can be strings of one or more group names. This defines th=
+e group(s)
+>> +that one wants to configure
+>> +
+>> +- brcm,function:
+>> +    This is the alternate function that one wants to configure to. =
+Valid
+>> +alternate functions are "alt1", "alt2", "alt3", "alt4"
+>=20
+> NAK. We have standardized bindings for groups and functions,
+> and there are pending patches from S=C3=B6ren Brinkmann adding
+> this to the pinctrl DT parsing core.
+>=20
+> Just use "groups" and "function" and refer to
+> Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+>=20
+> Then "alt1", "alt2" etc are non-functional names of functions.
+> Use the real function names, like "spi0" or so. This
+> alt-business seems to be just a shortcut to make it
+> simple, don't do that.
+>=20
+> Then you use e.g. "spi0" as a group name. I prefer you
+> call that "spi0_grp" or something to say it is a group of
+> pins associated with spi0, as spi0 is actually the
+> function.
+>=20
+Hmmm, I did this by following brcm,bcm11351-pinctrl.txt:
+- function: String. Specifies the pin mux selection. Values must be one
+of: "alt1", "alt2", "alt3", "alt4"
+
+But you are right, in the pinctrl binding document it describes the
+generic pin multiplexing nodes use "function" and "group".
+
+Let me try to explain how the Cygnus pinctrl controller works and maybe
+you can help to comment whether or not it's suitable for what's
+described in pinctrl-binding.txt for the usage of "function" and "group=
+".
+
+The Cygnus pinctrl contoller has a limitation that the mux configuratio=
+n
+can only be group based. "group" here is a real configuration in the
+Cygnus pinctrl controller registers. One can configure a "group" to
+alternate function 1, 2, 3, or 4.
+
+=46or example, the group "lcd" covers 30 pins. When I configure "lcd" t=
+o
+alternate function 1, all 30 pins are muxed to LCD function. When
+configured to function 2, all pins are muxed to SRAM function. Now, her=
+e
+comes the issue, when configured to function 3, pins 1-15 and 20-30
+become GPIO function, but pins 16-19 becomes SPI5 function. When it's
+configured to function 4, all 30 pins become GPIO.
+
+In some other cases, when I configure a group to other functions, there
+could be spare pins which become unused (not brought out to the pad).
+Or, the spare pins may also become a separate function.
+
+Based on the LCD example, I'd assume I would do the following for the
+default LCD function:
+
+lcd_node {
+	group =3D "lcd_grp";
+	function =3D "lcd";
+};
+
+And in the case of function 3, I would call the function "spi5" and
+assume the rest of pins become either GPIO (or unused)?
+
+spi5_node {
+	group =3D "lcd_grp";
+	function =3D "spi5";
+};
+
+
+> If unsure of the definitions of group and function, refer
+> to Documentation/pinctrl.txt
+>=20
+> Yours,
+> Linus Walleij
+>=20
