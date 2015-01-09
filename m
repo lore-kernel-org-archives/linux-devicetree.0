@@ -1,32 +1,70 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 1/2] soc: qcom: Add TCSR driver
-Date: Fri, 09 Jan 2015 01:06:56 +0100
-Message-ID: <4757751.7cLGsvPiZX@wuerfel>
-References: <1420757577-20425-1-git-send-email-agross@codeaurora.org> <1420757577-20425-2-git-send-email-agross@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1420757577-20425-2-git-send-email-agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: [PATCH 1/2] leds: tlc59116: Document binding for the TI 16 Channel i2c LED driver
+Date: Fri,  9 Jan 2015 01:26:17 +0100
+Message-ID: <1420763178-10115-2-git-send-email-andrew@lunn.ch>
+References: <1420763178-10115-1-git-send-email-andrew@lunn.ch>
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <1420763178-10115-1-git-send-email-andrew@lunn.ch>
+Sender: linux-leds-owner@vger.kernel.org
+To: cooloney@gmail.com, rpurdie@rpsys.net
+Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux ARM <linux-arm-kernel@lists.infradead.org>, Andrew Lunn <andrew@lunn.ch>, Matthew.Fatheree@belkin.com
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 08 January 2015 16:52:56 Andy Gross wrote:
-> This patch adds support for the TCSR (Top Control and Status Register) IP block
-> that is present in the Qualcomm IPQ8064, APQ8064, and some later processors.
-> This block contains additional configuration and mux settings for various
-> peripherals in the system, including the ADM DMA block and USB controller.
-> 
-> Signed-off-by: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> 
+Document the binding for the TLC59116 LED driver.
 
-It sounds like this is a collection of random registers. Have you considered
-making it a syscon node instead?
+Signed-off-by: Andrew Lunn <andrew@lunn.ch>
+Cc: Matthew.Fatheree@belkin.com
+---
+ .../devicetree/bindings/leds/leds-tlc59116.txt     | 41 ++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-tlc59116.txt
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/leds/leds-tlc59116.txt b/Documentation/devicetree/bindings/leds/leds-tlc59116.txt
+new file mode 100644
+index 000000000000..9526731eda95
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/leds-tlc59116.txt
+@@ -0,0 +1,41 @@
++LEDs connected to tcl59116
++
++Required properties
++- compatible: should be "ti,tlc59116"
++- #address-cells: must be 1
++- #size-cells: must be 0
++- reg: typically 0x68
++
++Each led is represented as a sub-node of the ti,,tlc59116.
++See Documentation/devicetree/bindings/leds/common.txt
++
++LED sub-node properties:
++- reg: number of LED line, 0 to 15
++- label: (optional) name of LED
++- linux,default-trigger : (optional)
++
++Examples:
++
++tlc59116@68 {
++	#address-cells = <1>;
++	#size-cells = <0>;
++	#gpio-cells = <2>;
++	compatible = "ti,tlc59116";
++	reg = <0x68>;
++
++	wan@0 {
++		label = "wrt1900ac:amber:wan";
++		reg = <0x0>;
++	};
++
++	2g@2 {
++		label = "wrt1900ac:white:2g";
++		reg = <0x2>;
++	};
++
++	alive@9 {
++		label = "wrt1900ac:green:alive";
++		reg = <0x9>;
++		linux,default_trigger = "heartbeat";
++	};
++};
+-- 
+2.1.3
