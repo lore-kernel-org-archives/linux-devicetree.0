@@ -1,54 +1,148 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v3 0/7] Pinctrl support for Zynq
-Date: Fri, 9 Jan 2015 07:25:02 -0800
-Message-ID: <ba4ac5f77c7549f2a264a5a5b1318dc8@BN1BFFO11FD009.protection.gbl>
-References: <1d59c0972da04ec89dec6c09724986a1@BY2FFO11FD010.protection.gbl>
- <4d544fe425694a4e8043ddbf604db062@BN1AFFO11FD033.protection.gbl>
- <CACRpkdaKH21qz_RAcDtw6ycsw+5FD0RXQQs91_tZV53EuKVusQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdaKH21qz_RAcDtw6ycsw+5FD0RXQQs91_tZV53EuKVusQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Alessandro Rubini <rubini-9wsNiZum9E8@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: [PATCH/RFC v10 19/19] leds: aat1290: add support for V4L2 Flash
+ sub-device
+Date: Fri, 09 Jan 2015 16:23:09 +0100
+Message-ID: <1420816989-1808-20-git-send-email-j.anaszewski@samsung.com>
+References: <1420816989-1808-1-git-send-email-j.anaszewski@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1420816989-1808-1-git-send-email-j.anaszewski@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, kyungmin.park@samsung.com, b.zolnierkie@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com, Jacek Anaszewski <j.anaszewski@samsung.com>, Sakari Ailus <sakari.ailus@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2015-01-09 at 09:45AM +0100, Linus Walleij wrote:
-> On Fri, Dec 12, 2014 at 5:37 PM, S=C3=B6ren Brinkmann
-> <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
->=20
-> > Argh, this went through the wrong SMTP. I suspect threading is brok=
-en
-> > due to that. Let me know if you want me to resend this with intact
-> > threading.
->=20
-> I don't care much about the threading, but all messages are quoted-pr=
-intable
-> which doesn't apply :(
->=20
-> i.e.:
->=20
-> Content-Transfer-Encoding: quoted-printable
-> (...)
->=20
-> + const char *subnode_target_type =3D3D "pins";
-> =3D20
-> (...)
->=20
-> Can you resent with more sane encoding? I don't know where this
-> comes from but suspect the Microsoft Exchange SMTP server
-> does this when you use diacritics and german letters...
+Add support for V4L2 Flash sub-device to the aat1290 LED Flash class
+driver. The support allows for V4L2 Flash sub-device to take the control
+of the LED Flash class device.
 
-Okay, I'll rebase to the latest pinctrl/devel branch (if needed) and
-send an updated version bypassing exchange. I hope that works then.
+Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+Cc: Bryan Wu <cooloney@gmail.com>
+Cc: Richard Purdie <rpurdie@rpsys.net>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+---
+ drivers/leds/leds-aat1290.c |   62 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 62 insertions(+)
 
-	Thanks,
-	S=C3=B6ren
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/leds/leds-aat1290.c b/drivers/leds/leds-aat1290.c
+index 0a3c9b4..0974868 100644
+--- a/drivers/leds/leds-aat1290.c
++++ b/drivers/leds/leds-aat1290.c
+@@ -20,6 +20,7 @@
+ #include <linux/of_gpio.h>
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
++#include <media/v4l2-flash.h>
+ #include <linux/workqueue.h>
+ 
+ #define AAT1290_MOVIE_MODE_CURRENT_ADDR	17
+@@ -67,6 +68,7 @@ struct aat1290_led {
+ 	struct mutex lock;
+ 
+ 	struct led_classdev_flash fled_cdev;
++	struct v4l2_flash *v4l2_flash;
+ 
+ 	int flen_gpio;
+ 	int en_set_gpio;
+@@ -280,11 +282,44 @@ static void aat1290_init_flash_settings(struct aat1290_led *led,
+ 	setting->val = setting->max;
+ }
+ 
++#if IS_ENABLED(CONFIG_V4L2_FLASH_LED_CLASS)
++static void aat1290_init_v4l2_ctrl_config(struct aat1290_led_settings *s,
++					struct v4l2_flash_ctrl_config *config)
++{
++	struct led_flash_setting *setting;
++	struct v4l2_ctrl_config *c;
++
++	c = &config->intensity;
++	setting = &s->torch_brightness;
++	c->min = setting->min;
++	c->max = setting->max;
++	c->step = setting->step;
++	c->def = setting->val;
++
++	c = &config->flash_timeout;
++	setting = &s->flash_timeout;
++	c->min = setting->min;
++	c->max = setting->max;
++	c->step = setting->step;
++	c->def = setting->val;
++
++	config->has_external_strobe = false;
++}
++#else
++#define aat1290_init_v4l2_ctrl_config(s, config)
++#endif
++
+ static const struct led_flash_ops flash_ops = {
+ 	.strobe_set = aat1290_led_flash_strobe_set,
+ 	.timeout_set = aat1290_led_flash_timeout_set,
+ };
+ 
++#if IS_ENABLED(CONFIG_V4L2_FLASH_LED_CLASS)
++static const struct v4l2_flash_ops v4l2_flash_ops = {
++	.external_strobe_set = NULL,
++};
++#endif
++
+ static int aat1290_led_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+@@ -292,6 +327,9 @@ static int aat1290_led_probe(struct platform_device *pdev)
+ 	struct aat1290_led *led;
+ 	struct led_classdev *led_cdev;
+ 	struct led_classdev_flash *fled_cdev;
++#if IS_ENABLED(CONFIG_V4L2_FLASH_LED_CLASS)
++	struct v4l2_flash_ctrl_config v4l2_flash_config;
++#endif
+ 	struct aat1290_led_settings settings;
+ 	int flen_gpio, enset_gpio, ret;
+ 
+@@ -342,6 +380,9 @@ static int aat1290_led_probe(struct platform_device *pdev)
+ 
+ 	fled_cdev->timeout = settings.flash_timeout;
+ 
++	/* Init V4L2 Flash controls basing on initialized settings */
++	aat1290_init_v4l2_ctrl_config(&settings, &v4l2_flash_config);
++
+ 	/* Init led class */
+ 	led_cdev = &fled_cdev->led_cdev;
+ 	led_cdev->name = led->label;
+@@ -361,13 +402,34 @@ static int aat1290_led_probe(struct platform_device *pdev)
+ 
+ 	mutex_init(&led->lock);
+ 
++	of_node_get(dev_node);
++	led_cdev->dev->of_node = dev_node;
++
++	/* Create V4L2 Flash subdev. */
++	led->v4l2_flash = v4l2_flash_init(fled_cdev,
++					  &v4l2_flash_ops,
++					  &v4l2_flash_config);
++	if (IS_ERR(led->v4l2_flash)) {
++		ret = PTR_ERR(led->v4l2_flash);
++		goto error_v4l2_flash_init;
++	}
++
+ 	return 0;
++
++error_v4l2_flash_init:
++	of_node_put(dev_node);
++	led_classdev_flash_unregister(fled_cdev);
++	mutex_destroy(&led->lock);
++
++	return ret;
+ }
+ 
+ static int aat1290_led_remove(struct platform_device *pdev)
+ {
+ 	struct aat1290_led *led = platform_get_drvdata(pdev);
+ 
++	v4l2_flash_release(led->v4l2_flash);
++	of_node_put(led->fled_cdev.led_cdev.dev->of_node);
+ 	led_classdev_flash_unregister(&led->fled_cdev);
+ 	cancel_work_sync(&led->work_brightness_set);
+ 
+-- 
+1.7.9.5
