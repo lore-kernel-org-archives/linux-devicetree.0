@@ -1,40 +1,162 @@
-From: Jassi Brar <jaswinder.singh@linaro.org>
-Subject: Re: [PATCH v3 5/8] gpio: Add Fujitsu MB86S7x GPIO driver
-Date: Fri, 9 Jan 2015 18:50:34 +0530
-Message-ID: <CAJe_ZhdBCt0tLw7oU6fv7m_sBzB=nDhGWfbBFmpMMLOKiUuWrA@mail.gmail.com>
+From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 2/8] mailbox: arm_mhu: add driver for ARM MHU controller
+Date: Fri, 9 Jan 2015 18:49:12 +0530
+Message-ID: <CAJe_ZhdkF5o91HE8woAw0-DN5TuS_j6LM15NF0z6oHcQwPvnsQ@mail.gmail.com>
 References: <1420802369-3840-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
- <1420803212-4350-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
- <20150109125243.GM12302@n2100.arm.linux.org.uk>
+	<1420802889-4041-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
+	<20150109125102.GL12302@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20150109125243.GM12302@n2100.arm.linux.org.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Andy Green <andy.green@linaro.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, Devicetree List <devicetree@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Vincent Yang <vincent.yang.fujitsu@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Vincent Yang <Vincent.Yang@tw.fujitsu.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Patch Tracking <patches@linaro.org>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Tetsuya Nuriya <nuriya.tetsuya@jp.fujitsu.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150109125102.GL12302-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Vincent Yang <vincent.yang.fujitsu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Patch Tracking <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vincent Yang <Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>, Tetsuya Nuriya <nuriya.tetsuya-+CUm20s59erQFUHtdCDX3A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 9 January 2015 at 18:22, Russell King - ARM Linux
-<linux@arm.linux.org.uk> wrote:
-> On Fri, Jan 09, 2015 at 07:33:32PM +0800, Vincent Yang wrote:
->> +static int mb86s70_gpio_remove(struct platform_device *pdev)
+On 9 January 2015 at 18:21, Russell King - ARM Linux
+<linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
+> On Fri, Jan 09, 2015 at 07:28:09PM +0800, Vincent Yang wrote:
+>> +static irqreturn_t mhu_rx_interrupt(int irq, void *p)
 >> +{
->> +     struct mb86s70_gpio_chip *gchip = platform_get_drvdata(pdev);
+>> +     struct mbox_chan *chan = p;
+>> +     struct mhu_link *mlink = (struct mhu_link *)chan->con_priv;
+>> +     u32 val;
 >> +
->> +     gpiochip_remove(&gchip->gc);
+>> +     pr_debug("%s:%d\n", __func__, __LINE__);
+>> +     val = readl_relaxed(mlink->rx_reg + INTR_STAT_OFS);
+>> +     mbox_chan_received_data(chan, (void *)val);
+>> +
+>> +     writel_relaxed(val, mlink->rx_reg + INTR_CLR_OFS);
+>> +
+>> +     return IRQ_HANDLED;
 >
-> This doesn't disable and unprepare the clock.
+> What if 'val' was zero - is the interrupt still "handled" ?
 >
-Will do.
+This irq shouldn't fire unless RX_STAT register has some non-zero value.
+
+>> +static int mhu_startup(struct mbox_chan *chan)
+>> +{
+>> +     struct mhu_link *mlink = (struct mhu_link *)chan->con_priv;
+>
+> Casts from void * are not necessary (repeated many times.)
+>
+>> +     u32 val;
+>> +     int ret;
+>> +
+>> +     pr_debug("%s:%d\n", __func__, __LINE__);
+>> +     val = readl_relaxed(mlink->tx_reg + INTR_STAT_OFS);
+>> +     writel_relaxed(val, mlink->tx_reg + INTR_CLR_OFS);
+>> +
+>> +     ret = request_irq(mlink->irq, mhu_rx_interrupt,
+>> +                       IRQF_SHARED, "mhu_link", chan);
+>> +     if (unlikely(ret)) {
+>> +             pr_err("Unable to aquire IRQ\n");
+>> +             return ret;
+>> +     }
+>> +
+>> +     return 0;
+>
+> Needlessly complicated, and doesn't need that unlikely().  Also doesn't
+> print the reason for failure, and merely printing "Unable to aquire IRQ"
+> into the kernel log with no indication what produced it is silly.  You
+> have the device struct (via chan->mbox->dev), so using dev_err() is a
+> definite possibility and improvement.
+>
+> I'm sure this can be cleaned up and simplified.
+>
+>> +static int arm_mhu_probe(struct platform_device *pdev)
+>> +{
+>> +     int i, err;
+>> +     struct arm_mhu *mhu;
+>> +     struct resource *res;
+>> +     int mhu_reg[3] = {0x0, 0x20, 0x200};
+>> +
+>> +     /* Allocate memory for device */
+>> +     mhu = kzalloc(sizeof(*mhu), GFP_KERNEL);
+>> +     if (!mhu)
+>> +             return -ENOMEM;
+>
+> Consider using dev_kzalloc().
+>
+>> +
+>> +     mhu->clk = clk_get(&pdev->dev, "clk");
+>
+> devm_clk_get().
+>
+>> +     if (unlikely(IS_ERR(mhu->clk)))
+>> +             dev_info(&pdev->dev, "unable to init clock\n");
+>> +     else
+>> +             clk_prepare_enable(mhu->clk);
+>> +
+>> +     res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +     mhu->base = ioremap(res->start, resource_size(res));
+>
+> That's an oops waiting to happen.  Consider using devm_ioremap_resource()
+> which will check for !res.
+>
+>> +     if (!mhu->base) {
+>> +             dev_err(&pdev->dev, "ioremap failed.\n");
+>> +             kfree(mhu);
+>> +             return -EBUSY;
+>> +     }
+>> +
+>> +     for (i = 0; i < 3; i++) {
+>> +             mhu->chan[i].con_priv = &mhu->mlink[i];
+>> +             res = platform_get_resource(pdev, IORESOURCE_IRQ, i);
+>> +             mhu->mlink[i].irq = res->start;
+>> +             mhu->mlink[i].rx_reg = mhu->base + mhu_reg[i];
+>> +             mhu->mlink[i].tx_reg = mhu->mlink[i].rx_reg + 0x100;
+>> +     }
+>> +
+>> +     mhu->mbox.dev = &pdev->dev;
+>> +     mhu->mbox.chans = &mhu->chan[0];
+>> +     mhu->mbox.num_chans = 3;
+>> +     mhu->mbox.ops = &mhu_ops;
+>> +     mhu->mbox.txdone_irq = false;
+>> +     mhu->mbox.txdone_poll = true;
+>> +     mhu->mbox.txpoll_period = 10;
+>> +
+>> +     platform_set_drvdata(pdev, mhu);
+>> +
+>> +     err = mbox_controller_register(&mhu->mbox);
+>> +     if (err) {
+>> +             dev_err(&pdev->dev, "Failed to register mailboxes %d\n", err);
+>> +             iounmap(mhu->base);
+>
+> You don't clk_put() the clock here.  Using devm_* as suggested above
+> means you wouldn't have made this mistake here...
+>
+>> +             kfree(mhu);
+>> +     } else {
+>> +             dev_info(&pdev->dev, "ARM MHU Mailbox registered\n");
+>> +     }
+>> +
+>> +     return 0;
+>
+> Always returns success even if mbox_controller_register() fails?
+>
+>> +}
+>> +
+>> +static int arm_mhu_remove(struct platform_device *pdev)
+>> +{
+>> +     struct arm_mhu *mhu = platform_get_drvdata(pdev);
+>> +
+>> +     mbox_controller_unregister(&mhu->mbox);
+>> +
+>> +     iounmap(mhu->base);
+>> +
+>> +     if (!IS_ERR(mhu->clk))
+>> +             clk_disable_unprepare(mhu->clk);
+>
+> No clk_put() ?  If you used devm_* stuff as suggested above, you wouldn't
+> need to...
+>
+Yes, we should have implemented managed resource allocation. Will do.
 
 Thanks,
 Jassi
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
