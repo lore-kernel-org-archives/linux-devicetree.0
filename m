@@ -1,119 +1,44 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: [PATCH/RFC v10 09/19] DT: Add documentation for the mfd Maxim max77693
-Date: Fri, 09 Jan 2015 16:22:59 +0100
-Message-ID: <1420816989-1808-10-git-send-email-j.anaszewski@samsung.com>
-References: <1420816989-1808-1-git-send-email-j.anaszewski@samsung.com>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-reply-to: <1420816989-1808-1-git-send-email-j.anaszewski@samsung.com>
-Sender: linux-media-owner@vger.kernel.org
-To: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, kyungmin.park@samsung.com, b.zolnierkie@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com, Jacek Anaszewski <j.anaszewski@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Lee Jones <lee.jones@linaro.org>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: [PATCH 3/4] MAINTAINERS: Add the RTC driver for the Armada38x
+Date: Fri,  9 Jan 2015 16:32:44 +0100
+Message-ID: <1420817565-28800-4-git-send-email-gregory.clement@free-electrons.com>
+References: <1420817565-28800-1-git-send-email-gregory.clement@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1420817565-28800-1-git-send-email-gregory.clement@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Alessandro Zummo <a.zummo@towertech.it>, rtc-linux@googlegroups.com, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Tawfik Bayouk <tawfik@marvell.com>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds device tree binding documentation for
-the flash cell of the Maxim max77693 multifunctional device.
+Put it in the mvebu entry.
 
-Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
-Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
-Cc: Lee Jones <lee.jones@linaro.org>
-Cc: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: Bryan Wu <cooloney@gmail.com>
-Cc: Richard Purdie <rpurdie@rpsys.net>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Kumar Gala <galak@codeaurora.org>
+Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
 ---
- Documentation/devicetree/bindings/mfd/max77693.txt |   69 ++++++++++++++++++++
- 1 file changed, 69 insertions(+)
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/mfd/max77693.txt b/Documentation/devicetree/bindings/mfd/max77693.txt
-index 01e9f30..ef184f0 100644
---- a/Documentation/devicetree/bindings/mfd/max77693.txt
-+++ b/Documentation/devicetree/bindings/mfd/max77693.txt
-@@ -41,7 +41,52 @@ Optional properties:
- 	 To get more informations, please refer to documentaion.
- 	[*] refer Documentation/devicetree/bindings/pwm/pwm.txt
+diff --git a/MAINTAINERS b/MAINTAINERS
+index ddb9ac8d32b3..49ce80ef3894 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1157,6 +1157,7 @@ M:	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+ S:	Maintained
+ F:	arch/arm/mach-mvebu/
++F:  drivers/rtc/armada38x-rtc
  
-+- led : the LED submodule device node
-+
-+There are two led outputs available - fled1 and fled2. Each of them can
-+control a separate led or they can be connected together to double
-+the maximum current for a single connected led. One led is represented
-+by one child node.
-+
-+Required properties:
-+- compatible : Must be "maxim,max77693-led".
-+
-+Optional properties:
-+- maxim,trigger-type : Flash trigger type.
-+	Possible trigger types:
-+		MAX77693_LED_TRIG_TYPE_EDGE - Rising edge of the signal triggers
-+			the flash,
-+		MAX77693_LED_TRIG_TYPE_LEVEL - Strobe pulse length controls
-+			duration of the flash.
-+- maxim,boost-mode :
-+	In boost mode the device can produce up to 1.2A of total current
-+	on both outputs. The maximum current on each output is reduced
-+	to 625mA then. If not enabled explicitly, boost setting defaults to
-+	MAX77693_LED_BOOST_FIXED in case both current sources are used.
-+	Possible values:
-+		MAX77693_LED_BOOST_OFF - no boost,
-+		MAX77693_LED_BOOST_ADAPTIVE - adaptive mode,
-+		MAX77693_LED_BOOST_FIXED - fixed mode.
-+- maxim,boost-vout : Output voltage of the boost module in millivolts.
-+- maxim,vsys-min : Low input voltage level in millivolts. Flash is not fired
-+	if chip estimates that system voltage could drop below this level due
-+	to flash power consumption.
-+
-+Required properties of the LED child node:
-+- label : see Documentation/devicetree/bindings/leds/common.txt
-+- led-sources : see Documentation/devicetree/bindings/leds/common.txt
-+
-+Optional properties of the LED child node:
-+- max-microamp : see Documentation/devicetree/bindings/leds/common.txt
-+		Range: 15625 - 250000
-+- flash-max-microamp : see Documentation/devicetree/bindings/leds/common.txt
-+		Range: 15625 - 1000000
-+- flash-timeout-us : see Documentation/devicetree/bindings/leds/common.txt
-+		Range: 62500 - 1000000
-+
- Example:
-+#include <dt-bindings/mfd/max77693.h>
-+
- 	max77693@66 {
- 		compatible = "maxim,max77693";
- 		reg = <0x66>;
-@@ -73,4 +118,28 @@ Example:
- 			pwms = <&pwm 0 40000 0>;
- 			pwm-names = "haptic";
- 		};
-+
-+		led {
-+			compatible = "maxim,max77693-led";
-+			maxim,trigger-type = <MAX77693_LED_TRIG_TYPE_LEVEL>;
-+			maxim,boost-mode = <MAX77693_LED_BOOST_FIXED>;
-+			maxim,boost-vout = <5000>;
-+			maxim,vsys-min = <2400>;
-+
-+			camera1_flash: led1 {
-+				label = "max77693-flash1";
-+				led-sources = <1 0>;
-+				max-microamp = <250000>;
-+				flash-max-microamp = <625000>;
-+				flash-timeout-us = <1000000>;
-+			};
-+
-+			camera2_flash: led2 {
-+				label = "max77693-flash2";
-+				led-sources = <0 1>;
-+				max-microamp = <250000>;
-+				flash-max-microamp = <625000>;
-+				flash-timeout-us = <1000000>;
-+			};
-+		};
- 	};
+ ARM/Marvell Berlin SoC support
+ M:	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 -- 
-1.7.9.5
+1.9.1
