@@ -1,42 +1,153 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: =?UTF-8?q?=5BPATCH=5D=20DT=3A=20Vendors=3A=20Add=20Everspin?=
-Date: Fri,  9 Jan 2015 23:55:20 +0100
-Message-ID: <1420844120-31251-1-git-send-email-andrew@lunn.ch>
+From: "George G. Davis" <ggdavisiv-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] drivers: of: Export of_reserved_mem_device_{init,release}
+Date: Fri, 9 Jan 2015 18:18:23 -0500
+Message-ID: <20150109231823.GA86855@gandalf.middle.earth.net>
+References: <1420813745-130341-1-git-send-email-george_davis@mentor.com>
+ <CAL_JsqJaT-Y7DHQS5ZZ0TP6r0iPDbUZwU-Kec5MSE7DOPgZxCg@mail.gmail.com>
+ <20150109183310.GA38065@gandalf.middle.earth.net>
+ <20150109220552.GA86398@gandalf.middle.earth.net>
+ <CAL_JsqLKMw4bvov+t7SkEsY5Gu_rrJ5yDKhB6BckuTFfD4-MSA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqLKMw4bvov+t7SkEsY5Gu_rrJ5yDKhB6BckuTFfD4-MSA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "George G. Davis" <george_davis-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Everspin is a vendor of MRAM devices. Add them to the list
-of Vendors.
+On Fri, Jan 09, 2015 at 04:29:43PM -0600, Rob Herring wrote:
+> On Fri, Jan 9, 2015 at 4:05 PM, George G. Davis <ggdavisiv-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > On Fri, Jan 09, 2015 at 01:33:10PM -0500, George G. Davis wrote:
+> >> On Fri, Jan 09, 2015 at 11:53:01AM -0600, Rob Herring wrote:
+> >> > On Fri, Jan 9, 2015 at 8:29 AM, George G. Davis <ggdavisiv-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> >> > > Export of_reserved_mem_device_{init,release} so that modules
+> >> > > can initialize and release their assigned per-device cma_area.
+> >> >
+> >> > I believe the original intent was for the core bus code to call these
+> >> > functions. While the commit adding them says "automated assignment"
+> >> > that part did not go in.
+> >>
+> >> I suspected that there may have been a bit of missing magic.  The only
+> >> use of these functions that I was able to find was in an earlier out of
+> >> tree patch series where these functions were called from the s5p-mfc
+> >> driver:
+> >>
+> >> http://lists.linaro.org/pipermail/linaro-mm-sig/2014-August/004140.html
+> >>
+> >> I agree that "automated assignment" via core bus code would be a better
+> >> solution but I don't know where to add the calls.
+> >
+> > How about something like the following for automated assignment?:
+> 
+> It seems Grant wasn't happy about the core code doing this[1].
 
-Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
----
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+For what it's worth, I was rather liking the automagic assignments since
+no driver changes were necessary for that approach but I do agree with
+the rationale for not adding it to core bus code.
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Do=
-cumentation/devicetree/bindings/vendor-prefixes.txt
-index b1df0ad1306c..3214dd685ce9 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -56,6 +56,7 @@ epson	Seiko Epson Corp.
- est	ESTeem Wireless Modems
- eukrea  Eukr=C3=A9a Electromatique
- everest	Everest Semiconductor Co. Ltd.
-+everspin	Everspin Technologies, Inc.
- excito	Excito
- fcs	Fairchild Semiconductor
- fsl	Freescale Semiconductor
---=20
-2.1.3
+> So I
+> guess your original patch was okay except you should use
+> EXPORT_SYMBOL_GPL. I can fix that up if you agree.
+
+Yes, please go ahead.
+
+
+Thanks!
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+Regards,
+George
+
+> 
+> Rob
+> 
+> 
+> [1] https://lkml.org/lkml/2014/3/2/30
+> 
+> >
+> > diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+> > index 9421fed..231b427 100644
+> > --- a/drivers/base/platform.c
+> > +++ b/drivers/base/platform.c
+> > @@ -14,6 +14,7 @@
+> >  #include <linux/platform_device.h>
+> >  #include <linux/of_device.h>
+> >  #include <linux/of_irq.h>
+> > +#include <linux/of_reserved_mem.h>
+> >  #include <linux/module.h>
+> >  #include <linux/init.h>
+> >  #include <linux/dma-mapping.h>
+> > @@ -509,9 +510,12 @@ static int platform_drv_probe(struct device *_dev)
+> >
+> >         ret = dev_pm_domain_attach(_dev, true);
+> >         if (ret != -EPROBE_DEFER) {
+> > +               of_reserved_mem_device_init(_dev);
+> >                 ret = drv->probe(dev);
+> > -               if (ret)
+> > +               if (ret) {
+> > +                       of_reserved_mem_device_release(_dev);
+> >                         dev_pm_domain_detach(_dev, true);
+> > +               }
+> >         }
+> >
+> >         if (drv->prevent_deferred_probe && ret == -EPROBE_DEFER) {
+> > @@ -534,6 +538,7 @@ static int platform_drv_remove(struct device *_dev)
+> >         int ret;
+> >
+> >         ret = drv->remove(dev);
+> > +       of_reserved_mem_device_release(_dev);
+> >         dev_pm_domain_detach(_dev, true);
+> >
+> >         return ret;
+> >
+> >
+> > --
+> > Regards,
+> > George
+> >>
+> >> > As it stands, there are no in tree users of
+> >> > these functions.
+> >> >
+> >> > Marek, comments?
+> >>
+> >> Thanks!
+> >>
+> >> --
+> >> Regards,
+> >> George
+> >>
+> >> >
+> >> > Rob
+> >> >
+> >> > >
+> >> > > Signed-off-by: George G. Davis <george_davis-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+> >> > > ---
+> >> > >  drivers/of/of_reserved_mem.c | 2 ++
+> >> > >  1 file changed, 2 insertions(+)
+> >> > >
+> >> > > diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
+> >> > > index dc566b3..5eeb5b2 100644
+> >> > > --- a/drivers/of/of_reserved_mem.c
+> >> > > +++ b/drivers/of/of_reserved_mem.c
+> >> > > @@ -265,6 +265,7 @@ int of_reserved_mem_device_init(struct device *dev)
+> >> > >
+> >> > >         return ret;
+> >> > >  }
+> >> > > +EXPORT_SYMBOL(of_reserved_mem_device_init);
+> >> > >
+> >> > >  /**
+> >> > >   * of_reserved_mem_device_release() - release reserved memory device structures
+> >> > > @@ -289,3 +290,4 @@ void of_reserved_mem_device_release(struct device *dev)
+> >> > >
+> >> > >         rmem->ops->device_release(rmem, dev);
+> >> > >  }
+> >> > > +EXPORT_SYMBOL(of_reserved_mem_device_release);
+> >> > > --
+> >> > > 1.9.3
+> >> > >
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
