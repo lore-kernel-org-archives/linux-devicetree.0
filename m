@@ -1,43 +1,55 @@
-From: Ezequiel Garcia <ezequiel.garcia@imgtec.com>
-Subject: [PATCH v8 0/2] Imagination Technologies PWM support
-Date: Fri, 9 Jan 2015 14:54:46 -0300
-Message-ID: <1420826088-13113-1-git-send-email-ezequiel.garcia@imgtec.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH/RFC v10 06/19] mfd: max77693: modifications around
+ max77693_led_platform_data
+Date: Fri, 9 Jan 2015 18:56:41 +0100
+Message-ID: <20150109175641.GH18076@amd>
+References: <1420816989-1808-1-git-send-email-j.anaszewski@samsung.com>
+ <1420816989-1808-7-git-send-email-j.anaszewski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Bresticker <abrestic@chromium.org>, Thierry Reding <thierry.reding@gmail.com>, James Hartley <james.hartley@imgtec.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, vladimir_zapolskiy@mentor.com, Ezequiel Garcia <ezequiel.garcia@imgtec.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1420816989-1808-7-git-send-email-j.anaszewski@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, b.zolnierkie@samsung.com, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com, Chanwoo Choi <cw00.choi@samsung.com>, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-A new round for the IMG PWM driver.
+On Fri 2015-01-09 16:22:56, Jacek Anaszewski wrote:
+> 1. Rename max77693_led_platform_data to max77693_led_config_data to
+>    avoid making impression that the led driver expects a board file -
+>    it relies on Device Tree data.
+> 2. Remove fleds array, as the DT binding design has changed
+> 3. Add "label" array for Device Tree strings with the name of a LED device
+> 4. Make flash_timeout a two element array, for caching the sub-led
+>    related flash timeout.
+> 5. Remove trigger array as the related data will not be provided
+>    in the DT binding
+> 
+> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+> Cc: Chanwoo Choi <cw00.choi@samsung.com>
+> Cc: Lee Jones <lee.jones@linaro.org>
 
-The IMG PWM controller is muxed with a PDM controller, through a shared
-so-called periph register bit, which sets the output as PWM or PDM.
-Because this register is not part of the pin controller block, but rather
-PWM/PDM specific, and because the register is also used to set the PDM value,
-it is simpler to use a regmap-based syscon to deal with it.
+Seems that max77693_led_platform_data is unused at the moment, so it
+should not break bisect.
 
-This time, I'm removing the PDM driver from the submission and submitting the PWM
-alone. The PDM was written as a misc driver, but had some design issues, so for
-now I'm proposing to merge the PWM only.
+Acked-by: Pavel Machek <pavel@ucw.cz>
 
-The series is based on v3.19-rc3. If at all possible I'd like to see this merged
-for v3.20.
-
-Comments welcome!
-
-Naidu Tellapati (2):
-  pwm: Imagination Technologies PWM DAC driver
-  DT: pwm: Add binding document for IMG PWM DAC
-
- Documentation/devicetree/bindings/pwm/img-pwm.txt |  24 +++
- drivers/pwm/Kconfig                               |  13 ++
- drivers/pwm/Makefile                              |   1 +
- drivers/pwm/pwm-img.c                             | 250 ++++++++++++++++++++++
- 4 files changed, 288 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pwm/img-pwm.txt
- create mode 100644 drivers/pwm/pwm-img.c
+> index f0b6585..c1ccb13 100644
+> --- a/include/linux/mfd/max77693.h
+> +++ b/include/linux/mfd/max77693.h
+> @@ -87,17 +87,16 @@ enum max77693_led_boost_mode {
+>  	MAX77693_LED_BOOST_FIXED,
+>  };
+>  
+> -struct max77693_led_platform_data {
+> -	u32 fleds[2];
+> +struct max77693_led_config_data {
+> +	const char *label[2];
+>  	u32 iout_torch[2];
+>  	u32 iout_flash[2];
 
 -- 
-2.2.1
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
