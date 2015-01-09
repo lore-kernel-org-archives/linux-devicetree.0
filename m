@@ -1,96 +1,91 @@
-From: Gyungoh Yoo <gyungoh@gmail.com>
-Subject: Re: [PATCH v10 4/6] devicetree: backlight: Add new SKY81452
- backlight binding
-Date: Fri, 9 Jan 2015 10:31:19 +0900
-Message-ID: <20150109013119.GB2907@jack-ThinkPad-T520>
-References: <1420597167-3188-1-git-send-email-jack.yoo@skyworksinc.com>
- <1420597167-3188-5-git-send-email-jack.yoo@skyworksinc.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH 1/2] leds: tlc59116: Document binding for the TI 16
+ Channel i2c LED driver
+Date: Fri, 9 Jan 2015 02:34:21 +0100
+Message-ID: <20150109013421.GA10191@lunn.ch>
+References: <1420763178-10115-1-git-send-email-andrew@lunn.ch>
+ <1420763178-10115-2-git-send-email-andrew@lunn.ch>
+ <CAK5ve-+VNn+NBp_fXq1OZY9DbC90_GmPtLfkL22L5tjNX3xtfw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-leds-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1420597167-3188-5-git-send-email-jack.yoo@skyworksinc.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: sameo@linux.intel.com, lee.jones@linaro.org, grant.likely@linaro.org, robh+dt@kernel.org, jg1.han@samsung.com, cooloney@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, trivial@kernel.org
-Cc: akpm@linux-foundation.org, jic23@kernel.org, thomas.petazzoni@free-electrons.com, ktsai@capellamicro.com, hs@denx.de, stwiss.opensource@diasemi.com, matti.vaittinen@nsn.com, broonie@kernel.org, jason@lakedaemon.net, heiko@sntech.de, shawn.guo@freescale.com, florian.vaussard@epfl.ch, andrew@lunn.ch, antonynpavlov@gmail.com, hytszk@gmail.com, plagnioj@jcrosoft.com, tomi.valkeinen@ti.com, jack.yoo@skyworksinc.com, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <CAK5ve-+VNn+NBp_fXq1OZY9DbC90_GmPtLfkL22L5tjNX3xtfw@mail.gmail.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Bryan Wu <cooloney@gmail.com>
+Cc: "rpurdie@rpsys.net" <rpurdie@rpsys.net>, Linux LED Subsystem <linux-leds@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux ARM <linux-arm-kernel@lists.infradead.org>, Matthew.Fatheree@belkin.com
 List-Id: devicetree@vger.kernel.org
 
-DT Ack please.
+On Thu, Jan 08, 2015 at 05:02:07PM -0800, Bryan Wu wrote:
+> On Thu, Jan 8, 2015 at 4:26 PM, Andrew Lunn <andrew@lunn.ch> wrote:
+> > Document the binding for the TLC59116 LED driver.
+> >
+> > Signed-off-by: Andrew Lunn <andrew@lunn.ch>
+> > Cc: Matthew.Fatheree@belkin.com
+> > ---
+> >  .../devicetree/bindings/leds/leds-tlc59116.txt     | 41 ++++++++++++++++++++++
+> >  1 file changed, 41 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/leds/leds-tlc59116.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/leds/leds-tlc59116.txt b/Documentation/devicetree/bindings/leds/leds-tlc59116.txt
+> > new file mode 100644
+> > index 000000000000..9526731eda95
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/leds/leds-tlc59116.txt
+> > @@ -0,0 +1,41 @@
+> > +LEDs connected to tcl59116
+> > +
+> > +Required properties
+> > +- compatible: should be "ti,tlc59116"
+> > +- #address-cells: must be 1
+> > +- #size-cells: must be 0
+> > +- reg: typically 0x68
+> > +
+> > +Each led is represented as a sub-node of the ti,,tlc59116.
+> > +See Documentation/devicetree/bindings/leds/common.txt
+> > +
+> > +LED sub-node properties:
+> > +- reg: number of LED line, 0 to 15
+> > +- label: (optional) name of LED
+> > +- linux,default-trigger : (optional)
+> > +
+> > +Examples:
+> > +
+> > +tlc59116@68 {
+> > +       #address-cells = <1>;
+> > +       #size-cells = <0>;
+> > +       #gpio-cells = <2>;
+> 
+> What's gpio-cells for? Or missing document?
 
-On Wed, Jan 07, 2015 at 11:19:25AM +0900, gyungoh@gmail.com wrote:
-> From: Gyungoh Yoo <jack.yoo@skyworksinc.com>
-> 
-> Signed-off-by: Gyungoh Yoo <jack.yoo@skyworksinc.com>
-> Acked-by: Bryan Wu <cooloney@gmail.com>
-> ---
-> Changes v10:
-> Nothing
-> 
-> Changes v9:
-> Nothing
-> 
-> Changes v8:
-> Renamed property names for backlight with vendor prefix
-> Modified gpio-enable property to generic property for GPIO
-> Made up the example for backlight DT
-> 
-> Changes v7:
-> Nothing
-> 
-> Changes v6:
-> Nothing
-> 
-> Changes v5:
-> Nothing
-> 
-> Changes v4:
-> Nothing
-> 
-> Changes v3:
-> Nothing
-> 
-> Changes v2:
-> Added reg attribute for I2C slave address
-> 
->  .../video/backlight/sky81452-backlight.txt         | 29 ++++++++++++++++++++++
->  1 file changed, 29 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/video/backlight/sky81452-backlight.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/video/backlight/sky81452-backlight.txt b/Documentation/devicetree/bindings/video/backlight/sky81452-backlight.txt
-> new file mode 100644
-> index 0000000..8daebf5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/video/backlight/sky81452-backlight.txt
-> @@ -0,0 +1,29 @@
-> +SKY81452-backlight bindings
-> +
-> +Required properties:
-> +- compatible		: Must be "skyworks,sky81452-backlight"
-> +
-> +Optional properties:
-> +- name			: Name of backlight device. Default is 'lcd-backlight'.
-> +- gpios			: GPIO to use to EN pin.
-> +			See Documentation/devicetree/bindings/gpio/gpio.txt
-> +- skyworks,en-channels	: Enable mask for current sink channel 1 to 6.
-> +- skyworks,ignore-pwm	: Ignore both PWM input
-> +- skyworks,dpwm-mode	: Enable DPWM dimming mode, otherwise Analog dimming.
-> +- skyworks,phase-shift	: Enable phase shift mode
-> +- skyworks,ovp-level	: Over-voltage protection level.
-> +			Should be between 14 or 28V.
-> +- skyworks,short-detection-threshold	: It should be one of 4, 5, 6 and 7V.
-> +- skyworks,current-limit	: It should be 2300mA or 2750mA.
-> +
-> +Example:
-> +
-> +	backlight {
-> +		compatible = "skyworks,sky81452-backlight";
-> +		name = "pwm-backlight";
-> +		skyworks,en-channels = <0x3f>;
-> +		skyworks,ignore-pwm;
-> +		skyworks,phase-shift;
-> +		skyworks,ovp-level = <20>;
-> +		skyworks,current-limit = <2300>;
-> +	};
-> -- 
-> 1.9.1
-> 
+Hi Bryan
+
+It should be removed. I probably copied it from tca6507.txt binding
+documentation. This driver makes no attempt to also offer the pins are
+gpio lines.
+
+     Andrew
+
+ 
+> > +       compatible = "ti,tlc59116";
+> > +       reg = <0x68>;
+> > +
+> > +       wan@0 {
+> > +               label = "wrt1900ac:amber:wan";
+> > +               reg = <0x0>;
+> > +       };
+> > +
+> > +       2g@2 {
+> > +               label = "wrt1900ac:white:2g";
+> > +               reg = <0x2>;
+> > +       };
+> > +
+> > +       alive@9 {
+> > +               label = "wrt1900ac:green:alive";
+> > +               reg = <0x9>;
+> > +               linux,default_trigger = "heartbeat";
+> > +       };
+> > +};
+> > --
+> > 2.1.3
+> >
