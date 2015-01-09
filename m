@@ -1,60 +1,32 @@
-From: Ezequiel Garcia <ezequiel.garcia@imgtec.com>
-Subject: [PATCH v8 2/2] DT: pwm: Add binding document for IMG PWM DAC
-Date: Fri, 9 Jan 2015 14:54:48 -0300
-Message-ID: <1420826088-13113-3-git-send-email-ezequiel.garcia@imgtec.com>
-References: <1420826088-13113-1-git-send-email-ezequiel.garcia@imgtec.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH/RFC v10 07/19] mfd: max77693: Adjust FLASH_EN_SHIFT and
+ TORCH_EN_SHIFT macros
+Date: Fri, 9 Jan 2015 18:59:47 +0100
+Message-ID: <20150109175947.GI18076@amd>
+References: <1420816989-1808-1-git-send-email-j.anaszewski@samsung.com>
+ <1420816989-1808-8-git-send-email-j.anaszewski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <1420826088-13113-1-git-send-email-ezequiel.garcia@imgtec.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Andrew Bresticker <abrestic@chromium.org>, Thierry Reding <thierry.reding@gmail.com>, James Hartley <james.hartley@imgtec.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, vladimir_zapolskiy@mentor.com, Naidu Tellapati <naidu.tellapati@gmail.com>, Naidu Tellapati <Naidu.Tellapati@imgtec.com>, Sai Masarapu <Sai.Masarapu@imgtec.com>, Ezequiel Garcia <ezequiel.garcia@imgtec.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1420816989-1808-8-git-send-email-j.anaszewski@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, b.zolnierkie@samsung.com, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com, Chanwoo Choi <cw00.choi@samsung.com>, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Naidu Tellapati <naidu.tellapati@gmail.com>
+On Fri 2015-01-09 16:22:57, Jacek Anaszewski wrote:
+> Modify FLASH_EN_SHIFT and TORCH_EN_SHIFT macros to work properly
+> when passed enum max77693_fled values (0 for FLED1 and 1 for FLED2)
+> from leds-max77693 driver.
+> 
+> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+> Cc: Chanwoo Choi <cw00.choi@samsung.com>
+> Cc: Lee Jones <lee.jones@linaro.org>
 
-Add binding document for IMG Pulse Width Modulator (PWM) DAC present on the
-Pistachio SOC. The PWM DAC has four channels.
+Acked-by: Pavel Machek <pavel@ucw.cz>
 
-Signed-off-by: Naidu Tellapati <Naidu.Tellapati@imgtec.com>
-Signed-off-by: Sai Masarapu <Sai.Masarapu@imgtec.com>
-Signed-off-by: Ezequiel Garcia <ezequiel.garcia@imgtec.com>
----
- Documentation/devicetree/bindings/pwm/img-pwm.txt | 24 +++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pwm/img-pwm.txt
-
-diff --git a/Documentation/devicetree/bindings/pwm/img-pwm.txt b/Documentation/devicetree/bindings/pwm/img-pwm.txt
-new file mode 100644
-index 0000000..fade5f2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/img-pwm.txt
-@@ -0,0 +1,24 @@
-+*Imagination Technologies PWM DAC driver
-+
-+Required properties:
-+  - compatible: Should be "img,pistachio-pwm"
-+  - reg: Should contain physical base address and length of pwm registers.
-+  - clocks: Must contain an entry for each entry in clock-names.
-+	See ../clock/clock-bindings.txt for details.
-+  - clock-names: Must include the following entries.
-+    - pwm: PWM operating clock.
-+    - sys: PWM system interface clock.
-+  - #pwm-cells: Should be 2. See pwm.txt in this directory for the
-+	description of the cells format.
-+  - img,cr-periph: Must contain a phandle to the peripheral control
-+	syscon node which contains PWM control registers.
-+
-+Example:
-+	pwm: pwm@18101300 {
-+		compatible = "img,pistachio-pwm";
-+		reg = <0x18101300 0x100>;
-+		clocks = <&pwm_clk>, <&system_clk>;
-+		clock-names = "pwm", "sys";
-+		#pwm-cells = <2>;
-+		img,cr-periph = <&cr_periph>;
-+	};
 -- 
-2.2.1
-
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
