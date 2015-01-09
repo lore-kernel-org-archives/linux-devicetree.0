@@ -1,148 +1,62 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: [PATCH/RFC v10 19/19] leds: aat1290: add support for V4L2 Flash
- sub-device
-Date: Fri, 09 Jan 2015 16:23:09 +0100
-Message-ID: <1420816989-1808-20-git-send-email-j.anaszewski@samsung.com>
-References: <1420816989-1808-1-git-send-email-j.anaszewski@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1420816989-1808-1-git-send-email-j.anaszewski@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, kyungmin.park@samsung.com, b.zolnierkie@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com, Jacek Anaszewski <j.anaszewski@samsung.com>, Sakari Ailus <sakari.ailus@linux.intel.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH v3 2/8] mailbox: arm_mhu: add driver for ARM MHU controller
+Date: Fri, 9 Jan 2015 15:24:02 +0000
+Message-ID: <20150109152402.GQ12302@n2100.arm.linux.org.uk>
+References: <1420802369-3840-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
+ <1420802889-4041-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
+ <20150109125102.GL12302@n2100.arm.linux.org.uk>
+ <CAJe_ZhdkF5o91HE8woAw0-DN5TuS_j6LM15NF0z6oHcQwPvnsQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <CAJe_ZhdkF5o91HE8woAw0-DN5TuS_j6LM15NF0z6oHcQwPvnsQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jassi Brar <jaswinder.singh@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>, Andy Green <andy.green@linaro.org>, =?utf-8?B?UGF3ZcWC?= Moll <pawel.moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Vincent Yang <vincent.yang.fujitsu@gmail.com>, Sudeep Holla <sudeep.holla@arm.com>, Vincent Yang <Vincent.Yang@tw.fujitsu.com>, Rob Herring <robh+dt@kernel.org>, Patch Tracking <patches@linaro.org>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, Tetsuya Nuriya <nuriya.tetsuya@jp.fujitsu.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for V4L2 Flash sub-device to the aat1290 LED Flash class
-driver. The support allows for V4L2 Flash sub-device to take the control
-of the LED Flash class device.
+On Fri, Jan 09, 2015 at 06:49:12PM +0530, Jassi Brar wrote:
+> On 9 January 2015 at 18:21, Russell King - ARM Linux
+> <linux@arm.linux.org.uk> wrote:
+> > On Fri, Jan 09, 2015 at 07:28:09PM +0800, Vincent Yang wrote:
+> >> +static irqreturn_t mhu_rx_interrupt(int irq, void *p)
+> >> +{
+> >> +     struct mbox_chan *chan = p;
+> >> +     struct mhu_link *mlink = (struct mhu_link *)chan->con_priv;
+> >> +     u32 val;
+> >> +
+> >> +     pr_debug("%s:%d\n", __func__, __LINE__);
+> >> +     val = readl_relaxed(mlink->rx_reg + INTR_STAT_OFS);
+> >> +     mbox_chan_received_data(chan, (void *)val);
+> >> +
+> >> +     writel_relaxed(val, mlink->rx_reg + INTR_CLR_OFS);
+> >> +
+> >> +     return IRQ_HANDLED;
+> >
+> > What if 'val' was zero - is the interrupt still "handled" ?
+> >
+> This irq shouldn't fire unless RX_STAT register has some non-zero value.
 
-Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
-Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
-Cc: Bryan Wu <cooloney@gmail.com>
-Cc: Richard Purdie <rpurdie@rpsys.net>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
----
- drivers/leds/leds-aat1290.c |   62 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 62 insertions(+)
+You claim this interrupt handler using IRQF_SHARED - what if another user
+of this interrupt gets stuck?  Your handler above will prevent the kernel
+recovering as it will think that you are validly processing the stuck
+interrupt each time.
 
-diff --git a/drivers/leds/leds-aat1290.c b/drivers/leds/leds-aat1290.c
-index 0a3c9b4..0974868 100644
---- a/drivers/leds/leds-aat1290.c
-+++ b/drivers/leds/leds-aat1290.c
-@@ -20,6 +20,7 @@
- #include <linux/of_gpio.h>
- #include <linux/platform_device.h>
- #include <linux/slab.h>
-+#include <media/v4l2-flash.h>
- #include <linux/workqueue.h>
- 
- #define AAT1290_MOVIE_MODE_CURRENT_ADDR	17
-@@ -67,6 +68,7 @@ struct aat1290_led {
- 	struct mutex lock;
- 
- 	struct led_classdev_flash fled_cdev;
-+	struct v4l2_flash *v4l2_flash;
- 
- 	int flen_gpio;
- 	int en_set_gpio;
-@@ -280,11 +282,44 @@ static void aat1290_init_flash_settings(struct aat1290_led *led,
- 	setting->val = setting->max;
- }
- 
-+#if IS_ENABLED(CONFIG_V4L2_FLASH_LED_CLASS)
-+static void aat1290_init_v4l2_ctrl_config(struct aat1290_led_settings *s,
-+					struct v4l2_flash_ctrl_config *config)
-+{
-+	struct led_flash_setting *setting;
-+	struct v4l2_ctrl_config *c;
-+
-+	c = &config->intensity;
-+	setting = &s->torch_brightness;
-+	c->min = setting->min;
-+	c->max = setting->max;
-+	c->step = setting->step;
-+	c->def = setting->val;
-+
-+	c = &config->flash_timeout;
-+	setting = &s->flash_timeout;
-+	c->min = setting->min;
-+	c->max = setting->max;
-+	c->step = setting->step;
-+	c->def = setting->val;
-+
-+	config->has_external_strobe = false;
-+}
-+#else
-+#define aat1290_init_v4l2_ctrl_config(s, config)
-+#endif
-+
- static const struct led_flash_ops flash_ops = {
- 	.strobe_set = aat1290_led_flash_strobe_set,
- 	.timeout_set = aat1290_led_flash_timeout_set,
- };
- 
-+#if IS_ENABLED(CONFIG_V4L2_FLASH_LED_CLASS)
-+static const struct v4l2_flash_ops v4l2_flash_ops = {
-+	.external_strobe_set = NULL,
-+};
-+#endif
-+
- static int aat1290_led_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -292,6 +327,9 @@ static int aat1290_led_probe(struct platform_device *pdev)
- 	struct aat1290_led *led;
- 	struct led_classdev *led_cdev;
- 	struct led_classdev_flash *fled_cdev;
-+#if IS_ENABLED(CONFIG_V4L2_FLASH_LED_CLASS)
-+	struct v4l2_flash_ctrl_config v4l2_flash_config;
-+#endif
- 	struct aat1290_led_settings settings;
- 	int flen_gpio, enset_gpio, ret;
- 
-@@ -342,6 +380,9 @@ static int aat1290_led_probe(struct platform_device *pdev)
- 
- 	fled_cdev->timeout = settings.flash_timeout;
- 
-+	/* Init V4L2 Flash controls basing on initialized settings */
-+	aat1290_init_v4l2_ctrl_config(&settings, &v4l2_flash_config);
-+
- 	/* Init led class */
- 	led_cdev = &fled_cdev->led_cdev;
- 	led_cdev->name = led->label;
-@@ -361,13 +402,34 @@ static int aat1290_led_probe(struct platform_device *pdev)
- 
- 	mutex_init(&led->lock);
- 
-+	of_node_get(dev_node);
-+	led_cdev->dev->of_node = dev_node;
-+
-+	/* Create V4L2 Flash subdev. */
-+	led->v4l2_flash = v4l2_flash_init(fled_cdev,
-+					  &v4l2_flash_ops,
-+					  &v4l2_flash_config);
-+	if (IS_ERR(led->v4l2_flash)) {
-+		ret = PTR_ERR(led->v4l2_flash);
-+		goto error_v4l2_flash_init;
-+	}
-+
- 	return 0;
-+
-+error_v4l2_flash_init:
-+	of_node_put(dev_node);
-+	led_classdev_flash_unregister(fled_cdev);
-+	mutex_destroy(&led->lock);
-+
-+	return ret;
- }
- 
- static int aat1290_led_remove(struct platform_device *pdev)
- {
- 	struct aat1290_led *led = platform_get_drvdata(pdev);
- 
-+	v4l2_flash_release(led->v4l2_flash);
-+	of_node_put(led->fled_cdev.led_cdev.dev->of_node);
- 	led_classdev_flash_unregister(&led->fled_cdev);
- 	cancel_work_sync(&led->work_brightness_set);
- 
+If it isn't shared, then don't use IRQF_SHARED.
+
+Either way, it is good practice to return IRQ_NONE if there's no work to
+be done.
+
 -- 
-1.7.9.5
+FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
+according to speedtest.net.
