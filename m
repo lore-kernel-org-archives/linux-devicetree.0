@@ -1,49 +1,81 @@
-From: "Imre Kaloz" <kaloz@openwrt.org>
-Subject: Re: [PATCH] mvebu: add Linksys WRT1900AC (Mamba) support
-Date: Fri, 09 Jan 2015 13:51:09 +0100
-Message-ID: <op.xr64njf92s3iss@ecaz>
-References: <1420806710-27619-1-git-send-email-kaloz@openwrt.org>
- <54AFCDA3.1030601@free-electrons.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH v9 1/4] drm/i2c: tda998x: Add DT support for audio
+Date: Fri, 9 Jan 2015 13:07:25 +0000
+Message-ID: <20150109130725.GN12302@n2100.arm.linux.org.uk>
+References: <cover.1420628786.git.moinejf@free.fr>
+ <0084acea5a3475a77531d6a77483f36d3469111a.1420628786.git.moinejf@free.fr>
+ <54AE99F5.1010404@ti.com> <20150108174257.557f7ea5@armhf>
+ <54AFA9B0.6040405@ti.com> <20150109123036.4bc4bbf6@armhf>
+ <20150109114529.GH12302@n2100.arm.linux.org.uk>
+ <20150109135401.5b270d46@armhf>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"; DelSp="yes"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <54AFCDA3.1030601@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, jason@lakedaemon.net, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20150109135401.5b270d46@armhf>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jean-Francois Moine <moinejf@free.fr>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Andrew Jackson <Andrew.Jackson@arm.com>, linux-kernel@vger.kernel.org, Jyri Sarha <jsarha@ti.com>, Mark Brown <broonie@kernel.org>, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 09 Jan 2015 13:46:27 +0100, Gregory CLEMENT <gregory.clement@free-electrons.com> wrote:
-
-Hi Gregory,
-
-<snip>
-
->> + * This file is licensed under the terms of the GNU General Public
->> + * License version 2.  This program is licensed "as is" without any
->> + * warranty of any kind, whether express or implied.
->
-> We are moving to a dual license GPL/X11:
-> http://thread.gmane.org/gmane.linux.ports.arm.kernel/380065
->
-> Could you consider to use it too?
-> The file you based on will be converted, all the author of this
-> file already have given their acked-by.
-
-I'm aware of that, but Linus' tree still has the old license text so I didn't change it here. If it would be up to me, it would be simply ISC.
-
-> In meantime, I will review the content of your patch.
-
-Thank you. I'll incorporate whatever needs to be fixed with the license change in v2.
-
-
-Imre
+T24gRnJpLCBKYW4gMDksIDIwMTUgYXQgMDE6NTQ6MDFQTSArMDEwMCwgSmVhbi1GcmFuY29pcyBN
+b2luZSB3cm90ZToKPiBPbiBGcmksIDkgSmFuIDIwMTUgMTE6NDU6MjkgKzAwMDAKPiBSdXNzZWxs
+IEtpbmcgLSBBUk0gTGludXggPGxpbnV4QGFybS5saW51eC5vcmcudWs+IHdyb3RlOgo+ID4gSSB0
+aGluayB3ZSBuZWVkIHRvIHVuZGVyc3RhbmQgZXhhY3RseSBob3cgdGhlIDk5OHggbWFwIEkyUyBp
+bnB1dHMgdG8gdGhlCj4gPiBIRE1JIGNoYW5uZWxzIHRvIGF2b2lkIG1ha2luZyBhIG1pc3Rha2Ug
+d2l0aCB0aGUgYmluZGluZzsgcmVtZW1iZXIsIHRoZQo+ID4gYmluZGluZyBpc24ndCBzb21ldGhp
+bmcgdGhhdCBjYW4gYmUgZWFzaWx5ICJidWcgZml4ZWQiIGF0IGEgbGF0ZXIgZGF0ZQo+ID4gYXMg
+YW55dGhpbmcgd2UgY29tZSB1cCB3aXRoIG5vdyBoYXMgdG8gYmUgc3VwcG9ydGVkIGxvbmcgdGVy
+bSBieSB0aGUKPiA+IGtlcm5lbC4KPiAKPiBUaGUgRFQgZGVzY3JpYmVzIHRoZSBoYXJkd2FyZSBj
+b25maWd1cmF0aW9uLgoKWW91J3JlIG1pc3NpbmcgbXkgcG9pbnQuCgpIb3cgZG9lcyB0aGUgZHJp
+dmVyIGtub3cgd2hpY2ggb2YgdGhlIEkyUyBwaW5zIHRvIGVuYWJsZSBpbiBJMlMgbW9kZT8KCj4g
+QSBmdWxseSB3aXJlZCB0ZGE5OTh4IGNvdWxkIGJlIGEgY2hpcCB3aXRoIHRoZSBhdWRpbyBwaW5z
+IGNvbm5lY3RlZCB0bzoKPiAtIGEga2lya3dvb2QtbGlrZSBhdWRpbyBkZXZpY2Ugd2l0aCBvbmUg
+STJTIGFuZCBvbmUgUy9QRElGIG91dHB1dCwKPiAtIHR3byBvdGhlciBhdWRpbyBkZXZpY2VzIHdp
+dGggb25lIEkyUyBlYWNoLgoKSSBkb24ndCB0aGluayBpdCdzIHRoYXQgc2ltcGxlLiAgU2luY2Ug
+dGhlcmUgaXMgb25seSBvbmUgV1MgaW5wdXQgdG8KdGhlIDk5OHgsIHRoZSBmb3VyIEkyUyBzb3Vy
+Y2VzIHdvdWxkIG5lZWQgdG8gc3luY2hyb25pc2Ugc29tZWhvdywgYW5kCnNpbmNlIHRoZSBJMlMg
+c291cmNlIGdlbmVyYXRlcyBXUywgY29ubmVjdGluZyB0aGUgOTk4eCB0byBtdWx0aXBsZQppbmRl
+cGVuZGVudCBJMlMgc291cmNlcywgZWFjaCB3aXRoIHRoZWlyIG93biBXUyBvdXRwdXQsIHByZXNl
+bnRzIGEKaGFyZHdhcmUgcHJvYmxlbS4KCj4gV2l0aCBTL1BESUYsIG9ubHkgb25lIHN0ZXJlbyBj
+aGFubmVsIG1heSBiZSBzZW50LCBidXQgd2l0aCBJMlMsIHVwIHRvIDQKPiBzdGVyZW8gY2hhbm5l
+bHMgbWF5IGJlIHNlbnQuCgpUaGF0IHN0YXRlbWVudCBpcyBub3QgZW50aXJlbHkgYWNjdXJhdGUu
+ICBZZXMsIHdpdGggUy9QRElGLCBvbmx5IG9uZQpQQ00gTCtSIGNoYW5uZWwgY2FuIGJlIHNlbnQu
+ICBIb3dldmVyLCBTL1BESUYgYWxzbyBzdXBwb3J0cyBzZW5kaW5nCm1vcmUgY2hhbm5lbHMgdXNp
+bmcgIm5vbi1hdWRpbyIgc3RyZWFtcywgd2l0aCB0aGUgZGF0YSBlbmNvZGVkIGFzCk1QRUcgb3Ig
+QUFDLiAgVGhpcyB1c2VzIHRoZSBIRE1JIGRhdGEgaXNsYW5kcyB3aGljaCB3b3VsZCd2ZSBiZWVu
+Cm9jY3VwaWVkIGJ5IHRoZSBGcm9udCBMK1IgUENNIGNoYW5uZWwuCgo+IFRoZXNlIGNoYW5uZWxz
+IGFyZSBleHRyYWN0ZWQgYnkgdGhlIGRldmljZXMgY29ubmVjdGVkIG9uIHRoZSBIRE1JIGJ1cy4K
+ClRoYXQncyBpbmNvcnJlY3QuICBQbGVhc2UgcmVhZCB0aGUgSERNSSAxLjMgc3BlY2lmaWNhdGlv
+bjsgY2hhbm5lbHMgYXJlCmFsbG9jYXRlZCBmb3IgRnJvbnQgTCtSLCBDZW50cmUsIFN1YiwgUmVh
+ciBMK1IgYW5kIHRoZXJlJ3Mgbm8KaWRlbnRpZmljYXRpb24gdG8gaW5kaWNhdGUgdGhhdCB0aGVy
+ZSBhcmUgdHdvIEZyb250IEwrUiBjaGFubmVscyB3aGljaAphcmUgZGlmZmVyZW50IGxhbmd1YWdl
+cy4KCklmIHlvdSBmZWVsIGRpZmZlcmVudGx5LCBwbGVhc2UgcHJvdmlkZSBhIHJlZmVyZW5jZSB0
+byB0aGUgSERNSQpzcGVjaWZpY2F0aW9uIHdoaWNoIGRlc2NyaWJlcyB0aGlzIGZlYXR1cmUuCgo+
+IEFuIGV4YW1wbGUgY291bGQgYmUgdGhlIHBsYXlpbmcgb2YgYSBtdWx0aS1sYW5ndWFnZSBtb3Zp
+ZTogZWFjaCBhdWRpbwo+IGNoYW5uZWwgY2FycmllcyBvbmUgbGFuZ3VhZ2UuIEZyb20gdGhlIGNv
+bXB1dGVyIHZpZXcsIHRoZSBwbGF5aW5nCj4gYXBwbGljYXRpb24gc2VuZHMgZWFjaCBsYW5ndWFn
+ZSB0byBvbmUgc291bmQgY2FyZC4KClRoZSBzZWxlY3Rpb24gb2YgdGhlIGxhbmd1YWdlIGlzIGRv
+bmUgYXQgdGhlIHBsYXllciwgbm90IGJ5IHRoZSBkaXNwbGF5CmRldmljZS4KCj4gU28sIHRoaXMg
+bWVhbnMgdGhhdCB0aGUgdGRhOTk4eCBkcml2ZXIgc2hvdWxkIGNoZWNrIHRoYXQgUy9QRElGIGFu
+ZCBJMlMKPiBhcmUgbm90IGFjdGl2ZSBhdCB0aGUgc2FtZSB0aW1lLCBhbmQgaXQgc2hvdWxkIGFs
+c28gZG8gYSBwaW4gT1IvQU5EIG9uCj4gSTJTIHN0YXJ0L3N0b3AuCgpUaGF0J3MgY29ycmVjdDog
+dGhlIFREQTk5OHggY2FuIG9wZXJhdGUgaW4gb25lIG9mIHR3byBtb2RlczogZWl0aGVyClMvUERJ
+RiBfb3JfIEkyUywgYnV0IG5ldmVyIGJvdGguCgpNeSBxdWVzdGlvbiBpczogaG93IGRvIHdlIGtu
+b3cgd2hpY2ggSTJTIGlucHV0cyB0byBlbmFibGUsIG9yIGFyZQp5b3Ugc3VnZ2VzdGluZyB0aGF0
+IGFsbCBJMlMgaW5wdXRzIHNob3VsZCBiZSBlbmFibGVkIGlmIG9wZXJhdGluZyBpbgpJMlMgbW9k
+ZSBpcnJlc3BlY3RpdmUgb2Ygd2hldGhlciB0aGV5IG1heSBiZSBhY3RpdmU/CgotLSAKRlRUQyBi
+cm9hZGJhbmQgZm9yIDAuOG1pbGUgbGluZTogY3VycmVudGx5IGF0IDEwLjVNYnBzIGRvd24gNDAw
+a2JwcyB1cAphY2NvcmRpbmcgdG8gc3BlZWR0ZXN0Lm5ldC4KX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2
+ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
