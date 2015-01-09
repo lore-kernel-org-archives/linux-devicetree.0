@@ -1,172 +1,85 @@
 From: Soren Brinkmann <soren.brinkmann@xilinx.com>
-Subject: [PATCH v4 3/7] pinctrl: zynq: Document DT binding
-Date: Fri,  9 Jan 2015 07:43:47 -0800
-Message-ID: <1420818231-13451-4-git-send-email-soren.brinkmann@xilinx.com>
+Subject: [PATCH v4 1/7] pinctrl: pinconf-generic: Infer map type from DT
+ property
+Date: Fri,  9 Jan 2015 07:43:45 -0800
+Message-ID: <1420818231-13451-2-git-send-email-soren.brinkmann@xilinx.com>
 References: <1420818231-13451-1-git-send-email-soren.brinkmann@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1420818231-13451-1-git-send-email-soren.brinkmann@xilinx.com>
-Sender: linux-sh-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
-Cc: =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann@xilinx.com>, Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Alessandro Rubini <rubini@unipv.it>, Heiko Stuebner <heiko@sntech.de>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-rockchip@lists.infradead.org, linux-sh@vger.kernel.org, "Ivan T. Ivanov" <iivanov@mm-sol.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Beniamino Galvani <b.galvani@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Heiko Stuebner <heiko@sntech.de>, linux-sh@vger.kernel.org, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, Beniamino Galvani <b.galvani@gmail.com>, linux-rockchip@lists.infradead.org, =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann@xilinx.com>, "Ivan T. Ivanov" <iivanov@mm-sol.com>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org, Alessandro Rubini <rubini@unipv.it>
 List-Id: devicetree@vger.kernel.org
 
-Add documentation for the devicetree binding for the Zynq pincontroller=
-=2E
-
-Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
-Tested-by: Andreas F=C3=A4rber <afaerber@suse.de>
----
-Changes since v1:
- - fix typo
- - add USB related documentation
- - remove 'pinctrl-' prefix for pinctrl sub-nodes
- - update documentation to enforce strict separation of pinmux
-   and pinconf nodes
-   - update example accordingly
----
- .../bindings/pinctrl/xlnx,zynq-pinctrl.txt         | 104 +++++++++++++=
-++++++++
- 1 file changed, 104 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/xlnx,zynq=
--pinctrl.txt
-
-diff --git a/Documentation/devicetree/bindings/pinctrl/xlnx,zynq-pinctr=
-l.txt b/Documentation/devicetree/bindings/pinctrl/xlnx,zynq-pinctrl.txt
-new file mode 100644
-index 000000000000..b7b55a964f65
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/xlnx,zynq-pinctrl.txt
-@@ -0,0 +1,104 @@
-+	Binding for Xilinx Zynq Pinctrl
-+
-+Required properties:
-+- compatible: "xlnx,zynq-pinctrl"
-+- syscon: phandle to SLCR
-+- reg: Offset and length of pinctrl space in SLCR
-+
-+Please refer to pinctrl-bindings.txt in this directory for details of =
-the
-+common pinctrl bindings used by client devices, including the meaning =
-of the
-+phrase "pin configuration node".
-+
-+Zynq's pin configuration nodes act as a container for an arbitrary num=
-ber of
-+subnodes. Each of these subnodes represents some desired configuration=
- for a
-+pin, a group, or a list of pins or groups. This configuration can incl=
-ude the
-+mux function to select on those pin(s)/group(s), and various pin confi=
-guration
-+parameters, such as pull-up, slew rate, etc.
-+
-+Each configuration node can consist of multiple nodes describing the p=
-inmux and
-+pinconf options. Those nodes can be pinmux nodes or pinconf nodes.
-+
-+The name of each subnode is not important; all subnodes should be enum=
-erated
-+and processed purely based on their content.
-+
-+Required properties for pinmux nodes are:
-+ - groups: A list of pinmux groups.
-+ - function: The name of a pinmux function to activate for the specifi=
-ed set
-+   of groups.
-+
-+Required properties for configuration nodes:
-+One of:
-+ - pins: a list of pin names
-+ - groups: A list of pinmux groups.
-+
-+The following generic properties as defined in pinctrl-bindings.txt ar=
-e valid
-+to specify in a pinmux subnode:
-+ groups, function
-+
-+The following generic properties as defined in pinctrl-bindings.txt ar=
-e valid
-+to specify in a pinconf subnode:
-+ groups, pins, bias-disable, bias-high-impedance, bias-pull-up, slew-r=
-ate,
-+ low-power-disable, low-power-enable
-+
-+ Valid arguments for 'slew-rate' are '0' and '1' to select between slo=
-w and fast
-+ respectively.
-+
-+ Valid values for groups are:
-+   ethernet0_0_grp, ethernet1_0_grp, mdio0_0_grp, mdio1_0_grp,
-+   qspi0_0_grp, qspi1_0_grp, qspi_fbclk, qspi_cs1_grp, spi0_0_grp,
-+   spi0_1_grp - spi0_2_grp, spi1_0_grp - spi1_3_grp, sdio0_0_grp - sdi=
-o0_2_grp,
-+   sdio1_0_grp - sdio1_3_grp, sdio0_emio_wp, sdio0_emio_cd, sdio1_emio=
-_wp,
-+   sdio1_emio_cd, smc0_nor, smc0_nor_cs1_grp, smc0_nor_addr25_grp, smc=
-0_nand,
-+   can0_0_grp - can0_10_grp, can1_0_grp - can1_11_grp, uart0_0_grp - u=
-art0_10_grp,
-+   uart1_0_grp - uart1_11_grp, i2c0_0_grp - i2c0_10_grp, i2c1_0_grp - =
-i2c1_10_grp,
-+   ttc0_0_grp - ttc0_2_grp, ttc1_0_grp - ttc1_2_grp, swdt0_0_grp - swd=
-t0_4_grp,
-+   gpio0_0_grp - gpio0_53_grp, usb0_0_grp, usb1_0_grp
-+
-+ Valid values for pins are:
-+   MIO0 - MIO53
-+
-+ Valid values for function are:
-+   ethernet0, ethernet1, mdio0, mdio1, qspi0, qspi1, qspi_fbclk, qspi_=
-cs1,
-+   spi0, spi1, sdio0, sdio0_pc, sdio0_cd, sdio0_wp,
-+   sdio1, sdio1_pc, sdio1_cd, sdio1_wp,
-+   smc0_nor, smc0_nor_cs1, smc0_nor_addr25, smc0_nand, can0, can1, uar=
-t0, uart1,
-+   i2c0, i2c1, ttc0, ttc1, swdt0, gpio0, usb0, usb1
-+
-+The following driver-specific properties as defined here are valid to =
-specify in
-+a pin configuration subnode:
-+ - io-standard: Configure the pin to use the selected IO standard acco=
-rding to
-+   this mapping:
-+    1: LVCMOS18
-+    2: LVCMOS25
-+    3: LVCMOS33
-+    4: HSTL
-+
-+Example:
-+	pinctrl0: pinctrl@700 {
-+		compatible =3D "xlnx,pinctrl-zynq";
-+		reg =3D <0x700 0x200>;
-+		syscon =3D <&slcr>;
-+
-+		pinctrl_uart1_default: uart1-default {
-+			mux {
-+				groups =3D "uart1_10_grp";
-+				function =3D "uart1";
-+			};
-+
-+			conf {
-+				groups =3D "uart1_10_grp";
-+				slew-rate =3D <0>;
-+				io-standard =3D <1>;
-+			};
-+
-+			conf-rx {
-+				pins =3D "MIO49";
-+				bias-high-impedance;
-+			};
-+
-+			conf-tx {
-+				pins =3D "MIO48";
-+				bias-disable;
-+			};
-+		};
-+	};
---=20
-2.2.1.1.gb42cc81
-
+V2l0aCB0aGUgbmV3ICdncm91cHMnIHByb3BlcnR5LCB0aGUgRFQgcGFyc2VyIGNhbiBpbmZlciB0
+aGUgbWFwIHR5cGUKZnJvbSB0aGUgZmFjdCB3aGV0aGVyICdwaW5zJyBvciAnZ3JvdXBzJyBpcyB1
+c2VkIHRvIHNwZWNpZnkgdGhlIHBpbgpncm91cCB0byB3b3JrIG9uLgpUbyBtYWludGFpbiBiYWNr
+d2FyZHMgY29tcGF0aWJpdGxpeSB3aXRoIGN1cnJlbnQgdXNhZ2Ugb2YgdGhlIERUCmJpbmRpbmcs
+IHRoaXMgaXMgb25seSBkb25lIHdoZW4gUElOX01BUF9UWVBFX0lOVkFMSUQgaXMgcGFzc2VkIHRv
+IHRoZQpwYXJzaW5nIGZ1bmN0aW9uIGFzIHR5cGUuCkFsc28sIGEgbmV3IGhlbHBlciAncGluY29u
+Zl9nZW5lcmljX2R0X25vZGVfdG9fbWFwX2FsbCgpJyBpcyBpbnRyb2R1Y2VkLAp3aGljaCBjYW4g
+YmUgdXNlZCBieSBkcml2ZXJzIGFzIGdlbmVyaWMgY2FsbGJhY2sgZm9yIGR0X25vZGVfdG9fbWFw
+KCkgdG8KbGV2ZXJhZ2UgdGhlIG5ldyBmZWF0dXJlLgoKU2lnbmVkLW9mZi1ieTogU29yZW4gQnJp
+bmttYW5uIDxzb3Jlbi5icmlua21hbm5AeGlsaW54LmNvbT4KVGVzdGVkLWJ5OiBBbmRyZWFzIEbD
+pHJiZXIgPGFmYWVyYmVyQHN1c2UuZGU+Ci0tLQpDaGFuZ2VzIHNpbmNlIHYyOgogLSByZW5hbWUg
+ZHRfcGluX3NwZWNpZmllciB0byBzdWJub2RlX3RhcmdldF90eXBlCiAtIGFkZCBhZGRpdGlvbmFs
+IGNvbW1lbnQgaW4gaGVhZGVyIGZpbGUgZXhwbGFpbmluZyBwYXNzaW5nIGFuIGludmFsaWQKICAg
+bWFwIHR5cGUKIC0gbWVudGlvbiBtYXBfYWxsKCkgaGVscGVyIGluIGNvbW1pdCBtZXNzYWdlCkNo
+YW5nZXMgc2luY2UgUkZDIHYyOgogLSBub25lCi0tLQogZHJpdmVycy9waW5jdHJsL3BpbmNvbmYt
+Z2VuZXJpYy5jICAgICAgIHwgMTcgKysrKysrKysrKysrKystLS0KIGluY2x1ZGUvbGludXgvcGlu
+Y3RybC9waW5jb25mLWdlbmVyaWMuaCB8IDExICsrKysrKysrKysrCiAyIGZpbGVzIGNoYW5nZWQs
+IDI1IGluc2VydGlvbnMoKyksIDMgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9w
+aW5jdHJsL3BpbmNvbmYtZ2VuZXJpYy5jIGIvZHJpdmVycy9waW5jdHJsL3BpbmNvbmYtZ2VuZXJp
+Yy5jCmluZGV4IGY3OGI0MTZkNzk4NC4uMjFiM2Q5MGViYjJkIDEwMDY0NAotLS0gYS9kcml2ZXJz
+L3BpbmN0cmwvcGluY29uZi1nZW5lcmljLmMKKysrIGIvZHJpdmVycy9waW5jdHJsL3BpbmNvbmYt
+Z2VuZXJpYy5jCkBAIC0yNjQsNiArMjY0LDcgQEAgaW50IHBpbmNvbmZfZ2VuZXJpY19kdF9zdWJu
+b2RlX3RvX21hcChzdHJ1Y3QgcGluY3RybF9kZXYgKnBjdGxkZXYsCiAJdW5zaWduZWQgcmVzZXJ2
+ZTsKIAlzdHJ1Y3QgcHJvcGVydHkgKnByb3A7CiAJY29uc3QgY2hhciAqZ3JvdXA7CisJY29uc3Qg
+Y2hhciAqc3Vibm9kZV90YXJnZXRfdHlwZSA9ICJwaW5zIjsKIAogCXJldCA9IG9mX3Byb3BlcnR5
+X3JlYWRfc3RyaW5nKG5wLCAiZnVuY3Rpb24iLCAmZnVuY3Rpb24pOwogCWlmIChyZXQgPCAwKSB7
+CkBAIC0yODQsMTAgKzI4NSwyMCBAQCBpbnQgcGluY29uZl9nZW5lcmljX2R0X3N1Ym5vZGVfdG9f
+bWFwKHN0cnVjdCBwaW5jdHJsX2RldiAqcGN0bGRldiwKIAkJcmVzZXJ2ZSsrOwogCWlmIChudW1f
+Y29uZmlncykKIAkJcmVzZXJ2ZSsrOworCiAJcmV0ID0gb2ZfcHJvcGVydHlfY291bnRfc3RyaW5n
+cyhucCwgInBpbnMiKTsKIAlpZiAocmV0IDwgMCkgewotCQlkZXZfZXJyKGRldiwgImNvdWxkIG5v
+dCBwYXJzZSBwcm9wZXJ0eSBwaW5zXG4iKTsKLQkJZ290byBleGl0OworCQlyZXQgPSBvZl9wcm9w
+ZXJ0eV9jb3VudF9zdHJpbmdzKG5wLCAiZ3JvdXBzIik7CisJCWlmIChyZXQgPCAwKSB7CisJCQlk
+ZXZfZXJyKGRldiwgImNvdWxkIG5vdCBwYXJzZSBwcm9wZXJ0eSBwaW5zL2dyb3Vwc1xuIik7CisJ
+CQlnb3RvIGV4aXQ7CisJCX0KKwkJaWYgKHR5cGUgPT0gUElOX01BUF9UWVBFX0lOVkFMSUQpCisJ
+CQl0eXBlID0gUElOX01BUF9UWVBFX0NPTkZJR1NfR1JPVVA7CisJCXN1Ym5vZGVfdGFyZ2V0X3R5
+cGUgPSAiZ3JvdXBzIjsKKwl9IGVsc2UgeworCQlpZiAodHlwZSA9PSBQSU5fTUFQX1RZUEVfSU5W
+QUxJRCkKKwkJCXR5cGUgPSBQSU5fTUFQX1RZUEVfQ09ORklHU19QSU47CiAJfQogCXJlc2VydmUg
+Kj0gcmV0OwogCkBAIC0yOTYsNyArMzA3LDcgQEAgaW50IHBpbmNvbmZfZ2VuZXJpY19kdF9zdWJu
+b2RlX3RvX21hcChzdHJ1Y3QgcGluY3RybF9kZXYgKnBjdGxkZXYsCiAJaWYgKHJldCA8IDApCiAJ
+CWdvdG8gZXhpdDsKIAotCW9mX3Byb3BlcnR5X2Zvcl9lYWNoX3N0cmluZyhucCwgInBpbnMiLCBw
+cm9wLCBncm91cCkgeworCW9mX3Byb3BlcnR5X2Zvcl9lYWNoX3N0cmluZyhucCwgc3Vibm9kZV90
+YXJnZXRfdHlwZSwgcHJvcCwgZ3JvdXApIHsKIAkJaWYgKGZ1bmN0aW9uKSB7CiAJCQlyZXQgPSBw
+aW5jdHJsX3V0aWxzX2FkZF9tYXBfbXV4KHBjdGxkZXYsIG1hcCwKIAkJCQkJcmVzZXJ2ZWRfbWFw
+cywgbnVtX21hcHMsIGdyb3VwLApkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9waW5jdHJsL3Bp
+bmNvbmYtZ2VuZXJpYy5oIGIvaW5jbHVkZS9saW51eC9waW5jdHJsL3BpbmNvbmYtZ2VuZXJpYy5o
+CmluZGV4IGQ1NzhhNjBlZmYyMy4uODNjODlmNWFiNzA1IDEwMDY0NAotLS0gYS9pbmNsdWRlL2xp
+bnV4L3BpbmN0cmwvcGluY29uZi1nZW5lcmljLmgKKysrIGIvaW5jbHVkZS9saW51eC9waW5jdHJs
+L3BpbmNvbmYtZ2VuZXJpYy5oCkBAIC0xNzQsNiArMTc0LDE3IEBAIHN0YXRpYyBpbmxpbmUgaW50
+IHBpbmNvbmZfZ2VuZXJpY19kdF9ub2RlX3RvX21hcF9waW4oCiAJCQlQSU5fTUFQX1RZUEVfQ09O
+RklHU19QSU4pOwogfQogCitzdGF0aWMgaW5saW5lIGludCBwaW5jb25mX2dlbmVyaWNfZHRfbm9k
+ZV90b19tYXBfYWxsKAorCQlzdHJ1Y3QgcGluY3RybF9kZXYgKnBjdGxkZXYsIHN0cnVjdCBkZXZp
+Y2Vfbm9kZSAqbnBfY29uZmlnLAorCQlzdHJ1Y3QgcGluY3RybF9tYXAgKiptYXAsIHVuc2lnbmVk
+ICpudW1fbWFwcykKK3sKKwkvKgorCSAqIHBhc3NpbmcgdGhlIHR5cGUgYXMgUElOX01BUF9UWVBF
+X0lOVkFMSUQgY2F1c2VzIHRoZSB1bmRlcmx5aW5nIHBhcnNlcgorCSAqIHRvIGluZmVyIHRoZSBt
+YXAgdHlwZSBmcm9tIHRoZSBEVCBwcm9wZXJ0aWVzIHVzZWQuCisJICovCisJcmV0dXJuIHBpbmNv
+bmZfZ2VuZXJpY19kdF9ub2RlX3RvX21hcChwY3RsZGV2LCBucF9jb25maWcsIG1hcCwgbnVtX21h
+cHMsCisJCQlQSU5fTUFQX1RZUEVfSU5WQUxJRCk7Cit9CiAjZW5kaWYKIAogI2VuZGlmIC8qIENP
+TkZJR19HRU5FUklDX1BJTkNPTkYgKi8KLS0gCjIuMi4xLjEuZ2I0MmNjODEKCgpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1h
+aWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xp
+c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
