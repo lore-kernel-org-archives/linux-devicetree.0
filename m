@@ -1,32 +1,67 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH v3 5/8] gpio: Add Fujitsu MB86S7x GPIO driver
-Date: Fri, 9 Jan 2015 12:52:43 +0000
-Message-ID: <20150109125243.GM12302@n2100.arm.linux.org.uk>
-References: <1420802369-3840-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
- <1420803212-4350-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
+From: Jean-Francois Moine <moinejf@free.fr>
+Subject: Re: [PATCH v9 1/4] drm/i2c: tda998x: Add DT support
+	for audio
+Date: Fri, 9 Jan 2015 13:54:01 +0100
+Message-ID: <20150109135401.5b270d46@armhf>
+References: <cover.1420628786.git.moinejf@free.fr>
+ <0084acea5a3475a77531d6a77483f36d3469111a.1420628786.git.moinejf@free.fr>
+ <54AE99F5.1010404@ti.com> <20150108174257.557f7ea5@armhf>
+ <54AFA9B0.6040405@ti.com> <20150109123036.4bc4bbf6@armhf>
+ <20150109114529.GH12302@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1420803212-4350-1-git-send-email-Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vincent Yang <vincent.yang.fujitsu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Vincent Yang <Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Tetsuya Nuriya <nuriya.tetsuya-+CUm20s59erQFUHtdCDX3A@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20150109114529.GH12302@n2100.arm.linux.org.uk>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Andrew Jackson <Andrew.Jackson@arm.com>, linux-kernel@vger.kernel.org, Jyri Sarha <jsarha@ti.com>, Mark Brown <broonie@kernel.org>, dri-devel@lists.freedesktop.org, Dave Airlie <airlied@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 09, 2015 at 07:33:32PM +0800, Vincent Yang wrote:
-> +static int mb86s70_gpio_remove(struct platform_device *pdev)
-> +{
-> +	struct mb86s70_gpio_chip *gchip = platform_get_drvdata(pdev);
-> +
-> +	gpiochip_remove(&gchip->gc);
-
-This doesn't disable and unprepare the clock.
-
--- 
-FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
-according to speedtest.net.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gRnJpLCA5IEphbiAyMDE1IDExOjQ1OjI5ICswMDAwClJ1c3NlbGwgS2luZyAtIEFSTSBMaW51
+eCA8bGludXhAYXJtLmxpbnV4Lm9yZy51az4gd3JvdGU6Cgo+IE9uIEZyaSwgSmFuIDA5LCAyMDE1
+IGF0IDEyOjMwOjM2UE0gKzAxMDAsIEplYW4tRnJhbmNvaXMgTW9pbmUgd3JvdGU6Cj4gPiBJbiBt
+eSBvcmlnaW5hbCB2ZXJzaW9uLCB0aGUgYXVkaW8tcG9ydHMgYXJlIGEgYml0bWFwIG9mIHRoZSBw
+aW5zLCB0aGUKPiA+IGJpdCAwIGJlaW5nIHRoZSBXUyB1c2VkIGZvciBJMlMuIEEgZnVsbHkgd2ly
+ZWQgdGRhOTk4eCB3b3VsZCBoYXZlIGJlZW4KPiA+IGFzOgo+ID4gCj4gPiAJYXVkaW8tcG9ydHMg
+PSA8MHgwMz4sIDwweDA0PiwgPDB4MDk+LCA8MHgxMT47Cj4gPiAJYXVkaW8tcG9ydC1uYW1lcyA9
+ICJpMnMiLCAic3BkaWYiLCAiaTJzIiwgImkycyI7Cj4gPiAKPiA+IFdpdGggdGhlIG5ldyB2ZXJz
+aW9uLCBpdCB3b3VsZCBzaW1wbHkgYmVjb21lOgo+ID4gCj4gPiAJYXVkaW8taW5wdXRzID0gImky
+cyIsICJzcGRpZiIsICJpMnMiLCAiaTJzIjsKPiAKPiBIb3cgZG8geW91IGtub3cgd2hpY2ggaTJz
+IGlucHV0cyB0byBlbmFibGU/Cj4gCj4gRG9lcyBpdCBtYWtlIHNlbnNlIGZvciB0aGUgYXVkaW8g
+aW5wdXRzIHRvIGJlIG1peGVkIGxpa2UgdGhhdD8KPiAKPiBZb3Ugd2lsbCBuZWVkIHRvIGVuYWJs
+ZSBvbmUgaTJzIGZvciBmcm9udCBMK1IsIGFuZCBpbmNyZWFzaW5nbHkgb3RoZXJzCj4gZm9yIHRo
+ZSBhZGRpdGlvbmFsIGNoYW5uZWxzLgo+IAo+IEkgdGhpbmsgd2UgbmVlZCB0byB1bmRlcnN0YW5k
+IGV4YWN0bHkgaG93IHRoZSA5OTh4IG1hcCBJMlMgaW5wdXRzIHRvIHRoZQo+IEhETUkgY2hhbm5l
+bHMgdG8gYXZvaWQgbWFraW5nIGEgbWlzdGFrZSB3aXRoIHRoZSBiaW5kaW5nOyByZW1lbWJlciwg
+dGhlCj4gYmluZGluZyBpc24ndCBzb21ldGhpbmcgdGhhdCBjYW4gYmUgZWFzaWx5ICJidWcgZml4
+ZWQiIGF0IGEgbGF0ZXIgZGF0ZQo+IGFzIGFueXRoaW5nIHdlIGNvbWUgdXAgd2l0aCBub3cgaGFz
+IHRvIGJlIHN1cHBvcnRlZCBsb25nIHRlcm0gYnkgdGhlCj4ga2VybmVsLgoKVGhlIERUIGRlc2Ny
+aWJlcyB0aGUgaGFyZHdhcmUgY29uZmlndXJhdGlvbi4KCkEgZnVsbHkgd2lyZWQgdGRhOTk4eCBj
+b3VsZCBiZSBhIGNoaXAgd2l0aCB0aGUgYXVkaW8gcGlucyBjb25uZWN0ZWQgdG86Ci0gYSBraXJr
+d29vZC1saWtlIGF1ZGlvIGRldmljZSB3aXRoIG9uZSBJMlMgYW5kIG9uZSBTL1BESUYgb3V0cHV0
+LAotIHR3byBvdGhlciBhdWRpbyBkZXZpY2VzIHdpdGggb25lIEkyUyBlYWNoLgoKVGhlIHJlbGF0
+aW9uIGJldHdlZW4gYW4gYXVkaW8gZGV2aWNlIGFuZCB0aGUgYXNzb2NpYXRlZCBwaW4gaXMgZG9u
+ZSBieQp0aGUgZGVmaW5pdGlvbiBvZiB0aGUgc291bmQgY2FyZC4KCldpdGggUy9QRElGLCBvbmx5
+IG9uZSBzdGVyZW8gY2hhbm5lbCBtYXkgYmUgc2VudCwgYnV0IHdpdGggSTJTLCB1cCB0byA0CnN0
+ZXJlbyBjaGFubmVscyBtYXkgYmUgc2VudC4gVGhlc2UgY2hhbm5lbHMgYXJlIGV4dHJhY3RlZCBi
+eSB0aGUKZGV2aWNlcyBjb25uZWN0ZWQgb24gdGhlIEhETUkgYnVzLiBUaGVyZSBpcyBubyBtaXhp
+bmcuCkFuIGV4YW1wbGUgY291bGQgYmUgdGhlIHBsYXlpbmcgb2YgYSBtdWx0aS1sYW5ndWFnZSBt
+b3ZpZTogZWFjaCBhdWRpbwpjaGFubmVsIGNhcnJpZXMgb25lIGxhbmd1YWdlLiBGcm9tIHRoZSBj
+b21wdXRlciB2aWV3LCB0aGUgcGxheWluZwphcHBsaWNhdGlvbiBzZW5kcyBlYWNoIGxhbmd1YWdl
+IHRvIG9uZSBzb3VuZCBjYXJkLgoKU28sIHRoaXMgbWVhbnMgdGhhdCB0aGUgdGRhOTk4eCBkcml2
+ZXIgc2hvdWxkIGNoZWNrIHRoYXQgUy9QRElGIGFuZCBJMlMKYXJlIG5vdCBhY3RpdmUgYXQgdGhl
+IHNhbWUgdGltZSwgYW5kIGl0IHNob3VsZCBhbHNvIGRvIGEgcGluIE9SL0FORCBvbgpJMlMgc3Rh
+cnQvc3RvcC4KCi0tIApLZW4gYXIgYydoZW50YcOxCXwJICAgICAgKiogQnJlaXpoIGhhIExpbnV4
+IGF0YXYhICoqCkplZgkJfAkJaHR0cDovL21vaW5lamYuZnJlZS5mci8KX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KQWxzYS1kZXZlbCBtYWlsaW5nIGxpc3QK
+QWxzYS1kZXZlbEBhbHNhLXByb2plY3Qub3JnCmh0dHA6Ly9tYWlsbWFuLmFsc2EtcHJvamVjdC5v
+cmcvbWFpbG1hbi9saXN0aW5mby9hbHNhLWRldmVsCg==
