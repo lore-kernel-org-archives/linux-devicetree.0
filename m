@@ -1,49 +1,50 @@
-From: atull <atull@opensource.altera.com>
-Subject: Re: [PATCH v8 2/4] fpga manager: add sysfs interface document
-Date: Fri, 9 Jan 2015 13:14:24 -0600
-Message-ID: <alpine.DEB.2.02.1501091302370.30067@linuxheads99>
-References: <1420575219-27061-1-git-send-email-atull@opensource.altera.com>
- <1420575219-27061-3-git-send-email-atull@opensource.altera.com>
- <20150107084819.GA1887@amd>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 4/6] i2c: busses: add SLIMpro I2C device driver on APM X-Gene platform
+Date: Fri, 09 Jan 2015 20:42:28 +0100
+Message-ID: <15808906.L2zUs54agU@wuerfel>
+References: <1412726809-7525-1-git-send-email-fkan@apm.com> <1894616.4yY7dajl4R@wuerfel> <CAL85gmCOXKiHEO=URrAGBNZpJpen5P5PH1xDoF1-jasj0iDg4Q@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20150107084819.GA1887@amd>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Pavel Machek <pavel@denx.de>
-Cc: mark.rutland@arm.com, linux-doc@vger.kernel.org, rubini@gnudd.com, pantelis.antoniou@konsulko.com, hpa@zytor.com, s.trumtrar@pengutronix.de, devel@driverdev.osuosl.org, sameo@linux.intel.com, nico@linaro.org, ijc+devicetree@hellion.org.uk, michal.simek@xilinx.com, kyle.teske@ni.com, jgunthorpe@obsidianresearch.com, grant.likely@linaro.org, davidb@codeaurora.org, linus.walleij@linaro.org, cesarb@cesarb.net, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, iws@ovro.caltech.edu, broonie@kernel.org, philip@balister.org, dinguyen@opensource.altera.com, monstr@monstr.eu, gregkh@linuxfoundation.org, yvanderv@opensource.altera.com, linux-kernel@vger.kernel.org, balbi@ti.com, delicious.quinoa@gmail.com, robh+dt@kernel.org, rob@landley.net, galak@codeaurora.org, akpm@linux-foundation.org, davem@davemloft.net, m.chehab@samsung.com
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL85gmCOXKiHEO=URrAGBNZpJpen5P5PH1xDoF1-jasj0iDg4Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hieu Le <hnle-qTEPVZfXA3Y@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 7 Jan 2015, Pavel Machek wrote:
+On Friday 09 January 2015 10:56:51 Feng Kan wrote:
+> On Tue, Nov 11, 2014 at 1:51 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> > On Tuesday 07 October 2014 17:06:47 Feng Kan wrote:
+> >> diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
+> >> index 2e45ae3..a03042c 100644
+> >> --- a/drivers/i2c/busses/Kconfig
+> >> +++ b/drivers/i2c/busses/Kconfig
+> >> @@ -1009,6 +1009,15 @@ config I2C_CROS_EC_TUNNEL
+> >>         connected there. This will work whatever the interface used to
+> >>         talk to the EC (SPI, I2C or LPC).
+> >>
+> >> +config I2C_XGENE_SLIMPRO
+> >> +     tristate "APM X-Gene SoC I2C SLIMpro devices support"
+> >> +     depends on ARCH_XGENE && XGENE_SLIMPRO_MBOX
+> >
+> > Why this dependency on XGENE_SLIMPRO_MBOX?
+> >
+> > Better replace it with a dependency on MAILBOX.
+> Arnd, just a question. Is this because this possibly help with future
+> compatibility by choosing a more broad dependency?
 
-> On Tue 2015-01-06 14:13:37, atull@opensource.altera.com wrote:
-> > +
-> > +What:		/sys/class/fpga_manager/<fpga>/firmware
-> > +Date:		October 2014
-> > +KernelVersion:	3.18
-> > +Contact:	Alan Tull <atull@opensource.altera.com>
-> > +Description:	Name of the FPGA image file to load using firmware
-> > class.
-> 
-> This one is ugly: it unneccessarily passes firmware name through the
-> kernel. Just make interface and code simpler by always passing
-> "socfpga-fpga-image" or something like that.
-> 
-> Thanks,
-> 									Pavel
+The dependency should ideally describe build-time dependencies,
+to make it possible to build on other architectures for static
+code analysis purposes. If the driver makes no sense on other
+platforms you can also use
 
-Hi Pavel,
+	depends on ARCH_XGENE || COMPILE_TEST
+	depends on MAILBOX
 
-It might be ugly.  It's not unnecessary.  Some uses of FPGAs involve
-switching out the FPGA images dynamically under control of the userspace.
+to cover both the build-time and run-time dependencies. But the
+dependency on XGENE_SLIMPRO_MBOX just shouldn't be there, the driver
+will work with any mailbox implementation if someone puts the same
+hardware into a different SoC.
 
-Alan
+	Arnd
