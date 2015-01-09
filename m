@@ -1,59 +1,317 @@
-From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 2/8] mailbox: arm_mhu: add driver for ARM MHU controller
-Date: Fri, 9 Jan 2015 20:59:20 +0530
-Message-ID: <CAJe_ZheihwiEUXaRQfCFSfr9s1k59E_-0Ca8U_kNLVtRtNOnPg@mail.gmail.com>
-References: <1420802369-3840-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
-	<1420802889-4041-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
-	<20150109125102.GL12302@n2100.arm.linux.org.uk>
-	<CAJe_ZhdkF5o91HE8woAw0-DN5TuS_j6LM15NF0z6oHcQwPvnsQ@mail.gmail.com>
-	<20150109152402.GQ12302@n2100.arm.linux.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150109152402.GQ12302-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Vincent Yang <vincent.yang.fujitsu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Patch Tracking <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vincent Yang <Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>, Tetsuya Nuriya <nuriya.tetsuya-+CUm20s59erQFUHtdCDX3A@public.gmane.org>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: [PATCH/RFC v10 18/19] leds: max77693: add support for V4L2 Flash
+ sub-device
+Date: Fri, 09 Jan 2015 16:23:08 +0100
+Message-ID: <1420816989-1808-19-git-send-email-j.anaszewski@samsung.com>
+References: <1420816989-1808-1-git-send-email-j.anaszewski@samsung.com>
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <1420816989-1808-1-git-send-email-j.anaszewski@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, kyungmin.park@samsung.com, b.zolnierkie@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com, Jacek Anaszewski <j.anaszewski@samsung.com>, Sakari Ailus <sakari.ailus@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On 9 January 2015 at 20:54, Russell King - ARM Linux
-<linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
-> On Fri, Jan 09, 2015 at 06:49:12PM +0530, Jassi Brar wrote:
->> On 9 January 2015 at 18:21, Russell King - ARM Linux
->> <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
->> > On Fri, Jan 09, 2015 at 07:28:09PM +0800, Vincent Yang wrote:
->> >> +static irqreturn_t mhu_rx_interrupt(int irq, void *p)
->> >> +{
->> >> +     struct mbox_chan *chan = p;
->> >> +     struct mhu_link *mlink = (struct mhu_link *)chan->con_priv;
->> >> +     u32 val;
->> >> +
->> >> +     pr_debug("%s:%d\n", __func__, __LINE__);
->> >> +     val = readl_relaxed(mlink->rx_reg + INTR_STAT_OFS);
->> >> +     mbox_chan_received_data(chan, (void *)val);
->> >> +
->> >> +     writel_relaxed(val, mlink->rx_reg + INTR_CLR_OFS);
->> >> +
->> >> +     return IRQ_HANDLED;
->> >
->> > What if 'val' was zero - is the interrupt still "handled" ?
->> >
->> This irq shouldn't fire unless RX_STAT register has some non-zero value.
->
-> You claim this interrupt handler using IRQF_SHARED - what if another user
-> of this interrupt gets stuck?  Your handler above will prevent the kernel
-> recovering as it will think that you are validly processing the stuck
-> interrupt each time.
->
-> If it isn't shared, then don't use IRQF_SHARED.
->
-> Either way, it is good practice to return IRQ_NONE if there's no work to
-> be done.
->
-OK, will do.
+Add support for V4L2 Flash sub-device to the max77693 LED Flash class
+driver. The support allows for V4L2 Flash sub-device to take the control
+of the LED Flash class device.
 
-thanks.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+Cc: Bryan Wu <cooloney@gmail.com>
+Cc: Richard Purdie <rpurdie@rpsys.net>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+---
+ drivers/leds/leds-max77693.c |  151 +++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 142 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/leds/leds-max77693.c b/drivers/leds/leds-max77693.c
+index 3ba07c4..ef35abb 100644
+--- a/drivers/leds/leds-max77693.c
++++ b/drivers/leds/leds-max77693.c
+@@ -21,6 +21,7 @@
+ #include <linux/regmap.h>
+ #include <linux/slab.h>
+ #include <linux/workqueue.h>
++#include <media/v4l2-flash.h>
+ 
+ #define MODE_OFF		0
+ #define MODE_FLASH(a)		(1 << (a))
+@@ -52,6 +53,8 @@ struct max77693_sub_led {
+ 	struct led_classdev_flash fled_cdev;
+ 	/* assures led-triggers compatibility */
+ 	struct work_struct work_brightness_set;
++	/* V4L2 Flash device */
++	struct v4l2_flash *v4l2_flash;
+ 
+ 	/* brightness cache */
+ 	unsigned int torch_brightness;
+@@ -624,6 +627,32 @@ unlock:
+ 	return ret;
+ }
+ 
++#if IS_ENABLED(CONFIG_V4L2_FLASH_LED_CLASS)
++static int max77693_led_external_strobe_set(
++				struct v4l2_flash *v4l2_flash,
++				bool enable)
++{
++	struct max77693_sub_led *sub_led =
++				flcdev_to_sub_led(v4l2_flash->fled_cdev);
++	struct max77693_led_device *led = sub_led_to_led(sub_led);
++	int fled_id = sub_led->fled_id;
++	int ret;
++
++	mutex_lock(&led->lock);
++
++	if (enable)
++		ret = max77693_add_mode(led, MODE_FLASH_EXTERNAL(fled_id));
++	else
++		ret = max77693_clear_mode(led, MODE_FLASH_EXTERNAL(fled_id));
++
++	mutex_unlock(&led->lock);
++
++	return ret;
++}
++#else
++#define max77693_led_external_strobe_set(v4l2_flash, enable) (NULL)
++#endif
++
+ static int max77693_led_flash_fault_get(
+ 				struct led_classdev_flash *fled_cdev,
+ 				u32 *fault)
+@@ -689,7 +718,8 @@ static int max77693_led_flash_timeout_set(
+ }
+ 
+ static int max77693_led_parse_dt(struct max77693_led_device *led,
+-				 struct device_node *node)
++				 struct device_node *node,
++				 struct device_node **sub_nodes)
+ {
+ 	struct max77693_led_config_data *cfg = led->cfg_data;
+ 	struct max77693_sub_led *sub_leds = led->sub_leds;
+@@ -727,6 +757,13 @@ static int max77693_led_parse_dt(struct max77693_led_device *led,
+ 			return -EINVAL;
+ 		}
+ 
++		if (sub_nodes[fled_id]) {
++			dev_err(dev,
++				"Conflicting \"led-sources\" DT properties\n");
++			return -EINVAL;
++		}
++
++		sub_nodes[fled_id] = child_node;
+ 		sub_leds[fled_id].fled_id = fled_id;
+ 
+ 		ret = of_property_read_string(child_node, "label",
+@@ -812,7 +849,8 @@ static void max77693_led_validate_configuration(struct max77693_led_device *led)
+ 				MAX_FLASH1_VSYS_MAX, MAX_FLASH1_VSYS_STEP);
+ }
+ 
+-static int max77693_led_get_configuration(struct max77693_led_device *led)
++static int max77693_led_get_configuration(struct max77693_led_device *led,
++					  struct device_node **sub_nodes)
+ {
+ 	struct device *dev = &led->pdev->dev;
+ 	int ret;
+@@ -824,7 +862,7 @@ static int max77693_led_get_configuration(struct max77693_led_device *led)
+ 	if (!led->cfg_data)
+ 		return -ENOMEM;
+ 
+-	ret = max77693_led_parse_dt(led, dev->of_node);
++	ret = max77693_led_parse_dt(led, dev->of_node, sub_nodes);
+ 	if (ret < 0)
+ 		return ret;
+ 
+@@ -841,6 +879,12 @@ static const struct led_flash_ops flash_ops = {
+ 	.fault_get		= max77693_led_flash_fault_get,
+ };
+ 
++#if IS_ENABLED(CONFIG_V4L2_FLASH_LED_CLASS)
++static const struct v4l2_flash_ops v4l2_flash_ops = {
++	.external_strobe_set = max77693_led_external_strobe_set,
++};
++#endif
++
+ static void max77693_init_flash_settings(struct max77693_led_device *led,
+ 					 struct max77693_led_settings *s,
+ 					 int fled_id)
+@@ -875,6 +919,47 @@ static void max77693_init_flash_settings(struct max77693_led_device *led,
+ 	setting->val = setting->max;
+ }
+ 
++#if IS_ENABLED(CONFIG_V4L2_FLASH_LED_CLASS)
++static void max77693_init_v4l2_ctrl_config(struct max77693_led_settings *s,
++					struct max77693_led_config_data *p,
++					struct v4l2_flash_ctrl_config *config,
++					int fled_id)
++{
++	struct led_flash_setting *setting;
++	struct v4l2_ctrl_config *c;
++
++	c = &config->intensity;
++	setting = &s->torch_brightness;
++	c->min = setting->min;
++	c->max = setting->max;
++	c->step = setting->step;
++	c->def = setting->val;
++
++	c = &config->flash_intensity;
++	setting = &s->flash_brightness;
++	c->min = setting->min;
++	c->max = setting->max;
++	c->step = setting->step;
++	c->def = setting->val;
++
++	c = &config->flash_timeout;
++	setting = &s->flash_timeout;
++	c->min = setting->min;
++	c->max = setting->max;
++	c->step = setting->step;
++	c->def = setting->val;
++
++	/* Init flash faults config */
++	config->flash_faults =	V4L2_FLASH_FAULT_OVER_VOLTAGE |
++				V4L2_FLASH_FAULT_SHORT_CIRCUIT |
++				V4L2_FLASH_FAULT_OVER_CURRENT;
++
++	config->has_external_strobe = true;
++}
++#else
++#define max77693_init_v4l2_ctrl_config(s, p, config, fled_id)
++#endif
++
+ static int max77693_set_available_sync_led(struct max77693_led_device *led,
+ 						int fled_id)
+ {
+@@ -893,7 +978,8 @@ static int max77693_set_available_sync_led(struct max77693_led_device *led,
+ }
+ 
+ static void max77693_init_fled_cdev(struct max77693_led_device *led,
+-					int fled_id)
++				int fled_id,
++				struct v4l2_flash_ctrl_config *v4l2_flash_cfg)
+ {
+ 	struct led_classdev_flash *fled_cdev;
+ 	struct led_classdev *led_cdev;
+@@ -902,6 +988,9 @@ static void max77693_init_fled_cdev(struct max77693_led_device *led,
+ 
+ 	/* Initialize flash settings */
+ 	max77693_init_flash_settings(led, &settings, fled_id);
++	/* Initialize V4L2 Flash config basing on initialized settings */
++	max77693_init_v4l2_ctrl_config(&settings, led->cfg_data,
++					v4l2_flash_cfg, fled_id);
+ 
+ 	/* Initialize LED Flash class device */
+ 	fled_cdev = &sub_led->fled_cdev;
+@@ -924,14 +1013,51 @@ static void max77693_init_fled_cdev(struct max77693_led_device *led,
+ 	sub_led->flash_timeout = fled_cdev->timeout.val;
+ }
+ 
++static int max77693_register_led(struct max77693_sub_led *sub_led,
++				 struct v4l2_flash_ctrl_config *v4l2_flash_cfg,
++				 struct device_node *sub_node)
++{
++	struct max77693_led_device *led = sub_led_to_led(sub_led);
++	struct led_classdev_flash *fled_cdev = &sub_led->fled_cdev;
++	struct device *dev = &led->pdev->dev;
++	int ret;
++
++	/* Register in the LED subsystem */
++	ret = led_classdev_flash_register(dev, fled_cdev);
++	if (ret < 0)
++		return ret;
++
++	of_node_get(sub_node);
++	fled_cdev->led_cdev.dev->of_node = sub_node;
++
++	/* Register in the V4L2 subsystem. */
++	sub_led->v4l2_flash = v4l2_flash_init(fled_cdev, &v4l2_flash_ops,
++						v4l2_flash_cfg);
++	if (IS_ERR(sub_led->v4l2_flash)) {
++		ret = PTR_ERR(sub_led->v4l2_flash);
++		goto err_v4l2_flash_init;
++	}
++
++	return 0;
++
++err_v4l2_flash_init:
++	of_node_put(sub_node);
++	led_classdev_flash_unregister(fled_cdev);
++	return ret;
++}
++
+ static int max77693_led_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+ 	struct max77693_dev *iodev = dev_get_drvdata(dev->parent);
+ 	struct max77693_led_device *led;
+ 	struct max77693_sub_led *sub_leds;
++	struct device_node *sub_nodes[2] = { NULL, NULL };
++	struct v4l2_flash_ctrl_config v4l2_flash_config[2];
+ 	int init_fled_cdev[2], i, ret;
+ 
++	memset(v4l2_flash_config, 0, sizeof(v4l2_flash_config));
++
+ 	led = devm_kzalloc(dev, sizeof(*led), GFP_KERNEL);
+ 	if (!led)
+ 		return -ENOMEM;
+@@ -941,7 +1067,7 @@ static int max77693_led_probe(struct platform_device *pdev)
+ 	sub_leds = led->sub_leds;
+ 
+ 	platform_set_drvdata(pdev, led);
+-	ret = max77693_led_get_configuration(led);
++	ret = max77693_led_get_configuration(led, sub_nodes);
+ 	if (ret < 0)
+ 		return ret;
+ 
+@@ -957,7 +1083,7 @@ static int max77693_led_probe(struct platform_device *pdev)
+ 	/* Initialize LED Flash class device(s) */
+ 	for (i = FLED1; i <= FLED2; ++i)
+ 		if (init_fled_cdev[i])
+-			max77693_init_fled_cdev(led, i);
++			max77693_init_fled_cdev(led, i, &v4l2_flash_config[i]);
+ 
+ 	/* Setup sub-leds available for flash strobe synchronization */
+ 	if (led->cfg_data->num_leds == 2) {
+@@ -970,11 +1096,12 @@ static int max77693_led_probe(struct platform_device *pdev)
+ 
+ 	mutex_init(&led->lock);
+ 
+-	/* Register LED Flash class device(s) */
++	/* Register LED Flash class and related V4L2 Flash device(s) */
+ 	for (i = FLED1; i <= FLED2; ++i) {
+ 		if (init_fled_cdev[i]) {
+-			ret = led_classdev_flash_register(dev,
+-							&sub_leds[i].fled_cdev);
++			ret = max77693_register_led(&sub_leds[i],
++						    &v4l2_flash_config[i],
++						    sub_nodes[i]);
+ 			if (ret < 0) {
+ 				/*
+ 				 * At this moment FLED1 might have been already
+@@ -995,6 +1122,8 @@ err_register_led2:
+ 	/* It is possible than only FLED2 was to be registered */
+ 	if (!init_fled_cdev[FLED1])
+ 		goto err_register_led1;
++	v4l2_flash_release(sub_leds[FLED1].v4l2_flash);
++	of_node_put(sub_leds[FLED1].fled_cdev.led_cdev.dev->of_node);
+ 	led_classdev_flash_unregister(&sub_leds[FLED1].fled_cdev);
+ err_register_led1:
+ 	mutex_destroy(&led->lock);
+@@ -1008,11 +1137,15 @@ static int max77693_led_remove(struct platform_device *pdev)
+ 	struct max77693_sub_led *sub_leds = led->sub_leds;
+ 
+ 	if (led->iout_joint || max77693_fled_used(led, FLED1)) {
++		v4l2_flash_release(sub_leds[FLED1].v4l2_flash);
++		of_node_put(sub_leds[FLED1].fled_cdev.led_cdev.dev->of_node);
+ 		led_classdev_flash_unregister(&sub_leds[FLED1].fled_cdev);
+ 		cancel_work_sync(&sub_leds[FLED1].work_brightness_set);
+ 	}
+ 
+ 	if (!led->iout_joint && max77693_fled_used(led, FLED2)) {
++		v4l2_flash_release(sub_leds[FLED2].v4l2_flash);
++		of_node_put(sub_leds[FLED2].fled_cdev.led_cdev.dev->of_node);
+ 		led_classdev_flash_unregister(&sub_leds[FLED2].fled_cdev);
+ 		cancel_work_sync(&sub_leds[FLED2].work_brightness_set);
+ 	}
+-- 
+1.7.9.5
