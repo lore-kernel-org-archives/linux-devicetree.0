@@ -1,53 +1,55 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] drivers: of: Export of_reserved_mem_device_{init,release}
-Date: Fri, 9 Jan 2015 11:53:01 -0600
-Message-ID: <CAL_JsqJaT-Y7DHQS5ZZ0TP6r0iPDbUZwU-Kec5MSE7DOPgZxCg@mail.gmail.com>
-References: <1420813745-130341-1-git-send-email-george_davis@mentor.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v9 3/4] ASoC: tda998x: add a codec to the HDMI transmitter
+Date: Fri, 9 Jan 2015 17:54:59 +0000
+Message-ID: <20150109175459.GN2634@sirena.org.uk>
+References: <cover.1420628786.git.moinejf@free.fr>
+ <23b36acc1f769418a06f3e929eba288b5911da12.1420628786.git.moinejf@free.fr>
+ <54B0123C.9070800@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1420813745-130341-1-git-send-email-george_davis@mentor.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "George G. Davis" <ggdavisiv@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, "George G. Davis" <george_davis@mentor.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="yS2QJoX5Vl2MmcUM"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <54B0123C.9070800-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Jackson <Andrew.Jackson-5wv7dgnIgG8@public.gmane.org>
+Cc: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 9, 2015 at 8:29 AM, George G. Davis <ggdavisiv@gmail.com> wrote:
-> Export of_reserved_mem_device_{init,release} so that modules
-> can initialize and release their assigned per-device cma_area.
 
-I believe the original intent was for the core bus code to call these
-functions. While the commit adding them says "automated assignment"
-that part did not go in. As it stands, there are no in tree users of
-these functions.
+--yS2QJoX5Vl2MmcUM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Marek, comments?
+On Fri, Jan 09, 2015 at 05:39:08PM +0000, Andrew Jackson wrote:
 
-Rob
+> In the light of our discussions elsewhere [1], shouldn't this
+> be constrained by the number of hardware channels that the TDA998x
+> supports too?  That is, the maximum number of channels should
+> be the lesser of sd[SAD_MX_CHAN_I] and number_of_I2S channels=20
+> (or S/PDIF channels if so configured).
 
->
-> Signed-off-by: George G. Davis <george_davis@mentor.com>
-> ---
->  drivers/of/of_reserved_mem.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
-> index dc566b3..5eeb5b2 100644
-> --- a/drivers/of/of_reserved_mem.c
-> +++ b/drivers/of/of_reserved_mem.c
-> @@ -265,6 +265,7 @@ int of_reserved_mem_device_init(struct device *dev)
->
->         return ret;
->  }
-> +EXPORT_SYMBOL(of_reserved_mem_device_init);
->
->  /**
->   * of_reserved_mem_device_release() - release reserved memory device structures
-> @@ -289,3 +290,4 @@ void of_reserved_mem_device_release(struct device *dev)
->
->         rmem->ops->device_release(rmem, dev);
->  }
-> +EXPORT_SYMBOL(of_reserved_mem_device_release);
-> --
-> 1.9.3
->
+Yes, that's a good idea in general - we should do more of this.
+
+--yS2QJoX5Vl2MmcUM
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUsBXyAAoJECTWi3JdVIfQazgH/0plBowsIMWRwsEapQBO3mSJ
++AhpyNiWBoOpCtbEhgQVxJtL+mZ2OT+LqE1RPLOuGdjukQlOCz5q1dx1q/q+PrmB
+OGnCov6TIp1k+5qW9GeHhoJgEsaSXFys45dXT9egpgMI7UuqeQswZVHK4cfD6Mpd
+byU5MxgWgNzG2S6EWOr4MaHVsQNTDr0WFuo/ZjouK3FiEUj80P7A/0mPxeYfzPC6
+/iiIOyvAM48Q50ppXPzDboUhyopbeszQd++M2/5tv/y+DfqA9DO44fdHxrwApB22
++UZyrcwdNeuKCvO/1Q2Le1xj6MinPTxEYC4XVekeAiylOOLTSAimPgqcnrbjiyI=
+=l2kO
+-----END PGP SIGNATURE-----
+
+--yS2QJoX5Vl2MmcUM--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
