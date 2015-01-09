@@ -1,99 +1,28 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH v9 1/4] drm/i2c: tda998x: Add DT support for audio
-Date: Fri, 9 Jan 2015 20:01:27 +0000
-Message-ID: <20150109200127.GD12302@n2100.arm.linux.org.uk>
-References: <54AE99F5.1010404@ti.com> <20150108174257.557f7ea5@armhf>
- <54AFA9B0.6040405@ti.com> <20150109123036.4bc4bbf6@armhf>
- <20150109114529.GH12302@n2100.arm.linux.org.uk>
- <20150109135401.5b270d46@armhf>
- <20150109130725.GN12302@n2100.arm.linux.org.uk>
- <54AFDE8D.3000504@arm.com>
- <20150109145741.GP12302@n2100.arm.linux.org.uk>
- <20150109183857.53d701a4@armhf>
+From: nick <xerofoify@gmail.com>
+Subject: Reminder about patch sent for the file,xsysace.c
+Date: Fri, 09 Jan 2015 15:46:07 -0500
+Message-ID: <54B03E0F.1000401@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20150109183857.53d701a4@armhf>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jean-Francois Moine <moinejf@free.fr>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Andrew Jackson <Andrew.Jackson@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>, Mark Brown <broonie@kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: michal.simek@xilinx.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, soren.brinkmann@xilinx.com, grant.likely@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBKYW4gMDksIDIwMTUgYXQgMDY6Mzg6NTdQTSArMDEwMCwgSmVhbi1GcmFuY29pcyBN
-b2luZSB3cm90ZToKPiBPbiBGcmksIDkgSmFuIDIwMTUgMTQ6NTc6NDEgKzAwMDAKPiBSdXNzZWxs
-IEtpbmcgLSBBUk0gTGludXggPGxpbnV4QGFybS5saW51eC5vcmcudWs+IHdyb3RlOgo+ID4gV2hh
-dCB3ZSBkbyBrbm93IGlzIHRoYXQgdGhlcmUgaXMgYSBmaXhlZCBtYXBwaW5nIGJldHdlZW4gQVAg
-cGlucyBhbmQgSTJTCj4gPiBjaGFubmVscyAod2hpY2ggYXJlIG5vdCBQQ00gY2hhbm5lbHMpLCBi
-dXQgYXMgeW91IHBvaW50IG91dCwgd2UgZG9uJ3QKPiA+IGhhdmUgYW55IGRvY3VtZW50YXRpb24g
-d2hpY2ggZGVzY3JpYmVzIGhvdyB0aGUgSTJTIGNoYW5uZWxzIChlYWNoIHdpdGgKPiA+IHRoZWly
-IG93biBMK1Igd29yZHMpIG1hcCB0byB0aGUgUENNIGNoYW5uZWxzIC0gYW5kIHdlIGRvbid0IGtu
-b3cgd2hldGhlcgo+ID4gdGhlIENBX0kyUyBiaXRzIGluIHRoYXQgc2FtZSByZWdpc3RlciBpbiB0
-aGUgVERBOTk4eCBoYXZlIGFuIGVmZmVjdCBvbgo+ID4gdGhpcy4KPiAKPiBIRE1JIHRhbGtzIGFi
-b3V0IExQQ00gKExpbmVhciBQQ00pIGNoYW5uZWxzIGFuZCBUREExOTk4OCB0YWxrcyBhYm91dAo+
-IEkyUy1idXMgKHN0ZXJlbykgY2hhbm5lbHMuIEZvciBtZSwgaXQgc2VlbXMgb2J2aW91cyB0aGF0
-IHRoZXNlIGNoYW5uZWxzCj4gYXJlIGNvcnJlbGF0ZWQ6Cj4gLSBMUENNLTAgaXMgSTJTLWJ1cy0w
-LWxlZnQgKEZMKQo+IC0gTFBDTS0xIGlzIEkyUy1idXMtMC1yaWdodCAoRlIpCj4gLSBMUENNLTIg
-aXMgSTJTLWJ1cy0xLWxlZnQgKExGRSkKPiAtIExQQ00tMyBpcyBJMlMtYnVzLTEtcmlnaHQgKEZD
-KQo+IC4uLgoKVGhhdCdzIGNlcnRhaW5seSBhIHJlYXNvbmFibGUgcG9zc2liaWxpdHksIGJ1dCB3
-ZSBkb24ndCBoYXZlIGEgd2F5IHRvCmNvbmZpcm0gaXQgYXMgSSBkb24ndCB0aGluayBhbnlvbmUg
-aGFzIGFjY2VzcyB0byBhIHNldHVwIHdoaWNoIHVzZXMKSTJTIGJ1cyAxLgoKPiA+IERvZXMgYW55
-b25lIGhhdmUgYSBUREE5OTh4IHNldHVwIHdoaWNoIGhhcyBhbiBJMlMgc291cmNlIGNvbm5lY3Rl
-ZCB0bwo+ID4gdGhlIFREQTk5OHggSTJTIGNoYW5uZWwgMSwgYW5kIHdobyBoYXMgYSBIRE1JIHNp
-bmsgd2hpY2ggd2lsbCBhY2NlcHQKPiA+IHRoZSBMRkUvRkMgY2hhbm5lbHM/ICBJZiBzbywgcHJv
-ZHVjaW5nIGEgZGVzY3JpcHRpb24gb2YgaG93IHRoZSBDQV9JMlMKPiA+IGJpdHMgYW5kIGVuYWJs
-aW5nIEkyUyBpbnB1dCBwaW5zIGluZmx1ZW5jZXMgdGhlIG1hcHBpbmcgd291bGQgYmUgYSBnb29k
-Cj4gPiBpZGVhLgo+IAo+IEkgY291bGQgbm90IGZpbmQgYSBkZXNjcmlwdGlvbiBvZiB0aGVzZSBD
-QV9JMlMgYml0cy4KCkknbSB3aWxsaW5nIHRvIGJldCB0aGF0IHdoZW4gdGhlIGF1ZGlvIGlzIGNv
-bmZpZ3VyZWQgZm9yIGxheW91dCAxLCBDQV9JMlMKYWZmZWN0cyB0aGUgbWFwcGluZyBvZiBpbmRp
-dmlkdWFsIEkyUyBjaGFubmVscyAod2hhdCBJIGNhbGwgIndvcmRzIikgdG8KdGhlIEhETUkgY2hh
-bm5lbHMuCgo+ID4gSWYgd2UgZG9uJ3QgaGF2ZSB0aGF0LCBJJ2QgcmVjb21tZW5kIHNwbGl0dGlu
-ZyB0aGUgRFQgcHJvcGVydHkgaW50bwo+ID4gImF1ZGlvIGlucHV0cyBmb3IgSTJTIiBhbmQgImF1
-ZGlvIGlucHV0IGZvciBTUERJRiIgKG9ubHkgb25lIGNhbiBiZQo+ID4gYWN0aXZlIHdpdGggU1BE
-SUYpLgo+ID4gCj4gPiBJZiB3ZSB3YW50IHRvIHN1cHBvcnQgbW9yZSB0aGFuIG9uZSBTUERJRiBp
-bnB1dCAod2hpY2ggbXVzdCBiZSBtdXR1YWxseQo+ID4gZXhjbHVzaXZlKSBJJ2QgcmVjb21tZW5k
-IHRvIGxvb2sgYXQgdGhlIE9GIGdyYXBoIHN0dWZmIHdlIHVzZSBpbiBEUk0gLQo+ID4gb25lIHBv
-cnQgZm9yIGVhY2ggIm1vZGUiIC0gZWcsIEkyUywgU1BESUYgaW4gb24gQVAyLCBTUERJRiBpbiBv
-biBBUDMuCj4gPiBFYWNoIHBvcnQgbm9kZSBjYW4gc3BlY2lmeSB0aGUgQVAgcGlucyB3aGljaCBz
-aG91bGQgYmUgZW5hYmxlZC4KPiAKPiBJIGFncmVlLiBUaGVyZSBhcmUgb25lIFMvUERJRiBwb3J0
-IGFuZCBvbmUgSTJTIHBvcnQuCj4gCj4gU28sIHdoaWNoIHN5bnRheD8KPiAKPiBJIHByb3Bvc2Vk
-Ogo+IAo+IAlhdWRpby1wb3J0cyA9IDwweDA0PiwgPDB4MDM+Owo+IAlhdWRpby1wb3J0LW5hbWVz
-ID0gInNwZGlmIiwgImkycyI7Cj4gCj4gRG8geW91IGJldHRlciBsaWtlOgo+IAo+IAlhdWRpby1z
-cGRpZi1wb3J0ID0gPDB4MDQ+Owo+IAlhdWRpby1pMnMtcG9ydCA9IDwweDAzPjsKCk5laXRoZXI7
-IHdlIGtub3cgdGhhdCB0aGVyZSBhcmUgVERBOTk4eCBkZXZpY2VzIHdoaWNoIGFsbG93IFNQRElG
-IHRvIGJlCmlucHV0IHZpYSB0d28gc2VwYXJhdGUgcGlucywgYnV0IG9ubHkgb25lIHRvIGJlIGFj
-dGl2ZSBhdCBhbnkgb25lIHRpbWUuCkdpdmVuIHRoYXQgdGhlIGhhcmR3YXJlIGlzIGZsZXhpYmxl
-IGluIHRoYXQgcmVnYXJkLCBhIGJpbmRpbmcgd2hpY2gKYXJ0aWZpY2lhbGx5IHJlc3RyaWN0cyB0
-aGF0IGZsZXhpYmlsaXR5IHdvdWxkIHNlZW0gdW53aXNlLgoKSWYgd2Ugd2VyZSB0byBjb21lIGFj
-cm9zcyBhIHNldHVwIHdoaWNoIGRpZCByb3V0ZSB0d28gU1BESUYgc3RyZWFtcyB0bwp0aGUgVERB
-OTk4eCwgYW5kIHdlIGhhZCB0byBtYWtlIHRoZSBkZWNpc2lvbiBhdCBydW4gdGltZSB3aGljaCB0
-byByb3V0ZQp0byB0aGUgSERNSSBzaW5rLCB3ZSdkIGhhdmUgdG8gcmV3b3JrIHRoZSBiaW5kaW5n
-LCBhbmQgd2UnZCBoYXZlIHRvCnN1cHBvcnQgdGhlIG5ldyBiaW5kaW5nIGFuZCB0aGUgb2xkIGJp
-bmRpbmcgaW4gdGhlIGRyaXZlci4KCkNhbiB5b3UgcGxlYXNlIGxvb2sgYXQgRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dyYXBoLnR4dCA/CgpJIHRoaW5rIHdlIG1heSBiZSBhYmxl
-IHRvIHVzZSBzb21ldGhpbmcgbGlrZSB0aGlzOgoKdGRhOTk4eDogaGRtaS1lbmNvZGVyIHsKCWNv
-bXBhdGlibGUgPSAibnhwLHRkYTk5OHgiOwoJcmVnID0gPDB4NzA+OwoJdmlkZW8tcG9ydHMgPSA8
-MHgyMzQ1MDE+OwoKCXBvcnQgewoJCXRkYTk5OHhfdmlkZW86IGVuZHBvaW50IHsKCQkJcmVtb3Rl
-LWVuZHBvaW50ID0gPCZsY2QwX3JnYj47CgkJfTsKCX07CgoJcG9ydCB7CgkJI2FkZHJlc3MtY2Vs
-bHMgPSA8MT47CgkJI3NpemUtY2VsbHMgPSA8MD47CgoJCXRkYTk5OHhfc3BkaWYwOiBlbmRwb2lu
-dEAwMiB7CgkJCXJlZyA9IDwweDAyPjsKCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZzcGRpZjA+OwoJ
-CX07CgoJCXRkYTk5OHhfc3BkaWYxOiBlbmRwb2ludEAwNCB7CgkJCXJlZyA9IDwweDA0PjsKCQkJ
-cmVtb3RlLWVuZHBvaW50ID0gPCZzcGRpZjA+OwoJCX07CgoJCXRkYTk5OHhfaTJzOiBlbmRwb2lu
-dEAwMyB7CgkJCXJlZyA9IDwweDAzPjsKCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZpMnM+OwoJCX07
-Cgl9Owp9OwoKSSdtIGFkZGluZyBQaGlsaXBwIFphYmVsIGZvciBjb21tZW50LiAgVGhlIGlzc3Vl
-IEkgc2VlIHdpdGggdGhpcyBpcyB0aGF0CndlIGhhdmUgdHdvIHBvcnRzIGhlcmUgd2hpY2ggYXJl
-IG5vdCBtdXR1YWxseSBleGNsdXNpdmUsIGFuZCBpdCdzIG5vdApvYnZpb3VzIGhvdyB0aGV5IGFy
-ZSBkZWFsdCB3aXRoLgoKLS0gCkZUVEMgYnJvYWRiYW5kIGZvciAwLjhtaWxlIGxpbmU6IGN1cnJl
-bnRseSBhdCAxMC41TWJwcyBkb3duIDQwMGticHMgdXAKYWNjb3JkaW5nIHRvIHNwZWVkdGVzdC5u
-ZXQuCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1k
-ZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8v
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Greetings Michal and others,
+I am wondering about the patch I sent at the beginning of last month for removing the 
+comment from the function,ace_probe for hard coding the bus width. In addition I am 
+wondering whether I should resend this patch or is it in the queue for the upcoming
+rc releases or the 3.20 release.
+Thanks,
+Nick
