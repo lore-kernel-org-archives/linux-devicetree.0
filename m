@@ -1,71 +1,44 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCHv2 8/8] arm: dts: tegra: update isl29028 compatible string
- to use isil vendor prefix
-Date: Fri, 9 Jan 2015 12:06:36 +0100
-Message-ID: <20150109110635.GA16465@ulmo>
-References: <cover.1418763328.git.arno@natisbad.org>
- <8cfd0ac11713262036dca415e59e56508fb07c3c.1418763328.git.arno@natisbad.org>
+From: Jean-Francois Moine <moinejf@free.fr>
+Subject: Re: [PATCH v9 3/4] ASoC: tda998x: add a codec to the
+ HDMI transmitter
+Date: Fri, 9 Jan 2015 12:15:13 +0100
+Message-ID: <20150109121513.1c829fdc@armhf>
+References: <cover.1420628786.git.moinejf@free.fr>
+ <23b36acc1f769418a06f3e929eba288b5911da12.1420628786.git.moinejf@free.fr>
+ <54AD4C77.5000401@arm.com>
+ <20150107154138.GL12302@n2100.arm.linux.org.uk>
+ <20150107190241.27ebac8b@armhf> <54AFAC4C.7010209@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="k+w/mQv8wyuph6w0"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <8cfd0ac11713262036dca415e59e56508fb07c3c.1418763328.git.arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Darshana Padmadas <darshanapadmadas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <54AFAC4C.7010209@ti.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Jyri Sarha <jsarha@ti.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Andrew Jackson <Andrew.Jackson@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Mark Brown <broonie@kernel.org>, Dave Airlie <airlied@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-
---k+w/mQv8wyuph6w0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Dec 16, 2014 at 10:21:16PM +0100, Arnaud Ebalard wrote:
->=20
-> "isil" and "isl" prefixes are used at various locations inside the kernel
-> to reference Intersil corporation. This patch is part of a series fixing
-> those locations were "isl" is used in compatible strings to use the now
-> expected "isil" prefix instead (NASDAQ symbol for Intersil and most used
-> version).
->=20
-> Note: isl29028 is an I2C device so the patch does not in fact currently
-> depend on the introduction of "isil"-based compatible string in isl29028
-> driver because I2C core does not check the prefix yet.
->=20
-> Signed-off-by: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-> ---
->  arch/arm/boot/dts/tegra30-cardhu.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-
-Applied to the for-3.20/dt branch, thanks.
-
-Thierry
-
---k+w/mQv8wyuph6w0
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJUr7Y7AAoJEN0jrNd/PrOhnW0P/R2pYDuyjTnDWbxozxWaDi1E
-XG/usI9KHue49Hza0EhXvmyf6OjhaP620nO/JzFe6LKaNF+TJ9Yy4wG+5oL+6w6w
-23QiDkwXLQ3sHFsFrsE7AIYs8/uqh8HZ4VBHAisnD3MW1yCLSOJ/UzBVAHBaCeLs
-Jv68f1PpevXgUilB8jlpGjaT4FOaJIFqmyKTV2JuKGOfLhYby6X/F8LA2GWc1BD/
-lZluW0WeJ18LUhYPkJ9bKJfmSX0TZ0nB3tnOuSplqzzrMgy8g4A82hTGjEUPdpY7
-kNN0KzQSQIzNQ3YKPUwxg8oQqeZH2iaG/Y1lbXpwVPWdW2UD5fFjmIOhS8I3G/ao
-eVSjVgxyRgbwfXjsNhOSXZHE4JRMYzMvuvX3CbO/dMhif7q9Y6YOD2RN6TMrr4AY
-8SHP9AYs4cO/FoOcFoC92aXVngdZttmKrZytesy/HjwR5uh+Q70LMKUehzi+G3YJ
-Rluhc0hzx1vjPrQ88b/l7PLiGx9AOy9ADydSIJlT71lUHFTIlIdpxK/Rtb1oVJtA
-HXYnhqRos+iLevUI/9b47X5GVszhMTqlmGrrrHeYJAqRqvqaNIqpvvHyB+4qqWH8
-gOifM2sjw+vfA9611Ox9nkgK+O/PSutfnlfQDon7PfAXTvSs0qLKxmVWlg+Ak6gE
-JvWqtl2F94048lGmtnv3
-=xthr
------END PGP SIGNATURE-----
-
---k+w/mQv8wyuph6w0--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gRnJpLCA5IEphbiAyMDE1IDEyOjI0OjEyICswMjAwCkp5cmkgU2FyaGEgPGpzYXJoYUB0aS5j
+b20+IHdyb3RlOgoKPiA+IAlzZWxlY3QgU05EX1NPQ19UREE5OThYIGlmIFNORF9TT0MKPiA+Cj4g
+PiBzaG91bGQgd29yayBpbiBhbGwgY2FzZXMuCj4gPiAgCj4gCj4gSSB0aGluayB0aGF0IHdvdWxk
+IHN0aWxsIGZhaWwgaWYgRFJNIGFuZCBUREE5OTh4IGlzIGJ1aWx0IGluIGFuZCBTTkRfU09DIAo+
+IGlzIGJ1aWx0IGFzIG1vZHVsZXMuIEEgcmVxdWVzdF9tb2R1bGUoKSBjYWxsIGJlZm9yZSAKPiB0
+ZGE5OTk4eF9jb2RlY19yZWdpc3RlcigpIHNob3VsZCBoZWxwLiBPciBjb3VsZCBjb3VsZCB3cml0
+ZToKPiAKPiBzZWxlY3QgU05EX1NPQ19UREE5OThYIGlmIChTTkRfU09DPURSTV9JMkNfTlhQX1RE
+QTk5OFggfHwgU05EX1NPQz15KQoKcmVxdWVzdF9tb2R1bGUoKSBpcyBub3QgbmVlZGVkIGJlY2F1
+c2UgdGhlcmUgYXJlIGZ1bmN0aW9ucyBjYWxscyBmcm9tCnRoZSB0cmFuc21pdHRlciB0byB0aGUg
+Y29kZWMuCgpXaXRoIHRoZSBzaW1wbGUgImlmIFNORF9TT0MiLCBtYWtlIG1lbnVjb25maWcgcmVm
+dXNlcyB0byBoYXZlIFREQTk5OHgKYnVpbHQgaW4gYW5kIFNORF9TT0MgYnVpbHQgYXMgbW9kdWxl
+cywgYXMgaXQgc2hvdWxkLgoKLS0gCktlbiBhciBjJ2hlbnRhw7EJfAkgICAgICAqKiBCcmVpemgg
+aGEgTGludXggYXRhdiEgKioKSmVmCQl8CQlodHRwOi8vbW9pbmVqZi5mcmVlLmZyLwpfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpBbHNhLWRldmVsIG1haWxp
+bmcgbGlzdApBbHNhLWRldmVsQGFsc2EtcHJvamVjdC5vcmcKaHR0cDovL21haWxtYW4uYWxzYS1w
+cm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Fsc2EtZGV2ZWwK
