@@ -1,39 +1,65 @@
-From: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-Subject: Re: [PATCH v2 0/8] Add Simple Power-Managed Bus Support
-Date: Fri, 9 Jan 2015 11:57:57 +0100
-Message-ID: <CAO3366x64phBJ=tHOK03P6Ok_6LxiyLyC9LhjcocuqTx=86cfA@mail.gmail.com>
-References: <1418842153-17113-1-git-send-email-geert+renesas@glider.be>
-	<CAMuHMdVeEmKiqGTOmevaBDbJ=nBTbSi6d6Xrm0eyvbMTtyU=sA@mail.gmail.com>
+From: Vivek Gautam <gautamvivek1987@gmail.com>
+Subject: Re: [PATCH] arm64: dts: exynos7: Fix wrong base address of i2c7 bus
+Date: Fri, 9 Jan 2015 16:34:17 +0530
+Message-ID: <CAFp+6iHKdZ6uGKRcVYs1kAEQs5R4bWVuHKy8KdmUHJDo9Gd8nA@mail.gmail.com>
+References: <1418996000-15735-1-git-send-email-padma.v@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdVeEmKiqGTOmevaBDbJ=nBTbSi6d6Xrm0eyvbMTtyU=sA@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux PM list <linux-pm@vger.kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1418996000-15735-1-git-send-email-padma.v@samsung.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Padmavathi Venna <padma.v@samsung.com>
+Cc: robh+dt <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 8, 2015 at 8:28 PM, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> On Wed, Dec 17, 2014 at 7:49 PM, Geert Uytterhoeven
-> <geert+renesas@glider.be> wrote:
->> The Renesas Bus State Controller (BSC) provides an external bus for
->> connecting multiple external devices to an SoC, driving several chip
->> select lines, for e.g. NOR FLASH, Ethernet and USB.
->> On the kzm9g and ape6evm development boards, an smsc9220 Ethernet
->> controller is connnected to the BSC of an SH-Mobile AG5 (sh73a0) resp.
->> R-Mobile APE6 (r8a73a4) SoC.
->
-> [...]
->
->> This was tested on sh73a0/kzm9g-multiplatform. Without this, Ethernet
->> doesn't work, as the ZB clock is disabled by clk_disable_unused().
->> Testing on r8a73a4/ape6evm-multiplatform would be appreciated.
->
-> Has anyone tried this on r8a73a4/ape6evm-multiplatform?
+Hi Padma,
 
-Works like a charm.
 
-Tested-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+On Fri, Dec 19, 2014 at 7:03 PM, Padmavathi Venna <padma.v@samsung.com> wrote:
+> I2C7 base address corrected.
+>
+> Signed-off-by: Padmavathi Venna <padma.v@samsung.com>
+> ---
 
-CU
-Uli
+Verified from Exynos7 datasheet. LGTM.
+
+Reviewed-by: Vivek Gautam <gautam.vivek@samsung.com>
+
+>  arch/arm64/boot/dts/exynos/exynos7.dtsi |    4 ++--
+>  1 files changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/arm64/boot/dts/exynos/exynos7.dtsi b/arch/arm64/boot/dts/exynos/exynos7.dtsi
+> index db7058a..84a57c8 100644
+> --- a/arch/arm64/boot/dts/exynos/exynos7.dtsi
+> +++ b/arch/arm64/boot/dts/exynos/exynos7.dtsi
+> @@ -386,9 +386,9 @@
+>                         status = "disabled";
+>                 };
+>
+> -               hsi2c_7: hsi2c@13e10000 {
+> +               hsi2c_7: hsi2c@14e10000 {
+>                         compatible = "samsung,exynos7-hsi2c";
+> -                       reg = <0x13e10000 0x1000>;
+> +                       reg = <0x14e10000 0x1000>;
+>                         interrupts = <0 462 0>;
+>                         #address-cells = <1>;
+>                         #size-cells = <0>;
+> --
+> 1.7.4.4
+
+
+
+-- 
+Best Regards
+Vivek Gautam
+Samsung R&D Institute, Bangalore
+India
