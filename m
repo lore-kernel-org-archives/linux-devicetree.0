@@ -1,66 +1,79 @@
 From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 5/9] dts: versatile: add sysregs nodes
-Date: Fri, 9 Jan 2015 08:10:36 +0100
-Message-ID: <CACRpkdZFxToT5L0sJXap-NQGtjkryn4KTZVnweKCxXL9WvFLEg@mail.gmail.com>
+Subject: Re: [PATCH 0/9] ARM Versatile multi-platform support
+Date: Fri, 9 Jan 2015 09:34:46 +0100
+Message-ID: <CACRpkdZpwoY4-9K9_Eh-UikmP5hqQhfu2eZRb-wkVntVn1g5wA@mail.gmail.com>
 References: <1419967718-26909-1-git-send-email-robherring2@gmail.com>
-	<1419967718-26909-6-git-send-email-robherring2@gmail.com>
-	<CACRpkdbinR3Uvi5zZmQJFxJgnWfvE6JZouMVxxRRGVtMNXkBQQ@mail.gmail.com>
-	<CAL_JsqKBLx03E1w0NMH8CH+Pm_L8yQvnR6VTTDxqnpOwAoDhXg@mail.gmail.com>
+	<CACRpkda8T8CwghVYtTw41h_y+GdCA5xCEaSL1Jy4VZBo3MAy-Q@mail.gmail.com>
+	<CAL_JsqKLNPVDCUELaZU8JW0roT3RcyqcxtJbvbYQrjzxjt3FeQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqKBLx03E1w0NMH8CH+Pm_L8yQvnR6VTTDxqnpOwAoDhXg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <CAL_JsqKLNPVDCUELaZU8JW0roT3RcyqcxtJbvbYQrjzxjt3FeQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Peter Maydell <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Peter Maydell <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 9, 2015 at 12:53 AM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Thu, Jan 8, 2015 at 1:44 PM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-
+On Thu, Jan 8, 2015 at 10:38 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Thu, Jan 8, 2015 at 1:47 PM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
 >> On Tue, Dec 30, 2014 at 8:28 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> compatible = "syscon";
->
-> maybe? VExpress is missing that then...
-
-I don't like the way some vexpress stuff has been done I think, just
-not enough reviewing power :(
-
-I've tried to make an as clean separation as possible in the Integrator
-as it has been refactored with a minimum of time pressure and
-I tried to make it as reusable as possible. But it doesn't necessarily
-mean I did the right thing all the time ...
-
->>> +                               reg = <0x00000 0x1000>;
->>> +
->>> +                               v2m_led_gpios: sys_led@08 {
->>> +                                       compatible = "arm,vexpress-sysreg,sys_led";
->>> +                                       gpio-controller;
->>> +                                       #gpio-cells = <2>;
->>> +                               };
 >>
->> These are not GPIOs. These are LED registers really.
->
-> A register bit that controls an i/o signal sounds like a GPIO to me.
-
-Are they described as general purpose in the manual for the
-board?
-
-In the ARM reference design manuals I've seen these bits are
-described as for one purpose only. I mean you can claim the
-memory RE signal is "a bit that controls an I/O signal" as well,
-but we have to think about the abstraction here.
-
->> see how to use LEDs from drivers/leds/leds-syscon.c and bindings.
->> example in:
->> arch/arm/boot/dts/integrator.dtsi
+>>> From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>>
+>>> This series converts ARM Versatile platform to multi-platform. I started
+>>> this some time ago and some pieces were already merged. The primary
+>>> piece remaining is converting the PCI host to DT which I was waiting for
+>>> the common PCI DT parsing to get settled. Now that that is in place as
+>>> well as a few other pieces are in place like multi-platform fixes for
+>>> CLCD, we can fully convert Versatile to DT and multi-platform.
+>>>
+>>> There's still a few things that need DT support which can be done
+>>> later:
+>>> - MMC card detect and write protect. Should be able to use VExpress
+>>>   support
+>>> - Reboot support. Should be able to re-use Realview reboot code.
+>>> - flash phys-map support. Binding exists, but specifically Vpp control
+>>>   is needed.
+>>> - CLCD support. Not sure where this is at.
 >>
->> Very straight-forward I think.
+>> I like it overall but would like to see some use of the syscon
+>> pattern to access random registers in syscon, and specifically not
+>> to refer to these registers as some "gpio" because they aren't.
 >
-> So we have 2 implementations and bindings for roughly the same hardware? Great!
+> I'm not sure I follow. Creating GPIO lines for SD card detect and
+> write protect is exactly how VExpress syscon was implemented.
 
-The syscon stuff is designed to be reusable for machines outside
-the Versatile and ARM reference families.
+Hm it all boils down to this mfd/vexpress-sysreg.c driver that
+spawns some MFD devices.
+
+>From there a LED, card detect and flash protection are modeled as
+"basic-mmio-gpio" instantiating the drivers/gpio/gpio-generic.c
+driver to drive/read various bits.
+
+Specifically commit 974cc7b93441a0e78f030495436d1be7eb7c208d
+that makes a layered MFD->gpio->gpio LED cake.
+Needless to say neither the GPIO maintainers or the GPIO
+mailing list was included in review of this patch and it was
+merged on its MFD merits :(
+
+It is sort of elegant in a way, but I don't like it when we describe
+registers that are not general purpose as "general purpose input
+output" it is simply ontologically wrong and a misleading hardware
+description. These bits are not general purpose *at* *all* they are
+special purpose.
+
+It is Linux GPIO implementation details leaking into the hardware
+description basically: it just happened to be very convenient to
+describe these register bits as "gpios" as the drivers etc were
+already in place.
+
+I prefer syscon->syscon LED as a two layer cake
+instead of a three layer cake involving GPIO and it's more to the point,
+describing the hardware properly, so I say let's go for that instead.
+
+For card detect and flash protection I suspect we can use
+syscon as well, avoiding shoehorning a GPIO abstraction between
+it.
 
 Yours,
 Linus Walleij
