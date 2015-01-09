@@ -1,13 +1,15 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v3 3/4] drivers: bus: Add Simple Power-Managed Bus DT Bindings
-Date: Fri,  9 Jan 2015 14:12:34 +0100
-Message-ID: <1420809155-4015-4-git-send-email-geert+renesas@glider.be>
-References: <1420809155-4015-1-git-send-email-geert+renesas@glider.be>
+From: Jassi Brar <jaswinder.singh@linaro.org>
+Subject: Re: [PATCH v3 5/8] gpio: Add Fujitsu MB86S7x GPIO driver
+Date: Fri, 9 Jan 2015 18:50:34 +0530
+Message-ID: <CAJe_ZhdBCt0tLw7oU6fv7m_sBzB=nDhGWfbBFmpMMLOKiUuWrA@mail.gmail.com>
+References: <1420802369-3840-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
+ <1420803212-4350-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
+ <20150109125243.GM12302@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1420809155-4015-1-git-send-email-geert+renesas@glider.be>
+In-Reply-To: <20150109125243.GM12302@n2100.arm.linux.org.uk>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,83 +19,22 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Arnd Bergmann <arnd@arndb.de>, linux-pm@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, Kevin Hilman <khilman@kernel.org>, linux-arm-kernel@lists.infradead.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Andy Green <andy.green@linaro.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, Devicetree List <devicetree@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Vincent Yang <vincent.yang.fujitsu@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Vincent Yang <Vincent.Yang@tw.fujitsu.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Patch Tracking <patches@linaro.org>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Tetsuya Nuriya <nuriya.tetsuya@jp.fujitsu.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Tested-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
----
-v3:
-  - Add Tested-by,
-  - Document required properties inherited from "simple-bus",
-  - Document required "reg" property for "renesas,bsc",
-  - Move "ranges" before "reg" in the example,
+On 9 January 2015 at 18:22, Russell King - ARM Linux
+<linux@arm.linux.org.uk> wrote:
+> On Fri, Jan 09, 2015 at 07:33:32PM +0800, Vincent Yang wrote:
+>> +static int mb86s70_gpio_remove(struct platform_device *pdev)
+>> +{
+>> +     struct mb86s70_gpio_chip *gchip = platform_get_drvdata(pdev);
+>> +
+>> +     gpiochip_remove(&gchip->gc);
+>
+> This doesn't disable and unprepare the clock.
+>
+Will do.
 
-v2:
-  - New.
----
- .../devicetree/bindings/bus/simple-pm-bus.txt      | 52 ++++++++++++++++++++++
- 1 file changed, 52 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/bus/simple-pm-bus.txt
-
-diff --git a/Documentation/devicetree/bindings/bus/simple-pm-bus.txt b/Documentation/devicetree/bindings/bus/simple-pm-bus.txt
-new file mode 100644
-index 0000000000000000..d03abf7fd8e3997a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/bus/simple-pm-bus.txt
-@@ -0,0 +1,52 @@
-+Simple Power-Managed Bus
-+========================
-+
-+A Simple Power-Managed Bus is a transparent bus that doesn't need a real
-+driver, as it's typically initialized by the boot loader.
-+
-+However, its bus controller is part of a PM domain, or under the control of a
-+functional clock.  Hence, the bus controller's PM domain and/or clock must be
-+enabled for child devices connected to the bus (either on-SoC or externally)
-+to function.
-+
-+
-+Generic compatible values and properties
-+----------------------------------------
-+
-+Required properties:
-+  - compatible: Must be at least one of the vendor-specific compatible values
-+		from a vendor-specific section below, and "simple-bus" as a
-+		fallback.
-+  - #address-cells, #size-cells, ranges: Must describe the mapping between
-+		parent address and child address spaces.
-+
-+Optional platform-specific properties for clock or PM domain control (at least
-+one of them is required):
-+  - clocks: Must contain a reference to the functional clock(s),
-+  - power-domains: Must contain a reference to the PM domain.
-+
-+
-+Vendor-specific compatible values and properties
-+------------------------------------------------
-+
-+Renesas Bus State Controller (BSC):
-+  - compatible: Must be an SoC-specific value, and "renesas,bsc" as a fallback.
-+                SoC-specific values can be:
-+		"renesas,bsc-r8a73a4" for R-Mobile APE6 (r8a73a4)
-+		"renesas,bsc-sh73a0" for SH-Mobile AG5 (sh73a0)
-+  - reg: Must contain the base address and length to access the bus controller.
-+  - interrupts: Must contain a reference to the BSC interrupt, if available.
-+
-+
-+Example:
-+
-+	bsc: bus@fec10000 {
-+		compatible = "renesas,bsc-sh73a0", "renesas,bsc", "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0 0x20000000>;
-+		reg = <0xfec10000 0x400>;
-+		interrupts = <0 39 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&zb_clk>;
-+		power-domains = <&pd_a4s>;
-+	};
--- 
-1.9.1
+Thanks,
+Jassi
