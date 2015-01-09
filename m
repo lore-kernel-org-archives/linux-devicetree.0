@@ -1,56 +1,142 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v4 00/12]  Add Armada 38x GP and AP boards support
-Date: Fri, 9 Jan 2015 16:20:17 +0100
-Message-ID: <20150109152017.GB18832@lunn.ch>
-References: <1420738694-6163-1-git-send-email-gregory.clement@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1420738694-6163-1-git-send-email-gregory.clement@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Tawfik Bayouk <tawfik@marvell.com>, devicetree@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: [PATCH/RFC v10 00/19] LED / flash API integration
+Date: Fri, 09 Jan 2015 16:22:50 +0100
+Message-ID: <1420816989-1808-1-git-send-email-j.anaszewski@samsung.com>
+Return-path: <linux-leds-owner@vger.kernel.org>
+Sender: linux-leds-owner@vger.kernel.org
+To: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, kyungmin.park@samsung.com, b.zolnierkie@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com, Jacek Anaszewski <j.anaszewski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-> Gregory CLEMENT (5):
->   ARM: mvebu: a38x: Add more pinctrl functions
->   ARM: mvebu: a38x: Add missing labels
->   ARM: mvebu: Document the Device Tree binding for the Armada 388 SoC
->   ARM: mvebu: Add Device Tree description of the Armada 388 SoC
->   ARM: mvebu: Add Armada 388 General Purpose Development Board support
+This patch set is a follow-up of the LED / flash API integration
+series [1]. It is based on linux-next_20150108.
 
-All added to mvebu/dt
+========================
+Changes since version 9 :
+========================
 
-> 
-> Maxime Ripard (7):
->   ARM: mvebu: Rename DEBUG_LL to indicate UART index
->   ARM: mvebu: Add UART1 as DEBUG_LL possible target
+- switched to assigning sub-led related of_node to led_cdev->dev->of_node
+  member which allowed for avoiding modifications around v4l-async
+- reimplemented max77693 flash cell driver to avoid extensive use
+  of macros
+- added led-sources DT property and switched to using it
+- switched to reporting flash faults in the LED subsystem in the form
+  of human readable strings
+- added available_sync_leds sysfs attribute to the LED Flash class
+  and changed the semantics of flash_sync_strobe attribute
+- made LED subsystem flash faults not depending on the V4L2 Flash ones
+- applied various fixes and cleanups
 
-Added to mvebu/soc
+========================
+Changes since version 8:
+========================
 
->   ARM: mvebu: a38x: Fix node names
+- added a new way of registering async sub-device
+- switched to matching flash leds by DT phandles
+- improved Device Tree bindings documentation
+- split the drivers patches to LED Flash class
+  and V4L2 Flash part
+- fixed indicator leds handling in v4l2-flash
+- applied various fixes an cleanups
 
-All added to mvebu/dt
+========================
+Changes since version 7:
+========================
 
->   pinctrl: mvebu: a38x: Add UART1 muxing options
+- removed explicit support for indicator leds from
+  LED Flash class - indicator leds will be registered
+  as a separate LED Flash class devices
+- added flash_sync_strobe sysfs attribute and related
+  V4L2_CID_FLASH_SYNC_STROBE control
+- changed the way of matching V4L2 Flash sub-devices
+  in a media device, which entailed modification in
+  v4l2-async driver
+- modified max77693 DT bindings documentation
+- applied various fixes an cleanups
 
-Linus took this one already
+========================
+Changes since version 6:
+========================
 
->   ARM: mvebu: A38x: Remove redundant pinctrl informations
->   ARM: mvebu: Add a number of pinctrl functions
->   ARM: mvebu: Add Armada 385 Access Point Development Board support
+- removed addition of public LED subsystem API for setting
+  torch brightness in favour of internal API for
+  synchronous and asynchronous led brightness level setting
+- fixed possible race condition upon creating LED Flash class
+  related sysfs attributes
 
-All added to mvebu/dt
+========================
+Changes since version 5:
+========================
 
-Thanks
-	Andrew
+- removed flash manager framework - its implementation needs
+  further thorough discussion.
+- removed external strobe facilities from the LED Flash Class
+  and provided external_strobe_set op in v4l2-flash. LED subsystem
+  should be strobe provider agnostic.
+
+Thanks,
+Jacek Anaszewski
+
+[1] https://lkml.org/lkml/2014/7/11/914
+
+Jacek Anaszewski (19):
+  leds: Add LED Flash class extension to the LED subsystem
+  Documentation: leds: Add description of LED Flash class extension
+  DT: leds: Add led-sources property
+  dt-binding: mfd: max77693: Add DT binding related macros
+  mfd: max77693: Modify flash cell name identifiers
+  mfd: max77693: modifications around max77693_led_platform_data
+  mfd: max77693: Adjust FLASH_EN_SHIFT and TORCH_EN_SHIFT macros
+  leds: Add support for max77693 mfd flash cell
+  DT: Add documentation for the mfd Maxim max77693
+  leds: Add driver for AAT1290 current regulator
+  of: Add Skyworks Solutions, Inc. vendor prefix
+  DT: Add documentation for the Skyworks AAT1290
+  exynos4-is: Add support for v4l2-flash subdevs
+  v4l2-ctrls: Add V4L2_CID_FLASH_SYNC_STROBE control
+  media: Add registration helpers for V4L2 flash sub-devices
+  Documentation: leds: Add description of v4l2-flash sub-device
+  DT: Add documentation for exynos4-is 'flashes' property
+  leds: max77693: add support for V4L2 Flash sub-device
+  leds: aat1290: add support for V4L2 Flash sub-device
+
+ Documentation/DocBook/media/v4l/controls.xml       |    9 +
+ Documentation/devicetree/bindings/leds/common.txt  |    5 +
+ .../devicetree/bindings/leds/leds-aat1290.txt      |   17 +
+ .../devicetree/bindings/media/samsung-fimc.txt     |    7 +
+ Documentation/devicetree/bindings/mfd/max77693.txt |   69 ++
+ .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+ Documentation/leds/leds-class-flash.txt            |   70 ++
+ drivers/leds/Kconfig                               |   27 +
+ drivers/leds/Makefile                              |    3 +
+ drivers/leds/led-class-flash.c                     |  486 ++++++++
+ drivers/leds/led-class.c                           |    4 +
+ drivers/leds/leds-aat1290.c                        |  460 ++++++++
+ drivers/leds/leds-max77693.c                       | 1178 ++++++++++++++++++++
+ drivers/media/platform/exynos4-is/media-dev.c      |   36 +-
+ drivers/media/platform/exynos4-is/media-dev.h      |   13 +-
+ drivers/media/v4l2-core/Kconfig                    |   11 +
+ drivers/media/v4l2-core/Makefile                   |    2 +
+ drivers/media/v4l2-core/v4l2-ctrls.c               |    2 +
+ drivers/media/v4l2-core/v4l2-flash.c               |  581 ++++++++++
+ drivers/mfd/max77693.c                             |    4 +-
+ include/dt-bindings/mfd/max77693.h                 |   21 +
+ include/linux/led-class-flash.h                    |  207 ++++
+ include/linux/leds.h                               |    3 +
+ include/linux/mfd/max77693-private.h               |    4 +-
+ include/linux/mfd/max77693.h                       |    9 +-
+ include/media/v4l2-flash.h                         |  139 +++
+ include/uapi/linux/v4l2-controls.h                 |    1 +
+ 27 files changed, 3357 insertions(+), 12 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-aat1290.txt
+ create mode 100644 Documentation/leds/leds-class-flash.txt
+ create mode 100644 drivers/leds/led-class-flash.c
+ create mode 100644 drivers/leds/leds-aat1290.c
+ create mode 100644 drivers/leds/leds-max77693.c
+ create mode 100644 drivers/media/v4l2-core/v4l2-flash.c
+ create mode 100644 include/dt-bindings/mfd/max77693.h
+ create mode 100644 include/linux/led-class-flash.h
+ create mode 100644 include/media/v4l2-flash.h
+
+-- 
+1.7.9.5
