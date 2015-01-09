@@ -1,54 +1,54 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: [PATCH/RFC v10 12/19] DT: Add documentation for the Skyworks AAT1290
-Date: Fri, 09 Jan 2015 16:23:02 +0100
-Message-ID: <1420816989-1808-13-git-send-email-j.anaszewski@samsung.com>
-References: <1420816989-1808-1-git-send-email-j.anaszewski@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1420816989-1808-1-git-send-email-j.anaszewski@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, kyungmin.park@samsung.com, b.zolnierkie@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com, Jacek Anaszewski <j.anaszewski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v3 0/7] Pinctrl support for Zynq
+Date: Fri, 9 Jan 2015 07:25:02 -0800
+Message-ID: <ba4ac5f77c7549f2a264a5a5b1318dc8@BN1BFFO11FD009.protection.gbl>
+References: <1d59c0972da04ec89dec6c09724986a1@BY2FFO11FD010.protection.gbl>
+ <4d544fe425694a4e8043ddbf604db062@BN1AFFO11FD033.protection.gbl>
+ <CACRpkdaKH21qz_RAcDtw6ycsw+5FD0RXQQs91_tZV53EuKVusQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdaKH21qz_RAcDtw6ycsw+5FD0RXQQs91_tZV53EuKVusQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Alessandro Rubini <rubini-9wsNiZum9E8@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds device tree binding documentation for
-1.5A Step-Up Current Regulator for Flash LEDs.
+On Fri, 2015-01-09 at 09:45AM +0100, Linus Walleij wrote:
+> On Fri, Dec 12, 2014 at 5:37 PM, S=C3=B6ren Brinkmann
+> <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
+>=20
+> > Argh, this went through the wrong SMTP. I suspect threading is brok=
+en
+> > due to that. Let me know if you want me to resend this with intact
+> > threading.
+>=20
+> I don't care much about the threading, but all messages are quoted-pr=
+intable
+> which doesn't apply :(
+>=20
+> i.e.:
+>=20
+> Content-Transfer-Encoding: quoted-printable
+> (...)
+>=20
+> + const char *subnode_target_type =3D3D "pins";
+> =3D20
+> (...)
+>=20
+> Can you resent with more sane encoding? I don't know where this
+> comes from but suspect the Microsoft Exchange SMTP server
+> does this when you use diacritics and german letters...
 
-Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
-Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
-Cc: Bryan Wu <cooloney@gmail.com>
-Cc: Richard Purdie <rpurdie@rpsys.net>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Kumar Gala <galak@codeaurora.org>
----
- .../devicetree/bindings/leds/leds-aat1290.txt      |   17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/leds-aat1290.txt
+Okay, I'll rebase to the latest pinctrl/devel branch (if needed) and
+send an updated version bypassing exchange. I hope that works then.
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-aat1290.txt b/Documentation/devicetree/bindings/leds/leds-aat1290.txt
-new file mode 100644
-index 0000000..880a21d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/leds-aat1290.txt
-@@ -0,0 +1,17 @@
-+* Skyworks Solutions, Inc. AAT1290 Current Regulator for Flash LEDs
-+
-+Required properties:
-+
-+- compatible : Must be "skyworks,aat1290".
-+- gpios : Two gpio pins in order FLEN, EN/SET.
-+- flash-timeout-us : Maximum flash timeout in microseconds -
-+		     it can be calculated using following formula:
-+		     T = 8.82 * 10^9 * Ct.
-+
-+Example:
-+
-+flash_led: led {
-+	compatible = "skyworks,aat1290";
-+	gpios = <&gpj1 1 0>, <&gpj1 2 0>;
-+	flash-timeout-us = <1940000>;
-+}
--- 
-1.7.9.5
+	Thanks,
+	S=C3=B6ren
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
