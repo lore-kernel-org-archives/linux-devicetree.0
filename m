@@ -1,54 +1,49 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v5 0/2] devicetree: document ARM bindings for QEMU's
- Firmware Config interface
-Date: Fri, 9 Jan 2015 11:36:36 +0000
-Message-ID: <20150109113635.GA12942@leverpostej>
-References: <1420652574-5897-1-git-send-email-lersek@redhat.com>
+From: Jean-Francois Moine <moinejf@free.fr>
+Subject: Re: [PATCH v9 3/4] ASoC: tda998x: add a codec to the
+ HDMI transmitter
+Date: Fri, 9 Jan 2015 12:45:31 +0100
+Message-ID: <20150109124531.493bece4@armhf>
+References: <cover.1420628786.git.moinejf@free.fr>
+ <23b36acc1f769418a06f3e929eba288b5911da12.1420628786.git.moinejf@free.fr>
+ <54AD4C77.5000401@arm.com>
+ <20150107154138.GL12302@n2100.arm.linux.org.uk>
+ <20150107190241.27ebac8b@armhf> <54AFAC4C.7010209@ti.com>
+ <20150109111935.GF12302@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1420652574-5897-1-git-send-email-lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laszlo Ersek <lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: "robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "drjones-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <drjones-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "pbonzini-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <pbonzini-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "agraf-l3A5Bk7waGM@public.gmane.org" <agraf-l3A5Bk7waGM@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20150109111935.GF12302@n2100.arm.linux.org.uk>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Andrew Jackson <Andrew.Jackson@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>, Mark Brown <broonie@kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Dave Airlie <airlied@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 07, 2015 at 05:42:52PM +0000, Laszlo Ersek wrote:
-> Relative to v4, patch #1 is left unchanged.
-> 
-> The two-character change in patch #2 is documented in its notes section.
-> 
-> Thanks & sorry about the many rounds!
-
-No worries, thanks for handling all the feedback.
-
-Both patches look fine to me:
-
-Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-
-(no need to resend, I'm sure the tag can be applied when the patches get
-picked up).
-
-Thanks,
-Mark.
-
-> Laszlo
-> 
-> Laszlo Ersek (2):
->   devicetree: document the "qemu" and "virtio" vendor prefixes
->   devicetree: document ARM bindings for QEMU's Firmware Config interface
-> 
->  Documentation/devicetree/bindings/arm/fw-cfg.txt   | 72 ++++++++++++++++++++++
->  .../devicetree/bindings/vendor-prefixes.txt        |  2 +
->  2 files changed, 74 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/fw-cfg.txt
-> 
-> -- 
-> 1.8.3.1
-> 
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gRnJpLCA5IEphbiAyMDE1IDExOjE5OjM1ICswMDAwClJ1c3NlbGwgS2luZyAtIEFSTSBMaW51
+eCA8bGludXhAYXJtLmxpbnV4Lm9yZy51az4gd3JvdGU6Cgo+IFdvdWxkIGl0IGJlIG1vcmUgc2Vu
+c2libGUgdG8gbWFrZSBTTkRfU09DX1REQTk5OFggZGVwZW5kIG9uCj4gRFJNX0kyQ19OWFBfVERB
+OTk4WCBpbnN0ZWFkLCBtYXliZSB3aXRoIGEgJ2RlZmF1bHQgeScgLSB3aGljaCBpcyBhCj4ga2lu
+ZGVyIHdheSB0byBoYXZlIFNORF9TT0NfVERBOTk4WCBiZSBlbmFibGVkLiAgSWYgU05EX1NPQ19U
+REE5OThYCj4gZG9lc24ndCBoYXZlIGEgcHJvbXB0LCB0aGVuIGl0J2xsIGF1dG9tYXRpY2FsbHkg
+ZW5hYmxlIGl0c2VsZiB0b28KPiB0aGlzIHdheSB3aGVuIGFsbCBpdHMgZGVwZW5kZW5jaWVzIGFy
+ZSBzYXRpc2ZpZWQuCgpZb3UgYXJlIHJpZ2h0LCBJIHdpbGwgc2V0IGJhY2sgdGhlIHdheSBJIGhh
+ZCBpbiB0aGUgdmVyc2lvbiAzOgoKPiBkaWZmIC0tZ2l0IGEvc291bmQvc29jL2NvZGVjcy9LY29u
+ZmlnIGIvc291bmQvc29jL2NvZGVjcy9LY29uZmlnCj4gaW5kZXggYjMzYjQ1ZC4uNzQ3ZTM4NyAx
+MDA2NDQKPiAtLS0gYS9zb3VuZC9zb2MvY29kZWNzL0tjb25maWcKPiArKysgYi9zb3VuZC9zb2Mv
+Y29kZWNzL0tjb25maWcKPiBAQCAtMzUyLDYgKzM1MiwxMiBAQCBjb25maWcgU05EX1NPQ19TVEFD
+OTc2Ngo+ICBjb25maWcgU05EX1NPQ19UQVM1MDg2Cj4gIAl0cmlzdGF0ZQo+ICAKPiArY29uZmln
+IFNORF9TT0NfVERBOTk4WAo+ICsJdHJpc3RhdGUKPiArCWRlZmF1bHQgeSBpZiBEUk1fSTJDX05Y
+UF9UREE5OThYPXkKPiArCWRlZmF1bHQgbSBpZiBEUk1fSTJDX05YUF9UREE5OThYPW0KPiArCgot
+LSAKS2VuIGFyIGMnaGVudGHDsQl8CSAgICAgICoqIEJyZWl6aCBoYSBMaW51eCBhdGF2ISAqKgpK
+ZWYJCXwJCWh0dHA6Ly9tb2luZWpmLmZyZWUuZnIvCl9fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fCkFsc2EtZGV2ZWwgbWFpbGluZyBsaXN0CkFsc2EtZGV2ZWxA
+YWxzYS1wcm9qZWN0Lm9yZwpodHRwOi8vbWFpbG1hbi5hbHNhLXByb2plY3Qub3JnL21haWxtYW4v
+bGlzdGluZm8vYWxzYS1kZXZlbAo=
