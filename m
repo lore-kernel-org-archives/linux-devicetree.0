@@ -1,87 +1,50 @@
-From: Francois Romieu <romieu-W8zweXLXuWQS+FvcfC7Uqw@public.gmane.org>
-Subject: Re: [PATCH] ethernet: atheros: Add nss-gmac driver
-Date: Fri, 9 Jan 2015 01:00:57 +0100
-Message-ID: <20150109000057.GB11396@electric-eye.fr.zoreil.com>
-References: <y>
- <1420754626-30121-1-git-send-email-wstephen@codeaurora.org>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v3 2/4] of: move of_dma_configure() to device,c to help re-use
+Date: Fri, 09 Jan 2015 01:05:11 +0100
+Message-ID: <2405706.Bhe0GramZJ@wuerfel>
+References: <1420656594-8908-1-git-send-email-m-karicheri2@ti.com> <2083932.v1GzgAfexK@wuerfel> <54AF165F.7070909@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1420754626-30121-1-git-send-email-wstephen-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+In-Reply-To: <54AF165F.7070909-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Wang <wstephen-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: jcliburn-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Stephen Wang <wstephen-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> :
-> This driver adds support for the internal GMACs on IPQ806x SoCs.
-> It supports the device-tree and will register up to 4 ethernet
-> interfaces.
+On Thursday 08 January 2015 18:44:31 Murali Karicheri wrote:
+> The grep of dma-ranges for arch/arm shows the size used is mask + 1 as
 > 
-> Signed-off-by: Stephen Wang <wstephen-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> ---
-[...]
-> +/*
-> + * NSS GMAC data plane ops, default would be slowpath and can be override by
-> + * nss-drv
-> + */
-> +struct nss_gmac_data_plane_ops {
-> +	int (*open)(void *ctx, uint32_t tx_desc_ring, uint32_t rx_desc_ring,
-> +							uint32_t mode);
-> +	int (*close)(void *ctx);
-> +	int (*link_state)(void *ctx, uint32_t link_state);
-> +	int (*mac_addr)(void *ctx, uint8_t *addr);
-> +	int (*change_mtu)(void *ctx, uint32_t mtu);
-> +	int (*xmit)(void *ctx, struct sk_buff *os_buf);
-> +};
+> ./boot/dts/keystone.dtsi:               dma-ranges = <0x80000000 0x8 0x00000000 
+> 0x80000000>;
+> ./boot/dts/keystone.dtsi:                       dma-ranges;
+> ./boot/dts/keystone.dtsi:                       dma-ranges;
+> ./boot/dts/r8a7790.dtsi:                dma-ranges = <0x42000000 0 0x40000000 0 
+> 0x40000000 0 0x80000000
+> ./boot/dts/integratorap.dts:    dma-ranges = <0x80000000 0x0 0x80000000>;
+> ./boot/dts/r8a7791.dtsi:                dma-ranges = <0x42000000 0 0x40000000 0 
+> 0x40000000 0 0x80000000
+> ./boot/dts/.k2hk-evm.dtb.dts.tmp:  dma-ranges = <0x80000000 0x8 
+> 0x00000000 0x80000000>;
+> ./boot/dts/.k2hk-evm.dtb.dts.tmp:   dma-ranges;
+> ./boot/dts/.k2l-evm.dtb.dts.tmp:  dma-ranges = <0x80000000 0x8 
+> 0x00000000 0x80000000>;
+> ./boot/dts/.k2l-evm.dtb.dts.tmp:   dma-ranges;
+> ./boot/dts/.k2e-evm.dtb.dts.tmp:  dma-ranges = <0x80000000 0x8 
+> 0x00000000 0x80000000>;
+> ./boot/dts/.k2e-evm.dtb.dts.tmp:   dma-ranges;
+> ./boot/dts/.k2e-evm.dtb.dts.tmp:   dma-ranges;
+> ./boot/dts/k2e.dtsi:                    dma-ranges;
+> ./boot/dts/k2e.dtsi:                    dma-ranges;
+> 
+> So for ARM 32 the below case doesn't seem to apply.
+> 
 
-Weak types.
+Ah, I guess that is because an empty dma-ranges property serves the same
+purpose.
 
-[...]
-> +/*
-> + * nss_gmac_register_offload()
-> + *
-> + * @param[netdev] netdev instance that is going to register
-> + * @param[dp_ops] dataplan ops for chaning mac addr/mtu/link status
-> + * @param[ctx] passing the ctx of this nss_phy_if to gmac
-> + *
-> + * @return Return SUCCESS or FAILURE
-> + */
-> +int nss_gmac_override_data_plane(struct net_device *netdev,
-> +				struct nss_gmac_data_plane_ops *dp_ops,
-> +				void *ctx)
-> +{
-> +	struct nss_gmac_dev *gmacdev = (struct nss_gmac_dev *)netdev_priv(netdev);
-> +
-> +	BUG_ON(!gmacdev);
-> +
-> +	if (!dp_ops->open || !dp_ops->close || !dp_ops->link_state
-> +		|| !dp_ops->mac_addr || !dp_ops->change_mtu || !dp_ops->xmit) {
-> +		netdev_dbg(netdev, "%s: All the op functions must be present, reject this registeration",
-> +								__func__);
-> +		return NSS_GMAC_FAILURE;
-> +	}
-> +
-> +	/*
-> +	 * If this gmac is up, close the netdev to force TX/RX stop
-> +	 */
-> +	if (test_bit(__NSS_GMAC_UP, &gmacdev->flags))
-> +		nss_gmac_linux_close(netdev);
-> +
-> +	/* Recored the data_plane_ctx, data_plane_ops */
-> +	gmacdev->data_plane_ctx = ctx;
-> +	gmacdev->data_plane_ops = dp_ops;
-> +	gmacdev->first_linkup_done = 0;
-> +
-> +	return NSS_GMAC_SUCCESS;
-> +}
-> +EXPORT_SYMBOL(nss_gmac_override_data_plane);
-
-Why is this hook needed ?
-
--- 
-Ueimor
+	Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
