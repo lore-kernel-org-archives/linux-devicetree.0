@@ -1,8 +1,11 @@
 From: Soren Brinkmann <soren.brinkmann@xilinx.com>
-Subject: [PATCH v4 7/7] pinctrl: qcom-spmi-gpio: Migrate to pinconf-generic
-Date: Fri,  9 Jan 2015 07:43:51 -0800
-Message-ID: <1420818231-13451-8-git-send-email-soren.brinkmann@xilinx.com>
+Subject: [PATCH v4 4/7] pinctrl: Add driver for Zynq
+Date: Fri,  9 Jan 2015 07:43:48 -0800
+Message-ID: <1420818231-13451-5-git-send-email-soren.brinkmann@xilinx.com>
 References: <1420818231-13451-1-git-send-email-soren.brinkmann@xilinx.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1420818231-13451-1-git-send-email-soren.brinkmann@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
@@ -10,188 +13,1302 @@ To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
 Cc: =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann@xilinx.com>, Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Alessandro Rubini <rubini@unipv.it>, Heiko Stuebner <heiko@sntech.de>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-rockchip@lists.infradead.org, linux-sh@vger.kernel.org, "Ivan T. Ivanov" <iivanov@mm-sol.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Beniamino Galvani <b.galvani@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Instead of the driver caring about implementation details like device
-tree, just provide information about driver specific pinconf parameters
-to pinconf-generic which takes care of parsing the DT.
+This adds a pin-control driver for Zynq.
 
 Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
+Tested-by: Andreas F=C3=A4rber <afaerber@suse.de>
 ---
 Changes since v2:
- - remove hyphens in 'pull-up-strength' debugfs representation.
- - driver-specific DT properties are passed to the core in two arrays,
-   one for the actual DT parsing one for the debugfs representation.
-   Issue a compiler warning when the number of entries is not the same
-   for both arrays.
+- driver-specific DT properties are passed to the core in two arrays,
+  one for the actual DT parsing one for the debugfs representation.
+  Issue a compiler warning when the number of entries is not the same
+  for both arrays.
 
-This is compile tested only. So, it's likely that it needs more tweaking
-to make it actually work on HW. But it illustrates the potential
-benefits of the pinconf-generic changes in this series.
+Changes since v1:
+ - fix EMIO_SD1_CD pin name
+ - add USB to pinmux options
+
+changes since RFCv2:
+ - let Zynq select PINCTRL_ZYNQ. Boot hangs when pinctrl information is
+   present in DT but no driver available.
+ - add #defines to get rid of magical constants
+ - add commas at end of initializers
+ - separate changes in mach-zynq in separate patch
+ - add driver specific io-standard DT property
+ - refactored pinconf set function to not require arguments for
+   argument-less properties
+ - squash other patches in
+   - support for IO-standard property
+   - support for low-power mode property
+   - migration to pinconf_generic_dt_node_to_map_all()
+ - use newly created infrastructure to add pass driver-specific DT
+   params to pinconf-generic
+
+changes since RFC:
+ - use syscon/regmap to access registers in SLCR space
+ - rebase to 3.18: rename enable -> set_mux
+ - add kernel-doc
+ - support pinconf
+   - supported attributes
+     - pin-bias: pull up, tristate, disable
+     - slew-rate: 0 =3D=3D slow, 1 =3D=3D fast; generic pinconf does no=
+t display
+       argument
 ---
- drivers/pinctrl/qcom/pinctrl-spmi-gpio.c | 125 +++----------------------------
- 1 file changed, 11 insertions(+), 114 deletions(-)
+ drivers/pinctrl/Kconfig        |    8 +
+ drivers/pinctrl/Makefile       |    1 +
+ drivers/pinctrl/pinctrl-zynq.c | 1176 ++++++++++++++++++++++++++++++++=
+++++++++
+ 3 files changed, 1185 insertions(+)
+ create mode 100644 drivers/pinctrl/pinctrl-zynq.c
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-index b863b5080890..17f811c9c2c0 100644
---- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-+++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-@@ -131,14 +131,14 @@ struct pmic_gpio_state {
- 	struct gpio_chip chip;
- };
- 
--struct pmic_gpio_bindings {
--	const char	*property;
--	unsigned	param;
-+static const struct pinconf_generic_dt_params pmic_gpio_bindings[] = {
-+	{"qcom,pull-up-strength",	PMIC_GPIO_CONF_PULL_UP,		0},
-+	{"qcom,drive-strength",		PMIC_GPIO_CONF_STRENGTH,	0},
- };
- 
--static struct pmic_gpio_bindings pmic_gpio_bindings[] = {
--	{"qcom,pull-up-strength",	PMIC_GPIO_CONF_PULL_UP},
--	{"qcom,drive-strength",		PMIC_GPIO_CONF_STRENGTH},
-+static const struct pin_config_item pmic_conf_items[ARRAY_SIZE(pmic_gpio_bindings)] = {
-+	PCONFDUMP(PMIC_GPIO_CONF_PULL_UP,  "pull up strength", NULL, true),
-+	PCONFDUMP(PMIC_GPIO_CONF_STRENGTH, "drive-strength", NULL, true),
- };
- 
- static const char *const pmic_gpio_groups[] = {
-@@ -209,118 +209,11 @@ static int pmic_gpio_get_group_pins(struct pinctrl_dev *pctldev, unsigned pin,
- 	return 0;
- }
- 
--static int pmic_gpio_parse_dt_config(struct device_node *np,
--				     struct pinctrl_dev *pctldev,
--				     unsigned long **configs,
--				     unsigned int *nconfs)
--{
--	struct pmic_gpio_bindings *par;
--	unsigned long cfg;
--	int ret, i;
--	u32 val;
--
--	for (i = 0; i < ARRAY_SIZE(pmic_gpio_bindings); i++) {
--		par = &pmic_gpio_bindings[i];
--		ret = of_property_read_u32(np, par->property, &val);
--
--		/* property not found */
--		if (ret == -EINVAL)
--			continue;
--
--		/* use zero as default value */
--		if (ret)
--			val = 0;
--
--		dev_dbg(pctldev->dev, "found %s with value %u\n",
--			par->property, val);
--
--		cfg = pinconf_to_config_packed(par->param, val);
--
--		ret = pinctrl_utils_add_config(pctldev, configs, nconfs, cfg);
--		if (ret)
--			return ret;
--	}
--
--	return 0;
--}
--
--static int pmic_gpio_dt_subnode_to_map(struct pinctrl_dev *pctldev,
--				       struct device_node *np,
--				       struct pinctrl_map **map,
--				       unsigned *reserv, unsigned *nmaps,
--				       enum pinctrl_map_type type)
--{
--	unsigned long *configs = NULL;
--	unsigned nconfs = 0;
--	struct property *prop;
--	const char *group;
--	int ret;
--
--	ret = pmic_gpio_parse_dt_config(np, pctldev, &configs, &nconfs);
--	if (ret < 0)
--		return ret;
--
--	if (!nconfs)
--		return 0;
--
--	ret = of_property_count_strings(np, "pins");
--	if (ret < 0)
--		goto exit;
--
--	ret = pinctrl_utils_reserve_map(pctldev, map, reserv, nmaps, ret);
--	if (ret < 0)
--		goto exit;
--
--	of_property_for_each_string(np, "pins", prop, group) {
--		ret = pinctrl_utils_add_map_configs(pctldev, map,
--						    reserv, nmaps, group,
--						    configs, nconfs, type);
--		if (ret < 0)
--			break;
--	}
--exit:
--	kfree(configs);
--	return ret;
--}
--
--static int pmic_gpio_dt_node_to_map(struct pinctrl_dev *pctldev,
--				    struct device_node *np_config,
--				    struct pinctrl_map **map, unsigned *nmaps)
--{
--	enum pinctrl_map_type type;
--	struct device_node *np;
--	unsigned reserv;
--	int ret;
--
--	ret = 0;
--	*map = NULL;
--	*nmaps = 0;
--	reserv = 0;
--	type = PIN_MAP_TYPE_CONFIGS_GROUP;
--
--	for_each_child_of_node(np_config, np) {
--		ret = pinconf_generic_dt_subnode_to_map(pctldev, np, map,
--							&reserv, nmaps, type);
--		if (ret)
--			break;
--
--		ret = pmic_gpio_dt_subnode_to_map(pctldev, np, map, &reserv,
--						  nmaps, type);
--		if (ret)
--			break;
--	}
--
--	if (ret < 0)
--		pinctrl_utils_dt_free_map(pctldev, *map, *nmaps);
--
--	return ret;
--}
--
- static const struct pinctrl_ops pmic_gpio_pinctrl_ops = {
- 	.get_groups_count	= pmic_gpio_get_groups_count,
- 	.get_group_name		= pmic_gpio_get_group_name,
- 	.get_group_pins		= pmic_gpio_get_group_pins,
--	.dt_node_to_map		= pmic_gpio_dt_node_to_map,
-+	.dt_node_to_map		= pinconf_generic_dt_node_to_map_group,
- 	.dt_free_map		= pinctrl_utils_dt_free_map,
- };
- 
-@@ -590,6 +483,7 @@ static void pmic_gpio_config_dbg_show(struct pinctrl_dev *pctldev,
- }
- 
- static const struct pinconf_ops pmic_gpio_pinconf_ops = {
-+	.is_generic			= true,
- 	.pin_config_group_get		= pmic_gpio_config_get,
- 	.pin_config_group_set		= pmic_gpio_config_set,
- 	.pin_config_group_dbg_show	= pmic_gpio_config_dbg_show,
-@@ -848,6 +742,9 @@ static int pmic_gpio_probe(struct platform_device *pdev)
- 	pctrldesc->name = dev_name(dev);
- 	pctrldesc->pins = pindesc;
- 	pctrldesc->npins = npins;
-+	pctrldesc->num_dt_params = ARRAY_SIZE(pmic_gpio_bindings);
-+	pctrldesc->params = pmic_gpio_bindings;
-+	pctrldesc->conf_items = pmic_conf_items;
- 
- 	for (i = 0; i < npins; i++, pindesc++) {
- 		pad = &pads[i];
--- 
+diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
+index d014f22f387a..67c8db927454 100644
+--- a/drivers/pinctrl/Kconfig
++++ b/drivers/pinctrl/Kconfig
+@@ -191,6 +191,14 @@ config PINCTRL_PALMAS
+ 	  open drain configuration for the Palmas series devices like
+ 	  TPS65913, TPS80036 etc.
+=20
++config PINCTRL_ZYNQ
++	bool "Pinctrl driver for Xilinx Zynq"
++	depends on ARCH_ZYNQ
++	select PINMUX
++	select GENERIC_PINCONF
++	help
++	  This selectes the pinctrl driver for Xilinx Zynq.
++
+ source "drivers/pinctrl/berlin/Kconfig"
+ source "drivers/pinctrl/freescale/Kconfig"
+ source "drivers/pinctrl/intel/Kconfig"
+diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
+index c030b3db8034..886357556e87 100644
+--- a/drivers/pinctrl/Makefile
++++ b/drivers/pinctrl/Makefile
+@@ -35,6 +35,7 @@ obj-$(CONFIG_PINCTRL_XWAY)	+=3D pinctrl-xway.o
+ obj-$(CONFIG_PINCTRL_LANTIQ)	+=3D pinctrl-lantiq.o
+ obj-$(CONFIG_PINCTRL_TB10X)	+=3D pinctrl-tb10x.o
+ obj-$(CONFIG_PINCTRL_ST) 	+=3D pinctrl-st.o
++obj-$(CONFIG_PINCTRL_ZYNQ)	+=3D pinctrl-zynq.o
+=20
+ obj-$(CONFIG_ARCH_BERLIN)	+=3D berlin/
+ obj-y				+=3D freescale/
+diff --git a/drivers/pinctrl/pinctrl-zynq.c b/drivers/pinctrl/pinctrl-z=
+ynq.c
+new file mode 100644
+index 000000000000..c2fc9035dde9
+--- /dev/null
++++ b/drivers/pinctrl/pinctrl-zynq.c
+@@ -0,0 +1,1176 @@
++/*
++ * Zynq pin controller
++ *
++ *  Copyright (C) 2014 Xilinx
++ *
++ *  S=C3=B6ren Brinkmann <soren.brinkmann@xilinx.com>
++ *
++ * This program is free software: you can redistribute it and/or modif=
+y
++ * it under the terms of the GNU General Public License as published b=
+y
++ * the Free Software Foundation, either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/=
+>.
++ */
++#include <linux/io.h>
++#include <linux/mfd/syscon.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/pinctrl/pinctrl.h>
++#include <linux/pinctrl/pinmux.h>
++#include <linux/pinctrl/pinconf.h>
++#include <linux/pinctrl/pinconf-generic.h>
++#include <linux/regmap.h>
++#include "pinctrl-utils.h"
++#include "core.h"
++
++#define ZYNQ_NUM_MIOS	54
++
++#define ZYNQ_PCTRL_MIO_MST_TRI0	0x10c
++#define ZYNQ_PCTRL_MIO_MST_TRI1	0x110
++
++#define ZYNQ_PINMUX_MUX_SHIFT	1
++#define ZYNQ_PINMUX_MUX_MASK	(0x7f << ZYNQ_PINMUX_MUX_SHIFT)
++
++/**
++ * struct zynq_pinctrl - driver data
++ * @pctrl:		Pinctrl device
++ * @syscon:		Syscon regmap
++ * @pctrl_offset:	Offset for pinctrl into the @syscon space
++ * @groups:		Pingroups
++ * @ngroupos:		Number of @groups
++ * @funcs:		Pinmux functions
++ * @nfuncs:		Number of @funcs
++ */
++struct zynq_pinctrl {
++	struct pinctrl_dev *pctrl;
++	struct regmap *syscon;
++	u32 pctrl_offset;
++	const struct zynq_pctrl_group *groups;
++	unsigned int ngroups;
++	const struct zynq_pinmux_function *funcs;
++	unsigned int nfuncs;
++};
++
++struct zynq_pctrl_group {
++	const char *name;
++	const unsigned int *pins;
++	const unsigned npins;
++};
++
++/**
++ * struct zynq_pinmux_function - a pinmux function
++ * @name:	Name of the pinmux function.
++ * @groups:	List of pingroups for this function.
++ * @ngroups:	Number of entries in @groups.
++ * @mux_val:	Selector for this function
++ * @mux:	Offset of function specific mux
++ * @mux_mask:	Mask for function specific selector
++ * @mux_shift:	Shift for function specific selector
++ */
++struct zynq_pinmux_function {
++	const char *name;
++	const char * const *groups;
++	unsigned int ngroups;
++	unsigned int mux_val;
++	u32 mux;
++	u32 mux_mask;
++	u8 mux_shift;
++};
++
++enum zynq_pinmux_functions {
++	ZYNQ_PMUX_can0,
++	ZYNQ_PMUX_can1,
++	ZYNQ_PMUX_ethernet0,
++	ZYNQ_PMUX_ethernet1,
++	ZYNQ_PMUX_gpio0,
++	ZYNQ_PMUX_i2c0,
++	ZYNQ_PMUX_i2c1,
++	ZYNQ_PMUX_mdio0,
++	ZYNQ_PMUX_mdio1,
++	ZYNQ_PMUX_qspi0,
++	ZYNQ_PMUX_qspi1,
++	ZYNQ_PMUX_qspi_fbclk,
++	ZYNQ_PMUX_qspi_cs1,
++	ZYNQ_PMUX_spi0,
++	ZYNQ_PMUX_spi1,
++	ZYNQ_PMUX_sdio0,
++	ZYNQ_PMUX_sdio0_pc,
++	ZYNQ_PMUX_sdio0_cd,
++	ZYNQ_PMUX_sdio0_wp,
++	ZYNQ_PMUX_sdio1,
++	ZYNQ_PMUX_sdio1_pc,
++	ZYNQ_PMUX_sdio1_cd,
++	ZYNQ_PMUX_sdio1_wp,
++	ZYNQ_PMUX_smc0_nor,
++	ZYNQ_PMUX_smc0_nor_cs1,
++	ZYNQ_PMUX_smc0_nor_addr25,
++	ZYNQ_PMUX_smc0_nand,
++	ZYNQ_PMUX_ttc0,
++	ZYNQ_PMUX_ttc1,
++	ZYNQ_PMUX_uart0,
++	ZYNQ_PMUX_uart1,
++	ZYNQ_PMUX_usb0,
++	ZYNQ_PMUX_usb1,
++	ZYNQ_PMUX_swdt0,
++	ZYNQ_PMUX_MAX_FUNC
++};
++
++const struct pinctrl_pin_desc zynq_pins[] =3D {
++	PINCTRL_PIN(0,  "MIO0"),
++	PINCTRL_PIN(1,  "MIO1"),
++	PINCTRL_PIN(2,  "MIO2"),
++	PINCTRL_PIN(3,  "MIO3"),
++	PINCTRL_PIN(4,  "MIO4"),
++	PINCTRL_PIN(5,  "MIO5"),
++	PINCTRL_PIN(6,  "MIO6"),
++	PINCTRL_PIN(7,  "MIO7"),
++	PINCTRL_PIN(8,  "MIO8"),
++	PINCTRL_PIN(9,  "MIO9"),
++	PINCTRL_PIN(10, "MIO10"),
++	PINCTRL_PIN(11, "MIO11"),
++	PINCTRL_PIN(12, "MIO12"),
++	PINCTRL_PIN(13, "MIO13"),
++	PINCTRL_PIN(14, "MIO14"),
++	PINCTRL_PIN(15, "MIO15"),
++	PINCTRL_PIN(16, "MIO16"),
++	PINCTRL_PIN(17, "MIO17"),
++	PINCTRL_PIN(18, "MIO18"),
++	PINCTRL_PIN(19, "MIO19"),
++	PINCTRL_PIN(20, "MIO20"),
++	PINCTRL_PIN(21, "MIO21"),
++	PINCTRL_PIN(22, "MIO22"),
++	PINCTRL_PIN(23, "MIO23"),
++	PINCTRL_PIN(24, "MIO24"),
++	PINCTRL_PIN(25, "MIO25"),
++	PINCTRL_PIN(26, "MIO26"),
++	PINCTRL_PIN(27, "MIO27"),
++	PINCTRL_PIN(28, "MIO28"),
++	PINCTRL_PIN(29, "MIO29"),
++	PINCTRL_PIN(30, "MIO30"),
++	PINCTRL_PIN(31, "MIO31"),
++	PINCTRL_PIN(32, "MIO32"),
++	PINCTRL_PIN(33, "MIO33"),
++	PINCTRL_PIN(34, "MIO34"),
++	PINCTRL_PIN(35, "MIO35"),
++	PINCTRL_PIN(36, "MIO36"),
++	PINCTRL_PIN(37, "MIO37"),
++	PINCTRL_PIN(38, "MIO38"),
++	PINCTRL_PIN(39, "MIO39"),
++	PINCTRL_PIN(40, "MIO40"),
++	PINCTRL_PIN(41, "MIO41"),
++	PINCTRL_PIN(42, "MIO42"),
++	PINCTRL_PIN(43, "MIO43"),
++	PINCTRL_PIN(44, "MIO44"),
++	PINCTRL_PIN(45, "MIO45"),
++	PINCTRL_PIN(46, "MIO46"),
++	PINCTRL_PIN(47, "MIO47"),
++	PINCTRL_PIN(48, "MIO48"),
++	PINCTRL_PIN(49, "MIO49"),
++	PINCTRL_PIN(50, "MIO50"),
++	PINCTRL_PIN(51, "MIO51"),
++	PINCTRL_PIN(52, "MIO52"),
++	PINCTRL_PIN(53, "MIO53"),
++	PINCTRL_PIN(54, "EMIO_SD0_WP"),
++	PINCTRL_PIN(55, "EMIO_SD0_CD"),
++	PINCTRL_PIN(56, "EMIO_SD1_WP"),
++	PINCTRL_PIN(57, "EMIO_SD1_CD"),
++};
++
++/* pin groups */
++static const unsigned int ethernet0_0_pins[] =3D {16, 17, 18, 19, 20, =
+21, 22, 23,
++						24, 25, 26, 27};
++static const unsigned int ethernet1_0_pins[] =3D {28, 29, 30, 31, 32, =
+33, 34, 35,
++						36, 37, 38, 39};
++static const unsigned int mdio0_0_pins[] =3D {52, 53};
++static const unsigned int mdio1_0_pins[] =3D {52, 53};
++static const unsigned int qspi0_0_pins[] =3D {1, 2, 3, 4, 5, 6};
++
++static const unsigned int qspi1_0_pins[] =3D {9, 10, 11, 12, 13};
++static const unsigned int qspi_cs1_pins[] =3D {0};
++static const unsigned int qspi_fbclk_pins[] =3D {8};
++static const unsigned int spi0_0_pins[] =3D {16, 17, 18, 19, 20, 21};
++static const unsigned int spi0_1_pins[] =3D {28, 29, 30, 31, 32, 33};
++static const unsigned int spi0_2_pins[] =3D {40, 41, 42, 43, 44, 45};
++static const unsigned int spi1_0_pins[] =3D {10, 11, 12, 13, 14, 15};
++static const unsigned int spi1_1_pins[] =3D {22, 23, 24, 25, 26, 27};
++static const unsigned int spi1_2_pins[] =3D {34, 35, 36, 37, 38, 39};
++static const unsigned int spi1_3_pins[] =3D {46, 47, 48, 49, 40, 51};
++static const unsigned int sdio0_0_pins[] =3D {16, 17, 18, 19, 20, 21};
++static const unsigned int sdio0_1_pins[] =3D {28, 29, 30, 31, 32, 33};
++static const unsigned int sdio0_2_pins[] =3D {40, 41, 42, 43, 44, 45};
++static const unsigned int sdio1_0_pins[] =3D {10, 11, 12, 13, 14, 15};
++static const unsigned int sdio1_1_pins[] =3D {22, 23, 24, 25, 26, 27};
++static const unsigned int sdio1_2_pins[] =3D {34, 35, 36, 37, 38, 39};
++static const unsigned int sdio1_3_pins[] =3D {46, 47, 48, 49, 40, 51};
++static const unsigned int sdio0_emio_wp_pins[] =3D {54};
++static const unsigned int sdio0_emio_cd_pins[] =3D {55};
++static const unsigned int sdio1_emio_wp_pins[] =3D {56};
++static const unsigned int sdio1_emio_cd_pins[] =3D {57};
++static const unsigned int smc0_nor_pins[] =3D {0, 3, 4, 5, 6, 7, 8, 9,=
+ 10, 11, 13,
++					     15, 16, 17, 18, 19, 20, 21, 22, 23,
++					     24, 25, 26, 27, 28, 29, 30, 31, 32,
++					     33, 34, 35, 36, 37, 38, 39};
++static const unsigned int smc0_nor_cs1_pins[] =3D {1};
++static const unsigned int smc0_nor_addr25_pins[] =3D {1};
++static const unsigned int smc0_nand_pins[] =3D {0, 2, 3, 4, 5, 6, 7, 8=
+, 9, 10, 11,
++					      12, 13, 14, 16, 17, 18, 19, 20,
++					      21, 22, 23};
++/* Note: CAN MIO clock inputs are modeled in the clock framework */
++static const unsigned int can0_0_pins[] =3D {10, 11};
++static const unsigned int can0_1_pins[] =3D {14, 15};
++static const unsigned int can0_2_pins[] =3D {18, 19};
++static const unsigned int can0_3_pins[] =3D {22, 23};
++static const unsigned int can0_4_pins[] =3D {26, 27};
++static const unsigned int can0_5_pins[] =3D {30, 31};
++static const unsigned int can0_6_pins[] =3D {34, 35};
++static const unsigned int can0_7_pins[] =3D {38, 39};
++static const unsigned int can0_8_pins[] =3D {42, 43};
++static const unsigned int can0_9_pins[] =3D {46, 47};
++static const unsigned int can0_10_pins[] =3D {50, 51};
++static const unsigned int can1_0_pins[] =3D {8, 9};
++static const unsigned int can1_1_pins[] =3D {12, 13};
++static const unsigned int can1_2_pins[] =3D {16, 17};
++static const unsigned int can1_3_pins[] =3D {20, 21};
++static const unsigned int can1_4_pins[] =3D {24, 25};
++static const unsigned int can1_5_pins[] =3D {28, 29};
++static const unsigned int can1_6_pins[] =3D {32, 33};
++static const unsigned int can1_7_pins[] =3D {36, 37};
++static const unsigned int can1_8_pins[] =3D {40, 41};
++static const unsigned int can1_9_pins[] =3D {44, 45};
++static const unsigned int can1_10_pins[] =3D {48, 49};
++static const unsigned int can1_11_pins[] =3D {52, 53};
++static const unsigned int uart0_0_pins[] =3D {10, 11};
++static const unsigned int uart0_1_pins[] =3D {14, 15};
++static const unsigned int uart0_2_pins[] =3D {18, 19};
++static const unsigned int uart0_3_pins[] =3D {22, 23};
++static const unsigned int uart0_4_pins[] =3D {26, 27};
++static const unsigned int uart0_5_pins[] =3D {30, 31};
++static const unsigned int uart0_6_pins[] =3D {34, 35};
++static const unsigned int uart0_7_pins[] =3D {38, 39};
++static const unsigned int uart0_8_pins[] =3D {42, 43};
++static const unsigned int uart0_9_pins[] =3D {46, 47};
++static const unsigned int uart0_10_pins[] =3D {50, 51};
++static const unsigned int uart1_0_pins[] =3D {8, 9};
++static const unsigned int uart1_1_pins[] =3D {12, 13};
++static const unsigned int uart1_2_pins[] =3D {16, 17};
++static const unsigned int uart1_3_pins[] =3D {20, 21};
++static const unsigned int uart1_4_pins[] =3D {24, 25};
++static const unsigned int uart1_5_pins[] =3D {28, 29};
++static const unsigned int uart1_6_pins[] =3D {32, 33};
++static const unsigned int uart1_7_pins[] =3D {36, 37};
++static const unsigned int uart1_8_pins[] =3D {40, 41};
++static const unsigned int uart1_9_pins[] =3D {44, 45};
++static const unsigned int uart1_10_pins[] =3D {48, 49};
++static const unsigned int uart1_11_pins[] =3D {52, 53};
++static const unsigned int i2c0_0_pins[] =3D {10, 11};
++static const unsigned int i2c0_1_pins[] =3D {14, 15};
++static const unsigned int i2c0_2_pins[] =3D {18, 19};
++static const unsigned int i2c0_3_pins[] =3D {22, 23};
++static const unsigned int i2c0_4_pins[] =3D {26, 27};
++static const unsigned int i2c0_5_pins[] =3D {30, 31};
++static const unsigned int i2c0_6_pins[] =3D {34, 35};
++static const unsigned int i2c0_7_pins[] =3D {38, 39};
++static const unsigned int i2c0_8_pins[] =3D {42, 43};
++static const unsigned int i2c0_9_pins[] =3D {46, 47};
++static const unsigned int i2c0_10_pins[] =3D {50, 51};
++static const unsigned int i2c1_0_pins[] =3D {12, 13};
++static const unsigned int i2c1_1_pins[] =3D {16, 17};
++static const unsigned int i2c1_2_pins[] =3D {20, 21};
++static const unsigned int i2c1_3_pins[] =3D {24, 25};
++static const unsigned int i2c1_4_pins[] =3D {28, 29};
++static const unsigned int i2c1_5_pins[] =3D {32, 33};
++static const unsigned int i2c1_6_pins[] =3D {36, 37};
++static const unsigned int i2c1_7_pins[] =3D {40, 41};
++static const unsigned int i2c1_8_pins[] =3D {44, 45};
++static const unsigned int i2c1_9_pins[] =3D {48, 49};
++static const unsigned int i2c1_10_pins[] =3D {52, 53};
++static const unsigned int ttc0_0_pins[] =3D {18, 19};
++static const unsigned int ttc0_1_pins[] =3D {30, 31};
++static const unsigned int ttc0_2_pins[] =3D {42, 43};
++static const unsigned int ttc1_0_pins[] =3D {16, 17};
++static const unsigned int ttc1_1_pins[] =3D {28, 29};
++static const unsigned int ttc1_2_pins[] =3D {40, 41};
++static const unsigned int swdt0_0_pins[] =3D {14, 15};
++static const unsigned int swdt0_1_pins[] =3D {26, 27};
++static const unsigned int swdt0_2_pins[] =3D {38, 39};
++static const unsigned int swdt0_3_pins[] =3D {50, 51};
++static const unsigned int swdt0_4_pins[] =3D {52, 53};
++static const unsigned int gpio0_0_pins[] =3D {0};
++static const unsigned int gpio0_1_pins[] =3D {1};
++static const unsigned int gpio0_2_pins[] =3D {2};
++static const unsigned int gpio0_3_pins[] =3D {3};
++static const unsigned int gpio0_4_pins[] =3D {4};
++static const unsigned int gpio0_5_pins[] =3D {5};
++static const unsigned int gpio0_6_pins[] =3D {6};
++static const unsigned int gpio0_7_pins[] =3D {7};
++static const unsigned int gpio0_8_pins[] =3D {8};
++static const unsigned int gpio0_9_pins[] =3D {9};
++static const unsigned int gpio0_10_pins[] =3D {10};
++static const unsigned int gpio0_11_pins[] =3D {11};
++static const unsigned int gpio0_12_pins[] =3D {12};
++static const unsigned int gpio0_13_pins[] =3D {13};
++static const unsigned int gpio0_14_pins[] =3D {14};
++static const unsigned int gpio0_15_pins[] =3D {15};
++static const unsigned int gpio0_16_pins[] =3D {16};
++static const unsigned int gpio0_17_pins[] =3D {17};
++static const unsigned int gpio0_18_pins[] =3D {18};
++static const unsigned int gpio0_19_pins[] =3D {19};
++static const unsigned int gpio0_20_pins[] =3D {20};
++static const unsigned int gpio0_21_pins[] =3D {21};
++static const unsigned int gpio0_22_pins[] =3D {22};
++static const unsigned int gpio0_23_pins[] =3D {23};
++static const unsigned int gpio0_24_pins[] =3D {24};
++static const unsigned int gpio0_25_pins[] =3D {25};
++static const unsigned int gpio0_26_pins[] =3D {26};
++static const unsigned int gpio0_27_pins[] =3D {27};
++static const unsigned int gpio0_28_pins[] =3D {28};
++static const unsigned int gpio0_29_pins[] =3D {29};
++static const unsigned int gpio0_30_pins[] =3D {30};
++static const unsigned int gpio0_31_pins[] =3D {31};
++static const unsigned int gpio0_32_pins[] =3D {32};
++static const unsigned int gpio0_33_pins[] =3D {33};
++static const unsigned int gpio0_34_pins[] =3D {34};
++static const unsigned int gpio0_35_pins[] =3D {35};
++static const unsigned int gpio0_36_pins[] =3D {36};
++static const unsigned int gpio0_37_pins[] =3D {37};
++static const unsigned int gpio0_38_pins[] =3D {38};
++static const unsigned int gpio0_39_pins[] =3D {39};
++static const unsigned int gpio0_40_pins[] =3D {40};
++static const unsigned int gpio0_41_pins[] =3D {41};
++static const unsigned int gpio0_42_pins[] =3D {42};
++static const unsigned int gpio0_43_pins[] =3D {43};
++static const unsigned int gpio0_44_pins[] =3D {44};
++static const unsigned int gpio0_45_pins[] =3D {45};
++static const unsigned int gpio0_46_pins[] =3D {46};
++static const unsigned int gpio0_47_pins[] =3D {47};
++static const unsigned int gpio0_48_pins[] =3D {48};
++static const unsigned int gpio0_49_pins[] =3D {49};
++static const unsigned int gpio0_50_pins[] =3D {50};
++static const unsigned int gpio0_51_pins[] =3D {51};
++static const unsigned int gpio0_52_pins[] =3D {52};
++static const unsigned int gpio0_53_pins[] =3D {53};
++static const unsigned int usb0_0_pins[] =3D {28, 19, 30, 31, 32, 33, 3=
+4, 35, 36,
++					   37, 38, 39};
++static const unsigned int usb1_0_pins[] =3D {40, 41, 42, 43, 44, 45, 4=
+6, 47, 48,
++					   49, 50, 51};
++
++#define DEFINE_ZYNQ_PINCTRL_GRP(nm) \
++	{ \
++		.name =3D #nm "_grp", \
++		.pins =3D nm ## _pins, \
++		.npins =3D ARRAY_SIZE(nm ## _pins), \
++	}
++
++struct zynq_pctrl_group zynq_pctrl_groups[] =3D {
++	DEFINE_ZYNQ_PINCTRL_GRP(ethernet0_0),
++	DEFINE_ZYNQ_PINCTRL_GRP(ethernet1_0),
++	DEFINE_ZYNQ_PINCTRL_GRP(mdio0_0),
++	DEFINE_ZYNQ_PINCTRL_GRP(mdio1_0),
++	DEFINE_ZYNQ_PINCTRL_GRP(qspi0_0),
++	DEFINE_ZYNQ_PINCTRL_GRP(qspi1_0),
++	DEFINE_ZYNQ_PINCTRL_GRP(qspi_fbclk),
++	DEFINE_ZYNQ_PINCTRL_GRP(qspi_cs1),
++	DEFINE_ZYNQ_PINCTRL_GRP(spi0_0),
++	DEFINE_ZYNQ_PINCTRL_GRP(spi0_1),
++	DEFINE_ZYNQ_PINCTRL_GRP(spi0_2),
++	DEFINE_ZYNQ_PINCTRL_GRP(spi1_0),
++	DEFINE_ZYNQ_PINCTRL_GRP(spi1_1),
++	DEFINE_ZYNQ_PINCTRL_GRP(spi1_2),
++	DEFINE_ZYNQ_PINCTRL_GRP(spi1_3),
++	DEFINE_ZYNQ_PINCTRL_GRP(sdio0_0),
++	DEFINE_ZYNQ_PINCTRL_GRP(sdio0_1),
++	DEFINE_ZYNQ_PINCTRL_GRP(sdio0_2),
++	DEFINE_ZYNQ_PINCTRL_GRP(sdio1_0),
++	DEFINE_ZYNQ_PINCTRL_GRP(sdio1_1),
++	DEFINE_ZYNQ_PINCTRL_GRP(sdio1_2),
++	DEFINE_ZYNQ_PINCTRL_GRP(sdio1_3),
++	DEFINE_ZYNQ_PINCTRL_GRP(sdio0_emio_wp),
++	DEFINE_ZYNQ_PINCTRL_GRP(sdio0_emio_cd),
++	DEFINE_ZYNQ_PINCTRL_GRP(sdio1_emio_wp),
++	DEFINE_ZYNQ_PINCTRL_GRP(sdio1_emio_cd),
++	DEFINE_ZYNQ_PINCTRL_GRP(smc0_nor),
++	DEFINE_ZYNQ_PINCTRL_GRP(smc0_nor_cs1),
++	DEFINE_ZYNQ_PINCTRL_GRP(smc0_nor_addr25),
++	DEFINE_ZYNQ_PINCTRL_GRP(smc0_nand),
++	DEFINE_ZYNQ_PINCTRL_GRP(can0_0),
++	DEFINE_ZYNQ_PINCTRL_GRP(can0_1),
++	DEFINE_ZYNQ_PINCTRL_GRP(can0_2),
++	DEFINE_ZYNQ_PINCTRL_GRP(can0_3),
++	DEFINE_ZYNQ_PINCTRL_GRP(can0_4),
++	DEFINE_ZYNQ_PINCTRL_GRP(can0_5),
++	DEFINE_ZYNQ_PINCTRL_GRP(can0_6),
++	DEFINE_ZYNQ_PINCTRL_GRP(can0_7),
++	DEFINE_ZYNQ_PINCTRL_GRP(can0_8),
++	DEFINE_ZYNQ_PINCTRL_GRP(can0_9),
++	DEFINE_ZYNQ_PINCTRL_GRP(can0_10),
++	DEFINE_ZYNQ_PINCTRL_GRP(can1_0),
++	DEFINE_ZYNQ_PINCTRL_GRP(can1_1),
++	DEFINE_ZYNQ_PINCTRL_GRP(can1_2),
++	DEFINE_ZYNQ_PINCTRL_GRP(can1_3),
++	DEFINE_ZYNQ_PINCTRL_GRP(can1_4),
++	DEFINE_ZYNQ_PINCTRL_GRP(can1_5),
++	DEFINE_ZYNQ_PINCTRL_GRP(can1_6),
++	DEFINE_ZYNQ_PINCTRL_GRP(can1_7),
++	DEFINE_ZYNQ_PINCTRL_GRP(can1_8),
++	DEFINE_ZYNQ_PINCTRL_GRP(can1_9),
++	DEFINE_ZYNQ_PINCTRL_GRP(can1_10),
++	DEFINE_ZYNQ_PINCTRL_GRP(can1_11),
++	DEFINE_ZYNQ_PINCTRL_GRP(uart0_0),
++	DEFINE_ZYNQ_PINCTRL_GRP(uart0_1),
++	DEFINE_ZYNQ_PINCTRL_GRP(uart0_2),
++	DEFINE_ZYNQ_PINCTRL_GRP(uart0_3),
++	DEFINE_ZYNQ_PINCTRL_GRP(uart0_4),
++	DEFINE_ZYNQ_PINCTRL_GRP(uart0_5),
++	DEFINE_ZYNQ_PINCTRL_GRP(uart0_6),
++	DEFINE_ZYNQ_PINCTRL_GRP(uart0_7),
++	DEFINE_ZYNQ_PINCTRL_GRP(uart0_8),
++	DEFINE_ZYNQ_PINCTRL_GRP(uart0_9),
++	DEFINE_ZYNQ_PINCTRL_GRP(uart0_10),
++	DEFINE_ZYNQ_PINCTRL_GRP(uart1_0),
++	DEFINE_ZYNQ_PINCTRL_GRP(uart1_1),
++	DEFINE_ZYNQ_PINCTRL_GRP(uart1_2),
++	DEFINE_ZYNQ_PINCTRL_GRP(uart1_3),
++	DEFINE_ZYNQ_PINCTRL_GRP(uart1_4),
++	DEFINE_ZYNQ_PINCTRL_GRP(uart1_5),
++	DEFINE_ZYNQ_PINCTRL_GRP(uart1_6),
++	DEFINE_ZYNQ_PINCTRL_GRP(uart1_7),
++	DEFINE_ZYNQ_PINCTRL_GRP(uart1_8),
++	DEFINE_ZYNQ_PINCTRL_GRP(uart1_9),
++	DEFINE_ZYNQ_PINCTRL_GRP(uart1_10),
++	DEFINE_ZYNQ_PINCTRL_GRP(uart1_11),
++	DEFINE_ZYNQ_PINCTRL_GRP(i2c0_0),
++	DEFINE_ZYNQ_PINCTRL_GRP(i2c0_1),
++	DEFINE_ZYNQ_PINCTRL_GRP(i2c0_2),
++	DEFINE_ZYNQ_PINCTRL_GRP(i2c0_3),
++	DEFINE_ZYNQ_PINCTRL_GRP(i2c0_4),
++	DEFINE_ZYNQ_PINCTRL_GRP(i2c0_5),
++	DEFINE_ZYNQ_PINCTRL_GRP(i2c0_6),
++	DEFINE_ZYNQ_PINCTRL_GRP(i2c0_7),
++	DEFINE_ZYNQ_PINCTRL_GRP(i2c0_8),
++	DEFINE_ZYNQ_PINCTRL_GRP(i2c0_9),
++	DEFINE_ZYNQ_PINCTRL_GRP(i2c0_10),
++	DEFINE_ZYNQ_PINCTRL_GRP(i2c1_0),
++	DEFINE_ZYNQ_PINCTRL_GRP(i2c1_1),
++	DEFINE_ZYNQ_PINCTRL_GRP(i2c1_2),
++	DEFINE_ZYNQ_PINCTRL_GRP(i2c1_3),
++	DEFINE_ZYNQ_PINCTRL_GRP(i2c1_4),
++	DEFINE_ZYNQ_PINCTRL_GRP(i2c1_5),
++	DEFINE_ZYNQ_PINCTRL_GRP(i2c1_6),
++	DEFINE_ZYNQ_PINCTRL_GRP(i2c1_7),
++	DEFINE_ZYNQ_PINCTRL_GRP(i2c1_8),
++	DEFINE_ZYNQ_PINCTRL_GRP(i2c1_9),
++	DEFINE_ZYNQ_PINCTRL_GRP(i2c1_10),
++	DEFINE_ZYNQ_PINCTRL_GRP(ttc0_0),
++	DEFINE_ZYNQ_PINCTRL_GRP(ttc0_1),
++	DEFINE_ZYNQ_PINCTRL_GRP(ttc0_2),
++	DEFINE_ZYNQ_PINCTRL_GRP(ttc1_0),
++	DEFINE_ZYNQ_PINCTRL_GRP(ttc1_1),
++	DEFINE_ZYNQ_PINCTRL_GRP(ttc1_2),
++	DEFINE_ZYNQ_PINCTRL_GRP(swdt0_0),
++	DEFINE_ZYNQ_PINCTRL_GRP(swdt0_1),
++	DEFINE_ZYNQ_PINCTRL_GRP(swdt0_2),
++	DEFINE_ZYNQ_PINCTRL_GRP(swdt0_3),
++	DEFINE_ZYNQ_PINCTRL_GRP(swdt0_4),
++	DEFINE_ZYNQ_PINCTRL_GRP(gpio0_0),
++	DEFINE_ZYNQ_PINCTRL_GRP(gpio0_1),
++	DEFINE_ZYNQ_PINCTRL_GRP(gpio0_2),
++	DEFINE_ZYNQ_PINCTRL_GRP(gpio0_3),
++	DEFINE_ZYNQ_PINCTRL_GRP(gpio0_4),
++	DEFINE_ZYNQ_PINCTRL_GRP(gpio0_5),
++	DEFINE_ZYNQ_PINCTRL_GRP(gpio0_6),
++	DEFINE_ZYNQ_PINCTRL_GRP(gpio0_7),
++	DEFINE_ZYNQ_PINCTRL_GRP(gpio0_8),
++	DEFINE_ZYNQ_PINCTRL_GRP(gpio0_9),
++	DEFINE_ZYNQ_PINCTRL_GRP(gpio0_10),
++	DEFINE_ZYNQ_PINCTRL_GRP(gpio0_11),
++	DEFINE_ZYNQ_PINCTRL_GRP(gpio0_12),
++	DEFINE_ZYNQ_PINCTRL_GRP(gpio0_13),
++	DEFINE_ZYNQ_PINCTRL_GRP(gpio0_14),
++	DEFINE_ZYNQ_PINCTRL_GRP(gpio0_15),
++	DEFINE_ZYNQ_PINCTRL_GRP(gpio0_16),
++	DEFINE_ZYNQ_PINCTRL_GRP(gpio0_17),
++	DEFINE_ZYNQ_PINCTRL_GRP(gpio0_18),
++	DEFINE_ZYNQ_PINCTRL_GRP(gpio0_19),
++	DEFINE_ZYNQ_PINCTRL_GRP(gpio0_20),
++	DEFINE_ZYNQ_PINCTRL_GRP(gpio0_21),
++	DEFINE_ZYNQ_PINCTRL_GRP(gpio0_22),
++	DEFINE_ZYNQ_PINCTRL_GRP(gpio0_23),
++	DEFINE_ZYNQ_PINCTRL_GRP(gpio0_24),
++	DEFINE_ZYNQ_PINCTRL_GRP(gpio0_25),
++	DEFINE_ZYNQ_PINCTRL_GRP(gpio0_26),
++	DEFINE_ZYNQ_PINCTRL_GRP(gpio0_27),
++	DEFINE_ZYNQ_PINCTRL_GRP(gpio0_28),
++	DEFINE_ZYNQ_PINCTRL_GRP(gpio0_29),
++	DEFINE_ZYNQ_PINCTRL_GRP(gpio0_30),
++	DEFINE_ZYNQ_PINCTRL_GRP(gpio0_31),
++	DEFINE_ZYNQ_PINCTRL_GRP(gpio0_32),
++	DEFINE_ZYNQ_PINCTRL_GRP(gpio0_33),
++	DEFINE_ZYNQ_PINCTRL_GRP(gpio0_34),
++	DEFINE_ZYNQ_PINCTRL_GRP(gpio0_35),
++	DEFINE_ZYNQ_PINCTRL_GRP(gpio0_36),
++	DEFINE_ZYNQ_PINCTRL_GRP(gpio0_37),
++	DEFINE_ZYNQ_PINCTRL_GRP(gpio0_38),
++	DEFINE_ZYNQ_PINCTRL_GRP(gpio0_39),
++	DEFINE_ZYNQ_PINCTRL_GRP(gpio0_40),
++	DEFINE_ZYNQ_PINCTRL_GRP(gpio0_41),
++	DEFINE_ZYNQ_PINCTRL_GRP(gpio0_42),
++	DEFINE_ZYNQ_PINCTRL_GRP(gpio0_43),
++	DEFINE_ZYNQ_PINCTRL_GRP(gpio0_44),
++	DEFINE_ZYNQ_PINCTRL_GRP(gpio0_45),
++	DEFINE_ZYNQ_PINCTRL_GRP(gpio0_46),
++	DEFINE_ZYNQ_PINCTRL_GRP(gpio0_47),
++	DEFINE_ZYNQ_PINCTRL_GRP(gpio0_48),
++	DEFINE_ZYNQ_PINCTRL_GRP(gpio0_49),
++	DEFINE_ZYNQ_PINCTRL_GRP(gpio0_50),
++	DEFINE_ZYNQ_PINCTRL_GRP(gpio0_51),
++	DEFINE_ZYNQ_PINCTRL_GRP(gpio0_52),
++	DEFINE_ZYNQ_PINCTRL_GRP(gpio0_53),
++	DEFINE_ZYNQ_PINCTRL_GRP(usb0_0),
++	DEFINE_ZYNQ_PINCTRL_GRP(usb1_0),
++};
++
++/* function groups */
++static const char * const ethernet0_groups[] =3D {"ethernet0_0_grp"};
++static const char * const ethernet1_groups[] =3D {"ethernet1_0_grp"};
++static const char * const usb0_groups[] =3D {"usb0_0_grp"};
++static const char * const usb1_groups[] =3D {"usb1_0_grp"};
++static const char * const mdio0_groups[] =3D {"mdio0_0_grp"};
++static const char * const mdio1_groups[] =3D {"mdio1_0_grp"};
++static const char * const qspi0_groups[] =3D {"qspi0_0_grp"};
++static const char * const qspi1_groups[] =3D {"qspi0_1_grp"};
++static const char * const qspi_fbclk_groups[] =3D {"qspi_fbclk_grp"};
++static const char * const qspi_cs1_groups[] =3D {"qspi_cs1_grp"};
++static const char * const spi0_groups[] =3D {"spi0_0_grp", "spi0_1_grp=
+",
++					   "spi0_2_grp"};
++static const char * const spi1_groups[] =3D {"spi1_0_grp", "spi1_1_grp=
+",
++					   "spi1_2_grp", "spi1_3_grp"};
++static const char * const sdio0_groups[] =3D {"sdio0_0_grp", "sdio0_1_=
+grp",
++					    "sdio0_2_grp"};
++static const char * const sdio1_groups[] =3D {"sdio1_0_grp", "sdio1_1_=
+grp",
++					    "sdio1_2_grp", "sdio1_3_grp"};
++static const char * const sdio0_pc_groups[] =3D {"gpio0_0_grp",
++		"gpio0_2_grp", "gpio0_4_grp", "gpio0_6_grp",
++		"gpio0_8_grp", "gpio0_10_grp", "gpio0_12_grp",
++		"gpio0_14_grp", "gpio0_16_grp", "gpio0_18_grp",
++		"gpio0_20_grp", "gpio0_22_grp", "gpio0_24_grp",
++		"gpio0_26_grp", "gpio0_28_grp", "gpio0_30_grp",
++		"gpio0_32_grp", "gpio0_34_grp", "gpio0_36_grp",
++		"gpio0_38_grp", "gpio0_40_grp", "gpio0_42_grp",
++		"gpio0_44_grp", "gpio0_46_grp", "gpio0_48_grp",
++		"gpio0_50_grp", "gpio0_52_grp"};
++static const char * const sdio1_pc_groups[] =3D {"gpio0_1_grp",
++		"gpio0_3_grp", "gpio0_5_grp", "gpio0_7_grp",
++		"gpio0_9_grp", "gpio0_11_grp", "gpio0_13_grp",
++		"gpio0_15_grp", "gpio0_17_grp", "gpio0_19_grp",
++		"gpio0_21_grp", "gpio0_23_grp", "gpio0_25_grp",
++		"gpio0_27_grp", "gpio0_29_grp", "gpio0_31_grp",
++		"gpio0_33_grp", "gpio0_35_grp", "gpio0_37_grp",
++		"gpio0_39_grp", "gpio0_41_grp", "gpio0_43_grp",
++		"gpio0_45_grp", "gpio0_47_grp", "gpio0_49_grp",
++		"gpio0_51_grp", "gpio0_53_grp"};
++static const char * const sdio0_cd_groups[] =3D {"gpio0_0_grp",
++		"gpio0_2_grp", "gpio0_4_grp", "gpio0_6_grp",
++		"gpio0_10_grp", "gpio0_12_grp",
++		"gpio0_14_grp", "gpio0_16_grp", "gpio0_18_grp",
++		"gpio0_20_grp", "gpio0_22_grp", "gpio0_24_grp",
++		"gpio0_26_grp", "gpio0_28_grp", "gpio0_30_grp",
++		"gpio0_32_grp", "gpio0_34_grp", "gpio0_36_grp",
++		"gpio0_38_grp", "gpio0_40_grp", "gpio0_42_grp",
++		"gpio0_44_grp", "gpio0_46_grp", "gpio0_48_grp",
++		"gpio0_50_grp", "gpio0_52_grp", "gpio0_1_grp",
++		"gpio0_3_grp", "gpio0_5_grp",
++		"gpio0_9_grp", "gpio0_11_grp", "gpio0_13_grp",
++		"gpio0_15_grp", "gpio0_17_grp", "gpio0_19_grp",
++		"gpio0_21_grp", "gpio0_23_grp", "gpio0_25_grp",
++		"gpio0_27_grp", "gpio0_29_grp", "gpio0_31_grp",
++		"gpio0_33_grp", "gpio0_35_grp", "gpio0_37_grp",
++		"gpio0_39_grp", "gpio0_41_grp", "gpio0_43_grp",
++		"gpio0_45_grp", "gpio0_47_grp", "gpio0_49_grp",
++		"gpio0_51_grp", "gpio0_53_grp", "sdio0_emio_cd_grp"};
++static const char * const sdio0_wp_groups[] =3D {"gpio0_0_grp",
++		"gpio0_2_grp", "gpio0_4_grp", "gpio0_6_grp",
++		"gpio0_10_grp", "gpio0_12_grp",
++		"gpio0_14_grp", "gpio0_16_grp", "gpio0_18_grp",
++		"gpio0_20_grp", "gpio0_22_grp", "gpio0_24_grp",
++		"gpio0_26_grp", "gpio0_28_grp", "gpio0_30_grp",
++		"gpio0_32_grp", "gpio0_34_grp", "gpio0_36_grp",
++		"gpio0_38_grp", "gpio0_40_grp", "gpio0_42_grp",
++		"gpio0_44_grp", "gpio0_46_grp", "gpio0_48_grp",
++		"gpio0_50_grp", "gpio0_52_grp", "gpio0_1_grp",
++		"gpio0_3_grp", "gpio0_5_grp",
++		"gpio0_9_grp", "gpio0_11_grp", "gpio0_13_grp",
++		"gpio0_15_grp", "gpio0_17_grp", "gpio0_19_grp",
++		"gpio0_21_grp", "gpio0_23_grp", "gpio0_25_grp",
++		"gpio0_27_grp", "gpio0_29_grp", "gpio0_31_grp",
++		"gpio0_33_grp", "gpio0_35_grp", "gpio0_37_grp",
++		"gpio0_39_grp", "gpio0_41_grp", "gpio0_43_grp",
++		"gpio0_45_grp", "gpio0_47_grp", "gpio0_49_grp",
++		"gpio0_51_grp", "gpio0_53_grp", "sdio0_emio_wp_grp"};
++static const char * const sdio1_cd_groups[] =3D {"gpio0_0_grp",
++		"gpio0_2_grp", "gpio0_4_grp", "gpio0_6_grp",
++		"gpio0_10_grp", "gpio0_12_grp",
++		"gpio0_14_grp", "gpio0_16_grp", "gpio0_18_grp",
++		"gpio0_20_grp", "gpio0_22_grp", "gpio0_24_grp",
++		"gpio0_26_grp", "gpio0_28_grp", "gpio0_30_grp",
++		"gpio0_32_grp", "gpio0_34_grp", "gpio0_36_grp",
++		"gpio0_38_grp", "gpio0_40_grp", "gpio0_42_grp",
++		"gpio0_44_grp", "gpio0_46_grp", "gpio0_48_grp",
++		"gpio0_50_grp", "gpio0_52_grp", "gpio0_1_grp",
++		"gpio0_3_grp", "gpio0_5_grp",
++		"gpio0_9_grp", "gpio0_11_grp", "gpio0_13_grp",
++		"gpio0_15_grp", "gpio0_17_grp", "gpio0_19_grp",
++		"gpio0_21_grp", "gpio0_23_grp", "gpio0_25_grp",
++		"gpio0_27_grp", "gpio0_29_grp", "gpio0_31_grp",
++		"gpio0_33_grp", "gpio0_35_grp", "gpio0_37_grp",
++		"gpio0_39_grp", "gpio0_41_grp", "gpio0_43_grp",
++		"gpio0_45_grp", "gpio0_47_grp", "gpio0_49_grp",
++		"gpio0_51_grp", "gpio0_53_grp", "sdio1_emio_cd_grp"};
++static const char * const sdio1_wp_groups[] =3D {"gpio0_0_grp",
++		"gpio0_2_grp", "gpio0_4_grp", "gpio0_6_grp",
++		"gpio0_10_grp", "gpio0_12_grp",
++		"gpio0_14_grp", "gpio0_16_grp", "gpio0_18_grp",
++		"gpio0_20_grp", "gpio0_22_grp", "gpio0_24_grp",
++		"gpio0_26_grp", "gpio0_28_grp", "gpio0_30_grp",
++		"gpio0_32_grp", "gpio0_34_grp", "gpio0_36_grp",
++		"gpio0_38_grp", "gpio0_40_grp", "gpio0_42_grp",
++		"gpio0_44_grp", "gpio0_46_grp", "gpio0_48_grp",
++		"gpio0_50_grp", "gpio0_52_grp", "gpio0_1_grp",
++		"gpio0_3_grp", "gpio0_5_grp",
++		"gpio0_9_grp", "gpio0_11_grp", "gpio0_13_grp",
++		"gpio0_15_grp", "gpio0_17_grp", "gpio0_19_grp",
++		"gpio0_21_grp", "gpio0_23_grp", "gpio0_25_grp",
++		"gpio0_27_grp", "gpio0_29_grp", "gpio0_31_grp",
++		"gpio0_33_grp", "gpio0_35_grp", "gpio0_37_grp",
++		"gpio0_39_grp", "gpio0_41_grp", "gpio0_43_grp",
++		"gpio0_45_grp", "gpio0_47_grp", "gpio0_49_grp",
++		"gpio0_51_grp", "gpio0_53_grp", "sdio1_emio_wp_grp"};
++static const char * const smc0_nor_groups[] =3D {"smc0_nor"};
++static const char * const smc0_nor_cs1_groups[] =3D {"smc0_nor_cs1_grp=
+"};
++static const char * const smc0_nor_addr25_groups[] =3D {"smc0_nor_addr=
+25_grp"};
++static const char * const smc0_nand_groups[] =3D {"smc0_nand"};
++static const char * const can0_groups[] =3D {"can0_0_grp", "can0_1_grp=
+",
++		"can0_2_grp", "can0_3_grp", "can0_4_grp", "can0_5_grp",
++		"can0_6_grp", "can0_7_grp", "can0_8_grp", "can0_9_grp",
++		"can0_10_grp"};
++static const char * const can1_groups[] =3D {"can1_0_grp", "can1_1_grp=
+",
++		"can1_2_grp", "can1_3_grp", "can1_4_grp", "can1_5_grp",
++		"can1_6_grp", "can1_7_grp", "can1_8_grp", "can1_9_grp",
++		"can1_10_grp", "can1_11_grp"};
++static const char * const uart0_groups[] =3D {"uart0_0_grp", "uart0_1_=
+grp",
++		"uart0_2_grp", "uart0_3_grp", "uart0_4_grp", "uart0_5_grp",
++		"uart0_6_grp", "uart0_7_grp", "uart0_8_grp", "uart0_9_grp",
++		"uart0_10_grp"};
++static const char * const uart1_groups[] =3D {"uart1_0_grp", "uart1_1_=
+grp",
++		"uart1_2_grp", "uart1_3_grp", "uart1_4_grp", "uart1_5_grp",
++		"uart1_6_grp", "uart1_7_grp", "uart1_8_grp", "uart1_9_grp",
++		"uart1_10_grp", "uart1_11_grp"};
++static const char * const i2c0_groups[] =3D {"i2c0_0_grp", "i2c0_1_grp=
+",
++		"i2c0_2_grp", "i2c0_3_grp", "i2c0_4_grp", "i2c0_5_grp",
++		"i2c0_6_grp", "i2c0_7_grp", "i2c0_8_grp", "i2c0_9_grp",
++		"i2c0_10_grp"};
++static const char * const i2c1_groups[] =3D {"i2c1_0_grp", "i2c1_1_grp=
+",
++		"i2c1_2_grp", "i2c1_3_grp", "i2c1_4_grp", "i2c1_5_grp",
++		"i2c1_6_grp", "i2c1_7_grp", "i2c1_8_grp", "i2c1_9_grp",
++		"i2c1_10_grp"};
++static const char * const ttc0_groups[] =3D {"ttc0_0_grp", "ttc0_1_grp=
+",
++					   "ttc0_2_grp"};
++static const char * const ttc1_groups[] =3D {"ttc1_0_grp", "ttc1_1_grp=
+",
++					   "ttc1_2_grp"};
++static const char * const swdt0_groups[] =3D {"swdt0_0_grp", "swdt0_1_=
+grp",
++		"swdt0_2_grp", "swdt0_3_grp", "swdt0_4_grp"};
++static const char * const gpio0_groups[] =3D {"gpio0_0_grp",
++		"gpio0_2_grp", "gpio0_4_grp", "gpio0_6_grp",
++		"gpio0_8_grp", "gpio0_10_grp", "gpio0_12_grp",
++		"gpio0_14_grp", "gpio0_16_grp", "gpio0_18_grp",
++		"gpio0_20_grp", "gpio0_22_grp", "gpio0_24_grp",
++		"gpio0_26_grp", "gpio0_28_grp", "gpio0_30_grp",
++		"gpio0_32_grp", "gpio0_34_grp", "gpio0_36_grp",
++		"gpio0_38_grp", "gpio0_40_grp", "gpio0_42_grp",
++		"gpio0_44_grp", "gpio0_46_grp", "gpio0_48_grp",
++		"gpio0_50_grp", "gpio0_52_grp", "gpio0_1_grp",
++		"gpio0_3_grp", "gpio0_5_grp", "gpio0_7_grp",
++		"gpio0_9_grp", "gpio0_11_grp", "gpio0_13_grp",
++		"gpio0_15_grp", "gpio0_17_grp", "gpio0_19_grp",
++		"gpio0_21_grp", "gpio0_23_grp", "gpio0_25_grp",
++		"gpio0_27_grp", "gpio0_29_grp", "gpio0_31_grp",
++		"gpio0_33_grp", "gpio0_35_grp", "gpio0_37_grp",
++		"gpio0_39_grp", "gpio0_41_grp", "gpio0_43_grp",
++		"gpio0_45_grp", "gpio0_47_grp", "gpio0_49_grp",
++		"gpio0_51_grp", "gpio0_53_grp"};
++
++#define DEFINE_ZYNQ_PINMUX_FUNCTION(fname, mval)	\
++	[ZYNQ_PMUX_##fname] =3D {				\
++		.name =3D #fname,				\
++		.groups =3D fname##_groups,		\
++		.ngroups =3D ARRAY_SIZE(fname##_groups),	\
++		.mux_val =3D mval,			\
++	}
++
++#define DEFINE_ZYNQ_PINMUX_FUNCTION_MUX(fname, mval, mux, mask, shift)=
+	\
++	[ZYNQ_PMUX_##fname] =3D {				\
++		.name =3D #fname,				\
++		.groups =3D fname##_groups,		\
++		.ngroups =3D ARRAY_SIZE(fname##_groups),	\
++		.mux_val =3D mval,			\
++		.mux_mask =3D mask,			\
++		.mux_shift =3D shift,			\
++	}
++
++#define ZYNQ_SDIO_WP_SHIFT	0
++#define ZYNQ_SDIO_WP_MASK	(0x3f << ZYNQ_SDIO_WP_SHIFT)
++#define ZYNQ_SDIO_CD_SHIFT	16
++#define ZYNQ_SDIO_CD_MASK	(0x3f << ZYNQ_SDIO_CD_SHIFT)
++
++static const struct zynq_pinmux_function zynq_pmux_functions[] =3D {
++	DEFINE_ZYNQ_PINMUX_FUNCTION(ethernet0, 1),
++	DEFINE_ZYNQ_PINMUX_FUNCTION(ethernet1, 1),
++	DEFINE_ZYNQ_PINMUX_FUNCTION(usb0, 2),
++	DEFINE_ZYNQ_PINMUX_FUNCTION(usb1, 2),
++	DEFINE_ZYNQ_PINMUX_FUNCTION(mdio0, 0x40),
++	DEFINE_ZYNQ_PINMUX_FUNCTION(mdio1, 0x50),
++	DEFINE_ZYNQ_PINMUX_FUNCTION(qspi0, 1),
++	DEFINE_ZYNQ_PINMUX_FUNCTION(qspi1, 1),
++	DEFINE_ZYNQ_PINMUX_FUNCTION(qspi_fbclk, 1),
++	DEFINE_ZYNQ_PINMUX_FUNCTION(qspi_cs1, 1),
++	DEFINE_ZYNQ_PINMUX_FUNCTION(spi0, 0x50),
++	DEFINE_ZYNQ_PINMUX_FUNCTION(spi1, 0x50),
++	DEFINE_ZYNQ_PINMUX_FUNCTION(sdio0, 0x40),
++	DEFINE_ZYNQ_PINMUX_FUNCTION(sdio0_pc, 0xc),
++	DEFINE_ZYNQ_PINMUX_FUNCTION_MUX(sdio0_wp, 0, 130, ZYNQ_SDIO_WP_MASK,
++					ZYNQ_SDIO_WP_SHIFT),
++	DEFINE_ZYNQ_PINMUX_FUNCTION_MUX(sdio0_cd, 0, 130, ZYNQ_SDIO_CD_MASK,
++					ZYNQ_SDIO_CD_SHIFT),
++	DEFINE_ZYNQ_PINMUX_FUNCTION(sdio1, 0x40),
++	DEFINE_ZYNQ_PINMUX_FUNCTION(sdio1_pc, 0xc),
++	DEFINE_ZYNQ_PINMUX_FUNCTION_MUX(sdio1_wp, 0, 134, ZYNQ_SDIO_WP_MASK,
++					ZYNQ_SDIO_WP_SHIFT),
++	DEFINE_ZYNQ_PINMUX_FUNCTION_MUX(sdio1_cd, 0, 134, ZYNQ_SDIO_CD_MASK,
++					ZYNQ_SDIO_CD_SHIFT),
++	DEFINE_ZYNQ_PINMUX_FUNCTION(smc0_nor, 4),
++	DEFINE_ZYNQ_PINMUX_FUNCTION(smc0_nor_cs1, 8),
++	DEFINE_ZYNQ_PINMUX_FUNCTION(smc0_nor_addr25, 4),
++	DEFINE_ZYNQ_PINMUX_FUNCTION(smc0_nand, 8),
++	DEFINE_ZYNQ_PINMUX_FUNCTION(can0, 0x10),
++	DEFINE_ZYNQ_PINMUX_FUNCTION(can1, 0x10),
++	DEFINE_ZYNQ_PINMUX_FUNCTION(uart0, 0x70),
++	DEFINE_ZYNQ_PINMUX_FUNCTION(uart1, 0x70),
++	DEFINE_ZYNQ_PINMUX_FUNCTION(i2c0, 0x20),
++	DEFINE_ZYNQ_PINMUX_FUNCTION(i2c1, 0x20),
++	DEFINE_ZYNQ_PINMUX_FUNCTION(ttc0, 0x60),
++	DEFINE_ZYNQ_PINMUX_FUNCTION(ttc1, 0x60),
++	DEFINE_ZYNQ_PINMUX_FUNCTION(swdt0, 0x30),
++	DEFINE_ZYNQ_PINMUX_FUNCTION(gpio0, 0),
++};
++
++
++/* pinctrl */
++static int zynq_pctrl_get_groups_count(struct pinctrl_dev *pctldev)
++{
++	struct zynq_pinctrl *pctrl =3D pinctrl_dev_get_drvdata(pctldev);
++
++	return pctrl->ngroups;
++}
++
++static const char *zynq_pctrl_get_group_name(struct pinctrl_dev *pctld=
+ev,
++					     unsigned selector)
++{
++	struct zynq_pinctrl *pctrl =3D pinctrl_dev_get_drvdata(pctldev);
++
++	return pctrl->groups[selector].name;
++}
++
++static int zynq_pctrl_get_group_pins(struct pinctrl_dev *pctldev,
++				     unsigned selector,
++				     const unsigned **pins,
++				     unsigned *num_pins)
++{
++	struct zynq_pinctrl *pctrl =3D pinctrl_dev_get_drvdata(pctldev);
++
++	*pins =3D pctrl->groups[selector].pins;
++	*num_pins =3D pctrl->groups[selector].npins;
++
++	return 0;
++}
++
++static const struct pinctrl_ops zynq_pctrl_ops =3D {
++	.get_groups_count =3D zynq_pctrl_get_groups_count,
++	.get_group_name =3D zynq_pctrl_get_group_name,
++	.get_group_pins =3D zynq_pctrl_get_group_pins,
++	.dt_node_to_map =3D pinconf_generic_dt_node_to_map_all,
++	.dt_free_map =3D pinctrl_utils_dt_free_map,
++};
++
++/* pinmux */
++static int zynq_pmux_get_functions_count(struct pinctrl_dev *pctldev)
++{
++	struct zynq_pinctrl *pctrl =3D pinctrl_dev_get_drvdata(pctldev);
++
++	return pctrl->nfuncs;
++}
++
++static const char *zynq_pmux_get_function_name(struct pinctrl_dev *pct=
+ldev,
++					       unsigned selector)
++{
++	struct zynq_pinctrl *pctrl =3D pinctrl_dev_get_drvdata(pctldev);
++
++	return pctrl->funcs[selector].name;
++}
++
++static int zynq_pmux_get_function_groups(struct pinctrl_dev *pctldev,
++					 unsigned selector,
++					 const char * const **groups,
++					 unsigned * const num_groups)
++{
++	struct zynq_pinctrl *pctrl =3D pinctrl_dev_get_drvdata(pctldev);
++
++	*groups =3D pctrl->funcs[selector].groups;
++	*num_groups =3D pctrl->funcs[selector].ngroups;
++	return 0;
++}
++
++static int zynq_pinmux_set_mux(struct pinctrl_dev *pctldev,
++			       unsigned function,
++			       unsigned group)
++{
++	int i, ret;
++	struct zynq_pinctrl *pctrl =3D pinctrl_dev_get_drvdata(pctldev);
++	const struct zynq_pctrl_group *pgrp =3D &pctrl->groups[group];
++	const struct zynq_pinmux_function *func =3D &pctrl->funcs[function];
++
++	/*
++	 * SD WP & CD are special. They have dedicated registers
++	 * to mux them in
++	 */
++	if (function =3D=3D ZYNQ_PMUX_sdio0_cd || function =3D=3D ZYNQ_PMUX_s=
+dio0_wp ||
++			function =3D=3D ZYNQ_PMUX_sdio1_cd ||
++			function =3D=3D ZYNQ_PMUX_sdio1_wp) {
++		u32 reg;
++
++		ret =3D regmap_read(pctrl->syscon,
++				  pctrl->pctrl_offset + func->mux, &reg);
++		if (ret)
++			return ret;
++
++		reg &=3D ~func->mux_mask;
++		reg |=3D pgrp->pins[0] << func->mux_shift;
++		ret =3D regmap_write(pctrl->syscon,
++				   pctrl->pctrl_offset + func->mux, reg);
++		if (ret)
++			return ret;
++	} else {
++		for (i =3D 0; i < pgrp->npins; i++) {
++			unsigned int pin =3D pgrp->pins[i];
++			u32 reg, addr =3D pctrl->pctrl_offset + (4 * pin);
++
++			ret =3D regmap_read(pctrl->syscon, addr, &reg);
++			if (ret)
++				return ret;
++
++			reg &=3D ~ZYNQ_PINMUX_MUX_MASK;
++			reg |=3D func->mux_val << ZYNQ_PINMUX_MUX_SHIFT;
++			ret =3D regmap_write(pctrl->syscon, addr, reg);
++			if (ret)
++				return ret;
++		}
++	}
++
++	return 0;
++}
++
++static const struct pinmux_ops zynq_pinmux_ops =3D {
++	.get_functions_count =3D zynq_pmux_get_functions_count,
++	.get_function_name =3D zynq_pmux_get_function_name,
++	.get_function_groups =3D zynq_pmux_get_function_groups,
++	.set_mux =3D zynq_pinmux_set_mux,
++};
++
++/* pinconfig */
++#define ZYNQ_PINCONF_TRISTATE		BIT(0)
++#define ZYNQ_PINCONF_SPEED		BIT(8)
++#define ZYNQ_PINCONF_PULLUP		BIT(12)
++#define ZYNQ_PINCONF_DISABLE_RECVR	BIT(13)
++
++#define ZYNQ_PINCONF_IOTYPE_SHIFT	9
++#define ZYNQ_PINCONF_IOTYPE_MASK	(7 << ZYNQ_PINCONF_IOTYPE_SHIFT)
++
++enum zynq_io_standards {
++	zynq_iostd_min,
++	zynq_iostd_lvcmos18,
++	zynq_iostd_lvcmos25,
++	zynq_iostd_lvcmos33,
++	zynq_iostd_hstl,
++	zynq_iostd_max
++};
++
++/**
++ * enum zynq_pin_config_param - possible pin configuration parameters
++ * @PIN_CONFIG_IOSTANDARD: if the pin can select an IO standard, the a=
+rgument to
++ *	this parameter (on a custom format) tells the driver which alternat=
+ive
++ *	IO standard to use.
++ */
++enum zynq_pin_config_param {
++	PIN_CONFIG_IOSTANDARD =3D PIN_CONFIG_END + 1,
++};
++
++static const struct pinconf_generic_dt_params zynq_dt_params[] =3D {
++	{"io-standard", PIN_CONFIG_IOSTANDARD, zynq_iostd_lvcmos18},
++};
++
++static const struct pin_config_item zynq_conf_items[ARRAY_SIZE(zynq_dt=
+_params)] =3D {
++	PCONFDUMP(PIN_CONFIG_IOSTANDARD, "IO-standard", NULL, true),
++};
++
++static unsigned int zynq_pinconf_iostd_get(u32 reg)
++{
++	return (reg & ZYNQ_PINCONF_IOTYPE_MASK) >> ZYNQ_PINCONF_IOTYPE_SHIFT;
++}
++
++static int zynq_pinconf_cfg_get(struct pinctrl_dev *pctldev,
++				unsigned pin,
++				unsigned long *config)
++{
++	u32 reg;
++	int ret;
++	unsigned int arg =3D 0;
++	unsigned int param =3D pinconf_to_config_param(*config);
++	struct zynq_pinctrl *pctrl =3D pinctrl_dev_get_drvdata(pctldev);
++
++	if (pin >=3D ZYNQ_NUM_MIOS)
++		return -ENOTSUPP;
++
++	ret =3D regmap_read(pctrl->syscon, pctrl->pctrl_offset + (4 * pin), &=
+reg);
++	if (ret)
++		return -EIO;
++
++	switch (param) {
++	case PIN_CONFIG_BIAS_PULL_UP:
++		if (!(reg & ZYNQ_PINCONF_PULLUP))
++			return -EINVAL;
++		arg =3D 1;
++		break;
++	case PIN_CONFIG_BIAS_HIGH_IMPEDANCE:
++		if (!(reg & ZYNQ_PINCONF_TRISTATE))
++			return -EINVAL;
++		arg =3D 1;
++		break;
++	case PIN_CONFIG_BIAS_DISABLE:
++		if (reg & ZYNQ_PINCONF_PULLUP || reg & ZYNQ_PINCONF_TRISTATE)
++			return -EINVAL;
++		break;
++	case PIN_CONFIG_SLEW_RATE:
++		arg =3D !!(reg & ZYNQ_PINCONF_SPEED);
++		break;
++	case PIN_CONFIG_LOW_POWER_MODE:
++	{
++		enum zynq_io_standards iostd =3D zynq_pinconf_iostd_get(reg);
++
++		if (iostd !=3D zynq_iostd_hstl)
++			return -EINVAL;
++		if (!(reg & ZYNQ_PINCONF_DISABLE_RECVR))
++			return -EINVAL;
++		arg =3D !!(reg & ZYNQ_PINCONF_DISABLE_RECVR);
++		break;
++	}
++	case PIN_CONFIG_IOSTANDARD:
++		arg =3D zynq_pinconf_iostd_get(reg);
++		break;
++	default:
++		return -ENOTSUPP;
++	}
++
++	*config =3D pinconf_to_config_packed(param, arg);
++	return 0;
++}
++
++static int zynq_pinconf_cfg_set(struct pinctrl_dev *pctldev,
++				unsigned pin,
++				unsigned long *configs,
++				unsigned num_configs)
++{
++	int i, ret;
++	u32 reg;
++	u32 pullup =3D 0;
++	u32 tristate =3D 0;
++	struct zynq_pinctrl *pctrl =3D pinctrl_dev_get_drvdata(pctldev);
++
++	if (pin >=3D ZYNQ_NUM_MIOS)
++		return -ENOTSUPP;
++
++	ret =3D regmap_read(pctrl->syscon, pctrl->pctrl_offset + (4 * pin), &=
+reg);
++	if (ret)
++		return -EIO;
++
++	for (i =3D 0; i < num_configs; i++) {
++		unsigned int param =3D pinconf_to_config_param(configs[i]);
++		unsigned int arg =3D pinconf_to_config_argument(configs[i]);
++
++		switch (param) {
++		case PIN_CONFIG_BIAS_PULL_UP:
++			pullup =3D ZYNQ_PINCONF_PULLUP;
++			break;
++		case PIN_CONFIG_BIAS_HIGH_IMPEDANCE:
++			tristate =3D ZYNQ_PINCONF_TRISTATE;
++			break;
++		case PIN_CONFIG_BIAS_DISABLE:
++			reg &=3D ~(ZYNQ_PINCONF_PULLUP | ZYNQ_PINCONF_TRISTATE);
++			break;
++		case PIN_CONFIG_SLEW_RATE:
++			if (arg)
++				reg |=3D ZYNQ_PINCONF_SPEED;
++			else
++				reg &=3D ~ZYNQ_PINCONF_SPEED;
++
++			break;
++		case PIN_CONFIG_IOSTANDARD:
++			if (arg <=3D zynq_iostd_min || arg >=3D zynq_iostd_max) {
++				dev_warn(pctldev->dev,
++					 "unsupported IO standard '%u'\n",
++					 param);
++				break;
++			}
++			reg &=3D ~ZYNQ_PINCONF_IOTYPE_MASK;
++			reg |=3D arg << ZYNQ_PINCONF_IOTYPE_SHIFT;
++			break;
++		case PIN_CONFIG_LOW_POWER_MODE:
++			if (arg)
++				reg |=3D ZYNQ_PINCONF_DISABLE_RECVR;
++			else
++				reg &=3D ~ZYNQ_PINCONF_DISABLE_RECVR;
++
++			break;
++		default:
++			dev_warn(pctldev->dev,
++				 "unsupported configuration parameter '%u'\n",
++				 param);
++			continue;
++		}
++	}
++
++	if (tristate || pullup) {
++		reg &=3D ~(ZYNQ_PINCONF_PULLUP | ZYNQ_PINCONF_TRISTATE);
++		reg |=3D tristate | pullup;
++	}
++
++	ret =3D regmap_write(pctrl->syscon, pctrl->pctrl_offset + (4 * pin), =
+reg);
++	if (ret)
++		return -EIO;
++
++	return 0;
++}
++
++static int zynq_pinconf_group_set(struct pinctrl_dev *pctldev,
++				  unsigned selector,
++				  unsigned long *configs,
++				  unsigned num_configs)
++{
++	int i, ret;
++	struct zynq_pinctrl *pctrl =3D pinctrl_dev_get_drvdata(pctldev);
++	const struct zynq_pctrl_group *pgrp =3D &pctrl->groups[selector];
++
++	for (i =3D 0; i < pgrp->npins; i++) {
++		ret =3D zynq_pinconf_cfg_set(pctldev, pgrp->pins[i], configs,
++					   num_configs);
++		if (ret)
++			return ret;
++	}
++
++	return 0;
++}
++
++static const struct pinconf_ops zynq_pinconf_ops =3D {
++	.is_generic =3D true,
++	.pin_config_get =3D zynq_pinconf_cfg_get,
++	.pin_config_set =3D zynq_pinconf_cfg_set,
++	.pin_config_group_set =3D zynq_pinconf_group_set,
++};
++
++static struct pinctrl_desc zynq_desc =3D {
++	.name =3D "zynq_pinctrl",
++	.pins =3D zynq_pins,
++	.npins =3D ARRAY_SIZE(zynq_pins),
++	.pctlops =3D &zynq_pctrl_ops,
++	.pmxops =3D &zynq_pinmux_ops,
++	.confops =3D &zynq_pinconf_ops,
++	.num_dt_params =3D ARRAY_SIZE(zynq_dt_params),
++	.params =3D zynq_dt_params,
++	.conf_items =3D zynq_conf_items,
++	.owner =3D THIS_MODULE,
++};
++
++static int zynq_pinctrl_probe(struct platform_device *pdev)
++
++{
++	struct resource *res;
++	struct zynq_pinctrl *pctrl;
++
++	pctrl =3D devm_kzalloc(&pdev->dev, sizeof(*pctrl), GFP_KERNEL);
++	if (!pctrl)
++		return -ENOMEM;
++
++	pctrl->syscon =3D syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
++							"syscon");
++	if (IS_ERR(pctrl->syscon)) {
++		dev_err(&pdev->dev, "unable to get syscon\n");
++		return PTR_ERR(pctrl->syscon);
++	}
++
++	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	if (!res) {
++		dev_err(&pdev->dev, "missing IO resource\n");
++		return -ENODEV;
++	}
++	pctrl->pctrl_offset =3D res->start;
++
++	pctrl->groups =3D zynq_pctrl_groups;
++	pctrl->ngroups =3D ARRAY_SIZE(zynq_pctrl_groups);
++	pctrl->funcs =3D zynq_pmux_functions;
++	pctrl->nfuncs =3D ARRAY_SIZE(zynq_pmux_functions);
++
++	pctrl->pctrl =3D pinctrl_register(&zynq_desc, &pdev->dev, pctrl);
++	if (!pctrl->pctrl)
++		return -ENOMEM;
++
++	platform_set_drvdata(pdev, pctrl);
++
++	dev_info(&pdev->dev, "zynq pinctrl initialized\n");
++
++	return 0;
++}
++
++int zynq_pinctrl_remove(struct platform_device *pdev)
++{
++	struct zynq_pinctrl *pctrl =3D platform_get_drvdata(pdev);
++
++	pinctrl_unregister(pctrl->pctrl);
++
++	return 0;
++}
++
++static const struct of_device_id zynq_pinctrl_of_match[] =3D {
++	{ .compatible =3D "xlnx,pinctrl-zynq" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, zynq_pinctrl_of_match);
++
++static struct platform_driver zynq_pinctrl_driver =3D {
++	.driver =3D {
++		.name =3D "zynq-pinctrl",
++		.of_match_table =3D zynq_pinctrl_of_match,
++	},
++	.probe =3D zynq_pinctrl_probe,
++	.remove =3D zynq_pinctrl_remove,
++};
++
++module_platform_driver(zynq_pinctrl_driver);
++
++MODULE_AUTHOR("S=C3=B6ren Brinkmann <soren.brinkmann@xilinx.com>");
++MODULE_DESCRIPTION("Xilinx Zynq pinctrl driver");
++MODULE_LICENSE("GPL");
+--=20
 2.2.1.1.gb42cc81
