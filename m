@@ -1,70 +1,42 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v2 2/4] Documentation: bindings: Add the regulator property
- to the sub-nodes AHCI bindings
-Date: Fri, 09 Jan 2015 16:46:43 +0100
-Message-ID: <54AFF7E3.4070506@redhat.com>
-References: <1420799989-10645-1-git-send-email-gregory.clement@free-electrons.com> <1420799989-10645-3-git-send-email-gregory.clement@free-electrons.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v8 1/4] doc: add bindings document for altera fpga manager
+Date: Fri, 9 Jan 2015 09:50:07 -0600
+Message-ID: <CAL_Jsq+pn5MW6veUivEL49FLSQxZOWRq0gU9Q6iD5jzurKK3rQ@mail.gmail.com>
+References: <1420575219-27061-1-git-send-email-atull@opensource.altera.com>
+ <1420575219-27061-2-git-send-email-atull@opensource.altera.com>
+ <CAL_JsqKRe2YquSmi01wa5b=Ctns+1ek-PdSHDLuxyCfKasTw5g@mail.gmail.com> <alpine.DEB.2.02.1501061627150.18120@linuxheads99>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1420799989-10645-3-git-send-email-gregory.clement@free-electrons.com>
+In-Reply-To: <alpine.DEB.2.02.1501061627150.18120@linuxheads99>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>, Tejun Heo <tj@kernel.org>, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: =?windows-1252?Q?Antoine_T=E9nart?= <antoine.tenart@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+To: atull <atull@opensource.altera.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, "H. Peter Anvin" <hpa@zytor.com>, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Randy Dunlap <rdunlap@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, iws@ovro.caltech.edu, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Pavel Machek <pavel@denx.de>, Mark Brown <broonie@kernel.org>, Philip Balister <philip@balister.org>, Alessandro Rubini <rubini@gnudd.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Jason Cooper <jason@lakedaemon.net>, Kyle Teske <kyle.teske@ni.com>, Nicolas Pitre <nico@linaro.org>, Felipe Balbi <balbi>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 09-01-15 11:39, Gregory CLEMENT wrote:
-> It is now possible to use a regulator property for each port of the
-> AHCI controller.
+On Tue, Jan 6, 2015 at 4:34 PM, atull <atull@opensource.altera.com> wrote:
+> On Tue, 6 Jan 2015, Rob Herring wrote:
 >
-> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
-> ---
->   Documentation/devicetree/bindings/ata/ahci-platform.txt | 9 ++++++---
->   1 file changed, 6 insertions(+), 3 deletions(-)
+>> On Tue, Jan 6, 2015 at 2:13 PM,  <atull@opensource.altera.com> wrote:
+>> > From: Alan Tull <atull@opensource.altera.com>
+>> >
+>> > New bindings document for Altera fpga manager.
+>> >
+>> > Signed-off-by: Alan Tull <atull@opensource.altera.com>
+>>
+>> Acked-by: Rob Herring <robh@kernel.org>
+>>
+>> Like I said, this binding doesn't look like it will change other than
+>> perhaps additional optional properties, so it can go into
+>> Documentation. Perhaps .../bindings/fpga/. I'm happy to merge this
+>> thru DT tree if you want.
+>>
+>> Rob
 >
-> diff --git a/Documentation/devicetree/bindings/ata/ahci-platform.txt b/Documentation/devicetree/bindings/ata/ahci-platform.txt
-> index 4ab09f2202d4..87416d71c758 100644
-> --- a/Documentation/devicetree/bindings/ata/ahci-platform.txt
-> +++ b/Documentation/devicetree/bindings/ata/ahci-platform.txt
-> @@ -37,9 +37,10 @@ Required properties when using sub-nodes:
+> Thanks, that would be great.  Yes ../bindings/fpga sounds good.
 >
->
->   Sub-nodes required properties:
-> -- reg               : the port number
-> -- phys              : reference to the SATA PHY node
-> -
-> +- reg					: the port number
-> +And at least one of the following properties:
-> +- phys              	: reference to the SATA PHY node
-> +- target-port<n>-supply	: regulator for SATA target power for port <n>
->
->   Examples:
->           sata@ffe08000 {
-> @@ -68,10 +69,12 @@ With sub-nodes:
->   		sata0: sata-port@0 {
->   			reg = <0>;
->   			phys = <&sata_phy 0>;
-> +			target-port0-supply = <&reg_sata0>;
->   		};
->
+> Do you want me to send you a patch with the updated path?
 
-I'm sorry, but I've to NAK this, I did not follow the regulator discussion.,
-thinking that it was just about the use of some utility function vs diy or
-some such, I had no idea this would impact the dt-binding.
+Yes, please.
 
-The -port%d- bit is completely unnecessary from a dt pov. Devicetree is
-supposed to be OS agnostic, we cannot make the dt-binding ugly just because
-the regulator subsys in Linux does not provide the necessary functionality.
-
-I'm afraid you will have to get back to the regulator subsys people and tell
-them that we really need an of_regulator_get, so that we can tell the
-regulator subsys we want a regulator from a specific of_node.
-
-Please CC me when you re-open the discussion with the regulator people.
-
-Regards,
-
-Hans
+Rob
