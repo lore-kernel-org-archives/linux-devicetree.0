@@ -1,477 +1,590 @@
-From: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v4 6/7] ARM: zynq: DT: Add pinctrl information
-Date: Fri,  9 Jan 2015 07:43:50 -0800
-Message-ID: <1420818231-13451-7-git-send-email-soren.brinkmann@xilinx.com>
+From: Soren Brinkmann <soren.brinkmann@xilinx.com>
+Subject: [PATCH v4 2/7] pinctrl: pinconf-generic: Allow driver to specify DT params
+Date: Fri,  9 Jan 2015 07:43:46 -0800
+Message-ID: <1420818231-13451-3-git-send-email-soren.brinkmann@xilinx.com>
 References: <1420818231-13451-1-git-send-email-soren.brinkmann@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1420818231-13451-1-git-send-email-soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alessandro Rubini <rubini-9wsNiZum9E8@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1420818231-13451-1-git-send-email-soren.brinkmann@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
+Cc: =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann@xilinx.com>, Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Alessandro Rubini <rubini@unipv.it>, Heiko Stuebner <heiko@sntech.de>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-rockchip@lists.infradead.org, linux-sh@vger.kernel.org, "Ivan T. Ivanov" <iivanov@mm-sol.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Beniamino Galvani <b.galvani@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add pinctrl descriptions to the zc702 and zc706 device trees.
+Additionally to the generic DT parameters, allow drivers to provide
+driver-specific DT parameters to be used with the generic parser
+infrastructure.
 
-Signed-off-by: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Tested-by: Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
+To achieve this 'struct pinctrl_desc' is extended to pass custom pincon=
+f
+option to the core. In order to pass this kind of information, the
+related data structures - 'struct pinconf_generic_dt_params',
+'pin_config_item' - are moved from pinconf internals to the
+pinconf-generic header.
+
+Additionally pinconfg-generic is refactored to not only iterate over th=
+e
+generic pinconf parameters but also take the parameters into account
+that are provided through the driver's 'struct pinctrl_desc'.
+In particular 'pinconf_generic_parse_dt_config()' and
+'pinconf_generic_dump' helpers are split into two parts each. In order
+to have a more generic helper that can be used to process the generic
+parameters as well as the driver-specific ones.
+
+Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
+Tested-by: Andreas F=C3=A4rber <afaerber@suse.de>
 ---
-Changes since v1:
- - remove 'pinctrl-' prefix for pinctrl sub-nodes
- - separate config and mux nodes
-
-Changes since RFC v2:
- - add pinconf properties to zc702 mdio node
- - remove arguments from bias-related props
-
-Changes since RFC v1:
- - separate DT changes into their own patch
+v2:
+ - fix typo
+ - add missing documentation for @conf_items member in struct
+ - rebase to pinctrl/devel: conflict in abx500
+ - rename _pinconf_generic_dump() to pinconf_generic_dump_one()
+ - removed '_' from _parse_dt_cfg()
+ - removed BUG_ONs, error condition is handled in if statements
+ - removed pinconf_generic_dump_group() & pinconf_generic_dump_pin
+   helpers
+   - fixed up corresponding call sites
+   - renamed pinconf_generic_dump() to pinconf_generic_dump_pins()
+   - added kernel-doc to pinconf_generic_dump_pins()
+ - add kernel-doc
+ - more verbose commit message
 ---
- arch/arm/boot/dts/zynq-7000.dtsi |   8 +-
- arch/arm/boot/dts/zynq-zc702.dts | 181 +++++++++++++++++++++++++++++++=
-++++++++
- arch/arm/boot/dts/zynq-zc706.dts | 152 +++++++++++++++++++++++++++++++=
-+
- 3 files changed, 340 insertions(+), 1 deletion(-)
+ drivers/pinctrl/nomadik/pinctrl-abx500.c |   2 +-
+ drivers/pinctrl/pinconf-generic.c        | 182 +++++++++++++++++------=
+--------
+ drivers/pinctrl/pinconf.c                |   4 +-
+ drivers/pinctrl/pinconf.h                |  22 ++--
+ drivers/pinctrl/pinctrl-rockchip.c       |   2 +-
+ drivers/pinctrl/pinctrl-tz1090-pdc.c     |   2 +-
+ drivers/pinctrl/pinctrl-tz1090.c         |   2 +-
+ drivers/pinctrl/sh-pfc/pinctrl.c         |   2 +-
+ include/linux/pinctrl/pinconf-generic.h  |  18 +++
+ include/linux/pinctrl/pinctrl.h          |   9 ++
+ 10 files changed, 141 insertions(+), 104 deletions(-)
 
-diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-=
-7000.dtsi
-index ee3e5d675b05..9a19a319b0f1 100644
---- a/arch/arm/boot/dts/zynq-7000.dtsi
-+++ b/arch/arm/boot/dts/zynq-7000.dtsi
-@@ -237,7 +237,7 @@
- 		slcr: slcr@f8000000 {
- 			#address-cells =3D <1>;
- 			#size-cells =3D <1>;
--			compatible =3D "xlnx,zynq-slcr", "syscon";
-+			compatible =3D "xlnx,zynq-slcr", "syscon", "simple-bus";
- 			reg =3D <0xF8000000 0x1000>;
- 			ranges;
- 			clkc: clkc@100 {
-@@ -257,6 +257,12 @@
- 						"dbg_trc", "dbg_apb";
- 				reg =3D <0x100 0x100>;
- 			};
+diff --git a/drivers/pinctrl/nomadik/pinctrl-abx500.c b/drivers/pinctrl=
+/nomadik/pinctrl-abx500.c
+index 3d6d97228523..1806b24faa14 100644
+--- a/drivers/pinctrl/nomadik/pinctrl-abx500.c
++++ b/drivers/pinctrl/nomadik/pinctrl-abx500.c
+@@ -914,7 +914,7 @@ static int abx500_dt_subnode_to_map(struct pinctrl_=
+dev *pctldev,
+ 		}
+ 	}
+=20
+-	ret =3D pinconf_generic_parse_dt_config(np, &configs, &nconfigs);
++	ret =3D pinconf_generic_parse_dt_config(np, pctldev, &configs, &nconf=
+igs);
+ 	if (nconfigs) {
+ 		const char *gpio_name;
+ 		const char *pin;
+diff --git a/drivers/pinctrl/pinconf-generic.c b/drivers/pinctrl/pincon=
+f-generic.c
+index 21b3d90ebb2d..e0886665b70a 100644
+--- a/drivers/pinctrl/pinconf-generic.c
++++ b/drivers/pinctrl/pinconf-generic.c
+@@ -27,17 +27,6 @@
+ #include "pinctrl-utils.h"
+=20
+ #ifdef CONFIG_DEBUG_FS
+-
+-struct pin_config_item {
+-	const enum pin_config_param param;
+-	const char * const display;
+-	const char * const format;
+-	bool has_arg;
+-};
+-
+-#define PCONFDUMP(a, b, c, d) { .param =3D a, .display =3D b, .format =
+=3D c, \
+-				.has_arg =3D d }
+-
+ static const struct pin_config_item conf_items[] =3D {
+ 	PCONFDUMP(PIN_CONFIG_BIAS_DISABLE, "input bias disabled", NULL, false=
+),
+ 	PCONFDUMP(PIN_CONFIG_BIAS_HIGH_IMPEDANCE, "input bias high impedance"=
+, NULL, false),
+@@ -60,22 +49,25 @@ static const struct pin_config_item conf_items[] =3D=
+ {
+ 	PCONFDUMP(PIN_CONFIG_OUTPUT, "pin output", "level", true),
+ };
+=20
+-void pinconf_generic_dump_pin(struct pinctrl_dev *pctldev,
+-			      struct seq_file *s, unsigned pin)
++static void pinconf_generic_dump_one(struct pinctrl_dev *pctldev,
++				     struct seq_file *s, const char *gname,
++				     unsigned pin,
++				     const struct pin_config_item *items,
++				     int nitems)
+ {
+-	const struct pinconf_ops *ops =3D pctldev->desc->confops;
+ 	int i;
+=20
+-	if (!ops->is_generic)
+-		return;
+-
+-	for (i =3D 0; i < ARRAY_SIZE(conf_items); i++) {
++	for (i =3D 0; i < nitems; i++) {
+ 		unsigned long config;
+ 		int ret;
+=20
+ 		/* We want to check out this parameter */
+-		config =3D pinconf_to_config_packed(conf_items[i].param, 0);
+-		ret =3D pin_config_get_for_pin(pctldev, pin, &config);
++		config =3D pinconf_to_config_packed(items[i].param, 0);
++		if (gname)
++			ret =3D pin_config_group_get(dev_name(pctldev->dev),
++						   gname, &config);
++		else
++			ret =3D pin_config_get_for_pin(pctldev, pin, &config);
+ 		/* These are legal errors */
+ 		if (ret =3D=3D -EINVAL || ret =3D=3D -ENOTSUPP)
+ 			continue;
+@@ -85,56 +77,46 @@ void pinconf_generic_dump_pin(struct pinctrl_dev *p=
+ctldev,
+ 		}
+ 		/* Space between multiple configs */
+ 		seq_puts(s, " ");
+-		seq_puts(s, conf_items[i].display);
++		seq_puts(s, items[i].display);
+ 		/* Print unit if available */
+-		if (conf_items[i].has_arg) {
++		if (items[i].has_arg) {
+ 			seq_printf(s, " (%u",
+ 				   pinconf_to_config_argument(config));
+-			if (conf_items[i].format)
+-				seq_printf(s, " %s)", conf_items[i].format);
++			if (items[i].format)
++				seq_printf(s, " %s)", items[i].format);
+ 			else
+ 				seq_puts(s, ")");
+ 		}
+ 	}
+ }
+=20
+-void pinconf_generic_dump_group(struct pinctrl_dev *pctldev,
+-			      struct seq_file *s, const char *gname)
++/**
++ * pinconf_generic_dump_pins - Print information about pin or group of=
+ pins
++ * @pctldev:	Pincontrol device
++ * @s:		File to print to
++ * @gname:	Group name specifying pins
++ * @pin:	Pin number specyfying pin
++ *
++ * Print the pinconf configuration for the requested pin(s) to @s. Pin=
+s can be
++ * specified either by pin using @pin or by group using @gname. Only o=
+ne needs
++ * to be specified the other can be NULL/0.
++ */
++void pinconf_generic_dump_pins(struct pinctrl_dev *pctldev, struct seq=
+_file *s,
++			       const char *gname, unsigned pin)
+ {
+ 	const struct pinconf_ops *ops =3D pctldev->desc->confops;
+-	int i;
+=20
+ 	if (!ops->is_generic)
+ 		return;
+=20
+-	for (i =3D 0; i < ARRAY_SIZE(conf_items); i++) {
+-		unsigned long config;
+-		int ret;
+-
+-		/* We want to check out this parameter */
+-		config =3D pinconf_to_config_packed(conf_items[i].param, 0);
+-		ret =3D pin_config_group_get(dev_name(pctldev->dev), gname,
+-					   &config);
+-		/* These are legal errors */
+-		if (ret =3D=3D -EINVAL || ret =3D=3D -ENOTSUPP)
+-			continue;
+-		if (ret) {
+-			seq_printf(s, "ERROR READING CONFIG SETTING %d ", i);
+-			continue;
+-		}
+-		/* Space between multiple configs */
+-		seq_puts(s, " ");
+-		seq_puts(s, conf_items[i].display);
+-		/* Print unit if available */
+-		if (conf_items[i].has_arg) {
+-			seq_printf(s, " (%u",
+-				   pinconf_to_config_argument(config));
+-			if (conf_items[i].format)
+-				seq_printf(s, " %s)", conf_items[i].format);
+-			else
+-				seq_puts(s, ")");
+-		}
+-	}
++	/* generic parameters */
++	pinconf_generic_dump_one(pctldev, s, gname, pin, conf_items,
++				 ARRAY_SIZE(conf_items));
++	/* driver-specific parameters */
++	if (pctldev->desc->num_dt_params && pctldev->desc->conf_items)
++		pinconf_generic_dump_one(pctldev, s, gname, pin,
++					 pctldev->desc->conf_items,
++					 pctldev->desc->num_dt_params);
+ }
+=20
+ void pinconf_generic_dump_config(struct pinctrl_dev *pctldev,
+@@ -148,17 +130,21 @@ void pinconf_generic_dump_config(struct pinctrl_d=
+ev *pctldev,
+ 		seq_printf(s, "%s: 0x%x", conf_items[i].display,
+ 			   pinconf_to_config_argument(config));
+ 	}
 +
-+			pinctrl0: pinctrl@700 {
-+				compatible =3D "xlnx,pinctrl-zynq";
-+				reg =3D <0x700 0x200>;
-+				syscon =3D <&slcr>;
-+			};
- 		};
++	if (!pctldev->desc->num_dt_params || !pctldev->desc->conf_items)
++		return;
++
++	for (i =3D 0; i < pctldev->desc->num_dt_params; i++) {
++		if (pinconf_to_config_param(config) !=3D pctldev->desc->conf_items[i=
+].param)
++			continue;
++		seq_printf(s, "%s: 0x%x", pctldev->desc->conf_items[i].display,
++			   pinconf_to_config_argument(config));
++	}
+ }
+ EXPORT_SYMBOL_GPL(pinconf_generic_dump_config);
+ #endif
 =20
- 		dmac_s: dmac@f8003000 {
-diff --git a/arch/arm/boot/dts/zynq-zc702.dts b/arch/arm/boot/dts/zynq-=
-zc702.dts
-index 280f02dd4ddc..4995412f116f 100644
---- a/arch/arm/boot/dts/zynq-zc702.dts
-+++ b/arch/arm/boot/dts/zynq-zc702.dts
-@@ -40,6 +40,8 @@
-=20
- &can0 {
- 	status =3D "okay";
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_can0_default>;
+ #ifdef CONFIG_OF
+-struct pinconf_generic_dt_params {
+-	const char * const property;
+-	enum pin_config_param param;
+-	u32 default_value;
+-};
+-
+ static const struct pinconf_generic_dt_params dt_params[] =3D {
+ 	{ "bias-disable", PIN_CONFIG_BIAS_DISABLE, 0 },
+ 	{ "bias-high-impedance", PIN_CONFIG_BIAS_HIGH_IMPEDANCE, 0 },
+@@ -184,6 +170,47 @@ static const struct pinconf_generic_dt_params dt_p=
+arams[] =3D {
  };
 =20
- &clkc {
-@@ -50,15 +52,24 @@
- 	status =3D "okay";
- 	phy-mode =3D "rgmii-id";
- 	phy-handle =3D <&ethernet_phy>;
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_gem0_default>;
+ /**
++ * parse_dt_cfg - Parse DT pinconf parameters
++ * @np:	DT node
++ * @params:	Array of describing DT parameters
++ * @count:	Number of entries in @params
++ * @cfg:	Array of parsed config options
++ * @ncfg:	Number of entries in @cfg
++ *
++ * Parse the config options described in @params from @np and puts the=
+ result
++ * in @cfg. @cfg does not need to be empty, entries are added begginin=
+g at
++ * @ncfg. @ncfg is updated to reflect the number of entries after pars=
+ing. @cfg
++ * needs to have enough memory allocated to hold all possible entries.
++ */
++static void parse_dt_cfg(struct device_node *np,
++			 const struct pinconf_generic_dt_params *params,
++			 unsigned int count, unsigned long *cfg,
++			 unsigned int *ncfg)
++{
++	int i;
++
++	for (i =3D 0; i < count; i++) {
++		u32 val;
++		int ret;
++		const struct pinconf_generic_dt_params *par =3D &params[i];
++
++		ret =3D of_property_read_u32(np, par->property, &val);
++
++		/* property not found */
++		if (ret =3D=3D -EINVAL)
++			continue;
++
++		/* use default value, when no value is specified */
++		if (ret)
++			val =3D par->default_value;
++
++		pr_debug("found %s with value %u\n", par->property, val);
++		cfg[*ncfg] =3D pinconf_to_config_packed(par->param, val);
++		(*ncfg)++;
++	}
++}
++
++/**
+  * pinconf_generic_parse_dt_config()
+  * parse the config properties into generic pinconfig values.
+  * @np: node containing the pinconfig properties
+@@ -191,39 +218,29 @@ static const struct pinconf_generic_dt_params dt_=
+params[] =3D {
+  * @nconfigs: umber of configurations
+  */
+ int pinconf_generic_parse_dt_config(struct device_node *np,
++				    struct pinctrl_dev *pctldev,
+ 				    unsigned long **configs,
+ 				    unsigned int *nconfigs)
+ {
+ 	unsigned long *cfg;
+-	unsigned int ncfg =3D 0;
++	unsigned int max_cfg, ncfg =3D 0;
+ 	int ret;
+-	int i;
+-	u32 val;
 =20
- 	ethernet_phy: ethernet-phy@7 {
- 		reg =3D <7>;
- 	};
+ 	if (!np)
+ 		return -EINVAL;
+=20
+ 	/* allocate a temporary array big enough to hold one of each option *=
+/
+-	cfg =3D kzalloc(sizeof(*cfg) * ARRAY_SIZE(dt_params), GFP_KERNEL);
++	max_cfg =3D ARRAY_SIZE(dt_params);
++	if (pctldev)
++		max_cfg +=3D pctldev->desc->num_dt_params;
++	cfg =3D kcalloc(max_cfg, sizeof(*cfg), GFP_KERNEL);
+ 	if (!cfg)
+ 		return -ENOMEM;
+=20
+-	for (i =3D 0; i < ARRAY_SIZE(dt_params); i++) {
+-		const struct pinconf_generic_dt_params *par =3D &dt_params[i];
+-		ret =3D of_property_read_u32(np, par->property, &val);
+-
+-		/* property not found */
+-		if (ret =3D=3D -EINVAL)
+-			continue;
+-
+-		/* use default value, when no value is specified */
+-		if (ret)
+-			val =3D par->default_value;
+-
+-		pr_debug("found %s with value %u\n", par->property, val);
+-		cfg[ncfg] =3D pinconf_to_config_packed(par->param, val);
+-		ncfg++;
+-	}
++	parse_dt_cfg(np, dt_params, ARRAY_SIZE(dt_params), cfg, &ncfg);
++	if (pctldev && pctldev->desc->num_dt_params && pctldev->desc->params)
++		parse_dt_cfg(np, pctldev->desc->params,
++			      pctldev->desc->num_dt_params, cfg, &ncfg);
+=20
+ 	ret =3D 0;
+=20
+@@ -274,7 +291,8 @@ int pinconf_generic_dt_subnode_to_map(struct pinctr=
+l_dev *pctldev,
+ 		function =3D NULL;
+ 	}
+=20
+-	ret =3D pinconf_generic_parse_dt_config(np, &configs, &num_configs);
++	ret =3D pinconf_generic_parse_dt_config(np, pctldev, &configs,
++					      &num_configs);
+ 	if (ret < 0) {
+ 		dev_err(dev, "could not parse node property\n");
+ 		return ret;
+diff --git a/drivers/pinctrl/pinconf.c b/drivers/pinctrl/pinconf.c
+index 8bfa0643e5dc..1fc09dc20199 100644
+--- a/drivers/pinctrl/pinconf.c
++++ b/drivers/pinctrl/pinconf.c
+@@ -288,7 +288,7 @@ static void pinconf_dump_pin(struct pinctrl_dev *pc=
+tldev,
+ 	const struct pinconf_ops *ops =3D pctldev->desc->confops;
+=20
+ 	/* no-op when not using generic pin config */
+-	pinconf_generic_dump_pin(pctldev, s, pin);
++	pinconf_generic_dump_pins(pctldev, s, NULL, pin);
+ 	if (ops && ops->pin_config_dbg_show)
+ 		ops->pin_config_dbg_show(pctldev, s, pin);
+ }
+@@ -333,7 +333,7 @@ static void pinconf_dump_group(struct pinctrl_dev *=
+pctldev,
+ 	const struct pinconf_ops *ops =3D pctldev->desc->confops;
+=20
+ 	/* no-op when not using generic pin config */
+-	pinconf_generic_dump_group(pctldev, s, gname);
++	pinconf_generic_dump_pins(pctldev, s, gname, 0);
+ 	if (ops && ops->pin_config_group_dbg_show)
+ 		ops->pin_config_group_dbg_show(pctldev, s, selector);
+ }
+diff --git a/drivers/pinctrl/pinconf.h b/drivers/pinctrl/pinconf.h
+index a4a5417e1413..55c75780b3b2 100644
+--- a/drivers/pinctrl/pinconf.h
++++ b/drivers/pinctrl/pinconf.h
+@@ -92,26 +92,17 @@ static inline void pinconf_init_device_debugfs(stru=
+ct dentry *devroot,
+=20
+ #if defined(CONFIG_GENERIC_PINCONF) && defined(CONFIG_DEBUG_FS)
+=20
+-void pinconf_generic_dump_pin(struct pinctrl_dev *pctldev,
+-			      struct seq_file *s, unsigned pin);
+-
+-void pinconf_generic_dump_group(struct pinctrl_dev *pctldev,
+-			      struct seq_file *s, const char *gname);
++void pinconf_generic_dump_pins(struct pinctrl_dev *pctldev,
++			       struct seq_file *s, const char *gname,
++			       unsigned pin);
+=20
+ void pinconf_generic_dump_config(struct pinctrl_dev *pctldev,
+ 				 struct seq_file *s, unsigned long config);
+ #else
+=20
+-static inline void pinconf_generic_dump_pin(struct pinctrl_dev *pctlde=
+v,
+-					    struct seq_file *s,
+-					    unsigned pin)
+-{
+-	return;
+-}
+-
+-static inline void pinconf_generic_dump_group(struct pinctrl_dev *pctl=
+dev,
+-					      struct seq_file *s,
+-					      const char *gname)
++static inline void pinconf_generic_dump_pins(struct pinctrl_dev *pctld=
+ev,
++					     struct seq_file *s,
++					     const char *gname, unsigned pin)
+ {
+ 	return;
+ }
+@@ -126,6 +117,7 @@ static inline void pinconf_generic_dump_config(stru=
+ct pinctrl_dev *pctldev,
+=20
+ #if defined(CONFIG_GENERIC_PINCONF) && defined(CONFIG_OF)
+ int pinconf_generic_parse_dt_config(struct device_node *np,
++				    struct pinctrl_dev *pctldev,
+ 				    unsigned long **configs,
+ 				    unsigned int *nconfigs);
+ #endif
+diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinct=
+rl-rockchip.c
+index ba74f0aa60c7..7625f333ab07 100644
+--- a/drivers/pinctrl/pinctrl-rockchip.c
++++ b/drivers/pinctrl/pinctrl-rockchip.c
+@@ -1140,7 +1140,7 @@ static int rockchip_pinctrl_parse_groups(struct d=
+evice_node *np,
+ 			return -EINVAL;
+=20
+ 		np_config =3D of_find_node_by_phandle(be32_to_cpup(phandle));
+-		ret =3D pinconf_generic_parse_dt_config(np_config,
++		ret =3D pinconf_generic_parse_dt_config(np_config, NULL,
+ 				&grp->data[j].configs, &grp->data[j].nconfigs);
+ 		if (ret)
+ 			return ret;
+diff --git a/drivers/pinctrl/pinctrl-tz1090-pdc.c b/drivers/pinctrl/pin=
+ctrl-tz1090-pdc.c
+index 146e48a9b839..fab6aafa6a9f 100644
+--- a/drivers/pinctrl/pinctrl-tz1090-pdc.c
++++ b/drivers/pinctrl/pinctrl-tz1090-pdc.c
+@@ -415,7 +415,7 @@ static int tz1090_pdc_pinctrl_dt_subnode_to_map(str=
+uct device *dev,
+ 		function =3D NULL;
+ 	}
+=20
+-	ret =3D pinconf_generic_parse_dt_config(np, &configs, &num_configs);
++	ret =3D pinconf_generic_parse_dt_config(np, NULL, &configs, &num_conf=
+igs);
+ 	if (ret)
+ 		return ret;
+=20
+diff --git a/drivers/pinctrl/pinctrl-tz1090.c b/drivers/pinctrl/pinctrl=
+-tz1090.c
+index df8cb1e5b7b4..8bd73075f9dd 100644
+--- a/drivers/pinctrl/pinctrl-tz1090.c
++++ b/drivers/pinctrl/pinctrl-tz1090.c
+@@ -1131,7 +1131,7 @@ static int tz1090_pinctrl_dt_subnode_to_map(struc=
+t device *dev,
+ 		function =3D NULL;
+ 	}
+=20
+-	ret =3D pinconf_generic_parse_dt_config(np, &configs, &num_configs);
++	ret =3D pinconf_generic_parse_dt_config(np, NULL, &configs, &num_conf=
+igs);
+ 	if (ret)
+ 		return ret;
+=20
+diff --git a/drivers/pinctrl/sh-pfc/pinctrl.c b/drivers/pinctrl/sh-pfc/=
+pinctrl.c
+index 910deaefa0ac..072e7c62cab7 100644
+--- a/drivers/pinctrl/sh-pfc/pinctrl.c
++++ b/drivers/pinctrl/sh-pfc/pinctrl.c
+@@ -122,7 +122,7 @@ static int sh_pfc_dt_subnode_to_map(struct device *=
+dev, struct device_node *np,
+ 		return ret;
+ 	}
+=20
+-	ret =3D pinconf_generic_parse_dt_config(np, &configs, &num_configs);
++	ret =3D pinconf_generic_parse_dt_config(np, NULL, &configs, &num_conf=
+igs);
+ 	if (ret < 0)
+ 		return ret;
+=20
+diff --git a/include/linux/pinctrl/pinconf-generic.h b/include/linux/pi=
+nctrl/pinconf-generic.h
+index 83c89f5ab705..342409f7f3ec 100644
+--- a/include/linux/pinctrl/pinconf-generic.h
++++ b/include/linux/pinctrl/pinconf-generic.h
+@@ -115,6 +115,18 @@ enum pin_config_param {
+ 	PIN_CONFIG_END =3D 0x7FFF,
  };
 =20
-+&gpio0 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_gpio0_default>;
++#ifdef CONFIG_DEBUG_FS
++#define PCONFDUMP(a, b, c, d) { .param =3D a, .display =3D b, .format =
+=3D c, \
++				.has_arg =3D d }
++
++struct pin_config_item {
++	const enum pin_config_param param;
++	const char * const display;
++	const char * const format;
++	bool has_arg;
++};
++#endif /* CONFIG_DEBUG_FS */
++
+ /*
+  * Helpful configuration macro to be used in tables etc.
+  */
+@@ -150,6 +162,12 @@ static inline unsigned long pinconf_to_config_pack=
+ed(enum pin_config_param param
+ struct pinctrl_dev;
+ struct pinctrl_map;
+=20
++struct pinconf_generic_dt_params {
++	const char * const property;
++	enum pin_config_param param;
++	u32 default_value;
 +};
 +
- &i2c0 {
- 	status =3D "okay";
- 	clock-frequency =3D <400000>;
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_i2c0_default>;
+ int pinconf_generic_dt_subnode_to_map(struct pinctrl_dev *pctldev,
+ 		struct device_node *np, struct pinctrl_map **map,
+ 		unsigned *reserved_maps, unsigned *num_maps,
+diff --git a/include/linux/pinctrl/pinctrl.h b/include/linux/pinctrl/pi=
+nctrl.h
+index cc8e1aff0e28..c58b3e11ba8e 100644
+--- a/include/linux/pinctrl/pinctrl.h
++++ b/include/linux/pinctrl/pinctrl.h
+@@ -24,6 +24,7 @@ struct pinctrl_dev;
+ struct pinctrl_map;
+ struct pinmux_ops;
+ struct pinconf_ops;
++struct pin_config_item;
+ struct gpio_chip;
+ struct device_node;
 =20
- 	i2cswitch@74 {
- 		compatible =3D "nxp,pca9548";
-@@ -132,10 +143,180 @@
- 	};
+@@ -117,6 +118,9 @@ struct pinctrl_ops {
+  * @confops: pin config operations vtable, if you support pin configur=
+ation in
+  *	your driver
+  * @owner: module providing the pin controller, used for refcounting
++ * @num_dt_params: Number of driver-specific DT parameters
++ * @params: List of DT parameters
++ * @conf_items: Information how to print @params in debugfs
+  */
+ struct pinctrl_desc {
+ 	const char *name;
+@@ -126,6 +130,11 @@ struct pinctrl_desc {
+ 	const struct pinmux_ops *pmxops;
+ 	const struct pinconf_ops *confops;
+ 	struct module *owner;
++#if defined(CONFIG_GENERIC_PINCONF) && defined(CONFIG_OF)
++	unsigned int num_dt_params;
++	const struct pinconf_generic_dt_params *params;
++	const struct pin_config_item *conf_items;
++#endif
  };
 =20
-+&pinctrl0 {
-+	pinctrl_can0_default: can0-default {
-+		mux {
-+			function =3D "can0";
-+			groups =3D "can0_9_grp";
-+		};
-+
-+		conf {
-+			groups =3D "can0_9_grp";
-+			slew-rate =3D <0>;
-+			io-standard =3D <1>;
-+		};
-+
-+		conf-rx {
-+			pins =3D "MIO46";
-+			bias-high-impedance;
-+		};
-+
-+		conf-tx {
-+			pins =3D "MIO47";
-+			bias-disable;
-+		};
-+	};
-+
-+	pinctrl_gem0_default: gem0-default {
-+		mux {
-+			function =3D "ethernet0";
-+			groups =3D "ethernet0_0_grp";
-+		};
-+
-+		conf {
-+			groups =3D "ethernet0_0_grp";
-+			slew-rate =3D <0>;
-+			io-standard =3D <4>;
-+		};
-+
-+		conf-rx {
-+			pins =3D "MIO22", "MIO23", "MIO24", "MIO25", "MIO26", "MIO27";
-+			bias-high-impedance;
-+			low-power-disable;
-+		};
-+
-+		conf-tx {
-+			pins =3D "MIO16", "MIO17", "MIO18", "MIO19", "MIO20", "MIO21";
-+			bias-disable;
-+			low-power-enable;
-+		};
-+
-+		mux-mdio {
-+			function =3D "mdio0";
-+			groups =3D "mdio0_0_grp";
-+		};
-+
-+		conf-mdio {
-+			groups =3D "mdio0_0_grp";
-+			slew-rate =3D <0>;
-+			io-standard =3D <1>;
-+			bias-disable;
-+		};
-+	};
-+
-+	pinctrl_gpio0_default: gpio0-default {
-+		mux {
-+			function =3D "gpio0";
-+			groups =3D "gpio0_7_grp", "gpio0_8_grp", "gpio0_9_grp",
-+				 "gpio0_10_grp", "gpio0_11_grp", "gpio0_12_grp",
-+				 "gpio0_13_grp", "gpio0_14_grp";
-+		};
-+
-+		conf {
-+			groups =3D "gpio0_7_grp", "gpio0_8_grp", "gpio0_9_grp",
-+				 "gpio0_10_grp", "gpio0_11_grp", "gpio0_12_grp",
-+				 "gpio0_13_grp", "gpio0_14_grp";
-+			slew-rate =3D <0>;
-+			io-standard =3D <1>;
-+		};
-+
-+		conf-pull-up {
-+			pins =3D "MIO9", "MIO10", "MIO11", "MIO12", "MIO13", "MIO14";
-+			bias-pull-up;
-+		};
-+
-+		conf-pull-none {
-+			pins =3D "MIO7", "MIO8";
-+			bias-disable;
-+		};
-+	};
-+
-+	pinctrl_i2c0_default: i2c0-default {
-+		mux {
-+			groups =3D "i2c0_10_grp";
-+			function =3D "i2c0";
-+		};
-+
-+		conf {
-+			groups =3D "i2c0_10_grp";
-+			bias-pull-up;
-+			slew-rate =3D <0>;
-+			io-standard =3D <1>;
-+		};
-+	};
-+
-+	pinctrl_sdhci0_default: sdhci0-default {
-+		mux {
-+			groups =3D "sdio0_2_grp";
-+			function =3D "sdio0";
-+		};
-+
-+		conf {
-+			groups =3D "sdio0_2_grp";
-+			slew-rate =3D <0>;
-+			io-standard =3D <1>;
-+			bias-disable;
-+		};
-+
-+		mux-cd {
-+			groups =3D "gpio0_0_grp";
-+			function =3D "sdio0_cd";
-+		};
-+
-+		conf-cd {
-+			groups =3D "gpio0_0_grp";
-+			bias-high-impedance;
-+			bias-pull-up;
-+			slew-rate =3D <0>;
-+			io-standard =3D <1>;
-+		};
-+
-+		mux-wp {
-+			groups =3D "gpio0_15_grp";
-+			function =3D "sdio0_wp";
-+		};
-+
-+		conf-wp {
-+			groups =3D "gpio0_15_grp";
-+			bias-high-impedance;
-+			bias-pull-up;
-+			slew-rate =3D <0>;
-+			io-standard =3D <1>;
-+		};
-+	};
-+
-+	pinctrl_uart1_default: uart1-default {
-+		mux {
-+			groups =3D "uart1_10_grp";
-+			function =3D "uart1";
-+		};
-+
-+		conf {
-+			groups =3D "uart1_10_grp";
-+			slew-rate =3D <0>;
-+			io-standard =3D <1>;
-+		};
-+
-+		conf-rx {
-+			pins =3D "MIO49";
-+			bias-high-impedance;
-+		};
-+
-+		conf-tx {
-+			pins =3D "MIO48";
-+			bias-disable =3D <0>;
-+		};
-+	};
-+};
-+
- &sdhci0 {
- 	status =3D "okay";
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_sdhci0_default>;
- };
-=20
- &uart1 {
- 	status =3D "okay";
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_uart1_default>;
- };
-diff --git a/arch/arm/boot/dts/zynq-zc706.dts b/arch/arm/boot/dts/zynq-=
-zc706.dts
-index 34f7812d2ee8..af590d2bb046 100644
---- a/arch/arm/boot/dts/zynq-zc706.dts
-+++ b/arch/arm/boot/dts/zynq-zc706.dts
-@@ -37,15 +37,24 @@
- 	status =3D "okay";
- 	phy-mode =3D "rgmii-id";
- 	phy-handle =3D <&ethernet_phy>;
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_gem0_default>;
-=20
- 	ethernet_phy: ethernet-phy@7 {
- 		reg =3D <7>;
- 	};
- };
-=20
-+&gpio0 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_gpio0_default>;
-+};
-+
- &i2c0 {
- 	status =3D "okay";
- 	clock-frequency =3D <400000>;
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_i2c0_default>;
-=20
- 	i2cswitch@74 {
- 		compatible =3D "nxp,pca9548";
-@@ -111,10 +120,153 @@
- 	};
- };
-=20
-+&pinctrl0 {
-+	pinctrl_gem0_default: gem0-default {
-+		mux {
-+			function =3D "ethernet0";
-+			groups =3D "ethernet0_0_grp";
-+		};
-+
-+		conf {
-+			groups =3D "ethernet0_0_grp";
-+			slew-rate =3D <0>;
-+			io-standard =3D <4>;
-+		};
-+
-+		conf-rx {
-+			pins =3D "MIO22", "MIO23", "MIO24", "MIO25", "MIO26", "MIO27";
-+			bias-high-impedance;
-+			low-power-disable;
-+		};
-+
-+		conf-tx {
-+			pins =3D "MIO16", "MIO17", "MIO18", "MIO19", "MIO20", "MIO21";
-+			low-power-enable;
-+			bias-disable;
-+		};
-+
-+		mux-mdio {
-+			function =3D "mdio0";
-+			groups =3D "mdio0_0_grp";
-+		};
-+
-+		conf-mdio {
-+			groups =3D "mdio0_0_grp";
-+			slew-rate =3D <0>;
-+			io-standard =3D <1>;
-+			bias-disable;
-+		};
-+	};
-+
-+	pinctrl_gpio0_default: gpio0-default {
-+		mux {
-+			function =3D "gpio0";
-+			groups =3D "gpio0_7_grp", "gpio0_46_grp", "gpio0_47_grp";
-+		};
-+
-+		conf {
-+			groups =3D "gpio0_7_grp", "gpio0_46_grp", "gpio0_47_grp";
-+			slew-rate =3D <0>;
-+			io-standard =3D <1>;
-+		};
-+
-+		conf-pull-up {
-+			pins =3D "MIO46", "MIO47";
-+			bias-pull-up;
-+		};
-+
-+		conf-pull-none {
-+			pins =3D "MIO7";
-+			bias-disable;
-+		};
-+	};
-+
-+	pinctrl_i2c0_default: i2c0-default {
-+		mux {
-+			groups =3D "i2c0_10_grp";
-+			function =3D "i2c0";
-+		};
-+
-+		conf {
-+			groups =3D "i2c0_10_grp";
-+			bias-pull-up;
-+			slew-rate =3D <0>;
-+			io-standard =3D <1>;
-+		};
-+	};
-+
-+	pinctrl_sdhci0_default: sdhci0-default {
-+		mux {
-+			groups =3D "sdio0_2_grp";
-+			function =3D "sdio0";
-+		};
-+
-+		conf {
-+			groups =3D "sdio0_2_grp";
-+			slew-rate =3D <0>;
-+			io-standard =3D <1>;
-+			bias-disable;
-+		};
-+
-+		mux-cd {
-+			groups =3D "gpio0_14_grp";
-+			function =3D "sdio0_cd";
-+		};
-+
-+		conf-cd {
-+			groups =3D "gpio0_14_grp";
-+			bias-high-impedance;
-+			bias-pull-up;
-+			slew-rate =3D <0>;
-+			io-standard =3D <1>;
-+		};
-+
-+		mux-wp {
-+			groups =3D "gpio0_15_grp";
-+			function =3D "sdio0_wp";
-+		};
-+
-+		conf-wp {
-+			groups =3D "gpio0_15_grp";
-+			bias-high-impedance;
-+			bias-pull-up;
-+			slew-rate =3D <0>;
-+			io-standard =3D <1>;
-+		};
-+	};
-+
-+	pinctrl_uart1_default: uart1-default {
-+		mux {
-+			groups =3D "uart1_10_grp";
-+			function =3D "uart1";
-+		};
-+
-+		conf {
-+			groups =3D "uart1_10_grp";
-+			slew-rate =3D <0>;
-+			io-standard =3D <1>;
-+		};
-+
-+		conf-rx {
-+			pins =3D "MIO49";
-+			bias-high-impedance;
-+		};
-+
-+		conf-tx {
-+			pins =3D "MIO48";
-+			bias-disable;
-+		};
-+	};
-+};
-+
- &sdhci0 {
- 	status =3D "okay";
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_sdhci0_default>;
- };
-=20
- &uart1 {
- 	status =3D "okay";
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_uart1_default>;
- };
+ /* External interface to pin controller */
 --=20
 2.2.1.1.gb42cc81
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
