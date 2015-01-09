@@ -1,251 +1,248 @@
-From: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V2] (gpio-fan): Add thermal control hooks
-Date: Fri, 9 Jan 2015 07:46:01 -0400
-Message-ID: <20150109114559.GA9510@developer>
-References: <1420740303-12529-1-git-send-email-nm@ti.com>
+From: Vivek Gautam <gautamvivek1987@gmail.com>
+Subject: Re: [PATCH 2/4] clk: samsung: exynos7: add clocks for SPI block
+Date: Fri, 9 Jan 2015 17:18:45 +0530
+Message-ID: <CAFp+6iFzawDY1wFA-2AQUHFCk54WsaCJAOkrqvX9t7b-XugY8g@mail.gmail.com>
+References: <1418995427-7712-1-git-send-email-padma.v@samsung.com>
+	<1418995427-7712-3-git-send-email-padma.v@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="k1lZvvs/B4yU6o8G"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1420740303-12529-1-git-send-email-nm-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1418995427-7712-3-git-send-email-padma.v@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Padmavathi Venna <padma.v@samsung.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, mturquette@linaro.org, Tomasz Figa <tomasz.figa@gmail.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Padma,
 
---k1lZvvs/B4yU6o8G
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jan 08, 2015 at 12:05:03PM -0600, Nishanth Menon wrote:
-> Allow gpio-fan to be used as thermal cooling device for platforms that
-> use GPIO maps to control fans.
->=20
-> As part of this change, we make the shutdown and remove logic the same
-> as well.
->=20
-> Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-
-For the thermal part:
-
-Acked-by: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-
+On Fri, Dec 19, 2014 at 6:53 PM, Padmavathi Venna <padma.v@samsung.com> wrote:
+> Add clock support for 5 SPI channels.
+>
+> Signed-off-by: Padmavathi Venna <padma.v@samsung.com>
 > ---
->=20
-> Changes since v1:
-> 	- review comments incorporated (hopefully correct)
-> 	- checkpatch verified
-> 	- retested :).
->=20
-> V1: https://patchwork.kernel.org/patch/5587061/
->=20
->  .../devicetree/bindings/gpio/gpio-fan.txt          |   13 +++
->  drivers/hwmon/gpio-fan.c                           |   83 ++++++++++++++=
-++++--
->  2 files changed, 89 insertions(+), 7 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-fan.txt b/Docume=
-ntation/devicetree/bindings/gpio/gpio-fan.txt
-> index 2dd457a3469a..43ca2a45b862 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio-fan.txt
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-fan.txt
-> @@ -11,6 +11,9 @@ Required properties:
->  Optional properties:
->  - alarm-gpios: This pin going active indicates something is wrong with
->    the fan, and a udev event will be fired.
-> +- cooling-cells: If used as a cooling device, must be <2>
-> +  Also see: Documentation/devicetree/bindings/thermal/thermal.txt
-> +  min and max states are derived from the speed-map of the fan.
-> =20
->  Examples:
-> =20
-> @@ -23,3 +26,13 @@ Examples:
->  				      6000 2>;
->  		alarm-gpios =3D <&gpio1 15 1>;
->  	};
-> +	gpio_fan_cool: gpio_fan {
-> +		compatible =3D "gpio-fan";
-> +		gpios =3D <&gpio2 14 1
-> +			 &gpio2 13 1>;
-> +		gpio-fan,speed-map =3D	<0    0>,
-> +					<3000 1>,
-> +					<6000 2>;
-> +		alarm-gpios =3D <&gpio2 15 1>;
-> +		#cooling-cells =3D <2>; /* min followed by max */
-> +	};
-> diff --git a/drivers/hwmon/gpio-fan.c b/drivers/hwmon/gpio-fan.c
-> index 36abf814b8c7..20232c11b579 100644
-> --- a/drivers/hwmon/gpio-fan.c
-> +++ b/drivers/hwmon/gpio-fan.c
-> @@ -34,10 +34,13 @@
->  #include <linux/of.h>
->  #include <linux/of_platform.h>
->  #include <linux/of_gpio.h>
-> +#include <linux/thermal.h>
-> =20
->  struct gpio_fan_data {
->  	struct platform_device	*pdev;
->  	struct device		*hwmon_dev;
-> +	/* Cooling device if any */
-> +	struct thermal_cooling_device *cdev;
->  	struct mutex		lock; /* lock GPIOs operations. */
->  	int			num_ctrl;
->  	unsigned		*ctrl;
-> @@ -387,6 +390,53 @@ static int fan_ctrl_init(struct gpio_fan_data *fan_d=
-ata,
->  	return 0;
->  }
-> =20
-> +static int gpio_fan_get_max_state(struct thermal_cooling_device *cdev,
-> +				  unsigned long *state)
-> +{
-> +	struct gpio_fan_data *fan_data =3D cdev->devdata;
+>  drivers/clk/samsung/clk-exynos7.c       |   73 +++++++++++++++++++++++++++++++
+>  include/dt-bindings/clock/exynos7-clk.h |   22 ++++++++-
+>  2 files changed, 93 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/clk/samsung/clk-exynos7.c b/drivers/clk/samsung/clk-exynos7.c
+> index 954f9a0..cf5e50e 100644
+> --- a/drivers/clk/samsung/clk-exynos7.c
+> +++ b/drivers/clk/samsung/clk-exynos7.c
+> @@ -166,9 +166,15 @@ CLK_OF_DECLARE(exynos7_clk_topc, "samsung,exynos7-clock-topc",
+>  #define MUX_SEL_TOP00                  0x0200
+>  #define MUX_SEL_TOP01                  0x0204
+>  #define MUX_SEL_TOP03                  0x020C
+> +#define MUX_SEL_TOP0_PERIC1            0x0234
+> +#define MUX_SEL_TOP0_PERIC2            0x0238
+>  #define MUX_SEL_TOP0_PERIC3            0x023C
+>  #define DIV_TOP03                      0x060C
+> +#define DIV_TOP0_PERIC1                        0x0634
+> +#define DIV_TOP0_PERIC2                        0x0638
+>  #define DIV_TOP0_PERIC3                        0x063C
+> +#define ENABLE_SCLK_TOP0_PERIC1                0x0A34
+> +#define ENABLE_SCLK_TOP0_PERIC2                0x0A38
+>  #define ENABLE_SCLK_TOP0_PERIC3                0x0A3C
+>
+>  /* List of parent clocks for Muxes in CMU_TOP0 */
+> @@ -194,9 +200,15 @@ static unsigned long top0_clk_regs[] __initdata = {
+>         MUX_SEL_TOP00,
+>         MUX_SEL_TOP01,
+>         MUX_SEL_TOP03,
+> +       MUX_SEL_TOP0_PERIC1,
+> +       MUX_SEL_TOP0_PERIC2,
+>         MUX_SEL_TOP0_PERIC3,
+>         DIV_TOP03,
+> +       DIV_TOP0_PERIC1,
+> +       DIV_TOP0_PERIC2,
+>         DIV_TOP0_PERIC3,
+> +       ENABLE_SCLK_TOP0_PERIC1,
+> +       ENABLE_SCLK_TOP0_PERIC2,
+>         ENABLE_SCLK_TOP0_PERIC3,
+>  };
+>
+> @@ -218,10 +230,16 @@ static struct samsung_mux_clock top0_mux_clks[] __initdata = {
+>         MUX(0, "mout_aclk_peric1_66", mout_top0_group1, MUX_SEL_TOP03, 12, 2),
+>         MUX(0, "mout_aclk_peric0_66", mout_top0_group1, MUX_SEL_TOP03, 20, 2),
+>
+> +       MUX(0, "mout_sclk_spi1", mout_top0_group1, MUX_SEL_TOP0_PERIC1, 8, 2),
+> +       MUX(0, "mout_sclk_spi0", mout_top0_group1, MUX_SEL_TOP0_PERIC1, 20, 2),
 > +
-> +	if (!fan_data)
-> +		return -EINVAL;
+> +       MUX(0, "mout_sclk_spi3", mout_top0_group1, MUX_SEL_TOP0_PERIC2, 8, 2),
+> +       MUX(0, "mout_sclk_spi2", mout_top0_group1, MUX_SEL_TOP0_PERIC2, 20, 2),
+>         MUX(0, "mout_sclk_uart3", mout_top0_group1, MUX_SEL_TOP0_PERIC3, 4, 2),
+>         MUX(0, "mout_sclk_uart2", mout_top0_group1, MUX_SEL_TOP0_PERIC3, 8, 2),
+>         MUX(0, "mout_sclk_uart1", mout_top0_group1, MUX_SEL_TOP0_PERIC3, 12, 2),
+>         MUX(0, "mout_sclk_uart0", mout_top0_group1, MUX_SEL_TOP0_PERIC3, 16, 2),
+> +       MUX(0, "mout_sclk_spi4", mout_top0_group1, MUX_SEL_TOP0_PERIC3, 20, 2),
+>  };
+>
+>  static struct samsung_div_clock top0_div_clks[] __initdata = {
+> @@ -230,13 +248,29 @@ static struct samsung_div_clock top0_div_clks[] __initdata = {
+>         DIV(DOUT_ACLK_PERIC0, "dout_aclk_peric0_66", "mout_aclk_peric0_66",
+>                 DIV_TOP03, 20, 6),
+>
+> +       DIV(0, "dout_sclk_spi1", "mout_sclk_spi1", DIV_TOP0_PERIC1, 8, 12),
+> +       DIV(0, "dout_sclk_spi0", "mout_sclk_spi0", DIV_TOP0_PERIC1, 20, 12),
 > +
-> +	*state =3D fan_data->num_speed - 1;
-> +	return 0;
-> +}
+> +       DIV(0, "dout_sclk_spi3", "mout_sclk_spi3", DIV_TOP0_PERIC2, 8, 12),
+> +       DIV(0, "dout_sclk_spi2", "mout_sclk_spi2", DIV_TOP0_PERIC2, 20, 12),
 > +
-> +static int gpio_fan_get_cur_state(struct thermal_cooling_device *cdev,
-> +				  unsigned long *state)
-> +{
-> +	struct gpio_fan_data *fan_data =3D cdev->devdata;
-> +	int r;
+>         DIV(0, "dout_sclk_uart3", "mout_sclk_uart3", DIV_TOP0_PERIC3, 4, 4),
+>         DIV(0, "dout_sclk_uart2", "mout_sclk_uart2", DIV_TOP0_PERIC3, 8, 4),
+>         DIV(0, "dout_sclk_uart1", "mout_sclk_uart1", DIV_TOP0_PERIC3, 12, 4),
+>         DIV(0, "dout_sclk_uart0", "mout_sclk_uart0", DIV_TOP0_PERIC3, 16, 4),
+> +       DIV(0, "dout_sclk_spi4", "mout_sclk_spi4", DIV_TOP0_PERIC3, 20, 12),
+>  };
+>
+>  static struct samsung_gate_clock top0_gate_clks[] __initdata = {
+> +       GATE(CLK_SCLK_SPI1, "sclk_spi1", "dout_sclk_spi1",
+> +               ENABLE_SCLK_TOP0_PERIC1, 8, CLK_SET_RATE_PARENT, 0),
+> +       GATE(CLK_SCLK_SPI0, "sclk_spi0", "dout_sclk_spi0",
+> +               ENABLE_SCLK_TOP0_PERIC1, 20, CLK_SET_RATE_PARENT, 0),
 > +
-> +	if (!fan_data)
-> +		return -EINVAL;
-> +
-> +	r =3D get_fan_speed_index(fan_data);
-> +	if (r < 0)
-> +		return r;
-> +
-> +	*state =3D r;
-> +	return 0;
-> +}
-> +
-> +static int gpio_fan_set_cur_state(struct thermal_cooling_device *cdev,
-> +				  unsigned long state)
-> +{
-> +	struct gpio_fan_data *fan_data =3D cdev->devdata;
-> +
-> +	if (!fan_data)
-> +		return -EINVAL;
-> +
-> +	set_fan_speed(fan_data, state);
-> +	return 0;
-> +}
-> +
-> +static const struct thermal_cooling_device_ops gpio_fan_cool_ops =3D {
-> +	.get_max_state =3D gpio_fan_get_max_state,
-> +	.get_cur_state =3D gpio_fan_get_cur_state,
-> +	.set_cur_state =3D gpio_fan_set_cur_state,
-> +};
-> +
->  #ifdef CONFIG_OF_GPIO
->  /*
->   * Translate OpenFirmware node properties into platform_data
-> @@ -495,6 +545,11 @@ static int gpio_fan_probe(struct platform_device *pd=
-ev)
->  	struct gpio_fan_data *fan_data;
->  	struct gpio_fan_platform_data *pdata =3D dev_get_platdata(&pdev->dev);
-> =20
-> +	fan_data =3D devm_kzalloc(&pdev->dev, sizeof(struct gpio_fan_data),
-> +				GFP_KERNEL);
-> +	if (!fan_data)
-> +		return -ENOMEM;
-> +
->  #ifdef CONFIG_OF_GPIO
->  	if (!pdata) {
->  		pdata =3D devm_kzalloc(&pdev->dev,
-> @@ -506,17 +561,20 @@ static int gpio_fan_probe(struct platform_device *p=
-dev)
->  		err =3D gpio_fan_get_of_pdata(&pdev->dev, pdata);
->  		if (err)
->  			return err;
-> +		/* Optional cooling device register for Device tree platforms */
-> +		fan_data->cdev =3D
-> +			thermal_of_cooling_device_register(pdev->dev.of_node,
-> +							   "gpio-fan", fan_data,
-> +							   &gpio_fan_cool_ops);
->  	}
->  #else /* CONFIG_OF_GPIO */
->  	if (!pdata)
->  		return -EINVAL;
-> +	/* Optional cooling device register for non Device tree platforms */
-> +	fan_data->cdev =3D thermal_cooling_device_register("gpio-fan", fan_data,
-> +							 &gpio_fan_cool_ops);
->  #endif /* CONFIG_OF_GPIO */
-> =20
-> -	fan_data =3D devm_kzalloc(&pdev->dev, sizeof(struct gpio_fan_data),
-> -				GFP_KERNEL);
-> -	if (!fan_data)
-> -		return -ENOMEM;
-> -
->  	fan_data->pdev =3D pdev;
->  	platform_set_drvdata(pdev, fan_data);
->  	mutex_init(&fan_data->lock);
-> @@ -550,12 +608,22 @@ static int gpio_fan_probe(struct platform_device *p=
-dev)
->  	return 0;
->  }
-> =20
-> -static void gpio_fan_shutdown(struct platform_device *pdev)
-> +static int gpio_fan_remove(struct platform_device *pdev)
->  {
-> -	struct gpio_fan_data *fan_data =3D dev_get_drvdata(&pdev->dev);
-> +	struct gpio_fan_data *fan_data =3D platform_get_drvdata(pdev);
-> +
-> +	if (!IS_ERR(fan_data->cdev))
-> +		thermal_cooling_device_unregister(fan_data->cdev);
-> =20
->  	if (fan_data->ctrl)
->  		set_fan_speed(fan_data, 0);
-> +
-> +	return 0;
-> +}
-> +
-> +static void gpio_fan_shutdown(struct platform_device *pdev)
-> +{
-> +	gpio_fan_remove(pdev);
->  }
-> =20
->  #ifdef CONFIG_PM_SLEEP
-> @@ -589,6 +657,7 @@ static SIMPLE_DEV_PM_OPS(gpio_fan_pm, gpio_fan_suspen=
-d, gpio_fan_resume);
-> =20
->  static struct platform_driver gpio_fan_driver =3D {
->  	.probe		=3D gpio_fan_probe,
-> +	.remove		=3D gpio_fan_remove,
->  	.shutdown	=3D gpio_fan_shutdown,
->  	.driver	=3D {
->  		.name	=3D "gpio-fan",
-> --=20
-> 1.7.9.5
->=20
+> +       GATE(CLK_SCLK_SPI3, "sclk_spi3", "dout_sclk_spi3",
+> +               ENABLE_SCLK_TOP0_PERIC2, 8, CLK_SET_RATE_PARENT, 0),
+> +       GATE(CLK_SCLK_SPI2, "sclk_spi2", "dout_sclk_spi2",
+> +               ENABLE_SCLK_TOP0_PERIC2, 20, CLK_SET_RATE_PARENT, 0),
+>         GATE(CLK_SCLK_UART3, "sclk_uart3", "dout_sclk_uart3",
+>                 ENABLE_SCLK_TOP0_PERIC3, 4, 0, 0),
+>         GATE(CLK_SCLK_UART2, "sclk_uart2", "dout_sclk_uart2",
+> @@ -245,6 +279,8 @@ static struct samsung_gate_clock top0_gate_clks[] __initdata = {
+>                 ENABLE_SCLK_TOP0_PERIC3, 12, 0, 0),
+>         GATE(CLK_SCLK_UART0, "sclk_uart0", "dout_sclk_uart0",
+>                 ENABLE_SCLK_TOP0_PERIC3, 16, 0, 0),
+> +       GATE(CLK_SCLK_SPI4, "sclk_spi4", "dout_sclk_spi4",
+> +               ENABLE_SCLK_TOP0_PERIC3, 20, CLK_SET_RATE_PARENT, 0),
+>  };
+>
+>  static struct samsung_fixed_factor_clock top0_fixed_factor_clks[] __initdata = {
+> @@ -520,6 +556,7 @@ static void __init exynos7_clk_peric0_init(struct device_node *np)
+>  /* Register Offset definitions for CMU_PERIC1 (0x14C80000) */
+>  #define MUX_SEL_PERIC10                        0x0200
+>  #define MUX_SEL_PERIC11                        0x0204
+> +#define MUX_SEL_PERIC12                        0x0208
+>  #define ENABLE_PCLK_PERIC1             0x0900
+>  #define ENABLE_SCLK_PERIC10            0x0A00
+>
+> @@ -531,10 +568,16 @@ PNAME(mout_aclk_peric1_66_p)      = { "fin_pll", "dout_aclk_peric1_66" };
+>  PNAME(mout_sclk_uart1_p)       = { "fin_pll", "sclk_uart1" };
+>  PNAME(mout_sclk_uart2_p)       = { "fin_pll", "sclk_uart2" };
+>  PNAME(mout_sclk_uart3_p)       = { "fin_pll", "sclk_uart3" };
+> +PNAME(mout_sclk_spi0_p)                = { "fin_pll", "sclk_spi0" };
+> +PNAME(mout_sclk_spi1_p)                = { "fin_pll", "sclk_spi1" };
+> +PNAME(mout_sclk_spi2_p)                = { "fin_pll", "sclk_spi2" };
+> +PNAME(mout_sclk_spi3_p)                = { "fin_pll", "sclk_spi3" };
+> +PNAME(mout_sclk_spi4_p)                = { "fin_pll", "sclk_spi4" };
+>
+>  static unsigned long peric1_clk_regs[] __initdata = {
+>         MUX_SEL_PERIC10,
+>         MUX_SEL_PERIC11,
+> +       MUX_SEL_PERIC12,
+>         ENABLE_PCLK_PERIC1,
+>         ENABLE_SCLK_PERIC10,
+>  };
+> @@ -543,6 +586,16 @@ static struct samsung_mux_clock peric1_mux_clks[] __initdata = {
+>         MUX(0, "mout_aclk_peric1_66_user", mout_aclk_peric1_66_p,
+>                 MUX_SEL_PERIC10, 0, 1),
+>
+> +       MUX_F(0, "mout_sclk_spi0_user", mout_sclk_spi0_p,
+> +               MUX_SEL_PERIC11, 0, 1, CLK_SET_RATE_PARENT, 0),
+> +       MUX_F(0, "mout_sclk_spi1_user", mout_sclk_spi1_p,
+> +               MUX_SEL_PERIC11, 4, 1, CLK_SET_RATE_PARENT, 0),
+> +       MUX_F(0, "mout_sclk_spi2_user", mout_sclk_spi2_p,
+> +               MUX_SEL_PERIC11, 8, 1, CLK_SET_RATE_PARENT, 0),
+> +       MUX_F(0, "mout_sclk_spi3_user", mout_sclk_spi3_p,
+> +               MUX_SEL_PERIC11, 12, 1, CLK_SET_RATE_PARENT, 0),
+> +       MUX_F(0, "mout_sclk_spi4_user", mout_sclk_spi4_p,
+> +               MUX_SEL_PERIC11, 16, 1, CLK_SET_RATE_PARENT, 0),
+>         MUX(0, "mout_sclk_uart1_user", mout_sclk_uart1_p,
+>                 MUX_SEL_PERIC11, 20, 1),
+>         MUX(0, "mout_sclk_uart2_user", mout_sclk_uart2_p,
+> @@ -568,6 +621,16 @@ static struct samsung_gate_clock peric1_gate_clks[] __initdata = {
+>                 ENABLE_PCLK_PERIC1, 10, 0, 0),
+>         GATE(PCLK_UART3, "pclk_uart3", "mout_aclk_peric1_66_user",
+>                 ENABLE_PCLK_PERIC1, 11, 0, 0),
+> +       GATE(PCLK_SPI0, "pclk_spi0", "mout_aclk_peric1_66_user",
+> +               ENABLE_PCLK_PERIC1, 12, 0, 0),
+> +       GATE(PCLK_SPI1, "pclk_spi1", "mout_aclk_peric1_66_user",
+> +               ENABLE_PCLK_PERIC1, 13, 0, 0),
+> +       GATE(PCLK_SPI2, "pclk_spi2", "mout_aclk_peric1_66_user",
+> +               ENABLE_PCLK_PERIC1, 14, 0, 0),
+> +       GATE(PCLK_SPI3, "pclk_spi3", "mout_aclk_peric1_66_user",
+> +               ENABLE_PCLK_PERIC1, 15, 0, 0),
+> +       GATE(PCLK_SPI4, "pclk_spi4", "mout_aclk_peric1_66_user",
+> +               ENABLE_PCLK_PERIC1, 16, 0, 0),
+>
+>         GATE(SCLK_UART1, "sclk_uart1_user", "mout_sclk_uart1_user",
+>                 ENABLE_SCLK_PERIC10, 9, 0, 0),
+> @@ -575,6 +638,16 @@ static struct samsung_gate_clock peric1_gate_clks[] __initdata = {
+>                 ENABLE_SCLK_PERIC10, 10, 0, 0),
+>         GATE(SCLK_UART3, "sclk_uart3_user", "mout_sclk_uart3_user",
+>                 ENABLE_SCLK_PERIC10, 11, 0, 0),
+> +       GATE(SCLK_SPI0, "sclk_spi0_user", "mout_sclk_spi0_user",
+> +               ENABLE_SCLK_PERIC10, 12, CLK_SET_RATE_PARENT, 0),
+> +       GATE(SCLK_SPI1, "sclk_spi1_user", "mout_sclk_spi1_user",
+> +               ENABLE_SCLK_PERIC10, 13, CLK_SET_RATE_PARENT, 0),
+> +       GATE(SCLK_SPI2, "sclk_spi2_user", "mout_sclk_spi2_user",
+> +               ENABLE_SCLK_PERIC10, 14, CLK_SET_RATE_PARENT, 0),
+> +       GATE(SCLK_SPI3, "sclk_spi3_user", "mout_sclk_spi3_user",
+> +               ENABLE_SCLK_PERIC10, 15, CLK_SET_RATE_PARENT, 0),
+> +       GATE(SCLK_SPI4, "sclk_spi4_user", "mout_sclk_spi4_user",
+> +               ENABLE_SCLK_PERIC10, 16, CLK_SET_RATE_PARENT, 0),
+>  };
+>
+>  static struct samsung_cmu_info peric1_cmu_info __initdata = {
+> diff --git a/include/dt-bindings/clock/exynos7-clk.h b/include/dt-bindings/clock/exynos7-clk.h
+> index a6c4d8e..3bba9ec 100644
+> --- a/include/dt-bindings/clock/exynos7-clk.h
+> +++ b/include/dt-bindings/clock/exynos7-clk.h
+> @@ -26,7 +26,13 @@
+>  #define CLK_SCLK_UART1                 4
+>  #define CLK_SCLK_UART2                 5
+>  #define CLK_SCLK_UART3                 6
+> -#define TOP0_NR_CLK                    7
+> +#define CLK_SCLK_SPI0                  7
+> +#define CLK_SCLK_SPI1                  8
+> +#define CLK_SCLK_SPI2                  9
+> +#define CLK_SCLK_SPI3                  10
+> +#define CLK_SCLK_SPI4                  11
+> +#define CLK_SCLK_SPI5                  12
 
---k1lZvvs/B4yU6o8G
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+I don't see this CLK_SCLK_SPI5 being used anywhere in the patch.
+Possibly you didn't want to add it here.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+> +#define TOP0_NR_CLK                    13
+>
+>  /* TOP1 */
+>  #define DOUT_ACLK_FSYS1_200            1
+> @@ -70,7 +76,19 @@
+>  #define PCLK_HSI2C6                    9
+>  #define PCLK_HSI2C7                    10
+>  #define PCLK_HSI2C8                    11
+> -#define PERIC1_NR_CLK                  12
+> +#define PCLK_SPI0                      12
+> +#define PCLK_SPI1                      13
+> +#define PCLK_SPI2                      14
+> +#define PCLK_SPI3                      15
+> +#define PCLK_SPI4                      16
+> +#define PCLK_SPI5                      17
+> +#define SCLK_SPI0                      18
+> +#define SCLK_SPI1                      19
+> +#define SCLK_SPI2                      20
+> +#define SCLK_SPI3                      21
+> +#define SCLK_SPI4                      22
+> +#define SCLK_SPI5                      23
 
-iQEcBAEBAgAGBQJUr79uAAoJEMLUO4d9pOJWoS8H/ifD0Ym3utI4XqEzYJuODYCd
-i3fo96W/+yMFR4HIWrnAXKHv6p9Z9IoaYsUCO+igOhqmQjzwRQ8xMpx0vMfbGNfy
-wRLZdUAh7z0nexVMVgFCHZUTjztjxTczZh3Prs4jSuwv+o91+a5g+f5+mS+arQ/o
-pF8jqnFNkuBgzTWjKYNcyYj+Mrys4jt9j1T8eMlbzeW1M4O7af1+uL7QmphTz2bK
-Fb5yXqwKLKcGT3bPQgU3pG9lYrNwVYXJRqm03kLkr1Mi0P0nO/OQhhaWQ5PL8WSi
-UH6fp4OQa3WknYnt8dJv72YVY/eNFqL/alNcNWWTequ4OzHNZuwakeWs1l1WzrU=
-=w3qV
------END PGP SIGNATURE-----
+Same here for SCLK_SPI5, unused in the patch.
 
---k1lZvvs/B4yU6o8G--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[snip]
+
+The rest all looks good in this patch. I have also verified from the Exynos7 UM.
+
+
+-- 
+Best Regards
+Vivek Gautam
+Samsung R&D Institute, Bangalore
+India
