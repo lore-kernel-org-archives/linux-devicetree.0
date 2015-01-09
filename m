@@ -1,134 +1,237 @@
-From: Maxime COQUELIN <maxime.coquelin@st.com>
-Subject: [PATCH 3/3] ARM: dts: STiH418: Add B2199 board support
-Date: Fri,  9 Jan 2015 16:11:46 +0100
-Message-ID: <1420816306-11305-4-git-send-email-maxime.coquelin@st.com>
-References: <1420816306-11305-1-git-send-email-maxime.coquelin@st.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1420816306-11305-1-git-send-email-maxime.coquelin@st.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com
-Cc: lee.jones@linaro.org, peter.griffin@linaro.org
+From: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 00/16] tz1090: add clock components
+Date: Fri, 9 Jan 2015 15:10:43 +0000
+Message-ID: <54AFEF73.60508@imgtec.com>
+References: <1417476006-10407-1-git-send-email-james.hogan@imgtec.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="OV6DRDxiondMsueB872iFedvVt95bJlCv"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1417476006-10407-1-git-send-email-james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-metag-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-B2199 HDK is the reference board for STiH418 SoC.
-It has the following characteristics:
- - 3GB DDR3
- - 8GB eMMC / SD-Card slot
- - 32MB NOR Flash
- - 1 x Gbit Ethernet
- - 1 x USB3.0 port
- - 2 x USB2.0 ports
- - 1 x Sata or Mini-PCIe port
- - 1 x WiFi 802.11ac (Quantenna)
- - 1 x HDMI out
- - 1 x HDMI in
- - 1 x SPDIF
+--OV6DRDxiondMsueB872iFedvVt95bJlCv
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Maxime Coquelin <maxime.coquelin@st.com>
----
- arch/arm/boot/dts/Makefile          |  3 +-
- arch/arm/boot/dts/stih418-b2199.dts | 78 +++++++++++++++++++++++++++++++++++++
- 2 files changed, 80 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/stih418-b2199.dts
+Hi,
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 91bd5bd..cb37b5e 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -441,7 +441,8 @@ dtb-$(CONFIG_ARCH_STI)+= stih407-b2120.dtb \
- 	stih415-b2020.dtb \
- 	stih416-b2000.dtb \
- 	stih416-b2020.dtb \
--	stih416-b2020e.dtb
-+	stih416-b2020e.dtb \
-+	stih418-b2199.dtb
- dtb-$(CONFIG_MACH_SUN4I) += \
- 	sun4i-a10-a1000.dtb \
- 	sun4i-a10-ba10-tvbox.dtb \
-diff --git a/arch/arm/boot/dts/stih418-b2199.dts b/arch/arm/boot/dts/stih418-b2199.dts
-new file mode 100644
-index 0000000..926235c
---- /dev/null
-+++ b/arch/arm/boot/dts/stih418-b2199.dts
-@@ -0,0 +1,78 @@
-+/*
-+ * Copyright (C) 2015 STMicroelectronics (R&D) Limited.
-+ * Author: Maxime Coquelin <maxime.coquelin@st.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+/dts-v1/;
-+#include "stih418.dtsi"
-+/ {
-+	model = "STiH418 B2199";
-+	compatible = "st,stih418-b2199", "st,stih418";
-+
-+	chosen {
-+		bootargs = "console=ttyAS0,115200 clk_ignore_unused";
-+		linux,stdout-path = &sbc_serial0;
-+	};
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0x40000000 0xc0000000>;
-+	};
-+
-+	aliases {
-+		ttyAS0 = &sbc_serial0;
-+	};
-+
-+	soc {
-+		sbc_serial0: serial@9530000 {
-+			status = "okay";
-+		};
-+
-+		leds {
-+			compatible = "gpio-leds";
-+			red {
-+				#gpio-cells = <2>;
-+				label = "Front Panel LED";
-+				gpios = <&pio4 1 0>;
-+				linux,default-trigger = "heartbeat";
-+			};
-+			green {
-+				#gpio-cells = <2>;
-+				gpios = <&pio1 3 0>;
-+				default-state = "off";
-+			};
-+		};
-+
-+		i2c@9842000 {
-+			status = "okay";
-+		};
-+
-+		i2c@9843000 {
-+			status = "okay";
-+		};
-+
-+		i2c@9844000 {
-+			status = "okay";
-+		};
-+
-+		i2c@9845000 {
-+			status = "okay";
-+		};
-+
-+		i2c@9540000 {
-+			status = "okay";
-+		};
-+
-+		/* SSC11 to HDMI */
-+		i2c@9541000 {
-+			status = "okay";
-+			/* HDMI V1.3a supports Standard mode only */
-+			clock-frequency = <100000>;
-+			st,i2c-min-scl-pulse-width-us = <0>;
-+			st,i2c-min-sda-pulse-width-us = <5>;
-+		};
-+	};
-+};
--- 
-1.9.1
+On 01/12/14 23:19, James Hogan wrote:
+> This patchset adds common clock framework support for the TZ1090 SoC.
 
+Any further comments on these patches? It'd be nice to be able to get
+them into v3.20 if possible.
+
+Cheers
+James
+
+>=20
+> Patch 1 adds common code to simplify TZ1090 clock providers.
+>=20
+> Patches 2 to 6 add TZ1090 clock types, specifically:
+> * Gate banks (a register containing clock gate bits)
+> * Mux banks (a register containing clock mux bits)
+> * Clock deleters (delete up to 1023 out of every 1024 clocks)
+> * PLLs (True Circuits, but TZ1090 specific register interface)
+> * Divider clock (pretty basic divider, but specific to TZ1090)
+>=20
+> Patches 7 to 14 add clock providers and DT bindings:
+> * Top level register  (TOP) clocks
+> * High end peripheral (HEP) clocks
+> * Peripheral (PERIP) clocks
+> * PowerDown Controller (PDC) clocks
+>=20
+> Finally patch 15 defines most of the TZ1090 clocks in DT using these
+> clock providers, with a few placeholders for less interesting clocks
+> from more complex components, and patch 16 hooks up the Meta core clock=
+
+> so that the precise frequency of the Meta clock source can be
+> determined. These are mostly for reference to give an idea how the cloc=
+k
+> components are intended to be used, and I'll take this one through the
+> metag tree when the drivers/clk/ stuff is accepted.
+>=20
+> Changes since v1:
+>=20
+> Rework (the main change):
+> - Convert explicit DT representation of clock infrastructure using
+>   generic bindings for individual components to several TZ1090 specific=
+
+>   bindings representing groups of TZ1090 clocks (thanks Heiko). This
+>   results in more lines of code overall, but it is nicer and more
+>   maintainable.
+> - Add common code for allocating and registering TZ1090 specific clock
+>   providers. Various tz1090_clk_register_*() helper functions are
+>   provided to conveniently register various low level TZ1090 clocks in =
+a
+>   clock provider from static initialisation data, which can be
+>   initialised statically using provided macros.
+> - Drop DT bindings for TZ1090 gate banks, mux banks, deleters, dividers=
+
+>   and PLLs as they will be instantiated directly from a larger clock
+>   provider rather than individually from DT.
+> - Switch back to using clk_divider::width rather than clk_divider::mask=
+=2E
+>   Mask was only added to make it easier to be exposed in a DT binding,
+>   which is no longer required.
+> - Add DT bindings and clock providers for TZ1090 top level register
+>   clocks (TOP), high end peripheral clocks (HEP), peripheral (PERIP)
+>   clocks, and powerdown controller clocks (PDC).
+> - Add headers in <dt-bindings/clock/> to enumerate provided clocks.
+> - Move divider specific flags (policy) to clock providers as dividers
+>   will be instantiated by a provider rather than directly from DT.
+>=20
+> Functional changes and corrections:
+> - Tweak various clock names. A couple were wrong, some had the slightly=
+
+>   redundant text "clk" in them, and others were output clocks so were
+>   better named without the "_en" which the output of clock gates tend t=
+o
+>   be called.
+> - Add TOP_CLKEN register to top clocks, which gates system clock to PDC=
+=2E
+> - Combine unrepresented AFE block clocks into single fixed-clock
+>   placeholder.
+>=20
+> Other cleanups and refactorings:
+> - Split out wrapped (meta exclusive locked) divider driver from PDC
+>   clock driver to clk-tz1090-divider.c.
+> - Change the PDC clocks DT bindings and driver to conceptually represen=
+t
+>   all clocks provided by the PDC in TZ1090 rather than the same generic=
+
+>   arrangement of clocks as the PDC in TZ1090, since the driver will use=
+
+>   the common TZ1090 specific clock provider helpers to provide specific=
+
+>   clocks.
+> - Change PDC clocks compatible string from "img,tz1090-pdc-clock" to
+>   "img,tz1090-pdc-clocks" to match the intended purpose.
+> - Add clock-names as required property to PDC clocks DT binding as used=
+
+>   by common TZ1090 clock provider code.
+> - Mention standard clock-indices and clock-output-names in PDC clocks D=
+T
+>   binding as optional properties for when the clocks may be used by
+>   other clock providers and should match the names used in the driver.
+> - Split out use of Meta core clock into separate patch 16.
+> - Renamed function prefixes from clk_tz1090_ to tz1090_clk_ for
+>   consistency with the rest.
+> - Tweak ascii art clock diagrams a little.
+>=20
+> Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+> Cc: linux-metag-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>=20
+> James Hogan (16):
+>   clk: tz1090: add clock provider common code
+>   clk: tz1090: add gate bank clock driver
+>   clk: tz1090: add mux bank clock driver
+>   clk: tz1090: add deleter clock driver
+>   clk: tz1090: add divider clock driver
+>   clk: tz1090: add PLL clock driver
+>   dt: binding: add binding for TZ1090 PDC clocks
+>   clk: tz1090: add PDC clock provider driver
+>   dt: binding: add binding for TZ1090 TOP clocks
+>   clk: tz1090: add TOP clock provider driver
+>   dt: binding: add binding for TZ1090 HEP clocks
+>   clk: tz1090: add HEP clock provider driver
+>   dt: binding: add binding for TZ1090 PERIP clocks
+>   clk: tz1090: add PERIP clock provider driver
+>   metag: tz1090: add TZ1090 clocks to device tree
+>   metag: tz1090: connect Meta core clock
+>=20
+>  .../bindings/clock/img,tz1090-hep-cru.txt          |  53 +++
+>  .../bindings/clock/img,tz1090-pdc-clocks.txt       |  59 ++++
+>  .../bindings/clock/img,tz1090-perip-cru.txt        |  49 +++
+>  .../bindings/clock/img,tz1090-top-clocks.txt       |  68 ++++
+>  arch/metag/Kconfig.soc                             |   1 +
+>  arch/metag/boot/dts/tz1090.dtsi                    |   4 +
+>  arch/metag/boot/dts/tz1090_clk.dtsi                | 143 ++++++++
+>  drivers/clk/Makefile                               |   1 +
+>  drivers/clk/tz1090/Makefile                        |  13 +
+>  drivers/clk/tz1090/clk-tz1090-deleter.c            | 132 ++++++++
+>  drivers/clk/tz1090/clk-tz1090-divider.c            | 151 +++++++++
+>  drivers/clk/tz1090/clk-tz1090-gate-bank.c          | 149 +++++++++
+>  drivers/clk/tz1090/clk-tz1090-hep.c                |  46 +++
+>  drivers/clk/tz1090/clk-tz1090-mux-bank.c           | 139 ++++++++
+>  drivers/clk/tz1090/clk-tz1090-pdc.c                |  52 +++
+>  drivers/clk/tz1090/clk-tz1090-perip.c              |  57 ++++
+>  drivers/clk/tz1090/clk-tz1090-pll.c                | 276 +++++++++++++=
++++
+>  drivers/clk/tz1090/clk-tz1090-top.c                | 364 +++++++++++++=
+++++++++
+>  drivers/clk/tz1090/clk.c                           |  89 +++++
+>  drivers/clk/tz1090/clk.h                           | 254 +++++++++++++=
++
+>  include/dt-bindings/clock/tz1090-hep.h             |  19 ++
+>  include/dt-bindings/clock/tz1090-pdc.h             |  18 +
+>  include/dt-bindings/clock/tz1090-perip.h           |  30 ++
+>  include/dt-bindings/clock/tz1090-top.h             | 118 +++++++
+>  24 files changed, 2285 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/img,tz1090-=
+hep-cru.txt
+>  create mode 100644 Documentation/devicetree/bindings/clock/img,tz1090-=
+pdc-clocks.txt
+>  create mode 100644 Documentation/devicetree/bindings/clock/img,tz1090-=
+perip-cru.txt
+>  create mode 100644 Documentation/devicetree/bindings/clock/img,tz1090-=
+top-clocks.txt
+>  create mode 100644 arch/metag/boot/dts/tz1090_clk.dtsi
+>  create mode 100644 drivers/clk/tz1090/Makefile
+>  create mode 100644 drivers/clk/tz1090/clk-tz1090-deleter.c
+>  create mode 100644 drivers/clk/tz1090/clk-tz1090-divider.c
+>  create mode 100644 drivers/clk/tz1090/clk-tz1090-gate-bank.c
+>  create mode 100644 drivers/clk/tz1090/clk-tz1090-hep.c
+>  create mode 100644 drivers/clk/tz1090/clk-tz1090-mux-bank.c
+>  create mode 100644 drivers/clk/tz1090/clk-tz1090-pdc.c
+>  create mode 100644 drivers/clk/tz1090/clk-tz1090-perip.c
+>  create mode 100644 drivers/clk/tz1090/clk-tz1090-pll.c
+>  create mode 100644 drivers/clk/tz1090/clk-tz1090-top.c
+>  create mode 100644 drivers/clk/tz1090/clk.c
+>  create mode 100644 drivers/clk/tz1090/clk.h
+>  create mode 100644 include/dt-bindings/clock/tz1090-hep.h
+>  create mode 100644 include/dt-bindings/clock/tz1090-pdc.h
+>  create mode 100644 include/dt-bindings/clock/tz1090-perip.h
+>  create mode 100644 include/dt-bindings/clock/tz1090-top.h
+>=20
+
+
+--OV6DRDxiondMsueB872iFedvVt95bJlCv
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJUr+96AAoJEGwLaZPeOHZ6uFAP/2gUH57D2KzJeCdEZdJsMVVy
+uERxgI7CCiBlBrkQh8cHFl/qoRCVq9OwECQXsjAQw6h7ZH67ar0eay8QVbiNLbgU
+p6sma+iba12Djwx8OpeosAWkEswgEZjM31tirdUI1wU2UPzv5uG7SFhH9R7Q9IKF
+wwbAfDZvof2tT55qoPaT3MrL9S1IUdRH4jm27gR4VeDKX8Sa+hp+pXZn7jvdSWZv
+FrwdApMh4vOZzgmsuMJbGAVblna8kGXX3cNdLpptBp7A9fmAeIXAg+oJewBIzgNB
+p9mhKnzcZuD4XR9b3fpPDRpfAj7QmniYZyRGBtOCo5zjIu3ulHDOtieRFbbKBdhw
+fqL6RjPCY/NkFF/Ac8U+CvM+jeg5y8g+rDZjH/D2uDrioWuEROepxuDIX5a9f/++
+P/m0xNUYj6ld3fPL+lL90UZMyMMWRLSazljaQy9IDoR4Smu2bNliqIdnrDTogZFR
+UCr8/dL/s69FRgVxtt1CmxQim5lCejdQxWGHuEsSJCUPa5NEhbgd5JaKyc1Av/Mi
+A8dQFP1zEYhkgwpxl2bDdhon2R4loX7cA/9tGisp5bWuKTztQWNlgYXf2wrR20BB
++k3zHa3AQL+WN09u6XZHXtmxy8zbhczB3EQp1T6MFlzZk6xp0AgqJmh0swyXUth9
+1aCu29UScMNo1kDwSOnc
+=RHZG
+-----END PGP SIGNATURE-----
+
+--OV6DRDxiondMsueB872iFedvVt95bJlCv--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
