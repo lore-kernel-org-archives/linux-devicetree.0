@@ -1,122 +1,32 @@
-From: "George G. Davis" <ggdavisiv-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] drivers: of: Export of_reserved_mem_device_{init,release}
-Date: Fri, 9 Jan 2015 17:05:52 -0500
-Message-ID: <20150109220552.GA86398@gandalf.middle.earth.net>
-References: <1420813745-130341-1-git-send-email-george_davis@mentor.com>
- <CAL_JsqJaT-Y7DHQS5ZZ0TP6r0iPDbUZwU-Kec5MSE7DOPgZxCg@mail.gmail.com>
- <20150109183310.GA38065@gandalf.middle.earth.net>
+From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v4 5/5] tty/serial: Add Spreadtrum sc9836-uart driver
+ support
+Date: Fri, 9 Jan 2015 14:25:01 -0800
+Message-ID: <20150109222501.GA10102@kroah.com>
+References: <sc9836v4>
+ <1417692860-18841-1-git-send-email-chunyan.zhang@spreadtrum.com>
+ <1417692860-18841-6-git-send-email-chunyan.zhang@spreadtrum.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20150109183310.GA38065-f9ZlEuEWxVcBGMgAZHU0458/Q/RUDjKW@public.gmane.org>
+In-Reply-To: <1417692860-18841-6-git-send-email-chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "George G. Davis" <george_davis-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+To: Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, florian.vaussard-p8DiymsW2f8@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, hytszk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, orsonzhai-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, geng.ren-lxIno14LUO0EEoCn2XhGlw@public.gmane.org, zhizhou.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org, lanqing.liu-lxIno14LUO0EEoCn2XhGlw@public.gmane.org, zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, wei.qiao-lxIno14LUO0EEoCn2XhGlw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sprdlinux-uGLqWuYN4qMgsBAKwltoeQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 09, 2015 at 01:33:10PM -0500, George G. Davis wrote:
-> On Fri, Jan 09, 2015 at 11:53:01AM -0600, Rob Herring wrote:
-> > On Fri, Jan 9, 2015 at 8:29 AM, George G. Davis <ggdavisiv-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > > Export of_reserved_mem_device_{init,release} so that modules
-> > > can initialize and release their assigned per-device cma_area.
-> > 
-> > I believe the original intent was for the core bus code to call these
-> > functions. While the commit adding them says "automated assignment"
-> > that part did not go in.
-> 
-> I suspected that there may have been a bit of missing magic.  The only
-> use of these functions that I was able to find was in an earlier out of
-> tree patch series where these functions were called from the s5p-mfc
-> driver:
-> 
-> http://lists.linaro.org/pipermail/linaro-mm-sig/2014-August/004140.html
-> 
-> I agree that "automated assignment" via core bus code would be a better
-> solution but I don't know where to add the calls.
+On Thu, Dec 04, 2014 at 07:34:20PM +0800, Chunyan Zhang wrote:
+> --- a/include/uapi/linux/serial_core.h
+> +++ b/include/uapi/linux/serial_core.h
+> @@ -247,4 +247,7 @@
+>  /* MESON */
+>  #define PORT_MESON	109
+>  
+> +/* SPRD SERIAL  */
+> +#define PORT_SPRD       110
 
-How about something like the following for automated assignment?:
-
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index 9421fed..231b427 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -14,6 +14,7 @@
- #include <linux/platform_device.h>
- #include <linux/of_device.h>
- #include <linux/of_irq.h>
-+#include <linux/of_reserved_mem.h>
- #include <linux/module.h>
- #include <linux/init.h>
- #include <linux/dma-mapping.h>
-@@ -509,9 +510,12 @@ static int platform_drv_probe(struct device *_dev)
- 
- 	ret = dev_pm_domain_attach(_dev, true);
- 	if (ret != -EPROBE_DEFER) {
-+		of_reserved_mem_device_init(_dev);
- 		ret = drv->probe(dev);
--		if (ret)
-+		if (ret) {
-+			of_reserved_mem_device_release(_dev);
- 			dev_pm_domain_detach(_dev, true);
-+		}
- 	}
- 
- 	if (drv->prevent_deferred_probe && ret == -EPROBE_DEFER) {
-@@ -534,6 +538,7 @@ static int platform_drv_remove(struct device *_dev)
- 	int ret;
- 
- 	ret = drv->remove(dev);
-+	of_reserved_mem_device_release(_dev);
- 	dev_pm_domain_detach(_dev, true);
- 
- 	return ret;
-
-
---
-Regards,
-George
-> 
-> > As it stands, there are no in tree users of
-> > these functions.
-> > 
-> > Marek, comments?
-> 
-> Thanks!
-> 
-> --
-> Regards,
-> George
-> 
-> > 
-> > Rob
-> > 
-> > >
-> > > Signed-off-by: George G. Davis <george_davis-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-> > > ---
-> > >  drivers/of/of_reserved_mem.c | 2 ++
-> > >  1 file changed, 2 insertions(+)
-> > >
-> > > diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
-> > > index dc566b3..5eeb5b2 100644
-> > > --- a/drivers/of/of_reserved_mem.c
-> > > +++ b/drivers/of/of_reserved_mem.c
-> > > @@ -265,6 +265,7 @@ int of_reserved_mem_device_init(struct device *dev)
-> > >
-> > >         return ret;
-> > >  }
-> > > +EXPORT_SYMBOL(of_reserved_mem_device_init);
-> > >
-> > >  /**
-> > >   * of_reserved_mem_device_release() - release reserved memory device structures
-> > > @@ -289,3 +290,4 @@ void of_reserved_mem_device_release(struct device *dev)
-> > >
-> > >         rmem->ops->device_release(rmem, dev);
-> > >  }
-> > > +EXPORT_SYMBOL(of_reserved_mem_device_release);
-> > > --
-> > > 1.9.3
-> > >
+Please use a tab here, like all other entries have.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
