@@ -1,63 +1,81 @@
-From: Niklas =?iso-8859-1?Q?S=F6derlund?= <niso-UNjuZkX4dYU@public.gmane.org>
-Subject: Re: [PATCH 0/4] sh-pfc: Add emev2 pinmux support
-Date: Fri, 9 Jan 2015 11:22:06 +0100
-Message-ID: <20150109102206.GB30143@bigcity.berto.se>
-References: <1418414497-23741-1-git-send-email-niso@kth.se>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: Re: [PATCH v9 3/4] ASoC: tda998x: add a codec to the
+	HDMI transmitter
+Date: Fri, 9 Jan 2015 12:24:12 +0200
+Message-ID: <54AFAC4C.7010209@ti.com>
+References: <cover.1420628786.git.moinejf@free.fr>	<23b36acc1f769418a06f3e929eba288b5911da12.1420628786.git.moinejf@free.fr>	<54AD4C77.5000401@arm.com>	<20150107154138.GL12302@n2100.arm.linux.org.uk>
+ <20150107190241.27ebac8b@armhf>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1418414497-23741-1-git-send-email-niso-UNjuZkX4dYU@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20150107190241.27ebac8b@armhf>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Jean-Francois Moine <moinejf@free.fr>, Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Andrew Jackson <Andrew.Jackson@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Mark Brown <broonie@kernel.org>, Dave Airlie <airlied@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus and Laurent,
+On 01/07/2015 08:02 PM, Jean-Francois Moine wrote:
+> On Wed, 7 Jan 2015 15:41:38 +0000
+> Russell King - ARM Linux <linux@arm.linux.org.uk> wrote:
+>
+>> On Wed, Jan 07, 2015 at 03:10:47PM +0000, Andrew Jackson wrote:
+>>> On 01/07/15 10:51, Jean-Francois Moine wrote:
+>>>> diff --git a/drivers/gpu/drm/i2c/Kconfig b/drivers/gpu/drm/i2c/Kconfig
+>>>> index 22c7ed6..24fc975 100644
+>>>> --- a/drivers/gpu/drm/i2c/Kconfig
+>>>> +++ b/drivers/gpu/drm/i2c/Kconfig
+>>>> @@ -28,6 +28,7 @@ config DRM_I2C_SIL164
+>>>>   config DRM_I2C_NXP_TDA998X
+>>>>          tristate "NXP Semiconductors TDA998X HDMI encoder"
+>>>>          default m if DRM_TILCDC
+>>>> +       select SND_SOC_TDA998X
+>>>
+>>> Do you need this since sound/soc/codecs/Kconfig conditionally brings in the
+>>> CODEC driver?
+>
+> For SND_SOC_ALL_CODECS only.
+>
+>> More importantly, it's broken, because it'll cause Kconfig to complain
+>> if you enable DRM_I2C_NXP_TDA998X, but have ASoC disabled.
+>>
+>> Moreover, if you decide you want the sound and ASoC built as a module,
+>> but want to build in DRM and TDA998x support (so you can get video
+>> output working on boot before initramfs/rootfs), Kconfig may well
+>> complain.
+>
+> 	select SND_SOC_TDA998X if SND_SOC
+>
+> should work in all cases.
+>
 
-I know we are coming out of the holiday season so here is a humble ping
-on this patchset.
+I think that would still fail if DRM and TDA998x is built in and SND_SOC 
+is built as modules. A request_module() call before 
+tda9998x_codec_register() should help. Or could could write:
 
-* Niklas S=F6derlund <niso-UNjuZkX4dYU@public.gmane.org> [2014-12-12 21:01:33 +0100]:
+select SND_SOC_TDA998X if (SND_SOC=DRM_I2C_NXP_TDA998X || SND_SOC=y)
 
-> Greetings,
+>>>> +static int __init tda998x_codec_init(void)
+>>>> +{
+>>>> +       return 0;
+>>>> +}
+>>>> +static void __exit tda998x_codec_exit(void)
+>>>> +{
+>>>> +}
+>>>> +module_init(tda998x_codec_init);
+>>>> +module_exit(tda998x_codec_exit);
+>>
+>> There's no need for these if they remain as the above.  Modules can have
+>> both init/exit functions, or neither, and they are still unloadable.
+>> Only modules which provide only an init function get locked in on load.
 >
-> This patchset introduces pinmux support for the EMMA Mobile EV2 board=
- to
-> the sh-pfc pin-controller driver. Devicetree bindings for gpio and th=
-e
-> populated serial connector are also defined in 3/4 and 4/4.
+> Thanks.
 >
-> Comments are welcome!
->
-> Regards
-> // Niklas
->
-> Niklas S=F6derlund (4):
->   sh-pfc: add macro to define pinmux without function
->   sh-pfc: Add emev2 pinmux support
->   ARM: shmobile: emev2: Add PFC information to emev2.dtsi
->   ARM: shmobile: emev2-kzm9d: Add PFC information for uart1
->
->  .../bindings/pinctrl/renesas,pfc-pinctrl.txt       |    1 +
->  arch/arm/boot/dts/emev2-kzm9d.dts                  |   13 +
->  arch/arm/boot/dts/emev2.dtsi                       |   11 +
->  drivers/pinctrl/sh-pfc/Kconfig                     |    5 +
->  drivers/pinctrl/sh-pfc/Makefile                    |    1 +
->  drivers/pinctrl/sh-pfc/core.c                      |    9 +
->  drivers/pinctrl/sh-pfc/core.h                      |    1 +
->  drivers/pinctrl/sh-pfc/pfc-emev2.c                 | 1915 ++++++++++=
-++++++++++
->  drivers/pinctrl/sh-pfc/sh_pfc.h                    |    2 +
->  9 files changed, 1958 insertions(+)
->  create mode 100644 drivers/pinctrl/sh-pfc/pfc-emev2.c
->
-> --
-> 2.1.3
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
