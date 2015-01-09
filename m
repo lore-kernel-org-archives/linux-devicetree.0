@@ -1,30 +1,60 @@
-From: Kevin Hilman <khilman@kernel.org>
-Subject: Re: [PATCH v3] ARM: dts: Add dts file for odroid XU3 board
-Date: Fri, 09 Jan 2015 09:10:24 -0800
-Message-ID: <7htwzzvq0v.fsf@deeprootsystems.com>
-References: <1420671228-24692-1-git-send-email-sjoerd.simons@collabora.co.uk>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 2/4] Documentation: bindings: Add the regulator
+ property to the sub-nodes AHCI bindings
+Date: Fri, 9 Jan 2015 17:11:31 +0000
+Message-ID: <20150109171131.GH2634@sirena.org.uk>
+References: <1420799989-10645-1-git-send-email-gregory.clement@free-electrons.com>
+ <1420799989-10645-3-git-send-email-gregory.clement@free-electrons.com>
+ <54AFF7E3.4070506@redhat.com>
+ <54AFFFDC.7020307@free-electrons.com>
+ <CAGb2v674q4Cjp9qy9CbUXe2j5pT_ez98CKxXHC8u4Diap2TT1A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1420671228-24692-1-git-send-email-sjoerd.simons@collabora.co.uk>
-	(Sjoerd Simons's message of "Wed, 7 Jan 2015 23:53:48 +0100")
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
-Cc: Kukjin Kim <kgene.kim@samsung.com>, Tyler Baker <tyler.baker@linaro.org>, Heesub Shin <heesub.shin@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="FOk1sPzRVyI5JND9"
+Return-path: <linux-ide-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAGb2v674q4Cjp9qy9CbUXe2j5pT_ez98CKxXHC8u4Diap2TT1A@mail.gmail.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Gregory CLEMENT <gregory.clement@free-electrons.com>, Hans de Goede <hdegoede@redhat.com>, linux-kernel <linux-kernel@vger.kernel.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Tawfik Bayouk <tawfik@marvell.com>, Andrew Lunn <andrew@lunn.ch>, devicetree <devicetree@vger.kernel.org>, Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart@free-electrons.com>, Mark Rutland <mark.rutland@arm.com>, Nadav Haklai <nadavh@marvell.com>, linux-ide@vger.kernel.org, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Tejun Heo <tj@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Ulf Hansson <ulf.hansson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Sjoerd Simons <sjoerd.simons@collabora.co.uk> writes:
 
-> Add DTS for the Hardkernel Odroid XU3. The name of the DTS file is kept the
-> same as the vendors naming, which means it's prefixed with exynos5422
-> instead of exynos5800 as the SoC name even though it includes the
-> exyno5800 dtsi.
->
-> Signed-off-by: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+--FOk1sPzRVyI5JND9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Boot tested on top of next-20150109 (with and without my hack for
-bringing up 8 cores.)
+On Sat, Jan 10, 2015 at 12:29:32AM +0800, Chen-Yu Tsai wrote:
 
-Tested-by: Kevin Hilman <khilman@linaro.org>
+> Since the AHCI library code already supports the generic phy subsystem,
+> with one phy possible for each port node, you could possibly add a
+> generic phy that just takes a regulator, and hook it up that way.
 
-Kevin
+> I don't know if the extra layer of indirection is good or not.
+> Just offering an alternative.
+
+Or if the supply is for the device at the other end of the link (which
+is what it sounded like) then use that.  This just sounds like the same
+problem we have for all the enumerable buses in embedded systems where
+we need to be able to understand that the device exists prior to it
+being fully ready to appear in the system.  Having the link/slot be a
+device in Linux does indeed seem to be a common way people think about
+doing this, it sounds like for this one it might be the most direct.
+
+--FOk1sPzRVyI5JND9
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUsAvCAAoJECTWi3JdVIfQTM4H/2UO7wLAPT10oLokFxKC8HXb
+KP7QN4TELOy1HDifgnj3/qSDMrRehT51hVPq90sFgdzzop/FxEupk+AabC71nm32
+w9ggTQejndTbFqr2rRHEKLiMLSvlPWi7kjXTvTSLb3nR0+CTR9cr82dvAbzUgyKo
+FqvJNZ0DAZrvRnia0roNSslFrVsjZmf+jMFLSA9CbmQ2hKOD1BqIUpe0L4L2R+w9
+W/hzs/R89kBcwTfHTvoPD11Omqzz0yT2gIiwGTA5Kh/cKAt5hlclwkmbQagjNGKE
+sUdte9p/y32SLpS90qT3hYrQsFk5tYTzlFlKkpIBRpFFk4Fh1kaRpO0FDs8+vHo=
+=4wRN
+-----END PGP SIGNATURE-----
+
+--FOk1sPzRVyI5JND9--
