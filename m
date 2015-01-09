@@ -1,7 +1,7 @@
 From: <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: [PATCHv6 1/5] arm: socfpga: Enable L2 Cache ECC on startup.
-Date: Thu, 8 Jan 2015 20:53:52 -0600
-Message-ID: <1420772036-3112-2-git-send-email-tthayer@opensource.altera.com>
+Subject: [PATCHv6 5/5] arm: dts: Add Altera L2 Cache and OCRAM EDAC entries
+Date: Thu, 8 Jan 2015 20:53:56 -0600
+Message-ID: <1420772036-3112-6-git-send-email-tthayer@opensource.altera.com>
 References: <1420772036-3112-1-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,114 +14,108 @@ List-Id: devicetree@vger.kernel.org
 
 From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 
-This patch enables the ECC for L2 cache on machine
-startup.  The ECC has to be enabled before data is
-is stored in memory otherwise the ECC will fail on
-reads.
+Adding the device tree entries and bindings needed to support
+the Altera L2 cache and On-Chip RAM EDAC. This patch relies upon
+an earlier patch to declare and setup On-chip RAM properly.
+http://www.spinics.net/lists/devicetree/msg51117.html
 
 Signed-off-by: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 ---
-v2: Split OCRAM initialization into separate patch.
+v2: Remove OCRAM declaration and reference prior patch.
 
-v3/4: No change
+v3-5: No Change
 
-v5: Remove l2cache.h, use io.h instead of clk-provider.h
-    Make copyright header inclusive. Remove MAINTAINERS entry.
-
-v6: Remove pr_debug() & update year in header.
+v6: Change to nested EDAC device nodes based on community
+    feedback. Remove L2 syscon. Use consolidated binding.
 ---
- arch/arm/mach-socfpga/Makefile   |    1 +
- arch/arm/mach-socfpga/core.h     |    2 ++
- arch/arm/mach-socfpga/l2_cache.c |   39 ++++++++++++++++++++++++++++++++++++++
- arch/arm/mach-socfpga/socfpga.c  |    4 +++-
- 4 files changed, 45 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/mach-socfpga/l2_cache.c
+ .../bindings/arm/altera/socfpga-edac.txt           |   46 ++++++++++++++++++++
+ arch/arm/boot/dts/socfpga.dtsi                     |   20 +++++++++
+ 2 files changed, 66 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-edac.txt
 
-diff --git a/arch/arm/mach-socfpga/Makefile b/arch/arm/mach-socfpga/Makefile
-index 6dd7a93..142609e 100644
---- a/arch/arm/mach-socfpga/Makefile
-+++ b/arch/arm/mach-socfpga/Makefile
-@@ -4,3 +4,4 @@
- 
- obj-y					:= socfpga.o
- obj-$(CONFIG_SMP)	+= headsmp.o platsmp.o
-+obj-$(CONFIG_EDAC_ALTERA_L2C) += l2_cache.o
-diff --git a/arch/arm/mach-socfpga/core.h b/arch/arm/mach-socfpga/core.h
-index 483cb46..28c8a15 100644
---- a/arch/arm/mach-socfpga/core.h
-+++ b/arch/arm/mach-socfpga/core.h
-@@ -47,4 +47,6 @@ extern unsigned long socfpga_cpu1start_addr;
- 
- #define SOCFPGA_SCU_VIRT_BASE   0xfffec000
- 
-+void socfpga_init_l2_ecc(void);
-+
- #endif
-diff --git a/arch/arm/mach-socfpga/l2_cache.c b/arch/arm/mach-socfpga/l2_cache.c
+diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-edac.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-edac.txt
 new file mode 100644
-index 0000000..047759d
+index 0000000..4bf32e1
 --- /dev/null
-+++ b/arch/arm/mach-socfpga/l2_cache.c
-@@ -0,0 +1,39 @@
-+/*
-+ * Copyright Altera Corporation (C) 2015. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along with
-+ * this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+#include <linux/io.h>
-+#include <linux/of_platform.h>
-+#include <linux/of_address.h>
++++ b/Documentation/devicetree/bindings/arm/altera/socfpga-edac.txt
+@@ -0,0 +1,46 @@
++Altera SoCFPGA Error Detection and Correction [EDAC]
 +
-+void socfpga_init_l2_ecc(void)
-+{
-+	struct device_node *np;
-+	void __iomem  *mapped_l2_edac_addr;
++Required Properties:
++- compatible : Should be "altr,edac"
++- #address-cells: must be 1
++- #size-cells: must be 1
++- ranges : standard definition, should translate from local addresses
 +
-+	np = of_find_compatible_node(NULL, NULL, "altr,l2-edac");
-+	if (!np) {
-+		pr_err("SOCFPGA: Unable to find altr,l2-edac in dtb\n");
-+		return;
-+	}
++Subcomponents:
 +
-+	mapped_l2_edac_addr = of_iomap(np, 0);
-+	if (!mapped_l2_edac_addr) {
-+		pr_err("SOCFPGA: Unable to find L2 ECC mapping in dtb\n");
-+		return;
-+	}
++L2 Cache ECC
++Required Properties:
++- compatible : Should be "altr,l2-edac"
++- reg : Address and size for ECC error interrupt clear registers.
++- interrupts : Should be single bit error interrupt, then double bit error
++	interrupt. Note the rising edge type.
 +
-+	/* Enable ECC */
-+	writel(0x01, mapped_l2_edac_addr);
-+}
-diff --git a/arch/arm/mach-socfpga/socfpga.c b/arch/arm/mach-socfpga/socfpga.c
-index 383d61e..ce04313 100644
---- a/arch/arm/mach-socfpga/socfpga.c
-+++ b/arch/arm/mach-socfpga/socfpga.c
-@@ -1,5 +1,5 @@
- /*
-- *  Copyright (C) 2012 Altera Corporation
-+ *  Copyright (C) 2012-2015 Altera Corporation
-  *
-  * This program is free software; you can redistribute it and/or modify
-  * it under the terms of the GNU General Public License as published by
-@@ -83,6 +83,8 @@ static void __init socfpga_init_irq(void)
- {
- 	irqchip_init();
- 	socfpga_sysmgr_init();
-+	if (IS_ENABLED(CONFIG_EDAC_ALTERA_L2C))
-+		socfpga_init_l2_ecc();
- }
++On Chip RAM ECC
++Required Properties:
++- compatible : Should be "altr,ocram-edac"
++- reg : Address and size for ECC error interrupt clear registers.
++- iram : phandle to On-Chip RAM definition.
++- interrupts : Should be single bit error interrupt, then double bit error
++	interrupt. Note the rising edge type.
++
++Example:
++
++	soc_ecc {
++		compatible = "altr,edac";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		l2edac@ffd08140 {
++			compatible = "altr,l2-edac";
++			reg = <0xffd08140 0x4>;
++			interrupts = <0 36 1>, <0 37 1>;
++		};
++
++		ocramedac@ffd08144 {
++			compatible = "altr,ocram-edac";
++			reg = <0xffd08144 0x4>;
++			iram = <&ocram>;
++			interrupts = <0 178 1>, <0 179 1>;
++		};
++	};
+diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+index 252c3d1..e546e47 100644
+--- a/arch/arm/boot/dts/socfpga.dtsi
++++ b/arch/arm/boot/dts/socfpga.dtsi
+@@ -618,6 +618,26 @@
+ 			interrupts = <0 39 4>;
+ 		};
  
- static void socfpga_cyclone5_restart(enum reboot_mode mode, const char *cmd)
++		soc_ecc {
++			compatible = "altr,edac";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges;
++
++			l2edac@ffd08140 {
++				compatible = "altr,l2-edac";
++				reg = <0xffd08140 0x4>;
++				interrupts = <0 36 1>, <0 37 1>;
++			};
++
++			ocramedac@ffd08144 {
++				compatible = "altr,ocram-edac";
++				reg = <0xffd08144 0x4>;
++				iram = <&ocram>;
++				interrupts = <0 178 1>, <0 179 1>;
++			};
++		};
++
+ 		L2: l2-cache@fffef000 {
+ 			compatible = "arm,pl310-cache";
+ 			reg = <0xfffef000 0x1000>;
 -- 
 1.7.9.5
 
