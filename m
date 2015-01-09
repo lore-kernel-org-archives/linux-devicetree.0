@@ -1,128 +1,62 @@
-From: Vincent Yang <vincent.yang.fujitsu@gmail.com>
-Subject: [PATCH v3 0/8] Support for Fujitsu MB86S7X SoCs
-Date: Fri,  9 Jan 2015 19:19:29 +0800
-Message-ID: <1420802369-3840-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH v9 3/4] ASoC: tda998x: add a codec to the
+	HDMI transmitter
+Date: Fri, 9 Jan 2015 11:19:35 +0000
+Message-ID: <20150109111935.GF12302@n2100.arm.linux.org.uk>
+References: <cover.1420628786.git.moinejf@free.fr>
+ <23b36acc1f769418a06f3e929eba288b5911da12.1420628786.git.moinejf@free.fr>
+ <54AD4C77.5000401@arm.com>
+ <20150107154138.GL12302@n2100.arm.linux.org.uk>
+ <20150107190241.27ebac8b@armhf> <54AFAC4C.7010209@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: mark.rutland@arm.com, andy.green@linaro.org, linux@arm.linux.org.uk, arnd@arndb.de, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, patches@linaro.org, Vincent Yang <Vincent.Yang@tw.fujitsu.com>, jaswinder.singh@linaro.org, robh+dt@kernel.org, galak@codeaurora.org, olof@lixom.net
+Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Disposition: inline
+In-Reply-To: <54AFAC4C.7010209@ti.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Jyri Sarha <jsarha@ti.com>
+Cc: Jean-Francois Moine <moinejf@free.fr>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Andrew Jackson <Andrew.Jackson@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Mark Brown <broonie@kernel.org>, Dave Airlie <airlied@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On Fri, Jan 09, 2015 at 12:24:12PM +0200, Jyri Sarha wrote:
+> I think that would still fail if DRM and TDA998x is built in and SND_SOC is
+> built as modules. A request_module() call before tda9998x_codec_register()
+> should help.
 
-  Fujitsu have a series of SoC already shipping based around
-variations of 2xCA7+2xCA15 big.LITTLE architecture, and we would like
-to upstream the basic support in this series.
+That doesn't fix the problem.  If the DRM driver is built in, but the
+codec is not, and the DRM driver has a reference to
+tda9998x_codec_register(), then the vmlinux file will fail to link,
+and you'll never get the opportunity to call request_module().
 
-  MB86S70 is a big.LITTLE platform with 2xCA7+2xCA15 and an additional
-CM3 as the master. MB86S73 is a simple 2xCA7 and an additional CM3
-master.
+> Or could could write:
+> 
+> select SND_SOC_TDA998X if (SND_SOC=DRM_I2C_NXP_TDA998X || SND_SOC=y)
 
-  The DT includes references to sdhci patches which are being sent to
-the mmc list at the same time.
+I'm not sure that's right either.
 
-  We welcome any comments or questions.
+Let's go back and think about this: why should SND_SOC_TDA998X be
+*selected*.  Let me put that a different way: why should this symbol
+be forced on just because we're building the DRM TDA998x driver?
 
-Changes since v2:
-* Minor cleanup of MCPM as suggested by Nicolas Pitre.
+Would it be more sensible to make SND_SOC_TDA998X depend on
+DRM_I2C_NXP_TDA998X instead, maybe with a 'default y' - which is a
+kinder way to have SND_SOC_TDA998X be enabled.  If SND_SOC_TDA998X
+doesn't have a prompt, then it'll automatically enable itself too
+this way when all its dependencies are satisfied.
 
-Changes since v1:
-* Thanks to Arnd, modified clock driver to populate clocks only when
-some user need them. Node name changed from "fujitsu,mb86s70-clk" to
-"fujitsu,mb86s70-crg11" . Controller+Domain+Port of a clock are now
-three cells specified by the user node.
-* aliases moved into board DTS files
-* Voltage supply moved as per-board DT node.
-* Removed default overly verbose loglevel=8
-* Specify -march=armv7-a flag for mcpm.c and smc.S that contain ARMv7
-specific code.
-* Removed wrongly put outer_flush_all(), now using standard
-v7_exit_coherency_flush() instead of platform specific macro.
-* Simplified GPIO offset calculations in gpio-mb86s70.c driver. And
-added .remove() for the driver
-* ARM MHU driver provided a .remove() to enable module unloading.
-* A few other misc cleanups suggested in v1 submission.
-
-Thanks.
-
-Jassi Brar (8):
-  ARM: Add platform support for Fujitsu MB86S7X SoCs
-  mailbox: arm_mhu: add driver for ARM MHU controller
-  ARM: MB86S7X: Add MCPM support
-  clk: Add clock driver for mb86s7x
-  gpio: Add Fujitsu MB86S7x GPIO driver
-  dt: mb86s7x: add dt files for MB86S7x evbs
-  of: add Fujitsu vendor prefix
-  ARM: MB86S7x: Add configs
-
- Documentation/devicetree/bindings/arm/mb86s7x.txt  |   8 +
- .../bindings/clock/fujitsu,mb86s70-crg11.txt       |  26 +
- .../bindings/gpio/fujitsu,mb86s70-gpio.txt         |  20 +
- .../devicetree/bindings/mailbox/arm-mhu.txt        |  33 ++
- .../devicetree/bindings/soc/mb86s7x/scb_mhu.txt    |  35 ++
- .../devicetree/bindings/vendor-prefixes.txt        |   1 +
- MAINTAINERS                                        |   7 +
- arch/arm/Kconfig                                   |   2 +
- arch/arm/Makefile                                  |   1 +
- arch/arm/boot/dts/Makefile                         |   1 +
- arch/arm/boot/dts/mb86s70.dtsi                     |  91 ++++
- arch/arm/boot/dts/mb86s70eb.dts                    |  57 +++
- arch/arm/boot/dts/mb86s73.dtsi                     |  63 +++
- arch/arm/boot/dts/mb86s73eb.dts                    |  44 ++
- arch/arm/boot/dts/mb86s7x.dtsi                     | 140 ++++++
- arch/arm/configs/fujitsu_defconfig                 | 232 +++++++++
- arch/arm/configs/multi_v7_defconfig                |   5 +
- arch/arm/mach-mb86s7x/Kconfig                      |  19 +
- arch/arm/mach-mb86s7x/Makefile                     |   3 +
- arch/arm/mach-mb86s7x/board.c                      |  23 +
- arch/arm/mach-mb86s7x/mcpm.c                       | 315 ++++++++++++
- arch/arm/mach-mb86s7x/smc.S                        |  27 ++
- drivers/clk/Makefile                               |   1 +
- drivers/clk/clk-mb86s7x.c                          | 379 +++++++++++++++
- drivers/gpio/Kconfig                               |   6 +
- drivers/gpio/Makefile                              |   1 +
- drivers/gpio/gpio-mb86s7x.c                        | 231 +++++++++
- drivers/mailbox/Kconfig                            |   7 +
- drivers/mailbox/Makefile                           |   2 +
- drivers/mailbox/arm_mhu.c                          | 212 +++++++++
- drivers/soc/Makefile                               |   1 +
- drivers/soc/mb86s7x/Makefile                       |   4 +
- drivers/soc/mb86s7x/scb_mhu.c                      | 528 +++++++++++++++++++++
- include/soc/mb86s7x/scb_mhu.h                      | 105 ++++
- 34 files changed, 2630 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/mb86s7x.txt
- create mode 100644 Documentation/devicetree/bindings/clock/fujitsu,mb86s70-crg11.txt
- create mode 100644 Documentation/devicetree/bindings/gpio/fujitsu,mb86s70-gpio.txt
- create mode 100644 Documentation/devicetree/bindings/mailbox/arm-mhu.txt
- create mode 100644 Documentation/devicetree/bindings/soc/mb86s7x/scb_mhu.txt
- create mode 100644 arch/arm/boot/dts/mb86s70.dtsi
- create mode 100644 arch/arm/boot/dts/mb86s70eb.dts
- create mode 100644 arch/arm/boot/dts/mb86s73.dtsi
- create mode 100644 arch/arm/boot/dts/mb86s73eb.dts
- create mode 100644 arch/arm/boot/dts/mb86s7x.dtsi
- create mode 100644 arch/arm/configs/fujitsu_defconfig
- create mode 100644 arch/arm/mach-mb86s7x/Kconfig
- create mode 100644 arch/arm/mach-mb86s7x/Makefile
- create mode 100644 arch/arm/mach-mb86s7x/board.c
- create mode 100644 arch/arm/mach-mb86s7x/mcpm.c
- create mode 100644 arch/arm/mach-mb86s7x/smc.S
- create mode 100644 drivers/clk/clk-mb86s7x.c
- create mode 100644 drivers/gpio/gpio-mb86s7x.c
- create mode 100644 drivers/mailbox/arm_mhu.c
- create mode 100644 drivers/soc/mb86s7x/Makefile
- create mode 100644 drivers/soc/mb86s7x/scb_mhu.c
- create mode 100644 include/soc/mb86s7x/scb_mhu.h
+IMHO "select" is a very over-used, and in many cases an evil
+construct because its very hard to avoid breaking dependencies
+with it.
 
 -- 
-1.9.0
+FTTC broadband for 0.8mile line: currently at 9.5Mbps down 400kbps up
+according to speedtest.net.
