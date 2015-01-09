@@ -1,80 +1,123 @@
-From: Kevin Hilman <khilman@kernel.org>
-Subject: Re: [PATCH v2] ARM: dts: Add dts file for odroid XU3 board
-Date: Fri, 09 Jan 2015 13:06:52 -0800
-Message-ID: <7hmw5rvf2r.fsf@deeprootsystems.com>
-References: <1417721269-19342-1-git-send-email-sjoerd.simons@collabora.co.uk>
-	<54AA48E6.3040404@samsung.com>
-	<1420470469.15910.134.camel@collabora.co.uk>
-	<69242715.30115.1420655868687.JavaMail.yahoo@jws10659.mail.bf1.yahoo.com>
-	<1420670333.6075.2.camel@collabora.co.uk>
-	<6203C077F070A646AA0FCB4B5F1795D248114CA6@sisaex01sj>
-	<1420706948.6075.17.camel@collabora.co.uk>
+From: "George G. Davis" <ggdavisiv-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] drivers: of: Export of_reserved_mem_device_{init,release}
+Date: Fri, 9 Jan 2015 17:05:52 -0500
+Message-ID: <20150109220552.GA86398@gandalf.middle.earth.net>
+References: <1420813745-130341-1-git-send-email-george_davis@mentor.com>
+ <CAL_JsqJaT-Y7DHQS5ZZ0TP6r0iPDbUZwU-Kec5MSE7DOPgZxCg@mail.gmail.com>
+ <20150109183310.GA38065@gandalf.middle.earth.net>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1420706948.6075.17.camel@collabora.co.uk> (Sjoerd Simons's
-	message of "Thu, 08 Jan 2015 09:49:08 +0100")
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
-Cc: Jonathan Stone -SISA <j.stone@samsung.com>, Anand Moon <moon.linux@yahoo.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Joonyoung Shim <jy0922.shim@samsung.com>, Tyler Baker <tyler.baker@linaro.org>, Heesub Shin <heesub.shin@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150109183310.GA38065-f9ZlEuEWxVcBGMgAZHU0458/Q/RUDjKW@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "George G. Davis" <george_davis-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Sjoerd Simons <sjoerd.simons@collabora.co.uk> writes:
+On Fri, Jan 09, 2015 at 01:33:10PM -0500, George G. Davis wrote:
+> On Fri, Jan 09, 2015 at 11:53:01AM -0600, Rob Herring wrote:
+> > On Fri, Jan 9, 2015 at 8:29 AM, George G. Davis <ggdavisiv-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > > Export of_reserved_mem_device_{init,release} so that modules
+> > > can initialize and release their assigned per-device cma_area.
+> > 
+> > I believe the original intent was for the core bus code to call these
+> > functions. While the commit adding them says "automated assignment"
+> > that part did not go in.
+> 
+> I suspected that there may have been a bit of missing magic.  The only
+> use of these functions that I was able to find was in an earlier out of
+> tree patch series where these functions were called from the s5p-mfc
+> driver:
+> 
+> http://lists.linaro.org/pipermail/linaro-mm-sig/2014-August/004140.html
+> 
+> I agree that "automated assignment" via core bus code would be a better
+> solution but I don't know where to add the calls.
 
-> On Wed, 2015-01-07 at 23:49 +0000, Jonathan Stone -SISA wrote:
->> 
->> On On Wed, 2015-01-07 at 18:37 +0000, Sjoerd Simons writes wrote:
->> >On Wed, 2015-01-07 at 18:37 +0000, Anand Moon wrote:>
->> [...]
->> 
->> >> Only 4 core cpu's are on my board. Also CpuFreq is not working.
->> > 
->> > Can you share some point on this.
->> 
->> >The defconfig is using the bL switcher, which pairs up big and
->> > little cores to make them appear as one core.. So for 8 real
->> > cores, you'll get
->> >4 "virtual cores".
->> 
->> That configuration is appropriate for the 5420, which allegedly has
->> a hardware bug in the cache-coherence between the Cortex-A7 block
->> and the Cortex-A15 block.
->> Newer Exynos 5 SoCs -- 5422/5800, 5620, etc -- don't have that
->> bug. The scheduler should configured to do HMP on all 8 (or 6)
->> cores.
->> I don't have a 5410, but I assume it has the same bug as the 5420.
->
-> Yes the kernel/scheduler could be configured like that, but
-> exynos_defconfig turns on bL rather then HMP. 
->
-> Now it's not unthinkable to add code/dts properties to select the
-> right/preferred scheduling strategy depending on the board (HMP vs. bL).
-> But proper HMP scheduling is still a work in progress in mainline 
+How about something like the following for automated assignment?:
 
-Yes, HMP scheduling is not yet ready for mainline, which is why the
-switcher is enabled by default.  If you turn the switcher off, you will
-indeed get all 8 cores, but you may get some rather strange and
-sub-optimal results with performance since from the scheduler
-perspective, it will balance tasks across all 8 CPUs as if they were
-identical.
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index 9421fed..231b427 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -14,6 +14,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/of_device.h>
+ #include <linux/of_irq.h>
++#include <linux/of_reserved_mem.h>
+ #include <linux/module.h>
+ #include <linux/init.h>
+ #include <linux/dma-mapping.h>
+@@ -509,9 +510,12 @@ static int platform_drv_probe(struct device *_dev)
+ 
+ 	ret = dev_pm_domain_attach(_dev, true);
+ 	if (ret != -EPROBE_DEFER) {
++		of_reserved_mem_device_init(_dev);
+ 		ret = drv->probe(dev);
+-		if (ret)
++		if (ret) {
++			of_reserved_mem_device_release(_dev);
+ 			dev_pm_domain_detach(_dev, true);
++		}
+ 	}
+ 
+ 	if (drv->prevent_deferred_probe && ret == -EPROBE_DEFER) {
+@@ -534,6 +538,7 @@ static int platform_drv_remove(struct device *_dev)
+ 	int ret;
+ 
+ 	ret = drv->remove(dev);
++	of_reserved_mem_device_release(_dev);
+ 	dev_pm_domain_detach(_dev, true);
+ 
+ 	return ret;
 
-> and iirc specifically on the XU3 there are open issue wrt. MCPM and
-> its secure firmware. I've added Kevin to the CC as he's been working
-> on this topic so should know the status a lot better then i do.
 
-The broken firmware issues don't affect scheduling directly, but affect
-the low-power states that are available to the kernel.  Since the
-firwmware doesn't allow proper access to CCI, low-power states that
-require MCPM are not available, which, among other things, means the
-clusters can not be powered down.
-
->> The XU3 kernel supplied by HardKernel shows all 8 cores, and does HMP scheduling across all 8.
->
-> Yes, that's independant of the dts though as mentioned above. Also there
-> are still opne issues to booting up all cores on an XU3 afaik. See 
->    http://www.spinics.net/lists/linux-samsung-soc/msg39523.html
-
-I haven't looked closely at the hardkernel tree to see what HMP
-scheduling patches they're using, but it must be something out of tree.
-
-Kevin
+--
+Regards,
+George
+> 
+> > As it stands, there are no in tree users of
+> > these functions.
+> > 
+> > Marek, comments?
+> 
+> Thanks!
+> 
+> --
+> Regards,
+> George
+> 
+> > 
+> > Rob
+> > 
+> > >
+> > > Signed-off-by: George G. Davis <george_davis-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+> > > ---
+> > >  drivers/of/of_reserved_mem.c | 2 ++
+> > >  1 file changed, 2 insertions(+)
+> > >
+> > > diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
+> > > index dc566b3..5eeb5b2 100644
+> > > --- a/drivers/of/of_reserved_mem.c
+> > > +++ b/drivers/of/of_reserved_mem.c
+> > > @@ -265,6 +265,7 @@ int of_reserved_mem_device_init(struct device *dev)
+> > >
+> > >         return ret;
+> > >  }
+> > > +EXPORT_SYMBOL(of_reserved_mem_device_init);
+> > >
+> > >  /**
+> > >   * of_reserved_mem_device_release() - release reserved memory device structures
+> > > @@ -289,3 +290,4 @@ void of_reserved_mem_device_release(struct device *dev)
+> > >
+> > >         rmem->ops->device_release(rmem, dev);
+> > >  }
+> > > +EXPORT_SYMBOL(of_reserved_mem_device_release);
+> > > --
+> > > 1.9.3
+> > >
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
