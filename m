@@ -1,58 +1,33 @@
-From: Pavel Machek <pavel@denx.de>
-Subject: Re: [PATCH v8 2/4] fpga manager: add sysfs interface document
-Date: Fri, 9 Jan 2015 21:56:44 +0100
-Message-ID: <20150109205643.GA5761@amd>
-References: <1420575219-27061-1-git-send-email-atull@opensource.altera.com>
- <1420575219-27061-3-git-send-email-atull@opensource.altera.com>
- <20150107084819.GA1887@amd>
- <alpine.DEB.2.02.1501091302370.30067@linuxheads99>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH/RFC v10 16/19] Documentation: leds: Add description of
+ v4l2-flash sub-device
+Date: Fri, 9 Jan 2015 21:57:06 +0100
+Message-ID: <20150109205706.GQ18076@amd>
+References: <1420816989-1808-1-git-send-email-j.anaszewski@samsung.com>
+ <1420816989-1808-17-git-send-email-j.anaszewski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-leds-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.02.1501091302370.30067@linuxheads99>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: atull <atull@opensource.altera.com>
-Cc: mark.rutland@arm.com, linux-doc@vger.kernel.org, rubini@gnudd.com, pantelis.antoniou@konsulko.com, hpa@zytor.com, s.trumtrar@pengutronix.de, devel@driverdev.osuosl.org, sameo@linux.intel.com, nico@linaro.org, ijc+devicetree@hellion.org.uk, michal.simek@xilinx.com, kyle.teske@ni.com, jgunthorpe@obsidianresearch.com, grant.likely@linaro.org, davidb@codeaurora.org, linus.walleij@linaro.org, cesarb@cesarb.net, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, iws@ovro.caltech.edu, broonie@kernel.org, philip@balister.org, dinguyen@opensource.altera.com, monstr@monstr.eu, gregkh@linuxfoundation.org, yvanderv@opensource.altera.com, linux-kernel@vger.kernel.org, balbi@ti.com, delicious.quinoa@gmail.com, robh+dt@kernel.org, rob@landley.net, galak@codeaurora.org, akpm@linux-foundation.org, davem@davemloft.net, m.chehab@samsung.com
+In-Reply-To: <1420816989-1808-17-git-send-email-j.anaszewski@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, b.zolnierkie@samsung.com, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri 2015-01-09 13:14:24, atull wrote:
-> On Wed, 7 Jan 2015, Pavel Machek wrote:
+On Fri 2015-01-09 16:23:06, Jacek Anaszewski wrote:
+> This patch extends LED Flash class documention by
+> the description of interactions with v4l2-flash sub-device.
 > 
-> > On Tue 2015-01-06 14:13:37, atull@opensource.altera.com wrote:
-> > > +
-> > > +What:		/sys/class/fpga_manager/<fpga>/firmware
-> > > +Date:		October 2014
-> > > +KernelVersion:	3.18
-> > > +Contact:	Alan Tull <atull@opensource.altera.com>
-> > > +Description:	Name of the FPGA image file to load using firmware
-> > > class.
-> > 
-> > This one is ugly: it unneccessarily passes firmware name through the
-> > kernel. Just make interface and code simpler by always passing
-> > "socfpga-fpga-image" or something like that.
-> > 
-> > Thanks,
-> > 									Pavel
-> 
-> Hi Pavel,
-> 
-> It might be ugly.  It's not unnecessary.  Some uses of FPGAs involve
-> switching out the FPGA images dynamically under control of the userspace.
+> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+> Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Cc: Bryan Wu <cooloney@gmail.com>
+> Cc: Richard Purdie <rpurdie@rpsys.net>
 
-Then configure udev to load right firmware for you, or ln -s
-image-i-want-now socfpga-fpga-image to select the one to read...?
+Acked-by: Pavel Machek <pavel@ucw.cz>
 
-									Pavel
+
 -- 
 (english) http://www.livejournal.com/~pavelmachek
 (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
