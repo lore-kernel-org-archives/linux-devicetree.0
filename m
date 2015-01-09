@@ -1,395 +1,263 @@
-From: Robin Gong <b38343@freescale.com>
-Subject: [PATCH v1] regulator: pfuze100-regulator: add pfuze3000 support
-Date: Fri, 9 Jan 2015 09:57:33 +0800
-Message-ID: <1420768653-1760-1-git-send-email-b38343@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Gigi Joseph <gigi.joseph@gmail.com>
+Subject: [PATCH 1/6] ti-st: add device tree support
+Date: Fri,  9 Jan 2015 03:45:02 +0000
+Message-ID: <1420775102-24664-1-git-send-email-gigi.joseph@ti.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, lgirdwood@gmail.com, broonie@kernel.org, b38343@freescale.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Robin van der Gracht <robin@protonic.nl>, Wolfram Sang <wsa@the-dreams.de>, Enric Balletbo i Serra <eballetbo@iseebcn.com>, Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Gigi Joseph <gigi.joseph@ti.com>, Eyal Reizer <eyalr@ti.com>, bvijay <bvijay@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Add pfuze3000 chip support.
+When using device tree, driver configuration data need to be read from
+device node.
+Add support for getting the platform data information from the device
+tree information stored in the .dtb file in case it exists.
 
-Signed-off-by: Robin Gong <b38343@freescale.com>
+Signed-off-by: Eyal Reizer <eyalr@ti.com>
+Signed-off-by: bvijay <bvijay@ti.com>
+Diff rendering mode:inlineside by side
+
+Signed-off-by: Gigi Joseph <gigi.joseph@ti.com>
 ---
- .../devicetree/bindings/regulator/pfuze100.txt     |  94 ++++++++++++++-
- drivers/regulator/pfuze100-regulator.c             | 134 +++++++++++++++++++--
- include/linux/regulator/pfuze100.h                 |  14 +++
- 3 files changed, 232 insertions(+), 10 deletions(-)
+ drivers/misc/ti-st/st_kim.c  | 97 ++++++++++++++++++++++++++++++++++++++++----
+ drivers/misc/ti-st/st_ll.c   | 17 +++++++-
+ include/linux/ti_wilink_st.h |  1 +
+ 3 files changed, 105 insertions(+), 10 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/regulator/pfuze100.txt b/Documentation/devicetree/bindings/regulator/pfuze100.txt
-index 34ef5d1..9b40db8 100644
---- a/Documentation/devicetree/bindings/regulator/pfuze100.txt
-+++ b/Documentation/devicetree/bindings/regulator/pfuze100.txt
-@@ -1,7 +1,7 @@
- PFUZE100 family of regulators
- 
- Required properties:
--- compatible: "fsl,pfuze100" or "fsl,pfuze200"
-+- compatible: "fsl,pfuze100", "fsl,pfuze200", "fsl,pfuze3000"
- - reg: I2C slave address
- 
- Required child node:
-@@ -14,6 +14,8 @@ Required child node:
-   sw1ab,sw1c,sw2,sw3a,sw3b,sw4,swbst,vsnvs,vrefddr,vgen1~vgen6
-   --PFUZE200
-   sw1ab,sw2,sw3a,sw3b,swbst,vsnvs,vrefddr,vgen1~vgen6
-+  --PFUZE3000
-+  sw1a,sw1b,sw2,sw3,swbst,vsnvs,vrefddr,vldo1,vldo2,vccsd,v33,vldo3,vldo4
- 
- Each regulator is defined using the standard binding for regulators.
- 
-@@ -205,3 +207,93 @@ Example 2: PFUZE200
- 			};
- 		};
- 	};
-+
-+Example 3: PFUZE3000
-+
-+	pmic: pfuze3000@08 {
-+		compatible = "fsl,pfuze3000";
-+		reg = <0x08>;
-+
-+		regulators {
-+			sw1a_reg: sw1a {
-+				regulator-min-microvolt = <700000>;
-+				regulator-max-microvolt = <1475000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+				regulator-ramp-delay = <6250>;
-+			};
-+			/* use sw1c_reg to align with pfuze100/pfuze200 */
-+			sw1c_reg: sw1b {
-+				regulator-min-microvolt = <700000>;
-+				regulator-max-microvolt = <1475000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+				regulator-ramp-delay = <6250>;
-+			};
-+
-+			sw2_reg: sw2 {
-+				regulator-min-microvolt = <2500000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			sw3a_reg: sw3 {
-+				regulator-min-microvolt = <900000>;
-+				regulator-max-microvolt = <1650000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			swbst_reg: swbst {
-+				regulator-min-microvolt = <5000000>;
-+				regulator-max-microvolt = <5150000>;
-+			};
-+
-+			snvs_reg: vsnvs {
-+				regulator-min-microvolt = <1000000>;
-+				regulator-max-microvolt = <3000000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vref_reg: vrefddr {
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vgen1_reg: vldo1 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vgen2_reg: vldo2 {
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <1550000>;
-+			};
-+
-+			vgen3_reg: vccsd {
-+				regulator-min-microvolt = <2850000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vgen4_reg: v33 {
-+				regulator-min-microvolt = <2850000>;
-+				regulator-max-microvolt = <3300000>;
-+			};
-+
-+			vgen5_reg: vldo3 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vgen6_reg: vldo4 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+		};
-+	};
-diff --git a/drivers/regulator/pfuze100-regulator.c b/drivers/regulator/pfuze100-regulator.c
-index c879dff..8cc8d18 100644
---- a/drivers/regulator/pfuze100-regulator.c
-+++ b/drivers/regulator/pfuze100-regulator.c
-@@ -56,7 +56,7 @@
- #define PFUZE100_VGEN5VOL	0x70
- #define PFUZE100_VGEN6VOL	0x71
- 
--enum chips { PFUZE100, PFUZE200 };
-+enum chips { PFUZE100, PFUZE200, PFUZE3000 = 3 };
- 
- struct pfuze_regulator {
- 	struct regulator_desc desc;
-@@ -80,9 +80,18 @@ static const int pfuze100_vsnvs[] = {
- 	1000000, 1100000, 1200000, 1300000, 1500000, 1800000, 3000000,
- };
- 
-+static const int pfuze3000_sw2lo[] = {
-+	1500000, 1550000, 1600000, 1650000, 1700000, 1750000, 1800000, 1850000,
-+};
-+
-+static const int pfuze3000_sw2hi[] = {
-+	2500000, 2800000, 2850000, 3000000, 3100000, 3150000, 3200000, 3300000,
-+};
-+
- static const struct i2c_device_id pfuze_device_id[] = {
- 	{.name = "pfuze100", .driver_data = PFUZE100},
- 	{.name = "pfuze200", .driver_data = PFUZE200},
-+	{.name = "pfuze3000", .driver_data = PFUZE3000},
- 	{ }
- };
- MODULE_DEVICE_TABLE(i2c, pfuze_device_id);
-@@ -90,6 +99,7 @@ MODULE_DEVICE_TABLE(i2c, pfuze_device_id);
- static const struct of_device_id pfuze_dt_ids[] = {
- 	{ .compatible = "fsl,pfuze100", .data = (void *)PFUZE100},
- 	{ .compatible = "fsl,pfuze200", .data = (void *)PFUZE200},
-+	{ .compatible = "fsl,pfuze3000", .data = (void *)PFUZE3000},
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, pfuze_dt_ids);
-@@ -219,6 +229,60 @@ static struct regulator_ops pfuze100_swb_regulator_ops = {
- 		.stby_mask = 0x20,	\
- 	}
- 
-+#define PFUZE3000_VCC_REG(_chip, _name, base, min, max, step)	{	\
-+	.desc = {	\
-+		.name = #_name,	\
-+		.n_voltages = ((max) - (min)) / (step) + 1,	\
-+		.ops = &pfuze100_ldo_regulator_ops,	\
-+		.type = REGULATOR_VOLTAGE,	\
-+		.id = _chip ## _ ## _name,	\
-+		.owner = THIS_MODULE,	\
-+		.min_uV = (min),	\
-+		.uV_step = (step),	\
-+		.vsel_reg = (base),	\
-+		.vsel_mask = 0x3,	\
-+		.enable_reg = (base),	\
-+		.enable_mask = 0x10,	\
-+	},	\
-+	.stby_reg = (base),	\
-+	.stby_mask = 0x20,	\
-+}
-+
-+
-+#define PFUZE3000_SW2_REG(_chip, _name, base, min, max, step)	{	\
-+	.desc = {	\
-+		.name = #_name,\
-+		.n_voltages = ((max) - (min)) / (step) + 1,	\
-+		.ops = &pfuze100_sw_regulator_ops,	\
-+		.type = REGULATOR_VOLTAGE,	\
-+		.id = _chip ## _ ## _name,	\
-+		.owner = THIS_MODULE,	\
-+		.min_uV = (min),	\
-+		.uV_step = (step),	\
-+		.vsel_reg = (base) + PFUZE100_VOL_OFFSET,	\
-+		.vsel_mask = 0x7,	\
-+	},	\
-+	.stby_reg = (base) + PFUZE100_STANDBY_OFFSET,	\
-+	.stby_mask = 0x7,	\
-+}
-+
-+#define PFUZE3000_SW3_REG(_chip, _name, base, min, max, step)	{	\
-+	.desc = {	\
-+		.name = #_name,\
-+		.n_voltages = ((max) - (min)) / (step) + 1,	\
-+		.ops = &pfuze100_sw_regulator_ops,	\
-+		.type = REGULATOR_VOLTAGE,	\
-+		.id = _chip ## _ ## _name,	\
-+		.owner = THIS_MODULE,	\
-+		.min_uV = (min),	\
-+		.uV_step = (step),	\
-+		.vsel_reg = (base) + PFUZE100_VOL_OFFSET,	\
-+		.vsel_mask = 0xf,	\
-+	},	\
-+	.stby_reg = (base) + PFUZE100_STANDBY_OFFSET,	\
-+	.stby_mask = 0xf,	\
-+}
-+
- /* PFUZE100 */
- static struct pfuze_regulator pfuze100_regulators[] = {
- 	PFUZE100_SW_REG(PFUZE100, SW1AB, PFUZE100_SW1ABVOL, 300000, 1875000, 25000),
-@@ -254,6 +318,22 @@ static struct pfuze_regulator pfuze200_regulators[] = {
- 	PFUZE100_VGEN_REG(PFUZE200, VGEN6, PFUZE100_VGEN6VOL, 1800000, 3300000, 100000),
- };
- 
-+static struct pfuze_regulator pfuze3000_regulators[] = {
-+	PFUZE100_SW_REG(PFUZE3000, SW1A, PFUZE100_SW1ABVOL, 700000, 1475000, 25000),
-+	PFUZE100_SW_REG(PFUZE3000, SW1B, PFUZE100_SW1CVOL, 700000, 1475000, 25000),
-+	PFUZE100_SWB_REG(PFUZE3000, SW2, PFUZE100_SW2VOL, 0x7, pfuze3000_sw2lo),
-+	PFUZE3000_SW3_REG(PFUZE3000, SW3, PFUZE100_SW3AVOL, 900000, 1650000, 50000),
-+	PFUZE100_SWB_REG(PFUZE3000, SWBST, PFUZE100_SWBSTCON1, 0x3, pfuze100_swbst),
-+	PFUZE100_SWB_REG(PFUZE3000, VSNVS, PFUZE100_VSNVSVOL, 0x7, pfuze100_vsnvs),
-+	PFUZE100_FIXED_REG(PFUZE3000, VREFDDR, PFUZE100_VREFDDRCON, 750000),
-+	PFUZE100_VGEN_REG(PFUZE3000, VLDO1, PFUZE100_VGEN1VOL, 1800000, 3300000, 100000),
-+	PFUZE100_VGEN_REG(PFUZE3000, VLDO2, PFUZE100_VGEN2VOL, 800000, 1550000, 50000),
-+	PFUZE3000_VCC_REG(PFUZE3000, VCCSD, PFUZE100_VGEN3VOL, 2850000, 3300000, 150000),
-+	PFUZE3000_VCC_REG(PFUZE3000, V33, PFUZE100_VGEN4VOL, 2850000, 3300000, 150000),
-+	PFUZE100_VGEN_REG(PFUZE3000, VLDO3, PFUZE100_VGEN5VOL, 1800000, 3300000, 100000),
-+	PFUZE100_VGEN_REG(PFUZE3000, VLDO4, PFUZE100_VGEN6VOL, 1800000, 3300000, 100000),
-+};
-+
- static struct pfuze_regulator *pfuze_regulators;
- 
- #ifdef CONFIG_OF
-@@ -294,6 +374,24 @@ static struct of_regulator_match pfuze200_matches[] = {
- 	{ .name = "vgen6",	},
- };
- 
-+/* PFUZE3000 */
-+static struct of_regulator_match pfuze3000_matches[] = {
-+
-+	{ .name = "sw1a",	},
-+	{ .name = "sw1b",	},
-+	{ .name = "sw2",	},
-+	{ .name = "sw3",	},
-+	{ .name = "swbst",	},
-+	{ .name = "vsnvs",	},
-+	{ .name = "vrefddr",	},
-+	{ .name = "vldo1",	},
-+	{ .name = "vldo2",	},
-+	{ .name = "vccsd",	},
-+	{ .name = "v33",	},
-+	{ .name = "vldo3",	},
-+	{ .name = "vldo4",	},
-+};
-+
- static struct of_regulator_match *pfuze_matches;
- 
- static int pfuze_parse_regulators_dt(struct pfuze_chip *chip)
-@@ -313,6 +411,11 @@ static int pfuze_parse_regulators_dt(struct pfuze_chip *chip)
- 	}
- 
- 	switch (chip->chip_id) {
-+	case PFUZE3000:
-+		pfuze_matches = pfuze3000_matches;
-+		ret = of_regulator_match(dev, parent, pfuze3000_matches,
-+					 ARRAY_SIZE(pfuze3000_matches));
-+		break;
- 	case PFUZE200:
- 		pfuze_matches = pfuze200_matches;
- 		ret = of_regulator_match(dev, parent, pfuze200_matches,
-@@ -378,7 +481,8 @@ static int pfuze_identify(struct pfuze_chip *pfuze_chip)
- 		 * as ID=8 in PFUZE100
- 		 */
- 		dev_info(pfuze_chip->dev, "Assuming misprogrammed ID=0x8");
--	} else if ((value & 0x0f) != pfuze_chip->chip_id) {
-+	} else if ((value & 0x0f) != pfuze_chip->chip_id &&
-+		   (value & 0xf0) >> 4 != pfuze_chip->chip_id) {
- 		/* device id NOT match with your setting */
- 		dev_warn(pfuze_chip->dev, "Illegal ID: %x\n", value);
- 		return -ENODEV;
-@@ -417,7 +521,7 @@ static int pfuze100_regulator_probe(struct i2c_client *client,
- 	int i, ret;
- 	const struct of_device_id *match;
- 	u32 regulator_num;
--	u32 sw_check_start, sw_check_end;
-+	u32 sw_check_start, sw_check_end, sw_hi = 0x40;
- 
- 	pfuze_chip = devm_kzalloc(&client->dev, sizeof(*pfuze_chip),
- 			GFP_KERNEL);
-@@ -458,13 +562,19 @@ static int pfuze100_regulator_probe(struct i2c_client *client,
- 
- 	/* use the right regulators after identify the right device */
- 	switch (pfuze_chip->chip_id) {
-+	case PFUZE3000:
-+		pfuze_regulators = pfuze3000_regulators;
-+		regulator_num = ARRAY_SIZE(pfuze3000_regulators);
-+		sw_check_start = PFUZE3000_SW2;
-+		sw_check_end = PFUZE3000_SW2;
-+		sw_hi = 1 << 3;
-+		break;
- 	case PFUZE200:
- 		pfuze_regulators = pfuze200_regulators;
- 		regulator_num = ARRAY_SIZE(pfuze200_regulators);
- 		sw_check_start = PFUZE200_SW2;
- 		sw_check_end = PFUZE200_SW3B;
- 		break;
+diff --git a/drivers/misc/ti-st/st_kim.c b/drivers/misc/ti-st/st_kim.c
+index e4b7ee4f..68a0b58 100644
+--- a/drivers/misc/ti-st/st_kim.c
++++ b/drivers/misc/ti-st/st_kim.c
+@@ -36,7 +36,8 @@
+ #include <linux/skbuff.h>
+ #include <linux/ti_wilink_st.h>
+ #include <linux/module.h>
 -
- 	case PFUZE100:
- 	default:
- 		pfuze_regulators = pfuze100_regulators;
-@@ -474,7 +584,8 @@ static int pfuze100_regulator_probe(struct i2c_client *client,
- 		break;
- 	}
- 	dev_info(&client->dev, "pfuze%s found.\n",
--		(pfuze_chip->chip_id == PFUZE100) ? "100" : "200");
-+		(pfuze_chip->chip_id == PFUZE100) ? "100" :
-+		((pfuze_chip->chip_id == PFUZE200) ? "200" : "3000"));
++#include <linux/of.h>
++#include <linux/of_device.h>
  
- 	memcpy(pfuze_chip->regulator_descs, pfuze_regulators,
- 		sizeof(pfuze_chip->regulator_descs));
-@@ -498,10 +609,15 @@ static int pfuze100_regulator_probe(struct i2c_client *client,
- 		/* SW2~SW4 high bit check and modify the voltage value table */
- 		if (i >= sw_check_start && i <= sw_check_end) {
- 			regmap_read(pfuze_chip->regmap, desc->vsel_reg, &val);
--			if (val & 0x40) {
--				desc->min_uV = 800000;
--				desc->uV_step = 50000;
--				desc->n_voltages = 51;
-+			if (val & sw_hi) {
-+				if (pfuze_chip->chip_id == PFUZE3000) {
-+					desc->volt_table = pfuze3000_sw2hi;
-+					desc->n_voltages = ARRAY_SIZE(pfuze3000_sw2hi);
-+				} else {
-+					desc->min_uV = 800000;
-+					desc->uV_step = 50000;
-+					desc->n_voltages = 51;
-+				}
- 			}
- 		}
+ #define MAX_ST_DEVICES	3	/* Imagine 1 on each UART for now */
+ static struct platform_device *st_kim_devices[MAX_ST_DEVICES];
+@@ -44,6 +45,9 @@ static struct platform_device *st_kim_devices[MAX_ST_DEVICES];
+ /**********************************************************************/
+ /* internal functions */
  
-diff --git a/include/linux/regulator/pfuze100.h b/include/linux/regulator/pfuze100.h
-index 364f7a7..70c6c66 100644
---- a/include/linux/regulator/pfuze100.h
-+++ b/include/linux/regulator/pfuze100.h
-@@ -49,6 +49,20 @@
- #define PFUZE200_VGEN5		11
- #define PFUZE200_VGEN6		12
- 
-+#define PFUZE3000_SW1A		0
-+#define PFUZE3000_SW1B		1
-+#define PFUZE3000_SW2		2
-+#define PFUZE3000_SW3		3
-+#define PFUZE3000_SWBST		4
-+#define PFUZE3000_VSNVS		5
-+#define PFUZE3000_VREFDDR	6
-+#define PFUZE3000_VLDO1		7
-+#define PFUZE3000_VLDO2		8
-+#define PFUZE3000_VCCSD		9
-+#define PFUZE3000_V33		10
-+#define PFUZE3000_VLDO3		11
-+#define PFUZE3000_VLDO4		12
++struct ti_st_plat_data	*dt_pdata;
++static struct ti_st_plat_data *get_platform_data(struct device *dev);
 +
- struct regulator_init_data;
+ /**
+  * st_get_plat_device -
+  *	function which returns the reference to the platform device
+@@ -462,7 +466,12 @@ long st_kim_start(void *kim_data)
+ 	struct kim_data_s	*kim_gdata = (struct kim_data_s *)kim_data;
  
- struct pfuze_regulator_platform_data {
+ 	pr_info(" %s", __func__);
+-	pdata = kim_gdata->kim_pdev->dev.platform_data;
++	if (kim_gdata->kim_pdev->dev.of_node) {
++		pr_debug("use device tree data");
++		pdata = dt_pdata;
++	} else {
++		pdata = kim_gdata->kim_pdev->dev.platform_data;
++	}
+ 
+ 	do {
+ 		/* platform specific enabling code here */
+@@ -522,12 +531,18 @@ long st_kim_stop(void *kim_data)
+ {
+ 	long err = 0;
+ 	struct kim_data_s	*kim_gdata = (struct kim_data_s *)kim_data;
+-	struct ti_st_plat_data	*pdata =
+-		kim_gdata->kim_pdev->dev.platform_data;
++	struct ti_st_plat_data	*pdata;
+ 	struct tty_struct	*tty = kim_gdata->core_data->tty;
+ 
+ 	reinit_completion(&kim_gdata->ldisc_installed);
+ 
++	if (kim_gdata->kim_pdev->dev.of_node) {
++		pr_debug("use device tree data");
++		pdata = dt_pdata;
++	} else
++		pdata = kim_gdata->kim_pdev->dev.platform_data;
++
++
+ 	if (tty) {	/* can be called before ldisc is installed */
+ 		/* Flush any pending characters in the driver and discipline. */
+ 		tty_ldisc_flush(tty);
+@@ -715,13 +730,53 @@ static const struct file_operations list_debugfs_fops = {
+  * board-*.c file
+  */
+ 
++static const struct of_device_id kim_of_match[] = {
++{
++	.compatible = "kim",
++	},
++	{}
++};
++MODULE_DEVICE_TABLE(of, kim_of_match);
++
++static struct ti_st_plat_data *get_platform_data(struct device *dev)
++{
++	struct device_node *np = dev->of_node;
++	const u32 *dt_property;
++	int len;
++
++	dt_pdata = kzalloc(sizeof(*dt_pdata), GFP_KERNEL);
++
++	if (!dt_pdata)
++		pr_err("Can't allocate device_tree platform data\n");
++
++	dt_property = of_get_property(np, "dev_name", &len);
++	if (dt_property)
++		memcpy(&dt_pdata->dev_name, dt_property, len);
++	of_property_read_u32(np, "nshutdown_gpio",
++			     (u32 *)&dt_pdata->nshutdown_gpio);
++	of_property_read_u32(np, "flow_cntrl", (u32 *)&dt_pdata->flow_cntrl);
++	of_property_read_u32(np, "baud_rate", (u32 *)&dt_pdata->baud_rate);
++
++	return dt_pdata;
++}
++
+ static struct dentry *kim_debugfs_dir;
+ static int kim_probe(struct platform_device *pdev)
+ {
+ 	struct kim_data_s	*kim_gdata;
+-	struct ti_st_plat_data	*pdata = pdev->dev.platform_data;
++	struct ti_st_plat_data	*pdata;
+ 	int err;
+ 
++	if (pdev->dev.of_node)
++		pdata = get_platform_data(&pdev->dev);
++	else
++		pdata = pdev->dev.platform_data;
++
++	if (pdata == NULL) {
++		dev_err(&pdev->dev, "Platform Data is missing\n");
++		return -ENXIO;
++	}
++
+ 	if ((pdev->id != -1) && (pdev->id < MAX_ST_DEVICES)) {
+ 		/* multiple devices could exist */
+ 		st_kim_devices[pdev->id] = pdev;
+@@ -806,9 +861,16 @@ err_core_init:
+ static int kim_remove(struct platform_device *pdev)
+ {
+ 	/* free the GPIOs requested */
+-	struct ti_st_plat_data	*pdata = pdev->dev.platform_data;
++	struct ti_st_plat_data	*pdata;
+ 	struct kim_data_s	*kim_gdata;
+ 
++	if (pdev->dev.of_node) {
++		pr_debug("use device tree data");
++		pdata = dt_pdata;
++	} else {
++		pdata = pdev->dev.platform_data;
++	}
++
+ 	kim_gdata = platform_get_drvdata(pdev);
+ 
+ 	/* Free the Bluetooth/FM/GPIO
+@@ -826,12 +888,22 @@ static int kim_remove(struct platform_device *pdev)
+ 
+ 	kfree(kim_gdata);
+ 	kim_gdata = NULL;
++	kfree(dt_pdata);
++	dt_pdata = NULL;
++
+ 	return 0;
+ }
+ 
+ static int kim_suspend(struct platform_device *pdev, pm_message_t state)
+ {
+-	struct ti_st_plat_data	*pdata = pdev->dev.platform_data;
++	struct ti_st_plat_data	*pdata;
++
++	if (pdev->dev.of_node) {
++		pr_debug("use device tree data");
++		pdata = dt_pdata;
++	} else {
++		pdata = pdev->dev.platform_data;
++	}
+ 
+ 	if (pdata->suspend)
+ 		return pdata->suspend(pdev, state);
+@@ -841,7 +913,14 @@ static int kim_suspend(struct platform_device *pdev, pm_message_t state)
+ 
+ static int kim_resume(struct platform_device *pdev)
+ {
+-	struct ti_st_plat_data	*pdata = pdev->dev.platform_data;
++	struct ti_st_plat_data	*pdata;
++
++	if (pdev->dev.of_node) {
++		pr_debug("use device tree data");
++		pdata = dt_pdata;
++	} else {
++		pdata = pdev->dev.platform_data;
++	}
+ 
+ 	if (pdata->resume)
+ 		return pdata->resume(pdev);
+@@ -858,6 +937,8 @@ static struct platform_driver kim_platform_driver = {
+ 	.resume = kim_resume,
+ 	.driver = {
+ 		.name = "kim",
++		.owner = THIS_MODULE,
++		.of_match_table = of_match_ptr(kim_of_match),
+ 	},
+ };
+ 
+diff --git a/drivers/misc/ti-st/st_ll.c b/drivers/misc/ti-st/st_ll.c
+index 93b4d67..518e1b7 100644
+--- a/drivers/misc/ti-st/st_ll.c
++++ b/drivers/misc/ti-st/st_ll.c
+@@ -26,6 +26,7 @@
+ #include <linux/ti_wilink_st.h>
+ 
+ /**********************************************************************/
++
+ /* internal functions */
+ static void send_ll_cmd(struct st_data_s *st_data,
+ 	unsigned char cmd)
+@@ -53,7 +54,13 @@ static void ll_device_want_to_sleep(struct st_data_s *st_data)
+ 
+ 	/* communicate to platform about chip asleep */
+ 	kim_data = st_data->kim_data;
+-	pdata = kim_data->kim_pdev->dev.platform_data;
++	if (kim_data->kim_pdev->dev.of_node) {
++		pr_debug("use device tree data");
++		pdata = dt_pdata;
++	} else {
++		pdata = kim_data->kim_pdev->dev.platform_data;
++	}
++
+ 	if (pdata->chip_asleep)
+ 		pdata->chip_asleep(NULL);
+ }
+@@ -86,7 +93,13 @@ static void ll_device_want_to_wakeup(struct st_data_s *st_data)
+ 
+ 	/* communicate to platform about chip wakeup */
+ 	kim_data = st_data->kim_data;
+-	pdata = kim_data->kim_pdev->dev.platform_data;
++	if (kim_data->kim_pdev->dev.of_node) {
++		pr_debug("use device tree data");
++		pdata = dt_pdata;
++	} else {
++		pdata = kim_data->kim_pdev->dev.platform_data;
++	}
++
+ 	if (pdata->chip_awake)
+ 		pdata->chip_awake(NULL);
+ }
+diff --git a/include/linux/ti_wilink_st.h b/include/linux/ti_wilink_st.h
+index 884d626..9072d9f 100644
+--- a/include/linux/ti_wilink_st.h
++++ b/include/linux/ti_wilink_st.h
+@@ -86,6 +86,7 @@ struct st_proto_s {
+ extern long st_register(struct st_proto_s *);
+ extern long st_unregister(struct st_proto_s *);
+ 
++extern struct ti_st_plat_data   *dt_pdata;
+ 
+ /*
+  * header information used by st_core.c
 -- 
 1.9.1
