@@ -1,83 +1,59 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0/9] ARM Versatile multi-platform support
-Date: Fri, 9 Jan 2015 09:34:46 +0100
-Message-ID: <CACRpkdZpwoY4-9K9_Eh-UikmP5hqQhfu2eZRb-wkVntVn1g5wA@mail.gmail.com>
-References: <1419967718-26909-1-git-send-email-robherring2@gmail.com>
-	<CACRpkda8T8CwghVYtTw41h_y+GdCA5xCEaSL1Jy4VZBo3MAy-Q@mail.gmail.com>
-	<CAL_JsqKLNPVDCUELaZU8JW0roT3RcyqcxtJbvbYQrjzxjt3FeQ@mail.gmail.com>
+From: Jean-Michel Hautbois <jean-michel.hautbois@vodalys.com>
+Subject: Re: [PATCH] adv7604: Add DT parsing support
+Date: Fri, 9 Jan 2015 09:38:38 +0100
+Message-ID: <CAL8zT=goqUXzK+HhxrJf=ZRTGgcT4agyR+QY9BYV3gtfWvZH4g@mail.gmail.com>
+References: <1413992061-28678-1-git-send-email-jean-michel.hautbois@vodalys.com>
+ <1645583.LAOF2HV7Iq@avalon> <CAL8zT=gUaBDiq=KC5YqCD5dqx2WO1PSXGckvchX_9XxDbJJEpw@mail.gmail.com>
+ <19115179.EGFbFL174J@avalon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqKLNPVDCUELaZU8JW0roT3RcyqcxtJbvbYQrjzxjt3FeQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Peter Maydell <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <19115179.EGFbFL174J@avalon>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Linux Media Mailing List <linux-media@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, wsa@the-dreams.de, Lars-Peter Clausen <lars@metafoo.de>, Hans Verkuil <hverkuil@xs4all.nl>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 8, 2015 at 10:38 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Thu, Jan 8, 2015 at 1:47 PM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> On Tue, Dec 30, 2014 at 8:28 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>
->>> From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>>
->>> This series converts ARM Versatile platform to multi-platform. I started
->>> this some time ago and some pieces were already merged. The primary
->>> piece remaining is converting the PCI host to DT which I was waiting for
->>> the common PCI DT parsing to get settled. Now that that is in place as
->>> well as a few other pieces are in place like multi-platform fixes for
->>> CLCD, we can fully convert Versatile to DT and multi-platform.
->>>
->>> There's still a few things that need DT support which can be done
->>> later:
->>> - MMC card detect and write protect. Should be able to use VExpress
->>>   support
->>> - Reboot support. Should be able to re-use Realview reboot code.
->>> - flash phys-map support. Binding exists, but specifically Vpp control
->>>   is needed.
->>> - CLCD support. Not sure where this is at.
->>
->> I like it overall but would like to see some use of the syscon
->> pattern to access random registers in syscon, and specifically not
->> to refer to these registers as some "gpio" because they aren't.
+Hi,
+
+2014-10-27 0:30 GMT+01:00 Laurent Pinchart <laurent.pinchart@ideasonboard.com>:
+> Hi Jean-Michel,
 >
-> I'm not sure I follow. Creating GPIO lines for SD card detect and
-> write protect is exactly how VExpress syscon was implemented.
+> On Thursday 23 October 2014 07:51:50 Jean-Michel Hautbois wrote:
+>> 2014-10-23 1:53 GMT+02:00 Laurent Pinchart:
+>> > On Wednesday 22 October 2014 17:34:21 Jean-Michel Hautbois wrote:
+>> >> This patch adds support for DT parsing of ADV7604 as well as ADV7611.
+>> >> It needs to be improved in order to get ports parsing too.
+>> >
+>> > Let's improve it then :-) The DT bindings as proposed by this patch are
+>> > incomplete, that's just asking for trouble.
+>> >
+>> > How would you model the adv7604 ports ?
+>>
+>> I am opened to suggestions :).
+>> But it has to remain as simple as possible, ideally allowing for giving
+>> names to the ports.
+>> As done today, it works, ports are parsed but are all the same...
+>
+> The ADV7611 was easy, it had a single HDMI input only. The ADV7612 is easy as
+> well as it just has two separate HDMI inputs.
+>
+> The ADV7604 is a more complex beast. The HDMI inputs shouldn't be much of an
+> issue as they're independent and multiplexed internally. You can just create
+> one pad per HDMI input.
+>
+> The analog inputs, however, can't be modeled as easily. A naive approach would
+> be to create one pad for each of the 12 analog inputs, but the chip has three
+> separate ADCs and can combine 3 inputs in a single digital video stream. I
+> don't know how we should model support for that. Lars-Peter, Hans, would you
+> have a revolutionary idea to same the world today ?
 
-Hm it all boils down to this mfd/vexpress-sysreg.c driver that
-spawns some MFD devices.
+I get back to working on this specific part, but I don't know how
+these analog inputs should be modeled.
+On page 68 of ADV7604_HW_RevF there is Figure 11 showing typical
+configurations using AIN_SEL[2:0].
+I can see 4 inputs muxed : this would suggest to have 4 pads for analog inputs.
+Not sure it makes sense though...
 
->From there a LED, card detect and flash protection are modeled as
-"basic-mmio-gpio" instantiating the drivers/gpio/gpio-generic.c
-driver to drive/read various bits.
-
-Specifically commit 974cc7b93441a0e78f030495436d1be7eb7c208d
-that makes a layered MFD->gpio->gpio LED cake.
-Needless to say neither the GPIO maintainers or the GPIO
-mailing list was included in review of this patch and it was
-merged on its MFD merits :(
-
-It is sort of elegant in a way, but I don't like it when we describe
-registers that are not general purpose as "general purpose input
-output" it is simply ontologically wrong and a misleading hardware
-description. These bits are not general purpose *at* *all* they are
-special purpose.
-
-It is Linux GPIO implementation details leaking into the hardware
-description basically: it just happened to be very convenient to
-describe these register bits as "gpios" as the drivers etc were
-already in place.
-
-I prefer syscon->syscon LED as a two layer cake
-instead of a three layer cake involving GPIO and it's more to the point,
-describing the hardware properly, so I say let's go for that instead.
-
-For card detect and flash protection I suspect we can use
-syscon as well, avoiding shoehorning a GPIO abstraction between
-it.
-
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+JM
