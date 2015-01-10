@@ -1,7 +1,7 @@
 From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v1 10/10] tpm/st33zp24/dts/st33zp24-spi: Add dts documentation for st33zp24 spi phy
-Date: Sat, 10 Jan 2015 12:20:31 +0100
-Message-ID: <1420888831-17491-11-git-send-email-christophe-h.ricard@st.com>
+Subject: [PATCH v1 06/10] tpm/tpm_i2c_stm_st33: Add status check when reading data on the FIFO
+Date: Sat, 10 Jan 2015 12:20:27 +0100
+Message-ID: <1420888831-17491-7-git-send-email-christophe-h.ricard@st.com>
 References: <1420888831-17491-1-git-send-email-christophe-h.ricard@st.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1420888831-17491-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
@@ -10,52 +10,38 @@ To: PeterHuewe-Mmb7MZpHnFY@public.gmane.org
 Cc: ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org, tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, jean-luc.blanc-qxv4g6HH51o@public.gmane.org, benoit.houyere-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org, jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Add a return value check when reading data from the FIFO register.
+
 Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
 ---
- .../bindings/security/tpm/st33zp24-spi.txt         | 34 ++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/security/tpm/st33zp24-spi.txt
+ drivers/char/tpm/tpm_i2c_stm_st33.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/security/tpm/st33zp24-spi.txt b/Documentation/devicetree/bindings/security/tpm/st33zp24-spi.txt
-new file mode 100644
-index 0000000..923c55d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/security/tpm/st33zp24-spi.txt
-@@ -0,0 +1,34 @@
-+* STMicroelectronics SAS. ST33ZP24 TPM SoC
+diff --git a/drivers/char/tpm/tpm_i2c_stm_st33.c b/drivers/char/tpm/tpm_i2c_stm_st33.c
+index 3289f9d..eeb4816 100644
+--- a/drivers/char/tpm/tpm_i2c_stm_st33.c
++++ b/drivers/char/tpm/tpm_i2c_stm_st33.c
+@@ -440,7 +440,7 @@ again:
+  */
+ static int recv_data(struct tpm_chip *chip, u8 *buf, size_t count)
+ {
+-	int size = 0, burstcnt, len;
++	int size = 0, burstcnt, len, ret;
+ 	struct tpm_stm_dev *tpm_dev;
+ 
+ 	tpm_dev = (struct tpm_stm_dev *)TPM_VPRIV(chip);
+@@ -454,7 +454,10 @@ static int recv_data(struct tpm_chip *chip, u8 *buf, size_t count)
+ 		if (burstcnt < 0)
+ 			return burstcnt;
+ 		len = min_t(int, burstcnt, count - size);
+-		I2C_READ_DATA(tpm_dev, TPM_DATA_FIFO, buf + size, len);
++		ret = I2C_READ_DATA(tpm_dev, TPM_DATA_FIFO, buf + size, len);
++		if (ret < 0)
++			return ret;
 +
-+Required properties:
-+- compatible: Should be "st,st33zp24-spi".
-+- spi-max-frequency: Maximum SPI frequency (<= 10000000).
-+
-+Optional ST33ZP24 Properties:
-+- interrupt-parent: phandle for the interrupt gpio controller
-+- interrupts: GPIO interrupt to which the chip is connected
-+- lpcpd-gpios: Output GPIO pin used for ST33ZP24 power management D1/D2 state.
-+If set, power must be present when the platform is going into sleep/hibernate mode.
-+
-+Optional SoC Specific Properties:
-+- pinctrl-names: Contains only one value - "default".
-+- pintctrl-0: Specifies the pin control groups used for this controller.
-+
-+Example (for ARM-based BeagleBoard xM with ST33ZP24 on SPI2):
-+
-+&i2c2 {
-+
-+        status = "okay";
-+
-+        st33zp24@0 {
-+
-+                compatible = "st,st33zp24-spi";
-+
-+                spi-max-frequency = <10000000>;
-+
-+                interrupt-parent = <&gpio5>;
-+                interrupts = <7 IRQ_TYPE_LEVEL_HIGH>;
-+
-+                lpcpd-gpios = <&gpio5 15 GPIO_ACTIVE_HIGH>;
-+        };
-+};
+ 		size += len;
+ 	}
+ 	return size;
 -- 
 2.1.0
 
