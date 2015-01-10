@@ -1,497 +1,261 @@
-From: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>
-Subject: Re: [PATCH v7 1/3] iio: adc: Cosmic Circuits 10001 ADC driver
-Date: Sat, 10 Jan 2015 21:22:02 +0100
-Message-ID: <54B189EA.8060300@gmx.de>
-References: <1420577257-10846-1-git-send-email-ezequiel.garcia@imgtec.com> <1420577257-10846-2-git-send-email-ezequiel.garcia@imgtec.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v3 2/3] dt-bindings: Add pinctrl bindings for mt65xx/mt81xx.
+Date: Sat, 10 Jan 2015 22:33:46 +0100
+Message-ID: <CACRpkdZeRd+j7d_iRphruHRg8p3XjqWK8_HQzLH2PTZ_pqOrYA@mail.gmail.com>
+References: <1415709535-31515-1-git-send-email-hongzhou.yang@mediatek.com>
+	<1415709535-31515-3-git-send-email-hongzhou.yang@mediatek.com>
+	<CACRpkdYSe_BH_qiHma2BA+c2otEi3wd0TBXy83t8vwrNL+3U2g@mail.gmail.com>
+	<20141127101830.GP30369@pengutronix.de>
+	<CACRpkdbMdJT6y-NL36RgQe0-CAFAVGqKiwY9+yFcwA7JDLmA+Q@mail.gmail.com>
+	<20141202135527.GM30369@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1420577257-10846-2-git-send-email-ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Mark.Rutland-5wv7dgnIgG8@public.gmane.org
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel.Moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Phani Movva <Phani.Movva-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20141202135527.GM30369@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Rob Herring <robh+dt@kernel.org>, Hongzhou Yang <hongzhou.yang@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Sascha Hauer <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, "Joe.C" <yingjoe.chen@mediatek.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Catalin Marinas <catalin.marinas@arm.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, huang eddie <eddie.huang@mediatek.com>, dandan.he@mediatek.comal
 List-Id: devicetree@vger.kernel.org
 
-Ezequiel Garcia schrieb am 06.01.2015 um 21:47:
-> From: Phani Movva <Phani.Movva-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-> 
-> This commit adds support for Cosmic Circuits 10001 10-bit ADC device.
-> 
-> Reviewed-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> Signed-off-by: Phani Movva <Phani.Movva-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-> [ezequiel: code style cleaning]
-> Signed-off-by: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Acked-by: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>
-> ---
->  drivers/iio/adc/Kconfig       |  11 ++
->  drivers/iio/adc/Makefile      |   1 +
->  drivers/iio/adc/cc10001_adc.c | 423 ++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 435 insertions(+)
->  create mode 100644 drivers/iio/adc/cc10001_adc.c
-> 
-> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-> index 0f79e47..9cb8543 100644
-> --- a/drivers/iio/adc/Kconfig
-> +++ b/drivers/iio/adc/Kconfig
-> @@ -135,6 +135,17 @@ config AXP288_ADC
->  	  device. Depending on platform configuration, this general purpose ADC can
->  	  be used for sampling sensors such as thermal resistors.
->  
-> +config CC10001_ADC
-> +	tristate "Cosmic Circuits 10001 ADC driver"
-> +	depends on HAS_IOMEM || HAVE_CLK || REGULATOR
-> +	select IIO_BUFFER
-> +	select IIO_TRIGGERED_BUFFER
-> +	help
-> +	  Say yes here to build support for Cosmic Circuits 10001 ADC.
-> +
-> +	  This driver can also be built as a module. If so, the module will be
-> +	  called cc10001_adc.
-> +
->  config EXYNOS_ADC
->  	tristate "Exynos ADC driver support"
->  	depends on ARCH_EXYNOS || ARCH_S3C24XX || ARCH_S3C64XX || (OF && COMPILE_TEST)
-> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
-> index 701fdb7..ce60fe9 100644
-> --- a/drivers/iio/adc/Makefile
-> +++ b/drivers/iio/adc/Makefile
-> @@ -15,6 +15,7 @@ obj-$(CONFIG_AD7887) += ad7887.o
->  obj-$(CONFIG_AD799X) += ad799x.o
->  obj-$(CONFIG_AT91_ADC) += at91_adc.o
->  obj-$(CONFIG_AXP288_ADC) += axp288_adc.o
-> +obj-$(CONFIG_CC10001_ADC) += cc10001_adc.o
->  obj-$(CONFIG_EXYNOS_ADC) += exynos_adc.o
->  obj-$(CONFIG_LP8788_ADC) += lp8788_adc.o
->  obj-$(CONFIG_MAX1027) += max1027.o
-> diff --git a/drivers/iio/adc/cc10001_adc.c b/drivers/iio/adc/cc10001_adc.c
-> new file mode 100644
-> index 0000000..47f638b
-> --- /dev/null
-> +++ b/drivers/iio/adc/cc10001_adc.c
-> @@ -0,0 +1,423 @@
-> +/*
-> + * Copyright (c) 2014-2015 Imagination Technologies Ltd.
-> + *
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms of the GNU General Public License version 2 as published by
-> + * the Free Software Foundation.
-> + *
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/delay.h>
-> +#include <linux/err.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regulator/consumer.h>
-> +#include <linux/slab.h>
-> +
-> +#include <linux/iio/buffer.h>
-> +#include <linux/iio/iio.h>
-> +#include <linux/iio/sysfs.h>
-> +#include <linux/iio/trigger.h>
-> +#include <linux/iio/trigger_consumer.h>
-> +#include <linux/iio/triggered_buffer.h>
-> +
-> +/* Registers */
-> +#define CC10001_ADC_CONFIG		0x00
-> +#define CC10001_ADC_START_CONV		BIT(4)
-> +#define CC10001_ADC_MODE_SINGLE_CONV	BIT(5)
-> +
-> +#define CC10001_ADC_DDATA_OUT		0x04
-> +#define CC10001_ADC_EOC			0x08
-> +#define CC10001_ADC_EOC_SET		BIT(0)
-> +
-> +#define CC10001_ADC_CHSEL_SAMPLED	0x0c
-> +#define CC10001_ADC_POWER_UP		0x10
-> +#define CC10001_ADC_POWER_UP_SET	BIT(0)
-> +#define CC10001_ADC_DEBUG		0x14
-> +#define CC10001_ADC_DATA_COUNT		0x20
-> +
-> +#define CC10001_ADC_DATA_MASK		GENMASK(9, 0)
-> +#define CC10001_ADC_NUM_CHANNELS	8
-> +#define CC10001_ADC_CH_MASK		GENMASK(2, 0)
-> +
-> +#define CC10001_INVALID_SAMPLED		0xffff
-> +#define CC10001_MAX_POLL_COUNT		20
-> +
-> +/*
-> + * As per device specification, wait six clock cycles after power-up to
-> + * activate START. Since adding two more clock cycles delay does not
-> + * impact the performance too much, we are adding two additional cycles delay
-> + * intentionally here.
-> + */
-> +#define	CC10001_WAIT_CYCLES		8
-> +
-> +struct cc10001_adc_device {
-> +	void __iomem *reg_base;
-> +	struct clk *adc_clk;
-> +	struct regulator *reg;
-> +	u16 *buf;
-> +
-> +	struct mutex lock;
-> +	unsigned long channel_map;
-> +	unsigned int start_delay_ns;
-> +	unsigned int eoc_delay_ns;
-> +};
-> +
-> +static inline void cc10001_adc_write_reg(struct cc10001_adc_device *adc_dev,
-> +					 u32 reg, u32 val)
-> +{
-> +	writel(val, adc_dev->reg_base + reg);
-> +}
-> +
-> +static inline u32 cc10001_adc_read_reg(struct cc10001_adc_device *adc_dev,
-> +				       u32 reg)
-> +{
-> +	return readl(adc_dev->reg_base + reg);
-> +}
-> +
-> +static void cc10001_adc_start(struct cc10001_adc_device *adc_dev,
-> +			      unsigned int channel)
-> +{
-> +	u32 val;
-> +
-> +	/* Channel selection and mode of operation */
-> +	val = (channel & CC10001_ADC_CH_MASK) | CC10001_ADC_MODE_SINGLE_CONV;
-> +	cc10001_adc_write_reg(adc_dev, CC10001_ADC_CONFIG, val);
-> +
-> +	val = cc10001_adc_read_reg(adc_dev, CC10001_ADC_CONFIG);
-> +	val = val | CC10001_ADC_START_CONV;
-> +	cc10001_adc_write_reg(adc_dev, CC10001_ADC_CONFIG, val);
-> +}
-> +
-> +static u16 cc10001_adc_poll_done(struct iio_dev *indio_dev,
-> +				 unsigned int channel,
-> +				 unsigned int delay)
-> +{
-> +	struct cc10001_adc_device *adc_dev = iio_priv(indio_dev);
-> +	unsigned int poll_count = 0;
-> +
-> +	while (!(cc10001_adc_read_reg(adc_dev, CC10001_ADC_EOC) &
-> +			CC10001_ADC_EOC_SET)) {
-> +
-> +		ndelay(delay);
-> +		if (poll_count++ == CC10001_MAX_POLL_COUNT)
-> +			return CC10001_INVALID_SAMPLED;
-> +	}
-> +
-> +	poll_count = 0;
-> +	while ((cc10001_adc_read_reg(adc_dev, CC10001_ADC_CHSEL_SAMPLED) &
-> +			CC10001_ADC_CH_MASK) != channel) {
-> +
-> +		ndelay(delay);
-> +		if (poll_count++ == CC10001_MAX_POLL_COUNT)
-> +			return CC10001_INVALID_SAMPLED;
-> +	}
-> +
-> +	/* Read the 10 bit output register */
-> +	return cc10001_adc_read_reg(adc_dev, CC10001_ADC_DDATA_OUT) &
-> +			       CC10001_ADC_DATA_MASK;
-> +}
-> +
-> +static irqreturn_t cc10001_adc_trigger_h(int irq, void *p)
-> +{
-> +	struct cc10001_adc_device *adc_dev;
-> +	struct iio_poll_func *pf = p;
-> +	struct iio_dev *indio_dev;
-> +	unsigned int delay_ns;
-> +	unsigned int channel;
-> +	bool sample_invalid;
-> +	u16 *data;
-> +	int i;
-> +
-> +	indio_dev = pf->indio_dev;
-> +	adc_dev = iio_priv(indio_dev);
-> +	data = adc_dev->buf;
-> +
-> +	mutex_lock(&adc_dev->lock);
-> +
-> +	cc10001_adc_write_reg(adc_dev, CC10001_ADC_POWER_UP,
-> +			      CC10001_ADC_POWER_UP_SET);
-> +
-> +	/* Wait for 8 (6+2) clock cycles before activating START */
-> +	ndelay(adc_dev->start_delay_ns);
-> +
-> +	/* Calculate delay step for eoc and sampled data */
-> +	delay_ns = adc_dev->eoc_delay_ns / CC10001_MAX_POLL_COUNT;
-> +
-> +	i = 0;
-> +	sample_invalid = false;
-> +	for_each_set_bit(channel, indio_dev->active_scan_mask,
-> +				  indio_dev->masklength) {
-> +
-> +		cc10001_adc_start(adc_dev, channel);
-> +
-> +		data[i] = cc10001_adc_poll_done(indio_dev, channel, delay_ns);
-> +		if (data[i] == CC10001_INVALID_SAMPLED) {
-> +			dev_warn(&indio_dev->dev,
-> +				 "invalid sample on channel %d\n", channel);
-> +			sample_invalid = true;
-> +			goto done;
-> +		}
-> +		i++;
-> +	}
-> +
-> +done:
-> +	cc10001_adc_write_reg(adc_dev, CC10001_ADC_POWER_UP, 0);
-> +
-> +	mutex_unlock(&adc_dev->lock);
-> +
-> +	if (!sample_invalid)
-> +		iio_push_to_buffers_with_timestamp(indio_dev, data,
-> +						   iio_get_time_ns());
-> +	iio_trigger_notify_done(indio_dev->trig);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static u16 cc10001_adc_read_raw_voltage(struct iio_dev *indio_dev,
-> +					struct iio_chan_spec const *chan)
-> +{
-> +	struct cc10001_adc_device *adc_dev = iio_priv(indio_dev);
-> +	unsigned int delay_ns;
-> +	u16 val;
-> +
-> +	cc10001_adc_write_reg(adc_dev, CC10001_ADC_POWER_UP,
-> +			      CC10001_ADC_POWER_UP_SET);
-> +
-> +	/* Wait for 8 (6+2) clock cycles before activating START */
-> +	ndelay(adc_dev->start_delay_ns);
-> +
-> +	/* Calculate delay step for eoc and sampled data */
-> +	delay_ns = adc_dev->eoc_delay_ns / CC10001_MAX_POLL_COUNT;
-> +
-> +	cc10001_adc_start(adc_dev, chan->channel);
-> +
-> +	val = cc10001_adc_poll_done(indio_dev, chan->channel, delay_ns);
-> +
-> +	cc10001_adc_write_reg(adc_dev, CC10001_ADC_POWER_UP, 0);
-> +
-> +	return val;
-> +}
-> +
-> +static int cc10001_adc_read_raw(struct iio_dev *indio_dev,
-> +				 struct iio_chan_spec const *chan,
-> +				 int *val, int *val2, long mask)
-> +{
-> +	struct cc10001_adc_device *adc_dev = iio_priv(indio_dev);
-> +	int ret;
-> +
-> +	switch (mask) {
-> +	case IIO_CHAN_INFO_RAW:
-> +		if (iio_buffer_enabled(indio_dev))
-> +			return -EBUSY;
-> +		mutex_lock(&adc_dev->lock);
-> +		*val = cc10001_adc_read_raw_voltage(indio_dev, chan);
-> +		mutex_unlock(&adc_dev->lock);
-> +
-> +		if (*val == CC10001_INVALID_SAMPLED)
-> +			return -EIO;
-> +		return IIO_VAL_INT;
-> +
-> +	case IIO_CHAN_INFO_SCALE:
-> +		ret = regulator_get_voltage(adc_dev->reg);
-> +		if (ret)
-> +			return ret;
-> +
-> +		*val = ret / 1000;
-> +		*val2 = chan->scan_type.realbits;
-> +		return IIO_VAL_FRACTIONAL_LOG2;
-> +
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +static int cc10001_update_scan_mode(struct iio_dev *indio_dev,
-> +				    const unsigned long *scan_mask)
-> +{
-> +	struct cc10001_adc_device *adc_dev = iio_priv(indio_dev);
-> +
-> +	kfree(adc_dev->buf);
-> +	adc_dev->buf = kmalloc(indio_dev->scan_bytes, GFP_KERNEL);
-> +	if (!adc_dev->buf)
-> +		return -ENOMEM;
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct iio_info cc10001_adc_info = {
-> +	.driver_module = THIS_MODULE,
-> +	.read_raw = &cc10001_adc_read_raw,
-> +	.update_scan_mode = &cc10001_update_scan_mode,
-> +};
-> +
-> +static int cc10001_adc_channel_init(struct iio_dev *indio_dev)
-> +{
-> +	struct cc10001_adc_device *adc_dev = iio_priv(indio_dev);
-> +	struct iio_chan_spec *chan_array, *timestamp;
-> +	unsigned int bit, idx = 0;
-> +
-> +	indio_dev->num_channels = bitmap_weight(&adc_dev->channel_map,
-> +						CC10001_ADC_NUM_CHANNELS);
-> +
-> +	chan_array = devm_kcalloc(&indio_dev->dev, indio_dev->num_channels + 1,
-> +				  sizeof(struct iio_chan_spec),
-> +				  GFP_KERNEL);
-> +	if (!chan_array)
-> +		return -ENOMEM;
-> +
-> +	for_each_set_bit(bit, &adc_dev->channel_map, CC10001_ADC_NUM_CHANNELS) {
-> +		struct iio_chan_spec *chan = &chan_array[idx];
-> +
-> +		chan->type = IIO_VOLTAGE;
-> +		chan->indexed = 1;
-> +		chan->channel = bit;
-> +		chan->scan_index = idx;
-> +		chan->scan_type.sign = 'u';
-> +		chan->scan_type.realbits = 10;
-> +		chan->scan_type.storagebits = 16;
-> +		chan->info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE);
-> +		chan->info_mask_separate = BIT(IIO_CHAN_INFO_RAW);
-> +		idx++;
-> +	}
-> +
-> +	timestamp = &chan_array[idx];
-> +	timestamp->type = IIO_TIMESTAMP;
-> +	timestamp->channel = -1;
-> +	timestamp->scan_index = idx;
-> +	timestamp->scan_type.sign = 's';
-> +	timestamp->scan_type.realbits = 64;
-> +	timestamp->scan_type.storagebits = 64;
-> +
-> +	indio_dev->channels = chan_array;
-> +
-> +	return 0;
-> +}
-> +
-> +static int cc10001_adc_probe(struct platform_device *pdev)
-> +{
-> +	struct device_node *node = pdev->dev.of_node;
-> +	struct cc10001_adc_device *adc_dev;
-> +	unsigned long adc_clk_rate;
-> +	struct resource *res;
-> +	struct iio_dev *indio_dev;
-> +	int ret;
-> +
-> +	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*adc_dev));
-> +	if (indio_dev == NULL)
-> +		return -ENOMEM;
-> +
-> +	adc_dev = iio_priv(indio_dev);
-> +
-> +	adc_dev->channel_map = GENMASK(CC10001_ADC_NUM_CHANNELS - 1, 0);
-> +	if (!of_property_read_u32(node, "adc-reserved-channels", &ret))
-> +		adc_dev->channel_map &= ~ret;
-> +
-> +	adc_dev->reg = devm_regulator_get(&pdev->dev, "vref");
-> +	if (IS_ERR(adc_dev->reg))
-> +		return PTR_ERR(adc_dev->reg);
-> +
-> +	ret = regulator_enable(adc_dev->reg);
-> +	if (ret)
-> +		return ret;
-> +
-> +	indio_dev->dev.parent = &pdev->dev;
-> +	indio_dev->name = dev_name(&pdev->dev);
-> +	indio_dev->info = &cc10001_adc_info;
-> +	indio_dev->modes = INDIO_DIRECT_MODE;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	adc_dev->reg_base = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(adc_dev->reg_base)) {
-> +		ret = PTR_ERR(adc_dev->reg_base);
-> +		goto err_disable_reg;
-> +	}
-> +
-> +	adc_dev->adc_clk = devm_clk_get(&pdev->dev, "adc");
-> +	if (IS_ERR(adc_dev->adc_clk)) {
-> +		dev_err(&pdev->dev, "failed to get the clock\n");
-> +		ret = PTR_ERR(adc_dev->adc_clk);
-> +		goto err_disable_reg;
-> +	}
-> +
-> +	ret = clk_prepare_enable(adc_dev->adc_clk);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "failed to enable the clock\n");
-> +		goto err_disable_reg;
-> +	}
-> +
-> +	adc_clk_rate = clk_get_rate(adc_dev->adc_clk);
-> +	if (!adc_clk_rate) {
-> +		ret = -EINVAL;
-> +		dev_err(&pdev->dev, "null clock rate!\n");
-> +		goto err_disable_clk;
-> +	}
-> +
-> +	adc_dev->eoc_delay_ns = NSEC_PER_SEC / adc_clk_rate;
-> +	adc_dev->start_delay_ns = adc_dev->eoc_delay_ns * CC10001_WAIT_CYCLES;
-> +
-> +	/* Setup the ADC channels available on the device */
-> +	ret = cc10001_adc_channel_init(indio_dev);
-> +	if (ret < 0)
-> +		goto err_disable_clk;
-> +
-> +	mutex_init(&adc_dev->lock);
-> +
-> +	ret = iio_triggered_buffer_setup(indio_dev, NULL,
-> +					 &cc10001_adc_trigger_h, NULL);
-> +	if (ret < 0)
-> +		goto err_disable_clk;
-> +
-> +	ret = iio_device_register(indio_dev);
-> +	if (ret < 0)
-> +		goto err_cleanup_buffer;
-> +
-> +	platform_set_drvdata(pdev, indio_dev);
-> +
-> +	return 0;
-> +
-> +err_cleanup_buffer:
-> +	iio_triggered_buffer_cleanup(indio_dev);
-> +err_disable_clk:
-> +	clk_disable_unprepare(adc_dev->adc_clk);
-> +err_disable_reg:
-> +	regulator_disable(adc_dev->reg);
-> +	return ret;
-> +}
-> +
-> +static int cc10001_adc_remove(struct platform_device *pdev)
-> +{
-> +	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
-> +	struct cc10001_adc_device *adc_dev = iio_priv(indio_dev);
-> +
-> +	iio_device_unregister(indio_dev);
-> +	iio_triggered_buffer_cleanup(indio_dev);
-> +	clk_disable_unprepare(adc_dev->adc_clk);
-> +	regulator_disable(adc_dev->reg);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id cc10001_adc_dt_ids[] = {
-> +	{ .compatible = "cosmic,10001-adc", },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, cc10001_adc_dt_ids);
-> +
-> +static struct platform_driver cc10001_adc_driver = {
-> +	.driver = {
-> +		.name   = "cc10001-adc",
-> +		.of_match_table = cc10001_adc_dt_ids,
-> +	},
-> +	.probe	= cc10001_adc_probe,
-> +	.remove	= cc10001_adc_remove,
-> +};
-> +module_platform_driver(cc10001_adc_driver);
-> +
-> +MODULE_AUTHOR("Phani Movva <Phani.Movva-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>");
-> +MODULE_DESCRIPTION("Cosmic Circuits ADC driver");
-> +MODULE_LICENSE("GPL v2");
-> 
+On Tue, Dec 2, 2014 at 2:55 PM, Sascha Hauer <s.hauer@pengutronix.de> wrote:
+
+Sorry for taking eternities to get back on this, I ran into a merge window
+and some christmas. I do hope we can resolve this in the current
+development cycle so we can get this support in.
+
+> On Fri, Nov 28, 2014 at 05:12:44PM +0100, Linus Walleij wrote:
+>> On Thu, Nov 27, 2014 at 11:18 AM, Sascha Hauer <s.hauer@pengutronix.de> wrote:
+>> > On Thu, Nov 27, 2014 at 09:44:42AM +0100, Linus Walleij wrote:
+>> >> On Tue, Nov 11, 2014 at 1:38 PM, Hongzhou Yang
+>> >> <hongzhou.yang@mediatek.com> wrote:
+
+>> >> > +    node {
+>> >> > +     mediatek,pins = <PIN_NUMBER_PINMUX>;
+>> >> > +                     GENERIC_PINCONFIG;
+>> >> > +    };
+>> >>
+>> >> As suggested by Sacha, use just "pins" and define the binding as a patch
+>> >> to Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+>> >> that is generic for multiplexing, so we get some order here.
+>> >>
+>> >> I want you however to put pin multiplexing and pin configuration into
+>> >> different nodes if possible. I don't like combines muxing and config
+>> >> nodes. If necessary tag the node with something.
+>> >
+>> > Why? I think the properties can live happily together, even when the
+>> > parsing functions go to the pinctrl core.
+>>
+>> I'm worried about the semantic ambiguity between the pins = <...>;
+>> property on different pin controllers, whether they are based on
+>> function+group or per-pin. It's not even up to me to decide,
+>> this is for the DT binding people.
+>>
+>> In this case:
+>>
+>> pins = <MT8135_PIN_100_SDA0__FUNC_SDA0>,
+>>           <MT8135_PIN_101_SCL0__FUNC_SCL0>;
+>>
+>> Each element is a 32bit unsigned where the lower and higher
+>> 16 bits have different meanings.
+>>
+>> In some other pin controller (using generic bindings and
+>> already merged! arch/arm/boot/dts/ste-href-ab8500.dtsi):
+>>
+>> gpio39 {
+>>       gpio39_default_mode: gpio39_default {
+>>              default_mux {
+>>                       function = "gpio";
+>>                       groups = "gpio39_a_1";
+>>              };
+>>              default_cfg {
+>>                       pins = "GPIO39_E16";
+>>                       input-enable;
+>>                       bias-pull-down;
+>>              };
+>>      };
+>> };
+>>
+>> Can we get away with using the same core parser with this
+>> as well, here the nodes are split and using strings to identify
+>> pins, not 32bit numbers.
+>>
+>> I am worried about semantic coexistance...
+>
+> We could rename the property from 'pins' to 'pinmux' for this variant of
+> the binding. Then a parser would know that this property is about pins
+> and muxing.
+
+OK sounds like a viable compromise.
+
+I am mostly worried that none of the fine device tree people say
+anything about this stuff we're discussing here, maybe absolutely
+nobody else understands...
+
+>> >> i2c0_pins_a: i2c0@0 {
+>> >>         pins1 {
+>> >>                 pins = <MT8135_PIN_100_SDA0>;
+>> >>                 function = <MT8135_PIN_100_FUNC_SDA0>;
+>> >>         };
+>> >
+>> > The reason to put this in a single define was to make writing the device
+>> > trees less error prone. When you have two arrays you must correlate the
+>> > entries.
+>>
+>> I see the upside. I'm just worried about ambiguity when comparing
+>> different device trees to each other, because they should be about
+>> readability and understanding, not confusing...
+>
+> Sorry, given the currently existing devicetrees I don't buy that
+> readability argument. Let's look into the snowball example, here ssp0:
+>
+>         ssp0_snowball_mode: ssp0_snowball_default {
+>                 snowball_mux {
+>                         ste,function = "ssp0";
+>                         ste,pins = "ssp0_a_1";
+>                 };
+>                 snowball_cfg1 {
+>                         ste,pins = "GPIO144_B13"; /* FRM */
+>                         ste,config = <&gpio_out_hi>;
+>                 };
+>                 snowball_cfg2 {
+>                         ste,pins = "GPIO145_C13"; /* RXD */
+>                         ste,config = <&in_pd>;
+>                 };
+>                 snowball_cfg3 {
+>                         ste,pins =
+>                         "GPIO146_D13", /* TXD */
+>                         "GPIO143_D12"; /* CLK */
+>                         ste,config = <&out_lo>;
+>                 };
+>         };
+
+I agree the ste,pins is not a good example, it is insane to have
+something group and pins mixed, and that is why
+I migrated it in the last merge window, notably the pin multiplex thing
+so it now looks like this:
+
+                        ssp0 {
+                                ssp0_snowball_mode: ssp0_snowball_default {
+                                        snowball_mux {
+                                                function = "ssp0";
+                                                groups = "ssp0_a_1";
+                                        };
+                                        snowball_cfg1 {
+                                                pins = "GPIO144_B13"; /* FRM */
+                                                ste,config = <&gpio_out_hi>;
+                                        };
+(...)
+
+I'm sorry about not migrating the ste,config part to
+generic bindings yet :( that is next.
+
+> For the SSP0 it needs the string "ssp0_a_1" which is documented exactly
+> nowhere.
+
+Is this a bug report about the documentation? I don't see how
+that is relevant to the overall design.
+
+> Only the sourcecode shows that this (totally made up) string
+> means that the pins DB8500_PIN_D12, DB8500_PIN_B13, DB8500_PIN_C13 and
+> DB8500_PIN_D13 shall be muxed.
+
+So this pins and pins ambiguity (which has nothing to do with the
+generic bindings BTW) is now fixed up somewhat. The first thing is
+a group, the pins are pin names.
+
+> The corresponding ste,function property
+> has the value "ssp0" which again is not documented. The following config
+> nodes reference the same pins under a different name: "GPIO144_B13",
+> "GPIO145_C13", "GPIO146_D13" and "GPIO143_D12".
+
+Yes, because it references individual pins, not groups. Config
+is per-pin, multiplexing is per-group in the Nomadik case.
+(Some hardware and drivers are different.)
+
+> Again, these strings are
+> completely undocumented and only the sourcecode shows which strings can
+> be used for the ste,pins property. Not only that no documentation shows
+> which strings are allowed, there's also no documentation which describes
+> which combination of strings for the different properties make sense.
+
+OK again a documentation bug report I guess, if you want to I can
+add this to the documentation (there are indeed some pin control
+drivers that list these groups and functions). This documentation was
+not written by me, but I can sure fix it up if that makes you happier.
+
+> The use of ## for concatenating defines in the driver makes the whole
+> stuff even harder to understand. It even took me quite a while to
+> realize that the binding requires me to configure the muxes in groups,
+> but the config as individual pins.
+
+The hardware is such that muxes are in groups and pin config per-pin.
+We cannot augment reality, just describe it in an as structured way
+as possible.
+
+To add to the complexity, some pin controllers mux things in groups,
+some per-pin (like freescale I think?) some controllers even do config
+of things like pull-up across groups of pins rather than individually.
+
+> So no, the current devicetrees are
+> not about readability.
+
+Is this an argument that goes away if I fix the documentation?
+
+> #define GPIO143_D12_SSP0_CLK    PINMUX_PIN(143, 1)
+> #define GPIO144_B13_SSP0_FRM    PINMUX_PIN(144, 1)
+> #define GPIO145_C13_SSP0_RXD    PINMUX_PIN(145, 1)
+> #define GPIO146_D13_SSP0_TXD    PINMUX_PIN(146, 1)
+>
+> and we get:
+>
+>         ssp0_snowball_mode: ssp0_snowball_default {
+>                 snowball_cfg1 {
+>                         pinmux = <GPIO144_B13_SSP0_FRM>;
+>                         ste,config = <&gpio_out_hi>;
+>                 };
+>                 snowball_cfg2 {
+>                         pinmux = <GPIO145_C13_SSP0_RXD>;
+>                         ste,config = <&in_pd>;
+>                 };
+>                 snowball_cfg3 {
+>                         pinmux = <GPIO143_D12_SSP0_CLK GPIO146_D13_SSP0_TXD>;
+>                         ste,config = <&out_lo>;
+>                 };
+>         };
+
+But this gives the false impression that pins can be muxed
+individually, and it makes it possible to write device trees that
+attempt to do so, while in practice it will not perform on the
+hardware.
+
+>> >> One node for the multiplexing, one node for the config. This is the
+>> >> pattern used by most drivers, so I want to have this structure.
+>> >>
+>> >> It is also easy to tell one node from the other: if it contains "function"
+>> >> we know it's a multiplexing node, if it doesn't, it's a config node.
+>> >
+>> > So when merging these together a node is always multiplexing and
+>> > configuration. But do we really win anything if both are separated? When
+>> > both are separated you still need an array of pins in the nodes to
+>> > tell which pins this node is for. If this array also contains the
+>> > mux information then this won't hurt. You can still ignore it.
+>>
+>> Well we definately have to support the case with split config and
+>> muxing nodes at least. I am very worried that we would get into
+>> ambguities where that is not possible.
+>
+> Sure we have as we cannot change existing bindings,
+
+For Nomadik I did, because there are no deployed systems suffering
+from it. I just had to use some board I had to make some kind of
+example. I would encourage any other system not deployed in the
+masses with flashed-in device trees to do the same as this is
+still somewhat in a flux.
+
+I am worried that there is something in your reasoning that sort of
+assumes all pin controllers mux pins one-by-one and not in groups.
+How do we make it impossible to write a device tree that also
+make hardware that do groupwise config viable without ambiguities?
+
+Yours,
+Linus Walleij
