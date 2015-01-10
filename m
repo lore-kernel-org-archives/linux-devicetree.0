@@ -1,153 +1,72 @@
-From: "George G. Davis" <ggdavisiv-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] drivers: of: Export of_reserved_mem_device_{init,release}
-Date: Fri, 9 Jan 2015 18:18:23 -0500
-Message-ID: <20150109231823.GA86855@gandalf.middle.earth.net>
-References: <1420813745-130341-1-git-send-email-george_davis@mentor.com>
- <CAL_JsqJaT-Y7DHQS5ZZ0TP6r0iPDbUZwU-Kec5MSE7DOPgZxCg@mail.gmail.com>
- <20150109183310.GA38065@gandalf.middle.earth.net>
- <20150109220552.GA86398@gandalf.middle.earth.net>
- <CAL_JsqLKMw4bvov+t7SkEsY5Gu_rrJ5yDKhB6BckuTFfD4-MSA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqLKMw4bvov+t7SkEsY5Gu_rrJ5yDKhB6BckuTFfD4-MSA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "George G. Davis" <george_davis-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Subject: Re: [PATCH v8 2/4] fpga manager: add sysfs interface document
+Date: Sat, 10 Jan 2015 10:10:51 +0200
+Message-ID: <4D4EA2D5-68DD-49F7-9E2D-3A0A8F6AF9CA@konsulko.com>
+References: <1420575219-27061-1-git-send-email-atull@opensource.altera.com> <1420575219-27061-3-git-send-email-atull@opensource.altera.com> <20150107084819.GA1887@amd> <alpine.DEB.2.02.1501091302370.30067@linuxheads99> <20150109205643.GA5761@amd>
+Mime-Version: 1.0 (Mac OS X Mail 8.1 \(1993\))
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20150109205643.GA5761@amd>
+Sender: linux-doc-owner@vger.kernel.org
+To: Pavel Machek <pavel@denx.de>
+Cc: atull <atull@opensource.altera.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, jgunthorpe@obsidianresearch.com, hpa@zytor.com, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, rdunlap@infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, robh+dt@kernel.org, Grant Likely <grant.likely@linaro.org>, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, Mark Brown <broonie@kernel.org>, philip@balister.org, rubini@gnudd.com, Steffen Trumtrar <s.trumtrar@pengutronix.de>, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, Felipe Balbi <balbi@ti.com>, m.chehab@samsung.com, davidb@codeaurora.org, Rob Landley <rob@landley.net>, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, Linus Walleij <linus.walleij@linaro.org>, pawel.moll@arm.com, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 09, 2015 at 04:29:43PM -0600, Rob Herring wrote:
-> On Fri, Jan 9, 2015 at 4:05 PM, George G. Davis <ggdavisiv-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > On Fri, Jan 09, 2015 at 01:33:10PM -0500, George G. Davis wrote:
-> >> On Fri, Jan 09, 2015 at 11:53:01AM -0600, Rob Herring wrote:
-> >> > On Fri, Jan 9, 2015 at 8:29 AM, George G. Davis <ggdavisiv-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> >> > > Export of_reserved_mem_device_{init,release} so that modules
-> >> > > can initialize and release their assigned per-device cma_area.
-> >> >
-> >> > I believe the original intent was for the core bus code to call these
-> >> > functions. While the commit adding them says "automated assignment"
-> >> > that part did not go in.
-> >>
-> >> I suspected that there may have been a bit of missing magic.  The only
-> >> use of these functions that I was able to find was in an earlier out of
-> >> tree patch series where these functions were called from the s5p-mfc
-> >> driver:
-> >>
-> >> http://lists.linaro.org/pipermail/linaro-mm-sig/2014-August/004140.html
-> >>
-> >> I agree that "automated assignment" via core bus code would be a better
-> >> solution but I don't know where to add the calls.
-> >
-> > How about something like the following for automated assignment?:
-> 
-> It seems Grant wasn't happy about the core code doing this[1].
+Hi Pavel,
 
-For what it's worth, I was rather liking the automagic assignments since
-no driver changes were necessary for that approach but I do agree with
-the rationale for not adding it to core bus code.
+> On Jan 9, 2015, at 22:56 , Pavel Machek <pavel@denx.de> wrote:
+>=20
+> On Fri 2015-01-09 13:14:24, atull wrote:
+>> On Wed, 7 Jan 2015, Pavel Machek wrote:
+>>=20
+>>> On Tue 2015-01-06 14:13:37, atull@opensource.altera.com wrote:
+>>>> +
+>>>> +What:		/sys/class/fpga_manager/<fpga>/firmware
+>>>> +Date:		October 2014
+>>>> +KernelVersion:	3.18
+>>>> +Contact:	Alan Tull <atull@opensource.altera.com>
+>>>> +Description:	Name of the FPGA image file to load using firmware
+>>>> class.
+>>>=20
+>>> This one is ugly: it unneccessarily passes firmware name through th=
+e
+>>> kernel. Just make interface and code simpler by always passing
+>>> "socfpga-fpga-image" or something like that.
+>>>=20
+>>> Thanks,
+>>> 									Pavel
+>>=20
+>> Hi Pavel,
+>>=20
+>> It might be ugly.  It's not unnecessary.  Some uses of FPGAs involve
+>> switching out the FPGA images dynamically under control of the users=
+pace.
+>=20
+> Then configure udev to load right firmware for you, or ln -s
+> image-i-want-now socfpga-fpga-image to select the one to read=E2=80=A6=
+?
+>=20
 
-> So I
-> guess your original patch was okay except you should use
-> EXPORT_SYMBOL_GPL. I can fix that up if you agree.
+Who said that udev is going to be available in the kind of system this =
+is going to end in?
 
-Yes, please go ahead.
+Doing ln -s tricks to load a different image? Really?
 
+I say the interface is fine as it is.
 
-Thanks!
+Regards
 
---
-Regards,
-George
+=E2=80=94 Pantelis
 
-> 
-> Rob
-> 
-> 
-> [1] https://lkml.org/lkml/2014/3/2/30
-> 
-> >
-> > diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-> > index 9421fed..231b427 100644
-> > --- a/drivers/base/platform.c
-> > +++ b/drivers/base/platform.c
-> > @@ -14,6 +14,7 @@
-> >  #include <linux/platform_device.h>
-> >  #include <linux/of_device.h>
-> >  #include <linux/of_irq.h>
-> > +#include <linux/of_reserved_mem.h>
-> >  #include <linux/module.h>
-> >  #include <linux/init.h>
-> >  #include <linux/dma-mapping.h>
-> > @@ -509,9 +510,12 @@ static int platform_drv_probe(struct device *_dev)
-> >
-> >         ret = dev_pm_domain_attach(_dev, true);
-> >         if (ret != -EPROBE_DEFER) {
-> > +               of_reserved_mem_device_init(_dev);
-> >                 ret = drv->probe(dev);
-> > -               if (ret)
-> > +               if (ret) {
-> > +                       of_reserved_mem_device_release(_dev);
-> >                         dev_pm_domain_detach(_dev, true);
-> > +               }
-> >         }
-> >
-> >         if (drv->prevent_deferred_probe && ret == -EPROBE_DEFER) {
-> > @@ -534,6 +538,7 @@ static int platform_drv_remove(struct device *_dev)
-> >         int ret;
-> >
-> >         ret = drv->remove(dev);
-> > +       of_reserved_mem_device_release(_dev);
-> >         dev_pm_domain_detach(_dev, true);
-> >
-> >         return ret;
-> >
-> >
-> > --
-> > Regards,
-> > George
-> >>
-> >> > As it stands, there are no in tree users of
-> >> > these functions.
-> >> >
-> >> > Marek, comments?
-> >>
-> >> Thanks!
-> >>
-> >> --
-> >> Regards,
-> >> George
-> >>
-> >> >
-> >> > Rob
-> >> >
-> >> > >
-> >> > > Signed-off-by: George G. Davis <george_davis-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-> >> > > ---
-> >> > >  drivers/of/of_reserved_mem.c | 2 ++
-> >> > >  1 file changed, 2 insertions(+)
-> >> > >
-> >> > > diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
-> >> > > index dc566b3..5eeb5b2 100644
-> >> > > --- a/drivers/of/of_reserved_mem.c
-> >> > > +++ b/drivers/of/of_reserved_mem.c
-> >> > > @@ -265,6 +265,7 @@ int of_reserved_mem_device_init(struct device *dev)
-> >> > >
-> >> > >         return ret;
-> >> > >  }
-> >> > > +EXPORT_SYMBOL(of_reserved_mem_device_init);
-> >> > >
-> >> > >  /**
-> >> > >   * of_reserved_mem_device_release() - release reserved memory device structures
-> >> > > @@ -289,3 +290,4 @@ void of_reserved_mem_device_release(struct device *dev)
-> >> > >
-> >> > >         rmem->ops->device_release(rmem, dev);
-> >> > >  }
-> >> > > +EXPORT_SYMBOL(of_reserved_mem_device_release);
-> >> > > --
-> >> > > 1.9.3
-> >> > >
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>=20
+> --=20
+> (english) http://www.livejournal.com/~pavelmachek
+> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/hors=
+es/blog.html
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree"=
+ in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
