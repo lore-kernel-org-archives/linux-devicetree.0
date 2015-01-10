@@ -1,85 +1,115 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH 3/3] clk: berlin: bg2q: remove non-exist "smemc" gate
- clock
-Date: Sat, 10 Jan 2015 14:08:22 +0100
-Message-ID: <54B12446.4030703@gmail.com>
-References: <1420016272-6789-1-git-send-email-jszhang@marvell.com> <1420016272-6789-4-git-send-email-jszhang@marvell.com> <54AD3EAE.6090009@gmail.com> <20150107222209.64ed24a0@xhacker> <54AD431F.6060403@gmail.com> <20150109201306.4d1a296b@xhacker>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v2 2/4] Documentation: bindings: Add the regulator property
+ to the sub-nodes AHCI bindings
+Date: Sat, 10 Jan 2015 14:51:16 +0100
+Message-ID: <54B12E54.7000704@redhat.com>
+References: <1420799989-10645-1-git-send-email-gregory.clement@free-electrons.com> <1420799989-10645-3-git-send-email-gregory.clement@free-electrons.com> <54AFF7E3.4070506@redhat.com> <54AFFFDC.7020307@free-electrons.com> <CAGb2v674q4Cjp9qy9CbUXe2j5pT_ez98CKxXHC8u4Diap2TT1A@mail.gmail.com> <20150109171131.GH2634@sirena.org.uk> <54B0FCDD.7000300@redhat.com> <20150110111748.GB4160@sirena.org.uk>
+Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20150109201306.4d1a296b@xhacker>
-Sender: stable-owner@vger.kernel.org
-To: Jisheng Zhang <jszhang@marvell.com>
-Cc: "mturquette@linaro.org" <mturquette@linaro.org>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "alexandre.belloni@free-electrons.com" <alexandre.belloni@free-electrons.com>, "antoine.tenart@free-electrons.com" <antoine.tenart@free-electrons.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "stable@vger.kernel.org" <stable@vger.kernel.org>
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <20150110111748.GB4160@sirena.org.uk>
+Sender: linux-ide-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Chen-Yu Tsai <wens@csie.org>, Gregory CLEMENT <gregory.clement@free-electrons.com>, linux-kernel <linux-kernel@vger.kernel.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Tawfik Bayouk <tawfik@marvell.com>, Andrew Lunn <andrew@lunn.ch>, devicetree <devicetree@vger.kernel.org>, =?windows-1252?Q?Antoine_T=E9nart?= <antoine.tenart@free-electrons.com>, Mark Rutland <mark.rutland@arm.com>, Nadav Haklai <nadavh@marvell.com>, linux-ide@vger.kernel.org, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Tejun Heo <tj@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Ulf Hansson <ulf.hansson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09.01.2015 13:13, Jisheng Zhang wrote:
-> On Wed, 7 Jan 2015 06:30:55 -0800
-> Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com> wrote:
->> On 07.01.2015 15:22, Jisheng Zhang wrote:
->>> On Wed, 7 Jan 2015 06:11:58 -0800
->>> Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com> wrote:
->>>> On 31.12.2014 09:57, Jisheng Zhang wrote:
->>>>> The "smemc" clock is removed on BG2Q SoCs. In fact, bit19 of clkenable
->>>>> register is for nfc. Current code use bit19 for non-exist "smemc"
->>>>> incorrectly, this prevents eMMC from working due to the sdhci's
->>>>> "core" clk is still gated.
->>>>>
->>>>> Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
->>>>> Cc: stable@vger.kernel.org # 3.16+
->>>>> ---
->>>>>     drivers/clk/berlin/bg2q.c | 1 -
->>>>>     1 file changed, 1 deletion(-)
->>>>>
->>>>> diff --git a/drivers/clk/berlin/bg2q.c b/drivers/clk/berlin/bg2q.c
->>>>> index 21784e4..440ef81 100644
->>>>> --- a/drivers/clk/berlin/bg2q.c
->>>>> +++ b/drivers/clk/berlin/bg2q.c
->>>>> @@ -285,7 +285,6 @@ static const struct berlin2_gate_data bg2q_gates[]
->>>>> __initconst = { { "pbridge",	"perif",	15,
->>>>> CLK_IGNORE_UNUSED }, { "sdio",	"perif",	16,
->>>>> CLK_IGNORE_UNUSED }, { "nfc",	"perif",	18 },
->>>
->>> The nfc here is really confusing, we call it as nfccore internally. Is it
->>> better to rename it as nfccore?
->>
->> I guess it comes from some early Marvell BSP code, if there is no
->> issues with the name, e.g. something already depends on "nfc", feel
->> free to rename it to something more meaningful.
+Hi,
+
+On 10-01-15 12:17, Mark Brown wrote:
+> On Sat, Jan 10, 2015 at 11:20:13AM +0100, Hans de Goede wrote:
+>> On 09-01-15 18:11, Mark Brown wrote:
 >
-> In BG2, mrvl call the clock as nfccore. The code use "nfc" for it.
-> The situation is similar for usbcore, satacore etc. So keep the name here,
-> what do you think?
-
-Yes, I am fine with keeping the name as is.
-
->>>>> -	{ "smemc",	"perif",	19 },
->>>>
->>>> if bit 19 is for nfc, how does that work out with bit 18 which is
->>>> still assigned to nfc? Can you re-evaluate clkenable registers for
->>>
->>> bit 19 is for nfcEcc, the "io" clock; bit 18 is for nfcCore, the "core"
->>> clock.
->>
->> Ok, then both bits should be dealt with accordingly, i.e. rename
->> "smemc" to "nfcecc" and use it in the corresponding dts node.
->>
->> If this clk_gate just disables a clock that is fed into another
->> gateable clock module, I can live with removing it - although I
->> still think it is best to leave the clk_gate in place and pick
->> another name that does not collide with any other clock name.
+>>> Or if the supply is for the device at the other end of the link (which
+>>> is what it sounded like) then use that.  This just sounds like the same
+>>> problem we have for all the enumerable buses in embedded systems where
+>>> we need to be able to understand that the device exists prior to it
+>>> being fully ready to appear in the system.  Having the link/slot be a
+>>> device in Linux does indeed seem to be a common way people think about
+>>> doing this, it sounds like for this one it might be the most direct.
 >
-> The nfcecc is already defined in the bg2q_divs, the gate bit is correct there.
+>> I think we should be careful to not think too much from an implementation
+>> pov here, the purpose of the devicetree description is to describe the hardware,
+>> as is.
+>
+> I don't think anyone is talking about changing the DT here, only the way
+> it's represented inside Linux.
+>
+>>                  sata0: sata-port@0 {
+>>                          reg = <0>;
+>>                          phys = <&sata_phy 0>;
+>> 			target-supply = <&reg_sata0>;
+>>                  };
+>>
+>>                  sata1: sata-port@1 {
+>>                          reg = <1>;
+>>                          phys = <&sata_phy 1>;
+>> 			target-supply = <&reg_sata1>;
+>>                  };
+>>          };
+>
+>> Seems to match the hardware pretty exactly, and also matches how we've
+>> been describing similar devices with only one sata port + power plug sofar,
+>> so from a consistency pov it also is a good model.
+>
+> Right, I think that makes sense
 
-Ok, I had a look in the actual code and agree that the same bit 19
-is used twice. The patch is fine and we can take it as is.
+Good, as said I think getting the dt bit rights is the most important
+thing here. So if we agree that the above dt example looks sane, lets see
+how we can best implement that.
 
-This is clk subsystem, so either Mike takes it through his fixes branch
-including my
+ > it also looks to me like these things
+> should be representable as devices within Linux.
 
-Acked-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+I guess we could manually instantiate platform devices for each of the
+subnodes which represent an sata port here, yes that should not be
+hard to do, it feels like a bit overkill though.
 
-or decides to agree that I take it instead with his Ack. I am fine
-with both.
+So for our this should likely look something like this:
 
-Sebastian
+         if (IS_ENABLED(CONFIG_OF_ADDRESS) && dev->of_node) {
+                 for_each_child_of_node(dev->of_node, np) {
+                         pdev[i++] = of_platform_device_create(np, NULL, NULL);
+                 }
+         }
+
+and then loop over the pdev[] array and get the regulator, and phy for each.
+
+I wonder if of_platform_device_create can deal with nodes with
+#size-cells = <0>; is 0 though, if it cannot maybe we need to teach it.
+
+>> So supporting this model requires having a regulator_get API which allows
+>> specifying which of_node to get the regulator from, e.g. the proposed
+>
+> It requires nothing of the sort.
+
+You're proposed solution of instantiating devices does more or less exactly
+what I say is required, it is a way to pass an of_node into regulator_get,
+but you're hiding the node inside dev->of_node. I can see the appeal in
+that.
+
+>> of_regulator_get function. I know you (Mark) do not like this, but all
+>> other subsystems have an of_foo_get function taking an of_node as argument,
+>> I do not see how the regulator subsys is so special that it cannot have one,
+>> and also notice that this is only a kernel internal API which we can always
+>> change later.
+>
+> Two things there.  One is that mostly those APIs are legacy APIs from
+> before we made DT a first class citizen and generally they shouldn't be
+> used these days.  The other is that at least for regulators we have
+> constant problems with people abusing the API in various ways, as a
+> result the API has a goal of not helping undesirable usage patterns in
+> order to help people spot problems.  Having an API which makes it easy
+> create broken bindings means that it is much more likely that people
+> will do just that.
+
+Hmm I can see where you're coming from, and your proposed solution may
+also be useful for when we get similar boards requiring explicit regulator
+handling with the sata ports described in ACPI tables.
+
+Gregory, can you give the setup using per sata port devices a try, and
+see how that works out code wise ?
+
+Regards,
+
+Hans
