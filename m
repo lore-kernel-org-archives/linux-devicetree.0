@@ -1,176 +1,497 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/4] mtd: nand: add NVIDIA Tegra NAND Flash controller
- driver
-Date: Sat, 10 Jan 2015 19:20:25 +0100
-Message-ID: <20150110192025.78c763e9@bbrezillon>
-References: <1420403960-26626-1-git-send-email-dev@lynxeye.de>
+From: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>
+Subject: Re: [PATCH v7 1/3] iio: adc: Cosmic Circuits 10001 ADC driver
+Date: Sat, 10 Jan 2015 21:22:02 +0100
+Message-ID: <54B189EA.8060300@gmx.de>
+References: <1420577257-10846-1-git-send-email-ezequiel.garcia@imgtec.com> <1420577257-10846-2-git-send-email-ezequiel.garcia@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=ISO-8859-15
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1420403960-26626-1-git-send-email-dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lucas Stach <dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>
-Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1420577257-10846-2-git-send-email-ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Mark.Rutland-5wv7dgnIgG8@public.gmane.org
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel.Moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Phani Movva <Phani.Movva-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun,  4 Jan 2015 21:39:17 +0100
-Lucas Stach <dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org> wrote:
-
-> Add support for the NAND flash controller found on NVIDIA
-> Tegra 2/3 SoCs. This is a largely reworked version of the driver
-> started by Thierry.
+Ezequiel Garcia schrieb am 06.01.2015 um 21:47:
+> From: Phani Movva <Phani.Movva-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 > 
-> Signed-off-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-> Signed-off-by: Lucas Stach <dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>
-> ---
-> I've tested this driver with the in-kernel mtd-tests and some
-> realworld workloads on a Colibri T20 module.
-> ---
->  .../bindings/mtd/nvidia,tegra20-nand.txt           |  30 +
->  MAINTAINERS                                        |   6 +
->  drivers/mtd/nand/Kconfig                           |   6 +
->  drivers/mtd/nand/Makefile                          |   1 +
->  drivers/mtd/nand/tegra_nand.c                      | 794 +++++++++++++++++++++
->  5 files changed, 837 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/nvidia,tegra20-nand.txt
->  create mode 100644 drivers/mtd/nand/tegra_nand.c
+> This commit adds support for Cosmic Circuits 10001 10-bit ADC device.
 > 
-
-[...]
-
+> Reviewed-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Signed-off-by: Phani Movva <Phani.Movva-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Naidu Tellapati <Naidu.Tellapati-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+> [ezequiel: code style cleaning]
+> Signed-off-by: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Acked-by: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>
+> ---
+>  drivers/iio/adc/Kconfig       |  11 ++
+>  drivers/iio/adc/Makefile      |   1 +
+>  drivers/iio/adc/cc10001_adc.c | 423 ++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 435 insertions(+)
+>  create mode 100644 drivers/iio/adc/cc10001_adc.c
+> 
+> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> index 0f79e47..9cb8543 100644
+> --- a/drivers/iio/adc/Kconfig
+> +++ b/drivers/iio/adc/Kconfig
+> @@ -135,6 +135,17 @@ config AXP288_ADC
+>  	  device. Depending on platform configuration, this general purpose ADC can
+>  	  be used for sampling sensors such as thermal resistors.
+>  
+> +config CC10001_ADC
+> +	tristate "Cosmic Circuits 10001 ADC driver"
+> +	depends on HAS_IOMEM || HAVE_CLK || REGULATOR
+> +	select IIO_BUFFER
+> +	select IIO_TRIGGERED_BUFFER
+> +	help
+> +	  Say yes here to build support for Cosmic Circuits 10001 ADC.
 > +
-> +static const char * const part_probes[] = {
-> +	"cmdlinepart", "ofpart", NULL };
-
-Where is part_probe referenced in this driver ?
-
+> +	  This driver can also be built as a module. If so, the module will be
+> +	  called cc10001_adc.
 > +
-> +static int tegra_nand_probe(struct platform_device *pdev)
+>  config EXYNOS_ADC
+>  	tristate "Exynos ADC driver support"
+>  	depends on ARCH_EXYNOS || ARCH_S3C24XX || ARCH_S3C64XX || (OF && COMPILE_TEST)
+> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
+> index 701fdb7..ce60fe9 100644
+> --- a/drivers/iio/adc/Makefile
+> +++ b/drivers/iio/adc/Makefile
+> @@ -15,6 +15,7 @@ obj-$(CONFIG_AD7887) += ad7887.o
+>  obj-$(CONFIG_AD799X) += ad799x.o
+>  obj-$(CONFIG_AT91_ADC) += at91_adc.o
+>  obj-$(CONFIG_AXP288_ADC) += axp288_adc.o
+> +obj-$(CONFIG_CC10001_ADC) += cc10001_adc.o
+>  obj-$(CONFIG_EXYNOS_ADC) += exynos_adc.o
+>  obj-$(CONFIG_LP8788_ADC) += lp8788_adc.o
+>  obj-$(CONFIG_MAX1027) += max1027.o
+> diff --git a/drivers/iio/adc/cc10001_adc.c b/drivers/iio/adc/cc10001_adc.c
+> new file mode 100644
+> index 0000000..47f638b
+> --- /dev/null
+> +++ b/drivers/iio/adc/cc10001_adc.c
+> @@ -0,0 +1,423 @@
+> +/*
+> + * Copyright (c) 2014-2015 Imagination Technologies Ltd.
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms of the GNU General Public License version 2 as published by
+> + * the Free Software Foundation.
+> + *
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +#include <linux/err.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/slab.h>
+> +
+> +#include <linux/iio/buffer.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/iio/sysfs.h>
+> +#include <linux/iio/trigger.h>
+> +#include <linux/iio/trigger_consumer.h>
+> +#include <linux/iio/triggered_buffer.h>
+> +
+> +/* Registers */
+> +#define CC10001_ADC_CONFIG		0x00
+> +#define CC10001_ADC_START_CONV		BIT(4)
+> +#define CC10001_ADC_MODE_SINGLE_CONV	BIT(5)
+> +
+> +#define CC10001_ADC_DDATA_OUT		0x04
+> +#define CC10001_ADC_EOC			0x08
+> +#define CC10001_ADC_EOC_SET		BIT(0)
+> +
+> +#define CC10001_ADC_CHSEL_SAMPLED	0x0c
+> +#define CC10001_ADC_POWER_UP		0x10
+> +#define CC10001_ADC_POWER_UP_SET	BIT(0)
+> +#define CC10001_ADC_DEBUG		0x14
+> +#define CC10001_ADC_DATA_COUNT		0x20
+> +
+> +#define CC10001_ADC_DATA_MASK		GENMASK(9, 0)
+> +#define CC10001_ADC_NUM_CHANNELS	8
+> +#define CC10001_ADC_CH_MASK		GENMASK(2, 0)
+> +
+> +#define CC10001_INVALID_SAMPLED		0xffff
+> +#define CC10001_MAX_POLL_COUNT		20
+> +
+> +/*
+> + * As per device specification, wait six clock cycles after power-up to
+> + * activate START. Since adding two more clock cycles delay does not
+> + * impact the performance too much, we are adding two additional cycles delay
+> + * intentionally here.
+> + */
+> +#define	CC10001_WAIT_CYCLES		8
+> +
+> +struct cc10001_adc_device {
+> +	void __iomem *reg_base;
+> +	struct clk *adc_clk;
+> +	struct regulator *reg;
+> +	u16 *buf;
+> +
+> +	struct mutex lock;
+> +	unsigned long channel_map;
+> +	unsigned int start_delay_ns;
+> +	unsigned int eoc_delay_ns;
+> +};
+> +
+> +static inline void cc10001_adc_write_reg(struct cc10001_adc_device *adc_dev,
+> +					 u32 reg, u32 val)
 > +{
-> +	struct tegra_nand *nand;
-> +	struct nand_chip *chip;
-> +	struct mtd_info *mtd;
-> +	struct resource *res;
-> +	unsigned long value;
-> +	int err = 0;
+> +	writel(val, adc_dev->reg_base + reg);
+> +}
 > +
-> +	nand = devm_kzalloc(&pdev->dev, sizeof(*nand), GFP_KERNEL);
-> +	if (!nand)
-> +		return -ENOMEM;
+> +static inline u32 cc10001_adc_read_reg(struct cc10001_adc_device *adc_dev,
+> +				       u32 reg)
+> +{
+> +	return readl(adc_dev->reg_base + reg);
+> +}
 > +
-> +	nand->dev = &pdev->dev;
+> +static void cc10001_adc_start(struct cc10001_adc_device *adc_dev,
+> +			      unsigned int channel)
+> +{
+> +	u32 val;
 > +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	nand->regs = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(nand->regs))
-> +		return PTR_ERR(nand->regs);
+> +	/* Channel selection and mode of operation */
+> +	val = (channel & CC10001_ADC_CH_MASK) | CC10001_ADC_MODE_SINGLE_CONV;
+> +	cc10001_adc_write_reg(adc_dev, CC10001_ADC_CONFIG, val);
 > +
-> +	nand->irq  = platform_get_irq(pdev, 0);
-> +	err = devm_request_irq(&pdev->dev, nand->irq, tegra_nand_irq, 0,
-> +			       dev_name(&pdev->dev), nand);
-> +	if (err)
-> +		return err;
+> +	val = cc10001_adc_read_reg(adc_dev, CC10001_ADC_CONFIG);
+> +	val = val | CC10001_ADC_START_CONV;
+> +	cc10001_adc_write_reg(adc_dev, CC10001_ADC_CONFIG, val);
+> +}
 > +
-> +	nand->rst = devm_reset_control_get(&pdev->dev, "nand");
-> +	if (IS_ERR(nand->rst))
-> +		return PTR_ERR(nand->rst);
+> +static u16 cc10001_adc_poll_done(struct iio_dev *indio_dev,
+> +				 unsigned int channel,
+> +				 unsigned int delay)
+> +{
+> +	struct cc10001_adc_device *adc_dev = iio_priv(indio_dev);
+> +	unsigned int poll_count = 0;
 > +
-> +	nand->clk = devm_clk_get(&pdev->dev, "nand");
-> +	if (IS_ERR(nand->clk))
-> +		return PTR_ERR(nand->clk);
+> +	while (!(cc10001_adc_read_reg(adc_dev, CC10001_ADC_EOC) &
+> +			CC10001_ADC_EOC_SET)) {
 > +
-> +	err = tegra_nand_parse_dt(pdev->dev.of_node, nand);
-> +	if (err)
-> +		return err;
-> +
-> +	err = clk_prepare_enable(nand->clk);
-> +	if (err)
-> +		return err;
-> +
-> +	reset_control_assert(nand->rst);
-> +	udelay(2);
-> +	reset_control_deassert(nand->rst);
-> +
-> +	if (gpio_is_valid(nand->wp_gpio)) {
-> +		err = devm_gpio_request_one(&pdev->dev, nand->wp_gpio,
-> +				GPIOF_OUT_INIT_HIGH, "tegra-nand-wp");
-> +		if (err)
-> +			return err;
+> +		ndelay(delay);
+> +		if (poll_count++ == CC10001_MAX_POLL_COUNT)
+> +			return CC10001_INVALID_SAMPLED;
 > +	}
 > +
-> +	value = HWSTATUS_RDSTATUS_MASK(1) | HWSTATUS_RDSTATUS_VALUE(0) |
-> +		HWSTATUS_RBSY_MASK(NAND_STATUS_READY) |
-> +		HWSTATUS_RBSY_VALUE(NAND_STATUS_READY);
-> +	writel(NAND_CMD_STATUS, nand->regs + HWSTATUS_CMD);
-> +	writel(value, nand->regs + HWSTATUS_MASK);
+> +	poll_count = 0;
+> +	while ((cc10001_adc_read_reg(adc_dev, CC10001_ADC_CHSEL_SAMPLED) &
+> +			CC10001_ADC_CH_MASK) != channel) {
 > +
-> +	init_completion(&nand->command_complete);
-> +	init_completion(&nand->dma_complete);
+> +		ndelay(delay);
+> +		if (poll_count++ == CC10001_MAX_POLL_COUNT)
+> +			return CC10001_INVALID_SAMPLED;
+> +	}
 > +
-> +	mtd = &nand->mtd;
-> +	mtd->name = dev_name(&pdev->dev);
-> +	mtd->owner = THIS_MODULE;
-> +	mtd->priv = &nand->chip;
+> +	/* Read the 10 bit output register */
+> +	return cc10001_adc_read_reg(adc_dev, CC10001_ADC_DDATA_OUT) &
+> +			       CC10001_ADC_DATA_MASK;
+> +}
 > +
-> +	mtd->type = MTD_NANDFLASH;
-> +	mtd->flags = MTD_CAP_NANDFLASH;
+> +static irqreturn_t cc10001_adc_trigger_h(int irq, void *p)
+> +{
+> +	struct cc10001_adc_device *adc_dev;
+> +	struct iio_poll_func *pf = p;
+> +	struct iio_dev *indio_dev;
+> +	unsigned int delay_ns;
+> +	unsigned int channel;
+> +	bool sample_invalid;
+> +	u16 *data;
+> +	int i;
 > +
-> +	/* clear interrupts */
-> +	value = readl(nand->regs + ISR);
-> +	writel(value, nand->regs + ISR);
+> +	indio_dev = pf->indio_dev;
+> +	adc_dev = iio_priv(indio_dev);
+> +	data = adc_dev->buf;
 > +
-> +	writel(DMA_CTRL_IS_DONE, nand->regs + DMA_CTRL);
+> +	mutex_lock(&adc_dev->lock);
 > +
-> +	/* enable interrupts */
-> +	value = IER_UND | IER_OVR | IER_CMD_DONE | IER_ECC_ERR | IER_GIE;
-> +	writel(value, nand->regs + IER);
+> +	cc10001_adc_write_reg(adc_dev, CC10001_ADC_POWER_UP,
+> +			      CC10001_ADC_POWER_UP_SET);
 > +
-> +	chip = &nand->chip;
-> +	chip->cmdfunc = tegra_nand_command;
-> +	chip->select_chip = tegra_nand_select_chip;
-> +	chip->read_byte = tegra_nand_read_byte;
-> +	chip->read_buf = tegra_nand_read_buf;
-> +	chip->write_buf = tegra_nand_write_buf;
+> +	/* Wait for 8 (6+2) clock cycles before activating START */
+> +	ndelay(adc_dev->start_delay_ns);
 > +
-> +	tegra_nand_setup_timing(nand, 0);
+> +	/* Calculate delay step for eoc and sampled data */
+> +	delay_ns = adc_dev->eoc_delay_ns / CC10001_MAX_POLL_COUNT;
 > +
-> +	err = nand_scan_ident(mtd, 1, NULL);
-> +	if (err)
-> +		return err;
+> +	i = 0;
+> +	sample_invalid = false;
+> +	for_each_set_bit(channel, indio_dev->active_scan_mask,
+> +				  indio_dev->masklength) {
 > +
-> +	nand->data_buf = dmam_alloc_coherent(&pdev->dev, mtd->writesize,
-> +					    &nand->data_dma, GFP_KERNEL);
-> +	if (!nand->data_buf)
+> +		cc10001_adc_start(adc_dev, channel);
+> +
+> +		data[i] = cc10001_adc_poll_done(indio_dev, channel, delay_ns);
+> +		if (data[i] == CC10001_INVALID_SAMPLED) {
+> +			dev_warn(&indio_dev->dev,
+> +				 "invalid sample on channel %d\n", channel);
+> +			sample_invalid = true;
+> +			goto done;
+> +		}
+> +		i++;
+> +	}
+> +
+> +done:
+> +	cc10001_adc_write_reg(adc_dev, CC10001_ADC_POWER_UP, 0);
+> +
+> +	mutex_unlock(&adc_dev->lock);
+> +
+> +	if (!sample_invalid)
+> +		iio_push_to_buffers_with_timestamp(indio_dev, data,
+> +						   iio_get_time_ns());
+> +	iio_trigger_notify_done(indio_dev->trig);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static u16 cc10001_adc_read_raw_voltage(struct iio_dev *indio_dev,
+> +					struct iio_chan_spec const *chan)
+> +{
+> +	struct cc10001_adc_device *adc_dev = iio_priv(indio_dev);
+> +	unsigned int delay_ns;
+> +	u16 val;
+> +
+> +	cc10001_adc_write_reg(adc_dev, CC10001_ADC_POWER_UP,
+> +			      CC10001_ADC_POWER_UP_SET);
+> +
+> +	/* Wait for 8 (6+2) clock cycles before activating START */
+> +	ndelay(adc_dev->start_delay_ns);
+> +
+> +	/* Calculate delay step for eoc and sampled data */
+> +	delay_ns = adc_dev->eoc_delay_ns / CC10001_MAX_POLL_COUNT;
+> +
+> +	cc10001_adc_start(adc_dev, chan->channel);
+> +
+> +	val = cc10001_adc_poll_done(indio_dev, chan->channel, delay_ns);
+> +
+> +	cc10001_adc_write_reg(adc_dev, CC10001_ADC_POWER_UP, 0);
+> +
+> +	return val;
+> +}
+> +
+> +static int cc10001_adc_read_raw(struct iio_dev *indio_dev,
+> +				 struct iio_chan_spec const *chan,
+> +				 int *val, int *val2, long mask)
+> +{
+> +	struct cc10001_adc_device *adc_dev = iio_priv(indio_dev);
+> +	int ret;
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		if (iio_buffer_enabled(indio_dev))
+> +			return -EBUSY;
+> +		mutex_lock(&adc_dev->lock);
+> +		*val = cc10001_adc_read_raw_voltage(indio_dev, chan);
+> +		mutex_unlock(&adc_dev->lock);
+> +
+> +		if (*val == CC10001_INVALID_SAMPLED)
+> +			return -EIO;
+> +		return IIO_VAL_INT;
+> +
+> +	case IIO_CHAN_INFO_SCALE:
+> +		ret = regulator_get_voltage(adc_dev->reg);
+> +		if (ret)
+> +			return ret;
+> +
+> +		*val = ret / 1000;
+> +		*val2 = chan->scan_type.realbits;
+> +		return IIO_VAL_FRACTIONAL_LOG2;
+> +
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static int cc10001_update_scan_mode(struct iio_dev *indio_dev,
+> +				    const unsigned long *scan_mask)
+> +{
+> +	struct cc10001_adc_device *adc_dev = iio_priv(indio_dev);
+> +
+> +	kfree(adc_dev->buf);
+> +	adc_dev->buf = kmalloc(indio_dev->scan_bytes, GFP_KERNEL);
+> +	if (!adc_dev->buf)
 > +		return -ENOMEM;
 > +
-> +	nand->oob_buf = dmam_alloc_coherent(&pdev->dev, mtd->oobsize,
-> +					    &nand->oob_dma, GFP_KERNEL);
-> +	if (!nand->oob_buf)
+> +	return 0;
+> +}
+> +
+> +static const struct iio_info cc10001_adc_info = {
+> +	.driver_module = THIS_MODULE,
+> +	.read_raw = &cc10001_adc_read_raw,
+> +	.update_scan_mode = &cc10001_update_scan_mode,
+> +};
+> +
+> +static int cc10001_adc_channel_init(struct iio_dev *indio_dev)
+> +{
+> +	struct cc10001_adc_device *adc_dev = iio_priv(indio_dev);
+> +	struct iio_chan_spec *chan_array, *timestamp;
+> +	unsigned int bit, idx = 0;
+> +
+> +	indio_dev->num_channels = bitmap_weight(&adc_dev->channel_map,
+> +						CC10001_ADC_NUM_CHANNELS);
+> +
+> +	chan_array = devm_kcalloc(&indio_dev->dev, indio_dev->num_channels + 1,
+> +				  sizeof(struct iio_chan_spec),
+> +				  GFP_KERNEL);
+> +	if (!chan_array)
 > +		return -ENOMEM;
 > +
-> +	chip->ecc.mode = NAND_ECC_HW;
-> +	chip->ecc.size = 512;
-> +	chip->ecc.bytes = mtd->oobsize;
-> +	chip->ecc.read_page = tegra_nand_read_page;
-> +	chip->ecc.write_page = tegra_nand_write_page;
-
-Just a nit, but I would rename those read/write_page functions into
-tegra_nand_hwecc_xxx_page to clearly state that HW ECC is involved
-here.
-
+> +	for_each_set_bit(bit, &adc_dev->channel_map, CC10001_ADC_NUM_CHANNELS) {
+> +		struct iio_chan_spec *chan = &chan_array[idx];
 > +
-> +	value = CFG_HW_ECC | CFG_ECC_SEL | CFG_ERR_COR | CFG_PIPE_EN |
-> +		CFG_TVAL_8 | CFG_SKIP_SPARE | CFG_SKIP_SPARE_SIZE_4;
-
-Can you move the CFG_HW_ECC flags setting into tegra_nand_read_page
-(setting them at entry and clearing them at exit).
-This is really important to be able to access the NAND in raw mode
-(i.e. without involving ECC), and you seem to force HW ECC for
-all accesses, which means ecc.read/write_page_raw are probably not
-working correctly.
-
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+> +		chan->type = IIO_VOLTAGE;
+> +		chan->indexed = 1;
+> +		chan->channel = bit;
+> +		chan->scan_index = idx;
+> +		chan->scan_type.sign = 'u';
+> +		chan->scan_type.realbits = 10;
+> +		chan->scan_type.storagebits = 16;
+> +		chan->info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE);
+> +		chan->info_mask_separate = BIT(IIO_CHAN_INFO_RAW);
+> +		idx++;
+> +	}
+> +
+> +	timestamp = &chan_array[idx];
+> +	timestamp->type = IIO_TIMESTAMP;
+> +	timestamp->channel = -1;
+> +	timestamp->scan_index = idx;
+> +	timestamp->scan_type.sign = 's';
+> +	timestamp->scan_type.realbits = 64;
+> +	timestamp->scan_type.storagebits = 64;
+> +
+> +	indio_dev->channels = chan_array;
+> +
+> +	return 0;
+> +}
+> +
+> +static int cc10001_adc_probe(struct platform_device *pdev)
+> +{
+> +	struct device_node *node = pdev->dev.of_node;
+> +	struct cc10001_adc_device *adc_dev;
+> +	unsigned long adc_clk_rate;
+> +	struct resource *res;
+> +	struct iio_dev *indio_dev;
+> +	int ret;
+> +
+> +	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*adc_dev));
+> +	if (indio_dev == NULL)
+> +		return -ENOMEM;
+> +
+> +	adc_dev = iio_priv(indio_dev);
+> +
+> +	adc_dev->channel_map = GENMASK(CC10001_ADC_NUM_CHANNELS - 1, 0);
+> +	if (!of_property_read_u32(node, "adc-reserved-channels", &ret))
+> +		adc_dev->channel_map &= ~ret;
+> +
+> +	adc_dev->reg = devm_regulator_get(&pdev->dev, "vref");
+> +	if (IS_ERR(adc_dev->reg))
+> +		return PTR_ERR(adc_dev->reg);
+> +
+> +	ret = regulator_enable(adc_dev->reg);
+> +	if (ret)
+> +		return ret;
+> +
+> +	indio_dev->dev.parent = &pdev->dev;
+> +	indio_dev->name = dev_name(&pdev->dev);
+> +	indio_dev->info = &cc10001_adc_info;
+> +	indio_dev->modes = INDIO_DIRECT_MODE;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	adc_dev->reg_base = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(adc_dev->reg_base)) {
+> +		ret = PTR_ERR(adc_dev->reg_base);
+> +		goto err_disable_reg;
+> +	}
+> +
+> +	adc_dev->adc_clk = devm_clk_get(&pdev->dev, "adc");
+> +	if (IS_ERR(adc_dev->adc_clk)) {
+> +		dev_err(&pdev->dev, "failed to get the clock\n");
+> +		ret = PTR_ERR(adc_dev->adc_clk);
+> +		goto err_disable_reg;
+> +	}
+> +
+> +	ret = clk_prepare_enable(adc_dev->adc_clk);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "failed to enable the clock\n");
+> +		goto err_disable_reg;
+> +	}
+> +
+> +	adc_clk_rate = clk_get_rate(adc_dev->adc_clk);
+> +	if (!adc_clk_rate) {
+> +		ret = -EINVAL;
+> +		dev_err(&pdev->dev, "null clock rate!\n");
+> +		goto err_disable_clk;
+> +	}
+> +
+> +	adc_dev->eoc_delay_ns = NSEC_PER_SEC / adc_clk_rate;
+> +	adc_dev->start_delay_ns = adc_dev->eoc_delay_ns * CC10001_WAIT_CYCLES;
+> +
+> +	/* Setup the ADC channels available on the device */
+> +	ret = cc10001_adc_channel_init(indio_dev);
+> +	if (ret < 0)
+> +		goto err_disable_clk;
+> +
+> +	mutex_init(&adc_dev->lock);
+> +
+> +	ret = iio_triggered_buffer_setup(indio_dev, NULL,
+> +					 &cc10001_adc_trigger_h, NULL);
+> +	if (ret < 0)
+> +		goto err_disable_clk;
+> +
+> +	ret = iio_device_register(indio_dev);
+> +	if (ret < 0)
+> +		goto err_cleanup_buffer;
+> +
+> +	platform_set_drvdata(pdev, indio_dev);
+> +
+> +	return 0;
+> +
+> +err_cleanup_buffer:
+> +	iio_triggered_buffer_cleanup(indio_dev);
+> +err_disable_clk:
+> +	clk_disable_unprepare(adc_dev->adc_clk);
+> +err_disable_reg:
+> +	regulator_disable(adc_dev->reg);
+> +	return ret;
+> +}
+> +
+> +static int cc10001_adc_remove(struct platform_device *pdev)
+> +{
+> +	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
+> +	struct cc10001_adc_device *adc_dev = iio_priv(indio_dev);
+> +
+> +	iio_device_unregister(indio_dev);
+> +	iio_triggered_buffer_cleanup(indio_dev);
+> +	clk_disable_unprepare(adc_dev->adc_clk);
+> +	regulator_disable(adc_dev->reg);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id cc10001_adc_dt_ids[] = {
+> +	{ .compatible = "cosmic,10001-adc", },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, cc10001_adc_dt_ids);
+> +
+> +static struct platform_driver cc10001_adc_driver = {
+> +	.driver = {
+> +		.name   = "cc10001-adc",
+> +		.of_match_table = cc10001_adc_dt_ids,
+> +	},
+> +	.probe	= cc10001_adc_probe,
+> +	.remove	= cc10001_adc_remove,
+> +};
+> +module_platform_driver(cc10001_adc_driver);
+> +
+> +MODULE_AUTHOR("Phani Movva <Phani.Movva-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>");
+> +MODULE_DESCRIPTION("Cosmic Circuits ADC driver");
+> +MODULE_LICENSE("GPL v2");
+> 
