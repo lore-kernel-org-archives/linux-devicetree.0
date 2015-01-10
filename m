@@ -1,51 +1,85 @@
-From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v1 06/10] tpm/tpm_i2c_stm_st33: Add status check when reading data on the FIFO
-Date: Sat, 10 Jan 2015 12:20:27 +0100
-Message-ID: <1420888831-17491-7-git-send-email-christophe-h.ricard@st.com>
-References: <1420888831-17491-1-git-send-email-christophe-h.ricard@st.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1420888831-17491-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: PeterHuewe-Mmb7MZpHnFY@public.gmane.org
-Cc: ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org, tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, jean-luc.blanc-qxv4g6HH51o@public.gmane.org, benoit.houyere-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org, jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH 3/3] clk: berlin: bg2q: remove non-exist "smemc" gate
+ clock
+Date: Sat, 10 Jan 2015 14:08:22 +0100
+Message-ID: <54B12446.4030703@gmail.com>
+References: <1420016272-6789-1-git-send-email-jszhang@marvell.com> <1420016272-6789-4-git-send-email-jszhang@marvell.com> <54AD3EAE.6090009@gmail.com> <20150107222209.64ed24a0@xhacker> <54AD431F.6060403@gmail.com> <20150109201306.4d1a296b@xhacker>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <20150109201306.4d1a296b@xhacker>
+Sender: stable-owner@vger.kernel.org
+To: Jisheng Zhang <jszhang@marvell.com>
+Cc: "mturquette@linaro.org" <mturquette@linaro.org>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "alexandre.belloni@free-electrons.com" <alexandre.belloni@free-electrons.com>, "antoine.tenart@free-electrons.com" <antoine.tenart@free-electrons.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "stable@vger.kernel.org" <stable@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a return value check when reading data from the FIFO register.
+On 09.01.2015 13:13, Jisheng Zhang wrote:
+> On Wed, 7 Jan 2015 06:30:55 -0800
+> Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com> wrote:
+>> On 07.01.2015 15:22, Jisheng Zhang wrote:
+>>> On Wed, 7 Jan 2015 06:11:58 -0800
+>>> Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com> wrote:
+>>>> On 31.12.2014 09:57, Jisheng Zhang wrote:
+>>>>> The "smemc" clock is removed on BG2Q SoCs. In fact, bit19 of clkenable
+>>>>> register is for nfc. Current code use bit19 for non-exist "smemc"
+>>>>> incorrectly, this prevents eMMC from working due to the sdhci's
+>>>>> "core" clk is still gated.
+>>>>>
+>>>>> Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
+>>>>> Cc: stable@vger.kernel.org # 3.16+
+>>>>> ---
+>>>>>     drivers/clk/berlin/bg2q.c | 1 -
+>>>>>     1 file changed, 1 deletion(-)
+>>>>>
+>>>>> diff --git a/drivers/clk/berlin/bg2q.c b/drivers/clk/berlin/bg2q.c
+>>>>> index 21784e4..440ef81 100644
+>>>>> --- a/drivers/clk/berlin/bg2q.c
+>>>>> +++ b/drivers/clk/berlin/bg2q.c
+>>>>> @@ -285,7 +285,6 @@ static const struct berlin2_gate_data bg2q_gates[]
+>>>>> __initconst = { { "pbridge",	"perif",	15,
+>>>>> CLK_IGNORE_UNUSED }, { "sdio",	"perif",	16,
+>>>>> CLK_IGNORE_UNUSED }, { "nfc",	"perif",	18 },
+>>>
+>>> The nfc here is really confusing, we call it as nfccore internally. Is it
+>>> better to rename it as nfccore?
+>>
+>> I guess it comes from some early Marvell BSP code, if there is no
+>> issues with the name, e.g. something already depends on "nfc", feel
+>> free to rename it to something more meaningful.
+>
+> In BG2, mrvl call the clock as nfccore. The code use "nfc" for it.
+> The situation is similar for usbcore, satacore etc. So keep the name here,
+> what do you think?
 
-Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
----
- drivers/char/tpm/tpm_i2c_stm_st33.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+Yes, I am fine with keeping the name as is.
 
-diff --git a/drivers/char/tpm/tpm_i2c_stm_st33.c b/drivers/char/tpm/tpm_i2c_stm_st33.c
-index 3289f9d..eeb4816 100644
---- a/drivers/char/tpm/tpm_i2c_stm_st33.c
-+++ b/drivers/char/tpm/tpm_i2c_stm_st33.c
-@@ -440,7 +440,7 @@ again:
-  */
- static int recv_data(struct tpm_chip *chip, u8 *buf, size_t count)
- {
--	int size = 0, burstcnt, len;
-+	int size = 0, burstcnt, len, ret;
- 	struct tpm_stm_dev *tpm_dev;
- 
- 	tpm_dev = (struct tpm_stm_dev *)TPM_VPRIV(chip);
-@@ -454,7 +454,10 @@ static int recv_data(struct tpm_chip *chip, u8 *buf, size_t count)
- 		if (burstcnt < 0)
- 			return burstcnt;
- 		len = min_t(int, burstcnt, count - size);
--		I2C_READ_DATA(tpm_dev, TPM_DATA_FIFO, buf + size, len);
-+		ret = I2C_READ_DATA(tpm_dev, TPM_DATA_FIFO, buf + size, len);
-+		if (ret < 0)
-+			return ret;
-+
- 		size += len;
- 	}
- 	return size;
--- 
-2.1.0
+>>>>> -	{ "smemc",	"perif",	19 },
+>>>>
+>>>> if bit 19 is for nfc, how does that work out with bit 18 which is
+>>>> still assigned to nfc? Can you re-evaluate clkenable registers for
+>>>
+>>> bit 19 is for nfcEcc, the "io" clock; bit 18 is for nfcCore, the "core"
+>>> clock.
+>>
+>> Ok, then both bits should be dealt with accordingly, i.e. rename
+>> "smemc" to "nfcecc" and use it in the corresponding dts node.
+>>
+>> If this clk_gate just disables a clock that is fed into another
+>> gateable clock module, I can live with removing it - although I
+>> still think it is best to leave the clk_gate in place and pick
+>> another name that does not collide with any other clock name.
+>
+> The nfcecc is already defined in the bg2q_divs, the gate bit is correct there.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ok, I had a look in the actual code and agree that the same bit 19
+is used twice. The patch is fine and we can take it as is.
+
+This is clk subsystem, so either Mike takes it through his fixes branch
+including my
+
+Acked-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+
+or decides to agree that I take it instead with his Ack. I am fine
+with both.
+
+Sebastian
