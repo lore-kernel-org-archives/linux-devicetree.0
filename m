@@ -1,109 +1,79 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 2/4] Documentation: bindings: Add the regulator
- property to the sub-nodes AHCI bindings
-Date: Sat, 10 Jan 2015 11:17:48 +0000
-Message-ID: <20150110111748.GB4160@sirena.org.uk>
-References: <1420799989-10645-1-git-send-email-gregory.clement@free-electrons.com>
- <1420799989-10645-3-git-send-email-gregory.clement@free-electrons.com>
- <54AFF7E3.4070506@redhat.com>
- <54AFFFDC.7020307@free-electrons.com>
- <CAGb2v674q4Cjp9qy9CbUXe2j5pT_ez98CKxXHC8u4Diap2TT1A@mail.gmail.com>
- <20150109171131.GH2634@sirena.org.uk>
- <54B0FCDD.7000300@redhat.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="FsscpQKzF/jJk6ya"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <54B0FCDD.7000300@redhat.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Gregory CLEMENT <gregory.clement@free-electrons.com>, linux-kernel <linux-kernel@vger.kernel.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Tawfik Bayouk <tawfik@marvell.com>, Andrew Lunn <andrew@lunn.ch>, devicetree <devicetree@vger.kernel.org>, Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart@free-electrons.com>, Mark Rutland <mark.rutland@arm.com>, Nadav Haklai <nadavh@marvell.com>, linux-ide@vger.kernel.org, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Tejun Heo <tj@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Ulf Hansson <ulf.hansson@linaro.org>
+From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v1 00/10] st33zp24 new architecture proposal and st33zp24 spi driver
+Date: Sat, 10 Jan 2015 12:20:21 +0100
+Message-ID: <1420888831-17491-1-git-send-email-christophe-h.ricard@st.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: PeterHuewe-Mmb7MZpHnFY@public.gmane.org
+Cc: ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org, tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, jean-luc.blanc-qxv4g6HH51o@public.gmane.org, benoit.houyere-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org, jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---FsscpQKzF/jJk6ya
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The following patchset:
+- clean the current tpm_i2c_stm_st33 driver
+- propose a new architecture allowing to share a core st33zp24 data management
+layer with different phy (i2c & spi). For st33zp24 both phy have a proprietary transport
+protocol. Both are relying on the TCG TIS protocol. At the end, it simplifies the maintenance.
+- Add an spi phy allowing to support st33zp24 using with an SPI bus.
 
-On Sat, Jan 10, 2015 at 11:20:13AM +0100, Hans de Goede wrote:
-> On 09-01-15 18:11, Mark Brown wrote:
+The complete solution got tested in polling and interrupt mode successfully with i2c & spi phy.
+This patchset applies on top of Peter's tree https://github.com/PeterHuewe/linux-tpmdd.git for-james branch
+on top of:
+tpm: TPM 2.0 FIFO Interface 2c71d9fb22289a196a4b51d6158cf0d2f9abcfb9
 
-> >Or if the supply is for the device at the other end of the link (which
-> >is what it sounded like) then use that.  This just sounds like the same
-> >problem we have for all the enumerable buses in embedded systems where
-> >we need to be able to understand that the device exists prior to it
-> >being fully ready to appear in the system.  Having the link/slot be a
-> >device in Linux does indeed seem to be a common way people think about
-> >doing this, it sounds like for this one it might be the most direct.
+I confirm also Jarkko Sakkinen's changes are working with this product with both phy's.
 
-> I think we should be careful to not think too much from an implementation
-> pov here, the purpose of the devicetree description is to describe the ha=
-rdware,
-> as is.
+Best Regards
+Christophe
 
-I don't think anyone is talking about changing the DT here, only the way
-it's represented inside Linux.
+Christophe Ricard (10):
+  tpm/tpm_i2c_stm_st33: Remove sparse spaces
+  tpm/tpm_i2c_stm_st33: Sanity cleanup
+  tpm/tpm_i2c_stm_st33: Replace remaining r by ret
+  tpm/tpm_i2c_stm_st33: Replace access to io_lpcpd from struct
+    st33zp24_platform_data to tpm_stm_dev
+  tpm/tpm_i2c_stm_st33: Change tpm_i2c_stm_st33.h to tpm_stm_st33.h
+  tpm/tpm_i2c_stm_st33: Add status check when reading data on the FIFO
+  tpm/tpm_i2c_stm_st33/dts/st33zp24-i2c: Rename st33zp24 dts
+    documentation
+  tpm/tpm_i2c_stm_st33: Split tpm_i2c_tpm_st33 in 2 layers (core + phy)
+  tpm/st33zp24/spi: Add st33zp24 spi phy
+  tpm/st33zp24/dts/st33zp24-spi: Add dts documentation for st33zp24 spi
+    phy
 
->                 sata0: sata-port@0 {
->                         reg =3D <0>;
->                         phys =3D <&sata_phy 0>;
-> 			target-supply =3D <&reg_sata0>;
->                 };
->=20
->                 sata1: sata-port@1 {
->                         reg =3D <1>;
->                         phys =3D <&sata_phy 1>;
-> 			target-supply =3D <&reg_sata1>;
->                 };
->         };
+ .../bindings/security/tpm/st33zp24-i2c.txt         |  36 +
+ .../bindings/security/tpm/st33zp24-spi.txt         |  34 +
+ .../devicetree/bindings/security/tpm/st33zp24.txt  |  36 -
+ drivers/char/tpm/Kconfig                           |  11 +-
+ drivers/char/tpm/Makefile                          |   2 +-
+ drivers/char/tpm/st33zp24/Kconfig                  |  30 +
+ drivers/char/tpm/st33zp24/Makefile                 |  12 +
+ drivers/char/tpm/st33zp24/i2c.c                    | 283 +++++++
+ drivers/char/tpm/st33zp24/spi.c                    | 399 +++++++++
+ drivers/char/tpm/st33zp24/st33zp24.c               | 688 ++++++++++++++++
+ drivers/char/tpm/st33zp24/st33zp24.h               |  32 +
+ drivers/char/tpm/tpm_i2c_stm_st33.c                | 910 ---------------------
+ include/linux/platform_data/st33zp24.h             |  28 +
+ include/linux/platform_data/tpm_i2c_stm_st33.h     |  39 -
+ 14 files changed, 1544 insertions(+), 996 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/security/tpm/st33zp24-i2c.txt
+ create mode 100644 Documentation/devicetree/bindings/security/tpm/st33zp24-spi.txt
+ delete mode 100644 Documentation/devicetree/bindings/security/tpm/st33zp24.txt
+ create mode 100644 drivers/char/tpm/st33zp24/Kconfig
+ create mode 100644 drivers/char/tpm/st33zp24/Makefile
+ create mode 100644 drivers/char/tpm/st33zp24/i2c.c
+ create mode 100644 drivers/char/tpm/st33zp24/spi.c
+ create mode 100644 drivers/char/tpm/st33zp24/st33zp24.c
+ create mode 100644 drivers/char/tpm/st33zp24/st33zp24.h
+ delete mode 100644 drivers/char/tpm/tpm_i2c_stm_st33.c
+ create mode 100644 include/linux/platform_data/st33zp24.h
+ delete mode 100644 include/linux/platform_data/tpm_i2c_stm_st33.h
 
-> Seems to match the hardware pretty exactly, and also matches how we've
-> been describing similar devices with only one sata port + power plug sofa=
-r,
-> so from a consistency pov it also is a good model.
+-- 
+2.1.0
 
-Right, I think that makes sense - it also looks to me like these things
-should be representable as devices within Linux.
-
-> So supporting this model requires having a regulator_get API which allows
-> specifying which of_node to get the regulator from, e.g. the proposed
-
-It requires nothing of the sort.
-
-> of_regulator_get function. I know you (Mark) do not like this, but all
-> other subsystems have an of_foo_get function taking an of_node as argumen=
-t,
-> I do not see how the regulator subsys is so special that it cannot have o=
-ne,
-> and also notice that this is only a kernel internal API which we can alwa=
-ys
-> change later.
-
-Two things there.  One is that mostly those APIs are legacy APIs from
-before we made DT a first class citizen and generally they shouldn't be
-used these days.  The other is that at least for regulators we have
-constant problems with people abusing the API in various ways, as a
-result the API has a goal of not helping undesirable usage patterns in
-order to help people spot problems.  Having an API which makes it easy
-create broken bindings means that it is much more likely that people
-will do just that.
-
---FsscpQKzF/jJk6ya
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUsQpbAAoJECTWi3JdVIfQxwYH/iEzJFcp4qFzIVt/Af9ri40/
-1g1Wjuujq3TMMYu/OcutyMvYEp8VBK8LOV0dYnQ6CJ08g+0+Tbg+RHzmOjtG3eeE
-XCGxoVOn6HwRLBledYyoAsFEzqdVaBGTYRUBGnU4Yhq6XGzQBrqigZyiSbWrR4nV
-oO0gj5We4WsB4Y0bCZhxJwG6nVIMoLdbDHjQCyGf2PdhhyW6CogHJ5fIWMG3HPKr
-i8h/RbK/qkaFmmGGtdZrkiVG03fH46YvcGmdvUswBoZISRRIrCH5C9m9OBF4NvI6
-dt48gKFuMQsflZ4/EoO+tPhu3dIE4rbz8EBVSaxHqNm3pYIaPuVv64qv4QwwbG4=
-=+bOd
------END PGP SIGNATURE-----
-
---FsscpQKzF/jJk6ya--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
