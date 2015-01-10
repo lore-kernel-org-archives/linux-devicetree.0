@@ -1,115 +1,69 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v2 2/4] Documentation: bindings: Add the regulator property
- to the sub-nodes AHCI bindings
-Date: Sat, 10 Jan 2015 14:51:16 +0100
-Message-ID: <54B12E54.7000704@redhat.com>
-References: <1420799989-10645-1-git-send-email-gregory.clement@free-electrons.com> <1420799989-10645-3-git-send-email-gregory.clement@free-electrons.com> <54AFF7E3.4070506@redhat.com> <54AFFFDC.7020307@free-electrons.com> <CAGb2v674q4Cjp9qy9CbUXe2j5pT_ez98CKxXHC8u4Diap2TT1A@mail.gmail.com> <20150109171131.GH2634@sirena.org.uk> <54B0FCDD.7000300@redhat.com> <20150110111748.GB4160@sirena.org.uk>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V1 1/1] iio: Added Capella cm3232 ambient light sensor
+ driver.
+Date: Sat, 10 Jan 2015 14:06:15 +0000
+Message-ID: <54B131D7.4040705@kernel.org>
+References: <1420071030-888-1-git-send-email-ktsai@capellamicro.com>	 <CAEnQRZBD2NMYRp1cW0J2ssT4CT=0jSM=X6ByHQiUrA0ueV8fRA@mail.gmail.com>	 <1420463396.2652.8.camel@perches.com>	 <CAEnQRZBmwurFCJU4E4ArO8waU+YcGWrRYr3DRVxq9haduX2t=w@mail.gmail.com>	 <1420476166.2652.14.camel@perches.com>	 <CAEnQRZA6=FK8CaJvh7kxOEAyDLQQE77xZ02UofLUUT67yZG8bg@mail.gmail.com> <1420480611.2652.19.camel@perches.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <20150110111748.GB4160@sirena.org.uk>
-Sender: linux-ide-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Chen-Yu Tsai <wens@csie.org>, Gregory CLEMENT <gregory.clement@free-electrons.com>, linux-kernel <linux-kernel@vger.kernel.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Tawfik Bayouk <tawfik@marvell.com>, Andrew Lunn <andrew@lunn.ch>, devicetree <devicetree@vger.kernel.org>, =?windows-1252?Q?Antoine_T=E9nart?= <antoine.tenart@free-electrons.com>, Mark Rutland <mark.rutland@arm.com>, Nadav Haklai <nadavh@marvell.com>, linux-ide@vger.kernel.org, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Tejun Heo <tj@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Ulf Hansson <ulf.hansson@linaro.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1420480611.2652.19.camel-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, Archana Patni <archana.patni-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 10-01-15 12:17, Mark Brown wrote:
-> On Sat, Jan 10, 2015 at 11:20:13AM +0100, Hans de Goede wrote:
->> On 09-01-15 18:11, Mark Brown wrote:
->
->>> Or if the supply is for the device at the other end of the link (which
->>> is what it sounded like) then use that.  This just sounds like the same
->>> problem we have for all the enumerable buses in embedded systems where
->>> we need to be able to understand that the device exists prior to it
->>> being fully ready to appear in the system.  Having the link/slot be a
->>> device in Linux does indeed seem to be a common way people think about
->>> doing this, it sounds like for this one it might be the most direct.
->
->> I think we should be careful to not think too much from an implementation
->> pov here, the purpose of the devicetree description is to describe the hardware,
->> as is.
->
-> I don't think anyone is talking about changing the DT here, only the way
-> it's represented inside Linux.
->
->>                  sata0: sata-port@0 {
->>                          reg = <0>;
->>                          phys = <&sata_phy 0>;
->> 			target-supply = <&reg_sata0>;
->>                  };
+On 05/01/15 17:56, Joe Perches wrote:
+> On Mon, 2015-01-05 at 19:50 +0200, Daniel Baluta wrote:
+>> On Mon, Jan 5, 2015 at 6:42 PM, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org> wrote:
+>>> On Mon, 2015-01-05 at 16:20 +0200, Daniel Baluta wrote:
+>>>> On Mon, Jan 5, 2015 at 3:09 PM, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org> wrote:
+>>>>> On Mon, 2015-01-05 at 12:51 +0200, Daniel Baluta wrote:
+>>>>>> On Thu, Jan 1, 2015 at 2:10 AM, Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org> wrote:
+>>>>>>> CM3232 is an advanced ambient light sensor with I2C protocol interface.
+>>>>>>> The I2C slave address is internally hardwired as 0x10 (7-bit).  Writing
+>>>>>>> to configure register is byte mode, but reading ALS register requests to
+>>>>>>> use word mode for 16-bit resolution.
+>>> []
+>>>>>> You could directly return i2c_smbus_write_byte_data(..).
+>>>>>
+>>>>> Sometimes it's better to return a specific value
+>>>>> for the error instead of depending on correctness
+>>>>> of all the indirect functions in the call chain.
+>>>>>
+>>>>> In this case, all the smbus_xfer functions must
+>>>>> return 0 on success.  Do they?
+>>>>
+>>>> Yes.
+>>>>
+>>>> http://lxr.free-electrons.com/source/drivers/i2c/i2c-core.c#L2845
+>>>
+>>> This doesn't show that adapter->algo->smbus_xfer()
+>>> returns 0, you have to look at the code for that
+>>> indirectly called function.
 >>
->>                  sata1: sata-port@1 {
->>                          reg = <1>;
->>                          phys = <&sata_phy 1>;
->> 			target-supply = <&reg_sata1>;
->>                  };
->>          };
->
->> Seems to match the hardware pretty exactly, and also matches how we've
->> been describing similar devices with only one sata port + power plug sofar,
->> so from a consistency pov it also is a good model.
->
-> Right, I think that makes sense
+>> I based my answer on the comment at the top of the function:
+>>
+>> 2845  * This executes an SMBus protocol operation, and returns a negative
+>> 2846  * errno code else zero on success.
+> 
+> Sure, but comments and code often differ and the
+> implementation of any of those smbus_xfer functions
+> could return a positive value like the byte value or
+> the number of bytes written instead of 0.
+> 
+> For correctness, you'd have to inspect them all.
+> 
+> If some new future smbus_xfer function was written
+> incorrectly, the return value from this function could
+> now be positive.
+> 
+That would however, clearly be a bug and likely to cause all
+sorts of issues elsewhere given the documentation requires that
+it does return 0 on success and people will have been
+relying on it.
 
-Good, as said I think getting the dt bit rights is the most important
-thing here. So if we agree that the above dt example looks sane, lets see
-how we can best implement that.
-
- > it also looks to me like these things
-> should be representable as devices within Linux.
-
-I guess we could manually instantiate platform devices for each of the
-subnodes which represent an sata port here, yes that should not be
-hard to do, it feels like a bit overkill though.
-
-So for our this should likely look something like this:
-
-         if (IS_ENABLED(CONFIG_OF_ADDRESS) && dev->of_node) {
-                 for_each_child_of_node(dev->of_node, np) {
-                         pdev[i++] = of_platform_device_create(np, NULL, NULL);
-                 }
-         }
-
-and then loop over the pdev[] array and get the regulator, and phy for each.
-
-I wonder if of_platform_device_create can deal with nodes with
-#size-cells = <0>; is 0 though, if it cannot maybe we need to teach it.
-
->> So supporting this model requires having a regulator_get API which allows
->> specifying which of_node to get the regulator from, e.g. the proposed
->
-> It requires nothing of the sort.
-
-You're proposed solution of instantiating devices does more or less exactly
-what I say is required, it is a way to pass an of_node into regulator_get,
-but you're hiding the node inside dev->of_node. I can see the appeal in
-that.
-
->> of_regulator_get function. I know you (Mark) do not like this, but all
->> other subsystems have an of_foo_get function taking an of_node as argument,
->> I do not see how the regulator subsys is so special that it cannot have one,
->> and also notice that this is only a kernel internal API which we can always
->> change later.
->
-> Two things there.  One is that mostly those APIs are legacy APIs from
-> before we made DT a first class citizen and generally they shouldn't be
-> used these days.  The other is that at least for regulators we have
-> constant problems with people abusing the API in various ways, as a
-> result the API has a goal of not helping undesirable usage patterns in
-> order to help people spot problems.  Having an API which makes it easy
-> create broken bindings means that it is much more likely that people
-> will do just that.
-
-Hmm I can see where you're coming from, and your proposed solution may
-also be useful for when we get similar boards requiring explicit regulator
-handling with the sata ports described in ACPI tables.
-
-Gregory, can you give the setup using per sata port devices a try, and
-see how that works out code wise ?
-
-Regards,
-
-Hans
+Jonathan
+> cheers, Joe
+> 
