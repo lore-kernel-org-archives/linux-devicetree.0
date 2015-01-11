@@ -1,71 +1,59 @@
 From: Baruch Siach <baruch@tkos.co.il>
 Subject: Re: [PATCH v2 4/8] irqchip: devicetree: document Conexant Digicolor
  irq binding
-Date: Sun, 11 Jan 2015 13:21:41 +0200
-Message-ID: <20150111112141.GO2481@sapphire.tkos.co.il>
+Date: Sun, 11 Jan 2015 13:29:44 +0200
+Message-ID: <20150111112944.GP2481@sapphire.tkos.co.il>
 References: <cover.1420744368.git.baruch@tkos.co.il>
  <3bdf8fa0bf971b4881024e72312c3c9d29298e79.1420744369.git.baruch@tkos.co.il>
- <20150109115014.GC12942@leverpostej>
+ <54AFEFEC.5000300@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20150109115014.GC12942@leverpostej>
+In-Reply-To: <54AFEFEC.5000300@cogentembedded.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: linux-arm-kernel@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+Hi Sergei,
 
-On Fri, Jan 09, 2015 at 11:50:14AM +0000, Mark Rutland wrote:
-> On Thu, Jan 08, 2015 at 07:40:00PM +0000, Baruch Siach wrote:
-> > Signed-off-by: Baruch Siach <baruch@tkos.co.il>
-> > ---
+On Fri, Jan 09, 2015 at 06:12:44PM +0300, Sergei Shtylyov wrote:
+> On 1/8/2015 10:40 PM, Baruch Siach wrote:
+> 
+> >Signed-off-by: Baruch Siach <baruch@tkos.co.il>
+> >---
 > >  .../bindings/interrupt-controller/digicolor-ic.txt   | 20 ++++++++++++++++++++
 > >  1 file changed, 20 insertions(+)
 > >  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/digicolor-ic.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/digicolor-ic.txt b/Documentation/devicetree/bindings/interrupt-controller/digicolor-ic.txt
-> > new file mode 100644
-> > index 000000000000..fdf9a4c59bf3
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/interrupt-controller/digicolor-ic.txt
-> > @@ -0,0 +1,20 @@
-> > +Conexant Digicolor Interrupt Controller
-> > +
-> > +Required properties:
-> > +
-> > +- compatible : should be "cnxt,cx92755-ic"
 > 
-> I didn't spot "cnxt" in
-> Documentation/devicetree/bindings/vendor-prefixes.txt in mainline, nor
-> did I spot it added as part of this series. Please add it, assuming a
-> patch doing so is not already queued elsewhere.
-
-I sent a vendor-prefixes.txt update earlier as part of the UART driver series. 
-Greg has it queued in the tty-testing branch of his tty tree 
-(https://git.kernel.org/cgit/linux/kernel/git/gregkh/tty.git/commit/?h=tty-testing&id=48c738631753186e0ec7dd0079beffb3a6f4bb5c).
-
-> > +- reg : Specifies base physical address and size of the MISC area, that is
-> > +  where the interrupt controller registers are located
+> >diff --git a/Documentation/devicetree/bindings/interrupt-controller/digicolor-ic.txt b/Documentation/devicetree/bindings/interrupt-controller/digicolor-ic.txt
+> >new file mode 100644
+> >index 000000000000..fdf9a4c59bf3
+> >--- /dev/null
+> >+++ b/Documentation/devicetree/bindings/interrupt-controller/digicolor-ic.txt
+> >@@ -0,0 +1,20 @@
+> >+Conexant Digicolor Interrupt Controller
+> >+
+> >+Required properties:
+> >+
+> >+- compatible : should be "cnxt,cx92755-ic"
+> >+- reg : Specifies base physical address and size of the MISC area, that is
+> >+  where the interrupt controller registers are located
+> >+- interrupt-controller : Identifies the node as an interrupt controller
+> >+- #interrupt-cells : Specifies the number of cells needed to encode an
+> >+  interrupt source. The value shall be 1.
+> >+
+> >+Example:
+> >+
+> >+	intc: intc@f0000000 {
 > 
-> Is this area shared with other devices?
+>    The node name should be "interrupt-controller@f0000000", according to the
+> ePAPR standard, section 2.2.2.
 
-Yes. The interrupt controller uses just a small area in this registers space 
-(offsets 0x40 - 0x80). This trouble is that I also need access to the system 
-global UC_IRQ_CONTROL register (offset 0x3a4), to configure interrupts channel 
-and routing (IRQ/FIQ). I wonder whether register access via syscon is better.
+I'll change that in my next submission.
 
-> > +- interrupt-controller : Identifies the node as an interrupt controller
-> > +- #interrupt-cells : Specifies the number of cells needed to encode an
-> > +  interrupt source. The value shall be 1.
-> 
-> There is no configuration that can be applied to individual interrupt
-> lines (e.g. trigger type)?
-
-No. There is none.
-
+Thanks,
 baruch
 
 -- 
