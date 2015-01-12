@@ -1,44 +1,72 @@
-From: arno@natisbad.org (Arnaud Ebalard)
-Subject: Re: [PATCHv0 1/3] of: add vendor prefix for Abracon Corporation
-Date: Mon, 12 Jan 2015 18:11:22 +0100
-Message-ID: <87mw5nncud.fsf@natisbad.org>
-References: <cover.1421045942.git.arno@natisbad.org>
-	<754e04216222807206344fdd9f8575e6b504ed14.1421045942.git.arno@natisbad.org>
-	<CAL_JsqL=yP1XmhNiV6Rq_t=ktE1FDBmRKYNNJ0Tn3iAkM3ecag@mail.gmail.com>
+From: Jean-Francois Moine <moinejf@free.fr>
+Subject: Re: [PATCH v9 1/4] drm/i2c: tda998x: Add DT support for audio
+Date: Mon, 12 Jan 2015 18:13:41 +0100
+Message-ID: <20150112181341.4a53ea24@armhf>
+References: <20150109114529.GH12302@n2100.arm.linux.org.uk>
+ <20150109135401.5b270d46@armhf>
+ <20150109130725.GN12302@n2100.arm.linux.org.uk>
+ <54AFDE8D.3000504@arm.com>
+ <20150109145741.GP12302@n2100.arm.linux.org.uk>
+ <20150109183857.53d701a4@armhf>
+ <20150109200127.GD12302@n2100.arm.linux.org.uk>
+ <1421054728.3081.28.camel@pengutronix.de>
+ <20150112122527.GF12302@n2100.arm.linux.org.uk>
+ <1421071197.3081.44.camel@pengutronix.de>
+ <20150112140456.GI12302@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqL=yP1XmhNiV6Rq_t=ktE1FDBmRKYNNJ0Tn3iAkM3ecag@mail.gmail.com>
-	(Rob Herring's message of "Mon, 12 Jan 2015 07:41:25 -0600")
-Sender: linux-doc-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Peter Huewe <peter.huewe@infineon.com>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <treding@nvidia.com>, Mark Brown <broonie@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Rob Landley <rob@landley.net>, rtc-linux@googlegroups.com, Jason Cooper <jason@lakedaemon.net>, Guenter Roeck <linux@roeck-us.net>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20150112140456.GI12302@n2100.arm.linux.org.uk>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Andrew Jackson <Andrew.Jackson@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>, Mark Brown <broonie@kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-Rob Herring <robherring2@gmail.com> writes:
-
-> On Mon, Jan 12, 2015 at 2:16 AM, Arnaud Ebalard <arno@natisbad.org> wrote:
->> Signed-off-by: Arnaud Ebalard <arno@natisbad.org>
->> ---
->>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
->> index b1df0ad1306c..44defc3c162a 100644
->> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
->> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
->> @@ -4,6 +4,7 @@ This isn't an exhaustive list, but you should add new prefixes to it before
->>  using them to avoid name-space collisions.
->>
->>  abilis Abilis Systems
->> +abcn   Abracon Corporation
->
-> Is there some reason not to use "abracon"?
-
-None, I guess. I'll change that in a v1.
-
-Cheers,
-
-a+
+T24gTW9uLCAxMiBKYW4gMjAxNSAxNDowNDo1NiArMDAwMApSdXNzZWxsIEtpbmcgLSBBUk0gTGlu
+dXggPGxpbnV4QGFybS5saW51eC5vcmcudWs+IHdyb3RlOgoKPiBPbiBNb24sIEphbiAxMiwgMjAx
+NSBhdCAwMjo1OTo1N1BNICswMTAwLCBQaGlsaXBwIFphYmVsIHdyb3RlOgo+ID4gQW0gTW9udGFn
+LCBkZW4gMTIuMDEuMjAxNSwgMTI6MjUgKzAwMDAgc2NocmllYiBSdXNzZWxsIEtpbmcgLSBBUk0g
+TGludXg6Cj4gPiA+IEl0J3Mgbm90IHF1aXRlIHRoYXQgc2ltcGxlLCBiZWNhdXNlIHRoZSBTUERJ
+RiBBUCBwaW5zIGFyZSBtdWx0aXBsZXhlZAo+ID4gPiB3aXRoIHRoZSBJMlMgcGlucyAtIGFuZCB0
+aGVyZSBpcyB2YXJpYXRpb24gYmV0d2VlbiBjaGlwIG1vZGVscyBhbmQKPiA+ID4gcGFja2FnZXMu
+Cj4gPiA+Cj4gPiA+IFNvLCBpdCdzIHByb2JhYmx5IGJlc3QgaWYgcG9ydEAwIGlzIHRoZSB2aWRl
+byBwb3J0LCBhbmQgdGhlbiBwb3J0QDEuLm4KPiA+ID4gY2FuIGRlc2NyaWJlIHRoZSBhdWRpbyBp
+bnB1dHMsIGluY2x1ZGluZyBhIHByb3BlcnR5IHdoaWNoIHNwZWNpZmllcwo+ID4gPiB3aGV0aGVy
+IHRoZXkgYXJlIEkyUyBvciBTUERJRiwgYW5kIHRoZSB2YWx1ZSB0byBiZSBwcm9ncmFtbWVkIGlu
+dG8KPiA+ID4gdGhlIEFQIGVuYWJsZSByZWdpc3RlciAod2hpY2ggaXMgYSBiaXQgZmllbGQgb2Yg
+dGhlIEFQIHBpbnMgd2hpY2gKPiA+ID4gc2hvdWxkIGJlIHVubWFza2VkLikgIEkgZ3Vlc3Mgd2Ug
+Y2FuIHJlLXVzZSB0aGUgcmVnPSBwcm9wZXJ0eSBmb3IgdGhhdAo+ID4gPiB2YWx1ZSwgc2luY2Ug
+dmlkZW8gd2lsbCBhbHdheXMgYmUgemVyby4KPiA+IAo+ID4gTm90ZSB0aGF0IG9mX2dyYXBoX3Bh
+cnNlX2VuZHBvaW50IGludGVycHJldHMgdGhlIHBvcnQgbm9kZSdzIHJlZwo+ID4gcHJvcGVydHkg
+YXMgcG9ydCBpZC4gQW5kIHRoZSB1bml0IGFkZHJlc3MgcGFydCBvZiB0aGUgbm9kZSBuYW1lIHNo
+b3VsZAo+ID4gbWF0Y2ggdGhlIGZpcnN0IGFkZHJlc3MgaW4gdGhlIHJlZyBwcm9wZXJ0eS4KClRo
+aXMgaXMgbm90IHRoZSBjYXNlIGluIHZleHByZXNzLXYycC1jYTE1X2E3LmR0cy4KCj4gU28gdGhh
+dCdzIG5vdCBnb2luZyB0byB3b3JrIHZlcnkgd2VsbC4uLiBiZWNhdXNlIHRoZSBBUCByZWdpc3Rl
+ciBpcyBhCj4gYml0bWFzay4KPiAKPiBJIGd1ZXNzIHdlIGNvdWxkIHNwZWNpZnkgYSBub2RlIHVu
+aXQgYW5kIHJlZywgd2hpY2ggdGhlIGNvZGUgb3RoZXJ3aXNlCj4gaWdub3JlcywgYW5kIHNwZWNp
+ZnkgYSBwaGlsaXBwcyxhcC1tYXNrID0gcHJvcGVydHkgZm9yIHRoZSBhdWRpbyBwb3J0cwo+IGlu
+c3RlYWQuCgpBbHNvLCB0aGUgdmlkZW8gYW5kIGF1ZGlvIHBvcnRzIG11c3QgYmUgZGlzdGluZ3Vp
+c2hlZC4gVGhleSBjb3VsZCBiZQpkZWZpbmVkIGluIGRpZmZlcmVudCBwb3J0IGdyb3Vwcy4KCkV4
+YW1wbGUgZnJvbSB0aGUgQ3Vib3g6CgoJdmlkZW8tcG9ydHM6IHBvcnRzQDAgewoJCXBvcnQgewoJ
+CQl0ZGE5OTh4X3ZpZGVvOiBlbmRwb2ludCB7CgkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmxjZDBf
+MD47CgkJCQlueHAsdmlkZW8tcG9ydCA9IDwweDIzMDE0NT47CgkJCX07CgkJfTsKCX07CglhdWRp
+by1wb3J0czogcG9ydHNAMSB7CgkJcG9ydEAwIHsJCQkvKiBBUDEgPSBJMlMgKi8KCQkJdGRhOTk4
+eF9pMnM6IGVuZHBvaW50QDAgewoJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZhdWRpbzFfaTJzPjsK
+CQkJCW54cCxhdWRpby1wb3J0ID0gPDB4MDM+OwoJCQl9OwoJCX07CgkJcG9ydEAxIHsJCQkgLyog
+QVAyID0gUy9QRElGICovCgkJCXRkYTk5OHhfc3BkaWY6IGVuZHBvaW50QDEgewoJCQkJcmVtb3Rl
+LWVuZHBvaW50ID0gPCZhdWRpbzFfc3BkaWYxPjsKCQkJCW54cCxhdWRpby1wb3J0ID0gPDB4MDQ+
+OwoJCQl9OwoJCX07Cgl9OwoKVGhlIHBvcnQgdHlwZSBpcyBpZGVudGlmaWVkIGJ5IHRoZSBiaXQg
+QVAwLgoKLS0gCktlbiBhciBjJ2hlbnRhw7EJfAkgICAgICAqKiBCcmVpemggaGEgTGludXggYXRh
+diEgKioKSmVmCQl8CQlodHRwOi8vbW9pbmVqZi5mcmVlLmZyLwpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
+ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
