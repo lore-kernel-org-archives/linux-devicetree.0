@@ -1,70 +1,67 @@
-From: Eddie Huang <eddie.huang@mediatek.com>
-Subject: [PATCH v4 4/4] arm64: mediatek: Add MT8173 SoC Kconfig and defconfig
-Date: Mon, 12 Jan 2015 17:14:33 +0800
-Message-ID: <1421054073-43468-5-git-send-email-eddie.huang@mediatek.com>
-References: <1421054073-43468-1-git-send-email-eddie.huang@mediatek.com>
+From: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: Re: [PATCH v6 1/2] mtd: hisilicon: add a new NAND controller driver
+ for hisilicon hip04 Soc
+Date: Mon, 12 Jan 2015 17:18:38 +0800
+Message-ID: <54B3916E.4040906@hisilicon.com>
+References: <1421047734-30818-1-git-send-email-wangzhou1@hisilicon.com> <1421047734-30818-2-git-send-email-wangzhou1@hisilicon.com> <5265608.Ut8IQVYZc5@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1421054073-43468-1-git-send-email-eddie.huang@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Jason Cooper <jason@lakedaemon.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, marc.zyngier@arm.com, Catalin Marinas <catalin.marinas@arm.com>, Mark Brown <broonie@linaro.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Robert Richter <rrichter@cavium.com>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, "Joe.C" <yingjoe.chen@mediatek.com>, Thomas Gleixner <tglx@linutronix.de>, Eddie Huang <eddie.huang@mediatek.com>, peter.maydell@linaro.org, linux-arm-kernel@lists.infradead.org, yh.chen@mediatek.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5265608.Ut8IQVYZc5@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, caizhiyong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, yubingxu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add MT8173 arm64 Kconfig and defconfig files
+On 2015/1/12 16:21, Arnd Bergmann wrote:
+> On Monday 12 January 2015 15:28:53 Zhou Wang wrote:
+>> Signed-off-by: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+>> ---
+> 
+> I haven't looked at earlier versions, but it looks very good to
+> me overall. Just add a patch description above please.
 
-Signed-off-by: Eddie Huang <eddie.huang@mediatek.com>
----
- arch/arm64/Kconfig           | 6 ++++++
- arch/arm64/configs/defconfig | 2 ++
- 2 files changed, 8 insertions(+)
+Hi Arnd,
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index b1f9a20..e627ead 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -148,6 +148,12 @@ source "kernel/Kconfig.freezer"
- 
- menu "Platform selection"
- 
-+config ARCH_MEDIATEK
-+	bool "Mediatek MT65xx & MT81xx ARMv8 SoC"
-+	select ARM_GIC
-+	help
-+	  Support for Mediatek MT65xx & MT81xx ARMv8 SoCs
-+
- config ARCH_SEATTLE
- 	bool "AMD Seattle SoC Family"
- 	help
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index dd301be..ed84d21 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -32,6 +32,7 @@ CONFIG_MODULES=y
- CONFIG_MODULE_UNLOAD=y
- # CONFIG_BLK_DEV_BSG is not set
- # CONFIG_IOSCHED_DEADLINE is not set
-+CONFIG_ARCH_MEDIATEK=y
- CONFIG_ARCH_THUNDER=y
- CONFIG_ARCH_VEXPRESS=y
- CONFIG_ARCH_XGENE=y
-@@ -87,6 +88,7 @@ CONFIG_SERIO_AMBAKMI=y
- CONFIG_LEGACY_PTY_COUNT=16
- CONFIG_SERIAL_8250=y
- CONFIG_SERIAL_8250_CONSOLE=y
-+CONFIG_SERIAL_8250_MT6577=y
- CONFIG_SERIAL_AMBA_PL011=y
- CONFIG_SERIAL_AMBA_PL011_CONSOLE=y
- CONFIG_SERIAL_OF_PLATFORM=y
--- 
-1.8.1.1.dirty
+The earlier version is same with this one, just change E-mail
+address here. Will add a patch description in next version. Thanks!
+
+> 
+> One tiny detail:
+> 
+>> +static const struct of_device_id nfc_id_table[] = {
+>> +	{ .compatible = "hisilicon,504-nfc" },
+>> +	{}
+>> +};
+>> +MODULE_DEVICE_TABLE(of, nfc_id_table);
+>> +
+>> +static struct platform_driver hisi_nfc_driver = {
+>> +	.driver = {
+>> +		.name  = "hisi_nand",
+>> +		.of_match_table = of_match_ptr(nfc_id_table),
+>> +		.pm = &hisi_nfc_pm_ops,
+>> +	},
+>> +	.probe		= hisi_nfc_probe,
+>> +	.remove		= hisi_nfc_remove,
+>> +};
+> 
+> Remove the of_match_ptr() macro here to avoid a warning when
+> CONFIG_OF is not set.
+
+Will remove the macro here, thanks!
+
+Best regards,
+Zhou Wang
+
+> 
+> 	Arnd
+> 
+> .
+> 
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
