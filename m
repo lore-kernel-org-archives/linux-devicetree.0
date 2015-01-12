@@ -1,56 +1,42 @@
-From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Subject: Re: [PATCH v8 2/4] fpga manager: add sysfs interface document
-Date: Mon, 12 Jan 2015 14:43:14 -0700
-Message-ID: <20150112214314.GA18610@obsidianresearch.com>
-References: <1420575219-27061-1-git-send-email-atull@opensource.altera.com>
- <1420575219-27061-3-git-send-email-atull@opensource.altera.com>
- <20150107084819.GA1887@amd>
- <alpine.DEB.2.02.1501091302370.30067@linuxheads99>
- <20150109205643.GA5761@amd>
- <20150112210134.687176ed@lxorguk.ukuu.org.uk>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH] ARM: shmobile: r8a7791: fix MSTP8 input clocks
+Date: Tue, 13 Jan 2015 01:31:14 +0300
+Message-ID: <4221957.7dd2kFrTHY@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150112210134.687176ed@lxorguk.ukuu.org.uk>
-Sender: linux-doc-owner@vger.kernel.org
-To: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
-Cc: Pavel Machek <pavel@denx.de>, atull <atull@opensource.altera.com>, gregkh@linuxfoundation.org, hpa@zytor.com, monstr@monstr.eu, michal.simek@xilinx.com, rdunlap@infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, pantelis.antoniou@konsulko.com, robh+dt@kernel.org, grant.likely@linaro.org, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, broonie@kernel.org, philip@balister.org, rubini@gnudd.com, s.trumtrar@pengutronix.de, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, balbi@ti.com, m.chehab@samsung.com, davidb@codeaurora.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, linus.walleij@linaro.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devel@driverdev.osuosl.org, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yv
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: horms@verge.net.au, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 12, 2015 at 09:01:34PM +0000, One Thousand Gnomes wrote:
-> There are plenty of people today who treat the FPGA as an entirely
-> dynamic resource. It's not like flashing a controller, its near
-> immediate.
+I made  a mistake when rebasing Andrey Gusakov's patch adding MLB+ clock to the
+R8A7791 device  tree, inserting <&hp_clk> into the "clocks"  property of the
+MSTP8 node at a wrong position, so that the input clocks for MLB+ and IPMMU-SGX
+got swapped...
 
-But this is a completely different use case. Remember, there are
-*megabytes* of internal state in a FPGA, and it isn't really feasible
-to dump/restore that state.
+Fixes: 7408d3061d2f ("ARM: shmobile: r8a7791: add MLB+ clock")
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-It is one thing to context switch a maths algorithm that is built to
-be stateless, it is quite another to context switch between, say an
-ethernet core with an operating Linux Net driver doing DMA and a maths
-algorithm.
+---
+The patch is against 'renesas-devel-20150108v2-v3.19-rc3' tag of Simon Horman's
+'renesas.git' repo.
 
-A DT overlay approach where the overlay has to be unloaded to 'free'
-the FPGA makes alot of sense to me for the stateful kernel driver
-environment, and open/close/etc makes alot of sense for the stateless
-switchable userspace environment - other than sharing configuration
-code, is there any overlap between these use cases????
+ arch/arm/boot/dts/r8a7791.dtsi |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> Its completely dynamic and it will get more so as we switch from the
-> painful world of VHDL and friends to high level parallel aware language
-> compilers for FPGAs and everyone will be knocking up quick FPGA hacks.
+Index: renesas/arch/arm/boot/dts/r8a7791.dtsi
+===================================================================
+--- renesas.orig/arch/arm/boot/dts/r8a7791.dtsi
++++ renesas/arch/arm/boot/dts/r8a7791.dtsi
+@@ -1196,7 +1196,7 @@
+ 		mstp8_clks: mstp8_clks@e6150990 {
+ 			compatible = "renesas,r8a7791-mstp-clocks", "renesas,cpg-mstp-clocks";
+ 			reg = <0 0xe6150990 0 4>, <0 0xe61509a0 0 4>;
+-			clocks = <&hp_clk>, <&zg_clk>, <&zg_clk>, <&zg_clk>,
++			clocks = <&zg_clk>, <&hp_clk>, <&zg_clk>, <&zg_clk>,
+ 			         <&zg_clk>, <&p_clk>, <&zs_clk>, <&zs_clk>;
+ 			#clock-cells = <1>;
+ 			clock-indices = <
 
-Only for some users. In my world FPGAs are filled with bus interface
-logic, ethernet controllers, memory controllers, packet processing
-engines, etc. This is all incredibly stateful - both in the FPGA
-itself, and in the Linux side w/ drviers. It certainly will not ever
-work in the model you are talking about.
-
-Even if the digital state could somehow be frozen, dumped and
-restored, all the FPGA external interface logic has *ANALOG* state
-that cannot ever be dump/restored. It just isn't feasible for that
-class of application.
-
-Jason
