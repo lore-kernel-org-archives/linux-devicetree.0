@@ -1,47 +1,104 @@
-From: Dan Carpenter <dan.carpenter@oracle.com>
-Subject: Re: [PATCH v8 0/4] FPGA Manager Framework
-Date: Mon, 12 Jan 2015 17:06:43 +0300
-Message-ID: <20150112140642.GD7568@mwanda>
-References: <1420575219-27061-1-git-send-email-atull@opensource.altera.com>
- <20150110181120.GA26067@t400>
- <alpine.DEB.2.10.1501111004580.2556@shineypoop>
- <20150111162426.GC26067@t400> <20150111195219.GA25760@amd>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH v2 3/5] pinctrl: exynos: Fix GPIO setup failure because
+ domain clock being gated
+Date: Mon, 12 Jan 2015 15:11:41 +0100
+Message-ID: <1421071901.20276.7.camel@AMDC1943>
+References: <1417011857-10419-1-git-send-email-k.kozlowski@samsung.com>
+ <1417011857-10419-4-git-send-email-k.kozlowski@samsung.com>
+ <CACRpkdb8F8YcvFeHPvOKHjx_p4HEpimck3XRabB3oHpZTdmRQQ@mail.gmail.com>
+ <1417183724.18249.36.camel@AMDC1943>
+ <CA+Ln22Ejo51VPWf6DmuRvV_fZr_H=-BXAshSPSOokNE1bz=-QA@mail.gmail.com>
+ <1417423043.4055.14.camel@AMDC1943>
+ <CA+Ln22H_a9CWxrYO_i9Esm6keXA8XLLYmE1Vg-8ynamJ1sAwpQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <20150111195219.GA25760@amd>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Pavel Machek <pavel@denx.de>
-Cc: mark.rutland@arm.com, linux-doc@vger.kernel.org, linus.walleij@linaro.org, pantelis.antoniou@konsulko.com, dinguyen@opensource.altera.com, hpa@zytor.com, s.trumtrar@pengutronix.de, devel@driverdev.osuosl.org, sameo@linux.intel.com, nico@linaro.org, iws@ovro.caltech.edu, michal.simek@xilinx.com, kyle.teske@ni.com, jgunthorpe@obsidianresearch.com, grant.likely@linaro.org, davidb@codeaurora.org, rubini@gnudd.com, cesarb@cesarb.net, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, atull <atull@opensource.altera.com>, broonie@kernel.org, philip@balister.org, Konrad Zapalowicz <bergo.torino@gmail.com>, monstr@monstr.eu, gregkh@linuxfoundation.org, yvanderv@opensource.altera.com, linux-kernel@vger.kernel.org, balbi@ti.com, delicious.quinoa@gmail.com, robh+dt@kernel.org, rob@landley.net, galak@codeaurora.org, akpm@linux-foundat
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CA+Ln22H_a9CWxrYO_i9Esm6keXA8XLLYmE1Vg-8ynamJ1sAwpQ@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Mike Turquette <mturquette@linaro.org>, Kukjin Kim <kgene@kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Vivek Gautam <gautam.vivek@samsung.com>, Kevin Hilman <khilman@kernel.org>, Russell King <linux@arm.linux.org.uk>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jan 11, 2015 at 08:52:19PM +0100, Pavel Machek wrote:
+On pon, 2014-12-01 at 23:34 +0900, Tomasz Figa wrote:
+> 2014-12-01 17:37 GMT+09:00 Krzysztof Kozlowski <k.kozlowski@samsung.com>:
+> >
+> > On nie, 2014-11-30 at 21:19 +0900, Tomasz Figa wrote:
+> >> Hi Krzysztof,
+> >>
+(...)
+> >
+> >> Also isn't a similar problem happening due to power domains? I believe
+> >> the whole maudio block is located in a separate power domain but
+> >> somehow it doesn't get turned off?
+> >
+> > There is Maudio power domain... but I think it is not related here.
 > 
-> Actually, why not? Tools should know to look at From: in the
-> commit. AFAICT, Alan has it set up correctly.
-> 								Pavel
+> Could you somehow check what happens when the maudio power domain is
+> turned off and maudio pin controller is accessed? Could you also check
+> the difference in power consumption with this domain powered on and
+> off?
 
-Normally, the Extra From header should only be used if the patches were
-sent on behalf of someone else.  It's just a bit of a pain to verify
-that the Extra From matches the email headers.
+Hi Tomasz,
 
-Also sometimes people can't get their corporate email configured
-properly for patches and so they use gmail but specify an Extra From so
-their employer gets credit...  That's ok.
+Some time ago you asked for some details of Exynos5420 Maudio domain
+behavior. Here it goes:
 
-The patches apply fine so it's not a "redo the patch" type thing, it's
-just a "In the long term, please, fix your email From header so the
-Extra From isn't needed."
+1. mau domain ON, EPL: OFF: boot hang (this was behavior after adding
+runtime PM to pl330 driver)
 
-regards,
-dan carpenter
+2. maud domain OFF, EPLL OFF: boot hang
+
+3. maud domain ON, EPLL ON: works (current linux-next and mainline)
+
+4. maud domain OFF, EPLL ON: works, almost the same energy consumption
+as in (3) (diff: 0.1% so it is smaller than measuring accuracy).
+
+However an unspecified imprecise abort shows up in (4):
+[   11.911628] Freeing unused kernel memory: 328K (c0674000 - c06c6000)
+[   12.122695] usb 5-1.4: new high-speed USB device number 3 using exynos-ehci
+[   12.190011] Unhandled fault: imprecise external abort (0x1406) at 0x00000000
+[   12.219062] usb 5-1.4: New USB device found, idVendor=0b95, idProduct=772a
+[   12.224548] usb 5-1.4: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+[   12.231794] usb 5-1.4: Product: AX88772
+[   12.235681] usb 5-1.4: Manufacturer: ASIX Elec. Corp.
+[   12.240707] usb 5-1.4: SerialNumber: 000001
+[   12.248835] asix 5-1.4:1.0 (unnamed net_device) (uninitialized): invalid hw address, using random
+root@(none):/#
+
+Best regards,
+Krzysztof
+
+> 
+> > Pinctrl driver does not have runtime PM and is not attached to a domain.
+> > I thought about other solution to this problem (with utilization of
+> > power domains):
+> >  - add runtime PM to pinctrl and audss clocks,
+> >  - attach pinctrl and audss clocks to maudio power domain,
+> >  - enable the clock when power domain is turned on.
+> > However almost the same changes had to be added to pinctrl and audss
+> > clocks drivers (replace clock_enable() with pm_runtime_get_sync()).
+> 
+> Well, if the dependency is there due to hardware design, I think it
+> needs to be reflected in the drivers as well.
+> 
+> Few other issues that came to my mind:
+> 
+>  - Your previous patch added clock control only to pinctrl operations.
+> Shouldn't GPIO operations be included as well?
+> 
+>  - If power domain dependency is there too, what happens with GPIO
+> pins if the domain is powered off? If they lose their states, wouldn't
+> it necessary to keep the domain powered on whenever there is some GPIO
+> pin requested (which usually = in use)? (I'd assume that special
+> functions shouldn't take a reference on runtime PM, because they are
+> related to IP blocks in the same PM domain, which will implicitly keep
+> the domain powered on.)
+> 
+>  - Doesn't the clock controller also lose its state whenever the power
+> domain is powered off? I guess that would be similar to ISP clock
+> controller, issues of which are still not resolved in mainline.
+> Sylwester could tell you more about this, I guess.
+> 
+> Best regards,
+> Tomasz
