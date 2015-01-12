@@ -1,103 +1,82 @@
-From: Ken Wilson <ken.wilson@opengear.com>
-Subject: [PATCHv2 2/2] spi: orion: Add multiple chip select support to spi-orion
-Date: Mon, 12 Jan 2015 13:14:00 +1000
-Message-ID: <1421032440-15335-3-git-send-email-ken.wilson@opengear.com>
-References: <1421032440-15335-1-git-send-email-ken.wilson@opengear.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1421032440-15335-1-git-send-email-ken.wilson@opengear.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: thomas.petazzoni@free-electrons.com
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, broonie@kernel.org, ezequiel.garcia@free-electrons.com, gerg@uclinux.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, Ken Wilson <ken.wilson@opengear.com>
+From: Eddie Huang <eddie.huang@mediatek.com>
+Subject: Re: [PATCH v3 3/4] arm64: dts: Add mediatek MT8173 SoC and
+ evaluation board dts and Makefile
+Date: Mon, 12 Jan 2015 13:39:22 +0800
+Message-ID: <1421041162.2792.2.camel@mtksdaap41>
+References: <1419582417-4448-1-git-send-email-eddie.huang@mediatek.com>
+ <1419582417-4448-4-git-send-email-eddie.huang@mediatek.com>
+ <CABuKBe+=uTVFKCdpr7an-7jOZdQ91ERu0ObjfiW9fKv1CO1oAg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CABuKBe+=uTVFKCdpr7an-7jOZdQ91ERu0ObjfiW9fKv1CO1oAg@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Mark Brown <broonie@linaro.org>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Robert Richter <rrichter@cavium.com>, srv_heupstream <srv_heupstream@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, "Joe.C" <yingjoe.chen@mediatek.com>, Thomas Gleixner <tglx@linutronix.de>, peter.maydell@linaro.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>YH Chen =?UTF-8?Q?=28=E9=99=B3=E6=98=B1=E8=B1=AA=29?= <y>
 List-Id: devicetree@vger.kernel.org
 
-This commit adds support for multiple hardware chip selects to spi-orion.
-The number of supported chip selects varies based on the SoC and pin
-configuration, so it is set using the num-cs device tree binding.
+Hi Matthias,
 
-Signed-off-by: Ken Wilson <ken.wilson@opengear.com>
----
- Documentation/devicetree/bindings/spi/spi-orion.txt |  3 +++
- drivers/spi/spi-orion.c                             | 17 +++++++++++++++--
- 2 files changed, 18 insertions(+), 2 deletions(-)
+Thanks your review, I will modify in next version.
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-orion.txt b/Documentation/devicetree/bindings/spi/spi-orion.txt
-index 50c3a3d..0f8fd7e 100644
---- a/Documentation/devicetree/bindings/spi/spi-orion.txt
-+++ b/Documentation/devicetree/bindings/spi/spi-orion.txt
-@@ -6,6 +6,8 @@ Required properties:
- - cell-index : Which of multiple SPI controllers is this.
- Optional properties:
- - interrupts : Is currently not used.
-+- num-cs     : The total number of chip selects used by this platform.
-+		If unset, this defaults to 1.
- 
- Example:
-        spi@10600 {
-@@ -15,5 +17,6 @@ Example:
- 	       cell-index = <0>;
- 	       reg = <0x10600 0x28>;
- 	       interrupts = <23>;
-+	       num-cs = <1>;
- 	       status = "disabled";
-        };
-diff --git a/drivers/spi/spi-orion.c b/drivers/spi/spi-orion.c
-index e6ac9d5..1c28152 100644
---- a/drivers/spi/spi-orion.c
-+++ b/drivers/spi/spi-orion.c
-@@ -28,7 +28,6 @@
- /* Runtime PM autosuspend timeout: PM is fairly light on this driver */
- #define SPI_AUTOSUSPEND_TIMEOUT		200
- 
--#define ORION_NUM_CHIPSELECTS		1 /* only one slave is supported*/
- #define ORION_SPI_WAIT_RDY_MAX_LOOP	2000 /* in usec */
- 
- #define ORION_SPI_IF_CTRL_REG		0x00
-@@ -44,6 +43,10 @@
- #define ARMADA_SPI_CLK_PRESCALE_MASK	0xDF
- #define ORION_SPI_MODE_MASK		(ORION_SPI_MODE_CPOL | \
- 					 ORION_SPI_MODE_CPHA)
-+#define ORION_SPI_CS_MASK	0x1C
-+#define ORION_SPI_CS_SHIFT	2
-+#define ORION_SPI_CS(cs)	((cs << ORION_SPI_CS_SHIFT) & \
-+					ORION_SPI_CS_MASK)
- 
- enum orion_spi_type {
- 	ORION_SPI,
-@@ -221,6 +224,10 @@ static void orion_spi_set_cs(struct spi_device *spi, bool enable)
- 
- 	orion_spi = spi_master_get_devdata(spi->master);
- 
-+	orion_spi_clrbits(orion_spi, ORION_SPI_IF_CTRL_REG, ORION_SPI_CS_MASK);
-+	orion_spi_setbits(orion_spi, ORION_SPI_IF_CTRL_REG,
-+				ORION_SPI_CS(spi->chip_select));
-+
- 	/* Chip select logic is inverted from spi_set_cs */
- 	if (!enable)
- 		orion_spi_setbits(orion_spi, ORION_SPI_IF_CTRL_REG, 0x1);
-@@ -406,17 +413,23 @@ static int orion_spi_probe(struct platform_device *pdev)
- 		master->bus_num = pdev->id;
- 	if (pdev->dev.of_node) {
- 		u32 cell_index;
-+		u32 num_cs;
- 
- 		if (!of_property_read_u32(pdev->dev.of_node, "cell-index",
- 					  &cell_index))
- 			master->bus_num = cell_index;
-+
-+		if (!of_property_read_u32(pdev->dev.of_node, "num_cs",
-+					  &num_cs))
-+			master->num_chipselect = num_cs;
-+		else
-+			master->num_chipselect = 1;
- 	}
- 
- 	/* we support only mode 0, and no options */
- 	master->mode_bits = SPI_CPHA | SPI_CPOL;
- 	master->set_cs = orion_spi_set_cs;
- 	master->transfer_one = orion_spi_transfer_one;
--	master->num_chipselect = ORION_NUM_CHIPSELECTS;
- 	master->setup = orion_spi_setup;
- 	master->bits_per_word_mask = SPI_BPW_MASK(8) | SPI_BPW_MASK(16);
- 	master->auto_runtime_pm = true;
--- 
-2.0.0
+
+On Sun, 2015-01-11 at 21:12 +0100, Matthias Brugger wrote:
+> 2014-12-26 9:26 GMT+01:00 Eddie Huang <eddie.huang@mediatek.com>:
+> > Add device tree support for MT8173 SoC and evaluation board based on it.
+> >
+> > Signed-off-by: Eddie Huang <eddie.huang@mediatek.com>
+> > ---
+> >  arch/arm64/boot/dts/Makefile                |   1 +
+> >  arch/arm64/boot/dts/mediatek/Makefile       |   5 +
+> >  arch/arm64/boot/dts/mediatek/mt8173-evb.dts |  34 ++++++
+> >  arch/arm64/boot/dts/mediatek/mt8173.dtsi    | 159 ++++++++++++++++++++++++++++
+> >  4 files changed, 199 insertions(+)
+> >  create mode 100644 arch/arm64/boot/dts/mediatek/Makefile
+> >  create mode 100644 arch/arm64/boot/dts/mediatek/mt8173-evb.dts
+> >  create mode 100644 arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> >
+> > +
+> > +       soc {
+> > +               #address-cells = <2>;
+> > +               #size-cells = <2>;
+> > +               compatible = "simple-bus";
+> > +               ranges;
+> > +
+> > +               sysirq: intpol-controller@10200620 {
+> > +                       compatible = "mediatek,mt8173-sysirq", "mediatek,mt6577-sysirq";
+> 
+> Please update the dts bindings for sysirq and add mediatek,mt8173-sysirq.
+> Also check that the lines in this patch does not exceed the 80 character limit.
+> 
+> > +
+> > +               uart0: serial@11002000 {
+> > +                       compatible = "mediatek,mt8173-uart","mediatek,mt6577-uart";
+> 
+> Please update the dts binding documentation.
+> 
+> > +                       reg = <0 0x11002000 0 0x400>;
+> > +                       interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_LOW>;
+> > +                       clocks = <&uart_clk>;
+> > +               };
+> 
+> Please disable the uart ports in the dtsi and enable the one used by
+> the board in the dts.
+> See [0] and [1] on how to do this.
+> 
+> Apart from that, the series looks fine to me.
+> 
+> Thanks,
+> Matthias
+> 
+> [0] https://github.com/mbgg/linux-mediatek/commit/0714947369cdb2b9b8cc24aa07264d4b61ea4fd9
+> [1] https://github.com/mbgg/linux-mediatek/commit/ac00aa4dcd085e4cf01761095ec1e2a141f86f38
+> 
