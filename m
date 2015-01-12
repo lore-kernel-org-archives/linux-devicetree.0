@@ -1,87 +1,75 @@
-From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 3/3] usb: dwc3: add a quirk for device disconnection
- issue in Synopsis dwc3 core
-Date: Mon, 12 Jan 2015 11:50:47 -0600
-Message-ID: <20150112175047.GE6525@saruman>
-References: <1418695828-605-4-git-send-email-Sneeker.Yeh@tw.fujitsu.com>
- <20141222153730.GA12815@saruman>
- <CAJ1gpc3jVpz=5ME4+wCJDW5NKihvB4xYzwi0co=UuPtG9Ubmjg@mail.gmail.com>
- <CAJ1gpc3-Wjtm54WOhO6RXjZft9BMngzyYC0-S-XnTacV-qKgMg@mail.gmail.com>
- <20141229160641.GD29379@saruman>
- <CAJ1gpc0Uu4vS2iA_o_W5NaE_QBWDYFZJio7yKvhpaR5f=qWcGA@mail.gmail.com>
- <20150105170921.GH19336@saruman>
- <CAJ1gpc3RZnqizhiasrwS8uy1H_wQAi_T0mPcS8LAK4FhmBRJ6A@mail.gmail.com>
- <20150112172032.GD6525@saruman>
- <1421083783.22660.69.camel@x220>
-Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH v9 1/4] drm/i2c: tda998x: Add DT support for audio
+Date: Mon, 12 Jan 2015 17:57:06 +0000
+Message-ID: <20150112175705.GN12302@n2100.arm.linux.org.uk>
+References: <20150109130725.GN12302@n2100.arm.linux.org.uk>
+ <54AFDE8D.3000504@arm.com>
+ <20150109145741.GP12302@n2100.arm.linux.org.uk>
+ <20150109183857.53d701a4@armhf>
+ <20150109200127.GD12302@n2100.arm.linux.org.uk>
+ <1421054728.3081.28.camel@pengutronix.de>
+ <20150112122527.GF12302@n2100.arm.linux.org.uk>
+ <1421071197.3081.44.camel@pengutronix.de>
+ <20150112140456.GI12302@n2100.arm.linux.org.uk>
+ <20150112181341.4a53ea24@armhf>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="GxcwvYAGnODwn7V8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1421083783.22660.69.camel@x220>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
-Cc: balbi-l0cyMroinI0@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Sneeker Yeh <sneeker.yeh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Thomas Pugliese <thomas.pugliese-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Mosberger <davidm-haPfTeumbwasTnJN9+BGXg@public.gmane.org>, Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-fy+rA21nqHI@public.gmane.org
+In-Reply-To: <20150112181341.4a53ea24@armhf>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jean-Francois Moine <moinejf@free.fr>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Andrew Jackson <Andrew.Jackson@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>, Mark Brown <broonie@kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
---GxcwvYAGnODwn7V8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Jan 12, 2015 at 06:29:43PM +0100, Paul Bolle wrote:
-> On Mon, 2015-01-12 at 11:20 -0600, Felipe Balbi wrote:
-> > On Sun, Jan 11, 2015 at 11:19:55PM +0800, Sneeker Yeh wrote:
-> > > in case i express unclearly i also put a pdf:
-> > > https://drive.google.com/file/d/0B18MmcvvKjNNbDF6eEdHSzZCazA/view
-> > >=20
-> > > This issue is defined by a two-way race at disconnect, between
-> > > 1) class driver interrupt endpoint resheduling attempts if the ISR ga=
-ve an
-> > > ep error event due to device detach (it would try 3 times)
-> > > 2) Disconnect interrupt on PORTSC_CSC, which is cleared by hub thread
-> > > asynchronously
-> > > 3) The hardware IP was configured in silicon with
-> > >        - DWC_USB3_SUSPEND_ON_DISCONNECT_EN=3D1 (this is an IP configu=
-ration
-> >=20
-> > yeah, aparently this is another configuration which is not exposed on
-> > HWPARAMS registers. Paul, can you confirm for us ? I couldn't find it on
-> > Databook on any of the HWPARAMS registers.
->=20
-> I guess you meant to ask Pawel, because I know nothing at all about all
-> that!=20
-
-No, it was Paul Zimmerman :-)
-
---=20
-balbi
-
---GxcwvYAGnODwn7V8
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUtAl3AAoJEIaOsuA1yqREig0P/RG9Il8bjoVJQuWb51562MH1
-XgXqZWDT7b7p/WGUtDbC423JXUoQilktOvofCdO5tq3UBqO6I+RGpxb1E5BfJKCP
-vWEvH3q+kIrpNsUw7R9mIoD52ouzqJAfhuH3XldnsrBGX7nl7wEB7LhDdHEnpKCz
-Fr53LJ/AFLWiQYl+LMJ59e11kYeJSRQMuyaw6lzFoo+bvrNDm2P6PUrd4j/CpV5H
-EfpUb1x+7H8WhWVx3i7DKhSIrb/i6QiZkA1bK8Rt3OpiDVYQDC5wHYUYqSn1P82Z
-ugLsFm4ajvBUEbuqWubyl2Et1I4u9doVeXEzehHJmtdWcUPZLax7LitG0D8MkPY9
-Q8O/Puq7PLjnYETMGidLP8qNrTBWmUVwuBpU4bxJYktoeoR96xL8DB9nOhHVFoNt
-CH7dFl9XzjaSTxBXgQmcvOaez7J0tkeOih4EmKiZaN/XDKWArIu3i7M7FuDYocHr
-Z+VTW+GoP7oa9/1RoX2auHnlhhWvanqkCuHxWHUzEZb+2RxHCUJWcGGMMy4erWcw
-3BucbtvfYCojcXFnaZI+N06idAzK3BeMEUsoo4OcuyeT7nuJXMmyKSSVJ1DSulHu
-gSe4e5n3zCM2109TAGQzlhcXioIgKg004xYoWLarEJDmQ+TeVAstV8/mm86+aLsR
-CUXQ8MUchR7WtQ4b9ke1
-=aa/l
------END PGP SIGNATURE-----
-
---GxcwvYAGnODwn7V8--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gTW9uLCBKYW4gMTIsIDIwMTUgYXQgMDY6MTM6NDFQTSArMDEwMCwgSmVhbi1GcmFuY29pcyBN
+b2luZSB3cm90ZToKPiBPbiBNb24sIDEyIEphbiAyMDE1IDE0OjA0OjU2ICswMDAwCj4gUnVzc2Vs
+bCBLaW5nIC0gQVJNIExpbnV4IDxsaW51eEBhcm0ubGludXgub3JnLnVrPiB3cm90ZToKPiA+IE9u
+IE1vbiwgSmFuIDEyLCAyMDE1IGF0IDAyOjU5OjU3UE0gKzAxMDAsIFBoaWxpcHAgWmFiZWwgd3Jv
+dGU6Cj4gPiA+IE5vdGUgdGhhdCBvZl9ncmFwaF9wYXJzZV9lbmRwb2ludCBpbnRlcnByZXRzIHRo
+ZSBwb3J0IG5vZGUncyByZWcKPiA+ID4gcHJvcGVydHkgYXMgcG9ydCBpZC4gQW5kIHRoZSB1bml0
+IGFkZHJlc3MgcGFydCBvZiB0aGUgbm9kZSBuYW1lIHNob3VsZAo+ID4gPiBtYXRjaCB0aGUgZmly
+c3QgYWRkcmVzcyBpbiB0aGUgcmVnIHByb3BlcnR5Lgo+IAo+IFRoaXMgaXMgbm90IHRoZSBjYXNl
+IGluIHZleHByZXNzLXYycC1jYTE1X2E3LmR0cy4KCkhtbS4uLiBhcyB0aGUgRFQgYmluZGluZyBk
+b2MgZG9lc24ndCBzcGVjaWZ5IHRoaXMgcmVzdHJpY3Rpb24sIGFuZCB3ZQpoYXZlIGEgRFQgZmls
+ZSB3aGljaCB2aW9sYXRlcyB3aGF0IFBoaWxpcHAgaGFzIHNhaWQsIEkgdGhpbmsgd2Ugb3VnaHQK
+dG8gZG9jdW1lbnQgdGhhdCByZWcgdnMgdW5pdCBub2RlIG5hbWUgZG9lcyBub3QgbmVlZCB0byBt
+YXRjaCBlYWNoCm90aGVyLCB0aGVyZWJ5IG1ha2luZyB0aGF0IG9mZmljaWFsLgoKPiA+IFNvIHRo
+YXQncyBub3QgZ29pbmcgdG8gd29yayB2ZXJ5IHdlbGwuLi4gYmVjYXVzZSB0aGUgQVAgcmVnaXN0
+ZXIgaXMgYQo+ID4gYml0bWFzay4KPiA+IAo+ID4gSSBndWVzcyB3ZSBjb3VsZCBzcGVjaWZ5IGEg
+bm9kZSB1bml0IGFuZCByZWcsIHdoaWNoIHRoZSBjb2RlIG90aGVyd2lzZQo+ID4gaWdub3Jlcywg
+YW5kIHNwZWNpZnkgYSBwaGlsaXBwcyxhcC1tYXNrID0gcHJvcGVydHkgZm9yIHRoZSBhdWRpbyBw
+b3J0cwo+ID4gaW5zdGVhZC4KPiAKPiBBbHNvLCB0aGUgdmlkZW8gYW5kIGF1ZGlvIHBvcnRzIG11
+c3QgYmUgZGlzdGluZ3Vpc2hlZC4gVGhleSBjb3VsZCBiZQo+IGRlZmluZWQgaW4gZGlmZmVyZW50
+IHBvcnQgZ3JvdXBzLgo+IAo+IEV4YW1wbGUgZnJvbSB0aGUgQ3Vib3g6Cj4gCj4gCXZpZGVvLXBv
+cnRzOiBwb3J0c0AwIHsKPiAJCXBvcnQgewo+IAkJCXRkYTk5OHhfdmlkZW86IGVuZHBvaW50IHsK
+PiAJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZsY2QwXzA+Owo+IAkJCQlueHAsdmlkZW8tcG9ydCA9
+IDwweDIzMDE0NT47Cj4gCQkJfTsKPiAJCX07Cj4gCX07Cj4gCWF1ZGlvLXBvcnRzOiBwb3J0c0Ax
+IHsKPiAJCXBvcnRAMCB7CQkJLyogQVAxID0gSTJTICovCj4gCQkJdGRhOTk4eF9pMnM6IGVuZHBv
+aW50QDAgewo+IAkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmF1ZGlvMV9pMnM+Owo+IAkJCQlueHAs
+YXVkaW8tcG9ydCA9IDwweDAzPjsKPiAJCQl9Owo+IAkJfTsKPiAJCXBvcnRAMSB7CQkJIC8qIEFQ
+MiA9IFMvUERJRiAqLwo+IAkJCXRkYTk5OHhfc3BkaWY6IGVuZHBvaW50QDEgewo+IAkJCQlyZW1v
+dGUtZW5kcG9pbnQgPSA8JmF1ZGlvMV9zcGRpZjE+Owo+IAkJCQlueHAsYXVkaW8tcG9ydCA9IDww
+eDA0PjsKPiAJCQl9Owo+IAkJfTsKPiAJfTsKPiAKPiBUaGUgcG9ydCB0eXBlIGlzIGlkZW50aWZp
+ZWQgYnkgdGhlIGJpdCBBUDAuCgpJIGRvbid0IHBhcnRpY3VsYXJseSBsaWtlIHRoYXQgLSB0aGF0
+IG1ha2VzIHRoZSBhc3N1bXB0aW9uIHRoYXQgQVAwCmFsd2F5cyBtZWFucyBJMlMuICBXaGF0IGlm
+IGEgZnV0dXJlIGNoaXAgZGVjaWRlcyB0byBhbGxvdyBTUERJRiBvbgpBUDA/ICBXaHkgc2hvdWxk
+IHdlIG5lZWQgdG8gcmUtaW52ZW50IHRoZSBiaW5kaW5nPwoKSU1ITywgaXQgd291bGQgYmUgbXVj
+aCBiZXR0ZXIgdG8gbWFrZSB0aGlzIGV4cGxpY2l0LgoKTm90ZSB0aGF0IHRoZSAidmlkZW8tcG9y
+dHMiIGFuZCAiYXVkaW8tcG9ydHMiIGFyZSBqdXN0IGxhYmVscyBpbiB0aGUKRFQgZmlsZTsgdGhl
+eSBhcmVuJ3QgY2FycmllZCB0aHJvdWdoIHRvIHRoZSByZXN1bHRpbmcgRFQgYmluYXJ5IGZpbGUs
+CnNvIHRoZXkgZG9uJ3QgaGF2ZSBhbnkgbWVhbmluZyB0byB0aGUga2VybmVsLgoKLS0gCkZUVEMg
+YnJvYWRiYW5kIGZvciAwLjhtaWxlIGxpbmU6IGN1cnJlbnRseSBhdCAxMC41TWJwcyBkb3duIDQw
+MGticHMgdXAKYWNjb3JkaW5nIHRvIHNwZWVkdGVzdC5uZXQuCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
+dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
+aWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
