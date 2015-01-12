@@ -1,72 +1,27 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: GIC_CPU_MASK_SIMPLE(8)" on big.LITTLE?
-Date: Mon, 12 Jan 2015 16:33:00 +0100
-Message-ID: <CAMuHMdUDQXn7_BkoYejZL1XL3-xuFYksMRWwT=egq-RO+Hd9Ag@mail.gmail.com>
-References: <CAMuHMdWQQBECdXT1pbChT31y8YdHzcjvTGR1A2HhtdtwpRmdPQ@mail.gmail.com>
-	<20150112144514.GL823@e106497-lin.cambridge.arm.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 1/4] tty: serial: Add 8250 earlycon to support noinit option
+Date: Mon, 12 Jan 2015 16:35:19 +0100
+Message-ID: <3712986.8SuKNvhKTk@wuerfel>
+References: <1421068104-30463-1-git-send-email-eddie.huang@mediatek.com> <1421068104-30463-2-git-send-email-eddie.huang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20150112144514.GL823@e106497-lin.cambridge.arm.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Liviu Dudau <Liviu.Dudau@arm.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Marc Zyngier <Marc.Zyngier@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1421068104-30463-2-git-send-email-eddie.huang@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Eddie Huang <eddie.huang@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Matthias Brugger <matthias.bgg@gmail.com>, devicetree@vger.kernel.org, Vladimir Murzin <vladimir.murzin@arm.com>, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Jonathan Corbet <corbet@lwn.net>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, yh.chen@mediatek.com, Howard Chen <ibanezchen@gmail.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, linux-serial@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, "Joe.C" <yingjoe.chen@mediatek.com>, Jiri Slaby <jslaby@suse.cz>, Alan Cox <alan@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Liviu,
+On Monday 12 January 2015 21:08:21 Eddie Huang wrote:
+> Add earlycon support not only baudrate option, but also add noinit option.
+> If use noinit option, 8250 earlycon will not init serial hardware and use
+> loader setting.
+> 
+> Signed-off-by: Eddie Huang <eddie.huang@mediatek.com>
 
-On Mon, Jan 12, 2015 at 3:45 PM, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
-> On Mon, Jan 05, 2015 at 10:37:47AM +0000, Geert Uytterhoeven wrote:
->> A while ago, I wondered:
->>
->> | It's my understanding GIC_CPU_MASK_SIMPLE should reflect the actual number
->> | of CPU cores the interrupt is wired too. Is that correct?
->> |
->> | [Fixes for incorrect masks on shmobile]
->> |
->> | Should it be "GIC_CPU_MASK_SIMPLE(8)" on big.LITTLE configurations
->> | with four Cortex-A15 cores and four Cortex-A7 cores?
->> | Or should the interrupts be delivered to the four Cortex-A15 cores
->> | only by default?
->> |
->> | Note that incorrect masks for GIC PPI interrupts are not limited to
->> | shmobile. Presumably the interrupt specifiers got copied around a lot,
->> | cfr. the proliferation of "GIC_CPU_MASK_SIMPLE(4)" (and the older
->> | hardcoded "0xf0x" variant) in various dtsi files, not always limited to
->> | quad-core CPUs.
->>
->> In the mean time, arch/arm64/boot/dts/arm/juno.dts got added, which has 2 A57
->> cores and 4 A53 cores, and uses GIC_CPU_MASK_SIMPLE(6), so it seems like
->> my two RFC patches to use GIC_CPU_MASK_SIMPLE(8) for 4 A15 cores and 4
->> A7 cores are actually correct?
->>
->> Thanks for your comments!
->>
->> References:
->>   1. Original RFC series:
->>      [PATCH/RFC 0/4] ARM: shmobile: Correct masks for GIC PPI interrupts
->>      http://lists.infradead.org/pipermail/linux-arm-kernel/2014-November/306743.html
->>   2. RFC patches:
->>        a. [PATCH/RFC 3/4] ARM: shmobile: r8a7790: Correct mask for GIC
->> PPI interrupts
->>           http://lists.infradead.org/pipermail/linux-arm-kernel/2014-November/306741.html
->>        b. [PATCH/RFC 4/4] ARM: shmobile: r8a73a4: Correct mask for GIC
->> PPI interrupts
->>           http://lists.infradead.org/pipermail/linux-arm-kernel/2014-November/306740.html
+I probably missed something in the previous discussion, but why is
+"noinit" not just the default? I believe that is how we handle early
+serial ports on PowerPC, and I see no downsides to it.
 
-> Your patches are correct, the mask should reflect the number of CPUs present *and* they way
-> they are wired in the GIC. AFAIK, HW designers have been sane so far and wired the CPUs
-> in sequence in the GIC, but I lack inside knowledge of the shmobile design.
-
-Thanks, I will resend them.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+	Arnd
