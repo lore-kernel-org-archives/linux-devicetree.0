@@ -1,104 +1,41 @@
-From: Alexander Graf <agraf@suse.de>
-Subject: Re: [PATCH net-next v11 3/3] net: hisilicon: new hip04 ethernet driver
-Date: Mon, 12 Jan 2015 19:25:22 +0100
-Message-ID: <54B41192.3030400@suse.de>
-References: <1421049832-6224-1-git-send-email-dingtianhong@huawei.com> <1421049832-6224-4-git-send-email-dingtianhong@huawei.com>
+From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH v1 00/10] st33zp24 new architecture proposal and st33zp24
+ spi driver
+Date: Mon, 12 Jan 2015 11:26:38 -0700
+Message-ID: <20150112182638.GB11295@obsidianresearch.com>
+References: <1420888831-17491-1-git-send-email-christophe-h.ricard@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1421049832-6224-4-git-send-email-dingtianhong@huawei.com>
-Sender: netdev-owner@vger.kernel.org
-To: Ding Tianhong <dingtianhong@huawei.com>, arnd@arndb.de, robh+dt@kernel.org, davem@davemloft.net, grant.likely@linaro.org
-Cc: sergei.shtylyov@cogentembedded.com, linux-arm-kernel@lists.infradead.org, eric.dumazet@gmail.com, xuwei5@hisilicon.com, zhangfei.gao@linaro.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux@arm.linux.org.uk
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1420888831-17491-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: PeterHuewe-Mmb7MZpHnFY@public.gmane.org, ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org, tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, jean-luc.blanc-qxv4g6HH51o@public.gmane.org, benoit.houyere-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12.01.15 09:03, Ding Tianhong wrote:
-> Support Hisilicon hip04 ethernet driver, including 100M / 1000M controller.
-> The controller has no tx done interrupt, reclaim xmitted buffer in the poll.
+On Sat, Jan 10, 2015 at 12:20:21PM +0100, Christophe Ricard wrote:
+> Hi,
 > 
-> v11: Add ethtool support for tx coalecse getting and setting, the xmit_more
-> is not supported for this patch, but I think it could work for hip04,
-> will support it later after some tests for performance better.
-> 
-> Here are some performance test results by ping and iperf(add tx_coalesce_frames/users),
-> it looks that the performance and latency is more better by tx_coalesce_frames/usecs.
-> 
-> - Before:
-> $ ping 192.168.1.1 ...
-> --- 192.168.1.1 ping statistics ---
+> The following patchset:
+> - clean the current tpm_i2c_stm_st33 driver
+> - propose a new architecture allowing to share a core st33zp24 data management
+> layer with different phy (i2c & spi). For st33zp24 both phy have a proprietary transport
+> protocol. Both are relying on the TCG TIS protocol. At the end, it simplifies the maintenance.
+> - Add an spi phy allowing to support st33zp24 using with an SPI bus.
 
-Writing --- directly into your patch description is usually a pretty bad
-idea. Git am cuts off everything that comes after --- so your patch
-description ends here without manual intervention ;).
+I read through this and not much stood out, just one comment on patch 8
 
-> 24 packets transmitted, 24 received, 0% packet loss, time 22999ms
-> rtt min/avg/max/mdev = 0.180/0.202/0.403/0.043 ms
-> 
-> $ iperf -c 192.168.1.1 ...
-> [ ID] Interval       Transfer     Bandwidth
-> [  3]  0.0- 1.0 sec   115 MBytes   945 Mbits/sec
-> 
-> - After:
-> $ ping 192.168.1.1 ...
-> --- 192.168.1.1 ping statistics ---
-> 24 packets transmitted, 24 received, 0% packet loss, time 22999ms
-> rtt min/avg/max/mdev = 0.178/0.190/0.380/0.041 ms
-> 
-> $ iperf -c 192.168.1.1 ...
-> [ ID] Interval       Transfer     Bandwidth
-> [  3]  0.0- 1.0 sec   115 MBytes   965 Mbits/sec
-> 
-> v10: According David Miller and Arnd Bergmann's suggestion, add some modification
+Patch 4 and 6 do not seem to be part of this series and seem to be
+bug fixes, the should be seperated so Peter can fast track them
+into the kernel.
 
-Version history however should go after a --- line, so that it doesn't
-show up in the patch description in the tree.
+So excluding patch 8:
 
-> for v9 version
-> - drop the workqueue
-> - batch cleanup based on tx_coalesce_frames/usecs for better throughput
-> - use a reasonable default tx timeout (200us, could be shorted
->   based on measurements) with a range timer
-> - fix napi poll function return value
-> - use a lockless queue for cleanup
-> 
-> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Ding Tianhong <dingtianhong@huawei.com>
-> ---
+Reviewed-By: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
 
-
-[...]
-
-> +static int hip04_remove(struct platform_device *pdev)
-> +{
-> +	struct net_device *ndev = platform_get_drvdata(pdev);
-> +	struct hip04_priv *priv = netdev_priv(ndev);
-> +	struct device *d = &pdev->dev;
-> +
-> +	if (priv->phy)
-> +		phy_disconnect(priv->phy);
-> +
-> +	hip04_free_ring(ndev, d);
-> +	unregister_netdev(ndev);
-> +	free_irq(ndev->irq, ndev);
-> +	of_node_put(priv->phy_node);
-> +	cancel_work_sync(&priv->tx_timeout_task);
-> +	free_netdev(ndev);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id hip04_mac_match[] = {
-> +	{ .compatible = "hisilicon,hip04-mac" },
-> +	{ }
-> +};
-
-This is missing
-
-MODULE_DEVICE_TABLE(of, hip04_mac_match);
-
-to enable automatic module loading, no?
-
-
-Alex
+Jason
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
