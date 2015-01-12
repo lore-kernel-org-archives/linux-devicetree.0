@@ -1,101 +1,368 @@
-From: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH/RFC v10 15/19] media: Add registration helpers for V4L2
- flash sub-devices
-Date: Mon, 12 Jan 2015 10:46:26 +0100
-Message-ID: <54B397F2.6060205@samsung.com>
-References: <1420816989-1808-1-git-send-email-j.anaszewski@samsung.com>
- <1420816989-1808-16-git-send-email-j.anaszewski@samsung.com>
- <20150109205432.GP18076@amd>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [Patch v5 1/2] gpio: add GPIO hogging mechanism
+Date: Mon, 12 Jan 2015 11:16:17 +0100
+Message-ID: <CACRpkdZhXMpmcOx9S2TNQUepQ6n0UY1h5MTx8v8cctyDBajrGQ@mail.gmail.com>
+References: <1419019671-25377-1-git-send-email-bparrot@ti.com>
+	<1419019671-25377-2-git-send-email-bparrot@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20150109205432.GP18076@amd>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Cc: linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org, sakari.ailus-X3B1VOXEql0@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1419019671-25377-2-git-send-email-bparrot@ti.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Benoit Parrot <bparrot@ti.com>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Jiri Prchal <jiri.prchal@aksignal.cz>, Pantelis Antoniou <panto@antoniou-consulting.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Pavel,
+On Fri, Dec 19, 2014 at 9:07 PM, Benoit Parrot <bparrot@ti.com> wrote:
 
-Thanks for the review.
-
-On 01/09/2015 09:54 PM, Pavel Machek wrote:
-> On Fri 2015-01-09 16:23:05, Jacek Anaszewski wrote:
->> This patch adds helper functions for registering/unregistering
->> LED Flash class devices as V4L2 sub-devices. The functions should
->> be called from the LED subsystem device driver. In case the
->> support for V4L2 Flash sub-devices is disabled in the kernel
->> config the functions' empty versions will be used.
->>
->> Signed-off-by: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> Acked-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> Cc: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
->> Cc: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+> Based on Boris Brezillion's work this is a reworked patch
+> of his initial GPIO hogging mechanism.
+> This patch provides a way to initially configure specific GPIO
+> when the GPIO controller is probed.
 >
-> Acked-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+> The actual DT scanning to collect the GPIO specific data is performed
+> as part of gpiochip_add().
 >
->> +	/*
->> +	 * Indicator leds, unlike torch leds, are turned on/off basing
->> on
+> The purpose of this is to allow specific GPIOs to be configured
+> without any driver specific code.
+> This is particularly useful because board design are getting
+> increasingly complex and given SoC pins can now have more
+> than 10 mux values, a lot of connections are now dependent on
+> external IO muxes to switch various modes.
 >
-> leds -> LEDs.
-
-Sure.
-
->> +	 * the state of V4L2_CID_FLASH_INDICATOR_INTENSITY control only.
->> +	 * Therefore it must be possible to set it to 0 level which in
->> +	 * the LED subsystem reflects LED_OFF state.
->> +	 */
->> +	if (cdata_id != INDICATOR_INTENSITY)
->> +		++__intensity;
+> Specific drivers should not necessarily need to be aware of
+> what accounts to a specific board implementation. This board level
+> "description" should be best kept as part of the dts file.
 >
-> And normally we'd do i++ instead of ++i, and avoid __ for local
-> variables...?
+> Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> Reviewed-by: Alexandre Courbot <acourbot@nvidia.com>
 
-Pre-incrementation operator is favourable over the post-incrementation
-one if we don't want to have an access to the value of a variable before
-incrementation, which is the case here.
-Maybe gcc detects the cases when the value of a variable is not assigned
-and doesn't copy it before incrementing, however I haven't found any
-reference. I see that often in the for loops the i++ version
-is used, but I am not sure if this is done because developers are
-aware that gcc will optimize it anyway or it is just an omission.
+(...)
+>  /**
+> + * of_get_gpio_hog() - Get a GPIO hog descriptor, names and flags for GPIO API
+> + * @np:                device node to get GPIO from
+> + * @name:      GPIO line name
+> + * @flags:     a flags pointer to fill in
 
-And regarding __ for local variable - I haven't found any restriction
-about it in the Documentation/CodingStyle. Nevertheless I can rename
-it to tmp or something.
+kerneldoc is unsynchronized, document both flags.
 
->> +/**
->> + * struct v4l2_flash_ctrl_config - V4L2 Flash controls initialization data
->> + * @intensity:			constraints for the led in a non-flash mode
->> + * @flash_intensity:		V4L2_CID_FLASH_INTENSITY settings constraints
->> + * @flash_timeout:		V4L2_CID_FLASH_TIMEOUT constraints
->> + * @flash_faults:		possible flash faults
->> + * @has_external_strobe:	external strobe capability
->> + * @indicator_led:		signifies that a led is of indicator type
->> + */
->> +struct v4l2_flash_ctrl_config {
->> +	struct v4l2_ctrl_config intensity;
->> +	struct v4l2_ctrl_config flash_intensity;
->> +	struct v4l2_ctrl_config flash_timeout;
->> +	u32 flash_faults;
->> +	bool has_external_strobe:1;
->> +	bool indicator_led:1;
->> +};
+> + *
+> + * Returns GPIO descriptor to use with Linux GPIO API, or one of the errno
+> + * value on the error condition.
+> + */
+> +
+
+No newline after kerneldoc. What is lflags and dflags?
+
+> +static struct gpio_desc *of_get_gpio_hog(struct device_node *np,
+> +                                 const char **name,
+> +                                 enum gpio_lookup_flags *lflags,
+> +                                 enum gpiod_flags *dflags)
+> +{
+> +       struct device_node *chip_np;
+> +       enum of_gpio_flags xlate_flags;
+> +       struct gpio_desc *desc;
+> +       const char *dir_val;
+> +       struct gg_data gg_data = {
+> +               .flags = &xlate_flags,
+> +       };
+> +       u32 tmp;
+> +       int i, ret;
+> +
+> +       chip_np = np->parent;
+> +       if (!chip_np)
+> +               return ERR_PTR(-EINVAL);
+> +
+> +       xlate_flags = 0;
+> +       *lflags = 0;
+> +       *dflags = 0;
+> +
+> +       ret = of_property_read_u32(chip_np, "#gpio-cells", &tmp);
+> +       if (ret)
+> +               return ERR_PTR(ret);
+> +       if (tmp > MAX_PHANDLE_ARGS)
+> +               return ERR_PTR(-EINVAL);
+> +       gg_data.gpiospec.args_count = tmp;
+> +       gg_data.gpiospec.np = chip_np;
+
+Are we duplicating this code elsewhere? No need to
+fix now, but space for refactor later on...
+
+> +       for (i = 0; i < tmp; i++) {
+> +               ret = of_property_read_u32_index(np, "gpios", i,
+> +                                          &gg_data.gpiospec.args[i]);
+> +               if (ret)
+> +                       return ERR_PTR(ret);
+> +       }
+> +
+> +       gpiochip_find(&gg_data, of_gpiochip_find_and_xlate);
+> +       if (!gg_data.out_gpio) {
+> +               if (np->parent == np)
+> +                       return ERR_PTR(-ENXIO);
+> +               else
+> +                       return ERR_PTR(-EPROBE_DEFER);
+
+Is this really reasonable, as we know we're instantiating the only
+gpio_chip this hog can be on?
+
+> +       }
+> +
+> +       if (xlate_flags & OF_GPIO_ACTIVE_LOW)
+> +               *lflags |= GPIO_ACTIVE_LOW;
+> +
+> +       if (of_property_read_string(np, "state", &dir_val)) {
+> +               pr_warn("%s: GPIO:%d (%s): no hogging state specified, bailing out\n",
+> +                        __func__, desc_to_gpio(gg_data.out_gpio), np->name);
+> +               return ERR_PTR(-EINVAL);
+> +       }
+> +
+> +       if (!strcmp(dir_val, "input"))
+> +               *dflags |= GPIOD_IN;
+> +       else if (!strcmp(dir_val, "output-low"))
+> +               *dflags |= GPIOD_OUT_LOW;
+> +       else if (!strcmp(dir_val, "output-high"))
+> +               *dflags |= GPIOD_OUT_HIGH;
+> +       else {
+> +               pr_warn("%s: GPIO:%d (%s): invalid state '%s' requested, bailing out\n",
+> +                        __func__, desc_to_gpio(gg_data.out_gpio),
+> +                       np->name, dir_val);
+> +               return ERR_PTR(-EINVAL);
+> +       }
+
+Hmmmm need to check the bindings first. I'm not yet sure I
+like how we represent this.
+
+> +       if (name && of_property_read_string(np, "line-name", name))
+> +               *name = np->name;
+
+I quite like this.
+
+> +
+> +       desc = gg_data.out_gpio;
+> +
+> +       return desc;
+> +}
+> +
+> +/**
+> + * of_gpiochip_scan_hogs - Scan gpio-controller and apply GPIO hog as requested
+> + * @chip:      gpio chip to act on
+> + *
+> + * This is only used by of_gpiochip_add to request/set GPIO initial
+> + * configuration.
+> + */
+> +static void of_gpiochip_scan_hogs(struct gpio_chip *chip)
+> +{
+> +       struct gpio_desc *desc = NULL;
+> +       struct device_node *np;
+> +       const char *name;
+> +       enum gpio_lookup_flags lflags;
+> +       enum gpiod_flags dflags;
+> +
+> +       for_each_child_of_node(chip->of_node, np) {
+> +               if (!of_property_read_bool(np, "gpio-hog"))
+> +                       continue;
+> +
+> +               desc = of_get_gpio_hog(np, &name, &lflags, &dflags);
+> +               if (IS_ERR(desc))
+> +                       continue;
+> +
+> +               if (gpiod_hog(desc, name, lflags, dflags))
+> +                       continue;
+> +       }
+> +}
+> +
+> +/**
+>   * of_gpio_simple_xlate - translate gpio_spec to the GPIO number and flags
+>   * @gc:                pointer to the gpio_chip structure
+>   * @np:                device node of the GPIO chip
+> @@ -302,6 +418,8 @@ void of_gpiochip_add(struct gpio_chip *chip)
 >
-> I don't think you are supposed to do boolean bit arrays.
+>         of_gpiochip_add_pin_range(chip);
+>         of_node_get(chip->of_node);
+> +
+> +       of_gpiochip_scan_hogs(chip);
+>  }
+>
+>  void of_gpiochip_remove(struct gpio_chip *chip)
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index 487afe6..d79c265 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -313,6 +313,7 @@ EXPORT_SYMBOL_GPL(gpiochip_add);
+>
+>  /* Forward-declaration */
+>  static void gpiochip_irqchip_remove(struct gpio_chip *gpiochip);
+> +static void gpiochip_free_hogs(struct gpio_chip *chip);
+>
+>  /**
+>   * gpiochip_remove() - unregister a gpio_chip
+> @@ -331,6 +332,7 @@ void gpiochip_remove(struct gpio_chip *chip)
+>
+>         gpiochip_irqchip_remove(chip);
+>         gpiochip_remove_pin_ranges(chip);
+> +       gpiochip_free_hogs(chip);
+>         of_gpiochip_remove(chip);
+>
+>         for (id = 0; id < chip->ngpio; id++) {
+> @@ -864,6 +866,7 @@ static bool __gpiod_free(struct gpio_desc *desc)
+>                 clear_bit(FLAG_REQUESTED, &desc->flags);
+>                 clear_bit(FLAG_OPEN_DRAIN, &desc->flags);
+>                 clear_bit(FLAG_OPEN_SOURCE, &desc->flags);
+> +               clear_bit(FLAG_IS_HOGGED, &desc->flags);
+>                 ret = true;
+>         }
+>
+> @@ -1836,6 +1839,47 @@ struct gpio_desc *__must_check __gpiod_get_optional(struct device *dev,
+>  }
+>  EXPORT_SYMBOL_GPL(__gpiod_get_optional);
+>
+> +
+> +/**
+> + * __gpiod_set_helper - helper function to configure a given GPIO
+> + * @desc:      gpio whose value will be assigned
+> + * @con_id:    function within the GPIO consumer
+> + * @lflags:    gpio_lookup_flags - returned from of_find_gpio() or
+> + *             of_get_gpio_hog()
+> + * @dflags:    gpiod_flags - optional GPIO initialization flags
+> + *
+> + * Return 0 on success, -ENOENT if no GPIO has been assigned to the
+> + * requested function and/or index, or another IS_ERR() code if an error
+> + * occurred while trying to acquire the GPIO.
+> + */
+> +static int __gpiod_set_helper(struct gpio_desc *desc, const char *con_id,
+> +               unsigned long lflags, enum gpiod_flags dflags)
 
-These bit fields allow to reduce memory usage. If they were not bit
-fields, the address of the next variable would be aligned to the
-multiply of the CPU word size.
-Please look e.g. at struct dev_pm_info in the file include/linux/pm.h.
-It also contains boolean bit fields.
+This function has no sensible name.
 
--- 
-Best Regards,
-Jacek Anaszewski
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Skip the arbitrary __ prefix and give it a descriptive name
+like "gpiod_configure_flags" or something.
+
+> +{
+> +       int status;
+> +
+> +       if (lflags & GPIO_ACTIVE_LOW)
+> +               set_bit(FLAG_ACTIVE_LOW, &desc->flags);
+> +       if (lflags & GPIO_OPEN_DRAIN)
+> +               set_bit(FLAG_OPEN_DRAIN, &desc->flags);
+> +       if (lflags & GPIO_OPEN_SOURCE)
+> +               set_bit(FLAG_OPEN_SOURCE, &desc->flags);
+> +
+> +       /* No particular flag request, return here... */
+> +       if (!(dflags & GPIOD_FLAGS_BIT_DIR_SET)) {
+> +               pr_debug("no flags found for %s\n", con_id);
+> +               return 0;
+> +       }
+> +
+> +       /* Process flags */
+> +       if (dflags & GPIOD_FLAGS_BIT_DIR_OUT)
+> +               status = gpiod_direction_output(desc,
+> +                                             dflags & GPIOD_FLAGS_BIT_DIR_VAL);
+> +       else
+> +               status = gpiod_direction_input(desc);
+> +
+> +       return status;
+> +}
+> +
+>  /**
+>   * gpiod_get_index - obtain a GPIO from a multi-index GPIO function
+>   * @dev:       GPIO consumer, can be NULL for system-global GPIOs
+> @@ -1885,30 +1929,12 @@ struct gpio_desc *__must_check __gpiod_get_index(struct device *dev,
+>         }
+>
+>         status = gpiod_request(desc, con_id);
+> -
+>         if (status < 0)
+>                 return ERR_PTR(status);
+>
+> -       if (lookupflags & GPIO_ACTIVE_LOW)
+> -               set_bit(FLAG_ACTIVE_LOW, &desc->flags);
+> -       if (lookupflags & GPIO_OPEN_DRAIN)
+> -               set_bit(FLAG_OPEN_DRAIN, &desc->flags);
+> -       if (lookupflags & GPIO_OPEN_SOURCE)
+> -               set_bit(FLAG_OPEN_SOURCE, &desc->flags);
+> -
+> -       /* No particular flag request, return here... */
+> -       if (!(flags & GPIOD_FLAGS_BIT_DIR_SET))
+> -               return desc;
+> -
+> -       /* Process flags */
+> -       if (flags & GPIOD_FLAGS_BIT_DIR_OUT)
+> -               status = gpiod_direction_output(desc,
+> -                                             flags & GPIOD_FLAGS_BIT_DIR_VAL);
+> -       else
+> -               status = gpiod_direction_input(desc);
+> -
+> +       status = __gpiod_set_helper(desc, con_id, lookupflags, flags);
+>         if (status < 0) {
+> -               dev_dbg(dev, "setup of GPIO %s failed\n", con_id);
+> +               pr_debug("setup of GPIO %s failed\n", con_id);
+>                 gpiod_put(desc);
+>                 return ERR_PTR(status);
+>         }
+> @@ -2002,6 +2028,68 @@ struct gpio_desc *__must_check __gpiod_get_index_optional(struct device *dev,
+>  EXPORT_SYMBOL_GPL(__gpiod_get_index_optional);
+>
+>  /**
+> + * gpiod_hog - Hog the specified GPIO desc given the provided flags
+> + * @desc:      gpio whose value will be assigned
+> + * @name:      gpio line name
+> + * @lflags:    gpio_lookup_flags - returned from of_find_gpio() or
+> + *             of_get_gpio_hog()
+> + * @dflags:    gpiod_flags - optional GPIO initialization flags
+> + *
+> + */
+> +int gpiod_hog(struct gpio_desc *desc, const char *name,
+> +             unsigned long lflags, enum gpiod_flags dflags)
+> +{
+> +       struct gpio_chip *chip;
+> +       struct gpio_desc *local_desc;
+> +       int hwnum;
+> +       int status;
+> +
+> +       chip = gpiod_to_chip(desc);
+> +       hwnum = gpio_chip_hwgpio(desc);
+> +
+> +       local_desc = gpiochip_request_own_desc(chip, hwnum, name);
+> +       if (IS_ERR(local_desc)) {
+> +               pr_debug("requesting own GPIO %s failed\n", name);
+> +               return PTR_ERR(local_desc);
+> +       }
+> +
+> +       status = __gpiod_set_helper(desc, name, lflags, dflags);
+> +       if (status < 0) {
+> +               pr_debug("setup of GPIO %s failed\n", name);
+> +               gpiochip_free_own_desc(desc);
+> +               return status;
+> +       }
+> +
+> +       /* Mark GPIO as hogged so it can be identified and removed later */
+> +       set_bit(FLAG_IS_HOGGED, &desc->flags);
+> +
+> +       pr_debug("%s: GPIO:%d (%s) as %s%s\n", __func__,
+
+Convert to pr_info(), as this *should* be printed to console, skip printing
+__func__ please.
+
+Modify string to "GPIO line %d (%s) hogged as %s%s\n"
+
+> +               desc_to_gpio(desc), name,
+> +               (dflags&GPIOD_FLAGS_BIT_DIR_OUT) ? "output" : "input",
+> +               (dflags&GPIOD_FLAGS_BIT_DIR_OUT) ?
+> +                 (dflags&GPIOD_FLAGS_BIT_DIR_VAL) ? "/high" : "/low":"");
+> +
+> +       return 0;
+> +}
+> +
+> +/**
+> + * gpiochip_free_hogs - Scan gpio-controller chip and release GPIO hog
+> + * @chip:      gpio chip to act on
+> + *
+> + * This is only used by of_gpiochip_remove to free hogged gpios
+> + *
+
+Skip this comment newline.
+
+Overall the changes to gpiolib.c looks very nice.
+
+Yours,
+Linus Walleij
