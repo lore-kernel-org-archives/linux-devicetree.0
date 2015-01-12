@@ -1,56 +1,38 @@
-From: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH net-next v11 3/3] net: hisilicon: new hip04 ethernet driver
-Date: Mon, 12 Jan 2015 17:04:43 +0800
-Message-ID: <54B38E2B.4060105@huawei.com>
-References: <1421049832-6224-1-git-send-email-dingtianhong@huawei.com> <1421049832-6224-4-git-send-email-dingtianhong@huawei.com> <19225293.OPozO1Cbk5@wuerfel>
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Subject: Re: [PATCH v4 7/7] pinctrl: qcom-spmi-gpio: Migrate to
+ pinconf-generic
+Date: Mon, 12 Jan 2015 11:09:11 +0200
+Message-ID: <1421053751.28652.9.camel@mm-sol.com>
+References: <1420818231-13451-1-git-send-email-soren.brinkmann@xilinx.com>
+	 <1420818231-13451-8-git-send-email-soren.brinkmann@xilinx.com>
+	 <CACRpkdbDEcStJhabgKEm8H=z2umEr+bd-0oK4_HvCO+rz0pTXQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <19225293.OPozO1Cbk5@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, eric.dumazet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdbDEcStJhabgKEm8H=z2umEr+bd-0oK4_HvCO+rz0pTXQ@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Soren Brinkmann <soren.brinkmann@xilinx.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Alessandro Rubini <rubini@unipv.it>, Heiko Stuebner <heiko@sntech.de>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, Beniamino Galvani <b.galvani@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2015/1/12 16:52, Arnd Bergmann wrote:
-> On Monday 12 January 2015 16:03:52 Ding Tianhong wrote:
->> Support Hisilicon hip04 ethernet driver, including 100M / 1000M controller.
->> The controller has no tx done interrupt, reclaim xmitted buffer in the poll.
-> 
-> Looks great to me in the latest version. Dave, unless you have further
-> concerns, please apply.
-> 
->> v11: Add ethtool support for tx coalecse getting and setting, the xmit_more
->> is not supported for this patch, but I think it could work for hip04,
->> will support it later after some tests for performance better.
->>
->> Here are some performance test results by ping and iperf(add tx_coalesce_frames/users),
->> it looks that the performance and latency is more better by tx_coalesce_frames/usecs.
->>
->> - Before:
->> $ ping 192.168.1.1 ...
->> --- 192.168.1.1 ping statistics ---
->> 24 packets transmitted, 24 received, 0% packet loss, time 22999ms
->> rtt min/avg/max/mdev = 0.180/0.202/0.403/0.043 ms
->>
->> $ iperf -c 192.168.1.1 ...
->> [ ID] Interval       Transfer     Bandwidth
->> [  3]  0.0- 1.0 sec   115 MBytes   945 Mbits/sec
-> 
-> Just to be sure: you were running the two tests simultaneously, right?
-> 
-> 	Arnd
-> 
-Yes, sure, and try several times, record the more appropriate test results. :)
 
-Ding
+On Sun, 2015-01-11 at 22:40 +0100, Linus Walleij wrote:
+> On Fri, Jan 9, 2015 at 4:43 PM, Soren Brinkmann
+> brinkmann@xilinx.com> wrote:
+>=20
+> > Instead of the driver caring about implementation details like devi=
+ce
+> > tree, just provide information about driver specific pinconf parame=
+ters
+> > to pinconf-generic which takes care of parsing the DT.
+> >=20
+> > Signed-off-by: Soren Brinkmann brinkmann@xilinx.com>
+>=20
+> Patch applied: qualcomm folks, can you make sure that the Qualcomm
+> stuff is still working as expected with S=C3=B6ren's core parser?
+>=20
 
-> .
-> 
+Yep, it still works. Tested on pm8941 and pma8084. Thanks.
 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Tested-by: Ivan T. Ivanov <iivanov@mm-sol.com>
