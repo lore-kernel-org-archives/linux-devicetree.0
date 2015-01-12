@@ -1,41 +1,131 @@
-From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH v1 00/10] st33zp24 new architecture proposal and st33zp24
- spi driver
-Date: Mon, 12 Jan 2015 11:26:38 -0700
-Message-ID: <20150112182638.GB11295@obsidianresearch.com>
-References: <1420888831-17491-1-git-send-email-christophe-h.ricard@st.com>
+From: Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH 3/5] PCI: st: Provide support for the sti PCIe controller
+Date: Mon, 12 Jan 2015 11:43:49 -0700
+Message-ID: <20150112184349.GB2776@google.com>
+References: <1418812486-12394-1-git-send-email-gabriel.fernandez@linaro.org>
+ <1418812486-12394-4-git-send-email-gabriel.fernandez@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1420888831-17491-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: PeterHuewe-Mmb7MZpHnFY@public.gmane.org, ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org, tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, jean-luc.blanc-qxv4g6HH51o@public.gmane.org, benoit.houyere-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+In-Reply-To: <1418812486-12394-4-git-send-email-gabriel.fernandez@linaro.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Mohit Kumar <mohit.kumar@st.com>, Jingoo Han <jg1.han@samsung.com>, Grant Likely <grant.likely@linaro.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>, Fabrice Gasnier <fabrice.gasnier@st.com>, Arnd Bergmann <arnd@arndb.de>, Viresh Kumar <viresh.kumar@linaro.org>, Thierry Reding <treding@nvidia.com>, Minghuan Lian <Minghuan.Lian@freescale.com>, Magnus Damm <damm@opensource.se>, Will Deacon <will.deacon@arm.com>, Tanmay Inamdar <tinamdar@apm.com>, Murali Karicheri <m-karicheri2@ti.com>, Kishon
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jan 10, 2015 at 12:20:21PM +0100, Christophe Ricard wrote:
-> Hi,
+On Wed, Dec 17, 2014 at 11:34:44AM +0100, Gabriel FERNANDEZ wrote:
+> sti pcie is built around a Synopsis Designware PCIe IP.
 > 
-> The following patchset:
-> - clean the current tpm_i2c_stm_st33 driver
-> - propose a new architecture allowing to share a core st33zp24 data management
-> layer with different phy (i2c & spi). For st33zp24 both phy have a proprietary transport
-> protocol. Both are relying on the TCG TIS protocol. At the end, it simplifies the maintenance.
-> - Add an spi phy allowing to support st33zp24 using with an SPI bus.
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+> ---
+>  drivers/pci/host/Kconfig  |   5 +
+>  drivers/pci/host/Makefile |   1 +
+>  drivers/pci/host/pci-st.c | 713 ++++++++++++++++++++++++++++++++++++++++++++++
 
-I read through this and not much stood out, just one comment on patch 8
+Hi Gabriel,
 
-Patch 4 and 6 do not seem to be part of this series and seem to be
-bug fixes, the should be seperated so Peter can fast track them
-into the kernel.
+Can you add a MAINTAINERS update so I know who should ack changes to this
+driver?
 
-So excluding patch 8:
+>  3 files changed, 719 insertions(+)
+>  create mode 100644 drivers/pci/host/pci-st.c
+> 
+> diff --git a/drivers/pci/host/Kconfig b/drivers/pci/host/Kconfig
+> index c4b6568..999d2b9 100644
+> --- a/drivers/pci/host/Kconfig
+> +++ b/drivers/pci/host/Kconfig
+> @@ -102,4 +102,9 @@ config PCI_LAYERSCAPE
+>  	help
+>  	  Say Y here if you want PCIe controller support on Layerscape SoCs.
+>  
+> +config PCI_ST
+> +	bool "ST STiH41x PCIe controller"
+> +	depends on ARCH_STI
+> +	select PCIE_DW
 
-Reviewed-By: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Please add help text here.
 
-Jason
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +static int st_pcie_rd_other_conf(struct pcie_port *pp, struct pci_bus *bus,
+> +				 unsigned int devfn, int where, int size,
+> +				 u32 *val)
+> +{
+> +	u32 data;
+> +	u32 bdf;
+> +	struct st_pcie *pcie = to_st_pcie(pp);
+> +	int is_root_bus = pci_is_root_bus(bus);
+> +	int retry_count = 0;
+> +	int ret;
+> +	void __iomem *addr;
+> +
+> +	/*
+> +	 * Prerequisite
+> +	 * PCI express devices will respond to all config type 0 cycles, since
+> +	 * they are point to point links. Thus to avoid probing for multiple
+> +	 * devices on the root, dw-pcie already check for us if it is on the
+> +	 * root bus / other slots. Also, dw-pcie checks for the link being up
+> +	 * as we will hang if we issue a config request and the link is down.
+> +	 * A switch will reject requests for slots it knows do not exist.
+> +	 */
+> +	bdf = bdf_num(bus->number, devfn, is_root_bus);
+> +	addr = pcie->config_area + config_addr(where,
+> +			bus->parent->number == pp->root_bus_nr);
+> +retry:
+> +	/* Set the config packet devfn */
+> +	writel_relaxed(bdf, pp->dbi_base + FUNC0_BDF_NUM);
+> +	readl_relaxed(pp->dbi_base + FUNC0_BDF_NUM);
+> +
+> +	ret = dw_pcie_cfg_read(addr, where, size, &data);
+> +
+> +	/*
+> +	 * This is intended to help with when we are probing the bus. The
+> +	 * problem is that the wrapper logic doesn't have any way to
+> +	 * interrogate if the configuration request failed or not.
+> +	 * On the ARM we actually get a real bus error.
+> +	 *
+> +	 * Unfortunately this means it is impossible to tell the difference
+> +	 * between when a device doesn't exist (the switch will return a UR
+> +	 * completion) or the device does exist but isn't yet ready to accept
+> +	 * configuration requests (the device will return a CRS completion)
+
+We do have CRS support in the Linux PCI core, so I guess this comment means
+that the ST host bridge doesn't handle CRS correctly?
+
+> +	 *
+> +	 * The result of this is that we will miss devices when probing.
+> +	 *
+> +	 * So if we are trying to read the dev/vendor id on devfn 0 and we
+> +	 * appear to get zero back, then we retry the request.  We know that
+> +	 * zero can never be a valid device/vendor id. The specification says
+> +	 * we must retry for up to a second before we decide the device is
+> +	 * dead. If we are still dead then we assume there is nothing there and
+> +	 * return ~0
+> +	 *
+> +	 * The downside of this is that we incur a delay of 1s for every pci
+> +	 * express link that doesn't have a device connected.
+
+That sounds pretty bad and I assume is a consequence of CRS handling being
+broken in hardware.
+
+> +	 */
+> +	if (((where & ~3) == 0) && devfn == 0 && (data == 0 || data == ~0)) {
+> +		if (retry_count++ < 1000) {
+> +			mdelay(1);
+> +			goto retry;
+> +		} else {
+> +			*val = ~0;
+> +			return PCIBIOS_DEVICE_NOT_FOUND;
+> +		}
+> +	}
+> +
+> +	*val = data;
+> +	return ret;
+> +}
+
+> +MODULE_LICENSE("GPLv2");
+
+See license_is_gpl_compatible().  This string needs to be "GPL v2", not
+"GPLv2" to avoid tainting the kernel.
+
+Bjorn
