@@ -1,27 +1,56 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 1/2] Documentation: dt-bindings: Add aliases information
- for Exynos7 pin controllers
-Date: Mon, 12 Jan 2015 10:14:18 +0100
-Message-ID: <CACRpkdaZjZjGp3ipQqwRbWFAukQwSsCzTTa3AAKyFuM+Xjn8Pg@mail.gmail.com>
-References: <1418200780-22363-1-git-send-email-gautam.vivek@samsung.com>
+From: Kukjin Kim <kgene@kernel.org>
+Subject: Re: [PATCH] ARM: samsung: add exynos-chipid binding information
+Date: Mon, 12 Jan 2015 18:14:29 +0900
+Message-ID: <54B39075.20406@kernel.org>
+References: <1417592664-10672-1-git-send-email-pankaj.dubey@samsung.com> <54AA5D1D.9000409@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1418200780-22363-1-git-send-email-gautam.vivek@samsung.com>
+In-Reply-To: <54AA5D1D.9000409@samsung.com>
 Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Vivek Gautam <gautam.vivek@samsung.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>, root <alim.akhtar@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>
+To: Pankaj Dubey <pankaj.dubey@samsung.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, thomas.ab@samsung.com, kgene.kim@samsung.com, pawel.moll@arm.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 10, 2014 at 9:39 AM, Vivek Gautam <gautam.vivek@samsung.com> wrote:
+On 01/05/15 18:45, Pankaj Dubey wrote:
+> Gentle Ping.
+> 
+> On Wednesday 03 December 2014 01:14 PM, Pankaj Dubey wrote:
+>> Exynos SoC's DT files are using Chipid device nodes, but it's binding
+>> information is missing. This patch adds exynos-chipid binding
+>> information.
+>>
+>> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+>> ---
+>>   .../bindings/arm/samsung/exynos-chipid.txt         |   12 ++++++++++++
+>>   1 file changed, 12 insertions(+)
+>>   create mode 100644
+>> Documentation/devicetree/bindings/arm/samsung/exynos-chipid.txt
+>>
+>> diff --git
+>> a/Documentation/devicetree/bindings/arm/samsung/exynos-chipid.txt
+>> b/Documentation/devicetree/bindings/arm/samsung/exynos-chipid.txt
+>> new file mode 100644
+>> index 0000000..85c5dfd
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/arm/samsung/exynos-chipid.txt
+>> @@ -0,0 +1,12 @@
+>> +SAMSUNG Exynos SoCs Chipid driver.
+>> +
+>> +Required properties:
+>> +- compatible : Should at least contain "samsung,exynos4210-chipid".
+>> +
+>> +- reg: offset and length of the register set
+>> +
+>> +Example:
+>> +    chipid@10000000 {
+>> +        compatible = "samsung,exynos4210-chipid";
+>> +        reg = <0x10000000 0x100>;
+>> +    };
+>>
 
-> Adding list of aliases for supported Exynos7 pin controller blocks.
->
-> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
-> Cc: Tomasz Figa <tomasz.figa@gmail.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
+I've applied. Sorry for late taking.
 
-Patch applied.
-
-Yours,
-Linus Walleij
+Thanks,
+Kukjin
