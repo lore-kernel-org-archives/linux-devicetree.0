@@ -1,92 +1,62 @@
-From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH v1 08/10] tpm/tpm_i2c_stm_st33: Split tpm_i2c_tpm_st33 in
- 2 layers (core + phy)
-Date: Mon, 12 Jan 2015 13:26:53 -0700
-Message-ID: <20150112202653.GC11295@obsidianresearch.com>
-References: <1420888831-17491-1-git-send-email-christophe-h.ricard@st.com>
- <1420888831-17491-9-git-send-email-christophe-h.ricard@st.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH] ARM: shmobile: r8a7791: add MLB+ clock
+Date: Mon, 12 Jan 2015 23:40:21 +0300
+Message-ID: <54B43135.6000002@cogentembedded.com>
+References: <7846462.yepFC759KH@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1420888831-17491-9-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: PeterHuewe-Mmb7MZpHnFY@public.gmane.org, ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org, tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, jean-luc.blanc-qxv4g6HH51o@public.gmane.org, benoit.houyere-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <7846462.yepFC759KH@wasted.cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: horms@verge.net.au, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jan 10, 2015 at 12:20:29PM +0100, Christophe Ricard wrote:
+Hello.
 
-For reference:
+On 12/18/2014 11:43 PM, Sergei Shtylyov wrote:
 
-> -static int tpm_stm_i2c_remove(struct i2c_client *client)
-> -{
-> -       struct tpm_chip *chip =
-> -               (struct tpm_chip *) i2c_get_clientdata(client);
-> -
-> -       if (chip)
-> -                tpm_chip_unregister(chip);
-> -
-> -       return 0;
-> -}
+> From: Andrey Gusakov <andrey.gusakov@cogentembedded.com>
 
-Became:
+> Add MLB+ clock to R8A7791 device tree.
 
-> +static int st33zp24_i2c_remove(struct i2c_client *client)
-> +{
-> +	void *tpm_data = i2c_get_clientdata(client);
-> +
-> +	if (tpm_data)
-> +		st33zp24_remove(tpm_data);
-> +
-> +	return 0;
-> +}
+> Signed-off-by: Andrey Gusakov <andrey.gusakov@cogentembedded.com>
+> [Sergei: rebased, renamed, added changelog]
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-The value of i2c_get_clientdata hasn't/can't be changed, it must be
-the tpm_chip, so tpm_data should be tpm_chip *, not void *.
+> ---
+> This patch is against 'renesas-devel-20141218-v3.18' tag of Simon Horman's
+> 'renesas.git' repo.
 
-The 'if (tpm_data)' is an anti-pattern, please remove it
+>   arch/arm/boot/dts/r8a7791.dtsi            |   10 +++++-----
+>   include/dt-bindings/clock/r8a7791-clock.h |    1 +
+>   2 files changed, 6 insertions(+), 5 deletions(-)
 
-Same comment applies to patch 9
+> Index: renesas/arch/arm/boot/dts/r8a7791.dtsi
+> ===================================================================
+> --- renesas.orig/arch/arm/boot/dts/r8a7791.dtsi
+> +++ renesas/arch/arm/boot/dts/r8a7791.dtsi
+> @@ -1154,17 +1154,17 @@
+>   		mstp8_clks: mstp8_clks@e6150990 {
+>   			compatible = "renesas,r8a7791-mstp-clocks", "renesas,cpg-mstp-clocks";
+>   			reg = <0 0xe6150990 0 4>, <0 0xe61509a0 0 4>;
+> -			clocks = <&zg_clk>, <&zg_clk>, <&zg_clk>, <&zg_clk>, <&p_clk>,
+> -				 <&zs_clk>, <&zs_clk>;
+> +			clocks = <&hp_clk>, <&zg_clk>, <&zg_clk>, <&zg_clk>,
 
-> +int st33zp24_remove(void *tpm_data)
-> +{
-> +	struct st33zp24_dev *tpm_dev = (struct st33zp24_dev *)tpm_data;
-> +	struct tpm_chip *chip = tpm_dev->chip;
-> +
-> +	if (chip)
-> +		tpm_chip_unregister(chip);
-> +
-> +	return 0;
-> +}
+    Oops, the first two clocks need to be swapped. I'll send a fix (since this 
+patch has been merged already).
 
-Now this looks wrong. st33zp24_dev is the TPM_VPRIV of the chip, but
-tpm_data is the tpm_chip already, so that cast is surely wrong.
+> +			         <&zg_clk>, <&p_clk>, <&zs_clk>, <&zs_clk>;
+>   			#clock-cells = <1>;
+>   			clock-indices = <
+> -				R8A7791_CLK_IPMMU_SGX
+> +				R8A7791_CLK_IPMMU_SGX R8A7791_CLK_MLB
+>   				R8A7791_CLK_VIN2 R8A7791_CLK_VIN1 R8A7791_CLK_VIN0
+>   				R8A7791_CLK_ETHER R8A7791_CLK_SATA1 R8A7791_CLK_SATA0
+>   			>;
+[...]
 
-Again, remove the 'if (chip)' anti-pattern.
+WBR, Sergei
 
-> +static struct st33zp24_phy_ops i2c_phy_ops = {
-> +       .send = st33zp24_i2c_send,
-> +       .recv = st33zp24_i2c_recv,
-> +};
-
-Should be 'static const struct', same comment for patch 9
-
-> +       tpm_dev = devm_kzalloc(dev, sizeof(struct st33zp24_dev),
-> +                              GFP_KERNEL);
-> +       if (!tpm_dev)
-> +               return -ENOMEM;
-> +
-> +       chip = tpmm_chip_alloc(dev, &st33zp24_tpm);
-> +       if (IS_ERR(chip))
-> +               return PTR_ERR(chip);
-
-It is idomatic in the TPM drivers for the tpmm_chip_alloc to be first,
-then the priv allocation to be second. Someday we might merge the two
-calls.
-
-Jason
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
