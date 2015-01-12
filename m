@@ -1,115 +1,69 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH/RFC v10 03/19] DT: leds: Add led-sources property
-Date: Mon, 12 Jan 2015 10:55:29 -0600
-Message-ID: <CAL_JsqKpJtUG0G6g1GOuSVpc31oe-dp3qdrKJUE0upG-xRDFhA@mail.gmail.com>
-References: <1420816989-1808-1-git-send-email-j.anaszewski@samsung.com>
- <1420816989-1808-4-git-send-email-j.anaszewski@samsung.com>
- <CAL_JsqJKEp6TWaRhJimg3AWBh+MCCr2Bk9+1o7orLLdp5E+n-g@mail.gmail.com>
- <54B38682.5080605@samsung.com> <CAL_Jsq+UaA41DvawdOMmOib=Fi0hC-nBdKV-+P4DFo+MoOy-bQ@mail.gmail.com>
- <54B3F1EF.4060506@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <54B3F1EF.4060506@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: linux-leds@vger.kernel.org, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Pavel Machek <pavel@ucw.cz>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, sakari.ailus@iki.fi, Sylwester Nawrocki <s.nawrocki@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
+From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH] i2c: Mark instantiated device nodes with OF_POPULATE
+Date: Mon, 12 Jan 2015 19:01:34 +0200
+Message-ID: <1421082094-10267-1-git-send-email-pantelis.antoniou@konsulko.com>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Adding Mark B and Liam...
+Mark (and unmark) device nodes with the POPULATE flag as appropriate.
+This is required to avoid multi probing when using I2C and device
+overlays containing a mux.
 
-On Mon, Jan 12, 2015 at 10:10 AM, Jacek Anaszewski
-<j.anaszewski@samsung.com> wrote:
-> On 01/12/2015 02:52 PM, Rob Herring wrote:
->>
->> On Mon, Jan 12, 2015 at 2:32 AM, Jacek Anaszewski
->> <j.anaszewski@samsung.com> wrote:
->>> On 01/09/2015 07:33 PM, Rob Herring wrote:
->>>> On Fri, Jan 9, 2015 at 9:22 AM, Jacek Anaszewski
->>>> <j.anaszewski@samsung.com> wrote:
->>>>> Add a property for defining the device outputs the LED
->>>>> represented by the DT child node is connected to.
+Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+---
+ drivers/i2c/i2c-core.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
-[...]
-
->>>>> b/Documentation/devicetree/bindings/leds/common.txt
->>>>> index a2c3f7a..29295bf 100644
->>>>> --- a/Documentation/devicetree/bindings/leds/common.txt
->>>>> +++ b/Documentation/devicetree/bindings/leds/common.txt
->>>>> @@ -1,6 +1,10 @@
->>>>>    Common leds properties.
->>>>>
->>>>>    Optional properties for child nodes:
->>>>> +- led-sources : Array of bits signifying the LED current regulator
->>>>> outputs the
->>>>> +               LED represented by the child node is connected to (1 -
->>>>> the LED
->>>>> +               is connected to the output, 0 - the LED isn't connected
->>>>> to the
->>>>> +               output).
->>>>
->>>>
->>>>
->>>> Sorry, I just don't understand this.
->>>
->>>
->>>
->>> In some Flash LED devices one LED can be connected to one or more
->>> electric current outputs, which allows for multiplying the maximum
->>> current allowed for the LED. Each sub-LED is represented by a child
->>> node in the DT binding of the Flash LED device and it needs to declare
->>> which outputs it is connected to. In the example below the led-sources
->>> property is a two element array, which means that the flash LED device
->>> has two current outputs, and the bits signify if the LED is connected
->>> to the output.
->>
->>
->> Sounds like a regulator for which we already have bindings for and we
->> have a driver for regulator based LEDs (but no binding for it).
->
->
-> Do you think of drivers/leds/leds-regulator.c driver? This driver just
-> allows for registering an arbitrary regulator device as a LED subsystem
-> device.
->
-> There are however devices that don't fall into this category, i.e. they
-> have many outputs, that can be connected to a single LED or to many LEDs
-> and the driver has to know what is the actual arrangement.
-
-We may need to extend the regulator binding slightly and allow for
-multiple phandles on a supply property, but wouldn't something like
-this work:
-
-led-supply = <&led-reg0>, <&led-reg1>, <&led-reg2>, <&led-reg3>;
-
-The shared source is already supported by the regulator binding.
-
-Rob
-
->
->> Please use the regulator binding.
->
->
->>> Do your doubts stem from the ambiguity of the word "current" or the
->>> form of the description itself is unclear? Probably there should be
->>> explicit explanation added that the size of the array depends on the
->>> number of current outputs of the flash LED device.
->>
->>
->> The size of the array and meaning of array indexes was not clear.
->
->
-> What about this:
->
-> led-sources : Array of connection states between all LED current
->               sources exposed by the device and this LED (1 - this LED
->               is connected to the current output with index N, 0 -
->               this LED isn't connected to the current output with
->               index N); the mapping of N-th element of the array to the
->               physical device output should be defined in the LED
->               driver binding.
->
->
-> --
-> Best Regards,
-> Jacek Anaszewski
+diff --git a/drivers/i2c/i2c-core.c b/drivers/i2c/i2c-core.c
+index e020a16..afc189c 100644
+--- a/drivers/i2c/i2c-core.c
++++ b/drivers/i2c/i2c-core.c
+@@ -1122,6 +1122,8 @@ EXPORT_SYMBOL_GPL(i2c_new_device);
+  */
+ void i2c_unregister_device(struct i2c_client *client)
+ {
++	if (client->dev.of_node)
++		of_node_clear_flag(client->dev.of_node, OF_POPULATED);
+ 	device_unregister(&client->dev);
+ }
+ EXPORT_SYMBOL_GPL(i2c_unregister_device);
+@@ -1441,8 +1443,11 @@ static void of_i2c_register_devices(struct i2c_adapter *adap)
+ 
+ 	dev_dbg(&adap->dev, "of_i2c: walking child nodes\n");
+ 
+-	for_each_available_child_of_node(adap->dev.of_node, node)
++	for_each_available_child_of_node(adap->dev.of_node, node) {
++		if (of_node_test_and_set_flag(node, OF_POPULATED))
++			continue;
+ 		of_i2c_register_device(adap, node);
++	}
+ }
+ 
+ static int of_dev_node_match(struct device *dev, void *data)
+@@ -1976,6 +1981,9 @@ static int of_i2c_notify(struct notifier_block *nb, unsigned long action,
+ 		if (adap == NULL)
+ 			return NOTIFY_OK;	/* not for us */
+ 
++		if (of_node_test_and_set_flag(rd->dn, OF_POPULATED))
++			return NOTIFY_OK;
++
+ 		client = of_i2c_register_device(adap, rd->dn);
+ 		put_device(&adap->dev);
+ 
+@@ -1986,6 +1994,11 @@ static int of_i2c_notify(struct notifier_block *nb, unsigned long action,
+ 		}
+ 		break;
+ 	case OF_RECONFIG_CHANGE_REMOVE:
++
++		/* already depopulated? */
++		if (!of_node_check_flag(rd->dn, OF_POPULATED))
++			return NOTIFY_OK;
++
+ 		/* find our device by node */
+ 		client = of_find_i2c_device_by_node(rd->dn);
+ 		if (client == NULL)
+-- 
+1.7.12
