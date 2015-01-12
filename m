@@ -1,48 +1,84 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v6 1/2] mtd: hisilicon: add a new NAND controller driver for hisilicon hip04 Soc
-Date: Mon, 12 Jan 2015 09:21:05 +0100
-Message-ID: <5265608.Ut8IQVYZc5@wuerfel>
-References: <1421047734-30818-1-git-send-email-wangzhou1@hisilicon.com> <1421047734-30818-2-git-send-email-wangzhou1@hisilicon.com>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH/RFC v10 03/19] DT: leds: Add led-sources property
+Date: Mon, 12 Jan 2015 09:32:02 +0100
+Message-ID: <54B38682.5080605@samsung.com>
+References: <1420816989-1808-1-git-send-email-j.anaszewski@samsung.com>
+ <1420816989-1808-4-git-send-email-j.anaszewski@samsung.com>
+ <CAL_JsqJKEp6TWaRhJimg3AWBh+MCCr2Bk9+1o7orLLdp5E+n-g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1421047734-30818-2-git-send-email-wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, caizhiyong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, yubingxu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <CAL_JsqJKEp6TWaRhJimg3AWBh+MCCr2Bk9+1o7orLLdp5E+n-g@mail.gmail.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: linux-leds@vger.kernel.org, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Pavel Machek <pavel@ucw.cz>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, sakari.ailus@iki.fi, Sylwester Nawrocki <s.nawrocki@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 12 January 2015 15:28:53 Zhou Wang wrote:
-> Signed-off-by: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-> ---
+On 01/09/2015 07:33 PM, Rob Herring wrote:
+> On Fri, Jan 9, 2015 at 9:22 AM, Jacek Anaszewski
+> <j.anaszewski@samsung.com> wrote:
+>> Add a property for defining the device outputs the LED
+>> represented by the DT child node is connected to.
+>>
+>> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+>> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+>> Cc: Bryan Wu <cooloney@gmail.com>
+>> Cc: Richard Purdie <rpurdie@rpsys.net>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Cc: Pawel Moll <pawel.moll@arm.com>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+>> Cc: Kumar Gala <galak@codeaurora.org>
+>> ---
+>>   Documentation/devicetree/bindings/leds/common.txt |    5 +++++
+>>   1 file changed, 5 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
+>> index a2c3f7a..29295bf 100644
+>> --- a/Documentation/devicetree/bindings/leds/common.txt
+>> +++ b/Documentation/devicetree/bindings/leds/common.txt
+>> @@ -1,6 +1,10 @@
+>>   Common leds properties.
+>>
+>>   Optional properties for child nodes:
+>> +- led-sources : Array of bits signifying the LED current regulator outputs the
+>> +               LED represented by the child node is connected to (1 - the LED
+>> +               is connected to the output, 0 - the LED isn't connected to the
+>> +               output).
+>
+> Sorry, I just don't understand this.
 
-I haven't looked at earlier versions, but it looks very good to
-me overall. Just add a patch description above please.
+In some Flash LED devices one LED can be connected to one or more
+electric current outputs, which allows for multiplying the maximum
+current allowed for the LED. Each sub-LED is represented by a child
+node in the DT binding of the Flash LED device and it needs to declare
+which outputs it is connected to. In the example below the led-sources
+property is a two element array, which means that the flash LED device
+has two current outputs, and the bits signify if the LED is connected
+to the output.
 
-One tiny detail:
+Do your doubts stem from the ambiguity of the word "current" or the
+form of the description itself is unclear? Probably there should be
+explicit explanation added that the size of the array depends on the
+number of current outputs of the flash LED device.
 
-> +static const struct of_device_id nfc_id_table[] = {
-> +	{ .compatible = "hisilicon,504-nfc" },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, nfc_id_table);
-> +
-> +static struct platform_driver hisi_nfc_driver = {
-> +	.driver = {
-> +		.name  = "hisi_nand",
-> +		.of_match_table = of_match_ptr(nfc_id_table),
-> +		.pm = &hisi_nfc_pm_ops,
-> +	},
-> +	.probe		= hisi_nfc_probe,
-> +	.remove		= hisi_nfc_remove,
-> +};
+>>   - label : The label for this LED.  If omitted, the label is
+>>     taken from the node name (excluding the unit address).
+>>
+>> @@ -33,6 +37,7 @@ system-status {
+>>
+>>   camera-flash {
+>>          label = "Flash";
+>> +       led-sources = <1 0>;
+>>          max-microamp = <50000>;
+>>          flash-max-microamp = <320000>;
+>>          flash-timeout-us = <500000>;
+>> --
+>> 1.7.9.5
+>>
+>
 
-Remove the of_match_ptr() macro here to avoid a warning when
-CONFIG_OF is not set.
-
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Best Regards,
+Jacek Anaszewski
