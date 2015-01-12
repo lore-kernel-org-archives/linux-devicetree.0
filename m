@@ -1,38 +1,88 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V3 2/2] pinctrl: exynos: Add BUS1 pin controller for exynos7
-Date: Mon, 12 Jan 2015 10:14:53 +0100
-Message-ID: <CACRpkdbtJZ4wKh=wF8t8-NAvi9P1OapP_x61VUdz1WRjSwcYEw@mail.gmail.com>
-References: <1418200780-22363-1-git-send-email-gautam.vivek@samsung.com>
-	<1418200780-22363-2-git-send-email-gautam.vivek@samsung.com>
+From: Eddie Huang <eddie.huang@mediatek.com>
+Subject: [PATCH v4 1/4] Document: DT: Add bindings for mediatek MT8173 SoC
+ Platform
+Date: Mon, 12 Jan 2015 17:14:30 +0800
+Message-ID: <1421054073-43468-2-git-send-email-eddie.huang@mediatek.com>
+References: <1421054073-43468-1-git-send-email-eddie.huang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1418200780-22363-2-git-send-email-gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, root <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1421054073-43468-1-git-send-email-eddie.huang@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Jason Cooper <jason@lakedaemon.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, marc.zyngier@arm.com, Catalin Marinas <catalin.marinas@arm.com>, Mark Brown <broonie@linaro.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Robert Richter <rrichter@cavium.com>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, "Joe.C" <yingjoe.chen@mediatek.com>, Thomas Gleixner <tglx@linutronix.de>, Eddie Huang <eddie.huang@mediatek.com>, peter.maydell@linaro.org, linux-arm-kernel@lists.infradead.org, yh.chen@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 10, 2014 at 9:39 AM, Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+MT8173 is a 64-bit four core Soc.
+And mt8173-evb is a evaluation board based on mt8173.
+This commit add the devicetree binding document for
+  mediatek MT8173 SoC
+  MT8173 sysirq
+  MT8173 uart
 
-> USB and Power regulator on Exynos7 require gpios available
-> in BUS1 pin controller block.
-> So adding the BUS1 pinctrl support.
->
-> Signed-off-by: Naveen Krishna Ch <naveenkrishna.ch-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Cc: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->
-> Changes since V2:
->  - Added documentation on alias for BUS1 pin controller block.
+Signed-off-by: Eddie Huang <eddie.huang@mediatek.com>
+---
+ Documentation/devicetree/bindings/arm/mediatek.txt                 | 4 ++++
+ Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt | 1 +
+ Documentation/devicetree/bindings/serial/mtk-uart.txt              | 4 +++-
+ 3 files changed, 8 insertions(+), 1 deletion(-)
 
-Patch applied with Tomasz ACK.
-
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/arm/mediatek.txt b/Documentation/devicetree/bindings/arm/mediatek.txt
+index 3be4013..dd7550a 100644
+--- a/Documentation/devicetree/bindings/arm/mediatek.txt
++++ b/Documentation/devicetree/bindings/arm/mediatek.txt
+@@ -9,6 +9,7 @@ compatible: Must contain one of
+    "mediatek,mt6592"
+    "mediatek,mt8127"
+    "mediatek,mt8135"
++   "mediatek,mt8173"
+ 
+ 
+ Supported boards:
+@@ -25,3 +26,6 @@ Supported boards:
+ - MTK mt8135 tablet EVB:
+     Required root node properties:
+       - compatible = "mediatek,mt8135-evbp1", "mediatek,mt8135";
++- MTK mt8173 tablet EVB:
++    Required root node properties:
++      - compatible = "mediatek,mt8173-evb", "mediatek,mt8173";
+diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt
+index d680b07..8794f8d 100644
+--- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt
++++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,sysirq.txt
+@@ -5,6 +5,7 @@ interrupt.
+ 
+ Required properties:
+ - compatible: should be one of:
++	"mediatek,mt8173-sysirq"
+ 	"mediatek,mt8135-sysirq"
+ 	"mediatek,mt8127-sysirq"
+ 	"mediatek,mt6589-sysirq"
+diff --git a/Documentation/devicetree/bindings/serial/mtk-uart.txt b/Documentation/devicetree/bindings/serial/mtk-uart.txt
+index 48358a3..0e41b6e 100644
+--- a/Documentation/devicetree/bindings/serial/mtk-uart.txt
++++ b/Documentation/devicetree/bindings/serial/mtk-uart.txt
+@@ -2,9 +2,11 @@
+ 
+ Required properties:
+ - compatible should contain:
++  * "mediatek,mt8173-uart" for MT8173 compatible UARTS
+   * "mediatek,mt6589-uart" for MT6589 compatible UARTS
+   * "mediatek,mt6582-uart" for MT6582 compatible UARTS
+-  * "mediatek,mt6577-uart" for all compatible UARTS (MT6589, MT6582, MT6577)
++  * "mediatek,mt6577-uart" for all compatible UARTS (MT8173, MT6589, MT6582, 
++	MT6577)
+ 
+ - reg: The base address of the UART register bank.
+ 
+-- 
+1.8.1.1.dirty
