@@ -1,38 +1,72 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v5 3/7] gpio/xilinx: Add support for X86 Arch
-Date: Mon, 12 Jan 2015 10:24:34 +0100
-Message-ID: <CACRpkdYr6OZUjQ8JLzpktQK1xg1Un_SKtU+xr=gFzpSo+A2C-g@mail.gmail.com>
-References: <1418831474-24428-1-git-send-email-ricardo.ribalda@gmail.com>
-	<1418831474-24428-4-git-send-email-ricardo.ribalda@gmail.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v9 1/4] drm/i2c: tda998x: Add DT support for audio
+Date: Mon, 12 Jan 2015 10:25:28 +0100
+Message-ID: <1421054728.3081.28.camel@pengutronix.de>
+References: <54AE99F5.1010404@ti.com> <20150108174257.557f7ea5@armhf>
+ <54AFA9B0.6040405@ti.com> <20150109123036.4bc4bbf6@armhf>
+ <20150109114529.GH12302@n2100.arm.linux.org.uk>
+ <20150109135401.5b270d46@armhf>
+ <20150109130725.GN12302@n2100.arm.linux.org.uk> <54AFDE8D.3000504@arm.com>
+ <20150109145741.GP12302@n2100.arm.linux.org.uk>
+ <20150109183857.53d701a4@armhf>
+ <20150109200127.GD12302@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1418831474-24428-4-git-send-email-ricardo.ribalda@gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-Cc: Alexandre Courbot <gnurou@gmail.com>, Michal Simek <michal.simek@xilinx.com>, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Darren Hart <dvhart@linux.intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20150109200127.GD12302@n2100.arm.linux.org.uk>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Andrew Jackson <Andrew.Jackson@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>, Mark Brown <broonie@kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 17, 2014 at 4:51 PM, Ricardo Ribalda Delgado
-<ricardo.ribalda@gmail.com> wrote:
-
-> Core can be accessed via PCIe on X86 platform.
-> This patch also allows the driver to be used as module.
->
-> Acked-by: Michal Simek <michal.simek@xilinx.com>
-> Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-
-PCIe on x86, using device tree? The ACPI people are just gonna love this.
-
-Patch applied, anyway. DT on x86 is not unheard of.
-
->  config GPIO_XILINX
-> -       bool "Xilinx GPIO support"
-> -       depends on PPC_OF || MICROBLAZE || ARCH_ZYNQ
-> +       tristate "Xilinx GPIO support"
-> +       depends on OF_GPIO && (PPC_OF || MICROBLAZE || ARCH_ZYNQ || ARCH_X86)
-
-Maybe you want to add COMPILE_TEST too?
-
-Yours,
-Linus Walleij
+QW0gRnJlaXRhZywgZGVuIDA5LjAxLjIwMTUsIDIwOjAxICswMDAwIHNjaHJpZWIgUnVzc2VsbCBL
+aW5nIC0gQVJNCkxpbnV4OgpbLi4uXQo+IE5laXRoZXI7IHdlIGtub3cgdGhhdCB0aGVyZSBhcmUg
+VERBOTk4eCBkZXZpY2VzIHdoaWNoIGFsbG93IFNQRElGIHRvIGJlCj4gaW5wdXQgdmlhIHR3byBz
+ZXBhcmF0ZSBwaW5zLCBidXQgb25seSBvbmUgdG8gYmUgYWN0aXZlIGF0IGFueSBvbmUgdGltZS4K
+PiBHaXZlbiB0aGF0IHRoZSBoYXJkd2FyZSBpcyBmbGV4aWJsZSBpbiB0aGF0IHJlZ2FyZCwgYSBi
+aW5kaW5nIHdoaWNoCj4gYXJ0aWZpY2lhbGx5IHJlc3RyaWN0cyB0aGF0IGZsZXhpYmlsaXR5IHdv
+dWxkIHNlZW0gdW53aXNlLgo+IAo+IElmIHdlIHdlcmUgdG8gY29tZSBhY3Jvc3MgYSBzZXR1cCB3
+aGljaCBkaWQgcm91dGUgdHdvIFNQRElGIHN0cmVhbXMgdG8KPiB0aGUgVERBOTk4eCwgYW5kIHdl
+IGhhZCB0byBtYWtlIHRoZSBkZWNpc2lvbiBhdCBydW4gdGltZSB3aGljaCB0byByb3V0ZQo+IHRv
+IHRoZSBIRE1JIHNpbmssIHdlJ2QgaGF2ZSB0byByZXdvcmsgdGhlIGJpbmRpbmcsIGFuZCB3ZSdk
+IGhhdmUgdG8KPiBzdXBwb3J0IHRoZSBuZXcgYmluZGluZyBhbmQgdGhlIG9sZCBiaW5kaW5nIGlu
+IHRoZSBkcml2ZXIuCj4gCj4gQ2FuIHlvdSBwbGVhc2UgbG9vayBhdCBEb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvZ3JhcGgudHh0ID8KPiAKPiBJIHRoaW5rIHdlIG1heSBiZSBhYmxl
+IHRvIHVzZSBzb21ldGhpbmcgbGlrZSB0aGlzOgo+IAo+IHRkYTk5OHg6IGhkbWktZW5jb2RlciB7
+Cj4gCWNvbXBhdGlibGUgPSAibnhwLHRkYTk5OHgiOwo+IAlyZWcgPSA8MHg3MD47Cj4gCXZpZGVv
+LXBvcnRzID0gPDB4MjM0NTAxPjsKPiAKPiAJcG9ydCB7Cj4gCQl0ZGE5OTh4X3ZpZGVvOiBlbmRw
+b2ludCB7Cj4gCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZsY2QwX3JnYj47Cj4gCQl9Owo+IAl9Owo+
+IAo+IAlwb3J0IHsKPiAJCSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+IAkJI3NpemUtY2VsbHMgPSA8
+MD47Cj4gCj4gCQl0ZGE5OTh4X3NwZGlmMDogZW5kcG9pbnRAMDIgewo+IAkJCXJlZyA9IDwweDAy
+PjsKPiAJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JnNwZGlmMD47Cj4gCQl9Owo+IAo+IAkJdGRhOTk4
+eF9zcGRpZjE6IGVuZHBvaW50QDA0IHsKPiAJCQlyZWcgPSA8MHgwND47Cj4gCQkJcmVtb3RlLWVu
+ZHBvaW50ID0gPCZzcGRpZjA+Owo+IAkJfTsKPiAKPiAJCXRkYTk5OHhfaTJzOiBlbmRwb2ludEAw
+MyB7Cj4gCQkJcmVnID0gPDB4MDM+Owo+IAkJCXJlbW90ZS1lbmRwb2ludCA9IDwmaTJzPjsKPiAJ
+CX07Cj4gCX07Cj4gfTsKPiAKPiBJJ20gYWRkaW5nIFBoaWxpcHAgWmFiZWwgZm9yIGNvbW1lbnQu
+ICBUaGUgaXNzdWUgSSBzZWUgd2l0aCB0aGlzIGlzIHRoYXQKPiB3ZSBoYXZlIHR3byBwb3J0cyBo
+ZXJlIHdoaWNoIGFyZSBub3QgbXV0dWFsbHkgZXhjbHVzaXZlLCBhbmQgaXQncyBub3QKPiBvYnZp
+b3VzIGhvdyB0aGV5IGFyZSBkZWFsdCB3aXRoLgoKSmVhbi1GcmFuY29pcycgcmVwbHkgYWxyZWFk
+eSByZWZsZWN0cyB0aGlzLCBidXQgdGhlICdwb3J0JyBub2RlcyBzaG91bGQKY29ycmVzcG9uZCB0
+byBwaHlzaWNhbCBwb3J0cyBvZiB0aGUgZGV2aWNlIGlmIHBvc3NpYmxlLiBJZiB5b3UgY2FuCmNv
+bmZpZ3VyZSB0aGUgZGV2aWNlIHRvIGhhdmUgZGVkaWNhdGVkIGlucHV0IHBpbnMgZm9yIEkyUywg
+U1BESUYwLCBhbmQKU1BESUYxIGF0IHRoZSBzYW1lIHRpbWUsIHRoZXkgc2hvdWxkIGFwcGVhciBp
+biB0aGUgZGV2aWNlIHRyZWUgYXMKc2VwYXJhdGUgcG9ydHM6Cgp0ZGE5OTh4OiBoZG1pLWVuY29k
+ZXIgewoJcG9ydEAwIHsgLyogcGl4ZWwgZGF0YSBhY2NvcmRpbmcgdG8gdmlkZW8tcG9ydHMgKi8K
+CQlyZWcgPSA8MHgwMD47Cgl9OwoJcG9ydEAxIHsgLyogQVAxOiBTUERJRjAgKi8KCQlyZWcgPSA8
+MHgwMT47Cgl9OwoJcG9ydEAyIHsgLyogQVAyOiBTUERJRjEgKi8KCQlyZWcgPSA8MHgwMj47Cgl9
+OwoJcG9ydEAzIHsgLyogQVAzOiBJMlMgKi8KCQlyZWcgPSA8MHgwMz47Cgl9Owp9OwoKVGhlIHRk
+YTk5OHggYmluZGluZyB3b3VsZCBkZWZpbmUgaG93IHRoZSBwb3J0cyBhcmUgbnVtYmVyZWQsIHNv
+bWUKY29ycmVzcG9uZGVuY2UgdG8gdGhlIEFQIHBpbiBudW1iZXJzIHdvdWxkIGJlIGdvb2QuCgpy
+ZWdhcmRzClBoaWxpcHAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
+Lm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRl
+dmVsCg==
