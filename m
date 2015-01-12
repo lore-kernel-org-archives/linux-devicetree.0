@@ -1,65 +1,44 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH/RFC v10 03/19] DT: leds: Add led-sources property
-Date: Mon, 12 Jan 2015 17:06:44 +0000
-Message-ID: <20150112170644.GO4160@sirena.org.uk>
-References: <1420816989-1808-1-git-send-email-j.anaszewski@samsung.com>
- <1420816989-1808-4-git-send-email-j.anaszewski@samsung.com>
- <CAL_JsqJKEp6TWaRhJimg3AWBh+MCCr2Bk9+1o7orLLdp5E+n-g@mail.gmail.com>
- <54B38682.5080605@samsung.com>
- <CAL_Jsq+UaA41DvawdOMmOib=Fi0hC-nBdKV-+P4DFo+MoOy-bQ@mail.gmail.com>
- <54B3F1EF.4060506@samsung.com>
- <CAL_JsqKpJtUG0G6g1GOuSVpc31oe-dp3qdrKJUE0upG-xRDFhA@mail.gmail.com>
+From: arno@natisbad.org (Arnaud Ebalard)
+Subject: Re: [PATCHv0 1/3] of: add vendor prefix for Abracon Corporation
+Date: Mon, 12 Jan 2015 18:11:22 +0100
+Message-ID: <87mw5nncud.fsf@natisbad.org>
+References: <cover.1421045942.git.arno@natisbad.org>
+	<754e04216222807206344fdd9f8575e6b504ed14.1421045942.git.arno@natisbad.org>
+	<CAL_JsqL=yP1XmhNiV6Rq_t=ktE1FDBmRKYNNJ0Tn3iAkM3ecag@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="nLMor0SRtNCuLS/8"
-Return-path: <linux-leds-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqKpJtUG0G6g1GOuSVpc31oe-dp3qdrKJUE0upG-xRDFhA@mail.gmail.com>
-Sender: linux-leds-owner@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqL=yP1XmhNiV6Rq_t=ktE1FDBmRKYNNJ0Tn3iAkM3ecag@mail.gmail.com>
+	(Rob Herring's message of "Mon, 12 Jan 2015 07:41:25 -0600")
+Sender: linux-doc-owner@vger.kernel.org
 To: Rob Herring <robherring2@gmail.com>
-Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, linux-leds@vger.kernel.org, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Pavel Machek <pavel@ucw.cz>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, sakari.ailus@iki.fi, Sylwester Nawrocki <s.nawrocki@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Peter Huewe <peter.huewe@infineon.com>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <treding@nvidia.com>, Mark Brown <broonie@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Rob Landley <rob@landley.net>, rtc-linux@googlegroups.com, Jason Cooper <jason@lakedaemon.net>, Guenter Roeck <linux@roeck-us.net>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---nLMor0SRtNCuLS/8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Rob Herring <robherring2@gmail.com> writes:
 
-On Mon, Jan 12, 2015 at 10:55:29AM -0600, Rob Herring wrote:
-> On Mon, Jan 12, 2015 at 10:10 AM, Jacek Anaszewski
+> On Mon, Jan 12, 2015 at 2:16 AM, Arnaud Ebalard <arno@natisbad.org> wrote:
+>> Signed-off-by: Arnaud Ebalard <arno@natisbad.org>
+>> ---
+>>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+>> index b1df0ad1306c..44defc3c162a 100644
+>> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+>> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+>> @@ -4,6 +4,7 @@ This isn't an exhaustive list, but you should add new prefixes to it before
+>>  using them to avoid name-space collisions.
+>>
+>>  abilis Abilis Systems
+>> +abcn   Abracon Corporation
+>
+> Is there some reason not to use "abracon"?
 
-> > There are however devices that don't fall into this category, i.e. they
-> > have many outputs, that can be connected to a single LED or to many LEDs
-> > and the driver has to know what is the actual arrangement.
+None, I guess. I'll change that in a v1.
 
-> We may need to extend the regulator binding slightly and allow for
-> multiple phandles on a supply property, but wouldn't something like
-> this work:
+Cheers,
 
-> led-supply = <&led-reg0>, <&led-reg1>, <&led-reg2>, <&led-reg3>;
-
-> The shared source is already supported by the regulator binding.
-
-What is the reasoning for this?  If a single supply is being supplied by
-multiple regulators then in general those regulators will all know about
-each other at a hardware level and so from a functional and software
-point of view will effectively be one regulator.  If they don't/aren't
-then they tend to interfere with each other.
-
---nLMor0SRtNCuLS/8
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJUs/8jAAoJECTWi3JdVIfQsVgH/0EvbSbMMCak7c7Dv9XJ9++9
-C6ln4JD+REd0SaP5HBEZ/LURh2gNJ+GuwlT6VqPLfEQYVjLs5jzYQG3JAfj11954
-PrNWrUuVrOhCpgkKRut0z4OBnJ+mO1AstTNz8WfcyYeuDgNXnWh79VOfYW87p/D7
-m15nqwk0Qs+N05yhqEoHza9oNu8ZptaZm0njfEAyEp4o+3pVa2AQYkReSfvYTmID
-4c5WIpBv7WZx1ztg/D7LxukKIuZ0TxesGGLg/zj4XN0Ln0IUc0vmmydnwvjs09mM
-+ow6tIvsSKtojAbJNWUvxuvk/E52+mjGKG+UDKzFfBHPNqK4HJM0Q3H4YtR22wI=
-=B3bS
------END PGP SIGNATURE-----
-
---nLMor0SRtNCuLS/8--
+a+
