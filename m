@@ -1,72 +1,144 @@
-From: Jean-Francois Moine <moinejf@free.fr>
-Subject: Re: [PATCH v9 1/4] drm/i2c: tda998x: Add DT support for audio
-Date: Mon, 12 Jan 2015 18:13:41 +0100
-Message-ID: <20150112181341.4a53ea24@armhf>
-References: <20150109114529.GH12302@n2100.arm.linux.org.uk>
- <20150109135401.5b270d46@armhf>
- <20150109130725.GN12302@n2100.arm.linux.org.uk>
- <54AFDE8D.3000504@arm.com>
- <20150109145741.GP12302@n2100.arm.linux.org.uk>
- <20150109183857.53d701a4@armhf>
- <20150109200127.GD12302@n2100.arm.linux.org.uk>
- <1421054728.3081.28.camel@pengutronix.de>
- <20150112122527.GF12302@n2100.arm.linux.org.uk>
- <1421071197.3081.44.camel@pengutronix.de>
- <20150112140456.GI12302@n2100.arm.linux.org.uk>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH 3/3] usb: dwc3: add a quirk for device disconnection
+ issue in Synopsis dwc3 core
+Date: Mon, 12 Jan 2015 11:20:32 -0600
+Message-ID: <20150112172032.GD6525@saruman>
+References: <1418695828-605-1-git-send-email-Sneeker.Yeh@tw.fujitsu.com>
+ <1418695828-605-4-git-send-email-Sneeker.Yeh@tw.fujitsu.com>
+ <20141222153730.GA12815@saruman>
+ <CAJ1gpc3jVpz=5ME4+wCJDW5NKihvB4xYzwi0co=UuPtG9Ubmjg@mail.gmail.com>
+ <CAJ1gpc3-Wjtm54WOhO6RXjZft9BMngzyYC0-S-XnTacV-qKgMg@mail.gmail.com>
+ <20141229160641.GD29379@saruman>
+ <CAJ1gpc0Uu4vS2iA_o_W5NaE_QBWDYFZJio7yKvhpaR5f=qWcGA@mail.gmail.com>
+ <20150105170921.GH19336@saruman>
+ <CAJ1gpc3RZnqizhiasrwS8uy1H_wQAi_T0mPcS8LAK4FhmBRJ6A@mail.gmail.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20150112140456.GI12302@n2100.arm.linux.org.uk>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Andrew Jackson <Andrew.Jackson@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>, Mark Brown <broonie@kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="3Gf/FFewwPeBMqCJ"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAJ1gpc3RZnqizhiasrwS8uy1H_wQAi_T0mPcS8LAK4FhmBRJ6A@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sneeker Yeh <sneeker.yeh@gmail.com>
+Cc: Felipe Balbi <balbi@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Grant Likely <grant.likely@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Arnd Bergmann <arnd@arndb.de>, Paul Bolle <pebolle@tiscali.nl>, Hans de Goede <hdegoede@redhat.com>, Thomas Pugliese <thomas.pugliese@gmail.com>, David Mosberger <davidm@egauge.net>, Peter Griffin <peter.griffin@linaro.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Andrew Bresticker <abrestic@chromium.org>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCAxMiBKYW4gMjAxNSAxNDowNDo1NiArMDAwMApSdXNzZWxsIEtpbmcgLSBBUk0gTGlu
-dXggPGxpbnV4QGFybS5saW51eC5vcmcudWs+IHdyb3RlOgoKPiBPbiBNb24sIEphbiAxMiwgMjAx
-NSBhdCAwMjo1OTo1N1BNICswMTAwLCBQaGlsaXBwIFphYmVsIHdyb3RlOgo+ID4gQW0gTW9udGFn
-LCBkZW4gMTIuMDEuMjAxNSwgMTI6MjUgKzAwMDAgc2NocmllYiBSdXNzZWxsIEtpbmcgLSBBUk0g
-TGludXg6Cj4gPiA+IEl0J3Mgbm90IHF1aXRlIHRoYXQgc2ltcGxlLCBiZWNhdXNlIHRoZSBTUERJ
-RiBBUCBwaW5zIGFyZSBtdWx0aXBsZXhlZAo+ID4gPiB3aXRoIHRoZSBJMlMgcGlucyAtIGFuZCB0
-aGVyZSBpcyB2YXJpYXRpb24gYmV0d2VlbiBjaGlwIG1vZGVscyBhbmQKPiA+ID4gcGFja2FnZXMu
-Cj4gPiA+Cj4gPiA+IFNvLCBpdCdzIHByb2JhYmx5IGJlc3QgaWYgcG9ydEAwIGlzIHRoZSB2aWRl
-byBwb3J0LCBhbmQgdGhlbiBwb3J0QDEuLm4KPiA+ID4gY2FuIGRlc2NyaWJlIHRoZSBhdWRpbyBp
-bnB1dHMsIGluY2x1ZGluZyBhIHByb3BlcnR5IHdoaWNoIHNwZWNpZmllcwo+ID4gPiB3aGV0aGVy
-IHRoZXkgYXJlIEkyUyBvciBTUERJRiwgYW5kIHRoZSB2YWx1ZSB0byBiZSBwcm9ncmFtbWVkIGlu
-dG8KPiA+ID4gdGhlIEFQIGVuYWJsZSByZWdpc3RlciAod2hpY2ggaXMgYSBiaXQgZmllbGQgb2Yg
-dGhlIEFQIHBpbnMgd2hpY2gKPiA+ID4gc2hvdWxkIGJlIHVubWFza2VkLikgIEkgZ3Vlc3Mgd2Ug
-Y2FuIHJlLXVzZSB0aGUgcmVnPSBwcm9wZXJ0eSBmb3IgdGhhdAo+ID4gPiB2YWx1ZSwgc2luY2Ug
-dmlkZW8gd2lsbCBhbHdheXMgYmUgemVyby4KPiA+IAo+ID4gTm90ZSB0aGF0IG9mX2dyYXBoX3Bh
-cnNlX2VuZHBvaW50IGludGVycHJldHMgdGhlIHBvcnQgbm9kZSdzIHJlZwo+ID4gcHJvcGVydHkg
-YXMgcG9ydCBpZC4gQW5kIHRoZSB1bml0IGFkZHJlc3MgcGFydCBvZiB0aGUgbm9kZSBuYW1lIHNo
-b3VsZAo+ID4gbWF0Y2ggdGhlIGZpcnN0IGFkZHJlc3MgaW4gdGhlIHJlZyBwcm9wZXJ0eS4KClRo
-aXMgaXMgbm90IHRoZSBjYXNlIGluIHZleHByZXNzLXYycC1jYTE1X2E3LmR0cy4KCj4gU28gdGhh
-dCdzIG5vdCBnb2luZyB0byB3b3JrIHZlcnkgd2VsbC4uLiBiZWNhdXNlIHRoZSBBUCByZWdpc3Rl
-ciBpcyBhCj4gYml0bWFzay4KPiAKPiBJIGd1ZXNzIHdlIGNvdWxkIHNwZWNpZnkgYSBub2RlIHVu
-aXQgYW5kIHJlZywgd2hpY2ggdGhlIGNvZGUgb3RoZXJ3aXNlCj4gaWdub3JlcywgYW5kIHNwZWNp
-ZnkgYSBwaGlsaXBwcyxhcC1tYXNrID0gcHJvcGVydHkgZm9yIHRoZSBhdWRpbyBwb3J0cwo+IGlu
-c3RlYWQuCgpBbHNvLCB0aGUgdmlkZW8gYW5kIGF1ZGlvIHBvcnRzIG11c3QgYmUgZGlzdGluZ3Vp
-c2hlZC4gVGhleSBjb3VsZCBiZQpkZWZpbmVkIGluIGRpZmZlcmVudCBwb3J0IGdyb3Vwcy4KCkV4
-YW1wbGUgZnJvbSB0aGUgQ3Vib3g6CgoJdmlkZW8tcG9ydHM6IHBvcnRzQDAgewoJCXBvcnQgewoJ
-CQl0ZGE5OTh4X3ZpZGVvOiBlbmRwb2ludCB7CgkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmxjZDBf
-MD47CgkJCQlueHAsdmlkZW8tcG9ydCA9IDwweDIzMDE0NT47CgkJCX07CgkJfTsKCX07CglhdWRp
-by1wb3J0czogcG9ydHNAMSB7CgkJcG9ydEAwIHsJCQkvKiBBUDEgPSBJMlMgKi8KCQkJdGRhOTk4
-eF9pMnM6IGVuZHBvaW50QDAgewoJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZhdWRpbzFfaTJzPjsK
-CQkJCW54cCxhdWRpby1wb3J0ID0gPDB4MDM+OwoJCQl9OwoJCX07CgkJcG9ydEAxIHsJCQkgLyog
-QVAyID0gUy9QRElGICovCgkJCXRkYTk5OHhfc3BkaWY6IGVuZHBvaW50QDEgewoJCQkJcmVtb3Rl
-LWVuZHBvaW50ID0gPCZhdWRpbzFfc3BkaWYxPjsKCQkJCW54cCxhdWRpby1wb3J0ID0gPDB4MDQ+
-OwoJCQl9OwoJCX07Cgl9OwoKVGhlIHBvcnQgdHlwZSBpcyBpZGVudGlmaWVkIGJ5IHRoZSBiaXQg
-QVAwLgoKLS0gCktlbiBhciBjJ2hlbnRhw7EJfAkgICAgICAqKiBCcmVpemggaGEgTGludXggYXRh
-diEgKioKSmVmCQl8CQlodHRwOi8vbW9pbmVqZi5mcmVlLmZyLwpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
-ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+--3Gf/FFewwPeBMqCJ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Sun, Jan 11, 2015 at 11:19:55PM +0800, Sneeker Yeh wrote:
+> > > > enable the quirk only for you. Isn't there a better way of enabling=
+ the
+> > > > quirk based off of revision detection couple with a look on GHWPARA=
+MS*
+> > > > registers ?
+> > > >
+> > > > What's tricking me is this claim that only config-free PHYs would be
+> > > > affected, why ?
+> > > >
+> > >
+> > > i'm still struggling now to try to get more information about this.
+> > > some security policy inside Fujitsu make me unable to access full
+> > > information of this errata today.
+> > >
+> > > Someday after i get enough information,
+> > > i shall take your suggestion here that seems better to incur quirk
+> > > dynamically via GHWPARAMS,
+> > > and then send it here again.
+> >
+> > ok, hopefully you'll find a way ;-)
+> >
+> > I got some update information here finally~
+> in case i express unclearly i also put a pdf:
+> https://drive.google.com/file/d/0B18MmcvvKjNNbDF6eEdHSzZCazA/view
+>=20
+> This issue is defined by a two-way race at disconnect, between
+> 1) class driver interrupt endpoint resheduling attempts if the ISR gave an
+> ep error event due to device detach (it would try 3 times)
+> 2) Disconnect interrupt on PORTSC_CSC, which is cleared by hub thread
+> asynchronously
+> 3) The hardware IP was configured in silicon with
+>        - DWC_USB3_SUSPEND_ON_DISCONNECT_EN=3D1 (this is an IP configurati=
+on
+
+yeah, aparently this is another configuration which is not exposed on
+HWPARAMS registers. Paul, can you confirm for us ? I couldn't find it on
+Databook on any of the HWPARAMS registers.
+
+> port whose state cannot be checked from software)
+>        - Synopsys IP version is < 3.00a
+
+heh, so pretty much everybody :-)
+
+>        The IP will auto-suspend itself on device detach with some
+> phy-specific interval after CSC is cleared by 2)
+>=20
+> If 2) and 3) complete before 1), the interrupts it expects will not be
+> generated by the autosuspended IP, leading to a deadlock. Even later
+> disconnection procedure would detect that corresponding urb is still
+> in-progress and issue a ep stop command, auto-suspended IP still won't
+> respond to that command.
+>=20
+> this defect would result in this when device detached:
+> -------------------
+> [   99.603544] usb 4-1: USB disconnect, device number 2
+> [  104.615254] xhci-hcd xhci-hcd.0.auto: xHCI host not responding to stop
+> endpoint command.
+> [  104.623362] xhci-hcd xhci-hcd.0.auto: Assuming host is dying, halting
+> host.
+> [  104.653261] xhci-hcd xhci-hcd.0.auto: Host not halted after 16000
+> microseconds.
+> [  104.660584] xhci-hcd xhci-hcd.0.auto: Non-responsive xHCI host is not
+> halting.
+> [  104.667817] xhci-hcd xhci-hcd.0.auto: Completing active URBs anyway.
+> [  104.674198] xhci-hcd xhci-hcd.0.auto: HC died; cleaning up
+> --------------------
+> As a result, when device detached, we desired to postpone "PORTCSC clear"
+> behind "disable slot". it's found that all executed ep command related to
+> disconnetion, are executed before "disable slot".
+
+Now this is all great information and they should all be part of your
+commit log and probably a big comment should be added to code as well.
+
+Thanks for going after all these details, now let's figure out a way to
+pass dwc3 revision to xhci, or maybe we pass just a flag for the quirk,
+something like:
+
+	if (dwc->revision < 3.00a && dwc->has_suspend_on_disconnect)
+		xhci_pdata.delay_portcsc_clear =3D true;
+
+or something similar to that.
+
+cheers
+
+--=20
+balbi
+
+--3Gf/FFewwPeBMqCJ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUtAJgAAoJEIaOsuA1yqREGw8P/jpIGLNqcZXQ98zMo0UbgeYx
+5Qsk4DCs3DzruXojtOo09RY9uGmFQybUyarlc9jEmuiBm/IZVLYKDGMggGb9qUY9
+o9o+T9G7oMCFN7IisMrFuc6KNQJARkXfKBjuHZOzRiEdaZE73ie7D6yUJa15ggzR
+h2Pnei2Dzmcu6rNCWjrZhLt05W/GAGUpFQX9DgW59DKU7GR+2YUviSlvNXyUy2wL
+WiFDhHRV25aGIFY9rH4sKTDvSRDJgqWV/gZLMwU0lZmCMfpgJA5hFECr5m0TWrbe
+SIgPE1nb8KIsbWM5qboFQg9Iue3OziuXsgTtoYg6SJd5WRw+EYl7LI/ayxJErTqJ
+GaamsnM+SG3QDlM1lS9+WsqP46unsFoXwu5lTFhkmjg9SwYMt57xX2Bm4VaKs0v0
+2ln/fxWjpFTpgQzeqWTejbnlQGqnQ/9PWxW4Eyd0REjIo1QrTeH+57O0PgvDx+X/
+K8hQMuZfL+LZPfcCOOy/ijHM0WUaWlAxS47J+QMWgvGr5TIX6ubLC4K4c/eAOD2w
+0jZntuhDY/k6C8MutWcSMSq9iqt4sCTCdCM3ts718EUMwk5eTsz4hrINL0dUR47l
+MZOHO/+ii4U1U9unVhLio1voSnail6VnkCrOGR3SZpRK2ClBHDupvJfdhs2gs5yg
+ND71GCunNsNVzmQWhQvu
+=HyRL
+-----END PGP SIGNATURE-----
+
+--3Gf/FFewwPeBMqCJ--
