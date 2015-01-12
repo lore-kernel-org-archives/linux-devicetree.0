@@ -1,82 +1,51 @@
-From: Eddie Huang <eddie.huang@mediatek.com>
-Subject: Re: [PATCH v3 3/4] arm64: dts: Add mediatek MT8173 SoC and
- evaluation board dts and Makefile
-Date: Mon, 12 Jan 2015 13:39:22 +0800
-Message-ID: <1421041162.2792.2.camel@mtksdaap41>
-References: <1419582417-4448-1-git-send-email-eddie.huang@mediatek.com>
- <1419582417-4448-4-git-send-email-eddie.huang@mediatek.com>
- <CABuKBe+=uTVFKCdpr7an-7jOZdQ91ERu0ObjfiW9fKv1CO1oAg@mail.gmail.com>
+From: Zhou Wang <wangzhou1@hisilicon.com>
+Subject: [PATCH v6 0/2] ARM: hip04: add GPIO support
+Date: Mon, 12 Jan 2015 15:05:10 +0800
+Message-ID: <1421046312-22170-1-git-send-email-wangzhou1@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CABuKBe+=uTVFKCdpr7an-7jOZdQ91ERu0ObjfiW9fKv1CO1oAg@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Mark Brown <broonie@linaro.org>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Robert Richter <rrichter@cavium.com>, srv_heupstream <srv_heupstream@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, "Joe.C" <yingjoe.chen@mediatek.com>, Thomas Gleixner <tglx@linutronix.de>, peter.maydell@linaro.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>YH Chen =?UTF-8?Q?=28=E9=99=B3=E6=98=B1=E8=B1=AA=29?= <y>
+Content-Type: text/plain
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Haojian Zhuang <haojian.zhuang@linaro.org>, Wei Xu <xuwei5@hisilicon.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Russell King <linux@arm.linux.org.uk>
+Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, liguozhu@hisilicon.com, Zhou Wang <wangzhou1@hisilicon.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Matthias,
+This series add the support for the GPIOs of Hisilicon Soc hip04. Hip04 uses
+synopsis' GPIO IP, and we use the dwapb GPIO driver here. This series add the
+corresponding dts. The default value of ARCH_NR_GPIOS is used to find gpio
+base here.
 
-Thanks your review, I will modify in next version.
+I resend this patchset with new E-mail address in signed-off-by.
 
+Change in v6:
+- Change E-mail address in signed-off-by to "wangzhou1@hisilicon.com"
+Change in v5:
+- Base on v3.19-rc1
+- Just use default value of ARCH_NR_GPIOS to find gpio base. Remove the new
+  added patch(3/4) in v4.
+Change in v4:
+- Delete "default 128 if ARCH_HIP04" in arch/arm/Kconfig
+- add a new patch to support find GPIO base number in increasing order
+- add gpio-number-forward property in snps gpio binding doc
+Change in v3:
+- Move CONFIG_GPIO_DWAPB to hisi_defconfig
+- Add CONFIG_GPIOLIB, CONFIG_GPIO_SYSFS in hisi_defconfig
+Change in v2:
+- Add select GPIO_DWAPB in arch/arm/mach-hisi/Kconfig
 
-On Sun, 2015-01-11 at 21:12 +0100, Matthias Brugger wrote:
-> 2014-12-26 9:26 GMT+01:00 Eddie Huang <eddie.huang@mediatek.com>:
-> > Add device tree support for MT8173 SoC and evaluation board based on it.
-> >
-> > Signed-off-by: Eddie Huang <eddie.huang@mediatek.com>
-> > ---
-> >  arch/arm64/boot/dts/Makefile                |   1 +
-> >  arch/arm64/boot/dts/mediatek/Makefile       |   5 +
-> >  arch/arm64/boot/dts/mediatek/mt8173-evb.dts |  34 ++++++
-> >  arch/arm64/boot/dts/mediatek/mt8173.dtsi    | 159 ++++++++++++++++++++++++++++
-> >  4 files changed, 199 insertions(+)
-> >  create mode 100644 arch/arm64/boot/dts/mediatek/Makefile
-> >  create mode 100644 arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-> >  create mode 100644 arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> >
-> > +
-> > +       soc {
-> > +               #address-cells = <2>;
-> > +               #size-cells = <2>;
-> > +               compatible = "simple-bus";
-> > +               ranges;
-> > +
-> > +               sysirq: intpol-controller@10200620 {
-> > +                       compatible = "mediatek,mt8173-sysirq", "mediatek,mt6577-sysirq";
-> 
-> Please update the dts bindings for sysirq and add mediatek,mt8173-sysirq.
-> Also check that the lines in this patch does not exceed the 80 character limit.
-> 
-> > +
-> > +               uart0: serial@11002000 {
-> > +                       compatible = "mediatek,mt8173-uart","mediatek,mt6577-uart";
-> 
-> Please update the dts binding documentation.
-> 
-> > +                       reg = <0 0x11002000 0 0x400>;
-> > +                       interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_LOW>;
-> > +                       clocks = <&uart_clk>;
-> > +               };
-> 
-> Please disable the uart ports in the dtsi and enable the one used by
-> the board in the dts.
-> See [0] and [1] on how to do this.
-> 
-> Apart from that, the series looks fine to me.
-> 
-> Thanks,
-> Matthias
-> 
-> [0] https://github.com/mbgg/linux-mediatek/commit/0714947369cdb2b9b8cc24aa07264d4b61ea4fd9
-> [1] https://github.com/mbgg/linux-mediatek/commit/ac00aa4dcd085e4cf01761095ec1e2a141f86f38
-> 
+Link for v4:
+- http://www.spinics.net/lists/arm-kernel/msg383883.html
+Link for v3:
+- http://www.spinics.net/lists/devicetree/msg60324.html
+
+Zhou Wang (2):
+  ARM: hip04: add GPIO configure in hisi_defconfig
+  ARM: dts: hip04: add GPIO pieces
+
+ arch/arm/boot/dts/hip04.dtsi    | 75 +++++++++++++++++++++++++++++++++++++++++
+ arch/arm/configs/hisi_defconfig |  1 +
+ 2 files changed, 76 insertions(+)
+
+-- 
+1.9.1
+
