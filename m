@@ -1,33 +1,104 @@
-From: Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH 4/5] PCI: qcom: Add Qualcomm PCIe controller driver
-Date: Mon, 12 Jan 2015 11:20:29 -0700
-Message-ID: <20150112182029.GA2776@google.com>
-References: <1418404441-5518-1-git-send-email-svarbanov@mm-sol.com>
- <1418404441-5518-5-git-send-email-svarbanov@mm-sol.com>
+From: Alexander Graf <agraf@suse.de>
+Subject: Re: [PATCH net-next v11 3/3] net: hisilicon: new hip04 ethernet driver
+Date: Mon, 12 Jan 2015 19:25:22 +0100
+Message-ID: <54B41192.3030400@suse.de>
+References: <1421049832-6224-1-git-send-email-dingtianhong@huawei.com> <1421049832-6224-4-git-send-email-dingtianhong@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1418404441-5518-5-git-send-email-svarbanov@mm-sol.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stanimir Varbanov <svarbanov@mm-sol.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1421049832-6224-4-git-send-email-dingtianhong@huawei.com>
+Sender: netdev-owner@vger.kernel.org
+To: Ding Tianhong <dingtianhong@huawei.com>, arnd@arndb.de, robh+dt@kernel.org, davem@davemloft.net, grant.likely@linaro.org
+Cc: sergei.shtylyov@cogentembedded.com, linux-arm-kernel@lists.infradead.org, eric.dumazet@gmail.com, xuwei5@hisilicon.com, zhangfei.gao@linaro.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux@arm.linux.org.uk
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 12, 2014 at 07:14:00PM +0200, Stanimir Varbanov wrote:
-> The PCIe driver reuse the Designware common code for host
-> and MSI initialization, and also program the Qualcomm
-> application specific registers.
+On 12.01.15 09:03, Ding Tianhong wrote:
+> Support Hisilicon hip04 ethernet driver, including 100M / 1000M controller.
+> The controller has no tx done interrupt, reclaim xmitted buffer in the poll.
 > 
-> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
+> v11: Add ethtool support for tx coalecse getting and setting, the xmit_more
+> is not supported for this patch, but I think it could work for hip04,
+> will support it later after some tests for performance better.
+> 
+> Here are some performance test results by ping and iperf(add tx_coalesce_frames/users),
+> it looks that the performance and latency is more better by tx_coalesce_frames/usecs.
+> 
+> - Before:
+> $ ping 192.168.1.1 ...
+> --- 192.168.1.1 ping statistics ---
+
+Writing --- directly into your patch description is usually a pretty bad
+idea. Git am cuts off everything that comes after --- so your patch
+description ends here without manual intervention ;).
+
+> 24 packets transmitted, 24 received, 0% packet loss, time 22999ms
+> rtt min/avg/max/mdev = 0.180/0.202/0.403/0.043 ms
+> 
+> $ iperf -c 192.168.1.1 ...
+> [ ID] Interval       Transfer     Bandwidth
+> [  3]  0.0- 1.0 sec   115 MBytes   945 Mbits/sec
+> 
+> - After:
+> $ ping 192.168.1.1 ...
+> --- 192.168.1.1 ping statistics ---
+> 24 packets transmitted, 24 received, 0% packet loss, time 22999ms
+> rtt min/avg/max/mdev = 0.178/0.190/0.380/0.041 ms
+> 
+> $ iperf -c 192.168.1.1 ...
+> [ ID] Interval       Transfer     Bandwidth
+> [  3]  0.0- 1.0 sec   115 MBytes   965 Mbits/sec
+> 
+> v10: According David Miller and Arnd Bergmann's suggestion, add some modification
+
+Version history however should go after a --- line, so that it doesn't
+show up in the patch description in the tree.
+
+> for v9 version
+> - drop the workqueue
+> - batch cleanup based on tx_coalesce_frames/usecs for better throughput
+> - use a reasonable default tx timeout (200us, could be shorted
+>   based on measurements) with a range timer
+> - fix napi poll function return value
+> - use a lockless queue for cleanup
+> 
+> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Ding Tianhong <dingtianhong@huawei.com>
 > ---
->  drivers/pci/host/Kconfig     |    9 +
->  drivers/pci/host/Makefile    |    1 +
->  drivers/pci/host/pcie-qcom.c |  415 ++++++++++++++++++++++++++++++++++++++++++
 
-Hi Stanimir,
 
-Can you also add a MAINTAINERS update so I'll know who should ack changes
-to this driver?
+[...]
 
-Bjorn
+> +static int hip04_remove(struct platform_device *pdev)
+> +{
+> +	struct net_device *ndev = platform_get_drvdata(pdev);
+> +	struct hip04_priv *priv = netdev_priv(ndev);
+> +	struct device *d = &pdev->dev;
+> +
+> +	if (priv->phy)
+> +		phy_disconnect(priv->phy);
+> +
+> +	hip04_free_ring(ndev, d);
+> +	unregister_netdev(ndev);
+> +	free_irq(ndev->irq, ndev);
+> +	of_node_put(priv->phy_node);
+> +	cancel_work_sync(&priv->tx_timeout_task);
+> +	free_netdev(ndev);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id hip04_mac_match[] = {
+> +	{ .compatible = "hisilicon,hip04-mac" },
+> +	{ }
+> +};
+
+This is missing
+
+MODULE_DEVICE_TABLE(of, hip04_mac_match);
+
+to enable automatic module loading, no?
+
+
+Alex
