@@ -1,62 +1,56 @@
-From: Alexandre Courbot <gnurou@gmail.com>
-Subject: Re: [Patch v5 2/2] gpio: Document GPIO hogging mechanism
-Date: Tue, 13 Jan 2015 06:43:33 +0900
-Message-ID: <CAAVeFuLF7EVR-Xta=eNegmGWX9AFu9xmyhXisGCTwc1ds3t1cA@mail.gmail.com>
-References: <1419019671-25377-1-git-send-email-bparrot@ti.com>
- <1419019671-25377-3-git-send-email-bparrot@ti.com> <CACRpkdb7Wq7-rBypqPkefejY5Qfq_KKx91H+DxKWv-TM2y04bg@mail.gmail.com>
- <20150112163902.GE5834@ti.com>
+From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Subject: Re: [PATCH v8 2/4] fpga manager: add sysfs interface document
+Date: Mon, 12 Jan 2015 14:43:14 -0700
+Message-ID: <20150112214314.GA18610@obsidianresearch.com>
+References: <1420575219-27061-1-git-send-email-atull@opensource.altera.com>
+ <1420575219-27061-3-git-send-email-atull@opensource.altera.com>
+ <20150107084819.GA1887@amd>
+ <alpine.DEB.2.02.1501091302370.30067@linuxheads99>
+ <20150109205643.GA5761@amd>
+ <20150112210134.687176ed@lxorguk.ukuu.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150112163902.GE5834@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Benoit Parrot <bparrot@ti.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Jiri Prchal <jiri.prchal@aksignal.cz>, Pantelis Antoniou <panto@antoniou-consulting.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150112210134.687176ed@lxorguk.ukuu.org.uk>
+Sender: linux-doc-owner@vger.kernel.org
+To: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
+Cc: Pavel Machek <pavel@denx.de>, atull <atull@opensource.altera.com>, gregkh@linuxfoundation.org, hpa@zytor.com, monstr@monstr.eu, michal.simek@xilinx.com, rdunlap@infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, pantelis.antoniou@konsulko.com, robh+dt@kernel.org, grant.likely@linaro.org, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, broonie@kernel.org, philip@balister.org, rubini@gnudd.com, s.trumtrar@pengutronix.de, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, balbi@ti.com, m.chehab@samsung.com, davidb@codeaurora.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, linus.walleij@linaro.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devel@driverdev.osuosl.org, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yv
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 13, 2015 at 1:39 AM, Benoit Parrot <bparrot@ti.com> wrote:
-> Linus Walleij <linus.walleij@linaro.org> wrote on Mon [2015-Jan-12 11:20:14 +0100]:
->> On Fri, Dec 19, 2014 at 9:07 PM, Benoit Parrot <bparrot@ti.com> wrote:
->>
->> > Add GPIO hogging documentation to gpio.txt
->> >
->> > Signed-off-by: Benoit Parrot <bparrot@ti.com>
->> > Reviewed-by: Alexandre Courbot <acourbot@nvidia.com>
->>
->> This is starting to look good ...
->>
->> > +               line_b {
->> > +                       gpio-hog;
->> > +                       gpios = <6 0>;
->> > +                       state = "output-low";
->>
->> I don't like the state string.
->>
->> Instead have boolean properties for all states.
->>
->> line_b {
->>     gpio-hog;
->>     gpios = <6 0>;
->>     output-low;
->>     line-name = "foo-bar-gpio";
->> }
->>
->> Then use of_property_read_bool() in the code to check which
->> state is to be selected intially. You can check that no mutually
->> exclusive state are selected, I don't like that an arbitrary string
->> select the state like that, if we do it that way an enumerator would
->> be better, I prefer bools.
->
-> I am sorry but that is how it was originally in the first patch.
-> Alexandre's review comment suggested this method in [1] and [2] (below).
->
-> Alexandre, any comments?
->
-> [1] http://marc.info/?l=linux-gpio&m=141456662426151&w=2
->
-> [2] http://marc.info/?l=linux-gpio&m=141715982424744&w=2
+On Mon, Jan 12, 2015 at 09:01:34PM +0000, One Thousand Gnomes wrote:
+> There are plenty of people today who treat the FPGA as an entirely
+> dynamic resource. It's not like flashing a controller, its near
+> immediate.
 
-When Linus and I are in conflict, follow Linus. Arnd's suggestion of
-having enums defined in (IIUC) include/dt-bindings/gpio and using them
-sounds good to me too and might make everyone happy (no possibility of
-conflicting definitions + no strings). Linus, could you comment on it?
+But this is a completely different use case. Remember, there are
+*megabytes* of internal state in a FPGA, and it isn't really feasible
+to dump/restore that state.
+
+It is one thing to context switch a maths algorithm that is built to
+be stateless, it is quite another to context switch between, say an
+ethernet core with an operating Linux Net driver doing DMA and a maths
+algorithm.
+
+A DT overlay approach where the overlay has to be unloaded to 'free'
+the FPGA makes alot of sense to me for the stateful kernel driver
+environment, and open/close/etc makes alot of sense for the stateless
+switchable userspace environment - other than sharing configuration
+code, is there any overlap between these use cases????
+
+> Its completely dynamic and it will get more so as we switch from the
+> painful world of VHDL and friends to high level parallel aware language
+> compilers for FPGAs and everyone will be knocking up quick FPGA hacks.
+
+Only for some users. In my world FPGAs are filled with bus interface
+logic, ethernet controllers, memory controllers, packet processing
+engines, etc. This is all incredibly stateful - both in the FPGA
+itself, and in the Linux side w/ drviers. It certainly will not ever
+work in the model you are talking about.
+
+Even if the digital state could somehow be frozen, dumped and
+restored, all the FPGA external interface logic has *ANALOG* state
+that cannot ever be dump/restored. It just isn't feasible for that
+class of application.
+
+Jason
