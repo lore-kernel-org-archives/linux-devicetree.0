@@ -1,562 +1,72 @@
-From: Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V2 1/1] iio: Added Capella cm3232 ambient light sensor driver.
-Date: Mon, 12 Jan 2015 17:29:42 +0200
-Message-ID: <CAEnQRZDEfiptt1hL2jtNupsODOYXhRBLmgsqVFYsZkqOF8oTyA@mail.gmail.com>
-References: <1420582187-11499-1-git-send-email-ktsai@capellamicro.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: GIC_CPU_MASK_SIMPLE(8)" on big.LITTLE?
+Date: Mon, 12 Jan 2015 16:33:00 +0100
+Message-ID: <CAMuHMdUDQXn7_BkoYejZL1XL3-xuFYksMRWwT=egq-RO+Hd9Ag@mail.gmail.com>
+References: <CAMuHMdWQQBECdXT1pbChT31y8YdHzcjvTGR1A2HhtdtwpRmdPQ@mail.gmail.com>
+	<20150112144514.GL823@e106497-lin.cambridge.arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1420582187-11499-1-git-send-email-ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org>
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Archana Patni <archana.patni-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20150112144514.GL823@e106497-lin.cambridge.arm.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Liviu Dudau <Liviu.Dudau@arm.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Marc Zyngier <Marc.Zyngier@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 7, 2015 at 12:09 AM, Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org> wrote:
-> CM3232 is an advanced ambient light sensor with I2C protocol interface.
-> The I2C slave address is internally hardwired as 0x10 (7-bit).  Writing
-> to configure register is byte mode, but reading ALS register requests to
-> use word mode for 16-bit resolution.
->
-> v2:
-> Removed unused CM3232_CMD_ALS_HS.
-> Modified cm3232_als_info structure.  Removed id field.
-> Modified cm3232_chip structure.
-> Merged CM3232_als_it_bits and CM3232_als_it_values to cm3232_it_scale.
-> Removed mutex lock.
-> Renamed als_raw to regs_als.  Moved it to cm3232_chip structure.
-> Modified cm3232_read_als_it() and cm3232_write_als_it() to support val2.
->
-> Thanks comments from Jeremiah Mahler, Peter Meerwald, Daniel Baluta,
-> and Joe Perches.
->
-> v1:
-> Added cm3232.c to support Capella Microsystems CM3232 Ambient Light
-> Sensor.
->
+Hi Liviu,
 
-Usually, we keep history out of the commit message - below the scissor line.
+On Mon, Jan 12, 2015 at 3:45 PM, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
+> On Mon, Jan 05, 2015 at 10:37:47AM +0000, Geert Uytterhoeven wrote:
+>> A while ago, I wondered:
+>>
+>> | It's my understanding GIC_CPU_MASK_SIMPLE should reflect the actual number
+>> | of CPU cores the interrupt is wired too. Is that correct?
+>> |
+>> | [Fixes for incorrect masks on shmobile]
+>> |
+>> | Should it be "GIC_CPU_MASK_SIMPLE(8)" on big.LITTLE configurations
+>> | with four Cortex-A15 cores and four Cortex-A7 cores?
+>> | Or should the interrupts be delivered to the four Cortex-A15 cores
+>> | only by default?
+>> |
+>> | Note that incorrect masks for GIC PPI interrupts are not limited to
+>> | shmobile. Presumably the interrupt specifiers got copied around a lot,
+>> | cfr. the proliferation of "GIC_CPU_MASK_SIMPLE(4)" (and the older
+>> | hardcoded "0xf0x" variant) in various dtsi files, not always limited to
+>> | quad-core CPUs.
+>>
+>> In the mean time, arch/arm64/boot/dts/arm/juno.dts got added, which has 2 A57
+>> cores and 4 A53 cores, and uses GIC_CPU_MASK_SIMPLE(6), so it seems like
+>> my two RFC patches to use GIC_CPU_MASK_SIMPLE(8) for 4 A15 cores and 4
+>> A7 cores are actually correct?
+>>
+>> Thanks for your comments!
+>>
+>> References:
+>>   1. Original RFC series:
+>>      [PATCH/RFC 0/4] ARM: shmobile: Correct masks for GIC PPI interrupts
+>>      http://lists.infradead.org/pipermail/linux-arm-kernel/2014-November/306743.html
+>>   2. RFC patches:
+>>        a. [PATCH/RFC 3/4] ARM: shmobile: r8a7790: Correct mask for GIC
+>> PPI interrupts
+>>           http://lists.infradead.org/pipermail/linux-arm-kernel/2014-November/306741.html
+>>        b. [PATCH/RFC 4/4] ARM: shmobile: r8a73a4: Correct mask for GIC
+>> PPI interrupts
+>>           http://lists.infradead.org/pipermail/linux-arm-kernel/2014-November/306740.html
 
-> Signed-off-by: Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org>
-> ---
+> Your patches are correct, the mask should reflect the number of CPUs present *and* they way
+> they are wired in the GIC. AFAIK, HW designers have been sane so far and wired the CPUs
+> in sequence in the GIC, but I lack inside knowledge of the shmobile design.
 
-<here is the place for adding changes since last versions>
+Thanks, I will resend them.
 
->  .../devicetree/bindings/i2c/trivial-devices.txt    |   1 +
->  MAINTAINERS                                        |   6 +
->  drivers/iio/light/Kconfig                          |  11 +
->  drivers/iio/light/Makefile                         |   1 +
->  drivers/iio/light/cm3232.c                         | 411 +++++++++++++++++++++
->  5 files changed, 430 insertions(+)
->  create mode 100644 drivers/iio/light/cm3232.c
->
-> diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-> index 9f4e382..572a7c4 100644
-> --- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-> +++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-> @@ -34,6 +34,7 @@ atmel,24c512          i2c serial eeprom  (24cxx)
->  atmel,24c1024          i2c serial eeprom  (24cxx)
->  atmel,at97sc3204t      i2c trusted platform module (TPM)
->  capella,cm32181                CM32181: Ambient Light Sensor
-> +capella,cm3232         CM3232: Ambient Light Sensor
->  catalyst,24c32         i2c serial eeprom
->  cirrus,cs42l51         Cirrus Logic CS42L51 audio codec
->  dallas,ds1307          64 x 8, Serial, I2C Real-Time Clock
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index ddb9ac8..06a613a 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -2378,6 +2378,12 @@ F:       security/capability.c
->  F:     security/commoncap.c
->  F:     kernel/capability.c
->
-> +CAPELLA MICROSYSTEMS LIGHT SENSOR DRIVER
-> +M:     Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org>
-> +S:     Maintained
-> +F:     drivers/iio/light/cm*
-> +F:     Documentation/devicetree/bindings/i2c/trivial-devices.txt
-> +
->  CC2520 IEEE-802.15.4 RADIO DRIVER
->  M:     Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->  L:     linux-wpan-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> diff --git a/drivers/iio/light/Kconfig b/drivers/iio/light/Kconfig
-> index 5bea821..cd5028e 100644
-> --- a/drivers/iio/light/Kconfig
-> +++ b/drivers/iio/light/Kconfig
-> @@ -48,6 +48,17 @@ config CM32181
->          To compile this driver as a module, choose M here:
->          the module will be called cm32181.
->
-> +config CM3232
-> +       depends on I2C
-> +       tristate "CM3232 ambient light sensor"
-> +       help
-> +        Say Y here if you use cm3232.
-> +        This option enables ambient light sensor using
-> +        Capella Microsystems cm3232 device driver.
-> +
-> +        To compile this driver as a module, choose M here:
-> +        the module will be called cm3232.
-> +
->  config CM36651
->         depends on I2C
->         tristate "CM36651 driver"
-> diff --git a/drivers/iio/light/Makefile b/drivers/iio/light/Makefile
-> index 47877a3..f2c8d55 100644
-> --- a/drivers/iio/light/Makefile
-> +++ b/drivers/iio/light/Makefile
-> @@ -7,6 +7,7 @@ obj-$(CONFIG_ADJD_S311)         += adjd_s311.o
->  obj-$(CONFIG_AL3320A)          += al3320a.o
->  obj-$(CONFIG_APDS9300)         += apds9300.o
->  obj-$(CONFIG_CM32181)          += cm32181.o
-> +obj-$(CONFIG_CM3232)           += cm3232.o
->  obj-$(CONFIG_CM36651)          += cm36651.o
->  obj-$(CONFIG_GP2AP020A00F)     += gp2ap020a00f.o
->  obj-$(CONFIG_HID_SENSOR_ALS)   += hid-sensor-als.o
-> diff --git a/drivers/iio/light/cm3232.c b/drivers/iio/light/cm3232.c
-> new file mode 100644
-> index 0000000..b4b7d1b
-> --- /dev/null
-> +++ b/drivers/iio/light/cm3232.c
-> @@ -0,0 +1,411 @@
-> +/*
-> + * CM3232 Ambient Light Sensor
-> + *
-> + * Copyright (C) 2014-2015 Capella Microsystems Inc.
-> + * Author: Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms of the GNU General Public License version 2, as published
-> + * by the Free Software Foundation.
-> + *
-> + * IIO driver for CM3232 (7-bit I2C slave address 0x10).
-> + *
-> + */
-> +
-> +#include <linux/delay.h>
-> +#include <linux/err.h>
-> +#include <linux/i2c.h>
-> +#include <linux/module.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/regulator/consumer.h>
-> +#include <linux/iio/iio.h>
-> +#include <linux/iio/sysfs.h>
-> +#include <linux/iio/events.h>
+Gr{oetje,eeting}s,
 
-Why do you need to include events.h?
+                        Geert
 
-> +#include <linux/init.h>
-> +
-> +/* Registers Address */
-> +#define CM3232_REG_ADDR_CMD 0x00
-> +#define CM3232_REG_ADDR_ALS 0x50
-> +#define CM3232_REG_ADDR_ID 0x53
-> +
-> +/* CMD register */
-> +#define CM3232_CMD_ALS_DISABLE BIT(0)
-> +
-> +#define CM3232_CMD_ALS_IT_SHIFT 2
-> +#define CM3232_CMD_ALS_IT_MASK (0x07 << CM3232_CMD_ALS_IT_SHIFT)
-> +#define CM3232_CMD_ALS_IT_DEFAULT (0x01 << CM3232_CMD_ALS_IT_SHIFT)
-> +
-> +#define        CM3232_CMD_ALS_RESET BIT(6)
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Use only one space between define and CM3232_ ...
-
-> +
-> +#define CM3232_CMD_DEFAULT CM3232_CMD_ALS_IT_DEFAULT
-> +
-> +#define        CM3232_HW_ID 0x32
-> +#define CM3232_CALIBSCALE_DEFAULT 100000
-> +#define CM3232_CALIBSCALE_RESOLUTION 100000
-> +#define CM3232_MLUX_PER_LUX 1000
-> +
-> +#define CM3232_MLUX_PER_BIT_DEFAULT 64
-> +#define CM3232_MLUX_PER_BIT_BASE_IT 100000
-> +
-> +struct cm3232_it_scale {
-> +       int val;
-> +       int val2;
-> +       u8 it;
-> +};
-> +
-> +static const struct cm3232_it_scale cm3232_als_it_scales[] = {
-> +       {0, 100000, 0}, /* 0.100000 */
-> +       {0, 200000, 1}, /* 0.200000 */
-> +       {0, 400000, 2}, /* 0.400000 */
-> +       {0, 800000, 3}, /* 0.800000 */
-> +       {1, 600000, 4}, /* 1.600000 */
-> +       {3, 200000, 5}, /* 3.200000 */
-> +};
-> +
-> +struct cm3232_als_info {
-> +       u8 regs_cmd_default;
-> +       int calibscale;
-> +       int mlux_per_bit;
-> +       int mlux_per_bit_base_it;
-> +};
-> +
-> +static struct cm3232_als_info cm3232_als_info_default = {
-> +       .regs_cmd_default = CM3232_CMD_DEFAULT,
-> +       .calibscale = CM3232_CALIBSCALE_DEFAULT,
-> +       .mlux_per_bit = CM3232_MLUX_PER_BIT_DEFAULT,
-> +       .mlux_per_bit_base_it = CM3232_MLUX_PER_BIT_BASE_IT,
-> +};
-> +
-> +struct cm3232_chip {
-> +       struct i2c_client *client;
-> +       struct cm3232_als_info *als_info;
-> +       u8 regs_cmd;
-> +       u16 regs_als;
-> +};
-> +
-> +static int cm3232_get_lux(struct cm3232_chip *chip);
-> +static int cm3232_read_als_it(struct cm3232_chip *chip, int *val, int *val2);
-> +
-> +/**
-> + * cm3232_reg_init() - Initialize CM3232
-> + * @chip:      pointer of struct cm3232.
-> + *
-> + * Check and initialize CM3232 ambient light sensor.
-> + *
-> + * Return: 0 for success; otherwise for error code.
-> + */
-> +static int cm3232_reg_init(struct cm3232_chip *chip)
-> +{
-> +       struct i2c_client *client = chip->client;
-> +       s32 ret;
-> +
-> +       chip->als_info = &cm3232_als_info_default;
-> +
-> +       /* Identify device */
-> +       ret = i2c_smbus_read_word_data(client, CM3232_REG_ADDR_ID);
-> +       if (ret < 0)
-> +               return ret;
-> +       if ((ret & 0xFF) != CM3232_HW_ID)
-> +               return -ENODEV;
-> +
-> +       /* Disable and reset device */
-> +       chip->regs_cmd = CM3232_CMD_ALS_DISABLE | CM3232_CMD_ALS_RESET;
-> +       ret = i2c_smbus_write_byte_data(client, CM3232_REG_ADDR_CMD,
-> +                               chip->regs_cmd);
-> +       if (ret < 0)
-> +               return ret;
-> +
-> +       /* Register default value */
-> +       chip->regs_cmd = chip->als_info->regs_cmd_default;
-> +
-> +       /* Configure register */
-> +       ret = i2c_smbus_write_byte_data(client, CM3232_REG_ADDR_CMD,
-> +                               chip->regs_cmd);
-> +       if (ret < 0)
-> +               return ret;
-> +
-> +       return 0;
-> +}
-> +
-> +/**
-> + *  cm3232_read_als_it() - Get sensor integration time
-> + *  @chip:     pointer of struct cm3232
-> + *  @val:      pointer of int to load the integration (sec).
-> + *  @val2:     pointer of int to load the integration time (microsecond).
-> + *
-> + *  Report the current integration time.
-> + *
-> + *  Return: IIO_VAL_INT_PLUS_MICRO for success, otherwise -EINVAL.
-> + */
-> +static int cm3232_read_als_it(struct cm3232_chip *chip, int *val, int *val2)
-> +{
-> +       u16 als_it;
-> +       int i;
-> +
-> +       als_it = chip->regs_cmd;
-> +       als_it &= CM3232_CMD_ALS_IT_MASK;
-> +       als_it >>= CM3232_CMD_ALS_IT_SHIFT;
-> +       for (i = 0; i < ARRAY_SIZE(cm3232_als_it_scales); i++) {
-> +               if (als_it == cm3232_als_it_scales[i].it) {
-> +                       *val = cm3232_als_it_scales[i].val;
-> +                       *val2 = cm3232_als_it_scales[i].val2;
-> +                       return IIO_VAL_INT_PLUS_MICRO;
-> +               }
-> +       }
-> +
-> +       return -EINVAL;
-> +}
-> +
-> +/**
-> + * cm3232_write_als_it() - Write sensor integration time
-> + * @chip:      pointer of struct cm3232.
-> + * @val:       integration time in second.
-> + * @val2:      integration time in microsecond.
-> + *
-> + * Convert integration time to sensor value.
-> + *
-> + * Return: i2c_smbus_write_byte_data command return value.
-> + */
-> +static int cm3232_write_als_it(struct cm3232_chip *chip, int val, int val2)
-> +{
-> +       struct i2c_client *client = chip->client;
-> +       u16 als_it;
-> +       int i;
-> +       s32 ret;
-> +
-> +       for (i = 0; i < ARRAY_SIZE(cm3232_als_it_scales); i++) {
-> +               if (val == cm3232_als_it_scales[i].val &&
-> +                       val2 == cm3232_als_it_scales[i].val2) {
-> +
-> +                       als_it = cm3232_als_it_scales[i].it;
-> +                       als_it <<= CM3232_CMD_ALS_IT_SHIFT;
-> +
-> +                       chip->regs_cmd &= ~CM3232_CMD_ALS_IT_MASK;
-> +                       chip->regs_cmd |= als_it;
-> +                       ret = i2c_smbus_write_byte_data(client,
-> +                               CM3232_REG_ADDR_CMD,
-> +                               chip->regs_cmd);
-> +                       if (ret < 0)
-> +                               return ret;
-
-I see one problem here. If I2C write fails, you will still end up with
-an updated
-value of chip->regs_cmd. Then, a user reading integration time will get invalid
-information.
-
-> +
-> +                       return 0;
-> +               }
-> +       }
-> +       return -ERANGE;
-> +}
-> +
-> +/**
-> + * cm3232_get_lux() - report current lux value
-> + * @chip:      pointer of struct cm3232.
-> + *
-> + * Convert sensor data to lux.  It depends on integration
-> + * time and calibscale variable.
-
-Would you care to add more details on how sensor data is converted to lux.
-Reading the code its not very clear for me.
-
-Explaining the following macros CM3232_CALIBSCALE_DEFAULT,
-CM3232_CALIBSCALE_RESOLUTION,  CM3232_MLUX_PER_BIT_DEFAULT,
-CM3232_MLUX_PER_BIT_BASE_IT will do it.
-
-
-> +
-> + *
-> + * Return: Zero or positive value is lux, otherwise error code.
-> + */
-> +static int cm3232_get_lux(struct cm3232_chip *chip)
-> +{
-> +       struct i2c_client *client = chip->client;
-> +       struct cm3232_als_info *als_info = chip->als_info;
-> +       int ret;
-> +       struct cm3232_it_scale scale;
-> +       int als_it;
-> +       u64 lux;
-> +
-> +       /* Calculate mlux per bit based on als_it */
-> +       ret = cm3232_read_als_it(chip, &scale.val, &scale.val2);
-> +       if (ret < 0)
-> +               return -EINVAL;
-> +       als_it = scale.val * 1000000 + scale.val2;
-> +       lux = (__force u64)als_info->mlux_per_bit;
-> +       lux *= als_info->mlux_per_bit_base_it;
-> +       lux = div_u64(lux, als_it);
-> +
-> +       ret = i2c_smbus_read_word_data(
-> +                               client,
-> +                               CM3232_REG_ADDR_ALS);
-> +       if (ret < 0)
-> +               return ret;
-> +
-> +       chip->regs_als = (u16)ret;
-> +       lux *= chip->regs_als;
-> +       lux *= als_info->calibscale;
-> +       lux = div_u64(lux, CM3232_CALIBSCALE_RESOLUTION);
-> +       lux = div_u64(lux, CM3232_MLUX_PER_LUX);
-> +
-> +       if (lux > 0xFFFF)
-> +               lux = 0xFFFF;
-> +
-> +       return (int)lux;
-> +}
-> +
-> +static int cm3232_read_raw(struct iio_dev *indio_dev,
-> +                       struct iio_chan_spec const *chan,
-> +                       int *val, int *val2, long mask)
-> +{
-> +       struct cm3232_chip *chip = iio_priv(indio_dev);
-> +       struct cm3232_als_info *als_info = chip->als_info;
-> +       int ret;
-> +
-> +       switch (mask) {
-> +       case IIO_CHAN_INFO_PROCESSED:
-> +               ret = cm3232_get_lux(chip);
-> +               if (ret < 0)
-> +                       return ret;
-> +               *val = ret;
-> +               return IIO_VAL_INT;
-> +       case IIO_CHAN_INFO_CALIBSCALE:
-> +               *val = als_info->calibscale;
-> +               return IIO_VAL_INT;
-> +       case IIO_CHAN_INFO_INT_TIME:
-> +               *val = 0;
-> +               return cm3232_read_als_it(chip, val, val2);
-> +       }
-> +
-> +       return -EINVAL;
-> +}
-> +
-> +static int cm3232_write_raw(struct iio_dev *indio_dev,
-> +                       struct iio_chan_spec const *chan,
-> +                       int val, int val2, long mask)
-> +{
-> +       struct cm3232_chip *chip = iio_priv(indio_dev);
-> +       struct cm3232_als_info *als_info = chip->als_info;
-> +
-> +       switch (mask) {
-> +       case IIO_CHAN_INFO_CALIBSCALE:
-> +               als_info->calibscale = val;
-> +               return val;
-> +       case IIO_CHAN_INFO_INT_TIME:
-> +               return cm3232_write_als_it(chip, val, val2);
-> +       }
-> +
-> +       return -EINVAL;
-> +}
-> +
-> +/**
-> + * cm3232_get_it_available() - Get available ALS IT value
-> + * @dev:       pointer of struct device.
-> + * @attr:      pointer of struct device_attribute.
-> + * @buf:       pointer of return string buffer.
-> + *
-> + * Display the available integration time in second.
-> + *
-> + * Return: string length.
-> + */
-> +static ssize_t cm3232_get_it_available(struct device *dev,
-> +                       struct device_attribute *attr, char *buf)
-> +{
-> +       int i, len;
-> +
-> +       for (i = 0, len = 0; i < ARRAY_SIZE(cm3232_als_it_scales); i++)
-> +               len += scnprintf(buf + len, PAGE_SIZE - len, "%u.%06u ",
-> +                       cm3232_als_it_scales[i].val,
-> +                       cm3232_als_it_scales[i].val2);
-> +       return len + scnprintf(buf + len, PAGE_SIZE - len, "\n");
-> +}
-> +
-> +static const struct iio_chan_spec cm3232_channels[] = {
-> +       {
-> +               .type = IIO_LIGHT,
-> +               .info_mask_separate =
-> +                       BIT(IIO_CHAN_INFO_PROCESSED) |
-> +                       BIT(IIO_CHAN_INFO_CALIBSCALE) |
-> +                       BIT(IIO_CHAN_INFO_INT_TIME),
-> +       }
-> +};
-> +
-> +static IIO_DEVICE_ATTR(in_illuminance_integration_time_available,
-> +                       S_IRUGO, cm3232_get_it_available, NULL, 0);
-> +
-> +static struct attribute *cm3232_attributes[] = {
-> +       &iio_dev_attr_in_illuminance_integration_time_available.dev_attr.attr,
-> +       NULL,
-> +};
-> +
-> +static const struct attribute_group cm3232_attribute_group = {
-> +       .attrs = cm3232_attributes
-> +};
-> +
-> +static const struct iio_info cm3232_info = {
-> +       .driver_module          = THIS_MODULE,
-> +       .read_raw               = &cm3232_read_raw,
-> +       .write_raw              = &cm3232_write_raw,
-> +       .attrs                  = &cm3232_attribute_group,
-> +};
-> +
-> +static int cm3232_probe(struct i2c_client *client,
-> +                       const struct i2c_device_id *id)
-> +{
-> +       struct cm3232_chip *chip;
-> +       struct iio_dev *indio_dev;
-> +       int ret;
-> +
-> +       indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*chip));
-> +       if (!indio_dev)
-> +               return -ENOMEM;
-> +
-> +       chip = iio_priv(indio_dev);
-> +       i2c_set_clientdata(client, indio_dev);
-> +       chip->client = client;
-> +
-> +       indio_dev->dev.parent = &client->dev;
-> +       indio_dev->channels = cm3232_channels;
-> +       indio_dev->num_channels = ARRAY_SIZE(cm3232_channels);
-> +       indio_dev->info = &cm3232_info;
-> +       if (id && id->name)
-> +               indio_dev->name = id->name;
-> +       else
-> +               indio_dev->name = (char *)dev_name(&client->dev);
-> +       indio_dev->modes = INDIO_DIRECT_MODE;
-> +
-> +       ret = cm3232_reg_init(chip);
-> +       if (ret) {
-> +               dev_err(&client->dev,
-> +                       "%s: register init failed\n",
-> +                       __func__);
-> +               return ret;
-> +       }
-> +
-> +       return iio_device_register(indio_dev);
-> +}
-> +
-> +static int cm3232_remove(struct i2c_client *client)
-> +{
-> +       struct iio_dev *indio_dev = i2c_get_clientdata(client);
-> +
-> +       i2c_smbus_write_byte_data(client, CM3232_REG_ADDR_CMD,
-> +               CM3232_CMD_ALS_DISABLE);
-> +
-> +       iio_device_unregister(indio_dev);
-> +       return 0;
-> +}
-> +
-> +static const struct i2c_device_id cm3232_id[] = {
-> +       {"cm3232", 0},
-> +       {}
-> +};
-> +
-> +MODULE_DEVICE_TABLE(i2c, cm3232_id);
-> +
-> +static const struct of_device_id cm3232_of_match[] = {
-> +       {.compatible = "capella,cm3232"},
-> +       {}
-> +};
-> +
-> +static struct i2c_driver cm3232_driver = {
-> +       .driver = {
-> +               .name   = "cm3232",
-> +               .owner  = THIS_MODULE,
-> +               .of_match_table = of_match_ptr(cm3232_of_match),
-> +       },
-> +       .id_table       = cm3232_id,
-> +       .probe          = cm3232_probe,
-> +       .remove         = cm3232_remove,
-> +};
-> +
-> +module_i2c_driver(cm3232_driver);
-> +
-> +MODULE_AUTHOR("Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org>");
-> +MODULE_DESCRIPTION("CM3232 ambient light sensor driver");
-> +MODULE_LICENSE("GPL");
-> --
-> 1.8.3.1
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
