@@ -1,43 +1,38 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v2 2/2] phy: ti-pipe3: Fix SATA across suspend/resume
-Date: Mon, 12 Jan 2015 11:23:51 +0200
-Message-ID: <54B392A7.2080702@ti.com>
-References: <1418990720-3638-1-git-send-email-rogerq@ti.com> <1418990720-3638-3-git-send-email-rogerq@ti.com> <54AE6758.7030501@ti.com> <54AFDEB9.3060402@ti.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v5 3/7] gpio/xilinx: Add support for X86 Arch
+Date: Mon, 12 Jan 2015 10:24:34 +0100
+Message-ID: <CACRpkdYr6OZUjQ8JLzpktQK1xg1Un_SKtU+xr=gFzpSo+A2C-g@mail.gmail.com>
+References: <1418831474-24428-1-git-send-email-ricardo.ribalda@gmail.com>
+	<1418831474-24428-4-git-send-email-ricardo.ribalda@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <54AFDEB9.3060402@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, tony@atomide.com
-Cc: nm@ti.com, balbi@ti.com, george.cherian@ti.com, nsekhar@ti.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1418831474-24428-4-git-send-email-ricardo.ribalda@gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+Cc: Alexandre Courbot <gnurou@gmail.com>, Michal Simek <michal.simek@xilinx.com>, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Darren Hart <dvhart@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09/01/15 15:59, Kishon Vijay Abraham I wrote:
-> Hi Roger,
-> 
-> On Thursday 08 January 2015 04:47 PM, Roger Quadros wrote:
->> Failed test case: Boot without SATA drive connected. Suspend/resume
->> the board and then connect SATA drive. It fails to enumerate.
->>
->> Due to Errata i783 "SATA Lockup After SATA DPLL Unlock/Relock"
->> we can't allow SATA DPLL to be in the unlocked state.
->> The SATA refclk (sata_ref_clk) is the source of the SATA_DPLL.
->> Till now this clock was controlled by the AHCI SATA driver and was being
->> shut off  during system suspend (if the SATA drive was not already attached)
->> causing the SATA DPLL to be unlocked and so causing errata i783.
->>
->> To prevent sata_ref_clk from being disabled, we move the control of
->> this clock from the SATA AHCI driver to the SATA PHY driver and prevent
->> it from being disabled.
->>
->> This also fixes the issue of SATA not working on OMAP5/DRA7 when
->> AHCI platform driver is built as a module.
-> 
-> I feel the dt patches and the PHY patches can go separately. Can you split and
-> re-send?
+On Wed, Dec 17, 2014 at 4:51 PM, Ricardo Ribalda Delgado
+<ricardo.ribalda@gmail.com> wrote:
 
-OK. will re-send.
+> Core can be accessed via PCIe on X86 platform.
+> This patch also allows the driver to be used as module.
+>
+> Acked-by: Michal Simek <michal.simek@xilinx.com>
+> Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
 
-cheers,
--roger
+PCIe on x86, using device tree? The ACPI people are just gonna love this.
+
+Patch applied, anyway. DT on x86 is not unheard of.
+
+>  config GPIO_XILINX
+> -       bool "Xilinx GPIO support"
+> -       depends on PPC_OF || MICROBLAZE || ARCH_ZYNQ
+> +       tristate "Xilinx GPIO support"
+> +       depends on OF_GPIO && (PPC_OF || MICROBLAZE || ARCH_ZYNQ || ARCH_X86)
+
+Maybe you want to add COMPILE_TEST too?
+
+Yours,
+Linus Walleij
