@@ -1,41 +1,51 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: [RFC 2/3] ARM: dts: Specify MSHC realistic clocks and use frequency
- scaling
-Date: Mon, 12 Jan 2015 10:23:04 +0100
-Message-ID: <1421054585-9032-3-git-send-email-k.kozlowski@samsung.com>
-References: <1421054585-9032-1-git-send-email-k.kozlowski@samsung.com>
+From: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+Subject: Re: [PATCH v5 3/7] gpio/xilinx: Add support for X86 Arch
+Date: Mon, 12 Jan 2015 10:31:44 +0100
+Message-ID: <CAPybu_2X17ymd2NK7AHgJ5eaTjbpTQS_8mp8a6ijYsdS+qoQ+Q@mail.gmail.com>
+References: <1418831474-24428-1-git-send-email-ricardo.ribalda@gmail.com>
+ <1418831474-24428-4-git-send-email-ricardo.ribalda@gmail.com> <CACRpkdYr6OZUjQ8JLzpktQK1xg1Un_SKtU+xr=gFzpSo+A2C-g@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1421054585-9032-1-git-send-email-k.kozlowski@samsung.com>
+In-Reply-To: <CACRpkdYr6OZUjQ8JLzpktQK1xg1Un_SKtU+xr=gFzpSo+A2C-g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Jaehoon Chung <jh80.chung@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
-Cc: Kyungmin Park <kyungmin.park@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Alexandre Courbot <gnurou@gmail.com>, Michal Simek <michal.simek@xilinx.com>, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Darren Hart <dvhart@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Lower the dw_mmc host clock from 400 MHz to 100 MHz because there are a
-lot of MMC errors above 100 MHz.
+Hello
 
-Enable frequency scaling to reduce energy consumption. In idle this
-reduced energy consumption by 2.6% (from 119.5 mA to 116.4 mA).
+On Mon, Jan 12, 2015 at 10:24 AM, Linus Walleij
+<linus.walleij@linaro.org> wrote:
+> On Wed, Dec 17, 2014 at 4:51 PM, Ricardo Ribalda Delgado
+> <ricardo.ribalda@gmail.com> wrote:
+>
+>> Core can be accessed via PCIe on X86 platform.
+>> This patch also allows the driver to be used as module.
+>>
+>> Acked-by: Michal Simek <michal.simek@xilinx.com>
+>> Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+>
+> PCIe on x86, using device tree? The ACPI people are just gonna love this.
 
-Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
----
- arch/arm/boot/dts/exynos4412-trats2.dts | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> Patch applied, anyway. DT on x86 is not unheard of.
+>
+>>  config GPIO_XILINX
+>> -       bool "Xilinx GPIO support"
+>> -       depends on PPC_OF || MICROBLAZE || ARCH_ZYNQ
+>> +       tristate "Xilinx GPIO support"
+>> +       depends on OF_GPIO && (PPC_OF || MICROBLAZE || ARCH_ZYNQ || ARCH_X86)
+>
+> Maybe you want to add COMPILE_TEST too?
 
-diff --git a/arch/arm/boot/dts/exynos4412-trats2.dts b/arch/arm/boot/dts/exynos4412-trats2.dts
-index 29231b452643..21f1236ae979 100644
---- a/arch/arm/boot/dts/exynos4412-trats2.dts
-+++ b/arch/arm/boot/dts/exynos4412-trats2.dts
-@@ -558,7 +558,9 @@
- 		non-removable;
- 		card-detect-delay = <200>;
- 		vmmc-supply = <&vemmc_reg>;
--		clock-frequency = <400000000>;
-+		clock-frequency = <100000000>;
-+		clock-freq-min-max = <400000 100000000>;
-+		frequency-scaling;
- 		samsung,dw-mshc-ciu-div = <0>;
- 		samsung,dw-mshc-sdr-timing = <2 3>;
- 		samsung,dw-mshc-ddr-timing = <1 2>;
+Up to you
+
+>
+> Yours,
+> Linus Walleij
+
+
+
 -- 
-1.9.1
+Ricardo Ribalda
