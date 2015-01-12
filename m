@@ -1,75 +1,52 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH v9 1/4] drm/i2c: tda998x: Add DT support for audio
-Date: Mon, 12 Jan 2015 17:57:06 +0000
-Message-ID: <20150112175705.GN12302@n2100.arm.linux.org.uk>
-References: <20150109130725.GN12302@n2100.arm.linux.org.uk>
- <54AFDE8D.3000504@arm.com>
- <20150109145741.GP12302@n2100.arm.linux.org.uk>
- <20150109183857.53d701a4@armhf>
- <20150109200127.GD12302@n2100.arm.linux.org.uk>
- <1421054728.3081.28.camel@pengutronix.de>
- <20150112122527.GF12302@n2100.arm.linux.org.uk>
- <1421071197.3081.44.camel@pengutronix.de>
- <20150112140456.GI12302@n2100.arm.linux.org.uk>
- <20150112181341.4a53ea24@armhf>
+From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Subject: Re: [PATCH v8 2/4] fpga manager: add sysfs interface document
+Date: Mon, 12 Jan 2015 11:06:08 -0700
+Message-ID: <20150112180608.GA11295@obsidianresearch.com>
+References: <1420575219-27061-1-git-send-email-atull@opensource.altera.com>
+ <1420575219-27061-3-git-send-email-atull@opensource.altera.com>
+ <20150107084819.GA1887@amd>
+ <alpine.DEB.2.02.1501091302370.30067@linuxheads99>
+ <20150109205643.GA5761@amd>
+ <4D4EA2D5-68DD-49F7-9E2D-3A0A8F6AF9CA@konsulko.com>
+ <20150110151118.GA16036@amd>
+ <alpine.DEB.2.10.1501111009180.2556@shineypoop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20150112181341.4a53ea24@armhf>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jean-Francois Moine <moinejf@free.fr>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Andrew Jackson <Andrew.Jackson@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>, Mark Brown <broonie@kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+In-Reply-To: <alpine.DEB.2.10.1501111009180.2556@shineypoop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: atull <atull@opensource.altera.com>
+Cc: Pavel Machek <pavel@denx.de>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, hpa@zytor.com, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, rdunlap@infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, robh+dt@kernel.org, Grant Likely <grant.likely@linaro.org>, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, Mark Brown <broonie@kernel.org>, philip@balister.org, rubini@gnudd.com, Steffen Trumtrar <s.trumtrar@pengutronix.de>, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, Felipe Balbi <balbi@ti.com>, m.chehab@samsung.com, davidb@codeaurora.org, Rob Landley <rob@landley.net>, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, Linus Walleij <linus.walleij@linaro.org>, pawel.moll@arm.com, mark.rutl
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBKYW4gMTIsIDIwMTUgYXQgMDY6MTM6NDFQTSArMDEwMCwgSmVhbi1GcmFuY29pcyBN
-b2luZSB3cm90ZToKPiBPbiBNb24sIDEyIEphbiAyMDE1IDE0OjA0OjU2ICswMDAwCj4gUnVzc2Vs
-bCBLaW5nIC0gQVJNIExpbnV4IDxsaW51eEBhcm0ubGludXgub3JnLnVrPiB3cm90ZToKPiA+IE9u
-IE1vbiwgSmFuIDEyLCAyMDE1IGF0IDAyOjU5OjU3UE0gKzAxMDAsIFBoaWxpcHAgWmFiZWwgd3Jv
-dGU6Cj4gPiA+IE5vdGUgdGhhdCBvZl9ncmFwaF9wYXJzZV9lbmRwb2ludCBpbnRlcnByZXRzIHRo
-ZSBwb3J0IG5vZGUncyByZWcKPiA+ID4gcHJvcGVydHkgYXMgcG9ydCBpZC4gQW5kIHRoZSB1bml0
-IGFkZHJlc3MgcGFydCBvZiB0aGUgbm9kZSBuYW1lIHNob3VsZAo+ID4gPiBtYXRjaCB0aGUgZmly
-c3QgYWRkcmVzcyBpbiB0aGUgcmVnIHByb3BlcnR5Lgo+IAo+IFRoaXMgaXMgbm90IHRoZSBjYXNl
-IGluIHZleHByZXNzLXYycC1jYTE1X2E3LmR0cy4KCkhtbS4uLiBhcyB0aGUgRFQgYmluZGluZyBk
-b2MgZG9lc24ndCBzcGVjaWZ5IHRoaXMgcmVzdHJpY3Rpb24sIGFuZCB3ZQpoYXZlIGEgRFQgZmls
-ZSB3aGljaCB2aW9sYXRlcyB3aGF0IFBoaWxpcHAgaGFzIHNhaWQsIEkgdGhpbmsgd2Ugb3VnaHQK
-dG8gZG9jdW1lbnQgdGhhdCByZWcgdnMgdW5pdCBub2RlIG5hbWUgZG9lcyBub3QgbmVlZCB0byBt
-YXRjaCBlYWNoCm90aGVyLCB0aGVyZWJ5IG1ha2luZyB0aGF0IG9mZmljaWFsLgoKPiA+IFNvIHRo
-YXQncyBub3QgZ29pbmcgdG8gd29yayB2ZXJ5IHdlbGwuLi4gYmVjYXVzZSB0aGUgQVAgcmVnaXN0
-ZXIgaXMgYQo+ID4gYml0bWFzay4KPiA+IAo+ID4gSSBndWVzcyB3ZSBjb3VsZCBzcGVjaWZ5IGEg
-bm9kZSB1bml0IGFuZCByZWcsIHdoaWNoIHRoZSBjb2RlIG90aGVyd2lzZQo+ID4gaWdub3Jlcywg
-YW5kIHNwZWNpZnkgYSBwaGlsaXBwcyxhcC1tYXNrID0gcHJvcGVydHkgZm9yIHRoZSBhdWRpbyBw
-b3J0cwo+ID4gaW5zdGVhZC4KPiAKPiBBbHNvLCB0aGUgdmlkZW8gYW5kIGF1ZGlvIHBvcnRzIG11
-c3QgYmUgZGlzdGluZ3Vpc2hlZC4gVGhleSBjb3VsZCBiZQo+IGRlZmluZWQgaW4gZGlmZmVyZW50
-IHBvcnQgZ3JvdXBzLgo+IAo+IEV4YW1wbGUgZnJvbSB0aGUgQ3Vib3g6Cj4gCj4gCXZpZGVvLXBv
-cnRzOiBwb3J0c0AwIHsKPiAJCXBvcnQgewo+IAkJCXRkYTk5OHhfdmlkZW86IGVuZHBvaW50IHsK
-PiAJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZsY2QwXzA+Owo+IAkJCQlueHAsdmlkZW8tcG9ydCA9
-IDwweDIzMDE0NT47Cj4gCQkJfTsKPiAJCX07Cj4gCX07Cj4gCWF1ZGlvLXBvcnRzOiBwb3J0c0Ax
-IHsKPiAJCXBvcnRAMCB7CQkJLyogQVAxID0gSTJTICovCj4gCQkJdGRhOTk4eF9pMnM6IGVuZHBv
-aW50QDAgewo+IAkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmF1ZGlvMV9pMnM+Owo+IAkJCQlueHAs
-YXVkaW8tcG9ydCA9IDwweDAzPjsKPiAJCQl9Owo+IAkJfTsKPiAJCXBvcnRAMSB7CQkJIC8qIEFQ
-MiA9IFMvUERJRiAqLwo+IAkJCXRkYTk5OHhfc3BkaWY6IGVuZHBvaW50QDEgewo+IAkJCQlyZW1v
-dGUtZW5kcG9pbnQgPSA8JmF1ZGlvMV9zcGRpZjE+Owo+IAkJCQlueHAsYXVkaW8tcG9ydCA9IDww
-eDA0PjsKPiAJCQl9Owo+IAkJfTsKPiAJfTsKPiAKPiBUaGUgcG9ydCB0eXBlIGlzIGlkZW50aWZp
-ZWQgYnkgdGhlIGJpdCBBUDAuCgpJIGRvbid0IHBhcnRpY3VsYXJseSBsaWtlIHRoYXQgLSB0aGF0
-IG1ha2VzIHRoZSBhc3N1bXB0aW9uIHRoYXQgQVAwCmFsd2F5cyBtZWFucyBJMlMuICBXaGF0IGlm
-IGEgZnV0dXJlIGNoaXAgZGVjaWRlcyB0byBhbGxvdyBTUERJRiBvbgpBUDA/ICBXaHkgc2hvdWxk
-IHdlIG5lZWQgdG8gcmUtaW52ZW50IHRoZSBiaW5kaW5nPwoKSU1ITywgaXQgd291bGQgYmUgbXVj
-aCBiZXR0ZXIgdG8gbWFrZSB0aGlzIGV4cGxpY2l0LgoKTm90ZSB0aGF0IHRoZSAidmlkZW8tcG9y
-dHMiIGFuZCAiYXVkaW8tcG9ydHMiIGFyZSBqdXN0IGxhYmVscyBpbiB0aGUKRFQgZmlsZTsgdGhl
-eSBhcmVuJ3QgY2FycmllZCB0aHJvdWdoIHRvIHRoZSByZXN1bHRpbmcgRFQgYmluYXJ5IGZpbGUs
-CnNvIHRoZXkgZG9uJ3QgaGF2ZSBhbnkgbWVhbmluZyB0byB0aGUga2VybmVsLgoKLS0gCkZUVEMg
-YnJvYWRiYW5kIGZvciAwLjhtaWxlIGxpbmU6IGN1cnJlbnRseSBhdCAxMC41TWJwcyBkb3duIDQw
-MGticHMgdXAKYWNjb3JkaW5nIHRvIHNwZWVkdGVzdC5uZXQuCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
-dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
-aWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Sun, Jan 11, 2015 at 10:29:00AM -0600, atull wrote:
+> the FPGA image.  If someone wants there to be only one FPGA image on
+> the FGPA forever, they will probably not be using this framework; their
+> FPGA will probably be loaded before Linux boots up.
+
+Nonsense, loading the FPGA through Linux is much better, it avoids
+having to deal with this complexity in the boot loader and means that
+Linux can be used to locate the huge image in some kind of sensible
+filesystem, log failures, do any FPGA startup sequence/etc.
+
+With hotplug and DT I find this this works very well. The FPGA devices
+simply are not registered with the kernel until userspace gives the OK
+(in future a DT overload can handle this)
+
+If you keep with the notion that the DT overload specifies the
+matching FPGA firmware then it makes alot more sense to me to use DT
+overlays as the API to change the file name - not sysfs.
+
+To reload a FPGA, unload the DT overlay (this would have to disconnect
+all the drivers), de-program the FPGA, the load a new DT overlay,
+which reprograms and re-binds the new drivers. All those steps have to
+be done anyhow, you can't just swap the HW while drivers are attached.
+
+.. and if there are no drivers then Alan is right, this is the wrong
+interface for the 'FPGA as a user space co-processor' model.
+
+I would also re-iterate my earlier comments: requiring the whole FPGA
+image to be held in ram makes this useless for any of my applications.
+
+Jason
