@@ -1,104 +1,81 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v2 3/5] pinctrl: exynos: Fix GPIO setup failure because
- domain clock being gated
-Date: Mon, 12 Jan 2015 15:11:41 +0100
-Message-ID: <1421071901.20276.7.camel@AMDC1943>
-References: <1417011857-10419-1-git-send-email-k.kozlowski@samsung.com>
- <1417011857-10419-4-git-send-email-k.kozlowski@samsung.com>
- <CACRpkdb8F8YcvFeHPvOKHjx_p4HEpimck3XRabB3oHpZTdmRQQ@mail.gmail.com>
- <1417183724.18249.36.camel@AMDC1943>
- <CA+Ln22Ejo51VPWf6DmuRvV_fZr_H=-BXAshSPSOokNE1bz=-QA@mail.gmail.com>
- <1417423043.4055.14.camel@AMDC1943>
- <CA+Ln22H_a9CWxrYO_i9Esm6keXA8XLLYmE1Vg-8ynamJ1sAwpQ@mail.gmail.com>
+From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Subject: Re: [PATCH 0/4] mmc: core: Add support for MMC power sequences
+Date: Mon, 12 Jan 2015 15:26:39 +0100
+Message-ID: <CAAObsKDXTwmXQ_oviSv4jyvaVepgsw8g5VJNpt1X=JCzfpTYuw@mail.gmail.com>
+References: <1420215248-20650-1-git-send-email-ulf.hansson@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CA+Ln22H_a9CWxrYO_i9Esm6keXA8XLLYmE1Vg-8ynamJ1sAwpQ@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Mike Turquette <mturquette@linaro.org>, Kukjin Kim <kgene@kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Vivek Gautam <gautam.vivek@samsung.com>, Kevin Hilman <khilman@kernel.org>, Russell King <linux@arm.linux.org.uk>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1420215248-20650-1-git-send-email-ulf.hansson@linaro.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: linux-mmc@vger.kernel.org, Chris Ball <chris@printf.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Alexandre Courbot <gnurou@gmail.com>, NeilBrown <neilb@suse.de>, Linus Walleij <linus.walleij@linaro.org>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Mark Brown <broonie@kernel.org>, Arend van Spriel <arend@broadcom.com>, Sascha Hauer <s.hauer@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On pon, 2014-12-01 at 23:34 +0900, Tomasz Figa wrote:
-> 2014-12-01 17:37 GMT+09:00 Krzysztof Kozlowski <k.kozlowski@samsung.com>:
-> >
-> > On nie, 2014-11-30 at 21:19 +0900, Tomasz Figa wrote:
-> >> Hi Krzysztof,
-> >>
-(...)
-> >
-> >> Also isn't a similar problem happening due to power domains? I believe
-> >> the whole maudio block is located in a separate power domain but
-> >> somehow it doesn't get turned off?
-> >
-> > There is Maudio power domain... but I think it is not related here.
-> 
-> Could you somehow check what happens when the maudio power domain is
-> turned off and maudio pin controller is accessed? Could you also check
-> the difference in power consumption with this domain powered on and
-> off?
+On 2 January 2015 at 17:14, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+> This is yet another try to solve the issues of dealing with power sequences for
+> the MMC subsystem. The latest attempt, see link below, took a generic approach
+> by adding a new top level driver layer. That's was rejected by several reasons.
+> http://lwn.net/Articles/602855/
+>
+> This time the approach is focused to fix the issues for MMC only.
+>
+> To give a short background, SOCs may specify a specific MMC power sequence. To
+> successfully detect an (e)MMC/SD/SDIO card, that power sequence must be followed
+> while initializing the card.
 
-Hi Tomasz,
+Hi Ulf,
 
-Some time ago you asked for some details of Exynos5420 Maudio domain
-behavior. Here it goes:
+have used this to successfully init a mwifiex_sdio card but had to
+also add a delay while the reset line is asserted. May make sense to
+add a property to the pwrseq node to specify the minimum amount of
+time that the reset GPIO needs to be asserted?
 
-1. mau domain ON, EPL: OFF: boot hang (this was behavior after adding
-runtime PM to pl330 driver)
+Tested-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
 
-2. maud domain OFF, EPLL OFF: boot hang
+Thanks,
 
-3. maud domain ON, EPLL ON: works (current linux-next and mainline)
+Tomeu
 
-4. maud domain OFF, EPLL ON: works, almost the same energy consumption
-as in (3) (diff: 0.1% so it is smaller than measuring accuracy).
-
-However an unspecified imprecise abort shows up in (4):
-[   11.911628] Freeing unused kernel memory: 328K (c0674000 - c06c6000)
-[   12.122695] usb 5-1.4: new high-speed USB device number 3 using exynos-ehci
-[   12.190011] Unhandled fault: imprecise external abort (0x1406) at 0x00000000
-[   12.219062] usb 5-1.4: New USB device found, idVendor=0b95, idProduct=772a
-[   12.224548] usb 5-1.4: New USB device strings: Mfr=1, Product=2, SerialNumber=3
-[   12.231794] usb 5-1.4: Product: AX88772
-[   12.235681] usb 5-1.4: Manufacturer: ASIX Elec. Corp.
-[   12.240707] usb 5-1.4: SerialNumber: 000001
-[   12.248835] asix 5-1.4:1.0 (unnamed net_device) (uninitialized): invalid hw address, using random
-root@(none):/#
-
-Best regards,
-Krzysztof
-
-> 
-> > Pinctrl driver does not have runtime PM and is not attached to a domain.
-> > I thought about other solution to this problem (with utilization of
-> > power domains):
-> >  - add runtime PM to pinctrl and audss clocks,
-> >  - attach pinctrl and audss clocks to maudio power domain,
-> >  - enable the clock when power domain is turned on.
-> > However almost the same changes had to be added to pinctrl and audss
-> > clocks drivers (replace clock_enable() with pm_runtime_get_sync()).
-> 
-> Well, if the dependency is there due to hardware design, I think it
-> needs to be reflected in the drivers as well.
-> 
-> Few other issues that came to my mind:
-> 
->  - Your previous patch added clock control only to pinctrl operations.
-> Shouldn't GPIO operations be included as well?
-> 
->  - If power domain dependency is there too, what happens with GPIO
-> pins if the domain is powered off? If they lose their states, wouldn't
-> it necessary to keep the domain powered on whenever there is some GPIO
-> pin requested (which usually = in use)? (I'd assume that special
-> functions shouldn't take a reference on runtime PM, because they are
-> related to IP blocks in the same PM domain, which will implicitly keep
-> the domain powered on.)
-> 
->  - Doesn't the clock controller also lose its state whenever the power
-> domain is powered off? I guess that would be similar to ISP clock
-> controller, issues of which are still not resolved in mainline.
-> Sylwester could tell you more about this, I guess.
-> 
-> Best regards,
-> Tomasz
+> To be able to handle these SOC specific power sequences, we add a MMC power
+> sequence interface, which helps the mmc core to deal with such.
+>
+> A MMC power sequence provider then implements a set of callbacks from the above
+> mentioned interface. The provider has a corresponding DT compatibility string
+> and relies on CONFIG_OF to be set to find it's various resourses, like for
+> example a GPIO reset.
+>
+> The mmc core will from mmc_of_parse() try find a "mmc-pwrseq" DT node and then
+> call the corresponding MMC power sequence provider's initialization function.
+>
+>
+> Ulf Hansson (4):
+>   mmc: core: Initial support for MMC power sequences
+>   mmc: pwrseq: Document DT bindings for the simple MMC power sequence
+>   mmc: pwrseq: Initial support for the simple MMC power sequence
+>     provider
+>   mmc: pwrseq_simple: Add support for a reset GPIO pin
+>
+>  .../devicetree/bindings/mmc/mmc,pwrseq-simple.txt  |  23 +++++
+>  Documentation/devicetree/bindings/mmc/mmc.txt      |   5 +
+>  drivers/mmc/core/Makefile                          |   2 +-
+>  drivers/mmc/core/core.c                            |   7 ++
+>  drivers/mmc/core/host.c                            |   4 +-
+>  drivers/mmc/core/pwrseq.c                          | 109 +++++++++++++++++++++
+>  drivers/mmc/core/pwrseq.h                          |  42 ++++++++
+>  drivers/mmc/core/pwrseq_simple.c                   |  86 ++++++++++++++++
+>  include/linux/mmc/host.h                           |   2 +
+>  9 files changed, 278 insertions(+), 2 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/mmc,pwrseq-simple.txt
+>  create mode 100644 drivers/mmc/core/pwrseq.c
+>  create mode 100644 drivers/mmc/core/pwrseq.h
+>  create mode 100644 drivers/mmc/core/pwrseq_simple.c
+>
+> --
+> 1.9.1
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
