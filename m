@@ -1,84 +1,42 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH/RFC v10 08/19] leds: Add support for max77693 mfd flash cell
-Date: Mon, 12 Jan 2015 09:52:37 +0100
-Message-ID: <54B38B55.7080503@samsung.com>
-References: <1420816989-1808-1-git-send-email-j.anaszewski@samsung.com>
- <1420816989-1808-9-git-send-email-j.anaszewski@samsung.com>
- <20150109184606.GJ18076@amd>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH net-next v11 3/3] net: hisilicon: new hip04 ethernet driver
+Date: Mon, 12 Jan 2015 09:52:57 +0100
+Message-ID: <19225293.OPozO1Cbk5@wuerfel>
+References: <1421049832-6224-1-git-send-email-dingtianhong@huawei.com> <1421049832-6224-4-git-send-email-dingtianhong@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <20150109184606.GJ18076@amd>
-Sender: linux-leds-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, b.zolnierkie@samsung.com, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com, Andrzej Hajda <a.hajda@samsung.com>, Lee Jones <lee.jones@linaro.org>, Chanwoo Choi <cw00.choi@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1421049832-6224-4-git-send-email-dingtianhong@huawei.com>
+Sender: netdev-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Ding Tianhong <dingtianhong@huawei.com>, robh+dt@kernel.org, davem@davemloft.net, grant.likely@linaro.org, devicetree@vger.kernel.org, linux@arm.linux.org.uk, sergei.shtylyov@cogentembedded.com, eric.dumazet@gmail.com, netdev@vger.kernel.org, xuwei5@hisilicon.com, zhangfei.gao@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Pavel,
+On Monday 12 January 2015 16:03:52 Ding Tianhong wrote:
+> Support Hisilicon hip04 ethernet driver, including 100M / 1000M controller.
+> The controller has no tx done interrupt, reclaim xmitted buffer in the poll.
 
-Thanks for the review.
+Looks great to me in the latest version. Dave, unless you have further
+concerns, please apply.
 
-On 01/09/2015 07:46 PM, Pavel Machek wrote:
-> On Fri 2015-01-09 16:22:58, Jacek Anaszewski wrote:
->> This patch adds led-flash support to Maxim max77693 chipset.
->> A device can be exposed to user space through LED subsystem
->> sysfs interface. Device supports up to two leds which can
->> work in flash and torch mode. The leds can be triggered
->> externally or by software.
->>
->
->> +struct max77693_sub_led {
->> +	/* related FLED output identifier */
->
-> ->flash LED, about 4x.
->
->> +/* split composite current @i into two @iout according to @imax weights */
->> +static void __max77693_calc_iout(u32 iout[2], u32 i, u32 imax[2])
->> +{
->> +	u64 t = i;
->> +
->> +	t *= imax[1];
->> +	do_div(t, imax[0] + imax[1]);
->> +
->> +	iout[1] = (u32)t / FLASH_IOUT_STEP * FLASH_IOUT_STEP;
->> +	iout[0] = i - iout[1];
->> +}
->
-> Is 64-bit arithmetics neccessary here? Could we do the FLASH_IOUT_STEP
-> divisons before t *=, so that 64-bit division is not neccessary?
+> v11: Add ethtool support for tx coalecse getting and setting, the xmit_more
+> is not supported for this patch, but I think it could work for hip04,
+> will support it later after some tests for performance better.
+> 
+> Here are some performance test results by ping and iperf(add tx_coalesce_frames/users),
+> it looks that the performance and latency is more better by tx_coalesce_frames/usecs.
+> 
+> - Before:
+> $ ping 192.168.1.1 ...
+> --- 192.168.1.1 ping statistics ---
+> 24 packets transmitted, 24 received, 0% packet loss, time 22999ms
+> rtt min/avg/max/mdev = 0.180/0.202/0.403/0.043 ms
+> 
+> $ iperf -c 192.168.1.1 ...
+> [ ID] Interval       Transfer     Bandwidth
+> [  3]  0.0- 1.0 sec   115 MBytes   945 Mbits/sec
 
-It is required. All these operations allow for splitting the composite
-current into both outputs according to weights given in the imax array.
+Just to be sure: you were running the two tests simultaneously, right?
 
->> +static int max77693_led_flash_strobe_get(
->> +				struct led_classdev_flash *fled_cdev,
->> +				bool *state)
->> +{
->> +	struct max77693_sub_led *sub_led = flcdev_to_sub_led(fled_cdev);
->> +	struct max77693_led_device *led = sub_led_to_led(sub_led);
->> +	int ret;
->> +
->> +	if (!state)
->> +		return -EINVAL;
->> +
->> +	mutex_lock(&led->lock);
->> +
->> +	ret = max77693_strobe_status_get(led, state);
->> +
->> +	*state = !!(*state && (led->strobing_sub_led_id == sub_led->fled_id));
->> +
->> +
->> +	mutex_unlock(&led->lock);
->> +
->> +	return ret;
->> +}
->
-> Maybe remove some empty lines?
->
-
-Of course.
-
--- 
-Best Regards,
-Jacek Anaszewski
+	Arnd
