@@ -1,73 +1,103 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH v8 0/4] FPGA Manager Framework
-Date: Mon, 12 Jan 2015 14:50:27 +0100
-Message-ID: <2ea77cba43724d5ab5aff54cec9fae98@BL2FFO11FD043.protection.gbl>
-References: <1420575219-27061-1-git-send-email-atull@opensource.altera.com>
- <20150110181120.GA26067@t400> <alpine.DEB.2.10.1501111004580.2556@shineypoop>
- <20150111162426.GC26067@t400> <20150111195219.GA25760@amd>
- <20150111205800.GD26067@t400> <20150111213146.GA16524@amd>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH/RFC v10 03/19] DT: leds: Add led-sources property
+Date: Mon, 12 Jan 2015 07:52:24 -0600
+Message-ID: <CAL_Jsq+UaA41DvawdOMmOib=Fi0hC-nBdKV-+P4DFo+MoOy-bQ@mail.gmail.com>
+References: <1420816989-1808-1-git-send-email-j.anaszewski@samsung.com>
+ <1420816989-1808-4-git-send-email-j.anaszewski@samsung.com>
+ <CAL_JsqJKEp6TWaRhJimg3AWBh+MCCr2Bk9+1o7orLLdp5E+n-g@mail.gmail.com> <54B38682.5080605@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20150111213146.GA16524@amd>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Pavel Machek <pavel@denx.de>, Konrad Zapalowicz <bergo.torino@gmail.com>
-Cc: mark.rutland@arm.com, linux-doc@vger.kernel.org, rubini@gnudd.com, pantelis.antoniou@konsulko.com, hpa@zytor.com, s.trumtrar@pengutronix.de, devel@driverdev.osuosl.org, sameo@linux.intel.com, nico@linaro.org, iws@ovro.caltech.edu, michal.simek@xilinx.com, kyle.teske@ni.com, jgunthorpe@obsidianresearch.com, grant.likely@linaro.org, davidb@codeaurora.org, linus.walleij@linaro.org, cesarb@cesarb.net, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, atull <atull@opensource.altera.com>, broonie@kernel.org, philip@balister.org, akpm@linux-foundation.org, monstr@monstr.eu, gregkh@linuxfoundation.org, yvanderv@opensource.altera.com, linux-kernel@vger.kernel.org, balbi@ti.com, davem@davemloft.net, robh+dt@kernel.org, rob@landley.net, galak@codeaurora.org, dinguyen@opensource.altera.com, delicious.quinoa@gmail.com, m.chehab@samsu
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <54B38682.5080605@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: linux-leds@vger.kernel.org, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Pavel Machek <pavel@ucw.cz>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, sakari.ailus@iki.fi, Sylwester Nawrocki <s.nawrocki@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/11/2015 10:31 PM, Pavel Machek wrote:
-> On Sun 2015-01-11 21:58:00, Konrad Zapalowicz wrote:
->> On 01/11, Pavel Machek wrote:
->>> On Sun 2015-01-11 17:24:26, Konrad Zapalowicz wrote:
->>>> On 01/11, atull wrote:
->>>>> On Sat, 10 Jan 2015, Konrad Zapalowicz wrote:
->>>>>
->>>>>> On 01/06, atull@opensource.altera.com wrote:
->>>>>>> From: Alan Tull <atull@opensource.altera.com>
->>>>>>
->>>>>> Alan, there is something wrong with your email client configuration
->>>>>> and you need to fix.
->>>>>>
->>>>>> thanks,
->>>>>> konrad
->>>>>
->>>>> Hi Konrad,
->>>>>
->>>>> Can you be more specific?  What problem are you seeing?  Is it a problem 
->>>>> with the original patch  post or when I reply?  When I a post, I'm using
->>>>> 'git send-email' with sendmail and when I am replying, I am using alpine.
->>>>
->>>> I think that because you email client configuration sets the 'From'
->>>> header to "atull@..." and at the same time you sign-off messages with
->>>> "Alan Tull atull@..." the "From" is added at the beginning of the
->>>> message to indicate the original author.
->>>>
->>>> This should be fixed as the "from" is not welcomed in the body of the
->>>> commit message.
->>>
->>> Actually, why not? Tools should know to look at From: in the
->>> commit. AFAICT, Alan has it set up correctly.
+On Mon, Jan 12, 2015 at 2:32 AM, Jacek Anaszewski
+<j.anaszewski@samsung.com> wrote:
+> On 01/09/2015 07:33 PM, Rob Herring wrote:
 >>
->> I think he has not. I suspect that the sendmail configuration in the git
->> config might be wrong. The 'from' must contain the same data as the git
->> is configured for the user.name and user.email options. Otherwise the
->> send-email is adding the "From: ..." to the message body.
-> 
-> And what is the problem with From: in the message body? Tools should
-> handle that ok.
+>> On Fri, Jan 9, 2015 at 9:22 AM, Jacek Anaszewski
+>> <j.anaszewski@samsung.com> wrote:
+>>>
+>>> Add a property for defining the device outputs the LED
+>>> represented by the DT child node is connected to.
+>>>
+>>> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+>>> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+>>> Cc: Bryan Wu <cooloney@gmail.com>
+>>> Cc: Richard Purdie <rpurdie@rpsys.net>
+>>> Cc: Rob Herring <robh+dt@kernel.org>
+>>> Cc: Pawel Moll <pawel.moll@arm.com>
+>>> Cc: Mark Rutland <mark.rutland@arm.com>
+>>> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+>>> Cc: Kumar Gala <galak@codeaurora.org>
+>>> ---
+>>>   Documentation/devicetree/bindings/leds/common.txt |    5 +++++
+>>>   1 file changed, 5 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/leds/common.txt
+>>> b/Documentation/devicetree/bindings/leds/common.txt
+>>> index a2c3f7a..29295bf 100644
+>>> --- a/Documentation/devicetree/bindings/leds/common.txt
+>>> +++ b/Documentation/devicetree/bindings/leds/common.txt
+>>> @@ -1,6 +1,10 @@
+>>>   Common leds properties.
+>>>
+>>>   Optional properties for child nodes:
+>>> +- led-sources : Array of bits signifying the LED current regulator
+>>> outputs the
+>>> +               LED represented by the child node is connected to (1 -
+>>> the LED
+>>> +               is connected to the output, 0 - the LED isn't connected
+>>> to the
+>>> +               output).
+>>
+>>
+>> Sorry, I just don't understand this.
+>
+>
+> In some Flash LED devices one LED can be connected to one or more
+> electric current outputs, which allows for multiplying the maximum
+> current allowed for the LED. Each sub-LED is represented by a child
+> node in the DT binding of the Flash LED device and it needs to declare
+> which outputs it is connected to. In the example below the led-sources
+> property is a two element array, which means that the flash LED device
+> has two current outputs, and the bits signify if the LED is connected
+> to the output.
 
-Konrad: Problem is probably just on your end. I have also no problem to handle
-these patches.
-Alan: From my point of view you don't need to change anything.
+Sounds like a regulator for which we already have bindings for and we
+have a driver for regulator based LEDs (but no binding for it). Please
+use the regulator binding.
 
-Thanks,
-Michal
+> Do your doubts stem from the ambiguity of the word "current" or the
+> form of the description itself is unclear? Probably there should be
+> explicit explanation added that the size of the array depends on the
+> number of current outputs of the flash LED device.
+
+The size of the array and meaning of array indexes was not clear.
+
+Rob
+
+>
+>
+>>>   - label : The label for this LED.  If omitted, the label is
+>>>     taken from the node name (excluding the unit address).
+>>>
+>>> @@ -33,6 +37,7 @@ system-status {
+>>>
+>>>   camera-flash {
+>>>          label = "Flash";
+>>> +       led-sources = <1 0>;
+>>>          max-microamp = <50000>;
+>>>          flash-max-microamp = <320000>;
+>>>          flash-timeout-us = <500000>;
+>>> --
+>>> 1.7.9.5
+>>>
+>>
+>
+> --
+> Best Regards,
+> Jacek Anaszewski
