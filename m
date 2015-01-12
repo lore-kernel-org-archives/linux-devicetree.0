@@ -1,92 +1,237 @@
-From: Pavel Machek <pavel@denx.de>
-Subject: Re: [PATCH v8 2/4] fpga manager: add sysfs interface document
-Date: Mon, 12 Jan 2015 09:45:30 +0100
-Message-ID: <20150112084530.GA28681@amd>
-References: <1420575219-27061-1-git-send-email-atull@opensource.altera.com>
- <1420575219-27061-3-git-send-email-atull@opensource.altera.com>
- <20150107084819.GA1887@amd>
- <alpine.DEB.2.02.1501091302370.30067@linuxheads99>
- <20150109205643.GA5761@amd>
- <4D4EA2D5-68DD-49F7-9E2D-3A0A8F6AF9CA@konsulko.com>
- <20150110151118.GA16036@amd>
- <alpine.DEB.2.10.1501111009180.2556@shineypoop>
+From: Stefan Agner <stefan@agner.ch>
+Subject: RE: [PATCH v2] net: fec: fix MDIO bus assignement for dual fec SoC's
+Date: Mon, 12 Jan 2015 09:47:44 +0100
+Message-ID: <c9a7077c1f800f5a56ef53cd721e73f6@agner.ch>
+References: <1420812103-5865-1-git-send-email-stefan@agner.ch>
+ <BLUPR03MB373862B10A8C60BCB113B70F5430@BLUPR03MB373.namprd03.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.10.1501111009180.2556@shineypoop>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: atull <atull@opensource.altera.com>
-Cc: mark.rutland@arm.com, linux-doc@vger.kernel.org, rubini@gnudd.com, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, hpa@zytor.com, Steffen Trumtrar <s.trumtrar@pengutronix.de>, devel@driverdev.osuosl.org, sameo@linux.intel.com, nico@linaro.org, ijc+devicetree@hellion.org.uk, Michal Simek <michal.simek@xilinx.com>, kyle.teske@ni.com, jgunthorpe@obsidianresearch.com, Grant Likely <grant.likely@linaro.org>, davidb@codeaurora.org, Linus Walleij <linus.walleij@linaro.org>, cesarb@cesarb.net, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, iws@ovro.caltech.edu, Mark Brown <broonie@kernel.org>, philip@balister.org, dinguyen@opensource.altera.com, Michal Simek <monstr@monstr.eu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, yvanderv@opensource.altera.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, Alan
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <BLUPR03MB373862B10A8C60BCB113B70F5430@BLUPR03MB373.namprd03.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: fugang.duan@freescale.com
+Cc: davem@davemloft.net, shawn.guo@linaro.org, u.kleine-koenig@pengutronix.de, mark.rutland@arm.com, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, "LW@KARO-electronics.de" <LW@karo-electronics.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Bhuvanchandra DV <bhuvanchandra.dv@toradex.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gU3VuIDIwMTUtMDEtMTEgMTA6Mjk6MDAsIGF0dWxsIHdyb3RlOgo+IE9uIFNhdCwgMTAgSmFu
-IDIwMTUsIFBhdmVsIE1hY2hlayB3cm90ZToKPiAKPiA+IE9uIFNhdCAyMDE1LTAxLTEwIDEwOjEw
-OjUxLCBQYW50ZWxpcyBBbnRvbmlvdSB3cm90ZToKPiA+ID4gSGkgUGF2ZWwsCj4gPiA+IAo+ID4g
-PiA+IE9uIEphbiA5LCAyMDE1LCBhdCAyMjo1NiAsIFBhdmVsIE1hY2hlayA8cGF2ZWxAZGVueC5k
-ZT4gd3JvdGU6Cj4gPiA+ID4gCj4gPiA+ID4gT24gRnJpIDIwMTUtMDEtMDkgMTM6MTQ6MjQsIGF0
-dWxsIHdyb3RlOgo+ID4gPiA+PiBPbiBXZWQsIDcgSmFuIDIwMTUsIFBhdmVsIE1hY2hlayB3cm90
-ZToKPiA+ID4gPj4gCj4gPiA+ID4+PiBPbiBUdWUgMjAxNS0wMS0wNiAxNDoxMzozNywgYXR1bGxA
-b3BlbnNvdXJjZS5hbHRlcmEuY29tIHdyb3RlOgo+ID4gPiA+Pj4+ICsKPiA+ID4gPj4+PiArV2hh
-dDoJCS9zeXMvY2xhc3MvZnBnYV9tYW5hZ2VyLzxmcGdhPi9maXJtd2FyZQo+ID4gPiA+Pj4+ICtE
-YXRlOgkJT2N0b2JlciAyMDE0Cj4gPiA+ID4+Pj4gK0tlcm5lbFZlcnNpb246CTMuMTgKPiA+ID4g
-Pj4+PiArQ29udGFjdDoJQWxhbiBUdWxsIDxhdHVsbEBvcGVuc291cmNlLmFsdGVyYS5jb20+Cj4g
-PiA+ID4+Pj4gK0Rlc2NyaXB0aW9uOglOYW1lIG9mIHRoZSBGUEdBIGltYWdlIGZpbGUgdG8gbG9h
-ZCB1c2luZyBmaXJtd2FyZQo+ID4gPiA+Pj4+IGNsYXNzLgo+ID4gPiA+Pj4gCj4gPiA+ID4+PiBU
-aGlzIG9uZSBpcyB1Z2x5OiBpdCB1bm5lY2Nlc3NhcmlseSBwYXNzZXMgZmlybXdhcmUgbmFtZSB0
-aHJvdWdoIHRoZQo+ID4gPiA+Pj4ga2VybmVsLiBKdXN0IG1ha2UgaW50ZXJmYWNlIGFuZCBjb2Rl
-IHNpbXBsZXIgYnkgYWx3YXlzIHBhc3NpbmcKPiA+ID4gPj4+ICJzb2NmcGdhLWZwZ2EtaW1hZ2Ui
-IG9yIHNvbWV0aGluZyBsaWtlIHRoYXQuCj4gPiA+ID4+PiAKPiA+ID4gPj4+IFRoYW5rcywKPiA+
-ID4gPj4+IAkJCQkJCQkJCVBhdmVsCj4gPiA+ID4+IAo+ID4gPiA+PiBIaSBQYXZlbCwKPiA+ID4g
-Pj4gCj4gPiA+ID4+IEl0IG1pZ2h0IGJlIHVnbHkuICBJdCdzIG5vdCB1bm5lY2Vzc2FyeS4gIFNv
-bWUgdXNlcyBvZiBGUEdBcyBpbnZvbHZlCj4gPiA+ID4+IHN3aXRjaGluZyBvdXQgdGhlIEZQR0Eg
-aW1hZ2VzIGR5bmFtaWNhbGx5IHVuZGVyIGNvbnRyb2wgb2YgdGhlIHVzZXJzcGFjZS4KPiA+ID4g
-PiAKPiA+ID4gPiBUaGVuIGNvbmZpZ3VyZSB1ZGV2IHRvIGxvYWQgcmlnaHQgZmlybXdhcmUgZm9y
-IHlvdSwgb3IgbG4gLXMKPiA+ID4gPiBpbWFnZS1pLXdhbnQtbm93IHNvY2ZwZ2EtZnBnYS1pbWFn
-ZSB0byBzZWxlY3QgdGhlIG9uZSB0byByZWFk4oCmPwo+ID4gPiA+IAo+ID4gPiAKPiA+ID4gV2hv
-IHNhaWQgdGhhdCB1ZGV2IGlzIGdvaW5nIHRvIGJlIGF2YWlsYWJsZSBpbiB0aGUga2luZCBvZiBz
-eXN0ZW0gdGhpcyBpcyBnb2luZyB0byBlbmQgaW4/Cj4gPiAKPiA+IE5vb25lLgo+ID4gCj4gPiA+
-IERvaW5nIGxuIC1zIHRyaWNrcyB0byBsb2FkIGEgZGlmZmVyZW50IGltYWdlPyBSZWFsbHk/Cj4g
-PiAKPiA+IEJ1dCBpZiB5b3UgZG9uJ3QgaGF2ZSB1ZGV2LCB5b3UgY2FuIGRvIGxuIC1zLiBJdCBp
-cyBiZXR0ZXIgdGhhbgo+ID4gb3Blbi1jb2Rpbmcgc3ltbGluayBmdW5jdGlvbmFsaXR5IGludG8K
-PiA+IC9zeXMvY2xhc3MvZnBnYV9tYW5hZ2VyLzxmcGdhPi9maXJtd2FyZSAuLi4gY2F1c2UgdGhh
-dCdzIHdoYXQgdGhpcyBpcy4KPiA+IAo+ID4gQWN0dWFsbHksIGNsZWFuIGltcGxlbWVudGF0aW9u
-IG9mICJmaXJtd2FyZSIgd291bGQgYmUgc3ltbGluayBpbgo+ID4gc3lzZnM7IGJ1dCBJJ2Qgc2F5
-IHRoYXQgd291bGQgYmUgb3ZlcmRvaW5nIGl0Lgo+ID4gCj4gPiA+IEkgc2F5IHRoZSBpbnRlcmZh
-Y2UgaXMgZmluZSBhcyBpdCBpcy4KPiA+IAo+ID4gSSBzYXkgaXQgaXMgbm90Lgo+ID4gCQkJCQkJ
-CQkJUGF2ZWwKPiAKPiBIaSBQYXZlbCwKPiAKPiBJIHNlZSB0aGF0IHdlIGNvdWxkIGRvIGl0IHRo
-YXQgd2F5IGFuZCBpdCB3b3VsZCBlbGltaW5hdGUgb25lIG9mIHRoZQo+IHN5c2ZzIGZpbGVzICgu
-Li9mcGdhX21hbmFnZXIvPGZwZ2E+L2Zpcm13YXJlKS4gIEVpdGhlciB3YXkgd2UgYXJlIGFzc3Vt
-aW5nCj4gdGhhdCB0aGVyZSBhcmUgZnBnYSBpbWFnZXMgaW4gdGhlIGZpbGVzeXN0ZW0gaW4gdGhl
-IGZpcm13YXJlIHNlYXJjaCBwYXRoLAo+IHNvIEkgZG9uJ3Qgc2VlIHdoeSBhZGRpbmcgYSBwaWVj
-ZSBvZiBpbmRpcmVjdGlvbiAoc3ltbGluaykgbWFrZXMgdGhpbmdzCj4gYmV0dGVyLgoKV2VsbC4u
-IHlvdSBhcmUgYmFzaWNhbGx5IHJlLWltcGxlbWVudGluZyBzeW1saW5rIHdpdGgKLi4vZnBnYV9t
-YW5hZ2VyLzxmcGdhPi9maXJtd2FyZSAiZmlsZSIgaW4gc3lzZnMsIGFuZCBkb2luZyBpdApiYWRs
-eS4gSXQgaGFzIG5vIGFkdmFudGFnZXMgb3ZlciByZWFsIHN5bWxpbmsuCgo+IFdlIHdhbnQgdG8g
-YmUgYWJsZSB0byBzd2l0Y2ggb3V0IHRoZSBGUEdBIGltYWdlCj4gdW5kZXIgY29udHJvbCBvZiB1
-c2Vyc3BhY2UuICBTbyB3ZSBkb24ndCB3YW50IGFuIGludGVyZmFjZSB0aGF0IG1ha2VzCj4gaXQg
-bW9yZSBjdW1iZXJzb21lIG9yIHRyaWVzIHRvIHByZXRlbmQgdGhhdCB0aGVyZSdzIG9ubHkgb25l
-IGltYWdlLgoKV2hhdCBpcyBjdW1iZXJzb21lIGFib3V0IHN5bWxpbms/IFdoeSBpcyAiZmFrZSIg
-c3ltbGluayBpbiBzeXNmcyBiZXR0ZXI/Cgo+IFByZXZpb3VzIHVzZXMgb2YgdGhlIGZpcm13YXJl
-IGxheWVyIGhhcyBiZWVuIHRvIHVzZSBpdCB0byBsb2FkIG9uY2UgYWZ0ZXIKPiBib290dXA7IHRo
-aXMgaXMgZGlmZmVyZW50IHNpbmNlIHNvbWUgdXNlIGNhc2VzIHdpbGwgd2FudCB0byBzd2l0Y2gg
-b3V0Cj4gdGhlIEZQR0EgaW1hZ2UuICBJZiBzb21lb25lIHdhbnRzIHRoZXJlIHRvIGJlIG9ubHkg
-b25lIEZQR0EgaW1hZ2Ugb24KPiB0aGUgRkdQQSBmb3JldmVyLCB0aGV5IHdpbGwgcHJvYmFibHkg
-bm90IGJlIHVzaW5nIHRoaXMgZnJhbWV3b3JrOyB0aGVpcgo+IEZQR0Egd2lsbCBwcm9iYWJseSBi
-ZSBsb2FkZWQgYmVmb3JlIExpbnV4IGJvb3RzIHVwLgoKV2h5PyBJIGhhdmUganVzdCBvbmUgaW1h
-Z2Ugb24gdGhlIGZwZ2EsIGFuZCB3b3VsZCBwcmVmZXIgdG8gbG9hZCBpdApmcm9tIExpbnV4LgoJ
-CQkJCQkJCVBhdmVsCi0tIAooZW5nbGlzaCkgaHR0cDovL3d3dy5saXZlam91cm5hbC5jb20vfnBh
-dmVsbWFjaGVrCihjZXNreSwgcGljdHVyZXMpIGh0dHA6Ly9hdHJleS5rYXJsaW4ubWZmLmN1bmku
-Y3ovfnBhdmVsL3BpY3R1cmUvaG9yc2VzL2Jsb2cuaHRtbApfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZlbCBtYWlsaW5nIGxpc3QKZGV2ZWxAbGludXhk
-cml2ZXJwcm9qZWN0Lm9yZwpodHRwOi8vZHJpdmVyZGV2LmxpbnV4ZHJpdmVycHJvamVjdC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9kcml2ZXJkZXYtZGV2ZWwK
+On 2015-01-12 03:45, fugang.duan@freescale.com wrote:
+> From: Stefan Agner <stefan@agner.ch> Sent: Friday, January 09, 2015 10:02 PM
+>> To: davem@davemloft.net
+>> Cc: shawn.guo@linaro.org; u.kleine-koenig@pengutronix.de; Duan Fugang-
+>> B38611; mark.rutland@arm.com; robh+dt@kernel.org; pawel.moll@arm.com;
+>> ijc+devicetree@hellion.org.uk; galak@codeaurora.org; Duan Fugang-B38611;
+>> LW@KARO-electronics.de; linux-arm-kernel@lists.infradead.org; linux-
+>> kernel@vger.kernel.org; devicetree@vger.kernel.org; stefan@agner.ch;
+>> Bhuvanchandra DV
+>> Subject: [PATCH v2] net: fec: fix MDIO bus assignement for dual fec SoC's
+>>
+>> On i.MX28, the MDIO bus is shared between the two FEC instances.
+>> The driver makes sure that the second FEC uses the MDIO bus of the first
+>> FEC. This is done conditionally if FEC_QUIRK_ENET_MAC is set.
+>> However, in newer designs, such as Vybrid or i.MX6SX, each FEC MAC has
+>> its own MDIO bus. Simply removing the quirk FEC_QUIRK_ENET_MAC is not an
+>> option since other logic, triggered by this quirk, is still needed.
+>>
+>> Furthermore, there are board designs which use the same MDIO bus for both
+>> PHY's even though the second bus would be available on the SoC side. Such
+>> layout are popular since it saves pins on SoC side.
+>> Due to the above quirk, those boards currently do work fine. The boards
+>> in the mainline tree with such a layout are:
+>> - Freescale Vybrid Tower with TWR-SER2 (vf610-twr.dts)
+>> - Freescale i.MX6 SoloX SDB Board (imx6sx-sdb.dts)
+>>
+>> This patch adds a new quirk FEC_QUIRK_SINGLE_MDIO for i.MX28, which makes
+>> sure that the MDIO bus of the first FEC is used in any case.
+>>
+>> However, the boards above do have a SoC with a MDIO bus for each FEC
+>> instance. But the PHY's are not connected in a 1:1 configuration. A
+>> proper device tree description is needed to allow the driver to figure
+>> out where to find its PHY. This patch fixes that shortcoming by adding a
+>> MDIO bus child node to the first FEC instance, along with the two PHY's
+>> on that bus, and making use of the phy-handle property to add a reference
+>> to the PHY's.
+>>
+>> Signed-off-by: Stefan Agner <stefan@agner.ch>
+>> Signed-off-by: Bhuvanchandra DV <bhuvanchandra.dv@toradex.com>
+>> ---
+>> Yes, this breaks existing device trees, but it does this because those
+>> device trees were lacking proper description of the HW...
+>> IMHO, in this case, this is acceptable. We also do this in other cases,
+>> e.g. in the gic_arch_extn killing patchset:
+>> http://archive.arm.linux.org.uk/lurker/message/20150107.174235.3fc3a92f.e
+>> n.html
+>>
+>> Also, the two boards we are breaking are not very widespread:
+>> The Vybrid Tower is generally not very widespread and there is only the
+>> TWR-VF65GS10-PRO variant with TWR-SER2 affected. And the SoloX SDB board
+>> is not even generally available yet...
+>>
+>> If we don't want to break the board, we could add the
+>> FEC_QUIRK_SINGLE_MDIO to Vybrid or/and i.MX6SX too. But then, we need to
+>> make the quirk conditional: If a MDIO node or phy- handle is specified,
+>> we should rely on the device tree information.
+>> However, this solution adds new code and complexity. Using the quirk for
+>> those SoC's just feels wrong. So I strongly advocate for the breaking
+>> variant.
+>>
+>> Changes since v1 (https://lkml.org/lkml/2015/1/6/284):
+>> - Add MDIO/phy-handle device tree nodes for dual FEC boards
+>>
+>>  arch/arm/boot/dts/imx6sx-sdb.dts          | 15 +++++++++++++++
+>>  arch/arm/boot/dts/vf610-twr.dts           | 15 +++++++++++++++
+>>  drivers/net/ethernet/freescale/fec.h      |  2 ++
+>>  drivers/net/ethernet/freescale/fec_main.c |  9 +++++----
+>>  4 files changed, 37 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/imx6sx-sdb.dts b/arch/arm/boot/dts/imx6sx-
+>> sdb.dts
+>> index 1e6e5cc..8c1febd 100644
+>> --- a/arch/arm/boot/dts/imx6sx-sdb.dts
+>> +++ b/arch/arm/boot/dts/imx6sx-sdb.dts
+>> @@ -159,13 +159,28 @@
+>>  	pinctrl-0 = <&pinctrl_enet1>;
+>>  	phy-supply = <&reg_enet_3v3>;
+>>  	phy-mode = "rgmii";
+>> +	phy-handle = <&ethphy1>;
+>>  	status = "okay";
+>> +
+>> +	mdio {
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +
+>> +		ethphy1: ethernet-phy@0 {
+>> +			reg = <0>;
+>> +		};
+>> +
+>> +		ethphy2: ethernet-phy@1 {
+>> +			reg = <1>;
+>> +		};
+>> +	};
+>>  };
+>>
+>>  &fec2 {
+>>  	pinctrl-names = "default";
+>>  	pinctrl-0 = <&pinctrl_enet2>;
+>>  	phy-mode = "rgmii";
+>> +	phy-handle = <&ethphy2>;
+>>  	status = "okay";
+>>  };
+>>
+>> diff --git a/arch/arm/boot/dts/vf610-twr.dts b/arch/arm/boot/dts/vf610-
+>> twr.dts index a0f7621..f2b64b1 100644
+>> --- a/arch/arm/boot/dts/vf610-twr.dts
+>> +++ b/arch/arm/boot/dts/vf610-twr.dts
+>> @@ -129,13 +129,28 @@
+>>
+>>  &fec0 {
+>>  	phy-mode = "rmii";
+>> +	phy-handle = <&ethphy0>;
+>>  	pinctrl-names = "default";
+>>  	pinctrl-0 = <&pinctrl_fec0>;
+>>  	status = "okay";
+>> +
+>> +	mdio {
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +
+>> +		ethphy0: ethernet-phy@0 {
+>> +			reg = <0>;
+>> +		};
+>> +
+>> +		ethphy1: ethernet-phy@1 {
+>> +			reg = <1>;
+>> +		};
+>> +	};
+>>  };
+>>
+>>  &fec1 {
+>>  	phy-mode = "rmii";
+>> +	phy-handle = <&ethphy1>;
+>>  	pinctrl-names = "default";
+>>  	pinctrl-0 = <&pinctrl_fec1>;
+>>  	status = "okay";
+>> diff --git a/drivers/net/ethernet/freescale/fec.h
+>> b/drivers/net/ethernet/freescale/fec.h
+>> index 469691a..4013292 100644
+>> --- a/drivers/net/ethernet/freescale/fec.h
+>> +++ b/drivers/net/ethernet/freescale/fec.h
+>> @@ -424,6 +424,8 @@ struct bufdesc_ex {
+>>   * (40ns * 6).
+>>   */
+>>  #define FEC_QUIRK_BUG_CAPTURE		(1 << 10)
+>> +/* Controller has only one MDIO bus */
+>> +#define FEC_QUIRK_SINGLE_MDIO		(1 << 11)
+>>
+>>  struct fec_enet_priv_tx_q {
+>>  	int index;
+>> diff --git a/drivers/net/ethernet/freescale/fec_main.c
+>> b/drivers/net/ethernet/freescale/fec_main.c
+>> index 5ebdf8d..8dc0391 100644
+>> --- a/drivers/net/ethernet/freescale/fec_main.c
+>> +++ b/drivers/net/ethernet/freescale/fec_main.c
+>> @@ -91,7 +91,8 @@ static struct platform_device_id fec_devtype[] = {
+>>  		.driver_data = 0,
+>>  	}, {
+>>  		.name = "imx28-fec",
+>> -		.driver_data = FEC_QUIRK_ENET_MAC | FEC_QUIRK_SWAP_FRAME,
+>> +		.driver_data = FEC_QUIRK_ENET_MAC | FEC_QUIRK_SWAP_FRAME |
+>> +				FEC_QUIRK_SINGLE_MDIO,
+>>  	}, {
+>>  		.name = "imx6q-fec",
+>>  		.driver_data = FEC_QUIRK_ENET_MAC | FEC_QUIRK_HAS_GBIT | @@ -
+>> 1937,7 +1938,7 @@ static int fec_enet_mii_init(struct platform_device
+>> *pdev)
+>>  	int err = -ENXIO, i;
+>>
+>>  	/*
+>> -	 * The dual fec interfaces are not equivalent with enet-mac.
+>> +	 * The i.MX28 dual fec interfaces are not equal.
+>>  	 * Here are the differences:
+>>  	 *
+>>  	 *  - fec0 supports MII & RMII modes while fec1 only supports RMII
+>> @@ -1952,7 +1953,7 @@ static int fec_enet_mii_init(struct platform_device
+>> *pdev)
+>>  	 * mdio interface in board design, and need to be configured by
+>>  	 * fec0 mii_bus.
+>>  	 */
+>> -	if ((fep->quirks & FEC_QUIRK_ENET_MAC) && fep->dev_id > 0) {
+>> +	if ((fep->quirks & FEC_QUIRK_SINGLE_MDIO) && fep->dev_id > 0) {
+>>  		/* fec1 uses fec0 mii_bus */
+>>  		if (mii_cnt && fec0_mii_bus) {
+>>  			fep->mii_bus = fec0_mii_bus;
+>> @@ -2015,7 +2016,7 @@ static int fec_enet_mii_init(struct platform_device
+>> *pdev)
+>>  	mii_cnt++;
+>>
+>>  	/* save fec0 mii_bus */
+>> -	if (fep->quirks & FEC_QUIRK_ENET_MAC)
+>> +	if (fep->quirks & FEC_QUIRK_SINGLE_MDIO)
+>>  		fec0_mii_bus = fep->mii_bus;
+>>
+>>  	return 0;
+>> --
+>> 2.2.1
+> 
+> The patch limits all dts to use MDIO/phy-handle property that means
+> don't support legacy mode like V1 patch comments case1 & case3.
+
+No, not all dts need to use MDIO/phy-handle properties. The 1:1 case
+(FEC connected with PHY on its own MDIO bus) works without any
+properties. There is just no such board in mainline currently.
+
+But yes the case which can be found on the two Freescale boards is not
+supported without dts changes. And I think it is ok since it is a
+special case which needs to have this information.
+
+> Maybe it is the shortcut method.
+> 
+> In additional, it is better to split the patch to two part with dts
+> and driver part.
+
+Hm, this would mandate to have the device tree with the MDIO/phy-handle
+changes merged before the net changes to maintain bisect-ability.
+
+@Dave/Shawn, what do you prefer?
+
+--
+Stefan
