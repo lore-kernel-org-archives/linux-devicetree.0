@@ -1,144 +1,41 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH 3/3] usb: dwc3: add a quirk for device disconnection
- issue in Synopsis dwc3 core
-Date: Mon, 12 Jan 2015 11:20:32 -0600
-Message-ID: <20150112172032.GD6525@saruman>
-References: <1418695828-605-1-git-send-email-Sneeker.Yeh@tw.fujitsu.com>
- <1418695828-605-4-git-send-email-Sneeker.Yeh@tw.fujitsu.com>
- <20141222153730.GA12815@saruman>
- <CAJ1gpc3jVpz=5ME4+wCJDW5NKihvB4xYzwi0co=UuPtG9Ubmjg@mail.gmail.com>
- <CAJ1gpc3-Wjtm54WOhO6RXjZft9BMngzyYC0-S-XnTacV-qKgMg@mail.gmail.com>
- <20141229160641.GD29379@saruman>
- <CAJ1gpc0Uu4vS2iA_o_W5NaE_QBWDYFZJio7yKvhpaR5f=qWcGA@mail.gmail.com>
- <20150105170921.GH19336@saruman>
- <CAJ1gpc3RZnqizhiasrwS8uy1H_wQAi_T0mPcS8LAK4FhmBRJ6A@mail.gmail.com>
-Reply-To: <balbi@ti.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: randconfig build error with next-20150112, in
+ drivers/hwmon/gpio-fan.c
+Date: Mon, 12 Jan 2015 09:25:37 -0800
+Message-ID: <20150112172537.GA19868@roeck-us.net>
+References: <CA+r1Zhh4EXQ_0pYZfL4jB=F8unP7+jzp7LVL2RRL+urU3srj3A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="3Gf/FFewwPeBMqCJ"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-next-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAJ1gpc3RZnqizhiasrwS8uy1H_wQAi_T0mPcS8LAK4FhmBRJ6A@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sneeker Yeh <sneeker.yeh@gmail.com>
-Cc: Felipe Balbi <balbi@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Grant Likely <grant.likely@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Arnd Bergmann <arnd@arndb.de>, Paul Bolle <pebolle@tiscali.nl>, Hans de Goede <hdegoede@redhat.com>, Thomas Pugliese <thomas.pugliese@gmail.com>, David Mosberger <davidm@egauge.net>, Peter Griffin <peter.griffin@linaro.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Andrew Bresticker <abrestic@chromium.org>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb
+In-Reply-To: <CA+r1Zhh4EXQ_0pYZfL4jB=F8unP7+jzp7LVL2RRL+urU3srj3A@mail.gmail.com>
+Sender: linux-next-owner@vger.kernel.org
+To: Jim Davis <jim.epost@gmail.com>
+Cc: linux-next <linux-next@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, jdelvare@suse.de, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, lm-sensors@lm-sensors.org, devicetree <devicetree@vger.kernel.org>, Nishanth Menon <nm@ti.com>, Eduardo Valentin <edubezval@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
---3Gf/FFewwPeBMqCJ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Mon, Jan 12, 2015 at 09:53:05AM -0700, Jim Davis wrote:
+> Building with the attached random configuration file,
+> 
+> drivers/built-in.o: In function `gpio_fan_remove':
+> gpio-fan.c:(.text+0x6efea): undefined reference to
+> `thermal_cooling_device_unregister'
+> drivers/built-in.o: In function `gpio_fan_probe':
+> gpio-fan.c:(.text+0x6f376): undefined reference to
+> `thermal_cooling_device_register'
+> make: *** [vmlinux] Error 1
 
-Hi,
+Hi Jim,
 
-On Sun, Jan 11, 2015 at 11:19:55PM +0800, Sneeker Yeh wrote:
-> > > > enable the quirk only for you. Isn't there a better way of enabling=
- the
-> > > > quirk based off of revision detection couple with a look on GHWPARA=
-MS*
-> > > > registers ?
-> > > >
-> > > > What's tricking me is this claim that only config-free PHYs would be
-> > > > affected, why ?
-> > > >
-> > >
-> > > i'm still struggling now to try to get more information about this.
-> > > some security policy inside Fujitsu make me unable to access full
-> > > information of this errata today.
-> > >
-> > > Someday after i get enough information,
-> > > i shall take your suggestion here that seems better to incur quirk
-> > > dynamically via GHWPARAMS,
-> > > and then send it here again.
-> >
-> > ok, hopefully you'll find a way ;-)
-> >
-> > I got some update information here finally~
-> in case i express unclearly i also put a pdf:
-> https://drive.google.com/file/d/0B18MmcvvKjNNbDF6eEdHSzZCazA/view
->=20
-> This issue is defined by a two-way race at disconnect, between
-> 1) class driver interrupt endpoint resheduling attempts if the ISR gave an
-> ep error event due to device detach (it would try 3 times)
-> 2) Disconnect interrupt on PORTSC_CSC, which is cleared by hub thread
-> asynchronously
-> 3) The hardware IP was configured in silicon with
->        - DWC_USB3_SUSPEND_ON_DISCONNECT_EN=3D1 (this is an IP configurati=
-on
+thanks for the note.
 
-yeah, aparently this is another configuration which is not exposed on
-HWPARAMS registers. Paul, can you confirm for us ? I couldn't find it on
-Databook on any of the HWPARAMS registers.
+Hmm .. turns out those functions don't define dummies if CONFIG_THERMAL
+is not configured. How annoying.
 
-> port whose state cannot be checked from software)
->        - Synopsys IP version is < 3.00a
+Nishant, please fix your gpio-fan patch. I am going to drop it for now.
+Please keep in mind that there is a secondary dependency: The thermal
+code can be built as module. In that case, the gpio-fan driver must
+either also be built as module, or its thermal registration must be
+disabled.
 
-heh, so pretty much everybody :-)
-
->        The IP will auto-suspend itself on device detach with some
-> phy-specific interval after CSC is cleared by 2)
->=20
-> If 2) and 3) complete before 1), the interrupts it expects will not be
-> generated by the autosuspended IP, leading to a deadlock. Even later
-> disconnection procedure would detect that corresponding urb is still
-> in-progress and issue a ep stop command, auto-suspended IP still won't
-> respond to that command.
->=20
-> this defect would result in this when device detached:
-> -------------------
-> [   99.603544] usb 4-1: USB disconnect, device number 2
-> [  104.615254] xhci-hcd xhci-hcd.0.auto: xHCI host not responding to stop
-> endpoint command.
-> [  104.623362] xhci-hcd xhci-hcd.0.auto: Assuming host is dying, halting
-> host.
-> [  104.653261] xhci-hcd xhci-hcd.0.auto: Host not halted after 16000
-> microseconds.
-> [  104.660584] xhci-hcd xhci-hcd.0.auto: Non-responsive xHCI host is not
-> halting.
-> [  104.667817] xhci-hcd xhci-hcd.0.auto: Completing active URBs anyway.
-> [  104.674198] xhci-hcd xhci-hcd.0.auto: HC died; cleaning up
-> --------------------
-> As a result, when device detached, we desired to postpone "PORTCSC clear"
-> behind "disable slot". it's found that all executed ep command related to
-> disconnetion, are executed before "disable slot".
-
-Now this is all great information and they should all be part of your
-commit log and probably a big comment should be added to code as well.
-
-Thanks for going after all these details, now let's figure out a way to
-pass dwc3 revision to xhci, or maybe we pass just a flag for the quirk,
-something like:
-
-	if (dwc->revision < 3.00a && dwc->has_suspend_on_disconnect)
-		xhci_pdata.delay_portcsc_clear =3D true;
-
-or something similar to that.
-
-cheers
-
---=20
-balbi
-
---3Gf/FFewwPeBMqCJ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUtAJgAAoJEIaOsuA1yqREGw8P/jpIGLNqcZXQ98zMo0UbgeYx
-5Qsk4DCs3DzruXojtOo09RY9uGmFQybUyarlc9jEmuiBm/IZVLYKDGMggGb9qUY9
-o9o+T9G7oMCFN7IisMrFuc6KNQJARkXfKBjuHZOzRiEdaZE73ie7D6yUJa15ggzR
-h2Pnei2Dzmcu6rNCWjrZhLt05W/GAGUpFQX9DgW59DKU7GR+2YUviSlvNXyUy2wL
-WiFDhHRV25aGIFY9rH4sKTDvSRDJgqWV/gZLMwU0lZmCMfpgJA5hFECr5m0TWrbe
-SIgPE1nb8KIsbWM5qboFQg9Iue3OziuXsgTtoYg6SJd5WRw+EYl7LI/ayxJErTqJ
-GaamsnM+SG3QDlM1lS9+WsqP46unsFoXwu5lTFhkmjg9SwYMt57xX2Bm4VaKs0v0
-2ln/fxWjpFTpgQzeqWTejbnlQGqnQ/9PWxW4Eyd0REjIo1QrTeH+57O0PgvDx+X/
-K8hQMuZfL+LZPfcCOOy/ijHM0WUaWlAxS47J+QMWgvGr5TIX6ubLC4K4c/eAOD2w
-0jZntuhDY/k6C8MutWcSMSq9iqt4sCTCdCM3ts718EUMwk5eTsz4hrINL0dUR47l
-MZOHO/+ii4U1U9unVhLio1voSnail6VnkCrOGR3SZpRK2ClBHDupvJfdhs2gs5yg
-ND71GCunNsNVzmQWhQvu
-=HyRL
------END PGP SIGNATURE-----
-
---3Gf/FFewwPeBMqCJ--
+Guenter
