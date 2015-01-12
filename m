@@ -1,43 +1,80 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCHv0 1/3] of: add vendor prefix for Abracon Corporation
-Date: Mon, 12 Jan 2015 07:41:25 -0600
-Message-ID: <CAL_JsqL=yP1XmhNiV6Rq_t=ktE1FDBmRKYNNJ0Tn3iAkM3ecag@mail.gmail.com>
-References: <cover.1421045942.git.arno@natisbad.org> <754e04216222807206344fdd9f8575e6b504ed14.1421045942.git.arno@natisbad.org>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH/RFC v10 08/19] leds: Add support for max77693 mfd flash cell
+Date: Mon, 12 Jan 2015 14:46:59 +0100
+Message-ID: <54B3D053.4010300@samsung.com>
+References: <1420816989-1808-1-git-send-email-j.anaszewski@samsung.com>
+ <1420816989-1808-9-git-send-email-j.anaszewski@samsung.com>
+ <20150109184606.GJ18076@amd> <54B38B55.7080503@samsung.com>
+ <20150112132521.GA15838@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <754e04216222807206344fdd9f8575e6b504ed14.1421045942.git.arno@natisbad.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Arnaud Ebalard <arno@natisbad.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Peter Huewe <peter.huewe@infineon.com>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <treding@nvidia.com>, Mark Brown <broonie@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Rob Landley <rob@landley.net>, rtc-linux@googlegroups.com, Jason Cooper <jason@lakedaemon.net>, Guenter Roeck <linux@roeck-us.net>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <20150112132521.GA15838@amd>
+Sender: linux-leds-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, b.zolnierkie@samsung.com, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com, Andrzej Hajda <a.hajda@samsung.com>, Lee Jones <lee.jones@linaro.org>, Chanwoo Choi <cw00.choi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 12, 2015 at 2:16 AM, Arnaud Ebalard <arno@natisbad.org> wrote:
-> Signed-off-by: Arnaud Ebalard <arno@natisbad.org>
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
+On 01/12/2015 02:25 PM, Pavel Machek wrote:
+> Hi!
 >
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index b1df0ad1306c..44defc3c162a 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -4,6 +4,7 @@ This isn't an exhaustive list, but you should add new prefixes to it before
->  using them to avoid name-space collisions.
+>>>> +struct max77693_sub_led {
+>>>> +	/* related FLED output identifier */
+>>>
+>>> ->flash LED, about 4x.
+>>>
+>>>> +/* split composite current @i into two @iout according to @imax weights */
+>>>> +static void __max77693_calc_iout(u32 iout[2], u32 i, u32 imax[2])
+>>>> +{
+>>>> +	u64 t = i;
+>>>> +
+>>>> +	t *= imax[1];
+>>>> +	do_div(t, imax[0] + imax[1]);
+>>>> +
+>>>> +	iout[1] = (u32)t / FLASH_IOUT_STEP * FLASH_IOUT_STEP;
+>>>> +	iout[0] = i - iout[1];
+>>>> +}
+>>>
+>>> Is 64-bit arithmetics neccessary here? Could we do the FLASH_IOUT_STEP
+>>> divisons before t *=, so that 64-bit division is not neccessary?
+>>
+>> It is required. All these operations allow for splitting the composite
+>> current into both outputs according to weights given in the imax
+>> array.
 >
->  abilis Abilis Systems
-> +abcn   Abracon Corporation
+> I know.
+>
+> What about this?
+>
+> static void __max77693_calc_iout(u32 iout[2], u32 i, u32 imax[2])
+> {
+> 	u32 t = i;
+>
+> 	t *= imax[1] / FLASH_IOUT_STEP;
 
-Is there some reason not to use "abracon"?
+Let's consider following case:
 
->  active-semi    Active-Semi International Inc
->  ad     Avionic Design GmbH
->  adapteva       Adapteva, Inc.
-> --
-> 2.1.1
+t = 1000000
+imax[1] = 1000000
+
+multiplication of the above will give 10^12 - much more than
+it is possible to encode on 32 bits.
+
+> 	t = t / (imax[0] + imax[1]);
+> 	t /= FLASH_IOUT_STEP
 >
+> 	iout[1] = (u32)t;
+> 	iout[0] = i - iout[1];
+> }
 >
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Does it lack precision?
+>
+> Thanks,
+> 									Pavel
+>
+
+
+-- 
+Best Regards,
+Jacek Anaszewski
