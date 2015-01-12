@@ -1,32 +1,66 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3 5/8] gpio: Add Fujitsu MB86S7x GPIO driver
-Date: Mon, 12 Jan 2015 01:04:10 +0100
-Message-ID: <CACRpkdajpv0yK-m3WRxRRKJyQiBZxRppOiay+-CLTr_adOw9ww@mail.gmail.com>
-References: <1420802369-3840-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
-	<1420803212-4350-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
-	<CACRpkdZk3sLN43zmuWM+VYLB7vJdNCSq_goTx6mDSnzHrO=UHw@mail.gmail.com>
+From: =?gb2312?B?UGV0ZXIgUGFuIMXLtrAgKHBldGVycGFuZG9uZyk=?=
+	<peterpandong-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH 3/3] mtd: spi-nand: add devicetree binding
+Date: Mon, 12 Jan 2015 01:57:27 +0000
+Message-ID: <87F60714EC601C4C83DFF1D2E3D390A04AC98F@NTXXIAMBX02.xacn.micron.com>
+References: <87F60714EC601C4C83DFF1D2E3D390A04AB425@NTXXIAMBX02.xacn.micron.com>
+ <54ADF66F.7090400@imgtec.com>
+ <87F60714EC601C4C83DFF1D2E3D390A04AB4EA@NTXXIAMBX02.xacn.micron.com>
+ <54AE9E54.2010506@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZk3sLN43zmuWM+VYLB7vJdNCSq_goTx6mDSnzHrO=UHw@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Vincent Yang <vincent.yang.fujitsu@gmail.com>, Kamlakant Patel <kamlakant.patel@linaro.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Andy Green <andy.green@linaro.org>, Patch Tracking <patches@linaro.org>, Jaswinder Singh <jaswinder.singh@linaro.org>, Vincent Yang <Vincent.Yang@tw.fujitsu.com>, Tetsuya Nuriya <nuriya.tetsuya@jp.fujitsu.com>
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54AE9E54.2010506-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?gb2312?B?UWkgV2FuZyDN9cbwIChxaXdhbmcp?= <qiwang-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org>, =?gb2312?B?RnJhbmsgTGl1IMH1yLogKGZyYW5rbGl1KQ==?= <frankliu-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org>, =?gb2312?B?TWVsYW5pZSBaaGFuZyDVxdHgIChtZWxhbmllemhhbmcp?= <melaniezhang-AL4WhLSQfzjQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jan 11, 2015 at 11:40 PM, Linus Walleij
-<linus.walleij@linaro.org> wrote:
-
-> First I thought maybe this could use the generic MMIO driver
-> but it seems you need this double register access for setting
-> the direction so it won't work.
->
-> Otherwise it's sort of close ... have you looks at the option?
-
-Bah, sorry I saw I already asked this in the past and you explained
-that the arithmetic is not simple enough. Sorry for forgetting what
-I already asked. This is over all looking very good, but waiting since
-you had some pending change, then I'll merge it.
-
-Yours,
-Linus Walleij
+PiBPbiAwMS8wOC8yMDE1IDAyOjA0IEFNLCBQZXRlciBQYW4gxcu2sCAocGV0ZXJwYW5kb25nKSB3
+cm90ZToNCj4gPj4+IFRoaXMgY29tbWl0IGFkZHMgdGhlIGRldmljZXRyZWUgYmluZGluZyBkb2N1
+bWVudCB0aGF0IHNwZWNpZmllcyB0aGUNCj4gPj4+IHNwaSBuYW5kIGRldmljZXMgc3VwcG9ydC4N
+Cj4gPj4+DQo+ID4+PiBTaWduZWQtb2ZmLWJ5OiBQZXRlciBQYW4gPHBldGVycGFuZG9uZ0BtaWNy
+b24uY29tPg0KPiA+Pj4gLS0tDQo+ID4+PiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL210ZC9zcGktbmFuZC50eHQgfCAyMg0KPiA+PiArKysrKysrKysrKysrKysrKysrKysrDQo+
+ID4+PiAgMSBmaWxlIGNoYW5nZWQsIDIyIGluc2VydGlvbnMoKykNCj4gPj4+ICBjcmVhdGUgbW9k
+ZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9zcGktDQo+ID4+
+IG5hbmQudHh0DQo+ID4+Pg0KPiA+Pj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9tdGQvc3BpLW5hbmQudHh0DQo+ID4+IGIvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL210ZC9zcGktbmFuZC50eHQNCj4gPj4+IG5ldyBmaWxlIG1vZGUgMTAw
+NjQ0DQo+ID4+PiBpbmRleCAwMDAwMDAwLi45ZGQzZWZkDQo+ID4+PiAtLS0gL2Rldi9udWxsDQo+
+ID4+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbXRkL3NwaS1uYW5k
+LnR4dA0KPiA+Pj4gQEAgLTAsMCArMSwyMiBAQA0KPiA+Pj4gKyogTkFORCBkcml2ZXIgZm9yIE1U
+MjlGLCBHRDVGIGFuZCBzaW1pbGFyIFNQSSBOQU5EIGZsYXNoIGNoaXBzDQo+ID4+PiArDQo+ID4+
+PiArUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPj4+ICstICNhZGRyZXNzLWNlbGxzLCAjc2l6ZS1j
+ZWxscyA6IE11c3QgYmUgcHJlc2VudCBpZiB0aGUgZGV2aWNlIGhhcw0KPiA+PiBzdWItbm9kZXMN
+Cj4gPj4+ICsgIHJlcHJlc2VudGluZyBwYXJ0aXRpb25zLg0KPiA+Pj4gKy0gY29tcGF0aWJsZSA6
+IFNob3VsZCBiZSB0aGUgbWFudWZhY3R1cmVyIGFuZCB0aGUgbmFtZSBvZiB0aGUgY2hpcC4NCj4g
+Pj4gQmVhciBpbiBtaW5kDQo+ID4+Pg0KPiA+Pg0KPiA+PiBVbmxlc3MgSSdtIG1pc3Rha2VuLCB3
+ZSBkb24ndCBuZWVkIHRoZSBjaGlwIElEIGhlcmUsIGFzIFNQSSBOQU5EDQo+IGFsbG93cw0KPiA+
+PiB0byBhdXRvZGV0ZWN0IHRoZSBkZXZpY2UuIEFueSByZWFzb24gd2h5IHdlIGNhbid0IGp1c3Qg
+dXNlIGEgZ2VuZXJpYw0KPiA+PiBjb21wYXRpYmxlICJzcGktbmFuZCIgaGVyZT8NCj4gPj4gLS0N
+Cj4gPj4gRXplcXVpZWwNCj4gPg0KPiA+IEluIGZhY3QsIEkgZG9uJ3Qga25vdyBob3cgdG8gYXV0
+b2RldGVjdCB0aGUgU1BJIE5BTkQgZGV2aWNlLiBNaWNyb24NCj4gZGV2aWNlIGFuZA0KPiA+IEdp
+Z2FkZXZpY2UgZGV2aWNlIGhhdmUgZGlmZmVyZW50IHJlYWQgSUQgZnVuY3Rpb25zLiBUaGUgQ2hp
+cCBJRCBoZXJlDQo+IGlzIHVzZWQgdG8NCj4gPiBkZXRlcm1pbmUgd2hpY2ggZnVuY3Rpb24gdG8g
+dXNlLg0KPiA+DQo+IA0KPiBJc24ndCB0aGUgZGlmZmVyZW5jZSBiZXR3ZWVuIHRoZSBSZWFkIElE
+IHZlcnkgbWlub3I/IE9uZSBvZiB0aGUgdmVuZG9yDQo+IG5lZWRzIGEgMi1ieXRlIElEIHJlYWQs
+IGFuZCB0aGUgb3RoZXIgb25lIG5lZWRzIGEgMy1ieXRlIElEIHJlYWQuDQo+IA0KPiBTbyB5b3Ug
+Y2FuIGp1c3QgdHJ5IHdpdGggMi1ieXRlLCBhbmQgaWYgdGhhdCBmYWlscyAobm8gdmVuZG9yIElE
+IGlzDQo+IGZvdW5kIG9uIHRoZSBmaXJzdCBieXRlKSwgeW91IGNhbiB0cnkgd2l0aCB0aGUgMy1i
+eXRlIGNvbW1hbmQuDQo+IA0KPiBJdCdzIG5vdCB0aGUgbW9zdCBlbGVnYW50IHNvbHV0aW9uLCBi
+dXQgaXQncyBub3Qgc3VwZXIgYXdmdWwgZWl0aGVyLg0KPiAtLQ0KPiBFemVxdWllbA0KDQpJIGFn
+cmVlIHdpdGggeW91ciBpZGVhIGFib3V0IHRyeSBkaWZmZXJlbnQgd2F5cyB0byByZWFkIElELiBJ
+dCBpcyBhIGJldHRlciB3YXkNCnRvIGRldGVjdCB0aGUgY2hpcCBpZiBpdCBjYW4gd29yayBwcm9w
+ZXJseS4NCg0KVGhlIGRpZmZlcmVuY2UgYmV0d2VlbiB0aGUgUmVhZCBJRCBpcyB0aGF0IHNvbWUg
+Y2hpcHMgbmVlZCB0byBzZW5kIGEgZHVtbXkgYnl0ZQ0Kb3IgYWRkcmVzcyBhZnRlciBvcGNvZGUg
+dGhlbiByZWFkIDIgYnl0ZSwgc29tZSBjaGlwcyBuZWVkbid0IHNlbmQgYW55IGRhdGEgYWZ0ZXIN
+Cm9wY29kZSBidXQgcmVhZCAzIGJ5dGUuDQoNCkknbSBjb25jZXJuZWQgbWF5YmUgY2hpcCB3aWxs
+IGdldCBpbnRvIHVua25vd24gb3IgdmVuZG9yIHNwZWNpZmllZCBzdGF0ZSBpZiB3ZQ0Kc2VuZCB0
+aGUgd3Jvbmcgc2VxdWVuY2UuDQo=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
