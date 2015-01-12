@@ -1,71 +1,62 @@
-From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 05/11] usb: gadget: at91_udc: Remove non-DT handling code
-Date: Mon, 12 Jan 2015 15:39:05 -0600
-Message-ID: <20150112213905.GI2858@saruman>
-References: <1417606330-17753-1-git-send-email-boris.brezillon@free-electrons.com>
- <1417606330-17753-6-git-send-email-boris.brezillon@free-electrons.com>
-Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
+From: Alexandre Courbot <gnurou@gmail.com>
+Subject: Re: [Patch v5 2/2] gpio: Document GPIO hogging mechanism
+Date: Tue, 13 Jan 2015 06:43:33 +0900
+Message-ID: <CAAVeFuLF7EVR-Xta=eNegmGWX9AFu9xmyhXisGCTwc1ds3t1cA@mail.gmail.com>
+References: <1419019671-25377-1-git-send-email-bparrot@ti.com>
+ <1419019671-25377-3-git-send-email-bparrot@ti.com> <CACRpkdb7Wq7-rBypqPkefejY5Qfq_KKx91H+DxKWv-TM2y04bg@mail.gmail.com>
+ <20150112163902.GE5834@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="rCb8EA+9TsBVtA92"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1417606330-17753-6-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150112163902.GE5834@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benoit Parrot <bparrot@ti.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Jiri Prchal <jiri.prchal@aksignal.cz>, Pantelis Antoniou <panto@antoniou-consulting.com>
 List-Id: devicetree@vger.kernel.org
 
---rCb8EA+9TsBVtA92
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue, Jan 13, 2015 at 1:39 AM, Benoit Parrot <bparrot@ti.com> wrote:
+> Linus Walleij <linus.walleij@linaro.org> wrote on Mon [2015-Jan-12 11:20:14 +0100]:
+>> On Fri, Dec 19, 2014 at 9:07 PM, Benoit Parrot <bparrot@ti.com> wrote:
+>>
+>> > Add GPIO hogging documentation to gpio.txt
+>> >
+>> > Signed-off-by: Benoit Parrot <bparrot@ti.com>
+>> > Reviewed-by: Alexandre Courbot <acourbot@nvidia.com>
+>>
+>> This is starting to look good ...
+>>
+>> > +               line_b {
+>> > +                       gpio-hog;
+>> > +                       gpios = <6 0>;
+>> > +                       state = "output-low";
+>>
+>> I don't like the state string.
+>>
+>> Instead have boolean properties for all states.
+>>
+>> line_b {
+>>     gpio-hog;
+>>     gpios = <6 0>;
+>>     output-low;
+>>     line-name = "foo-bar-gpio";
+>> }
+>>
+>> Then use of_property_read_bool() in the code to check which
+>> state is to be selected intially. You can check that no mutually
+>> exclusive state are selected, I don't like that an arbitrary string
+>> select the state like that, if we do it that way an enumerator would
+>> be better, I prefer bools.
+>
+> I am sorry but that is how it was originally in the first patch.
+> Alexandre's review comment suggested this method in [1] and [2] (below).
+>
+> Alexandre, any comments?
+>
+> [1] http://marc.info/?l=linux-gpio&m=141456662426151&w=2
+>
+> [2] http://marc.info/?l=linux-gpio&m=141715982424744&w=2
 
-On Wed, Dec 03, 2014 at 12:32:04PM +0100, Boris Brezillon wrote:
-> Since non-DT board support has been removed from the at91 architecture we
-> can safely remove non-DT handling code.
->=20
-> Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-
-doesn't apply cleanly:
-
-checking file drivers/usb/gadget/udc/Kconfig
-checking file drivers/usb/gadget/udc/at91_udc.c
-Hunk #1 succeeded at 1710 (offset 13 lines).
-Hunk #2 succeeded at 1722 (offset 13 lines).
-Hunk #3 succeeded at 1958 (offset 13 lines).
-Hunk #4 FAILED at 1960.
-1 out of 4 hunks FAILED
-
-please rebase on testing/next which I just pushed.
-
---=20
-balbi
-
---rCb8EA+9TsBVtA92
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUtD75AAoJEIaOsuA1yqREnL0P/0ZdPB46Byvm2oj9t56CEeZk
-R2kBsJhznYqBJzUXMaccvjcP1HXr4HVQQhTR/dF52cus4nXHvNK2p9NQ/9Ja8Qf9
-PhyPAoAryTrhQvc50JSOs9z1DsIE3uRwvRIRyVJrplMp04M+Bs6BVHj7s0BXkXOV
-NkZJqcjKIonBxyHZ7+/4P1/cWCPoJ/JeE6F7Zs+Az6eOcH7KSphtVFRAULV6lC10
-TaH5xJcEWPDljOzIgRKcAUljopldnnBo22+KJW2ErZf3EdIwTCZPL3Ae+4rlG1L0
-4JAOOrYL4OaGACb5NdJ3j1dEx5/dJyF+jAUNq4JfgPyr0UzmZOc6bQ6u5h30LLNJ
-Y49Ppgz2ohe3PydGi4cjrlwoVp0UrQzTa6E2s/EmPs0c39Omz9RrR5px8sSAyZQc
-YBuP2a1qi83Kx6ftdeFoP8NQ6s4vOCO3ZjD7JwF08SSCYI1jqBebSX50/fSx7vIe
-t1IURJqbXVOxnA7FCf5g5p6IeDxKjEtIL7W5JuRXT89CXz4z5IoSOxNOH13+J6iq
-sSS7WygyBz+9QQQXCyqrbNyus7HNDSfCoOWPQPcKlHLMkkutsNPlcTBCEUM+I4pN
-Lx7XQW7AFNtIzM41qdOQfROzYOfJCZDeA7zpBgjSHHQe2oehgow5gkDTQuLQQAa0
-qZxv5X3Vq1za1z9rfY+C
-=uDD9
------END PGP SIGNATURE-----
-
---rCb8EA+9TsBVtA92--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+When Linus and I are in conflict, follow Linus. Arnd's suggestion of
+having enums defined in (IIUC) include/dt-bindings/gpio and using them
+sounds good to me too and might make everyone happy (no possibility of
+conflicting definitions + no strings). Linus, could you comment on it?
