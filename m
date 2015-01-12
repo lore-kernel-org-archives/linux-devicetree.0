@@ -1,72 +1,41 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v9 1/4] drm/i2c: tda998x: Add DT support for audio
-Date: Mon, 12 Jan 2015 10:25:28 +0100
-Message-ID: <1421054728.3081.28.camel@pengutronix.de>
-References: <54AE99F5.1010404@ti.com> <20150108174257.557f7ea5@armhf>
- <54AFA9B0.6040405@ti.com> <20150109123036.4bc4bbf6@armhf>
- <20150109114529.GH12302@n2100.arm.linux.org.uk>
- <20150109135401.5b270d46@armhf>
- <20150109130725.GN12302@n2100.arm.linux.org.uk> <54AFDE8D.3000504@arm.com>
- <20150109145741.GP12302@n2100.arm.linux.org.uk>
- <20150109183857.53d701a4@armhf>
- <20150109200127.GD12302@n2100.arm.linux.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20150109200127.GD12302@n2100.arm.linux.org.uk>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Andrew Jackson <Andrew.Jackson@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>, Mark Brown <broonie@kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: [RFC 2/3] ARM: dts: Specify MSHC realistic clocks and use frequency
+ scaling
+Date: Mon, 12 Jan 2015 10:23:04 +0100
+Message-ID: <1421054585-9032-3-git-send-email-k.kozlowski@samsung.com>
+References: <1421054585-9032-1-git-send-email-k.kozlowski@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1421054585-9032-1-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Jaehoon Chung <jh80.chung@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+Cc: Kyungmin Park <kyungmin.park@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-QW0gRnJlaXRhZywgZGVuIDA5LjAxLjIwMTUsIDIwOjAxICswMDAwIHNjaHJpZWIgUnVzc2VsbCBL
-aW5nIC0gQVJNCkxpbnV4OgpbLi4uXQo+IE5laXRoZXI7IHdlIGtub3cgdGhhdCB0aGVyZSBhcmUg
-VERBOTk4eCBkZXZpY2VzIHdoaWNoIGFsbG93IFNQRElGIHRvIGJlCj4gaW5wdXQgdmlhIHR3byBz
-ZXBhcmF0ZSBwaW5zLCBidXQgb25seSBvbmUgdG8gYmUgYWN0aXZlIGF0IGFueSBvbmUgdGltZS4K
-PiBHaXZlbiB0aGF0IHRoZSBoYXJkd2FyZSBpcyBmbGV4aWJsZSBpbiB0aGF0IHJlZ2FyZCwgYSBi
-aW5kaW5nIHdoaWNoCj4gYXJ0aWZpY2lhbGx5IHJlc3RyaWN0cyB0aGF0IGZsZXhpYmlsaXR5IHdv
-dWxkIHNlZW0gdW53aXNlLgo+IAo+IElmIHdlIHdlcmUgdG8gY29tZSBhY3Jvc3MgYSBzZXR1cCB3
-aGljaCBkaWQgcm91dGUgdHdvIFNQRElGIHN0cmVhbXMgdG8KPiB0aGUgVERBOTk4eCwgYW5kIHdl
-IGhhZCB0byBtYWtlIHRoZSBkZWNpc2lvbiBhdCBydW4gdGltZSB3aGljaCB0byByb3V0ZQo+IHRv
-IHRoZSBIRE1JIHNpbmssIHdlJ2QgaGF2ZSB0byByZXdvcmsgdGhlIGJpbmRpbmcsIGFuZCB3ZSdk
-IGhhdmUgdG8KPiBzdXBwb3J0IHRoZSBuZXcgYmluZGluZyBhbmQgdGhlIG9sZCBiaW5kaW5nIGlu
-IHRoZSBkcml2ZXIuCj4gCj4gQ2FuIHlvdSBwbGVhc2UgbG9vayBhdCBEb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvZ3JhcGgudHh0ID8KPiAKPiBJIHRoaW5rIHdlIG1heSBiZSBhYmxl
-IHRvIHVzZSBzb21ldGhpbmcgbGlrZSB0aGlzOgo+IAo+IHRkYTk5OHg6IGhkbWktZW5jb2RlciB7
-Cj4gCWNvbXBhdGlibGUgPSAibnhwLHRkYTk5OHgiOwo+IAlyZWcgPSA8MHg3MD47Cj4gCXZpZGVv
-LXBvcnRzID0gPDB4MjM0NTAxPjsKPiAKPiAJcG9ydCB7Cj4gCQl0ZGE5OTh4X3ZpZGVvOiBlbmRw
-b2ludCB7Cj4gCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZsY2QwX3JnYj47Cj4gCQl9Owo+IAl9Owo+
-IAo+IAlwb3J0IHsKPiAJCSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+IAkJI3NpemUtY2VsbHMgPSA8
-MD47Cj4gCj4gCQl0ZGE5OTh4X3NwZGlmMDogZW5kcG9pbnRAMDIgewo+IAkJCXJlZyA9IDwweDAy
-PjsKPiAJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JnNwZGlmMD47Cj4gCQl9Owo+IAo+IAkJdGRhOTk4
-eF9zcGRpZjE6IGVuZHBvaW50QDA0IHsKPiAJCQlyZWcgPSA8MHgwND47Cj4gCQkJcmVtb3RlLWVu
-ZHBvaW50ID0gPCZzcGRpZjA+Owo+IAkJfTsKPiAKPiAJCXRkYTk5OHhfaTJzOiBlbmRwb2ludEAw
-MyB7Cj4gCQkJcmVnID0gPDB4MDM+Owo+IAkJCXJlbW90ZS1lbmRwb2ludCA9IDwmaTJzPjsKPiAJ
-CX07Cj4gCX07Cj4gfTsKPiAKPiBJJ20gYWRkaW5nIFBoaWxpcHAgWmFiZWwgZm9yIGNvbW1lbnQu
-ICBUaGUgaXNzdWUgSSBzZWUgd2l0aCB0aGlzIGlzIHRoYXQKPiB3ZSBoYXZlIHR3byBwb3J0cyBo
-ZXJlIHdoaWNoIGFyZSBub3QgbXV0dWFsbHkgZXhjbHVzaXZlLCBhbmQgaXQncyBub3QKPiBvYnZp
-b3VzIGhvdyB0aGV5IGFyZSBkZWFsdCB3aXRoLgoKSmVhbi1GcmFuY29pcycgcmVwbHkgYWxyZWFk
-eSByZWZsZWN0cyB0aGlzLCBidXQgdGhlICdwb3J0JyBub2RlcyBzaG91bGQKY29ycmVzcG9uZCB0
-byBwaHlzaWNhbCBwb3J0cyBvZiB0aGUgZGV2aWNlIGlmIHBvc3NpYmxlLiBJZiB5b3UgY2FuCmNv
-bmZpZ3VyZSB0aGUgZGV2aWNlIHRvIGhhdmUgZGVkaWNhdGVkIGlucHV0IHBpbnMgZm9yIEkyUywg
-U1BESUYwLCBhbmQKU1BESUYxIGF0IHRoZSBzYW1lIHRpbWUsIHRoZXkgc2hvdWxkIGFwcGVhciBp
-biB0aGUgZGV2aWNlIHRyZWUgYXMKc2VwYXJhdGUgcG9ydHM6Cgp0ZGE5OTh4OiBoZG1pLWVuY29k
-ZXIgewoJcG9ydEAwIHsgLyogcGl4ZWwgZGF0YSBhY2NvcmRpbmcgdG8gdmlkZW8tcG9ydHMgKi8K
-CQlyZWcgPSA8MHgwMD47Cgl9OwoJcG9ydEAxIHsgLyogQVAxOiBTUERJRjAgKi8KCQlyZWcgPSA8
-MHgwMT47Cgl9OwoJcG9ydEAyIHsgLyogQVAyOiBTUERJRjEgKi8KCQlyZWcgPSA8MHgwMj47Cgl9
-OwoJcG9ydEAzIHsgLyogQVAzOiBJMlMgKi8KCQlyZWcgPSA8MHgwMz47Cgl9Owp9OwoKVGhlIHRk
-YTk5OHggYmluZGluZyB3b3VsZCBkZWZpbmUgaG93IHRoZSBwb3J0cyBhcmUgbnVtYmVyZWQsIHNv
-bWUKY29ycmVzcG9uZGVuY2UgdG8gdGhlIEFQIHBpbiBudW1iZXJzIHdvdWxkIGJlIGdvb2QuCgpy
-ZWdhcmRzClBoaWxpcHAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
-Lm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRl
-dmVsCg==
+Lower the dw_mmc host clock from 400 MHz to 100 MHz because there are a
+lot of MMC errors above 100 MHz.
+
+Enable frequency scaling to reduce energy consumption. In idle this
+reduced energy consumption by 2.6% (from 119.5 mA to 116.4 mA).
+
+Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+---
+ arch/arm/boot/dts/exynos4412-trats2.dts | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/exynos4412-trats2.dts b/arch/arm/boot/dts/exynos4412-trats2.dts
+index 29231b452643..21f1236ae979 100644
+--- a/arch/arm/boot/dts/exynos4412-trats2.dts
++++ b/arch/arm/boot/dts/exynos4412-trats2.dts
+@@ -558,7 +558,9 @@
+ 		non-removable;
+ 		card-detect-delay = <200>;
+ 		vmmc-supply = <&vemmc_reg>;
+-		clock-frequency = <400000000>;
++		clock-frequency = <100000000>;
++		clock-freq-min-max = <400000 100000000>;
++		frequency-scaling;
+ 		samsung,dw-mshc-ciu-div = <0>;
+ 		samsung,dw-mshc-sdr-timing = <2 3>;
+ 		samsung,dw-mshc-ddr-timing = <1 2>;
+-- 
+1.9.1
