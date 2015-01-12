@@ -1,37 +1,92 @@
-From: Kukjin Kim <kgene@kernel.org>
-Subject: Re: [PATCH v3] ARM: dts: Add dts file for odroid XU3 board
-Date: Mon, 12 Jan 2015 17:37:59 +0900
-Message-ID: <54B387E7.3080406@kernel.org>
-References: <1420671228-24692-1-git-send-email-sjoerd.simons@collabora.co.uk> <7htwzzvq0v.fsf@deeprootsystems.com>
+From: Pavel Machek <pavel@denx.de>
+Subject: Re: [PATCH v8 2/4] fpga manager: add sysfs interface document
+Date: Mon, 12 Jan 2015 09:45:30 +0100
+Message-ID: <20150112084530.GA28681@amd>
+References: <1420575219-27061-1-git-send-email-atull@opensource.altera.com>
+ <1420575219-27061-3-git-send-email-atull@opensource.altera.com>
+ <20150107084819.GA1887@amd>
+ <alpine.DEB.2.02.1501091302370.30067@linuxheads99>
+ <20150109205643.GA5761@amd>
+ <4D4EA2D5-68DD-49F7-9E2D-3A0A8F6AF9CA@konsulko.com>
+ <20150110151118.GA16036@amd>
+ <alpine.DEB.2.10.1501111009180.2556@shineypoop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <7htwzzvq0v.fsf@deeprootsystems.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kevin Hilman <khilman@kernel.org>
-Cc: Sjoerd Simons <sjoerd.simons@collabora.co.uk>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Joonyoung Shim <jy0922.shim@samsung.com>, Tyler Baker <tyler.baker@linaro.org>, Heesub Shin <heesub.shin@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.10.1501111009180.2556@shineypoop>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: atull <atull@opensource.altera.com>
+Cc: mark.rutland@arm.com, linux-doc@vger.kernel.org, rubini@gnudd.com, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, hpa@zytor.com, Steffen Trumtrar <s.trumtrar@pengutronix.de>, devel@driverdev.osuosl.org, sameo@linux.intel.com, nico@linaro.org, ijc+devicetree@hellion.org.uk, Michal Simek <michal.simek@xilinx.com>, kyle.teske@ni.com, jgunthorpe@obsidianresearch.com, Grant Likely <grant.likely@linaro.org>, davidb@codeaurora.org, Linus Walleij <linus.walleij@linaro.org>, cesarb@cesarb.net, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, iws@ovro.caltech.edu, Mark Brown <broonie@kernel.org>, philip@balister.org, dinguyen@opensource.altera.com, Michal Simek <monstr@monstr.eu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, yvanderv@opensource.altera.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, Alan
 List-Id: devicetree@vger.kernel.org
 
-On 01/10/15 02:10, Kevin Hilman wrote:
-> Sjoerd Simons <sjoerd.simons@collabora.co.uk> writes:
-> 
->> Add DTS for the Hardkernel Odroid XU3. The name of the DTS file is kept the
->> same as the vendors naming, which means it's prefixed with exynos5422
->> instead of exynos5800 as the SoC name even though it includes the
->> exyno5800 dtsi.
->>
->> Signed-off-by: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
-> 
-> Boot tested on top of next-20150109 (with and without my hack for
-> bringing up 8 cores.)
-> 
-> Tested-by: Kevin Hilman <khilman@linaro.org>
-> 
-Thanks for your test, Kevin.
-
-I've applied, need to update devicetree bindings for samsung-boards
-though because it can be updated later.
-
-Thanks,
-Kukjin
+T24gU3VuIDIwMTUtMDEtMTEgMTA6Mjk6MDAsIGF0dWxsIHdyb3RlOgo+IE9uIFNhdCwgMTAgSmFu
+IDIwMTUsIFBhdmVsIE1hY2hlayB3cm90ZToKPiAKPiA+IE9uIFNhdCAyMDE1LTAxLTEwIDEwOjEw
+OjUxLCBQYW50ZWxpcyBBbnRvbmlvdSB3cm90ZToKPiA+ID4gSGkgUGF2ZWwsCj4gPiA+IAo+ID4g
+PiA+IE9uIEphbiA5LCAyMDE1LCBhdCAyMjo1NiAsIFBhdmVsIE1hY2hlayA8cGF2ZWxAZGVueC5k
+ZT4gd3JvdGU6Cj4gPiA+ID4gCj4gPiA+ID4gT24gRnJpIDIwMTUtMDEtMDkgMTM6MTQ6MjQsIGF0
+dWxsIHdyb3RlOgo+ID4gPiA+PiBPbiBXZWQsIDcgSmFuIDIwMTUsIFBhdmVsIE1hY2hlayB3cm90
+ZToKPiA+ID4gPj4gCj4gPiA+ID4+PiBPbiBUdWUgMjAxNS0wMS0wNiAxNDoxMzozNywgYXR1bGxA
+b3BlbnNvdXJjZS5hbHRlcmEuY29tIHdyb3RlOgo+ID4gPiA+Pj4+ICsKPiA+ID4gPj4+PiArV2hh
+dDoJCS9zeXMvY2xhc3MvZnBnYV9tYW5hZ2VyLzxmcGdhPi9maXJtd2FyZQo+ID4gPiA+Pj4+ICtE
+YXRlOgkJT2N0b2JlciAyMDE0Cj4gPiA+ID4+Pj4gK0tlcm5lbFZlcnNpb246CTMuMTgKPiA+ID4g
+Pj4+PiArQ29udGFjdDoJQWxhbiBUdWxsIDxhdHVsbEBvcGVuc291cmNlLmFsdGVyYS5jb20+Cj4g
+PiA+ID4+Pj4gK0Rlc2NyaXB0aW9uOglOYW1lIG9mIHRoZSBGUEdBIGltYWdlIGZpbGUgdG8gbG9h
+ZCB1c2luZyBmaXJtd2FyZQo+ID4gPiA+Pj4+IGNsYXNzLgo+ID4gPiA+Pj4gCj4gPiA+ID4+PiBU
+aGlzIG9uZSBpcyB1Z2x5OiBpdCB1bm5lY2Nlc3NhcmlseSBwYXNzZXMgZmlybXdhcmUgbmFtZSB0
+aHJvdWdoIHRoZQo+ID4gPiA+Pj4ga2VybmVsLiBKdXN0IG1ha2UgaW50ZXJmYWNlIGFuZCBjb2Rl
+IHNpbXBsZXIgYnkgYWx3YXlzIHBhc3NpbmcKPiA+ID4gPj4+ICJzb2NmcGdhLWZwZ2EtaW1hZ2Ui
+IG9yIHNvbWV0aGluZyBsaWtlIHRoYXQuCj4gPiA+ID4+PiAKPiA+ID4gPj4+IFRoYW5rcywKPiA+
+ID4gPj4+IAkJCQkJCQkJCVBhdmVsCj4gPiA+ID4+IAo+ID4gPiA+PiBIaSBQYXZlbCwKPiA+ID4g
+Pj4gCj4gPiA+ID4+IEl0IG1pZ2h0IGJlIHVnbHkuICBJdCdzIG5vdCB1bm5lY2Vzc2FyeS4gIFNv
+bWUgdXNlcyBvZiBGUEdBcyBpbnZvbHZlCj4gPiA+ID4+IHN3aXRjaGluZyBvdXQgdGhlIEZQR0Eg
+aW1hZ2VzIGR5bmFtaWNhbGx5IHVuZGVyIGNvbnRyb2wgb2YgdGhlIHVzZXJzcGFjZS4KPiA+ID4g
+PiAKPiA+ID4gPiBUaGVuIGNvbmZpZ3VyZSB1ZGV2IHRvIGxvYWQgcmlnaHQgZmlybXdhcmUgZm9y
+IHlvdSwgb3IgbG4gLXMKPiA+ID4gPiBpbWFnZS1pLXdhbnQtbm93IHNvY2ZwZ2EtZnBnYS1pbWFn
+ZSB0byBzZWxlY3QgdGhlIG9uZSB0byByZWFk4oCmPwo+ID4gPiA+IAo+ID4gPiAKPiA+ID4gV2hv
+IHNhaWQgdGhhdCB1ZGV2IGlzIGdvaW5nIHRvIGJlIGF2YWlsYWJsZSBpbiB0aGUga2luZCBvZiBz
+eXN0ZW0gdGhpcyBpcyBnb2luZyB0byBlbmQgaW4/Cj4gPiAKPiA+IE5vb25lLgo+ID4gCj4gPiA+
+IERvaW5nIGxuIC1zIHRyaWNrcyB0byBsb2FkIGEgZGlmZmVyZW50IGltYWdlPyBSZWFsbHk/Cj4g
+PiAKPiA+IEJ1dCBpZiB5b3UgZG9uJ3QgaGF2ZSB1ZGV2LCB5b3UgY2FuIGRvIGxuIC1zLiBJdCBp
+cyBiZXR0ZXIgdGhhbgo+ID4gb3Blbi1jb2Rpbmcgc3ltbGluayBmdW5jdGlvbmFsaXR5IGludG8K
+PiA+IC9zeXMvY2xhc3MvZnBnYV9tYW5hZ2VyLzxmcGdhPi9maXJtd2FyZSAuLi4gY2F1c2UgdGhh
+dCdzIHdoYXQgdGhpcyBpcy4KPiA+IAo+ID4gQWN0dWFsbHksIGNsZWFuIGltcGxlbWVudGF0aW9u
+IG9mICJmaXJtd2FyZSIgd291bGQgYmUgc3ltbGluayBpbgo+ID4gc3lzZnM7IGJ1dCBJJ2Qgc2F5
+IHRoYXQgd291bGQgYmUgb3ZlcmRvaW5nIGl0Lgo+ID4gCj4gPiA+IEkgc2F5IHRoZSBpbnRlcmZh
+Y2UgaXMgZmluZSBhcyBpdCBpcy4KPiA+IAo+ID4gSSBzYXkgaXQgaXMgbm90Lgo+ID4gCQkJCQkJ
+CQkJUGF2ZWwKPiAKPiBIaSBQYXZlbCwKPiAKPiBJIHNlZSB0aGF0IHdlIGNvdWxkIGRvIGl0IHRo
+YXQgd2F5IGFuZCBpdCB3b3VsZCBlbGltaW5hdGUgb25lIG9mIHRoZQo+IHN5c2ZzIGZpbGVzICgu
+Li9mcGdhX21hbmFnZXIvPGZwZ2E+L2Zpcm13YXJlKS4gIEVpdGhlciB3YXkgd2UgYXJlIGFzc3Vt
+aW5nCj4gdGhhdCB0aGVyZSBhcmUgZnBnYSBpbWFnZXMgaW4gdGhlIGZpbGVzeXN0ZW0gaW4gdGhl
+IGZpcm13YXJlIHNlYXJjaCBwYXRoLAo+IHNvIEkgZG9uJ3Qgc2VlIHdoeSBhZGRpbmcgYSBwaWVj
+ZSBvZiBpbmRpcmVjdGlvbiAoc3ltbGluaykgbWFrZXMgdGhpbmdzCj4gYmV0dGVyLgoKV2VsbC4u
+IHlvdSBhcmUgYmFzaWNhbGx5IHJlLWltcGxlbWVudGluZyBzeW1saW5rIHdpdGgKLi4vZnBnYV9t
+YW5hZ2VyLzxmcGdhPi9maXJtd2FyZSAiZmlsZSIgaW4gc3lzZnMsIGFuZCBkb2luZyBpdApiYWRs
+eS4gSXQgaGFzIG5vIGFkdmFudGFnZXMgb3ZlciByZWFsIHN5bWxpbmsuCgo+IFdlIHdhbnQgdG8g
+YmUgYWJsZSB0byBzd2l0Y2ggb3V0IHRoZSBGUEdBIGltYWdlCj4gdW5kZXIgY29udHJvbCBvZiB1
+c2Vyc3BhY2UuICBTbyB3ZSBkb24ndCB3YW50IGFuIGludGVyZmFjZSB0aGF0IG1ha2VzCj4gaXQg
+bW9yZSBjdW1iZXJzb21lIG9yIHRyaWVzIHRvIHByZXRlbmQgdGhhdCB0aGVyZSdzIG9ubHkgb25l
+IGltYWdlLgoKV2hhdCBpcyBjdW1iZXJzb21lIGFib3V0IHN5bWxpbms/IFdoeSBpcyAiZmFrZSIg
+c3ltbGluayBpbiBzeXNmcyBiZXR0ZXI/Cgo+IFByZXZpb3VzIHVzZXMgb2YgdGhlIGZpcm13YXJl
+IGxheWVyIGhhcyBiZWVuIHRvIHVzZSBpdCB0byBsb2FkIG9uY2UgYWZ0ZXIKPiBib290dXA7IHRo
+aXMgaXMgZGlmZmVyZW50IHNpbmNlIHNvbWUgdXNlIGNhc2VzIHdpbGwgd2FudCB0byBzd2l0Y2gg
+b3V0Cj4gdGhlIEZQR0EgaW1hZ2UuICBJZiBzb21lb25lIHdhbnRzIHRoZXJlIHRvIGJlIG9ubHkg
+b25lIEZQR0EgaW1hZ2Ugb24KPiB0aGUgRkdQQSBmb3JldmVyLCB0aGV5IHdpbGwgcHJvYmFibHkg
+bm90IGJlIHVzaW5nIHRoaXMgZnJhbWV3b3JrOyB0aGVpcgo+IEZQR0Egd2lsbCBwcm9iYWJseSBi
+ZSBsb2FkZWQgYmVmb3JlIExpbnV4IGJvb3RzIHVwLgoKV2h5PyBJIGhhdmUganVzdCBvbmUgaW1h
+Z2Ugb24gdGhlIGZwZ2EsIGFuZCB3b3VsZCBwcmVmZXIgdG8gbG9hZCBpdApmcm9tIExpbnV4LgoJ
+CQkJCQkJCVBhdmVsCi0tIAooZW5nbGlzaCkgaHR0cDovL3d3dy5saXZlam91cm5hbC5jb20vfnBh
+dmVsbWFjaGVrCihjZXNreSwgcGljdHVyZXMpIGh0dHA6Ly9hdHJleS5rYXJsaW4ubWZmLmN1bmku
+Y3ovfnBhdmVsL3BpY3R1cmUvaG9yc2VzL2Jsb2cuaHRtbApfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZlbCBtYWlsaW5nIGxpc3QKZGV2ZWxAbGludXhk
+cml2ZXJwcm9qZWN0Lm9yZwpodHRwOi8vZHJpdmVyZGV2LmxpbnV4ZHJpdmVycHJvamVjdC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9kcml2ZXJkZXYtZGV2ZWwK
