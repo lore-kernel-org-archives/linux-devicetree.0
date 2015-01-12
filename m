@@ -1,51 +1,30 @@
-From: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-Subject: Re: [PATCH v5 3/7] gpio/xilinx: Add support for X86 Arch
-Date: Mon, 12 Jan 2015 10:31:44 +0100
-Message-ID: <CAPybu_2X17ymd2NK7AHgJ5eaTjbpTQS_8mp8a6ijYsdS+qoQ+Q@mail.gmail.com>
-References: <1418831474-24428-1-git-send-email-ricardo.ribalda@gmail.com>
- <1418831474-24428-4-git-send-email-ricardo.ribalda@gmail.com> <CACRpkdYr6OZUjQ8JLzpktQK1xg1Un_SKtU+xr=gFzpSo+A2C-g@mail.gmail.com>
+From: Paul Bolle <pebolle@tiscali.nl>
+Subject: ARM: mvebu: CONFIG_DEBUG_MVEBU_UART_ALTERNATE
+Date: Mon, 12 Jan 2015 10:33:56 +0100
+Message-ID: <1421055236.22660.12.camel@x220>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYr6OZUjQ8JLzpktQK1xg1Un_SKtU+xr=gFzpSo+A2C-g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Alexandre Courbot <gnurou@gmail.com>, Michal Simek <michal.simek@xilinx.com>, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Darren Hart <dvhart@linux.intel.com>
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Valentin Rothberg <valentinrothberg@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello
+Maxime,
 
-On Mon, Jan 12, 2015 at 10:24 AM, Linus Walleij
-<linus.walleij@linaro.org> wrote:
-> On Wed, Dec 17, 2014 at 4:51 PM, Ricardo Ribalda Delgado
-> <ricardo.ribalda@gmail.com> wrote:
->
->> Core can be accessed via PCIe on X86 platform.
->> This patch also allows the driver to be used as module.
->>
->> Acked-by: Michal Simek <michal.simek@xilinx.com>
->> Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
->
-> PCIe on x86, using device tree? The ACPI people are just gonna love this.
+Your commit d91125ddf962 ("ARM: mvebu: Rename DEBUG_LL to indicate UART
+index") is included in today's linux-next (ie, next-20150112). So is the
+related commit bd920490047a ("ARM: mvebu: Add UART1 as DEBUG_LL possible
+target"). I noticed because a script I use, spotted a minor issue with
+the first commit.
 
->
-> Patch applied, anyway. DT on x86 is not unheard of.
->
->>  config GPIO_XILINX
->> -       bool "Xilinx GPIO support"
->> -       depends on PPC_OF || MICROBLAZE || ARCH_ZYNQ
->> +       tristate "Xilinx GPIO support"
->> +       depends on OF_GPIO && (PPC_OF || MICROBLAZE || ARCH_ZYNQ || ARCH_X86)
->
-> Maybe you want to add COMPILE_TEST too?
-
-Up to you
-
->
-> Yours,
-> Linus Walleij
+See, the first commit renamed DEBUG_MVEBU_UART_ALTERNATE to
+DEBUG_MVEBU_UART0_ALTERNATE (so "0" was added). But there's still a last
+reference to CONFIG_DEBUG_MVEBU_UART_ALTERNATE in a comment in
+arch/arm/boot/dts/armada-xp-axpwifiap.dts. Is a patch to rename that
+last reference queued somewhere? If not, should I submit a trivial patch
+to do that?
 
 
-
--- 
-Ricardo Ribalda
+Paul Bolle
