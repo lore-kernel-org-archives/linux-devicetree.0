@@ -1,103 +1,58 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH/RFC v10 03/19] DT: leds: Add led-sources property
-Date: Mon, 12 Jan 2015 07:52:24 -0600
-Message-ID: <CAL_Jsq+UaA41DvawdOMmOib=Fi0hC-nBdKV-+P4DFo+MoOy-bQ@mail.gmail.com>
-References: <1420816989-1808-1-git-send-email-j.anaszewski@samsung.com>
- <1420816989-1808-4-git-send-email-j.anaszewski@samsung.com>
- <CAL_JsqJKEp6TWaRhJimg3AWBh+MCCr2Bk9+1o7orLLdp5E+n-g@mail.gmail.com> <54B38682.5080605@samsung.com>
+From: Alim Akhtar <alim.akhtar@gmail.com>
+Subject: Re: [PATCH v3 1/4] mmc: dw_mmc: exynos: incorporate ciu_div into
+ timing property
+Date: Mon, 12 Jan 2015 19:22:47 +0530
+Message-ID: <CAGOxZ52Fn3Q=mhkX+CPZsnNz-T5z09xR6ZGYhjYMQ9BOugs_+g@mail.gmail.com>
+References: <1420008185-24758-1-git-send-email-alim.akhtar@samsung.com>
+ <1420008185-24758-2-git-send-email-alim.akhtar@samsung.com>
+ <CAD=FV=WXzPt=VKxB=KHK+hC=RN6WbmdnQcLUT4zFQ0Ud7BFanQ@mail.gmail.com>
+ <CAGOxZ509kASim7keNkAGj5gAGO02=7vZM=VL-MRMObv3x+CzTg@mail.gmail.com> <CAD=FV=U0U2ycmd4jyVyFiEq0+3ujSpdBeFg27iYYbMRxpRCmmQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <54B38682.5080605@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: linux-leds@vger.kernel.org, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Pavel Machek <pavel@ucw.cz>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, sakari.ailus@iki.fi, Sylwester Nawrocki <s.nawrocki@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CAD=FV=U0U2ycmd4jyVyFiEq0+3ujSpdBeFg27iYYbMRxpRCmmQ@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: Alim Akhtar <alim.akhtar@samsung.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Jaehoon Chung <jh80.chung@samsung.com>, Seungwon Jeon <tgih.jun@samsung.com>, kgene <kgene@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Abhilash Kesavan <a.kesavan@samsung.com>, Alexandru Stan <amstan@google.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Olof Johansson <olof@lixom.net>, Kevin Hilman <khilman@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 12, 2015 at 2:32 AM, Jacek Anaszewski
-<j.anaszewski@samsung.com> wrote:
-> On 01/09/2015 07:33 PM, Rob Herring wrote:
->>
->> On Fri, Jan 9, 2015 at 9:22 AM, Jacek Anaszewski
->> <j.anaszewski@samsung.com> wrote:
->>>
->>> Add a property for defining the device outputs the LED
->>> represented by the DT child node is connected to.
->>>
->>> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
->>> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
->>> Cc: Bryan Wu <cooloney@gmail.com>
->>> Cc: Richard Purdie <rpurdie@rpsys.net>
->>> Cc: Rob Herring <robh+dt@kernel.org>
->>> Cc: Pawel Moll <pawel.moll@arm.com>
->>> Cc: Mark Rutland <mark.rutland@arm.com>
->>> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
->>> Cc: Kumar Gala <galak@codeaurora.org>
->>> ---
->>>   Documentation/devicetree/bindings/leds/common.txt |    5 +++++
->>>   1 file changed, 5 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/leds/common.txt
->>> b/Documentation/devicetree/bindings/leds/common.txt
->>> index a2c3f7a..29295bf 100644
->>> --- a/Documentation/devicetree/bindings/leds/common.txt
->>> +++ b/Documentation/devicetree/bindings/leds/common.txt
->>> @@ -1,6 +1,10 @@
->>>   Common leds properties.
->>>
->>>   Optional properties for child nodes:
->>> +- led-sources : Array of bits signifying the LED current regulator
->>> outputs the
->>> +               LED represented by the child node is connected to (1 -
->>> the LED
->>> +               is connected to the output, 0 - the LED isn't connected
->>> to the
->>> +               output).
->>
->>
->> Sorry, I just don't understand this.
->
->
-> In some Flash LED devices one LED can be connected to one or more
-> electric current outputs, which allows for multiplying the maximum
-> current allowed for the LED. Each sub-LED is represented by a child
-> node in the DT binding of the Flash LED device and it needs to declare
-> which outputs it is connected to. In the example below the led-sources
-> property is a two element array, which means that the flash LED device
-> has two current outputs, and the bits signify if the LED is connected
-> to the output.
+Hi Doug,
 
-Sounds like a regulator for which we already have bindings for and we
-have a driver for regulator based LEDs (but no binding for it). Please
-use the regulator binding.
-
-> Do your doubts stem from the ambiguity of the word "current" or the
-> form of the description itself is unclear? Probably there should be
-> explicit explanation added that the size of the array depends on the
-> number of current outputs of the flash LED device.
-
-The size of the array and meaning of array indexes was not clear.
-
-Rob
-
+On Tue, Jan 6, 2015 at 6:37 AM, Doug Anderson <dianders@chromium.org> wrote:
+> Alim,
 >
+> On Sun, Jan 4, 2015 at 2:43 PM, Alim Akhtar <alim.akhtar@gmail.com> wrote:
+>>> You are breaking backward compatibility here.  If your change is
+>>> merged then all old boards will instantly break.  Since the "dts" and
+>>> code changes will likely be merged through different trees you'll end
+>>> up with a bunch of broken trees until everything is merged together.
+>>> Even if you don't subscribe to the stable bindings theory this is not
+>>> acceptable.
+>>>
+>> yes the major concern in this series is probably this, which breaks
+>> things unless everything merge in one go and via one tree. Thats why I
+>> re-based everything including dts change on mmc-tree for this case and
+>> added device-tree mailing list for more opinion etc.
 >
->>>   - label : The label for this LED.  If omitted, the label is
->>>     taken from the node name (excluding the unit address).
->>>
->>> @@ -33,6 +37,7 @@ system-status {
->>>
->>>   camera-flash {
->>>          label = "Flash";
->>> +       led-sources = <1 0>;
->>>          max-microamp = <50000>;
->>>          flash-max-microamp = <320000>;
->>>          flash-timeout-us = <500000>;
->>> --
->>> 1.7.9.5
->>>
->>
+> Got it.  I doubt that folks will like this, but I could be wrong.  In
+> order for this to work, you'd need all changes in the series to land
+> in _both_ the ARMSoC tree and the MMC tree.  That's not unheard of,
+> but it doesn't seem ideal.
 >
-> --
-> Best Regards,
-> Jacek Anaszewski
+> You also break bisect-ability here since without the code the DTS
+> change will break things and without the DTS change the code will
+> break things.
+>
+> If you add all the above to the fact that bindings are supposed to be
+> stable (ish) I'm not convinced this will land.
+>
+Hmmm......Ok, let me take a re-look on this, I will try to use
+existing bindings.
+>
+> -Doug
+
+
+
+-- 
+Regards,
+Alim
