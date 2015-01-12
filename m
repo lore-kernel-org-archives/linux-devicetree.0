@@ -1,38 +1,81 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH v4 6/7] ARM: zynq: DT: Add pinctrl information
-Date: Mon, 12 Jan 2015 08:27:33 +0100
-Message-ID: <1a749692196d406a8229d4891f3563f4@BN1BFFO11FD016.protection.gbl>
-References: <1420818231-13451-1-git-send-email-soren.brinkmann@xilinx.com>
-	<1420818231-13451-7-git-send-email-soren.brinkmann@xilinx.com>
- <CACRpkdZ1jfTUqfLKonJxar2Jn25+4wTF-D4XUXOszSsoJrA07w@mail.gmail.com>
+From: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: [PATCH v6 2/2] mtd: hisilicon: add device tree binding documentation
+Date: Mon, 12 Jan 2015 15:28:54 +0800
+Message-ID: <1421047734-30818-3-git-send-email-wangzhou1@hisilicon.com>
+References: <1421047734-30818-1-git-send-email-wangzhou1@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZ1jfTUqfLKonJxar2Jn25+4wTF-D4XUXOszSsoJrA07w@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Soren Brinkmann <soren.brinkmann@xilinx.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Alessandro Rubini <rubini@unipv.it>, Heiko Stuebner <heiko@sntech.de>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "Ivan T. Ivanov" <iivanov@mm-sol.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Beniamino Galvani <b.galvani@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1421047734-30818-1-git-send-email-wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, caizhiyong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, yubingxu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/11/2015 10:38 PM, Linus Walleij wrote:
-> On Fri, Jan 9, 2015 at 4:43 PM, Soren Brinkmann
-> <soren.brinkmann@xilinx.com> wrote:
->=20
->> Add pinctrl descriptions to the zc702 and zc706 device trees.
->>
->> Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
->> Tested-by: Andreas F=C3=A4rber <afaerber@suse.de>
->=20
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
->=20
-> Beautiful and in line with how I want things to look.
->=20
-> Yours,
-> Linus Walleij
->=20
+Signed-off-by: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+---
+ .../devicetree/bindings/mtd/hisi504-nand.txt       | 48 ++++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/hisi504-nand.txt
 
-Applied to zynq/dt.
+diff --git a/Documentation/devicetree/bindings/mtd/hisi504-nand.txt b/Documentation/devicetree/bindings/mtd/hisi504-nand.txt
+new file mode 100644
+index 0000000..bee6a9f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mtd/hisi504-nand.txt
+@@ -0,0 +1,48 @@
++Hisilicon Hip04 Soc NAND controller DT binding
++
++Required properties:
++
++- compatible:          Should be "hisilicon,504-nfc".
++- reg:                 The first contains base physical address and size of
++                       NAND controller's registers. The second contains base
++                       physical address and size of NAND controller's buffer.
++- interrupts:          Interrupt number for nfc.
++- nand-bus-width:      See nand.txt.
++- nand-ecc-mode:       Support none and hw ecc mode.
++- #address-cells:      Partition address, should be set 1.
++- #size-cells:         Partition size, should be set 1.
++
++Optional properties:
++
++- nand-ecc-strength:   Number of bits to correct per ECC step.
++- nand-ecc-step-size:  Number of data bytes covered by a single ECC step.
++
++The following ECC strength and step size are currently supported:
++
++ - nand-ecc-strength = <1>, nand-ecc-step-size = <512>
++ - nand-ecc-strength = <16>, nand-ecc-step-size = <1024>
++
++Flash chip may optionally contain additional sub-nodes describing partitions of
++the address space. See partition.txt for more detail.
++
++Example:
++
++	nand: nand@4020000 {
++		compatible = "hisilicon,504-nfc";
++		reg = <0x4020000 0x10000>, <0x5000000 0x1000>;
++		interrupts = <0 379 4>;
++		nand-bus-width = <8>;
++		nand-ecc-mode = "hw";
++		nand-ecc-strength = <16>;
++		nand-ecc-step-size = <1024>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		partition@0 {
++			label = "nand_text";
++			reg = <0x00000000 0x00400000>;
++		};
++
++		...
++
++	};
+-- 
+1.9.1
 
-Thanks,
-Michal
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
