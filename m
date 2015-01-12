@@ -1,89 +1,75 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH 0/4] mmc: core: Add support for MMC power sequences
-Date: Mon, 12 Jan 2015 16:18:20 +0000
-Message-ID: <20150112161820.GJ12302@n2100.arm.linux.org.uk>
-References: <1420215248-20650-1-git-send-email-ulf.hansson@linaro.org>
- <20150102181423.GS11285@n2100.arm.linux.org.uk>
- <CAPDyKFpo=WpE3hDxqETVXOYX6pFsSmO7YybLJF=kJFyYFVcaoA@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v8 2/4] fpga manager: add sysfs interface document
+Date: Mon, 12 Jan 2015 16:26:09 +0000
+Message-ID: <20150112162608.GN4160@sirena.org.uk>
+References: <1420575219-27061-1-git-send-email-atull@opensource.altera.com>
+ <1420575219-27061-3-git-send-email-atull@opensource.altera.com>
+ <20150107084819.GA1887@amd>
+ <alpine.DEB.2.02.1501091302370.30067@linuxheads99>
+ <20150109205643.GA5761@amd>
+ <4D4EA2D5-68DD-49F7-9E2D-3A0A8F6AF9CA@konsulko.com>
+ <20150110151118.GA16036@amd>
+ <alpine.DEB.2.10.1501111009180.2556@shineypoop>
+ <CAL_Jsq+ZfCajLXhLCi4MFbLRYGgs+BcDTsKg3r5rSBPv9yjGEQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="JfVplkuTfB13Rsg5"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAPDyKFpo=WpE3hDxqETVXOYX6pFsSmO7YybLJF=kJFyYFVcaoA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>
+In-Reply-To: <CAL_Jsq+ZfCajLXhLCi4MFbLRYGgs+BcDTsKg3r5rSBPv9yjGEQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: atull <atull@opensource.altera.com>, Pavel Machek <pavel@denx.de>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, "H. Peter Anvin" <hpa@zytor.com>, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Randy Dunlap <rdunlap@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, iws@ovro.caltech.edu, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Philip Balister <philip@balister.org>, Alessandro Rubini <rubini@gnudd.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Jason Cooper <jason@lakedaemon.net>, Kyle Teske <kyle.teske@ni.com>, Nicolas Pitre <nico@linaro.org>, Felipe Balbi <balbi@>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 12, 2015 at 03:29:54PM +0100, Ulf Hansson wrote:
-> Regarding you concern, about me propagating the same design mistake as
-> for the ->set_ios() callback, I am not sure I fully understand why you
-> think that's the case?
 
-Because of this:
+--JfVplkuTfB13Rsg5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-mmc_pwrseq_power_up()- Invoked from mmc_power_up(), to power up.
-mmc_pwrseq_power_on()- Invoked from mmc_power_up(), to power on.
+On Mon, Jan 12, 2015 at 10:05:49AM -0600, Rob Herring wrote:
+> On Sun, Jan 11, 2015 at 10:29 AM, atull <atull@opensource.altera.com> wrote:
 
-This re-inforces the "power up, wait, power on" _power_ _sequence_
-as part of the software design.
+> > Previous uses of the firmware layer has been to use it to load once after
+> > bootup; this is different since some use cases will want to switch out
+> > the FPGA image.  If someone wants there to be only one FPGA image on
+> > the FGPA forever, they will probably not be using this framework; their
+> > FPGA will probably be loaded before Linux boots up.
 
-We know that _today_ there is hardware which does not work like that.
-We know that we have host adapters which ignore the "power up" part,
-because they deal with all the sequencing in hardware.
+> That's not really true. Some WiFi devices have to load different
+> firmware for client and AP modes and switching is a common usecase in
+> phones.
 
-I'll refer to your new infrastructure as "pwrseq" and the existing
-infrastructure as "power sequence".  (That alone shows what an
-absurd situation this is - we have two things which have the same
-name!)
+Right, this is also very common for audio DSPs - the DSPs are frequently
+much smaller than the total set of firmware they might want to run so
+they need to switch at runtime.
 
-Let's say we have a pwrseq handler which implements the power_up()
-and power_on() callbacks.  It's written for use with a controller
-which implements appropriate actions on set_ios() with POWER_UP
-and POWER_ON states implemented.
+> There may be other instances of drivers wanting configurable firmware
+> names already. A common interface here would be nice. It could also be
+> useful to expose the firmware names such that you could generate a
+> list of all firmware files needed for a machine (that may already be
+> possible with uevents?).
 
-So, what we have is:
+Some standard mechanism for enumerating the possible firmwares and
+switching between them would definitely make life easier on the audio
+side.  It'd also be good for userspace to be able to say it's got new
+firmware to add to the list, but that's suggesting to me that the
+enumeration part of things might be better handled in userspace.
 
-pwrseq		power sequence	host state/action
+--JfVplkuTfB13Rsg5
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-power_up			no power supplied
-		POWER_UP	host applies power to the card
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-power_on			host is supplying power to card
-		POWER_ON	host applies clocks to the card
+iQEcBAEBAgAGBQJUs/WgAAoJECTWi3JdVIfQRMMH/3W5zl41DkzvdPDiQaTIU9Hy
+WQun+fyw3tPjAOXqMpsz4z57hQ7RlQ6bzRnhGQ73TsaWkumAM/DmanryEiPV3x6n
+s4ppRcdzAXhVzZ4EakxHGRtb1SZDQgErdLj9kR0IwCm3u8g1sx6uq7byvmbnKamh
+wJboG797SqyEFqIpcwKfUooclQvBAFOFExcpUX24qxIxavmKtfy4Zx+vSZDwaufJ
+ywmQOcUqQnkp/r+wIfbTWDR8iXd6rYfamqNUQJp8ehCEjfoGGX/TCQJwQkbw+3eE
+/ij7ZuDqpblD9zGOMvpMqG7KdJR1FMUxArHOpOoVl9EIrywhPqmGgihGAUqsiC8=
+=2WBm
+-----END PGP SIGNATURE-----
 
-Now, for a more inteligent host, where the hardware takes care of
-sequencing the application of power and clocks, we have this:
-
-pwrseq		power sequence	host action
-
-power_up			no power applied
-		POWER_UP	host does nothing
-
-power_on			no power applied
-		POWER_ON	host applies power to the card, waits,
-				and applies the clock
-
-As we can see, the hardware state which the power_on() method of the
-pwrseq is called is highly host dependent.  In the first case, power
-has already been applied.  In the second case, power has not been
-applied.
-
-To have consistency, you need to /first/ solve the problem which I've
-been pointing out, otherwise we're going to have these new pwrseq
-callbacks being called with inconsistent, host specific power states
-being applied to the card.
-
-An alternative way to get consistency is to eliminate the pwrseq
-"power_on" callback altogether; the "power_up" callback will always
-be made before the host interface power sequence is started - and
-that is about the only thing we can guarantee given the variability
-in host interface designs.
-
--- 
-FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
-according to speedtest.net.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--JfVplkuTfB13Rsg5--
