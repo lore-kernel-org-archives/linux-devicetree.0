@@ -1,38 +1,93 @@
-From: Zhou Wang <wangzhou1@hisilicon.com>
-Subject: [PATCH v6 1/2] ARM: hip04: add GPIO configure in hisi_defconfig
-Date: Mon, 12 Jan 2015 15:05:11 +0800
-Message-ID: <1421046312-22170-2-git-send-email-wangzhou1@hisilicon.com>
-References: <1421046312-22170-1-git-send-email-wangzhou1@hisilicon.com>
+From: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: [PATCH v3] mtd: hisilicon: add device tree node for NAND controller
+Date: Mon, 12 Jan 2015 15:14:05 +0800
+Message-ID: <1421046845-25814-1-git-send-email-wangzhou1@hisilicon.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1421046312-22170-1-git-send-email-wangzhou1@hisilicon.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Haojian Zhuang <haojian.zhuang@linaro.org>, Wei Xu <xuwei5@hisilicon.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Russell King <linux@arm.linux.org.uk>
-Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, liguozhu@hisilicon.com, Zhou Wang <wangzhou1@hisilicon.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The GPIO controller of Hisilicon hip04 Soc uses the IP from Sysnopsis,
-gpio-dwapb.c can be reused to support this GPIO controller. This patch
-adds related configure item in hisi_defconfig.
+This patch add dts support for NAND flash controller of Hisilicon Soc Hip04
 
-Signed-off-by: Zhou Wang <wangzhou1@hisilicon.com>
+I resend this patch with new E-mail address in signed-off-by.
+
+Changes in v3:
+- Change E-mail address in signed-off-by to "wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org"
+Changes in v2:
+- Base on v3.19-rc1
+- Use nand-ecc-strength, nand-ecc-step-size to replace hisi,nand-ecc-bits
+Changes in v1:
+- Move partition and other board related information into board dts file:
+  hip04-d01.dts
+
+Signed-off-by: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 ---
- arch/arm/configs/hisi_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/hip04-d01.dts | 27 +++++++++++++++++++++++++++
+ arch/arm/boot/dts/hip04.dtsi    |  7 +++++++
+ 2 files changed, 34 insertions(+)
 
-diff --git a/arch/arm/configs/hisi_defconfig b/arch/arm/configs/hisi_defconfig
-index 1125436..4a50862 100644
---- a/arch/arm/configs/hisi_defconfig
-+++ b/arch/arm/configs/hisi_defconfig
-@@ -50,6 +50,7 @@ CONFIG_GPIO_SYSFS=y
- CONFIG_GPIOLIB=y
- CONFIG_GPIO_GENERIC_PLATFORM=y
- CONFIG_REGULATOR_GPIO=y
-+CONFIG_GPIO_DWAPB=y
- CONFIG_MFD_SYSCON=y
- CONFIG_POWER_RESET_SYSCON=y
- CONFIG_DRM=y
+diff --git a/arch/arm/boot/dts/hip04-d01.dts b/arch/arm/boot/dts/hip04-d01.dts
+index 40a9e33..ba04dd5 100644
+--- a/arch/arm/boot/dts/hip04-d01.dts
++++ b/arch/arm/boot/dts/hip04-d01.dts
+@@ -28,5 +28,32 @@
+ 		uart0: uart@4007000 {
+ 			status = "ok";
+ 		};
++
++		nand: nand@4020000 {
++			nand-bus-width = <8>;
++			nand-ecc-mode = "hw";
++			nand-ecc-strength = <16>;
++			nand-ecc-step-size = <1024>;
++
++			partition@0 {
++				label = "nand_text";
++				reg = <0x00000000 0x00400000>;
++			};
++
++			partition@00400000 {
++				label = "nand_monitor";
++				reg = <0x00400000 0x00400000>;
++			};
++
++			partition@00800000 {
++				label = "nand_kernel";
++				reg = <0x00800000 0x00800000>;
++			};
++
++			partition@01000000 {
++				label = "nand_fs";
++				reg = <0x01000000 0x1f000000>;
++			};
++		};
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/hip04.dtsi b/arch/arm/boot/dts/hip04.dtsi
+index 2388145..ac32fce 100644
+--- a/arch/arm/boot/dts/hip04.dtsi
++++ b/arch/arm/boot/dts/hip04.dtsi
+@@ -269,6 +269,13 @@
+ 			interrupts = <0 372 4>;
+ 		};
+ 
++		nand: nand@4020000 {
++			compatible = "hisilicon,504-nfc";
++			reg = <0x4020000 0x10000>, <0x5000000 0x1000>;
++			interrupts = <0 379 4>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++		};
+ 	};
+ 
+ 	etb@0,e3c42000 {
 -- 
 1.9.1
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
