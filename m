@@ -1,41 +1,60 @@
-From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Subject: Re: [PATCH v2 0/7] Fix sti drivers whcih mix reg address spaces
-Date: Sun, 11 Jan 2015 18:54:45 -0500 (EST)
-Message-ID: <20150111.185445.1288456704842706068.davem@davemloft.net>
-References: <1420643052-4506-1-git-send-email-peter.griffin@linaro.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v3 2/3] pinctrl: add driver for Amlogic Meson SoCs
+Date: Mon, 12 Jan 2015 01:00:16 +0100
+Message-ID: <CACRpkdY0tv77GgOF91EG8wEzsgQ4OsLUjogNxFjO-rjfY2Q15g@mail.gmail.com>
+References: <1416168856-12747-1-git-send-email-b.galvani@gmail.com>
+	<1416168856-12747-3-git-send-email-b.galvani@gmail.com>
+	<CACRpkda-U5OuKdBVGJ8UWprJkAtmTL1m11+AbNskVULPfyS72A@mail.gmail.com>
+	<20141127223402.GA11418@gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1420643052-4506-1-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20141127223402.GA11418@gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Beniamino Galvani <b.galvani@gmail.com>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@arm.linux.org.uk>, Carlo Caione <carlo@caione.org>, Soren Brinkmann <soren.brinkmann@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jerry Cao <jerry.cao@amlogic.com>, Victor Wan <victor.wan@amlogic.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Date: Wed,  7 Jan 2015 15:04:05 +0000
+On Thu, Nov 27, 2014 at 11:34 PM, Beniamino Galvani <b.galvani@gmail.co=
+m> wrote:
+> On Thu, Nov 27, 2014 at 02:48:31PM +0100, Linus Walleij wrote:
+>> On Sun, Nov 16, 2014 at 9:14 PM, Beniamino Galvani <b.galvani@gmail.=
+com> wrote:
+>>
+>> > This is a driver for the pinmux and GPIO controller available in
+>> > Amlogic Meson SoCs. At the moment it only supports Meson8 devices,
+>> > however other SoC families like Meson6 and Meson8b (the Cortex-A5
+>> > variant) appear to be similar, with just different sets of banks a=
+nd
+>> > registers.
+>> >
+>> > GPIO interrupts are not supported at the moment due to lack of
+>> > documentation.
+>> >
+>> > Signed-off-by: Beniamino Galvani <b.galvani@gmail.com>
+>>
+>> This is dependent on S=C3=B6ren's patches I guess?
+>>
+>> OK I'll merge this once we have that other code sorted out.
+>
+> Yes, this depends on Soren's patches.
 
-> A V2 of this old series incorporating Arnd and Lees Feedback form v1.
-> 
-> Following on from Arnds comments about the picophy driver here
-> https://lkml.org/lkml/2014/11/13/161, this series fixes the
-> remaining upstreamed drivers for STI, which are mixing address spaces
-> in the reg property. We do this in a way similar to the keystone
-> and bcm7445 platforms, by having sysconfig phandle/ offset pair 
-> (where only one register is required). Or phandle / integer array
-> where multiple offsets in the same bank are needed).
-> 
-> This series breaks DT compatability! But the platform support
-> is WIP and only being used by the few developers who are upstreaming
-> support for it. I've made each change to the driver / dt doc / dt
-> file as a single atomic commit so the kernel will remain bisectable. 
-> 
-> This series then also enables the picophy driver, and adds back in
-> the ehci/ohci dt nodes for stih410 which make use of the picophy.
+Hi Beniamino,
 
-Series applied to net-next, thanks.
+sorry for the delay to merging S=C3=B6ren's patches.
+
+Can you rebase this patch on top of the pin control "devel" branch:
+https://git.kernel.org/cgit/linux/kernel/git/linusw/linux-pinctrl.git/l=
+og/?h=3Ddevel
+
+Some stuff like structs and functions were renamed by me since it was
+not generic enough.
+
+Yours,
+Linus Walleij
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+n
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
