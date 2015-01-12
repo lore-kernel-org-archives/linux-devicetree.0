@@ -1,49 +1,105 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH 0/4] mmc: core: Add support for MMC power sequences
-Date: Mon, 12 Jan 2015 15:43:24 +0100
-Message-ID: <CAPDyKFoXxCT8uED3SxY9e1N6HhRyk1RGwpHOHRtzUY5vcBtcYA@mail.gmail.com>
-References: <1420215248-20650-1-git-send-email-ulf.hansson@linaro.org>
-	<CAAObsKDXTwmXQ_oviSv4jyvaVepgsw8g5VJNpt1X=JCzfpTYuw@mail.gmail.com>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: Re: GIC_CPU_MASK_SIMPLE(8)" on big.LITTLE?
+Date: Mon, 12 Jan 2015 14:45:14 +0000
+Message-ID: <20150112144514.GL823@e106497-lin.cambridge.arm.com>
+References: <CAMuHMdWQQBECdXT1pbChT31y8YdHzcjvTGR1A2HhtdtwpRmdPQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <CAAObsKDXTwmXQ_oviSv4jyvaVepgsw8g5VJNpt1X=JCzfpTYuw@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc: linux-mmc <linux-mmc@vger.kernel.org>, Chris Ball <chris@printf.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Alexandre Courbot <gnurou@gmail.com>, NeilBrown <neilb@suse.de>, Linus Walleij <linus.walleij@linaro.org>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Mark Brown <broonie@kernel.org>, Arend van Spriel <arend@broadcom.com>, Sascha Hauer <s.hauer@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdWQQBECdXT1pbChT31y8YdHzcjvTGR1A2HhtdtwpRmdPQ@mail.gmail.com>
+Content-Disposition: inline
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Marc Zyngier <Marc.Zyngier@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12 January 2015 at 15:26, Tomeu Vizoso <tomeu.vizoso@collabora.com> wrote:
-> On 2 January 2015 at 17:14, Ulf Hansson <ulf.hansson@linaro.org> wrote:
->> This is yet another try to solve the issues of dealing with power sequences for
->> the MMC subsystem. The latest attempt, see link below, took a generic approach
->> by adding a new top level driver layer. That's was rejected by several reasons.
->> http://lwn.net/Articles/602855/
->>
->> This time the approach is focused to fix the issues for MMC only.
->>
->> To give a short background, SOCs may specify a specific MMC power sequence. To
->> successfully detect an (e)MMC/SD/SDIO card, that power sequence must be followed
->> while initializing the card.
->
-> Hi Ulf,
->
-> have used this to successfully init a mwifiex_sdio card but had to
-> also add a delay while the reset line is asserted. May make sense to
-> add a property to the pwrseq node to specify the minimum amount of
-> time that the reset GPIO needs to be asserted?
+On Mon, Jan 05, 2015 at 10:37:47AM +0000, Geert Uytterhoeven wrote:
+> A while ago, I wondered:
+>=20
+> | It's my understanding GIC_CPU_MASK_SIMPLE should reflect the actual=
+ number
+> | of CPU cores the interrupt is wired too. Is that correct?
+> |
+> | [Fixes for incorrect masks on shmobile]
+> |
+> | Should it be "GIC_CPU_MASK_SIMPLE(8)" on big.LITTLE configurations
+> | with four Cortex-A15 cores and four Cortex-A7 cores?
+> | Or should the interrupts be delivered to the four Cortex-A15 cores
+> | only by default?
+> |
+> | Note that incorrect masks for GIC PPI interrupts are not limited to
+> | shmobile. Presumably the interrupt specifiers got copied around a l=
+ot,
+> | cfr. the proliferation of "GIC_CPU_MASK_SIMPLE(4)" (and the older
+> | hardcoded "0xf0x" variant) in various dtsi files, not always limite=
+d to
+> | quad-core CPUs.
+>=20
+> In the mean time, arch/arm64/boot/dts/arm/juno.dts got added, which h=
+as 2 A57
+> cores and 4 A53 cores, and uses GIC_CPU_MASK_SIMPLE(6), so it seems l=
+ike
+> my two RFC patches to use GIC_CPU_MASK_SIMPLE(8) for 4 A15 cores and =
+4
+> A7 cores are actually correct?
+>=20
+> Thanks for your comments!
+>=20
+> References:
+>   1. Original RFC series:
+>      [PATCH/RFC 0/4] ARM: shmobile: Correct masks for GIC PPI interru=
+pts
+>      http://lists.infradead.org/pipermail/linux-arm-kernel/2014-Novem=
+ber/306743.html
+>   2. RFC patches:
+>        a. [PATCH/RFC 3/4] ARM: shmobile: r8a7790: Correct mask for GI=
+C
+> PPI interrupts
+>           http://lists.infradead.org/pipermail/linux-arm-kernel/2014-=
+November/306741.html
+>        b. [PATCH/RFC 4/4] ARM: shmobile: r8a73a4: Correct mask for GI=
+C
+> PPI interrupts
+>           http://lists.infradead.org/pipermail/linux-arm-kernel/2014-=
+November/306740.html
+>=20
+> Gr{oetje,eeting}s,
+>=20
+>                         Geert
+>=20
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linu=
+x-m68k.org
+>=20
+> In personal conversations with technical people, I call myself a hack=
+er. But
+> when I'm talking to journalists I just say "programmer" or something =
+like that.
+>                                 -- Linus Torvalds
+>=20
 
-To me that is description of the HW, so I would happily accept such a
-DT property. Can you please send a patch, based on top of this
-patchset?
+Hi Geert,
 
-BTW, I guess you only need the delay while the ->power_up() callback
-is invoked and not for ->power_off()?
+Sorry for delay in responding, I'm just coming back online.
 
->
-> Tested-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Your patches are correct, the mask should reflect the number of CPUs pr=
+esent *and* they way
+they are wired in the GIC. AFAIK, HW designers have been sane so far an=
+d wired the CPUs
+in sequence in the GIC, but I lack inside knowledge of the shmobile des=
+ign.
 
-Thanks for helping out testing!
+Best regards,
+Liviu
 
-Kind regards
-Uffe
+--=20
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    =C2=AF\_(=E3=83=84)_/=C2=AF
+
