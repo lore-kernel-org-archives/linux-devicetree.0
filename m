@@ -1,47 +1,51 @@
-From: Eddie Huang <eddie.huang@mediatek.com>
-Subject: [PATCH v2 3/4] arm64: dts: Add mediatek MT8173 earlycon support
-Date: Mon, 12 Jan 2015 21:08:23 +0800
-Message-ID: <1421068104-30463-4-git-send-email-eddie.huang@mediatek.com>
-References: <1421068104-30463-1-git-send-email-eddie.huang@mediatek.com>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: Re: [PATCH] ARM: at91: sama5d3: dt: correct the sound route
+Date: Mon, 12 Jan 2015 14:21:13 +0100
+Message-ID: <54B3CA49.7010302@atmel.com>
+References: <1420795096-8944-1-git-send-email-voice.shen@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1421068104-30463-1-git-send-email-eddie.huang@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: devicetree@vger.kernel.org, Vladimir Murzin <vladimir.murzin@arm.com>, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Jonathan Corbet <corbet@lwn.net>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, yh.chen@mediatek.com, Howard Chen <ibanezchen@gmail.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, linux-serial@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, "Joe.C" <yingjoe.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, Jiri Slaby <jslaby@suse.cz>, linux-arm-kernel@lists.infradead.org, Alan Cox <alan@linux.intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1420795096-8944-1-git-send-email-voice.shen@atmel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bo Shen <voice.shen@atmel.com>, Mark Brown <broonie@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add earlycon support to mediatek MT8173 evaluation board dts.
+Le 09/01/2015 10:18, Bo Shen a =E9crit :
+> The MICBIAS is a supply, should route to MIC while not IN1L.
+>=20
+> Signed-off-by: Bo Shen <voice.shen@atmel.com>
 
-Signed-off-by: Eddie Huang <eddie.huang@mediatek.com>
----
- arch/arm64/boot/dts/mediatek/mt8173-evb.dts | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-index 43d5401..d4cf751 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-@@ -30,7 +30,9 @@
- 		reg = <0 0x40000000 0 0x80000000>;
- 	};
- 
--	chosen { };
-+	chosen {
-+		linux,stdout-path = &uart0;
-+	};
- };
- 
- &uart0 {
--- 
-1.8.1.1.dirty
+I stack it up in at91-3.19-fixes.
+
+Thanks. Bye.
+
+
+> ---
+>=20
+>  arch/arm/boot/dts/sama5d3xmb.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/arch/arm/boot/dts/sama5d3xmb.dtsi b/arch/arm/boot/dts/sa=
+ma5d3xmb.dtsi
+> index 0399be6..83d0598 100644
+> --- a/arch/arm/boot/dts/sama5d3xmb.dtsi
+> +++ b/arch/arm/boot/dts/sama5d3xmb.dtsi
+> @@ -176,7 +176,7 @@
+>  			"Headphone Jack", "HPOUTR",
+>  			"IN2L", "Line In Jack",
+>  			"IN2R", "Line In Jack",
+> -			"MICBIAS", "IN1L",
+> +			"Mic", "MICBIAS",
+>  			"IN1L", "Mic";
+> =20
+>  		atmel,ssc-controller =3D <&ssc0>;
+>=20
+
+
+--=20
+Nicolas Ferre
