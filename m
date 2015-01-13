@@ -1,121 +1,60 @@
-From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Subject: Re: [PATCH v8 2/4] fpga manager: add sysfs interface document
-Date: Tue, 13 Jan 2015 13:00:32 -0700
-Message-ID: <20150113200032.GA16205@obsidianresearch.com>
-References: <1420575219-27061-1-git-send-email-atull@opensource.altera.com>
- <1420575219-27061-3-git-send-email-atull@opensource.altera.com>
- <20150107084819.GA1887@amd>
- <alpine.DEB.2.02.1501091302370.30067@linuxheads99>
- <20150109205643.GA5761@amd>
- <20150112210134.687176ed@lxorguk.ukuu.org.uk>
- <20150112214314.GA18610@obsidianresearch.com>
- <20150113162847.2778b5a5@lxorguk.ukuu.org.uk>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCHv2 1/8] dt-bindings: use isil prefix for Intersil in vendor-prefixes.txt
+Date: Tue, 13 Jan 2015 14:02:35 -0600
+Message-ID: <CAL_JsqLt7BuG9eccqR4CELPsOO+o3NGP6c4aqKDXbJfT0O0=5w@mail.gmail.com>
+References: <cover.1418763328.git.arno@natisbad.org> <e32fe98a511e3ab8aeed9849bcac33ba14fd8986.1418763328.git.arno@natisbad.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150113162847.2778b5a5@lxorguk.ukuu.org.uk>
-Sender: linux-doc-owner@vger.kernel.org
-To: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
-Cc: Pavel Machek <pavel@denx.de>, atull <atull@opensource.altera.com>, gregkh@linuxfoundation.org, hpa@zytor.com, monstr@monstr.eu, michal.simek@xilinx.com, rdunlap@infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, pantelis.antoniou@konsulko.com, robh+dt@kernel.org, grant.likely@linaro.org, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, broonie@kernel.org, philip@balister.org, rubini@gnudd.com, s.trumtrar@pengutronix.de, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, balbi@ti.com, m.chehab@samsung.com, davidb@codeaurora.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, linus.walleij@linaro.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devel@driverdev.osuosl.org, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yv
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <e32fe98a511e3ab8aeed9849bcac33ba14fd8986.1418763328.git.arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Hayato Suzuki <hytszk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 13, 2015 at 04:28:47PM +0000, One Thousand Gnomes wrote:
-
-> There is a lot of code overlap in things like loading the bitstreams,
-> there is also some overlap because you want to be able to assign FPGA
-> resources. For example if you have four FPGAs and you want to use one for
-> OS stuff (say video) you want the other three to be open/close
-> accessible, but if you've not got a video driver loaded and are running
-> the same board headless you'd like all four to be handed out as normal
-> resources.
+On Tue, Dec 16, 2014 at 3:18 PM, Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org> wrote:
 >
-> So IMHO it's no different to say kmalloc. We don't pre-empt kernel memory
-> and give it to users but we don't reserve memory for kernel and not use
-> it.
+> This patch fixes DT vendor-prefixes.txt documentation to reference
+> isil (NASDAQ symbol and the most used prefix inside the kernel) for
+> Intersil.
+>
+> It reverts 7c75c1d5e72b ("dt-bindings: Document deprecated device
+> vendor name to fix related warning").
+>
+> Signed-off-by: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
 
-I do agree with this, and I think this is where this patch set goes so
-wrong.
+Applied for 3.20. Thanks.
 
-Just exposing all sorts of controls to userspace and having a way for
-the kernel to load/unload a bitstream compleletely misses the point that
-the two main ways to use FPGAs *require* some kind of kernel side
-driver suppport on the FPGA.
+While there are not interdepencies here, it probably would have been
+better to keep this series all together. Other patches have already
+been picked up, so I'm just taking this one.
 
-Even if it is just a maths FPGA kernel side has to be involved in some
-way to restrict DMAs, MMIO, by the user process. Obviously a FPGA that
-uses kernel drivers needs kernel side help to bind those drivers.
+Rob
 
-Plonking /sys/class/fpga_manager/<fpga>/reset for either case is more
-likely than not to completely crash the system.
 
-I would look at this problem from a completely different angle - the
-90% case is a single FPGA that is loaded to provide HW that Linux
-drivers bind to, these days the majority use DT.
-
-So..
-
-soc
-{
-    zynq_cfg: ps7-dev-cfg@f8007000 { compatible = "xlnx,zynq-devcfg-1.0"; }
-    
-    fpga@pl {
-       compatible = "..";
-       fpga,api = "gpio-api1";
-       fpga,controller = &zynq_cfg;
-
-       gp0_axi: axi@40000000 {
-         gpio3: klina_gpio@80010 {
-                 #gpio-cells = <2>;
-                 compatible = "linux,basic-mmio-gpio";
-                 gpio-controller;
-                 reg-names = "dat", "set", "dirin";
-                 reg = <0x80010 4>,
-                       <0x80014 4>,
-                       <0x80018 4>;
-         };
-       }
-    }  
-}
-
-Make it so linux can boot, automatically fetch the gpio-api1 bit file
-and load it into the chip and then bind the GPIO driver to the FPGA
-resource. All without userspace involvment, all potentially done
-before calling INIT.
-
-Make it so via sysfs we can reverse this process and reboot the FPGA.
-
-Make it so userspace can't do something to the FPGA without first
-unloading the drivers.
-
-Then worry about how to change the FPGA, or providing more user space
-control over the process (DT overlays are a natural answer).
-
-Providing a roll-your-own approach via a bunch of sysfs controls
-satisfies the 'make the HW work' need without actually providing the
-overall architecture someone needs to *make use* of this mechanism.
-
-And no, this isn't just a 'theory', I have 4 shipping products today
-that work pretty much exactly like this, including a Zynq
-design. Binding kernel drivers to a FPGA once it is loaded is a big
-functionality gap, and an annoying problem. Programming the actual
-FPGA? That is the *EASIEST* part of this whole thing!
-
-Honestly, I'd much rather see the above use case solved properly
-without sysfs support and then go from there to build a replacable
-FPGA scheme on the same concepts.
-
-Providing a 'build your own' solution with sysfs controls just seems
-to completely miss the mark to me.
-
-> So IMHO it's no different to say kmalloc. We don't pre-empt kernel memory
-> and give it to users but we don't reserve memory for kernel and not use
-> it.
-
-I think we see a kernel side with more structure, that knows when the
-FPGA is in use or not, there is a pretty clear path to later add a
-/dev/ scheme for user space use that can properly interlock.
-
-A /dev/ scheme doesn't make much sense to bind kernel drivers...
-
-Jason
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 423d47418e72..585e5b5dca27 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -81,8 +81,7 @@ innolux       Innolux Corporation
+>  intel  Intel Corporation
+>  intercontrol   Inter Control Group
+>  isee   ISEE 2007 S.L.
+> -isil    Intersil (deprecated, use isl)
+> -isl    Intersil
+> +isil   Intersil
+>  karo   Ka-Ro electronics GmbH
+>  keymile        Keymile GmbH
+>  lacie  LaCie
+> --
+> 2.1.1
+>
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
