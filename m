@@ -1,89 +1,81 @@
 From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 03/13] mtd: st_spi_fsm: dt-bindings: Deprecate generic
- compatible string
-Date: Mon, 12 Jan 2015 21:02:30 -0800
-Message-ID: <20150113050230.GP9759@ld-irv-0074>
+Subject: Re: [PATCH v3 00/13] mtd: st_spi_fsm: Align with ST's internal
+ development
+Date: Mon, 12 Jan 2015 21:14:52 -0800
+Message-ID: <20150113051452.GR9759@ld-irv-0074>
 References: <1418644760-18773-1-git-send-email-lee.jones@linaro.org>
- <1418644760-18773-4-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1418644760-18773-4-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1418644760-18773-1-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-+ devicetree
-
-Please include devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org whenever you send DT patches
-like this.
-
-On Mon, Dec 15, 2014 at 11:59:10AM +0000, Lee Jones wrote:
-> This driver now obtains platform information via DT matching, which requires
-> a compatible string per platform.  This change introduces the new specific
-> strings and deprecates the old generic one.
-> 
-> We also take out all of the old, unused properties which are no longer
-> required.
-> 
-> Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/mtd/st-fsm.txt | 20 +++++++-------------
->  1 file changed, 7 insertions(+), 13 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/st-fsm.txt b/Documentation/devicetree/bindings/mtd/st-fsm.txt
-> index c248939..4e3a16c 100644
-> --- a/Documentation/devicetree/bindings/mtd/st-fsm.txt
-> +++ b/Documentation/devicetree/bindings/mtd/st-fsm.txt
-> @@ -1,26 +1,20 @@
->  * ST-Microelectronics SPI FSM Serial (NOR) Flash Controller
+On Mon, Dec 15, 2014 at 11:59:07AM +0000, Lee Jones wrote:
+> Hi Brian, all,
 >  
->  Required properties:
-> -  - compatible : Should be "st,spi-fsm"
-> +  - compatible : "st,spi-fsm" is now DEPRECATED
+>  [x] Bulid test
+>  [x] Bisectable
+>  [x] Smatch
+>  [x] Sparse
 
-See my comments on patch 4.
+Picked patches 1, 2, and 5 to l2-mtd.git. I requested changes to patch 3
+and possibly 4. The rest look OK, but I don't want to futz with patch
+conflicts on the remaining. Please rebase to l2-mtd.git if/when you
+resend.
 
-In light of that, it may make sense to support both, so DTS files could
-list:
+> v3:
+>   Further aligned with upstream changes as suggested by Peter Griffin.
+>   The clk_ignore_unused kernel command line parameter is due to be turned
+>   off on STiH4* platforms, so we no longer give the driver the chance to
+>   opt-out of fetching the EMI clock.  We also now provide syscfg offsets
+>   inside the driver, as it's simpler and reduces the cost of having lots
+>   of extra DT properties.
 
-	compatible = "st,stid127-spi-fsm", "st,spi-fsm";
+Typically "simpler" and "reducing the cost of having lots of extra DT
+properties" aren't good enough reasons for immediately breaking an
+existing DT binding. We usually expect to support both for some period
+of time.
 
-But I'm not really privy to whatever discussion determined that you
-needed to deprecate the current binding. If there really are no users of
-the current upstream binding, then maybe your current deprecation plan
-can work fine.
-
-> +		 Should be one of;
-> +		   "st,stid127-spi-fsm"
-> +		   "st,stih407-spi-fsm"
-> +		   "st,stih416-spi-fsm"
->    - reg        : Contains register's location and length.
-> -  - reg-names  : Should contain the reg names "spi-fsm"
->    - interrupts : The interrupt number
->    - pinctrl-0  : Standard Pinctrl phandle (see: pinctrl/pinctrl-bindings.txt)
-> -
-> -Optional properties:
-> -  - st,syscfg          : Phandle to boot-device system configuration registers
-> -  - st,boot-device-reg : Address of the aforementioned boot-device register(s)
-> -  - st,boot-device-spi : Expected boot-device value if booted via this device
-> +  - st,syscfg  : Phandle to boot-device system configuration registers
+> v2:
+>   These are the last remaining patches in the set, all rebased and
+>   with the DT documentation requested after the last submission.
 >  
->  Example:
->  	spifsm: spifsm@fe902000{
-> -	        compatible         = "st,spi-fsm";
-> +		compatible         = "st,stih407-spi-fsm";
->  	        reg                =  <0xfe902000 0x1000>;
-> -	        reg-names          = "spi-fsm";
->  	        pinctrl-0          = <&pinctrl_fsm>;
->  		st,syscfg	   = <&syscfg_rear>;
-> -	        st,boot-device-reg = <0x958>;
-> -	        st,boot-device-spi = <0x1a>;
-> -		status = "okay";
->  	};
-> -
+> v1:
+>   This patch-set updates ST's FSM SPI-NOR driver with all the internal
+>   goodness which has happened since the initial (now upstreamed) snapshot
+>   was taken. It covers just over 6 months worth of internal development
+>   and bug-fixes. A final whitespace clean-up is also appended to the set
+>   - to make it look pretty and stuff. :)
+> 
+> Angus Clark (3):
+>   mtd: st_spi_fsm: Add support for N25Q512 and N25Q00A devices
+>   mtd: st_spi_fsm: Update Spansion device entries
+>   mtd: st_spi_fsm: Improve busy wait handling
+> 
+> Lee Jones (9):
+>   mtd: st_spi_fsm: Extend fsm_clear_fifo to handle unwanted bytes
+>   mtd: st_spi_fsm: Obtain and use EMI clock
+>   mtd: st_spi_fsm: dt-bindings: Deprecate generic compatible string
+>   mtd: st_spi_fsm: Fetch boot device locations from DT match tables
+>   mtd: st_spi_fsm: Fix [-Wsign-compare] build warning
+>   mtd: st_spi_fsm: Update the JEDEC probe to handle extended READIDs
+>   mtd: st_spi_fsm: General tidy-up
+>   ARM: STi: stih416: Use new platform specific compatible string
+>   ARM: STi: stih416: Supply EMI clock reference to FSM SPI NOR
+> 
+> Nunzio Raciti (1):
+>   mtd: st_spi_fsm: Add support for Micron N25Q512A
+> 
+>  Documentation/devicetree/bindings/mtd/st-fsm.txt |  20 +-
+>  arch/arm/boot/dts/stih416.dtsi                   |   6 +-
+>  drivers/mtd/devices/st_spi_fsm.c                 | 747 +++++++++++++++--------
+>  include/dt-bindings/clock/stih416-clks.h         |   1 +
+>  4 files changed, 519 insertions(+), 255 deletions(-)
+> 
 
 Brian
 --
