@@ -1,96 +1,58 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 3/4] ARM: shmobile: emev2: Add PFC information to emev2.dtsi
-Date: Tue, 13 Jan 2015 16:45:59 +0200
-Message-ID: <1701639.rHDfQqXMRy@avalon>
-References: <1418414497-23741-1-git-send-email-niso@kth.se> <1418414497-23741-4-git-send-email-niso@kth.se>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: Re: [PATCH v2 0/8] ARM: at91: dts: sama5d3: add dt support for atmel
+ isi and ov2640 sensor
+Date: Tue, 13 Jan 2015 16:05:57 +0100
+Message-ID: <54B53455.9050407@atmel.com>
+References: <1420362153-500-1-git-send-email-josh.wu@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1418414497-23741-4-git-send-email-niso@kth.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Niklas =?ISO-8859-1?Q?S=F6derlund?= <niso@kth.se>
-Cc: linux-kernel@vger.kernel.org, linus.walleij@linaro.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, magnus.damm@gmail.com
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1420362153-500-1-git-send-email-josh.wu@atmel.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Josh Wu <josh.wu@atmel.com>, devicetree@vger.kernel.org
+Cc: grant.likely@linaro.org, galak@codeaurora.org, rob@landley.net, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, pawel.moll@arm.com, linux-arm-kernel@lists.infradead.org, voice.shen@atmel.com, laurent.pinchart@ideasonboard.com, alexandre.belloni@free-electrons.com, plagnioj@jcrosoft.com, boris.brezillon@free-electrons.com, linux-media@vger.kernel.org, g.liakhovetski@gmx.de
 List-Id: devicetree@vger.kernel.org
 
-Hi Niklas,
-
-Thank you for the patch.
-
-On Friday 12 December 2014 21:01:36 Niklas S=F6derlund wrote:
-> With this information all GPIOs can make use of the PFC functionality=
-=2E
+Le 04/01/2015 10:02, Josh Wu a =E9crit :
+> This patch series add ISI and ov2640 support on dts files.
 >=20
-> Signed-off-by: Niklas S=F6derlund <niso@kth.se>
-> ---
->  arch/arm/boot/dts/emev2.dtsi | 11 +++++++++++
->  1 file changed, 11 insertions(+)
+> As the ov2640 driver dt is still in review. The patch is in: https://=
+patchwork.linuxtv.org/patch/27554/
+> So I want to send this dt patch early for a review.
 >=20
-> diff --git a/arch/arm/boot/dts/emev2.dtsi b/arch/arm/boot/dts/emev2.d=
-tsi
-> index cc7bfe0..518b7fa 100644
-> --- a/arch/arm/boot/dts/emev2.dtsi
-> +++ b/arch/arm/boot/dts/emev2.dtsi
-> @@ -169,12 +169,19 @@
->  		clock-names =3D "sclk";
->  	};
+> v1 -> v2:
+>   1. add one more patch to change the pin name of ISI_MCK
+>   2. rewrite the commit [4/8] ARM: at91: dts: sama5d3: change name of=
+ pinctrl_isi_{power,reset}.
+>   3. move the common chip parts of ISI node to sama5d3.dtsi.
 >=20
-> +	pfc: pfc@e0140200 {
-> +		compatible =3D "renesas,pfc-emev2";
-> +		reg =3D <0xe0140200 0x14>, <0xe0140284 0xc>,
-> +			<0xe0140294 0x8>, <0xe01402a8 0x4>;
+> Bo Shen (3):
+>   ARM: at91: dts: sama5d3: split isi pinctrl
+>   ARM: at91: dts: sama5d3: add missing pins of isi
+>   ARM: at91: dts: sama5d3: move the isi mck pin to mb
+>=20
+> Josh Wu (5):
+>   ARM: at91: dts: sama5d3: add isi clock
+>   ARM: at91: dts: sama5d3: change name of pinctrl_isi_{power,reset}
+>   ARM: at91: dts: sama5d3: change name of pinctrl of ISI_MCK
+>   ARM: at91: dts: sama5d3: add ov2640 camera sensor support
+>   ARM: at91: sama5: enable atmel-isi and ov2640 in defconfig
 
-I think a single reg entry set to <0xe0140200 0x100> should be enough.
+Josh,
 
-> +	};
-> +
->  	gpio0: gpio@e0050000 {
->  		compatible =3D "renesas,em-gio";
->  		reg =3D <0xe0050000 0x2c>, <0xe0050040 0x20>;
->  		interrupts =3D <0 67 IRQ_TYPE_LEVEL_HIGH>,
->  			     <0 68 IRQ_TYPE_LEVEL_HIGH>;
->  		gpio-controller;
-> +		gpio-ranges =3D <&pfc 0 0 32>;
->  		#gpio-cells =3D <2>;
->  		ngpios =3D <32>;
->  		interrupt-controller;
-> @@ -186,6 +193,7 @@
->  		interrupts =3D <0 69 IRQ_TYPE_LEVEL_HIGH>,
->  			     <0 70 IRQ_TYPE_LEVEL_HIGH>;
->  		gpio-controller;
-> +		gpio-ranges =3D <&pfc 0 32 32>;
->  		#gpio-cells =3D <2>;
->  		ngpios =3D <32>;
->  		interrupt-controller;
-> @@ -197,6 +205,7 @@
->  		interrupts =3D <0 71 IRQ_TYPE_LEVEL_HIGH>,
->  			     <0 72 IRQ_TYPE_LEVEL_HIGH>;
->  		gpio-controller;
-> +		gpio-ranges =3D <&pfc 0 64 32>;
->  		#gpio-cells =3D <2>;
->  		ngpios =3D <32>;
->  		interrupt-controller;
-> @@ -208,6 +217,7 @@
->  		interrupts =3D <0 73 IRQ_TYPE_LEVEL_HIGH>,
->  			     <0 74 IRQ_TYPE_LEVEL_HIGH>;
->  		gpio-controller;
-> +		gpio-ranges =3D <&pfc 0 96 32>;
->  		#gpio-cells =3D <2>;
->  		ngpios =3D <32>;
->  		interrupt-controller;
-> @@ -219,6 +229,7 @@
->  		interrupts =3D <0 75 IRQ_TYPE_LEVEL_HIGH>,
->  			     <0 76 IRQ_TYPE_LEVEL_HIGH>;
->  		gpio-controller;
-> +		gpio-ranges =3D <&pfc 0 128 32>;
+It seems that this patch doesn't show up in the series: I only received
+up to 6/8 patches (2 missing?). Can you please send it(them?)?
 
-Shouldn't this be <&pfc 0 128 31>; ?
+Bye,
 
->  		#gpio-cells =3D <2>;
->  		ngpios =3D <31>;
->  		interrupt-controller;
+>  arch/arm/boot/dts/sama5d3.dtsi    | 24 ++++++++++++++++++-----
+>  arch/arm/boot/dts/sama5d3xmb.dtsi | 40 +++++++++++++++++++++++++++++=
+++++++----
+>  arch/arm/configs/sama5_defconfig  |  6 ++++++
+>  3 files changed, 61 insertions(+), 9 deletions(-)
+>=20
+
 
 --=20
-Regards,
-
-Laurent Pinchart
+Nicolas Ferre
