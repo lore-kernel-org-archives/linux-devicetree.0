@@ -1,27 +1,65 @@
-From: nick <xerofoify@gmail.com>
-Subject: Question about the function,g2d_suspend in the file,exynos_drm_g2d.c
-Date: Tue, 13 Jan 2015 00:35:02 -0500
-Message-ID: <54B4AE86.1090301@gmail.com>
+From: Padma Venkat <padma.kvr@gmail.com>
+Subject: Re: [PATCH 2/4] clk: samsung: exynos7: add clocks for SPI block
+Date: Tue, 13 Jan 2015 11:40:34 +0530
+Message-ID: <CAAgF-BcVRUY-kWRJ0KmpkX6GPsppDBd0O73R_pLdPU=OOen8Kw@mail.gmail.com>
+References: <1418995427-7712-1-git-send-email-padma.v@samsung.com>
+	<1418995427-7712-3-git-send-email-padma.v@samsung.com>
+	<CAFp+6iFzawDY1wFA-2AQUHFCk54WsaCJAOkrqvX9t7b-XugY8g@mail.gmail.com>
+	<CAFp+6iHaJ3b9+ERygksNLcyG9PxP2yf-6BTtwFgFgcUOqX+PVg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: inki.dae@samsung.com
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, jy0922.shim@samsung.com, airlied@linux.ie, sw0312.kim@samsung.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, kyungmin.park@samsung.com, kgene@kernel.org, dri-devel@lists.freedesktop.org, grant.likely@linaro.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAFp+6iHaJ3b9+ERygksNLcyG9PxP2yf-6BTtwFgFgcUOqX+PVg@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Vivek Gautam <gautamvivek1987@gmail.com>
+Cc: Padmavathi Venna <padma.v@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, mturquette@linaro.org, Tomasz Figa <tomasz.figa@gmail.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Greetings All,
-I am wondering as I don't have the hardware to test if the usleep range has a correct and good
-value. Otherwise if one of the maintainers has the hardware and has tested there to be better
-values for the sleep range, please send them to me so I can send in a patch for this.
-Regards,
-Nick
+Hi ViVek,
+
+On 1/9/15, Vivek Gautam <gautamvivek1987@gmail.com> wrote:
+> On Fri, Jan 9, 2015 at 5:18 PM, Vivek Gautam <gautamvivek1987@gmail.com>
+> wrote:
+>> Hi Padma,
+>>
+>>
+>> On Fri, Dec 19, 2014 at 6:53 PM, Padmavathi Venna <padma.v@samsung.com>
+>> wrote:
+>>> Add clock support for 5 SPI channels.
+>>>
+>>> Signed-off-by: Padmavathi Venna <padma.v@samsung.com>
+>>> ---
+
+[snip]
+
+>> Same here for SCLK_SPI5, unused in the patch.
+
+ok.
+
+>>
+>> [snip]
+>>
+>> The rest all looks good in this patch. I have also verified from the
+>> Exynos7 UM.
+>
+> missed it earlier. You may also want to add update documentation for
+> clock sources
+> of peric1 block.
+
+I will add the required source clks.
+Thanks for the review.
+
+Padma
+>
+>
+> --
+> Best Regards
+> Vivek Gautam
+> Samsung R&D Institute, Bangalore
+> India
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc"
+> in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
