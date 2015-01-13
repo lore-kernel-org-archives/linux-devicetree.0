@@ -1,164 +1,44 @@
 From: Semen Protsenko <semen.protsenko@globallogic.com>
-Subject: [PATCH 1/4] gpio: max732x: Add device tree support
-Date: Tue, 13 Jan 2015 15:41:42 +0200
-Message-ID: <1421156505-16600-2-git-send-email-semen.protsenko@globallogic.com>
-References: <1421156505-16600-1-git-send-email-semen.protsenko@globallogic.com>
+Subject: [PATCH 0/4] gpio: max732x: Update MAX732X driver to use modern kernel API
+Date: Tue, 13 Jan 2015 15:41:41 +0200
+Message-ID: <1421156505-16600-1-git-send-email-semen.protsenko@globallogic.com>
 Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1421156505-16600-1-git-send-email-semen.protsenko@globallogic.com>
 Sender: linux-gpio-owner@vger.kernel.org
 To: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>
 Cc: Grant Likely <grant.likely@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Marc Zyngier <maz@misterjones.org>, Grygorii Strashko <grygorii.strashko@globallogic.com>, Illia Smyrnov <illia.smyrnov@globallogic.com>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Semen Protsenko <semen.protsenko@globallogic.com>
----
- drivers/gpio/gpio-max732x.c |   62 +++++++++++++++++++++++++++++++++++--------
- 1 file changed, 51 insertions(+), 11 deletions(-)
+This patch series updates driver for MAX732X I/O expander to use modern kernel
+API (like Device Tree). Basically, I was needed this driver to work with
+kernel 3.8 on our ARM-based board, but it was in obsolete state (supporting
+only platform data from board-file). First patch makes driver work with
+data taken from device tree file (old platform data support also kept in place
+for compatibility reasons).
 
-diff --git a/drivers/gpio/gpio-max732x.c b/drivers/gpio/gpio-max732x.c
-index 6c67622..a642f78 100644
---- a/drivers/gpio/gpio-max732x.c
-+++ b/drivers/gpio/gpio-max732x.c
-@@ -21,6 +21,7 @@
- #include <linux/irq.h>
- #include <linux/i2c.h>
- #include <linux/i2c/max732x.h>
-+#include <linux/of.h>
- 
- 
- /*
-@@ -116,6 +117,22 @@ static const struct i2c_device_id max732x_id[] = {
- };
- MODULE_DEVICE_TABLE(i2c, max732x_id);
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id max732x_of_table[] = {
-+	{ .compatible = "maxim,max7319" },
-+	{ .compatible = "maxim,max7320" },
-+	{ .compatible = "maxim,max7321" },
-+	{ .compatible = "maxim,max7322" },
-+	{ .compatible = "maxim,max7323" },
-+	{ .compatible = "maxim,max7324" },
-+	{ .compatible = "maxim,max7325" },
-+	{ .compatible = "maxim,max7326" },
-+	{ .compatible = "maxim,max7327" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, max732x_of_table);
-+#endif
-+
- struct max732x_chip {
- 	struct gpio_chip gpio_chip;
- 
-@@ -457,10 +474,12 @@ static int max732x_irq_setup(struct max732x_chip *chip,
- 	int has_irq = max732x_features[id->driver_data] >> 32;
- 	int ret;
- 
--	if (pdata->irq_base && has_irq != INT_NONE) {
-+	if (((pdata && pdata->irq_base) || client->irq)
-+			&& has_irq != INT_NONE) {
- 		int lvl;
- 
--		chip->irq_base = pdata->irq_base;
-+		if (pdata)
-+			chip->irq_base = pdata->irq_base;
- 		chip->irq_features = has_irq;
- 		mutex_init(&chip->irq_lock);
- 
-@@ -515,7 +534,7 @@ static int max732x_irq_setup(struct max732x_chip *chip,
- 	struct max732x_platform_data *pdata = dev_get_platdata(&client->dev);
- 	int has_irq = max732x_features[id->driver_data] >> 32;
- 
--	if (pdata->irq_base && has_irq != INT_NONE)
-+	if (((pdata && pdata->irq_base) || client->irq) && has_irq != INT_NONE)
- 		dev_warn(&client->dev, "interrupt support not compiled in\n");
- 
- 	return 0;
-@@ -574,28 +593,47 @@ static int max732x_setup_gpio(struct max732x_chip *chip,
- 	return port;
- }
- 
-+static struct max732x_platform_data *of_gpio_max732x(struct device *dev)
-+{
-+	struct max732x_platform_data *pdata;
-+
-+	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
-+	if (!pdata)
-+		return NULL;
-+
-+	pdata->gpio_base = -1;
-+
-+	return pdata;
-+}
-+
- static int max732x_probe(struct i2c_client *client,
- 				   const struct i2c_device_id *id)
- {
- 	struct max732x_platform_data *pdata;
-+	struct device_node *node;
- 	struct max732x_chip *chip;
- 	struct i2c_client *c;
- 	uint16_t addr_a, addr_b;
- 	int ret, nr_port;
- 
- 	pdata = dev_get_platdata(&client->dev);
--	if (pdata == NULL) {
-+	node = client->dev.of_node;
-+
-+	if (!pdata && node)
-+		pdata = of_gpio_max732x(&client->dev);
-+
-+	if (!pdata) {
- 		dev_dbg(&client->dev, "no platform data\n");
- 		return -EINVAL;
- 	}
- 
--	chip = devm_kzalloc(&client->dev, sizeof(struct max732x_chip),
--			GFP_KERNEL);
-+	chip = devm_kzalloc(&client->dev, sizeof(*chip), GFP_KERNEL);
- 	if (chip == NULL)
- 		return -ENOMEM;
- 	chip->client = client;
- 
- 	nr_port = max732x_setup_gpio(chip, id, pdata->gpio_base);
-+	chip->gpio_chip.dev = &client->dev;
- 
- 	addr_a = (client->addr & 0x0f) | 0x60;
- 	addr_b = (client->addr & 0x0f) | 0x50;
-@@ -643,7 +681,7 @@ static int max732x_probe(struct i2c_client *client,
- 	if (ret)
- 		goto out_failed;
- 
--	if (pdata->setup) {
-+	if (pdata && pdata->setup) {
- 		ret = pdata->setup(client, chip->gpio_chip.base,
- 				chip->gpio_chip.ngpio, pdata->context);
- 		if (ret < 0)
-@@ -664,9 +702,10 @@ static int max732x_remove(struct i2c_client *client)
- {
- 	struct max732x_platform_data *pdata = dev_get_platdata(&client->dev);
- 	struct max732x_chip *chip = i2c_get_clientdata(client);
--	int ret;
- 
--	if (pdata->teardown) {
-+	if (pdata && pdata->teardown) {
-+		int ret;
-+
- 		ret = pdata->teardown(client, chip->gpio_chip.base,
- 				chip->gpio_chip.ngpio, pdata->context);
- 		if (ret < 0) {
-@@ -689,8 +728,9 @@ static int max732x_remove(struct i2c_client *client)
- 
- static struct i2c_driver max732x_driver = {
- 	.driver = {
--		.name	= "max732x",
--		.owner	= THIS_MODULE,
-+		.name		= "max732x",
-+		.owner		= THIS_MODULE,
-+		.of_match_table	= of_match_ptr(max732x_of_table),
- 	},
- 	.probe		= max732x_probe,
- 	.remove		= max732x_remove,
+After adding device tree support it came to me that current approach to
+implement interrupt controller is to use irq-domain framework. Hence the second
+patch (only affects the code for generating interrupts on level change on
+expander's GPIO input lines).
+
+Once driver became fully functional (using data from device tree), another
+issue showed up: lockdep validator revealed possible dead-lock in driver code.
+Third patch fixes this problem.
+
+Finally, fourth patch adds binding documentation showing how to describe MAX732X
+driver in device tree file.
+
+Semen Protsenko (4):
+  gpio: max732x: Add device tree support
+  gpio: max732x: Rewrite IRQ code to use irq_domain API
+  gpio: max732x: Fix possible deadlock
+  gpio: max732x: Add DT binding documentation
+
+ .../devicetree/bindings/gpio/gpio-max732x.txt      |   59 +++++++
+ drivers/gpio/Kconfig                               |    1 +
+ drivers/gpio/gpio-max732x.c                        |  174 ++++++++++++++------
+ 3 files changed, 187 insertions(+), 47 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-max732x.txt
+
 -- 
 1.7.9.5
 
