@@ -1,111 +1,53 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH v9 1/4] drm/i2c: tda998x: Add DT support for audio
-Date: Tue, 13 Jan 2015 19:26:48 +0000
-Message-ID: <20150113192648.GU12302@n2100.arm.linux.org.uk>
-References: <20150112122527.GF12302@n2100.arm.linux.org.uk>
- <1421071197.3081.44.camel@pengutronix.de>
- <20150112140456.GI12302@n2100.arm.linux.org.uk>
- <20150112181341.4a53ea24@armhf>
- <20150112175705.GN12302@n2100.arm.linux.org.uk>
- <1421151718.4519.24.camel@pengutronix.de>
- <20150113122715.GP12302@n2100.arm.linux.org.uk>
- <20150113165411.5469930d@armhf>
- <20150113160313.GR12302@n2100.arm.linux.org.uk>
- <20150113200252.3dbfab14@armhf>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [PATCH 3/3] clk: berlin: bg2q: remove non-exist "smemc" gate clock
+Date: Tue, 13 Jan 2015 11:27:07 -0800
+Message-ID: <20150113192707.20842.42495@quantum>
+References: <1420016272-6789-1-git-send-email-jszhang@marvell.com>
+ <1420016272-6789-4-git-send-email-jszhang@marvell.com>
+ <54AD3EAE.6090009@gmail.com> <20150107222209.64ed24a0@xhacker>
+ <54AD431F.6060403@gmail.com> <20150109201306.4d1a296b@xhacker>
+ <54B12446.4030703@gmail.com> <20150113002817.20842.98432@quantum>
+ <54B50CDA.3090307@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20150113200252.3dbfab14@armhf>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jean-Francois Moine <moinejf@free.fr>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Andrew Jackson <Andrew.Jackson@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>, Mark Brown <broonie@kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+Content-Transfer-Encoding: 8BIT
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <54B50CDA.3090307@gmail.com>
+Sender: stable-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Jisheng Zhang <jszhang@marvell.com>
+Cc: "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "alexandre.belloni@free-electrons.com" <alexandre.belloni@free-electrons.com>, "antoine.tenart@free-electrons.com" <antoine.tenart@free-electrons.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "stable@vger.kernel.org" <stable@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBKYW4gMTMsIDIwMTUgYXQgMDg6MDI6NTJQTSArMDEwMCwgSmVhbi1GcmFuY29pcyBN
-b2luZSB3cm90ZToKPiBPbiBUdWUsIDEzIEphbiAyMDE1IDE2OjAzOjEzICswMDAwCj4gUnVzc2Vs
-bCBLaW5nIC0gQVJNIExpbnV4IDxsaW51eEBhcm0ubGludXgub3JnLnVrPiB3cm90ZToKPiAKPiA+
-IE9uIFR1ZSwgSmFuIDEzLCAyMDE1IGF0IDA0OjU0OjExUE0gKzAxMDAsIEplYW4tRnJhbmNvaXMg
-TW9pbmUgd3JvdGU6Cj4gPiA+IDQgc3RyZWFtcyBvbiA0IGRpZmZlcmVudCBBUHMgKHNvdXJjZXMp
-IHNob3VsZCB3b3JrLCBidXQgNCBzdHJlYW1zIGZyb20KPiA+ID4gYSBzYW1lIHNvdXJjZSBzaG91
-bGQgYmUgZGV0YWlsZWQuCj4gPiAKPiA+IEknZCBsaWtlIHRvIGtub3cgaG93IHlvdSBpbnRlbmQg
-dG8gd2lyZSB1cCBmb3VyIGRpZmZlcmVudCBJMlMgc291cmNlcwo+ID4gdG8gdGhlIFREQTk5OHgu
-Cj4gPiAKPiA+IFJlbWVtYmVyLCBhbiBJMlMgc291cmNlIHByb2R1Y2VzIHRoZSBJMlMgZGF0YSBh
-bmQgdGhlIHdvcmQgY2xvY2sgLSB0aGF0J3MKPiA+IHR3byBvdXRwdXRzLiAgWW91IGNhbid0IGVs
-ZWN0cm9uaWNhbGx5IHdpcmUgdGhlIHdvcmQgY2xvY2tzIHRvZ2V0aGVyLgo+IAo+IEZyb20gdGhl
-IHNwZWMsIHRoZSB0ZGE5OTh4IGdldHMgaW5kZXBlbmRlbnRseSB0aGUgc2VyaWFsIGNsb2NrIGFu
-ZCB0aGUKPiBzZXJpYWwgd29yZCBzZWxlY3QgZnJvbSBlYWNoIEkyUyAoc3RlcmVvKSBpbnB1dCBj
-aGFubmVsICg9IGF1ZGlvIHBpbiksCj4gc28sIHlvdSBtYXkgaGF2ZSA0IGF1ZGlvIGNoaXBzIGdp
-dmluZyA0IGluZGVwZW5kZW50IGF1ZGlvIHN0cmVhbXMuCj4gSSBkb24ndCBrbm93IHdoYXQgY2Fu
-IGJlIHRoZSByZXN1bHQgaW4gSERNSSBpZiB0aGVzZSBzdHJlYW1zIGFyZSBhY3RpdmVkCj4gYXQg
-dGhlIHNhbWUgdGltZSEKPiAKPiBJbiB0aGUgb3RoZXIgY29uZmlndXJhdGlvbiwgYW4gYXVkaW8g
-Y2hpcCBtYXkgaGF2ZSA0IHN5bmNocm9uaXplZCBzdGVyZW8KPiBjaGFubmVscyAoc29mdHdhcmUg
-UENNcykuIFRoZXNlIG9uZXMgbWF5IGJlIGNvbnNpZGVyZWQgYXMgb25lIGxpbmsgKG9uZQo+IHBv
-cnQgb3V0IGZyb20gdGhlIGF1ZGlvIGNoaXAgdG8gb25lIHBvcnQgaW4gdG8gdGhlIHRkYTk5OHgp
-LCB0aGUgQVAKPiBjb25maWd1cmF0aW9uIGJlaW5nIDB4MWYuCgpMZXQgbWUgdHJ5IHRvIGJlIGNs
-ZWFyZXIuICBIZXJlJ3MgZm91ciBpbmRlcGVuZGVudCBJMlMgYmxvY2tzIHdoaWNoCmhhdmUgYmVl
-biBhcnJhbmdlZCB0byBiZSBjbG9ja2VkIGJ5IHRoZSBzYW1lIEkyUyBidXMgY2xvY2suICBFYWNo
-CkkyUyBibG9jayBwcm9kdWNlcyBpdHMgb3duIHdvcmQgY2xvY2sgYW5kIGRhdGEgc3RyZWFtOgoK
-U0NMSwp8ICArLS0tLS0tLSsKKy0+fCBJMlMgICArLS0tLS0tPiBXUzEKfCAgfCBzcmMgMSArLS0t
-LS0tPiBJMlMxCnwgICstLS0tLS0tKwp8CnwgICstLS0tLS0tKworLT58IEkyUyAgICstLS0tLS0+
-IFdTMgp8ICB8IHNyYyAyICstLS0tLS0+IEkyUzIKfCAgKy0tLS0tLS0rCnwKfCAgKy0tLS0tLS0r
-CistPnwgSTJTICAgKy0tLS0tLT4gV1MzCnwgIHwgc3JjIDMgKy0tLS0tLT4gSTJTMwp8ICArLS0t
-LS0tLSsKfAp8ICArLS0tLS0tLSsKKy0+fCBJMlMgICArLS0tLS0tPiBXUzQKfCAgfCBzcmMgNCAr
-LS0tLS0tPiBJMlM0CnwgICstLS0tLS0tKwp8CnwgICAgICAgICstLS0tLS0tLS0rCnwgICAgICAg
-IHwgVERBOTk4eCB8CmAtLS0tLS0tPisgQUNMSyAgICB8CiAgV1MgLS0tPisgQVAwICAgICB8Ckky
-UzEgLS0tPisgQVAxICAgICB8CkkyUzIgLS0tPisgQVAyICAgICB8CkkyUzMgLS0tPisgQVAzICAg
-ICB8CkkyUzQgLS0tPisgQVA0ICAgICB8CiAgICAgICAgICstLS0tLS0tLS0rCgpUaGUgYXJyb3dz
-IHBvaW50IGZyb20gdGhlIG91dHB1dCAoZHJpdmVyIG9mIHRoZSBzaWduYWwpIHRvIHRoZSBpbnB1
-dC4KSXQgaXMgaWxsZWdhbCBpbiBlbGVjdHJvbmljcyB0byB3aXJlIHR3byBvdXRwdXRzICh3aGlj
-aCBhcmUgbm90IGFibGUgdG8KZGlzYWJsZSB0aGVpciBvdXRwdXQgZHJpdmVycykgdG9nZXRoZXIu
-CgpIb3cgZG8geW91IGFycmFuZ2UgZm9yIFdTMS4uV1M0IHRvIGJlIGNvbm5lY3RlZCB0byB0aGUg
-VERBOTk4eCBXUyBpbnB1dD8KCk15IGFuc3dlciBpczogdGhpcyBpcyBhbiBpbXBvc3NpYmxlIHNl
-dHVwLgoKU2luY2UgdGhlc2UgYXJlIGluZGVwZW5kZW50IGJsb2NrcywgdGhlcmUgaXMgbm8gZ3Vh
-cmFudGVlIHRoYXQgdGhlCldTMS4uV1M0IG91dHB1dHMgd2lsbCBiZSBzeW5jaHJvbmlzZWQgdG8g
-ZWFjaCBvdGhlciwgc2luY2UgdGhhdCBkZXBlbmRzCnVwb24gdGhlIFNDTEsgZWRnZSB0aGF0IGVh
-Y2ggdW5pdCBiZWNvbWVzIGVuYWJsZWQuICBUaGF0IGFsc28gZGV0ZXJtaW5lcwp0aGUgYml0IHBv
-c2l0aW9uIHJlbGF0aXZlIHRvIFNDTEsgb2YgdGhlIGZpcnN0IGJpdCBvdXRwdXQuCgpIZW5jZSwg
-eW91IGNvdWxkIHZlcnkgd2VsbCBlbmQgdXAgd2l0aCBzb21ldGhpbmcgbGlrZSB0aGlzIGZvciBh
-IDE2LWJpdApJMlMgb3V0cHV0IGZyb20gZWFjaCBJMlMgYmxvY2s6CgpTQ0xLOiBffl9+X35ffl9+
-X35ffl9+X35ffl9+X35ffl9+X35ffl9+X35ffl9+X35ffl9+X35ffl9+X35ffl9+X35ffl9+X35f
-CiBXUzE6IF9ffn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX34KSTJTMTogbGxtbS4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi5s
-bG1tLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLmxsbQogV1MyOiBfX19fX19fX19fX19fX19f
-fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5fX19fX19fX19fX19fX19fX19fCkkyUzI6
-IC4uLi4uLi4uLi4uLi4ubGxtbS4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi5sbG1tLi4uLi4u
-Li4uLi4uLi4uLi4KIFdTMzogX19fX19fX19+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+
-fl9fX19fX19fX19fX19fX19fX19fX19fX19fXwpJMlMzOiAuLi4uLi5sbG1tLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLmxsbW0uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uCiBXUzQ6IF9fX19f
-X35+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+X19fX19fX19fX19fX19fX19fX19fX19f
-X19fX18KSTJTNDogLi4uLmxsbW0uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4ubGxtbS4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLgoKd2hlcmUgJ2wnIGluZGljYXRlcyB0aGUgTFNCIG9mIHRo
-ZSBzYW1wbGUsIGFuZCAnbScgaW5kaWNhdGVzIHRoZSBNU0IuCgpUaGUgcHJvYmxlbSBpcyB0aGF0
-IHRoZSBUREE5OTh4IGV4cGVjdHMgZWFjaCBJMlMgaW5wdXQgdG8gYmUgc3luY2hyb25pc2VkLgpJ
-biBvdGhlciB3b3JkcywgdGhlIFdTIGlucHV0IGlzIHNoYXJlZCBiZXR3ZWVuIGVhY2ggYW5kIGV2
-ZXJ5IHNlcGFyYXRlIEkyUwppbnB1dCwgd2hpY2ggbWVhbnMgdGhlIE1TQiBvZiBlYWNoIEkyUyBp
-bnB1dCBuZWVkcyB0byBiZSBzdXBwbGllZCBhdApleGFjdGx5IHRoZSBzYW1lIFNDTEsgZWRnZS4g
-IEluIG90aGVyIHdvcmRzOgoKU0NMSzogX35ffl9+X35ffl9+X35ffl9+X35ffl9+X35ffl9+X35f
-fl9+X35ffl9+X35ffl9+X35ffl9+X35ffl9+X35ffl9+XwogIFdTOiBfX35+fn5+fn5+fn5+fn5+
-fn5+fn5+fn5+fn5+fn5+fn5+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19+CkkyUzE6
-IGxsbW0uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4ubGxtbS4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi5sbG0KSTJTMjogbGxtbS4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi5sbG1tLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLmxsbQpJMlMzOiBsbG1tLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLmxsbW0uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4ubGxtCkkyUzQ6IGxsbW0u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4ubGxtbS4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li5sbG0KClNvLCB3aGF0IEknbSBzYXlpbmcgaXMgdGhhdCBpdCBpcyBfaW1wb3NzaWJsZV8gdG8g
-ZHJpdmUgdGhlIFREQTk5OHggdXNpbmcKbXVsdGlwbGUgSTJTIHN0cmVhbXMgd2hpY2ggYXJlIG5v
-dCBwcm9kdWNlZCBieSB0aGUgc2FtZSBJMlMgYmxvY2suCgotLSAKRlRUQyBicm9hZGJhbmQgZm9y
-IDAuOG1pbGUgbGluZTogY3VycmVudGx5IGF0IDEwLjVNYnBzIGRvd24gNDAwa2JwcyB1cAphY2Nv
-cmRpbmcgdG8gc3BlZWR0ZXN0Lm5ldC4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
-by9kcmktZGV2ZWwK
+Quoting Sebastian Hesselbarth (2015-01-13 04:17:30)
+> On 01/13/2015 01:28 AM, Mike Turquette wrote:
+> > Quoting Sebastian Hesselbarth (2015-01-10 05:08:22)
+> >> This is clk subsystem, so either Mike takes it through his fixes branch
+> >> including my
+> >>
+> >> Acked-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+> >>
+> >> or decides to agree that I take it instead with his Ack. I am fine
+> >> with both.
+> >
+> > Acked-by: Michael Turquette <mturquette@linaro.org>
+> >
+> > Now the three fixes can stay together and live happily ever after.
+> 
+> Mike,
+> 
+> I already had the two others pulled by Olof some days ago.
+> If you plan for a fixes branch for v3.19, please take this in too.
+> 
+> If you have no other fixes, I can take it and do a 2nd round of
+> fixes for Berlin.
+
+The fixes family has been broken up. How sad.
+
+Applied to clk-fixes for the next -rc.
+
+Regards,
+Mike
+
+> 
+> Sebastian
+> 
