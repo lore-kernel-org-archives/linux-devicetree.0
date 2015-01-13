@@ -1,424 +1,155 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH v3 3/4] ata: libahci: Allow using multiple regulators
-Date: Tue, 13 Jan 2015 15:22:32 +0100
-Message-ID: <1421158953-2957-4-git-send-email-gregory.clement@free-electrons.com>
-References: <1421158953-2957-1-git-send-email-gregory.clement@free-electrons.com>
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <1421158953-2957-1-git-send-email-gregory.clement@free-electrons.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Tejun Heo <tj@kernel.org>, Hans de Goede <hdegoede@redhat.com>, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 2/4] sh-pfc: Add emev2 pinmux support
+Date: Tue, 13 Jan 2015 16:27:06 +0200
+Message-ID: <4306343.ZxG2x6FY5Y@avalon>
+References: <1418414497-23741-1-git-send-email-niso@kth.se> <1418414497-23741-3-git-send-email-niso@kth.se>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1418414497-23741-3-git-send-email-niso@kth.se>
+Sender: linux-sh-owner@vger.kernel.org
+To: Niklas =?ISO-8859-1?Q?S=F6derlund?= <niso@kth.se>
+Cc: linux-kernel@vger.kernel.org, linus.walleij@linaro.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, magnus.damm@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-The current implementation of the libahci allows using multiple PHYs
-but not multiple regulators. This patch adds the support of multiple
-regulators. Until now it was mandatory to have a PHY under a subnode,
-now a port subnode can contain either a regulator or a PHY (or both).
+Hi Niklas,
 
-In order to be able to asociate a port with a regulator the port are
-now a platform device in the device tree case.
+Thank you for the patch.
 
-There was only one driver which used directly the regulator field of
-the ahci_host_priv structure. To preserve the bisectability the change
-in the ahci_imx driver was done in the same patch.
+On Friday 12 December 2014 21:01:35 Niklas S=F6derlund wrote:
+> Add PFC support for the EMMA Mobile EV2 SoC including pin groups for
+> on-chip devices.
+>=20
+> Signed-off-by: Niklas S=F6derlund <niso@kth.se>
+> ---
+>  .../bindings/pinctrl/renesas,pfc-pinctrl.txt       |    1 +
+>  drivers/pinctrl/sh-pfc/Kconfig                     |    5 +
+>  drivers/pinctrl/sh-pfc/Makefile                    |    1 +
+>  drivers/pinctrl/sh-pfc/core.c                      |    9 +
+>  drivers/pinctrl/sh-pfc/core.h                      |    1 +
+>  drivers/pinctrl/sh-pfc/pfc-emev2.c                 | 1915 ++++++++++=
++++++++
+>  6 files changed, 1932 insertions(+)
+>  create mode 100644 drivers/pinctrl/sh-pfc/pfc-emev2.c
 
-Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
----
- drivers/ata/ahci.h             |   2 +-
- drivers/ata/ahci_imx.c         |  14 +--
- drivers/ata/libahci_platform.c | 227 +++++++++++++++++++++++++++++------------
- include/linux/ahci_platform.h  |   2 +
- 4 files changed, 170 insertions(+), 75 deletions(-)
+[snip]
 
-diff --git a/drivers/ata/ahci.h b/drivers/ata/ahci.h
-index 40f0e34f17af..275358ae0b3f 100644
---- a/drivers/ata/ahci.h
-+++ b/drivers/ata/ahci.h
-@@ -333,7 +333,7 @@ struct ahci_host_priv {
- 	u32			em_msg_type;	/* EM message type */
- 	bool			got_runtime_pm; /* Did we do pm_runtime_get? */
- 	struct clk		*clks[AHCI_MAX_CLKS]; /* Optional */
--	struct regulator	*target_pwr;	/* Optional */
-+	struct regulator	**target_pwrs;	/* Optional */
- 	/*
- 	 * If platform uses PHYs. There is a 1:1 relation between the port number and
- 	 * the PHY position in this array.
-diff --git a/drivers/ata/ahci_imx.c b/drivers/ata/ahci_imx.c
-index 35d51c59a370..41632e57d46f 100644
---- a/drivers/ata/ahci_imx.c
-+++ b/drivers/ata/ahci_imx.c
-@@ -221,11 +221,9 @@ static int imx_sata_enable(struct ahci_host_priv *hpriv)
- 	if (imxpriv->no_device)
- 		return 0;
- 
--	if (hpriv->target_pwr) {
--		ret = regulator_enable(hpriv->target_pwr);
--		if (ret)
--			return ret;
--	}
-+	ret = ahci_platform_enable_regulators(hpriv);
-+	if (ret)
-+		return ret;
- 
- 	ret = clk_prepare_enable(imxpriv->sata_ref_clk);
- 	if (ret < 0)
-@@ -270,8 +268,7 @@ static int imx_sata_enable(struct ahci_host_priv *hpriv)
- disable_clk:
- 	clk_disable_unprepare(imxpriv->sata_ref_clk);
- disable_regulator:
--	if (hpriv->target_pwr)
--		regulator_disable(hpriv->target_pwr);
-+	ahci_platform_disable_regulators(hpriv);
- 
- 	return ret;
- }
-@@ -291,8 +288,7 @@ static void imx_sata_disable(struct ahci_host_priv *hpriv)
- 
- 	clk_disable_unprepare(imxpriv->sata_ref_clk);
- 
--	if (hpriv->target_pwr)
--		regulator_disable(hpriv->target_pwr);
-+	ahci_platform_disable_regulators(hpriv);
- }
- 
- static void ahci_imx_error_handler(struct ata_port *ap)
-diff --git a/drivers/ata/libahci_platform.c b/drivers/ata/libahci_platform.c
-index a147aaadca85..1db968ef6ff8 100644
---- a/drivers/ata/libahci_platform.c
-+++ b/drivers/ata/libahci_platform.c
-@@ -24,6 +24,7 @@
- #include <linux/ahci_platform.h>
- #include <linux/phy/phy.h>
- #include <linux/pm_runtime.h>
-+#include <linux/of_platform.h>
- #include "ahci.h"
- 
- static void ahci_host_stop(struct ata_host *host);
-@@ -138,6 +139,59 @@ void ahci_platform_disable_clks(struct ahci_host_priv *hpriv)
- EXPORT_SYMBOL_GPL(ahci_platform_disable_clks);
- 
- /**
-+ * ahci_platform_enable_regulators - Enable regulators
-+ * @hpriv: host private area to store config values
-+ *
-+ * This function enables all the regulators found in
-+ * hpriv->target_pwrs, if any.  If a regulator fails to be enabled, it
-+ * disables all the regulators already enabled in reverse order and
-+ * returns an error.
-+ *
-+ * RETURNS:
-+ * 0 on success otherwise a negative error code
-+ */
-+int ahci_platform_enable_regulators(struct ahci_host_priv *hpriv)
-+{
-+	int rc, i;
-+
-+	for (i = 0; i < hpriv->nports; i++) {
-+		if (!hpriv->target_pwrs[i])
-+			continue;
-+
-+		rc = regulator_enable(hpriv->target_pwrs[i]);
-+		if (rc)
-+			goto disable_target_pwrs;
-+	}
-+
-+	return 0;
-+
-+disable_target_pwrs:
-+	while (--i >= 0)
-+		if (hpriv->target_pwrs[i])
-+			regulator_disable(hpriv->target_pwrs[i]);
-+
-+	return rc;
-+}
-+EXPORT_SYMBOL_GPL(ahci_platform_enable_regulators);
-+
-+/**
-+ * ahci_platform_disable_regulators - Disable regulators
-+ * @hpriv: host private area to store config values
-+ *
-+ * This function disables all regulators found in hpriv->target_pwrs.
-+ */
-+void ahci_platform_disable_regulators(struct ahci_host_priv *hpriv)
-+{
-+	int i;
-+
-+	for (i = 0; i < hpriv->nports; i++) {
-+		if (!hpriv->target_pwrs[i])
-+			continue;
-+		regulator_disable(hpriv->target_pwrs[i]);
-+	}
-+}
-+EXPORT_SYMBOL_GPL(ahci_platform_disable_regulators);
-+/**
-  * ahci_platform_enable_resources - Enable platform resources
-  * @hpriv: host private area to store config values
-  *
-@@ -157,11 +211,9 @@ int ahci_platform_enable_resources(struct ahci_host_priv *hpriv)
- {
- 	int rc;
- 
--	if (hpriv->target_pwr) {
--		rc = regulator_enable(hpriv->target_pwr);
--		if (rc)
--			return rc;
--	}
-+	rc = ahci_platform_enable_regulators(hpriv);
-+	if (rc)
-+		return rc;
- 
- 	rc = ahci_platform_enable_clks(hpriv);
- 	if (rc)
-@@ -177,8 +229,8 @@ disable_clks:
- 	ahci_platform_disable_clks(hpriv);
- 
- disable_regulator:
--	if (hpriv->target_pwr)
--		regulator_disable(hpriv->target_pwr);
-+	ahci_platform_disable_regulators(hpriv);
-+
- 	return rc;
- }
- EXPORT_SYMBOL_GPL(ahci_platform_enable_resources);
-@@ -199,8 +251,7 @@ void ahci_platform_disable_resources(struct ahci_host_priv *hpriv)
- 
- 	ahci_platform_disable_clks(hpriv);
- 
--	if (hpriv->target_pwr)
--		regulator_disable(hpriv->target_pwr);
-+	ahci_platform_disable_regulators(hpriv);
- }
- EXPORT_SYMBOL_GPL(ahci_platform_disable_resources);
- 
-@@ -218,6 +269,59 @@ static void ahci_platform_put_resources(struct device *dev, void *res)
- 		clk_put(hpriv->clks[c]);
- }
- 
-+static int ahci_platform_get_phy(struct ahci_host_priv *hpriv, u32 port,
-+				struct device *dev, struct device_node *node)
-+{
-+	int rc;
-+
-+	hpriv->phys[port] = devm_of_phy_get(dev, node, NULL);
-+
-+	if (!IS_ERR(hpriv->phys[port]))
-+		return 0;
-+
-+	rc = PTR_ERR(hpriv->phys[port]);
-+	switch (rc) {
-+	case -ENOSYS:
-+		/* No PHY support. Check if PHY is required. */
-+		if (of_find_property(node, "phys", NULL)) {
-+			dev_err(dev,
-+				"couldn't get PHY in node %s: ENOSYS\n",
-+				node->name);
-+			break;
-+		}
-+	case -ENODEV:
-+		/* continue normally */
-+		hpriv->phys[port] = NULL;
-+		rc = 0;
-+		break;
-+
-+	default:
-+		dev_err(dev,
-+			"couldn't get PHY in node %s: %d\n",
-+			node->name, rc);
-+
-+		break;
-+	}
-+
-+	return rc;
-+}
-+
-+static int ahci_platform_get_regulator(struct ahci_host_priv *hpriv, u32 port,
-+				struct device *dev)
-+{
-+	struct regulator *target_pwr;
-+	int rc = 0;
-+
-+	target_pwr = devm_regulator_get_optional(dev, "target");
-+
-+	if (!IS_ERR(target_pwr))
-+		hpriv->target_pwrs[port] = target_pwr;
-+	else
-+		rc = PTR_ERR(target_pwr);
-+
-+	return rc;
-+}
-+
- /**
-  * ahci_platform_get_resources - Get platform resources
-  * @pdev: platform device to get resources for
-@@ -240,7 +344,7 @@ struct ahci_host_priv *ahci_platform_get_resources(struct platform_device *pdev)
- 	struct ahci_host_priv *hpriv;
- 	struct clk *clk;
- 	struct device_node *child;
--	int i, enabled_ports = 0, rc = -ENOMEM;
-+	int i, sz, enabled_ports = 0, rc = -ENOMEM, child_nodes;
- 	u32 mask_port_map = 0;
- 
- 	if (!devres_open_group(dev, NULL, GFP_KERNEL))
-@@ -261,14 +365,6 @@ struct ahci_host_priv *ahci_platform_get_resources(struct platform_device *pdev)
- 		goto err_out;
- 	}
- 
--	hpriv->target_pwr = devm_regulator_get_optional(dev, "target");
--	if (IS_ERR(hpriv->target_pwr)) {
--		rc = PTR_ERR(hpriv->target_pwr);
--		if (rc == -EPROBE_DEFER)
--			goto err_out;
--		hpriv->target_pwr = NULL;
--	}
--
- 	for (i = 0; i < AHCI_MAX_CLKS; i++) {
- 		/*
- 		 * For now we must use clk_get(dev, NULL) for the first clock,
-@@ -290,19 +386,33 @@ struct ahci_host_priv *ahci_platform_get_resources(struct platform_device *pdev)
- 		hpriv->clks[i] = clk;
- 	}
- 
--	hpriv->nports = of_get_child_count(dev->of_node);
-+	hpriv->nports = child_nodes = of_get_child_count(dev->of_node);
- 
--	if (hpriv->nports) {
--		hpriv->phys = devm_kzalloc(dev,
--					   hpriv->nports * sizeof(*hpriv->phys),
--					   GFP_KERNEL);
--		if (!hpriv->phys) {
--			rc = -ENOMEM;
--			goto err_out;
--		}
-+	/*
-+	 * If no sub-node was found, we still need to set nports to
-+	 * one in order to be able to use the
-+	 * ahci_platform_[en|dis]able_[phys|regulators] functions.
-+	 */
-+	if (!child_nodes)
-+		hpriv->nports = 1;
-+
-+	sz = hpriv->nports * sizeof(*hpriv->phys);
-+	hpriv->phys = devm_kzalloc(dev, sz, GFP_KERNEL);
-+	if (!hpriv->phys) {
-+		rc = -ENOMEM;
-+		goto err_out;
-+	}
-+	sz = hpriv->nports * sizeof(*hpriv->target_pwrs);
-+	hpriv->target_pwrs = devm_kzalloc(dev, sz, GFP_KERNEL);
-+	if (!hpriv->target_pwrs) {
-+		rc = -ENOMEM;
-+		goto err_out;
-+	}
- 
-+	if (child_nodes) {
- 		for_each_child_of_node(dev->of_node, child) {
- 			u32 port;
-+			struct platform_device *port_dev;
- 
- 			if (!of_device_is_available(child))
- 				continue;
-@@ -316,17 +426,20 @@ struct ahci_host_priv *ahci_platform_get_resources(struct platform_device *pdev)
- 				dev_warn(dev, "invalid port number %d\n", port);
- 				continue;
- 			}
--
- 			mask_port_map |= BIT(port);
- 
--			hpriv->phys[port] = devm_of_phy_get(dev, child, NULL);
--			if (IS_ERR(hpriv->phys[port])) {
--				rc = PTR_ERR(hpriv->phys[port]);
--				dev_err(dev,
--					"couldn't get PHY in node %s: %d\n",
--					child->name, rc);
-+			of_platform_device_create(child, NULL, NULL);
-+
-+			port_dev = of_find_device_by_node(child);
-+
-+			rc = ahci_platform_get_regulator(hpriv, port,
-+							&port_dev->dev);
-+			if (rc == -EPROBE_DEFER)
-+				goto err_out;
-+
-+			rc = ahci_platform_get_phy(hpriv, port, dev, child);
-+			if (rc)
- 				goto err_out;
--			}
- 
- 			enabled_ports++;
- 		}
-@@ -343,38 +456,14 @@ struct ahci_host_priv *ahci_platform_get_resources(struct platform_device *pdev)
- 		 * If no sub-node was found, keep this for device tree
- 		 * compatibility
- 		 */
--		struct phy *phy = devm_phy_get(dev, "sata-phy");
--		if (!IS_ERR(phy)) {
--			hpriv->phys = devm_kzalloc(dev, sizeof(*hpriv->phys),
--						   GFP_KERNEL);
--			if (!hpriv->phys) {
--				rc = -ENOMEM;
--				goto err_out;
--			}
--
--			hpriv->phys[0] = phy;
--			hpriv->nports = 1;
--		} else {
--			rc = PTR_ERR(phy);
--			switch (rc) {
--				case -ENOSYS:
--					/* No PHY support. Check if PHY is required. */
--					if (of_find_property(dev->of_node, "phys", NULL)) {
--						dev_err(dev, "couldn't get sata-phy: ENOSYS\n");
--						goto err_out;
--					}
--				case -ENODEV:
--					/* continue normally */
--					hpriv->phys = NULL;
--					break;
--
--				default:
--					goto err_out;
-+		rc = ahci_platform_get_phy(hpriv, 0, dev, dev->of_node);
-+		if (rc)
-+			goto err_out;
- 
--			}
--		}
-+		rc = ahci_platform_get_regulator(hpriv, 0, dev);
-+		if (rc == -EPROBE_DEFER)
-+			goto err_out;
- 	}
--
- 	pm_runtime_enable(dev);
- 	pm_runtime_get_sync(dev);
- 	hpriv->got_runtime_pm = true;
-@@ -383,6 +472,14 @@ struct ahci_host_priv *ahci_platform_get_resources(struct platform_device *pdev)
- 	return hpriv;
- 
- err_out:
-+	/*
-+	 * In case of a deferred probe, previous regulators may have
-+	 * been already get, so put them to be able to get them again
-+	 * in the next probe.
-+	 */
-+	for (i = 0; i < hpriv->nports; i++)
-+		if (hpriv->target_pwrs[i])
-+			devm_regulator_put(hpriv->target_pwrs[i]);
- 	devres_release_group(dev, NULL);
- 	return ERR_PTR(rc);
- }
-diff --git a/include/linux/ahci_platform.h b/include/linux/ahci_platform.h
-index 642d6ae4030c..f65b33809170 100644
---- a/include/linux/ahci_platform.h
-+++ b/include/linux/ahci_platform.h
-@@ -24,6 +24,8 @@ struct platform_device;
- 
- int ahci_platform_enable_clks(struct ahci_host_priv *hpriv);
- void ahci_platform_disable_clks(struct ahci_host_priv *hpriv);
-+int ahci_platform_enable_regulators(struct ahci_host_priv *hpriv);
-+void ahci_platform_disable_regulators(struct ahci_host_priv *hpriv);
- int ahci_platform_enable_resources(struct ahci_host_priv *hpriv);
- void ahci_platform_disable_resources(struct ahci_host_priv *hpriv);
- struct ahci_host_priv *ahci_platform_get_resources(
--- 
-1.9.1
+> diff --git a/drivers/pinctrl/sh-pfc/pfc-emev2.c
+> b/drivers/pinctrl/sh-pfc/pfc-emev2.c new file mode 100644
+> index 0000000..22c9e15
+> --- /dev/null
+> +++ b/drivers/pinctrl/sh-pfc/pfc-emev2.c
+
+[snip]
+
+> +#define CPU_ALL_PORT(fn, sfx)						\
+> +	PORT_GP_32(0, fn, sfx),						\
+> +	PORT_GP_32(1, fn, sfx),						\
+> +	PORT_GP_32(2, fn, sfx),						\
+> +	PORT_GP_32(3, fn, sfx),						\
+> +	PORT_GP_32(4, fn, sfx)
+
+GPIOs are numbered linearly in the datasheet, not using a bank number.=20
+Shouldn't that be reflected here ? Additionally the chip has 159 GPIOs,=
+ and=20
+you define 160 of them.
+
+[snip]
+
+I'm afraid I can't review all the data tables, I'll trust you on that :=
+-)
+
+> +/* Pin numbers for pins without a corresponding GPIO port number are
+> computed
+> + * from the row and column numbers with a 1000 offset to avoid colli=
+sions
+> with
+> + * GPIO port numbers. */
+> +#define PIN_NUMBER(row, col)            (1000+((row)-1)*25+(col)-1)
+
+The chip is an 23x23 BGA, shouldn't you multiply by 23 instead of 25 ?
+
+[snip]
+
+> +#define EMEV_MUX_PIN(name, pin, mark) \
+> +	static const unsigned int name##_pins[] =3D { pin }; \
+> +	static const unsigned int name##_mux[] =3D { mark##_MARK }
+
+[snip]
+
+> +/* =3D [ IIC ] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D */
+> +EMEV_MUX_PIN(iic0_scl, 44, IIC0_SCL);
+> +EMEV_MUX_PIN(iic0_sda, 45, IIC0_SDA);
+
+[snip]
+
+> +static const struct sh_pfc_pin_group pinmux_groups[] =3D {
+
+[snip]
+
+> +	SH_PFC_PIN_GROUP(iic0_scl),
+> +	SH_PFC_PIN_GROUP(iic0_sda),
+
+[snip]
+
+> +};
+
+[snip]
+
+> +static const char * const iic0_groups[] =3D {
+> +	"iic0_scl",
+> +	"iic0_sda",
+> +};
+
+(Taking IIC0 as an example)
+
+You're defining one pin group per pin. While this isn't an invalid deci=
+sion,=20
+the sh-pfc driver tried so far to group related pins in the same group.=
+ For=20
+instance, with IIC0, SCL and SDA can't be used independently, so you al=
+ways=20
+need to request both. They could thus be grouped together. Is there a r=
+eason=20
+not to follow the same design for EMEV2 ?
+
+[snip]
+
+> +static const struct sh_pfc_function pinmux_functions[] =3D {
+> +	SH_PFC_FUNCTION(jtag),
+> +	SH_PFC_FUNCTION(lcd),
+> +	SH_PFC_FUNCTION(yuv),
+> +	SH_PFC_FUNCTION(tp33),
+> +	SH_PFC_FUNCTION(iic0),
+> +	SH_PFC_FUNCTION(iic1),
+> +	SH_PFC_FUNCTION(uart1),
+> +	SH_PFC_FUNCTION(uart2),
+> +	SH_PFC_FUNCTION(uart3),
+> +	SH_PFC_FUNCTION(sd),
+> +	SH_PFC_FUNCTION(sdi0),
+> +	SH_PFC_FUNCTION(sdi1),
+> +	SH_PFC_FUNCTION(sdi2),
+> +	SH_PFC_FUNCTION(ab),
+> +	SH_PFC_FUNCTION(dtv),
+> +	SH_PFC_FUNCTION(cf),
+> +	SH_PFC_FUNCTION(usi0),
+> +	SH_PFC_FUNCTION(usi1),
+> +	SH_PFC_FUNCTION(usi2),
+> +	SH_PFC_FUNCTION(usi3),
+> +	SH_PFC_FUNCTION(usi4),
+> +	SH_PFC_FUNCTION(usi5),
+> +	SH_PFC_FUNCTION(ntsc),
+> +	SH_PFC_FUNCTION(cam),
+> +	SH_PFC_FUNCTION(hsi),
+> +};
+
+Could you please order the functions alphabetically, here and above ?
+
+[snip]
+
+--=20
+Regards,
+
+Laurent Pinchart
 
