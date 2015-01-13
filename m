@@ -1,46 +1,56 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH v9 1/4] drm/i2c: tda998x: Add DT support for audio
-Date: Tue, 13 Jan 2015 12:27:15 +0000
-Message-ID: <20150113122715.GP12302@n2100.arm.linux.org.uk>
-References: <20150109145741.GP12302@n2100.arm.linux.org.uk>
- <20150109183857.53d701a4@armhf>
- <20150109200127.GD12302@n2100.arm.linux.org.uk>
- <1421054728.3081.28.camel@pengutronix.de>
- <20150112122527.GF12302@n2100.arm.linux.org.uk>
- <1421071197.3081.44.camel@pengutronix.de>
- <20150112140456.GI12302@n2100.arm.linux.org.uk>
- <20150112181341.4a53ea24@armhf>
- <20150112175705.GN12302@n2100.arm.linux.org.uk>
- <1421151718.4519.24.camel@pengutronix.de>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: dts: sun8i: Add lradc node to sun8i-a23.dtsi
+Date: Tue, 13 Jan 2015 13:32:41 +0100
+Message-ID: <54B51069.3000506@redhat.com>
+References: <1421146024-17957-1-git-send-email-hdegoede@redhat.com> <54B50B69.6000002@cogentembedded.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <1421151718.4519.24.camel@pengutronix.de>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Andrew Jackson <Andrew.Jackson@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>, Mark Brown <broonie@kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Return-path: <linux-sunxi+bncBDRZXY4CYYORB5NA2SSQKGQEO6QZV4Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <54B50B69.6000002-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBKYW4gMTMsIDIwMTUgYXQgMDE6MjE6NThQTSArMDEwMCwgUGhpbGlwcCBaYWJlbCB3
-cm90ZToKPiBJIHdvbmRlciBpZiBpdCB3b3VsZG4ndCBiZSBuaWNlciB0byBoYXZlIHRoZSBBUCMg
-YW5kIHR5cGUgaW4gdGhlIGRldmljZQo+IHRyZWUgYW5kIHRoZW4gY2FsY3VsYXRlIHRoZSByZWdp
-c3RlciB2YWx1ZSBmcm9tIHRoYXQgaW4gdGhlIGRyaXZlci4KPiAKPiAJcG9ydEAxIHsKPiAJCXJl
-ZyA9IDwxPjsgLyogQVAxICovCj4gCQlueHAsYXVkaW8tcG9ydCA9ICJpMnMiOwo+IAkJdGRhOTk4
-eF9pMnM6IGVuZHBvaW50IHsKPiAJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmF1ZGlvMV9pMnM+Owo+
-IAkJfTsKPiAJfTsKCldoYXQgYWJvdXQgdGhlIGNhc2Ugd2hlcmUgd2UgaGF2ZSA0IEkyUyBzdHJl
-YW1zIGJlaW5nIHN1cHBsaWVkIHRvIHRoZQpkZXZpY2Ugb24gZm91ciBzZXBhcmF0ZSBBUCBpbnB1
-dHM/CgotLSAKRlRUQyBicm9hZGJhbmQgZm9yIDAuOG1pbGUgbGluZTogY3VycmVudGx5IGF0IDEw
-LjVNYnBzIGRvd24gNDAwa2JwcyB1cAphY2NvcmRpbmcgdG8gc3BlZWR0ZXN0Lm5ldC4KX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxp
-bmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVl
-ZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Hi,
+
+On 13-01-15 13:11, Sergei Shtylyov wrote:
+> Hello.
+>
+> On 1/13/2015 1:47 PM, Hans de Goede wrote:
+>
+>> The A23 has the same lradc controller as previous Allwinner SoCs.
+>
+>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> ---
+>>   arch/arm/boot/dts/sun8i-a23.dtsi | 7 +++++++
+>>   1 file changed, 7 insertions(+)
+>
+>> diff --git a/arch/arm/boot/dts/sun8i-a23.dtsi b/arch/arm/boot/dts/sun8i-a23.dtsi
+>> index a31842d..c2ceafb 100644
+>> --- a/arch/arm/boot/dts/sun8i-a23.dtsi
+>> +++ b/arch/arm/boot/dts/sun8i-a23.dtsi
+>> @@ -419,6 +419,13 @@
+>>               interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
+>>           };
+>>
+>> +        lradc: lradc@01c22800 {
+>> +            compatible = "allwinner,sun4i-a10-lradc-keys";
+>
+>     If this is a keyboard controller, its node name should probably be "keyboard", according to the ePAPR standard...
+
+I'm not sure this qualifies as a keyboard controller, more over we
+already have the same name in all other sun?i-a*.dtsi files, so if
+we fix this it should be fixed by a follow up patch, and be fixed
+everywhere.
+
+Regards,
+
+Hans
