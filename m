@@ -1,157 +1,55 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: Re: [RFC PATCH 1/3] of/device: manage resources similar to platform_device_add
-Date: Tue, 13 Jan 2015 17:04:57 -0600
-Message-ID: <54B5A499.7060106@ti.com>
-References: <1420651854-17768-1-git-send-email-s-anna@ti.com> <1420651854-17768-2-git-send-email-s-anna@ti.com> <CAL_Jsq+79cnCiww6g8ejki0yT59-N8eucHC3QGMbsXG4DksWuQ@mail.gmail.com> <54B58D5D.5070508@ti.com> <CAL_JsqLW9PRktHntLquohH3x_bPgJrrn2Y2_8RYA_HnKhpTDHg@mail.gmail.com>
+From: arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org (Arnaud Ebalard)
+Subject: Re: [PATCHv2 1/8] dt-bindings: use isil prefix for Intersil in vendor-prefixes.txt
+Date: Wed, 14 Jan 2015 00:21:24 +0100
+Message-ID: <87ppaib72j.fsf@natisbad.org>
+References: <cover.1418763328.git.arno@natisbad.org>
+	<e32fe98a511e3ab8aeed9849bcac33ba14fd8986.1418763328.git.arno@natisbad.org>
+	<CAL_JsqLt7BuG9eccqR4CELPsOO+o3NGP6c4aqKDXbJfT0O0=5w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLW9PRktHntLquohH3x_bPgJrrn2Y2_8RYA_HnKhpTDHg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Pawel Moll <pawel.moll@arm.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Felipe Balbi <balbi@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-omap <linux-omap@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqLt7BuG9eccqR4CELPsOO+o3NGP6c4aqKDXbJfT0O0=5w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+	(Rob Herring's message of "Tue, 13 Jan 2015 14:02:35 -0600")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Hayato Suzuki <hytszk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/13/2015 04:00 PM, Rob Herring wrote:
-> On Tue, Jan 13, 2015 at 3:25 PM, Suman Anna <s-anna@ti.com> wrote:
->> Hi Rob,
+Hi Rob,
+
+Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
+
+> On Tue, Dec 16, 2014 at 3:18 PM, Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org> wrote:
 >>
->> On 01/13/2015 02:38 PM, Rob Herring wrote:
->>> On Wed, Jan 7, 2015 at 11:30 AM, Suman Anna <s-anna@ti.com> wrote:
->>>> Drivers can use of_platform_populate() to create platform devices
->>>> for children of the device main node, and a complementary API
->>>> of_platform_depopulate() is provided to delete these child platform
->>>> devices. The of_platform_depopulate() leverages the platform API
->>>> for performing the cleanup of these devices.
->>>>
->>>> The platform device resources are managed differently between
->>>> of_device_add and platform_device_add, and this asymmetry causes
->>>> a kernel oops in platform_device_del during removal of the resources.
->>>> Manage the platform device resources similar to platform_device_add
->>>> to fix this kernel oops.
->>>
->>> This is a known issue and has been attempted to be fixed before (I
->>> believe there is a revert in mainline). The problem is there are known
->>> devicetrees which have overlapping resources and they will break with
->>> your change.
+>> This patch fixes DT vendor-prefixes.txt documentation to reference
+>> isil (NASDAQ symbol and the most used prefix inside the kernel) for
+>> Intersil.
 >>
->> Are you referring to 02bbde7849e6 (Revert "of: use
->> platform_device_add")?
-> 
-> I believe that's the one.
-> 
->> That one seems to be in registration path, and
->> this crash is in the unregistration path. If so, to fix the crash,
->> should we be skipping the release_resource() for now in
->> platform_device_del for DT nodes, or replace platform_device_unregister
->> with of_device_unregister in of_platform_device_destroy()?
-> 
-> IIRC, the problem is inserting a resource twice on add from 2
-> different nodes, not the removal path. Perhaps we could make a
-> collision non-fatal for in the DT case.
+>> It reverts 7c75c1d5e72b ("dt-bindings: Document deprecated device
+>> vendor name to fix related warning").
+>>
+>> Signed-off-by: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+>
+> Applied for 3.20. Thanks.
+>
+> While there are not interdepencies here, it probably would have been
+> better to keep this series all together.
 
-We may be talking two different things here, I understand that this
-patch would create an issue with inserting a resource twice in the
-devicetrees with overlapping resources (just like the commit that was
-reverted above), but the crash is on devices with resources whose
-parent, child, sibling pointers have never been initialized (the
-of_device_add path does not touch these at all), and get dereferenced in
-platform_device_del()->release_resource(). See the following that has a
-better explanation [1].
-
-regards
-Suman
-
-[1]
-http://lists.infradead.org/pipermail/linux-arm-kernel/2014-July/274412.html
+This was the main reason my v0 was in a single patch. I think I then got
+some comment to split things in different patches so that the various
+maintainers have their words to say. But I'll try and follow your
+approach next time.
 
 
-> Grant may have some ideas on
-> what's needed here.
-> 
->> This is a common crash and we cannot use of_platform_depopulate() today
->> in drivers to complement of_platform_populate().
-> 
-> Yes, I know.
-> 
->> Also, the platform_data crash is independent of this, I could reproduce
->> that one even with using of_device_unregister in a loop in driver remove.
-> 
-> Missed this one. I'll reply to that patch.
-> 
-> Rob
-> 
->>
->> regards
->> Suman
->>
->>>
->>> Rob
->>>
->>>>
->>>> Signed-off-by: Suman Anna <s-anna@ti.com>
->>>> ---
->>>>  drivers/of/device.c | 38 +++++++++++++++++++++++++++++++++++++-
->>>>  1 file changed, 37 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/of/device.c b/drivers/of/device.c
->>>> index 46d6c75c1404..fa27c1c71f29 100644
->>>> --- a/drivers/of/device.c
->>>> +++ b/drivers/of/device.c
->>>> @@ -50,6 +50,8 @@ EXPORT_SYMBOL(of_dev_put);
->>>>
->>>>  int of_device_add(struct platform_device *ofdev)
->>>>  {
->>>> +       int i, ret;
->>>> +
->>>>         BUG_ON(ofdev->dev.of_node == NULL);
->>>>
->>>>         /* name and id have to be set so that the platform bus doesn't get
->>>> @@ -63,7 +65,41 @@ int of_device_add(struct platform_device *ofdev)
->>>>         if (!ofdev->dev.parent)
->>>>                 set_dev_node(&ofdev->dev, of_node_to_nid(ofdev->dev.of_node));
->>>>
->>>> -       return device_add(&ofdev->dev);
->>>> +       for (i = 0; i < ofdev->num_resources; i++) {
->>>> +               struct resource *p, *r = &ofdev->resource[i];
->>>> +
->>>> +               if (!r->name)
->>>> +                       r->name = dev_name(&ofdev->dev);
->>>> +
->>>> +               p = r->parent;
->>>> +               if (!p) {
->>>> +                       if (resource_type(r) == IORESOURCE_MEM)
->>>> +                               p = &iomem_resource;
->>>> +                       else if (resource_type(r) == IORESOURCE_IO)
->>>> +                               p = &ioport_resource;
->>>> +               }
->>>> +
->>>> +               if (p && insert_resource(p, r)) {
->>>> +                       dev_err(&ofdev->dev, "failed to claim resource %d\n",
->>>> +                               i);
->>>> +                       ret = -EBUSY;
->>>> +                       goto failed;
->>>> +               }
->>>> +       }
->>>> +
->>>> +       ret = device_add(&ofdev->dev);
->>>> +       if (ret == 0)
->>>> +               return ret;
->>>> +
->>>> +failed:
->>>> +       while (--i >= 0) {
->>>> +               struct resource *r = &ofdev->resource[i];
->>>> +               unsigned long type = resource_type(r);
->>>> +
->>>> +               if (type == IORESOURCE_MEM || type == IORESOURCE_IO)
->>>> +                       release_resource(r);
->>>> +       }
->>>> +       return ret;
->>>>  }
->>>>
->>>>  int of_device_register(struct platform_device *pdev)
->>>> --
->>>> 2.2.1
->>>>
->>
+> Other patches have already been picked up, so I'm just taking this
+> one.
+
+Thanks.
+
+Cheers,
+
+a+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
