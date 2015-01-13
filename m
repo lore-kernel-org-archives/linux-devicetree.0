@@ -1,47 +1,38 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: dts: sun8i: Add lradc node to sun8i-a23.dtsi
-Date: Tue, 13 Jan 2015 15:11:21 +0300
-Message-ID: <54B50B69.6000002@cogentembedded.com>
-References: <1421146024-17957-1-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <linux-sunxi+bncBC6MFNV32EFRB3EW2SSQKGQEUCYMINA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1421146024-17957-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH 3/3] clk: berlin: bg2q: remove non-exist "smemc" gate
+ clock
+Date: Tue, 13 Jan 2015 13:17:30 +0100
+Message-ID: <54B50CDA.3090307@gmail.com>
+References: <1420016272-6789-1-git-send-email-jszhang@marvell.com> <1420016272-6789-4-git-send-email-jszhang@marvell.com> <54AD3EAE.6090009@gmail.com> <20150107222209.64ed24a0@xhacker> <54AD431F.6060403@gmail.com> <20150109201306.4d1a296b@xhacker> <54B12446.4030703@gmail.com> <20150113002817.20842.98432@quantum>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <20150113002817.20842.98432@quantum>
+Sender: stable-owner@vger.kernel.org
+To: Mike Turquette <mturquette@linaro.org>, Jisheng Zhang <jszhang@marvell.com>
+Cc: "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "alexandre.belloni@free-electrons.com" <alexandre.belloni@free-electrons.com>, "antoine.tenart@free-electrons.com" <antoine.tenart@free-electrons.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "stable@vger.kernel.org" <stable@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
-
-On 1/13/2015 1:47 PM, Hans de Goede wrote:
-
-> The A23 has the same lradc controller as previous Allwinner SoCs.
-
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> ---
->   arch/arm/boot/dts/sun8i-a23.dtsi | 7 +++++++
->   1 file changed, 7 insertions(+)
-
-> diff --git a/arch/arm/boot/dts/sun8i-a23.dtsi b/arch/arm/boot/dts/sun8i-a23.dtsi
-> index a31842d..c2ceafb 100644
-> --- a/arch/arm/boot/dts/sun8i-a23.dtsi
-> +++ b/arch/arm/boot/dts/sun8i-a23.dtsi
-> @@ -419,6 +419,13 @@
->   			interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
->   		};
+On 01/13/2015 01:28 AM, Mike Turquette wrote:
+> Quoting Sebastian Hesselbarth (2015-01-10 05:08:22)
+>> This is clk subsystem, so either Mike takes it through his fixes branch
+>> including my
+>>
+>> Acked-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+>>
+>> or decides to agree that I take it instead with his Ack. I am fine
+>> with both.
 >
-> +		lradc: lradc@01c22800 {
-> +			compatible = "allwinner,sun4i-a10-lradc-keys";
+> Acked-by: Michael Turquette <mturquette@linaro.org>
+>
+> Now the three fixes can stay together and live happily ever after.
 
-    If this is a keyboard controller, its node name should probably be 
-"keyboard", according to the ePAPR standard...
+Mike,
 
-WBR, Sergei
+I already had the two others pulled by Olof some days ago.
+If you plan for a fixes branch for v3.19, please take this in too.
+
+If you have no other fixes, I can take it and do a 2nd round of
+fixes for Berlin.
+
+Sebastian
