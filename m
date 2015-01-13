@@ -1,142 +1,120 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
-Subject: Re: [PATCH v5] can: Convert to runtime_pm
-Date: Tue, 13 Jan 2015 09:24:36 -0800
-Message-ID: <1ef3e0f060f54c888061514bd2926762@BY2FFO11FD033.protection.gbl>
-References: <baf987c11c0242c2bf87b81f9396b09d@BN1BFFO11FD018.protection.gbl>
- <3a3437c5c8ff48d9a45fee7e81fa8dca@BY2FFO11FD058.protection.gbl>
- <54B4FCB5.6040904@pengutronix.de>
- <6ea3c0ea0f5c4deb9a6e4738a8d94a36@BN1AFFO11FD047.protection.gbl>
- <54B55326.1060606@pengutronix.de>
-Mime-Version: 1.0
+From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Subject: Re: [PATCH v8 2/4] fpga manager: add sysfs interface document
+Date: Tue, 13 Jan 2015 19:26:53 +0200
+Message-ID: <027665D5-EB1F-47D1-B727-FE236C009FA7@konsulko.com>
+References: <1420575219-27061-1-git-send-email-atull@opensource.altera.com> <1420575219-27061-3-git-send-email-atull@opensource.altera.com> <20150107084819.GA1887@amd> <alpine.DEB.2.02.1501091302370.30067@linuxheads99> <20150109205643.GA5761@amd> <20150112210134.687176ed@lxorguk.ukuu.org.uk> <20150112214314.GA18610@obsidianresearch.com> <20150113162847.2778b5a5@lxorguk.ukuu.org.uk>
+Mime-Version: 1.0 (Mac OS X Mail 8.1 \(1993\))
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <54B55326.1060606@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Kleine-Budde <mkl@pengutronix.de>
-Cc: Kedareswara rao Appana <appana.durga.rao@xilinx.com>, wg@grandegger.com, michal.simek@xilinx.com, grant.likely@linaro.org, robh+dt@kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Kedareswara rao Appana <appanad@xilinx.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20150113162847.2778b5a5@lxorguk.ukuu.org.uk>
+Sender: linux-doc-owner@vger.kernel.org
+To: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
+Cc: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Pavel Machek <pavel@denx.de>, atull <atull@opensource.altera.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, hpa@zytor.com, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, rdunlap@infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, robh+dt@kernel.org, Grant Likely <grant.likely@linaro.org>, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, Mark Brown <broonie@kernel.org>, philip@balister.org, rubini@gnudd.com, Steffen Trumtrar <s.trumtrar@pengutronix.de>, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, Felipe Balbi <balbi@ti.com>, m.chehab@samsung.com, davidb@codeaurora.org, Rob Landley <rob@landley.net>, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, Linus Walleij <linus.walleij@linaro>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2015-01-13 at 06:17PM +0100, Marc Kleine-Budde wrote:
-> On 01/13/2015 06:08 PM, S=C3=B6ren Brinkmann wrote:
-> > On Tue, 2015-01-13 at 12:08PM +0100, Marc Kleine-Budde wrote:
-> >> On 01/12/2015 07:45 PM, S=C3=B6ren Brinkmann wrote:
-> >>> On Mon, 2015-01-12 at 08:34PM +0530, Kedareswara rao Appana wrote=
-:
-> >>>> Instead of enabling/disabling clocks at several locations in the=
- driver,
-> >>>> Use the runtime_pm framework. This consolidates the actions for =
-runtime PM
-> >>>> In the appropriate callbacks and makes the driver more readable =
-and mantainable.
-> >>>>
-> >>>> Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
-> >>>> Signed-off-by: Kedareswara rao Appana <appanad@xilinx.com>
-> >>>> ---
-> >>>> Changes for v5:
-> >>>>  - Updated with the review comments.
-> >>>>    Updated the remove fuction to use runtime_pm.
-> >>>> Chnages for v4:
-> >>>>  - Updated with the review comments.
-> >>>> Changes for v3:
-> >>>>   - Converted the driver to use runtime_pm.
-> >>>> Changes for v2:
-> >>>>   - Removed the struct platform_device* from suspend/resume
-> >>>>     as suggest by Lothar.
-> >>>>
-> >>>>  drivers/net/can/xilinx_can.c |  157 +++++++++++++++++++++++++++=
-+-------------
-> >>>>  1 files changed, 107 insertions(+), 50 deletions(-)
-> >>> [..]
-> >>>> +static int __maybe_unused xcan_runtime_resume(struct device *de=
-v)
-> >>>>  {
-> >>>> -	struct platform_device *pdev =3D dev_get_drvdata(dev);
-> >>>> -	struct net_device *ndev =3D platform_get_drvdata(pdev);
-> >>>> +	struct net_device *ndev =3D dev_get_drvdata(dev);
-> >>>>  	struct xcan_priv *priv =3D netdev_priv(ndev);
-> >>>>  	int ret;
-> >>>> +	u32 isr, status;
-> >>>> =20
-> >>>>  	ret =3D clk_enable(priv->bus_clk);
-> >>>>  	if (ret) {
-> >>>> @@ -1014,15 +1030,28 @@ static int __maybe_unused xcan_resume(st=
-ruct device *dev)
-> >>>>  	ret =3D clk_enable(priv->can_clk);
-> >>>>  	if (ret) {
-> >>>>  		dev_err(dev, "Cannot enable clock.\n");
-> >>>> -		clk_disable_unprepare(priv->bus_clk);
-> >>>> +		clk_disable(priv->bus_clk);
-> >>> [...]
-> >>>> @@ -1173,12 +1219,23 @@ static int xcan_remove(struct platform_d=
-evice *pdev)
-> >>>>  {
-> >>>>  	struct net_device *ndev =3D platform_get_drvdata(pdev);
-> >>>>  	struct xcan_priv *priv =3D netdev_priv(ndev);
-> >>>> +	int ret;
-> >>>> +
-> >>>> +	ret =3D pm_runtime_get_sync(&pdev->dev);
-> >>>> +	if (ret < 0) {
-> >>>> +		netdev_err(ndev, "%s: pm_runtime_get failed(%d)\n",
-> >>>> +				__func__, ret);
-> >>>> +		return ret;
-> >>>> +	}
-> >>>> =20
-> >>>>  	if (set_reset_mode(ndev) < 0)
-> >>>>  		netdev_err(ndev, "mode resetting failed!\n");
-> >>>> =20
-> >>>>  	unregister_candev(ndev);
-> >>>> +	pm_runtime_disable(&pdev->dev);
-> >>>>  	netif_napi_del(&priv->napi);
-> >>>> +	clk_disable_unprepare(priv->bus_clk);
-> >>>> +	clk_disable_unprepare(priv->can_clk);
-> >>>
-> >>> Shouldn't pretty much all these occurrences of clk_disable/enable
-> >>> disappear? This should all be handled by the runtime_pm framework=
- now.
-> >>
-> >> We have:
-> >> - clk_prepare_enable() in probe
-> >=20
-> > This should become something like pm_runtime_get_sync(), shouldn't =
-it?
-> >=20
-> >> - clk_disable_unprepare() in remove
-> >=20
-> > pm_runtime_put()
-> >=20
-> >> - clk_enable() in runtime_resume
-> >> - clk_disable() in runtime_suspend
-> >=20
-> > These are the ones needed.
-> >=20
-> > The above makes me suspect that the clocks are always on, regardles=
-s of
->=20
-> Define "on" :)
-> The clocks are prepared after probe() exists, but not enabled. The fi=
-rst
-> pm_runtime_get_sync() will enable the clocks.
->=20
-> > the runtime suspend state since they are enabled in probe and disab=
-led
-> > in remove, is that right? Ideally, the usage in probe and remove sh=
-ould
-> > be migrated to runtime_pm and clocks should really only be running =
-when
-> > needed and not throughout the whole lifetime of the driver.
->=20
-> The clocks are not en/disabled via pm_runtime, because
-> pm_runtime_get_sync() is called from atomic contect. We can have anot=
-her
-> look into the driver and try to change this.
+Hi Alan,
 
-Wasn't that why the call to pm_runtime_irq_safe() was added?
-Also, clk_enable/disable should be okay to be run from atomic context.
-And if the clock are already prepared after the exit of probe that
-should be enough. Then remove() should just have to do the unprepare.
-But I don't see why runtime_pm shouldn't be able to do the
-enable/disable.
+> On Jan 13, 2015, at 18:28 , One Thousand Gnomes <gnomes@lxorguk.ukuu.=
+org.uk> wrote:
+>=20
+> On Mon, 12 Jan 2015 14:43:14 -0700
+> Jason Gunthorpe <jgunthorpe@obsidianresearch.com> wrote:
+>=20
+>> On Mon, Jan 12, 2015 at 09:01:34PM +0000, One Thousand Gnomes wrote:
+>>> There are plenty of people today who treat the FPGA as an entirely
+>>> dynamic resource. It's not like flashing a controller, its near
+>>> immediate.
+>>=20
+>> But this is a completely different use case. Remember, there are
+>> *megabytes* of internal state in a FPGA, and it isn't really feasibl=
+e
+>> to dump/restore that state.
+>=20
+> People already do it with cases where it makes sense
+>=20
 
-	S=C3=B6ren
+Those people have failed to show up and provide input and/or code.
+
+>> It is one thing to context switch a maths algorithm that is built to
+>> be stateless, it is quite another to context switch between, say an
+>> ethernet core with an operating Linux Net driver doing DMA and a mat=
+hs
+>> algorithm.
+>=20
+> And people already do it with thins like maths algorithms.
+>=20
+
+Again those people have failed to show up and provide input and/or code=
+=2E
+
+>> A DT overlay approach where the overlay has to be unloaded to 'free'
+>> the FPGA makes alot of sense to me for the stateful kernel driver
+>> environment, and open/close/etc makes alot of sense for the stateles=
+s
+>> switchable userspace environment - other than sharing configuration
+>> code, is there any overlap between these use cases????
+>=20
+> There is a lot of code overlap in things like loading the bitstreams,
+> there is also some overlap because you want to be able to assign FPGA
+> resources. For example if you have four FPGAs and you want to use one=
+ for
+> OS stuff (say video) you want the other three to be open/close
+> accessible, but if you've not got a video driver loaded and are runni=
+ng
+> the same board headless you'd like all four to be handed out as norma=
+l
+> resources.
+>=20
+> So IMHO it's no different to say kmalloc. We don't pre-empt kernel me=
+mory
+> and give it to users but we don't reserve memory for kernel and not u=
+se
+> it.
+>=20
+>>> Its completely dynamic and it will get more so as we switch from th=
+e
+>>> painful world of VHDL and friends to high level parallel aware lang=
+uage
+>>> compilers for FPGAs and everyone will be knocking up quick FPGA hac=
+ks.
+>>=20
+>> Only for some users. In my world FPGAs are filled with bus interface
+>> logic, ethernet controllers, memory controllers, packet processing
+>> engines, etc. This is all incredibly stateful - both in the FPGA
+>> itself, and in the Linux side w/ drviers. It certainly will not ever
+>> work in the model you are talking about.
+>=20
+> For those cases I mostly agree (the state in the FPGA isn't always a
+> problem as you can program an FPGA to DMA its state out).
+>=20
+>> Even if the digital state could somehow be frozen, dumped and
+>> restored, all the FPGA external interface logic has *ANALOG* state
+>> that cannot ever be dump/restored. It just isn't feasible for that
+>> class of application.
+>=20
+> Yes, however as we are starting to get things like OpenCL for FPGA th=
+ey
+> become extremely attractive for a wide range of purposes that don't
+> involve glueing them to electronica in quite the same way. All the 'G=
+PU
+> as CPU' type uses and more begin to apply.
+>=20
+
+Your points are valid, but they are mostly academic right now.
+
+We have a lot of well known use cases that this patchset addresses
+satisfactorily. The possible users of the cases you point out are=20
+welcome to provide input and working code to address their needs.
+
+At this point in time, no-one has showed up; is there a reason for
+this needed capability to be delayed in order to address something
+that no-one has expressed interest for?
+
+> Alan
+> =E2=80=94
+
+Regards
+
+=E2=80=94 Pantelis
+
