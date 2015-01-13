@@ -1,70 +1,55 @@
-From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v4 3/3] arm: dts: omap3-gta04: Add handling for tv output
-Date: Tue, 13 Jan 2015 12:11:15 +0200
-Message-ID: <54B4EF43.50300@ti.com>
-References: <1417642402-20538-1-git-send-email-marek@goldelico.com> <1417642402-20538-4-git-send-email-marek@goldelico.com>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH 2/4] DT: i2c: Add devices handled by the da9063 MFD driver
+Date: Tue, 13 Jan 2015 11:15:41 +0100
+Message-ID: <20150113101541.GH1059@katana>
+References: <1418124169-7123-1-git-send-email-geert+renesas@glider.be>
+ <1418124169-7123-3-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="FsKh27OBDuG4WVkpv3ap5Q76vqlvrDUU5"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1417642402-20538-4-git-send-email-marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
-Cc: plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+	protocol="application/pgp-signature"; boundary="boAH8PqvUi1v1f55"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1418124169-7123-3-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Support Opensource <support.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---FsKh27OBDuG4WVkpv3ap5Q76vqlvrDUU5
-Content-Type: text/plain; charset=windows-1252
+
+--boAH8PqvUi1v1f55
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On 03/12/14 23:33, Marek Belisko wrote:
-> Add handling for gta04 tv out chain:
-> venc -> opa362 -> svideo
+On Tue, Dec 09, 2014 at 12:22:47PM +0100, Geert Uytterhoeven wrote:
+> This allows checkpatch to validate more DTSes.
 >=20
-> Use invert-polarity in venc node because opa362
-> is doing polarity inversion also.
->=20
-> Signed-off-by: Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/omap3-gta04.dtsi | 49 ++++++++++++++++++++++++++++++=
-++++++++
->  1 file changed, 49 insertions(+)
+> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 
-Looks fine to me.
-
-Tony, do you want to pick this up? I can take the first two patches via
-fbdev.
-
- Tomi
+Applied to for-next, thanks!
 
 
-
---FsKh27OBDuG4WVkpv3ap5Q76vqlvrDUU5
+--boAH8PqvUi1v1f55
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJUtO9DAAoJEPo9qoy8lh71qwgP/0WaNBxbpL5Z0jyxf2NkpKHJ
-C5bKasUpileQUe4LxHe0VZzwiOrKDC4RcpdYRoo2c5+MrEmVRCuPEYWx64h2Yvvq
-kLc+aJH+vmSBfej/CNgieRvElDaPy7ESzBxSIZT1znAkWYvzeyWclp1SX98cgJgg
-GnB/bVSN3xHWuKfYDIp/+yyiwxSHLuKTsjPCQ/fEmovdXL35vZSePmeQEO6vzvol
-AltR1EC/Nvgd2Yz/fiZtStwT8rKrsDV15QufnLQf+b5maIFzO4Erd564pbLIOu2c
-xOoG3Gwc5lWlRqBiZxL7Q6wJEOGO+IBOnmw+btiJbemeWOuLmUl0Owp/npz6c4pr
-wq5jJ0SHxe5XksFq9FKmqoBK03WFmv8syRtrBZgFlI8vidJGUw/4fpPMx70c5lmB
-tLoe6prLlCTxebqamCTjwwtROWBkQg9CRljzR5yRjUPWQUoleMZkvdSjMJWedfGH
-/Nm51fnpzWE59uRMd5hnrmlVG3t7dN6YDKvlrUFDIP8Gvv9Ep6s16I0VIbf4huo/
-Yj7jyl47LMpewUCzhragJ2anvpTjJJFNcWdgLYxTT7mokgA5+YTsPge94HQ8Sfzk
-urxnggTsg+3tEQ9qOn9HPPcfs0YsPIXJyjl3so091pgLHwyneOLAwCgQ5JOeskoc
-97Z7hmnsaRcjHVnc0Pl8
-=sNxd
+iQIcBAEBAgAGBQJUtPBNAAoJEBQN5MwUoCm2iNsP/AjtlWEndXDssxKgZY9COUGo
+hsqZakcXbQYM1HkFdVQ6ZVXSGzyy7BnzY1a/Z+v6TLtxlvFykhgVAC9ds311xi8u
+w/6Aei0eMPdJKJWnXSzkDx23B/fViQ6SbOyudZQdw/sm6XVVvoqx8RA7Mg0KyCg9
+Wh+rYYIBezK5/YkLtKqEgXQu4mopd6eMs4rniTsi0WnNJjKA5Dgjc7SSRwol/NLp
+N1j33IEFaI7h6SkMLXOYcwee/Bp94Q4ND/RRIsBgpYV7LK6p3CiM84JgAVuJ+36E
+dwFOOSR3Tv/n5L68z9ykhmdGKbhnnUARoaCRaagFUM4PguSDgGETQ/BRDvlE137m
+PuXz/1FBg+W4XjMDMIiEIiLrvYa0dyC68WLXQqhjcCkvFZdlNyh9jEkurOWv0WEM
+7EVL3rA5eblWb64PmgINL+XjMU8xusR5Lo/4vyaQEX7E1hj5KJXweq5+r7P/gtcM
+m1HO2eHUtTrtOyOlQ1c+7faIpZJbjO5avB3f+0EyXxxCp+T4A4RlGx5d2vOxqGql
+7j5AmPlhMPEqfV2eLUZdyOJbDLgGMaIW+UXt7VJKS2VJ89HECrMftdB2YjsDVe7Q
+cpxH+HM2F805OAZ6808S7NxwfofyYIN2S8n3Rs1mr7ZeTTV2aRxawbQbnExWr/dw
+IzIgeh7PHP3K0Vt8zyM9
+=bqzf
 -----END PGP SIGNATURE-----
 
---FsKh27OBDuG4WVkpv3ap5Q76vqlvrDUU5--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--boAH8PqvUi1v1f55--
