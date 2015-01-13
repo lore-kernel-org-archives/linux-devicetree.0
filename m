@@ -1,39 +1,226 @@
-From: Inha Song <ideal.song@samsung.com>
-Subject: Re: [alsa-devel] [PATCH 2/3] ASoC: samsung: Document Trats2 audio
- subsystem bindings
-Date: Tue, 13 Jan 2015 10:27:34 +0900
-Message-ID: <20150113102734.7a3aa77a@songinha-Samsung-DeskTop-System>
-References: <1420457117-11030-1-git-send-email-ideal.song@samsung.com>
- <1420457117-11030-3-git-send-email-ideal.song@samsung.com>
- <20150105152918.GT11764@sirena.org.uk>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH v2] Added support for pogoplug e02 (pink/gray)
+Date: Tue, 13 Jan 2015 03:11:56 +0100
+Message-ID: <20150113021156.GB2434@lunn.ch>
+References: <CAA8MNVjieDJ-dv2NNWXK=+uqrPmvtk2EiBYJGJkMugEiN2TsAw@mail.gmail.com>
+ <1421112132-9651-1-git-send-email-ottxor@gentoo.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <20150105152918.GT11764@sirena.org.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sbkim73@samsung.com, linux-kernel@vger.kernel.org, lgirdwood@gmail.com, tiwai@suse.de, robh+dt@kernel.org, kgene@kernel.org, s.nawrocki@samsung.com, galak@codeaurora.org, grant.likely@linaro.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1421112132-9651-1-git-send-email-ottxor-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Christoph Junghans <ottxor-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+On Mon, Jan 12, 2015 at 06:22:12PM -0700, Christoph Junghans wrote:
+> The pogoplug differs from the SheevaPlug only by a
+> few details, but especially in the led assignments.
+> This patch was tested under Gentoo Linux and is
+> based on dts files from Arch Linux ARM and OpenWrt.
 
-Thank you for your feedback and sorry for late response.
+Hi Christoph
 
-I think, I should remove clock settings in machine driver.
-If the clock settings are necessary, I will add "assigned-clocks" nodes
-in trats2 sound DT like odroid board.
+I just tried compiling this with 3.19-rc1:
 
-Best Regards,
-Inha Song.
+  DTC     arch/arm/boot/dts/kirkwood-pogo_e02.dtb
+ERROR (duplicate_label): Duplicate label 'pinctrl' on /ocp@f1000000/pinctrl@10000 and /ocp@f1000000/pin-controller@10000
+ERROR: Input tree has errors, aborting (use -f to force output)
 
-> On Mon, Jan 05, 2015 at 08:25:16PM +0900, Inha Song wrote:
+> Suggested-by: Felix Kaechele <heffer-rxtnV0ftBwyoClj4AeEUq9i2O/JbrIOy@public.gmane.org>
+> Suggested-by: Oleg Rakhmanov <moonman.ca-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Christoph Junghans <ottxor-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
+> ---
+
+It is normal to say here, after the --- what you have changed since
+the previous version.
+
+>  .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+>  arch/arm/boot/dts/Makefile                         |   1 +
+>  arch/arm/boot/dts/kirkwood-pogo_e02.dts            | 129 +++++++++++++++++++++
+>  3 files changed, 131 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/kirkwood-pogo_e02.dts
 > 
-> > + - clocks : Reference to the codec master clock
-> > + - clock-names : The clock should be named "mclk"
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index ac7269f..e5f58c6 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -32,6 +32,7 @@ cdns	Cadence Design Systems Inc.
+>  chrp	Common Hardware Reference Platform
+>  chunghwa	Chunghwa Picture Tubes Ltd.
+>  cirrus	Cirrus Logic, Inc.
+> +cloudengines	Cloud Engines, Inc.
+>  cortina	Cortina Systems, Inc.
+
+This failed to apply. cnm was added Wed May 14 2014, so i guess you are not using 3.19-rc1?
+
+>  crystalfontz	Crystalfontz America, Inc.
+>  dallas	Maxim Integrated Products (formerly Dallas Semiconductor)
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index b8c5cd3..cd974eb 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -143,6 +143,7 @@ dtb-$(CONFIG_MACH_KIRKWOOD) += kirkwood-b3.dtb \
+>  	kirkwood-openrd-base.dtb \
+>  	kirkwood-openrd-client.dtb \
+>  	kirkwood-openrd-ultimate.dtb \
+> +	kirkwood-pogo_e02.dtb \
+>  	kirkwood-rd88f6192.dtb \
+>  	kirkwood-rd88f6281-a0.dtb \
+>  	kirkwood-rd88f6281-a1.dtb \
+> diff --git a/arch/arm/boot/dts/kirkwood-pogo_e02.dts b/arch/arm/boot/dts/kirkwood-pogo_e02.dts
+> new file mode 100644
+> index 0000000..be38dab
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/kirkwood-pogo_e02.dts
+> @@ -0,0 +1,129 @@
+> +/*
+> + * kirkwood-sheevaplug.dts - Device tree file for Pogoplug E02
+> + *
+> + * Copyright (C) 2015 Christoph Junghans <ottxor-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
+> + *
+> + * based on information of dts files from
+> + *  Arch Linux ARM by Oleg Rakhmanov <moonman.ca-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> + *  OpenWrt by Felix Kaechele <heffer-rxtnV0ftBwyoClj4AeEUq9i2O/JbrIOy@public.gmane.org>
+> + *
+> + * This file is licensed under the terms of the GNU General Public
+> + * License version 2.  This program is licensed "as is" without any
+> + * warranty of any kind, whether express or implied.
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "kirkwood.dtsi"
+> +#include "kirkwood-6281.dtsi"
+> +
+> +/ {
+> +	model = "Cloud Engines Pogoplug E02";
+> +	compatible = "cloudengines,pogoe02", "marvell,kirkwood-88f6281", "marvell,kirkwood";
+> +
+> +	memory {
+> +		device_type = "memory";
+> +		reg = <0x00000000 0x10000000>;
+> +	};
+> +
+> +	chosen {
+> +		bootargs = "console=ttyS0,115200n8";
+> +		linux,stdout-path = &serial1;
+
+This is not what i was expecting. I would expect it to be
+
+                stdout-path = &uart0;
+
+
+> +	};
+> +
+> +	ocp@f1000000 {
+> +		pinctrl: pinctrl@10000 {
+> +			pmx_usb_power_enable: pmx-usb-power-enable {
+> +				marvell,pins = "mpp29";
+> +				marvell,function = "gpio";
+> +			};
+> +			pmx_led_green: pmx-led-green {
+> +				marvell,pins = "mpp48";
+> +				marvell,function = "gpio";
+> +			};
+> +			pmx_led_orange: pmx-led-orange {
+> +				marvell,pins = "mpp49";
+> +				marvell,function = "gpio";
+> +			};
+> +		};
+
+To fix the error above, i suggest you take a look at:
+
+https://lkml.org/lkml/2014/12/28/34
+
+	Andrew
+
+> +		serial1: serial@12000 {
+> +			status = "ok";
+> +		};
+> +	};
+> +	gpio-leds {
+> +		compatible = "gpio-leds";
+> +		pinctrl-0 = < &pmx_usb_power_enable &pmx_led_orange
+> +			      &pmx_led_green >;
+> +		pinctrl-names = "default";
+> +
+> +		health {
+> +			label = "pogo_e02:green:health";
+> +			gpios = <&gpio1 16 GPIO_ACTIVE_LOW>;
+> +			default-state = "keep";
+> +		};
+> +		fault {
+> +			label = "pogo_e02:orange:fault";
+> +			gpios = <&gpio1 17 GPIO_ACTIVE_LOW>;
+> +		};
+> +	};
+> +	regulators {
+> +		compatible = "simple-bus";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		pinctrl-0 = <&pmx_usb_power_enable>;
+> +		pinctrl-names = "default";
+> +
+> +		usb_power: regulator@1 {
+> +			compatible = "regulator-fixed";
+> +			reg = <1>;
+> +			regulator-name = "USB Power";
+> +			regulator-min-microvolt = <5000000>;
+> +			regulator-max-microvolt = <5000000>;
+> +			enable-active-high;
+> +			regulator-always-on;
+> +			regulator-boot-on;
+> +			gpio = <&gpio0 29 GPIO_ACTIVE_HIGH>;
+> +		};
+> +	};
+> +};
+> +
+> +&nand {
+> +	chip-delay = <40>;
+> +	status = "okay";
+> +
+> +	partition@0 {
+> +		label = "u-boot";
+> +		reg = <0x0000000 0x100000>;
+> +		read-only;
+> +	};
+> +
+> +	partition@100000 {
+> +		label = "uImage";
+> +		reg = <0x0100000 0x400000>;
+> +	};
+> +
+> +	partition@500000 {
+> +		label = "pogoplug";
+> +		reg = <0x0500000 0x2000000>;
+> +	};
+> +
+> +	partition@2500000 {
+> +		label = "root";
+> +		reg = <0x02500000 0x5b00000>;
+> +	};
+> +};
+> +
+> +&mdio {
+> +	status = "okay";
+> +
+> +	ethphy0: ethernet-phy@0 {
+> +		reg = <0>;
+> +	};
+> +};
+> +
+> +&eth0 {
+> +	status = "okay";
+> +	ethernet0-port@0 {
+> +		phy-handle = <&ethphy0>;
+> +	};
+> +};
+> -- 
+> 2.0.5
 > 
-> This should be done in the CODEC driver, not in the machine driver - the
-> CODEC always needs the clock, it's not something specific to this
-> machine.  Even if we decide that for Linux the best thing to do is to
-> manage the clock in the machine driver it should be described in the DT
-> as being attached to the CODEC.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
