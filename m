@@ -1,397 +1,249 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v6 2/3] gpio: Cygnus: add GPIO driver
-Date: Tue, 13 Jan 2015 09:53:12 +0100
-Message-ID: <CACRpkdYGksEseGaO49=1rUi5WBdOxwAd-F1gpgZn+BFatRCdDg@mail.gmail.com>
-References: <rjui@broadcom.com>
-	<1418696307-19392-1-git-send-email-rjui@broadcom.com>
-	<1418696307-19392-3-git-send-email-rjui@broadcom.com>
+From: Ding Tianhong <dingtianhong@huawei.com>
+Subject: [PATCH net-next v12 2/3] net: hisilicon: new hip04 MDIO driver
+Date: Tue, 13 Jan 2015 17:11:29 +0800
+Message-ID: <1421140290-5492-3-git-send-email-dingtianhong@huawei.com>
+References: <1421140290-5492-1-git-send-email-dingtianhong@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1418696307-19392-3-git-send-email-rjui@broadcom.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Ray Jui <rjui@broadcom.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Joe Perches <joe@perches.com>, Arnd Bergmann <arnd@arndb.de>, Scott Branden <sbranden@broadcom.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1421140290-5492-1-git-send-email-dingtianhong@huawei.com>
+Sender: netdev-owner@vger.kernel.org
+To: arnd@arndb.de, robh+dt@kernel.org, davem@davemloft.net, grant.likely@linaro.org, agraf@suse.de
+Cc: sergei.shtylyov@cogentembedded.com, linux-arm-kernel@lists.infradead.org, eric.dumazet@gmail.com, xuwei5@hisilicon.com, zhangfei.gao@linaro.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux@arm.linux.org.uk
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 16, 2014 at 3:18 AM, Ray Jui <rjui@broadcom.com> wrote:
+From: Zhangfei Gao <zhangfei.gao@linaro.org>
 
-> This GPIO driver supports all 3 GPIO controllers in the Broadcom Cygnus
-> SoC. The 3 GPIO controllers are 1) the ASIU GPIO controller, 2) the
-> chipCommonG GPIO controller, and 3) the ALWAYS-ON GPIO controller
->
-> Signed-off-by: Ray Jui <rjui@broadcom.com>
-> Reviewed-by: Scott Branden <sbranden@broadcom.com>
+Hisilicon hip04 platform mdio driver
+Reuse Marvell phy drivers/net/phy/marvell.c
 
-(Big thanks to Alexandre for doing the major part of the review,
-good work with following up so far!)
+Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+Signed-off-by: Ding Tianhong <dingtianhong@huawei.com>
+---
+ drivers/net/ethernet/hisilicon/Kconfig      |   9 ++
+ drivers/net/ethernet/hisilicon/Makefile     |   1 +
+ drivers/net/ethernet/hisilicon/hip04_mdio.c | 186 ++++++++++++++++++++++++++++
+ 3 files changed, 196 insertions(+)
+ create mode 100644 drivers/net/ethernet/hisilicon/hip04_mdio.c
 
-(...)
-> +config GPIO_BCM_CYGNUS
-> +       bool "Broadcom Cygnus GPIO support"
-> +       depends on ARCH_BCM_CYGNUS && OF_GPIO
-
-select GPIOLIB_IRQCHIP
-
-See more about this below.
-
-> +++ b/drivers/gpio/gpio-bcm-cygnus.c
-> @@ -0,0 +1,607 @@
-> +/*
-> + * Copyright (C) 2014 Broadcom Corporation
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License as
-> + * published by the Free Software Foundation version 2.
-> + *
-> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-> + * kind, whether express or implied; without even the implied warranty
-> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/slab.h>
-> +#include <linux/module.h>
-> +#include <linux/irq.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/io.h>
-> +#include <linux/gpio.h>
-> +#include <linux/ioport.h>
-> +#include <linux/of_device.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/irqchip/chained_irq.h>
-
-Skip <linux/irq.h> and <linux/irqchip/chained_irq.h>
-as these move to the core with GPIOLIB_IRQCHIP
-
-> +#define CYGNUS_GPIO_DATA_IN_OFFSET   0x00
-> +#define CYGNUS_GPIO_DATA_OUT_OFFSET  0x04
-> +#define CYGNUS_GPIO_OUT_EN_OFFSET    0x08
-> +#define CYGNUS_GPIO_IN_TYPE_OFFSET   0x0c
-> +#define CYGNUS_GPIO_INT_DE_OFFSET    0x10
-> +#define CYGNUS_GPIO_INT_EDGE_OFFSET  0x14
-> +#define CYGNUS_GPIO_INT_MSK_OFFSET   0x18
-> +#define CYGNUS_GPIO_INT_STAT_OFFSET  0x1c
-> +#define CYGNUS_GPIO_INT_MSTAT_OFFSET 0x20
-> +#define CYGNUS_GPIO_INT_CLR_OFFSET   0x24
-> +#define CYGNUS_GPIO_PAD_RES_OFFSET   0x34
-> +#define CYGNUS_GPIO_RES_EN_OFFSET    0x38
-> +
-> +/* drive strength control for ASIU GPIO */
-> +#define CYGNUS_GPIO_ASIU_DRV0_CTRL_OFFSET 0x58
-> +
-> +/* drive strength control for CCM GPIO */
-> +#define CYGNUS_GPIO_CCM_DRV0_CTRL_OFFSET  0x00
-
-This stuff (drive strength) is pin control, pin config.
-It does not belong in a pure GPIO driver. If you're
-making a combined pin control + GPIO driver, it
-shall be put in drivers/pinctrl/*
-
-> +#define GPIO_BANK_SIZE 0x200
-> +#define NGPIOS_PER_BANK 32
-> +#define GPIO_BANK(pin) ((pin) / NGPIOS_PER_BANK)
-> +
-> +#define CYGNUS_GPIO_REG(pin, reg) (GPIO_BANK(pin) * GPIO_BANK_SIZE + (reg))
-> +#define CYGNUS_GPIO_SHIFT(pin) ((pin) % NGPIOS_PER_BANK)
-> +
-> +#define GPIO_FLAG_BIT_MASK           0xffff
-> +#define GPIO_PULL_BIT_SHIFT          16
-> +#define GPIO_PULL_BIT_MASK           0x3
-> +
-> +#define GPIO_DRV_STRENGTH_BIT_SHIFT  20
-> +#define GPIO_DRV_STRENGTH_BITS       3
-> +#define GPIO_DRV_STRENGTH_BIT_MASK   ((1 << GPIO_DRV_STRENGTH_BITS) - 1)
-> +
-> +/*
-> + * For GPIO internal pull up/down registers
-> + */
-> +enum gpio_pull {
-> +       GPIO_PULL_NONE = 0,
-> +       GPIO_PULL_UP,
-> +       GPIO_PULL_DOWN,
-> +       GPIO_PULL_INVALID,
-> +};
-> +
-> +/*
-> + * GPIO drive strength
-> + */
-> +enum gpio_drv_strength {
-> +       GPIO_DRV_STRENGTH_2MA = 0,
-> +       GPIO_DRV_STRENGTH_4MA,
-> +       GPIO_DRV_STRENGTH_6MA,
-> +       GPIO_DRV_STRENGTH_8MA,
-> +       GPIO_DRV_STRENGTH_10MA,
-> +       GPIO_DRV_STRENGTH_12MA,
-> +       GPIO_DRV_STRENGTH_14MA,
-> +       GPIO_DRV_STRENGTH_16MA,
-> +       GPIO_DRV_STRENGTH_INVALID,
-> +};
-
-
-All this pull up/down and drive strength is pin config for
-the pin control subsystem.
-
-> +struct cygnus_gpio {
-> +       struct device *dev;
-> +       void __iomem *base;
-> +       void __iomem *io_ctrl;
-> +       spinlock_t lock;
-> +       struct gpio_chip gc;
-> +       unsigned num_banks;
-> +       int irq;
-> +       struct irq_domain *irq_domain;
-
-Skip irq and irqdomain and use GPIOLIB_IRQCHIP
-
-> +static u32 cygnus_readl(struct cygnus_gpio *cygnus_gpio, unsigned int offset)
-> +{
-> +       return readl(cygnus_gpio->base + offset);
-> +}
-> +
-> +static void cygnus_writel(struct cygnus_gpio *cygnus_gpio,
-> +                         unsigned int offset, u32 val)
-> +{
-> +       writel(val, cygnus_gpio->base + offset);
-> +}
-
-I don't see the value of using these accessors over just inlining
-your readl/writel stuff.
-
-(...)
-> +static int cygnus_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
-> +{
-> +       struct cygnus_gpio *cygnus_gpio = to_cygnus_gpio(gc);
-> +
-> +       return irq_find_mapping(cygnus_gpio->irq_domain, offset);
-> +}
-
-This goes away to the core with GPIOLIB_IRQCHIP
-
-> +static void cygnus_gpio_irq_handler(unsigned int irq, struct irq_desc *desc)
-> +{
-> +       struct cygnus_gpio *cygnus_gpio;
-> +       struct irq_chip *chip = irq_desc_get_chip(desc);
-> +       int i, bit;
-> +
-> +       chained_irq_enter(chip, desc);
-> +
-> +       cygnus_gpio = irq_get_handler_data(irq);
-> +
-> +       /* go through the entire GPIO banks and handle all interrupts */
-> +       for (i = 0; i < cygnus_gpio->num_banks; i++) {
-> +               unsigned long val = cygnus_readl(cygnus_gpio,
-> +                               (i * GPIO_BANK_SIZE) +
-> +                               CYGNUS_GPIO_INT_MSTAT_OFFSET);
-> +
-> +               for_each_set_bit(bit, &val, NGPIOS_PER_BANK) {
-> +                       unsigned pin = NGPIOS_PER_BANK * i + bit;
-> +                       int child_irq =
-> +                               cygnus_gpio_to_irq(&cygnus_gpio->gc, pin);
-> +
-> +                       /*
-> +                        * Clear the interrupt before invoking the
-> +                        * handler, so we do not leave any window
-> +                        */
-> +                       cygnus_writel(cygnus_gpio, (i * GPIO_BANK_SIZE) +
-> +                               CYGNUS_GPIO_INT_CLR_OFFSET, BIT(bit));
-> +
-> +                       generic_handle_irq(child_irq);
-> +               }
-> +       }
-> +
-> +       chained_irq_exit(chip, desc);
-> +}
-
-Looks good, but you will need to have the struct gpio_chip * as
-handler data to use GPIOLIB_IRQCHIP, so get from there to
-the struct cygnus_gpio something like:
-
-struct gpio_chip *gc = irq_desc_get_handler_data(desc);
-struct cygnus_gpio *cyg = to_cygnus_gpio(gc);
-
-> +static int cygnus_gpio_get(struct gpio_chip *gc, unsigned gpio)
-> +{
-> +       struct cygnus_gpio *cygnus_gpio = to_cygnus_gpio(gc);
-> +       unsigned int offset = CYGNUS_GPIO_REG(gpio,
-> +                       CYGNUS_GPIO_DATA_IN_OFFSET);
-> +       unsigned int shift = CYGNUS_GPIO_SHIFT(gpio);
-> +       u32 val;
-> +
-> +       val = cygnus_readl(cygnus_gpio, offset);
-> +       val = (val >> shift) & 1;
-
-No, do this:
-
-return !!(cygnus_readl(cygnus_gpio, offset) & BIT(shift));
-
-Maybe rename the "shift" variable to "bit" or just use the macro
-directly in the readl().
-
-> +static int cygnus_gpio_irq_map(struct irq_domain *d, unsigned int irq,
-> +                              irq_hw_number_t hwirq)
-> +{
-> +       int ret;
-> +
-> +       ret = irq_set_chip_data(irq, d->host_data);
-> +       if (ret < 0)
-> +               return ret;
-> +       irq_set_lockdep_class(irq, &gpio_lock_class);
-> +       irq_set_chip_and_handler(irq, &cygnus_gpio_irq_chip,
-> +                       handle_simple_irq);
-> +       set_irq_flags(irq, IRQF_VALID);
-> +
-> +       return 0;
-> +}
-> +
-> +static void cygnus_gpio_irq_unmap(struct irq_domain *d, unsigned int irq)
-> +{
-> +       irq_set_chip_and_handler(irq, NULL, NULL);
-> +       irq_set_chip_data(irq, NULL);
-> +}
-> +
-> +static struct irq_domain_ops cygnus_irq_ops = {
-> +       .map = cygnus_gpio_irq_map,
-> +       .unmap = cygnus_gpio_irq_unmap,
-> +       .xlate = irq_domain_xlate_twocell,
-> +};
-
-All this goes away with GPIOLIB_IRQCHIP (that is what is good about it).
-
-> +#ifdef CONFIG_OF_GPIO
-
-What, that should be defined all the time, you depend on it in
-Kconfig!
-
-> +static void cygnus_gpio_set_pull(struct cygnus_gpio *cygnus_gpio,
-> +                                unsigned gpio, enum gpio_pull pull)
-(...)
-> +static void cygnus_gpio_set_strength(struct cygnus_gpio *cygnus_gpio,
-> +               unsigned gpio, enum gpio_drv_strength strength)
-(...)
-> +static int cygnus_gpio_of_xlate(struct gpio_chip *gc,
-> +               const struct of_phandle_args *gpiospec, u32 *flags)
-
-NAK. This is pin control, put this in the pin control driver.
-
-I guess the same that is part of this patch series.
-
-(...)
-> +static int cygnus_gpio_probe(struct platform_device *pdev)
-> +{
-> +       struct device *dev = &pdev->dev;
-> +       struct resource *res;
-> +       struct cygnus_gpio *cygnus_gpio;
-> +       struct gpio_chip *gc;
-> +       u32 i, ngpios;
-> +       int ret;
-> +
-> +       cygnus_gpio = devm_kzalloc(dev, sizeof(*cygnus_gpio), GFP_KERNEL);
-> +       if (!cygnus_gpio)
-> +               return -ENOMEM;
-> +
-> +       cygnus_gpio->dev = dev;
-> +       platform_set_drvdata(pdev, cygnus_gpio);
-> +
-> +       if (of_property_read_u32(dev->of_node, "ngpios", &ngpios)) {
-> +               dev_err(&pdev->dev, "missing ngpios DT property\n");
-> +               return -ENODEV;
-> +       }
-> +       cygnus_gpio->num_banks = (ngpios + NGPIOS_PER_BANK - 1) /
-> +               NGPIOS_PER_BANK;
-> +
-> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +       cygnus_gpio->base = devm_ioremap_resource(dev, res);
-> +       if (IS_ERR(cygnus_gpio->base)) {
-> +               dev_err(&pdev->dev, "unable to map I/O memory\n");
-> +               return PTR_ERR(cygnus_gpio->base);
-> +       }
-> +
-> +       /*
-> +        * Only certain types of Cygnus GPIO interfaces have I/O control
-> +        * registers
-> +        */
-> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> +       if (res) {
-> +               cygnus_gpio->io_ctrl = devm_ioremap_resource(dev, res);
-> +               if (IS_ERR(cygnus_gpio->io_ctrl)) {
-> +                       dev_err(&pdev->dev, "unable to map I/O memory\n");
-> +                       return PTR_ERR(cygnus_gpio->io_ctrl);
-> +               }
-> +       }
-
-This is a good indication that it's a separate piece of HW and should
-be a separate pin control driver.
-
-> +
-> +       spin_lock_init(&cygnus_gpio->lock);
-> +
-> +       gc = &cygnus_gpio->gc;
-> +       gc->base = -1;
-> +       gc->ngpio = ngpios;
-> +       gc->label = dev_name(dev);
-> +       gc->dev = dev;
-> +#ifdef CONFIG_OF_GPIO
-
-You depend on this symbol.
-
-> +       gc->of_node = dev->of_node;
-> +       gc->of_gpio_n_cells = 2;
-> +       gc->of_xlate = cygnus_gpio_of_xlate;
-> +#endif
-> +       gc->direction_input = cygnus_gpio_direction_input;
-> +       gc->direction_output = cygnus_gpio_direction_output;
-> +       gc->set = cygnus_gpio_set;
-> +       gc->get = cygnus_gpio_get;
-> +       gc->to_irq = cygnus_gpio_to_irq;
-> +
-> +       ret = gpiochip_add(gc);
-> +       if (ret < 0) {
-> +               dev_err(&pdev->dev, "unable to add GPIO chip\n");
-> +               return ret;
-> +       }
-> +
-> +       /*
-> +        * Some of the GPIO interfaces do not have interrupt wired to the main
-> +        * processor
-> +        */
-> +       cygnus_gpio->irq = platform_get_irq(pdev, 0);
-> +       if (cygnus_gpio->irq < 0) {
-> +               ret = cygnus_gpio->irq;
-> +               if (ret == -EPROBE_DEFER)
-> +                       goto err_rm_gpiochip;
-> +
-> +               dev_info(&pdev->dev, "no interrupt hook\n");
-> +       }
-
->From here:
-
-> +       cygnus_gpio->irq_domain = irq_domain_add_linear(dev->of_node,
-> +                       gc->ngpio, &cygnus_irq_ops, cygnus_gpio);
-> +       if (!cygnus_gpio->irq_domain) {
-> +               dev_err(&pdev->dev, "unable to allocate IRQ domain\n");
-> +               ret = -ENXIO;
-> +               goto err_rm_gpiochip;
-> +       }
-> +
-> +       for (i = 0; i < gc->ngpio; i++) {
-> +               int irq = irq_create_mapping(cygnus_gpio->irq_domain, i);
-> +
-> +               irq_set_lockdep_class(irq, &gpio_lock_class);
-> +               irq_set_chip_data(irq, cygnus_gpio);
-> +               irq_set_chip_and_handler(irq, &cygnus_gpio_irq_chip,
-> +                               handle_simple_irq);
-> +               set_irq_flags(irq, IRQF_VALID);
-> +       }
-> +
-> +       irq_set_chained_handler(cygnus_gpio->irq, cygnus_gpio_irq_handler);
-> +       irq_set_handler_data(cygnus_gpio->irq, cygnus_gpio);
-
-To here, replace with a single call to
-gpiochip_set_chained_irqchip(chip *, irq_chip *, irq, handler)...
-
-Look at other drivers using GPIOLIB_IRQCHIP for inspiration.
-
-Yours,
-Linus Walleij
+diff --git a/drivers/net/ethernet/hisilicon/Kconfig b/drivers/net/ethernet/hisilicon/Kconfig
+index e942173..a54d897 100644
+--- a/drivers/net/ethernet/hisilicon/Kconfig
++++ b/drivers/net/ethernet/hisilicon/Kconfig
+@@ -24,4 +24,13 @@ config HIX5HD2_GMAC
+ 	help
+ 	  This selects the hix5hd2 mac family network device.
+ 
++config HIP04_ETH
++	tristate "HISILICON P04 Ethernet support"
++	select PHYLIB
++	select MARVELL_PHY
++	select MFD_SYSCON
++	---help---
++	  If you wish to compile a kernel for a hardware with hisilicon p04 SoC and
++	  want to use the internal ethernet then you should answer Y to this.
++
+ endif # NET_VENDOR_HISILICON
+diff --git a/drivers/net/ethernet/hisilicon/Makefile b/drivers/net/ethernet/hisilicon/Makefile
+index 9175e846..40115a7 100644
+--- a/drivers/net/ethernet/hisilicon/Makefile
++++ b/drivers/net/ethernet/hisilicon/Makefile
+@@ -3,3 +3,4 @@
+ #
+ 
+ obj-$(CONFIG_HIX5HD2_GMAC) += hix5hd2_gmac.o
++obj-$(CONFIG_HIP04_ETH) += hip04_mdio.o
+diff --git a/drivers/net/ethernet/hisilicon/hip04_mdio.c b/drivers/net/ethernet/hisilicon/hip04_mdio.c
+new file mode 100644
+index 0000000..b3bac25
+--- /dev/null
++++ b/drivers/net/ethernet/hisilicon/hip04_mdio.c
+@@ -0,0 +1,186 @@
++/* Copyright (c) 2014 Linaro Ltd.
++ * Copyright (c) 2014 Hisilicon Limited.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ */
++
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/io.h>
++#include <linux/of_mdio.h>
++#include <linux/delay.h>
++
++#define MDIO_CMD_REG		0x0
++#define MDIO_ADDR_REG		0x4
++#define MDIO_WDATA_REG		0x8
++#define MDIO_RDATA_REG		0xc
++#define MDIO_STA_REG		0x10
++
++#define MDIO_START		BIT(14)
++#define MDIO_R_VALID		BIT(1)
++#define MDIO_READ	        (BIT(12) | BIT(11) | MDIO_START)
++#define MDIO_WRITE	        (BIT(12) | BIT(10) | MDIO_START)
++
++struct hip04_mdio_priv {
++	void __iomem *base;
++};
++
++#define WAIT_TIMEOUT 10
++static int hip04_mdio_wait_ready(struct mii_bus *bus)
++{
++	struct hip04_mdio_priv *priv = bus->priv;
++	int i;
++
++	for (i = 0; readl_relaxed(priv->base + MDIO_CMD_REG) & MDIO_START; i++) {
++		if (i == WAIT_TIMEOUT)
++			return -ETIMEDOUT;
++		msleep(20);
++	}
++
++	return 0;
++}
++
++static int hip04_mdio_read(struct mii_bus *bus, int mii_id, int regnum)
++{
++	struct hip04_mdio_priv *priv = bus->priv;
++	u32 val;
++	int ret;
++
++	ret = hip04_mdio_wait_ready(bus);
++	if (ret < 0)
++		goto out;
++
++	val = regnum | (mii_id << 5) | MDIO_READ;
++	writel_relaxed(val, priv->base + MDIO_CMD_REG);
++
++	ret = hip04_mdio_wait_ready(bus);
++	if (ret < 0)
++		goto out;
++
++	val = readl_relaxed(priv->base + MDIO_STA_REG);
++	if (val & MDIO_R_VALID) {
++		dev_err(bus->parent, "SMI bus read not valid\n");
++		ret = -ENODEV;
++		goto out;
++	}
++
++	val = readl_relaxed(priv->base + MDIO_RDATA_REG);
++	ret = val & 0xFFFF;
++out:
++	return ret;
++}
++
++static int hip04_mdio_write(struct mii_bus *bus, int mii_id,
++			    int regnum, u16 value)
++{
++	struct hip04_mdio_priv *priv = bus->priv;
++	u32 val;
++	int ret;
++
++	ret = hip04_mdio_wait_ready(bus);
++	if (ret < 0)
++		goto out;
++
++	writel_relaxed(value, priv->base + MDIO_WDATA_REG);
++	val = regnum | (mii_id << 5) | MDIO_WRITE;
++	writel_relaxed(val, priv->base + MDIO_CMD_REG);
++out:
++	return ret;
++}
++
++static int hip04_mdio_reset(struct mii_bus *bus)
++{
++	int temp, i;
++
++	for (i = 0; i < PHY_MAX_ADDR; i++) {
++		hip04_mdio_write(bus, i, 22, 0);
++		temp = hip04_mdio_read(bus, i, MII_BMCR);
++		if (temp < 0)
++			continue;
++
++		temp |= BMCR_RESET;
++		if (hip04_mdio_write(bus, i, MII_BMCR, temp) < 0)
++			continue;
++	}
++
++	mdelay(500);
++	return 0;
++}
++
++static int hip04_mdio_probe(struct platform_device *pdev)
++{
++	struct resource *r;
++	struct mii_bus *bus;
++	struct hip04_mdio_priv *priv;
++	int ret;
++
++	bus = mdiobus_alloc_size(sizeof(struct hip04_mdio_priv));
++	if (!bus) {
++		dev_err(&pdev->dev, "Cannot allocate MDIO bus\n");
++		return -ENOMEM;
++	}
++
++	bus->name = "hip04_mdio_bus";
++	bus->read = hip04_mdio_read;
++	bus->write = hip04_mdio_write;
++	bus->reset = hip04_mdio_reset;
++	snprintf(bus->id, MII_BUS_ID_SIZE, "%s-mii", dev_name(&pdev->dev));
++	bus->parent = &pdev->dev;
++	priv = bus->priv;
++
++	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	priv->base = devm_ioremap_resource(&pdev->dev, r);
++	if (IS_ERR(priv->base)) {
++		ret = PTR_ERR(priv->base);
++		goto out_mdio;
++	}
++
++	ret = of_mdiobus_register(bus, pdev->dev.of_node);
++	if (ret < 0) {
++		dev_err(&pdev->dev, "Cannot register MDIO bus (%d)\n", ret);
++		goto out_mdio;
++	}
++
++	platform_set_drvdata(pdev, bus);
++
++	return 0;
++
++out_mdio:
++	mdiobus_free(bus);
++	return ret;
++}
++
++static int hip04_mdio_remove(struct platform_device *pdev)
++{
++	struct mii_bus *bus = platform_get_drvdata(pdev);
++
++	mdiobus_unregister(bus);
++	mdiobus_free(bus);
++
++	return 0;
++}
++
++static const struct of_device_id hip04_mdio_match[] = {
++	{ .compatible = "hisilicon,hip04-mdio" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, hip04_mdio_match);
++
++static struct platform_driver hip04_mdio_driver = {
++	.probe = hip04_mdio_probe,
++	.remove = hip04_mdio_remove,
++	.driver = {
++		.name = "hip04-mdio",
++		.owner = THIS_MODULE,
++		.of_match_table = hip04_mdio_match,
++	},
++};
++
++module_platform_driver(hip04_mdio_driver);
++
++MODULE_DESCRIPTION("HISILICON P04 MDIO interface driver");
++MODULE_LICENSE("GPL v2");
++MODULE_ALIAS("platform:hip04-mdio");
+-- 
+1.8.0
