@@ -1,56 +1,130 @@
-From: Jyri Sarha <jsarha@ti.com>
-Subject: Re: [PATCH v9 1/4] drm/i2c: tda998x: Add DT support
-	for audio
-Date: Tue, 13 Jan 2015 21:41:01 +0200
-Message-ID: <54B574CD.9020905@ti.com>
-References: <20150112122527.GF12302@n2100.arm.linux.org.uk>
- <1421071197.3081.44.camel@pengutronix.de>
- <20150112140456.GI12302@n2100.arm.linux.org.uk>
- <20150112181341.4a53ea24@armhf>
- <20150112175705.GN12302@n2100.arm.linux.org.uk>
- <1421151718.4519.24.camel@pengutronix.de>
- <20150113122715.GP12302@n2100.arm.linux.org.uk>
- <20150113165411.5469930d@armhf>
- <20150113160313.GR12302@n2100.arm.linux.org.uk>
- <20150113200252.3dbfab14@armhf>
- <20150113192648.GU12302@n2100.arm.linux.org.uk>
+From: atull <atull@opensource.altera.com>
+Subject: Re: [PATCH v8 2/4] fpga manager: add sysfs interface document
+Date: Tue, 13 Jan 2015 13:44:01 -0600
+Message-ID: <alpine.DEB.2.02.1501131336220.29145@linuxheads99>
+References: <1420575219-27061-1-git-send-email-atull@opensource.altera.com> <1420575219-27061-3-git-send-email-atull@opensource.altera.com> <20150107084819.GA1887@amd> <alpine.DEB.2.02.1501091302370.30067@linuxheads99> <20150109205643.GA5761@amd>
+ <20150112210134.687176ed@lxorguk.ukuu.org.uk> <20150112214314.GA18610@obsidianresearch.com> <20150113162847.2778b5a5@lxorguk.ukuu.org.uk> <027665D5-EB1F-47D1-B727-FE236C009FA7@konsulko.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; Format="flowed"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20150113192648.GU12302@n2100.arm.linux.org.uk>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>, Jean-Francois Moine <moinejf@free.fr>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Andrew Jackson <Andrew.Jackson@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Mark Brown <broonie@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Dave Airlie <airlied@gmail.com>
+Content-Type: multipart/mixed;
+	boundary="8323329-121362096-1421178262=:29145"
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <027665D5-EB1F-47D1-B727-FE236C009FA7@konsulko.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Cc: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Pavel Machek <pavel@denx.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, hpa@zytor.com, Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, rdunlap@infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, robh+dt@kernel.org, Grant Likely <grant.likely@linaro.org>, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, Mark Brown <broonie@kernel.org>, philip@balister.org, rubini@gnudd.com, Steffen Trumtrar <s.trumtrar@pengutronix.de>, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, Felipe Balbi <balbi@ti.com>, m.chehab@samsung.com, davidb@codeaurora.org, Rob Landley <rob@landley.net>, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-found
 List-Id: devicetree@vger.kernel.org
 
-On 01/13/2015 09:26 PM, Russell King - ARM Linux wrote:
-> SCLK: _~_~_~_~_~_~_~_~_~_~_~_~_~_~_~_~_~_~_~_~_~_~_~_~_~_~_~_~_~_~_~_~_~_
->    WS: __~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~________________________________~
-> I2S1: llmm............................llmm............................llm
-> I2S2: llmm............................llmm............................llm
-> I2S3: llmm............................llmm............................llm
-> I2S4: llmm............................llmm............................llm
->
-> So, what I'm saying is that it is_impossible_  to drive the TDA998x using
-> multiple I2S streams which are not produced by the same I2S block.
+--8323329-121362096-1421178262=:29145
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
 
-This is besides the point, but it is possible that one of the multiple =
+On Tue, 13 Jan 2015, Pantelis Antoniou wrote:
 
-I2S blocks is the bit-clock and frame-clock master to the i2s bus and =
+> Hi Alan,
+> 
+> > On Jan 13, 2015, at 18:28 , One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk> wrote:
+> > 
+> > On Mon, 12 Jan 2015 14:43:14 -0700
+> > Jason Gunthorpe <jgunthorpe@obsidianresearch.com> wrote:
+> > 
+> >> On Mon, Jan 12, 2015 at 09:01:34PM +0000, One Thousand Gnomes wrote:
+> >>> There are plenty of people today who treat the FPGA as an entirely
+> >>> dynamic resource. It's not like flashing a controller, its near
+> >>> immediate.
+> >> 
+> >> But this is a completely different use case. Remember, there are
+> >> *megabytes* of internal state in a FPGA, and it isn't really feasible
+> >> to dump/restore that state.
+> > 
+> > People already do it with cases where it makes sense
+> > 
+> 
+> Those people have failed to show up and provide input and/or code.
+> 
+> >> It is one thing to context switch a maths algorithm that is built to
+> >> be stateless, it is quite another to context switch between, say an
+> >> ethernet core with an operating Linux Net driver doing DMA and a maths
+> >> algorithm.
+> > 
+> > And people already do it with thins like maths algorithms.
+> > 
+> 
+> Again those people have failed to show up and provide input and/or code.
+> 
+> >> A DT overlay approach where the overlay has to be unloaded to 'free'
+> >> the FPGA makes alot of sense to me for the stateful kernel driver
+> >> environment, and open/close/etc makes alot of sense for the stateless
+> >> switchable userspace environment - other than sharing configuration
+> >> code, is there any overlap between these use cases????
+> > 
+> > There is a lot of code overlap in things like loading the bitstreams,
+> > there is also some overlap because you want to be able to assign FPGA
+> > resources. For example if you have four FPGAs and you want to use one for
+> > OS stuff (say video) you want the other three to be open/close
+> > accessible, but if you've not got a video driver loaded and are running
+> > the same board headless you'd like all four to be handed out as normal
+> > resources.
+> > 
+> > So IMHO it's no different to say kmalloc. We don't pre-empt kernel memory
+> > and give it to users but we don't reserve memory for kernel and not use
+> > it.
+> > 
+> >>> Its completely dynamic and it will get more so as we switch from the
+> >>> painful world of VHDL and friends to high level parallel aware language
+> >>> compilers for FPGAs and everyone will be knocking up quick FPGA hacks.
+> >> 
+> >> Only for some users. In my world FPGAs are filled with bus interface
+> >> logic, ethernet controllers, memory controllers, packet processing
+> >> engines, etc. This is all incredibly stateful - both in the FPGA
+> >> itself, and in the Linux side w/ drviers. It certainly will not ever
+> >> work in the model you are talking about.
+> > 
+> > For those cases I mostly agree (the state in the FPGA isn't always a
+> > problem as you can program an FPGA to DMA its state out).
+> > 
+> >> Even if the digital state could somehow be frozen, dumped and
+> >> restored, all the FPGA external interface logic has *ANALOG* state
+> >> that cannot ever be dump/restored. It just isn't feasible for that
+> >> class of application.
+> > 
+> > Yes, however as we are starting to get things like OpenCL for FPGA they
+> > become extremely attractive for a wide range of purposes that don't
+> > involve glueing them to electronica in quite the same way. All the 'GPU
+> > as CPU' type uses and more begin to apply.
+> > 
+> 
+> Your points are valid, but they are mostly academic right now.
+> 
+> We have a lot of well known use cases that this patchset addresses
+> satisfactorily. The possible users of the cases you point out are 
+> welcome to provide input and working code to address their needs.
+> 
+> At this point in time, no-one has showed up; is there a reason for
+> this needed capability to be delayed in order to address something
+> that no-one has expressed interest for?
+> 
+> > Alan
+> > —
+> 
+> Regards
+> 
+> — Pantelis
+> 
+> 
 
-the others are slaves to it (banging their bits according to SCLK and WS =
+There has been a lot of discussion in the past.  It is possible that
+some of the use models are conflicting, but that doesn't really mean
+that one model is more valid and needs to be the
+winner that determines the only valid way to use FPGAs under Linux.
 
-of the I2S master). However, in this situation there really is only one =
+I like the dynamic usage model and the DT overlays model both.  It
+is likely that both will be added and used.
 
-i2s bus with multiple data pins.
+This set of patches gets something started.  The sysfs interface
+is built on a set of functions that can be used to build other
+interfaces.  An earlier set of patches included DT overlay support,
+but I've taken that out for the moment.  It's going into
+drivers/staging so that we can use it and grow it.
 
-Just my 0.02=80 to this discussion.
+Alan
+--8323329-121362096-1421178262=:29145--
