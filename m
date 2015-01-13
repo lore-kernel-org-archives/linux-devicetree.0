@@ -1,50 +1,44 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH]dts: add bcm2835-pwm bindings
-Date: Tue, 13 Jan 2015 09:19:35 -0700
-Message-ID: <54B54597.3010508@wwwdotorg.org>
-References: <1420471983-29945-1-git-send-email-bart.tanghe@thomasmore.be> <54B1556C.7070401@wwwdotorg.org> <54B53C86.4030903@thomasmore.be>
+From: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
+Subject: Re: [PATCH v8 2/4] fpga manager: add sysfs interface document
+Date: Tue, 13 Jan 2015 16:21:33 +0000
+Message-ID: <20150113162133.2a4d1116@lxorguk.ukuu.org.uk>
+References: <1420575219-27061-1-git-send-email-atull@opensource.altera.com>
+ <1420575219-27061-3-git-send-email-atull@opensource.altera.com>
+ <20150107084819.GA1887@amd>
+ <alpine.DEB.2.02.1501091302370.30067@linuxheads99>
+ <20150109205643.GA5761@amd>
+ <4D4EA2D5-68DD-49F7-9E2D-3A0A8F6AF9CA@konsulko.com>
+ <20150110151118.GA16036@amd>
+ <alpine.DEB.2.10.1501111009180.2556@shineypoop>
+ <20150112180608.GA11295@obsidianresearch.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54B53C86.4030903-2dq7lIxLGp5qkBXjtECzWg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bart Tanghe <bart.tanghe-2dq7lIxLGp5qkBXjtECzWg@public.gmane.org>, lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20150112180608.GA11295@obsidianresearch.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Cc: mark.rutland@arm.com, linux-doc@vger.kernel.org, rubini@gnudd.com, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, hpa@zytor.com, Steffen Trumtrar <s.trumtrar@pengutronix.de>, devel@driverdev.osuosl.org, sameo@linux.intel.com, nico@linaro.org, ijc+devicetree@hellion.org.uk, Michal Simek <michal.simek@xilinx.com>, kyle.teske@ni.com, Grant Likely <grant.likely@linaro.org>, davidb@codeaurora.org, Linus Walleij <linus.walleij@linaro.org>, cesarb@cesarb.net, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, iws@ovro.caltech.edu, atull <atull@opensource.altera.com>, galak@codeaurora.org, Mark Brown <broonie@kernel.org>, philip@balister.org, dinguyen@opensource.altera.com, Michal Simek <monstr@monstr.eu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, yvanderv@opensource.altera.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Felipe
 List-Id: devicetree@vger.kernel.org
 
-On 01/13/2015 08:40 AM, Bart Tanghe wrote:
-> On 01/10/2015 05:38 PM, Stephen Warren wrote:
->> On 01/05/2015 08:33 AM, Bart Tanghe wrote:
->>> To probe the bcm2835-pwm driver properly, this dts bindings has to be added
->>> to the bcm2835 dtsi file.
->>> In expectation of a bcm2835 clock driver, I've added fixed-clock clock binding.
->>> To change the status of the gpio pins into pwm output pins, some additional
->>> bindings has to be added but this has not to be done automatically.
->>> Is it possible to document this bindings somewhere?
->>
->> The pinctrl bindings allow you to do this. They're documented in:
->>
->> Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
->> Documentation/devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt
->>
->> pinctrl setup would typically be added to the board file (i.e.
->> arch/arm/boot/dts/bcm2835-rpi-b.dts) rather than the SoC file. I think
->> on the RPi, the pins that can generate PWM aren't dedicated to PWM by
->> the RPi board design (they could be GPIOs and probably other functions
->> too) so we probably need to leave it up to individual users to add PWM
->> configuration to their DT, if/when they use the PWM feature.
->>
->
-> Indeed, the pins aren't dedicated to pwm and can be used for other functions.
-> Is it usefull to add  the pwm pinctrl description to
-> Documentation/devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt or is this
-> useless?
+On Mon, 12 Jan 2015 11:06:08 -0700
+Jason Gunthorpe <jgunthorpe@obsidianresearch.com> wrote:
 
-As far as I can tell, that file already describes everything required to 
-configure those pins as PWM (or indeed any pins as any function). Can 
-you expand on what you think is missing?
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> On Sun, Jan 11, 2015 at 10:29:00AM -0600, atull wrote:
+> > the FPGA image.  If someone wants there to be only one FPGA image on
+> > the FGPA forever, they will probably not be using this framework; their
+> > FPGA will probably be loaded before Linux boots up.
+> 
+> Nonsense, loading the FPGA through Linux is much better
+
+You need both. There are platforms where the FPGA must be loaded to even
+boot the OS (for example Linux running an FPGA soft 486 can't run until
+the FPGA has the CPU loaded into it.
