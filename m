@@ -1,77 +1,38 @@
-From: Y Vo <yvo@apm.com>
-Subject: Re: [PATCH v2 RESEND 2/3] Documentation: gpio: Add APM X-Gene standby
- GPIO controller DTS binding
-Date: Tue, 13 Jan 2015 16:41:24 +0700
-Message-ID: <CAL4ahLfcMsu2i2efiwq96a3YD4dChBEuJeEnQ7tsZH6et8H=sw@mail.gmail.com>
-References: <1418793050-26927-1-git-send-email-yvo@apm.com>
-	<1418793050-26927-3-git-send-email-yvo@apm.com>
-	<CACRpkdbcdf7Ub9uYbeqUe1La1dnVeWCxK8N7=iVZuBtuKHFHFA@mail.gmail.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 1/5] ARM: mediatek: Add config options for mediatek SoCs.
+Date: Tue, 13 Jan 2015 10:43:59 +0100
+Message-ID: <CACRpkda2pHpjMAsEeuEebShQnbqf5knfNbEGtSHLN=o18HC5nQ@mail.gmail.com>
+References: <1418772873-19747-1-git-send-email-hongzhou.yang@mediatek.com>
+	<1418772873-19747-2-git-send-email-hongzhou.yang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdbcdf7Ub9uYbeqUe1La1dnVeWCxK8N7=iVZuBtuKHFHFA@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Phong Vo <pvo@apm.com>, Toan Le <toanle@apm.com>, patches <patches@apm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1418772873-19747-2-git-send-email-hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Joe.C" <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, dandan.he-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, alan.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, toby.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, maoguang.meng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Yes, exactly 6 interrupts. As I describe before:
-- There are 22 GPIO_DSs.
-- Only 6 GPIO_DSs from 0x08..0xD which supports interrupts
+On Wed, Dec 17, 2014 at 12:34 AM, Hongzhou Yang
+<hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
 
-Regards,
-Y
+> From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>
+> The upcoming MTK pinctrl driver have a big pin table for each SoC
+> and we don't want to bloat the kernel binary if we don't need it.
+> Add config options so we can build for one SoC only.
+>
+> Signed-off-by: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-On Tue, Jan 13, 2015 at 4:25 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Wed, Dec 17, 2014 at 6:10 AM, Y Vo <yvo@apm.com> wrote:
->> Documentation for APM X-Gene standby GPIO controller DTS binding.
->>
->> Signed-off-by: Y Vo <yvo@apm.com>
->> ---
->>  .../devicetree/bindings/gpio/gpio-xgene-sb.txt     | 31 ++++++++++++++++++++++
->>  1 file changed, 31 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-xgene-sb.txt
->>
->> diff --git a/Documentation/devicetree/bindings/gpio/gpio-xgene-sb.txt b/Documentation/devicetree/bindings/gpio/gpio-xgene-sb.txt
->> new file mode 100644
->> index 0000000..3215e4d
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/gpio/gpio-xgene-sb.txt
->> @@ -0,0 +1,31 @@
->> +APM X-Gene Standby GPIO controller bindings
->> +
->> +This is a gpio controller in standby domain.
->> +
->> +There are 20 GPIO pins from 0..21. There is no GPIO_DS14 and GPIO_DS15.
->> +Only GPIO_DS8..GPIO_DS13 support interrupt. IRQ mapping 0x28..0x2d.
->> +
->> +Required properties:
->> +- compatible: "apm,xgene-gpio-sb" for X-Gene Standby GPIO controller
->> +- reg: Physical base address and size of the controller's registers
->> +- #gpio-cells: Should be two.
->> +       - first cell is the pin number
->> +       - second cell is used to specify the gpio polarity:
->> +               0 = active high
->> +               1 = active low
->> +- gpio-controller: Marks the device node as a GPIO controller.
->> +- interrupts: Shall contains the interrupts.
->
-> From the example it seems it must contain exactly 6 interrupts?
-> Then state this.
->
->> +Example:
->> +       sbgpio: sbgpio@17001000 {
->> +               compatible = "apm,xgene-gpio-sb";
->> +               reg = <0x0 0x17001000 0x0 0x400>;
->> +               #gpio-cells = <2>;
->> +               gpio-controller;
->> +               interrupts =    <0x0 0x28 0x1>,
->> +                               <0x0 0x29 0x1>,
->> +                               <0x0 0x2a 0x1>,
->> +                               <0x0 0x2b 0x1>,
->> +                               <0x0 0x2c 0x1>,
->> +                               <0x0 0x2d 0x1>;
->> +       };
->
-> Yours,
-> Linus Walleij
+Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
+I guess this goes directly to the ARM SoC tree. As it is only
+Kconfig symbols it should be OK to merge out-of-order.
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
