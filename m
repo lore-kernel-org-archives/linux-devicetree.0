@@ -1,122 +1,43 @@
-From: Ding Tianhong <dingtianhong@huawei.com>
-Subject: [PATCH net-next v12 1/3] Documentation: add Device tree bindings for Hisilicon hip04 ethernet
-Date: Tue, 13 Jan 2015 17:11:28 +0800
-Message-ID: <1421140290-5492-2-git-send-email-dingtianhong@huawei.com>
-References: <1421140290-5492-1-git-send-email-dingtianhong@huawei.com>
+From: Jean-Francois Moine <moinejf@free.fr>
+Subject: Re: [PATCH v9 3/4] ASoC: tda998x: add a codec to the HDMI transmitter
+Date: Tue, 13 Jan 2015 10:24:55 +0100
+Message-ID: <20150113102455.4f29cff5@armhf>
+References: <cover.1420628786.git.moinejf@free.fr>
+ <23b36acc1f769418a06f3e929eba288b5911da12.1420628786.git.moinejf@free.fr>
+ <54B0123C.9070800@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1421140290-5492-1-git-send-email-dingtianhong@huawei.com>
-Sender: netdev-owner@vger.kernel.org
-To: arnd@arndb.de, robh+dt@kernel.org, davem@davemloft.net, grant.likely@linaro.org, agraf@suse.de
-Cc: sergei.shtylyov@cogentembedded.com, linux-arm-kernel@lists.infradead.org, eric.dumazet@gmail.com, xuwei5@hisilicon.com, zhangfei.gao@linaro.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux@arm.linux.org.uk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <54B0123C.9070800@arm.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Andrew Jackson <Andrew.Jackson@arm.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>, Mark Brown <broonie@kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Zhangfei Gao <zhangfei.gao@linaro.org>
-
-This patch adds the Device Tree bindings for the Hisilicon hip04
-Ethernet controller, including 100M / 1000M controller.
-
-Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
-Signed-off-by: Ding Tianhong <dingtianhong@huawei.com>
----
- .../bindings/net/hisilicon-hip04-net.txt           | 88 ++++++++++++++++++++++
- 1 file changed, 88 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/hisilicon-hip04-net.txt
-
-diff --git a/Documentation/devicetree/bindings/net/hisilicon-hip04-net.txt b/Documentation/devicetree/bindings/net/hisilicon-hip04-net.txt
-new file mode 100644
-index 0000000..988fc69
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/hisilicon-hip04-net.txt
-@@ -0,0 +1,88 @@
-+Hisilicon hip04 Ethernet Controller
-+
-+* Ethernet controller node
-+
-+Required properties:
-+- compatible: should be "hisilicon,hip04-mac".
-+- reg: address and length of the register set for the device.
-+- interrupts: interrupt for the device.
-+- port-handle: <phandle port channel>
-+	phandle, specifies a reference to the syscon ppe node
-+	port, port number connected to the controller
-+	channel, recv channel start from channel * number (RX_DESC_NUM)
-+- phy-mode: see ethernet.txt [1].
-+
-+Optional properties:
-+- phy-handle: see ethernet.txt [1].
-+
-+[1] Documentation/devicetree/bindings/net/ethernet.txt
-+
-+
-+* Ethernet ppe node:
-+Control rx & tx fifos of all ethernet controllers.
-+Have 2048 recv channels shared by all ethernet controllers, only if no overlap.
-+Each controller's recv channel start from channel * number (RX_DESC_NUM).
-+
-+Required properties:
-+- compatible: "hisilicon,hip04-ppe", "syscon".
-+- reg: address and length of the register set for the device.
-+
-+
-+* MDIO bus node:
-+
-+Required properties:
-+
-+- compatible: should be "hisilicon,hip04-mdio".
-+- Inherits from MDIO bus node binding [2]
-+[2] Documentation/devicetree/bindings/net/phy.txt
-+
-+Example:
-+	mdio {
-+		compatible = "hisilicon,hip04-mdio";
-+		reg = <0x28f1000 0x1000>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		phy0: ethernet-phy@0 {
-+			compatible = "ethernet-phy-ieee802.3-c22";
-+			reg = <0>;
-+			marvell,reg-init = <18 0x14 0 0x8001>;
-+		};
-+
-+		phy1: ethernet-phy@1 {
-+			compatible = "ethernet-phy-ieee802.3-c22";
-+			reg = <1>;
-+			marvell,reg-init = <18 0x14 0 0x8001>;
-+		};
-+	};
-+
-+	ppe: ppe@28c0000 {
-+		compatible = "hisilicon,hip04-ppe", "syscon";
-+		reg = <0x28c0000 0x10000>;
-+	};
-+
-+	fe: ethernet@28b0000 {
-+		compatible = "hisilicon,hip04-mac";
-+		reg = <0x28b0000 0x10000>;
-+		interrupts = <0 413 4>;
-+		phy-mode = "mii";
-+		port-handle = <&ppe 31 0>;
-+	};
-+
-+	ge0: ethernet@2800000 {
-+		compatible = "hisilicon,hip04-mac";
-+		reg = <0x2800000 0x10000>;
-+		interrupts = <0 402 4>;
-+		phy-mode = "sgmii";
-+		port-handle = <&ppe 0 1>;
-+		phy-handle = <&phy0>;
-+	};
-+
-+	ge8: ethernet@2880000 {
-+		compatible = "hisilicon,hip04-mac";
-+		reg = <0x2880000 0x10000>;
-+		interrupts = <0 410 4>;
-+		phy-mode = "sgmii";
-+		port-handle = <&ppe 8 2>;
-+		phy-handle = <&phy1>;
-+	};
--- 
-1.8.0
+T24gRnJpLCAwOSBKYW4gMjAxNSAxNzozOTowOCArMDAwMApBbmRyZXcgSmFja3NvbiA8QW5kcmV3
+LkphY2tzb25AYXJtLmNvbT4gd3JvdGU6Cgo+ID4gKyAgICAgICBzbmRfcGNtX2h3X2NvbnN0cmFp
+bnRfbWlubWF4KHJ1bnRpbWUsCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFNO
+RFJWX1BDTV9IV19QQVJBTV9DSEFOTkVMUywKPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgMSwgc2FkW1NBRF9NWF9DSEFOX0ldKTsgIAo+IAo+IEluIHRoZSBsaWdodCBvZiBvdXIg
+ZGlzY3Vzc2lvbnMgZWxzZXdoZXJlIFsxXSwgc2hvdWxkbid0IHRoaXMKPiBiZSBjb25zdHJhaW5l
+ZCBieSB0aGUgbnVtYmVyIG9mIGhhcmR3YXJlIGNoYW5uZWxzIHRoYXQgdGhlIFREQTk5OHgKPiBz
+dXBwb3J0cyB0b28/ICBUaGF0IGlzLCB0aGUgbWF4aW11bSBudW1iZXIgb2YgY2hhbm5lbHMgc2hv
+dWxkCj4gYmUgdGhlIGxlc3NlciBvZiBzZFtTQURfTVhfQ0hBTl9JXSBhbmQgbnVtYmVyX29mX0ky
+UyBjaGFubmVscyAKPiAob3IgUy9QRElGIGNoYW5uZWxzIGlmIHNvIGNvbmZpZ3VyZWQpLgoKc25k
+X3BjbV9od19jb25zdHJhaW50X21pbm1heCgpIGRvZXMgdGhlIGpvYiBmcm9tIHRoZSBtaW4vbWF4
+IG51bWJlcnMgb2YKY2hhbm5lbHMgaW4gdGhlIERBSSBkZWZpbml0aW9uIGFuZCB0aGUgcmVhbCBt
+YXggbnVtYmVyIG9mIGNoYW5uZWxzIHdpbGwKYmUgc2V0IGZyb20gYXVkaW8gcG9ydHMgZGVjbGFy
+ZWQgaW4gdGhlIERULgoKLS0gCktlbiBhciBjJ2hlbnRhw7EJfAkgICAgICAqKiBCcmVpemggaGEg
+TGludXggYXRhdiEgKioKSmVmCQl8CQlodHRwOi8vbW9pbmVqZi5mcmVlLmZyLwpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBs
+aXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNr
+dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
