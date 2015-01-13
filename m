@@ -1,41 +1,104 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v4 2/4] irqchip: mtk-sysirq: Get irq number from register
- resource size
-Date: Tue, 13 Jan 2015 14:12:35 +0100
-Message-ID: <CABuKBeKGbxR8YQcVPJyZDpnVsNUsTxQQhsisW_F2L13zfgeyjw@mail.gmail.com>
-References: <1421054073-43468-1-git-send-email-eddie.huang@mediatek.com>
-	<1421054073-43468-3-git-send-email-eddie.huang@mediatek.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v4 4/5] ARM: mediatek: Add EINT support to MTK pinctrl driver.
+Date: Tue, 13 Jan 2015 14:24:40 +0100
+Message-ID: <CACRpkdb2KJbjzFgTmDvHSw7jNAExxVtU3y4_fgyn6J8hcW5OrQ@mail.gmail.com>
+References: <1418772873-19747-1-git-send-email-hongzhou.yang@mediatek.com>
+	<1418772873-19747-5-git-send-email-hongzhou.yang@mediatek.com>
+	<1418807365.6443.17.camel@mtksdaap41>
+	<1420535817.17567.10.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1421054073-43468-3-git-send-email-eddie.huang@mediatek.com>
+In-Reply-To: <1420535817.17567.10.camel@mtksdaap41>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Eddie Huang <eddie.huang@mediatek.com>, Jason Cooper <jason@lakedaemon.net>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Rob Herring <robh+dt@kernel.org>, srv_heupstream <srv_heupstream@mediatek.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Olof Johansson <olof@lixom.net>, "Joe.C" <yingjoe.chen@mediatek.com>, Robert Richter <rrichter@cavium.com>, Mark Brown <broonie@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sascha Hauer <kernel@pengutronix.de>, Marc Zyngier <marc.zyngier@arm.com>, Peter Maydell <peter.maydell@linaro.org>, =?UTF-8?B?WUggQ2hlbiAo6Zmz5pix6LGqKQ==?= <yh.chen@mediatek.com>
+To: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, maoguang.meng@mediatek.com, Catalin Marinas <catalin.marinas@arm.com>, alan.cheng@mediatek.com, Russell King <linux@arm.linux.org.uk>, Hongzhou Yang <hongzhou.yang@mediatek.com>, toby.liu@mediatek.com, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Vladimir Murzin <vladimir.murzin@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, dandan.he@mediatek.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, srv_heupstream@mediatek.com, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-2015-01-12 10:14 GMT+01:00 Eddie Huang <eddie.huang@mediatek.com>:
-> From: Yingjoe Chen <yingjoe.chen@mediatek.com>
+On Tue, Jan 6, 2015 at 10:16 AM, Yingjoe Chen <yingjoe.chen@mediatek.com> wrote:
+> On Wed, 2014-12-17 at 17:09 +0800, Yingjoe Chen wrote:
+>> On Wed, 2014-12-17 at 07:34 +0800, Hongzhou Yang wrote:
+>> > From: Maoguang Meng <maoguang.meng@mediatek.com>
+>> >
+>> > MTK SoC support external interrupt(EINT) from most SoC pins.
+>> > Add EINT support to pinctrl driver.
+>> >
+>> > Signed-off-by: Maoguang Meng <maoguang.meng@mediatek.com>
+>> > Signed-off-by: Hongzhou Yang <hongzhou.yang@mediatek.com>
+>>
+>> Hi Linus,
+>>
+>> This patch add EINT support to the pinctrl driver. We've surveyed
+>> GPIOLIB_IRQCHIP, but we didn't use it because:
+>>
+>> - Not every GPIO pin support interrupt.
+>> - EINT use a different numbering to GPIO. eg, from the mt8135 table,
+>> GPIO29 is EINT158. It is more nature & efficient to use EINT number as
+>> hwirq.
+>>
+>> +               MTK_EINT_FUNCTION(2, 158),
+>> +               MTK_FUNCTION(0, "GPIO29"),
 >
-> Originally mtk-sysirq hardcoded supported irq number to 224. This
-> was fine since all SoCs before support the same number of irqs for
-> intpol.
->
-> However MT8173 intpol support 32 more irq pins, changes to get
-> irq number from register resource size to suppor MT8173 properly.
->
-> Signed-off-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
-> Signed-off-by: Eddie Huang <eddie.huang@mediatek.com>
-> ---
->  drivers/irqchip/irq-mtk-sysirq.c | 18 +++++++++++-------
->  1 file changed, 11 insertions(+), 7 deletions(-)
->
+> After further looking into this, we could use GPIOLIB_IRQCHIP if we add
+> an extension gpiochip_irqchip_add() to accept interrupt numbers and
+> custom .to_irq function for our SoC. We could still reuse other code
+> GPIOLIB_IRQCHIP provide.
 
-Jason, Thomas, will you take this patch through your branch?
-I will take the rest of the series.
+I see, and I still want to see all possibilities to centralize code
+surveyed.
 
-Best regards,
-Matthias
+If I understand correctly what you actually need is a linear
+irqdomain with "holes" (invalid offsets) in it.
+So this is what we should design for.
 
--- 
-motzblog.wordpress.com
+The .to_irq() function should not really perform anything but a
+simple lookup in the domain.
+
+What you do here:
+
++static int mtk_gpio_to_irq(struct gpio_chip *chip, unsigned offset)
++{
++       const struct mtk_desc_pin *pin;
++       struct mtk_pinctrl *pctl = dev_get_drvdata(chip->dev);
++       int irq;
++
++       pin = pctl->devdata->pins + offset;
++       if (pin->eint.eintnum == NO_EINT_SUPPORT)
++               return -EINVAL;
++
++       irq = irq_find_mapping(pctl->domain, pin->eint.eintnum);
++       if (!irq)
++               return -EINVAL;
++
++       return irq;
++}
+
+Is *avoiding* to translate some IRQs from a certain offset using
+the domain, I think that is the wrong way to go.
+
+Instead, we would need to handle these "holes" in
+drivers/pinctrl/nomadik/pinctrl-abx500.c also need the same
+thing.
+
+Maybe we can add a gpiochip_irqchip_add_sparse() in
+gpiolib that will take an array of bools in, indicating of
+a certain line is elegible for IRQ or not, e.g.:
+
+bool valid = { false, true, false, true };
+
+foo = gpiochip_irqchip_add_sparse(&chip,
+                         &irqchip,
+                         0,
+                         handler,
+                         IRQ_TYPE_NONE,
+                         &valid);
+
+So the loop inside the lib will avoid calling
+irq_create_mapping() on the invalid lines, and any calls
+to irq_find_mapping() will fail if you try to use one of
+them for IRQs.
+
+If you're up to do this and test on your driver I'm all in for it.
+
+Yours,
+Linus Walleij
