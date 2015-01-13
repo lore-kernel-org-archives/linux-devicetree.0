@@ -1,85 +1,119 @@
-From: Pavel Machek <pavel@denx.de>
-Subject: Re: [PATCH v8 2/4] fpga manager: add sysfs interface document
-Date: Tue, 13 Jan 2015 08:28:57 +0100
-Message-ID: <20150113072857.GA11760@amd>
-References: <1420575219-27061-1-git-send-email-atull@opensource.altera.com>
- <1420575219-27061-3-git-send-email-atull@opensource.altera.com>
- <20150107084819.GA1887@amd>
- <alpine.DEB.2.02.1501091302370.30067@linuxheads99>
- <20150109205643.GA5761@amd>
- <4D4EA2D5-68DD-49F7-9E2D-3A0A8F6AF9CA@konsulko.com>
- <20150110151118.GA16036@amd>
- <alpine.DEB.2.10.1501111009180.2556@shineypoop>
- <20150112084530.GA28681@amd>
- <bed1d7ce1b984c79acc75a47495cb959@BL2FFO11FD043.protection.gbl>
+From: Jean-Francois Moine <moinejf@free.fr>
+Subject: Re: [PATCH v9 3/4] ASoC: tda998x: add a codec to the HDMI transmitter
+Date: Tue, 13 Jan 2015 08:41:44 +0100
+Message-ID: <20150113084144.7c62c18d@armhf>
+References: <cover.1420628786.git.moinejf@free.fr>
+ <23b36acc1f769418a06f3e929eba288b5911da12.1420628786.git.moinejf@free.fr>
+ <54B2E512.7000904@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <bed1d7ce1b984c79acc75a47495cb959@BL2FFO11FD043.protection.gbl>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Michal Simek <michal.simek@xilinx.com>
-Cc: mark.rutland@arm.com, linux-doc@vger.kernel.org, rubini@gnudd.com, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, hpa@zytor.com, Steffen Trumtrar <s.trumtrar@pengutronix.de>, devel@driverdev.osuosl.org, sameo@linux.intel.com, nico@linaro.org, ijc+devicetree@hellion.org.uk, kyle.teske@ni.com, jgunthorpe@obsidianresearch.com, Grant Likely <grant.likely@linaro.org>, davidb@codeaurora.org, Linus Walleij <linus.walleij@linaro.org>, cesarb@cesarb.net, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, iws@ovro.caltech.edu, atull <atull@opensource.altera.com>, Mark Brown <broonie@kernel.org>, philip@balister.org, dinguyen@opensource.altera.com, Michal Simek <monstr@monstr.eu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, yvanderv@opensource.altera.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <54B2E512.7000904@ti.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jyri Sarha <jsarha@ti.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, Andrew Jackson <Andrew.Jackson@arm.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi!
-
-> >>>>>>>> +What:		/sys/class/fpga_manager/<fpga>/firmware
-> >>>>>>>> +Date:		October 2014
-> >>>>>>>> +KernelVersion:	3.18
-> >>>>>>>> +Contact:	Alan Tull <atull@opensource.altera.com>
-> >>>>>>>> +Description:	Name of the FPGA image file to load using firmware
-> >>>>>>>> class.
-> >>>>>>>
-> >>>>>>> This one is ugly: it unneccessarily passes firmware name through the
-> >>>>>>> kernel. Just make interface and code simpler by always passing
-> >>>>>>> "socfpga-fpga-image" or something like that.
-...
- 
-> > What is cumbersome about symlink? Why is "fake" symlink in sysfs better?
-> > 
-> >> Previous uses of the firmware layer has been to use it to load once after
-> >> bootup; this is different since some use cases will want to switch out
-> >> the FPGA image.  If someone wants there to be only one FPGA image on
-> >> the FGPA forever, they will probably not be using this framework; their
-> >> FPGA will probably be loaded before Linux boots up.
-> > 
-> > Why? I have just one image on the fpga, and would prefer to load it
-> > from Linux.
-> 
-> Pavel: These patches target staging and sysfs interface doesn't need to be stable
-> at this time. I would prefer to add these patches to staging for 3.20
-> and feel free to send the patch which fix this.
-
-Interesting way to address patch review. "We'll merge it, and you can
-fix it up later".
-
-> With your code will be exactly clear how you want to use it and we can
-> talk about it.
-
-I'm pretty sure Alan knows what I want at this point, he just does not
-want to do it.
-
-For the record, I want to drop "firmware" file, use fixed firmware
-name, and deal with multiple firmwares in userspace (using symlink or
-udev magic).
-
-I believe this is simplest solution, should be adequate, and is
-certainly less ugly than implementing fake symlink in
-/sys/.../firmware. And I have yet to hear what is wrong with that
-suggestion.
-
-Thanks,									
-									Pavel
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+T24gU3VuLCAxMSBKYW4gMjAxNSAyMzowMzoxNCArMDIwMApKeXJpIFNhcmhhIDxqc2FyaGFAdGku
+Y29tPiB3cm90ZToKCj4gU29tZSBtb3JlIGNvbW1lbnRzIGJhc2VkIG9uIG15IC0gZmluYWxseSBz
+dWNjZXNzZnVsIC0gYXR0ZW1wdCB0byB1c2UgCj4gdGhpcyBjb2RlIHdpdGggQkJCIEhETUkgYXVk
+aW8uCj4gCj4gT24gMDEvMDcvMjAxNSAxMjo1MSBQTSwgSmVhbi1GcmFuY29pcyBNb2luZSB3cm90
+ZToKPiA+IFRoaXMgcGF0Y2ggYWRkcyBhIENPREVDIHRvIHRoZSBOWFAgVERBOTk4eCBIRE1JIHRy
+YW5zbWl0dGVyLgoJW3NuaXBdCj4gPiBAQCAtNDcsNiArNTIsMTAgQEAgc3RydWN0IHRkYTk5OHhf
+cHJpdiB7Cj4gPiAgIAlzdHJ1Y3QgZHJtX2VuY29kZXIgKmVuY29kZXI7Cj4gPgo+ID4gICAJdTgg
+YXVkaW9fcG9ydHNbMl07Cj4gPiArI2lmZGVmIFdJVEhfQ09ERUMKPiA+ICsJdTggc2FkWzNdOwkJ
+CS8qIFNob3J0IEF1ZGlvIERlc2NyaXB0b3IgKi8KPiA+ICsJc3RydWN0IHNuZF9wY21faHdfY29u
+c3RyYWludF9saXN0IHJhdGVfY29uc3RyYWludHM7Cj4gPiArI2VuZGlmCj4gCj4gSXQgZmVlbHMg
+YSBiaXQgYmFja3dhcmRzIHRvIG1lIHRvIHN0b3JlIHRoZXNlIGF1ZGlvIHNpZGUgdmFyaWFibGVz
+IGhlcmUgCj4gaW4gRFJNIHNpZGUgZHJpdmVyIC0gZXNwZWNpYWxseSB0aGUgcmF0ZV9jb25zdHJh
+aW50IC0gYW5kIHByb3ZpZGUgYSAKPiBmdW5jdGlvbiAodGRhOTk4eF9nZXRfYXVkaW9fdmFyKCkp
+IGZvciBnZXR0aW5nIHRoZWlyIGluZGl2aWR1YWwgCj4gYWRkcmVzc2VzIHRvIEFTb0Mgc2lkZS4g
+V291bGRuJ3QgaXQgYmUgbW9yZSBzdHJhaWdodCBmb3J3YXJkIHRvIHByb3ZpZGUgCj4gZnVuY3Rp
+b25zIGZvciBzZXR0aW5nIGFuZCBnZXR0aW5nIHRoZSBhdWRpbyBzaWRlIGRhdGEgZnJvbSBhIHZv
+aWQgCj4gcG9pbnRlciBpbiBEUk0gc2lkZSBkZXZpY2UgZHJ2ZGF0YT8KCkdvb2QgaWRlYS4gVGhl
+IHJhdGVfY29uc3RyYWludHMgd291bGQgYmUgYWxsb2NhdGVkIGJ5IHRoZSBjb2RlYyBhbmQgc2V0
+IGJ5IGEgdHJhbnNtaXR0ZXIgZnVuY3Rpb24uCgoJW3NuaXBdCj4gPiBkaWZmIC0tZ2l0IGEvaW5j
+bHVkZS9zb3VuZC90ZGE5OTh4LmggYi9pbmNsdWRlL3NvdW5kL3RkYTk5OHguaAo+ID4gbmV3IGZp
+bGUgbW9kZSAxMDA2NDQKPiA+IGluZGV4IDAwMDAwMDAuLjk3Y2ZmMzAKPiA+IC0tLSAvZGV2L251
+bGwKPiA+ICsrKyBiL2luY2x1ZGUvc291bmQvdGRhOTk4eC5oCj4gPiBAQCAtMCwwICsxLDIzIEBA
+Cj4gPiArI2lmbmRlZiBTTkRfVERBOTk4WF9ICj4gPiArI2RlZmluZSBTTkRfVERBOTk4WF9ICj4g
+PiArCj4gPiArI2luY2x1ZGUgPHNvdW5kL3BjbS5oPgo+ID4gKwo+ID4gKy8qIHBvcnQgaW5kZXhl
+cyAqLwo+ID4gKyNkZWZpbmUgUE9SVF9OT05FICgtMSkKPiA+ICsjZGVmaW5lIFBPUlRfU1BESUYg
+MAo+ID4gKyNkZWZpbmUgUE9SVF9JMlMgMQo+ID4gKwo+ID4gK3R5cGVkZWYgaW50ICgqZ2V0X2F1
+ZGlvX3Zhcl90KShzdHJ1Y3QgZGV2aWNlICpkZXYsCj4gPiArCQkJCXU4ICoqc2FkLAo+ID4gKwkJ
+CXN0cnVjdCBzbmRfcGNtX2h3X2NvbnN0cmFpbnRfbGlzdCAqKnJhdGVfY29uc3RyYWludHMpOwo+
+ID4gK3R5cGVkZWYgaW50ICgqc2V0X2F1ZGlvX2lucHV0X3QpKHN0cnVjdCBkZXZpY2UgKmRldiwK
+PiA+ICsJCQkJaW50IHBvcnRfaW5kZXgsCj4gPiArCQkJCXVuc2lnbmVkIHNhbXBsZV9yYXRlLAo+
+ID4gKwkJCQlpbnQgc2FtcGxlX2Zvcm1hdCk7Cj4gPiArCj4gCj4gV2h5IGRvbid0IHlvdSBzaW1w
+bHkgZGVjbGFyZSB0ZGE5OTh4X2dldF9hdWRpb192YXIoKSBhbmQgCj4gdGRhOTk4eF9zZXRfYXVk
+aW9faW5wdXQoKSBoZXJlIGFuZCBleHBvcnQgdGhlbSBpbiBEUk0gc2lkZSBkcml2ZXI/IFRoaXMg
+Cj4gaXMgYSB0ZGE5OTh4IHNwZWNpZmljIGNvZGVjIGFmdGVyIGFsbC4gSSBzZWUgbm8gcG9pbnQg
+dG8gdGhpcyB0aGlzIAo+IGZ1bmN0aW9uIHBvaW50ZXIgdHlwZWRlZiBnYW1lLCB3aGVuIHRoZSBw
+b2ludGVycyBhcmUgYW55d2F5IHN0b3JlZCB0byAKPiBnbG9iYWwgdmFyaWFibGVzIGluIEFTb0Mg
+dGhlIHNpZGUgbW9kdWxlLgoKVGhlcmUgY2Fubm90IGJlIGJvdGggd2F5cyBvZiBmdW5jdGlvbiBj
+YWxsIHdpdGggbW9kdWxlczoKdGhlIHRyYW5zbWl0dGVyIG1heSBjYWxsIGV4cG9ydGVkIGZ1bmN0
+aW9ucyBvZiB0aGUgY29kZWMsCmJ1dCB0aGUgY29kZWMgY2Fubm90IGNhbGwgZXhwb3J0ZWQgZnVu
+Y3Rpb25zIG9mIHRoZSB0cmFuc21pdHRlci4KCglbc25pcF0KPiA+ICsJc25kX3BjbV9od19jb25z
+dHJhaW50X21pbm1heChydW50aW1lLAo+ID4gKwkJCQlTTkRSVl9QQ01fSFdfUEFSQU1fQ0hBTk5F
+TFMsCj4gPiArCQkJCTEsIHNhZFtTQURfTVhfQ0hBTl9JXSk7Cj4gCj4gU0FEIGJ5dGUgMSBiaXRz
+IDItMCBwcm92aWRlcyB0aGUgbWF4aW11bSBjaGFubmVsIGNvdW50IF9taW51c19vbmVfLiBZb3Ug
+Cj4gc2hvdWxkIF9hZGRfb25lXyB0byBzYWRbU0FEX01YX0NIQU5fSV0gd2hlbiBzZXR0aW5nIHRo
+ZSBjb25zdHJhaW50LgoKUmlnaHQuIFRoYW5rcy4KCglbc25pcF0KPiA+ICtzdGF0aWMgc3RydWN0
+IHNuZF9zb2NfZGFpX2RyaXZlciB0ZGE5OTh4X2RhaXNbXSA9IHsKPiA+ICsJewo+ID4gKwkJLm5h
+bWUgPSAic3BkaWYtaGlmaSIsCj4gPiArCQkuaWQgPSBQT1JUX1NQRElGLAo+ID4gKwkJLnBsYXli
+YWNrID0gewo+ID4gKwkJCS5zdHJlYW1fbmFtZQk9ICJIRE1JIFNQRElGIFBsYXliYWNrIiwKPiA+
+ICsJCQkuY2hhbm5lbHNfbWluCT0gMSwKPiA+ICsJCQkuY2hhbm5lbHNfbWF4CT0gMiwKPiA+ICsJ
+CQkucmF0ZXMJCT0gU05EUlZfUENNX1JBVEVfQ09OVElOVU9VUywKPiA+ICsJCQkucmF0ZV9taW4J
+PSAyMjA1MCwKPiA+ICsJCQkucmF0ZV9tYXgJPSAxOTIwMDAsCj4gPiArCQkJLmZvcm1hdHMJPSBU
+REE5OThYX0ZPUk1BVFMsCj4gPiArCQl9LAo+ID4gKwkJLm9wcyA9ICZ0ZGE5OTh4X2NvZGVjX29w
+cywKPiA+ICsJfSwKPiA+ICsJewo+ID4gKwkJLm5hbWUgPSAiaTJzLWhpZmkiLAo+ID4gKwkJLmlk
+ID0gUE9SVF9JMlMsCj4gPiArCQkucGxheWJhY2sgPSB7Cj4gPiArCQkJLnN0cmVhbV9uYW1lCT0g
+IkhETUkgSTJTIFBsYXliYWNrIiwKPiA+ICsJCQkuY2hhbm5lbHNfbWluCT0gMSwKPiA+ICsJCQku
+Y2hhbm5lbHNfbWF4CT0gOCwKPiA+ICsJCQkucmF0ZXMJCT0gU05EUlZfUENNX1JBVEVfQ09OVElO
+VU9VUywKPiA+ICsJCQkucmF0ZV9taW4JPSA1NTEyLAo+ID4gKwkJCS5yYXRlX21heAk9IDE5MjAw
+MCwKPiA+ICsJCQkuZm9ybWF0cwk9IFREQTk5OFhfRk9STUFUUywKPiA+ICsJCX0sCj4gPiArCQku
+b3BzID0gJnRkYTk5OHhfY29kZWNfb3BzLAo+ID4gKwl9LAo+ID4gK307Cj4gCj4gV2h5IGRvIHlv
+dSB1c2UgU05EUlZfUENNX1JBVEVfQ09OVElOVU9VUywgd2hlbiBIRE1JIHN0YW5kYXJkIG9ubHkg
+Cj4gc3VwcG9ydHMgMzIwMDAsIDQ0MTAwLCA0ODAwMCwgODgyMDAsIDk2MDAwLCAxNzY0MDAsIGFu
+ZCAxOTIwMDAgSHotcmF0ZXM/CgpCZWZvcmUgSSB0cmVhdGVkIHRoZSBFRElELCBJIGRpcmVjdGx5
+IHVzZWQgdGhlc2UgZGVmaW5pdGlvbnMsCmFuZCBteSBUViBkaXNwbGF5IGFjY2VwdGVkIG1hbnkg
+bW9yZSByYXRlcyBhcyAyMjA1MCB3aXRoIFMvUERJRiBpbnB1dApvciA3ODc1IHdpdGggSTJTIGlu
+cHV0LgoKPiA+ICsKPiA+ICtzdGF0aWMgY29uc3Qgc3RydWN0IHNuZF9zb2NfZGFwbV93aWRnZXQg
+dGRhOTk4eF93aWRnZXRzW10gPSB7Cj4gPiArCVNORF9TT0NfREFQTV9PVVRQVVQoImhkbWktb3V0
+IiksCj4gPiArfTsKPiA+ICtzdGF0aWMgY29uc3Qgc3RydWN0IHNuZF9zb2NfZGFwbV9yb3V0ZSB0
+ZGE5OTh4X3JvdXRlc1tdID0gewo+ID4gKwl7ICJoZG1pLW91dCIsIE5VTEwsICJIRE1JIEkyUyBQ
+bGF5YmFjayIgfSwKPiA+ICsJeyAiaGRtaS1vdXQiLCBOVUxMLCAiSERNSSBTUERJRiBQbGF5YmFj
+ayIgfSwKPiA+ICt9Owo+ID4gKwo+ID4gK3N0YXRpYyBzdHJ1Y3Qgc25kX3NvY19jb2RlY19kcml2
+ZXIgdGRhOTk4eF9jb2RlY19kcnYgPSB7Cj4gPiArCS5kYXBtX3dpZGdldHMgPSB0ZGE5OTh4X3dp
+ZGdldHMsCj4gPiArCS5udW1fZGFwbV93aWRnZXRzID0gQVJSQVlfU0laRSh0ZGE5OTh4X3dpZGdl
+dHMpLAo+ID4gKwkuZGFwbV9yb3V0ZXMgPSB0ZGE5OTh4X3JvdXRlcywKPiA+ICsJLm51bV9kYXBt
+X3JvdXRlcyA9IEFSUkFZX1NJWkUodGRhOTk4eF9yb3V0ZXMpLAo+ID4gKwkuaWdub3JlX3BtZG93
+bl90aW1lID0gdHJ1ZSwKPiA+ICt9Owo+ID4gKwo+ID4gK2ludCB0ZGE5OTk4eF9jb2RlY19yZWdp
+c3RlcihzdHJ1Y3QgZGV2aWNlICpkZXYsCj4gPiArCQkJZ2V0X2F1ZGlvX3Zhcl90IGdldF9hdWRp
+b192YXJfaSwKPiA+ICsJCQlzZXRfYXVkaW9faW5wdXRfdCBzZXRfYXVkaW9faW5wdXRfaSkKPiA+
+ICt7Cj4gPiArCWdldF9hdWRpb192YXIgPSBnZXRfYXVkaW9fdmFyX2k7Cj4gPiArCXNldF9hdWRp
+b19pbnB1dCA9IHNldF9hdWRpb19pbnB1dF9pOwo+ID4gKwlyZXR1cm4gc25kX3NvY19yZWdpc3Rl
+cl9jb2RlYyhkZXYsCj4gPiArCQkJCSZ0ZGE5OTh4X2NvZGVjX2RydiwKPiA+ICsJCQkJdGRhOTk4
+eF9kYWlzLCBBUlJBWV9TSVpFKHRkYTk5OHhfZGFpcykpOwo+IAo+IFNvIHRoaXMgYWx3YXlzIHJl
+Z2lzdGVycyBhIHR3byBEQUkgY29kZWMgd2hldGhlciBvciBub3QgYm90aCB0aGUgaTJzIGFuZCAK
+PiBzcGRpZiBpcyB1c2VkLiBUaGUgRFQgYmluZGluZyBkb2N1bWVudCBjb3VsZCBzdGF0ZSB0aGF0
+IHRoZSBEQUkgaW5kZXggMCAKPiBpcyBhbHdheXMgdGhlIHNwZGlmIERBSSBhbmQgaW5kZXggMSBp
+cyB0aGUgaTJzIERBSSwgb3IgZXZlbiBiZXR0ZXIgeW91IAo+IGNvdWxkICNkZWZpbmUgdGhlbSB1
+bmRlciBpbmNsdWRlL2R0LWJpbmRpbmdzLy4KPiAKPiBXaGlsZSB5b3UgYXJlIGF0IGl0LCB5b3Ug
+Y291bGQgYWxzbyBtZW50aW9uIHRoZSBEQVBNIG91dHB1dCBuYW1lIAo+ICJoZG1pLW91dCIgZm9y
+IHRoZSBjb2RlYyBpbiB0aGUgRFQtYmluZGluZyBkb2N1bWVudC4KCVtzbmlwXQoKVGhpcyB3aWxs
+IGJlIGNoYW5nZWQgd2hlbiB1c2luZyB0aGUgZ3JhcGggb2YgcG9ydHM6IHRoZSBEQUlzIHdpbGwg
+YmUKZHluYW1pY2FsbHkgY3JlYXRlZCBmcm9tIHRoZSBEVC4KCi0tIApLZW4gYXIgYydoZW50YcOx
+CXwJICAgICAgKiogQnJlaXpoIGhhIExpbnV4IGF0YXYhICoqCkplZgkJfAkJaHR0cDovL21vaW5l
+amYuZnJlZS5mci8KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+Cmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
