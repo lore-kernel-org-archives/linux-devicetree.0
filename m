@@ -1,47 +1,112 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v5 1/3] gpio: Cygnus: define Broadcom Cygnus GPIO binding
-Date: Tue, 13 Jan 2015 09:06:15 +0100
-Message-ID: <CACRpkdZbGjNecrggrFr_18zjobXMBpkrSjBMAUfyfs2ZCebB0w@mail.gmail.com>
-References: <1418342706-14755-2-git-send-email-rjui@broadcom.com>
-	<1918116.UxUgDPTmcq@wuerfel>
-	<CAAVeFuL2MKRA7YLm_wsyftNy-sxgEYPrmqBm8XTRZQb66YF-qw@mail.gmail.com>
-	<1628217.66frkAqHMc@wuerfel>
-	<CAAVeFuJhiten-eVLCa2sMG-nsRwjPMiZap8UJM1kNCuRyK-b1w@mail.gmail.com>
-	<20141217104428.GV11285@n2100.arm.linux.org.uk>
+Subject: Re: [PATCH 1/4] pinctrl: Broadcom Cygnus pinctrl device tree binding
+Date: Tue, 13 Jan 2015 09:20:02 +0100
+Message-ID: <CACRpkdbW5P=w0CPYYf_gfBuD7W0WOdAYCKpTXM5MsK9mdYDc5w@mail.gmail.com>
+References: <rjui@broadcom.com>
+	<1417131990-17954-1-git-send-email-rjui@broadcom.com>
+	<1417131990-17954-2-git-send-email-rjui@broadcom.com>
+	<CACRpkdb5pNMbXmWGjrGpAYNLLwv6pWWOJQy0C6BLetNcStFM6A@mail.gmail.com>
+	<54B01D44.5080601@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20141217104428.GV11285@n2100.arm.linux.org.uk>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Alexandre Courbot <gnurou@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Ray Jui <rjui@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Joe Perches <joe@perches.com>, Scott Branden <sbranden@broadcom.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <54B01D44.5080601@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ray Jui <rjui@broadcom.com>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Scott Branden <sbranden@broadcom.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 17, 2014 at 11:44 AM, Russell King - ARM Linux
-<linux@arm.linux.org.uk> wrote:
-> On Wed, Dec 17, 2014 at 11:45:01AM +0900, Alexandre Courbot wrote:
->> Actually we are not that far from being able to do completely without
->> any GPIO number, and maybe that's what we should aim for. I think the
->> only remaining offender is the sysfs interface.
+On Fri, Jan 9, 2015 at 7:26 PM, Ray Jui <rjui@broadcom.com> wrote:
+> On 1/9/2015 2:12 AM, Linus Walleij wrote:
+
+>> Just use "groups" and "function" and refer to
+>> Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+>>
+>> Then "alt1", "alt2" etc are non-functional names of functions.
+>> Use the real function names, like "spi0" or so. This
+>> alt-business seems to be just a shortcut to make it
+>> simple, don't do that.
+>>
+>> Then you use e.g. "spi0" as a group name. I prefer you
+>> call that "spi0_grp" or something to say it is a group of
+>> pins associated with spi0, as spi0 is actually the
+>> function.
+>>
+> Hmmm, I did this by following brcm,bcm11351-pinctrl.txt:
+> - function: String. Specifies the pin mux selection. Values must be one
+> of: "alt1", "alt2", "alt3", "alt4"
 >
-> And that is a user API, and there's lots of users of it (eg, on Raspberry
-> Pi platforms.)  So changing it isn't going to be easy - I'd say that it's
-> impractical.
+> But you are right, in the pinctrl binding document it describes the
+> generic pin multiplexing nodes use "function" and "group".
+
+Note "function" and "groups". Note groups is pluralis. You can
+select multiple groups for a single function.
+
+> For example, the group "lcd" covers 30 pins. When I configure "lcd" to
+> alternate function 1, all 30 pins are muxed to LCD function. When
+> configured to function 2, all pins are muxed to SRAM function. Now, here
+> comes the issue, when configured to function 3, pins 1-15 and 20-30
+> become GPIO function, but pins 16-19 becomes SPI5 function. When it's
+> configured to function 4, all 30 pins become GPIO.
+
+I would split the use case in two groups for LCD and SRAM,
+and three groups for GPIO:
+"lcd_grp", "sram_grp", "gpio-1-15_grp",
+"gpio-16-19_grp", "gpio-20-30_grp", "spi5_grp"
+
+Valid combinations become
+
+function = "lcd"
+groups = "lcd_grp";
+
+function = "sram"
+groups = "sram_grp"
+
+For all GPIO only this:
+
+function = "gpio"
+groups = "gpio-1-16_grp", "gpio-16-19_grp", "gpio-20-30_grp"
+
+For a combined GPIO+SPI:
+
+function = "gpio"
+groups = "gpio-1-16_grp", "gpio-20-30_grp"
+
+function = "spi5"
+groups = "spi5_grp"
+
+The pinctrl runtile will protest if you try to combine spi5_grp
+with gpio-16-19_grp.
+
+> In some other cases, when I configure a group to other functions, there
+> could be spare pins which become unused (not brought out to the pad).
+> Or, the spare pins may also become a separate function.
+
+That's cool.
+
+> Based on the LCD example, I'd assume I would do the following for the
+> default LCD function:
 >
-> What you're suggesting would be like re-numbering Linux syscalls.
+> lcd_node {
+>         group = "lcd_grp";
+>         function = "lcd";
+> };
+>
+> And in the case of function 3, I would call the function "spi5" and
+> assume the rest of pins become either GPIO (or unused)?
+>
+> spi5_node {
+>         group = "lcd_grp";
+>         function = "spi5";
+> };
 
-The problem is that right now if we set the .base of a gpio_chip
-to -1 for dynamic allocation of GPIO numbers and we have more
-than one GPIO chip in the system, the numbers basically depend
-on probe order, and may theoretically even differ between two boots.
+Looks cool per above.
 
-So in these cases preserving the ABI means preserving the
-unpredictability of these assigned numbers or something.
+You need some clever code in the driver to handle double-configuration
+of registers and so on, but I think it can be done.
 
-For the old usecases with a single GPIO controller and a fixed
-base offset of e.g. 0 (which I suspect was implicit in the initial
-design of the subsystem) things work fine as always, it's these new
-dynamic use cases that destabilize the ABI.
+Using pin control as a GPIO backend can be a bit tricky and will need
+some testing and elaboration, but the subsystem will block collisions.
 
 Yours,
 Linus Walleij
