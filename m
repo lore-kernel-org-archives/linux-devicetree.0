@@ -1,43 +1,40 @@
 From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] Documentation: of: fix typo in graph bindings
-Date: Tue, 13 Jan 2015 14:04:15 -0600
-Message-ID: <CAL_JsqLNw_n5dpsx7AsuToH1BEDkE-WsC+NDwg2bA4BNUH_FJw@mail.gmail.com>
-References: <1420452136-76466-1-git-send-email-xiakaixu@huawei.com>
+Subject: Re: [PATCH v5 0/2] devicetree: document ARM bindings for QEMU's
+ Firmware Config interface
+Date: Tue, 13 Jan 2015 14:04:55 -0600
+Message-ID: <CAL_JsqJiQ7Cdz-onSOOR3ec0WB+zHzyPq=XyYJMan7KrJ=ZWyA@mail.gmail.com>
+References: <1420652574-5897-1-git-send-email-lersek@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1420452136-76466-1-git-send-email-xiakaixu-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1420652574-5897-1-git-send-email-lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kaixu Xia <xiakaixu-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, kaixu.xia-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: Laszlo Ersek <lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter Maydell <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, drjones-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Paolo Bonzini <pbonzini-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Alexander Graf <agraf-l3A5Bk7waGM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 5, 2015 at 4:02 AM, Kaixu Xia <xiakaixu-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wrote:
-> Just fix a minor typo about the example path.
+On Wed, Jan 7, 2015 at 11:42 AM, Laszlo Ersek <lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+> Relative to v4, patch #1 is left unchanged.
 >
-> Signed-off-by: Kaixu Xia <xiakaixu-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+> The two-character change in patch #2 is documented in its notes section.
+>
+> Thanks & sorry about the many rounds!
+> Laszlo
+>
+> Laszlo Ersek (2):
+>   devicetree: document the "qemu" and "virtio" vendor prefixes
+>   devicetree: document ARM bindings for QEMU's Firmware Config interface
 
-Applied for 3.20. Thanks.
+Both applied for 3.20. Thanks.
 
-> ---
->  Documentation/devicetree/bindings/graph.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/Documentation/devicetree/bindings/graph.txt b/Documentation/devicetree/bindings/graph.txt
-> index 1a69c07..fcb1c6a 100644
-> --- a/Documentation/devicetree/bindings/graph.txt
-> +++ b/Documentation/devicetree/bindings/graph.txt
-> @@ -19,7 +19,7 @@ type of the connections, they just map their existence. Specific properties
->  may be described by specialized bindings depending on the type of connection.
+>  Documentation/devicetree/bindings/arm/fw-cfg.txt   | 72 ++++++++++++++++++++++
+>  .../devicetree/bindings/vendor-prefixes.txt        |  2 +
+>  2 files changed, 74 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/fw-cfg.txt
 >
->  To see how this binding applies to video pipelines, for example, see
-> -Documentation/device-tree/bindings/media/video-interfaces.txt.
-> +Documentation/devicetree/bindings/media/video-interfaces.txt.
->  Here the ports describe data interfaces, and the links between them are
->  the connecting data buses. A single port with multiple connections can
->  correspond to multiple devices being connected to the same physical bus.
 > --
-> 1.8.5.5
+> 1.8.3.1
 >
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
