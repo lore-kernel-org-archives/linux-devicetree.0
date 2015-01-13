@@ -1,40 +1,45 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v4 3/3] arm: dts: omap3-gta04: Add handling for tv output
-Date: Tue, 13 Jan 2015 07:56:35 -0800
-Message-ID: <20150113155634.GD2419@atomide.com>
-References: <1417642402-20538-1-git-send-email-marek@goldelico.com>
- <1417642402-20538-4-git-send-email-marek@goldelico.com>
- <54B4EF43.50300@ti.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH v9 1/4] drm/i2c: tda998x: Add DT support for audio
+Date: Tue, 13 Jan 2015 16:03:13 +0000
+Message-ID: <20150113160313.GR12302@n2100.arm.linux.org.uk>
+References: <20150109200127.GD12302@n2100.arm.linux.org.uk>
+ <1421054728.3081.28.camel@pengutronix.de>
+ <20150112122527.GF12302@n2100.arm.linux.org.uk>
+ <1421071197.3081.44.camel@pengutronix.de>
+ <20150112140456.GI12302@n2100.arm.linux.org.uk>
+ <20150112181341.4a53ea24@armhf>
+ <20150112175705.GN12302@n2100.arm.linux.org.uk>
+ <1421151718.4519.24.camel@pengutronix.de>
+ <20150113122715.GP12302@n2100.arm.linux.org.uk>
+ <20150113165411.5469930d@armhf>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <54B4EF43.50300@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Marek Belisko <marek@goldelico.com>, plagnioj@jcrosoft.com, bcousson@baylibre.com, hns@goldelico.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org
+In-Reply-To: <20150113165411.5469930d@armhf>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jean-Francois Moine <moinejf@free.fr>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Andrew Jackson <Andrew.Jackson@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>, Mark Brown <broonie@kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-* Tomi Valkeinen <tomi.valkeinen@ti.com> [150113 02:14]:
-> On 03/12/14 23:33, Marek Belisko wrote:
-> > Add handling for gta04 tv out chain:
-> > venc -> opa362 -> svideo
-> > 
-> > Use invert-polarity in venc node because opa362
-> > is doing polarity inversion also.
-> > 
-> > Signed-off-by: Marek Belisko <marek@goldelico.com>
-> > ---
-> >  arch/arm/boot/dts/omap3-gta04.dtsi | 49 ++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 49 insertions(+)
-> 
-> Looks fine to me.
-> 
-> Tony, do you want to pick this up? I can take the first two patches via
-> fbdev.
-
-OK will pick the dtsi change.
-
-Thanks,
-
-Tony
+T24gVHVlLCBKYW4gMTMsIDIwMTUgYXQgMDQ6NTQ6MTFQTSArMDEwMCwgSmVhbi1GcmFuY29pcyBN
+b2luZSB3cm90ZToKPiA0IHN0cmVhbXMgb24gNCBkaWZmZXJlbnQgQVBzIChzb3VyY2VzKSBzaG91
+bGQgd29yaywgYnV0IDQgc3RyZWFtcyBmcm9tCj4gYSBzYW1lIHNvdXJjZSBzaG91bGQgYmUgZGV0
+YWlsZWQuCgpJJ2QgbGlrZSB0byBrbm93IGhvdyB5b3UgaW50ZW5kIHRvIHdpcmUgdXAgZm91ciBk
+aWZmZXJlbnQgSTJTIHNvdXJjZXMKdG8gdGhlIFREQTk5OHguCgpSZW1lbWJlciwgYW4gSTJTIHNv
+dXJjZSBwcm9kdWNlcyB0aGUgSTJTIGRhdGEgYW5kIHRoZSB3b3JkIGNsb2NrIC0gdGhhdCdzCnR3
+byBvdXRwdXRzLiAgWW91IGNhbid0IGVsZWN0cm9uaWNhbGx5IHdpcmUgdGhlIHdvcmQgY2xvY2tz
+IHRvZ2V0aGVyLgoKLS0gCkZUVEMgYnJvYWRiYW5kIGZvciAwLjhtaWxlIGxpbmU6IGN1cnJlbnRs
+eSBhdCAxMC41TWJwcyBkb3duIDQwMGticHMgdXAKYWNjb3JkaW5nIHRvIHNwZWVkdGVzdC5uZXQu
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZl
+bCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
