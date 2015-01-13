@@ -1,74 +1,121 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH v9 1/4] drm/i2c: tda998x: Add DT support for audio
-Date: Tue, 13 Jan 2015 19:54:15 +0000
-Message-ID: <20150113195415.GV12302@n2100.arm.linux.org.uk>
-References: <20150112140456.GI12302@n2100.arm.linux.org.uk>
- <20150112181341.4a53ea24@armhf>
- <20150112175705.GN12302@n2100.arm.linux.org.uk>
- <1421151718.4519.24.camel@pengutronix.de>
- <20150113122715.GP12302@n2100.arm.linux.org.uk>
- <20150113165411.5469930d@armhf>
- <20150113160313.GR12302@n2100.arm.linux.org.uk>
- <20150113200252.3dbfab14@armhf>
- <20150113192648.GU12302@n2100.arm.linux.org.uk>
- <54B574CD.9020905@ti.com>
+From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Subject: Re: [PATCH v8 2/4] fpga manager: add sysfs interface document
+Date: Tue, 13 Jan 2015 13:00:32 -0700
+Message-ID: <20150113200032.GA16205@obsidianresearch.com>
+References: <1420575219-27061-1-git-send-email-atull@opensource.altera.com>
+ <1420575219-27061-3-git-send-email-atull@opensource.altera.com>
+ <20150107084819.GA1887@amd>
+ <alpine.DEB.2.02.1501091302370.30067@linuxheads99>
+ <20150109205643.GA5761@amd>
+ <20150112210134.687176ed@lxorguk.ukuu.org.uk>
+ <20150112214314.GA18610@obsidianresearch.com>
+ <20150113162847.2778b5a5@lxorguk.ukuu.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <54B574CD.9020905@ti.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jyri Sarha <jsarha@ti.com>
-Cc: "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Andrew Jackson <Andrew.Jackson@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Mark Brown <broonie@kernel.org>
+In-Reply-To: <20150113162847.2778b5a5@lxorguk.ukuu.org.uk>
+Sender: linux-doc-owner@vger.kernel.org
+To: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
+Cc: Pavel Machek <pavel@denx.de>, atull <atull@opensource.altera.com>, gregkh@linuxfoundation.org, hpa@zytor.com, monstr@monstr.eu, michal.simek@xilinx.com, rdunlap@infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, pantelis.antoniou@konsulko.com, robh+dt@kernel.org, grant.likely@linaro.org, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, broonie@kernel.org, philip@balister.org, rubini@gnudd.com, s.trumtrar@pengutronix.de, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, balbi@ti.com, m.chehab@samsung.com, davidb@codeaurora.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, linus.walleij@linaro.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devel@driverdev.osuosl.org, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yv
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBKYW4gMTMsIDIwMTUgYXQgMDk6NDE6MDFQTSArMDIwMCwgSnlyaSBTYXJoYSB3cm90
-ZToKPiBPbiAwMS8xMy8yMDE1IDA5OjI2IFBNLCBSdXNzZWxsIEtpbmcgLSBBUk0gTGludXggd3Jv
-dGU6Cj4gPlNDTEs6IF9+X35ffl9+X35ffl9+X35ffl9+X35ffl9+X35ffl9+X35ffl9+X35ffl9+
-X35ffl9+X35ffl9+X35ffl9+X35ffl8KPiA+ICAgV1M6IF9ffn5+fn5+fn5+fn5+fn5+fn5+fn5+
-fn5+fn5+fn5+fn5fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX34KPiA+STJTMTogbGxt
-bS4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi5sbG1tLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLmxsbQo+ID5JMlMyOiBsbG1tLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLmxsbW0uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4ubGxtCj4gPkkyUzM6IGxsbW0uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4ubGxtbS4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi5sbG0KPiA+STJTNDog
-bGxtbS4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi5sbG1tLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLmxsbQo+ID4KPiA+U28sIHdoYXQgSSdtIHNheWluZyBpcyB0aGF0IGl0IGlzX2ltcG9z
-c2libGVfICB0byBkcml2ZSB0aGUgVERBOTk4eCB1c2luZwo+ID5tdWx0aXBsZSBJMlMgc3RyZWFt
-cyB3aGljaCBhcmUgbm90IHByb2R1Y2VkIGJ5IHRoZSBzYW1lIEkyUyBibG9jay4KPiAKPiBUaGlz
-IGlzIGJlc2lkZXMgdGhlIHBvaW50LCBidXQgaXQgaXMgcG9zc2libGUgdGhhdCBvbmUgb2YgdGhl
-IG11bHRpcGxlIEkyUwo+IGJsb2NrcyBpcyB0aGUgYml0LWNsb2NrIGFuZCBmcmFtZS1jbG9jayBt
-YXN0ZXIgdG8gdGhlIGkycyBidXMgYW5kIHRoZSBvdGhlcnMKPiBhcmUgc2xhdmVzIHRvIGl0IChi
-YW5naW5nIHRoZWlyIGJpdHMgYWNjb3JkaW5nIHRvIFNDTEsgYW5kIFdTIG9mIHRoZSBJMlMKPiBt
-YXN0ZXIpLiBIb3dldmVyLCBpbiB0aGlzIHNpdHVhdGlvbiB0aGVyZSByZWFsbHkgaXMgb25seSBv
-bmUgaTJzIGJ1cyB3aXRoCj4gbXVsdGlwbGUgZGF0YSBwaW5zLgo+IAo+IEp1c3QgbXkgMC4wMuKC
-rCB0byB0aGlzIGRpc2N1c3Npb24uCgpSaWdodCwgdGhhdCdzIGFib3V0IHRoZSBvbmx5IHdheSBp
-dCBjb3VsZCB3b3JrLgoKVG8gcmVwcmVzZW50IHRoYXQgaW4gRFQsIEkgd291bGQgaW1hZ2luZSB3
-ZSdkIG5lZWQgc29tZXRoaW5nIGxpa2UgdGhpczoKCgkjYWRkcmVzcy1jZWxscyA9IDwxPjsKCSNz
-aXplLWNlbGxzID0gPDA+OwoJLi4uCiAgICAgICAgcG9ydEAxIHsgICAgICAgICAgICAgICAgICAg
-ICAgICAvKiBBUDEsMiA9IEkyUyAqLwoJCSNhZGRyZXNzLWNlbGxzID0gPDE+OwoJCSNzaXplLWNl
-bGxzID0gPDA+OwogICAgICAgICAgICAgICAgcG9ydC10eXBlID0gImkycyI7CiAgICAgICAgICAg
-ICAgICByZWcgPSA8MHgwMT47CQkvKiBXUyAqLwogICAgICAgICAgICAgICAgdGRhOTk4eF9pMnMx
-OiBlbmRwb2ludEAyIHsKCQkJcmVnID0gPDB4MDI+OwkvKiBBUDEgKi8KICAgICAgICAgICAgICAg
-ICAgICAgICAgcmVtb3RlLWVuZHBvaW50ID0gPCZhdWRpbzFfaTJzPjsKICAgICAgICAgICAgICAg
-IH07CiAgICAgICAgICAgICAgICB0ZGE5OTh4X2kyczI6IGVuZHBvaW50QDQgewoJCQlyZWcgPSA8
-MHgwND47CS8qIEFQMiAqLwogICAgICAgICAgICAgICAgICAgICAgICByZW1vdGUtZW5kcG9pbnQg
-PSA8JmF1ZGlvMl9pMnM+OwogICAgICAgICAgICAgICAgfTsKICAgICAgICB9OwoKd2hlcmUgYXVk
-aW8xX2kycyBpcyBvcGVyYXRpbmcgaW4gbWFzdGVyIG1vZGUsIGFuZCBhdWRpbzJfaTJzIGlzCm9w
-ZXJhdGluZyBpbiBzbGF2ZSBtb2RlIGZvciBib3RoIFdTIGFuZCBTQ0xLLgoKSWYgd2UgY2FuIGFn
-cmVlIG9uIHRoYXQsIHRoZW4gSSdtIGhhcHB5IHdpdGggdGhlIHByb3Bvc2VkIGJpbmRpbmcuCihS
-ZW1lbWJlciB0aGF0ICNhZGRyZXNzLWNlbGxzIGFuZCAjc2l6ZS1jZWxscyBhcmUgcmVxdWlyZWQg
-aW4gdGhlCnBhcmVudCB3aGVyZSB3ZSBoYXZlIHJlZz0gaW4gdGhlIGNoaWxkLikKCi0tIApGVFRD
-IGJyb2FkYmFuZCBmb3IgMC44bWlsZSBsaW5lOiBjdXJyZW50bHkgYXQgMTAuNU1icHMgZG93biA0
-MDBrYnBzIHVwCmFjY29yZGluZyB0byBzcGVlZHRlc3QubmV0LgpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
-ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Tue, Jan 13, 2015 at 04:28:47PM +0000, One Thousand Gnomes wrote:
+
+> There is a lot of code overlap in things like loading the bitstreams,
+> there is also some overlap because you want to be able to assign FPGA
+> resources. For example if you have four FPGAs and you want to use one for
+> OS stuff (say video) you want the other three to be open/close
+> accessible, but if you've not got a video driver loaded and are running
+> the same board headless you'd like all four to be handed out as normal
+> resources.
+>
+> So IMHO it's no different to say kmalloc. We don't pre-empt kernel memory
+> and give it to users but we don't reserve memory for kernel and not use
+> it.
+
+I do agree with this, and I think this is where this patch set goes so
+wrong.
+
+Just exposing all sorts of controls to userspace and having a way for
+the kernel to load/unload a bitstream compleletely misses the point that
+the two main ways to use FPGAs *require* some kind of kernel side
+driver suppport on the FPGA.
+
+Even if it is just a maths FPGA kernel side has to be involved in some
+way to restrict DMAs, MMIO, by the user process. Obviously a FPGA that
+uses kernel drivers needs kernel side help to bind those drivers.
+
+Plonking /sys/class/fpga_manager/<fpga>/reset for either case is more
+likely than not to completely crash the system.
+
+I would look at this problem from a completely different angle - the
+90% case is a single FPGA that is loaded to provide HW that Linux
+drivers bind to, these days the majority use DT.
+
+So..
+
+soc
+{
+    zynq_cfg: ps7-dev-cfg@f8007000 { compatible = "xlnx,zynq-devcfg-1.0"; }
+    
+    fpga@pl {
+       compatible = "..";
+       fpga,api = "gpio-api1";
+       fpga,controller = &zynq_cfg;
+
+       gp0_axi: axi@40000000 {
+         gpio3: klina_gpio@80010 {
+                 #gpio-cells = <2>;
+                 compatible = "linux,basic-mmio-gpio";
+                 gpio-controller;
+                 reg-names = "dat", "set", "dirin";
+                 reg = <0x80010 4>,
+                       <0x80014 4>,
+                       <0x80018 4>;
+         };
+       }
+    }  
+}
+
+Make it so linux can boot, automatically fetch the gpio-api1 bit file
+and load it into the chip and then bind the GPIO driver to the FPGA
+resource. All without userspace involvment, all potentially done
+before calling INIT.
+
+Make it so via sysfs we can reverse this process and reboot the FPGA.
+
+Make it so userspace can't do something to the FPGA without first
+unloading the drivers.
+
+Then worry about how to change the FPGA, or providing more user space
+control over the process (DT overlays are a natural answer).
+
+Providing a roll-your-own approach via a bunch of sysfs controls
+satisfies the 'make the HW work' need without actually providing the
+overall architecture someone needs to *make use* of this mechanism.
+
+And no, this isn't just a 'theory', I have 4 shipping products today
+that work pretty much exactly like this, including a Zynq
+design. Binding kernel drivers to a FPGA once it is loaded is a big
+functionality gap, and an annoying problem. Programming the actual
+FPGA? That is the *EASIEST* part of this whole thing!
+
+Honestly, I'd much rather see the above use case solved properly
+without sysfs support and then go from there to build a replacable
+FPGA scheme on the same concepts.
+
+Providing a 'build your own' solution with sysfs controls just seems
+to completely miss the mark to me.
+
+> So IMHO it's no different to say kmalloc. We don't pre-empt kernel memory
+> and give it to users but we don't reserve memory for kernel and not use
+> it.
+
+I think we see a kernel side with more structure, that knows when the
+FPGA is in use or not, there is a pretty clear path to later add a
+/dev/ scheme for user space use that can properly interlock.
+
+A /dev/ scheme doesn't make much sense to bind kernel drivers...
+
+Jason
