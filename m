@@ -1,104 +1,83 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v4 4/5] ARM: mediatek: Add EINT support to MTK pinctrl driver.
-Date: Tue, 13 Jan 2015 14:24:40 +0100
-Message-ID: <CACRpkdb2KJbjzFgTmDvHSw7jNAExxVtU3y4_fgyn6J8hcW5OrQ@mail.gmail.com>
-References: <1418772873-19747-1-git-send-email-hongzhou.yang@mediatek.com>
-	<1418772873-19747-5-git-send-email-hongzhou.yang@mediatek.com>
-	<1418807365.6443.17.camel@mtksdaap41>
-	<1420535817.17567.10.camel@mtksdaap41>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Semen Protsenko <semen.protsenko@globallogic.com>
+Subject: [PATCH 3/4] gpio: max732x: Fix possible deadlock
+Date: Tue, 13 Jan 2015 15:41:44 +0200
+Message-ID: <1421156505-16600-4-git-send-email-semen.protsenko@globallogic.com>
+References: <1421156505-16600-1-git-send-email-semen.protsenko@globallogic.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1420535817.17567.10.camel@mtksdaap41>
+In-Reply-To: <1421156505-16600-1-git-send-email-semen.protsenko@globallogic.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, maoguang.meng@mediatek.com, Catalin Marinas <catalin.marinas@arm.com>, alan.cheng@mediatek.com, Russell King <linux@arm.linux.org.uk>, Hongzhou Yang <hongzhou.yang@mediatek.com>, toby.liu@mediatek.com, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Vladimir Murzin <vladimir.murzin@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, dandan.he@mediatek.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, srv_heupstream@mediatek.com, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>
+To: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>
+Cc: Grant Likely <grant.likely@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Marc Zyngier <maz@misterjones.org>, Grygorii Strashko <grygorii.strashko@globallogic.com>, Illia Smyrnov <illia.smyrnov@globallogic.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 6, 2015 at 10:16 AM, Yingjoe Chen <yingjoe.chen@mediatek.com> wrote:
-> On Wed, 2014-12-17 at 17:09 +0800, Yingjoe Chen wrote:
->> On Wed, 2014-12-17 at 07:34 +0800, Hongzhou Yang wrote:
->> > From: Maoguang Meng <maoguang.meng@mediatek.com>
->> >
->> > MTK SoC support external interrupt(EINT) from most SoC pins.
->> > Add EINT support to pinctrl driver.
->> >
->> > Signed-off-by: Maoguang Meng <maoguang.meng@mediatek.com>
->> > Signed-off-by: Hongzhou Yang <hongzhou.yang@mediatek.com>
->>
->> Hi Linus,
->>
->> This patch add EINT support to the pinctrl driver. We've surveyed
->> GPIOLIB_IRQCHIP, but we didn't use it because:
->>
->> - Not every GPIO pin support interrupt.
->> - EINT use a different numbering to GPIO. eg, from the mt8135 table,
->> GPIO29 is EINT158. It is more nature & efficient to use EINT number as
->> hwirq.
->>
->> +               MTK_EINT_FUNCTION(2, 158),
->> +               MTK_FUNCTION(0, "GPIO29"),
->
-> After further looking into this, we could use GPIOLIB_IRQCHIP if we add
-> an extension gpiochip_irqchip_add() to accept interrupt numbers and
-> custom .to_irq function for our SoC. We could still reuse other code
-> GPIOLIB_IRQCHIP provide.
+This patch was derived from next one:
+"gpio: fix pca953x set_type 'scheduling while atomic' bug".
 
-I see, and I still want to see all possibilities to centralize code
-surveyed.
+After adding entry that consumes max732x GPIO as interrupt line to dts
+file, deadlock appears somewhere in max732x probe function.
 
-If I understand correctly what you actually need is a linear
-irqdomain with "holes" (invalid offsets) in it.
-So this is what we should design for.
+Deadlock caught by lockdep (from kernel log):
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< cut here >>>>>>>>>>>>>>>>>>>>>>>>>>>
+[    0.473419] ======================================================
+[    0.473419] [ INFO: HARDIRQ-safe -> HARDIRQ-unsafe lock order detected ]
+[    0.473449] 3.x.xx-xxxxx-xxxxxxxx-dirty #2 Tainted: G        W
+[    0.473449] ------------------------------------------------------
+[    0.473449] swapper/0/1 [HC0[0]:SC0[0]:HE0:SE1] is trying to acquire:
+[    0.473449]  (&lock->wait_lock){+.+...}, at: [<c072e350>] rt_mutex_trylock+0xc/0x74
+[    0.473480]
+[    0.473480] and this task is already holding:
+[    0.473510]  (&chip->lock){......}, at: [<c0314514>] max732x_gpio_set_value+0x2c/0xa4
+[    0.473541] which would create a new lock dependency:
+[    0.473541]  (&chip->lock){......} -> (&lock->wait_lock){+.+...}
 
-The .to_irq() function should not really perform anything but a
-simple lookup in the domain.
+...
 
-What you do here:
+[    0.474273]  *** DEADLOCK ***
+[    0.474273]
+[    0.474273] 5 locks held by swapper/0/1:
+[    0.474273]  #0:  (&__lockdep_no_validate__){......}, at: [<c03b2328>] __driver_attach+0x48/0x98
+[    0.474304]  #1:  (&__lockdep_no_validate__){......}, at: [<c03b2338>] __driver_attach+0x58/0x98
+[    0.474334]  #2:  (&chip->irq_lock){+.+...}, at: [<c0313e3c>] max732x_irq_bus_lock+0x14/0x20
+[    0.474365]  #3:  (&irq_desc_lock_class){-.....}, at: [<c00a65a4>] __irq_get_desc_lock+0x48/0x88
+[    0.474365]  #4:  (&chip->lock){......}, at: [<c0314514>] max732x_gpio
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< cut here >>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-+static int mtk_gpio_to_irq(struct gpio_chip *chip, unsigned offset)
-+{
-+       const struct mtk_desc_pin *pin;
-+       struct mtk_pinctrl *pctl = dev_get_drvdata(chip->dev);
-+       int irq;
+Signed-off-by: Semen Protsenko <semen.protsenko@globallogic.com>
+---
+ drivers/gpio/gpio-max732x.c |   12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/gpio/gpio-max732x.c b/drivers/gpio/gpio-max732x.c
+index f8f3e80..5fbab13 100644
+--- a/drivers/gpio/gpio-max732x.c
++++ b/drivers/gpio/gpio-max732x.c
+@@ -377,8 +377,18 @@ static void max732x_irq_bus_lock(struct irq_data *d)
+ static void max732x_irq_bus_sync_unlock(struct irq_data *d)
+ {
+ 	struct max732x_chip *chip = irq_data_get_irq_chip_data(d);
++	uint16_t new_irqs;
++	uint16_t level;
+ 
+ 	max732x_irq_update_mask(chip);
 +
-+       pin = pctl->devdata->pins + offset;
-+       if (pin->eint.eintnum == NO_EINT_SUPPORT)
-+               return -EINVAL;
++	new_irqs = chip->irq_trig_fall | chip->irq_trig_raise;
++	while (new_irqs) {
++		level = __ffs(new_irqs);
++		max732x_gpio_direction_input(&chip->gpio_chip, level);
++		new_irqs &= ~(1 << level);
++	}
 +
-+       irq = irq_find_mapping(pctl->domain, pin->eint.eintnum);
-+       if (!irq)
-+               return -EINVAL;
-+
-+       return irq;
-+}
-
-Is *avoiding* to translate some IRQs from a certain offset using
-the domain, I think that is the wrong way to go.
-
-Instead, we would need to handle these "holes" in
-drivers/pinctrl/nomadik/pinctrl-abx500.c also need the same
-thing.
-
-Maybe we can add a gpiochip_irqchip_add_sparse() in
-gpiolib that will take an array of bools in, indicating of
-a certain line is elegible for IRQ or not, e.g.:
-
-bool valid = { false, true, false, true };
-
-foo = gpiochip_irqchip_add_sparse(&chip,
-                         &irqchip,
-                         0,
-                         handler,
-                         IRQ_TYPE_NONE,
-                         &valid);
-
-So the loop inside the lib will avoid calling
-irq_create_mapping() on the invalid lines, and any calls
-to irq_find_mapping() will fail if you try to use one of
-them for IRQs.
-
-If you're up to do this and test on your driver I'm all in for it.
-
-Yours,
-Linus Walleij
+ 	mutex_unlock(&chip->irq_lock);
+ }
+ 
+@@ -410,7 +420,7 @@ static int max732x_irq_set_type(struct irq_data *d, unsigned int type)
+ 	else
+ 		chip->irq_trig_raise &= ~mask;
+ 
+-	return max732x_gpio_direction_input(&chip->gpio_chip, off);
++	return 0;
+ }
+ 
+ static struct irq_chip max732x_irq_chip = {
+-- 
+1.7.9.5
