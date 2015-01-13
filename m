@@ -1,123 +1,107 @@
-From: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH/RFC v10 03/19] DT: leds: Add led-sources property
-Date: Tue, 13 Jan 2015 09:42:41 +0100
-Message-ID: <54B4DA81.7060900@samsung.com>
-References: <1420816989-1808-1-git-send-email-j.anaszewski@samsung.com>
- <1420816989-1808-4-git-send-email-j.anaszewski@samsung.com>
- <CAL_JsqJKEp6TWaRhJimg3AWBh+MCCr2Bk9+1o7orLLdp5E+n-g@mail.gmail.com>
- <54B38682.5080605@samsung.com>
- <CAL_Jsq+UaA41DvawdOMmOib=Fi0hC-nBdKV-+P4DFo+MoOy-bQ@mail.gmail.com>
- <54B3F1EF.4060506@samsung.com>
- <CAL_JsqKpJtUG0G6g1GOuSVpc31oe-dp3qdrKJUE0upG-xRDFhA@mail.gmail.com>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v5 00/11] memory: add Atmel EBI (External Bus Interface)
+ driver
+Date: Tue, 13 Jan 2015 09:50:27 +0100
+Message-ID: <20150113085027.GA3843@piout.net>
+References: <1417639455-17410-1-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <CAL_JsqKpJtUG0G6g1GOuSVpc31oe-dp3qdrKJUE0upG-xRDFhA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1417639455-17410-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, sakari.ailus-X3B1VOXEql0@public.gmane.org, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/12/2015 05:55 PM, Rob Herring wrote:
-> Adding Mark B and Liam...
->
-> On Mon, Jan 12, 2015 at 10:10 AM, Jacek Anaszewski
-> <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
->> On 01/12/2015 02:52 PM, Rob Herring wrote:
->>>
->>> On Mon, Jan 12, 2015 at 2:32 AM, Jacek Anaszewski
->>> <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
->>>> On 01/09/2015 07:33 PM, Rob Herring wrote:
->>>>> On Fri, Jan 9, 2015 at 9:22 AM, Jacek Anaszewski
->>>>> <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
->>>>>> Add a property for defining the device outputs the LED
->>>>>> represented by the DT child node is connected to.
->
-> [...]
->
->>>>>> b/Documentation/devicetree/bindings/leds/common.txt
->>>>>> index a2c3f7a..29295bf 100644
->>>>>> --- a/Documentation/devicetree/bindings/leds/common.txt
->>>>>> +++ b/Documentation/devicetree/bindings/leds/common.txt
->>>>>> @@ -1,6 +1,10 @@
->>>>>>     Common leds properties.
->>>>>>
->>>>>>     Optional properties for child nodes:
->>>>>> +- led-sources : Array of bits signifying the LED current regulator
->>>>>> outputs the
->>>>>> +               LED represented by the child node is connected to (1 -
->>>>>> the LED
->>>>>> +               is connected to the output, 0 - the LED isn't connected
->>>>>> to the
->>>>>> +               output).
->>>>>
->>>>>
->>>>>
->>>>> Sorry, I just don't understand this.
->>>>
->>>>
->>>>
->>>> In some Flash LED devices one LED can be connected to one or more
->>>> electric current outputs, which allows for multiplying the maximum
->>>> current allowed for the LED. Each sub-LED is represented by a child
->>>> node in the DT binding of the Flash LED device and it needs to declare
->>>> which outputs it is connected to. In the example below the led-sources
->>>> property is a two element array, which means that the flash LED device
->>>> has two current outputs, and the bits signify if the LED is connected
->>>> to the output.
->>>
->>>
->>> Sounds like a regulator for which we already have bindings for and we
->>> have a driver for regulator based LEDs (but no binding for it).
->>
->>
->> Do you think of drivers/leds/leds-regulator.c driver? This driver just
->> allows for registering an arbitrary regulator device as a LED subsystem
->> device.
->>
->> There are however devices that don't fall into this category, i.e. they
->> have many outputs, that can be connected to a single LED or to many LEDs
->> and the driver has to know what is the actual arrangement.
->
-> We may need to extend the regulator binding slightly and allow for
-> multiple phandles on a supply property, but wouldn't something like
-> this work:
->
-> led-supply = <&led-reg0>, <&led-reg1>, <&led-reg2>, <&led-reg3>;
->
-> The shared source is already supported by the regulator binding.
+Hi Lee,
 
-I think that we shouldn't split the LED devices into power supply
-providers and consumers as in case of generic regulators. From this
-point of view a LED device current output is a provider and a discrete
-LED element is a consumer. In this approach each discrete LED element
-should have a related driver which is not how LED devices are being
-handled in the LED subsystem, where there is a single binding for a LED
-device and there is a single driver for it which creates separate LED
-class devices for each LED connected to the LED device output. Each
-discrete LED is represented by a child node in the LED device binding.
+There has not been any comment on that series since a while and we have
+other series on hold, waiting for the first 4 patches to be taken.
 
-I am aware that it may be tempting to treat LED devices as common
-regulators, but they have their specific features which gave a
-reason for introducing LED class for them. Besides, there is already
-drivers/leds/leds-regulator.c driver for LED devices which support only
-turning on/off and setting brightness level.
+Could you have a look at those 4 patches and take them if you don't have
+any comment ?
 
-In your proposition a separate regulator provider binding would have
-to be created for each current output and a separate binding for
-each discrete LED connected to the LED device. It would create
-unnecessary noise in a dts file.
+Thanks.
 
-Moreover, using regulator binding implies that we want to treat it
-as a sheer power supply for our device (which would be a discrete LED
-element in this case), whereas LED devices provide more features like
-blinking pattern and for flash LED devices - flash timeout, external
-strobe and flash faults.
+On 03/12/2014 at 21:44:04 +0100, Boris Brezillon wrote :
+> The EBI (External Bus Interface) is used to access external peripherals
+> (NOR, SRAM, NAND, and other specific devices like ethernet controllers).
+> Each device is assigned a CS line and an address range and can have its
+> own configuration (timings, access mode, bus width, ...).
+> This driver provides a generic DT binding to configure a device according
+> to its requirements.
+> For specific device controllers (like the NAND one) the SMC timings
+> should be configured by the controller driver through the matrix and
+> smc syscon regmaps.
+> 
+> The first 4 patches introduce 2 syscon devices needed to configure the
+> EBI bus, patch 5 and 6 adds support for the EBI bus, and the remaining
+> patches declares the EBI related nodes in sama5d3 dts[i] files.
+> 
+> Changes since v4:
+> - fix inconsistencies in SMC and MATRIX registers definition
+> - add missing compatible strings for at91sam9rl SoC
+> - fix DT bindings documentation
+> - replace "atmel,generic-dev" property by "atmel,specialized-logic"
+> 
+> Changes since v3:
+> - added AT91_MATRIX_USBPUCR_PUON definition
+> - removed useless macros (those directly returning SoC specific register
+>   offsets)
+> - use syscon_regmap_lookup_by_phandle instead of of_parse_phandle +
+>   syscon_node_to_regmap
+> - drop AT91_EBICSA_REGFIELD and AT91_MULTI_EBICSA_REGFIELD macros
+> 
+> Changes since v2:
+> - minor fixes int DT bindings doc
+> - fix SMC macros
+> - make use of SMC macros defined in include/linux/mfd/syscon/atmel-smc.h
+> 
+> Changes since v1:
+> - almost everything :-)
+> 
+> Boris Brezillon (11):
+>   mfd: syscon: Add atmel-matrix registers definition
+>   mfd: syscon: Add Atmel Matrix bus DT binding documentation
+>   mfd: syscon: Add atmel-smc registers definition
+>   mfd: syscon: Add Atmel SMC binding doc
+>   memory: add Atmel EBI (External Bus Interface) driver
+>   memory: atmel-ebi: add DT bindings documentation
+>   ARM: at91: select ATMEL_EBI when compiling a kernel for at91sam9 or
+>     sama5d3
+>   ARM: at91/dt: add HSMC (Static Memory Controller) node in sama5d3 dtsi
+>   ARM: at91/dt: add matrix node in sama5d3 dtsi
+>   ARM: at91/dt: add EBI (External Bus Interface) node in sama5d3 dtsi
+>   ARM: at91/dt: add NOR definition in sama5d3xcm dtsi
+> 
+>  .../bindings/memory-controllers/atmel-ebi.txt      | 155 ++++++
+>  .../devicetree/bindings/mfd/atmel-matrix.txt       |  24 +
+>  .../devicetree/bindings/mfd/atmel-smc.txt          |  19 +
+>  arch/arm/boot/dts/sama5d3.dtsi                     |  93 ++++
+>  arch/arm/boot/dts/sama5d3xcm.dtsi                  |  33 ++
+>  arch/arm/mach-at91/Kconfig                         |   2 +
+>  drivers/memory/Kconfig                             |  11 +
+>  drivers/memory/Makefile                            |   1 +
+>  drivers/memory/atmel-ebi.c                         | 579 +++++++++++++++++++++
+>  include/linux/mfd/syscon/atmel-matrix.h            | 117 +++++
+>  include/linux/mfd/syscon/atmel-smc.h               | 173 ++++++
+>  11 files changed, 1207 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/memory-controllers/atmel-ebi.txt
+>  create mode 100644 Documentation/devicetree/bindings/mfd/atmel-matrix.txt
+>  create mode 100644 Documentation/devicetree/bindings/mfd/atmel-smc.txt
+>  create mode 100644 drivers/memory/atmel-ebi.c
+>  create mode 100644 include/linux/mfd/syscon/atmel-matrix.h
+>  create mode 100644 include/linux/mfd/syscon/atmel-smc.h
+> 
+> -- 
+> 1.9.1
+> 
 
 -- 
-Best Regards,
-Jacek Anaszewski
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
