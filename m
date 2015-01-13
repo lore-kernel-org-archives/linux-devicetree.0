@@ -1,92 +1,114 @@
-From: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
-Subject: Re: [PATCH v8 2/4] fpga manager: add sysfs interface document
-Date: Tue, 13 Jan 2015 16:28:47 +0000
-Message-ID: <20150113162847.2778b5a5@lxorguk.ukuu.org.uk>
-References: <1420575219-27061-1-git-send-email-atull@opensource.altera.com>
- <1420575219-27061-3-git-send-email-atull@opensource.altera.com>
- <20150107084819.GA1887@amd>
- <alpine.DEB.2.02.1501091302370.30067@linuxheads99>
- <20150109205643.GA5761@amd>
- <20150112210134.687176ed@lxorguk.ukuu.org.uk>
- <20150112214314.GA18610@obsidianresearch.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20150112214314.GA18610@obsidianresearch.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Cc: mark.rutland@arm.com, linux-doc@vger.kernel.org, rubini@gnudd.com, pantelis.antoniou@konsulko.com, hpa@zytor.com, s.trumtrar@pengutronix.de, devel@driverdev.osuosl.org, sameo@linux.intel.com, nico@linaro.org, ijc+devicetree@hellion.org.uk, michal.simek@xilinx.com, kyle.teske@ni.com, grant.likely@linaro.org, davidb@codeaurora.org, linus.walleij@linaro.org, cesarb@cesarb.net, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, iws@ovro.caltech.edu, atull <atull@opensource.altera.com>, galak@codeaurora.org, broonie@kernel.org, philip@balister.org, dinguyen@opensource.altera.com, monstr@monstr.eu, gregkh@linuxfoundation.org, yvanderv@opensource.altera.com, linux-kernel@vger.kernel.org, balbi@ti.com, delicious.quinoa@gmail.com, robh+dt@kernel.org, rob@landley.net, Pavel Machek <pavel@denx.de>, akpm@linux-foundation.org, davem@davemloft.net, m.chehab@samsung.c
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: Re: [PATCH v3 2/3] dt-bindings: Add pinctrl bindings for
+ mt65xx/mt81xx.
+Date: Wed, 14 Jan 2015 00:24:53 +0800
+Message-ID: <15A74798-690D-40CA-88F0-A2CA06781546@jcrosoft.com>
+References: <1415709535-31515-1-git-send-email-hongzhou.yang@mediatek.com>
+ <1415709535-31515-3-git-send-email-hongzhou.yang@mediatek.com>
+ <CACRpkdYSe_BH_qiHma2BA+c2otEi3wd0TBXy83t8vwrNL+3U2g@mail.gmail.com>
+ <20141127101830.GP30369@pengutronix.de>
+ <CACRpkdbMdJT6y-NL36RgQe0-CAFAVGqKiwY9+yFcwA7JDLmA+Q@mail.gmail.com>
+ <20141202135527.GM30369@pengutronix.de>
+ <CACRpkdZeRd+j7d_iRphruHRg8p3XjqWK8_HQzLH2PTZ_pqOrYA@mail.gmail.com>
+ <20150112122200.GC18908@pengutronix.de>
+ <CACRpkdYXrdiRWMV8YpxrSLe2rLEV-ZnX7=36w21zGquh==6WgA@mail.gmail.com>
+ <20150113161614.GF23940@pengutronix.de>
+Mime-Version: 1.0 (Mac OS X Mail 8.1 \(1993\))
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20150113161614.GF23940@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, =?utf-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, alan.cheng@mediatek.com, Russell King <linux@arm.linux.org.uk>, Hongzhou Yang <hongzhou.yang@mediatek.com>, toby.liu@mediatek.com, Grant Likely <grant.likely@linaro.org>, "Joe.C" <yingjoe.chen@mediatek.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Vladimir Murzin <vladimir.murzin@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, dandan.he@mediatek.com, huang eddie <eddie.huang@mediatek.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kerne>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 12 Jan 2015 14:43:14 -0700
-Jason Gunthorpe <jgunthorpe@obsidianresearch.com> wrote:
-
-> On Mon, Jan 12, 2015 at 09:01:34PM +0000, One Thousand Gnomes wrote:
-> > There are plenty of people today who treat the FPGA as an entirely
-> > dynamic resource. It's not like flashing a controller, its near
-> > immediate.
-> 
-> But this is a completely different use case. Remember, there are
-> *megabytes* of internal state in a FPGA, and it isn't really feasible
-> to dump/restore that state.
-
-People already do it with cases where it makes sense
-
-> It is one thing to context switch a maths algorithm that is built to
-> be stateless, it is quite another to context switch between, say an
-> ethernet core with an operating Linux Net driver doing DMA and a maths
-> algorithm.
-
-And people already do it with thins like maths algorithms.
- 
-> A DT overlay approach where the overlay has to be unloaded to 'free'
-> the FPGA makes alot of sense to me for the stateful kernel driver
-> environment, and open/close/etc makes alot of sense for the stateless
-> switchable userspace environment - other than sharing configuration
-> code, is there any overlap between these use cases????
-
-There is a lot of code overlap in things like loading the bitstreams,
-there is also some overlap because you want to be able to assign FPGA
-resources. For example if you have four FPGAs and you want to use one for
-OS stuff (say video) you want the other three to be open/close
-accessible, but if you've not got a video driver loaded and are running
-the same board headless you'd like all four to be handed out as normal
-resources.
-
-So IMHO it's no different to say kmalloc. We don't pre-empt kernel memory
-and give it to users but we don't reserve memory for kernel and not use
-it.
-
-> > Its completely dynamic and it will get more so as we switch from the
-> > painful world of VHDL and friends to high level parallel aware language
-> > compilers for FPGAs and everyone will be knocking up quick FPGA hacks.
-> 
-> Only for some users. In my world FPGAs are filled with bus interface
-> logic, ethernet controllers, memory controllers, packet processing
-> engines, etc. This is all incredibly stateful - both in the FPGA
-> itself, and in the Linux side w/ drviers. It certainly will not ever
-> work in the model you are talking about.
-
-For those cases I mostly agree (the state in the FPGA isn't always a
-problem as you can program an FPGA to DMA its state out).
-
-> Even if the digital state could somehow be frozen, dumped and
-> restored, all the FPGA external interface logic has *ANALOG* state
-> that cannot ever be dump/restored. It just isn't feasible for that
-> class of application.
-
-Yes, however as we are starting to get things like OpenCL for FPGA they
-become extremely attractive for a wide range of purposes that don't
-involve glueing them to electronica in quite the same way. All the 'GPU
-as CPU' type uses and more begin to apply.
-
-Alan
+Cj4gT24gSmFuIDE0LCAyMDE1LCBhdCAxMjoxNiBBTSwgU2FzY2hhIEhhdWVyIDxzLmhhdWVyQHBl
+bmd1dHJvbml4LmRlPiB3cm90ZToKPiAKPiBPbiBUdWUsIEphbiAxMywgMjAxNSBhdCAxMTowNToy
+MkFNICswMTAwLCBMaW51cyBXYWxsZWlqIHdyb3RlOgo+Pj4+IEkgYW0gd29ycmllZCB0aGF0IHRo
+ZXJlIGlzIHNvbWV0aGluZyBpbiB5b3VyIHJlYXNvbmluZyB0aGF0IHNvcnQgb2YKPj4+PiBhc3N1
+bWVzIGFsbCBwaW4gY29udHJvbGxlcnMgbXV4IHBpbnMgb25lLWJ5LW9uZSBhbmQgbm90IGluIGdy
+b3Vwcy4KPj4+PiBIb3cgZG8gd2UgbWFrZSBpdCBpbXBvc3NpYmxlIHRvIHdyaXRlIGEgZGV2aWNl
+IHRyZWUgdGhhdCBhbHNvCj4+Pj4gbWFrZSBoYXJkd2FyZSB0aGF0IGRvIGdyb3Vwd2lzZSBjb25m
+aWcgdmlhYmxlIHdpdGhvdXQgYW1iaWd1aXRpZXM/Cj4+PiAKPj4+IFNvcnJ5LCBJIGRvbid0IHVu
+ZGVyc3RhbmQgdGhpcyBzZW50ZW5jZS4gV2hhdCBkbyB5b3UgbWVhbiBoZXJlPwo+Pj4gCj4+PiBU
+aGUgYmluZGluZ3MgSSBzdWdnZXN0ZWQgYXJlIGZvciBpbmRpdmlkdWFsIHBpbiBiYXNlZCBjb250
+cm9sbGVycwo+Pj4gb25seS4gSSBrbm93IHRoZXJlIGFyZSBncm91cCBiYXNlZCBjb250cm9sbGVy
+cywgYnV0IEkgZG9uJ3Qgd2FudCB0bwo+Pj4gY2hhbmdlIHRoZWlyIGJpbmRpbmdzLiBJIGJlbGll
+dmUgdGhlcmUgaXMgbm8gc2luZ2xlIGJpbmRpbmcgdGhhdCBpcwo+Pj4gZ29vZCBmb3IgYm90aCB0
+eXBlcyBvZiBjb250cm9sbGVycy4KPj4+IAo+Pj4gSSB0aGluayB3ZSBtdXN0IGZhY2UgaXQgdGhh
+dCBpbmRpdmlkdWFsIHBpbiBiYXNlZCBjb250cm9sbGVycyBhcmUKPj4+IGRpZmZlcmVudCBmcm9t
+IGdyb3VwIGJhc2VkIGNvbnRyb2xsZXJzLiBUaGF0J3MgdGhlIG1haW4gZGlmZmVyZW5jZQo+Pj4g
+YmV0d2VlbiBkaWZmZXJlbnQgcGluIGNvbnRyb2xsZXJzIGFuZCBJIHRoaW5rIHRoZXJlIGFyZSBn
+b29kIHJlYXNvbnMKPj4+IHRvIHJlZmxlY3QgdGhhdCBpbiB0aGUgZGV2aWNlIHRyZWUuCj4+IAo+
+PiBPSyBsZXQncyB3b3JrIG9uIGEgYmluZGluZyBmb3IgdGhpcyB1c2VjYXNlLgo+IAo+IE9rYXku
+Cj4gCj4+IAo+Pj4gWW91IG9mdGVuIHRhbGsgYWJvdXQgYW1iaWd1aXRpZXMuIENvdWxkIHlvdSBn
+aXZlIGFuIGV4YW1wbGUgd2hhdAo+Pj4gYW1iaWd1aXRpZXMgeW91IG1lYW4/Cj4+IAo+PiBXaGF0
+IGhhcHBlbmVkIHdhcyB0aGlzIHBpbnMgPSA7IGFyZ3VtZW50cyB3ZXJlIHNvbWV0aW1lcwo+PiBz
+dHJpbmdzIGFuZCBzb21ldGltZXMgaW50ZWdlcnMsIHRoYXQgYmVjb21lcyBzdHJhbmdlIHRvIGhh
+bmRsZQo+PiBpbiBjb2RlLCBhbWJpZ3VvdXMuCj4gCj4gSSBzZWUuIEkgbGlrZSBuYW1pbmcgaXQg
+J3Bpbm11eCcgYmVjYXVzZSB0aGF0J3Mgd2hhdCBpdCBpczogcGlucyBhbmQKPiBtdXggc2V0dGlu
+Z3MuIEEgcGxhaW4gJ3Bpbm5vJyBzdWdnZXN0cyB0aGF0IGl0IGNvbnRhaW5zIG9ubHkgcGluIG11
+YmVycywKPiB3aXRob3V0IG11eCBzZXR0aW5nLiBIb3cgYWJvdXQgJ3Bpbi1uby1tdXgnPyBXZSBh
+bHNvIGNvdWxkIGFkZCBhbgo+IGV4cGxpY2l0ICJwaW5zLWFyZS1udW1iZXJlZCIgcHJvcGVydHkg
+aW5zdGVhZCBvZiBkaXN0aW5ndWlzaGluZyB0aGlzCj4gYnkgcHJvcGVydHkgbmFtZXMuCj4gCj4+
+IAo+PiBJJ20gZnV6emlseSByZWZlcnJpbmcgdG8gdGhlIGNvbmNlcHQgb2YgdGhpbmdzIGJlaW5n
+IG5hbWVkIHRoZQo+PiBzYW1lIHdheSBpbiBkaWZmZXJlbnQgZGV2aWNlIHRyZWVzLCB5ZXQgbGFj
+a2luZyBjb21tb25hbGl0eSwKPj4gY29uZnVzaW5nIGEgaHVtYW4gcmVhZGVyIHRoYXQgdGhleSBt
+YXkgYmUgdGhlIHNhbWUgdGhpbmcsCj4+IGV2ZW4gaWYgaXQgaXMgcG9zc2libGUgdG8gd3JpdGUg
+c2NoZW1hcyBhbmQgcGFyc2VycyBoYW5kbGluZwo+PiBpdCB1bmFtYmlnb3VzbHksIHNvIG5vdCBh
+bWJpZ3VpdHkgaW4gdGhlIGZvcm1hbCBsb2dpYyBzZW5zZS4KPj4gCj4+IElmIGkgbGF0ZXIgd2Fu
+dCB0byByZWZhY3RvciB0aGUgY29kZSBhcm91bmQgdGhpcyB0byBhIGNlbnRyYWwKPj4gcGFyc2Vy
+IEkgY2Fubm90IGRvIHNvIGJlY2F1c2UgaXQgd291bGQgbGVhZCB0byBmb3JtYWwgYW1iaWd1aXRp
+ZXMKPj4gYW5kIGlzIG5vbi1kb2FibGUuCj4gCj4gVGhlcmUgY291bGQgYmUgYSBmbGFnIGluIHRo
+ZSBwaW5jdHJvbGxlciBzdHJ1Y3QgaW5kaWNhdGluZyB3aGV0aGVyIHRoZQo+IHByb3BlcnRpZXMg
+YXJlIHRvIGJlIGludGVycHJldGVkIGFzIHN0cmluZ3Mgb3IgYXMgbnVtYmVycy4KPiAKPj4gCj4+
+PiBOb3RlIHRoYXQgdGhlIHdheSB3ZSBjb21iaW5lIHBpbi9tdXggaW4gYSBzaW5nbGUgZGVmaW5l
+IGlzIG5vdCBuZXcsCj4+PiB0aGUgaS5NWCBwaW4gY29udHJvbGxlciB1c2VzIHRoaXMgYWxyZWFk
+eSBhbmQgc28gZmFyIEknbSBub3QgYXdhcmUgb2YKPj4+IGFueSBwcm9ibGVtcyB0aGlzIG1ha2Vz
+Lgo+PiAKPj4gWWVhaCB3ZSBuZXZlciBoYWQgdGltZSB0byBzaXQgZG93biBhbmQgY29tZSB1cCB3
+aXRoIHByb3Blcgo+PiBnZW5lcmljIHBpbiBjb250cm9sIGJpbmRpbmdzLCB3ZSB3ZW50IHdpdGgg
+Y3VzdG9tIGJpbmRpbmdzCj4+IHBhcnRseSBiZWNhdXNlIG9mIGdlbmVyYWwgZGlzYWdyZWVtZW50
+cywgcGFydGx5IGJlY2F1c2UgSQo+PiB3YXMgbmV3IHRvIGRldmljZSB0cmVlIGFuZCBob25lc3Rs
+eSBoYWQgbm8gaWRlYSBvZiBob3cKPj4gdG8gc2tpbiB0aGlzIGNhdC4KPj4gCj4+IE5vdyB0aGF0
+IHdlIGdldCB0byBmb3JtYWxpemUgZ2VuZXJpYyBiaW5kaW5ncyBmb3IgRFQgYW5kCj4+IEFDUEkg
+YW5kIHdoYXRldmVyIGFsaWtlLCBJIHByZWZlciBpZiB3ZSBtYWtlIGJvdGggZ3JvdXB3aXNlCj4+
+IGFuZCBwZXItcGluIHBpbiBjb250cm9sbGVycyBhcyBzdHJpY3QgYW5kIHdlbGwgZGVmaW5lZCBh
+cwo+PiBwb3NzaWJsZS4KPj4gCj4+IE9uZSBtaW5vciBwcm9ibGVtIEkgaGF2ZSB3aXRoIHVzaW5n
+IGFuIGludGVnZXIgZm9yIG11eCBjb25maWcKPj4gaXMgdGhhdCBpdCBhc3N1bWVzIHNvbWV0aGlu
+ZyBhYm91dCBob3cgbWFueSBwaW5zLCBjb25maWdzIGV0Ywo+PiB0aGF0IG1heSBleGlzdCBvbiBz
+dWNoIGEgc3lzdGVtLiBUaGlzIHNob3VsZCBiZSBzdGF0ZWQKPj4gZXhwbGljaXRseSBpbiB0aGUg
+YmluZGluZ3MgYXRsZWFzdCBzbyB3ZSBrbm93IHdoYXQgcmVzdHJpY3Rpb25zCj4+IHdlIGJ1aWxk
+IGludG8gdGhlbS4gU3RyaW5nLWJhc2VkIGZ1bmN0aW9uK2dyb3VwIG1hdGNoaW5nIGhhcwo+PiBu
+byBzdWNoIHJlc3RyaWN0aW9ucy4KPiAKPiBObyBwcm9ibGVtLCB0aGF0IGNhbiBiZSBkb2N1bWVu
+dGVkLiBOb3JtYWxseSB0aGUgZGVmaW5lcyBzaG91bGQgYmUgdXNlZAo+IGFueXdheSwgbm90IHRo
+ZSBwbGFpbiBwaW4gbnVtYmVycy4KPiAKPiBCVFcgb25lIHRoaW5nIEkgcmVhbGx5IGxpa2UgYWJv
+dXQgaW50ZWdlcnMgaXMgdGhlIHB1cmUgYmluYXJ5IHNpemUuIEluCj4gYmFyZWJveCBJIGFsc28g
+cGFyc2UgdGhlIHBpbm11eCBzZXR0aW5ncyBmcm9tIHRoZSBkZXZpY2UgdHJlZS4gVGhlCj4gZHJp
+dmVycyB1c2luZyBzdHJpbmcgbWF0Y2hpbmcgYXJlIG11bHRpcGxlIHRpbWVzIGJpZ2dlciBkdWUg
+dG8gdGhlCj4gc3RyaW5nIHRhYmxlczoKPiAKPiAtcnctci0tci0tIDEgc2hhIHB0eCAgNTQzNiBK
+YW4gMTMgMTU6MDAgaW14LWlvbXV4LXYzLm8KPiAtcnctci0tci0tIDEgc2hhIHB0eCA0MjA2MCBK
+YW4gMTMgMTU6MDAgcGluY3RybC10ZWdyYTMwLm8KCkFncmVlZCB3aXRoIFNhc2NoYSB0aGF04oCZ
+cyB3aHkgSSBjaG9zZSBpbnRlZ2VyIGZvciBhdDkxIHRvbwoKaWYgeW91IHdhbnQgc3RyaW5nIGp1
+c3QgdXNlIGRlZmluZSBpbnN0ZWFkIHRvIG1ha2UgaXQgbW9yZSByZWFkYWJsZQoKQmVzdCBSZWdh
+cmRzLApKLgo+IAo+IFNhc2NoYQo+IAo+IC0tIAo+IFBlbmd1dHJvbml4IGUuSy4gICAgICAgICAg
+ICAgICAgICAgICAgICAgICB8ICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8Cj4gSW5kdXN0
+cmlhbCBMaW51eCBTb2x1dGlvbnMgICAgICAgICAgICAgICAgIHwgaHR0cDovL3d3dy5wZW5ndXRy
+b25peC5kZS8gIHwKPiBQZWluZXIgU3RyLiA2LTgsIDMxMTM3IEhpbGRlc2hlaW0sIEdlcm1hbnkg
+fCBQaG9uZTogKzQ5LTUxMjEtMjA2OTE3LTAgICAgfAo+IEFtdHNnZXJpY2h0IEhpbGRlc2hlaW0s
+IEhSQSAyNjg2ICAgICAgICAgICB8IEZheDogICArNDktNTEyMS0yMDY5MTctNTU1NSB8Cj4gCj4g
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KPiBsaW51eC1h
+cm0ta2VybmVsIG1haWxpbmcgbGlzdAo+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFk
+Lm9yZwo+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgt
+YXJtLWtlcm5lbAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMu
+aW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZv
+L2xpbnV4LWFybS1rZXJuZWwK
