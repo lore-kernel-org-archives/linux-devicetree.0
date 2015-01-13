@@ -1,1212 +1,1026 @@
-From: Brian Norris <computersforpeace@gmail.com>
-Subject: Re: [PATCH mtd] mtd:devices: Add Altera EPCQ Driver
-Date: Mon, 12 Jan 2015 19:33:03 -0800
-Message-ID: <20150113033303.GI9759@ld-irv-0074>
-References: <1418890996-4002-1-git-send-email-vndao@altera.com>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v6 1/2] mtd: hisilicon: add a new NAND controller driver
+ for hisilicon hip04 Soc
+Date: Mon, 12 Jan 2015 19:58:44 -0800
+Message-ID: <20150113035844.GJ9759@ld-irv-0074>
+References: <1421047734-30818-1-git-send-email-wangzhou1@hisilicon.com>
+ <1421047734-30818-2-git-send-email-wangzhou1@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1418890996-4002-1-git-send-email-vndao@altera.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: vndao@altera.com
-Cc: dwmw2@infradead.org, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, ngachi86@gmail.com
+In-Reply-To: <1421047734-30818-2-git-send-email-wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, caizhiyong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, yubingxu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 18, 2014 at 12:23:16AM -0800, vndao@altera.com wrote:
-> From: Viet Nga Dao <vndao@altera.com>
-> 
-> Altera EPCQ Controller is a soft IP which enables access to Altera EPCQ and
-> EPCS flash chips. This patch adds driver for these devices.
-> 
-> Signed-off-by: Viet Nga Dao <vndao@altera.com>
+On Mon, Jan 12, 2015 at 03:28:53PM +0800, Zhou Wang wrote:
+> Signed-off-by: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 
-This drivers seems awfully similar to (and so I infer it is likely
-copy-and-pasted from) m25p80.c / spi-nor.c. Do you think it can be
-rewritten as a SPI NOR driver, under drivers/mtd/spi-nor/ ? It looks
-like these flash share most (all?) the same basic opcodes.
+Mostly good. A few small comments.
 
 > ---
->  .../devicetree/bindings/mtd/altera_epcq.txt        |   45 ++
->  drivers/mtd/devices/Kconfig                        |   12 +
->  drivers/mtd/devices/Makefile                       |    2 +-
->  drivers/mtd/devices/altera_epcq.c                  |  804 ++++++++++++++++++++
->  drivers/mtd/devices/altera_epcq.h                  |  130 ++++
->  5 files changed, 992 insertions(+), 1 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mtd/altera_epcq.txt
->  create mode 100644 drivers/mtd/devices/altera_epcq.c
->  create mode 100644 drivers/mtd/devices/altera_epcq.h
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/altera_epcq.txt b/Documentation/devicetree/bindings/mtd/altera_epcq.txt
-> new file mode 100644
-> index 0000000..d14f50e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mtd/altera_epcq.txt
-> @@ -0,0 +1,45 @@
-> +* MTD Altera EPCQ driver
-> +
-> +Required properties:
-> +- compatible: Should be "altr,epcq-1.0"
-> +- reg: Address and length of the register set  for the device. It contains
-> +  the information of registers in the same order as described by reg-names
-> +- reg-names: Should contain the reg names
-> +  "csr_base": Should contain the register configuration base address
-> +  "data_base": Should contain the data base address
-> +- is-epcs: boolean type.
-> +		If present, the device contains EPCS flashes.
-> +		Otherwise, it contains EPCQ flashes.
-> +- #address-cells: Must be <1>.
-> +- #size-cells: Must be <0>.
-> +- flash device tree subnode, there must be a node with the following fields:
-
-These subnodes definitely require a 'compatible' string. Perhaps they
-should be used to differentiate EPCS vs. EPCQ. Does "is-epcs" really
-need to be in the top-level controller node?
-
-> +	- reg: Should contain the flash id
-
-Should, or must? (This question is relevant, because you seem to make it
-optional in your code.) And what does the "flash ID" mean? It seems like
-you're using as a chip-select or bank index.
-
-> +	- #address-cells: please refer to /mtd/partition.txt
-> +	- #size-cells: please refer to /mtd/partition.txt
-> +	For partitions inside each flash, please refer to /mtd/partition.txt
-> +
-> +Example:
-> +
-> +			epcq_controller_0: epcq@0x000000000 {
-> +				compatible = "altr,epcq-1.0";
-> +				reg = <0x00000001 0x00000000 0x00000020>,
-> +					<0x00000000 0x00000000 0x02000000>;
-> +				reg-names = "csr_base", "data_base";
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +				flash0: epcq256@0 {
-> +					reg = <0>;
-> +					#address-cells = <1>;
-> +					#size-cells = <1>;
-> +					partition@0 {
-> +						/* 16 MB for raw data. */
-> +						label = "EPCQ Flash 0 raw data";
-> +						reg = <0x0 0x1000000>;
-> +					};
-> +					partition@1000000 {
-> +						/* 16 MB for jffs2 data. */
-> +						label = "EPCQ Flash 0 JFFS 2";
-> +						reg = <0x1000000 0x1000000>;
-> +					};
-> +				};
-> +			}; //end epcq@0x000000000 (epcq_controller_0)
-> diff --git a/drivers/mtd/devices/Kconfig b/drivers/mtd/devices/Kconfig
-> index c49d0b1..020b864 100644
-> --- a/drivers/mtd/devices/Kconfig
-> +++ b/drivers/mtd/devices/Kconfig
-> @@ -218,6 +218,18 @@ config MTD_ST_SPI_FSM
->  	  SPI Fast Sequence Mode (FSM) Serial Flash Controller and support
->  	  for a subset of connected Serial Flash devices.
->  
-> +config MTD_ALTERA_EPCQ
-> +	tristate "Support Altera EPCQ/EPCS Flash chips"
-> +	depends on OF
+>  drivers/mtd/nand/Kconfig        |   5 +
+>  drivers/mtd/nand/Makefile       |   1 +
+>  drivers/mtd/nand/hisi504_nand.c | 907 ++++++++++++++++++++++++++++++=
+++++++++++
+>  3 files changed, 913 insertions(+)
+>  create mode 100644 drivers/mtd/nand/hisi504_nand.c
+>=20
+> diff --git a/drivers/mtd/nand/Kconfig b/drivers/mtd/nand/Kconfig
+> index 7d0150d..e1220fc 100644
+> --- a/drivers/mtd/nand/Kconfig
+> +++ b/drivers/mtd/nand/Kconfig
+> @@ -524,4 +524,9 @@ config MTD_NAND_SUNXI
+>  	help
+>  	  Enables support for NAND Flash chips on Allwinner SoCs.
+> =20
+> +config MTD_NAND_HISI504
+> +	tristate "Support for NAND controller on Hisilicon SoC Hip04"
 > +	help
-> +	  This enables access to Altera EPCQ/EPCS flash chips, used for data
-> +	  storage. See the driver source for the current list,
-> +	  or to add other chips.
+> +	  Enables support for NAND controller on Hisilicon SoC Hip04.
 > +
-> +	  If you want to compile this driver as a module ( = code which can be
-> +	  inserted in and removed from the running kernel whenever you want),
-> +	  say M here and read <file:Documentation/kbuild/modules.txt>.
-> +
->  if MTD_DOCG3
->  config BCH_CONST_M
->  	default 14
-> diff --git a/drivers/mtd/devices/Makefile b/drivers/mtd/devices/Makefile
-> index f0b0e61..b429c4d 100644
-> --- a/drivers/mtd/devices/Makefile
-> +++ b/drivers/mtd/devices/Makefile
-> @@ -16,6 +16,6 @@ obj-$(CONFIG_MTD_SPEAR_SMI)	+= spear_smi.o
->  obj-$(CONFIG_MTD_SST25L)	+= sst25l.o
->  obj-$(CONFIG_MTD_BCM47XXSFLASH)	+= bcm47xxsflash.o
->  obj-$(CONFIG_MTD_ST_SPI_FSM)    += st_spi_fsm.o
-> -
-> +obj-$(CONFIG_MTD_ALTERA_EPCQ)		+= altera_epcq.o
->  
->  CFLAGS_docg3.o			+= -I$(src)
-> diff --git a/drivers/mtd/devices/altera_epcq.c b/drivers/mtd/devices/altera_epcq.c
+>  endif # MTD_NAND
+> diff --git a/drivers/mtd/nand/Makefile b/drivers/mtd/nand/Makefile
+> index bd38f21..582bbd05 100644
+> --- a/drivers/mtd/nand/Makefile
+> +++ b/drivers/mtd/nand/Makefile
+> @@ -51,5 +51,6 @@ obj-$(CONFIG_MTD_NAND_GPMI_NAND)	+=3D gpmi-nand/
+>  obj-$(CONFIG_MTD_NAND_XWAY)		+=3D xway_nand.o
+>  obj-$(CONFIG_MTD_NAND_BCM47XXNFLASH)	+=3D bcm47xxnflash/
+>  obj-$(CONFIG_MTD_NAND_SUNXI)		+=3D sunxi_nand.o
+> +obj-$(CONFIG_MTD_NAND_HISI504)	        +=3D hisi504_nand.o
+> =20
+>  nand-objs :=3D nand_base.o nand_bbt.o nand_timings.o
+> diff --git a/drivers/mtd/nand/hisi504_nand.c b/drivers/mtd/nand/hisi5=
+04_nand.c
 > new file mode 100644
-> index 0000000..09213d5
+> index 0000000..2000f21
 > --- /dev/null
-> +++ b/drivers/mtd/devices/altera_epcq.c
-> @@ -0,0 +1,804 @@
+> +++ b/drivers/mtd/nand/hisi504_nand.c
+> @@ -0,0 +1,907 @@
 > +/*
-> + * Copyright (C) 2014 Altera Corporation. All rights reserved
+> + * Hisilicon NAND Flash controller driver
 > + *
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms and conditions of the GNU General Public License,
-> + * version 2, as published by the Free Software Foundation.
+> + * Copyright =A9 2012-2014 HiSilicon Technologies Co., Ltd.
+> + *              http://www.hisilicon.com
 > + *
-> + * This program is distributed in the hope it will be useful, but WITHOUT
-> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-> + * more details.
+> + * Author: Zhou Wang <wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> + * The initial developer of the original code is Zhiyong Cai
+> + * <caizhiyong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 > + *
-> + * You should have received a copy of the GNU General Public License along with
-> + * this program.  If not, see <http://www.gnu.org/licenses/>.
+> + * This program is free software; you can redistribute it and/or mod=
+ify
+> + * it under the terms of the GNU General Public License as published=
+ by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
 > + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/delay.h>
-> +#include <linux/device.h>
-> +#include <linux/err.h>
-> +#include <linux/errno.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/io.h>
-> +#include <linux/ioport.h>
-> +#include <linux/jiffies.h>
-> +#include <linux/kernel.h>
-> +#include <linux/log2.h>
-> +#include <linux/module.h>
-> +#include <linux/mtd/mtd.h>
-> +#include <linux/mtd/partitions.h>
-> +#include <linux/mutex.h>
 > +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/param.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm.h>
-> +#include <linux/sched.h>
+> +#include <linux/of_mtd.h>
+> +#include <linux/mtd/mtd.h>
+> +#include <linux/sizes.h>
+> +#include <linux/clk.h>
 > +#include <linux/slab.h>
-> +#include <linux/wait.h>
+> +#include <linux/module.h>
+> +#include <linux/delay.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/mtd/nand.h>
+> +#include <linux/dma-mapping.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/mtd/partitions.h>
 > +
-> +#include "altera_epcq.h"
+> +#define HINFC504_MAX_CHIP                               (4)
+> +#define HINFC504_W_LATCH                                (5)
+> +#define HINFC504_R_LATCH                                (7)
+> +#define HINFC504_RW_LATCH                               (3)
 > +
-> +/* data structure to maintain flash ids from different vendors */
-> +struct flash_device {
-> +	char *name;
-> +	bool is_epcs;
-> +	u32 device_id;
-> +	uint32_t sectorsize_inbytes;
-> +	uint64_t size_inbytes;
-> +	u32 pagesize;
+> +#define HINFC504_NFC_TIMEOUT				(2 * HZ)
+> +#define HINFC504_NFC_PM_TIMEOUT				(1 * HZ)
+> +#define HINFC504_NFC_DMA_TIMEOUT			(5 * HZ)
+> +#define HINFC504_CHIP_DELAY				(25)
+> +
+> +#define HINFC504_REG_BASE_ADDRESS_LEN			(0x100)
+> +#define HINFC504_BUFFER_BASE_ADDRESS_LEN		(2048 + 128)
+> +
+> +#define HINFC504_ADDR_CYCLE_MASK			0x4
+> +
+> +#define HINFC504_CON					0x00
+> +#define HINFC504_CON_OP_MODE_NORMAL			BIT(0)
+> +#define HINFC504_CON_PAGEISZE_SHIFT			(1)
+> +#define HINFC504_CON_PAGESIZE_MASK			(0x07)
+> +#define HINFC504_CON_BUS_WIDTH				BIT(4)
+> +#define HINFC504_CON_READY_BUSY_SEL			BIT(8)
+> +#define HINFC504_CON_ECCTYPE_SHIFT			(9)
+> +#define HINFC504_CON_ECCTYPE_MASK			(0x07)
+> +
+> +#define HINFC504_PWIDTH					0x04
+> +#define SET_HINFC504_PWIDTH(_w_lcnt, _r_lcnt, _rw_hcnt) \
+> +	((_w_lcnt) | (((_r_lcnt) & 0x0F) << 4) | (((_rw_hcnt) & 0x0F) << 8)=
+)
+> +
+> +#define HINFC504_CMD					0x0C
+> +#define HINFC504_ADDRL					0x10
+> +#define HINFC504_ADDRH					0x14
+> +#define HINFC504_DATA_NUM				0x18
+> +
+> +#define HINFC504_OP					0x1C
+> +#define HINFC504_OP_READ_DATA_EN			BIT(1)
+> +#define HINFC504_OP_WAIT_READY_EN			BIT(2)
+> +#define HINFC504_OP_CMD2_EN				BIT(3)
+> +#define HINFC504_OP_WRITE_DATA_EN			BIT(4)
+> +#define HINFC504_OP_ADDR_EN				BIT(5)
+> +#define HINFC504_OP_CMD1_EN				BIT(6)
+> +#define HINFC504_OP_NF_CS_SHIFT                         (7)
+> +#define HINFC504_OP_NF_CS_MASK				(3)
+> +#define HINFC504_OP_ADDR_CYCLE_SHIFT			(9)
+> +#define HINFC504_OP_ADDR_CYCLE_MASK			(7)
+> +
+> +#define HINFC504_STATUS                                 0x20
+> +#define HINFC504_READY					BIT(0)
+> +
+> +#define HINFC504_INTEN					0x24
+> +#define HINFC504_INTEN_DMA				BIT(9)
+> +#define HINFC504_INTEN_UE				BIT(6)
+> +#define HINFC504_INTEN_CE				BIT(5)
+> +
+> +#define HINFC504_INTS					0x28
+> +#define HINFC504_INTS_DMA				BIT(9)
+> +#define HINFC504_INTS_UE				BIT(6)
+> +#define HINFC504_INTS_CE				BIT(5)
+> +
+> +#define HINFC504_INTCLR                                 0x2C
+> +#define HINFC504_INTCLR_DMA				BIT(9)
+> +#define HINFC504_INTCLR_UE				BIT(6)
+> +#define HINFC504_INTCLR_CE				BIT(5)
+> +
+> +#define HINFC504_ECC_STATUS                             0x5C
+> +#define HINFC504_ECC_1_BIT_SHIFT                        16
+> +#define HINFC504_ECC_16_BIT_SHIFT                       12
+> +
+> +#define HINFC504_DMA_CTRL				0x60
+> +#define HINFC504_DMA_CTRL_DMA_START			BIT(0)
+> +#define HINFC504_DMA_CTRL_WE				BIT(1)
+> +#define HINFC504_DMA_CTRL_DATA_AREA_EN			BIT(2)
+> +#define HINFC504_DMA_CTRL_OOB_AREA_EN			BIT(3)
+> +#define HINFC504_DMA_CTRL_BURST4_EN			BIT(4)
+> +#define HINFC504_DMA_CTRL_BURST8_EN			BIT(5)
+> +#define HINFC504_DMA_CTRL_BURST16_EN			BIT(6)
+> +#define HINFC504_DMA_CTRL_ADDR_NUM_SHIFT		(7)
+> +#define HINFC504_DMA_CTRL_ADDR_NUM_MASK                 (1)
+> +#define HINFC504_DMA_CTRL_CS_SHIFT			(8)
+> +#define HINFC504_DMA_CTRL_CS_MASK			(0x03)
+> +
+> +#define HINFC504_DMA_ADDR_DATA				0x64
+> +#define HINFC504_DMA_ADDR_OOB				0x68
+> +
+> +#define HINFC504_DMA_LEN				0x6C
+> +#define HINFC504_DMA_LEN_OOB_SHIFT			(16)
+> +#define HINFC504_DMA_LEN_OOB_MASK			(0xFFF)
+> +
+> +#define HINFC504_DMA_PARA				0x70
+> +#define HINFC504_DMA_PARA_DATA_RW_EN			BIT(0)
+> +#define HINFC504_DMA_PARA_OOB_RW_EN			BIT(1)
+> +#define HINFC504_DMA_PARA_DATA_EDC_EN			BIT(2)
+> +#define HINFC504_DMA_PARA_OOB_EDC_EN			BIT(3)
+> +#define HINFC504_DMA_PARA_DATA_ECC_EN			BIT(4)
+> +#define HINFC504_DMA_PARA_OOB_ECC_EN			BIT(5)
+> +
+> +#define HINFC_VERSION                                   0x74
+> +#define HINFC504_LOG_READ_ADDR				0x7C
+> +#define HINFC504_LOG_READ_LEN				0x80
+> +
+> +#define HINFC504_NANDINFO_LEN				0x10
+> +
+> +struct hinfc_host {
+> +	struct nand_chip	chip;
+> +	struct mtd_info		mtd;
+> +	struct device		*dev;
+> +	void __iomem		*iobase;
+> +	struct completion       cmd_complete;
+> +	unsigned int		offset;
+> +	unsigned int		command;
+> +	int			chipselect;
+> +	unsigned int		addr_cycle;
+> +	u32                     addr_value[2];
+> +	u32                     cache_addr_value[2];
+> +	char			*buffer;
+> +	dma_addr_t		dma_buffer;
+> +	dma_addr_t		dma_oob;
+> +	int			version;
+> +	unsigned int            irq_status; /* interrupt status */
 > +};
 > +
-> +#define FLASH_ID(_n, _is_epcs, _id, _ssize, _size, _psize)	\
-> +{				\
-> +	.name = (_n),		\
-> +	.is_epcs = (_is_epcs),		\
-> +	.device_id = (_id),	\
-> +	.sectorsize_inbytes = (_ssize),	\
-> +	.size_inbytes = (_size),	\
-> +	.pagesize = (_psize),	\
+> +static inline unsigned int hinfc_read(struct hinfc_host *host, unsig=
+ned int reg)
+> +{
+> +	return readl(host->iobase + reg);
 > +}
 > +
-> +static struct flash_device flash_devices[] = {
-> +	FLASH_ID("epcq16"    , 0, 0x15, 0x10000, 0x200000, 0x100),
-> +	FLASH_ID("epcq32"    , 0, 0x16, 0x10000, 0x400000, 0x100),
-> +	FLASH_ID("epcq64"    , 0, 0x17, 0x10000, 0x800000, 0x100),
-> +	FLASH_ID("epcq128"   , 0, 0x18, 0x10000, 0x1000000, 0x100),
-> +	FLASH_ID("epcq256"   , 0, 0x19, 0x10000, 0x2000000, 0x100),
-> +	FLASH_ID("epcq512"   , 0, 0x20, 0x10000, 0x4000000, 0x100),
-> +
-> +	FLASH_ID("epcs16"    , 1, 0x14, 0x10000, 0x200000, 0x100),
-> +	FLASH_ID("epcs64"    , 1, 0x16, 0x10000, 0x800000, 0x100),
-> +	FLASH_ID("epcs128"   , 1, 0x18, 0x40000, 0x1000000, 0x100),
-> +};
-> +
-> +static inline struct altera_epcq_flash *get_flash_data(struct mtd_info *mtd)
+> +static inline void hinfc_write(struct hinfc_host *host, unsigned int=
+ value,
+> +			       unsigned int reg)
 > +{
-> +	return container_of(mtd, struct altera_epcq_flash, mtd);
+> +	writel(value, host->iobase + reg);
 > +}
 > +
-> +static u32 altera_epcq_read_sr(struct altera_epcq *dev)
+> +static void wait_controller_finished(struct hinfc_host *host)
 > +{
-> +	return readl(dev->csr_base + EPCQ_SR_REG);
-> +}
+> +	unsigned long timeout =3D jiffies + HINFC504_NFC_TIMEOUT;
+> +	int val;
 > +
-> +static int altera_epcq_wait_till_ready(struct altera_epcq *dev)
-> +{
-> +	unsigned long finish;
-> +	int status;
-> +
-> +	finish = jiffies + EPCQ_MAX_TIME_OUT;
-> +	do {
-> +		status = altera_epcq_read_sr(dev);
-> +		if (status < 0)
-> +			return status;
-> +		else if (!(status & EPCQ_SR_WIP))
-> +			return 0;
-> +
-> +		cond_resched();
-> +	} while (!time_after_eq(jiffies, finish));
-> +
-> +	dev_err(&dev->pdev->dev, "epcq controller is busy, timeout\n");
-> +	return -EBUSY;
-> +}
-> +
-> +static int get_flash_index(u32 flash_id, bool is_epcs)
-> +{
-> +	int index;
-> +
-> +	for (index = 0; index < ARRAY_SIZE(flash_devices); index++) {
-> +		if (flash_devices[index].device_id == flash_id &&
-> +		    flash_devices[index].is_epcs == is_epcs)
-> +			return index;
-> +	}
-> +
-> +	/* Memory chip is not listed and not supported */
-> +	return -ENODEV;
-> +}
-> +
-> +static int altera_epcq_write_erase_check(struct altera_epcq *dev,
-> +					 bool write_erase)
-> +{
-> +	u32 val;
-> +	u32 mask;
-> +
-> +	if (write_erase)
-> +		mask = EPCQ_ISR_ILLEGAL_WRITE_MASK;
-> +	else
-> +		mask = EPCQ_ISR_ILLEGAL_ERASE_MASK;
-> +
-> +	val = readl(dev->csr_base + EPCQ_ISR_REG);
-> +	if (val & mask) {
-> +		dev_err(&dev->pdev->dev,
-> +			"write/erase failed, sector might be protected\n");
-> +		/*clear this status for next use*/
-> +		writel(val, dev->csr_base + EPCQ_ISR_REG);
-> +		return -EIO;
-> +	}
-> +	return 0;
-> +}
-> +
-> +static int altera_epcq_erase_chip(struct mtd_info *mtd)
-> +{
-> +	int ret;
-> +	u32 val;
-> +	struct altera_epcq *dev = mtd->priv;
-> +
-> +	/* Wait until finished previous write command. */
-> +	ret = altera_epcq_wait_till_ready(dev);
-
-This pattern is pretty silly. We don't need to have every operation
-check the status of the previous operation. Each operation should check
-itself. You obviously copied this one... but we recently changed that:
-
-    commit dfa9c0cba4ea20e766bbb4f89152b05d00ab9ab3
-    Author: Brian Norris <computersforpeace@gmail.com>
-    Date:   Wed Aug 6 18:16:57 2014 -0700
-
-        mtd: spi-nor: move "wait-till-ready" checks into erase/write
-	functions
-
-
-    https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=dfa9c0cba4ea20e766bbb4f89152b05d00ab9ab3
-
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* erase chip. */
-> +	val = EPCQ_MEM_OP_BULK_ERASE_CMD;
-> +	writel(val, dev->csr_base + EPCQ_MEM_OP_REG);
-> +
-> +	/* Wait until finished previous write command. */
-> +	ret = altera_epcq_wait_till_ready(dev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	 /* check whether write triggered a illegal write interrupt */
-> +	ret = altera_epcq_write_erase_check(dev, 0);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return 0;
-> +}
-> +
-> +static int altera_epcq_addr_to_sector(struct altera_epcq_flash *flash,
-> +				      int addr_offset)
-> +{
-> +	int sector = 0;
-> +	int i;
-> +
-> +	for (i = 0; i < flash->num_sectors; i++) {
-> +		if (addr_offset >= i * flash->mtd.erasesize && addr_offset <
-> +		    (i * flash->mtd.erasesize + flash->mtd.erasesize)) {
-> +			sector = i;
-> +			return sector;
-> +		}
-> +	}
-
-Uh, really? Am I crazy, or shouldn't this whole function just be a
-really simple arithmetic operation? Like:
-
-	return addr_offset >> mtd->erasesize_shift;
-
-> +	return -1;
-> +}
-> +
-> +static int altera_epcq_erase_sector(struct mtd_info *mtd,
-> +				    int addr_offset)
-> +{
-> +	struct altera_epcq_flash *flash = get_flash_data(mtd);
-> +	struct altera_epcq *dev = mtd->priv;
-> +	u32 val;
-> +	int ret;
-> +	int sector_value;
-> +
-> +	ret = altera_epcq_wait_till_ready(dev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	sector_value = altera_epcq_addr_to_sector(flash, addr_offset);
-> +
-> +	/* sanity check that block_offset is a valid sector number */
-> +	if (sector_value < 0)
-> +		return -EINVAL;
-> +
-> +	/* sector value should occupy bits 17:8 */
-> +	val = (sector_value << 8) & EPCQ_MEM_OP_SECTOR_VALUE_MASK;
-> +
-> +	/* sector erase commands occupies lower 2 bits */
-> +	val |= EPCQ_MEM_OP_SECTOR_ERASE_CMD;
-> +
-> +	/* write sector erase command to EPCQ_MEM_OP register*/
-> +	writel(val, dev->csr_base + EPCQ_MEM_OP_REG);
-> +
-> +	ret = altera_epcq_wait_till_ready(dev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	 /* check whether write triggered a illegal write interrupt */
-
-^^ extra space here? You have <TAB><SPACE>/* check [...]
-
-> +	ret = altera_epcq_write_erase_check(dev, 0);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return 0;
-> +}
-> +
-> +static int altera_epcq_erase(struct mtd_info *mtd, struct erase_info *e_info)
-> +{
-> +	u32 addr;
-> +	int ret;
-> +	u32 len;
-> +	struct altera_epcq_flash *flash = get_flash_data(mtd);
-> +	struct altera_epcq *dev = mtd->priv;
-> +
-> +	addr = e_info->addr;
-> +	len = e_info->len;
-> +
-> +	if (flash->bank > dev->num_flashes - 1) {
-> +		dev_err(&dev->pdev->dev, "Invalid chip id\n");
-> +		return -EINVAL;
-> +	}
-> +	mutex_lock(&flash->lock);
-> +
-> +	/*erase whole chip*/
-> +	if (len == mtd->size) {
-> +		if (altera_epcq_erase_chip(mtd)) {
-> +			e_info->state = MTD_ERASE_FAILED;
-> +			mutex_unlock(&flash->lock);
-> +			return -EIO;
-> +		}
-> +	/*"sector"-at-a-time erase*/
-> +	} else {
-> +		while (len) {
-> +			ret = altera_epcq_erase_sector(mtd, addr);
-> +			if (ret) {
-> +				e_info->state = MTD_ERASE_FAILED;
-> +				mutex_unlock(&flash->lock);
-> +				return -EIO;
+> +	while (time_before(jiffies, timeout)) {
+> +		val =3D hinfc_read(host, HINFC504_STATUS);
+> +		if (host->command =3D=3D NAND_CMD_ERASE2) {
+> +			/* nfc is ready */
+> +			while (!(val & HINFC504_READY))	{
+> +				usleep_range(500, 1000);
+> +				val =3D hinfc_read(host, HINFC504_STATUS);
 > +			}
-> +			addr += mtd->erasesize;
-> +			if (len < mtd->erasesize)
-> +				len = 0;
-> +			else
-> +				len -= mtd->erasesize;
+> +			return;
 > +		}
-> +	}
-> +	mutex_unlock(&flash->lock);
-> +	e_info->state = MTD_ERASE_DONE;
-> +	mtd_erase_callback(e_info);
 > +
-> +	return 0;
-> +}
-> +
-> +static int altera_epcq_read(struct mtd_info *mtd, loff_t from, size_t len,
-> +			    size_t *retlen, u8 *buf)
-> +{
-> +	struct altera_epcq_flash *flash = get_flash_data(mtd);
-> +	struct altera_epcq *dev = mtd->priv;
-> +	void *src;
-> +	int ret = 0;
-> +
-> +	if (!flash || !dev)
-> +		return -ENODEV;
-
-Why would either of these be 0? If they are, you have much bigger
-problems, since you aren't checking these almost anywhere else. And the
-!flash check is pretty odd, since get_flash_data() is using
-container_of(), which is not likely to give you exactly 0...
-
-> +
-> +	if (flash->bank > dev->num_flashes - 1) {
-> +		dev_err(&dev->pdev->dev, "Invalid chip id\n");
-> +		return -EINVAL;
+> +		if (val & HINFC504_READY)
+> +			return;
 > +	}
 > +
-> +	src = dev->data_base + from;
-> +
-> +	mutex_lock(&flash->lock);
-> +	/* wait till previous write/erase is done. */
-> +	ret = altera_epcq_wait_till_ready(dev);
-> +	if (ret)
-> +		goto err;
-> +
-> +	memcpy_fromio(buf, (u8 *)src, len);
-
-Drop the cast. Also, you get sparse warnings because you're dropping the
-__iomem. Why not just this?
-
-	memcpy_fromio(buf, dev->data_base + from, len);
-
-(BTW, you might consider running sparse on all your code. See
-Documentation/sparse.txt. It tells you how to get it, but you can often
-just download it through your distro's package manager.)
-
-> +	*retlen = len;
-> +
-> +err:
-> +	mutex_unlock(&flash->lock);
-> +	return ret;
+> +	/* wait cmd timeout */
+> +	dev_err(host->dev, "Wait NAND controller exec cmd timeout.\n");
 > +}
 > +
-> +static int altera_epcq_write(struct mtd_info *mtd, loff_t to, size_t len,
-> +			     size_t *retlen, const u8 *buf)
+> +static void hisi_nfc_dma_transfer(struct hinfc_host *host, int todev=
+)
 > +{
-> +	struct altera_epcq_flash *flash = get_flash_data(mtd);
-> +	struct altera_epcq *dev = mtd->priv;
-> +	void *dest;
-> +	int ret = 0;
+> +	struct mtd_info	*mtd =3D &host->mtd;
+> +	struct nand_chip *chip =3D mtd->priv;
+> +	unsigned long val;
+> +	int ret;
 > +
-> +	if (!flash || !dev)
-> +		return -ENODEV;
-
-Also here. I don't think you need these checks.
-
+> +	hinfc_write(host, host->dma_buffer, HINFC504_DMA_ADDR_DATA);
+> +	hinfc_write(host, host->dma_oob, HINFC504_DMA_ADDR_OOB);
 > +
-> +	if (flash->bank > dev->num_flashes - 1) {
-> +		dev_err(&dev->pdev->dev, "Invalid chip id\n");
-> +		return -EINVAL;
-> +	}
-> +	dest = dev->data_base + to;
+> +	if (chip->ecc.mode =3D=3D NAND_ECC_NONE) {
+> +		hinfc_write(host, ((mtd->oobsize & HINFC504_DMA_LEN_OOB_MASK)
+> +			<< HINFC504_DMA_LEN_OOB_SHIFT), HINFC504_DMA_LEN);
 > +
-> +	mutex_lock(&flash->lock);
-> +
-> +	/* wait until finished previous write command. */
-> +	ret = altera_epcq_wait_till_ready(dev);
-> +	if (ret)
-> +		goto err;
-> +
-> +	memcpy_toio(dest, buf, len);
-
-Similar. Why not just this?
-
-	memcpy_toio(dev->data_base + to, buf, len);
-
-> +	*retlen += len;
-> +
-> +	/* wait until finished previous write command. */
-> +	ret = altera_epcq_wait_till_ready(dev);
-> +	if (ret)
-> +		goto err;
-> +
-> +	 /* check whether write triggered a illegal write interrupt */
-> +	ret = altera_epcq_write_erase_check(dev, 1);
-> +	if (ret < 0)
-> +		goto err;
-> +
-> +err:
-> +	mutex_unlock(&flash->lock);
-> +	return ret;
-> +}
-> +
-> +static int altera_epcq_lock(struct mtd_info *mtd, loff_t ofs, uint64_t len)
-> +{
-> +	struct altera_epcq_flash *flash = get_flash_data(mtd);
-> +	struct altera_epcq *dev = mtd->priv;
-> +	uint32_t offset = ofs;
-> +	int ret = 0;
-> +	u32 sector_start, sector_end;
-> +	u32 num_sectors;
-> +	u32 mem_op;
-> +	unsigned sr_bp = 0;
-> +	unsigned sr_tb = 0;
-> +
-> +	sector_start = altera_epcq_addr_to_sector(flash, offset);
-> +	sector_end = altera_epcq_addr_to_sector(flash, offset + len);
-> +	num_sectors = flash->num_sectors;
-> +	dev_dbg(&dev->pdev->dev,
-> +		"%s: num_setor is %u,sector start is %u,sector end is %u\n",
-> +		__func__, num_sectors, sector_start, sector_end);
-> +
-> +	mutex_lock(&flash->lock);
-> +	/* wait until finished previous write command. */
-> +	ret = altera_epcq_wait_till_ready(dev);
-> +	if (ret)
-> +		goto err;
-> +
-> +	if (sector_start >= num_sectors/2) {
-
-It's preferable to have spaces around operators. So 'num_sectors / 2'.
-The same thing comes up in several other places.
-
-> +		if (sector_start < num_sectors-(num_sectors / 4))
-> +			sr_bp = __ilog2_u32(num_sectors);
-> +		else if (sector_start < num_sectors-(num_sectors / 8))
-> +			sr_bp = __ilog2_u32(num_sectors) - 1;
-> +		else if (sector_start < num_sectors-(num_sectors / 16))
-> +			sr_bp = __ilog2_u32(num_sectors) - 2;
-> +		else if (sector_start < num_sectors-(num_sectors / 32))
-> +			sr_bp = __ilog2_u32(num_sectors) - 3;
-> +		else if (sector_start < num_sectors-(num_sectors / 64))
-> +			sr_bp = __ilog2_u32(num_sectors) - 4;
-> +		else if (sector_start < num_sectors-(num_sectors / 128))
-> +			sr_bp = __ilog2_u32(num_sectors) - 5;
-> +		else if (sector_start < num_sectors-(num_sectors / 256))
-> +			sr_bp = __ilog2_u32(num_sectors) - 6;
-> +		else if (sector_start < num_sectors-(num_sectors / 512))
-> +			sr_bp = __ilog2_u32(num_sectors) - 7;
-> +		else if (sector_start < num_sectors-(num_sectors / 1024))
-> +			sr_bp = __ilog2_u32(num_sectors) - 8;
-> +		else
-> +			sr_bp = 0;  /* non area protected */
-
-Yikes, that's ugly! And I'm not sure it matches the EPCQ doc I found.
-I'm pretty sure you can rewrite this if/else-if/else block in about 1
-line though.
-
-> +
-> +		if (sr_bp < 0) {
-
-sr_bp is unsigned, so this is never true.
-
-> +			dev_err(&dev->pdev->dev, "%s: address is out of range\n"
-> +				, __func__);
-> +			ret = -EINVAL;
-> +			goto err;
-> +		}
-> +		/*set TB = 0*/
-> +		sr_tb = 0;
-> +
+> +		hinfc_write(host, HINFC504_DMA_PARA_DATA_RW_EN
+> +			| HINFC504_DMA_PARA_OOB_RW_EN, HINFC504_DMA_PARA);
 > +	} else {
-> +		if (sector_end < 1)
-> +			sr_bp = 1;
-> +		else if (sector_end < 2)
-> +			sr_bp = 2;
-> +		else if (sector_end < 4)
-> +			sr_bp = 3;
-> +		else if (sector_end < 8)
-> +			sr_bp = 4;
-> +		else if (sector_end < 16)
-> +			sr_bp = 5;
-> +		else if (sector_end < 32)
-> +			sr_bp = 6;
-> +		else if (sector_end < 64)
-> +			sr_bp = 7;
-> +		else if (sector_end < 128)
-> +			sr_bp = 8;
-> +		else if (sector_end < 256)
-> +			sr_bp = 9;
-> +		else if (sector_end < 512)
-> +			sr_bp = 10;
+> +		if (host->command =3D=3D NAND_CMD_READOOB)
+> +			hinfc_write(host, HINFC504_DMA_PARA_OOB_RW_EN
+> +			| HINFC504_DMA_PARA_OOB_EDC_EN
+> +			| HINFC504_DMA_PARA_OOB_ECC_EN, HINFC504_DMA_PARA);
 > +		else
-> +			sr_bp = 16; /*protect all areas*/
-
-Again, this is ugly. How about this?
-
-	sr_bp = fls(sector_end) + 1;
-
+> +			hinfc_write(host, HINFC504_DMA_PARA_DATA_RW_EN
+> +			| HINFC504_DMA_PARA_OOB_RW_EN
+> +			| HINFC504_DMA_PARA_DATA_EDC_EN
+> +			| HINFC504_DMA_PARA_OOB_EDC_EN
+> +			| HINFC504_DMA_PARA_DATA_ECC_EN
+> +			| HINFC504_DMA_PARA_OOB_ECC_EN, HINFC504_DMA_PARA);
 > +
-> +		sr_tb = 1;
 > +	}
 > +
-> +	mem_op = (sr_tb << 12) | (sr_bp << 8);
-> +	mem_op &= EPCQ_MEM_OP_SECTOR_PROTECT_VALUE_MASK;
-> +	mem_op |= EPCQ_MEM_OP_SECTOR_PROTECT_CMD;
-> +	writel(mem_op, dev->csr_base + EPCQ_MEM_OP_REG);
+> +	val =3D (HINFC504_DMA_CTRL_DMA_START | HINFC504_DMA_CTRL_BURST4_EN
+> +		| HINFC504_DMA_CTRL_BURST8_EN | HINFC504_DMA_CTRL_BURST16_EN
+> +		| HINFC504_DMA_CTRL_DATA_AREA_EN | HINFC504_DMA_CTRL_OOB_AREA_EN
+> +		| ((host->addr_cycle =3D=3D 4 ? 1 : 0)
+> +			<< HINFC504_DMA_CTRL_ADDR_NUM_SHIFT)
+> +		| ((host->chipselect & HINFC504_DMA_CTRL_CS_MASK)
+> +			<< HINFC504_DMA_CTRL_CS_SHIFT));
 > +
-> +err:
-> +	mutex_unlock(&flash->lock);
-> +	return ret;
+> +	if (todev)
+> +		val |=3D HINFC504_DMA_CTRL_WE;
+> +
+> +	init_completion(&host->cmd_complete);
+> +
+> +	hinfc_write(host, val, HINFC504_DMA_CTRL);
+> +	ret =3D wait_for_completion_timeout(&host->cmd_complete,
+> +			HINFC504_NFC_DMA_TIMEOUT);
+> +
+> +	if (!ret) {
+> +		dev_err(host->dev, "DMA operation(irq) timeout!\n");
+> +		/* sanity check */
+> +		val =3D hinfc_read(host, HINFC504_DMA_CTRL);
+> +		if (!(val & HINFC504_DMA_CTRL_DMA_START))
+> +			dev_err(host->dev, "DMA is already done but without irq ACK!\n");
+> +		else
+> +			dev_err(host->dev, "DMA is really timeout!\n");
+> +	}
 > +}
 > +
-> +static int altera_epcq_unlock(struct mtd_info *mtd, loff_t ofs, uint64_t len)
+> +static int hisi_nfc_send_cmd_pageprog(struct hinfc_host *host)
 > +{
-> +	struct altera_epcq_flash *flash = get_flash_data(mtd);
-> +	struct altera_epcq *dev = mtd->priv;
+> +	host->addr_value[0] &=3D 0xffff0000;
 > +
-> +	int ret = 0;
-> +	u32 mem_op;
+> +	hinfc_write(host, host->addr_value[0], HINFC504_ADDRL);
+> +	hinfc_write(host, host->addr_value[1], HINFC504_ADDRH);
+> +	hinfc_write(host, NAND_CMD_PAGEPROG << 8 | NAND_CMD_SEQIN,
+> +		    HINFC504_CMD);
 > +
-> +	mutex_lock(&flash->lock);
-> +	/* wait until finished previous write command. */
-> +	ret = altera_epcq_wait_till_ready(dev);
-> +	if (ret)
-> +		goto err;
-> +	dev_info(&dev->pdev->dev, "Unlock all protected area\n");
-> +	mem_op = 0;
-> +	mem_op &= EPCQ_MEM_OP_SECTOR_PROTECT_VALUE_MASK;
-> +	mem_op |= EPCQ_MEM_OP_SECTOR_PROTECT_CMD;
-> +	writel(mem_op, dev->csr_base + EPCQ_MEM_OP_REG);
+> +	hisi_nfc_dma_transfer(host, 1);
 > +
-> +err:
-> +	mutex_unlock(&flash->lock);
-> +	return ret;
+> +	return 0;
 > +}
 > +
-> +static void altera_epcq_chip_select(struct altera_epcq *dev, u32 bank)
+> +static int hisi_nfc_send_cmd_readstart(struct hinfc_host *host)
 > +{
-> +	u32 val = 0;
+> +	struct mtd_info	*mtd =3D &host->mtd;
 > +
-> +	switch (bank) {
-> +	case 0:
-> +		val = EPCQ_CHIP_SELECT_0;
-> +		break;
-> +	case 1:
-> +		val = EPCQ_CHIP_SELECT_1;
-> +		break;
-> +	case 2:
-> +		val = EPCQ_CHIP_SELECT_2;
-> +		break;
-> +	default:
+> +	if ((host->addr_value[0] =3D=3D host->cache_addr_value[0]) &&
+> +	    (host->addr_value[1] =3D=3D host->cache_addr_value[1]))
+> +		return 0;
+> +
+> +	host->addr_value[0] &=3D 0xffff0000;
+> +
+> +	hinfc_write(host, host->addr_value[0], HINFC504_ADDRL);
+> +	hinfc_write(host, host->addr_value[1], HINFC504_ADDRH);
+> +	hinfc_write(host, NAND_CMD_READSTART << 8 | NAND_CMD_READ0,
+> +		    HINFC504_CMD);
+> +
+> +	hinfc_write(host, 0, HINFC504_LOG_READ_ADDR);
+> +	hinfc_write(host, mtd->writesize + mtd->oobsize,
+> +		    HINFC504_LOG_READ_LEN);
+> +
+> +	hisi_nfc_dma_transfer(host, 0);
+> +
+> +	host->cache_addr_value[0] =3D host->addr_value[0];
+> +	host->cache_addr_value[1] =3D host->addr_value[1];
+> +
+> +	return 0;
+> +}
+> +
+> +static int hisi_nfc_send_cmd_erase(struct hinfc_host *host)
+> +{
+> +	hinfc_write(host, host->addr_value[0], HINFC504_ADDRL);
+> +	hinfc_write(host, (NAND_CMD_ERASE2 << 8) | NAND_CMD_ERASE1,
+> +		    HINFC504_CMD);
+> +
+> +	hinfc_write(host, HINFC504_OP_WAIT_READY_EN
+> +		| HINFC504_OP_CMD2_EN
+> +		| HINFC504_OP_CMD1_EN
+> +		| HINFC504_OP_ADDR_EN
+> +		| ((host->chipselect & HINFC504_OP_NF_CS_MASK)
+> +			<< HINFC504_OP_NF_CS_SHIFT)
+> +		| ((host->addr_cycle & HINFC504_OP_ADDR_CYCLE_MASK)
+> +			<< HINFC504_OP_ADDR_CYCLE_SHIFT),
+> +		HINFC504_OP);
+> +
+> +	wait_controller_finished(host);
+> +
+> +	return 0;
+> +}
+> +
+> +static int hisi_nfc_send_cmd_readid(struct hinfc_host *host)
+> +{
+> +	hinfc_write(host, HINFC504_NANDINFO_LEN, HINFC504_DATA_NUM);
+> +	hinfc_write(host, NAND_CMD_READID, HINFC504_CMD);
+> +	hinfc_write(host, 0, HINFC504_ADDRL);
+> +
+> +	hinfc_write(host, HINFC504_OP_CMD1_EN | HINFC504_OP_ADDR_EN
+> +		| HINFC504_OP_READ_DATA_EN
+> +		| ((host->chipselect & HINFC504_OP_NF_CS_MASK)
+> +			<< HINFC504_OP_NF_CS_SHIFT)
+> +		| 1 << HINFC504_OP_ADDR_CYCLE_SHIFT, HINFC504_OP);
+> +
+> +	wait_controller_finished(host);
+> +
+> +	return 0;
+> +}
+> +
+> +static int hisi_nfc_send_cmd_status(struct hinfc_host *host)
+> +{
+> +	hinfc_write(host, HINFC504_NANDINFO_LEN, HINFC504_DATA_NUM);
+> +	hinfc_write(host, NAND_CMD_STATUS, HINFC504_CMD);
+> +	hinfc_write(host, HINFC504_OP_CMD1_EN
+> +		| HINFC504_OP_READ_DATA_EN
+> +		| ((host->chipselect & HINFC504_OP_NF_CS_MASK)
+> +			<< HINFC504_OP_NF_CS_SHIFT),
+> +		HINFC504_OP);
+> +
+> +	wait_controller_finished(host);
+> +
+> +	return 0;
+> +}
+> +
+> +static int hisi_nfc_send_cmd_reset(struct hinfc_host *host, int chip=
+select)
+> +{
+> +	hinfc_write(host, NAND_CMD_RESET, HINFC504_CMD);
+> +
+> +	hinfc_write(host, HINFC504_OP_CMD1_EN
+> +		| ((chipselect & HINFC504_OP_NF_CS_MASK)
+> +			<< HINFC504_OP_NF_CS_SHIFT)
+> +		| HINFC504_OP_WAIT_READY_EN,
+> +		HINFC504_OP);
+> +
+> +	wait_controller_finished(host);
+> +
+> +	return 0;
+> +}
+> +
+> +static void hisi_nfc_select_chip(struct mtd_info *mtd, int chipselec=
+t)
+> +{
+> +	struct nand_chip *chip =3D mtd->priv;
+> +	struct hinfc_host *host =3D chip->priv;
+> +
+> +	if (chipselect < 0)
 > +		return;
-> +	}
 > +
-> +	writel(val, dev->csr_base + EPCQ_CHIP_SELECT_REG);
+> +	host->chipselect =3D chipselect;
 > +}
 > +
-> +static int altera_epcq_probe_flash(struct altera_epcq *dev, u32 bank)
+> +static uint8_t hisi_nfc_read_byte(struct mtd_info *mtd)
 > +{
-> +	int ret = 0;
-> +	u32 val = 0;
+> +	struct nand_chip *chip =3D mtd->priv;
+> +	struct hinfc_host *host =3D chip->priv;
 > +
-> +	mutex_lock(&dev->lock);
+> +	if (host->command =3D=3D NAND_CMD_STATUS)
+> +		return readb(chip->IO_ADDR_R);
 > +
-> +	/*select bank*/
+> +	host->offset++;
+> +
+> +	if (host->command =3D=3D NAND_CMD_READID)
+> +		return readb(chip->IO_ADDR_R + host->offset - 1);
+> +
+> +	return readb(host->buffer + host->offset - 1);
 
-Comment spacing, here and elsewhere:
+You're reading from memory, not IO. You don't need readb().
 
-	/* select bank */
+> +}
+> +
+> +static u16 hisi_nfc_read_word(struct mtd_info *mtd)
+> +{
+> +	struct nand_chip *chip =3D mtd->priv;
+> +	struct hinfc_host *host =3D chip->priv;
+> +
+> +	host->offset +=3D 2;
+> +	return readw(host->buffer + host->offset - 2);
 
-> +	altera_epcq_chip_select(dev, bank);
+Same here, for readw().
+
+> +}
 > +
-> +	ret = altera_epcq_wait_till_ready(dev);
-> +	if (ret)
-> +		goto err;
+> +static void
+> +hisi_nfc_write_buf(struct mtd_info *mtd, const uint8_t *buf, int len=
+)
+> +{
+> +	struct nand_chip *chip =3D mtd->priv;
+> +	struct hinfc_host *host =3D chip->priv;
 > +
-> +	/* get device sillicon id */
-> +	if (dev->is_epcs)
-> +		val = readl(dev->csr_base + EPCQ_SID_REG);
-> +	else
-> +		val = readl(dev->csr_base + EPCQ_RDID_REG);
+> +	memcpy(host->buffer + host->offset, buf, len);
+> +	host->offset +=3D len;
+> +}
 > +
-> +	/* get flash index based on the device list*/
-> +	ret = get_flash_index(val, dev->is_epcs);
+> +static void hisi_nfc_read_buf(struct mtd_info *mtd, uint8_t *buf, in=
+t len)
+> +{
+> +	struct nand_chip *chip =3D mtd->priv;
+> +	struct hinfc_host *host =3D chip->priv;
+> +
+> +	memcpy(buf, host->buffer + host->offset, len);
+> +	host->offset +=3D len;
+> +}
+> +
+> +static void set_addr(struct mtd_info *mtd, int column, int page_addr=
+)
+> +{
+> +	struct nand_chip *chip =3D mtd->priv;
+> +	struct hinfc_host *host =3D chip->priv;
+> +	unsigned int command =3D host->command;
+> +
+> +	host->addr_cycle    =3D 0;
+> +	host->addr_value[0] =3D 0;
+> +	host->addr_value[1] =3D 0;
+> +
+> +	/* Serially input address */
+> +	if (column !=3D -1) {
+> +		/* Adjust columns for 16 bit buswidth */
+> +		if (chip->options & NAND_BUSWIDTH_16 &&
+> +				!nand_opcode_8bits(command))
+> +			column >>=3D 1;
+> +
+> +		host->addr_value[0] =3D column & 0xffff;
+> +		host->addr_cycle    =3D 2;
+> +	}
+> +	if (page_addr !=3D -1) {
+> +		host->addr_value[0] |=3D (page_addr & 0xffff)
+> +			<< (host->addr_cycle * 8);
+> +		host->addr_cycle    +=3D 2;
+> +		/* One more address cycle for devices > 128MiB */
+> +		if (chip->chipsize > (128 << 20)) {
+> +			host->addr_cycle +=3D 1;
+> +			if (host->command =3D=3D NAND_CMD_ERASE1)
+> +				host->addr_value[0] |=3D ((page_addr >> 16) & 0xff) << 16;
+> +			else
+> +				host->addr_value[1] |=3D ((page_addr >> 16) & 0xff);
+> +		}
+> +	}
+> +}
+> +
+> +static void hisi_nfc_cmdfunc(struct mtd_info *mtd, unsigned command,=
+ int column,
+> +		int page_addr)
+> +{
+> +	struct nand_chip *chip =3D mtd->priv;
+> +	struct hinfc_host *host =3D chip->priv;
+> +	int is_cache_invalid =3D 1;
+> +	unsigned int flag =3D 0;
+> +
+> +	host->command =3D  command;
+> +
+> +	switch (command) {
+> +	case NAND_CMD_READ0:
+> +	case NAND_CMD_READOOB:
+> +		if (command =3D=3D NAND_CMD_READ0)
+> +			host->offset =3D column;
+> +		else
+> +			host->offset =3D column + mtd->writesize;
+> +
+> +		is_cache_invalid =3D 0;
+> +		set_addr(mtd, column, page_addr);
+> +		hisi_nfc_send_cmd_readstart(host);
+> +		break;
+> +
+> +	case NAND_CMD_SEQIN:
+> +		host->offset =3D column;
+> +		set_addr(mtd, column, page_addr);
+> +		break;
+> +
+> +	case NAND_CMD_ERASE1:
+> +		set_addr(mtd, column, page_addr);
+> +		break;
+> +
+> +	case NAND_CMD_PAGEPROG:
+> +		hisi_nfc_send_cmd_pageprog(host);
+> +		break;
+> +
+> +	case NAND_CMD_ERASE2:
+> +		hisi_nfc_send_cmd_erase(host);
+> +		break;
+> +
+> +	case NAND_CMD_READID:
+> +		host->offset =3D column;
+> +		memset(chip->IO_ADDR_R, 0, 0x10);
+> +		hisi_nfc_send_cmd_readid(host);
+> +		break;
+> +
+> +	case NAND_CMD_STATUS:
+> +		flag =3D hinfc_read(host, HINFC504_CON);
+> +		if (chip->ecc.mode =3D=3D NAND_ECC_HW)
+> +			hinfc_write(host,
+> +				    flag && ~(HINFC504_CON_ECCTYPE_MASK <<
+> +				    HINFC504_CON_ECCTYPE_SHIFT), HINFC504_CON);
+> +
+> +		host->offset =3D 0;
+> +		memset(chip->IO_ADDR_R, 0, 0x10);
+> +		hisi_nfc_send_cmd_status(host);
+> +		hinfc_write(host, flag, HINFC504_CON);
+> +		break;
+> +
+> +	case NAND_CMD_RESET:
+> +		hisi_nfc_send_cmd_reset(host, host->chipselect);
+> +		break;
+> +
+> +	default:
+> +		dev_err(host->dev, "Error: unsupported cmd(cmd=3D%x, col=3D%x, pag=
+e=3D%x)\n",
+> +			command, column, page_addr);
+> +	}
+> +
+> +	if (is_cache_invalid) {
+> +		host->cache_addr_value[0] =3D ~0;
+> +		host->cache_addr_value[1] =3D ~0;
+> +	}
+> +}
+> +
+> +static irqreturn_t hinfc_irq_handle(int irq, void *devid)
+> +{
+> +	struct hinfc_host *host =3D devid;
+> +	unsigned int flag;
+> +
+> +	flag =3D hinfc_read(host, HINFC504_INTS);
+> +	/* store interrupts state */
+> +	host->irq_status |=3D flag;
+> +
+> +	if (flag & HINFC504_INTS_DMA) {
+> +		hinfc_write(host, HINFC504_INTCLR_DMA, HINFC504_INTCLR);
+> +		complete(&host->cmd_complete);
+> +	} else if (flag & HINFC504_INTS_CE) {
+> +		hinfc_write(host, HINFC504_INTCLR_CE, HINFC504_INTCLR);
+> +	} else if (flag & HINFC504_INTS_UE) {
+> +		hinfc_write(host, HINFC504_INTCLR_UE, HINFC504_INTCLR);
+> +	}
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int hisi_nand_read_page_hwecc(struct mtd_info *mtd,
+> +	struct nand_chip *chip, uint8_t *buf, int oob_required, int page)
+> +{
+> +	struct hinfc_host *host =3D chip->priv;
+> +	int max_bitflips =3D 0, stat =3D 0, stat_max, status_ecc;
+> +	int stat_1, stat_2;
+> +
+> +	chip->read_buf(mtd, buf, mtd->writesize);
+> +	chip->read_buf(mtd, chip->oob_poi, mtd->oobsize);
+> +
+> +	/* errors which can not be corrected by ECC */
+> +	if (host->irq_status & HINFC504_INTS_UE) {
+> +		mtd->ecc_stats.failed++;
+> +	} else if (host->irq_status & HINFC504_INTS_CE) {
+> +		/* TODO: need add other ECC modes! */
+> +		switch (chip->ecc.strength) {
+> +		case 1:
+> +			stat =3D hweight8(hinfc_read(host, HINFC504_ECC_STATUS)>>
+> +						HINFC504_ECC_1_BIT_SHIFT);
+> +			stat_max =3D 1;
+> +			break;
+> +		case 16:
+> +			status_ecc =3D hinfc_read(host, HINFC504_ECC_STATUS) >>
+> +					HINFC504_ECC_16_BIT_SHIFT & 0x0fff;
+> +			stat_2 =3D status_ecc & 0x3f;
+> +			stat_1 =3D status_ecc >> 6 & 0x3f;
+> +			stat =3D stat_1 + stat_2;
+> +			stat_max =3D max_t(int, stat_1, stat_2);
+> +		}
+> +		mtd->ecc_stats.corrected +=3D stat;
+> +		max_bitflips =3D max_t(int, max_bitflips, stat_max);
+> +	}
+> +	host->irq_status =3D 0;
+> +
+> +	return max_bitflips;
+> +}
+> +
+> +static int hisi_nand_read_oob(struct mtd_info *mtd, struct nand_chip=
+ *chip,
+> +				int page)
+> +{
+> +	struct hinfc_host *host =3D chip->priv;
+> +
+> +	chip->cmdfunc(mtd, NAND_CMD_READOOB, 0, page);
+> +	chip->read_buf(mtd, chip->oob_poi, mtd->oobsize);
+> +
+> +	if (host->irq_status & HINFC504_INTS_UE) {
+> +		host->irq_status =3D 0;
+> +		return -EBADMSG;
+> +	}
+> +
+> +	host->irq_status =3D 0;
 > +	return 0;
-> +err:
-> +	mutex_unlock(&dev->lock);
-> +	return ret;
 > +}
 > +
-> +static int altera_epcq_probe_config_dt(struct platform_device *pdev,
-> +				       struct device_node *np,
-> +				       struct altera_epcq_plat_data *pdata)
+> +static int hisi_nand_write_page_hwecc(struct mtd_info *mtd,
+> +		struct nand_chip *chip, const uint8_t *buf, int oob_required)
 > +{
-> +	struct device_node *pp = NULL;
-> +	struct resource *epcq_res;
-> +	int i = 0;
-> +	u32 id;
+> +	chip->write_buf(mtd, buf, mtd->writesize);
+> +	if (oob_required)
+> +		chip->write_buf(mtd, chip->oob_poi, mtd->oobsize);
 > +
-> +	pdata->is_epcs = of_property_read_bool(np, "is-epcs");
-> +
-> +	epcq_res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> +						"csr_base");
-> +	if (!epcq_res) {
-
-devm_ioremap_resource() will check the that 'epcq_res' is valid, so you
-don't need this whole 'if' block.
-
-> +		dev_err(&pdev->dev, "resource csr base is not defined\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	pdata->csr_base = devm_ioremap_resource(&pdev->dev, epcq_res);
-> +	if (IS_ERR(pdata->csr_base)) {
-> +		dev_err(&pdev->dev, "%s: ERROR: failed to map csr base\n",
-> +			__func__);
-> +		return PTR_ERR(pdata->csr_base);
-> +	}
-> +
-> +	epcq_res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> +						"data_base");
-> +	if (!epcq_res) {
-
-Same here.
-
-> +		dev_err(&pdev->dev, "resource data base is not defined\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	pdata->data_base = devm_ioremap_resource(&pdev->dev, epcq_res);
-> +	if (IS_ERR(pdata->data_base)) {
-> +		dev_err(&pdev->dev, "%s: ERROR: failed to map data base\n",
-> +			__func__);
-> +		return PTR_ERR(pdata->data_base);
-> +	}
-> +
-> +	pdata->board_flash_info = devm_kzalloc(&pdev->dev,
-> +					       sizeof(*pdata->board_flash_info),
-> +					       GFP_KERNEL);
-> +
-> +	/* Fill structs for each subnode (flash device) */
-> +	while ((pp = of_get_next_child(np, pp))) {
-
-for_each_available_child_of_node()?
-
-> +		struct altera_epcq_flash_info *flash_info;
-> +
-> +		flash_info = &pdata->board_flash_info[i];
-
-This is never used. Either use it below, or drop the local variable.
-
-> +		pdata->np[i] = pp;
-> +
-> +		/* Read bank id from DT */
-> +		if (of_get_property(pp, "reg", &id))
-
-Is this property optional? Your DT binding doc doesn't make it clear,
-but it seems like a property which would be wise to require (i.e., not
-optional).
-
-> +			pdata->board_flash_info[i].bank = id;
-> +		i++;
-> +	}
-> +	pdata->num_flashes = i;
 > +	return 0;
 > +}
 > +
-> +static int altera_epcq_setup_banks(struct platform_device *pdev,
-> +				   u32 bank, struct device_node *np,
-> +				   struct altera_epcq_plat_data *pdata)
+> +static void hisi_nfc_host_init(struct hinfc_host *host)
 > +{
-> +	struct altera_epcq *dev = platform_get_drvdata(pdev);
-> +	struct mtd_part_parser_data ppdata = {};
-> +	struct altera_epcq_flash_info *flash_info;
-> +	struct altera_epcq_flash *flash;
-> +	struct mtd_partition *parts = NULL;
-
-Drop this variable. Just use NULL directly below.
-
-> +	int count = 0;
-
-Same. Just use 0 below.
-
-> +	int flash_index;
-> +	int ret = 0;
-> +	uint64_t size;
-> +	uint32_t sector_size;
+> +	struct nand_chip *chip =3D &host->chip;
+> +	unsigned int flag =3D 0;
 > +
-> +	flash_info = &pdata->board_flash_info[bank];
-> +	if (!flash_info)
-> +		return -ENODEV;
+> +	host->version =3D hinfc_read(host, HINFC_VERSION);
+> +	host->addr_cycle		=3D 0;
+> +	host->addr_value[0]		=3D 0;
+> +	host->addr_value[1]		=3D 0;
+> +	host->cache_addr_value[0]	=3D ~0;
+> +	host->cache_addr_value[1]	=3D ~0;
+> +	host->chipselect		=3D 0;
 > +
-> +	if (bank > pdata->num_flashes - 1)
+> +	/* default page size: 2K, ecc_none. need modify */
+> +	flag =3D HINFC504_CON_OP_MODE_NORMAL | HINFC504_CON_READY_BUSY_SEL
+> +		| ((0x001 & HINFC504_CON_PAGESIZE_MASK)
+> +			<< HINFC504_CON_PAGEISZE_SHIFT)
+> +		| ((0x0 & HINFC504_CON_ECCTYPE_MASK)
+> +			<< HINFC504_CON_ECCTYPE_SHIFT)
+> +		| ((chip->options & NAND_BUSWIDTH_16) ?
+> +			HINFC504_CON_BUS_WIDTH : 0);
+> +	hinfc_write(host, flag, HINFC504_CON);
+> +
+> +	memset(chip->IO_ADDR_R, 0xff, HINFC504_BUFFER_BASE_ADDRESS_LEN);
+> +
+> +	hinfc_write(host, SET_HINFC504_PWIDTH(HINFC504_W_LATCH,
+> +		    HINFC504_R_LATCH, HINFC504_RW_LATCH), HINFC504_PWIDTH);
+> +
+> +	/* enable DMA irq */
+> +	hinfc_write(host, HINFC504_INTEN_DMA, HINFC504_INTEN);
+> +}
+> +
+> +static struct nand_ecclayout nand_ecc_2K_1bit =3D {
+> +	.oobfree =3D { {24, 40} }
+> +};
+> +
+> +static struct nand_ecclayout nand_ecc_2K_16bits =3D {
+> +	.oobavail =3D 6,
+> +	.oobfree =3D { {2, 6} },
+> +};
+> +
+> +static int hisi_nfc_ecc_probe(struct hinfc_host *host)
+> +{
+> +	unsigned int flag;
+> +	int size, strength, ecc_bits;
+> +	struct device *dev =3D host->dev;
+> +	struct nand_chip *chip =3D &host->chip;
+> +	struct mtd_info *mtd =3D &host->mtd;
+> +	struct device_node *np =3D host->dev->of_node;
+> +
+> +	size =3D of_get_nand_ecc_step_size(np);
+> +	strength =3D of_get_nand_ecc_strength(np);
+> +	if ((size !=3D 512) && (size !=3D 1024)) {
+> +		dev_err(dev, "error ecc size: %d\n", size);
 > +		return -EINVAL;
-> +
-> +	flash = devm_kzalloc(&pdev->dev, sizeof(*flash), GFP_KERNEL);
-> +	if (!flash)
-> +		return -ENOMEM;
-> +	flash->bank = bank;
-> +
-> +	mutex_init(&flash->lock);
-> +
-> +	/* verify whether flash is really present on board */
-> +	flash_index = altera_epcq_probe_flash(dev, bank);
-> +	if (flash_index < 0) {
-> +		dev_info(&dev->pdev->dev, "epcq:flash%d not found\n",
-> +			 flash->bank);
-> +		return flash_index;
 > +	}
 > +
-> +	dev->flash[bank] = flash;
+> +	if ((size =3D=3D 512) && (strength !=3D 1)) {
+> +		dev_err(dev, "ecc size and strength do not match\n");
+> +		return -EINVAL;
+> +	}
+> +	if ((size =3D=3D 1024) && ((strength !=3D 8) && (strength !=3D 16) =
+&&
+> +				(strength !=3D 24) && (strength !=3D 40))) {
+> +		dev_err(dev, "ecc size and strength do not match\n");
+> +		return -EINVAL;
+> +	}
 > +
-> +	size = flash_devices[flash_index].size_inbytes;
-> +	sector_size = flash_devices[flash_index].sectorsize_inbytes;
-> +	/*use do_div instead of plain div to avoid linker err*/
-> +	do_div(size, sector_size);
-> +	flash->num_sectors = size;
+> +	chip->ecc.size =3D size;
+> +	chip->ecc.strength =3D strength;
 > +
-> +	/*mtd framework */
-> +	flash->mtd.priv = dev;
-> +	flash->mtd.name = flash_devices[flash_index].name;
-> +	flash->mtd.type = MTD_NORFLASH;
-> +	flash->mtd.writesize = 1;
-> +	flash->mtd.flags = MTD_CAP_NORFLASH;
-> +	flash->mtd.size = flash_devices[flash_index].size_inbytes;
-> +	flash->mtd.erasesize = flash_devices[flash_index].sectorsize_inbytes;
-> +	flash->mtd._erase = altera_epcq_erase;
-> +	flash->mtd._read = altera_epcq_read;
-> +	flash->mtd._write = altera_epcq_write;
-> +	flash->mtd._lock = altera_epcq_lock;
-> +	flash->mtd._unlock = altera_epcq_unlock;
+> +	chip->ecc.read_page =3D hisi_nand_read_page_hwecc;
+> +	chip->ecc.read_oob =3D hisi_nand_read_oob;
+> +	chip->ecc.write_page =3D hisi_nand_write_page_hwecc;
 > +
-> +	dev_info(&pdev->dev, "mtd .name=%s .size=0x%llx (%lluM)\n",
-> +		 flash->mtd.name, (long long)flash->mtd.size,
-> +		 (long long)(flash->mtd.size >> 20));
+> +	switch (chip->ecc.strength) {
+> +	case 1:
+> +		ecc_bits =3D 1;
+> +		if (mtd->writesize =3D=3D 2048)
+> +			chip->ecc.layout =3D &nand_ecc_2K_1bit;
 > +
-> +	dev_info(&pdev->dev, ".erasesize = 0x%x(%uK)\n",
-> +		 flash->mtd.erasesize, flash->mtd.erasesize >> 10);
+> +		/* TODO: add more page size support */
+> +		break;
+> +	case 16:
+> +		ecc_bits =3D 6;
+> +		if (mtd->writesize =3D=3D 2048)
+> +			chip->ecc.layout =3D &nand_ecc_2K_16bits;
 > +
-> +	ppdata.of_node = np;
+> +		/* TODO: add more page size support */
+> +		break;
 > +
-> +	ret = mtd_device_parse_register(&flash->mtd, NULL, &ppdata, parts,
-> +					count);
+> +	/* TODO: add more ecc strength support */
+> +	default:
+> +		dev_err(dev, "not support strength: %d\n", chip->ecc.strength);
+> +		return -EINVAL;
+> +	}
+> +
+> +	flag =3D hinfc_read(host, HINFC504_CON);
+> +	/* add ecc type configure */
+> +	flag |=3D ((ecc_bits & HINFC504_CON_ECCTYPE_MASK)
+> +						<< HINFC504_CON_ECCTYPE_SHIFT);
+> +	hinfc_write(host, flag, HINFC504_CON);
+> +
+> +	/* enable ecc irq */
+> +	flag =3D hinfc_read(host, HINFC504_INTEN) & 0xfff;
+> +	hinfc_write(host, flag | HINFC504_INTEN_UE | HINFC504_INTEN_CE,
+> +		    HINFC504_INTEN);
+> +
+> +	return 0;
+> +}
+> +
+> +static int hisi_nfc_probe(struct platform_device *pdev)
+> +{
+> +	int ret =3D 0, irq, buswidth, flag, max_chips =3D HINFC504_MAX_CHIP=
+;
+> +	struct device *dev =3D &pdev->dev;
+> +	struct hinfc_host *host;
+> +	struct nand_chip  *chip;
+> +	struct mtd_info   *mtd;
+> +	struct resource	  *res;
+> +	struct device_node *np =3D dev->of_node;
+> +	struct mtd_part_parser_data ppdata;
+> +
+> +	host =3D devm_kzalloc(dev, sizeof(*host), GFP_KERNEL);
+> +	if (!host)
+> +		return -ENOMEM;
+> +	host->dev =3D dev;
+> +
+> +	platform_set_drvdata(pdev, host);
+> +	chip =3D &host->chip;
+> +	mtd  =3D &host->mtd;
+> +
+> +	irq =3D platform_get_irq(pdev, 0);
+> +	if (irq < 0) {
+> +		dev_err(dev, "no IRQ resource defined\n");
+> +		ret =3D -ENXIO;
+> +		goto err_res;
+> +	}
+> +
+> +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	host->iobase =3D devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(host->iobase)) {
+> +		ret =3D PTR_ERR(host->iobase);
+> +		dev_err(dev, "devm_ioremap_resource[0] fail\n");
+
+I don't think yhou really need this error print. devm_ioremap_resource(=
+)
+should be descriptive enough, I think.
+
+> +		goto err_res;
+> +	}
+> +
+> +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> +	chip->IO_ADDR_R =3D chip->IO_ADDR_W =3D devm_ioremap_resource(dev, =
+res);
+
+Hmm, do you really have to reuse IO_ADDR_{R,W} here? Those are only
+targeted for NAND systems which have a direct MMIO mapping to the NAND
+I/O pins. See nand_base's {read,write}_buf() and read_{byte,word}()
+implementations. But you override those.
+
+It's best if it's obvious if nand_base is somehow inadvertently using
+these pointers. So leaving them NULL is helpful.
+
+As an alternative, you can just stash another private void __iomem
+pointer in you your host struct.
+
+> +	if (IS_ERR(chip->IO_ADDR_R)) {
+> +		ret =3D PTR_ERR(chip->IO_ADDR_R);
+> +		dev_err(dev, "devm_ioremap_resource[1] fail\n");
+> +		goto err_res;
+> +	}
+> +
+> +	mtd->priv		=3D chip;
+> +	mtd->owner		=3D THIS_MODULE;
+> +	mtd->name		=3D "hisi_nand";
+> +	mtd->dev.parent         =3D &pdev->dev;
+> +
+> +	chip->priv		=3D host;
+> +	chip->cmdfunc		=3D hisi_nfc_cmdfunc;
+> +	chip->select_chip	=3D hisi_nfc_select_chip;
+> +	chip->read_byte		=3D hisi_nfc_read_byte;
+> +	chip->read_word		=3D hisi_nfc_read_word;
+> +	chip->write_buf		=3D hisi_nfc_write_buf;
+> +	chip->read_buf		=3D hisi_nfc_read_buf;
+> +	chip->chip_delay	=3D HINFC504_CHIP_DELAY;
+> +
+> +	chip->ecc.mode =3D of_get_nand_ecc_mode(np);
+> +
+> +	buswidth =3D of_get_nand_bus_width(np);
+> +	if (buswidth =3D=3D 16)
+> +		chip->options |=3D NAND_BUSWIDTH_16;
+> +
+> +	hisi_nfc_host_init(host);
+> +
+> +	ret =3D devm_request_irq(dev, irq, hinfc_irq_handle, IRQF_DISABLED,
+> +				"nandc", host);
 > +	if (ret) {
-> +		dev_err(&pdev->dev, "Err MTD partition=%d\n", ret);
-> +		goto err;
+> +		dev_err(dev, "failed to request IRQ\n");
+> +		goto err_res;
+> +	}
+> +
+> +	ret =3D nand_scan_ident(mtd, max_chips, NULL);
+> +	if (ret) {
+> +		ret =3D -ENODEV;
+> +		goto err_res;
+> +	}
+> +
+> +	host->buffer =3D dmam_alloc_coherent(dev, mtd->writesize + mtd->oob=
+size,
+> +		&host->dma_buffer, GFP_KERNEL);
 
-You don't want to unregister a MTD that failed to register. The MTD core
-code should handle that itself.
+You need to check this for allocation failures.
 
-Instead of this if (ret) {} block, I'd just make this:
-
-	return mtd_device_parse_register(&flash->mtd, NULL, &ppdata, NULL, 0);
-
+> +	host->dma_oob =3D host->dma_buffer + mtd->writesize;
+> +	memset(host->buffer, 0xff, mtd->writesize + mtd->oobsize);
+> +
+> +	flag =3D hinfc_read(host, HINFC504_CON);
+> +	flag &=3D ~(HINFC504_CON_PAGESIZE_MASK << HINFC504_CON_PAGEISZE_SHI=
+=46T);
+> +	switch (mtd->writesize) {
+> +	case 2048:
+> +		flag |=3D (0x001 << HINFC504_CON_PAGEISZE_SHIFT); break;
+> +	/*
+> +	 * TODO: add more pagesize support,
+> +	 * default pagesize has been set in hisi_nfc_host_init
+> +	 */
+> +	default:
+> +		dev_err(dev, "NON-2KB page size nand flash\n");
+> +		ret =3D -EINVAL;
+> +		goto err_res;
+> +	}
+> +	hinfc_write(host, flag, HINFC504_CON);
+> +
+> +	if (chip->ecc.mode =3D=3D NAND_ECC_HW)
+> +		hisi_nfc_ecc_probe(host);
+> +
+> +	ret =3D nand_scan_tail(mtd);
+> +	if (ret) {
+> +		dev_err(dev, "nand_scan_tail failed: %d\n", ret);
+> +		goto err_res;
+> +	}
+> +
+> +	ppdata.of_node =3D np;
+> +	ret =3D mtd_device_parse_register(mtd, NULL, &ppdata, NULL, 0);
+> +	if (ret) {
+> +		dev_err(dev, "Err MTD partition=3D%d\n", ret);
+> +		goto err_mtd;
 > +	}
 > +
 > +	return 0;
 > +
-> +err:
-> +	mtd_device_unregister(&flash->mtd);
+> +err_mtd:
+> +	nand_release(mtd);
+> +err_res:
 > +	return ret;
 > +}
 > +
-> +static int altera_epcq_probe(struct platform_device *pdev)
+> +static int hisi_nfc_remove(struct platform_device *pdev)
 > +{
-> +	struct device_node *np = pdev->dev.of_node;
-> +	struct altera_epcq_plat_data *pdata = NULL;
-> +	struct altera_epcq *dev;
-> +	int ret = 0;
-> +	int i;
+> +	struct hinfc_host *host =3D platform_get_drvdata(pdev);
+> +	struct mtd_info *mtd =3D &host->mtd;
 > +
-> +	if (!np) {
-> +		ret = -ENODEV;
-> +		dev_err(&pdev->dev, "no device found\n");
-> +		goto err;
-> +	}
+> +	nand_release(mtd);
 > +
-> +	pdata = devm_kzalloc(&pdev->dev,
-> +			     sizeof(struct altera_epcq_plat_data),
-> +			     GFP_KERNEL);
+> +	return 0;
+> +}
 > +
-> +	if (!pdata) {
-> +		ret = -ENOMEM;
-> +		dev_err(&pdev->dev, "%s: ERROR: no memory\n", __func__);
+> +#ifdef CONFIG_PM_SLEEP
+> +static int hisi_nfc_suspend(struct device *dev)
+> +{
+> +	struct hinfc_host *host =3D dev_get_drvdata(dev);
+> +	unsigned long timeout =3D jiffies + HINFC504_NFC_PM_TIMEOUT;
+> +
+> +	while (time_before(jiffies, timeout)) {
+> +		if (((hinfc_read(host, HINFC504_STATUS) & 0x1) =3D=3D 0x0) &&
+> +		    (hinfc_read(host, HINFC504_DMA_CTRL) &
+> +		     HINFC504_DMA_CTRL_DMA_START)) {
+> +			_cond_resched();
 
-Unnecessary print. The MM code will print plenty of info if you're
-out of memory.
+Why not just cond_resched()?
 
-> +		goto err;
-> +	}
-> +	ret = altera_epcq_probe_config_dt(pdev, np, pdata);
-> +	if (ret) {
-> +		ret = -ENODEV;
-> +		dev_err(&pdev->dev, "probe fail\n");
-> +		goto err;
-> +	}
-> +
-> +	dev = devm_kzalloc(&pdev->dev, sizeof(*dev), GFP_ATOMIC);
-> +	if (!dev) {
-> +		ret = -ENOMEM;
-> +		dev_err(&pdev->dev, "mem alloc fail\n");
-
-Same here.
-
-> +		goto err;
-> +	}
-> +	mutex_init(&dev->lock);
-> +	dev->pdev = pdev;
-> +	dev->is_epcs = pdata->is_epcs;
-> +	dev->csr_base = pdata->csr_base;
-> +	dev->data_base = pdata->data_base;
-> +
-> +	/*check number of flashes*/
-> +	dev->num_flashes = pdata->num_flashes;
-> +	if (dev->num_flashes > MAX_NUM_FLASH_CHIP) {
-> +		dev_err(&pdev->dev, "exceeding max number of flashes\n");
-> +		dev->num_flashes = MAX_NUM_FLASH_CHIP;
-> +	}
-> +
-> +	/* check clock*/
-> +	dev->clk = devm_clk_get(&pdev->dev, NULL);
-> +	if (IS_ERR(dev->clk)) {
-> +		ret = PTR_ERR(dev->clk);
-> +		goto err;
-> +	}
-> +	ret = clk_prepare_enable(dev->clk);
-> +	if (ret)
-> +		goto err;
-> +
-> +	platform_set_drvdata(pdev, dev);
-> +
-> +	/* loop for each serial flash which is connected to epcq */
-> +	for (i = 0; i < dev->num_flashes; i++) {
-> +		ret = altera_epcq_setup_banks(pdev, i, pdata->np[i], pdata);
-> +		if (ret) {
-> +			dev_err(&pdev->dev, "bank setup failed\n");
-> +			goto err_bank_setup;
+> +			return 0;
 > +		}
 > +	}
 > +
-> +	return 0;
+> +	dev_err(host->dev, "nand controller suspend timeout.\n");
 > +
-> +err_bank_setup:
-> +	clk_disable_unprepare(dev->clk);
-> +err:
-> +	return ret;
+> +	return -EAGAIN;
 > +}
 > +
-> +static int altera_epcq_remove(struct platform_device *pdev)
+> +static int hisi_nfc_resume(struct device *dev)
 > +{
-> +	struct altera_epcq *dev;
-> +	struct altera_epcq_flash *flash;
-> +	int ret, i;
+> +	int cs;
+> +	struct hinfc_host *host =3D dev_get_drvdata(dev);
+> +	struct nand_chip *chip =3D &host->chip;
 > +
-> +	dev = platform_get_drvdata(pdev);
-> +
-> +	/* clean up for all nor flash */
-> +	for (i = 0; i < dev->num_flashes; i++) {
-> +		flash = dev->flash[i];
-> +		if (!flash)
-> +			continue;
-> +
-> +		/* clean up mtd stuff */
-> +		ret = mtd_device_unregister(&flash->mtd);
-> +		if (ret)
-> +			dev_err(&pdev->dev, "error removing mtd\n");
-> +	}
-> +
-> +	clk_disable_unprepare(dev->clk);
+> +	for (cs =3D 0; cs < chip->numchips; cs++)
+> +		hisi_nfc_send_cmd_reset(host, cs);
+> +	hinfc_write(host, SET_HINFC504_PWIDTH(HINFC504_W_LATCH,
+> +		    HINFC504_R_LATCH, HINFC504_RW_LATCH), HINFC504_PWIDTH);
 > +
 > +	return 0;
 > +}
-> +
-> +#ifdef CONFIG_PM
-
-Make this CONFIG_PM_SLEEP.
-
-> +static int altera_epcq_suspend(struct device *dev)
-> +{
-> +	struct altera_epcq *sdev = dev_get_drvdata(dev);
-> +
-> +	clk_disable_unprepare(sdev->clk);
-> +
-> +	return 0;
-> +}
-> +
-> +static int altera_epcq_resume(struct device *dev)
-> +{
-> +	struct altera_epcq *sdev = dev_get_drvdata(dev);
-> +	int ret = -EPERM;
-
-Drop 'ret'.
-
-> +
-> +	ret = clk_prepare_enable(sdev->clk);
-
-Just:
-
-	return clk_prepare_enable(sdev->clk);
-
-> +
-> +	return ret;
-> +}
-> +
-> +static SIMPLE_DEV_PM_OPS(altera_epcq_pm_ops, altera_epcq_suspend,
-> +			 altera_epcq_resume);
 > +#endif
+> +static SIMPLE_DEV_PM_OPS(hisi_nfc_pm_ops, hisi_nfc_suspend, hisi_nfc=
+_resume);
 > +
-> +static const struct of_device_id altera_epcq_id_table[] = {
-> +	{ .compatible = "altr,epcq-1.0" },
+> +static const struct of_device_id nfc_id_table[] =3D {
+> +	{ .compatible =3D "hisilicon,504-nfc" },
 > +	{}
 > +};
-> +MODULE_DEVICE_TABLE(of, altera_epcq_id_table);
+> +MODULE_DEVICE_TABLE(of, nfc_id_table);
 > +
-> +static struct platform_driver altera_epcq_driver = {
-> +	.driver = {
-> +		.name = ALTERA_EPCQ_RESOURCE_NAME,
-> +		.bus = &platform_bus_type,
-> +		.owner = THIS_MODULE,
-
-The .owner assignment is no longer necessary.
-
-> +		.of_match_table = altera_epcq_id_table,
-> +#ifdef CONFIG_PM
-
-Also CONFIG_PM_SLEEP.
-
-> +		.pm = &altera_epcq_pm_ops,
-> +#endif
+> +static struct platform_driver hisi_nfc_driver =3D {
+> +	.driver =3D {
+> +		.name  =3D "hisi_nand",
+> +		.of_match_table =3D of_match_ptr(nfc_id_table),
+> +		.pm =3D &hisi_nfc_pm_ops,
 > +	},
-> +	.probe = altera_epcq_probe,
-> +	.remove = altera_epcq_remove,
-> +};
-> +module_platform_driver(altera_epcq_driver);
-> +
-> +MODULE_AUTHOR("Viet Nga Dao <vndao@altera.com>");
-> +MODULE_DESCRIPTION("MTD Altera EPCQ Driver");
-> +MODULE_LICENSE("GPL v2");
-> diff --git a/drivers/mtd/devices/altera_epcq.h b/drivers/mtd/devices/altera_epcq.h
-> new file mode 100644
-> index 0000000..c3d15e5
-> --- /dev/null
-> +++ b/drivers/mtd/devices/altera_epcq.h
-> @@ -0,0 +1,130 @@
-> +/*
-> + * Copyright (C) 2014 Altera Corporation. All rights reserved
-> + *
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms and conditions of the GNU General Public License,
-> + * version 2, as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope it will be useful, but WITHOUT
-> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-> + * more details.
-> + *
-> + * You should have received a copy of the GNU General Public License along with
-> + * this program.  If not, see <http://www.gnu.org/licenses/>.
-> + */
-> +
-> +#ifndef __ALTERA_ECPQ_H
-> +#define __ALTERA_ECPQ_H
-> +
-> +#define ALTERA_EPCQ_RESOURCE_NAME        "altera_epcq"
-> +/* max possible slots for serial flash chip in the EPCQ controller */
-> +#define MAX_NUM_FLASH_CHIP	3
-> +
-> +/* macro to define partitions for flash devices */
-> +#define DEFINE_PARTS(n, of, s)		\
-
-This macro is not used anywhere. Drop it?
-
-> +{					\
-> +	.name = n,			\
-> +	.offset = of,			\
-> +	.size = s,			\
-> +}
-> +
-> +struct altera_epcq_flash_info {
-> +	u32 bank;
-> +	struct mtd_partition *partitions;
-> +	int nr_partitions;
+> +	.probe		=3D hisi_nfc_probe,
+> +	.remove		=3D hisi_nfc_remove,
 > +};
 > +
-> +struct altera_epcq_plat_data {
-> +	void __iomem *csr_base;
-> +	void __iomem *data_base;
-> +	bool is_epcs;
-> +	u32 num_flashes;
-> +	struct altera_epcq_flash_info *board_flash_info;
-> +	struct device_node *np[MAX_NUM_FLASH_CHIP];
-> +};
+> +module_platform_driver(hisi_nfc_driver);
 > +
-> +struct altera_epcq {
-> +	struct clk *clk;
-> +	bool is_epcs;
-> +	struct mutex lock;	/*device lock*/
-> +	void __iomem *csr_base;
-> +	void __iomem *data_base;
-> +	struct platform_device *pdev;
-> +	u32 num_flashes;
-> +	struct altera_epcq_flash *flash[MAX_NUM_FLASH_CHIP];
-> +};
-> +
-> +struct altera_epcq_flash {
-> +	u32 bank;
-> +	u32 num_sectors;
-> +	u32 num_parts;
-> +	struct mtd_partition *parts;
-> +	struct mutex lock;	/*flash lock*/
-> +	struct mtd_info mtd;
-> +};
-> +
-> +/* Define max times to check status register before we give up. */
-> +#define EPCQ_MAX_TIME_OUT			(40 * HZ)
-> +
-> +/* defines for status register */
-> +#define EPCQ_SR_REG				0x0
-> +#define EPCQ_SR_WIP_MASK			0x00000001
-> +#define EPCQ_SR_WIP				0x1
-> +#define EPCQ_SR_WEL				0x2
-> +#define EPCQ_SR_BP0				0x4
-> +#define EPCQ_SR_BP1				0x8
-> +#define EPCQ_SR_BP2				0x10
-> +#define EPCQ_SR_BP3				0x40
-> +#define EPCQ_SR_TB				0x20
-> +
-> +/* defines for device id register */
-> +#define EPCQ_SID_REG				0x4
-> +#define EPCQ_RDID_REG				0x8
-> +#define EPCQ_RDID_MASK				0x000000FF
-> +/*
-> + * EPCQ_MEM_OP register offset
-> + *
-> + * The EPCQ_MEM_OP register is used to do memory protect and erase operations
-> + *
-> + */
-> +#define EPCQ_MEM_OP_REG				0xC
-> +
-> +#define EPCQ_MEM_OP_CMD_MASK			0x00000003
-> +#define EPCQ_MEM_OP_BULK_ERASE_CMD		0x00000001
-> +#define EPCQ_MEM_OP_SECTOR_ERASE_CMD		0x00000002
-> +#define EPCQ_MEM_OP_SECTOR_PROTECT_CMD		0x00000003
-> +#define EPCQ_MEM_OP_SECTOR_VALUE_MASK		0x0003FF00
-> +#define EPCQ_MEM_OP_SECTOR_PROTECT_VALUE_MASK	0x00001F00
-> +#define EPCQ_MEM_OP_SECTOR_PROTECT_SHIFT	8
-> +/*
-> + * EPCQ_ISR register offset
-> + *
-> + * The EPCQ_ISR register is used to determine whether an invalid write or erase
-> + * operation trigerred an interrupt
-> + *
-> + */
-> +#define EPCQ_ISR_REG				0x10
-> +
-> +#define EPCQ_ISR_ILLEGAL_ERASE_MASK		0x00000001
-> +#define EPCQ_ISR_ILLEGAL_WRITE_MASK		0x00000002
-> +
-> +/*
-> + * EPCQ_IMR register offset
-> + *
-> + * The EPCQ_IMR register is used to mask the invalid erase or the invalid write
-> + * interrupts.
-> + *
-> + */
-> +#define EPCQ_IMR_REG				0x14
-> +#define EPCQ_IMR_ILLEGAL_ERASE_MASK		0x00000001
-> +
-> +#define EPCQ_IMR_ILLEGAL_WRITE_MASK		0x00000002
-> +
-> +#define EPCQ_CHIP_SELECT_REG			0x18
-> +#define EPCQ_CHIP_SELECT_MASK			0x00000007
-> +#define EPCQ_CHIP_SELECT_0			0x00000001
-> +#define EPCQ_CHIP_SELECT_1			0x00000002
-> +#define EPCQ_CHIP_SELECT_2			0x00000004
-> +
-> +#endif /* __ALTERA_ECPQ_H */
+> +MODULE_LICENSE("GPL");
+> +MODULE_AUTHOR("Zhiyong Cai");
+> +MODULE_AUTHOR("Zhou Wang");
+> +MODULE_DESCRIPTION("Hisilicon Nand Flash Controller Driver");
 
 Brian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
