@@ -1,102 +1,195 @@
-From: atull <atull@opensource.altera.com>
-Subject: Re: [PATCH v8 2/4] fpga manager: add sysfs interface document
-Date: Tue, 13 Jan 2015 11:27:05 -0600
-Message-ID: <alpine.DEB.2.02.1501131124320.27340@linuxheads99>
-References: <20150107084819.GA1887@amd> <alpine.DEB.2.02.1501091302370.30067@linuxheads99> <20150109205643.GA5761@amd> <4D4EA2D5-68DD-49F7-9E2D-3A0A8F6AF9CA@konsulko.com> <20150110151118.GA16036@amd> <alpine.DEB.2.10.1501111009180.2556@shineypoop>
- <20150112084530.GA28681@amd> <bed1d7ce1b984c79acc75a47495cb959@BL2FFO11FD043.protection.gbl> <20150113072857.GA11760@amd> <D62286C4-2800-47B6-9D69-6F92E27347AF@konsulko.com> <20150113075651.GB11760@amd>
+From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v5] can: Convert to runtime_pm
+Date: Tue, 13 Jan 2015 18:44:51 +0100
+Message-ID: <54B55993.4020806@pengutronix.de>
+References: <baf987c11c0242c2bf87b81f9396b09d@BN1BFFO11FD018.protection.gbl> <3a3437c5c8ff48d9a45fee7e81fa8dca@BY2FFO11FD058.protection.gbl> <54B4FCB5.6040904@pengutronix.de> <6ea3c0ea0f5c4deb9a6e4738a8d94a36@BN1AFFO11FD047.protection.gbl> <54B55326.1060606@pengutronix.de> <1ef3e0f060f54c888061514bd2926762@BY2FFO11FD033.protection.gbl>
 Mime-Version: 1.0
-Content-Type: multipart/mixed;
-	boundary="8323329-132828085-1421170041=:27340"
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20150113075651.GB11760@amd>
-Sender: linux-doc-owner@vger.kernel.org
-To: Pavel Machek <pavel@denx.de>
-Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Michal Simek <michal.simek@xilinx.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, jgunthorpe@obsidianresearch.com, hpa@zytor.com, Michal Simek <monstr@monstr.eu>, rdunlap@infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, robh+dt@kernel.org, Grant Likely <grant.likely@linaro.org>, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, Mark Brown <broonie@kernel.org>, philip@balister.org, rubini@gnudd.com, Steffen Trumtrar <s.trumtrar@pengutronix.de>, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, Felipe Balbi <balbi@ti.com>, m.chehab@samsung.com, davidb@codeaurora.org, Rob Landley <rob@landley.net>, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, Linus Walleij <linus.walleij@lina>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="us25MiQkMcVQnudKqAhiaCbUgJr8xqOwT"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1ef3e0f060f54c888061514bd2926762-neA4ZlFjCT3DAA6W7k9C4mYJ4DzVTqeXkX/xN29GLwg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?B?U8O2cmVuIEJyaW5rbWFubg==?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: Kedareswara rao Appana <appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kedareswara rao Appana <appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---8323329-132828085-1421170041=:27340
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--us25MiQkMcVQnudKqAhiaCbUgJr8xqOwT
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 13 Jan 2015, Pavel Machek wrote:
+On 01/13/2015 06:24 PM, S=C3=B6ren Brinkmann wrote:
+> On Tue, 2015-01-13 at 06:17PM +0100, Marc Kleine-Budde wrote:
+>> On 01/13/2015 06:08 PM, S=C3=B6ren Brinkmann wrote:
+>>> On Tue, 2015-01-13 at 12:08PM +0100, Marc Kleine-Budde wrote:
+>>>> On 01/12/2015 07:45 PM, S=C3=B6ren Brinkmann wrote:
+>>>>> On Mon, 2015-01-12 at 08:34PM +0530, Kedareswara rao Appana wrote:
+>>>>>> Instead of enabling/disabling clocks at several locations in the d=
+river,
+>>>>>> Use the runtime_pm framework. This consolidates the actions for ru=
+ntime PM
+>>>>>> In the appropriate callbacks and makes the driver more readable an=
+d mantainable.
+>>>>>>
+>>>>>> Signed-off-by: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+>>>>>> Signed-off-by: Kedareswara rao Appana <appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+>>>>>> ---
+>>>>>> Changes for v5:
+>>>>>>  - Updated with the review comments.
+>>>>>>    Updated the remove fuction to use runtime_pm.
+>>>>>> Chnages for v4:
+>>>>>>  - Updated with the review comments.
+>>>>>> Changes for v3:
+>>>>>>   - Converted the driver to use runtime_pm.
+>>>>>> Changes for v2:
+>>>>>>   - Removed the struct platform_device* from suspend/resume
+>>>>>>     as suggest by Lothar.
+>>>>>>
+>>>>>>  drivers/net/can/xilinx_can.c |  157 ++++++++++++++++++++++++++++-=
+------------
+>>>>>>  1 files changed, 107 insertions(+), 50 deletions(-)
+>>>>> [..]
+>>>>>> +static int __maybe_unused xcan_runtime_resume(struct device *dev)=
 
-> On Tue 2015-01-13 09:40:18, Pantelis Antoniou wrote:
-> > Hi Pavel,
-> > 
-> > > On Jan 13, 2015, at 09:28 , Pavel Machek <pavel@denx.de> wrote:
-> > > 
-> > > Hi!
-> > > 
-> > >>>>>>>>>> +What:		/sys/class/fpga_manager/<fpga>/firmware
-> > >>>>>>>>>> +Date:		October 2014
-> > >>>>>>>>>> +KernelVersion:	3.18
-> > >>>>>>>>>> +Contact:	Alan Tull <atull@opensource.altera.com>
-> > >>>>>>>>>> +Description:	Name of the FPGA image file to load using firmware
-> > >>>>>>>>>> class.
-> > >>>>>>>>> 
-> > >>>>>>>>> This one is ugly: it unneccessarily passes firmware name through the
-> > >>>>>>>>> kernel. Just make interface and code simpler by always passing
-> > >>>>>>>>> "socfpga-fpga-image" or something like that.
-> > > ...
-> > > 
-> > >>> What is cumbersome about symlink? Why is "fake" symlink in sysfs better?
-> > >>> 
-> > >>>> Previous uses of the firmware layer has been to use it to load once after
-> > >>>> bootup; this is different since some use cases will want to switch out
-> > >>>> the FPGA image.  If someone wants there to be only one FPGA image on
-> > >>>> the FGPA forever, they will probably not be using this framework; their
-> > >>>> FPGA will probably be loaded before Linux boots up.
-> > >>> 
-> > >>> Why? I have just one image on the fpga, and would prefer to load it
-> > >>> from Linux.
-> > >> 
-> > >> Pavel: These patches target staging and sysfs interface doesn't need to be stable
-> > >> at this time. I would prefer to add these patches to staging for 3.20
-> > >> and feel free to send the patch which fix this.
-> > > 
-> > > Interesting way to address patch review. "We'll merge it, and you can
-> > > fix it up later".
-> > > 
-> > >> With your code will be exactly clear how you want to use it and we can
-> > >> talk about it.
-> > > 
-> > > I'm pretty sure Alan knows what I want at this point, he just does not
-> > > want to do it.
-> > > 
-> > > For the record, I want to drop "firmware" file, use fixed firmware
-> > > name, and deal with multiple firmwares in userspace (using symlink or
-> > > udev magic).
-> > 
-> > That’s completely bogus. Using a fixed firmware file does not respond to
-> > real world usage, and there are no words to describe the hacks using
-> > symlinks and udev in an embedded product.
-> 
-> > > I believe this is simplest solution, should be adequate, and is
-> > > certainly less ugly than implementing fake symlink in
-> > > /sys/.../firmware. And I have yet to hear what is wrong with that
-> > > suggestion.
-> > 
-> > Everything.
-> 
-> Can you be more specific? Current solution already has a fake symlink,
-> implemented badly.
-> 
-> Just remove it, and use real symlink (and then you can optionally
-> think of something better...)
-> 
+>>>>>>  {
+>>>>>> -	struct platform_device *pdev =3D dev_get_drvdata(dev);
+>>>>>> -	struct net_device *ndev =3D platform_get_drvdata(pdev);
+>>>>>> +	struct net_device *ndev =3D dev_get_drvdata(dev);
+>>>>>>  	struct xcan_priv *priv =3D netdev_priv(ndev);
+>>>>>>  	int ret;
+>>>>>> +	u32 isr, status;
+>>>>>> =20
+>>>>>>  	ret =3D clk_enable(priv->bus_clk);
+>>>>>>  	if (ret) {
+>>>>>> @@ -1014,15 +1030,28 @@ static int __maybe_unused xcan_resume(stru=
+ct device *dev)
+>>>>>>  	ret =3D clk_enable(priv->can_clk);
+>>>>>>  	if (ret) {
+>>>>>>  		dev_err(dev, "Cannot enable clock.\n");
+>>>>>> -		clk_disable_unprepare(priv->bus_clk);
+>>>>>> +		clk_disable(priv->bus_clk);
+>>>>> [...]
+>>>>>> @@ -1173,12 +1219,23 @@ static int xcan_remove(struct platform_dev=
+ice *pdev)
+>>>>>>  {
+>>>>>>  	struct net_device *ndev =3D platform_get_drvdata(pdev);
+>>>>>>  	struct xcan_priv *priv =3D netdev_priv(ndev);
+>>>>>> +	int ret;
+>>>>>> +
+>>>>>> +	ret =3D pm_runtime_get_sync(&pdev->dev);
+>>>>>> +	if (ret < 0) {
+>>>>>> +		netdev_err(ndev, "%s: pm_runtime_get failed(%d)\n",
+>>>>>> +				__func__, ret);
+>>>>>> +		return ret;
+>>>>>> +	}
+>>>>>> =20
+>>>>>>  	if (set_reset_mode(ndev) < 0)
+>>>>>>  		netdev_err(ndev, "mode resetting failed!\n");
+>>>>>> =20
+>>>>>>  	unregister_candev(ndev);
+>>>>>> +	pm_runtime_disable(&pdev->dev);
+>>>>>>  	netif_napi_del(&priv->napi);
+>>>>>> +	clk_disable_unprepare(priv->bus_clk);
+>>>>>> +	clk_disable_unprepare(priv->can_clk);
+>>>>>
+>>>>> Shouldn't pretty much all these occurrences of clk_disable/enable
+>>>>> disappear? This should all be handled by the runtime_pm framework n=
+ow.
+>>>>
+>>>> We have:
+>>>> - clk_prepare_enable() in probe
+>>>
+>>> This should become something like pm_runtime_get_sync(), shouldn't it=
+?
+>>>
+>>>> - clk_disable_unprepare() in remove
+>>>
+>>> pm_runtime_put()
+>>>
+>>>> - clk_enable() in runtime_resume
+>>>> - clk_disable() in runtime_suspend
+>>>
+>>> These are the ones needed.
+>>>
+>>> The above makes me suspect that the clocks are always on, regardless =
+of
+>>
+>> Define "on" :)
+>> The clocks are prepared after probe() exists, but not enabled. The fir=
+st
+>> pm_runtime_get_sync() will enable the clocks.
+>>
+>>> the runtime suspend state since they are enabled in probe and disable=
+d
+>>> in remove, is that right? Ideally, the usage in probe and remove shou=
+ld
+>>> be migrated to runtime_pm and clocks should really only be running wh=
+en
+>>> needed and not throughout the whole lifetime of the driver.
+>>
+>> The clocks are not en/disabled via pm_runtime, because
+>> pm_runtime_get_sync() is called from atomic contect. We can have anoth=
+er
+>> look into the driver and try to change this.
 
-Hi Pavel,
+> Wasn't that why the call to pm_runtime_irq_safe() was added?
 
-I still don't get what you are saying.  It's not a symlink.  I'm not
-changing it.  
+Good question. That should be investigated.
 
-Alan
+> Also, clk_enable/disable should be okay to be run from atomic context.
+> And if the clock are already prepared after the exit of probe that
+> should be enough. Then remove() should just have to do the unprepare.
+> But I don't see why runtime_pm shouldn't be able to do the
+> enable/disable.
+
+runtime_pm does call the clk_{enable,disable} function. But you mean
+clk_prepare() + pm_runtime_get_sync() should be used in probe() instead
+of calling clk_prepare_enable(). Good idea! I think the
+"pm_runtime_set_active(&pdev->dev);" has to be removed from the patch.
+
+Coming back whether blocking calls are allowed or not.
+If you make a call to pm_runtime_irq_safe(), you state that it's okay to
+call pm_runtime_get_sync() from atomic context. But it's only called in
+open, probe, remove and in xcan_get_berr_counter, which is not called
+from atomic either. So let's try to remove the pm_runtime_irq_safe() and
+use clk_prepare_enable() clk_disable_unprepare() in the runtime_resume()
+runtime_suspend() functions.
+
+Marc
+
+--=20
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
 
 
-> 
-> 									Pavel
-> -- 
-> (english) http://www.livejournal.com/~pavelmachek
-> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
-> 
---8323329-132828085-1421170041=:27340--
+--us25MiQkMcVQnudKqAhiaCbUgJr8xqOwT
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUtVmTAAoJECte4hHFiupU1FUQAIdZNssAS+zUZi+n5TEf/nNF
+PJr4T2/pDK5wmtY94YcJJInj2QafyIflwD62iV3a1OyB4bog9oYM1ykV7l30v/it
+DUcERzWgBjdAI1xbJ9ZsTjpd0pIZIlPxgZbFBEKjWwKSg0gO3Rz4tnOxYI4+6fzV
+UDfEjK8kTLdS1y1MoUyFM/9HRxA+XCH6upuVZAf6wTw46747PFXj5qkGoOhhfkUl
+mrn2fgB+fT4QkAEXNRtceLLG40u2OT/t/KkwggKjOQfI+x3fXdenCtEA1nXAWPBr
+j3EjKnZGbTrUQ353PLmufXrPNu3fH8DYP4UIr4UC4THkWXoCQ1+HiiN6KK7gRoeq
+ATsisaKYVI+Gq1feqS+AaHja1sY4EZ9zsHqvy96mBxxPe4+IE+AuVnveeQPeXtku
+2aLUQq/0MAqufN9xcLH8aGb1s5tZp+JTrJMnB1Q3NRLAP/rPhORhBexpLf97REKE
+Aih7t9iIxaneXSYR3YwL5TvwIjAlGzRN/4UANZuL7qqHnUwiIucGryMqT4N2a22y
+BhQkHHNEgv3ZzZ27/QtgEo7rzVrTiYncCA9e3CZY/cv5/6hFtqnIEnBMQuD6W0zR
+xaQ/aA+GP/FkVn39vVpIF/Siu8dMZGf+g2fJqjBeD54karBEMGKhifHoLpEPyb3z
+79+N+06qEEy8teM+YLe4
+=bdOt
+-----END PGP SIGNATURE-----
+
+--us25MiQkMcVQnudKqAhiaCbUgJr8xqOwT--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
