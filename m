@@ -1,84 +1,48 @@
-From: Pavel Machek <pavel@denx.de>
-Subject: Re: [PATCH v8 2/4] fpga manager: add sysfs interface document
-Date: Tue, 13 Jan 2015 08:56:51 +0100
-Message-ID: <20150113075651.GB11760@amd>
-References: <20150107084819.GA1887@amd>
- <alpine.DEB.2.02.1501091302370.30067@linuxheads99>
- <20150109205643.GA5761@amd>
- <4D4EA2D5-68DD-49F7-9E2D-3A0A8F6AF9CA@konsulko.com>
- <20150110151118.GA16036@amd>
- <alpine.DEB.2.10.1501111009180.2556@shineypoop>
- <20150112084530.GA28681@amd>
- <bed1d7ce1b984c79acc75a47495cb959@BL2FFO11FD043.protection.gbl>
- <20150113072857.GA11760@amd>
- <D62286C4-2800-47B6-9D69-6F92E27347AF@konsulko.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/5] gpio: Cygnus: define Broadcom Cygnus GPIO binding
+Date: Tue, 13 Jan 2015 08:57:30 +0100
+Message-ID: <CACRpkdaTU_efMOpKoEdBA0rDHyn6wcn7VamUZRiX-K2MYZygBQ@mail.gmail.com>
+References: <rjui@broadcom.com>
+	<1417826408-1600-1-git-send-email-rjui@broadcom.com>
+	<1417826408-1600-2-git-send-email-rjui@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <D62286C4-2800-47B6-9D69-6F92E27347AF@konsulko.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Cc: mark.rutland@arm.com, linux-doc@vger.kernel.org, rubini@gnudd.com, hpa@zytor.com, Steffen Trumtrar <s.trumtrar@pengutronix.de>, devel@driverdev.osuosl.org, sameo@linux.intel.com, nico@linaro.org, ijc+devicetree@hellion.org.uk, Michal Simek <michal.simek@xilinx.com>, kyle.teske@ni.com, jgunthorpe@obsidianresearch.com, Grant Likely <grant.likely@linaro.org>, davidb@codeaurora.org, Linus Walleij <linus.walleij@linaro.org>, cesarb@cesarb.net, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, iws@ovro.caltech.edu, atull <atull@opensource.altera.com>, Mark Brown <broonie@kernel.org>, philip@balister.org, dinguyen@opensource.altera.com, Michal Simek <monstr@monstr.eu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, yvanderv@opensource.altera.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, Alan Tull <delicious.qu>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1417826408-1600-2-git-send-email-rjui@broadcom.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Ray Jui <rjui@broadcom.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Scott Branden <sbranden@broadcom.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlIDIwMTUtMDEtMTMgMDk6NDA6MTgsIFBhbnRlbGlzIEFudG9uaW91IHdyb3RlOgo+IEhp
-IFBhdmVsLAo+IAo+ID4gT24gSmFuIDEzLCAyMDE1LCBhdCAwOToyOCAsIFBhdmVsIE1hY2hlayA8
-cGF2ZWxAZGVueC5kZT4gd3JvdGU6Cj4gPiAKPiA+IEhpIQo+ID4gCj4gPj4+Pj4+Pj4+PiArV2hh
-dDoJCS9zeXMvY2xhc3MvZnBnYV9tYW5hZ2VyLzxmcGdhPi9maXJtd2FyZQo+ID4+Pj4+Pj4+Pj4g
-K0RhdGU6CQlPY3RvYmVyIDIwMTQKPiA+Pj4+Pj4+Pj4+ICtLZXJuZWxWZXJzaW9uOgkzLjE4Cj4g
-Pj4+Pj4+Pj4+PiArQ29udGFjdDoJQWxhbiBUdWxsIDxhdHVsbEBvcGVuc291cmNlLmFsdGVyYS5j
-b20+Cj4gPj4+Pj4+Pj4+PiArRGVzY3JpcHRpb246CU5hbWUgb2YgdGhlIEZQR0EgaW1hZ2UgZmls
-ZSB0byBsb2FkIHVzaW5nIGZpcm13YXJlCj4gPj4+Pj4+Pj4+PiBjbGFzcy4KPiA+Pj4+Pj4+Pj4g
-Cj4gPj4+Pj4+Pj4+IFRoaXMgb25lIGlzIHVnbHk6IGl0IHVubmVjY2Vzc2FyaWx5IHBhc3NlcyBm
-aXJtd2FyZSBuYW1lIHRocm91Z2ggdGhlCj4gPj4+Pj4+Pj4+IGtlcm5lbC4gSnVzdCBtYWtlIGlu
-dGVyZmFjZSBhbmQgY29kZSBzaW1wbGVyIGJ5IGFsd2F5cyBwYXNzaW5nCj4gPj4+Pj4+Pj4+ICJz
-b2NmcGdhLWZwZ2EtaW1hZ2UiIG9yIHNvbWV0aGluZyBsaWtlIHRoYXQuCj4gPiAuLi4KPiA+IAo+
-ID4+PiBXaGF0IGlzIGN1bWJlcnNvbWUgYWJvdXQgc3ltbGluaz8gV2h5IGlzICJmYWtlIiBzeW1s
-aW5rIGluIHN5c2ZzIGJldHRlcj8KPiA+Pj4gCj4gPj4+PiBQcmV2aW91cyB1c2VzIG9mIHRoZSBm
-aXJtd2FyZSBsYXllciBoYXMgYmVlbiB0byB1c2UgaXQgdG8gbG9hZCBvbmNlIGFmdGVyCj4gPj4+
-PiBib290dXA7IHRoaXMgaXMgZGlmZmVyZW50IHNpbmNlIHNvbWUgdXNlIGNhc2VzIHdpbGwgd2Fu
-dCB0byBzd2l0Y2ggb3V0Cj4gPj4+PiB0aGUgRlBHQSBpbWFnZS4gIElmIHNvbWVvbmUgd2FudHMg
-dGhlcmUgdG8gYmUgb25seSBvbmUgRlBHQSBpbWFnZSBvbgo+ID4+Pj4gdGhlIEZHUEEgZm9yZXZl
-ciwgdGhleSB3aWxsIHByb2JhYmx5IG5vdCBiZSB1c2luZyB0aGlzIGZyYW1ld29yazsgdGhlaXIK
-PiA+Pj4+IEZQR0Egd2lsbCBwcm9iYWJseSBiZSBsb2FkZWQgYmVmb3JlIExpbnV4IGJvb3RzIHVw
-Lgo+ID4+PiAKPiA+Pj4gV2h5PyBJIGhhdmUganVzdCBvbmUgaW1hZ2Ugb24gdGhlIGZwZ2EsIGFu
-ZCB3b3VsZCBwcmVmZXIgdG8gbG9hZCBpdAo+ID4+PiBmcm9tIExpbnV4Lgo+ID4+IAo+ID4+IFBh
-dmVsOiBUaGVzZSBwYXRjaGVzIHRhcmdldCBzdGFnaW5nIGFuZCBzeXNmcyBpbnRlcmZhY2UgZG9l
-c24ndCBuZWVkIHRvIGJlIHN0YWJsZQo+ID4+IGF0IHRoaXMgdGltZS4gSSB3b3VsZCBwcmVmZXIg
-dG8gYWRkIHRoZXNlIHBhdGNoZXMgdG8gc3RhZ2luZyBmb3IgMy4yMAo+ID4+IGFuZCBmZWVsIGZy
-ZWUgdG8gc2VuZCB0aGUgcGF0Y2ggd2hpY2ggZml4IHRoaXMuCj4gPiAKPiA+IEludGVyZXN0aW5n
-IHdheSB0byBhZGRyZXNzIHBhdGNoIHJldmlldy4gIldlJ2xsIG1lcmdlIGl0LCBhbmQgeW91IGNh
-bgo+ID4gZml4IGl0IHVwIGxhdGVyIi4KPiA+IAo+ID4+IFdpdGggeW91ciBjb2RlIHdpbGwgYmUg
-ZXhhY3RseSBjbGVhciBob3cgeW91IHdhbnQgdG8gdXNlIGl0IGFuZCB3ZSBjYW4KPiA+PiB0YWxr
-IGFib3V0IGl0Lgo+ID4gCj4gPiBJJ20gcHJldHR5IHN1cmUgQWxhbiBrbm93cyB3aGF0IEkgd2Fu
-dCBhdCB0aGlzIHBvaW50LCBoZSBqdXN0IGRvZXMgbm90Cj4gPiB3YW50IHRvIGRvIGl0Lgo+ID4g
-Cj4gPiBGb3IgdGhlIHJlY29yZCwgSSB3YW50IHRvIGRyb3AgImZpcm13YXJlIiBmaWxlLCB1c2Ug
-Zml4ZWQgZmlybXdhcmUKPiA+IG5hbWUsIGFuZCBkZWFsIHdpdGggbXVsdGlwbGUgZmlybXdhcmVz
-IGluIHVzZXJzcGFjZSAodXNpbmcgc3ltbGluayBvcgo+ID4gdWRldiBtYWdpYykuCj4gCj4gVGhh
-dOKAmXMgY29tcGxldGVseSBib2d1cy4gVXNpbmcgYSBmaXhlZCBmaXJtd2FyZSBmaWxlIGRvZXMg
-bm90IHJlc3BvbmQgdG8KPiByZWFsIHdvcmxkIHVzYWdlLCBhbmQgdGhlcmUgYXJlIG5vIHdvcmRz
-IHRvIGRlc2NyaWJlIHRoZSBoYWNrcyB1c2luZwo+IHN5bWxpbmtzIGFuZCB1ZGV2IGluIGFuIGVt
-YmVkZGVkIHByb2R1Y3QuCgo+ID4gSSBiZWxpZXZlIHRoaXMgaXMgc2ltcGxlc3Qgc29sdXRpb24s
-IHNob3VsZCBiZSBhZGVxdWF0ZSwgYW5kIGlzCj4gPiBjZXJ0YWlubHkgbGVzcyB1Z2x5IHRoYW4g
-aW1wbGVtZW50aW5nIGZha2Ugc3ltbGluayBpbgo+ID4gL3N5cy8uLi4vZmlybXdhcmUuIEFuZCBJ
-IGhhdmUgeWV0IHRvIGhlYXIgd2hhdCBpcyB3cm9uZyB3aXRoIHRoYXQKPiA+IHN1Z2dlc3Rpb24u
-Cj4gCj4gRXZlcnl0aGluZy4KCkNhbiB5b3UgYmUgbW9yZSBzcGVjaWZpYz8gQ3VycmVudCBzb2x1
-dGlvbiBhbHJlYWR5IGhhcyBhIGZha2Ugc3ltbGluaywKaW1wbGVtZW50ZWQgYmFkbHkuCgpKdXN0
-IHJlbW92ZSBpdCwgYW5kIHVzZSByZWFsIHN5bWxpbmsgKGFuZCB0aGVuIHlvdSBjYW4gb3B0aW9u
-YWxseQp0aGluayBvZiBzb21ldGhpbmcgYmV0dGVyLi4uKQoKCgkJCQkJCQkJCVBhdmVsCi0tIAoo
-ZW5nbGlzaCkgaHR0cDovL3d3dy5saXZlam91cm5hbC5jb20vfnBhdmVsbWFjaGVrCihjZXNreSwg
-cGljdHVyZXMpIGh0dHA6Ly9hdHJleS5rYXJsaW4ubWZmLmN1bmkuY3ovfnBhdmVsL3BpY3R1cmUv
-aG9yc2VzL2Jsb2cuaHRtbApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwpkZXZlbCBtYWlsaW5nIGxpc3QKZGV2ZWxAbGludXhkcml2ZXJwcm9qZWN0Lm9yZwpo
-dHRwOi8vZHJpdmVyZGV2LmxpbnV4ZHJpdmVycHJvamVjdC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
-cml2ZXJkZXYtZGV2ZWwK
+On Sat, Dec 6, 2014 at 1:40 AM, Ray Jui <rjui@broadcom.com> wrote:
+
+> Document the GPIO device tree binding for Broadcom Cygnus SoC
+>
+> Signed-off-by: Ray Jui <rjui@broadcom.com>
+> Reviewed-by: Scott Branden <sbranden@broadcom.com>
+(...)
+> +- #gpio-cells:
+> +    Must be two. The first cell is the GPIO pin number (within the
+> +controller's domain) and the second cell is used for the following:
+> +    bit[0]: polarity (0 for normal and 1 for inverted)
+> +    bit[18:16]: internal pull up/down: 0 - pull up/down disabled
+> +                                       1 - pull up enabled
+> +                                       2 - pull down enabled
+> +    bit[22:20]: drive strength: 0 - 2 mA
+> +                                1 - 4 mA
+> +                                2 - 6 mA
+> +                                3 - 8 mA
+> +                                4 - 10 mA
+> +                                5 - 12 mA
+> +                                6 - 14 mA
+> +                                7 - 16 mA
+
+No. This pull up/down and drive strength is pin controller
+business, use a pin control backend behind the GPIO driver
+see Documentation/pinctrl.txt.
+
+Initial states for these configurations can be set up using
+pin control hogs since pin control and GPIO is orthogonal.
+
+Yours,
+Linus Walleij
