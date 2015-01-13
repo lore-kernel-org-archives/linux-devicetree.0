@@ -1,129 +1,142 @@
-From: Ray Jui <rjui@broadcom.com>
-Subject: Re: [PATCH 2/4] pinctrl: cygnus: add initial pinctrl support
-Date: Tue, 13 Jan 2015 09:17:35 -0800
-Message-ID: <54B5532F.7050107@broadcom.com>
-References: <rjui@broadcom.com>	<1417131990-17954-1-git-send-email-rjui@broadcom.com>	<1417131990-17954-3-git-send-email-rjui@broadcom.com>	<CACRpkdbZx1hcvd-q9AL3FPQRqU+wJjeSV8AdSno5PVr+fqhpRQ@mail.gmail.com>	<54B0201E.3000307@broadcom.com> <CACRpkdZUaB-tt2N0dbaV5RkVS5PuFi63TqgOg15Jb2ACH52Yug@mail.gmail.com>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: Re: [PATCH v5] can: Convert to runtime_pm
+Date: Tue, 13 Jan 2015 09:24:36 -0800
+Message-ID: <1ef3e0f060f54c888061514bd2926762@BY2FFO11FD033.protection.gbl>
+References: <baf987c11c0242c2bf87b81f9396b09d@BN1BFFO11FD018.protection.gbl>
+ <3a3437c5c8ff48d9a45fee7e81fa8dca@BY2FFO11FD058.protection.gbl>
+ <54B4FCB5.6040904@pengutronix.de>
+ <6ea3c0ea0f5c4deb9a6e4738a8d94a36@BN1AFFO11FD047.protection.gbl>
+ <54B55326.1060606@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZUaB-tt2N0dbaV5RkVS5PuFi63TqgOg15Jb2ACH52Yug@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <54B55326.1060606@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Sherman Yin <syin@broadcom.com>, Simon Arlott <simon@fire.lp0.eu>, Chris Boot <bootc@bootc.net>, Stephen Warren <swarren@wwwdotorg.org>, =?UTF-8?B?U8O2cmVuIEJyaW5rbWFubg==?= <soren.brinkmann@xilinx.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Scott Branden <sbranden@broadcom.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Fengguang Wu <fengguang.wu@intel.com>
+To: Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: Kedareswara rao Appana <appana.durga.rao@xilinx.com>, wg@grandegger.com, michal.simek@xilinx.com, grant.likely@linaro.org, robh+dt@kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Kedareswara rao Appana <appanad@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 1/13/2015 12:25 AM, Linus Walleij wrote:
-> On Fri, Jan 9, 2015 at 7:38 PM, Ray Jui <rjui@broadcom.com> wrote:
->> On 1/9/2015 3:03 AM, Linus Walleij wrote:
->>> On Fri, Nov 28, 2014 at 12:46 AM, Ray Jui <rjui@broadcom.com> wrote=
+On Tue, 2015-01-13 at 06:17PM +0100, Marc Kleine-Budde wrote:
+> On 01/13/2015 06:08 PM, S=C3=B6ren Brinkmann wrote:
+> > On Tue, 2015-01-13 at 12:08PM +0100, Marc Kleine-Budde wrote:
+> >> On 01/12/2015 07:45 PM, S=C3=B6ren Brinkmann wrote:
+> >>> On Mon, 2015-01-12 at 08:34PM +0530, Kedareswara rao Appana wrote=
 :
+> >>>> Instead of enabling/disabling clocks at several locations in the=
+ driver,
+> >>>> Use the runtime_pm framework. This consolidates the actions for =
+runtime PM
+> >>>> In the appropriate callbacks and makes the driver more readable =
+and mantainable.
+> >>>>
+> >>>> Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
+> >>>> Signed-off-by: Kedareswara rao Appana <appanad@xilinx.com>
+> >>>> ---
+> >>>> Changes for v5:
+> >>>>  - Updated with the review comments.
+> >>>>    Updated the remove fuction to use runtime_pm.
+> >>>> Chnages for v4:
+> >>>>  - Updated with the review comments.
+> >>>> Changes for v3:
+> >>>>   - Converted the driver to use runtime_pm.
+> >>>> Changes for v2:
+> >>>>   - Removed the struct platform_device* from suspend/resume
+> >>>>     as suggest by Lothar.
+> >>>>
+> >>>>  drivers/net/can/xilinx_can.c |  157 +++++++++++++++++++++++++++=
++-------------
+> >>>>  1 files changed, 107 insertions(+), 50 deletions(-)
+> >>> [..]
+> >>>> +static int __maybe_unused xcan_runtime_resume(struct device *de=
+v)
+> >>>>  {
+> >>>> -	struct platform_device *pdev =3D dev_get_drvdata(dev);
+> >>>> -	struct net_device *ndev =3D platform_get_drvdata(pdev);
+> >>>> +	struct net_device *ndev =3D dev_get_drvdata(dev);
+> >>>>  	struct xcan_priv *priv =3D netdev_priv(ndev);
+> >>>>  	int ret;
+> >>>> +	u32 isr, status;
+> >>>> =20
+> >>>>  	ret =3D clk_enable(priv->bus_clk);
+> >>>>  	if (ret) {
+> >>>> @@ -1014,15 +1030,28 @@ static int __maybe_unused xcan_resume(st=
+ruct device *dev)
+> >>>>  	ret =3D clk_enable(priv->can_clk);
+> >>>>  	if (ret) {
+> >>>>  		dev_err(dev, "Cannot enable clock.\n");
+> >>>> -		clk_disable_unprepare(priv->bus_clk);
+> >>>> +		clk_disable(priv->bus_clk);
+> >>> [...]
+> >>>> @@ -1173,12 +1219,23 @@ static int xcan_remove(struct platform_d=
+evice *pdev)
+> >>>>  {
+> >>>>  	struct net_device *ndev =3D platform_get_drvdata(pdev);
+> >>>>  	struct xcan_priv *priv =3D netdev_priv(ndev);
+> >>>> +	int ret;
+> >>>> +
+> >>>> +	ret =3D pm_runtime_get_sync(&pdev->dev);
+> >>>> +	if (ret < 0) {
+> >>>> +		netdev_err(ndev, "%s: pm_runtime_get failed(%d)\n",
+> >>>> +				__func__, ret);
+> >>>> +		return ret;
+> >>>> +	}
+> >>>> =20
+> >>>>  	if (set_reset_mode(ndev) < 0)
+> >>>>  		netdev_err(ndev, "mode resetting failed!\n");
+> >>>> =20
+> >>>>  	unregister_candev(ndev);
+> >>>> +	pm_runtime_disable(&pdev->dev);
+> >>>>  	netif_napi_del(&priv->napi);
+> >>>> +	clk_disable_unprepare(priv->bus_clk);
+> >>>> +	clk_disable_unprepare(priv->can_clk);
+> >>>
+> >>> Shouldn't pretty much all these occurrences of clk_disable/enable
+> >>> disappear? This should all be handled by the runtime_pm framework=
+ now.
+> >>
+> >> We have:
+> >> - clk_prepare_enable() in probe
+> >=20
+> > This should become something like pm_runtime_get_sync(), shouldn't =
+it?
+> >=20
+> >> - clk_disable_unprepare() in remove
+> >=20
+> > pm_runtime_put()
+> >=20
+> >> - clk_enable() in runtime_resume
+> >> - clk_disable() in runtime_suspend
+> >=20
+> > These are the ones needed.
+> >=20
+> > The above makes me suspect that the clocks are always on, regardles=
+s of
 >=20
->>> I don't know if the hardware has any similarity though, so invite
->>> the authors of the previous drivers to review this code.
->>>
->> They are completely different. The only similarity between Cygnus an=
-d
->> bcm281xx pinctrl is that they use the same concept of alternation
->> functions (1, 2, 3, 4) for mux configuration.
+> Define "on" :)
+> The clocks are prepared after probe() exists, but not enabled. The fi=
+rst
+> pm_runtime_get_sync() will enable the clocks.
 >=20
-> Then you can probably look at that driver for inspiration on how to h=
-andle
-> the situation you described earlier with collissions.
+> > the runtime suspend state since they are enabled in probe and disab=
+led
+> > in remove, is that right? Ideally, the usage in probe and remove sh=
+ould
+> > be migrated to runtime_pm and clocks should really only be running =
+when
+> > needed and not throughout the whole lifetime of the driver.
 >=20
->>>> +/*
->>>> + * List of groups of pins
->>>> + */
->>>> +static const unsigned gpio0_pins[] =3D { 12 };
->>>> +static const unsigned gpio1_pins[] =3D { 13 };
->>>> +static const unsigned gpio2_pins[] =3D { 14 };
->>>> +static const unsigned gpio3_pins[] =3D { 15 };
->>>> +static const unsigned gpio4_pins[] =3D { 16 };
->>>> +static const unsigned gpio5_pins[] =3D { 17 };
->>>> +static const unsigned gpio6_pins[] =3D { 18 };
->>>> +static const unsigned gpio7_pins[] =3D { 19 };
->>>> +static const unsigned gpio8_pins[] =3D { 20 };
->>>> +static const unsigned gpio9_pins[] =3D { 21 };
->>>> +static const unsigned gpio10_pins[] =3D { 22 };
->>>> +static const unsigned gpio11_pins[] =3D { 23 };
->>>> +static const unsigned gpio12_pins[] =3D { 24 };
->>>> +static const unsigned gpio13_pins[] =3D { 25 };
->>>> +static const unsigned gpio14_pins[] =3D { 26 };
->>>> +static const unsigned gpio15_pins[] =3D { 27 };
->>>> +static const unsigned gpio16_pins[] =3D { 28 };
->>>> +static const unsigned gpio17_pins[] =3D { 29 };
->>>> +static const unsigned gpio18_pins[] =3D { 30 };
->>>> +static const unsigned gpio19_pins[] =3D { 31 };
->>>> +static const unsigned gpio20_pins[] =3D { 32 };
->>>> +static const unsigned gpio21_pins[] =3D { 33 };
->>>> +static const unsigned gpio22_pins[] =3D { 34 };
->>>> +static const unsigned gpio23_pins[] =3D { 35 };
->>>
->>> Have you considered implementing .gpio_request_enable()
->>> and .gpio_disable_free() to get around having to have one
->>> group for each GPIO line?
->>>
->> Okay the Cygnus pin controller is really a mess. GPIO 0 ~ GPIO23 are
->> really 23 distinct groups, each with one pin. Then the rest of GPIOs=
- go
->> under other groups. In general, when we set a group to alternate
->> function 4, all pins become GPIO.
->=20
-> It will require some complicated code no matter how you
-> handle it I'm afraid. Rely on the pin control subsystem
-> to handle collisions though.
->=20
->>>> +static const unsigned qspi_gpio_pins[] =3D { 108, 109 };
->>>> +static const unsigned smart_card0_fcb_pins[] =3D { 45 };
->>>> +static const unsigned smart_card1_fcb_pins[] =3D { 51 };
->>>> +static const unsigned gpio0_3p3_pins[] =3D { 176 };
->>>> +static const unsigned gpio1_3p3_pins[] =3D { 177 };
->>>> +static const unsigned gpio2_3p3_pins[] =3D { 178 };
->>>
->>> Looks good...
->>>
->> Note these pins are definitions in the driver that help to describe =
-the
->> pad layout. We can't really configure any individual pins in Cygnus.
->=20
-> Yeah it's a groupwise controller then, that's similar to
-> e.g. the coh901 driver.
->=20
-> We should be able to accomodate this...
->=20
-Okay will check the coh901 driver.
+> The clocks are not en/disabled via pm_runtime, because
+> pm_runtime_get_sync() is called from atomic contect. We can have anot=
+her
+> look into the driver and try to change this.
 
->>>> +static int cygnus_dt_node_to_map(struct pinctrl_dev *pctrl_dev,
->>>> +               struct device_node *np, struct pinctrl_map **map,
->>>> +               unsigned *num_maps)
->>>> +{
->>>
->>> After S=C3=B6ren Brinkmanns patches youy should be able to use core
->>> functions for this and avoid this code altogether.
->>
->> Will that help to take care our case, based on the way we will use
->> "function" and "group"?
->=20
-> groupS but yes it will work with your controller, though I think
-> .set_mux and the controller state will need some elaborate code
-> to handle what the framework requests.
->=20
-Thanks.
+Wasn't that why the call to pm_runtime_irq_safe() was added?
+Also, clk_enable/disable should be okay to be run from atomic context.
+And if the clock are already prepared after the exit of probe that
+should be enough. Then remove() should just have to do the unprepare.
+But I don't see why runtime_pm shouldn't be able to do the
+enable/disable.
 
->>>> +       num_groups =3D of_property_count_strings(np, "brcm,groups"=
-);
->>>
->>> As mentioned, just "groups".
->>>
->> I guess I will use "group"?
->=20
-> No groups, as with the standard attribute "gpios", this may be
-> a single group too, it's just a standard binding.
->=20
-Okay.
-
-> Yours,
-> Linus Walleij
->=20
+	S=C3=B6ren
