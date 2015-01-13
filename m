@@ -1,150 +1,46 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: [PATCH v3 2/4] phy: ti-pipe3: Fix SATA across suspend/resume
-Date: Tue, 13 Jan 2015 14:23:20 +0200
-Message-ID: <1421151802-7396-3-git-send-email-rogerq@ti.com>
-References: <1421151802-7396-1-git-send-email-rogerq@ti.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH v9 1/4] drm/i2c: tda998x: Add DT support for audio
+Date: Tue, 13 Jan 2015 12:27:15 +0000
+Message-ID: <20150113122715.GP12302@n2100.arm.linux.org.uk>
+References: <20150109145741.GP12302@n2100.arm.linux.org.uk>
+ <20150109183857.53d701a4@armhf>
+ <20150109200127.GD12302@n2100.arm.linux.org.uk>
+ <1421054728.3081.28.camel@pengutronix.de>
+ <20150112122527.GF12302@n2100.arm.linux.org.uk>
+ <1421071197.3081.44.camel@pengutronix.de>
+ <20150112140456.GI12302@n2100.arm.linux.org.uk>
+ <20150112181341.4a53ea24@armhf>
+ <20150112175705.GN12302@n2100.arm.linux.org.uk>
+ <1421151718.4519.24.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1421151802-7396-1-git-send-email-rogerq@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: kishon@ti.com, tony@atomide.com
-Cc: nm@ti.com, balbi@ti.com, george.cherian@ti.com, nsekhar@ti.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Roger Quadros <rogerq@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <1421151718.4519.24.camel@pengutronix.de>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Andrew Jackson <Andrew.Jackson@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>, Mark Brown <broonie@kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-Failed test case: Boot without SATA drive connected. Suspend/resume
-the board and then connect SATA drive. It fails to enumerate.
-
-Due to Errata i783 "SATA Lockup After SATA DPLL Unlock/Relock"
-we can't allow SATA DPLL to be in the unlocked state.
-The SATA refclk (sata_ref_clk) is the source of the SATA_DPLL.
-This clock is being controlled only by the AHCI SATA driver and is
-shut off during system suspend (if the SATA drive was not already attached)
-causing the SATA DPLL to be unlocked and so causing errata i783.
-
-To prevent sata_ref_clk from being disabled, we add the control of
-this clock to the SATA PHY driver and prevent it from being disabled.
-
-This also fixes the issue of SATA not working on OMAP5/DRA7 when
-AHCI platform driver is built as a module.
-
-NOTE: Device tree changes also required for OMAP5 & DRA7.
-
-Signed-off-by: Roger Quadros <rogerq@ti.com>
----
- drivers/phy/phy-ti-pipe3.c | 57 +++++++++++++++++++++++++++++++++-------------
- 1 file changed, 41 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/phy/phy-ti-pipe3.c b/drivers/phy/phy-ti-pipe3.c
-index e60ff14..456dec2 100644
---- a/drivers/phy/phy-ti-pipe3.c
-+++ b/drivers/phy/phy-ti-pipe3.c
-@@ -85,6 +85,7 @@ struct ti_pipe3 {
- 	struct pipe3_dpll_map	*dpll_map;
- 	u8			id;
- 	bool enabled;
-+	bool refclk_enabled;	/* this flag is needed specifically for SATA */
- 	spinlock_t lock;	/* serialize clock enable/disable */
- };
- 
-@@ -333,21 +334,24 @@ static int ti_pipe3_probe(struct platform_device *pdev)
- 		}
- 	}
- 
-+	phy->refclk = devm_clk_get(phy->dev, "refclk");
-+	if (IS_ERR(phy->refclk)) {
-+		dev_err(&pdev->dev, "unable to get refclk\n");
-+		/* older DTBs have missing refclk in SATA PHY
-+		 * so don't bail out in case of SATA PHY.
-+		 */
-+		if (!of_device_is_compatible(node, "ti,phy-pipe3-sata"))
-+			return PTR_ERR(phy->refclk);
-+	}
-+
- 	if (!of_device_is_compatible(node, "ti,phy-pipe3-sata")) {
- 		phy->wkupclk = devm_clk_get(phy->dev, "wkupclk");
- 		if (IS_ERR(phy->wkupclk)) {
- 			dev_err(&pdev->dev, "unable to get wkupclk\n");
- 			return PTR_ERR(phy->wkupclk);
- 		}
--
--		phy->refclk = devm_clk_get(phy->dev, "refclk");
--		if (IS_ERR(phy->refclk)) {
--			dev_err(&pdev->dev, "unable to get refclk\n");
--			return PTR_ERR(phy->refclk);
--		}
- 	} else {
- 		phy->wkupclk = ERR_PTR(-ENODEV);
--		phy->refclk = ERR_PTR(-ENODEV);
- 	}
- 
- 	if (of_device_is_compatible(node, "ti,phy-pipe3-pcie")) {
-@@ -428,6 +432,29 @@ static int ti_pipe3_remove(struct platform_device *pdev)
- }
- 
- #ifdef CONFIG_PM
-+static int ti_pipe3_enable_refclk(struct ti_pipe3 *phy)
-+{
-+	if (!IS_ERR(phy->refclk) && !phy->refclk_enabled) {
-+		int ret;
-+
-+		ret = clk_prepare_enable(phy->refclk);
-+		if (ret) {
-+			dev_err(phy->dev, "Failed to enable refclk %d\n", ret);
-+			return ret;
-+		}
-+		phy->refclk_enabled = true;
-+	}
-+
-+	return 0;
-+}
-+
-+static void ti_pipe3_disable_refclk(struct ti_pipe3 *phy)
-+{
-+	if (!IS_ERR(phy->refclk))
-+		clk_disable_unprepare(phy->refclk);
-+
-+	phy->refclk_enabled = false;
-+}
- 
- static int ti_pipe3_enable_clocks(struct ti_pipe3 *phy)
- {
-@@ -438,13 +465,9 @@ static int ti_pipe3_enable_clocks(struct ti_pipe3 *phy)
- 	if (phy->enabled)
- 		goto err1;
- 
--	if (!IS_ERR(phy->refclk)) {
--		ret = clk_prepare_enable(phy->refclk);
--		if (ret) {
--			dev_err(phy->dev, "Failed to enable refclk %d\n", ret);
--			goto err1;
--		}
--	}
-+	ret = ti_pipe3_enable_refclk(phy);
-+	if (ret)
-+		goto err1;
- 
- 	if (!IS_ERR(phy->wkupclk)) {
- 		ret = clk_prepare_enable(phy->wkupclk);
-@@ -474,6 +497,7 @@ err2:
- 	if (!IS_ERR(phy->refclk))
- 		clk_disable_unprepare(phy->refclk);
- 
-+	ti_pipe3_disable_refclk(phy);
- err1:
- 	spin_unlock_irqrestore(&phy->lock, flags);
- 	return ret;
-@@ -491,8 +515,9 @@ static void ti_pipe3_disable_clocks(struct ti_pipe3 *phy)
- 
- 	if (!IS_ERR(phy->wkupclk))
- 		clk_disable_unprepare(phy->wkupclk);
--	if (!IS_ERR(phy->refclk))
--		clk_disable_unprepare(phy->refclk);
-+	/* Don't disable refclk for SATA PHY due to Errata i783 */
-+	if (!of_device_is_compatible(phy->dev->of_node, "ti,phy-pipe3-sata"))
-+		ti_pipe3_disable_refclk(phy);
- 	if (!IS_ERR(phy->div_clk))
- 		clk_disable_unprepare(phy->div_clk);
- 	phy->enabled = false;
--- 
-2.1.0
+T24gVHVlLCBKYW4gMTMsIDIwMTUgYXQgMDE6MjE6NThQTSArMDEwMCwgUGhpbGlwcCBaYWJlbCB3
+cm90ZToKPiBJIHdvbmRlciBpZiBpdCB3b3VsZG4ndCBiZSBuaWNlciB0byBoYXZlIHRoZSBBUCMg
+YW5kIHR5cGUgaW4gdGhlIGRldmljZQo+IHRyZWUgYW5kIHRoZW4gY2FsY3VsYXRlIHRoZSByZWdp
+c3RlciB2YWx1ZSBmcm9tIHRoYXQgaW4gdGhlIGRyaXZlci4KPiAKPiAJcG9ydEAxIHsKPiAJCXJl
+ZyA9IDwxPjsgLyogQVAxICovCj4gCQlueHAsYXVkaW8tcG9ydCA9ICJpMnMiOwo+IAkJdGRhOTk4
+eF9pMnM6IGVuZHBvaW50IHsKPiAJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmF1ZGlvMV9pMnM+Owo+
+IAkJfTsKPiAJfTsKCldoYXQgYWJvdXQgdGhlIGNhc2Ugd2hlcmUgd2UgaGF2ZSA0IEkyUyBzdHJl
+YW1zIGJlaW5nIHN1cHBsaWVkIHRvIHRoZQpkZXZpY2Ugb24gZm91ciBzZXBhcmF0ZSBBUCBpbnB1
+dHM/CgotLSAKRlRUQyBicm9hZGJhbmQgZm9yIDAuOG1pbGUgbGluZTogY3VycmVudGx5IGF0IDEw
+LjVNYnBzIGRvd24gNDAwa2JwcyB1cAphY2NvcmRpbmcgdG8gc3BlZWR0ZXN0Lm5ldC4KX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxp
+bmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVl
+ZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
