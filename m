@@ -1,180 +1,89 @@
 From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 04/13] mtd: st_spi_fsm: Fetch boot device locations
- from DT match tables
-Date: Mon, 12 Jan 2015 20:55:11 -0800
-Message-ID: <20150113045511.GO9759@ld-irv-0074>
+Subject: Re: [PATCH v3 03/13] mtd: st_spi_fsm: dt-bindings: Deprecate generic
+ compatible string
+Date: Mon, 12 Jan 2015 21:02:30 -0800
+Message-ID: <20150113050230.GP9759@ld-irv-0074>
 References: <1418644760-18773-1-git-send-email-lee.jones@linaro.org>
- <1418644760-18773-5-git-send-email-lee.jones@linaro.org>
+ <1418644760-18773-4-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1418644760-18773-5-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1418644760-18773-4-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 + devicetree
 
-On Mon, Dec 15, 2014 at 11:59:11AM +0000, Lee Jones wrote:
-> To trim down on the amount of properties used by this driver and to conform
-> to the newly agreed method of acquiring syscfg registers/offsets, we now
-> obtain this information using match tables.
+Please include devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org whenever you send DT patches
+like this.
+
+On Mon, Dec 15, 2014 at 11:59:10AM +0000, Lee Jones wrote:
+> This driver now obtains platform information via DT matching, which requires
+> a compatible string per platform.  This change introduces the new specific
+> strings and deprecates the old generic one.
 > 
-> In the process we are deprecating the old generic compatible string and
-> providing 3 shiny new ones for each of the support platforms.  The
-> deprecated compatible string will be removed in due course.
-
-I'm not sure how this agreement was done, but by default, we expect not
-to break backwards compatibility. This patch does just that.
-
+> We also take out all of the old, unused properties which are no longer
+> required.
+> 
 > Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > ---
->  drivers/mtd/devices/st_spi_fsm.c | 75 ++++++++++++++++++++++++++++++----------
->  1 file changed, 57 insertions(+), 18 deletions(-)
+>  Documentation/devicetree/bindings/mtd/st-fsm.txt | 20 +++++++-------------
+>  1 file changed, 7 insertions(+), 13 deletions(-)
 > 
-> diff --git a/drivers/mtd/devices/st_spi_fsm.c b/drivers/mtd/devices/st_spi_fsm.c
-> index fac0fe9..d82394a 100644
-> --- a/drivers/mtd/devices/st_spi_fsm.c
-> +++ b/drivers/mtd/devices/st_spi_fsm.c
-> @@ -29,6 +29,21 @@
->  #include "serial_flash_cmds.h"
+> diff --git a/Documentation/devicetree/bindings/mtd/st-fsm.txt b/Documentation/devicetree/bindings/mtd/st-fsm.txt
+> index c248939..4e3a16c 100644
+> --- a/Documentation/devicetree/bindings/mtd/st-fsm.txt
+> +++ b/Documentation/devicetree/bindings/mtd/st-fsm.txt
+> @@ -1,26 +1,20 @@
+>  * ST-Microelectronics SPI FSM Serial (NOR) Flash Controller
 >  
->  /*
-> + * FSM SPI Boot Mode Registers/Masks
-> + */
-> +#define STID127_SYSCON_BOOT_DEV_REG	0x0D8
-> +#define STID127_SYSCON_BOOT_DEV_SPI	0x068
-> +#define STID127_SYSCON_BOOT_DEV_MASK	0x07C
-> +
-> +#define STIH407_SYSCON_BOOT_DEV_REG	0x8C4
-> +#define STIH407_SYSCON_BOOT_DEV_SPI	0x068
-> +#define STIH407_SYSCON_BOOT_DEV_MASK	0x07C
-> +
-> +#define STIH416_SYSCON_BOOT_DEV_REG	0x958
-> +#define STIH416_SYSCON_BOOT_DEV_SPI	0x01A
-> +#define STIH416_SYSCON_BOOT_DEV_MASK	0x01F
-> +
-> +/*
->   * FSM SPI Controller Registers
->   */
->  #define SPI_CLOCKDIV			0x0010
-> @@ -288,6 +303,12 @@ struct seq_rw_config {
->  	uint8_t         dummy_cycles;   /* No. of DUMMY cycles */
->  };
->  
-> +struct stfsm_boot_dev {
-> +	uint32_t		reg;
-> +	uint32_t		spi;
-> +	uint32_t		mask;
-> +};
-> +
->  /* SPI Flash Device Table */
->  struct flash_info {
->  	char            *name;
-> @@ -313,6 +334,24 @@ struct flash_info {
->  	int             (*config)(struct stfsm *);
->  };
->  
-> +static struct stfsm_boot_dev stfsm_stid127_data = {
-> +	.reg  = STID127_SYSCON_BOOT_DEV_REG,
-> +	.spi  = STID127_SYSCON_BOOT_DEV_SPI,
-> +	.mask = STID127_SYSCON_BOOT_DEV_MASK,
-> +};
-> +
-> +static struct stfsm_boot_dev stfsm_stih407_data = {
-> +	.reg  = STIH407_SYSCON_BOOT_DEV_REG,
-> +	.spi  = STIH407_SYSCON_BOOT_DEV_SPI,
-> +	.mask = STIH407_SYSCON_BOOT_DEV_MASK,
-> +};
-> +
-> +static struct stfsm_boot_dev stfsm_stih416_data = {
-> +	.reg  = STIH416_SYSCON_BOOT_DEV_REG,
-> +	.spi  = STIH416_SYSCON_BOOT_DEV_SPI,
-> +	.mask = STIH416_SYSCON_BOOT_DEV_MASK,
-> +};
-> +
->  static int stfsm_n25q_config(struct stfsm *fsm);
->  static int stfsm_mx25_config(struct stfsm *fsm);
->  static int stfsm_s25fl_config(struct stfsm *fsm);
-> @@ -1977,14 +2016,23 @@ static int stfsm_init(struct stfsm *fsm)
->  	return 0;
->  }
->  
-> +static const struct of_device_id stfsm_match[] = {
-> +	{ .compatible = "st,spi-fsm" }, /* DEPRECATED */
-> +	{ .compatible = "st,stid127-spi-fsm", .data = &stfsm_stid127_data },
-> +	{ .compatible = "st,stih407-spi-fsm", .data = &stfsm_stih407_data },
-> +	{ .compatible = "st,stih416-spi-fsm", .data = &stfsm_stih416_data },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, stfsm_match);
-> +
->  static void stfsm_fetch_platform_configs(struct platform_device *pdev)
->  {
->  	struct stfsm *fsm = platform_get_drvdata(pdev);
->  	struct device_node *np = pdev->dev.of_node;
-> +	const struct stfsm_boot_dev *boot_dev;
-> +	const struct of_device_id *match;
->  	struct regmap *regmap;
-> -	uint32_t boot_device_reg;
-> -	uint32_t boot_device_spi;
-> -	uint32_t boot_device;     /* Value we read from *boot_device_reg */
-> +	uint32_t boot_device;    /* Value we read from the boot dev mode pins */
->  	int ret;
->  
->  	/* Booting from SPI NOR Flash is the default */
-> @@ -1998,21 +2046,18 @@ static void stfsm_fetch_platform_configs(struct platform_device *pdev)
->  
->  	fsm->reset_por = of_property_read_bool(np, "st,reset-por");
->  
-> -	/* Where in the syscon the boot device information lives */
-> -	ret = of_property_read_u32(np, "st,boot-device-reg", &boot_device_reg);
-> -	if (ret)
-> +	match = of_match_node(stfsm_match, np);
-> +	if (!match)
->  		goto boot_device_fail;
-> +	boot_dev = match->data;
->  
-> -	/* Boot device value when booted from SPI NOR */
-> -	ret = of_property_read_u32(np, "st,boot-device-spi", &boot_device_spi);
-> +	ret = regmap_read(regmap, boot_dev->reg, &boot_device);
+>  Required properties:
+> -  - compatible : Should be "st,spi-fsm"
+> +  - compatible : "st,spi-fsm" is now DEPRECATED
 
+See my comments on patch 4.
 
-^^^ NULL pointer dereference for any existing DTB that uses the
-"st,spi-fsm" compatible string. So I'll NAK this patch as-is. Either we
-need to completely drop the "deprecated" compatible property (what's the
-point binding to it, if we're going to OOPS on it anyway), or else we
-need to maintain both methods (at least for whatever deprecation period
-is deemed acceptable).
+In light of that, it may make sense to support both, so DTS files could
+list:
 
->  	if (ret)
->  		goto boot_device_fail;
->  
-> -	ret = regmap_read(regmap, boot_device_reg, &boot_device);
-> -	if (ret)
-> -		goto boot_device_fail;
-> +	boot_device &= boot_dev->mask;
->  
-> -	if (boot_device != boot_device_spi)
-> +	if (boot_device != boot_dev->spi)
->  		fsm->booted_from_spi = false;
->  
->  	return;
-> @@ -2156,12 +2201,6 @@ static int stfsmfsm_resume(struct device *dev)
->  
->  static SIMPLE_DEV_PM_OPS(stfsm_pm_ops, stfsmfsm_suspend, stfsmfsm_resume);
->  
-> -static const struct of_device_id stfsm_match[] = {
-> -	{ .compatible = "st,spi-fsm", },
-> -	{},
-> -};
-> -MODULE_DEVICE_TABLE(of, stfsm_match);
+	compatible = "st,stid127-spi-fsm", "st,spi-fsm";
+
+But I'm not really privy to whatever discussion determined that you
+needed to deprecate the current binding. If there really are no users of
+the current upstream binding, then maybe your current deprecation plan
+can work fine.
+
+> +		 Should be one of;
+> +		   "st,stid127-spi-fsm"
+> +		   "st,stih407-spi-fsm"
+> +		   "st,stih416-spi-fsm"
+>    - reg        : Contains register's location and length.
+> -  - reg-names  : Should contain the reg names "spi-fsm"
+>    - interrupts : The interrupt number
+>    - pinctrl-0  : Standard Pinctrl phandle (see: pinctrl/pinctrl-bindings.txt)
 > -
->  static struct platform_driver stfsm_driver = {
->  	.probe		= stfsm_probe,
->  	.remove		= stfsm_remove,
+> -Optional properties:
+> -  - st,syscfg          : Phandle to boot-device system configuration registers
+> -  - st,boot-device-reg : Address of the aforementioned boot-device register(s)
+> -  - st,boot-device-spi : Expected boot-device value if booted via this device
+> +  - st,syscfg  : Phandle to boot-device system configuration registers
+>  
+>  Example:
+>  	spifsm: spifsm@fe902000{
+> -	        compatible         = "st,spi-fsm";
+> +		compatible         = "st,stih407-spi-fsm";
+>  	        reg                =  <0xfe902000 0x1000>;
+> -	        reg-names          = "spi-fsm";
+>  	        pinctrl-0          = <&pinctrl_fsm>;
+>  		st,syscfg	   = <&syscfg_rear>;
+> -	        st,boot-device-reg = <0x958>;
+> -	        st,boot-device-spi = <0x1a>;
+> -		status = "okay";
+>  	};
+> -
 
 Brian
 --
