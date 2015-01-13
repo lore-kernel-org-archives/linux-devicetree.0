@@ -1,60 +1,54 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v3 0/2] ARM: mediatek: Add driver for Mediatek I2C
- controller
-Date: Tue, 13 Jan 2015 16:23:05 +0100
-Message-ID: <20150113152305.GJ7660@katana>
-References: <1416821928-11453-1-git-send-email-xudong.chen@mediatek.com>
- <20141124121555.GG3733@katana>
- <1417096856.12707.59.camel@mtksdaap41>
- <20141127164536.GC5667@katana>
- <1418352022.4994.44.camel@mtksdaap41>
- <20150106133753.GA3754@katana>
- <20150113095725.GC1059@katana>
- <1421162154.27675.75.camel@mtksdaap41>
+From: Bart Tanghe <bart.tanghe@thomasmore.be>
+Subject: Re: [PATCH]dts: add bcm2835-pwm bindings
+Date: Tue, 13 Jan 2015 16:40:54 +0100
+Message-ID: <54B53C86.4030903@thomasmore.be>
+References: <1420471983-29945-1-git-send-email-bart.tanghe@thomasmore.be>
+ <54B1556C.7070401@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Tu8ztk+XgTAiG9Id"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1421162154.27675.75.camel@mtksdaap41>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, linux-i2c@vger.kernel.org, Jean Delvare <jdelvare@suse.de>, Xudong Chen <xudong.chen@mediatek.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, YH Chen <yh.chen@mediatek.com>, Liguo Zhang <Liguo.Zhang@mediatek.com>, Nathan Chung <nathan.chung@mediatek.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Eddie Huang <eddie.huang@mediatek.com>, linux-arm-kernel@lists.infradead.org, srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <54B1556C.7070401@wwwdotorg.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stephen Warren <swarren@wwwdotorg.org>, lee@kernel.org, devicetree@vger.kernel.org
+Cc: mark.rutland@arm.com, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, thierry.reding@gmail.com, galak@codeaurora.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On 01/10/2015 05:38 PM, Stephen Warren wrote:
+> On 01/05/2015 08:33 AM, Bart Tanghe wrote:
+>> To probe the bcm2835-pwm driver properly, this dts bindings has to be added 
+>> to the bcm2835 dtsi file.
+>> In expectation of a bcm2835 clock driver, I've added fixed-clock clock binding.
+>> To change the status of the gpio pins into pwm output pins, some additional 
+>> bindings has to be added but this has not to be done automatically.
+>> Is it possible to document this bindings somewhere?
+> 
+> The pinctrl bindings allow you to do this. They're documented in:
+> 
+> Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+> Documentation/devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt
+> 
+> pinctrl setup would typically be added to the board file (i.e.
+> arch/arm/boot/dts/bcm2835-rpi-b.dts) rather than the SoC file. I think
+> on the RPi, the pins that can generate PWM aren't dedicated to PWM by
+> the RPi board design (they could be GPIOs and probably other functions
+> too) so we probably need to leave it up to individual users to add PWM
+> configuration to their DT, if/when they use the PWM feature.
+> 
 
---Tu8ztk+XgTAiG9Id
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Indeed, the pins aren't dedicated to pwm and can be used for other functions.
+Is it usefull to add  the pwm pinctrl description to 
+Documentation/devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt or is this 
+useless? 
 
+Regards,
 
-> I think the quirks can describe our HW limitation without issue.
-> We are porting our i2c driver base on that. Will let you know the test
-> result.
-
-Great news, thanks for the update :)
-
-
---Tu8ztk+XgTAiG9Id
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUtThZAAoJEBQN5MwUoCm2Dm0P/1BJsmDfwpOOM+Kv8wPJZpF0
-STtTmxmTmkIpd7hCibmrite+EWPjBgYc4SMdkAaJCazdEAbsX+7lKZN80508rx6O
-MaaNZXJayhjbVtQIfWhZocatlWRaJ2OtDMfsvyVMjUTKiupn6mspa2AechYJz3qJ
-Wa3/DI/N9CXC5udnRr67bhnlqEce7IDfTmYJ8T76bySAp+XgP2IQY3TGYlqtTJNd
-0eQ+UdzGpln/pYrOIW0DzW5J8gGe+19dAxV1GJE/BpvmcQQ/3JzCVQCEDWTdYz8p
-/NdUsi/aRm86+VhetSGwnxD1vrtMCG2fZJm6/d9FTL+uDUC9nXBBxbbi3SWLmxcU
-QXT/4JERJ0cMlcRcJ/JNEjKyRGwavBXL3p5hNuqLbKPR+G/82E4N3MWtrEzZ/Ard
-tP4T2SQYqVOhn0mr2S61+oQauExCX+4sLnfprRE9ZcDcpltHnJgs/gFDorXqzy5Z
-RsDU25srBeFTv8/R0ucThxDHg04qCoxQ4hmZqJ1N06KzSuN/VQMbwQ095Rtkk8HG
-lNHUEqTtqgP4BdjbAR+HvU9H44rKZalFtuKIDdNuP49hfauzYHqR9AjtmZoQknh1
-mNZ4APyjzq3TWUR6/UuDLIzfhFXD/YQjHE9mgjj4QqCID5ecFuxcCrHnE041W98s
-uMew4dmHpJHvm8z8Qtf4
-=Nsyh
------END PGP SIGNATURE-----
-
---Tu8ztk+XgTAiG9Id--
+Bart
