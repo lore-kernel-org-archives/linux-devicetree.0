@@ -1,86 +1,92 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH v3] Added support for pogoplug e02 (pink/gray)
-Date: Tue, 13 Jan 2015 17:23:21 +0100
-Message-ID: <20150113162321.GA13608@lunn.ch>
-References: <CAA8MNVjieDJ-dv2NNWXK=+uqrPmvtk2EiBYJGJkMugEiN2TsAw@mail.gmail.com>
- <1421129591-18479-1-git-send-email-junghans@votca.org>
+From: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
+Subject: Re: [PATCH v8 2/4] fpga manager: add sysfs interface document
+Date: Tue, 13 Jan 2015 16:28:47 +0000
+Message-ID: <20150113162847.2778b5a5@lxorguk.ukuu.org.uk>
+References: <1420575219-27061-1-git-send-email-atull@opensource.altera.com>
+ <1420575219-27061-3-git-send-email-atull@opensource.altera.com>
+ <20150107084819.GA1887@amd>
+ <alpine.DEB.2.02.1501091302370.30067@linuxheads99>
+ <20150109205643.GA5761@amd>
+ <20150112210134.687176ed@lxorguk.ukuu.org.uk>
+ <20150112214314.GA18610@obsidianresearch.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1421129591-18479-1-git-send-email-junghans-GtS5+KdRXKTYtjvyW6yDsg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christoph Junghans <junghans-GtS5+KdRXKTYtjvyW6yDsg@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Christoph Junghans <ottxor-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20150112214314.GA18610@obsidianresearch.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Cc: mark.rutland@arm.com, linux-doc@vger.kernel.org, rubini@gnudd.com, pantelis.antoniou@konsulko.com, hpa@zytor.com, s.trumtrar@pengutronix.de, devel@driverdev.osuosl.org, sameo@linux.intel.com, nico@linaro.org, ijc+devicetree@hellion.org.uk, michal.simek@xilinx.com, kyle.teske@ni.com, grant.likely@linaro.org, davidb@codeaurora.org, linus.walleij@linaro.org, cesarb@cesarb.net, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, iws@ovro.caltech.edu, atull <atull@opensource.altera.com>, galak@codeaurora.org, broonie@kernel.org, philip@balister.org, dinguyen@opensource.altera.com, monstr@monstr.eu, gregkh@linuxfoundation.org, yvanderv@opensource.altera.com, linux-kernel@vger.kernel.org, balbi@ti.com, delicious.quinoa@gmail.com, robh+dt@kernel.org, rob@landley.net, Pavel Machek <pavel@denx.de>, akpm@linux-foundation.org, davem@davemloft.net, m.chehab@samsung.c
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 12, 2015 at 11:13:11PM -0700, Christoph Junghans wrote:
-> From: Christoph Junghans <ottxor-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
+On Mon, 12 Jan 2015 14:43:14 -0700
+Jason Gunthorpe <jgunthorpe@obsidianresearch.com> wrote:
+
+> On Mon, Jan 12, 2015 at 09:01:34PM +0000, One Thousand Gnomes wrote:
+> > There are plenty of people today who treat the FPGA as an entirely
+> > dynamic resource. It's not like flashing a controller, its near
+> > immediate.
 > 
-> The pogoplug differs from the SheevaPlug only by a
-> few details, but especially in the led assignments.
-> This patch was tested under Gentoo Linux and is
-> based on dts files from Arch Linux ARM and OpenWrt.
+> But this is a completely different use case. Remember, there are
+> *megabytes* of internal state in a FPGA, and it isn't really feasible
+> to dump/restore that state.
+
+People already do it with cases where it makes sense
+
+> It is one thing to context switch a maths algorithm that is built to
+> be stateless, it is quite another to context switch between, say an
+> ethernet core with an operating Linux Net driver doing DMA and a maths
+> algorithm.
+
+And people already do it with thins like maths algorithms.
+ 
+> A DT overlay approach where the overlay has to be unloaded to 'free'
+> the FPGA makes alot of sense to me for the stateful kernel driver
+> environment, and open/close/etc makes alot of sense for the stateless
+> switchable userspace environment - other than sharing configuration
+> code, is there any overlap between these use cases????
+
+There is a lot of code overlap in things like loading the bitstreams,
+there is also some overlap because you want to be able to assign FPGA
+resources. For example if you have four FPGAs and you want to use one for
+OS stuff (say video) you want the other three to be open/close
+accessible, but if you've not got a video driver loaded and are running
+the same board headless you'd like all four to be handed out as normal
+resources.
+
+So IMHO it's no different to say kmalloc. We don't pre-empt kernel memory
+and give it to users but we don't reserve memory for kernel and not use
+it.
+
+> > Its completely dynamic and it will get more so as we switch from the
+> > painful world of VHDL and friends to high level parallel aware language
+> > compilers for FPGAs and everyone will be knocking up quick FPGA hacks.
 > 
-> Suggested-by: Felix Kaechele <heffer-rxtnV0ftBwyoClj4AeEUq9i2O/JbrIOy@public.gmane.org>
-> Suggested-by: Oleg Rakhmanov <moonman.ca-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Christoph Junghans <ottxor-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
-> ---
-> 
-> V1: initial patch
-> V2: added GPL-2 header
->     dropped earlyprintk from bootargs
->     added stdout-path
->     change leds name to scheme "devicename:colour:function"
-> V3: rebase on v3.19-rc4
->     fixed stdout-path to be &uart0
->     fixed compiling issue by using pin-controller
+> Only for some users. In my world FPGAs are filled with bus interface
+> logic, ethernet controllers, memory controllers, packet processing
+> engines, etc. This is all incredibly stateful - both in the FPGA
+> itself, and in the Linux side w/ drviers. It certainly will not ever
+> work in the model you are talking about.
 
-Hi Christoph
+For those cases I mostly agree (the state in the FPGA isn't always a
+problem as you can program an FPGA to DMA its state out).
 
-Thanks for adding this list of changes.
+> Even if the digital state could somehow be frozen, dumped and
+> restored, all the FPGA external interface logic has *ANALOG* state
+> that cannot ever be dump/restored. It just isn't feasible for that
+> class of application.
 
-> +
-> +	ocp@f1000000 {
-> +		pinctrl: pin-controller@10000 {
-> +			pmx_usb_power_enable: pmx-usb-power-enable {
-> +				marvell,pins = "mpp29";
-> +				marvell,function = "gpio";
-> +			};
-> +			pmx_led_green: pmx-led-green {
-> +				marvell,pins = "mpp48";
-> +				marvell,function = "gpio";
-> +			};
-> +			pmx_led_orange: pmx-led-orange {
-> +				marvell,pins = "mpp49";
-> +				marvell,function = "gpio";
-> +			};
-> +		};
+Yes, however as we are starting to get things like OpenCL for FPGA they
+become extremely attractive for a wide range of purposes that don't
+involve glueing them to electronica in quite the same way. All the 'GPU
+as CPU' type uses and more begin to apply.
 
-Sorry, should of made myself more clear, when i pointed at:
-
-https://lkml.org/lkml/2014/12/28/34
-
-Please use the label for pinctl, and don't nest it under ocp@f1000000.
-
-> +		serial@12000 {
-> +			status = "ok";
-> +		};
-> +	};
-
-Same here, just
-
-&uart0 {
-	status = "okay";
-};
-
-Doing it like this is somewhat new, so most of the other kirkwood
-boards don't do this. But we would like all new boards to use this
-layout.
-
-	Thanks
-		Andrew
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Alan
