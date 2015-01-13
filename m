@@ -1,93 +1,183 @@
 From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 0/2] mtd: hisilicon: add a new driver for NAND
- controller of hisilicon hip04 Soc
-Date: Mon, 12 Jan 2015 20:17:01 -0800
-Message-ID: <20150113041701.GM9759@ld-irv-0074>
-References: <1415105221-7732-1-git-send-email-wangzhou.bry@gmail.com>
- <20141130090853.GG3608@norris-Latitude-E6410>
- <548987D3.3060407@gmail.com>
- <20141217062333.GD7112@brian-ubuntu>
- <5491638B.5090403@gmail.com>
+Subject: Re: [PATCH v3 04/13] mtd: st_spi_fsm: Fetch boot device locations
+ from DT match tables
+Date: Mon, 12 Jan 2015 20:55:11 -0800
+Message-ID: <20150113045511.GO9759@ld-irv-0074>
+References: <1418644760-18773-1-git-send-email-lee.jones@linaro.org>
+ <1418644760-18773-5-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <5491638B.5090403-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1418644760-18773-5-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhou Wang <wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, caizhiyong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, yubingxu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Iwo Mergler <Iwo.Mergler-/K5RfY/kUqoaXkdz0Xzl5EEOCMrvLtNR@public.gmane.org>
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-=46ollowing up on this last comment from last year's thread:
++ devicetree
 
-On Wed, Dec 17, 2014 at 07:05:47PM +0800, Zhou Wang wrote:
-> On 2014=E5=B9=B412=E6=9C=8817=E6=97=A5 14:23, Brian Norris wrote:
-[...]
-> >>[  104.648056] mtd_nandbiterrs: ECC failure, read data is incorrect
-> >>despite read success
-> >>insmod: can't insert 'mtd_nandbiterrs.ko': Input/output error
-> >>
-> >>The reason for above failure is that:
-> >>In ECC mode, when rewriting page data to NAND flash, the NAND
-> >>controller will also produce ECC code and write them to NAND flash
-> >>as well. So when we read data from NAND flash, there is no need to
-> >>correct the error bit. We read what we write to the flash.
-> >
-> >BTW, your explanation doesn't seem quite right. The problem is that
-> >even though mtd_read() didn't report errors, the data doesn't match
-> >what's written. It's not that there was "no need to correct the erro=
-r
-> >bit".
->=20
-> Maybe I did not express clearly. In the nandbiterrs test, firstly
-> write data to flash with ECC code in oob area, then change some bits
-> and rewrite data to flash with old ECC code in oob area, at last read
-> data out with ECC to test if the "error bits" can be corrected. My
-> explanation is that in rewriting process NAND controller also produce=
-s
-> new ECC code of the data and write both data and new ECC code to flas=
-h.
-> So in next step we will get what was writen without "correction".
+On Mon, Dec 15, 2014 at 11:59:11AM +0000, Lee Jones wrote:
+> To trim down on the amount of properties used by this driver and to conform
+> to the newly agreed method of acquiring syscfg registers/offsets, we now
+> obtain this information using match tables.
+> 
+> In the process we are deprecating the old generic compatible string and
+> providing 3 shiny new ones for each of the support platforms.  The
+> deprecated compatible string will be removed in due course.
 
-But we should at least get an -EBADMSG return status, right? If you're
-"rewriting" the data, this should result in two sets of data written on
-top of each other, which (depending on the flash layout charecteristics=
-)
-might turn up as a kind of logical AND of all the data+OOB. This is
-"probably" not correctable.
+I'm not sure how this agreement was done, but by default, we expect not
+to break backwards compatibility. This patch does just that.
 
-But that last "probably" leaves room for the possibility you mentioned,
-I guess; that the ECC code is just correcting the data to look like the
-second set of (intentionally) erroneous data.
+> Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  drivers/mtd/devices/st_spi_fsm.c | 75 ++++++++++++++++++++++++++++++----------
+>  1 file changed, 57 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/mtd/devices/st_spi_fsm.c b/drivers/mtd/devices/st_spi_fsm.c
+> index fac0fe9..d82394a 100644
+> --- a/drivers/mtd/devices/st_spi_fsm.c
+> +++ b/drivers/mtd/devices/st_spi_fsm.c
+> @@ -29,6 +29,21 @@
+>  #include "serial_flash_cmds.h"
+>  
+>  /*
+> + * FSM SPI Boot Mode Registers/Masks
+> + */
+> +#define STID127_SYSCON_BOOT_DEV_REG	0x0D8
+> +#define STID127_SYSCON_BOOT_DEV_SPI	0x068
+> +#define STID127_SYSCON_BOOT_DEV_MASK	0x07C
+> +
+> +#define STIH407_SYSCON_BOOT_DEV_REG	0x8C4
+> +#define STIH407_SYSCON_BOOT_DEV_SPI	0x068
+> +#define STIH407_SYSCON_BOOT_DEV_MASK	0x07C
+> +
+> +#define STIH416_SYSCON_BOOT_DEV_REG	0x958
+> +#define STIH416_SYSCON_BOOT_DEV_SPI	0x01A
+> +#define STIH416_SYSCON_BOOT_DEV_MASK	0x01F
+> +
+> +/*
+>   * FSM SPI Controller Registers
+>   */
+>  #define SPI_CLOCKDIV			0x0010
+> @@ -288,6 +303,12 @@ struct seq_rw_config {
+>  	uint8_t         dummy_cycles;   /* No. of DUMMY cycles */
+>  };
+>  
+> +struct stfsm_boot_dev {
+> +	uint32_t		reg;
+> +	uint32_t		spi;
+> +	uint32_t		mask;
+> +};
+> +
+>  /* SPI Flash Device Table */
+>  struct flash_info {
+>  	char            *name;
+> @@ -313,6 +334,24 @@ struct flash_info {
+>  	int             (*config)(struct stfsm *);
+>  };
+>  
+> +static struct stfsm_boot_dev stfsm_stid127_data = {
+> +	.reg  = STID127_SYSCON_BOOT_DEV_REG,
+> +	.spi  = STID127_SYSCON_BOOT_DEV_SPI,
+> +	.mask = STID127_SYSCON_BOOT_DEV_MASK,
+> +};
+> +
+> +static struct stfsm_boot_dev stfsm_stih407_data = {
+> +	.reg  = STIH407_SYSCON_BOOT_DEV_REG,
+> +	.spi  = STIH407_SYSCON_BOOT_DEV_SPI,
+> +	.mask = STIH407_SYSCON_BOOT_DEV_MASK,
+> +};
+> +
+> +static struct stfsm_boot_dev stfsm_stih416_data = {
+> +	.reg  = STIH416_SYSCON_BOOT_DEV_REG,
+> +	.spi  = STIH416_SYSCON_BOOT_DEV_SPI,
+> +	.mask = STIH416_SYSCON_BOOT_DEV_MASK,
+> +};
+> +
+>  static int stfsm_n25q_config(struct stfsm *fsm);
+>  static int stfsm_mx25_config(struct stfsm *fsm);
+>  static int stfsm_s25fl_config(struct stfsm *fsm);
+> @@ -1977,14 +2016,23 @@ static int stfsm_init(struct stfsm *fsm)
+>  	return 0;
+>  }
+>  
+> +static const struct of_device_id stfsm_match[] = {
+> +	{ .compatible = "st,spi-fsm" }, /* DEPRECATED */
+> +	{ .compatible = "st,stid127-spi-fsm", .data = &stfsm_stid127_data },
+> +	{ .compatible = "st,stih407-spi-fsm", .data = &stfsm_stih407_data },
+> +	{ .compatible = "st,stih416-spi-fsm", .data = &stfsm_stih416_data },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, stfsm_match);
+> +
+>  static void stfsm_fetch_platform_configs(struct platform_device *pdev)
+>  {
+>  	struct stfsm *fsm = platform_get_drvdata(pdev);
+>  	struct device_node *np = pdev->dev.of_node;
+> +	const struct stfsm_boot_dev *boot_dev;
+> +	const struct of_device_id *match;
+>  	struct regmap *regmap;
+> -	uint32_t boot_device_reg;
+> -	uint32_t boot_device_spi;
+> -	uint32_t boot_device;     /* Value we read from *boot_device_reg */
+> +	uint32_t boot_device;    /* Value we read from the boot dev mode pins */
+>  	int ret;
+>  
+>  	/* Booting from SPI NOR Flash is the default */
+> @@ -1998,21 +2046,18 @@ static void stfsm_fetch_platform_configs(struct platform_device *pdev)
+>  
+>  	fsm->reset_por = of_property_read_bool(np, "st,reset-por");
+>  
+> -	/* Where in the syscon the boot device information lives */
+> -	ret = of_property_read_u32(np, "st,boot-device-reg", &boot_device_reg);
+> -	if (ret)
+> +	match = of_match_node(stfsm_match, np);
+> +	if (!match)
+>  		goto boot_device_fail;
+> +	boot_dev = match->data;
+>  
+> -	/* Boot device value when booted from SPI NOR */
+> -	ret = of_property_read_u32(np, "st,boot-device-spi", &boot_device_spi);
+> +	ret = regmap_read(regmap, boot_dev->reg, &boot_device);
 
-> >I'd recommend digging a little more to figure out what's wrong here.=
- You
-> >might need to instrument the nandbiterrs test. This is possibly
->=20
-> Thanks, I will do it.
->=20
-> >highlighting a driver bug [1].
-> >
-> >Brian
-> >
-> >[1] Besised simply that you didn't implement write_page_raw(). The
-> >default nand_write_page_raw() implementation looks just like your
-> >non-raw version.
->=20
-> Yes. In ECC mode, as the NAND controller must write page as a whole
-> with ECC code, the default nand_write_page_raw() looks just like
-> non-raw version.
 
-Are you saying you cannot implement the raw() hooks for this IP? Or jus=
-t
-that you haven't yet? The latter is probably OK for now (I'd recommend
-doing this, or at least mark a TODO in the code), but the former is a
-little disturbing.
+^^^ NULL pointer dereference for any existing DTB that uses the
+"st,spi-fsm" compatible string. So I'll NAK this patch as-is. Either we
+need to completely drop the "deprecated" compatible property (what's the
+point binding to it, if we're going to OOPS on it anyway), or else we
+need to maintain both methods (at least for whatever deprecation period
+is deemed acceptable).
+
+>  	if (ret)
+>  		goto boot_device_fail;
+>  
+> -	ret = regmap_read(regmap, boot_device_reg, &boot_device);
+> -	if (ret)
+> -		goto boot_device_fail;
+> +	boot_device &= boot_dev->mask;
+>  
+> -	if (boot_device != boot_device_spi)
+> +	if (boot_device != boot_dev->spi)
+>  		fsm->booted_from_spi = false;
+>  
+>  	return;
+> @@ -2156,12 +2201,6 @@ static int stfsmfsm_resume(struct device *dev)
+>  
+>  static SIMPLE_DEV_PM_OPS(stfsm_pm_ops, stfsmfsm_suspend, stfsmfsm_resume);
+>  
+> -static const struct of_device_id stfsm_match[] = {
+> -	{ .compatible = "st,spi-fsm", },
+> -	{},
+> -};
+> -MODULE_DEVICE_TABLE(of, stfsm_match);
+> -
+>  static struct platform_driver stfsm_driver = {
+>  	.probe		= stfsm_probe,
+>  	.remove		= stfsm_remove,
 
 Brian
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
