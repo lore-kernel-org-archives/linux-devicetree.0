@@ -1,198 +1,111 @@
-From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC 08/15] clk: add restrack support
-Date: Tue, 13 Jan 2015 11:25:17 -0800
-Message-ID: <20150113192517.20842.4777@quantum>
-References: <1418226513-14105-1-git-send-email-a.hajda@samsung.com>
- <1418226513-14105-9-git-send-email-a.hajda@samsung.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH v9 1/4] drm/i2c: tda998x: Add DT support for audio
+Date: Tue, 13 Jan 2015 19:26:48 +0000
+Message-ID: <20150113192648.GU12302@n2100.arm.linux.org.uk>
+References: <20150112122527.GF12302@n2100.arm.linux.org.uk>
+ <1421071197.3081.44.camel@pengutronix.de>
+ <20150112140456.GI12302@n2100.arm.linux.org.uk>
+ <20150112181341.4a53ea24@armhf>
+ <20150112175705.GN12302@n2100.arm.linux.org.uk>
+ <1421151718.4519.24.camel@pengutronix.de>
+ <20150113122715.GP12302@n2100.arm.linux.org.uk>
+ <20150113165411.5469930d@armhf>
+ <20150113160313.GR12302@n2100.arm.linux.org.uk>
+ <20150113200252.3dbfab14@armhf>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1418226513-14105-9-git-send-email-a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: "Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski
-	<m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Greg Kroah-Hartman
-	<gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>,
-	Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot
-	<gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Inki Dae
-	<inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Liam
-	Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant
-	Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>,
-	moderated list:ARM/CLKDEV SUPPORT <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-	, open list:GPIO SUBSYSTEM <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list:DRM
-	PANEL DRIVERS <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, moderated list:ARM/S5P
-	EXYNOS AR... <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list:OPEN
-	FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, sboyd@co
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20150113200252.3dbfab14@armhf>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jean-Francois Moine <moinejf@free.fr>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Andrew Jackson <Andrew.Jackson@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>, Mark Brown <broonie@kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-+Stephen Boyd
-
-Quoting Andrzej Hajda (2014-12-10 07:48:26)
-> Clocks supports different methods of lookup.
-> The patch adds restrack support only to DT based clocks.
-> 
-> Signed-off-by: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
->  drivers/clk/clk.c        |  6 ++++
->  drivers/clk/clkdev.c     | 74 ++++++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/clk.h      |  3 ++
->  include/linux/restrack.h |  1 +
->  4 files changed, 84 insertions(+)
-> 
-> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-> index 4896ae9..2c50204 100644
-> --- a/drivers/clk/clk.c
-> +++ b/drivers/clk/clk.c
-> @@ -16,6 +16,7 @@
->  #include <linux/spinlock.h>
->  #include <linux/err.h>
->  #include <linux/list.h>
-> +#include <linux/restrack.h>
->  #include <linux/slab.h>
->  #include <linux/of.h>
->  #include <linux/device.h>
-> @@ -2476,6 +2477,9 @@ int of_clk_add_provider(struct device_node *np,
->         ret = of_clk_set_defaults(np, true);
->         if (ret < 0)
->                 of_clk_del_provider(np);
-> +       else
-> +               restrack_up(RESTRACK_TYPE_CLOCK, cp->node, cp);
-> +
->  
->         return ret;
->  }
-> @@ -2489,6 +2493,8 @@ void of_clk_del_provider(struct device_node *np)
->  {
->         struct of_clk_provider *cp;
->  
-> +       restrack_down(RESTRACK_TYPE_CLOCK, np, NULL);
-> +
->         mutex_lock(&of_clk_mutex);
->         list_for_each_entry(cp, &of_clk_providers, link) {
->                 if (cp->node == np) {
-> diff --git a/drivers/clk/clkdev.c b/drivers/clk/clkdev.c
-> index bd22750..2532ea1 100644
-> --- a/drivers/clk/clkdev.c
-> +++ b/drivers/clk/clkdev.c
-> @@ -20,6 +20,7 @@
->  #include <linux/clk.h>
->  #include <linux/clkdev.h>
->  #include <linux/of.h>
-> +#include <linux/restrack.h>
->  
->  #include "clk.h"
->  
-> @@ -143,6 +144,79 @@ static int of_get_clock_spec(struct device *dev, const char *name,
->  
->         return -ENOENT;
->  }
-> +
-> +struct clk_restrack_desc {
-> +       struct clk **ptr;
-> +       const char *name;
-> +       struct of_phandle_args spec;
-> +       struct restrack_desc desc;
-> +};
-> +
-> +static int clk_restrack_init(struct device *dev,
-> +               struct restrack_desc *desc)
-> +{
-> +       struct clk_restrack_desc *rd = restrack_desc_to_rd(rd, desc);
-> +       int ret;
-> +
-> +       ret = of_get_clock_spec(dev, rd->name, &rd->spec);
-> +       if (!ret)
-> +               desc->if_id = rd->spec.np;
-> +       return ret;
-> +}
-> +
-> +static void clk_restrack_destroy(struct device *dev,
-> +               struct restrack_desc *desc)
-> +{
-> +       struct clk_restrack_desc *rd = restrack_desc_to_rd(rd, desc);
-> +
-> +       of_node_put(desc->if_id);
-> +       kfree(rd);
-> +}
-> +
-> +static int clk_restrack_ifup(struct device *dev,
-> +               struct restrack_desc *desc, void *data)
-> +{
-> +       struct clk_restrack_desc *rd = restrack_desc_to_rd(rd, desc);
-> +
-> +       *rd->ptr = of_clk_get_by_clkspec(&rd->spec);
-> +       return PTR_ERR_OR_ZERO(*rd->ptr);
-> +}
-> +
-> +static void clk_restrack_ifdown(struct device *dev,
-> +               struct restrack_desc *desc, void *data)
-> +{
-> +       struct clk_restrack_desc *rd = restrack_desc_to_rd(rd, desc);
-> +
-> +       clk_put(*rd->ptr);
-> +       *rd->ptr = ERR_PTR(-EPROBE_DEFER);
-> +}
-> +
-> +static const struct restrack_ops clk_restrack_ops = {
-> +       .if_type = RESTRACK_TYPE_CLOCK,
-> +       .init = clk_restrack_init,
-> +       .destroy = clk_restrack_destroy,
-> +       .if_up = clk_restrack_ifup,
-> +       .if_down = clk_restrack_ifdown,
-> +};
-> +
-> +/**
-> + * clk_restrack_desc - clock resource descriptor allocator
-> + * @clk: pointer to variable which will be set to clock handle
-> + * @name: name of clock
-> + *
-> + * The function creates resource description for clock, which shall be used
-> + * by *restrack_register functions.
-> + */
-> +struct restrack_desc *clk_restrack_desc(struct clk **clock, const char *name)
-> +{
-> +       struct clk_restrack_desc *rd;
-> +
-> +       RESTRACK_DESC_ALLOC(rd, clk_restrack_ops, clock, name);
-> +
-> +       return rd ? &rd->desc : ERR_PTR(-ENOMEM);
-> +}
-> +EXPORT_SYMBOL_GPL(clk_restrack_desc);
-> +
->  #endif
->  
->  /*
-> diff --git a/include/linux/clk.h b/include/linux/clk.h
-> index c7f258a..28bad95 100644
-> --- a/include/linux/clk.h
-> +++ b/include/linux/clk.h
-> @@ -428,6 +428,9 @@ struct of_phandle_args;
->  struct clk *of_clk_get(struct device_node *np, int index);
->  struct clk *of_clk_get_by_name(struct device_node *np, const char *name);
->  struct clk *of_clk_get_from_provider(struct of_phandle_args *clkspec);
-> +
-> +struct restrack_desc;
-> +struct restrack_desc *clk_restrack_desc(struct clk **clock, const char *name);
->  #else
->  static inline struct clk *of_clk_get(struct device_node *np, int index)
->  {
-> diff --git a/include/linux/restrack.h b/include/linux/restrack.h
-> index e1aded0..6707dce 100644
-> --- a/include/linux/restrack.h
-> +++ b/include/linux/restrack.h
-> @@ -6,6 +6,7 @@
->  #define RESTRACK_TYPE_DRM_PANEL 1
->  #define RESTRACK_TYPE_REGULATOR 2
->  #define RESTRACK_TYPE_GPIO 3
-> +#define RESTRACK_TYPE_CLOCK 4
->  
->  struct device;
->  struct restrack_ctx;
-> -- 
-> 1.9.1
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gVHVlLCBKYW4gMTMsIDIwMTUgYXQgMDg6MDI6NTJQTSArMDEwMCwgSmVhbi1GcmFuY29pcyBN
+b2luZSB3cm90ZToKPiBPbiBUdWUsIDEzIEphbiAyMDE1IDE2OjAzOjEzICswMDAwCj4gUnVzc2Vs
+bCBLaW5nIC0gQVJNIExpbnV4IDxsaW51eEBhcm0ubGludXgub3JnLnVrPiB3cm90ZToKPiAKPiA+
+IE9uIFR1ZSwgSmFuIDEzLCAyMDE1IGF0IDA0OjU0OjExUE0gKzAxMDAsIEplYW4tRnJhbmNvaXMg
+TW9pbmUgd3JvdGU6Cj4gPiA+IDQgc3RyZWFtcyBvbiA0IGRpZmZlcmVudCBBUHMgKHNvdXJjZXMp
+IHNob3VsZCB3b3JrLCBidXQgNCBzdHJlYW1zIGZyb20KPiA+ID4gYSBzYW1lIHNvdXJjZSBzaG91
+bGQgYmUgZGV0YWlsZWQuCj4gPiAKPiA+IEknZCBsaWtlIHRvIGtub3cgaG93IHlvdSBpbnRlbmQg
+dG8gd2lyZSB1cCBmb3VyIGRpZmZlcmVudCBJMlMgc291cmNlcwo+ID4gdG8gdGhlIFREQTk5OHgu
+Cj4gPiAKPiA+IFJlbWVtYmVyLCBhbiBJMlMgc291cmNlIHByb2R1Y2VzIHRoZSBJMlMgZGF0YSBh
+bmQgdGhlIHdvcmQgY2xvY2sgLSB0aGF0J3MKPiA+IHR3byBvdXRwdXRzLiAgWW91IGNhbid0IGVs
+ZWN0cm9uaWNhbGx5IHdpcmUgdGhlIHdvcmQgY2xvY2tzIHRvZ2V0aGVyLgo+IAo+IEZyb20gdGhl
+IHNwZWMsIHRoZSB0ZGE5OTh4IGdldHMgaW5kZXBlbmRlbnRseSB0aGUgc2VyaWFsIGNsb2NrIGFu
+ZCB0aGUKPiBzZXJpYWwgd29yZCBzZWxlY3QgZnJvbSBlYWNoIEkyUyAoc3RlcmVvKSBpbnB1dCBj
+aGFubmVsICg9IGF1ZGlvIHBpbiksCj4gc28sIHlvdSBtYXkgaGF2ZSA0IGF1ZGlvIGNoaXBzIGdp
+dmluZyA0IGluZGVwZW5kZW50IGF1ZGlvIHN0cmVhbXMuCj4gSSBkb24ndCBrbm93IHdoYXQgY2Fu
+IGJlIHRoZSByZXN1bHQgaW4gSERNSSBpZiB0aGVzZSBzdHJlYW1zIGFyZSBhY3RpdmVkCj4gYXQg
+dGhlIHNhbWUgdGltZSEKPiAKPiBJbiB0aGUgb3RoZXIgY29uZmlndXJhdGlvbiwgYW4gYXVkaW8g
+Y2hpcCBtYXkgaGF2ZSA0IHN5bmNocm9uaXplZCBzdGVyZW8KPiBjaGFubmVscyAoc29mdHdhcmUg
+UENNcykuIFRoZXNlIG9uZXMgbWF5IGJlIGNvbnNpZGVyZWQgYXMgb25lIGxpbmsgKG9uZQo+IHBv
+cnQgb3V0IGZyb20gdGhlIGF1ZGlvIGNoaXAgdG8gb25lIHBvcnQgaW4gdG8gdGhlIHRkYTk5OHgp
+LCB0aGUgQVAKPiBjb25maWd1cmF0aW9uIGJlaW5nIDB4MWYuCgpMZXQgbWUgdHJ5IHRvIGJlIGNs
+ZWFyZXIuICBIZXJlJ3MgZm91ciBpbmRlcGVuZGVudCBJMlMgYmxvY2tzIHdoaWNoCmhhdmUgYmVl
+biBhcnJhbmdlZCB0byBiZSBjbG9ja2VkIGJ5IHRoZSBzYW1lIEkyUyBidXMgY2xvY2suICBFYWNo
+CkkyUyBibG9jayBwcm9kdWNlcyBpdHMgb3duIHdvcmQgY2xvY2sgYW5kIGRhdGEgc3RyZWFtOgoK
+U0NMSwp8ICArLS0tLS0tLSsKKy0+fCBJMlMgICArLS0tLS0tPiBXUzEKfCAgfCBzcmMgMSArLS0t
+LS0tPiBJMlMxCnwgICstLS0tLS0tKwp8CnwgICstLS0tLS0tKworLT58IEkyUyAgICstLS0tLS0+
+IFdTMgp8ICB8IHNyYyAyICstLS0tLS0+IEkyUzIKfCAgKy0tLS0tLS0rCnwKfCAgKy0tLS0tLS0r
+CistPnwgSTJTICAgKy0tLS0tLT4gV1MzCnwgIHwgc3JjIDMgKy0tLS0tLT4gSTJTMwp8ICArLS0t
+LS0tLSsKfAp8ICArLS0tLS0tLSsKKy0+fCBJMlMgICArLS0tLS0tPiBXUzQKfCAgfCBzcmMgNCAr
+LS0tLS0tPiBJMlM0CnwgICstLS0tLS0tKwp8CnwgICAgICAgICstLS0tLS0tLS0rCnwgICAgICAg
+IHwgVERBOTk4eCB8CmAtLS0tLS0tPisgQUNMSyAgICB8CiAgV1MgLS0tPisgQVAwICAgICB8Ckky
+UzEgLS0tPisgQVAxICAgICB8CkkyUzIgLS0tPisgQVAyICAgICB8CkkyUzMgLS0tPisgQVAzICAg
+ICB8CkkyUzQgLS0tPisgQVA0ICAgICB8CiAgICAgICAgICstLS0tLS0tLS0rCgpUaGUgYXJyb3dz
+IHBvaW50IGZyb20gdGhlIG91dHB1dCAoZHJpdmVyIG9mIHRoZSBzaWduYWwpIHRvIHRoZSBpbnB1
+dC4KSXQgaXMgaWxsZWdhbCBpbiBlbGVjdHJvbmljcyB0byB3aXJlIHR3byBvdXRwdXRzICh3aGlj
+aCBhcmUgbm90IGFibGUgdG8KZGlzYWJsZSB0aGVpciBvdXRwdXQgZHJpdmVycykgdG9nZXRoZXIu
+CgpIb3cgZG8geW91IGFycmFuZ2UgZm9yIFdTMS4uV1M0IHRvIGJlIGNvbm5lY3RlZCB0byB0aGUg
+VERBOTk4eCBXUyBpbnB1dD8KCk15IGFuc3dlciBpczogdGhpcyBpcyBhbiBpbXBvc3NpYmxlIHNl
+dHVwLgoKU2luY2UgdGhlc2UgYXJlIGluZGVwZW5kZW50IGJsb2NrcywgdGhlcmUgaXMgbm8gZ3Vh
+cmFudGVlIHRoYXQgdGhlCldTMS4uV1M0IG91dHB1dHMgd2lsbCBiZSBzeW5jaHJvbmlzZWQgdG8g
+ZWFjaCBvdGhlciwgc2luY2UgdGhhdCBkZXBlbmRzCnVwb24gdGhlIFNDTEsgZWRnZSB0aGF0IGVh
+Y2ggdW5pdCBiZWNvbWVzIGVuYWJsZWQuICBUaGF0IGFsc28gZGV0ZXJtaW5lcwp0aGUgYml0IHBv
+c2l0aW9uIHJlbGF0aXZlIHRvIFNDTEsgb2YgdGhlIGZpcnN0IGJpdCBvdXRwdXQuCgpIZW5jZSwg
+eW91IGNvdWxkIHZlcnkgd2VsbCBlbmQgdXAgd2l0aCBzb21ldGhpbmcgbGlrZSB0aGlzIGZvciBh
+IDE2LWJpdApJMlMgb3V0cHV0IGZyb20gZWFjaCBJMlMgYmxvY2s6CgpTQ0xLOiBffl9+X35ffl9+
+X35ffl9+X35ffl9+X35ffl9+X35ffl9+X35ffl9+X35ffl9+X35ffl9+X35ffl9+X35ffl9+X35f
+CiBXUzE6IF9ffn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX34KSTJTMTogbGxtbS4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi5s
+bG1tLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLmxsbQogV1MyOiBfX19fX19fX19fX19fX19f
+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5fX19fX19fX19fX19fX19fX19fCkkyUzI6
+IC4uLi4uLi4uLi4uLi4ubGxtbS4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi5sbG1tLi4uLi4u
+Li4uLi4uLi4uLi4KIFdTMzogX19fX19fX19+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+
+fl9fX19fX19fX19fX19fX19fX19fX19fX19fXwpJMlMzOiAuLi4uLi5sbG1tLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLmxsbW0uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uCiBXUzQ6IF9fX19f
+X35+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+X19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18KSTJTNDogLi4uLmxsbW0uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4ubGxtbS4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLgoKd2hlcmUgJ2wnIGluZGljYXRlcyB0aGUgTFNCIG9mIHRo
+ZSBzYW1wbGUsIGFuZCAnbScgaW5kaWNhdGVzIHRoZSBNU0IuCgpUaGUgcHJvYmxlbSBpcyB0aGF0
+IHRoZSBUREE5OTh4IGV4cGVjdHMgZWFjaCBJMlMgaW5wdXQgdG8gYmUgc3luY2hyb25pc2VkLgpJ
+biBvdGhlciB3b3JkcywgdGhlIFdTIGlucHV0IGlzIHNoYXJlZCBiZXR3ZWVuIGVhY2ggYW5kIGV2
+ZXJ5IHNlcGFyYXRlIEkyUwppbnB1dCwgd2hpY2ggbWVhbnMgdGhlIE1TQiBvZiBlYWNoIEkyUyBp
+bnB1dCBuZWVkcyB0byBiZSBzdXBwbGllZCBhdApleGFjdGx5IHRoZSBzYW1lIFNDTEsgZWRnZS4g
+IEluIG90aGVyIHdvcmRzOgoKU0NMSzogX35ffl9+X35ffl9+X35ffl9+X35ffl9+X35ffl9+X35f
+fl9+X35ffl9+X35ffl9+X35ffl9+X35ffl9+X35ffl9+XwogIFdTOiBfX35+fn5+fn5+fn5+fn5+
+fn5+fn5+fn5+fn5+fn5+fn5+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19+CkkyUzE6
+IGxsbW0uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4ubGxtbS4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi5sbG0KSTJTMjogbGxtbS4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi5sbG1tLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLmxsbQpJMlMzOiBsbG1tLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLmxsbW0uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4ubGxtCkkyUzQ6IGxsbW0u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4ubGxtbS4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li5sbG0KClNvLCB3aGF0IEknbSBzYXlpbmcgaXMgdGhhdCBpdCBpcyBfaW1wb3NzaWJsZV8gdG8g
+ZHJpdmUgdGhlIFREQTk5OHggdXNpbmcKbXVsdGlwbGUgSTJTIHN0cmVhbXMgd2hpY2ggYXJlIG5v
+dCBwcm9kdWNlZCBieSB0aGUgc2FtZSBJMlMgYmxvY2suCgotLSAKRlRUQyBicm9hZGJhbmQgZm9y
+IDAuOG1pbGUgbGluZTogY3VycmVudGx5IGF0IDEwLjVNYnBzIGRvd24gNDAwa2JwcyB1cAphY2Nv
+cmRpbmcgdG8gc3BlZWR0ZXN0Lm5ldC4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJl
+ZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9kcmktZGV2ZWwK
