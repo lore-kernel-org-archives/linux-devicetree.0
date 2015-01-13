@@ -1,84 +1,27 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 00/13] mtd: st_spi_fsm: Align with ST's internal
- development
-Date: Mon, 12 Jan 2015 21:14:52 -0800
-Message-ID: <20150113051452.GR9759@ld-irv-0074>
-References: <1418644760-18773-1-git-send-email-lee.jones@linaro.org>
+From: nick <xerofoify@gmail.com>
+Subject: Question about the function,g2d_suspend in the file,exynos_drm_g2d.c
+Date: Tue, 13 Jan 2015 00:35:02 -0500
+Message-ID: <54B4AE86.1090301@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1418644760-18773-1-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: inki.dae@samsung.com
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, jy0922.shim@samsung.com, airlied@linux.ie, sw0312.kim@samsung.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, kyungmin.park@samsung.com, kgene@kernel.org, dri-devel@lists.freedesktop.org, grant.likely@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 15, 2014 at 11:59:07AM +0000, Lee Jones wrote:
-> Hi Brian, all,
->  
->  [x] Bulid test
->  [x] Bisectable
->  [x] Smatch
->  [x] Sparse
-
-Picked patches 1, 2, and 5 to l2-mtd.git. I requested changes to patch 3
-and possibly 4. The rest look OK, but I don't want to futz with patch
-conflicts on the remaining. Please rebase to l2-mtd.git if/when you
-resend.
-
-> v3:
->   Further aligned with upstream changes as suggested by Peter Griffin.
->   The clk_ignore_unused kernel command line parameter is due to be turned
->   off on STiH4* platforms, so we no longer give the driver the chance to
->   opt-out of fetching the EMI clock.  We also now provide syscfg offsets
->   inside the driver, as it's simpler and reduces the cost of having lots
->   of extra DT properties.
-
-Typically "simpler" and "reducing the cost of having lots of extra DT
-properties" aren't good enough reasons for immediately breaking an
-existing DT binding. We usually expect to support both for some period
-of time.
-
-> v2:
->   These are the last remaining patches in the set, all rebased and
->   with the DT documentation requested after the last submission.
->  
-> v1:
->   This patch-set updates ST's FSM SPI-NOR driver with all the internal
->   goodness which has happened since the initial (now upstreamed) snapshot
->   was taken. It covers just over 6 months worth of internal development
->   and bug-fixes. A final whitespace clean-up is also appended to the set
->   - to make it look pretty and stuff. :)
-> 
-> Angus Clark (3):
->   mtd: st_spi_fsm: Add support for N25Q512 and N25Q00A devices
->   mtd: st_spi_fsm: Update Spansion device entries
->   mtd: st_spi_fsm: Improve busy wait handling
-> 
-> Lee Jones (9):
->   mtd: st_spi_fsm: Extend fsm_clear_fifo to handle unwanted bytes
->   mtd: st_spi_fsm: Obtain and use EMI clock
->   mtd: st_spi_fsm: dt-bindings: Deprecate generic compatible string
->   mtd: st_spi_fsm: Fetch boot device locations from DT match tables
->   mtd: st_spi_fsm: Fix [-Wsign-compare] build warning
->   mtd: st_spi_fsm: Update the JEDEC probe to handle extended READIDs
->   mtd: st_spi_fsm: General tidy-up
->   ARM: STi: stih416: Use new platform specific compatible string
->   ARM: STi: stih416: Supply EMI clock reference to FSM SPI NOR
-> 
-> Nunzio Raciti (1):
->   mtd: st_spi_fsm: Add support for Micron N25Q512A
-> 
->  Documentation/devicetree/bindings/mtd/st-fsm.txt |  20 +-
->  arch/arm/boot/dts/stih416.dtsi                   |   6 +-
->  drivers/mtd/devices/st_spi_fsm.c                 | 747 +++++++++++++++--------
->  include/dt-bindings/clock/stih416-clks.h         |   1 +
->  4 files changed, 519 insertions(+), 255 deletions(-)
-> 
-
-Brian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Greetings All,
+I am wondering as I don't have the hardware to test if the usleep range has a correct and good
+value. Otherwise if one of the maintainers has the hardware and has tested there to be better
+values for the sleep range, please send them to me so I can send in a patch for this.
+Regards,
+Nick
