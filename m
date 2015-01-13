@@ -1,43 +1,68 @@
-From: Jean-Francois Moine <moinejf@free.fr>
-Subject: Re: [PATCH v9 3/4] ASoC: tda998x: add a codec to the HDMI transmitter
-Date: Tue, 13 Jan 2015 10:24:55 +0100
-Message-ID: <20150113102455.4f29cff5@armhf>
-References: <cover.1420628786.git.moinejf@free.fr>
- <23b36acc1f769418a06f3e929eba288b5911da12.1420628786.git.moinejf@free.fr>
- <54B0123C.9070800@arm.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 RESEND 2/3] Documentation: gpio: Add APM X-Gene standby
+ GPIO controller DTS binding
+Date: Tue, 13 Jan 2015 10:25:49 +0100
+Message-ID: <CACRpkdbcdf7Ub9uYbeqUe1La1dnVeWCxK8N7=iVZuBtuKHFHFA@mail.gmail.com>
+References: <1418793050-26927-1-git-send-email-yvo@apm.com>
+	<1418793050-26927-3-git-send-email-yvo@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <54B0123C.9070800@arm.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Andrew Jackson <Andrew.Jackson@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>, Mark Brown <broonie@kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1418793050-26927-3-git-send-email-yvo@apm.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Y Vo <yvo@apm.com>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Phong Vo <pvo@apm.com>, Toan Le <toanle@apm.com>, patches <patches@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCAwOSBKYW4gMjAxNSAxNzozOTowOCArMDAwMApBbmRyZXcgSmFja3NvbiA8QW5kcmV3
-LkphY2tzb25AYXJtLmNvbT4gd3JvdGU6Cgo+ID4gKyAgICAgICBzbmRfcGNtX2h3X2NvbnN0cmFp
-bnRfbWlubWF4KHJ1bnRpbWUsCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFNO
-RFJWX1BDTV9IV19QQVJBTV9DSEFOTkVMUywKPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgMSwgc2FkW1NBRF9NWF9DSEFOX0ldKTsgIAo+IAo+IEluIHRoZSBsaWdodCBvZiBvdXIg
-ZGlzY3Vzc2lvbnMgZWxzZXdoZXJlIFsxXSwgc2hvdWxkbid0IHRoaXMKPiBiZSBjb25zdHJhaW5l
-ZCBieSB0aGUgbnVtYmVyIG9mIGhhcmR3YXJlIGNoYW5uZWxzIHRoYXQgdGhlIFREQTk5OHgKPiBz
-dXBwb3J0cyB0b28/ICBUaGF0IGlzLCB0aGUgbWF4aW11bSBudW1iZXIgb2YgY2hhbm5lbHMgc2hv
-dWxkCj4gYmUgdGhlIGxlc3NlciBvZiBzZFtTQURfTVhfQ0hBTl9JXSBhbmQgbnVtYmVyX29mX0ky
-UyBjaGFubmVscyAKPiAob3IgUy9QRElGIGNoYW5uZWxzIGlmIHNvIGNvbmZpZ3VyZWQpLgoKc25k
-X3BjbV9od19jb25zdHJhaW50X21pbm1heCgpIGRvZXMgdGhlIGpvYiBmcm9tIHRoZSBtaW4vbWF4
-IG51bWJlcnMgb2YKY2hhbm5lbHMgaW4gdGhlIERBSSBkZWZpbml0aW9uIGFuZCB0aGUgcmVhbCBt
-YXggbnVtYmVyIG9mIGNoYW5uZWxzIHdpbGwKYmUgc2V0IGZyb20gYXVkaW8gcG9ydHMgZGVjbGFy
-ZWQgaW4gdGhlIERULgoKLS0gCktlbiBhciBjJ2hlbnRhw7EJfAkgICAgICAqKiBCcmVpemggaGEg
-TGludXggYXRhdiEgKioKSmVmCQl8CQlodHRwOi8vbW9pbmVqZi5mcmVlLmZyLwpfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBs
-aXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNr
-dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Wed, Dec 17, 2014 at 6:10 AM, Y Vo <yvo@apm.com> wrote:
+> Documentation for APM X-Gene standby GPIO controller DTS binding.
+>
+> Signed-off-by: Y Vo <yvo@apm.com>
+> ---
+>  .../devicetree/bindings/gpio/gpio-xgene-sb.txt     | 31 ++++++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-xgene-sb.txt
+>
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-xgene-sb.txt b/Documentation/devicetree/bindings/gpio/gpio-xgene-sb.txt
+> new file mode 100644
+> index 0000000..3215e4d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-xgene-sb.txt
+> @@ -0,0 +1,31 @@
+> +APM X-Gene Standby GPIO controller bindings
+> +
+> +This is a gpio controller in standby domain.
+> +
+> +There are 20 GPIO pins from 0..21. There is no GPIO_DS14 and GPIO_DS15.
+> +Only GPIO_DS8..GPIO_DS13 support interrupt. IRQ mapping 0x28..0x2d.
+> +
+> +Required properties:
+> +- compatible: "apm,xgene-gpio-sb" for X-Gene Standby GPIO controller
+> +- reg: Physical base address and size of the controller's registers
+> +- #gpio-cells: Should be two.
+> +       - first cell is the pin number
+> +       - second cell is used to specify the gpio polarity:
+> +               0 = active high
+> +               1 = active low
+> +- gpio-controller: Marks the device node as a GPIO controller.
+> +- interrupts: Shall contains the interrupts.
+
+>From the example it seems it must contain exactly 6 interrupts?
+Then state this.
+
+> +Example:
+> +       sbgpio: sbgpio@17001000 {
+> +               compatible = "apm,xgene-gpio-sb";
+> +               reg = <0x0 0x17001000 0x0 0x400>;
+> +               #gpio-cells = <2>;
+> +               gpio-controller;
+> +               interrupts =    <0x0 0x28 0x1>,
+> +                               <0x0 0x29 0x1>,
+> +                               <0x0 0x2a 0x1>,
+> +                               <0x0 0x2b 0x1>,
+> +                               <0x0 0x2c 0x1>,
+> +                               <0x0 0x2d 0x1>;
+> +       };
+
+Yours,
+Linus Walleij
