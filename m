@@ -1,45 +1,60 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH v9 1/4] drm/i2c: tda998x: Add DT support for audio
-Date: Tue, 13 Jan 2015 16:03:13 +0000
-Message-ID: <20150113160313.GR12302@n2100.arm.linux.org.uk>
-References: <20150109200127.GD12302@n2100.arm.linux.org.uk>
- <1421054728.3081.28.camel@pengutronix.de>
- <20150112122527.GF12302@n2100.arm.linux.org.uk>
- <1421071197.3081.44.camel@pengutronix.de>
- <20150112140456.GI12302@n2100.arm.linux.org.uk>
- <20150112181341.4a53ea24@armhf>
- <20150112175705.GN12302@n2100.arm.linux.org.uk>
- <1421151718.4519.24.camel@pengutronix.de>
- <20150113122715.GP12302@n2100.arm.linux.org.uk>
- <20150113165411.5469930d@armhf>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v2] ARM: dts: cm-t3x: add NAND support
+Date: Tue, 13 Jan 2015 08:01:14 -0800
+Message-ID: <20150113160113.GE2419@atomide.com>
+References: <54A00BD6.8010507@compulab.co.il>
+ <1419777049-25271-1-git-send-email-lifshitz@compulab.co.il>
+ <54A151F2.9010904@ti.com>
+ <54A25696.80608@compulab.co.il>
+ <20150108001648.GQ13010@atomide.com>
+ <54AE5C3F.7010306@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20150113165411.5469930d@armhf>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jean-Francois Moine <moinejf@free.fr>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Andrew Jackson <Andrew.Jackson@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>, Mark Brown <broonie@kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+In-Reply-To: <54AE5C3F.7010306@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: Dmitry Lifshitz <lifshitz@compulab.co.il>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, grinberg@compulab.co.il
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBKYW4gMTMsIDIwMTUgYXQgMDQ6NTQ6MTFQTSArMDEwMCwgSmVhbi1GcmFuY29pcyBN
-b2luZSB3cm90ZToKPiA0IHN0cmVhbXMgb24gNCBkaWZmZXJlbnQgQVBzIChzb3VyY2VzKSBzaG91
-bGQgd29yaywgYnV0IDQgc3RyZWFtcyBmcm9tCj4gYSBzYW1lIHNvdXJjZSBzaG91bGQgYmUgZGV0
-YWlsZWQuCgpJJ2QgbGlrZSB0byBrbm93IGhvdyB5b3UgaW50ZW5kIHRvIHdpcmUgdXAgZm91ciBk
-aWZmZXJlbnQgSTJTIHNvdXJjZXMKdG8gdGhlIFREQTk5OHguCgpSZW1lbWJlciwgYW4gSTJTIHNv
-dXJjZSBwcm9kdWNlcyB0aGUgSTJTIGRhdGEgYW5kIHRoZSB3b3JkIGNsb2NrIC0gdGhhdCdzCnR3
-byBvdXRwdXRzLiAgWW91IGNhbid0IGVsZWN0cm9uaWNhbGx5IHdpcmUgdGhlIHdvcmQgY2xvY2tz
-IHRvZ2V0aGVyLgoKLS0gCkZUVEMgYnJvYWRiYW5kIGZvciAwLjhtaWxlIGxpbmU6IGN1cnJlbnRs
-eSBhdCAxMC41TWJwcyBkb3duIDQwMGticHMgdXAKYWNjb3JkaW5nIHRvIHNwZWVkdGVzdC5uZXQu
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZl
-bCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+* Roger Quadros <rogerq@ti.com> [150108 02:33]:
+> On 08/01/15 02:16, Tony Lindgren wrote:
+> > * Dmitry Lifshitz <lifshitz@compulab.co.il> [141229 23:42]:
+> >> On 12/29/2014 03:06 PM, Roger Quadros wrote:
+> >>> On 28/12/14 16:30, Dmitry Lifshitz wrote:
+> >>>> --- a/arch/arm/boot/dts/omap3-cm-t3x30.dtsi
+> >>>> +++ b/arch/arm/boot/dts/omap3-cm-t3x30.dtsi
+> >>>> @@ -50,7 +50,8 @@
+> >>>>  #include "omap-gpmc-smsc911x.dtsi"
+> >>>>
+> >>>>  &gpmc {
+> >>>> -	ranges = <5 0 0x2c000000 0x01000000>;
+> >>>> +	ranges = <5 0 0x2c000000 0x01000000>, /* CM-T3x30 SMSC9x Eth */
+> >>>> +		 <0 0 0x00000000 0x01000000>; /* CM-T3x NAND */
+> >>>
+> >>> Isn't this ranges property redundant as it will anyways be overridden by the board specific dts?
+> >>>
+> >>
+> >> The ranges are specified here (and other files below) by design.
+> >>
+> >> We built a tree like structure to organize DT files -
+> >> d234e4239 "ARM: dts: sbc-t3x: refactor DT support"
+> >>
+> >> It allows to inherit/override properties common for different boards.
+> >>
+> >> Our customers do not have to deal with a correct GPMC ranges settings, once
+> >> they base on omap3-cm-t3x.dts core module DT file (in case they do not
+> >> connect additional device to the bus).
+> >>
+> >> This is the point of Igor's comment to the previous patch version.
+> > 
+> > Roger, do you still have pending issues with this patch?
+> 
+> Sorry missed this one. Thanks for the explanations Dmitry.
+> 
+> Acked-by: Roger Quadros <rogerq@ti.com>
+
+Applying into omap-for-v3.20/dt thanks.
+
+Tony
