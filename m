@@ -1,103 +1,116 @@
-From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: Re: [PATCH v8 2/4] fpga manager: add sysfs interface document
-Date: Tue, 13 Jan 2015 09:40:18 +0200
-Message-ID: <D62286C4-2800-47B6-9D69-6F92E27347AF@konsulko.com>
-References: <1420575219-27061-1-git-send-email-atull@opensource.altera.com> <1420575219-27061-3-git-send-email-atull@opensource.altera.com> <20150107084819.GA1887@amd> <alpine.DEB.2.02.1501091302370.30067@linuxheads99> <20150109205643.GA5761@amd> <4D4EA2D5-68DD-49F7-9E2D-3A0A8F6AF9CA@konsulko.com> <20150110151118.GA16036@amd> <alpine.DEB.2.10.1501111009180.2556@shineypoop> <20150112084530.GA28681@amd> <bed1d7ce1b984c79acc75a47495cb959@BL2FFO11FD043.protection.gbl> <20150113072857.GA11760@amd>
-Mime-Version: 1.0 (Mac OS X Mail 8.1 \(1993\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150113072857.GA11760@amd>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@denx.de>
-Cc: Michal Simek <michal.simek@xilinx.com>, atull <atull@opensource.altera.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, jgunthorpe@obsidianresearch.com, hpa@zytor.com, Michal Simek <monstr@monstr.eu>, rdunlap@infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, robh+dt@kernel.org, Grant Likely <grant.likely@linaro.org>, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, Mark Brown <broonie@kernel.org>, philip@balister.org, rubini@gnudd.com, Steffen Trumtrar <s.trumtrar@pengutronix.de>, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, Felipe Balbi <balbi@ti.com>, m.chehab@samsung.com, davidb@codeaurora.org, Rob Landley <rob@landley.net>, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, Linus Walleij <linus.walleij@linaro.org>, pawel.moll@arm.com, mark.rutland@arm.com
+From: Ding Tianhong <dingtianhong@huawei.com>
+Subject: Re: [PATCH net-next v11 3/3] net: hisilicon: new hip04 ethernet driver
+Date: Tue, 13 Jan 2015 15:55:03 +0800
+Message-ID: <54B4CF57.4020505@huawei.com>
+References: <1421049832-6224-1-git-send-email-dingtianhong@huawei.com> <1421049832-6224-4-git-send-email-dingtianhong@huawei.com> <54B41192.3030400@suse.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <54B41192.3030400@suse.de>
+Sender: netdev-owner@vger.kernel.org
+To: Alexander Graf <agraf@suse.de>, arnd@arndb.de, robh+dt@kernel.org, davem@davemloft.net, grant.likely@linaro.org
+Cc: sergei.shtylyov@cogentembedded.com, linux-arm-kernel@lists.infradead.org, eric.dumazet@gmail.com, xuwei5@hisilicon.com, zhangfei.gao@linaro.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux@arm.linux.org.uk
 List-Id: devicetree@vger.kernel.org
 
-Hi Pavel,
+On 2015/1/13 2:25, Alexander Graf wrote:
+> On 12.01.15 09:03, Ding Tianhong wrote:
+>> Support Hisilicon hip04 ethernet driver, including 100M / 1000M controller.
+>> The controller has no tx done interrupt, reclaim xmitted buffer in the poll.
+>>
+>> v11: Add ethtool support for tx coalecse getting and setting, the xmit_more
+>> is not supported for this patch, but I think it could work for hip04,
+>> will support it later after some tests for performance better.
+>>
+>> Here are some performance test results by ping and iperf(add tx_coalesce_frames/users),
+>> it looks that the performance and latency is more better by tx_coalesce_frames/usecs.
+>>
+>> - Before:
+>> $ ping 192.168.1.1 ...
+>> --- 192.168.1.1 ping statistics ---
+> 
+> Writing --- directly into your patch description is usually a pretty bad
+> idea. Git am cuts off everything that comes after --- so your patch
+> description ends here without manual intervention ;).
+> 
+>> 24 packets transmitted, 24 received, 0% packet loss, time 22999ms
+>> rtt min/avg/max/mdev = 0.180/0.202/0.403/0.043 ms
+>>
+>> $ iperf -c 192.168.1.1 ...
+>> [ ID] Interval       Transfer     Bandwidth
+>> [  3]  0.0- 1.0 sec   115 MBytes   945 Mbits/sec
+>>
+>> - After:
+>> $ ping 192.168.1.1 ...
+>> --- 192.168.1.1 ping statistics ---
+>> 24 packets transmitted, 24 received, 0% packet loss, time 22999ms
+>> rtt min/avg/max/mdev = 0.178/0.190/0.380/0.041 ms
+>>
+>> $ iperf -c 192.168.1.1 ...
+>> [ ID] Interval       Transfer     Bandwidth
+>> [  3]  0.0- 1.0 sec   115 MBytes   965 Mbits/sec
+>>
+>> v10: According David Miller and Arnd Bergmann's suggestion, add some modification
+> 
+> Version history however should go after a --- line, so that it doesn't
+> show up in the patch description in the tree.
+> 
 
-> On Jan 13, 2015, at 09:28 , Pavel Machek <pavel@denx.de> wrote:
->=20
-> Hi!
->=20
->>>>>>>>>> +What:		/sys/class/fpga_manager/<fpga>/firmware
->>>>>>>>>> +Date:		October 2014
->>>>>>>>>> +KernelVersion:	3.18
->>>>>>>>>> +Contact:	Alan Tull <atull@opensource.altera.com>
->>>>>>>>>> +Description:	Name of the FPGA image file to load using firm=
-ware
->>>>>>>>>> class.
->>>>>>>>>=20
->>>>>>>>> This one is ugly: it unneccessarily passes firmware name thro=
-ugh the
->>>>>>>>> kernel. Just make interface and code simpler by always passin=
-g
->>>>>>>>> "socfpga-fpga-image" or something like that.
-> ...
->=20
->>> What is cumbersome about symlink? Why is "fake" symlink in sysfs be=
-tter?
->>>=20
->>>> Previous uses of the firmware layer has been to use it to load onc=
-e after
->>>> bootup; this is different since some use cases will want to switch=
- out
->>>> the FPGA image.  If someone wants there to be only one FPGA image =
-on
->>>> the FGPA forever, they will probably not be using this framework; =
-their
->>>> FPGA will probably be loaded before Linux boots up.
->>>=20
->>> Why? I have just one image on the fpga, and would prefer to load it
->>> from Linux.
->>=20
->> Pavel: These patches target staging and sysfs interface doesn't need=
- to be stable
->> at this time. I would prefer to add these patches to staging for 3.2=
-0
->> and feel free to send the patch which fix this.
->=20
-> Interesting way to address patch review. "We'll merge it, and you can
-> fix it up later".
->=20
->> With your code will be exactly clear how you want to use it and we c=
-an
->> talk about it.
->=20
-> I'm pretty sure Alan knows what I want at this point, he just does no=
-t
-> want to do it.
->=20
-> For the record, I want to drop "firmware" file, use fixed firmware
-> name, and deal with multiple firmwares in userspace (using symlink or
-> udev magic).
->=20
+ok
 
-That=E2=80=99s completely bogus. Using a fixed firmware file does not r=
-espond to
-real world usage, and there are no words to describe the hacks using
-symlinks and udev in an embedded product.
+>> for v9 version
+>> - drop the workqueue
+>> - batch cleanup based on tx_coalesce_frames/usecs for better throughput
+>> - use a reasonable default tx timeout (200us, could be shorted
+>>   based on measurements) with a range timer
+>> - fix napi poll function return value
+>> - use a lockless queue for cleanup
+>>
+>> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+>> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>> Signed-off-by: Ding Tianhong <dingtianhong@huawei.com>
+>> ---
+> 
+> 
+> [...]
+> 
+>> +static int hip04_remove(struct platform_device *pdev)
+>> +{
+>> +	struct net_device *ndev = platform_get_drvdata(pdev);
+>> +	struct hip04_priv *priv = netdev_priv(ndev);
+>> +	struct device *d = &pdev->dev;
+>> +
+>> +	if (priv->phy)
+>> +		phy_disconnect(priv->phy);
+>> +
+>> +	hip04_free_ring(ndev, d);
+>> +	unregister_netdev(ndev);
+>> +	free_irq(ndev->irq, ndev);
+>> +	of_node_put(priv->phy_node);
+>> +	cancel_work_sync(&priv->tx_timeout_task);
+>> +	free_netdev(ndev);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct of_device_id hip04_mac_match[] = {
+>> +	{ .compatible = "hisilicon,hip04-mac" },
+>> +	{ }
+>> +};
+> 
+> This is missing
+> 
+> MODULE_DEVICE_TABLE(of, hip04_mac_match);
+> 
+> to enable automatic module loading, no?
+> 
+looks good to me, thanks.
 
-> I believe this is simplest solution, should be adequate, and is
-> certainly less ugly than implementing fake symlink in
-> /sys/.../firmware. And I have yet to hear what is wrong with that
-> suggestion.
->=20
+Ding
 
-Everything.
-
-> Thanks,								=09
-
-Regards
-
-=E2=80=94 Pantelis
-
-> 									Pavel
-> --=20
-> (english) http://www.livejournal.com/~pavelmachek
-> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/hors=
-es/blog.html
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree"=
- in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> Alex
+> 
+> 
+> .
+> 
