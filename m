@@ -1,114 +1,70 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: Re: [PATCH v3 2/3] dt-bindings: Add pinctrl bindings for
- mt65xx/mt81xx.
-Date: Wed, 14 Jan 2015 00:24:53 +0800
-Message-ID: <15A74798-690D-40CA-88F0-A2CA06781546@jcrosoft.com>
-References: <1415709535-31515-1-git-send-email-hongzhou.yang@mediatek.com>
- <1415709535-31515-3-git-send-email-hongzhou.yang@mediatek.com>
- <CACRpkdYSe_BH_qiHma2BA+c2otEi3wd0TBXy83t8vwrNL+3U2g@mail.gmail.com>
- <20141127101830.GP30369@pengutronix.de>
- <CACRpkdbMdJT6y-NL36RgQe0-CAFAVGqKiwY9+yFcwA7JDLmA+Q@mail.gmail.com>
- <20141202135527.GM30369@pengutronix.de>
- <CACRpkdZeRd+j7d_iRphruHRg8p3XjqWK8_HQzLH2PTZ_pqOrYA@mail.gmail.com>
- <20150112122200.GC18908@pengutronix.de>
- <CACRpkdYXrdiRWMV8YpxrSLe2rLEV-ZnX7=36w21zGquh==6WgA@mail.gmail.com>
- <20150113161614.GF23940@pengutronix.de>
-Mime-Version: 1.0 (Mac OS X Mail 8.1 \(1993\))
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20150113161614.GF23940@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, =?utf-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, alan.cheng@mediatek.com, Russell King <linux@arm.linux.org.uk>, Hongzhou Yang <hongzhou.yang@mediatek.com>, toby.liu@mediatek.com, Grant Likely <grant.likely@linaro.org>, "Joe.C" <yingjoe.chen@mediatek.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Vladimir Murzin <vladimir.murzin@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, dandan.he@mediatek.com, huang eddie <eddie.huang@mediatek.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kerne>
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 05/11] usb: gadget: at91_udc: Remove non-DT handling code
+Date: Tue, 13 Jan 2015 10:36:54 -0600
+Message-ID: <20150113163654.GI16533@saruman>
+References: <1417606330-17753-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1417606330-17753-6-git-send-email-boris.brezillon@free-electrons.com>
+ <20150112213905.GI2858@saruman>
+ <20150112225330.GQ2447@piout.net>
+Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="4LwthZj+AV2mq5CX"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150112225330.GQ2447-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Cj4gT24gSmFuIDE0LCAyMDE1LCBhdCAxMjoxNiBBTSwgU2FzY2hhIEhhdWVyIDxzLmhhdWVyQHBl
-bmd1dHJvbml4LmRlPiB3cm90ZToKPiAKPiBPbiBUdWUsIEphbiAxMywgMjAxNSBhdCAxMTowNToy
-MkFNICswMTAwLCBMaW51cyBXYWxsZWlqIHdyb3RlOgo+Pj4+IEkgYW0gd29ycmllZCB0aGF0IHRo
-ZXJlIGlzIHNvbWV0aGluZyBpbiB5b3VyIHJlYXNvbmluZyB0aGF0IHNvcnQgb2YKPj4+PiBhc3N1
-bWVzIGFsbCBwaW4gY29udHJvbGxlcnMgbXV4IHBpbnMgb25lLWJ5LW9uZSBhbmQgbm90IGluIGdy
-b3Vwcy4KPj4+PiBIb3cgZG8gd2UgbWFrZSBpdCBpbXBvc3NpYmxlIHRvIHdyaXRlIGEgZGV2aWNl
-IHRyZWUgdGhhdCBhbHNvCj4+Pj4gbWFrZSBoYXJkd2FyZSB0aGF0IGRvIGdyb3Vwd2lzZSBjb25m
-aWcgdmlhYmxlIHdpdGhvdXQgYW1iaWd1aXRpZXM/Cj4+PiAKPj4+IFNvcnJ5LCBJIGRvbid0IHVu
-ZGVyc3RhbmQgdGhpcyBzZW50ZW5jZS4gV2hhdCBkbyB5b3UgbWVhbiBoZXJlPwo+Pj4gCj4+PiBU
-aGUgYmluZGluZ3MgSSBzdWdnZXN0ZWQgYXJlIGZvciBpbmRpdmlkdWFsIHBpbiBiYXNlZCBjb250
-cm9sbGVycwo+Pj4gb25seS4gSSBrbm93IHRoZXJlIGFyZSBncm91cCBiYXNlZCBjb250cm9sbGVy
-cywgYnV0IEkgZG9uJ3Qgd2FudCB0bwo+Pj4gY2hhbmdlIHRoZWlyIGJpbmRpbmdzLiBJIGJlbGll
-dmUgdGhlcmUgaXMgbm8gc2luZ2xlIGJpbmRpbmcgdGhhdCBpcwo+Pj4gZ29vZCBmb3IgYm90aCB0
-eXBlcyBvZiBjb250cm9sbGVycy4KPj4+IAo+Pj4gSSB0aGluayB3ZSBtdXN0IGZhY2UgaXQgdGhh
-dCBpbmRpdmlkdWFsIHBpbiBiYXNlZCBjb250cm9sbGVycyBhcmUKPj4+IGRpZmZlcmVudCBmcm9t
-IGdyb3VwIGJhc2VkIGNvbnRyb2xsZXJzLiBUaGF0J3MgdGhlIG1haW4gZGlmZmVyZW5jZQo+Pj4g
-YmV0d2VlbiBkaWZmZXJlbnQgcGluIGNvbnRyb2xsZXJzIGFuZCBJIHRoaW5rIHRoZXJlIGFyZSBn
-b29kIHJlYXNvbnMKPj4+IHRvIHJlZmxlY3QgdGhhdCBpbiB0aGUgZGV2aWNlIHRyZWUuCj4+IAo+
-PiBPSyBsZXQncyB3b3JrIG9uIGEgYmluZGluZyBmb3IgdGhpcyB1c2VjYXNlLgo+IAo+IE9rYXku
-Cj4gCj4+IAo+Pj4gWW91IG9mdGVuIHRhbGsgYWJvdXQgYW1iaWd1aXRpZXMuIENvdWxkIHlvdSBn
-aXZlIGFuIGV4YW1wbGUgd2hhdAo+Pj4gYW1iaWd1aXRpZXMgeW91IG1lYW4/Cj4+IAo+PiBXaGF0
-IGhhcHBlbmVkIHdhcyB0aGlzIHBpbnMgPSA7IGFyZ3VtZW50cyB3ZXJlIHNvbWV0aW1lcwo+PiBz
-dHJpbmdzIGFuZCBzb21ldGltZXMgaW50ZWdlcnMsIHRoYXQgYmVjb21lcyBzdHJhbmdlIHRvIGhh
-bmRsZQo+PiBpbiBjb2RlLCBhbWJpZ3VvdXMuCj4gCj4gSSBzZWUuIEkgbGlrZSBuYW1pbmcgaXQg
-J3Bpbm11eCcgYmVjYXVzZSB0aGF0J3Mgd2hhdCBpdCBpczogcGlucyBhbmQKPiBtdXggc2V0dGlu
-Z3MuIEEgcGxhaW4gJ3Bpbm5vJyBzdWdnZXN0cyB0aGF0IGl0IGNvbnRhaW5zIG9ubHkgcGluIG11
-YmVycywKPiB3aXRob3V0IG11eCBzZXR0aW5nLiBIb3cgYWJvdXQgJ3Bpbi1uby1tdXgnPyBXZSBh
-bHNvIGNvdWxkIGFkZCBhbgo+IGV4cGxpY2l0ICJwaW5zLWFyZS1udW1iZXJlZCIgcHJvcGVydHkg
-aW5zdGVhZCBvZiBkaXN0aW5ndWlzaGluZyB0aGlzCj4gYnkgcHJvcGVydHkgbmFtZXMuCj4gCj4+
-IAo+PiBJJ20gZnV6emlseSByZWZlcnJpbmcgdG8gdGhlIGNvbmNlcHQgb2YgdGhpbmdzIGJlaW5n
-IG5hbWVkIHRoZQo+PiBzYW1lIHdheSBpbiBkaWZmZXJlbnQgZGV2aWNlIHRyZWVzLCB5ZXQgbGFj
-a2luZyBjb21tb25hbGl0eSwKPj4gY29uZnVzaW5nIGEgaHVtYW4gcmVhZGVyIHRoYXQgdGhleSBt
-YXkgYmUgdGhlIHNhbWUgdGhpbmcsCj4+IGV2ZW4gaWYgaXQgaXMgcG9zc2libGUgdG8gd3JpdGUg
-c2NoZW1hcyBhbmQgcGFyc2VycyBoYW5kbGluZwo+PiBpdCB1bmFtYmlnb3VzbHksIHNvIG5vdCBh
-bWJpZ3VpdHkgaW4gdGhlIGZvcm1hbCBsb2dpYyBzZW5zZS4KPj4gCj4+IElmIGkgbGF0ZXIgd2Fu
-dCB0byByZWZhY3RvciB0aGUgY29kZSBhcm91bmQgdGhpcyB0byBhIGNlbnRyYWwKPj4gcGFyc2Vy
-IEkgY2Fubm90IGRvIHNvIGJlY2F1c2UgaXQgd291bGQgbGVhZCB0byBmb3JtYWwgYW1iaWd1aXRp
-ZXMKPj4gYW5kIGlzIG5vbi1kb2FibGUuCj4gCj4gVGhlcmUgY291bGQgYmUgYSBmbGFnIGluIHRo
-ZSBwaW5jdHJvbGxlciBzdHJ1Y3QgaW5kaWNhdGluZyB3aGV0aGVyIHRoZQo+IHByb3BlcnRpZXMg
-YXJlIHRvIGJlIGludGVycHJldGVkIGFzIHN0cmluZ3Mgb3IgYXMgbnVtYmVycy4KPiAKPj4gCj4+
-PiBOb3RlIHRoYXQgdGhlIHdheSB3ZSBjb21iaW5lIHBpbi9tdXggaW4gYSBzaW5nbGUgZGVmaW5l
-IGlzIG5vdCBuZXcsCj4+PiB0aGUgaS5NWCBwaW4gY29udHJvbGxlciB1c2VzIHRoaXMgYWxyZWFk
-eSBhbmQgc28gZmFyIEknbSBub3QgYXdhcmUgb2YKPj4+IGFueSBwcm9ibGVtcyB0aGlzIG1ha2Vz
-Lgo+PiAKPj4gWWVhaCB3ZSBuZXZlciBoYWQgdGltZSB0byBzaXQgZG93biBhbmQgY29tZSB1cCB3
-aXRoIHByb3Blcgo+PiBnZW5lcmljIHBpbiBjb250cm9sIGJpbmRpbmdzLCB3ZSB3ZW50IHdpdGgg
-Y3VzdG9tIGJpbmRpbmdzCj4+IHBhcnRseSBiZWNhdXNlIG9mIGdlbmVyYWwgZGlzYWdyZWVtZW50
-cywgcGFydGx5IGJlY2F1c2UgSQo+PiB3YXMgbmV3IHRvIGRldmljZSB0cmVlIGFuZCBob25lc3Rs
-eSBoYWQgbm8gaWRlYSBvZiBob3cKPj4gdG8gc2tpbiB0aGlzIGNhdC4KPj4gCj4+IE5vdyB0aGF0
-IHdlIGdldCB0byBmb3JtYWxpemUgZ2VuZXJpYyBiaW5kaW5ncyBmb3IgRFQgYW5kCj4+IEFDUEkg
-YW5kIHdoYXRldmVyIGFsaWtlLCBJIHByZWZlciBpZiB3ZSBtYWtlIGJvdGggZ3JvdXB3aXNlCj4+
-IGFuZCBwZXItcGluIHBpbiBjb250cm9sbGVycyBhcyBzdHJpY3QgYW5kIHdlbGwgZGVmaW5lZCBh
-cwo+PiBwb3NzaWJsZS4KPj4gCj4+IE9uZSBtaW5vciBwcm9ibGVtIEkgaGF2ZSB3aXRoIHVzaW5n
-IGFuIGludGVnZXIgZm9yIG11eCBjb25maWcKPj4gaXMgdGhhdCBpdCBhc3N1bWVzIHNvbWV0aGlu
-ZyBhYm91dCBob3cgbWFueSBwaW5zLCBjb25maWdzIGV0Ywo+PiB0aGF0IG1heSBleGlzdCBvbiBz
-dWNoIGEgc3lzdGVtLiBUaGlzIHNob3VsZCBiZSBzdGF0ZWQKPj4gZXhwbGljaXRseSBpbiB0aGUg
-YmluZGluZ3MgYXRsZWFzdCBzbyB3ZSBrbm93IHdoYXQgcmVzdHJpY3Rpb25zCj4+IHdlIGJ1aWxk
-IGludG8gdGhlbS4gU3RyaW5nLWJhc2VkIGZ1bmN0aW9uK2dyb3VwIG1hdGNoaW5nIGhhcwo+PiBu
-byBzdWNoIHJlc3RyaWN0aW9ucy4KPiAKPiBObyBwcm9ibGVtLCB0aGF0IGNhbiBiZSBkb2N1bWVu
-dGVkLiBOb3JtYWxseSB0aGUgZGVmaW5lcyBzaG91bGQgYmUgdXNlZAo+IGFueXdheSwgbm90IHRo
-ZSBwbGFpbiBwaW4gbnVtYmVycy4KPiAKPiBCVFcgb25lIHRoaW5nIEkgcmVhbGx5IGxpa2UgYWJv
-dXQgaW50ZWdlcnMgaXMgdGhlIHB1cmUgYmluYXJ5IHNpemUuIEluCj4gYmFyZWJveCBJIGFsc28g
-cGFyc2UgdGhlIHBpbm11eCBzZXR0aW5ncyBmcm9tIHRoZSBkZXZpY2UgdHJlZS4gVGhlCj4gZHJp
-dmVycyB1c2luZyBzdHJpbmcgbWF0Y2hpbmcgYXJlIG11bHRpcGxlIHRpbWVzIGJpZ2dlciBkdWUg
-dG8gdGhlCj4gc3RyaW5nIHRhYmxlczoKPiAKPiAtcnctci0tci0tIDEgc2hhIHB0eCAgNTQzNiBK
-YW4gMTMgMTU6MDAgaW14LWlvbXV4LXYzLm8KPiAtcnctci0tci0tIDEgc2hhIHB0eCA0MjA2MCBK
-YW4gMTMgMTU6MDAgcGluY3RybC10ZWdyYTMwLm8KCkFncmVlZCB3aXRoIFNhc2NoYSB0aGF04oCZ
-cyB3aHkgSSBjaG9zZSBpbnRlZ2VyIGZvciBhdDkxIHRvbwoKaWYgeW91IHdhbnQgc3RyaW5nIGp1
-c3QgdXNlIGRlZmluZSBpbnN0ZWFkIHRvIG1ha2UgaXQgbW9yZSByZWFkYWJsZQoKQmVzdCBSZWdh
-cmRzLApKLgo+IAo+IFNhc2NoYQo+IAo+IC0tIAo+IFBlbmd1dHJvbml4IGUuSy4gICAgICAgICAg
-ICAgICAgICAgICAgICAgICB8ICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8Cj4gSW5kdXN0
-cmlhbCBMaW51eCBTb2x1dGlvbnMgICAgICAgICAgICAgICAgIHwgaHR0cDovL3d3dy5wZW5ndXRy
-b25peC5kZS8gIHwKPiBQZWluZXIgU3RyLiA2LTgsIDMxMTM3IEhpbGRlc2hlaW0sIEdlcm1hbnkg
-fCBQaG9uZTogKzQ5LTUxMjEtMjA2OTE3LTAgICAgfAo+IEFtdHNnZXJpY2h0IEhpbGRlc2hlaW0s
-IEhSQSAyNjg2ICAgICAgICAgICB8IEZheDogICArNDktNTEyMS0yMDY5MTctNTU1NSB8Cj4gCj4g
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KPiBsaW51eC1h
-cm0ta2VybmVsIG1haWxpbmcgbGlzdAo+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFk
-Lm9yZwo+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgt
-YXJtLWtlcm5lbAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMu
-aW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2xpbnV4LWFybS1rZXJuZWwK
+--4LwthZj+AV2mq5CX
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Mon, Jan 12, 2015 at 11:53:30PM +0100, Alexandre Belloni wrote:
+> Hi Felipe,
+>=20
+> I've rebased that patch series but it depends on another one (the mfd:
+> syscon: part of "memory: add Atmel EBI (External Bus Interface)
+> driver") that is not taken yet so applying it now will break the
+> build. I still hope to get it merged for 3.20 and I'll resend it as
+> soon as possible.
+
+In that case, we either take the entire series through MFD (including
+the gadget patches) or we delay the gadget patches until all
+dependencies have been sorted out.
+
+--=20
+balbi
+
+--4LwthZj+AV2mq5CX
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUtUmmAAoJEIaOsuA1yqRE040QAJH7NOLe/DsC9soHqjM/ywuR
+FmMDrqitvIIcCsAJZL989OwiLNtKV1zlF1xUV0NQxMakmgzefpetKJONdPZ2iwts
+mwV224mSVg19kYK5gMf03+ILldMfkArAzw90YBTVYDJdCY+MihuKWT8qzT1lI8pZ
++7w6dPFAncsA7XMA734t/n/56775z6FtVLtY9lL44zrS0J+T9ard11JRyzMO9Ike
+mP5fLIz/Ig2+JCecw8MU75UAev54sS36CqZkCp5gEM3eiVGMMOuxGdpbyS8Wm/4K
+9YmTbO2N1gdFyKGzdcoB8wf9NivzopGFheZRI2ny1B7Ns9Z2MRXi/EZOmKg/kggc
+wpmtiIY4BI0B4gE5j2H3WqhPnrVMOGB+7+k68lCGBkWVd5RpMpF+Ha1JjnFVTJya
+Ds7S1ibtgZNDjGtkgkEL7XiURHiOs21WzimRb6p6SZxFfZZmWbr/Hn/gmkiODKF1
+gcRP7c8dIKDHhYqju3Nl6PGSyQdEpu74fqvmiBcYsFTF6egzaO/HvJw1w8vzBBwl
+CvRpvVOVSETOllKziP3rnqacAwrHajOL32jANmHkBm0sTH7nmh/JoI4hzpAiO/O4
+6iyBR00nMP4kBNM43ii+r71yURpyfKG3q3Y9CS/lVIHonvlNA3pVSfFYiAmrTqUp
+ckDK0LlNeBssyUIXaOgs
+=LXLg
+-----END PGP SIGNATURE-----
+
+--4LwthZj+AV2mq5CX--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
