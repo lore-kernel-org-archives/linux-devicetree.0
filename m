@@ -1,126 +1,124 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/4] pinctrl: cygnus: add initial pinctrl support
-Date: Tue, 13 Jan 2015 09:25:57 +0100
-Message-ID: <CACRpkdZUaB-tt2N0dbaV5RkVS5PuFi63TqgOg15Jb2ACH52Yug@mail.gmail.com>
-References: <rjui@broadcom.com>
-	<1417131990-17954-1-git-send-email-rjui@broadcom.com>
-	<1417131990-17954-3-git-send-email-rjui@broadcom.com>
-	<CACRpkdbZx1hcvd-q9AL3FPQRqU+wJjeSV8AdSno5PVr+fqhpRQ@mail.gmail.com>
-	<54B0201E.3000307@broadcom.com>
+From: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH/RFC v10 03/19] DT: leds: Add led-sources property
+Date: Tue, 13 Jan 2015 09:42:41 +0100
+Message-ID: <54B4DA81.7060900@samsung.com>
+References: <1420816989-1808-1-git-send-email-j.anaszewski@samsung.com>
+ <1420816989-1808-4-git-send-email-j.anaszewski@samsung.com>
+ <CAL_JsqJKEp6TWaRhJimg3AWBh+MCCr2Bk9+1o7orLLdp5E+n-g@mail.gmail.com>
+ <54B38682.5080605@samsung.com>
+ <CAL_Jsq+UaA41DvawdOMmOib=Fi0hC-nBdKV-+P4DFo+MoOy-bQ@mail.gmail.com>
+ <54B3F1EF.4060506@samsung.com>
+ <CAL_JsqKpJtUG0G6g1GOuSVpc31oe-dp3qdrKJUE0upG-xRDFhA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54B0201E.3000307-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+In-reply-to: <CAL_JsqKpJtUG0G6g1GOuSVpc31oe-dp3qdrKJUE0upG-xRDFhA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Sherman Yin <syin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>, Chris Boot <bootc-1Slo4GeK4H1eoWH0uzbU5w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Fengguang Wu <fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, sakari.ailus-X3B1VOXEql0@public.gmane.org, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 9, 2015 at 7:38 PM, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
-> On 1/9/2015 3:03 AM, Linus Walleij wrote:
->> On Fri, Nov 28, 2014 at 12:46 AM, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
-
->> I don't know if the hardware has any similarity though, so invite
->> the authors of the previous drivers to review this code.
->>
-> They are completely different. The only similarity between Cygnus and
-> bcm281xx pinctrl is that they use the same concept of alternation
-> functions (1, 2, 3, 4) for mux configuration.
-
-Then you can probably look at that driver for inspiration on how to han=
-dle
-the situation you described earlier with collissions.
-
->>> +/*
->>> + * List of groups of pins
->>> + */
->>> +static const unsigned gpio0_pins[] =3D { 12 };
->>> +static const unsigned gpio1_pins[] =3D { 13 };
->>> +static const unsigned gpio2_pins[] =3D { 14 };
->>> +static const unsigned gpio3_pins[] =3D { 15 };
->>> +static const unsigned gpio4_pins[] =3D { 16 };
->>> +static const unsigned gpio5_pins[] =3D { 17 };
->>> +static const unsigned gpio6_pins[] =3D { 18 };
->>> +static const unsigned gpio7_pins[] =3D { 19 };
->>> +static const unsigned gpio8_pins[] =3D { 20 };
->>> +static const unsigned gpio9_pins[] =3D { 21 };
->>> +static const unsigned gpio10_pins[] =3D { 22 };
->>> +static const unsigned gpio11_pins[] =3D { 23 };
->>> +static const unsigned gpio12_pins[] =3D { 24 };
->>> +static const unsigned gpio13_pins[] =3D { 25 };
->>> +static const unsigned gpio14_pins[] =3D { 26 };
->>> +static const unsigned gpio15_pins[] =3D { 27 };
->>> +static const unsigned gpio16_pins[] =3D { 28 };
->>> +static const unsigned gpio17_pins[] =3D { 29 };
->>> +static const unsigned gpio18_pins[] =3D { 30 };
->>> +static const unsigned gpio19_pins[] =3D { 31 };
->>> +static const unsigned gpio20_pins[] =3D { 32 };
->>> +static const unsigned gpio21_pins[] =3D { 33 };
->>> +static const unsigned gpio22_pins[] =3D { 34 };
->>> +static const unsigned gpio23_pins[] =3D { 35 };
->>
->> Have you considered implementing .gpio_request_enable()
->> and .gpio_disable_free() to get around having to have one
->> group for each GPIO line?
->>
-> Okay the Cygnus pin controller is really a mess. GPIO 0 ~ GPIO23 are
-> really 23 distinct groups, each with one pin. Then the rest of GPIOs =
-go
-> under other groups. In general, when we set a group to alternate
-> function 4, all pins become GPIO.
-
-It will require some complicated code no matter how you
-handle it I'm afraid. Rely on the pin control subsystem
-to handle collisions though.
-
->>> +static const unsigned qspi_gpio_pins[] =3D { 108, 109 };
->>> +static const unsigned smart_card0_fcb_pins[] =3D { 45 };
->>> +static const unsigned smart_card1_fcb_pins[] =3D { 51 };
->>> +static const unsigned gpio0_3p3_pins[] =3D { 176 };
->>> +static const unsigned gpio1_3p3_pins[] =3D { 177 };
->>> +static const unsigned gpio2_3p3_pins[] =3D { 178 };
->>
->> Looks good...
->>
-> Note these pins are definitions in the driver that help to describe t=
-he
-> pad layout. We can't really configure any individual pins in Cygnus.
-
-Yeah it's a groupwise controller then, that's similar to
-e.g. the coh901 driver.
-
-We should be able to accomodate this...
-
->>> +static int cygnus_dt_node_to_map(struct pinctrl_dev *pctrl_dev,
->>> +               struct device_node *np, struct pinctrl_map **map,
->>> +               unsigned *num_maps)
->>> +{
->>
->> After S=C3=B6ren Brinkmanns patches youy should be able to use core
->> functions for this and avoid this code altogether.
+On 01/12/2015 05:55 PM, Rob Herring wrote:
+> Adding Mark B and Liam...
 >
-> Will that help to take care our case, based on the way we will use
-> "function" and "group"?
-
-groupS but yes it will work with your controller, though I think
-=2Eset_mux and the controller state will need some elaborate code
-to handle what the framework requests.
-
->>> +       num_groups =3D of_property_count_strings(np, "brcm,groups")=
-;
+> On Mon, Jan 12, 2015 at 10:10 AM, Jacek Anaszewski
+> <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+>> On 01/12/2015 02:52 PM, Rob Herring wrote:
+>>>
+>>> On Mon, Jan 12, 2015 at 2:32 AM, Jacek Anaszewski
+>>> <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+>>>> On 01/09/2015 07:33 PM, Rob Herring wrote:
+>>>>> On Fri, Jan 9, 2015 at 9:22 AM, Jacek Anaszewski
+>>>>> <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+>>>>>> Add a property for defining the device outputs the LED
+>>>>>> represented by the DT child node is connected to.
+>
+> [...]
+>
+>>>>>> b/Documentation/devicetree/bindings/leds/common.txt
+>>>>>> index a2c3f7a..29295bf 100644
+>>>>>> --- a/Documentation/devicetree/bindings/leds/common.txt
+>>>>>> +++ b/Documentation/devicetree/bindings/leds/common.txt
+>>>>>> @@ -1,6 +1,10 @@
+>>>>>>     Common leds properties.
+>>>>>>
+>>>>>>     Optional properties for child nodes:
+>>>>>> +- led-sources : Array of bits signifying the LED current regulator
+>>>>>> outputs the
+>>>>>> +               LED represented by the child node is connected to (1 -
+>>>>>> the LED
+>>>>>> +               is connected to the output, 0 - the LED isn't connected
+>>>>>> to the
+>>>>>> +               output).
+>>>>>
+>>>>>
+>>>>>
+>>>>> Sorry, I just don't understand this.
+>>>>
+>>>>
+>>>>
+>>>> In some Flash LED devices one LED can be connected to one or more
+>>>> electric current outputs, which allows for multiplying the maximum
+>>>> current allowed for the LED. Each sub-LED is represented by a child
+>>>> node in the DT binding of the Flash LED device and it needs to declare
+>>>> which outputs it is connected to. In the example below the led-sources
+>>>> property is a two element array, which means that the flash LED device
+>>>> has two current outputs, and the bits signify if the LED is connected
+>>>> to the output.
+>>>
+>>>
+>>> Sounds like a regulator for which we already have bindings for and we
+>>> have a driver for regulator based LEDs (but no binding for it).
 >>
->> As mentioned, just "groups".
 >>
-> I guess I will use "group"?
+>> Do you think of drivers/leds/leds-regulator.c driver? This driver just
+>> allows for registering an arbitrary regulator device as a LED subsystem
+>> device.
+>>
+>> There are however devices that don't fall into this category, i.e. they
+>> have many outputs, that can be connected to a single LED or to many LEDs
+>> and the driver has to know what is the actual arrangement.
+>
+> We may need to extend the regulator binding slightly and allow for
+> multiple phandles on a supply property, but wouldn't something like
+> this work:
+>
+> led-supply = <&led-reg0>, <&led-reg1>, <&led-reg2>, <&led-reg3>;
+>
+> The shared source is already supported by the regulator binding.
 
-No groups, as with the standard attribute "gpios", this may be
-a single group too, it's just a standard binding.
+I think that we shouldn't split the LED devices into power supply
+providers and consumers as in case of generic regulators. From this
+point of view a LED device current output is a provider and a discrete
+LED element is a consumer. In this approach each discrete LED element
+should have a related driver which is not how LED devices are being
+handled in the LED subsystem, where there is a single binding for a LED
+device and there is a single driver for it which creates separate LED
+class devices for each LED connected to the LED device output. Each
+discrete LED is represented by a child node in the LED device binding.
 
-Yours,
-Linus Walleij
+I am aware that it may be tempting to treat LED devices as common
+regulators, but they have their specific features which gave a
+reason for introducing LED class for them. Besides, there is already
+drivers/leds/leds-regulator.c driver for LED devices which support only
+turning on/off and setting brightness level.
+
+In your proposition a separate regulator provider binding would have
+to be created for each current output and a separate binding for
+each discrete LED connected to the LED device. It would create
+unnecessary noise in a dts file.
+
+Moreover, using regulator binding implies that we want to treat it
+as a sheer power supply for our device (which would be a discrete LED
+element in this case), whereas LED devices provide more features like
+blinking pattern and for flash LED devices - flash timeout, external
+strobe and flash faults.
+
+-- 
+Best Regards,
+Jacek Anaszewski
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
