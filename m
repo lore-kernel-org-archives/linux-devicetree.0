@@ -1,77 +1,70 @@
 From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 00/10]  st33zp24 new architecture proposal and st33zp24 spi driver
-Date: Tue, 13 Jan 2015 23:13:08 +0100
-Message-ID: <1421187198-8503-1-git-send-email-christophe-h.ricard@st.com>
+Subject: [PATCH v2 01/10] tpm/tpm_i2c_stm_st33: Remove sparse spaces
+Date: Tue, 13 Jan 2015 23:13:09 +0100
+Message-ID: <1421187198-8503-2-git-send-email-christophe-h.ricard@st.com>
+References: <1421187198-8503-1-git-send-email-christophe-h.ricard@st.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1421187198-8503-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: PeterHuewe-Mmb7MZpHnFY@public.gmane.org
 Cc: ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org, tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, jean-luc.blanc-qxv4g6HH51o@public.gmane.org, benoit.houyere-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org, jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Remove some useless spaces (new line or space)
 
-The following patchset:
-- clean the current tpm_i2c_stm_st33 driver
-- propose a new architecture allowing to share a core st33zp24 data management
-layer with different phy (i2c & spi). For st33zp24 both phy have a proprietary transport
-protocol. Both are relying on the TCG TIS protocol. At the end, it simplifies the maintenance.
-- Add an spi phy allowing to support st33zp24 using with an SPI bus.
+Reviewed-by: Jasob Gunthorpe <jason.gunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
+---
+ drivers/char/tpm/tpm_i2c_stm_st33.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-The complete solution got tested in polling and interrupt mode successfully with i2c & spi phy.
-This patchset applies on top of Peter's tree https://github.com/PeterHuewe/linux-tpmdd.git for-james branch
-on top of:
-tpm: TPM 2.0 FIFO Interface 2c71d9fb22289a196a4b51d6158cf0d2f9abcfb9
-
-I confirm also Jarkko Sakkinen's changes are working with this product with both phy's.
-
-v2 takes into account feedbacks from Jason Gunthorpe.
-
-Best Regards
-Christophe
-
-Christophe Ricard (10):
-  tpm/tpm_i2c_stm_st33: Remove sparse spaces
-  tpm/tpm_i2c_stm_st33: Sanity cleanup
-  tpm/tpm_i2c_stm_st33: Replace remaining r by ret
-  tpm/tpm_i2c_stm_st33: Replace access to io_lpcpd from struct
-    st33zp24_platform_data to tpm_stm_dev
-  tpm/tpm_i2c_stm_st33: Change tpm_i2c_stm_st33.h to tpm_stm_st33.h
-  tpm/tpm_i2c_stm_st33: Add status check when reading data on the FIFO
-  tpm/tpm_i2c_stm_st33/dts/st33zp24-i2c: Rename st33zp24 dts
-    documentation
-  tpm/tpm_i2c_stm_st33: Split tpm_i2c_tpm_st33 in 2 layers (core + phy)
-  tpm/st33zp24/spi: Add st33zp24 spi phy
-  tpm/st33zp24/dts/st33zp24-spi: Add dts documentation for st33zp24 spi
-    phy
-
- .../bindings/security/tpm/st33zp24-i2c.txt         |  36 +
- .../bindings/security/tpm/st33zp24-spi.txt         |  34 +
- .../devicetree/bindings/security/tpm/st33zp24.txt  |  36 -
- drivers/char/tpm/Kconfig                           |  11 +-
- drivers/char/tpm/Makefile                          |   2 +-
- drivers/char/tpm/st33zp24/Kconfig                  |  30 +
- drivers/char/tpm/st33zp24/Makefile                 |  12 +
- drivers/char/tpm/st33zp24/i2c.c                    | 281 +++++++
- drivers/char/tpm/st33zp24/spi.c                    | 388 +++++++++
- drivers/char/tpm/st33zp24/st33zp24.c               | 683 ++++++++++++++++
- drivers/char/tpm/st33zp24/st33zp24.h               |  32 +
- drivers/char/tpm/tpm_i2c_stm_st33.c                | 910 ---------------------
- include/linux/platform_data/st33zp24.h             |  28 +
- include/linux/platform_data/tpm_i2c_stm_st33.h     |  39 -
- 14 files changed, 1526 insertions(+), 996 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/security/tpm/st33zp24-i2c.txt
- create mode 100644 Documentation/devicetree/bindings/security/tpm/st33zp24-spi.txt
- delete mode 100644 Documentation/devicetree/bindings/security/tpm/st33zp24.txt
- create mode 100644 drivers/char/tpm/st33zp24/Kconfig
- create mode 100644 drivers/char/tpm/st33zp24/Makefile
- create mode 100644 drivers/char/tpm/st33zp24/i2c.c
- create mode 100644 drivers/char/tpm/st33zp24/spi.c
- create mode 100644 drivers/char/tpm/st33zp24/st33zp24.c
- create mode 100644 drivers/char/tpm/st33zp24/st33zp24.h
- delete mode 100644 drivers/char/tpm/tpm_i2c_stm_st33.c
- create mode 100644 include/linux/platform_data/st33zp24.h
- delete mode 100644 include/linux/platform_data/tpm_i2c_stm_st33.h
-
+diff --git a/drivers/char/tpm/tpm_i2c_stm_st33.c b/drivers/char/tpm/tpm_i2c_stm_st33.c
+index 48c4808..5deb9cc 100644
+--- a/drivers/char/tpm/tpm_i2c_stm_st33.c
++++ b/drivers/char/tpm/tpm_i2c_stm_st33.c
+@@ -238,7 +238,6 @@ static int check_locality(struct tpm_chip *chip)
+ 		return chip->vendor.locality;
+ 
+ 	return -EACCES;
+-
+ } /* check_locality() */
+ 
+ /*
+@@ -352,7 +351,7 @@ static u8 interrupt_to_status(u8 irq_mask)
+ {
+ 	u8 status = 0;
+ 
+-	if ((irq_mask & TPM_INTF_STS_VALID_INT) ==  TPM_INTF_STS_VALID_INT)
++	if ((irq_mask & TPM_INTF_STS_VALID_INT) == TPM_INTF_STS_VALID_INT)
+ 		status |= TPM_STS_VALID;
+ 	if ((irq_mask & TPM_INTF_DATA_AVAIL_INT) == TPM_INTF_DATA_AVAIL_INT)
+ 		status |= TPM_STS_DATA_AVAIL;
+@@ -570,7 +569,7 @@ out_err:
+  * @param: buf,	the buffer to store datas.
+  * @param: count, the number of bytes to send.
+  * @return: In case of success the number of bytes received.
+- *		In other case, a < 0 value describing the issue.
++ *	    In other case, a < 0 value describing the issue.
+  */
+ static int tpm_stm_i2c_recv(struct tpm_chip *chip, unsigned char *buf,
+ 			    size_t count)
+@@ -633,7 +632,6 @@ static int tpm_stm_i2c_of_request_resources(struct tpm_chip *chip)
+ 	struct device_node *pp;
+ 	struct tpm_stm_dev *tpm_dev = (struct tpm_stm_dev *)TPM_VPRIV(chip);
+ 	struct i2c_client *client = tpm_dev->client;
+-
+ 	int gpio;
+ 	int ret;
+ 
+@@ -846,7 +844,7 @@ static int tpm_stm_i2c_pm_suspend(struct device *dev)
+ 		ret = tpm_pm_suspend(dev);
+ 
+ 	return ret;
+-}				/* tpm_stm_i2c_suspend() */
++} /* tpm_stm_i2c_suspend() */
+ 
+ /*
+  * tpm_stm_i2c_pm_resume resume the TPM device
 -- 
 2.1.0
 
