@@ -1,50 +1,193 @@
-From: Eddie Huang <eddie.huang@mediatek.com>
-Subject: Re: [PATCH v2 1/4] tty: serial: Add 8250 earlycon to support
- noinit option
-Date: Tue, 13 Jan 2015 09:05:29 +0800
-Message-ID: <1421111129.10374.4.camel@mtksdaap41>
-References: <1421068104-30463-1-git-send-email-eddie.huang@mediatek.com>
- <1421068104-30463-2-git-send-email-eddie.huang@mediatek.com>
- <3712986.8SuKNvhKTk@wuerfel>  <1421078918.31978.32.camel@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1421078918.31978.32.camel@linux.intel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>, Alan Cox <alan@linux.intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-doc@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Jiri Slaby <jslaby@suse.cz>, Jonathan Corbet <corbet@lwn.net>, yh.chen@mediatek.com, Howard Chen <ibanezchen@gmail.com>, linux-serial@vger.kernel.org, "Joe.C" <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, Vladimir Murzin <vladimir.murzin@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org, srv_heupstream@mediatek.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Kumar Gala <galak@codeaurora.org>
+From: Christoph Junghans <ottxor-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v2] Added support for pogoplug e02 (pink/gray)
+Date: Mon, 12 Jan 2015 18:22:12 -0700
+Message-ID: <1421112132-9651-1-git-send-email-ottxor@gentoo.org>
+References: <CAA8MNVjieDJ-dv2NNWXK=+uqrPmvtk2EiBYJGJkMugEiN2TsAw@mail.gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAA8MNVjieDJ-dv2NNWXK=+uqrPmvtk2EiBYJGJkMugEiN2TsAw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: andrew-g2DYL2Zd6BY@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Christoph Junghans <ottxor-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+The pogoplug differs from the SheevaPlug only by a
+few details, but especially in the led assignments.
+This patch was tested under Gentoo Linux and is
+based on dts files from Arch Linux ARM and OpenWrt.
 
-On Mon, 2015-01-12 at 16:08 +0000, Alan Cox wrote:
-> On Mon, 2015-01-12 at 16:35 +0100, Arnd Bergmann wrote:
-> > On Monday 12 January 2015 21:08:21 Eddie Huang wrote:
-> > > Add earlycon support not only baudrate option, but also add noinit option.
-> > > If use noinit option, 8250 earlycon will not init serial hardware and use
-> > > loader setting.
-> > > 
-> > > Signed-off-by: Eddie Huang <eddie.huang@mediatek.com>
-> > 
-> > I probably missed something in the previous discussion, but why is
-> > "noinit" not just the default? I believe that is how we handle early
-> > serial ports on PowerPC, and I see no downsides to it.
-> 
-> Most PC hardware at least needs the port initialised to use it. It won't
-> have been configured by the firmware in many cases.
-> 
+Suggested-by: Felix Kaechele <heffer-rxtnV0ftBwyoClj4AeEUq9i2O/JbrIOy@public.gmane.org>
+Suggested-by: Oleg Rakhmanov <moonman.ca-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Christoph Junghans <ottxor-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
+---
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ arch/arm/boot/dts/Makefile                         |   1 +
+ arch/arm/boot/dts/kirkwood-pogo_e02.dts            | 129 +++++++++++++++++++++
+ 3 files changed, 131 insertions(+)
+ create mode 100644 arch/arm/boot/dts/kirkwood-pogo_e02.dts
 
-Sorry no continue discuss in previous series. Since other 8250 user may
-already depend on current init behavior, I think it's better to keep it
-and add noinit by extra setting.
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index ac7269f..e5f58c6 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -32,6 +32,7 @@ cdns	Cadence Design Systems Inc.
+ chrp	Common Hardware Reference Platform
+ chunghwa	Chunghwa Picture Tubes Ltd.
+ cirrus	Cirrus Logic, Inc.
++cloudengines	Cloud Engines, Inc.
+ cortina	Cortina Systems, Inc.
+ crystalfontz	Crystalfontz America, Inc.
+ dallas	Maxim Integrated Products (formerly Dallas Semiconductor)
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index b8c5cd3..cd974eb 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -143,6 +143,7 @@ dtb-$(CONFIG_MACH_KIRKWOOD) += kirkwood-b3.dtb \
+ 	kirkwood-openrd-base.dtb \
+ 	kirkwood-openrd-client.dtb \
+ 	kirkwood-openrd-ultimate.dtb \
++	kirkwood-pogo_e02.dtb \
+ 	kirkwood-rd88f6192.dtb \
+ 	kirkwood-rd88f6281-a0.dtb \
+ 	kirkwood-rd88f6281-a1.dtb \
+diff --git a/arch/arm/boot/dts/kirkwood-pogo_e02.dts b/arch/arm/boot/dts/kirkwood-pogo_e02.dts
+new file mode 100644
+index 0000000..be38dab
+--- /dev/null
++++ b/arch/arm/boot/dts/kirkwood-pogo_e02.dts
+@@ -0,0 +1,129 @@
++/*
++ * kirkwood-sheevaplug.dts - Device tree file for Pogoplug E02
++ *
++ * Copyright (C) 2015 Christoph Junghans <ottxor-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
++ *
++ * based on information of dts files from
++ *  Arch Linux ARM by Oleg Rakhmanov <moonman.ca-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++ *  OpenWrt by Felix Kaechele <heffer-rxtnV0ftBwyoClj4AeEUq9i2O/JbrIOy@public.gmane.org>
++ *
++ * This file is licensed under the terms of the GNU General Public
++ * License version 2.  This program is licensed "as is" without any
++ * warranty of any kind, whether express or implied.
++ */
++
++/dts-v1/;
++
++#include "kirkwood.dtsi"
++#include "kirkwood-6281.dtsi"
++
++/ {
++	model = "Cloud Engines Pogoplug E02";
++	compatible = "cloudengines,pogoe02", "marvell,kirkwood-88f6281", "marvell,kirkwood";
++
++	memory {
++		device_type = "memory";
++		reg = <0x00000000 0x10000000>;
++	};
++
++	chosen {
++		bootargs = "console=ttyS0,115200n8";
++		linux,stdout-path = &serial1;
++	};
++
++	ocp@f1000000 {
++		pinctrl: pinctrl@10000 {
++			pmx_usb_power_enable: pmx-usb-power-enable {
++				marvell,pins = "mpp29";
++				marvell,function = "gpio";
++			};
++			pmx_led_green: pmx-led-green {
++				marvell,pins = "mpp48";
++				marvell,function = "gpio";
++			};
++			pmx_led_orange: pmx-led-orange {
++				marvell,pins = "mpp49";
++				marvell,function = "gpio";
++			};
++		};
++		serial1: serial@12000 {
++			status = "ok";
++		};
++	};
++	gpio-leds {
++		compatible = "gpio-leds";
++		pinctrl-0 = < &pmx_usb_power_enable &pmx_led_orange
++			      &pmx_led_green >;
++		pinctrl-names = "default";
++
++		health {
++			label = "pogo_e02:green:health";
++			gpios = <&gpio1 16 GPIO_ACTIVE_LOW>;
++			default-state = "keep";
++		};
++		fault {
++			label = "pogo_e02:orange:fault";
++			gpios = <&gpio1 17 GPIO_ACTIVE_LOW>;
++		};
++	};
++	regulators {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		pinctrl-0 = <&pmx_usb_power_enable>;
++		pinctrl-names = "default";
++
++		usb_power: regulator@1 {
++			compatible = "regulator-fixed";
++			reg = <1>;
++			regulator-name = "USB Power";
++			regulator-min-microvolt = <5000000>;
++			regulator-max-microvolt = <5000000>;
++			enable-active-high;
++			regulator-always-on;
++			regulator-boot-on;
++			gpio = <&gpio0 29 GPIO_ACTIVE_HIGH>;
++		};
++	};
++};
++
++&nand {
++	chip-delay = <40>;
++	status = "okay";
++
++	partition@0 {
++		label = "u-boot";
++		reg = <0x0000000 0x100000>;
++		read-only;
++	};
++
++	partition@100000 {
++		label = "uImage";
++		reg = <0x0100000 0x400000>;
++	};
++
++	partition@500000 {
++		label = "pogoplug";
++		reg = <0x0500000 0x2000000>;
++	};
++
++	partition@2500000 {
++		label = "root";
++		reg = <0x02500000 0x5b00000>;
++	};
++};
++
++&mdio {
++	status = "okay";
++
++	ethphy0: ethernet-phy@0 {
++		reg = <0>;
++	};
++};
++
++&eth0 {
++	status = "okay";
++	ethernet0-port@0 {
++		phy-handle = <&ethphy0>;
++	};
++};
+-- 
+2.0.5
 
-Eddie 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
