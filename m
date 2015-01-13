@@ -1,70 +1,43 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH] video: fbdev: omap2: dss: dispc.c:  Remove some unused
- functions
-Date: Tue, 13 Jan 2015 13:22:55 +0200
-Message-ID: <54B5000F.8030408@ti.com>
-References: <1420126149-27019-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
+From: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] drivers: of: Export of_reserved_mem_device_{init,release}
+Date: Tue, 13 Jan 2015 12:23:27 +0100
+Message-ID: <54B5002F.9030004@samsung.com>
+References: <1420813745-130341-1-git-send-email-george_davis@mentor.com>
+ <CAL_JsqJaT-Y7DHQS5ZZ0TP6r0iPDbUZwU-Kec5MSE7DOPgZxCg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="kj63F3rPpMtD0LpUpJHXREUhaUAa5NA2C"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1420126149-27019-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
-Cc: Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <CAL_JsqJaT-Y7DHQS5ZZ0TP6r0iPDbUZwU-Kec5MSE7DOPgZxCg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "George G. Davis" <ggdavisiv-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "George G. Davis" <george_davis-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---kj63F3rPpMtD0LpUpJHXREUhaUAa5NA2C
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: quoted-printable
+Hello,
 
-On 01/01/15 17:29, Rickard Strandqvist wrote:
-> Removes some functions that are not used anywhere:
-> dispc_wb_go() dispc_wb_go_busy() dispc_wb_get_framedone_irq()
-> dispc_mgr_get_clock_div() dispc_wb_is_enabled() dispc_wb_enable()
-> dispc_wb_setup() dispc_enable_fifomerge() dispc_wb_set_channel_in()
->=20
-> This was partially found by using a static code analysis program called=
- cppcheck.
->=20
-> Signed-off-by: Rickard Strandqvist <rickard_strandqvist@spectrumdigital=
-=2Ese>
-> ---
->  drivers/video/fbdev/omap2/dss/dispc.c |  124 -------------------------=
---------
->  drivers/video/fbdev/omap2/dss/dss.h   |   12 ----
->  2 files changed, 136 deletions(-)
+On 2015-01-09 18:53, Rob Herring wrote:
+> On Fri, Jan 9, 2015 at 8:29 AM, George G. Davis <ggdavisiv-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> Export of_reserved_mem_device_{init,release} so that modules
+>> can initialize and release their assigned per-device cma_area.
+> I believe the original intent was for the core bus code to call these
+> functions. While the commit adding them says "automated assignment"
+> that part did not go in. As it stands, there are no in tree users of
+> these functions.
+>
+> Marek, comments?
 
-The functions are for DSS's write-back functionality. We're going to
-implement that hopefully sometime soon, so I don't want to remove those
-functions.
+Yes, my idea was to call it directly from platform bus code, but Grant
+opposed, so right now the drivers need to do it on their own. Assuming
+that those functions need to be called from drivers, then EXPORT_SYMPOL_GPL
+is the correct approach.
 
- Tomi
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
-
-
---kj63F3rPpMtD0LpUpJHXREUhaUAa5NA2C
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUtQAPAAoJEPo9qoy8lh71xXAP/R6mRGjCizsEHhHRUPcbSYF0
-4DfVaQnO1+95wOAnA5gXkQR4yBVIgaIIPqMoxq9jyu9RKqaJYP4M1rdvTjIJiYEL
-2Bb8yHlApfQQ4B5LOXIW6c4+srGwOrAk2lX4yGkfVRS4QhOLjkyHs+TLyNmKHsM3
-v1xliHCvkKx3qcxJNSU+DVWhRyrCS3MY0gCyK2/k5gfPwlrCdDmL9WDJYzN/gNMU
-svN7s0JhW7SQzicrCmpfK9NkHNcwiQnsRlOiUvrKi1MckpV1K3bvZp6cXXhpTstn
-QOn+Nr1vdYBzLevQas917OtAC+Xp5wFYluIJnczJjxjO+3QXeQ2/xdvTmWrm1bu3
-UUOwPwpUibwPRAyI+IHBE2cg28RAw592L2qsv74xvY2HXcr5o/gMtxDZr0oqaLXq
-SJu+t9JK6EkrYHkwGSxb5MUwtK+uuAs5eFOmLZGEHwmZgoVuZrwQpyVTNF7AwCG/
-ay82NgzjLfZgh74N0GD2Acs37fwf4a/miHg4QGpH5LmpZLUOj2ocQOsoN47OoOAR
-MnAd37C/7aRjMPPnhYZTq99pe2zZTDZUcKn5aAUk1qD7cST20rZe1NTRnpPHqQ1l
-TTjaqzuUNbuIq2ziU+zBLiplKPrfUlWvZk1yrnSlBJoa4fo6cjiZ0n+40vHbFrHk
-mM7PfyW4QXTCMLx0k2Ew
-=R4vl
------END PGP SIGNATURE-----
-
---kj63F3rPpMtD0LpUpJHXREUhaUAa5NA2C--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
