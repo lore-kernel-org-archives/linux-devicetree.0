@@ -1,45 +1,78 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: Re: [PATCH] dma-mapping: limit dma_mask in arch_setup_dma_ops()
-Date: Tue, 13 Jan 2015 15:38:02 -0500
-Message-ID: <54B5822A.8050506@ti.com>
-References: <1419458139-4034-1-git-send-email-m-karicheri2@ti.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 2/5] irqchip: Add DT binding doc for dumb demuxer
+ chips
+Date: Tue, 13 Jan 2015 21:52:07 +0100
+Message-ID: <20150113215207.185d92b4@bbrezillon>
+References: <1421174781-4340-1-git-send-email-boris.brezillon@free-electrons.com>
+	<1421174781-4340-3-git-send-email-boris.brezillon@free-electrons.com>
+	<20150113190050.GZ24989@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1419458139-4034-1-git-send-email-m-karicheri2@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Murali Karicheri <m-karicheri2@ti.com>
-Cc: linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, arnd@arndb.de, will.deacon@arm.com, grant.likely@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150113190050.GZ24989-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "Rafael J. Wysocki" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/24/2014 04:55 PM, Murali Karicheri wrote:
-> dma_mask should be limited to minimum of the default dma mask
-> and dma-range size configured in DT for proper operation.
->
-> Signed-off-by: Murali Karicheri<m-karicheri2@ti.com>
-> Reviewed-by: Arnd Bergmann<arnd@arndb.de>
-> ---
->   arch/arm/mm/dma-mapping.c |    1 +
->   1 file changed, 1 insertion(+)
->
-> diff --git a/arch/arm/mm/dma-mapping.c b/arch/arm/mm/dma-mapping.c
-> index 7864797..5cea1fc 100644
-> --- a/arch/arm/mm/dma-mapping.c
-> +++ b/arch/arm/mm/dma-mapping.c
-> @@ -2053,6 +2053,7 @@ void arch_setup_dma_ops(struct device *dev, u64 dma_base, u64 size,
->   {
->   	struct dma_map_ops *dma_ops;
->
-> +	*dev->dma_mask = min((*dev->dma_mask), (dma_base + size - 1));
->   	dev->archdata.dma_coherent = coherent;
->   	if (arm_setup_iommu_dma_ops(dev, dma_base, size, iommu))
->   		dma_ops = arm_get_iommu_dma_map_ops(coherent);
-Please discard this as this is still a work in progress. Any change if 
-required will be added to my series with subject "PCI: get DMA 
-configuration from parent device"
+Hi Jason,
 
-Thanks.
--- 
-Murali Karicheri
-Linux Kernel, Texas Instruments
+On Tue, 13 Jan 2015 14:00:50 -0500
+Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> wrote:
+
+> Boris,
+>=20
+> On Tue, Jan 13, 2015 at 07:46:18PM +0100, Boris Brezillon wrote:
+> > Add documentation for the dumb demuxer.
+> >=20
+> > Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > ---
+> >  .../bindings/interrupt-controller/dumb-demux.txt   | 34 ++++++++++=
+++++++++++++
+> >  1 file changed, 34 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/interrupt-con=
+troller/dumb-demux.txt
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/interrupt-controller=
+/dumb-demux.txt b/Documentation/devicetree/bindings/interrupt-controlle=
+r/dumb-demux.txt
+> > new file mode 100644
+> > index 0000000..1c777ef
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/interrupt-controller/dumb-d=
+emux.txt
+> > @@ -0,0 +1,34 @@
+> > +* Generic Dumb Interrupt Demultiplexer
+> > +
+> > +This Dumb demultiplixer simply forward all incoming interrupts to =
+its
+> > +enabled/unmasked children.
+>=20
+> Please forgive the potentially na=C3=AFve question, but what hardware=
+ is this
+> describing?
+
+That's not a real hardware per se, but on some hardware (like at91 SoCs=
+)
+some IRQ line are shared by several peripherals, and this dumb
+demultiplex is here to represent such shared irq lines which cannot be
+easily demultiplexed (because they do not provide a 'cause'
+register).
+
+You can see it as a virtual irqchip provided to address broken hardware
+designs.
+
+Regards,
+
+Boris
+
+--=20
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
