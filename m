@@ -1,27 +1,44 @@
-From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Subject: [PATCH 0/2] Enable DRM/KMS support for STiH407 and STiH410 boards
-Date: Wed, 14 Jan 2015 16:47:10 +0100
-Message-ID: <1421250432-25903-1-git-send-email-gabriel.fernandez@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, benjamin.gaignard@linaro.org
-Cc: linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v4 0/2] mmc: dw_mmc: exynos: Add HS400 support
+Date: Wed, 14 Jan 2015 16:56:46 +0100
+Message-ID: <CAPDyKFo0YB6UpjQXxQ9d9VhE6quur0mo=YNLdzB=xQoCE4J9xQ@mail.gmail.com>
+References: <1421231446-4776-1-git-send-email-alim.akhtar@samsung.com>
+	<54B67001.2090002@samsung.com>
+	<54B68CC6.1040907@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <54B68CC6.1040907@kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Kukjin Kim <kgene@kernel.org>
+Cc: Jaehoon Chung <jh80.chung@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, linux-mmc <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "tgih.jun@samsung.com" <tgih.jun@samsung.com>, Chris Ball <chris@printf.net>, Doug Anderson <dianders@chromium.org>, ABHILASH KESAVAN <a.kesavan@samsung.com>, Alim Akhtar <alim.akhtar@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch-set Enable DRM/KMS support for STiH407-b2120 and STiH410-b2120 boards.
+On 14 January 2015 at 16:35, Kukjin Kim <kgene@kernel.org> wrote:
+> On 01/14/15 22:32, Jaehoon Chung wrote:
+>> Hi, Alim.
+>>
+>> On 01/14/2015 07:30 PM, Alim Akhtar wrote:
+>>> This adds HS400 mode support for exynos dw_mmc host controller.
+>>>
+>>> Currently tested on Exynos5800-peach-pi platform for HS400 mode.
+>>> Tested HS200 mode with this series applied, HS200 still works.
+>>>
+>>> Appreciate testing on other exynos5/7 platform which supports emmc5.0
+>>
+>> I will test this patch on exynos5/7 board.
+>>
+>
+> What's the result? :-) If it's OK, I'll take DT changes for exynos
+> stuff, I'm not sure about the driver changes though...
 
-This patch-set replace the previous one (PATCH 0/2] Enable DRM/KMS support for STiH407 Family boards)
+Kukjin,
 
-Gabriel Fernandez (2):
-  ARM: DT: STiH407: Add DRM dt nodes
-  ARM: DT: STiH410: Add DRM dt nodes
+As I understand it, there is a dependency between the patches, since
+driver adds supports for new DT bindings.
 
- arch/arm/boot/dts/stih407-b2120.dts  |   3 +-
- arch/arm/boot/dts/stih407.dtsi       | 151 +++++++++++++++++++++++++++++++++++
- arch/arm/boot/dts/stih410.dtsi       | 138 ++++++++++++++++++++++++++++++++
- arch/arm/boot/dts/stihxxx-b2120.dtsi |   2 +-
- 4 files changed, 291 insertions(+), 3 deletions(-)
- create mode 100644 arch/arm/boot/dts/stih407.dtsi
+So, unless I am mistaken I think it would be best to take this
+complete patchset through my mmc tree. With your ack of course.
 
--- 
-1.9.1
+Kind regards
+Uffe
