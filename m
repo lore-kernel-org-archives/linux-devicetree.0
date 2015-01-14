@@ -1,81 +1,120 @@
-From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: Re: [PATCH v8 2/4] fpga manager: add sysfs interface document
-Date: Wed, 14 Jan 2015 21:01:33 +0200
-Message-ID: <9BA687C8-8C37-48DA-9A76-E82AF2339FF7@konsulko.com>
-References: <20150107084819.GA1887@amd>
- <alpine.DEB.2.02.1501091302370.30067@linuxheads99>
- <20150109205643.GA5761@amd> <20150112210134.687176ed@lxorguk.ukuu.org.uk>
- <20150112214314.GA18610@obsidianresearch.com>
- <20150113162847.2778b5a5@lxorguk.ukuu.org.uk>
- <20150113200032.GA16205@obsidianresearch.com>
- <alpine.DEB.2.02.1501131455130.30192@linuxheads99>
- <20150113222450.GA17475@obsidianresearch.com>
- <20150114160617.02fb9135@lxorguk.ukuu.org.uk>
- <20150114181258.GB16392@obsidianresearch.com>
-Mime-Version: 1.0 (Mac OS X Mail 8.1 \(1993\))
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20150114181258.GB16392@obsidianresearch.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Cc: mark.rutland@arm.com, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, linux-doc@vger.kernel.org, rubini@gnudd.com, hpa@zytor.com, Steffen Trumtrar <s.trumtrar@pengutronix.de>, devel@driverdev.osuosl.org, sameo@linux.intel.com, nico@linaro.org, ijc+devicetree@hellion.org.uk, Michal Simek <michal.simek@xilinx.com>, kyle.teske@ni.com, Grant Likely <grant.likely@linaro.org>, davidb@codeaurora.org, Linus Walleij <linus.walleij@linaro.org>, cesarb@cesarb.net, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, iws@ovro.caltech.edu, atull <atull@opensource.altera.com>, galak@codeaurora.org, Mark Brown <broonie@kernel.org>, philip@balister.org, dinguyen@opensource.altera.com, Michal Simek <monstr@monstr.eu>, Pavel Machek <pavel@denx.de>, yvanderv@opensource.altera.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, Alan
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 2/5] irqchip: Add DT binding doc for dumb demuxer
+ chips
+Date: Wed, 14 Jan 2015 20:08:09 +0100
+Message-ID: <20150114200809.0c16baae@bbrezillon>
+References: <1421174781-4340-1-git-send-email-boris.brezillon@free-electrons.com>
+	<1421174781-4340-3-git-send-email-boris.brezillon@free-electrons.com>
+	<20150113190050.GZ24989@titan.lakedaemon.net>
+	<20150113215207.185d92b4@bbrezillon>
+	<20150114185619.GB24989@titan.lakedaemon.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150114185619.GB24989-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "Rafael J. Wysocki" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgSmFzb24sCgo+IE9uIEphbiAxNCwgMjAxNSwgYXQgMjA6MTIgLCBKYXNvbiBHdW50aG9ycGUg
-PGpndW50aG9ycGVAb2JzaWRpYW5yZXNlYXJjaC5jb20+IHdyb3RlOgo+IAo+IE9uIFdlZCwgSmFu
-IDE0LCAyMDE1IGF0IDA0OjA2OjE3UE0gKzAwMDAsIE9uZSBUaG91c2FuZCBHbm9tZXMgd3JvdGU6
-Cj4gCj4+IGFuZCBJIHRoaW5rIHlvdSBlZmZlY3RpdmVseSBoYXZlIHRoZSB1c2VyIHVzYWdlIGNv
-dmVyZWQgaGVyZSBmb3Igc3VjaAo+PiB0aGluZ3MuIEl0IG11Y2ggbGlrZSBHUElPIHBpbnMgLSB3
-ZSBjYW4gZGVzY3JpYmUgdGhlbSBidXQgd2UgY2FuIGFsc28KPj4gZGVjbGFyZSB0aGV5IGFyZSBu
-b3QgdmlzaWJsZSB0byB0aGUgdXNlci4KPiAKPiBBIG1pc3NpbmcgZWxlbWVudCBpbiBtYWlubGlu
-ZSBpcyBhIGtpbmQgb2YgVkZJTyBzY2hlbWUgdG8gbGV0IHVzZXIKPiBzcGFjZSBhY2Nlc3MgdGhl
-IEZQR0EgcmVnaXN0ZXJzIGRlc2lnbmF0ZWQgZm9yIHVzZXIgc3BhY2UgdXNlLgo+IAo+IFdlIGhh
-dmUgYmVlbiB1c2luZyB0aGVzZSBwYXRjaGVzIHNpbmNlIDIuNi4xNiB0byBhbGxvdyB1c2VyIHNw
-YWNlIHRvCj4gYWNjZXNzIHRoZSBGUEdBIHJlZ2lzdGVyIHJlc291cmNlcyB2aWEgYSBQQ0kgbGlr
-ZSAvc3lzLy4uL3Jlc291cmNlMAo+IG1tYXBhYmxlOgo+IAo+ICAgIGh0dHBzOi8vZ2l0aHViLmNv
-bS9qZ3VudGhvcnBlL2xpbnV4L2NvbW1pdC81OWQ1ZDEzZGRlZmZhODk4MGNjYzYyNDhlYmI1ZjE2
-NzhjY2IyM2Y0Cj4gICAgaHR0cHM6Ly9naXRodWIuY29tL2pndW50aG9ycGUvbGludXgvY29tbWl0
-LzdjMjljNDM0NDYyN2JlOGEzOTA2ZDY0ZDMyZGI1MzNiYzEzMWRmODYKPiAgICBodHRwczovL2dp
-dGh1Yi5jb20vamd1bnRob3JwZS9saW51eC9jb21taXQvZTQxYmI0YTE5NzM2OGE5ZDUwNWQ2NmI2
-MjdhZWU4MmYyZDJiODg5NQo+IAo+IFdlIGRlbGliZXJhdGVseSBzcGxpdCB1cCB0aGUgRlBHQSBy
-ZWdpc3RlcnMgYW5kIHRoZSBhc3NpZ24gdXNlciBzcGFjZQo+IHBlcm1pc3Npb25zIHRvIHRoZSBy
-ZXNvdXJjZTAgZmlsZXMgaW4gYSB3YXkgdGhhdCBtYWtlcyBzZW5zZSBmb3Igb3VyCj4gYXBwLiBU
-eXBpY2FsbHkgdGhlcmUgYXJlIDEwLTIwIEZQR0EgcmVnaXN0ZXIgcmVnaW9ucy4gVXNlciBzcGFj
-ZSBkb2VzCj4gbm90IGFjY2VzcyByZWdpc3RlciByZWdpb25zIHRoYXQgY29udHJvbCBETUEuCj4g
-CgpJbnRlcmVzdGluZy4KCj4+IFRoZSBzd2FwcGFibGUgY2FzZSBtb3N0bHkgY29tZXMgb3V0IG9m
-IHRoZSAvZGV2IG5vZGUuIE9uY2UgeW91IGhhdmUgdGhlCj4+IGRldiBub2RlIGl0IGJlY29tZXMg
-YSBkZXRhaWwgb2YgdGhlIE9TIG5vdCB0aGUgRlBHQSBkcml2ZXIgYXMgdG8gd2hvIG1heQo+PiBv
-cGVuIGl0LCBhbmQgaG93IGl0IGlzIGhhbmRlZCBhYm91dC4gSXQgbWlnaHQgYmUgYW4gRlBVIG1h
-bmFnZXIgZGFlbW9uIGl0Cj4+IG1pZ2h0IG5vdC4KPiAKPiBSaWdodCwgYnV0IHRoZSB0aGluZyB0
-aGF0IHNjYXJlcyBtZSBhYm91dCB0aGUgc3dhcHBhYmxlIGNhc2UgaXMgdGhlCj4ga2VybmVsIHNp
-ZGUgc3VwcG9ydC4uIFRoZSBGUEdBIGhhcyB0byBjb25uZWN0IHRvIHRoZSBDUFUgaW4gc29tZSB3
-YXksCj4gaXQgbXVzdCBoYXZlIHNvbWUgYWRkcmVzcyBhc3NpZ25lZCwgZXRjLiBTd2FwcGluZyBu
-ZWVkcyB0byB0YWtlIGNhcmUKPiBvZiBhbGwgdGhvc2UgZGV0YWlscyBpbiBzb21lIHdheS4KPiAK
-PiBBIGZpeGVkIGJ1cyBpbnRlcmZhY2UgYmxvY2sgYW5kIGR5bmFtaWMgcmVjb25maWd1cmF0aW9u
-IGZvciB0aGUKPiByZW1haW5kZXIgaXMgcHJvYmFibHkgdGhlIHdheSB0byBtYW5hZ2UgdGhhdC4g
-QnV0LCB0aGF0IGltcGxpZXMgdGhhdAo+IGV2ZW4gYSBmYW1pbHkgb2Ygc3dhcHBhYmxlIEZQR0Fz
-IHdpbGwgaGF2ZSBhIERUIG92ZXJsYXkgYXNzb2NpYXRlZAo+IHdpdGggaXQuCj4gCj4gSWRlYWxs
-eSwgSSBjb3VsZCBzZWUgd2FudGluZyB0byBoYXZlIGEgZmlsZSBmb3JtYXQgdGhhdCBjb21iaW5l
-cyB0aGUKPiBvdmVybGF5IGFuZCBGUEdBIGJpdGZpbGUuIEEgbG9hZGVyIHRvb2wgd291bGQgdXNl
-IHRoZSAvZGV2LyBpbnRlcmZhY2UKPiB0byBzZXR1cCBib3RoIGVsZW1lbnRzLiBUaGF0IHdvdWxk
-IGJlIG11Y2ggbW9yZSByb2J1c3QgdGhhbiB0aGUKPiBjdXJyZW50IHNjaGVtZSBJIHNlZSAoZWcg
-WGlsaW54KSB1c2luZyB3aGVyZSB0aGUgYml0ZmlsZSBhbmQgRFQgYml0Cj4gbGl2ZSBpbiBjb21w
-bGV0ZWx5IGRpZmZlcmVudCBwbGFjZXMgYW5kIGhhdmUgdG8gYmUgcGVyZmVjdGx5IG1hdGNoZWQu
-Cj4gCgpBIHNpbmdsZSBEVCBwcm9wZXJ0eSBjYW4gYmUgNCBnaWdzIG9mIGJpbmFyeSBkYXRhIChj
-aGVhdGluZyBhIGJpdCwgdGhlIHdob2xlIGJsb2IgY2FuIGJlCjQgZ2lncykuIFlvdSBjYW4gY29u
-Y2VpdmFibHkgaW5jbHVkZSB0aGUgd2hvbGUgYml0ZmlsZSBpbiB0aGUgRFQgYmxvYi4KCldoZXRo
-ZXIgdGhpcyBpcyBhIHBlcnZlcnNpb24gb3Igbm90IGl04oCZcyBsZWZ0IHRvIHRoZSByZWFkZXIu
-IFRoZSBiaXRmaWxlIGRvZXMKZGVzY3JpYmUgdGhlIGhhcmR3YXJlIHRob3VnaC4KCj4gSmFzb24K
-ClJlZ2FyZHMKCuKAlCBQYW50ZWxpcwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18KZGV2ZWwgbWFpbGluZyBsaXN0CmRldmVsQGxpbnV4ZHJpdmVycHJvamVj
-dC5vcmcKaHR0cDovL2RyaXZlcmRldi5saW51eGRyaXZlcnByb2plY3Qub3JnL21haWxtYW4vbGlz
-dGluZm8vZHJpdmVyZGV2LWRldmVsCg==
+Hi Jason,
+
+On Wed, 14 Jan 2015 13:56:19 -0500
+Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> wrote:
+
+> Hey Boris,
+>=20
+> On Tue, Jan 13, 2015 at 09:52:07PM +0100, Boris Brezillon wrote:
+> > On Tue, 13 Jan 2015 14:00:50 -0500 Jason Cooper <jason@lakedaemon.n=
+et> wrote:
+> > > On Tue, Jan 13, 2015 at 07:46:18PM +0100, Boris Brezillon wrote:
+> > > > Add documentation for the dumb demuxer.
+> > > >=20
+> > > > Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.=
+com>
+> > > > ---
+> > > >  .../bindings/interrupt-controller/dumb-demux.txt   | 34 ++++++=
+++++++++++++++++
+> > > >  1 file changed, 34 insertions(+)
+> > > >  create mode 100644 Documentation/devicetree/bindings/interrupt=
+-controller/dumb-demux.txt
+> > > >=20
+> > > > diff --git a/Documentation/devicetree/bindings/interrupt-contro=
+ller/dumb-demux.txt b/Documentation/devicetree/bindings/interrupt-contr=
+oller/dumb-demux.txt
+> > > > new file mode 100644
+> > > > index 0000000..1c777ef
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/interrupt-controller/du=
+mb-demux.txt
+> > > > @@ -0,0 +1,34 @@
+> > > > +* Generic Dumb Interrupt Demultiplexer
+> > > > +
+> > > > +This Dumb demultiplixer simply forward all incoming interrupts=
+ to its
+> > > > +enabled/unmasked children.
+> > >=20
+> > > Please forgive the potentially na=C3=AFve question, but what hard=
+ware is this
+> > > describing?
+> >=20
+> > That's not a real hardware per se, but on some hardware (like at91 =
+SoCs)
+> > some IRQ line are shared by several peripherals, and this dumb
+> > demultiplex is here to represent such shared irq lines which cannot=
+ be
+> > easily demultiplexed (because they do not provide a 'cause'
+> > register).
+> >=20
+> > You can see it as a virtual irqchip provided to address broken hard=
+ware
+> > designs.
+>=20
+> Hmm.  Well, given tglx's recent reply, I suppose I'll *not* go down t=
+he
+> rabbit hole of "the DT is for describing hardware."  :-P
+
+Actually I'm a bit surprised no one else already mentioned that :-) (I
+thought this would be the first complain regarding this dumb irq
+demux chip).
+
+Anyway, IMHO, this can be considered as hardware description since
+these irq-lines are really multiplexed into a single one...
+
+>=20
+> However, it would probably be a lot more palatable to the DT maintain=
+ers
+> if we at least change the compatible to prepend "linux,".  This way, =
+if
+> someone does come up with a better solution down the road, it will be
+> much easier to deprecate the binding.
+>=20
+> I would also be amenable to "virt,", or "hack,", or even
+> "work-around-piss-poor-hw,".  Basically, anything that would indicate=
+ to
+> consumers of the DT that this is not a true reflection of the hardwar=
+e,
+> and that it may be superseded by a better solution later.
+
+Actually I thought about changing it to "virtual,dumb-irq-demux" :-).
+
+>=20
+> It would also be helpful to explain the situation more fully in the
+> binding document.
+
+Sure, I'll add a few lines to describe what this irqchip really is.
+
+Regards,
+
+Boris
+
+--=20
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
