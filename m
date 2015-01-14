@@ -1,104 +1,131 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 4/6] ARM: shmobile: R-Mobile: Special-case PM domains with memory-controllers
-Date: Wed, 14 Jan 2015 13:11:22 +0100
-Message-ID: <1421237484-16847-5-git-send-email-geert+renesas@glider.be>
-References: <1421237484-16847-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1421237484-16847-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: linux-sh@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH v9 1/4] drm/i2c: tda998x: Add DT support for audio
+Date: Wed, 14 Jan 2015 12:12:34 +0000
+Message-ID: <20150114121233.GW12302@n2100.arm.linux.org.uk>
+References: <20150112175705.GN12302@n2100.arm.linux.org.uk>
+ <1421151718.4519.24.camel@pengutronix.de>
+ <20150113122715.GP12302@n2100.arm.linux.org.uk>
+ <20150113165411.5469930d@armhf>
+ <20150113160313.GR12302@n2100.arm.linux.org.uk>
+ <20150113200252.3dbfab14@armhf>
+ <20150113192648.GU12302@n2100.arm.linux.org.uk>
+ <54B574CD.9020905@ti.com>
+ <20150113195415.GV12302@n2100.arm.linux.org.uk>
+ <20150114085501.677dc4d2@armhf>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20150114085501.677dc4d2@armhf>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jean-Francois Moine <moinejf@free.fr>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Andrew Jackson <Andrew.Jackson@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>, Mark Brown <broonie@kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a special case for PM domains containing a memory-controller.
-Such a PM domain must not be turned off if memory is in use.
-
-On sh73a0 PM domains A4BC0 and A4BC1 each contain an SDRAM Bus State
-Controller (SBSC). On r8a73a4 PM domain A3BC contains two DDR Bus
-Controllers (DBSC).  In both cases, there are no other devices in these
-PM domains, so they were eligible for power down, crashing the system.
-
-On r8a7740 the DDR3 Bus State Controller (DBSC3) is located in A4S,
-whose child domain A3SM contains the CPU core. Hence A4S is never turned
-off, and no crash happened.
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-v2:
-  - Rename PD_SBSC to PD_MEMCTL,
-  - Reword code comments and patch description.
----
- arch/arm/mach-shmobile/pm-rmobile.c | 29 +++++++++++++++++++++++------
- 1 file changed, 23 insertions(+), 6 deletions(-)
-
-diff --git a/arch/arm/mach-shmobile/pm-rmobile.c b/arch/arm/mach-shmobile/pm-rmobile.c
-index e4c3f7de48e2ccf2..95018209ff0b37cc 100644
---- a/arch/arm/mach-shmobile/pm-rmobile.c
-+++ b/arch/arm/mach-shmobile/pm-rmobile.c
-@@ -222,6 +222,7 @@ enum pd_types {
- 	PD_CPU,
- 	PD_CONSOLE,
- 	PD_DEBUG,
-+	PD_MEMCTL,
- };
- 
- #define MAX_NUM_SPECIAL_PDS	16
-@@ -233,6 +234,14 @@ static struct special_pd {
- 
- static unsigned int num_special_pds __initdata;
- 
-+static const struct of_device_id special_ids[] __initconst = {
-+	{ .compatible = "arm,coresight-etm3x", .data = (void *)PD_DEBUG },
-+	{ .compatible = "renesas,dbsc-r8a73a4", .data = (void *)PD_MEMCTL, },
-+	{ .compatible = "renesas,dbsc3-r8a7740", .data = (void *)PD_MEMCTL, },
-+	{ .compatible = "renesas,sbsc-sh73a0", .data = (void *)PD_MEMCTL, },
-+	{ /* sentinel */ },
-+};
-+
- static void __init add_special_pd(struct device_node *np, enum pd_types type)
- {
- 	unsigned int i;
-@@ -265,6 +274,7 @@ static void __init add_special_pd(struct device_node *np, enum pd_types type)
- static void __init get_special_pds(void)
- {
- 	struct device_node *np;
-+	const struct of_device_id *id;
- 
- 	/* PM domains containing CPUs */
- 	for_each_node_by_type(np, "cpu")
-@@ -274,12 +284,9 @@ static void __init get_special_pds(void)
- 	if (of_stdout)
- 		add_special_pd(of_stdout, PD_CONSOLE);
- 
--	/* PM domain containing Coresight-ETM */
--	np = of_find_compatible_node(NULL, NULL, "arm,coresight-etm3x");
--	if (np) {
--		add_special_pd(np, PD_DEBUG);
--		of_node_put(np);
--	}
-+	/* PM domains containing other special devices */
-+	for_each_matching_node_and_match(np, special_ids, &id)
-+		add_special_pd(np, (enum pd_types)id->data);
- }
- 
- static void __init put_special_pds(void)
-@@ -334,6 +341,16 @@ static void __init rmobile_setup_pm_domain(struct device_node *np,
- 		pd->suspend = rmobile_pd_suspend_busy;
- 		break;
- 
-+	case PD_MEMCTL:
-+		/*
-+		 * This domain contains a memory-controller and therefore it
-+		 * should only be turned off if memory is not in use.
-+		 */
-+		pr_debug("PM domain %s contains MEMCTL\n", name);
-+		pd->gov = &pm_domain_always_on_gov;
-+		pd->suspend = rmobile_pd_suspend_busy;
-+		break;
-+
- 	case PD_NORMAL:
- 		break;
- 	}
--- 
-1.9.1
-
+T24gV2VkLCBKYW4gMTQsIDIwMTUgYXQgMDg6NTU6MDFBTSArMDEwMCwgSmVhbi1GcmFuY29pcyBN
+b2luZSB3cm90ZToKPiBPbiBUdWUsIDEzIEphbiAyMDE1IDE5OjU0OjE1ICswMDAwCj4gUnVzc2Vs
+bCBLaW5nIC0gQVJNIExpbnV4IDxsaW51eEBhcm0ubGludXgub3JnLnVrPiB3cm90ZToKPiAKPiA+
+IE9uIFR1ZSwgSmFuIDEzLCAyMDE1IGF0IDA5OjQxOjAxUE0gKzAyMDAsIEp5cmkgU2FyaGEgd3Jv
+dGU6Cj4gPiA+IE9uIDAxLzEzLzIwMTUgMDk6MjYgUE0sIFJ1c3NlbGwgS2luZyAtIEFSTSBMaW51
+eCB3cm90ZToKPiA+ID4gPlNDTEs6IF9+X35ffl9+X35ffl9+X35ffl9+X35ffl9+X35ffl9+X35f
+fl9+X35ffl9+X35ffl9+X35ffl9+X35ffl9+X35ffl8KPiA+ID4gPiAgIFdTOiBfX35+fn5+fn5+
+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19+
+Cj4gPiA+ID5JMlMxOiBsbG1tLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLmxsbW0uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4ubGxtCj4gPiA+ID5JMlMyOiBsbG1tLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLmxsbW0uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4ubGxtCj4gPiA+ID5J
+MlMzOiBsbG1tLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLmxsbW0uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4ubGxtCj4gPiA+ID5JMlM0OiBsbG1tLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLmxsbW0uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4ubGxtCj4gPiA+ID4KPiA+ID4gPlNv
+LCB3aGF0IEknbSBzYXlpbmcgaXMgdGhhdCBpdCBpc19pbXBvc3NpYmxlXyAgdG8gZHJpdmUgdGhl
+IFREQTk5OHggdXNpbmcKPiA+ID4gPm11bHRpcGxlIEkyUyBzdHJlYW1zIHdoaWNoIGFyZSBub3Qg
+cHJvZHVjZWQgYnkgdGhlIHNhbWUgSTJTIGJsb2NrLgo+ID4gPiAKPiA+ID4gVGhpcyBpcyBiZXNp
+ZGVzIHRoZSBwb2ludCwgYnV0IGl0IGlzIHBvc3NpYmxlIHRoYXQgb25lIG9mIHRoZSBtdWx0aXBs
+ZSBJMlMKPiA+ID4gYmxvY2tzIGlzIHRoZSBiaXQtY2xvY2sgYW5kIGZyYW1lLWNsb2NrIG1hc3Rl
+ciB0byB0aGUgaTJzIGJ1cyBhbmQgdGhlIG90aGVycwo+ID4gPiBhcmUgc2xhdmVzIHRvIGl0IChi
+YW5naW5nIHRoZWlyIGJpdHMgYWNjb3JkaW5nIHRvIFNDTEsgYW5kIFdTIG9mIHRoZSBJMlMKPiA+
+ID4gbWFzdGVyKS4gSG93ZXZlciwgaW4gdGhpcyBzaXR1YXRpb24gdGhlcmUgcmVhbGx5IGlzIG9u
+bHkgb25lIGkycyBidXMgd2l0aAo+ID4gPiBtdWx0aXBsZSBkYXRhIHBpbnMuCj4gPiA+IAo+ID4g
+PiBKdXN0IG15IDAuMDLigqwgdG8gdGhpcyBkaXNjdXNzaW9uLgo+ID4gCj4gPiBSaWdodCwgdGhh
+dCdzIGFib3V0IHRoZSBvbmx5IHdheSBpdCBjb3VsZCB3b3JrLgo+ID4gCj4gPiBUbyByZXByZXNl
+bnQgdGhhdCBpbiBEVCwgSSB3b3VsZCBpbWFnaW5lIHdlJ2QgbmVlZCBzb21ldGhpbmcgbGlrZSB0
+aGlzOgo+ID4gCj4gPiAJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gPiAJI3NpemUtY2VsbHMgPSA8
+MD47Cj4gPiAJLi4uCj4gPiAgICAgICAgIHBvcnRAMSB7ICAgICAgICAgICAgICAgICAgICAgICAg
+LyogQVAxLDIgPSBJMlMgKi8KPiA+IAkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gPiAJCSNzaXpl
+LWNlbGxzID0gPDA+Owo+ID4gICAgICAgICAgICAgICAgIHBvcnQtdHlwZSA9ICJpMnMiOwo+ID4g
+ICAgICAgICAgICAgICAgIHJlZyA9IDwweDAxPjsJCS8qIFdTICovCj4gPiAgICAgICAgICAgICAg
+ICAgdGRhOTk4eF9pMnMxOiBlbmRwb2ludEAyIHsKPiA+IAkJCXJlZyA9IDwweDAyPjsJLyogQVAx
+ICovCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICByZW1vdGUtZW5kcG9pbnQgPSA8JmF1ZGlv
+MV9pMnM+Owo+ID4gICAgICAgICAgICAgICAgIH07Cj4gPiAgICAgICAgICAgICAgICAgdGRhOTk4
+eF9pMnMyOiBlbmRwb2ludEA0IHsKPiA+IAkJCXJlZyA9IDwweDA0PjsJLyogQVAyICovCj4gPiAg
+ICAgICAgICAgICAgICAgICAgICAgICByZW1vdGUtZW5kcG9pbnQgPSA8JmF1ZGlvMl9pMnM+Owo+
+ID4gICAgICAgICAgICAgICAgIH07Cj4gPiAgICAgICAgIH07Cj4gPiAKPiA+IHdoZXJlIGF1ZGlv
+MV9pMnMgaXMgb3BlcmF0aW5nIGluIG1hc3RlciBtb2RlLCBhbmQgYXVkaW8yX2kycyBpcwo+ID4g
+b3BlcmF0aW5nIGluIHNsYXZlIG1vZGUgZm9yIGJvdGggV1MgYW5kIFNDTEsuCj4gPiAKPiA+IElm
+IHdlIGNhbiBhZ3JlZSBvbiB0aGF0LCB0aGVuIEknbSBoYXBweSB3aXRoIHRoZSBwcm9wb3NlZCBi
+aW5kaW5nLgo+ID4gKFJlbWVtYmVyIHRoYXQgI2FkZHJlc3MtY2VsbHMgYW5kICNzaXplLWNlbGxz
+IGFyZSByZXF1aXJlZCBpbiB0aGUKPiA+IHBhcmVudCB3aGVyZSB3ZSBoYXZlIHJlZz0gaW4gdGhl
+IGNoaWxkLikKPiAKPiAjYWRkcmVzcy1jZWxscyBhbmQgI3NpemUtY2VsbHMgbWF5IGJlIGRlZmlu
+ZWQgaW4gYW55IG9mIHRoZSB1cHBlcgo+IHBhcmVudCwgc28sIGFzIGl0IGlzIGRlZmluZWQgaW4g
+dGhlIGRldmljZSwgaXQgaXMgbm90IG5lZWRlZCBpbiB0aGUKPiBwb3J0IChzZWUgb2Zfbl9hZGRy
+X2NlbGxzIGluIGRyaXZlcnMvb2YvYmFzZS5jKS4KClRoYXQgbWF5IGJlLCBidXQgdGhlIGRvY3Vt
+ZW50YXRpb24gc3BlY2lmaWVzIHRoYXQgaXQgc2hvdWxkIGJlIGdpdmVuLgpTZWUgRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dyYXBoLnR4dCAtIG1heWJlIHRoZSBkb2NzIG5lZWQK
+Zml4aW5nPwoKPiBXZWxsLCBJIGFtIGEgYml0IGxvc3QgYmV0d2VlbiAob25seSBvbmUgc291cmNl
+IC8gbWFueSBjaGFubmVscyAtIEkyUwo+IGJ1c3NlcykgYW5kIChtYW55IHNvdXJjZXMgLyBvbmUg
+STJzIGJ1cyEpLgoKSSB0aGluayB0aGF0J3MgYSBtYXR0ZXIgb2YgaG93IHRoZSBwcm9ibGVtIGlz
+IHZpZXdlZC4gOikKCj4gQW55d2F5LCBJIGRvbid0IHVuZGVyc3RhbmQgeW91ciBleGFtcGxlLgo+
+IEknZCBleHBlY3QgdGhhdCBhIHBvcnQgd291bGQgYmUgYSBEQUkuCgpJIHZpZXcgYSBEQUkgYXMg
+YSBMaW51eCBhYnN0cmFjdGlvbiwgd2hpY2ggZG9lc24ndCByZWFsbHkgaGF2ZSBhbnkgcGxhY2UK
+aW4gRFQuICBJJ20gbG9va2luZyBhdCB0aGlzIHByb2JsZW0gZnJvbSB0aGUgZWxlY3Ryb25pY3Mg
+cG9pbnQgb2Ygdmlldy4KCj4gSWYgeWVzLCB3aGVuIHBsYXlpbmcgaXMgYWN0aXZlLCBib3RoIGVu
+ZHBvaW50cyByZWNlaXZlIGFuIGF1ZGlvIHN0cmVhbQo+IGZyb20gdGhlIHJlbW90ZSBhdWRpbyBk
+ZXZpY2VzLCBhbmQgdGhlIEFQIHJlZ2lzdGVyIGlzIGFsd2F5cyBzZXQgdG8KPiAweDA3ICg9IDB4
+MDEgfCAweDAyIHwgMHgwNCkuCj4gVGhlbiwgaXQgd291bGQgaGF2ZSBiZWVuIHNpbXBsZXIgdG8g
+aGF2ZToKPiAKPiAgCSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+ICAJI3NpemUtY2VsbHMgPSA8MD47
+Cj4gIAkuLi4KPiAgICAgICAgICBwb3J0QDcgeyAgICAgICAgICAgICAgICAgICAgICAgIC8qIEFQ
+MSwyID0gSTJTICovCj4gICAgICAgICAgICAgICAgICBwb3J0LXR5cGUgPSAiaTJzIjsKPiAgICAg
+ICAgICAgICAgICAgIHJlZyA9IDwweDA3PjsJCS8qIFdTICsgQVAxICsgQVAyICovCj4gICAgICAg
+ICAgICAgICAgICB0ZGE5OTh4X2kyczE6IGVuZHBvaW50QDEgewo+ICAgICAgICAgICAgICAgICAg
+ICAgICAgICByZW1vdGUtZW5kcG9pbnQgPSA8JmF1ZGlvMV9pMnM+Owo+ICAgICAgICAgICAgICAg
+ICAgfTsKPiAgICAgICAgICAgICAgICAgIHRkYTk5OHhfaTJzMjogZW5kcG9pbnRAMiB7Cj4gICAg
+ICAgICAgICAgICAgICAgICAgICAgIHJlbW90ZS1lbmRwb2ludCA9IDwmYXVkaW8yX2kycz47Cj4g
+ICAgICAgICAgICAgICAgICB9Owo+ICAgICAgICAgIH07Cj4gCj4gSWYgbm8sIHRoZSB0d28gREFJ
+cyBtdXN0IGJlIGNyZWF0ZWQgZnJvbSB0aGUgZW5kcG9pbnRzLCBwZXJtaXR0aW5nCj4gc3RyZWFt
+aW5nIG9uIGkyczEgYWxvbmUsIGkyczIgYWxvbmUgb3IgYm90aCBpMnMxK2kyczIgYXQgdGhlIHNh
+bWUgdGltZS4KCkhvdyBkb2VzIHRoYXQgd29yayAtIEkgbWVhbiwgaWYgd2UgaGF2ZSBpMnMxIGFz
+IHRoZSBTQ0xLIGFuZCBXUyBtYXN0ZXIsCmhvdyBjYW4gaTJzMiBydW4gd2l0aG91dCBpMnMxPwoK
+SSBzdXBwb3NlIEkyUzIgY291bGQgYmUgcmVwcm9ncmFtbWVkIHRvIGJlIHRoZSBtYXN0ZXIgZm9y
+IGJvdGggc2lnbmFscywKcHJvdmlkZWQgdGhhdCBJMlMxIGlzIHByb2dyYW1tZWQgdG8gYmUgYSBz
+bGF2ZSBiZWZvcmUgaGFuZCwgYnV0IHRoYXQKc2VlbXMgdG8gYmUgbWFraW5nIHRoaW5ncyBleGNl
+c3NpdmVseSBjb21wbGV4ICh3ZSdkIG5lZWQgc29tZSB3YXkgZm9yCkkyUzEgYW5kIEkyUzIgdG8g
+Y29tdW5pY2F0ZSB0aGF0IHN0YXRlIGJldHdlZW4gdGhlbXNlbHZlcyBhbmQgbmVnb3RpYXRlCndo
+aWNoIHRvIGJlIHRoZSBtYXN0ZXIuKQoKSG93ZXZlciwgSSdkIHN1Z2dlc3QgdGhhdCBpZiBhdWRp
+bzFfaTJzIGFsd2F5cyBtYXBzIHRvIEhETUkgZnJvbnQKbGVmdC9yaWdodCwgYXVkaW8xX2kycyBt
+dXN0IGFsd2F5cyBiZSBlbmFibGVkIHdoZW4gYXVkaW8gcGxheWJhY2sgaXMKcmVxdWlyZWQ7IHRo
+ZXJlIGlzIG5vIENBIGJpdCBjb21iaW5hdGlvbiBwcm92aWRlZCBpbiBIRE1JIHdoZXJlIHRoZQpm
+cm9udCBML1IgY2hhbm5lbHMgYXJlIG9wdGlvbmFsLiAgSGVuY2UsIEknZCBzdWdnZXN0IHRoYXQg
+YXVkaW8xX2kycwptdXN0IGFsd2F5cyBiZSB0aGUgbWFzdGVyLgoKQXMgd2UgZG9uJ3Qga25vdywg
+SSdkIHN1Z2dlc3QgdGhhdCB3ZSBwZXJtaXQgZmxleGliaWxpdHkgaGVyZS4gIFdlCmNhbiB1c2Ug
+dGhlIHJlZyBwcm9wZXJ0eSBhcyB5b3UgaGF2ZSBiZWxvdywgYW5kIHdlIGp1c3QgYml0d2lzZS1v
+cgp0aGUgb2ZfZW5kcG9pbnQgcG9ydC9pZCB0b2dldGhlciwgYWxvbmcgd2l0aCB0aGF0IHJlc3Vs
+dCBmcm9tIG90aGVyCmFjdGl2ZSBhdWRpbyBlbmRwb2ludHMuICBUaGUgYWR2YW50YWdlIG9mIHRo
+YXQgaXMgd2UgY2FuIHVzZSBhbnkgb2YKdGhlc2UgcmVwcmVzZW50YXRpb25zLCBhbmQgaXQgc2hv
+dWxkIHJlc3VsdCBpbiBhIHdvcmtpbmcgc2V0dXAgLSBhbmQKd2hlbiB3ZSBkbyBoYXZlIHRoZSBu
+ZWNlc3NhcnkgaW5mb3JtYXRpb24gdG8gbWFrZSBhIHByb3Blcmx5IGluZm9ybWVkCmRlY2lzaW9u
+LCB3ZSBjYW4gdXBkYXRlIHRoZSBEVCBhbmQgYmluZGluZyBkb2MgYWNjb3JkaW5nbHkgYW5kIHdl
+Cndvbid0IGhhdmUgdG8gdXBkYXRlIHRoZSBkcml2ZXIgKG5vciB3aWxsIHdlIGJyZWFrIGJhY2t3
+YXJkcyBjb21wYXQuKQoKU291bmQgc2FuZT8KCi0tIApGVFRDIGJyb2FkYmFuZCBmb3IgMC44bWls
+ZSBsaW5lOiBjdXJyZW50bHkgYXQgMTAuNU1icHMgZG93biA0MDBrYnBzIHVwCmFjY29yZGluZyB0
+byBzcGVlZHRlc3QubmV0LgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
+cC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
+ZXZlbAo=
