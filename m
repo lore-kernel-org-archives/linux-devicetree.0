@@ -1,56 +1,44 @@
-From: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH v2 0/7] Fix sti drivers whcih mix reg address spaces
-Date: Wed, 14 Jan 2015 13:17:08 +0100
-Message-ID: <54B65E44.7060901@st.com>
-References: <1420643052-4506-1-git-send-email-peter.griffin@linaro.org> <20150111.185445.1288456704842706068.davem@davemloft.net>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH RFC] pinctrl: at91
+Date: Wed, 14 Jan 2015 13:26:16 +0100
+Message-ID: <CACRpkda9wTPcRy6nRGP08rDpHV=tRyYVuD80TeO2zFGzX+aJcg@mail.gmail.com>
+References: <CACRpkdbkUUzVVMp14szY+vGNd+d+8bL066STh_XMGud-UsFBqA@mail.gmail.com>
+	<1418637470-5839-1-git-send-email-ludovic.desroches@atmel.com>
+	<54943933.60102@atmel.com>
+	<20150106093706.GC26982@ldesroches-Latitude-E6320>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150111.185445.1288456704842706068.davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+In-Reply-To: <20150106093706.GC26982@ldesroches-Latitude-E6320>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi David,
-On 01/12/2015 12:54 AM, David Miller wrote:
-> From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Date: Wed,  7 Jan 2015 15:04:05 +0000
->
->> A V2 of this old series incorporating Arnd and Lees Feedback form v1.
->>
->> Following on from Arnds comments about the picophy driver here
->> https://lkml.org/lkml/2014/11/13/161, this series fixes the
->> remaining upstreamed drivers for STI, which are mixing address spaces
->> in the reg property. We do this in a way similar to the keystone
->> and bcm7445 platforms, by having sysconfig phandle/ offset pair
->> (where only one register is required). Or phandle / integer array
->> where multiple offsets in the same bank are needed).
->>
->> This series breaks DT compatability! But the platform support
->> is WIP and only being used by the few developers who are upstreaming
->> support for it. I've made each change to the driver / dt doc / dt
->> file as a single atomic commit so the kernel will remain bisectable.
->>
->> This series then also enables the picophy driver, and adds back in
->> the ehci/ohci dt nodes for stih410 which make use of the picophy.
-> Series applied to net-next, thanks.
-Did you apply all the series to net-next?
+On Tue, Jan 6, 2015 at 10:37 AM, Ludovic Desroches
+<ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> wrote:
 
-I need the DT patches in STi SoC tree, that will go to Linus tree via 
-arm-soc, hopefully for v3.20.
+> Usage of of_gpiochip_add() only solves my issue about gpio but not about
+> pinctrl stuff, I still need a patch to manage the case when we have a gap if
+> a gpio controller is not enabled to not break the pin naming, etc.
 
-How could we synchronize?
-Maybe I could create an immutable tag on top of STi DT branch, which is 
-based on top of v3.19-rc1,
-that you would merge in your tree?
+This has been the topic of many threads today.
+I assume you are talking about keeping GPIO numbers
+consistent.
 
-Please let me know your preferred way.
+- My suggestion is to add alias handling of the GPIO chips
+  to the core so they can be probed in the right order.
 
-Thanks,
-Maxime
+- For consistency in sysfs use the "names" array in
+  struct gpio_chip so you can search for a symbolic
+  name in sysfs and don't have to rely on fragile stuff
+  like GPIO numbers.
 
+- Partake in the development of a new GPIO ABI
+  that does not use the global GPIO numberspace.
+
+Yours,
+Linus Walleij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
