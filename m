@@ -1,132 +1,74 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH v2 1/5] irqchip: add dumb demultiplexer implementation
-Date: Wed, 14 Jan 2015 15:03:32 +0100
-Message-ID: <20150114150332.09fecbea@bbrezillon>
-References: <1421174781-4340-1-git-send-email-boris.brezillon@free-electrons.com>
- <1421174781-4340-2-git-send-email-boris.brezillon@free-electrons.com>
- <54B670EA.1010800@atmel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <54B670EA.1010800@atmel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, linux-arm-kernel@lists.infradead.org
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: [PATCH v3 1/7 RESEND] PM / Domains: Add a note about power domain
+ subdomains
+Date: Wed, 14 Jan 2015 15:12:15 +0100
+Message-ID: <1421244735-10844-1-git-send-email-m.szyprowski@samsung.com>
+References: <1421243091-10778-2-git-send-email-m.szyprowski@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1421243091-10778-2-git-send-email-m.szyprowski@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Kukjin Kim <kgene@kernel.org>, Tobias Jakobi <Liquid.Acid@gmx.net>, Daniel Drake <drake@endlessm.com>, Andrzej Hajda <a.hajda@samsung.com>, Inki Dae <inki.dae@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, kyungmin.park@samsung.com, Pankaj Dubey <pankaj.dubey@samsung.com>, Amit Daniel Kachhap <amit.daniel@samsung.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Ulf Hansson <ulf.hansson@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAxNCBKYW4gMjAxNSAxNDozNjo0MiArMDEwMApOaWNvbGFzIEZlcnJlIDxuaWNvbGFz
-LmZlcnJlQGF0bWVsLmNvbT4gd3JvdGU6Cgo+IExlIDEzLzAxLzIwMTUgMTk6NDYsIEJvcmlzIEJy
-ZXppbGxvbiBhIMOpY3JpdCA6Cj4gPiBTb21lIGludGVycnVwdCBjb250cm9sbGVycyBhcmUgbXVs
-dGlwbGV4aW5nIHNldmVyYWwgcGVyaXBoZXJhbCBJUlFzIG9uCj4gPiBhIHNpbmdsZSBpbnRlcnJ1
-cHQgbGluZS4KPiA+IFdoaWxlIHRoaXMgaXMgbm90IGEgcHJvYmxlbSBmb3IgbW9zdCBJUlFzIChh
-cyBsb25nIGFzIGFsbCBwZXJpcGhlcmFscwo+ID4gcmVxdWVzdCB0aGUgaW50ZXJydXB0IHdpdGgg
-SVJRRl9TSEFSRUQgZmxhZyBzZXQpLCBtdWx0aXBsZXhpbmcgdGltZXJzIGFuZAo+ID4gb3RoZXIg
-dHlwZSBvZiBwZXJpcGhlcmFscyB3aWxsIGdlbmVyYXRlIGEgV0FSTklORyAobWl4aW5nIElSUUZf
-Tk9fU1VTUEVORAo+ID4gYW5kICFJUlFGX05PX1NVU1BFTkQgaXMgcHJvaGliaXRlZCkuCj4gPiAK
-PiA+IENyZWF0ZSBhIGR1bWIgaXJxIGRlbXVsdGlwbGV4ZXIgd2hpY2ggc2ltcGx5IGZvcndhcmRz
-IGludGVycnVwdHMgdG8gYWxsCj4gPiBwZXJpcGhlcmFscyAoZXhhY3RseSB3aGF0J3MgaGFwcGVu
-aW5nIHdpdGggSVJRX1NIQVJFRCkgYnV0IGtlZXAgYSB1bmlxdWUKPiA+IGlycSBudW1iZXIgZm9y
-IGVhY2ggcGVyaXBoZXJhbCwgdGh1cyBwcmV2ZW50aW5nIHRoZSBJUlFGX05PX1NVU1BFTkQKPiA+
-IGFuZCAhSVJRRl9OT19TVVNQRU5EIG1peCBvbiBhIGdpdmVuIGludGVycnVwdC4KPiA+IAo+ID4g
-U2lnbmVkLW9mZi1ieTogQm9yaXMgQnJlemlsbG9uIDxib3Jpcy5icmV6aWxsb25AZnJlZS1lbGVj
-dHJvbnMuY29tPgo+ID4gLS0tCj4gPiAgZHJpdmVycy9pcnFjaGlwL0tjb25maWcgICAgICAgICAg
-fCAgIDQgKysKPiA+ICBkcml2ZXJzL2lycWNoaXAvTWFrZWZpbGUgICAgICAgICB8ICAgMSArCj4g
-PiAgZHJpdmVycy9pcnFjaGlwL2lycS1kdW1iLWRlbXV4LmMgfCAgNzAgKysrKysrKysrKysrKysr
-KysrKysKPiA+ICBpbmNsdWRlL2xpbnV4L2lycS5oICAgICAgICAgICAgICB8ICA0OSArKysrKysr
-KysrKysrKwo+ID4gIGluY2x1ZGUvbGludXgvaXJxZG9tYWluLmggICAgICAgIHwgICAxICsKPiA+
-ICBrZXJuZWwvaXJxL0tjb25maWcgICAgICAgICAgICAgICB8ICAgNSArKwo+ID4gIGtlcm5lbC9p
-cnEvTWFrZWZpbGUgICAgICAgICAgICAgIHwgICAxICsKPiA+ICBrZXJuZWwvaXJxL2NoaXAuYyAg
-ICAgICAgICAgICAgICB8ICA0MSArKysrKysrKysrKysKPiA+ICBrZXJuZWwvaXJxL2R1bWItZGVt
-dXgtY2hpcC5jICAgICB8IDE0MCArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysKPiA+ICBrZXJuZWwvaXJxL2hhbmRsZS5jICAgICAgICAgICAgICB8ICAzMSArKysrKysrKy0K
-PiA+ICBrZXJuZWwvaXJxL2ludGVybmFscy5oICAgICAgICAgICB8ICAgMyArCj4gPiAgMTEgZmls
-ZXMgY2hhbmdlZCwgMzQ0IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCj4gPiAgY3JlYXRl
-IG1vZGUgMTAwNjQ0IGRyaXZlcnMvaXJxY2hpcC9pcnEtZHVtYi1kZW11eC5jCj4gPiAgY3JlYXRl
-IG1vZGUgMTAwNjQ0IGtlcm5lbC9pcnEvZHVtYi1kZW11eC1jaGlwLmMKPiA+IAo+ID4gZGlmZiAt
-LWdpdCBhL2RyaXZlcnMvaXJxY2hpcC9LY29uZmlnIGIvZHJpdmVycy9pcnFjaGlwL0tjb25maWcK
-PiA+IGluZGV4IGNjNzlkMmEuLjhhOWRmODggMTAwNjQ0Cj4gPiAtLS0gYS9kcml2ZXJzL2lycWNo
-aXAvS2NvbmZpZwo+ID4gKysrIGIvZHJpdmVycy9pcnFjaGlwL0tjb25maWcKPiA+IEBAIC03MCw2
-ICs3MCwxMCBAQCBjb25maWcgQlJDTVNUQl9MMl9JUlEKPiA+ICAJc2VsZWN0IEdFTkVSSUNfSVJR
-X0NISVAKPiA+ICAJc2VsZWN0IElSUV9ET01BSU4KPiA+ICAKPiA+ICtjb25maWcgRFVNQl9ERU1V
-WF9JUlEKPiA+ICsJYm9vbAo+ID4gKwlzZWxlY3QgRFVNQl9JUlFfREVNVVhfQ0hJUAo+ID4gKwo+
-ID4gIGNvbmZpZyBEV19BUEJfSUNUTAo+ID4gIAlib29sCj4gPiAgCXNlbGVjdCBHRU5FUklDX0lS
-UV9DSElQCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9pcnFjaGlwL01ha2VmaWxlIGIvZHJpdmVy
-cy9pcnFjaGlwL01ha2VmaWxlCj4gPiBpbmRleCA5NTE2YTMyLi43N2YzYzUxIDEwMDY0NAo+ID4g
-LS0tIGEvZHJpdmVycy9pcnFjaGlwL01ha2VmaWxlCj4gPiArKysgYi9kcml2ZXJzL2lycWNoaXAv
-TWFrZWZpbGUKPiA+IEBAIC04LDYgKzgsNyBAQCBvYmotJChDT05GSUdfQVJDSF9NVkVCVSkJCSs9
-IGlycS1hcm1hZGEtMzcwLXhwLm8KPiA+ICBvYmotJChDT05GSUdfQVJDSF9NWFMpCQkJKz0gaXJx
-LW14cy5vCj4gPiAgb2JqLSQoQ09ORklHX0FSQ0hfUzNDMjRYWCkJCSs9IGlycS1zM2MyNHh4Lm8K
-PiA+ICBvYmotJChDT05GSUdfRFdfQVBCX0lDVEwpCQkrPSBpcnEtZHctYXBiLWljdGwubwo+ID4g
-K29iai0kKENPTkZJR19EVU1CX0RFTVVYX0lSUSkJCSs9IGlycS1kdW1iLWRlbXV4Lm8KPiA+ICBv
-YmotJChDT05GSUdfTUVUQUcpCQkJKz0gaXJxLW1ldGFnLWV4dC5vCj4gPiAgb2JqLSQoQ09ORklH
-X01FVEFHX1BFUkZDT1VOVEVSX0lSUVMpCSs9IGlycS1tZXRhZy5vCj4gPiAgb2JqLSQoQ09ORklH
-X0FSQ0hfTU9YQVJUKQkJKz0gaXJxLW1veGFydC5vCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9p
-cnFjaGlwL2lycS1kdW1iLWRlbXV4LmMgYi9kcml2ZXJzL2lycWNoaXAvaXJxLWR1bWItZGVtdXgu
-Ywo+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiA+IGluZGV4IDAwMDAwMDAuLmRmYTA1Y2UKPiA+
-IC0tLSAvZGV2L251bGwKPiA+ICsrKyBiL2RyaXZlcnMvaXJxY2hpcC9pcnEtZHVtYi1kZW11eC5j
-Cj4gPiBAQCAtMCwwICsxLDcwIEBACj4gCj4gTWF5YmUgYWRkIGEgbGl0dGxlIGZpbGUgaGVhZGVy
-IGhlcmUuIEl0J3MgYWx3YXlzIGJldHRlci4KClN1cmUsIEkganVzdCBmb3Jnb3QgaXQuCgo+ID4g
-KyNpZmRlZiBDT05GSUdfRFVNQl9JUlFfREVNVVhfQ0hJUAo+ID4gKy8qKgo+ID4gKyAqCWhhbmRs
-ZV9kdW1iX2RlbXV4X2lycSAtIER1bWIgZGVtdXhlciBpcnEgaGFuZGxlIGZ1bmN0aW9uLgo+ID4g
-KyAqCUBpcnE6CXRoZSBpbnRlcnJ1cHQgbnVtYmVyCj4gPiArICoJQGRlc2M6CXRoZSBpbnRlcnJ1
-cHQgZGVzY3JpcHRpb24gc3RydWN0dXJlIGZvciB0aGlzIGlycQo+ID4gKyAqCj4gPiArICoJRHVt
-YiBkZW11eCBpbnRlcnJ1cHRzIGFyZSBzZW50IGZyb20gYSBkZW11bHRpcGxleGluZyBpbnRlcnJ1
-cHQgaGFuZGxlcgo+ID4gKyAqCXdoaWNoIGlzIG5vdCBhYmxlIHRvIGRlY2lkZSB3aGljaCBjaGls
-ZCBpbnRlcnJ1cHQgaW50ZXJydXB0IGhhbmRsZXIKPiAKPiB0eXBvOiAiaW50ZXJydXB0IGludGVy
-cnVwdCIKCkknbGwgZml4IHRoYXQuCgo+IAo+ID4gKyAqCXNob3VsZCBiZSBjYWxsZWQuCj4gPiAr
-ICoKPiA+ICsgKglOb3RlOiBUaGUgY2FsbGVyIGlzIGV4cGVjdGVkIHRvIGhhbmRsZSB0aGUgYWNr
-LCBjbGVhciwgbWFzayBhbmQKPiA+ICsgKgl1bm1hc2sgaXNzdWVzIGlmIG5lY2Vzc2FyeS4KPiA+
-ICsgKi8KClsuLi5dCgo+ID4gKwo+ID4gIC8qCj4gPiAgICogQ2FsbGVkIHVuY29uZGl0aW9uYWxs
-eSBmcm9tIGhhbmRsZV9sZXZlbF9pcnEoKSBhbmQgb25seSBmb3Igb25lc2hvdAo+ID4gICAqIGlu
-dGVycnVwdHMgZnJvbSBoYW5kbGVfZmFzdGVvaV9pcnEoKQo+ID4gZGlmZiAtLWdpdCBhL2tlcm5l
-bC9pcnEvZHVtYi1kZW11eC1jaGlwLmMgYi9rZXJuZWwvaXJxL2R1bWItZGVtdXgtY2hpcC5jCj4g
-PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+ID4gaW5kZXggMDAwMDAwMC4uOGUyZGUxZAo+ID4gLS0t
-IC9kZXYvbnVsbAo+ID4gKysrIGIva2VybmVsL2lycS9kdW1iLWRlbXV4LWNoaXAuYwo+ID4gQEAg
-LTAsMCArMSwxNDAgQEAKPiA+ICsvKgo+ID4gKyAqIExpYnJhcnkgaW1wbGVtZW50aW5nIGNvbW1v
-biBkdW1iIGlycSBkZW11eCBjaGlwIGZ1bmN0aW9ucwo+ID4gKyAqCj4gPiArICogQ29weXJpZ2h0
-IChDKSAyMDE1LCBCb3JpcyBCcmV6aWxsb24KPiAKPiBMaWNlbnNlIGhlcmUsIHBsZWFzZS4KClll
-cCwgSSdsbCBhZGQgaXQuCgo+IAo+ID4gKyAqLwo+ID4gKyNpbmNsdWRlIDxsaW51eC9lcnIuaD4K
-PiA+ICsjaW5jbHVkZSA8bGludXgvaW8uaD4KPiA+ICsjaW5jbHVkZSA8bGludXgvaXJxLmg+Cj4g
-PiArI2luY2x1ZGUgPGxpbnV4L3NsYWIuaD4KPiA+ICsjaW5jbHVkZSA8bGludXgvZXhwb3J0Lmg+
-Cj4gPiArI2luY2x1ZGUgPGxpbnV4L2lycS5oPgo+ID4gKyNpbmNsdWRlIDxsaW51eC9pcnFkb21h
-aW4uaD4KPiA+ICsjaW5jbHVkZSA8bGludXgvaXJxY2hpcC9jaGFpbmVkX2lycS5oPgo+ID4gKyNp
-bmNsdWRlIDxsaW51eC9pbnRlcnJ1cHQuaD4KPiA+ICsjaW5jbHVkZSA8bGludXgva2VybmVsX3N0
-YXQuaD4KPiA+ICsjaW5jbHVkZSA8bGludXgvc3lzY29yZV9vcHMuaD4KPiA+ICsKPiA+ICsjaW5j
-bHVkZSAiaW50ZXJuYWxzLmgiCj4gPiArCj4gPiArc3RhdGljIHZvaWQgaXJxX2R1bWJfZGVtdXhf
-bWFzayhzdHJ1Y3QgaXJxX2RhdGEgKmQpCj4gPiArewo+ID4gKwlzdHJ1Y3QgaXJxX2NoaXBfZHVt
-Yl9kZW11eCAqZGVtdXggPSBpcnFfZGF0YV9nZXRfaXJxX2NoaXBfZGF0YShkKTsKPiA+ICsKPiA+
-ICsJY2xlYXJfYml0KGQtPmh3aXJxLCAmZGVtdXgtPnVubWFza2VkKTsKPiA+ICsKPiA+ICsJaWYg
-KCFkZW11eC0+dW5tYXNrZWQpCj4gPiArCQlkaXNhYmxlX2lycV9ub3N5bmMoZGVtdXgtPnNyY19p
-cnEpOwo+ID4gK30KPiA+ICsKPiA+ICtzdGF0aWMgdm9pZCBpcnFfZHVtYl9kZW11eF91bm1hc2so
-c3RydWN0IGlycV9kYXRhICpkKQo+ID4gK3sKPiA+ICsJc3RydWN0IGlycV9jaGlwX2R1bWJfZGVt
-dXggKmRlbXV4ID0gaXJxX2RhdGFfZ2V0X2lycV9jaGlwX2RhdGEoZCk7Cj4gPiArCWJvb2wgZW5h
-YmxlX3NyY19pcnEgPSAhZGVtdXgtPnVubWFza2VkOwo+IAo+IFdoeSB0aGlzIGFkZGl0aW9uYWwg
-ImJvb2wiIHVubGlrZSB0aGUgb3RoZXIgZnVuY3Rpb24gYWJvdmU/CgpCZWNhdXNlIHNldF9iaXQg
-d2lsbCBtb2RpZnkgdGhlIHVubWFza2VkIHN0YXR1cyBhbmQgd2UgbXVzdCBjaGVjayBpZiBpdApp
-cyBlcXVhbCB0byAwIChpbiBvdGhlciB0ZXJtcywgYWxsIGlycXMgYXJlIG1hc2tlZCkgYmVmb3Jl
-IG1vZGlmeWluZyBpdAppbiBvcmRlciB0byBrbm93IHdoZXRoZXIgd2Ugc2hvdWxkIGVuYWJsZSB0
-aGUgc3JjIGlycSBvciBub3QuCgo+IAo+ID4gKwo+ID4gKwlzZXRfYml0KGQtPmh3aXJxLCAmZGVt
-dXgtPnVubWFza2VkKTsKPiA+ICsKPiA+ICsJaWYgKGVuYWJsZV9zcmNfaXJxKQo+ID4gKwkJZW5h
-YmxlX2lycShkZW11eC0+c3JjX2lycSk7Cj4gPiArfQo+ID4gKwoKWy4uLl0KCj4gPiArCj4gPiAr
-LyoqCj4gPiArICogaXJxX2FsbG9jX2R1bWJfZGVtdXhfY2hpcCAtIEFsbG9jYXRlIGEgZHVtYiBk
-ZW11eCBjaGlwCj4gPiArICogQHNyY19pcnE6CQlpcnEgZmVlZGluZyB0aGUgZHVtYiBkZW11eCBj
-aGlwCj4gPiArICogQGRkX2ZsYWdzOgkJaXJxX2R1bWJfZGVtdXhfZmxhZ3MgZmxhZ3MKPiA+ICsg
-KiBAdmFsaWRfaXJxczoJCUJpdG1hc2sgcmVwcmVzZW50aW5nIHZhbGlkIGlycXMKPiA+ICsgKiBA
-Y2xyX2ZsYWdzOgkJaXJxX2ZsYWdzIHRvIGNsZWFyIHdoZW4gbWFwcGluZyBhbiBpbnRlcnJ1cHQK
-PiA+ICsgKiBAc2V0X2ZsYWdzOgkJaXJxX2ZsYWdzIHRvIHNldCB3aGVuIG1hcHBpbmcgYW4gaW50
-ZXJydXB0Cj4gCj4gTml0LiBub3Qgc2FtZSBvcmRlciBhcyB0aGUgZnVuY3Rpb24gcGFyYW1ldGVy
-cy4uLgoKSSdsbCBmaXggdGhhdC4KClRoYW5rcywKCkJvcmlzCi0tIApCb3JpcyBCcmV6aWxsb24s
-IEZyZWUgRWxlY3Ryb25zCkVtYmVkZGVkIExpbnV4IGFuZCBLZXJuZWwgZW5naW5lZXJpbmcKaHR0
-cDovL2ZyZWUtZWxlY3Ryb25zLmNvbQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtl
-cm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
-YW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+This patch adds a note on defining subdomains to generic PM domain
+binding documentation to let power domain providers use common approach
+for defining power domain hierarchy.
+
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+---
+RESEND version:
+- fixed spelling mistakes, thanks go to Geert!
+---
+ .../devicetree/bindings/power/power_domain.txt     | 29 ++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/power/power_domain.txt b/Documentation/devicetree/bindings/power/power_domain.txt
+index 98c1667..eeea45b 100644
+--- a/Documentation/devicetree/bindings/power/power_domain.txt
++++ b/Documentation/devicetree/bindings/power/power_domain.txt
+@@ -19,6 +19,16 @@ Required properties:
+    providing multiple PM domains (e.g. power controllers), but can be any value
+    as specified by device tree binding documentation of particular provider.
+ 
++Optional properties:
++ - power-domains : A phandle and PM domain specifier as defined by bindings of
++                   the power controller specified by phandle.
++   Some power domains might be powered from another power domain (or have
++   other hardware specific dependencies). For representing such dependency
++   a standard PM domain consumer binding is used. When provided, all domains
++   created by the given provider should be subdomains of the domain
++   specified by this binding. More details about power domain specifier are
++   available in the next section.
++
+ Example:
+ 
+ 	power: power-controller@12340000 {
+@@ -30,6 +40,25 @@ Example:
+ The node above defines a power controller that is a PM domain provider and
+ expects one cell as its phandle argument.
+ 
++Example 2:
++
++	parent: power-controller@12340000 {
++		compatible = "foo,power-controller";
++		reg = <0x12340000 0x1000>;
++		#power-domain-cells = <1>;
++	};
++
++	child: power-controller@12340000 {
++		compatible = "foo,power-controller";
++		reg = <0x12341000 0x1000>;
++		power-domains = <&parent 0>;
++		#power-domain-cells = <1>;
++	};
++
++The nodes above define two power controllers: 'parent' and 'child'.
++Domains created by the 'child' power controller are subdomains of '0' power
++domain provided by the 'parent' power controller.
++
+ ==PM domain consumers==
+ 
+ Required properties:
+-- 
+1.9.2
