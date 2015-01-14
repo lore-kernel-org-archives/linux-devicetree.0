@@ -1,34 +1,37 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH] arch: arm: common: edma.c:  Remove some unused functions
-Date: Wed, 14 Jan 2015 15:24:53 +0530
-Message-ID: <54B63CED.1020603@ti.com>
-References: <1417906406-5527-1-git-send-email-rickard_strandqvist@spectrumdigital.se> <54A10868.70001@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+From: Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH 0/3] Enable myphy28lp support
+Date: Wed, 14 Jan 2015 10:54:56 +0100
+Message-ID: <1421229299-8206-1-git-send-email-gabriel.fernandez@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54A10868.70001-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 29 December 2014 01:23 PM, Peter Ujfalusi wrote:
-> On 12/07/2014 12:53 AM, Rickard Strandqvist wrote:
->> Removes some functions that are not used anywhere:
->> edma_shadow0_read() edma_or_array()
->>
->> This was partially found by using a static code analysis program called cppcheck.
-> 
-> Acked-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+The goal of this series is to enable the support of MiPHY28lp Generic PHY.
 
-Queuing for v3.20 through ARM-SoC.
+The first patch is to update miphy28lp phy driver to access sysconfig register
+offsets via syscfg dt property. It's based on Arnds review comments here
+https://lkml.org/lkml/2014/11/13/161
+I have updated the miphy28lp phy driver same way as Peter's implementation.
 
-The correct prefix for ARM patches is "ARM: ". I will fix while
-applying. Please take care next time on.
+Gabriel Fernandez (3):
+  phy: miphy28lp: Pass sysconfig register offsets via syscfg dt
+    property.
+  ARM: DT: STi: STiH407: Add DT node for MiPHY28lp
+  ARM: multi_v7_defconfig: Enable MiPHY28lp - ST's Generic (SATA, PCIe &
+    USB3) PHY
 
-Thanks,
-Sekhar
+ .../devicetree/bindings/phy/phy-miphy28lp.txt      | 43 ++++++---------
+ arch/arm/boot/dts/stih407-family.dtsi              | 53 +++++++++++++++++++
+ arch/arm/boot/dts/stihxxx-b2120.dtsi               | 11 ++++
+ arch/arm/configs/multi_v7_defconfig                |  1 +
+ drivers/phy/phy-miphy28lp.c                        | 61 ++++++++++++----------
+ 5 files changed, 113 insertions(+), 56 deletions(-)
+
+-- 
+1.9.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
