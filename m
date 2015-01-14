@@ -1,84 +1,102 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v4 3/4] gpio: Add find GPIO base in increasing order
-Date: Wed, 14 Jan 2015 09:13:02 +0100
-Message-ID: <CACRpkdZccD_FM+m3US3e40LitH4OsX-8cSS_ju+C541330PdXw@mail.gmail.com>
-References: <1417750722-14027-1-git-send-email-wangzhou.bry@gmail.com>
-	<1417750722-14027-4-git-send-email-wangzhou.bry@gmail.com>
-	<CAAVeFu+Hn1Fk7PDcc4wGHFyJurX0hsW1N1prnPs2j=taGQKrKw@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/4] rtc: armada38x: Add the device tree binding
+ documentation
+Date: Wed, 14 Jan 2015 09:13:10 +0100
+Message-ID: <20150114081310.GI4891@lukather>
+References: <1420817565-28800-1-git-send-email-gregory.clement@free-electrons.com>
+ <1420817565-28800-2-git-send-email-gregory.clement@free-electrons.com>
+ <87iogai8sc.fsf@natisbad.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CAAVeFu+Hn1Fk7PDcc4wGHFyJurX0hsW1N1prnPs2j=taGQKrKw@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Alexandre Courbot <gnurou@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Zhou Wang <wangzhou.bry@gmail.com>, Russell King <linux@arm.linux.org.uk>, Haojian Zhuang <haojian.zhuang@linaro.org>, Wei Xu <xuwei5@hisilicon.com>, Olof Johansson <olof@lixom.net>, Kevin Hilman <khilman@linaro.org>, Arnd Bergmann <arnd@arndb.de>, liguozhu@hisilicon.com, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alan Tull <atull@altera.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Jamie Iles <jamie@jamieiles.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, wangzhou1@hisilicon.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="yJLks8MEB0SlUFSu"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <87iogai8sc.fsf-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+Cc: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 10, 2014 at 9:51 AM, Alexandre Courbot <gnurou@gmail.com> wrote:
-> On Fri, Dec 5, 2014 at 12:38 PM, Zhou Wang <wangzhou.bry@gmail.com> wrote:
->> In function gpiochip_find_base, base number of a GPIO controller
->> is found in decreasing order. ARCH_NR_GPIOS is used to define from
->> which number we begin to search for base number of a GPIO controller.
->>
->> In fact, ARCH_NR_GPIOS brings us some multiplatform problems, like:
->> http://www.spinics.net/lists/devicetree/msg60433.html
->>
->> This patch adds the support to find base number of a GPIO controller
->> in increasing order. It will assign base number from 0.
->> A new dts property called gpio-number-forward must be add to the related
->> GPIO dts nodes if you want it works well.
->
-> Global GPIO numbers are a Linux-only concept, so your property should
-> be named linux,gpio-number-forward.
->
-> But even that way I don't think I like this idea. This just adds some
-> more mess to how the GPIO number space is constructed, and it is
-> already quite messy as it is. You have no guarantee over the probe
-> order of your GPIO controllers, so they may very well be probed in a
-> different order and end up with different base numbers anytime.
 
-Yup.
+--yJLks8MEB0SlUFSu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The way stuff is usually forced ordered in device tree is to use
-aliases, e.g.:
+On Wed, Jan 14, 2015 at 12:02:27AM +0100, Arnaud Ebalard wrote:
+> Hi Gregory,
+>=20
+> Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> writes:
+>=20
+> > The Armada 38x SoCs come with a new RTC which differs from the one
+> > used in the other mvebu SoCs until now. This patch describes the
+> > binding of this RTC.
+> >
+> > Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > ---
+> >  .../devicetree/bindings/rtc/armada-380-rtc.txt          | 17 +++++++++=
+++++++++
+> >  1 file changed, 17 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/rtc/armada-380-rt=
+c.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/rtc/armada-380-rtc.txt b=
+/Documentation/devicetree/bindings/rtc/armada-380-rtc.txt
+> > new file mode 100644
+> > index 000000000000..2c56bef9dd7e
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/rtc/armada-380-rtc.txt
+> > @@ -0,0 +1,17 @@
+> > +* Real Time Clock of te Armada 38x SoCs
+> > +
+> > +RTC controller for the Armada 38x SoCs
+> > +
+> > +Required properties:
+> > +- compatible : Should be "marvell,armada-380-rtc"
+> > +- reg: physical base address of the controller and length of memory ma=
+pped
+> > +  region. The second entires is for the IP configuration part.
+>                         ^^^^^^^
+>                         entry
+>=20
+> I had to read probe function to understand precisely the purpose of each
+> region, i.e. IMHO the description could be made a bit clearer.
 
-        aliases {
-                serial0 = &pb1176_serial0;
-                serial1 = &pb1176_serial1;
-                serial2 = &pb1176_serial2;
-                serial3 = &pb1176_serial3;
-                serial4 = &fpga_serial;
-        };
+Maybe using reg-names would make it easier to understand, both in the
+documentation and the DT itself (as well as not needing to enforce a
+particular ordering of the two areas in the documentation)
 
-By getting the alias ID with of_alias_get_id(np, "serial")
-a certain serial port is assigned to be
-0, 1, 2 ...
+Maxime
 
-I think I could accept a tweak of this patch that will register
-GPIOs beginning from 0 if and only if the alias mechanism is
-used.
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 
-        aliases {
-                gpio0 = &foo_gpio0;
-                gpio1 = &expander;
-        };
+--yJLks8MEB0SlUFSu
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-The actual Linux-specific integer base will *NOT* be in the
-device tree, but if you know how many GPIOs are on each
-controller the number space is still stable and predictable
-beginning from 0. If one want to keep track of the Linux
-number space one can do so with comments in the device
-tree or something.
+iQIcBAEBAgAGBQJUtiUWAAoJEBx+YmzsjxAgbFwP/RF3LlMLV4XfzX2HCB6+IH9A
+XAEHhTkDuUQV7p7tzJ5zbu+IWXppFXvk7WRoxj3eulY/72SQsPpHgBSJSY54VBE0
+peB2tsER6Y/JSxK3+C+dltbsIDJkvuG5Uus73X9aNyM25nCGhpv1Zwo8yBAOKNXy
+JRv/g3QlGr9dJg0qxBcWAU/Duc25/cv5nLoFX31WCQL4sERsfrP+O1KNkX+zBhKw
+FDu6KgoqDhDGHMBUKZwSMQF4g2LdODp+akXz39ZxKR8WN2E/6E09+I6jt+I8fZsd
+LpYPjeMgDBtyha/vusJNYj2MzWHc+bb9tZOOauWJA2QJytUbIcxXcDcqbef3FkmE
+lfpIWRjDeBUNssbIFUwQ6RaSmYDOGVQXrgmb54/iB9V3LrL35vIjt7XrkZjd4axJ
+Vqm0D1l0fN5BEYgjd9MsBNSNpDK2pUGTryHgC8KEgXNuf62og1KZQWi7m0Qnj0VF
+rWmxWRCxBzW0Yqac98svZ0NM2FbLEsCOMQkAfT2JCrDESnXfHKa5FfuDicjZvbjB
+NguW+zXUZoM/wflUsc9H422rbzzDt7KgvXn5FXMDN6nwZ9l0Dhak1WNKfiYsOg11
+nzKQVeKYHk9ZRpUUGlEQsqQ86WsTeUcHFLj7qShjn1de/TjympSCqkz5pkVEXrE6
+hYMCGbRtK1LPuT8D2rHW
+=3Ipf
+-----END PGP SIGNATURE-----
 
-> I know we pushed back against this kind of solution in the past, but
-> it is still more reliable than having a property that affects how the
-> kernel's base finding function works, and will offer us a way to
-> eventually put ARCH_NR_GPIOS and gpiochip_find_base() to rest (at the
-> cost of backwards-compatibility, but we just cannot do without it).
-> Linus, do you agree?
-
-What do you think about the above?
-
-Yours,
-Linus Walleij
+--yJLks8MEB0SlUFSu--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
