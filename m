@@ -1,122 +1,45 @@
-From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH_V4] dm9000: Add regulator and reset support to dm9000
-Date: Wed, 14 Jan 2015 10:36:17 +0000
-Message-ID: <1421231777-12589-1-git-send-email-Zubair.Kakakhel@imgtec.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
-Cc: Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org
+From: Alim Akhtar <alim.akhtar@samsung.com>
+Subject: [PATCH v4 0/2] mmc: dw_mmc: exynos: Add HS400 support
+Date: Wed, 14 Jan 2015 16:00:44 +0530
+Message-ID: <1421231446-4776-1-git-send-email-alim.akhtar@samsung.com>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: linux-mmc@vger.kernel.org
+Cc: chris@printf.net, ulf.hansson@linaro.org, jh80.chung@samsung.com, tgih.jun@samsung.com, dianders@chromium.org, alim.akhtar@gmail.com, kgene@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, a.kesavan@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-In boards, the dm9000 chip's power and reset can be controlled by gpio.
+This adds HS400 mode support for exynos dw_mmc host controller.
 
-It makes sense to add them to the dm9000 driver and let dt be used to
-enable power and reset the phy.
+Currently tested on Exynos5800-peach-pi platform for HS400 mode.
+Tested HS200 mode with this series applied, HS200 still works.
 
-Signed-off-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Appreciate testing on other exynos5/7 platform which supports emmc5.0
 
----
-V3 Fixed an indentation and removed a call to gpio_direction_output as
-devm_gpio_request_one can handle it.
+Changes in V4:
+	* drop the idea of changing existing binding for ciu_div as per [1]
+        * addressed comments from Jaehoon Chung [2]
 
-V2 A few fixes and more error checks. Nothing major
+[1] http://www.spinics.net/lists/linux-samsung-soc/msg40923.html
+[2] http://www.spinics.net/lists/devicetree/msg64373.html
 
-V1 Minor blooper
----
- .../devicetree/bindings/net/davicom-dm9000.txt     |  4 +++
- drivers/net/ethernet/davicom/dm9000.c              | 40 ++++++++++++++++++++++
- 2 files changed, 44 insertions(+)
+Changes in V3:
+	rebased on ulf's next (commit: 607b448 mmc: core: Make tuning block patterns static)
 
-diff --git a/Documentation/devicetree/bindings/net/davicom-dm9000.txt b/Documentation/devicetree/bindings/net/davicom-dm9000.txt
-index 28767ed..5224bf0 100644
---- a/Documentation/devicetree/bindings/net/davicom-dm9000.txt
-+++ b/Documentation/devicetree/bindings/net/davicom-dm9000.txt
-@@ -11,6 +11,8 @@ Required properties:
- Optional properties:
- - davicom,no-eeprom : Configuration EEPROM is not available
- - davicom,ext-phy : Use external PHY
-+- reset-gpios : phandle of gpio that will be used to reset chip during probe
-+- vcc-supply : phandle of regulator that will be used to enable power to chip
- 
- Example:
- 
-@@ -21,4 +23,6 @@ Example:
- 		interrupts = <7 4>;
- 		local-mac-address = [00 00 de ad be ef];
- 		davicom,no-eeprom;
-+		reset-gpios = <&gpf 12 GPIO_ACTIVE_LOW>;
-+		vcc-supply = <&eth0_power>;
- 	};
-diff --git a/drivers/net/ethernet/davicom/dm9000.c b/drivers/net/ethernet/davicom/dm9000.c
-index ef0bb58..375a16d 100644
---- a/drivers/net/ethernet/davicom/dm9000.c
-+++ b/drivers/net/ethernet/davicom/dm9000.c
-@@ -36,6 +36,9 @@
- #include <linux/platform_device.h>
- #include <linux/irq.h>
- #include <linux/slab.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/gpio.h>
-+#include <linux/of_gpio.h>
- 
- #include <asm/delay.h>
- #include <asm/irq.h>
-@@ -1426,11 +1429,48 @@ dm9000_probe(struct platform_device *pdev)
- 	struct dm9000_plat_data *pdata = dev_get_platdata(&pdev->dev);
- 	struct board_info *db;	/* Point a board information structure */
- 	struct net_device *ndev;
-+	struct device *dev = &pdev->dev;
- 	const unsigned char *mac_src;
- 	int ret = 0;
- 	int iosize;
- 	int i;
- 	u32 id_val;
-+	int reset_gpios;
-+	enum of_gpio_flags flags;
-+	struct regulator *power;
-+
-+	power = devm_regulator_get(dev, "vcc");
-+	if (PTR_ERR(power) == -EPROBE_DEFER)
-+		return -EPROBE_DEFER;
-+	if (IS_ERR(power)) {
-+		dev_dbg(dev, "no regulator provided\n");
-+	} else {
-+		ret = regulator_enable(power);
-+		if (ret != 0) {
-+			dev_err(dev,
-+				"Failed to enable power regulator: %d\n", ret);
-+			return ret;
-+		}
-+		dev_dbg(dev, "regulator enabled\n");
-+	}
-+
-+	reset_gpios = of_get_named_gpio_flags(dev->of_node, "reset-gpios", 0,
-+					      &flags);
-+	if (gpio_is_valid(reset_gpios)) {
-+		ret = devm_gpio_request_one(dev, reset_gpios, flags,
-+					    "dm9000_reset");
-+		if (ret) {
-+			dev_err(dev, "failed to request reset gpio %d: %d\n",
-+				reset_gpios, ret);
-+			return -ENODEV;
-+		}
-+
-+		/* According to manual PWRST# Low Period Min 1ms */
-+		msleep(2);
-+		gpio_set_value(reset_gpios, 1);
-+		/* Needs 3ms to read eeprom when PWRST is deasserted */
-+		msleep(4);
-+	}
- 
- 	if (!pdata) {
- 		pdata = dm9000_parse_dt(&pdev->dev);
+Seungwon Jeon (2):
+  mmc: dw_mmc: exynos: Support eMMC's HS400 mode
+  ARM: dts: Add HS400 support for exynos5420 and exynos5800
+
+ .../devicetree/bindings/mmc/exynos-dw-mshc.txt     |    7 +
+ arch/arm/boot/dts/exynos5420-peach-pit.dts         |    4 +-
+ arch/arm/boot/dts/exynos5420-pinctrl.dtsi          |    7 +
+ arch/arm/boot/dts/exynos5420-smdk5420.dts          |    4 +-
+ arch/arm/boot/dts/exynos5800-peach-pi.dts          |    4 +-
+ drivers/mmc/host/dw_mmc-exynos.c                   |  187 ++++++++++++++++----
+ drivers/mmc/host/dw_mmc-exynos.h                   |   19 +-
+ drivers/mmc/host/dw_mmc.c                          |   16 +-
+ drivers/mmc/host/dw_mmc.h                          |    2 +
+ 9 files changed, 212 insertions(+), 38 deletions(-)
+
 -- 
-1.9.1
+1.7.9.5
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
