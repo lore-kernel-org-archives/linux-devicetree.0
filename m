@@ -1,59 +1,94 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v1 4/4] leds: no longer use unnamed gpios
-Date: Wed, 14 Jan 2015 13:45:16 +0100
-Message-ID: <CACRpkdZZxAPecNfADzYLSz8S6tNBi9Jr4st==zxnNp2r2gPC2g@mail.gmail.com>
-References: <1420621722-7428-1-git-send-email-oliver+list@schinagl.nl>
-	<1420621722-7428-5-git-send-email-oliver+list@schinagl.nl>
-	<20150107235522.GA6670@dtor-ws>
-	<54AE43A9.3020309@schinagl.nl>
-	<CAL_JsqJE_PCXrejHO3vfdbbtC4FGyuPhJ8W-A=8nZMcu6aBxCw@mail.gmail.com>
-	<20150108221249.GH23256@dtor-ws>
+From: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: Re: [PATCH v6 1/2] mtd: hisilicon: add a new NAND controller driver
+ for hisilicon hip04 Soc
+Date: Wed, 14 Jan 2015 20:45:05 +0800
+Message-ID: <54B664D1.6060508@hisilicon.com>
+References: <1421047734-30818-1-git-send-email-wangzhou1@hisilicon.com> <1421047734-30818-2-git-send-email-wangzhou1@hisilicon.com> <20150113040254.GK9759@ld-irv-0074>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <20150108221249.GH23256@dtor-ws>
-Sender: linux-leds-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Rob Herring <robherring2@gmail.com>, Olliver Schinagl <oliver@schinagl.nl>, Olliver Schinagl <oliver+list@schinagl.nl>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alexandre Courbot <gnurou@gmail.com>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Robin Gong <b38343@freescale.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Aaron Lu <aaron.lu@intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Grant Likely <grant.likely@linaro.org>, Wolfram Sang <wsa@the-dreams.de>, Alexander Shiyan <shc_work@mail.ru>, Jingoo Han <jg1.han@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>"linux-gpio@vger.kernel.org" <l>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150113040254.GK9759@ld-irv-0074>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, caizhiyong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, yubingxu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 8, 2015 at 11:12 PM, Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
-> On Thu, Jan 08, 2015 at 08:40:20AM -0600, Rob Herring wrote:
->> On Thu, Jan 8, 2015 at 2:45 AM, Olliver Schinagl <oliver@schinagl.nl> wrote:
+On 2015/1/13 12:02, Brian Norris wrote:
+> One more thing:
+>=20
+> On Mon, Jan 12, 2015 at 03:28:53PM +0800, Zhou Wang wrote:
+>> diff --git a/drivers/mtd/nand/hisi504_nand.c b/drivers/mtd/nand/hisi=
+504_nand.c
+>> new file mode 100644
+>> index 0000000..2000f21
+>> --- /dev/null
+>> +++ b/drivers/mtd/nand/hisi504_nand.c
+> ...
+>> +static int hisi_nand_read_page_hwecc(struct mtd_info *mtd,
+>> +	struct nand_chip *chip, uint8_t *buf, int oob_required, int page)
+>> +{
+>> +	struct hinfc_host *host =3D chip->priv;
+>> +	int max_bitflips =3D 0, stat =3D 0, stat_max, status_ecc;
+>=20
+>     drivers/mtd/nand/hisi504_nand.c:547:34: warning: =E2=80=98stat_ma=
+x=E2=80=99 may be used uninitialized in this function [-Wmaybe-uninitia=
+lized]
+>       int max_bitflips =3D 0, stat =3D 0, stat_max, status_ecc;
 
->> >>> --- a/drivers/leds/leds-gpio.c
->> >>> +++ b/drivers/leds/leds-gpio.c
->> >>> @@ -184,7 +184,7 @@ static struct gpio_leds_priv *gpio_leds_create(struct
->> >>> platform_device *pdev)
->> >>>                 struct gpio_led led = {};
->> >>>                 const char *state = NULL;
->> >>>   -             led.gpiod = devm_get_gpiod_from_child(dev, NULL, child);
->> >>> +               led.gpiod = devm_get_gpiod_from_child(dev, "led", child);
->> >>
->> >> Would not this break existing boards using old bindings? You need to
->> >> handle both cases: if you can't located "led-gpios" then you will have to
->> >> try just "gpios".
->> >
->> > Very true. I was rather even hoping we could update all bindings, I don't
->> > mind going through the available dts files to fix them ... But need to know
->> > that that's the proper way to go before doing the work ;)
->>
->> That will not work. You cannot make changes that require a new dtb
->> with a new kernel. This would also break for the other way around
->> (i.e. a new dtb and old kernel).
->>
->> You would have to search for both led-gpios and gpios. I'm not sure if
->> we can do that generically for all GPIOs. If you had a node with both
->> "blah-gpios" and "gpios", it would break. I would hope there are no
->> such cases like that. We also now have to consider how ACPI identifies
->> GPIOs and whether this makes sense.
->
-> I think only the driver itself can know about such "legacy" mappings and
-> make a decision.
+In fact, there is no chance to run "default case" there as hisi_nfc_ecc=
+_probe
+will check this and print error.
+I will initialize stat_max with 0 to eliminate this warning.
 
-Yeah leds-gpio.c will need to be patched to check for "led-gpios" first
-and then fall back to "gpios" if not found.
+>                                       ^
+>=20
+>> +	int stat_1, stat_2;
+>> +
+>> +	chip->read_buf(mtd, buf, mtd->writesize);
+>> +	chip->read_buf(mtd, chip->oob_poi, mtd->oobsize);
+>> +
+>> +	/* errors which can not be corrected by ECC */
+>> +	if (host->irq_status & HINFC504_INTS_UE) {
+>> +		mtd->ecc_stats.failed++;
+>> +	} else if (host->irq_status & HINFC504_INTS_CE) {
+>> +		/* TODO: need add other ECC modes! */
+>=20
+> You may want a 'default' case that sets stat_max to zero, then.
+>=20
+>> +		switch (chip->ecc.strength) {
+>> +		case 1:
+>> +			stat =3D hweight8(hinfc_read(host, HINFC504_ECC_STATUS)>>
+>> +						HINFC504_ECC_1_BIT_SHIFT);
+>> +			stat_max =3D 1;
+>> +			break;
+>> +		case 16:
+>> +			status_ecc =3D hinfc_read(host, HINFC504_ECC_STATUS) >>
+>> +					HINFC504_ECC_16_BIT_SHIFT & 0x0fff;
+>> +			stat_2 =3D status_ecc & 0x3f;
+>> +			stat_1 =3D status_ecc >> 6 & 0x3f;
+>> +			stat =3D stat_1 + stat_2;
+>> +			stat_max =3D max_t(int, stat_1, stat_2);
+>> +		}
+>> +		mtd->ecc_stats.corrected +=3D stat;
+>> +		max_bitflips =3D max_t(int, max_bitflips, stat_max);
+>> +	}
+>> +	host->irq_status =3D 0;
+>> +
+>> +	return max_bitflips;
+>> +}
+>=20
+> Brian
 
-Yours,
-Linus Walleij
+Thanks for your comment!
+Zhou Wang
+>=20
+> .
+>=20
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
