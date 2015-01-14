@@ -1,104 +1,212 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 1/5] irqchip: add dumb demultiplexer implementation
-Date: Wed, 14 Jan 2015 15:43:29 +0100
-Message-ID: <54B68091.7080109@atmel.com>
-References: <1421174781-4340-1-git-send-email-boris.brezillon@free-electrons.com>	<1421174781-4340-2-git-send-email-boris.brezillon@free-electrons.com>	<54B670EA.1010800@atmel.com> <20150114150332.09fecbea@bbrezillon>
+From: Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH V1] mfd: da9063: Add device tree support
+Date: Wed, 14 Jan 2015 14:09:52 +0000
+Message-ID: <201501141438.t0EEcMBg010491@swsrvapps-01.diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150114150332.09fecbea@bbrezillon>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "Rafael J. Wysocki" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Dajun Chen <david.chen-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Support Opensource <support.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Le 14/01/2015 15:03, Boris Brezillon a =C3=A9crit :
-> On Wed, 14 Jan 2015 14:36:42 +0100
-> Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> wrote:
->=20
->> Le 13/01/2015 19:46, Boris Brezillon a =C3=A9crit :
->>> Some interrupt controllers are multiplexing several peripheral IRQs=
- on
->>> a single interrupt line.
->>> While this is not a problem for most IRQs (as long as all periphera=
-ls
->>> request the interrupt with IRQF_SHARED flag set), multiplexing time=
-rs and
->>> other type of peripherals will generate a WARNING (mixing IRQF_NO_S=
-USPEND
->>> and !IRQF_NO_SUSPEND is prohibited).
->>>
->>> Create a dumb irq demultiplexer which simply forwards interrupts to=
- all
->>> peripherals (exactly what's happening with IRQ_SHARED) but keep a u=
-nique
->>> irq number for each peripheral, thus preventing the IRQF_NO_SUSPEND
->>> and !IRQF_NO_SUSPEND mix on a given interrupt.
->>>
->>> Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->>> ---
->>>  drivers/irqchip/Kconfig          |   4 ++
->>>  drivers/irqchip/Makefile         |   1 +
->>>  drivers/irqchip/irq-dumb-demux.c |  70 ++++++++++++++++++++
->>>  include/linux/irq.h              |  49 ++++++++++++++
->>>  include/linux/irqdomain.h        |   1 +
->>>  kernel/irq/Kconfig               |   5 ++
->>>  kernel/irq/Makefile              |   1 +
->>>  kernel/irq/chip.c                |  41 ++++++++++++
->>>  kernel/irq/dumb-demux-chip.c     | 140 +++++++++++++++++++++++++++=
-++++++++++++
->>>  kernel/irq/handle.c              |  31 ++++++++-
->>>  kernel/irq/internals.h           |   3 +
->>>  11 files changed, 344 insertions(+), 2 deletions(-)
->>>  create mode 100644 drivers/irqchip/irq-dumb-demux.c
->>>  create mode 100644 kernel/irq/dumb-demux-chip.c
+From: Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
 
-[..]
-
->>> +static void irq_dumb_demux_mask(struct irq_data *d)
->>> +{
->>> +	struct irq_chip_dumb_demux *demux =3D irq_data_get_irq_chip_data(=
-d);
->>> +
->>> +	clear_bit(d->hwirq, &demux->unmasked);
->>> +
->>> +	if (!demux->unmasked)
->>> +		disable_irq_nosync(demux->src_irq);
->>> +}
->>> +
->>> +static void irq_dumb_demux_unmask(struct irq_data *d)
->>> +{
->>> +	struct irq_chip_dumb_demux *demux =3D irq_data_get_irq_chip_data(=
-d);
->>> +	bool enable_src_irq =3D !demux->unmasked;
->>
->> Why this additional "bool" unlike the other function above?
->=20
-> Because set_bit will modify the unmasked status and we must check if =
-it
-> is equal to 0 (in other terms, all irqs are masked) before modifying =
-it
-> in order to know whether we should enable the src irq or not.
-
-pfffff! ok, sorry for the noise then ;-)
+Add device tree support for DA9063 regulators; Real-Time Clock
+and Watchdog.
 
 
->>> +
->>> +	set_bit(d->hwirq, &demux->unmasked);
->>> +
->>> +	if (enable_src_irq)
->>> +		enable_irq(demux->src_irq);
->>> +}
->>> +
+Signed-off-by: Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
 
-[...]
+---
+Checks performed with linux-next/v3.19-rc4/scripts/checkpatch.pl
+ da9063.txt                total: 0 errors, 0 warnings, 94 lines checked
+ da9063-core.c             total: 0 errors, 0 warnings, 192 lines checked
+ da9063-i2c.c              total: 0 errors, 0 warnings, 277 lines checked
+ core.h                    total: 0 errors, 0 warnings, 99 lines checked
+This patch applies against linux-next and v3.19-rc4 
 
-Bye,
---=20
-Nicolas Ferre
+
+
+ Documentation/devicetree/bindings/mfd/da9063.txt | 94 ++++++++++++++++++++++++
+ drivers/mfd/da9063-core.c                        |  2 +
+ drivers/mfd/da9063-i2c.c                         | 11 +++
+ include/linux/mfd/da9063/core.h                  |  1 +
+ 4 files changed, 108 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/da9063.txt
+
+diff --git a/Documentation/devicetree/bindings/mfd/da9063.txt b/Documentation/devicetree/bindings/mfd/da9063.txt
+new file mode 100644
+index 0000000..ac26af4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/da9063.txt
+@@ -0,0 +1,94 @@
++* Dialog DA9063 Power Management Integrated Circuit (PMIC)
++
++DA9093 consists of a large and varied group of sub-devices (I2C Only):
++
++Device                   Supply Names    Description
++------                   ------------    -----------
++da9063-regulator        :               : LDOs & BUCKs
++da9063-rtc              :               : Real-Time Clock
++da9063-watchdog         :               : Watchdog
++
++======
++
++Required properties:
++
++- compatible : Should be "dlg,da9063-ca", "dlg,da9063-bb" or/and
++  "dlg,da9063-ad".
++- reg : Specifies the I2C slave address (this defaults to 0x58 but it can be
++  modified to match the chip's OTP settings).
++- interrupt-parent : Specifies the reference to the interrupt controller for
++  the DA9063.
++- interrupts : IRQ line information.
++- interrupt-controller
++
++Sub-nodes:
++
++- regulators : This node defines the settings for the LDOs and BUCKs. The
++  DA9063 regulators are bound using their names listed below:
++
++    bcore1    : BUCK CORE1
++    bcore2    : BUCK CORE2
++    bpro      : BUCK PRO
++    bmem      : BUCK MEM
++    bio       : BUCK IO
++    bperi     : BUCK PERI
++    ldo1      : LDO_1
++    ldo2      : LDO_2
++    ldo3      : LDO_3
++    ldo4      : LDO_4
++    ldo5      : LDO_5
++    ldo6      : LDO_6
++    ldo7      : LDO_7
++    ldo8      : LDO_8
++    ldo9      : LDO_9
++    ldo10     : LDO_10
++    ldo11     : LDO_11
++
++  The component follows the standard regulator framework and the bindings
++  details of individual regulator device can be found in:
++  Documentation/devicetree/bindings/regulator/regulator.txt
++
++- rtc : This node defines settings for the Real-Time Clock associated with
++  the DA9063. There are currently no entries in this binding, however
++  compatible = "dlg,da9063-rtc" should be added if a node is created.
++
++- watchdog : This node defines settings for the Watchdog timer associated
++  with the DA9063. There are currently no entries in this binding, however
++  compatible = "dlg,da9063-watchdog" should be added if a node is created.
++
++
++Example:
++
++	pmic0: da9063@58 {
++		compatible = "dlg,da9063-ca", "dlg,da9063-bb", "dlg,da9063-ad";
++		reg = <0x58>;
++		interrupt-parent = <&gpio6>;
++		interrupts = <11 IRQ_TYPE_LEVEL_LOW>;
++		interrupt-controller;
++
++		rtc {
++			compatible = "dlg,da9063-rtc";
++		};
++
++		wdt {
++			compatible = "dlg,da9063-watchdog";
++		};
++
++		regulators {
++			DA9063_BCORE1: bcore1 {
++				regulator-name = "BCORE1";
++				regulator-min-microvolt = <300000>;
++				regulator-max-microvolt = <1570000>;
++				regulator-min-microamp = <500000>;
++				regulator-max-microamp = <2000000>;
++				regulator-boot-on;
++			};
++			DA9063_LDO11: ldo11 {
++				regulator-name = "LDO_11";
++				regulator-min-microvolt = <900000>;
++				regulator-max-microvolt = <3600000>;
++				regulator-boot-on;
++			};
++		};
++	};
++
+diff --git a/drivers/mfd/da9063-core.c b/drivers/mfd/da9063-core.c
+index f38bc98..171ed7e 100644
+--- a/drivers/mfd/da9063-core.c
++++ b/drivers/mfd/da9063-core.c
+@@ -85,6 +85,7 @@ static const struct mfd_cell da9063_devs[] = {
+ 		.name		= DA9063_DRVNAME_LEDS,
+ 	},
+ 	{
++		.of_compatible = "dlg,da9063-watchdog",
+ 		.name		= DA9063_DRVNAME_WATCHDOG,
+ 	},
+ 	{
+@@ -98,6 +99,7 @@ static const struct mfd_cell da9063_devs[] = {
+ 		.resources	= da9063_onkey_resources,
+ 	},
+ 	{
++		.of_compatible = "dlg,da9063-rtc",
+ 		.name		= DA9063_DRVNAME_RTC,
+ 		.num_resources	= ARRAY_SIZE(da9063_rtc_resources),
+ 		.resources	= da9063_rtc_resources,
+diff --git a/drivers/mfd/da9063-i2c.c b/drivers/mfd/da9063-i2c.c
+index 21fd8d9..c4f5351 100644
+--- a/drivers/mfd/da9063-i2c.c
++++ b/drivers/mfd/da9063-i2c.c
+@@ -25,6 +25,9 @@
+ #include <linux/mfd/da9063/pdata.h>
+ #include <linux/mfd/da9063/registers.h>
+ 
++#include <linux/of.h>
++#include <linux/regulator/of_regulator.h>
++
+ static const struct regmap_range da9063_ad_readable_ranges[] = {
+ 	{
+ 		.range_min = DA9063_REG_PAGE_CON,
+@@ -203,6 +206,13 @@ static struct regmap_config da9063_regmap_config = {
+ 	.cache_type = REGCACHE_RBTREE,
+ };
+ 
++static const struct of_device_id da9063_dt_ids[] = {
++	{ .compatible = "dlg,da9063-ad", },
++	{ .compatible = "dlg,da9063-bb", },
++	{ .compatible = "dlg,da9063-ca", },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, da9063_dt_ids);
+ static int da9063_i2c_probe(struct i2c_client *i2c,
+ 	const struct i2c_device_id *id)
+ {
+@@ -257,6 +267,7 @@ static struct i2c_driver da9063_i2c_driver = {
+ 	.driver = {
+ 		.name = "da9063",
+ 		.owner = THIS_MODULE,
++		.of_match_table = of_match_ptr(da9063_dt_ids),
+ 	},
+ 	.probe    = da9063_i2c_probe,
+ 	.remove   = da9063_i2c_remove,
+diff --git a/include/linux/mfd/da9063/core.h b/include/linux/mfd/da9063/core.h
+index b92a326..79f4d82 100644
+--- a/include/linux/mfd/da9063/core.h
++++ b/include/linux/mfd/da9063/core.h
+@@ -36,6 +36,7 @@ enum da9063_models {
+ enum da9063_variant_codes {
+ 	PMIC_DA9063_AD = 0x3,
+ 	PMIC_DA9063_BB = 0x5,
++	PMIC_DA9063_CA = 0x6,
+ };
+ 
+ /* Interrupts */
+-- 
+end-of-patch for PATCH V1
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
