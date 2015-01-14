@@ -1,7 +1,7 @@
 From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 2/3] ARM: at91/dt: sama5d4: add pioD controller
-Date: Wed, 14 Jan 2015 11:08:08 +0100
-Message-ID: <1421230089-1418-3-git-send-email-ludovic.desroches@atmel.com>
+Subject: [PATCH 3/3] MAINTAINERS: add maintainer for pinctrl-at91
+Date: Wed, 14 Jan 2015 11:08:09 +0100
+Message-ID: <1421230089-1418-4-git-send-email-ludovic.desroches@atmel.com>
 References: <1421230089-1418-1-git-send-email-ludovic.desroches@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,46 +12,23 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetr
 Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-PioD controller was not described in the device tree since we don't use
-it. As pinctrl-at91 allows disabled gpio controllers in the device
-tree, we can add it to complete the device description.
-
 Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/boot/dts/sama5d4.dtsi | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/sama5d4.dtsi b/arch/arm/boot/dts/sama5d4.dtsi
-index 1b0f30c..368973e 100644
---- a/arch/arm/boot/dts/sama5d4.dtsi
-+++ b/arch/arm/boot/dts/sama5d4.dtsi
-@@ -62,6 +62,7 @@
- 		gpio0 = &pioA;
- 		gpio1 = &pioB;
- 		gpio2 = &pioC;
-+		gpio3 = &pioD;
- 		gpio4 = &pioE;
- 		tcb0 = &tcb0;
- 		tcb1 = &tcb1;
-@@ -1111,6 +1112,18 @@
- 					clocks = <&pioC_clk>;
- 				};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index ddb9ac8..dfa702c 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -7405,6 +7405,7 @@ F:	include/linux/pinctrl/
  
-+				pioD: gpio@fc068000 {
-+					compatible = "atmel,at91sam9x5-gpio", "atmel,at91rm9200-gpio";
-+					reg = <0xfc068000 0x100>;
-+					interrupts = <5 IRQ_TYPE_LEVEL_HIGH 1>;
-+					#gpio-cells = <2>;
-+					gpio-controller;
-+					interrupt-controller;
-+					#interrupt-cells = <2>;
-+					clocks = <&pioD_clk>;
-+					status = "disabled";
-+				};
-+
- 				pioE: gpio@fc06d000 {
- 					compatible = "atmel,at91sam9x5-gpio", "atmel,at91rm9200-gpio";
- 					reg = <0xfc06d000 0x100>;
+ PIN CONTROLLER - ATMEL AT91
+ M:	Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
++M:	Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+ L:	linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org (moderated for non-subscribers)
+ S:	Maintained
+ F:	drivers/pinctrl/pinctrl-at91.*
 -- 
 2.2.0
 
