@@ -1,45 +1,31 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH RFC] pinctrl: at91
-Date: Wed, 14 Jan 2015 13:26:16 +0100
-Message-ID: <CACRpkda9wTPcRy6nRGP08rDpHV=tRyYVuD80TeO2zFGzX+aJcg@mail.gmail.com>
-References: <CACRpkdbkUUzVVMp14szY+vGNd+d+8bL066STh_XMGud-UsFBqA@mail.gmail.com>
-	<1418637470-5839-1-git-send-email-ludovic.desroches@atmel.com>
-	<54943933.60102@atmel.com>
-	<20150106093706.GC26982@ldesroches-Latitude-E6320>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v1 1/4] gpio:gpiolib: use static const char const * for a
+ suffixes array
+Date: Wed, 14 Jan 2015 13:35:12 +0100
+Message-ID: <CACRpkdYyaK5JjXEwJxzLgd_-0ccTjb1wEFxVUSdLsppcmTMDoA@mail.gmail.com>
+References: <1420621722-7428-1-git-send-email-oliver+list@schinagl.nl>
+	<1420621722-7428-2-git-send-email-oliver+list@schinagl.nl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150106093706.GC26982@ldesroches-Latitude-E6320>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1420621722-7428-2-git-send-email-oliver+list@schinagl.nl>
+Sender: linux-input-owner@vger.kernel.org
+To: Olliver Schinagl <oliver+list@schinagl.nl>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Olliver Schinagl <oliver@schinagl.nl>, Robin Gong <b38343@freescale.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Aaron Lu <aaron.lu@intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Grant Likely <grant.likely@linaro.org>, Wolfram Sang <wsa@the-dreams.de>, Alexander Shiyan <shc_work@mail.ru>, Jingoo Han <jg1.han@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linux
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 6, 2015 at 10:37 AM, Ludovic Desroches
-<ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> wrote:
+On Wed, Jan 7, 2015 at 10:08 AM, Olliver Schinagl
+<oliver+list@schinagl.nl> wrote:
 
-> Usage of of_gpiochip_add() only solves my issue about gpio but not about
-> pinctrl stuff, I still need a patch to manage the case when we have a gap if
-> a gpio controller is not enabled to not break the pin naming, etc.
+> From: Olliver Schinagl <oliver@schinagl.nl>
+>
+> Checkpatch complains, and probably with good reason that we should use
+> const char const * for the static constant array that never gets
+> changed.
+>
+> Signed-off-by: Olliver Schinagl <oliver@schinagl.nl>
 
-This has been the topic of many threads today.
-I assume you are talking about keeping GPIO numbers
-consistent.
-
-- My suggestion is to add alias handling of the GPIO chips
-  to the core so they can be probed in the right order.
-
-- For consistency in sysfs use the "names" array in
-  struct gpio_chip so you can search for a symbolic
-  name in sysfs and don't have to rely on fragile stuff
-  like GPIO numbers.
-
-- Partake in the development of a new GPIO ABI
-  that does not use the global GPIO numberspace.
+Patch applied.
 
 Yours,
 Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
