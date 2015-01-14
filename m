@@ -1,61 +1,71 @@
-From: Frans Klaver <frans.klaver@xsens.com>
-Subject: [PATCH RESEND 11/13] power: reset: ltc2952: check trigger value before starting timer
-Date: Wed, 14 Jan 2015 09:15:44 +0100
-Message-ID: <1421223346-27410-12-git-send-email-frans.klaver@xsens.com>
-References: <1421223346-27410-1-git-send-email-frans.klaver@xsens.com>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [PATCH v2 0/8] ARM: at91: dts: sama5d3: add dt support for atmel
+ isi and ov2640 sensor
+Date: Wed, 14 Jan 2015 09:30:30 +0100
+Message-ID: <20150114083030.GI3843@piout.net>
+References: <1420362153-500-1-git-send-email-josh.wu@atmel.com>
+ <54B53455.9050407@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1421223346-27410-1-git-send-email-frans.klaver@xsens.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>
-Cc: Frans Klaver <frans.klaver@xsens.com>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?q?Ren=C3=A9=20Moll?= <linux@r-moll.nl>, Guenter Roeck <linux@roeck-us.net>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <54B53455.9050407@atmel.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Nicolas Ferre <nicolas.ferre@atmel.com>
+Cc: Josh Wu <josh.wu@atmel.com>, devicetree@vger.kernel.org, grant.likely@linaro.org, galak@codeaurora.org, rob@landley.net, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, pawel.moll@arm.com, linux-arm-kernel@lists.infradead.org, voice.shen@atmel.com, laurent.pinchart@ideasonboard.com, plagnioj@jcrosoft.com, boris.brezillon@free-electrons.com, linux-media@vger.kernel.org, g.liakhovetski@gmx.de
 List-Id: devicetree@vger.kernel.org
 
-In ltc2952_poweroff_handler it is theoretically possible that the timer
-fails to start on first pass (button press), but succeeds in starting on
-the second (button release). This will cause the button press to be
-misinterpreted, and will incorrectly shut down the system. Because a
-picture says more than a thousand words:
+Hi Nicolas,
 
-Expected behavior:
-tmr:      ++++++++++
-btn: -----__________-----
+BTW, you can add my ack on the remaining patches (5-7).
 
-Faulty behavior:
-tmr:                +++++
-btn: -----__________-----
+On 13/01/2015 at 16:05:57 +0100, Nicolas Ferre wrote :
+> Le 04/01/2015 10:02, Josh Wu a =E9crit :
+> > This patch series add ISI and ov2640 support on dts files.
+> >=20
+> > As the ov2640 driver dt is still in review. The patch is in: https:=
+//patchwork.linuxtv.org/patch/27554/
+> > So I want to send this dt patch early for a review.
+> >=20
+> > v1 -> v2:
+> >   1. add one more patch to change the pin name of ISI_MCK
+> >   2. rewrite the commit [4/8] ARM: at91: dts: sama5d3: change name =
+of pinctrl_isi_{power,reset}.
+> >   3. move the common chip parts of ISI node to sama5d3.dtsi.
+> >=20
+> > Bo Shen (3):
+> >   ARM: at91: dts: sama5d3: split isi pinctrl
+> >   ARM: at91: dts: sama5d3: add missing pins of isi
+> >   ARM: at91: dts: sama5d3: move the isi mck pin to mb
+> >=20
+> > Josh Wu (5):
+> >   ARM: at91: dts: sama5d3: add isi clock
+> >   ARM: at91: dts: sama5d3: change name of pinctrl_isi_{power,reset}
+> >   ARM: at91: dts: sama5d3: change name of pinctrl of ISI_MCK
+> >   ARM: at91: dts: sama5d3: add ov2640 camera sensor support
+> >   ARM: at91: sama5: enable atmel-isi and ov2640 in defconfig
+>=20
+> Josh,
+>=20
+> It seems that this patch doesn't show up in the series: I only receiv=
+ed
+> up to 6/8 patches (2 missing?). Can you please send it(them?)?
+>=20
+> Bye,
+>=20
+> >  arch/arm/boot/dts/sama5d3.dtsi    | 24 ++++++++++++++++++-----
+> >  arch/arm/boot/dts/sama5d3xmb.dtsi | 40 +++++++++++++++++++++++++++=
+++++++++----
+> >  arch/arm/configs/sama5_defconfig  |  6 ++++++
+> >  3 files changed, 61 insertions(+), 9 deletions(-)
+> >=20
+>=20
+>=20
+> --=20
+> Nicolas Ferre
 
-Legend:
-+ timer runs
-_ button pressed
-- button depressed
-
-To prevent this from happening, check the value of the gpio before
-starting the timer. If the button is active, we should start the timer,
-else we should stop it.
-
-The situation described can now still occur if the polarity of the input
-pin is set incorrectly, but that at least is predictable behavior and
-can be detected during the first tests.
-
-Signed-off-by: Frans Klaver <frans.klaver@xsens.com>
----
- drivers/power/reset/ltc2952-poweroff.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/power/reset/ltc2952-poweroff.c b/drivers/power/reset/ltc2952-poweroff.c
-index 2f3fd5b..fda2735 100644
---- a/drivers/power/reset/ltc2952-poweroff.c
-+++ b/drivers/power/reset/ltc2952-poweroff.c
-@@ -160,7 +160,7 @@ static irqreturn_t ltc2952_poweroff_handler(int irq, void *dev_id)
- 		return IRQ_HANDLED;
- 	}
- 
--	if (!hrtimer_active(&data->timer_trigger)) {
-+	if (gpiod_get_value(data->gpio_trigger)) {
- 		if (hrtimer_start(&data->timer_trigger, data->trigger_delay,
- 				  HRTIMER_MODE_REL))
- 			dev_err(data->dev, "unable to start the wait timer\n");
--- 
-2.1.0
+--=20
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
