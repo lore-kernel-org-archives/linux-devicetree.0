@@ -1,212 +1,141 @@
-From: Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH V1] mfd: da9063: Add device tree support
-Date: Wed, 14 Jan 2015 14:09:52 +0000
-Message-ID: <201501141438.t0EEcMBg010491@swsrvapps-01.diasemi.com>
+From: Lukasz Majewski <l.majewski@samsung.com>
+Subject: Re: [PATCH v2 1/8] thermal: Provide stub for
+ thermal_of_cooling_device_register() function
+Date: Wed, 14 Jan 2015 16:01:06 +0100
+Message-ID: <20150114160106.20aa160b@amdc2363>
+References: <1418897591-18332-1-git-send-email-l.majewski@samsung.com>
+ <1419265668-32283-1-git-send-email-l.majewski@samsung.com>
+ <1419265668-32283-2-git-send-email-l.majewski@samsung.com>
+ <20150102185426.GC12485@developer> <20150102190339.GA22356@developer>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Dajun Chen <david.chen-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Support Opensource <support.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <20150102190339.GA22356@developer>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Eduardo Valentin <edubezval@gmail.com>
+Cc: Kamil Debski <k.debski@samsung.com>, Jean Delvare <jdelvare@suse.de>, Guenter Roeck <linux@roeck-us.net>, lm-sensors@lm-sensors.org, Linux PM list <linux-pm@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Lukasz Majewski <l.majewski@majess.pl>, Kukjin Kim <kgene.kim@samsung.com>, linux-kernel@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Abhilash Kesavan <a.kesavan@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Hi Eduardo,
 
-Add device tree support for DA9063 regulators; Real-Time Clock
-and Watchdog.
+> On Fri, Jan 02, 2015 at 02:54:28PM -0400, Eduardo Valentin wrote:
+> > On Mon, Dec 22, 2014 at 05:27:41PM +0100, Lukasz Majewski wrote:
+> > > Odroid U3 fan can work without being registered as OF cooling
+> > > device (with CONFIG_THERMAL_OF disabled).
+> > > In this situation it can be controlled via PWM entry at
+> > > /sys/class/hwmon/hwmon0/pwm1.
+> > >=20
+> > > Therefore, the thermal_of_cooling_device_register() function
+> > > needs a stub to allow clean compilation.
+> > >=20
+> > > Signed-off-by: Lukasz Majewski <l.majewski@samsung.com>
+> >=20
+> > Acked-by: Eduardo Valentin <edubezval@gmail.com>
+>=20
+> Sorry, too fast,
+>=20
+> This is actually
+> Nacked-by: Eduardo Valentin <edubezval@gmail.com>
+>=20
+> :-)
+>=20
+> I get this error:
+> drivers/thermal/thermal_core.c:1210:1: error: redefinition of
+> =E2=80=98thermal_of_cooling_device_register=E2=80=99
+>  thermal_of_cooling_device_register(struct device_node *np,
+>   ^
+>   In file included from drivers/thermal/thermal_core.c:34:0:
+>   include/linux/thermal.h:321:1: note: previous definition of
+>   =E2=80=98thermal_of_cooling_device_register=E2=80=99 was here
+>    thermal_of_cooling_device_register(struct device_node *np,
+>     ^
+>=20
+>=20
+> We provide the function in thermal core even if CONFIG_THERMAL_OF is
+> not set.
+
+Unfortunately the PWM fan subsystem can work perfectly fine without
+CONFIG_THERMAL.
+
+I think that it would be enough to make something like this in
+the ./include/linux/thermal.h:
+
+#ifdef CONFIG_THERMAL
+	static inline struct thermal_cooling_device *
+		thermal_of_cooling_device_register(struct device_node
+		*np, char *type, void *devdata,
+				   const struct
+		thermal_cooling_device_ops *ops) {
+		return NULL;
+	}
+#else
+	[ already present declaration of
+	thermal_of_cooling_device_register() ]
+#endif /* CONFIG_THERMAL */
 
 
-Signed-off-by: Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
 
----
-Checks performed with linux-next/v3.19-rc4/scripts/checkpatch.pl
- da9063.txt                total: 0 errors, 0 warnings, 94 lines checked
- da9063-core.c             total: 0 errors, 0 warnings, 192 lines checked
- da9063-i2c.c              total: 0 errors, 0 warnings, 277 lines checked
- core.h                    total: 0 errors, 0 warnings, 99 lines checked
-This patch applies against linux-next and v3.19-rc4 
+> >=20
+> > > ---
+> > > Changes for v2:
+> > > - None
+> > > ---
+> > >  include/linux/thermal.h | 14 +++++++++++---
+> > >  1 file changed, 11 insertions(+), 3 deletions(-)
+> > >=20
+> > > diff --git a/include/linux/thermal.h b/include/linux/thermal.h
+> > > index 2de3d9e..871123c 100644
+> > > --- a/include/linux/thermal.h
+> > > +++ b/include/linux/thermal.h
+> > > @@ -328,6 +328,10 @@ thermal_zone_of_sensor_register(struct
+> > > device *dev, int id, void *data, const struct
+> > > thermal_zone_of_device_ops *ops); void
+> > > thermal_zone_of_sensor_unregister(struct device *dev, struct
+> > > thermal_zone_device *tz); +struct thermal_cooling_device *
+> > > +thermal_of_cooling_device_register(struct device_node *np,
+> > > +				   char *type, void *devdata,
+> > > +				   const struct
+> > > thermal_cooling_device_ops *); #else
+> > >  static inline struct thermal_zone_device *
+> > >  thermal_zone_of_sensor_register(struct device *dev, int id, void
+> > > *data, @@ -342,6 +346,13 @@ void
+> > > thermal_zone_of_sensor_unregister(struct device *dev, {
+> > >  }
+> > > =20
+> > > +static inline struct thermal_cooling_device *
+> > > +thermal_of_cooling_device_register(struct device_node *np,
+> > > +				   char *type, void *devdata,
+> > > +				   const struct
+> > > thermal_cooling_device_ops *ops) +{
+> > > +	return NULL;
+> > > +}
+> > >  #endif
+> > >  struct thermal_zone_device *thermal_zone_device_register(const
+> > > char *, int, int, void *, struct thermal_zone_device_ops *,
+> > > @@ -357,9 +368,6 @@ void thermal_zone_device_update(struct
+> > > thermal_zone_device *);=20
+> > >  struct thermal_cooling_device
+> > > *thermal_cooling_device_register(char *, void *, const struct
+> > > thermal_cooling_device_ops *); -struct thermal_cooling_device *
+> > > -thermal_of_cooling_device_register(struct device_node *np, char
+> > > *, void *,
+> > > -				   const struct
+> > > thermal_cooling_device_ops *); void
+> > > thermal_cooling_device_unregister(struct thermal_cooling_device
+> > > *); struct thermal_zone_device
+> > > *thermal_zone_get_zone_by_name(const char *name); int
+> > > thermal_zone_get_temp(struct thermal_zone_device *tz, unsigned
+> > > long *temp); -- 2.0.0.rc2
+> > >=20
+>=20
+>=20
 
 
 
- Documentation/devicetree/bindings/mfd/da9063.txt | 94 ++++++++++++++++++++++++
- drivers/mfd/da9063-core.c                        |  2 +
- drivers/mfd/da9063-i2c.c                         | 11 +++
- include/linux/mfd/da9063/core.h                  |  1 +
- 4 files changed, 108 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/da9063.txt
+--=20
+Best regards,
 
-diff --git a/Documentation/devicetree/bindings/mfd/da9063.txt b/Documentation/devicetree/bindings/mfd/da9063.txt
-new file mode 100644
-index 0000000..ac26af4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/da9063.txt
-@@ -0,0 +1,94 @@
-+* Dialog DA9063 Power Management Integrated Circuit (PMIC)
-+
-+DA9093 consists of a large and varied group of sub-devices (I2C Only):
-+
-+Device                   Supply Names    Description
-+------                   ------------    -----------
-+da9063-regulator        :               : LDOs & BUCKs
-+da9063-rtc              :               : Real-Time Clock
-+da9063-watchdog         :               : Watchdog
-+
-+======
-+
-+Required properties:
-+
-+- compatible : Should be "dlg,da9063-ca", "dlg,da9063-bb" or/and
-+  "dlg,da9063-ad".
-+- reg : Specifies the I2C slave address (this defaults to 0x58 but it can be
-+  modified to match the chip's OTP settings).
-+- interrupt-parent : Specifies the reference to the interrupt controller for
-+  the DA9063.
-+- interrupts : IRQ line information.
-+- interrupt-controller
-+
-+Sub-nodes:
-+
-+- regulators : This node defines the settings for the LDOs and BUCKs. The
-+  DA9063 regulators are bound using their names listed below:
-+
-+    bcore1    : BUCK CORE1
-+    bcore2    : BUCK CORE2
-+    bpro      : BUCK PRO
-+    bmem      : BUCK MEM
-+    bio       : BUCK IO
-+    bperi     : BUCK PERI
-+    ldo1      : LDO_1
-+    ldo2      : LDO_2
-+    ldo3      : LDO_3
-+    ldo4      : LDO_4
-+    ldo5      : LDO_5
-+    ldo6      : LDO_6
-+    ldo7      : LDO_7
-+    ldo8      : LDO_8
-+    ldo9      : LDO_9
-+    ldo10     : LDO_10
-+    ldo11     : LDO_11
-+
-+  The component follows the standard regulator framework and the bindings
-+  details of individual regulator device can be found in:
-+  Documentation/devicetree/bindings/regulator/regulator.txt
-+
-+- rtc : This node defines settings for the Real-Time Clock associated with
-+  the DA9063. There are currently no entries in this binding, however
-+  compatible = "dlg,da9063-rtc" should be added if a node is created.
-+
-+- watchdog : This node defines settings for the Watchdog timer associated
-+  with the DA9063. There are currently no entries in this binding, however
-+  compatible = "dlg,da9063-watchdog" should be added if a node is created.
-+
-+
-+Example:
-+
-+	pmic0: da9063@58 {
-+		compatible = "dlg,da9063-ca", "dlg,da9063-bb", "dlg,da9063-ad";
-+		reg = <0x58>;
-+		interrupt-parent = <&gpio6>;
-+		interrupts = <11 IRQ_TYPE_LEVEL_LOW>;
-+		interrupt-controller;
-+
-+		rtc {
-+			compatible = "dlg,da9063-rtc";
-+		};
-+
-+		wdt {
-+			compatible = "dlg,da9063-watchdog";
-+		};
-+
-+		regulators {
-+			DA9063_BCORE1: bcore1 {
-+				regulator-name = "BCORE1";
-+				regulator-min-microvolt = <300000>;
-+				regulator-max-microvolt = <1570000>;
-+				regulator-min-microamp = <500000>;
-+				regulator-max-microamp = <2000000>;
-+				regulator-boot-on;
-+			};
-+			DA9063_LDO11: ldo11 {
-+				regulator-name = "LDO_11";
-+				regulator-min-microvolt = <900000>;
-+				regulator-max-microvolt = <3600000>;
-+				regulator-boot-on;
-+			};
-+		};
-+	};
-+
-diff --git a/drivers/mfd/da9063-core.c b/drivers/mfd/da9063-core.c
-index f38bc98..171ed7e 100644
---- a/drivers/mfd/da9063-core.c
-+++ b/drivers/mfd/da9063-core.c
-@@ -85,6 +85,7 @@ static const struct mfd_cell da9063_devs[] = {
- 		.name		= DA9063_DRVNAME_LEDS,
- 	},
- 	{
-+		.of_compatible = "dlg,da9063-watchdog",
- 		.name		= DA9063_DRVNAME_WATCHDOG,
- 	},
- 	{
-@@ -98,6 +99,7 @@ static const struct mfd_cell da9063_devs[] = {
- 		.resources	= da9063_onkey_resources,
- 	},
- 	{
-+		.of_compatible = "dlg,da9063-rtc",
- 		.name		= DA9063_DRVNAME_RTC,
- 		.num_resources	= ARRAY_SIZE(da9063_rtc_resources),
- 		.resources	= da9063_rtc_resources,
-diff --git a/drivers/mfd/da9063-i2c.c b/drivers/mfd/da9063-i2c.c
-index 21fd8d9..c4f5351 100644
---- a/drivers/mfd/da9063-i2c.c
-+++ b/drivers/mfd/da9063-i2c.c
-@@ -25,6 +25,9 @@
- #include <linux/mfd/da9063/pdata.h>
- #include <linux/mfd/da9063/registers.h>
- 
-+#include <linux/of.h>
-+#include <linux/regulator/of_regulator.h>
-+
- static const struct regmap_range da9063_ad_readable_ranges[] = {
- 	{
- 		.range_min = DA9063_REG_PAGE_CON,
-@@ -203,6 +206,13 @@ static struct regmap_config da9063_regmap_config = {
- 	.cache_type = REGCACHE_RBTREE,
- };
- 
-+static const struct of_device_id da9063_dt_ids[] = {
-+	{ .compatible = "dlg,da9063-ad", },
-+	{ .compatible = "dlg,da9063-bb", },
-+	{ .compatible = "dlg,da9063-ca", },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, da9063_dt_ids);
- static int da9063_i2c_probe(struct i2c_client *i2c,
- 	const struct i2c_device_id *id)
- {
-@@ -257,6 +267,7 @@ static struct i2c_driver da9063_i2c_driver = {
- 	.driver = {
- 		.name = "da9063",
- 		.owner = THIS_MODULE,
-+		.of_match_table = of_match_ptr(da9063_dt_ids),
- 	},
- 	.probe    = da9063_i2c_probe,
- 	.remove   = da9063_i2c_remove,
-diff --git a/include/linux/mfd/da9063/core.h b/include/linux/mfd/da9063/core.h
-index b92a326..79f4d82 100644
---- a/include/linux/mfd/da9063/core.h
-+++ b/include/linux/mfd/da9063/core.h
-@@ -36,6 +36,7 @@ enum da9063_models {
- enum da9063_variant_codes {
- 	PMIC_DA9063_AD = 0x3,
- 	PMIC_DA9063_BB = 0x5,
-+	PMIC_DA9063_CA = 0x6,
- };
- 
- /* Interrupts */
--- 
-end-of-patch for PATCH V1
+Lukasz Majewski
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Samsung R&D Institute Poland (SRPOL) | Linux Platform Group
