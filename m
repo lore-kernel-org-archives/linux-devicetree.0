@@ -1,94 +1,92 @@
-From: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Subject: Re: [PATCH v6 1/2] mtd: hisilicon: add a new NAND controller driver
- for hisilicon hip04 Soc
-Date: Wed, 14 Jan 2015 20:45:05 +0800
-Message-ID: <54B664D1.6060508@hisilicon.com>
-References: <1421047734-30818-1-git-send-email-wangzhou1@hisilicon.com> <1421047734-30818-2-git-send-email-wangzhou1@hisilicon.com> <20150113040254.GK9759@ld-irv-0074>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v9 1/4] drm/i2c: tda998x: Add DT support
+	for audio
+Date: Wed, 14 Jan 2015 12:50:56 +0000
+Message-ID: <20150114125056.GU4160@sirena.org.uk>
+References: <20150112175705.GN12302@n2100.arm.linux.org.uk>
+ <1421151718.4519.24.camel@pengutronix.de>
+ <20150113122715.GP12302@n2100.arm.linux.org.uk>
+ <20150113165411.5469930d@armhf>
+ <20150113160313.GR12302@n2100.arm.linux.org.uk>
+ <20150113200252.3dbfab14@armhf>
+ <20150113192648.GU12302@n2100.arm.linux.org.uk>
+ <54B574CD.9020905@ti.com>
+ <20150113195415.GV12302@n2100.arm.linux.org.uk>
+ <1421232418.3155.31.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150113040254.GK9759@ld-irv-0074>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, caizhiyong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, yubingxu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============4847048719639612950=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1421232418.3155.31.camel@pengutronix.de>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Jean-Francois Moine <moinejf@free.fr>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Andrew Jackson <Andrew.Jackson@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Dave Airlie <airlied@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2015/1/13 12:02, Brian Norris wrote:
-> One more thing:
->=20
-> On Mon, Jan 12, 2015 at 03:28:53PM +0800, Zhou Wang wrote:
->> diff --git a/drivers/mtd/nand/hisi504_nand.c b/drivers/mtd/nand/hisi=
-504_nand.c
->> new file mode 100644
->> index 0000000..2000f21
->> --- /dev/null
->> +++ b/drivers/mtd/nand/hisi504_nand.c
-> ...
->> +static int hisi_nand_read_page_hwecc(struct mtd_info *mtd,
->> +	struct nand_chip *chip, uint8_t *buf, int oob_required, int page)
->> +{
->> +	struct hinfc_host *host =3D chip->priv;
->> +	int max_bitflips =3D 0, stat =3D 0, stat_max, status_ecc;
->=20
->     drivers/mtd/nand/hisi504_nand.c:547:34: warning: =E2=80=98stat_ma=
-x=E2=80=99 may be used uninitialized in this function [-Wmaybe-uninitia=
-lized]
->       int max_bitflips =3D 0, stat =3D 0, stat_max, status_ecc;
 
-In fact, there is no chance to run "default case" there as hisi_nfc_ecc=
-_probe
-will check this and print error.
-I will initialize stat_max with 0 to eliminate this warning.
-
->                                       ^
->=20
->> +	int stat_1, stat_2;
->> +
->> +	chip->read_buf(mtd, buf, mtd->writesize);
->> +	chip->read_buf(mtd, chip->oob_poi, mtd->oobsize);
->> +
->> +	/* errors which can not be corrected by ECC */
->> +	if (host->irq_status & HINFC504_INTS_UE) {
->> +		mtd->ecc_stats.failed++;
->> +	} else if (host->irq_status & HINFC504_INTS_CE) {
->> +		/* TODO: need add other ECC modes! */
->=20
-> You may want a 'default' case that sets stat_max to zero, then.
->=20
->> +		switch (chip->ecc.strength) {
->> +		case 1:
->> +			stat =3D hweight8(hinfc_read(host, HINFC504_ECC_STATUS)>>
->> +						HINFC504_ECC_1_BIT_SHIFT);
->> +			stat_max =3D 1;
->> +			break;
->> +		case 16:
->> +			status_ecc =3D hinfc_read(host, HINFC504_ECC_STATUS) >>
->> +					HINFC504_ECC_16_BIT_SHIFT & 0x0fff;
->> +			stat_2 =3D status_ecc & 0x3f;
->> +			stat_1 =3D status_ecc >> 6 & 0x3f;
->> +			stat =3D stat_1 + stat_2;
->> +			stat_max =3D max_t(int, stat_1, stat_2);
->> +		}
->> +		mtd->ecc_stats.corrected +=3D stat;
->> +		max_bitflips =3D max_t(int, max_bitflips, stat_max);
->> +	}
->> +	host->irq_status =3D 0;
->> +
->> +	return max_bitflips;
->> +}
->=20
-> Brian
-
-Thanks for your comment!
-Zhou Wang
->=20
-> .
->=20
+--===============4847048719639612950==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="9o1Xi4ZMQ45MudWG"
+Content-Disposition: inline
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--9o1Xi4ZMQ45MudWG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, Jan 14, 2015 at 11:46:58AM +0100, Philipp Zabel wrote:
+
+> So the question is mostly whether four I2S data pins with a single
+> shared WS/SCK input should be called "four I2S ports with shared clocks"
+> or "one I2S port with up to four data lanes". I'd lean towards the
+> latter.
+
+Yes, this is what we're doing for the Samsung CPU side controllers which
+implement this natively and seems to make sense here too - the different
+channels can't really work as separate interfaces in any practical way.
+
+> How audio2_i2s is forced to synchronize its clock output to audio1_i2s
+> is a problem their bindings will have to handle.
+
+Trying to hook up a controller that doesn't natively support this format
+to a device that uses it is definitely tricky, as well as describing the
+physical hookup we also need to worry about how things look to userspace
+- it's ideally going to want a single multi-channel audio stream.
+
+I think from a binding point of view we need a way to say "this endpoint
+on the link is constructed from these DAIs on the device side" and say
+if this is TDM or multi-data, and what's driving the clocks.
+
+--9o1Xi4ZMQ45MudWG
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJUtmYvAAoJECTWi3JdVIfQt28H/1viMMw+EK2qHbR88BLH5iLi
+9tbosp+jQxC+PTtsTI5YlUR3T/shxxV7+xA9D6wPezG2tyDghYicKvcDinxWGYnK
+7wwtbmDBsRv69WPyeLNeZtZnTb4Oox5TYIYy1EtZluc1bYmpB3w1/MuOe4OU7ZdW
+lkaOaL9pw8Bjx7ycw1rBIPbxszsOhDiQkrDkYKoKD3SlkCeSxtBAtJJG2Fas5AfS
+yu8nGIGEI6f6EzXj4ry+j8/fAgftH+SMXj1/A+rOjFRWgjns9sCd8E9Sp2K7gEsl
+wTgiBH1gecrvcQ3gnO492ZqfBvST+U2J0pzzDrOEKmLfck/2hoqLe884+yKdWgQ=
+=pZEW
+-----END PGP SIGNATURE-----
+
+--9o1Xi4ZMQ45MudWG--
+
+--===============4847048719639612950==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============4847048719639612950==--
