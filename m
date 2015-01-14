@@ -1,87 +1,74 @@
-From: Alexandre Courbot <gnurou@gmail.com>
-Subject: Re: [PATCH v4 3/4] gpio: Add find GPIO base in increasing order
-Date: Wed, 14 Jan 2015 17:17:23 +0900
-Message-ID: <CAAVeFuJkr9mFwJq0GdbLO7EgbffvD25bjBVdXAFZubq5Sz4MZQ@mail.gmail.com>
-References: <1417750722-14027-1-git-send-email-wangzhou.bry@gmail.com>
- <1417750722-14027-4-git-send-email-wangzhou.bry@gmail.com>
- <CAAVeFu+Hn1Fk7PDcc4wGHFyJurX0hsW1N1prnPs2j=taGQKrKw@mail.gmail.com> <CACRpkdZccD_FM+m3US3e40LitH4OsX-8cSS_ju+C541330PdXw@mail.gmail.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 1/5] irqchip: add dumb demultiplexer implementation
+Date: Wed, 14 Jan 2015 09:22:35 +0100
+Message-ID: <20150114092235.032dc986@bbrezillon>
+References: <1421174781-4340-1-git-send-email-boris.brezillon@free-electrons.com>
+	<1421174781-4340-2-git-send-email-boris.brezillon@free-electrons.com>
+	<CAL_JsqJ5DSo6jmAuHPDdV6pMca8BVbg5V-GZ5=2qu96_QYXMtQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZccD_FM+m3US3e40LitH4OsX-8cSS_ju+C541330PdXw@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Zhou Wang <wangzhou.bry@gmail.com>, Russell King <linux@arm.linux.org.uk>, Haojian Zhuang <haojian.zhuang@linaro.org>, Wei Xu <xuwei5@hisilicon.com>, Olof Johansson <olof@lixom.net>, Kevin Hilman <khilman@linaro.org>, Arnd Bergmann <arnd@arndb.de>, liguozhu@hisilicon.com, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alan Tull <atull@altera.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Jamie Iles <jamie@jamieiles.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, wangzhou1@hisilicon.com
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqJ5DSo6jmAuHPDdV6pMca8BVbg5V-GZ5=2qu96_QYXMtQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "Rafael J. Wysocki" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 14, 2015 at 5:13 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Wed, Dec 10, 2014 at 9:51 AM, Alexandre Courbot <gnurou@gmail.com> wrote:
->> On Fri, Dec 5, 2014 at 12:38 PM, Zhou Wang <wangzhou.bry@gmail.com> wrote:
->>> In function gpiochip_find_base, base number of a GPIO controller
->>> is found in decreasing order. ARCH_NR_GPIOS is used to define from
->>> which number we begin to search for base number of a GPIO controller.
->>>
->>> In fact, ARCH_NR_GPIOS brings us some multiplatform problems, like:
->>> http://www.spinics.net/lists/devicetree/msg60433.html
->>>
->>> This patch adds the support to find base number of a GPIO controller
->>> in increasing order. It will assign base number from 0.
->>> A new dts property called gpio-number-forward must be add to the related
->>> GPIO dts nodes if you want it works well.
->>
->> Global GPIO numbers are a Linux-only concept, so your property should
->> be named linux,gpio-number-forward.
->>
->> But even that way I don't think I like this idea. This just adds some
->> more mess to how the GPIO number space is constructed, and it is
->> already quite messy as it is. You have no guarantee over the probe
->> order of your GPIO controllers, so they may very well be probed in a
->> different order and end up with different base numbers anytime.
->
-> Yup.
->
-> The way stuff is usually forced ordered in device tree is to use
-> aliases, e.g.:
->
->         aliases {
->                 serial0 = &pb1176_serial0;
->                 serial1 = &pb1176_serial1;
->                 serial2 = &pb1176_serial2;
->                 serial3 = &pb1176_serial3;
->                 serial4 = &fpga_serial;
->         };
->
-> By getting the alias ID with of_alias_get_id(np, "serial")
-> a certain serial port is assigned to be
-> 0, 1, 2 ...
->
-> I think I could accept a tweak of this patch that will register
-> GPIOs beginning from 0 if and only if the alias mechanism is
-> used.
->
->         aliases {
->                 gpio0 = &foo_gpio0;
->                 gpio1 = &expander;
->         };
->
->
-> The actual Linux-specific integer base will *NOT* be in the
-> device tree, but if you know how many GPIOs are on each
-> controller the number space is still stable and predictable
-> beginning from 0. If one want to keep track of the Linux
-> number space one can do so with comments in the device
-> tree or something.
->
->> I know we pushed back against this kind of solution in the past, but
->> it is still more reliable than having a property that affects how the
->> kernel's base finding function works, and will offer us a way to
->> eventually put ARCH_NR_GPIOS and gpiochip_find_base() to rest (at the
->> cost of backwards-compatibility, but we just cannot do without it).
->> Linus, do you agree?
->
-> What do you think about the above?
+Hi Rob,
 
-It would definitely help with the probe order, but unfortunately not
-with the fact that GPIO bases are allocated in decreasing order
-starting from the potentially varying ARCH_NR_GPIOS. So that alone
-will not be able to ensure stable GPIO numbers.
+On Tue, 13 Jan 2015 21:26:42 -0600
+Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+
+> On Tue, Jan 13, 2015 at 12:46 PM, Boris Brezillon
+> <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> > Some interrupt controllers are multiplexing several peripheral IRQs on
+> > a single interrupt line.
+> > While this is not a problem for most IRQs (as long as all peripherals
+> > request the interrupt with IRQF_SHARED flag set), multiplexing timers and
+> > other type of peripherals will generate a WARNING (mixing IRQF_NO_SUSPEND
+> > and !IRQF_NO_SUSPEND is prohibited).
+> >
+> > Create a dumb irq demultiplexer which simply forwards interrupts to all
+> > peripherals (exactly what's happening with IRQ_SHARED) but keep a unique
+> > irq number for each peripheral, thus preventing the IRQF_NO_SUSPEND
+> > and !IRQF_NO_SUSPEND mix on a given interrupt.
+> 
+> This really seems like a work-around for how IRQF_SHARED works. It
+> seems like what is really desired is just per handler disabling.
+
+Like what I proposed here [1] ?
+
+> It is
+> fragile in that devices can deadlock the system if the drivers don't
+> disable the interrupt source before calling disable_irq.
+
+Not exactly deadlock since spurious interrupt detection is implemented,
+but yes, things won't work as expected.
+
+> But unlike
+> IRQF_SHARED, there is nothing explicit in the driver indicating it is
+> designed to work properly with a shared interrupt line.
+> 
+> I see no reason to accept this into DT either. We already can support
+> shared lines and modeling an OR gate as an interrupt controller is
+> pointless.
+
+Okay, I guess I'll let DT and irq maintainers decide what is preferable
+here (I already spent much time than I first expected to remove this
+warning in a proper way).
+
+Best Regards,
+
+Boris
+
+[1]https://lkml.org/lkml/2014/12/15/552
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
