@@ -1,75 +1,210 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] ARM: shmobile: R-Mobile: Fix DT refcount bugs in PM
- domain code
-Date: Thu, 15 Jan 2015 08:38:46 +0900
-Message-ID: <20150114233845.GB10479@verge.net.au>
-References: <1421232648-15204-1-git-send-email-geert+renesas@glider.be>
+From: Aaron Sierra <asierra@xes-inc.com>
+Subject: [PATCH 2/2 v3 RESEND] mtd: fsl_upm: Support NAND ECC DTS properties
+Date: Wed, 14 Jan 2015 17:41:49 -0600 (CST)
+Message-ID: <447095612.147126.1421278909058.JavaMail.zimbra@xes-inc.com>
+References: <1136776275.110939.1421109367310.JavaMail.zimbra@xes-inc.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1421232648-15204-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <1136776275.110939.1421109367310.JavaMail.zimbra@xes-inc.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Cc: devicetree@vger.kernel.org, linux-mtd@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 14, 2015 at 11:50:48AM +0100, Geert Uytterhoeven wrote:
-> Fix two DT refcount imbalances in the PM domain code that scans the DT
-> topology:
-> 
->   1. Add missing of_node_put() after of_find_compatible_node().
-> 
->   2. If CONFIG_OF_DYNAMIC=y:
-> 
-> 	ERROR: Bad of_node_put() on /system-controller@e6180000
-> 	<backtrace>
-> 
->      of_find_node_by_name() calls of_node_put() on its "from" parameter,
->      which must not be done on the for_each_compatible_node() iterator,
->      as it causes a zero refcount later.
->      Use of_get_child_by_name() instead to fix this.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> Fixes: d7a3a10c8391fdcd ("ARM: shmobile: R-Mobile: Add DT support for PM domains")
-> in Simon's git://git.kernel.org/pub/scm/linux/kernel/git/horms/renesas.git
-> tag renesas-dt-pm-for-v3.20
+From: Jordan Friendshuh <jfriendshuh@xes-inc.com>
 
-Thanks.
+Support the generic nand-ecc-mode, nand-ecc-strength, and
+nand-ecc-step-size device-tree properties with the Freescale UPM NAND
+driver.
 
-As the patch above is not in the ARM SoC tree yet I have decided
-to squash this patch into it.
+This patch preserves the default software ECC mode while adding the
+ability to use BCH ECC for larger NAND devices.
 
-> ---
->  arch/arm/mach-shmobile/pm-rmobile.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm/mach-shmobile/pm-rmobile.c b/arch/arm/mach-shmobile/pm-rmobile.c
-> index 07fb4ea4d8e94258..85a7fdd9823bc5a6 100644
-> --- a/arch/arm/mach-shmobile/pm-rmobile.c
-> +++ b/arch/arm/mach-shmobile/pm-rmobile.c
-> @@ -270,8 +270,10 @@ static void __init get_special_pds(void)
->  
->  	/* PM domain containing Coresight-ETM */
->  	np = of_find_compatible_node(NULL, NULL, "arm,coresight-etm3x");
-> -	if (np)
-> +	if (np) {
->  		debug_pd = of_parse_phandle(np, "power-domains", 0);
-> +		of_node_put(np);
-> +	}
->  }
->  
->  static void __init put_special_pds(void)
-> @@ -363,7 +365,7 @@ static int __init rmobile_init_pm_domains(void)
->  			continue;
->  		}
->  
-> -		pmd = of_find_node_by_name(np, "pm-domains");
-> +		pmd = of_get_child_by_name(np, "pm-domains");
->  		if (!pmd) {
->  			pr_warn("%s lacks pm-domains node\n", np->full_name);
->  			continue;
-> -- 
-> 1.9.1
-> 
+Signed-off-by: Jordan Friendshuh <jfriendshuh@xes-inc.com>
+Signed-off-by: Aaron Sierra <asierra@xes-inc.com>
+---
+v2:
+    * Now using ECC mode and strength helpers from of_mtd.h
+    * ECC mode and strength checking is more robust
+v3 (resent due to [PATCH 1/2] v2 update):
+    * Require nand-ecc-step-size for soft_bch.
+    * Simplify mode/strength/step parameter checking.
+
+ .../devicetree/bindings/mtd/fsl-upm-nand.txt       | 32 +++++++++++
+ drivers/mtd/nand/Kconfig                           |  1 +
+ drivers/mtd/nand/fsl_upm.c                         | 66 ++++++++++++++++++++--
+ 3 files changed, 94 insertions(+), 5 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/mtd/fsl-upm-nand.txt b/Documentation/devicetree/bindings/mtd/fsl-upm-nand.txt
+index fce4894..3643ee1 100644
+--- a/Documentation/devicetree/bindings/mtd/fsl-upm-nand.txt
++++ b/Documentation/devicetree/bindings/mtd/fsl-upm-nand.txt
+@@ -18,6 +18,9 @@ Optional properties:
+ - chip-delay : chip dependent delay for transferring data from array to
+ 	read registers (tR). Required if property "gpios" is not used
+ 	(R/B# pins not connected).
++- nand-ecc-mode : as defined by nand.txt ("soft" and "soft_bch", only).
++- nand-ecc-strength : as defined by nand.txt.
++- nand-ecc-step-size : as defined by nand.txt.
+ 
+ Each flash chip described may optionally contain additional sub-nodes
+ describing partitions of the address space. See partition.txt for more
+@@ -65,3 +68,32 @@ upm@3,0 {
+ 		};
+ 	};
+ };
++
++/*
++ * Micron MT29F32G08AFABA (M62B)
++ * 32 Gb (4 GiB), 2 chipselect
++ */
++upm@2,0 {
++	#address-cells = <0>;
++	#size-cells = <0>;
++	compatible = "fsl,upm-nand";
++	reg = <2 0x0 0x80000>;
++	fsl,upm-addr-line-cs-offsets = <0x0 0x10000>;
++	fsl,upm-addr-offset = <0x10>;
++	fsl,upm-cmd-offset = <0x08>;
++	fsl,upm-wait-flags = <0x1>;
++	chip-delay = <50>;
++
++	nand@0 {
++		#address-cells = <1>;
++		#size-cells = <2>;
++		nand-ecc-mode = "soft_bch";
++		nand-ecc-strength = <4>;
++		nand-ecc-step-size = <512>;
++
++		partition@0 {
++			label = "NAND filesystem";
++			reg = <0x0 0x1 0x00000000>;
++		};
++	};
++};
+diff --git a/drivers/mtd/nand/Kconfig b/drivers/mtd/nand/Kconfig
+index e5e3343..4c85daf 100644
+--- a/drivers/mtd/nand/Kconfig
++++ b/drivers/mtd/nand/Kconfig
+@@ -444,6 +444,7 @@ config MTD_NAND_FSL_UPM
+ 	tristate "Support for NAND on Freescale UPM"
+ 	depends on PPC_83xx || PPC_85xx
+ 	select FSL_LBC
++	select MTD_NAND_ECC_BCH
+ 	help
+ 	  Enables support for NAND Flash chips wired onto Freescale PowerPC
+ 	  processor localbus with User-Programmable Machine support.
+diff --git a/drivers/mtd/nand/fsl_upm.c b/drivers/mtd/nand/fsl_upm.c
+index 72755d7..053d8bf 100644
+--- a/drivers/mtd/nand/fsl_upm.c
++++ b/drivers/mtd/nand/fsl_upm.c
+@@ -18,6 +18,7 @@
+ #include <linux/mtd/nand_ecc.h>
+ #include <linux/mtd/partitions.h>
+ #include <linux/mtd/mtd.h>
++#include <linux/of_mtd.h>
+ #include <linux/of_address.h>
+ #include <linux/of_platform.h>
+ #include <linux/of_gpio.h>
+@@ -160,6 +161,11 @@ static int fun_chip_init(struct fsl_upm_nand *fun,
+ 	int ret;
+ 	struct device_node *flash_np;
+ 	struct mtd_part_parser_data ppdata;
++	int mode, strength, step_size;
++
++	flash_np = of_get_next_child(upm_np, NULL);
++	if (!flash_np)
++		return -ENODEV;
+ 
+ 	fun->chip.IO_ADDR_R = fun->io_base;
+ 	fun->chip.IO_ADDR_W = fun->io_base;
+@@ -168,7 +174,61 @@ static int fun_chip_init(struct fsl_upm_nand *fun,
+ 	fun->chip.read_byte = fun_read_byte;
+ 	fun->chip.read_buf = fun_read_buf;
+ 	fun->chip.write_buf = fun_write_buf;
+-	fun->chip.ecc.mode = NAND_ECC_SOFT;
++
++	/*
++	 * Support NAND_ECC_SOFT and NAND_ECC_SOFT_BCH, error otherwise.
++	 */
++	mode = of_get_nand_ecc_mode(flash_np);
++	strength = of_get_nand_ecc_strength(flash_np);
++	step_size = of_get_nand_ecc_step_size(flash_np);
++	if (mode < 0) {
++		dev_info(fun->dev, "ECC mode defaulting to 'soft'");
++		mode = NAND_ECC_SOFT;
++	} else if (mode != NAND_ECC_SOFT && mode != NAND_ECC_SOFT_BCH) {
++		dev_err(fun->dev, "ECC mode in device tree is unsupported");
++		ret = -EINVAL;
++		goto err;
++	}
++
++	/*
++	 * In NAND_ECC_SOFT_BCH, require strength >= 1 and step >= 1.
++	 * In NAND_ECC_SOFT:
++	 *     a. ignore strength (1 implied)
++	 *     b. step < 0, step = 256, or step = 512.
++	 */
++	if (mode == NAND_ECC_SOFT_BCH) {
++		if (strength < 1)
++			dev_err(fun->dev, "invalid nand-ecc-strength for BCH");
++
++		if (step_size < 1)
++			dev_err(fun->dev, "invalid nand-ecc-step-size for BCH");
++
++		if (strength < 1 || step_size < 1) {
++			ret = -EINVAL;
++			goto err;
++		}
++
++		fun->chip.ecc.mode = mode;
++		fun->chip.ecc.strength = strength;
++		fun->chip.ecc.size = step_size;
++	} else {
++		if (strength >= 0)
++			dev_warn(fun->dev, "soft ECC implies 1-bit strength");
++
++		if (step_size < 0) {
++			step_size = 256;
++		} else if (step_size != 256 && step_size != 512) {
++			dev_err(fun->dev,
++				"soft ECC needs 256 or 512 byte step");
++			ret = -EINVAL;
++			goto err;
++		}
++
++		fun->chip.ecc.mode = mode;
++		fun->chip.ecc.strength = 1;
++		fun->chip.ecc.size = step_size;
++	}
++
+ 	if (fun->mchip_count > 1)
+ 		fun->chip.select_chip = fun_select_chip;
+ 
+@@ -178,10 +238,6 @@ static int fun_chip_init(struct fsl_upm_nand *fun,
+ 	fun->mtd.priv = &fun->chip;
+ 	fun->mtd.owner = THIS_MODULE;
+ 
+-	flash_np = of_get_next_child(upm_np, NULL);
+-	if (!flash_np)
+-		return -ENODEV;
+-
+ 	fun->mtd.name = kasprintf(GFP_KERNEL, "0x%llx.%s", (u64)io_res->start,
+ 				  flash_np->name);
+ 	if (!fun->mtd.name) {
+-- 
+1.9.1
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
