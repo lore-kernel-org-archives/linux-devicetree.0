@@ -1,152 +1,132 @@
-From: Lukasz Majewski <l.majewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 2/9] hwmon: dts: Doc: Add DTS doc to explain how to use PWM
- FAN as a cooling device
-Date: Wed, 14 Jan 2015 14:56:32 +0100
-Message-ID: <20150114145632.3010f836@amdc2363>
-References: <1418897591-18332-1-git-send-email-l.majewski@samsung.com>
- <1418897591-18332-3-git-send-email-l.majewski@samsung.com>
- <1418899337.23532.9.camel@collabora.co.uk> <20141219163224.34796e5d@amdc2363>
- <20141219160237.GA2199@roeck-us.net> <20141219171301.1527d81e@amdc2363>
- <1420455034.15910.53.camel@collabora.co.uk>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v2 1/5] irqchip: add dumb demultiplexer implementation
+Date: Wed, 14 Jan 2015 15:03:32 +0100
+Message-ID: <20150114150332.09fecbea@bbrezillon>
+References: <1421174781-4340-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1421174781-4340-2-git-send-email-boris.brezillon@free-electrons.com>
+ <54B670EA.1010800@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1420455034.15910.53.camel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, Linux PM list <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lukasz Majewski <l.majewski-AM3owJQeAb5mR6Xm/wNWPw@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <54B670EA.1010800@atmel.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Nicolas Ferre <nicolas.ferre@atmel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sjoerd,
-
-> Hey Lukasz,
-> 
-> Blame the holiday season for my late reply ;)
-> 
-> On Fri, 2014-12-19 at 17:13 +0100, Lukasz Majewski wrote:
-> > Hi Guenter,
-> > 
-> > > On Fri, Dec 19, 2014 at 04:32:24PM +0100, Lukasz Majewski wrote:
-> > > > Hi Sjoerd,
-> > > > 
-> > > > Thanks for your feedback and sorry for a late reply.
-> > > > 
-> > > > > On Thu, 2014-12-18 at 11:13 +0100, Lukasz Majewski wrote:
-> > > > > > Several new properties to allow PWM fan working as a cooling
-> > > > > > device have been combined into this single commit.
-> > > > > > 
-> > > > > > Signed-off-by: Lukasz Majewski <l.majewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> > > > > > ---
-> > > > > >  .../devicetree/bindings/hwmon/pwm-fan.txt          | 28
-> > > > > > ++++++++++++++++++++++ 1 file changed, 28 insertions(+)
-> > > > > > 
-> > > > > > diff --git
-> > > > > > a/Documentation/devicetree/bindings/hwmon/pwm-fan.txt
-> > > > > > b/Documentation/devicetree/bindings/hwmon/pwm-fan.txt index
-> > > > > > 610757c..3877810 100644 ---
-> > > > > > a/Documentation/devicetree/bindings/hwmon/pwm-fan.txt +++
-> > > > > > b/Documentation/devicetree/bindings/hwmon/pwm-fan.txt @@
-> > > > > > -3,10 +3,38 @@ Bindings for a fan connected to the PWM
-> > > > > > lines Required properties:
-> > > > > >  - compatible	: "pwm-fan"
-> > > > > >  - pwms		: the PWM that is used to control the
-> > > > > > PWM fan +- cooling-pwm-values      : PWM duty cycle values
-> > > > > > relative to
-> > > > > > +			    cooling-max-pwm-value
-> > > > > > correspondig to
-> > > > > > +			    proper cooling states
-> > > > > > +- default-pulse-width     : Property specifying default
-> > > > > > pulse width for FAN
-> > > > > > +			    at system boot (zero to disable
-> > > > > > FAN on boot).
-> > > > > > +			    Allowed range is 0 to 255
-> > > > > 
-> > > > > The 0..255 range seems somewhat random. Would be nicer to
-> > > > > either use the approach of pwm-backlight (iotw, have the
-> > > > > range go from the first to the last entry of
-> > > > > cooling-pwm-values) 
-> > > > 
-> > > > I'm OK to change the default-pulse-width to be similar to
-> > > > "default-brightness-level" (as it is in
-> > > > Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt)
-> > > > 
-> > > > > or simply have be the duty
-> > > > > lenght in NS as entries instead of the current indirection.
-> > > > 
-> > > > I'd prefer to keep the indirection - as it is utilized in the
-> > > > current pwm-fan.c driver.
-> > > > 
-> > > FWIW, devicetree information is supposed to be implementation
-> > > independent. So this is a poor argument.
-> > 
-> > Many other pwm drivers use the indirection - e.g. mentioned
-> > pwm-backlight.
-> 
-> I don't specifically mind the indirection, i was just thinking out
-> loud whether it added value (but if it's quite common, might indeed
-> be good to keep the pattern). What i do dislike is the number of
-> levels is being set to an arbitrary levels, as that will very rarely
-> match the actual number of distinct pwm levels you 
-> 
-> One thing though, when following the pattern of the pwm-backlight
-> driver; In pwm-backlight the highest index of brightness-levels is
-> always 100% duty cycle.. On e.g. XU3 the vendor kernel never drives
-> the fan at 100% duty (maximum of 91%). So it would be nice if the dt
-> bindigns could model that e.g. by having:
-> 
-> pwm-levels = <20>; // 21 distinct pwm levels
-> valid-pwm-level = <5 15 18>; /* 5 15 and 18 are usable levels - pwm
-> will default to highest level */
-> 
-
-Could you review v2 of this patch series?
-
-http://www.spinics.net/lists/devicetree/msg63159.html
-
-> 
-> > > > Enabling pan to full RPM was the default behaviour in the
-> > > > current pwm-fan.c file.
-> > > > 
-> > > > To be honest, there is no need to enable fan to full RPM speed
-> > > > in this board for following reasons:
-> > > > 1. In Odroid the FAN is optional (stacked on top of a heat
-> > > > sink) - very often it is just enough to only have the heat sink.
-> > > > 
-> > > > 2. Odroid has thermal enabled by default and IMHO it would be
-> > > > more feasible to allow thermal to control fan from the very
-> > > > beginning.
-> > > > 
-> > > > However, I can also understand if the policy for hwmon implies a
-> > > > rule to enable by default all fans to full RPM speed.
-> > > > 
-> > > Why and how does that all suggest that the current default
-> > > behavior should be changed ?
-> > 
-> > I wanted to avoid the unpleasant sound for full speed fan when
-> > thermal is not enabled by default.
-> > 
-> > But as I said, I fully understand the policy and I would be happy to
-> > comply with it as thermal should reduce the fan speed anyway at boot
-> > time.
-> 
-> Yeah, what happens on my XU3 is that u-boot sets the pwm to 100% duty
-> and the thermal infrastructure turns it off as soon as it gets into
-> control, which works quite nicely (and keeps my sanity as that fan at
-> 100% is *loud*)...  So if you want to avoid unpleasant sounds, just
-> build with thermal :p
-> 
-> 
-
-
-
--- 
-Best regards,
-
-Lukasz Majewski
-
-Samsung R&D Institute Poland (SRPOL) | Linux Platform Group
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gV2VkLCAxNCBKYW4gMjAxNSAxNDozNjo0MiArMDEwMApOaWNvbGFzIEZlcnJlIDxuaWNvbGFz
+LmZlcnJlQGF0bWVsLmNvbT4gd3JvdGU6Cgo+IExlIDEzLzAxLzIwMTUgMTk6NDYsIEJvcmlzIEJy
+ZXppbGxvbiBhIMOpY3JpdCA6Cj4gPiBTb21lIGludGVycnVwdCBjb250cm9sbGVycyBhcmUgbXVs
+dGlwbGV4aW5nIHNldmVyYWwgcGVyaXBoZXJhbCBJUlFzIG9uCj4gPiBhIHNpbmdsZSBpbnRlcnJ1
+cHQgbGluZS4KPiA+IFdoaWxlIHRoaXMgaXMgbm90IGEgcHJvYmxlbSBmb3IgbW9zdCBJUlFzIChh
+cyBsb25nIGFzIGFsbCBwZXJpcGhlcmFscwo+ID4gcmVxdWVzdCB0aGUgaW50ZXJydXB0IHdpdGgg
+SVJRRl9TSEFSRUQgZmxhZyBzZXQpLCBtdWx0aXBsZXhpbmcgdGltZXJzIGFuZAo+ID4gb3RoZXIg
+dHlwZSBvZiBwZXJpcGhlcmFscyB3aWxsIGdlbmVyYXRlIGEgV0FSTklORyAobWl4aW5nIElSUUZf
+Tk9fU1VTUEVORAo+ID4gYW5kICFJUlFGX05PX1NVU1BFTkQgaXMgcHJvaGliaXRlZCkuCj4gPiAK
+PiA+IENyZWF0ZSBhIGR1bWIgaXJxIGRlbXVsdGlwbGV4ZXIgd2hpY2ggc2ltcGx5IGZvcndhcmRz
+IGludGVycnVwdHMgdG8gYWxsCj4gPiBwZXJpcGhlcmFscyAoZXhhY3RseSB3aGF0J3MgaGFwcGVu
+aW5nIHdpdGggSVJRX1NIQVJFRCkgYnV0IGtlZXAgYSB1bmlxdWUKPiA+IGlycSBudW1iZXIgZm9y
+IGVhY2ggcGVyaXBoZXJhbCwgdGh1cyBwcmV2ZW50aW5nIHRoZSBJUlFGX05PX1NVU1BFTkQKPiA+
+IGFuZCAhSVJRRl9OT19TVVNQRU5EIG1peCBvbiBhIGdpdmVuIGludGVycnVwdC4KPiA+IAo+ID4g
+U2lnbmVkLW9mZi1ieTogQm9yaXMgQnJlemlsbG9uIDxib3Jpcy5icmV6aWxsb25AZnJlZS1lbGVj
+dHJvbnMuY29tPgo+ID4gLS0tCj4gPiAgZHJpdmVycy9pcnFjaGlwL0tjb25maWcgICAgICAgICAg
+fCAgIDQgKysKPiA+ICBkcml2ZXJzL2lycWNoaXAvTWFrZWZpbGUgICAgICAgICB8ICAgMSArCj4g
+PiAgZHJpdmVycy9pcnFjaGlwL2lycS1kdW1iLWRlbXV4LmMgfCAgNzAgKysrKysrKysrKysrKysr
+KysrKysKPiA+ICBpbmNsdWRlL2xpbnV4L2lycS5oICAgICAgICAgICAgICB8ICA0OSArKysrKysr
+KysrKysrKwo+ID4gIGluY2x1ZGUvbGludXgvaXJxZG9tYWluLmggICAgICAgIHwgICAxICsKPiA+
+ICBrZXJuZWwvaXJxL0tjb25maWcgICAgICAgICAgICAgICB8ICAgNSArKwo+ID4gIGtlcm5lbC9p
+cnEvTWFrZWZpbGUgICAgICAgICAgICAgIHwgICAxICsKPiA+ICBrZXJuZWwvaXJxL2NoaXAuYyAg
+ICAgICAgICAgICAgICB8ICA0MSArKysrKysrKysrKysKPiA+ICBrZXJuZWwvaXJxL2R1bWItZGVt
+dXgtY2hpcC5jICAgICB8IDE0MCArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysKPiA+ICBrZXJuZWwvaXJxL2hhbmRsZS5jICAgICAgICAgICAgICB8ICAzMSArKysrKysrKy0K
+PiA+ICBrZXJuZWwvaXJxL2ludGVybmFscy5oICAgICAgICAgICB8ICAgMyArCj4gPiAgMTEgZmls
+ZXMgY2hhbmdlZCwgMzQ0IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCj4gPiAgY3JlYXRl
+IG1vZGUgMTAwNjQ0IGRyaXZlcnMvaXJxY2hpcC9pcnEtZHVtYi1kZW11eC5jCj4gPiAgY3JlYXRl
+IG1vZGUgMTAwNjQ0IGtlcm5lbC9pcnEvZHVtYi1kZW11eC1jaGlwLmMKPiA+IAo+ID4gZGlmZiAt
+LWdpdCBhL2RyaXZlcnMvaXJxY2hpcC9LY29uZmlnIGIvZHJpdmVycy9pcnFjaGlwL0tjb25maWcK
+PiA+IGluZGV4IGNjNzlkMmEuLjhhOWRmODggMTAwNjQ0Cj4gPiAtLS0gYS9kcml2ZXJzL2lycWNo
+aXAvS2NvbmZpZwo+ID4gKysrIGIvZHJpdmVycy9pcnFjaGlwL0tjb25maWcKPiA+IEBAIC03MCw2
+ICs3MCwxMCBAQCBjb25maWcgQlJDTVNUQl9MMl9JUlEKPiA+ICAJc2VsZWN0IEdFTkVSSUNfSVJR
+X0NISVAKPiA+ICAJc2VsZWN0IElSUV9ET01BSU4KPiA+ICAKPiA+ICtjb25maWcgRFVNQl9ERU1V
+WF9JUlEKPiA+ICsJYm9vbAo+ID4gKwlzZWxlY3QgRFVNQl9JUlFfREVNVVhfQ0hJUAo+ID4gKwo+
+ID4gIGNvbmZpZyBEV19BUEJfSUNUTAo+ID4gIAlib29sCj4gPiAgCXNlbGVjdCBHRU5FUklDX0lS
+UV9DSElQCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9pcnFjaGlwL01ha2VmaWxlIGIvZHJpdmVy
+cy9pcnFjaGlwL01ha2VmaWxlCj4gPiBpbmRleCA5NTE2YTMyLi43N2YzYzUxIDEwMDY0NAo+ID4g
+LS0tIGEvZHJpdmVycy9pcnFjaGlwL01ha2VmaWxlCj4gPiArKysgYi9kcml2ZXJzL2lycWNoaXAv
+TWFrZWZpbGUKPiA+IEBAIC04LDYgKzgsNyBAQCBvYmotJChDT05GSUdfQVJDSF9NVkVCVSkJCSs9
+IGlycS1hcm1hZGEtMzcwLXhwLm8KPiA+ICBvYmotJChDT05GSUdfQVJDSF9NWFMpCQkJKz0gaXJx
+LW14cy5vCj4gPiAgb2JqLSQoQ09ORklHX0FSQ0hfUzNDMjRYWCkJCSs9IGlycS1zM2MyNHh4Lm8K
+PiA+ICBvYmotJChDT05GSUdfRFdfQVBCX0lDVEwpCQkrPSBpcnEtZHctYXBiLWljdGwubwo+ID4g
+K29iai0kKENPTkZJR19EVU1CX0RFTVVYX0lSUSkJCSs9IGlycS1kdW1iLWRlbXV4Lm8KPiA+ICBv
+YmotJChDT05GSUdfTUVUQUcpCQkJKz0gaXJxLW1ldGFnLWV4dC5vCj4gPiAgb2JqLSQoQ09ORklH
+X01FVEFHX1BFUkZDT1VOVEVSX0lSUVMpCSs9IGlycS1tZXRhZy5vCj4gPiAgb2JqLSQoQ09ORklH
+X0FSQ0hfTU9YQVJUKQkJKz0gaXJxLW1veGFydC5vCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9p
+cnFjaGlwL2lycS1kdW1iLWRlbXV4LmMgYi9kcml2ZXJzL2lycWNoaXAvaXJxLWR1bWItZGVtdXgu
+Ywo+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiA+IGluZGV4IDAwMDAwMDAuLmRmYTA1Y2UKPiA+
+IC0tLSAvZGV2L251bGwKPiA+ICsrKyBiL2RyaXZlcnMvaXJxY2hpcC9pcnEtZHVtYi1kZW11eC5j
+Cj4gPiBAQCAtMCwwICsxLDcwIEBACj4gCj4gTWF5YmUgYWRkIGEgbGl0dGxlIGZpbGUgaGVhZGVy
+IGhlcmUuIEl0J3MgYWx3YXlzIGJldHRlci4KClN1cmUsIEkganVzdCBmb3Jnb3QgaXQuCgo+ID4g
+KyNpZmRlZiBDT05GSUdfRFVNQl9JUlFfREVNVVhfQ0hJUAo+ID4gKy8qKgo+ID4gKyAqCWhhbmRs
+ZV9kdW1iX2RlbXV4X2lycSAtIER1bWIgZGVtdXhlciBpcnEgaGFuZGxlIGZ1bmN0aW9uLgo+ID4g
+KyAqCUBpcnE6CXRoZSBpbnRlcnJ1cHQgbnVtYmVyCj4gPiArICoJQGRlc2M6CXRoZSBpbnRlcnJ1
+cHQgZGVzY3JpcHRpb24gc3RydWN0dXJlIGZvciB0aGlzIGlycQo+ID4gKyAqCj4gPiArICoJRHVt
+YiBkZW11eCBpbnRlcnJ1cHRzIGFyZSBzZW50IGZyb20gYSBkZW11bHRpcGxleGluZyBpbnRlcnJ1
+cHQgaGFuZGxlcgo+ID4gKyAqCXdoaWNoIGlzIG5vdCBhYmxlIHRvIGRlY2lkZSB3aGljaCBjaGls
+ZCBpbnRlcnJ1cHQgaW50ZXJydXB0IGhhbmRsZXIKPiAKPiB0eXBvOiAiaW50ZXJydXB0IGludGVy
+cnVwdCIKCkknbGwgZml4IHRoYXQuCgo+IAo+ID4gKyAqCXNob3VsZCBiZSBjYWxsZWQuCj4gPiAr
+ICoKPiA+ICsgKglOb3RlOiBUaGUgY2FsbGVyIGlzIGV4cGVjdGVkIHRvIGhhbmRsZSB0aGUgYWNr
+LCBjbGVhciwgbWFzayBhbmQKPiA+ICsgKgl1bm1hc2sgaXNzdWVzIGlmIG5lY2Vzc2FyeS4KPiA+
+ICsgKi8KClsuLi5dCgo+ID4gKwo+ID4gIC8qCj4gPiAgICogQ2FsbGVkIHVuY29uZGl0aW9uYWxs
+eSBmcm9tIGhhbmRsZV9sZXZlbF9pcnEoKSBhbmQgb25seSBmb3Igb25lc2hvdAo+ID4gICAqIGlu
+dGVycnVwdHMgZnJvbSBoYW5kbGVfZmFzdGVvaV9pcnEoKQo+ID4gZGlmZiAtLWdpdCBhL2tlcm5l
+bC9pcnEvZHVtYi1kZW11eC1jaGlwLmMgYi9rZXJuZWwvaXJxL2R1bWItZGVtdXgtY2hpcC5jCj4g
+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+ID4gaW5kZXggMDAwMDAwMC4uOGUyZGUxZAo+ID4gLS0t
+IC9kZXYvbnVsbAo+ID4gKysrIGIva2VybmVsL2lycS9kdW1iLWRlbXV4LWNoaXAuYwo+ID4gQEAg
+LTAsMCArMSwxNDAgQEAKPiA+ICsvKgo+ID4gKyAqIExpYnJhcnkgaW1wbGVtZW50aW5nIGNvbW1v
+biBkdW1iIGlycSBkZW11eCBjaGlwIGZ1bmN0aW9ucwo+ID4gKyAqCj4gPiArICogQ29weXJpZ2h0
+IChDKSAyMDE1LCBCb3JpcyBCcmV6aWxsb24KPiAKPiBMaWNlbnNlIGhlcmUsIHBsZWFzZS4KClll
+cCwgSSdsbCBhZGQgaXQuCgo+IAo+ID4gKyAqLwo+ID4gKyNpbmNsdWRlIDxsaW51eC9lcnIuaD4K
+PiA+ICsjaW5jbHVkZSA8bGludXgvaW8uaD4KPiA+ICsjaW5jbHVkZSA8bGludXgvaXJxLmg+Cj4g
+PiArI2luY2x1ZGUgPGxpbnV4L3NsYWIuaD4KPiA+ICsjaW5jbHVkZSA8bGludXgvZXhwb3J0Lmg+
+Cj4gPiArI2luY2x1ZGUgPGxpbnV4L2lycS5oPgo+ID4gKyNpbmNsdWRlIDxsaW51eC9pcnFkb21h
+aW4uaD4KPiA+ICsjaW5jbHVkZSA8bGludXgvaXJxY2hpcC9jaGFpbmVkX2lycS5oPgo+ID4gKyNp
+bmNsdWRlIDxsaW51eC9pbnRlcnJ1cHQuaD4KPiA+ICsjaW5jbHVkZSA8bGludXgva2VybmVsX3N0
+YXQuaD4KPiA+ICsjaW5jbHVkZSA8bGludXgvc3lzY29yZV9vcHMuaD4KPiA+ICsKPiA+ICsjaW5j
+bHVkZSAiaW50ZXJuYWxzLmgiCj4gPiArCj4gPiArc3RhdGljIHZvaWQgaXJxX2R1bWJfZGVtdXhf
+bWFzayhzdHJ1Y3QgaXJxX2RhdGEgKmQpCj4gPiArewo+ID4gKwlzdHJ1Y3QgaXJxX2NoaXBfZHVt
+Yl9kZW11eCAqZGVtdXggPSBpcnFfZGF0YV9nZXRfaXJxX2NoaXBfZGF0YShkKTsKPiA+ICsKPiA+
+ICsJY2xlYXJfYml0KGQtPmh3aXJxLCAmZGVtdXgtPnVubWFza2VkKTsKPiA+ICsKPiA+ICsJaWYg
+KCFkZW11eC0+dW5tYXNrZWQpCj4gPiArCQlkaXNhYmxlX2lycV9ub3N5bmMoZGVtdXgtPnNyY19p
+cnEpOwo+ID4gK30KPiA+ICsKPiA+ICtzdGF0aWMgdm9pZCBpcnFfZHVtYl9kZW11eF91bm1hc2so
+c3RydWN0IGlycV9kYXRhICpkKQo+ID4gK3sKPiA+ICsJc3RydWN0IGlycV9jaGlwX2R1bWJfZGVt
+dXggKmRlbXV4ID0gaXJxX2RhdGFfZ2V0X2lycV9jaGlwX2RhdGEoZCk7Cj4gPiArCWJvb2wgZW5h
+YmxlX3NyY19pcnEgPSAhZGVtdXgtPnVubWFza2VkOwo+IAo+IFdoeSB0aGlzIGFkZGl0aW9uYWwg
+ImJvb2wiIHVubGlrZSB0aGUgb3RoZXIgZnVuY3Rpb24gYWJvdmU/CgpCZWNhdXNlIHNldF9iaXQg
+d2lsbCBtb2RpZnkgdGhlIHVubWFza2VkIHN0YXR1cyBhbmQgd2UgbXVzdCBjaGVjayBpZiBpdApp
+cyBlcXVhbCB0byAwIChpbiBvdGhlciB0ZXJtcywgYWxsIGlycXMgYXJlIG1hc2tlZCkgYmVmb3Jl
+IG1vZGlmeWluZyBpdAppbiBvcmRlciB0byBrbm93IHdoZXRoZXIgd2Ugc2hvdWxkIGVuYWJsZSB0
+aGUgc3JjIGlycSBvciBub3QuCgo+IAo+ID4gKwo+ID4gKwlzZXRfYml0KGQtPmh3aXJxLCAmZGVt
+dXgtPnVubWFza2VkKTsKPiA+ICsKPiA+ICsJaWYgKGVuYWJsZV9zcmNfaXJxKQo+ID4gKwkJZW5h
+YmxlX2lycShkZW11eC0+c3JjX2lycSk7Cj4gPiArfQo+ID4gKwoKWy4uLl0KCj4gPiArCj4gPiAr
+LyoqCj4gPiArICogaXJxX2FsbG9jX2R1bWJfZGVtdXhfY2hpcCAtIEFsbG9jYXRlIGEgZHVtYiBk
+ZW11eCBjaGlwCj4gPiArICogQHNyY19pcnE6CQlpcnEgZmVlZGluZyB0aGUgZHVtYiBkZW11eCBj
+aGlwCj4gPiArICogQGRkX2ZsYWdzOgkJaXJxX2R1bWJfZGVtdXhfZmxhZ3MgZmxhZ3MKPiA+ICsg
+KiBAdmFsaWRfaXJxczoJCUJpdG1hc2sgcmVwcmVzZW50aW5nIHZhbGlkIGlycXMKPiA+ICsgKiBA
+Y2xyX2ZsYWdzOgkJaXJxX2ZsYWdzIHRvIGNsZWFyIHdoZW4gbWFwcGluZyBhbiBpbnRlcnJ1cHQK
+PiA+ICsgKiBAc2V0X2ZsYWdzOgkJaXJxX2ZsYWdzIHRvIHNldCB3aGVuIG1hcHBpbmcgYW4gaW50
+ZXJydXB0Cj4gCj4gTml0LiBub3Qgc2FtZSBvcmRlciBhcyB0aGUgZnVuY3Rpb24gcGFyYW1ldGVy
+cy4uLgoKSSdsbCBmaXggdGhhdC4KClRoYW5rcywKCkJvcmlzCi0tIApCb3JpcyBCcmV6aWxsb24s
+IEZyZWUgRWxlY3Ryb25zCkVtYmVkZGVkIExpbnV4IGFuZCBLZXJuZWwgZW5naW5lZXJpbmcKaHR0
+cDovL2ZyZWUtZWxlY3Ryb25zLmNvbQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtl
+cm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
+YW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
