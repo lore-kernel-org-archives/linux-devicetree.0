@@ -1,29 +1,37 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH v2 16/16] ARM: dts: Fix I2S1,
- I2S2 compatible for exynos4 SoCs
-Date: Wed, 14 Jan 2015 12:57:51 +0100
-Message-ID: <54B659BF.4000803@samsung.com>
-References: <1418997336-17777-1-git-send-email-s.nawrocki@samsung.com>
- <1418997336-17777-17-git-send-email-s.nawrocki@samsung.com>
- <20150106181517.GQ2634@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <20150106181517.GQ2634@sirena.org.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: kgene@kernel.org, alsa-devel@alsa-project.org, padma.v@samsung.com, drake@endlessm.com, sbkim73@samsung.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v2 1/6] PM / Domains: R-Mobile SYSC: Document SH-Mobile AG5 (sh73a0) binding
+Date: Wed, 14 Jan 2015 13:11:19 +0100
+Message-ID: <1421237484-16847-2-git-send-email-geert+renesas@glider.be>
+References: <1421237484-16847-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1421237484-16847-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: linux-sh@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-On 06/01/15 19:15, Mark Brown wrote:
-> On Fri, Dec 19, 2014 at 02:55:36PM +0100, Sylwester Nawrocki wrote:
->> > I2S1, I2S2 on Exynos4 SoC series have limited functionality compared
->> > to I2S0, "samsung,s3c6410-i2s" compatible should be used for them.
->> > 
->> > Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
->> > ---
->
-> This should probably go to stable as a bug fix too.
+SH-Mobile AG5 (sh73a0) can be handled by the existing bindings.
 
-Sounds like a reasonable thing to do, I will Cc stable in next iteration.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+v2:
+  - No changes
+---
+ Documentation/devicetree/bindings/power/renesas,sysc-rmobile.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/power/renesas,sysc-rmobile.txt b/Documentation/devicetree/bindings/power/renesas,sysc-rmobile.txt
+index 2460476808e9333e..cc3b1f0a9b1a2b75 100644
+--- a/Documentation/devicetree/bindings/power/renesas,sysc-rmobile.txt
++++ b/Documentation/devicetree/bindings/power/renesas,sysc-rmobile.txt
+@@ -12,6 +12,7 @@ Required properties:
+ 	      fallback.
+ 	      Examples with soctypes are:
+ 		- "renesas,sysc-r8a7740" (R-Mobile A1)
++		- "renesas,sysc-sh73a0" (SH-Mobile AG5)
+ - reg: Two address start and address range blocks for the device:
+          - The first block refers to the normally accessible registers,
+          - the second block refers to the registers protected by the HPB
+-- 
+1.9.1
+
