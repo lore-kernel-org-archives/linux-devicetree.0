@@ -1,232 +1,357 @@
-From: Baruch Siach <baruch@tkos.co.il>
-Subject: [PATCH v3 3/4] ARM: digicolor: add minimal device tree description
-Date: Wed, 14 Jan 2015 10:40:32 +0200
-Message-ID: <474d0849bb30ab4ec323fa4c1bc67b30b31d3884.1421219953.git.baruch@tkos.co.il>
-References: <cover.1421219953.git.baruch@tkos.co.il>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1421219953.git.baruch@tkos.co.il>
-Sender: linux-kernel-owner@vger.kernel.org
-To: arm@kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Baruch Siach <baruch@tkos.co.il>
+From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH 1/2] ARM: imx6sx-sdb: change default board as reva board
+Date: Wed, 14 Jan 2015 15:36:37 +0800
+Message-ID: <1421220998-3491-2-git-send-email-peter.chen@freescale.com>
+References: <1421220998-3491-1-git-send-email-peter.chen@freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1421220998-3491-1-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-cx92755.dtsi describes CX92755 on chip peripherals. conexant_equinox.dts
-describes the Equinox evaluation board for the CX92755 SoC.
+The imx6sx sdb board has two revisions, the current mainline one
+is reva which is mainly for internal use. In this commit, we
+rename imx6sx-sdb.dts to imx6sx-sdb.dtsi, and move the reva dedicated
+contents to imx6sx-sdb-reva.dts.
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Baruch Siach <baruch@tkos.co.il>
+Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
- arch/arm/boot/dts/Makefile             |   1 +
- arch/arm/boot/dts/conexant_equinox.dts |  74 +++++++++++++++++++++++
- arch/arm/boot/dts/cx92755.dtsi         | 107 +++++++++++++++++++++++++++++++++
- 3 files changed, 182 insertions(+)
- create mode 100644 arch/arm/boot/dts/conexant_equinox.dts
- create mode 100644 arch/arm/boot/dts/cx92755.dtsi
+ arch/arm/boot/dts/imx6sx-sdb-reva.dts              | 158 +++++++++++++++++++++
+ .../boot/dts/{imx6sx-sdb.dts => imx6sx-sdb.dtsi}   | 131 -----------------
+ 2 files changed, 158 insertions(+), 131 deletions(-)
+ create mode 100644 arch/arm/boot/dts/imx6sx-sdb-reva.dts
+ rename arch/arm/boot/dts/{imx6sx-sdb.dts => imx6sx-sdb.dtsi} (83%)
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 91bd5bd62857..fbeb65eaddda 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -75,6 +75,7 @@ dtb-$(CONFIG_ARCH_BRCMSTB) += \
- 	bcm7445-bcm97445svmb.dtb
- dtb-$(CONFIG_ARCH_DAVINCI) += da850-enbw-cmc.dtb \
- 	da850-evm.dtb
-+dtb-$(CONFIG_ARCH_DIGICOLOR) += conexant_equinox.dtb
- dtb-$(CONFIG_ARCH_EFM32) += efm32gg-dk3750.dtb
- dtb-$(CONFIG_ARCH_EXYNOS) += exynos3250-monk.dtb \
- 	exynos3250-rinato.dtb \
-diff --git a/arch/arm/boot/dts/conexant_equinox.dts b/arch/arm/boot/dts/conexant_equinox.dts
+diff --git a/arch/arm/boot/dts/imx6sx-sdb-reva.dts b/arch/arm/boot/dts/imx6sx-sdb-reva.dts
 new file mode 100644
-index 000000000000..f33bf5635d47
+index 0000000..e7a8c34
 --- /dev/null
-+++ b/arch/arm/boot/dts/conexant_equinox.dts
-@@ -0,0 +1,74 @@
++++ b/arch/arm/boot/dts/imx6sx-sdb-reva.dts
+@@ -0,0 +1,158 @@
 +/*
-+ * Device Tree file for the Conexant Equinox CX92755 EVK
++ * Copyright (C) 2014-2015 Freescale Semiconductor, Inc.
 + *
-+ * Author: Baruch Siach <baruch@tkos.co.il>
-+ *
-+ *  Copyright (C) 2014 Paradox Innovation Ltd.
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
 + */
 +
-+/dts-v1/;
-+
-+#include "cx92755.dtsi"
++#include "imx6sx-sdb.dtsi"
 +
 +/ {
-+	model = "Conexant Equinox CX92755 EVK";
-+	compatible = "cnxt,equinox", "cnxt,cx92755";
-+
-+	aliases {
-+		serial0 = &uart0;
-+		serial1 = &uart1;
-+		serial2 = &uart2;
-+	};
-+
-+	memory@0 {
-+		reg = <0 0x8000000>;
-+		device_type = "memory";
-+	};
-+
-+	chosen {
-+		bootargs = "console=ttyS0,115200";
-+		stdout-path = &uart0;
-+	};
++	model = "Freescale i.MX6 SoloX SDB RevA Board";
 +};
 +
-+&uart0 {
++&cpu0 {
++	operating-points = <
++		/* kHz    uV */
++		996000  1250000
++		792000  1175000
++		396000  1075000
++	>;
++	fsl,soc-operating-points = <
++		/* ARM kHz  SOC uV */
++		996000      1175000
++		792000      1175000
++		396000      1175000
++	>;
++};
++
++&i2c1 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c1>;
 +	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/cx92755.dtsi b/arch/arm/boot/dts/cx92755.dtsi
-new file mode 100644
-index 000000000000..984cca90ef9a
---- /dev/null
-+++ b/arch/arm/boot/dts/cx92755.dtsi
-@@ -0,0 +1,107 @@
-+/*
-+ * Device Tree Include file for the Conexant Digicolor CX92755 SoC
-+ *
-+ * Author: Baruch Siach <baruch@tkos.co.il>
-+ *
-+ *  Copyright (C) 2014 Paradox Innovation Ltd.
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
 +
-+#include "skeleton.dtsi"
++	pmic: pfuze100@08 {
++		compatible = "fsl,pfuze100";
++		reg = <0x08>;
 +
-+/ {
-+	compatible = "cnxt,cx92755";
++		regulators {
++			sw1a_reg: sw1ab {
++				regulator-min-microvolt = <300000>;
++				regulator-max-microvolt = <1875000>;
++				regulator-boot-on;
++				regulator-always-on;
++				regulator-ramp-delay = <6250>;
++			};
 +
-+	interrupt-parent = <&intc>;
++			sw1c_reg: sw1c {
++				regulator-min-microvolt = <300000>;
++				regulator-max-microvolt = <1875000>;
++				regulator-boot-on;
++				regulator-always-on;
++				regulator-ramp-delay = <6250>;
++			};
 +
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a8";
-+			reg = <0x0>;
++			sw2_reg: sw2 {
++				regulator-min-microvolt = <800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			sw3a_reg: sw3a {
++				regulator-min-microvolt = <400000>;
++				regulator-max-microvolt = <1975000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			sw3b_reg: sw3b {
++				regulator-min-microvolt = <400000>;
++				regulator-max-microvolt = <1975000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			sw4_reg: sw4 {
++				regulator-min-microvolt = <800000>;
++				regulator-max-microvolt = <3300000>;
++			};
++
++			swbst_reg: swbst {
++				regulator-min-microvolt = <5000000>;
++				regulator-max-microvolt = <5150000>;
++			};
++
++			snvs_reg: vsnvs {
++				regulator-min-microvolt = <1000000>;
++				regulator-max-microvolt = <3000000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			vref_reg: vrefddr {
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			vgen1_reg: vgen1 {
++				regulator-min-microvolt = <800000>;
++				regulator-max-microvolt = <1550000>;
++				regulator-always-on;
++			};
++
++			vgen2_reg: vgen2 {
++				regulator-min-microvolt = <800000>;
++				regulator-max-microvolt = <1550000>;
++			};
++
++			vgen3_reg: vgen3 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++
++			vgen4_reg: vgen4 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++
++			vgen5_reg: vgen5 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++
++			vgen6_reg: vgen6 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
 +		};
 +	};
++};
 +
-+	main_clk: main_clk {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency  = <200000000>;
++&qspi2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_qspi2>;
++	status = "okay";
++
++	flash0: s25fl128s@0 {
++		reg = <0>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "spansion,s25fl128s";
++		spi-max-frequency = <66000000>;
 +	};
 +
-+	intc: intc@f0000000 {
-+		compatible = "cnxt,cx92755-ic";
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+		reg = <0xf0000000 0x1000>;
-+	};
-+
-+	timer@f0000fc0 {
-+		compatible = "cnxt,cx92755-timer";
-+		reg = <0xf0000fc0 0x40>;
-+		interrupts = <19>, <31>, <34>, <35>, <52>, <53>, <54>, <55>;
-+		clocks = <&main_clk>;
-+	};
-+
-+	uart0: uart@f0000740 {
-+		compatible = "cnxt,cx92755-usart";
-+		reg = <0xf0000740 0x20>;
-+		clocks = <&main_clk>;
-+		interrupts = <44>;
-+		status = "disabled";
-+	};
-+
-+	uart1: uart@f0000760 {
-+		compatible = "cnxt,cx92755-usart";
-+		reg = <0xf0000760 0x20>;
-+		clocks = <&main_clk>;
-+		interrupts = <45>;
-+		status = "disabled";
-+	};
-+
-+	uart2: uart@f0000780 {
-+		compatible = "cnxt,cx92755-usart";
-+		reg = <0xf0000780 0x20>;
-+		clocks = <&main_clk>;
-+		interrupts = <46>;
-+		status = "disabled";
++	flash1: s25fl128s@1 {
++		reg = <1>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "spansion,s25fl128s";
++		spi-max-frequency = <66000000>;
 +	};
 +};
+diff --git a/arch/arm/boot/dts/imx6sx-sdb.dts b/arch/arm/boot/dts/imx6sx-sdb.dtsi
+similarity index 83%
+rename from arch/arm/boot/dts/imx6sx-sdb.dts
+rename to arch/arm/boot/dts/imx6sx-sdb.dtsi
+index cdffe84..7b02aa7 100644
+--- a/arch/arm/boot/dts/imx6sx-sdb.dts
++++ b/arch/arm/boot/dts/imx6sx-sdb.dtsi
+@@ -13,7 +13,6 @@
+ #include "imx6sx.dtsi"
+ 
+ / {
+-	model = "Freescale i.MX6 SoloX SDB Board";
+ 	compatible = "fsl,imx6sx-sdb", "fsl,imx6sx";
+ 
+ 	chosen {
+@@ -169,114 +168,6 @@
+ 	status = "okay";
+ };
+ 
+-&i2c1 {
+-        clock-frequency = <100000>;
+-        pinctrl-names = "default";
+-        pinctrl-0 = <&pinctrl_i2c1>;
+-        status = "okay";
+-
+-	pmic: pfuze100@08 {
+-		compatible = "fsl,pfuze100";
+-		reg = <0x08>;
+-
+-		regulators {
+-			sw1a_reg: sw1ab {
+-				regulator-min-microvolt = <300000>;
+-				regulator-max-microvolt = <1875000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-				regulator-ramp-delay = <6250>;
+-			};
+-
+-			sw1c_reg: sw1c {
+-				regulator-min-microvolt = <300000>;
+-				regulator-max-microvolt = <1875000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-				regulator-ramp-delay = <6250>;
+-			};
+-
+-			sw2_reg: sw2 {
+-				regulator-min-microvolt = <800000>;
+-				regulator-max-microvolt = <3300000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-			};
+-
+-			sw3a_reg: sw3a {
+-				regulator-min-microvolt = <400000>;
+-				regulator-max-microvolt = <1975000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-			};
+-
+-			sw3b_reg: sw3b {
+-				regulator-min-microvolt = <400000>;
+-				regulator-max-microvolt = <1975000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-			};
+-
+-			sw4_reg: sw4 {
+-				regulator-min-microvolt = <800000>;
+-				regulator-max-microvolt = <3300000>;
+-			};
+-
+-			swbst_reg: swbst {
+-				regulator-min-microvolt = <5000000>;
+-				regulator-max-microvolt = <5150000>;
+-			};
+-
+-			snvs_reg: vsnvs {
+-				regulator-min-microvolt = <1000000>;
+-				regulator-max-microvolt = <3000000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-			};
+-
+-			vref_reg: vrefddr {
+-				regulator-boot-on;
+-				regulator-always-on;
+-			};
+-
+-			vgen1_reg: vgen1 {
+-				regulator-min-microvolt = <800000>;
+-				regulator-max-microvolt = <1550000>;
+-				regulator-always-on;
+-			};
+-
+-			vgen2_reg: vgen2 {
+-				regulator-min-microvolt = <800000>;
+-				regulator-max-microvolt = <1550000>;
+-			};
+-
+-			vgen3_reg: vgen3 {
+-				regulator-min-microvolt = <1800000>;
+-				regulator-max-microvolt = <3300000>;
+-				regulator-always-on;
+-			};
+-
+-			vgen4_reg: vgen4 {
+-				regulator-min-microvolt = <1800000>;
+-				regulator-max-microvolt = <3300000>;
+-				regulator-always-on;
+-			};
+-
+-			vgen5_reg: vgen5 {
+-				regulator-min-microvolt = <1800000>;
+-				regulator-max-microvolt = <3300000>;
+-				regulator-always-on;
+-			};
+-
+-			vgen6_reg: vgen6 {
+-				regulator-min-microvolt = <1800000>;
+-				regulator-max-microvolt = <3300000>;
+-				regulator-always-on;
+-			};
+-		};
+-	};
+-};
+-
+ &i2c4 {
+         clock-frequency = <100000>;
+         pinctrl-names = "default";
+@@ -340,28 +231,6 @@
+ 	status = "okay";
+ };
+ 
+-&qspi2 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&pinctrl_qspi2>;
+-	status = "okay";
+-
+-	flash0: s25fl128s@0 {
+-		reg = <0>;
+-		#address-cells = <1>;
+-		#size-cells = <1>;
+-		compatible = "spansion,s25fl128s";
+-		spi-max-frequency = <66000000>;
+-	};
+-
+-	flash1: s25fl128s@1 {
+-		reg = <1>;
+-		#address-cells = <1>;
+-		#size-cells = <1>;
+-		compatible = "spansion,s25fl128s";
+-		spi-max-frequency = <66000000>;
+-	};
+-};
+-
+ &ssi2 {
+ 	status = "okay";
+ };
 -- 
-2.1.4
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
