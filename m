@@ -1,109 +1,42 @@
-From: Jean-Francois Moine <moinejf@free.fr>
-Subject: Re: [PATCH v9 1/4] drm/i2c: tda998x: Add DT support for audio
-Date: Wed, 14 Jan 2015 08:55:01 +0100
-Message-ID: <20150114085501.677dc4d2@armhf>
-References: <20150112140456.GI12302@n2100.arm.linux.org.uk>
- <20150112181341.4a53ea24@armhf>
- <20150112175705.GN12302@n2100.arm.linux.org.uk>
- <1421151718.4519.24.camel@pengutronix.de>
- <20150113122715.GP12302@n2100.arm.linux.org.uk>
- <20150113165411.5469930d@armhf>
- <20150113160313.GR12302@n2100.arm.linux.org.uk>
- <20150113200252.3dbfab14@armhf>
- <20150113192648.GU12302@n2100.arm.linux.org.uk>
- <54B574CD.9020905@ti.com>
- <20150113195415.GV12302@n2100.arm.linux.org.uk>
+From: Joe Perches <joe@perches.com>
+Subject: Re: [PATCH net-next v13 3/3] net: hisilicon: new hip04 ethernet
+ driver
+Date: Wed, 14 Jan 2015 00:06:22 -0800
+Message-ID: <1421222782.2847.1.camel@perches.com>
+References: <1421217254-12008-1-git-send-email-dingtianhong@huawei.com>
+	 <1421217254-12008-4-git-send-email-dingtianhong@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20150113195415.GV12302@n2100.arm.linux.org.uk>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Andrew Jackson <Andrew.Jackson@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>, Mark Brown <broonie@kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1421217254-12008-4-git-send-email-dingtianhong@huawei.com>
+Sender: netdev-owner@vger.kernel.org
+To: Ding Tianhong <dingtianhong@huawei.com>
+Cc: arnd@arndb.de, robh+dt@kernel.org, davem@davemloft.net, grant.likely@linaro.org, agraf@suse.de, sergei.shtylyov@cogentembedded.com, linux-arm-kernel@lists.infradead.org, eric.dumazet@gmail.com, xuwei5@hisilicon.com, zhangfei.gao@linaro.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux@arm.linux.org.uk
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCAxMyBKYW4gMjAxNSAxOTo1NDoxNSArMDAwMApSdXNzZWxsIEtpbmcgLSBBUk0gTGlu
-dXggPGxpbnV4QGFybS5saW51eC5vcmcudWs+IHdyb3RlOgoKPiBPbiBUdWUsIEphbiAxMywgMjAx
-NSBhdCAwOTo0MTowMVBNICswMjAwLCBKeXJpIFNhcmhhIHdyb3RlOgo+ID4gT24gMDEvMTMvMjAx
-NSAwOToyNiBQTSwgUnVzc2VsbCBLaW5nIC0gQVJNIExpbnV4IHdyb3RlOgo+ID4gPlNDTEs6IF9+
-X35ffl9+X35ffl9+X35ffl9+X35ffl9+X35ffl9+X35ffl9+X35ffl9+X35ffl9+X35ffl9+X35f
-fl9+X35ffl8KPiA+ID4gICBXUzogX19+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19ffgo+ID4gPkkyUzE6IGxsbW0uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4ubGxtbS4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi5sbG0KPiA+
-ID5JMlMyOiBsbG1tLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLmxsbW0uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4ubGxtCj4gPiA+STJTMzogbGxtbS4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi5sbG1tLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLmxsbQo+ID4gPkkyUzQ6IGxsbW0u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4ubGxtbS4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li5sbG0KPiA+ID4KPiA+ID5Tbywgd2hhdCBJJ20gc2F5aW5nIGlzIHRoYXQgaXQgaXNfaW1wb3Nz
-aWJsZV8gIHRvIGRyaXZlIHRoZSBUREE5OTh4IHVzaW5nCj4gPiA+bXVsdGlwbGUgSTJTIHN0cmVh
-bXMgd2hpY2ggYXJlIG5vdCBwcm9kdWNlZCBieSB0aGUgc2FtZSBJMlMgYmxvY2suCj4gPiAKPiA+
-IFRoaXMgaXMgYmVzaWRlcyB0aGUgcG9pbnQsIGJ1dCBpdCBpcyBwb3NzaWJsZSB0aGF0IG9uZSBv
-ZiB0aGUgbXVsdGlwbGUgSTJTCj4gPiBibG9ja3MgaXMgdGhlIGJpdC1jbG9jayBhbmQgZnJhbWUt
-Y2xvY2sgbWFzdGVyIHRvIHRoZSBpMnMgYnVzIGFuZCB0aGUgb3RoZXJzCj4gPiBhcmUgc2xhdmVz
-IHRvIGl0IChiYW5naW5nIHRoZWlyIGJpdHMgYWNjb3JkaW5nIHRvIFNDTEsgYW5kIFdTIG9mIHRo
-ZSBJMlMKPiA+IG1hc3RlcikuIEhvd2V2ZXIsIGluIHRoaXMgc2l0dWF0aW9uIHRoZXJlIHJlYWxs
-eSBpcyBvbmx5IG9uZSBpMnMgYnVzIHdpdGgKPiA+IG11bHRpcGxlIGRhdGEgcGlucy4KPiA+IAo+
-ID4gSnVzdCBteSAwLjAy4oKsIHRvIHRoaXMgZGlzY3Vzc2lvbi4KPiAKPiBSaWdodCwgdGhhdCdz
-IGFib3V0IHRoZSBvbmx5IHdheSBpdCBjb3VsZCB3b3JrLgo+IAo+IFRvIHJlcHJlc2VudCB0aGF0
-IGluIERULCBJIHdvdWxkIGltYWdpbmUgd2UnZCBuZWVkIHNvbWV0aGluZyBsaWtlIHRoaXM6Cj4g
-Cj4gCSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+IAkjc2l6ZS1jZWxscyA9IDwwPjsKPiAJLi4uCj4g
-ICAgICAgICBwb3J0QDEgeyAgICAgICAgICAgICAgICAgICAgICAgIC8qIEFQMSwyID0gSTJTICov
-Cj4gCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiAJCSNzaXplLWNlbGxzID0gPDA+Owo+ICAgICAg
-ICAgICAgICAgICBwb3J0LXR5cGUgPSAiaTJzIjsKPiAgICAgICAgICAgICAgICAgcmVnID0gPDB4
-MDE+OwkJLyogV1MgKi8KPiAgICAgICAgICAgICAgICAgdGRhOTk4eF9pMnMxOiBlbmRwb2ludEAy
-IHsKPiAJCQlyZWcgPSA8MHgwMj47CS8qIEFQMSAqLwo+ICAgICAgICAgICAgICAgICAgICAgICAg
-IHJlbW90ZS1lbmRwb2ludCA9IDwmYXVkaW8xX2kycz47Cj4gICAgICAgICAgICAgICAgIH07Cj4g
-ICAgICAgICAgICAgICAgIHRkYTk5OHhfaTJzMjogZW5kcG9pbnRANCB7Cj4gCQkJcmVnID0gPDB4
-MDQ+OwkvKiBBUDIgKi8KPiAgICAgICAgICAgICAgICAgICAgICAgICByZW1vdGUtZW5kcG9pbnQg
-PSA8JmF1ZGlvMl9pMnM+Owo+ICAgICAgICAgICAgICAgICB9Owo+ICAgICAgICAgfTsKPiAKPiB3
-aGVyZSBhdWRpbzFfaTJzIGlzIG9wZXJhdGluZyBpbiBtYXN0ZXIgbW9kZSwgYW5kIGF1ZGlvMl9p
-MnMgaXMKPiBvcGVyYXRpbmcgaW4gc2xhdmUgbW9kZSBmb3IgYm90aCBXUyBhbmQgU0NMSy4KPiAK
-PiBJZiB3ZSBjYW4gYWdyZWUgb24gdGhhdCwgdGhlbiBJJ20gaGFwcHkgd2l0aCB0aGUgcHJvcG9z
-ZWQgYmluZGluZy4KPiAoUmVtZW1iZXIgdGhhdCAjYWRkcmVzcy1jZWxscyBhbmQgI3NpemUtY2Vs
-bHMgYXJlIHJlcXVpcmVkIGluIHRoZQo+IHBhcmVudCB3aGVyZSB3ZSBoYXZlIHJlZz0gaW4gdGhl
-IGNoaWxkLikKCiNhZGRyZXNzLWNlbGxzIGFuZCAjc2l6ZS1jZWxscyBtYXkgYmUgZGVmaW5lZCBp
-biBhbnkgb2YgdGhlIHVwcGVyCnBhcmVudCwgc28sIGFzIGl0IGlzIGRlZmluZWQgaW4gdGhlIGRl
-dmljZSwgaXQgaXMgbm90IG5lZWRlZCBpbiB0aGUKcG9ydCAoc2VlIG9mX25fYWRkcl9jZWxscyBp
-biBkcml2ZXJzL29mL2Jhc2UuYykuCgpXZWxsLCBJIGFtIGEgYml0IGxvc3QgYmV0d2VlbiAob25s
-eSBvbmUgc291cmNlIC8gbWFueSBjaGFubmVscyAtIEkyUwpidXNzZXMpIGFuZCAobWFueSBzb3Vy
-Y2VzIC8gb25lIEkycyBidXMhKS4KCkFueXdheSwgSSBkb24ndCB1bmRlcnN0YW5kIHlvdXIgZXhh
-bXBsZS4KSSdkIGV4cGVjdCB0aGF0IGEgcG9ydCB3b3VsZCBiZSBhIERBSS4KCklmIHllcywgd2hl
-biBwbGF5aW5nIGlzIGFjdGl2ZSwgYm90aCBlbmRwb2ludHMgcmVjZWl2ZSBhbiBhdWRpbyBzdHJl
-YW0KZnJvbSB0aGUgcmVtb3RlIGF1ZGlvIGRldmljZXMsIGFuZCB0aGUgQVAgcmVnaXN0ZXIgaXMg
-YWx3YXlzIHNldCB0bwoweDA3ICg9IDB4MDEgfCAweDAyIHwgMHgwNCkuClRoZW4sIGl0IHdvdWxk
-IGhhdmUgYmVlbiBzaW1wbGVyIHRvIGhhdmU6CgogCSNhZGRyZXNzLWNlbGxzID0gPDE+OwogCSNz
-aXplLWNlbGxzID0gPDA+OwogCS4uLgogICAgICAgICBwb3J0QDcgeyAgICAgICAgICAgICAgICAg
-ICAgICAgIC8qIEFQMSwyID0gSTJTICovCiAgICAgICAgICAgICAgICAgcG9ydC10eXBlID0gImky
-cyI7CiAgICAgICAgICAgICAgICAgcmVnID0gPDB4MDc+OwkJLyogV1MgKyBBUDEgKyBBUDIgKi8K
-ICAgICAgICAgICAgICAgICB0ZGE5OTh4X2kyczE6IGVuZHBvaW50QDEgewogICAgICAgICAgICAg
-ICAgICAgICAgICAgcmVtb3RlLWVuZHBvaW50ID0gPCZhdWRpbzFfaTJzPjsKICAgICAgICAgICAg
-ICAgICB9OwogICAgICAgICAgICAgICAgIHRkYTk5OHhfaTJzMjogZW5kcG9pbnRAMiB7CiAgICAg
-ICAgICAgICAgICAgICAgICAgICByZW1vdGUtZW5kcG9pbnQgPSA8JmF1ZGlvMl9pMnM+OwogICAg
-ICAgICAgICAgICAgIH07CiAgICAgICAgIH07CgpJZiBubywgdGhlIHR3byBEQUlzIG11c3QgYmUg
-Y3JlYXRlZCBmcm9tIHRoZSBlbmRwb2ludHMsIHBlcm1pdHRpbmcKc3RyZWFtaW5nIG9uIGkyczEg
-YWxvbmUsIGkyczIgYWxvbmUgb3IgYm90aCBpMnMxK2kyczIgYXQgdGhlIHNhbWUgdGltZS4KVGhl
-biwgaXQgd291bGQgaGF2ZSBiZWVuIHNpbXBsZXIgdG8gZGVmaW5lIHRoZSBEQUlzIGZyb20gdGhl
-IHBvcnRzOgoKCSNhZGRyZXNzLWNlbGxzID0gPDE+OwogCSNzaXplLWNlbGxzID0gPDA+OwogCS4u
-LgogICAgICAgICBwb3J0QDMgeyAgICAgICAgICAgICAgICAgICAgICAgIC8qIEFQMSA9IEkyUyAq
-LwogICAgICAgICAgICAgICAgIHBvcnQtdHlwZSA9ICJpMnMiOwogICAgICAgICAgICAgICAgIHJl
-ZyA9IDwweDAzPjsJCS8qIFdTICsgQVAxICovCiAgICAgICAgICAgICAgICAgdGRhOTk4eF9pMnMx
-OiBlbmRwb2ludCB7CiAgICAgICAgICAgICAgICAgICAgICAgICByZW1vdGUtZW5kcG9pbnQgPSA8
-JmF1ZGlvMV9pMnM+OwogICAgICAgICAgICAgICAgIH07CiAgICAgICAgIH07CiAgICAgICAgIHBv
-cnRANSB7ICAgICAgICAgICAgICAgICAgICAgICAgLyogQVAyID0gSTJTICovCiAgICAgICAgICAg
-ICAgICAgcG9ydC10eXBlID0gImkycyI7CiAgICAgICAgICAgICAgICAgcmVnID0gPDB4MDU+OwkJ
-LyogV1MgKyBBUDIgKi8KICAgICAgICAgICAgICAgICB0ZGE5OTh4X2kyczE6IGVuZHBvaW50IHsK
-ICAgICAgICAgICAgICAgICAgICAgICAgIHJlbW90ZS1lbmRwb2ludCA9IDwmYXVkaW8xX2kycz47
-CiAgICAgICAgICAgICAgICAgfTsKCX07CgotLSAKS2VuIGFyIGMnaGVudGHDsQl8CSAgICAgICoq
-IEJyZWl6aCBoYSBMaW51eCBhdGF2ISAqKgpKZWYJCXwJCWh0dHA6Ly9tb2luZWpmLmZyZWUuZnIv
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZl
-bCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Wed, 2015-01-14 at 14:34 +0800, Ding Tianhong wrote:
+> Support Hisilicon hip04 ethernet driver, including 100M / 1000M controller.
+> The controller has no tx done interrupt, reclaim xmitted buffer in the poll.
+
+Single comment:
+
+> diff --git a/drivers/net/ethernet/hisilicon/hip04_eth.c b/drivers/net/ethernet/hisilicon/hip04_eth.c
+[]
+> +static int hip04_rx_poll(struct napi_struct *napi, int budget)
+> +{
+[]
+> +	while (cnt && !last) {
+> +		buf = priv->rx_buf[priv->rx_head];
+> +		skb = build_skb(buf, priv->rx_buf_size);
+> +		if (unlikely(!skb))
+> +			net_dbg_ratelimited("build_skb failed\n");
+> +
+> +		dma_unmap_single(&ndev->dev, priv->rx_phys[priv->rx_head],
+> +				 RX_BUF_SIZE, DMA_FROM_DEVICE);
+> +		priv->rx_phys[priv->rx_head] = 0;
+> +
+> +		desc = (struct rx_desc *)skb->data;
+
+Perhaps if (!skb) is possible, there shouldn't be
+a dereference of that known null here.
