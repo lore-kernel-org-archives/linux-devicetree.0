@@ -1,78 +1,109 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-	<u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH v3 2/3] i2c: iproc: Add Broadcom iProc I2C Driver
-Date: Wed, 14 Jan 2015 08:51:37 +0100
-Message-ID: <20150114075137.GL22880@pengutronix.de>
-References: <rjui@broadcom.com>
- <1418183832-24793-1-git-send-email-rjui@broadcom.com>
- <1418183832-24793-3-git-send-email-rjui@broadcom.com>
- <20150113225012.GK22880@pengutronix.de>
- <54B5D0F9.8030902@broadcom.com>
+From: Jean-Francois Moine <moinejf@free.fr>
+Subject: Re: [PATCH v9 1/4] drm/i2c: tda998x: Add DT support for audio
+Date: Wed, 14 Jan 2015 08:55:01 +0100
+Message-ID: <20150114085501.677dc4d2@armhf>
+References: <20150112140456.GI12302@n2100.arm.linux.org.uk>
+ <20150112181341.4a53ea24@armhf>
+ <20150112175705.GN12302@n2100.arm.linux.org.uk>
+ <1421151718.4519.24.camel@pengutronix.de>
+ <20150113122715.GP12302@n2100.arm.linux.org.uk>
+ <20150113165411.5469930d@armhf>
+ <20150113160313.GR12302@n2100.arm.linux.org.uk>
+ <20150113200252.3dbfab14@armhf>
+ <20150113192648.GU12302@n2100.arm.linux.org.uk>
+ <54B574CD.9020905@ti.com>
+ <20150113195415.GV12302@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <54B5D0F9.8030902@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ray Jui <rjui@broadcom.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Scott Branden <sbranden@broadcom.com>, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20150113195415.GV12302@n2100.arm.linux.org.uk>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Andrew Jackson <Andrew.Jackson@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>, Mark Brown <broonie@kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-
-On Tue, Jan 13, 2015 at 06:14:17PM -0800, Ray Jui wrote:
-> >> +	irq =3D platform_get_irq(pdev, 0);
-> >> +	if (irq < 0) {
-> > irq =3D=3D 0 should be handled as error, too.
-> >=20
-> Ah. I thought zero is a valid global interrupt number, and I see othe=
-r
-> drivers checking against < 0 as well. Is my understanding incorrect?
-These are wrong, too. 0 should never be a valid interrupt number. There
-are some exceptions but mostly for historic reasons. The right handling
-is used for example in drivers/i2c/busses/i2c-efm32.c.
-
-> >> +		dev_err(dev->device, "no irq resource\n");
-> >> +		return irq;
-> >> +	}
-> [...]
-> >> +static int bcm_iproc_i2c_remove(struct platform_device *pdev)
-> >> +{
-> >> +	struct bcm_iproc_i2c_dev *dev =3D platform_get_drvdata(pdev);
-> >> +
-> >> +	i2c_del_adapter(&dev->adapter);
-> >> +	bcm_iproc_i2c_disable(dev);
-> > I think you have a problem here if bcm_iproc_i2c_remove is called w=
-hile
-> > an irq is still being serviced. I'm not sure how to prevent this
-> > properly for a shared interrupt.
-> >=20
-> Can I grab i2c_lock_adapter to ensure the bus is locked (so there's n=
-o
-> outstanding transactions or IRQs by the time we remove the adapter)? =
-But
-> I see no I2C bus driver does this in their remove function...
-The problem I pointed out is the reason for some driver authors not to
-use devm_request_irq. If you use plain request_irq and the matching
-free_irq in the .remove callback you can be sure that the irq isn't
-running any more as soon as free_irq returns.
-
-BTW, if you use vim, you can add
-
-	set cinoptions=3D(,:
-	if has("autocmd")
-		filetype plugin indent on
-	endif
-
-to your .vimrc. Then while typing vim does the indention right and
-consistent, and with the =3D command you can reindent.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
-    |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
+T24gVHVlLCAxMyBKYW4gMjAxNSAxOTo1NDoxNSArMDAwMApSdXNzZWxsIEtpbmcgLSBBUk0gTGlu
+dXggPGxpbnV4QGFybS5saW51eC5vcmcudWs+IHdyb3RlOgoKPiBPbiBUdWUsIEphbiAxMywgMjAx
+NSBhdCAwOTo0MTowMVBNICswMjAwLCBKeXJpIFNhcmhhIHdyb3RlOgo+ID4gT24gMDEvMTMvMjAx
+NSAwOToyNiBQTSwgUnVzc2VsbCBLaW5nIC0gQVJNIExpbnV4IHdyb3RlOgo+ID4gPlNDTEs6IF9+
+X35ffl9+X35ffl9+X35ffl9+X35ffl9+X35ffl9+X35ffl9+X35ffl9+X35ffl9+X35ffl9+X35f
+fl9+X35ffl8KPiA+ID4gICBXUzogX19+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19ffgo+ID4gPkkyUzE6IGxsbW0uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4ubGxtbS4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi5sbG0KPiA+
+ID5JMlMyOiBsbG1tLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLmxsbW0uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4ubGxtCj4gPiA+STJTMzogbGxtbS4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi5sbG1tLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLmxsbQo+ID4gPkkyUzQ6IGxsbW0u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4ubGxtbS4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li5sbG0KPiA+ID4KPiA+ID5Tbywgd2hhdCBJJ20gc2F5aW5nIGlzIHRoYXQgaXQgaXNfaW1wb3Nz
+aWJsZV8gIHRvIGRyaXZlIHRoZSBUREE5OTh4IHVzaW5nCj4gPiA+bXVsdGlwbGUgSTJTIHN0cmVh
+bXMgd2hpY2ggYXJlIG5vdCBwcm9kdWNlZCBieSB0aGUgc2FtZSBJMlMgYmxvY2suCj4gPiAKPiA+
+IFRoaXMgaXMgYmVzaWRlcyB0aGUgcG9pbnQsIGJ1dCBpdCBpcyBwb3NzaWJsZSB0aGF0IG9uZSBv
+ZiB0aGUgbXVsdGlwbGUgSTJTCj4gPiBibG9ja3MgaXMgdGhlIGJpdC1jbG9jayBhbmQgZnJhbWUt
+Y2xvY2sgbWFzdGVyIHRvIHRoZSBpMnMgYnVzIGFuZCB0aGUgb3RoZXJzCj4gPiBhcmUgc2xhdmVz
+IHRvIGl0IChiYW5naW5nIHRoZWlyIGJpdHMgYWNjb3JkaW5nIHRvIFNDTEsgYW5kIFdTIG9mIHRo
+ZSBJMlMKPiA+IG1hc3RlcikuIEhvd2V2ZXIsIGluIHRoaXMgc2l0dWF0aW9uIHRoZXJlIHJlYWxs
+eSBpcyBvbmx5IG9uZSBpMnMgYnVzIHdpdGgKPiA+IG11bHRpcGxlIGRhdGEgcGlucy4KPiA+IAo+
+ID4gSnVzdCBteSAwLjAy4oKsIHRvIHRoaXMgZGlzY3Vzc2lvbi4KPiAKPiBSaWdodCwgdGhhdCdz
+IGFib3V0IHRoZSBvbmx5IHdheSBpdCBjb3VsZCB3b3JrLgo+IAo+IFRvIHJlcHJlc2VudCB0aGF0
+IGluIERULCBJIHdvdWxkIGltYWdpbmUgd2UnZCBuZWVkIHNvbWV0aGluZyBsaWtlIHRoaXM6Cj4g
+Cj4gCSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+IAkjc2l6ZS1jZWxscyA9IDwwPjsKPiAJLi4uCj4g
+ICAgICAgICBwb3J0QDEgeyAgICAgICAgICAgICAgICAgICAgICAgIC8qIEFQMSwyID0gSTJTICov
+Cj4gCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiAJCSNzaXplLWNlbGxzID0gPDA+Owo+ICAgICAg
+ICAgICAgICAgICBwb3J0LXR5cGUgPSAiaTJzIjsKPiAgICAgICAgICAgICAgICAgcmVnID0gPDB4
+MDE+OwkJLyogV1MgKi8KPiAgICAgICAgICAgICAgICAgdGRhOTk4eF9pMnMxOiBlbmRwb2ludEAy
+IHsKPiAJCQlyZWcgPSA8MHgwMj47CS8qIEFQMSAqLwo+ICAgICAgICAgICAgICAgICAgICAgICAg
+IHJlbW90ZS1lbmRwb2ludCA9IDwmYXVkaW8xX2kycz47Cj4gICAgICAgICAgICAgICAgIH07Cj4g
+ICAgICAgICAgICAgICAgIHRkYTk5OHhfaTJzMjogZW5kcG9pbnRANCB7Cj4gCQkJcmVnID0gPDB4
+MDQ+OwkvKiBBUDIgKi8KPiAgICAgICAgICAgICAgICAgICAgICAgICByZW1vdGUtZW5kcG9pbnQg
+PSA8JmF1ZGlvMl9pMnM+Owo+ICAgICAgICAgICAgICAgICB9Owo+ICAgICAgICAgfTsKPiAKPiB3
+aGVyZSBhdWRpbzFfaTJzIGlzIG9wZXJhdGluZyBpbiBtYXN0ZXIgbW9kZSwgYW5kIGF1ZGlvMl9p
+MnMgaXMKPiBvcGVyYXRpbmcgaW4gc2xhdmUgbW9kZSBmb3IgYm90aCBXUyBhbmQgU0NMSy4KPiAK
+PiBJZiB3ZSBjYW4gYWdyZWUgb24gdGhhdCwgdGhlbiBJJ20gaGFwcHkgd2l0aCB0aGUgcHJvcG9z
+ZWQgYmluZGluZy4KPiAoUmVtZW1iZXIgdGhhdCAjYWRkcmVzcy1jZWxscyBhbmQgI3NpemUtY2Vs
+bHMgYXJlIHJlcXVpcmVkIGluIHRoZQo+IHBhcmVudCB3aGVyZSB3ZSBoYXZlIHJlZz0gaW4gdGhl
+IGNoaWxkLikKCiNhZGRyZXNzLWNlbGxzIGFuZCAjc2l6ZS1jZWxscyBtYXkgYmUgZGVmaW5lZCBp
+biBhbnkgb2YgdGhlIHVwcGVyCnBhcmVudCwgc28sIGFzIGl0IGlzIGRlZmluZWQgaW4gdGhlIGRl
+dmljZSwgaXQgaXMgbm90IG5lZWRlZCBpbiB0aGUKcG9ydCAoc2VlIG9mX25fYWRkcl9jZWxscyBp
+biBkcml2ZXJzL29mL2Jhc2UuYykuCgpXZWxsLCBJIGFtIGEgYml0IGxvc3QgYmV0d2VlbiAob25s
+eSBvbmUgc291cmNlIC8gbWFueSBjaGFubmVscyAtIEkyUwpidXNzZXMpIGFuZCAobWFueSBzb3Vy
+Y2VzIC8gb25lIEkycyBidXMhKS4KCkFueXdheSwgSSBkb24ndCB1bmRlcnN0YW5kIHlvdXIgZXhh
+bXBsZS4KSSdkIGV4cGVjdCB0aGF0IGEgcG9ydCB3b3VsZCBiZSBhIERBSS4KCklmIHllcywgd2hl
+biBwbGF5aW5nIGlzIGFjdGl2ZSwgYm90aCBlbmRwb2ludHMgcmVjZWl2ZSBhbiBhdWRpbyBzdHJl
+YW0KZnJvbSB0aGUgcmVtb3RlIGF1ZGlvIGRldmljZXMsIGFuZCB0aGUgQVAgcmVnaXN0ZXIgaXMg
+YWx3YXlzIHNldCB0bwoweDA3ICg9IDB4MDEgfCAweDAyIHwgMHgwNCkuClRoZW4sIGl0IHdvdWxk
+IGhhdmUgYmVlbiBzaW1wbGVyIHRvIGhhdmU6CgogCSNhZGRyZXNzLWNlbGxzID0gPDE+OwogCSNz
+aXplLWNlbGxzID0gPDA+OwogCS4uLgogICAgICAgICBwb3J0QDcgeyAgICAgICAgICAgICAgICAg
+ICAgICAgIC8qIEFQMSwyID0gSTJTICovCiAgICAgICAgICAgICAgICAgcG9ydC10eXBlID0gImky
+cyI7CiAgICAgICAgICAgICAgICAgcmVnID0gPDB4MDc+OwkJLyogV1MgKyBBUDEgKyBBUDIgKi8K
+ICAgICAgICAgICAgICAgICB0ZGE5OTh4X2kyczE6IGVuZHBvaW50QDEgewogICAgICAgICAgICAg
+ICAgICAgICAgICAgcmVtb3RlLWVuZHBvaW50ID0gPCZhdWRpbzFfaTJzPjsKICAgICAgICAgICAg
+ICAgICB9OwogICAgICAgICAgICAgICAgIHRkYTk5OHhfaTJzMjogZW5kcG9pbnRAMiB7CiAgICAg
+ICAgICAgICAgICAgICAgICAgICByZW1vdGUtZW5kcG9pbnQgPSA8JmF1ZGlvMl9pMnM+OwogICAg
+ICAgICAgICAgICAgIH07CiAgICAgICAgIH07CgpJZiBubywgdGhlIHR3byBEQUlzIG11c3QgYmUg
+Y3JlYXRlZCBmcm9tIHRoZSBlbmRwb2ludHMsIHBlcm1pdHRpbmcKc3RyZWFtaW5nIG9uIGkyczEg
+YWxvbmUsIGkyczIgYWxvbmUgb3IgYm90aCBpMnMxK2kyczIgYXQgdGhlIHNhbWUgdGltZS4KVGhl
+biwgaXQgd291bGQgaGF2ZSBiZWVuIHNpbXBsZXIgdG8gZGVmaW5lIHRoZSBEQUlzIGZyb20gdGhl
+IHBvcnRzOgoKCSNhZGRyZXNzLWNlbGxzID0gPDE+OwogCSNzaXplLWNlbGxzID0gPDA+OwogCS4u
+LgogICAgICAgICBwb3J0QDMgeyAgICAgICAgICAgICAgICAgICAgICAgIC8qIEFQMSA9IEkyUyAq
+LwogICAgICAgICAgICAgICAgIHBvcnQtdHlwZSA9ICJpMnMiOwogICAgICAgICAgICAgICAgIHJl
+ZyA9IDwweDAzPjsJCS8qIFdTICsgQVAxICovCiAgICAgICAgICAgICAgICAgdGRhOTk4eF9pMnMx
+OiBlbmRwb2ludCB7CiAgICAgICAgICAgICAgICAgICAgICAgICByZW1vdGUtZW5kcG9pbnQgPSA8
+JmF1ZGlvMV9pMnM+OwogICAgICAgICAgICAgICAgIH07CiAgICAgICAgIH07CiAgICAgICAgIHBv
+cnRANSB7ICAgICAgICAgICAgICAgICAgICAgICAgLyogQVAyID0gSTJTICovCiAgICAgICAgICAg
+ICAgICAgcG9ydC10eXBlID0gImkycyI7CiAgICAgICAgICAgICAgICAgcmVnID0gPDB4MDU+OwkJ
+LyogV1MgKyBBUDIgKi8KICAgICAgICAgICAgICAgICB0ZGE5OTh4X2kyczE6IGVuZHBvaW50IHsK
+ICAgICAgICAgICAgICAgICAgICAgICAgIHJlbW90ZS1lbmRwb2ludCA9IDwmYXVkaW8xX2kycz47
+CiAgICAgICAgICAgICAgICAgfTsKCX07CgotLSAKS2VuIGFyIGMnaGVudGHDsQl8CSAgICAgICoq
+IEJyZWl6aCBoYSBMaW51eCBhdGF2ISAqKgpKZWYJCXwJCWh0dHA6Ly9tb2luZWpmLmZyZWUuZnIv
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZl
+bCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
