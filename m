@@ -1,691 +1,251 @@
-From: Eric Dumazet <eric.dumazet@gmail.com>
-Subject: Re: [PATCH net-next v13 3/3] net: hisilicon: new hip04 ethernet
- driver
-Date: Wed, 14 Jan 2015 08:34:06 -0800
-Message-ID: <1421253246.11734.17.camel@edumazet-glaptop2.roam.corp.google.com>
-References: <1421217254-12008-1-git-send-email-dingtianhong@huawei.com>
-	 <1421217254-12008-4-git-send-email-dingtianhong@huawei.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH 3/3] usb: dwc3: add a quirk for device disconnection
+ issue in Synopsis dwc3 core
+Date: Wed, 14 Jan 2015 11:02:44 -0600
+Message-ID: <20150114170244.GD16533@saruman>
+References: <1418695828-605-4-git-send-email-Sneeker.Yeh@tw.fujitsu.com>
+ <20141222153730.GA12815@saruman>
+ <CAJ1gpc3jVpz=5ME4+wCJDW5NKihvB4xYzwi0co=UuPtG9Ubmjg@mail.gmail.com>
+ <CAJ1gpc3-Wjtm54WOhO6RXjZft9BMngzyYC0-S-XnTacV-qKgMg@mail.gmail.com>
+ <20141229160641.GD29379@saruman>
+ <CAJ1gpc0Uu4vS2iA_o_W5NaE_QBWDYFZJio7yKvhpaR5f=qWcGA@mail.gmail.com>
+ <20150105170921.GH19336@saruman>
+ <CAJ1gpc3RZnqizhiasrwS8uy1H_wQAi_T0mPcS8LAK4FhmBRJ6A@mail.gmail.com>
+ <20150112172032.GD6525@saruman>
+ <CAJ1gpc0ZQva0u=e=SpBdhhRrTXdj_b3hv3oP=jyNue=1sF8EbA@mail.gmail.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1421217254-12008-4-git-send-email-dingtianhong@huawei.com>
-Sender: netdev-owner@vger.kernel.org
-To: Ding Tianhong <dingtianhong@huawei.com>
-Cc: arnd@arndb.de, robh+dt@kernel.org, davem@davemloft.net, grant.likely@linaro.org, agraf@suse.de, sergei.shtylyov@cogentembedded.com, linux-arm-kernel@lists.infradead.org, xuwei5@hisilicon.com, zhangfei.gao@linaro.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux@arm.linux.org.uk
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Zljh9u/ceMLi+8mf"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAJ1gpc0ZQva0u=e=SpBdhhRrTXdj_b3hv3oP=jyNue=1sF8EbA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sneeker Yeh <sneeker.yeh@gmail.com>
+Cc: Felipe Balbi <balbi@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Grant Likely <grant.likely@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Arnd Bergmann <arnd@arndb.de>, Paul Bolle <pebolle@tiscali.nl>, Hans de Goede <hdegoede@redhat.com>, Thomas Pugliese <thomas.pugliese@gmail.com>, David Mosberger <davidm@egauge.net>, Peter Griffin <peter.griffin@linaro.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Andrew Bresticker <abrestic@chromium.org>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2015-01-14 at 14:34 +0800, Ding Tianhong wrote:
-> Support Hisilicon hip04 ethernet driver, including 100M / 1000M controller.
-> The controller has no tx done interrupt, reclaim xmitted buffer in the poll.
-> 
-> v13: Fix the problem of alignment parameters for function and checkpatch warming.
-> 
-> v12: According Alex's suggestion, modify the changelog and add MODULE_DEVICE_TABLE
->      for hip04 ethernet.
-> 
-> v11: Add ethtool support for tx coalecse getting and setting, the xmit_more
->      is not supported for this patch, but I think it could work for hip04,
->      will support it later after some tests for performance better.
-> 
->      Here are some performance test results by ping and iperf(add tx_coalesce_frames/users),
->      it looks that the performance and latency is more better by tx_coalesce_frames/usecs.
-> 
->      - Before:
->      $ ping 192.168.1.1 ...
->      === 192.168.1.1 ping statistics ===
->      24 packets transmitted, 24 received, 0% packet loss, time 22999ms
->      rtt min/avg/max/mdev = 0.180/0.202/0.403/0.043 ms
-> 
->      $ iperf -c 192.168.1.1 ...
->      [ ID] Interval       Transfer     Bandwidth
->      [  3]  0.0- 1.0 sec   115 MBytes   945 Mbits/sec
-> 
->      - After:
->      $ ping 192.168.1.1 ...
->      === 192.168.1.1 ping statistics ===
->      24 packets transmitted, 24 received, 0% packet loss, time 22999ms
->      rtt min/avg/max/mdev = 0.178/0.190/0.380/0.041 ms
-> 
->      $ iperf -c 192.168.1.1 ...
->      [ ID] Interval       Transfer     Bandwidth
->      [  3]  0.0- 1.0 sec   115 MBytes   965 Mbits/sec
-> 
-> v10: According David Miller and Arnd Bergmann's suggestion, add some modification
->      for v9 version
->      - drop the workqueue
->      - batch cleanup based on tx_coalesce_frames/usecs for better throughput
->      - use a reasonable default tx timeout (200us, could be shorted
->        based on measurements) with a range timer
->      - fix napi poll function return value
->      - use a lockless queue for cleanup
-> 
-> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Ding Tianhong <dingtianhong@huawei.com>
-> ---
->  drivers/net/ethernet/hisilicon/Makefile    |   2 +-
->  drivers/net/ethernet/hisilicon/hip04_eth.c | 969 +++++++++++++++++++++++++++++
->  2 files changed, 970 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/net/ethernet/hisilicon/hip04_eth.c
-> 
-> diff --git a/drivers/net/ethernet/hisilicon/Makefile b/drivers/net/ethernet/hisilicon/Makefile
-> index 40115a7..6c14540 100644
-> --- a/drivers/net/ethernet/hisilicon/Makefile
-> +++ b/drivers/net/ethernet/hisilicon/Makefile
-> @@ -3,4 +3,4 @@
->  #
->  
->  obj-$(CONFIG_HIX5HD2_GMAC) += hix5hd2_gmac.o
-> -obj-$(CONFIG_HIP04_ETH) += hip04_mdio.o
-> +obj-$(CONFIG_HIP04_ETH) += hip04_mdio.o hip04_eth.o
-> diff --git a/drivers/net/ethernet/hisilicon/hip04_eth.c b/drivers/net/ethernet/hisilicon/hip04_eth.c
-> new file mode 100644
-> index 0000000..525214e
-> --- /dev/null
-> +++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
-> @@ -0,0 +1,969 @@
-> +
-> +/* Copyright (c) 2014 Linaro Ltd.
-> + * Copyright (c) 2014 Hisilicon Limited.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/etherdevice.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/ktime.h>
-> +#include <linux/of_address.h>
-> +#include <linux/phy.h>
-> +#include <linux/of_mdio.h>
-> +#include <linux/of_net.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/regmap.h>
-> +
-> +#define PPE_CFG_RX_ADDR			0x100
-> +#define PPE_CFG_POOL_GRP		0x300
-> +#define PPE_CFG_RX_BUF_SIZE		0x400
-> +#define PPE_CFG_RX_FIFO_SIZE		0x500
-> +#define PPE_CURR_BUF_CNT		0xa200
-> +
-> +#define GE_DUPLEX_TYPE			0x08
-> +#define GE_MAX_FRM_SIZE_REG		0x3c
-> +#define GE_PORT_MODE			0x40
-> +#define GE_PORT_EN			0x44
-> +#define GE_SHORT_RUNTS_THR_REG		0x50
-> +#define GE_TX_LOCAL_PAGE_REG		0x5c
-> +#define GE_TRANSMIT_CONTROL_REG		0x60
-> +#define GE_CF_CRC_STRIP_REG		0x1b0
-> +#define GE_MODE_CHANGE_REG		0x1b4
-> +#define GE_RECV_CONTROL_REG		0x1e0
-> +#define GE_STATION_MAC_ADDRESS		0x210
-> +#define PPE_CFG_CPU_ADD_ADDR		0x580
-> +#define PPE_CFG_MAX_FRAME_LEN_REG	0x408
-> +#define PPE_CFG_BUS_CTRL_REG		0x424
-> +#define PPE_CFG_RX_CTRL_REG		0x428
-> +#define PPE_CFG_RX_PKT_MODE_REG		0x438
-> +#define PPE_CFG_QOS_VMID_GEN		0x500
-> +#define PPE_CFG_RX_PKT_INT		0x538
-> +#define PPE_INTEN			0x600
-> +#define PPE_INTSTS			0x608
-> +#define PPE_RINT			0x604
-> +#define PPE_CFG_STS_MODE		0x700
-> +#define PPE_HIS_RX_PKT_CNT		0x804
-> +
-> +/* REG_INTERRUPT */
-> +#define RCV_INT				BIT(10)
-> +#define RCV_NOBUF			BIT(8)
-> +#define RCV_DROP			BIT(7)
-> +#define TX_DROP				BIT(6)
-> +#define DEF_INT_ERR			(RCV_NOBUF | RCV_DROP | TX_DROP)
-> +#define DEF_INT_MASK			(RCV_INT | DEF_INT_ERR)
-> +
-> +/* TX descriptor config */
-> +#define TX_FREE_MEM			BIT(0)
-> +#define TX_READ_ALLOC_L3		BIT(1)
-> +#define TX_FINISH_CACHE_INV		BIT(2)
-> +#define TX_CLEAR_WB			BIT(4)
-> +#define TX_L3_CHECKSUM			BIT(5)
-> +#define TX_LOOP_BACK			BIT(11)
-> +
-> +/* RX error */
-> +#define RX_PKT_DROP			BIT(0)
-> +#define RX_L2_ERR			BIT(1)
-> +#define RX_PKT_ERR			(RX_PKT_DROP | RX_L2_ERR)
-> +
-> +#define SGMII_SPEED_1000		0x08
-> +#define SGMII_SPEED_100			0x07
-> +#define SGMII_SPEED_10			0x06
-> +#define MII_SPEED_100			0x01
-> +#define MII_SPEED_10			0x00
-> +
-> +#define GE_DUPLEX_FULL			BIT(0)
-> +#define GE_DUPLEX_HALF			0x00
-> +#define GE_MODE_CHANGE_EN		BIT(0)
-> +
-> +#define GE_TX_AUTO_NEG			BIT(5)
-> +#define GE_TX_ADD_CRC			BIT(6)
-> +#define GE_TX_SHORT_PAD_THROUGH		BIT(7)
-> +
-> +#define GE_RX_STRIP_CRC			BIT(0)
-> +#define GE_RX_STRIP_PAD			BIT(3)
-> +#define GE_RX_PAD_EN			BIT(4)
-> +
-> +#define GE_AUTO_NEG_CTL			BIT(0)
-> +
-> +#define GE_RX_INT_THRESHOLD		BIT(6)
-> +#define GE_RX_TIMEOUT			0x04
-> +
-> +#define GE_RX_PORT_EN			BIT(1)
-> +#define GE_TX_PORT_EN			BIT(2)
-> +
-> +#define PPE_CFG_STS_RX_PKT_CNT_RC	BIT(12)
-> +
-> +#define PPE_CFG_RX_PKT_ALIGN		BIT(18)
-> +#define PPE_CFG_QOS_VMID_MODE		BIT(14)
-> +#define PPE_CFG_QOS_VMID_GRP_SHIFT	8
-> +
-> +#define PPE_CFG_RX_FIFO_FSFU		BIT(11)
-> +#define PPE_CFG_RX_DEPTH_SHIFT		16
-> +#define PPE_CFG_RX_START_SHIFT		0
-> +#define PPE_CFG_RX_CTRL_ALIGN_SHIFT	11
-> +
-> +#define PPE_CFG_BUS_LOCAL_REL		BIT(14)
-> +#define PPE_CFG_BUS_BIG_ENDIEN		BIT(0)
-> +
-> +#define RX_DESC_NUM			128
-> +#define TX_DESC_NUM			256
-> +#define TX_NEXT(N)			(((N) + 1) & (TX_DESC_NUM-1))
-> +#define RX_NEXT(N)			(((N) + 1) & (RX_DESC_NUM-1))
-> +
-> +#define GMAC_PPE_RX_PKT_MAX_LEN		379
-> +#define GMAC_MAX_PKT_LEN		1516
-> +#define GMAC_MIN_PKT_LEN		31
-> +#define RX_BUF_SIZE			1600
-> +#define RESET_TIMEOUT			1000
-> +#define TX_TIMEOUT			(6 * HZ)
-> +
-> +#define DRV_NAME			"hip04-ether"
-> +#define DRV_VERSION			"v1.0"
-> +
-> +#define HIP04_MAX_TX_COALESCE_USECS	200
-> +#define HIP04_MIN_TX_COALESCE_USECS	100
-> +#define HIP04_MAX_TX_COALESCE_FRAMES	200
-> +#define HIP04_MIN_TX_COALESCE_FRAMES	100
-> +
-> +struct tx_desc {
-> +	u32 send_addr;
+--Zljh9u/ceMLi+8mf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-	__be32 send_adddr; ?
+Hi,
 
-> +	u32 send_size;
+On Wed, Jan 14, 2015 at 03:08:43PM +0800, Sneeker Yeh wrote:
+> Hi Felipe:
+>=20
+> thanks for suggestion,
+>=20
+> 2015-01-13 1:20 GMT+08:00 Felipe Balbi <balbi@ti.com>:
+>=20
+> > Hi,
+> >
+> > On Sun, Jan 11, 2015 at 11:19:55PM +0800, Sneeker Yeh wrote:
+> > > > > > enable the quirk only for you. Isn't there a better way of
+> > enabling the
+> > > > > > quirk based off of revision detection couple with a look on
+> > GHWPARAMS*
+> > > > > > registers ?
+> > > > > >
+> > > > > > What's tricking me is this claim that only config-free PHYs wou=
+ld
+> > be
+> > > > > > affected, why ?
+> > > > > >
+> > > > >
+> > > > > i'm still struggling now to try to get more information about thi=
+s.
+> > > > > some security policy inside Fujitsu make me unable to access full
+> > > > > information of this errata today.
+> > > > >
+> > > > > Someday after i get enough information,
+> > > > > i shall take your suggestion here that seems better to incur quirk
+> > > > > dynamically via GHWPARAMS,
+> > > > > and then send it here again.
+> > > >
+> > > > ok, hopefully you'll find a way ;-)
+> > > >
+> > > > I got some update information here finally~
+> > > in case i express unclearly i also put a pdf:
+> > > https://drive.google.com/file/d/0B18MmcvvKjNNbDF6eEdHSzZCazA/view
+> > >
+> > > This issue is defined by a two-way race at disconnect, between
+> > > 1) class driver interrupt endpoint resheduling attempts if the ISR ga=
+ve
+> > an
+> > > ep error event due to device detach (it would try 3 times)
+> > > 2) Disconnect interrupt on PORTSC_CSC, which is cleared by hub thread
+> > > asynchronously
+> > > 3) The hardware IP was configured in silicon with
+> > >        - DWC_USB3_SUSPEND_ON_DISCONNECT_EN=3D1 (this is an IP configu=
+ration
+> >
+> > yeah, aparently this is another configuration which is not exposed on
+> > HWPARAMS registers. Paul, can you confirm for us ? I couldn't find it on
+> > Databook on any of the HWPARAMS registers.
+> >
+> > > port whose state cannot be checked from software)
+> > >        - Synopsys IP version is < 3.00a
+> >
+> > heh, so pretty much everybody :-)
+> >
+>=20
+> yeah, and I'm really lucky to encounter this @@
+>=20
+>=20
+> >
+> > >        The IP will auto-suspend itself on device detach with some
+> > > phy-specific interval after CSC is cleared by 2)
+> > >
+> > > If 2) and 3) complete before 1), the interrupts it expects will not be
+> > > generated by the autosuspended IP, leading to a deadlock. Even later
+> > > disconnection procedure would detect that corresponding urb is still
+> > > in-progress and issue a ep stop command, auto-suspended IP still won't
+> > > respond to that command.
+> > >
+> > > this defect would result in this when device detached:
+> > > -------------------
+> > > [   99.603544] usb 4-1: USB disconnect, device number 2
+> > > [  104.615254] xhci-hcd xhci-hcd.0.auto: xHCI host not responding to =
+stop
+> > > endpoint command.
+> > > [  104.623362] xhci-hcd xhci-hcd.0.auto: Assuming host is dying, halt=
+ing
+> > > host.
+> > > [  104.653261] xhci-hcd xhci-hcd.0.auto: Host not halted after 16000
+> > > microseconds.
+> > > [  104.660584] xhci-hcd xhci-hcd.0.auto: Non-responsive xHCI host is =
+not
+> > > halting.
+> > > [  104.667817] xhci-hcd xhci-hcd.0.auto: Completing active URBs anywa=
+y.
+> > > [  104.674198] xhci-hcd xhci-hcd.0.auto: HC died; cleaning up
+> > > --------------------
+> > > As a result, when device detached, we desired to postpone "PORTCSC cl=
+ear"
+> > > behind "disable slot". it's found that all executed ep command relate=
+d to
+> > > disconnetion, are executed before "disable slot".
+> >
+> > Now this is all great information and they should all be part of your
+> > commit log and probably a big comment should be added to code as well.
+> >
+>=20
+> I see, thanks.
+>=20
+>=20
+> >
+> > Thanks for going after all these details, now let's figure out a way to
+> > pass dwc3 revision to xhci, or maybe we pass just a flag for the quirk,
+> > something like:
+> >
+> >         if (dwc->revision < 3.00a && dwc->has_suspend_on_disconnect)
+> >                 xhci_pdata.delay_portcsc_clear =3D true;
+> >
+> > or something similar to that.
+> >
+>=20
+> Sure, how about i write these like this, that i learn from the way dwc3
+> inject XHCI_LPM_SUPPORT to xhci via platform data:
+>=20
+> --- a/drivers/usb/dwc3/host.c
+> +++ b/drivers/usb/dwc3/host.c
+> @@ -53,6 +53,10 @@ int dwc3_host_init(struct dwc3 *dwc)
+>         pdata.usb3_lpm_capable =3D 1;
+>  #endif
+>=20
+> +       if ((dwc->revision < DWC3_REVISION_300A) &&
+> +           dwc->suspend_on_disconnect_quirk)
+> +               pdata.delay_portcsc_clear =3D 1;
+> +
+>         ret =3D platform_device_add_data(xhci, &pdata, sizeof(pdata));
+>         if (ret) {
+>                 dev_err(dwc->dev, "couldn't add platform data to xHCI
+> device\n");
+> --- a/drivers/usb/host/xhci-plat.c
+> +++ b/drivers/usb/host/xhci-plat.c
+> @@ -147,6 +147,9 @@ static int xhci_plat_probe(struct platform_device *pd=
+ev)
+>         if ((node && of_property_read_bool(node, "usb3-lpm-capable")) ||
+>                         (pdata && pdata->usb3_lpm_capable))
+>                 xhci->quirks |=3D XHCI_LPM_SUPPORT;
+> +
+> +       if (pdata && pdata->delay_portcsc_clear)
+> +               xhci->quirks |=3D XHCI_DISCONNECT_QUIRK;
+>         /*
+>          * Set the xHCI pointer before xhci_plat_setup() (aka
+> hcd_driver.reset)
+>          * is called by usb_add_hcd().
+>=20
+> but I'm a little confused about how we decide
+> dwc->suspend_on_disconnect_quirk.
+> just wondering if pdata & dts would be better than Kconfig to decide this?
+> because using Kconfig means forcing dwc3.ko has this quirk, but platform
+> might have another dwc3 core doesn't need that quirk.
+> So I write the following code, is it in a good shape? :
+>=20
+> --- a/drivers/usb/dwc3/core.c
+> +++ b/drivers/usb/dwc3/core.c
+> @@ -838,6 +838,9 @@ static int dwc3_probe(struct platform_device *pdev)
+>                                 "snps,tx_de_emphasis_quirk");
+>                 of_property_read_u8(node, "snps,tx_de_emphasis",
+>                                 &tx_de_emphasis);
+> +
+> +               dwc->suspend_on_disconnect_quirk =3D
+> of_property_read_bool(node,
+> +                               "snps,has_suspend_on_disconnect");
+>         } else if (pdata) {
+>                 dwc->maximum_speed =3D pdata->maximum_speed;
+>                 dwc->has_lpm_erratum =3D pdata->has_lpm_erratum;
+> @@ -864,6 +867,8 @@ static int dwc3_probe(struct platform_device *pdev)
+>                 dwc->tx_de_emphasis_quirk =3D pdata->tx_de_emphasis_quirk;
+>                 if (pdata->tx_de_emphasis)
+>                         tx_de_emphasis =3D pdata->tx_de_emphasis;
+> +
+> +               dwc->suspend_on_disconnect_quirk =3D
+> pdata->has_suspend_on_disconnect;
+>         }
+>=20
+>         /* default to superspeed if no maximum_speed passed */
 
-	__be32
+this all looks good, but let's split it in tiny little patches:
 
-> +	u32 next_addr;
-	__be32
+1) add macros for new revisions
+2) add suspend_on_disconnect_quirk (and the DT counterpart, please don't
+	forget to document the new binding)
+3) pass the quirk to XHCI through pdata
+4) Use the quirk on XHCI
 
-> +	u32 cfg;
-	__be32
+That'll make patches real easy to review. As per the commit log, the
+more verbose the better, specially when it comes to the quirk. It needs
+to be 100% clear that we cannot detect this in runtime.
 
-> +	u32 wb_addr;
-	__be32 wb_addr ?
+cheers
 
-> +} __aligned(64);
-> +
-> +struct rx_desc {
-> +	u16 reserved_16;
-> +	u16 pkt_len;
-> +	u32 reserve1[3];
-> +	u32 pkt_err;
-> +	u32 reserve2[4];
-> +};
-> +
-> +struct hip04_priv {
-> +	void __iomem *base;
-> +	int phy_mode;
-> +	int chan;
-> +	unsigned int port;
-> +	unsigned int speed;
-> +	unsigned int duplex;
-> +	unsigned int reg_inten;
-> +
-> +	struct napi_struct napi;
-> +	struct net_device *ndev;
-> +
-> +	struct tx_desc *tx_desc;
-> +	dma_addr_t tx_desc_dma;
-> +	struct sk_buff *tx_skb[TX_DESC_NUM];
-> +	dma_addr_t tx_phys[TX_DESC_NUM];
+--=20
+balbi
 
-This is not an efficient way to store skb/phys, as for each skb, info
-will be store in 2 separate cache lines.
+--Zljh9u/ceMLi+8mf
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-It would be better to use a 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-struct hip04_tx_desc {
-   struct sk_buff   *skb;
-   dma_addr_t       phys;
-} 
+iQIcBAEBAgAGBQJUtqE0AAoJEIaOsuA1yqRE9zAQAJQ9zod009StGwXwcJKduBfg
+VqiJ/rzSZ7AiZekdBF1KIszYNtf0gLInnYePWWUU46gGuqvY68pADhEcav4kYCcx
+rw/cs4hvidaDBoOR5ZlP/0JTsAo6YITOKmLQ+H2d2FqzrhXJe0jzMwVxVY+Js6Vb
+xVvbR+zKUOKv0ZmvD1eGZUL5UBI52bhcLeQDjnyvjPOO+TrpVEzXBzSX1T7A5xY2
+3rDvm6zTAn0MD26UcgDw/052XnCvCcAwkllJr/lC0moK+gBRptaXOfEw+o1Is6zV
+noscxdHHqoyFVUG8b6HjepDmNGSYPrPtuA28GKQ/RVzGRAuR1oZnS/sPbIR8AOuO
+bmvcWCmp7WMX3HggagmrZV8+1S4cSgc2yzlyzE5hU+MQaCAY3x8em/KQT256rgAt
+ITbwvqGyavAQzsm2IMaQaAGeO2tSyi3/sDw6wBJ4g7bemle09kHEPLZT2hzusWLU
+lhqn2Gy6ETsPkhmkv+F/hh9/J6cKn9xesAAB2BtMXAoy+VqcVx+HYyE5X0aWyatn
+tA1ulcxj2WbkSf/stZKjcvRRKbJUPFUlq8khmHtUtPQA+tyfk4hEp96RnqtGSPyr
+sDP6ijKvmTGGJyBNHG5sfEe8gXy/HptEFbLeM+goBOBK3zENxsGDlsjgMYlMCQvs
+wmOSpa6g4E0hDS2H3Eac
+=7HEe
+-----END PGP SIGNATURE-----
 
-> +	unsigned int tx_head;
-> +
-> +	int tx_coalesce_frames;
-> +	int tx_coalesce_usecs;
-> +	struct hrtimer tx_coalesce_timer;
-> +
-> +	unsigned char *rx_buf[RX_DESC_NUM];
-> +	dma_addr_t rx_phys[RX_DESC_NUM];
-
-Same thing here : Use a struct to get better data locality.
-
-> +	unsigned int rx_head;
-> +	unsigned int rx_buf_size;
-> +
-> +	struct device_node *phy_node;
-> +	struct phy_device *phy;
-> +	struct regmap *map;
-> +	struct work_struct tx_timeout_task;
-> +
-> +	/* written only by tx cleanup */
-> +	unsigned int tx_tail ____cacheline_aligned_in_smp;
-> +};
-> +
-> +static inline unsigned int tx_count(unsigned int head, unsigned int tail)
-> +{
-> +	return (head - tail) % (TX_DESC_NUM - 1);
-> +}
-> +
-> +static void hip04_config_port(struct net_device *ndev, u32 speed, u32 duplex)
-> +{
-> +	struct hip04_priv *priv = netdev_priv(ndev);
-> +	u32 val;
-> +
-> +	priv->speed = speed;
-> +	priv->duplex = duplex;
-> +
-> +	switch (priv->phy_mode) {
-> +	case PHY_INTERFACE_MODE_SGMII:
-> +		if (speed == SPEED_1000)
-> +			val = SGMII_SPEED_1000;
-> +		else if (speed == SPEED_100)
-> +			val = SGMII_SPEED_100;
-> +		else
-> +			val = SGMII_SPEED_10;
-> +		break;
-> +	case PHY_INTERFACE_MODE_MII:
-> +		if (speed == SPEED_100)
-> +			val = MII_SPEED_100;
-> +		else
-> +			val = MII_SPEED_10;
-> +		break;
-> +	default:
-> +		netdev_warn(ndev, "not supported mode\n");
-> +		val = MII_SPEED_10;
-> +		break;
-> +	}
-> +	writel_relaxed(val, priv->base + GE_PORT_MODE);
-> +
-> +	val = duplex ? GE_DUPLEX_FULL : GE_DUPLEX_HALF;
-> +	writel_relaxed(val, priv->base + GE_DUPLEX_TYPE);
-> +
-> +	val = GE_MODE_CHANGE_EN;
-> +	writel_relaxed(val, priv->base + GE_MODE_CHANGE_REG);
-> +}
-> +
-> +static void hip04_reset_ppe(struct hip04_priv *priv)
-> +{
-> +	u32 val, tmp, timeout = 0;
-> +
-> +	do {
-> +		regmap_read(priv->map, priv->port * 4 + PPE_CURR_BUF_CNT, &val);
-> +		regmap_read(priv->map, priv->port * 4 + PPE_CFG_RX_ADDR, &tmp);
-> +		if (timeout++ > RESET_TIMEOUT)
-> +			break;
-> +	} while (val & 0xfff);
-> +}
-> +
-> +static void hip04_config_fifo(struct hip04_priv *priv)
-> +{
-> +	u32 val;
-> +
-> +	val = readl_relaxed(priv->base + PPE_CFG_STS_MODE);
-> +	val |= PPE_CFG_STS_RX_PKT_CNT_RC;
-> +	writel_relaxed(val, priv->base + PPE_CFG_STS_MODE);
-> +
-> +	val = BIT(priv->port);
-> +	regmap_write(priv->map, priv->port * 4 + PPE_CFG_POOL_GRP, val);
-> +
-> +	val = priv->port << PPE_CFG_QOS_VMID_GRP_SHIFT;
-> +	val |= PPE_CFG_QOS_VMID_MODE;
-> +	writel_relaxed(val, priv->base + PPE_CFG_QOS_VMID_GEN);
-> +
-> +	val = RX_BUF_SIZE;
-> +	regmap_write(priv->map, priv->port * 4 + PPE_CFG_RX_BUF_SIZE, val);
-> +
-> +	val = RX_DESC_NUM << PPE_CFG_RX_DEPTH_SHIFT;
-> +	val |= PPE_CFG_RX_FIFO_FSFU;
-> +	val |= priv->chan << PPE_CFG_RX_START_SHIFT;
-> +	regmap_write(priv->map, priv->port * 4 + PPE_CFG_RX_FIFO_SIZE, val);
-> +
-> +	val = NET_IP_ALIGN << PPE_CFG_RX_CTRL_ALIGN_SHIFT;
-> +	writel_relaxed(val, priv->base + PPE_CFG_RX_CTRL_REG);
-> +
-> +	val = PPE_CFG_RX_PKT_ALIGN;
-> +	writel_relaxed(val, priv->base + PPE_CFG_RX_PKT_MODE_REG);
-> +
-> +	val = PPE_CFG_BUS_LOCAL_REL | PPE_CFG_BUS_BIG_ENDIEN;
-> +	writel_relaxed(val, priv->base + PPE_CFG_BUS_CTRL_REG);
-> +
-> +	val = GMAC_PPE_RX_PKT_MAX_LEN;
-> +	writel_relaxed(val, priv->base + PPE_CFG_MAX_FRAME_LEN_REG);
-> +
-> +	val = GMAC_MAX_PKT_LEN;
-> +	writel_relaxed(val, priv->base + GE_MAX_FRM_SIZE_REG);
-> +
-> +	val = GMAC_MIN_PKT_LEN;
-> +	writel_relaxed(val, priv->base + GE_SHORT_RUNTS_THR_REG);
-> +
-> +	val = readl_relaxed(priv->base + GE_TRANSMIT_CONTROL_REG);
-> +	val |= GE_TX_AUTO_NEG | GE_TX_ADD_CRC | GE_TX_SHORT_PAD_THROUGH;
-> +	writel_relaxed(val, priv->base + GE_TRANSMIT_CONTROL_REG);
-> +
-> +	val = GE_RX_STRIP_CRC;
-> +	writel_relaxed(val, priv->base + GE_CF_CRC_STRIP_REG);
-> +
-> +	val = readl_relaxed(priv->base + GE_RECV_CONTROL_REG);
-> +	val |= GE_RX_STRIP_PAD | GE_RX_PAD_EN;
-> +	writel_relaxed(val, priv->base + GE_RECV_CONTROL_REG);
-> +
-> +	val = GE_AUTO_NEG_CTL;
-> +	writel_relaxed(val, priv->base + GE_TX_LOCAL_PAGE_REG);
-> +}
-> +
-> +static void hip04_mac_enable(struct net_device *ndev)
-> +{
-> +	struct hip04_priv *priv = netdev_priv(ndev);
-> +	u32 val;
-> +
-> +	/* enable tx & rx */
-> +	val = readl_relaxed(priv->base + GE_PORT_EN);
-> +	val |= GE_RX_PORT_EN | GE_TX_PORT_EN;
-> +	writel_relaxed(val, priv->base + GE_PORT_EN);
-> +
-> +	/* clear rx int */
-> +	val = RCV_INT;
-> +	writel_relaxed(val, priv->base + PPE_RINT);
-> +
-> +	/* config recv int */
-> +	val = GE_RX_INT_THRESHOLD | GE_RX_TIMEOUT;
-> +	writel_relaxed(val, priv->base + PPE_CFG_RX_PKT_INT);
-> +
-> +	/* enable interrupt */
-> +	priv->reg_inten = DEF_INT_MASK;
-> +	writel_relaxed(priv->reg_inten, priv->base + PPE_INTEN);
-> +}
-> +
-> +static void hip04_mac_disable(struct net_device *ndev)
-> +{
-> +	struct hip04_priv *priv = netdev_priv(ndev);
-> +	u32 val;
-> +
-> +	/* disable int */
-> +	priv->reg_inten &= ~(DEF_INT_MASK);
-> +	writel_relaxed(priv->reg_inten, priv->base + PPE_INTEN);
-> +
-> +	/* disable tx & rx */
-> +	val = readl_relaxed(priv->base + GE_PORT_EN);
-> +	val &= ~(GE_RX_PORT_EN | GE_TX_PORT_EN);
-> +	writel_relaxed(val, priv->base + GE_PORT_EN);
-> +}
-> +
-> +static void hip04_set_xmit_desc(struct hip04_priv *priv, dma_addr_t phys)
-> +{
-> +	writel(phys, priv->base + PPE_CFG_CPU_ADD_ADDR);
-> +}
-> +
-> +static void hip04_set_recv_desc(struct hip04_priv *priv, dma_addr_t phys)
-> +{
-> +	regmap_write(priv->map, priv->port * 4 + PPE_CFG_RX_ADDR, phys);
-> +}
-> +
-> +static u32 hip04_recv_cnt(struct hip04_priv *priv)
-> +{
-> +	return readl(priv->base + PPE_HIS_RX_PKT_CNT);
-> +}
-> +
-> +static void hip04_update_mac_address(struct net_device *ndev)
-> +{
-> +	struct hip04_priv *priv = netdev_priv(ndev);
-> +
-> +	writel_relaxed(((ndev->dev_addr[0] << 8) | (ndev->dev_addr[1])),
-> +		       priv->base + GE_STATION_MAC_ADDRESS);
-> +	writel_relaxed(((ndev->dev_addr[2] << 24) | (ndev->dev_addr[3] << 16) |
-> +			(ndev->dev_addr[4] << 8) | (ndev->dev_addr[5])),
-> +		       priv->base + GE_STATION_MAC_ADDRESS + 4);
-> +}
-> +
-> +static int hip04_set_mac_address(struct net_device *ndev, void *addr)
-> +{
-> +	eth_mac_addr(ndev, addr);
-> +	hip04_update_mac_address(ndev);
-> +	return 0;
-> +}
-> +
-> +static int hip04_tx_reclaim(struct net_device *ndev, bool force)
-> +{
-> +	struct hip04_priv *priv = netdev_priv(ndev);
-> +	unsigned tx_tail = priv->tx_tail;
-> +	struct tx_desc *desc;
-> +	unsigned int bytes_compl = 0, pkts_compl = 0;
-> +	unsigned int count;
-> +
-> +	smp_rmb();
-> +	count = tx_count(ACCESS_ONCE(priv->tx_head), tx_tail);
-> +	if (count == 0)
-> +		goto out;
-> +
-> +	while (count) {
-> +		desc = &priv->tx_desc[tx_tail];
-> +		if (desc->send_addr != 0) {
-> +			if (force)
-> +				desc->send_addr = 0;
-> +			else
-> +				break;
-> +		}
-> +
-> +		if (priv->tx_phys[tx_tail]) {
-> +			dma_unmap_single(&ndev->dev, priv->tx_phys[tx_tail],
-> +					 priv->tx_skb[tx_tail]->len,
-> +					 DMA_TO_DEVICE);
-> +			priv->tx_phys[tx_tail] = 0;
-> +		}
-> +		pkts_compl++;
-> +		bytes_compl += priv->tx_skb[tx_tail]->len;
-> +		dev_kfree_skb(priv->tx_skb[tx_tail]);
-> +		priv->tx_skb[tx_tail] = NULL;
-> +		tx_tail = TX_NEXT(tx_tail);
-> +		count--;
-> +	}
-> +
-> +	priv->tx_tail = tx_tail;
-> +	smp_wmb(); /* Ensure tx_tail visible to xmit */
-> +
-> +out:
-> +	if (pkts_compl || bytes_compl)
-
-Testing bytes_compl should be enough : There is no way pkt_compl could
-be 0 if bytes_compl is not 0.
-
-> +		netdev_completed_queue(ndev, pkts_compl, bytes_compl);
-> +
-> +	if (unlikely(netif_queue_stopped(ndev)) && (count < (TX_DESC_NUM - 1)))
-> +		netif_wake_queue(ndev);
-> +
-> +	return count;
-> +}
-> +
-> +static int hip04_mac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
-> +{
-> +	struct hip04_priv *priv = netdev_priv(ndev);
-> +	struct net_device_stats *stats = &ndev->stats;
-> +	unsigned int tx_head = priv->tx_head, count;
-> +	struct tx_desc *desc = &priv->tx_desc[tx_head];
-> +	dma_addr_t phys;
-> +
-> +	smp_rmb();
-> +	count = tx_count(tx_head, ACCESS_ONCE(priv->tx_tail));
-> +	if (count == (TX_DESC_NUM - 1)) {
-> +		netif_stop_queue(ndev);
-> +		return NETDEV_TX_BUSY;
-> +	}
-> +
-> +	phys = dma_map_single(&ndev->dev, skb->data, skb->len, DMA_TO_DEVICE);
-> +	if (dma_mapping_error(&ndev->dev, phys)) {
-> +		dev_kfree_skb(skb);
-> +		return NETDEV_TX_OK;
-> +	}
-> +
-> +	priv->tx_skb[tx_head] = skb;
-> +	priv->tx_phys[tx_head] = phys;
-> +	desc->send_addr = cpu_to_be32(phys);
-> +	desc->send_size = cpu_to_be32(skb->len);
-> +	desc->cfg = cpu_to_be32(TX_CLEAR_WB | TX_FINISH_CACHE_INV);
-> +	phys = priv->tx_desc_dma + tx_head * sizeof(struct tx_desc);
-> +	desc->wb_addr = cpu_to_be32(phys);
-> +	skb_tx_timestamp(skb);
-> +
-> +	hip04_set_xmit_desc(priv, phys);
-> +	priv->tx_head = TX_NEXT(tx_head);
-> +	count++;
-
-Starting from this point, skb might already have been freed by TX
-completion.
-
-Its racy to access skb->len 
-
-> +	netdev_sent_queue(ndev, skb->len);
-> +
-> +	stats->tx_bytes += skb->len;
-> +	stats->tx_packets++;
-> +
-> +	/* Ensure tx_head update visible to tx reclaim */
-> +	smp_wmb();
-> +
-> +	/* queue is getting full, better start cleaning up now */
-> +	if (count >= priv->tx_coalesce_frames) {
-> +		if (napi_schedule_prep(&priv->napi)) {
-> +			/* disable rx interrupt and timer */
-> +			priv->reg_inten &= ~(RCV_INT);
-> +			writel_relaxed(DEF_INT_MASK & ~RCV_INT,
-> +				       priv->base + PPE_INTEN);
-> +			hrtimer_cancel(&priv->tx_coalesce_timer);
-> +			__napi_schedule(&priv->napi);
-> +		}
-> +	} else if (!hrtimer_is_queued(&priv->tx_coalesce_timer)) {
-> +		/* cleanup not pending yet, start a new timer */
-> +		hrtimer_start_expires(&priv->tx_coalesce_timer,
-> +				      HRTIMER_MODE_REL);
-> +	}
-> +
-> +	return NETDEV_TX_OK;
-> +}
-> +
-> +static int hip04_rx_poll(struct napi_struct *napi, int budget)
-> +{
-> +	struct hip04_priv *priv = container_of(napi, struct hip04_priv, napi);
-> +	struct net_device *ndev = priv->ndev;
-> +	struct net_device_stats *stats = &ndev->stats;
-> +	unsigned int cnt = hip04_recv_cnt(priv);
-> +	struct rx_desc *desc;
-> +	struct sk_buff *skb;
-> +	unsigned char *buf;
-> +	bool last = false;
-> +	dma_addr_t phys;
-> +	int rx = 0;
-> +	int tx_remaining;
-> +	u16 len;
-> +	u32 err;
-> +
-> +	while (cnt && !last) {
-> +		buf = priv->rx_buf[priv->rx_head];
-> +		skb = build_skb(buf, priv->rx_buf_size);
-> +		if (unlikely(!skb))
-> +			net_dbg_ratelimited("build_skb failed\n");
-
-Well, is skb is NULL, you're crashing later...
-You really have to address a memory allocation error much better than
-that !
-
-> +
-> +		dma_unmap_single(&ndev->dev, priv->rx_phys[priv->rx_head],
-> +				 RX_BUF_SIZE, DMA_FROM_DEVICE);
-> +		priv->rx_phys[priv->rx_head] = 0;
-> +
-> +		desc = (struct rx_desc *)skb->data;
-> +		len = be16_to_cpu(desc->pkt_len);
-> +		err = be32_to_cpu(desc->pkt_err);
-> +
-> +		if (0 == len) {
-> +			dev_kfree_skb_any(skb);
-> +			last = true;
-> +		} else if ((err & RX_PKT_ERR) || (len >= GMAC_MAX_PKT_LEN)) {
-> +			dev_kfree_skb_any(skb);
-> +			stats->rx_dropped++;
-> +			stats->rx_errors++;
-> +		} else {
-> +			skb_reserve(skb, NET_SKB_PAD + NET_IP_ALIGN);
-> +			skb_put(skb, len);
-> +			skb->protocol = eth_type_trans(skb, ndev);
-> +			napi_gro_receive(&priv->napi, skb);
-> +			stats->rx_packets++;
-> +			stats->rx_bytes += len;
-> +			rx++;
-> +		}
-> +
-> +		buf = netdev_alloc_frag(priv->rx_buf_size);
-> +		if (!buf)
-> +			goto done;
-
-Same problem here : In case of memory allocation error, your driver is
-totally screwed.
-
-> +		phys = dma_map_single(&ndev->dev, buf,
-> +				      RX_BUF_SIZE, DMA_FROM_DEVICE);
-> +		if (dma_mapping_error(&ndev->dev, phys))
-> +			goto done;
-
-Same problem here : You really have to recover properly.
-
-> +		priv->rx_buf[priv->rx_head] = buf;
-> +		priv->rx_phys[priv->rx_head] = phys;
-> +		hip04_set_recv_desc(priv, phys);
-> +
-> +		priv->rx_head = RX_NEXT(priv->rx_head);
-> +		if (rx >= budget)
-> +			goto done;
-> +
-> +		if (--cnt == 0)
-> +			cnt = hip04_recv_cnt(priv);
-> +	}
-> +
-> +	if (!(priv->reg_inten & RCV_INT)) {
-> +		/* enable rx interrupt */
-> +		priv->reg_inten |= RCV_INT;
-> +		writel_relaxed(priv->reg_inten, priv->base + PPE_INTEN);
-> +	}
-> +	napi_complete(napi);
-> +done:
-> +	/* clean up tx descriptors and start a new timer if necessary */
-> +	tx_remaining = hip04_tx_reclaim(ndev, false);
-> +	if (rx < budget && tx_remaining)
-> +		hrtimer_start_expires(&priv->tx_coalesce_timer, HRTIMER_MODE_REL);
-> +
-> +	return rx;
-> +}
-> +
+--Zljh9u/ceMLi+8mf--
