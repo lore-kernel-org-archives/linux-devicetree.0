@@ -1,110 +1,78 @@
 From: Baruch Siach <baruch@tkos.co.il>
-Subject: [PATCH v3 2/4] ARM: digicolor: add low level debug support
-Date: Wed, 14 Jan 2015 10:40:31 +0200
-Message-ID: <5b6342c716e2e56da34d7a518b49817967de948a.1421219953.git.baruch@tkos.co.il>
-References: <cover.1421219953.git.baruch@tkos.co.il>
+Subject: [PATCH v3 0/4] ARM: Conexant Digicolor CX92755 SoC support
+Date: Wed, 14 Jan 2015 10:40:29 +0200
+Message-ID: <cover.1421219953.git.baruch@tkos.co.il>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1421219953.git.baruch@tkos.co.il>
 Sender: linux-kernel-owner@vger.kernel.org
 To: arm@kernel.org
 Cc: Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Baruch Siach <baruch@tkos.co.il>
 List-Id: devicetree@vger.kernel.org
 
-Use the USART peripheral as UART for low level debug. Only the UA0 port is
-currently supported.
+This series adds initial support for the Conexant CX92755 SoC. The CX92755 is
+one of the Digicolor series of SoCs, all sharing many of the same peripherals.
+The code was tested on the CX92755 evaluation kit, AKA Equinox.
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Baruch Siach <baruch@tkos.co.il>
----
- arch/arm/Kconfig.debug             | 12 ++++++++++--
- arch/arm/include/debug/digicolor.S | 35 +++++++++++++++++++++++++++++++++++
- 2 files changed, 45 insertions(+), 2 deletions(-)
+Uses attempting to try this code will most likely also want the UART/console
+driver available from https://patchwork.kernel.org/patch/5515861/.
+
+v3:
+   * Remove earlyprintk from dts bootargs (Arnd Bergmann)
+
+   * Move aliases from chip .dtsi to board .dts (Arnd Bergmann)
+
+   * Add 'cpus' node (Mark Rutland)
+
+   * Add commit log messages to all patches (Arnd Bergmann)
+
+   * Add Arnd's ack
+
+   * Split arch/arm stuff from the irq and timer drivers
+
+v2:
+   http://marc.info/?t=142074613900007&r=1&w=2
+
+   * Remove .map_io assignment, debug_ll is enabled by default (Arnd Bergmann)
+
+   * Migrate the irq driver to generic irq chip, simplifying the code somewhat
+     (Arnd Bergmann)
+
+   * Change the timer dt binding, so that the 'reg' property points to the
+     first "Agent Communication" register. This should improve the chance of
+     reusing this binding for other SoCs in this series.
+
+   * Add the CONTROL() and COUNT() macros to the timer driver to make the code
+     clearer.
+
+   * Move arch/arm Kconfig changes from the clocksource driver patch to the
+     base arch support patch to reduce dependency between them
+
+v1:
+   http://thread.gmane.org/gmane.linux.kernel/1855027
+
+Baruch Siach (4):
+  ARM: initial support for Conexant Digicolor CX92755 SoC
+  ARM: digicolor: add low level debug support
+  ARM: digicolor: add minimal device tree description
+  ARM: devicetree: document supported Conexant Digicolor SoC
+
+ .../devicetree/bindings/arm/digicolor.txt          |   6 ++
+ arch/arm/Kconfig                                   |   2 +
+ arch/arm/Kconfig.debug                             |  12 ++-
+ arch/arm/boot/dts/Makefile                         |   1 +
+ arch/arm/boot/dts/conexant_equinox.dts             |  74 ++++++++++++++
+ arch/arm/boot/dts/cx92755.dtsi                     | 107 +++++++++++++++++++++
+ arch/arm/include/debug/digicolor.S                 |  35 +++++++
+ arch/arm/mach-digicolor/Kconfig                    |   5 +
+ arch/arm/mach-digicolor/Makefile                   |   1 +
+ arch/arm/mach-digicolor/digicolor.c                |  18 ++++
+ 10 files changed, 259 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/digicolor.txt
+ create mode 100644 arch/arm/boot/dts/conexant_equinox.dts
+ create mode 100644 arch/arm/boot/dts/cx92755.dtsi
  create mode 100644 arch/arm/include/debug/digicolor.S
+ create mode 100644 arch/arm/mach-digicolor/Kconfig
+ create mode 100644 arch/arm/mach-digicolor/Makefile
+ create mode 100644 arch/arm/mach-digicolor/digicolor.c
 
-diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
-index 5ddd4906f7a7..7ccab0629dd2 100644
---- a/arch/arm/Kconfig.debug
-+++ b/arch/arm/Kconfig.debug
-@@ -241,6 +241,13 @@ choice
- 		  Say Y here if you want the debug print routines to direct
- 		  their output to the serial port in the DC21285 (Footbridge).
- 
-+	config DEBUG_DIGICOLOR_UA0
-+		bool "Kernel low-level debugging messages via Digicolor UA0"
-+		depends on ARCH_DIGICOLOR
-+		help
-+		  Say Y here if you want the debug print routines to direct
-+		  their output to the UA0 serial port in the CX92755.
-+
- 	config DEBUG_FOOTBRIDGE_COM1
- 		bool "Kernel low-level debugging messages via footbridge 8250 at PCI COM1"
- 		depends on FOOTBRIDGE
-@@ -1204,6 +1211,7 @@ config DEBUG_LL_INCLUDE
- 	default "debug/vt8500.S" if DEBUG_VT8500_UART0
- 	default "debug/zynq.S" if DEBUG_ZYNQ_UART0 || DEBUG_ZYNQ_UART1
- 	default "debug/bcm63xx.S" if DEBUG_UART_BCM63XX
-+	default "debug/digicolor.S" if DEBUG_DIGICOLOR_UA0
- 	default "mach/debug-macro.S"
- 
- # Compatibility options for PL01x
-@@ -1320,7 +1328,7 @@ config DEBUG_UART_PHYS
- 		DEBUG_RCAR_GEN2_SCIF0 || DEBUG_RCAR_GEN2_SCIF2 || \
- 		DEBUG_RMOBILE_SCIFA0 || DEBUG_RMOBILE_SCIFA1 || \
- 		DEBUG_RMOBILE_SCIFA4 || DEBUG_S3C24XX_UART || \
--		DEBUG_UART_BCM63XX || DEBUG_ASM9260_UART
-+		DEBUG_UART_BCM63XX || DEBUG_ASM9260_UART || DEBUG_DIGICOLOR_UA0
- 
- config DEBUG_UART_VIRT
- 	hex "Virtual base address of debug UART"
-@@ -1398,7 +1406,7 @@ config DEBUG_UART_VIRT
- 	depends on DEBUG_LL_UART_8250 || DEBUG_LL_UART_PL01X || \
- 		DEBUG_UART_8250 || DEBUG_UART_PL01X || DEBUG_MESON_UARTAO || \
- 		DEBUG_MSM_UART || DEBUG_QCOM_UARTDM || DEBUG_S3C24XX_UART || \
--		DEBUG_UART_BCM63XX || DEBUG_ASM9260_UART
-+		DEBUG_UART_BCM63XX || DEBUG_ASM9260_UART || DEBUG_DIGICOLOR_UA0
- 
- config DEBUG_UART_8250_SHIFT
- 	int "Register offset shift for the 8250 debug UART"
-diff --git a/arch/arm/include/debug/digicolor.S b/arch/arm/include/debug/digicolor.S
-new file mode 100644
-index 000000000000..c9517150766a
---- /dev/null
-+++ b/arch/arm/include/debug/digicolor.S
-@@ -0,0 +1,35 @@
-+/*
-+ * Debugging macro include header for Conexant Digicolor USART
-+ *
-+ * Copyright (C) 2014 Paradox Innovation Ltd.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+*/
-+
-+#define UA0_STATUS	0x0742
-+#define UA0_EMI_REC	0x0744
-+
-+#define UA0_STATUS_TX_READY	0x40
-+
-+#ifdef CONFIG_DEBUG_UART_PHYS
-+		.macro	addruart, rp, rv, tmp
-+		ldr	\rp, =CONFIG_DEBUG_UART_PHYS
-+		ldr	\rv, =CONFIG_DEBUG_UART_VIRT
-+		.endm
-+#endif
-+
-+		.macro	senduart,rd,rx
-+		strb	\rd, [\rx, #UA0_EMI_REC]
-+		.endm
-+
-+		.macro	waituart,rd,rx
-+		.endm
-+
-+	.macro	busyuart,rd,rx
-+1001:		ldrb	\rd, [\rx, #UA0_STATUS]
-+		tst	\rd, #UA0_STATUS_TX_READY
-+		beq	1001b
-+		.endm
 -- 
 2.1.4
