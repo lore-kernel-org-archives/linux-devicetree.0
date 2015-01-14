@@ -1,69 +1,75 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: [PATCHv3 1/2] leds: tlc59116: Document binding for the TI 16 Channel i2c LED driver
-Date: Thu, 15 Jan 2015 00:15:06 +0100
-Message-ID: <1421277308-3477-2-git-send-email-andrew@lunn.ch>
-References: <1421277308-3477-1-git-send-email-andrew@lunn.ch>
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <1421277308-3477-1-git-send-email-andrew@lunn.ch>
-Sender: linux-leds-owner@vger.kernel.org
-To: cooloney@gmail.com, rpurdie@rpsys.net
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux ARM <linux-arm-kernel@lists.infradead.org>, kaloz@openwrt.org, Andrew Lunn <andrew@lunn.ch>, Matthew.Fatheree@belkin.com
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] ARM: shmobile: R-Mobile: Fix DT refcount bugs in PM
+ domain code
+Date: Thu, 15 Jan 2015 08:38:46 +0900
+Message-ID: <20150114233845.GB10479@verge.net.au>
+References: <1421232648-15204-1-git-send-email-geert+renesas@glider.be>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1421232648-15204-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Document the binding for the TLC59116 LED driver.
+On Wed, Jan 14, 2015 at 11:50:48AM +0100, Geert Uytterhoeven wrote:
+> Fix two DT refcount imbalances in the PM domain code that scans the DT
+> topology:
+> 
+>   1. Add missing of_node_put() after of_find_compatible_node().
+> 
+>   2. If CONFIG_OF_DYNAMIC=y:
+> 
+> 	ERROR: Bad of_node_put() on /system-controller@e6180000
+> 	<backtrace>
+> 
+>      of_find_node_by_name() calls of_node_put() on its "from" parameter,
+>      which must not be done on the for_each_compatible_node() iterator,
+>      as it causes a zero refcount later.
+>      Use of_get_child_by_name() instead to fix this.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> Fixes: d7a3a10c8391fdcd ("ARM: shmobile: R-Mobile: Add DT support for PM domains")
+> in Simon's git://git.kernel.org/pub/scm/linux/kernel/git/horms/renesas.git
+> tag renesas-dt-pm-for-v3.20
 
-Signed-off-by: Andrew Lunn <andrew@lunn.ch>
-Cc: Matthew.Fatheree@belkin.com
----
- .../devicetree/bindings/leds/leds-tlc59116.txt     | 40 ++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/leds-tlc59116.txt
+Thanks.
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-tlc59116.txt b/Documentation/devicetree/bindings/leds/leds-tlc59116.txt
-new file mode 100644
-index 000000000000..45c2123774d3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/leds-tlc59116.txt
-@@ -0,0 +1,40 @@
-+LEDs connected to tcl59116
-+
-+Required properties
-+- compatible: should be "ti,tlc59116"
-+- #address-cells: must be 1
-+- #size-cells: must be 0
-+- reg: typically 0x68
-+
-+Each led is represented as a sub-node of the ti,,tlc59116.
-+See Documentation/devicetree/bindings/leds/common.txt
-+
-+LED sub-node properties:
-+- reg: number of LED line, 0 to 15
-+- label: (optional) name of LED
-+- linux,default-trigger : (optional)
-+
-+Examples:
-+
-+tlc59116@68 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	compatible = "ti,tlc59116";
-+	reg = <0x68>;
-+
-+	wan@0 {
-+		label = "wrt1900ac:amber:wan";
-+		reg = <0x0>;
-+	};
-+
-+	2g@2 {
-+		label = "wrt1900ac:white:2g";
-+		reg = <0x2>;
-+	};
-+
-+	alive@9 {
-+		label = "wrt1900ac:green:alive";
-+		reg = <0x9>;
-+		linux,default_trigger = "heartbeat";
-+	};
-+};
--- 
-2.1.4
+As the patch above is not in the ARM SoC tree yet I have decided
+to squash this patch into it.
+
+> ---
+>  arch/arm/mach-shmobile/pm-rmobile.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm/mach-shmobile/pm-rmobile.c b/arch/arm/mach-shmobile/pm-rmobile.c
+> index 07fb4ea4d8e94258..85a7fdd9823bc5a6 100644
+> --- a/arch/arm/mach-shmobile/pm-rmobile.c
+> +++ b/arch/arm/mach-shmobile/pm-rmobile.c
+> @@ -270,8 +270,10 @@ static void __init get_special_pds(void)
+>  
+>  	/* PM domain containing Coresight-ETM */
+>  	np = of_find_compatible_node(NULL, NULL, "arm,coresight-etm3x");
+> -	if (np)
+> +	if (np) {
+>  		debug_pd = of_parse_phandle(np, "power-domains", 0);
+> +		of_node_put(np);
+> +	}
+>  }
+>  
+>  static void __init put_special_pds(void)
+> @@ -363,7 +365,7 @@ static int __init rmobile_init_pm_domains(void)
+>  			continue;
+>  		}
+>  
+> -		pmd = of_find_node_by_name(np, "pm-domains");
+> +		pmd = of_get_child_by_name(np, "pm-domains");
+>  		if (!pmd) {
+>  			pr_warn("%s lacks pm-domains node\n", np->full_name);
+>  			continue;
+> -- 
+> 1.9.1
+> 
