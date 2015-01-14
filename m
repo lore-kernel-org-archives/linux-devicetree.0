@@ -1,56 +1,51 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 1/5] mfd: tps65218: make INT[12] and STATUS registers
- volatile
-Date: Wed, 14 Jan 2015 09:07:17 -0800
-Message-ID: <20150114170716.GL2419@atomide.com>
-References: <1419622104-25812-1-git-send-email-balbi@ti.com>
- <1419622104-25812-2-git-send-email-balbi@ti.com>
- <20150106173734.GL6502@saruman>
- <20150108162512.GC31926@saruman>
- <20150112164654.GB6525@saruman>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv2 1/2] spi: orion: Change spi-orion to use transfer_one()
+ semantics for SPI transfers
+Date: Wed, 14 Jan 2015 17:22:06 +0000
+Message-ID: <20150114172206.GA4160@sirena.org.uk>
+References: <1421032440-15335-1-git-send-email-ken.wilson@opengear.com>
+ <1421032440-15335-2-git-send-email-ken.wilson@opengear.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="8p/3hdGJBHAENZPK"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20150112164654.GB6525@saruman>
-Sender: linux-input-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>, stable@vger.kernel.org, Keerthy <j-keerthy@ti.com>, Andrew Morton <akpm@linux-foundation.org>
+In-Reply-To: <1421032440-15335-2-git-send-email-ken.wilson-xg7Pnmy8KxlWk0Htik3J/w@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ken Wilson <ken.wilson-xg7Pnmy8KxlWk0Htik3J/w@public.gmane.org>
+Cc: thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, gerg-JBU5SbJe1FlAfugRpC6u6w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Felipe Balbi <balbi@ti.com> [150112 08:50]:
-> Hi,
-> 
-> On Thu, Jan 08, 2015 at 10:25:12AM -0600, Felipe Balbi wrote:
-> > On Tue, Jan 06, 2015 at 11:37:34AM -0600, Felipe Balbi wrote:
-> > > On Fri, Dec 26, 2014 at 01:28:20PM -0600, Felipe Balbi wrote:
-> > > > STATUS register can be modified by the HW, so we
-> > > > should bypass cache because of that.
-> > > > 
-> > > > In the case of INT[12] registers, they are the ones
-> > > > that actually clear the IRQ source at the time they
-> > > > are read. If we rely on the cache for them, we will
-> > > > never be able to clear the interrupt, which will cause
-> > > > our IRQ line to be disabled due to IRQ throttling.
-> > > > 
-> > > > Fixes: 44b4dc6 mfd: tps65218: Add driver for the TPS65218 PMIC
-> > > > Cc: <stable@vger.kernel.org> # v3.15+
-> > > > Cc: Keerthy <j-keerthy@ti.com>
-> > > > Cc: Lee Jones <lee.jones@linaro.org>
-> > > > Signed-off-by: Felipe Balbi <balbi@ti.com>
-> > > 
-> > > ping
-> > 
-> > another ping. Without this and the following patch TPS65218 power button
-> > driver which was already applied by Dmitry, won't work.
-> 
-> Anybody ? -rc4 is out and tps65218 is still broken because nobody has
-> acted on these two patches. All other patches which are meant for 3.20
-> merge window are applied and because of these pending, those patches
-> won't work.
 
-Lee, are you planning to pick these two drivers/mfd patches?
+--8p/3hdGJBHAENZPK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Regards,
+On Mon, Jan 12, 2015 at 01:13:59PM +1000, Ken Wilson wrote:
+> This commit changes spi-orion to provide setup, set_cs, and transfer_one
+> functions instead of transfer_one_message. This allows chip select support
+> for both native and GPIO chip selects to be added.
 
-Tony
+Applied, thanks.
+
+--8p/3hdGJBHAENZPK
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJUtqW+AAoJECTWi3JdVIfQyKcH/1rOfEb5pMLI95Y+6L6Tb+x/
+qneOjSR10GZMk9ScRs9TMrnCESTVqiv1SU5nTbQsB56zvvLBoZ5X2WnXx2kEMC4O
+hHdAjjz46e4WBrmRTgt52Zbn/sbucKDtLAbiY2FSkLFEIclkVhlkuQgAmBkPi9jZ
+xk699s91Qp0FwefqN9pSLNJMLIuILUMynzf9VC+5XKbXaGErFOhlgjiZ34YCD8Du
+CU9GOwf91TR6XuML4eNGs5QKdKFmmEyJ5l9PH9lk4Cbg026hMpkbp8KQVx2jakTR
+4U45Qd6n5oHqq3jT5znuXYklm8xLXBuJlctOZAWJUoKVEWw5HtxZB/kLQT7nj7w=
+=7J8p
+-----END PGP SIGNATURE-----
+
+--8p/3hdGJBHAENZPK--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
