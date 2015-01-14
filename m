@@ -1,142 +1,57 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH V2 4/4] mmc: pwrseq_simple: Add support for a reset GPIO pin
-Date: Wed, 14 Jan 2015 14:02:10 +0100
-Message-ID: <1421240530-7971-5-git-send-email-ulf.hansson@linaro.org>
-References: <1421240530-7971-1-git-send-email-ulf.hansson@linaro.org>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1421240530-7971-1-git-send-email-ulf.hansson@linaro.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: linux-mmc@vger.kernel.org, Chris Ball <chris@printf.net>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Alexandre Courbot <gnurou@gmail.com>, Arend van Spriel <arend@broadcom.com>, Sascha Hauer <s.hauer@pengutronix.de>, Olof Johansson <olof@lixom.net>, Russell King <linux@arm.linux.org.uk>, Hans de Goede <hdegoede@redhat.com>, Doug Anderson <dianders@chromium.org>, NeilBrown <neilb@suse.de>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Ulf Hansson <ulf.hansson@linaro.org>
+From: Olliver Schinagl <oliver@schinagl.nl>
+Subject: Re: [PATCH v1 4/4] leds: no longer use unnamed gpios
+Date: Wed, 14 Jan 2015 14:20:07 +0100
+Message-ID: <54B66D07.8040807@schinagl.nl>
+References: <1420621722-7428-1-git-send-email-oliver+list@schinagl.nl>	<1420621722-7428-5-git-send-email-oliver+list@schinagl.nl>	<20150107235522.GA6670@dtor-ws>	<54AE43A9.3020309@schinagl.nl>	<CAL_JsqJE_PCXrejHO3vfdbbtC4FGyuPhJ8W-A=8nZMcu6aBxCw@mail.gmail.com>	<20150108221249.GH23256@dtor-ws> <CACRpkdZZxAPecNfADzYLSz8S6tNBi9Jr4st==zxnNp2r2gPC2g@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdZZxAPecNfADzYLSz8S6tNBi9Jr4st==zxnNp2r2gPC2g@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Rob Herring <robherring2@gmail.com>, Olliver Schinagl <oliver+list@schinagl.nl>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alexandre Courbot <gnurou@gmail.com>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Robin Gong <b38343@freescale.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Aaron Lu <aaron.lu@intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Grant Likely <grant.likely@linaro.org>, Wolfram Sang <wsa@the-dreams.de>, Alexander Shiyan <shc_work@mail.ru>, Jingoo Han <jg1.han@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, linux-inpu
 List-Id: devicetree@vger.kernel.org
 
-The need for a reset GPIO has several times been pointed out from
-earlier posted patchsets. Especially some WLAN chips which are
-attached to an SDIO interface may use a GPIO reset.
 
-In this first version, one reset pin is supported. We may want to
-extend the support to cover more pins, but let's leave that as a future
-change. The added DT binding for the reset GPIO can easily be extended
-to manage several pins.
+On 14-01-15 13:45, Linus Walleij wrote:
+> On Thu, Jan 8, 2015 at 11:12 PM, Dmitry Torokhov
+> <dmitry.torokhov@gmail.com> wrote:
+>> On Thu, Jan 08, 2015 at 08:40:20AM -0600, Rob Herring wrote:
+>>> On Thu, Jan 8, 2015 at 2:45 AM, Olliver Schinagl <oliver@schinagl.nl> wrote:
+>>>>>> --- a/drivers/leds/leds-gpio.c
+>>>>>> +++ b/drivers/leds/leds-gpio.c
+>>>>>> @@ -184,7 +184,7 @@ static struct gpio_leds_priv *gpio_leds_create(struct
+>>>>>> platform_device *pdev)
+>>>>>>                  struct gpio_led led = {};
+>>>>>>                  const char *state = NULL;
+>>>>>>    -             led.gpiod = devm_get_gpiod_from_child(dev, NULL, child);
+>>>>>> +               led.gpiod = devm_get_gpiod_from_child(dev, "led", child);
+>>>>> Would not this break existing boards using old bindings? You need to
+>>>>> handle both cases: if you can't located "led-gpios" then you will have to
+>>>>> try just "gpios".
+>>>> Very true. I was rather even hoping we could update all bindings, I don't
+>>>> mind going through the available dts files to fix them ... But need to know
+>>>> that that's the proper way to go before doing the work ;)
+>>> That will not work. You cannot make changes that require a new dtb
+>>> with a new kernel. This would also break for the other way around
+>>> (i.e. a new dtb and old kernel).
+>>>
+>>> You would have to search for both led-gpios and gpios. I'm not sure if
+>>> we can do that generically for all GPIOs. If you had a node with both
+>>> "blah-gpios" and "gpios", it would break. I would hope there are no
+>>> such cases like that. We also now have to consider how ACPI identifies
+>>> GPIOs and whether this makes sense.
+>> I think only the driver itself can know about such "legacy" mappings and
+>> make a decision.
+> Yeah leds-gpio.c will need to be patched to check for "led-gpios" first
+> and then fall back to "gpios" if not found.
+yeah I've done the work, just need to double check it and resend a v2.
 
-The reset GPIO is asserted at initialization and prior we start the
-power up procedure. It will then be de-asserted right after the power
-has been provided to the external chip/card, from the ->post_power_on()
-callback.
+Linus, I assume you want the already applied patches omitted from v2?
 
-Note, the reset GPIO is optional. Thus we don't return an error even if
-we can't find a GPIO pin for the consumer.
-
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
----
-
-Changes in v2:
-	- Adopted to the changed names of the pwrseq callbacks.
-
----
- .../devicetree/bindings/mmc/mmc,pwrseq-simple.txt  |  5 +++
- drivers/mmc/core/pwrseq_simple.c                   | 38 ++++++++++++++++++++++
- 2 files changed, 43 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/mmc/mmc,pwrseq-simple.txt b/Documentation/devicetree/bindings/mmc/mmc,pwrseq-simple.txt
-index e1b7f9c..6fe0cd6 100644
---- a/Documentation/devicetree/bindings/mmc/mmc,pwrseq-simple.txt
-+++ b/Documentation/devicetree/bindings/mmc/mmc,pwrseq-simple.txt
-@@ -11,8 +11,13 @@ for several SOC designs.
- Required properties:
- - compatible : contains "mmc,pwrseq-simple".
- 
-+Optional properties:
-+- reset-gpios : contains a list of GPIO specifiers, though currently only one
-+		specifier is supported.
-+
- Example:
- 
- 	sdhci0_pwrseq {
- 		compatible = "mmc,pwrseq-simple";
-+		reset-gpios = <&gpio1 12 0>;
- 	}
-diff --git a/drivers/mmc/core/pwrseq_simple.c b/drivers/mmc/core/pwrseq_simple.c
-index 7f87bc1..42d9836 100644
---- a/drivers/mmc/core/pwrseq_simple.c
-+++ b/drivers/mmc/core/pwrseq_simple.c
-@@ -11,6 +11,7 @@
- #include <linux/slab.h>
- #include <linux/device.h>
- #include <linux/err.h>
-+#include <linux/gpio/consumer.h>
- 
- #include <linux/mmc/host.h>
- 
-@@ -18,31 +19,68 @@
- 
- struct mmc_pwrseq_simple {
- 	struct mmc_pwrseq pwrseq;
-+	struct gpio_desc *reset_gpio;
- };
- 
-+static void mmc_pwrseq_simple_pre_power_on(struct mmc_host *host)
-+{
-+	struct mmc_pwrseq_simple *pwrseq = container_of(host->pwrseq,
-+					struct mmc_pwrseq_simple, pwrseq);
-+
-+	if (!IS_ERR(pwrseq->reset_gpio))
-+		gpiod_set_value_cansleep(pwrseq->reset_gpio, 1);
-+}
-+
-+static void mmc_pwrseq_simple_post_power_on(struct mmc_host *host)
-+{
-+	struct mmc_pwrseq_simple *pwrseq = container_of(host->pwrseq,
-+					struct mmc_pwrseq_simple, pwrseq);
-+
-+	if (!IS_ERR(pwrseq->reset_gpio))
-+		gpiod_set_value_cansleep(pwrseq->reset_gpio, 0);
-+}
-+
- static void mmc_pwrseq_simple_free(struct mmc_host *host)
- {
- 	struct mmc_pwrseq_simple *pwrseq = container_of(host->pwrseq,
- 					struct mmc_pwrseq_simple, pwrseq);
- 
-+	if (!IS_ERR(pwrseq->reset_gpio))
-+		gpiod_put(pwrseq->reset_gpio);
-+
- 	kfree(&pwrseq);
- 	host->pwrseq = NULL;
- }
- 
- static struct mmc_pwrseq_ops mmc_pwrseq_simple_ops = {
-+	.pre_power_on = mmc_pwrseq_simple_pre_power_on,
-+	.post_power_on = mmc_pwrseq_simple_post_power_on,
-+	.power_off = mmc_pwrseq_simple_pre_power_on,
- 	.free = mmc_pwrseq_simple_free,
- };
- 
- int mmc_pwrseq_simple_alloc(struct mmc_host *host, struct device *dev)
- {
- 	struct mmc_pwrseq_simple *pwrseq;
-+	int ret = 0;
- 
- 	pwrseq = kzalloc(sizeof(struct mmc_pwrseq_simple), GFP_KERNEL);
- 	if (!pwrseq)
- 		return -ENOMEM;
- 
-+	pwrseq->reset_gpio = gpiod_get_index(dev, "reset", 0, GPIOD_OUT_HIGH);
-+	if (IS_ERR(pwrseq->reset_gpio) &&
-+		PTR_ERR(pwrseq->reset_gpio) != -ENOENT &&
-+		PTR_ERR(pwrseq->reset_gpio) != -ENOSYS) {
-+		ret = PTR_ERR(pwrseq->reset_gpio);
-+		goto free;
-+	}
-+
- 	pwrseq->pwrseq.ops = &mmc_pwrseq_simple_ops;
- 	host->pwrseq = &pwrseq->pwrseq;
- 
- 	return 0;
-+free:
-+	kfree(&pwrseq);
-+	return ret;
- }
--- 
-1.9.1
+Olliver
+>
+> Yours,
+> Linus Walleij
 
