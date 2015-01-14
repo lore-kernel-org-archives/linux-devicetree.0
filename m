@@ -1,398 +1,237 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: Re: [PATCH 1/2] pinctrl: at91: allow disabled gpio controllers
-Date: Wed, 14 Jan 2015 21:45:12 +0100
-Message-ID: <20150114204512.GB14457@ns203013.ovh.net>
-References: <1417193367-12422-1-git-send-email-ludovic.desroches@atmel.com>
+From: arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org (Arnaud Ebalard)
+Subject: Re: [PATCH v2 2/5] drivers/rtc/rtc-armada38x: Add a new RTC driver for recent mvebu SoCs
+Date: Wed, 14 Jan 2015 21:55:39 +0100
+Message-ID: <871tmxrsj8.fsf@natisbad.org>
+References: <1421257155-3379-1-git-send-email-gregory.clement@free-electrons.com>
+	<1421257155-3379-3-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="ikeVEW9yuYc//A+q"
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1417193367-12422-1-git-send-email-ludovic.desroches@atmel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ludovic Desroches <ludovic.desroches@atmel.com>
-Cc: devicetree@vger.kernel.org, linus.walleij@linaro.org, nicolas.ferre@atmel.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Gregory,
 
---ikeVEW9yuYc//A+q
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> writes:
 
-On 17:49 Fri 28 Nov     , Ludovic Desroches wrote:
-> This patch allows to have gpio controller with status set to disabled.
-> 
-> gpio_banks represents all the gpio banks available on the device whereas
-> nbanks represents the gpio banks used. Having a disabled gpio controller
-> involves that nbanks value is lower than gpio_banks and that some
-> pointers in the gpio_chips array are NULL. This patch deals with these
-> specific cases.
-> 
-> Signed-off-by: Ludovic Desroches <ludovic.desroches@atmel.com>
+> The new mvebu SoCs come with a new RTC driver. This patch adds the
+> support for this new IP which is currently found in the Armada 38x
+> SoCs.
+>
+> This RTC provides two alarms, but only the first one is used in the
+> driver. The RTC also allows using periodic interrupts.
+>
+> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 > ---
-> 
-> Hi,
-> 
-> Without this patch, pinctrl is broken on sama5d4 because pinctrl-at91 doesn't
-> support unused gpio bank.
+>  drivers/rtc/Kconfig         |  10 ++
+>  drivers/rtc/Makefile        |   1 +
+>  drivers/rtc/rtc-armada38x.c | 319 ++++++++++++++++++++++++++++++++++=
+++++++++++
+>  3 files changed, 330 insertions(+)
+>  create mode 100644 drivers/rtc/rtc-armada38x.c
+>
+> diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+> index f15cddfeb897..de42ebd4b626 100644
+> --- a/drivers/rtc/Kconfig
+> +++ b/drivers/rtc/Kconfig
+> @@ -1269,6 +1269,16 @@ config RTC_DRV_MV
+>  	  This driver can also be built as a module. If so, the module
+>  	  will be called rtc-mv.
+> =20
+> +config RTC_DRV_ARMADA38X
+> +	tristate "Armada 38x Marvell SoC RTC"
+> +	depends on ARCH_MVEBU
+> +	help
+> +	  If you say yes here you will get support for the in-chip RTC
+> +	  that can be found in the Armada 38x Marvell's SoC device
+> +
+> +	  This driver can also be built as a module. If so, the module
+> +	  will be called armada38x-rtc.
+> +
+>  config RTC_DRV_PS3
+>  	tristate "PS3 RTC"
+>  	depends on PPC_PS3
+> diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
+> index c8ef3e1e6ccd..03fe5629c464 100644
+> --- a/drivers/rtc/Makefile
+> +++ b/drivers/rtc/Makefile
+> @@ -24,6 +24,7 @@ obj-$(CONFIG_RTC_DRV_88PM860X)  +=3D rtc-88pm860x.o
+>  obj-$(CONFIG_RTC_DRV_88PM80X)	+=3D rtc-88pm80x.o
+>  obj-$(CONFIG_RTC_DRV_AB3100)	+=3D rtc-ab3100.o
+>  obj-$(CONFIG_RTC_DRV_AB8500)	+=3D rtc-ab8500.o
+> +obj-$(CONFIG_RTC_DRV_ARMADA38X)	+=3D rtc-armada38x.o
+>  obj-$(CONFIG_RTC_DRV_AS3722)	+=3D rtc-as3722.o
+>  obj-$(CONFIG_RTC_DRV_AT32AP700X)+=3D rtc-at32ap700x.o
+>  obj-$(CONFIG_RTC_DRV_AT91RM9200)+=3D rtc-at91rm9200.o
+> diff --git a/drivers/rtc/rtc-armada38x.c b/drivers/rtc/rtc-armada38x.=
+c
+> new file mode 100644
+> index 000000000000..30bae27e828c
+> --- /dev/null
+> +++ b/drivers/rtc/rtc-armada38x.c
+> @@ -0,0 +1,319 @@
+> +/*
+> + * RTC driver for the Armada 38x Marvell SoCs
+> + *
+> + * Copyright (C) 2015 Marvell
+> + *
+> + * Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License as
+> + * published by the Free Software Foundation; either version 2 of th=
+e
+> + * License, or (at your option) any later version.
+> + *
+> + */
+> +
+> +#include <linux/delay.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/rtc.h>
+> +
+> +#define RTC_STATUS	    0x0
+> +#define RTC_STATUS_ALARM1	    BIT(0)
+> +#define RTC_STATUS_ALARM2	    BIT(1)
+> +#define RTC_IRQ1_CONF	    0x4
+> +#define RTC_IRQ1_AL_EN		    BIT(0)
+> +#define RTC_IRQ1_FREQ_EN	    BIT(1)
+> +#define RTC_IRQ1_FREQ_1HZ	    BIT(2)
+> +#define RTC_TIME	    0xC
+> +#define RTC_ALARM1	    0x10
+> +
+> +#define SOC_RTC_INTERRUPT   0x8
+> +#define SOC_RTC_ALARM1		BIT(0)
+> +#define SOC_RTC_ALARM2		BIT(1)
+> +#define SOC_RTC_ALARM1_MASK	BIT(2)
+> +#define SOC_RTC_ALARM2_MASK	BIT(3)
+> +
+> +struct armada38x_rtc {
+> +	struct rtc_device   *rtc_dev;
+> +	void __iomem	    *regs;
+> +	void __iomem	    *regs_soc;
+> +	spinlock_t	    lock;
+> +	int		    irq;
+> +};
+> +
+> +/*
+> + * According to the datasheet, we need to wait for 5us only between
+> + * two consecutive writes
+> + */
+> +static void rtc_delayed_write(u32 val, struct armada38x_rtc *rtc, in=
+t offset)
+> +{
+> +	writel(val, rtc->regs + offset);
+> +	udelay(5);
+> +}
 
-the problem is different
+The thing I do not get is how you can guarantee that an undelayed
+writel() in a function will not be followed less than 5=C2=B5s later by
+another writel() in another function. For instance:
 
-The current code does support this partially
+  1) a call to set_alarm() followed by a call to alarm_irq_enable().
+  2) some writel() or even rtc_udelayed_write() w/ sth asynchronous
+    occuring like your interrupt handler just after that.
 
-but need to have few by using gpio_banks for the pinctrl part instead of
-info->banks
-as we already known the last enabled bank
+I guess it may be possible to make assumptions on the fact that the
+amount of code before a writel() or rtc_udelayed_write() may prevent
+such scenario but it's difficult to tell, all the more w/ a spinlock
+before the writel() in irq_enable().
 
-> 
-> 
->  drivers/pinctrl/pinctrl-at91.c | 30 ++++++++++++++++++------------
->  1 file changed, 18 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
-> index 94643bb..95ae122 100644
-> --- a/drivers/pinctrl/pinctrl-at91.c
-> +++ b/drivers/pinctrl/pinctrl-at91.c
-> @@ -981,7 +981,8 @@ static void at91_pinctrl_child_count(struct at91_pinctrl *info,
->  
->  	for_each_child_of_node(np, child) {
->  		if (of_device_is_compatible(child, gpio_compat)) {
-> -			info->nbanks++;
-> +			if (of_device_is_available(child))
-> +				info->nbanks++;
->  		} else {
->  			info->nfunctions++;
->  			info->ngroups += of_get_child_count(child);
-> @@ -1003,11 +1004,11 @@ static int at91_pinctrl_mux_mask(struct at91_pinctrl *info,
->  	}
->  
->  	size /= sizeof(*list);
-> -	if (!size || size % info->nbanks) {
-> +	if (!size || size % gpio_banks) {
->  		dev_err(info->dev, "wrong mux mask array should be by %d\n", info->nbanks);
->  		return -EINVAL;
->  	}
-> -	info->nmux = size / info->nbanks;
-> +	info->nmux = size / gpio_banks;
->  
->  	info->mux_mask = devm_kzalloc(info->dev, sizeof(u32) * size, GFP_KERNEL);
->  	if (!info->mux_mask) {
-> @@ -1185,7 +1186,7 @@ static int at91_pinctrl_probe(struct platform_device *pdev)
->  {
->  	struct at91_pinctrl *info;
->  	struct pinctrl_pin_desc *pdesc;
-> -	int ret, i, j, k;
-> +	int ret, i, j, k, ngpio_chips_enabled = 0;
->  
->  	info = devm_kzalloc(&pdev->dev, sizeof(*info), GFP_KERNEL);
->  	if (!info)
-> @@ -1200,12 +1201,14 @@ static int at91_pinctrl_probe(struct platform_device *pdev)
->  	 * to obtain references to the struct gpio_chip * for them, and we
->  	 * need this to proceed.
->  	 */
-> -	for (i = 0; i < info->nbanks; i++) {
-> -		if (!gpio_chips[i]) {
-> -			dev_warn(&pdev->dev, "GPIO chip %d not registered yet\n", i);
-> -			devm_kfree(&pdev->dev, info);
-> -			return -EPROBE_DEFER;
-> -		}
-> +	for (i = 0; i < gpio_banks; i++) {
-> +		if (gpio_chips[i])
-> +			ngpio_chips_enabled++;
-> +	}
-> +	if (ngpio_chips_enabled < info->nbanks) {
-> +		dev_warn(&pdev->dev, "All GPIO chips are not registered yet\n");
-> +		devm_kfree(&pdev->dev, info);
-> +		return -EPROBE_DEFER;
->  	}
->  
->  	at91_pinctrl_desc.name = dev_name(&pdev->dev);
-> @@ -1234,8 +1237,9 @@ static int at91_pinctrl_probe(struct platform_device *pdev)
->  	}
->  
->  	/* We will handle a range of GPIO pins */
-> -	for (i = 0; i < info->nbanks; i++)
-> -		pinctrl_add_gpio_range(info->pctl, &gpio_chips[i]->range);
-> +	for (i = 0; i < gpio_banks; i++)
-> +		if (gpio_chips[i])
-> +			pinctrl_add_gpio_range(info->pctl, &gpio_chips[i]->range);
->  
->  	dev_info(&pdev->dev, "initialized AT91 pinctrl driver\n");
->  
-> @@ -1681,6 +1685,8 @@ static void at91_gpio_probe_fixup(void)
->  
->  	for (i = 0; i < gpio_banks; i++) {
->  		at91_gpio = gpio_chips[i];
-> +		if (!at91_gpio)
-> +			continue;
+Considering the description of the bug, why not doing the following:
 
-here Nack
+ 1) implement rtc_delayed_write() a bit differently:
 
-as if you disable ANY of the bank that use pioc you break the IRQ support
+    static inline void rtc_delayed_write(u32 val, struct armada38x_rtc =
+*rtc, int offset)
+    {
+	udelay(5);
+	writel(val, rtc->regs + offset);
+    }
 
-attached a patch we the idea how to handle the current issue
-only compiled not tested (too late here)
+ 2) remove all writel() in the driver and use rtc_delayed_write()
+    everywhere.
 
-Best Regards,
-J.
->  
->  		/*
->  		 * GPIO controller are grouped on some SoC:
-> -- 
-> 2.0.3
-> 
-
---ikeVEW9yuYc//A+q
-Content-Type: text/x-diff; charset=us-ascii
-Content-Disposition: attachment; filename="0001-pinctrl-at91-allow-to-have-disable-gpio-bank.patch"
-
->From c94cb27d4d4feb2d3af8d7eeffa34f8ea9484db7 Mon Sep 17 00:00:00 2001
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Date: Thu, 15 Jan 2015 04:00:46 +0800
-Subject: [PATCH 1/1] pinctrl: at91: allow to have disable gpio bank
-
-Today we expect that all the bank are enabled, and count the number of banks
-used by the pinctrl based on it instead of using the last bank id enabled.
-
-So switch to it
-
-And set the chained IRQ at runtime based on enabled banks
-
-Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
----
- drivers/pinctrl/pinctrl-at91.c | 94 ++++++++++++++++++++----------------------
- 1 file changed, 44 insertions(+), 50 deletions(-)
-
-diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
-index 354a81d..170e67f 100644
---- a/drivers/pinctrl/pinctrl-at91.c
-+++ b/drivers/pinctrl/pinctrl-at91.c
-@@ -655,12 +655,18 @@ static int pin_check_config(struct at91_pinctrl *info, const char *name,
- 	int mux;
- 
- 	/* check if it's a valid config */
--	if (pin->bank >= info->nbanks) {
-+	if (pin->bank >= gpio_banks) {
- 		dev_err(info->dev, "%s: pin conf %d bank_id %d >= nbanks %d\n",
--			name, index, pin->bank, info->nbanks);
-+			name, index, pin->bank, gpio_banks);
- 		return -EINVAL;
- 	}
- 
-+	if (!gpio_chips[pin->bank]) {
-+		dev_err(info->dev, "%s: pin conf %d bank_id %d not enabled\n",
-+			name, index, pin->bank);
-+		return -ENXIO;
-+	}
-+
- 	if (pin->pin >= MAX_NB_GPIO_PER_BANK) {
- 		dev_err(info->dev, "%s: pin conf %d pin_bank_id %d >= %d\n",
- 			name, index, pin->pin, MAX_NB_GPIO_PER_BANK);
-@@ -982,12 +988,10 @@ static void at91_pinctrl_child_count(struct at91_pinctrl *info,
- 	struct device_node *child;
- 
- 	for_each_child_of_node(np, child) {
--		if (of_device_is_compatible(child, gpio_compat)) {
--			info->nbanks++;
--		} else {
--			info->nfunctions++;
--			info->ngroups += of_get_child_count(child);
--		}
-+		if (of_device_is_compatible(child, gpio_compat))
-+			continue;
-+		info->nfunctions++;
-+		info->ngroups += of_get_child_count(child);
- 	}
- }
- 
-@@ -1005,11 +1009,11 @@ static int at91_pinctrl_mux_mask(struct at91_pinctrl *info,
- 	}
- 
- 	size /= sizeof(*list);
--	if (!size || size % info->nbanks) {
--		dev_err(info->dev, "wrong mux mask array should be by %d\n", info->nbanks);
-+	if (!size || size % gpio_banks) {
-+		dev_err(info->dev, "wrong mux mask array should be by %d\n", gpio_banks);
- 		return -EINVAL;
- 	}
--	info->nmux = size / info->nbanks;
-+	info->nmux = size / gpio_banks;
- 
- 	info->mux_mask = devm_kzalloc(info->dev, sizeof(u32) * size, GFP_KERNEL);
- 	if (!info->mux_mask) {
-@@ -1133,7 +1137,7 @@ static int at91_pinctrl_probe_dt(struct platform_device *pdev,
- 		of_match_device(at91_pinctrl_of_match, &pdev->dev)->data;
- 	at91_pinctrl_child_count(info, np);
- 
--	if (info->nbanks < 1) {
-+	if (gpio_banks < 1) {
- 		dev_err(&pdev->dev, "you need to specify at least one gpio-controller\n");
- 		return -EINVAL;
- 	}
-@@ -1146,7 +1150,7 @@ static int at91_pinctrl_probe_dt(struct platform_device *pdev,
- 
- 	dev_dbg(&pdev->dev, "mux-mask\n");
- 	tmp = info->mux_mask;
--	for (i = 0; i < info->nbanks; i++) {
-+	for (i = 0; i < gpio_banks; i++) {
- 		for (j = 0; j < info->nmux; j++, tmp++) {
- 			dev_dbg(&pdev->dev, "%d:%d\t0x%x\n", i, j, tmp[0]);
- 		}
-@@ -1164,7 +1168,7 @@ static int at91_pinctrl_probe_dt(struct platform_device *pdev,
- 	if (!info->groups)
- 		return -ENOMEM;
- 
--	dev_dbg(&pdev->dev, "nbanks = %d\n", info->nbanks);
-+	dev_dbg(&pdev->dev, "nbanks = %d\n", gpio_banks);
- 	dev_dbg(&pdev->dev, "nfunctions = %d\n", info->nfunctions);
- 	dev_dbg(&pdev->dev, "ngroups = %d\n", info->ngroups);
- 
-@@ -1202,7 +1206,7 @@ static int at91_pinctrl_probe(struct platform_device *pdev)
- 	 * to obtain references to the struct gpio_chip * for them, and we
- 	 * need this to proceed.
- 	 */
--	for (i = 0; i < info->nbanks; i++) {
-+	for (i = 0; i < gpio_banks; i++) {
- 		if (!gpio_chips[i]) {
- 			dev_warn(&pdev->dev, "GPIO chip %d not registered yet\n", i);
- 			devm_kfree(&pdev->dev, info);
-@@ -1211,14 +1215,14 @@ static int at91_pinctrl_probe(struct platform_device *pdev)
- 	}
- 
- 	at91_pinctrl_desc.name = dev_name(&pdev->dev);
--	at91_pinctrl_desc.npins = info->nbanks * MAX_NB_GPIO_PER_BANK;
-+	at91_pinctrl_desc.npins = gpio_banks * MAX_NB_GPIO_PER_BANK;
- 	at91_pinctrl_desc.pins = pdesc =
- 		devm_kzalloc(&pdev->dev, sizeof(*pdesc) * at91_pinctrl_desc.npins, GFP_KERNEL);
- 
- 	if (!at91_pinctrl_desc.pins)
- 		return -ENOMEM;
- 
--	for (i = 0 , k = 0; i < info->nbanks; i++) {
-+	for (i = 0 , k = 0; i < gpio_banks; i++) {
- 		for (j = 0; j < MAX_NB_GPIO_PER_BANK; j++, k++) {
- 			pdesc->number = k;
- 			pdesc->name = kasprintf(GFP_KERNEL, "pio%c%d", i + 'A', j);
-@@ -1236,7 +1240,7 @@ static int at91_pinctrl_probe(struct platform_device *pdev)
- 	}
- 
- 	/* We will handle a range of GPIO pins */
--	for (i = 0; i < info->nbanks; i++)
-+	for (i = 0; i < gpio_banks; i++)
- 		pinctrl_add_gpio_range(info->pctl, &gpio_chips[i]->range);
- 
- 	dev_info(&pdev->dev, "initialized AT91 pinctrl driver\n");
-@@ -1614,9 +1618,10 @@ static void gpio_irq_handler(unsigned irq, struct irq_desc *desc)
- static int at91_gpio_of_irq_setup(struct platform_device *pdev,
- 				  struct at91_gpio_chip *at91_gpio)
- {
-+	struct gpio_chip	*gpiochip_prev = NULL;
- 	struct at91_gpio_chip   *prev = NULL;
- 	struct irq_data		*d = irq_get_irq_data(at91_gpio->pioc_virq);
--	int ret;
-+	int ret, i;
- 
- 	at91_gpio->pioc_hwirq = irqd_to_hwirq(d);
- 
-@@ -1642,24 +1647,33 @@ static int at91_gpio_of_irq_setup(struct platform_device *pdev,
- 		return ret;
- 	}
- 
--	/* Setup chained handler */
--	if (at91_gpio->pioc_idx)
--		prev = gpio_chips[at91_gpio->pioc_idx - 1];
--
- 	/* The top level handler handles one bank of GPIOs, except
- 	 * on some SoC it can handle up to three...
- 	 * We only set up the handler for the first of the list.
- 	 */
--	if (prev && prev->next == at91_gpio)
-+	gpiochip_prev = irq_get_handler_data(at91_gpio->pioc_virq);
-+	if (!gpiochip_prev) {
-+		/* Then register the chain on the parent IRQ */
-+		gpiochip_set_chained_irqchip(&at91_gpio->chip,
-+					     &gpio_irqchip,
-+					     at91_gpio->pioc_virq,
-+					     gpio_irq_handler);
- 		return 0;
-+	}
- 
--	/* Then register the chain on the parent IRQ */
--	gpiochip_set_chained_irqchip(&at91_gpio->chip,
--				     &gpio_irqchip,
--				     at91_gpio->pioc_virq,
--				     gpio_irq_handler);
-+	prev = container_of(gpiochip_prev, struct at91_gpio_chip, chip);
- 
--	return 0;
-+	/* we can only have 2 banks before */
-+	for (i = 0; i < 2; i++) {
-+		if (prev->next) {
-+			prev = prev->next;
-+		} else {
-+			prev->next = at91_gpio;
-+			return 0;
-+		}
-+	}
-+
-+	return -EINVAL;
- }
- 
- /* This structure is replicated for each GPIO block allocated at probe time */
-@@ -1676,24 +1690,6 @@ static struct gpio_chip at91_gpio_template = {
- 	.ngpio			= MAX_NB_GPIO_PER_BANK,
- };
- 
--static void at91_gpio_probe_fixup(void)
--{
--	unsigned i;
--	struct at91_gpio_chip *at91_gpio, *last = NULL;
--
--	for (i = 0; i < gpio_banks; i++) {
--		at91_gpio = gpio_chips[i];
--
--		/*
--		 * GPIO controller are grouped on some SoC:
--		 * PIOC, PIOD and PIOE can share the same IRQ line
--		 */
--		if (last && last->pioc_virq == at91_gpio->pioc_virq)
--			last->next = at91_gpio;
--		last = at91_gpio;
--	}
--}
--
- static struct of_device_id at91_gpio_of_match[] = {
- 	{ .compatible = "atmel,at91sam9x5-gpio", .data = &at91sam9x5_ops, },
- 	{ .compatible = "atmel,at91rm9200-gpio", .data = &at91rm9200_ops },
-@@ -1806,8 +1802,6 @@ static int at91_gpio_probe(struct platform_device *pdev)
- 	gpio_chips[alias_idx] = at91_chip;
- 	gpio_banks = max(gpio_banks, alias_idx + 1);
- 
--	at91_gpio_probe_fixup();
--
- 	ret = at91_gpio_of_irq_setup(pdev, at91_chip);
- 	if (ret)
- 		goto irq_setup_err;
--- 
-2.1.3
+All writes being under the protection of your spinlock, this will
+guarantee the 5=C2=B5s delay in all cases.
 
 
---ikeVEW9yuYc//A+q
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+> +static int armada38x_rtc_read_time(struct device *dev, struct rtc_ti=
+me *tm)
+> +{
+> +	struct armada38x_rtc *rtc =3D dev_get_drvdata(dev);
+> +	unsigned long time, time_check, flags;
+> +
+> +	spin_lock_irqsave(&rtc->lock, flags);
+> +
+> +	time =3D readl(rtc->regs + RTC_TIME);
+> +	/*
+> +	 * WA for failing time set attempts. As stated in HW ERRATA if
+> +	 * more than one second between two time reads is detected
+> +	 * then read once again.
+> +	 */
+> +	time_check =3D readl(rtc->regs + RTC_TIME);
+> +	if ((time_check - time) > 1)
+> +		time_check =3D readl(rtc->regs + RTC_TIME);
+> +
+> +	spin_unlock_irqrestore(&rtc->lock, flags);
+> +
+> +	rtc_time_to_tm(time_check, tm);
+> +
+> +	return 0;
+> +}
+> +
+> +static int armada38x_rtc_set_time(struct device *dev, struct rtc_tim=
+e *tm)
+> +{
+> +	struct armada38x_rtc *rtc =3D dev_get_drvdata(dev);
+> +	int ret =3D 0;
+> +	unsigned long time, flags;
+> +
+> +	ret =3D rtc_tm_to_time(tm, &time);
+> +
+> +	if (ret)
+> +		goto out;
+> +	/*
+> +	 * Setting the RTC time not always succeeds. According to the
+> +	 * errata we need to first write on the status register and
+> +	 * then wait for 100ms before writing to the time register to be
+> +	 * sure that the data will be taken into account.
+> +	 */
+> +	spin_lock_irqsave(&rtc->lock, flags);
+> +
+> +	writel(0, rtc->regs + RTC_STATUS);
+> +
+> +	spin_unlock_irqrestore(&rtc->lock, flags);
+> +
+> +	msleep(100);
+> +
+> +	spin_lock_irqsave(&rtc->lock, flags);
+> +
+> +	writel(time, rtc->regs + RTC_TIME);
 
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+probably not critical (it's rtc clock and not system clock) but you sti=
+ll
+introduce a 100ms shift when setting time here.
 
---ikeVEW9yuYc//A+q--
+As for the two writel() not being done w/o releasing the spinlock, it
+looks a bit weird but it seems it's ok for other functions manipulating
+RTC_STATUS reg.=20
+
+Nonetheless, in the reverse direction, if a writel() occurs somewhere
+(e.g. in the alarm irq handler) during your msleep(), you may do your
+final writel() w/o having enforced the expected 100ms delay.
+
+
+> [SNIP]
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
