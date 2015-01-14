@@ -1,48 +1,40 @@
-From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 3/3] backlight: 88pm860x_bl: Use of_get_child_by_name() instead of refcount hack
-Date: Wed, 14 Jan 2015 14:51:59 +0100
-Message-ID: <1421243519-6257-4-git-send-email-geert+renesas@glider.be>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 1/3] powerpc/pmac: Fix DT refcount imbalance in pmac_pic_probe_oldstyle
+Date: Wed, 14 Jan 2015 14:51:57 +0100
+Message-ID: <1421243519-6257-2-git-send-email-geert+renesas@glider.be>
 References: <1421243519-6257-1-git-send-email-geert+renesas@glider.be>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1421243519-6257-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1421243519-6257-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jingoo Han <jg1.han@samsung.com>, Lee Jones <lee.jones@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-of_find_node_by_name() calls of_node_put() on its "from" parameter.
-To counter this, pm860x_backlight_dt_init() calls of_node_get() first.
+of_find_node_by_name() calls of_node_put() on its "from" parameter,
+which must not be done on "master", as it's still in use, and will be
+released manually later.  This may cause a zero kref refcount.
+Use of_get_child_by_name() instead to fix this.
 
-Use of_get_child_by_name() instead to get rid of the refcount hack.
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: linuxppc-dev@lists.ozlabs.org
 ---
 Compile-tested only
 ---
- drivers/video/backlight/88pm860x_bl.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ arch/powerpc/platforms/powermac/pic.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/video/backlight/88pm860x_bl.c b/drivers/video/backlight/88pm860x_bl.c
-index 9a23698b6fe8398c..2da5862876d1fe78 100644
---- a/drivers/video/backlight/88pm860x_bl.c
-+++ b/drivers/video/backlight/88pm860x_bl.c
-@@ -168,10 +168,7 @@ static int pm860x_backlight_dt_init(struct platform_device *pdev,
- 	struct device_node *nproot, *np;
- 	int iset = 0;
+diff --git a/arch/powerpc/platforms/powermac/pic.c b/arch/powerpc/platforms/powermac/pic.c
+index 4c24bf60d39d2834..90ada1209c118902 100644
+--- a/arch/powerpc/platforms/powermac/pic.c
++++ b/arch/powerpc/platforms/powermac/pic.c
+@@ -321,7 +321,7 @@ static void __init pmac_pic_probe_oldstyle(void)
+ 		max_irqs = max_real_irqs = 64;
  
--	nproot = of_node_get(pdev->dev.parent->of_node);
--	if (!nproot)
--		return -ENODEV;
--	nproot = of_find_node_by_name(nproot, "backlights");
-+	nproot = of_get_child_by_name(pdev->dev.parent->of_node, "backlights");
- 	if (!nproot) {
- 		dev_err(&pdev->dev, "failed to find backlights node\n");
- 		return -ENODEV;
+ 		/* We might have a second cascaded heathrow */
+-		slave = of_find_node_by_name(master, "mac-io");
++		slave = of_get_child_by_name(master, "mac-io");
+ 
+ 		/* Check ordering of master & slave */
+ 		if (of_device_is_compatible(master, "gatwick")) {
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
