@@ -1,357 +1,47 @@
-From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH 1/2] ARM: imx6sx-sdb: change default board as reva board
-Date: Wed, 14 Jan 2015 15:36:37 +0800
-Message-ID: <1421220998-3491-2-git-send-email-peter.chen@freescale.com>
-References: <1421220998-3491-1-git-send-email-peter.chen@freescale.com>
+From: Peter Chen <peter.chen@freescale.com>
+Subject: [PATCH 0/2] ARM: imx6sx-sdb: add revb board
+Date: Wed, 14 Jan 2015 15:36:36 +0800
+Message-ID: <1421220998-3491-1-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1421220998-3491-1-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: shawn.guo@linaro.org, kernel@pengutronix.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, Peter Chen <peter.chen@freescale.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The imx6sx sdb board has two revisions, the current mainline one
-is reva which is mainly for internal use. In this commit, we
-rename imx6sx-sdb.dts to imx6sx-sdb.dtsi, and move the reva dedicated
-contents to imx6sx-sdb-reva.dts.
+Hi Shawn,
 
-Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
+The imx6sx-sdb board has two revisions, the current mainline is the
+reva which is used by internal user mainly, and the revb is used widely
+for internal and external users.
+
+The main changes between reva and revb board:
+- cpu operating point and related voltage
+- pfuse
+- qspi
+- can transceiver (not mainlined)
+
+Peter Chen (2):
+  ARM: imx6sx-sdb: change default board as reva board
+  ARM: imx6sx-sdb: add revb board
+
  arch/arm/boot/dts/imx6sx-sdb-reva.dts              | 158 +++++++++++++++++++++
+ arch/arm/boot/dts/imx6sx-sdb-revb.dts              | 145 +++++++++++++++++++
  .../boot/dts/{imx6sx-sdb.dts => imx6sx-sdb.dtsi}   | 131 -----------------
- 2 files changed, 158 insertions(+), 131 deletions(-)
+ 3 files changed, 303 insertions(+), 131 deletions(-)
  create mode 100644 arch/arm/boot/dts/imx6sx-sdb-reva.dts
+ create mode 100644 arch/arm/boot/dts/imx6sx-sdb-revb.dts
  rename arch/arm/boot/dts/{imx6sx-sdb.dts => imx6sx-sdb.dtsi} (83%)
 
-diff --git a/arch/arm/boot/dts/imx6sx-sdb-reva.dts b/arch/arm/boot/dts/imx6sx-sdb-reva.dts
-new file mode 100644
-index 0000000..e7a8c34
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6sx-sdb-reva.dts
-@@ -0,0 +1,158 @@
-+/*
-+ * Copyright (C) 2014-2015 Freescale Semiconductor, Inc.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include "imx6sx-sdb.dtsi"
-+
-+/ {
-+	model = "Freescale i.MX6 SoloX SDB RevA Board";
-+};
-+
-+&cpu0 {
-+	operating-points = <
-+		/* kHz    uV */
-+		996000  1250000
-+		792000  1175000
-+		396000  1075000
-+	>;
-+	fsl,soc-operating-points = <
-+		/* ARM kHz  SOC uV */
-+		996000      1175000
-+		792000      1175000
-+		396000      1175000
-+	>;
-+};
-+
-+&i2c1 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c1>;
-+	status = "okay";
-+
-+	pmic: pfuze100@08 {
-+		compatible = "fsl,pfuze100";
-+		reg = <0x08>;
-+
-+		regulators {
-+			sw1a_reg: sw1ab {
-+				regulator-min-microvolt = <300000>;
-+				regulator-max-microvolt = <1875000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+				regulator-ramp-delay = <6250>;
-+			};
-+
-+			sw1c_reg: sw1c {
-+				regulator-min-microvolt = <300000>;
-+				regulator-max-microvolt = <1875000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+				regulator-ramp-delay = <6250>;
-+			};
-+
-+			sw2_reg: sw2 {
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			sw3a_reg: sw3a {
-+				regulator-min-microvolt = <400000>;
-+				regulator-max-microvolt = <1975000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			sw3b_reg: sw3b {
-+				regulator-min-microvolt = <400000>;
-+				regulator-max-microvolt = <1975000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			sw4_reg: sw4 {
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <3300000>;
-+			};
-+
-+			swbst_reg: swbst {
-+				regulator-min-microvolt = <5000000>;
-+				regulator-max-microvolt = <5150000>;
-+			};
-+
-+			snvs_reg: vsnvs {
-+				regulator-min-microvolt = <1000000>;
-+				regulator-max-microvolt = <3000000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vref_reg: vrefddr {
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vgen1_reg: vgen1 {
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <1550000>;
-+				regulator-always-on;
-+			};
-+
-+			vgen2_reg: vgen2 {
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <1550000>;
-+			};
-+
-+			vgen3_reg: vgen3 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vgen4_reg: vgen4 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vgen5_reg: vgen5 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vgen6_reg: vgen6 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+		};
-+	};
-+};
-+
-+&qspi2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_qspi2>;
-+	status = "okay";
-+
-+	flash0: s25fl128s@0 {
-+		reg = <0>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "spansion,s25fl128s";
-+		spi-max-frequency = <66000000>;
-+	};
-+
-+	flash1: s25fl128s@1 {
-+		reg = <1>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "spansion,s25fl128s";
-+		spi-max-frequency = <66000000>;
-+	};
-+};
-diff --git a/arch/arm/boot/dts/imx6sx-sdb.dts b/arch/arm/boot/dts/imx6sx-sdb.dtsi
-similarity index 83%
-rename from arch/arm/boot/dts/imx6sx-sdb.dts
-rename to arch/arm/boot/dts/imx6sx-sdb.dtsi
-index cdffe84..7b02aa7 100644
---- a/arch/arm/boot/dts/imx6sx-sdb.dts
-+++ b/arch/arm/boot/dts/imx6sx-sdb.dtsi
-@@ -13,7 +13,6 @@
- #include "imx6sx.dtsi"
- 
- / {
--	model = "Freescale i.MX6 SoloX SDB Board";
- 	compatible = "fsl,imx6sx-sdb", "fsl,imx6sx";
- 
- 	chosen {
-@@ -169,114 +168,6 @@
- 	status = "okay";
- };
- 
--&i2c1 {
--        clock-frequency = <100000>;
--        pinctrl-names = "default";
--        pinctrl-0 = <&pinctrl_i2c1>;
--        status = "okay";
--
--	pmic: pfuze100@08 {
--		compatible = "fsl,pfuze100";
--		reg = <0x08>;
--
--		regulators {
--			sw1a_reg: sw1ab {
--				regulator-min-microvolt = <300000>;
--				regulator-max-microvolt = <1875000>;
--				regulator-boot-on;
--				regulator-always-on;
--				regulator-ramp-delay = <6250>;
--			};
--
--			sw1c_reg: sw1c {
--				regulator-min-microvolt = <300000>;
--				regulator-max-microvolt = <1875000>;
--				regulator-boot-on;
--				regulator-always-on;
--				regulator-ramp-delay = <6250>;
--			};
--
--			sw2_reg: sw2 {
--				regulator-min-microvolt = <800000>;
--				regulator-max-microvolt = <3300000>;
--				regulator-boot-on;
--				regulator-always-on;
--			};
--
--			sw3a_reg: sw3a {
--				regulator-min-microvolt = <400000>;
--				regulator-max-microvolt = <1975000>;
--				regulator-boot-on;
--				regulator-always-on;
--			};
--
--			sw3b_reg: sw3b {
--				regulator-min-microvolt = <400000>;
--				regulator-max-microvolt = <1975000>;
--				regulator-boot-on;
--				regulator-always-on;
--			};
--
--			sw4_reg: sw4 {
--				regulator-min-microvolt = <800000>;
--				regulator-max-microvolt = <3300000>;
--			};
--
--			swbst_reg: swbst {
--				regulator-min-microvolt = <5000000>;
--				regulator-max-microvolt = <5150000>;
--			};
--
--			snvs_reg: vsnvs {
--				regulator-min-microvolt = <1000000>;
--				regulator-max-microvolt = <3000000>;
--				regulator-boot-on;
--				regulator-always-on;
--			};
--
--			vref_reg: vrefddr {
--				regulator-boot-on;
--				regulator-always-on;
--			};
--
--			vgen1_reg: vgen1 {
--				regulator-min-microvolt = <800000>;
--				regulator-max-microvolt = <1550000>;
--				regulator-always-on;
--			};
--
--			vgen2_reg: vgen2 {
--				regulator-min-microvolt = <800000>;
--				regulator-max-microvolt = <1550000>;
--			};
--
--			vgen3_reg: vgen3 {
--				regulator-min-microvolt = <1800000>;
--				regulator-max-microvolt = <3300000>;
--				regulator-always-on;
--			};
--
--			vgen4_reg: vgen4 {
--				regulator-min-microvolt = <1800000>;
--				regulator-max-microvolt = <3300000>;
--				regulator-always-on;
--			};
--
--			vgen5_reg: vgen5 {
--				regulator-min-microvolt = <1800000>;
--				regulator-max-microvolt = <3300000>;
--				regulator-always-on;
--			};
--
--			vgen6_reg: vgen6 {
--				regulator-min-microvolt = <1800000>;
--				regulator-max-microvolt = <3300000>;
--				regulator-always-on;
--			};
--		};
--	};
--};
--
- &i2c4 {
-         clock-frequency = <100000>;
-         pinctrl-names = "default";
-@@ -340,28 +231,6 @@
- 	status = "okay";
- };
- 
--&qspi2 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_qspi2>;
--	status = "okay";
--
--	flash0: s25fl128s@0 {
--		reg = <0>;
--		#address-cells = <1>;
--		#size-cells = <1>;
--		compatible = "spansion,s25fl128s";
--		spi-max-frequency = <66000000>;
--	};
--
--	flash1: s25fl128s@1 {
--		reg = <1>;
--		#address-cells = <1>;
--		#size-cells = <1>;
--		compatible = "spansion,s25fl128s";
--		spi-max-frequency = <66000000>;
--	};
--};
--
- &ssi2 {
- 	status = "okay";
- };
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
