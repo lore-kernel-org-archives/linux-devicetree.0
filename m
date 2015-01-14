@@ -1,87 +1,47 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v8 1/2] drivers/gpio: Altera soft IP GPIO driver device
- tree binding
-Date: Wed, 14 Jan 2015 11:01:49 +0100
-Message-ID: <CACRpkdZue+9v2+9wfdOqZhh5rEyxCqy6BMVmADW+qkNZNi2pKw@mail.gmail.com>
-References: <1419409345-8297-1-git-send-email-thloh@altera.com>
-	<1419409345-8297-2-git-send-email-thloh@altera.com>
+From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 0/3] pinctrl: at91: allow disabled gpio controllers
+Date: Wed, 14 Jan 2015 11:08:06 +0100
+Message-ID: <1421230089-1418-1-git-send-email-ludovic.desroches@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1419409345-8297-2-git-send-email-thloh@altera.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Tien Hock Loh <thloh@altera.com>
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Joe Perches <joe@perches.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Antti Palosaari <crope@iki.fi>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Dinh Nguyen <dinguyen@altera.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 24, 2014 at 9:22 AM,  <thloh@altera.com> wrote:
+Hi Linus,
 
-> From: Tien Hock Loh <thloh@altera.com>
->
-> Adds a new driver device tree binding for Altera soft GPIO IP
->
-> Signed-off-by: Tien Hock Loh <thloh@altera.com>
-> ---
->  .../devicetree/bindings/gpio/gpio-altera.txt       |   43 ++++++++++++++++++++
->  1 files changed, 43 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-altera.txt
->
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-altera.txt b/Documentation/devicetree/bindings/gpio/gpio-altera.txt
-> new file mode 100644
-> index 0000000..649fa02
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-altera.txt
-> @@ -0,0 +1,43 @@
-> +Altera GPIO controller bindings
-> +
-> +Required properties:
-> +- compatible:
-> +  - "altr,pio-1.0"
-> +- reg: Physical base address and length of the controller's registers.
-> +- #gpio-cells : Should be 2
+I have updated the previous version. I have tried to follow your advice but it
+doesn't seem to be the best solution in my case.
 
-Yeah.
+You told me to use gpiochip_add_pingroup_range() instead of
+pinctrl_add_gpio_range(). I agree that is the proper way to manage a gap but it
+only solves my issue on gpio side but not on muxing side. I still need some
+fixes. Moreover it involves to add the gpio-ranges property so to update our
+dtsi files so it will break backward compatibility.
 
-> +  - The first cell is the gpio offset number.
-> +  - The second cell is reserved and is currently unused.
-> +- gpio-controller : Marks the device node as a GPIO controller.
-> +- interrupt-controller: Mark the device node as an interrupt controller
-> +- #interrupt-cells : Should be 1. The interrupt type is fixed in the hardware.
-> +  - The first cell is the GPIO offset number within the GPIO controller.
-> +- interrupts: Specify the interrupt.
-> +- altr,interrupt-trigger: Specifies the interrupt trigger type the GPIO
-> +  hardware is synthesized. This field is required if the Altera GPIO controller
-> +  used has IRQ enabled as the interrupt type is not software controlled,
-> +  but hardware synthesized. Required if GPIO is used as an interrupt
-> +  controller. The value is defined in <dt-bindings/interrupt-controller/irq.h>
-> +  Only the following flags are supported:
-> +    IRQ_TYPE_EDGE_RISING
-> +    IRQ_TYPE_EDGE_FALLING
-> +    IRQ_TYPE_EDGE_BOTH
-> +    IRQ_TYPE_LEVEL_HIGH
-> +
-> +Optional properties:
-> +- altr,ngpio: Width of the GPIO bank. This defines how many pins the
-> +  GPIO device has. Ranges between 1-32. Optional and defaults to 32 is not
-> +  specified.
-> +
-> +Example:
-> +
-> +gpio_altr: gpio@0xff200000 {
-> +       compatible = "altr,pio-1.0";
-> +       reg = <0xff200000 0x10>;
-> +       interrupts = <0 45 4>;
-> +       altr,ngpio = <32>;
-> +       altr,interrupt_trigger = <IRQ_TYPE_EDGE_RISING>;
-> +       #gpio-cells = <1>;
+By the way, I would like to be co-maintainer on this driver as it seems the
+maintainer is not very active at the moment.
 
-So why is there one cell in the example?
+Regards
 
-I know the second cell will describe the interrupt type that is
-anyway hardcoded but yeah, I guess it is best to work
-like all other controllers.
+Ludovic
 
-If you actually want it onecell that is fine too.
+Ludovic Desroches (3):
+  pinctrl: at91: allow disabled pio controllers
+  ARM: at91/dt: sama5d4: add pioD controller
+  MAINTAINERS: add maintainer for pinctrl-at91
 
-Yours,
-Linus Walleij
+ MAINTAINERS                    |  1 +
+ arch/arm/boot/dts/sama5d4.dtsi | 13 +++++++++++++
+ drivers/pinctrl/pinctrl-at91.c | 30 ++++++++++++++++++++++--------
+ 3 files changed, 36 insertions(+), 8 deletions(-)
+
+-- 
+2.2.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
