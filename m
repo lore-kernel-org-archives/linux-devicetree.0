@@ -1,92 +1,65 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v9 1/4] drm/i2c: tda998x: Add DT support
-	for audio
-Date: Wed, 14 Jan 2015 12:50:56 +0000
-Message-ID: <20150114125056.GU4160@sirena.org.uk>
-References: <20150112175705.GN12302@n2100.arm.linux.org.uk>
- <1421151718.4519.24.camel@pengutronix.de>
- <20150113122715.GP12302@n2100.arm.linux.org.uk>
- <20150113165411.5469930d@armhf>
- <20150113160313.GR12302@n2100.arm.linux.org.uk>
- <20150113200252.3dbfab14@armhf>
- <20150113192648.GU12302@n2100.arm.linux.org.uk>
- <54B574CD.9020905@ti.com>
- <20150113195415.GV12302@n2100.arm.linux.org.uk>
- <1421232418.3155.31.camel@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4847048719639612950=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1421232418.3155.31.camel@pengutronix.de>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Jean-Francois Moine <moinejf@free.fr>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Andrew Jackson <Andrew.Jackson@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Dave Airlie <airlied@gmail.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH V2 0/4] mmc: core: Add support for MMC power sequences
+Date: Wed, 14 Jan 2015 14:02:06 +0100
+Message-ID: <1421240530-7971-1-git-send-email-ulf.hansson@linaro.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: linux-mmc@vger.kernel.org, Chris Ball <chris@printf.net>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Alexandre Courbot <gnurou@gmail.com>, Arend van Spriel <arend@broadcom.com>, Sascha Hauer <s.hauer@pengutronix.de>, Olof Johansson <olof@lixom.net>, Russell King <linux@arm.linux.org.uk>, Hans de Goede <hdegoede@redhat.com>, Doug Anderson <dianders@chromium.org>, NeilBrown <neilb@suse.de>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Ulf Hansson <ulf.hansson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-
---===============4847048719639612950==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="9o1Xi4ZMQ45MudWG"
-Content-Disposition: inline
-
-
---9o1Xi4ZMQ45MudWG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Wed, Jan 14, 2015 at 11:46:58AM +0100, Philipp Zabel wrote:
-
-> So the question is mostly whether four I2S data pins with a single
-> shared WS/SCK input should be called "four I2S ports with shared clocks"
-> or "one I2S port with up to four data lanes". I'd lean towards the
-> latter.
-
-Yes, this is what we're doing for the Samsung CPU side controllers which
-implement this natively and seems to make sense here too - the different
-channels can't really work as separate interfaces in any practical way.
-
-> How audio2_i2s is forced to synchronize its clock output to audio1_i2s
-> is a problem their bindings will have to handle.
-
-Trying to hook up a controller that doesn't natively support this format
-to a device that uses it is definitely tricky, as well as describing the
-physical hookup we also need to worry about how things look to userspace
-- it's ideally going to want a single multi-channel audio stream.
-
-I think from a binding point of view we need a way to say "this endpoint
-on the link is constructed from these DAIs on the device side" and say
-if this is TDM or multi-data, and what's driving the clocks.
-
---9o1Xi4ZMQ45MudWG
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJUtmYvAAoJECTWi3JdVIfQt28H/1viMMw+EK2qHbR88BLH5iLi
-9tbosp+jQxC+PTtsTI5YlUR3T/shxxV7+xA9D6wPezG2tyDghYicKvcDinxWGYnK
-7wwtbmDBsRv69WPyeLNeZtZnTb4Oox5TYIYy1EtZluc1bYmpB3w1/MuOe4OU7ZdW
-lkaOaL9pw8Bjx7ycw1rBIPbxszsOhDiQkrDkYKoKD3SlkCeSxtBAtJJG2Fas5AfS
-yu8nGIGEI6f6EzXj4ry+j8/fAgftH+SMXj1/A+rOjFRWgjns9sCd8E9Sp2K7gEsl
-wTgiBH1gecrvcQ3gnO492ZqfBvST+U2J0pzzDrOEKmLfck/2hoqLe884+yKdWgQ=
-=pZEW
------END PGP SIGNATURE-----
-
---9o1Xi4ZMQ45MudWG--
-
---===============4847048719639612950==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Changes in v2:
+	Fixed comments from Russell King:
+	- Renamed pwrseq callbacks and corresponding interface functions.
+	- Move the call to the previous namned ->power_on() callback, to the
+	  end of mmc_power_up() to get consistent behavior.
 
 
---===============4847048719639612950==--
+This is yet another try to solve the issues of dealing with power sequences for
+the MMC subsystem. The latest attempt, see link below, took a generic approach
+by adding a new top level driver layer. That's was rejected by several reasons.
+http://lwn.net/Articles/602855/
+
+This time the approach is focused to fix the issues for MMC only.
+
+To give a short background, SOCs may specify a specific MMC power sequence. To
+successfully detect an (e)MMC/SD/SDIO card, that power sequence must be followed
+while initializing the card.
+
+To be able to handle these SOC specific power sequences, we add a MMC power
+sequence interface, which helps the mmc core to deal with such.
+
+A MMC power sequence provider then implements a set of callbacks from the above
+mentioned interface. The provider has a corresponding DT compatibility string
+and relies on CONFIG_OF to be set to find it's various resourses, like for
+example a GPIO reset.
+
+The mmc core will from mmc_of_parse() try find a "mmc-pwrseq" DT node and then
+call the corresponding MMC power sequence provider's initialization function.
+
+
+Ulf Hansson (4):
+  mmc: core: Initial support for MMC power sequences
+  mmc: pwrseq: Document DT bindings for the simple MMC power sequence
+  mmc: pwrseq: Initial support for the simple MMC power sequence
+    provider
+  mmc: pwrseq_simple: Add support for a reset GPIO pin
+
+ .../devicetree/bindings/mmc/mmc,pwrseq-simple.txt  |  23 +++++
+ Documentation/devicetree/bindings/mmc/mmc.txt      |   5 +
+ drivers/mmc/core/Makefile                          |   2 +-
+ drivers/mmc/core/core.c                            |   7 ++
+ drivers/mmc/core/host.c                            |   4 +-
+ drivers/mmc/core/pwrseq.c                          | 109 +++++++++++++++++++++
+ drivers/mmc/core/pwrseq.h                          |  42 ++++++++
+ drivers/mmc/core/pwrseq_simple.c                   |  86 ++++++++++++++++
+ include/linux/mmc/host.h                           |   2 +
+ 9 files changed, 278 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mmc/mmc,pwrseq-simple.txt
+ create mode 100644 drivers/mmc/core/pwrseq.c
+ create mode 100644 drivers/mmc/core/pwrseq.h
+ create mode 100644 drivers/mmc/core/pwrseq_simple.c
+
+-- 
+1.9.1
+
