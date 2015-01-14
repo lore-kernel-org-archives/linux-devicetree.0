@@ -1,110 +1,170 @@
-From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH] of: Add missing of_node_put() in of_find_node_by_path()
-Date: Wed, 14 Jan 2015 16:45:56 +0100
-Message-ID: <1421250356-16690-1-git-send-email-geert+renesas@glider.be>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
+Subject: [PATCH 2/2] ARM: DT: STiH410: Add DRM dt nodes
+Date: Wed, 14 Jan 2015 16:47:12 +0100
+Message-ID: <1421250432-25903-3-git-send-email-gabriel.fernandez@linaro.org>
+References: <1421250432-25903-1-git-send-email-gabriel.fernandez@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1421250432-25903-1-git-send-email-gabriel.fernandez@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>
+Cc: linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-When traversing all nodes and moving to a new path component, the old
-one must be released by calling of_node_put(). Else the refcounts of the
-parent node(s) will not be decremented.
+This patch adds the DRM/KMS dt nodes.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
 ---
-Background.
+ arch/arm/boot/dts/stih410.dtsi | 138 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 138 insertions(+)
 
-While investigating a reference count imbalance issue with
-CONFIG_OF_DYNAMIC=y, I wrote the debug code below to validate the
-reference counts of the nodes I was interested in.
-During the first call of check_refcnts(), it gathers all reference
-counts. During a subsequent call, it verifies that they are still the
-same.
-
-Surprisingly, lots of reference counts were wrong, and kept incrementing
-every time check_refcnts() was called.
-
-I was just wondering whether it would be useful to have a reference
-count test in OF_UNITTEST, but now I see the "select OF_DYNAMIC" will go
-away?
-
-Feel free to (ab)use the code below and derive a unittest from it...
-
-static struct to_check {
-	const char *path;
-	int refcnt;
-} to_check[] = {
-	{ "/" },
-	{ "/cpus/cpu@0" },
-	{ "/cpus/cpu@1" },
-	/* ... other paths I was interested in ... */
-};
-
-static void check_refcnts(void)
-{
-	static bool called;
-	unsigned int i;
-	const char *path;
-	struct device_node *np;
-	int refcnt;
-	unsigned int errors = 0;
-
-	pr_info("----- %s reference counts -----\n",
-		called ? "Checking" : "Saving");
-	for (i = 0; i < ARRAY_SIZE(to_check); i++) {
-		path = to_check[i].path;
-		np = of_find_node_by_path(path);
-		if (!np)
-			continue;
-
-		refcnt = atomic_read(&np->kobj.kref.refcount);
-		if (!called) {
-			pr_info("%s %d\n", path, refcnt);
-			to_check[i].refcnt = refcnt;
-		} else if (refcnt == to_check[i].refcnt) {
-			pr_info("%s %d (OK)\n", path, refcnt);
-		} else {
-			pr_info("%s %d (should be %d)\n", path, refcnt,
-				to_check[i].refcnt);
-			errors++;
-		}
-
-		of_node_put(np);
-	}
-
-	if (called)
-		pr_info("----- Checking done (%u errors) -----\n", errors);
-	else
-		pr_info("----- Saving done -----\n");
-
-	called = true;
-}
----
- drivers/of/base.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 36536b6a8834acd2..f3e346e19c69d1f2 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -791,8 +791,10 @@ struct device_node *of_find_node_opts_by_path(const char *path, const char **opt
- 	if (!np)
- 		np = of_node_get(of_root);
- 	while (np && *path == '/') {
-+		struct device_node *parent = np;
- 		path++; /* Increment past '/' delimiter */
--		np = __of_find_node_by_path(np, path);
-+		np = __of_find_node_by_path(parent, path);
-+		of_node_put(parent);
- 		path = strchrnul(path, '/');
- 	}
- 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+diff --git a/arch/arm/boot/dts/stih410.dtsi b/arch/arm/boot/dts/stih410.dtsi
+index 37995f4..208b5e8 100644
+--- a/arch/arm/boot/dts/stih410.dtsi
++++ b/arch/arm/boot/dts/stih410.dtsi
+@@ -80,5 +80,143 @@
+ 			phys = <&usb2_picophy2>;
+ 			phy-names = "usb";
+ 		};
++
++		/* Display */
++		vtg_main: sti-vtg-main@8d02800 {
++			compatible = "st,vtg";
++			reg = <0x8d02800 0x200>;
++			interrupts = <GIC_SPI 108 IRQ_TYPE_NONE>;
++		};
++
++		vtg_aux: sti-vtg-aux@8d00200 {
++			compatible = "st,vtg";
++			reg = <0x8d00200 0x100>;
++			interrupts = <GIC_SPI 109 IRQ_TYPE_NONE>;
++		};
++
++		sti-display-subsystem {
++			compatible = "st,sti-display-subsystem";
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			assigned-clocks	= <&clk_s_d2_quadfs 0>,
++					  <&clk_s_d2_quadfs 0>,
++					  <&clk_s_d2_flexgen CLK_PIX_MAIN_DISP>,
++					  <&clk_s_d2_flexgen CLK_PIX_AUX_DISP>,
++					  <&clk_s_d2_flexgen CLK_PIX_GDP1>,
++					  <&clk_s_d2_flexgen CLK_PIX_GDP2>,
++					  <&clk_s_d2_flexgen CLK_PIX_GDP3>,
++					  <&clk_s_d2_flexgen CLK_PIX_GDP4>;
++
++			assigned-clock-parents = <0>,
++						 <0>,
++						 <&clk_s_d2_quadfs 0>,
++						 <&clk_s_d2_quadfs 0>,
++						 <&clk_s_d2_quadfs 0>,
++						 <&clk_s_d2_quadfs 0>,
++						 <&clk_s_d2_quadfs 0>,
++						 <&clk_s_d2_quadfs 0>;
++
++			assigned-clock-rates = <297000000>, <297000000>;
++
++			ranges;
++
++			sti-compositor@9d11000 {
++				compatible = "st,stih407-compositor";
++				reg = <0x9d11000 0x1000>;
++
++				clock-names = "compo_main",
++					      "compo_aux",
++					      "pix_main",
++					      "pix_aux",
++					      "pix_gdp1",
++					      "pix_gdp2",
++					      "pix_gdp3",
++					      "pix_gdp4",
++					      "main_parent",
++					      "aux_parent";
++
++				clocks = <&clk_s_c0_flexgen CLK_COMPO_DVP>,
++					 <&clk_s_c0_flexgen CLK_COMPO_DVP>,
++					 <&clk_s_d2_flexgen CLK_PIX_MAIN_DISP>,
++					 <&clk_s_d2_flexgen CLK_PIX_AUX_DISP>,
++					 <&clk_s_d2_flexgen CLK_PIX_GDP1>,
++					 <&clk_s_d2_flexgen CLK_PIX_GDP2>,
++					 <&clk_s_d2_flexgen CLK_PIX_GDP3>,
++					 <&clk_s_d2_flexgen CLK_PIX_GDP4>,
++					 <&clk_s_d2_quadfs 0>,
++					 <&clk_s_d2_quadfs 1>;
++
++				reset-names = "compo-main", "compo-aux";
++				resets = <&softreset STIH407_COMPO_SOFTRESET>,
++					 <&softreset STIH407_COMPO_SOFTRESET>;
++				st,vtg = <&vtg_main>, <&vtg_aux>;
++			};
++
++			sti-tvout@8d08000 {
++				compatible = "st,stih407-tvout";
++				reg = <0x8d08000 0x1000>;
++				reg-names = "tvout-reg";
++				reset-names = "tvout";
++				resets = <&softreset STIH407_HDTVOUT_SOFTRESET>;
++				#address-cells = <1>;
++				#size-cells = <1>;
++				assigned-clocks = <&clk_s_d2_flexgen CLK_PIX_HDMI>,
++						  <&clk_s_d2_flexgen CLK_TMDS_HDMI>,
++						  <&clk_s_d2_flexgen CLK_REF_HDMIPHY>,
++						  <&clk_s_d0_flexgen CLK_PCM_0>,
++						  <&clk_s_d2_flexgen CLK_PIX_HDDAC>,
++						  <&clk_s_d2_flexgen CLK_HDDAC>;
++
++				assigned-clock-parents = <&clk_s_d2_quadfs 0>,
++							 <&clk_tmdsout_hdmi>,
++							 <&clk_s_d2_quadfs 0>,
++							 <&clk_s_d0_quadfs 0>,
++							 <&clk_s_d2_quadfs 0>,
++							 <&clk_s_d2_quadfs 0>;
++				ranges;
++
++				sti-hdmi@8d04000 {
++					compatible = "st,stih407-hdmi";
++					reg = <0x8d04000 0x1000>;
++					reg-names = "hdmi-reg";
++					interrupts = <GIC_SPI 106 IRQ_TYPE_NONE>;
++					interrupt-names	= "irq";
++					clock-names = "pix",
++						      "tmds",
++						      "phy",
++						      "audio",
++						      "main_parent",
++						      "aux_parent";
++
++					clocks = <&clk_s_d2_flexgen CLK_PIX_HDMI>,
++						 <&clk_s_d2_flexgen CLK_TMDS_HDMI>,
++						 <&clk_s_d2_flexgen CLK_REF_HDMIPHY>,
++						 <&clk_s_d0_flexgen CLK_PCM_0>,
++						 <&clk_s_d2_quadfs 0>,
++						 <&clk_s_d2_quadfs 1>;
++
++					hdmi,hpd-gpio = <&pio5 3>;
++					reset-names = "hdmi";
++					resets = <&softreset STIH407_HDMI_TX_PHY_SOFTRESET>;
++					ddc = <&hdmiddc>;
++
++				};
++
++				sti-hda@8d02000 {
++					compatible = "st,stih407-hda";
++					reg = <0x8d02000 0x400>, <0x92b0120 0x4>;
++					reg-names = "hda-reg", "video-dacs-ctrl";
++					clock-names = "pix",
++						      "hddac",
++						      "main_parent",
++						      "aux_parent";
++					clocks = <&clk_s_d2_flexgen CLK_PIX_HDDAC>,
++						 <&clk_s_d2_flexgen CLK_HDDAC>,
++						 <&clk_s_d2_quadfs 0>,
++						 <&clk_s_d2_quadfs 1>;
++				};
++			};
++		};
+ 	};
+ };
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
