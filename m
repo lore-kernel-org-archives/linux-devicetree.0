@@ -1,39 +1,81 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH] ARM: shmobile: r8a7791: fix MSTP8 input clocks
-Date: Wed, 14 Jan 2015 22:00:19 +0300
-Message-ID: <54B6BCC3.6040307@cogentembedded.com>
-References: <4221957.7dd2kFrTHY@wasted.cogentembedded.com> <20150113003604.GB27284@verge.net.au>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20150113003604.GB27284@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Subject: Re: [PATCH v8 2/4] fpga manager: add sysfs interface document
+Date: Wed, 14 Jan 2015 21:01:33 +0200
+Message-ID: <9BA687C8-8C37-48DA-9A76-E82AF2339FF7@konsulko.com>
+References: <20150107084819.GA1887@amd>
+ <alpine.DEB.2.02.1501091302370.30067@linuxheads99>
+ <20150109205643.GA5761@amd> <20150112210134.687176ed@lxorguk.ukuu.org.uk>
+ <20150112214314.GA18610@obsidianresearch.com>
+ <20150113162847.2778b5a5@lxorguk.ukuu.org.uk>
+ <20150113200032.GA16205@obsidianresearch.com>
+ <alpine.DEB.2.02.1501131455130.30192@linuxheads99>
+ <20150113222450.GA17475@obsidianresearch.com>
+ <20150114160617.02fb9135@lxorguk.ukuu.org.uk>
+ <20150114181258.GB16392@obsidianresearch.com>
+Mime-Version: 1.0 (Mac OS X Mail 8.1 \(1993\))
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20150114181258.GB16392@obsidianresearch.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Cc: mark.rutland@arm.com, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, linux-doc@vger.kernel.org, rubini@gnudd.com, hpa@zytor.com, Steffen Trumtrar <s.trumtrar@pengutronix.de>, devel@driverdev.osuosl.org, sameo@linux.intel.com, nico@linaro.org, ijc+devicetree@hellion.org.uk, Michal Simek <michal.simek@xilinx.com>, kyle.teske@ni.com, Grant Likely <grant.likely@linaro.org>, davidb@codeaurora.org, Linus Walleij <linus.walleij@linaro.org>, cesarb@cesarb.net, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, iws@ovro.caltech.edu, atull <atull@opensource.altera.com>, galak@codeaurora.org, Mark Brown <broonie@kernel.org>, philip@balister.org, dinguyen@opensource.altera.com, Michal Simek <monstr@monstr.eu>, Pavel Machek <pavel@denx.de>, yvanderv@opensource.altera.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, Alan
 List-Id: devicetree@vger.kernel.org
 
-Hello.
-
-On 01/13/2015 03:36 AM, Simon Horman wrote:
-
->> I made  a mistake when rebasing Andrey Gusakov's patch adding MLB+ clock to the
->> R8A7791 device  tree, inserting <&hp_clk> into the "clocks"  property of the
->> MSTP8 node at a wrong position, so that the input clocks for MLB+ and IPMMU-SGX
->> got swapped...
-
->> Fixes: 7408d3061d2f ("ARM: shmobile: r8a7791: add MLB+ clock")
->> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-
->> ---
->> The patch is against 'renesas-devel-20150108v2-v3.19-rc3' tag of Simon Horman's
->> 'renesas.git' repo.
-
-> Thanks, I have queued this up.
-
-    Thank you! I've just noticed that this patch was atop of several other 
-patches in my tree, so there might have been an offset when you applied it.
-Sorry about that... :-<
-
-WBR, Sergei
-
+SGkgSmFzb24sCgo+IE9uIEphbiAxNCwgMjAxNSwgYXQgMjA6MTIgLCBKYXNvbiBHdW50aG9ycGUg
+PGpndW50aG9ycGVAb2JzaWRpYW5yZXNlYXJjaC5jb20+IHdyb3RlOgo+IAo+IE9uIFdlZCwgSmFu
+IDE0LCAyMDE1IGF0IDA0OjA2OjE3UE0gKzAwMDAsIE9uZSBUaG91c2FuZCBHbm9tZXMgd3JvdGU6
+Cj4gCj4+IGFuZCBJIHRoaW5rIHlvdSBlZmZlY3RpdmVseSBoYXZlIHRoZSB1c2VyIHVzYWdlIGNv
+dmVyZWQgaGVyZSBmb3Igc3VjaAo+PiB0aGluZ3MuIEl0IG11Y2ggbGlrZSBHUElPIHBpbnMgLSB3
+ZSBjYW4gZGVzY3JpYmUgdGhlbSBidXQgd2UgY2FuIGFsc28KPj4gZGVjbGFyZSB0aGV5IGFyZSBu
+b3QgdmlzaWJsZSB0byB0aGUgdXNlci4KPiAKPiBBIG1pc3NpbmcgZWxlbWVudCBpbiBtYWlubGlu
+ZSBpcyBhIGtpbmQgb2YgVkZJTyBzY2hlbWUgdG8gbGV0IHVzZXIKPiBzcGFjZSBhY2Nlc3MgdGhl
+IEZQR0EgcmVnaXN0ZXJzIGRlc2lnbmF0ZWQgZm9yIHVzZXIgc3BhY2UgdXNlLgo+IAo+IFdlIGhh
+dmUgYmVlbiB1c2luZyB0aGVzZSBwYXRjaGVzIHNpbmNlIDIuNi4xNiB0byBhbGxvdyB1c2VyIHNw
+YWNlIHRvCj4gYWNjZXNzIHRoZSBGUEdBIHJlZ2lzdGVyIHJlc291cmNlcyB2aWEgYSBQQ0kgbGlr
+ZSAvc3lzLy4uL3Jlc291cmNlMAo+IG1tYXBhYmxlOgo+IAo+ICAgIGh0dHBzOi8vZ2l0aHViLmNv
+bS9qZ3VudGhvcnBlL2xpbnV4L2NvbW1pdC81OWQ1ZDEzZGRlZmZhODk4MGNjYzYyNDhlYmI1ZjE2
+NzhjY2IyM2Y0Cj4gICAgaHR0cHM6Ly9naXRodWIuY29tL2pndW50aG9ycGUvbGludXgvY29tbWl0
+LzdjMjljNDM0NDYyN2JlOGEzOTA2ZDY0ZDMyZGI1MzNiYzEzMWRmODYKPiAgICBodHRwczovL2dp
+dGh1Yi5jb20vamd1bnRob3JwZS9saW51eC9jb21taXQvZTQxYmI0YTE5NzM2OGE5ZDUwNWQ2NmI2
+MjdhZWU4MmYyZDJiODg5NQo+IAo+IFdlIGRlbGliZXJhdGVseSBzcGxpdCB1cCB0aGUgRlBHQSBy
+ZWdpc3RlcnMgYW5kIHRoZSBhc3NpZ24gdXNlciBzcGFjZQo+IHBlcm1pc3Npb25zIHRvIHRoZSBy
+ZXNvdXJjZTAgZmlsZXMgaW4gYSB3YXkgdGhhdCBtYWtlcyBzZW5zZSBmb3Igb3VyCj4gYXBwLiBU
+eXBpY2FsbHkgdGhlcmUgYXJlIDEwLTIwIEZQR0EgcmVnaXN0ZXIgcmVnaW9ucy4gVXNlciBzcGFj
+ZSBkb2VzCj4gbm90IGFjY2VzcyByZWdpc3RlciByZWdpb25zIHRoYXQgY29udHJvbCBETUEuCj4g
+CgpJbnRlcmVzdGluZy4KCj4+IFRoZSBzd2FwcGFibGUgY2FzZSBtb3N0bHkgY29tZXMgb3V0IG9m
+IHRoZSAvZGV2IG5vZGUuIE9uY2UgeW91IGhhdmUgdGhlCj4+IGRldiBub2RlIGl0IGJlY29tZXMg
+YSBkZXRhaWwgb2YgdGhlIE9TIG5vdCB0aGUgRlBHQSBkcml2ZXIgYXMgdG8gd2hvIG1heQo+PiBv
+cGVuIGl0LCBhbmQgaG93IGl0IGlzIGhhbmRlZCBhYm91dC4gSXQgbWlnaHQgYmUgYW4gRlBVIG1h
+bmFnZXIgZGFlbW9uIGl0Cj4+IG1pZ2h0IG5vdC4KPiAKPiBSaWdodCwgYnV0IHRoZSB0aGluZyB0
+aGF0IHNjYXJlcyBtZSBhYm91dCB0aGUgc3dhcHBhYmxlIGNhc2UgaXMgdGhlCj4ga2VybmVsIHNp
+ZGUgc3VwcG9ydC4uIFRoZSBGUEdBIGhhcyB0byBjb25uZWN0IHRvIHRoZSBDUFUgaW4gc29tZSB3
+YXksCj4gaXQgbXVzdCBoYXZlIHNvbWUgYWRkcmVzcyBhc3NpZ25lZCwgZXRjLiBTd2FwcGluZyBu
+ZWVkcyB0byB0YWtlIGNhcmUKPiBvZiBhbGwgdGhvc2UgZGV0YWlscyBpbiBzb21lIHdheS4KPiAK
+PiBBIGZpeGVkIGJ1cyBpbnRlcmZhY2UgYmxvY2sgYW5kIGR5bmFtaWMgcmVjb25maWd1cmF0aW9u
+IGZvciB0aGUKPiByZW1haW5kZXIgaXMgcHJvYmFibHkgdGhlIHdheSB0byBtYW5hZ2UgdGhhdC4g
+QnV0LCB0aGF0IGltcGxpZXMgdGhhdAo+IGV2ZW4gYSBmYW1pbHkgb2Ygc3dhcHBhYmxlIEZQR0Fz
+IHdpbGwgaGF2ZSBhIERUIG92ZXJsYXkgYXNzb2NpYXRlZAo+IHdpdGggaXQuCj4gCj4gSWRlYWxs
+eSwgSSBjb3VsZCBzZWUgd2FudGluZyB0byBoYXZlIGEgZmlsZSBmb3JtYXQgdGhhdCBjb21iaW5l
+cyB0aGUKPiBvdmVybGF5IGFuZCBGUEdBIGJpdGZpbGUuIEEgbG9hZGVyIHRvb2wgd291bGQgdXNl
+IHRoZSAvZGV2LyBpbnRlcmZhY2UKPiB0byBzZXR1cCBib3RoIGVsZW1lbnRzLiBUaGF0IHdvdWxk
+IGJlIG11Y2ggbW9yZSByb2J1c3QgdGhhbiB0aGUKPiBjdXJyZW50IHNjaGVtZSBJIHNlZSAoZWcg
+WGlsaW54KSB1c2luZyB3aGVyZSB0aGUgYml0ZmlsZSBhbmQgRFQgYml0Cj4gbGl2ZSBpbiBjb21w
+bGV0ZWx5IGRpZmZlcmVudCBwbGFjZXMgYW5kIGhhdmUgdG8gYmUgcGVyZmVjdGx5IG1hdGNoZWQu
+Cj4gCgpBIHNpbmdsZSBEVCBwcm9wZXJ0eSBjYW4gYmUgNCBnaWdzIG9mIGJpbmFyeSBkYXRhIChj
+aGVhdGluZyBhIGJpdCwgdGhlIHdob2xlIGJsb2IgY2FuIGJlCjQgZ2lncykuIFlvdSBjYW4gY29u
+Y2VpdmFibHkgaW5jbHVkZSB0aGUgd2hvbGUgYml0ZmlsZSBpbiB0aGUgRFQgYmxvYi4KCldoZXRo
+ZXIgdGhpcyBpcyBhIHBlcnZlcnNpb24gb3Igbm90IGl04oCZcyBsZWZ0IHRvIHRoZSByZWFkZXIu
+IFRoZSBiaXRmaWxlIGRvZXMKZGVzY3JpYmUgdGhlIGhhcmR3YXJlIHRob3VnaC4KCj4gSmFzb24K
+ClJlZ2FyZHMKCuKAlCBQYW50ZWxpcwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18KZGV2ZWwgbWFpbGluZyBsaXN0CmRldmVsQGxpbnV4ZHJpdmVycHJvamVj
+dC5vcmcKaHR0cDovL2RyaXZlcmRldi5saW51eGRyaXZlcnByb2plY3Qub3JnL21haWxtYW4vbGlz
+dGluZm8vZHJpdmVyZGV2LWRldmVsCg==
