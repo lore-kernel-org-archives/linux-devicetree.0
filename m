@@ -1,112 +1,78 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: Including empty regulator nodes in axp209.dtsi is a
- BAD idea
-Date: Wed, 14 Jan 2015 08:42:11 +0100
-Message-ID: <54B61DD3.6010105@redhat.com>
-References: <54B4E7B5.6060304@redhat.com> <20150113164606.GA4891@lukather>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+	<u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v3 2/3] i2c: iproc: Add Broadcom iProc I2C Driver
+Date: Wed, 14 Jan 2015 08:51:37 +0100
+Message-ID: <20150114075137.GL22880@pengutronix.de>
+References: <rjui@broadcom.com>
+ <1418183832-24793-1-git-send-email-rjui@broadcom.com>
+ <1418183832-24793-3-git-send-email-rjui@broadcom.com>
+ <20150113225012.GK22880@pengutronix.de>
+ <54B5D0F9.8030902@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBXF33CSQKGQEKH7EQBA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20150113164606.GA4891@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <54B5D0F9.8030902@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ray Jui <rjui@broadcom.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Scott Branden <sbranden@broadcom.com>, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hello,
 
-On 13-01-15 17:46, Maxime Ripard wrote:
-> On Tue, Jan 13, 2015 at 10:39:01AM +0100, Hans de Goede wrote:
->> Hi ChenYu, Maxime,
->>
->> During the review of a few dts files for new boards Maxime asked me to use
->> axp209.dtsi to avoid the standard axp209 "boilerplate" present in most
->> boards using the axp209 pmic.
->>
->> But axp209.dtsi includes empty regulator nodes, e.g. :
->>
->>                  reg_dcdc3: dcdc3 {
->>                          regulator-name = "dcdc3";
->>                  };
->>
->> This is a BAD idea, the presence of these empty nodes causes the
->> axp20x-regulator driver to actually register regulators for them,
->> and then on late_init the regulator subsys turns them off, since
->> they have absolutely no constraints set (nor users registered)
->> and the regulator subsys assumes that when devicetree is used their
->> is always a compete set of constraints and that thus turning them
->> off is safe.
->>
->> So when I switched to using axp209.dtsi for the bananapro.dts,
->> and booted the bananapro this is the last message I got from the
->> kernel while booting:
->>
->> [    2.314014] dcdc3: disabling
->>
->> And away went our DRAM power-supply, oops.
->>
->> So for dcdc2 (CPU) and dcdc3 (DRAM), the boilerplate
->> should contain reasonable constraints (eg the operating range
->> from the datasheet)
->
-> Indeed.
->
->> and an always-on property.
->
-> I disagree. The regulator disabling is a feature, and how the board is
-> wired is, well, up to the board.
+On Tue, Jan 13, 2015 at 06:14:17PM -0800, Ray Jui wrote:
+> >> +	irq =3D platform_get_irq(pdev, 0);
+> >> +	if (irq < 0) {
+> > irq =3D=3D 0 should be handled as error, too.
+> >=20
+> Ah. I thought zero is a valid global interrupt number, and I see othe=
+r
+> drivers checking against < 0 as well. Is my understanding incorrect?
+These are wrong, too. 0 should never be a valid interrupt number. There
+are some exceptions but mostly for historic reasons. The right handling
+is used for example in drivers/i2c/busses/i2c-efm32.c.
 
-And here I was thinking you wanted to reduce the amount of boilerplate
-in our dts files ..
+> >> +		dev_err(dev->device, "no irq resource\n");
+> >> +		return irq;
+> >> +	}
+> [...]
+> >> +static int bcm_iproc_i2c_remove(struct platform_device *pdev)
+> >> +{
+> >> +	struct bcm_iproc_i2c_dev *dev =3D platform_get_drvdata(pdev);
+> >> +
+> >> +	i2c_del_adapter(&dev->adapter);
+> >> +	bcm_iproc_i2c_disable(dev);
+> > I think you have a problem here if bcm_iproc_i2c_remove is called w=
+hile
+> > an irq is still being serviced. I'm not sure how to prevent this
+> > properly for a shared interrupt.
+> >=20
+> Can I grab i2c_lock_adapter to ensure the bus is locked (so there's n=
+o
+> outstanding transactions or IRQs by the time we remove the adapter)? =
+But
+> I see no I2C bus driver does this in their remove function...
+The problem I pointed out is the reason for some driver authors not to
+use devm_request_irq. If you use plain request_irq and the matching
+free_irq in the .remove callback you can be sure that the irq isn't
+running any more as soon as free_irq returns.
 
-IOW I disagree with your disagreeing all boards we know of have dcdc2
-wired to Vcpu and dcdc3 wired to Vddr, so not having this in the dtsi
-will lead to a lot of extra boilerplate in each dts file. We're not
-talking about our main dtsi file here, if we ever encounter a board
-which is wired in a different way, then its dts can simply not use
-axp209.dtsi and instead define the nodes itself, it needs to do that
-anyways if we do include the standard CPU and DDR constrains in the
-dtsi since those will not make sense either in that case.
+BTW, if you use vim, you can add
 
-> If an always-on property is needed, then it's in the DTS, not in the
-> AXP DTSI.
->
->> The ldo-s are trickier, since we simply do not know how those
->> are used, I think ldo2 is used for Avcc on most boards, so it
->> too should be always on, since almost any board will have some
->> analog parts on it (be it the ir receiver, lradc, rtp, lvds, vga,
->> or analog audio in/out). Assuming that we're willing to assume
->> that ldo2 is used this way, we should give it matching constraints
->> and always mark it always-on.
->
-> Ideally, all the drivers that have a analogic component should have a
-> reference to the regulator they use. But again, at the board
-> level. And more realistically, putting always-on should also happen at
-> the board level.
->
->> As for ldo3 - 5 I've no idea when / for what these are used, but
->> if we do not know it is better to just leave them be then to turn
->> them off IMHO, so we should remove the nodes for these from axp209.dtsi
->>
->> Anyways sorting this all out is going to take some time, so I'm
->> not going to use axp209.dtsi in dts files for new boards for now.
->
-> I'm afraid it's an "all or nothing" situation.
+	set cinoptions=3D(,:
+	if has("autocmd")
+		filetype plugin indent on
+	endif
 
-No it is not, the PMIC is a mfd, and we can use some of its functions
-fine without actually loading the regulator bits. This is already
-done on most boards with the axp209, even without touching the regulators
-it is nice to have the axp209 mfd driver loaded so that we get support
-for the powerbutton, and support for poweroff, esp. the latter is quite
-nice to have.
+to your .vimrc. Then while typing vim does the indention right and
+consistent, and with the =3D command you can reindent.
 
-Regards,
+Best regards
+Uwe
 
-Hans
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
+    |
+Industrial Linux Solutions                 | http://www.pengutronix.de/=
+  |
