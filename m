@@ -1,52 +1,56 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 1/5] rtc: armada38x: Add the device tree binding
- documentation
-Date: Wed, 14 Jan 2015 20:22:52 +0100
-Message-ID: <20150114202252.457d328e@free-electrons.com>
-References: <1421257155-3379-1-git-send-email-gregory.clement@free-electrons.com>
-	<1421257155-3379-2-git-send-email-gregory.clement@free-electrons.com>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v6 1/2] mtd: hisilicon: add a new NAND controller driver
+ for hisilicon hip04 Soc
+Date: Wed, 14 Jan 2015 11:25:10 -0800
+Message-ID: <20150114192510.GY9759@ld-irv-0074>
+References: <1421047734-30818-1-git-send-email-wangzhou1@hisilicon.com>
+ <1421047734-30818-2-git-send-email-wangzhou1@hisilicon.com>
+ <20150113035844.GJ9759@ld-irv-0074>
+ <54B6625F.8060607@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1421257155-3379-2-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <54B6625F.8060607-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, caizhiyong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, yubingxu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Gregory CLEMENT,
+On Wed, Jan 14, 2015 at 08:34:39PM +0800, Zhou Wang wrote:
+> On 2015/1/13 11:58, Brian Norris wrote:
+> > On Mon, Jan 12, 2015 at 03:28:53PM +0800, Zhou Wang wrote:
+> >> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> >> +	chip->IO_ADDR_R = chip->IO_ADDR_W = devm_ioremap_resource(dev, res);
+> > 
+> > Hmm, do you really have to reuse IO_ADDR_{R,W} here? Those are only
+> > targeted for NAND systems which have a direct MMIO mapping to the NAND
+> > I/O pins. See nand_base's {read,write}_buf() and read_{byte,word}()
+> > implementations. But you override those.
+> 
+> There is a hardware buffer in this NAND controller, and the buffer can be
+> accessed as MMIO.
 
-On Wed, 14 Jan 2015 18:39:11 +0100, Gregory CLEMENT wrote:
+Sure.
 
-> +Required properties:
-> +- compatible : Should be "marvell,armada-380-rtc"
-> +- reg: physical base address of the controller and length of memory
-> +  mapped region, associated to the reg-name "rtc". The other entry is
-> +  related to the interrupt control from the SoC, associated to the
-> +  reg-name "soc-interrupt".
+> IO_ADDR_R/W just indicates the base address of this buffer.
 
-soc-interrupt or...
+But I was noting that IO_ADDR_{R,W} actually serve a very particular
+purpose in nand_base.c, which seems distinct from your HW buffer.
 
-> +- reg-names: names of the mapped memory regions listed in regs
-> +    property in the same order: "rtc" and "soc-int".
+> Maybe I need to use a void __iomem pointer stored in my host struct to use
+> this buffer instead of IO_ADDR_R/W as you said below here?
 
-soc-int ?
+Yes, I think that would be better.
 
-> +rtc@a3800 {
-> +	compatible = "marvell,armada-380-rtc";
-> +	reg = <0xa3800 0x20>, <0x184a0 0x0c>;
-
-Any reason to use <0x184A0 0xC> instead of <0x184A8 0x4> ? According to
-the datasheet, there is only this 184A8 register for RTC stuff.
+> > It's best if it's obvious if nand_base is somehow inadvertently using
+> > these pointers. So leaving them NULL is helpful.
+> > 
+> > As an alternative, you can just stash another private void __iomem
+> > pointer in you your host struct.
 
 Thanks,
-
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+Brian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
