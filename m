@@ -1,40 +1,85 @@
-From: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Subject: [PATCH v3 4/4] ARM: devicetree: document supported Conexant Digicolor SoC
-Date: Wed, 14 Jan 2015 10:40:33 +0200
-Message-ID: <8ac384f1c15c05229d5534036a9a4000d908c0cf.1421219953.git.baruch@tkos.co.il>
+From: Baruch Siach <baruch@tkos.co.il>
+Subject: [PATCH v3 1/4] ARM: initial support for Conexant Digicolor CX92755 SoC
+Date: Wed, 14 Jan 2015 10:40:30 +0200
+Message-ID: <b78eff5b92f808cb6748097b4f7867fb320e8d21.1421219953.git.baruch@tkos.co.il>
 References: <cover.1421219953.git.baruch@tkos.co.il>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1421219953.git.baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1421219953.git.baruch@tkos.co.il>
+Sender: linux-kernel-owner@vger.kernel.org
+To: arm@kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Baruch Siach <baruch@tkos.co.il>
 List-Id: devicetree@vger.kernel.org
 
-Of the Digicolor SoCs series only CX92755 is currently supported.
+Add initial support for the Conexant CX92755 SoC. The CX92755 is one of the
+Digicolor series of SoCs, all sharing many of the same peripherals. The code
+was tested on the CX92755 evaluation kit, AKA Equinox.
 
-Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+Acked-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Baruch Siach <baruch@tkos.co.il>
 ---
- Documentation/devicetree/bindings/arm/digicolor.txt | 6 ++++++
- 1 file changed, 6 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/digicolor.txt
+ arch/arm/Kconfig                    |  2 ++
+ arch/arm/mach-digicolor/Kconfig     |  5 +++++
+ arch/arm/mach-digicolor/Makefile    |  1 +
+ arch/arm/mach-digicolor/digicolor.c | 18 ++++++++++++++++++
+ 4 files changed, 26 insertions(+)
+ create mode 100644 arch/arm/mach-digicolor/Kconfig
+ create mode 100644 arch/arm/mach-digicolor/Makefile
+ create mode 100644 arch/arm/mach-digicolor/digicolor.c
 
-diff --git a/Documentation/devicetree/bindings/arm/digicolor.txt b/Documentation/devicetree/bindings/arm/digicolor.txt
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index 97d07ed60a0b..86e2202565e6 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -858,6 +858,8 @@ source "arch/arm/mach-cns3xxx/Kconfig"
+ 
+ source "arch/arm/mach-davinci/Kconfig"
+ 
++source "arch/arm/mach-digicolor/Kconfig"
++
+ source "arch/arm/mach-dove/Kconfig"
+ 
+ source "arch/arm/mach-ep93xx/Kconfig"
+diff --git a/arch/arm/mach-digicolor/Kconfig b/arch/arm/mach-digicolor/Kconfig
 new file mode 100644
-index 000000000000..658553f40b23
+index 000000000000..5a0669a2738e
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/digicolor.txt
-@@ -0,0 +1,6 @@
-+Conexant Digicolor Platforms Device Tree Bindings
++++ b/arch/arm/mach-digicolor/Kconfig
+@@ -0,0 +1,5 @@
++config ARCH_DIGICOLOR
++	bool "Conexant Digicolor SoC Support"
++	depends on ARCH_MULTI_V7
++	select CLKSRC_MMIO
++	select GENERIC_IRQ_CHIP
+diff --git a/arch/arm/mach-digicolor/Makefile b/arch/arm/mach-digicolor/Makefile
+new file mode 100644
+index 000000000000..3d8a1d228408
+--- /dev/null
++++ b/arch/arm/mach-digicolor/Makefile
+@@ -0,0 +1 @@
++obj-$(CONFIG_ARCH_DIGICOLOR)	+= digicolor.o
+diff --git a/arch/arm/mach-digicolor/digicolor.c b/arch/arm/mach-digicolor/digicolor.c
+new file mode 100644
+index 000000000000..cfc88d1caa47
+--- /dev/null
++++ b/arch/arm/mach-digicolor/digicolor.c
+@@ -0,0 +1,18 @@
++/*
++ * Support for Conexant Digicolor SoCs
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++*/
 +
-+Each device tree must specify which Conexant Digicolor SoC it uses.
-+Must be the following compatible string:
++#include <asm/mach/arch.h>
 +
-+  cnxt,cx92755
++static const char *digicolor_dt_compat[] __initconst = {
++	"cnxt,cx92755",
++	NULL,
++};
++
++DT_MACHINE_START(DIGICOLOR, "Conexant Digicolor (Flattened Device Tree)")
++	.dt_compat	= digicolor_dt_compat,
++MACHINE_END
 -- 
 2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
