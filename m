@@ -1,56 +1,40 @@
-From: Bart Tanghe <bart.tanghe-2dq7lIxLGp5qkBXjtECzWg@public.gmane.org>
-Subject: [PATCH v3] ARM: dts: add bcm2835-pwm bindings
-Date: Wed, 14 Jan 2015 10:18:54 +0100
-Message-ID: <1421227134-8590-1-git-send-email-bart.tanghe@thomasmore.be>
+From: arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org (Arnaud Ebalard)
+Subject: Re: [PATCHv2 1/8] dt-bindings: use isil prefix for Intersil in vendor-prefixes.txt
+Date: Wed, 14 Jan 2015 10:25:46 +0100
+Message-ID: <8761c9ogrp.fsf@natisbad.org>
+References: <cover.1418763328.git.arno@natisbad.org>
+	<e32fe98a511e3ab8aeed9849bcac33ba14fd8986.1418763328.git.arno@natisbad.org>
+	<CAL_JsqLt7BuG9eccqR4CELPsOO+o3NGP6c4aqKDXbJfT0O0=5w@mail.gmail.com>
+	<87ppaib72j.fsf@natisbad.org>
+	<CAL_JsqJMQ=8_sQhCRR+f-6v0Ac3hme3Tsom0x1GuA=FaZkgdnA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqJMQ=8_sQhCRR+f-6v0Ac3hme3Tsom0x1GuA=FaZkgdnA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+	(Rob Herring's message of "Tue, 13 Jan 2015 17:31:29 -0600")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bart Tanghe <bart.tanghe-2dq7lIxLGp5qkBXjtECzWg@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Hayato Suzuki <hytszk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-To probe the bcm2835-pwm driver properly, this dts bindings has to be added 
-to the bcm2835 dtsi file.
-In expectation of a bcm2835 clock driver, I've added fixed-clock clock binding.
----
-Changes in v3:
- - node added by reg value
 
-Signed-off-by: Bart Tanghe <bart.tanghe-2dq7lIxLGp5qkBXjtECzWg@public.gmane.org>
-Acked-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
 
-diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835.dtsi
-index 3342cb1..ba76bb4 100644
---- a/arch/arm/boot/dts/bcm2835.dtsi
-+++ b/arch/arm/boot/dts/bcm2835.dtsi
-@@ -146,6 +147,14 @@
- 			interrupts = <1 9>;
- 		};
- 
-+		pwm: pwm@7e20e000 {
-+			compatible = "brcm,bcm2835-pwm";
-+			reg = <0x7e20c000 0x28>;
-+			clocks = <&clk_pwm>;
-+			#pwm-cells = <2>;
-+			status = "disabled";
-+		};
-+
- 		arm-pmu {
- 			compatible = "arm,arm1176-pmu";
- 		};
-@@ -179,5 +188,13 @@
- 			clock-output-names = "spi";
- 			clock-frequency = <250000000>;
- 		};
-+
-+		clk_pwm: clock@3 {
-+			compatible = "fixed-clock";
-+			reg = <3>;
-+			#clock-cells = <0>;
-+			clock-output-names = "pwm";
-+			clock-frequency = <9200000>;
-+		};
- 	};
- };
+>>> While there are not interdepencies here, it probably would have been
+>>> better to keep this series all together.
+>>
+>> This was the main reason my v0 was in a single patch. I think I then got
+>> some comment to split things in different patches so that the various
+>> maintainers have their words to say. But I'll try and follow your
+>> approach next time.
+>
+> I didn't say a single patch, but merge the series together. A separate
+> commit per maintainer is generally preferred. You just have to be
+> clear whether you are looking for just acks or to take individual
+> patches.
+
+Noted.
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
