@@ -1,66 +1,46 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH v9 1/4] drm/i2c: tda998x: Add DT support for audio
-Date: Wed, 14 Jan 2015 14:23:27 +0000
-Message-ID: <20150114142327.GX12302@n2100.arm.linux.org.uk>
-References: <1421151718.4519.24.camel@pengutronix.de>
- <20150113122715.GP12302@n2100.arm.linux.org.uk>
- <20150113165411.5469930d@armhf>
- <20150113160313.GR12302@n2100.arm.linux.org.uk>
- <20150113200252.3dbfab14@armhf>
- <20150113192648.GU12302@n2100.arm.linux.org.uk>
- <54B574CD.9020905@ti.com>
- <20150113195415.GV12302@n2100.arm.linux.org.uk>
- <1421232418.3155.31.camel@pengutronix.de>
- <20150114125056.GU4160@sirena.org.uk>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH 1/2] pinctrl: exynos: Add AUDIO pin controller for exynos7
+Date: Wed, 14 Jan 2015 23:27:44 +0900
+Message-ID: <CA+Ln22GhnW5jcXdQfYaJ_aM4Wq9OHXvShHHaxLKjJi+dp6Afcg@mail.gmail.com>
+References: <1418994659-5222-1-git-send-email-padma.v@samsung.com>
+	<1418994659-5222-2-git-send-email-padma.v@samsung.com>
+	<CACRpkdZopjCN_GMEPQFd_NWa0Ddocqt3aViLrZ7Yh3ui_YcBAg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20150114125056.GU4160@sirena.org.uk>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Andrew Jackson <Andrew.Jackson@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdZopjCN_GMEPQFd_NWa0Ddocqt3aViLrZ7Yh3ui_YcBAg@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Padmavathi Venna <padma.v@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBKYW4gMTQsIDIwMTUgYXQgMTI6NTA6NTZQTSArMDAwMCwgTWFyayBCcm93biB3cm90
-ZToKPiBUcnlpbmcgdG8gaG9vayB1cCBhIGNvbnRyb2xsZXIgdGhhdCBkb2Vzbid0IG5hdGl2ZWx5
-IHN1cHBvcnQgdGhpcyBmb3JtYXQKPiB0byBhIGRldmljZSB0aGF0IHVzZXMgaXQgaXMgZGVmaW5p
-dGVseSB0cmlja3ksIGFzIHdlbGwgYXMgZGVzY3JpYmluZyB0aGUKPiBwaHlzaWNhbCBob29rdXAg
-d2UgYWxzbyBuZWVkIHRvIHdvcnJ5IGFib3V0IGhvdyB0aGluZ3MgbG9vayB0byB1c2Vyc3BhY2UK
-PiAtIGl0J3MgaWRlYWxseSBnb2luZyB0byB3YW50IGEgc2luZ2xlIG11bHRpLWNoYW5uZWwgYXVk
-aW8gc3RyZWFtLgoKVHJ5aW5nIHRvIGdldCB0aGUgc3luY2hyb25pc2F0aW9uIGNvcnJlY3QgZm9y
-IHByb3BlciBzdXJyb3VuZCBhdWRpbwpyZXByb2R1Y3Rpb24gd291bGQgYWxzbyBiZSBpbnRlcmVz
-dGluZy4gIEkgc3VzcGVjdCB0aGF0IHVzZXJzcGFjZQp3b3VsZCBoYXZlIHRvIGJlIHRhdWdodCBz
-cGVjaWZpY2FsbHkgYWJvdXQgYSBoYXJkd2FyZSBzZXR1cCBsaWtlIHRoaXMgLQppbiBvcmRlciB0
-byBlbnN1cmUgdGhhdCB0aGUgc2xhdmUgSTJTIGJsb2NrcyBhcmUgcmVhZHkgYmVmb3JlIHRoZSBt
-YXN0ZXIKc3RhcnRzIG91dHB1dHRpbmcgdGhlIEkyUyBjbG9ja3MuCgpJJ20gL25vdC8gdGhhdCB0
-aHJpbGxlZCB3aXRoIHRoZSB3aG9sZSBpZGVhOyBJJ2QgbXVjaCByYXRoZXIgc3VnZ2VzdAp0aGF0
-IHdlIHNob3VsZCBjb25jZW50cmF0ZSBvbiBzYW5lIHNldHVwcywgYnV0IHdlIGtub3cgdGhhdCBo
-YXJkd2FyZQplbmdpbmVlcnMgZG8gY3JlYXRlIHNvbWUgc2lsbHkgc2V0dXBzICJiZWNhdXNlIHRo
-ZXkgY2FuIi4KCj4gSSB0aGluayBmcm9tIGEgYmluZGluZyBwb2ludCBvZiB2aWV3IHdlIG5lZWQg
-YSB3YXkgdG8gc2F5ICJ0aGlzIGVuZHBvaW50Cj4gb24gdGhlIGxpbmsgaXMgY29uc3RydWN0ZWQg
-ZnJvbSB0aGVzZSBEQUlzIG9uIHRoZSBkZXZpY2Ugc2lkZSIgYW5kIHNheQo+IGlmIHRoaXMgaXMg
-VERNIG9yIG11bHRpLWRhdGEsIGFuZCB3aGF0J3MgZHJpdmluZyB0aGUgY2xvY2tzLgoKVGhpcyBz
-ZWVtcyB0byBmYXZvdXIgdGhlICJvbmUgRFQgcG9ydCBmb3IgSTJTIiBtb2RlbCAtIHBvc3NpYmx5
-IHdpdGgKbXVsdGlwbGUgZW5kcG9pbnRzIGZvciBlYWNoIEkyUyBjaGFubmVsIChpZiBkZXNpcmVk
-KS4gIFRoZXJlJ3Mgbm90aGluZwppbiB0aGF0IG1vZGVsIHdoaWNoIHdvdWxkIHByZXZlbnQgaGF2
-aW5nIG9uZSBlbmQgcG9pbnQgZm9yIGFsbCBmb3VyCmNoYW5uZWxzLiAgVG8gcHV0IHRoYXQgYW5v
-dGhlciB3YXksIHdlIGNhbiByZW1haW4gZmxleGlibGUuCgpNYXliZSB3ZSBzaG91bGQgZG9jdW1l
-bnQgdGhlIGJpbmRpbmcgaW5kaWNhdGluZyB0aGF0IGZvciBJMlMsIG9uZSBwb3J0CmFuZCBvbmUg
-ZW5kcG9pbnQgY29ubmVjdGVkIHRvIG9uZSBJMlMgYmxvY2sgd2hpY2ggc3VwcGxpZXMgYWxsIEky
-UwpjaGFubmVscyBpcyB0aGUgcHJlZmVycmVkIG1vZGVsLCBidXQgb3RoZXJzIGFyZSBwZXJtaXR0
-ZWQgYnV0IG5vdApuZWNlc3NhcmlseSBndWFyYW50ZWVkIHRvIHdvcmsgY29ycmVjdGx5LgoKLS0g
-CkZUVEMgYnJvYWRiYW5kIGZvciAwLjhtaWxlIGxpbmU6IGN1cnJlbnRseSBhdCAxMC41TWJwcyBk
-b3duIDQwMGticHMgdXAKYWNjb3JkaW5nIHRvIHNwZWVkdGVzdC5uZXQuCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
-ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Hi Linus,
+
+2015-01-14 20:40 GMT+09:00 Linus Walleij <linus.walleij@linaro.org>:
+> On Fri, Dec 19, 2014 at 2:10 PM, Padmavathi Venna <padma.v@samsung.com> wrote:
+>
+>> Audio IPs on Exynos7 require gpios available in AUDIO
+>> pin controller block. So adding the AUDIO pinctrl support.
+>>
+>> Signed-off-by: Padmavathi Venna <padma.v@samsung.com>
+> (...)
+>> --- a/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
+>> +++ b/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
+>> @@ -181,6 +181,7 @@ Aliases for controllers compatible with "samsung,exynos7-pinctrl":
+>>  - pinctrl6: pin controller of FSYS0 block,
+>>  - pinctrl7: pin controller of FSYS1 block,
+>>  - pinctrl8: pin controller of BUS1 block,
+>> +- pinctrl9: pin controller of AUDIO block,
+>
+> This doesn't apply at all, the list has never been in the document merged
+> upstream.
+
+I believe this patch depends on patch [1], which was mentioned in
+cover letter and which you seem to have applied two days ago. If it
+still doesn't apply, please let me know if I should collect the
+patches myself and prepare a pull request for you.
+
+[1] https://patchwork.kernel.org/patch/5467321/
+
+Best regards,
+Tomasz
