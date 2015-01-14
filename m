@@ -1,30 +1,56 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v3] ARM: dts: add bcm2835-pwm bindings
-Date: Wed, 14 Jan 2015 10:06:08 -0700
-Message-ID: <54B6A200.4040209@wwwdotorg.org>
-References: <1421227134-8590-1-git-send-email-bart.tanghe@thomasmore.be>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 1/5] mfd: tps65218: make INT[12] and STATUS registers
+ volatile
+Date: Wed, 14 Jan 2015 09:07:17 -0800
+Message-ID: <20150114170716.GL2419@atomide.com>
+References: <1419622104-25812-1-git-send-email-balbi@ti.com>
+ <1419622104-25812-2-git-send-email-balbi@ti.com>
+ <20150106173734.GL6502@saruman>
+ <20150108162512.GC31926@saruman>
+ <20150112164654.GB6525@saruman>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1421227134-8590-1-git-send-email-bart.tanghe-2dq7lIxLGp5qkBXjtECzWg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bart Tanghe <bart.tanghe-2dq7lIxLGp5qkBXjtECzWg@public.gmane.org>, lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150112164654.GB6525@saruman>
+Sender: linux-input-owner@vger.kernel.org
+To: Felipe Balbi <balbi@ti.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>, stable@vger.kernel.org, Keerthy <j-keerthy@ti.com>, Andrew Morton <akpm@linux-foundation.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/14/2015 02:18 AM, Bart Tanghe wrote:
-> To probe the bcm2835-pwm driver properly, this dts bindings has to be added
-> to the bcm2835 dtsi file.
-> In expectation of a bcm2835 clock driver, I've added fixed-clock clock binding.
-> ---
-> Changes in v3:
->   - node added by reg value
+* Felipe Balbi <balbi@ti.com> [150112 08:50]:
+> Hi,
+> 
+> On Thu, Jan 08, 2015 at 10:25:12AM -0600, Felipe Balbi wrote:
+> > On Tue, Jan 06, 2015 at 11:37:34AM -0600, Felipe Balbi wrote:
+> > > On Fri, Dec 26, 2014 at 01:28:20PM -0600, Felipe Balbi wrote:
+> > > > STATUS register can be modified by the HW, so we
+> > > > should bypass cache because of that.
+> > > > 
+> > > > In the case of INT[12] registers, they are the ones
+> > > > that actually clear the IRQ source at the time they
+> > > > are read. If we rely on the cache for them, we will
+> > > > never be able to clear the interrupt, which will cause
+> > > > our IRQ line to be disabled due to IRQ throttling.
+> > > > 
+> > > > Fixes: 44b4dc6 mfd: tps65218: Add driver for the TPS65218 PMIC
+> > > > Cc: <stable@vger.kernel.org> # v3.15+
+> > > > Cc: Keerthy <j-keerthy@ti.com>
+> > > > Cc: Lee Jones <lee.jones@linaro.org>
+> > > > Signed-off-by: Felipe Balbi <balbi@ti.com>
+> > > 
+> > > ping
+> > 
+> > another ping. Without this and the following patch TPS65218 power button
+> > driver which was already applied by Dmitry, won't work.
+> 
+> Anybody ? -rc4 is out and tps65218 is still broken because nobody has
+> acted on these two patches. All other patches which are meant for 3.20
+> merge window are applied and because of these pending, those patches
+> won't work.
 
-The pwm node still seems to be in the wrong place. Sorting by reg value, 
-it should be after i2c@20205000 and before sdhci@7e300000, as I 
-mentioned before.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Lee, are you planning to pick these two drivers/mfd patches?
+
+Regards,
+
+Tony
