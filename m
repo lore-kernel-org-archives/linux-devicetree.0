@@ -1,32 +1,62 @@
 From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Subject: [PATCH 2/2] ARM: DT: STiH410: Add DRM dt nodes
-Date: Wed, 14 Jan 2015 16:47:12 +0100
-Message-ID: <1421250432-25903-3-git-send-email-gabriel.fernandez@linaro.org>
+Subject: [PATCH 1/2] ARM: DT: STiH407: Add DRM dt nodes
+Date: Wed, 14 Jan 2015 16:47:11 +0100
+Message-ID: <1421250432-25903-2-git-send-email-gabriel.fernandez@linaro.org>
 References: <1421250432-25903-1-git-send-email-gabriel.fernandez@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1421250432-25903-1-git-send-email-gabriel.fernandez@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>
-Cc: linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>
+To: Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, benjamin.gaignard@linaro.org
+Cc: linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
 This patch adds the DRM/KMS dt nodes.
+This node can't be in stih407-family.dtsi file because in the future we
+will integrate a new stih418-b2199 board. It's a stih407 family board
+with different drm/kms dt nodes.
+That is why i created the stih407.dtsi file.
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
 Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
 ---
- arch/arm/boot/dts/stih410.dtsi | 138 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 138 insertions(+)
+ arch/arm/boot/dts/stih407-b2120.dts  |   3 +-
+ arch/arm/boot/dts/stih407.dtsi       | 151 +++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/stihxxx-b2120.dtsi |   2 +-
+ 3 files changed, 153 insertions(+), 3 deletions(-)
+ create mode 100644 arch/arm/boot/dts/stih407.dtsi
 
-diff --git a/arch/arm/boot/dts/stih410.dtsi b/arch/arm/boot/dts/stih410.dtsi
-index 37995f4..208b5e8 100644
---- a/arch/arm/boot/dts/stih410.dtsi
-+++ b/arch/arm/boot/dts/stih410.dtsi
-@@ -80,5 +80,143 @@
- 			phys = <&usb2_picophy2>;
- 			phy-names = "usb";
- 		};
-+
+diff --git a/arch/arm/boot/dts/stih407-b2120.dts b/arch/arm/boot/dts/stih407-b2120.dts
+index 261d5e2..af48714 100644
+--- a/arch/arm/boot/dts/stih407-b2120.dts
++++ b/arch/arm/boot/dts/stih407-b2120.dts
+@@ -7,9 +7,8 @@
+  * published by the Free Software Foundation.
+  */
+ /dts-v1/;
+-#include "stih407-clock.dtsi"
+-#include "stih407-family.dtsi"
+ #include "stihxxx-b2120.dtsi"
++#include "stih407.dtsi"
+ / {
+ 	model = "STiH407 B2120";
+ 	compatible = "st,stih407-b2120", "st,stih407";
+diff --git a/arch/arm/boot/dts/stih407.dtsi b/arch/arm/boot/dts/stih407.dtsi
+new file mode 100644
+index 0000000..3efa3b2
+--- /dev/null
++++ b/arch/arm/boot/dts/stih407.dtsi
+@@ -0,0 +1,151 @@
++/*
++ * Copyright (C) 2015 STMicroelectronics Limited.
++ * Author: Gabriel Fernandez <gabriel.fernandez@linaro.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * publishhed by the Free Software Foundation.
++ */
++#include "stih407-clock.dtsi"
++#include "stih407-family.dtsi"
++/ {
++	soc {
 +		/* Display */
 +		vtg_main: sti-vtg-main@8d02800 {
 +			compatible = "st,vtg";
@@ -164,7 +194,20 @@ index 37995f4..208b5e8 100644
 +				};
 +			};
 +		};
- 	};
- };
++	};
++};
+diff --git a/arch/arm/boot/dts/stihxxx-b2120.dtsi b/arch/arm/boot/dts/stihxxx-b2120.dtsi
+index 8af5282..c1d8590 100644
+--- a/arch/arm/boot/dts/stihxxx-b2120.dtsi
++++ b/arch/arm/boot/dts/stihxxx-b2120.dtsi
+@@ -48,7 +48,7 @@
+ 		};
+ 
+ 		/* SSC11 to HDMI */
+-		i2c@9541000 {
++		hdmiddc: i2c@9541000 {
+ 			status = "okay";
+ 			/* HDMI V1.3a supports Standard mode only */
+ 			clock-frequency = <100000>;
 -- 
 1.9.1
