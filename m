@@ -1,52 +1,59 @@
-From: Karol Wrona <k.wrona-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v4 2/5] iio: sensorhub: Add sensorhub bindings
-Date: Wed, 14 Jan 2015 17:16:12 +0100
-Message-ID: <1421252172-26797-1-git-send-email-k.wrona@samsung.com>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Karol Wrona <wrona.vy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Karol Wrona <k.wrona-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [PATCH v5 00/11] memory: add Atmel EBI (External Bus Interface)
+ driver
+Date: Wed, 14 Jan 2015 17:21:52 +0100
+Message-ID: <20150114162152.GL3843@piout.net>
+References: <1417639455-17410-1-git-send-email-boris.brezillon@free-electrons.com>
+ <20150111135615.3326d803@bbrezillon>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150111135615.3326d803@bbrezillon>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Andrew Victor <linux@maxim.org.za>, Samuel Ortiz <sameo@linux.intel.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Jean-Jacques Hiblot <jjhiblot@traphandler.com>
 List-Id: devicetree@vger.kernel.org
 
-Add sensorhub bindings for sensorhub on Galaxy Gear 2.
 
-Signed-off-by: Karol Wrona <k.wrona-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Acked-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
- .../devicetree/bindings/iio/sensorhub.txt          |   25 ++++++++++++++++++++
- 1 file changed, 25 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/sensorhub.txt
+Hi,
 
-diff --git a/Documentation/devicetree/bindings/iio/sensorhub.txt b/Documentation/devicetree/bindings/iio/sensorhub.txt
-new file mode 100644
-index 0000000..8d57571
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/sensorhub.txt
-@@ -0,0 +1,25 @@
-+Samsung Sensorhub driver
-+
-+Sensorhub is a MCU which manages several sensors and also plays the role
-+of a virtual sensor device.
-+
-+Required properties:
-+- compatible: "samsung,sensorhub-rinato" or "samsung,sensorhub-thermostat"
-+- spi-max-frequency: max SPI clock frequency
-+- interrupt-parent: interrupt parent
-+- interrupts: communication interrupt
-+- ap-mcu-gpios: [out] ap to sensorhub line - used during communication
-+- mcu-ap-gpios: [in] sensorhub to ap - used during communication
-+- mcu-reset-gpios: [out] sensorhub reset
-+
-+Example:
-+
-+	shub_spi: shub {
-+		compatible = "samsung,sensorhub-rinato";
-+		spi-max-frequency = <5000000>;
-+		interrupt-parent = <&gpx0>;
-+		interrupts = <2 0>;
-+		ap-mcu-gpios = <&gpx0 0 0>;
-+		mcu-ap-gpios = <&gpx0 4 0>;
-+		mcu-reset-gpios = <&gpx0 5 0>;
-+	};
+On 11/01/2015 at 13:56:15 +0100, Boris Brezillon wrote :
+> Hi Lee,
+> 
+> On Wed,  3 Dec 2014 21:44:04 +0100
+> Boris Brezillon <boris.brezillon@free-electrons.com> wrote:
+> 
+> > The EBI (External Bus Interface) is used to access external peripherals
+> > (NOR, SRAM, NAND, and other specific devices like ethernet controllers).
+> > Each device is assigned a CS line and an address range and can have its
+> > own configuration (timings, access mode, bus width, ...).
+> > This driver provides a generic DT binding to configure a device according
+> > to its requirements.
+> > For specific device controllers (like the NAND one) the SMC timings
+> > should be configured by the controller driver through the matrix and
+> > smc syscon regmaps.
+> > 
+> > The first 4 patches introduce 2 syscon devices needed to configure the
+> > EBI bus, patch 5 and 6 adds support for the EBI bus, and the remaining
+> > patches declares the EBI related nodes in sama5d3 dts[i] files.
+> 
+> Can you take the first 4 patches of this series (adding 2 syscon
+> devices and their associated bindings doc) for 3.20 ?
+> Alexandre has worked on multi platform support for Atmel SoCs and his
+> work depends on these two syscon devices.
+> 
+> Let me know if you want me to send to send a new series containing only
+> those 4 commits.
+> 
+
+Actually, because of other series depending on it and because you
+already acked them, Nicolas wants to take those 4 patches through the
+AT91 tree, unless you have any reason to take them through your tree.
+
+Sorry for the noise.
+
 -- 
-1.7.9.5
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
