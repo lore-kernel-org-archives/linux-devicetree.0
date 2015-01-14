@@ -1,68 +1,128 @@
-From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Subject: Re: [PATCH v8 2/4] fpga manager: add sysfs interface document
-Date: Wed, 14 Jan 2015 11:12:58 -0700
-Message-ID: <20150114181258.GB16392@obsidianresearch.com>
-References: <20150107084819.GA1887@amd>
- <alpine.DEB.2.02.1501091302370.30067@linuxheads99>
- <20150109205643.GA5761@amd>
- <20150112210134.687176ed@lxorguk.ukuu.org.uk>
- <20150112214314.GA18610@obsidianresearch.com>
- <20150113162847.2778b5a5@lxorguk.ukuu.org.uk>
- <20150113200032.GA16205@obsidianresearch.com>
- <alpine.DEB.2.02.1501131455130.30192@linuxheads99>
- <20150113222450.GA17475@obsidianresearch.com>
- <20150114160617.02fb9135@lxorguk.ukuu.org.uk>
+From: Eduardo Valentin <edubezval@gmail.com>
+Subject: Re: [PATCH v2 2/8] thermal: Provide stub for thermal_cdev_update()
+ function
+Date: Wed, 14 Jan 2015 14:28:37 -0400
+Message-ID: <20150114182835.GA3672@developer>
+References: <1418897591-18332-1-git-send-email-l.majewski@samsung.com>
+ <1419265668-32283-1-git-send-email-l.majewski@samsung.com>
+ <1419265668-32283-3-git-send-email-l.majewski@samsung.com>
+ <20150102184028.GA12371@developer>
+ <20150114160753.48f903da@amdc2363>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="/04w6evG8XlLl3ft"
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20150114160617.02fb9135@lxorguk.ukuu.org.uk>
-Sender: linux-doc-owner@vger.kernel.org
-To: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
-Cc: atull <atull@opensource.altera.com>, Pavel Machek <pavel@denx.de>, gregkh@linuxfoundation.org, hpa@zytor.com, monstr@monstr.eu, michal.simek@xilinx.com, rdunlap@infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, pantelis.antoniou@konsulko.com, robh+dt@kernel.org, grant.likely@linaro.org, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, broonie@kernel.org, philip@balister.org, rubini@gnudd.com, s.trumtrar@pengutronix.de, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, balbi@ti.com, m.chehab@samsung.com, davidb@codeaurora.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, linus.walleij@linaro.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devel@driverdev.osuosl.org, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yv
+In-Reply-To: <20150114160753.48f903da@amdc2363>
+Sender: linux-pm-owner@vger.kernel.org
+To: Lukasz Majewski <l.majewski@samsung.com>
+Cc: Kamil Debski <k.debski@samsung.com>, Jean Delvare <jdelvare@suse.de>, Guenter Roeck <linux@roeck-us.net>, lm-sensors@lm-sensors.org, Linux PM list <linux-pm@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Lukasz Majewski <l.majewski@majess.pl>, Kukjin Kim <kgene.kim@samsung.com>, linux-kernel@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Abhilash Kesavan <a.kesavan@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 14, 2015 at 04:06:17PM +0000, One Thousand Gnomes wrote:
 
-> and I think you effectively have the user usage covered here for such
-> things. It much like GPIO pins - we can describe them but we can also
-> declare they are not visible to the user.
+--/04w6evG8XlLl3ft
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-A missing element in mainline is a kind of VFIO scheme to let user
-space access the FPGA registers designated for user space use.
+On Wed, Jan 14, 2015 at 04:07:53PM +0100, Lukasz Majewski wrote:
+> Hi Eduardo,
+>=20
+> > On Mon, Dec 22, 2014 at 05:27:42PM +0100, Lukasz Majewski wrote:
+> > > Odroid U3 fan can work without being registered as OF cooling device
+> > > (with CONFIG_THERMAL_OF disabled).
+> > > In this situation it can be controlled via PWM entry at
+> > > /sys/class/hwmon/hwmon0/pwm1.
+> > >=20
+> > > Therefore, the thermal_cdev_update() function needs a stub
+> > > to allow clean compilation.
+> >=20
+> > I am not sure I understand what you are attempting to do here. What is
+> > the relation that you see between CONFIG_OF_THERMAL and
+> > thermal_cdev_update?=20
+>=20
+> It should be CONFIG_THERMAL, not CONFIG_OF_THERMAL.
+>=20
+> The thermal_cdev_update() is necessary since pwm-fan code can be
+> run without THERMAL subsystem (and such configuration is perfectly
+> valid).
 
-We have been using these patches since 2.6.16 to allow user space to
-access the FPGA register resources via a PCI like /sys/../resource0
-mmapable:
+OK. Now I understand. Then, please resend this one using CONFIG_THERMAL.
 
-    https://github.com/jgunthorpe/linux/commit/59d5d13ddeffa8980ccc6248ebb5f1678ccb23f4
-    https://github.com/jgunthorpe/linux/commit/7c29c4344627be8a3906d64d32db533bc131df86
-    https://github.com/jgunthorpe/linux/commit/e41bb4a197368a9d505d66b627aee82f2d2b8895
 
-We deliberately split up the FPGA registers and the assign user space
-permissions to the resource0 files in a way that makes sense for our
-app. Typically there are 10-20 FPGA register regions. User space does
-not access register regions that control DMA.
+Thanks,
 
-> The swappable case mostly comes out of the /dev node. Once you have the
-> dev node it becomes a detail of the OS not the FPGA driver as to who may
-> open it, and how it is handed about. It might be an FPU manager daemon it
-> might not.
 
-Right, but the thing that scares me about the swappable case is the
-kernel side support.. The FPGA has to connect to the CPU in some way,
-it must have some address assigned, etc. Swapping needs to take care
-of all those details in some way.
+Eduardo Valentin
 
-A fixed bus interface block and dynamic reconfiguration for the
-remainder is probably the way to manage that. But, that implies that
-even a family of swappable FPGAs will have a DT overlay associated
-with it.
+>=20
+> >=20
+> > >=20
+> > > Signed-off-by: Lukasz Majewski <l.majewski@samsung.com>
+> > > ---
+> > > Changes for v2:
+> > > - New patch
+> > > ---
+> > >  include/linux/thermal.h | 6 +++++-
+> > >  1 file changed, 5 insertions(+), 1 deletion(-)
+> > >=20
+> > > diff --git a/include/linux/thermal.h b/include/linux/thermal.h
+> > > index 871123c..b3515b5 100644
+> > > --- a/include/linux/thermal.h
+> > > +++ b/include/linux/thermal.h
+> > > @@ -332,6 +332,7 @@ struct thermal_cooling_device *
+> > >  thermal_of_cooling_device_register(struct device_node *np,
+> > >  				   char *type, void *devdata,
+> > >  				   const struct
+> > > thermal_cooling_device_ops *); +void thermal_cdev_update(struct
+> > > thermal_cooling_device *); #else
+> > >  static inline struct thermal_zone_device *
+> > >  thermal_zone_of_sensor_register(struct device *dev, int id, void
+> > > *data, @@ -353,6 +354,10 @@
+> > > thermal_of_cooling_device_register(struct device_node *np, {
+> > >  	return NULL;
+> > >  }
+> > > +
+> > > +static inline void thermal_cdev_update(struct
+> > > thermal_cooling_device *cdev) +{
+> > > +}
+> > >  #endif
+> > >  struct thermal_zone_device *thermal_zone_device_register(const
+> > > char *, int, int, void *, struct thermal_zone_device_ops *,
+> > > @@ -375,7 +380,6 @@ int thermal_zone_get_temp(struct
+> > > thermal_zone_device *tz, unsigned long *temp); int
+> > > get_tz_trend(struct thermal_zone_device *, int); struct
+> > > thermal_instance *get_thermal_instance(struct thermal_zone_device
+> > > *, struct thermal_cooling_device *, int); -void
+> > > thermal_cdev_update(struct thermal_cooling_device *); void
+> > > thermal_notify_framework(struct thermal_zone_device *, int);=20
+> > >  #ifdef CONFIG_NET
+> > > --=20
+> > > 2.0.0.rc2
+> > >=20
+>=20
+>=20
+> --=20
+> Best regards,
+>=20
+> Lukasz Majewski
+>=20
+> Samsung R&D Institute Poland (SRPOL) | Linux Platform Group
 
-Ideally, I could see wanting to have a file format that combines the
-overlay and FPGA bitfile. A loader tool would use the /dev/ interface
-to setup both elements. That would be much more robust than the
-current scheme I see (eg Xilinx) using where the bitfile and DT bit
-live in completely different places and have to be perfectly matched.
+--/04w6evG8XlLl3ft
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Jason
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUtrVIAAoJEMLUO4d9pOJWQRYH/1A0R6BYwPWkVKEViu3ASgNK
+sHO81csXMk9Z5p9OUpRixD2WuaL1Z8k8vH1bR7mp76bLmBF5V6xBfat2OrSeeWLI
+wfQC4EZIp7OtT2nd80mm2Gb6RocmcjVTecqxex7QY7oM9grDyGRlRmsuYptEDrMg
+Gjco7nwSvbK/R3OyZ1ZwHOlKFAdOIWhT4aqzr56xcOibDoC7gl6PzozTm3M5wzxT
+zqffWgztZ2ccklteYLPbRjCscX++pPGS3089Ti6Nc7ojsOns9cPRy4eJmnwGxL0U
+R4DZ1vlDYmO1dMNh3YgW8BuwoARRGzn03pcPo3VUuaEEhsNtzDTsx45vlO0VW28=
+=rOL+
+-----END PGP SIGNATURE-----
+
+--/04w6evG8XlLl3ft--
