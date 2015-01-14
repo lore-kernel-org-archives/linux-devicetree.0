@@ -1,42 +1,50 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 2/3] leds: leds-mc13783: Use of_get_child_by_name() instead of refcount hack
-Date: Wed, 14 Jan 2015 14:51:58 +0100
-Message-ID: <1421243519-6257-3-git-send-email-geert+renesas@glider.be>
-References: <1421243519-6257-1-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH 0/3] Use of_get_child_by_name() instead of of_find_node_by_name()
+Date: Wed, 14 Jan 2015 14:51:56 +0100
+Message-ID: <1421243519-6257-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1421243519-6257-1-git-send-email-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jingoo Han <jg1.han@samsung.com>, Lee Jones <lee.jones@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, linux-leds@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-of_find_node_by_name() calls of_node_put() on its "from" parameter.
-To counter this, mc13xxx_led_probe_dt() calls of_node_get() first.
+	Hi Ben, Bryan/Richard, Jingoo/Lee,
 
-Use of_get_child_by_name() instead to get rid of the refcount hack.
+Internally, of_find_node_by_name() calls of_node_put() on its "from"
+parameter.  This is a problem if that device_node will be used
+afterwards, or if of_node_put() is called on it again (either manually
+or in a for_each_*_node() loop) later, as that may cause a zero kref
+refcount. This may be caught by the system if CONFIG_OF_DYNAMIC=y:
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: linux-leds@vger.kernel.org
----
-Compile-tested only
----
- drivers/leds/leds-mc13783.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+	ERROR: Bad of_node_put() on /....
 
-diff --git a/drivers/leds/leds-mc13783.c b/drivers/leds/leds-mc13783.c
-index 85c3714e1b5aabba..e2b847fe22a1c934 100644
---- a/drivers/leds/leds-mc13783.c
-+++ b/drivers/leds/leds-mc13783.c
-@@ -134,9 +134,7 @@ static struct mc13xxx_leds_platform_data __init *mc13xxx_led_probe_dt(
- 	if (!pdata)
- 		return ERR_PTR(-ENOMEM);
- 
--	of_node_get(dev->parent->of_node);
--
--	parent = of_find_node_by_name(dev->parent->of_node, "leds");
-+	parent = of_get_child_by_name(dev->parent->of_node, "leds");
- 	if (!parent)
- 		goto out_node_put;
- 
+Use of_get_child_by_name() instead to fix this, and remove existing
+workarounds to pre-increase the refcount.
+
+Compile-tested only.
+
+Geert Uytterhoeven (3):
+  powerpc/pmac: Fix DT refcount imbalance in pmac_pic_probe_oldstyle
+  leds: leds-mc13783: Use of_get_child_by_name() instead of refcount
+    hack
+  backlight: 88pm860x_bl: Use of_get_child_by_name() instead of refcount
+    hack
+
+ arch/powerpc/platforms/powermac/pic.c | 2 +-
+ drivers/leds/leds-mc13783.c           | 4 +---
+ drivers/video/backlight/88pm860x_bl.c | 5 +----
+ 3 files changed, 3 insertions(+), 8 deletions(-)
+
 -- 
 1.9.1
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
