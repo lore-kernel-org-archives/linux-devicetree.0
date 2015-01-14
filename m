@@ -1,156 +1,60 @@
-From: Y Vo <yvo@apm.com>
-Subject: Re: [PATCH v2 RESEND 1/3] gpio: Add APM X-Gene standby GPIO
- controller driver
-Date: Wed, 14 Jan 2015 15:27:55 +0700
-Message-ID: <CAL4ahLfGNc1sL-hr7bZi_pcxjz7CNHjPRSPnJf_TUCGsbweaDA@mail.gmail.com>
-References: <1418793050-26927-1-git-send-email-yvo@apm.com>
-	<1418793050-26927-2-git-send-email-yvo@apm.com>
-	<CACRpkdZe7Huiruu-iSNU4MWaiLo_qL=QAab1crummuuVOEJ0zQ@mail.gmail.com>
+From: Frans Klaver <frans.klaver@xsens.com>
+Subject: [PATCH RESEND 07/13] power: reset: ltc2952: drop empty suspend/resume functions
+Date: Wed, 14 Jan 2015 09:15:40 +0100
+Message-ID: <1421223346-27410-8-git-send-email-frans.klaver@xsens.com>
+References: <1421223346-27410-1-git-send-email-frans.klaver@xsens.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZe7Huiruu-iSNU4MWaiLo_qL=QAab1crummuuVOEJ0zQ@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Phong Vo <pvo@apm.com>, Toan Le <toanle@apm.com>, patches <patches@apm.com>
+Content-Type: text/plain
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1421223346-27410-1-git-send-email-frans.klaver@xsens.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>
+Cc: Frans Klaver <frans.klaver@xsens.com>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?q?Ren=C3=A9=20Moll?= <linux@r-moll.nl>, Guenter Roeck <linux@roeck-us.net>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 13, 2015 at 4:40 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Wed, Dec 17, 2014 at 6:10 AM, Y Vo <yvo@apm.com> wrote:
->
->> Add APM X-Gene standby GPIO controller driver.
->
-> Write something about what platform an arch this is and so
-> on, this is too terse commit message for a new driver.
->
->> Signed-off-by: Y Vo <yvo@apm.com>
-> (...)
->
->> +config GPIO_XGENE_SB
->> +       tristate "APM X-Gene GPIO standby controller support"
->> +       depends on ARCH_XGENE && OF_GPIO
->
-> select GPIO_GENERIC
-Why ?
-> see below on why.
->
->> +       help
->> +         This driver supports the GPIO block within the APM X-Gene
->> +         Standby Domain. Say yes here to enable the GPIO functionality.
->> +
->>  config GPIO_XILINX
->>         bool "Xilinx GPIO support"
->>         depends on PPC_OF || MICROBLAZE || ARCH_ZYNQ
->> diff --git a/drivers/gpio/gpio-xgene-sb.c b/drivers/gpio/gpio-xgene-sb.c
->> new file mode 100644
->> index 0000000..1248448
->
-> (...)
->> +++ b/drivers/gpio/gpio-xgene-sb.c
->> +#include <linux/module.h>
->> +#include <linux/io.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/of_gpio.h>
->> +#include <linux/gpio.h>
->
-> #include <linux/gpio/driver.h>
->
-> instead.
->
->> +#include <linux/of_irq.h>
->> +#include <linux/acpi.h>
-OK.
+Documentation/SubmittingDrivers suggests these be implemented even when
+they do nothing. On the other hand, the platform code calls these
+functions 'legacy'. Suspend and resume operations should go into a
+pm_ops structure, pointed at by the driver's pm field. This approach
+would lead to a lot of boiler plate, while achieving nothing. Drop the
+functions instead.
 
-> OK, why?
->
->> +#include <linux/efi.h>
-I will remove.
+Signed-off-by: Frans Klaver <frans.klaver@xsens.com>
+---
+ drivers/power/reset/ltc2952-poweroff.c | 13 -------------
+ 1 file changed, 13 deletions(-)
 
-> Why?
->
->> +#include <linux/string.h>
->> +#include <linux/of_address.h>
+diff --git a/drivers/power/reset/ltc2952-poweroff.c b/drivers/power/reset/ltc2952-poweroff.c
+index bc8d228..af3cb6e 100644
+--- a/drivers/power/reset/ltc2952-poweroff.c
++++ b/drivers/power/reset/ltc2952-poweroff.c
+@@ -184,17 +184,6 @@ static void ltc2952_poweroff_kill(void)
+ 	gpiod_set_value(ltc2952_data->gpio_kill, 1);
+ }
+ 
+-static int ltc2952_poweroff_suspend(struct platform_device *pdev,
+-	pm_message_t state)
+-{
+-	return -ENOSYS;
+-}
+-
+-static int ltc2952_poweroff_resume(struct platform_device *pdev)
+-{
+-	return -ENOSYS;
+-}
+-
+ static void ltc2952_poweroff_default(struct ltc2952_poweroff *data)
+ {
+ 	data->wde_interval = ktime_set(0, 300L*1E6L);
+@@ -323,8 +312,6 @@ static struct platform_driver ltc2952_poweroff_driver = {
+ 		.owner = THIS_MODULE,
+ 		.of_match_table = of_ltc2952_poweroff_match,
+ 	},
+-	.suspend = ltc2952_poweroff_suspend,
+-	.resume = ltc2952_poweroff_resume,
+ };
+ 
+ module_platform_driver(ltc2952_poweroff_driver);
+-- 
+2.1.0
 
-I will remove.
-
-> #include <linux/basic_mmio_gpio.h>
-> when you start using GENERIC_GPIO
->
->> +
->> +#define XGENE_MAX_GPIO_DS              22
->> +#define XGENE_MAX_GPIO_DS_IRQ          6
->> +
->> +#define GPIO_MASK(x)                   (1U << ((x) % 32))
->> +#define GPIO_DIR_IN                    0
->> +#define GPIO_DIR_OUT                   1
->> +
->> +#define MPA_GPIO_INT_LVL               0x0290
->> +#define MPA_GPIO_OE_ADDR               0x029c
->> +#define MPA_GPIO_OUT_ADDR              0x02a0
->> +#define MPA_GPIO_IN_ADDR               0x02a4
->> +#define MPA_GPIO_SEL_LO                        0x0294
->> +#define MPA_GPIO_SEL_HIGH              0x029c
->> +
->> +struct xgene_gpio_sb {
->> +       struct of_mm_gpio_chip mm;
->> +       u32 *irq;
->> +       u32 nirq;
->> +       spinlock_t lock; /* mutual exclusion */
->> +};
->
-> Add kerneldoc to this struct.
->
->> +static void xgene_gpio_set_bit(void __iomem *reg, u32 gpio, int val)
-> (...)
->> +static int xgene_gpio_sb_get(struct gpio_chip *gc, u32 gpio)
->
-> This looks very much like a memory-mapped standard GPIO controller,
-> use drivers/gpio/gpio-generic.c with some IRQ add-on, compare
-> to any other driver selecting GPIO_GENERIC for guidance:
-> drivers/gpio/gpio-74xx-mmio.c, gpio-dwapb.c etc.
-You mean I must rewrite to use GPIO_GENERIC follow gpio-74xx-mmio.c,
-gpio-dwapb.c ?
-
->> +static int apm_gpio_sb_to_irq(struct gpio_chip *gc, u32 gpio)
->> +{
->> +       struct of_mm_gpio_chip *mm_gc = to_of_mm_gpio_chip(gc);
->> +       struct xgene_gpio_sb *chip = to_xgene_gpio_sb(mm_gc);
->> +
->> +       if (chip->irq[gpio])
->> +               return chip->irq[gpio];
->> +
->> +       return -ENXIO;
->> +}
->> +
->> +static int xgene_gpio_sb_probe(struct platform_device *pdev)
->> +{
->> +       struct of_mm_gpio_chip *mm;
->> +       struct xgene_gpio_sb *apm_gc;
->> +       u32 ret, i;
->> +       u32 default_pins[] = {0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D};
->
-> Um, pins... call these "lines" instead to avoid confusion with the pin
-> control subsystem.
-
-I will change.
-
->> +       struct resource *res;
->> +
->> +       apm_gc = devm_kzalloc(&pdev->dev, sizeof(*apm_gc), GFP_KERNEL);
->> +       if (!apm_gc)
->> +               return -ENOMEM;
->> +
->> +       mm = &apm_gc->mm;
->> +       mm->gc.direction_input = xgene_gpio_sb_dir_in;
->> +       mm->gc.direction_output = xgene_gpio_sb_dir_out;
->> +       mm->gc.get = xgene_gpio_sb_get;
->> +       mm->gc.set = xgene_gpio_sb_set;
->> +       mm->gc.to_irq = apm_gpio_sb_to_irq;
->> +       mm->gc.base = -1;
->> +       mm->gc.label = dev_name(&pdev->dev);
->
-> gc has a device tree .np node and a .dev struct device *
-> pointer, assign them here. (Also after you switch to GENERIC_GPIO.)
->
-> Yours,
-> Linus Walleij
