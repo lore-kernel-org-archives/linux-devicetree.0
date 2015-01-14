@@ -1,54 +1,112 @@
-From: Jean-Francois Moine <moinejf@free.fr>
-Subject: Re: [PATCH RFC 0/3] Make "ti,tilcdc,slave" DT binding more sensible
-Date: Wed, 14 Jan 2015 07:57:29 +0100
-Message-ID: <20150114075729.7fe4b80a@armhf>
-References: <cover.1421167634.git.jsarha@ti.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: Including empty regulator nodes in axp209.dtsi is a
+ BAD idea
+Date: Wed, 14 Jan 2015 08:42:11 +0100
+Message-ID: <54B61DD3.6010105@redhat.com>
+References: <54B4E7B5.6060304@redhat.com> <20150113164606.GA4891@lukather>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <cover.1421167634.git.jsarha@ti.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jyri Sarha <jsarha@ti.com>
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, detheridge@ti.com, tony@atomide.com, tomi.valkeinen@ti.com, bcousson@baylibre.com, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBXF33CSQKGQEKH7EQBA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20150113164606.GA4891@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCAxMyBKYW4gMjAxNSAxOToxMjoyNSArMDIwMApKeXJpIFNhcmhhIDxqc2FyaGFAdGku
-Y29tPiB3cm90ZToKCj4gVGhlc2UgcGF0Y2hlcyBhcmUgbmVlZGVkIGZvciBCZWFnbGVib25lLWJh
-Y2sgSERNSSBhdWRpby4gVGhlcmUgaXMgbm8KPiBkaXJlY3QgZGVwZW5kZW5jeSBiZXR3ZWVuIHRo
-ZXNlIHBhdGNoZXMgYW5kIHRoZSBvdGhlciAoZHRzIGFuZCBBU29DKQo+IGNoYW5nZXMgbmVlZGVk
-IGZvciB0aGUgSERNSSBhdWRpbyBzbyB0aGVzZSBjaGFuZ2VzIGNhbiBiZSBtZXJnZWQKPiBpbmRl
-cGVuZGVudGx5LiBJIGFsc28gZmVlbCB0aGF0IHRoZXNlIGNoYW5nZXMgbWFrZSBzZW5zZSBldmVu
-IHdpdGhvdXQKPiB0aGUgSERNSSBhdWRpby4KPiAKPiBCZXN0IHJlZ2FyZHMsCj4gSnlyaQo+IAo+
-IEp5cmkgU2FyaGEgKDMpOgo+ICAgZHJtOiBlbmNvZGVyX3NsYXZlOiBBZGQgZHJtX2kyY19lbmNv
-ZGVyX2F0dGFjaCgpCj4gICBkcm0vdGlsY2RjOiBzbGF2ZTogQWRkIHN1cHBvcnQgZm9yICJpMmMt
-c2xhdmUiIERULXBhcmFtZXRlcgo+ICAgQVJNOiBkdHM6IGFtMzM1eC1ib25lYmxhY2s6IFVzZSBu
-ZXcgYmluZGluZyBpbiB0aSx0aWxjZGMsc2xhdmUgbm9kZQo+IAo+ICAuLi4vZGV2aWNldHJlZS9i
-aW5kaW5ncy9kcm0vdGlsY2RjL3NsYXZlLnR4dCAgICAgICB8ICAgIDQgKy0KPiAgYXJjaC9hcm0v
-Ym9vdC9kdHMvYW0zMzV4LWJvbmVibGFjay5kdHMgICAgICAgICAgICAgfCAgICA5ICsrKy0KPiAg
-ZHJpdmVycy9ncHUvZHJtL2RybV9lbmNvZGVyX3NsYXZlLmMgICAgICAgICAgICAgICAgfCAgIDUx
-ICsrKysrKysrKysrKysrKysrKysrCj4gIGRyaXZlcnMvZ3B1L2RybS90aWxjZGMvdGlsY2RjX3Ns
-YXZlLmMgICAgICAgICAgICAgIHwgICA1MCArKysrKysrKysrKy0tLS0tLS0tCj4gIGluY2x1ZGUv
-ZHJtL2RybV9lbmNvZGVyX3NsYXZlLmggICAgICAgICAgICAgICAgICAgIHwgICAgMyArKwo+ICA1
-IGZpbGVzIGNoYW5nZWQsIDk1IGluc2VydGlvbnMoKyksIDIyIGRlbGV0aW9ucygtKQoKSW5zdGVh
-ZCBvZiBhZGRpbmcgY29kZSB0byBoYXZlIHRoZSBzbGF2ZSBlbmNvZGVyIHdvcmtpbmcsIGl0IHdv
-dWxkIGJlCnNpbXBsZXIgdG8gY2hhbmdlIHRoZSB3YXkgdGlsY2RjIHVzZXMgdGhlIHRkYTk5OHgu
-CkkgYWxyZWFkeSBwcm9wb3NlZCBzdWNoIGEgcGF0Y2g6CgpodHRwOi8vbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnL2FyY2hpdmVzL2RyaS1kZXZlbC8yMDE0LU1hcmNoLzA1NjA2NS5odG1sCgphbmQgdGhl
-IGNoYW5nZXMgaW4gdGhlIHRkYTk5OHggZHJpdmVyIGhhdmUgYmVlbiBkb25lIGJ5IFJ1c3NlbGw6
-Cgpjb21taXQ6IGE4ZjRkNGQ2MzczOWU0YmNhNDU5ZmY0MDYzNmYxZDllNGI3ZWY1ZTYKCWRybS9p
-MmM6IHRkYTk5OHg6IGFsbG93IHJlLXVzZSBvZiB0ZGE5OTh4IHN1cHBvcnQgY29kZQphbmQKY29t
-bWl0OiBjNzA3YzM2MTljYTgxZjQ5OWE1Y2UwMzIwMjE0MDVlOTg5YTk2ZmYwCglkcm0vaTJjOiB0
-ZGE5OTh4OiBhZGQgY29tcG9uZW50IHN1cHBvcnQKCi0tIApLZW4gYXIgYydoZW50YcOxCXwJICAg
-ICAgKiogQnJlaXpoIGhhIExpbnV4IGF0YXYhICoqCkplZgkJfAkJaHR0cDovL21vaW5lamYuZnJl
-ZS5mci8KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
-LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6
-Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Hi,
+
+On 13-01-15 17:46, Maxime Ripard wrote:
+> On Tue, Jan 13, 2015 at 10:39:01AM +0100, Hans de Goede wrote:
+>> Hi ChenYu, Maxime,
+>>
+>> During the review of a few dts files for new boards Maxime asked me to use
+>> axp209.dtsi to avoid the standard axp209 "boilerplate" present in most
+>> boards using the axp209 pmic.
+>>
+>> But axp209.dtsi includes empty regulator nodes, e.g. :
+>>
+>>                  reg_dcdc3: dcdc3 {
+>>                          regulator-name = "dcdc3";
+>>                  };
+>>
+>> This is a BAD idea, the presence of these empty nodes causes the
+>> axp20x-regulator driver to actually register regulators for them,
+>> and then on late_init the regulator subsys turns them off, since
+>> they have absolutely no constraints set (nor users registered)
+>> and the regulator subsys assumes that when devicetree is used their
+>> is always a compete set of constraints and that thus turning them
+>> off is safe.
+>>
+>> So when I switched to using axp209.dtsi for the bananapro.dts,
+>> and booted the bananapro this is the last message I got from the
+>> kernel while booting:
+>>
+>> [    2.314014] dcdc3: disabling
+>>
+>> And away went our DRAM power-supply, oops.
+>>
+>> So for dcdc2 (CPU) and dcdc3 (DRAM), the boilerplate
+>> should contain reasonable constraints (eg the operating range
+>> from the datasheet)
+>
+> Indeed.
+>
+>> and an always-on property.
+>
+> I disagree. The regulator disabling is a feature, and how the board is
+> wired is, well, up to the board.
+
+And here I was thinking you wanted to reduce the amount of boilerplate
+in our dts files ..
+
+IOW I disagree with your disagreeing all boards we know of have dcdc2
+wired to Vcpu and dcdc3 wired to Vddr, so not having this in the dtsi
+will lead to a lot of extra boilerplate in each dts file. We're not
+talking about our main dtsi file here, if we ever encounter a board
+which is wired in a different way, then its dts can simply not use
+axp209.dtsi and instead define the nodes itself, it needs to do that
+anyways if we do include the standard CPU and DDR constrains in the
+dtsi since those will not make sense either in that case.
+
+> If an always-on property is needed, then it's in the DTS, not in the
+> AXP DTSI.
+>
+>> The ldo-s are trickier, since we simply do not know how those
+>> are used, I think ldo2 is used for Avcc on most boards, so it
+>> too should be always on, since almost any board will have some
+>> analog parts on it (be it the ir receiver, lradc, rtp, lvds, vga,
+>> or analog audio in/out). Assuming that we're willing to assume
+>> that ldo2 is used this way, we should give it matching constraints
+>> and always mark it always-on.
+>
+> Ideally, all the drivers that have a analogic component should have a
+> reference to the regulator they use. But again, at the board
+> level. And more realistically, putting always-on should also happen at
+> the board level.
+>
+>> As for ldo3 - 5 I've no idea when / for what these are used, but
+>> if we do not know it is better to just leave them be then to turn
+>> them off IMHO, so we should remove the nodes for these from axp209.dtsi
+>>
+>> Anyways sorting this all out is going to take some time, so I'm
+>> not going to use axp209.dtsi in dts files for new boards for now.
+>
+> I'm afraid it's an "all or nothing" situation.
+
+No it is not, the PMIC is a mfd, and we can use some of its functions
+fine without actually loading the regulator bits. This is already
+done on most boards with the axp209, even without touching the regulators
+it is nice to have the axp209 mfd driver loaded so that we get support
+for the powerbutton, and support for poweroff, esp. the latter is quite
+nice to have.
+
+Regards,
+
+Hans
