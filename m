@@ -1,74 +1,208 @@
-From: Ding Tianhong <dingtianhong@huawei.com>
-Subject: Re: [PATCH net-next v12 3/3] net: hisilicon: new hip04 ethernet driver
-Date: Wed, 14 Jan 2015 12:22:20 +0800
-Message-ID: <54B5EEFC.5020902@huawei.com>
-References: <1421140290-5492-1-git-send-email-dingtianhong@huawei.com>	<1421140290-5492-4-git-send-email-dingtianhong@huawei.com> <20150113.230611.375062426344934847.davem@davemloft.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20150113.230611.375062426344934847.davem@davemloft.net>
-Sender: netdev-owner@vger.kernel.org
-To: David Miller <davem@davemloft.net>
-Cc: arnd@arndb.de, robh+dt@kernel.org, grant.likely@linaro.org, agraf@suse.de, sergei.shtylyov@cogentembedded.com, linux-arm-kernel@lists.infradead.org, eric.dumazet@gmail.com, xuwei5@hisilicon.com, zhangfei.gao@linaro.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux@arm.linux.org.uk
+From: Christoph Junghans <ottxor-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v4] Added support for pogoplug e02 (pink/gray)
+Date: Tue, 13 Jan 2015 21:49:29 -0700
+Message-ID: <1421210969-12446-1-git-send-email-ottxor@gentoo.org>
+References: <CAA8MNVjieDJ-dv2NNWXK=+uqrPmvtk2EiBYJGJkMugEiN2TsAw@mail.gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAA8MNVjieDJ-dv2NNWXK=+uqrPmvtk2EiBYJGJkMugEiN2TsAw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: andrew-g2DYL2Zd6BY@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Christoph Junghans <ottxor-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2015/1/14 12:06, David Miller wrote:
-> From: Ding Tianhong <dingtianhong@huawei.com>
-> Date: Tue, 13 Jan 2015 17:11:30 +0800
-> 
->> +static int hip04_alloc_ring(struct net_device *ndev, struct device *d)
->> +{
->> +	struct hip04_priv *priv = netdev_priv(ndev);
->> +	int i;
->> +
->> +	priv->tx_desc = dma_alloc_coherent(d,
->> +			TX_DESC_NUM * sizeof(struct tx_desc),
->> +			&priv->tx_desc_dma, GFP_KERNEL);
-> 
-> When a function call spans multiple lines, the arguments on the
-> second and subsequent lines should start at the first column
-> after the openning parenthesis of the function call.
-> 
-> If you are only using TAB characters, your indentation is likely
-> to be incorrect.
-> 
+The pogoplug differs from the SheevaPlug only by a
+few details, but especially in the led assignments.
+This patch was tested under Gentoo Linux and is
+based on dts files from Arch Linux ARM and OpenWrt.
 
-Sorry for the mistake.
+Suggested-by: Felix Kaechele <heffer-rxtnV0ftBwyoClj4AeEUq9i2O/JbrIOy@public.gmane.org>
+Suggested-by: Oleg Rakhmanov <moonman.ca-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Christoph Junghans <ottxor-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
+---
 
->> +	/*
->> +	 * BQL will try to keep the TX queue as short as possible, but it can't
->> +	 * be faster than tx_coalesce_usecs, so we need a fast timeout here,
->> +	 * but also long enough to gather up enough frames to ensure we don't
->> +	 * get more interrupts than necessary.
->> +	 * 200us is enough for 16 frames of 1500 bytes at gigabit ethernet rate
->> +	 */
-> 
-> Comments in the networking should be:
-> 
-> 	/* Formatted
-> 	 * like this.
-> 	 */
-> 
+V1: initial patch
+V2: added GPL-2 header
+    dropped earlyprintk from bootargs
+    added stdout-path
+    change leds name to scheme "devicename:colour:function"
+V3: rebase on v3.19-rc4
+    fixed stdout-path to be &uart0
+    fixed compiling issue by using pin-controller
+V4: moved ocp@f1000000 block into &uart and &pinctrl
 
-yes.
->> +	priv->phy_node = of_parse_phandle(node, "phy-handle", 0);
->> +	if (priv->phy_node) {
->> +		priv->phy = of_phy_connect(ndev, priv->phy_node,
->> +			&hip04_adjust_link, 0, priv->phy_mode);
-> 
-> Please align the arguments to this function call correctly, as
-> per above.
-> 
-Ok, I will check them again.
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ arch/arm/boot/dts/Makefile                         |   1 +
+ arch/arm/boot/dts/kirkwood-pogo_e02.dts            | 133 +++++++++++++++++++++
+ 3 files changed, 135 insertions(+)
+ create mode 100644 arch/arm/boot/dts/kirkwood-pogo_e02.dts
 
-Ding
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index b1df0ad..61888db 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -34,6 +34,7 @@ chipidea	Chipidea, Inc
+ chrp	Common Hardware Reference Platform
+ chunghwa	Chunghwa Picture Tubes Ltd.
+ cirrus	Cirrus Logic, Inc.
++cloudengines	Cloud Engines, Inc.
+ cnm	Chips&Media, Inc.
+ cortina	Cortina Systems, Inc.
+ crystalfontz	Crystalfontz America, Inc.
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 91bd5bd..a3463ff 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -160,6 +160,7 @@ dtb-$(CONFIG_MACH_KIRKWOOD) += kirkwood-b3.dtb \
+ 	kirkwood-openrd-base.dtb \
+ 	kirkwood-openrd-client.dtb \
+ 	kirkwood-openrd-ultimate.dtb \
++	kirkwood-pogo_e02.dtb \
+ 	kirkwood-rd88f6192.dtb \
+ 	kirkwood-rd88f6281-z0.dtb \
+ 	kirkwood-rd88f6281-a.dtb \
+diff --git a/arch/arm/boot/dts/kirkwood-pogo_e02.dts b/arch/arm/boot/dts/kirkwood-pogo_e02.dts
+new file mode 100644
+index 0000000..b62c41c
+--- /dev/null
++++ b/arch/arm/boot/dts/kirkwood-pogo_e02.dts
+@@ -0,0 +1,133 @@
++/*
++ * kirkwood-pogo_e02.dts - Device tree file for Pogoplug E02
++ *
++ * Copyright (C) 2015 Christoph Junghans <ottxor-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
++ *
++ * based on information of dts files from
++ *  Arch Linux ARM by Oleg Rakhmanov <moonman.ca-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++ *  OpenWrt by Felix Kaechele <heffer-rxtnV0ftBwyoClj4AeEUq9i2O/JbrIOy@public.gmane.org>
++ *
++ * This file is licensed under the terms of the GNU General Public
++ * License version 2.  This program is licensed "as is" without any
++ * warranty of any kind, whether express or implied.
++ */
++
++/dts-v1/;
++
++#include "kirkwood.dtsi"
++#include "kirkwood-6281.dtsi"
++
++/ {
++	model = "Cloud Engines Pogoplug E02";
++	compatible = "cloudengines,pogoe02", "marvell,kirkwood-88f6281", "marvell,kirkwood";
++
++	memory {
++		device_type = "memory";
++		reg = <0x00000000 0x10000000>;
++	};
++
++	chosen {
++		bootargs = "console=ttyS0,115200n8";
++		stdout-path = &uart0;
++	};
++
++	gpio-leds {
++		compatible = "gpio-leds";
++
++		health {
++			label = "pogo_e02:green:health";
++			gpios = <&gpio1 16 GPIO_ACTIVE_LOW>;
++			default-state = "keep";
++		};
++		fault {
++			label = "pogo_e02:orange:fault";
++			gpios = <&gpio1 17 GPIO_ACTIVE_LOW>;
++		};
++	};
++
++	regulators {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		pinctrl-0 = <&pmx_usb_power_enable>;
++		pinctrl-names = "default";
++
++		usb_power: regulator@1 {
++			compatible = "regulator-fixed";
++			reg = <1>;
++			regulator-name = "USB Power";
++			regulator-min-microvolt = <5000000>;
++			regulator-max-microvolt = <5000000>;
++			enable-active-high;
++			regulator-always-on;
++			regulator-boot-on;
++			gpio = <&gpio0 29 GPIO_ACTIVE_HIGH>;
++		};
++	};
++};
++
++&pinctrl {
++	pinctrl-0 = < &pmx_usb_power_enable &pmx_led_orange
++		      &pmx_led_green >;
++	pinctrl-names = "default";
++
++	pmx_usb_power_enable: pmx-usb-power-enable {
++		marvell,pins = "mpp29";
++		marvell,function = "gpio";
++	};
++
++	pmx_led_green: pmx-led-green {
++		marvell,pins = "mpp48";
++		marvell,function = "gpio";
++	};
++
++	pmx_led_orange: pmx-led-orange {
++		marvell,pins = "mpp49";
++		marvell,function = "gpio";
++	};
++};
++
++&uart0 {
++	status = "okay";
++};
++
++&nand {
++	chip-delay = <40>;
++	status = "okay";
++
++	partition@0 {
++		label = "u-boot";
++		reg = <0x0000000 0x100000>;
++		read-only;
++	};
++
++	partition@100000 {
++		label = "uImage";
++		reg = <0x0100000 0x400000>;
++	};
++
++	partition@500000 {
++		label = "pogoplug";
++		reg = <0x0500000 0x2000000>;
++	};
++
++	partition@2500000 {
++		label = "root";
++		reg = <0x02500000 0x5b00000>;
++	};
++};
++
++&mdio {
++	status = "okay";
++
++	ethphy0: ethernet-phy@0 {
++		reg = <0>;
++	};
++};
++
++&eth0 {
++	status = "okay";
++	ethernet0-port@0 {
++		phy-handle = <&ethphy0>;
++	};
++};
+-- 
+2.0.5
 
-> Thanks.
-> --
-> To unsubscribe from this list: send the line "unsubscribe netdev" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
-> .
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
