@@ -1,141 +1,72 @@
-From: Lukasz Majewski <l.majewski@samsung.com>
-Subject: Re: [PATCH v2 1/8] thermal: Provide stub for
- thermal_of_cooling_device_register() function
-Date: Wed, 14 Jan 2015 16:01:06 +0100
-Message-ID: <20150114160106.20aa160b@amdc2363>
-References: <1418897591-18332-1-git-send-email-l.majewski@samsung.com>
- <1419265668-32283-1-git-send-email-l.majewski@samsung.com>
- <1419265668-32283-2-git-send-email-l.majewski@samsung.com>
- <20150102185426.GC12485@developer> <20150102190339.GA22356@developer>
+From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH RFC] pinctrl: at91
+Date: Wed, 14 Jan 2015 16:03:39 +0100
+Message-ID: <20150114150339.GJ3625@ldesroches-Latitude-E6320>
+References: <CACRpkdbkUUzVVMp14szY+vGNd+d+8bL066STh_XMGud-UsFBqA@mail.gmail.com>
+ <1418637470-5839-1-git-send-email-ludovic.desroches@atmel.com>
+ <54943933.60102@atmel.com>
+ <20150106093706.GC26982@ldesroches-Latitude-E6320>
+ <CACRpkda9wTPcRy6nRGP08rDpHV=tRyYVuD80TeO2zFGzX+aJcg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20150102190339.GA22356@developer>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eduardo Valentin <edubezval@gmail.com>
-Cc: Kamil Debski <k.debski@samsung.com>, Jean Delvare <jdelvare@suse.de>, Guenter Roeck <linux@roeck-us.net>, lm-sensors@lm-sensors.org, Linux PM list <linux-pm@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Lukasz Majewski <l.majewski@majess.pl>, Kukjin Kim <kgene.kim@samsung.com>, linux-kernel@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Abhilash Kesavan <a.kesavan@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkda9wTPcRy6nRGP08rDpHV=tRyYVuD80TeO2zFGzX+aJcg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Eduardo,
+On Wed, Jan 14, 2015 at 01:26:16PM +0100, Linus Walleij wrote:
+> On Tue, Jan 6, 2015 at 10:37 AM, Ludovic Desroches
+> <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> wrote:
+> 
+> > Usage of of_gpiochip_add() only solves my issue about gpio but not about
+> > pinctrl stuff, I still need a patch to manage the case when we have a gap if
+> > a gpio controller is not enabled to not break the pin naming, etc.
+> 
+> This has been the topic of many threads today.
+> I assume you are talking about keeping GPIO numbers
+> consistent.
+> 
+> - My suggestion is to add alias handling of the GPIO chips
+>   to the core so they can be probed in the right order.
 
-> On Fri, Jan 02, 2015 at 02:54:28PM -0400, Eduardo Valentin wrote:
-> > On Mon, Dec 22, 2014 at 05:27:41PM +0100, Lukasz Majewski wrote:
-> > > Odroid U3 fan can work without being registered as OF cooling
-> > > device (with CONFIG_THERMAL_OF disabled).
-> > > In this situation it can be controlled via PWM entry at
-> > > /sys/class/hwmon/hwmon0/pwm1.
-> > >=20
-> > > Therefore, the thermal_of_cooling_device_register() function
-> > > needs a stub to allow clean compilation.
-> > >=20
-> > > Signed-off-by: Lukasz Majewski <l.majewski@samsung.com>
-> >=20
-> > Acked-by: Eduardo Valentin <edubezval@gmail.com>
->=20
-> Sorry, too fast,
->=20
-> This is actually
-> Nacked-by: Eduardo Valentin <edubezval@gmail.com>
->=20
-> :-)
->=20
-> I get this error:
-> drivers/thermal/thermal_core.c:1210:1: error: redefinition of
-> =E2=80=98thermal_of_cooling_device_register=E2=80=99
->  thermal_of_cooling_device_register(struct device_node *np,
->   ^
->   In file included from drivers/thermal/thermal_core.c:34:0:
->   include/linux/thermal.h:321:1: note: previous definition of
->   =E2=80=98thermal_of_cooling_device_register=E2=80=99 was here
->    thermal_of_cooling_device_register(struct device_node *np,
->     ^
->=20
->=20
-> We provide the function in thermal core even if CONFIG_THERMAL_OF is
-> not set.
+We are already using aliases but it seems to not be the perfect
+solution. For example, at the probe time, we wait for all gpio
+controllers to be probed. We fill a gpio_chips table whose position in
+this table is the alias id of the gpio controller. The at91 pinctrl driver
+is waiting for 'maximum alias id' gpio controllers. What happens if
+don't want to use a gpio controller and don't declare it or set it as
+disabled?
 
-Unfortunately the PWM fan subsystem can work perfectly fine without
-CONFIG_THERMAL.
+> 
+> - For consistency in sysfs use the "names" array in
+>   struct gpio_chip so you can search for a symbolic
+>   name in sysfs and don't have to rely on fragile stuff
+>   like GPIO numbers.
+> 
+> - Partake in the development of a new GPIO ABI
+>   that does not use the global GPIO numberspace.
 
-I think that it would be enough to make something like this in
-the ./include/linux/thermal.h:
+I will have a look and bring my humble contribution if I can but I think
+this topic is far away from the fix I am sending.
 
-#ifdef CONFIG_THERMAL
-	static inline struct thermal_cooling_device *
-		thermal_of_cooling_device_register(struct device_node
-		*np, char *type, void *devdata,
-				   const struct
-		thermal_cooling_device_ops *ops) {
-		return NULL;
-	}
-#else
-	[ already present declaration of
-	thermal_of_cooling_device_register() ]
-#endif /* CONFIG_THERMAL */
+As you notice we can improve the at91 pinctrl driver, removing
+pinctrl_add_gpio_range() and the range computation in the driver but it
+won't solve my issue and it involves to add the gpio-range property to
+all our devices so it breaks backward compatibility with old dtb.
+
+>From my point of view, it is two distinct topics. One is a very
+important fix because our SAMA5D4 device is not booting without it. The
+other one is a proper way to manage gpio ranges but alone I don't think
+it can solve my issue.
 
 
+Regards
 
-> >=20
-> > > ---
-> > > Changes for v2:
-> > > - None
-> > > ---
-> > >  include/linux/thermal.h | 14 +++++++++++---
-> > >  1 file changed, 11 insertions(+), 3 deletions(-)
-> > >=20
-> > > diff --git a/include/linux/thermal.h b/include/linux/thermal.h
-> > > index 2de3d9e..871123c 100644
-> > > --- a/include/linux/thermal.h
-> > > +++ b/include/linux/thermal.h
-> > > @@ -328,6 +328,10 @@ thermal_zone_of_sensor_register(struct
-> > > device *dev, int id, void *data, const struct
-> > > thermal_zone_of_device_ops *ops); void
-> > > thermal_zone_of_sensor_unregister(struct device *dev, struct
-> > > thermal_zone_device *tz); +struct thermal_cooling_device *
-> > > +thermal_of_cooling_device_register(struct device_node *np,
-> > > +				   char *type, void *devdata,
-> > > +				   const struct
-> > > thermal_cooling_device_ops *); #else
-> > >  static inline struct thermal_zone_device *
-> > >  thermal_zone_of_sensor_register(struct device *dev, int id, void
-> > > *data, @@ -342,6 +346,13 @@ void
-> > > thermal_zone_of_sensor_unregister(struct device *dev, {
-> > >  }
-> > > =20
-> > > +static inline struct thermal_cooling_device *
-> > > +thermal_of_cooling_device_register(struct device_node *np,
-> > > +				   char *type, void *devdata,
-> > > +				   const struct
-> > > thermal_cooling_device_ops *ops) +{
-> > > +	return NULL;
-> > > +}
-> > >  #endif
-> > >  struct thermal_zone_device *thermal_zone_device_register(const
-> > > char *, int, int, void *, struct thermal_zone_device_ops *,
-> > > @@ -357,9 +368,6 @@ void thermal_zone_device_update(struct
-> > > thermal_zone_device *);=20
-> > >  struct thermal_cooling_device
-> > > *thermal_cooling_device_register(char *, void *, const struct
-> > > thermal_cooling_device_ops *); -struct thermal_cooling_device *
-> > > -thermal_of_cooling_device_register(struct device_node *np, char
-> > > *, void *,
-> > > -				   const struct
-> > > thermal_cooling_device_ops *); void
-> > > thermal_cooling_device_unregister(struct thermal_cooling_device
-> > > *); struct thermal_zone_device
-> > > *thermal_zone_get_zone_by_name(const char *name); int
-> > > thermal_zone_get_temp(struct thermal_zone_device *tz, unsigned
-> > > long *temp); -- 2.0.0.rc2
-> > >=20
->=20
->=20
-
-
-
---=20
-Best regards,
-
-Lukasz Majewski
-
-Samsung R&D Institute Poland (SRPOL) | Linux Platform Group
+Ludovic
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
