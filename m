@@ -1,210 +1,112 @@
-From: Aaron Sierra <asierra@xes-inc.com>
-Subject: [PATCH 2/2 v3 RESEND] mtd: fsl_upm: Support NAND ECC DTS properties
-Date: Wed, 14 Jan 2015 17:41:49 -0600 (CST)
-Message-ID: <447095612.147126.1421278909058.JavaMail.zimbra@xes-inc.com>
-References: <1136776275.110939.1421109367310.JavaMail.zimbra@xes-inc.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC PATCH v3 3/4] arm64:thunder: Add initial dts for Cavium's
+ Thunder SoC in 2 Node topology.
+Date: Wed, 14 Jan 2015 23:49:05 +0000
+Message-ID: <20150114234905.GB18194@e102568-lin.cambridge.arm.com>
+References: <1420011208-7051-1-git-send-email-ganapatrao.kulkarni@caviumnetworks.com>
+ <3372289.4AUgcSNZN5@wuerfel>
+ <CAFpQJXUB8=XhmAn9-SPKaRHoTaTDynfD8xd-mVJOYrAwo50Rzg@mail.gmail.com>
+ <2298510.9qAQRQ2lzi@wuerfel>
+ <20150114173639.GA11844@red-moon>
+ <CAFpQJXXiUmK+BdQAFxV_JCuLyDSm89M7pe+enc2ZMTbuyC-T+g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <1136776275.110939.1421109367310.JavaMail.zimbra@xes-inc.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
-Cc: devicetree@vger.kernel.org, linux-mtd@lists.infradead.org
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAFpQJXXiUmK+BdQAFxV_JCuLyDSm89M7pe+enc2ZMTbuyC-T+g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Ganapatrao Kulkarni <ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Roy Franz <roy.franz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Steve Capper <steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org" <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Jordan Friendshuh <jfriendshuh@xes-inc.com>
+On Wed, Jan 14, 2015 at 06:48:32PM +0000, Ganapatrao Kulkarni wrote:
+> Hi Lorenzo,
+> 
+> On Wed, Jan 14, 2015 at 11:06 PM, Lorenzo Pieralisi
+> <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org> wrote:
+> > On Wed, Jan 07, 2015 at 08:18:50AM +0000, Arnd Bergmann wrote:
+> >> On Wednesday 07 January 2015 12:37:51 Ganapatrao Kulkarni wrote:
+> >> > Hi Arnd,
+> >> >
+> >> > On Wed, Jan 7, 2015 at 1:32 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> >> > > On Tuesday 06 January 2015 15:04:26 Ganapatrao Kulkarni wrote:
+> >> > >> On Sat, Jan 3, 2015 at 2:47 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> >> > >> > On Wednesday 31 December 2014 13:03:27 Ganapatrao Kulkarni wrote:
+> >> > >> >> +             cpu@00f {
+> >> > >> >> +                     device_type = "cpu";
+> >> > >> >> +                     compatible = "cavium,thunder", "arm,armv8";
+> >> > >> >> +                     reg = <0x0 0x00f>;
+> >> > >> >> +                     enable-method = "psci";
+> >> > >> >> +                     arm,associativity = <0 0 0x00f>;
+> >> > >> >> +             };
+> >> > >> >> +             cpu@100 {
+> >> > >> >> +                     device_type = "cpu";
+> >> > >> >> +                     compatible = "cavium,thunder", "arm,armv8";
+> >> > >> >> +                     reg = <0x0 0x100>;
+> >> > >> >> +                     enable-method = "psci";
+> >> > >> >> +                     arm,associativity = <0 0 0x100>;
+> >> > >> >> +             };
+> >> > >> >
+> >> > >> > What is the 0x100 offset in the last-level topology field? Does this have
+> >> > >> > no significance to topology at all? I would expect that to be something
+> >> > >> > like cluster number that is relevant to caching and should be represented
+> >> > >> > as a separate level.
+> >> > >>
+> >> > >> i did not understand, can you please explain little more about "
+> >> > >> should be represented as a separate level."
+> >> > >> at present, i have put the hwid of a cpu.
+> >> > >
+> >> > > From what I undertand, the hwid of the CPU contains the "cluster" number in
+> >> > > this bit position, so you typically have a shared L2 or L3 cache between
+> >> > > all cores within a cluster, but separate caches in other clusters.
+> >> > >
+> >> > > If this is the case, there will be a measurable difference in performance
+> >> > > between two processes sharing memory when running on the same cluster,
+> >> > > or when running on different clusters on the same socket. If the
+> >> > > performance difference is relevant, it should be described as a separate
+> >> > > level in the associativity property.
+> >> > you mean, the associativity as array of  <board> <socket> <cluster>
+> >>
+> >> No, that would leave out the core number, which is required to identify
+> >> the individual thread. I meant adding an extra level such as
+> >>
+> >> <board> <socket> <cluster> <core>
+> >>
+> >> A lot of machines will leave out the <board> number because they are
+> >> built with SoCs that don't have a long-distance coherency protocol.
+> >
+> > Can't we use phandles to cpu-map nodes instead of a list of numbers (and
+> > yet another topology binding description) ?
+> cpu-map describes only a cpu topology.
+> infact, i have tried initially(in v1 patch set) to use topology for
+> the numa mapping.
+> However, for numa, we need to define association of cpu, memory and IOs.
+> arm,associativity is a generic node property and can be used in any dt nodes.
 
-Support the generic nand-ecc-mode, nand-ecc-strength, and
-nand-ecc-step-size device-tree properties with the Freescale UPM NAND
-driver.
+I understand that, I was advising to define "arm,associativity" as a
+phandle in cpu nodes AND all devices.
 
-This patch preserves the default software ECC mode while adding the
-ability to use BCH ECC for larger NAND devices.
+Why can't you make it point at a phandle in the cpu-map instead of adding
+a t-uple doing the same thing. Am I missing something here ?
+cpu-map allows you to describe the system hierarchy and can expand beyond
+clusters (several layers of clusterings, above core it is just a way to
+define the system hierarchy, leaves node will always be cores or threads).
 
-Signed-off-by: Jordan Friendshuh <jfriendshuh@xes-inc.com>
-Signed-off-by: Aaron Sierra <asierra@xes-inc.com>
----
-v2:
-    * Now using ECC mode and strength helpers from of_mtd.h
-    * ECC mode and strength checking is more robust
-v3 (resent due to [PATCH 1/2] v2 update):
-    * Require nand-ecc-step-size for soft_bch.
-    * Simplify mode/strength/step parameter checking.
+On a side note, one of the reasons cpu-map was devised for was exactly
+that, to allow mappings of resources (ie IRQs but it is valid for caches
+and other devices too) to groups of CPUs.
 
- .../devicetree/bindings/mtd/fsl-upm-nand.txt       | 32 +++++++++++
- drivers/mtd/nand/Kconfig                           |  1 +
- drivers/mtd/nand/fsl_upm.c                         | 66 ++++++++++++++++++++--
- 3 files changed, 94 insertions(+), 5 deletions(-)
+Is there anything that you can't do by using cpu-map phandles to
+describe devices associativity ?
 
-diff --git a/Documentation/devicetree/bindings/mtd/fsl-upm-nand.txt b/Documentation/devicetree/bindings/mtd/fsl-upm-nand.txt
-index fce4894..3643ee1 100644
---- a/Documentation/devicetree/bindings/mtd/fsl-upm-nand.txt
-+++ b/Documentation/devicetree/bindings/mtd/fsl-upm-nand.txt
-@@ -18,6 +18,9 @@ Optional properties:
- - chip-delay : chip dependent delay for transferring data from array to
- 	read registers (tR). Required if property "gpios" is not used
- 	(R/B# pins not connected).
-+- nand-ecc-mode : as defined by nand.txt ("soft" and "soft_bch", only).
-+- nand-ecc-strength : as defined by nand.txt.
-+- nand-ecc-step-size : as defined by nand.txt.
- 
- Each flash chip described may optionally contain additional sub-nodes
- describing partitions of the address space. See partition.txt for more
-@@ -65,3 +68,32 @@ upm@3,0 {
- 		};
- 	};
- };
-+
-+/*
-+ * Micron MT29F32G08AFABA (M62B)
-+ * 32 Gb (4 GiB), 2 chipselect
-+ */
-+upm@2,0 {
-+	#address-cells = <0>;
-+	#size-cells = <0>;
-+	compatible = "fsl,upm-nand";
-+	reg = <2 0x0 0x80000>;
-+	fsl,upm-addr-line-cs-offsets = <0x0 0x10000>;
-+	fsl,upm-addr-offset = <0x10>;
-+	fsl,upm-cmd-offset = <0x08>;
-+	fsl,upm-wait-flags = <0x1>;
-+	chip-delay = <50>;
-+
-+	nand@0 {
-+		#address-cells = <1>;
-+		#size-cells = <2>;
-+		nand-ecc-mode = "soft_bch";
-+		nand-ecc-strength = <4>;
-+		nand-ecc-step-size = <512>;
-+
-+		partition@0 {
-+			label = "NAND filesystem";
-+			reg = <0x0 0x1 0x00000000>;
-+		};
-+	};
-+};
-diff --git a/drivers/mtd/nand/Kconfig b/drivers/mtd/nand/Kconfig
-index e5e3343..4c85daf 100644
---- a/drivers/mtd/nand/Kconfig
-+++ b/drivers/mtd/nand/Kconfig
-@@ -444,6 +444,7 @@ config MTD_NAND_FSL_UPM
- 	tristate "Support for NAND on Freescale UPM"
- 	depends on PPC_83xx || PPC_85xx
- 	select FSL_LBC
-+	select MTD_NAND_ECC_BCH
- 	help
- 	  Enables support for NAND Flash chips wired onto Freescale PowerPC
- 	  processor localbus with User-Programmable Machine support.
-diff --git a/drivers/mtd/nand/fsl_upm.c b/drivers/mtd/nand/fsl_upm.c
-index 72755d7..053d8bf 100644
---- a/drivers/mtd/nand/fsl_upm.c
-+++ b/drivers/mtd/nand/fsl_upm.c
-@@ -18,6 +18,7 @@
- #include <linux/mtd/nand_ecc.h>
- #include <linux/mtd/partitions.h>
- #include <linux/mtd/mtd.h>
-+#include <linux/of_mtd.h>
- #include <linux/of_address.h>
- #include <linux/of_platform.h>
- #include <linux/of_gpio.h>
-@@ -160,6 +161,11 @@ static int fun_chip_init(struct fsl_upm_nand *fun,
- 	int ret;
- 	struct device_node *flash_np;
- 	struct mtd_part_parser_data ppdata;
-+	int mode, strength, step_size;
-+
-+	flash_np = of_get_next_child(upm_np, NULL);
-+	if (!flash_np)
-+		return -ENODEV;
- 
- 	fun->chip.IO_ADDR_R = fun->io_base;
- 	fun->chip.IO_ADDR_W = fun->io_base;
-@@ -168,7 +174,61 @@ static int fun_chip_init(struct fsl_upm_nand *fun,
- 	fun->chip.read_byte = fun_read_byte;
- 	fun->chip.read_buf = fun_read_buf;
- 	fun->chip.write_buf = fun_write_buf;
--	fun->chip.ecc.mode = NAND_ECC_SOFT;
-+
-+	/*
-+	 * Support NAND_ECC_SOFT and NAND_ECC_SOFT_BCH, error otherwise.
-+	 */
-+	mode = of_get_nand_ecc_mode(flash_np);
-+	strength = of_get_nand_ecc_strength(flash_np);
-+	step_size = of_get_nand_ecc_step_size(flash_np);
-+	if (mode < 0) {
-+		dev_info(fun->dev, "ECC mode defaulting to 'soft'");
-+		mode = NAND_ECC_SOFT;
-+	} else if (mode != NAND_ECC_SOFT && mode != NAND_ECC_SOFT_BCH) {
-+		dev_err(fun->dev, "ECC mode in device tree is unsupported");
-+		ret = -EINVAL;
-+		goto err;
-+	}
-+
-+	/*
-+	 * In NAND_ECC_SOFT_BCH, require strength >= 1 and step >= 1.
-+	 * In NAND_ECC_SOFT:
-+	 *     a. ignore strength (1 implied)
-+	 *     b. step < 0, step = 256, or step = 512.
-+	 */
-+	if (mode == NAND_ECC_SOFT_BCH) {
-+		if (strength < 1)
-+			dev_err(fun->dev, "invalid nand-ecc-strength for BCH");
-+
-+		if (step_size < 1)
-+			dev_err(fun->dev, "invalid nand-ecc-step-size for BCH");
-+
-+		if (strength < 1 || step_size < 1) {
-+			ret = -EINVAL;
-+			goto err;
-+		}
-+
-+		fun->chip.ecc.mode = mode;
-+		fun->chip.ecc.strength = strength;
-+		fun->chip.ecc.size = step_size;
-+	} else {
-+		if (strength >= 0)
-+			dev_warn(fun->dev, "soft ECC implies 1-bit strength");
-+
-+		if (step_size < 0) {
-+			step_size = 256;
-+		} else if (step_size != 256 && step_size != 512) {
-+			dev_err(fun->dev,
-+				"soft ECC needs 256 or 512 byte step");
-+			ret = -EINVAL;
-+			goto err;
-+		}
-+
-+		fun->chip.ecc.mode = mode;
-+		fun->chip.ecc.strength = 1;
-+		fun->chip.ecc.size = step_size;
-+	}
-+
- 	if (fun->mchip_count > 1)
- 		fun->chip.select_chip = fun_select_chip;
- 
-@@ -178,10 +238,6 @@ static int fun_chip_init(struct fsl_upm_nand *fun,
- 	fun->mtd.priv = &fun->chip;
- 	fun->mtd.owner = THIS_MODULE;
- 
--	flash_np = of_get_next_child(upm_np, NULL);
--	if (!flash_np)
--		return -ENODEV;
--
- 	fun->mtd.name = kasprintf(GFP_KERNEL, "0x%llx.%s", (u64)io_res->start,
- 				  flash_np->name);
- 	if (!fun->mtd.name) {
--- 
-1.9.1
+We have to add bindings that allow to compute the distance as you
+do by using the reference points (I am reading the code to figure
+out how it is used), but that's feasible as a binding update.
 
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+Lorenzo
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
