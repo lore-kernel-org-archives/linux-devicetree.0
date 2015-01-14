@@ -1,75 +1,59 @@
-From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH 0/2] clk: rockchip: leave npll for DCLK_VOP0(HDMI) only
-Date: Wed, 14 Jan 2015 14:16:15 -0800
-Message-ID: <20150114221615.22722.24878@quantum>
-References: <1416236138-11010-1-git-send-email-kever.yang@rock-chips.com>
- <3353483.Eif0pChkY5@phil>
+From: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v4 0/3] Add I2C support to Broadcom iProc
+Date: Wed, 14 Jan 2015 14:23:30 -0800
+Message-ID: <1421274213-3544-1-git-send-email-rjui@broadcom.com>
+References: <Ray Jui <rjui@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3353483.Eif0pChkY5@phil>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?utf-8?q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
-Cc: sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dkl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dmitry Torokhov <dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jianqun <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Heiko St=C3=BCbner (2015-01-08 14:30:01)
-> Hi Kever,
->=20
-> Am Montag, 17. November 2014, 22:55:36 schrieb Kever Yang:
-> > To support all kinds of frequency requirement for HDMI on rk3288,
-> > we need a PLL that can change rate at run time.
-> >=20
-> > There are some discussion before at [0], I think we can just leave
-> > the npll for HDMI(DCLK_VOP0) used to make it simple.
-> >=20
-> > Comments are welcome.
->=20
-> I think I said it in private somewhere already, but just so it's also=
-=20
-> available publically:
->=20
-> I don't think customizing/limiting the clock usage like this will fly=
-,=20
-> especially as this would require each and every rk3288 board to use v=
-op0 for=20
-> hdmi and vop1 for other stuff.
->=20
-> With the new rk3288 Firefly devboard this concern already becomes rea=
-lity.=20
-> There a vga converter is connected to VOP0, which leaves only vop1 fo=
-r hdmi if=20
-> one wants to support the vga connection.
->=20
->=20
-> From our discussion about this problem I remember that the missing cl=
-ock=20
-> frequencies only affected more esotheric screen resolutions, so perso=
-nally I'm=20
-> not this much concerned an would like to wait till we find a better s=
-olution to=20
-> the problem.
+This patchset contains the initial I2C support for Broadcom iProc family of
+SoCs.
 
-Ack. We shouldn't have to limit the possible hardware configurations in
-software just to keep things simple. This points to a deficiency in the
-clock framework. This is a common concern: how to change a clock
-frequency for one user without exploding all of the other users.
+The iProc I2C controller has separate internal TX and RX FIFOs, each has a
+size of 64 bytes. The iProc I2C controller supports two bus speeds including
+standard mode (100 kHz) and fast mode (400 kHz)
 
-Do you think Tomeu's constraints API[0] might be a step in the right
-direction for you?
+Changes from v3:
+ - Add config dependency to COMPILE_TEST to allow the driver to be build tested
+   by other platforms
+ - Improve CPU utilization efficiency in the loop of waiting for bus to idle
+ - Add more comment in the driver to clarify the way how the "start busy"
+   interrupt is triggered from the I2C controller
+ - Fix inconsistent coding style and format
+ - Improve the bus speed validation logic in the driver
+ - Add code to free the interrupt line in driver's remove function. Also
+   change to use non-devm API to request the interrupt line
+ - Other miscellaneous improvements and fixes
 
-[0] http://lkml.kernel.org/r/<1421071809-17402-3-git-send-email-tomeu.v=
-izoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Changes from v2:
+ - Have the I2C driver default to y so it does not need to be selected from
+   ARCH_BCM_IPROC. This also helps to get rid of one patch. The driver still
+   depends on ARCH_BCM_IPROC
+ - Get rid of redundant check on resource returned by platform_get_resource
 
-Regards,
-Mike
+Changes from v1:
+ - Fix function argument parenthesis
+ - Get rid of redundant driver owner field
 
->=20
->=20
-> Heiko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ray Jui (3):
+  i2c: iProc: define Broadcom iProc I2C binding
+  i2c: iproc: Add Broadcom iProc I2C Driver
+  ARM: dts: add I2C device nodes for Broadcom Cygnus
+
+ .../devicetree/bindings/i2c/brcm,iproc-i2c.txt     |   37 ++
+ arch/arm/boot/dts/bcm-cygnus.dtsi                  |   20 +
+ drivers/i2c/busses/Kconfig                         |   10 +
+ drivers/i2c/busses/Makefile                        |    1 +
+ drivers/i2c/busses/i2c-bcm-iproc.c                 |  503 ++++++++++++++++++++
+ 5 files changed, 571 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/brcm,iproc-i2c.txt
+ create mode 100644 drivers/i2c/busses/i2c-bcm-iproc.c
+
+-- 
+1.7.9.5
