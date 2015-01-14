@@ -1,84 +1,65 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC PATCH v3 3/4] arm64:thunder: Add initial dts for Cavium's
- Thunder SoC in 2 Node topology.
-Date: Wed, 14 Jan 2015 17:36:39 +0000
-Message-ID: <20150114173639.GA11844@red-moon>
-References: <1420011208-7051-1-git-send-email-ganapatrao.kulkarni@caviumnetworks.com>
- <3372289.4AUgcSNZN5@wuerfel>
- <CAFpQJXUB8=XhmAn9-SPKaRHoTaTDynfD8xd-mVJOYrAwo50Rzg@mail.gmail.com>
- <2298510.9qAQRQ2lzi@wuerfel>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v2 0/5] Add a new RTC driver for recent mvebu SoCs
+Date: Wed, 14 Jan 2015 18:39:10 +0100
+Message-ID: <1421257155-3379-1-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=y
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <2298510.9qAQRQ2lzi@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ganapatrao Kulkarni <ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Roy Franz <roy.franz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Steve Capper <steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org" <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 07, 2015 at 08:18:50AM +0000, Arnd Bergmann wrote:
-> On Wednesday 07 January 2015 12:37:51 Ganapatrao Kulkarni wrote:
-> > Hi Arnd,
-> > 
-> > On Wed, Jan 7, 2015 at 1:32 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> > > On Tuesday 06 January 2015 15:04:26 Ganapatrao Kulkarni wrote:
-> > >> On Sat, Jan 3, 2015 at 2:47 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> > >> > On Wednesday 31 December 2014 13:03:27 Ganapatrao Kulkarni wrote:
-> > >> >> +             cpu@00f {
-> > >> >> +                     device_type = "cpu";
-> > >> >> +                     compatible = "cavium,thunder", "arm,armv8";
-> > >> >> +                     reg = <0x0 0x00f>;
-> > >> >> +                     enable-method = "psci";
-> > >> >> +                     arm,associativity = <0 0 0x00f>;
-> > >> >> +             };
-> > >> >> +             cpu@100 {
-> > >> >> +                     device_type = "cpu";
-> > >> >> +                     compatible = "cavium,thunder", "arm,armv8";
-> > >> >> +                     reg = <0x0 0x100>;
-> > >> >> +                     enable-method = "psci";
-> > >> >> +                     arm,associativity = <0 0 0x100>;
-> > >> >> +             };
-> > >> >
-> > >> > What is the 0x100 offset in the last-level topology field? Does this have
-> > >> > no significance to topology at all? I would expect that to be something
-> > >> > like cluster number that is relevant to caching and should be represented
-> > >> > as a separate level.
-> > >>
-> > >> i did not understand, can you please explain little more about "
-> > >> should be represented as a separate level."
-> > >> at present, i have put the hwid of a cpu.
-> > >
-> > > From what I undertand, the hwid of the CPU contains the "cluster" number in
-> > > this bit position, so you typically have a shared L2 or L3 cache between
-> > > all cores within a cluster, but separate caches in other clusters.
-> > >
-> > > If this is the case, there will be a measurable difference in performance
-> > > between two processes sharing memory when running on the same cluster,
-> > > or when running on different clusters on the same socket. If the
-> > > performance difference is relevant, it should be described as a separate
-> > > level in the associativity property.
-> > you mean, the associativity as array of  <board> <socket> <cluster>
-> 
-> No, that would leave out the core number, which is required to identify
-> the individual thread. I meant adding an extra level such as
-> 
-> <board> <socket> <cluster> <core>
-> 
-> A lot of machines will leave out the <board> number because they are
-> built with SoCs that don't have a long-distance coherency protocol.
+Hi,
 
-Can't we use phandles to cpu-map nodes instead of a list of numbers (and
-yet another topology binding description) ?
+The Marvell Armada 38x SoCs contains an RTC which differs from the RTC
+used in the other mvebu SoCs until now. This second version of the
+patch set adds support for this new IP and enable it in the Device
+Tree of the Armada 38x SoC.
 
-Is arm,associativity used solely to map "devices" (inclusive of caches)
-to a set of cpus ?
+Thanks,
 
-cpu-map misses a notion of distance between hierarchy layers, but we can
-add to that.
+Gr=C3=A9gory
 
-Lorenzo
+Changelog
+v1 -> v2:
+
+- Used reg-names to identify the registers in the device tree
+- Changed the space into tab in the MAINTAINERS file
+- Emphasized that the 5s wait was only needed between two consecutive
+  writes
+- Reduced the wait in the set_time function, 100ms were enough
+- If no interrupt was available, then disable the alarm related
+  functions
+- Fixed the critical sections
+- Updated the mvebu_v7_defconfig by enabling the new RTC support
+
+Gregory CLEMENT (5):
+  rtc: armada38x: Add the device tree binding documentation
+  drivers/rtc/rtc-armada38x: Add a new RTC driver for recent mvebu SoCs
+  MAINTAINERS: Add the RTC driver for the Armada38x
+  ARM: mvebu: add Device Tree description of RTC on Armada 38x
+  ARM: mvebu: enable Armada 38x RTC driver in mvebu_v7_defconfig
+
+ .../devicetree/bindings/rtc/armada-380-rtc.txt     |  22 ++
+ MAINTAINERS                                        |   1 +
+ arch/arm/boot/dts/armada-38x.dtsi                  |   7 +
+ arch/arm/configs/mvebu_v7_defconfig                |   1 +
+ drivers/rtc/Kconfig                                |  10 +
+ drivers/rtc/Makefile                               |   1 +
+ drivers/rtc/rtc-armada38x.c                        | 319 +++++++++++++=
+++++++++
+ 7 files changed, 361 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rtc/armada-380-rt=
+c.txt
+ create mode 100644 drivers/rtc/rtc-armada38x.c
+
+--=20
+1.9.1
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
