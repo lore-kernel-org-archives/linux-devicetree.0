@@ -1,40 +1,27 @@
 From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] pinctrl: exynos: Add AUDIO pin controller for exynos7
-Date: Wed, 14 Jan 2015 12:40:58 +0100
-Message-ID: <CACRpkdZopjCN_GMEPQFd_NWa0Ddocqt3aViLrZ7Yh3ui_YcBAg@mail.gmail.com>
-References: <1418994659-5222-1-git-send-email-padma.v@samsung.com>
-	<1418994659-5222-2-git-send-email-padma.v@samsung.com>
+Subject: Re: [PATCH] mfd: db8500-prcmu: Remove unused function
+Date: Wed, 14 Jan 2015 12:41:45 +0100
+Message-ID: <CACRpkdY2namg-b1Qb0yHyR_043H4cVaUEPMhkG4kb=SJhrAjBg@mail.gmail.com>
+References: <1420134593-690-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1418994659-5222-2-git-send-email-padma.v-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <1420134593-690-1-git-send-email-rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Padmavathi Venna <padma.v-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
+Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 19, 2014 at 2:10 PM, Padmavathi Venna <padma.v-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+On Thu, Jan 1, 2015 at 6:49 PM, Rickard Strandqvist
+<rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org> wrote:
 
-> Audio IPs on Exynos7 require gpios available in AUDIO
-> pin controller block. So adding the AUDIO pinctrl support.
+> Remove the function prcmu_get_boot_status() that is not used anywhere.
 >
-> Signed-off-by: Padmavathi Venna <padma.v-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-(...)
-> --- a/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
-> @@ -181,6 +181,7 @@ Aliases for controllers compatible with "samsung,exynos7-pinctrl":
->  - pinctrl6: pin controller of FSYS0 block,
->  - pinctrl7: pin controller of FSYS1 block,
->  - pinctrl8: pin controller of BUS1 block,
-> +- pinctrl9: pin controller of AUDIO block,
+> This was partially found by using a static code analysis program called cppcheck.
+>
+> Signed-off-by: Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
 
-This doesn't apply at all, the list has never been in the document merged
-upstream.
-
-Please prepare this patch rebased on a *CLEAN* upstream tree
-and resend.
-
-Include Tomasz ACK on your repost.
+Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
 Yours,
 Linus Walleij
