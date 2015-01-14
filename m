@@ -1,31 +1,29 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] mfd: db8500-prcmu: Remove unused function
-Date: Wed, 14 Jan 2015 12:41:45 +0100
-Message-ID: <CACRpkdY2namg-b1Qb0yHyR_043H4cVaUEPMhkG4kb=SJhrAjBg@mail.gmail.com>
-References: <1420134593-690-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH v2 02/16] ASoC: samsung: i2s: samsung_i2s_get_driver_data()
+ cleanup
+Date: Wed, 14 Jan 2015 12:52:16 +0100
+Message-ID: <54B65870.20509@samsung.com>
+References: <1418997336-17777-1-git-send-email-s.nawrocki@samsung.com>
+ <1418997336-17777-3-git-send-email-s.nawrocki@samsung.com>
+ <20150106181402.GP2634@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1420134593-690-1-git-send-email-rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
-Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <20150106181402.GP2634@sirena.org.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: kgene@kernel.org, alsa-devel@alsa-project.org, padma.v@samsung.com, drake@endlessm.com, sbkim73@samsung.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 1, 2015 at 6:49 PM, Rickard Strandqvist
-<rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org> wrote:
-
-> Remove the function prcmu_get_boot_status() that is not used anywhere.
+On 06/01/15 19:14, Mark Brown wrote:
+> On Fri, Dec 19, 2014 at 02:55:22PM +0100, Sylwester Nawrocki wrote:
+>> > Tidy up the samsung_i2s_get_driver_data() function by using
+>> > IS_ENABLE() instead of #ifdef and add missing braces for
+>> > the 'else' part. Also ensure we are not dereferencing NULL
+>> > 'match' pointer.
 >
-> This was partially found by using a static code analysis program called cppcheck.
->
-> Signed-off-by: Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
+> This doesn't apply against current code, can you please check and
+> resend?
 
-Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+OK, I will resend it rebased onto your 3.19-rc1 topic/samsung branch.
