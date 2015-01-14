@@ -1,41 +1,58 @@
-From: arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org (Arnaud Ebalard)
-Subject: Re: [PATCHv2 1/8] dt-bindings: use isil prefix for Intersil in vendor-prefixes.txt
-Date: Wed, 14 Jan 2015 10:25:46 +0100
-Message-ID: <8761c9ogrp.fsf@natisbad.org>
-References: <cover.1418763328.git.arno@natisbad.org>
-	<e32fe98a511e3ab8aeed9849bcac33ba14fd8986.1418763328.git.arno@natisbad.org>
-	<CAL_JsqLt7BuG9eccqR4CELPsOO+o3NGP6c4aqKDXbJfT0O0=5w@mail.gmail.com>
-	<87ppaib72j.fsf@natisbad.org>
-	<CAL_JsqJMQ=8_sQhCRR+f-6v0Ac3hme3Tsom0x1GuA=FaZkgdnA@mail.gmail.com>
+From: Rameshwar Sahu <rsahu@apm.com>
+Subject: Re: [PATCH v2 1/3] dmaengine: Add support for APM X-Gene SoC DMA
+ engine driver
+Date: Wed, 14 Jan 2015 14:56:33 +0530
+Message-ID: <CAFd313zMoW86ZcXURrk2K+E6129L+BruOp4E0A=w0PQEcMr-Yw@mail.gmail.com>
+References: <1420628981-22774-1-git-send-email-rsahu@apm.com>
+	<1420628981-22774-2-git-send-email-rsahu@apm.com>
+	<CAFd313xp5rZZZSSKk-DDTC4ccY9ZucGgmWrc9oG-TiK2FMBS1g@mail.gmail.com>
+	<1701652.4qUlzcU1j2@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJMQ=8_sQhCRR+f-6v0Ac3hme3Tsom0x1GuA=FaZkgdnA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-	(Rob Herring's message of "Tue, 13 Jan 2015 17:31:29 -0600")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Hayato Suzuki <hytszk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1701652.4qUlzcU1j2@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: vinod.koul@intel.com, dan.j.williams@intel.com, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ddutile@redhat.com, jcm@redhat.com, patches@apm.com, Loc Ho <lho@apm.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Arnd,
 
-Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
 
->>> While there are not interdepencies here, it probably would have been
->>> better to keep this series all together.
+
+
+
+Thanks,
+with regards,
+Ram
+
+
+On Tue, Jan 13, 2015 at 12:25 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Monday 12 January 2015 14:40:09 Rameshwar Sahu wrote:
+>> > +
+>> > +       dma_set_mask_and_coherent(&pdev->dev,
+>> > +                                 (sizeof(dma_addr_t) == sizeof(u64)) ?
+>> > +                                 DMA_BIT_MASK(64) : DMA_BIT_MASK(32));
+>> > +
 >>
->> This was the main reason my v0 was in a single patch. I think I then got
->> some comment to split things in different patches so that the various
->> maintainers have their words to say. But I'll try and follow your
->> approach next time.
 >
-> I didn't say a single patch, but merge the series together. A separate
-> commit per maintainer is generally preferred. You just have to be
-> clear whether you are looking for just acks or to take individual
-> patches.
+> I commented on this on v1 already: always set the device specific mask here,
+> it's independent of the CPU architecture, but do check the return value.
+>
+Got it, I will set first 64 bit dma mask here  due to device support
+64 bit address dma operations, and fall down to 32 - bit in case
+failure with 64 bit.
 
-Noted.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Also add the correct dma-ranges property in the parent, or else this will
+> fail in the future once we add proper checks to dma_set_mask.
+
+I see arch/arm64 kernel doesn't use dma range value parsed from
+dma-range property currently, I will check it more.
+It doesn't use dma_pfn_offset value calculated by the dma-ranges in
+dma mapping API.
+dma-ranges value should test properly before adding.
+Is there any use to add this dma-ranges properly if arch code doesn't support ??
+
+>
+>         Arnd
