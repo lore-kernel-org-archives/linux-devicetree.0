@@ -1,184 +1,33 @@
-From: Peter Chen <peter.chen@freescale.com>
-Subject: [PATCH 2/2] ARM: imx6sx-sdb: add revb board
-Date: Wed, 14 Jan 2015 15:36:38 +0800
-Message-ID: <1421220998-3491-3-git-send-email-peter.chen@freescale.com>
-References: <1421220998-3491-1-git-send-email-peter.chen@freescale.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH net-next v13 3/3] net: hisilicon: new hip04 ethernet driver
+Date: Wed, 14 Jan 2015 09:53:34 +0100
+Message-ID: <3131780.HetDHI4Cfl@wuerfel>
+References: <1421217254-12008-1-git-send-email-dingtianhong@huawei.com> <1421217254-12008-4-git-send-email-dingtianhong@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1421220998-3491-1-git-send-email-peter.chen@freescale.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: shawn.guo@linaro.org, kernel@pengutronix.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, Peter Chen <peter.chen@freescale.com>, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1421217254-12008-4-git-send-email-dingtianhong@huawei.com>
+Sender: netdev-owner@vger.kernel.org
+To: Ding Tianhong <dingtianhong@huawei.com>
+Cc: robh+dt@kernel.org, davem@davemloft.net, grant.likely@linaro.org, agraf@suse.de, sergei.shtylyov@cogentembedded.com, linux-arm-kernel@lists.infradead.org, eric.dumazet@gmail.com, xuwei5@hisilicon.com, zhangfei.gao@linaro.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux@arm.linux.org.uk
 List-Id: devicetree@vger.kernel.org
 
-Add imx6sx-sdb revb board
+On Wednesday 14 January 2015 14:34:14 Ding Tianhong wrote:
+> +#define HIP04_MAX_TX_COALESCE_USECS    200
+> +#define HIP04_MIN_TX_COALESCE_USECS    100
+> +#define HIP04_MAX_TX_COALESCE_FRAMES   200
+> +#define HIP04_MIN_TX_COALESCE_FRAMES   100
 
-Signed-off-by: Peter Chen <peter.chen@freescale.com>
----
- arch/arm/boot/dts/imx6sx-sdb-revb.dts | 145 ++++++++++++++++++++++++++++++++++
- 1 file changed, 145 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6sx-sdb-revb.dts
+It's not important, but in case you are creating another version of the
+patch, maybe the allowed range can be extended somewhat. The example values
+I picked when I sent my suggestion were really made up. It's great if
+they work fine, but users might want to  tune this far more depending on
+their workloads,  How about these
 
-diff --git a/arch/arm/boot/dts/imx6sx-sdb-revb.dts b/arch/arm/boot/dts/imx6sx-sdb-revb.dts
-new file mode 100644
-index 0000000..d68dfd4
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6sx-sdb-revb.dts
-@@ -0,0 +1,145 @@
-+/*
-+ * Copyright (C) 2014-2015 Freescale Semiconductor, Inc.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include "imx6sx-sdb.dtsi"
-+
-+/ {
-+	model = "Freescale i.MX6 SoloX SDB RevB Board";
-+};
-+
-+&cpu0 {
-+	operating-points = <
-+		/* kHz    uV */
-+		996000  1250000
-+		792000  1175000
-+		396000  1175000
-+		>;
-+	fsl,soc-operating-points = <
-+		/* ARM kHz      SOC uV */
-+		996000	1250000
-+		792000	1175000
-+		396000	1175000
-+	>;
-+};
-+
-+&i2c1 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c1>;
-+	status = "okay";
-+
-+	pmic: pfuze100@08 {
-+		compatible = "fsl,pfuze200";
-+		reg = <0x08>;
-+
-+		regulators {
-+			sw1a_reg: sw1ab {
-+				regulator-min-microvolt = <300000>;
-+				regulator-max-microvolt = <1875000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+				regulator-ramp-delay = <6250>;
-+			};
-+
-+			sw2_reg: sw2 {
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			sw3a_reg: sw3a {
-+				regulator-min-microvolt = <400000>;
-+				regulator-max-microvolt = <1975000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			sw3b_reg: sw3b {
-+				regulator-min-microvolt = <400000>;
-+				regulator-max-microvolt = <1975000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			swbst_reg: swbst {
-+				regulator-min-microvolt = <5000000>;
-+				regulator-max-microvolt = <5150000>;
-+			};
-+
-+			snvs_reg: vsnvs {
-+				regulator-min-microvolt = <1000000>;
-+				regulator-max-microvolt = <3000000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vref_reg: vrefddr {
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vgen1_reg: vgen1 {
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <1550000>;
-+				regulator-always-on;
-+			};
-+
-+			vgen2_reg: vgen2 {
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <1550000>;
-+			};
-+
-+			vgen3_reg: vgen3 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vgen4_reg: vgen4 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vgen5_reg: vgen5 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vgen6_reg: vgen6 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+		};
-+	};
-+};
-+
-+&qspi2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_qspi2>;
-+	status = "okay";
-+
-+	flash0: n25q256a@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "micron,n25q256a";
-+		spi-max-frequency = <29000000>;
-+		reg = <0>;
-+	};
-+
-+	flash1: n25q256a@1 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "micron,n25q256a";
-+		spi-max-frequency = <29000000>;
-+		reg = <1>;
-+	};
-+};
--- 
-1.9.1
+#define HIP04_MAX_TX_COALESCE_USECS    100000
+#define HIP04_MIN_TX_COALESCE_USECS    1
+#define HIP04_MAX_TX_COALESCE_FRAMES   (TX_DESC_NUM - 1)
+#define HIP04_MIN_TX_COALESCE_FRAMES   1
+
+	Arnd
