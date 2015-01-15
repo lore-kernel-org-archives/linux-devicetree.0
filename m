@@ -1,51 +1,72 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCHv2 2/2] spi: orion: Add multiple chip select support to
- spi-orion
-Date: Thu, 15 Jan 2015 11:22:13 +0000
-Message-ID: <20150115112213.GT3043@sirena.org.uk>
-References: <1421032440-15335-1-git-send-email-ken.wilson@opengear.com>
- <1421032440-15335-3-git-send-email-ken.wilson@opengear.com>
- <20150114200626.GN3043@sirena.org.uk>
- <54B712C0.5010808@opengear.com>
+From: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
+Subject: Re: [PATCH v8 2/4] fpga manager: add sysfs interface document
+Date: Thu, 15 Jan 2015 11:36:17 +0000
+Message-ID: <20150115113617.537965b3@lxorguk.ukuu.org.uk>
+References: <20150107084819.GA1887@amd>
+ <alpine.DEB.2.02.1501091302370.30067@linuxheads99>
+ <20150109205643.GA5761@amd>
+ <20150112210134.687176ed@lxorguk.ukuu.org.uk>
+ <20150112214314.GA18610@obsidianresearch.com>
+ <20150113162847.2778b5a5@lxorguk.ukuu.org.uk>
+ <20150113200032.GA16205@obsidianresearch.com>
+ <alpine.DEB.2.02.1501131455130.30192@linuxheads99>
+ <20150113222450.GA17475@obsidianresearch.com>
+ <20150114160617.02fb9135@lxorguk.ukuu.org.uk>
+ <20150114181258.GB16392@obsidianresearch.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="TJ9V72hR/LoebVea"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <54B712C0.5010808@opengear.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ken Wilson <ken.wilson@opengear.com>
-Cc: thomas.petazzoni@free-electrons.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, ezequiel.garcia@free-electrons.com, gerg@uclinux.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20150114181258.GB16392@obsidianresearch.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Cc: mark.rutland@arm.com, linux-doc@vger.kernel.org, rubini@gnudd.com, pantelis.antoniou@konsulko.com, hpa@zytor.com, s.trumtrar@pengutronix.de, devel@driverdev.osuosl.org, sameo@linux.intel.com, nico@linaro.org, ijc+devicetree@hellion.org.uk, michal.simek@xilinx.com, kyle.teske@ni.com, grant.likely@linaro.org, davidb@codeaurora.org, linus.walleij@linaro.org, cesarb@cesarb.net, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, iws@ovro.caltech.edu, atull <atull@opensource.altera.com>, galak@codeaurora.org, broonie@kernel.org, philip@balister.org, dinguyen@opensource.altera.com, monstr@monstr.eu, gregkh@linuxfoundation.org, yvanderv@opensource.altera.com, linux-kernel@vger.kernel.org, balbi@ti.com, delicious.quinoa@gmail.com, robh+dt@kernel.org, rob@landley.net, Pavel Machek <pavel@denx.de>, akpm@linux-foundation.org, davem@davemloft.net, m.chehab@samsung.c
 List-Id: devicetree@vger.kernel.org
 
+On Wed, 14 Jan 2015 11:12:58 -0700
+Jason Gunthorpe <jgunthorpe@obsidianresearch.com> wrote:
 
---TJ9V72hR/LoebVea
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> On Wed, Jan 14, 2015 at 04:06:17PM +0000, One Thousand Gnomes wrote:
+> 
+> > and I think you effectively have the user usage covered here for such
+> > things. It much like GPIO pins - we can describe them but we can also
+> > declare they are not visible to the user.
+> 
+> A missing element in mainline is a kind of VFIO scheme to let user
+> space access the FPGA registers designated for user space use.
 
-On Thu, Jan 15, 2015 at 11:07:12AM +1000, Ken Wilson wrote:
+Agreed entirely.
 
-> I agree that we could support any sane chip select for a slave, since the
-> slave addresses do need
-> to be explicitly defined. I'm happy with whatever your preference is.
+> A fixed bus interface block and dynamic reconfiguration for the
+> remainder is probably the way to manage that. But, that implies that
+> even a family of swappable FPGAs will have a DT overlay associated
+> with it.
 
-Just accepting anything seems easier both for users and in
-implementation.
+Or some other resource, it could be described by PCI but something is
+going to need to describe it when we get to that state and something
+will need to set up the IOMMU for it and potentially manage virtualising
+it or assigning it to things like docker instances.
+ 
+> Ideally, I could see wanting to have a file format that combines the
+> overlay and FPGA bitfile. A loader tool would use the /dev/ interface
+> to setup both elements. That would be much more robust than the
+> current scheme I see (eg Xilinx) using where the bitfile and DT bit
+> live in completely different places and have to be perfectly matched.
 
---TJ9V72hR/LoebVea
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+yes - there is a model for this in Linux already. Some of the audio
+subsystems have "firmware" files distributed which are actually a
+structured file that userspace parses to get a real set of firmware for
+the controller and a set of descriptions for things like mixer controls.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+They have the same basic problem - when you change firmware your control
+interfaces may change so you need both descriptions together.
 
-iQEcBAEBCAAGBQJUt6LkAAoJECTWi3JdVIfQboMH/2FrwA8VEDSQZzlbas58eEws
-vD1EgggndHLeSSniFHUblzCjn6CGldTpIHlFi7OUrsoaHkASWhEtDyCfrTG+AUec
-zVIA1rHqYSOXZXFIZynP9QM7a6P43Fh/WaVN0YkUb0rSnxC4CsJx4KxILgiVdaSm
-bY6rh1oc/tQU/FghZvJiTIHGbhviuNLcjvrvUvydLVZDX5xQkb0QerumMFD8MVcu
-6Mnpd1wNfcz7YIcL7LoDxJ4KTp6Op1g9sQVcqHJSpSFfQ99rRCEycytOWDbulL9j
-LPpgFY3RecxnOQGdWW4BxvZbCds4GV3aHPE8IjAr4l5+Xiez2gbUg6pj4Ar0n2I=
-=pf3A
------END PGP SIGNATURE-----
-
---TJ9V72hR/LoebVea--
+Alan
