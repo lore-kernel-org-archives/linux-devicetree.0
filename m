@@ -1,60 +1,96 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH net-next v13 3/3] net: hisilicon: new hip04 ethernet driver
-Date: Thu, 15 Jan 2015 10:05:19 +0100
-Message-ID: <3098312.6ZisxMKXt6@wuerfel>
-References: <1421217254-12008-1-git-send-email-dingtianhong@huawei.com> <3131780.HetDHI4Cfl@wuerfel> <54B72BE0.7040403@huawei.com>
+From: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: [PATCH v7 0/2] mtd: hisilicon: add a new driver for NAND controller of hisilicon hip04 Soc
+Date: Thu, 15 Jan 2015 17:10:29 +0800
+Message-ID: <1421313031-118936-1-git-send-email-wangzhou1@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <54B72BE0.7040403@huawei.com>
-Sender: netdev-owner@vger.kernel.org
-To: Ding Tianhong <dingtianhong@huawei.com>
-Cc: robh+dt@kernel.org, davem@davemloft.net, grant.likely@linaro.org, agraf@suse.de, sergei.shtylyov@cogentembedded.com, linux-arm-kernel@lists.infradead.org, eric.dumazet@gmail.com, xuwei5@hisilicon.com, zhangfei.gao@linaro.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux@arm.linux.org.uk
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, caizhiyong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, yubingxu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 15 January 2015 10:54:24 Ding Tianhong wrote:
-> On 2015/1/14 16:53, Arnd Bergmann wrote:
-> > On Wednesday 14 January 2015 14:34:14 Ding Tianhong wrote:
-> >> +#define HIP04_MAX_TX_COALESCE_USECS    200
-> >> +#define HIP04_MIN_TX_COALESCE_USECS    100
-> >> +#define HIP04_MAX_TX_COALESCE_FRAMES   200
-> >> +#define HIP04_MIN_TX_COALESCE_FRAMES   100
-> > 
-> > It's not important, but in case you are creating another version of the
-> > patch, maybe the allowed range can be extended somewhat. The example values
-> > I picked when I sent my suggestion were really made up. It's great if
-> > they work fine, but users might want to  tune this far more depending on
-> > their workloads,  How about these
-> > 
-> > #define HIP04_MAX_TX_COALESCE_USECS    100000
-> > #define HIP04_MIN_TX_COALESCE_USECS    1
-> > #define HIP04_MAX_TX_COALESCE_FRAMES   (TX_DESC_NUM - 1)
-> > #define HIP04_MIN_TX_COALESCE_FRAMES   1
-> > 
-> 
-> Is it really ok that the so big range may break the driver and hip04 could not work fine?
-> I am not sure it is ok, I will fix it in next version.
+This patchset adds the support for NAND controller of hisilicon hip04 Soc.
+The NAND controller IP was developed by hisilicon and needs a new driver to
+support it. This patchset is based on l2-mtd/master.
 
-Obviously, performance will suffer when you pick a bad setting for
-a given workload. If the numbers are too low, you will increase
-the CPU load but get better latency, so I see nothing wrong in
-allowing '1' as the minimum. For the descriptor number, you can't
-go above TX_DESC_NUM, but there is nothing wrong in going close to
-it, it will just mean that the timer should fire before you get
-there and you again get more interrupts.
+I have tested this NAND flash controller driver in Hip04 D01 board using MTD
+test modules. All testes passed except mtd_nandbiterrs. The reason is that this
+NAND controller doesn't support to write raw page in ECC mode. In the test of
+mtd_nandbiterrs, when rewriting raw page(with some bits changed) back, this NAND
+controller will also produce ECC codes and write into NAND flash OOB area. As
+ECC codes in OOB area have been broken, read error comes out as follow.
 
-The 100ms maximum delay is a bit extreme, and will definitely impact
-TX latency in some workloads if a user sets this, but the system
-will should still be usable, and I couldn't think of a better
-limit. Feel free to set this to e.g. 10ms or 1ms if you feel more
-comfortable with that.
+Changes in v7:
+- Add error check for dmam_alloc_coherent,
+  delete error print after devm_ioremap_resource.
+- Directly get value in memory instead of using readb/w.
+- Use a private pointer stored in host to access hardware buffer instead
+  of using IO_ADDR_R/W.
+- Use cond_resched to replace _cond_resched.
+- Initialize stat_max in hisi_nand_read_page_hwecc to avoid WARNING when compiling.
+- Remove of_match_ptr macro in struct platform_driver hisi_nfc_driver.
 
-For reference, with TX_DESC_NUM=256 and 1500 byte frames, you have
-up to 300ms worth of data in a full tx queue on a 10mbit link,
-or 3ms respectively for a 1gbit link. Because of BQL, the actual
-queue length will normally be much shorter than this, but on a
-tx-only workload won't shrink below the currently used
-tx_coalesce_usecs value.
+Changes in v6:
+- Change E-mail address in signed-off-by to "wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org"
 
-	Arnd
+Changes in v5:
+- Make modifications according to the comments from Brian, thanks a lot.
+- Add hisi_nand_read_oob callback function.
+
+Changes in v4:
+- Add mtd->dev.parent = &pdev->dev, thanks Frans Klaver.  
+
+Changes in v3:
+- Modify code to eliminate some code style warnings.
+- Add ecc-bits input check.
+- Avoid using waterfall style in hisi_nfc_cmdfunc().
+
+Changes in v2:
+- Remove the patch for device tree, now patchset only has the driver and its
+
+device tree binding documentation.
+- Change the file name: hisi_nand.c to hisi504_nand.c.
+
+Changes in v1:
+- Remove callback functions out of struct hinfc_host, and call them directly
+  in relative functions.
+- Change hinfc_read and hinfc_write from macros to inline functions.
+- Instead of putting pointers, embed struct nand_chip and struct mtd_info
+  in struct hinfc_host directly.
+- rewrite some unclear lines in device tree binding document, correct
+  some code style error.
+
+Link on v6:
+- http://spinics.net/lists/arm-kernel/msg390124.html
+Link on v5:
+- http://spinics.net/lists/arm-kernel/msg387244.html
+Link on v4:
+- https://lkml.org/lkml/2014/11/4/377
+Link on v3:
+- https://lkml.org/lkml/2014/10/28/386
+Link on v2:
+- https://www.mail-archive.com/linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg750071.html
+Link on v1:
+- https://lkml.org/lkml/2014/7/15/198
+
+
+Zhou Wang (2):
+  mtd: hisilicon: add a new NAND controller driver for hisilicon hip04 Soc
+  mtd: hisilicon: add device tree binding documentation
+
+ .../devicetree/bindings/mtd/hisi504-nand.txt       |  48 ++
+ drivers/mtd/nand/Kconfig                           |   5 +
+ drivers/mtd/nand/Makefile                          |   1 +
+ drivers/mtd/nand/hisi504_nand.c                    | 912 +++++++++++++++++++++
+ 4 files changed, 966 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/hisi504-nand.txt
+ create mode 100644 drivers/mtd/nand/hisi504_nand.c
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
