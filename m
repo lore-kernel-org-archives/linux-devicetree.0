@@ -1,51 +1,70 @@
-From: Alexander Graf <agraf@suse.de>
-Subject: Re: [PATCH net-next v13 0/3] add hisilicon hip04 ethernet driver
-Date: Thu, 15 Jan 2015 13:39:03 +0100
-Message-ID: <54B7B4E7.8030108@suse.de>
-References: <1421217254-12008-1-git-send-email-dingtianhong@huawei.com> <54B642B4.8010807@suse.de> <54B77C43.6010200@huawei.com> <14674609.dERhba4yMV@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <14674609.dERhba4yMV@wuerfel>
-Sender: netdev-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, Ding Tianhong <dingtianhong@huawei.com>
-Cc: robh+dt@kernel.org, davem@davemloft.net, grant.likely@linaro.org, sergei.shtylyov@cogentembedded.com, linux-arm-kernel@lists.infradead.org, eric.dumazet@gmail.com, xuwei5@hisilicon.com, zhangfei.gao@linaro.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux@arm.linux.org.uk
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: [PATCH] ARM: zynq: DT: Fix binding for cadence WDT
+Date: Thu, 15 Jan 2015 13:47:29 +0100
+Message-ID: <0c27264afa3356979d803d53d329458039f64485.1421326047.git.michal.simek@xilinx.com>
+Content-Type: multipart/signed;
+    boundary="=_mimegpg-monstr-desktop-7207-1421326049-0001";
+    micalg=pgp-sha1; protocol="application/pgp-signature"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: monstr@monstr.eu, Josh Cartwright <josh.cartwright@ni.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Rob Herring <robherring2@gmail.com>, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann@xilinx.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+This is a MIME GnuPG-signed message.  If you see this text, it means that
+your E-mail or Usenet software does not support MIME signed messages.
+The Internet standard for MIME PGP messages, RFC 2015, was published in 1996.
+To open this message correctly you will need to install E-mail or Usenet
+software that supports modern Internet standards.
+
+--=_mimegpg-monstr-desktop-7207-1421326049-0001
+
+Based on:
+"devicetree: Add Cadence WDT devicetree bindings documentation"
+(sha1: 191891c0378f44aec8e06e889a08d0b76fe6c5cb)
+
+- compatible string is cdns,wdt-r1p2
+- remove device_type property
+- remove int reset property (reset-on-timeout is bool)
+
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+---
+
+ arch/arm/boot/dts/zynq-7000.dtsi | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
+index c9b9722c0c59..a5cd2eda3edf 100644
+--- a/arch/arm/boot/dts/zynq-7000.dtsi
++++ b/arch/arm/boot/dts/zynq-7000.dtsi
+@@ -342,12 +342,10 @@
+
+ 		watchdog0: watchdog@f8005000 {
+ 			clocks = <&clkc 45>;
+-			compatible = "xlnx,zynq-wdt-r1p2";
+-			device_type = "watchdog";
++			compatible = "cdns,wdt-r1p2";
+ 			interrupt-parent = <&intc>;
+ 			interrupts = <0 9 1>;
+ 			reg = <0xf8005000 0x1000>;
+-			reset = <0>;
+ 			timeout-sec = <10>;
+ 		};
+ 	};
+--
+1.8.2.3
 
 
-On 15.01.15 10:42, Arnd Bergmann wrote:
-> On Thursday 15 January 2015 16:37:23 Ding Tianhong wrote:
->> On 2015/1/14 18:19, Alexander Graf wrote:
->>>
->>> >From a 10000 feet perspective it looks like two problems to me
->>>
->>>   1) Allocation failure doesn't get handled properly somewhere
-> 
-> This is the bug that Eric pointed out as well.
-> 
->>>   2) We fail to allocate with order=0 - I don't see why
-> 
-> GFP_ATOMIC. When allocating from a the napi poll function in softirq
-> context, you have to use nonblocking allocations, which occasionally
-> fail. This should not cause any harm other than dropped packets.
-> 
->> is it easy to repetition this bug? how big is your memory on your board,
->> is it happened in your previous hip04 driver?
-> 
-> It should be independent of memory size, but may be more likely if you
-> don't have swap space configured.
+--=_mimegpg-monstr-desktop-7207-1421326049-0001
+Content-Type: application/pgp-signature
+Content-Transfer-Encoding: 7bit
 
-With the previous driver I was unable to get this far - I ended up in
-random memory corruption and had a ~90% packet loss after about an hour
-of uptime.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
 
-I'm not sure whether it's easy to reproduce, I merely started up a few
-VMs, did some disk I/O and started to compile QEMU in the background ;).
+iEYEABECAAYFAlS3tuEACgkQykllyylKDCHZcwCfbca+f5CtcIBKR5Ml7Ozw3eTS
+WbwAni6isv7kkYFdDRk1TGGnxGjjQqOi
+=8C/M
+-----END PGP SIGNATURE-----
 
-I'll happily give your follow up patch that's going to fix the memory
-allocation problems a try though.
-
-
-Alex
+--=_mimegpg-monstr-desktop-7207-1421326049-0001--
