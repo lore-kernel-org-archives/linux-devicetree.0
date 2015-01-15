@@ -1,84 +1,41 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v4 00/13] Add ACPI _DSD and unified device properties support
-Date: Thu, 15 Jan 2015 10:12:44 +0100
-Message-ID: <2657331.Z9mozUByf5@vostro.rjw.lan>
-References: <2660541.BycO7TFnA2@vostro.rjw.lan> <20141015131551.GC20034@leverpostej> <1421260943.14516.19.camel@infradead.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1421260943.14516.19.camel@infradead.org>
-Sender: linux-acpi-owner@vger.kernel.org
-To: David Woodhouse <dwmw2@infradead.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Aaron Lu <aaron.lu@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Darren Hart <dvhart@linux.intel.com>
+From: Masahiro Yamada <yamada.m@jp.panasonic.com>
+Subject: [PATCH] Documentation: gpio: fix bindings document
+Date: Thu, 15 Jan 2015 17:52:40 +0900
+Message-ID: <1421311960-4120-1-git-send-email-yamada.m@jp.panasonic.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: Linus Walleij <linus.walleij@linaro.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, Alexandre Courbot <acourbot@nvidia.com>, Stephen Warren <swarren@nvidia.com>, linux-gpio@vger.kernel.org, Masahiro Yamada <yamada.m@jp.panasonic.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, January 14, 2015 10:42:23 AM David Woodhouse wrote:
-> 
-> --=-3dIl43yXcWwu/nzOqQWw
-> Content-Type: multipart/mixed; boundary="=-ca0AFM5hvqL+pJIndiHh"
-> 
-> 
-> --=-ca0AFM5hvqL+pJIndiHh
-> Content-Type: text/plain; charset="UTF-8"
-> Content-Transfer-Encoding: quoted-printable
-> 
-> I'm looking again at updating of_serial to work with ACPI properties.=20
-> 
-> Specifically, I want to support a serial port with a non-standard baud
-> rate, something like this:
-> 
->     Device(COM1) {
->         Name(_HID, EisaId("PNP0501"))
->         Name(_CID, EisaId("PRP0001"))
-> 	Name(_DSD, Package() {
-> 	    ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
->             Package () {
-> 		Package () {"compatible", Package () {"ns16550a"}},
-> 		Package () {"clock-frequency", 2457600},
-> 	    }
-> 	})
->         ...
->     }
-> 
-> Firstly, the of_serial driver doesn't even get *invoked* unless I do
-> this:
-> 
-> diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
-> index 0d08373..eb1201a 100644
-> --- a/drivers/acpi/scan.c
-> +++ b/drivers/acpi/scan.c
-> @@ -2083,6 +2086,8 @@ static int acpi_add_single_object(struct acpi_device =
-> **child,
->  	ACPI_DEBUG_PRINT((ACPI_DB_INFO, "Added %s [%s] parent %s\n",
->  		dev_name(&device->dev), (char *) buffer.pointer,
->  		device->parent ? dev_name(&device->parent->dev) : "(null)"));
-> +	if (device->data.of_compatible)
-> +		acpi_create_platform_device(device);
->  	kfree(buffer.pointer);
->  	*child =3D device;
->  	return 0;
-> 
-> Now it doesn't work because it uses of_match_device() to look the device
-> up and find the corresponding *data* for that entry in its match table.
-> And without CONFIG_OF, I don't *have* of_match_device().
-> 
-> We've talked about the fact that the platform bus probe function doesn't
-> pass you the match ID. Is that something we could potentially fix now
-> that things are a little more unified?
+Signed-off-by: Masahiro Yamada <yamada.m@jp.panasonic.com>
+---
 
-We can do that in my view.
+ Documentation/devicetree/bindings/gpio/gpio.txt | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-> Or do we expect drivers still to have to use something like
-> of_match_id() to do the lookup again for themselves... and in that case
-> should we make of_match_id() available or produce a new
-> device_match_id() that they are expected to switch to?
-
-So far we've been targeting drivers that already have of_match_id() rather
-than ones that want to use the unified interface from the start and not
-necessarily with CONFIG_OF set.  That looks like an overlooked use case to me
-to be honest.
-
+diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documentation/devicetree/bindings/gpio/gpio.txt
+index b9bd1d6..f7a158d 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio.txt
+@@ -69,7 +69,8 @@ GPIO pin number, and GPIO flags as accepted by the "qe_pio_e" gpio-controller.
+ ----------------------------------
+ 
+ A gpio-specifier should contain a flag indicating the GPIO polarity; active-
+-high or active-low. If it does, the follow best practices should be followed:
++high or active-low. If it does, the following best practices should be
++followed:
+ 
+ The gpio-specifier's polarity flag should represent the physical level at the
+ GPIO controller that achieves (or represents, for inputs) a logically asserted
+@@ -147,7 +148,7 @@ contains information structures as follows:
+ 	numeric-gpio-range ::=
+ 			<pinctrl-phandle> <gpio-base> <pinctrl-base> <count>
+ 	named-gpio-range ::= <pinctrl-phandle> <gpio-base> '<0 0>'
+-	gpio-phandle : phandle to pin controller node.
++	pinctrl-phandle : phandle to pin controller node
+ 	gpio-base : Base GPIO ID in the GPIO controller
+ 	pinctrl-base : Base pinctrl pin ID in the pin controller
+ 	count : The number of GPIOs/pins in this range
 -- 
-I speak only for myself.
-Rafael J. Wysocki, Intel Open Source Technology Center.
+1.9.1
