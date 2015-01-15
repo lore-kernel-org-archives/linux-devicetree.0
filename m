@@ -1,65 +1,93 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH v2] of: i2c: Add idle-disconnect DT property to PCA954x mux driver
-Date: Thu, 15 Jan 2015 16:40:12 +0200
-Message-ID: <2086954.CPkjLx72cS@avalon>
-References: <5494599A.8050803@nsn.com> <54B7BBF5.4010001@nsn.com> <20150115131935.GE2549@katana>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v7 1/4] Documentation: dt: add common bindings for hwspinlock
+Date: Thu, 15 Jan 2015 08:42:23 -0600
+Message-ID: <CAL_JsqL2LZAooMk-V8+xeF2g6acZE21M+-OBRw8aEVa-5wVHuQ@mail.gmail.com>
+References: <1421269101-51105-1-git-send-email-s-anna@ti.com>
+ <1421269101-51105-2-git-send-email-s-anna@ti.com> <20150115135201.GG16217@leverpostej>
+ <20150115135556.GH16217@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150115131935.GE2549@katana>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, jdelvare-l3A5Bk7waGM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Lawnick Michael 61283229 <michael.lawnick-OYasijW0DpE@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150115135556.GH16217@leverpostej>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Suman Anna <s-anna@ti.com>, Ohad Ben-Cohen <ohad@wizery.com>, Kumar Gala <galak@codeaurora.org>, Bjorn Andersson <bjorn@kryo.se>, Josh Cartwright <joshc@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Wolfram,
-
-On Thursday 15 January 2015 14:19:35 Wolfram Sang wrote:
-> On Thu, Jan 15, 2015 at 02:09:09PM +0100, Alexander Sverdlin wrote:
-> > On 15/01/15 13:32, ext Wolfram Sang wrote:
-> >> On Fri, Dec 19, 2014 at 06:00:10PM +0100, Alexander Sverdlin wrote:
-> >>> of: i2c: Add idle-disconnect DT property to PCA954x mux driver
-> >>> 
-> >>> Add idle-disconnect device tree property to PCA954x mux driver. The new
-> >>> property forces the multiplexer to disconnect child buses in idle
-> >>> state. This is used, for example, when there are several multiplexers
-> >>> on the same bus and the devices on the underlying buses might have
-> >>> same I2C addresses.
-> >> 
-> >> Basically OK. Question to DT maintainers: "idle-disconnect",
-> >> "i2c-mux-idle-disconnect", or is there another existing binding we could
-> >> use?
-> >> 
-> >>> At the same time old (and not used in the tree) platform data binding
-> >>> deselect_on_exit is removed to simplify the implementation. Old binding
-> >>> has different (per-channel) semantics and doesn't fit well in the new
-> >>> concept.
-> >> 
-> >> I'd prefer to keep it. It should be only one || more. It is not really
-> >> in the way IMO.
-> > 
-> > It complicates the implementation 3x times :) This is part of our
-> > discussion with Laurent:
+On Thu, Jan 15, 2015 at 7:55 AM, Mark Rutland <mark.rutland@arm.com> wrote:
+> On Thu, Jan 15, 2015 at 01:52:01PM +0000, Mark Rutland wrote:
+>> On Wed, Jan 14, 2015 at 08:58:18PM +0000, Suman Anna wrote:
+>> > This patch adds the generic common bindings used to represent
+>> > a hwlock device and use/request locks in a device-tree build.
+>> >
+>> > All the platform-specific hwlock driver implementations need the
+>> > number of locks and associated base id for registering the locks
+>> > present within the device with the driver core. This base id
+>> > needs to be unique across multiple IP instances of a hwspinlock
+>> > device, so that each hwlock can be represented uniquely in a
+>> > system.
+>> >
+>> > The number of locks is represented by 'hwlock-num-locks' property,
+>> > and the base id is represented by the 'hwlock-base-id' property.
+>> > The args specifier length is dependent on each vendor-specific
+>> > implementation and is represented through the '#hwlock-cells'
+>> > property. Client users need to use the property 'hwlocks' for
+>> > requesting specific lock(s).
+>> >
+>> > Note that the document is named hwlock.txt deliberately to keep
+>> > it a bit more generic.
+>> >
+>> > Cc: Rob Herring <robh+dt@kernel.org>
+>> > Signed-off-by: Suman Anna <s-anna@ti.com>
+>> > ---
+>> > v7: Revised binding info for hwlock-base-id, it is mandatory now
+>> >
+>> >  .../devicetree/bindings/hwlock/hwlock.txt          | 55 ++++++++++++++++++++++
+>> >  1 file changed, 55 insertions(+)
+>> >  create mode 100644 Documentation/devicetree/bindings/hwlock/hwlock.txt
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/hwlock/hwlock.txt b/Documentation/devicetree/bindings/hwlock/hwlock.txt
+>> > new file mode 100644
+>> > index 000000000000..8de7aaf878f9
+>> > --- /dev/null
+>> > +++ b/Documentation/devicetree/bindings/hwlock/hwlock.txt
+>> > @@ -0,0 +1,55 @@
+>> > +Generic hwlock bindings
+>> > +=======================
+>> > +
+>> > +Generic bindings that are common to all the hwlock platform specific driver
+>> > +implementations.
+>> > +
+>> > +The validity and need of these common properties may vary from one platform
+>> > +implementation to another. The platform specific bindings should explicitly
+>> > +state if an optional property is used. Please also look through the individual
+>> > +platform specific hwlock binding documentations for identifying the applicable
+>> > +properties.
+>> > +
+>> > +Common properties:
+>> > +- #hwlock-cells:   Specifies the number of cells needed to represent a
+>> > +                   specific lock. This property is mandatory for all
+>> > +                   platform implementations.
+>> > +- hwlock-num-locks:        Number of locks present in a hwlock device. This
+>> > +                   property is needed on hwlock devices, where the number
+>> > +                   of supported locks within a hwlock device cannot be
+>> > +                   read from a register.
+>> > +- hwlock-base-id:  An unique base Id for the locks for a particular hwlock
+>> > +                   device. This property is mandatory for all platform
+>> > +                   implementations.
+>>
+>> This property makes no sense. The ID encoded in the hwlock cells is
+>> relative to the instance (identified by phandle), not global. So the DT
+>> has no global ID space.
+>>
+>> Why do you think you need this?
 >
-> Does it? I don't want DT and platform_data to behave equally. I just
-> want to keep being backwards compatible. So, I'd suggest:
-> 
-> (pdata && pdata->modes[num].deselect_on_exit) || idle_disconnect ?
-> pca954x_deselect_mux : NULL);
+> Having looked at the way this proeprty is used, NAK.
 >
-> >> I'm not keen to brake out-of-tree code (if any), but may be it will be
-> >> decided to drop this per-channel deselect_on_exit, because it's not used
-> >> at least in the kernel tree...
-> 
-> I couldn't find a user of the platform_data, at all. But removing
-> platform_data support is a seperate patch, and deprecating platform_data
-> is a seperate and general issue IMO.
+> If you need to carve up a Linux-internal ID space, do that dynamically.
+> There is no need for this property.
 
-Sure, but it could be a preliminary patch on top of which to add idle-
-disconnect DT support :-)
+Better yet, don't create a Linux ID space for this. Everywhere we have
+one, we want to get rid of it.
 
--- 
-Regards,
-
-Laurent Pinchart
+Rob
