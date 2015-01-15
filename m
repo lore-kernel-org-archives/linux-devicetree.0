@@ -1,115 +1,50 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH V2 2/4] mmc: pwrseq: Document DT bindings for the simple
- MMC power sequence
-Date: Thu, 15 Jan 2015 16:58:26 +0000
-Message-ID: <20150115165825.GL16217@leverpostej>
-References: <1421240530-7971-1-git-send-email-ulf.hansson@linaro.org>
- <1421240530-7971-3-git-send-email-ulf.hansson@linaro.org>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/4] gpio: max732x: Rewrite IRQ code to use irq_domain API
+Date: Thu, 15 Jan 2015 18:03:23 +0100
+Message-ID: <CACRpkdbH3xD0LbmkZB-ewc8rzhFmD=2FRMWA_L=Wrv9OxagedQ@mail.gmail.com>
+References: <1421156505-16600-1-git-send-email-semen.protsenko@globallogic.com>
+	<1421156505-16600-3-git-send-email-semen.protsenko@globallogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1421240530-7971-3-git-send-email-ulf.hansson@linaro.org>
-Content-Language: en-US
-Sender: linux-mmc-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Chris Ball <chris@printf.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Alexandre Courbot <gnurou@gmail.com>, Arend van Spriel <arend@broadcom.com>, Sascha Hauer <s.hauer@pengutronix.de>, Olof Johansson <olof@lixom.net>, Russell King <linux@arm.linux.org.uk>, Hans de Goede <hdegoede@redhat.com>, Doug Anderson <dianders@chromium.org>, NeilBrown <neilb@suse.de>, Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1421156505-16600-3-git-send-email-semen.protsenko-hExfYMNmJl/Cnp4W7fqMDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Semen Protsenko <semen.protsenko-hExfYMNmJl/Cnp4W7fqMDg@public.gmane.org>
+Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marc Zyngier <maz-20xNzvSXLT6hUMvJH42dtQ@public.gmane.org>, Grygorii Strashko <grygorii.strashko-hExfYMNmJl/Cnp4W7fqMDg@public.gmane.org>, Illia Smyrnov <illia.smyrnov-hExfYMNmJl/Cnp4W7fqMDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ulf,
+On Tue, Jan 13, 2015 at 2:41 PM, Semen Protsenko
+<semen.protsenko-hExfYMNmJl/Cnp4W7fqMDg@public.gmane.org> wrote:
 
-On Wed, Jan 14, 2015 at 01:02:08PM +0000, Ulf Hansson wrote:
-> The simple MMC power sequence provider, intends to supports a set of
-> common properties between SOC designs. It thus enables us to re-use the
-> same provider for several SOCs.
-> 
-> In this initial step, let's add the top level description of the MMC
-> power sequence and describe the compatible string for the simple MMC
-> power sequence provider.
-> 
-> Following patches will step by step add support for new properties to
-> the simple MMC power sequence provider.
-> 
-> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-> ---
-> 
-> Changes in v2:
-> 	- None.
-> 
-> ---
->  .../devicetree/bindings/mmc/mmc,pwrseq-simple.txt      | 18 ++++++++++++++++++
->  Documentation/devicetree/bindings/mmc/mmc.txt          |  5 +++++
->  2 files changed, 23 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mmc/mmc,pwrseq-simple.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mmc/mmc,pwrseq-simple.txt b/Documentation/devicetree/bindings/mmc/mmc,pwrseq-simple.txt
-> new file mode 100644
-> index 0000000..e1b7f9c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mmc/mmc,pwrseq-simple.txt
-> @@ -0,0 +1,18 @@
-> +* The simple MMC power sequence provider
-> +
-> +System on chip designs may specify a specific MMC power sequence. To
-> +successfully detect an (e)MMC/SD/SDIO card, that power sequence must be
-> +maintained while initializing the card.
-> +
-> +The simple MMC power sequence provider, intends to supports a set of common
-> +properties between SOC designs. It thus enables us to re-use the same provider
-> +for several SOC designs.
-> +
-> +Required properties:
-> +- compatible : contains "mmc,pwrseq-simple".
+> Signed-off-by: Semen Protsenko <semen.protsenko-hExfYMNmJl/Cnp4W7fqMDg@public.gmane.org>
 
-Nit: "mmc" is not a vendor prefix.
+This makes the code *so* much better so patch applied, naturally.
 
-> +
-> +Example:
-> +
-> +	sdhci0_pwrseq {
-> +		compatible = "mmc,pwrseq-simple";
-> +	}
+But...
 
-I'm a little confused here. What specific sequence is described by this
-node? We don't appear to have referred to any resources used as part of
-that sequence, and the description above only mentions that there could
-be a specific sequence, not what that sequence is.
+>  config GPIO_MAX732X
+>         tristate "MAX7319, MAX7320-7327 I2C Port Expanders"
+>         depends on I2C
+> +       select IRQ_DOMAIN
 
-So I don't think this makes sense on its own, and should probably be
-folded with patches adding the initial support for the resources used as
-part of the sequence (e.g. the GPIOs added in a later patch).
+The most modern way would be to take another step and convert the
+driver to GPIOLIB_IRQCHIP by stating
 
-Thanks,
-Mark.
+select GPIOLIB_IRQCHIP
 
-> diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
-> index bac1311..b12de1e 100644
-> --- a/Documentation/devicetree/bindings/mmc/mmc.txt
-> +++ b/Documentation/devicetree/bindings/mmc/mmc.txt
-> @@ -64,6 +64,10 @@ Optional SDIO properties:
->  - keep-power-in-suspend: Preserves card power during a suspend/resume cycle
->  - enable-sdio-wakeup: Enables wake up of host system on SDIO IRQ assertion
->  
-> +Optional MMC power sequence:
-> +- mmc-pwrseq: phandle to the MMC power sequence node. See "mmc,pwrseq-*"
-> +	for documentation of MMC power sequence bindings.
-> +
->  
->  Use of Function subnodes
->  ------------------------
-> @@ -101,6 +105,7 @@ sdhci@ab000000 {
->  	max-frequency = <50000000>;
->  	keep-power-in-suspend;
->  	enable-sdio-wakeup;
-> +	mmc-pwrseq = <&sdhci0_pwrseq>
->  }
->  
->  Example with sdio function subnode:
-> -- 
-> 1.9.1
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+here.
+
+If you look at other drivers using GPIOLIB_IRQCHIP on an
+i2c expander, say gpio-stmpe.c or gpio-tc3589x.c, you
+can get a grip on how that works.
+
+So please follow up with a patch converting the driver to
+GPIOLIB_IRQCHIP on top of these patches :) if you
+have time.
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
