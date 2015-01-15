@@ -1,65 +1,60 @@
-From: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH net-next v13 0/3] add hisilicon hip04 ethernet driver
-Date: Thu, 15 Jan 2015 20:56:21 +0800
-Message-ID: <54B7B8F5.6060808@huawei.com>
-References: <1421217254-12008-1-git-send-email-dingtianhong@huawei.com> <54B642B4.8010807@suse.de> <54B77C43.6010200@huawei.com> <14674609.dERhba4yMV@wuerfel> <54B7B4E7.8030108@suse.de>
+From: Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>
+Subject: Re: [PATCH v2] of: i2c: Add idle-disconnect DT property to PCA954x
+ mux driver
+Date: Thu, 15 Jan 2015 14:09:09 +0100
+Message-ID: <54B7BBF5.4010001@nsn.com>
+References: <5494599A.8050803@nsn.com> <20150115123237.GC2549@katana>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54B7B4E7.8030108-l3A5Bk7waGM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Graf <agraf-l3A5Bk7waGM@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, eric.dumazet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150115123237.GC2549@katana>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: ext Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: jdelvare-l3A5Bk7waGM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Lawnick Michael 61283229 <michael.lawnick-OYasijW0DpE@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2015/1/15 20:39, Alexander Graf wrote:
-> 
-> 
-> On 15.01.15 10:42, Arnd Bergmann wrote:
->> On Thursday 15 January 2015 16:37:23 Ding Tianhong wrote:
->>> On 2015/1/14 18:19, Alexander Graf wrote:
->>>>
->>>> >From a 10000 feet perspective it looks like two problems to me
->>>>
->>>>   1) Allocation failure doesn't get handled properly somewhere
->>
->> This is the bug that Eric pointed out as well.
->>
->>>>   2) We fail to allocate with order=0 - I don't see why
->>
->> GFP_ATOMIC. When allocating from a the napi poll function in softirq
->> context, you have to use nonblocking allocations, which occasionally
->> fail. This should not cause any harm other than dropped packets.
->>
->>> is it easy to repetition this bug? how big is your memory on your board,
->>> is it happened in your previous hip04 driver?
->>
->> It should be independent of memory size, but may be more likely if you
->> don't have swap space configured.
-> 
-> With the previous driver I was unable to get this far - I ended up in
-> random memory corruption and had a ~90% packet loss after about an hour
-> of uptime.
-> 
-> I'm not sure whether it's easy to reproduce, I merely started up a few
-> VMs, did some disk I/O and started to compile QEMU in the background ;).
-> 
-> I'll happily give your follow up patch that's going to fix the memory
-> allocation problems a try though.
-> 
-Thanks for your work, I am sure we could make it much more better:)
+Hi Wolfram!
 
-Ding
+On 15/01/15 13:32, ext Wolfram Sang wrote:
+> On Fri, Dec 19, 2014 at 06:00:10PM +0100, Alexander Sverdlin wrote:
+>> of: i2c: Add idle-disconnect DT property to PCA954x mux driver
+>>
+>> Add idle-disconnect device tree property to PCA954x mux driver. The new property
+>> forces the multiplexer to disconnect child buses in idle state. This is used, for
+>> example, when there are several multiplexers on the same bus and the devices on
+>> the underlying buses might have same I2C addresses.
+> 
+> Basically OK. Question to DT maintainers: "idle-disconnect",
+> "i2c-mux-idle-disconnect", or is there another existing binding we could
+> use?
+> 
+>> At the same time old (and not used in the tree) platform data binding
+>> deselect_on_exit is removed to simplify the implementation. Old binding has
+>> different (per-channel) semantics and doesn't fit well in the new concept.
+> 
+> I'd prefer to keep it. It should be only one || more. It is not really
+> in the way IMO.
 
-> 
-> Alex
-> 
-> .
-> 
+It complicates the implementation 3x times :) This is part of our discussion with Laurent:
+----
+>>
+>> I would copy pdata->modes[chan].deselect_on_exit to data->idle_disconnect
+>> in the probe function, so you could avoiding accessing pdata here.
+>
+> Unfortunately, this pdata has different (per-channel) semantics. I cannot
+> really understand, why it was done this way, but anyway it's not possible
+> to use one global bit to represent per-channel bits without changing the
+> behavior.
+>
+> I'm not keen to brake out-of-tree code (if any), but may be it will be
+> decided to drop this per-channel deselect_on_exit, because it's not used at
+> least in the kernel tree...
+
+I'd vote for removing deselect_on_exit from platform data, but I won't insist.
+----
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Best regards,
+Alexander Sverdlin.
