@@ -1,65 +1,39 @@
-From: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Subject: Re: [PATCH v6 1/2] mtd: hisilicon: add a new NAND controller driver
- for hisilicon hip04 Soc
-Date: Thu, 15 Jan 2015 09:27:14 +0800
-Message-ID: <54B71772.9080601@hisilicon.com>
-References: <1421047734-30818-1-git-send-email-wangzhou1@hisilicon.com> <1421047734-30818-2-git-send-email-wangzhou1@hisilicon.com> <20150113035844.GJ9759@ld-irv-0074> <54B6625F.8060607@hisilicon.com> <20150114192510.GY9759@ld-irv-0074>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
+From: FUKAUMI Naoki <naobsd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/3] add support for Firefly-RK3288 and Rayeager PX2 boards
+Date: Thu, 15 Jan 2015 11:40:56 +0900
+Message-ID: <1421289659-16627-1-git-send-email-naobsd@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150114192510.GY9759@ld-irv-0074>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, caizhiyong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, yubingxu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: FUKAUMI Naoki <naobsd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2015/1/15 3:25, Brian Norris wrote:
-> On Wed, Jan 14, 2015 at 08:34:39PM +0800, Zhou Wang wrote:
->> On 2015/1/13 11:58, Brian Norris wrote:
->>> On Mon, Jan 12, 2015 at 03:28:53PM +0800, Zhou Wang wrote:
->>>> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
->>>> +	chip->IO_ADDR_R = chip->IO_ADDR_W = devm_ioremap_resource(dev, res);
->>>
->>> Hmm, do you really have to reuse IO_ADDR_{R,W} here? Those are only
->>> targeted for NAND systems which have a direct MMIO mapping to the NAND
->>> I/O pins. See nand_base's {read,write}_buf() and read_{byte,word}()
->>> implementations. But you override those.
->>
->> There is a hardware buffer in this NAND controller, and the buffer can be
->> accessed as MMIO.
-> 
-> Sure.
-> 
->> IO_ADDR_R/W just indicates the base address of this buffer.
-> 
-> But I was noting that IO_ADDR_{R,W} actually serve a very particular
-> purpose in nand_base.c, which seems distinct from your HW buffer.
-> 
->> Maybe I need to use a void __iomem pointer stored in my host struct to use
->> this buffer instead of IO_ADDR_R/W as you said below here?
-> 
-> Yes, I think that would be better.
+This series adds support for following Rockchip SoC based boards.
 
-OK, I will do as this in next version, Thanks!
+ - Firefly, Firefly-RK3288 (both beta and mass production version)
+ - ChipSPARK, Rayeager PX2
 
-> 
->>> It's best if it's obvious if nand_base is somehow inadvertently using
->>> these pointers. So leaving them NULL is helpful.
->>>
->>> As an alternative, you can just stash another private void __iomem
->>> pointer in you your host struct.
-> 
-> Thanks,
-> Brian
+FUKAUMI Naoki (3):
+  dt-bindings: add vendor prefix and root compatible property for
+    Rockchip boards
+  ARM: dts: rockchip: add dts for Firefly Firefly-RK3288 boards
+  ARM: dts: rockchip: add dts for ChipSPARK Rayeager PX2 board
 
-Thanks for your reply!
-Zhou Wang
+ Documentation/devicetree/bindings/arm/rockchip.txt |   8 +
+ .../devicetree/bindings/vendor-prefixes.txt        |   2 +
+ arch/arm/boot/dts/Makefile                         |   5 +-
+ arch/arm/boot/dts/rk3066a-rayeager.dts             | 457 +++++++++++++++++++
+ arch/arm/boot/dts/rk3288-firefly-beta.dts          |  70 +++
+ arch/arm/boot/dts/rk3288-firefly.dts               |  70 +++
+ arch/arm/boot/dts/rk3288-firefly.dtsi              | 498 +++++++++++++++++++++
+ 7 files changed, 1109 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/rk3066a-rayeager.dts
+ create mode 100644 arch/arm/boot/dts/rk3288-firefly-beta.dts
+ create mode 100644 arch/arm/boot/dts/rk3288-firefly.dts
+ create mode 100644 arch/arm/boot/dts/rk3288-firefly.dtsi
 
-> 
-> .
-> 
-
+-- 
+2.2.2
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
