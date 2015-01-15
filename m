@@ -1,81 +1,59 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3 1/5] rtc: armada38x: Add the device tree binding
- documentation
-Date: Thu, 15 Jan 2015 11:39:47 +0000
-Message-ID: <20150115113947.GC16217@leverpostej>
-References: <1421318826-27268-1-git-send-email-gregory.clement@free-electrons.com>
- <1421318826-27268-2-git-send-email-gregory.clement@free-electrons.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v8 2/4] fpga manager: add sysfs interface document
+Date: Thu, 15 Jan 2015 11:44:37 +0000
+Message-ID: <20150115114437.GV3043@sirena.org.uk>
+References: <20150109205643.GA5761@amd>
+ <20150112210134.687176ed@lxorguk.ukuu.org.uk>
+ <20150112214314.GA18610@obsidianresearch.com>
+ <20150113162847.2778b5a5@lxorguk.ukuu.org.uk>
+ <20150113200032.GA16205@obsidianresearch.com>
+ <alpine.DEB.2.02.1501131455130.30192@linuxheads99>
+ <20150113222450.GA17475@obsidianresearch.com>
+ <20150114160617.02fb9135@lxorguk.ukuu.org.uk>
+ <20150114181258.GB16392@obsidianresearch.com>
+ <20150115113617.537965b3@lxorguk.ukuu.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="v7CWsE/Dy737oYst"
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1421318826-27268-2-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, "rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150115113617.537965b3@lxorguk.ukuu.org.uk>
+Sender: linux-doc-owner@vger.kernel.org
+To: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
+Cc: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, atull <atull@opensource.altera.com>, Pavel Machek <pavel@denx.de>, gregkh@linuxfoundation.org, hpa@zytor.com, monstr@monstr.eu, michal.simek@xilinx.com, rdunlap@infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, pantelis.antoniou@konsulko.com, robh+dt@kernel.org, grant.likely@linaro.org, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, philip@balister.org, rubini@gnudd.com, s.trumtrar@pengutronix.de, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, balbi@ti.com, m.chehab@samsung.com, davidb@codeaurora.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, linus.walleij@linaro.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devel@driverdev.osuosl.org, delicious.quinoa@gmail.comdi
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 15, 2015 at 10:47:02AM +0000, Gregory CLEMENT wrote:
-> The Armada 38x SoCs come with a new RTC which differs from the one
-> used in the other mvebu SoCs until now. This patch describes the
-> binding of this RTC.
-> 
-> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  .../devicetree/bindings/rtc/armada-380-rtc.txt     | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/rtc/armada-380-rtc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/rtc/armada-380-rtc.txt b/Documentation/devicetree/bindings/rtc/armada-380-rtc.txt
-> new file mode 100644
-> index 000000000000..e6fe29bda608
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/rtc/armada-380-rtc.txt
-> @@ -0,0 +1,22 @@
-> +* Real Time Clock of the Armada 38x SoCs
-> +
-> +RTC controller for the Armada 38x SoCs
-> +
-> +Required properties:
-> +- compatible : Should be "marvell,armada-380-rtc"
-> +- reg: physical base address of the controller and length of memory
-> +  mapped region, associated to the reg-name "rtc". The other entry is
-> +  related to the interrupt control from the SoC, associated to the
-> +  reg-name "soc-int".
-> +- reg-names: names of the mapped memory regions listed in reg property
-> +    in the same order: "rtc" and "soc-int".
 
-It would be nicer if reg were defined in terms of reg-names to avoid
-redundancy, e.g.
+--v7CWsE/Dy737oYst
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-- reg: a list of base address and size pairs, one for each entry in
-  reg-names
-- reg names: should contain:
-  * "rtc" for the RTC registers
-  * "soc-int" for the interrutp control registers.
+On Thu, Jan 15, 2015 at 11:36:17AM +0000, One Thousand Gnomes wrote:
 
-That said, what are the "soc-int" registers, and why does the RTC driver
-need to poke them? It looks like they're for a separate component (i.e.
-the interrupt controller).
+> yes - there is a model for this in Linux already. Some of the audio
+> subsystems have "firmware" files distributed which are actually a
+> structured file that userspace parses to get a real set of firmware for
+> the controller and a set of descriptions for things like mixer controls.
 
-Thanks,
-Mark.
+We didn't actually merge that yet (but we do want to).  It's likely that
+the parsing of the files will end up in the kernel rather than userspace,
+or that anything userspace is doing is mostly about translating vendor
+formats into a standard Linux one anyway.
 
-> +- interrupts: IRQ line for the RTC.
-> +
-> +Example:
-> +
-> +rtc@a3800 {
-> +	compatible = "marvell,armada-380-rtc";
-> +	reg = <0xa3800 0x20>, <0x184a0 0x0c>;
-> +	reg-names = "rtc", "soc-int";
-> +	interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
-> +};
-> -- 
-> 1.9.1
-> 
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--v7CWsE/Dy737oYst
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJUt6gkAAoJECTWi3JdVIfQ4yEH/AmhkGaqplZacrO2SqUdLw9v
+Tgg940NRMGB3vZLtdA9kCGJ8xSuoO299yukTDb9Jrg3IkNSxbOISiooh31pkzqS0
+we7p09DC3gKPiV2EvG4gFqz+Qbiy+S19Q6bnO2V2DTuviJvMNeCcW/GqNxGCt5Cs
+py0NM0YEFUvfXnlgpK93/HL368a0cGey4/pfHUKRF++DcioPlKCCDTBxk1mDBzXX
+EcTqCrYphmYfi9RkDeAkorvZFuMIoz5XHfLCiQ/DH4X3S7i1W326La0jMoP5LU8s
+JvizzG9DtFawLqnRDiWbiAJUBF6Rz72J9ggep/SBvFSZexw/9T99SfyhHhrW0BE=
+=rb+2
+-----END PGP SIGNATURE-----
+
+--v7CWsE/Dy737oYst--
