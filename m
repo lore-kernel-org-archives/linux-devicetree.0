@@ -1,147 +1,112 @@
-From: alison-hh6fLRYtCEIS+FvcfC7Uqw@public.gmane.org
-Subject: [PATCH] i.MX6-SabreAuto: WEIM: add steering-gpios to set WEIM for NOR
-Date: Thu, 15 Jan 2015 10:46:11 -0800
-Message-ID: <1421347571-9239-2-git-send-email-alison_chaiken@mentor.com>
-References: <20150115075646.GM23940@pengutronix.de>
- <1421347571-9239-1-git-send-email-alison_chaiken@mentor.com>
+From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH v8 2/4] fpga manager: add sysfs interface document
+Date: Thu, 15 Jan 2015 11:47:26 -0700
+Message-ID: <20150115184726.GA23247@obsidianresearch.com>
+References: <20150107084819.GA1887@amd>
+ <alpine.DEB.2.02.1501091302370.30067@linuxheads99>
+ <20150109205643.GA5761@amd>
+ <20150112210134.687176ed@lxorguk.ukuu.org.uk>
+ <20150112214314.GA18610@obsidianresearch.com>
+ <20150113162847.2778b5a5@lxorguk.ukuu.org.uk>
+ <20150113200032.GA16205@obsidianresearch.com>
+ <alpine.DEB.2.02.1501131455130.30192@linuxheads99>
+ <20150113222450.GA17475@obsidianresearch.com>
+ <alpine.DEB.2.02.1501150936390.16760@linuxheads99>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1421347571-9239-1-git-send-email-alison_chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.02.1501150936390.16760@linuxheads99>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
-Cc: alison_chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org, shijie8-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: atull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, One Thousand Gnomes <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>, Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>, hpa-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org, monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, iws-lulEs6mt1IksTUYHLfqkUA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, philip-6RQC9ztksjxg9hUCZPvPmw@public.gmane.org, rubini-kaDoWcXyVrEAvxtiuMwx3w@public.gmane.org, s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, kyle.teske-acOepvfBmUk@public.gmane.org, nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, cesarb-PWySMVKUnqmsTnJN9+BGXg@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dinguyen@opensource.
 List-Id: devicetree@vger.kernel.org
 
-From: Alison Chaiken <alison_chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+On Thu, Jan 15, 2015 at 10:34:39AM -0600, atull wrote:
 
-EIM_D18 pin of i.MX6 CPU is connected to the WEIM switch, to which pin
-DQ2 of the parallel NOR is also attached.  Use GPIO5, pin 4 to steer
-the switch to connect the pin to the parallel NOR at boot.  If the
-GPIO is not set LOW, the probe of the NOR fails when cfi_qry_present()
-returns "U-V-]" rather than "Q-R-Y" because bit 2 is erroneously high.
-Implement control of the GPIO by adding a steering-gpios property to
-the nor child node of the WEIM in the SabreAuto device-tree. Also add
-a function to the imx-weim probe to set GPIO5 to drive the pad.
+> This is great!  The way I had it working was using Pantelis' devicetree
+> configfs interface.
 
-Signed-off-by: Alison Chaiken <alison_chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
----
- Documentation/devicetree/bindings/bus/imx-weim.txt | 10 +++++
- arch/arm/boot/dts/imx6qdl-sabreauto.dtsi           |  1 +
- drivers/bus/imx-weim.c                             | 46 ++++++++++++++++++++++
- 3 files changed, 57 insertions(+)
+I figured you were very close to this already in your overlay work..
+ 
+> The DT fragment described the FPGA logic and included a filename
+> for firmware to load. In another branch of this thread, I see discussion
+> starting on what the overlay should look like and whether it could somehow
+> contain the DT itself.
 
-diff --git a/Documentation/devicetree/bindings/bus/imx-weim.txt b/Documentation/devicetree/bindings/bus/imx-weim.txt
-index 6630d84..359fb26 100644
---- a/Documentation/devicetree/bindings/bus/imx-weim.txt
-+++ b/Documentation/devicetree/bindings/bus/imx-weim.txt
-@@ -59,6 +59,15 @@ Timing property for child nodes. It is mandatory, not optional.
- 			there are six registers: CSxGCR1, CSxGCR2, CSxRCR1,
- 			CSxRCR2, CSxWCR1, CSxWCR2.
- 
-+Steering property for child nodes is optional.  Steering is needed if
-+the bootloader doesn't set the GPIOs driving the EIM switch to connect
-+the WEIM to the CPU rather than to the peripherals with which the WEIM
-+has a pin conflict.
-+
-+ - fsl,steering-gpios:  For i.mx6q-sabreauto, the connectivity of CPU
-+			pins EIM_D18 and EIM_D30 can be controlled via
-+			GPIOs.
-+
- Example for an imx6q-sabreauto board, the NOR flash connected to the WEIM:
- 
- 	weim: weim@021b8000 {
-@@ -76,6 +85,7 @@ Example for an imx6q-sabreauto board, the NOR flash connected to the WEIM:
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			bank-width = <2>;
-+			fsl,steering-gpios = <&gpio5 4 GPIO_ACTIVE_LOW>;
- 			fsl,weim-cs-timing = <0x00620081 0x00000001 0x1c022000
- 					0x0000c000 0x1404a38e 0x00000000>;
- 		};
-diff --git a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
-index 009abd6..e1429c5 100644
---- a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
-@@ -454,5 +454,6 @@
- 		bank-width = <2>;
- 		fsl,weim-cs-timing = <0x00620081 0x00000001 0x1c022000
- 				0x0000c000 0x1404a38e 0x00000000>;
-+		fsl,steering-gpios = <&gpio5 4 GPIO_ACTIVE_LOW>;
- 	};
- };
-diff --git a/drivers/bus/imx-weim.c b/drivers/bus/imx-weim.c
-index 0958b69..af3408e 100644
---- a/drivers/bus/imx-weim.c
-+++ b/drivers/bus/imx-weim.c
-@@ -14,6 +14,8 @@
- #include <linux/mfd/syscon.h>
- #include <linux/mfd/syscon/imx6q-iomuxc-gpr.h>
- #include <linux/regmap.h>
-+#include <linux/of_gpio.h>
-+#include <linux/gpio.h>
- 
- struct imx_weim_devtype {
- 	unsigned int	cs_count;
-@@ -108,6 +110,43 @@ err:
- 	return -EINVAL;
- }
- 
-+/* set GPIOs to steer EIM CPU PADs to WEIM connection so that
-+ * cfi_qry_present() of attached NOR chip works properly */
-+static int __init steering_gpio_setup(struct device_node *np,
-+				struct device *parent)
-+{
-+	unsigned steering_gpio, level;
-+	enum of_gpio_flags of_flags;
-+	int ret;
-+
-+	steering_gpio = of_get_named_gpio_flags(np, "fsl,steering-gpios",
-+						0, &of_flags);
-+
-+	/* this child requires no pin steering */
-+	if (!steering_gpio)
-+		return 0;
-+
-+	if (gpio_is_valid(steering_gpio)) {
-+		ret = devm_gpio_request_one(parent, steering_gpio,
-+					GPIOF_DIR_OUT, "steering-gpio");
-+	} else {
-+		ret = -ENODEV;
-+		goto out;
-+	}
-+
-+	if (ret < 0)
-+		goto out;
-+
-+	level = ((of_flags == OF_GPIO_ACTIVE_LOW) ? 0 : 1);
-+
-+	gpio_set_value(steering_gpio, level);
-+
-+	return 0;
-+out:
-+	dev_err(parent, "Unable to request steering GPIO.\n");
-+	return ret;
-+}
-+
- /* Parse and set the timing for this device. */
- static int __init weim_timing_setup(struct device_node *np, void __iomem *base,
- 				    const struct imx_weim_devtype *devtype)
-@@ -160,6 +199,13 @@ static int __init weim_parse_dt(struct platform_device *pdev,
- 				child->full_name);
- 			return ret;
- 		}
-+
-+		ret = steering_gpio_setup(child, &pdev->dev);
-+		if (ret) {
-+			dev_err(&pdev->dev, "%s steering gpios setup failed.\n",
-+				child->full_name);
-+			return ret;
-+		}
- 	}
- 
- 	ret = of_platform_populate(pdev->dev.of_node,
--- 
-2.1.4
+It is a novel idea, my concern would be that embedding the FPGA in the
+DT makes it permanent unswappable kernel memory.
 
+Not having the kernel hold the FPGA is best for many uses.
+
+Having the kernel hold the FPGA as a swppable file handle/mmap of some
+sort is next best (obviously the fs must be operating during resume)
+
+Unswappable kernel memory is the worst choice
+
+> Long ago this driver started out with a /dev interface.  It didn't have
+> an ioctl yet at that point, but programming the fpga was by opening
+> the devnode and writing to it.  Greg KH preferred sysfs or configfs
+> over adding another ioctl:
+
+I think to justify the ioctls you need a reason to have the context
+of a FD. sysfs is stateless, so if my process dies the kernel doesn't
+know.
+
+But now that we are talking about adding locking and ownership
+concepts a FD is the natural anchor for that in user space.
+
+Ie, if I open the dev node, program a FPGA and then crash the kernel
+doesn't attach drivers, and immediately de-programs the
+chip. Userspace has to make it all the way through to the DT bind
+before the FPGA lifetime would exceed the FD.
+
+> https://lkml.org/lkml/2013/10/8/677
+
+I think Greg's reply makes sense in the context of the question being
+asked. Thinking of the FPGA as lockable ref counted kind of resource
+changes the question somewhat.
+
+Identifying the ioctls needed would probably clarify things. My
+rough start would be 
+
+- Get status: programed, not programmed, error?
+  Bitfile type? (eg Xilinx has nearly every permutation of bit/byte
+  ordering)
+- Start Program with with some kind of context (ie this a new bit
+  file, partial reconfiguration basis X, partial reconfiguration
+  overlay on X)
+- for (;;) write() to do programming
+- Get Error to return detailed failure information (CRC error,
+  auth error, etc)
+- Hand over to a DT overlay (how does this work?) Lock transfers
+  from FD to kernel
+
+-  .. something something VFIO .. ?
+
+Where start program is refused if the FPGA is already locked, and
+  locks it 
+Where start program -> close() returns the FPGA back to reset and
+  unlocks
+Where start program -> hand over -> close() keeps the FPGA loaded with
+ kernel drivers attached and fpga locked (remove the overlay to
+ de-program and unlock)
+
+Not sure exactly how to tie together DT overlays with the FPGA state,
+but that seems the natural combination..
+
+Not sure about partial reconfiguration - clearly the kernel needs to
+know and check that the bitfiles are of the correct family, I wonder
+if the approach should be to program a basis on the FPGA which then
+creates a new FPGA device in the system that can accept the partial
+reconfiguration - this way the locking makes sense, the basis is
+locked by the kernel and devices and the overlay remains
+lockable/swappable/whatever by a dedicated /dev/ node ??
+
+Just thinking aloud, I've never had a use case for partial
+reconfiguration.
+
+Jason
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
