@@ -1,72 +1,41 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH] i.MX6-SabreAuto: EIM: pull PAD_EIM_D18 low for NOR probe
-Date: Thu, 15 Jan 2015 08:56:46 +0100
-Message-ID: <20150115075646.GM23940@pengutronix.de>
-References: <1421278609-8446-1-git-send-email-alison_chaiken@mentor.com>
- <20150115000334.GA9759@ld-irv-0074>
+From: arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org (Arnaud Ebalard)
+Subject: Re: [PATCHv0 2/3] rtc: Add support for Abracon AB-RTCMC-32.768kHz-B5ZE-S3 I2C RTC chip
+Date: Thu, 15 Jan 2015 09:02:23 +0100
+Message-ID: <87h9vsqxo0.fsf@natisbad.org>
+References: <cover.1421045942.git.arno@natisbad.org>
+	<1ae63ab80cfb39305884bd0c2648a420ba3bc0a5.1421045942.git.arno@natisbad.org>
+	<20150114165557.d44c5752.akpm@linux-foundation.org>
+	<20150114170343.6f8d807a.akpm@linux-foundation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150115000334.GA9759@ld-irv-0074>
+In-Reply-To: <20150114170343.6f8d807a.akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org> (Andrew
+	Morton's message of "Wed, 14 Jan 2015 17:03:43 -0800")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: alison-hh6fLRYtCEIS+FvcfC7Uqw@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alison_chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org, shijie8-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+To: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Peter Huewe <peter.huewe-d0qZbvYSIPpWk0Htik3J/w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 14, 2015 at 04:03:34PM -0800, Brian Norris wrote:
-> + linux-arm-kernel, maintainers, devicetree
-> 
-> Shawn, Sascha: should this driver be listed under the Freescale IMX
-> MAINTAINERS entry?
+Hi Andrew,
 
-This driver is purely i.MX, so yes, that would be good.
+Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org> writes:
 
-> 
-> On Wed, Jan 14, 2015 at 03:36:49PM -0800, alison-hh6fLRYtCEIS+FvcfC7Uqw@public.gmane.org wrote:
-> > From: Alison Chaiken <alison_chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-> > 
-> > PAD_EIM_D18 must be pulled low at boot in order for the parallel NOR
-> > connected to the EIM switch to probe properly.  Otherwise
-> > cfi_qry_present() may return "U-V-]" rather than "Q-R-Y" if the
-> > PAD_EIM_D18 is high.  Add a nor-gpios property to the nor node in the
-> > SabreAuto device-tree and add a function to the imx-weim probe to set
-> > GPIO5 to drive the pad.
-> > 
-> > Signed-off-by: Alison Chaiken <alison_chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-> > ---
-> >  arch/arm/boot/dts/imx6qdl-sabreauto.dtsi |  1 +
-> >  drivers/bus/imx-weim.c                   | 43 ++++++++++++++++++++++++++++++++
-> >  2 files changed, 44 insertions(+)
-> > 
-> > diff --git a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
-> > index 009abd6..dd5e3bc 100644
-> > --- a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
-> > +++ b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
-> > @@ -454,5 +454,6 @@
-> >  		bank-width = <2>;
-> >  		fsl,weim-cs-timing = <0x00620081 0x00000001 0x1c022000
-> >  				0x0000c000 0x1404a38e 0x00000000>;
-> > +		nor-gpios = <&gpio5 4 GPIO_ACTIVE_LOW>;
-> 
-> Such a binding needs to be documented. Also, if it's going to be named
-> generically like that, it needs to be generically useful and supported
-> under MTD code, not platform-specific bus code.
-> 
-> So what pin is this, exactly? A write-protect pin? An address pin? A
-> toaster control, where the toaster is keeping the flash too hot?
+> On Wed, 14 Jan 2015 16:55:57 -0800 Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org> wrote:
+>
+>> Something like this?
+>
+> Leading to changes in [3/3].  Please have a think about where we should
+> be calling device_init_wakeup(dev, false) on the error recovery path.
+>
+> Let me know if I should just drop it all and await a v2...
 
-Yeah, the gpio should probably be named after the input pin on the flash
-where it's connected to. Otherwise people just use this property for any
-GPIO they need to put in a certain direction.
+I'll work on a v2 to handle your comments and suggestions. I will also
+take into account the other comment I got regarding the use of "abracon"
+instead of "abcn" as vendor prefix for Abracon Corporation.
 
-Sascha
+Thanks for the review.
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+a+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
