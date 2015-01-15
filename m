@@ -1,82 +1,44 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [RFC 0/3] mmc: Add dynamic frequency scaling
-Date: Thu, 15 Jan 2015 09:20:05 +0100
-Message-ID: <CAPDyKFpGiaDJ3zjCSSbcia6iLS2+FLBRjGAheQAzvFsAkJax+A@mail.gmail.com>
-References: <1421054585-9032-1-git-send-email-k.kozlowski@samsung.com>
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 1/5] rtc: armada38x: Add the device tree binding
+ documentation
+Date: Thu, 15 Jan 2015 09:24:17 +0100
+Message-ID: <20150115092417.1db53b82@free-electrons.com>
+References: <1421257155-3379-1-git-send-email-gregory.clement@free-electrons.com>
+	<1421257155-3379-2-git-send-email-gregory.clement@free-electrons.com>
+	<20150114202252.457d328e@free-electrons.com>
+	<54B7712F.2090509@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1421054585-9032-1-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Chris Ball <chris@printf.net>, Jaehoon Chung <jh80.chung@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mmc <linux-mmc@vger.kernel.org>, Kukjin Kim <kgene@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54B7712F.2090509-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-+ Mike, Stephen (Clock maintainers)
+Dear Gregory CLEMENT,
 
-On 12 January 2015 at 10:23, Krzysztof Kozlowski
-<k.kozlowski@samsung.com> wrote:
-> Hi,
->
->
-> I would like to hear some comments about idea of scaling MMC clock
-> frequency. The basic idea is to lower the clock when device is
-> completely idle or not busy enough.
+On Thu, 15 Jan 2015 08:50:07 +0100, Gregory CLEMENT wrote:
 
-We already have host drivers that implements runtime PM support.
-Typically that would mean the clock will be gated once the device
-becomes runtime PM suspended.
+> > Any reason to use <0x184A0 0xC> instead of <0x184A8 0x4> ? According to
+> > the datasheet, there is only this 184A8 register for RTC stuff.
+> 
+> Yes but according to the code I saw there were other registers related to the RTC
+> from 0x184A0. Even if we don't use them now I prefer having an accurate mapping from
+> the beginning for avoiding using negative offset as we needed to do in the past.
 
-Why should we decrease the frequency of an already gated clock?
+So I presume you mean that there are undocumented registers, since I
+didn't see them in the datasheet. Is this correct?
 
-I think this boils done to how DVFS transitions can be triggered from
-the clock drivers, right?
+Thanks,
 
-Currently the clock framework supports this through clock rate change
-notifiers. Should we have clock notifiers for clk_prepare|unprepare()
-as well? I do remember that someone posted patches for that a while
-ago, but those were rejected.
-
-Mike, Stephen - comments?
-
-Kind regards
-Uffe
-
->
-> The patchset adds MMC card as a devfreq device and uses simple_ondemand
-> as governor. In idle this gave benefits (less energy consumed during
-> idle):
-> 1. Trats2 (Exynos4412): 2.6%
-> 2. Rinato (Exynos3250): 1%
->
-> but (especially on Rinato) it had impact on performance (probably
-> because ondemand triggering a little to late). What is interesting
-> manually changing the clock (without this patchset) gave slightly
-> bigger benefits. Maybe the devfreq introduces noticeable overhead?
->
->
-> Comments are welcomed. Maybe on other platforms this has bigger impact?
->
-> Best regards,
-> Krzysztof
->
->
-> Krzysztof Kozlowski (3):
->   mmc: Add dynamic frequency scaling
->   ARM: dts: Specify MSHC realistic clocks and use frequency scaling
->   ARM: dts: Use frequency scaling for MSHC
->
->  Documentation/devicetree/bindings/mmc/mmc.txt |   2 +
->  arch/arm/boot/dts/exynos3250-rinato.dts       |   1 +
->  arch/arm/boot/dts/exynos4412-trats2.dts       |   4 +-
->  drivers/mmc/card/block.c                      | 247 ++++++++++++++++++++++++++
->  drivers/mmc/core/Kconfig                      |  16 ++
->  drivers/mmc/core/core.h                       |   1 -
->  drivers/mmc/core/host.c                       |   2 +
->  include/linux/mmc/card.h                      |   8 +
->  include/linux/mmc/host.h                      |   3 +
->  9 files changed, 282 insertions(+), 2 deletions(-)
->
-> --
-> 1.9.1
->
+Thomas
+-- 
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
