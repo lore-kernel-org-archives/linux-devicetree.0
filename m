@@ -1,72 +1,81 @@
-From: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
-Subject: Re: [PATCH v8 2/4] fpga manager: add sysfs interface document
-Date: Thu, 15 Jan 2015 11:36:17 +0000
-Message-ID: <20150115113617.537965b3@lxorguk.ukuu.org.uk>
-References: <20150107084819.GA1887@amd>
- <alpine.DEB.2.02.1501091302370.30067@linuxheads99>
- <20150109205643.GA5761@amd>
- <20150112210134.687176ed@lxorguk.ukuu.org.uk>
- <20150112214314.GA18610@obsidianresearch.com>
- <20150113162847.2778b5a5@lxorguk.ukuu.org.uk>
- <20150113200032.GA16205@obsidianresearch.com>
- <alpine.DEB.2.02.1501131455130.30192@linuxheads99>
- <20150113222450.GA17475@obsidianresearch.com>
- <20150114160617.02fb9135@lxorguk.ukuu.org.uk>
- <20150114181258.GB16392@obsidianresearch.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v3 1/5] rtc: armada38x: Add the device tree binding
+ documentation
+Date: Thu, 15 Jan 2015 11:39:47 +0000
+Message-ID: <20150115113947.GC16217@leverpostej>
+References: <1421318826-27268-1-git-send-email-gregory.clement@free-electrons.com>
+ <1421318826-27268-2-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20150114181258.GB16392@obsidianresearch.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Cc: mark.rutland@arm.com, linux-doc@vger.kernel.org, rubini@gnudd.com, pantelis.antoniou@konsulko.com, hpa@zytor.com, s.trumtrar@pengutronix.de, devel@driverdev.osuosl.org, sameo@linux.intel.com, nico@linaro.org, ijc+devicetree@hellion.org.uk, michal.simek@xilinx.com, kyle.teske@ni.com, grant.likely@linaro.org, davidb@codeaurora.org, linus.walleij@linaro.org, cesarb@cesarb.net, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, iws@ovro.caltech.edu, atull <atull@opensource.altera.com>, galak@codeaurora.org, broonie@kernel.org, philip@balister.org, dinguyen@opensource.altera.com, monstr@monstr.eu, gregkh@linuxfoundation.org, yvanderv@opensource.altera.com, linux-kernel@vger.kernel.org, balbi@ti.com, delicious.quinoa@gmail.com, robh+dt@kernel.org, rob@landley.net, Pavel Machek <pavel@denx.de>, akpm@linux-foundation.org, davem@davemloft.net, m.chehab@samsung.c
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1421318826-27268-2-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, "rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 14 Jan 2015 11:12:58 -0700
-Jason Gunthorpe <jgunthorpe@obsidianresearch.com> wrote:
-
-> On Wed, Jan 14, 2015 at 04:06:17PM +0000, One Thousand Gnomes wrote:
+On Thu, Jan 15, 2015 at 10:47:02AM +0000, Gregory CLEMENT wrote:
+> The Armada 38x SoCs come with a new RTC which differs from the one
+> used in the other mvebu SoCs until now. This patch describes the
+> binding of this RTC.
 > 
-> > and I think you effectively have the user usage covered here for such
-> > things. It much like GPIO pins - we can describe them but we can also
-> > declare they are not visible to the user.
+> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  .../devicetree/bindings/rtc/armada-380-rtc.txt     | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/rtc/armada-380-rtc.txt
 > 
-> A missing element in mainline is a kind of VFIO scheme to let user
-> space access the FPGA registers designated for user space use.
+> diff --git a/Documentation/devicetree/bindings/rtc/armada-380-rtc.txt b/Documentation/devicetree/bindings/rtc/armada-380-rtc.txt
+> new file mode 100644
+> index 000000000000..e6fe29bda608
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/rtc/armada-380-rtc.txt
+> @@ -0,0 +1,22 @@
+> +* Real Time Clock of the Armada 38x SoCs
+> +
+> +RTC controller for the Armada 38x SoCs
+> +
+> +Required properties:
+> +- compatible : Should be "marvell,armada-380-rtc"
+> +- reg: physical base address of the controller and length of memory
+> +  mapped region, associated to the reg-name "rtc". The other entry is
+> +  related to the interrupt control from the SoC, associated to the
+> +  reg-name "soc-int".
+> +- reg-names: names of the mapped memory regions listed in reg property
+> +    in the same order: "rtc" and "soc-int".
 
-Agreed entirely.
+It would be nicer if reg were defined in terms of reg-names to avoid
+redundancy, e.g.
 
-> A fixed bus interface block and dynamic reconfiguration for the
-> remainder is probably the way to manage that. But, that implies that
-> even a family of swappable FPGAs will have a DT overlay associated
-> with it.
+- reg: a list of base address and size pairs, one for each entry in
+  reg-names
+- reg names: should contain:
+  * "rtc" for the RTC registers
+  * "soc-int" for the interrutp control registers.
 
-Or some other resource, it could be described by PCI but something is
-going to need to describe it when we get to that state and something
-will need to set up the IOMMU for it and potentially manage virtualising
-it or assigning it to things like docker instances.
- 
-> Ideally, I could see wanting to have a file format that combines the
-> overlay and FPGA bitfile. A loader tool would use the /dev/ interface
-> to setup both elements. That would be much more robust than the
-> current scheme I see (eg Xilinx) using where the bitfile and DT bit
-> live in completely different places and have to be perfectly matched.
+That said, what are the "soc-int" registers, and why does the RTC driver
+need to poke them? It looks like they're for a separate component (i.e.
+the interrupt controller).
 
-yes - there is a model for this in Linux already. Some of the audio
-subsystems have "firmware" files distributed which are actually a
-structured file that userspace parses to get a real set of firmware for
-the controller and a set of descriptions for things like mixer controls.
+Thanks,
+Mark.
 
-They have the same basic problem - when you change firmware your control
-interfaces may change so you need both descriptions together.
-
-Alan
+> +- interrupts: IRQ line for the RTC.
+> +
+> +Example:
+> +
+> +rtc@a3800 {
+> +	compatible = "marvell,armada-380-rtc";
+> +	reg = <0xa3800 0x20>, <0x184a0 0x0c>;
+> +	reg-names = "rtc", "soc-int";
+> +	interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
+> +};
+> -- 
+> 1.9.1
+> 
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
