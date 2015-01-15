@@ -1,113 +1,64 @@
-From: "Dr. H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH 1/3] input: tsc2007: Add pre-calibration, flipping and rotation
-Date: Thu, 15 Jan 2015 17:14:38 +0100
-Message-ID: <8B08216C-13DD-40D8-9BA9-060F1C18A018@goldelico.com>
-References: <1412108254-19234-1-git-send-email-marek@goldelico.com> <1412108254-19234-2-git-send-email-marek@goldelico.com> <CAAfyv36bD9ZratOzr7FkeQde8k-K9XjEjH9gkntm9qewD-cH9g@mail.gmail.com> <20150115005938.GB9134@dtor-ws> <0F9A17C1-9B01-4EE9-BE98-266B8FC02B84@goldelico.com> <20150115143855.GD512@earth.universe>
-Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150115143855.GD512@earth.universe>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Belisko Marek <marek.belisko@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-input@vger.kernel.org, Marek Belisko <marek@goldelico.com>, Jonathan Richardson <jonathar@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Yoichi Yuasa <yuasa@linux-mips.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, List
+From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Subject: [PATCH v2 11/11] ASoC: tegra: add sink for the
+	internal mic to tegra_max98090
+Date: Thu, 15 Jan 2015 17:12:23 +0100
+Message-ID: <1421338359-27467-12-git-send-email-tomeu.vizoso@collabora.com>
+References: <1421338359-27467-1-git-send-email-tomeu.vizoso@collabora.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1421338359-27467-1-git-send-email-tomeu.vizoso@collabora.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: linux-tegra@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Ulf Hansson <ulf.hansson@linaro.org>, Wolfram Sang <wsa@the-dreams.de>, Takashi Iwai <tiwai@suse.de>, alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Lars-Peter Clausen <lars@metafoo.de>, Stephen Warren <swarren@wwwdotorg.org>, Dylan Reid <dgreid@chromium.org>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Simon Glass <sjg@chromium.org>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, Kumar Gala <galak@codeaurora.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
+This is used in the Tegra-based Chromebooks.
 
-Am 15.01.2015 um 15:38 schrieb Sebastian Reichel <sre@kernel.org>:
+Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+---
+ Documentation/devicetree/bindings/sound/nvidia,tegra-audio-max98090.txt | 1 +
+ sound/soc/tegra/tegra_max98090.c                                        | 2 ++
+ 2 files changed, 3 insertions(+)
 
-> Hi,
->=20
-> On Thu, Jan 15, 2015 at 08:36:44AM +0100, Dr. H. Nikolaus Schaller wr=
-ote:
->>> 1. Perform conversion in input core rather than individual drivers.=
- I
->>> think we should allocate a new bitmaps for some transformations and=
- have
->>> the code do X/Y flip/clip of the coordinates.
->>=20
->> Do you have a suggestion where this should be (I have no clue how
->> the input system works or is structured - we just know how to extend=
- a
->> driver that uses it)?
->>=20
->>> 2. Standardize on bindings. We already have of-touchscreen.c doing
->>> rudimentary parsing, we shoudl look into extending it rather than
->>> creating myriad of driver-specific bindings.
->>=20
->> Ok, looks reasonable.
->=20
-> Documentation is in=20
->=20
-> Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
-
-I did look into it now. Unfortunately, it does not fit well into my vie=
-w of how bindings
-should be. They should describe hardware (as we are told for many other=
- kernel
-subsystems).
-
-Pixels and resolutions are IMHO related to the screen it is glued on - =
-and that is
-quite independent.
-
-So I don=92t see how they do describe the different ways the touch scre=
-en can be
-wired to a tsc2007 controller.
-
-Please can you add minimum and maximum properties for us?
-
-Then, inverted-x and inverted-y is redundant because it is the same as =
-having
-an expected higher value from the ADC for the minimum coordinate and a =
-lower
-for the maximum.
-
->=20
->>> Also, do we need swap and flip or do we simply need rotation (like =
-the
->>> proposed Broadcom iproc driver has)?
->>=20
->> Well, since the DT should describe hardware, there are 3 sets of wir=
-es which
->> can have a cross-over: X+ and X-, Y+ and Y-, X and Y.
->>=20
->> So IMHO hardware has no =93rotation=94, just crossover of wires. Rot=
-ation is an
->> interpretation of the result of these connections in combination wit=
-h some
->> panel the touch is glued to and should therefore not be represented =
-in the DT.
->>=20
->> As a result we have proposed a scheme without explicit rotation. We =
-specify what
->> coordinates X- and X+ should report at their ends (min, max) because=
- the DT
->> programmer has to specify them anyways. Flipping is a result of defi=
-ning these
->> coordinates in an ascending or descending way. Only swapping of the =
-X and Y
->> wires can=92t be implicitly defined so it has its own property. So t=
-he scheme we
->> have proposed tries to optimize the efforts needed to adapt new boar=
-ds and write
->> DTs and focus the DT on hardware description.
->>=20
->> As a bonus we also specify the min and max value to be reported for =
-the touch
->> pressure (Z axis) using the same basic principle.
->>=20
->> And it is a pure add-on on top of the existing driver so that it att=
-empts not
->> to break existing device trees.
->=20
-> from what I can see there are no in-tree-users using any of the
-> new properties.
->=20
->> Maybe could you accept it as a first step for this specific driver (=
-and let=92s do
->> the big standardization work later on)?
->=20
-> That does not work, since you create an ABI.
->=20
-> -- Sebastian
+diff --git a/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-max98090.txt b/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-max98090.txt
+index c949abc..c3495be 100644
+--- a/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-max98090.txt
++++ b/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-max98090.txt
+@@ -18,6 +18,7 @@ Required properties:
+   * Headphones
+   * Speakers
+   * Mic Jack
++  * Int Mic
+ 
+ - nvidia,i2s-controller : The phandle of the Tegra I2S controller that's
+   connected to the CODEC.
+diff --git a/sound/soc/tegra/tegra_max98090.c b/sound/soc/tegra/tegra_max98090.c
+index 8df71a4..29ea87c 100644
+--- a/sound/soc/tegra/tegra_max98090.c
++++ b/sound/soc/tegra/tegra_max98090.c
+@@ -133,11 +133,13 @@ static const struct snd_soc_dapm_widget tegra_max98090_dapm_widgets[] = {
+ 	SND_SOC_DAPM_HP("Headphones", NULL),
+ 	SND_SOC_DAPM_SPK("Speakers", NULL),
+ 	SND_SOC_DAPM_MIC("Mic Jack", NULL),
++	SND_SOC_DAPM_MIC("Int Mic", NULL),
+ };
+ 
+ static const struct snd_kcontrol_new tegra_max98090_controls[] = {
+ 	SOC_DAPM_PIN_SWITCH("Headphones"),
+ 	SOC_DAPM_PIN_SWITCH("Speakers"),
++	SOC_DAPM_PIN_SWITCH("Int Mic"),
+ };
+ 
+ static int tegra_max98090_asoc_init(struct snd_soc_pcm_runtime *rtd)
+-- 
+1.9.3
