@@ -1,424 +1,112 @@
-From: Arnaud Ebalard <arno@natisbad.org>
-Subject: [PATCHv1 3/3] rtc: rtc-ab-b5ze-s3: Add sub-minute alarm support
-Date: Thu, 15 Jan 2015 22:30:40 +0100
-Message-ID: <849b2f470acfdd0da25fc35fccbf2f9b5bc4e55b.1421356414.git.arno@natisbad.org>
-References: <cover.1421356414.git.arno@natisbad.org>
+From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Subject: Re: [PATCH v8 2/4] fpga manager: add sysfs interface document
+Date: Thu, 15 Jan 2015 14:42:30 -0700
+Message-ID: <20150115214230.GD23247@obsidianresearch.com>
+References: <20150109205643.GA5761@amd>
+ <20150112210134.687176ed@lxorguk.ukuu.org.uk>
+ <20150112214314.GA18610@obsidianresearch.com>
+ <20150113162847.2778b5a5@lxorguk.ukuu.org.uk>
+ <20150113200032.GA16205@obsidianresearch.com>
+ <alpine.DEB.2.02.1501131455130.30192@linuxheads99>
+ <20150113222450.GA17475@obsidianresearch.com>
+ <alpine.DEB.2.02.1501150936390.16760@linuxheads99>
+ <20150115184726.GA23247@obsidianresearch.com>
+ <20150115204502.591bca1d@lxorguk.ukuu.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <cover.1421356414.git.arno@natisbad.org>
+Content-Disposition: inline
+In-Reply-To: <20150115204502.591bca1d@lxorguk.ukuu.org.uk>
 Sender: linux-doc-owner@vger.kernel.org
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Peter Huewe <peter.huewe@infineon.com>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <treding@nvidia.com>, Mark Brown <broonie@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Rob Landley <rob@landley.net>, rtc-linux@googlegroups.com, Jason Cooper <jason@lakedaemon.net>, Guenter Roeck <linux@roeck-us.net>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+To: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
+Cc: atull <atull@opensource.altera.com>, gregkh@linuxfoundation.org, Pavel Machek <pavel@denx.de>, hpa@zytor.com, monstr@monstr.eu, michal.simek@xilinx.com, rdunlap@infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, pantelis.antoniou@konsulko.com, robh+dt@kernel.org, grant.likely@linaro.org, iws@ovro.caltech.edu, linux-doc@vger.kernel.org, broonie@kernel.org, philip@balister.org, rubini@gnudd.com, s.trumtrar@pengutronix.de, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, balbi@ti.com, m.chehab@samsung.com, davidb@codeaurora.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, linus.walleij@linaro.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devel@driverdev.osuosl.org, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yv
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Jan 15, 2015 at 08:45:02PM +0000, One Thousand Gnomes wrote:
 
-Abracon AB-RTCMC-32.768kHz-B5ZE-S3 alarm is only accurate to the minute.
-For that reason, UIE mode is currently not supported by the driver. But
-the device provides a watchdog timer which can be coupled with the alarm
-mechanism to extend support and provide sub-minute alarm capability.
+> > - Hand over to a DT overlay (how does this work?) Lock transfers
+> >   from FD to kernel
+> 
+> That bit isn't stateful so I would actually have expected something in
+> the kernel ABI along the lines of 
+> 
+>            request_fpga(blah)
+> 
+> which does
+> 
+>              if in use by user
+>                     EBUSY
+>              lock it (all user opens will fail)
+> 
+> and
+> 
+>             release_fpga(blah)
 
-This patch implements that extension. More precisely, it makes use of
-the watchdog timer for alarms which are less that four minutes in the
-future (with second accuracy) and use standard alarm mechanism for
-other alarms (with minute accuracy).
+I am imagining two ways to start a kernel FPGA, the in-kernel method
+triggered by a DT node:
 
-Signed-off-by: Arnaud Ebalard <arno@natisbad.org>
----
- drivers/rtc/rtc-ab-b5ze-s3.c | 291 ++++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 262 insertions(+), 29 deletions(-)
+  fpga = request_and_lock_fpga(of_get_fpga_controller(dev->of_node))
+  fw = request_firmat(of_get_fpga_firmware(dev->of_node));
+  fpga_program_fw(fpga, fw);
 
-diff --git a/drivers/rtc/rtc-ab-b5ze-s3.c b/drivers/rtc/rtc-ab-b5ze-s3.c
-index bbbf06f55e17..cfc2ef98d393 100644
---- a/drivers/rtc/rtc-ab-b5ze-s3.c
-+++ b/drivers/rtc/rtc-ab-b5ze-s3.c
-@@ -133,6 +133,7 @@ struct abb5zes3_rtc_data {
- 	int irq;
- 
- 	bool battery_low;
-+	bool timer_alarm; /* current alarm is via timer A */
- };
- 
- /*
-@@ -192,6 +193,22 @@ static int _abb5zes3_rtc_update_alarm(struct device *dev, bool enable)
- 	return ret;
- }
- 
-+/* Enable or disable timer (watchdog timer A interrupt generation) */
-+static int _abb5zes3_rtc_update_timer(struct device *dev, bool enable)
-+{
-+	struct abb5zes3_rtc_data *data = dev_get_drvdata(dev);
-+	int ret;
-+
-+	ret = regmap_update_bits(data->regmap, ABB5ZES3_REG_CTRL2,
-+				 ABB5ZES3_REG_CTRL2_WTAIE,
-+				 enable ? ABB5ZES3_REG_CTRL2_WTAIE : 0);
-+	if (ret)
-+		dev_err(dev, "%s: writing timer INT failed (%d)\n",
-+			__func__, ret);
-+
-+	return ret;
-+}
-+
- /*
-  * Note: we only read, so regmap inner lock protection is sufficient, i.e.
-  * we do not need driver's main lock protection.
-@@ -277,7 +294,92 @@ static int abb5zes3_rtc_set_time(struct device *dev, struct rtc_time *tm)
- 	return ret;
- }
- 
--static int abb5zes3_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alarm)
-+/*
-+ * Set provided TAQ and Timer A registers (TIMA_CLK and TIMA) based on
-+ * given number of seconds.
-+ */
-+static inline void sec_to_timer_a(u8 secs, u8 *taq, u8 *timer_a)
-+{
-+	*taq = ABB5ZES3_REG_TIMA_CLK_TAQ1; /* 1Hz */
-+	*timer_a = secs;
-+}
-+
-+/*
-+ * Return current number of seconds in Timer A. As we only use
-+ * timer A with a 1Hz freq, this is what we expect to have.
-+ */
-+static inline int sec_from_timer_a(u8 *secs, u8 taq, u8 timer_a)
-+{
-+	if (taq != ABB5ZES3_REG_TIMA_CLK_TAQ1) /* 1Hz */
-+		return -EINVAL;
-+
-+	*secs = timer_a;
-+
-+	return 0;
-+}
-+
-+/*
-+ * Read alarm currently configured via a watchdog timer using timer A. This
-+ * is done by reading current RTC time and adding remaining timer time.
-+ */
-+static int _abb5zes3_rtc_read_timer(struct device *dev,
-+				    struct rtc_wkalrm *alarm)
-+{
-+	struct abb5zes3_rtc_data *data = dev_get_drvdata(dev);
-+	struct rtc_time rtc_tm, *alarm_tm = &alarm->time;
-+	u8 regs[ABB5ZES3_TIMA_SEC_LEN + 1];
-+	unsigned long rtc_secs;
-+	unsigned int reg;
-+	u8 timer_secs;
-+	int ret;
-+
-+	/*
-+	 * Instead of doing two separate calls, because they are consecutive,
-+	 * we grab both clockout register and Timer A section. The latter is
-+	 * used to decide if timer A is enabled (as a watchdog timer).
-+	 */
-+	ret = regmap_bulk_read(data->regmap, ABB5ZES3_REG_TIM_CLK, regs,
-+			       ABB5ZES3_TIMA_SEC_LEN + 1);
-+	if (ret) {
-+		dev_err(dev, "%s: reading Timer A section failed (%d)\n",
-+			__func__, ret);
-+		goto err;
-+	}
-+
-+	/* get current time ... */
-+	ret = _abb5zes3_rtc_read_time(dev, &rtc_tm);
-+	if (ret)
-+		goto err;
-+
-+	/* ... convert to seconds ... */
-+	ret = rtc_tm_to_time(&rtc_tm, &rtc_secs);
-+	if (ret)
-+		goto err;
-+
-+	/* ... add remaining timer A time ... */
-+	ret = sec_from_timer_a(&timer_secs, regs[1], regs[2]);
-+	if (ret)
-+		goto err;
-+
-+	/* ... and convert back. */
-+	rtc_time_to_tm(rtc_secs + timer_secs, alarm_tm);
-+
-+	ret = regmap_read(data->regmap, ABB5ZES3_REG_CTRL2, &reg);
-+	if (ret) {
-+		dev_err(dev, "%s: reading ctrl reg failed (%d)\n",
-+			__func__, ret);
-+		goto err;
-+	}
-+
-+	alarm->enabled = !!(reg & ABB5ZES3_REG_CTRL2_WTAIE);
-+
-+err:
-+	return ret;
-+}
-+
-+/* Read alarm currently configured via a RTC alarm registers. */
-+static int _abb5zes3_rtc_read_alarm(struct device *dev,
-+				    struct rtc_wkalrm *alarm)
- {
- 	struct abb5zes3_rtc_data *data = dev_get_drvdata(dev);
- 	struct rtc_time rtc_tm, *alarm_tm = &alarm->time;
-@@ -286,7 +388,6 @@ static int abb5zes3_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alarm)
- 	unsigned int reg;
- 	int ret;
- 
--	mutex_lock(&data->lock);
- 	ret = regmap_bulk_read(data->regmap, ABB5ZES3_REG_ALRM_MN, regs,
- 			       ABB5ZES3_ALRM_SEC_LEN);
- 	if (ret) {
-@@ -340,13 +441,39 @@ static int abb5zes3_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alarm)
- 	alarm->enabled = !!(reg & ABB5ZES3_REG_CTRL1_AIE);
- 
- err:
-+	return ret;
-+}
-+
-+/*
-+ * As the Alarm mechanism supported by the chip is only accurate to the
-+ * minute, we use the watchdog timer mechanism provided by timer A
-+ * (up to 256 seconds w/ a second accuracy) for low alarm values (below
-+ * 4 minutes). Otherwise, we use the common alarm mechanism provided
-+ * by the chip. In order for that to work, we keep track of currently
-+ * configured timer type via 'timer_alarm' flag in our private data
-+ * structure.
-+ */
-+static int abb5zes3_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alarm)
-+{
-+	struct abb5zes3_rtc_data *data = dev_get_drvdata(dev);
-+	int ret;
-+
-+	mutex_lock(&data->lock);
-+	if (data->timer_alarm)
-+		ret = _abb5zes3_rtc_read_timer(dev, alarm);
-+	else
-+		ret = _abb5zes3_rtc_read_alarm(dev, alarm);
- 	mutex_unlock(&data->lock);
- 
- 	return ret;
- }
- 
--/* ALARM is only accurate to the minute (not the second) */
--static int abb5zes3_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alarm)
-+/*
-+ * Set alarm using chip alarm mechanism. It is only accurate to the
-+ * minute (not the second). The function expects alarm interrupt to
-+ * be disabled.
-+ */
-+static int _abb5zes3_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alarm)
- {
- 	struct abb5zes3_rtc_data *data = dev_get_drvdata(dev);
- 	struct rtc_time *alarm_tm = &alarm->time;
-@@ -355,7 +482,6 @@ static int abb5zes3_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alarm)
- 	struct rtc_time rtc_tm;
- 	int ret, enable = 1;
- 
--	mutex_lock(&data->lock);
- 	ret = _abb5zes3_rtc_read_time(dev, &rtc_tm);
- 	if (ret)
- 		goto err;
-@@ -397,18 +523,13 @@ static int abb5zes3_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alarm)
- 		}
- 	}
- 
--	/* Disable the alarm before modifying it */
--	ret = _abb5zes3_rtc_update_alarm(dev, 0);
--	if (ret < 0) {
--		dev_err(dev, "%s: unable to disable the alarm (%d)\n",
--			__func__, ret);
--		goto err;
--	}
--
--	/* Program alarm registers */
--	regs[0] = bin2bcd(alarm_tm->tm_min) & 0x7f;  /* minute */
--	regs[1] = bin2bcd(alarm_tm->tm_hour) & 0x3f; /* hour */
--	regs[2] = bin2bcd(alarm_tm->tm_mday) & 0x3f; /* day of the month */
-+	/*
-+	 * Program all alarm registers but DW one. For each register, setting
-+	 * MSB to 0 enables associated alarm.
-+	 */
-+	regs[0] = bin2bcd(alarm_tm->tm_min) & 0x7f;
-+	regs[1] = bin2bcd(alarm_tm->tm_hour) & 0x3f;
-+	regs[2] = bin2bcd(alarm_tm->tm_mday) & 0x3f;
- 	regs[3] = ABB5ZES3_REG_ALRM_DW_AE; /* do not match day of the week */
- 
- 	ret = regmap_bulk_write(data->regmap, ABB5ZES3_REG_ALRM_MN, regs,
-@@ -419,15 +540,115 @@ static int abb5zes3_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alarm)
- 		goto err;
- 	}
- 
--	/* Enable or disable alarm */
-+	/* Record currently configured alarm is not a timer */
-+	data->timer_alarm = 0;
-+
-+	/* Enable or disable alarm interrupt generation */
- 	ret = _abb5zes3_rtc_update_alarm(dev, enable);
- 
- err:
--	mutex_unlock(&data->lock);
-+	return ret;
-+}
-+
-+/*
-+ * Set alarm using timer watchdog (via timer A) mechanism. The function expects
-+ * timer A interrupt to be disabled.
-+ */
-+static int _abb5zes3_rtc_set_timer(struct device *dev, struct rtc_wkalrm *alarm,
-+				   u8 secs)
-+{
-+	struct abb5zes3_rtc_data *data = dev_get_drvdata(dev);
-+	u8 regs[ABB5ZES3_TIMA_SEC_LEN];
-+	u8 mask = ABB5ZES3_REG_TIM_CLK_TAC0 | ABB5ZES3_REG_TIM_CLK_TAC1;
-+	int ret = 0;
-+
-+	/* Program given number of seconds to Timer A registers */
-+	sec_to_timer_a(secs, &regs[0], &regs[1]);
-+	ret = regmap_bulk_write(data->regmap, ABB5ZES3_REG_TIMA_CLK, regs,
-+				ABB5ZES3_TIMA_SEC_LEN);
-+	if (ret < 0) {
-+		dev_err(dev, "%s: writing timer section failed\n", __func__);
-+		goto err;
-+	}
-+
-+	/* Configure Timer A as a watchdog timer */
-+	ret = regmap_update_bits(data->regmap, ABB5ZES3_REG_TIM_CLK,
-+				 mask, ABB5ZES3_REG_TIM_CLK_TAC1);
-+	if (ret)
-+		dev_err(dev, "%s: failed to update timer\n", __func__);
-+
-+	/* Record currently configured alarm is a timer */
-+	data->timer_alarm = 1;
- 
-+	/* Enable or disable timer interrupt generation */
-+	ret = _abb5zes3_rtc_update_timer(dev, alarm->enabled);
-+
-+err:
- 	return ret;
- }
- 
-+/*
-+ * The chip has an alarm which is only accurate to the minute. In order to
-+ * handle alarms below that limit, we use the watchdog timer function of
-+ * timer A. More precisely, the timer method is used for alarms below 240
-+ * seconds.
-+ */
-+static int abb5zes3_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alarm)
-+{
-+	struct abb5zes3_rtc_data *data = dev_get_drvdata(dev);
-+	struct rtc_time *alarm_tm = &alarm->time;
-+	unsigned long rtc_secs, alarm_secs;
-+	struct rtc_time rtc_tm;
-+	int ret;
-+
-+	mutex_lock(&data->lock);
-+	ret = _abb5zes3_rtc_read_time(dev, &rtc_tm);
-+	if (ret)
-+		goto err;
-+
-+	ret = rtc_tm_to_time(&rtc_tm, &rtc_secs);
-+	if (ret)
-+		goto err;
-+
-+	ret = rtc_tm_to_time(alarm_tm, &alarm_secs);
-+	if (ret)
-+		goto err;
-+
-+	/* Let's first disable both the alarm and the timer interrupts */
-+	ret = _abb5zes3_rtc_update_alarm(dev, false);
-+	if (ret < 0) {
-+		dev_err(dev, "%s: unable to disable alarm (%d)\n", __func__,
-+			ret);
-+		goto err;
-+	}
-+	ret = _abb5zes3_rtc_update_timer(dev, false);
-+	if (ret < 0) {
-+		dev_err(dev, "%s: unable to disable timer (%d)\n", __func__,
-+			ret);
-+		goto err;
-+	}
-+
-+	data->timer_alarm = 0;
-+
-+	/*
-+	 * Let's now configure the alarm; if we are expected to ring in
-+	 * more than 240s, then we setup an alarm. Otherwise, a timer.
-+	 */
-+	if ((alarm_secs > rtc_secs) && ((alarm_secs - rtc_secs) <= 240))
-+		ret = _abb5zes3_rtc_set_timer(dev, alarm,
-+					      alarm_secs - rtc_secs);
-+	else
-+		ret = _abb5zes3_rtc_set_alarm(dev, alarm);
-+
-+ err:
-+	mutex_unlock(&data->lock);
-+
-+	if (ret)
-+		dev_err(dev, "%s: unable to configure alarm (%d)\n", __func__,
-+			ret);
-+
-+	return ret;
-+ }
- 
- /* Enable or disable battery low irq generation */
- static inline int _abb5zes3_rtc_battery_low_irq_enable(struct regmap *regmap,
-@@ -446,7 +667,7 @@ static inline int _abb5zes3_rtc_battery_low_irq_enable(struct regmap *regmap,
- static int abb5zes3_rtc_check_setup(struct device *dev)
- {
- 	struct abb5zes3_rtc_data *data = dev_get_drvdata(dev);
--	struct regmap *regmap =  data->regmap;
-+	struct regmap *regmap = data->regmap;
- 	unsigned int reg;
- 	int ret;
- 	u8 mask;
-@@ -579,7 +800,10 @@ static int abb5zes3_rtc_alarm_irq_enable(struct device *dev,
- 
- 	if (rtc_data->irq) {
- 		mutex_lock(&rtc_data->lock);
--		ret = _abb5zes3_rtc_update_alarm(dev, enable);
-+		if (rtc_data->timer_alarm)
-+			ret = _abb5zes3_rtc_update_timer(dev, enable);
-+		else
-+			ret = _abb5zes3_rtc_update_alarm(dev, enable);
- 		mutex_unlock(&rtc_data->lock);
- 	}
- 
-@@ -629,6 +853,23 @@ static irqreturn_t _abb5zes3_rtc_interrupt(int irq, void *data)
- 		handled = IRQ_HANDLED;
- 	}
- 
-+	/* Check watchdog Timer A flag */
-+	if (regs[ABB5ZES3_REG_CTRL2] & ABB5ZES3_REG_CTRL2_WTAF) {
-+		dev_dbg(dev, "RTC timer!\n");
-+
-+		rtc_update_irq(rtc, 1, RTC_IRQF | RTC_AF);
-+
-+		/*
-+		 * Acknowledge and disable the alarm. Note: WTAF
-+		 * flag had been cleared when reading CTRL2
-+		 */
-+		_abb5zes3_rtc_update_timer(dev, 0);
-+
-+		rtc_data->timer_alarm = 0;
-+
-+		handled = IRQ_HANDLED;
-+	}
-+
- 	return handled;
- }
- 
-@@ -712,14 +953,6 @@ static int abb5zes3_probe(struct i2c_client *client,
- 		goto err;
- 	}
- 
--	/*
--	 * AB-B5Z5E only supports a coarse granularity alarm (one minute
--	 * resolution up to one month) so we cannot support UIE mode
--	 * using the device's alarm. Note it should be feasible to support
--	 * such a feature using one of the two timers the device provides.
--	 */
--	data->rtc->uie_unsupported = 1;
--
- 	/* Enable battery low detection interrupt if battery not already low */
- 	if (!data->battery_low && data->irq) {
- 		ret = _abb5zes3_rtc_battery_low_irq_enable(regmap, true);
--- 
-2.1.1
+  for_each_child_of_node(dev->of_node, child)
+    .. of_platform_bus_probe(child ... ) ..
 
+  .. somehow fpga and its lock transfer to dev->of_node ..
+
+The problem with this is it assumes the FPGA is ready to go
+immediately after fpga_program_fw. There are a few platforms that can
+manage this, but many others require at least some kind of startup
+sequence - eg wait for clocking PLLs to lock, do low level setup, etc.
+
+For very common cases (like Zynq can have a pretty common setup scheme
+for the PL side) the DT binding can guide the kernel to run the right
+code, and the code can live in the kernel because it is simple and
+broadly useful.
+
+For wild cases I'd like to just punt the setup code to user space. It
+is safer and simpler to run that complexity in a user process than in
+the kernel.
+
+Maybe there is a better way to handle this, but I have been under the
+impression that these days it is frowned on for the kernel to wait for
+userspace?
+
+So my idea is to use the user space method to also load a 'kernel'
+fpga, the process follows the kernel flow:
+
+   fd = open("/dev/fpga0"); // request_and_lock_fpga
+
+   ioctl(fd,START_PROGRAMMING); // fpga_program_fw
+   write(fd,fw,fw_size);
+   
+   // Arbitary complexity here
+   userspace_setup_fpga();
+
+   icotl(fd,BIND_DT_OVERLAY, .. ?? ..) // for_each_child_of_node
+
+This is what the state is about, if the setup fails I expect the
+kernel to go and unlock and deprogram the FPGA if fd is closed. Only a
+success on BIND_DT_OVERLAY will make the FPGA permanent beyond closing
+fd.
+
+Pantelis: I think this explains why a fd and ioctls. configfs, sysfs,
+etc lack the FD context to do the cleanup. 
+
+Essentially, I think a running FPGA should always be attached to some
+context that is the user - either the user is in-kernel (a DT of_node)
+or the user is in userspace (the fd).
+
+The invarient is - if there is no user then the kernel automatically
+makes the FPGA deprogrammed.
+
+Having a device that is potentially attached to the CPU bus running
+'rouge' is dangerous. We can't realistically deprogram it safely if we
+don't know what it is doing. Eg deprogramming in the middle of a DMA
+operation between the CPU and FPGA will often crash the entire system.
+
+The only way to provide reasonable safe guards is to have a clear
+chain of ownership. When the kernel takes ownership of the FPGA it
+also takes ownership of any cleanup required prior to deprogram.
+
+Jason
