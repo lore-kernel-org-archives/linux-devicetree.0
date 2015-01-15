@@ -1,98 +1,65 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH 1/3] input: tsc2007: Add pre-calibration, flipping and
- rotation
-Date: Thu, 15 Jan 2015 15:38:55 +0100
-Message-ID: <20150115143855.GD512@earth.universe>
-References: <1412108254-19234-1-git-send-email-marek@goldelico.com>
- <1412108254-19234-2-git-send-email-marek@goldelico.com>
- <CAAfyv36bD9ZratOzr7FkeQde8k-K9XjEjH9gkntm9qewD-cH9g@mail.gmail.com>
- <20150115005938.GB9134@dtor-ws>
- <0F9A17C1-9B01-4EE9-BE98-266B8FC02B84@goldelico.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH v2] of: i2c: Add idle-disconnect DT property to PCA954x mux driver
+Date: Thu, 15 Jan 2015 16:40:12 +0200
+Message-ID: <2086954.CPkjLx72cS@avalon>
+References: <5494599A.8050803@nsn.com> <54B7BBF5.4010001@nsn.com> <20150115131935.GE2549@katana>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <0F9A17C1-9B01-4EE9-BE98-266B8FC02B84@goldelico.com>
-Sender: linux-input-owner@vger.kernel.org
-To: "Dr. H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Belisko Marek <marek.belisko@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-input@vger.kernel.org, Marek Belisko <marek@goldelico.com>, Jonathan Richardson <jonathar@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Yoichi Yuasa <yuasa@linux-mips.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, List
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150115131935.GE2549@katana>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, jdelvare-l3A5Bk7waGM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Lawnick Michael 61283229 <michael.lawnick-OYasijW0DpE@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Wolfram,
 
-On Thu, Jan 15, 2015 at 08:36:44AM +0100, Dr. H. Nikolaus Schaller wrot=
-e:
-> > 1. Perform conversion in input core rather than individual drivers.=
- I
-> > think we should allocate a new bitmaps for some transformations and=
- have
-> > the code do X/Y flip/clip of the coordinates.
->=20
-> Do you have a suggestion where this should be (I have no clue how
-> the input system works or is structured - we just know how to extend =
-a
-> driver that uses it)?
->=20
-> > 2. Standardize on bindings. We already have of-touchscreen.c doing
-> > rudimentary parsing, we shoudl look into extending it rather than
-> > creating myriad of driver-specific bindings.
->=20
-> Ok, looks reasonable.
-
-Documentation is in=20
-
-Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
-
-> > Also, do we need swap and flip or do we simply need rotation (like =
-the
-> > proposed Broadcom iproc driver has)?
->=20
-> Well, since the DT should describe hardware, there are 3 sets of wire=
-s which
-> can have a cross-over: X+ and X-, Y+ and Y-, X and Y.
+On Thursday 15 January 2015 14:19:35 Wolfram Sang wrote:
+> On Thu, Jan 15, 2015 at 02:09:09PM +0100, Alexander Sverdlin wrote:
+> > On 15/01/15 13:32, ext Wolfram Sang wrote:
+> >> On Fri, Dec 19, 2014 at 06:00:10PM +0100, Alexander Sverdlin wrote:
+> >>> of: i2c: Add idle-disconnect DT property to PCA954x mux driver
+> >>> 
+> >>> Add idle-disconnect device tree property to PCA954x mux driver. The new
+> >>> property forces the multiplexer to disconnect child buses in idle
+> >>> state. This is used, for example, when there are several multiplexers
+> >>> on the same bus and the devices on the underlying buses might have
+> >>> same I2C addresses.
+> >> 
+> >> Basically OK. Question to DT maintainers: "idle-disconnect",
+> >> "i2c-mux-idle-disconnect", or is there another existing binding we could
+> >> use?
+> >> 
+> >>> At the same time old (and not used in the tree) platform data binding
+> >>> deselect_on_exit is removed to simplify the implementation. Old binding
+> >>> has different (per-channel) semantics and doesn't fit well in the new
+> >>> concept.
+> >> 
+> >> I'd prefer to keep it. It should be only one || more. It is not really
+> >> in the way IMO.
+> > 
+> > It complicates the implementation 3x times :) This is part of our
+> > discussion with Laurent:
 >
-> So IMHO hardware has no =E2=80=9Crotation=E2=80=9D, just crossover of=
- wires. Rotation is an
-> interpretation of the result of these connections in combination with=
- some
-> panel the touch is glued to and should therefore not be represented i=
-n the DT.
->=20
-> As a result we have proposed a scheme without explicit rotation. We s=
-pecify what
-> coordinates X- and X+ should report at their ends (min, max) because =
-the DT
-> programmer has to specify them anyways. Flipping is a result of defin=
-ing these
-> coordinates in an ascending or descending way. Only swapping of the X=
- and Y
-> wires can=E2=80=99t be implicitly defined so it has its own property.=
- So the scheme we
-> have proposed tries to optimize the efforts needed to adapt new board=
-s and write
-> DTs and focus the DT on hardware description.
->=20
-> As a bonus we also specify the min and max value to be reported for t=
-he touch
-> pressure (Z axis) using the same basic principle.
->=20
-> And it is a pure add-on on top of the existing driver so that it atte=
-mpts not
-> to break existing device trees.
+> Does it? I don't want DT and platform_data to behave equally. I just
+> want to keep being backwards compatible. So, I'd suggest:
+> 
+> (pdata && pdata->modes[num].deselect_on_exit) || idle_disconnect ?
+> pca954x_deselect_mux : NULL);
+>
+> >> I'm not keen to brake out-of-tree code (if any), but may be it will be
+> >> decided to drop this per-channel deselect_on_exit, because it's not used
+> >> at least in the kernel tree...
+> 
+> I couldn't find a user of the platform_data, at all. But removing
+> platform_data support is a seperate patch, and deprecating platform_data
+> is a seperate and general issue IMO.
 
-from what I can see there are no in-tree-users using any of the
-new properties.
+Sure, but it could be a preliminary patch on top of which to add idle-
+disconnect DT support :-)
 
-> Maybe could you accept it as a first step for this specific driver (a=
-nd let=E2=80=99s do
-> the big standardization work later on)?
+-- 
+Regards,
 
-That does not work, since you create an ABI.
-
--- Sebastian
---
-To unsubscribe from this list: send the line "unsubscribe linux-input" =
-in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Laurent Pinchart
