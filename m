@@ -1,98 +1,135 @@
-From: "Dr. H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH 1/3] input: tsc2007: Add pre-calibration, flipping and rotation
-Date: Thu, 15 Jan 2015 19:49:52 +0100
-Message-ID: <0CD142CE-0BC3-4A86-AAFB-383805A81646@goldelico.com>
-References: <1412108254-19234-1-git-send-email-marek@goldelico.com> <1412108254-19234-2-git-send-email-marek@goldelico.com> <CAAfyv36bD9ZratOzr7FkeQde8k-K9XjEjH9gkntm9qewD-cH9g@mail.gmail.com> <20150115005938.GB9134@dtor-ws> <0F9A17C1-9B01-4EE9-BE98-266B8FC02B84@goldelico.com> <20150115143855.GD512@earth.universe> <8B08216C-13DD-40D8-9BA9-060F1C18A018@goldelico.com> <20150115181637.GE33214@dtor-ws>
-Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20150115181637.GE33214@dtor-ws>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Sebastian Reichel <sre@kernel.org>, Belisko Marek <marek.belisko@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-input@vger.kernel.org, Marek Belisko <marek@goldelico.com>, Jonathan Richardson <jonathar@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Yoichi Yuasa <yuasa@linux-mips.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, List
+From: NeilBrown <neilb@suse.de>
+Subject: Re: [PATCH V2 2/4] mmc: pwrseq: Document DT bindings for the simple
+ MMC power sequence
+Date: Fri, 16 Jan 2015 07:53:08 +1300
+Message-ID: <20150116075308.3f4e250a@notabene.brown>
+References: <1421240530-7971-1-git-send-email-ulf.hansson@linaro.org>
+	<1421240530-7971-3-git-send-email-ulf.hansson@linaro.org>
+	<20150115165825.GL16217@leverpostej>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ boundary="Sig_/G6QNO4ykORx7wMNJN/Q8qVO"; protocol="application/pgp-signature"
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20150115165825.GL16217@leverpostej>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Chris Ball <chris@printf.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Alexandre Courbot <gnurou@gmail.com>, Arend van Spriel <arend@broadcom.com>, Sascha Hauer <s.hauer@pengutronix.de>, Olof Johansson <olof@lixom.net>, Russell King <linux@arm.linux.org.uk>, Hans de Goede <hdegoede@redhat.com>, Doug Anderson <dianders@chromium.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>
 List-Id: devicetree@vger.kernel.org
 
+--Sig_/G6QNO4ykORx7wMNJN/Q8qVO
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Am 15.01.2015 um 19:16 schrieb Dmitry Torokhov <dmitry.torokhov@gmail.c=
-om>:
+On Thu, 15 Jan 2015 16:58:26 +0000 Mark Rutland <mark.rutland@arm.com> wrot=
+e:
 
-> On Thu, Jan 15, 2015 at 05:14:38PM +0100, Dr. H. Nikolaus Schaller wr=
-ote:
->>=20
->> Am 15.01.2015 um 15:38 schrieb Sebastian Reichel <sre@kernel.org>:
->>=20
->>> Hi,
->>>=20
->>> On Thu, Jan 15, 2015 at 08:36:44AM +0100, Dr. H. Nikolaus Schaller =
-wrote:
->>>>> 1. Perform conversion in input core rather than individual driver=
-s. I
->>>>> think we should allocate a new bitmaps for some transformations a=
-nd have
->>>>> the code do X/Y flip/clip of the coordinates.
->>>>=20
->>>> Do you have a suggestion where this should be (I have no clue how
->>>> the input system works or is structured - we just know how to exte=
-nd a
->>>> driver that uses it)?
->>>>=20
->>>>> 2. Standardize on bindings. We already have of-touchscreen.c doin=
-g
->>>>> rudimentary parsing, we shoudl look into extending it rather than
->>>>> creating myriad of driver-specific bindings.
->>>>=20
->>>> Ok, looks reasonable.
->>>=20
->>> Documentation is in=20
->>>=20
->>> Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
->>=20
->> I did look into it now. Unfortunately, it does not fit well into my =
-view of how bindings
->> should be. They should describe hardware (as we are told for many ot=
-her kernel
->> subsystems).
->>=20
->> Pixels and resolutions are IMHO related to the screen it is glued on=
- - and that is
->> quite independent.
+> Hi Ulf,
 >=20
-> Well, I think pixels was the wrong word to be used there. It is meant=
- to
-> be native units, as opposed to millimeters, inches, points, etc.
-
-ok.
-
+> On Wed, Jan 14, 2015 at 01:02:08PM +0000, Ulf Hansson wrote:
+> > The simple MMC power sequence provider, intends to supports a set of
+> > common properties between SOC designs. It thus enables us to re-use the
+> > same provider for several SOCs.
+> >=20
+> > In this initial step, let's add the top level description of the MMC
+> > power sequence and describe the compatible string for the simple MMC
+> > power sequence provider.
+> >=20
+> > Following patches will step by step add support for new properties to
+> > the simple MMC power sequence provider.
+> >=20
+> > Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+> > ---
+> >=20
+> > Changes in v2:
+> > 	- None.
+> >=20
+> > ---
+> >  .../devicetree/bindings/mmc/mmc,pwrseq-simple.txt      | 18 ++++++++++=
+++++++++
+> >  Documentation/devicetree/bindings/mmc/mmc.txt          |  5 +++++
+> >  2 files changed, 23 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/mmc/mmc,pwrseq-si=
+mple.txt
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/mmc/mmc,pwrseq-simple.tx=
+t b/Documentation/devicetree/bindings/mmc/mmc,pwrseq-simple.txt
+> > new file mode 100644
+> > index 0000000..e1b7f9c
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mmc/mmc,pwrseq-simple.txt
+> > @@ -0,0 +1,18 @@
+> > +* The simple MMC power sequence provider
+> > +
+> > +System on chip designs may specify a specific MMC power sequence. To
+> > +successfully detect an (e)MMC/SD/SDIO card, that power sequence must be
+> > +maintained while initializing the card.
+> > +
+> > +The simple MMC power sequence provider, intends to supports a set of c=
+ommon
+> > +properties between SOC designs. It thus enables us to re-use the same =
+provider
+> > +for several SOC designs.
+> > +
+> > +Required properties:
+> > +- compatible : contains "mmc,pwrseq-simple".
 >=20
->>=20
->> So I don=92t see how they do describe the different ways the touch s=
-creen can be
->> wired to a tsc2007 controller.
->>=20
->> Please can you add minimum and maximum properties for us?
->>=20
->> Then, inverted-x and inverted-y is redundant because it is the same =
-as having
->> an expected higher value from the ADC for the minimum coordinate and=
- a lower
->> for the maximum.
+> Nit: "mmc" is not a vendor prefix.
 >=20
-> I'd rather not add minimum and maximum, but add the touchscreen-start=
--x and
-> touchscreen-start-y instead so that we limit the number of obsolete
-> properties.
+> > +
+> > +Example:
+> > +
+> > +	sdhci0_pwrseq {
+> > +		compatible =3D "mmc,pwrseq-simple";
+> > +	}
+>=20
+> I'm a little confused here. What specific sequence is described by this
+> node? We don't appear to have referred to any resources used as part of
+> that sequence, and the description above only mentions that there could
+> be a specific sequence, not what that sequence is.
+>=20
+> So I don't think this makes sense on its own, and should probably be
+> folded with patches adding the initial support for the resources used as
+> part of the sequence (e.g. the GPIOs added in a later patch).
+>=20
 
-ok, that should not be too difficult to add.
+I guess I assumed that this "simple" referred to the current behaviour, whi=
+ch
+includes some of vmmc-supply, vqmmc-supply, vmmc_aux-supply and pbias-supply
+being switched at "appropriate" times.
 
-So we will modify our driver to use the new functions and align omap3-g=
-ta04.dtsi accordingly.
+Would it make sense to bring all of these explicitly under the "pwrseq"
+umbrella, leaving the current behaviour only when no pwrseq node is provide=
+d?
 
-BR,
-Nikolaus
+Also, it isn't clear to me whether the need for power/reset is a function of
+the mmc-host, or a function of the device attached to the host.  I suspect
+some are needed by one, some by the other.  Any by both?
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-input" =
-in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Should the two needs be kept separate?
+
+NeilBrown
+
+
+--Sig_/G6QNO4ykORx7wMNJN/Q8qVO
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIVAwUBVLgMlDnsnt1WYoG5AQKeLQ/8CJcQcQov+aWtrLwSzVT/KMrXfNICn37r
+Kofg3G2ZzVE/2gFvkc7VS/mvHIdvOXbg/F4MRNl+bbZ/0oTybXkFUE06xBK937+u
+5q6cc7IgFK4OUE3BXpgYuYln0PWswvJ9ec6fg/jFSzfAb6E7Oc8qimGLeGGfACcH
+/Uf7eIBDhvikC60djn/V7dQuUHFhq6j/7hIEtzf034wVF8VZvAljSWUsmsp2lPrl
+Ne5uJOD9feCiBYVkUUCzYazZr3ffLVLwDjwRhmKR8q2BUfyABW+o+jeSAV2As1Td
+PTPE/Qys06X3bhvV7Ue4ERd1bmxHgPU2agZYnuTPUw8N/XDB5dff+5ER2KTnExR5
+28qjq6jd2QzooPS/4rg9mr+eiXNx/Eslf+933mWhtjIIqdL2VktttP2ATrnyaWw6
++1cyNL1qIqDYFiEbMVQz+67l92iZdK79X8GNe8yfquEao2aT/FBP2ykv25zgo6W9
+UiaDdsGxGAVb1HRdwqiKYLp+/PvoDT9JhqJDbo3vhEvl/mr9gbw19K9PyPAi0WID
+FiOCE/p0j2DRcrfV5yYu6ysi/GrTj5BuAiy8L9nX7fq9we/HCXVf5VzFpBk+sWF4
+/s0RPH+NEZkl5o8ixPUWW1pAHTKpHccbNzkhKj3tew1Vz6Nuykjxzj24plNSwrSM
+2//4sYnYMMo=
+=FXOL
+-----END PGP SIGNATURE-----
+
+--Sig_/G6QNO4ykORx7wMNJN/Q8qVO--
