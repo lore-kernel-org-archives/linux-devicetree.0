@@ -1,149 +1,65 @@
-From: "Dr. H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH 1/3] input: tsc2007: Add pre-calibration, flipping and rotation
-Date: Thu, 15 Jan 2015 08:36:44 +0100
-Message-ID: <0F9A17C1-9B01-4EE9-BE98-266B8FC02B84@goldelico.com>
-References: <1412108254-19234-1-git-send-email-marek@goldelico.com> <1412108254-19234-2-git-send-email-marek@goldelico.com> <CAAfyv36bD9ZratOzr7FkeQde8k-K9XjEjH9gkntm9qewD-cH9g@mail.gmail.com> <20150115005938.GB9134@dtor-ws>
-Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 1/5] rtc: armada38x: Add the device tree binding documentation
+Date: Thu, 15 Jan 2015 08:50:07 +0100
+Message-ID: <54B7712F.2090509@free-electrons.com>
+References: <1421257155-3379-1-git-send-email-gregory.clement@free-electrons.com>	<1421257155-3379-2-git-send-email-gregory.clement@free-electrons.com> <20150114202252.457d328e@free-electrons.com>
+Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20150115005938.GB9134@dtor-ws>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Belisko Marek <marek.belisko@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-input@vger.kernel.org, Marek Belisko <marek@goldelico.com>, Jonathan Richardson <jonathar@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Yoichi Yuasa <yuasa@linux-mips.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, List for communicating with real GTA04 owners <gta04-owne>
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150114202252.457d328e-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Thomas,
 
-Am 15.01.2015 um 01:59 schrieb Dmitry Torokhov <dmitry.torokhov@gmail.c=
-om>:
+On 14/01/2015 20:22, Thomas Petazzoni wrote:
+> Dear Gregory CLEMENT,
+> 
+> On Wed, 14 Jan 2015 18:39:11 +0100, Gregory CLEMENT wrote:
+> 
+>> +Required properties:
+>> +- compatible : Should be "marvell,armada-380-rtc"
+>> +- reg: physical base address of the controller and length of memory
+>> +  mapped region, associated to the reg-name "rtc". The other entry is
+>> +  related to the interrupt control from the SoC, associated to the
+>> +  reg-name "soc-interrupt".
+> 
+> soc-interrupt or...
 
-> On Sat, Jan 10, 2015 at 03:15:39PM +0100, Belisko Marek wrote:
->> Ping for input maintainer. DT changes was acked. Thanks.
->>=20
->> On Tue, Sep 30, 2014 at 10:17 PM, Marek Belisko <marek@goldelico.com=
-> wrote:
->>> This patch adds new parameters that allow to address typical hardwa=
-re
->>> design differences: touch screens may be wired or oriented differen=
-tly
->>> (portrait or landscape). And usually the active area of the touch i=
-s a
->>> little larger than the active area of the LCD. This results in the =
-touch
->>> coordinates that have some significant deviation from LCD coordinat=
-es.
->>> Usually this is addressed in user space by a calibration tool (e.g.=
- tslib
->>> or xinput-calibrator) but some systems don't have these tools or re=
-quire
->>> that the screen is already roughly calibrated (e.g. Replicant) to o=
-perate
->>> the device until a better calibration can be done. And, some system=
-s
->>> react very strangely if the touch event stream reports coordinates
->>> outside of the active area.
->>>=20
->>> This makes it necessry to be able to configure:
->>> 1. swapping x and y wires (coordinate values)
->>> 2. flipping of x (left - right) or y (top - bottom) or even both
->>> 3. define an active area so that an uncalibrated screen already
->>> roughly matches the LCD to be useful.
->>> 4. clip reported coordinates to the active area.
->>>=20
->>> If none of the new parameters is defined (in DT) or set in a board =
-file,
->>> the driver behaves the same as without this patch.
->>>=20
->>> Author (1&2): H. Nikolaus Schaller <hns@goldelico.com>
->>> Author (3&4): Paul Kocialkowski <contact@paulk.fr>
->>>=20
->>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
->=20
-> OK, I was hesitant of adding these as normally we have tslib to perfo=
-rm
-> the conversion, but maybe it is time to allow it in the kernel and
-> standardize users.
+I changed all the name from soc-interrupt to soc-int except here.
+I will fix it.
 
-Well, tslib isn=92t a good replacement for this problem any more and
-pre-initializing tslib makes some deep hardware dependency visible
-in user space (each board needs a different tslib config and pointercal
-default - and on some user spaces tslib is broken with Xorg).
+> 
+>> +- reg-names: names of the mapped memory regions listed in regs
+>> +    property in the same order: "rtc" and "soc-int".
+> 
+> soc-int ?
+> 
+>> +rtc@a3800 {
+>> +	compatible = "marvell,armada-380-rtc";
+>> +	reg = <0xa3800 0x20>, <0x184a0 0x0c>;
+> 
+> Any reason to use <0x184A0 0xC> instead of <0x184A8 0x4> ? According to
+> the datasheet, there is only this 184A8 register for RTC stuff.
 
-But the issue to be solved is more hardware related, i.e. if the Y- and=
- Y+
-pins of the controller are connected in a swapped way to the resistor
-ends of the panel.
+Yes but according to the code I saw there were other registers related to the RTC
+from 0x184A0. Even if we don't use them now I prefer having an accurate mapping from
+the beginning for avoiding using negative offset as we needed to do in the past.
 
-Hence in a DT based system, this must IMHO be described by the DT
-and can not be left to some user-space functions any more.
+Thanks,
 
-> However, this seems like a general issue and we
-> should:
->=20
-> 1. Perform conversion in input core rather than individual drivers. I
-> think we should allocate a new bitmaps for some transformations and h=
-ave
-> the code do X/Y flip/clip of the coordinates.
-
-Do you have a suggestion where this should be (I have no clue how
-the input system works or is structured - we just know how to extend a
-driver that uses it)?
-
->=20
-> 2. Standardize on bindings. We already have of-touchscreen.c doing
-> rudimentary parsing, we shoudl look into extending it rather than
-> creating myriad of driver-specific bindings.
-
-Ok, looks reasonable.
-
->=20
-> Also, do we need swap and flip or do we simply need rotation (like th=
-e
-> proposed Broadcom iproc driver has)?
-
-Well, since the DT should describe hardware, there are 3 sets of wires =
-which
-can have a cross-over: X+ and X-, Y+ and Y-, X and Y.
-
-So IMHO hardware has no =93rotation=94, just crossover of wires. Rotati=
-on is an
-interpretation of the result of these connections in combination with s=
-ome
-panel the touch is glued to and should therefore not be represented in =
-the DT.
-
-As a result we have proposed a scheme without explicit rotation. We spe=
-cify what
-coordinates X- and X+ should report at their ends (min, max) because th=
-e DT
-programmer has to specify them anyways. Flipping is a result of definin=
-g these
-coordinates in an ascending or descending way. Only swapping of the X a=
-nd Y
-wires can=92t be implicitly defined so it has its own property. So the =
-scheme we
-have proposed tries to optimize the efforts needed to adapt new boards =
-and write
-DTs and focus the DT on hardware description.
-
-As a bonus we also specify the min and max value to be reported for the=
- touch
-pressure (Z axis) using the same basic principle.
-
-And it is a pure add-on on top of the existing driver so that it attemp=
-ts not
-to break existing device trees.
-
-Maybe could you accept it as a first step for this specific driver (and=
- let=92s do
-the big standardization work later on)?
-
-=97 hns
+Gregory
 
 
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
 --
-To unsubscribe from this list: send the line "unsubscribe linux-input" =
-in
-the body of a message to majordomo@vger.kernel.org
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
