@@ -1,70 +1,134 @@
-From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH RESEND 00/13] ltc2952 modernization and new functionality
-Date: Thu, 15 Jan 2015 01:52:49 +0100
-Message-ID: <20150115005249.GA20141@earth.universe>
-References: <1421223346-27410-1-git-send-email-frans.klaver@xsens.com>
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCHv0 2/3] rtc: Add support for Abracon
+ AB-RTCMC-32.768kHz-B5ZE-S3 I2C RTC chip
+Date: Wed, 14 Jan 2015 16:55:57 -0800
+Message-ID: <20150114165557.d44c5752.akpm@linux-foundation.org>
+References: <cover.1421045942.git.arno@natisbad.org>
+	<1ae63ab80cfb39305884bd0c2648a420ba3bc0a5.1421045942.git.arno@natisbad.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="qMm9M+Fa2AknHoGS"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1421223346-27410-1-git-send-email-frans.klaver-MHHw4NDrbWwAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frans Klaver <frans.klaver-MHHw4NDrbWwAvxtiuMwx3w@public.gmane.org>
-Cc: Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?iso-8859-1?Q?Ren=E9?= Moll <linux-93MfrKQ0iTlmR6Xm/wNWPw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1ae63ab80cfb39305884bd0c2648a420ba3bc0a5.1421045942.git.arno@natisbad.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Arnaud Ebalard <arno@natisbad.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Peter Huewe <peter.huewe@infineon.com>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <treding@nvidia.com>, Mark Brown <broonie@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Rob Landley <rob@landley.net>, rtc-linux@googlegroups.com, Jason Cooper <jason@lakedaemon.net>, Guenter Roeck <linux@roeck-us.net>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, 12 Jan 2015 09:16:36 +0100 Arnaud Ebalard <arno@natisbad.org> wrote:
 
---qMm9M+Fa2AknHoGS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> This patch adds support for Abracon AB-RTCMC-32.768kHz-B5ZE-S3
+> RTC/Calendar module w/ I2C interface.
+> 
+> This supports includes RTC time reading and setting, Alarm (1 minute
+> accuracy) reading and setting, and battery low detection. The device
+> also supports frequency adjustment and two timers but those features
+> are currently not implemented in this driver. Due to alarm accuracy
+> limitation (and current lack of timer support in the driver), UIE
+> mode is not supported.
+> 
+> ...
+>
+> +static int abb5zes3_probe(struct i2c_client *client,
+> +			  const struct i2c_device_id *id)
+> +{
+> +	struct device *dev = &client->dev;
+> +	struct abb5zes3_rtc_data *data;
+> +	struct regmap *regmap;
+> +	int ret;
+> +
+> +	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C |
+> +				     I2C_FUNC_SMBUS_BYTE_DATA |
+> +				     I2C_FUNC_SMBUS_I2C_BLOCK))
+> +		return -ENODEV;
+> +
+> +	regmap = devm_regmap_init_i2c(client, &abb5zes3_rtc_regmap_config);
+> +	if (IS_ERR(regmap)) {
+> +		ret = PTR_ERR(regmap);
+> +		dev_err(dev, "%s: regmap allocation failed: %d\n",
+> +			__func__, ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = abb5zes3_i2c_validate_chip(regmap);
+> +	if (ret)
+> +		return ret;
+> +
+> +	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
+> +
+> +	mutex_init(&data->lock);
+> +	data->regmap = regmap;
+> +	dev_set_drvdata(dev, data);
+> +
+> +	ret = abb5zes3_rtc_check_setup(dev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (client->irq > 0) {
+> +		ret = devm_request_threaded_irq(dev, client->irq, NULL,
+> +						_abb5zes3_rtc_interrupt,
+> +						IRQF_SHARED|IRQF_ONESHOT,
+> +						DRV_NAME, client);
+> +		if (!ret) {
+> +			device_init_wakeup(dev, true);
+> +			data->irq = client->irq;
+> +			dev_dbg(dev, "%s: irq %d used by RTC\n", __func__,
+> +				client->irq);
+> +		} else {
+> +			dev_err(dev, "%s: irq %d unavailable (%d)\n",
+> +				__func__, client->irq, ret);
+> +		}
+> +	}
+> +
+> +	data->rtc = devm_rtc_device_register(dev, DRV_NAME, &rtc_ops,
+> +					     THIS_MODULE);
+> +	ret = PTR_ERR_OR_ZERO(data->rtc);
 
-Hi,
+If devm_request_threaded_irq() returned an error, we just wiped that
+out here.  I'd suggest consistently adding a few "return ret;"
+statements in this function.
 
-On Wed, Jan 14, 2015 at 09:15:33AM +0100, Frans Klaver wrote:
-> Here's a resend of an earlier cleanup and improvement series for
-> the ltc2952 driver.
->=20
-> This series implements devm_* usage, reduction of globals, some
-> cleanup and finally makes the input trigger optional.
->=20
-> From the changes to the previous submissions I did not include
-> renaming kill to poweroff. The name poweroff is already used a
-> lot. Besides that, the control is referred to as kill in the
-> ltc2952 datasheet.
+Something like this?
 
-Thanks for the cleanup, applied:
+--- a/drivers/rtc/rtc-ab-b5ze-s3.c~rtc-add-support-for-abracon-ab-rtcmc-32768khz-b5ze-s3-i2c-rtc-chip-fix
++++ a/drivers/rtc/rtc-ab-b5ze-s3.c
+@@ -695,6 +695,7 @@ static int abb5zes3_probe(struct i2c_cli
+ 		} else {
+ 			dev_err(dev, "%s: irq %d unavailable (%d)\n",
+ 				__func__, client->irq, ret);
++			return ret;
+ 		}
+ 	}
+ 
+@@ -704,7 +705,7 @@ static int abb5zes3_probe(struct i2c_cli
+ 	if (ret) {
+ 		dev_err(dev, "%s: unable to register RTC device (%d)\n",
+ 			__func__, ret);
+-		device_init_wakeup(dev, false);
++		goto err;
+ 	}
+ 
+ 	/*
+@@ -718,12 +719,17 @@ static int abb5zes3_probe(struct i2c_cli
+ 	/* Enable battery low detection interrupt if battery not already low */
+ 	if (!data->battery_low && data->irq) {
+ 		ret = _abb5zes3_rtc_battery_low_irq_enable(regmap, true);
+-		if (ret)
++		if (ret) {
+ 			dev_err(dev, "%s: enabling battery low interrupt "
+ 				"generation failed (%d)\n", __func__, ret);
++			goto err;
++		}
+ 	}
+ 
+ 	return ret;
++err:
++	device_init_wakeup(dev, false);
++	return ret;
+ }
+ 
+ static int abb5zes3_remove(struct i2c_client *client)
+_
 
-http://git.infradead.org/battery-2.6.git/commit/d84ba07c27fafca3cc77b25a1e2=
-04383a4b5af91
-
--- Sebastian
-
---qMm9M+Fa2AknHoGS
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJUtw9eAAoJENju1/PIO/qatb8P/3bKXUeBEJ6n6pixVf8aTdGh
-BpVzDkCa4ezxb2esvDxT0YKWcquVV68bXlpYwnU5C324emSmgxY+EN8RyzQTO4FH
-M5mESt6eTnZBwx87RNUD59kEyaKiKaxH2F3p+BNdv1ikSLiHYmvNGXyw6NoabNxE
-TGKawixtJwfA0Y9VRHUqSIvrZfPAAV7x2N3qX1PMTEVBRttAunAMLNlOQ8rQsWel
-2qtDatDqvPwJ/FQQnDmdd1ExRXEokvYQyFYS9qLoqyayioFeroZpBlnMOr091bJP
-+OTwPi7c/z8iZuJtbYcvMsu3y5TAUNjM1E1vAH3gO4H81tKQPuPZ2jK8NJ2mLvYl
-W+WnbfbuL2rmZlOqErhXhOLCrRWwn1rkVrO/ITmXGlvdr5CMIYmzQNBeSsQnl6VJ
-QUyLfupWFW2xK/exZKLPvy8+orFBlk9JhZyF3SVzis1Hr0Rw1CbyBd+9SmPTtP6U
-KIrtzE7+CLtsp8OLiZW+yNz++d7CBXx77DebRHa+hGX80FFAL8VYIeJhlRSS53Fc
-tRl8BiyEVpRjRS5blJAqOEUR2ZM2U8Xl/dUYqiE2oyCig/xcjQx0iIxjQXeCWUZQ
-iwzw5nlGLMjiLYCm1PNiEyxAUwdRfObIGeCoNc0zoccgFqBXzW4rbV1jBw6E8Nxl
-lwWRJ8d7S27+zTE+aSSg
-=8HFH
------END PGP SIGNATURE-----
-
---qMm9M+Fa2AknHoGS--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
