@@ -1,128 +1,69 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] i.MX6-SabreAuto: EIM: pull PAD_EIM_D18 low for NOR probe
-Date: Wed, 14 Jan 2015 16:03:34 -0800
-Message-ID: <20150115000334.GA9759@ld-irv-0074>
-References: <1421278609-8446-1-git-send-email-alison_chaiken@mentor.com>
+From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH RESEND 00/13] ltc2952 modernization and new functionality
+Date: Thu, 15 Jan 2015 01:52:49 +0100
+Message-ID: <20150115005249.GA20141@earth.universe>
+References: <1421223346-27410-1-git-send-email-frans.klaver@xsens.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="qMm9M+Fa2AknHoGS"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1421278609-8446-1-git-send-email-alison_chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1421223346-27410-1-git-send-email-frans.klaver-MHHw4NDrbWwAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: alison-hh6fLRYtCEIS+FvcfC7Uqw@public.gmane.org
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alison_chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org, shijie8-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+To: Frans Klaver <frans.klaver-MHHw4NDrbWwAvxtiuMwx3w@public.gmane.org>
+Cc: Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?iso-8859-1?Q?Ren=E9?= Moll <linux-93MfrKQ0iTlmR6Xm/wNWPw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-+ linux-arm-kernel, maintainers, devicetree
 
-Shawn, Sascha: should this driver be listed under the Freescale IMX
-MAINTAINERS entry?
+--qMm9M+Fa2AknHoGS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 14, 2015 at 03:36:49PM -0800, alison-hh6fLRYtCEIS+FvcfC7Uqw@public.gmane.org wrote:
-> From: Alison Chaiken <alison_chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-> 
-> PAD_EIM_D18 must be pulled low at boot in order for the parallel NOR
-> connected to the EIM switch to probe properly.  Otherwise
-> cfi_qry_present() may return "U-V-]" rather than "Q-R-Y" if the
-> PAD_EIM_D18 is high.  Add a nor-gpios property to the nor node in the
-> SabreAuto device-tree and add a function to the imx-weim probe to set
-> GPIO5 to drive the pad.
-> 
-> Signed-off-by: Alison Chaiken <alison_chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-> ---
->  arch/arm/boot/dts/imx6qdl-sabreauto.dtsi |  1 +
->  drivers/bus/imx-weim.c                   | 43 ++++++++++++++++++++++++++++++++
->  2 files changed, 44 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
-> index 009abd6..dd5e3bc 100644
-> --- a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
-> @@ -454,5 +454,6 @@
->  		bank-width = <2>;
->  		fsl,weim-cs-timing = <0x00620081 0x00000001 0x1c022000
->  				0x0000c000 0x1404a38e 0x00000000>;
-> +		nor-gpios = <&gpio5 4 GPIO_ACTIVE_LOW>;
+Hi,
 
-Such a binding needs to be documented. Also, if it's going to be named
-generically like that, it needs to be generically useful and supported
-under MTD code, not platform-specific bus code.
+On Wed, Jan 14, 2015 at 09:15:33AM +0100, Frans Klaver wrote:
+> Here's a resend of an earlier cleanup and improvement series for
+> the ltc2952 driver.
+>=20
+> This series implements devm_* usage, reduction of globals, some
+> cleanup and finally makes the input trigger optional.
+>=20
+> From the changes to the previous submissions I did not include
+> renaming kill to poweroff. The name poweroff is already used a
+> lot. Besides that, the control is referred to as kill in the
+> ltc2952 datasheet.
 
-So what pin is this, exactly? A write-protect pin? An address pin? A
-toaster control, where the toaster is keeping the flash too hot?
+Thanks for the cleanup, applied:
 
->  	};
->  };
-> diff --git a/drivers/bus/imx-weim.c b/drivers/bus/imx-weim.c
-> index 0958b69..b3c2ca6 100644
-> --- a/drivers/bus/imx-weim.c
-> +++ b/drivers/bus/imx-weim.c
-> @@ -14,6 +14,8 @@
->  #include <linux/mfd/syscon.h>
->  #include <linux/mfd/syscon/imx6q-iomuxc-gpr.h>
->  #include <linux/regmap.h>
-> +#include <linux/of_gpio.h>
-> +#include <linux/gpio.h>
->  
->  struct imx_weim_devtype {
->  	unsigned int	cs_count;
-> @@ -108,6 +110,40 @@ err:
->  	return -EINVAL;
->  }
->  
-> +/* set the GPIO to control PAD_EIM_D18 so cfi_qry_present() works properly */
-> +static int __init nor_gpio_setup(struct device_node *np, struct device *parent)
-> +{
-> +	unsigned nor_gpio, level;
-> +	enum of_gpio_flags of_flags;
-> +	int ret;
-> +
-> +	nor_gpio = of_get_named_gpio_flags(np, "nor-gpios", 0, &of_flags);
-> +
-> +	/* this child is not a NOR chip */
-> +	if (!nor_gpio)
-> +		return 0;
-> +
-> +	if (gpio_is_valid(nor_gpio)) {
-> +		ret = devm_gpio_request_one(parent, nor_gpio,
-> +					GPIOF_DIR_OUT, "nor-gpio");
-> +	} else {
-> +		ret = -ENODEV;
-> +		goto out;
-> +	}
-> +
-> +	if (ret < 0)
-> +		goto out;
-> +
-> +	level = ((of_flags == OF_GPIO_ACTIVE_LOW) ? 0 : 1);
-> +
-> +	gpio_set_value(nor_gpio, level);
-> +
-> +	return 0;
-> +out:
-> +	dev_err(parent, "Unable to request EIM_D18 GPIO for NOR.\n");
-> +	return ret;
-> +}
-> +
->  /* Parse and set the timing for this device. */
->  static int __init weim_timing_setup(struct device_node *np, void __iomem *base,
->  				    const struct imx_weim_devtype *devtype)
-> @@ -160,6 +196,13 @@ static int __init weim_parse_dt(struct platform_device *pdev,
->  				child->full_name);
->  			return ret;
->  		}
-> +
-> +		ret = nor_gpio_setup(child, &pdev->dev);
-> +		if (ret) {
-> +			dev_err(&pdev->dev, "%s gpios setup failed.\n",
-> +				child->full_name);
-> +			return ret;
-> +		}
->  	}
->  
->  	ret = of_platform_populate(pdev->dev.of_node,
+http://git.infradead.org/battery-2.6.git/commit/d84ba07c27fafca3cc77b25a1e2=
+04383a4b5af91
 
-Brian
+-- Sebastian
+
+--qMm9M+Fa2AknHoGS
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJUtw9eAAoJENju1/PIO/qatb8P/3bKXUeBEJ6n6pixVf8aTdGh
+BpVzDkCa4ezxb2esvDxT0YKWcquVV68bXlpYwnU5C324emSmgxY+EN8RyzQTO4FH
+M5mESt6eTnZBwx87RNUD59kEyaKiKaxH2F3p+BNdv1ikSLiHYmvNGXyw6NoabNxE
+TGKawixtJwfA0Y9VRHUqSIvrZfPAAV7x2N3qX1PMTEVBRttAunAMLNlOQ8rQsWel
+2qtDatDqvPwJ/FQQnDmdd1ExRXEokvYQyFYS9qLoqyayioFeroZpBlnMOr091bJP
++OTwPi7c/z8iZuJtbYcvMsu3y5TAUNjM1E1vAH3gO4H81tKQPuPZ2jK8NJ2mLvYl
+W+WnbfbuL2rmZlOqErhXhOLCrRWwn1rkVrO/ITmXGlvdr5CMIYmzQNBeSsQnl6VJ
+QUyLfupWFW2xK/exZKLPvy8+orFBlk9JhZyF3SVzis1Hr0Rw1CbyBd+9SmPTtP6U
+KIrtzE7+CLtsp8OLiZW+yNz++d7CBXx77DebRHa+hGX80FFAL8VYIeJhlRSS53Fc
+tRl8BiyEVpRjRS5blJAqOEUR2ZM2U8Xl/dUYqiE2oyCig/xcjQx0iIxjQXeCWUZQ
+iwzw5nlGLMjiLYCm1PNiEyxAUwdRfObIGeCoNc0zoccgFqBXzW4rbV1jBw6E8Nxl
+lwWRJ8d7S27+zTE+aSSg
+=8HFH
+-----END PGP SIGNATURE-----
+
+--qMm9M+Fa2AknHoGS--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
