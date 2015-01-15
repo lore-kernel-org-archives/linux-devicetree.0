@@ -1,91 +1,128 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 1/5] rtc: armada38x: Add the device tree binding documentation
-Date: Thu, 15 Jan 2015 15:34:25 +0100
-Message-ID: <54B7CFF1.8080703@free-electrons.com>
-References: <1421318826-27268-1-git-send-email-gregory.clement@free-electrons.com> <1421318826-27268-2-git-send-email-gregory.clement@free-electrons.com> <20150115113947.GC16217@leverpostej>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH/RFC v10 03/19] DT: leds: Add led-sources property
+Date: Thu, 15 Jan 2015 08:37:19 -0600
+Message-ID: <CAL_JsqLqRn1QG6dG5Ea6231SNzrV=Q9K=uRqjziM9sDdA3+31g@mail.gmail.com>
+References: <1420816989-1808-1-git-send-email-j.anaszewski@samsung.com>
+ <1420816989-1808-4-git-send-email-j.anaszewski@samsung.com>
+ <CAL_JsqJKEp6TWaRhJimg3AWBh+MCCr2Bk9+1o7orLLdp5E+n-g@mail.gmail.com>
+ <54B38682.5080605@samsung.com> <CAL_Jsq+UaA41DvawdOMmOib=Fi0hC-nBdKV-+P4DFo+MoOy-bQ@mail.gmail.com>
+ <54B3F1EF.4060506@samsung.com> <CAL_JsqKpJtUG0G6g1GOuSVpc31oe-dp3qdrKJUE0upG-xRDFhA@mail.gmail.com>
+ <20150112170644.GO4160@sirena.org.uk> <54B7B39C.7080204@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150115113947.GC16217@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, "rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <54B7B39C.7080204@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Mark Brown <broonie@kernel.org>, Jacek Anaszewski <j.anaszewski@samsung.com>, linux-leds@vger.kernel.org, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Pavel Machek <pavel@ucw.cz>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, sakari.ailus@iki.fi, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 15/01/2015 12:39, Mark Rutland wrote:
-> On Thu, Jan 15, 2015 at 10:47:02AM +0000, Gregory CLEMENT wrote:
->> The Armada 38x SoCs come with a new RTC which differs from the one
->> used in the other mvebu SoCs until now. This patch describes the
->> binding of this RTC.
+On Thu, Jan 15, 2015 at 6:33 AM, Sylwester Nawrocki
+<s.nawrocki@samsung.com> wrote:
+> On 12/01/15 18:06, Mark Brown wrote:
+>> On Mon, Jan 12, 2015 at 10:55:29AM -0600, Rob Herring wrote:
+>>> > On Mon, Jan 12, 2015 at 10:10 AM, Jacek Anaszewski
+>>>> > > There are however devices that don't fall into this category, i.e. they
+>>>> > > have many outputs, that can be connected to a single LED or to many LEDs
+>>>> > > and the driver has to know what is the actual arrangement.
+>>> >
+>>> > We may need to extend the regulator binding slightly and allow for
+>>> > multiple phandles on a supply property, but wouldn't something like
+>>> > this work:
+>>> > led-supply = <&led-reg0>, <&led-reg1>, <&led-reg2>, <&led-reg3>;
+>>> > The shared source is already supported by the regulator binding.
 >>
->> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->> ---
->>  .../devicetree/bindings/rtc/armada-380-rtc.txt     | 22 +++++++++++=
-+++++++++++
->>  1 file changed, 22 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/rtc/armada-380=
--rtc.txt
->>
->> diff --git a/Documentation/devicetree/bindings/rtc/armada-380-rtc.tx=
-t b/Documentation/devicetree/bindings/rtc/armada-380-rtc.txt
->> new file mode 100644
->> index 000000000000..e6fe29bda608
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/rtc/armada-380-rtc.txt
->> @@ -0,0 +1,22 @@
->> +* Real Time Clock of the Armada 38x SoCs
->> +
->> +RTC controller for the Armada 38x SoCs
->> +
->> +Required properties:
->> +- compatible : Should be "marvell,armada-380-rtc"
->> +- reg: physical base address of the controller and length of memory
->> +  mapped region, associated to the reg-name "rtc". The other entry =
-is
->> +  related to the interrupt control from the SoC, associated to the
->> +  reg-name "soc-int".
->> +- reg-names: names of the mapped memory regions listed in reg prope=
-rty
->> +    in the same order: "rtc" and "soc-int".
->=20
-> It would be nicer if reg were defined in terms of reg-names to avoid
-> redundancy, e.g.
->=20
-> - reg: a list of base address and size pairs, one for each entry in
->   reg-names
-> - reg names: should contain:
->   * "rtc" for the RTC registers
->   * "soc-int" for the interrutp control registers.
+>> What is the reasoning for this?  If a single supply is being supplied by
+>> multiple regulators then in general those regulators will all know about
+>> each other at a hardware level and so from a functional and software
+>> point of view will effectively be one regulator.  If they don't/aren't
+>> then they tend to interfere with each other.
+>
+> For LED current regulators like this one [1] we want to be able to
+> communicate to the software the hardware wiring, e.g. if a single LED is
+> connected to only one or both the current regulators.  The device needs
+> to be programmed differently for each configuration, as shown on page 36
+> of the datasheet [2].
+>
+> Now, the LED DT binding describes the LEDs (current consumers) as child
+> nodes of the LED driver IC (current supplier), e.g. (from [3]):
+>
+> pca9632@62 {
+>         compatible = "nxp,pca9632";
+>         #address-cells = <1>;
+>         #size-cells = <0>;
+>         reg = <0x62>;
+>
+>         red@0 {
+>                 label = "red";
+>                 reg = <0>;
 
-OK
+This only works if you don't have sub blocks or different functions to
+describe. I suppose you could add yet another level of nodes. This
+feels like abuse of the reg property even though to use the reg
+property is a frequent review comment.
 
->=20
-> That said, what are the "soc-int" registers, and why does the RTC dri=
-ver
-> need to poke them? It looks like they're for a separate component (i.=
-e.
-> the interrupt controller).
+OTOH, we don't need 2 ways to describe this.
 
-I don't have much information about it but for sure it is not part of t=
-he
-interrupt controller. It is a range of 3 registers related to the RTC, =
-2
-of them are not documented and the third one is related to the interrup=
-t
-management of the RTC. That's why I named this range soc-int(errupt), b=
-ut
-it would more accurate to name it rtc-soc
+>                 linux,default-trigger = "none";
+>         };
+>         green@1 {
+>                 label = "green";
+>                 reg = <1>;
+>                 linux,default-trigger = "none";
+>         };
+>         ...
+> };
+>
+> What is missing in this binding is the ability to tell that a single LED
+> is connected to more than one current source.
+>
+> We could, for example adopt the multiple phandle in the supply property
+> scheme, but not use the kernel regulator API, e.g.
+>
+> flash-led {
+>          compatible = "maxim,max77387";
+>
+>          current-reg1 { // FLED1
+>                  led-output-id = <0>;
+>          };
+>
+>          current-reg2 { // FLED2
+>                  led-output-id = <1>;
+>          };
+>
+>          red_led {
+>                  led-supply = <&current-reg1>, <&current-reg2>;
+>          };
+> };
+>
+> However my feeling is that it is unnecessarily complicated that way.
 
-Gr=E9gory
+This example is not so complicated, but I already agreed on not using
+regulators on the basis there are other properties of the driver
+unique to LEDs.
 
---=20
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Perhaps we could use the 'reg' property to describe actual connections,
+> I'm not sure if it's better than a LED specific property, e.g.
+>
+> max77387@52 {
+>         compatible = "nxp,max77387";
+>         #address-cells = <2>;
+>         #size-cells = <0>;
+>         reg = <0x52>;
+>
+>         flash_led {
+>                 reg = <1 1>;
+
+Don't you mean <0 1> as the values are the "address" which in this
+case are the LED driver output indexes.
+
+Rob
+
+>                 ...
+>         };
+> };
+>
+> [1] http://www.maximintegrated.com/en/products/power/led-drivers/MAX77387.html
+> [2] http://datasheets.maximintegrated.com/en/ds/MAX77387.pdf
+> [3] Documentation/devicetree/bindings/leds/pca963x.txt
