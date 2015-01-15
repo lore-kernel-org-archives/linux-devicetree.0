@@ -1,94 +1,84 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] i2c: Mark instantiated device nodes with OF_POPULATE
-Date: Thu, 15 Jan 2015 15:24:04 -0600
-Message-ID: <CAL_JsqLL7EhW1ABJ8sM-WTAADsK3eiWVvTKP4bwwj_qXrJov5Q@mail.gmail.com>
-References: <1421346798-17148-1-git-send-email-pantelis.antoniou@konsulko.com>
+From: Arnaud Ebalard <arno@natisbad.org>
+Subject: [PATCHv1 0/3] rtc: Abracon AB-RTCMC-32.768kHz-B5ZE-S3 I2C RTC chip support
+Date: Thu, 15 Jan 2015 22:29:58 +0100
+Message-ID: <cover.1421356414.git.arno@natisbad.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1421346798-17148-1-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Peter Huewe <peter.huewe@infineon.com>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <treding@nvidia.com>, Mark Brown <broonie@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Rob Landley <rob@landley.net>, rtc-linux@googlegroups.com, Jason Cooper <jason@lakedaemon.net>, Guenter Roeck <linux@roeck-us.net>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 15, 2015 at 12:33 PM, Pantelis Antoniou
-<pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
-> Mark (and unmark) device nodes with the POPULATE flag as appropriate.
-> This is required to avoid multi probing when using I2C and device
-> overlays containing a mux.
-> This patch is also more careful with the release of the adapter device
-> which caused a deadlock with muxes, and does not break the build
-> on !OF since the node flag accessors are not defined then.
+Hi Andrew, 
 
-Why don't we define them then and get rid of the ifdef below.
+I fixed unhandled error case for devm_request_threaded_irq() and came w/
+a simple solution to get a single return path in probe function:
 
-It may be good to split this out of of.h because we don't want drivers
-fiddling with these bits.
+   err:
+   	if (ret && data && data->irq)
+   		device_init_wakeup(dev, false);
+   	return ret;
+   }
 
-Rob
+  
+Changes since v0:
+  - fixed unhandled error case for devm_request_threaded_irq()
+  - enforced a common error return path in _probe()
 
->
-> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-> ---
->  drivers/i2c/i2c-core.c | 18 +++++++++++++++++-
->  1 file changed, 17 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/i2c/i2c-core.c b/drivers/i2c/i2c-core.c
-> index 39d25a8..1d44e3a 100644
-> --- a/drivers/i2c/i2c-core.c
-> +++ b/drivers/i2c/i2c-core.c
-> @@ -1122,6 +1122,10 @@ EXPORT_SYMBOL_GPL(i2c_new_device);
->   */
->  void i2c_unregister_device(struct i2c_client *client)
->  {
-> +#if IS_ENABLED(CONFIG_OF_DYNAMIC)
-> +       if (client->dev.of_node)
-> +               of_node_clear_flag(client->dev.of_node, OF_POPULATED);
-> +#endif
->         device_unregister(&client->dev);
->  }
->  EXPORT_SYMBOL_GPL(i2c_unregister_device);
-> @@ -1441,8 +1445,11 @@ static void of_i2c_register_devices(struct i2c_adapter *adap)
->
->         dev_dbg(&adap->dev, "of_i2c: walking child nodes\n");
->
-> -       for_each_available_child_of_node(adap->dev.of_node, node)
-> +       for_each_available_child_of_node(adap->dev.of_node, node) {
-> +               if (of_node_test_and_set_flag(node, OF_POPULATED))
-> +                       continue;
->                 of_i2c_register_device(adap, node);
-> +       }
->  }
->
->  static int of_dev_node_match(struct device *dev, void *data)
-> @@ -1976,6 +1983,11 @@ static int of_i2c_notify(struct notifier_block *nb, unsigned long action,
->                 if (adap == NULL)
->                         return NOTIFY_OK;       /* not for us */
->
-> +               if (of_node_test_and_set_flag(rd->dn, OF_POPULATED)) {
-> +                       put_device(&adap->dev);
-> +                       return NOTIFY_OK;
-> +               }
-> +
->                 client = of_i2c_register_device(adap, rd->dn);
->                 put_device(&adap->dev);
->
-> @@ -1986,6 +1998,10 @@ static int of_i2c_notify(struct notifier_block *nb, unsigned long action,
->                 }
->                 break;
->         case OF_RECONFIG_CHANGE_REMOVE:
-> +               /* already depopulated? */
-> +               if (!of_node_check_flag(rd->dn, OF_POPULATED))
-> +                       return NOTIFY_OK;
-> +
->                 /* find our device by node */
->                 client = of_find_i2c_device_by_node(rd->dn);
->                 if (client == NULL)
-> --
-> 1.7.12
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+For those who missed v0:
+
+This series adds support for Abracon AB-RTCMC-32.768kHz-B5ZE-S3 I2C RTC 
+chip. Unlike many RTC chips, it includes an internal oscillator which 
+spares room on the PCB. It also has some interesting features, like 
+battery low detection (which the driver in this series supports). The 
+only small "limitation" (mainly due to what RTC subsystem expects from 
+RTC chips) is the fact that its alarm is accurate to the second. This 
+series provides a solution (described below) for that limitation using 
+another mechanism of the chip. 
+
+I decided to split support between three different patches for 
+this v0: 
+
+- Patch 1/3: it simply references Abracon Corporation in vendor-prefixes 
+  documentation file. As Abracon has no NASDAQ ticker symbol; I have 
+  decided to use "abcn" (I initially started my work w/ "ab" but later 
+  changed for "abcn" which looked more meaningful) 
+- Patch 2/3: it adds initial support for the chip and provides the 
+  ability to read/write time and also read/write alarm. As the alarm 
+  the chip provides is accurate to the minute, the support provided 
+  by this patch also has this limitation (e.g. UIE mode is not 
+  supported). 
+- Patch 3/3: the chip supports a watchdog timer which can be used to 
+  extend the alarm mechanism in patch 2/3 in order to provide support 
+  for alarms under one minute (e.g. support UIE mode). In practice, 
+  the logic I implemented is to use the watchdog timer for alarms which 
+  are at most 4 minutes in the future and use the common alarm mechanism 
+  for alarms which are set to larger values. With that additional patch 
+  the device fully passes the rtctest.c program. 
+
+I decided to split the driver between two patches (2 and 3 of 3) in 
+order to ease review: patch 2 should be pretty straightforward to read 
+for someone familiar w/ RTC subsystem. Patch 3 only extends what is in 
+patch 2 regarding alarms. If you prefer a single patch in a v1, do not 
+hesitate to ask. 
+
+The set currently applies on top of 3.19-rc4 but I can rebase it against 
+something else if you prefer. 
+
+Arnaud Ebalard (3):
+  of: add vendor prefix for Abracon Corporation
+  rtc: Add support for Abracon AB-RTCMC-32.768kHz-B5ZE-S3 I2C RTC chip
+  rtc: rtc-ab-b5ze-s3: Add sub-minute alarm support
+
+ .../devicetree/bindings/i2c/trivial-devices.txt    |    1 +
+ .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+ drivers/rtc/Kconfig                                |   11 +
+ drivers/rtc/Makefile                               |    1 +
+ drivers/rtc/rtc-ab-b5ze-s3.c                       | 1035 ++++++++++++++++++++
+ 5 files changed, 1049 insertions(+)
+ create mode 100644 drivers/rtc/rtc-ab-b5ze-s3.c
+
+-- 
+2.1.1
+
