@@ -1,76 +1,142 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH/RFC v10 03/19] DT: leds: Add led-sources property
-Date: Thu, 15 Jan 2015 15:53:14 +0000
-Message-ID: <20150115155314.GZ3043@sirena.org.uk>
-References: <1420816989-1808-1-git-send-email-j.anaszewski@samsung.com>
- <1420816989-1808-4-git-send-email-j.anaszewski@samsung.com>
- <CAL_JsqJKEp6TWaRhJimg3AWBh+MCCr2Bk9+1o7orLLdp5E+n-g@mail.gmail.com>
- <54B38682.5080605@samsung.com>
- <CAL_Jsq+UaA41DvawdOMmOib=Fi0hC-nBdKV-+P4DFo+MoOy-bQ@mail.gmail.com>
- <54B3F1EF.4060506@samsung.com>
- <CAL_JsqKpJtUG0G6g1GOuSVpc31oe-dp3qdrKJUE0upG-xRDFhA@mail.gmail.com>
- <54B4DA81.7060900@samsung.com>
- <CAL_JsqLYxB5hzLAWXpU=uncM5DEMZU78mP673H9oSSNB-cgcYQ@mail.gmail.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 5/9] dts: versatile: add sysregs nodes
+Date: Thu, 15 Jan 2015 16:06:35 +0000
+Message-ID: <20150115160635.GA1576@red-moon>
+References: <1419967718-26909-1-git-send-email-robherring2@gmail.com>
+ <1419967718-26909-6-git-send-email-robherring2@gmail.com>
+ <CACRpkdbinR3Uvi5zZmQJFxJgnWfvE6JZouMVxxRRGVtMNXkBQQ@mail.gmail.com>
+ <CAL_JsqKBLx03E1w0NMH8CH+Pm_L8yQvnR6VTTDxqnpOwAoDhXg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="oRWDw5wXQ3uCJU7V"
-Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqLYxB5hzLAWXpU=uncM5DEMZU78mP673H9oSSNB-cgcYQ@mail.gmail.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, linux-leds@vger.kernel.org, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Pavel Machek <pavel@ucw.cz>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, sakari.ailus@iki.fi, Sylwester Nawrocki <s.nawrocki@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>
+In-Reply-To: <CAL_JsqKBLx03E1w0NMH8CH+Pm_L8yQvnR6VTTDxqnpOwAoDhXg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Peter Maydell <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---oRWDw5wXQ3uCJU7V
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Thu, Jan 15, 2015 at 08:24:26AM -0600, Rob Herring wrote:
-> On Tue, Jan 13, 2015 at 2:42 AM, Jacek Anaszewski
-
-> > I am aware that it may be tempting to treat LED devices as common
-> > regulators, but they have their specific features which gave a
-> > reason for introducing LED class for them. Besides, there is already
-> > drivers/leds/leds-regulator.c driver for LED devices which support only
-> > turning on/off and setting brightness level.
+On Thu, Jan 08, 2015 at 11:53:15PM +0000, Rob Herring wrote:
+> Adding VExpress maintainers...
+> 
+> On Thu, Jan 8, 2015 at 1:44 PM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> > On Tue, Dec 30, 2014 at 8:28 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 > >
-> > In your proposition a separate regulator provider binding would have
-> > to be created for each current output and a separate binding for
-> > each discrete LED connected to the LED device. It would create
-> > unnecessary noise in a dts file.
+> >> From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> >>
+> >> The Versatile boards have the same sysregs as other ARM Ltd boards. Add
+> >> the nodes in preparation to enable support for 24MHz counter as
+> >> sched_clock and MMC card detect and write protect support.
+> >>
+> >> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> >> Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+> >> Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >> ---
+> >>  arch/arm/boot/dts/versatile-ab.dts | 23 +++++++++++++++++++++++
+> >>  1 file changed, 23 insertions(+)
+> >>
+> >> diff --git a/arch/arm/boot/dts/versatile-ab.dts b/arch/arm/boot/dts/versatile-ab.dts
+> >> index 27d0d9c..62f04b0 100644
+> >> --- a/arch/arm/boot/dts/versatile-ab.dts
+> >> +++ b/arch/arm/boot/dts/versatile-ab.dts
+> >> @@ -252,6 +252,29 @@
+> >>                         #size-cells = <1>;
+> >>                         ranges = <0 0x10000000 0x10000>;
+> >>
+> >> +                       sysreg@0 {
+> >> +                               compatible = "arm,vexpress-sysreg";
 > >
-> > Moreover, using regulator binding implies that we want to treat it
-> > as a sheer power supply for our device (which would be a discrete LED
-> > element in this case), whereas LED devices provide more features like
-> > blinking pattern and for flash LED devices - flash timeout, external
-> > strobe and flash faults.
+> > vexpress? No...
+> 
+> Compatible with yes. Should perhaps be '"arm,versatile-sysreg",
+> "arm,vexpress-sysreg"' instead. Kind of backwards, as really the
+> versatile came first, but it would work. Or we just need another match
+> entry in the kernel.
 
-> Okay, fair enough. Please include some of this explanation in the
-> binding description.
+versatile and vexpress sys registers are not compatible, so they should
+not be treated as such.
 
-Right, the other thing here is that these chips are not normally
-designed with the goal that the various components be used separately -
-I've seen devices where the startup and shutdown procedures involve
-interleaved actions to the boost regulator and current sink for example.
-Trying to insert an abstraction layer typically just makes life more
-complex.
+Actually, versatile regs are not managed by a single entity driver
+in the kernel, so basically I really think you should not leave
 
---oRWDw5wXQ3uCJU7V
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+"arm,vexpress-sysreg"
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+in the compatible list.
 
-iQEcBAEBCAAGBQJUt+JpAAoJECTWi3JdVIfQJlAH/14LZlsbUxQleUWSqvUm0Utn
-Beo8Jw4dP9fhDxexIZQsWZx9zi1XTlHhlOWLYBi8G4dDm8XVsLE0o8hf3bX+oFmR
-1GD/3DwNkk7B15ENbnS8dCZec0e1E4v0XOfNOY9ppEc9l7DdvbTgdL1oXUjJOSx9
-s246WxUHhpTuVGYk5ES55YxuBaZeWVrTn8D9S4894REQISEC1c1ILjbyvdS9HiAp
-CArEVXYBFhvGWg7vcom+bg30Ro8m/2THd5gDrxtQjU4L4FVavp/EjfdKVJFvSEj6
-/2dwK7AGJLFywtXsioiwRQsG3B4facZ7DJsZclFOAoGvHSf9zPfv/5I4Sty3V+4=
-=QiRx
------END PGP SIGNATURE-----
+> I copied this whole chunk as is from VExpress and verified these sub
+> nodes are all the same hence why it is here.
+> 
+> > compatible = "syscon";
+> 
+> maybe? VExpress is missing that then...
 
---oRWDw5wXQ3uCJU7V--
+vexpress-sysreg is more than a "syscon" interface, so we can't match
+on it, it would be wrong.
+
+> 
+> >> +                               reg = <0x00000 0x1000>;
+> >> +
+> >> +                               v2m_led_gpios: sys_led@08 {
+> >> +                                       compatible = "arm,vexpress-sysreg,sys_led";
+> >> +                                       gpio-controller;
+> >> +                                       #gpio-cells = <2>;
+> >> +                               };
+> >
+> > These are not GPIOs. These are LED registers really.
+> 
+> A register bit that controls an i/o signal sounds like a GPIO to me.
+
+To me too. I agree that definining a gpio-controller for every possible
+gpio pin would soon get unwieldy, but hey, the choice made for vexpress
+leds makes perfect sense to me, after all they are gpio signals
+connected to leds, and there is a driver for that in the kernel:
+
+drivers/leds/leds-gpio.c
+
+we could move this stuff to syscon-leds, but honestly I think is one of those
+things we could argue forever about that.
+
+> > see how to use LEDs from drivers/leds/leds-syscon.c and bindings.
+> > example in:
+> > arch/arm/boot/dts/integrator.dtsi
+> >
+> > Very straight-forward I think.
+> 
+> So we have 2 implementations and bindings for roughly the same hardware? Great!
+
+See above.
+
+> >> +                               v2m_mmc_gpios: sys_mci@48 {
+> >> +                                       compatible = "arm,vexpress-sysreg,sys_mci";
+> >> +                                       gpio-controller;
+> >> +                                       #gpio-cells = <2>;
+> >> +                               };
+> >> +
+> >> +                               v2m_flash_gpios: sys_flash@4c {
+> >> +                                       compatible = "arm,vexpress-sysreg,sys_flash";
+> >> +                                       gpio-controller;
+> >> +                                       #gpio-cells = <2>;
+> >> +                               };
+> >
+> > I don't have drivers for these "gpio controllers" and I don't think they are
+> > GPIOs either, since they are not general purpose at all.
+> 
+> They are only general purpose until you connect the i/o lines to
+> something. But yes, if we went around making every misc internal
+> control line in SOCs a 1-bit GPIO controller that would be pretty
+> crazy.
+> 
+> Anyway, most of this is not actually used ATM on Versatile, but it is
+> present in VExpress. I added it only for sched_clock. We need to
+> resolve this with VExpress platforms, but it's already in use for MMC
+> and LEDs.
+
+I did not get what you meant here, in particular which bits you want us
+to fix/change/update on vexpress.
+
+Thanks,
+Lorenzo
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
