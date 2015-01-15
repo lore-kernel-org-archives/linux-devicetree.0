@@ -1,44 +1,40 @@
-From: Joseph Salisbury <joseph.salisbury@canonical.com>
-Subject: [PATCH][v3.16.y-ckt] ACPICA: Add new GPE public interface - acpi_mark_gpe_for_wake.
-Date: Thu, 15 Jan 2015 15:19:51 -0500
-Message-ID: <54B820E7.4080406@canonical.com>
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] i2c: mv64xxx: enable acquisition of timeout value from
+ Device Tree
+Date: Thu, 15 Jan 2015 21:36:15 +0100
+Message-ID: <20150115213615.6697ef5a@free-electrons.com>
+References: <1421342671-20468-1-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Luis Henriques <luis.henriques@canonical.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, grant.likely@linaro.org, robh+dt@kernel.org, linux-acpi@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, "stable@vger.kernel.org" <stable@vger.kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1421342671-20468-1-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Dear Gregory CLEMENT,
 
-Please consider including mainline commit c12f07d and bd9b2f9 in the
-next v3.16.y-ckt release.  They
-were included in the mainline tree as of v3.17-rc1.  A test kernel has
-been built and tested, which was confirmed to resolve:
-http://bugs.launchpad.net/bugs/1406767 .
+On Thu, 15 Jan 2015 18:24:31 +0100, Gregory CLEMENT wrote:
 
-commit c12f07d17c12193256a99e20c9a0f130fb8f7be8
-Author: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Date:   Wed Jul 23 13:12:16 2014 +0800
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt b/Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt
+> index 5c30026921ae..d7fa740b68f1 100644
+> --- a/Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt
+> @@ -25,12 +25,16 @@ default frequency is 100kHz
+>                       whenever you're using the "allwinner,sun6i-a31-i2c"
+>                       compatible.
+>  
+> + - timeout-ms      : timeout value in miliseconds. If not set the default
+> +                     timeout is 1000ms
 
-    ACPICA: Add new GPE public interface - acpi_mark_gpe_for_wake.
+I think this description lacks one information: the timeout of *what* ?
 
+Best regards,
 
-Commit c12f07d does not cherry-pick cleanly in 3.16.y.  However, it will
-if commit bd9b2f9aff26c185c1f8e0cd08a850ee4ace391a is cherry picked first:
-
-commit bd9b2f9aff26c185c1f8e0cd08a850ee4ace391a
-Author: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Date:   Mon Jul 14 22:41:41 2014 +0200
-
-    ACPI / scan: No implicit wake notification for buttons
-
-   
-
-
-Sincerely,
-Joseph Salisbury
-
-
+Thomas
+-- 
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
