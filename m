@@ -1,79 +1,114 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH net-next v13 3/3] net: hisilicon: new hip04 ethernet driver
-Date: Thu, 15 Jan 2015 10:53:46 +0100
-Message-ID: <1456101.oYxGUWa027@wuerfel>
-References: <1421217254-12008-1-git-send-email-dingtianhong@huawei.com> <1421217254-12008-4-git-send-email-dingtianhong@huawei.com>
+From: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: at91: dts: sama5d3/sama5d4: reduce NFC command registers
+ memory region
+Date: Thu, 15 Jan 2015 17:59:15 +0800
+Message-ID: <54B78F73.9000504@atmel.com>
+References: <1421305683-8739-1-git-send-email-josh.wu@atmel.com> <20150115094527.3fde882a@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1421217254-12008-4-git-send-email-dingtianhong@huawei.com>
-Sender: netdev-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Ding Tianhong <dingtianhong@huawei.com>, robh+dt@kernel.org, davem@davemloft.net, grant.likely@linaro.org, agraf@suse.de, devicetree@vger.kernel.org, linux@arm.linux.org.uk, sergei.shtylyov@cogentembedded.com, eric.dumazet@gmail.com, netdev@vger.kernel.org, xuwei5@hisilicon.com, zhangfei.gao@linaro.org
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150115094527.3fde882a@bbrezillon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 14 January 2015 14:34:14 Ding Tianhong wrote:
-> +static int hip04_set_coalesce(struct net_device *netdev,
-> +                             struct ethtool_coalesce *ec)
-> +{
-> +       struct hip04_priv *priv = netdev_priv(netdev);
-> +
-> +       /* Check not supported parameters  */
-> +       if ((ec->rx_max_coalesced_frames) || (ec->rx_coalesce_usecs_irq) ||
-> +           (ec->rx_max_coalesced_frames_irq) || (ec->tx_coalesce_usecs_irq) ||
-> +           (ec->use_adaptive_rx_coalesce) || (ec->use_adaptive_tx_coalesce) ||
-> +           (ec->pkt_rate_low) || (ec->rx_coalesce_usecs_low) ||
-> +           (ec->rx_max_coalesced_frames_low) || (ec->tx_coalesce_usecs_high) ||
-> +           (ec->tx_max_coalesced_frames_low) || (ec->pkt_rate_high) ||
-> +           (ec->tx_coalesce_usecs_low) || (ec->rx_coalesce_usecs_high) ||
-> +           (ec->rx_max_coalesced_frames_high) || (ec->rx_coalesce_usecs) ||
-> +           (ec->tx_max_coalesced_frames_irq) ||
-> +           (ec->stats_block_coalesce_usecs) ||
-> +           (ec->tx_max_coalesced_frames_high) || (ec->rate_sample_interval))
-> +               return -EOPNOTSUPP;
-> +
-> +       if ((ec->tx_coalesce_usecs > HIP04_MAX_TX_COALESCE_USECS ||
-> +            ec->tx_coalesce_usecs < HIP04_MIN_TX_COALESCE_USECS) ||
-> +           (ec->tx_max_coalesced_frames > HIP04_MAX_TX_COALESCE_FRAMES ||
-> +            ec->tx_max_coalesced_frames < HIP04_MIN_TX_COALESCE_FRAMES))
-> +               return -EINVAL;
-> +
-> +       priv->tx_coalesce_usecs = ec->tx_coalesce_usecs;
-> +       priv->tx_coalesce_frames = ec->tx_max_coalesced_frames;
-> +
-> +       return 0;
-> +}
+Hi=EF=BC=8C Boris
 
-I just looked at this again and noticed that you fail to actually use the
-tx_coalesce_usecs value anywhere, since you don't call hrtimer_set_expires_range()
-any more.
+Thanks for the review.
 
-Also, I guess it would be nice use the rx_coalesce_usecs_low and
-tx_coalesce_usecs_high numbers instead of just a single number, as
-hrtimer_set_expires_range takes two values already. Just do something
-like 
+On 1/15/2015 4:45 PM, Boris Brezillon wrote:
+> Hi Josh,
+>
+> On Thu, 15 Jan 2015 15:08:03 +0800
+> Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> wrote:
+>
+>> To get NFC status, we need to read the NFC command registers, which =
+is a
+>> 256M memory mapping address. To check the status, you just read such
+>> address from NFC command registers.
+>> For example, to check NFCBUSY (bit 27), you need to read 0x08000000
+>> (bit 27 is set to 1) of the NFC command register.
+>> If you want to check NFCBUSY (bit 27) and NFCWR (bit 26) in same tim=
+e,
+>> you need to read 0x0c000000 (bit 27 and bit 26 are set to 1).
+> Are NFCBUSY and NFCWR found in NFCDATA_STATUS and those found in HSMC=
+_SR
+> representing the same thing.
+yes. it is. I just check with IP team. The NFCBUSY of NFCDATA_STATUS is=
+=20
+also refer to NFC_BUSY of HSMC_SR.
 
-	hrtimer_set_expires_range(&priv->tx_coalesce_timer,
-				   priv->rx_coalesce_usecs_low,
-				   priv->rx_coalesce_usecs_high -
-				   priv->rx_coalesce_usecs_low);
+> If they are, I think you can just use HSMC_SR instead of NFCDATA_STAT=
+US
+> to check the status [1] and drop the last bit in the NFC Command
+> Resgiters range.
+Thank you. your code works (just need some typo change).
+I want to send [1] code with your signed-off and my acked to mtd list.
+Is it okay for you?
 
-and make sure the 'low' value is smaller than the 'high' one.
+>
+>> But mapping such huge memory address only for multiple NFC status ch=
+eck
+>> is not very economic.
+>>
+>> The economic way is we check the NFC status one bit a time, then we =
+don't
+>> have to mapping such huge address.
+>>
+>> Now we reduce the memory mapping from 256M to 128M+4 (include 0x0800=
+0000),
+>> the only difference is NFCBUSY (bit 27) status. You cannot check NFC=
+BUSY
+>> bit with other NFC status bit.
+>>
+>> Since current atmel_nand driver check the NFCBUSY status without com=
+bine
+>> other bits, so this change (reduce 256M to 128M+4) will not be harmf=
+ul.
+>>
+>> Signed-off-by: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+>>
+>> ---
+>>
+>>   arch/arm/boot/dts/sama5d3.dtsi | 2 +-
+>>   arch/arm/boot/dts/sama5d4.dtsi | 2 +-
+>>   2 files changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/sama5d3.dtsi b/arch/arm/boot/dts/sama=
+5d3.dtsi
+>> index d701ddd..d243732 100644
+>> --- a/arch/arm/boot/dts/sama5d3.dtsi
+>> +++ b/arch/arm/boot/dts/sama5d3.dtsi
+>> @@ -1426,7 +1426,7 @@
+>>   				#address-cells =3D <1>;
+>>   				#size-cells =3D <1>;
+>>   				reg =3D <
+>> -					0x70000000 0x10000000	/* NFC Command Registers */
+>> +					0x70000000 0x08000004	/* NFC Command Registers */
+> This would give the following range:
+>
+> 					0x70000000 0x08000000
+This is also right if we apply above code change.
 
-> +       priv->tx_coalesce_frames = TX_DESC_NUM * 3 / 4;
-> +       priv->tx_coalesce_usecs = 200;
+So after above patch for mtd list is accepted I'll send out the dts=20
+changes patch.
 
-Related, instead of putting the raw numbers here, how about
-adding the defaults along with the other macros we talked about:
-
-#define HIP04_MAX_TX_COALESCE_USECS		10000
-#define HIP04_MIN_TX_COALESCE_USECS		1
-#define HIP04_MAX_TX_COALESCE_FRAMES		(TX_DESC_NUM - 1)
-#define HIP04_MIN_TX_COALESCE_FRAMES		1
-
-#define HIP04_DEFAULT_TX_COALESCE_USECS_LOW	80
-#define HIP04_DEFAULT_TX_COALESCE_USECS_HIGH	200
-#define HIP04_DEFAULT_TX_COALESCE_FRAMES	(TX_DESC_NUM / 2)
-
-	Arnd
+>
+>
+> Best Regards,
+>
+> Boris
+>
+> [1]http://code.bulix.org/2noozv-87724
+>
+>
+Best Regards,
+Josh Wu
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
