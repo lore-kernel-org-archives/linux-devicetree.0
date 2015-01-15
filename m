@@ -1,110 +1,74 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v2 1/2] Input: touchscreen-iproc: Add Broadcom iProc
- touchscreen driver
-Date: Wed, 14 Jan 2015 22:07:13 -0800
-Message-ID: <20150115060713.GA2694@dtor-ws>
-References: <jonathar@broadcom.com>
- <1419027470-7969-1-git-send-email-jonathar@broadcom.com>
- <1419027470-7969-2-git-send-email-jonathar@broadcom.com>
- <20150115010256.GC9134@dtor-ws>
- <54B753C7.6000006@broadcom.com>
+From: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] ARM: at91: dts: sama5d3/sama5d4: reduce NFC command registers memory region
+Date: Thu, 15 Jan 2015 15:08:03 +0800
+Message-ID: <1421305683-8739-1-git-send-email-josh.wu@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <54B753C7.6000006@broadcom.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Scott Branden <sbranden@broadcom.com>
-Cc: Jonathan Richardson <jonathar@broadcom.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, Joe Perches <joe@perches.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 14, 2015 at 09:44:39PM -0800, Scott Branden wrote:
-> On 15-01-14 05:02 PM, Dmitry Torokhov wrote:
-> >Hi Jonathan,
-> >
-> >On Fri, Dec 19, 2014 at 02:17:49PM -0800, Jonathan Richardson wrote:
-> >>+	if (of_property_read_u32(np, "scanning_period", &val) >= 0) {
-> >>+		if (val < 1 || val > 256) {
-> >>+			dev_err(dev, "scanning_period must be [1-256]\n");
-> >>+			return -EINVAL;
-> >>+		}
-> >>+		priv->cfg_params.scanning_period = val;
-> >>+	}
-> >>+
-> >>+	if (of_property_read_u32(np, "debounce_timeout", &val) >= 0) {
-> >>+		if (val < 0 || val > 255) {
-> >>+			dev_err(dev, "debounce_timeout must be [0-255]\n");
-> >>+			return -EINVAL;
-> >>+		}
-> >>+		priv->cfg_params.debounce_timeout = val;
-> >>+	}
-> >>+
-> >>+	if (of_property_read_u32(np, "settling_timeout", &val) >= 0) {
-> >>+		if (val < 0 || val > 11) {
-> >>+			dev_err(dev, "settling_timeout must be [0-11]\n");
-> >>+			return -EINVAL;
-> >>+		}
-> >>+		priv->cfg_params.settling_timeout = val;
-> >>+	}
-> >>+
-> >>+	if (of_property_read_u32(np, "touch_timeout", &val) >= 0) {
-> >>+		if (val < 0 || val > 255) {
-> >>+			dev_err(dev, "touch_timeout must be [0-255]\n");
-> >>+			return -EINVAL;
-> >>+		}
-> >>+		priv->cfg_params.touch_timeout = val;
-> >>+	}
-> >>+
-> >>+	if (of_property_read_u32(np, "average_data", &val) >= 0) {
-> >>+		if (val < 0 || val > 8) {
-> >>+			dev_err(dev, "average_data must be [0-8]\n");
-> >>+			return -EINVAL;
-> >>+		}
-> >>+		priv->cfg_params.average_data = val;
-> >>+	}
-> >>+
-> >>+	if (of_property_read_u32(np, "fifo_threshold", &val) >= 0) {
-> >>+		if (val < 0 || val > 31) {
-> >>+			dev_err(dev, "fifo_threshold must be [0-31]\n");
-> >>+			return -EINVAL;
-> >>+		}
-> >>+		priv->cfg_params.fifo_threshold = val;
-> >>+	}
-> >
-> >I think these are dveice specific and thus should have "brcm," prefix.
-> I'm confused as to why we need the brcm prefix?  Other device tree
-> bindings we have for other drivers do not need such prefix.
+To get NFC status, we need to read the NFC command registers, which is a
+256M memory mapping address. To check the status, you just read such
+address from NFC command registers.
+For example, to check NFCBUSY (bit 27), you need to read 0x08000000
+(bit 27 is set to 1) of the NFC command register.
+If you want to check NFCBUSY (bit 27) and NFCWR (bit 26) in same time,
+you need to read 0x0c000000 (bit 27 and bit 26 are set to 1).
 
-Properties that are not standard on the system (reg, interrupts,
-clkocks, etc) or subsystem level customarily carry the vendor prefix so
-that they do not clash with newly added global or subsystem properties.
+But mapping such huge memory address only for multiple NFC status check
+is not very economic.
 
->  Is this
-> convention documented somewhere?
+The economic way is we check the NFC status one bit a time, then we don't
+have to mapping such huge address.
 
-Not sure. I glanced through Documentation/devicetree and do not see it
-spelled out. Device tree overlords, what say you?
+Now we reduce the memory mapping from 256M to 128M+4 (include 0x08000000),
+the only difference is NFCBUSY (bit 27) status. You cannot check NFCBUSY
+bit with other NFC status bit.
 
-> >
-> >>+
-> >>+	priv->ts_rotation = TS_ROTATION_0;
-> >>+	if (of_property_read_u32(np, "ts-rotation", &val) >= 0) {
-> >>+		priv->ts_rotation = val;
-> >>+		dev_dbg(dev, "ts rotation [%d] degrees\n",
-> >>+			90 * priv->ts_rotation);
-> >>+	}
-> >
-> >This I am not quite sure about - if we want rotation or swap+invert. You
-> >are CCed on another email (tsc2007) that talks about need of generic
-> >touchscreen transforms in input core/of bindings.
-> Does such generic binding exist today?  If not, I would like to go
-> with this implementation and update to the new binding if/when it
-> exists?
+Since current atmel_nand driver check the NFCBUSY status without combine
+other bits, so this change (reduce 256M to 128M+4) will not be harmful.
 
-Not yet but there several people interested. I think we have enough time
-till 3.20 to hash it out properly.
+Signed-off-by: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 
-Thanks.
+---
 
+ arch/arm/boot/dts/sama5d3.dtsi | 2 +-
+ arch/arm/boot/dts/sama5d4.dtsi | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/boot/dts/sama5d3.dtsi b/arch/arm/boot/dts/sama5d3.dtsi
+index d701ddd..d243732 100644
+--- a/arch/arm/boot/dts/sama5d3.dtsi
++++ b/arch/arm/boot/dts/sama5d3.dtsi
+@@ -1426,7 +1426,7 @@
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
+ 				reg = <
+-					0x70000000 0x10000000	/* NFC Command Registers */
++					0x70000000 0x08000004	/* NFC Command Registers */
+ 					0xffffc000 0x00000070	/* NFC HSMC regs */
+ 					0x00200000 0x00100000	/* NFC SRAM banks */
+ 					>;
+diff --git a/arch/arm/boot/dts/sama5d4.dtsi b/arch/arm/boot/dts/sama5d4.dtsi
+index 0a2477f..05b096b 100644
+--- a/arch/arm/boot/dts/sama5d4.dtsi
++++ b/arch/arm/boot/dts/sama5d4.dtsi
+@@ -288,7 +288,7 @@
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
+ 				reg = <
+-					0x90000000 0x10000000	/* NFC Command Registers */
++					0x90000000 0x08000004	/* NFC Command Registers */
+ 					0xfc05c000 0x00000070	/* NFC HSMC regs */
+ 					0x00100000 0x00100000	/* NFC SRAM banks */
+                                          >;
 -- 
-Dmitry
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
