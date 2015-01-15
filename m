@@ -1,76 +1,67 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v2 1/2] Input: touchscreen-iproc: Add Broadcom iProc touchscreen
- driver
-Date: Wed, 14 Jan 2015 17:08:58 -0800
-Message-ID: <54B7132A.6030803@gmail.com>
-References: <Jonathan Richardson <jonathar@broadcom.com> <1419027470-7969-1-git-send-email-jonathar@broadcom.com> <1419027470-7969-2-git-send-email-jonathar@broadcom.com> <1419028015.25129.14.camel@perches.com> <5494AEB8.8060606@broadcom.com>
+From: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: Re: [PATCH v6 1/2] mtd: hisilicon: add a new NAND controller driver
+ for hisilicon hip04 Soc
+Date: Thu, 15 Jan 2015 09:27:14 +0800
+Message-ID: <54B71772.9080601@hisilicon.com>
+References: <1421047734-30818-1-git-send-email-wangzhou1@hisilicon.com> <1421047734-30818-2-git-send-email-wangzhou1@hisilicon.com> <20150113035844.GJ9759@ld-irv-0074> <54B6625F.8060607@hisilicon.com> <20150114192510.GY9759@ld-irv-0074>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <5494AEB8.8060606@broadcom.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Jonathan Richardson <jonathar@broadcom.com>, Joe Perches <joe@perches.com>
-Cc: devicetree@vger.kernel.org, Ray Jui <rjui@broadcom.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-input@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150114192510.GY9759@ld-irv-0074>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, caizhiyong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, yubingxu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 19/12/14 15:03, Jonathan Richardson wrote:
-> On 14-12-19 02:26 PM, Joe Perches wrote:
->> On Fri, 2014-12-19 at 14:17 -0800, Jonathan Richardson wrote:
->>> Add initial version of the Broadcom touchscreen driver.
+On 2015/1/15 3:25, Brian Norris wrote:
+> On Wed, Jan 14, 2015 at 08:34:39PM +0800, Zhou Wang wrote:
+>> On 2015/1/13 11:58, Brian Norris wrote:
+>>> On Mon, Jan 12, 2015 at 03:28:53PM +0800, Zhou Wang wrote:
+>>>> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+>>>> +	chip->IO_ADDR_R = chip->IO_ADDR_W = devm_ioremap_resource(dev, res);
+>>>
+>>> Hmm, do you really have to reuse IO_ADDR_{R,W} here? Those are only
+>>> targeted for NAND systems which have a direct MMIO mapping to the NAND
+>>> I/O pins. See nand_base's {read,write}_buf() and read_{byte,word}()
+>>> implementations. But you override those.
 >>
->> more trivia:
->>
->>> diff --git a/drivers/input/touchscreen/bcm_iproc_tsc.c b/drivers/input/touchscreen/bcm_iproc_tsc.c
->> []
->>> +static int get_tsc_config(struct device_node *np, struct iproc_ts_priv *priv)
->>> +{
->>> +	u32 val;
->> []
->>> +	if (of_property_read_u32(np, "debounce_timeout", &val) >= 0) {
->>> +		if (val < 0 || val > 255) {
->>> +			dev_err(dev, "debounce_timeout must be [0-255]\n");
->>> +			return -EINVAL;
->>> +		}
->>> +		priv->cfg_params.debounce_timeout = val;
+>> There is a hardware buffer in this NAND controller, and the buffer can be
+>> accessed as MMIO.
+> 
+> Sure.
+> 
+>> IO_ADDR_R/W just indicates the base address of this buffer.
+> 
+> But I was noting that IO_ADDR_{R,W} actually serve a very particular
+> purpose in nand_base.c, which seems distinct from your HW buffer.
+> 
+>> Maybe I need to use a void __iomem pointer stored in my host struct to use
+>> this buffer instead of IO_ADDR_R/W as you said below here?
+> 
+> Yes, I think that would be better.
 
-BTW, common practice for DT properties is to use a dash instead of an
-underscore for multi-worded properties.
+OK, I will do as this in next version, Thanks!
 
->>
->> Doesn't the compiler generate a warning message
->> about an impossible "unsigned < 0" test for all
->> of these "val < 0" uses?
->>
 > 
-> Actually no it doesn't. The gcc output shows that neither -Wtype-limits
-> nor -Wextra are used to compile that file. I assume this is because
-> there would be just too many warnings.
+>>> It's best if it's obvious if nand_base is somehow inadvertently using
+>>> these pointers. So leaving them NULL is helpful.
+>>>
+>>> As an alternative, you can just stash another private void __iomem
+>>> pointer in you your host struct.
 > 
+> Thanks,
+> Brian
+
+Thanks for your reply!
+Zhou Wang
+
 > 
->>> +	}
->>> +
->>> +	if (of_property_read_u32(np, "settling_timeout", &val) >= 0) {
->>> +		if (val < 0 || val > 11) {
->> []
->>> +	if (of_property_read_u32(np, "touch_timeout", &val) >= 0) {
->>> +		if (val < 0 || val > 255) {
->> []
->>> +	if (of_property_read_u32(np, "average_data", &val) >= 0) {
->>> +		if (val < 0 || val > 8) {
->> []
->>> +	if (of_property_read_u32(np, "fifo_threshold", &val) >= 0) {
->>> +		if (val < 0 || val > 31) {
->>
->>
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> .
 > 
 
 
--- 
-Florian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
