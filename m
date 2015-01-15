@@ -1,139 +1,55 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM: dts: rockchip: add dts for ChipSPARK Rayeager PX2 board
-Date: Thu, 15 Jan 2015 17:19:08 +0100
-Message-ID: <2706590.Kkspa3JYVn@phil>
-References: <1421289659-16627-1-git-send-email-naobsd@gmail.com> <1421289659-16627-4-git-send-email-naobsd@gmail.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+	<u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v4 2/3] i2c: iproc: Add Broadcom iProc I2C Driver
+Date: Thu, 15 Jan 2015 17:32:35 +0100
+Message-ID: <20150115163235.GQ22880@pengutronix.de>
+References: <rjui@broadcom.com>
+ <1421274213-3544-1-git-send-email-rjui@broadcom.com>
+ <1421274213-3544-3-git-send-email-rjui@broadcom.com>
+ <20150115084119.GN22880@pengutronix.de>
+ <20150115120704.GB2549@katana>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1421289659-16627-4-git-send-email-naobsd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: FUKAUMI Naoki <naobsd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150115120704.GB2549@katana>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hello,
 
-again, please add a small commit message and reorder nodes as described in the 
-previous patch, some more stuff inline
+On Thu, Jan 15, 2015 at 01:07:05PM +0100, Wolfram Sang wrote:
+> > > +	iproc_i2c->msg =3D msg;
+> > Can it happen that iproc_i2c->msg still holds an uncompleted messag=
+e
+> > here or is this serialized by the core? Wolfram? Either here someth=
+ing
+>=20
+> We have per-adapter locks serializing transfers, if you mean that?
+ok, so in the efm32 driver the if (ddata->msgs) condition in
+efm32_i2c_master_xfer can never be true, right?
 
-Am Donnerstag, 15. Januar 2015, 11:40:59 schrieb FUKAUMI Naoki:
-> Signed-off-by: FUKAUMI Naoki <naobsd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
+> > > +static int bcm_iproc_i2c_remove(struct platform_device *pdev)
+> > > +{
+> > > +	struct bcm_iproc_i2c_dev *iproc_i2c =3D platform_get_drvdata(pd=
+ev);
+> > > +
+> > > +	i2c_del_adapter(&iproc_i2c->adapter);
+> > You need to free the irq before i2c_del_adapter.
+>=20
+> One could also keep using devm_request_irq and disable all interrupts
+> sources here?
+calling devm_free_irq would work or writel(0, iproc_i2c->base +
+IE_OFFSET) + synchronize_irq().
 
-[...]
+Best regards
+Uwe
 
-> +
-> +	vsys: vsys-regulator {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vsys";
-> +		regulator-min-microvolt = <5000000>;
-> +		regulator-max-microvolt = <5000000>;
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +	};
-> +
-> +	vcc_otg: usb-otg-regulator {
-> +		compatible = "regulator-fixed";
-> +		enable-active-high;
-> +		gpio = <&gpio0 5 GPIO_ACTIVE_HIGH>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&otg_drv>;
-> +		regulator-name = "vcc_otg";
-> +		regulator-min-microvolt = <5000000>;
-> +		regulator-max-microvolt = <5000000>;
-> +		regulator-always-on;
-
-missing vin-supply
-
-> +	};
-> +
-> +	vcc_host: usb-host-regulator {
-> +		compatible = "regulator-fixed";
-> +		enable-active-high;
-> +		gpio = <&gpio0 6 GPIO_ACTIVE_HIGH>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&host_drv>;
-> +		regulator-name = "host-pwr";
-> +		regulator-min-microvolt = <5000000>;
-> +		regulator-max-microvolt = <5000000>;
-> +		regulator-always-on;
-
-missing vin-supply
-
-> +	};
-> +
-> +	vcc_sata: sata-regulator {
-> +		compatible = "regulator-fixed";
-> +		enable-active-high;
-> +		gpio = <&gpio4 22 GPIO_ACTIVE_HIGH>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&sata_pwr>;
-> +		regulator-name = "usb_5v";
-
-why is it named "usb_5v"?
-
-> +		regulator-min-microvolt = <5000000>;
-> +		regulator-max-microvolt = <5000000>;
-> +		regulator-always-on;
-
-missing vin-supply
-
-> +	};
-> +
-
-[...]
-
-> +&emmc {
-> +	broken-cd;
-> +	bus-width = <8>;
-> +	cap-mmc-highspeed;
-> +	disable-wp;
-> +	non-removable;
-> +	num-slots = <1>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&emmc_clk>, <&emmc_cmd>, <&emmc_rst>;
-> +	status = "okay";
-> +	vmmc-supply = <&vcc_emmc>;
-> +	vqmmc-supply = <&vcc_emmc>;
-
-I checked the public schematics and surprisingly this is actually correct ... 
-but still very strange :-)
-
-> +};
-
-[...]
-
-> +&i2c0 {
-> +	status = "okay";
-> +	clock-frequency = <400000>;
-> +
-> +	ak8963: ak8963@d {
-
-please use two chars for the address, i.e. ak8963@0d, same for the reg below
-
-> +		compatible = "asahi-kasei,ak8975";
-> +		reg = <0xd>;
-> +		interrupt-parent = <&gpio4>;
-> +		interrupts = <17 IRQ_TYPE_EDGE_RISING>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&comp_int>;
-> +	};
-> +
-> +	mma8452: mma8452@1d {
-> +		compatible = "fsl,mma8452";
-> +		reg = <0x1d>;
-> +		interrupt-parent = <&gpio4>;
-> +		interrupts = <16 IRQ_TYPE_EDGE_RISING>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&gsensor_int>;
-> +	};
-> +};
-
-
-Heiko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
+    |
+Industrial Linux Solutions                 | http://www.pengutronix.de/=
+  |
