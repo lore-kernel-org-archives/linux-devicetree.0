@@ -1,7 +1,7 @@
 From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v3 4/5] ARM: mvebu: add Device Tree description of RTC on Armada 38x
-Date: Thu, 15 Jan 2015 11:47:05 +0100
-Message-ID: <1421318826-27268-5-git-send-email-gregory.clement@free-electrons.com>
+Subject: [PATCH v3 3/5] MAINTAINERS: Add the RTC driver for the Armada38x
+Date: Thu, 15 Jan 2015 11:47:04 +0100
+Message-ID: <1421318826-27268-4-git-send-email-gregory.clement@free-electrons.com>
 References: <1421318826-27268-1-git-send-email-gregory.clement@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1421318826-27268-1-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
@@ -10,33 +10,25 @@ To: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linu
 Cc: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The Marvell Armada 38x SoCs contains an RTC which differs from the RTC
-used in the other mvebu SoCs until now. This commit adds the Device
-Tree description of this interface at the SoC level.
+Put it in the mvebu entry.
 
 Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- arch/arm/boot/dts/armada-38x.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/armada-38x.dtsi b/arch/arm/boot/dts/armada-38x.dtsi
-index 04fe80d101f8..36c1d35873dd 100644
---- a/arch/arm/boot/dts/armada-38x.dtsi
-+++ b/arch/arm/boot/dts/armada-38x.dtsi
-@@ -466,6 +466,13 @@
- 				clocks = <&gateclk 4>;
- 			};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index ddb9ac8d32b3..393f158a64e8 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1157,6 +1157,7 @@ M:	Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+ L:	linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org (moderated for non-subscribers)
+ S:	Maintained
+ F:	arch/arm/mach-mvebu/
++F:	drivers/rtc/armada38x-rtc
  
-+			rtc@a3800 {
-+				compatible = "marvell,armada-380-rtc";
-+				reg = <0xa3800 0x20>, <0x184a0 0x0c>;
-+				reg-names = "rtc", "soc-int";
-+				interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
-+			};
-+
- 			sata@a8000 {
- 				compatible = "marvell,armada-380-ahci";
- 				reg = <0xa8000 0x2000>;
+ ARM/Marvell Berlin SoC support
+ M:	Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 -- 
 1.9.1
 
