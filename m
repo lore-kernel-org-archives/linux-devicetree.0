@@ -1,95 +1,47 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH 1/3] input: tsc2007: Add pre-calibration, flipping and
- rotation
-Date: Thu, 15 Jan 2015 10:16:37 -0800
-Message-ID: <20150115181637.GE33214@dtor-ws>
-References: <1412108254-19234-1-git-send-email-marek@goldelico.com>
- <1412108254-19234-2-git-send-email-marek@goldelico.com>
- <CAAfyv36bD9ZratOzr7FkeQde8k-K9XjEjH9gkntm9qewD-cH9g@mail.gmail.com>
- <20150115005938.GB9134@dtor-ws>
- <0F9A17C1-9B01-4EE9-BE98-266B8FC02B84@goldelico.com>
- <20150115143855.GD512@earth.universe>
- <8B08216C-13DD-40D8-9BA9-060F1C18A018@goldelico.com>
-Mime-Version: 1.0
+From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH] i2c: Mark instantiated device nodes with OF_POPULATE
+Date: Thu, 15 Jan 2015 20:32:47 +0200
+Message-ID: <5F116C80-232D-4587-ACD1-F99C93262D7A@konsulko.com>
+References: <1421339635-16039-1-git-send-email-pantelis.antoniou@konsulko.com> <20150115173529.GB6342@katana>
+Mime-Version: 1.0 (Mac OS X Mail 8.1 \(1993\))
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <8B08216C-13DD-40D8-9BA9-060F1C18A018@goldelico.com>
-Sender: linux-input-owner@vger.kernel.org
-To: "Dr. H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Sebastian Reichel <sre@kernel.org>, Belisko Marek <marek.belisko@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-input@vger.kernel.org, Marek Belisko <marek@goldelico.com>, Jonathan Richardson <jonathar@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Yoichi Yuasa <yuasa@linux-mips.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, List
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150115173529.GB6342@katana>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 15, 2015 at 05:14:38PM +0100, Dr. H. Nikolaus Schaller wrot=
-e:
->=20
-> Am 15.01.2015 um 15:38 schrieb Sebastian Reichel <sre@kernel.org>:
->=20
-> > Hi,
-> >=20
-> > On Thu, Jan 15, 2015 at 08:36:44AM +0100, Dr. H. Nikolaus Schaller =
-wrote:
-> >>> 1. Perform conversion in input core rather than individual driver=
-s. I
-> >>> think we should allocate a new bitmaps for some transformations a=
-nd have
-> >>> the code do X/Y flip/clip of the coordinates.
-> >>=20
-> >> Do you have a suggestion where this should be (I have no clue how
-> >> the input system works or is structured - we just know how to exte=
-nd a
-> >> driver that uses it)?
-> >>=20
-> >>> 2. Standardize on bindings. We already have of-touchscreen.c doin=
-g
-> >>> rudimentary parsing, we shoudl look into extending it rather than
-> >>> creating myriad of driver-specific bindings.
-> >>=20
-> >> Ok, looks reasonable.
-> >=20
-> > Documentation is in=20
-> >=20
-> > Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
->=20
-> I did look into it now. Unfortunately, it does not fit well into my v=
-iew of how bindings
-> should be. They should describe hardware (as we are told for many oth=
-er kernel
-> subsystems).
->=20
-> Pixels and resolutions are IMHO related to the screen it is glued on =
-- and that is
-> quite independent.
+Hi Wolfram,
 
-Well, I think pixels was the wrong word to be used there. It is meant t=
-o
-be native units, as opposed to millimeters, inches, points, etc.
-
+> On Jan 15, 2015, at 19:35 , Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org> wrote:
 >=20
-> So I don=E2=80=99t see how they do describe the different ways the to=
-uch screen can be
-> wired to a tsc2007 controller.
+> On Thu, Jan 15, 2015 at 06:33:55PM +0200, Pantelis Antoniou wrote:
+>> Mark (and unmark) device nodes with the POPULATE flag as appropriate=
+=2E
+>> This is required to avoid multi probing when using I2C and device
+>> overlays containing a mux.
+>> This patch is also more careful with the release of the adapter devi=
+ce
+>> which caused a deadlock with muxes.
+>>=20
+>> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 >=20
-> Please can you add minimum and maximum properties for us?
+> Applied to for-current, thanks!
 >=20
-> Then, inverted-x and inverted-y is redundant because it is the same a=
-s having
-> an expected higher value from the ADC for the minimum coordinate and =
-a lower
-> for the maximum.
 
-I'd rather not add minimum and maximum, but add the touchscreen-start-x=
- and
-touchscreen-start-y instead so that we limit the number of obsolete
-properties.
+Just sent an updated patch that doesn=E2=80=99t break the build on !OF;=
+ some
+OF accessors are not defined then.
 
-Thanks.
+Regards
 
---=20
-Dmitry
+=E2=80=94 Pantelis
+
+
 --
-To unsubscribe from this list: send the line "unsubscribe linux-input" =
-in
-the body of a message to majordomo@vger.kernel.org
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
