@@ -1,73 +1,119 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: at91: dts: sama5d3/sama5d4: reduce NFC command
- registers memory region
-Date: Thu, 15 Jan 2015 11:05:01 +0100
-Message-ID: <20150115110501.53b4584c@bbrezillon>
-References: <1421305683-8739-1-git-send-email-josh.wu@atmel.com>
-	<20150115094527.3fde882a@bbrezillon>
-	<54B78F73.9000504@atmel.com>
+From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+Subject: [PATCH_V5] dm9000: Add regulator and reset support to dm9000
+Date: Thu, 15 Jan 2015 10:12:26 +0000
+Message-ID: <1421316746-38128-1-git-send-email-Zubair.Kakakhel@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54B78F73.9000504-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: davem@davemloft.net
+Cc: Zubair.Kakakhel@imgtec.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, s.hauer@pengutronix.de, sergei.shtylyov@cogentembedded.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Josh,
+In boards, the dm9000 chip's power and reset can be controlled by gpio.
 
-On Thu, 15 Jan 2015 17:59:15 +0800
-Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> wrote:
+It makes sense to add them to the dm9000 driver and let dt be used to
+enable power and reset the phy.
 
-> Hi=EF=BC=8C Boris
->=20
-> Thanks for the review.
->=20
-> On 1/15/2015 4:45 PM, Boris Brezillon wrote:
-> > Hi Josh,
-> >
-> > On Thu, 15 Jan 2015 15:08:03 +0800
-> > Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> wrote:
-> >
-> >> To get NFC status, we need to read the NFC command registers, whic=
-h is a
-> >> 256M memory mapping address. To check the status, you just read su=
-ch
-> >> address from NFC command registers.
-> >> For example, to check NFCBUSY (bit 27), you need to read 0x0800000=
-0
-> >> (bit 27 is set to 1) of the NFC command register.
-> >> If you want to check NFCBUSY (bit 27) and NFCWR (bit 26) in same t=
-ime,
-> >> you need to read 0x0c000000 (bit 27 and bit 26 are set to 1).
-> > Are NFCBUSY and NFCWR found in NFCDATA_STATUS and those found in HS=
-MC_SR
-> > representing the same thing.
-> yes. it is. I just check with IP team. The NFCBUSY of NFCDATA_STATUS =
-is=20
-> also refer to NFC_BUSY of HSMC_SR.
->=20
-> > If they are, I think you can just use HSMC_SR instead of NFCDATA_ST=
-ATUS
-> > to check the status [1] and drop the last bit in the NFC Command
-> > Resgiters range.
-> Thank you. your code works (just need some typo change).
-> I want to send [1] code with your signed-off and my acked to mtd list=
-=2E
-> Is it okay for you?
+Signed-off-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+Signed-off-by: Paul Burton <paul.burton@imgtec.com>
 
-Sure, no problem.
+---
+V4 Reordered an error check. PTR_ERR inside IS_ERR.
 
+V3 Fixed an indentation and removed a call to gpio_direction_output as
+devm_gpio_request_one can handle it.
 
+V2 A few fixes and more error checks. Nothing major
 
---=20
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+V1 Minor blooper
+---
+ .../devicetree/bindings/net/davicom-dm9000.txt     |  4 +++
+ drivers/net/ethernet/davicom/dm9000.c              | 40 ++++++++++++++++++++++
+ 2 files changed, 44 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/net/davicom-dm9000.txt b/Documentation/devicetree/bindings/net/davicom-dm9000.txt
+index 28767ed..5224bf0 100644
+--- a/Documentation/devicetree/bindings/net/davicom-dm9000.txt
++++ b/Documentation/devicetree/bindings/net/davicom-dm9000.txt
+@@ -11,6 +11,8 @@ Required properties:
+ Optional properties:
+ - davicom,no-eeprom : Configuration EEPROM is not available
+ - davicom,ext-phy : Use external PHY
++- reset-gpios : phandle of gpio that will be used to reset chip during probe
++- vcc-supply : phandle of regulator that will be used to enable power to chip
+ 
+ Example:
+ 
+@@ -21,4 +23,6 @@ Example:
+ 		interrupts = <7 4>;
+ 		local-mac-address = [00 00 de ad be ef];
+ 		davicom,no-eeprom;
++		reset-gpios = <&gpf 12 GPIO_ACTIVE_LOW>;
++		vcc-supply = <&eth0_power>;
+ 	};
+diff --git a/drivers/net/ethernet/davicom/dm9000.c b/drivers/net/ethernet/davicom/dm9000.c
+index ef0bb58..c0a7813 100644
+--- a/drivers/net/ethernet/davicom/dm9000.c
++++ b/drivers/net/ethernet/davicom/dm9000.c
+@@ -36,6 +36,9 @@
+ #include <linux/platform_device.h>
+ #include <linux/irq.h>
+ #include <linux/slab.h>
++#include <linux/regulator/consumer.h>
++#include <linux/gpio.h>
++#include <linux/of_gpio.h>
+ 
+ #include <asm/delay.h>
+ #include <asm/irq.h>
+@@ -1426,11 +1429,48 @@ dm9000_probe(struct platform_device *pdev)
+ 	struct dm9000_plat_data *pdata = dev_get_platdata(&pdev->dev);
+ 	struct board_info *db;	/* Point a board information structure */
+ 	struct net_device *ndev;
++	struct device *dev = &pdev->dev;
+ 	const unsigned char *mac_src;
+ 	int ret = 0;
+ 	int iosize;
+ 	int i;
+ 	u32 id_val;
++	int reset_gpios;
++	enum of_gpio_flags flags;
++	struct regulator *power;
++
++	power = devm_regulator_get(dev, "vcc");
++	if (IS_ERR(power)) {
++		if (PTR_ERR(power) == -EPROBE_DEFER)
++			return -EPROBE_DEFER;
++		dev_dbg(dev, "no regulator provided\n");
++	} else {
++		ret = regulator_enable(power);
++		if (ret != 0) {
++			dev_err(dev,
++				"Failed to enable power regulator: %d\n", ret);
++			return ret;
++		}
++		dev_dbg(dev, "regulator enabled\n");
++	}
++
++	reset_gpios = of_get_named_gpio_flags(dev->of_node, "reset-gpios", 0,
++					      &flags);
++	if (gpio_is_valid(reset_gpios)) {
++		ret = devm_gpio_request_one(dev, reset_gpios, flags,
++					    "dm9000_reset");
++		if (ret) {
++			dev_err(dev, "failed to request reset gpio %d: %d\n",
++				reset_gpios, ret);
++			return -ENODEV;
++		}
++
++		/* According to manual PWRST# Low Period Min 1ms */
++		msleep(2);
++		gpio_set_value(reset_gpios, 1);
++		/* Needs 3ms to read eeprom when PWRST is deasserted */
++		msleep(4);
++	}
+ 
+ 	if (!pdata) {
+ 		pdata = dm9000_parse_dt(&pdev->dev);
+-- 
+1.9.1
