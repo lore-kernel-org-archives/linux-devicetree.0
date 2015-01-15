@@ -1,43 +1,51 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] ethernet: atheros: Add nss-gmac driver
-Date: Thu, 15 Jan 2015 13:34:48 +0100
-Message-ID: <2318041.V2OJAPu7gC@wuerfel>
-References: <1420754626-30121-1-git-send-email-wstephen@codeaurora.org> <5550127.3sXOcCISZN@wuerfel> <bca0eaf2183036ff6a913daea6e09ad9.squirrel@www.codeaurora.org>
+From: Alexander Graf <agraf@suse.de>
+Subject: Re: [PATCH net-next v13 0/3] add hisilicon hip04 ethernet driver
+Date: Thu, 15 Jan 2015 13:39:03 +0100
+Message-ID: <54B7B4E7.8030108@suse.de>
+References: <1421217254-12008-1-git-send-email-dingtianhong@huawei.com> <54B642B4.8010807@suse.de> <54B77C43.6010200@huawei.com> <14674609.dERhba4yMV@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <bca0eaf2183036ff6a913daea6e09ad9.squirrel@www.codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: wstephen@codeaurora.org
-Cc: jcliburn@gmail.com, grant.likely@linaro.org, robh+dt@kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <14674609.dERhba4yMV@wuerfel>
+Sender: netdev-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, Ding Tianhong <dingtianhong@huawei.com>
+Cc: robh+dt@kernel.org, davem@davemloft.net, grant.likely@linaro.org, sergei.shtylyov@cogentembedded.com, linux-arm-kernel@lists.infradead.org, eric.dumazet@gmail.com, xuwei5@hisilicon.com, zhangfei.gao@linaro.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux@arm.linux.org.uk
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 15 January 2015 08:12:51 wstephen@codeaurora.org wrote:
+
+
+On 15.01.15 10:42, Arnd Bergmann wrote:
+> On Thursday 15 January 2015 16:37:23 Ding Tianhong wrote:
+>> On 2015/1/14 18:19, Alexander Graf wrote:
+>>>
+>>> >From a 10000 feet perspective it looks like two problems to me
+>>>
+>>>   1) Allocation failure doesn't get handled properly somewhere
 > 
-> The nss-gmac driver is for the internal GMAC IP in the Qualcomm IPQ806x
-> SoC. There are 2 ARM cores and 2 NSS cores inside the IPQ806x SoC. The
-> main purpose of these NSS cores is to offload the networking stack from
-> the ARM cores to achieve high performance at routing/ipsec..etc without
-> exhausting the ARM core CPU cycles. There is another nss-drv driver for
-> the NSS cores.
+> This is the bug that Eric pointed out as well.
+> 
+>>>   2) We fail to allocate with order=0 - I don't see why
+> 
+> GFP_ATOMIC. When allocating from a the napi poll function in softirq
+> context, you have to use nonblocking allocations, which occasionally
+> fail. This should not cause any harm other than dropped packets.
+> 
+>> is it easy to repetition this bug? how big is your memory on your board,
+>> is it happened in your previous hip04 driver?
+> 
+> It should be independent of memory size, but may be more likely if you
+> don't have swap space configured.
 
-I see.
+With the previous driver I was unable to get this far - I ended up in
+random memory corruption and had a ~90% packet loss after about an hour
+of uptime.
 
-> The nss-gmac driver is designed to work standalone or with the nss-drv
-> driver so the switchable data plane overlay was implemented. When it
-> worked standalone, the data plane is running on the ARM core as a standard
-> networking driver.
+I'm not sure whether it's easy to reproduce, I merely started up a few
+VMs, did some disk I/O and started to compile QEMU in the background ;).
 
-How do you decide which way it gets used on a particular system?
+I'll happily give your follow up patch that's going to fix the memory
+allocation problems a try though.
 
-> The nss-drv driver can take over the data plane and
-> offload it to the NSS cores. The STMicro stmmac driver does not have this
-> kind of overlay design so is not suitable for IPQ806x. This is why we
-> don't based on the stmmac driver
 
-Which kind of offload is implemented specifically? 'data plane' sounds
-fairly generic and could mean anything, and the code isn't readable enough
-in its current form for me to find out.
-
-	Arnd
+Alex
