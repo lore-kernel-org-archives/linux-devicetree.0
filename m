@@ -1,11 +1,10 @@
-From: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
+From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
 Subject: Re: [PATCH v8 2/4] fpga manager: add sysfs interface document
-Date: Thu, 15 Jan 2015 20:45:02 +0000
-Message-ID: <20150115204502.591bca1d@lxorguk.ukuu.org.uk>
+Date: Thu, 15 Jan 2015 22:54:46 +0200
+Message-ID: <A3B5BC9B-EB88-4C0E-B235-E9C86D23DC34@konsulko.com>
 References: <20150107084819.GA1887@amd>
  <alpine.DEB.2.02.1501091302370.30067@linuxheads99>
- <20150109205643.GA5761@amd>
- <20150112210134.687176ed@lxorguk.ukuu.org.uk>
+ <20150109205643.GA5761@amd> <20150112210134.687176ed@lxorguk.ukuu.org.uk>
  <20150112214314.GA18610@obsidianresearch.com>
  <20150113162847.2778b5a5@lxorguk.ukuu.org.uk>
  <20150113200032.GA16205@obsidianresearch.com>
@@ -13,11 +12,12 @@ References: <20150107084819.GA1887@amd>
  <20150113222450.GA17475@obsidianresearch.com>
  <alpine.DEB.2.02.1501150936390.16760@linuxheads99>
  <20150115184726.GA23247@obsidianresearch.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+ <20150115204502.591bca1d@lxorguk.ukuu.org.uk>
+Mime-Version: 1.0 (Mac OS X Mail 8.1 \(1993\))
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20150115184726.GA23247@obsidianresearch.com>
+In-Reply-To: <20150115204502.591bca1d@lxorguk.ukuu.org.uk>
 List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
  <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
 List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
@@ -27,91 +27,84 @@ List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driver
  <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
 Errors-To: driverdev-devel-bounces@linuxdriverproject.org
 Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Cc: mark.rutland@arm.com, linux-doc@vger.kernel.org, rubini@gnudd.com, pantelis.antoniou@konsulko.com, hpa@zytor.com, s.trumtrar@pengutronix.de, devel@driverdev.osuosl.org, sameo@linux.intel.com, nico@linaro.org, ijc+devicetree@hellion.org.uk, michal.simek@xilinx.com, kyle.teske@ni.com, grant.likely@linaro.org, davidb@codeaurora.org, linus.walleij@linaro.org, cesarb@cesarb.net, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, iws@ovro.caltech.edu, atull <atull@opensource.altera.com>, galak@codeaurora.org, broonie@kernel.org, philip@balister.org, dinguyen@opensource.altera.com, monstr@monstr.eu, Pavel Machek <pavel@denx.de>, yvanderv@opensource.altera.com, linux-kernel@vger.kernel.org, balbi@ti.com, delicious.quinoa@gmail.com, robh+dt@kernel.org, rob@landley.net, gregkh@linuxfoundation.org, akpm@linux-foundation.org, davem@davemloft.net, m.chehab@samsung.c
+To: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
+Cc: mark.rutland@arm.com, linux-doc@vger.kernel.org, rubini@gnudd.com, hpa@zytor.com, Steffen Trumtrar <s.trumtrar@pengutronix.de>, devel@driverdev.osuosl.org, sameo@linux.intel.com, nico@linaro.org, ijc+devicetree@hellion.org.uk, Michal Simek <michal.simek@xilinx.com>, kyle.teske@ni.com, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Grant Likely <grant.likely@linaro.org>, davidb@codeaurora.org, Linus Walleij <linus.walleij@linaro.org>, cesarb@cesarb.net, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, iws@ovro.caltech.edu, atull <atull@opensource.altera.com>, galak@codeaurora.org, Mark Brown <broonie@kernel.org>, philip@balister.org, dinguyen@opensource.altera.com, Michal Simek <monstr@monstr.eu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, yvanderv@opensource.altera.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Felipe
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 15 Jan 2015 11:47:26 -0700
-Jason Gunthorpe <jgunthorpe@obsidianresearch.com> wrote:
-> It is a novel idea, my concern would be that embedding the FPGA in the
-> DT makes it permanent unswappable kernel memory.
-> Not having the kernel hold the FPGA is best for many uses.
-
-If you have a filesysytem before the FPGA is set up then it belongs in
-the file system. As you presumably loaded the kernel from somewhere there
-ought to be a file system (even an initrd).
-
-> Having the kernel hold the FPGA as a swppable file handle/mmap of some
-> sort is next best (obviously the fs must be operating during resume)
-
-For a lot of hardware that gets somewhat hairy because you don't know
-what the dependancies between devices are on the resume but yes.
-
-> Unswappable kernel memory is the worst choice
-
-There is another case here - which is where the firmware is somewhere
-else physically. For example in PCI ROM space, or flash, but designed to
-be loaded by the OS.
-
-
-> I think to justify the ioctls you need a reason to have the context
-> of a FD. sysfs is stateless, so if my process dies the kernel doesn't
-> know.
-
-That isn't to say the stateless information doesn't belong in sysfs. Eg
-you don't neccessarily want to open the device node and go through ioctls
-just for bits of information that are interesting to reporting tools.
-
-(Imagine an 'lsfpga' tool for the kind of things you'd leave in sysfs)
-
-> Identifying the ioctls needed would probably clarify things. My
-> rough start would be 
-> 
-> - Get status: programed, not programmed, error?
->   Bitfile type? (eg Xilinx has nearly every permutation of bit/byte
->   ordering)
-
-That's probably some kind of "what are you" ioctl that returns the
-vendor/type information.
-
-> - Hand over to a DT overlay (how does this work?) Lock transfers
->   from FD to kernel
-
-That bit isn't stateful so I would actually have expected something in
-the kernel ABI along the lines of 
-
-           request_fpga(blah)
-
-which does
-
-             if in use by user
-                    EBUSY
-             lock it (all user opens will fail)
-
-and
-
-            release_fpga(blah)
-
-and a sysfs node indicating its busy (and perhaps also what for if the
-request_fpga passes a textual name)
-
-> Not sure about partial reconfiguration - clearly the kernel needs to
-> know and check that the bitfiles are of the correct family, I wonder
-> if the approach should be to program a basis on the FPGA which then
-> creates a new FPGA device in the system that can accept the partial
-> reconfiguration - this way the locking makes sense, the basis is
-> locked by the kernel and devices and the overlay remains
-> lockable/swappable/whatever by a dedicated /dev/ node ??
-
-I think so.
-
-If you closed the device you have no idea what happened between the close
-and a re-open, therefore you have no idea what the FPGA state is.
- 
-> Just thinking aloud, I've never had a use case for partial
-> reconfiguration.
-
-The API handles it but whether it needs to be there from day one I don't
-know.
-
-Alan
+SGkgQWxhbiwKCj4gT24gSmFuIDE1LCAyMDE1LCBhdCAyMjo0NSAsIE9uZSBUaG91c2FuZCBHbm9t
+ZXMgPGdub21lc0BseG9yZ3VrLnVrdXUub3JnLnVrPiB3cm90ZToKPiAKPiBPbiBUaHUsIDE1IEph
+biAyMDE1IDExOjQ3OjI2IC0wNzAwCj4gSmFzb24gR3VudGhvcnBlIDxqZ3VudGhvcnBlQG9ic2lk
+aWFucmVzZWFyY2guY29tPiB3cm90ZToKPj4gSXQgaXMgYSBub3ZlbCBpZGVhLCBteSBjb25jZXJu
+IHdvdWxkIGJlIHRoYXQgZW1iZWRkaW5nIHRoZSBGUEdBIGluIHRoZQo+PiBEVCBtYWtlcyBpdCBw
+ZXJtYW5lbnQgdW5zd2FwcGFibGUga2VybmVsIG1lbW9yeS4KPj4gTm90IGhhdmluZyB0aGUga2Vy
+bmVsIGhvbGQgdGhlIEZQR0EgaXMgYmVzdCBmb3IgbWFueSB1c2VzLgo+IAo+IElmIHlvdSBoYXZl
+IGEgZmlsZXN5c3l0ZW0gYmVmb3JlIHRoZSBGUEdBIGlzIHNldCB1cCB0aGVuIGl0IGJlbG9uZ3Mg
+aW4KPiB0aGUgZmlsZSBzeXN0ZW0uIEFzIHlvdSBwcmVzdW1hYmx5IGxvYWRlZCB0aGUga2VybmVs
+IGZyb20gc29tZXdoZXJlIHRoZXJlCj4gb3VnaHQgdG8gYmUgYSBmaWxlIHN5c3RlbSAoZXZlbiBh
+biBpbml0cmQpLgo+IAoKUmVxdWVzdCBmaXJtd2FyZSBkb2VzIG5vdCBpbXBseSBrZWVwaW5nIGl0
+IGFyb3VuZC4gWW91IGNhbiBhbHdheXMgcmUtcmVxdWVzdAp3aGVuIHJlbG9hZGluZyAoYWx0aG91
+Z2ggdGhlcmXigJlzIGEgbmFzdHkgYmlnIG9mIGNhY2hpbmcgdGhhdCBuZWVkcyB0byBiZQpyZXNv
+bHZlZCB3aXRoIHRoZSBmaXJtd2FyZSBsb2FkZXIpLgoKPj4gSGF2aW5nIHRoZSBrZXJuZWwgaG9s
+ZCB0aGUgRlBHQSBhcyBhIHN3cHBhYmxlIGZpbGUgaGFuZGxlL21tYXAgb2Ygc29tZQo+PiBzb3J0
+IGlzIG5leHQgYmVzdCAob2J2aW91c2x5IHRoZSBmcyBtdXN0IGJlIG9wZXJhdGluZyBkdXJpbmcg
+cmVzdW1lKQo+IAo+IEZvciBhIGxvdCBvZiBoYXJkd2FyZSB0aGF0IGdldHMgc29tZXdoYXQgaGFp
+cnkgYmVjYXVzZSB5b3UgZG9uJ3Qga25vdwo+IHdoYXQgdGhlIGRlcGVuZGFuY2llcyBiZXR3ZWVu
+IGRldmljZXMgYXJlIG9uIHRoZSByZXN1bWUgYnV0IHllcy4KPiAKPj4gVW5zd2FwcGFibGUga2Vy
+bmVsIG1lbW9yeSBpcyB0aGUgd29yc3QgY2hvaWNlCj4gCj4gVGhlcmUgaXMgYW5vdGhlciBjYXNl
+IGhlcmUgLSB3aGljaCBpcyB3aGVyZSB0aGUgZmlybXdhcmUgaXMgc29tZXdoZXJlCj4gZWxzZSBw
+aHlzaWNhbGx5LiBGb3IgZXhhbXBsZSBpbiBQQ0kgUk9NIHNwYWNlLCBvciBmbGFzaCwgYnV0IGRl
+c2lnbmVkIHRvCj4gYmUgbG9hZGVkIGJ5IHRoZSBPUy4KPiAKPiAKCk9uZSBvZiB0aGUgaWRlYXMg
+cm9sbGluZyBhYm91dCBpcyB0byBwdXQgdGhlIGRldmljZSB0cmVlIG92ZXJsYXkgYmxvYiBpbgph
+biBFRVBST00gYW5kIHRoZW4gbG9hZCBpdCBmcm9tIHRoZXJlIChub3QgZnJvbSB0aGUgZmlsZXN5
+c3RlbSkuCgo+PiBJIHRoaW5rIHRvIGp1c3RpZnkgdGhlIGlvY3RscyB5b3UgbmVlZCBhIHJlYXNv
+biB0byBoYXZlIHRoZSBjb250ZXh0Cj4+IG9mIGEgRkQuIHN5c2ZzIGlzIHN0YXRlbGVzcywgc28g
+aWYgbXkgcHJvY2VzcyBkaWVzIHRoZSBrZXJuZWwgZG9lc24ndAo+PiBrbm93Lgo+IAo+IFRoYXQg
+aXNuJ3QgdG8gc2F5IHRoZSBzdGF0ZWxlc3MgaW5mb3JtYXRpb24gZG9lc24ndCBiZWxvbmcgaW4g
+c3lzZnMuIEVnCj4geW91IGRvbid0IG5lY2Nlc3NhcmlseSB3YW50IHRvIG9wZW4gdGhlIGRldmlj
+ZSBub2RlIGFuZCBnbyB0aHJvdWdoIGlvY3Rscwo+IGp1c3QgZm9yIGJpdHMgb2YgaW5mb3JtYXRp
+b24gdGhhdCBhcmUgaW50ZXJlc3RpbmcgdG8gcmVwb3J0aW5nIHRvb2xzLgo+IAo+IChJbWFnaW5l
+IGFuICdsc2ZwZ2EnIHRvb2wgZm9yIHRoZSBraW5kIG9mIHRoaW5ncyB5b3UnZCBsZWF2ZSBpbiBz
+eXNmcykKPiAKPj4gSWRlbnRpZnlpbmcgdGhlIGlvY3RscyBuZWVkZWQgd291bGQgcHJvYmFibHkg
+Y2xhcmlmeSB0aGluZ3MuIE15Cj4+IHJvdWdoIHN0YXJ0IHdvdWxkIGJlIAo+PiAKPj4gLSBHZXQg
+c3RhdHVzOiBwcm9ncmFtZWQsIG5vdCBwcm9ncmFtbWVkLCBlcnJvcj8KPj4gIEJpdGZpbGUgdHlw
+ZT8gKGVnIFhpbGlueCBoYXMgbmVhcmx5IGV2ZXJ5IHBlcm11dGF0aW9uIG9mIGJpdC9ieXRlCj4+
+ICBvcmRlcmluZykKPiAKPiBUaGF0J3MgcHJvYmFibHkgc29tZSBraW5kIG9mICJ3aGF0IGFyZSB5
+b3UiIGlvY3RsIHRoYXQgcmV0dXJucyB0aGUKPiB2ZW5kb3IvdHlwZSBpbmZvcm1hdGlvbi4KPiAK
+CkNhbiB3ZSBwbGVhc2Ugbm90IHVzZSBpb2N0bHMgaWYgcG9zc2libGUuIENvbmZpZ2ZzIHNlZW1z
+IHRvIHdvcmsganVzdCBmaW5lCmZvciBjb25maWd1cmF0aW9uIGFuZCBmb3IgYW55IG90aGVyIGhp
+Z2hlciBzcGVlZCBBUEkgd2Ugc2hvdWxkIHVzZSByZWFkL3dyaXRlL21tYXAuCgpJb2N0bHMgYXJl
+IGEgcGFpbiBmb3Igc2NyaXB0aW5nIGFuZCBpbnRlcnByZXRlZCBsYW5ndWFnZXMgdXN1YWxseS4K
+Cj4+IC0gSGFuZCBvdmVyIHRvIGEgRFQgb3ZlcmxheSAoaG93IGRvZXMgdGhpcyB3b3JrPykgTG9j
+ayB0cmFuc2ZlcnMKPj4gIGZyb20gRkQgdG8ga2VybmVsCj4gCj4gVGhhdCBiaXQgaXNuJ3Qgc3Rh
+dGVmdWwgc28gSSB3b3VsZCBhY3R1YWxseSBoYXZlIGV4cGVjdGVkIHNvbWV0aGluZyBpbgo+IHRo
+ZSBrZXJuZWwgQUJJIGFsb25nIHRoZSBsaW5lcyBvZiAKPiAKPiAgICAgICAgICAgcmVxdWVzdF9m
+cGdhKGJsYWgpCj4gCj4gd2hpY2ggZG9lcwo+IAo+ICAgICAgICAgICAgIGlmIGluIHVzZSBieSB1
+c2VyCj4gICAgICAgICAgICAgICAgICAgIEVCVVNZCj4gICAgICAgICAgICAgbG9jayBpdCAoYWxs
+IHVzZXIgb3BlbnMgd2lsbCBmYWlsKQo+IAo+IGFuZAo+IAo+ICAgICAgICAgICAgcmVsZWFzZV9m
+cGdhKGJsYWgpCj4gCj4gYW5kIGEgc3lzZnMgbm9kZSBpbmRpY2F0aW5nIGl0cyBidXN5IChhbmQg
+cGVyaGFwcyBhbHNvIHdoYXQgZm9yIGlmIHRoZQo+IHJlcXVlc3RfZnBnYSBwYXNzZXMgYSB0ZXh0
+dWFsIG5hbWUpCj4gCj4+IE5vdCBzdXJlIGFib3V0IHBhcnRpYWwgcmVjb25maWd1cmF0aW9uIC0g
+Y2xlYXJseSB0aGUga2VybmVsIG5lZWRzIHRvCj4+IGtub3cgYW5kIGNoZWNrIHRoYXQgdGhlIGJp
+dGZpbGVzIGFyZSBvZiB0aGUgY29ycmVjdCBmYW1pbHksIEkgd29uZGVyCj4+IGlmIHRoZSBhcHBy
+b2FjaCBzaG91bGQgYmUgdG8gcHJvZ3JhbSBhIGJhc2lzIG9uIHRoZSBGUEdBIHdoaWNoIHRoZW4K
+Pj4gY3JlYXRlcyBhIG5ldyBGUEdBIGRldmljZSBpbiB0aGUgc3lzdGVtIHRoYXQgY2FuIGFjY2Vw
+dCB0aGUgcGFydGlhbAo+PiByZWNvbmZpZ3VyYXRpb24gLSB0aGlzIHdheSB0aGUgbG9ja2luZyBt
+YWtlcyBzZW5zZSwgdGhlIGJhc2lzIGlzCj4+IGxvY2tlZCBieSB0aGUga2VybmVsIGFuZCBkZXZp
+Y2VzIGFuZCB0aGUgb3ZlcmxheSByZW1haW5zCj4+IGxvY2thYmxlL3N3YXBwYWJsZS93aGF0ZXZl
+ciBieSBhIGRlZGljYXRlZCAvZGV2LyBub2RlID8/Cj4gCj4gSSB0aGluayBzby4KPiAKPiBJZiB5
+b3UgY2xvc2VkIHRoZSBkZXZpY2UgeW91IGhhdmUgbm8gaWRlYSB3aGF0IGhhcHBlbmVkIGJldHdl
+ZW4gdGhlIGNsb3NlCj4gYW5kIGEgcmUtb3BlbiwgdGhlcmVmb3JlIHlvdSBoYXZlIG5vIGlkZWEg
+d2hhdCB0aGUgRlBHQSBzdGF0ZSBpcy4KPiAKPj4gSnVzdCB0aGlua2luZyBhbG91ZCwgSSd2ZSBu
+ZXZlciBoYWQgYSB1c2UgY2FzZSBmb3IgcGFydGlhbAo+PiByZWNvbmZpZ3VyYXRpb24uCj4gCj4g
+VGhlIEFQSSBoYW5kbGVzIGl0IGJ1dCB3aGV0aGVyIGl0IG5lZWRzIHRvIGJlIHRoZXJlIGZyb20g
+ZGF5IG9uZSBJIGRvbid0Cj4ga25vdy4KPiAKCk1ha2luZyB0aGUgQVBJIGhhbmRsZSBwYXJ0aWFs
+IHJlY29uZmlndXJhdGlvbiBmcm9tIGRheSBvbmUgbWlnaHQgYmUgcHVzaGluZyB0cmlja3kuCkkg
+ZG9u4oCZdCByZW1lbWJlciBhbnkgY2FzZSB3aGVyZSBJIGNhbWUgYWNyb3NzIGEgbmVlZCBmb3Ig
+aXQuCgpXZSBjb3VsZCBkbyB3aXRoIGEgdmlydHVhbCBGUEdBIHRvcG9sb2d5OyBoYXZlIGEgcm9v
+dCBGUEdBIHRoYXTigJlzIGtlZXBpbmcgdGhlCmNvbW1vbiB1bmNoYW5nZWQgYml0cyBhbmQgYW5v
+dGhlciB0aGF04oCZcyBrZWVwaW5nIHRoZSBiaXRzIHRoYXQgZG8gY2hhbmdlLgoKRHVubm8gaG93
+IG5pY2UgaXQgd291bGQgYmUgaW4gcHJhY3RpY2UgdGhvdWdoLgoKPiBBbGFuCj4gCgpSZWdhcmRz
+CgrigJQgUGFudGVsaXMKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmRldmVsIG1haWxpbmcgbGlzdApkZXZlbEBsaW51eGRyaXZlcnByb2plY3Qub3JnCmh0
+dHA6Ly9kcml2ZXJkZXYubGludXhkcml2ZXJwcm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
+aXZlcmRldi1kZXZlbAo=
