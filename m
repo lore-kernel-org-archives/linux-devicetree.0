@@ -1,70 +1,65 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: [PATCH] ARM: zynq: DT: Fix binding for cadence WDT
-Date: Thu, 15 Jan 2015 13:47:29 +0100
-Message-ID: <0c27264afa3356979d803d53d329458039f64485.1421326047.git.michal.simek@xilinx.com>
-Content-Type: multipart/signed;
-    boundary="=_mimegpg-monstr-desktop-7207-1421326049-0001";
-    micalg=pgp-sha1; protocol="application/pgp-signature"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: monstr@monstr.eu, Josh Cartwright <josh.cartwright@ni.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Rob Herring <robherring2@gmail.com>, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann@xilinx.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH net-next v13 0/3] add hisilicon hip04 ethernet driver
+Date: Thu, 15 Jan 2015 20:56:21 +0800
+Message-ID: <54B7B8F5.6060808@huawei.com>
+References: <1421217254-12008-1-git-send-email-dingtianhong@huawei.com> <54B642B4.8010807@suse.de> <54B77C43.6010200@huawei.com> <14674609.dERhba4yMV@wuerfel> <54B7B4E7.8030108@suse.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54B7B4E7.8030108-l3A5Bk7waGM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Graf <agraf-l3A5Bk7waGM@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, eric.dumazet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is a MIME GnuPG-signed message.  If you see this text, it means that
-your E-mail or Usenet software does not support MIME signed messages.
-The Internet standard for MIME PGP messages, RFC 2015, was published in 1996.
-To open this message correctly you will need to install E-mail or Usenet
-software that supports modern Internet standards.
+On 2015/1/15 20:39, Alexander Graf wrote:
+> 
+> 
+> On 15.01.15 10:42, Arnd Bergmann wrote:
+>> On Thursday 15 January 2015 16:37:23 Ding Tianhong wrote:
+>>> On 2015/1/14 18:19, Alexander Graf wrote:
+>>>>
+>>>> >From a 10000 feet perspective it looks like two problems to me
+>>>>
+>>>>   1) Allocation failure doesn't get handled properly somewhere
+>>
+>> This is the bug that Eric pointed out as well.
+>>
+>>>>   2) We fail to allocate with order=0 - I don't see why
+>>
+>> GFP_ATOMIC. When allocating from a the napi poll function in softirq
+>> context, you have to use nonblocking allocations, which occasionally
+>> fail. This should not cause any harm other than dropped packets.
+>>
+>>> is it easy to repetition this bug? how big is your memory on your board,
+>>> is it happened in your previous hip04 driver?
+>>
+>> It should be independent of memory size, but may be more likely if you
+>> don't have swap space configured.
+> 
+> With the previous driver I was unable to get this far - I ended up in
+> random memory corruption and had a ~90% packet loss after about an hour
+> of uptime.
+> 
+> I'm not sure whether it's easy to reproduce, I merely started up a few
+> VMs, did some disk I/O and started to compile QEMU in the background ;).
+> 
+> I'll happily give your follow up patch that's going to fix the memory
+> allocation problems a try though.
+> 
+Thanks for your work, I am sure we could make it much more better:)
 
---=_mimegpg-monstr-desktop-7207-1421326049-0001
+Ding
 
-Based on:
-"devicetree: Add Cadence WDT devicetree bindings documentation"
-(sha1: 191891c0378f44aec8e06e889a08d0b76fe6c5cb)
+> 
+> Alex
+> 
+> .
+> 
 
-- compatible string is cdns,wdt-r1p2
-- remove device_type property
-- remove int reset property (reset-on-timeout is bool)
 
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
----
-
- arch/arm/boot/dts/zynq-7000.dtsi | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
-index c9b9722c0c59..a5cd2eda3edf 100644
---- a/arch/arm/boot/dts/zynq-7000.dtsi
-+++ b/arch/arm/boot/dts/zynq-7000.dtsi
-@@ -342,12 +342,10 @@
-
- 		watchdog0: watchdog@f8005000 {
- 			clocks = <&clkc 45>;
--			compatible = "xlnx,zynq-wdt-r1p2";
--			device_type = "watchdog";
-+			compatible = "cdns,wdt-r1p2";
- 			interrupt-parent = <&intc>;
- 			interrupts = <0 9 1>;
- 			reg = <0xf8005000 0x1000>;
--			reset = <0>;
- 			timeout-sec = <10>;
- 		};
- 	};
 --
-1.8.2.3
-
-
---=_mimegpg-monstr-desktop-7207-1421326049-0001
-Content-Type: application/pgp-signature
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-
-iEYEABECAAYFAlS3tuEACgkQykllyylKDCHZcwCfbca+f5CtcIBKR5Ml7Ozw3eTS
-WbwAni6isv7kkYFdDRk1TGGnxGjjQqOi
-=8C/M
------END PGP SIGNATURE-----
-
---=_mimegpg-monstr-desktop-7207-1421326049-0001--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
