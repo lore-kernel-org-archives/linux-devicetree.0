@@ -1,84 +1,40 @@
-From: Arnaud Ebalard <arno@natisbad.org>
-Subject: [PATCHv1 0/3] rtc: Abracon AB-RTCMC-32.768kHz-B5ZE-S3 I2C RTC chip support
-Date: Thu, 15 Jan 2015 22:29:58 +0100
-Message-ID: <cover.1421356414.git.arno@natisbad.org>
+From: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+Subject: [PATCHv1 1/3] of: add vendor prefix for Abracon Corporation
+Date: Thu, 15 Jan 2015 22:30:14 +0100
+Message-ID: <b1fec47ebc8d343cfb7f28f0347087045387bb46.1421356414.git.arno@natisbad.org>
+References: <cover.1421356414.git.arno@natisbad.org>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Peter Huewe <peter.huewe@infineon.com>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <treding@nvidia.com>, Mark Brown <broonie@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Rob Landley <rob@landley.net>, rtc-linux@googlegroups.com, Jason Cooper <jason@lakedaemon.net>, Guenter Roeck <linux@roeck-us.net>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1421356414.git.arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Peter Huewe <peter.huewe-d0qZbvYSIPpWk0Htik3J/w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew, 
 
-I fixed unhandled error case for devm_request_threaded_irq() and came w/
-a simple solution to get a single return path in probe function:
+Signed-off-by: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-   err:
-   	if (ret && data && data->irq)
-   		device_init_wakeup(dev, false);
-   	return ret;
-   }
-
-  
-Changes since v0:
-  - fixed unhandled error case for devm_request_threaded_irq()
-  - enforced a common error return path in _probe()
-
-For those who missed v0:
-
-This series adds support for Abracon AB-RTCMC-32.768kHz-B5ZE-S3 I2C RTC 
-chip. Unlike many RTC chips, it includes an internal oscillator which 
-spares room on the PCB. It also has some interesting features, like 
-battery low detection (which the driver in this series supports). The 
-only small "limitation" (mainly due to what RTC subsystem expects from 
-RTC chips) is the fact that its alarm is accurate to the second. This 
-series provides a solution (described below) for that limitation using 
-another mechanism of the chip. 
-
-I decided to split support between three different patches for 
-this v0: 
-
-- Patch 1/3: it simply references Abracon Corporation in vendor-prefixes 
-  documentation file. As Abracon has no NASDAQ ticker symbol; I have 
-  decided to use "abcn" (I initially started my work w/ "ab" but later 
-  changed for "abcn" which looked more meaningful) 
-- Patch 2/3: it adds initial support for the chip and provides the 
-  ability to read/write time and also read/write alarm. As the alarm 
-  the chip provides is accurate to the minute, the support provided 
-  by this patch also has this limitation (e.g. UIE mode is not 
-  supported). 
-- Patch 3/3: the chip supports a watchdog timer which can be used to 
-  extend the alarm mechanism in patch 2/3 in order to provide support 
-  for alarms under one minute (e.g. support UIE mode). In practice, 
-  the logic I implemented is to use the watchdog timer for alarms which 
-  are at most 4 minutes in the future and use the common alarm mechanism 
-  for alarms which are set to larger values. With that additional patch 
-  the device fully passes the rtctest.c program. 
-
-I decided to split the driver between two patches (2 and 3 of 3) in 
-order to ease review: patch 2 should be pretty straightforward to read 
-for someone familiar w/ RTC subsystem. Patch 3 only extends what is in 
-patch 2 regarding alarms. If you prefer a single patch in a v1, do not 
-hesitate to ask. 
-
-The set currently applies on top of 3.19-rc4 but I can rebase it against 
-something else if you prefer. 
-
-Arnaud Ebalard (3):
-  of: add vendor prefix for Abracon Corporation
-  rtc: Add support for Abracon AB-RTCMC-32.768kHz-B5ZE-S3 I2C RTC chip
-  rtc: rtc-ab-b5ze-s3: Add sub-minute alarm support
-
- .../devicetree/bindings/i2c/trivial-devices.txt    |    1 +
- .../devicetree/bindings/vendor-prefixes.txt        |    1 +
- drivers/rtc/Kconfig                                |   11 +
- drivers/rtc/Makefile                               |    1 +
- drivers/rtc/rtc-ab-b5ze-s3.c                       | 1035 ++++++++++++++++++++
- 5 files changed, 1049 insertions(+)
- create mode 100644 drivers/rtc/rtc-ab-b5ze-s3.c
-
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index b1df0ad1306c..8275258cc8c5 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -4,6 +4,7 @@ This isn't an exhaustive list, but you should add new prefixes to it before
+ using them to avoid name-space collisions.
+ 
+ abilis	Abilis Systems
++abracon	Abracon Corporation
+ active-semi	Active-Semi International Inc
+ ad	Avionic Design GmbH
+ adapteva	Adapteva, Inc.
 -- 
 2.1.1
 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
