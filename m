@@ -1,47 +1,74 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 1/5] rtc: armada38x: Add the device tree binding documentation
-Date: Thu, 15 Jan 2015 09:25:09 +0100
-Message-ID: <54B77965.4040201@free-electrons.com>
-References: <1421257155-3379-1-git-send-email-gregory.clement@free-electrons.com>	<1421257155-3379-2-git-send-email-gregory.clement@free-electrons.com>	<20150114202252.457d328e@free-electrons.com>	<54B7712F.2090509@free-electrons.com> <20150115092417.1db53b82@free-electrons.com>
+From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Subject: Re: Reminder about patch sent for the file,xsysace.c
+Date: Thu, 15 Jan 2015 09:33:28 +0100
+Message-ID: <54B77B58.1000206@monstr.eu>
+References: <54B03E0F.1000401@gmail.com>
+Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="aWeiFAIjoDNd6KXVVAJ4WK4VsfOrxnBsF"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150115092417.1db53b82-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <54B03E0F.1000401-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: nick <xerofoify-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Thomas,
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--aWeiFAIjoDNd6KXVVAJ4WK4VsfOrxnBsF
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: quoted-printable
 
-On 15/01/2015 09:24, Thomas Petazzoni wrote:
-> Dear Gregory CLEMENT,
-> 
-> On Thu, 15 Jan 2015 08:50:07 +0100, Gregory CLEMENT wrote:
-> 
->>> Any reason to use <0x184A0 0xC> instead of <0x184A8 0x4> ? According to
->>> the datasheet, there is only this 184A8 register for RTC stuff.
->>
->> Yes but according to the code I saw there were other registers related to the RTC
->> from 0x184A0. Even if we don't use them now I prefer having an accurate mapping from
->> the beginning for avoiding using negative offset as we needed to do in the past.
-> 
-> So I presume you mean that there are undocumented registers, since I
-> didn't see them in the datasheet. Is this correct?
+Hi,
 
-Yes indeed there are not documented in the current version of our datasheet.
+please send the patch for removing that FIXME.
 
 Thanks,
+Michal
 
-Gregory
+On 01/09/2015 09:46 PM, nick wrote:
+> Greetings Michal and others,
+> I am wondering about the patch I sent at the beginning of last month fo=
+r removing the=20
+> comment from the function,ace_probe for hard coding the bus width. In a=
+ddition I am=20
+> wondering whether I should resend this patch or is it in the queue for =
+the upcoming
+> rc releases or the 3.20 release.
+> Thanks,
+> Nick
+>=20
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>=20
 
 
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
+
+
+
+--aWeiFAIjoDNd6KXVVAJ4WK4VsfOrxnBsF
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+
+iEYEARECAAYFAlS3e1wACgkQykllyylKDCEAfACcC5NqHfmWFRnKovYw02lkEkSO
+IUsAnjNBg5OT4nq7sCTPgVMEDwfaqBAH
+=mDA7
+-----END PGP SIGNATURE-----
+
+--aWeiFAIjoDNd6KXVVAJ4WK4VsfOrxnBsF--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
