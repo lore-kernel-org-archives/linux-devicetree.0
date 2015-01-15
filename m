@@ -1,7 +1,7 @@
 From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v4 1/5] rtc: armada38x: Add the device tree binding documentation
-Date: Thu, 15 Jan 2015 18:23:17 +0100
-Message-ID: <1421342601-20384-2-git-send-email-gregory.clement@free-electrons.com>
+Subject: [PATCH v4 4/5] ARM: mvebu: add Device Tree description of RTC on Armada 38x
+Date: Thu, 15 Jan 2015 18:23:20 +0100
+Message-ID: <1421342601-20384-5-git-send-email-gregory.clement@free-electrons.com>
 References: <1421342601-20384-1-git-send-email-gregory.clement@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1421342601-20384-1-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
@@ -10,44 +10,33 @@ To: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linu
 Cc: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The Armada 38x SoCs come with a new RTC which differs from the one
-used in the other mvebu SoCs until now. This patch describes the
-binding of this RTC.
+The Marvell Armada 38x SoCs contains an RTC which differs from the RTC
+used in the other mvebu SoCs until now. This commit adds the Device
+Tree description of this interface at the SoC level.
 
 Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- .../devicetree/bindings/rtc/armada-380-rtc.txt     | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/rtc/armada-380-rtc.txt
+ arch/arm/boot/dts/armada-38x.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/rtc/armada-380-rtc.txt b/Documentation/devicetree/bindings/rtc/armada-380-rtc.txt
-new file mode 100644
-index 000000000000..2eb9d4ee7dc0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/armada-380-rtc.txt
-@@ -0,0 +1,22 @@
-+* Real Time Clock of the Armada 38x SoCs
+diff --git a/arch/arm/boot/dts/armada-38x.dtsi b/arch/arm/boot/dts/armada-38x.dtsi
+index 04fe80d101f8..79c4acf186e2 100644
+--- a/arch/arm/boot/dts/armada-38x.dtsi
++++ b/arch/arm/boot/dts/armada-38x.dtsi
+@@ -466,6 +466,13 @@
+ 				clocks = <&gateclk 4>;
+ 			};
+ 
++			rtc@a3800 {
++				compatible = "marvell,armada-380-rtc";
++				reg = <0xa3800 0x20>, <0x184a0 0x0c>;
++				reg-names = "rtc", "rtc-soc";
++				interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
++			};
 +
-+RTC controller for the Armada 38x SoCs
-+
-+Required properties:
-+- compatible : Should be "marvell,armada-380-rtc"
-+- reg: a list of base address and size pairs, one for each entry in
-+  reg-names
-+- reg names: should contain:
-+  * "rtc" for the RTC registers
-+  * "rtc-soc" for the SoC related registers and among them the one
-+    related to the interrupt.
-+- interrupts: IRQ line for the RTC.
-+
-+Example:
-+
-+rtc@a3800 {
-+	compatible = "marvell,armada-380-rtc";
-+	reg = <0xa3800 0x20>, <0x184a0 0x0c>;
-+	reg-names = "rtc", "rtc-soc";
-+	interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
-+};
+ 			sata@a8000 {
+ 				compatible = "marvell,armada-380-ahci";
+ 				reg = <0xa8000 0x2000>;
 -- 
 1.9.1
 
