@@ -1,51 +1,80 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v2 03/11] ARM: tegra: Set the sound card model that alsaucm
- expects
-Date: Thu, 15 Jan 2015 10:22:31 -0700
-Message-ID: <54B7F757.5060002@wwwdotorg.org>
-References: <1421338359-27467-1-git-send-email-tomeu.vizoso@collabora.com> <1421338359-27467-4-git-send-email-tomeu.vizoso@collabora.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v4 0/5] Add a new RTC driver for recent mvebu SoCs
+Date: Thu, 15 Jan 2015 18:23:16 +0100
+Message-ID: <1421342601-20384-1-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1421338359-27467-4-git-send-email-tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/15/2015 09:12 AM, Tomeu Vizoso wrote:
-> Patches are on its way to add a config file to alsaucm for the Nyan
-> boards. Use the same card ID that alsaucm will expect.
->
-> Signed-off-by: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-> ---
->   arch/arm/boot/dts/tegra124-nyan-big.dts | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/tegra124-nyan-big.dts b/arch/arm/boot/dts/tegra124-nyan-big.dts
-> index 43e58a4..9a9cffe 100644
-> --- a/arch/arm/boot/dts/tegra124-nyan-big.dts
-> +++ b/arch/arm/boot/dts/tegra124-nyan-big.dts
-> @@ -1976,9 +1976,9 @@
->   	};
->
->   	sound {
-> -		compatible = "nvidia,tegra-audio-max98090-nyan-big",
-> +		compatible = "nvidia,tegra-audio-max98090-nyan",
->   			     "nvidia,tegra-audio-max98090";
+Hi,
 
-If all the boards that are derived from Nyan truly have identical audio 
-HW (or at least any differences can be described by this binding), then 
-it seems fine to add "nvidia,tegra-audio-max98090-nyan" to the 
-compatible value.
+The Marvell Armada 38x SoCs contains an RTC which differs from the RTC
+used in the other mvebu SoCs until now. This forth version of the
+patch set adds support for this new IP and enable it in the Device
+Tree of the Armada 38x SoC.
 
-However, I don't see a reason to remove the board-specific compatible 
-value "nvidia,tegra-audio-max98090-nyan-big"; we should always include 
-all the values that are relevant.
+Thanks,
 
-> -		nvidia,model = "Acer Chromebook 13";
-> +		nvidia,model = "GoogleNyan";
+Gr=C3=A9gory
 
-Why not just name the UCM config file after the ASoC card name that's 
-already in use? Perhaps it's not likely to be unique enough though:-(
+Changelog
+
+v3 -> v4:
+
+- Formatted the device tree binding documentation in a better way
+- Renamed the soc-int regmap to rtc-soc because this group of register
+  was not only about the interrupt.
+- Fixed the rtc_delayed_write function. I found the exact description
+  of the WA to use, and the wait should really be after the write.
+
+v2 -> v3:
+
+- Fixed the reg-names description in the dt binding documentation
+- Used the delayed version of the writel in everyplace.
+
+v1 -> v2:
+
+- Used reg-names to identify the registers in the device tree
+- Changed the space into tab in the MAINTAINERS file
+- Emphasized that the 5s wait was only needed between two consecutive
+  writes
+- Reduced the wait in the set_time function, 100ms were enough
+- If no interrupt was available, then disable the alarm related
+  functions
+- Fixed the critical sections
+- Updated the mvebu_v7_defconfig by enabling the new RTC support
+
+
+Gregory CLEMENT (5):
+  rtc: armada38x: Add the device tree binding documentation
+  drivers/rtc/rtc-armada38x: Add a new RTC driver for recent mvebu SoCs
+  MAINTAINERS: Add the RTC driver for the Armada38x
+  ARM: mvebu: add Device Tree description of RTC on Armada 38x
+  ARM: mvebu: enable Armada 38x RTC driver in mvebu_v7_defconfig
+
+ .../devicetree/bindings/rtc/armada-380-rtc.txt     |  22 ++
+ MAINTAINERS                                        |   1 +
+ arch/arm/boot/dts/armada-38x.dtsi                  |   7 +
+ arch/arm/configs/mvebu_v7_defconfig                |   1 +
+ drivers/rtc/Kconfig                                |  10 +
+ drivers/rtc/Makefile                               |   1 +
+ drivers/rtc/rtc-armada38x.c                        | 320 +++++++++++++=
+++++++++
+ 7 files changed, 362 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rtc/armada-380-rt=
+c.txt
+ create mode 100644 drivers/rtc/rtc-armada38x.c
+
+--=20
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
