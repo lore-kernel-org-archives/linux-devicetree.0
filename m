@@ -1,47 +1,129 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 0/4] ARM: shmobile: Add DT support for memory controllers
-Date: Thu, 15 Jan 2015 08:55:10 +0900
-Message-ID: <20150114235509.GD10479@verge.net.au>
-References: <1421233982-15883-1-git-send-email-geert+renesas@glider.be>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] i.MX6-SabreAuto: EIM: pull PAD_EIM_D18 low for NOR probe
+Date: Wed, 14 Jan 2015 16:03:34 -0800
+Message-ID: <20150115000334.GA9759@ld-irv-0074>
+References: <1421278609-8446-1-git-send-email-alison_chaiken@mentor.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1421233982-15883-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-pm-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+In-Reply-To: <1421278609-8446-1-git-send-email-alison_chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: alison-hh6fLRYtCEIS+FvcfC7Uqw@public.gmane.org
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alison_chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org, shijie8-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 14, 2015 at 12:12:58PM +0100, Geert Uytterhoeven wrote:
-> 	Hi Simon, Magnus,
-> 
-> This patch series adds DT binding documentation and devices nodes to
-> describe memory-controllers in R-Mobile and SH-Mobile SoCs.
-> 
-> Currently memory controller device nodes are used only to reference PM
-> domains, and prevent these PM domains from being powered down, which
-> would crash the system.
-> 
-> As such this series is a prerequisite for adding DT PM domain support to
-> sh73a0 (SH-Mobile AG5) and r7a73a4 (R-Mobile APE6).
-> For r8a7740 (R-Mobile A1), this wasn't a hard prerequisite for PM
-> domain support, as the A4S PM domain is never turned off anyway
-> because its child PM domain A3SM contains the CPU core.
-> 
-> The patches for sh73a0 and r8a7740 have been sent before as part of
-> (patches in) the series "[PATCH RFC 0/7] ARM: shmobile: sh73a0: DT PM
-> domain support" (https://lkml.org/lkml/2014/11/19/404).
-> 
-> "ARM: shmobile: r8a7740 dtsi: Add memory-controller node" depends on
-> the DT R-Mobile PM Domain support for r8a7740 that's queued up in
-> Simon's tree under tag renesas-dt-pm-for-v3.20, as the
-> memory-controller node already contains a power-domains property.
-> 
-> The two other dtsi patches do not add power-domains properties yet.
-> These will be added when adding PM domain support for sh73a0 resp.
-> r8a73a4.
-> 
-> Thanks!
++ linux-arm-kernel, maintainers, devicetree
 
-Thanks Geert, I have queued these up.
+Shawn, Sascha: should this driver be listed under the Freescale IMX
+MAINTAINERS entry?
+
+On Wed, Jan 14, 2015 at 03:36:49PM -0800, alison-hh6fLRYtCEIS+FvcfC7Uqw@public.gmane.org wrote:
+> From: Alison Chaiken <alison_chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+> 
+> PAD_EIM_D18 must be pulled low at boot in order for the parallel NOR
+> connected to the EIM switch to probe properly.  Otherwise
+> cfi_qry_present() may return "U-V-]" rather than "Q-R-Y" if the
+> PAD_EIM_D18 is high.  Add a nor-gpios property to the nor node in the
+> SabreAuto device-tree and add a function to the imx-weim probe to set
+> GPIO5 to drive the pad.
+> 
+> Signed-off-by: Alison Chaiken <alison_chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/imx6qdl-sabreauto.dtsi |  1 +
+>  drivers/bus/imx-weim.c                   | 43 ++++++++++++++++++++++++++++++++
+>  2 files changed, 44 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
+> index 009abd6..dd5e3bc 100644
+> --- a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
+> @@ -454,5 +454,6 @@
+>  		bank-width = <2>;
+>  		fsl,weim-cs-timing = <0x00620081 0x00000001 0x1c022000
+>  				0x0000c000 0x1404a38e 0x00000000>;
+> +		nor-gpios = <&gpio5 4 GPIO_ACTIVE_LOW>;
+
+Such a binding needs to be documented. Also, if it's going to be named
+generically like that, it needs to be generically useful and supported
+under MTD code, not platform-specific bus code.
+
+So what pin is this, exactly? A write-protect pin? An address pin? A
+toaster control, where the toaster is keeping the flash too hot?
+
+>  	};
+>  };
+> diff --git a/drivers/bus/imx-weim.c b/drivers/bus/imx-weim.c
+> index 0958b69..b3c2ca6 100644
+> --- a/drivers/bus/imx-weim.c
+> +++ b/drivers/bus/imx-weim.c
+> @@ -14,6 +14,8 @@
+>  #include <linux/mfd/syscon.h>
+>  #include <linux/mfd/syscon/imx6q-iomuxc-gpr.h>
+>  #include <linux/regmap.h>
+> +#include <linux/of_gpio.h>
+> +#include <linux/gpio.h>
+>  
+>  struct imx_weim_devtype {
+>  	unsigned int	cs_count;
+> @@ -108,6 +110,40 @@ err:
+>  	return -EINVAL;
+>  }
+>  
+> +/* set the GPIO to control PAD_EIM_D18 so cfi_qry_present() works properly */
+> +static int __init nor_gpio_setup(struct device_node *np, struct device *parent)
+> +{
+> +	unsigned nor_gpio, level;
+> +	enum of_gpio_flags of_flags;
+> +	int ret;
+> +
+> +	nor_gpio = of_get_named_gpio_flags(np, "nor-gpios", 0, &of_flags);
+> +
+> +	/* this child is not a NOR chip */
+> +	if (!nor_gpio)
+> +		return 0;
+> +
+> +	if (gpio_is_valid(nor_gpio)) {
+> +		ret = devm_gpio_request_one(parent, nor_gpio,
+> +					GPIOF_DIR_OUT, "nor-gpio");
+> +	} else {
+> +		ret = -ENODEV;
+> +		goto out;
+> +	}
+> +
+> +	if (ret < 0)
+> +		goto out;
+> +
+> +	level = ((of_flags == OF_GPIO_ACTIVE_LOW) ? 0 : 1);
+> +
+> +	gpio_set_value(nor_gpio, level);
+> +
+> +	return 0;
+> +out:
+> +	dev_err(parent, "Unable to request EIM_D18 GPIO for NOR.\n");
+> +	return ret;
+> +}
+> +
+>  /* Parse and set the timing for this device. */
+>  static int __init weim_timing_setup(struct device_node *np, void __iomem *base,
+>  				    const struct imx_weim_devtype *devtype)
+> @@ -160,6 +196,13 @@ static int __init weim_parse_dt(struct platform_device *pdev,
+>  				child->full_name);
+>  			return ret;
+>  		}
+> +
+> +		ret = nor_gpio_setup(child, &pdev->dev);
+> +		if (ret) {
+> +			dev_err(&pdev->dev, "%s gpios setup failed.\n",
+> +				child->full_name);
+> +			return ret;
+> +		}
+>  	}
+>  
+>  	ret = of_platform_populate(pdev->dev.of_node,
+
+Brian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
