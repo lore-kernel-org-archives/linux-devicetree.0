@@ -1,77 +1,49 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [RFC PATCH v3 3/4] arm64:thunder: Add initial dts for Cavium's Thunder SoC in 2 Node topology.
-Date: Thu, 15 Jan 2015 18:32:06 +0100
-Message-ID: <10472930.gA3cIoMNLT@wuerfel>
-References: <1420011208-7051-1-git-send-email-ganapatrao.kulkarni@caviumnetworks.com> <CAFpQJXXiUmK+BdQAFxV_JCuLyDSm89M7pe+enc2ZMTbuyC-T+g@mail.gmail.com> <20150114234905.GB18194@e102568-lin.cambridge.arm.com>
+From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] rotary encoder: Add wake up support
+Date: Thu, 15 Jan 2015 09:33:14 -0800
+Message-ID: <20150115173314.GB33214@dtor-ws>
+References: <1421164262-28261-1-git-send-email-sylvain.rochet@finsecur.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150114234905.GB18194-7AyDDHkRsp3ZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1421164262-28261-1-git-send-email-sylvain.rochet-ETtyaVkrhkNWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ganapatrao Kulkarni <ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Roy Franz <roy.franz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Steve Capper <steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org" <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Sylvain Rochet <sylvain.rochet-ETtyaVkrhkNWk0Htik3J/w@public.gmane.org>
+Cc: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Mack <daniel-rDUAYElUppE@public.gmane.org>, Johan Hovold <jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 14 January 2015 23:49:05 Lorenzo Pieralisi wrote:
-> On Wed, Jan 14, 2015 at 06:48:32PM +0000, Ganapatrao Kulkarni wrote:
-> > On Wed, Jan 14, 2015 at 11:06 PM, Lorenzo Pieralisi
-> > <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org> wrote:
-> > > On Wed, Jan 07, 2015 at 08:18:50AM +0000, Arnd Bergmann wrote:
-> > >> No, that would leave out the core number, which is required to identify
-> > >> the individual thread. I meant adding an extra level such as
-> > >>
-> > >> <board> <socket> <cluster> <core>
-> > >>
-> > >> A lot of machines will leave out the <board> number because they are
-> > >> built with SoCs that don't have a long-distance coherency protocol.
-> > >
-> > > Can't we use phandles to cpu-map nodes instead of a list of numbers (and
-> > > yet another topology binding description) ?
-> > cpu-map describes only a cpu topology.
-> > infact, i have tried initially(in v1 patch set) to use topology for
-> > the numa mapping.
-> > However, for numa, we need to define association of cpu, memory and IOs.
-> > arm,associativity is a generic node property and can be used in any dt nodes.
+On Tue, Jan 13, 2015 at 04:51:02PM +0100, Sylvain Rochet wrote:
+> This patch add wake up support for rotary encoders.
+> New DT property: rotary-encoder,wakeup
 > 
-> I understand that, I was advising to define "arm,associativity" as a
-> phandle in cpu nodes AND all devices.
+> Signed-off-by: Sylvain Rochet <sylvain.rochet-ETtyaVkrhkNWk0Htik3J/w@public.gmane.org>
+> ---
+>  .../devicetree/bindings/input/rotary-encoder.txt   |  1 +
+>  Documentation/input/rotary-encoder.txt             |  1 +
+>  drivers/input/misc/rotary_encoder.c                | 36 ++++++++++++++++++++++
+>  include/linux/rotary_encoder.h                     |  1 +
+>  4 files changed, 39 insertions(+)
 > 
-> Why can't you make it point at a phandle in the cpu-map instead of adding
-> a t-uple doing the same thing. Am I missing something here ?
+> diff --git a/Documentation/devicetree/bindings/input/rotary-encoder.txt b/Documentation/devicetree/bindings/input/rotary-encoder.txt
+> index 3315495..468d545 100644
+> --- a/Documentation/devicetree/bindings/input/rotary-encoder.txt
+> +++ b/Documentation/devicetree/bindings/input/rotary-encoder.txt
+> @@ -15,6 +15,7 @@ Optional properties:
+>  - rotary-encoder,rollover: Automatic rollove when the rotary value becomes
+>    greater than the specified steps or smaller than 0. For absolute axis only.
+>  - rotary-encoder,half-period: Makes the driver work on half-period mode.
+> +- rotary-encoder,wakeup: Boolean, rotary encoder can wake-up the system.
 
-Most importantly, it's following an existing spec for ibm,associativity,
-which defines topology in terms of associativity, not a hierarchical tree.
+I wonder if this should be "rotary-encoder,wakeup", "linux,wakeup" or
+"wakeup-source".
 
-> cpu-map allows you to describe the system hierarchy and can expand beyond
-> clusters (several layers of clusterings, above core it is just a way to
-> define the system hierarchy, leaves node will always be cores or threads).
+Devicetree folks, what say you?
 
-> On a side note, one of the reasons cpu-map was devised for was exactly
-> that, to allow mappings of resources (ie IRQs but it is valid for caches
-> and other devices too) to groups of CPUs.
-> 
-> Is there anything that you can't do by using cpu-map phandles to
-> describe devices associativity ?
+Thanks.
 
-- It doesn't work for cpu-less nodes.
-- It fails if you have multiple paths between two devices, rather than
-  a strict tree.
-- It doesn't (yet) have a way to define which levels are relevant to NUMA
-  topology.
-- the phandle references are done in the wrong way if you want to
-  represent a lot of devices.
-
-> We have to add bindings that allow to compute the distance as you
-> do by using the reference points (I am reading the code to figure
-> out how it is used), but that's feasible as a binding update.
-
-It's very unfortunate that we have two conflicting bindings that are
-established. I still think that the associativity binding is more
-flexible, but we could try to extend the arm topology binding if
-necessary, but I'm not sure the end result of that would be better.
-
-	Arnd
+-- 
+Dmitry
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
