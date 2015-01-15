@@ -1,82 +1,83 @@
-From: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Subject: [PATCH v7 2/2] mtd: hisilicon: add device tree binding documentation
-Date: Thu, 15 Jan 2015 17:10:31 +0800
-Message-ID: <1421313031-118936-3-git-send-email-wangzhou1@hisilicon.com>
-References: <1421313031-118936-1-git-send-email-wangzhou1@hisilicon.com>
+From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Subject: Re: [PATCH v2 1/5] irqchip: add dumb demultiplexer implementation
+Date: Thu, 15 Jan 2015 10:11:52 +0100 (CET)
+Message-ID: <alpine.DEB.2.11.1501151003430.5526@nanos>
+References: <1421174781-4340-1-git-send-email-boris.brezillon@free-electrons.com> <1421174781-4340-2-git-send-email-boris.brezillon@free-electrons.com> <CAL_JsqJ5DSo6jmAuHPDdV6pMca8BVbg5V-GZ5=2qu96_QYXMtQ@mail.gmail.com> <alpine.DEB.2.11.1501141110190.5526@nanos>
+ <CAL_JsqLwBvV5s531_YsA=sCE4_LG=eXTua8mh069ufRjSNFhng@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1421313031-118936-1-git-send-email-wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+In-Reply-To: <CAL_JsqLwBvV5s531_YsA=sCE4_LG=eXTua8mh069ufRjSNFhng-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, caizhiyong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, yubingxu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "Rafael J. Wysocki" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the related dts binding document for Hisilicon 504 NAND
-controller.
+On Wed, 14 Jan 2015, Rob Herring wrote:
+> On Wed, Jan 14, 2015 at 4:36 AM, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org> wrote:
+> > All attempts to work around that have resulted in horrible bandaids so
+> > far. That's why I guided Boris to implement this dummy demultiplexing
+> > mechanism. It solves the problem at hand nicely without adding nasty
+> > hackarounds into the suspend/resume code and inflicting platform
+> > knowledge on multi-platform device drivers.
+> 
+> This change will break on old kernels with a new dtb. Would you be
+> happy if a BIOS update required a new kernel? Fixing this for any
+> platform requires a dtb update which may not be possible on some
+> platforms. I don't have a problem with this breakage for 1 platform
+> and the at91 guys may not care, but we'd ultimately be changing how
+> all shared irqs are specified for all DT. Maybe we decide that this is
+> how we want to describe things, but that needs much wider discussion
+> and agreement.
 
-Signed-off-by: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
----
- .../devicetree/bindings/mtd/hisi504-nand.txt       | 48 ++++++++++++++++++++++
- 1 file changed, 48 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/hisi504-nand.txt
+We do not change shared interrupts in any way. We provide an
+alternative mechanism for braindead hardware. And if the at91 folks
+are fine with the DT change, then it's their decision. Nothing forces
+this on everyone.
+ 
+> > If you have a proper solution for the problem at hand which
+> >
+> >    - avoids the demux dummy
+> >
+> >    - works straight forward with suspend/resume/wakeup
+> >
+> >    - does not add horrible new APIs
+> >
+> >    - does not add conditionals to the interrupt hotpath
+> >
+> >    - does not inflict platform knowledge about interrupt chip details
+> >      on drivers
+> >
+> > then I'm happy to take it.
+> >
+> > But as long as you can't come up with anything sane, the demux dummy
+> > is the best solution for this problem we've seen so far.
+> 
+> What if during suspend you move all actions w/o IRQF_NO_SUSPEND to a
+> suspended action list? This would leave only the actions with
+> IRQF_NO_SUSPEND set in the active action list. The cost would be a
+> pointer in irq_desc and moving the actions during suspend and resume.
 
-diff --git a/Documentation/devicetree/bindings/mtd/hisi504-nand.txt b/Documentation/devicetree/bindings/mtd/hisi504-nand.txt
-new file mode 100644
-index 0000000..bee6a9f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/hisi504-nand.txt
-@@ -0,0 +1,48 @@
-+Hisilicon Hip04 Soc NAND controller DT binding
-+
-+Required properties:
-+
-+- compatible:          Should be "hisilicon,504-nfc".
-+- reg:                 The first contains base physical address and size of
-+                       NAND controller's registers. The second contains base
-+                       physical address and size of NAND controller's buffer.
-+- interrupts:          Interrupt number for nfc.
-+- nand-bus-width:      See nand.txt.
-+- nand-ecc-mode:       Support none and hw ecc mode.
-+- #address-cells:      Partition address, should be set 1.
-+- #size-cells:         Partition size, should be set 1.
-+
-+Optional properties:
-+
-+- nand-ecc-strength:   Number of bits to correct per ECC step.
-+- nand-ecc-step-size:  Number of data bytes covered by a single ECC step.
-+
-+The following ECC strength and step size are currently supported:
-+
-+ - nand-ecc-strength = <1>, nand-ecc-step-size = <512>
-+ - nand-ecc-strength = <16>, nand-ecc-step-size = <1024>
-+
-+Flash chip may optionally contain additional sub-nodes describing partitions of
-+the address space. See partition.txt for more detail.
-+
-+Example:
-+
-+	nand: nand@4020000 {
-+		compatible = "hisilicon,504-nfc";
-+		reg = <0x4020000 0x10000>, <0x5000000 0x1000>;
-+		interrupts = <0 379 4>;
-+		nand-bus-width = <8>;
-+		nand-ecc-mode = "hw";
-+		nand-ecc-strength = <16>;
-+		nand-ecc-step-size = <1024>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		partition@0 {
-+			label = "nand_text";
-+			reg = <0x00000000 0x00400000>;
-+		};
-+
-+		...
-+
-+	};
--- 
-1.9.1
+That's exactly what we want NOT. Because it prevents us to do proper
+sanity checks for IRQF_NO_SUSPEND. We've been there and I rejected it
+for that very reason.
+ 
+> There are probably ways to do this demux irqchip without a DT change.
+
+What's the problem with a DT change for a single platform, if the
+maintainers are willing to take it and deal with the fallout?
+
+And in case of AT91 the new kernel will simply work with the old DT
+and just emit the same warning vs. the IRQF_NO_SUSPEND mismatch. Older
+kernels won't work with a new DT, but that's about it.
+
+Aside of that, I'm quite amused about your DT update worries. DTs
+break with every kernel version on very popular platforms in very
+weird and subtle ways.
+
+Thanks,
+
+	tglx
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
