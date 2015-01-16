@@ -1,69 +1,74 @@
-From: Luis Henriques <luis.henriques-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
-Subject: Re: [PATCH][v3.16.y-ckt] ACPICA: Add new GPE public interface -
- acpi_mark_gpe_for_wake.
-Date: Fri, 16 Jan 2015 14:21:46 +0000
-Message-ID: <20150116142146.GD2438@charon>
-References: <54B820E7.4080406@canonical.com>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH v4 4/4] ARM: mvebu: Armada 385 GP: Add regulators to the
+ SATA port
+Date: Fri, 16 Jan 2015 15:27:00 +0100
+Message-ID: <54B91FB4.5080707@free-electrons.com>
+References: <1421330978-9694-1-git-send-email-gregory.clement@free-electrons.com> <1421330978-9694-5-git-send-email-gregory.clement@free-electrons.com> <54B8C933.7020502@redhat.com> <54B8D97B.3090908@free-electrons.com> <54B8E38A.6020709@redhat.com> <20150116123705.GM3043@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <54B820E7.4080406-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joseph Salisbury <joseph.salisbury-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
-Cc: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Len Brown <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <20150116123705.GM3043@sirena.org.uk>
+Sender: linux-ide-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, Hans de Goede <hdegoede@redhat.com>
+Cc: Tejun Heo <tj@kernel.org>, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, =?windows-1252?Q?Antoine_T=E9nart?= <antoine.tenart@free-electrons.com>, Liam Girdwood <lgirdwood@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 15, 2015 at 03:19:51PM -0500, Joseph Salisbury wrote:
-> Hello,
->=20
-> Please consider including mainline commit c12f07d and bd9b2f9 in the
-> next v3.16.y-ckt release.  They
-> were included in the mainline tree as of v3.17-rc1.  A test kernel ha=
-s
-> been built and tested, which was confirmed to resolve:
-> http://bugs.launchpad.net/bugs/1406767 .
->=20
-> commit c12f07d17c12193256a99e20c9a0f130fb8f7be8
-> Author: Rafael J. Wysocki <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-> Date:   Wed Jul 23 13:12:16 2014 +0800
->=20
->     ACPICA: Add new GPE public interface - acpi_mark_gpe_for_wake.
->=20
->=20
-> Commit c12f07d does not cherry-pick cleanly in 3.16.y.  However, it w=
-ill
-> if commit bd9b2f9aff26c185c1f8e0cd08a850ee4ace391a is cherry picked f=
-irst:
->=20
-> commit bd9b2f9aff26c185c1f8e0cd08a850ee4ace391a
-> Author: Rafael J. Wysocki <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-> Date:   Mon Jul 14 22:41:41 2014 +0200
->=20
->     ACPI / scan: No implicit wake notification for buttons
->=20
->   =20
->=20
->
+Hi Mark and Hans,
 
-Thanks, I'll queue both commits to the 3.16 kernel.
+On 16/01/2015 13:37, Mark Brown wrote:
+> On Fri, Jan 16, 2015 at 11:10:18AM +0100, Hans de Goede wrote:
+>> On 16-01-15 10:27, Gregory CLEMENT wrote:
+> 
+>>>>> +	reg_sata0: pwr-sata0 {
+>>>>> +		compatible = "regulator-fixed";
+>>>>> +		regulator-name = "pwr_en_sata0";
+>>>>> +		enable-active-high;
+>>>>> +		regulator-always-on;
+> 
+>>>> done, but we're not using a power on delay anyways.
+> 
+>>> But if regulator-always-on prevent to switch it off in
+>>> suspend then yes using regulator-boot-on is better.
+> 
+>> AFAIK regulator-always-on means exactly that and thus likely
+>> is not what you want. As for using regulator-off-in-suspend
+>> that is not necessary as the suspend method for the acpi
+>> driver will already turn it off.
+> 
+> regulator-always-on is a bit fuzzy for suspend, if the regulator has
+> suspend control it'll kick in - it's really about the Linux refcounting
+> while it's running.  What's more concerning here is that the quick
+> sample of the regulators flagged as always on like the above that I
+> looked at in the patch don't seem to have any enable control in the DT
+> so this will have absolutely no effect.
 
-Cheers,
---
-Lu=EDs
+Actually the reg_sata[0-4] are controlled by gpio, so there is a mean
+to enable/disable them. For the reg_5v_sata[0-4] and reg_12v_sata[0-4]
+they depend on their respective reg_sata and I just propagated the
+regulator-always-on, this was maybe a mistake.
+
+> 
+>> It is probably a good idea to use regulator-boot-on and
+>> then test things this way, and if that works use
+>> regulator-boot-on.
+> 
+> No, it's unlikely that boot-on makes sense here - it's there for cases
+> where we can't read back the hardware state at power on.  Generally
+> drivers should work regardless of the initial state of the regulator
+> (and modular drivers will actually break if they try to rely on boot-on
+> since we clean up unused regulators at boot).
+
+As pointed by Hans my concern here was be sure that during boot the disk
+are not power off. In this case which property would be accurate?
 
 
-> Sincerely,
-> Joseph Salisbury
->=20
->=20
-> --
-> To unsubscribe from this list: send the line "unsubscribe stable" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+
+Gregory
+
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
