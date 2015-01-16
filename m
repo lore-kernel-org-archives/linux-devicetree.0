@@ -1,70 +1,79 @@
-From: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH 0/3] Enable myphy28lp support
-Date: Fri, 16 Jan 2015 13:32:03 +0100
-Message-ID: <54B904C3.1080002@st.com>
-References: <1421229299-8206-1-git-send-email-gabriel.fernandez@linaro.org> <54B8FC56.8080400@st.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v4 4/4] ARM: mvebu: Armada 385 GP: Add regulators to the
+ SATA port
+Date: Fri, 16 Jan 2015 12:37:05 +0000
+Message-ID: <20150116123705.GM3043@sirena.org.uk>
+References: <1421330978-9694-1-git-send-email-gregory.clement@free-electrons.com>
+ <1421330978-9694-5-git-send-email-gregory.clement@free-electrons.com>
+ <54B8C933.7020502@redhat.com>
+ <54B8D97B.3090908@free-electrons.com>
+ <54B8E38A.6020709@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54B8FC56.8080400-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="glNuw4S6NeIZr5j7"
+Return-path: <linux-ide-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <54B8E38A.6020709@redhat.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Gregory CLEMENT <gregory.clement@free-electrons.com>, Tejun Heo <tj@kernel.org>, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart@free-electrons.com>, Liam Girdwood <lgirdwood@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
-On 01/16/2015 12:56 PM, Maxime Coquelin wrote:
-> Hi Gabriel,
->
->     For the series:
-> Acked-by: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
->
->     Kishon, could you take care of adding PHY driver patch for v3.20?
-Hi Kishon,
+--glNuw4S6NeIZr5j7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-     Don't apply the patch, since we have 2 other PHY driver patches, I 
-will send you a pull request.
+On Fri, Jan 16, 2015 at 11:10:18AM +0100, Hans de Goede wrote:
+> On 16-01-15 10:27, Gregory CLEMENT wrote:
 
-Best regards,
-Maxime
+> >>>+	reg_sata0: pwr-sata0 {
+> >>>+		compatible = "regulator-fixed";
+> >>>+		regulator-name = "pwr_en_sata0";
+> >>>+		enable-active-high;
+> >>>+		regulator-always-on;
 
+> >>done, but we're not using a power on delay anyways.
 
->
-> Thanks,
-> Maxime
-> On 01/14/2015 10:54 AM, Gabriel FERNANDEZ wrote:
->> The goal of this series is to enable the support of MiPHY28lp Generic 
->> PHY.
->>
->> The first patch is to update miphy28lp phy driver to access sysconfig 
->> register
->> offsets via syscfg dt property. It's based on Arnds review comments here
->> https://lkml.org/lkml/2014/11/13/161
->> I have updated the miphy28lp phy driver same way as Peter's 
->> implementation.
->>
->> Gabriel Fernandez (3):
->>    phy: miphy28lp: Pass sysconfig register offsets via syscfg dt
->>      property.
->>    ARM: DT: STi: STiH407: Add DT node for MiPHY28lp
->>    ARM: multi_v7_defconfig: Enable MiPHY28lp - ST's Generic (SATA, 
->> PCIe &
->>      USB3) PHY
->>
->>   .../devicetree/bindings/phy/phy-miphy28lp.txt      | 43 
->> ++++++---------
->>   arch/arm/boot/dts/stih407-family.dtsi              | 53 
->> +++++++++++++++++++
->>   arch/arm/boot/dts/stihxxx-b2120.dtsi               | 11 ++++
->>   arch/arm/configs/multi_v7_defconfig                |  1 +
->>   drivers/phy/phy-miphy28lp.c                        | 61 
->> ++++++++++++----------
->>   5 files changed, 113 insertions(+), 56 deletions(-)
->>
->
+> >But if regulator-always-on prevent to switch it off in
+> >suspend then yes using regulator-boot-on is better.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> AFAIK regulator-always-on means exactly that and thus likely
+> is not what you want. As for using regulator-off-in-suspend
+> that is not necessary as the suspend method for the acpi
+> driver will already turn it off.
+
+regulator-always-on is a bit fuzzy for suspend, if the regulator has
+suspend control it'll kick in - it's really about the Linux refcounting
+while it's running.  What's more concerning here is that the quick
+sample of the regulators flagged as always on like the above that I
+looked at in the patch don't seem to have any enable control in the DT
+so this will have absolutely no effect.
+
+> It is probably a good idea to use regulator-boot-on and
+> then test things this way, and if that works use
+> regulator-boot-on.
+
+No, it's unlikely that boot-on makes sense here - it's there for cases
+where we can't read back the hardware state at power on.  Generally
+drivers should work regardless of the initial state of the regulator
+(and modular drivers will actually break if they try to rely on boot-on
+since we clean up unused regulators at boot).
+
+--glNuw4S6NeIZr5j7
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJUuQXwAAoJECTWi3JdVIfQu5gH/AhCywjrNL2vXzWBMUdPpaYI
+/8gj9ulaew6Tp42IFGTwy0oegIL0KgiIHE9VuAXlVSzXOviHgZUeRTpwh7fU4mpD
+KMMzq0T4tyzobOZbzEYIGFiyX6E/lpRO3TmH80vo7aDYi37126KY8AB0JYyFIGNi
+oNdnaQPmoIlZRAdMeQBz6rpISsRM66JHYiuJKtmVxbJgCx69CxtLqBCpSmyv7dRR
+ur4J0NfL4USfLSzs47j514u/Mz8MKy4xXQGAE/Af5fUE/3grFke1PjsYq/zSmXl4
+YFXYA18ZvqUgKyyHXpba3W/HByC22LmKNbKg0ghTWH1sUthtcGMusNh/oJWajhA=
+=dxAq
+-----END PGP SIGNATURE-----
+
+--glNuw4S6NeIZr5j7--
