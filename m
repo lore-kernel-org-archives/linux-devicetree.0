@@ -1,203 +1,84 @@
-From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH V3 3/4] mmc: pwrseq: Initial support for the simple MMC power sequence provider
-Date: Fri, 16 Jan 2015 11:47:52 +0100
-Message-ID: <1421405273-19117-4-git-send-email-ulf.hansson@linaro.org>
-References: <1421405273-19117-1-git-send-email-ulf.hansson@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1421405273-19117-1-git-send-email-ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>, Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v5 4/5] arm64: Add support for Spreadtrum's Sharkl64
+ Platform in Kconfig and defconfig
+Date: Fri, 16 Jan 2015 10:48:42 +0000
+Message-ID: <20150116104842.GE21809@leverpostej>
+References: <sc9836-v5>
+ <1421402411-3479-1-git-send-email-chunyan.zhang@spreadtrum.com>
+ <1421402411-3479-5-git-send-email-chunyan.zhang@spreadtrum.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1421402411-3479-5-git-send-email-chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+Cc: "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org" <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "jslaby-AlSwsSmVLrQ@public.gmane.org" <jslaby-AlSwsSmVLrQ@public.gmane.org>, "jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org" <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org" <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "florian.vaussard-p8DiymsW2f8@public.gmane.org" <florian.vaussard-p8DiymsW2f8@public.gmane.org>, "andrew-g2DYL2Zd6BY@public.gmane.org" <andrew-g2DYL2Zd6BY@public.gmane.org>, "rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "hytszk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <hytszk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joel.Schopp@amd.c
 List-Id: devicetree@vger.kernel.org
 
-To add the core part for the MMC power sequence, let's start by adding
-initial support for the simple MMC power sequence provider.
+On Fri, Jan 16, 2015 at 10:00:10AM +0000, Chunyan Zhang wrote:
+> From: Zhizhou Zhang <zhizhou.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+> 
+> Adds support for Spreadtrum's SoC Platform in the arm64 Kconfig and
+> defconfig files.
+> 
+> Signed-off-by: Zhizhou Zhang <zhizhou.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+> Signed-off-by: Orson Zhai <orson.zhai-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+> Signed-off-by: Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+> ---
+>  arch/arm64/Kconfig           |    5 +++++
+>  arch/arm64/configs/defconfig |    1 +
+>  2 files changed, 6 insertions(+)
+> 
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index b1f9a20..885c1f4 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -153,6 +153,11 @@ config ARCH_SEATTLE
+>  	help
+>  	  This enables support for AMD Seattle SOC Family
+>  
+> +config ARCH_SPRD
 
-In this initial step, the MMC power sequence node are fetched and the
-compatible string for the simple MMC power sequence provider are
-verified.
+This should presumably be ARCH_SHARKL64, so you can add other SoC
+families later. The other entries in here are already formatted that
+way.
 
-At this point we don't parse the node for any properties, but instead
-that will be handled from following patches. Since there are no
-properties supported yet, let's just implement the ->alloc() and the
-->free() callbacks.
+I wonder if we should have these of the form ARCH_${VENDOR}_${FAMILY}
+(e.g. ARCH_SPRD_SHARKL64) rather than just ARCH_${FAMILY} to save
+ourselves from name conflicts in future (and to make it easier to grep
+for a particular vendor's config options).
 
-Signed-off-by: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
+> +	bool "Spreadtrum SoC platform"
 
-Changes in v3:
-	- Updated to use the new compatible string for the simple MMC power
-	  sequence.
+bool "Spreadtrun Sharkl64 SoC Family"
 
----
- drivers/mmc/core/Makefile        |  2 +-
- drivers/mmc/core/pwrseq.c        | 61 +++++++++++++++++++++++++++++++++++++++-
- drivers/mmc/core/pwrseq.h        |  2 ++
- drivers/mmc/core/pwrseq_simple.c | 48 +++++++++++++++++++++++++++++++
- 4 files changed, 111 insertions(+), 2 deletions(-)
- create mode 100644 drivers/mmc/core/pwrseq_simple.c
+> +	help
+> +	  Support for Spreadtrum ARM based SoCs
 
-diff --git a/drivers/mmc/core/Makefile b/drivers/mmc/core/Makefile
-index ccdd35f..b39cbd2 100644
---- a/drivers/mmc/core/Makefile
-+++ b/drivers/mmc/core/Makefile
-@@ -8,5 +8,5 @@ mmc_core-y			:= core.o bus.o host.o \
- 				   sdio.o sdio_ops.o sdio_bus.o \
- 				   sdio_cis.o sdio_io.o sdio_irq.o \
- 				   quirks.o slot-gpio.o
--mmc_core-$(CONFIG_OF)		+= pwrseq.o
-+mmc_core-$(CONFIG_OF)		+= pwrseq.o pwrseq_simple.o
- mmc_core-$(CONFIG_DEBUG_FS)	+= debugfs.o
-diff --git a/drivers/mmc/core/pwrseq.c b/drivers/mmc/core/pwrseq.c
-index bd08772..2cea00e 100644
---- a/drivers/mmc/core/pwrseq.c
-+++ b/drivers/mmc/core/pwrseq.c
-@@ -7,14 +7,73 @@
-  *
-  *  MMC power sequence management
-  */
-+#include <linux/kernel.h>
-+#include <linux/platform_device.h>
-+#include <linux/err.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
-+
- #include <linux/mmc/host.h>
- 
- #include "pwrseq.h"
- 
-+struct mmc_pwrseq_match {
-+	const char *compatible;
-+	int (*alloc)(struct mmc_host *host, struct device *dev);
-+};
-+
-+static struct mmc_pwrseq_match pwrseq_match[] = {
-+	{
-+		.compatible = "mmc-pwrseq-simple",
-+		.alloc = mmc_pwrseq_simple_alloc,
-+	},
-+};
-+
-+static struct mmc_pwrseq_match *mmc_pwrseq_find(struct device_node *np)
-+{
-+	struct mmc_pwrseq_match *match = ERR_PTR(-ENODEV);
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(pwrseq_match); i++) {
-+		if (of_device_is_compatible(np,	pwrseq_match[i].compatible)) {
-+			match = &pwrseq_match[i];
-+			break;
-+		}
-+	}
-+
-+	return match;
-+}
- 
- int mmc_pwrseq_alloc(struct mmc_host *host)
- {
--	return 0;
-+	struct platform_device *pdev;
-+	struct device_node *np;
-+	struct mmc_pwrseq_match *match;
-+	int ret = 0;
-+
-+	np = of_parse_phandle(host->parent->of_node, "mmc-pwrseq", 0);
-+	if (!np)
-+		return 0;
-+
-+	pdev = of_find_device_by_node(np);
-+	if (!pdev) {
-+		ret = -ENODEV;
-+		goto err;
-+	}
-+
-+	match = mmc_pwrseq_find(np);
-+	if (IS_ERR(match)) {
-+		ret = PTR_ERR(match);
-+		goto err;
-+	}
-+
-+	ret = match->alloc(host, &pdev->dev);
-+	if (!ret)
-+		dev_info(host->parent, "allocated mmc-pwrseq\n");
-+
-+err:
-+	of_node_put(np);
-+	return ret;
- }
- 
- void mmc_pwrseq_pre_power_on(struct mmc_host *host)
-diff --git a/drivers/mmc/core/pwrseq.h b/drivers/mmc/core/pwrseq.h
-index 12aaf2b..bd860d8 100644
---- a/drivers/mmc/core/pwrseq.h
-+++ b/drivers/mmc/core/pwrseq.h
-@@ -27,6 +27,8 @@ void mmc_pwrseq_post_power_on(struct mmc_host *host);
- void mmc_pwrseq_power_off(struct mmc_host *host);
- void mmc_pwrseq_free(struct mmc_host *host);
- 
-+int mmc_pwrseq_simple_alloc(struct mmc_host *host, struct device *dev);
-+
- #else
- 
- static inline int mmc_pwrseq_alloc(struct mmc_host *host) { return 0; }
-diff --git a/drivers/mmc/core/pwrseq_simple.c b/drivers/mmc/core/pwrseq_simple.c
-new file mode 100644
-index 0000000..7f87bc1
---- /dev/null
-+++ b/drivers/mmc/core/pwrseq_simple.c
-@@ -0,0 +1,48 @@
-+/*
-+ *  Copyright (C) 2014 Linaro Ltd
-+ *
-+ * Author: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-+ *
-+ * License terms: GNU General Public License (GPL) version 2
-+ *
-+ *  Simple MMC power sequence management
-+ */
-+#include <linux/kernel.h>
-+#include <linux/slab.h>
-+#include <linux/device.h>
-+#include <linux/err.h>
-+
-+#include <linux/mmc/host.h>
-+
-+#include "pwrseq.h"
-+
-+struct mmc_pwrseq_simple {
-+	struct mmc_pwrseq pwrseq;
-+};
-+
-+static void mmc_pwrseq_simple_free(struct mmc_host *host)
-+{
-+	struct mmc_pwrseq_simple *pwrseq = container_of(host->pwrseq,
-+					struct mmc_pwrseq_simple, pwrseq);
-+
-+	kfree(&pwrseq);
-+	host->pwrseq = NULL;
-+}
-+
-+static struct mmc_pwrseq_ops mmc_pwrseq_simple_ops = {
-+	.free = mmc_pwrseq_simple_free,
-+};
-+
-+int mmc_pwrseq_simple_alloc(struct mmc_host *host, struct device *dev)
-+{
-+	struct mmc_pwrseq_simple *pwrseq;
-+
-+	pwrseq = kzalloc(sizeof(struct mmc_pwrseq_simple), GFP_KERNEL);
-+	if (!pwrseq)
-+		return -ENOMEM;
-+
-+	pwrseq->pwrseq.ops = &mmc_pwrseq_simple_ops;
-+	host->pwrseq = &pwrseq->pwrseq;
-+
-+	return 0;
-+}
--- 
-1.9.1
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Support for the Spreadtrum Sharkl64 SoC family.
+
+Thanks,
+Mark.
+
+> +
+>  config ARCH_THUNDER
+>  	bool "Cavium Inc. Thunder SoC Family"
+>  	help
+> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> index dd301be..c1677ca 100644
+> --- a/arch/arm64/configs/defconfig
+> +++ b/arch/arm64/configs/defconfig
+> @@ -33,6 +33,7 @@ CONFIG_MODULE_UNLOAD=y
+>  # CONFIG_BLK_DEV_BSG is not set
+>  # CONFIG_IOSCHED_DEADLINE is not set
+>  CONFIG_ARCH_THUNDER=y
+> +CONFIG_ARCH_SPRD=y
+>  CONFIG_ARCH_VEXPRESS=y
+>  CONFIG_ARCH_XGENE=y
+>  CONFIG_PCI=y
+> -- 
+> 1.7.9.5
+> 
+> 
