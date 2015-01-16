@@ -1,61 +1,34 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: [PATCH 3/4] ARM: bcm2835: Add header file for pinctrl constants
-Date: Fri, 16 Jan 2015 16:48:16 +0000
-Message-ID: <1421426897-27225-4-git-send-email-stefan.wahren@i2se.com>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: [PATCH 1/4] dt-bindings: Add vendor prefix for Raspberry Pi
+Date: Fri, 16 Jan 2015 16:48:14 +0000
+Message-ID: <1421426897-27225-2-git-send-email-stefan.wahren@i2se.com>
 References: <1421426897-27225-1-git-send-email-stefan.wahren@i2se.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1421426897-27225-1-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1421426897-27225-1-git-send-email-stefan.wahren@i2se.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: swarren@wwwdotorg.org, lee@kernel.org, linux@arm.linux.org.uk, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This new header file defines pincontrol constants to use
-from bcm2835 DTS files for pincontrol properties option.
+Since the prefix is already in use, we need to add it in the
+vendor list.
 
-Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
 ---
- include/dt-bindings/pinctrl/bcm2835.h |   27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
- create mode 100644 include/dt-bindings/pinctrl/bcm2835.h
+ .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/dt-bindings/pinctrl/bcm2835.h b/include/dt-bindings/pinctrl/bcm2835.h
-new file mode 100644
-index 0000000..6f0bc37
---- /dev/null
-+++ b/include/dt-bindings/pinctrl/bcm2835.h
-@@ -0,0 +1,27 @@
-+/*
-+ * Header providing constants for bcm2835 pinctrl bindings.
-+ *
-+ * Copyright (C) 2015 Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-+ *
-+ * The code contained herein is licensed under the GNU General Public
-+ * License. You may obtain a copy of the GNU General Public License
-+ * Version 2 at the following locations:
-+ *
-+ * http://www.opensource.org/licenses/gpl-license.html
-+ * http://www.gnu.org/copyleft/gpl.html
-+ */
-+
-+#ifndef __DT_BINDINGS_PINCTRL_BCM2835_H__
-+#define __DT_BINDINGS_PINCTRL_BCM2835_H__
-+
-+/* brcm,function property */
-+#define BCM2835_FSEL_GPIO_IN	0
-+#define BCM2835_FSEL_GPIO_OUT	1
-+#define BCM2835_FSEL_ALT5	2
-+#define BCM2835_FSEL_ALT4	3
-+#define BCM2835_FSEL_ALT0	4
-+#define BCM2835_FSEL_ALT1	5
-+#define BCM2835_FSEL_ALT2	6
-+#define BCM2835_FSEL_ALT3	7
-+
-+#endif /* __DT_BINDINGS_PINCTRL_BCM2835_H__ */
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 5d2251a..0546f73 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -136,6 +136,7 @@ radxa	Radxa
+ raidsonic	RaidSonic Technology GmbH
+ ralink	Mediatek/Ralink Technology Corp.
+ ramtron	Ramtron International
++raspberrypi	Raspberry Pi Foundation
+ realtek Realtek Semiconductor Corp.
+ renesas	Renesas Electronics Corporation
+ ricoh	Ricoh Co. Ltd.
 -- 
 1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
