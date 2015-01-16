@@ -1,31 +1,52 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: Re: [STLinux Kernel] [PATCH 0/2] Enable DRM/KMS support for STiH407
- and STiH410 boards
-Date: Fri, 16 Jan 2015 10:52:41 +0000
-Message-ID: <20150116105241.GB5102@griffinp-ThinkPad-X1-Carbon-2nd>
-References: <1421250432-25903-1-git-send-email-gabriel.fernandez@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Robert Jarzmik <robert.jarzmik@free.fr>
+Subject: [PATCH v3 1/3] dt-bindings: mfd: add lubbock-io binding
+Date: Fri, 16 Jan 2015 12:00:08 +0100
+Message-ID: <1421406010-14851-1-git-send-email-robert.jarzmik@free.fr>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1421250432-25903-1-git-send-email-gabriel.fernandez@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, benjamin.gaignard@linaro.org, devicetree@vger.kernel.org, kernel@stlinux.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Gabriel,
+Add a binding for lubbock motherboard IO board.
 
-On Wed, 14 Jan 2015, Gabriel FERNANDEZ wrote:
+Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
+---
+ .../devicetree/bindings/mfd/lubbock-io.txt         | 26 ++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/lubbock-io.txt
 
-> This patch-set Enable DRM/KMS support for STiH407-b2120 and STiH410-b2120 boards.
-> 
-> This patch-set replace the previous one (PATCH 0/2] Enable DRM/KMS support for STiH407 Family boards)
-
-Great stuff :-) For the series: -
-
-Acked-by: Peter Griffin <peter.griffin@linaro.org>
-
-regards,
-
-Peter.
+diff --git a/Documentation/devicetree/bindings/mfd/lubbock-io.txt b/Documentation/devicetree/bindings/mfd/lubbock-io.txt
+new file mode 100644
+index 0000000..33c9e21
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/lubbock-io.txt
+@@ -0,0 +1,26 @@
++Intel's pxa255 system development platform motherboard.
++
++This is the motherboard, or IO board, of the pxa25x development system,
++supporting a lubbock pxa25x SoC board.
++
++Required properties:
++  - compatible : One of the following chip-specific strings:
++        "intel,lubbock-io"
++  - interrupts : The first interrupt is the line the /IRQ signal the IO board
++                 multiplex is connected to. The only known case is GPIO0 on the
++                 pxa25x SoC.
++
++Optional properties:
++  - interrupts : The second optional interrupt is the base of the interrupts
++                 multiplexed by the lubbock motherboard. If unspecified, the
++                 range is fully dynamic, and the irqdomain will generate its
++                 interrupt base on the fly.
++
++Example:
++
++mb: lubbock-mb@0 {
++	compatible = "intel,lubbock-io";
++	interrupts = <0 IRQ_TYPE_EDGE_FALLING 400 IRQ_TYPE_NONE>;
++	#interrupt-cells = <2>;
++        interrupt-parent = <&pxairq>;
++};
+-- 
+2.1.0
