@@ -1,47 +1,92 @@
-From: Bo Shen <voice.shen@atmel.com>
-Subject: Re: [PATCH v2 1/3] ASoC: codecs: wm8904: add dt ids table
-Date: Fri, 16 Jan 2015 09:17:45 +0800
-Message-ID: <54B866B9.8000900@atmel.com>
-References: <1418614273-2303-1-git-send-email-voice.shen@atmel.com> <20150115115425.GX3043@sirena.org.uk>
+From: Masahiro Yamada <yamada.m@jp.panasonic.com>
+Subject: Re: [PATCH] Documentation: gpio: fix bindings document
+Date: Fri, 16 Jan 2015 10:20:56 +0900
+Message-ID: <20150116102056.F108.AA925319@jp.panasonic.com>
+References: <CAL_JsqL+0C_wQ26=bdwYGLj0X=vzmn8khFfo_Ryet5O=k-XFzw@mail.gmail.com> <2479604.mfbgZIQjOA@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-sound-owner@vger.kernel.org>
-In-Reply-To: <20150115115425.GX3043@sirena.org.uk>
-Sender: linux-sound-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: nicolas.ferre@atmel.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-sound@vger.kernel.org, Alexander Morozov <linux@meltdown.ru>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <2479604.mfbgZIQjOA@avalon>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Rob Herring <robherring2@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, Alexandre Courbot <acourbot@nvidia.com>, Stephen Warren <swarren@nvidia.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+Hi Laurent, Rob,
 
-On 01/15/2015 07:54 PM, Mark Brown wrote:
-> On Mon, Dec 15, 2014 at 11:31:11AM +0800, Bo Shen wrote:
->
->> +#ifdef CONFIG_OF
->> +static enum wm8904_type wm8904_data = WM8904;
->> +static enum wm8904_type wm8912_data = WM8912;
->> +
->> +static const struct of_device_id wm8904_of_match[] = {
->> +	{
->> +		.compatible = "wlf,wm8904",
->> +		.data = &wm8904_data,
->
-> Does this end up in the i2c_driver_id driver data or do we need some
-> extra code when devtype is assigned to check for an of_node and look at
-> the DT data instead?  That certainly used to be the case...
 
-At the beginning I think as the same as you, and also add the code to 
-get the data as I do in <drivers/misc/atmel-ssc.c>. However, as I 
-remember, I2C seems only use the compatible string after the comma, that 
-means only for "wlf,wm8904", it uses "wm8904" to match. So, I remove all 
-the code I added, and just keep these, and it can get the device type 
-correctly.
+On Thu, 15 Jan 2015 16:10:54 +0200
+Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote:
 
-So, when I submit the patch and keep the code as simple as possible.
+> Hi Rob,
+> 
+> On Thursday 15 January 2015 08:07:18 Rob Herring wrote:
+> > On Thu, Jan 15, 2015 at 2:52 AM, Masahiro Yamada
+> > 
+> > <yamada.m@jp.panasonic.com> wrote:
+> > > Signed-off-by: Masahiro Yamada <yamada.m@jp.panasonic.com>
+> > 
+> > Perhaps some explanation. You can't just remove properties. Please
+> > explain to what extent the old/wrong name is used. This patch is only
+> > okay if there are no users of gpio-phandle.
+> 
+> As far as I understand the patch just fixes a typo. There has never been a 
+> gpio-phandle for GPIO controllers, only for GPIO consumers.
 
-Thanks.
 
-Best Regards,
-Bo Shen
+Yes, this patch just fixes typos.
+I thought I could be lazy here...
+
+
+
+> > > ---
+> > > 
+> > >  Documentation/devicetree/bindings/gpio/gpio.txt | 5 +++--
+> > >  1 file changed, 3 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt
+> > > b/Documentation/devicetree/bindings/gpio/gpio.txt index b9bd1d6..f7a158d
+> > > 100644
+> > > --- a/Documentation/devicetree/bindings/gpio/gpio.txt
+> > > +++ b/Documentation/devicetree/bindings/gpio/gpio.txt
+> > > @@ -69,7 +69,8 @@ GPIO pin number, and GPIO flags as accepted by the
+> > > "qe_pio_e" gpio-controller.> 
+> > >  ----------------------------------
+> > >  
+> > >  A gpio-specifier should contain a flag indicating the GPIO polarity;
+> > >  active-> 
+> > > -high or active-low. If it does, the follow best practices should be
+> > > followed: +high or active-low. If it does, the following best practices
+> > > should be> 
+> > > +followed:
+> > >  The gpio-specifier's polarity flag should represent the physical level at
+> > >  the GPIO controller that achieves (or represents, for inputs) a
+> > >  logically asserted> 
+> > > @@ -147,7 +148,7 @@ contains information structures as follows:
+> > >         numeric-gpio-range ::=
+> > >         
+> > >                         <pinctrl-phandle> <gpio-base> <pinctrl-base>
+> > >                         <count>
+> > >         
+> > >         named-gpio-range ::= <pinctrl-phandle> <gpio-base> '<0 0>'
+> > > 
+> > > -       gpio-phandle : phandle to pin controller node.
+> > > +       pinctrl-phandle : phandle to pin controller node
+> > > 
+> > >         gpio-base : Base GPIO ID in the GPIO controller
+> > >         pinctrl-base : Base pinctrl pin ID in the pin controller
+> > >         count : The number of GPIOs/pins in this range
+> 
+> -- 
+> Regards,
+> 
+> Laurent Pinchart
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
+
 
