@@ -1,184 +1,125 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH/RFC v10 03/19] DT: leds: Add led-sources property
-Date: Fri, 16 Jan 2015 10:07:28 +0100
-Message-ID: <54B8D4D0.3000904@samsung.com>
-References: <1420816989-1808-1-git-send-email-j.anaszewski@samsung.com>
- <1420816989-1808-4-git-send-email-j.anaszewski@samsung.com>
- <CAL_JsqJKEp6TWaRhJimg3AWBh+MCCr2Bk9+1o7orLLdp5E+n-g@mail.gmail.com>
- <54B38682.5080605@samsung.com>
- <CAL_Jsq+UaA41DvawdOMmOib=Fi0hC-nBdKV-+P4DFo+MoOy-bQ@mail.gmail.com>
- <54B3F1EF.4060506@samsung.com>
- <CAL_JsqKpJtUG0G6g1GOuSVpc31oe-dp3qdrKJUE0upG-xRDFhA@mail.gmail.com>
- <54B4DA81.7060900@samsung.com>
- <CAL_JsqLYxB5hzLAWXpU=uncM5DEMZU78mP673H9oSSNB-cgcYQ@mail.gmail.com>
+From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V2 2/4] mmc: pwrseq: Document DT bindings for the simple
+ MMC power sequence
+Date: Fri, 16 Jan 2015 10:13:33 +0100
+Message-ID: <CAPDyKFrzkzHF3AJ7n4Uh8kQr-zdhLCqdxOtgXpxtRWj6=0h+2w@mail.gmail.com>
+References: <1421240530-7971-1-git-send-email-ulf.hansson@linaro.org>
+	<1421240530-7971-3-git-send-email-ulf.hansson@linaro.org>
+	<20150115165825.GL16217@leverpostej>
+	<20150116075308.3f4e250a@notabene.brown>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <CAL_JsqLYxB5hzLAWXpU=uncM5DEMZU78mP673H9oSSNB-cgcYQ@mail.gmail.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: linux-leds@vger.kernel.org, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Pavel Machek <pavel@ucw.cz>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, sakari.ailus@iki.fi, Sylwester Nawrocki <s.nawrocki@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150116075308.3f4e250a-wvvUuzkyo1EYVZTmpyfIwg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/15/2015 03:24 PM, Rob Herring wrote:
-> On Tue, Jan 13, 2015 at 2:42 AM, Jacek Anaszewski
-> <j.anaszewski@samsung.com> wrote:
->> On 01/12/2015 05:55 PM, Rob Herring wrote:
->>>
->>> Adding Mark B and Liam...
->>>
->>> On Mon, Jan 12, 2015 at 10:10 AM, Jacek Anaszewski
->>> <j.anaszewski@samsung.com> wrote:
->>>>
->>>> On 01/12/2015 02:52 PM, Rob Herring wrote:
->>>>>
->>>>>
->>>>> On Mon, Jan 12, 2015 at 2:32 AM, Jacek Anaszewski
->>>>> <j.anaszewski@samsung.com> wrote:
->>>>>>
->>>>>> On 01/09/2015 07:33 PM, Rob Herring wrote:
->>>>>>>
->>>>>>> On Fri, Jan 9, 2015 at 9:22 AM, Jacek Anaszewski
->>>>>>> <j.anaszewski@samsung.com> wrote:
->>>>>>>>
->>>>>>>> Add a property for defining the device outputs the LED
->>>>>>>> represented by the DT child node is connected to.
->>>
->>>
->>> [...]
->>>
->>>>>>>> b/Documentation/devicetree/bindings/leds/common.txt
->>>>>>>> index a2c3f7a..29295bf 100644
->>>>>>>> --- a/Documentation/devicetree/bindings/leds/common.txt
->>>>>>>> +++ b/Documentation/devicetree/bindings/leds/common.txt
->>>>>>>> @@ -1,6 +1,10 @@
->>>>>>>>      Common leds properties.
->>>>>>>>
->>>>>>>>      Optional properties for child nodes:
->>>>>>>> +- led-sources : Array of bits signifying the LED current regulator
->>>>>>>> outputs the
->>>>>>>> +               LED represented by the child node is connected to (1
->>>>>>>> -
->>>>>>>> the LED
->>>>>>>> +               is connected to the output, 0 - the LED isn't
->>>>>>>> connected
->>>>>>>> to the
->>>>>>>> +               output).
->>>>>>>
->>>>>>>
->>>>>>>
->>>>>>>
->>>>>>> Sorry, I just don't understand this.
->>>>>>
->>>>>>
->>>>>>
->>>>>>
->>>>>> In some Flash LED devices one LED can be connected to one or more
->>>>>> electric current outputs, which allows for multiplying the maximum
->>>>>> current allowed for the LED. Each sub-LED is represented by a child
->>>>>> node in the DT binding of the Flash LED device and it needs to declare
->>>>>> which outputs it is connected to. In the example below the led-sources
->>>>>> property is a two element array, which means that the flash LED device
->>>>>> has two current outputs, and the bits signify if the LED is connected
->>>>>> to the output.
->>>>>
->>>>>
->>>>>
->>>>> Sounds like a regulator for which we already have bindings for and we
->>>>> have a driver for regulator based LEDs (but no binding for it).
->>>>
->>>>
->>>>
->>>> Do you think of drivers/leds/leds-regulator.c driver? This driver just
->>>> allows for registering an arbitrary regulator device as a LED subsystem
->>>> device.
->>>>
->>>> There are however devices that don't fall into this category, i.e. they
->>>> have many outputs, that can be connected to a single LED or to many LEDs
->>>> and the driver has to know what is the actual arrangement.
->>>
->>>
->>> We may need to extend the regulator binding slightly and allow for
->>> multiple phandles on a supply property, but wouldn't something like
->>> this work:
->>>
->>> led-supply = <&led-reg0>, <&led-reg1>, <&led-reg2>, <&led-reg3>;
->>>
->>> The shared source is already supported by the regulator binding.
->>
->>
->> I think that we shouldn't split the LED devices into power supply
->> providers and consumers as in case of generic regulators. From this
->> point of view a LED device current output is a provider and a discrete
->> LED element is a consumer. In this approach each discrete LED element
->> should have a related driver which is not how LED devices are being
->> handled in the LED subsystem, where there is a single binding for a LED
->> device and there is a single driver for it which creates separate LED
->> class devices for each LED connected to the LED device output. Each
->> discrete LED is represented by a child node in the LED device binding.
->>
->> I am aware that it may be tempting to treat LED devices as common
->> regulators, but they have their specific features which gave a
->> reason for introducing LED class for them. Besides, there is already
->> drivers/leds/leds-regulator.c driver for LED devices which support only
->> turning on/off and setting brightness level.
->>
->> In your proposition a separate regulator provider binding would have
->> to be created for each current output and a separate binding for
->> each discrete LED connected to the LED device. It would create
->> unnecessary noise in a dts file.
->>
->> Moreover, using regulator binding implies that we want to treat it
->> as a sheer power supply for our device (which would be a discrete LED
->> element in this case), whereas LED devices provide more features like
->> blinking pattern and for flash LED devices - flash timeout, external
->> strobe and flash faults.
+On 15 January 2015 at 19:53, NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org> wrote:
+> On Thu, 15 Jan 2015 16:58:26 +0000 Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
 >
-> Okay, fair enough. Please include some of this explanation in the
-> binding description.
+>> Hi Ulf,
+>>
+>> On Wed, Jan 14, 2015 at 01:02:08PM +0000, Ulf Hansson wrote:
+>> > The simple MMC power sequence provider, intends to supports a set of
+>> > common properties between SOC designs. It thus enables us to re-use the
+>> > same provider for several SOCs.
+>> >
+>> > In this initial step, let's add the top level description of the MMC
+>> > power sequence and describe the compatible string for the simple MMC
+>> > power sequence provider.
+>> >
+>> > Following patches will step by step add support for new properties to
+>> > the simple MMC power sequence provider.
+>> >
+>> > Signed-off-by: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> > ---
+>> >
+>> > Changes in v2:
+>> >     - None.
+>> >
+>> > ---
+>> >  .../devicetree/bindings/mmc/mmc,pwrseq-simple.txt      | 18 ++++++++++++++++++
+>> >  Documentation/devicetree/bindings/mmc/mmc.txt          |  5 +++++
+>> >  2 files changed, 23 insertions(+)
+>> >  create mode 100644 Documentation/devicetree/bindings/mmc/mmc,pwrseq-simple.txt
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/mmc/mmc,pwrseq-simple.txt b/Documentation/devicetree/bindings/mmc/mmc,pwrseq-simple.txt
+>> > new file mode 100644
+>> > index 0000000..e1b7f9c
+>> > --- /dev/null
+>> > +++ b/Documentation/devicetree/bindings/mmc/mmc,pwrseq-simple.txt
+>> > @@ -0,0 +1,18 @@
+>> > +* The simple MMC power sequence provider
+>> > +
+>> > +System on chip designs may specify a specific MMC power sequence. To
+>> > +successfully detect an (e)MMC/SD/SDIO card, that power sequence must be
+>> > +maintained while initializing the card.
+>> > +
+>> > +The simple MMC power sequence provider, intends to supports a set of common
+>> > +properties between SOC designs. It thus enables us to re-use the same provider
+>> > +for several SOC designs.
+>> > +
+>> > +Required properties:
+>> > +- compatible : contains "mmc,pwrseq-simple".
+>>
+>> Nit: "mmc" is not a vendor prefix.
+>>
+>> > +
+>> > +Example:
+>> > +
+>> > +   sdhci0_pwrseq {
+>> > +           compatible = "mmc,pwrseq-simple";
+>> > +   }
+>>
+>> I'm a little confused here. What specific sequence is described by this
+>> node? We don't appear to have referred to any resources used as part of
+>> that sequence, and the description above only mentions that there could
+>> be a specific sequence, not what that sequence is.
+>>
+>> So I don't think this makes sense on its own, and should probably be
+>> folded with patches adding the initial support for the resources used as
+>> part of the sequence (e.g. the GPIOs added in a later patch).
+>>
 >
-> I do still have some concerns about led-sources and whether it can
-> support other scenarios. It is very much tied to the parent node. Are
-> there any cases where we don't want the LEDs to be sub nodes? Perhaps
-> the LEDs are on a separate daughterboard from the driver/supply and we
-> can have different drivers. It's a stretch maybe.
+> I guess I assumed that this "simple" referred to the current behaviour, which
+> includes some of vmmc-supply, vqmmc-supply, vmmc_aux-supply and pbias-supply
+> being switched at "appropriate" times.
+>
+> Would it make sense to bring all of these explicitly under the "pwrseq"
+> umbrella, leaving the current behaviour only when no pwrseq node is provided?
 
-I think it is. Such arrangements would introduce problems also to the
-other existing bindings. Probably not only LED subsystem related ones.
+In principle there is nothing that prevents us from following your
+suggestion. But why should we?
 
-> Or are there cases
-> where you need more information than just the connection?
+Moreover, I don't think it's required at this point, let's first get
+the basic mmc-pwrseq support in place. Then we can evolve it. :-)
 
-Currently I can't think of any.
+>
+> Also, it isn't clear to me whether the need for power/reset is a function of
+> the mmc-host, or a function of the device attached to the host.  I suspect
+> some are needed by one, some by the other.  Any by both?
 
-Modified rough proposal of the description:
+To me the the power is coupled with the host and thus controlled by
+the mmc layer. But I guess we can discuss this in a forever long loop.
+:-)
 
+They may be other resources which is coupled with an SDIO function /
+eMMC,SDIO card, such as irqs. Those shall be described in the child
+node of the host.
+I have queued the below patchset from Hans, which I believe should address this:
 
--Optional properties for child nodes:
-+LED and flash LED devices provide the same basic functionality as
-+current regulators, but extended with LED and flash LED specific 
-+features like blinking patterns, flash timeout, flash faults and
-+external flash strobe mode.
-+
-+Many LED devices expose more than one current output that can be
-+connected to one or more discrete LED component. Since the arrangement
-+of connections can influence the way of the LED device initialization,
-+the LED components have to be tightly coupled with the LED device
-+binding. They are represented in the form of its child nodes.
-+
-+Optional properties for child nodes (if a LED device exposes only one
-+current output the properties can be placed directly in the LED device
-+node):
-+- led-sources : Array of connection states between all LED current
-+               sources exposed by the device and this LED (1 - this LED
-+               is connected to the current output with index N, 0 -
-+               this LED isn't connected to the current output with
-+               index N); the mapping of N-th element of the array to
-+               the physical device output should be defined in the LED
-+               driver binding.
+https://www.mail-archive.com/linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg27241.html
 
+>
+> Should the two needs be kept separate?
 
--- 
-Best Regards,
-Jacek Anaszewski
+Yes, I think so.
+
+Kind regards
+Uffe
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
