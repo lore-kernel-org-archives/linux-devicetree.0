@@ -1,7 +1,7 @@
 From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: [PATCH 2/4] dt-bindings: Add root properties for Raspberry Pi B and B+
-Date: Fri, 16 Jan 2015 16:48:15 +0000
-Message-ID: <1421426897-27225-3-git-send-email-stefan.wahren@i2se.com>
+Subject: [PATCH 3/4] ARM: bcm2835: Add header file for pinctrl constants
+Date: Fri, 16 Jan 2015 16:48:16 +0000
+Message-ID: <1421426897-27225-4-git-send-email-stefan.wahren@i2se.com>
 References: <1421426897-27225-1-git-send-email-stefan.wahren@i2se.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1421426897-27225-1-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
@@ -10,36 +10,48 @@ To: swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, lee-DgEjT+Ai2ygdnm+yROfE0A@
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds root compatible properties for the following boards:
-- Raspberry Pi Model B
-- Raspberry Pi Model B+
+This new header file defines pincontrol constants to use
+from bcm2835 DTS files for pincontrol properties option.
 
 Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
 ---
- Documentation/devicetree/bindings/arm/bcm2835.txt |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ include/dt-bindings/pinctrl/bcm2835.h |   27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+ create mode 100644 include/dt-bindings/pinctrl/bcm2835.h
 
-diff --git a/Documentation/devicetree/bindings/arm/bcm2835.txt b/Documentation/devicetree/bindings/arm/bcm2835.txt
-index ac68348..789aca2 100644
---- a/Documentation/devicetree/bindings/arm/bcm2835.txt
-+++ b/Documentation/devicetree/bindings/arm/bcm2835.txt
-@@ -1,8 +1,14 @@
- Broadcom BCM2835 device tree bindings
- -------------------------------------------
- 
--Boards with the BCM2835 SoC shall have the following properties:
-+Raspberry Pi Model B
-+Required root node properties:
-+compatible = "raspberrypi,model-b", "brcm,bcm2835";
- 
--Required root node property:
-+Raspberry Pi Model B+
-+Required root node properties:
-+compatible = "raspberrypi,model-b-plus", "brcm,bcm2835";
- 
-+Generic BCM2835 board
-+Required root node properties:
- compatible = "brcm,bcm2835";
+diff --git a/include/dt-bindings/pinctrl/bcm2835.h b/include/dt-bindings/pinctrl/bcm2835.h
+new file mode 100644
+index 0000000..6f0bc37
+--- /dev/null
++++ b/include/dt-bindings/pinctrl/bcm2835.h
+@@ -0,0 +1,27 @@
++/*
++ * Header providing constants for bcm2835 pinctrl bindings.
++ *
++ * Copyright (C) 2015 Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
++ *
++ * The code contained herein is licensed under the GNU General Public
++ * License. You may obtain a copy of the GNU General Public License
++ * Version 2 at the following locations:
++ *
++ * http://www.opensource.org/licenses/gpl-license.html
++ * http://www.gnu.org/copyleft/gpl.html
++ */
++
++#ifndef __DT_BINDINGS_PINCTRL_BCM2835_H__
++#define __DT_BINDINGS_PINCTRL_BCM2835_H__
++
++/* brcm,function property */
++#define BCM2835_FSEL_GPIO_IN	0
++#define BCM2835_FSEL_GPIO_OUT	1
++#define BCM2835_FSEL_ALT5	2
++#define BCM2835_FSEL_ALT4	3
++#define BCM2835_FSEL_ALT0	4
++#define BCM2835_FSEL_ALT1	5
++#define BCM2835_FSEL_ALT2	6
++#define BCM2835_FSEL_ALT3	7
++
++#endif /* __DT_BINDINGS_PINCTRL_BCM2835_H__ */
 -- 
 1.7.9.5
 
