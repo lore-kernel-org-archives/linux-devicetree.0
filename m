@@ -1,87 +1,51 @@
-From: Lyra Zhang <zhang.lyra@gmail.com>
-Subject: Re: [PATCH v5 4/5] arm64: Add support for Spreadtrum's Sharkl64
- Platform in Kconfig and defconfig
-Date: Fri, 16 Jan 2015 19:50:18 +0800
-Message-ID: <CAAfSe-vuSgwH2PHQdYLyfJ+KZ0C8a7D6Ry=mHaBrjpbuksaKvQ@mail.gmail.com>
-References: <1421402411-3479-1-git-send-email-chunyan.zhang@spreadtrum.com>
- <1421402411-3479-5-git-send-email-chunyan.zhang@spreadtrum.com>
- <20150116104842.GE21809@leverpostej>
+From: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH 0/3] Enable myphy28lp support
+Date: Fri, 16 Jan 2015 12:56:06 +0100
+Message-ID: <54B8FC56.8080400@st.com>
+References: <1421229299-8206-1-git-send-email-gabriel.fernandez@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20150116104842.GE21809@leverpostej>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "gnomes@lxorguk.ukuu.org.uk" <gnomes@lxorguk.ukuu.org.uk>, "heiko@sntech.de" <heiko@sntech.de>, "andrew@lunn.ch" <andrew@lunn.ch>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>, "jslaby@suse.cz" <jslaby@suse.cz>, "lanqing.liu@spreadtrum.com" <lanqing.liu@spreadtrum.com>, "arnd@arndb.de" <arnd@arndb.de>, Chunyan Zhang <chunyan.zhang@spreadtrum.com>, "zhizhou.zhang@spreadtrum.com" <zhizhou.zhang@spreadtrum.com>, "geng.ren@spreadtrum.com" <geng.ren@spreadtrum.com>, "antonynpavlov@gmail.com" <antonynpavlov@gmail.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "orsonzhai@gmail.com" <orsonzhai@gmail.com>, "florian.vaussard@epfl.ch" <florian.vaussard@epfl.ch>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1421229299-8206-1-git-send-email-gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Mark
+Hi Gabriel,
 
-On Fri, Jan 16, 2015 at 6:48 PM, Mark Rutland <mark.rutland@arm.com> wrote:
-> On Fri, Jan 16, 2015 at 10:00:10AM +0000, Chunyan Zhang wrote:
->> From: Zhizhou Zhang <zhizhou.zhang@spreadtrum.com>
->>
->> Adds support for Spreadtrum's SoC Platform in the arm64 Kconfig and
->> defconfig files.
->>
->> Signed-off-by: Zhizhou Zhang <zhizhou.zhang@spreadtrum.com>
->> Signed-off-by: Orson Zhai <orson.zhai@spreadtrum.com>
->> Signed-off-by: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
->> ---
->>  arch/arm64/Kconfig           |    5 +++++
->>  arch/arm64/configs/defconfig |    1 +
->>  2 files changed, 6 insertions(+)
->>
->> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
->> index b1f9a20..885c1f4 100644
->> --- a/arch/arm64/Kconfig
->> +++ b/arch/arm64/Kconfig
->> @@ -153,6 +153,11 @@ config ARCH_SEATTLE
->>       help
->>         This enables support for AMD Seattle SOC Family
->>
->> +config ARCH_SPRD
+     For the series:
+Acked-by: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
+
+     Kishon, could you take care of adding PHY driver patch for v3.20?
+
+Thanks,
+Maxime
+On 01/14/2015 10:54 AM, Gabriel FERNANDEZ wrote:
+> The goal of this series is to enable the support of MiPHY28lp Generic PHY.
 >
-> This should presumably be ARCH_SHARKL64, so you can add other SoC
-> families later. The other entries in here are already formatted that
-> way.
+> The first patch is to update miphy28lp phy driver to access sysconfig register
+> offsets via syscfg dt property. It's based on Arnds review comments here
+> https://lkml.org/lkml/2014/11/13/161
+> I have updated the miphy28lp phy driver same way as Peter's implementation.
 >
-> I wonder if we should have these of the form ARCH_${VENDOR}_${FAMILY}
-> (e.g. ARCH_SPRD_SHARKL64) rather than just ARCH_${FAMILY} to save
-> ourselves from name conflicts in future (and to make it easier to grep
-> for a particular vendor's config options).
+> Gabriel Fernandez (3):
+>    phy: miphy28lp: Pass sysconfig register offsets via syscfg dt
+>      property.
+>    ARM: DT: STi: STiH407: Add DT node for MiPHY28lp
+>    ARM: multi_v7_defconfig: Enable MiPHY28lp - ST's Generic (SATA, PCIe &
+>      USB3) PHY
+>
+>   .../devicetree/bindings/phy/phy-miphy28lp.txt      | 43 ++++++---------
+>   arch/arm/boot/dts/stih407-family.dtsi              | 53 +++++++++++++++++++
+>   arch/arm/boot/dts/stihxxx-b2120.dtsi               | 11 ++++
+>   arch/arm/configs/multi_v7_defconfig                |  1 +
+>   drivers/phy/phy-miphy28lp.c                        | 61 ++++++++++++----------
+>   5 files changed, 113 insertions(+), 56 deletions(-)
 >
 
-actually we've discussed this question before[1], and I think Arnd's
-suggestion is suitable for our case, so I changed this to use
-ARCH_SPRD instead of ARCH_SHARKL64.
-
-[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-November/306246.html
-
-anyway, thank you very much!
-
-Chunyan
-
->> +     bool "Spreadtrum SoC platform"
->
-> bool "Spreadtrun Sharkl64 SoC Family"
->
->> +     help
->> +       Support for Spreadtrum ARM based SoCs
->
->
-> Support for the Spreadtrum Sharkl64 SoC family.
->
-> Thanks,
-> Mark.
->
->> +
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
