@@ -1,202 +1,94 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v4 4/4] ARM: mvebu: Armada 385 GP: Add regulators to the
- SATA port
-Date: Fri, 16 Jan 2015 09:17:55 +0100
-Message-ID: <54B8C933.7020502@redhat.com>
-References: <1421330978-9694-1-git-send-email-gregory.clement@free-electrons.com> <1421330978-9694-5-git-send-email-gregory.clement@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <1421330978-9694-5-git-send-email-gregory.clement@free-electrons.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>, Tejun Heo <tj@kernel.org>, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: =?windows-1252?Q?Antoine_T=E9nart?= <antoine.tenart@free-electrons.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v2] i2c: mv64xxx: enable acquisition of timeout value from Device Tree
+Date: Fri, 16 Jan 2015 09:36:23 +0100
+Message-ID: <1421397383-8222-1-git-send-email-gregory.clement@free-electrons.com>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+From: Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
 
-On 15-01-15 15:09, Gregory CLEMENT wrote:
-> Add the regulators to each SATA port.
->
-> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
-> ---
->   arch/arm/boot/dts/armada-388-gp.dts | 126 ++++++++++++++++++++++++++++++++++++
->   1 file changed, 126 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/armada-388-gp.dts b/arch/arm/boot/dts/armada-388-gp.dts
-> index 4df22bf91683..590b383db323 100644
-> --- a/arch/arm/boot/dts/armada-388-gp.dts
-> +++ b/arch/arm/boot/dts/armada-388-gp.dts
-> @@ -173,6 +173,16 @@
->   				status = "okay";
->   				#address-cells = <1>;
->   				#size-cells = <0>;
-> +
-> +				sata0: sata-port@0 {
-> +					reg = <0>;
-> +					target-supply = <&reg_5v_sata0>;
-> +				};
-> +
-> +				sata1: sata-port@1 {
-> +					reg = <1>;
-> +					target-supply = <&reg_5v_sata1>;
-> +				};
->   			};
->
->   			sata@e0000 {
-> @@ -181,6 +191,16 @@
->   				status = "okay";
->   				#address-cells = <1>;
->   				#size-cells = <0>;
-> +
-> +				sata2: sata-port@0 {
-> +					reg = <0>;
-> +					target-supply = <&reg_5v_sata2>;
-> +				};
-> +
-> +				sata3: sata-port@1 {
-> +					reg = <1>;
-> +					target-supply = <&reg_5v_sata3>;
-> +				};
->   			};
->
->   			sdhci@d8000 {
-> @@ -278,6 +298,112 @@
->   		regulator-always-on;
->   		gpio = <&expander0 4 GPIO_ACTIVE_HIGH>;
->   	};
-> +
-> +	reg_sata0: pwr-sata0 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "pwr_en_sata0";
-> +		enable-active-high;
-> +		regulator-always-on;
-> +
-> +	};
-> +
-> +	reg_5v_sata0: v5-sata0 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "v5.0-sata0";
-> +		regulator-min-microvolt = <5000000>;
-> +		regulator-max-microvolt = <5000000>;
-> +		regulator-always-on;
-> +		vin-supply = <&reg_sata0>;
-> +	};
-> +
-> +	reg_12v_sata0: v12-sata0 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "v12.0-sata0";
-> +		regulator-min-microvolt = <12000000>;
-> +		regulator-max-microvolt = <12000000>;
-> +		regulator-always-on;
-> +		vin-supply = <&reg_sata0>;
-> +	};
+This commit enables obtaining the transaction timeout value in
+miliseconds using the timeout-ms property. If it doesn't succeed, the
+default value of 1000ms is set.
 
-AFAIK the separate v5 / 12v regulators you're creating here
-are not used anywhere. So I guess there just here to
-accurately / completely describe the power topology ?
+The Device Tree binding documentation is updated accordingly.
 
-> +
-> +	reg_sata1: pwr-sata1 {
-> +		regulator-name = "pwr_en_sata1";
-> +		compatible = "regulator-fixed";
-> +		regulator-min-microvolt = <12000000>;
-> +		regulator-max-microvolt = <12000000>;
-> +		enable-active-high;
-> +		regulator-always-on;
+[gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org: convert commit log to mainline
+style]
+[gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org: clarify which timeout is it]
 
+Signed-off-by: Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
+Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
 
-The always on here seems to a bit weird, wasn't the
-whole purpose of this patch set to teach ahci_platform
-to turn it on as needed ?
+Changelog:
 
-You do probably want to put a regulator-boot-on here so
-that disks do not get an unwanted powercycle (bad for
-their lifetime) when the firmware has already turned on
-the disk. Downside of using regulator-boot-on is that if
-the power is not actually turned on no power-on-delay is
-done, but we're not using a power on delay anyways.
+v1 -> v2:
 
-The same goes for reg_sata2 & reg_sata3.
+- clarify which timeout is it in the Device Tree binding documentation
+  and in the commit log.
 
-> +		gpio = <&expander0 3 GPIO_ACTIVE_HIGH>;
-> +	};
-> +
-> +	reg_5v_sata1: v5-sata1 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "v5.0-sata1";
-> +		regulator-min-microvolt = <5000000>;
-> +		regulator-max-microvolt = <5000000>;
-> +		regulator-always-on;
-> +		vin-supply = <&reg_sata1>;
-> +	};
-> +
-> +	reg_12v_sata1: v12-sata1 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "v12.0-sata1";
-> +		regulator-min-microvolt = <12000000>;
-> +		regulator-max-microvolt = <12000000>;
-> +		regulator-always-on;
-> +		vin-supply = <&reg_sata1>;
-> +	};
-> +
-> +	reg_sata2: pwr-sata2 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "pwr_en_sata2";
-> +		enable-active-high;
-> +		regulator-always-on;
-> +		gpio = <&expander0 11 GPIO_ACTIVE_HIGH>;
-> +	};
-> +
-> +	reg_5v_sata2: v5-sata2 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "v5.0-sata2";
-> +		regulator-min-microvolt = <5000000>;
-> +		regulator-max-microvolt = <5000000>;
-> +		regulator-always-on;
-> +		vin-supply = <&reg_sata2>;
-> +	};
-> +
-> +	reg_12v_sata2: v12-sata2 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "v12.0-sata2";
-> +		regulator-min-microvolt = <12000000>;
-> +		regulator-max-microvolt = <12000000>;
-> +		regulator-always-on;
-> +		vin-supply = <&reg_sata2>;
-> +	};
-> +
-> +	reg_sata3: pwr-sata3 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "pwr_en_sata3";
-> +		enable-active-high;
-> +		regulator-always-on;
-> +		gpio = <&expander0 12 GPIO_ACTIVE_HIGH>;
-> +	};
-> +
-> +	reg_5v_sata3: v5-sata3 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "v5.0-sata3";
-> +		regulator-min-microvolt = <5000000>;
-> +		regulator-max-microvolt = <5000000>;
-> +		regulator-always-on;
-> +		vin-supply = <&reg_sata3>;
-> +	};
-> +
-> +	reg_12v_sata3: v12-sata3 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "v12.0-sata3";
-> +		regulator-min-microvolt = <12000000>;
-> +		regulator-max-microvolt = <12000000>;
-> +		regulator-always-on;
-> +		vin-supply = <&reg_sata3>;
-> +	};
->   };
->
->   &pinctrl {
->
+ Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt | 5 +++++
+ drivers/i2c/busses/i2c-mv64xxx.c                      | 9 ++++-----
+ 2 files changed, 9 insertions(+), 5 deletions(-)
 
-Regards,
-
-Hans
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt b/Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt
+index 5c30026921ae..d02d0e5d202c 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt
+@@ -25,12 +25,16 @@ default frequency is 100kHz
+                      whenever you're using the "allwinner,sun6i-a31-i2c"
+                      compatible.
+ 
++ - timeout-ms      : transaction timeout value in miliseconds. If not set the
++   		     default timeout is 1000ms
++
+ Examples:
+ 
+ 	i2c@11000 {
+ 		compatible = "marvell,mv64xxx-i2c";
+ 		reg = <0x11000 0x20>;
+ 		interrupts = <29>;
++		timeout-ms = <1000>;
+ 		clock-frequency = <100000>;
+ 	};
+ 
+@@ -40,5 +44,6 @@ For the Armada XP:
+ 		compatible = "marvell,mv78230-i2c", "marvell,mv64xxx-i2c";
+ 		reg = <0x11000 0x100>;
+ 		interrupts = <29>;
++		timeout-ms = <1000>;
+ 		clock-frequency = <100000>;
+ 	};
+diff --git a/drivers/i2c/busses/i2c-mv64xxx.c b/drivers/i2c/busses/i2c-mv64xxx.c
+index 30059c1df2a3..a379a17c5c21 100644
+--- a/drivers/i2c/busses/i2c-mv64xxx.c
++++ b/drivers/i2c/busses/i2c-mv64xxx.c
+@@ -803,7 +803,7 @@ mv64xxx_of_config(struct mv64xxx_i2c_data *drv_data,
+ #else
+ 	const struct of_device_id *device;
+ 	struct device_node *np = dev->of_node;
+-	u32 bus_freq, tclk;
++	u32 bus_freq, tclk, timeout;
+ 	int rc = 0;
+ 
+ 	if (IS_ERR(drv_data->clk)) {
+@@ -832,10 +832,9 @@ mv64xxx_of_config(struct mv64xxx_i2c_data *drv_data,
+ 		reset_control_deassert(drv_data->rstc);
+ 	}
+ 
+-	/* Its not yet defined how timeouts will be specified in device tree.
+-	 * So hard code the value to 1 second.
+-	 */
+-	drv_data->adapter.timeout = HZ;
++	if (of_property_read_u32(np, "timeout-ms", &timeout))
++		timeout = 1000; /* 1000ms by default */
++	drv_data->adapter.timeout = msecs_to_jiffies(timeout);
+ 
+ 	device = of_match_device(mv64xxx_i2c_of_match_table, dev);
+ 	if (!device)
+-- 
+1.9.1
