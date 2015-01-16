@@ -1,59 +1,175 @@
-From: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 0/4] Add support for kosagi novena
-Date: Thu, 15 Jan 2015 18:46:15 -0600
-Message-ID: <20150116004615.GF29776@google.com>
-References: <1419237127-21763-1-git-send-email-xobs@kosagi.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: Including empty regulator nodes in axp209.dtsi is a
+ BAD idea
+Date: Fri, 16 Jan 2015 08:58:04 +0800
+Message-ID: <CAGb2v65AT=8J4uMTk+b7N6QLNfcbgPJjW0Jgd1B=Pjq5a+SY_g@mail.gmail.com>
+References: <54B4E7B5.6060304@redhat.com> <20150113164606.GA4891@lukather>
+ <54B61DD3.6010105@redhat.com> <CAGb2v67uGV2HBKciRVGhf-vb7K=whruiaUvv8L7Lqz=8=kBnQQ@mail.gmail.com>
+ <20150115220438.GD5567@lukather>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1419237127-21763-1-git-send-email-xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Richard Zhu <r65037-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bunnie-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBMGE4GSQKGQE43HFNDQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20150115220438.GD5567@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 22, 2014 at 04:32:03PM +0800, Sean Cross wrote:
-> The Kosagi Novena mainboard contains an i.MX6, along with a PCI Express slot.
-> This patchset adds regulator support to the PCI Express slot, and adds
-> device tree support for the Novena mainboard.
-> 
-> Changes since v1:
->     - Add 'kosagi' to vendor prefixes
->     - Add LCD panel to simple-panel
->     - Renamed power-supply to bus-supply
->     - Replaced devm_regulator_get() with devm_regulator_get_optional()
->     - Moved regulator_enable to imx6_add_pcie_port()
->     - Removed fpga@1 from spi definition in dts -- will use overlays instead
-> 
-> Sean Cross (4):
->   drm/panel: simple: Add Innolux N133HSE panel support
->   devicetree: bindings: Add vendor prefix for Kosagi
->   PCI: imx6: Add power-supply support
+On Fri, Jan 16, 2015 at 6:04 AM, Maxime Ripard
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> On Fri, Jan 16, 2015 at 12:54:58AM +0800, Chen-Yu Tsai wrote:
+>> Hi,
+>>
+>> On Wed, Jan 14, 2015 at 3:42 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+>> > Hi,
+>> >
+>> >
+>> > On 13-01-15 17:46, Maxime Ripard wrote:
+>> >>
+>> >> On Tue, Jan 13, 2015 at 10:39:01AM +0100, Hans de Goede wrote:
+>> >>>
+>> >>> Hi ChenYu, Maxime,
+>> >>>
+>> >>> During the review of a few dts files for new boards Maxime asked me to
+>> >>> use
+>> >>> axp209.dtsi to avoid the standard axp209 "boilerplate" present in most
+>> >>> boards using the axp209 pmic.
+>> >>>
+>> >>> But axp209.dtsi includes empty regulator nodes, e.g. :
+>> >>>
+>> >>>                  reg_dcdc3: dcdc3 {
+>> >>>                          regulator-name = "dcdc3";
+>> >>>                  };
+>> >>>
+>> >>> This is a BAD idea, the presence of these empty nodes causes the
+>> >>> axp20x-regulator driver to actually register regulators for them,
+>> >>> and then on late_init the regulator subsys turns them off, since
+>> >>> they have absolutely no constraints set (nor users registered)
+>> >>> and the regulator subsys assumes that when devicetree is used their
+>> >>> is always a compete set of constraints and that thus turning them
+>> >>> off is safe.
+>> >>>
+>> >>> So when I switched to using axp209.dtsi for the bananapro.dts,
+>> >>> and booted the bananapro this is the last message I got from the
+>> >>> kernel while booting:
+>> >>>
+>> >>> [    2.314014] dcdc3: disabling
+>> >>>
+>> >>> And away went our DRAM power-supply, oops.
+>> >>>
+>> >>> So for dcdc2 (CPU) and dcdc3 (DRAM), the boilerplate
+>> >>> should contain reasonable constraints (eg the operating range
+>> >>> from the datasheet)
+>> >>
+>> >>
+>> >> Indeed.
+>> >>
+>> >>> and an always-on property.
+>> >>
+>> >>
+>> >> I disagree. The regulator disabling is a feature, and how the board is
+>> >> wired is, well, up to the board.
+>> >
+>> >
+>> > And here I was thinking you wanted to reduce the amount of boilerplate
+>> > in our dts files ..
+>> >
+>> > IOW I disagree with your disagreeing all boards we know of have dcdc2
+>> > wired to Vcpu and dcdc3 wired to Vddr, so not having this in the dtsi
+>> > will lead to a lot of extra boilerplate in each dts file. We're not
+>> > talking about our main dtsi file here, if we ever encounter a board
+>> > which is wired in a different way, then its dts can simply not use
+>> > axp209.dtsi and instead define the nodes itself, it needs to do that
+>> > anyways if we do include the standard CPU and DDR constrains in the
+>> > dtsi since those will not make sense either in that case.
+>>
+>> I think Maxime is only disagreeing to the "always-on" part. And I
+>> somewhat agree with him, but on a technical level. It doesn't seem
+>> possible to negate at the board level the "always-on" set in the dtsi,
+>> or it is not obvious to me how to do so. With properties with values
+>> you just set a new value. How do you "unset" a boolean flag?
+>
+> You don't, but Hans suggestion was to not use the DTSI then and define
+> the nodes yourself in your DTS.
+>
+> Another solution would be if this case comes up at some point to just
+> push the always-on constraints to the boards, but assume for now that
+> all boards will want it to be always on.
+>
+>> As for the constraints, I think we can agree that everyone will use
+>> the reference design if they choose to include the PMIC on a board.
+>
+> I'm not sure to get what you mean here. The PMIC has constraints of
+> its own (the min/max voltage it can deliver), and boards will have
+> some too (ie the min/max voltage the components can handle). So I
+> guess we will end up with constraints defined at both levels.
 
-I guess we're waiting on a response to Arnd's question about making this
-more generic, so I'm dropping these from my queue pending that.
+I don't know if we need to define the constraints the PMIC itself
+has. Aren't these already defined in the driver?
 
-Then we need a strategy for merging it since it crosses PCI/ARM/GPU.
-Please propose a strategy; it looks like the PCI part doesn't technically
-depend on the preceeding patches, but it's fine with me if you want to keep
-it all together.
+What I meant was that it's not unreasonable to assume that most boards
+using axp209 will follow the reference design, so dcdc2 powers the cpu,
+dcdc3 powers the rest of the internal logic and dll, and ldo3 powers
+avcc. And we could possibly put the the SoC constraints for these in
+axp209.dtsi. Maybe except vcc-cpu, which is different across sun[457]i.
 
->   ARM: dts: imx6q: add Novena board
-> 
->  .../devicetree/bindings/pci/fsl,imx6q-pcie.txt     |   3 +
->  .../devicetree/bindings/vendor-prefixes.txt        |   1 +
->  arch/arm/boot/dts/Makefile                         |   1 +
->  arch/arm/boot/dts/imx6q-novena.dts                 | 856 +++++++++++++++++++++
->  drivers/gpu/drm/panel/panel-simple.c               |  26 +
->  drivers/pci/host/pci-imx6.c                        |  27 +
->  6 files changed, 914 insertions(+)
->  create mode 100644 arch/arm/boot/dts/imx6q-novena.dts
-> 
-> -- 
-> 2.1.3
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ChenYu
+
+>> >> If an always-on property is needed, then it's in the DTS, not in the
+>> >> AXP DTSI.
+>> >>
+>> >>> The ldo-s are trickier, since we simply do not know how those
+>> >>> are used, I think ldo2 is used for Avcc on most boards, so it
+>> >>> too should be always on, since almost any board will have some
+>> >>> analog parts on it (be it the ir receiver, lradc, rtp, lvds, vga,
+>> >>> or analog audio in/out). Assuming that we're willing to assume
+>> >>> that ldo2 is used this way, we should give it matching constraints
+>> >>> and always mark it always-on.
+>> >>
+>> >>
+>> >> Ideally, all the drivers that have a analogic component should have a
+>> >> reference to the regulator they use. But again, at the board
+>> >> level. And more realistically, putting always-on should also happen at
+>> >> the board level.
+>> >>
+>> >>> As for ldo3 - 5 I've no idea when / for what these are used, but
+>> >>> if we do not know it is better to just leave them be then to turn
+>> >>> them off IMHO, so we should remove the nodes for these from axp209.dtsi
+>> >>>
+>> >>> Anyways sorting this all out is going to take some time, so I'm
+>> >>> not going to use axp209.dtsi in dts files for new boards for now.
+>> >>
+>> >>
+>> >> I'm afraid it's an "all or nothing" situation.
+>> >
+>> >
+>> > No it is not, the PMIC is a mfd, and we can use some of its functions
+>> > fine without actually loading the regulator bits. This is already
+>> > done on most boards with the axp209, even without touching the regulators
+>> > it is nice to have the axp209 mfd driver loaded so that we get support
+>> > for the powerbutton, and support for poweroff, esp. the latter is quite
+>> > nice to have.
+>>
+>> I agree that a) the PMIC is an mfd, and b) we can use other bits without
+>> loading the regulator bits. But if adding the regulator bits results in
+>> some sort of crash or issue, just because some regulator got turned off,
+>> it seems to me that the dt is not accurately describing the hardware.
+>
+> Yeah, that's kind of the same argument than the one we had with
+> simplefb clocks. So I guess we can agree that we can allow the MFD
+> part alone to work, but if regulator support is introduced, then *all*
+> regulators must be described accurately.
+>
+> Maxime
+>
+> --
+> Maxime Ripard, Free Electrons
+> Embedded Linux, Kernel and Android engineering
+> http://free-electrons.com
