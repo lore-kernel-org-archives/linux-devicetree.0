@@ -1,236 +1,100 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH v4 4/4] ARM: mvebu: Armada 385 GP: Add regulators to the
- SATA port
-Date: Fri, 16 Jan 2015 10:27:23 +0100
-Message-ID: <54B8D97B.3090908@free-electrons.com>
-References: <1421330978-9694-1-git-send-email-gregory.clement@free-electrons.com> <1421330978-9694-5-git-send-email-gregory.clement@free-electrons.com> <54B8C933.7020502@redhat.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 0/6] ARM: shmobile: sh73a0: DT PM domain support
+Date: Fri, 16 Jan 2015 10:51:29 +0100
+Message-ID: <CAMuHMdU4hj2p-N8abT-BSadznqF7=0-08o9F4_7+qjdvv6Whmw@mail.gmail.com>
+References: <1421237484-16847-1-git-send-email-geert+renesas@glider.be>
+	<20150114235302.GC10479@verge.net.au>
+	<CAMuHMdVANePZ-fLzaLCEOm0vHR735C=u5_fDa4Uywi_P5ggjBg@mail.gmail.com>
+	<20150116011315.GA7830@verge.net.au>
+	<20150116024724.GA31654@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <54B8C933.7020502@redhat.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>, Tejun Heo <tj@kernel.org>, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: =?windows-1252?Q?Antoine_T=E9nart?= <antoine.tenart@free-electrons.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20150116024724.GA31654@verge.net.au>
+Sender: linux-pm-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
+Hi Simon,
 
-On 16/01/2015 09:17, Hans de Goede wrote:
-> Hi,
-> 
-> On 15-01-15 15:09, Gregory CLEMENT wrote:
->> Add the regulators to each SATA port.
->>
->> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
->> ---
->>   arch/arm/boot/dts/armada-388-gp.dts | 126 ++++++++++++++++++++++++++++++++++++
->>   1 file changed, 126 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/armada-388-gp.dts b/arch/arm/boot/dts/armada-388-gp.dts
->> index 4df22bf91683..590b383db323 100644
->> --- a/arch/arm/boot/dts/armada-388-gp.dts
->> +++ b/arch/arm/boot/dts/armada-388-gp.dts
->> @@ -173,6 +173,16 @@
->>   				status = "okay";
->>   				#address-cells = <1>;
->>   				#size-cells = <0>;
->> +
->> +				sata0: sata-port@0 {
->> +					reg = <0>;
->> +					target-supply = <&reg_5v_sata0>;
->> +				};
->> +
->> +				sata1: sata-port@1 {
->> +					reg = <1>;
->> +					target-supply = <&reg_5v_sata1>;
->> +				};
->>   			};
->>
->>   			sata@e0000 {
->> @@ -181,6 +191,16 @@
->>   				status = "okay";
->>   				#address-cells = <1>;
->>   				#size-cells = <0>;
->> +
->> +				sata2: sata-port@0 {
->> +					reg = <0>;
->> +					target-supply = <&reg_5v_sata2>;
->> +				};
->> +
->> +				sata3: sata-port@1 {
->> +					reg = <1>;
->> +					target-supply = <&reg_5v_sata3>;
->> +				};
->>   			};
->>
->>   			sdhci@d8000 {
->> @@ -278,6 +298,112 @@
->>   		regulator-always-on;
->>   		gpio = <&expander0 4 GPIO_ACTIVE_HIGH>;
->>   	};
->> +
->> +	reg_sata0: pwr-sata0 {
->> +		compatible = "regulator-fixed";
->> +		regulator-name = "pwr_en_sata0";
->> +		enable-active-high;
->> +		regulator-always-on;
->> +
->> +	};
->> +
->> +	reg_5v_sata0: v5-sata0 {
->> +		compatible = "regulator-fixed";
->> +		regulator-name = "v5.0-sata0";
->> +		regulator-min-microvolt = <5000000>;
->> +		regulator-max-microvolt = <5000000>;
->> +		regulator-always-on;
->> +		vin-supply = <&reg_sata0>;
->> +	};
->> +
->> +	reg_12v_sata0: v12-sata0 {
->> +		compatible = "regulator-fixed";
->> +		regulator-name = "v12.0-sata0";
->> +		regulator-min-microvolt = <12000000>;
->> +		regulator-max-microvolt = <12000000>;
->> +		regulator-always-on;
->> +		vin-supply = <&reg_sata0>;
->> +	};
-> 
-> AFAIK the separate v5 / 12v regulators you're creating here
-> are not used anywhere. So I guess there just here to
-> accurately / completely describe the power topology ?
+On Fri, Jan 16, 2015 at 3:47 AM, Simon Horman <horms@verge.net.au> wrote:
+> On Fri, Jan 16, 2015 at 10:13:15AM +0900, Simon Horman wrote:
+>> On Thu, Jan 15, 2015 at 10:32:23AM +0100, Geert Uytterhoeven wrote:
+>> > On Thu, Jan 15, 2015 at 12:53 AM, Simon Horman <horms@verge.net.au> wrote:
+>> > > On Wed, Jan 14, 2015 at 01:11:18PM +0100, Geert Uytterhoeven wrote:
+>> > >> This patch series enables DT support for PM domains on the Renesas
+>> > >> SH-Mobile AG5 (sh73a0) SoC.
+>> > >>
+>> > >> This series builds further on the DT PM Domain support for R-Mobile A1
+>> > >> (r8a7740).  Due to the similarity of the SYSC System-Controller on the
+>> > >> various SH-Mobile/R-Mobile SoCs, and the abstraction of PM domains in
+>> > >> DT, the same driver can handle sh73a0 after some small modifications,
+>> > >> without changing the DT bindings.
+>> > >>
+>> > >> Compared to r8a7740, the only significant change is the move of the
+>> > >> memory-controller(s) to separate PM domains on sh73a0 (and also on
+>> > >> R-Mobile APE6 (r8a73a4)). Hence a provision must be made to not turn off
+>> > >> these PM domains inadvertently, cfr. the series "[PATCH 0/4] ARM:
+>> > >> shmobile: Add DT support for memory controllers" I've just sent.
+>> > >>
+>> > >> This series has been sent before, as part of the series "[PATCH RFC
+>> > >> 0/7] ARM: shmobile: sh73a0: DT PM domain support"
+>> > >> (https://lkml.org/lkml/2014/11/19/404).
+>> > >> Changes since v1 (more detailed changelogs in the individual patches):
+>> > >>   - Factored out addition of the memory-controller in a separate
+>> > >>     series.
+>> > >>
+>> > >> Dependencies:
+>> > >>   1. Patches 1-4 (DT binding doc, C code) depend on:
+>> > >>        a. The R-Mobile DT PM Domain work for r8a7740, queued in tag
+>> > >>           renesas-dt-pm-for-v3.20 of Simon's repository,
+>> > >
+>> > > In response to a request from Olof renesas-dt-pm-for-v3.20 has been
+>> > > withdrawn and the patches split between the soc-for-v3.20 and dt-for-v3.20
+>> > > branches. I am assuming that the patches that 1-4 depend on are
+>> > > now all in the soc-for-v3.20 branch. Could you check?
+>> >
+>> > OK, soc-for-v3.20 now.
+>> >
+>> > >>        b. "ARM: shmobile: R-Mobile: Fix DT refcount bugs in PM domain
+>> > >>          code"
+>> > >>          (http://www.spinics.net/lists/arm-kernel/msg391084.html),
+>> > >
+>> > > FWIW, I have squashed that patch into the patch that adds the problem
+>> > > and the result is in the soc-for-v3.20. I will to push that result
+>> > > a little later today.
+>> >
+>> > Thanks!
+>> >
+>> > >>   2. Patch 5 (dtsi) depends on:
+>> > >>        a. The multiplatform work for sh73a0, queued in branch
+>> > >>           sh73a0-multiplatform-for-v3.20 of Simon's repository,
+>> > >>        b. Series "[PATCH 0/4] ARM: shmobile: Add DT support for memory
+>> > >>           controllers"
+>> > >>         (http://marc.info/?l=linux-sh&m=142123399414888).
+>> > >
+>> > > This may be awkward to get into v3.20 unless we can adopt a looser approach
+>> > > to the dependencies.
 
-Yes it was the point.
+> Please take a look at renesas-next-20150115-v3.19-rc1.
 
-> 
->> +
->> +	reg_sata1: pwr-sata1 {
->> +		regulator-name = "pwr_en_sata1";
->> +		compatible = "regulator-fixed";
->> +		regulator-min-microvolt = <12000000>;
->> +		regulator-max-microvolt = <12000000>;
->> +		enable-active-high;
->> +		regulator-always-on;
-> 
-> 
-> The always on here seems to a bit weird, wasn't the
-> whole purpose of this patch set to teach ahci_platform
-> to turn it on as needed ?
+s/20150115/20150116/?
 
-Maybe I misunderstood the regulator binding, but I thought
-that (once the suspend will be available on this platform) I
-could use:
+> This series should be queued-up there.
 
-regulator-state-mem {
-			regulator-off-in-suspend;
-		};
+If you add patch 6 to sh-drivers-for-v3.20 and merge it in -next,
+everything is fine!
 
-> 
-> You do probably want to put a regulator-boot-on here so
-> that disks do not get an unwanted powercycle (bad for
-> their lifetime) when the firmware has already turned on
-> the disk. Downside of using regulator-boot-on is that if
-> the power is not actually turned on no power-on-delay is
+Thanks!
 
-That's why I didn't use it
+Gr{oetje,eeting}s,
 
-> done, but we're not using a power on delay anyways.
+                        Geert
 
-But if regulator-always-on prevent to switch it off in
-suspend then yes using regulator-boot-on is better.
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Thanks,
-
-Gregory
-
-> 
-> The same goes for reg_sata2 & reg_sata3.
-> 
->> +		gpio = <&expander0 3 GPIO_ACTIVE_HIGH>;
->> +	};
->> +
->> +	reg_5v_sata1: v5-sata1 {
->> +		compatible = "regulator-fixed";
->> +		regulator-name = "v5.0-sata1";
->> +		regulator-min-microvolt = <5000000>;
->> +		regulator-max-microvolt = <5000000>;
->> +		regulator-always-on;
->> +		vin-supply = <&reg_sata1>;
->> +	};
->> +
->> +	reg_12v_sata1: v12-sata1 {
->> +		compatible = "regulator-fixed";
->> +		regulator-name = "v12.0-sata1";
->> +		regulator-min-microvolt = <12000000>;
->> +		regulator-max-microvolt = <12000000>;
->> +		regulator-always-on;
->> +		vin-supply = <&reg_sata1>;
->> +	};
->> +
->> +	reg_sata2: pwr-sata2 {
->> +		compatible = "regulator-fixed";
->> +		regulator-name = "pwr_en_sata2";
->> +		enable-active-high;
->> +		regulator-always-on;
->> +		gpio = <&expander0 11 GPIO_ACTIVE_HIGH>;
->> +	};
->> +
->> +	reg_5v_sata2: v5-sata2 {
->> +		compatible = "regulator-fixed";
->> +		regulator-name = "v5.0-sata2";
->> +		regulator-min-microvolt = <5000000>;
->> +		regulator-max-microvolt = <5000000>;
->> +		regulator-always-on;
->> +		vin-supply = <&reg_sata2>;
->> +	};
->> +
->> +	reg_12v_sata2: v12-sata2 {
->> +		compatible = "regulator-fixed";
->> +		regulator-name = "v12.0-sata2";
->> +		regulator-min-microvolt = <12000000>;
->> +		regulator-max-microvolt = <12000000>;
->> +		regulator-always-on;
->> +		vin-supply = <&reg_sata2>;
->> +	};
->> +
->> +	reg_sata3: pwr-sata3 {
->> +		compatible = "regulator-fixed";
->> +		regulator-name = "pwr_en_sata3";
->> +		enable-active-high;
->> +		regulator-always-on;
->> +		gpio = <&expander0 12 GPIO_ACTIVE_HIGH>;
->> +	};
->> +
->> +	reg_5v_sata3: v5-sata3 {
->> +		compatible = "regulator-fixed";
->> +		regulator-name = "v5.0-sata3";
->> +		regulator-min-microvolt = <5000000>;
->> +		regulator-max-microvolt = <5000000>;
->> +		regulator-always-on;
->> +		vin-supply = <&reg_sata3>;
->> +	};
->> +
->> +	reg_12v_sata3: v12-sata3 {
->> +		compatible = "regulator-fixed";
->> +		regulator-name = "v12.0-sata3";
->> +		regulator-min-microvolt = <12000000>;
->> +		regulator-max-microvolt = <12000000>;
->> +		regulator-always-on;
->> +		vin-supply = <&reg_sata3>;
->> +	};
->>   };
->>
->>   &pinctrl {
->>
-> 
-> Regards,
-> 
-> Hans
-> 
-
-
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
