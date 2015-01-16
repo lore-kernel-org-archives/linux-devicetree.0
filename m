@@ -1,73 +1,83 @@
-From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH/RFC v10 03/19] DT: leds: Add led-sources property
-Date: Fri, 16 Jan 2015 11:17:24 +0100
-Message-ID: <54B8E534.5080506@samsung.com>
-References: <1420816989-1808-1-git-send-email-j.anaszewski@samsung.com>
- <1420816989-1808-4-git-send-email-j.anaszewski@samsung.com>
- <CAL_JsqJKEp6TWaRhJimg3AWBh+MCCr2Bk9+1o7orLLdp5E+n-g@mail.gmail.com>
- <54B38682.5080605@samsung.com>
- <CAL_Jsq+UaA41DvawdOMmOib=Fi0hC-nBdKV-+P4DFo+MoOy-bQ@mail.gmail.com>
- <54B3F1EF.4060506@samsung.com>
- <CAL_JsqKpJtUG0G6g1GOuSVpc31oe-dp3qdrKJUE0upG-xRDFhA@mail.gmail.com>
- <20150112170644.GO4160@sirena.org.uk> <54B7B39C.7080204@samsung.com>
- <20150115210310.GB24008@amd>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v7 1/4] Documentation: dt: add common bindings for
+ hwspinlock
+Date: Fri, 16 Jan 2015 10:17:47 +0000
+Message-ID: <20150116101746.GA21809@leverpostej>
+References: <1421269101-51105-1-git-send-email-s-anna@ti.com>
+ <1421269101-51105-2-git-send-email-s-anna@ti.com>
+ <20150115135201.GG16217@leverpostej>
+ <20150115135556.GH16217@leverpostej>
+ <CAL_JsqL2LZAooMk-V8+xeF2g6acZE21M+-OBRw8aEVa-5wVHuQ@mail.gmail.com>
+ <CAK=WgbYQ=BbinqJ5fsw2Y+FKdy=nasLsw9mX8pw6S_o3owy9-g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20150115210310.GB24008@amd>
+Content-Disposition: inline
+In-Reply-To: <CAK=WgbYQ=BbinqJ5fsw2Y+FKdy=nasLsw9mX8pw6S_o3owy9-g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, sakari.ailus-X3B1VOXEql0@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Fri, Jan 16, 2015 at 06:09:00AM +0000, Ohad Ben-Cohen wrote:
+> On Thu, Jan 15, 2015 at 4:42 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > On Thu, Jan 15, 2015 at 7:55 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> >> On Thu, Jan 15, 2015 at 01:52:01PM +0000, Mark Rutland wrote:
+> >>> On Wed, Jan 14, 2015 at 08:58:18PM +0000, Suman Anna wrote:
+> >>> > +- hwlock-base-id:  An unique base Id for the locks for a particular hwlock
+> >>> > +                   device. This property is mandatory for all platform
+> >>> > +                   implementations.
+> >>>
+> >>> This property makes no sense. The ID encoded in the hwlock cells is
+> >>> relative to the instance (identified by phandle), not global. So the DT
+> >>> has no global ID space.
+> >>>
+> >>> Why do you think you need this?
+> >>
+> >> Having looked at the way this proeprty is used, NAK.
+> >>
+> >> If you need to carve up a Linux-internal ID space, do that dynamically.
+> >> There is no need for this property.
+> >
+> > Better yet, don't create a Linux ID space for this. Everywhere we have
+> > one, we want to get rid of it.
+> 
+> Rob, Mark,
+> 
+> The hwlock is a basic hardware primitive that allow synchronization
+> between different processors in the system, which may be running Linux
+> as well as other operating systems, and may have no other means of
+> communication.
+> 
+> The hwlock id numbers are predefined, global and static across the
+> entire system: Linux may boot well after other operating systems are
+> already running and using these hwlocks to communicate, and therefore,
+> in order to use these hardware devices, it must not enumerate them
+> differently than the rest of the system.
 
-On 15/01/15 22:03, Pavel Machek wrote:
->> Perhaps we could use the 'reg' property to describe actual connections,
->> > I'm not sure if it's better than a LED specific property, e.g.
->> > 
->> > max77387@52 {
->> >         compatible = "nxp,max77387";
->> >         #address-cells = <2>;
->> >         #size-cells = <0>;
->> >         reg = <0x52>;
->> > 
->> > 	flash_led {
->> > 		reg = <1 1>;	
->> > 		...
->> > 	};	
->> > };
->
-> Normally, reg property is <start length>, if I understand things
-> correctly? Would that be enough here, or would we be doing list of
-> outputs?
+That's not true.
 
-In general the exact meaning depends on value of the #address-cells and
-#size-cells properties in the parent node.  In case as above #size-cells
-is 0.  You can find exact explanation in [1], at page 25.
+In order to communicate it must agree with the other users as to the
+meaning of each instance, and the protocol for use. That doesn't
+necessarily mean that Linux needs to know the numerical ID from a
+datasheet, and regardless that ID is separate from the logical ID Linux
+uses internally.
 
-Anyway, the above example might an abuse of the simple bus. I thought more
-about a list of outputs, but the indexes wouldn't be contiguous, e.g.
+> Given that these id numbers are global, system-wide, static and
+> predefined, where Linux may just be one user of them, please
+> reconsider the approach as implemented by Suman, or suggest an
+> alternative one you may prefer.
 
- curr. reg. outputs | "addres" value
---------------------------------
-FLED2    FLED1      |  reg
---------------------+-----------
-  0        1        | 0x00000001
-  1        0        | 0x00010000
-  1        1        | 0x00010001
+To communicate with the other processors, Linux will need to understand
+the protocol. So there will need to be nodes in the DT describing the
+protocol. Those nodes can refer to the relevant locks using phandle +
+args (with a hwlock-names list if indexing is not appropriate). The
+entire point of the hwlock-cells is to allow individual locks to be
+referred to in this way.
 
-But it might be not a good idea as Rob pointed out.
-
-OTOH we could simply assign indices 1,2,3 to the above FLED1/2 output
-combinations.
-
-[1] https://www.power.org/wp-content/uploads/2012/06/Power_ePAPR_APPROVED_v1.1.pdf
-
---
-Regards,
-Sylwester
+Thanks,
+Mark.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
