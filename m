@@ -1,75 +1,75 @@
-From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v2 0/4] Add support for kosagi novena
-Date: Fri, 16 Jan 2015 11:44:58 +0100
-Message-ID: <1421405098.4015.4.camel@pengutronix.de>
-References: <1419237127-21763-1-git-send-email-xobs@kosagi.com>
-	 <20150116004615.GF29776@google.com> <54B8EA1C.7070700@kosagi.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54B8EA1C.7070700-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Richard Zhu <r65037-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bunnie-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH V3 0/4] mmc: core: Add support for MMC power sequences
+Date: Fri, 16 Jan 2015 11:47:49 +0100
+Message-ID: <1421405273-19117-1-git-send-email-ulf.hansson@linaro.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: linux-mmc@vger.kernel.org, Chris Ball <chris@printf.net>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Alexandre Courbot <gnurou@gmail.com>, Arend van Spriel <arend@broadcom.com>, Sascha Hauer <s.hauer@pengutronix.de>, Olof Johansson <olof@lixom.net>, Russell King <linux@arm.linux.org.uk>, Hans de Goede <hdegoede@redhat.com>, Doug Anderson <dianders@chromium.org>, NeilBrown <neilb@suse.de>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Mark Rutland <mark.rutland@arm.com>, Ulf Hansson <ulf.hansson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, den 16.01.2015, 18:38 +0800 schrieb Sean Cross:
-> On 16/01/2015 08:46, Bjorn Helgaas wrote:
-> > On Mon, Dec 22, 2014 at 04:32:03PM +0800, Sean Cross wrote:
-> >> The Kosagi Novena mainboard contains an i.MX6, along with a PCI Express slot.
-> >> This patchset adds regulator support to the PCI Express slot, and adds
-> >> device tree support for the Novena mainboard.
-> >>
-> >> Changes since v1:
-> >>     - Add 'kosagi' to vendor prefixes
-> >>     - Add LCD panel to simple-panel
-> >>     - Renamed power-supply to bus-supply
-> >>     - Replaced devm_regulator_get() with devm_regulator_get_optional()
-> >>     - Moved regulator_enable to imx6_add_pcie_port()
-> >>     - Removed fpga@1 from spi definition in dts -- will use overlays instead
-> >>
-> >> Sean Cross (4):
-> >>   drm/panel: simple: Add Innolux N133HSE panel support
-> >>   devicetree: bindings: Add vendor prefix for Kosagi
-> >>   PCI: imx6: Add power-supply support
-> > I guess we're waiting on a response to Arnd's question about making this
-> > more generic, so I'm dropping these from my queue pending that.
-> >
-> > Then we need a strategy for merging it since it crosses PCI/ARM/GPU.
-> > Please propose a strategy; it looks like the PCI part doesn't technically
-> > depend on the preceeding patches, but it's fine with me if you want to keep
-> > it all together.
-> >
-> The PCI part was there because without it, the system hard-locks during
-> boot without it.
-> 
-> However, I'm not sure that the power-supply is the correct approach,
-> because I can still see lockups even with the switch in place. I still
-> haven't found out the root cause of that problem.
-> 
-> One workaround is to simply enable that GPIO in the bootloader and leave
-> it on permanently.  Doing this mimics behavior on other platforms where
-> PCIe is permanently powered up, and since the patches are decoupled the
-> PCI patch can be applied at a later time.
-> 
-> I'd prefer to drop the PCI patch for now.  Would you like me to submit a
-> v3 with simply the drm/panel and devicetree patches?
-> 
-Please keep the PCIe supply regulator in your DT, but just mark it
-always-on.
-I looked into moving the bus-supply into the common designware driver,
-but that needs some more work. I'll send out a series for this in the
-next days. We can then always hook up the regulator properly after this
-is done.
+Changes in v3:
+	Fixed comments from Mark Rutland:
+	- Document binding in one patch to get the big picture.
+	- Keep code and DT document consistent around how many GPIO resets we
+	  support. I decided to go for one GPIO, we can extend that if needed
+	  later on.
+	- Change compatible string for simple MMC power sequence and renamed the
+	  file for its documentation.
+	- Updated commit messages according to above changes.
 
-Please wait a bit until sending V3, I want to have another look at the
-V2 novena DT.
+Changes in v2:
+	Fixed comments from Russell King:
+	- Renamed pwrseq callbacks and corresponding interface functions.
+	- Move the call to the previous namned ->power_on() callback, to the
+	  end of mmc_power_up() to get consistent behavior.
 
-Regards,
-Lucas
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This is yet another try to solve the issues of dealing with power sequences for
+the MMC subsystem. The latest attempt, see link below, took a generic approach
+by adding a new top level driver layer. That's was rejected by several reasons.
+http://lwn.net/Articles/602855/
+
+This time the approach is focused to fix the issues for MMC only.
+
+To give a short background, SOCs may specify a specific MMC power sequence. To
+successfully detect an (e)MMC/SD/SDIO card, that power sequence must be followed
+while initializing the card.
+
+To be able to handle these SOC specific power sequences, we add a MMC power
+sequence interface, which helps the mmc core to deal with such.
+
+A MMC power sequence provider then implements a set of callbacks from the above
+mentioned interface. The provider has a corresponding DT compatibility string
+and relies on CONFIG_OF to be set to find it's various resourses, like for
+example a GPIO reset.
+
+The mmc core will from mmc_of_parse() try find a "mmc-pwrseq" DT node and then
+call the corresponding MMC power sequence provider's initialization function.
+
+
+Ulf Hansson (4):
+  mmc: core: Initial support for MMC power sequences
+  mmc: pwrseq: Document DT bindings for the simple MMC power sequence
+  mmc: pwrseq: Initial support for the simple MMC power sequence
+    provider
+  mmc: pwrseq_simple: Add support for a reset GPIO pin
+
+ .../devicetree/bindings/mmc/mmc-pwrseq-simple.txt  |  20 ++++
+ Documentation/devicetree/bindings/mmc/mmc.txt      |  14 +++
+ drivers/mmc/core/Makefile                          |   2 +-
+ drivers/mmc/core/core.c                            |   7 ++
+ drivers/mmc/core/host.c                            |   4 +-
+ drivers/mmc/core/pwrseq.c                          | 109 +++++++++++++++++++++
+ drivers/mmc/core/pwrseq.h                          |  42 ++++++++
+ drivers/mmc/core/pwrseq_simple.c                   |  86 ++++++++++++++++
+ include/linux/mmc/host.h                           |   2 +
+ 9 files changed, 284 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
+ create mode 100644 drivers/mmc/core/pwrseq.c
+ create mode 100644 drivers/mmc/core/pwrseq.h
+ create mode 100644 drivers/mmc/core/pwrseq_simple.c
+
+-- 
+1.9.1
+
