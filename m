@@ -1,49 +1,69 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 1/5] Documentation: DT: Renamed of-serial.txt to 8250.txt
-Date: Fri, 16 Jan 2015 08:11:23 -0600
-Message-ID: <CAL_JsqL9hkfuGi-BmRHTZ=F3KVL8miu2LXkftbswpVuuSx0dtA@mail.gmail.com>
-References: <1421402411-3479-1-git-send-email-chunyan.zhang@spreadtrum.com> <1421402411-3479-2-git-send-email-chunyan.zhang@spreadtrum.com>
+From: Luis Henriques <luis.henriques-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+Subject: Re: [PATCH][v3.16.y-ckt] ACPICA: Add new GPE public interface -
+ acpi_mark_gpe_for_wake.
+Date: Fri, 16 Jan 2015 14:21:46 +0000
+Message-ID: <20150116142146.GD2438@charon>
+References: <54B820E7.4080406@canonical.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1421402411-3479-2-git-send-email-chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <54B820E7.4080406-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, One Thousand Gnomes <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Hayato Suzuki <hytszk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joel Schopp <Joel.Schopp-5C7GfCeVMHo@public.gmane.org>, Suravee Suthikulanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Shawn Guo <shaw>
+To: Joseph Salisbury <joseph.salisbury-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+Cc: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Len Brown <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 16, 2015 at 4:00 AM, Chunyan Zhang
-<chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org> wrote:
-> The file of-serial.txt was only for 8250 compatible UART implementations,
-> so renamed it to 8250.txt to avoid confusing other persons.
-> This is suggested by Arnd, see:
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2014-September/291455.html
+On Thu, Jan 15, 2015 at 03:19:51PM -0500, Joseph Salisbury wrote:
+> Hello,
+>=20
+> Please consider including mainline commit c12f07d and bd9b2f9 in the
+> next v3.16.y-ckt release.  They
+> were included in the mainline tree as of v3.17-rc1.  A test kernel ha=
+s
+> been built and tested, which was confirmed to resolve:
+> http://bugs.launchpad.net/bugs/1406767 .
+>=20
+> commit c12f07d17c12193256a99e20c9a0f130fb8f7be8
+> Author: Rafael J. Wysocki <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> Date:   Wed Jul 23 13:12:16 2014 +0800
+>=20
+>     ACPICA: Add new GPE public interface - acpi_mark_gpe_for_wake.
+>=20
+>=20
+> Commit c12f07d does not cherry-pick cleanly in 3.16.y.  However, it w=
+ill
+> if commit bd9b2f9aff26c185c1f8e0cd08a850ee4ace391a is cherry picked f=
+irst:
+>=20
+> commit bd9b2f9aff26c185c1f8e0cd08a850ee4ace391a
+> Author: Rafael J. Wysocki <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> Date:   Mon Jul 14 22:41:41 2014 +0200
+>=20
+>     ACPI / scan: No implicit wake notification for buttons
+>=20
+>   =20
+>=20
 >
-> Signed-off-by: Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
-> Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 
-This is pretty much un-related to the rest of the series, so I will apply it.
+Thanks, I'll queue both commits to the 3.16 kernel.
 
-Rob
-
-> ---
->  .../bindings/serial/{of-serial.txt => 8250.txt}    |    0
->  1 file changed, 0 insertions(+), 0 deletions(-)
->  rename Documentation/devicetree/bindings/serial/{of-serial.txt => 8250.txt} (100%)
->
-> diff --git a/Documentation/devicetree/bindings/serial/of-serial.txt b/Documentation/devicetree/bindings/serial/8250.txt
-> similarity index 100%
-> rename from Documentation/devicetree/bindings/serial/of-serial.txt
-> rename to Documentation/devicetree/bindings/serial/8250.txt
-> --
-> 1.7.9.5
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Cheers,
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+Lu=EDs
+
+
+> Sincerely,
+> Joseph Salisbury
+>=20
+>=20
+> --
+> To unsubscribe from this list: send the line "unsubscribe stable" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
