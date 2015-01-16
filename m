@@ -1,524 +1,142 @@
-From: FUKAUMI Naoki <naobsd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 3/3] ARM: dts: rockchip: add dts for ChipSPARK Rayeager PX2 board
-Date: Sat, 17 Jan 2015 02:11:56 +0900
-Message-ID: <1421428316-26008-4-git-send-email-naobsd@gmail.com>
-References: <1421428316-26008-1-git-send-email-naobsd@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1421428316-26008-1-git-send-email-naobsd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: FUKAUMI Naoki <naobsd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] soc: tegra: Add Tegra132 SoC to the DT list of Tegra SoCs
+Date: Fri, 16 Jan 2015 17:30:05 +0000
+Message-ID: <20150116173005.GH32155@leverpostej>
+References: <alpine.DEB.2.02.1501161137351.9776@utopia.booyaka.com>
+ <20150116150749.GA32155@leverpostej>
+ <20150116170926.GA17763@ulmo.nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150116170926.GA17763-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This add support for Rayeager PX2, Rockchip PX2 based development board
-made by ChipSPARK.
+On Fri, Jan 16, 2015 at 05:09:28PM +0000, Thierry Reding wrote:
+> On Fri, Jan 16, 2015 at 03:07:49PM +0000, Mark Rutland wrote:
+> > Hi Paul,
+> > 
+> > /me opens a delicious can of Lumbricus terrestris
+> > 
+> > My comments below aren't so much about this patch alone, but more about
+> > the entire strategy with drivers/soc and the kind of code living there.
+> > 
+> > On Fri, Jan 16, 2015 at 11:39:13AM +0000, Paul Walmsley wrote:
+> > > 
+> > > Add "nvidia,tegra132" as a compatible string that denotes a Tegra SoC.
+> > > 
+> > > Signed-off-by: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
+> > > Cc: Paul Walmsley <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> > > Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+> > > Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > > Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > > ---
+> > >  drivers/soc/tegra/common.c | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > > 
+> > > diff --git a/drivers/soc/tegra/common.c b/drivers/soc/tegra/common.c
+> > > index a71cb74..a952986 100644
+> > > --- a/drivers/soc/tegra/common.c
+> > > +++ b/drivers/soc/tegra/common.c
+> > > @@ -15,6 +15,7 @@ static const struct of_device_id tegra_machine_match[] = {
+> > >  	{ .compatible = "nvidia,tegra30", },
+> > >  	{ .compatible = "nvidia,tegra114", },
+> > >  	{ .compatible = "nvidia,tegra124", },
+> > > +	{ .compatible = "nvidia,tegra132", },
+> > >  	{ }
+> > >  };
+> > 
+> > I'm rather worried by this.
+> > 
+> > The only user of this table is soc_is_tegra(), which seems to guard
+> > several probe paths in drivers which are DT driven. Given that, I don't
+> > see why this is necessary at all, because the presence of the
+> > appropriate nodes should be sufficient to handle the early return from
+> > an initcall.
+> 
+> We need this to preserve backward-compatibility. There are some
+> instances where any device tree nodes that could be used to guard the
+> code execution were only added after the fact. So in order to keep
+> systems with an old DTB running we need to continue running with hard
+> coded physical addresses.
 
-Signed-off-by: FUKAUMI Naoki <naobsd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
+Except that you don't need them for arm64 systems, becuase we don't yet
+have that legacy for arm64...
 
-Changes in v2:
-- add missing vin-supply
-- use two chars for i2c address
-- fix ordering for nodes without address element
-- add commit messages
+> > More worryingly, if soc_is_tegra() returns true but the node isn't
+> > found, the drivers decide to do things. If tegra_pmc_early_init passes
+> > soc_is_tegra() (because we happened to match "nvidia,tegra132"), but
+> > doesn't find a DTB entry for the pmc, it then pokes an assumed
+> > hard-coded physical address.
+> 
+> And that's (currently) safe. It at least makes sure that breakage (if
+> any) is restricted to Tegra boards. There are other occurrences where
+> drivers don't even bother checking for this at all and simply use an
+> initcall to unconditionally create a platform device which then goes
+> and tries to access physical addresses on *every* board in a multi-
+> platform kernel.
 
- arch/arm/boot/dts/Makefile             |   1 +
- arch/arm/boot/dts/rk3066a-rayeager.dts | 470 +++++++++++++++++++++++++++++++++
- 2 files changed, 471 insertions(+)
- create mode 100644 arch/arm/boot/dts/rk3066a-rayeager.dts
+So doing the wrong thing on a subset of boards is fine because it's not
+all boards?
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index c8a29e5..bfdc0a8 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -445,6 +445,7 @@ dtb-$(CONFIG_ARCH_REALVIEW) += \
- dtb-$(CONFIG_ARCH_ROCKCHIP) += \
- 	rk3066a-bqcurie2.dtb \
- 	rk3066a-marsboard.dtb \
-+	rk3066a-rayeager.dtb \
- 	rk3188-radxarock.dtb \
- 	rk3288-evb-act8846.dtb \
- 	rk3288-evb-rk808.dtb \
-diff --git a/arch/arm/boot/dts/rk3066a-rayeager.dts b/arch/arm/boot/dts/rk3066a-rayeager.dts
-new file mode 100644
-index 0000000..218da9c
---- /dev/null
-+++ b/arch/arm/boot/dts/rk3066a-rayeager.dts
-@@ -0,0 +1,470 @@
-+/*
-+ * Copyright (c) 2014, 2015 FUKAUMI Naoki <naobsd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include "rk3066a.dtsi"
-+
-+/ {
-+	model = "Rayeager PX2";
-+	compatible = "chipspark,rayeager-px2", "rockchip,rk3066a";
-+
-+	memory {
-+		reg = <0x60000000 0x40000000>;
-+	};
-+
-+	ir: ir-receiver {
-+		compatible = "gpio-ir-receiver";
-+		gpios = <&gpio6 1 GPIO_ACTIVE_LOW>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&ir_int>;
-+	};
-+
-+	keys: gpio-keys {
-+		compatible = "gpio-keys";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		button@0 {
-+			gpio-key,wakeup = <1>;
-+			gpios = <&gpio6 2 GPIO_ACTIVE_LOW>;
-+			label = "GPIO Power";
-+			linux,code = <116>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pwr_key>;
-+		};
-+	};
-+
-+	vsys: vsys-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vsys";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+
-+	/* input for 5V_STDBY is VSYS or DC5V, selectable by jumper J4 */
-+	vcc_stdby: 5v-stdby-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "5v_stdby";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+
-+	vcc_otg: usb-otg-regulator {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		gpio = <&gpio0 5 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&otg_drv>;
-+		regulator-name = "vcc_otg";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-always-on;
-+		vin-supply = <&vcc_stdby>;
-+	};
-+
-+	vcc_host: usb-host-regulator {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		gpio = <&gpio0 6 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&host_drv>;
-+		regulator-name = "host-pwr";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-always-on;
-+		vin-supply = <&vcc_stdby>;
-+	};
-+
-+	vcc_sata: sata-regulator {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		gpio = <&gpio4 22 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&sata_pwr>;
-+		regulator-name = "usb_5v";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-always-on;
-+		vin-supply = <&vcc_stdby>;
-+	};
-+
-+	vcc_sd: sdmmc-regulator {
-+		compatible = "regulator-fixed";
-+		gpio = <&gpio3 7 GPIO_ACTIVE_LOW>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&sdmmc_pwr>;
-+		regulator-name = "vcc_sd";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		startup-delay-us = <100000>;
-+		vin-supply = <&vcc_io>;
-+	};
-+
-+	vcc_emmc: emmc-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "emmc_vccq";
-+		regulator-min-microvolt = <3000000>;
-+		regulator-max-microvolt = <3000000>;
-+		vin-supply = <&vsys>;
-+	};
-+};
-+
-+&cpu0 {
-+	cpu0-supply = <&vdd_arm>;
-+};
-+
-+&emac {
-+	status = "okay";
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&emac_xfer>, <&emac_mdio>, <&rmii_rst>;
-+
-+	phy = <&phy0>;
-+	phy-supply = <&vcc_rmii>;
-+
-+	phy0: ethernet-phy@0 {
-+		reg = <0>;
-+	};
-+};
-+
-+&emmc {
-+	broken-cd;
-+	bus-width = <8>;
-+	cap-mmc-highspeed;
-+	disable-wp;
-+	non-removable;
-+	num-slots = <1>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&emmc_clk>, <&emmc_cmd>, <&emmc_rst>;
-+	status = "okay";
-+	vmmc-supply = <&vcc_emmc>;
-+	vqmmc-supply = <&vcc_emmc>;
-+};
-+
-+&i2c0 {
-+	status = "okay";
-+	clock-frequency = <400000>;
-+
-+	ak8963: ak8963@0d {
-+		compatible = "asahi-kasei,ak8975";
-+		reg = <0x0d>;
-+		interrupt-parent = <&gpio4>;
-+		interrupts = <17 IRQ_TYPE_EDGE_RISING>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&comp_int>;
-+	};
-+
-+	mma8452: mma8452@1d {
-+		compatible = "fsl,mma8452";
-+		reg = <0x1d>;
-+		interrupt-parent = <&gpio4>;
-+		interrupts = <16 IRQ_TYPE_EDGE_RISING>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&gsensor_int>;
-+	};
-+};
-+
-+&i2c1 {
-+	status = "okay";
-+	clock-frequency = <400000>;
-+
-+	tps: tps@2d {
-+		reg = <0x2d>;
-+		interrupt-parent = <&gpio6>;
-+		interrupts = <4 IRQ_TYPE_EDGE_RISING>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pmic_int>, <&pwr_hold>;
-+
-+		vcc1-supply = <&vsys>;
-+		vcc2-supply = <&vsys>;
-+		vcc3-supply = <&vsys>;
-+		vcc4-supply = <&vsys>;
-+		vcc5-supply = <&vcc_io>;
-+		vcc6-supply = <&vcc_io>;
-+		vcc7-supply = <&vsys>;
-+		vccio-supply = <&vsys>;
-+
-+		regulators {
-+			vcc_rtc: regulator@0 {
-+				regulator-name = "vcc_rtc";
-+				regulator-always-on;
-+			};
-+
-+			vcc_io: regulator@1 {
-+				regulator-name = "vcc_io";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vdd_arm: regulator@2 {
-+				regulator-name = "vdd_arm";
-+				regulator-min-microvolt = <600000>;
-+				regulator-max-microvolt = <1500000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			vcc_ddr: regulator@3 {
-+				regulator-name = "vcc_ddr";
-+				regulator-min-microvolt = <600000>;
-+				regulator-max-microvolt = <1500000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			vcc18: regulator@5 {
-+				regulator-name = "vcc18";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-always-on;
-+			};
-+
-+			vdd_11: regulator@6 {
-+				regulator-name = "vdd_11";
-+				regulator-min-microvolt = <1100000>;
-+				regulator-max-microvolt = <1100000>;
-+				regulator-always-on;
-+			};
-+
-+			vcc_25: regulator@7 {
-+				regulator-name = "vcc_25";
-+				regulator-min-microvolt = <2500000>;
-+				regulator-max-microvolt = <2500000>;
-+				regulator-always-on;
-+			};
-+
-+			vccio_wl: regulator@8 {
-+				regulator-name = "vccio_wl";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+			};
-+
-+			vcc25_hdmi: regulator@9 {
-+				regulator-name = "vcc25_hdmi";
-+				regulator-min-microvolt = <2500000>;
-+				regulator-max-microvolt = <2500000>;
-+			};
-+
-+			vcca_33: regulator@10 {
-+				regulator-name = "vcca_33";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+			};
-+
-+			vcc_rmii: regulator@11 {
-+				regulator-name = "vcc_rmii";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+			};
-+
-+			vcc28_cif: regulator@12 {
-+				regulator-name = "vcc28_cif";
-+				regulator-min-microvolt = <2800000>;
-+				regulator-max-microvolt = <2800000>;
-+			};
-+		};
-+	};
-+};
-+
-+#include "tps65910.dtsi"
-+
-+&i2c2 {
-+	status = "okay";
-+};
-+
-+&i2c3 {
-+	status = "okay";
-+};
-+
-+&i2c4 {
-+	status = "okay";
-+};
-+
-+&mmc0 {
-+	bus-width = <4>;
-+	disable-wp;
-+	num-slots = <1>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sd0_clk>, <&sd0_cmd>, <&sd0_cd>, <&sd0_bus4>;
-+	status = "okay";
-+	vmmc-supply = <&vcc_sd>;
-+};
-+
-+&mmc1 {
-+	broken-cd;
-+	bus-width = <4>;
-+	disable-wp;
-+	non-removable;
-+	num-slots = <1>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sd1_clk>, <&sd1_cmd>, <&sd1_bus4>;
-+	status = "okay";
-+	vmmc-supply = <&vccio_wl>;
-+};
-+
-+&pinctrl {
-+	pcfg_output_high: pcfg-output-high {
-+		output-high;
-+	};
-+
-+	ak8963 {
-+		comp_int: comp-int {
-+			rockchip,pins = <4 17 RK_FUNC_GPIO &pcfg_pull_default>;
-+		};
-+	};
-+
-+	emac {
-+		rmii_rst: rmii-rst {
-+			rockchip,pins = <1 30 RK_FUNC_GPIO &pcfg_output_high>;
-+		};
-+	};
-+
-+	ir {
-+		ir_int: ir-int {
-+			rockchip,pins = <6 1 RK_FUNC_GPIO &pcfg_pull_default>;
-+		};
-+	};
-+
-+	keys {
-+		pwr_key: pwr-key {
-+			rockchip,pins = <6 2 RK_FUNC_GPIO &pcfg_pull_default>;
-+		};
-+	};
-+
-+	mma8452 {
-+		gsensor_int: gsensor-int {
-+			rockchip,pins = <4 16 RK_FUNC_GPIO &pcfg_pull_default>;
-+		};
-+	};
-+
-+	mmc {
-+		sdmmc_pwr: sdmmc-pwr {
-+			rockchip,pins = <3 7 RK_FUNC_GPIO &pcfg_pull_default>;
-+		};
-+	};
-+
-+	usb_host {
-+		host_drv: host-drv {
-+			rockchip,pins = <0 6 RK_FUNC_GPIO &pcfg_pull_default>;
-+		};
-+
-+		hub_rst: hub-rst {
-+			rockchip,pins = <1 31 RK_FUNC_GPIO &pcfg_output_high>;
-+		};
-+
-+		sata_pwr: sata-pwr {
-+			rockchip,pins = <4 22 RK_FUNC_GPIO &pcfg_pull_default>;
-+		};
-+
-+		sata_reset: sata-reset {
-+			rockchip,pins = <0 13 RK_FUNC_GPIO &pcfg_output_high>;
-+		};
-+	};
-+
-+	usb_otg {
-+		otg_drv: otg-drv {
-+			rockchip,pins = <0 5 RK_FUNC_GPIO &pcfg_pull_default>;
-+		};
-+	};
-+
-+	tps {
-+		pmic_int: pmic-int {
-+			rockchip,pins = <6 4 RK_FUNC_GPIO &pcfg_pull_default>;
-+		};
-+
-+		pwr_hold: pwr-hold {
-+			rockchip,pins = <6 8 RK_FUNC_GPIO &pcfg_output_high>;
-+		};
-+	};
-+};
-+
-+&pwm1 {
-+	status = "okay";
-+};
-+
-+&pwm2 {
-+	status = "okay";
-+};
-+
-+&saradc {
-+	status = "okay";
-+	vref-supply = <&vcc_25>;
-+};
-+
-+&spi0 {
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_xfer>, <&uart0_cts>, <&uart0_rts>;
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	status = "okay";
-+};
-+
-+&uart3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart3_xfer>, <&uart3_cts>, <&uart3_rts>;
-+	status = "okay";
-+};
-+
-+&usb_host {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&hub_rst>, <&sata_reset>;
-+	status = "okay";
-+};
-+
-+&usb_otg {
-+	status = "okay";
-+};
-+
-+&wdt {
-+	status = "okay";
-+};
--- 
-2.2.2
+Imagine I make a typo in a DT for a 64-bit system, and suddnely hit
+youre legacy code. Things happen to work, because I don't botehr reading
+the splat in dmesg for whatever reason.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Later we do some cleanup of the existing legacy, for whatever reason,
+and we get rid of this particular path for arm64.
+
+Suddenly my board won't boot, and to fix that we have to reintroduce
+legacy support code only because said legacy support was enabled where
+it should never have been in the first place. Another OS trying to
+target/use these DTBs has barely any chance of success.
+
+> > Assuming things because of the _lack_ of a node has been a major pain
+> > point on 32-bit as DTBs advanced and code was changed, resulting in boot
+> > breaking or DTB compatibility breaking over time as old and new kernels
+> > made conflicting assumptions.
+> 
+> So what are you saying? We can't support 64-bit ARM because we need to
+> keep backwards-compatibility with old DTBs and weren't smart enough to
+> see this through all the way three years ago?
+
+No. I'm saying that the workarounds we have in place for legacy DTBs
+should be constrained to those cases where legacy DTBs actually exist.
+There is no reason for that legacy to carry across to 64-bit.
+
+> > I don't want to see arm64 kernels making assumptions in that manner (nor
+> > would I like to see it in new code for 32-bit ARM); it always leads to
+> > boot breakage, and it's completely avoidable. The only thing we can know
+> > is what is described in the DTB.
+> 
+> I guess we could always make this conditional on 32-bit ARM. Or we could
+> decide that we don't care about DTB backwards-compatibility anymore. In
+> fact we're quite likely going to break it soon anyway because of Marc's
+> gic_arch_extn rework, so might as well start with a clean plate after
+> that...
+
+At the very least I think the soc_is_tegra stuff needs to be constrained
+to fallback paths that can only possibly run on 32-bit.
+
+> > So NAK to this addition while soc_is_tegra is in use in that way, and
+> > NAK to any DTS patches adding any of the strings that would cause
+> > soc_is_tegra to return true on arm64.
+> > 
+> > There's also the worrying pattern of initcalls that look for particular
+> > compatible strings -- why can't these use the existing DT probing
+> > infrastructure rather than rolling their own? It would be nice to not
+> > accumulate initcalls that only make sense on one platform.
+> 
+> You make it sound like the "existing DT probing infrastructure" is in
+> any way different from initcalls. Furthermore it's typically associated
+> with a specific subsystem or class of devices, so adding custom OF init
+> tables for a driver that's used on a single platform doesn't strike me
+> as something that people would be willing to merge.
+
+Fair point. 
+
+Thanks,
+Mark.
