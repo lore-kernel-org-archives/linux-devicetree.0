@@ -1,74 +1,81 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH v4 4/4] ARM: mvebu: Armada 385 GP: Add regulators to the
- SATA port
-Date: Fri, 16 Jan 2015 15:27:00 +0100
-Message-ID: <54B91FB4.5080707@free-electrons.com>
-References: <1421330978-9694-1-git-send-email-gregory.clement@free-electrons.com> <1421330978-9694-5-git-send-email-gregory.clement@free-electrons.com> <54B8C933.7020502@redhat.com> <54B8D97B.3090908@free-electrons.com> <54B8E38A.6020709@redhat.com> <20150116123705.GM3043@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <20150116123705.GM3043@sirena.org.uk>
-Sender: linux-ide-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, Hans de Goede <hdegoede@redhat.com>
-Cc: Tejun Heo <tj@kernel.org>, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, =?windows-1252?Q?Antoine_T=E9nart?= <antoine.tenart@free-electrons.com>, Liam Girdwood <lgirdwood@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+From: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH 3/5] Documentaion: dt: add DT bindings for Qualcomm NAND controller
+Date: Fri, 16 Jan 2015 20:18:20 +0530
+Message-ID: <1421419702-17812-4-git-send-email-architt@codeaurora.org>
+References: <1421419702-17812-1-git-send-email-architt@codeaurora.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1421419702-17812-1-git-send-email-architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark and Hans,
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+---
+ .../devicetree/bindings/mtd/qcom_nandc.txt         | 48 ++++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/qcom_nandc.txt
 
-On 16/01/2015 13:37, Mark Brown wrote:
-> On Fri, Jan 16, 2015 at 11:10:18AM +0100, Hans de Goede wrote:
->> On 16-01-15 10:27, Gregory CLEMENT wrote:
-> 
->>>>> +	reg_sata0: pwr-sata0 {
->>>>> +		compatible = "regulator-fixed";
->>>>> +		regulator-name = "pwr_en_sata0";
->>>>> +		enable-active-high;
->>>>> +		regulator-always-on;
-> 
->>>> done, but we're not using a power on delay anyways.
-> 
->>> But if regulator-always-on prevent to switch it off in
->>> suspend then yes using regulator-boot-on is better.
-> 
->> AFAIK regulator-always-on means exactly that and thus likely
->> is not what you want. As for using regulator-off-in-suspend
->> that is not necessary as the suspend method for the acpi
->> driver will already turn it off.
-> 
-> regulator-always-on is a bit fuzzy for suspend, if the regulator has
-> suspend control it'll kick in - it's really about the Linux refcounting
-> while it's running.  What's more concerning here is that the quick
-> sample of the regulators flagged as always on like the above that I
-> looked at in the patch don't seem to have any enable control in the DT
-> so this will have absolutely no effect.
-
-Actually the reg_sata[0-4] are controlled by gpio, so there is a mean
-to enable/disable them. For the reg_5v_sata[0-4] and reg_12v_sata[0-4]
-they depend on their respective reg_sata and I just propagated the
-regulator-always-on, this was maybe a mistake.
-
-> 
->> It is probably a good idea to use regulator-boot-on and
->> then test things this way, and if that works use
->> regulator-boot-on.
-> 
-> No, it's unlikely that boot-on makes sense here - it's there for cases
-> where we can't read back the hardware state at power on.  Generally
-> drivers should work regardless of the initial state of the regulator
-> (and modular drivers will actually break if they try to rely on boot-on
-> since we clean up unused regulators at boot).
-
-As pointed by Hans my concern here was be sure that during boot the disk
-are not power off. In this case which property would be accurate?
-
-
-Thanks,
-
-Gregory
-
+diff --git a/Documentation/devicetree/bindings/mtd/qcom_nandc.txt b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
+new file mode 100644
+index 0000000..e24c77a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
+@@ -0,0 +1,48 @@
++* Qualcomm NAND controller
++
++Required properties:
++- compatible:		should be "qcom,ebi2-nand" for IPQ806x
++- reg:			MMIO address range
++- clocks:		must contain core clock and always on clock
++- clock-names:		must contain "core" for the core clock and "aon" for the
++			always on clock
++- dmas:			DMA specifier, consisting of a phandle to the ADM DMA
++			controller node and the channel number to be used for
++			NAND. Refer to dma.txt and qcom_adm.txt for more details
++- dma-names:		must be "rxtx"
++- qcom,cmd-crci:	must contain the ADM command type CRCI block instance
++			number specified for the NAND controller on the given
++			platform
++- qcom,data-crci:	must contain the ADM data type CRCI block instance
++			number specified for the NAND controller on the given
++			platform
++
++Optional properties:
++- nand-bus-width:	bus width. Must be 8 or 16. If not present, 8 is chosen
++			as default
++
++- nand-ecc-strength:	number of bits to correct per ECC step. Must be 4 or 8
++			bits. If not present, 4 is chosen as default
++
++The device tree may optionally contain sub-nodes describing partitions of the
++address space. See partition.txt for more detail.
++
++Example:
++
++nand@0x1ac00000 {
++	compatible = "qcom,ebi2-nandc";
++	reg = <0x1ac00000 0x800>;
++
++	clocks = <&gcc EBI2_CLK>,
++		 <&gcc EBI2_AON_CLK>;
++	clock-names = "core", "aon";
++
++	dmas = <&adm_dma 3>;
++	dma-names = "rxtx";
++	qcom,cmd-crci = <15>;
++	qcom,data-crci = <3>;
++
++	partition@0 {
++	...
++	};
++};
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
