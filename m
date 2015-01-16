@@ -1,165 +1,42 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v4 4/4] ARM: mvebu: Armada 385 GP: Add regulators to the
- SATA port
-Date: Fri, 16 Jan 2015 11:10:18 +0100
-Message-ID: <54B8E38A.6020709@redhat.com>
-References: <1421330978-9694-1-git-send-email-gregory.clement@free-electrons.com> <1421330978-9694-5-git-send-email-gregory.clement@free-electrons.com> <54B8C933.7020502@redhat.com> <54B8D97B.3090908@free-electrons.com>
+From: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
+Subject: [PATCH v5 1/5] Documentation: DT: Renamed of-serial.txt to 8250.txt
+Date: Fri, 16 Jan 2015 18:00:07 +0800
+Message-ID: <1421402411-3479-2-git-send-email-chunyan.zhang@spreadtrum.com>
+References: <sc9836-v5>
+ <1421402411-3479-1-git-send-email-chunyan.zhang@spreadtrum.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <54B8D97B.3090908@free-electrons.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>, Tejun Heo <tj@kernel.org>, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: =?windows-1252?Q?Antoine_T=E9nart?= <antoine.tenart@free-electrons.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1421402411-3479-1-git-send-email-chunyan.zhang@spreadtrum.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: gregkh@linuxfoundation.org, mark.rutland@arm.com, arnd@arndb.de, gnomes@lxorguk.ukuu.org.uk, broonie@kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, will.deacon@arm.com, catalin.marinas@arm.com, jslaby@suse.cz, jason@lakedaemon.net, heiko@sntech.de, florian.vaussard@epfl.ch, andrew@lunn.ch, rrichter@cavium.com, hytszk@gmail.com, grant.likely@linaro.org, antonynpavlov@gmail.com, Joel.Schopp@amd.com, Suravee.Suthikulpanit@amd.com, shawn.guo@linaro.org, lea.yan@linaro.org, jorge.ramirez-ortiz@linaro.org, lee.jones@linaro.org, orsonzhai@gmail.com, geng.ren@spreadtrum.com, zhizhou.zhang@spreadtrum.com, lanqing.liu@spreadtrum.com, zhang.lyra@gmail.com, wei.qiao@spreadtrum.com
+Cc: devicetree@vger.kernel.org, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+The file of-serial.txt was only for 8250 compatible UART implementations,
+so renamed it to 8250.txt to avoid confusing other persons.
+This is suggested by Arnd, see:
+http://lists.infradead.org/pipermail/linux-arm-kernel/2014-September/291455.html
 
-On 16-01-15 10:27, Gregory CLEMENT wrote:
-> Hi Hans,
->
-> On 16/01/2015 09:17, Hans de Goede wrote:
->> Hi,
->>
->> On 15-01-15 15:09, Gregory CLEMENT wrote:
->>> Add the regulators to each SATA port.
->>>
->>> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
->>> ---
->>>    arch/arm/boot/dts/armada-388-gp.dts | 126 ++++++++++++++++++++++++++++++++++++
->>>    1 file changed, 126 insertions(+)
->>>
->>> diff --git a/arch/arm/boot/dts/armada-388-gp.dts b/arch/arm/boot/dts/armada-388-gp.dts
->>> index 4df22bf91683..590b383db323 100644
->>> --- a/arch/arm/boot/dts/armada-388-gp.dts
->>> +++ b/arch/arm/boot/dts/armada-388-gp.dts
->>> @@ -173,6 +173,16 @@
->>>    				status = "okay";
->>>    				#address-cells = <1>;
->>>    				#size-cells = <0>;
->>> +
->>> +				sata0: sata-port@0 {
->>> +					reg = <0>;
->>> +					target-supply = <&reg_5v_sata0>;
->>> +				};
->>> +
->>> +				sata1: sata-port@1 {
->>> +					reg = <1>;
->>> +					target-supply = <&reg_5v_sata1>;
->>> +				};
->>>    			};
->>>
->>>    			sata@e0000 {
->>> @@ -181,6 +191,16 @@
->>>    				status = "okay";
->>>    				#address-cells = <1>;
->>>    				#size-cells = <0>;
->>> +
->>> +				sata2: sata-port@0 {
->>> +					reg = <0>;
->>> +					target-supply = <&reg_5v_sata2>;
->>> +				};
->>> +
->>> +				sata3: sata-port@1 {
->>> +					reg = <1>;
->>> +					target-supply = <&reg_5v_sata3>;
->>> +				};
->>>    			};
->>>
->>>    			sdhci@d8000 {
->>> @@ -278,6 +298,112 @@
->>>    		regulator-always-on;
->>>    		gpio = <&expander0 4 GPIO_ACTIVE_HIGH>;
->>>    	};
->>> +
->>> +	reg_sata0: pwr-sata0 {
->>> +		compatible = "regulator-fixed";
->>> +		regulator-name = "pwr_en_sata0";
->>> +		enable-active-high;
->>> +		regulator-always-on;
->>> +
->>> +	};
->>> +
->>> +	reg_5v_sata0: v5-sata0 {
->>> +		compatible = "regulator-fixed";
->>> +		regulator-name = "v5.0-sata0";
->>> +		regulator-min-microvolt = <5000000>;
->>> +		regulator-max-microvolt = <5000000>;
->>> +		regulator-always-on;
->>> +		vin-supply = <&reg_sata0>;
->>> +	};
->>> +
->>> +	reg_12v_sata0: v12-sata0 {
->>> +		compatible = "regulator-fixed";
->>> +		regulator-name = "v12.0-sata0";
->>> +		regulator-min-microvolt = <12000000>;
->>> +		regulator-max-microvolt = <12000000>;
->>> +		regulator-always-on;
->>> +		vin-supply = <&reg_sata0>;
->>> +	};
->>
->> AFAIK the separate v5 / 12v regulators you're creating here
->> are not used anywhere. So I guess there just here to
->> accurately / completely describe the power topology ?
->
-> Yes it was the point.
+Signed-off-by: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+---
+ .../bindings/serial/{of-serial.txt => 8250.txt}    |    0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ rename Documentation/devicetree/bindings/serial/{of-serial.txt => 8250.txt} (100%)
 
-Ok.
-
->>> +
->>> +	reg_sata1: pwr-sata1 {
->>> +		regulator-name = "pwr_en_sata1";
->>> +		compatible = "regulator-fixed";
->>> +		regulator-min-microvolt = <12000000>;
->>> +		regulator-max-microvolt = <12000000>;
->>> +		enable-active-high;
->>> +		regulator-always-on;
->>
->>
->> The always on here seems to a bit weird, wasn't the
->> whole purpose of this patch set to teach ahci_platform
->> to turn it on as needed ?
->
-> Maybe I misunderstood the regulator binding, but I thought
-> that (once the suspend will be available on this platform) I
-> could use:
->
-> regulator-state-mem {
-> 			regulator-off-in-suspend;
-> 		};
->
->>
->> You do probably want to put a regulator-boot-on here so
->> that disks do not get an unwanted powercycle (bad for
->> their lifetime) when the firmware has already turned on
->> the disk. Downside of using regulator-boot-on is that if
->> the power is not actually turned on no power-on-delay is
->
-> That's why I didn't use it
->
->> done, but we're not using a power on delay anyways.
->
-> But if regulator-always-on prevent to switch it off in
-> suspend then yes using regulator-boot-on is better.
-
-AFAIK regulator-always-on means exactly that and thus likely
-is not what you want. As for using regulator-off-in-suspend
-that is not necessary as the suspend method for the acpi
-driver will already turn it off.
-
-Note that you can test this today by doing (IIRC):
-
-echo devices > /sys/power/pm_test
-echo mem > /sys/power/state
-
-This is how I tested ahci_platform suspend handling on
-the freescale imx processor on the wandboard.
-
-It is probably a good idea to use regulator-boot-on and
-then test things this way, and if that works use
-regulator-boot-on.
-
-Regards,
-
-Hans
+diff --git a/Documentation/devicetree/bindings/serial/of-serial.txt b/Documentation/devicetree/bindings/serial/8250.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/serial/of-serial.txt
+rename to Documentation/devicetree/bindings/serial/8250.txt
+-- 
+1.7.9.5
