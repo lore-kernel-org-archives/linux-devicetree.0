@@ -1,70 +1,33 @@
-From: Sean Cross <xobs@kosagi.com>
-Subject: Re: [PATCH v2 0/4] Add support for kosagi novena
-Date: Fri, 16 Jan 2015 18:38:20 +0800
-Message-ID: <54B8EA1C.7070700@kosagi.com>
-References: <1419237127-21763-1-git-send-email-xobs@kosagi.com> <20150116004615.GF29776@google.com>
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: Re: [PATCH 0/3] Add STiH418 SoC and reference board support
+Date: Fri, 16 Jan 2015 10:43:15 +0000
+Message-ID: <20150116104315.GA5102@griffinp-ThinkPad-X1-Carbon-2nd>
+References: <1420816306-11305-1-git-send-email-maxime.coquelin@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20150116004615.GF29776@google.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lucas Stach <l.stach@pengutronix.de>, Shawn Guo <shawn.guo@freescale.com>, devicetree@vger.kernel.org, Richard Zhu <r65037@freescale.com>, Grant Likely <grant.likely@linaro.org>, linux-pci@vger.kernel.org, bunnie@kosagi.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1420816306-11305-1-git-send-email-maxime.coquelin@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime COQUELIN <maxime.coquelin@st.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Patrice Chotard <patrice.chotard@st.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, lee.jones@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 16/01/2015 08:46, Bjorn Helgaas wrote:
-> On Mon, Dec 22, 2014 at 04:32:03PM +0800, Sean Cross wrote:
->> The Kosagi Novena mainboard contains an i.MX6, along with a PCI Express slot.
->> This patchset adds regulator support to the PCI Express slot, and adds
->> device tree support for the Novena mainboard.
->>
->> Changes since v1:
->>     - Add 'kosagi' to vendor prefixes
->>     - Add LCD panel to simple-panel
->>     - Renamed power-supply to bus-supply
->>     - Replaced devm_regulator_get() with devm_regulator_get_optional()
->>     - Moved regulator_enable to imx6_add_pcie_port()
->>     - Removed fpga@1 from spi definition in dts -- will use overlays instead
->>
->> Sean Cross (4):
->>   drm/panel: simple: Add Innolux N133HSE panel support
->>   devicetree: bindings: Add vendor prefix for Kosagi
->>   PCI: imx6: Add power-supply support
-> I guess we're waiting on a response to Arnd's question about making this
-> more generic, so I'm dropping these from my queue pending that.
->
-> Then we need a strategy for merging it since it crosses PCI/ARM/GPU.
-> Please propose a strategy; it looks like the PCI part doesn't technically
-> depend on the preceeding patches, but it's fine with me if you want to keep
-> it all together.
->
-The PCI part was there because without it, the system hard-locks during
-boot without it.
+Hi Maxime,
 
-However, I'm not sure that the power-supply is the correct approach,
-because I can still see lockups even with the switch in place. I still
-haven't found out the root cause of that problem.
+> This series adds basic support to the STMicroelectronics STiH407 SoC and its
+> B2199 reference board. The STiH418 is a quad-core ARM Cortex-A9 CPU aimed at
+> UHD STB market.
+> 
+> Maxime Coquelin (3):
+>   ARM: STi: Add STiH418 SoC support
+>   ARM: dts: Add STiH418 SoC support
+>   ARM: dts: STiH418: Add B2199 board support
 
-One workaround is to simply enable that GPIO in the bootloader and leave
-it on permanently.  Doing this mimics behavior on other platforms where
-PCIe is permanently powered up, and since the patches are decoupled the
-PCI patch can be applied at a later time.
+Looks good to me. For the series: -
 
-I'd prefer to drop the PCI patch for now.  Would you like me to submit a
-v3 with simply the drm/panel and devicetree patches?
+Reviewed-by: Peter Griffin <peter.griffin@linaro.org>
 
->>   ARM: dts: imx6q: add Novena board
->>
->>  .../devicetree/bindings/pci/fsl,imx6q-pcie.txt     |   3 +
->>  .../devicetree/bindings/vendor-prefixes.txt        |   1 +
->>  arch/arm/boot/dts/Makefile                         |   1 +
->>  arch/arm/boot/dts/imx6q-novena.dts                 | 856 +++++++++++++++++++++
->>  drivers/gpu/drm/panel/panel-simple.c               |  26 +
->>  drivers/pci/host/pci-imx6.c                        |  27 +
->>  6 files changed, 914 insertions(+)
->>  create mode 100644 arch/arm/boot/dts/imx6q-novena.dts
->>
->> -- 
->> 2.1.3
->>
+regards,
+
+Peter
