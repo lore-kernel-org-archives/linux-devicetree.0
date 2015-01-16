@@ -1,143 +1,70 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v5 3/5] arm64: dts: Add support for Spreadtrum SC9836 SoC
- in dts and Makefile
-Date: Fri, 16 Jan 2015 10:35:59 +0000
-Message-ID: <20150116103558.GD21809@leverpostej>
-References: <sc9836-v5>
- <1421402411-3479-1-git-send-email-chunyan.zhang@spreadtrum.com>
- <1421402411-3479-4-git-send-email-chunyan.zhang@spreadtrum.com>
+From: Sean Cross <xobs@kosagi.com>
+Subject: Re: [PATCH v2 0/4] Add support for kosagi novena
+Date: Fri, 16 Jan 2015 18:38:20 +0800
+Message-ID: <54B8EA1C.7070700@kosagi.com>
+References: <1419237127-21763-1-git-send-email-xobs@kosagi.com> <20150116004615.GF29776@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1421402411-3479-4-git-send-email-chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
-Cc: "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org" <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "jslaby-AlSwsSmVLrQ@public.gmane.org" <jslaby-AlSwsSmVLrQ@public.gmane.org>, "jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org" <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org" <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "florian.vaussard-p8DiymsW2f8@public.gmane.org" <florian.vaussard-p8DiymsW2f8@public.gmane.org>, "andrew-g2DYL2Zd6BY@public.gmane.org" <andrew-g2DYL2Zd6BY@public.gmane.org>, "rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "hytszk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <hytszk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joel.Schopp@amd.c
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20150116004615.GF29776@google.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lucas Stach <l.stach@pengutronix.de>, Shawn Guo <shawn.guo@freescale.com>, devicetree@vger.kernel.org, Richard Zhu <r65037@freescale.com>, Grant Likely <grant.likely@linaro.org>, linux-pci@vger.kernel.org, bunnie@kosagi.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 16, 2015 at 10:00:09AM +0000, Chunyan Zhang wrote:
-> From: Zhizhou Zhang <zhizhou.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
-> 
-> Adds the device tree support for Spreadtrum SC9836 SoC which is based on
-> Sharkl64 platform.
-> 
-> Sharkl64 platform contains the common nodes of Spreadtrum's arm64-based SoCs.
-> 
-> Signed-off-by: Zhizhou Zhang <zhizhou.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
-> Signed-off-by: Orson Zhai <orson.zhai-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
-> Signed-off-by: Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/Makefile                  |    1 +
->  arch/arm64/boot/dts/sprd/Makefile             |    5 ++
->  arch/arm64/boot/dts/sprd/sc9836-openphone.dts |   49 +++++++++++++++++
->  arch/arm64/boot/dts/sprd/sc9836.dtsi          |   73 +++++++++++++++++++++++++
->  arch/arm64/boot/dts/sprd/sharkl64.dtsi        |   67 +++++++++++++++++++++++
->  5 files changed, 195 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/sprd/Makefile
->  create mode 100644 arch/arm64/boot/dts/sprd/sc9836-openphone.dts
->  create mode 100644 arch/arm64/boot/dts/sprd/sc9836.dtsi
->  create mode 100644 arch/arm64/boot/dts/sprd/sharkl64.dtsi
+On 16/01/2015 08:46, Bjorn Helgaas wrote:
+> On Mon, Dec 22, 2014 at 04:32:03PM +0800, Sean Cross wrote:
+>> The Kosagi Novena mainboard contains an i.MX6, along with a PCI Express slot.
+>> This patchset adds regulator support to the PCI Express slot, and adds
+>> device tree support for the Novena mainboard.
+>>
+>> Changes since v1:
+>>     - Add 'kosagi' to vendor prefixes
+>>     - Add LCD panel to simple-panel
+>>     - Renamed power-supply to bus-supply
+>>     - Replaced devm_regulator_get() with devm_regulator_get_optional()
+>>     - Moved regulator_enable to imx6_add_pcie_port()
+>>     - Removed fpga@1 from spi definition in dts -- will use overlays instead
+>>
+>> Sean Cross (4):
+>>   drm/panel: simple: Add Innolux N133HSE panel support
+>>   devicetree: bindings: Add vendor prefix for Kosagi
+>>   PCI: imx6: Add power-supply support
+> I guess we're waiting on a response to Arnd's question about making this
+> more generic, so I'm dropping these from my queue pending that.
+>
+> Then we need a strategy for merging it since it crosses PCI/ARM/GPU.
+> Please propose a strategy; it looks like the PCI part doesn't technically
+> depend on the preceeding patches, but it's fine with me if you want to keep
+> it all together.
+>
+The PCI part was there because without it, the system hard-locks during
+boot without it.
 
-[...]
+However, I'm not sure that the power-supply is the correct approach,
+because I can still see lockups even with the switch in place. I still
+haven't found out the root cause of that problem.
 
-> +	cpus {
-> +		#address-cells = <2>;
-> +		#size-cells = <0>;
-> +
-> +		cpu@0 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a53", "arm,armv8";
-> +			reg = <0x0 0x0>;
-> +			enable-method = "psci";
-> +		};
-> +
-> +		cpu@1 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a53", "arm,armv8";
-> +			reg = <0x0 0x1>;
-> +			enable-method = "psci";
-> +		};
-> +
-> +		cpu@2 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a53", "arm,armv8";
-> +			reg = <0x0 0x2>;
-> +			enable-method = "psci";
-> +		};
-> +
-> +		cpu@3 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a53", "arm,armv8";
-> +			reg = <0x0 0x3>;
-> +			enable-method = "psci";
-> +		};
-> +	};
+One workaround is to simply enable that GPIO in the bootloader and leave
+it on permanently.  Doing this mimics behavior on other platforms where
+PCIe is permanently powered up, and since the patches are decoupled the
+PCI patch can be applied at a later time.
 
-Just to check, all CPUs may be hotplugged off and on, yes?
+I'd prefer to drop the PCI patch for now.  Would you like me to submit a
+v3 with simply the drm/panel and devicetree patches?
 
-Including CPU0?
-
-How is your implementation tested?
-
-You boot CPUs at EL2?
-
-> +
-> +	gic: interrupt-controller@12001000 {
-> +		compatible = "arm,gic-400";
-> +		#interrupt-cells = <3>;
-> +		interrupt-controller;
-> +		reg = <0 0x12001000 0 0x1000>,
-> +		      <0 0x12002000 0 0x2000>,
-> +		      <0 0x12004000 0 0x2000>,
-> +		      <0 0x12006000 0 0x2000>;
-> +	};
-
-You're missing the maintenance interrupt here.
-
-[...]
-
-> diff --git a/arch/arm64/boot/dts/sprd/sharkl64.dtsi b/arch/arm64/boot/dts/sprd/sharkl64.dtsi
-> new file mode 100644
-> index 0000000..b08989d
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/sprd/sharkl64.dtsi
-> @@ -0,0 +1,67 @@
-> +/*
-> + * Spreadtrum Sharkl64 platform DTS file
-> + *
-> + * Copyright (C) 2014, Spreadtrum Communications Inc.
-> + *
-> + * This file is licensed under a dual GPLv2 or X11 license.
-> + */
-> +
-> +/ {
-> +	interrupt-parent = <&gic>;
-> +	#address-cells = <2>;
-> +	#size-cells = <2>;
-> +
-> +	soc {
-> +		compatible = "simple-bus";
-> +		reg = <0x0 0x0 0x0 0x80000000>;
-
-What is this reg for? It's not required by simple-bus.
-
-If you want to encode that this covers a particular portion of the
-address space, do so with the ranges proeprty.
-
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		ap_apb: apb@70000000 {
-> +			compatible = "simple-bus";
-> +			reg = <0x0 0x70000000 0x0 0x10000000>;
-
-Likewise here.
-
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>   ARM: dts: imx6q: add Novena board
+>>
+>>  .../devicetree/bindings/pci/fsl,imx6q-pcie.txt     |   3 +
+>>  .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+>>  arch/arm/boot/dts/Makefile                         |   1 +
+>>  arch/arm/boot/dts/imx6q-novena.dts                 | 856 +++++++++++++++++++++
+>>  drivers/gpu/drm/panel/panel-simple.c               |  26 +
+>>  drivers/pci/host/pci-imx6.c                        |  27 +
+>>  6 files changed, 914 insertions(+)
+>>  create mode 100644 arch/arm/boot/dts/imx6q-novena.dts
+>>
+>> -- 
+>> 2.1.3
+>>
