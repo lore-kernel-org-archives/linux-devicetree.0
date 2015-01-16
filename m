@@ -1,64 +1,49 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH V3 4/4] mmc: pwrseq_simple: Add support for a reset GPIO pin
-Date: Fri, 16 Jan 2015 13:52:25 +0100
-Message-ID: <CAPDyKFr+7qWymd63TjgyPBnePbDpamOi_5DQkjonBAKBnEGHOw@mail.gmail.com>
-References: <1421405273-19117-1-git-send-email-ulf.hansson@linaro.org>
-	<1421405273-19117-5-git-send-email-ulf.hansson@linaro.org>
-	<CAAObsKDm1iPAWgJpQwed8KufkxKwqTAFa5espfqq+jY13r+Ymw@mail.gmail.com>
-	<CAPDyKFoLqmgTvJpFLrGZvxrfug+SyspsYaOYtf65CsZ7T991pA@mail.gmail.com>
-	<20150116124511.GG18220@pengutronix.de>
+From: Lyra Zhang <zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 2/5] Documentation: DT: Add bindings for Spreadtrum SoC Platform
+Date: Fri, 16 Jan 2015 20:53:16 +0800
+Message-ID: <CAAfSe-teDdPzRUnvzM+NErfZwmqM04yUMgic--hyZL8-Jjd8jw@mail.gmail.com>
+References: <1421402411-3479-1-git-send-email-chunyan.zhang@spreadtrum.com>
+	<1421402411-3479-3-git-send-email-chunyan.zhang@spreadtrum.com>
+	<20150116102135.GC21809@leverpostej>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20150116124511.GG18220@pengutronix.de>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Tomeu Vizoso <tomeu.vizoso@collabora.com>, linux-mmc <linux-mmc@vger.kernel.org>, Chris Ball <chris@printf.net>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Alexandre Courbot <gnurou@gmail.com>, NeilBrown <neilb@suse.de>, Linus Walleij <linus.walleij@linaro.org>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Mark Brown <broonie@kernel.org>, Arend van Spriel <arend@broadcom.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150116102135.GC21809@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org" <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "jslaby-AlSwsSmVLrQ@public.gmane.org" <jslaby-AlSwsSmVLrQ@public.gmane.org>, "jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org" <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org" <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "florian.vaussard-p8DiymsW2f8@public.gmane.org" <florian.vaussard-p8DiymsW2f8@public.gmane.org>, "andrew-g2DYL2Zd6BY@public.gmane.org" <andrew-g2DYL2Zd6BY@public.gmane.org>, "rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "hytszk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <hytszk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 16 January 2015 at 13:45, Sascha Hauer <s.hauer@pengutronix.de> wrote:
-> On Fri, Jan 16, 2015 at 01:37:41PM +0100, Ulf Hansson wrote:
->> On 16 January 2015 at 12:34, Tomeu Vizoso <tomeu.vizoso@collabora.com> wrote:
->> > On 16 January 2015 at 11:47, Ulf Hansson <ulf.hansson@linaro.org> wrote:
->> >>
->> >>  int mmc_pwrseq_simple_alloc(struct mmc_host *host, struct device *dev)
->> >>  {
->> >>         struct mmc_pwrseq_simple *pwrseq;
->> >> +       int ret = 0;
->> >>
->> >>         pwrseq = kzalloc(sizeof(struct mmc_pwrseq_simple), GFP_KERNEL);
->> >>         if (!pwrseq)
->> >>                 return -ENOMEM;
->> >>
->> >> +       pwrseq->reset_gpio = gpiod_get_index(dev, "reset", 0, GPIOD_OUT_HIGH);
->> >> +       if (IS_ERR(pwrseq->reset_gpio) &&
->> >> +               PTR_ERR(pwrseq->reset_gpio) != -ENOENT &&
->> >> +               PTR_ERR(pwrseq->reset_gpio) != -ENOSYS) {
->> >> +               ret = PTR_ERR(pwrseq->reset_gpio);
->> >> +               goto free;
->> >> +       }
->> >> +
->> >>         pwrseq->pwrseq.ops = &mmc_pwrseq_simple_ops;
->> >>         host->pwrseq = &pwrseq->pwrseq;
->> >>
->> >>         return 0;
->> >> +free:
->> >> +       kfree(&pwrseq);
->> >
->> > Hi Ulf,
->> >
->> > this kfree looks a bit fishy (there's one more instance of it in
->> > mmc_pwrseq_simple_free).
->>
->> This is the error path, which means I need to clean up data that I
->> have allocated.
+Hi, Mark
+
+>> +
+>> +Required properties:
+>> +- compatible: must be "sprd,sc9836-uart"
+>> +- reg: offset and length of the register set for the device
+>> +- interrupts: exactly one interrupt specifier
+>> +- clocks: phandles to input clocks.
 >
-> I think Tomeu meant that the '&' must be removed.
+> The order and relevance of each should be specified. If you have
+> multiple clocks I would strongly recommend you use clock-names to
+> distinguish them.
 >
 
-Of course, thanks!
+Thank you for the recommendation.
+but, since we haven't made the clock driver ready, for this initial
+commit, we just let 4 UARTs share a single fixed 26 MHz clock source.
+we'll do like you've recommended when we will submit the clock driver
+in the future.
 
-Unless I get some more comments I will fix it when I queue the patch.
+Best regards,
+Chunyan
 
-Kind regards
-Uffe
+
+
+> Otherwise this looks fine.
+>
+> Mark.
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
