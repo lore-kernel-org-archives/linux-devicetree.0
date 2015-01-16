@@ -1,39 +1,110 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: [PATCH 2/2] ARM: dts: Add syscon phandle to the video-phy node for
- Exynos4
-Date: Fri, 16 Jan 2015 18:30:38 +0100
-Message-ID: <1421429438-32090-2-git-send-email-s.nawrocki@samsung.com>
-References: <1421429438-32090-1-git-send-email-s.nawrocki@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1421429438-32090-1-git-send-email-s.nawrocki@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: kishon@ti.com, kgene@kernel.org
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sylwester Nawrocki <s.nawrocki@samsung.com>
+From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v7 1/4] Documentation: dt: add common bindings for hwspinlock
+Date: Fri, 16 Jan 2015 11:49:35 -0600
+Message-ID: <54B94F2F.3050303@ti.com>
+References: <1421269101-51105-1-git-send-email-s-anna@ti.com> <1421269101-51105-2-git-send-email-s-anna@ti.com> <20150115135201.GG16217@leverpostej> <20150115135556.GH16217@leverpostej> <CAL_JsqL2LZAooMk-V8+xeF2g6acZE21M+-OBRw8aEVa-5wVHuQ@mail.gmail.com> <20150116101903.GB21809@leverpostej>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150116101903.GB21809@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is required to fix regression after introducing the PMU device
-nodes required for the PMU driver modified in commit
-14fc8b93d47323561edf5d482d4a4b3ee1b90286
-("ARM: EXYNOS: Add platform driver support for Exynos PMU").
-This change is needed to make MIPI DSI displays and MIPI CSI-2
-camera sensors working again on Exynos4 boards.
+On 01/16/2015 04:19 AM, Mark Rutland wrote:
+> On Thu, Jan 15, 2015 at 02:42:23PM +0000, Rob Herring wrote:
+>> On Thu, Jan 15, 2015 at 7:55 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+>>> On Thu, Jan 15, 2015 at 01:52:01PM +0000, Mark Rutland wrote:
+>>>> On Wed, Jan 14, 2015 at 08:58:18PM +0000, Suman Anna wrote:
+>>>>> This patch adds the generic common bindings used to represent
+>>>>> a hwlock device and use/request locks in a device-tree build.
+>>>>>
+>>>>> All the platform-specific hwlock driver implementations need the
+>>>>> number of locks and associated base id for registering the locks
+>>>>> present within the device with the driver core. This base id
+>>>>> needs to be unique across multiple IP instances of a hwspinlock
+>>>>> device, so that each hwlock can be represented uniquely in a
+>>>>> system.
+>>>>>
+>>>>> The number of locks is represented by 'hwlock-num-locks' property,
+>>>>> and the base id is represented by the 'hwlock-base-id' property.
+>>>>> The args specifier length is dependent on each vendor-specific
+>>>>> implementation and is represented through the '#hwlock-cells'
+>>>>> property. Client users need to use the property 'hwlocks' for
+>>>>> requesting specific lock(s).
+>>>>>
+>>>>> Note that the document is named hwlock.txt deliberately to keep
+>>>>> it a bit more generic.
+>>>>>
+>>>>> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>>>> Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+>>>>> ---
+>>>>> v7: Revised binding info for hwlock-base-id, it is mandatory now
+>>>>>
+>>>>>  .../devicetree/bindings/hwlock/hwlock.txt          | 55 ++++++++++++++++++++++
+>>>>>  1 file changed, 55 insertions(+)
+>>>>>  create mode 100644 Documentation/devicetree/bindings/hwlock/hwlock.txt
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/hwlock/hwlock.txt b/Documentation/devicetree/bindings/hwlock/hwlock.txt
+>>>>> new file mode 100644
+>>>>> index 000000000000..8de7aaf878f9
+>>>>> --- /dev/null
+>>>>> +++ b/Documentation/devicetree/bindings/hwlock/hwlock.txt
+>>>>> @@ -0,0 +1,55 @@
+>>>>> +Generic hwlock bindings
+>>>>> +=======================
+>>>>> +
+>>>>> +Generic bindings that are common to all the hwlock platform specific driver
+>>>>> +implementations.
+>>>>> +
+>>>>> +The validity and need of these common properties may vary from one platform
+>>>>> +implementation to another. The platform specific bindings should explicitly
+>>>>> +state if an optional property is used. Please also look through the individual
+>>>>> +platform specific hwlock binding documentations for identifying the applicable
+>>>>> +properties.
+>>>>> +
+>>>>> +Common properties:
+>>>>> +- #hwlock-cells:   Specifies the number of cells needed to represent a
+>>>>> +                   specific lock. This property is mandatory for all
+>>>>> +                   platform implementations.
+>>>>> +- hwlock-num-locks:        Number of locks present in a hwlock device. This
+>>>>> +                   property is needed on hwlock devices, where the number
+>>>>> +                   of supported locks within a hwlock device cannot be
+>>>>> +                   read from a register.
+>>>>> +- hwlock-base-id:  An unique base Id for the locks for a particular hwlock
+>>>>> +                   device. This property is mandatory for all platform
+>>>>> +                   implementations.
+>>>>
+>>>> This property makes no sense. The ID encoded in the hwlock cells is
+>>>> relative to the instance (identified by phandle), not global. So the DT
+>>>> has no global ID space.
+>>>>
+>>>> Why do you think you need this?
+>>>
+>>> Having looked at the way this proeprty is used, NAK.
+>>>
+>>> If you need to carve up a Linux-internal ID space, do that dynamically.
+>>> There is no need for this property.
+>>
+>> Better yet, don't create a Linux ID space for this. Everywhere we have
+>> one, we want to get rid of it.
+> 
+> Agreed. A completely opaque token / desc structure would prevent a lot
+> of potential abuse and save us from painful breakage.
 
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
----
- arch/arm/boot/dts/exynos4.dtsi |    1 +
- 1 file changed, 1 insertion(+)
+The regular API to acquire or release a lock on Linux does indeed use
+opaque handles, but the id space is needed for communication with other
+processors as the handles have no meaning on non-Linux processors. The
+id space is the simplest to exchange which lock to use with other
+processors compared to the device instance plus the lock number within
+that device.
 
-diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
-index b8168f1..250ee50 100644
---- a/arch/arm/boot/dts/exynos4.dtsi
-+++ b/arch/arm/boot/dts/exynos4.dtsi
-@@ -76,6 +76,7 @@
- 		compatible = "samsung,s5pv210-mipi-video-phy";
- 		reg = <0x10020710 8>;
- 		#phy-cells = <1>;
-+		syscon = <&pmu_system_controller>;
- 	};
- 
- 	pd_mfc: mfc-power-domain@10023C40 {
--- 
-1.7.9.5
+regards
+Suman
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
