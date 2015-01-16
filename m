@@ -1,79 +1,57 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v4 4/4] ARM: mvebu: Armada 385 GP: Add regulators to the
- SATA port
-Date: Fri, 16 Jan 2015 12:37:05 +0000
-Message-ID: <20150116123705.GM3043@sirena.org.uk>
-References: <1421330978-9694-1-git-send-email-gregory.clement@free-electrons.com>
- <1421330978-9694-5-git-send-email-gregory.clement@free-electrons.com>
- <54B8C933.7020502@redhat.com>
- <54B8D97B.3090908@free-electrons.com>
- <54B8E38A.6020709@redhat.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH V3 4/4] mmc: pwrseq_simple: Add support for a reset GPIO pin
+Date: Fri, 16 Jan 2015 13:37:41 +0100
+Message-ID: <CAPDyKFoLqmgTvJpFLrGZvxrfug+SyspsYaOYtf65CsZ7T991pA@mail.gmail.com>
+References: <1421405273-19117-1-git-send-email-ulf.hansson@linaro.org>
+	<1421405273-19117-5-git-send-email-ulf.hansson@linaro.org>
+	<CAAObsKDm1iPAWgJpQwed8KufkxKwqTAFa5espfqq+jY13r+Ymw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="glNuw4S6NeIZr5j7"
-Return-path: <linux-ide-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <54B8E38A.6020709@redhat.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Gregory CLEMENT <gregory.clement@free-electrons.com>, Tejun Heo <tj@kernel.org>, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart@free-electrons.com>, Liam Girdwood <lgirdwood@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CAAObsKDm1iPAWgJpQwed8KufkxKwqTAFa5espfqq+jY13r+Ymw@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc: linux-mmc <linux-mmc@vger.kernel.org>, Chris Ball <chris@printf.net>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Alexandre Courbot <gnurou@gmail.com>, NeilBrown <neilb@suse.de>, Linus Walleij <linus.walleij@linaro.org>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Mark Brown <broonie@kernel.org>, Arend van Spriel <arend@broadcom.com>, Sascha Hauer <s.hauer@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On 16 January 2015 at 12:34, Tomeu Vizoso <tomeu.vizoso@collabora.com> wrote:
+> On 16 January 2015 at 11:47, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>>
+>>  int mmc_pwrseq_simple_alloc(struct mmc_host *host, struct device *dev)
+>>  {
+>>         struct mmc_pwrseq_simple *pwrseq;
+>> +       int ret = 0;
+>>
+>>         pwrseq = kzalloc(sizeof(struct mmc_pwrseq_simple), GFP_KERNEL);
+>>         if (!pwrseq)
+>>                 return -ENOMEM;
+>>
+>> +       pwrseq->reset_gpio = gpiod_get_index(dev, "reset", 0, GPIOD_OUT_HIGH);
+>> +       if (IS_ERR(pwrseq->reset_gpio) &&
+>> +               PTR_ERR(pwrseq->reset_gpio) != -ENOENT &&
+>> +               PTR_ERR(pwrseq->reset_gpio) != -ENOSYS) {
+>> +               ret = PTR_ERR(pwrseq->reset_gpio);
+>> +               goto free;
+>> +       }
+>> +
+>>         pwrseq->pwrseq.ops = &mmc_pwrseq_simple_ops;
+>>         host->pwrseq = &pwrseq->pwrseq;
+>>
+>>         return 0;
+>> +free:
+>> +       kfree(&pwrseq);
+>
+> Hi Ulf,
+>
+> this kfree looks a bit fishy (there's one more instance of it in
+> mmc_pwrseq_simple_free).
 
---glNuw4S6NeIZr5j7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This is the error path, which means I need to clean up data that I
+have allocated.
 
-On Fri, Jan 16, 2015 at 11:10:18AM +0100, Hans de Goede wrote:
-> On 16-01-15 10:27, Gregory CLEMENT wrote:
+mmc_pwrseq_simple_free() is called when host drivers ->remove()
+callback invokes mmc_free_host(). In that case the host->pwrseq has
+been assigned.
 
-> >>>+	reg_sata0: pwr-sata0 {
-> >>>+		compatible = "regulator-fixed";
-> >>>+		regulator-name = "pwr_en_sata0";
-> >>>+		enable-active-high;
-> >>>+		regulator-always-on;
-
-> >>done, but we're not using a power on delay anyways.
-
-> >But if regulator-always-on prevent to switch it off in
-> >suspend then yes using regulator-boot-on is better.
-
-> AFAIK regulator-always-on means exactly that and thus likely
-> is not what you want. As for using regulator-off-in-suspend
-> that is not necessary as the suspend method for the acpi
-> driver will already turn it off.
-
-regulator-always-on is a bit fuzzy for suspend, if the regulator has
-suspend control it'll kick in - it's really about the Linux refcounting
-while it's running.  What's more concerning here is that the quick
-sample of the regulators flagged as always on like the above that I
-looked at in the patch don't seem to have any enable control in the DT
-so this will have absolutely no effect.
-
-> It is probably a good idea to use regulator-boot-on and
-> then test things this way, and if that works use
-> regulator-boot-on.
-
-No, it's unlikely that boot-on makes sense here - it's there for cases
-where we can't read back the hardware state at power on.  Generally
-drivers should work regardless of the initial state of the regulator
-(and modular drivers will actually break if they try to rely on boot-on
-since we clean up unused regulators at boot).
-
---glNuw4S6NeIZr5j7
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJUuQXwAAoJECTWi3JdVIfQu5gH/AhCywjrNL2vXzWBMUdPpaYI
-/8gj9ulaew6Tp42IFGTwy0oegIL0KgiIHE9VuAXlVSzXOviHgZUeRTpwh7fU4mpD
-KMMzq0T4tyzobOZbzEYIGFiyX6E/lpRO3TmH80vo7aDYi37126KY8AB0JYyFIGNi
-oNdnaQPmoIlZRAdMeQBz6rpISsRM66JHYiuJKtmVxbJgCx69CxtLqBCpSmyv7dRR
-ur4J0NfL4USfLSzs47j514u/Mz8MKy4xXQGAE/Af5fUE/3grFke1PjsYq/zSmXl4
-YFXYA18ZvqUgKyyHXpba3W/HByC22LmKNbKg0ghTWH1sUthtcGMusNh/oJWajhA=
-=dxAq
------END PGP SIGNATURE-----
-
---glNuw4S6NeIZr5j7--
+Kind regards
+Uffe
