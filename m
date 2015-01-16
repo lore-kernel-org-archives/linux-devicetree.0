@@ -1,125 +1,236 @@
-From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V2 2/4] mmc: pwrseq: Document DT bindings for the simple
- MMC power sequence
-Date: Fri, 16 Jan 2015 10:13:33 +0100
-Message-ID: <CAPDyKFrzkzHF3AJ7n4Uh8kQr-zdhLCqdxOtgXpxtRWj6=0h+2w@mail.gmail.com>
-References: <1421240530-7971-1-git-send-email-ulf.hansson@linaro.org>
-	<1421240530-7971-3-git-send-email-ulf.hansson@linaro.org>
-	<20150115165825.GL16217@leverpostej>
-	<20150116075308.3f4e250a@notabene.brown>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH v4 4/4] ARM: mvebu: Armada 385 GP: Add regulators to the
+ SATA port
+Date: Fri, 16 Jan 2015 10:27:23 +0100
+Message-ID: <54B8D97B.3090908@free-electrons.com>
+References: <1421330978-9694-1-git-send-email-gregory.clement@free-electrons.com> <1421330978-9694-5-git-send-email-gregory.clement@free-electrons.com> <54B8C933.7020502@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150116075308.3f4e250a-wvvUuzkyo1EYVZTmpyfIwg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <54B8C933.7020502@redhat.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>, Tejun Heo <tj@kernel.org>, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: =?windows-1252?Q?Antoine_T=E9nart?= <antoine.tenart@free-electrons.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 15 January 2015 at 19:53, NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org> wrote:
-> On Thu, 15 Jan 2015 16:58:26 +0000 Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
->
->> Hi Ulf,
+Hi Hans,
+
+On 16/01/2015 09:17, Hans de Goede wrote:
+> Hi,
+> 
+> On 15-01-15 15:09, Gregory CLEMENT wrote:
+>> Add the regulators to each SATA port.
 >>
->> On Wed, Jan 14, 2015 at 01:02:08PM +0000, Ulf Hansson wrote:
->> > The simple MMC power sequence provider, intends to supports a set of
->> > common properties between SOC designs. It thus enables us to re-use the
->> > same provider for several SOCs.
->> >
->> > In this initial step, let's add the top level description of the MMC
->> > power sequence and describe the compatible string for the simple MMC
->> > power sequence provider.
->> >
->> > Following patches will step by step add support for new properties to
->> > the simple MMC power sequence provider.
->> >
->> > Signed-off-by: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> > ---
->> >
->> > Changes in v2:
->> >     - None.
->> >
->> > ---
->> >  .../devicetree/bindings/mmc/mmc,pwrseq-simple.txt      | 18 ++++++++++++++++++
->> >  Documentation/devicetree/bindings/mmc/mmc.txt          |  5 +++++
->> >  2 files changed, 23 insertions(+)
->> >  create mode 100644 Documentation/devicetree/bindings/mmc/mmc,pwrseq-simple.txt
->> >
->> > diff --git a/Documentation/devicetree/bindings/mmc/mmc,pwrseq-simple.txt b/Documentation/devicetree/bindings/mmc/mmc,pwrseq-simple.txt
->> > new file mode 100644
->> > index 0000000..e1b7f9c
->> > --- /dev/null
->> > +++ b/Documentation/devicetree/bindings/mmc/mmc,pwrseq-simple.txt
->> > @@ -0,0 +1,18 @@
->> > +* The simple MMC power sequence provider
->> > +
->> > +System on chip designs may specify a specific MMC power sequence. To
->> > +successfully detect an (e)MMC/SD/SDIO card, that power sequence must be
->> > +maintained while initializing the card.
->> > +
->> > +The simple MMC power sequence provider, intends to supports a set of common
->> > +properties between SOC designs. It thus enables us to re-use the same provider
->> > +for several SOC designs.
->> > +
->> > +Required properties:
->> > +- compatible : contains "mmc,pwrseq-simple".
+>> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+>> ---
+>>   arch/arm/boot/dts/armada-388-gp.dts | 126 ++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 126 insertions(+)
 >>
->> Nit: "mmc" is not a vendor prefix.
+>> diff --git a/arch/arm/boot/dts/armada-388-gp.dts b/arch/arm/boot/dts/armada-388-gp.dts
+>> index 4df22bf91683..590b383db323 100644
+>> --- a/arch/arm/boot/dts/armada-388-gp.dts
+>> +++ b/arch/arm/boot/dts/armada-388-gp.dts
+>> @@ -173,6 +173,16 @@
+>>   				status = "okay";
+>>   				#address-cells = <1>;
+>>   				#size-cells = <0>;
+>> +
+>> +				sata0: sata-port@0 {
+>> +					reg = <0>;
+>> +					target-supply = <&reg_5v_sata0>;
+>> +				};
+>> +
+>> +				sata1: sata-port@1 {
+>> +					reg = <1>;
+>> +					target-supply = <&reg_5v_sata1>;
+>> +				};
+>>   			};
 >>
->> > +
->> > +Example:
->> > +
->> > +   sdhci0_pwrseq {
->> > +           compatible = "mmc,pwrseq-simple";
->> > +   }
+>>   			sata@e0000 {
+>> @@ -181,6 +191,16 @@
+>>   				status = "okay";
+>>   				#address-cells = <1>;
+>>   				#size-cells = <0>;
+>> +
+>> +				sata2: sata-port@0 {
+>> +					reg = <0>;
+>> +					target-supply = <&reg_5v_sata2>;
+>> +				};
+>> +
+>> +				sata3: sata-port@1 {
+>> +					reg = <1>;
+>> +					target-supply = <&reg_5v_sata3>;
+>> +				};
+>>   			};
 >>
->> I'm a little confused here. What specific sequence is described by this
->> node? We don't appear to have referred to any resources used as part of
->> that sequence, and the description above only mentions that there could
->> be a specific sequence, not what that sequence is.
+>>   			sdhci@d8000 {
+>> @@ -278,6 +298,112 @@
+>>   		regulator-always-on;
+>>   		gpio = <&expander0 4 GPIO_ACTIVE_HIGH>;
+>>   	};
+>> +
+>> +	reg_sata0: pwr-sata0 {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "pwr_en_sata0";
+>> +		enable-active-high;
+>> +		regulator-always-on;
+>> +
+>> +	};
+>> +
+>> +	reg_5v_sata0: v5-sata0 {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "v5.0-sata0";
+>> +		regulator-min-microvolt = <5000000>;
+>> +		regulator-max-microvolt = <5000000>;
+>> +		regulator-always-on;
+>> +		vin-supply = <&reg_sata0>;
+>> +	};
+>> +
+>> +	reg_12v_sata0: v12-sata0 {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "v12.0-sata0";
+>> +		regulator-min-microvolt = <12000000>;
+>> +		regulator-max-microvolt = <12000000>;
+>> +		regulator-always-on;
+>> +		vin-supply = <&reg_sata0>;
+>> +	};
+> 
+> AFAIK the separate v5 / 12v regulators you're creating here
+> are not used anywhere. So I guess there just here to
+> accurately / completely describe the power topology ?
+
+Yes it was the point.
+
+> 
+>> +
+>> +	reg_sata1: pwr-sata1 {
+>> +		regulator-name = "pwr_en_sata1";
+>> +		compatible = "regulator-fixed";
+>> +		regulator-min-microvolt = <12000000>;
+>> +		regulator-max-microvolt = <12000000>;
+>> +		enable-active-high;
+>> +		regulator-always-on;
+> 
+> 
+> The always on here seems to a bit weird, wasn't the
+> whole purpose of this patch set to teach ahci_platform
+> to turn it on as needed ?
+
+Maybe I misunderstood the regulator binding, but I thought
+that (once the suspend will be available on this platform) I
+could use:
+
+regulator-state-mem {
+			regulator-off-in-suspend;
+		};
+
+> 
+> You do probably want to put a regulator-boot-on here so
+> that disks do not get an unwanted powercycle (bad for
+> their lifetime) when the firmware has already turned on
+> the disk. Downside of using regulator-boot-on is that if
+> the power is not actually turned on no power-on-delay is
+
+That's why I didn't use it
+
+> done, but we're not using a power on delay anyways.
+
+But if regulator-always-on prevent to switch it off in
+suspend then yes using regulator-boot-on is better.
+
+Thanks,
+
+Gregory
+
+> 
+> The same goes for reg_sata2 & reg_sata3.
+> 
+>> +		gpio = <&expander0 3 GPIO_ACTIVE_HIGH>;
+>> +	};
+>> +
+>> +	reg_5v_sata1: v5-sata1 {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "v5.0-sata1";
+>> +		regulator-min-microvolt = <5000000>;
+>> +		regulator-max-microvolt = <5000000>;
+>> +		regulator-always-on;
+>> +		vin-supply = <&reg_sata1>;
+>> +	};
+>> +
+>> +	reg_12v_sata1: v12-sata1 {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "v12.0-sata1";
+>> +		regulator-min-microvolt = <12000000>;
+>> +		regulator-max-microvolt = <12000000>;
+>> +		regulator-always-on;
+>> +		vin-supply = <&reg_sata1>;
+>> +	};
+>> +
+>> +	reg_sata2: pwr-sata2 {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "pwr_en_sata2";
+>> +		enable-active-high;
+>> +		regulator-always-on;
+>> +		gpio = <&expander0 11 GPIO_ACTIVE_HIGH>;
+>> +	};
+>> +
+>> +	reg_5v_sata2: v5-sata2 {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "v5.0-sata2";
+>> +		regulator-min-microvolt = <5000000>;
+>> +		regulator-max-microvolt = <5000000>;
+>> +		regulator-always-on;
+>> +		vin-supply = <&reg_sata2>;
+>> +	};
+>> +
+>> +	reg_12v_sata2: v12-sata2 {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "v12.0-sata2";
+>> +		regulator-min-microvolt = <12000000>;
+>> +		regulator-max-microvolt = <12000000>;
+>> +		regulator-always-on;
+>> +		vin-supply = <&reg_sata2>;
+>> +	};
+>> +
+>> +	reg_sata3: pwr-sata3 {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "pwr_en_sata3";
+>> +		enable-active-high;
+>> +		regulator-always-on;
+>> +		gpio = <&expander0 12 GPIO_ACTIVE_HIGH>;
+>> +	};
+>> +
+>> +	reg_5v_sata3: v5-sata3 {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "v5.0-sata3";
+>> +		regulator-min-microvolt = <5000000>;
+>> +		regulator-max-microvolt = <5000000>;
+>> +		regulator-always-on;
+>> +		vin-supply = <&reg_sata3>;
+>> +	};
+>> +
+>> +	reg_12v_sata3: v12-sata3 {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "v12.0-sata3";
+>> +		regulator-min-microvolt = <12000000>;
+>> +		regulator-max-microvolt = <12000000>;
+>> +		regulator-always-on;
+>> +		vin-supply = <&reg_sata3>;
+>> +	};
+>>   };
 >>
->> So I don't think this makes sense on its own, and should probably be
->> folded with patches adding the initial support for the resources used as
->> part of the sequence (e.g. the GPIOs added in a later patch).
+>>   &pinctrl {
 >>
->
-> I guess I assumed that this "simple" referred to the current behaviour, which
-> includes some of vmmc-supply, vqmmc-supply, vmmc_aux-supply and pbias-supply
-> being switched at "appropriate" times.
->
-> Would it make sense to bring all of these explicitly under the "pwrseq"
-> umbrella, leaving the current behaviour only when no pwrseq node is provided?
+> 
+> Regards,
+> 
+> Hans
+> 
 
-In principle there is nothing that prevents us from following your
-suggestion. But why should we?
 
-Moreover, I don't think it's required at this point, let's first get
-the basic mmc-pwrseq support in place. Then we can evolve it. :-)
-
->
-> Also, it isn't clear to me whether the need for power/reset is a function of
-> the mmc-host, or a function of the device attached to the host.  I suspect
-> some are needed by one, some by the other.  Any by both?
-
-To me the the power is coupled with the host and thus controlled by
-the mmc layer. But I guess we can discuss this in a forever long loop.
-:-)
-
-They may be other resources which is coupled with an SDIO function /
-eMMC,SDIO card, such as irqs. Those shall be described in the child
-node of the host.
-I have queued the below patchset from Hans, which I believe should address this:
-
-https://www.mail-archive.com/linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg27241.html
-
->
-> Should the two needs be kept separate?
-
-Yes, I think so.
-
-Kind regards
-Uffe
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
