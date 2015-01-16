@@ -1,93 +1,75 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCHv3 0/2] Driver for TI tlc59116 16 Channel i2c LED driver
-Date: Fri, 16 Jan 2015 16:52:12 +0200
-Message-ID: <54B9259C.3070403@ti.com>
-References: <1421277308-3477-1-git-send-email-andrew@lunn.ch>
+From: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH 0/3] Enable myphy28lp support
+Date: Fri, 16 Jan 2015 16:04:54 +0100
+Message-ID: <54B92896.5020607@st.com>
+References: <1421229299-8206-1-git-send-email-gabriel.fernandez@linaro.org> <54B8FC56.8080400@st.com> <54B904C3.1080002@st.com> <54B90FC4.2020604@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8853549839746532684=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1421277308-3477-1-git-send-email-andrew@lunn.ch>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andrew Lunn <andrew@lunn.ch>, cooloney@gmail.com, rpurdie@rpsys.net, "R, Vignesh" <vigneshr@ti.com>
-Cc: devicetree@vger.kernel.org, Matthew.Fatheree@belkin.com, Sekhar Nori <nsekhar@ti.com>, linux-leds@vger.kernel.org, kaloz@openwrt.org, linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54B90FC4.2020604-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
-
---===============8853549839746532684==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="bcO34vuBmAaiXnqpLeMhxaBXshVE5kfmK"
-
---bcO34vuBmAaiXnqpLeMhxaBXshVE5kfmK
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-On 15/01/15 01:15, Andrew Lunn wrote:
-> This patchset is a driver for the TI tlc59116 16 Channel i2c LED
-> driver. This driver is used on the Belkin WRT1900AC access point and
-> the C code is derived from code Belkin contributed to OpenWRT.
-> However it has been extensively re-written, and a device tree binding
-> added to replace platform data.
+On 01/16/2015 02:19 PM, Kishon Vijay Abraham I wrote:
+> Hi,
+>
+> On Friday 16 January 2015 06:02 PM, Maxime Coquelin wrote:
+>> On 01/16/2015 12:56 PM, Maxime Coquelin wrote:
+>>> Hi Gabriel,
+>>>
+>>>      For the series:
+>>> Acked-by: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
+>>>
+>>>      Kishon, could you take care of adding PHY driver patch for v3.20?
+>> Hi Kishon,
+>>
+>>      Don't apply the patch, since we have 2 other PHY driver patches, I will
+>> send you a pull request.
+> Send me as patches if that is okay.
+Ok. Just sent the patches.
 
-We have a TLC59108 on one of our boards, and with a quick glance it
-looks about the same as TLC59116, except the amount of outputs. Vignesh
-wrote a driver for it and was about to send it for review.
+Thanks,
+Maxime
+>
+> Thanks
+> Kishon
+>
+>> Best regards,
+>> Maxime
+>>
+>>
+>>> Thanks,
+>>> Maxime
+>>> On 01/14/2015 10:54 AM, Gabriel FERNANDEZ wrote:
+>>>> The goal of this series is to enable the support of MiPHY28lp Generic PHY.
+>>>>
+>>>> The first patch is to update miphy28lp phy driver to access sysconfig register
+>>>> offsets via syscfg dt property. It's based on Arnds review comments here
+>>>> https://lkml.org/lkml/2014/11/13/161
+>>>> I have updated the miphy28lp phy driver same way as Peter's implementation.
+>>>>
+>>>> Gabriel Fernandez (3):
+>>>>     phy: miphy28lp: Pass sysconfig register offsets via syscfg dt
+>>>>       property.
+>>>>     ARM: DT: STi: STiH407: Add DT node for MiPHY28lp
+>>>>     ARM: multi_v7_defconfig: Enable MiPHY28lp - ST's Generic (SATA, PCIe &
+>>>>       USB3) PHY
+>>>>
+>>>>    .../devicetree/bindings/phy/phy-miphy28lp.txt      | 43 ++++++---------
+>>>>    arch/arm/boot/dts/stih407-family.dtsi              | 53 +++++++++++++++++++
+>>>>    arch/arm/boot/dts/stihxxx-b2120.dtsi               | 11 ++++
+>>>>    arch/arm/configs/multi_v7_defconfig                |  1 +
+>>>>    drivers/phy/phy-miphy28lp.c                        | 61
+>>>> ++++++++++++----------
+>>>>    5 files changed, 113 insertions(+), 56 deletions(-)
+>>>>
 
-However, Vignesh implemented it as a PWM driver. We use it for LCD
-backlight (via pwm-backlight).
-
-I'm not very familiar with LED and PWM drivers, but doesn't implementing
-this as a LED driver prevent us from using it as a backlight? Whereas it
-looks like PWM can be used as a led via pwm-leds (I think).
-
- Tomi
-
-
-
---bcO34vuBmAaiXnqpLeMhxaBXshVE5kfmK
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUuSWcAAoJEPo9qoy8lh71o5sP/2mqBR5/g26ZDkvLMVqMW+Nu
-HsQKZ/UQKiszQ91f5W5bMarmH8JK1yQir6PNivgLrogtj+xFfsAGimn2jRhaTthf
-FfZXo0pHo57eGrVciZlQu/e/av8sWqr6k3+uM1ds/3UmQUHNBqcahkXXMj2IZtn2
-BDSvkFB9S0kPKM+FRD0eQXmib620s3t3310ef8OQVaGHmhR1Wz5gsi86uYfGKonq
-4z3hmx6JFHkOgAwOPfOCHPbKmltTQM3Lm8tlNMi8LNE5h+xvTWH7sqSLNP6QQV5R
-MhYRg8vhKiXbuUnQHUai4VoQ/f5XizhNrN6Oscb+g9Yyt1f6wJiHSQLvSm1T8Hpf
-wm7yo1WoR1qcG+kLnpZcnmWHJoxfaiJY3k7VRqLnVEw9xr5ftnTm4ajlw7ewbK8v
-bZVyIPONkwn/j+peExsTZ7ku9tDA9/vK7Dk8sD5uLfiHSb3nSDdtutS+sXcfPNwp
-SwMW7ffQiV68AIEPRGoRiIHuZ2dpQvlNvi480uwPY3SHxA4zYkfkYhFd19mVM7F1
-gZHgTS/JsaP19BhSL9eVSFUKt1osqeywcWk6xv7NpmqF8MNfHwdaUzE2JH7gdSrT
-gn5ffHn9KMgmJaxMhgrw1ui/DklT9gErJLiAsGnp3eeheI0O3sMiYjJyzEJSFaPJ
-rMoY4/pQcxHvwzJI1TqA
-=VxTc
------END PGP SIGNATURE-----
-
---bcO34vuBmAaiXnqpLeMhxaBXshVE5kfmK--
-
-
---===============8853549839746532684==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============8853549839746532684==--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
