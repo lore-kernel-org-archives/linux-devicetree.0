@@ -1,128 +1,83 @@
-From: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
-Subject: [PATCH v5 0/5] Add Spreadtrum Sharkl64 Platform support
-Date: Fri, 16 Jan 2015 18:00:06 +0800
-Message-ID: <1421402411-3479-1-git-send-email-chunyan.zhang@spreadtrum.com>
-References: <sc9836-v5>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] of: Add vendor prefix for Shanghai AVIC
+ Optoelectronics Co., Ltd.
+Date: Fri, 16 Jan 2015 12:14:04 +0100
+Message-ID: <20150116111402.GC4885@ulmo.nvidia.com>
+References: <1418917423-26583-1-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <sc9836-v5>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: gregkh@linuxfoundation.org, mark.rutland@arm.com, arnd@arndb.de, gnomes@lxorguk.ukuu.org.uk, broonie@kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, will.deacon@arm.com, catalin.marinas@arm.com, jslaby@suse.cz, jason@lakedaemon.net, heiko@sntech.de, florian.vaussard@epfl.ch, andrew@lunn.ch, rrichter@cavium.com, hytszk@gmail.com, grant.likely@linaro.org, antonynpavlov@gmail.com, Joel.Schopp@amd.com, Suravee.Suthikulpanit@amd.com, shawn.guo@linaro.org, lea.yan@linaro.org, jorge.ramirez-ortiz@linaro.org, lee.jones@linaro.org, orsonzhai@gmail.com, geng.ren@spreadtrum.com, zhizhou.zhang@spreadtrum.com, lanqing.liu@spreadtrum.com, zhang.lyra@gmail.com, wei.qiao@spreadtrum.com
-Cc: devicetree@vger.kernel.org, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="3siQDZowHQqNOShm"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1418917423-26583-1-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Spreadtrum is a rapid growing chip vendor providing smart phone total solutions.
 
-Sharkl64 Platform is nominated as a SoC infrastructure that supports 4G/3G/2G
-standards based on ARMv8 multiple core architecture. Now we have only one
-SoC(SC9836) based on this Platform in developing.
+--3siQDZowHQqNOShm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This patchset adds Sharkl64 support in arm64 device tree and adds the serial
-driver of SC9836-UART.
+On Thu, Dec 18, 2014 at 04:43:42PM +0100, Philipp Zabel wrote:
+> Shanghai AVIC Optoelectronics Co., Ltd. is a subsidiary of Tianma
+> Microelectronics Co., Ltd. and designs and manufactures TFT LCDs.
+>=20
+> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
-This patchset also has patches which address "sprd" prefix and DT compatible
-strings for nodes which appear un-documented.
+Hi Rob,
 
-This version code was tesed on SC9836 mobile phone.
+Will you Ack this so I can take it through the drm/panel tree, or would
+you rather pick it up yourself?
 
-Changes from v4:
-* Addressed review comments from last version:
-	- Remove compitible string "arm,psci-0.2"
-	- Add the properties of psci v0.1
-	- Remove the "clocks" container node
-* Addressed review comments from Shawn Guo, Lea Yan, Jorge Ramirez-Ortiz:
-	- Turn the 'clocks' property of uart into a required property
-	- Use GIC macro instead of the value
-	- Update the CPU mask to match the number of described CPUs
-	- Use the more explicit compatible string "arm,gic-400" for GIC
-	- sprd_serial.c: Add a cpu_relax() in the busy loop of sprd_putc
-	- sprd_serial.c: Add calling uart_suspend_port and uart_resume_port in
-	  the function sprd_suspend and sprd_resume respectively
-	- sprd_serial.c: Use SIMPLE_DEV_PM_OPS to register sprd_suspend and
-	  sprd_resume
+Thierry
 
-Changes from v3:
-* Addressed review comments:
-	- Added the description of clock property for sc9836-uart
-	- Revised the size of GICC to be 8KiB
-	- Added another compatible string for psci-0.1
-	- Removed the clock-frequency property of timer in DT
-	- Removed ARCH_SHARKL64, just left ARCH_SPRD only
-	- sprd_serial.c: Removed .owner of platform_driver.driver
-	- sprd_serial.c: Removed all usages of unlikely
-	- sprd_serial.c: Used the .port member of sprd_port instead of the cast
-	- sprd_serial.c: sed dynamic allocation for major/minor device id
-	- sprd_serial.c: Added a timeout and a cpu_relax for clearing rx/tx fifo
-	- sprd_serial.c: clear CMSPAR in termios->c_cflag
-	- sprd_serial.c: Set the resulting baud back into the termios
-	- sprd_serial.c: Implemented a shared interrupt handler
+>=20
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Docu=
+mentation/devicetree/bindings/vendor-prefixes.txt
+> index 78efebb..2ce15a4 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -23,6 +23,7 @@ armadeus	ARMadeus Systems SARL
+>  atmel	Atmel Corporation
+>  auo	AU Optronics Corporation
+>  avago	Avago Technologies
+> +avic	Shanghai AVIC Optoelectronics Co., Ltd.
+>  bosch	Bosch Sensortec GmbH
+>  brcm	Broadcom Corporation
+>  buffalo	Buffalo, Inc.
+> --=20
+> 2.1.3
+>=20
 
-Changes from v2:
-* Addressed review comments:
-	- Added a specific compitible string 'sc9836-uart' for the serial
-	- Added a full serial driver
-	- Added the property 'clock-frequency' for timer node in dtsi.
-	- Replaceed the old macro prefix 'UART_' with 'SPRD_' in the 
-	  Spreadtrum serial driver code.
-* Revised the name of SoC and board from 'sharkl3' to 'sc9836'
-* Used dual-license for DTS files
-* Added a menuconfig 'ARCH_SPRD' in arch/arm64/Kconfig
+--3siQDZowHQqNOShm
+Content-Type: application/pgp-signature
 
-Changes from v1:
-* Addressed review comments:
-        - Added "sprd" prefix to vendor-prefixes.txt
-        - Created serial/sprd-serial.txt and remove the properties for serial-sprd
-          from of-serial.txt to it.
-        - Renamed of-serial.txt to 8250.txt according to Arnd's review comments
-        - Splited and revised .dts for Sharkl64 Platform
-        - Changed to PSCI method for cpu power management
-        - Revised Kconfig Makefile to match the alphabetical ordering
-        - Renamed serial-sprd-earlycon.c to serial-sprd.c
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-Chunyan Zhang (3):
-  Documentation: DT: Renamed of-serial.txt to 8250.txt
-  Documentation: DT: Add bindings for Spreadtrum SoC Platform
-  tty/serial: Add Spreadtrum sc9836-uart driver support
+iQIcBAEBAgAGBQJUuPJ6AAoJEN0jrNd/PrOh+MsP/06HkgfHtX5eZ81OXs+DwBoM
+K7DG78XUCkq73RRDqcSEMe0YIvbttePM2M6DMEOvF1qCHh6LYUPfu8p/5EtWGzgU
+EP0fCo8KkUQsBnig2znwXMdVRycWfdMmu/1wt3o94H42AX2V/x4kpJbKJiHRQqlc
+imtWRPVST9H3xIzDguZ1oEDW+W/L0/UgM7lq04vdNUzIxNznzSTnZVN2PDSHOCsx
+6WxGkWTH33nVC6N4Ab0NUtvCCk7aOu/q9ldjj1Tmh3liamo6sDpHEIZwJLk5o0Sb
+14S/1a2xp4C3wWo2DzNE+CSc6dLEWn6QRSsbABkMHAdenLMb1OL/UEoadh3VWawK
+tzGxzOdKEKPsFChwNEjf1+J9jMNFxwCzAnyZrlr9u8jZetw0g/CyXHDCzcmn4ahv
+tD4VmTzcIiVI3YsEiQiSGGuNXJgSD6lsltHqsxcG0fQfLbhy/4Q2qY+TjOsYdrEx
+misQF3oBU9gpyVkZlhi7lcfSEbNJQEeGOTrUrfNYdp/OSWdbYfbGxgfaMoTUJvrq
+be5RecoXhPbyZfmjDwg7irK34qygQp+QortP6V6G23E7ptA4jkL3zkr2yaMUyZAR
+h57JelTiQvs4f/RRbqVDaJ8LiZypuPsBCbtDKcOAwGErVkJvY07IeaM1YYeLJgu+
+y4DQ8Y/fCWbd9xgGmWem
+=oFRX
+-----END PGP SIGNATURE-----
 
-Zhizhou Zhang (2):
-  arm64: dts: Add support for Spreadtrum SC9836 SoC in dts and Makefile
-  arm64: Add support for Spreadtrum's Sharkl64 Platform in Kconfig and
-    defconfig
-
- Documentation/devicetree/bindings/arm/sprd.txt     |   11 +
- .../bindings/serial/{of-serial.txt => 8250.txt}    |    0
- .../devicetree/bindings/serial/sprd-uart.txt       |    7 +
- .../devicetree/bindings/vendor-prefixes.txt        |    1 +
- arch/arm64/Kconfig                                 |    5 +
- arch/arm64/boot/dts/Makefile                       |    1 +
- arch/arm64/boot/dts/sprd/Makefile                  |    5 +
- arch/arm64/boot/dts/sprd/sc9836-openphone.dts      |   49 ++
- arch/arm64/boot/dts/sprd/sc9836.dtsi               |   73 ++
- arch/arm64/boot/dts/sprd/sharkl64.dtsi             |   67 ++
- arch/arm64/configs/defconfig                       |    1 +
- drivers/tty/serial/Kconfig                         |   18 +
- drivers/tty/serial/Makefile                        |    1 +
- drivers/tty/serial/sprd_serial.c                   |  772 ++++++++++++++++++++
- include/uapi/linux/serial_core.h                   |    3 +
- 15 files changed, 1014 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/sprd.txt
- rename Documentation/devicetree/bindings/serial/{of-serial.txt => 8250.txt} (100%)
- create mode 100644 Documentation/devicetree/bindings/serial/sprd-uart.txt
- create mode 100644 arch/arm64/boot/dts/sprd/Makefile
- create mode 100644 arch/arm64/boot/dts/sprd/sc9836-openphone.dts
- create mode 100644 arch/arm64/boot/dts/sprd/sc9836.dtsi
- create mode 100644 arch/arm64/boot/dts/sprd/sharkl64.dtsi
- create mode 100644 drivers/tty/serial/sprd_serial.c
-
--- 
-1.7.9.5
+--3siQDZowHQqNOShm--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
