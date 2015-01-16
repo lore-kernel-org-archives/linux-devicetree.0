@@ -1,62 +1,38 @@
-From: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v7 1/4] Documentation: dt: add common bindings for hwspinlock
-Date: Fri, 16 Jan 2015 08:09:00 +0200
-Message-ID: <CAK=WgbYQ=BbinqJ5fsw2Y+FKdy=nasLsw9mX8pw6S_o3owy9-g@mail.gmail.com>
-References: <1421269101-51105-1-git-send-email-s-anna@ti.com>
- <1421269101-51105-2-git-send-email-s-anna@ti.com> <20150115135201.GG16217@leverpostej>
- <20150115135556.GH16217@leverpostej> <CAL_JsqL2LZAooMk-V8+xeF2g6acZE21M+-OBRw8aEVa-5wVHuQ@mail.gmail.com>
+From: Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 1/2] of: Add vendor prefix 'netlogic'
+Date: Fri, 16 Jan 2015 12:53:39 +0530
+Message-ID: <1421393020-18807-1-git-send-email-jchandra@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqL2LZAooMk-V8+xeF2g6acZE21M+-OBRw8aEVa-5wVHuQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Subhendu Sekhar Behera <sbehera-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 15, 2015 at 4:42 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Thu, Jan 15, 2015 at 7:55 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
->> On Thu, Jan 15, 2015 at 01:52:01PM +0000, Mark Rutland wrote:
->>> On Wed, Jan 14, 2015 at 08:58:18PM +0000, Suman Anna wrote:
->>> > +- hwlock-base-id:  An unique base Id for the locks for a particular hwlock
->>> > +                   device. This property is mandatory for all platform
->>> > +                   implementations.
->>>
->>> This property makes no sense. The ID encoded in the hwlock cells is
->>> relative to the instance (identified by phandle), not global. So the DT
->>> has no global ID space.
->>>
->>> Why do you think you need this?
->>
->> Having looked at the way this proeprty is used, NAK.
->>
->> If you need to carve up a Linux-internal ID space, do that dynamically.
->> There is no need for this property.
->
-> Better yet, don't create a Linux ID space for this. Everywhere we have
-> one, we want to get rid of it.
+From: Subhendu Sekhar Behera <sbehera-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 
-Rob, Mark,
+Add vendor name "netlogic" in vendor-prefixes.txt, which will be used for
+the Netlogic XLP and XLPII MIPS SoCs. These processors were from NetLogic
+Microsystems which is now part of Broadcom Corporation.
 
-The hwlock is a basic hardware primitive that allow synchronization
-between different processors in the system, which may be running Linux
-as well as other operating systems, and may have no other means of
-communication.
+Signed-off-by: Subhendu Sekhar Behera <sbehera-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-The hwlock id numbers are predefined, global and static across the
-entire system: Linux may boot well after other operating systems are
-already running and using these hwlocks to communicate, and therefore,
-in order to use these hardware devices, it must not enumerate them
-differently than the rest of the system.
-
-Given that these id numbers are global, system-wide, static and
-predefined, where Linux may just be one user of them, please
-reconsider the approach as implemented by Suman, or suggest an
-alternative one you may prefer.
-
-Thanks,
-Ohad.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index b1df0ad..ad45908 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -111,6 +111,7 @@ mxicy	Macronix International Co., Ltd.
+ national	National Semiconductor
+ neonode		Neonode Inc.
+ netgear	NETGEAR
++netlogic	Broadcom Corporation (formerly NetLogic Microsystems)
+ newhaven	Newhaven Display International
+ nintendo	Nintendo
+ nokia	Nokia
+-- 
+1.9.1
