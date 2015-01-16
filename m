@@ -1,89 +1,70 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v5 2/5] Documentation: DT: Add bindings for Spreadtrum
- SoC Platform
-Date: Fri, 16 Jan 2015 10:21:35 +0000
-Message-ID: <20150116102135.GC21809@leverpostej>
-References: <sc9836-v5>
- <1421402411-3479-1-git-send-email-chunyan.zhang@spreadtrum.com>
- <1421402411-3479-3-git-send-email-chunyan.zhang@spreadtrum.com>
+From: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Subject: Re: [PATCH v3 2/3] dt-bindings: Add pinctrl bindings for
+ mt65xx/mt81xx.
+Date: Fri, 16 Jan 2015 18:23:25 +0800
+Message-ID: <1421403805.11671.58.camel@mtksdaap41>
+References: <1415709535-31515-1-git-send-email-hongzhou.yang@mediatek.com>
+	 <1415709535-31515-3-git-send-email-hongzhou.yang@mediatek.com>
+	 <CACRpkdYSe_BH_qiHma2BA+c2otEi3wd0TBXy83t8vwrNL+3U2g@mail.gmail.com>
+	 <20141127101830.GP30369@pengutronix.de>
+	 <CACRpkdbMdJT6y-NL36RgQe0-CAFAVGqKiwY9+yFcwA7JDLmA+Q@mail.gmail.com>
+	 <20141202135527.GM30369@pengutronix.de>
+	 <CACRpkdZeRd+j7d_iRphruHRg8p3XjqWK8_HQzLH2PTZ_pqOrYA@mail.gmail.com>
+	 <20150112122200.GC18908@pengutronix.de>
+	 <CACRpkdYXrdiRWMV8YpxrSLe2rLEV-ZnX7=36w21zGquh==6WgA@mail.gmail.com>
+	 <20150113161614.GF23940@pengutronix.de>
+	 <CACRpkdYRrs2=gNM1XGSh1cSo5Pvx6iNLt4HjL6gdTqGPWYSRDw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1421402411-3479-3-git-send-email-chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
-Cc: "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org" <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "jslaby-AlSwsSmVLrQ@public.gmane.org" <jslaby-AlSwsSmVLrQ@public.gmane.org>, "jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org" <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org" <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "florian.vaussard-p8DiymsW2f8@public.gmane.org" <florian.vaussard-p8DiymsW2f8@public.gmane.org>, "andrew-g2DYL2Zd6BY@public.gmane.org" <andrew-g2DYL2Zd6BY@public.gmane.org>, "rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "hytszk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <hytszk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joel.Schopp@amd.c
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdYRrs2=gNM1XGSh1cSo5Pvx6iNLt4HjL6gdTqGPWYSRDw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Hongzhou Yang <hongzhou.yang@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Sascha Hauer <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>, Catalin Marinas <catalin.marinas@arm.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, huang eddie <eddie.huang@mediatek.com>, dandan.he@mediatek.co
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 16, 2015 at 10:00:08AM +0000, Chunyan Zhang wrote:
-> Adds Spreadtrum's prefix "sprd" to vendor-prefixes file.
-> Adds the devicetree binding documentations for Spreadtrum's sc9836-uart
-> and SC9836 SoC based on the Sharkl64 Platform which is a 64-bit SoC
-> Platform of Spreadtrum.
+On Fri, 2015-01-16 at 10:53 +0100, Linus Walleij wrote:
+> On Tue, Jan 13, 2015 at 5:16 PM, Sascha Hauer <s.hauer@pengutronix.de> wrote:
+> > On Tue, Jan 13, 2015 at 11:05:22AM +0100, Linus Walleij wrote:
 > 
-> Signed-off-by: Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
-> Signed-off-by: Orson Zhai <orson.zhai-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/arm/sprd.txt     |   11 +++++++++++
->  .../devicetree/bindings/serial/sprd-uart.txt       |    7 +++++++
->  .../devicetree/bindings/vendor-prefixes.txt        |    1 +
->  3 files changed, 19 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/sprd.txt
->  create mode 100644 Documentation/devicetree/bindings/serial/sprd-uart.txt
+> >> > You often talk about ambiguities. Could you give an example what
+> >> > ambiguities you mean?
+> >>
+> >> What happened was this pins = ; arguments were sometimes
+> >> strings and sometimes integers, that becomes strange to handle
+> >> in code, ambiguous.
+> >
+> > I see. I like naming it 'pinmux' because that's what it is: pins and
+> > mux settings. A plain 'pinno' suggests that it contains only pin mubers,
+> > without mux setting. How about 'pin-no-mux'? We also could add an
+> > explicit "pins-are-numbered" property instead of distinguishing this
+> > by property names.
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/sprd.txt b/Documentation/devicetree/bindings/arm/sprd.txt
-> new file mode 100644
-> index 0000000..31a629d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/sprd.txt
-> @@ -0,0 +1,11 @@
-> +Spreadtrum SoC Platforms Device Tree Bindings
-> +----------------------------------------------------
-> +
-> +Sharkl64 is a Spreadtrum's SoC Platform which is based
-> +on ARM 64-bit processor.
-> +
-> +SC9836 openphone board with SC9836 SoC based on the
-> +Sharkl64 Platform shall have the following properties.
-> +
-> +Required root node properties:
-> +        - compatible = "sprd,sc9836-openphone", "sprd,sc9836";
-> diff --git a/Documentation/devicetree/bindings/serial/sprd-uart.txt b/Documentation/devicetree/bindings/serial/sprd-uart.txt
-> new file mode 100644
-> index 0000000..2aff0f2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/serial/sprd-uart.txt
-> @@ -0,0 +1,7 @@
-> +* Spreadtrum serial UART
-> +
-> +Required properties:
-> +- compatible: must be "sprd,sc9836-uart"
-> +- reg: offset and length of the register set for the device
-> +- interrupts: exactly one interrupt specifier
-> +- clocks: phandles to input clocks.
-
-The order and relevance of each should be specified. If you have
-multiple clocks I would strongly recommend you use clock-names to
-distinguish them.
-
-Otherwise this looks fine.
-
-Mark.
-
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index b1df0ad..0a8384f 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -153,6 +153,7 @@ snps	Synopsys, Inc.
->  solidrun	SolidRun
->  sony	Sony Corporation
->  spansion	Spansion Inc.
-> +sprd	Spreadtrum Communications Inc.
->  st	STMicroelectronics
->  ste	ST-Ericsson
->  stericsson	ST-Ericsson
-> -- 
-> 1.7.9.5
+> I kind of like this "pins-are-numbered" thing.
 > 
-> 
+> The other property for the pin, whether pinmux or pin-no-mux or
+> pin-num-and-mux etc is no such big deal, as long as it's
+> consistent and documented with the generic bindings.
+
+Hi Linus,
+
+To make sure I understand it correct, you think something like this is
+OK?
+
+	pinctrl@01c20800 {
+		compatible = "mediatek,mt8135-pinctrl";
+[...]
+		pins-are-numbered;
+
+		i2c0_pins_a: i2c0@0 {
+			pins1 {
+				pins = <MT8135_PIN_100_SDA0__FUNC_SDA0>,
+					<MT8135_PIN_101_SCL0__FUNC_SCL0>;
+				bias-disable;
+			};
+		};
+[....]
+	}
+
+Joe.C
