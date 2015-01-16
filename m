@@ -1,94 +1,52 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [Resend][PATCH v2 2/3] drm/panel: add s6e63j0x03 LCD panel driver
-Date: Fri, 16 Jan 2015 12:30:29 +0100
-Message-ID: <20150116113028.GD4885@ulmo.nvidia.com>
-References: <1418117346-9078-3-git-send-email-human.hwang@samsung.com>
- <54AAAD96.2050004@samsung.com>
+From: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: Re: [PATCH V3 4/4] mmc: pwrseq_simple: Add support for a reset GPIO pin
+Date: Fri, 16 Jan 2015 12:34:41 +0100
+Message-ID: <CAAObsKDm1iPAWgJpQwed8KufkxKwqTAFa5espfqq+jY13r+Ymw@mail.gmail.com>
+References: <1421405273-19117-1-git-send-email-ulf.hansson@linaro.org> <1421405273-19117-5-git-send-email-ulf.hansson@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="XvKFcGCOAo53UbWW"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <54AAAD96.2050004@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Inki Dae <inki.dae@samsung.com>
-Cc: DRI mailing list <dri-devel@lists.freedesktop.org>, David Airlie <airlied@linux.ie>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1421405273-19117-5-git-send-email-ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 16 January 2015 at 11:47, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>
+>  int mmc_pwrseq_simple_alloc(struct mmc_host *host, struct device *dev)
+>  {
+>         struct mmc_pwrseq_simple *pwrseq;
+> +       int ret = 0;
+>
+>         pwrseq = kzalloc(sizeof(struct mmc_pwrseq_simple), GFP_KERNEL);
+>         if (!pwrseq)
+>                 return -ENOMEM;
+>
+> +       pwrseq->reset_gpio = gpiod_get_index(dev, "reset", 0, GPIOD_OUT_HIGH);
+> +       if (IS_ERR(pwrseq->reset_gpio) &&
+> +               PTR_ERR(pwrseq->reset_gpio) != -ENOENT &&
+> +               PTR_ERR(pwrseq->reset_gpio) != -ENOSYS) {
+> +               ret = PTR_ERR(pwrseq->reset_gpio);
+> +               goto free;
+> +       }
+> +
+>         pwrseq->pwrseq.ops = &mmc_pwrseq_simple_ops;
+>         host->pwrseq = &pwrseq->pwrseq;
+>
+>         return 0;
+> +free:
+> +       kfree(&pwrseq);
 
---XvKFcGCOAo53UbWW
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Ulf,
 
-On Tue, Jan 06, 2015 at 12:28:22AM +0900, Inki Dae wrote:
-[...]
-> -------- Original Message --------
-> Subject: [PATCH v2 2/3] drm/panel: add s6e63j0x03 LCD panel driver
-> Date: Tue, 09 Dec 2014 18:29:05 +0900
-> From: Hyungwon Hwang <human.hwang@samsung.com>
-> To: dri-devel@lists.freedesktop.org
-> CC: airlied@linux.ie, devicetree@vger.kernel.org, robh+dt@kernel.org,
-> pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk,
-> galak@codeaurora.org, linux-samsung-soc@vger.kernel.org,
-> kyungmin.park@samsung.com, inki.dae@samsung.com, a.hajda@samsung.com,
-> kgene.kim@samsung.com, thierry.reding@gmail.com, Hyungwon Hwang
-> <human.hwang@samsung.com>
->=20
-> From: Inki Dae <inki.dae@samsung.com>
->=20
-> This patch adds MIPI-DSI based S6E63J0X03 AMOLED LCD panel driver
-> which uses mipi_dsi bus to communicate with panel. The panel has
-> 320=C3=97320 resolution in 1.63-inch physical panel. This panel is used in
-> Samsung Galaxy Gear 2.
->=20
-> Signed-off-by: Inki Dae <inki.dae@samsung.com>
-> Signed-off-by: Hyungwon Hwang <human.hwang@samsung.com>
-> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
-> ---
-> Changes for v2:
-> - Change the gamma table to 2-dimensional array
-> - Change the way to make index for brightness
-> - Make command functions to an array so that it can be called simply
-> - Change command id for reading device ID
-> - Change the way to handle the error condition
-> - Remove power variable, and use the same name variable in bl_dev
-> - Add the state FB_BLANK_NORMAL to represent the state which the panel
-> is working but blanked
-> - Miscellaneous changes to increase the readability and follow the
->   coding-style standard
->=20
->  drivers/gpu/drm/panel/Kconfig            |   6 +
->  drivers/gpu/drm/panel/Makefile           |   1 +
->  drivers/gpu/drm/panel/panel-s6e63j0x03.c | 549
-> +++++++++++++++++++++++++++++++
->  3 files changed, 556 insertions(+)
->  create mode 100644 drivers/gpu/drm/panel/panel-s6e63j0x03.c
+this kfree looks a bit fishy (there's one more instance of it in
+mmc_pwrseq_simple_free).
 
-I thought I had mentioned this before, but this is missing device tree
-binding documentation.
+Cheers,
 
-Thierry
-
---XvKFcGCOAo53UbWW
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJUuPZTAAoJEN0jrNd/PrOhG9gQAMJinnyb/4M/+XcMqQd0TCz/
-VrjpNg8txuFNtCwXKXSglxyw7XP563U4areRAMCyYkqKjiCHCCKjcSUCvXLBLftu
-cSjCmQWcA36LNq8aaPVcVYEYsGtNxQtzrGE6RhlRjeviUkT/sc5+lbk1u3WZ7OOR
-HCMVg+j5MZ59irbR12gVqJpvMmCBQlIoGLdifuRgvE4knzXHF68avg0YjdlmOeF6
-YSsk9MK6lNpPqqVeQgjM2wcLJ2XLADqBNQOSasl0HHJEejrwcPGWVD3x8GD4XF7G
-v+r+B/SrrUfRkwYJ9zA+BGdux1gLjnswNQUPUt085hukyyUKRvyvf/ORAFVBVCci
-j42PH6XZCri/3d5QWqEIiNkzCy+71w6gwHGAsaeaTrP9N6GcQn7ch8S35SCycWks
-q4aYUwtqJrErlnkLKuV2StlPJepumPv3JXP7Xp/DnI4wBYec1gZPHhnBOb2FoRUV
-39vhSaQOSkShf6llzZfXdSWgm5z4oKvBY7dBHO/lrm1K3Mhwv/XP+isAhzVYW1EW
-IdWITV0w9zDJKEEh0SD12AHoj+s/cuLvsjZZlsiQmWjZ2Nyyf5LP8NQVn4ckkXBQ
-dJozKkkCLljxvPjTvBTcJdLBlEc5aK4qCoQO92roIMRholanj8dutYMnoLGxZ/M8
-au157/WM1hke/8+vxTtt
-=H7mJ
------END PGP SIGNATURE-----
-
---XvKFcGCOAo53UbWW--
+Tomeu
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
