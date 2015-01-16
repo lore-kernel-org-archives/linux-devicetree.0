@@ -1,84 +1,85 @@
-From: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
-Subject: [PATCH v5 2/5] Documentation: DT: Add bindings for Spreadtrum SoC
- Platform
-Date: Fri, 16 Jan 2015 18:00:08 +0800
-Message-ID: <1421402411-3479-3-git-send-email-chunyan.zhang@spreadtrum.com>
-References: <sc9836-v5>
- <1421402411-3479-1-git-send-email-chunyan.zhang@spreadtrum.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v6 2/3] gpio: Cygnus: add GPIO driver
+Date: Fri, 16 Jan 2015 11:14:56 +0100
+Message-ID: <CACRpkdZef8S-EAbShjJ1eg+-3wQKn+yx4u1k_Mf8F7uFkJYdFw@mail.gmail.com>
+References: <rjui@broadcom.com>
+	<1418696307-19392-1-git-send-email-rjui@broadcom.com>
+	<1418696307-19392-3-git-send-email-rjui@broadcom.com>
+	<CACRpkdYGksEseGaO49=1rUi5WBdOxwAd-F1gpgZn+BFatRCdDg@mail.gmail.com>
+	<54B55068.8050500@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1421402411-3479-1-git-send-email-chunyan.zhang@spreadtrum.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: gregkh@linuxfoundation.org, mark.rutland@arm.com, arnd@arndb.de, gnomes@lxorguk.ukuu.org.uk, broonie@kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, will.deacon@arm.com, catalin.marinas@arm.com, jslaby@suse.cz, jason@lakedaemon.net, heiko@sntech.de, florian.vaussard@epfl.ch, andrew@lunn.ch, rrichter@cavium.com, hytszk@gmail.com, grant.likely@linaro.org, antonynpavlov@gmail.com, Joel.Schopp@amd.com, Suravee.Suthikulpanit@amd.com, shawn.guo@linaro.org, lea.yan@linaro.org, jorge.ramirez-ortiz@linaro.org, lee.jones@linaro.org, orsonzhai@gmail.com, geng.ren@spreadtrum.com, zhizhou.zhang@spreadtrum.com, lanqing.liu@spreadtrum.com, zhang.lyra@gmail.com, wei.qiao@spreadtrum.com
-Cc: devicetree@vger.kernel.org, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <54B55068.8050500@broadcom.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Ray Jui <rjui@broadcom.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Joe Perches <joe@perches.com>, Arnd Bergmann <arnd@arndb.de>, Scott Branden <sbranden@broadcom.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Adds Spreadtrum's prefix "sprd" to vendor-prefixes file.
-Adds the devicetree binding documentations for Spreadtrum's sc9836-uart
-and SC9836 SoC based on the Sharkl64 Platform which is a 64-bit SoC
-Platform of Spreadtrum.
+On Tue, Jan 13, 2015 at 6:05 PM, Ray Jui <rjui@broadcom.com> wrote:
+> On 1/13/2015 12:53 AM, Linus Walleij wrote:
+>> On Tue, Dec 16, 2014 at 3:18 AM, Ray Jui <rjui@broadcom.com> wrote:
+>>
+>>> +/* drive strength control for ASIU GPIO */
+>>> +#define CYGNUS_GPIO_ASIU_DRV0_CTRL_OFFSET 0x58
+>>> +
+>>> +/* drive strength control for CCM GPIO */
+>>> +#define CYGNUS_GPIO_CCM_DRV0_CTRL_OFFSET  0x00
+>>
+>> This stuff (drive strength) is pin control, pin config.
+>> It does not belong in a pure GPIO driver. If you're
+>> making a combined pin control + GPIO driver, it
+>> shall be put in drivers/pinctrl/*
+>>
+> Okay, I have some questions here. Are you suggesting me to register this
+> driver to both the pinctrl subsystem and gpiolib and move it to under
+> drivers/pinctrl/*?
 
-Signed-off-by: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
-Signed-off-by: Orson Zhai <orson.zhai@spreadtrum.com>
----
- Documentation/devicetree/bindings/arm/sprd.txt     |   11 +++++++++++
- .../devicetree/bindings/serial/sprd-uart.txt       |    7 +++++++
- .../devicetree/bindings/vendor-prefixes.txt        |    1 +
- 3 files changed, 19 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/sprd.txt
- create mode 100644 Documentation/devicetree/bindings/serial/sprd-uart.txt
+Either you can have a combined driver in drivers/pinctrl/*
+which has one probe() function calling pinctrl_register(),
+gpiochip_add(), gpiochip_add_pin_range(), having the gpio
+parts call into the pin control backend with
+pinctrl_request_gpio(), pinctrl_free_gpio(),
+pinctrl_gpio_direction_input(), pinctrl_gpio_direction_output().
 
-diff --git a/Documentation/devicetree/bindings/arm/sprd.txt b/Documentation/devicetree/bindings/arm/sprd.txt
-new file mode 100644
-index 0000000..31a629d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/sprd.txt
-@@ -0,0 +1,11 @@
-+Spreadtrum SoC Platforms Device Tree Bindings
-+----------------------------------------------------
-+
-+Sharkl64 is a Spreadtrum's SoC Platform which is based
-+on ARM 64-bit processor.
-+
-+SC9836 openphone board with SC9836 SoC based on the
-+Sharkl64 Platform shall have the following properties.
-+
-+Required root node properties:
-+        - compatible = "sprd,sc9836-openphone", "sprd,sc9836";
-diff --git a/Documentation/devicetree/bindings/serial/sprd-uart.txt b/Documentation/devicetree/bindings/serial/sprd-uart.txt
-new file mode 100644
-index 0000000..2aff0f2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/serial/sprd-uart.txt
-@@ -0,0 +1,7 @@
-+* Spreadtrum serial UART
-+
-+Required properties:
-+- compatible: must be "sprd,sc9836-uart"
-+- reg: offset and length of the register set for the device
-+- interrupts: exactly one interrupt specifier
-+- clocks: phandles to input clocks.
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index b1df0ad..0a8384f 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -153,6 +153,7 @@ snps	Synopsys, Inc.
- solidrun	SolidRun
- sony	Sony Corporation
- spansion	Spansion Inc.
-+sprd	Spreadtrum Communications Inc.
- st	STMicroelectronics
- ste	ST-Ericsson
- stericsson	ST-Ericsson
--- 
-1.7.9.5
+Or you can split it in one driver in drivers/pinctrl/*
+dealing with just the pin control stuff, and another driver
+in drivers/gpio/* dealing with the GPIO stuff, each with one
+probe() function.
+
+If they are using the same register range, the first approach
+is probably most intuitive. If the pin control and GPIO parts
+are separated in different register ranges, probably the
+second approach is the best.
+
+> Or Are you suggesting me to combine this driver with the other Cygnus
+> pinctrl driver (which only supports pinmux)?
+
+Depends on which hardware block the pin control-like
+registers belongs in. See per above.
+
+> Note in Cygnus, all pinmux logic is done in the pinmux block. And there
+> are 3 GPIO controllers, that handle GPIO, drive strength of the GPIO
+> pins, internal pull up/down of the GPIO pins, which are handled in this
+> driver. So this driver is generic to all 3 GPIO controllers, as you can
+> see from the device tree bindings, there are 3 nodes.
+>
+> Therefore, I think it makes sense to have one pinmux driver that handles
+> the pinmux block, and one generic pinctrl + gpio driver that handles
+> functions supported by all 3 GPIO controllers. Does this make sense to you?
+
+Yep.
+
+Some hardware designs put the software-controlled biasing
+resistors in the GPIO block electronically connected to the actual
+pins, so that e.g. the biasing will be available if some MMC or
+whatever is using the same pins in another muxing. In such
+situations it's quite evident that they need to be a combined
+GPIO and pin controller.
+
+I have some regrets that bolting a second pin controller to the
+GPIO chip make things a bit complex but it's a price we have
+to pay for getting some kind of generic interface.
+
+Yours,
+Linus Walleij
