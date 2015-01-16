@@ -1,70 +1,50 @@
-From: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Subject: Re: [PATCH v3 2/3] dt-bindings: Add pinctrl bindings for
- mt65xx/mt81xx.
-Date: Fri, 16 Jan 2015 18:23:25 +0800
-Message-ID: <1421403805.11671.58.camel@mtksdaap41>
-References: <1415709535-31515-1-git-send-email-hongzhou.yang@mediatek.com>
-	 <1415709535-31515-3-git-send-email-hongzhou.yang@mediatek.com>
-	 <CACRpkdYSe_BH_qiHma2BA+c2otEi3wd0TBXy83t8vwrNL+3U2g@mail.gmail.com>
-	 <20141127101830.GP30369@pengutronix.de>
-	 <CACRpkdbMdJT6y-NL36RgQe0-CAFAVGqKiwY9+yFcwA7JDLmA+Q@mail.gmail.com>
-	 <20141202135527.GM30369@pengutronix.de>
-	 <CACRpkdZeRd+j7d_iRphruHRg8p3XjqWK8_HQzLH2PTZ_pqOrYA@mail.gmail.com>
-	 <20150112122200.GC18908@pengutronix.de>
-	 <CACRpkdYXrdiRWMV8YpxrSLe2rLEV-ZnX7=36w21zGquh==6WgA@mail.gmail.com>
-	 <20150113161614.GF23940@pengutronix.de>
-	 <CACRpkdYRrs2=gNM1XGSh1cSo5Pvx6iNLt4HjL6gdTqGPWYSRDw@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v5 5/5] tty/serial: Add Spreadtrum sc9836-uart driver support
+Date: Fri, 16 Jan 2015 11:26:08 +0100
+Message-ID: <2026679.CiQSN0uJXp@wuerfel>
+References: <1421402411-3479-6-git-send-email-chunyan.zhang@spreadtrum.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYRrs2=gNM1XGSh1cSo5Pvx6iNLt4HjL6gdTqGPWYSRDw@mail.gmail.com>
+In-Reply-To: <1421402411-3479-6-git-send-email-chunyan.zhang@spreadtrum.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Hongzhou Yang <hongzhou.yang@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Sascha Hauer <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>, Catalin Marinas <catalin.marinas@arm.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, huang eddie <eddie.huang@mediatek.com>, dandan.he@mediatek.co
+To: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
+Cc: gregkh@linuxfoundation.org, mark.rutland@arm.com, gnomes@lxorguk.ukuu.org.uk, broonie@kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, will.deacon@arm.com, catalin.marinas@arm.com, jslaby@suse.cz, jason@lakedaemon.net, heiko@sntech.de, florian.vaussard@epfl.ch, andrew@lunn.ch, rrichter@cavium.com, hytszk@gmail.com, grant.likely@linaro.org, antonynpavlov@gmail.com, Joel.Schopp@amd.com, Suravee.Suthikulpanit@amd.com, shawn.guo@linaro.org, lea.yan@linaro.org, jorge.ramirez-ortiz@linaro.org, lee.jones@linaro.org, orsonzhai@gmail.com, geng.ren@spreadtrum.com, zhizhou.zhang@spreadtrum.com, lanqing.liu@spreadtrum.com, zhang.lyra@gmail.com, wei.qiao@spreadtrum.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, linux-api@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2015-01-16 at 10:53 +0100, Linus Walleij wrote:
-> On Tue, Jan 13, 2015 at 5:16 PM, Sascha Hauer <s.hauer@pengutronix.de> wrote:
-> > On Tue, Jan 13, 2015 at 11:05:22AM +0100, Linus Walleij wrote:
+On Friday 16 January 2015 18:00:11 Chunyan Zhang wrote:
+> Add a full sc9836-uart driver for SC9836 SoC which is based on the
+> spreadtrum sharkl64 platform.
+> This driver also support earlycon.
+> This patch also replaced the spaces between the macros and their
+> values with the tabs in serial_core.h
 > 
-> >> > You often talk about ambiguities. Could you give an example what
-> >> > ambiguities you mean?
-> >>
-> >> What happened was this pins = ; arguments were sometimes
-> >> strings and sometimes integers, that becomes strange to handle
-> >> in code, ambiguous.
-> >
-> > I see. I like naming it 'pinmux' because that's what it is: pins and
-> > mux settings. A plain 'pinno' suggests that it contains only pin mubers,
-> > without mux setting. How about 'pin-no-mux'? We also could add an
-> > explicit "pins-are-numbered" property instead of distinguishing this
-> > by property names.
+> Signed-off-by: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
+> Signed-off-by: Orson Zhai <orson.zhai@spreadtrum.com>
+> Originally-by: Lanqing Liu <lanqing.liu@spreadtrum.com>
 > 
-> I kind of like this "pins-are-numbered" thing.
-> 
-> The other property for the pin, whether pinmux or pin-no-mux or
-> pin-num-and-mux etc is no such big deal, as long as it's
-> consistent and documented with the generic bindings.
 
-Hi Linus,
+I see nothing wrong with the patch contents, but a few things regarding
+the submission process:
 
-To make sure I understand it correct, you think something like this is
-OK?
+- The 'Signed-off-by' lines are in the wrong order. As the person
+  sending it, your S-o-b should be the last one in the list
 
-	pinctrl@01c20800 {
-		compatible = "mediatek,mt8135-pinctrl";
-[...]
-		pins-are-numbered;
+- You have too many people on 'To'. Please send the patch only to
+  the person you expect to apply it, and put the other people that
+  may be interested on Cc. A lot of the people who got this mail
+  are probably not interested and you can drop them completely.
 
-		i2c0_pins_a: i2c0@0 {
-			pins1 {
-				pins = <MT8135_PIN_100_SDA0__FUNC_SDA0>,
-					<MT8135_PIN_101_SCL0__FUNC_SCL0>;
-				bias-disable;
-			};
-		};
-[....]
-	}
+- Now that everything is reviewed, split the series according to
+  subsystem maintainers and send it separately: patches 1,2 and 5
+  should go to GregKH as one series, the rest should go to
+  'arm@kernel.org'.
 
-Joe.C
+- For some reason I did not get patch 4. Can you check if that
+  made it to the mailing list?
+
+Feel free to add my 'Acked-by: Arnd Bergmann <arnd@arndb.de>' to
+the patches you send to Greg.
+
+	Arnd
