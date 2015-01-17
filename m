@@ -1,79 +1,68 @@
-From: Hans de Goede <hdegoede@redhat.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Subject: Re: [PATCH v4 4/4] ARM: mvebu: Armada 385 GP: Add regulators to the
  SATA port
-Date: Sat, 17 Jan 2015 09:48:57 +0100
-Message-ID: <54BA21F9.5050408@redhat.com>
-References: <1421330978-9694-1-git-send-email-gregory.clement@free-electrons.com> <1421330978-9694-5-git-send-email-gregory.clement@free-electrons.com> <54B8C933.7020502@redhat.com> <54B8D97B.3090908@free-electrons.com> <54B8E38A.6020709@redhat.com> <20150116123705.GM3043@sirena.org.uk> <54B9629C.9090800@redhat.com> <20150116202516.GL3856@sirena.org.uk>
+Date: Sat, 17 Jan 2015 13:14:05 +0000
+Message-ID: <20150117131404.GA6414@sirena.org.uk>
+References: <1421330978-9694-1-git-send-email-gregory.clement@free-electrons.com>
+ <1421330978-9694-5-git-send-email-gregory.clement@free-electrons.com>
+ <54B8C933.7020502@redhat.com>
+ <54B8D97B.3090908@free-electrons.com>
+ <54B8E38A.6020709@redhat.com>
+ <20150116123705.GM3043@sirena.org.uk>
+ <54B9629C.9090800@redhat.com>
+ <20150116202516.GL3856@sirena.org.uk>
+ <54BA21F9.5050408@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <20150116202516.GL3856@sirena.org.uk>
-Sender: linux-ide-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Gregory CLEMENT <gregory.clement@free-electrons.com>, Tejun Heo <tj@kernel.org>, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, =?windows-1252?Q?Antoine_T=E9nart?= <antoine.tenart@free-electrons.com>, Liam Girdwood <lgirdwood@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="5mCyUwZo2JvN/JJP"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <54BA21F9.5050408-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On 16-01-15 21:25, Mark Brown wrote:
-> On Fri, Jan 16, 2015 at 08:12:28PM +0100, Hans de Goede wrote:
->> On 16-01-15 13:37, Mark Brown wrote:
->
->>>> It is probably a good idea to use regulator-boot-on and
->>>> then test things this way, and if that works use
->>>> regulator-boot-on.
->
->>> No, it's unlikely that boot-on makes sense here - it's there for cases
->>> where we can't read back the hardware state at power on.
->
->> Which we cannot here since we've a gpio driven regulator, with the pin
->> in output mode, so we cannot read it back. Or at least the current kernel
->> implementation relies on regulator-boot-on rather then reading the
->> state back from the hardware.
->
-> Right, this always seems like a problem with the GPIO API - not being
-> able to read the state back is a total pain for boot handover, we should
-> really have a way of reading back the current output state.  This is one
-> of the few cases where boot-on can be useful, though ideally it'd be set
-> by the bootloader rather than as a static thing since otherwise you have
-> the opposite problem in the case where the disk isn't being used at the
-> current time.
->
->> While we're discussing this I would also like to advocate to change the
->> behavior for regulator-boot-on to be the same as always-on when it comes
->> to regulator_init_complete(), iow regulator-boot-on regulators should
->> not be touched by regulator_init_complete(). It makes no sense to have
->> different behavior for build in versus module drivers here.
->
-> Like I say boot-on is *only* intended to support bootstrapping, if you
-> want the regulator to be always on then mark it as always on.  If you
-> want some way of marking the end of userspace init so we can defer
-> cleanup of unused resources then go do that - it's a change I've
-> advocated before, it'd help with modular drivers in general.
+--5mCyUwZo2JvN/JJP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-The problem is there is no clear end of userspace init in modern event
-driven systems, I think it would be much clearer to simply be consistent
-and leave these regulators on, rather then turn them of $random time,
-because as I've advocated before (see the simplefb thread) there is
-no simple magic moment when it is right to turn things off, so doing
-it when userspace starts is more or less as good as any moment, and if
-it turns out that that is not a good moment, then maybe we need to
-re-think the turning off in general.
+On Sat, Jan 17, 2015 at 09:48:57AM +0100, Hans de Goede wrote:
 
-With that said, since this is a re-occuring theme I've send a mail to
-the systemd-devel list with you (Mark) in the CC, as well as the ide,
-arm and devicetree lists. In this mail I'm asking the udev developers
-if they would be willing to implement some sort of call into the kernel
-to tell the kernel that udev is done with loading modules. This will
-only cover devices which are already enumerated at late_init_call time,
-if we've some slow scanning bus still enumerating stuff in a thread
-(e.g. usb, scsi) then all bets are of, which is why I'm not enthusiastic
-about this solution TBH.
+> and leave these regulators on, rather then turn them of $random time,
+> because as I've advocated before (see the simplefb thread) there is
+> no simple magic moment when it is right to turn things off, so doing
+> it when userspace starts is more or less as good as any moment, and if
+> it turns out that that is not a good moment, then maybe we need to
+> re-think the turning off in general.
 
-A simpler solution for the use-case at hand may be to simply disallow
-building of the ahci_platform driver as a module.
+Following your argument to the logical conclusion means we can never
+turn any regualtor off - we always have the risk that there's another
+shared user which is going to get a power bounce if we power down.  More
+directly we'll also get people complaining that we're burning power
+pointlessly on their systems for devices they've not even got drivers
+enabled for.  This powering down is something there's been user demand
+for.
 
-Regards,
+--5mCyUwZo2JvN/JJP
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Hans
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJUumAcAAoJECTWi3JdVIfQlH0IAIaIzrngaQ6SB0xsjq9eZMgi
+sqS7M9Oi9AveSVZraYdpQ4AgmkgddW+Mqkn3eiojRw75prISheVi09T7veN5C0+t
+nq4MhUM8spaInxnT7Ns4GQP7wHwzhWohR6++b24V8olea2Mp+iUQ0C3e7cgxiJLQ
+vCQvE8CjYH6o6I57XLx2NsvheHh3CsOK6wdfJnb9f8e7kgK6E1vi9ICOvWsTBaMs
+BMzJojO0OgM3GqU9A6XIwbW8OvLUDMStN0lCRgRjXWgD19dZIuEqR4zfCzRXiIz+
+CjLOYUZ5deaxrLjS5c4epyO37eBgfSwZfpAMLZpE3h9ANKG0ealiW6aIN71MtSY=
+=3ctk
+-----END PGP SIGNATURE-----
+
+--5mCyUwZo2JvN/JJP--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
