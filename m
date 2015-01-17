@@ -1,112 +1,65 @@
-From: Ray Jui <rjui@broadcom.com>
-Subject: Re: [PATCH v6 2/3] gpio: Cygnus: add GPIO driver
-Date: Fri, 16 Jan 2015 16:11:14 -0800
-Message-ID: <54B9A8A2.6090209@broadcom.com>
-References: <rjui@broadcom.com>	<1418696307-19392-1-git-send-email-rjui@broadcom.com>	<1418696307-19392-3-git-send-email-rjui@broadcom.com>	<CACRpkdYGksEseGaO49=1rUi5WBdOxwAd-F1gpgZn+BFatRCdDg@mail.gmail.com>	<54B55068.8050500@broadcom.com> <CACRpkdZef8S-EAbShjJ1eg+-3wQKn+yx4u1k_Mf8F7uFkJYdFw@mail.gmail.com>
+From: Ohad Ben-Cohen <ohad@wizery.com>
+Subject: Re: [PATCH v7 1/4] Documentation: dt: add common bindings for hwspinlock
+Date: Sat, 17 Jan 2015 02:46:46 +0200
+Message-ID: <CAK=WgbYBqPoUm9byx0du_g5ZmHdYaUVLpSPZYHoCVzNoatNKpw@mail.gmail.com>
+References: <1421269101-51105-1-git-send-email-s-anna@ti.com>
+ <1421269101-51105-2-git-send-email-s-anna@ti.com> <20150115135201.GG16217@leverpostej>
+ <20150115135556.GH16217@leverpostej> <CAL_JsqL2LZAooMk-V8+xeF2g6acZE21M+-OBRw8aEVa-5wVHuQ@mail.gmail.com>
+ <CAK=WgbYQ=BbinqJ5fsw2Y+FKdy=nasLsw9mX8pw6S_o3owy9-g@mail.gmail.com> <20150116101746.GA21809@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZef8S-EAbShjJ1eg+-3wQKn+yx4u1k_Mf8F7uFkJYdFw@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Joe Perches <joe@perches.com>, Arnd Bergmann <arnd@arndb.de>, Scott Branden <sbranden@broadcom.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150116101746.GA21809@leverpostej>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Rob Herring <robherring2@gmail.com>, Suman Anna <s-anna@ti.com>, Kumar Gala <galak@codeaurora.org>, Bjorn Andersson <bjorn@kryo.se>, Josh Cartwright <joshc@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Mark,
 
-
-On 1/16/2015 2:14 AM, Linus Walleij wrote:
-> On Tue, Jan 13, 2015 at 6:05 PM, Ray Jui <rjui@broadcom.com> wrote:
->> On 1/13/2015 12:53 AM, Linus Walleij wrote:
->>> On Tue, Dec 16, 2014 at 3:18 AM, Ray Jui <rjui@broadcom.com> wrote:
->>>
->>>> +/* drive strength control for ASIU GPIO */
->>>> +#define CYGNUS_GPIO_ASIU_DRV0_CTRL_OFFSET 0x58
->>>> +
->>>> +/* drive strength control for CCM GPIO */
->>>> +#define CYGNUS_GPIO_CCM_DRV0_CTRL_OFFSET  0x00
->>>
->>> This stuff (drive strength) is pin control, pin config.
->>> It does not belong in a pure GPIO driver. If you're
->>> making a combined pin control + GPIO driver, it
->>> shall be put in drivers/pinctrl/*
->>>
->> Okay, I have some questions here. Are you suggesting me to register this
->> driver to both the pinctrl subsystem and gpiolib and move it to under
->> drivers/pinctrl/*?
-> 
-> Either you can have a combined driver in drivers/pinctrl/*
-> which has one probe() function calling pinctrl_register(),
-> gpiochip_add(), gpiochip_add_pin_range(), having the gpio
-> parts call into the pin control backend with
-> pinctrl_request_gpio(), pinctrl_free_gpio(),
-> pinctrl_gpio_direction_input(), pinctrl_gpio_direction_output().
-> 
-> Or you can split it in one driver in drivers/pinctrl/*
-> dealing with just the pin control stuff, and another driver
-> in drivers/gpio/* dealing with the GPIO stuff, each with one
-> probe() function.
-> 
-> If they are using the same register range, the first approach
-> is probably most intuitive. If the pin control and GPIO parts
-> are separated in different register ranges, probably the
-> second approach is the best.
-> 
->> Or Are you suggesting me to combine this driver with the other Cygnus
->> pinctrl driver (which only supports pinmux)?
-> 
-> Depends on which hardware block the pin control-like
-> registers belongs in. See per above.
-> 
->> Note in Cygnus, all pinmux logic is done in the pinmux block. And there
->> are 3 GPIO controllers, that handle GPIO, drive strength of the GPIO
->> pins, internal pull up/down of the GPIO pins, which are handled in this
->> driver. So this driver is generic to all 3 GPIO controllers, as you can
->> see from the device tree bindings, there are 3 nodes.
+On Fri, Jan 16, 2015 at 12:17 PM, Mark Rutland <mark.rutland@arm.com> wrote:
+>> The hwlock is a basic hardware primitive that allow synchronization
+>> between different processors in the system, which may be running Linux
+>> as well as other operating systems, and may have no other means of
+>> communication.
 >>
->> Therefore, I think it makes sense to have one pinmux driver that handles
->> the pinmux block, and one generic pinctrl + gpio driver that handles
->> functions supported by all 3 GPIO controllers. Does this make sense to you?
-> 
-> Yep.
-> 
-> Some hardware designs put the software-controlled biasing
-> resistors in the GPIO block electronically connected to the actual
-> pins, so that e.g. the biasing will be available if some MMC or
-> whatever is using the same pins in another muxing. In such
-> situations it's quite evident that they need to be a combined
-> GPIO and pin controller.
-> 
-> I have some regrets that bolting a second pin controller to the
-> GPIO chip make things a bit complex but it's a price we have
-> to pay for getting some kind of generic interface.
-> 
-> Yours,
-> Linus Walleij
-> 
-Okay. In summary, I think both of us think the following approach makes
-sense in my situation:
-- leave pinmux in pinctrl-bcm-cygnus.c
-- leave pinctrl + gpio in pinctrl-bcm-cygnus-gpio.c under drivers/pinctrl/*
+>> The hwlock id numbers are predefined, global and static across the
+>> entire system: Linux may boot well after other operating systems are
+>> already running and using these hwlocks to communicate, and therefore,
+>> in order to use these hardware devices, it must not enumerate them
+>> differently than the rest of the system.
+>
+> That's not true.
+>
+> In order to communicate it must agree with the other users as to the
+> meaning of each instance, and the protocol for use. That doesn't
+> necessarily mean that Linux needs to know the numerical ID from a
+> datasheet, and regardless that ID is separate from the logical ID Linux
+> uses internally.
 
-But by thinking about this more, I thought this would create duplicated
-pinctrl descriptors in our system, one from the pinmux driver, and the
-other from this pinctrl+gpio driver. That is probably undesirable?
+Let me describe hwspinlocks a bit more so we all get to know it better
+and can then agree on a proper solution.
 
-By reviewing various drivers in the pinctrl directory, I found what
-pinctrl-u300.c and pinctrl-coh901.c does seems to serve as a good model
-for me to follow:
-- pinctrl-u300.c is the pinmux driver
-- pinctrl-coh901.c is the gpio+pinctrl driver
+- What makes handling of hwspinlock ID numbers convenient is the fact
+that it's not based on random datasheet numbers. In fact, hwspinlocks
+is just special memory: usually datasheets just define the base
+address and the size of the hwspinlock area. So any numerical ID we
+use to call the locks themselves are already logical and sane, similar
+to the way we handle memory (i.e. if we have 32 locks we'll always use
+0..31). So hwlocks ids are very much like memory addressing, and not
+irq numbers.
 
-The GPIO pinctrl logic is in the coh901 block, so pinctrl-coh901.c
-exposed two public functions u300_gpio_config_get, u300_gpio_config_set
-that pinctrl-u300.c can use. The u300 populates all pinmux/pinctrl
-related functions into the subsystem. This way there's only one pinctrl
-descriptor, populated through pinctrl-u300.c.
+- Sometimes Linux will have to dynamically allocate a hwlock, and send
+the ID of the allocated lock to a remote processor (which may not be
+running Linux).
+- Sometimes a remote processor, which may not be running Linux, will
+have to dynamically allocate a hwlock, and send the ID of the
+allocated lock to us (another processor running Linux)
 
-Does that model make more sense to you?
+We cannot tell in advance what kind of IPC is going to be used for
+sending and receiving this hwlock ID. Some are handled by Linux
+(kernel) and some by the user space. So we must be able to expose an
+ID the system will understand as well as receive one.
 
 Thanks,
-
-Ray
+Ohad.
