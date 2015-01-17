@@ -1,83 +1,80 @@
-From: Greg KH <greg@kroah.com>
-Subject: Re: Making udev emit a signal when it is done
- loading modules
-Date: Sat, 17 Jan 2015 05:56:30 -0800
-Message-ID: <20150117135630.GA25585@kroah.com>
-References: <54BA20D0.7060402@redhat.com>
+From: Peter =?iso-8859-15?q?H=FCwe?= <PeterHuewe-Mmb7MZpHnFY@public.gmane.org>
+Subject: Re: [PATCH v2 00/10]  st33zp24 new architecture proposal and st33zp24 spi driver
+Date: Sat, 17 Jan 2015 15:08:36 +0100
+Message-ID: <201501171508.38660.PeterHuewe@gmx.de>
+References: <1421187198-8503-1-git-send-email-christophe-h.ricard@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <systemd-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <54BA20D0.7060402@redhat.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/systemd-devel>,
- <mailto:systemd-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/systemd-devel>
-List-Post: <mailto:systemd-devel@lists.freedesktop.org>
-List-Help: <mailto:systemd-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/systemd-devel>,
- <mailto:systemd-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: systemd-devel-bounces@lists.freedesktop.org
-Sender: "systemd-devel" <systemd-devel-bounces@lists.freedesktop.org>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, Mark Brown <broonie@kernel.org>, systemd-devel@lists.freedesktop.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>
+Content-Type: Text/Plain;
+  charset="iso-8859-15"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1421187198-8503-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org, tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, jean-luc.blanc-qxv4g6HH51o@public.gmane.org, benoit.houyere-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org, jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gU2F0LCBKYW4gMTcsIDIwMTUgYXQgMDk6NDQ6MDBBTSArMDEwMCwgSGFucyBkZSBHb2VkZSB3
-cm90ZToKPiBEZWFyIHVkZXYgZGV2ZWxvcGVycywKPiAKPiBXZSAobWUgYW5kIHNvbWUga2VybmVs
-IGRldnMgbW9zdGx5KSB3b3VsZCBsaWtlIHRvIGFkZCBzdXBwb3J0IHRvCj4gdGhlIGtlcm5lbCBm
-b3IgdXNlcnNwYWNlIHRlbGxpbmcgdGhlIGtlcm5lbCB0aGF0IGl0IGlzIGRvbmUgd2l0aAo+IHRo
-ZSAqaW5pdGlhbCogbG9hZGluZyBvZiBtb2R1bGVzLCB3aXRoIHRoZSBwdXJwb3NlIG9mIGNsZWFu
-aW5nIHVwCj4gKGRpc2FibGluZykgdW51c2VkIGhhcndhcmUgcmVzb3VyY2VzIGxpa2UgZS5nLiBy
-ZWd1bGF0b3JzIGFuZAo+IGNsb2Nrcy4KCkJ1dCB5b3UgZG9uJ3QgImtub3ciIHdoZW4gdGhhdCBo
-YXBwZW5zLiAgRXNwZWNpYWxseSB3aXRoIGRpc2NvdmVyYWJsZQpidXNzZXMgKFBDSSwgVVNCLCBl
-dGMuKSwgeW91IGtub3cgdGhpcyA6KQoKPiBDdXJyZW50bHkgdGhlIGtlcm5lbCBkb2VzIHRoaXMg
-Y2xlYW51cCBqdXN0IGJlZm9yZSBpdCBzdGFydHMgaW5pdAo+ICh3aGljaCBtYXkgdmVyeSB3ZWxs
-IGJlIGluaXQgZnJvbSBhIHJhbWRpc2spLiBJbiBzb21lIGNhc2VzIHRoaXMKPiBpcyB0b28gZWFy
-bHkgcmVhbGx5LCBiZWNhdXNlIGxhdGVyIG9uIGEgbW9kdWxlIG1heSBnZXQgbG9hZGVkCj4gd2hp
-Y2ggbmVlZHMgdGhpcyByZXNvdXJjZXMsIHRoZXNlIHJlc291cmNlcyB3aWxsIHRoZW4gZ2V0IHR1
-cm5lZAo+IG9uIGFnYWluIGJ5IHRoZSBsb2FkZWQgZHJpdmVyLCBhbmQgbW9zdCBvZiB0aGUgdGlt
-ZSB0aGlzIGlzIG5vdAo+IGFuIGlzc3VlLCBidXQgc29tZXRpbWVzIGl0IGlzLgo+IAo+IEkgcmVh
-bGl6ZSB2ZXJ5IHdlbGwgdGhhdCB0aGVyZSBpcyBubyBtYWdpYyBtb21lbnQgd2hlcmUgdWRldiBp
-cwo+IHJlYWxseSBldmVyIGRvbmUgbG9hZGluZyBtb2R1bGVzLCBidXQgdGhlIGNhc2Ugd2hpY2gg
-d2Ugd2FudCB0bwo+IHN1cHBvcnQgb25seSBpbnZvbHZlcyBkZXZpY2VzIHdoaWNoIGFyZSAqYWxy
-ZWFkeSBlbnVtZXJhdGVkKiwgYnV0Cj4gbWF5IG5vdCB5ZXQgaGF2ZSBhIGRyaXZlciBsb2FkZWQs
-IHdoZW4gdWRldiBzdGFydHMuIFdlIHdvdWxkIGxpa2UKPiB1ZGV2IHRvIGVtaXQgYSBzaWduYWwg
-KEFCSSB0byBiZSBkaXNjdXNzZWQpIHdoZW4gaXQgaXMgZG9uZQo+IHRyeWluZyB0byBsb2FkIG1v
-ZHVsZXMgZm9yIGV2ZXJ5dGhpbmcgd2hpY2ggd2FzIGFscmVhZHkgZW51bWVyYXRlZAo+IHdoZW4g
-aXQgc3RhcnRzLCBpb3cgd2hlbiB0aGVyZSBhcmUgbm8gbmV3IGRldmljZSBldmVudHMgcGVuZGlu
-Zwo+IGFueW1vcmUgd2hlbiB1ZGV2IGRvZXMgaXRzIGluaXRpYWwgaG90cGx1ZyByZXBsYXkuCgpU
-aGUga2VybmVsIGRvZXNuJ3QgZXZlbiAia25vdyIgd2hlbiB0aGlzIHR5cGUgb2YgdGhpbmcgaXMs
-IGhvdyBjYW4gdWRldgprbm93IHRoaXM/Cgo+IFNvIHRoZSBxdWVzdGlvbiB0byB5b3UgaXMgd291
-bGQgeW91IGJlIHdpbGxpbmcgdG8gaW5jbHVkZSBzdWNoCj4gZnVuY3Rpb25hbGl0eSBpbiB1ZGV2
-ID8gIE5vdGUgdGhpcyBzaWduYWwgd291bGQgbmVlZCB0byBiZSBlbWl0dGVkCj4gd2hlbiB1ZGV2
-IGZyb20gdGhlIHJlYWwgcm9vdGZzIGlzIGRvbmUgd2l0aCB0aGUgaW5pdGlhbCBtb2R1bGUKPiBs
-b2FkaW5nLCBhcyB0aGUgcmVhbCByb290ZnMgbWF5IHZlcnkgd2VsbCBoYXZlIG1vcmUgbW9kdWxl
-cwo+IGF2YWlsYWJsZSB0aGVuIHRoZSBpbml0cmQuCj4gCj4gIyMjCj4gCj4gV2l0aCB0aGUgZ2Vu
-ZXJpYyBzdG9yeSBhYm92ZSB0b2xkIGxldCBtZSBhbHNvIGdpdmUgdGhlIGNvbmNyZXRlCj4gZXhh
-bXBsZSAvIHByb2JsZW0gd2hpY2ggaGFzIGxldCB0byBtZSBhc2tpbmcgdGhpcyAobm90ZSB0aGlz
-IGhhcwo+IGJlZW4gYnJvdWdodCB1cCBiZWZvcmUgb24gdmFyaW91cyBrZXJuZWwgbGlzdHMsIGl0
-IGlzIGEKPiByZS1vY2N1cmluZyB0aGVtZSwgdGhpcyBpcyBqdXN0IGFuIGV4YW1wbGUgcmVhbGx5
-KSA6Cj4gCj4gVGhlIHByb2JsZW0gYXQgaGFuZCBpcyBhIHNhdGEgY29ubmVjdG9yIHdoaWNoIGFs
-c28gaGFzIGEgc2F0YS1wb3dlcgo+IGNvbm5lY3RvciBvbiBhbiBlbWJlZGRlZCAoaXNoKSBib2Fy
-ZCB3aGVyZSB0aGUgc2F0YS1wb3dlciBpcwo+IGNvbnRyb2xsZWQgdGhyb3VnaCBhIGdwaW8uIFRo
-ZSBzYXRhLXBvd2VyIGNvbm5lY3RvciBpcyBtb2RlbGVkCj4gaW4gZGV2aWNldHJlZSBhcyBhIHBv
-d2VyLXN1cHBseSBhbmQgdGhpcyBzdXBwbHkgZ2V0cyBjb250cm9sbGVkCj4gYnkgdGhlIGFoY2lf
-cGxhdGZvcm0gZHJpdmVyLgo+IAo+IFRoZSBkaXNrIHBvd2VyIG1heSB2ZXJ5IHdlbGwgaGF2ZSBh
-bHJlYWR5IGJlZW4gdHVybmVkIG9uIGJ5IHRoZQo+IGJvb3Rsb2FkZXIsIHNvIHdlIGFkZCBhIHJl
-Z3VsYXRvci1ib290LW9uIHByb3BlcnR5IHRvIHRoZSByZWd1bGF0b3IKPiBub2RlIGluIGRldmlj
-ZXRyZWUgdG8gbWFrZSBzdXJlIHRoYXQgaXQgaXMgbGVmdCB1bnRvdWNoZWQgd2hlbiB0aGUKPiBy
-ZWd1bGF0b3IgZHJpdmVyIGxvYWRzLiBJZiB0aGUgYWhjaV9wbGF0Zm9ybSBkcml2ZXIgaXMgYnVp
-bGQgaW50bwo+IHRoZSBrZXJuZWwsIGl0IHdpbGwgdGhlbiB0YWtlIGNvbnRyb2wgb2YgdGhlIHJl
-Z3VsYXRvciBhbmQKPiBldmVyeXRoaW5nIHdvcmtzIHdlbGwuCj4gCj4gSWYgaG93ZXZlciB0aGUg
-YWhjaV9wbGF0Zm9ybSBkcml2ZXIgaXMgYSBtb2R1bGUsIHRoZW4gYXMgc29vbiBhcwo+IHRoZSBr
-ZXJuZWwgaXMgcmVhZHkgdG8gc3RhcnQgaW5pdCwgdW51c2VkIHJlZ3VsYXRvcnMgYXJlIHR1cm5l
-ZCBvZmYKPiBhbmQgdGhlIGRpc2sgbG9vc2VzIGl0cyBwb3dlciB3aGlsZSBzcGlubmluZyBhbmQg
-ZW5kcyB1cCBkb2luZyBhbgo+IGVtZXJnZW5jeSBoZWFkcyBwYXJrLgoKV2hhdCB0dXJucyBvZmYg
-dGhlIHBvd2VyIGluIHRoaXMgc2l0dWF0aW9uPyAgVGhlIGtlcm5lbD8gIE9yIHVzZXJzcGFjZT8K
-RG9uJ3QgeW91IGhhdmUgY29udHJvbCBvZiB0aGlzPwoKSGF2ZSB5b3UgdHJpZWQgdG8gZXZlbiBj
-cmVhdGUgYSBwYXRjaCB0aGF0IGNvdWxkIGRvIHRoaXMgdHlwZSBvZiB0aGluZwp0byB1ZGV2IHRv
-IHNlZSBpZiBpdCBpcyBldmVuIHBvc3NpYmxlPwoKdGhhbmtzLAoKZ3JlZyBrLWgKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Kc3lzdGVtZC1kZXZlbCBtYWls
-aW5nIGxpc3QKc3lzdGVtZC1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3Rz
-LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL3N5c3RlbWQtZGV2ZWwK
+Am Dienstag, 13. Januar 2015, 23:13:08 schrieb Christophe Ricard:
+> Hi,
+> 
+> The following patchset:
+> - clean the current tpm_i2c_stm_st33 driver
+> - propose a new architecture allowing to share a core st33zp24 data
+> management layer with different phy (i2c & spi). For st33zp24 both phy
+> have a proprietary transport protocol. Both are relying on the TCG TIS
+> protocol. At the end, it simplifies the maintenance. - Add an spi phy
+> allowing to support st33zp24 using with an SPI bus.
+> 
+> The complete solution got tested in polling and interrupt mode successfully
+> with i2c & spi phy. This patchset applies on top of Peter's tree
+> https://github.com/PeterHuewe/linux-tpmdd.git for-james branch on top of:
+> tpm: TPM 2.0 FIFO Interface 2c71d9fb22289a196a4b51d6158cf0d2f9abcfb9
+> 
+> I confirm also Jarkko Sakkinen's changes are working with this product with
+> both phy's.
+> 
+> v2 takes into account feedbacks from Jason Gunthorpe.
+> 
+> Best Regards
+> Christophe
+> 
+> Christophe Ricard (10):
+>   tpm/tpm_i2c_stm_st33: Remove sparse spaces
+Applied
+>   tpm/tpm_i2c_stm_st33: Sanity cleanup
+Applied
+>   tpm/tpm_i2c_stm_st33: Replace remaining r by ret
+Applied
+>   tpm/tpm_i2c_stm_st33: Replace access to io_lpcpd from struct 
+st33zp24_platform_data to tpm_stm_dev
+please fix
+>    
+>   tpm/tpm_i2c_stm_st33: Change tpm_i2c_stm_st33.h to tpm_stm_st33.h
+Applied
+
+>   tpm/tpm_i2c_stm_st33: Add status check when reading data on the FIFO
+Applied, marked as stable
+
+>   tpm/tpm_i2c_stm_st33/dts/st33zp24-i2c: Rename st33zp24 dts
+>     documentation
+Applied
+
+>   tpm/tpm_i2c_stm_st33: Split tpm_i2c_tpm_st33 in 2 layers (core + phy)
+Please fix
+>   tpm/st33zp24/spi: Add st33zp24 spi phy
+N/A
+>   tpm/st33zp24/dts/st33zp24-spi: Add dts documentation for st33zp24 spi
+>     phy
+N/A
+
+Also fixed the Jasob typo :)
+
+The applied stuff will be included in the pull request.
+
+
+Peter
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
