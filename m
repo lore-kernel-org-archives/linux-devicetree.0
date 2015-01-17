@@ -1,44 +1,78 @@
-From: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v4 2/3] ARM: meson: select PINCTRL_MESON and ARCH_REQUIRE_GPIOLIB
-Date: Sat, 17 Jan 2015 19:15:15 +0100
-Message-ID: <1421518516-26976-3-git-send-email-b.galvani@gmail.com>
-References: <1421518516-26976-1-git-send-email-b.galvani@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1421518516-26976-1-git-send-email-b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jerry Cao <jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Victor Wan <victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v4 2/3] i2c: iproc: Add Broadcom iProc I2C Driver
+Date: Sat, 17 Jan 2015 11:58:33 -0800
+Message-ID: <54BABEE9.8070801@broadcom.com>
+References: <rjui@broadcom.com> <1421274213-3544-1-git-send-email-rjui@broadcom.com> <1421274213-3544-3-git-send-email-rjui@broadcom.com> <20150115084119.GN22880@pengutronix.de> <54B98C18.4080807@broadcom.com> <20150117160113.GA22880@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150117160113.GA22880-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?windows-1252?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Make sure that the Meson pinctrl driver is built whenever Meson
-support is enabled.
 
-Signed-off-by: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- arch/arm/mach-meson/Kconfig | 3 +++
- 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm/mach-meson/Kconfig b/arch/arm/mach-meson/Kconfig
-index 18301dc..0743e20 100644
---- a/arch/arm/mach-meson/Kconfig
-+++ b/arch/arm/mach-meson/Kconfig
-@@ -1,8 +1,11 @@
- menuconfig ARCH_MESON
- 	bool "Amlogic Meson SoCs" if ARCH_MULTI_V7
-+	select ARCH_REQUIRE_GPIOLIB
- 	select GENERIC_IRQ_CHIP
- 	select ARM_GIC
- 	select CACHE_L2X0
-+	select PINCTRL
-+	select PINCTRL_MESON
- 
- if ARCH_MESON
- 
--- 
-2.1.4
+On 1/17/2015 8:01 AM, Uwe Kleine-K=F6nig wrote:
+> Hello,
+>=20
+> On Fri, Jan 16, 2015 at 02:09:28PM -0800, Ray Jui wrote:
+>> On 1/15/2015 12:41 AM, Uwe Kleine-K=F6nig wrote:
+>>> On Wed, Jan 14, 2015 at 02:23:32PM -0800, Ray Jui wrote:
+>>>> +	 */
+>>>> +	val =3D 1 << M_CMD_START_BUSY_SHIFT;
+>>>> +	if (msg->flags & I2C_M_RD) {
+>>>> +		val |=3D (M_CMD_PROTOCOL_BLK_RD << M_CMD_PROTOCOL_SHIFT) |
+>>>> +		       (msg->len << M_CMD_RD_CNT_SHIFT);
+>>>> +	} else {
+>>>> +		val |=3D (M_CMD_PROTOCOL_BLK_WR << M_CMD_PROTOCOL_SHIFT);
+>>>> +	}
+>>>> +	writel(val, iproc_i2c->base + M_CMD_OFFSET);
+>>>> +
+>>>> +	time_left =3D wait_for_completion_timeout(&iproc_i2c->done, time=
+_left);
+>>>
+>>> When the interrupt fires here after the complete timed out and befo=
+re
+>>> you disable the irq you still throw the result away.
+>> Yes, but then this comes down to the fact that if it has reached the
+>> point that is determined to be a timeout condition in the driver, on=
+e
+>> should really treat it as timeout error. In a normal condition,
+>> time_left should never reach zero.
+> I don't agree here. I'm not sure there is a real technical reason,
+> though. But still if you're in a "success after timeout already over"
+> situation it's IMHO better to interpret it as success, not timeout.
+>=20
+The thing is, the interrupt should never fire after
+wait_for_completion_timeout returns zero here. If it does, then the
+issue is really that the timeout value set in the driver is probably no=
+t
+long enough. I just checked other I2C drivers. I think the way how
+timeout is handled here is consistent with other I2C drivers.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>>> +static int bcm_iproc_i2c_remove(struct platform_device *pdev)
+>>>> +{
+>>>> +	struct bcm_iproc_i2c_dev *iproc_i2c =3D platform_get_drvdata(pde=
+v);
+>>>> +
+>>>> +	i2c_del_adapter(&iproc_i2c->adapter);
+>>> You need to free the irq before i2c_del_adapter.
+>>>
+>> Yes. Thanks. Change back to use devm_request_irq, and use disable_ir=
+q
+>> here before removing the adapter.
+> The more lightweight approach is to set your device's irq-enable
+> register to zero and call synchronize_irq. (For a shared irq calling
+> disable_irq is even wrong here.)
+>=20
+The fact that IRQF_SHARED flag is not set indicates this is a dedicated
+IRQ line, so I thought using disable_irq here makes sense. But if both
+you and Wolfram think masking all I2C interrupts at the block level +
+synchronize_irq is a better approach, I can change to that. Thanks!
+
+> Best regards
+> Uwe
+>=20
