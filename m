@@ -1,52 +1,515 @@
+Return-Path: <sneeker.yeh@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1421776794.2724.1.camel@perches.com>
-References: <1421764441-11928-1-git-send-email-pantelis.antoniou@konsulko.com>
-	<CAL_JsqLVJjq3Ov=J-5LtXiTQPLvR5Y=+tB1i16k_rN3j5dODFQ@mail.gmail.com>
-	<E7065DB3-DD6B-4110-A066-8C7268186831@konsulko.com>
-	<1421776794.2724.1.camel@perches.com>
-Date: Tue, 20 Jan 2015 12:03:59 -0600
-Message-ID: <CAL_Jsq+Vdsr22K2EovmvveWS-G=xeZ5+kSUOjPGMwSctcoAa3w@mail.gmail.com>
-Subject: Re: [PATCH] of: Custom printk format specifier for device node
-From: Rob Herring <robherring2@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-To: Joe Perches <joe@perches.com>
-Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Andrew Morton <akpm@linux-foundation.org>, Grant Likely <grant.likely@secretlab.ca>, Randy Dunlap <rdunlap@infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+In-Reply-To: <20150114170244.GD16533@saruman>
+References: <1418695828-605-4-git-send-email-Sneeker.Yeh@tw.fujitsu.com>
+	<20141222153730.GA12815@saruman>
+	<CAJ1gpc3jVpz=5ME4+wCJDW5NKihvB4xYzwi0co=UuPtG9Ubmjg@mail.gmail.com>
+	<CAJ1gpc3-Wjtm54WOhO6RXjZft9BMngzyYC0-S-XnTacV-qKgMg@mail.gmail.com>
+	<20141229160641.GD29379@saruman>
+	<CAJ1gpc0Uu4vS2iA_o_W5NaE_QBWDYFZJio7yKvhpaR5f=qWcGA@mail.gmail.com>
+	<20150105170921.GH19336@saruman>
+	<CAJ1gpc3RZnqizhiasrwS8uy1H_wQAi_T0mPcS8LAK4FhmBRJ6A@mail.gmail.com>
+	<20150112172032.GD6525@saruman>
+	<CAJ1gpc0ZQva0u=e=SpBdhhRrTXdj_b3hv3oP=jyNue=1sF8EbA@mail.gmail.com>
+	<20150114170244.GD16533@saruman>
+Date: Sat, 17 Jan 2015 18:52:32 +0800
+Message-ID: <CAJ1gpc3ETDvdkLW_8Rm4eCsCvDdjeRfwAjY7EdFZsg8J9wcrRg@mail.gmail.com>
+Subject: Re: [PATCH 3/3] usb: dwc3: add a quirk for device disconnection issue
+ in Synopsis dwc3 core
+From: Sneeker Yeh <sneeker.yeh@gmail.com>
+Content-Type: multipart/alternative; boundary=047d7bdc8192df201d050cd6e2e9
+To: Felipe Balbi <balbi@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Grant Likely <grant.likely@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Arnd Bergmann <arnd@arndb.de>, Paul Bolle <pebolle@tiscali.nl>, Hans de Goede <hdegoede@redhat.com>, Thomas Pugliese <thomas.pugliese@gmail.com>, David Mosberger <davidm@egauge.net>, Peter Griffin <peter.griffin@linaro.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Andrew Bresticker <abrestic@chromium.org>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, Andy Green <andy.green@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Sneeker Yeh <Sneeker.Yeh@tw.fujitsu.com>
 List-ID: <devicetree@vger.kernel.org>
 
+--047d7bdc8192df201d050cd6e2e9
+Content-Type: text/plain; charset=UTF-8
+
+Hi,
+
+2015-01-15 1:02 GMT+08:00 Felipe Balbi <balbi@ti.com>:
+
+> Hi,
+>
+> On Wed, Jan 14, 2015 at 03:08:43PM +0800, Sneeker Yeh wrote:
+> > Hi Felipe:
+> >
+> > thanks for suggestion,
+> >
+> > 2015-01-13 1:20 GMT+08:00 Felipe Balbi <balbi@ti.com>:
+> >
+> > > Hi,
+> > >
+> > > On Sun, Jan 11, 2015 at 11:19:55PM +0800, Sneeker Yeh wrote:
+> > > > > > > enable the quirk only for you. Isn't there a better way of
+> > > enabling the
+> > > > > > > quirk based off of revision detection couple with a look on
+> > > GHWPARAMS*
+> > > > > > > registers ?
+> > > > > > >
+> > > > > > > What's tricking me is this claim that only config-free PHYs
+> would
+> > > be
+> > > > > > > affected, why ?
+> > > > > > >
+> > > > > >
+> > > > > > i'm still struggling now to try to get more information about
+> this.
+> > > > > > some security policy inside Fujitsu make me unable to access full
+> > > > > > information of this errata today.
+> > > > > >
+> > > > > > Someday after i get enough information,
+> > > > > > i shall take your suggestion here that seems better to incur
+> quirk
+> > > > > > dynamically via GHWPARAMS,
+> > > > > > and then send it here again.
+> > > > >
+> > > > > ok, hopefully you'll find a way ;-)
+> > > > >
+> > > > > I got some update information here finally~
+> > > > in case i express unclearly i also put a pdf:
+> > > > https://drive.google.com/file/d/0B18MmcvvKjNNbDF6eEdHSzZCazA/view
+> > > >
+> > > > This issue is defined by a two-way race at disconnect, between
+> > > > 1) class driver interrupt endpoint resheduling attempts if the ISR
+> gave
+> > > an
+> > > > ep error event due to device detach (it would try 3 times)
+> > > > 2) Disconnect interrupt on PORTSC_CSC, which is cleared by hub thread
+> > > > asynchronously
+> > > > 3) The hardware IP was configured in silicon with
+> > > >        - DWC_USB3_SUSPEND_ON_DISCONNECT_EN=1 (this is an IP
+> configuration
+> > >
+> > > yeah, aparently this is another configuration which is not exposed on
+> > > HWPARAMS registers. Paul, can you confirm for us ? I couldn't find it
+> on
+> > > Databook on any of the HWPARAMS registers.
+> > >
+> > > > port whose state cannot be checked from software)
+> > > >        - Synopsys IP version is < 3.00a
+> > >
+> > > heh, so pretty much everybody :-)
+> > >
+> >
+> > yeah, and I'm really lucky to encounter this @@
+> >
+> >
+> > >
+> > > >        The IP will auto-suspend itself on device detach with some
+> > > > phy-specific interval after CSC is cleared by 2)
+> > > >
+> > > > If 2) and 3) complete before 1), the interrupts it expects will not
+> be
+> > > > generated by the autosuspended IP, leading to a deadlock. Even later
+> > > > disconnection procedure would detect that corresponding urb is still
+> > > > in-progress and issue a ep stop command, auto-suspended IP still
+> won't
+> > > > respond to that command.
+> > > >
+> > > > this defect would result in this when device detached:
+> > > > -------------------
+> > > > [   99.603544] usb 4-1: USB disconnect, device number 2
+> > > > [  104.615254] xhci-hcd xhci-hcd.0.auto: xHCI host not responding to
+> stop
+> > > > endpoint command.
+> > > > [  104.623362] xhci-hcd xhci-hcd.0.auto: Assuming host is dying,
+> halting
+> > > > host.
+> > > > [  104.653261] xhci-hcd xhci-hcd.0.auto: Host not halted after 16000
+> > > > microseconds.
+> > > > [  104.660584] xhci-hcd xhci-hcd.0.auto: Non-responsive xHCI host is
+> not
+> > > > halting.
+> > > > [  104.667817] xhci-hcd xhci-hcd.0.auto: Completing active URBs
+> anyway.
+> > > > [  104.674198] xhci-hcd xhci-hcd.0.auto: HC died; cleaning up
+> > > > --------------------
+> > > > As a result, when device detached, we desired to postpone "PORTCSC
+> clear"
+> > > > behind "disable slot". it's found that all executed ep command
+> related to
+> > > > disconnetion, are executed before "disable slot".
+> > >
+> > > Now this is all great information and they should all be part of your
+> > > commit log and probably a big comment should be added to code as well.
+> > >
+> >
+> > I see, thanks.
+> >
+> >
+> > >
+> > > Thanks for going after all these details, now let's figure out a way to
+> > > pass dwc3 revision to xhci, or maybe we pass just a flag for the quirk,
+> > > something like:
+> > >
+> > >         if (dwc->revision < 3.00a && dwc->has_suspend_on_disconnect)
+> > >                 xhci_pdata.delay_portcsc_clear = true;
+> > >
+> > > or something similar to that.
+> > >
+> >
+> > Sure, how about i write these like this, that i learn from the way dwc3
+> > inject XHCI_LPM_SUPPORT to xhci via platform data:
+> >
+> > --- a/drivers/usb/dwc3/host.c
+> > +++ b/drivers/usb/dwc3/host.c
+> > @@ -53,6 +53,10 @@ int dwc3_host_init(struct dwc3 *dwc)
+> >         pdata.usb3_lpm_capable = 1;
+> >  #endif
+> >
+> > +       if ((dwc->revision < DWC3_REVISION_300A) &&
+> > +           dwc->suspend_on_disconnect_quirk)
+> > +               pdata.delay_portcsc_clear = 1;
+> > +
+> >         ret = platform_device_add_data(xhci, &pdata, sizeof(pdata));
+> >         if (ret) {
+> >                 dev_err(dwc->dev, "couldn't add platform data to xHCI
+> > device\n");
+> > --- a/drivers/usb/host/xhci-plat.c
+> > +++ b/drivers/usb/host/xhci-plat.c
+> > @@ -147,6 +147,9 @@ static int xhci_plat_probe(struct platform_device
+> *pdev)
+> >         if ((node && of_property_read_bool(node, "usb3-lpm-capable")) ||
+> >                         (pdata && pdata->usb3_lpm_capable))
+> >                 xhci->quirks |= XHCI_LPM_SUPPORT;
+> > +
+> > +       if (pdata && pdata->delay_portcsc_clear)
+> > +               xhci->quirks |= XHCI_DISCONNECT_QUIRK;
+> >         /*
+> >          * Set the xHCI pointer before xhci_plat_setup() (aka
+> > hcd_driver.reset)
+> >          * is called by usb_add_hcd().
+> >
+> > but I'm a little confused about how we decide
+> > dwc->suspend_on_disconnect_quirk.
+> > just wondering if pdata & dts would be better than Kconfig to decide
+> this?
+> > because using Kconfig means forcing dwc3.ko has this quirk, but platform
+> > might have another dwc3 core doesn't need that quirk.
+> > So I write the following code, is it in a good shape? :
+> >
+> > --- a/drivers/usb/dwc3/core.c
+> > +++ b/drivers/usb/dwc3/core.c
+> > @@ -838,6 +838,9 @@ static int dwc3_probe(struct platform_device *pdev)
+> >                                 "snps,tx_de_emphasis_quirk");
+> >                 of_property_read_u8(node, "snps,tx_de_emphasis",
+> >                                 &tx_de_emphasis);
+> > +
+> > +               dwc->suspend_on_disconnect_quirk =
+> > of_property_read_bool(node,
+> > +                               "snps,has_suspend_on_disconnect");
+> >         } else if (pdata) {
+> >                 dwc->maximum_speed = pdata->maximum_speed;
+> >                 dwc->has_lpm_erratum = pdata->has_lpm_erratum;
+> > @@ -864,6 +867,8 @@ static int dwc3_probe(struct platform_device *pdev)
+> >                 dwc->tx_de_emphasis_quirk = pdata->tx_de_emphasis_quirk;
+> >                 if (pdata->tx_de_emphasis)
+> >                         tx_de_emphasis = pdata->tx_de_emphasis;
+> > +
+> > +               dwc->suspend_on_disconnect_quirk =
+> > pdata->has_suspend_on_disconnect;
+> >         }
+> >
+> >         /* default to superspeed if no maximum_speed passed */
+>
+> this all looks good, but let's split it in tiny little patches:
+>
+> 1) add macros for new revisions
+> 2) add suspend_on_disconnect_quirk (and the DT counterpart, please don't
+>         forget to document the new binding)
+> 3) pass the quirk to XHCI through pdata
+> 4) Use the quirk on XHCI
+>
+> That'll make patches real easy to review. As per the commit log, the
+> more verbose the better, specially when it comes to the quirk. It needs
+> to be 100% clear that we cannot detect this in runtime.
+>
+
+Super thanks,
+I'm separating it and testing it, and would send v2 patch series later
+based on all suggestions here.
+
+Much appreciate,
+Sneeker
 
 
-On Tue, Jan 20, 2015 at 11:59 AM, Joe Perches <joe@perches.com> wrote:
-> On Tue, 2015-01-20 at 16:52 +0200, Pantelis Antoniou wrote:
->> Hi Rob,
->>
->> > On Jan 20, 2015, at 16:47 , Rob Herring <robherring2@gmail.com> wrote:
->> >
->> > On Tue, Jan 20, 2015 at 8:34 AM, Pantelis Antoniou
->> > <pantelis.antoniou@konsulko.com> wrote:
->> >> 90% of the usage of device node's full_name is printing it out
->> >> in a kernel message. Preparing for the eventual delayed allocation
->> >> introduce a custom printk format specifier that is both more
->> >> compact and more pleasant to the eye.
-> []
->> >> diff --git a/Documentation/printk-formats.txt b/Documentation/printk-formats.txt
-> []
->> >> +Device tree nodes:
->> >> +
->> >> +       %pO{,1,2}
->> >
->> > 'O' is not very obvious, but I imagine we are somewhat limted in our
->> > choice here?
->> >
->>
->> All the good women are married, all the handsome men are gay, all the obvious
->> format specifiers are taken.
 >
-> Not really at all.
+> cheers
 >
-> I quite dislike '0' as the format type specifier for
-> a device tree node as there's no mnemonic mapping.
+> --
+> balbi
+>
 
-It is O, not zero if that matters. Do you have 
+--047d7bdc8192df201d050cd6e2e9
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">Hi,<br><div><div class=3D"gmail_extra"><br><div class=3D"g=
+mail_quote">2015-01-15 1:02 GMT+08:00 Felipe Balbi <span dir=3D"ltr">&lt;<a=
+ href=3D"mailto:balbi@ti.com" target=3D"_blank">balbi@ti.com</a>&gt;</span>=
+:<br><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-le=
+ft:1px #ccc solid;padding-left:1ex">Hi,<br>
+<div><div class=3D"h5"><br>
+On Wed, Jan 14, 2015 at 03:08:43PM +0800, Sneeker Yeh wrote:<br>
+&gt; Hi Felipe:<br>
+&gt;<br>
+&gt; thanks for suggestion,<br>
+&gt;<br>
+&gt; 2015-01-13 1:20 GMT+08:00 Felipe Balbi &lt;<a href=3D"mailto:balbi@ti.=
+com">balbi@ti.com</a>&gt;:<br>
+&gt;<br>
+&gt; &gt; Hi,<br>
+&gt; &gt;<br>
+&gt; &gt; On Sun, Jan 11, 2015 at 11:19:55PM +0800, Sneeker Yeh wrote:<br>
+&gt; &gt; &gt; &gt; &gt; &gt; enable the quirk only for you. Isn&#39;t ther=
+e a better way of<br>
+&gt; &gt; enabling the<br>
+&gt; &gt; &gt; &gt; &gt; &gt; quirk based off of revision detection couple =
+with a look on<br>
+&gt; &gt; GHWPARAMS*<br>
+&gt; &gt; &gt; &gt; &gt; &gt; registers ?<br>
+&gt; &gt; &gt; &gt; &gt; &gt;<br>
+&gt; &gt; &gt; &gt; &gt; &gt; What&#39;s tricking me is this claim that onl=
+y config-free PHYs would<br>
+&gt; &gt; be<br>
+&gt; &gt; &gt; &gt; &gt; &gt; affected, why ?<br>
+&gt; &gt; &gt; &gt; &gt; &gt;<br>
+&gt; &gt; &gt; &gt; &gt;<br>
+&gt; &gt; &gt; &gt; &gt; i&#39;m still struggling now to try to get more in=
+formation about this.<br>
+&gt; &gt; &gt; &gt; &gt; some security policy inside Fujitsu make me unable=
+ to access full<br>
+&gt; &gt; &gt; &gt; &gt; information of this errata today.<br>
+&gt; &gt; &gt; &gt; &gt;<br>
+&gt; &gt; &gt; &gt; &gt; Someday after i get enough information,<br>
+&gt; &gt; &gt; &gt; &gt; i shall take your suggestion here that seems bette=
+r to incur quirk<br>
+&gt; &gt; &gt; &gt; &gt; dynamically via GHWPARAMS,<br>
+&gt; &gt; &gt; &gt; &gt; and then send it here again.<br>
+&gt; &gt; &gt; &gt;<br>
+&gt; &gt; &gt; &gt; ok, hopefully you&#39;ll find a way ;-)<br>
+&gt; &gt; &gt; &gt;<br>
+&gt; &gt; &gt; &gt; I got some update information here finally~<br>
+&gt; &gt; &gt; in case i express unclearly i also put a pdf:<br>
+&gt; &gt; &gt; <a href=3D"https://drive.google.com/file/d/0B18MmcvvKjNNbDF6=
+eEdHSzZCazA/view" target=3D"_blank">https://drive.google.com/file/d/0B18Mmc=
+vvKjNNbDF6eEdHSzZCazA/view</a><br>
+&gt; &gt; &gt;<br>
+&gt; &gt; &gt; This issue is defined by a two-way race at disconnect, betwe=
+en<br>
+&gt; &gt; &gt; 1) class driver interrupt endpoint resheduling attempts if t=
+he ISR gave<br>
+&gt; &gt; an<br>
+&gt; &gt; &gt; ep error event due to device detach (it would try 3 times)<b=
+r>
+&gt; &gt; &gt; 2) Disconnect interrupt on PORTSC_CSC, which is cleared by h=
+ub thread<br>
+&gt; &gt; &gt; asynchronously<br>
+&gt; &gt; &gt; 3) The hardware IP was configured in silicon with<br>
+&gt; &gt; &gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 - DWC_USB3_SUSPEND_ON_DISCONNECT_=
+EN=3D1 (this is an IP configuration<br>
+&gt; &gt;<br>
+&gt; &gt; yeah, aparently this is another configuration which is not expose=
+d on<br>
+&gt; &gt; HWPARAMS registers. Paul, can you confirm for us ? I couldn&#39;t=
+ find it on<br>
+&gt; &gt; Databook on any of the HWPARAMS registers.<br>
+&gt; &gt;<br>
+&gt; &gt; &gt; port whose state cannot be checked from software)<br>
+&gt; &gt; &gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 - Synopsys IP version is &lt; 3.0=
+0a<br>
+&gt; &gt;<br>
+&gt; &gt; heh, so pretty much everybody :-)<br>
+&gt; &gt;<br>
+&gt;<br>
+&gt; yeah, and I&#39;m really lucky to encounter this @@<br>
+&gt;<br>
+&gt;<br>
+&gt; &gt;<br>
+&gt; &gt; &gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 The IP will auto-suspend itself o=
+n device detach with some<br>
+&gt; &gt; &gt; phy-specific interval after CSC is cleared by 2)<br>
+&gt; &gt; &gt;<br>
+&gt; &gt; &gt; If 2) and 3) complete before 1), the interrupts it expects w=
+ill not be<br>
+&gt; &gt; &gt; generated by the autosuspended IP, leading to a deadlock. Ev=
+en later<br>
+&gt; &gt; &gt; disconnection procedure would detect that corresponding urb =
+is still<br>
+&gt; &gt; &gt; in-progress and issue a ep stop command, auto-suspended IP s=
+till won&#39;t<br>
+&gt; &gt; &gt; respond to that command.<br>
+&gt; &gt; &gt;<br>
+&gt; &gt; &gt; this defect would result in this when device detached:<br>
+&gt; &gt; &gt; -------------------<br>
+&gt; &gt; &gt; [=C2=A0 =C2=A099.603544] usb 4-1: USB disconnect, device num=
+ber 2<br>
+&gt; &gt; &gt; [=C2=A0 104.615254] xhci-hcd xhci-hcd.0.auto: xHCI host not =
+responding to stop<br>
+&gt; &gt; &gt; endpoint command.<br>
+&gt; &gt; &gt; [=C2=A0 104.623362] xhci-hcd xhci-hcd.0.auto: Assuming host =
+is dying, halting<br>
+&gt; &gt; &gt; host.<br>
+&gt; &gt; &gt; [=C2=A0 104.653261] xhci-hcd xhci-hcd.0.auto: Host not halte=
+d after 16000<br>
+&gt; &gt; &gt; microseconds.<br>
+&gt; &gt; &gt; [=C2=A0 104.660584] xhci-hcd xhci-hcd.0.auto: Non-responsive=
+ xHCI host is not<br>
+&gt; &gt; &gt; halting.<br>
+&gt; &gt; &gt; [=C2=A0 104.667817] xhci-hcd xhci-hcd.0.auto: Completing act=
+ive URBs anyway.<br>
+&gt; &gt; &gt; [=C2=A0 104.674198] xhci-hcd xhci-hcd.0.auto: HC died; clean=
+ing up<br>
+&gt; &gt; &gt; --------------------<br>
+&gt; &gt; &gt; As a result, when device detached, we desired to postpone &q=
+uot;PORTCSC clear&quot;<br>
+&gt; &gt; &gt; behind &quot;disable slot&quot;. it&#39;s found that all exe=
+cuted ep command related to<br>
+&gt; &gt; &gt; disconnetion, are executed before &quot;disable slot&quot;.<=
+br>
+&gt; &gt;<br>
+&gt; &gt; Now this is all great information and they should all be part of =
+your<br>
+&gt; &gt; commit log and probably a big comment should be added to code as =
+well.<br>
+&gt; &gt;<br>
+&gt;<br>
+&gt; I see, thanks.<br>
+&gt;<br>
+&gt;<br>
+&gt; &gt;<br>
+&gt; &gt; Thanks for going after all these details, now let&#39;s figure ou=
+t a way to<br>
+&gt; &gt; pass dwc3 revision to xhci, or maybe we pass just a flag for the =
+quirk,<br>
+&gt; &gt; something like:<br>
+&gt; &gt;<br>
+&gt; &gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if (dwc-&gt;revision &lt; 3.00a =
+&amp;&amp; dwc-&gt;has_suspend_on_disconnect)<br>
+&gt; &gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0xhci=
+_pdata.delay_portcsc_clear =3D true;<br>
+&gt; &gt;<br>
+&gt; &gt; or something similar to that.<br>
+&gt; &gt;<br>
+&gt;<br>
+&gt; Sure, how about i write these like this, that i learn from the way dwc=
+3<br>
+&gt; inject XHCI_LPM_SUPPORT to xhci via platform data:<br>
+&gt;<br>
+&gt; --- a/drivers/usb/dwc3/host.c<br>
+&gt; +++ b/drivers/usb/dwc3/host.c<br>
+&gt; @@ -53,6 +53,10 @@ int dwc3_host_init(struct dwc3 *dwc)<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0pdata.usb3_lpm_capable =3D 1;<br>
+&gt;=C2=A0 #endif<br>
+&gt;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0if ((dwc-&gt;revision &lt; DWC3_REVISION_3=
+00A) &amp;&amp;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0dwc-&gt;suspend_on_disconnec=
+t_quirk)<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0pdata.delay_po=
+rtcsc_clear =3D 1;<br>
+&gt; +<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0ret =3D platform_device_add_data(xhci=
+, &amp;pdata, sizeof(pdata));<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if (ret) {<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0dev_err(d=
+wc-&gt;dev, &quot;couldn&#39;t add platform data to xHCI<br>
+&gt; device\n&quot;);<br>
+&gt; --- a/drivers/usb/host/xhci-plat.c<br>
+&gt; +++ b/drivers/usb/host/xhci-plat.c<br>
+&gt; @@ -147,6 +147,9 @@ static int xhci_plat_probe(struct platform_device =
+*pdev)<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if ((node &amp;&amp; of_property_read=
+_bool(node, &quot;usb3-lpm-capable&quot;)) ||<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0(pdata &amp;&amp; pdata-&gt;usb3_lpm_capable))<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0xhci-&gt;=
+quirks |=3D XHCI_LPM_SUPPORT;<br>
+&gt; +<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0if (pdata &amp;&amp; pdata-&gt;delay_portc=
+sc_clear)<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0xhci-&gt;quirk=
+s |=3D XHCI_DISCONNECT_QUIRK;<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0/*<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 * Set the xHCI pointer before xhci_p=
+lat_setup() (aka<br>
+&gt; hcd_driver.reset)<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 * is called by usb_add_hcd().<br>
+&gt;<br>
+&gt; but I&#39;m a little confused about how we decide<br>
+&gt; dwc-&gt;suspend_on_disconnect_quirk.<br>
+&gt; just wondering if pdata &amp; dts would be better than Kconfig to deci=
+de this?<br>
+&gt; because using Kconfig means forcing dwc3.ko has this quirk, but platfo=
+rm<br>
+&gt; might have another dwc3 core doesn&#39;t need that quirk.<br>
+&gt; So I write the following code, is it in a good shape? :<br>
+&gt;<br>
+&gt; --- a/drivers/usb/dwc3/core.c<br>
+&gt; +++ b/drivers/usb/dwc3/core.c<br>
+&gt; @@ -838,6 +838,9 @@ static int dwc3_probe(struct platform_device *pdev=
+)<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0&quot;snps,tx_de_emphasis_q=
+uirk&quot;);<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0of_proper=
+ty_read_u8(node, &quot;snps,tx_de_emphasis&quot;,<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0&amp;tx_de_emphasis);<br>
+&gt; +<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0dwc-&gt;suspen=
+d_on_disconnect_quirk =3D<br>
+&gt; of_property_read_bool(node,<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0&quot;snps,has_suspend_on_disconn=
+ect&quot;);<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0} else if (pdata) {<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0dwc-&gt;m=
+aximum_speed =3D pdata-&gt;maximum_speed;<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0dwc-&gt;h=
+as_lpm_erratum =3D pdata-&gt;has_lpm_erratum;<br>
+&gt; @@ -864,6 +867,8 @@ static int dwc3_probe(struct platform_device *pdev=
+)<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0dwc-&gt;t=
+x_de_emphasis_quirk =3D pdata-&gt;tx_de_emphasis_quirk;<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if (pdata=
+-&gt;tx_de_emphasis)<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0tx_de_emphasis =3D pdata-&gt;tx_de_emphasis;<br>
+&gt; +<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0dwc-&gt;suspen=
+d_on_disconnect_quirk =3D<br>
+&gt; pdata-&gt;has_suspend_on_disconnect;<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0}<br>
+&gt;<br>
+&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0/* default to superspeed if no maximu=
+m_speed passed */<br>
+<br>
+</div></div>this all looks good, but let&#39;s split it in tiny little patc=
+hes:<br>
+<br>
+1) add macros for new revisions<br>
+2) add suspend_on_disconnect_quirk (and the DT counterpart, please don&#39;=
+t<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 forget to document the new binding)<br>
+3) pass the quirk to XHCI through pdata<br>
+4) Use the quirk on XHCI<br>
+<br>
+That&#39;ll make patches real easy to review. As per the commit log, the<br=
 >
->
->
+more verbose the better, specially when it comes to the quirk. It needs<br>
+to be 100% clear that we cannot detect this in runtime.<br></blockquote><di=
+v><br></div><div>Super thanks,<br></div><div>I&#39;m separating it and test=
+ing it, and would send v2 patch series later based on all suggestions here.=
+<br></div><div><br></div><div>Much appreciate,<br></div><div>Sneeker<br></d=
+iv><div>=C2=A0</div><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0=
+ .8ex;border-left:1px #ccc solid;padding-left:1ex">
+<br>
+cheers<br>
+<span class=3D"HOEnZb"><font color=3D"#888888"><br>
+--<br>
+balbi<br>
+</font></span></blockquote></div><br></div></div></div>
+
+--047d7bdc8192df201d050cd6e2e9--
