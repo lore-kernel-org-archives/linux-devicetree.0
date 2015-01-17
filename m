@@ -1,45 +1,173 @@
-From: Kay Sievers <kay@vrfy.org>
-Subject: Re: [systemd-devel] Making udev emit a signal when it is done loading modules
-Date: Sat, 17 Jan 2015 17:45:32 +0100
-Message-ID: <CAPXgP11bnhjopFUC6nu0C5gzLW5ZvJ0FV27FwjxSUQFxg4HxJA@mail.gmail.com>
-References: <54BA20D0.7060402@redhat.com> <20150117160319.GO18247@in.waw.pl>
+From: Niklas =?iso-8859-1?Q?S=F6derlund?= <niso@kth.se>
+Subject: Re: [PATCH 2/4] sh-pfc: Add emev2 pinmux support
+Date: Sat, 17 Jan 2015 19:11:59 +0100
+Message-ID: <20150117181159.GA11372@bigcity.berto.se>
+References: <1418414497-23741-1-git-send-email-niso@kth.se>
+ <1418414497-23741-3-git-send-email-niso@kth.se>
+ <4306343.ZxG2x6FY5Y@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <20150117160319.GO18247@in.waw.pl>
-Sender: linux-ide-owner@vger.kernel.org
-To: =?UTF-8?Q?Zbigniew_J=C4=99drzejewski=2DSzmek?= <zbyszek@in.waw.pl>
-Cc: Hans de Goede <hdegoede@redhat.com>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, Mark Brown <broonie@kernel.org>, systemd-devel@lists.freedesktop.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4306343.ZxG2x6FY5Y@avalon>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: linux-kernel@vger.kernel.org, linus.walleij@linaro.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, magnus.damm@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jan 17, 2015 at 5:03 PM, Zbigniew J=C4=99drzejewski-Szmek
-<zbyszek@in.waw.pl> wrote:
-> On Sat, Jan 17, 2015 at 09:44:00AM +0100, Hans de Goede wrote:
->> We would like
->> udev to emit a signal (ABI to be discussed) when it is done
->> trying to load modules for everything which was already enumerated
->> when it starts, iow when there are no new device events pending
->> anymore when udev does its initial hotplug replay.
-> I think you can just create a unit like:
->
-> # disable-new-hardware.service
-> [Unit]
-> After=3Dsystemd-udev-settle.service systemd-modules-load.service
-> Wants=3Dsystemd-udev-settle.service
->
-> [Service]
-> Type=3Doneshot
-> RemainAfterExit=3Dyes
-> ExecStart=3D/usr/local/bin/ping-the-kernel
->
->> So the question to you is would you be willing to include such
->> functionality in udev?
-> I don't think udevd has enough knowledge. But a systemd unit like
-> the one above should work.
+Hi Laurent,
 
-No, nothing new, maintained or properly working tool should use or
-rely on udevadm settle. Settle is just a dirty hack to make broken
-legacy tools work until they disappear.
+Thanks for your review. I will send a updated patch shortly.
 
-Kay
+Regards
+// Niklas
+
+* Laurent Pinchart <laurent.pinchart@ideasonboard.com> [2015-01-13 16:2=
+7:06 +0200]:
+
+> Hi Niklas,
+>
+> Thank you for the patch.
+>
+> On Friday 12 December 2014 21:01:35 Niklas S=F6derlund wrote:
+> > Add PFC support for the EMMA Mobile EV2 SoC including pin groups fo=
+r
+> > on-chip devices.
+> >
+> > Signed-off-by: Niklas S=F6derlund <niso@kth.se>
+> > ---
+> >  .../bindings/pinctrl/renesas,pfc-pinctrl.txt       |    1 +
+> >  drivers/pinctrl/sh-pfc/Kconfig                     |    5 +
+> >  drivers/pinctrl/sh-pfc/Makefile                    |    1 +
+> >  drivers/pinctrl/sh-pfc/core.c                      |    9 +
+> >  drivers/pinctrl/sh-pfc/core.h                      |    1 +
+> >  drivers/pinctrl/sh-pfc/pfc-emev2.c                 | 1915 ++++++++=
++++++++++
+> >  6 files changed, 1932 insertions(+)
+> >  create mode 100644 drivers/pinctrl/sh-pfc/pfc-emev2.c
+>
+> [snip]
+>
+> > diff --git a/drivers/pinctrl/sh-pfc/pfc-emev2.c
+> > b/drivers/pinctrl/sh-pfc/pfc-emev2.c new file mode 100644
+> > index 0000000..22c9e15
+> > --- /dev/null
+> > +++ b/drivers/pinctrl/sh-pfc/pfc-emev2.c
+>
+> [snip]
+>
+> > +#define CPU_ALL_PORT(fn, sfx)						\
+> > +	PORT_GP_32(0, fn, sfx),						\
+> > +	PORT_GP_32(1, fn, sfx),						\
+> > +	PORT_GP_32(2, fn, sfx),						\
+> > +	PORT_GP_32(3, fn, sfx),						\
+> > +	PORT_GP_32(4, fn, sfx)
+>
+> GPIOs are numbered linearly in the datasheet, not using a bank number=
+=2E
+> Shouldn't that be reflected here ? Additionally the chip has 159 GPIO=
+s, and
+> you define 160 of them.
+>
+> [snip]
+>
+> I'm afraid I can't review all the data tables, I'll trust you on that=
+ :-)
+>
+> > +/* Pin numbers for pins without a corresponding GPIO port number a=
+re
+> > computed
+> > + * from the row and column numbers with a 1000 offset to avoid col=
+lisions
+> > with
+> > + * GPIO port numbers. */
+> > +#define PIN_NUMBER(row, col)            (1000+((row)-1)*25+(col)-1=
+)
+>
+> The chip is an 23x23 BGA, shouldn't you multiply by 23 instead of 25 =
+?
+>
+> [snip]
+>
+> > +#define EMEV_MUX_PIN(name, pin, mark) \
+> > +	static const unsigned int name##_pins[] =3D { pin }; \
+> > +	static const unsigned int name##_mux[] =3D { mark##_MARK }
+>
+> [snip]
+>
+> > +/* =3D [ IIC ] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D */
+> > +EMEV_MUX_PIN(iic0_scl, 44, IIC0_SCL);
+> > +EMEV_MUX_PIN(iic0_sda, 45, IIC0_SDA);
+>
+> [snip]
+>
+> > +static const struct sh_pfc_pin_group pinmux_groups[] =3D {
+>
+> [snip]
+>
+> > +	SH_PFC_PIN_GROUP(iic0_scl),
+> > +	SH_PFC_PIN_GROUP(iic0_sda),
+>
+> [snip]
+>
+> > +};
+>
+> [snip]
+>
+> > +static const char * const iic0_groups[] =3D {
+> > +	"iic0_scl",
+> > +	"iic0_sda",
+> > +};
+>
+> (Taking IIC0 as an example)
+>
+> You're defining one pin group per pin. While this isn't an invalid de=
+cision,
+> the sh-pfc driver tried so far to group related pins in the same grou=
+p. For
+> instance, with IIC0, SCL and SDA can't be used independently, so you =
+always
+> need to request both. They could thus be grouped together. Is there a=
+ reason
+> not to follow the same design for EMEV2 ?
+>
+> [snip]
+>
+> > +static const struct sh_pfc_function pinmux_functions[] =3D {
+> > +	SH_PFC_FUNCTION(jtag),
+> > +	SH_PFC_FUNCTION(lcd),
+> > +	SH_PFC_FUNCTION(yuv),
+> > +	SH_PFC_FUNCTION(tp33),
+> > +	SH_PFC_FUNCTION(iic0),
+> > +	SH_PFC_FUNCTION(iic1),
+> > +	SH_PFC_FUNCTION(uart1),
+> > +	SH_PFC_FUNCTION(uart2),
+> > +	SH_PFC_FUNCTION(uart3),
+> > +	SH_PFC_FUNCTION(sd),
+> > +	SH_PFC_FUNCTION(sdi0),
+> > +	SH_PFC_FUNCTION(sdi1),
+> > +	SH_PFC_FUNCTION(sdi2),
+> > +	SH_PFC_FUNCTION(ab),
+> > +	SH_PFC_FUNCTION(dtv),
+> > +	SH_PFC_FUNCTION(cf),
+> > +	SH_PFC_FUNCTION(usi0),
+> > +	SH_PFC_FUNCTION(usi1),
+> > +	SH_PFC_FUNCTION(usi2),
+> > +	SH_PFC_FUNCTION(usi3),
+> > +	SH_PFC_FUNCTION(usi4),
+> > +	SH_PFC_FUNCTION(usi5),
+> > +	SH_PFC_FUNCTION(ntsc),
+> > +	SH_PFC_FUNCTION(cam),
+> > +	SH_PFC_FUNCTION(hsi),
+> > +};
+>
+> Could you please order the functions alphabetically, here and above ?
+>
+> [snip]
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
+>
