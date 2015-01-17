@@ -1,48 +1,62 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v2 0/6] ARM: shmobile: sh73a0: DT PM domain support
-Date: Sat, 17 Jan 2015 15:12:19 +0100
-Message-ID: <CAMuHMdX40LTdKt_nBb_U4eXWMuPXSYfC0Q4PvA42grdocCZfAA@mail.gmail.com>
-References: <1421237484-16847-1-git-send-email-geert+renesas@glider.be>
-	<20150114235302.GC10479@verge.net.au>
-	<CAMuHMdVANePZ-fLzaLCEOm0vHR735C=u5_fDa4Uywi_P5ggjBg@mail.gmail.com>
-	<20150116011315.GA7830@verge.net.au>
-	<20150116024724.GA31654@verge.net.au>
-	<CAMuHMdU4hj2p-N8abT-BSadznqF7=0-08o9F4_7+qjdvv6Whmw@mail.gmail.com>
-	<20150116124502.GC6285@verge.net.au>
-	<20150117011414.GC397@verge.net.au>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [systemd-devel] Making udev emit a signal when it is done
+ loading modules
+Date: Sat, 17 Jan 2015 14:12:48 +0000
+Message-ID: <20150117141248.GD6414@sirena.org.uk>
+References: <54BA20D0.7060402@redhat.com>
+ <20150117135630.GA25585@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150117011414.GC397-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux PM list <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="GpGaEY17fSl8rd50"
+Return-path: <linux-ide-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150117135630.GA25585@kroah.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Greg KH <greg@kroah.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, systemd-devel@lists.freedesktop.org, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
 
-On Sat, Jan 17, 2015 at 2:14 AM, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org> wrote:
->> > If you add patch 6 to sh-drivers-for-v3.20 and merge it in -next,
->> > everything is fine!
->>
->> Thanks, I thought I had that one but I must have missed it somehow.
->
-> I have made a second attempt and this time I hope that I haven't missed
-> anything. Please see renesas-next-20150117-v3.19-rc1.
+--GpGaEY17fSl8rd50
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Thanks, looks better!
+On Sat, Jan 17, 2015 at 05:56:30AM -0800, Greg KH wrote:
+> On Sat, Jan 17, 2015 at 09:44:00AM +0100, Hans de Goede wrote:
 
-Gr{oetje,eeting}s,
+> > If however the ahci_platform driver is a module, then as soon as
+> > the kernel is ready to start init, unused regulators are turned off
+> > and the disk looses its power while spinning and ends up doing an
+> > emergency heads park.
 
-                        Geert
+> What turns off the power in this situation?  The kernel?  Or userspace?
+> Don't you have control of this?
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+The kernel turns off the power in late_initcall because it noticed that
+nothing is using the regulator, it does this because otherwise we're
+just left with whatever the bootloader had which will may well be
+wasting power on unused rails due to inflexible PMICs (we do similar
+things for other subsystems like clocks).  This works fine for most use
+cases since in embedded systems anything critical tends to end up built
+in.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+There is configurability to allow things to be flagged as always on so
+they never get turned off.
+
+--GpGaEY17fSl8rd50
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJUum3fAAoJECTWi3JdVIfQm+kH/0HUApLmcI7p3Yi6npf1bqH7
+sId0i/epl7MsZKUuz0aBPtRs9nuZp1yNBwPaQqbQw/2m8/Sts+OECMXxGZVJ8mNG
+wjJscIVE3uVEiBqGp8+SlavcSHREYvQjqFpQNrJQTBtKrECawAvlF7+PS0HD3Ikp
+BVE6yrxAx/m5w6XCz5o4pF1YVWvC1CaI8AOcpvP61M1dMJXwR0+KfywJB70Sa2Ih
+DQDyUZ9/hdsgQ87sBo8bS2hoF/6YS50UY6lUU/dB6i5vLAVxaCT3V+R8LiDvDr6r
+t3yoFYl1Ye/ZcONkgkOt1pmlMh8KCrzb1TanVU3EV8x3r0TjvtwOJoRs7qfaAKQ=
+=DvwQ
+-----END PGP SIGNATURE-----
+
+--GpGaEY17fSl8rd50--
