@@ -1,73 +1,89 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Making udev emit a signal when it is done loading
-	modules
-Date: Sat, 17 Jan 2015 09:44:00 +0100
-Message-ID: <54BA20D0.7060402@redhat.com>
+From: Orson Zhai <orsonzhai-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 3/5] arm64: dts: Add support for Spreadtrum SC9836 SoC
+ in dts and Makefile
+Date: Sat, 17 Jan 2015 16:47:25 +0800
+Message-ID: <CA+H2tpFenKzBEvkaHOh7shX7GaYyGFc2CbBTDxgSL9=Wq1Q++g@mail.gmail.com>
+References: <1421402411-3479-1-git-send-email-chunyan.zhang@spreadtrum.com>
+	<1421402411-3479-4-git-send-email-chunyan.zhang@spreadtrum.com>
+	<20150116103558.GD21809@leverpostej>
+	<CA+H2tpGPKc8Gu=s+d4PnO=Wp_Uv=o338hxj_1opPRkZ3KZH+rw@mail.gmail.com>
+	<20150116140926.GB22569@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <systemd-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/systemd-devel>,
- <mailto:systemd-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/systemd-devel>
-List-Post: <mailto:systemd-devel@lists.freedesktop.org>
-List-Help: <mailto:systemd-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/systemd-devel>,
- <mailto:systemd-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: systemd-devel-bounces@lists.freedesktop.org
-Sender: "systemd-devel" <systemd-devel-bounces@lists.freedesktop.org>
-To: systemd-devel@lists.freedesktop.org
-Cc: "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, Mark Brown <broonie@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150116140926.GB22569@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: marc.zyngier-5wv7dgnIgG8@public.gmane.org, Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org" <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "jslaby-AlSwsSmVLrQ@public.gmane.org" <jslaby-AlSwsSmVLrQ@public.gmane.org>, "jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org" <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org" <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "florian.vaussard-p8DiymsW2f8@public.gmane.org" <florian.vaussard-p8DiymsW2f8@public.gmane.org>, "andrew-g2DYL2Zd6BY@public.gmane.org" <andrew-g2DYL2Zd6BY@public.gmane.org>, "rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "hytszk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <hytszk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>an
 List-Id: devicetree@vger.kernel.org
 
-RGVhciB1ZGV2IGRldmVsb3BlcnMsCgpXZSAobWUgYW5kIHNvbWUga2VybmVsIGRldnMgbW9zdGx5
-KSB3b3VsZCBsaWtlIHRvIGFkZCBzdXBwb3J0IHRvCnRoZSBrZXJuZWwgZm9yIHVzZXJzcGFjZSB0
-ZWxsaW5nIHRoZSBrZXJuZWwgdGhhdCBpdCBpcyBkb25lIHdpdGgKdGhlICppbml0aWFsKiBsb2Fk
-aW5nIG9mIG1vZHVsZXMsIHdpdGggdGhlIHB1cnBvc2Ugb2YgY2xlYW5pbmcgdXAKKGRpc2FibGlu
-ZykgdW51c2VkIGhhcndhcmUgcmVzb3VyY2VzIGxpa2UgZS5nLiByZWd1bGF0b3JzIGFuZApjbG9j
-a3MuCgpDdXJyZW50bHkgdGhlIGtlcm5lbCBkb2VzIHRoaXMgY2xlYW51cCBqdXN0IGJlZm9yZSBp
-dCBzdGFydHMgaW5pdAood2hpY2ggbWF5IHZlcnkgd2VsbCBiZSBpbml0IGZyb20gYSByYW1kaXNr
-KS4gSW4gc29tZSBjYXNlcyB0aGlzCmlzIHRvbyBlYXJseSByZWFsbHksIGJlY2F1c2UgbGF0ZXIg
-b24gYSBtb2R1bGUgbWF5IGdldCBsb2FkZWQKd2hpY2ggbmVlZHMgdGhpcyByZXNvdXJjZXMsIHRo
-ZXNlIHJlc291cmNlcyB3aWxsIHRoZW4gZ2V0IHR1cm5lZApvbiBhZ2FpbiBieSB0aGUgbG9hZGVk
-IGRyaXZlciwgYW5kIG1vc3Qgb2YgdGhlIHRpbWUgdGhpcyBpcyBub3QKYW4gaXNzdWUsIGJ1dCBz
-b21ldGltZXMgaXQgaXMuCgpJIHJlYWxpemUgdmVyeSB3ZWxsIHRoYXQgdGhlcmUgaXMgbm8gbWFn
-aWMgbW9tZW50IHdoZXJlIHVkZXYgaXMKcmVhbGx5IGV2ZXIgZG9uZSBsb2FkaW5nIG1vZHVsZXMs
-IGJ1dCB0aGUgY2FzZSB3aGljaCB3ZSB3YW50IHRvCnN1cHBvcnQgb25seSBpbnZvbHZlcyBkZXZp
-Y2VzIHdoaWNoIGFyZSAqYWxyZWFkeSBlbnVtZXJhdGVkKiwgYnV0Cm1heSBub3QgeWV0IGhhdmUg
-YSBkcml2ZXIgbG9hZGVkLCB3aGVuIHVkZXYgc3RhcnRzLiBXZSB3b3VsZCBsaWtlCnVkZXYgdG8g
-ZW1pdCBhIHNpZ25hbCAoQUJJIHRvIGJlIGRpc2N1c3NlZCkgd2hlbiBpdCBpcyBkb25lCnRyeWlu
-ZyB0byBsb2FkIG1vZHVsZXMgZm9yIGV2ZXJ5dGhpbmcgd2hpY2ggd2FzIGFscmVhZHkgZW51bWVy
-YXRlZAp3aGVuIGl0IHN0YXJ0cywgaW93IHdoZW4gdGhlcmUgYXJlIG5vIG5ldyBkZXZpY2UgZXZl
-bnRzIHBlbmRpbmcKYW55bW9yZSB3aGVuIHVkZXYgZG9lcyBpdHMgaW5pdGlhbCBob3RwbHVnIHJl
-cGxheS4KClNvIHRoZSBxdWVzdGlvbiB0byB5b3UgaXMgd291bGQgeW91IGJlIHdpbGxpbmcgdG8g
-aW5jbHVkZSBzdWNoCmZ1bmN0aW9uYWxpdHkgaW4gdWRldiA/ICBOb3RlIHRoaXMgc2lnbmFsIHdv
-dWxkIG5lZWQgdG8gYmUgZW1pdHRlZAp3aGVuIHVkZXYgZnJvbSB0aGUgcmVhbCByb290ZnMgaXMg
-ZG9uZSB3aXRoIHRoZSBpbml0aWFsIG1vZHVsZQpsb2FkaW5nLCBhcyB0aGUgcmVhbCByb290ZnMg
-bWF5IHZlcnkgd2VsbCBoYXZlIG1vcmUgbW9kdWxlcwphdmFpbGFibGUgdGhlbiB0aGUgaW5pdHJk
-LgoKIyMjCgpXaXRoIHRoZSBnZW5lcmljIHN0b3J5IGFib3ZlIHRvbGQgbGV0IG1lIGFsc28gZ2l2
-ZSB0aGUgY29uY3JldGUKZXhhbXBsZSAvIHByb2JsZW0gd2hpY2ggaGFzIGxldCB0byBtZSBhc2tp
-bmcgdGhpcyAobm90ZSB0aGlzIGhhcwpiZWVuIGJyb3VnaHQgdXAgYmVmb3JlIG9uIHZhcmlvdXMg
-a2VybmVsIGxpc3RzLCBpdCBpcyBhCnJlLW9jY3VyaW5nIHRoZW1lLCB0aGlzIGlzIGp1c3QgYW4g
-ZXhhbXBsZSByZWFsbHkpIDoKClRoZSBwcm9ibGVtIGF0IGhhbmQgaXMgYSBzYXRhIGNvbm5lY3Rv
-ciB3aGljaCBhbHNvIGhhcyBhIHNhdGEtcG93ZXIKY29ubmVjdG9yIG9uIGFuIGVtYmVkZGVkIChp
-c2gpIGJvYXJkIHdoZXJlIHRoZSBzYXRhLXBvd2VyIGlzCmNvbnRyb2xsZWQgdGhyb3VnaCBhIGdw
-aW8uIFRoZSBzYXRhLXBvd2VyIGNvbm5lY3RvciBpcyBtb2RlbGVkCmluIGRldmljZXRyZWUgYXMg
-YSBwb3dlci1zdXBwbHkgYW5kIHRoaXMgc3VwcGx5IGdldHMgY29udHJvbGxlZApieSB0aGUgYWhj
-aV9wbGF0Zm9ybSBkcml2ZXIuCgpUaGUgZGlzayBwb3dlciBtYXkgdmVyeSB3ZWxsIGhhdmUgYWxy
-ZWFkeSBiZWVuIHR1cm5lZCBvbiBieSB0aGUKYm9vdGxvYWRlciwgc28gd2UgYWRkIGEgcmVndWxh
-dG9yLWJvb3Qtb24gcHJvcGVydHkgdG8gdGhlIHJlZ3VsYXRvcgpub2RlIGluIGRldmljZXRyZWUg
-dG8gbWFrZSBzdXJlIHRoYXQgaXQgaXMgbGVmdCB1bnRvdWNoZWQgd2hlbiB0aGUKcmVndWxhdG9y
-IGRyaXZlciBsb2Fkcy4gSWYgdGhlIGFoY2lfcGxhdGZvcm0gZHJpdmVyIGlzIGJ1aWxkIGludG8K
-dGhlIGtlcm5lbCwgaXQgd2lsbCB0aGVuIHRha2UgY29udHJvbCBvZiB0aGUgcmVndWxhdG9yIGFu
-ZApldmVyeXRoaW5nIHdvcmtzIHdlbGwuCgpJZiBob3dldmVyIHRoZSBhaGNpX3BsYXRmb3JtIGRy
-aXZlciBpcyBhIG1vZHVsZSwgdGhlbiBhcyBzb29uIGFzCnRoZSBrZXJuZWwgaXMgcmVhZHkgdG8g
-c3RhcnQgaW5pdCwgdW51c2VkIHJlZ3VsYXRvcnMgYXJlIHR1cm5lZCBvZmYKYW5kIHRoZSBkaXNr
-IGxvb3NlcyBpdHMgcG93ZXIgd2hpbGUgc3Bpbm5pbmcgYW5kIGVuZHMgdXAgZG9pbmcgYW4KZW1l
-cmdlbmN5IGhlYWRzIHBhcmsuIFRoZW4gYXMgc29vbiBhcyB0aGUgYWhjaV9wbGF0Zm9ybSBtb2R1
-bGUKbG9hZHMgdGhlIGRpc2sgaXMgc3BpbiB1cCBhZ2Fpbi4gVGhpcyBpcyBub3QgZ29vZCAocXVp
-dGUgYmFkCmFjdHVhbGx5KSBmb3IgdGhlIGxpZmV0aW1lIG9mIHRoZSBkaXNrLgoKUmVnYXJkcywK
-CkhhbnMKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Kc3lz
-dGVtZC1kZXZlbCBtYWlsaW5nIGxpc3QKc3lzdGVtZC1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5v
-cmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL3N5c3RlbWQt
-ZGV2ZWwK
+On Fri, Jan 16, 2015 at 10:09 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> On Fri, Jan 16, 2015 at 12:49:20PM +0000, Orson Zhai wrote:
+>> Hi, Mark,
+>>
+>> On Fri, Jan 16, 2015 at 6:35 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+>[...]
+>>
+>>  It returns "status busy" after I type the command below.
+>
+> Is this while other CPUs are active, or after you've hotplugged out all
+> other CPUs? The latter is expected, but the former is not.
+>
+> Are you able to hotplug CPU0 out and back in while other CPUs are
+> active
+
+Yes, I have just tested again and confirm that cpu0 could be
+turned on/off when one of the other 3 CPUs was active.
+
+>
+> [...]
+>
+> For this bus you could instead use addresses relative to the bus inside,
+> rather than absolute addresses,
+
+Do you mean something like  apb@0 {...} apb@1 {...} ?
+
+> or you could have:
+>
+> ranges = <0x0 0x70000000 0x0 0x70000000 0x0 0x10000000>;
+>
+> [...]
+>>
+>> This initial patch is picked up from a very big dt file.
+>> There are several apb buses in this chip.
+>
+> At the same level us the bus hierarchy?
+>
+These buses are led by some bus matrix to different areas.
+But I'd like treat them simply at same level.
+Is it right to do that?
+
+>> So I use apb@starting-address to separate them.
+>> But I remember another rule that the @address needs to equal  first
+>> address in property reg array.
+>> Do I have to delete @7000000 as well if i delete reg line?
+>
+> Hmm. I'm not too keen on encoding a reg or unit-address here, because
+> the control interface of the bus isn't at that address. If we want to
+> add that later then the reg would be different in those cases. Given
+> there's no control interface here, there shouldn't be a reg or
+> unit-address.
+>
+
+Do you mean something like
+
+   ap-ahb { ... };
+   aon-ahb { ... };
+
+without using @xxxx ?
+
+   Thanks, Orson
+
+> Just ensure that the name before the unit-address is unique.
+>
+> Thanks,
+> Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
