@@ -1,54 +1,104 @@
-From: FUKAUMI Naoki <naobsd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 0/3] add support for Firefly-RK3288 and Rayeager PX2 boards
-Date: Sat, 17 Jan 2015 12:08:57 +0900
-Message-ID: <1421464140-29903-1-git-send-email-naobsd@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: FUKAUMI Naoki <naobsd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Tushar Behera <trblinux@gmail.com>
+Subject: Re: [PATCH V3 09/15] ASoC: samsung: i2s: Protect more registers with
+ a spinlock
+Date: Sat, 17 Jan 2015 14:21:46 +0900
+Message-ID: <CAC5m3BxTkS3KtwUC6itMRF=545PoWJw1gYV6av3p7QjtVMFXTQ@mail.gmail.com>
+References: <1421260962-16892-1-git-send-email-s.nawrocki@samsung.com>
+	<1421260962-16892-10-git-send-email-s.nawrocki@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1421260962-16892-10-git-send-email-s.nawrocki@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Mark Brown <broonie@kernel.org>, Kukjin Kim <kgene@kernel.org>, padma.v@samsung.com, drake@endlessm.com, Kim Sangbeom <sbkim73@samsung.com>, Linux-ALSA <alsa-devel@alsa-project.org>, ML Devicetree <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, ML Arch-Arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This series adds support for following Rockchip SoC based boards.
+On Thu, Jan 15, 2015 at 3:42 AM, Sylwester Nawrocki
+<s.nawrocki@samsung.com> wrote:
+> Ensure the I2SMOD, I2SPSR registers, which are also exposed through
+> clk API are only accessed with the i2s->spinlock spinlock held.
+>
+> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> ---
+>  sound/soc/samsung/i2s.c |   81 +++++++++++++++++++++++++++++------------------
+>  1 file changed, 51 insertions(+), 30 deletions(-)
+>
+> diff --git a/sound/soc/samsung/i2s.c b/sound/soc/samsung/i2s.c
+> index 20cc51f..05fc2f0 100644
+> --- a/sound/soc/samsung/i2s.c
+> +++ b/sound/soc/samsung/i2s.c
+> @@ -472,17 +472,22 @@ static int i2s_set_sysclk(struct snd_soc_dai *dai,
+>  {
+>         struct i2s_dai *i2s = to_info(dai);
+>         struct i2s_dai *other = get_other_dai(i2s);
+> -       u32 mod = readl(i2s->addr + I2SMOD);
+>         const struct samsung_i2s_variant_regs *i2s_regs = i2s->variant_regs;
+>         unsigned int cdcon_mask = 1 << i2s_regs->cdclkcon_off;
+>         unsigned int rsrc_mask = 1 << i2s_regs->rclksrc_off;
+> +       u32 mod, mask, val = 0;
+> +
+> +       spin_lock(i2s->lock);
+> +       mod = readl(i2s->addr + I2SMOD);
+> +       spin_unlock(i2s->lock);
+>
 
- - Firefly, Firefly-RK3288 (both beta and mass production version)
- - ChipSPARK, Rayeager PX2
+'mod' is now updated only at the bottom of this function. The above
+readl can be omitted.
 
-Changes in v3:
-- fix ordering more
-- fix clock-* properties
-- enable tsadc with clock-* properties
+>         switch (clk_id) {
+>         case SAMSUNG_I2S_OPCLK:
+> -               mod &= ~MOD_OPCLK_MASK;
+> -               mod |= dir;
+> +               mask = MOD_OPCLK_MASK;
+> +               val = dir;
+>                 break;
+>         case SAMSUNG_I2S_CDCLK:
+> +               mask = 1 << i2s_regs->cdclkcon_off;
 
-Changes in v2:
-- use own compatible property for Firefly-RK3288 beta version
-- remove disabled tsadc node
-- add missing vin-supply
-- use two chars for i2c address
-- fix ordering for the nodes without address element
-- add commit messages
+Use BIT() macro instead?
 
-FUKAUMI Naoki (3):
-  dt-bindings: add vendor prefix and root compatible property for
-    Rockchip boards
-  ARM: dts: rockchip: add dts for Firefly Firefly-RK3288 boards
-  ARM: dts: rockchip: add dts for ChipSPARK Rayeager PX2 board
+>                 /* Shouldn't matter in GATING(CLOCK_IN) mode */
+>                 if (dir == SND_SOC_CLOCK_IN)
+>                         rfs = 0;
+> @@ -499,15 +504,15 @@ static int i2s_set_sysclk(struct snd_soc_dai *dai,
+>                 }
+>
+>                 if (dir == SND_SOC_CLOCK_IN)
+> -                       mod |= 1 << i2s_regs->cdclkcon_off;
+> -               else
+> -                       mod &= ~(1 << i2s_regs->cdclkcon_off);
+> +                       val = 1 << i2s_regs->cdclkcon_off;
+>
 
- Documentation/devicetree/bindings/arm/rockchip.txt |  10 +
- .../devicetree/bindings/vendor-prefixes.txt        |   2 +
- arch/arm/boot/dts/Makefile                         |   5 +-
- arch/arm/boot/dts/rk3066a-rayeager.dts             | 468 +++++++++++++++++++
- arch/arm/boot/dts/rk3288-firefly-beta.dts          |  71 +++
- arch/arm/boot/dts/rk3288-firefly.dts               |  71 +++
- arch/arm/boot/dts/rk3288-firefly.dtsi              | 500 +++++++++++++++++++++
- 7 files changed, 1126 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/rk3066a-rayeager.dts
- create mode 100644 arch/arm/boot/dts/rk3288-firefly-beta.dts
- create mode 100644 arch/arm/boot/dts/rk3288-firefly.dts
- create mode 100644 arch/arm/boot/dts/rk3288-firefly.dtsi
+Same as above.
+
+>                 i2s->rfs = rfs;
+>                 break;
+>
+>         case SAMSUNG_I2S_RCLKSRC_0: /* clock corrsponding to IISMOD[10] := 0 */
+>         case SAMSUNG_I2S_RCLKSRC_1: /* clock corrsponding to IISMOD[10] := 1 */
+> +               mask = 1 << i2s_regs->rclksrc_off;
+> +
+
+Same as above.
+
+>                 if ((i2s->quirks & QUIRK_NO_MUXPSR)
+>                                 || (clk_id == SAMSUNG_I2S_RCLKSRC_0))
+>                         clk_id = 0;
+> @@ -557,18 +562,19 @@ static int i2s_set_sysclk(struct snd_soc_dai *dai,
+>                         return 0;
+>                 }
+>
+> -               if (clk_id == 0)
+> -                       mod &= ~(1 << i2s_regs->rclksrc_off);
+> -               else
+> -                       mod |= 1 << i2s_regs->rclksrc_off;
+> -
+> +               if (clk_id == 1)
+> +                       val = 1 << i2s_regs->rclksrc_off;
+
+Same as above.
 
 -- 
-2.2.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Tushar Behera
