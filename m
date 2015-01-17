@@ -1,104 +1,73 @@
-From: Tushar Behera <trblinux@gmail.com>
-Subject: Re: [PATCH V3 09/15] ASoC: samsung: i2s: Protect more registers with
- a spinlock
-Date: Sat, 17 Jan 2015 14:21:46 +0900
-Message-ID: <CAC5m3BxTkS3KtwUC6itMRF=545PoWJw1gYV6av3p7QjtVMFXTQ@mail.gmail.com>
-References: <1421260962-16892-1-git-send-email-s.nawrocki@samsung.com>
-	<1421260962-16892-10-git-send-email-s.nawrocki@samsung.com>
+From: Orson Zhai <orsonzhai-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 2/5] Documentation: DT: Add bindings for Spreadtrum SoC Platform
+Date: Sat, 17 Jan 2015 16:10:32 +0800
+Message-ID: <CA+H2tpHA7PRL98VMd3d3jeaOr_6Q5ktmM3fbdaBKRpm_pXVqVw@mail.gmail.com>
+References: <1421402411-3479-1-git-send-email-chunyan.zhang@spreadtrum.com>
+	<1421402411-3479-3-git-send-email-chunyan.zhang@spreadtrum.com>
+	<20150116102135.GC21809@leverpostej>
+	<CAAfSe-teDdPzRUnvzM+NErfZwmqM04yUMgic--hyZL8-Jjd8jw@mail.gmail.com>
+	<20150116141109.GC22569@leverpostej>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1421260962-16892-10-git-send-email-s.nawrocki@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: Mark Brown <broonie@kernel.org>, Kukjin Kim <kgene@kernel.org>, padma.v@samsung.com, drake@endlessm.com, Kim Sangbeom <sbkim73@samsung.com>, Linux-ALSA <alsa-devel@alsa-project.org>, ML Devicetree <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, ML Arch-Arm <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150116141109.GC22569@leverpostej>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Lyra Zhang <zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org" <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "jslaby-AlSwsSmVLrQ@public.gmane.org" <jslaby-AlSwsSmVLrQ@public.gmane.org>, "jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org" <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org" <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "florian.vaussard-p8DiymsW2f8@public.gmane.org" <florian.vaussard-p8DiymsW2f8@public.gmane.org>, "andrew-g2DYL2Zd6BY@public.gmane.org" <andrew-g2DYL2Zd6BY@public.gmane.org>, "rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "hytszk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <hytszk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely@lin>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 15, 2015 at 3:42 AM, Sylwester Nawrocki
-<s.nawrocki@samsung.com> wrote:
-> Ensure the I2SMOD, I2SPSR registers, which are also exposed through
-> clk API are only accessed with the i2s->spinlock spinlock held.
+On Fri, Jan 16, 2015 at 10:11 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> On Fri, Jan 16, 2015 at 12:53:16PM +0000, Lyra Zhang wrote:
+>> Hi, Mark
+>>
+>> >> +
+>> >> +Required properties:
+>> >> +- compatible: must be "sprd,sc9836-uart"
+>> >> +- reg: offset and length of the register set for the device
+>> >> +- interrupts: exactly one interrupt specifier
+>> >> +- clocks: phandles to input clocks.
+>> >
+>> > The order and relevance of each should be specified. If you have
+>> > multiple clocks I would strongly recommend you use clock-names to
+>> > distinguish them.
+>> >
+>>
+>> Thank you for the recommendation.
+>> but, since we haven't made the clock driver ready, for this initial
+>> commit, we just let 4 UARTs share a single fixed 26 MHz clock source.
+>> we'll do like you've recommended when we will submit the clock driver
+>> in the future.
 >
-> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> ---
->  sound/soc/samsung/i2s.c |   81 +++++++++++++++++++++++++++++------------------
->  1 file changed, 51 insertions(+), 30 deletions(-)
+> I'm on about the clock input lines on the UART instance, not the
+> providers they come from.
 >
-> diff --git a/sound/soc/samsung/i2s.c b/sound/soc/samsung/i2s.c
-> index 20cc51f..05fc2f0 100644
-> --- a/sound/soc/samsung/i2s.c
-> +++ b/sound/soc/samsung/i2s.c
-> @@ -472,17 +472,22 @@ static int i2s_set_sysclk(struct snd_soc_dai *dai,
->  {
->         struct i2s_dai *i2s = to_info(dai);
->         struct i2s_dai *other = get_other_dai(i2s);
-> -       u32 mod = readl(i2s->addr + I2SMOD);
->         const struct samsung_i2s_variant_regs *i2s_regs = i2s->variant_regs;
->         unsigned int cdcon_mask = 1 << i2s_regs->cdclkcon_off;
->         unsigned int rsrc_mask = 1 << i2s_regs->rclksrc_off;
-> +       u32 mod, mask, val = 0;
-> +
-> +       spin_lock(i2s->lock);
-> +       mod = readl(i2s->addr + I2SMOD);
-> +       spin_unlock(i2s->lock);
+> Is there only a single clock input line on each UART? Perhaps multiple
+> input lines which are currently fed by the same clock?
+
+________
+| 26MHz |-------------------------------------------------
+-------------        |                  |
+                     |                  |
+                _______       ________
+               | UART1 |      | UART2 |    .........
+               --------------      -------------
+
+the hardware is something like the diagram.
+
+4 Uart modules are all connected to a fixed 26Mhz crystal by power-on default.
+
+There should be a clock-mux between uart and 26Mhz which
+could select other clock source such as some pll output.
+
+But as initial commit , we are not ready to describe other inputs by
+these muxes.
+So  we treat the UART as a simple model with only one fixed-clock input.
+And we plan to add the other inputs path back in a not very far future.
+Is it appropriate  to do like this?
+
+  Orson
+
+
 >
-
-'mod' is now updated only at the bottom of this function. The above
-readl can be omitted.
-
->         switch (clk_id) {
->         case SAMSUNG_I2S_OPCLK:
-> -               mod &= ~MOD_OPCLK_MASK;
-> -               mod |= dir;
-> +               mask = MOD_OPCLK_MASK;
-> +               val = dir;
->                 break;
->         case SAMSUNG_I2S_CDCLK:
-> +               mask = 1 << i2s_regs->cdclkcon_off;
-
-Use BIT() macro instead?
-
->                 /* Shouldn't matter in GATING(CLOCK_IN) mode */
->                 if (dir == SND_SOC_CLOCK_IN)
->                         rfs = 0;
-> @@ -499,15 +504,15 @@ static int i2s_set_sysclk(struct snd_soc_dai *dai,
->                 }
->
->                 if (dir == SND_SOC_CLOCK_IN)
-> -                       mod |= 1 << i2s_regs->cdclkcon_off;
-> -               else
-> -                       mod &= ~(1 << i2s_regs->cdclkcon_off);
-> +                       val = 1 << i2s_regs->cdclkcon_off;
->
-
-Same as above.
-
->                 i2s->rfs = rfs;
->                 break;
->
->         case SAMSUNG_I2S_RCLKSRC_0: /* clock corrsponding to IISMOD[10] := 0 */
->         case SAMSUNG_I2S_RCLKSRC_1: /* clock corrsponding to IISMOD[10] := 1 */
-> +               mask = 1 << i2s_regs->rclksrc_off;
-> +
-
-Same as above.
-
->                 if ((i2s->quirks & QUIRK_NO_MUXPSR)
->                                 || (clk_id == SAMSUNG_I2S_RCLKSRC_0))
->                         clk_id = 0;
-> @@ -557,18 +562,19 @@ static int i2s_set_sysclk(struct snd_soc_dai *dai,
->                         return 0;
->                 }
->
-> -               if (clk_id == 0)
-> -                       mod &= ~(1 << i2s_regs->rclksrc_off);
-> -               else
-> -                       mod |= 1 << i2s_regs->rclksrc_off;
-> -
-> +               if (clk_id == 1)
-> +                       val = 1 << i2s_regs->rclksrc_off;
-
-Same as above.
-
--- 
-Tushar Behera
+> Thanks,
+> Mark.
