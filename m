@@ -1,65 +1,99 @@
-From: Ohad Ben-Cohen <ohad@wizery.com>
-Subject: Re: [PATCH v7 1/4] Documentation: dt: add common bindings for hwspinlock
-Date: Sat, 17 Jan 2015 02:46:46 +0200
-Message-ID: <CAK=WgbYBqPoUm9byx0du_g5ZmHdYaUVLpSPZYHoCVzNoatNKpw@mail.gmail.com>
-References: <1421269101-51105-1-git-send-email-s-anna@ti.com>
- <1421269101-51105-2-git-send-email-s-anna@ti.com> <20150115135201.GG16217@leverpostej>
- <20150115135556.GH16217@leverpostej> <CAL_JsqL2LZAooMk-V8+xeF2g6acZE21M+-OBRw8aEVa-5wVHuQ@mail.gmail.com>
- <CAK=WgbYQ=BbinqJ5fsw2Y+FKdy=nasLsw9mX8pw6S_o3owy9-g@mail.gmail.com> <20150116101746.GA21809@leverpostej>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 0/6] ARM: shmobile: sh73a0: DT PM domain support
+Date: Sat, 17 Jan 2015 10:14:14 +0900
+Message-ID: <20150117011414.GC397@verge.net.au>
+References: <1421237484-16847-1-git-send-email-geert+renesas@glider.be>
+ <20150114235302.GC10479@verge.net.au>
+ <CAMuHMdVANePZ-fLzaLCEOm0vHR735C=u5_fDa4Uywi_P5ggjBg@mail.gmail.com>
+ <20150116011315.GA7830@verge.net.au>
+ <20150116024724.GA31654@verge.net.au>
+ <CAMuHMdU4hj2p-N8abT-BSadznqF7=0-08o9F4_7+qjdvv6Whmw@mail.gmail.com>
+ <20150116124502.GC6285@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150116101746.GA21809@leverpostej>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Rob Herring <robherring2@gmail.com>, Suman Anna <s-anna@ti.com>, Kumar Gala <galak@codeaurora.org>, Bjorn Andersson <bjorn@kryo.se>, Josh Cartwright <joshc@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150116124502.GC6285@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Mark,
+On Fri, Jan 16, 2015 at 09:45:03PM +0900, Simon Horman wrote:
+> On Fri, Jan 16, 2015 at 10:51:29AM +0100, Geert Uytterhoeven wrote:
+> > Hi Simon,
+> > 
+> > On Fri, Jan 16, 2015 at 3:47 AM, Simon Horman <horms@verge.net.au> wrote:
+> > > On Fri, Jan 16, 2015 at 10:13:15AM +0900, Simon Horman wrote:
+> > >> On Thu, Jan 15, 2015 at 10:32:23AM +0100, Geert Uytterhoeven wrote:
+> > >> > On Thu, Jan 15, 2015 at 12:53 AM, Simon Horman <horms@verge.net.au> wrote:
+> > >> > > On Wed, Jan 14, 2015 at 01:11:18PM +0100, Geert Uytterhoeven wrote:
+> > >> > >> This patch series enables DT support for PM domains on the Renesas
+> > >> > >> SH-Mobile AG5 (sh73a0) SoC.
+> > >> > >>
+> > >> > >> This series builds further on the DT PM Domain support for R-Mobile A1
+> > >> > >> (r8a7740).  Due to the similarity of the SYSC System-Controller on the
+> > >> > >> various SH-Mobile/R-Mobile SoCs, and the abstraction of PM domains in
+> > >> > >> DT, the same driver can handle sh73a0 after some small modifications,
+> > >> > >> without changing the DT bindings.
+> > >> > >>
+> > >> > >> Compared to r8a7740, the only significant change is the move of the
+> > >> > >> memory-controller(s) to separate PM domains on sh73a0 (and also on
+> > >> > >> R-Mobile APE6 (r8a73a4)). Hence a provision must be made to not turn off
+> > >> > >> these PM domains inadvertently, cfr. the series "[PATCH 0/4] ARM:
+> > >> > >> shmobile: Add DT support for memory controllers" I've just sent.
+> > >> > >>
+> > >> > >> This series has been sent before, as part of the series "[PATCH RFC
+> > >> > >> 0/7] ARM: shmobile: sh73a0: DT PM domain support"
+> > >> > >> (https://lkml.org/lkml/2014/11/19/404).
+> > >> > >> Changes since v1 (more detailed changelogs in the individual patches):
+> > >> > >>   - Factored out addition of the memory-controller in a separate
+> > >> > >>     series.
+> > >> > >>
+> > >> > >> Dependencies:
+> > >> > >>   1. Patches 1-4 (DT binding doc, C code) depend on:
+> > >> > >>        a. The R-Mobile DT PM Domain work for r8a7740, queued in tag
+> > >> > >>           renesas-dt-pm-for-v3.20 of Simon's repository,
+> > >> > >
+> > >> > > In response to a request from Olof renesas-dt-pm-for-v3.20 has been
+> > >> > > withdrawn and the patches split between the soc-for-v3.20 and dt-for-v3.20
+> > >> > > branches. I am assuming that the patches that 1-4 depend on are
+> > >> > > now all in the soc-for-v3.20 branch. Could you check?
+> > >> >
+> > >> > OK, soc-for-v3.20 now.
+> > >> >
+> > >> > >>        b. "ARM: shmobile: R-Mobile: Fix DT refcount bugs in PM domain
+> > >> > >>          code"
+> > >> > >>          (http://www.spinics.net/lists/arm-kernel/msg391084.html),
+> > >> > >
+> > >> > > FWIW, I have squashed that patch into the patch that adds the problem
+> > >> > > and the result is in the soc-for-v3.20. I will to push that result
+> > >> > > a little later today.
+> > >> >
+> > >> > Thanks!
+> > >> >
+> > >> > >>   2. Patch 5 (dtsi) depends on:
+> > >> > >>        a. The multiplatform work for sh73a0, queued in branch
+> > >> > >>           sh73a0-multiplatform-for-v3.20 of Simon's repository,
+> > >> > >>        b. Series "[PATCH 0/4] ARM: shmobile: Add DT support for memory
+> > >> > >>           controllers"
+> > >> > >>         (http://marc.info/?l=linux-sh&m=142123399414888).
+> > >> > >
+> > >> > > This may be awkward to get into v3.20 unless we can adopt a looser approach
+> > >> > > to the dependencies.
+> > 
+> > > Please take a look at renesas-next-20150115-v3.19-rc1.
+> > 
+> > s/20150115/20150116/?
 
-On Fri, Jan 16, 2015 at 12:17 PM, Mark Rutland <mark.rutland@arm.com> wrote:
->> The hwlock is a basic hardware primitive that allow synchronization
->> between different processors in the system, which may be running Linux
->> as well as other operating systems, and may have no other means of
->> communication.
->>
->> The hwlock id numbers are predefined, global and static across the
->> entire system: Linux may boot well after other operating systems are
->> already running and using these hwlocks to communicate, and therefore,
->> in order to use these hardware devices, it must not enumerate them
->> differently than the rest of the system.
->
-> That's not true.
->
-> In order to communicate it must agree with the other users as to the
-> meaning of each instance, and the protocol for use. That doesn't
-> necessarily mean that Linux needs to know the numerical ID from a
-> datasheet, and regardless that ID is separate from the logical ID Linux
-> uses internally.
+Yes, 16 :)
 
-Let me describe hwspinlocks a bit more so we all get to know it better
-and can then agree on a proper solution.
+> > > This series should be queued-up there.
+> > 
+> > If you add patch 6 to sh-drivers-for-v3.20 and merge it in -next,
+> > everything is fine!
+> 
+> Thanks, I thought I had that one but I must have missed it somehow.
 
-- What makes handling of hwspinlock ID numbers convenient is the fact
-that it's not based on random datasheet numbers. In fact, hwspinlocks
-is just special memory: usually datasheets just define the base
-address and the size of the hwspinlock area. So any numerical ID we
-use to call the locks themselves are already logical and sane, similar
-to the way we handle memory (i.e. if we have 32 locks we'll always use
-0..31). So hwlocks ids are very much like memory addressing, and not
-irq numbers.
-
-- Sometimes Linux will have to dynamically allocate a hwlock, and send
-the ID of the allocated lock to a remote processor (which may not be
-running Linux).
-- Sometimes a remote processor, which may not be running Linux, will
-have to dynamically allocate a hwlock, and send the ID of the
-allocated lock to us (another processor running Linux)
-
-We cannot tell in advance what kind of IPC is going to be used for
-sending and receiving this hwlock ID. Some are handled by Linux
-(kernel) and some by the user space. So we must be able to expose an
-ID the system will understand as well as receive one.
-
-Thanks,
-Ohad.
+I have made a second attempt and this time I hope that I haven't missed
+anything. Please see renesas-next-20150117-v3.19-rc1.
