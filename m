@@ -1,65 +1,83 @@
-From: Peter =?iso-8859-15?q?H=FCwe?= <PeterHuewe-Mmb7MZpHnFY@public.gmane.org>
-Subject: Re: [PATCH v2 04/10] tpm/tpm_i2c_stm_st33: Replace access to io_lpcpd from struct st33zp24_platform_data to tpm_stm_dev
-Date: Sat, 17 Jan 2015 14:44:47 +0100
-Message-ID: <201501171444.49175.PeterHuewe@gmx.de>
-References: <1421187198-8503-1-git-send-email-christophe-h.ricard@st.com> <1421187198-8503-5-git-send-email-christophe-h.ricard@st.com>
+From: Greg KH <greg@kroah.com>
+Subject: Re: Making udev emit a signal when it is done
+ loading modules
+Date: Sat, 17 Jan 2015 05:56:30 -0800
+Message-ID: <20150117135630.GA25585@kroah.com>
+References: <54BA20D0.7060402@redhat.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-15"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1421187198-8503-5-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: ashley-fm2HMyfA2y6tG0bUXCXiUA@public.gmane.org, tpmdd-yWjUBOtONefk1uMJSBkQmQ@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, jean-luc.blanc-qxv4g6HH51o@public.gmane.org, benoit.houyere-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org, jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <systemd-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <54BA20D0.7060402@redhat.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/systemd-devel>,
+ <mailto:systemd-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/systemd-devel>
+List-Post: <mailto:systemd-devel@lists.freedesktop.org>
+List-Help: <mailto:systemd-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/systemd-devel>,
+ <mailto:systemd-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: systemd-devel-bounces@lists.freedesktop.org
+Sender: "systemd-devel" <systemd-devel-bounces@lists.freedesktop.org>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, Mark Brown <broonie@kernel.org>, systemd-devel@lists.freedesktop.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, 13. Januar 2015, 23:13:12 schrieb Christophe Ricard:
-> io_lpcpd is accessible from struct tpm_stm_dev.
-> struct st33zp24_platform_data is only valid when using static platform
-> configuration data, not when using dts.
-> 
-> Reviewed-by: Jasob Gunthorpe <jason.gunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-> Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
-> ---
->  drivers/char/tpm/tpm_i2c_stm_st33.c | 16 ++++++++++------
->  1 file changed, 10 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/char/tpm/tpm_i2c_stm_st33.c
-> b/drivers/char/tpm/tpm_i2c_stm_st33.c index d12d507..9d3c9c8 100644
-> --- a/drivers/char/tpm/tpm_i2c_stm_st33.c
-> +++ b/drivers/char/tpm/tpm_i2c_stm_st33.c
-> @@ -834,11 +834,14 @@ static int tpm_stm_i2c_remove(struct i2c_client
-> *client) */
->  static int tpm_stm_i2c_pm_suspend(struct device *dev)
->  {
-> -	struct st33zp24_platform_data *pin_infos = dev->platform_data;
-> +	struct tpm_chip *chip = dev_get_drvdata(dev);
-> +	struct tpm_stm_dev *tpm_dev;
->  	int ret = 0;
-> 
-> -	if (gpio_is_valid(pin_infos->io_lpcpd))
-> -		gpio_set_value(pin_infos->io_lpcpd, 0);
-> +	tpm_dev = (struct tpm_stm_dev *)TPM_VPRIV(chip);
-> +
-> +	if (gpio_is_valid(tpm_dev->io_lpcpd))
-> +		gpio_set_value(tpm_dev->io_lpcpd, 0);
->  	else
->  		ret = tpm_pm_suspend(dev);
-
-patch is not self contained and fails to build.
-
-drivers/char/tpm/tpm_i2c_stm_st33.c: In function 'tpm_stm_i2c_pm_resume':
-drivers/char/tpm/tpm_i2c_stm_st33.c:864:20: error: 'pin_infos' undeclared 
-(first use in this function)
-  if (gpio_is_valid(pin_infos->io_lpcpd)) {
-                    ^
-drivers/char/tpm/tpm_i2c_stm_st33.c:864:20: note: each undeclared identifier 
-is reported only once for each function it appears in
-scripts/Makefile.build:263: recipe for target 
-'drivers/char/tpm/tpm_i2c_stm_st33.o' failed
-make[3]: *** [drivers/char/tpm/tpm_i2c_stm_st33.o] Error 1
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gU2F0LCBKYW4gMTcsIDIwMTUgYXQgMDk6NDQ6MDBBTSArMDEwMCwgSGFucyBkZSBHb2VkZSB3
+cm90ZToKPiBEZWFyIHVkZXYgZGV2ZWxvcGVycywKPiAKPiBXZSAobWUgYW5kIHNvbWUga2VybmVs
+IGRldnMgbW9zdGx5KSB3b3VsZCBsaWtlIHRvIGFkZCBzdXBwb3J0IHRvCj4gdGhlIGtlcm5lbCBm
+b3IgdXNlcnNwYWNlIHRlbGxpbmcgdGhlIGtlcm5lbCB0aGF0IGl0IGlzIGRvbmUgd2l0aAo+IHRo
+ZSAqaW5pdGlhbCogbG9hZGluZyBvZiBtb2R1bGVzLCB3aXRoIHRoZSBwdXJwb3NlIG9mIGNsZWFu
+aW5nIHVwCj4gKGRpc2FibGluZykgdW51c2VkIGhhcndhcmUgcmVzb3VyY2VzIGxpa2UgZS5nLiBy
+ZWd1bGF0b3JzIGFuZAo+IGNsb2Nrcy4KCkJ1dCB5b3UgZG9uJ3QgImtub3ciIHdoZW4gdGhhdCBo
+YXBwZW5zLiAgRXNwZWNpYWxseSB3aXRoIGRpc2NvdmVyYWJsZQpidXNzZXMgKFBDSSwgVVNCLCBl
+dGMuKSwgeW91IGtub3cgdGhpcyA6KQoKPiBDdXJyZW50bHkgdGhlIGtlcm5lbCBkb2VzIHRoaXMg
+Y2xlYW51cCBqdXN0IGJlZm9yZSBpdCBzdGFydHMgaW5pdAo+ICh3aGljaCBtYXkgdmVyeSB3ZWxs
+IGJlIGluaXQgZnJvbSBhIHJhbWRpc2spLiBJbiBzb21lIGNhc2VzIHRoaXMKPiBpcyB0b28gZWFy
+bHkgcmVhbGx5LCBiZWNhdXNlIGxhdGVyIG9uIGEgbW9kdWxlIG1heSBnZXQgbG9hZGVkCj4gd2hp
+Y2ggbmVlZHMgdGhpcyByZXNvdXJjZXMsIHRoZXNlIHJlc291cmNlcyB3aWxsIHRoZW4gZ2V0IHR1
+cm5lZAo+IG9uIGFnYWluIGJ5IHRoZSBsb2FkZWQgZHJpdmVyLCBhbmQgbW9zdCBvZiB0aGUgdGlt
+ZSB0aGlzIGlzIG5vdAo+IGFuIGlzc3VlLCBidXQgc29tZXRpbWVzIGl0IGlzLgo+IAo+IEkgcmVh
+bGl6ZSB2ZXJ5IHdlbGwgdGhhdCB0aGVyZSBpcyBubyBtYWdpYyBtb21lbnQgd2hlcmUgdWRldiBp
+cwo+IHJlYWxseSBldmVyIGRvbmUgbG9hZGluZyBtb2R1bGVzLCBidXQgdGhlIGNhc2Ugd2hpY2gg
+d2Ugd2FudCB0bwo+IHN1cHBvcnQgb25seSBpbnZvbHZlcyBkZXZpY2VzIHdoaWNoIGFyZSAqYWxy
+ZWFkeSBlbnVtZXJhdGVkKiwgYnV0Cj4gbWF5IG5vdCB5ZXQgaGF2ZSBhIGRyaXZlciBsb2FkZWQs
+IHdoZW4gdWRldiBzdGFydHMuIFdlIHdvdWxkIGxpa2UKPiB1ZGV2IHRvIGVtaXQgYSBzaWduYWwg
+KEFCSSB0byBiZSBkaXNjdXNzZWQpIHdoZW4gaXQgaXMgZG9uZQo+IHRyeWluZyB0byBsb2FkIG1v
+ZHVsZXMgZm9yIGV2ZXJ5dGhpbmcgd2hpY2ggd2FzIGFscmVhZHkgZW51bWVyYXRlZAo+IHdoZW4g
+aXQgc3RhcnRzLCBpb3cgd2hlbiB0aGVyZSBhcmUgbm8gbmV3IGRldmljZSBldmVudHMgcGVuZGlu
+Zwo+IGFueW1vcmUgd2hlbiB1ZGV2IGRvZXMgaXRzIGluaXRpYWwgaG90cGx1ZyByZXBsYXkuCgpU
+aGUga2VybmVsIGRvZXNuJ3QgZXZlbiAia25vdyIgd2hlbiB0aGlzIHR5cGUgb2YgdGhpbmcgaXMs
+IGhvdyBjYW4gdWRldgprbm93IHRoaXM/Cgo+IFNvIHRoZSBxdWVzdGlvbiB0byB5b3UgaXMgd291
+bGQgeW91IGJlIHdpbGxpbmcgdG8gaW5jbHVkZSBzdWNoCj4gZnVuY3Rpb25hbGl0eSBpbiB1ZGV2
+ID8gIE5vdGUgdGhpcyBzaWduYWwgd291bGQgbmVlZCB0byBiZSBlbWl0dGVkCj4gd2hlbiB1ZGV2
+IGZyb20gdGhlIHJlYWwgcm9vdGZzIGlzIGRvbmUgd2l0aCB0aGUgaW5pdGlhbCBtb2R1bGUKPiBs
+b2FkaW5nLCBhcyB0aGUgcmVhbCByb290ZnMgbWF5IHZlcnkgd2VsbCBoYXZlIG1vcmUgbW9kdWxl
+cwo+IGF2YWlsYWJsZSB0aGVuIHRoZSBpbml0cmQuCj4gCj4gIyMjCj4gCj4gV2l0aCB0aGUgZ2Vu
+ZXJpYyBzdG9yeSBhYm92ZSB0b2xkIGxldCBtZSBhbHNvIGdpdmUgdGhlIGNvbmNyZXRlCj4gZXhh
+bXBsZSAvIHByb2JsZW0gd2hpY2ggaGFzIGxldCB0byBtZSBhc2tpbmcgdGhpcyAobm90ZSB0aGlz
+IGhhcwo+IGJlZW4gYnJvdWdodCB1cCBiZWZvcmUgb24gdmFyaW91cyBrZXJuZWwgbGlzdHMsIGl0
+IGlzIGEKPiByZS1vY2N1cmluZyB0aGVtZSwgdGhpcyBpcyBqdXN0IGFuIGV4YW1wbGUgcmVhbGx5
+KSA6Cj4gCj4gVGhlIHByb2JsZW0gYXQgaGFuZCBpcyBhIHNhdGEgY29ubmVjdG9yIHdoaWNoIGFs
+c28gaGFzIGEgc2F0YS1wb3dlcgo+IGNvbm5lY3RvciBvbiBhbiBlbWJlZGRlZCAoaXNoKSBib2Fy
+ZCB3aGVyZSB0aGUgc2F0YS1wb3dlciBpcwo+IGNvbnRyb2xsZWQgdGhyb3VnaCBhIGdwaW8uIFRo
+ZSBzYXRhLXBvd2VyIGNvbm5lY3RvciBpcyBtb2RlbGVkCj4gaW4gZGV2aWNldHJlZSBhcyBhIHBv
+d2VyLXN1cHBseSBhbmQgdGhpcyBzdXBwbHkgZ2V0cyBjb250cm9sbGVkCj4gYnkgdGhlIGFoY2lf
+cGxhdGZvcm0gZHJpdmVyLgo+IAo+IFRoZSBkaXNrIHBvd2VyIG1heSB2ZXJ5IHdlbGwgaGF2ZSBh
+bHJlYWR5IGJlZW4gdHVybmVkIG9uIGJ5IHRoZQo+IGJvb3Rsb2FkZXIsIHNvIHdlIGFkZCBhIHJl
+Z3VsYXRvci1ib290LW9uIHByb3BlcnR5IHRvIHRoZSByZWd1bGF0b3IKPiBub2RlIGluIGRldmlj
+ZXRyZWUgdG8gbWFrZSBzdXJlIHRoYXQgaXQgaXMgbGVmdCB1bnRvdWNoZWQgd2hlbiB0aGUKPiBy
+ZWd1bGF0b3IgZHJpdmVyIGxvYWRzLiBJZiB0aGUgYWhjaV9wbGF0Zm9ybSBkcml2ZXIgaXMgYnVp
+bGQgaW50bwo+IHRoZSBrZXJuZWwsIGl0IHdpbGwgdGhlbiB0YWtlIGNvbnRyb2wgb2YgdGhlIHJl
+Z3VsYXRvciBhbmQKPiBldmVyeXRoaW5nIHdvcmtzIHdlbGwuCj4gCj4gSWYgaG93ZXZlciB0aGUg
+YWhjaV9wbGF0Zm9ybSBkcml2ZXIgaXMgYSBtb2R1bGUsIHRoZW4gYXMgc29vbiBhcwo+IHRoZSBr
+ZXJuZWwgaXMgcmVhZHkgdG8gc3RhcnQgaW5pdCwgdW51c2VkIHJlZ3VsYXRvcnMgYXJlIHR1cm5l
+ZCBvZmYKPiBhbmQgdGhlIGRpc2sgbG9vc2VzIGl0cyBwb3dlciB3aGlsZSBzcGlubmluZyBhbmQg
+ZW5kcyB1cCBkb2luZyBhbgo+IGVtZXJnZW5jeSBoZWFkcyBwYXJrLgoKV2hhdCB0dXJucyBvZmYg
+dGhlIHBvd2VyIGluIHRoaXMgc2l0dWF0aW9uPyAgVGhlIGtlcm5lbD8gIE9yIHVzZXJzcGFjZT8K
+RG9uJ3QgeW91IGhhdmUgY29udHJvbCBvZiB0aGlzPwoKSGF2ZSB5b3UgdHJpZWQgdG8gZXZlbiBj
+cmVhdGUgYSBwYXRjaCB0aGF0IGNvdWxkIGRvIHRoaXMgdHlwZSBvZiB0aGluZwp0byB1ZGV2IHRv
+IHNlZSBpZiBpdCBpcyBldmVuIHBvc3NpYmxlPwoKdGhhbmtzLAoKZ3JlZyBrLWgKX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Kc3lzdGVtZC1kZXZlbCBtYWls
+aW5nIGxpc3QKc3lzdGVtZC1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3Rz
+LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL3N5c3RlbWQtZGV2ZWwK
