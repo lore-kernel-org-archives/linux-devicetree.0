@@ -1,73 +1,74 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v4 4/4] ARM: mvebu: Armada 385 GP: Add regulators to the
- SATA port
-Date: Sun, 18 Jan 2015 19:28:34 +0000
-Message-ID: <20150118192834.GE2809@sirena.org.uk>
-References: <54B8D97B.3090908@free-electrons.com>
- <54B8E38A.6020709@redhat.com>
- <20150116123705.GM3043@sirena.org.uk>
- <54B9629C.9090800@redhat.com>
- <20150116202516.GL3856@sirena.org.uk>
- <54BA21F9.5050408@redhat.com>
- <20150117131404.GA6414@sirena.org.uk>
- <54BA7197.40301@redhat.com>
- <20150118123531.GA2809@sirena.org.uk>
- <54BBD13E.6030901@redhat.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH 2/3] hwmon: Driver for OMAP3 temperature sensor
+Date: Sun, 18 Jan 2015 21:33:46 +0100
+Message-ID: <20150118203346.GA29863@amd>
+References: <20141226102933.GA28778@amd>
+ <1419597294-21487-1-git-send-email-sre@kernel.org>
+ <1419597294-21487-3-git-send-email-sre@kernel.org>
+ <CANOLnON6rAQ2+jJEFDKseH2Htu6bqRkURDioGt7zp1Ze73f8Pw@mail.gmail.com>
+ <CAGo_u6qO0ok+GBnm7SQtw6dJuwGN2OuP7CpKDEWawS3V2go4KA@mail.gmail.com>
+ <20141229181556.GA26926@amd>
+ <20141229190448.GA27124@roeck-us.net>
+ <20150103091858.GA30538@amd>
+ <20150107161944.GB9012@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="LSp5EJdfMPwZcMS1"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <54BBD13E.6030901@redhat.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Gregory CLEMENT <gregory.clement@free-electrons.com>, Tejun Heo <tj@kernel.org>, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart@free-electrons.com>, Liam Girdwood <lgirdwood@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+In-Reply-To: <20150107161944.GB9012@roeck-us.net>
+Sender: linux-omap-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Nishanth Menon <nm@ti.com>, Grazvydas Ignotas <notasas@gmail.com>, Sebastian Reichel <sre@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dt list <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Tony Lindgren <tony@atomide.com>, Kumar Gala <galak@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, lm-sensors@lm-sensors.org, Rob Herring <robh+dt@kernel.org>, Jean Delvare <jdelvare@suse.de>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Pali Rohar <pali.rohar@gmail.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed 2015-01-07 08:19:44, Guenter Roeck wrote:
+> On Sat, Jan 03, 2015 at 10:18:58AM +0100, Pavel Machek wrote:
+> > On Mon 2014-12-29 11:04:48, Guenter Roeck wrote:
+> > > On Mon, Dec 29, 2014 at 07:15:56PM +0100, Pavel Machek wrote:
+> > > > On Mon 2014-12-29 12:01:03, Nishanth Menon wrote:
+> > > > > On Mon, Dec 29, 2014 at 11:52 AM, Grazvydas Ignotas <notasas@gmail.com> wrote:
+> > > > > > On Fri, Dec 26, 2014 at 2:34 PM, Sebastian Reichel <sre@kernel.org> wrote:
+> > > > > >> OMAP34xx and OMAP36xx processors contain a register in the syscon area,
+> > > > > >> which can be used to determine the SoCs temperature. This patch provides
+> > > > > >> a DT based driver for the temperature sensor based on an older driver
+> > > > > >> written by Peter De Schrijver for the Nokia N900 and N9.
+> > > > > >
+> > > > > > The sensor looks like an earlier iteration of sensors used in newer
+> > > > > > OMAPs, which are already supported by maybe
+> > > > > > drivers/thermal/ti-soc-thermal/ , maybe it would make sense to update
+> > > > > > that driver instead?
+> > > > > 
+> > > > > Just to be clear - OMAP4 is the first time that the sensors were
+> > > > > reliable enough to be used.
+> > > > 
+> > > > When testing initial version of the patch, they seem to work very well
+> > > > in the omap3 case.
+> > > > 
+> > > Pavel,
+> > > 
+> > > can you look into the omap4 thermal driver to see if it can be used ?
+> > 
+> > After some fixes... yes, it seems to be same hardware.
+> > 
+> So this should be the way to go, but then we have others claim that
+> it should not be done because the OMAP3 sensors are too unreliable
+> to use for thermal decisions. Not really sure where that leaves us.
+> I am kind of opposed to have similar drivers for similar chips
+> in two different subsystems.
+> 
+> Is it possible to add the patch below to the omap thermal driver
+> and not use it for thermal decisions ?
 
---LSp5EJdfMPwZcMS1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Well... noone forces you to enable the driver, and I don't think it
+will do any thermal decisions on N900 as it is ... so we should be ok.
 
-On Sun, Jan 18, 2015 at 04:29:02PM +0100, Hans de Goede wrote:
-> On 18-01-15 13:35, Mark Brown wrote:
+Plus, it seems to work reasonably well (say +- 5 C), so situation does
+not seem to be as bad as TI claims.
 
-> >Right, but that's not what regulator-boot-on actually means (and I'm not
-> >sure why you would think it would TBH)
+Nokia was actually using it in production.
 
-> Well, the meaning of regulator-boot-on is not clearly defined really, to
-> begin we need with fixing that, currently all the bindings file says is:
-
-> - regulator-boot-on: bootloader/firmware enabled regulator
-
-If that meant anything about what to do with the regulator at runtime it
-would say so - it means exactly what it says.
-
-> One could easily argue that the bootloader likely has a good reason to turn
-> the regulator on, and that unless there is a specific driver which claims
-> the regulator and thus knows what to do with it it is best left alone ...
-
-That's an excessively big stretch; it doesn't reflect the reality that
-the bootloader is often just leaving the settings it found on initial
-power up alone nor the general quality of implementation concerns one
-often sees with bootloaders.  A big use case for this feature is that
-there is a fairly large class of systems where the bootloader can't be
-relied on.
-
---LSp5EJdfMPwZcMS1
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJUvAlhAAoJECTWi3JdVIfQFugH/2MtQS8neODkPiv2p92VJqpA
-yyGQvGqIheznrWmlk6q6VztpOWTirZdB8dXmwJ5iAlojBYVZ37RUt6gBpmUoAOTH
-vk3rKGwKANixryQ6p/INxeN/eI/ezGtpKyse5DP1jdHrx8nXlokm5gQPm/wzQeDu
-WMk9+pgYUlzRBbibYa10E38oAzStNsYmZMxZuHCjPmOZ5g0zLp/tGySZYZw5Y5jS
-eTEvtcsDrJ0QjQPBlrb696PdQuc5cHdZ218fPbZf/brvfVB7ATtQG2oIq7WL6bQs
-17TdfnUJrnGJHcNTQ/mXKBIW2y/pl6wz2UszfTWfhtW95yFx9LlOrbZYzH7zydI=
-=m6+K
------END PGP SIGNATURE-----
-
---LSp5EJdfMPwZcMS1--
+Best regards,
+									Pavel
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
