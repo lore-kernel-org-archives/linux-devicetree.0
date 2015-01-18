@@ -1,112 +1,31 @@
-From: Sylvain Rochet <sylvain.rochet-ETtyaVkrhkNWk0Htik3J/w@public.gmane.org>
-Subject: [PATCHv2 2/2] dts: AT91 Watchdog, remove property idle halt by default
-Date: Sun, 18 Jan 2015 14:26:51 +0100
-Message-ID: <1421587611-32708-3-git-send-email-sylvain.rochet@finsecur.com>
-References: <20150118090820.07856398@bbrezillon>
- <1421587611-32708-1-git-send-email-sylvain.rochet@finsecur.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1421587611-32708-1-git-send-email-sylvain.rochet-ETtyaVkrhkNWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Sylvain Rochet <sylvain.rochet-ETtyaVkrhkNWk0Htik3J/w@public.gmane.org>
+From: Aleksei Mamlin <mamlinav@gmail.com>
+Subject: [PATCH v2 0/3] Add device tree support for Goodix GT9xx series touchscreen controller
+Date: Sun, 18 Jan 2015 17:02:20 +0300
+Message-ID: <1421589740-12132-1-git-send-email-mamlinav@gmail.com>
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: linux-input@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Aleksei Mamlin <mamlinav@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The behavior changed when watchdog properties were added to DT, it makes
-the watchdog not counting when CPU is in idle state, therefore the
-watchdog reset time depends on mean CPU usage and will not reset at all
-if the CPU stop working while it is in idle state, which is a very weird
-behavior.
+This patch set adds device tree support and binding information for Goodix GT9xx series touchscreen controller.
+Support was tested on Wexler Tab 7200 tablet pc and also should work on other devices.
 
-Apply principle of least surprise on at91sam9260-wdt by removing idle
-halt flag by default.
+Changes since v1:
+  Added Kconfig entry, which enable CONFIG_OF
 
-Signed-off-by: Sylvain Rochet <sylvain.rochet-ETtyaVkrhkNWk0Htik3J/w@public.gmane.org>
----
-Acked-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
- arch/arm/boot/dts/at91sam9260.dtsi | 1 -
- arch/arm/boot/dts/at91sam9263.dtsi | 1 -
- arch/arm/boot/dts/at91sam9g45.dtsi | 1 -
- arch/arm/boot/dts/at91sam9n12.dtsi | 1 -
- arch/arm/boot/dts/at91sam9x5.dtsi  | 1 -
- arch/arm/boot/dts/sama5d3.dtsi     | 1 -
- 6 files changed, 6 deletions(-)
+Aleksei Mamlin (3):
+  input: goodix: Add device tree support
+  dt-bindings: Add vendor-prefix for Goodix
+  input: goodix: Add bindings documentation
 
-diff --git a/arch/arm/boot/dts/at91sam9260.dtsi b/arch/arm/boot/dts/at91sam9260.dtsi
-index dd1313c..184e1d1 100644
---- a/arch/arm/boot/dts/at91sam9260.dtsi
-+++ b/arch/arm/boot/dts/at91sam9260.dtsi
-@@ -971,7 +971,6 @@
- 				atmel,watchdog-type = "hardware";
- 				atmel,reset-type = "all";
- 				atmel,dbg-halt;
--				atmel,idle-halt;
- 				status = "disabled";
- 			};
- 
-diff --git a/arch/arm/boot/dts/at91sam9263.dtsi b/arch/arm/boot/dts/at91sam9263.dtsi
-index 1467750..c39556b 100644
---- a/arch/arm/boot/dts/at91sam9263.dtsi
-+++ b/arch/arm/boot/dts/at91sam9263.dtsi
-@@ -874,7 +874,6 @@
- 				atmel,watchdog-type = "hardware";
- 				atmel,reset-type = "all";
- 				atmel,dbg-halt;
--				atmel,idle-halt;
- 				status = "disabled";
- 			};
- 
-diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
-index 2a8da8a..b8d741d 100644
---- a/arch/arm/boot/dts/at91sam9g45.dtsi
-+++ b/arch/arm/boot/dts/at91sam9g45.dtsi
-@@ -1111,7 +1111,6 @@
- 				atmel,watchdog-type = "hardware";
- 				atmel,reset-type = "all";
- 				atmel,dbg-halt;
--				atmel,idle-halt;
- 				status = "disabled";
- 			};
- 
-diff --git a/arch/arm/boot/dts/at91sam9n12.dtsi b/arch/arm/boot/dts/at91sam9n12.dtsi
-index 68eb9ad..e0b5c24 100644
---- a/arch/arm/boot/dts/at91sam9n12.dtsi
-+++ b/arch/arm/boot/dts/at91sam9n12.dtsi
-@@ -889,7 +889,6 @@
- 				atmel,watchdog-type = "hardware";
- 				atmel,reset-type = "all";
- 				atmel,dbg-halt;
--				atmel,idle-halt;
- 				status = "disabled";
- 			};
- 
-diff --git a/arch/arm/boot/dts/at91sam9x5.dtsi b/arch/arm/boot/dts/at91sam9x5.dtsi
-index bbb3ba6..ce61f91 100644
---- a/arch/arm/boot/dts/at91sam9x5.dtsi
-+++ b/arch/arm/boot/dts/at91sam9x5.dtsi
-@@ -1125,7 +1125,6 @@
- 				atmel,watchdog-type = "hardware";
- 				atmel,reset-type = "all";
- 				atmel,dbg-halt;
--				atmel,idle-halt;
- 				status = "disabled";
- 			};
- 
-diff --git a/arch/arm/boot/dts/sama5d3.dtsi b/arch/arm/boot/dts/sama5d3.dtsi
-index 5f4144d..63d12ed 100644
---- a/arch/arm/boot/dts/sama5d3.dtsi
-+++ b/arch/arm/boot/dts/sama5d3.dtsi
-@@ -1224,7 +1224,6 @@
- 				atmel,watchdog-type = "hardware";
- 				atmel,reset-type = "all";
- 				atmel,dbg-halt;
--				atmel,idle-halt;
- 				status = "disabled";
- 			};
- 
+ .../bindings/input/touchscreen/gt9xx.txt           | 23 ++++++++++++++++++++++
+ .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+ drivers/input/touchscreen/Kconfig                  |  2 +-
+ drivers/input/touchscreen/goodix.c                 | 10 ++++++++++
+ 4 files changed, 35 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/input/touchscreen/gt9xx.txt
+
 -- 
-2.1.4
+2.0.5
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
