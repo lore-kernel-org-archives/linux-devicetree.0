@@ -1,45 +1,42 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH 2/3] hwmon: Driver for OMAP3 temperature sensor
-Date: Sun, 18 Jan 2015 14:18:24 -0800
-Message-ID: <54BC3130.4010401@roeck-us.net>
-References: <20141226102933.GA28778@amd> <1419597294-21487-1-git-send-email-sre@kernel.org> <1419597294-21487-3-git-send-email-sre@kernel.org> <CANOLnON6rAQ2+jJEFDKseH2Htu6bqRkURDioGt7zp1Ze73f8Pw@mail.gmail.com> <CAGo_u6qO0ok+GBnm7SQtw6dJuwGN2OuP7CpKDEWawS3V2go4KA@mail.gmail.com> <20141229181556.GA26926@amd> <20141229190448.GA27124@roeck-us.net> <20150103091858.GA30538@amd> <20150107161944.GB9012@roeck-us.net> <20150118203346.GA29863@amd>
+From: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 01/36] devicetree/bindings: add Ingenic Semiconductor vendor prefix
+Date: Sun, 18 Jan 2015 14:27:12 -0800
+Message-ID: <1421620067-23933-2-git-send-email-paul.burton@imgtec.com>
+References: <1421620067-23933-1-git-send-email-paul.burton@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20150118203346.GA29863@amd>
-Sender: linux-omap-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Nishanth Menon <nm@ti.com>, Grazvydas Ignotas <notasas@gmail.com>, Sebastian Reichel <sre@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dt list <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Tony Lindgren <tony@atomide.com>, Kumar Gala <galak@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, lm-sensors@lm-sensors.org, Rob Herring <robh+dt@kernel.org>, Jean Delvare <jdelvare@suse.de>, =?windows-1252?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, Pali Rohar <pali.rohar@gmail.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1421620067-23933-1-git-send-email-paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+Cc: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/18/2015 12:33 PM, Pavel Machek wrote:
+Simply use 'ingenic'.
 
->>>> Pavel,
->>>>
->>>> can you look into the omap4 thermal driver to see if it can be used ?
->>>
->>> After some fixes... yes, it seems to be same hardware.
->>>
->> So this should be the way to go, but then we have others claim that
->> it should not be done because the OMAP3 sensors are too unreliable
->> to use for thermal decisions. Not really sure where that leaves us.
->> I am kind of opposed to have similar drivers for similar chips
->> in two different subsystems.
->>
->> Is it possible to add the patch below to the omap thermal driver
->> and not use it for thermal decisions ?
->
-> Well... noone forces you to enable the driver, and I don't think it
-> will do any thermal decisions on N900 as it is ... so we should be ok.
->
-> Plus, it seems to work reasonably well (say +- 5 C), so situation does
-> not seem to be as bad as TI claims.
->
-> Nokia was actually using it in production.
->
-Ok, I'll assume that omap3 support will be added to the omap thermal driver.
+Signed-off-by: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-Thanks,
-Guenter
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index b1df0ad..30f7f08 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -78,6 +78,7 @@ ibm	International Business Machines (IBM)
+ idt	Integrated Device Technologies, Inc.
+ iom	Iomega Corporation
+ img	Imagination Technologies Ltd.
++ingenic	Ingenic Semiconductor
+ innolux	Innolux Corporation
+ intel	Intel Corporation
+ intercontrol	Inter Control Group
+-- 
+2.2.1
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
