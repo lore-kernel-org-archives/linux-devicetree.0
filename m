@@ -1,7 +1,7 @@
 From: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 01/36] devicetree/bindings: add Ingenic Semiconductor vendor prefix
-Date: Sun, 18 Jan 2015 14:27:12 -0800
-Message-ID: <1421620067-23933-2-git-send-email-paul.burton@imgtec.com>
+Subject: [PATCH 07/36] devicetree: document ingenic,jz4740-intc binding
+Date: Sun, 18 Jan 2015 14:27:18 -0800
+Message-ID: <1421620067-23933-8-git-send-email-paul.burton@imgtec.com>
 References: <1421620067-23933-1-git-send-email-paul.burton@imgtec.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,27 +12,46 @@ To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
 Cc: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Simply use 'ingenic'.
+Add binding documentation for the Ingenic jz4740 interrupt controller.
 
 Signed-off-by: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 ---
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+ .../interrupt-controller/ingenic,jz4740-intc.txt   | 24 ++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ingenic,jz4740-intc.txt
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index b1df0ad..30f7f08 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -78,6 +78,7 @@ ibm	International Business Machines (IBM)
- idt	Integrated Device Technologies, Inc.
- iom	Iomega Corporation
- img	Imagination Technologies Ltd.
-+ingenic	Ingenic Semiconductor
- innolux	Innolux Corporation
- intel	Intel Corporation
- intercontrol	Inter Control Group
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/ingenic,jz4740-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/ingenic,jz4740-intc.txt
+new file mode 100644
+index 0000000..3c06ef1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/ingenic,jz4740-intc.txt
+@@ -0,0 +1,24 @@
++Ingenic jz4740 SoC Interrupt Controller
++
++Required properties:
++
++- compatible : should be "ingenic,jz4740-intc"
++- reg : Specifies base physical address and size of the registers.
++- interrupt-controller : Identifies the node as an interrupt controller
++- #interrupt-cells : Specifies the number of cells needed to encode an
++  interrupt source. The value shall be 1.
++- interrupt-parent: phandle of the CPU interrupt controller.
++- interrupts - Specifies the CPU interrupt the controller is connected to.
++
++Example:
++
++intc: intc@10001000 {
++	compatible = "ingenic,jz4740-intc";
++	reg = <0x10001000 0x14>;
++
++	interrupt-controller;
++	#interrupt-cells = <1>;
++
++	interrupt-parent = <&cpuintc>;
++	interrupts = <2>;
++};
 -- 
 2.2.1
 
