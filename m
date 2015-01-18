@@ -1,12 +1,13 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v3 1/2] ARM: dts: sun7i: Add dts file for
- Bananapro board
-Date: Sun, 18 Jan 2015 13:08:19 +0100
-Message-ID: <1421582900-26040-1-git-send-email-hdegoede@redhat.com>
+Subject: [PATCH v3 2/3] ARM: dts: sun4i: Add mk802ii board
+Date: Sun, 18 Jan 2015 13:09:44 +0100
+Message-ID: <1421582985-26087-2-git-send-email-hdegoede@redhat.com>
+References: <1421582985-26087-1-git-send-email-hdegoede@redhat.com>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBQGE52SQKGQEY4WOOJA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBEWF52SQKGQEESLE7FY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1421582985-26087-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi
@@ -18,44 +19,37 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for the new Bananapro A20 development board from lemaker.org.
-This board features 1G RAM, 2 USB A receptacles, 1 micro USB receptacle for
-OTG, 1 micro USB receptacle for power, HDMI, sata, Gbit ethernet, ir receiver,
-3.5 mm jack for a/v out, on board microphone, 40 gpio pins and sdio wifi.
+The mk802ii is a revised version of the mk802 A10 based hdmi tv-stick, it
+features 1G RAM, 4G nand, a hdmi male connector, USB-A receptacle, 2 micro
+usb receptacles (OTG & power) and USB-wifi, and does come with an axp209 pmic.
+
+For more details see: http://linux-sunxi.org/Rikomagic_mk802ii
 
 Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 ---
-Changes in v2:
-- Use cpp style includes
-- Use GPIO header for the GPIO flags
-- Address nodes by reference rather then by their full dt path
-
-Changes in v3:
-- Sort nodes alphabetically
----
- arch/arm/boot/dts/Makefile                |   1 +
- arch/arm/boot/dts/sun7i-a20-bananapro.dts | 262 ++++++++++++++++++++++++++++++
- 2 files changed, 263 insertions(+)
- create mode 100644 arch/arm/boot/dts/sun7i-a20-bananapro.dts
+ arch/arm/boot/dts/Makefile              |   1 +
+ arch/arm/boot/dts/sun4i-a10-mk802ii.dts | 113 ++++++++++++++++++++++++++++++++
+ 2 files changed, 114 insertions(+)
+ create mode 100644 arch/arm/boot/dts/sun4i-a10-mk802ii.dts
 
 diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 601eb3d..34281aa 100644
+index dfb6885..b543e7d 100644
 --- a/arch/arm/boot/dts/Makefile
 +++ b/arch/arm/boot/dts/Makefile
-@@ -465,6 +465,7 @@ dtb-$(CONFIG_MACH_SUN6I) += \
- 	sun6i-a31s-cs908.dtb
- dtb-$(CONFIG_MACH_SUN7I) += \
- 	sun7i-a20-bananapi.dtb \
-+	sun7i-a20-bananapro.dtb \
- 	sun7i-a20-cubieboard2.dtb \
- 	sun7i-a20-cubietruck.dtb \
- 	sun7i-a20-hummingbird.dtb \
-diff --git a/arch/arm/boot/dts/sun7i-a20-bananapro.dts b/arch/arm/boot/dts/sun7i-a20-bananapro.dts
+@@ -449,6 +449,7 @@ dtb-$(CONFIG_MACH_SUN4I) += \
+ 	sun4i-a10-cubieboard.dtb \
+ 	sun4i-a10-mini-xplus.dtb \
+ 	sun4i-a10-mk802.dtb \
++	sun4i-a10-mk802ii.dtb \
+ 	sun4i-a10-hackberry.dtb \
+ 	sun4i-a10-inet97fv2.dtb \
+ 	sun4i-a10-olinuxino-lime.dtb \
+diff --git a/arch/arm/boot/dts/sun4i-a10-mk802ii.dts b/arch/arm/boot/dts/sun4i-a10-mk802ii.dts
 new file mode 100644
-index 0000000..fb89fe7
+index 0000000..802eda4
 --- /dev/null
-+++ b/arch/arm/boot/dts/sun7i-a20-bananapro.dts
-@@ -0,0 +1,262 @@
++++ b/arch/arm/boot/dts/sun4i-a10-mk802ii.dts
+@@ -0,0 +1,113 @@
 +/*
 + * Copyright 2015 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 + *
@@ -104,57 +98,13 @@ index 0000000..fb89fe7
 + */
 +
 +/dts-v1/;
-+#include "sun7i-a20.dtsi"
++#include "sun4i-a10.dtsi"
 +#include "sunxi-common-regulators.dtsi"
 +#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
 +
 +/ {
-+	model = "LeMaker Banana Pro";
-+	compatible = "lemaker,bananapro", "allwinner,sun7i-a20";
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&led_pins_bananapro>;
-+
-+		blue {
-+			label = "bananapro:blue:usr";
-+			gpios = <&pio 6 2 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		green {
-+			label = "bananapro:green:usr";
-+			gpios = <&pio 7 24 GPIO_ACTIVE_HIGH>;
-+		};
-+	};
-+
-+	reg_gmac_3v3: gmac-3v3 {
-+		compatible = "regulator-fixed";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&gmac_power_pin_bananapro>;
-+		regulator-name = "gmac-3v3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		startup-delay-us = <100000>;
-+		enable-active-high;
-+		gpio = <&pio 7 23 GPIO_ACTIVE_HIGH>;
-+	};
-+
-+	reg_vmmc3: vmmc3 {
-+		compatible = "regulator-fixed";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&vmmc3_pin_bananapro>;
-+		regulator-name = "vmmc3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		enable-active-high;
-+		gpio = <&pio 7 22 GPIO_ACTIVE_HIGH>;
-+	};
-+};
-+
-+&ahci {
-+	status = "okay";
++	model = "MK802ii";
++	compatible = "allwinner,mk802ii", "allwinner,sun4i-a10";
 +};
 +
 +&ehci0 {
@@ -165,19 +115,6 @@ index 0000000..fb89fe7
 +	status = "okay";
 +};
 +
-+&gmac {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&gmac_pins_rgmii_a>;
-+	phy = <&phy1>;
-+	phy-mode = "rgmii";
-+	phy-supply = <&reg_gmac_3v3>;
-+	status = "okay";
-+
-+	phy1: ethernet-phy@1 {
-+		reg = <1>;
-+	};
-+};
-+
 +&i2c0 {
 +	pinctrl-names = "default";
 +	pinctrl-0 = <&i2c0_pins_a>;
@@ -186,42 +123,20 @@ index 0000000..fb89fe7
 +	axp209: pmic@34 {
 +		compatible = "x-powers,axp209";
 +		reg = <0x34>;
-+		interrupt-parent = <&nmi_intc>;
-+		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
++		interrupts = <0>;
 +
 +		interrupt-controller;
 +		#interrupt-cells = <1>;
 +	};
 +};
 +
-+&i2c2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c2_pins_a>;
-+	status = "okay";
-+};
-+
-+&ir0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&ir0_pins_a>;
-+	status = "okay";
-+};
-+
 +&mmc0 {
 +	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_bananapro>;
++	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
 +	vmmc-supply = <&reg_vcc3v3>;
 +	bus-width = <4>;
-+	cd-gpios = <&pio 7 10 GPIO_ACTIVE_HIGH>; /* PH10 */
++	cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
 +	cd-inverted;
-+	status = "okay";
-+};
-+
-+&mmc3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc3_pins_a>;
-+	vmmc-supply = <&reg_vmmc3>;
-+	bus-width = <4>;
-+	non-removable;
 +	status = "okay";
 +};
 +
@@ -229,87 +144,17 @@ index 0000000..fb89fe7
 +	status = "okay";
 +};
 +
-+&ohci1 {
-+	status = "okay";
-+};
-+
-+&pio {
-+	gmac_power_pin_bananapro: gmac_power_pin@0 {
-+		allwinner,pins = "PH23";
-+		allwinner,function = "gpio_out";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+	};
-+
-+	led_pins_bananapro: led_pins@0 {
-+		allwinner,pins = "PH24", "PG2";
-+		allwinner,function = "gpio_out";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+	};
-+
-+	mmc0_cd_pin_bananapro: mmc0_cd_pin@0 {
-+		allwinner,pins = "PH10";
-+		allwinner,function = "gpio_in";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
-+	};
-+
-+	usb1_vbus_pin_bananapro: usb1_vbus_pin@0 {
-+		allwinner,pins = "PH0";
-+		allwinner,function = "gpio_out";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+	};
-+
-+	usb2_vbus_pin_bananapro: usb2_vbus_pin@0 {
-+		allwinner,pins = "PH1";
-+		allwinner,function = "gpio_out";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+	};
-+
-+	vmmc3_pin_bananapro: vmmc3_pin@0 {
-+		allwinner,pins = "PH22";
-+		allwinner,function = "gpio_out";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+	};
-+};
-+
 +&reg_usb1_vbus {
-+	pinctrl-0 = <&usb1_vbus_pin_bananapro>;
-+	gpio = <&pio 7 0 GPIO_ACTIVE_HIGH>; /* PH0 */
 +	status = "okay";
 +};
 +
 +&reg_usb2_vbus {
-+	pinctrl-0 = <&usb2_vbus_pin_bananapro>;
-+	gpio = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
-+	status = "okay";
-+};
-+
-+&spi0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&spi0_pins_a>;
 +	status = "okay";
 +};
 +
 +&uart0 {
 +	pinctrl-names = "default";
 +	pinctrl-0 = <&uart0_pins_a>;
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart2_pins_a>;
-+	status = "okay";
-+};
-+
-+&uart7 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart7_pins_a>;
 +	status = "okay";
 +};
 +
