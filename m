@@ -1,74 +1,47 @@
 From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH 2/3] hwmon: Driver for OMAP3 temperature sensor
-Date: Sun, 18 Jan 2015 21:33:46 +0100
-Message-ID: <20150118203346.GA29863@amd>
-References: <20141226102933.GA28778@amd>
- <1419597294-21487-1-git-send-email-sre@kernel.org>
- <1419597294-21487-3-git-send-email-sre@kernel.org>
- <CANOLnON6rAQ2+jJEFDKseH2Htu6bqRkURDioGt7zp1Ze73f8Pw@mail.gmail.com>
- <CAGo_u6qO0ok+GBnm7SQtw6dJuwGN2OuP7CpKDEWawS3V2go4KA@mail.gmail.com>
- <20141229181556.GA26926@amd>
- <20141229190448.GA27124@roeck-us.net>
- <20150103091858.GA30538@amd>
- <20150107161944.GB9012@roeck-us.net>
+Subject: Re: [PATCHv3] media: i2c/adp1653: devicetree support for adp1653
+Date: Sun, 18 Jan 2015 23:02:10 +0100
+Message-ID: <20150118220210.GA7481@amd>
+References: <20141203214641.GA1390@amd>
+ <20141224223434.GA20669@amd>
+ <20150104094352.GA3790@amd>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20150107161944.GB9012@roeck-us.net>
-Sender: linux-omap-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Nishanth Menon <nm@ti.com>, Grazvydas Ignotas <notasas@gmail.com>, Sebastian Reichel <sre@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dt list <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Tony Lindgren <tony@atomide.com>, Kumar Gala <galak@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, lm-sensors@lm-sensors.org, Rob Herring <robh+dt@kernel.org>, Jean Delvare <jdelvare@suse.de>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Pali Rohar <pali.rohar@gmail.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <20150104094352.GA3790@amd>
+Sender: linux-kernel-owner@vger.kernel.org
+To: pali.rohar@gmail.com, sre@debian.org, sre@ring0.de, kernel list <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-omap@vger.kernel.org, tony@atomide.com, khilman@kernel.org, aaro.koskinen@iki.fi, freemangordon@abv.bg, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, bcousson@baylibre.com, sakari.ailus@iki.fi, m.chehab@samsung.com, devicetree@vger.kernel.org, linux-media@vger.kernel.org
+Cc: j.anaszewski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed 2015-01-07 08:19:44, Guenter Roeck wrote:
-> On Sat, Jan 03, 2015 at 10:18:58AM +0100, Pavel Machek wrote:
-> > On Mon 2014-12-29 11:04:48, Guenter Roeck wrote:
-> > > On Mon, Dec 29, 2014 at 07:15:56PM +0100, Pavel Machek wrote:
-> > > > On Mon 2014-12-29 12:01:03, Nishanth Menon wrote:
-> > > > > On Mon, Dec 29, 2014 at 11:52 AM, Grazvydas Ignotas <notasas@gmail.com> wrote:
-> > > > > > On Fri, Dec 26, 2014 at 2:34 PM, Sebastian Reichel <sre@kernel.org> wrote:
-> > > > > >> OMAP34xx and OMAP36xx processors contain a register in the syscon area,
-> > > > > >> which can be used to determine the SoCs temperature. This patch provides
-> > > > > >> a DT based driver for the temperature sensor based on an older driver
-> > > > > >> written by Peter De Schrijver for the Nokia N900 and N9.
-> > > > > >
-> > > > > > The sensor looks like an earlier iteration of sensors used in newer
-> > > > > > OMAPs, which are already supported by maybe
-> > > > > > drivers/thermal/ti-soc-thermal/ , maybe it would make sense to update
-> > > > > > that driver instead?
-> > > > > 
-> > > > > Just to be clear - OMAP4 is the first time that the sensors were
-> > > > > reliable enough to be used.
-> > > > 
-> > > > When testing initial version of the patch, they seem to work very well
-> > > > in the omap3 case.
-> > > > 
-> > > Pavel,
-> > > 
-> > > can you look into the omap4 thermal driver to see if it can be used ?
-> > 
-> > After some fixes... yes, it seems to be same hardware.
-> > 
-> So this should be the way to go, but then we have others claim that
-> it should not be done because the OMAP3 sensors are too unreliable
-> to use for thermal decisions. Not really sure where that leaves us.
-> I am kind of opposed to have similar drivers for similar chips
-> in two different subsystems.
+On Sun 2015-01-04 10:43:52, Pavel Machek wrote:
 > 
-> Is it possible to add the patch below to the omap thermal driver
-> and not use it for thermal decisions ?
+> We are moving to device tree support on OMAP3, but that currently
+> breaks ADP1653 driver. This adds device tree support, plus required
+> documentation.
+> 
+> Signed-off-by: Pavel Machek <pavel@ucw.cz>
 
-Well... noone forces you to enable the driver, and I don't think it
-will do any thermal decisions on N900 as it is ... so we should be ok.
+Sakari? You are listed as adp1653 maintainer. Did you apply the patch?
+Is it going to be in 3.20?
 
-Plus, it seems to work reasonably well (say +- 5 C), so situation does
-not seem to be as bad as TI claims.
+Thanks,
+								Pavel
+								
+> ---
+> 
+> Please apply,
+> 							Pavel
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/adp1653.txt b/Documentation/devicetree/bindings/media/i2c/adp1653.txt
+> new file mode 100644
+> index 0000000..0fc28a9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/adp1653.txt
+> @@ -0,0 +1,37 @@
+> +* Analog Devices ADP1653 flash LED driver
 
-Nokia was actually using it in production.
-
-Best regards,
-									Pavel
 -- 
 (english) http://www.livejournal.com/~pavelmachek
 (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
