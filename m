@@ -1,92 +1,62 @@
-From: Aleksei Mamlin <mamlinav@gmail.com>
-Subject: Re: [PATCH 1/3] input: goodix: Add device tree support
-Date: Sun, 18 Jan 2015 19:12:43 +0400
-Message-ID: <CAF==cZWvqCdgVTJ76d4NoWhc09EnU=kxArgMQtz8=x5TesGpVQ@mail.gmail.com>
-References: <1421505253-7474-1-git-send-email-mamlinav@gmail.com>
-	<1421505361-8871-1-git-send-email-mamlinav@gmail.com>
-	<1421527085.2075.12.camel@hadess.net>
-	<CAF==cZWVN=NNaayVxtXNBe2hw7vxr9nryOyKknwY3vceKnNygw@mail.gmail.com>
-	<20150118152247.34aa149f16c60bf30cebbb42@ao2.it>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v4 4/4] ARM: mvebu: Armada 385 GP: Add regulators to the
+ SATA port
+Date: Sun, 18 Jan 2015 16:29:02 +0100
+Message-ID: <54BBD13E.6030901@redhat.com>
+References: <1421330978-9694-5-git-send-email-gregory.clement@free-electrons.com> <54B8C933.7020502@redhat.com> <54B8D97B.3090908@free-electrons.com> <54B8E38A.6020709@redhat.com> <20150116123705.GM3043@sirena.org.uk> <54B9629C.9090800@redhat.com> <20150116202516.GL3856@sirena.org.uk> <54BA21F9.5050408@redhat.com> <20150117131404.GA6414@sirena.org.uk> <54BA7197.40301@redhat.com> <20150118123531.GA2809@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20150118152247.34aa149f16c60bf30cebbb42@ao2.it>
-Sender: linux-input-owner@vger.kernel.org
-To: Antonio Ospite <ao2@ao2.it>
-Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <20150118123531.GA2809@sirena.org.uk>
+Sender: linux-ide-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Gregory CLEMENT <gregory.clement@free-electrons.com>, Tejun Heo <tj@kernel.org>, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, =?windows-1252?Q?Antoine_T=E9nart?= <antoine.tenart@free-electrons.com>, Liam Girdwood <lgirdwood@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Do you mean that I should use #ifdef CONFIG_ACPI and ACPI_PTR?
+Hi,
 
-#ifdef CONFIG_ACPI
-static const struct acpi_device_id goodix_acpi_match[] =3D {
-	{ "GDIX1001", 0 },
-	{ }
-};
-MODULE_DEVICE_TABLE(acpi, goodix_acpi_match);
-#endif
+On 18-01-15 13:35, Mark Brown wrote:
+> On Sat, Jan 17, 2015 at 03:28:39PM +0100, Hans de Goede wrote:
+>> On 17-01-15 14:14, Mark Brown wrote:
+>
+>>> Following your argument to the logical conclusion means we can never
+>>> turn any regualtor off - we always have the risk that there's another
+>>> shared user which is going to get a power bounce if we power down.  More
+>>> directly we'll also get people complaining that we're burning power
+>>> pointlessly on their systems for devices they've not even got drivers
+>>> enabled for.  This powering down is something there's been user demand
+>>> for.
+>
+>> Right, note I'm only advocating to not turn off regulators marked as
+>> regulator-boot-on. I would expect any regulator to have such a
+>> marking to have at least one user with an actual driver. If people decide
+>> to not build that driver, and then complain we can simply tell them to
+>> build the driver ...
+>
+> Right, but that's not what regulator-boot-on actually means (and I'm not
+> sure why you would think it would TBH)
 
-#ifdef CONFIG_OF
-static struct of_device_id goodix_of_match[] =3D {
-	{ .compatible =3D "goodix,gt9xx" },
-	{ }
-};
-MODULE_DEVICE_TABLE(of, goodix_of_match);
-#endif
+Well, the meaning of regulator-boot-on is not clearly defined really, to
+begin we need with fixing that, currently all the bindings file says is:
 
-static struct i2c_driver goodix_ts_driver =3D {
-	...
-		.acpi_match_table =3D ACPI_PTR(goodix_acpi_match),
-		.of_match_table =3D of_match_ptr(goodix_of_match),
-}
+- regulator-boot-on: bootloader/firmware enabled regulator
 
-2015-01-18 17:22 GMT+03:00, Antonio Ospite <ao2@ao2.it>:
-> On Sun, 18 Jan 2015 16:25:35 +0400
-> =D0=90=D0=BB=D0=B5=D0=BA=D1=81=D0=B5=D0=B9 =D0=9C=D0=B0=D0=BC=D0=BB=D0=
-=B8=D0=BD <mamlinav@gmail.com> wrote:
->
->> Look at include/linux/of.h
->>
->> #ifdef CONFIG_OF
->>  ...
->> #define of_match_ptr(_ptr)	(_ptr)
->>  ...
->> #else /* CONFIG_OF */
->>  ...
->> #define of_match_ptr(_ptr)	NULL
->>  ...
->> #endif /* CONFIG_OF */
->>
->> So it would be compiled. Similarly in other touchscreen drivers.
->> But Kconfig should be fixed to enable CONFIG_OF. Will be fixed in v2=
-=2E
->>
->
-> I was thinking, instead of depending on (ACPI || OF), can we make ACP=
-I
-> optional as well and remove the dependency on it?
-> Does it make sense to allow selecting a driver even with no
-> enabled mechanism to pass platform data to it?
->
-> Thanks,
->    Antonio
->
-> --
-> Antonio Ospite
-> http://ao2.it
->
-> A: Because it messes up the order in which people normally read text.
->    See http://en.wikipedia.org/wiki/Posting_style
-> Q: Why is top-posting such a bad thing?
->
+One could easily argue that the bootloader likely has a good reason to turn
+the regulator on, and that unless there is a specific driver which claims
+the regulator and thus knows what to do with it it is best left alone ...
 
+> so this will disrupt existing
+> users who are expecting the current behaviour.  We could try adding a
+> new property but it doesn't feel very idiomatic for DT which isn't very
+> nice.
+>
+> Telling people not to build the driver doesn't in general work any
+> better than telling them to build it in I fear, it seems like it's
+> essentially just shuffling things around so people have to change their
+> kernel config in a different way to avoid issues.
 
---=20
-Thanks and regards,
-Aleksei Mamlin
---
-To unsubscribe from this list: send the line "unsubscribe linux-input" =
-in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+
+Hans
+
