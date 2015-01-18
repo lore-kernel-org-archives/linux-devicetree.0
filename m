@@ -1,51 +1,52 @@
-From: =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niso@kth.se>
-Subject: [PATCH v2 0/4] Add emev2 pinmux support
-Date: Sun, 18 Jan 2015 13:20:00 +0100
-Message-ID: <1421583604-27256-1-git-send-email-niso@kth.se>
+From: =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niso-UNjuZkX4dYU@public.gmane.org>
+Subject: [PATCH v2 4/4] ARM: shmobile: emev2-kzm9d: Add PFC information for uart1
+Date: Sun, 18 Jan 2015 13:20:04 +0100
+Message-ID: <1421583604-27256-5-git-send-email-niso@kth.se>
+References: <1421583604-27256-1-git-send-email-niso@kth.se>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-sh-owner@vger.kernel.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, laurent.pinchart@ideasonboard.com, linus.walleij@linaro.org
-Cc: devicetree@vger.kernel.org, linux-sh@vger.kernel.org, magnus.damm@gmail.com, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niso@kth.se>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1421583604-27256-1-git-send-email-niso-UNjuZkX4dYU@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niso-UNjuZkX4dYU@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Greetings,
+Configure the pinmux on kzm9d to use the serial connector for uart1.
 
-This is v2 of a patchset that introduces pinmux support for the EMMA
-Mobile EV2 board to the sh-pfc pin-controller driver. Devicetree
-bindings for gpio and the populated serial connector are also defined i=
-n
-3/4 and 4/4.
+Signed-off-by: Niklas S=C3=B6derlund <niso-UNjuZkX4dYU@public.gmane.org>
+---
+ arch/arm/boot/dts/emev2-kzm9d.dts | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-Changes since v1:
-
-* GPIOs numbered linearly instead of using a bank_number schema
-* Group pins in larger groups instead of one group per pin
-* Only define the actual 159 GPIOs instead of 160
-* There are 23 pins per row not 25, correct PIN_NUMBER macro
-* Define one larger reg entry in dts for pfc instead of four small
-
-Niklas S=C3=B6derlund (4):
-  sh-pfc: add macro to define pinmux without function
-  sh-pfc: Add emev2 pinmux support
-  ARM: shmobile: emev2: Add PFC information to emev2.dtsi
-  ARM: shmobile: emev2-kzm9d: Add PFC information for uart1
-
- .../bindings/pinctrl/renesas,pfc-pinctrl.txt       |    1 +
- arch/arm/boot/dts/emev2-kzm9d.dts                  |   13 +
- arch/arm/boot/dts/emev2.dtsi                       |   10 +
- drivers/pinctrl/sh-pfc/Kconfig                     |    5 +
- drivers/pinctrl/sh-pfc/Makefile                    |    1 +
- drivers/pinctrl/sh-pfc/core.c                      |    9 +
- drivers/pinctrl/sh-pfc/core.h                      |    1 +
- drivers/pinctrl/sh-pfc/pfc-emev2.c                 | 1774 ++++++++++++=
-++++++++
- drivers/pinctrl/sh-pfc/sh_pfc.h                    |    2 +
- 9 files changed, 1816 insertions(+)
- create mode 100644 drivers/pinctrl/sh-pfc/pfc-emev2.c
-
---
+diff --git a/arch/arm/boot/dts/emev2-kzm9d.dts b/arch/arm/boot/dts/emev=
+2-kzm9d.dts
+index 667d323..1944627 100644
+--- a/arch/arm/boot/dts/emev2-kzm9d.dts
++++ b/arch/arm/boot/dts/emev2-kzm9d.dts
+@@ -94,3 +94,16 @@
+ 		vdd33a-supply =3D <&reg_3p3v>;
+ 	};
+ };
++
++&pfc {
++	uart1_pins: uart@e1030000 {
++		renesas,groups =3D "uart1_ctrl", "uart1_data";
++		renesas,function =3D "uart1";
++	};
++};
++
++&uart1 {
++	pinctrl-0 =3D <&uart1_pins>;
++	pinctrl-names =3D "default";
++	status =3D "okay";
++};
+--=20
 2.2.1
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
