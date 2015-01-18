@@ -1,90 +1,79 @@
-From: =?UTF-8?B?0JDQu9C10LrRgdC10Lkg0JzQsNC80LvQuNC9?=
-	<mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/3] input: goodix: Add device tree support
-Date: Sun, 18 Jan 2015 16:25:35 +0400
-Message-ID: <CAF==cZWVN=NNaayVxtXNBe2hw7vxr9nryOyKknwY3vceKnNygw@mail.gmail.com>
-References: <1421505253-7474-1-git-send-email-mamlinav@gmail.com>
-	<1421505361-8871-1-git-send-email-mamlinav@gmail.com>
-	<1421527085.2075.12.camel@hadess.net>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 4/4] ARM: mvebu: Armada 385 GP: Add regulators to the
+ SATA port
+Date: Sun, 18 Jan 2015 12:35:31 +0000
+Message-ID: <20150118123531.GA2809@sirena.org.uk>
+References: <1421330978-9694-5-git-send-email-gregory.clement@free-electrons.com>
+ <54B8C933.7020502@redhat.com>
+ <54B8D97B.3090908@free-electrons.com>
+ <54B8E38A.6020709@redhat.com>
+ <20150116123705.GM3043@sirena.org.uk>
+ <54B9629C.9090800@redhat.com>
+ <20150116202516.GL3856@sirena.org.uk>
+ <54BA21F9.5050408@redhat.com>
+ <20150117131404.GA6414@sirena.org.uk>
+ <54BA7197.40301@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="vkogqOf2sHV7VnPd"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1421527085.2075.12.camel-0MeiytkfxGOsTnJN9+BGXg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <54BA7197.40301-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Look at include/linux/of.h
 
-#ifdef CONFIG_OF
- ...
-#define of_match_ptr(_ptr)	(_ptr)
- ...
-#else /* CONFIG_OF */
- ...
-#define of_match_ptr(_ptr)	NULL
- ...
-#endif /* CONFIG_OF */
+--vkogqOf2sHV7VnPd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-So it would be compiled. Similarly in other touchscreen drivers.
-But Kconfig should be fixed to enable CONFIG_OF. Will be fixed in v2.
+On Sat, Jan 17, 2015 at 03:28:39PM +0100, Hans de Goede wrote:
+> On 17-01-15 14:14, Mark Brown wrote:
 
-2015-01-17 23:38 GMT+03:00, Bastien Nocera <hadess-0MeiytkfxGOsTnJN9+BGXg@public.gmane.org>:
-> On Sat, 2015-01-17 at 17:36 +0300, Aleksei Mamlin wrote:
->> Signed-off-by: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>  drivers/input/touchscreen/goodix.c | 10 ++++++++++
->>  1 file changed, 10 insertions(+)
->>
->> diff --git a/drivers/input/touchscreen/goodix.c
->> b/drivers/input/touchscreen/goodix.c
->> index ca19668..603d2ae 100644
->> --- a/drivers/input/touchscreen/goodix.c
->> +++ b/drivers/input/touchscreen/goodix.c
->> @@ -23,6 +23,7 @@
->>  #include <linux/irq.h>
->>  #include <linux/interrupt.h>
->>  #include <linux/slab.h>
->> +#include <linux/of.h>
->>  #include <asm/unaligned.h>
->>
->>  struct goodix_ts_data {
->> @@ -378,6 +379,14 @@ static const struct acpi_device_id
->> goodix_acpi_match[] = {
->>  };
->>  MODULE_DEVICE_TABLE(acpi, goodix_acpi_match);
->>
->> +#ifdef CONFIG_OF
->> +static struct of_device_id goodix_of_match[] = {
->> +	{ .compatible = "goodix,gt9xx" },
->> +	{ }
->> +};
->> +MODULE_DEVICE_TABLE(of, goodix_of_match);
->> +#endif
->> +
->>  static struct i2c_driver goodix_ts_driver = {
->>  	.probe = goodix_ts_probe,
->>  	.id_table = goodix_ts_id,
->> @@ -385,6 +394,7 @@ static struct i2c_driver goodix_ts_driver = {
->>  		.name = "Goodix-TS",
->>  		.owner = THIS_MODULE,
->>  		.acpi_match_table = goodix_acpi_match,
->> +		.of_match_table = of_match_ptr(goodix_of_match),
->
-> Pretty sure that wouldn't compile if CONFIG_OF is disabled.
->
->>  	},
->>  };
->>  module_i2c_driver(goodix_ts_driver);
->
->
->
+> >Following your argument to the logical conclusion means we can never
+> >turn any regualtor off - we always have the risk that there's another
+> >shared user which is going to get a power bounce if we power down.  More
+> >directly we'll also get people complaining that we're burning power
+> >pointlessly on their systems for devices they've not even got drivers
+> >enabled for.  This powering down is something there's been user demand
+> >for.
 
+> Right, note I'm only advocating to not turn off regulators marked as
+> regulator-boot-on. I would expect any regulator to have such a
+> marking to have at least one user with an actual driver. If people decide
+> to not build that driver, and then complain we can simply tell them to
+> build the driver ...
 
--- 
-Thanks and regards,
-Aleksei Mamlin
+Right, but that's not what regulator-boot-on actually means (and I'm not
+sure why you would think it would TBH) so this will disrupt existing
+users who are expecting the current behaviour.  We could try adding a
+new property but it doesn't feel very idiomatic for DT which isn't very
+nice.
+
+Telling people not to build the driver doesn't in general work any
+better than telling them to build it in I fear, it seems like it's
+essentially just shuffling things around so people have to change their
+kernel config in a different way to avoid issues.
+
+--vkogqOf2sHV7VnPd
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJUu6iSAAoJECTWi3JdVIfQT5IIAINLhGsWZ56mnsaeos3XRjtX
+jQIimV1Gj7q0PM01cdhS4lwZgdvfaFAvL12lCBrnJ69Jyk9Jywa4O9Ic/5p03bum
+ikk2WJuNUqm0KIGSBT9FOvH6EI3ArwZ5FhzdvxxUaOauB4g+IaJhZAMJ0/Kjlnp/
+dVYb2yGatkVdt8nSS5IqBVH80dclnNhEsw+ZBt4k04IG4XjnYrGYORx8tI7L9vD+
+QvoDMjmklOZgCr9dY3XkDqDBVI6qXIvRNuHE34nRCOTpc6SHNZUcnZfxXkLsc1Zn
+1gvWdgtnB6C1gnY+r/RQv6flT5NPbF43SDis2XzfNidHWO3Arta9pA0piE1BynA=
+=/l0+
+-----END PGP SIGNATURE-----
+
+--vkogqOf2sHV7VnPd--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
