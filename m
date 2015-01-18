@@ -1,44 +1,25 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 2/4] dt-bindings: Add root properties for Raspberry Pi
- B and B+
-Date: Sat, 17 Jan 2015 20:05:38 -0700
-Message-ID: <54BB2302.9070005@wwwdotorg.org>
-References: <1421426897-27225-1-git-send-email-stefan.wahren@i2se.com> <1421426897-27225-3-git-send-email-stefan.wahren@i2se.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 4/4] ARM: bcm2835: Use pinctrl header
+Date: Sat, 17 Jan 2015 20:06:34 -0700
+Message-ID: <54BB233A.10902@wwwdotorg.org>
+References: <1421426993-27264-1-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1421426897-27225-3-git-send-email-stefan.wahren@i2se.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: lee@kernel.org, linux@arm.linux.org.uk, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1421426993-27264-1-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/16/2015 09:48 AM, Stefan Wahren wrote:
-> This patch adds root compatible properties for the following boards:
-> - Raspberry Pi Model B
-> - Raspberry Pi Model B+
+On 01/16/2015 09:49 AM, Stefan Wahren wrote:
+> This patch converts all bcm2835 dts files to use the pinctrl
+> header file.
 
-We may as well add all the models while at it. I think the following is
-a complete list so far:
-
-"model-b-i2c0": early model B with I2C0 rather than I2C1 routed to the
-expansion header.
-
-model-b
-
-model-a
-
-model-b-rev2
-
-model-b-plus
-
-compute-module
-
-model-a-plus
-
-FWIW, take a look at the following file to see U-Boot's board
-identification code for the various models. Ideally we'll create
-matching DT files in the kernel for all of the DT filenames there, sometime.
-
-> http://git.denx.de/?p=u-boot.git;a=blob;f=board/raspberrypi/rpi/rpi.c;h=c18271fce823f7523a8958352701bfe3ea7086c7;hb=HEAD#l82
+Aside from the one comment I made, the series,
+Acked-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
