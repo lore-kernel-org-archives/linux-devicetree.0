@@ -1,53 +1,52 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-	<u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH v5 2/3] i2c: iproc: Add Broadcom iProc I2C Driver
-Date: Sun, 18 Jan 2015 12:17:59 +0100
-Message-ID: <20150118111759.GG22880@pengutronix.de>
-References: <rjui@broadcom.com>
- <1421451737-7107-1-git-send-email-rjui@broadcom.com>
- <1421451737-7107-3-git-send-email-rjui@broadcom.com>
- <54BB795C.6040402@broadcom.com>
- <20150118094741.GE22880@pengutronix.de>
- <20150118110658.GA1113@katana>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+Subject: [PATCH 4/8] gpio-mm-lantiq: Use of_propery_read_u16
+Date: Sun, 18 Jan 2015 12:39:29 +0100
+Message-ID: <1421581173-28416-5-git-send-email-ricardo.ribalda@gmail.com>
+References: <1421581173-28416-1-git-send-email-ricardo.ribalda@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150118110658.GA1113@katana>
+In-Reply-To: <1421581173-28416-1-git-send-email-ricardo.ribalda@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: Arend van Spriel <arend@broadcom.com>, Ray Jui <rjui@broadcom.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Christian Daudt <bcm@fixthebug.org>, Russell King <linux@arm.linux.org.uk>, Scott Branden <sbranden@broadcom.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Florian Fainelli <f.fainelli@gmail.com>, Matt Porter <mporter@linaro.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-i2c@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+To: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, John Crispin <blogic@openwrt.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Wolfram,
+Instead of parsing manually the shadow content, use the much simpler
+helper of_property_read_u16.
 
-On Sun, Jan 18, 2015 at 12:06:58PM +0100, Wolfram Sang wrote:
-> On Sun, Jan 18, 2015 at 10:47:41AM +0100, Uwe Kleine-K=F6nig wrote:
-> > On Sun, Jan 18, 2015 at 10:14:04AM +0100, Arend van Spriel wrote:
-> > > On 01/17/15 00:42, Ray Jui wrote:
-> > > >+	complete_all(&iproc_i2c->done);
-> > >=20
-> > > Looking over this code it seems to me there is always a single
-> > > process waiting for iproc_i2c->done to complete. So using complet=
-e()
-> > > here would suffice.
-> > Yeah, there is always only a single thread waiting. That means both
-> > complete and complete_all are suitable. AFAIK there is no reason to=
- pick
-> > one over the other in this case.
->=20
-> Clarity?
-And which do you consider more clear? complete_all might result in the
-question: "Is there >1 waiter?" and complete might yield to "What about
-the other waiters?". If you already know there is only one, both are on
-par on clarity. Might only be me?! I don't care much.
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Alexandre Courbot <gnurou@gmail.com>
+Cc: Grant Likely <grant.likely@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: John Crispin <blogic@openwrt.org>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+---
+ drivers/gpio/gpio-mm-lantiq.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
-    |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
+diff --git a/drivers/gpio/gpio-mm-lantiq.c b/drivers/gpio/gpio-mm-lantiq.c
+index 7d55161..b511a6b 100644
+--- a/drivers/gpio/gpio-mm-lantiq.c
++++ b/drivers/gpio/gpio-mm-lantiq.c
+@@ -105,7 +105,6 @@ static void ltq_mm_save_regs(struct of_mm_gpio_chip *mm_gc)
+ static int ltq_mm_probe(struct platform_device *pdev)
+ {
+ 	struct ltq_mm *chip;
+-	const __be32 *shadow;
+ 
+ 	chip = devm_kzalloc(&pdev->dev, sizeof(*chip), GFP_KERNEL);
+ 	if (!chip)
+@@ -117,9 +116,8 @@ static int ltq_mm_probe(struct platform_device *pdev)
+ 	chip->mmchip.save_regs = ltq_mm_save_regs;
+ 
+ 	/* store the shadow value if one was passed by the devicetree */
+-	shadow = of_get_property(pdev->dev.of_node, "lantiq,shadow", NULL);
+-	if (shadow)
+-		chip->shadow = be32_to_cpu(*shadow);
++	of_property_read_u16(pdev->dev.of_node, "lantiq,shadow",
++			     &chip->shadow);
+ 
+ 	return of_mm_gpiochip_add(pdev->dev.of_node, &chip->mmchip);
+ }
+-- 
+2.1.4
