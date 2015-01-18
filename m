@@ -1,80 +1,34 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [RFC 0/3] mmc: Add dynamic frequency scaling
-Date: Sat, 17 Jan 2015 15:52:22 -0800
-Message-ID: <20150117235222.22722.904@quantum>
-References: <1421054585-9032-1-git-send-email-k.kozlowski@samsung.com>
- <CAPDyKFpGiaDJ3zjCSSbcia6iLS2+FLBRjGAheQAzvFsAkJax+A@mail.gmail.com>
- <1421313626.19448.8.camel@AMDC1943>
- <CAPDyKFqe7UxSrQxuvGw7UWFQhvX0NZ83rvLrAEMZFpA4n0GcNg@mail.gmail.com>
+From: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v4 2/3] i2c: iproc: Add Broadcom iProc I2C Driver
+Date: Sat, 17 Jan 2015 16:30:33 -0800
+Message-ID: <54BAFEA9.9040900@broadcom.com>
+References: <1421274213-3544-1-git-send-email-rjui@broadcom.com> <1421274213-3544-3-git-send-email-rjui@broadcom.com> <20150115084119.GN22880@pengutronix.de> <54B98C18.4080807@broadcom.com> <20150117160113.GA22880@pengutronix.de> <54BABEE9.8070801@broadcom.com> <20150117201849.GC22880@pengutronix.de> <54BACB66.6040909@broadcom.com> <20150117211017.GD22880@pengutronix.de> <54BAD391.9080909@broadcom.com> <20150117224021.GA26493@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFqe7UxSrQxuvGw7UWFQhvX0NZ83rvLrAEMZFpA4n0GcNg@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Chris Ball <chris@printf.net>, Jaehoon Chung <jh80.chung@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mmc <linux-mmc@vger.kernel.org>, Kukjin Kim <kgene@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Stephen Boyd <sboyd@codeaurora.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150117224021.GA26493-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: =?windows-1252?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Ulf Hansson (2015-01-15 02:04:04)
-> On 15 January 2015 at 10:20, Krzysztof Kozlowski
-> <k.kozlowski@samsung.com> wrote:
-> > On czw, 2015-01-15 at 09:20 +0100, Ulf Hansson wrote:
-> >> + Mike, Stephen (Clock maintainers)
-> >>
-> >> On 12 January 2015 at 10:23, Krzysztof Kozlowski
-> >> <k.kozlowski@samsung.com> wrote:
-> >> > Hi,
-> >> >
-> >> >
-> >> > I would like to hear some comments about idea of scaling MMC clock
-> >> > frequency. The basic idea is to lower the clock when device is
-> >> > completely idle or not busy enough.
-> >>
-> >> We already have host drivers that implements runtime PM support.
-> >> Typically that would mean the clock will be gated once the device
-> >> becomes runtime PM suspended.
-> >>
-> >> Why should we decrease the frequency of an already gated clock?
-> >
-> > In case of idle state you're right that clkgate would be better. But
-> > what about finding a compromise between high performance (high
-> > frequency) and energy saving for different loads on MMC?
+
+
+On 1/17/2015 2:40 PM, Russell King - ARM Linux wrote:
+> On Sat, Jan 17, 2015 at 01:26:41PM -0800, Ray Jui wrote:
+>> 	time_left = wait_for_completion_timeout(&iproc_i2c->done, time_left);
+>>
+>> 	/* disable all interrupts */
+>> 	writel(0, iproc_i2c->base + IE_OFFSET);
+>>
+>> 	if (!time_left && !atomic_read(&iproc_i2c->transfer_is_successful)) {
 > 
-> I guess a compromise could be beneficial for some SOC and use cases.
-> At least I remember, ST-Ericsson's UX500 SOC had such an out of tree
-> hack to track MMC load.
-
-It is very important to model when resources are not needed, since this
-has some system-wide effects. There are two main use-cases I have in
-mind:
-
-1) MMC clk is a leaf clock of some complex hierarchy (e.g. a PLL at the
-top of a clock sub-tree). If MMC is always "locked" at some fast rate
-(e.g. 48MHz instead of 24MHz or 12MHz) then that constraint prevents
-the rest of the hierarchy from transitioning to a lower frequency. Even
-if the MMC clock is aggressively gating, maximum system-level power
-savings may not be achieved since the rest of the clock sub-tree
-(starting at the PLL) will be "stuck" at a higher frequency than
-necessary. Thus, aggressive clock gating might give good power savings
-for the MMC case, but may be a blocker for other system components.
-
-2) Wake-up latency constraints might make it impossible to clock gate,
-and thus the only power-saving option is to run at a lower frequency.
-This is not quite what is described above, but the point is that clock
-frequency scaling and clock gating are complementary power saving
-options, but we rely on the driver to model resource requirements
-accurately to get the best results.
-
-Regards,
-Mike
-
+> Why are you using atomic_read() here?
 > 
-> >
-> > The frequency scaling could help in that case. Anyway I should prepare
-> > some more benchmarks for such conditions.
-> 
-> Seems reasonable and please do!
-> 
-> Kind regards
-> Uffe
+transfer_is_successful 1) will be reset to 0 in this function (before
+kick start the I2C transfer), 2) will be set to 1 in the ISR (to signal
+completion of the I2C transfer), and 3) will be checked in this function
+here. I thought that means I should declare it volatile, because it can
+be modified in both the process context and interrupt context (and I use
+atomic because I remember Linux checkpatch warns against using volatile)?
