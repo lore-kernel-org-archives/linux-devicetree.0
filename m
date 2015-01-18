@@ -1,128 +1,79 @@
-From: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 7/8] gpio/mpc8xxx: Convert to platform device interface.
-Date: Sun, 18 Jan 2015 12:39:32 +0100
-Message-ID: <1421581173-28416-8-git-send-email-ricardo.ribalda@gmail.com>
-References: <1421581173-28416-1-git-send-email-ricardo.ribalda@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1421581173-28416-1-git-send-email-ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter Korsgaard <jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH v5 2/3] i2c: iproc: Add Broadcom iProc I2C Driver
+Date: Sun, 18 Jan 2015 12:42:55 +0100
+Message-ID: <20150118114255.GB1113@katana>
+References: <rjui@broadcom.com>
+ <1421451737-7107-1-git-send-email-rjui@broadcom.com>
+ <1421451737-7107-3-git-send-email-rjui@broadcom.com>
+ <54BB795C.6040402@broadcom.com>
+ <20150118094741.GE22880@pengutronix.de>
+ <20150118110658.GA1113@katana>
+ <20150118111759.GG22880@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="xgyAXRrhYN0wYx8y"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150118111759.GG22880-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This way we do not need to transverse the device tree manually.
 
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Peter Korsgaard <jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- drivers/gpio/gpio-mpc8xxx.c | 48 +++++++++++++++++++++------------------------
- 1 file changed, 22 insertions(+), 26 deletions(-)
+--xgyAXRrhYN0wYx8y
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
-index d1ff879..57eb794 100644
---- a/drivers/gpio/gpio-mpc8xxx.c
-+++ b/drivers/gpio/gpio-mpc8xxx.c
-@@ -15,6 +15,7 @@
- #include <linux/of.h>
- #include <linux/of_gpio.h>
- #include <linux/of_irq.h>
-+#include <linux/of_platform.h>
- #include <linux/gpio.h>
- #include <linux/slab.h>
- #include <linux/irq.h>
-@@ -342,8 +343,9 @@ static struct of_device_id mpc8xxx_gpio_ids[] __initdata = {
- 	{}
- };
- 
--static void __init mpc8xxx_add_controller(struct device_node *np)
-+static int mpc8xxx_probe(struct platform_device *pdev)
- {
-+	struct device_node *np = pdev->dev.of_node;
- 	struct mpc8xxx_gpio_chip *mpc8xxx_gc;
- 	struct of_mm_gpio_chip *mm_gc;
- 	struct gpio_chip *gc;
-@@ -351,11 +353,9 @@ static void __init mpc8xxx_add_controller(struct device_node *np)
- 	unsigned hwirq;
- 	int ret;
- 
--	mpc8xxx_gc = kzalloc(sizeof(*mpc8xxx_gc), GFP_KERNEL);
--	if (!mpc8xxx_gc) {
--		ret = -ENOMEM;
--		goto err;
--	}
-+	mpc8xxx_gc = devm_kzalloc(&pdev->dev, sizeof(*mpc8xxx_gc), GFP_KERNEL);
-+	if (!mpc8xxx_gc)
-+		return -ENOMEM;
- 
- 	spin_lock_init(&mpc8xxx_gc->lock);
- 
-@@ -375,16 +375,16 @@ static void __init mpc8xxx_add_controller(struct device_node *np)
- 
- 	ret = of_mm_gpiochip_add(np, mm_gc);
- 	if (ret)
--		goto err;
-+		return ret;
- 
- 	hwirq = irq_of_parse_and_map(np, 0);
- 	if (hwirq == NO_IRQ)
--		goto skip_irq;
-+		return 0;
- 
- 	mpc8xxx_gc->irq = irq_domain_add_linear(np, MPC8XXX_GPIO_PINS,
- 					&mpc8xxx_gpio_irq_ops, mpc8xxx_gc);
- 	if (!mpc8xxx_gc->irq)
--		goto skip_irq;
-+		return 0;
- 
- 	id = of_match_node(mpc8xxx_gpio_ids, np);
- 	if (id)
-@@ -397,24 +397,20 @@ static void __init mpc8xxx_add_controller(struct device_node *np)
- 	irq_set_handler_data(hwirq, mpc8xxx_gc);
- 	irq_set_chained_handler(hwirq, mpc8xxx_gpio_irq_cascade);
- 
--skip_irq:
--	return;
--
--err:
--	pr_err("%s: registration failed with status %d\n",
--	       np->full_name, ret);
--	kfree(mpc8xxx_gc);
--
--	return;
-+	return 0;
- }
- 
--static int __init mpc8xxx_add_gpiochips(void)
--{
--	struct device_node *np;
--
--	for_each_matching_node(np, mpc8xxx_gpio_ids)
--		mpc8xxx_add_controller(np);
-+static struct platform_driver mpc8xxx_plat_driver = {
-+	.probe		= mpc8xxx_probe,
-+	.driver		= {
-+		.name = "gpio-mpc8xxx",
-+		.of_match_table	= mpc8xxx_gpio_ids,
-+	},
-+};
- 
--	return 0;
-+static int __init mpc8xxx_init(void)
-+{
-+	return platform_driver_register(&mpc8xxx_plat_driver);
- }
--arch_initcall(mpc8xxx_add_gpiochips);
-+
-+arch_initcall(mpc8xxx_init);
--- 
-2.1.4
+On Sun, Jan 18, 2015 at 12:17:59PM +0100, Uwe Kleine-K=C3=B6nig wrote:
+> Hello Wolfram,
+>=20
+> On Sun, Jan 18, 2015 at 12:06:58PM +0100, Wolfram Sang wrote:
+> > On Sun, Jan 18, 2015 at 10:47:41AM +0100, Uwe Kleine-K=C3=B6nig wrote:
+> > > On Sun, Jan 18, 2015 at 10:14:04AM +0100, Arend van Spriel wrote:
+> > > > On 01/17/15 00:42, Ray Jui wrote:
+> > > > >+	complete_all(&iproc_i2c->done);
+> > > >=20
+> > > > Looking over this code it seems to me there is always a single
+> > > > process waiting for iproc_i2c->done to complete. So using complete()
+> > > > here would suffice.
+> > > Yeah, there is always only a single thread waiting. That means both
+> > > complete and complete_all are suitable. AFAIK there is no reason to p=
+ick
+> > > one over the other in this case.
+> >=20
+> > Clarity?
+> And which do you consider more clear? complete_all might result in the
+> question: "Is there >1 waiter?" and complete might yield to "What about
+> the other waiters?". If you already know there is only one, both are on
+> par on clarity. Might only be me?! I don't care much.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+It is minor, I agree: If I read complete_all, I assume there is
+something fishy if there is only one waiter. It doesn't match. It might
+work, but I'll wonder if this is accidently or intentionally.
+
+
+--xgyAXRrhYN0wYx8y
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUu5w/AAoJEBQN5MwUoCm2geUQAJEnu7R/+Jk/gusjSDqXbpJu
+CYFKdbI/TrT2YVaSMZBDeUAbv1/TPP3r0hrSxwRNHlUvaM/k/cCj62xm/CG9t2Xq
+7YEjjyAFa6jRWeumMbreNcjCLeS2KfeH3L/TNY6C6ZfUJRFlAMyisYJc/Pn4DHdA
+vsYSik2pPYF9Q0E15ZxrRiO4ixg3BuPwjbyVfhl0XdcjJafQ1WpetCz4HTxD5SJ5
+rOA+sqTeClIQ6HoNalk1HytZdarN+i//C8q+WrIzkDBQA9E09CSkaErwYpqiaDU+
+PzfdCzZC+wo9+/Qx0c4G+XTeKyMAi7+Qupp+ckUHQI80QIgT6tb8UB6PLSnX212f
+YQVa0dnD1yUMrxwicKDCUholu5OeTmd1YyEYmIWIPZyb3xNwDPp5cs5pLu9vlTOi
+Xu6Dw4bqxWQBeKG/RbBTaGunrWA0ALquumya81p6mKhvnCxlWd8B70hdjitD2OXT
+TU2JugP1s2SV7LAEnFLVPH9IsoJQMGyNgea+uqBaO6shWP68/SryDhJuFRQxvJXY
+2sJY22kOG1YIfQCwIRRymxTGlhRmBkU3b4yWvPgTxKfJQNj4rhgOMeNjUsc8Kcdw
+enZVJRV7RCrMEtGbt3Cuk087DI0MzjBcdp+EXuP3MxZoTUf8C3KaiKsMK/4/WtWK
+g4tJdmBigKm9ndgaVRRG
+=KVgA
+-----END PGP SIGNATURE-----
+
+--xgyAXRrhYN0wYx8y--
