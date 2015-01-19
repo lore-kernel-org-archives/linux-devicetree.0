@@ -1,96 +1,37 @@
-From: Peter Korsgaard <peter@korsgaard.com>
-Subject: Re: [PATCH 7/8] gpio/mpc8xxx: Convert to platform device interface.
-Date: Mon, 19 Jan 2015 23:48:16 +0100
-Message-ID: <87k30i9ykv.fsf@dell.be.48ers.dk>
-References: <1421581173-28416-1-git-send-email-ricardo.ribalda@gmail.com>
-	<1421581173-28416-8-git-send-email-ricardo.ribalda@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1421581173-28416-8-git-send-email-ricardo.ribalda@gmail.com>
-	(Ricardo Ribalda Delgado's message of "Sun, 18 Jan 2015 12:39:32
-	+0100")
-Sender: linux-gpio-owner@vger.kernel.org
-To: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Peter Korsgaard <jacmet@sunsite.dk>, devicetree@vger.kernel.org
+From: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/3] ARM: meson: add support for MINIX NEO-X8
+Date: Tue, 20 Jan 2015 00:22:56 +0100
+Message-ID: <1421709779-25691-1-git-send-email-b.galvani@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jerry Cao <jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Victor Wan <victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
->>>>> "Ricardo" == Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com> writes:
+This series adds support for MINIX NEO-X8, a digital media player
+based on a Amlogic S802 (Meson8) SoC. It depends on the pinctrl
+support for Meson8 submitted here:
 
- > This way we do not need to transverse the device tree manually.
- > Cc: Linus Walleij <linus.walleij@linaro.org>
- > Cc: Alexandre Courbot <gnurou@gmail.com>
- > Cc: Grant Likely <grant.likely@linaro.org>
- > Cc: Rob Herring <robh+dt@kernel.org>
- > Cc: Peter Korsgaard <jacmet@sunsite.dk>
- > Cc: devicetree@vger.kernel.org
- > Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
- > ---
- >  drivers/gpio/gpio-mpc8xxx.c | 48 +++++++++++++++++++++------------------------
- >  1 file changed, 22 insertions(+), 26 deletions(-)
+  https://lkml.org/lkml/2015/1/17/87
 
- > diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
- > index d1ff879..57eb794 100644
- > --- a/drivers/gpio/gpio-mpc8xxx.c
- > +++ b/drivers/gpio/gpio-mpc8xxx.c
- > @@ -15,6 +15,7 @@
- >  #include <linux/of.h>
- >  #include <linux/of_gpio.h>
- >  #include <linux/of_irq.h>
- > +#include <linux/of_platform.h>
- >  #include <linux/gpio.h>
- >  #include <linux/slab.h>
- >  #include <linux/irq.h>
- > @@ -342,8 +343,9 @@ static struct of_device_id mpc8xxx_gpio_ids[] __initdata = {
- >  	{}
- >  };
- 
- > -static void __init mpc8xxx_add_controller(struct device_node *np)
- > +static int mpc8xxx_probe(struct platform_device *pdev)
- >  {
- > +	struct device_node *np = pdev->dev.of_node;
- >  	struct mpc8xxx_gpio_chip *mpc8xxx_gc;
- >  	struct of_mm_gpio_chip *mm_gc;
- >  	struct gpio_chip *gc;
- > @@ -351,11 +353,9 @@ static void __init mpc8xxx_add_controller(struct device_node *np)
- >  	unsigned hwirq;
- >  	int ret;
- 
- > -	mpc8xxx_gc = kzalloc(sizeof(*mpc8xxx_gc), GFP_KERNEL);
- > -	if (!mpc8xxx_gc) {
- > -		ret = -ENOMEM;
- > -		goto err;
- > -	}
- > +	mpc8xxx_gc = devm_kzalloc(&pdev->dev, sizeof(*mpc8xxx_gc), GFP_KERNEL);
- > +	if (!mpc8xxx_gc)
- > +		return -ENOMEM;
- 
- >  	spin_lock_init(&mpc8xxx_gc->lock);
- 
- > @@ -375,16 +375,16 @@ static void __init mpc8xxx_add_controller(struct device_node *np)
- 
- >  	ret = of_mm_gpiochip_add(np, mm_gc);
- >  	if (ret)
- > -		goto err;
- > +		return ret;
- 
- >  	hwirq = irq_of_parse_and_map(np, 0);
- >  	if (hwirq == NO_IRQ)
- > -		goto skip_irq;
- > +		return 0;
+Beniamino Galvani (3):
+  of: Add vendor prefix for MINIX
+  of: Define board compatible for MINIX NEO-X8
+  ARM: dts: meson: add DTS file for MINIX NEO-X8
 
-Actually, looking closer - Isn't this leaking mm_gc? It was as well
-before, but it would be good to get it fixed.
-
-
- >       mpc8xxx_gc-> irq = irq_domain_add_linear(np, MPC8XXX_GPIO_PINS,
- >  					&mpc8xxx_gpio_irq_ops, mpc8xxx_gc);
- >  	if (!mpc8xxx_gc->irq)
- > -		goto skip_irq;
- > +		return 0;
-
-And here as well?
-
+ Documentation/devicetree/bindings/arm/amlogic.txt  |   4 +
+ .../devicetree/bindings/arm/geniatech.txt          |   5 -
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ arch/arm/boot/dts/Makefile                         |   1 +
+ arch/arm/boot/dts/meson8-minix-neo-x8.dts          | 128 +++++++++++++++++++++
+ 5 files changed, 134 insertions(+), 5 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/arm/geniatech.txt
+ create mode 100644 arch/arm/boot/dts/meson8-minix-neo-x8.dts
 
 -- 
-Bye, Peter Korsgaard
+2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
