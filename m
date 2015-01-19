@@ -1,374 +1,111 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCHv2] mvebu: add Linksys WRT1900AC (Mamba) support
-Date: Mon, 19 Jan 2015 19:21:13 +0100
-Message-ID: <20150119182113.GH32663@lunn.ch>
-References: <1421687701-5667-1-git-send-email-kaloz@openwrt.org>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: Re: [RFC PATCH 1/3] drivers: of: fix resources freeing in
+ of_pci_get_host_bridge_resources()
+Date: Mon, 19 Jan 2015 18:32:29 +0000
+Message-ID: <20150119183228.GE10762@e106497-lin.cambridge.arm.com>
+References: <1420644571-18928-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1420644571-18928-2-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1420644571-18928-2-git-send-email-lorenzo.pieralisi@arm.com>
 Content-Disposition: inline
-In-Reply-To: <1421687701-5667-1-git-send-email-kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Mohit Kumar <mohit.kumar@st.com>, Jingoo Han <jg1.han@samsung.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 19, 2015 at 06:15:01PM +0100, Imre Kaloz wrote:
-> The Linksys WRT1900AC (Mamba) is a router that has
-> 
-> - 2 mini-PCIe slots with Marvell 88W8864 radios
-> - 1 USB 3.0 port
-> - 1 USB 2.0/eSATAp port
-> - 2 Ethernet interfaces connected to a 88E6172 switch (1x WAN + 4x LAN)
-> - 128MB NAND flash
-> - 256MB RAM
-> 
-> Signed-off-by: Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+On Wed, Jan 07, 2015 at 03:29:29PM +0000, Lorenzo Pieralisi wrote:
+> In the function of_pci_get_host_bridge_resources() if the parsing of
+> ranges fails, previously allocated resources inclusive of bus_range
+> are not freed and are not expected to be freed by the function caller
+> on error return.
+>=20
+> This patch fixes the issues by adding code that properly frees resour=
+ces
+> and bus_range before exiting the function with an error return value.
+>=20
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Liviu Dudau <liviu.dudau@arm.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 > ---
-> Changes since v1:
->   * add dual license
->   * lower SPI speed to meet the chip's maximum
->   * pinctrl cleanups based on Andrew Lunn's suggestions
-> ---
->  arch/arm/boot/dts/armada-xp-mamba.dts | 273 ++++++++++++++++++++++++++++++++++
->  1 file changed, 273 insertions(+)
->  create mode 100644 arch/arm/boot/dts/armada-xp-mamba.dts
-> 
-> diff --git a/arch/arm/boot/dts/armada-xp-mamba.dts b/arch/arm/boot/dts/armada-xp-mamba.dts
-> new file mode 100644
-> index 0000000..e368d18
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/armada-xp-mamba.dts
-> @@ -0,0 +1,273 @@
-> +/*
-> + * Device Tree file for the Linksys WRT1900AC (Mamba).
+>  drivers/of/of_pci.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+>=20
+> diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
+> index 88471d3..6fbfe99 100644
+> --- a/drivers/of/of_pci.c
+> +++ b/drivers/of/of_pci.c
+> @@ -146,6 +146,7 @@ int of_pci_get_host_bridge_resources(struct devic=
+e_node *dev,
+>  	struct of_pci_range_parser parser;
+>  	char range_type[4];
+>  	int err;
+> +	struct pci_host_bridge_window *window;
+> =20
+>  	if (io_base)
+>  		*io_base =3D (resource_size_t)OF_BAD_ADDR;
+> @@ -225,7 +226,10 @@ int of_pci_get_host_bridge_resources(struct devi=
+ce_node *dev,
+>  conversion_failed:
+>  	kfree(res);
+>  parse_failed:
+> +	list_for_each_entry(window, resources, list)
+> +		kfree(window->res);
+>  	pci_free_resource_list(resources);
+> +	kfree(bus_range);
+>  	return err;
+>  }
+>  EXPORT_SYMBOL_GPL(of_pci_get_host_bridge_resources);
 
-Hi Imre
+Hi Lorenzo et all,
 
-Thanks for the v2. I have a few comments, and some points we will need
-to discuss.
+Here is my personal view and I am happy to hear from others on the desi=
+red
+behaviour:
 
-> + *
-> + * Note: this board is shipped with a new generation boot loader that
-> + * remaps internal registers at 0xf1000000. Therefore, if earlyprintk
-> + * is used, the CONFIG_DEBUG_MVEBU_UART_ALTERNATE option should be
+When I wrote this function what I had in mind was that it will parse as
+much as possible from the device tree and return a list of resources th=
+at
+could be successfully converted. If the entire list of ranges could not
+be converted then an error code will be returned, but the caller still
+had the list as constructed up to the error. It was the job of the call=
+er
+to free the list in either cases, as stated in the comment.
 
-There is a patch already queued up for this cycle:
+The historical reason why the function was written that way was because=
+ at
+some moment after parsing I've had an additional step where arches coul=
+d
+cleanup / veto the list and they could return an error value to signal
+their discontent. Also I was (am) not sure how lenient we could be with
+the device tree not being sane (at least one host bridge binding lists =
+the
+config space as a range, which was accepted as broken).
 
-http://lists.infradead.org/pipermail/linux-arm-kernel/2015-January/313605.html
+So, from that point of view, I would NAK this patch, as the function wo=
+rks
+as intended. If others find this mode of operation too convoluted, then
+the patch should probably make clear that cleanup only needs to be done=
+ on
+function returning success.
 
-Please can you change CONFIG_DEBUG_MVEBU_UART_ALTERNATE to
-CONFIG_DEBUG_MVEBU_UART0_ALTERNATE
+Best regards,
 
-> + * used.
-> + *
-> + * Copyright (C) 2014 Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-> + *
-> + * Based on armada-xp-axpwifiap.dts:
-> + *
-> + *     Copyright (C) 2013 Marvell
-> + *
-> + *     Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This file is licensed under the terms of the GNU General Public
-> + *     License version 2.  This program is licensed "as is" without
-> + *     any warranty of any kind, whether express or implied.
-> + *
-> + * Or, alternatively,
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use,
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + */
-> +
-> +/dts-v1/;
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/input/input.h>
-> +#include "armada-xp-mv78230.dtsi"
-> +
-> +/ {
-> +	model = "Linksys WRT1900AC (Mamba)";
-> +	compatible = "linksys,mamba", "marvell,armadaxp-mv78230",
-> +		     "marvell,armadaxp", "marvell,armada-370-xp";
+> --=20
+> 2.2.1
+>=20
+>=20
 
-So this is where the discussion starts. I don't like Mamba being so
-prominent. As far as i understand, Mamba is the board, not the device.
-In theory, another device could be created using the same board as a
-basis, but with different PCIe cards, etc. At that point, i would
-suggest refactoring the common parts out into a
-armada-xp-linksys-mamba.dtsi which is then included into any device
-.dts file using the Mamba board.
-
-This file describes the device. So i would prefer it to be called
-armada-xp-linksys-wrt1900ac.dts. The first compatible should be
-"linksys,wrt1900ac". Having "linksys,mamba" second is O.K.
-
-> +
-> +	chosen {
-> +		bootargs = "console=ttyS0,115200";
-> +		stdout-path = &uart0;
-> +	};
-> +
-> +	memory {
-> +		device_type = "memory";
-> +		reg = <0x00000000 0x00000000 0x00000000 0x10000000>; /* 256MB */
-> +	};
-> +
-> +	soc {
-> +		ranges = <MBUS_ID(0xf0, 0x01) 0 0 0xf1000000 0x100000
-> +			  MBUS_ID(0x01, 0x1d) 0 0 0xfff00000 0x100000>;
-> +
-> +		pcie-controller {
-> +			status = "okay";
-> +
-> +			/* Etron EJ168 USB 3.0 controller */
-> +			pcie@1,0 {
-> +				/* Port 0, Lane 0 */
-> +				status = "okay";
-> +			};
-> +
-> +			/* First mini-PCIe port */
-> +			pcie@2,0 {
-> +				/* Port 0, Lane 1 */
-> +				status = "okay";
-> +			};
-> +
-> +			/* Second mini-PCIe port */
-> +			pcie@3,0 {
-> +				/* Port 0, Lane 3 */
-> +				status = "okay";
-> +			};
-> +		};
-> +
-> +		internal-regs {
-
-It would be nice to document the jumper and pinout here.
-
-> +			serial@12000 {
-> +				status = "okay";
-> +			};
-> +
-> +			sata@a0000 {
-> +				nr-ports = <1>;
-> +				status = "okay";
-> +			};
-> +
-> +			ethernet@70000 {
-> +				pinctrl-0 = <&ge0_rgmii_pins>;
-> +				pinctrl-names = "default";
-> +				status = "okay";
-> +				phy-mode = "rgmii-id";
-> +				fixed-link {
-> +					speed = <1000>;
-> +					full-duplex;
-> +				};
-> +			};
-> +
-> +			ethernet@74000 {
-> +				pinctrl-0 = <&ge1_rgmii_pins>;
-> +				pinctrl-names = "default";
-> +				status = "okay";
-> +				phy-mode = "rgmii-id";
-> +				fixed-link {
-> +					speed = <1000>;
-> +					full-duplex;
-> +				};
-> +			};
-> +
-> +			/* USB part of the eSATA/USB 2.0 port */
-> +			usb@50000 {
-> +				status = "okay";
-> +			};
-> +
-> +			i2c@11000 {
-> +				status = "okay";
-> +				clock-frequency = <100000>;
-> +
-> +				tmp421@4c {
-> +					compatible = "ti,tmp421";
-> +					reg = <0x4c>;
-> +				};
-> +			};
-> +
-
-The discussion about the i2c LED controller is still ongoing, but i
-think TI are unlikely to get a PWM based driver accepted in place of a
-LED driver. So you could include the LEDs here, and something
-unexpected happens, we can remove it.
-
-> +			nand@d0000 {
-> +				status = "okay";
-> +				num-cs = <1>;
-> +				marvell,nand-keep-config;
-> +				marvell,nand-enable-arbiter;
-> +				nand-on-flash-bbt;
-> +				nand-ecc-strength = <4>;
-> +				nand-ecc-step-size = <512>;
-> +
-> +				partition@0 {
-> +					label = "u-boot";
-> +					reg = <0x0000000 0x100000>;  /* 1MB */
-> +					read-only;
-> +				};
-> +
-> +				partition@100000 {
-> +					label = "u_env";
-> +					reg = <0x100000 0x40000>;    /* 256KB */
-> +				};
-> +
-> +				partition@140000 {
-> +					label = "s_env";
-> +					reg = <0x140000 0x40000>;    /* 256KB */
-> +				};
-
-So there is a big gap here? 768KB of unused space before the devinfo section?
-
-> +
-> +				partition@900000 {
-> +					label = "devinfo";
-> +					reg = <0x900000 0x100000>;    /* 1MB */
-> +					read-only;
-> +				};
-> +
-> +				partition@a00000 {
-> +					label = "kernel1";
-> +					reg = <0xa00000 0x2800000>;    /* 3MB + rootfs1 */
-
-There are some long lines here. We try to keep to the 80 character
-rule.
-
-> +				};
-
-This partition overlaps the next one? That is new to me. Seems to be
-accepted practice for OpenWRT, but i'm not aware of any mainline
-Marvell DT doing this. Comments from others welcome...
-
-> +
-> +				partition@d00000 {
-> +					label = "rootfs1";
-> +					reg = <0xd00000 0x2500000>;    /* 37MB */
-> +				};
-> +
-> +				partition@3200000 {
-> +					label = "kernel2";
-> +					reg = <0x3200000 0x2800000>;    /* 3MB + rootfs2 */
-> +				};
-> +
-> +				partition@3500000 {
-> +					label = "rootfs2";
-> +					reg = <0x3500000 0x2500000>;    /* 37MB */
-> +				};
-> +
-> +				/* Last MB is for the BBT, i.e. not writable */
-> +				partition@5a00000 {
-> +					label = "syscfg";
-> +					reg = <0x5a00000 0x2600000>;    /* 38MB */
-> +				};
-> +			};
-> +
-> +			spi0: spi@10600 {
-> +				status = "okay";
-> +
-> +				spi-flash@0 {
-> +					#address-cells = <1>;
-> +					#size-cells = <1>;
-> +					compatible = "everspin,mr25h256";
-> +					reg = <0>; /* Chip select 0 */
-> +					spi-max-frequency = <40000000>;
-> +				};
-> +			};
-> +		};
-> +	};
-> +
-> +	gpio_keys {
-> +		compatible = "gpio-keys";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		pinctrl-0 = <&keys_pin>;
-> +		pinctrl-names = "default";
-> +
-> +		button@1 {
-> +			label = "WPS";
-> +			linux,code = <KEY_WPS_BUTTON>;
-> +			gpios = <&gpio1 0 GPIO_ACTIVE_HIGH>;
-> +		};
-> +
-> +		button@2 {
-> +			label = "Factory Reset Button";
-> +			linux,code = <KEY_RESTART>;
-> +			gpios = <&gpio1 1 GPIO_ACTIVE_HIGH>;
-> +		};
-> +	};
-> +
-> +	gpio-leds {
-> +		compatible = "gpio-leds";
-> +		pinctrl-0 = <&power_led_pin>;
-> +		pinctrl-names = "default";
-> +
-> +		power {
-> +			label = "mamba:white:power";
-
-Please replace this mamba with wrt1900ac. It is a property of the
-device, not the board. Another device using the mamba board may use it
-differently.
-
-> +			gpios = <&gpio1 8 GPIO_ACTIVE_HIGH>;
-> +			default-state = "on";
-> +		};
-> +	};
-> +
-> +	gpio_fan {
-> +		/* SUNON HA4010V4-0000-C99 */
-> +		compatible = "gpio-fan";
-> +		gpios = <&gpio0 24 0>;
-> +
-> +		gpio-fan,speed-map = <0    0
-> +				      4500 1>;
-> +	};
-> +};
-> +
-> +&pinctrl {
-> +
-> +	keys_pin: keys-pin {
-> +		marvell,pins = "mpp32", "mpp33";
-> +		marvell,function = "gpio";
-> +	};
-> +
-> +	power_led_pin: power-led-pin {
-> +		marvell,pins = "mpp40";
-> +		marvell,function = "gpio";
-> +	};
-> +
-> +	gpio_fan_pin: gpio-fan-pin {
-> +		marvell,pins = "mpp24";
-> +		marvell,function = "gpio";
-> +	};
-> +};
-> -- 
-> 2.1.0
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    =C2=AF\_(=E3=83=84)_/=C2=AF
