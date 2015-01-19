@@ -1,54 +1,41 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH net-next v13 3/3] net: hisilicon: new hip04 ethernet driver
-Date: Mon, 19 Jan 2015 21:34:17 +0100
-Message-ID: <9314032.C8yR0htxiP@wuerfel>
-References: <1421217254-12008-1-git-send-email-dingtianhong@huawei.com> <1421217254-12008-4-git-send-email-dingtianhong@huawei.com> <54BD48BF.3050707@suse.de>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sunxi: Add missing mdio label
+Date: Mon, 19 Jan 2015 21:39:41 +0100
+Message-ID: <20150119203941.GG4367@lukather>
+References: <1421696122-5389-1-git-send-email-mamlinav@gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54BD48BF.3050707-l3A5Bk7waGM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Graf <agraf-l3A5Bk7waGM@public.gmane.org>
-Cc: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, eric.dumazet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="z9ECzHErBrwFF8sy"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBLWX6WSQKGQE5CG23FY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1421696122-5389-1-git-send-email-mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 19 January 2015 19:11:11 Alexander Graf wrote:
-> 
-> After hammering on the box a bit again, I'm in a situation where I get 
-> lots of
-> 
-> [302398.232603] hip04-ether e28b0000.ethernet eth0: rx drop
-> [302398.377309] hip04-ether e28b0000.ethernet eth0: rx drop
-> [302398.395198] hip04-ether e28b0000.ethernet eth0: rx drop
-> [302398.466118] hip04-ether e28b0000.ethernet eth0: rx drop
-> [302398.659009] hip04-ether e28b0000.ethernet eth0: rx drop
-> [302399.053389] hip04-ether e28b0000.ethernet eth0: rx drop
-> [302399.122067] hip04-ether e28b0000.ethernet eth0: rx drop
-> [302399.268192] hip04-ether e28b0000.ethernet eth0: rx drop
-> [302399.286081] hip04-ether e28b0000.ethernet eth0: rx drop
-> [302399.594201] hip04-ether e28b0000.ethernet eth0: rx drop
-> [302399.683416] hip04-ether e28b0000.ethernet eth0: rx drop
-> [302399.701307] hip04-ether e28b0000.ethernet eth0: rx drop
-> 
-> and I really am getting a lot of drops - I can't even ping the machine 
-> anymore.
-> 
-> However, as it is there's a good chance the machine is simply 
-> unreachable because it's busy writing to the UART, and even if not all 
-> useful messages indicating anything have scrolled out. I really don't 
-> think you should emit any message over and over again to the user. Once 
-> or twice is enough.
->
-> Please make sure to rate limit it.
+--z9ECzHErBrwFF8sy
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-I would argue that packet loss is not an error condition at all
-and you should not print this at netdev_err() level. You could make
-this a netdev_dbg(), or just make it silent because it's already
-counted in the statistics.
+On Mon, Jan 19, 2015 at 10:35:22PM +0300, Aleksei Mamlin wrote:
+> This patch add missing mdio label for sun[457]i.
+> 
+> Signed-off-by: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Applied, thanks.
+
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--z9ECzHErBrwFF8sy--
