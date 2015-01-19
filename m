@@ -1,59 +1,55 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH] mfd: db8500-prcmu:  Remove unused function
-Date: Mon, 19 Jan 2015 09:55:20 +0000
-Message-ID: <20150119095520.GN21886@x1>
-References: <1420134593-690-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V1] mfd: da9063: Add device tree support
+Date: Mon, 19 Jan 2015 09:56:49 +0000
+Message-ID: <20150119095649.GO21886@x1>
+References: <201501141438.t0EEcMBg010491@swsrvapps-01.diasemi.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1420134593-690-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <201501141438.t0EEcMBg010491-GMeof6ifPvyPZR/jWPPeGKXmvbD0mHlG@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Dajun Chen <david.chen-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Support Opensource <support.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 01 Jan 2015, Rickard Strandqvist wrote:
+On Wed, 14 Jan 2015, Steve Twiss wrote:
 
-> Remove the function prcmu_get_boot_status() that is not used anywhere=
-=2E
+> From: Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
 >=20
-> This was partially found by using a static code analysis program call=
-ed cppcheck.
+> Add device tree support for DA9063 regulators; Real-Time Clock
+> and Watchdog.
 >=20
-> Signed-off-by: Rickard Strandqvist <rickard_strandqvist@spectrumdigit=
-al.se>
+>=20
+> Signed-off-by: Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+>=20
 > ---
->  drivers/mfd/db8500-prcmu.c |    9 ---------
->  1 file changed, 9 deletions(-)
+> Checks performed with linux-next/v3.19-rc4/scripts/checkpatch.pl
+>  da9063.txt                total: 0 errors, 0 warnings, 94 lines chec=
+ked
+>  da9063-core.c             total: 0 errors, 0 warnings, 192 lines che=
+cked
+>  da9063-i2c.c              total: 0 errors, 0 warnings, 277 lines che=
+cked
+>  core.h                    total: 0 errors, 0 warnings, 99 lines chec=
+ked
+> This patch applies against linux-next and v3.19-rc4=20
+>=20
+>=20
+>=20
+>  Documentation/devicetree/bindings/mfd/da9063.txt | 94 ++++++++++++++=
+++++++++++
 
-Applied, thanks.
-
-> diff --git a/drivers/mfd/db8500-prcmu.c b/drivers/mfd/db8500-prcmu.c
-> index 193cf16..b517501 100644
-> --- a/drivers/mfd/db8500-prcmu.c
-> +++ b/drivers/mfd/db8500-prcmu.c
-> @@ -675,15 +675,6 @@ bool prcmu_has_arm_maxopp(void)
->  }
-> =20
->  /**
-> - * prcmu_get_boot_status - PRCMU boot status checking
-> - * Returns: the current PRCMU boot status
-> - */
-> -int prcmu_get_boot_status(void)
-> -{
-> -	return readb(tcdm_base + PRCM_BOOT_STATUS);
-> -}
-> -
-> -/**
->   * prcmu_set_rc_a2p - This function is used to run few power state s=
-equences
->   * @val: Value to be set, i.e. transition requested
->   * Returns: 0 on success, -EINVAL on invalid argument
+Ah, and this should be in a separate patch.
 
 --=20
 Lee Jones
 Linaro STMicroelectronics Landing Team Lead
 Linaro.org =E2=94=82 Open source software for ARM SoCs
 =46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
