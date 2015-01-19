@@ -1,21 +1,142 @@
-From: Finance Department <comedor-zR9jn83fVkPG66mcB53EVw@public.gmane.org>
-Subject: Payment
-Date: Mon, 19 Jan 2015 15:46:55 -0430 (VET)
-Message-ID: <255853973.1143040.1421698615687.JavaMail.zimbra@inavi.gob.ve>
-Reply-To: Finance Department <defnce-9uewiaClKEY@public.gmane.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 3/5] PCI: st: Provide support for the sti PCIe controller
+Date: Mon, 19 Jan 2015 14:49:42 +0100
+Message-ID: <1682713.ac5OoTJoOr@wuerfel>
+References: <1418812486-12394-1-git-send-email-gabriel.fernandez@linaro.org> <8467440.C7CR1EqfOe@wuerfel> <CAG374jDmUyEX0_iu4wG8LjM6YGMjsB-3PjnyZy_0Se=nLcn16g@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <CAG374jDmUyEX0_iu4wG8LjM6YGMjsB-3PjnyZy_0Se=nLcn16g@mail.gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Bjorn Helgaas <bhelgaas@google.com>, Mohit Kumar <mohit.kumar@st.com>, Jingoo Han <jg1.han@samsung.com>, Grant Likely <grant.likely@linaro.org>, Fabrice Gasnier <fabrice.gasnier@st.com>, Viresh Kumar <viresh.kumar@linaro.org>, Thierry Reding <treding@nvidia.com>, Minghuan Lian <Minghuan.Lian@freescale.com>, Magnus Damm <damm@opensource.se>, Will Deacon <will.deacon@arm.com>, Tanmay
 List-Id: devicetree@vger.kernel.org
 
-Dear Recipient,
+On Monday 19 January 2015 13:37:33 Gabriel Fernandez wrote:
+> On 17 December 2014 at 23:14, Arnd Bergmann <arnd@arndb.de> wrote:
+> > On Wednesday 17 December 2014 11:34:44 Gabriel FERNANDEZ wrote:
+> > > +/*
+> > > + * On ARM platforms, we actually get a bus error returned when t=
+he PCIe
+> > IP
+> > > + * returns a UR or CRS instead of an OK.
+> > > + */
+> > > +static int st_pcie_abort_
+> > =E2=80=8B=E2=80=8B
+> > handler(unsigned long addr, unsigned int fsr,
+> > > +                              struct pt_regs *regs)
+> > > +{
+> > > +     return 0;
+> > > +}
+> >
+> > You should check that it's actually PCI that caused the abort. Don'=
+t
+> > just ignore a hard error condition.
+> >
+> > Usually there are registers in the PCI core that let you identify w=
+hat
+> > happened.
+> >
+>=20
+> =E2=80=8B
+> We return 0 because abort handler is not activated during boot.
+>=20
 
-You have been awarded the sum of  8,000,000.00 (Eight Million Pounds sterling) with reference number 77100146 by office of the ministry of finance UK.Send us your personal details to deliver your funds.
+Can you just remove the handler then? We should never have exception
+handlers that unconditionally return 0.
 
-Gloria Peter
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > > +      * we must retry for up to a second before we decide the de=
+vice is
+> > > +      * dead. If we are still dead then we assume there is nothi=
+ng
+> > there and
+> > > +      * return ~0
+> > > +      *
+> > > +      * The downside of this is that we incur a delay of 1s for =
+every
+> > pci
+> > > +      * express link that doesn't have a device connected.
+> > > +      */
+> > > +     if (((where & ~3) =3D=3D 0) && devfn =3D=3D 0 && (data =3D=3D=
+ 0 || data =3D=3D
+> > ~0)) {
+> > > +             if (retry_count++ < 1000) {
+> > > +                     mdelay(1);
+> > > +                     goto retry;
+> > > +             } else {
+> > > +                     *val =3D ~0;
+> > > +                     return PCIBIOS_DEVICE_NOT_FOUND;
+> > > +             }
+> > > +     }
+> > > +
+> > > +     *val =3D data;
+> > > +     return ret;
+> > > +}
+> >
+> > A busy-loop is extremely nasty. If this is only during the initial =
+bus
+> > scan, could you use an msleep instead?
+> >
+> > =E2=80=8Byes it's during the initial bus scan.
+> But we can't use msleep because we are under raw_spin_lock_irqsave()
+> see PCI_OP_READ() macro in drivers/pci/access.c
+
+Ah, I see. Better use a loop with 'time_before()' and a much shorter
+delay then. Even a single mdelay(1) with irqs disabled can be annoying,
+so try to make the time as short as possible.
+
+> > Also, it sounds like the error you get is actually the fault that y=
+ou
+> > are catching above. If this is correct, then use the fault handler =
+to
+> > communicate this to the probe function.
+> >
+>=20
+> =E2=80=8BSame as above the handler is not activated during the boot a=
+nd initial bus
+> scan.=E2=80=8B
+
+Maybe you could enable the handler during boot to catch this case, and
+then disable it later?
+
+> >
+> > > +static void st_msi_init_one(struct pcie_port *pp)
+> > > +{
+> > > +     struct st_pcie *pcie =3D to_st_pcie(pp);
+> > > +
+> > > +     /*
+> > > +      * Set the magic address the hardware responds to. This has=
+ to be
+> > in
+> > > +      * the range the PCI controller can write to.
+> > > +      */
+> > > +     dw_pcie_msi_init(pp);
+> > > +
+> > > +     if ((virt_to_phys((void *)pp->msi_data) < pcie->lmi->start)=
+ ||
+> > > +         (virt_to_phys((void *)pp->msi_data) > pcie->lmi->end))
+> > > +             dev_err(pp->dev, "MSI addr miss-configured\n");
+> > > +}
+> >
+> > Why do you call virt_to_phys() here? Isn't
+> > =E2=80=8B=E2=80=8B
+> > msi_data a physical address?
+> >
+> =E2=80=8B?
+>=20
+> =E2=80=8B
+> msi_data is a virtual address, it's obtained through a   __get_free_p=
+ages()
+> function in dw_pcie_msi_init() procedure.
+
+I guess you need dma_map_single() then, or use dma_alloc_coherent inste=
+ad
+of __get_free_pages(). There is no guarantee that the page you allocate
+there is actually visible to the PCI host at the same address that the =
+CPU
+uses, so you need to map from a CPU address to a DMA address that the P=
+CI
+host bridge uses.
+
+	Arnd
