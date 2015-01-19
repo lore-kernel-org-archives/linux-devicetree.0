@@ -1,110 +1,58 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 1/2] remoteproc: microblaze: Document device tree bindings
-Date: Mon, 19 Jan 2015 11:04:36 +0000
-Message-ID: <20150119110436.GD21553@leverpostej>
-References: <a458462d2dc6901440bded015608f7a9df9e7942.1421662385.git.michal.simek@xilinx.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+Subject: [PATCH v2 4/8] gpio-mm-lantiq: Use of_property_read_u32
+Date: Mon, 19 Jan 2015 12:27:24 +0100
+Message-ID: <1421666844-14599-1-git-send-email-ricardo.ribalda@gmail.com>
+References: <20150119105753.GC21553@leverpostej>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <a458462d2dc6901440bded015608f7a9df9e7942.1421662385.git.michal.simek@xilinx.com>
+In-Reply-To: <20150119105753.GC21553@leverpostej>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Simek <michal.simek@xilinx.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "monstr@monstr.eu" <monstr@monstr.eu>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, John Crispin <blogic@openwrt.org>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 19, 2015 at 10:30:19AM +0000, Michal Simek wrote:
-> Add device tree binding documentation for the Microblaze remoteproc
-> on Xilinx Zynq.
-> 
-> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-> ---
-> 
->  .../bindings/remoteproc/mb_remoteproc.txt          | 46 ++++++++++++++++++++++
->  1 file changed, 46 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/remoteproc/mb_remoteproc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/remoteproc/mb_remoteproc.txt b/Documentation/devicetree/bindings/remoteproc/mb_remoteproc.txt
-> new file mode 100644
-> index 000000000000..a2490eac0208
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/remoteproc/mb_remoteproc.txt
-> @@ -0,0 +1,46 @@
-> +Xilinx ARM-Microblaze remoteproc driver
-> +
-> +This driver requires specific Zynq hardware design where Microblaze is added
-> +to the programmable logic.
+Instead of parsing manually the shadow content, use the much simpler
+helper of_property_read_u32.
 
-The binding should describe the _hardware_, not the particular driver.
-Please remove any references to the 'driver'.
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Alexandre Courbot <gnurou@gmail.com>
+Cc: Grant Likely <grant.likely@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: John Crispin <blogic@openwrt.org>
+Cc: devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+---
 
-What hardware does this binding describe? Please focus on that.
+v2: Reported by Mark Rutland <mark.rutland@arm.com>
+ -use of_property_read_u32 instead of u16
 
-> +Microblaze is connected with PS block via axi bus connected to PS HP port
-> +to ensure access to PS DDR.
-> +Communication channels are done via soft GPIO IP connected to PS block
-> +and to Microblaze. There are also 2 gpio control signals reset and debug
-> +which are used for resetting Microblaze.
-> +
-> +Required properties:
-> +- compatible : Should be "xlnx,mb_remoteproc"
+ drivers/gpio/gpio-mm-lantiq.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-s/_/-/ in compatible strings please.
-
-> +- reg : Address and length of the ddr address space
-> +- bram: Phandle to bram controller which can access Microblaze BRAM
-> +- bram-firmware : Microblaze BRAM bootloader name
-
-Huh? What's this aname used for?
-
-This looks like a filesystem name, which shouldn't be in the DT.
-
-> +- firmware : Default firmware name which can be override by
-> +	     "firmware" module parameter
-
-Likewise on all points.
-
-> +- reset : Gpio phandle which reset Microblaze remoteproc
-> +- debug : Gpio phandle which setup Microblaze to debug state
-> +- ipino : Gpio phandle for Microblaze to ARM communication
-> +- vring0 : Gpio phandle for ARM to Microblaze communication vring 0
-> +- vring1 : Gpio phandle for ARM to Microblaze communication vring 1
-
-s/phandle/ / -- there's a gpio-specifier too, but we may as well just
-ignore the specifics of the format and leave that to the GPIO bindings.
-
-These should all have a "-gpio" suffix, too.
-
-> +
-> +Microblaze SoC can be also connected to the PS block via a axi bus.
-> +That's why there is the option to allocate interrupts for Microblaze use only.
-> +The driver will allocate interrupts to itself and Microblaze sw has to ensure
-> +that interrupts are properly enabled and handled by Microblaze interrupt
-> +controller.
-
-I'm not sure I follow? What is this for?
-
-Thanks,
-Mark.
-
-> +
-> +Optional properties:
-> + - interrupts : Interrupt mapping for remoteproc
-> + - interrupt-parent : Phandle for the interrupt controller
-> +
-> +Example:
-> +mb_remoteproc@800000 {
-> +	compatible = "xlnx,mb_remoteproc";
-> +	reg = < 0x8000000 0x8000000 >;
-> +	bram = <&axi_bram_ctrl_0>;
-> +	bram-firmware = "mb.bin";
-> +	firmware = "image.elf";
-> +	reset = <&zynq_gpio_reset 1 0>;
-> +	debug = <&zynq_gpio_reset 0 0>;
-> +	ipino = <&zynq_gpio_vring 0 0>;
-> +	vring0 = <&zynq_gpio_vring 1 0>;
-> +	vring1 = <&zynq_gpio_vring 2 0>;
-> +};
-> --
-> 1.8.2.3
-> 
+diff --git a/drivers/gpio/gpio-mm-lantiq.c b/drivers/gpio/gpio-mm-lantiq.c
+index 7d55161..95ff180 100644
+--- a/drivers/gpio/gpio-mm-lantiq.c
++++ b/drivers/gpio/gpio-mm-lantiq.c
+@@ -105,7 +105,7 @@ static void ltq_mm_save_regs(struct of_mm_gpio_chip *mm_gc)
+ static int ltq_mm_probe(struct platform_device *pdev)
+ {
+ 	struct ltq_mm *chip;
+-	const __be32 *shadow;
++	u32 shadow;
+ 
+ 	chip = devm_kzalloc(&pdev->dev, sizeof(*chip), GFP_KERNEL);
+ 	if (!chip)
+@@ -117,9 +117,8 @@ static int ltq_mm_probe(struct platform_device *pdev)
+ 	chip->mmchip.save_regs = ltq_mm_save_regs;
+ 
+ 	/* store the shadow value if one was passed by the devicetree */
+-	shadow = of_get_property(pdev->dev.of_node, "lantiq,shadow", NULL);
+-	if (shadow)
+-		chip->shadow = be32_to_cpu(*shadow);
++	if (!of_property_read_u32(pdev->dev.of_node, "lantiq,shadow", &shadow))
++		chip->shadow = shadow;
+ 
+ 	return of_mm_gpiochip_add(pdev->dev.of_node, &chip->mmchip);
+ }
+-- 
+2.1.4
