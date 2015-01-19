@@ -1,132 +1,106 @@
-From: Steve Twiss <stwiss.opensource@diasemi.com>
-Subject: [PATCH V2 2/2] devicetree: Add bindings for DA9063
-Date: Mon, 19 Jan 2015 16:29:51 +0000
-Message-ID: <7cd71ad47ba0cccd2d2da45fc3f1f82df0842a8c.1421684991.git.stwiss.opensource@diasemi.com>
-References: <cover.1421684991.git.stwiss.opensource@diasemi.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC PATCH 0/3] drivers: port PCIe designware to new DT parsing API
+Date: Mon, 19 Jan 2015 10:40:39 -0600
+Message-ID: <CAL_JsqLYg9vhFVmf=O4YLPfboj-dyoCR0H5dzBbMC3PeAEOwhQ@mail.gmail.com>
+References: <1420644571-18928-1-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1421684991.git.stwiss.opensource@diasemi.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>
-Cc: DT <devicetree@vger.kernel.org>, David Dajun Chen <david.chen@diasemi.com>, Grant Likely <grant.likely@linaro.org>, LKML <linux-kernel@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Support Opensource <support.opensource@diasemi.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1420644571-18928-1-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Cc: "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, Mohit Kumar <mohit.kumar-qxv4g6HH51o@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Steve Twiss <stwiss.opensource@diasemi.com>
+On Wed, Jan 7, 2015 at 9:29 AM, Lorenzo Pieralisi
+<lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org> wrote:
+> The introduction of the DT API:
+>
+> of_pci_get_host_bridge_resources()
+>
+> allows to retrieve PCI resources from the device tree in a generic way.
+>
+> Some PCI host controllers, in addition to standard IO and MEM resources and
+> corresponding CPU addresses, require to retrieve the addresses that are used
+> for bus routing of IO/MEM regions as seen at the bus level corresponding
+> to the bus segment the host controller is sitting on, so that the host
+> controller can programme its inbound/outbound memory regions correctly to
+> respond to bus transactions coming from the CPU on the host controller bus
+> ports.
+>
+> The DT generic layer provides functions that carry out the PCI
+> ranges <-> resources translation from PCI addresses to CPU addresses (as
+> seen at the CPU top level bus, through all required hierarchical bus layers),
+> but there is no generic API to retrieve the PCI range CPU untranslated
+> addresses, so PCI host controllers have to do it in a driver specific way
+> through the DT property parsing methods.
+>
+> This patchset converts the PCIe designware host controller driver to
+> use the API:
+>
+> of_pci_get_host_bridge_resources()
+>
+> in order to retrieve the PCI regions resources. To achieve generality, it
+> also augments the parsing API so that a new DT struct is created out of
+> PCI ranges, that contains the PCI resource and the range parser itself
+> so that it can be passed back to PCI host controllers drivers that
+> can, if needed, use it to parse the CPU untranslated addresses
+> corresponding to the resource in question.
 
-Add device tree bindings for DA9063 regulators; Real-Time Clock
-and Watchdog.
+I don't really like exposing ranges to host drivers. We've worked to
+not do that. So perhaps we need to rethink the API. I think we need to
+provide each range as a pair of resources which are the CPU address
+and PCI address. Perhaps an iterator is kind of pointless here. We do
+different things for each one. Are there cases with more than a single
+i/o space, non-prefetch memory and prefetch memory range? Perhaps we
+should just get the i/o and memory resources as separate calls. Just
+tossing out some ideas here.
 
-This patch is dependent on PATCH V2 1/2 
+> The first patch in the series is a fix/update for the parsing function:
+>
+> of_pci_get_host_bridge_resources()
 
-Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
+This one stands on its own and should go to stable perhap? If so, send
+it separately.
 
----
-This patch applies against linux-next and v3.19-rc4 
+Rob
 
- Documentation/devicetree/bindings/mfd/da9063.txt | 94 ++++++++++++++++++++++++
- 1 file changed, 94 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/da9063.txt
-
-diff --git a/Documentation/devicetree/bindings/mfd/da9063.txt b/Documentation/devicetree/bindings/mfd/da9063.txt
-new file mode 100644
-index 0000000..ac26af4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/da9063.txt
-@@ -0,0 +1,94 @@
-+* Dialog DA9063 Power Management Integrated Circuit (PMIC)
-+
-+DA9093 consists of a large and varied group of sub-devices (I2C Only):
-+
-+Device                   Supply Names    Description
-+------                   ------------    -----------
-+da9063-regulator        :               : LDOs & BUCKs
-+da9063-rtc              :               : Real-Time Clock
-+da9063-watchdog         :               : Watchdog
-+
-+======
-+
-+Required properties:
-+
-+- compatible : Should be "dlg,da9063-ca", "dlg,da9063-bb" or/and
-+  "dlg,da9063-ad".
-+- reg : Specifies the I2C slave address (this defaults to 0x58 but it can be
-+  modified to match the chip's OTP settings).
-+- interrupt-parent : Specifies the reference to the interrupt controller for
-+  the DA9063.
-+- interrupts : IRQ line information.
-+- interrupt-controller
-+
-+Sub-nodes:
-+
-+- regulators : This node defines the settings for the LDOs and BUCKs. The
-+  DA9063 regulators are bound using their names listed below:
-+
-+    bcore1    : BUCK CORE1
-+    bcore2    : BUCK CORE2
-+    bpro      : BUCK PRO
-+    bmem      : BUCK MEM
-+    bio       : BUCK IO
-+    bperi     : BUCK PERI
-+    ldo1      : LDO_1
-+    ldo2      : LDO_2
-+    ldo3      : LDO_3
-+    ldo4      : LDO_4
-+    ldo5      : LDO_5
-+    ldo6      : LDO_6
-+    ldo7      : LDO_7
-+    ldo8      : LDO_8
-+    ldo9      : LDO_9
-+    ldo10     : LDO_10
-+    ldo11     : LDO_11
-+
-+  The component follows the standard regulator framework and the bindings
-+  details of individual regulator device can be found in:
-+  Documentation/devicetree/bindings/regulator/regulator.txt
-+
-+- rtc : This node defines settings for the Real-Time Clock associated with
-+  the DA9063. There are currently no entries in this binding, however
-+  compatible = "dlg,da9063-rtc" should be added if a node is created.
-+
-+- watchdog : This node defines settings for the Watchdog timer associated
-+  with the DA9063. There are currently no entries in this binding, however
-+  compatible = "dlg,da9063-watchdog" should be added if a node is created.
-+
-+
-+Example:
-+
-+	pmic0: da9063@58 {
-+		compatible = "dlg,da9063-ca", "dlg,da9063-bb", "dlg,da9063-ad";
-+		reg = <0x58>;
-+		interrupt-parent = <&gpio6>;
-+		interrupts = <11 IRQ_TYPE_LEVEL_LOW>;
-+		interrupt-controller;
-+
-+		rtc {
-+			compatible = "dlg,da9063-rtc";
-+		};
-+
-+		wdt {
-+			compatible = "dlg,da9063-watchdog";
-+		};
-+
-+		regulators {
-+			DA9063_BCORE1: bcore1 {
-+				regulator-name = "BCORE1";
-+				regulator-min-microvolt = <300000>;
-+				regulator-max-microvolt = <1570000>;
-+				regulator-min-microamp = <500000>;
-+				regulator-max-microamp = <2000000>;
-+				regulator-boot-on;
-+			};
-+			DA9063_LDO11: ldo11 {
-+				regulator-name = "LDO_11";
-+				regulator-min-microvolt = <900000>;
-+				regulator-max-microvolt = <3600000>;
-+				regulator-boot-on;
-+			};
-+		};
-+	};
-+
--- 
-end-of-patch for PATCH V2
+>
+> It is part of the RFC series since it is a controversial fix to be
+> discussed before getting merged.
+>
+> Patch [2-3] augment the parsing API and convert the PCIe designware
+> driver code.
+>
+> The current API stays unchanged, so that the existing drivers using it
+> do not need patching and changes are limited.
+>
+> Tested on an iMX6 Sabrelite board.
+>
+> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> Cc: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
+> Cc: Mohit Kumar <mohit.kumar-qxv4g6HH51o@public.gmane.org>
+> Cc: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>
+> Lorenzo Pieralisi (3):
+>   drivers: of: fix resources freeing in
+>     of_pci_get_host_bridge_resources()
+>   drivers: of: of_pci_get_host_bridge_resources() range parsing update
+>   drivers: pci: host: update the pcie designware driver to new range
+>     parsing API
+>
+>  drivers/of/of_pci.c                |  36 +++++++--
+>  drivers/pci/host/pcie-designware.c | 145 +++++++++++++++++--------------------
+>  drivers/pci/host/pcie-designware.h |   5 +-
+>  include/linux/of_address.h         |   5 ++
+>  4 files changed, 104 insertions(+), 87 deletions(-)
+>
+> --
+> 2.2.1
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
