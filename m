@@ -1,142 +1,42 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 3/5] PCI: st: Provide support for the sti PCIe controller
-Date: Mon, 19 Jan 2015 14:49:42 +0100
-Message-ID: <1682713.ac5OoTJoOr@wuerfel>
-References: <1418812486-12394-1-git-send-email-gabriel.fernandez@linaro.org> <8467440.C7CR1EqfOe@wuerfel> <CAG374jDmUyEX0_iu4wG8LjM6YGMjsB-3PjnyZy_0Se=nLcn16g@mail.gmail.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] SATA: OCTEON: support SATA on OCTEON platform
+Date: Mon, 19 Jan 2015 14:30:22 -0600
+Message-ID: <CAL_JsqKq22K3kk7m09J1GZn9xXB+0tCUe75u3x+S3oWC0kyDcw@mail.gmail.com>
+References: <1421681040-3392-1-git-send-email-aleksey.makarov@auriga.com>
+ <20150119154357.GH21553@leverpostej> <54BD580C.6030701@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <CAG374jDmUyEX0_iu4wG8LjM6YGMjsB-3PjnyZy_0Se=nLcn16g@mail.gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Gabriel Fernandez <gabriel.fernandez@linaro.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Bjorn Helgaas <bhelgaas@google.com>, Mohit Kumar <mohit.kumar@st.com>, Jingoo Han <jg1.han@samsung.com>, Grant Likely <grant.likely@linaro.org>, Fabrice Gasnier <fabrice.gasnier@st.com>, Viresh Kumar <viresh.kumar@linaro.org>, Thierry Reding <treding@nvidia.com>, Minghuan Lian <Minghuan.Lian@freescale.com>, Magnus Damm <damm@opensource.se>, Will Deacon <will.deacon@arm.com>, Tanmay
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <54BD580C.6030701@gmail.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: David Daney <ddaney.cavm@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Aleksey Makarov <aleksey.makarov@auriga.com>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "linux-mips@linux-mips.org" <linux-mips@linux-mips.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Daney <david.daney@cavium.com>, Anton Vorontsov <avorontsov@ru.mvista.com>, Vinita Gupta <vgupta@caviumnetworks.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ralf Baechle <ralf@linux-mips.org>, Tejun Heo <tj@kernel.org>, Hans de Goede <hdegoede@redhat.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 19 January 2015 13:37:33 Gabriel Fernandez wrote:
-> On 17 December 2014 at 23:14, Arnd Bergmann <arnd@arndb.de> wrote:
-> > On Wednesday 17 December 2014 11:34:44 Gabriel FERNANDEZ wrote:
-> > > +/*
-> > > + * On ARM platforms, we actually get a bus error returned when t=
-he PCIe
-> > IP
-> > > + * returns a UR or CRS instead of an OK.
-> > > + */
-> > > +static int st_pcie_abort_
-> > =E2=80=8B=E2=80=8B
-> > handler(unsigned long addr, unsigned int fsr,
-> > > +                              struct pt_regs *regs)
-> > > +{
-> > > +     return 0;
-> > > +}
-> >
-> > You should check that it's actually PCI that caused the abort. Don'=
-t
-> > just ignore a hard error condition.
-> >
-> > Usually there are registers in the PCI core that let you identify w=
-hat
-> > happened.
-> >
->=20
-> =E2=80=8B
-> We return 0 because abort handler is not activated during boot.
->=20
+On Mon, Jan 19, 2015 at 1:16 PM, David Daney <ddaney.cavm@gmail.com> wrote:
+> On 01/19/2015 07:43 AM, Mark Rutland wrote:
+>>
+>> On Mon, Jan 19, 2015 at 03:23:58PM +0000, Aleksey Makarov wrote:
+>>>
+>>> The OCTEON SATA controller is currently found on cn71XX devices.
 
-Can you just remove the handler then? We should never have exception
-handlers that unconditionally return 0.
+[...]
 
-> > > +      * we must retry for up to a second before we decide the de=
-vice is
-> > > +      * dead. If we are still dead then we assume there is nothi=
-ng
-> > there and
-> > > +      * return ~0
-> > > +      *
-> > > +      * The downside of this is that we incur a delay of 1s for =
-every
-> > pci
-> > > +      * express link that doesn't have a device connected.
-> > > +      */
-> > > +     if (((where & ~3) =3D=3D 0) && devfn =3D=3D 0 && (data =3D=3D=
- 0 || data =3D=3D
-> > ~0)) {
-> > > +             if (retry_count++ < 1000) {
-> > > +                     mdelay(1);
-> > > +                     goto retry;
-> > > +             } else {
-> > > +                     *val =3D ~0;
-> > > +                     return PCIBIOS_DEVICE_NOT_FOUND;
-> > > +             }
-> > > +     }
-> > > +
-> > > +     *val =3D data;
-> > > +     return ret;
-> > > +}
-> >
-> > A busy-loop is extremely nasty. If this is only during the initial =
-bus
-> > scan, could you use an msleep instead?
-> >
-> > =E2=80=8Byes it's during the initial bus scan.
-> But we can't use msleep because we are under raw_spin_lock_irqsave()
-> see PCI_OP_READ() macro in drivers/pci/access.c
+>>> +
+>>> +       /* Set a good dma_mask */
+>>> +       pdev->dev.coherent_dma_mask = DMA_BIT_MASK(64);
+>>> +       pdev->dev.dma_mask = &pdev->dev.coherent_dma_mask;
+>>
+>>
+>> I thought a dma-ranges property in the DT could be used to set up the
+>> DMA mask appropriately?
+>
+>
+> The DT contains no dma-ranges property, and we know a priori, that it should
+> be 64-bits.
 
-Ah, I see. Better use a loop with 'time_before()' and a much shorter
-delay then. Even a single mdelay(1) with irqs disabled can be annoying,
-so try to make the time as short as possible.
+Neither this code nor dma-ranges should be necessary. The AHCI core
+code will set the mask to 32 or 64 bits based on the AHCI Capabilities
+register.
 
-> > Also, it sounds like the error you get is actually the fault that y=
-ou
-> > are catching above. If this is correct, then use the fault handler =
-to
-> > communicate this to the probe function.
-> >
->=20
-> =E2=80=8BSame as above the handler is not activated during the boot a=
-nd initial bus
-> scan.=E2=80=8B
-
-Maybe you could enable the handler during boot to catch this case, and
-then disable it later?
-
-> >
-> > > +static void st_msi_init_one(struct pcie_port *pp)
-> > > +{
-> > > +     struct st_pcie *pcie =3D to_st_pcie(pp);
-> > > +
-> > > +     /*
-> > > +      * Set the magic address the hardware responds to. This has=
- to be
-> > in
-> > > +      * the range the PCI controller can write to.
-> > > +      */
-> > > +     dw_pcie_msi_init(pp);
-> > > +
-> > > +     if ((virt_to_phys((void *)pp->msi_data) < pcie->lmi->start)=
- ||
-> > > +         (virt_to_phys((void *)pp->msi_data) > pcie->lmi->end))
-> > > +             dev_err(pp->dev, "MSI addr miss-configured\n");
-> > > +}
-> >
-> > Why do you call virt_to_phys() here? Isn't
-> > =E2=80=8B=E2=80=8B
-> > msi_data a physical address?
-> >
-> =E2=80=8B?
->=20
-> =E2=80=8B
-> msi_data is a virtual address, it's obtained through a   __get_free_p=
-ages()
-> function in dw_pcie_msi_init() procedure.
-
-I guess you need dma_map_single() then, or use dma_alloc_coherent inste=
-ad
-of __get_free_pages(). There is no guarantee that the page you allocate
-there is actually visible to the PCI host at the same address that the =
-CPU
-uses, so you need to map from a CPU address to a DMA address that the P=
-CI
-host bridge uses.
-
-	Arnd
+Rob
