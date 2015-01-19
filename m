@@ -1,104 +1,103 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH v3 2/4] clk: mediatek: Add initial common clock support for
- Mediatek SoCs.
-Date: Mon, 19 Jan 2015 08:28:08 -0800
-Message-ID: <20150119162808.22722.33140@quantum>
-References: <1420601123-25859-1-git-send-email-jamesjj.liao@mediatek.com>
- <1420601123-25859-3-git-send-email-jamesjj.liao@mediatek.com>
- <CABuKBeLQkTBYWkBWAYXjYudMAza+1zueRSqGFPd+480p1rYNwg@mail.gmail.com>
- <1420685701.27952.44.camel@mtksdaap41>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH V8 00/14] drm/exynos: few patches to enhance bridge chip
+ support
+Date: Mon, 19 Jan 2015 17:30:45 +0100
+Message-ID: <20150119163043.GB7751@ulmo.nvidia.com>
+References: <1416045309-13359-1-git-send-email-ajaykumar.rs@samsung.com>
+ <CAEC9eQOrKw2Z1q-ztFfadXmsL3CTcAkkv9kcS2QnDOAVSh2AuQ@mail.gmail.com>
+ <548ABAB6.6010200@collabora.co.uk>
+ <3197445.qizQc0zeRb@avalon>
+ <54914D7D.9060108@collabora.co.uk>
+ <CAPj87rN4HZzDt5JBLyTRmKZs7XcOG=0ha7ZQf9hmjPAFgTyhYQ@mail.gmail.com>
+ <20150105135015.GA12010@ulmo.nvidia.com>
+ <54BCDC28.7080003@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1420685701.27952.44.camel@mtksdaap41>
-Sender: linux-kernel-owner@vger.kernel.org
-To: James Liao <jamesjj.liao@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, srv_heupstream <srv_heupstream@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, huang eddie <eddie.huang@mediatek.com>, HenryC Chen <henryc.chen@mediatek.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, "Joe.C" <yingjoe.chen@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="zx4FCpZtqtKETZ7O"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <54BCDC28.7080003@collabora.co.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: Daniel Stone <daniel@fooishbar.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, dri-devel <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Sean Paul <seanpaul@google.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Ajay kumar <ajaynumb@gmail.com>, Kukjin Kim <kgene.kim@samsung.com>, Pannaga Bhushan Reddy Patel <bhushan.r@samsung.com>, Prashanth G <prashanth.g@samsung.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting James Liao (2015-01-07 18:55:01)
-> Hi Matthias,
-> 
-> On Wed, 2015-01-07 at 18:22 +0100, Matthias Brugger wrote:
-> > 2015-01-07 4:25 GMT+01:00 James Liao <jamesjj.liao@mediatek.com>:
-> > > +
-> > > +static void cg_set_mask(struct mtk_clk_gate *cg, u32 mask)
-> > 
-> > Please add mtk_ prefix to all functions generic for the mediatek SoCs.
-> 
-> OK.
-> 
-> > 
-> > > +       if (cg->flags & CLK_GATE_NO_SETCLR_REG) {
-> > 
-> > Is the CLK_GATE_NO_SETCLR_REG ever used?
-> > As far as I can see, in this patch set it is not.
-> 
-> No, this flag is not used in this patch. I'll remove it or add clocks
-> which use this flag in next patch.
-> 
-> > > +
-> > > +       if (cg->flags & CLK_GATE_INVERSE)
-> > > +               cg_set_mask(cg, mask);
-> > > +       else
-> > > +               cg_clr_mask(cg, mask);
-> > > +
-> > > +       mtk_clk_unlock(flags);
-> > > +
-> > > +       return 0;
-> > > +}
-> > 
-> > Actually we should use CLK_GATE_SET_TO_DISABLE instead of inventing a
-> > new bit, right?
-> 
-> CLK_GATE_SET_TO_DISABLE is used by struct clk_gate, which is different
-> from struct mtk_clk_gate. Should we use the same constant in these 2
-> different implementation? If yes, how do we avoid bit conflict between
-> clk_gate and mtk_clk_gate if we both add more flags in the future?
 
-I think that CLK_GATE_INVERSE is fine. This clock gate implementation is
-sufficiently different from the simple drivers/clk/clk-gate.c
-implementation (e.g. separate registers for setting bits, clearing bits
-and getting status).
+--zx4FCpZtqtKETZ7O
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Regards,
-Mike
+On Mon, Jan 19, 2015 at 11:27:52AM +0100, Javier Martinez Canillas wrote:
+> Hello Thierry,
+>=20
+> On 01/05/2015 02:50 PM, Thierry Reding wrote:
+> > On Fri, Jan 02, 2015 at 01:10:14PM +0000, Daniel Stone wrote:
+> >> >
+> >> > Ajay's series don't apply cleanly anymore because it has been a whil=
+e since
+> >> > he posted it but he can rebase on top of 3.19-rc1 once it is release=
+d and
+> >> > re-resend.
+> >> >
+> >>=20
+> >> Do you have any plans to rebase this so it's ready for merging?
+> >>=20
+> >> Thierry, Daniel, Dave - whose tree would this be best to merge through?
+> >=20
+> > The plan is for me to take the bridge patches through the drm/panel
+> > tree. I'm going to look at these patches again later this week but from
+> > a very quick peek there don't seem to be any major issues left.
+> >
+>=20
+> I know you probably are very busy but it would be great if you can take a=
+ look
+> to this series to avoid another kernel release to be missed since we are =
+already
+> at v3.19-rc5.
+>=20
+> Only this version was posted 2 months ago and the first version of the se=
+ries
+> was sent on May, 2014 so it has been on the list for almost a year now...
+>=20
+> Tomi and Laurent had already agreed with the DT binging so I think that w=
+e can
+> already merge these and if there are any remaining issues, those can be f=
+ixed
+> during the 3.20 -rc cycle.
 
-> 
-> 
-> > > +       pr_debug("%s(): %d, %s, bit[%d]\n",
-> > > +               __func__, r, __clk_get_name(hw->clk), (int)cg->bit);
-> > 
-> > Same here. Please review all debug messages.
-> 
-> OK, I'll remove them in next patch.
-> 
-> 
-> > > +
-> > > +#define CLK_DEBUG              0
-> > > +#define DUMMY_REG_TEST         0
-> > 
-> > This defines are not used, delete them.
-> 
-> OK.
-> 
-> > > +
-> > > +extern spinlock_t *get_mtk_clk_lock(void);
-> > > +
-> > > +#define mtk_clk_lock(flags)    spin_lock_irqsave(get_mtk_clk_lock(), flags)
-> > > +#define mtk_clk_unlock(flags)  \
-> > > +       spin_unlock_irqrestore(get_mtk_clk_lock(), flags)
-> > 
-> > Please use the spinlock directly without this akward defines.
-> 
-> Do you mean we should export clk_ops_lock (from clk-mtk.c) directly
-> instead of get_mtk_clk_lock()? Or simply remove mtk_clk_lock/unlock()?
-> 
-> 
-> Best regards,
-> 
-> James
-> 
-> 
-> 
+I see only a single Tested-by on this series and that seems to be with a
+bunch of out-of-tree patches applied on top. Does this now actually work
+applied on top of upstream? Also it seems like many people actually want
+this to get merged but there's been no Reviewed-bys and only a single
+Tested-by? Is that as good as it's going to get?
+
+Also I think the last update was that Ajay was going to resend this
+based on v3.19-rc1 or something. Is that still going to happen?
+Otherwise I can probably try to apply as-is, but not sure how well it
+will.
+
+Thierry
+
+--zx4FCpZtqtKETZ7O
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJUvTEzAAoJEN0jrNd/PrOhdhkQALMBzkN1mDndgqsU3OQdXFwL
+yYdJE4PbjbQFro2E8aVUR/hcAP/U7dyC41QtZfQODlExmbAn8oHcejORdRnihmCq
+axMTCECHYjeXgivLOhrRqTCLTZa2CzQ+LHwsYcOcKXb4cz8E+NB6O4zrSJGP0S2c
+DavYziQsZqAch9LwDsmty6pWAGleLBExyg7RnTqM5A4YnpHnQwYcoTqCXR3HUX5G
+fjj+VTm9ld8ioAJw3FzcyosYFlHzw3dkECcDODW1YWJF1qqegP4xaGLJ9RIv0bHA
+h7AddhOrOOBh++EgQ2aI/oE/cuocGGNLMuCy3R1ucRWeEPUh88oQBjeRYTzcCESa
++CrFgWm8UcxOD5HJcsaj5zSU1+Xdr3Z4R/laCMiZbF5aMoCg2/ZGff5iz71guC12
+duvvlxYTjnJpAAfWr6K13YxLpJnvJdWDMrLfl/WGMcHG9F6/LnW8qZQhyoI/H+sH
+0gcWZ31rK/D/N41rq73obfShbhc64o2ITEqHfWUcl+z1iAPvc+gwl5c4hycek+fq
+jImHO+rvKlb5WumI021gsjVuKU/fI2dKWHVfdbTOnx8h1F4acADdh5BsDoD1s41J
+Kns07xqm7ntFmOvrWfZaKeDzEUXKoWo2NKHIpvwKpY1dwdMH6XZVNZODvBgBiGwZ
+m1ZUDcuP0E3HTo2ZvwBp
+=YISN
+-----END PGP SIGNATURE-----
+
+--zx4FCpZtqtKETZ7O--
