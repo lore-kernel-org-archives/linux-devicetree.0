@@ -1,7 +1,7 @@
 From: Roger Quadros <rogerq@ti.com>
-Subject: [PATCH 5/5] ARM: omap2plus_defconfig: Enable PCF857X and EXTCON_GPIO_USB
-Date: Mon, 19 Jan 2015 19:52:22 +0200
-Message-ID: <1421689942-10201-6-git-send-email-rogerq@ti.com>
+Subject: [PATCH 3/5] ARM: dts: dra7-evm: Add extcon nodes for USB
+Date: Mon, 19 Jan 2015 19:52:20 +0200
+Message-ID: <1421689942-10201-4-git-send-email-rogerq@ti.com>
 References: <1421689942-10201-1-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,32 +12,74 @@ To: balbi@ti.com, tony@atomide.com, myungjoo.ham@samsung.com, cw00.choi@samsung.
 Cc: george.cherian@ti.com, nsekhar@ti.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Both are needed for USB cable type detection on dra7-evm.
+On this EVM, the USB cable state has to be determined via the
+ID pin tied to a GPIO line. We use the gpio-usb-extcon driver
+to read the ID pin and the extcon framework to forward
+the USB cable state information to the USB driver so the
+controller can be configured in the right mode (host/peripheral).
+
+Gets USB peripheral mode to work on this EVM.
 
 Signed-off-by: Roger Quadros <rogerq@ti.com>
 ---
- arch/arm/configs/omap2plus_defconfig | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/boot/dts/dra7-evm.dts | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
-diff --git a/arch/arm/configs/omap2plus_defconfig b/arch/arm/configs/omap2plus_defconfig
-index c2c3a85..bc23b90 100644
---- a/arch/arm/configs/omap2plus_defconfig
-+++ b/arch/arm/configs/omap2plus_defconfig
-@@ -203,6 +203,7 @@ CONFIG_SPI_OMAP24XX=y
- CONFIG_PINCTRL_SINGLE=y
- CONFIG_DEBUG_GPIO=y
- CONFIG_GPIO_SYSFS=y
-+CONFIG_GPIO_PCF857X=y
- CONFIG_GPIO_TWL4030=y
- CONFIG_W1=y
- CONFIG_BATTERY_BQ27x00=m
-@@ -326,6 +327,7 @@ CONFIG_DMADEVICES=y
- CONFIG_TI_EDMA=y
- CONFIG_DMA_OMAP=y
- CONFIG_EXTCON=y
-+CONFIG_EXTCON_GPIO_USB=y
- CONFIG_EXTCON_PALMAS=y
- CONFIG_PWM=y
- CONFIG_PWM_TIECAP=y
+diff --git a/arch/arm/boot/dts/dra7-evm.dts b/arch/arm/boot/dts/dra7-evm.dts
+index 10b725c..47d9a06 100644
+--- a/arch/arm/boot/dts/dra7-evm.dts
++++ b/arch/arm/boot/dts/dra7-evm.dts
+@@ -26,6 +26,16 @@
+ 		regulator-max-microvolt = <3300000>;
+ 	};
+ 
++	extcon_usb1: extcon_usb1 {
++		compatible = "linux,extcon-usb";
++		id-gpio = <&pcf_gpio_21 1 GPIO_ACTIVE_HIGH>;
++	};
++
++	extcon_usb2: extcon_usb2 {
++		compatible = "linux,extcon-usb";
++		id-gpio = <&pcf_gpio_21 2 GPIO_ACTIVE_HIGH>;
++	};
++
+ 	vtt_fixed: fixedregulator-vtt {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "vtt_fixed";
+@@ -391,6 +401,19 @@
+ 			};
+ 		};
+ 	};
++
++	pcf_gpio_21: gpio@21 {
++		compatible = "ti,pcf8575";
++		reg = <0x21>;
++		lines-initial-states = <0x1408>;
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-parent = <&gpio6>;
++		interrupts = <11 IRQ_TYPE_EDGE_FALLING>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
+ };
+ 
+ &i2c2 {
+@@ -520,6 +543,14 @@
+ 	};
+ };
+ 
++&omap_dwc3_1 {
++	extcon = <&extcon_usb1>;
++};
++
++&omap_dwc3_2 {
++	extcon = <&extcon_usb2>;
++};
++
+ &usb1 {
+ 	dr_mode = "peripheral";
+ 	pinctrl-names = "default";
 -- 
 2.1.0
