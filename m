@@ -1,47 +1,23 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 3/3] MAINTAINERS: add maintainer for pinctrl-at91
-Date: Mon, 19 Jan 2015 11:33:15 +0100
-Message-ID: <54BCDD6B.3010201@atmel.com>
-References: <1421422267-2934-1-git-send-email-ludovic.desroches@atmel.com> <1421422267-2934-4-git-send-email-ludovic.desroches@atmel.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] Documentation: gpio: fix bindings document
+Date: Mon, 19 Jan 2015 11:34:06 +0100
+Message-ID: <CACRpkdYqX4EFp2t+d6EOPrgyPBQ4Bt4ene=eiS=1RzEqYME66A@mail.gmail.com>
+References: <1421311960-4120-1-git-send-email-yamada.m@jp.panasonic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1421422267-2934-4-git-send-email-ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1421311960-4120-1-git-send-email-yamada.m@jp.panasonic.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Masahiro Yamada <yamada.m@jp.panasonic.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, Alexandre Courbot <acourbot@nvidia.com>, Stephen Warren <swarren@nvidia.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Le 16/01/2015 16:31, Ludovic Desroches a =E9crit :
-> Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> ---
->  MAINTAINERS | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 3589d67..455630d 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -7406,6 +7406,7 @@ F:	include/linux/pinctrl/
-> =20
->  PIN CONTROLLER - ATMEL AT91
->  M:	Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-> +M:	Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
->  L:	linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org (moderated for non-subscribe=
-rs)
->  S:	Maintained
->  F:	drivers/pinctrl/pinctrl-at91.*
+On Thu, Jan 15, 2015 at 9:52 AM, Masahiro Yamada
+<yamada.m@jp.panasonic.com> wrote:
 
-Yes, as I've just said for the v2 of this series:
+> Signed-off-by: Masahiro Yamada <yamada.m@jp.panasonic.com>
 
-Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Patch applied with Laurent's ACK.
 
-Thanks, bye,
---=20
-Nicolas Ferre
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yours,
+Linus Walleij
