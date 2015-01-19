@@ -1,97 +1,212 @@
-From: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v5 2/3] i2c: iproc: Add Broadcom iProc I2C Driver
-Date: Mon, 19 Jan 2015 11:15:41 -0800
-Message-ID: <54BD57DD.9080002@broadcom.com>
-References: <rjui@broadcom.com> <1421451737-7107-1-git-send-email-rjui@broadcom.com> <1421451737-7107-3-git-send-email-rjui@broadcom.com> <54BB795C.6040402@broadcom.com> <20150118094741.GE22880@pengutronix.de> <20150118110658.GA1113@katana> <20150118111759.GG22880@pengutronix.de> <54BB9D2B.20408@broadcom.com> <20150118115650.GH22880@pengutronix.de> <54BBA36A.10608@broadcom.com>
+From: David Daney <ddaney.cavm@gmail.com>
+Subject: Re: [PATCH] SATA: OCTEON: support SATA on OCTEON platform
+Date: Mon, 19 Jan 2015 11:16:28 -0800
+Message-ID: <54BD580C.6030701@gmail.com>
+References: <1421681040-3392-1-git-send-email-aleksey.makarov@auriga.com> <20150119154357.GH21553@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54BBA36A.10608-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, =?windows-1252?Q?Uwe_Kleine-?= =?windows-1252?Q?K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <20150119154357.GH21553@leverpostej>
+Sender: linux-ide-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>, Aleksey Makarov <aleksey.makarov@auriga.com>
+Cc: "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "linux-mips@linux-mips.org" <linux-mips@linux-mips.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Daney <david.daney@cavium.com>, Anton Vorontsov <avorontsov@ru.mvista.com>, Vinita Gupta <vgupta@caviumnetworks.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ralf Baechle <ralf@linux-mips.org>, Tejun Heo <tj@kernel.org>, Hans de Goede <hdegoede@redhat.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 1/18/2015 4:13 AM, Arend van Spriel wrote:
-> On 01/18/15 12:56, Uwe Kleine-K=F6nig wrote:
->> Hello,
+On 01/19/2015 07:43 AM, Mark Rutland wrote:
+> On Mon, Jan 19, 2015 at 03:23:58PM +0000, Aleksey Makarov wrote:
+>> The OCTEON SATA controller is currently found on cn71XX devices.
 >>
->> On Sun, Jan 18, 2015 at 12:46:51PM +0100, Arend van Spriel wrote:
->>> On 01/18/15 12:17, Uwe Kleine-K=F6nig wrote:
->>>> Hello Wolfram,
->>>>
->>>> On Sun, Jan 18, 2015 at 12:06:58PM +0100, Wolfram Sang wrote:
->>>>> On Sun, Jan 18, 2015 at 10:47:41AM +0100, Uwe Kleine-K=F6nig wrot=
-e:
->>>>>> On Sun, Jan 18, 2015 at 10:14:04AM +0100, Arend van Spriel wrote=
-:
->>>>>>> On 01/17/15 00:42, Ray Jui wrote:
->>>>>>>> +    complete_all(&iproc_i2c->done);
->>>>>>>
->>>>>>> Looking over this code it seems to me there is always a single
->>>>>>> process waiting for iproc_i2c->done to complete. So using compl=
-ete()
->>>>>>> here would suffice.
->>>>>> Yeah, there is always only a single thread waiting. That means b=
-oth
->>>>>> complete and complete_all are suitable. AFAIK there is no reason
->>>>>> to pick
->>>>>> one over the other in this case.
->>>>>
->>>>> Clarity?
->>>> And which do you consider more clear? complete_all might result in=
- the
->>>> question: "Is there>1 waiter?" and complete might yield to "What a=
-bout
->>>> the other waiters?". If you already know there is only one, both a=
-re on
->>>> par on clarity. Might only be me?! I don't care much.
->>>
->>> Maybe it is me, but it is not about questions but it is about
->>> implicit statements that the code makes (or reader derives from it)=
-=2E
->>> When using complete_all you indicate to the reader "there can be
->>> more than one waiter". When using complete it indicates "there is
->>> only one waiter". If those statements are not true that is a code
->> No, complete works just fine in the presence of>1 waiter. It just wa=
-kes
->> a single waiter and all others continue to wait.
->=20
-> Yes. Agree.
->=20
->> That is, for single-waiter situations there is no semantic differenc=
-e
->> between complete and complete_all. But there is a difference for
->> multi-waiter queues.
->=20
-> Indeed.
->=20
->> I think this is just a matter of your POV in the single-waiter
->> situation: complete might be intuitive because you just completed a
->> single task and complete_all might be intuitive because it signals
->> "I'm completely done, there is noone waiting for me any more.".
->=20
-> Ok. Let's leave it to the author's intuition or to say it differently
-> "sorry for the noise" ;-)
-Will stay with complete_all since I meant to say "after this transfer
-complete interrupt, there should be no one waiting anymore (although
-there's currently only one waiter, and will likely stay that way)"
-
-Thanks!
-
->=20
-> Regards,
-> Arend
->=20
->> Best regards
->> Uwe
+>> Signed-off-by: David Daney <david.daney@cavium.com>
+>> Signed-off-by: Vinita Gupta <vgupta@caviumnetworks.com>
+>> [aleksey.makarov@auriga.com: preparing for submission,
+>> conflict resolution, fixes for the platform code]
+>> Signed-off-by: Aleksey Makarov <aleksey.makarov@auriga.com>
+>> ---
+>>   .../devicetree/bindings/ata/ahci-platform.txt      |   1 +
+>>   .../devicetree/bindings/mips/cavium/sata-uctl.txt  |  31 ++++++
+>>   arch/mips/cavium-octeon/octeon-platform.c          |   1 +
+>>   drivers/ata/Kconfig                                |   9 ++
+>>   drivers/ata/Makefile                               |   1 +
+>>   drivers/ata/ahci_platform.c                        |  10 ++
+>>   drivers/ata/sata_octeon.c                          | 107 +++++++++++++++++++++
+>>   7 files changed, 160 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/mips/cavium/sata-uctl.txt
+>>   create mode 100644 drivers/ata/sata_octeon.c
 >>
->=20
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> diff --git a/Documentation/devicetree/bindings/ata/ahci-platform.txt b/Documentation/devicetree/bindings/ata/ahci-platform.txt
+>> index 4ab09f2..1a5d3be 100644
+>> --- a/Documentation/devicetree/bindings/ata/ahci-platform.txt
+>> +++ b/Documentation/devicetree/bindings/ata/ahci-platform.txt
+>> @@ -11,6 +11,7 @@ Required properties:
+>>   - compatible        : compatible string, one of:
+>>     - "allwinner,sun4i-a10-ahci"
+>>     - "hisilicon,hisi-ahci"
+>> +  - "cavium,octeon-7130-ahci"
+>>     - "ibm,476gtr-ahci"
+>>     - "marvell,armada-380-ahci"
+>>     - "snps,dwc-ahci"
+>> diff --git a/Documentation/devicetree/bindings/mips/cavium/sata-uctl.txt b/Documentation/devicetree/bindings/mips/cavium/sata-uctl.txt
+>> new file mode 100644
+>> index 0000000..222e66e
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mips/cavium/sata-uctl.txt
+>> @@ -0,0 +1,31 @@
+>> +* UCTL SATA controller glue
+>
+> I'm not sure I follow. What does this mean?
+
+Well, UCTL is the internal name of the hardware block.  It functions to 
+connect a standard AHCI controller to the internal busses of the OCTEON SoC.
+
+>
+>> +
+>> +Properties:
+>> +- compatible: "cavium,octeon-7130-sata-uctl"
+>> +
+>> +  Compatibility with the cn7130 SOC.
+>> +
+>> +- reg: The base address of the UCTL register bank.
+>> +
+>> +- #address-cells: Must be <2>.
+>> +
+>> +- #size-cells: Must be <2>.
+>> +
+>> +- ranges: Empty to signify direct mapping of the children.
+>
+> Why can't these be any values which are sufficient to map children?
+
+They can.  It happens to be the case that it is always empty.
+
+
+>
+>> +
+>> +Example:
+>> +
+>> +	uctl@118006c000000 {
+>> +	        compatible = "cavium,octeon-7130-sata-uctl";
+>> +	        reg = <0x00011800 0x6c000000 0x00000000 0x00000100>;
+>> +	        ranges;
+>> +	        #address-cells = <0x00000002>;
+>> +	        #size-cells = <0x00000002>;
+>
+> No need for all the zero-padding on these, they aren't addresses.
+
+OK.
+
+>
+>> +	        sata@16c00 {
+>> +	                compatible = "cavium,octeon-7130-ahci";
+>> +	                reg = <0x00016c00 0x00000000 0x00000000 0x00000200>;
+>> +	                interrupt-parent = <0x0000000d>;
+>> +	                interrupts = <0x00000002 0x00000004>;
+>> +	                cavium,qlm-trim-alias = "sata";
+>
+> What's this property for? It wasn't documented above, and doesn't exist
+> in mainline.
+
+It is not a part of the public interface, we will remove this line.
+
+>
+> [...]
+>
+>> diff --git a/drivers/ata/Makefile b/drivers/ata/Makefile
+>> index ae41107..4a0e5e3 100644
+>> --- a/drivers/ata/Makefile
+>> +++ b/drivers/ata/Makefile
+>> @@ -17,6 +17,7 @@ obj-$(CONFIG_AHCI_SUNXI)	+= ahci_sunxi.o libahci.o libahci_platform.o
+>>   obj-$(CONFIG_AHCI_ST)		+= ahci_st.o libahci.o libahci_platform.o
+>>   obj-$(CONFIG_AHCI_TEGRA)	+= ahci_tegra.o libahci.o libahci_platform.o
+>>   obj-$(CONFIG_AHCI_XGENE)	+= ahci_xgene.o libahci.o libahci_platform.o
+>> +obj-$(CONFIG_SATA_OCTEON)	+= sata_octeon.o
+>>
+>>   # SFF w/ custom DMA
+>>   obj-$(CONFIG_PDC_ADMA)		+= pdc_adma.o
+>> diff --git a/drivers/ata/ahci_platform.c b/drivers/ata/ahci_platform.c
+>> index 18d5398..bb36396 100644
+>> --- a/drivers/ata/ahci_platform.c
+>> +++ b/drivers/ata/ahci_platform.c
+>> @@ -22,6 +22,12 @@
+>>   #include <linux/ahci_platform.h>
+>>   #include "ahci.h"
+>>
+>> +#if IS_ENABLED(CONFIG_SATA_OCTEON)
+>> +void ahci_octeon_config(struct platform_device *pdev);
+>> +#else
+>> +static inline void ahci_octeon_config(struct platform_device *pdev) {}
+>> +#endif
+>> +
+>>   static const struct ata_port_info ahci_port_info = {
+>>   	.flags		= AHCI_FLAG_COMMON,
+>>   	.pio_mask	= ATA_PIO4,
+>> @@ -46,6 +52,9 @@ static int ahci_probe(struct platform_device *pdev)
+>>   	if (of_device_is_compatible(dev->of_node, "hisilicon,hisi-ahci"))
+>>   		hpriv->flags |= AHCI_HFLAG_NO_FBS | AHCI_HFLAG_NO_NCQ;
+>>
+>> +	if (of_device_is_compatible(dev->of_node, "cavium,octeon-7130-ahci"))
+>> +		ahci_octeon_config(pdev);
+>> +
+>
+> If we really need this kind of thing, make a new struct and associate it
+> with of_device_id::data in the table below. Then we make this path free
+> from any device-specific code.
+>
+
+Good idea.
+
+We will attempt to factor this into a separate driver module for the 
+"cavium,octeon-7130-sata-uctl" block.  If that turns out to be too ugly, 
+I would like to keep the code in this file, but with the change you suggest.
+
+>>   	rc = ahci_platform_init_host(pdev, hpriv, &ahci_port_info);
+>>   	if (rc)
+>>   		goto disable_resources;
+>> @@ -67,6 +76,7 @@ static const struct of_device_id ahci_of_match[] = {
+>>   	{ .compatible = "ibm,476gtr-ahci", },
+>>   	{ .compatible = "snps,dwc-ahci", },
+>>   	{ .compatible = "hisilicon,hisi-ahci", },
+>> +	{ .compatible = "cavium,octeon-7130-ahci", },
+>>   	{},
+>
+> I was under the impression that the strings other than "generic-ahci"
+> were only for compatibility with existing DTBs. Why do we need to add
+> new platform-specific strings here?
+
+Because it is an "existing DTB", The device tree doesn't contain the 
+compatible property of "generic-ahci", only "cavium,octeon-7130-ahci".
+
+>
+> [...]
+>
+>> +void ahci_octeon_config(struct platform_device *pdev)
+>> +{
+>> +	union cvmx_sata_uctl_shim_cfg shim_cfg;
+>> +
+>> +	/* set-up endian mode */
+>> +	shim_cfg.u64 = cvmx_read_csr(CVMX_SATA_UCTL_SHIM_CFG);
+>> +#ifdef __BIG_ENDIAN
+>> +	shim_cfg.s.dma_endian_mode = 1;
+>> +	shim_cfg.s.csr_endian_mode = 1;
+>> +#else
+>> +	shim_cfg.s.dma_endian_mode = 0;
+>> +	shim_cfg.s.csr_endian_mode = 0;
+>> +#endif
+>> +	shim_cfg.s.dma_read_cmd = 1; /* No allocate L2C */
+>> +	cvmx_write_csr(CVMX_SATA_UCTL_SHIM_CFG, shim_cfg.u64);
+>> +
+>> +	/* Set a good dma_mask */
+>> +	pdev->dev.coherent_dma_mask = DMA_BIT_MASK(64);
+>> +	pdev->dev.dma_mask = &pdev->dev.coherent_dma_mask;
+>
+> I thought a dma-ranges property in the DT could be used to set up the
+> DMA mask appropriately?
+
+The DT contains no dma-ranges property, and we know a priori, that it 
+should be 64-bits.
+
+>
+> Thanks,
+> Mark.
+>
+>
+
