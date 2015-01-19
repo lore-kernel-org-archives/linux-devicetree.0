@@ -1,70 +1,70 @@
-From: Ray Jui <rjui@broadcom.com>
-Subject: [PATCH v7 1/3] i2c: iProc: define Broadcom iProc I2C binding
-Date: Mon, 19 Jan 2015 13:51:48 -0800
-Message-ID: <1421704310-26857-2-git-send-email-rjui@broadcom.com>
-References: <Ray Jui <rjui@broadcom.com>
- <1421704310-26857-1-git-send-email-rjui@broadcom.com>
+From: wstephen-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Subject: Re: [PATCH] ethernet: atheros: Add nss-gmac driver
+Date: Mon, 19 Jan 2015 21:58:09 -0000
+Message-ID: <3ad19b16fe5c58612479f70c052d0045.squirrel@www.codeaurora.org>
+References: <1420754626-30121-1-git-send-email-wstephen@codeaurora.org>
+    <5550127.3sXOcCISZN@wuerfel>
+    <bca0eaf2183036ff6a913daea6e09ad9.squirrel@www.codeaurora.org>
+    <2318041.V2OJAPu7gC@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1421704310-26857-1-git-send-email-rjui@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, Arend van Spriel <arend@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>
-Cc: Scott Branden <sbranden@broadcom.com>, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, Ray Jui <rjui@broadcom.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2318041.V2OJAPu7gC@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: wstephen-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jcliburn-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Document the I2C device tree binding for Broadcom iProc family of
-SoCs
+> On Thursday 15 January 2015 08:12:51 wstephen-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org wrote:
+>>
+>> The nss-gmac driver is for the internal GMAC IP in the Qualcomm IPQ806x
+>> SoC. There are 2 ARM cores and 2 NSS cores inside the IPQ806x SoC. The
+>> main purpose of these NSS cores is to offload the networking stack from
+>> the ARM cores to achieve high performance at routing/ipsec..etc without
+>> exhausting the ARM core CPU cycles. There is another nss-drv driver for
+>> the NSS cores.
+>
+> I see.
+>
+>> The nss-gmac driver is designed to work standalone or with the nss-drv
+>> driver so the switchable data plane overlay was implemented. When it
+>> worked standalone, the data plane is running on the ARM core as a
+>> standard
+>> networking driver.
+>
+> How do you decide which way it gets used on a particular system?
+>
 
-Signed-off-by: Ray Jui <rjui@broadcom.com>
-Reviewed-by: Scott Branden <sbranden@broadcom.com>
----
- .../devicetree/bindings/i2c/brcm,iproc-i2c.txt     |   37 ++++++++++++++++++++
- 1 file changed, 37 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/i2c/brcm,iproc-i2c.txt
+By default the GMAC driver uses a native (Host ARM CPU) based data plane. 
+If the configuration loads the offload nss-drv driver, the offload driver
+registers an overlay with the GMAC.
 
-diff --git a/Documentation/devicetree/bindings/i2c/brcm,iproc-i2c.txt b/Documentation/devicetree/bindings/i2c/brcm,iproc-i2c.txt
-new file mode 100644
-index 0000000..81f982c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/i2c/brcm,iproc-i2c.txt
-@@ -0,0 +1,37 @@
-+Broadcom iProc I2C controller
-+
-+Required properties:
-+
-+- compatible:
-+    Must be "brcm,iproc-i2c"
-+
-+- reg:
-+    Define the base and range of the I/O address space that contain the iProc
-+    I2C controller registers
-+
-+- interrupts:
-+    Should contain the I2C interrupt
-+
-+- clock-frequency:
-+    This is the I2C bus clock. Need to be either 100000 or 400000
-+
-+- #address-cells:
-+    Always 1 (for I2C addresses)
-+
-+- #size-cells:
-+    Always 0
-+
-+Example:
-+	i2c0: i2c@18008000 {
-+		compatible = "brcm,iproc-i2c";
-+		reg = <0x18008000 0x100>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		interrupts = <GIC_SPI 85 IRQ_TYPE_NONE>;
-+		clock-frequency = <100000>;
-+
-+		codec: wm8750@1a {
-+			compatible = "wlf,wm8750";
-+			reg = <0x1a>;
-+		};
-+	};
--- 
-1.7.9.5
+>> The nss-drv driver can take over the data plane and
+>> offload it to the NSS cores. The STMicro stmmac driver does not have
+>> this
+>> kind of overlay design so is not suitable for IPQ806x. This is why we
+>> don't based on the stmmac driver
+>
+> Which kind of offload is implemented specifically? 'data plane' sounds
+> fairly generic and could mean anything, and the code isn't readable enough
+> in its current form for me to find out.
+
+The Network Subsystem (NSS core) provides a GMAC pass-through until it is
+given a rule to offload work.  Once a rule is given, it is capable of
+performing: bridging, IPv4 NAT/FWD, IPv6 NAT/FWD, IPSec, LAG, and other
+protocols.
+>
+> 	Arnd
+>
+
+Hope this clarify your question!
+
+Thanks,
+Stephen
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
