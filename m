@@ -1,111 +1,56 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [RFC PATCH 1/3] drivers: of: fix resources freeing in
- of_pci_get_host_bridge_resources()
-Date: Mon, 19 Jan 2015 18:32:29 +0000
-Message-ID: <20150119183228.GE10762@e106497-lin.cambridge.arm.com>
-References: <1420644571-18928-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1420644571-18928-2-git-send-email-lorenzo.pieralisi@arm.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 5/5] ARM: omap2plus_defconfig: Enable PCF857X and
+ EXTCON_GPIO_USB
+Date: Mon, 19 Jan 2015 10:45:46 -0800
+Message-ID: <20150119184546.GA18552@atomide.com>
+References: <1421689942-10201-1-git-send-email-rogerq@ti.com>
+ <1421689942-10201-6-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1420644571-18928-2-git-send-email-lorenzo.pieralisi@arm.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-Sender: linux-pci-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Mohit Kumar <mohit.kumar@st.com>, Jingoo Han <jg1.han@samsung.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>
+In-Reply-To: <1421689942-10201-6-git-send-email-rogerq@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: balbi@ti.com, myungjoo.ham@samsung.com, cw00.choi@samsung.com, george.cherian@ti.com, nsekhar@ti.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 07, 2015 at 03:29:29PM +0000, Lorenzo Pieralisi wrote:
-> In the function of_pci_get_host_bridge_resources() if the parsing of
-> ranges fails, previously allocated resources inclusive of bus_range
-> are not freed and are not expected to be freed by the function caller
-> on error return.
->=20
-> This patch fixes the issues by adding code that properly frees resour=
-ces
-> and bus_range before exiting the function with an error return value.
->=20
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Liviu Dudau <liviu.dudau@arm.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+* Roger Quadros <rogerq@ti.com> [150119 09:55]:
+> Both are needed for USB cable type detection on dra7-evm.
+> 
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
 > ---
->  drivers/of/of_pci.c | 4 ++++
->  1 file changed, 4 insertions(+)
->=20
-> diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
-> index 88471d3..6fbfe99 100644
-> --- a/drivers/of/of_pci.c
-> +++ b/drivers/of/of_pci.c
-> @@ -146,6 +146,7 @@ int of_pci_get_host_bridge_resources(struct devic=
-e_node *dev,
->  	struct of_pci_range_parser parser;
->  	char range_type[4];
->  	int err;
-> +	struct pci_host_bridge_window *window;
-> =20
->  	if (io_base)
->  		*io_base =3D (resource_size_t)OF_BAD_ADDR;
-> @@ -225,7 +226,10 @@ int of_pci_get_host_bridge_resources(struct devi=
-ce_node *dev,
->  conversion_failed:
->  	kfree(res);
->  parse_failed:
-> +	list_for_each_entry(window, resources, list)
-> +		kfree(window->res);
->  	pci_free_resource_list(resources);
-> +	kfree(bus_range);
->  	return err;
->  }
->  EXPORT_SYMBOL_GPL(of_pci_get_host_bridge_resources);
+>  arch/arm/configs/omap2plus_defconfig | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/arch/arm/configs/omap2plus_defconfig b/arch/arm/configs/omap2plus_defconfig
+> index c2c3a85..bc23b90 100644
+> --- a/arch/arm/configs/omap2plus_defconfig
+> +++ b/arch/arm/configs/omap2plus_defconfig
+> @@ -203,6 +203,7 @@ CONFIG_SPI_OMAP24XX=y
+>  CONFIG_PINCTRL_SINGLE=y
+>  CONFIG_DEBUG_GPIO=y
+>  CONFIG_GPIO_SYSFS=y
+> +CONFIG_GPIO_PCF857X=y
+>  CONFIG_GPIO_TWL4030=y
+>  CONFIG_W1=y
+>  CONFIG_BATTERY_BQ27x00=m
 
-Hi Lorenzo et all,
+Looks like I have this too but as a loadable module :) So I'll keep
+that one.
 
-Here is my personal view and I am happy to hear from others on the desi=
-red
-behaviour:
+> @@ -326,6 +327,7 @@ CONFIG_DMADEVICES=y
+>  CONFIG_TI_EDMA=y
+>  CONFIG_DMA_OMAP=y
+>  CONFIG_EXTCON=y
+> +CONFIG_EXTCON_GPIO_USB=y
+>  CONFIG_EXTCON_PALMAS=y
+>  CONFIG_PWM=y
+>  CONFIG_PWM_TIECAP=y
 
-When I wrote this function what I had in mind was that it will parse as
-much as possible from the device tree and return a list of resources th=
-at
-could be successfully converted. If the entire list of ranges could not
-be converted then an error code will be returned, but the caller still
-had the list as constructed up to the error. It was the job of the call=
-er
-to free the list in either cases, as stated in the comment.
+I'll apply this part into omap-for-v3.20/defconfig but make it into =m
+instead of =y.
 
-The historical reason why the function was written that way was because=
- at
-some moment after parsing I've had an additional step where arches coul=
-d
-cleanup / veto the list and they could return an error value to signal
-their discontent. Also I was (am) not sure how lenient we could be with
-the device tree not being sane (at least one host bridge binding lists =
-the
-config space as a range, which was accepted as broken).
+Regards,
 
-So, from that point of view, I would NAK this patch, as the function wo=
-rks
-as intended. If others find this mode of operation too convoluted, then
-the patch should probably make clear that cleanup only needs to be done=
- on
-function returning success.
-
-Best regards,
-
-> --=20
-> 2.2.1
->=20
->=20
-
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
+Tony
