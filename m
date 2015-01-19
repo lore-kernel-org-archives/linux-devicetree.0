@@ -1,129 +1,374 @@
-From: Alexander Graf <agraf@suse.de>
-Subject: Re: [PATCH net-next v13 3/3] net: hisilicon: new hip04 ethernet driver
-Date: Mon, 19 Jan 2015 19:11:11 +0100
-Message-ID: <54BD48BF.3050707@suse.de>
-References: <1421217254-12008-1-git-send-email-dingtianhong@huawei.com> <1421217254-12008-4-git-send-email-dingtianhong@huawei.com>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCHv2] mvebu: add Linksys WRT1900AC (Mamba) support
+Date: Mon, 19 Jan 2015 19:21:13 +0100
+Message-ID: <20150119182113.GH32663@lunn.ch>
+References: <1421687701-5667-1-git-send-email-kaloz@openwrt.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1421217254-12008-4-git-send-email-dingtianhong@huawei.com>
-Sender: netdev-owner@vger.kernel.org
-To: Ding Tianhong <dingtianhong@huawei.com>, arnd@arndb.de, robh+dt@kernel.org, davem@davemloft.net, grant.likely@linaro.org
-Cc: sergei.shtylyov@cogentembedded.com, linux-arm-kernel@lists.infradead.org, eric.dumazet@gmail.com, xuwei5@hisilicon.com, zhangfei.gao@linaro.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux@arm.linux.org.uk
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1421687701-5667-1-git-send-email-kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/14/15 07:34, Ding Tianhong wrote:
-> Support Hisilicon hip04 ethernet driver, including 100M / 1000M controller.
-> The controller has no tx done interrupt, reclaim xmitted buffer in the poll.
->
-> v13: Fix the problem of alignment parameters for function and checkpatch warming.
->
-> v12: According Alex's suggestion, modify the changelog and add MODULE_DEVICE_TABLE
->       for hip04 ethernet.
->
-> v11: Add ethtool support for tx coalecse getting and setting, the xmit_more
->       is not supported for this patch, but I think it could work for hip04,
->       will support it later after some tests for performance better.
->
->       Here are some performance test results by ping and iperf(add tx_coalesce_frames/users),
->       it looks that the performance and latency is more better by tx_coalesce_frames/usecs.
->
->       - Before:
->       $ ping 192.168.1.1 ...
->       === 192.168.1.1 ping statistics ===
->       24 packets transmitted, 24 received, 0% packet loss, time 22999ms
->       rtt min/avg/max/mdev = 0.180/0.202/0.403/0.043 ms
->
->       $ iperf -c 192.168.1.1 ...
->       [ ID] Interval       Transfer     Bandwidth
->       [  3]  0.0- 1.0 sec   115 MBytes   945 Mbits/sec
->
->       - After:
->       $ ping 192.168.1.1 ...
->       === 192.168.1.1 ping statistics ===
->       24 packets transmitted, 24 received, 0% packet loss, time 22999ms
->       rtt min/avg/max/mdev = 0.178/0.190/0.380/0.041 ms
->
->       $ iperf -c 192.168.1.1 ...
->       [ ID] Interval       Transfer     Bandwidth
->       [  3]  0.0- 1.0 sec   115 MBytes   965 Mbits/sec
->
-> v10: According David Miller and Arnd Bergmann's suggestion, add some modification
->       for v9 version
->       - drop the workqueue
->       - batch cleanup based on tx_coalesce_frames/usecs for better throughput
->       - use a reasonable default tx timeout (200us, could be shorted
->         based on measurements) with a range timer
->       - fix napi poll function return value
->       - use a lockless queue for cleanup
->
-> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Ding Tianhong <dingtianhong@huawei.com>
+On Mon, Jan 19, 2015 at 06:15:01PM +0100, Imre Kaloz wrote:
+> The Linksys WRT1900AC (Mamba) is a router that has
+> 
+> - 2 mini-PCIe slots with Marvell 88W8864 radios
+> - 1 USB 3.0 port
+> - 1 USB 2.0/eSATAp port
+> - 2 Ethernet interfaces connected to a 88E6172 switch (1x WAN + 4x LAN)
+> - 128MB NAND flash
+> - 256MB RAM
+> 
+> Signed-off-by: Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
 > ---
->   drivers/net/ethernet/hisilicon/Makefile    |   2 +-
->   drivers/net/ethernet/hisilicon/hip04_eth.c | 969 +++++++++++++++++++++++++++++
->   2 files changed, 970 insertions(+), 1 deletion(-)
->   create mode 100644 drivers/net/ethernet/hisilicon/hip04_eth.c
->
-> diff --git a/drivers/net/ethernet/hisilicon/Makefile b/drivers/net/ethernet/hisilicon/Makefile
-> index 40115a7..6c14540 100644
-> --- a/drivers/net/ethernet/hisilicon/Makefile
-> +++ b/drivers/net/ethernet/hisilicon/Makefile
-> @@ -3,4 +3,4 @@
->   #
->   
->   obj-$(CONFIG_HIX5HD2_GMAC) += hix5hd2_gmac.o
-> -obj-$(CONFIG_HIP04_ETH) += hip04_mdio.o
-> +obj-$(CONFIG_HIP04_ETH) += hip04_mdio.o hip04_eth.o
+> Changes since v1:
+>   * add dual license
+>   * lower SPI speed to meet the chip's maximum
+>   * pinctrl cleanups based on Andrew Lunn's suggestions
+> ---
+>  arch/arm/boot/dts/armada-xp-mamba.dts | 273 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 273 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/armada-xp-mamba.dts
+> 
+> diff --git a/arch/arm/boot/dts/armada-xp-mamba.dts b/arch/arm/boot/dts/armada-xp-mamba.dts
+> new file mode 100644
+> index 0000000..e368d18
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/armada-xp-mamba.dts
+> @@ -0,0 +1,273 @@
+> +/*
+> + * Device Tree file for the Linksys WRT1900AC (Mamba).
 
-[...]
+Hi Imre
 
-> +static irqreturn_t hip04_mac_interrupt(int irq, void *dev_id)
-> +{
-> +	struct net_device *ndev = (struct net_device *)dev_id;
-> +	struct hip04_priv *priv = netdev_priv(ndev);
-> +	struct net_device_stats *stats = &ndev->stats;
-> +	u32 ists = readl_relaxed(priv->base + PPE_INTSTS);
+Thanks for the v2. I have a few comments, and some points we will need
+to discuss.
+
+> + *
+> + * Note: this board is shipped with a new generation boot loader that
+> + * remaps internal registers at 0xf1000000. Therefore, if earlyprintk
+> + * is used, the CONFIG_DEBUG_MVEBU_UART_ALTERNATE option should be
+
+There is a patch already queued up for this cycle:
+
+http://lists.infradead.org/pipermail/linux-arm-kernel/2015-January/313605.html
+
+Please can you change CONFIG_DEBUG_MVEBU_UART_ALTERNATE to
+CONFIG_DEBUG_MVEBU_UART0_ALTERNATE
+
+> + * used.
+> + *
+> + * Copyright (C) 2014 Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+> + *
+> + * Based on armada-xp-axpwifiap.dts:
+> + *
+> + *     Copyright (C) 2013 Marvell
+> + *
+> + *     Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This file is licensed under the terms of the GNU General Public
+> + *     License version 2.  This program is licensed "as is" without
+> + *     any warranty of any kind, whether express or implied.
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
 > +
-> +	if (!ists)
-> +		return IRQ_NONE;
+> +/dts-v1/;
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/input/input.h>
+> +#include "armada-xp-mv78230.dtsi"
 > +
-> +	writel_relaxed(DEF_INT_MASK, priv->base + PPE_RINT);
+> +/ {
+> +	model = "Linksys WRT1900AC (Mamba)";
+> +	compatible = "linksys,mamba", "marvell,armadaxp-mv78230",
+> +		     "marvell,armadaxp", "marvell,armada-370-xp";
+
+So this is where the discussion starts. I don't like Mamba being so
+prominent. As far as i understand, Mamba is the board, not the device.
+In theory, another device could be created using the same board as a
+basis, but with different PCIe cards, etc. At that point, i would
+suggest refactoring the common parts out into a
+armada-xp-linksys-mamba.dtsi which is then included into any device
+.dts file using the Mamba board.
+
+This file describes the device. So i would prefer it to be called
+armada-xp-linksys-wrt1900ac.dts. The first compatible should be
+"linksys,wrt1900ac". Having "linksys,mamba" second is O.K.
+
 > +
-> +	if (unlikely(ists & DEF_INT_ERR)) {
-> +		if (ists & (RCV_NOBUF | RCV_DROP))
-> +			stats->rx_errors++;
-> +			stats->rx_dropped++;
-> +			netdev_err(ndev, "rx drop\n");
+> +	chosen {
+> +		bootargs = "console=ttyS0,115200";
+> +		stdout-path = &uart0;
+> +	};
+> +
+> +	memory {
+> +		device_type = "memory";
+> +		reg = <0x00000000 0x00000000 0x00000000 0x10000000>; /* 256MB */
+> +	};
+> +
+> +	soc {
+> +		ranges = <MBUS_ID(0xf0, 0x01) 0 0 0xf1000000 0x100000
+> +			  MBUS_ID(0x01, 0x1d) 0 0 0xfff00000 0x100000>;
+> +
+> +		pcie-controller {
+> +			status = "okay";
+> +
+> +			/* Etron EJ168 USB 3.0 controller */
+> +			pcie@1,0 {
+> +				/* Port 0, Lane 0 */
+> +				status = "okay";
+> +			};
+> +
+> +			/* First mini-PCIe port */
+> +			pcie@2,0 {
+> +				/* Port 0, Lane 1 */
+> +				status = "okay";
+> +			};
+> +
+> +			/* Second mini-PCIe port */
+> +			pcie@3,0 {
+> +				/* Port 0, Lane 3 */
+> +				status = "okay";
+> +			};
+> +		};
+> +
+> +		internal-regs {
 
-After hammering on the box a bit again, I'm in a situation where I get 
-lots of
+It would be nice to document the jumper and pinout here.
 
-[302398.232603] hip04-ether e28b0000.ethernet eth0: rx drop
-[302398.377309] hip04-ether e28b0000.ethernet eth0: rx drop
-[302398.395198] hip04-ether e28b0000.ethernet eth0: rx drop
-[302398.466118] hip04-ether e28b0000.ethernet eth0: rx drop
-[302398.659009] hip04-ether e28b0000.ethernet eth0: rx drop
-[302399.053389] hip04-ether e28b0000.ethernet eth0: rx drop
-[302399.122067] hip04-ether e28b0000.ethernet eth0: rx drop
-[302399.268192] hip04-ether e28b0000.ethernet eth0: rx drop
-[302399.286081] hip04-ether e28b0000.ethernet eth0: rx drop
-[302399.594201] hip04-ether e28b0000.ethernet eth0: rx drop
-[302399.683416] hip04-ether e28b0000.ethernet eth0: rx drop
-[302399.701307] hip04-ether e28b0000.ethernet eth0: rx drop
+> +			serial@12000 {
+> +				status = "okay";
+> +			};
+> +
+> +			sata@a0000 {
+> +				nr-ports = <1>;
+> +				status = "okay";
+> +			};
+> +
+> +			ethernet@70000 {
+> +				pinctrl-0 = <&ge0_rgmii_pins>;
+> +				pinctrl-names = "default";
+> +				status = "okay";
+> +				phy-mode = "rgmii-id";
+> +				fixed-link {
+> +					speed = <1000>;
+> +					full-duplex;
+> +				};
+> +			};
+> +
+> +			ethernet@74000 {
+> +				pinctrl-0 = <&ge1_rgmii_pins>;
+> +				pinctrl-names = "default";
+> +				status = "okay";
+> +				phy-mode = "rgmii-id";
+> +				fixed-link {
+> +					speed = <1000>;
+> +					full-duplex;
+> +				};
+> +			};
+> +
+> +			/* USB part of the eSATA/USB 2.0 port */
+> +			usb@50000 {
+> +				status = "okay";
+> +			};
+> +
+> +			i2c@11000 {
+> +				status = "okay";
+> +				clock-frequency = <100000>;
+> +
+> +				tmp421@4c {
+> +					compatible = "ti,tmp421";
+> +					reg = <0x4c>;
+> +				};
+> +			};
+> +
 
-and I really am getting a lot of drops - I can't even ping the machine 
-anymore.
+The discussion about the i2c LED controller is still ongoing, but i
+think TI are unlikely to get a PWM based driver accepted in place of a
+LED driver. So you could include the LEDs here, and something
+unexpected happens, we can remove it.
 
-However, as it is there's a good chance the machine is simply 
-unreachable because it's busy writing to the UART, and even if not all 
-useful messages indicating anything have scrolled out. I really don't 
-think you should emit any message over and over again to the user. Once 
-or twice is enough.
+> +			nand@d0000 {
+> +				status = "okay";
+> +				num-cs = <1>;
+> +				marvell,nand-keep-config;
+> +				marvell,nand-enable-arbiter;
+> +				nand-on-flash-bbt;
+> +				nand-ecc-strength = <4>;
+> +				nand-ecc-step-size = <512>;
+> +
+> +				partition@0 {
+> +					label = "u-boot";
+> +					reg = <0x0000000 0x100000>;  /* 1MB */
+> +					read-only;
+> +				};
+> +
+> +				partition@100000 {
+> +					label = "u_env";
+> +					reg = <0x100000 0x40000>;    /* 256KB */
+> +				};
+> +
+> +				partition@140000 {
+> +					label = "s_env";
+> +					reg = <0x140000 0x40000>;    /* 256KB */
+> +				};
 
-Please make sure to rate limit it.
+So there is a big gap here? 768KB of unused space before the devinfo section?
 
+> +
+> +				partition@900000 {
+> +					label = "devinfo";
+> +					reg = <0x900000 0x100000>;    /* 1MB */
+> +					read-only;
+> +				};
+> +
+> +				partition@a00000 {
+> +					label = "kernel1";
+> +					reg = <0xa00000 0x2800000>;    /* 3MB + rootfs1 */
 
-Alex
+There are some long lines here. We try to keep to the 80 character
+rule.
+
+> +				};
+
+This partition overlaps the next one? That is new to me. Seems to be
+accepted practice for OpenWRT, but i'm not aware of any mainline
+Marvell DT doing this. Comments from others welcome...
+
+> +
+> +				partition@d00000 {
+> +					label = "rootfs1";
+> +					reg = <0xd00000 0x2500000>;    /* 37MB */
+> +				};
+> +
+> +				partition@3200000 {
+> +					label = "kernel2";
+> +					reg = <0x3200000 0x2800000>;    /* 3MB + rootfs2 */
+> +				};
+> +
+> +				partition@3500000 {
+> +					label = "rootfs2";
+> +					reg = <0x3500000 0x2500000>;    /* 37MB */
+> +				};
+> +
+> +				/* Last MB is for the BBT, i.e. not writable */
+> +				partition@5a00000 {
+> +					label = "syscfg";
+> +					reg = <0x5a00000 0x2600000>;    /* 38MB */
+> +				};
+> +			};
+> +
+> +			spi0: spi@10600 {
+> +				status = "okay";
+> +
+> +				spi-flash@0 {
+> +					#address-cells = <1>;
+> +					#size-cells = <1>;
+> +					compatible = "everspin,mr25h256";
+> +					reg = <0>; /* Chip select 0 */
+> +					spi-max-frequency = <40000000>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	gpio_keys {
+> +		compatible = "gpio-keys";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		pinctrl-0 = <&keys_pin>;
+> +		pinctrl-names = "default";
+> +
+> +		button@1 {
+> +			label = "WPS";
+> +			linux,code = <KEY_WPS_BUTTON>;
+> +			gpios = <&gpio1 0 GPIO_ACTIVE_HIGH>;
+> +		};
+> +
+> +		button@2 {
+> +			label = "Factory Reset Button";
+> +			linux,code = <KEY_RESTART>;
+> +			gpios = <&gpio1 1 GPIO_ACTIVE_HIGH>;
+> +		};
+> +	};
+> +
+> +	gpio-leds {
+> +		compatible = "gpio-leds";
+> +		pinctrl-0 = <&power_led_pin>;
+> +		pinctrl-names = "default";
+> +
+> +		power {
+> +			label = "mamba:white:power";
+
+Please replace this mamba with wrt1900ac. It is a property of the
+device, not the board. Another device using the mamba board may use it
+differently.
+
+> +			gpios = <&gpio1 8 GPIO_ACTIVE_HIGH>;
+> +			default-state = "on";
+> +		};
+> +	};
+> +
+> +	gpio_fan {
+> +		/* SUNON HA4010V4-0000-C99 */
+> +		compatible = "gpio-fan";
+> +		gpios = <&gpio0 24 0>;
+> +
+> +		gpio-fan,speed-map = <0    0
+> +				      4500 1>;
+> +	};
+> +};
+> +
+> +&pinctrl {
+> +
+> +	keys_pin: keys-pin {
+> +		marvell,pins = "mpp32", "mpp33";
+> +		marvell,function = "gpio";
+> +	};
+> +
+> +	power_led_pin: power-led-pin {
+> +		marvell,pins = "mpp40";
+> +		marvell,function = "gpio";
+> +	};
+> +
+> +	gpio_fan_pin: gpio-fan-pin {
+> +		marvell,pins = "mpp24";
+> +		marvell,function = "gpio";
+> +	};
+> +};
+> -- 
+> 2.1.0
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
