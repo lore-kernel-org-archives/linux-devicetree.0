@@ -1,103 +1,106 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH V8 00/14] drm/exynos: few patches to enhance bridge chip
- support
-Date: Mon, 19 Jan 2015 17:30:45 +0100
-Message-ID: <20150119163043.GB7751@ulmo.nvidia.com>
-References: <1416045309-13359-1-git-send-email-ajaykumar.rs@samsung.com>
- <CAEC9eQOrKw2Z1q-ztFfadXmsL3CTcAkkv9kcS2QnDOAVSh2AuQ@mail.gmail.com>
- <548ABAB6.6010200@collabora.co.uk>
- <3197445.qizQc0zeRb@avalon>
- <54914D7D.9060108@collabora.co.uk>
- <CAPj87rN4HZzDt5JBLyTRmKZs7XcOG=0ha7ZQf9hmjPAFgTyhYQ@mail.gmail.com>
- <20150105135015.GA12010@ulmo.nvidia.com>
- <54BCDC28.7080003@collabora.co.uk>
+From: Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH V2 1/2] mfd: da9063: Add device tree support
+Date: Mon, 19 Jan 2015 16:29:51 +0000
+Message-ID: <d765ef11de06a4ac5721ecf3283ba1333a6d0c8c.1421684991.git.stwiss.opensource@diasemi.com>
+References: <cover.1421684991.git.stwiss.opensource@diasemi.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="zx4FCpZtqtKETZ7O"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <54BCDC28.7080003@collabora.co.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: Daniel Stone <daniel@fooishbar.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, dri-devel <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Sean Paul <seanpaul@google.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Ajay kumar <ajaynumb@gmail.com>, Kukjin Kim <kgene.kim@samsung.com>, Pannaga Bhushan Reddy Patel <bhushan.r@samsung.com>, Prashanth G <prashanth.g@samsung.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1421684991.git.stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Dajun Chen <david.chen-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Support Opensource <support.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+From: Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
 
---zx4FCpZtqtKETZ7O
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Add device tree support for DA9063 regulators; Real-Time Clock
+and Watchdog.
 
-On Mon, Jan 19, 2015 at 11:27:52AM +0100, Javier Martinez Canillas wrote:
-> Hello Thierry,
->=20
-> On 01/05/2015 02:50 PM, Thierry Reding wrote:
-> > On Fri, Jan 02, 2015 at 01:10:14PM +0000, Daniel Stone wrote:
-> >> >
-> >> > Ajay's series don't apply cleanly anymore because it has been a whil=
-e since
-> >> > he posted it but he can rebase on top of 3.19-rc1 once it is release=
-d and
-> >> > re-resend.
-> >> >
-> >>=20
-> >> Do you have any plans to rebase this so it's ready for merging?
-> >>=20
-> >> Thierry, Daniel, Dave - whose tree would this be best to merge through?
-> >=20
-> > The plan is for me to take the bridge patches through the drm/panel
-> > tree. I'm going to look at these patches again later this week but from
-> > a very quick peek there don't seem to be any major issues left.
-> >
->=20
-> I know you probably are very busy but it would be great if you can take a=
- look
-> to this series to avoid another kernel release to be missed since we are =
-already
-> at v3.19-rc5.
->=20
-> Only this version was posted 2 months ago and the first version of the se=
-ries
-> was sent on May, 2014 so it has been on the list for almost a year now...
->=20
-> Tomi and Laurent had already agreed with the DT binging so I think that w=
-e can
-> already merge these and if there are any remaining issues, those can be f=
-ixed
-> during the 3.20 -rc cycle.
+This patch is dependent on PATCH V2 2/2 
 
-I see only a single Tested-by on this series and that seems to be with a
-bunch of out-of-tree patches applied on top. Does this now actually work
-applied on top of upstream? Also it seems like many people actually want
-this to get merged but there's been no Reviewed-bys and only a single
-Tested-by? Is that as good as it's going to get?
+Signed-off-by: Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
 
-Also I think the last update was that Ajay was going to resend this
-based on v3.19-rc1 or something. Is that still going to happen?
-Otherwise I can probably try to apply as-is, but not sure how well it
-will.
+---
+This patch applies against linux-next and v3.19-rc4 
 
-Thierry
+ drivers/mfd/da9063-core.c       |  2 ++
+ drivers/mfd/da9063-i2c.c        | 11 +++++++++++
+ include/linux/mfd/da9063/core.h |  1 +
+ 3 files changed, 14 insertions(+)
 
---zx4FCpZtqtKETZ7O
-Content-Type: application/pgp-signature
+diff --git a/drivers/mfd/da9063-core.c b/drivers/mfd/da9063-core.c
+index f38bc98..facd361 100644
+--- a/drivers/mfd/da9063-core.c
++++ b/drivers/mfd/da9063-core.c
+@@ -86,6 +86,7 @@ static const struct mfd_cell da9063_devs[] = {
+ 	},
+ 	{
+ 		.name		= DA9063_DRVNAME_WATCHDOG,
++		.of_compatible	= "dlg,da9063-watchdog",
+ 	},
+ 	{
+ 		.name		= DA9063_DRVNAME_HWMON,
+@@ -101,6 +102,7 @@ static const struct mfd_cell da9063_devs[] = {
+ 		.name		= DA9063_DRVNAME_RTC,
+ 		.num_resources	= ARRAY_SIZE(da9063_rtc_resources),
+ 		.resources	= da9063_rtc_resources,
++		.of_compatible	= "dlg,da9063-rtc",
+ 	},
+ 	{
+ 		.name		= DA9063_DRVNAME_VIBRATION,
+diff --git a/drivers/mfd/da9063-i2c.c b/drivers/mfd/da9063-i2c.c
+index 21fd8d9..0e94b20 100644
+--- a/drivers/mfd/da9063-i2c.c
++++ b/drivers/mfd/da9063-i2c.c
+@@ -25,6 +25,9 @@
+ #include <linux/mfd/da9063/pdata.h>
+ #include <linux/mfd/da9063/registers.h>
+ 
++#include <linux/of.h>
++#include <linux/regulator/of_regulator.h>
++
+ static const struct regmap_range da9063_ad_readable_ranges[] = {
+ 	{
+ 		.range_min = DA9063_REG_PAGE_CON,
+@@ -203,6 +206,13 @@ static struct regmap_config da9063_regmap_config = {
+ 	.cache_type = REGCACHE_RBTREE,
+ };
+ 
++static const struct of_device_id da9063_dt_ids[] = {
++	{ .compatible = "dlg,da9063-ad", },
++	{ .compatible = "dlg,da9063-bb", },
++	{ .compatible = "dlg,da9063-ca", },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, da9063_dt_ids);
+ static int da9063_i2c_probe(struct i2c_client *i2c,
+ 	const struct i2c_device_id *id)
+ {
+@@ -257,6 +267,7 @@ static struct i2c_driver da9063_i2c_driver = {
+ 	.driver = {
+ 		.name = "da9063",
+ 		.owner = THIS_MODULE,
++		.of_match_table = of_match_ptr(da9063_dt_ids),
+ 	},
+ 	.probe    = da9063_i2c_probe,
+ 	.remove   = da9063_i2c_remove,
+diff --git a/include/linux/mfd/da9063/core.h b/include/linux/mfd/da9063/core.h
+index b92a326..79f4d82 100644
+--- a/include/linux/mfd/da9063/core.h
++++ b/include/linux/mfd/da9063/core.h
+@@ -36,6 +36,7 @@ enum da9063_models {
+ enum da9063_variant_codes {
+ 	PMIC_DA9063_AD = 0x3,
+ 	PMIC_DA9063_BB = 0x5,
++	PMIC_DA9063_CA = 0x6,
+ };
+ 
+ /* Interrupts */
+-- 
+end-of-patch for PATCH V2
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJUvTEzAAoJEN0jrNd/PrOhdhkQALMBzkN1mDndgqsU3OQdXFwL
-yYdJE4PbjbQFro2E8aVUR/hcAP/U7dyC41QtZfQODlExmbAn8oHcejORdRnihmCq
-axMTCECHYjeXgivLOhrRqTCLTZa2CzQ+LHwsYcOcKXb4cz8E+NB6O4zrSJGP0S2c
-DavYziQsZqAch9LwDsmty6pWAGleLBExyg7RnTqM5A4YnpHnQwYcoTqCXR3HUX5G
-fjj+VTm9ld8ioAJw3FzcyosYFlHzw3dkECcDODW1YWJF1qqegP4xaGLJ9RIv0bHA
-h7AddhOrOOBh++EgQ2aI/oE/cuocGGNLMuCy3R1ucRWeEPUh88oQBjeRYTzcCESa
-+CrFgWm8UcxOD5HJcsaj5zSU1+Xdr3Z4R/laCMiZbF5aMoCg2/ZGff5iz71guC12
-duvvlxYTjnJpAAfWr6K13YxLpJnvJdWDMrLfl/WGMcHG9F6/LnW8qZQhyoI/H+sH
-0gcWZ31rK/D/N41rq73obfShbhc64o2ITEqHfWUcl+z1iAPvc+gwl5c4hycek+fq
-jImHO+rvKlb5WumI021gsjVuKU/fI2dKWHVfdbTOnx8h1F4acADdh5BsDoD1s41J
-Kns07xqm7ntFmOvrWfZaKeDzEUXKoWo2NKHIpvwKpY1dwdMH6XZVNZODvBgBiGwZ
-m1ZUDcuP0E3HTo2ZvwBp
-=YISN
------END PGP SIGNATURE-----
-
---zx4FCpZtqtKETZ7O--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
