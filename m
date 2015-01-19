@@ -1,51 +1,56 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v4 0/4] ata: libahci: Allow using a regulator for each
- port
-Date: Mon, 19 Jan 2015 16:05:26 +0100
-Message-ID: <20150119150526.GB32663@lunn.ch>
-References: <1421330978-9694-1-git-send-email-gregory.clement@free-electrons.com>
- <54B8C49A.9070302@redhat.com>
- <20150119145413.GJ8140@htj.dyndns.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v3 2/3] arm64: dts: Add APM X-Gene DMA device and DMA clock DTS nodes
+Date: Mon, 19 Jan 2015 16:17:39 +0100
+Message-ID: <4015362.jQuStL4p6a@wuerfel>
+References: <1421671269-19441-1-git-send-email-rsahu@apm.com> <2407238.x2YxDm0cd4@wuerfel> <CAFd313wyVqsqGNdxrAzmGCCYd-RAEcrX6f4y2Gngi44OOkbx-Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-ide-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150119145413.GJ8140@htj.dyndns.org>
-Sender: linux-ide-owner@vger.kernel.org
-To: Tejun Heo <tj@kernel.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart@free-electrons.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAFd313wyVqsqGNdxrAzmGCCYd-RAEcrX6f4y2Gngi44OOkbx-Q@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rameshwar Sahu <rsahu@apm.com>
+Cc: vinod.koul@intel.com, dan.j.williams@intel.com, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ddutile@redhat.com, jcm@redhat.com, patches@apm.com, Loc Ho <lho@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 19, 2015 at 09:54:13AM -0500, Tejun Heo wrote:
-> On Fri, Jan 16, 2015 at 08:58:18AM +0100, Hans de Goede wrote:
-> > Hi,
-> >=20
-> > On 15-01-15 15:09, Gregory CLEMENT wrote:
-> > >The current implementation of the libahci allows using one PHY per
-> > >port but we still have one single regulator for the whole
-> > >controller. This series adds the support of multiple regulators.
-> > >
-> > >This is the forth version of the series.
-> > >
-> > >The improvement of this version is the use of
-> > >ahci_platform_put_resources to put the reference to the regulators=
-=2E
-> > >
-> > >Thanks,
-> > >
-> > >Gr=E9gory
-> >=20
-> > Thanks, patches 1 - 3 look good and are:
-> >=20
-> > Acked-by: Hans de Goede <hdegoede@redhat.com>
-> >=20
-> > Tejun, can you please queue up 1 - 3 ?
->=20
-> Applied 1-3 to libata/for-3.20.
+On Monday 19 January 2015 20:11:22 Rameshwar Sahu wrote:
+> 
+> >
+> > The value should be
+> >
+> >         dma-ranges = <0x40 0x0 0x40 0x0 0x200 0>;
+> >
+> 
+> then it should be :
+> 
+> dma-ranges = <0x40 0x0 0x40 0x0 0x400 0>;
+> 
+> 
+> to say that any DMA to physical addresses from 0 to 0x3f.ffffffff
 
-Thanks
+No, the property above is for a bus that extends from
+0x40.00000000 to 0x43f.ffffffff
 
-I will add 4/4 to mvebu/dt.
+The first tuple is the address that is used for the local
+bus, the second one is the address that it gets translated to
+on the parent bus, and the third tuple is the length.
 
-  Andrew
+> > is disallowed and dma to physical addresses from 0x40.00000000
+> > to 0x23f.ffffffff is allowed and gets translated using an
+> > identity mapping.
+> >
+> > I also see that on Mustang, all memory is outside of this range,
+> >
+> 
+> Do you mean all other device controller node in DT here??
+> Basically these are all device controller memory, as what I understood is
+> dma-ranges tells about DDR ranges like start address of DDR
+> and length.
+
+It has absolutely nothing to do with where the DDR memory resides,
+only which addresses are valid on a particular bus, like the
+ranges property for the opposite direction. This is usually set
+up in some control register for the bus, and you should use the
+same value here.
+
+	Arnd
