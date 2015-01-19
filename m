@@ -1,62 +1,105 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] of: Add vendor prefix for Shanghai AVIC
- Optoelectronics Co., Ltd.
-Date: Mon, 19 Jan 2015 14:42:42 +0100
-Message-ID: <20150119134241.GC23778@ulmo.nvidia.com>
-References: <1418917423-26583-1-git-send-email-p.zabel@pengutronix.de>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sun4i: Add simplefb node with
+ de_fe0-de_be0-lcd0-hdmi pipeline
+Date: Mon, 19 Jan 2015 14:46:00 +0100
+Message-ID: <54BD0A98.9030309@redhat.com>
+References: <1421672477-12978-1-git-send-email-hdegoede@redhat.com> <1421672477-12978-2-git-send-email-hdegoede@redhat.com> <20150119132002.GD4367@lukather> <54BD082D.6030905@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="UFHRwCdBEJvubb2X"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1418917423-26583-1-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBIEV6SSQKGQEDUUHIPA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <54BD082D.6030905-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---UFHRwCdBEJvubb2X
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 19-01-15 14:35, Hans de Goede wrote:
+> Hi,
+>
+> On 19-01-15 14:20, Maxime Ripard wrote:
+>> Hi Hans,
+>>
+>> On Mon, Jan 19, 2015 at 02:01:17PM +0100, Hans de Goede wrote:
+>>> Testing has shown that on sun4i the display backend engine does not have
+>>> deep enough fifo-s causing flickering / tearing in full-hd mode due to
+>>> fifo underruns. This can be avoided by letting the display frontend engine
+>>> do the dma from memory, and then letting it feed the data directly into
+>>> the backend unmodified, as the frontend does have deep enough fifo-s.
+>>>
+>>> Note since u-boot-v2015.01 has been released using the de_be0-lcd0-hdmi
+>>> pipeline on sun4i, we need to keep that one around too (unfortunately).
+>>>
+>>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>>> ---
+>>>   arch/arm/boot/dts/sun4i-a10.dtsi | 8 ++++++++
+>>>   1 file changed, 8 insertions(+)
+>>>
+>>> diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
+>>> index f5e35b5..ccd60e3 100644
+>>> --- a/arch/arm/boot/dts/sun4i-a10.dtsi
+>>> +++ b/arch/arm/boot/dts/sun4i-a10.dtsi
+>>> @@ -44,6 +44,14 @@
+>>>                    <&ahb_gates 44>;
+>>>               status = "disabled";
+>>>           };
+>>> +
+>>> +        framebuffer@1 {
+>>> +            compatible = "allwinner,simple-framebuffer", "simple-framebuffer";
+>>> +            allwinner,pipeline = "de_fe0-de_be0-lcd0-hdmi";
+>>> +            clocks = <&pll5 1>, <&ahb_gates 36>, <&ahb_gates 43>,
+>>> +                 <&ahb_gates 44>, <&ahb_gates 46>;
+>>> +            status = "disabled";
+>>> +        };
+>>
+>> Thanks for this.
+>>
+>> I do have a question though, maybe I'm missing something, but what
+>> would prevent us from using the existing node already? The output
+>> pipeline seems to be the same, at least for which output we
+>> use. Wether we use or not the display frontend looks like an
+>> implementation detail.
+>
+> The purpose of having a node per pipeline is to have the rights clocks
+> listed for the pipeline chosen. So the "de_fe0-de_be0-lcd0-hdmi" node
+> has one ahb_gates entry more so as to make sure the kernel does not gate
+> off the frontend.
+>
+> The idea of having different nodes per pipeline is that when we get
+> support for more module clocks in place, as a preparation for kms
+> support, we can add the module clocks to the relevant nodes, to also
+> ensure the module clocks will not get turned off.
+>
+> By having this info in the dtb, rather then in u-boot we can update
+> the clocks list as we add new clock nodes in the dtb, ensuring that
+> an older u-boot will keep working as we add support for module
+> clocks, etc.
 
-On Thu, Dec 18, 2014 at 04:43:42PM +0100, Philipp Zabel wrote:
-> Shanghai AVIC Optoelectronics Co., Ltd. is a subsidiary of Tianma
-> Microelectronics Co., Ltd. and designs and manufactures TFT LCDs.
->=20
-> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
+Hmm, thinking more about this, and about how u-boot searches for
+the simplefb node, I think that having a single node like this:
 
-Series applied, thanks.
+         framebuffer@0 {
+             compatible = "allwinner,simple-framebuffer", "simple-framebuffer";
+             /* This node is for de_fe0-de_be0-lcd0-hdmi, but we also declare de_be0-lcd0-hdmi
+                for compatibility with u-boot-v2015.01 which does not use the frontend */
+             allwinner,pipeline = "de_fe0-de_be0-lcd0-hdmi", "de_be0-lcd0-hdmi";
+             clocks = <&pll5 1>, <&ahb_gates 36>, <&ahb_gates 43>,
+                  <&ahb_gates 44>, <&ahb_gates 46>;
+             status = "disabled";
+         };
 
-Thierry
+Should work, but this will cause simplefb to enable the frontend ahb gate
+even if it is not used (this will only impact u-boot-v2015.01 users), and as
+such feels wrong, so I would prefer to go with my patch as is.
 
---UFHRwCdBEJvubb2X
-Content-Type: application/pgp-signature
+Regards,
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJUvQnRAAoJEN0jrNd/PrOh5IEP/0xIEG7xERvISwD76EvU+cUA
-/pcnyGTJDLP/hA/AK+6z3LqdCcztZlCxbfmD0Qrd8ZJ8Zv8U8QZoeAGo/ccTWnDZ
-dHY5M4VzFjMOwldo1TbXM4g2vdAUatYgaa+kMl8oI7tq6ZTmGHBVVQPnk3BzrpxU
-4yyTAA+jBRW6JdEJWMqJz5X82k2Yc9M57ssLPYSMXzBaTblC0NH162S7pq5FioVW
-jhXChI4CqriHUSQ084OVDN11sGex1AumkTVeoyyPCijg4CA239/NMI6sh3T/RT+0
-g1T9QCsDgN7T1RgPuzRqVLnAThs1dtNiKn27BHGF4JTjeSdj0EeCw4Hgp35PEFGO
-HPPIT7RomPAhnWZwDr1Cb8hNPtv7gW5kjdCOfoLv748Fpt/dspWR1rXcj5Lm8WR7
-x3h+Jx9fTr4O5TlIu33u0HsjyEStV9DsPrxaANxYiDUY6v9gtjXbO+EPNOBkUaS5
-knE36LMo1x6k7u+59e2WpjhNjWN0Xfb75FVXIYo/cNlcZlEbhnsO1Re5AQ8GaHh3
-PyVN3//egvPHo9cCG2IEgKurtWh3M0KPXEXfRpmaun3k8YK3g9LjsupoMZcYHRI+
-/kSy7u57lwSBswNCiS4akx7pVCAczAazcTjAqfP93RiDQkQNn3QbrIlcM9V/9tzX
-ICWmDTAjjrHSIBZYTwri
-=GEbx
------END PGP SIGNATURE-----
-
---UFHRwCdBEJvubb2X--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hans
