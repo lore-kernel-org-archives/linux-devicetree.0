@@ -1,179 +1,76 @@
 From: Alexandre Courbot <gnurou@gmail.com>
-Subject: Re: basic-mmio-gpio: add DT support
-Date: Mon, 19 Jan 2015 12:37:18 +0900
-Message-ID: <CAAVeFu+sv9XGus0QXpamkRaGebTsgWcpfCRY50Q0F3xb2psGrg@mail.gmail.com>
-References: <5490B528.2020305@gmail.com> <CAAVeFuLoZPptaqnN8s6r_aN_rpBj+MpmT=5Xc2-iO3kGKZfctw@mail.gmail.com>
- <54B65110.8030509@gmail.com>
+Subject: Re: [PATCH v1 4/4] leds: no longer use unnamed gpios
+Date: Mon, 19 Jan 2015 12:43:42 +0900
+Message-ID: <CAAVeFuLGKUb2A1U9YiDmoS23sHC9ihr3h8DcSRbmNEXuu03mqw@mail.gmail.com>
+References: <1420621722-7428-1-git-send-email-oliver+list@schinagl.nl>
+ <1420621722-7428-5-git-send-email-oliver+list@schinagl.nl>
+ <20150107235522.GA6670@dtor-ws> <54AE43A9.3020309@schinagl.nl>
+ <CAL_JsqJE_PCXrejHO3vfdbbtC4FGyuPhJ8W-A=8nZMcu6aBxCw@mail.gmail.com>
+ <20150108221249.GH23256@dtor-ws> <CACRpkdZZxAPecNfADzYLSz8S6tNBi9Jr4st==zxnNp2r2gPC2g@mail.gmail.com>
+ <54B66D07.8040807@schinagl.nl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <54B65110.8030509@gmail.com>
+In-Reply-To: <54B66D07.8040807@schinagl.nl>
 Sender: linux-gpio-owner@vger.kernel.org
-To: =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Olliver Schinagl <oliver@schinagl.nl>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robherring2@gmail.com>, Olliver Schinagl <oliver+list@schinagl.nl>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Robin Gong <b38343@freescale.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Aaron Lu <aaron.lu@intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Grant Likely <grant.likely@linaro.org>, Wolfram Sang <wsa@the-dreams.de>, Alexander Shiyan <shc_work@mail.ru>, Jingoo Han <jg1.han@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-gpio@vger.kern
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 14, 2015 at 8:20 PM, =C3=81lvaro Fern=C3=A1ndez Rojas
-<noltari@gmail.com> wrote:
-> El 14/01/2015 a las 6:32, Alexandre Courbot escribi=C3=B3:
->> On Wed, Dec 17, 2014 at 7:41 AM, =C3=81lvaro Fern=C3=A1ndez Rojas
->> <noltari@gmail.com> wrote:
->>> Add DT support while keeping legacy support.
+On Wed, Jan 14, 2015 at 10:20 PM, Olliver Schinagl <oliver@schinagl.nl> wrote:
+>
+> On 14-01-15 13:45, Linus Walleij wrote:
+>>
+>> On Thu, Jan 8, 2015 at 11:12 PM, Dmitry Torokhov
+>> <dmitry.torokhov@gmail.com> wrote:
 >>>
->>> Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
->>> ---
->>> diff --git a/drivers/gpio/gpio-generic.c b/drivers/gpio/gpio-generi=
-c.c
->>
->> There is no documentation for these new bindings?
->
-> Actually, I was waiting for this patch (by kamlakant.patel@linaro.org=
-) to be accepted before: "[PATCH v1 5/5] gpio: document basic mmio gpio=
- library".
-> Anyway, I will add documentation on the next version of this patch.
->
->>
->>> index 16f6115..9792783 100644
->>> --- a/drivers/gpio/gpio-generic.c
->>> +++ b/drivers/gpio/gpio-generic.c
->>> @@ -61,6 +61,9 @@ o        `                     ~~~~\___/~~~~    `=
- controller in FPGA is ,.`
->>>  #include <linux/platform_device.h>
->>>  #include <linux/mod_devicetable.h>
->>>  #include <linux/basic_mmio_gpio.h>
->>> +#include <linux/of.h>
->>> +#include <linux/of_device.h>
->>> +#include <linux/of_gpio.h>
+>>> On Thu, Jan 08, 2015 at 08:40:20AM -0600, Rob Herring wrote:
+>>>>
+>>>> On Thu, Jan 8, 2015 at 2:45 AM, Olliver Schinagl <oliver@schinagl.nl>
+>>>> wrote:
+>>>>>>>
+>>>>>>> --- a/drivers/leds/leds-gpio.c
+>>>>>>> +++ b/drivers/leds/leds-gpio.c
+>>>>>>> @@ -184,7 +184,7 @@ static struct gpio_leds_priv
+>>>>>>> *gpio_leds_create(struct
+>>>>>>> platform_device *pdev)
+>>>>>>>                  struct gpio_led led = {};
+>>>>>>>                  const char *state = NULL;
+>>>>>>>    -             led.gpiod = devm_get_gpiod_from_child(dev, NULL,
+>>>>>>> child);
+>>>>>>> +               led.gpiod = devm_get_gpiod_from_child(dev, "led",
+>>>>>>> child);
+>>>>>>
+>>>>>> Would not this break existing boards using old bindings? You need to
+>>>>>> handle both cases: if you can't located "led-gpios" then you will have
+>>>>>> to
+>>>>>> try just "gpios".
+>>>>>
+>>>>> Very true. I was rather even hoping we could update all bindings, I
+>>>>> don't
+>>>>> mind going through the available dts files to fix them ... But need to
+>>>>> know
+>>>>> that that's the proper way to go before doing the work ;)
+>>>>
+>>>> That will not work. You cannot make changes that require a new dtb
+>>>> with a new kernel. This would also break for the other way around
+>>>> (i.e. a new dtb and old kernel).
+>>>>
+>>>> You would have to search for both led-gpios and gpios. I'm not sure if
+>>>> we can do that generically for all GPIOs. If you had a node with both
+>>>> "blah-gpios" and "gpios", it would break. I would hope there are no
+>>>> such cases like that. We also now have to consider how ACPI identifies
+>>>> GPIOs and whether this makes sense.
 >>>
->>>  static void bgpio_write8(void __iomem *reg, unsigned long data)
->>>  {
->>> @@ -488,8 +491,58 @@ static void __iomem *bgpio_map(struct platform=
-_device *pdev,
->>>         return ret;
->>>  }
->>>
->>> +#ifdef CONFIG_OF
->>> +static const struct of_device_id bgpio_dt_ids[] =3D {
->>> +       { .compatible =3D "basic-mmio-gpio" },
->>> +};
->>> +MODULE_DEVICE_TABLE(of, bgpio_dt_ids);
->>> +
->>> +static int bgpio_probe_dt(struct platform_device *pdev)
->>> +{
->>> +       u32 tmp;
->>> +       struct bgpio_pdata *pdata;
->>> +       struct device_node *np;
->>> +
->>> +       np =3D pdev->dev.of_node;
->>> +       if (!np)
->>> +               return 0;
->>> +
->>> +       pdata =3D devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERN=
-EL);
->>> +       if (!pdata)
->>> +               return -ENOMEM;
->>> +
->>> +       pdata->label =3D dev_name(&pdev->dev);
->>> +       pdata->base =3D -1;
->>> +       if (of_find_property(np, "byte-be", NULL)) {
->>> +               pdata->flags |=3D BGPIOF_BIG_ENDIAN_BYTE_ORDER;
->>> +       }
->>> +       if (of_find_property(np, "bit-be", NULL)) {
->>> +               pdata->flags |=3D BGPIOF_BIG_ENDIAN;
->>> +       }
->>> +       if (of_find_property(np, "regset-nr", NULL)) {
->>> +               pdata->flags |=3D BGPIOF_UNREADABLE_REG_SET;
->>> +       }
->>> +       if (of_find_property(np, "regdir-nr", NULL)) {
->>> +               pdata->flags |=3D BGPIOF_UNREADABLE_REG_DIR;
->>> +       }
->>> +       if (!of_property_read_u32(np, "num-gpios", &tmp)) {
->>> +               pdata->ngpio =3D tmp;
->>> +       }
+>>> I think only the driver itself can know about such "legacy" mappings and
+>>> make a decision.
 >>
->> I don't think this is acceptable. gpio-generic is designed to be use=
-d
->> as a framework for other drivers to build upon. These drivers should
->> have their own compatible strings, which should be enough to infer a=
-ll
->> the properties you defined here.
->>
+>> Yeah leds-gpio.c will need to be patched to check for "led-gpios" first
+>> and then fall back to "gpios" if not found.
 >
-> gpio-generic is not only designed as a framework for other drivers, i=
-t can also be used directly by registering the driver through platform =
-device (basic-mmio-gpio/basic-mmio-gpio-be).
+> yeah I've done the work, just need to double check it and resend a v2.
+>
+> Linus, I assume you want the already applied patches omitted from v2?
 
-This works for platform drivers which stay confined to the kernel, but
-DT is a firmware definition where such generic bindings are much less
-desirable.
-
-> My intention is to make it DT compatible as a generic driver, which c=
-an be used for different hardware, by selecting different DT properties=
- as configuration.
->
->> Device Tree identifies hardware precisely (vendor and model), and th=
-is
->> new binding is just not that. You *could* however have a very simple
->> driver that associates compatible strings to static tables containin=
-g
->> the values of the properties you wanted to see passed through the DT=
-,
->> and have one single driver that covers many mmio-based GPIO devices.
->> But I'm afraid "basic-mmio-gpio" is *way* to vague to describe
->> hardware.
->>
->
-> I don't think making a new driver mapping different compatible string=
-s to static tables containing the values of the properties passed throu=
-gh DT is a sane way of doing it, since it will require multiple combina=
-tions to cover all the possibilites.
->
-> My plan is to be able to do something like this (btw, I actually test=
-ed this patch on BCM63xx and works perfectly):
-> gpio-controller@10000084 {
->         compatible =3D "basic-mmio-gpio", "brcm,brcm6368";
-
-Here your compatible string should be
-
-        compatible =3D "brcm,brcm6368", "basic-mmio-gpio";
-
-I.e. from more precise to less precise. A dedicated BRCM6368 driver
-should take precedence over your generic one.
-
->         reg =3D <0x10000084 0x4>, <0x1000008c 0x4>;
->         reg-names =3D "dirout", "dat";
->
->         num-gpios =3D <32>;
->         byte-be;
->
->         gpio-controller;
->         #gpio-cells =3D <2>;
-> };
-> And for other hardware you could do:
-> gpio-controller@10000180 {
->         compatible =3D "basic-mmio-gpio", "foo,bar";
->         reg =3D <0x10000180 0x4>, <0x10000184 0x4>, <0x10000188 0x4>;
->         reg-names =3D "dirin", "dirout", "dat";
->
->         num-gpios =3D <20>;
->         bit-be;
->         byte-be;
->         regdir-nr;
->
->         gpio-controller;
->         #gpio-cells =3D <2>;
-> };
-> This way you wouldn't need to add a wrapper for each specific hardwar=
-e using basic-mmio-gpio, and you would save time by using the generic d=
-river.
-
-I understand the intent but IIUC the history of DT speaks  against
-such generic bindings. On the other hand I can see some instances of
-them like "simple-bus" for instance. Added the DT maintainers and
-mailing list to get more informed opinions on the matter.
---
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yes, please base new revisions on Linus' devel branch, omitting any
+patches that he has already accepted.
