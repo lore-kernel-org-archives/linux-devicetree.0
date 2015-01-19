@@ -1,50 +1,38 @@
 From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] pinctrl: exynos: Add AUDIO pin controller for exynos7
-Date: Mon, 19 Jan 2015 11:05:27 +0100
-Message-ID: <CACRpkdaE8fY1OWy6VPucWVDRmTCRuE4fENZwsu6M3oSYv0DTvQ@mail.gmail.com>
-References: <1418994659-5222-1-git-send-email-padma.v@samsung.com>
-	<1418994659-5222-2-git-send-email-padma.v@samsung.com>
-	<CACRpkdZopjCN_GMEPQFd_NWa0Ddocqt3aViLrZ7Yh3ui_YcBAg@mail.gmail.com>
-	<CA+Ln22GhnW5jcXdQfYaJ_aM4Wq9OHXvShHHaxLKjJi+dp6Afcg@mail.gmail.com>
+Subject: Re: [PATCH RFC] pinctrl: at91
+Date: Mon, 19 Jan 2015 11:12:45 +0100
+Message-ID: <CACRpkdY6M=U-XA=Sd2DH6jVjCABUTSYq+oUs_DBy14M2tccrMw@mail.gmail.com>
+References: <CACRpkdbkUUzVVMp14szY+vGNd+d+8bL066STh_XMGud-UsFBqA@mail.gmail.com>
+	<1418637470-5839-1-git-send-email-ludovic.desroches@atmel.com>
+	<54943933.60102@atmel.com>
+	<20150106093706.GC26982@ldesroches-Latitude-E6320>
+	<CACRpkda9wTPcRy6nRGP08rDpHV=tRyYVuD80TeO2zFGzX+aJcg@mail.gmail.com>
+	<20150114150339.GJ3625@ldesroches-Latitude-E6320>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CA+Ln22GhnW5jcXdQfYaJ_aM4Wq9OHXvShHHaxLKjJi+dp6Afcg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20150114150339.GJ3625@ldesroches-Latitude-E6320>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Padmavathi Venna <padma.v-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 14, 2015 at 3:27 PM, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> 2015-01-14 20:40 GMT+09:00 Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
->> On Fri, Dec 19, 2014 at 2:10 PM, Padmavathi Venna <padma.v-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
->>
->>> Audio IPs on Exynos7 require gpios available in AUDIO
->>> pin controller block. So adding the AUDIO pinctrl support.
->>>
->>> Signed-off-by: Padmavathi Venna <padma.v-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> (...)
->>> --- a/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
->>> +++ b/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
->>> @@ -181,6 +181,7 @@ Aliases for controllers compatible with "samsung,exynos7-pinctrl":
->>>  - pinctrl6: pin controller of FSYS0 block,
->>>  - pinctrl7: pin controller of FSYS1 block,
->>>  - pinctrl8: pin controller of BUS1 block,
->>> +- pinctrl9: pin controller of AUDIO block,
->>
->> This doesn't apply at all, the list has never been in the document merged
->> upstream.
->
-> I believe this patch depends on patch [1], which was mentioned in
-> cover letter and which you seem to have applied two days ago. If it
-> still doesn't apply, please let me know if I should collect the
-> patches myself and prepare a pull request for you.
->
-> [1] https://patchwork.kernel.org/patch/5467321/
+On Wed, Jan 14, 2015 at 4:03 PM, Ludovic Desroches
+<ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> wrote:
 
-It applied when I tried it now, sorry I must have screwed up or something :(
+> From my point of view, it is two distinct topics. One is a very
+> important fix because our SAMA5D4 device is not booting without it. The
+> other one is a proper way to manage gpio ranges but alone I don't think
+> it can solve my issue.
 
-Patch applied!
+Can you make me a minimal, sane patch that fixes the boot regression?
+
+I hate regressions so these need to be fixed first...
+
+The rest we can discuss I guess.
+
+Or is it not possible to solve the boot regression without the larger
+fix?
 
 Yours,
 Linus Walleij
