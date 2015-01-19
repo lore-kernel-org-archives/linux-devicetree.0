@@ -1,81 +1,38 @@
-From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH V3 09/15] ASoC: samsung: i2s: Protect more registers with a
- spinlock
-Date: Mon, 19 Jan 2015 13:28:50 +0100
-Message-ID: <54BCF882.10005@samsung.com>
-References: <1421260962-16892-1-git-send-email-s.nawrocki@samsung.com>
- <1421260962-16892-10-git-send-email-s.nawrocki@samsung.com>
- <CAC5m3BxTkS3KtwUC6itMRF=545PoWJw1gYV6av3p7QjtVMFXTQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
+Subject: [PATCH v3 0/3] dmaengine: APM X-Gene SoC DMA engine driver support
+Date: Mon, 19 Jan 2015 18:11:06 +0530
+Message-ID: <1421671269-19441-1-git-send-email-rsahu@apm.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <CAC5m3BxTkS3KtwUC6itMRF=545PoWJw1gYV6av3p7QjtVMFXTQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tushar Behera <trblinux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, padma.v-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, drake-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, Kim Sangbeom <sbkim73-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, ML Devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ML Arch-Arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ddutile-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tuashar,
+This patch set implements the APM X-Gene SoC DMA driver
+support to offload the DMA operations such as memory copy(memcpy),
+scatter gathering.
 
-On 17/01/15 06:21, Tushar Behera wrote:
-> On Thu, Jan 15, 2015 at 3:42 AM, Sylwester Nawrocki
-> <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
->> Ensure the I2SMOD, I2SPSR registers, which are also exposed through
->> clk API are only accessed with the i2s->spinlock spinlock held.
->>
->> Signed-off-by: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> ---
->>  sound/soc/samsung/i2s.c |   81 +++++++++++++++++++++++++++++------------------
->>  1 file changed, 51 insertions(+), 30 deletions(-)
->>
->> diff --git a/sound/soc/samsung/i2s.c b/sound/soc/samsung/i2s.c
->> index 20cc51f..05fc2f0 100644
->> --- a/sound/soc/samsung/i2s.c
->> +++ b/sound/soc/samsung/i2s.c
->> @@ -472,17 +472,22 @@ static int i2s_set_sysclk(struct snd_soc_dai *dai,
->>  {
->>         struct i2s_dai *i2s = to_info(dai);
->>         struct i2s_dai *other = get_other_dai(i2s);
->> -       u32 mod = readl(i2s->addr + I2SMOD);
->>         const struct samsung_i2s_variant_regs *i2s_regs = i2s->variant_regs;
->>         unsigned int cdcon_mask = 1 << i2s_regs->cdclkcon_off;
->>         unsigned int rsrc_mask = 1 << i2s_regs->rclksrc_off;
->> +       u32 mod, mask, val = 0;
->> +
->> +       spin_lock(i2s->lock);
->> +       mod = readl(i2s->addr + I2SMOD);
->> +       spin_unlock(i2s->lock);
->>
-> 
-> 'mod' is now updated only at the bottom of this function. The above
-> readl can be omitted.
+Signed-off-by: Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
+Signed-off-by: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+---
 
-mod is used in some of the 'if' statements below, so we must read it
-here beforehand.
+Rameshwar Prasad Sahu (3):
+  dmaengine: Add support for APM X-Gene SoC DMA engine driver
+  arm64: dts: Add APM X-Gene DMA device and DMA clock DTS nodes
+  Documentation: dma: Add APM X-Gene SoC DMA engine driver documentation
 
->>         switch (clk_id) {
->>         case SAMSUNG_I2S_OPCLK:
->> -               mod &= ~MOD_OPCLK_MASK;
->> -               mod |= dir;
->> +               mask = MOD_OPCLK_MASK;
->> +               val = dir;
->>                 break;
->>         case SAMSUNG_I2S_CDCLK:
->> +               mask = 1 << i2s_regs->cdclkcon_off;
-> 
-> Use BIT() macro instead?
-
-Yes, it would be a good code cleanup, might be worth to include it in
-some future patch series. I'll keep it in mind, since this patch is merged
-already.
-And the logical bit operations is one of things people make mistakes most
-often, so any changes like these would need to be well tested and/or
-carefully reviewed.
+ .../devicetree/bindings/dma/apm-xgene-dma.txt      |   49 +
+ arch/arm64/boot/dts/apm/apm-storm.dtsi             |   28 +
+ drivers/dma/Kconfig                                |    8 +
+ drivers/dma/Makefile                               |    1 +
+ drivers/dma/xgene-dma.c                            | 1566 ++++++++++++++++++++
+ 5 files changed, 1652 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/apm-xgene-dma.txt
+ create mode 100644 drivers/dma/xgene-dma.c
 
 --
-Thanks,
-Sylwester
+1.8.2.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
