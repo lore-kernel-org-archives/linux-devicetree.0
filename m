@@ -1,81 +1,51 @@
-From: NeilBrown <neil@brown.name>
-Subject: Re: [PATCH V2 2/4] mmc: pwrseq: Document DT bindings for the simple
- MMC power sequence
-Date: Tue, 20 Jan 2015 07:17:01 +1100
-Message-ID: <awcfw5ggbfn27usdy0rb72ph.1421698621396@email.android.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v1 0/4] net: stmmac: dwmac-rk: Fix phy regulator issues
+Date: Mon, 19 Jan 2015 21:19:29 +0100
+Message-ID: <1446006.BXnWRvK5p3@phil>
+References: <1421690889-11901-1-git-send-email-romain.perier@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: base64
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Mark Rutland <mark.rutland@arm.com>, Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org, Chris Ball <chris@printf.net>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Alexandre Courbot <gnurou@gmail.com>, Arend van Spriel <arend@broadcom.com>, Sascha Hauer <s.hauer@pengutronix.de>, Olof Johansson <olof@lixom.net>, Hans de Goede <hdegoede@redhat.com>, Doug Anderson <dianders@chromium.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1421690889-11901-1-git-send-email-romain.perier@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Romain Perier <romain.perier@gmail.com>, David Miller <davem@davemloft.net>
+Cc: peppe.cavallaro@st.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, roger.chen@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiBGcmksIDE2IEphbiAyMDE1IDExOjM2OjQ2ICswMDAwIFJ1c3NlbGwgS2luZyAtIEFSTSBM
-aW51eA0KPGxpbnV4QGFybS5saW51eC5vcmcudWs+IHdyb3RlOg0KDQo+IE9uIEZyaSwgSmFuIDE2
-LCAyMDE1IGF0IDA3OjUzOjA4QU0gKzEzMDAsIE5laWxCcm93biB3cm90ZToNCj4gPiBBbHNvLCBp
-dCBpc24ndCBjbGVhciB0byBtZSB3aGV0aGVyIHRoZSBuZWVkIGZvciBwb3dlci9yZXNldCBpcyBh
-IGZ1bmN0aW9uIG9mDQo+ID4gdGhlIG1tYy1ob3N0LCBvciBhIGZ1bmN0aW9uIG9mIHRoZSBkZXZp
-Y2UgYXR0YWNoZWQgdG8gdGhlIGhvc3QuICBJIHN1c3BlY3QNCj4gPiBzb21lIGFyZSBuZWVkZWQg
-Ynkgb25lLCBzb21lIGJ5IHRoZSBvdGhlci4gIEFueSBieSBib3RoPw0KPiANCj4gTmVpbCwNCj4g
-DQo+IFRoZXJlJ3MgYSBob3JyaWQgaXNzdWUgdGhlcmUuICBUaGUgc3RhbmRhcmQgbW9kZWwgb2Yg
-TU1DL1NEIGlzIHRoYXQgdGhlDQo+IGRldmljZSB3aWxsIGJlIHBvd2VyZWQgdXAgYnkgdGhlIGhv
-c3QsIGFuZCB3aWxsIHRoZW4gYmUgcHJvYmVkIHRvIGZpbmQNCj4gb3V0IHdoYXQgdGhlIGRldmlj
-ZSBpcy4gIFRoaXMgbm9ybWFsbHkgd29ya3MgZmluZSBhcyB0aGUgaG9zdCBpcw0KPiByZXNwb25z
-aWJsZSBmb3IgY29udHJvbGxpbmcgdGhlIHBvd2VyIHRvIHRoZSBzb2NrZXQgd2hpY2ggdGhlIGNh
-cmQgaXMNCj4gcGx1Z2dlZCBpbnRvLg0KPiANCj4gV2hlcmUgdGhpbmdzIGZhbGwgZG93biBpcyB3
-aGVuIHlvdSBoYXZlIGEgTU1DL1NEIGRldmljZSBlbWJlZGRlZCBvbnRvDQo+IGEgYm9hcmQsIGFu
-ZCB0aGV5IGRlY2lkZSB0aGF0IGl0J2xsIGJlIGdpdmVuIHNlcGFyYXRlIGNvbnRyb2xzIGZvcg0K
-PiBwb3dlciBhbmQgcmVzZXQgd2hpY2ggYXJlIG5vdCB1bmRlciB0aGUgY29udHJvbCBvZiB0aGUg
-aG9zdC4NCj4gDQo+IElmIHRoZSBNTUMvU0QgZGV2aWNlIGlzIG5vdCBwb3dlcmVkIHVwIGJlZm9y
-ZSB3ZSBwcm9iZSB0aGUgYnVzLCB0aGVuDQo+IHRoZSBkZXZpY2UgaXMgbm90IGRpc2NvdmVyYWJs
-ZSwgYW5kIHRoaXMgYnJlYWtzIHRoZSBzdGFuZGFyZCBtb2RlbDoNCj4gLSBJZiB3ZSBydW4gdGhl
-IHN0YW5kYXJkIE1NQy9TRCBkZXZpY2UgZGlzY292ZXJ5IGNvZGUgd2l0aCB0aGUgZGV2aWNlDQo+
-ICAgcG93ZXJlZCBkb3duLCBpdCB3aWxsIGZpbmQgbm8gZGV2aWNlIGF0dGFjaGVkLCBzbyBubyBk
-ZXZpY2Ugd2lsbCBiZQ0KPiAgIGNyZWF0ZWQuDQo+IA0KPiAtIElmIHdlIGNyZWF0ZSBhIGRldmlj
-ZSwgdGhlbiB0aGUgZGV2aWNlIGRyaXZlciB3aWxsIGJlIHByb2JlZA0KPiAgIGltbWVkaWF0ZWx5
-LiAgV2hpbGUgdGhlIGRldmljZSBkcml2ZXIgY2FuIHRoZW4gYmluZCwgZGlzY292ZXIgdGhlDQo+
-ICAgcG93ZXIgYW5kIHJlc2V0IGNvbnRyb2xzLCBhbmQgYWN0aXZhdGUgdGhlbSwgaXQgY2FuJ3Qg
-dGhlbiB0YWxrIHRvDQo+ICAgaXRzIGRldmljZSBiZWNhdXNlIHRoZSBNTUMgbGF5ZXIgaGFzbid0
-IGdvbmUgdGhyb3VnaCB0aGUgcmVxdWlyZWQNCj4gICBzdGFuZGFyZCBkZXZpY2UgZGlzY292ZXJ5
-IGFuZCBwcm9iZSBzZXF1ZW5jZS4gIElmIHdlIGNvdWxkIGRvIHRoYXQsDQo+ICAgd2Ugd291bGQg
-dGhlbiBuZWVkIHNvbWUgd2F5IHRvIHN0b3AgdGhhdCBtZWNoYW5pc20gY3JlYXRpbmcgYW5vdGhl
-cg0KPiAgIGRldmljZS4NCg0KSGkgUnVzc2VsbCwNCiB0aGFua3MgZm9yIHRoZSBvdmVydmlldyAt
-IHF1aXRlIGhlbHBmdWwuDQogSSB3b3VsZCBsaWtlIHRvIHBhcnRpY3VsYXJseSBmb2N1cyBvbiB0
-aGF0IGxhc3Qgc2VudGVuY2UgbWVudGlvbmluZw0KICJzb21lIHdheSB0byBzdG9wIFtzdGFuZGFy
-ZCBkZXZpY2UgZGlzY292ZXJ5XSBjcmVhdGluZyBhbm90aGVyIGRldmljZSIuDQoNCiBUaGF0IHdh
-eSBhbHJlYWR5IGV4aXN0cywgb3Igc29tZXRoaW5nIHZlcnkgc2ltaWxhciB0byBpdCwgaW4gdGhl
-IG1tYy9zZGlvDQogY29yZS4gSW4gcGFydGljdWxhciwgdGhlICdvbGRjYXJkJyBhcmd1bWVudCB0
-byBtbWNfc2Rpb19pbml0X2NhcmQoKS4NCg0KIFRoaXMgaXMgY2FsbGVkIGJvdGggd2hlbiBpbml0
-aWFsaXNpbmcgYSBjYXJkIGFuZCB3aGVuIHJlc3RvcmluZyBwb3dlciB0byBpdC4NCiBJZiAnb2xk
-Y2FyZCcgaXMgc2V0IGFuZCB0aGUgY2FyZCBmb3VuZCBtYXRjaGVzICdvbGRjYXJkJywgdGhlbiAn
-b2xkY2FyZCcgaXMNCiBsZWZ0IHVuY2hhbmdlZC4gIGkuZS4gYSBuZXcgZGV2aWNlIGlzIG5vdCBj
-cmVhdGVkLg0KDQogU3VwcG9zZSB0aGF0IGRldmljZXRyZWUgbGlzdGVkIGEgY2hpbGQgbm9kZSBm
-b3IgYW4gbW1jIGhvc3Qgd2l0aA0KICJub24tcmVtb3ZhYmxlIiBzZXQsIHRoZW4gd2UgY291bGQg
-ZG8gYSBwcmVsaW1pbmFyeSBwcm9iZSB3aGljaCBzZXRzDQogdXAgaG9zdC0+Y2FyZCBzbyB0aGF0
-IHN1YnNlcXVlbnQgInN0YW5kYXJkIiBwcm9iZXMgZmluZCB0aGUgcHJvcGVybHkNCiBtYXRjaGlu
-ZyBjYXJkIGFuZCBsZWF2ZSAnb2xkY2FyZCcgdW5jaGFuZ2VkLiAgVGhpcyBjYXJkIGNvdWxkIHNv
-bWVob3cNCiByZWdpc3RlciBpdHMgb3duIHBvd2VyLXVwIHNlcXVlbmNlLg0KDQogSW4gdGhlIGNh
-c2Ugb2YgJ25vbi1yZW1vdmFibGUnIGl0IG1pZ2h0IGJlIG5pY2UgdG8gYmUgbXVjaCBtb3JlIGNh
-dXRpb3VzDQogYWJvdXQgY2xlYXJpbmcgaG9zdC0+Y2FyZCB3aGVuIGEgcHJvYmUgZmFpbHMuICBP
-bmUgb2YgdGhlIChtYW55KSBwcm9ibGVtcyBJDQogaGF2ZSBvbiBteSBkZXZpY2UgaXMgdGhhdCBv
-Y2Nhc2lvbmFsbHkgdGhlIHByb2JlIG9mIHRoZSBtbWMvc2Rpby93aWZpIGNhcmQNCiBmYWlscyAo
-RUJVU1kgSSB0aGluaywgYnV0IEknbSBub3Qgc3VyZSBhbmQgSSBoYXZlIG5vIGlkZWEgd2h5KS4g
-IE9uY2UgdGhhdA0KIGhhcHBlbnMsIHRoZSB3aWZpIGJlY29tZXMgaW5hY2Nlc3NpYmxlIHVudGls
-IGEgcmVib290LiANCg0KIEFzIG1tY19yZXNjYW4gZW5zdXJlcyB0aGF0IGEgbm9uLXJlbW92YWJs
-ZSBjYXJkIGlzIG9ubHkgc2Nhbm5lZCBvbmNlLCBpdA0KIHdvdWxkIGJlIHJlYWxseSBnb29kIGlm
-IHdlIHdlcmUgZXh0cmEgY2FyZWZ1bCBuZXZlciB0byByZW1vdmUgYQ0KIG5vbi1yZW1vdmFibGUg
-Y2FyZCwgZXZlbiBpbiB0aGUgZmFjZSBvZiBlcnJvci4uLg0KDQoNCj4gDQo+IElmIHdlIGluc3Rl
-YWQgdGFrZSB0aGUgdmlldyB0aGF0IHRoZSBob3N0IGlzIHJlc3BvbnNpYmxlIGZvciBwb3dlcmlu
-Zw0KPiB1cCB0aGUgZGV2aWNlLCB0aGVuIHdlIGFyZSBtZXJlbHkga2VlcGluZyB3aXRoIHRoZSBz
-dGFuZGFyZCBNTUMvU0QNCj4gbW9kZWwsIGFuZCB3ZSBkb24ndCBoYXZlIHRvIGhhY2sgYXJvdW5k
-IGhpcy4NCj4gDQo+IEtlZXBpbmcgdG8gdGhlIHN0YW5kYXJkIG1vZGVsIG9mIGEgaG9zdCByZXNw
-b25zaWJsZSBmb3IgcG93ZXIgY29udHJvbA0KPiBvZiBpdHMgY2hpbGQgZGV2aWNlcyBpcyBqdXN0
-IGEgd2hvbGUgbG90IG5pY2VyLg0KPiANCg0KSSdtIG5vdCByZWFsbHkgYWdhaW5zdCB0aGUgcHJv
-cG9zZWQgcGF0Y2guICBJdCBzaG91bGQgcmVtb3ZlIGF0IGxlYXN0IG9uZSBvZg0KbXkgcHJvYmxl
-bXMsIGFuZCBJIGRvbid0IHRoaW5rIGl0IG1ha2VzIGFueSBvdGhlciBwcm9ibGVtcyBtb3JlIGRp
-ZmZpY3VsdC4NClNvIGlmIHRoZSBhYm92ZSBpZGVhcyBkb24ndCBhcHBlYWwgdG8gYW55b25lIGVs
-c2UsIEknbGwgcmFpc2Ugbm8gZnVydGhlcg0Kb2JqZWN0aW9ucy4NCg0KVGhhbmtzLA0KTmVpbEJy
-b3duDQoNCg0K
+Hi Romain
 
+Am Montag, 19. Januar 2015, 18:08:05 schrieb Romain Perier:
+> This series fixes few issues in dwmac-rk:
+> 
+> 1. Voltage settings was hardcoded into the driver for the phy regulator.
+>    The driver now uses the default voltage settings found in the devicetree,
+> which are applied throught the regulator framework.
+> 2. The regulator name used to power on or power off the phy was put in the
+> devicetree variable "phy_regulator", which is not standard and added a lot
+> of code for nothing. The driver now uses the devicetree property
+> "phy-supply" and the corresponding functions to manipulate this regulator.
+> 
+> The corresponding devicetree files are also updated. As, dwmac-rk was
+> recently pushed in the development tree, I don't care about devicetree
+> backward compatibility issues.
+
+This last sentence is slightly misleading :-) .
+
+The actual fact is, that these new bindings for the rk3288 gmac have not been 
+released with any official kernel release yet ... i.e. the will be released with 
+3.20 in whatever form, so we don't _need_ to care about keeping compatibility 
+still for the next 2.5 weeks or so.
+
+@Dave: it would be good if this series (when fixed) could still go into the 
+3.20 material so we don't get stuck with the non-standard regulator property.
+
+
+As we'll probably need a v2 due to at the issue in patch3, could you also 
+switch places of patch1 and 2, which would keep bisecatbility (i.e. regulator 
+property before removing the voltage setting from the driver).
+
+
+Otherwise this series:
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+Tested-by: Heiko Stuebner <heiko@sntech.de>
