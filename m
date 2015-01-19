@@ -1,39 +1,78 @@
-From: Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
-Subject: [PATCH v3 0/3] dmaengine: APM X-Gene SoC DMA engine driver support
-Date: Mon, 19 Jan 2015 18:11:06 +0530
-Message-ID: <1421671269-19441-1-git-send-email-rsahu@apm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
-Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ddutile-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+From: Rameshwar Prasad Sahu <rsahu@apm.com>
+Subject: [PATCH v3 3/3] Documentation: dma: Add APM X-Gene SoC DMA engine driver documentation
+Date: Mon, 19 Jan 2015 18:11:09 +0530
+Message-ID: <1421671269-19441-4-git-send-email-rsahu@apm.com>
+References: <1421671269-19441-1-git-send-email-rsahu@apm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1421671269-19441-1-git-send-email-rsahu@apm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: vinod.koul@intel.com, dan.j.williams@intel.com
+Cc: dmaengine@vger.kernel.org, arnd@arndb.de, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ddutile@redhat.com, jcm@redhat.com, patches@apm.com, Rameshwar Prasad Sahu <rsahu@apm.com>, Loc Ho <lho@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch set implements the APM X-Gene SoC DMA driver
-support to offload the DMA operations such as memory copy(memcpy),
-scatter gathering.
+This patch adds device tree binding for APM X-Gene SoC DMA engine driver.
 
-Signed-off-by: Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
-Signed-off-by: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+Signed-off-by: Rameshwar Prasad Sahu <rsahu@apm.com>
+Signed-off-by: Loc Ho <lho@apm.com>
 ---
-
-Rameshwar Prasad Sahu (3):
-  dmaengine: Add support for APM X-Gene SoC DMA engine driver
-  arm64: dts: Add APM X-Gene DMA device and DMA clock DTS nodes
-  Documentation: dma: Add APM X-Gene SoC DMA engine driver documentation
-
- .../devicetree/bindings/dma/apm-xgene-dma.txt      |   49 +
- arch/arm64/boot/dts/apm/apm-storm.dtsi             |   28 +
- drivers/dma/Kconfig                                |    8 +
- drivers/dma/Makefile                               |    1 +
- drivers/dma/xgene-dma.c                            | 1566 ++++++++++++++++++++
- 5 files changed, 1652 insertions(+)
+ .../devicetree/bindings/dma/apm-xgene-dma.txt      | 49 ++++++++++++++++++++++
+ 1 file changed, 49 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/dma/apm-xgene-dma.txt
- create mode 100644 drivers/dma/xgene-dma.c
 
+diff --git a/Documentation/devicetree/bindings/dma/apm-xgene-dma.txt b/Documentation/devicetree/bindings/dma/apm-xgene-dma.txt
+new file mode 100644
+index 0000000..c661cc6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/apm-xgene-dma.txt
+@@ -0,0 +1,49 @@
++Applied Micro X-Gene SoC DMA nodes
++
++DMA nodes are defined to describe on-chip DMA interfaces in
++APM X-Gene SoC.
++
++Required properties for DMA interfaces:
++- compatible: Should be "apm,xgene-dma".
++- device_type: set to "dma".
++- reg: Address and length of the register set for the device.
++  It contains the information of registers in the same order
++  as described by reg-names.
++- reg-names: Should contain the register set names.
++  - "dma_csr": DMA control and status register address space.
++  - "ring_csr": Descriptor ring control and status register
++                address space.
++  - "ring_cmd": Descriptor ring command register address space.
++- interrupts: DMA has 5 interrupts sources. 1st interrupt is
++  DMA error reporting interrupt. 2nd, 3rd, 4th and 5th interrupts
++  are completion interrupts for each DMA channels.
++- clocks: Reference to the clock entry.
++
++Optional properties:
++- dma-coherent : Present if dma operations are coherent
++
++Example:
++	dmaclk: dmaclk@1f27c000 {
++		compatible = "apm,xgene-device-clock";
++		#clock-cells = <1>;
++		clocks = <&socplldiv2 0>;
++		reg = <0x0 0x1f27c000 0x0 0x1000>;
++		reg-names = "csr-reg";
++		clock-output-names = "dmaclk";
++	};
++
++	dma: dma@1f270000 {
++		compatible = "apm,xgene-dma";
++		device_type = "dma";
++		reg = <0x0 0x1f270000 0x0 0x10000>,
++		      <0x0 0x1f200000 0x0 0x10000>,
++		      <0x0 0x1b008000 0x0 0x2000>;
++		reg-names = "dma_csr", "ring_csr", "ring_cmd";
++		interrupts = <0x0 0xb8 0x4>,
++			     <0x0 0xb9 0x4>,
++			     <0x0 0xba 0x4>,
++			     <0x0 0xbb 0x4>,
++			     <0x0 0x82 0x4>;
++		dma-coherent;
++		clocks = <&dmaclk 0>;
++	};
 --
 1.8.2.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
