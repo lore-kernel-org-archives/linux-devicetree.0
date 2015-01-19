@@ -1,40 +1,60 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: Re: [PATCH 3/3] MAINTAINERS: add maintainer for pinctrl-at91
-Date: Mon, 19 Jan 2015 19:20:22 +0800
-Message-ID: <44AFE336-C9DB-47EB-9E0E-B4653607009B@jcrosoft.com>
-References: <1421230089-1418-1-git-send-email-ludovic.desroches@atmel.com>
- <1421230089-1418-4-git-send-email-ludovic.desroches@atmel.com>
- <CACRpkdZMY1SUiHzAMQaVZ=W+vwtxrUEgEHwrsQkV8UdPaX8f9g@mail.gmail.com>
- <54BCDC83.5080002@atmel.com>
-Mime-Version: 1.0 (Mac OS X Mail 8.1 \(1993\))
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <54BCDC83.5080002@atmel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Nicolas FERRE <nicolas.ferre@atmel.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Ludovic Desroches <ludovic.desroches@atmel.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 07/36] devicetree: document ingenic,jz4740-intc binding
+Date: Mon, 19 Jan 2015 14:54:10 +0300
+Message-ID: <54BCF062.1010009@cogentembedded.com>
+References: <1421620067-23933-1-git-send-email-paul.burton@imgtec.com> <1421620067-23933-8-git-send-email-paul.burton@imgtec.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1421620067-23933-8-git-send-email-paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Cj4gT24gSmFuIDE5LCAyMDE1LCBhdCA2OjI5IFBNLCBOaWNvbGFzIEZlcnJlIDxuaWNvbGFzLmZl
-cnJlQGF0bWVsLmNvbT4gd3JvdGU6Cj4gCj4gTGUgMTkvMDEvMjAxNSAxMTowMiwgTGludXMgV2Fs
-bGVpaiBhIMOpY3JpdCA6Cj4+IE9uIFdlZCwgSmFuIDE0LCAyMDE1IGF0IDExOjA4IEFNLCBMdWRv
-dmljIERlc3JvY2hlcwo+PiA8bHVkb3ZpYy5kZXNyb2NoZXNAYXRtZWwuY29tPiB3cm90ZToKPj4g
-Cj4+PiBTaWduZWQtb2ZmLWJ5OiBMdWRvdmljIERlc3JvY2hlcyA8bHVkb3ZpYy5kZXNyb2NoZXNA
-YXRtZWwuY29tPgo+PiAKPj4gVGhlIG1vcmUgbWFpbnRhaW5lcnMgdGhlIGJldHRlci4KPj4gTmlj
-b2xhcyAmIEotQzogY2FuIHlvdSBBQ0sgdGhpcz8KPiAKPiBBYnNvbHV0ZWx5Ogo+IEFja2VkLWJ5
-OiBOaWNvbGFzIEZlcnJlIDxuaWNvbGFzLmZlcnJlQGF0bWVsLmNvbT4KCkkgc3RpbGwgbWFpbnRh
-aW4gaXQgZG9lcyBub3Qgc2VlIHRoZSBuZWVkIGZvciAyIG1haW50YWluZXJzIGZvciBhIHNpbXBs
-ZSBkcml2ZXJzCgpOYWNrIGZvciBtZQoKQmVzdCBSZWdhcmRzLApKLgo+IAo+IEJ5ZSwKPiAtLSAK
-PiBOaWNvbGFzIEZlcnJlCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBs
-aXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlz
-dGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+Hello.
+
+On 1/19/2015 1:27 AM, Paul Burton wrote:
+
+> Add binding documentation for the Ingenic jz4740 interrupt controller.
+
+> Signed-off-by: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+> Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> ---
+>   .../interrupt-controller/ingenic,jz4740-intc.txt   | 24 ++++++++++++++++++++++
+>   1 file changed, 24 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ingenic,jz4740-intc.txt
+
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/ingenic,jz4740-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/ingenic,jz4740-intc.txt
+> new file mode 100644
+> index 0000000..3c06ef1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/ingenic,jz4740-intc.txt
+> @@ -0,0 +1,24 @@
+> +Ingenic jz4740 SoC Interrupt Controller
+> +
+> +Required properties:
+> +
+> +- compatible : should be "ingenic,jz4740-intc"
+> +- reg : Specifies base physical address and size of the registers.
+> +- interrupt-controller : Identifies the node as an interrupt controller
+> +- #interrupt-cells : Specifies the number of cells needed to encode an
+> +  interrupt source. The value shall be 1.
+> +- interrupt-parent: phandle of the CPU interrupt controller.
+> +- interrupts - Specifies the CPU interrupt the controller is connected to.
+> +
+> +Example:
+> +
+> +intc: intc@10001000 {
+
+    The node name should be "interrupt-controller@10001000", according to the 
+ePAPR standard.
+
+WBR, Sergei
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
