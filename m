@@ -1,307 +1,279 @@
-From: Nicolas Ferre <nicolas.ferre@atmel.com>
-Subject: Re: [PATCH v3 1/3] pinctrl: at91: allow to have disabled gpio bank
-Date: Mon, 19 Jan 2015 11:40:59 +0100
-Message-ID: <54BCDF3B.4060707@atmel.com>
-References: <1421422267-2934-1-git-send-email-ludovic.desroches@atmel.com> <1421422267-2934-2-git-send-email-ludovic.desroches@atmel.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sun4i: Add Marsboard A10 board
+Date: Mon, 19 Jan 2015 11:41:20 +0100
+Message-ID: <54BCDF50.2070702@redhat.com>
+References: <1421661748-8390-1-git-send-email-mamlinav@gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <1421422267-2934-2-git-send-email-ludovic.desroches@atmel.com>
-Sender: stable-owner@vger.kernel.org
-To: Ludovic Desroches <ludovic.desroches@atmel.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, plagnioj@jcrosoft.com, linus.walleij@linaro.org
-Cc: stable@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBWF66OSQKGQE6JG3M4Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1421661748-8390-1-git-send-email-mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Le 16/01/2015 16:31, Ludovic Desroches a =E9crit :
-> From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
->=20
-> Today we expect that all the bank are enabled, and count the number o=
-f banks
-> used by the pinctrl based on it instead of using the last bank id ena=
-bled.
->=20
-> So switch to it, set the chained IRQ at runtime based on enabled bank=
-s
-> and wait only the number of enabled gpio controllers at probe time.
->=20
-> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.co=
-m>
-> Signed-off-by: Ludovic Desroches <ludovic.desroches@atmel.com>
->=20
-> Cc: <stable@vger.kernel.org> # 3.18
+Hi,
 
-As I acknowledged a comparable solution previously, and after reading,
-this patch seems okay:
+On 19-01-15 11:02, Aleksei Mamlin wrote:
+> This patch add support for Marsboard A10 board.
+>
+> The Marsboard A10 is a A10 based development board with 1G RAM, 1G NAND,
+> micro SD card slot, SATA 2.0 socket, 10/100 ethernet, mini HDMI port,
+> 1 USB OTG port and 2 USB 2.0 ports. Board does not use the AXP209 pmic,
+> it does not have a pmic at all.
+> Board also have 2 expansion 70 pin headers.
+>
+>
+> Signed-off-by: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+Thanks, we've recently moved over from using a full node
+hierarchy to using label references in board dts files, see e.g. :
 
-Thanks, bye.
+https://git.kernel.org/cgit/linux/kernel/git/mripard/linux.git/commit/?h=sunxi/dt-for-3.20&id=327f121fea91fd79d6b71f47a8e1bc62a7fd86e5
+
+Can you please respin this to follow that style (the nodes should
+be sorted alphabetically).
+
+Also like with the u-boot patch, when submitting patches for upstream
+they should not be send to the linux-sunxi list, sunxi dts patches
+should go to Maxime Ripard (added to the Cc) with the linux-arm and
+devicetree lists both in the Cc (also added to the Cc) note you do
+not need to be subscribed to these lists.
+
+This makes me realize that we should probably write a manual on
+how to add a new sunxi board to upstream u-boot / a dts to the
+kernel. Since you've just gone through the process, could you
+perhaps write a manual for this on linux-sunxi.org, it is a wiki
+so you should be able to add an account and create a new page.
+
+Thanks & Regards,
+
+Hans
+
+
 
 
 > ---
->  drivers/pinctrl/pinctrl-at91.c | 108 +++++++++++++++++++++----------=
-----------
->  1 file changed, 55 insertions(+), 53 deletions(-)
->=20
-> diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl=
--at91.c
-> index dfd021e..f4cd0b9 100644
-> --- a/drivers/pinctrl/pinctrl-at91.c
-> +++ b/drivers/pinctrl/pinctrl-at91.c
-> @@ -177,7 +177,7 @@ struct at91_pinctrl {
->  	struct device		*dev;
->  	struct pinctrl_dev	*pctl;
-> =20
-> -	int			nbanks;
-> +	int			nactive_banks;
-> =20
->  	uint32_t		*mux_mask;
->  	int			nmux;
-> @@ -653,12 +653,18 @@ static int pin_check_config(struct at91_pinctrl=
- *info, const char *name,
->  	int mux;
-> =20
->  	/* check if it's a valid config */
-> -	if (pin->bank >=3D info->nbanks) {
-> +	if (pin->bank >=3D gpio_banks) {
->  		dev_err(info->dev, "%s: pin conf %d bank_id %d >=3D nbanks %d\n",
-> -			name, index, pin->bank, info->nbanks);
-> +			name, index, pin->bank, gpio_banks);
->  		return -EINVAL;
->  	}
-> =20
-> +	if (!gpio_chips[pin->bank]) {
-> +		dev_err(info->dev, "%s: pin conf %d bank_id %d not enabled\n",
-> +			name, index, pin->bank);
-> +		return -ENXIO;
-> +	}
+>   arch/arm/boot/dts/Makefile                |   1 +
+>   arch/arm/boot/dts/sun4i-a10-marsboard.dts | 192 ++++++++++++++++++++++++++++++
+>   2 files changed, 193 insertions(+)
+>   create mode 100644 arch/arm/boot/dts/sun4i-a10-marsboard.dts
+>
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 66a4282..20957b5 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -446,6 +446,7 @@ dtb-$(CONFIG_MACH_SUN4I) += \
+>   	sun4i-a10-a1000.dtb \
+>   	sun4i-a10-ba10-tvbox.dtb \
+>   	sun4i-a10-cubieboard.dtb \
+> +	sun4i-a10-marsboard.dtb \
+>   	sun4i-a10-mini-xplus.dtb \
+>   	sun4i-a10-hackberry.dtb \
+>   	sun4i-a10-inet97fv2.dtb \
+> diff --git a/arch/arm/boot/dts/sun4i-a10-marsboard.dts b/arch/arm/boot/dts/sun4i-a10-marsboard.dts
+> new file mode 100644
+> index 0000000..041dd95
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/sun4i-a10-marsboard.dts
+> @@ -0,0 +1,192 @@
+> +/*
+> + * Copyright 2015 Aleksei Mamlin
+> + * Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This file is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This file is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + *     You should have received a copy of the GNU General Public
+> + *     License along with this file; if not, write to the Free
+> + *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+> + *     MA 02110-1301 USA
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
 > +
->  	if (pin->pin >=3D MAX_NB_GPIO_PER_BANK) {
->  		dev_err(info->dev, "%s: pin conf %d pin_bank_id %d >=3D %d\n",
->  			name, index, pin->pin, MAX_NB_GPIO_PER_BANK);
-> @@ -981,7 +987,8 @@ static void at91_pinctrl_child_count(struct at91_=
-pinctrl *info,
-> =20
->  	for_each_child_of_node(np, child) {
->  		if (of_device_is_compatible(child, gpio_compat)) {
-> -			info->nbanks++;
-> +			if (of_device_is_available(child))
-> +				info->nactive_banks++;
->  		} else {
->  			info->nfunctions++;
->  			info->ngroups +=3D of_get_child_count(child);
-> @@ -1003,11 +1010,11 @@ static int at91_pinctrl_mux_mask(struct at91_=
-pinctrl *info,
->  	}
-> =20
->  	size /=3D sizeof(*list);
-> -	if (!size || size % info->nbanks) {
-> -		dev_err(info->dev, "wrong mux mask array should be by %d\n", info-=
->nbanks);
-> +	if (!size || size % gpio_banks) {
-> +		dev_err(info->dev, "wrong mux mask array should be by %d\n", gpio_=
-banks);
->  		return -EINVAL;
->  	}
-> -	info->nmux =3D size / info->nbanks;
-> +	info->nmux =3D size / gpio_banks;
-> =20
->  	info->mux_mask =3D devm_kzalloc(info->dev, sizeof(u32) * size, GFP_=
-KERNEL);
->  	if (!info->mux_mask) {
-> @@ -1131,7 +1138,7 @@ static int at91_pinctrl_probe_dt(struct platfor=
-m_device *pdev,
->  		of_match_device(at91_pinctrl_of_match, &pdev->dev)->data;
->  	at91_pinctrl_child_count(info, np);
-> =20
-> -	if (info->nbanks < 1) {
-> +	if (gpio_banks < 1) {
->  		dev_err(&pdev->dev, "you need to specify at least one gpio-control=
-ler\n");
->  		return -EINVAL;
->  	}
-> @@ -1144,7 +1151,7 @@ static int at91_pinctrl_probe_dt(struct platfor=
-m_device *pdev,
-> =20
->  	dev_dbg(&pdev->dev, "mux-mask\n");
->  	tmp =3D info->mux_mask;
-> -	for (i =3D 0; i < info->nbanks; i++) {
-> +	for (i =3D 0; i < gpio_banks; i++) {
->  		for (j =3D 0; j < info->nmux; j++, tmp++) {
->  			dev_dbg(&pdev->dev, "%d:%d\t0x%x\n", i, j, tmp[0]);
->  		}
-> @@ -1162,7 +1169,7 @@ static int at91_pinctrl_probe_dt(struct platfor=
-m_device *pdev,
->  	if (!info->groups)
->  		return -ENOMEM;
-> =20
-> -	dev_dbg(&pdev->dev, "nbanks =3D %d\n", info->nbanks);
-> +	dev_dbg(&pdev->dev, "nbanks =3D %d\n", gpio_banks);
->  	dev_dbg(&pdev->dev, "nfunctions =3D %d\n", info->nfunctions);
->  	dev_dbg(&pdev->dev, "ngroups =3D %d\n", info->ngroups);
-> =20
-> @@ -1185,7 +1192,7 @@ static int at91_pinctrl_probe(struct platform_d=
-evice *pdev)
->  {
->  	struct at91_pinctrl *info;
->  	struct pinctrl_pin_desc *pdesc;
-> -	int ret, i, j, k;
-> +	int ret, i, j, k, ngpio_chips_enabled =3D 0;
-> =20
->  	info =3D devm_kzalloc(&pdev->dev, sizeof(*info), GFP_KERNEL);
->  	if (!info)
-> @@ -1200,23 +1207,27 @@ static int at91_pinctrl_probe(struct platform=
-_device *pdev)
->  	 * to obtain references to the struct gpio_chip * for them, and we
->  	 * need this to proceed.
->  	 */
-> -	for (i =3D 0; i < info->nbanks; i++) {
-> -		if (!gpio_chips[i]) {
-> -			dev_warn(&pdev->dev, "GPIO chip %d not registered yet\n", i);
-> -			devm_kfree(&pdev->dev, info);
-> -			return -EPROBE_DEFER;
-> -		}
-> +	for (i =3D 0; i < gpio_banks; i++)
-> +		if (gpio_chips[i])
-> +			ngpio_chips_enabled++;
+> +/dts-v1/;
+> +#include "sun4i-a10.dtsi"
+> +#include "sunxi-common-regulators.dtsi"
 > +
-> +	if (ngpio_chips_enabled < info->nactive_banks) {
-> +		dev_warn(&pdev->dev,
-> +			 "All GPIO chips are not registered yet (%d/%d)\n",
-> +			 ngpio_chips_enabled, info->nactive_banks);
-> +		devm_kfree(&pdev->dev, info);
-> +		return -EPROBE_DEFER;
->  	}
-> =20
->  	at91_pinctrl_desc.name =3D dev_name(&pdev->dev);
-> -	at91_pinctrl_desc.npins =3D info->nbanks * MAX_NB_GPIO_PER_BANK;
-> +	at91_pinctrl_desc.npins =3D gpio_banks * MAX_NB_GPIO_PER_BANK;
->  	at91_pinctrl_desc.pins =3D pdesc =3D
->  		devm_kzalloc(&pdev->dev, sizeof(*pdesc) * at91_pinctrl_desc.npins,=
- GFP_KERNEL);
-> =20
->  	if (!at91_pinctrl_desc.pins)
->  		return -ENOMEM;
-> =20
-> -	for (i =3D 0 , k =3D 0; i < info->nbanks; i++) {
-> +	for (i =3D 0, k =3D 0; i < gpio_banks; i++) {
->  		for (j =3D 0; j < MAX_NB_GPIO_PER_BANK; j++, k++) {
->  			pdesc->number =3D k;
->  			pdesc->name =3D kasprintf(GFP_KERNEL, "pio%c%d", i + 'A', j);
-> @@ -1234,8 +1245,9 @@ static int at91_pinctrl_probe(struct platform_d=
-evice *pdev)
->  	}
-> =20
->  	/* We will handle a range of GPIO pins */
-> -	for (i =3D 0; i < info->nbanks; i++)
-> -		pinctrl_add_gpio_range(info->pctl, &gpio_chips[i]->range);
-> +	for (i =3D 0; i < gpio_banks; i++)
-> +		if (gpio_chips[i])
-> +			pinctrl_add_gpio_range(info->pctl, &gpio_chips[i]->range);
-> =20
->  	dev_info(&pdev->dev, "initialized AT91 pinctrl driver\n");
-> =20
-> @@ -1613,9 +1625,10 @@ static void gpio_irq_handler(unsigned irq, str=
-uct irq_desc *desc)
->  static int at91_gpio_of_irq_setup(struct platform_device *pdev,
->  				  struct at91_gpio_chip *at91_gpio)
->  {
-> +	struct gpio_chip	*gpiochip_prev =3D NULL;
->  	struct at91_gpio_chip   *prev =3D NULL;
->  	struct irq_data		*d =3D irq_get_irq_data(at91_gpio->pioc_virq);
-> -	int ret;
-> +	int ret, i;
-> =20
->  	at91_gpio->pioc_hwirq =3D irqd_to_hwirq(d);
-> =20
-> @@ -1641,24 +1654,33 @@ static int at91_gpio_of_irq_setup(struct plat=
-form_device *pdev,
->  		return ret;
->  	}
-> =20
-> -	/* Setup chained handler */
-> -	if (at91_gpio->pioc_idx)
-> -		prev =3D gpio_chips[at91_gpio->pioc_idx - 1];
-> -
->  	/* The top level handler handles one bank of GPIOs, except
->  	 * on some SoC it can handle up to three...
->  	 * We only set up the handler for the first of the list.
->  	 */
-> -	if (prev && prev->next =3D=3D at91_gpio)
-> +	gpiochip_prev =3D irq_get_handler_data(at91_gpio->pioc_virq);
-> +	if (!gpiochip_prev) {
-> +		/* Then register the chain on the parent IRQ */
-> +		gpiochip_set_chained_irqchip(&at91_gpio->chip,
-> +					     &gpio_irqchip,
-> +					     at91_gpio->pioc_virq,
-> +					     gpio_irq_handler);
->  		return 0;
-> +	}
-> =20
-> -	/* Then register the chain on the parent IRQ */
-> -	gpiochip_set_chained_irqchip(&at91_gpio->chip,
-> -				     &gpio_irqchip,
-> -				     at91_gpio->pioc_virq,
-> -				     gpio_irq_handler);
-> +	prev =3D container_of(gpiochip_prev, struct at91_gpio_chip, chip);
-> =20
-> -	return 0;
-> +	/* we can only have 2 banks before */
-> +	for (i =3D 0; i < 2; i++) {
-> +		if (prev->next) {
-> +			prev =3D prev->next;
-> +		} else {
-> +			prev->next =3D at91_gpio;
-> +			return 0;
-> +		}
-> +	}
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/pinctrl/sun4i-a10.h>
 > +
-> +	return -EINVAL;
->  }
-> =20
->  /* This structure is replicated for each GPIO block allocated at pro=
-be time */
-> @@ -1675,24 +1697,6 @@ static struct gpio_chip at91_gpio_template =3D=
- {
->  	.ngpio			=3D MAX_NB_GPIO_PER_BANK,
->  };
-> =20
-> -static void at91_gpio_probe_fixup(void)
-> -{
-> -	unsigned i;
-> -	struct at91_gpio_chip *at91_gpio, *last =3D NULL;
-> -
-> -	for (i =3D 0; i < gpio_banks; i++) {
-> -		at91_gpio =3D gpio_chips[i];
-> -
-> -		/*
-> -		 * GPIO controller are grouped on some SoC:
-> -		 * PIOC, PIOD and PIOE can share the same IRQ line
-> -		 */
-> -		if (last && last->pioc_virq =3D=3D at91_gpio->pioc_virq)
-> -			last->next =3D at91_gpio;
-> -		last =3D at91_gpio;
-> -	}
-> -}
-> -
->  static struct of_device_id at91_gpio_of_match[] =3D {
->  	{ .compatible =3D "atmel,at91sam9x5-gpio", .data =3D &at91sam9x5_op=
-s, },
->  	{ .compatible =3D "atmel,at91rm9200-gpio", .data =3D &at91rm9200_op=
-s },
-> @@ -1805,8 +1809,6 @@ static int at91_gpio_probe(struct platform_devi=
-ce *pdev)
->  	gpio_chips[alias_idx] =3D at91_chip;
->  	gpio_banks =3D max(gpio_banks, alias_idx + 1);
-> =20
-> -	at91_gpio_probe_fixup();
-> -
->  	ret =3D at91_gpio_of_irq_setup(pdev, at91_chip);
->  	if (ret)
->  		goto irq_setup_err;
->=20
-
-
---=20
-Nicolas Ferre
+> +/ {
+> +	model = "HAOYU Electronics Marsboard A10";
+> +	compatible = "haoyu,a10-marsboard", "allwinner,sun4i-a10";
+> +
+> +	soc@01c00000 {
+> +		emac: ethernet@01c0b000 {
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&emac_pins_a>;
+> +			phy = <&phy1>;
+> +			status = "okay";
+> +		};
+> +
+> +		mdio@01c0b080 {
+> +			status = "okay";
+> +
+> +			phy1: ethernet-phy@1 {
+> +				reg = <1>;
+> +			};
+> +		};
+> +
+> +		mmc0: mmc@01c0f000 {
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
+> +			vmmc-supply = <&reg_vcc3v3>;
+> +			bus-width = <4>;
+> +			cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
+> +			cd-inverted;
+> +			status = "okay";
+> +		};
+> +
+> +		usbphy: phy@01c13400 {
+> +			usb1_vbus-supply = <&reg_usb1_vbus>;
+> +			usb2_vbus-supply = <&reg_usb2_vbus>;
+> +			status = "okay";
+> +		};
+> +
+> +		ehci0: usb@01c14000 {
+> +			status = "okay";
+> +		};
+> +
+> +		ohci0: usb@01c14400 {
+> +			status = "okay";
+> +		};
+> +
+> +		ahci: sata@01c18000 {
+> +			status = "okay";
+> +		};
+> +
+> +		ehci1: usb@01c1c000 {
+> +			status = "okay";
+> +		};
+> +
+> +		ohci1: usb@01c1c400 {
+> +			status = "okay";
+> +		};
+> +
+> +		pinctrl@01c20800 {
+> +			led_pins_marsboard: led_pins@0 {
+> +				allwinner,pins = "PB5", "PB6", "PB7", "PB8";
+> +				allwinner,function = "gpio_out";
+> +				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+> +				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+> +			};
+> +		};
+> +
+> +		uart0: serial@01c28000 {
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&uart0_pins_a>;
+> +			status = "okay";
+> +		};
+> +
+> +		i2c0: i2c@01c2ac00 {
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&i2c0_pins_a>;
+> +			status = "okay";
+> +		};
+> +
+> +		i2c1: i2c@01c2b000 {
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&i2c1_pins_a>;
+> +			status = "okay";
+> +		};
+> +
+> +		spi0: spi@01c05000 {
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&spi0_pins_a>;
+> +			status = "okay";
+> +		};
+> +
+> +		spi1: spi@01c06000 {
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&spi1_pins_a>;
+> +			status = "okay";
+> +		};
+> +
+> +		spi2: spi@01c17000 {
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&spi2_pins_a>;
+> +			status = "okay";
+> +		};
+> +	};
+> +
+> +	leds {
+> +		compatible = "gpio-leds";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&led_pins_marsboard>;
+> +
+> +		red1 {
+> +			label = "marsboard:red1:usr";
+> +			gpios = <&pio 1 5 GPIO_ACTIVE_HIGH>; /* LED1 */
+> +			linux,default-trigger = "heartbeat";
+> +		};
+> +
+> +		red2 {
+> +			label = "marsboard:red2:usr";
+> +			gpios = <&pio 1 6 GPIO_ACTIVE_HIGH>; /* LED2 */
+> +		};
+> +
+> +		red3 {
+> +			label = "marsboard:red3:usr";
+> +			gpios = <&pio 1 7 GPIO_ACTIVE_HIGH>; /* LED3 */
+> +		};
+> +
+> +		red4 {
+> +			label = "marsboard:red4:usr";
+> +			gpios = <&pio 1 8 GPIO_ACTIVE_HIGH>; /* LED4 */
+> +		};
+> +	};
+> +
+> +	reg_usb1_vbus: usb1-vbus {
+> +		status = "okay";
+> +	};
+> +
+> +	reg_usb2_vbus: usb2-vbus {
+> +		status = "okay";
+> +	};
+> +};
+>
