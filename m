@@ -1,116 +1,189 @@
-From: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH v5 1/7] mfd: Add support for DA9150 combined charger &
- fuel-gauge device
-Date: Mon, 19 Jan 2015 13:23:15 +0000
-Message-ID: <2E89032DDAA8B9408CB92943514A0337AB52874E@SW-EX-MBX01.diasemi.com>
-References: <cover.1419264383.git.Adam.Thomson.Opensource@diasemi.com>
- <8768cf84babd1bc3e16dadc25bdbb50cebfb44b6.1419264383.git.Adam.Thomson.Opensource@diasemi.com>
- <20150119113332.GP21886@x1>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] soc: tegra: Add Tegra132 SoC to the DT list of Tegra SoCs
+Date: Mon, 19 Jan 2015 14:24:55 +0100
+Message-ID: <20150119132453.GG7312@ulmo.nvidia.com>
+References: <alpine.DEB.2.02.1501161137351.9776@utopia.booyaka.com>
+ <20150116150749.GA32155@leverpostej>
+ <20150116170926.GA17763@ulmo.nvidia.com>
+ <20150116173005.GH32155@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150119113332.GP21886@x1>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Opensource [Adam Thomson]" <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="eMnpOGXCMazMAbfp"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150116173005.GH32155@leverpostej>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gSmFudWFyeSAxOSwgMjAxNSAxMTozNCwgTGVlIEpvbmVzIHdyb3RlOg0KDQo+IE9uIE1vbiwg
-MjIgRGVjIDIwMTQsIEFkYW0gVGhvbXNvbiB3cm90ZToNCj4gDQo+ID4gREE5MTUwIGlzIGEgY29t
-YmluZWQgQ2hhcmdlciBhbmQgRnVlbC1HYXVnZSBJQywgd2l0aCBhZGRpdGlvbmFsDQo+ID4gR1BJ
-TyBhbmQgR1BBREMgZnVuY3Rpb25hbGl0eS4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEFkYW0g
-VGhvbXNvbiA8QWRhbS5UaG9tc29uLk9wZW5zb3VyY2VAZGlhc2VtaS5jb20+DQo+ID4gLS0tDQo+
-ID4gIGRyaXZlcnMvbWZkL0tjb25maWcgICAgICAgICAgICAgICAgICB8ICAgMTIgKw0KPiA+ICBk
-cml2ZXJzL21mZC9NYWtlZmlsZSAgICAgICAgICAgICAgICAgfCAgICAyICstDQo+ID4gIGRyaXZl
-cnMvbWZkL2RhOTE1MC1jb3JlLmMgICAgICAgICAgICB8ICA0MTMgKysrKysrKysrKysrDQo+ID4g
-IGluY2x1ZGUvbGludXgvbWZkL2RhOTE1MC9jb3JlLmggICAgICB8ICAgNjggKysNCj4gPiAgaW5j
-bHVkZS9saW51eC9tZmQvZGE5MTUwL3JlZ2lzdGVycy5oIHwgMTE1NQ0KPiArKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrDQo+ID4gIDUgZmlsZXMgY2hhbmdlZCwgMTY0OSBpbnNlcnRp
-b25zKCspLCAxIGRlbGV0aW9uKC0pDQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL21m
-ZC9kYTkxNTAtY29yZS5jDQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBpbmNsdWRlL2xpbnV4L21m
-ZC9kYTkxNTAvY29yZS5oDQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBpbmNsdWRlL2xpbnV4L21m
-ZC9kYTkxNTAvcmVnaXN0ZXJzLmgNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL21mZC9L
-Y29uZmlnIGIvZHJpdmVycy9tZmQvS2NvbmZpZw0KPiA+IGluZGV4IDJlNmI3MzEuLjU2ZTgwZDIg
-MTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9tZmQvS2NvbmZpZw0KPiA+ICsrKyBiL2RyaXZlcnMv
-bWZkL0tjb25maWcNCj4gPiBAQCAtMTk1LDYgKzE5NSwxOCBAQCBjb25maWcgTUZEX0RBOTA2Mw0K
-PiA+ICAJICBBZGRpdGlvbmFsIGRyaXZlcnMgbXVzdCBiZSBlbmFibGVkIGluIG9yZGVyIHRvIHVz
-ZSB0aGUgZnVuY3Rpb25hbGl0eQ0KPiA+ICAJICBvZiB0aGUgZGV2aWNlLg0KPiA+DQo+ID4gK2Nv
-bmZpZyBNRkRfREE5MTUwDQo+ID4gKwl0cmlzdGF0ZSAiRGlhbG9nIFNlbWljb25kdWN0b3IgREE5
-MTUwIENoYXJnZXIgRnVlbC1HYXVnZSBjaGlwIg0KPiA+ICsJZGVwZW5kcyBvbiBJMkM9eQ0KPiA+
-ICsJc2VsZWN0IE1GRF9DT1JFDQo+ID4gKwlzZWxlY3QgUkVHTUFQX0kyQw0KPiA+ICsJc2VsZWN0
-IFJFR01BUF9JUlENCj4gPiArCWhlbHANCj4gPiArCSAgVGhpcyBhZGRzIHN1cHBvcnQgZm9yIHRo
-ZSBEQTkxNTAgaW50ZWdyYXRlZCBjaGFyZ2VyIGFuZCBmdWVsLWdhdWdlDQo+ID4gKwkgIGNoaXAu
-IFRoaXMgZHJpdmVyIHByb3ZpZGVzIGNvbW1vbiBzdXBwb3J0IGZvciBhY2Nlc3NpbmcgdGhlIGRl
-dmljZS4NCj4gPiArCSAgQWRkaXRpb25hbCBkcml2ZXJzIG11c3QgYmUgZW5hYmxlZCBpbiBvcmRl
-ciB0byB1c2UgdGhlIHNwZWNpZmljDQo+ID4gKwkgIGZlYXR1cmVzIG9mIHRoZSBkZXZpY2UuDQo+
-ID4gKw0KPiA+ICBjb25maWcgTUZEX0RMTjINCj4gPiAgCXRyaXN0YXRlICJEaW9sYW4gRExOMiBz
-dXBwb3J0Ig0KPiA+ICAJc2VsZWN0IE1GRF9DT1JFDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
-bWZkL01ha2VmaWxlIGIvZHJpdmVycy9tZmQvTWFrZWZpbGUNCj4gPiBpbmRleCA1MzQ2N2UyLi5m
-MDZmNGM2IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvbWZkL01ha2VmaWxlDQo+ID4gKysrIGIv
-ZHJpdmVycy9tZmQvTWFrZWZpbGUNCj4gPiBAQCAtMTEzLDcgKzExMyw3IEBAIG9iai0kKENPTkZJ
-R19NRkRfREE5MDU1KQkrPSBkYTkwNTUubw0KPiA+DQo+ID4gIGRhOTA2My1vYmpzCQkJOj0gZGE5
-MDYzLWNvcmUubyBkYTkwNjMtaXJxLm8gZGE5MDYzLWkyYy5vDQo+ID4gIG9iai0kKENPTkZJR19N
-RkRfREE5MDYzKQkrPSBkYTkwNjMubw0KPiA+IC0NCj4gPiArb2JqLSQoQ09ORklHX01GRF9EQTkx
-NTApCSs9IGRhOTE1MC1jb3JlLm8NCj4gPiAgb2JqLSQoQ09ORklHX01GRF9NQVgxNDU3NykJKz0g
-bWF4MTQ1Nzcubw0KPiA+ICBvYmotJChDT05GSUdfTUZEX01BWDc3Njg2KQkrPSBtYXg3NzY4Ni5v
-DQo+ID4gIG9iai0kKENPTkZJR19NRkRfTUFYNzc2OTMpCSs9IG1heDc3NjkzLm8NCj4gPiBkaWZm
-IC0tZ2l0IGEvZHJpdmVycy9tZmQvZGE5MTUwLWNvcmUuYyBiL2RyaXZlcnMvbWZkL2RhOTE1MC1j
-b3JlLmMNCj4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiA+IGluZGV4IDAwMDAwMDAuLjRkNzU3
-YjkNCj4gPiAtLS0gL2Rldi9udWxsDQo+ID4gKysrIGIvZHJpdmVycy9tZmQvZGE5MTUwLWNvcmUu
-Yw0KPiA+IEBAIC0wLDAgKzEsNDEzIEBADQo+ID4gKy8qDQo+ID4gKyAqIERBOTE1MCBDb3JlIE1G
-RCBEcml2ZXINCj4gPiArICoNCj4gPiArICogQ29weXJpZ2h0IChjKSAyMDE0IERpYWxvZyBTZW1p
-Y29uZHVjdG9yDQo+ID4gKyAqDQo+ID4gKyAqIEF1dGhvcjogQWRhbSBUaG9tc29uIDxBZGFtLlRo
-b21zb24uT3BlbnNvdXJjZUBkaWFzZW1pLmNvbT4NCj4gPiArICoNCj4gPiArICogVGhpcyBwcm9n
-cmFtIGlzIGZyZWUgc29mdHdhcmU7IHlvdSBjYW4gcmVkaXN0cmlidXRlICBpdCBhbmQvb3IgbW9k
-aWZ5IGl0DQo+ID4gKyAqIHVuZGVyICB0aGUgdGVybXMgb2YgIHRoZSBHTlUgR2VuZXJhbCAgUHVi
-bGljIExpY2Vuc2UgYXMgcHVibGlzaGVkIGJ5IHRoZQ0KPiA+ICsgKiBGcmVlIFNvZnR3YXJlIEZv
-dW5kYXRpb247ICBlaXRoZXIgdmVyc2lvbiAyIG9mIHRoZSAgTGljZW5zZSwgb3IgKGF0IHlvdXIN
-Cj4gPiArICogb3B0aW9uKSBhbnkgbGF0ZXIgdmVyc2lvbi4NCj4gPiArICovDQo+IA0KPiBbLi4u
-XQ0KPiANCj4gPiArdTggZGE5MTUwX3JlZ19yZWFkKHN0cnVjdCBkYTkxNTAgKmRhOTE1MCwgdTE2
-IHJlZykNCj4gPiArew0KPiA+ICsJaW50IHZhbCwgcmV0Ow0KPiA+ICsNCj4gPiArCXJldCA9IHJl
-Z21hcF9yZWFkKGRhOTE1MC0+cmVnbWFwLCByZWcsICZ2YWwpOw0KPiA+ICsJaWYgKHJldCkNCj4g
-PiArCQlkZXZfZXJyKGRhOTE1MC0+ZGV2LCAiRmFpbGVkIHRvIHJlYWQgZnJvbSByZWcgMHgleDog
-JWRcbiIsDQo+ID4gKwkJCXJlZywgcmV0KTsNCj4gPiArDQo+ID4gKwlyZXR1cm4gKHU4KSB2YWw7
-DQo+ID4gK30NCj4gPiArRVhQT1JUX1NZTUJPTF9HUEwoZGE5MTUwX3JlZ19yZWFkKTsNCj4gPiAr
-DQo+ID4gK3ZvaWQgZGE5MTUwX3JlZ193cml0ZShzdHJ1Y3QgZGE5MTUwICpkYTkxNTAsIHUxNiBy
-ZWcsIHU4IHZhbCkNCj4gPiArew0KPiA+ICsJaW50IHJldDsNCj4gPiArDQo+ID4gKwlyZXQgPSBy
-ZWdtYXBfd3JpdGUoZGE5MTUwLT5yZWdtYXAsIHJlZywgdmFsKTsNCj4gPiArCWlmIChyZXQpDQo+
-ID4gKwkJZGV2X2VycihkYTkxNTAtPmRldiwgIkZhaWxlZCB0byB3cml0ZSB0byByZWcgMHgleDog
-JWRcbiIsDQo+ID4gKwkJCXJlZywgcmV0KTsNCj4gPiArfQ0KPiA+ICtFWFBPUlRfU1lNQk9MX0dQ
-TChkYTkxNTBfcmVnX3dyaXRlKTsNCj4gPiArDQo+ID4gK3ZvaWQgZGE5MTUwX3NldF9iaXRzKHN0
-cnVjdCBkYTkxNTAgKmRhOTE1MCwgdTE2IHJlZywgdTggbWFzaywgdTggdmFsKQ0KPiA+ICt7DQo+
-ID4gKwlpbnQgcmV0Ow0KPiA+ICsNCj4gPiArCXJldCA9IHJlZ21hcF91cGRhdGVfYml0cyhkYTkx
-NTAtPnJlZ21hcCwgcmVnLCBtYXNrLCB2YWwpOw0KPiA+ICsJaWYgKHJldCkNCj4gPiArCQlkZXZf
-ZXJyKGRhOTE1MC0+ZGV2LCAiRmFpbGVkIHRvIHNldCBiaXRzIGluIHJlZyAweCV4OiAlZFxuIiwN
-Cj4gPiArCQkJcmVnLCByZXQpOw0KPiA+ICt9DQo+ID4gK0VYUE9SVF9TWU1CT0xfR1BMKGRhOTE1
-MF9zZXRfYml0cyk7DQo+ID4gKw0KPiA+ICt2b2lkIGRhOTE1MF9idWxrX3JlYWQoc3RydWN0IGRh
-OTE1MCAqZGE5MTUwLCB1MTYgcmVnLCBpbnQgY291bnQsIHU4ICpidWYpDQo+ID4gK3sNCj4gPiAr
-CWludCByZXQ7DQo+ID4gKw0KPiA+ICsJcmV0ID0gcmVnbWFwX2J1bGtfcmVhZChkYTkxNTAtPnJl
-Z21hcCwgcmVnLCBidWYsIGNvdW50KTsNCj4gPiArCWlmIChyZXQpDQo+ID4gKwkJZGV2X2Vycihk
-YTkxNTAtPmRldiwgIkZhaWxlZCB0byBidWxrIHJlYWQgZnJvbSByZWcgMHgleDogJWRcbiIsDQo+
-ID4gKwkJCXJlZywgcmV0KTsNCj4gPiArfQ0KPiA+ICtFWFBPUlRfU1lNQk9MX0dQTChkYTkxNTBf
-YnVsa19yZWFkKTsNCj4gPiArDQo+ID4gK3ZvaWQgZGE5MTUwX2J1bGtfd3JpdGUoc3RydWN0IGRh
-OTE1MCAqZGE5MTUwLCB1MTYgcmVnLCBpbnQgY291bnQsIGNvbnN0IHU4DQo+ICpidWYpDQo+ID4g
-K3sNCj4gPiArCWludCByZXQ7DQo+ID4gKw0KPiA+ICsJcmV0ID0gcmVnbWFwX3Jhd193cml0ZShk
-YTkxNTAtPnJlZ21hcCwgcmVnLCBidWYsIGNvdW50KTsNCj4gPiArCWlmIChyZXQpDQo+ID4gKwkJ
-ZGV2X2VycihkYTkxNTAtPmRldiwgIkZhaWxlZCB0byBidWxrIHdyaXRlIHRvIHJlZyAweCV4ICVk
-XG4iLA0KPiA+ICsJCQlyZWcsIHJldCk7DQo+ID4gK30NCj4gPiArRVhQT1JUX1NZTUJPTF9HUEwo
-ZGE5MTUwX2J1bGtfd3JpdGUpOw0KPiANCj4gSSd2ZSBuZXZlciBiZWVuIGEgZmFuIG9mIHRoaXMg
-dHlwZSBvZiBhZ2dyZWdhdGlvbi4gIENhbiB5b3UgZXhwbGFpbiB0bw0KPiBtZSB3aGF0IHRoZSBw
-b2ludCBvZiB0aGVtIGlzPw0KDQpJIHJlZmVyIHlvdSBiYWNrIHRvIG91ciBwcmV2aW91cyBkaXNj
-dXNzaW9uIHNvbWUgdGltZSBiYWNrOg0KDQpodHRwczovL2xrbWwub3JnL2xrbWwvMjAxNC85Lzkv
-Mjg0DQoNCidUaGUgcmVhc29uIGZvciB0aGVzZSBpcyBiZWNhdXNlIGZ1dHVyZSBwYXRjaGVzIHRv
-IGFkZCBhZGRpdGlvbmFsIGZ1bmN0aW9uYWxpdHkNCndpbGwgaW50cm9kdWNlIEkyQyBhY2Nlc3Mg
-ZnVuY3Rpb25zIHdoaWNoIGRvIG5vdCB1c2UgcmVnbWFwIGFuZCBhY2Nlc3MgdGhlDQpkZXZpY2Ug
-dmlhIGEgc2VwYXJhdGUgSTJDIGFkZHJlc3MgZm9yIHRoaXMgcHVycG9zZS4gSSB3aWxsIG5lZWQg
-dG8gcHJvdmlkZQ0KYWNjZXNzIGZ1bmN0aW9ucyBmb3IgdGhhdCwgYW5kIHNvIGhhdmluZyBhIGNv
-bW1vbiBzdHlsZSBvZiBJMkMgYWNjZXNzIG1ha2VzDQpzZW5zZSBmb3IgdGhpcyBkcml2ZXIuIE1l
-YW5zIGFueSBhY2Nlc3MganVzdCBuZWVkcyB0byBwcm92aWRlIHRoZSBNRkQgcHJpdmF0ZQ0KZGF0
-YSwgYW5kIHRoZSByZWxldmFudCBmdW5jdGlvbnMgdGFrZSBjYXJlIG9mIHRoZSByZXN0LiBJIHRo
-aW5rIHRoaXMgaXMgY2xlYW5lcg0KaW4gdGhpcyBpbnN0YW5jZS4nDQo=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+--eMnpOGXCMazMAbfp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Jan 16, 2015 at 05:30:05PM +0000, Mark Rutland wrote:
+> On Fri, Jan 16, 2015 at 05:09:28PM +0000, Thierry Reding wrote:
+> > On Fri, Jan 16, 2015 at 03:07:49PM +0000, Mark Rutland wrote:
+> > > Hi Paul,
+> > >=20
+> > > /me opens a delicious can of Lumbricus terrestris
+> > >=20
+> > > My comments below aren't so much about this patch alone, but more abo=
+ut
+> > > the entire strategy with drivers/soc and the kind of code living ther=
+e.
+> > >=20
+> > > On Fri, Jan 16, 2015 at 11:39:13AM +0000, Paul Walmsley wrote:
+> > > >=20
+> > > > Add "nvidia,tegra132" as a compatible string that denotes a Tegra S=
+oC.
+> > > >=20
+> > > > Signed-off-by: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
+> > > > Cc: Paul Walmsley <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> > > > Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+> > > > Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > > > Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > > > ---
+> > > >  drivers/soc/tegra/common.c | 1 +
+> > > >  1 file changed, 1 insertion(+)
+> > > >=20
+> > > > diff --git a/drivers/soc/tegra/common.c b/drivers/soc/tegra/common.c
+> > > > index a71cb74..a952986 100644
+> > > > --- a/drivers/soc/tegra/common.c
+> > > > +++ b/drivers/soc/tegra/common.c
+> > > > @@ -15,6 +15,7 @@ static const struct of_device_id tegra_machine_ma=
+tch[] =3D {
+> > > >  	{ .compatible =3D "nvidia,tegra30", },
+> > > >  	{ .compatible =3D "nvidia,tegra114", },
+> > > >  	{ .compatible =3D "nvidia,tegra124", },
+> > > > +	{ .compatible =3D "nvidia,tegra132", },
+> > > >  	{ }
+> > > >  };
+> > >=20
+> > > I'm rather worried by this.
+> > >=20
+> > > The only user of this table is soc_is_tegra(), which seems to guard
+> > > several probe paths in drivers which are DT driven. Given that, I don=
+'t
+> > > see why this is necessary at all, because the presence of the
+> > > appropriate nodes should be sufficient to handle the early return from
+> > > an initcall.
+> >=20
+> > We need this to preserve backward-compatibility. There are some
+> > instances where any device tree nodes that could be used to guard the
+> > code execution were only added after the fact. So in order to keep
+> > systems with an old DTB running we need to continue running with hard
+> > coded physical addresses.
+>=20
+> Except that you don't need them for arm64 systems, becuase we don't yet
+> have that legacy for arm64...
+>=20
+> > > More worryingly, if soc_is_tegra() returns true but the node isn't
+> > > found, the drivers decide to do things. If tegra_pmc_early_init passes
+> > > soc_is_tegra() (because we happened to match "nvidia,tegra132"), but
+> > > doesn't find a DTB entry for the pmc, it then pokes an assumed
+> > > hard-coded physical address.
+> >=20
+> > And that's (currently) safe. It at least makes sure that breakage (if
+> > any) is restricted to Tegra boards. There are other occurrences where
+> > drivers don't even bother checking for this at all and simply use an
+> > initcall to unconditionally create a platform device which then goes
+> > and tries to access physical addresses on *every* board in a multi-
+> > platform kernel.
+>=20
+> So doing the wrong thing on a subset of boards is fine because it's not
+> all boards?
+
+It's not doing anything wrong. If the string is added to the above table
+then the assumption is that it supports the (very few) cases where we've
+needed physical addresses. For anything sufficiently recent we already
+have all the nodes in the DTB, so there's no issue.
+
+> Imagine I make a typo in a DT for a 64-bit system, and suddnely hit
+> youre legacy code. Things happen to work, because I don't botehr reading
+> the splat in dmesg for whatever reason.
+
+That's a bit of a stretch. You'd have to typo the top-level compatible
+string of some future board that happens not to have this IP anymore.
+Catching those types of mistakes is what we have the review process for.
+
+If you're concerned about the splat, we could probably turn it into a
+WARN() to make it abundantly clear that you've done something wrong.
+
+> Later we do some cleanup of the existing legacy, for whatever reason,
+> and we get rid of this particular path for arm64.
+>=20
+> Suddenly my board won't boot, and to fix that we have to reintroduce
+> legacy support code only because said legacy support was enabled where
+> it should never have been in the first place. Another OS trying to
+> target/use these DTBs has barely any chance of success.
+
+We've had cases in the past where it was argued that clearly broken DTBs
+didn't have to be considered for ABI stability. I'd argue that whatever
+kind of typo you're referring to falls into this obviously wrong
+category.
+
+> > > Assuming things because of the _lack_ of a node has been a major pain
+> > > point on 32-bit as DTBs advanced and code was changed, resulting in b=
+oot
+> > > breaking or DTB compatibility breaking over time as old and new kerne=
+ls
+> > > made conflicting assumptions.
+> >=20
+> > So what are you saying? We can't support 64-bit ARM because we need to
+> > keep backwards-compatibility with old DTBs and weren't smart enough to
+> > see this through all the way three years ago?
+>=20
+> No. I'm saying that the workarounds we have in place for legacy DTBs
+> should be constrained to those cases where legacy DTBs actually exist.
+> There is no reason for that legacy to carry across to 64-bit.
+
+That's fair. Note, though, that we're bound to make mistakes on 64-bit
+too, so it's wishful thinking that we'll live without legacy on 64-bit
+forever. But that's of course not to say we should start out with
+supporting legacy from the beginning.
+
+> > > I don't want to see arm64 kernels making assumptions in that manner (=
+nor
+> > > would I like to see it in new code for 32-bit ARM); it always leads to
+> > > boot breakage, and it's completely avoidable. The only thing we can k=
+now
+> > > is what is described in the DTB.
+> >=20
+> > I guess we could always make this conditional on 32-bit ARM. Or we could
+> > decide that we don't care about DTB backwards-compatibility anymore. In
+> > fact we're quite likely going to break it soon anyway because of Marc's
+> > gic_arch_extn rework, so might as well start with a clean plate after
+> > that...
+>=20
+> At the very least I think the soc_is_tegra stuff needs to be constrained
+> to fallback paths that can only possibly run on 32-bit.
+
+I think that's something we can do.
+
+Thierry
+
+--eMnpOGXCMazMAbfp
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJUvQWlAAoJEN0jrNd/PrOhccYP/iAqJvAl7BCPs02uDihLe8lW
+MU0c18x1T1UaBOgcw2guoie0t7OV/ITUfobuMy51hL20FnqoMwG/FZk4Kxx0ndOz
+Fc6d8PS2DQ9yjOjJHk8fCDWsdIvVymo81gqQY48dvtUPTlYVkaJbPcn6uS3fqu7M
+kVOyfIA3rPX6co14JFxnyTF3sTMtrJzSEK+OjOCw6Blv1lTkZcaR3EpQiAJTW4CQ
+NLNn7MRzxUAf+Xs2JhTCU8ZuOGrtSkvfqqfcWpKgJCWkrW5YLnhucf6cEuLeWcvJ
+O2N+g2QNQR3OgtMVAUisxF70nnr1OLt1C4MEbptv4+pOgwO1mq4JRVYUPpk5yPD5
++6LU6+hR40NVY8Zh7PUCb/kuJkq1ZIZH0fDNe4BzmTQ3RIzBGNeLO1Tp1R3wkFj1
+lxIvoZz+RRZBXsZjQNkLfc5xffA0yqC4sdrq9vmzof22R00OU8WH6yr4vT0A0rtp
+fcoHO5/FlM69FIHas8NXIe4LZ8lhWa8EfdFXiF6g1EDy9Sgz8U3DMDbFd5o5cIXl
+K1vOSeF/eNtl1Vq8oPcHk/Ox6WZNVplc5IgKAxlJeiteAKLN+gZ/NEObrIlJIoC9
+rAAaHS9Tn0BgBHhD+m7CAlz158fnczmZgx32KtsqJ8uYuFdO7LrK/pi4Gr4zf+Qc
+lItUPdfYW8sadt1/npdl
+=eTNL
+-----END PGP SIGNATURE-----
+
+--eMnpOGXCMazMAbfp--
