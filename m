@@ -1,462 +1,62 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] mmc: OCTEON: Add host driver for OCTEON MMC controller
-Date: Mon, 19 Jan 2015 14:28:06 +0000
-Message-ID: <20150119142805.GE21553@leverpostej>
-References: <1421675198-30213-1-git-send-email-aleksey.makarov@auriga.com>
+From: "Opensource [Steve Twiss]" <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH V1] mfd: da9063: Add device tree support
+Date: Mon, 19 Jan 2015 14:22:59 +0000
+Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7D0B52C08@SW-EX-MBX02.diasemi.com>
+References: <201501141438.t0EEcMBg010491@swsrvapps-01.diasemi.com>
+ <20150119095423.GM21886@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1421675198-30213-1-git-send-email-aleksey.makarov@auriga.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Aleksey Makarov <aleksey.makarov@auriga.com>
-Cc: "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-mips@linux-mips.org" <linux-mips@linux-mips.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Daney <david.daney@cavium.com>, Leonid Rosenboim <lrosenboim@caviumnetworks.com>, Aaron Williams <aaron.williams@cavium.com>, Chandrakala Chavva <cchavva@caviumnetworks.com>, Peter Swain <pswain@cavium.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150119095423.GM21886@x1>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Dajun Chen <david.chen-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Mon, Jan 19, 2015 at 01:46:36PM +0000, Aleksey Makarov wrote:
-> The OCTEON MMC controller is currently found on cn61XX and cnf71XX
-> devices.  Device parameters are configured from device tree data.
-> 
-> Currenly supported are eMMC, MMC and SD devices.
-
-Does that mean there are other devices that this could support in
-future, or that this supports everything it possibly can already?
-
-[...]
-
-> diff --git a/Documentation/devicetree/bindings/mmc/octeon-mmc.txt b/Documentation/devicetree/bindings/mmc/octeon-mmc.txt
-> new file mode 100644
-> index 0000000..ce373cf
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mmc/octeon-mmc.txt
-> @@ -0,0 +1,51 @@
-> +* OCTEON SD/MMC Host Controller
-> +
-> +This controller is present on some members of the Cavium OCTEON SoC
-> +family, provide an interface for eMMC, MMC and SD devices.  There is a
-> +single controller that may have several "slots" connected.  These
-> +slots appear as children of the main controller node.
-> +
-> +Required properties:
-> +- compatible : Should be "cavium,octeon-6130-mmc" or "cavium,octeon-7890-mmc"
-> +- reg : Two entries:
-> +       1) The base address of the MMC controller register bank.
-> +       2) The base address of the MMC DMA engine register bank.
-> +- interrupts : Two entries:
-> +       1) The MMC controller interrupt line.
-> +       2) The MMC DMA engine interrupt line.
-
-Is the DMA engine part of the MMC controller block, or is it a
-separate/generic component that happens to be used in combination with
-the MMC controller?
-
-> +- #address-cells : Must be <1>
-> +- #size-cells : Must be <0>
-> +
-> +Required properties of child nodes:
-> +- compatible : Should be "cavium,octeon-6130-mmc-slot".
-> +- reg : The slot number.
-> +- cavium,bus-max-width : The number of data lines present in the slot.
-> +- spi-max-frequency : The maximum operating frequency of the slot.
-> +
-> +Optional properties of child nodes:
-> +- cd-gpios : Specify GPIOs for card detection
-> +- wp-gpios : Specify GPIOs for write protection
-> +- power-gpios : Specify GPIOs for power control
-
-No clocks in the DT?
-
-> +
-> +Example:
-> +       mmc@1180000002000 {
-> +               compatible = "cavium,octeon-6130-mmc";
-> +               reg = <0x11800 0x00002000 0x0 0x100>,
-> +                     <0x11800 0x00000168 0x0 0x20>;
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +               /* EMM irq, DMA irq */
-> +               interrupts = <1 19>, <0 63>;
-> +
-> +               /* The board only has a single MMC slot */
-> +               mmc-slot@0 {
-> +                       compatible = "cavium,octeon-6130-mmc-slot";
-> +                       reg = <0>;
-> +                       spi-max-frequency = <20000000>;
-> +                       /* bus width can be 1, 4 or 8 */
-> +                       cavium,bus-max-width = <8>;
-> +                       cd-gpios = <&gpio 9 0>;
-> +                       wp-gpios = <&gpio 10 0>;
-> +                       power-gpios = <&gpio 8 0>;
-> +               };
-> +       };
-
-[...]
-
-> +static inline void *phys_to_ptr(u64 address)
-> +{
-> +       return (void *)(address | (1ull<<63)); /* XKPHYS */
-> +}
-> +
-> +/**
-> + * Lock a single line into L2. The line is zeroed before locking
-> + * to make sure no dram accesses are made.
-> + *
-> + * @addr   Physical address to lock
-> + */
-> +static void l2c_lock_line(u64 addr)
-> +{
-> +       char *addr_ptr = phys_to_ptr(addr);
-> +
-> +       asm volatile (
-> +               "cache 31, %[line]"     /* Unlock the line */
-> +               :: [line] "m" (*addr_ptr));
-> +}
-> +
-> +/**
-> + * Locks a memory region in the L2 cache
-> + *
-> + * @start - start address to begin locking
-> + * @len - length in bytes to lock
-> + */
-> +static void l2c_lock_mem_region(u64 start, u64 len)
-> +{
-> +       u64 end;
-> +
-> +       /* Round start/end to cache line boundaries */
-> +       end = ALIGN(start + len - 1, CVMX_CACHE_LINE_SIZE);
-> +       start = ALIGN(start, CVMX_CACHE_LINE_SIZE);
-> +
-> +       while (start <= end) {
-> +               l2c_lock_line(start);
-> +               start += CVMX_CACHE_LINE_SIZE;
-> +       }
-> +       asm volatile("sync");
-> +}
-> +
-> +/**
-> + * Unlock a single line in the L2 cache.
-> + *
-> + * @addr       Physical address to unlock
-> + *
-> + * Return Zero on success
-> + */
-> +static void l2c_unlock_line(u64 addr)
-> +{
-> +       char *addr_ptr = phys_to_ptr(addr);
-> +       asm volatile (
-> +               "cache 23, %[line]"     /* Unlock the line */
-> +               :: [line] "m" (*addr_ptr));
-> +}
-> +
-> +/**
-> + * Unlock a memory region in the L2 cache
-> + *
-> + * @start - start address to unlock
-> + * @len - length to unlock in bytes
-> + */
-> +static void l2c_unlock_mem_region(u64 start, u64 len)
-> +{
-> +       u64 end;
-> +
-> +       /* Round start/end to cache line boundaries */
-> +       end = ALIGN(start + len - 1, CVMX_CACHE_LINE_SIZE);
-> +       start = ALIGN(start, CVMX_CACHE_LINE_SIZE);
-> +
-> +       while (start <= end) {
-> +               l2c_unlock_line(start);
-> +               start += CVMX_CACHE_LINE_SIZE;
-> +       }
-> +}
-
-Why do you need to mess with the cache in this way within an MMC driver?
-To me it seems somewhat surprising that you need to do that, and again
-surprising that you have custom functions within the MMC driver.
-
-[...]
-
-> +static int octeon_mmc_probe(struct platform_device *pdev)
-> +{
-> +       union cvmx_mio_emm_cfg emm_cfg;
-> +       struct octeon_mmc_host *host;
-> +       struct resource *res;
-> +       void __iomem *base;
-> +       int mmc_irq[9];
-> +       int i;
-> +       int ret = 0;
-> +       struct device_node *node = pdev->dev.of_node;
-> +       int found = 0;
-> +       bool cn78xx_style;
-> +       u64 t;
-> +       enum of_gpio_flags f;
-> +
-> +       host = devm_kzalloc(&pdev->dev, sizeof(*host), GFP_KERNEL);
-> +       if (!host)
-> +               return -ENOMEM;
-> +
-> +       spin_lock_init(&host->irq_handler_lock);
-> +       sema_init(&host->mmc_serializer, 1);
-> +
-> +       cn78xx_style = of_device_is_compatible(node, "cavium,octeon-7890-mmc");
-> +       if (cn78xx_style) {
-> +               host->need_bootbus_lock = false;
-> +               host->big_dma_addr = true;
-> +               host->need_irq_handler_lock = true;
-> +               /*
-> +                * First seven are the EMM_INT bits 0..6, then two for
-> +                * the EMM_DMA_INT bits
-> +                */
-> +               for (i = 0; i < 9; i++) {
-> +                       mmc_irq[i] = platform_get_irq(pdev, i);
-> +                       if (mmc_irq[i] < 0)
-> +                               return mmc_irq[i];
-
-The documentation describes two interrupts, yet here you try to acquire
-nine. Please document which interrupts you expect (i.e. in what order
-and what the logical function of each is), and when you expect them.
-
-If some interrupts might not always be present, use interrupt-names.
-
-> +               }
-> +       } else {
-> +               host->need_bootbus_lock = true;
-> +               host->big_dma_addr = false;
-> +               host->need_irq_handler_lock = false;
-> +               /* First one is EMM second NDF_DMA */
-> +               for (i = 0; i < 2; i++) {
-> +                       mmc_irq[i] = platform_get_irq(pdev, i);
-> +                       if (mmc_irq[i] < 0)
-> +                               return mmc_irq[i];
-> +               }
-> +       }
-> +       host->last_slot = -1;
-> +
-> +       if (bb_size < 512 || bb_size >= (1 << 24))
-> +               bb_size = 1 << 18;
-> +       host->linear_buf_size = bb_size;
-> +       host->linear_buf = devm_kzalloc(&pdev->dev, host->linear_buf_size,
-> +                                       GFP_KERNEL);
-> +
-> +       if (!host->linear_buf) {
-> +               dev_err(&pdev->dev, "devm_kzalloc failed\n");
-> +               return -ENOMEM;
-> +       }
-> +
-> +       host->pdev = pdev;
-> +
-> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +       if (!res) {
-> +               dev_err(&pdev->dev, "Platform resource[0] is missing\n");
-> +               return -ENXIO;
-> +       }
-> +       base = devm_ioremap_resource(&pdev->dev, res);
-> +       if (IS_ERR(base))
-> +               return PTR_ERR(base);
-> +       host->base = (u64)base;
-
-I take it this can only be used on a 64-bit platform?
-
-> +
-> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> +       if (!res) {
-> +               dev_err(&pdev->dev, "Platform resource[1] is missing\n");
-> +               ret = -EINVAL;
-> +               goto err;
-> +       }
-> +       base = devm_ioremap_resource(&pdev->dev, res);
-> +       if (IS_ERR(base)) {
-> +               ret = PTR_ERR(base);
-> +               goto err;
-> +       }
-> +       host->ndf_base = (u64)base;
-> +       /*
-> +        * Clear out any pending interrupts that may be left over from
-> +        * bootloader.
-> +        */
-> +       t = cvmx_read_csr(host->base + OCT_MIO_EMM_INT);
-> +       cvmx_write_csr(host->base + OCT_MIO_EMM_INT, t);
-> +       if (cn78xx_style) {
-> +               /* Only CMD_DONE, DMA_DONE, CMD_ERR, DMA_ERR */
-> +               for (i = 1; i <= 4; i++) {
-> +                       ret = devm_request_irq(&pdev->dev, mmc_irq[i],
-> +                                              octeon_mmc_interrupt,
-> +                                              0, DRV_NAME, host);
-> +                       if (ret < 0) {
-> +                               dev_err(&pdev->dev, "Error: devm_request_irq %d\n",
-> +                                       mmc_irq[i]);
-> +                               goto err;
-> +                       }
-> +               }
-> +       } else {
-> +               ret = devm_request_irq(&pdev->dev, mmc_irq[0],
-> +                                      octeon_mmc_interrupt, 0, DRV_NAME, host);
-> +               if (ret < 0) {
-> +                       dev_err(&pdev->dev, "Error: devm_request_irq %d\n",
-> +                               mmc_irq[0]);
-> +                       goto err;
-> +               }
-> +       }
-> +
-> +       ret = of_get_named_gpio_flags(node, "power-gpios", 0, &f);
-> +       if (ret == -EPROBE_DEFER)
-> +               goto err;
-> +
-> +       host->global_pwr_gpio = ret;
-> +       host->global_pwr_gpio_low =
-> +               (host->global_pwr_gpio >= 0 && f == OF_GPIO_ACTIVE_LOW);
-> +
-> +       if (host->global_pwr_gpio >= 0) {
-> +               ret = gpio_request(host->global_pwr_gpio, "mmc global power");
-> +               if (ret) {
-> +                       dev_err(&pdev->dev,
-> +                               "Could not request mmc global power gpio %d\n",
-> +                               host->global_pwr_gpio);
-> +                       goto err;
-> +               }
-> +               dev_dbg(&pdev->dev, "Global power on\n");
-> +               gpio_direction_output(host->global_pwr_gpio,
-> +                                     !host->global_pwr_gpio_low);
-> +       }
-> +
-> +       platform_set_drvdata(pdev, host);
-> +
-> +       node = of_get_next_child(pdev->dev.of_node, NULL);
-> +       while (node) {
-
-You should use for_each_child_of_node here.
-
-Also, you'll want to skip nodes that aren't compatible with
-"cavium,octeon-6130-mmc-slot", and you'll probably want to log a warning
-in that case.
-
-> +               int r;
-> +               u32 slot;
-> +
-> +               found = 0;
-> +
-> +               r = of_property_read_u32(node, "reg", &slot);
-> +               if (!r) {
-
-If you use for_each_child_of_node, you can just skip ahead in this case,
-rather than having 90% of this block conditional.
-
-e.g.
-
-for_each_child_of_node(pdev->dev.of_node, node) {
-	
-	if (!of_device_is_compatible(node, "cavium,octeon-6130-mmc-slot") {
-		pr_warn("sub node isn't slot: %s\n", of_node_full_name(node));
-		continue;
-	}
-
-	if (of_property_read_u32(node, "reg", &slot) != 0) {
-		pr_warn("Missing or invalid reg property on %s\n",
-			of_node_full_name(node));
-		continue;
-	}
-
-	other_stuff();
-	not_indented();
-
-}
-
-> +                       int ro_gpio, cd_gpio, pwr_gpio;
-> +                       bool ro_low, cd_low, pwr_low;
-> +                       u32 bus_width, max_freq, cmd_skew, dat_skew;
-> +
-> +                       r = of_property_read_u32(node, "cavium,bus-max-width",
-> +                                                &bus_width);
-> +                       if (r) {
-> +                               pr_info("Bus width not found for slot %d\n",
-> +                                       slot);
-> +                               bus_width = 8;
-
-If the default assumption is 8 lanes, document that in the binding.
-Otherwise, make this mandatory and skip the slot if this is missing from
-the DT.
-
-> +                       } else {
-> +                               switch (bus_width) {
-> +                               case 1:
-> +                               case 4:
-> +                               case 8:
-> +                                       break;
-> +                               default:
-> +                                       bus_width = 8;
-> +                                       break;
-> +                               }
-> +                       }
-
-Silently modifying this value is not a good idea. If you get an invalid
-value, warn and skip the node. If the DT was wrong then you have no
-chance of guessing better anyway.
-
-> +
-> +                       r = of_property_read_u32(node, "cavium,cmd-clk-skew",
-> +                                                &cmd_skew);
-> +                       if (r)
-> +                               cmd_skew = 0;
-> +
-> +                       r = of_property_read_u32(node, "cavium,dat-clk-skew",
-> +                                                &dat_skew);
-> +                       if (r)
-> +                               dat_skew = 0;
-> +
-
-These weren't in the binding. They need to be documented.
-
-
-> +                       r = of_property_read_u32(node, "spi-max-frequency",
-> +                                                &max_freq);
-> +                       if (r) {
-> +                               max_freq = 52000000;
-> +                               pr_info("no spi-max-frequency for slot %d, defautling to %d\n",
-
-s/defautling/defaulting/
-
-> +                                       slot, max_freq);
-> +                       }
-> +
-> +                       ro_gpio = of_get_named_gpio_flags(node, "wp-gpios",
-> +                                                         0, &f);
-> +                       ro_low = (ro_gpio >= 0 && f == OF_GPIO_ACTIVE_LOW);
-> +                       cd_gpio = of_get_named_gpio_flags(node, "cd-gpios",
-> +                                                         0, &f);
-> +                       cd_low = (cd_gpio >= 0 && f == OF_GPIO_ACTIVE_LOW);
-> +                       pwr_gpio = of_get_named_gpio_flags(node, "power-gpios",
-> +                                                          0, &f);
-> +                       pwr_low = (pwr_gpio >= 0 && f == OF_GPIO_ACTIVE_LOW);
-> +
-> +                       ret = octeon_init_slot(host, slot, bus_width, max_freq,
-> +                                              ro_gpio, cd_gpio, pwr_gpio,
-> +                                              ro_low, cd_low, pwr_low,
-> +                                              cmd_skew, dat_skew);
-> +                       octeon_mmc_dbg("init slot %d, ret = %d\n", slot, ret);
-> +                       if (ret)
-> +                               goto err;
-> +               }
-> +               node = of_get_next_child(pdev->dev.of_node, node);
-> +       }
-> +
-> +       return ret;
-> +
-> +err:
-> +       /* Disable MMC controller */
-> +       emm_cfg.s.bus_ena = 0;
-> +       cvmx_write_csr(host->base + OCT_MIO_EMM_CFG, emm_cfg.u64);
-> +
-> +       if (host->global_pwr_gpio >= 0) {
-> +               dev_dbg(&pdev->dev, "Global power off\n");
-> +               gpio_set_value_cansleep(host->global_pwr_gpio,
-> +                                       host->global_pwr_gpio_low);
-> +               gpio_free(host->global_pwr_gpio);
-> +       }
-> +
-> +       return ret;
-> +}
-
-It's probably worth having some logging in this error path.
-
-Thanks,
-Mark.
+T24gMTkgSmFudWFyeSAyMDE1IDA5OjU0LCBMZWUgSm9uZXMgd3JvdGU6DQoNCj4gT24gV2VkLCAx
+NCBKYW4gMjAxNSwgU3RldmUgVHdpc3Mgd3JvdGU6DQo+ID4gRnJvbTogU3RldmUgVHdpc3MgPHN0
+d2lzcy5vcGVuc291cmNlQGRpYXNlbWkuY29tPg0KPiA+DQo+ID4gLS0tDQo+ID4gQ2hlY2tzIHBl
+cmZvcm1lZCB3aXRoIGxpbnV4LW5leHQvdjMuMTktcmM0L3NjcmlwdHMvY2hlY2twYXRjaC5wbA0K
+PiA+ICBkYTkwNjMudHh0ICAgICAgICAgICAgICAgIHRvdGFsOiAwIGVycm9ycywgMCB3YXJuaW5n
+cywgOTQgbGluZXMgY2hlY2tlZA0KPiA+ICBkYTkwNjMtY29yZS5jICAgICAgICAgICAgIHRvdGFs
+OiAwIGVycm9ycywgMCB3YXJuaW5ncywgMTkyIGxpbmVzIGNoZWNrZWQNCj4gPiAgZGE5MDYzLWky
+Yy5jICAgICAgICAgICAgICB0b3RhbDogMCBlcnJvcnMsIDAgd2FybmluZ3MsIDI3NyBsaW5lcyBj
+aGVja2VkDQo+ID4gIGNvcmUuaCAgICAgICAgICAgICAgICAgICAgdG90YWw6IDAgZXJyb3JzLCAw
+IHdhcm5pbmdzLCA5OSBsaW5lcyBjaGVja2VkDQo+IA0KPiBUaGVyZSBpcyBubyBuZWVkIHRvIHB1
+dCB0aGlzIGluIGhlcmUgcmVhbGx5LiAgSXQgaXMgYXNzdW1lZCB0aGF0DQo+IGNoZWNrcGF0Y2gu
+cGwgaGFzIGJlZW4gcnVuIGFuZCB0aGF0IG5vIHdhcm5pbmdzL2Vycm9ycyBleGlzdHMuDQo+IA0K
+DQpvayAtLSBJIHdpbGwgcmVtb3ZlIHRoaXMgaW4gZnV0dXJlDQoNClsuLi5dDQoNCj4gPiArUmVx
+dWlyZWQgcHJvcGVydGllczoNCj4gPiArDQo+ID4gKy0gY29tcGF0aWJsZSA6IFNob3VsZCBiZSAi
+ZGxnLGRhOTA2My1jYSIsICJkbGcsZGE5MDYzLWJiIiBvci9hbmQNCj4gPiArICAiZGxnLGRhOTA2
+My1hZCIuDQo+IA0KPiBXaGF0IGFyZSAnY2EnLCAnYmInIGFuZCAnYWQnPw0KDQpUaGVyZSBhcmUg
+bXVsdGlwbGUgdmFyaWFudHMgb2YgdGhlIERBOTA2MyBjaGlwIC0tIGhpc3RvcmljYWwgc3VwcG9y
+dC4NClRoZSBBRCBjaGlwIGhhcyBhIGRpZmZlcmVudCByZWdpc3RlciBtYXAgdG8gQkIgYW5kIENB
+ICBzaWxpY29uIGFuZCB0aGUNCnZhcmlhbnQgaW5mb3JtYXRpb24gaXMgcmVhZCBmcm9tIHRoZSBj
+aGlwIGF0IHJ1bi10aW1lIGFuZCB1c2VkIHRvIHNldA0KdXAgdGhlIGNvcnJlY3QgcmVnbWFwX2Nv
+bmZpZyB0YWJsZXMgZHVyaW5nIGluaXRpYWxpc2F0aW9uLg0KDQpbLi4uXQ0KDQo+ID4gKysrIGIv
+ZHJpdmVycy9tZmQvZGE5MDYzLWNvcmUuYw0KPiA+IEBAIC04NSw2ICs4NSw3IEBAIHN0YXRpYyBj
+b25zdCBzdHJ1Y3QgbWZkX2NlbGwgZGE5MDYzX2RldnNbXSA9IHsNCj4gPiAgCQkubmFtZQkJPSBE
+QTkwNjNfRFJWTkFNRV9MRURTLA0KPiA+ICAJfSwNCj4gPiAgCXsNCj4gPiArCQkub2ZfY29tcGF0
+aWJsZSA9ICJkbGcsZGE5MDYzLXdhdGNoZG9nIiwNCj4gDQo+IENhbiB5b3UgcHV0IHRoZSBvZl9j
+b21wYXRpYmxlIGF0dHJpYnV0ZSBhdCB0aGUgZW5kIG9mIHRoZSBzdHJ1Y3R1cmUNCj4gcGxlYXNl
+Pw0KPiANCj4gPiAgCQkubmFtZQkJPSBEQTkwNjNfRFJWTkFNRV9XQVRDSERPRywNCj4gPiAgCX0s
+DQo+ID4gIAl7DQo+ID4gQEAgLTk4LDYgKzk5LDcgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBtZmRf
+Y2VsbCBkYTkwNjNfZGV2c1tdID0gew0KPiA+ICAJCS5yZXNvdXJjZXMJPSBkYTkwNjNfb25rZXlf
+cmVzb3VyY2VzLA0KPiA+ICAJfSwNCj4gPiAgCXsNCj4gPiArCQkub2ZfY29tcGF0aWJsZSA9ICJk
+bGcsZGE5MDYzLXJ0YyIsDQo+IA0KPiBTYW1lIGhlcmUuDQoNClN1cmUuDQoNClsuLi5dDQo+ID4N
+Cj4gPiArc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgZGE5MDYzX2R0X2lkc1tdID0g
+ew0KPiA+ICsJeyAuY29tcGF0aWJsZSA9ICJkbGcsZGE5MDYzLWFkIiwgfSwNCj4gPiArCXsgLmNv
+bXBhdGlibGUgPSAiZGxnLGRhOTA2My1iYiIsIH0sDQo+ID4gKwl7IC5jb21wYXRpYmxlID0gImRs
+ZyxkYTkwNjMtY2EiLCB9LA0KPiANCj4gV2h5IGlzIHRoZXJlIGEgbmVlZCB0byBkaWZmZXJpZW50
+aWFlIGJldHdlZW4gJ2FkJywgJ2JiJyBhbmQgJ2NhJw0KPiAod2hhdGV2ZXIgdGhleSBhcmUpPw0K
+DQpBcyBkZXNjcmliZWQgYWJvdmUuDQoNCj4gPiArCXsgLyogc2VudGluZWwgKi8gfQ0KPiANCj4g
+Tml0OiBZb3UgY2FuIGRyb3AgdGhpcyBjb21tZW50Lg0KDQpvay4NCg0KWy4uLl0NCg0KSSB3aWxs
+IGFsc28gbWFrZSBjaGFuZ2VzIHRvIHNlcGFyYXRlIGludG8gbXVsdGlwbGUgcGF0Y2hlcw0KYXMg
+ZGVzY3JpYmVkIGluIGh0dHBzOi8vbGttbC5vcmcvbGttbC8yMDE1LzEvMTkvMTQ5DQpXaWxsIHJl
+LXNlbmQgYXMgcGF0Y2ggVjIgLi4uDQoNClJlZ2FyZHMsDQpTdGV2ZQ0KDQo=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
