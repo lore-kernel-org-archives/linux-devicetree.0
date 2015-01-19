@@ -1,80 +1,119 @@
-From: Inha Song <ideal.song@samsung.com>
-Subject: [alsa-devel] [PATCH v2 3/3] ARM: dts: Add sound nodes for
- exynos4412-trats2
-Date: Mon, 19 Jan 2015 18:48:22 +0900
-Message-ID: <1421660902-29679-4-git-send-email-ideal.song@samsung.com>
-References: <1421660902-29679-1-git-send-email-ideal.song@samsung.com>
+From: Mugunthan V N <mugunthanvnm@ti.com>
+Subject: [PATCH 1/1] ARM: dts: dra72-evm: Add qspi device
+Date: Mon, 19 Jan 2015 15:19:28 +0530
+Message-ID: <1421660968-16134-1-git-send-email-mugunthanvnm@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1421660902-29679-1-git-send-email-ideal.song@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: alsa-devel@alsa-project.org
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, s.nawrocki@samsung.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, kgene@kernel.org, sbkim73@samsung.com, lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.de, grant.likely@linaro.org, ideal.song@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+To: bcousson@baylibre.com, tony@atomide.com
+Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, Mugunthan V N <mugunthanvnm@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch add WM1811 audio codec, I2S interface and the sound
-machine nodes to enable audio on exynos4412-trats2 board.
+These add device tree entry for qspi device on dra72-evm.
 
-Signed-off-by: Inha Song <ideal.song@samsung.com>
+Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
 ---
- arch/arm/boot/dts/exynos4412-trats2.dts | 39 +++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
 
-diff --git a/arch/arm/boot/dts/exynos4412-trats2.dts b/arch/arm/boot/dts/exynos4412-trats2.dts
-index 29231b4..7a52cca 100644
---- a/arch/arm/boot/dts/exynos4412-trats2.dts
-+++ b/arch/arm/boot/dts/exynos4412-trats2.dts
-@@ -203,6 +203,25 @@
- 		};
+This patch is tested on linux-next and the boot logs is here [1]
+
+[1] - http://pastebin.ubuntu.com/9783555/ 
+
+---
+ arch/arm/boot/dts/dra72-evm.dts | 77 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 77 insertions(+)
+
+diff --git a/arch/arm/boot/dts/dra72-evm.dts b/arch/arm/boot/dts/dra72-evm.dts
+index 89085d0..cacddd7 100644
+--- a/arch/arm/boot/dts/dra72-evm.dts
++++ b/arch/arm/boot/dts/dra72-evm.dts
+@@ -121,6 +121,18 @@
+ 			0x418   (MUX_MODE15)	/* wakeup0.off */
+ 		>;
  	};
- 
-+	i2c@138A0000 {
-+		samsung,i2c-sda-delay = <100>;
-+		samsung,i2c-slave-addr = <0x10>;
-+		samsung,i2c-max-bus-freq = <100000>;
-+		pinctrl-0 = <&i2c4_bus>;
-+		pinctrl-names = "default";
-+		status = "okay";
 +
-+		wm1811: wm1811@1a {
-+			compatible = "wlf,wm1811";
-+			reg = <0x1a>;
-+			clocks = <&pmu_system_controller 0>;
-+			clock-names = "MCLK1";
-+			DCVDD-supply = <&ldo3_reg>;
-+			DBVDD1-supply = <&ldo3_reg>;
-+			wlf,ldo1ena = <&gpj0 4 0>;
++	qspi1_pins: pinmux_qspi1_pins {
++		pinctrl-single,pins = <
++			0x74 (PIN_OUTPUT | MUX_MODE1)	/* gpmc_a13.qspi1_rtclk */
++			0x78 (PIN_INPUT | MUX_MODE1)	/* gpmc_a14.qspi1_d3 */
++			0x7c (PIN_INPUT | MUX_MODE1)	/* gpmc_a15.qspi1_d2 */
++			0x80 (PIN_INPUT | MUX_MODE1)	/* gpmc_a16.qspi1_d1 */
++			0x84 (PIN_INPUT | MUX_MODE1)	/* gpmc_a17.qspi1_d0 */
++			0x88 (PIN_OUTPUT | MUX_MODE1)	/* qpmc_a18.qspi1_sclk */
++			0xb8 (PIN_OUTPUT | MUX_MODE1)	/* gpmc_cs2.qspi1_cs0 */
++		>;
++	};
+ };
+ 
+ &i2c1 {
+@@ -461,3 +473,68 @@
+ 	pinctrl-0 = <&dcan1_pins_default>;
+ 	pinctrl-1 = <&dcan1_pins_sleep>;
+ };
++
++&qspi {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&qspi1_pins>;
++
++	spi-max-frequency = <48000000>;
++	m25p80@0 {
++		compatible = "s25fl256s1";
++		spi-max-frequency = <48000000>;
++		reg = <0>;
++		spi-tx-bus-width = <1>;
++		spi-rx-bus-width = <4>;
++		spi-cpol;
++		spi-cpha;
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		/* MTD partition table.
++		 * The ROM checks the first four physical blocks
++		 * for a valid file to boot and the flash here is
++		 * 64KiB block size.
++		 */
++		partition@0 {
++			label = "QSPI.SPL";
++			reg = <0x00000000 0x000010000>;
++		};
++		partition@1 {
++			label = "QSPI.SPL.backup1";
++			reg = <0x00010000 0x00010000>;
++		};
++		partition@2 {
++			label = "QSPI.SPL.backup2";
++			reg = <0x00020000 0x00010000>;
++		};
++		partition@3 {
++			label = "QSPI.SPL.backup3";
++			reg = <0x00030000 0x00010000>;
++		};
++		partition@4 {
++			label = "QSPI.u-boot";
++			reg = <0x00040000 0x00100000>;
++		};
++		partition@5 {
++			label = "QSPI.u-boot-spl-os";
++			reg = <0x00140000 0x00080000>;
++		};
++		partition@6 {
++			label = "QSPI.u-boot-env";
++			reg = <0x001c0000 0x00010000>;
++		};
++		partition@7 {
++			label = "QSPI.u-boot-env.backup1";
++			reg = <0x001d0000 0x0010000>;
++		};
++		partition@8 {
++			label = "QSPI.kernel";
++			reg = <0x001e0000 0x0800000>;
++		};
++		partition@9 {
++			label = "QSPI.file-system";
++			reg = <0x009e0000 0x01620000>;
 +		};
 +	};
-+
- 	i2c@138D0000 {
- 		samsung,i2c-sda-delay = <100>;
- 		samsung,i2c-slave-addr = <0x10>;
-@@ -838,6 +857,26 @@
- 		};
- 	};
- 
-+	i2s0: i2s@03830000 {
-+		pinctrl-0 = <&i2s0_bus>;
-+		pinctrl-names = "default";
-+		status = "okay";
-+	};
-+
-+	sound {
-+		compatible = "samsung,trats2-audio";
-+		assigned-clocks = <&pmu_system_controller 0>;
-+		assigned-clock-parents =  <&clock CLK_XUSBXTI>;
-+		samsung,i2s-controller = <&i2s0>;
-+		samsung,model = "Trats2";
-+		samsung,audio-codec = <&wm1811>;
-+		samsung,audio-routing =
-+			"SPK", "SPKOUTLN",
-+			"SPK", "SPKOUTLP",
-+			"SPK", "SPKOUTRN",
-+			"SPK", "SPKOUTRP";
-+	};
-+
- 	exynos-usbphy@125B0000 {
- 		status = "okay";
- 	};
++};
 -- 
-2.0.0.390.gcb682f8
+2.2.1.62.g3f15098
