@@ -1,428 +1,101 @@
-From: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 2/5] ARM:sunxi:drivers:input Add support
- for A10/A20 PS2
-Date: Mon, 19 Jan 2015 11:37:38 +0530
-Message-ID: <CAEzqOZtOBOdpdUHvRqqf+d5GoR_8gpumZX9hfFntXDOzNog+mQ@mail.gmail.com>
-References: <1421417021-3247-1-git-send-email-vishnupatekar0510@gmail.com>
- <1421417021-3247-3-git-send-email-vishnupatekar0510@gmail.com> <20150117222529.GC38334@dtor-ws>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v4 0/4] power: Add max77693 charger driver
+Date: Mon, 19 Jan 2015 08:40:26 +0100
+Message-ID: <1421653226.4247.5.camel@AMDC1943>
+References: <1420453019-28614-1-git-send-email-k.kozlowski@samsung.com>
+ <20150118180002.GJ3574@x1>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBD64TFVR3YIBBP566KSQKGQE77HVHBY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20150117222529.GC38334@dtor-ws>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <20150118180002.GJ3574@x1>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Dmitry,
+On nie, 2015-01-18 at 18:00 +0000, Lee Jones wrote:
+> Tell us what you need?
 
-Thank you for review comments. Please see in-lined.
+Hi Lee,
 
-On Sun, Jan 18, 2015 at 3:55 AM, Dmitry Torokhov
-<dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Hi Vishnu,
->
-> On Fri, Jan 16, 2015 at 07:33:38PM +0530, Vishnu Patekar wrote:
->> Signed-off-by: VishnuPatekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>  drivers/input/serio/Kconfig     |   11 ++
->>  drivers/input/serio/Makefile    |    1 +
->>  drivers/input/serio/sun4i-ps2.c |  330 +++++++++++++++++++++++++++++++++++++++
->>  3 files changed, 342 insertions(+)
->>  create mode 100644 drivers/input/serio/sun4i-ps2.c
->>
->> diff --git a/drivers/input/serio/Kconfig b/drivers/input/serio/Kconfig
->> index bc2d474..964afc5 100644
->> --- a/drivers/input/serio/Kconfig
->> +++ b/drivers/input/serio/Kconfig
->> @@ -281,4 +281,15 @@ config HYPERV_KEYBOARD
->>         To compile this driver as a module, choose M here: the module will
->>         be called hyperv_keyboard.
->>
->> +config SERIO_SUN4I_PS2
->> +     tristate "Allwinner A10 PS/2 controller support"
->> +     default n
->> +     depends on ARCH_SUNXI || COMPILE_TEST
->> +     help
->> +       This selects support for the PS/2 Host Controller on
->> +       Allwinner A10.
->> +
->> +       To compile this driver as a module, choose M here: the
->> +       module will be called sun4i-ps2.
->> +
->>  endif
->> diff --git a/drivers/input/serio/Makefile b/drivers/input/serio/Makefile
->> index 815d874..c600089 100644
->> --- a/drivers/input/serio/Makefile
->> +++ b/drivers/input/serio/Makefile
->> @@ -29,3 +29,4 @@ obj-$(CONFIG_SERIO_ARC_PS2) += arc_ps2.o
->>  obj-$(CONFIG_SERIO_APBPS2)   += apbps2.o
->>  obj-$(CONFIG_SERIO_OLPC_APSP)        += olpc_apsp.o
->>  obj-$(CONFIG_HYPERV_KEYBOARD)        += hyperv-keyboard.o
->> +obj-$(CONFIG_SERIO_SUN4I_PS2)        += sun4i-ps2.o
->> diff --git a/drivers/input/serio/sun4i-ps2.c b/drivers/input/serio/sun4i-ps2.c
->> new file mode 100644
->> index 0000000..06b3fef
->> --- /dev/null
->> +++ b/drivers/input/serio/sun4i-ps2.c
->> @@ -0,0 +1,330 @@
->> +/*
->> + *   Driver for Allwinner A10 PS2 host controller
->> + *
->> + *   Author: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> + *           Aaron.maoye <leafy.myeh-Q9AEpCAkrSgqDJ6do+/SaQ@public.gmane.org>
->> + *
->> + *
->> + */
->> +
->> +#include <linux/module.h>
->> +#include <linux/serio.h>
->> +#include <linux/interrupt.h>
->> +#include <linux/errno.h>
->> +#include <linux/slab.h>
->> +#include <linux/list.h>
->> +#include <linux/io.h>
->> +#include <linux/of_address.h>
->> +#include <linux/of_device.h>
->> +#include <linux/of_irq.h>
->> +#include <linux/of_platform.h>
->> +#include <linux/clk.h>
->> +#include <linux/delay.h>
->> +
->> +#define DRIVER_NAME          "sun4i-ps2"
->> +
->> +/* register offset definitions */
->> +#define PS2_REG_GCTL         0x00    /*  PS2 Module Global Control Reg */
->> +#define PS2_REG_DATA         0x04    /*  PS2 Module Data Reg         */
->> +#define PS2_REG_LCTL         0x08    /*  PS2 Module Line Control Reg */
->> +#define PS2_REG_LSTS         0x0C    /*  PS2 Module Line Status Reg  */
->> +#define PS2_REG_FCTL         0x10    /*  PS2 Module FIFO Control Reg */
->> +#define PS2_REG_FSTS         0x14    /*  PS2 Module FIFO Status Reg  */
->> +#define PS2_REG_CLKDR                0x18    /*  PS2 Module Clock Divider Reg*/
->> +
->> +/*  PS2 GLOBAL CONTROL REGISTER PS2_GCTL */
->> +#define PS2_GCTL_INTFLAG     BIT(4)
->> +#define PS2_GCTL_INTEN               BIT(3)
->> +#define PS2_GCTL_RESET               BIT(2)
->> +#define PS2_GCTL_MASTER              BIT(1)
->> +#define PS2_GCTL_BUSEN               BIT(0)
->> +
->> +/* PS2 LINE CONTROL REGISTER */
->> +#define PS2_LCTL_NOACK               BIT(18)
->> +#define PS2_LCTL_TXDTOEN     BIT(8)
->> +#define PS2_LCTL_STOPERREN   BIT(3)
->> +#define PS2_LCTL_ACKERREN    BIT(2)
->> +#define PS2_LCTL_PARERREN    BIT(1)
->> +#define PS2_LCTL_RXDTOEN     BIT(0)
->> +
->> +/* PS2 LINE STATUS REGISTER */
->> +#define PS2_LSTS_TXTDO               BIT(8)
->> +#define PS2_LSTS_STOPERR     BIT(3)
->> +#define PS2_LSTS_ACKERR              BIT(2)
->> +#define PS2_LSTS_PARERR              BIT(1)
->> +#define PS2_LSTS_RXTDO               BIT(0)
->> +
->> +#define PS2_LINE_ERROR_BIT \
->> +     (PS2_LSTS_TXTDO | PS2_LSTS_STOPERR | PS2_LSTS_ACKERR | \
->> +     PS2_LSTS_PARERR | PS2_LSTS_RXTDO)
->> +
->> +/* PS2 FIFO CONTROL REGISTER */
->> +#define PS2_FCTL_TXRST               BIT(17)
->> +#define PS2_FCTL_RXRST               BIT(16)
->> +#define PS2_FCTL_TXUFIEN     BIT(10)
->> +#define PS2_FCTL_TXOFIEN     BIT(9)
->> +#define PS2_FCTL_TXRDYIEN    BIT(8)
->> +#define PS2_FCTL_RXUFIEN     BIT(2)
->> +#define PS2_FCTL_RXOFIEN     BIT(1)
->> +#define PS2_FCTL_RXRDYIEN    BIT(0)
->> +
->> +/* PS2 FIFO STATUS REGISTER */
->> +#define PS2_FSTS_TXUF                BIT(10)
->> +#define PS2_FSTS_TXOF                BIT(9)
->> +#define PS2_FSTS_TXRDY               BIT(8)
->> +#define PS2_FSTS_RXUF                BIT(2)
->> +#define PS2_FSTS_RXOF                BIT(1)
->> +#define PS2_FSTS_RXRDY               BIT(0)
->> +
->> +#define PS2_FIFO_ERROR_BIT \
->> +     (PS2_FSTS_TXUF | PS2_FSTS_TXOF | PS2_FSTS_RXUF | PS2_FSTS_RXOF)
->> +
->> +#define PS2_SAMPLE_CLK               1000000
->> +#define PS2_SCLK             125000
->> +
->> +struct sun4i_ps2data {
->> +     struct serio *serio;
->> +     struct device *dev;
->> +
->> +     /* IO mapping base */
->> +     void __iomem    *reg_base;
->> +
->> +     /* clock management */
->> +     struct clk      *clk;
->> +
->> +     /* irq */
->> +     spinlock_t      lock;
->> +     int             irq;
->> +};
->> +
->> +/*********************/
->> +/* Interrupt handler */
->> +/*********************/
->> +static irqreturn_t sun4i_ps2_interrupt(int irq, void *dev_id)
->> +{
->> +     struct sun4i_ps2data *drvdata = dev_id;
->> +     u32 intr_status;
->> +     u32 fifo_status;
->> +     unsigned char byte;
->> +     unsigned int rxflags = 0;
->> +     u32 rval;
->> +
->> +     spin_lock(&drvdata->lock);
->> +
->> +     /* Get the PS/2 interrupts and clear them */
->> +     intr_status  = readl(drvdata->reg_base + PS2_REG_LSTS);
->> +     fifo_status  = readl(drvdata->reg_base + PS2_REG_FSTS);
->> +
->> +     /*Check Line Status Register*/
->> +     if (intr_status & PS2_LINE_ERROR_BIT) {
->> +             rxflags = (intr_status & PS2_LINE_ERROR_BIT) ? SERIO_FRAME : 0;
->> +             rxflags |= (intr_status & PS2_LSTS_PARERR) ? SERIO_PARITY : 0;
->> +             rxflags |= (intr_status & PS2_LSTS_PARERR) ? SERIO_TIMEOUT : 0;
->> +
->> +             rval = PS2_LSTS_TXTDO | PS2_LSTS_STOPERR | PS2_LSTS_ACKERR |
->> +                     PS2_LSTS_PARERR | PS2_LSTS_RXTDO;
->> +             writel(rval, drvdata->reg_base + PS2_REG_LSTS);
->> +     }
->> +
->> +     /*Check FIFO Status Register*/
->> +     if (fifo_status & PS2_FIFO_ERROR_BIT) {
->> +             rval = PS2_FSTS_TXUF | PS2_FSTS_TXOF | PS2_FSTS_TXRDY |
->> +                     PS2_FSTS_RXUF | PS2_FSTS_RXOF | PS2_FSTS_RXRDY;
->> +             writel(rval, drvdata->reg_base + PS2_REG_FSTS);
->> +     }
->> +
->> +     rval = (fifo_status >> 16) & 0x3;
->> +     while (rval--) {
->> +             byte = readl(drvdata->reg_base + PS2_REG_DATA) & 0xff;
->> +             serio_interrupt(drvdata->serio, byte, rxflags);
->> +     }
->> +
->> +     writel(intr_status, drvdata->reg_base + PS2_REG_LSTS);
->> +     writel(fifo_status, drvdata->reg_base + PS2_REG_FSTS);
->> +
->> +     spin_unlock(&drvdata->lock);
->> +
->> +     return IRQ_HANDLED;
->> +}
->> +
->> +
->> +static int sun4i_ps2_open(struct serio *pserio)
->> +{
->> +     struct sun4i_ps2data *drvdata = pserio->port_data;
->> +     u32 src_clk = 0;
->> +     u32 clk_scdf;
->> +     u32 clk_pcdf;
->> +     u32 rval;
->> +     unsigned long flags;
->> +
->> +     /*Set Line Control And Enable Interrupt*/
->> +     rval = PS2_LCTL_STOPERREN | PS2_LCTL_ACKERREN
->> +             | PS2_LCTL_PARERREN | PS2_LCTL_RXDTOEN;
->> +     writel(rval, drvdata->reg_base + PS2_REG_LCTL);
->> +
->> +     /*Reset FIFO*/
->> +     rval = PS2_FCTL_TXRST | PS2_FCTL_RXRST | PS2_FCTL_TXUFIEN
->> +             | PS2_FCTL_TXOFIEN | PS2_FCTL_RXUFIEN
->> +             | PS2_FCTL_RXOFIEN | PS2_FCTL_RXRDYIEN;
->> +
->> +     writel(rval, drvdata->reg_base + PS2_REG_FCTL);
->> +
->> +     src_clk = clk_get_rate(drvdata->clk);
->> +     /*Set Clock Divider Register*/
->> +     clk_scdf = src_clk / PS2_SAMPLE_CLK - 1;
->> +     clk_pcdf = PS2_SAMPLE_CLK / PS2_SCLK - 1;
->> +     rval = (clk_scdf<<8) | clk_pcdf;
->> +     writel(rval, drvdata->reg_base + PS2_REG_CLKDR);
->> +
->> +
->> +     /*Set Global Control Register*/
->> +     rval = PS2_GCTL_RESET | PS2_GCTL_INTEN | PS2_GCTL_MASTER
->> +             | PS2_GCTL_BUSEN;
->> +
->> +     spin_lock_irqsave(&drvdata->lock, flags);
->> +     writel(rval, drvdata->reg_base + PS2_REG_GCTL);
->> +     spin_unlock_irqrestore(&drvdata->lock, flags);
->> +
->> +     return 0;
->> +}
->> +
->> +static void sun4i_ps2_close(struct serio *pserio)
->> +{
->> +     struct sun4i_ps2data *drvdata = pserio->port_data;
->> +
->> +     synchronize_irq(drvdata->irq);
->
-> synchronize_irq() on it's own is not very useful. You also need to shut
-> off interrupts on the chip (I suppose by clearing PS2_GCTL_INTEN?)
-> before calling synchronize_irq.
-Okie, I'll do it. Yes, clearing PS2_GCTL_INTEN will shut off the interrupts.
->
->> +}
->> +
->> +static int sun4i_ps2_write(struct serio *pserio, unsigned char val)
->> +{
->> +     unsigned long expire = jiffies + msecs_to_jiffies(10000);
->> +     struct sun4i_ps2data *drvdata;
->> +
->> +     drvdata = (struct sun4i_ps2data *)pserio->port_data;
->> +
->> +     do {
->> +             if (readl(drvdata->reg_base + PS2_REG_FSTS) & PS2_FSTS_TXRDY) {
->> +                     writel(val, drvdata->reg_base + PS2_REG_DATA);
->> +                     return 0;
->> +             }
->> +     } while (time_before(jiffies, expire));
->> +
->> +     return SERIO_TIMEOUT;
->> +}
->> +
->> +static int sun4i_ps2_probe(struct platform_device *pdev)
->> +{
->> +     struct resource *res; /* IO mem resources */
->> +     struct sun4i_ps2data *drvdata;
->> +     struct serio *serio;
->> +     struct device *dev = &pdev->dev;
->> +     unsigned int irq;
->> +     int error;
->> +
->> +     drvdata = devm_kzalloc(dev, sizeof(struct sun4i_ps2data), GFP_KERNEL);
->> +     serio = kzalloc(sizeof(struct serio), GFP_KERNEL);
->> +     if (!drvdata || !serio) {
->> +             error = -ENOMEM;
->> +             goto err_free_mem;
->> +     }
->> +
->> +     spin_lock_init(&drvdata->lock);
->> +
->> +     /* IO */
->> +     res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +     drvdata->reg_base = devm_ioremap_resource(dev, res);
->> +     if (IS_ERR(drvdata->reg_base)) {
->> +             dev_err(dev, "failed to map registers\n");
->> +             error = PTR_ERR(drvdata->reg_base);
->> +             goto err_free_mem;
->> +     }
->> +
->> +     drvdata->clk = devm_clk_get(dev, NULL);
->> +     if (IS_ERR(drvdata->clk)) {
->> +             error = PTR_ERR(drvdata->clk);
->> +             dev_err(dev, "couldn't get clock %d\n", error);
->> +             goto err_free_mem;
->> +     }
->> +
->> +     error = clk_prepare_enable(drvdata->clk);
->> +     if (error) {
->> +             dev_err(dev, "failed to enable clock %d\n", error);
->> +             goto err_free_mem;
->> +     }
->> +
->> +     serio->id.type = SERIO_8042;
->> +     serio->write = sun4i_ps2_write;
->> +     serio->open = sun4i_ps2_open;
->> +     serio->close = sun4i_ps2_close;
->> +     serio->port_data = drvdata;
->> +     serio->dev.parent = dev;
->> +     strlcpy(serio->name, dev_name(dev), sizeof(serio->name));
->> +     strlcpy(serio->phys, dev_name(dev), sizeof(serio->phys));
->> +
->> +     /* Get IRQ for the device */
->> +     irq = platform_get_irq(pdev, 0);
->> +     if (!irq) {
->> +             dev_err(dev, "no IRQ found\n");
->> +             error = -ENXIO;
->> +             goto error_disable_clk;
->> +     }
->> +
->> +     drvdata->irq = irq;
->> +     drvdata->serio = serio;
->> +     drvdata->dev = dev;
->> +     error = devm_request_threaded_irq(dev, drvdata->irq,
->> +             sun4i_ps2_interrupt, NULL, 0, DRIVER_NAME, drvdata);
->> +
->> +     if (error) {
->> +             dev_err(drvdata->dev, "Interrupt alloc failed %d:error:%d\n",
->> +                     drvdata->irq, error);
->> +             goto error_disable_clk;
->> +     }
->> +
->> +     serio_register_port(serio);
->> +     platform_set_drvdata(pdev, drvdata);
->> +
->> +     return 0;       /* success */
->> +
->> +error_disable_clk:
->> +     clk_disable_unprepare(drvdata->clk);
->> +
->> +err_free_mem:
->> +     kfree(serio);
->> +     return error;
->> +}
->> +
->> +static int sun4i_ps2_remove(struct platform_device *pdev)
->> +{
->> +     struct sun4i_ps2data *drvdata = platform_get_drvdata(pdev);
->> +
->> +     serio_unregister_port(drvdata->serio);
->> +
->> +     if (!IS_ERR(drvdata->clk))
->> +             clk_disable_unprepare(drvdata->clk);
->> +     kfree(drvdata->serio);
->
-> Serio is refcounted, you do not free it after its has been registered.
-> Overall I'd rather you did not use devm* interfaces here since you are
-> forced to mix managed and manually freed resources.
-Okie, No need to free serio here.
-If serio is not manually freed here, It is not freeing anything else manually.
 
-do you still feel I should not use devm* interfaces here?
->
->> +
->> +     return 0;
->> +}
->> +
->> +static const struct of_device_id sun4i_ps2_match[] = {
->> +     { .compatible = "allwinner,sun4i-a10-ps2", },
->> +     { },
->> +};
->> +
->> +MODULE_DEVICE_TABLE(of, sun4i_ps2_match);
->> +
->> +static struct platform_driver sun4i_ps2_driver = {
->> +     .probe          = sun4i_ps2_probe,
->> +     .remove         = sun4i_ps2_remove,
->> +     .driver = {
->> +             .name = DRIVER_NAME,
->> +             .of_match_table = sun4i_ps2_match,
->> +     },
->> +};
->> +module_platform_driver(sun4i_ps2_driver);
->> +
->> +MODULE_AUTHOR("Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>");
->> +MODULE_AUTHOR("Aaron.maoye <leafy.myeh-Q9AEpCAkrSgqDJ6do+/SaQ@public.gmane.org>");
->> +MODULE_DESCRIPTION("Allwinner A10/Sun4i PS/2 driver");
->> +MODULE_LICENSE("GPL v2");
->> --
->> 1.7.9.5
->>
->
-> Thanks.
->
-> --
-> Dmitry
+All I need is... acks or applying of patchset by Sebastian. Sebastian
+acked main patch (3/4) but then I changed it [1].
+
+You already acked the MFD change (patch 2/4: mfd: max77693: Add defines
+for MAX77693 charger driver).
+
+The patch with bindings (1/4: devicetree: power/mfd: max77693: Document
+new bindings for charger) actually adds bindings for charger so rather
+Sebastian's opinion is needed.
+
+Other patches are from power supply subsystem.
+Thanks for asking!
+
+
+Dear Sebastian,
+
+You already looked at the patchset [1], so maybe you could pick it up?
+
+[1] https://lkml.org/lkml/2014/10/27/774
+
+Best regards,
+Krzysztof
+
+> 
+> > Changes since v3
+> > ================
+> > 1. Patch 3/4: Don't create platform data structure for charger settings
+> >    because driver won't be used on non-DT SoCs (its for Exynos based
+> >    Trats2).
+> > 2. Patch 3/4: Drop Sebastian's ack [1] because of change above.
+> > 
+> > Changes since v2
+> > ================
+> > 1. Add ack from Sebastian Reichel (charger driver).
+> > 2. Drop patch "mfd: max77693: Map charger device to its own of_node"
+> >    (applied by Lee Jones).
+> > 
+> > 
+> > Changes since v1
+> > ================
+> > 1. Add patch 2/5: mfd: max77693: Map charger device to its own of_node
+> >    (forgot to send it in v1)
+> > 2. Remove patches for DTS and configs. I'll send them later.
+> > 3. Add ack from Lee Jones (patch 3/5).
+> > 
+> > 
+> > Description
+> > ===========
+> > The patchset adds max77693 charger driver present on Trats2 board
+> > (and Galaxy S III). The driver configures battery charger and exposes
+> > power supply interface.
+> > 
+> > Driver is necessary to provide full charging stack on Trats2 device
+> > (extcon, charger-manager etc.).
+> > 
+> > [1] https://lkml.org/lkml/2014/10/27/774
+> > 
+> > 
+> > Best regards,
+> > Krzysztof
+> > 
+> > 
+> > 
+> > Krzysztof Kozlowski (4):
+> >   devicetree: power/mfd: max77693: Document new bindings for charger
+> >   mfd: max77693: Add defines for MAX77693 charger driver
+> >   power: max77693: Add charger driver for Maxim 77693
+> >   Documentation: power: max77693-charger: Document exported sysfs entry
+> > 
+> >  Documentation/ABI/testing/sysfs-class-power        |  42 ++
+> >  Documentation/devicetree/bindings/mfd/max77693.txt |  45 ++
+> >  drivers/power/Kconfig                              |   6 +
+> >  drivers/power/Makefile                             |   1 +
+> >  drivers/power/max77693_charger.c                   | 758 +++++++++++++++++++++
+> >  include/linux/mfd/max77693-private.h               | 108 +++
+> >  6 files changed, 960 insertions(+)
+> >  create mode 100644 drivers/power/max77693_charger.c
+> > 
+> 
