@@ -1,40 +1,35 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v4 01/21] serial: rewrite pxa2xx-uart to use 8250_core
-Date: Mon, 19 Jan 2015 12:08:21 -0600
-Message-ID: <CAL_JsqJUWRhGA_8NU+O=fLFdMiVNz0LV6G0LU=ikgk=zah2q2A@mail.gmail.com>
-References: <1387309071-22382-1-git-send-email-ynvich@gmail.com>
- <1397668411-27162-1-git-send-email-ynvich@gmail.com> <1397668411-27162-2-git-send-email-ynvich@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Romain Perier <romain.perier@gmail.com>
+Subject: [PATCH v1 4/4] ARM: dts: Convert gmac to phy-supply in rk3288-evb-rk808.dts
+Date: Mon, 19 Jan 2015 18:08:09 +0000
+Message-ID: <1421690889-11901-5-git-send-email-romain.perier@gmail.com>
+References: <1421690889-11901-1-git-send-email-romain.perier@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1397668411-27162-2-git-send-email-ynvich@gmail.com>
+In-Reply-To: <1421690889-11901-1-git-send-email-romain.perier@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sergei Ianovich <ynvich@gmail.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Russell King <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, James Cameron <quozl@laptop.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Paul Bolle <pebolle@tiscali.nl>, Arnd Bergmann <arnd@arndb.de>, Randy Dunlap <rdunlap@infradead.org>, Stefan Seyfried <seife+kernel@b1-systems.com>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>
+To: peppe.cavallaro@st.com
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, heiko@sntech.de, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, roger.chen@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 16, 2014 at 12:13 PM, Sergei Ianovich <ynvich@gmail.com> wrote:
-> pxa2xx-uart was a separate uart platform driver. It was declaring
-> the same device names and numbers as 8250 driver. As a result,
-> it was impossible to use 8250 driver on PXA SoCs.
->
-> Upon closer examination pxa2xx-uart turned out to be a clone of
-> 8250_core driver.
->
-> Workaround for Erratum #19 according to Marvel(R) PXA270M Processor
-> Specification Update (April 19, 2010) is dropped. 8250_core reads
-> from FIFO immediately after checking DR bit in LSR.
->
-> Signed-off-by: Sergei Ianovich <ynvich@gmail.com>
-> Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> Reviewed-by: James Cameron <quozl@laptop.org>
-> Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
->  Resenging together with the rest of the series as the series
->  breaks without this one at [PATCH 12/21]
+This replaces the property phy_regulator by the standard devicetree property
+phy-supply and references the device_node vcc_phy from it.
 
-Whatever happened with merging this? I'm asking because either this or
-fixes to PXA uart are needed to coexist with the 8250 driver and for
-earlycon to work.
+Signed-off-by: Romain Perier <romain.perier@gmail.com>
+---
+ arch/arm/boot/dts/rk3288-evb-rk808.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Rob
+diff --git a/arch/arm/boot/dts/rk3288-evb-rk808.dts b/arch/arm/boot/dts/rk3288-evb-rk808.dts
+index 831a7aa..e1d3eeb 100644
+--- a/arch/arm/boot/dts/rk3288-evb-rk808.dts
++++ b/arch/arm/boot/dts/rk3288-evb-rk808.dts
+@@ -161,7 +161,7 @@
+ };
+ 
+ &gmac {
+-	phy_regulator = "vcc_phy";
++	phy-supply = <&vcc_phy>;
+ 	phy-mode = "rgmii";
+ 	clock_in_out = "input";
+ 	snps,reset-gpio = <&gpio4 7 0>;
+-- 
+1.9.1
