@@ -1,69 +1,61 @@
-From: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] ARM: dts: sunxi: Add missing mdio label
-Date: Mon, 19 Jan 2015 22:35:22 +0300
-Message-ID: <1421696122-5389-1-git-send-email-mamlinav@gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Paul Bolle <pebolle@tiscali.nl>
+Subject: [PATCH] [linux-next] ARM: mvebu: make DTS comments reflect DEBUG_LL
+ changes
+Date: Mon, 19 Jan 2015 20:40:25 +0100
+Message-ID: <1421696425.9655.65.camel@x220>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCENVD7YAEIM7OPVUUCRUBFR7YULU-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>
+Cc: Valentin Rothberg <valentinrothberg@gmail.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch add missing mdio label for sun[457]i.
+The Kconfig symbol DEBUG_MVEBU_UART_ALTERNATE was renamed to
+DEBUG_MVEBU_UART0_ALTERNATE. And the symbol DEBUG_MVEBU_UART1_ALTERNATE
+was added to allow UART1 as a DEBUG_LL target. Make the comment at the
+top of this DTS reflect those changes.
 
-Signed-off-by: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Since we're touching this DTS add comments to show which blocks describe
+UART0 and UART1.
+
+Signed-off-by: Paul Bolle <pebolle@tiscali.nl>
 ---
- arch/arm/boot/dts/sun4i-a10.dtsi  | 2 +-
- arch/arm/boot/dts/sun5i-a10s.dtsi | 2 +-
- arch/arm/boot/dts/sun7i-a20.dtsi  | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+Created on top of next-20150119. Untested! Note that I know nothing
+about this board or about DT source files, so all changes are nothing
+more than guesses.
 
-diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
-index ca79172..6a57f5b 100644
---- a/arch/arm/boot/dts/sun4i-a10.dtsi
-+++ b/arch/arm/boot/dts/sun4i-a10.dtsi
-@@ -464,7 +464,7 @@
- 			status = "disabled";
+ arch/arm/boot/dts/armada-xp-axpwifiap.dts | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/boot/dts/armada-xp-axpwifiap.dts b/arch/arm/boot/dts/armada-xp-axpwifiap.dts
+index ca0200e20751..28174ab019f9 100644
+--- a/arch/arm/boot/dts/armada-xp-axpwifiap.dts
++++ b/arch/arm/boot/dts/armada-xp-axpwifiap.dts
+@@ -3,8 +3,8 @@
+  *
+  * Note: this board is shipped with a new generation boot loader that
+  * remaps internal registers at 0xf1000000. Therefore, if earlyprintk
+- * is used, the CONFIG_DEBUG_MVEBU_UART_ALTERNATE option should be
+- * used.
++ * is used, the CONFIG_DEBUG_MVEBU_UART0_ALTERNATE option or the
++ * CONFIG_DEBUG_MVEBU_UART1_ALTERNATE option should be used.
+  *
+  * Copyright (C) 2013 Marvell
+  *
+@@ -60,10 +60,12 @@
  		};
  
--		mdio@01c0b080 {
-+		mdio: mdio@01c0b080 {
- 			compatible = "allwinner,sun4i-a10-mdio";
- 			reg = <0x01c0b080 0x14>;
- 			status = "disabled";
-diff --git a/arch/arm/boot/dts/sun5i-a10s.dtsi b/arch/arm/boot/dts/sun5i-a10s.dtsi
-index 76c20c5..74b201a 100644
---- a/arch/arm/boot/dts/sun5i-a10s.dtsi
-+++ b/arch/arm/boot/dts/sun5i-a10s.dtsi
-@@ -367,7 +367,7 @@
- 			status = "disabled";
- 		};
+ 		internal-regs {
++			/* UART0 */
+ 			serial@12000 {
+ 				status = "okay";
+ 			};
  
--		mdio@01c0b080 {
-+		mdio: mdio@01c0b080 {
- 			compatible = "allwinner,sun4i-a10-mdio";
- 			reg = <0x01c0b080 0x14>;
- 			status = "disabled";
-diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
-index 49ae6e6..e10c2b8 100644
---- a/arch/arm/boot/dts/sun7i-a20.dtsi
-+++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-@@ -588,7 +588,7 @@
- 			status = "disabled";
- 		};
- 
--		mdio@01c0b080 {
-+		mdio: mdio@01c0b080 {
- 			compatible = "allwinner,sun4i-a10-mdio";
- 			reg = <0x01c0b080 0x14>;
- 			status = "disabled";
++			/* UART1 */
+ 			serial@12100 {
+ 				status = "okay";
+ 			};
 -- 
-2.0.5
+1.9.3
