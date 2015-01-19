@@ -1,83 +1,167 @@
-From: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-Subject: Re: [PATCH 4/8] gpio-mm-lantiq: Use of_propery_read_u16
-Date: Mon, 19 Jan 2015 12:28:04 +0100
-Message-ID: <CAPybu_12eBQCA_gtTPi9o+taSS6nnTRkLS6qGG5APDS9S7JOvA@mail.gmail.com>
-References: <1421581173-28416-1-git-send-email-ricardo.ribalda@gmail.com>
- <1421581173-28416-5-git-send-email-ricardo.ribalda@gmail.com> <20150119105753.GC21553@leverpostej>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v5 1/7] mfd: Add support for DA9150 combined charger &
+ fuel-gauge device
+Date: Mon, 19 Jan 2015 11:33:32 +0000
+Message-ID: <20150119113332.GP21886@x1>
+References: <cover.1419264383.git.Adam.Thomson.Opensource@diasemi.com>
+ <8768cf84babd1bc3e16dadc25bdbb50cebfb44b6.1419264383.git.Adam.Thomson.Opensource@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150119105753.GC21553@leverpostej>
+Content-Disposition: inline
+In-Reply-To: <8768cf84babd1bc3e16dadc25bdbb50cebfb44b6.1419264383.git.Adam.Thomson.Opensource@diasemi.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, John Crispin <blogic@openwrt.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, linux-iio@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org, support.opensource@diasemi.com
 List-Id: devicetree@vger.kernel.org
 
-Hello Mark
+On Mon, 22 Dec 2014, Adam Thomson wrote:
 
-Thanks for noticing. I have just sent the v2 of the patch.
+> DA9150 is a combined Charger and Fuel-Gauge IC, with additional
+> GPIO and GPADC functionality.
+>=20
+> Signed-off-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+> ---
+>  drivers/mfd/Kconfig                  |   12 +
+>  drivers/mfd/Makefile                 |    2 +-
+>  drivers/mfd/da9150-core.c            |  413 ++++++++++++
+>  include/linux/mfd/da9150/core.h      |   68 ++
+>  include/linux/mfd/da9150/registers.h | 1155 ++++++++++++++++++++++++=
+++++++++++
+>  5 files changed, 1649 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/mfd/da9150-core.c
+>  create mode 100644 include/linux/mfd/da9150/core.h
+>  create mode 100644 include/linux/mfd/da9150/registers.h
+>=20
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index 2e6b731..56e80d2 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -195,6 +195,18 @@ config MFD_DA9063
+>  	  Additional drivers must be enabled in order to use the functional=
+ity
+>  	  of the device.
+>=20
+> +config MFD_DA9150
+> +	tristate "Dialog Semiconductor DA9150 Charger Fuel-Gauge chip"
+> +	depends on I2C=3Dy
+> +	select MFD_CORE
+> +	select REGMAP_I2C
+> +	select REGMAP_IRQ
+> +	help
+> +	  This adds support for the DA9150 integrated charger and fuel-gaug=
+e
+> +	  chip. This driver provides common support for accessing the devic=
+e.
+> +	  Additional drivers must be enabled in order to use the specific
+> +	  features of the device.
+> +
+>  config MFD_DLN2
+>  	tristate "Diolan DLN2 support"
+>  	select MFD_CORE
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index 53467e2..f06f4c6 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -113,7 +113,7 @@ obj-$(CONFIG_MFD_DA9055)	+=3D da9055.o
+>=20
+>  da9063-objs			:=3D da9063-core.o da9063-irq.o da9063-i2c.o
+>  obj-$(CONFIG_MFD_DA9063)	+=3D da9063.o
+> -
+> +obj-$(CONFIG_MFD_DA9150)	+=3D da9150-core.o
+>  obj-$(CONFIG_MFD_MAX14577)	+=3D max14577.o
+>  obj-$(CONFIG_MFD_MAX77686)	+=3D max77686.o
+>  obj-$(CONFIG_MFD_MAX77693)	+=3D max77693.o
+> diff --git a/drivers/mfd/da9150-core.c b/drivers/mfd/da9150-core.c
+> new file mode 100644
+> index 0000000..4d757b9
+> --- /dev/null
+> +++ b/drivers/mfd/da9150-core.c
+> @@ -0,0 +1,413 @@
+> +/*
+> + * DA9150 Core MFD Driver
+> + *
+> + * Copyright (c) 2014 Dialog Semiconductor
+> + *
+> + * Author: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+> + *
+> + * This program is free software; you can redistribute  it and/or mo=
+dify it
+> + * under  the terms of  the GNU General  Public License as published=
+ by the
+> + * Free Software Foundation;  either version 2 of the  License, or (=
+at your
+> + * option) any later version.
+> + */
 
-Regards!
+[...]
 
-On Mon, Jan 19, 2015 at 11:57 AM, Mark Rutland <mark.rutland@arm.com> wrote:
-> On Sun, Jan 18, 2015 at 11:39:29AM +0000, Ricardo Ribalda Delgado wrote:
->> Instead of parsing manually the shadow content, use the much simpler
->> helper of_property_read_u16.
->>
->> Cc: Linus Walleij <linus.walleij@linaro.org>
->> Cc: Alexandre Courbot <gnurou@gmail.com>
->> Cc: Grant Likely <grant.likely@linaro.org>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: John Crispin <blogic@openwrt.org>
->> Cc: devicetree@vger.kernel.org
->> Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
->> ---
->>  drivers/gpio/gpio-mm-lantiq.c | 6 ++----
->>  1 file changed, 2 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/gpio/gpio-mm-lantiq.c b/drivers/gpio/gpio-mm-lantiq.c
->> index 7d55161..b511a6b 100644
->> --- a/drivers/gpio/gpio-mm-lantiq.c
->> +++ b/drivers/gpio/gpio-mm-lantiq.c
->> @@ -105,7 +105,6 @@ static void ltq_mm_save_regs(struct of_mm_gpio_chip *mm_gc)
->>  static int ltq_mm_probe(struct platform_device *pdev)
->>  {
->>       struct ltq_mm *chip;
->> -     const __be32 *shadow;
->>
->>       chip = devm_kzalloc(&pdev->dev, sizeof(*chip), GFP_KERNEL);
->>       if (!chip)
->> @@ -117,9 +116,8 @@ static int ltq_mm_probe(struct platform_device *pdev)
->>       chip->mmchip.save_regs = ltq_mm_save_regs;
->>
->>       /* store the shadow value if one was passed by the devicetree */
->> -     shadow = of_get_property(pdev->dev.of_node, "lantiq,shadow", NULL);
->> -     if (shadow)
->> -             chip->shadow = be32_to_cpu(*shadow);
->> +     of_property_read_u16(pdev->dev.of_node, "lantiq,shadow",
->> +                          &chip->shadow);
->
-> The old code and new code aren't equivalent:
->
-> The binding doesn't specify the use of /bits/ 16 <...>, nor does the
-> only in-tree dts use it:
->
-> arch/mips/boot/dts/easy50712.dts:               lantiq,shadow = <0xfff>;
->
-> So in the DTB, lantiq-shadow will be stored as a be32 value. The byte
-> stream will look like: [00 00 0f ff].
->
-> The existing code reads all 4 bytes, and converts them as required,
-> reading the expected value of 0xfff. If you use of_property_read_u16,
-> this will only take the first 2 bytes, and will incorrectly read 0.
->
-> You can instead use of_property_read_u32, which will function
-> equivalently to the existing code.
->
-> Thanks,
-> Mark.
+> +u8 da9150_reg_read(struct da9150 *da9150, u16 reg)
+> +{
+> +	int val, ret;
+> +
+> +	ret =3D regmap_read(da9150->regmap, reg, &val);
+> +	if (ret)
+> +		dev_err(da9150->dev, "Failed to read from reg 0x%x: %d\n",
+> +			reg, ret);
+> +
+> +	return (u8) val;
+> +}
+> +EXPORT_SYMBOL_GPL(da9150_reg_read);
+> +
+> +void da9150_reg_write(struct da9150 *da9150, u16 reg, u8 val)
+> +{
+> +	int ret;
+> +
+> +	ret =3D regmap_write(da9150->regmap, reg, val);
+> +	if (ret)
+> +		dev_err(da9150->dev, "Failed to write to reg 0x%x: %d\n",
+> +			reg, ret);
+> +}
+> +EXPORT_SYMBOL_GPL(da9150_reg_write);
+> +
+> +void da9150_set_bits(struct da9150 *da9150, u16 reg, u8 mask, u8 val=
+)
+> +{
+> +	int ret;
+> +
+> +	ret =3D regmap_update_bits(da9150->regmap, reg, mask, val);
+> +	if (ret)
+> +		dev_err(da9150->dev, "Failed to set bits in reg 0x%x: %d\n",
+> +			reg, ret);
+> +}
+> +EXPORT_SYMBOL_GPL(da9150_set_bits);
+> +
+> +void da9150_bulk_read(struct da9150 *da9150, u16 reg, int count, u8 =
+*buf)
+> +{
+> +	int ret;
+> +
+> +	ret =3D regmap_bulk_read(da9150->regmap, reg, buf, count);
+> +	if (ret)
+> +		dev_err(da9150->dev, "Failed to bulk read from reg 0x%x: %d\n",
+> +			reg, ret);
+> +}
+> +EXPORT_SYMBOL_GPL(da9150_bulk_read);
+> +
+> +void da9150_bulk_write(struct da9150 *da9150, u16 reg, int count, co=
+nst u8 *buf)
+> +{
+> +	int ret;
+> +
+> +	ret =3D regmap_raw_write(da9150->regmap, reg, buf, count);
+> +	if (ret)
+> +		dev_err(da9150->dev, "Failed to bulk write to reg 0x%x %d\n",
+> +			reg, ret);
+> +}
+> +EXPORT_SYMBOL_GPL(da9150_bulk_write);
 
+I've never been a fan of this type of aggregation.  Can you explain to
+me what the point of them is?
 
-
--- 
-Ricardo Ribalda
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
