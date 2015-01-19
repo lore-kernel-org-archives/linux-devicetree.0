@@ -1,96 +1,35 @@
-From: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Subject: Re: [PATCH v2 03/11] ARM: tegra: Set the sound card model that
- alsaucm expects
-Date: Mon, 19 Jan 2015 18:11:14 +0100
-Message-ID: <CAAObsKBm5mesGqrLQnveKQMy__uEOU1vcLGptnKxqHjV-T9C0g@mail.gmail.com>
-References: <1421338359-27467-1-git-send-email-tomeu.vizoso@collabora.com>
- <1421338359-27467-4-git-send-email-tomeu.vizoso@collabora.com>
- <54B7F757.5060002@wwwdotorg.org> <CAAObsKCad9O_=TUQrF7fVbBvjDTmfJsLPgr+EasCyhvY+xhdHg@mail.gmail.com>
- <CAAObsKBKnU_wBaxNFN-buz71qL-te4s6bqrrnxao_N-TwBVkAQ@mail.gmail.com> <54BD3A75.80009@wwwdotorg.org>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 2/4 V2] dt-bindings: Add root properties for Raspberry
+ Pi
+Date: Mon, 19 Jan 2015 10:13:45 -0700
+Message-ID: <54BD3B49.4050203@wwwdotorg.org>
+References: <1421665231-28221-1-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54BD3A75.80009-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1421665231-28221-1-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 19 January 2015 at 18:10, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
-> On 01/16/2015 02:01 AM, Tomeu Vizoso wrote:
->>
->> On 16 January 2015 at 09:50, Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
->> wrote:
->>>
->>> On 15 January 2015 at 18:22, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
->>> wrote:
->>>>
->>>> On 01/15/2015 09:12 AM, Tomeu Vizoso wrote:
->>>>>
->>>>>
->>>>> Patches are on its way to add a config file to alsaucm for the Nyan
->>>>> boards. Use the same card ID that alsaucm will expect.
->>>>>
->>>>> Signed-off-by: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
->>>>> ---
->>>>>    arch/arm/boot/dts/tegra124-nyan-big.dts | 4 ++--
->>>>>    1 file changed, 2 insertions(+), 2 deletions(-)
->>>>>
->>>>> diff --git a/arch/arm/boot/dts/tegra124-nyan-big.dts
->>>>> b/arch/arm/boot/dts/tegra124-nyan-big.dts
->>>>> index 43e58a4..9a9cffe 100644
->>>>> --- a/arch/arm/boot/dts/tegra124-nyan-big.dts
->>>>> +++ b/arch/arm/boot/dts/tegra124-nyan-big.dts
->>>>> @@ -1976,9 +1976,9 @@
->>>>>          };
->>>>>
->>>>>          sound {
->>>>> -               compatible = "nvidia,tegra-audio-max98090-nyan-big",
->>>>> +               compatible = "nvidia,tegra-audio-max98090-nyan",
->>>>>                               "nvidia,tegra-audio-max98090";
->>>>
->>>>
->>>>
->>>> If all the boards that are derived from Nyan truly have identical audio
->>>> HW
->>>> (or at least any differences can be described by this binding), then it
->>>> seems fine to add "nvidia,tegra-audio-max98090-nyan" to the compatible
->>>> value.
->>>
->>>
->>>
->>>
->>>> However, I don't see a reason to remove the board-specific compatible
->>>> value
->>>> "nvidia,tegra-audio-max98090-nyan-big"; we should always include all the
->>>> values that are relevant.
->>>
->>>
->>> Ok.
->>
->>
->> Oh, actually, my intention was to move the whole sound node to the
->> nyan dtsi, as there isn't anything specific to the blaze regarding
->> sound.
->
->
-> There are zero differences between the sound circuits of the boards? If so,
-> that sounds fine. I suppose if we do need to apply a quirk to one board but
-> not the other, we can always fall back on the top-level compatible value if
-> we absolutely have to.
+On 01/19/2015 04:00 AM, Stefan Wahren wrote:
+> This patch adds root compatible properties for the following boards:
+> - Raspberry Pi Model A
+> - Raspberry Pi Model A+
+> - Raspberry Pi Model B
+> - Raspberry Pi Model B (no P5)
+> - Raspberry Pi Model B rev2
+> - Raspberry Pi Model B+
+> - Raspberry Pi Compute Module
 
-Yeah, this is what Dylan said in other thread:
+Acked-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 
-"ChromeOS uses one config for both.  The only audio difference between
-these two boards is the speakers, that isn't represented in UCM, so
-one config file is fine."
-
-Regards,
-
-Tomeu
-
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+This seems sane to me. One thing I should have asked: What compatible 
+values does the RPi Foundation's downstream for all these cases? 
+Aligning with that would be nice if possible.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
