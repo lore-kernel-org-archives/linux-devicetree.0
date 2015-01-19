@@ -1,75 +1,77 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 4/8] gpio-mm-lantiq: Use of_propery_read_u16
-Date: Mon, 19 Jan 2015 10:57:53 +0000
-Message-ID: <20150119105753.GC21553@leverpostej>
-References: <1421581173-28416-1-git-send-email-ricardo.ribalda@gmail.com>
- <1421581173-28416-5-git-send-email-ricardo.ribalda@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: [PATCH 2/4 V2] dt-bindings: Add root properties for Raspberry Pi
+Date: Mon, 19 Jan 2015 11:00:31 +0000
+Message-ID: <1421665231-28221-1-git-send-email-stefan.wahren@i2se.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1421581173-28416-5-git-send-email-ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jan 18, 2015 at 11:39:29AM +0000, Ricardo Ribalda Delgado wrote:
-> Instead of parsing manually the shadow content, use the much simpler
-> helper of_property_read_u16.
-> 
-> Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  drivers/gpio/gpio-mm-lantiq.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpio-mm-lantiq.c b/drivers/gpio/gpio-mm-lantiq.c
-> index 7d55161..b511a6b 100644
-> --- a/drivers/gpio/gpio-mm-lantiq.c
-> +++ b/drivers/gpio/gpio-mm-lantiq.c
-> @@ -105,7 +105,6 @@ static void ltq_mm_save_regs(struct of_mm_gpio_chip *mm_gc)
->  static int ltq_mm_probe(struct platform_device *pdev)
->  {
->  	struct ltq_mm *chip;
-> -	const __be32 *shadow;
->  
->  	chip = devm_kzalloc(&pdev->dev, sizeof(*chip), GFP_KERNEL);
->  	if (!chip)
-> @@ -117,9 +116,8 @@ static int ltq_mm_probe(struct platform_device *pdev)
->  	chip->mmchip.save_regs = ltq_mm_save_regs;
->  
->  	/* store the shadow value if one was passed by the devicetree */
-> -	shadow = of_get_property(pdev->dev.of_node, "lantiq,shadow", NULL);
-> -	if (shadow)
-> -		chip->shadow = be32_to_cpu(*shadow);
-> +	of_property_read_u16(pdev->dev.of_node, "lantiq,shadow",
-> +			     &chip->shadow);
+This patch adds root compatible properties for the following boards:
+- Raspberry Pi Model A
+- Raspberry Pi Model A+
+- Raspberry Pi Model B
+- Raspberry Pi Model B (no P5)
+- Raspberry Pi Model B rev2
+- Raspberry Pi Model B+
+- Raspberry Pi Compute Module
 
-The old code and new code aren't equivalent:
+Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+---
 
-The binding doesn't specify the use of /bits/ 16 <...>, nor does the
-only in-tree dts use it:
+Changes in V2:
+- add all currently known Raspberry Pi boards as suggested by
+  Stephen Warren
 
-arch/mips/boot/dts/easy50712.dts:               lantiq,shadow = <0xfff>;
+ Documentation/devicetree/bindings/arm/bcm2835.txt |   31 +++++++++++++++++++--
+ 1 file changed, 29 insertions(+), 2 deletions(-)
 
-So in the DTB, lantiq-shadow will be stored as a be32 value. The byte
-stream will look like: [00 00 0f ff].
+diff --git a/Documentation/devicetree/bindings/arm/bcm2835.txt b/Documentation/devicetree/bindings/arm/bcm2835.txt
+index ac68348..c78576b 100644
+--- a/Documentation/devicetree/bindings/arm/bcm2835.txt
++++ b/Documentation/devicetree/bindings/arm/bcm2835.txt
+@@ -1,8 +1,35 @@
+ Broadcom BCM2835 device tree bindings
+ -------------------------------------------
+ 
+-Boards with the BCM2835 SoC shall have the following properties:
++Raspberry Pi Model A
++Required root node properties:
++compatible = "raspberrypi,model-a", "brcm,bcm2835";
+ 
+-Required root node property:
++Raspberry Pi Model A+
++Required root node properties:
++compatible = "raspberrypi,model-a-plus", "brcm,bcm2835";
+ 
++Raspberry Pi Model B
++Required root node properties:
++compatible = "raspberrypi,model-b", "brcm,bcm2835";
++
++Raspberry Pi Model B (no P5)
++early model B with I2C0 rather than I2C1 routed to the expansion header
++Required root node properties:
++compatible = "raspberrypi,model-b-i2c0", "brcm,bcm2835";
++
++Raspberry Pi Model B rev2
++Required root node properties:
++compatible = "raspberrypi,model-b-rev2", "brcm,bcm2835";
++
++Raspberry Pi Model B+
++Required root node properties:
++compatible = "raspberrypi,model-b-plus", "brcm,bcm2835";
++
++Raspberry Pi Compute Module
++Required root node properties:
++compatible = "raspberrypi,compute-module", "brcm,bcm2835";
++
++Generic BCM2835 board
++Required root node properties:
+ compatible = "brcm,bcm2835";
+-- 
+1.7.9.5
 
-The existing code reads all 4 bytes, and converts them as required,
-reading the expected value of 0xfff. If you use of_property_read_u16,
-this will only take the first 2 bytes, and will incorrectly read 0.
-
-You can instead use of_property_read_u32, which will function
-equivalently to the existing code.
-
-Thanks,
-Mark.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
