@@ -1,67 +1,39 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v2 2/5] usb: dwc3: add revision number DWC3_REVISION_300A
-Date: Mon, 19 Jan 2015 14:00:05 -0600
-Message-ID: <20150119200005.GP20386@saruman>
-References: <1421654209-6486-1-git-send-email-Sneeker.Yeh@tw.fujitsu.com>
- <1421654209-6486-3-git-send-email-Sneeker.Yeh@tw.fujitsu.com>
- <20150119144642.GD20386@saruman>
- <2B3535C5ECE8B5419E3ECBE3007729090174814C4D@us01wembx1.internal.synopsys.com>
-Reply-To: <balbi@ti.com>
+From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Subject: Re: [PATCH net-next v8 0/4] net: Add Keystone NetCP ethernet
+ driver support
+Date: Mon, 19 Jan 2015 15:11:06 -0500 (EST)
+Message-ID: <20150119.151106.822126941934010309.davem@davemloft.net>
+References: <1421367007-19744-1-git-send-email-m-karicheri2@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="1LW0Rr0Uq98qh6Rv"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <2B3535C5ECE8B5419E3ECBE3007729090174814C4D@us01wembx1.internal.synopsys.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: John Youn <John.Youn@synopsys.com>
-Cc: "balbi@ti.com" <balbi@ti.com>, Sneeker Yeh <sneeker.yeh@gmail.com>, Paul Zimmerman <paul.zimmerman@synopsys.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Grant Likely <grant.likely@linaro.org>, Huang Rui <ray.huang@amd.com>, Kishon Vijay Abraham I <kishon@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Andy Green <andy.green@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Sneeker Yeh <Sneeker.Yeh@tw.fujitsu.com>
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1421367007-19744-1-git-send-email-m-karicheri2-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: m-karicheri2-l0cyMroinI0@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---1LW0Rr0Uq98qh6Rv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+Date: Thu, 15 Jan 2015 19:10:03 -0500
 
-On Mon, Jan 19, 2015 at 07:45:31PM +0000, John Youn wrote:
-> > -----Original Message-----
-> > From: Felipe Balbi [mailto:balbi@ti.com]
-> > Sent: Monday, January 19, 2015 6:47 AM
-> > =09
-> > looking at Synopsys Solvnet for this IP, it shows that current version
-> > is 2.90a. There's no 3.00a. Paul, John, is there a 3.00a version of the
-> > DWC USB3 IP ?
->=20
-> Yes there is, but it has not been released yet, thus it's not in Solvnet.
+> The Network Coprocessor (NetCP) is a hardware accelerator that processes
+> Ethernet packets. NetCP has a gigabit Ethernet (GbE) subsystem with a ethernet
+> switch sub-module to send and receive packets. NetCP also includes a packet
+> accelerator (PA) module to perform packet classification operations such as
+> header matching, and packet modification operations such as checksum
+> generation. NetCP can also optionally include a Security Accelerator(SA)
+> capable of performing IPSec operations on ingress/egress packets.
+>     
+> Keystone SoC's also have a 10 Gigabit Ethernet Subsystem (XGbE) which
+> includes a 3-port Ethernet switch sub-module capable of 10Gb/s and
+> 1Gb/s rates per Ethernet port.
+>     
+> Both GBE and XGBE network processors supported using common driver. It
+> is also designed to handle future variants of NetCP.
 
-alright, in that case, Sneeker, can you update this patch to add 2.90a
-and 3.00a macros ?
-
-Thanks
-
---=20
-balbi
-
---1LW0Rr0Uq98qh6Rv
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUvWJFAAoJEIaOsuA1yqREmfoP/3wjs5yS5hXLHKZAr+OfVNj9
-IefA2Y0gNvM7KDUmT506nJH8A5Q3k5knlmBAkh6tJBezhqlweimc5E36I3uHQaWr
-XDDHrcJMTpTbyf4iRCeDR9BzcJYW2x1WMEZQw+pEj13SplnsSp94MiieBVvkXGHl
-mH6ZMWBJilSlhrCI6fTfqWwLc+/lRa/HRhbLK+IrwGS3/ks/w2lNpuZF9GcG0mCK
-tYGuKhkUMLjATBK1NBChaKTmruEqToWhRtbu4Bho5Gksxxt/fPFMM7Wm8Vpr178d
-w9Cbj8c5B5Ql2yXrRccmW9AaUHOSZHLNxMzQO3wKJtR+1nts/+SkcOMeB+wzrl7Z
-DZltoDNVgO18LcVbIhRqJtprWZ4+4jDz77e2wlF4TL1Z3OgFB/MN8fvYY4cZuM1B
-SbgZIVlvM9PnVnLkBsQP9QuFPdAGTa2GaFLpXMaEGpy9pzO60D/cqOapyse49jHD
-kq219+YFhGOyZjERZIZZ9z+Ef/d3LMxyKuLfRe+P4bFCGdl7MwE8GHIWxC8RynvJ
-+xXPxfaIMO5EeHmk/j4X/5xiORkdHmfzDctdKmQBpcS5rUqkT97AYHj1ESII7lMT
-YcT8537uBFBR6wu5EZGyZun5zZPhRxbUXPuk0bCXb6HLrILuJmwT5+sJPCSjtBbJ
-NpjMFH9D3YFi5ZtTRPfA
-=ar0/
------END PGP SIGNATURE-----
-
---1LW0Rr0Uq98qh6Rv--
+Series applied to net-next, thanks.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
