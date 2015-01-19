@@ -1,41 +1,49 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sunxi: Add missing mdio label
-Date: Mon, 19 Jan 2015 21:39:41 +0100
-Message-ID: <20150119203941.GG4367@lukather>
-References: <1421696122-5389-1-git-send-email-mamlinav@gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] SATA: OCTEON: support SATA on OCTEON platform
+Date: Mon, 19 Jan 2015 21:46:52 +0100
+Message-ID: <1657896.cG5R2xLFfX@wuerfel>
+References: <1421681040-3392-1-git-send-email-aleksey.makarov@auriga.com> <54BD580C.6030701@gmail.com> <CAL_JsqKq22K3kk7m09J1GZn9xXB+0tCUe75u3x+S3oWC0kyDcw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="z9ECzHErBrwFF8sy"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBLWX6WSQKGQE5CG23FY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1421696122-5389-1-git-send-email-mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqKq22K3kk7m09J1GZn9xXB+0tCUe75u3x+S3oWC0kyDcw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: David Daney <ddaney.cavm@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Aleksey Makarov <aleksey.makarov@auriga.com>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "linux-mips@linux-mips.org" <linux-mips@linux-mips.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Daney <david.daney@cavium.com>, Anton Vorontsov <avorontsov@ru.mvista.com>, Vinita Gupta <vgupta@caviumnetworks.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ralf Baechle <ralf@linux-mips.org>, Tejun Heo <tj@kernel.org>, Hans de Goede <hdegoede@redhat.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
---z9ECzHErBrwFF8sy
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
-
-On Mon, Jan 19, 2015 at 10:35:22PM +0300, Aleksei Mamlin wrote:
-> This patch add missing mdio label for sun[457]i.
+On Monday 19 January 2015 14:30:22 Rob Herring wrote:
+> On Mon, Jan 19, 2015 at 1:16 PM, David Daney <ddaney.cavm@gmail.com> wrote:
+> > On 01/19/2015 07:43 AM, Mark Rutland wrote:
+> >>
+> >> On Mon, Jan 19, 2015 at 03:23:58PM +0000, Aleksey Makarov wrote:
+> >>>
+> >>> The OCTEON SATA controller is currently found on cn71XX devices.
 > 
-> Signed-off-by: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> [...]
+> 
+> >>> +
+> >>> +       /* Set a good dma_mask */
+> >>> +       pdev->dev.coherent_dma_mask = DMA_BIT_MASK(64);
+> >>> +       pdev->dev.dma_mask = &pdev->dev.coherent_dma_mask;
+> >>
+> >>
+> >> I thought a dma-ranges property in the DT could be used to set up the
+> >> DMA mask appropriately?
+> >
+> >
+> > The DT contains no dma-ranges property, and we know a priori, that it should
+> > be 64-bits.
+> 
+> Neither this code nor dma-ranges should be necessary. The AHCI core
+> code will set the mask to 32 or 64 bits based on the AHCI Capabilities
+> register.
 
-Applied, thanks.
+You should however have a dma-ranges property in the parent bus of the
+device that contains the allowed range for DMA. The current dma_set_mask
+function is broken and will accept whatever a device driver asks for,
+and we need to fix this so masks larger than what is specified in dma-ranges
+are rejected.
 
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---z9ECzHErBrwFF8sy--
+	Arnd
