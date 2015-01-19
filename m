@@ -1,69 +1,97 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH V4 01/14] sh: Eliminate unused irq_reg_{readl,writel} accessors
-Date: Mon, 19 Jan 2015 20:13:25 +0100
-Message-ID: <CAMuHMdUpxURV4ztpa3x0TORsSWtxiKxe6_EDO5QsO_vhedip0A@mail.gmail.com>
-References: <1415342669-30640-1-git-send-email-cernekee@gmail.com>
-	<1415342669-30640-2-git-send-email-cernekee@gmail.com>
-	<CAMuHMdW+L8YbE8Z8jrtnm8xWk63sRGaFdM7TPM6MmrDg9XwHuQ@mail.gmail.com>
-	<20141114163843.GH29662@linux-mips.org>
-	<20141114170525.GL3698@titan.lakedaemon.net>
-	<CAMuHMdXMsxhcD9C079YPc6Toxdo0e23oqM_9KeSG=NrFa4auRQ@mail.gmail.com>
+From: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v5 2/3] i2c: iproc: Add Broadcom iProc I2C Driver
+Date: Mon, 19 Jan 2015 11:15:41 -0800
+Message-ID: <54BD57DD.9080002@broadcom.com>
+References: <rjui@broadcom.com> <1421451737-7107-1-git-send-email-rjui@broadcom.com> <1421451737-7107-3-git-send-email-rjui@broadcom.com> <54BB795C.6040402@broadcom.com> <20150118094741.GE22880@pengutronix.de> <20150118110658.GA1113@katana> <20150118111759.GG22880@pengutronix.de> <54BB9D2B.20408@broadcom.com> <20150118115650.GH22880@pengutronix.de> <54BBA36A.10608@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdXMsxhcD9C079YPc6Toxdo0e23oqM_9KeSG=NrFa4auRQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jason Cooper <jason@lakedaemon.net>
-Cc: Ralf Baechle <ralf@linux-mips.org>, Kevin Cernekee <cernekee@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linux-sh list <linux-sh@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Florian Fainelli <f.fainelli@gmail.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Maxime Bizon <mbizon@freebox.fr>, Jonas Gorski <jogo@openwrt.org>, Linux MIPS Mailing List <linux-mips@linux-mips.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54BBA36A.10608-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, =?windows-1252?Q?Uwe_Kleine-?= =?windows-1252?Q?K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jason,
 
-On Sun, Nov 16, 2014 at 10:34 AM, Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
-> Hi Jason,
->
-> On Fri, Nov 14, 2014 at 6:05 PM, Jason Cooper <jason@lakedaemon.net> wrote:
->> On Fri, Nov 14, 2014 at 05:38:44PM +0100, Ralf Baechle wrote:
->>> On Mon, Nov 10, 2014 at 09:13:49AM +0100, Geert Uytterhoeven wrote:
->>>
->>> > On Fri, Nov 7, 2014 at 7:44 AM, Kevin Cernekee <cernekee@gmail.com> wrote:
->>> > > Defining these macros way down in arch/sh/.../irq.c doesn't cause
->>> > > kernel/irq/generic-chip.c to use them.  As far as I can tell this code
->>> > > has no effect.
->>> > >
->>> > > Signed-off-by: Kevin Cernekee <cernekee@gmail.com>
->>> >
->>> > Compared preprocessor and asm output before and after, no difference
->>> > except for line numbers, so
->>> >
->>> > Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
->>>
->>> I noticed the remainder of of this series is now in Jason Cooper's irqchip
->>> tree.  Is anybody still taking care of SH?  If not I can funnel it
->>> through the MIPS tree.
+
+On 1/18/2015 4:13 AM, Arend van Spriel wrote:
+> On 01/18/15 12:56, Uwe Kleine-K=F6nig wrote:
+>> Hello,
 >>
->> Are the SH maintainers active?  I admit I know very little about the
->> arch.  I'm more than happy to pick it up and keep it with the rest of
->> the series, I just didn't want to step on toes...
->
-> SH is orphaned, so it would be great if you could pick it up.
-> Thanks!
+>> On Sun, Jan 18, 2015 at 12:46:51PM +0100, Arend van Spriel wrote:
+>>> On 01/18/15 12:17, Uwe Kleine-K=F6nig wrote:
+>>>> Hello Wolfram,
+>>>>
+>>>> On Sun, Jan 18, 2015 at 12:06:58PM +0100, Wolfram Sang wrote:
+>>>>> On Sun, Jan 18, 2015 at 10:47:41AM +0100, Uwe Kleine-K=F6nig wrot=
+e:
+>>>>>> On Sun, Jan 18, 2015 at 10:14:04AM +0100, Arend van Spriel wrote=
+:
+>>>>>>> On 01/17/15 00:42, Ray Jui wrote:
+>>>>>>>> +    complete_all(&iproc_i2c->done);
+>>>>>>>
+>>>>>>> Looking over this code it seems to me there is always a single
+>>>>>>> process waiting for iproc_i2c->done to complete. So using compl=
+ete()
+>>>>>>> here would suffice.
+>>>>>> Yeah, there is always only a single thread waiting. That means b=
+oth
+>>>>>> complete and complete_all are suitable. AFAIK there is no reason
+>>>>>> to pick
+>>>>>> one over the other in this case.
+>>>>>
+>>>>> Clarity?
+>>>> And which do you consider more clear? complete_all might result in=
+ the
+>>>> question: "Is there>1 waiter?" and complete might yield to "What a=
+bout
+>>>> the other waiters?". If you already know there is only one, both a=
+re on
+>>>> par on clarity. Might only be me?! I don't care much.
+>>>
+>>> Maybe it is me, but it is not about questions but it is about
+>>> implicit statements that the code makes (or reader derives from it)=
+=2E
+>>> When using complete_all you indicate to the reader "there can be
+>>> more than one waiter". When using complete it indicates "there is
+>>> only one waiter". If those statements are not true that is a code
+>> No, complete works just fine in the presence of>1 waiter. It just wa=
+kes
+>> a single waiter and all others continue to wait.
+>=20
+> Yes. Agree.
+>=20
+>> That is, for single-waiter situations there is no semantic differenc=
+e
+>> between complete and complete_all. But there is a difference for
+>> multi-waiter queues.
+>=20
+> Indeed.
+>=20
+>> I think this is just a matter of your POV in the single-waiter
+>> situation: complete might be intuitive because you just completed a
+>> single task and complete_all might be intuitive because it signals
+>> "I'm completely done, there is noone waiting for me any more.".
+>=20
+> Ok. Let's leave it to the author's intuition or to say it differently
+> "sorry for the noise" ;-)
+Will stay with complete_all since I meant to say "after this transfer
+complete interrupt, there should be no one waiting anymore (although
+there's currently only one waiter, and will likely stay that way)"
 
-I think you forgot to pick it up, as se7343 and se7722 are still broken:
+Thanks!
 
-http://kisskb.ellerman.id.au/kisskb/buildresult/12346740/
-http://kisskb.ellerman.id.au/kisskb/buildresult/12346745/
-
-Will you still do so, or shall I forward the patch to Andrew Morton?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+>=20
+> Regards,
+> Arend
+>=20
+>> Best regards
+>> Uwe
+>>
+>=20
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
