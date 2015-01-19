@@ -1,289 +1,180 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH v3 1/4] clk: dts: mediatek: add Mediatek MT8135 clock
- bindings
-Date: Mon, 19 Jan 2015 07:35:49 -0800
-Message-ID: <20150119153549.22722.67372@quantum>
-References: <1420601123-25859-1-git-send-email-jamesjj.liao@mediatek.com>
- <1420601123-25859-2-git-send-email-jamesjj.liao@mediatek.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] SATA: OCTEON: support SATA on OCTEON platform
+Date: Mon, 19 Jan 2015 15:43:57 +0000
+Message-ID: <20150119154357.GH21553@leverpostej>
+References: <1421681040-3392-1-git-send-email-aleksey.makarov@auriga.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1420601123-25859-2-git-send-email-jamesjj.liao@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, jamesjj.liao@mediatek.com, Vladimir Murzin <vladimir.murzin@arm.com>, Russell King <linux@arm.linux.org.uk>, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, linux-kernel@vger.kernel.org, henryc.chen@mediatek.com, devicetree@vger.kernel.org, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, "Joe.C" <yingjoe.chen@mediatek.com>, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-ide-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1421681040-3392-1-git-send-email-aleksey.makarov@auriga.com>
+Content-Language: en-US
+Sender: linux-ide-owner@vger.kernel.org
+To: Aleksey Makarov <aleksey.makarov@auriga.com>
+Cc: "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "linux-mips@linux-mips.org" <linux-mips@linux-mips.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Daney <david.daney@cavium.com>, Anton Vorontsov <avorontsov@ru.mvista.com>, Vinita Gupta <vgupta@caviumnetworks.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ralf Baechle <ralf@linux-mips.org>, Tejun Heo <tj@kernel.org>, Hans de Goede <hdegoede@redhat.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting James Liao (2015-01-06 19:25:20)
-> Document the device-tree binding of Mediatek MT8135 SoC, including
-> TOPCKGEN, PLLs, INFRA and PERI clock controller.
+On Mon, Jan 19, 2015 at 03:23:58PM +0000, Aleksey Makarov wrote:
+> The OCTEON SATA controller is currently found on cn71XX devices.
 > 
-> Change-Id: Ie9175adebdb2d3b6aa1854d3bc11c57c191b3255
-> Signed-off-by: James Liao <jamesjj.liao@mediatek.com>
+> Signed-off-by: David Daney <david.daney@cavium.com>
+> Signed-off-by: Vinita Gupta <vgupta@caviumnetworks.com>
+> [aleksey.makarov@auriga.com: preparing for submission,
+> conflict resolution, fixes for the platform code]
+> Signed-off-by: Aleksey Makarov <aleksey.makarov@auriga.com>
 > ---
->  .../bindings/clock/mediatek,mt8135-clock.txt       |  36 ++++
->  include/dt-bindings/clock/mt8135-clk.h             | 190 +++++++++++++++++++++
->  2 files changed, 226 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/mediatek,mt8135-clock.txt
->  create mode 100644 include/dt-bindings/clock/mt8135-clk.h
+>  .../devicetree/bindings/ata/ahci-platform.txt      |   1 +
+>  .../devicetree/bindings/mips/cavium/sata-uctl.txt  |  31 ++++++
+>  arch/mips/cavium-octeon/octeon-platform.c          |   1 +
+>  drivers/ata/Kconfig                                |   9 ++
+>  drivers/ata/Makefile                               |   1 +
+>  drivers/ata/ahci_platform.c                        |  10 ++
+>  drivers/ata/sata_octeon.c                          | 107 +++++++++++++++++++++
+>  7 files changed, 160 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mips/cavium/sata-uctl.txt
+>  create mode 100644 drivers/ata/sata_octeon.c
 > 
-> diff --git a/Documentation/devicetree/bindings/clock/mediatek,mt8135-clock.txt b/Documentation/devicetree/bindings/clock/mediatek,mt8135-clock.txt
+> diff --git a/Documentation/devicetree/bindings/ata/ahci-platform.txt b/Documentation/devicetree/bindings/ata/ahci-platform.txt
+> index 4ab09f2..1a5d3be 100644
+> --- a/Documentation/devicetree/bindings/ata/ahci-platform.txt
+> +++ b/Documentation/devicetree/bindings/ata/ahci-platform.txt
+> @@ -11,6 +11,7 @@ Required properties:
+>  - compatible        : compatible string, one of:
+>    - "allwinner,sun4i-a10-ahci"
+>    - "hisilicon,hisi-ahci"
+> +  - "cavium,octeon-7130-ahci"
+>    - "ibm,476gtr-ahci"
+>    - "marvell,armada-380-ahci"
+>    - "snps,dwc-ahci"
+> diff --git a/Documentation/devicetree/bindings/mips/cavium/sata-uctl.txt b/Documentation/devicetree/bindings/mips/cavium/sata-uctl.txt
 > new file mode 100644
-> index 0000000..e23df49
+> index 0000000..222e66e
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/mediatek,mt8135-clock.txt
-> @@ -0,0 +1,36 @@
-> +Mediatek MT8135 Clock Controller
-> +
-> +This binding uses the common clock binding:
-> +Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +
-> +The Mediatek MT8135 clock controller generates and supplies clock to various
-> +controllers within Mediatek MT8135 SoC.
-> +
-> +Required Properties:
-> +
-> +- compatible: should be one of following:
-> +       - "mediatek,mt8135-topckgen" : for topckgen clock controller of MT8135.
-> +       - "mediatek,mt8135-apmixedsys" : for apmixed_sys (PLLs) of MT8135.
-> +       - "mediatek,mt8135-infracfg" : for infra_sys clock controller of MT8135.
-> +       - "mediatek,mt8135-pericfg" : for peri_sys clock controller of MT8135.
-> +
-> +- reg: physical base address of the controller and length of memory mapped
-> +  region.
-> +
-> +- #clock-cells: should be 1.
-> +
-> +All available clocks are defined as preprocessor macros in
-> +dt-bindings/clock/mt8135-clk.h header and can be used in device tree sources.
-> +
-> +Example: I2C controller node that consumes the clock generated by the clock
-> +  controller (refer to the standard clock bindings for information about
-> +  "clocks" and "clock-names" properties):
-> +
-> +       i2c0: i2c@1100d000 {
-> +               compatible = "mediatek,mt8135-i2c", "mediatek,mt6589-i2c";
-> +               reg = <0 0x1100d000 0 0x70>, <0 0x11000300 0 0x80>;
-> +               interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_LOW>;
-> +               clock-div = <16>;
-> +               clocks = <&pericfg PERI_I2C0_CK>, <&pericfg PERI_AP_DMA_CK>;
-> +               clock-names = "main", "dma";
-> +       };
+> +++ b/Documentation/devicetree/bindings/mips/cavium/sata-uctl.txt
+> @@ -0,0 +1,31 @@
+> +* UCTL SATA controller glue
 
-Hello,
+I'm not sure I follow. What does this mean?
 
-Patch looks good to me overall. One suggestion for the next version is
-that your example above include a node for the clock controller itself,
-followed by the i2c controller example above.
+> +
+> +Properties:
+> +- compatible: "cavium,octeon-7130-sata-uctl"
+> +
+> +  Compatibility with the cn7130 SOC.
+> +
+> +- reg: The base address of the UCTL register bank.
+> +
+> +- #address-cells: Must be <2>.
+> +
+> +- #size-cells: Must be <2>.
+> +
+> +- ranges: Empty to signify direct mapping of the children.
 
-Regards,
-Mike
+Why can't these be any values which are sufficient to map children?
 
-> diff --git a/include/dt-bindings/clock/mt8135-clk.h b/include/dt-bindings/clock/mt8135-clk.h
-> new file mode 100644
-> index 0000000..8aea762
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/mt8135-clk.h
-> @@ -0,0 +1,190 @@
-> +/*
-> + * Copyright (c) 2014 MediaTek Inc.
-> + * Author: James Liao <jamesjj.liao@mediatek.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
 > +
-> +#ifndef _DT_BINDINGS_CLK_MT8135_H
-> +#define _DT_BINDINGS_CLK_MT8135_H
+> +Example:
 > +
-> +/* TOPCKGEN */
+> +	uctl@118006c000000 {
+> +	        compatible = "cavium,octeon-7130-sata-uctl";
+> +	        reg = <0x00011800 0x6c000000 0x00000000 0x00000100>;
+> +	        ranges;
+> +	        #address-cells = <0x00000002>;
+> +	        #size-cells = <0x00000002>;
+
+No need for all the zero-padding on these, they aren't addresses.
+
+> +	        sata@16c00 {
+> +	                compatible = "cavium,octeon-7130-ahci";
+> +	                reg = <0x00016c00 0x00000000 0x00000000 0x00000200>;
+> +	                interrupt-parent = <0x0000000d>;
+> +	                interrupts = <0x00000002 0x00000004>;
+> +	                cavium,qlm-trim-alias = "sata";
+
+What's this property for? It wasn't documented above, and doesn't exist
+in mainline.
+
+[...]
+
+> diff --git a/drivers/ata/Makefile b/drivers/ata/Makefile
+> index ae41107..4a0e5e3 100644
+> --- a/drivers/ata/Makefile
+> +++ b/drivers/ata/Makefile
+> @@ -17,6 +17,7 @@ obj-$(CONFIG_AHCI_SUNXI)	+= ahci_sunxi.o libahci.o libahci_platform.o
+>  obj-$(CONFIG_AHCI_ST)		+= ahci_st.o libahci.o libahci_platform.o
+>  obj-$(CONFIG_AHCI_TEGRA)	+= ahci_tegra.o libahci.o libahci_platform.o
+>  obj-$(CONFIG_AHCI_XGENE)	+= ahci_xgene.o libahci.o libahci_platform.o
+> +obj-$(CONFIG_SATA_OCTEON)	+= sata_octeon.o
+>  
+>  # SFF w/ custom DMA
+>  obj-$(CONFIG_PDC_ADMA)		+= pdc_adma.o
+> diff --git a/drivers/ata/ahci_platform.c b/drivers/ata/ahci_platform.c
+> index 18d5398..bb36396 100644
+> --- a/drivers/ata/ahci_platform.c
+> +++ b/drivers/ata/ahci_platform.c
+> @@ -22,6 +22,12 @@
+>  #include <linux/ahci_platform.h>
+>  #include "ahci.h"
+>  
+> +#if IS_ENABLED(CONFIG_SATA_OCTEON)
+> +void ahci_octeon_config(struct platform_device *pdev);
+> +#else
+> +static inline void ahci_octeon_config(struct platform_device *pdev) {}
+> +#endif
 > +
-> +#define TOP_DSI0_LNTC_DSICLK   1
-> +#define TOP_HDMITX_CLKDIG_CTS  2
-> +#define TOP_CLKPH_MCK          3
-> +#define TOP_CPUM_TCK_IN                4
-> +#define TOP_MAINPLL_806M       5
-> +#define TOP_MAINPLL_537P3M     6
-> +#define TOP_MAINPLL_322P4M     7
-> +#define TOP_MAINPLL_230P3M     8
-> +#define TOP_UNIVPLL_624M       9
-> +#define TOP_UNIVPLL_416M       10
-> +#define TOP_UNIVPLL_249P6M     11
-> +#define TOP_UNIVPLL_178P3M     12
-> +#define TOP_UNIVPLL_48M                13
-> +#define TOP_MMPLL_D2           14
-> +#define TOP_MMPLL_D3           15
-> +#define TOP_MMPLL_D5           16
-> +#define TOP_MMPLL_D7           17
-> +#define TOP_MMPLL_D4           18
-> +#define TOP_MMPLL_D6           19
-> +#define TOP_SYSPLL_D2          20
-> +#define TOP_SYSPLL_D4          21
-> +#define TOP_SYSPLL_D6          22
-> +#define TOP_SYSPLL_D8          23
-> +#define TOP_SYSPLL_D10         24
-> +#define TOP_SYSPLL_D12         25
-> +#define TOP_SYSPLL_D16         26
-> +#define TOP_SYSPLL_D24         27
-> +#define TOP_SYSPLL_D3          28
-> +#define TOP_SYSPLL_D2P5                29
-> +#define TOP_SYSPLL_D5          30
-> +#define TOP_SYSPLL_D3P5                31
-> +#define TOP_UNIVPLL1_D2                32
-> +#define TOP_UNIVPLL1_D4                33
-> +#define TOP_UNIVPLL1_D6                34
-> +#define TOP_UNIVPLL1_D8                35
-> +#define TOP_UNIVPLL1_D10       36
-> +#define TOP_UNIVPLL2_D2                37
-> +#define TOP_UNIVPLL2_D4                38
-> +#define TOP_UNIVPLL2_D6                39
-> +#define TOP_UNIVPLL2_D8                40
-> +#define TOP_UNIVPLL_D3         41
-> +#define TOP_UNIVPLL_D5         42
-> +#define TOP_UNIVPLL_D7         43
-> +#define TOP_UNIVPLL_D10                44
-> +#define TOP_UNIVPLL_D26                45
-> +#define TOP_APLL_CK            46
-> +#define TOP_APLL_D4            47
-> +#define TOP_APLL_D8            48
-> +#define TOP_APLL_D16           49
-> +#define TOP_APLL_D24           50
-> +#define TOP_LVDSPLL_D2         51
-> +#define TOP_LVDSPLL_D4         52
-> +#define TOP_LVDSPLL_D8         53
-> +#define TOP_LVDSTX_CLKDIG_CT   54
-> +#define TOP_VPLL_DPIX_CK       55
-> +#define TOP_TVHDMI_H_CK                56
-> +#define TOP_HDMITX_CLKDIG_D2   57
-> +#define TOP_HDMITX_CLKDIG_D3   58
-> +#define TOP_TVHDMI_D2          59
-> +#define TOP_TVHDMI_D4          60
-> +#define TOP_MEMPLL_MCK_D4      61
-> +#define TOP_AXI_SEL            62
-> +#define TOP_SMI_SEL            63
-> +#define TOP_MFG_SEL            64
-> +#define TOP_IRDA_SEL           65
-> +#define TOP_CAM_SEL            66
-> +#define TOP_AUD_INTBUS_SEL     67
-> +#define TOP_JPG_SEL            68
-> +#define TOP_DISP_SEL           69
-> +#define TOP_MSDC30_1_SEL       70
-> +#define TOP_MSDC30_2_SEL       71
-> +#define TOP_MSDC30_3_SEL       72
-> +#define TOP_MSDC30_4_SEL       73
-> +#define TOP_USB20_SEL          74
-> +#define TOP_VENC_SEL           75
-> +#define TOP_SPI_SEL            76
-> +#define TOP_UART_SEL           77
-> +#define TOP_MEM_SEL            78
-> +#define TOP_CAMTG_SEL          79
-> +#define TOP_AUDIO_SEL          80
-> +#define TOP_FIX_SEL            81
-> +#define TOP_VDEC_SEL           82
-> +#define TOP_DDRPHYCFG_SEL      83
-> +#define TOP_DPILVDS_SEL                84
-> +#define TOP_PMICSPI_SEL                85
-> +#define TOP_MSDC30_0_SEL       86
-> +#define TOP_SMI_MFG_AS_SEL     87
-> +#define TOP_GCPU_SEL           88
-> +#define TOP_DPI1_SEL           89
-> +#define TOP_CCI_SEL            90
-> +#define TOP_APLL_SEL           91
-> +#define TOP_HDMIPLL_SEL                92
-> +#define TOP_NR_CLK             93
+>  static const struct ata_port_info ahci_port_info = {
+>  	.flags		= AHCI_FLAG_COMMON,
+>  	.pio_mask	= ATA_PIO4,
+> @@ -46,6 +52,9 @@ static int ahci_probe(struct platform_device *pdev)
+>  	if (of_device_is_compatible(dev->of_node, "hisilicon,hisi-ahci"))
+>  		hpriv->flags |= AHCI_HFLAG_NO_FBS | AHCI_HFLAG_NO_NCQ;
+>  
+> +	if (of_device_is_compatible(dev->of_node, "cavium,octeon-7130-ahci"))
+> +		ahci_octeon_config(pdev);
 > +
-> +/* APMIXED_SYS */
+
+If we really need this kind of thing, make a new struct and associate it
+with of_device_id::data in the table below. Then we make this path free
+from any device-specific code.
+
+>  	rc = ahci_platform_init_host(pdev, hpriv, &ahci_port_info);
+>  	if (rc)
+>  		goto disable_resources;
+> @@ -67,6 +76,7 @@ static const struct of_device_id ahci_of_match[] = {
+>  	{ .compatible = "ibm,476gtr-ahci", },
+>  	{ .compatible = "snps,dwc-ahci", },
+>  	{ .compatible = "hisilicon,hisi-ahci", },
+> +	{ .compatible = "cavium,octeon-7130-ahci", },
+>  	{},
+
+I was under the impression that the strings other than "generic-ahci"
+were only for compatibility with existing DTBs. Why do we need to add
+new platform-specific strings here?
+
+[...]
+
+> +void ahci_octeon_config(struct platform_device *pdev)
+> +{
+> +	union cvmx_sata_uctl_shim_cfg shim_cfg;
 > +
-> +#define APMIXED_ARMPLL1                1
-> +#define APMIXED_ARMPLL2                2
-> +#define APMIXED_MAINPLL                3
-> +#define APMIXED_UNIVPLL                4
-> +#define APMIXED_MMPLL          5
-> +#define APMIXED_MSDCPLL                6
-> +#define APMIXED_TVDPLL         7
-> +#define APMIXED_LVDSPLL                8
-> +#define APMIXED_AUDPLL         9
-> +#define APMIXED_VDECPLL                10
-> +#define APMIXED_NR_CLK         11
+> +	/* set-up endian mode */
+> +	shim_cfg.u64 = cvmx_read_csr(CVMX_SATA_UCTL_SHIM_CFG);
+> +#ifdef __BIG_ENDIAN
+> +	shim_cfg.s.dma_endian_mode = 1;
+> +	shim_cfg.s.csr_endian_mode = 1;
+> +#else
+> +	shim_cfg.s.dma_endian_mode = 0;
+> +	shim_cfg.s.csr_endian_mode = 0;
+> +#endif
+> +	shim_cfg.s.dma_read_cmd = 1; /* No allocate L2C */
+> +	cvmx_write_csr(CVMX_SATA_UCTL_SHIM_CFG, shim_cfg.u64);
 > +
-> +/* INFRA_SYS */
-> +
-> +#define INFRA_PMIC_WRAP_CK     1
-> +#define INFRA_PMICSPI_CK       2
-> +#define INFRA_CCIF1_AP_CTRL    3
-> +#define INFRA_CCIF0_AP_CTRL    4
-> +#define INFRA_KP_CK            5
-> +#define INFRA_CPUM_CK          6
-> +#define INFRA_M4U_CK           7
-> +#define INFRA_MFGAXI_CK                8
-> +#define INFRA_DEVAPC_CK                9
-> +#define INFRA_AUDIO_CK         10
-> +#define INFRA_MFG_BUS_CK       11
-> +#define INFRA_SMI_CK           12
-> +#define INFRA_DBGCLK_CK                13
-> +#define INFRA_NR_CLK           14
-> +
-> +/* PERI_SYS */
-> +
-> +#define PERI_I2C5_CK           1
-> +#define PERI_I2C4_CK           2
-> +#define PERI_I2C3_CK           3
-> +#define PERI_I2C2_CK           4
-> +#define PERI_I2C1_CK           5
-> +#define PERI_I2C0_CK           6
-> +#define PERI_UART3_CK          7
-> +#define PERI_UART2_CK          8
-> +#define PERI_UART1_CK          9
-> +#define PERI_UART0_CK          10
-> +#define PERI_IRDA_CK           11
-> +#define PERI_NLI_CK            12
-> +#define PERI_MD_HIF_CK         13
-> +#define PERI_AP_HIF_CK         14
-> +#define PERI_MSDC30_3_CK       15
-> +#define PERI_MSDC30_2_CK       16
-> +#define PERI_MSDC30_1_CK       17
-> +#define PERI_MSDC20_2_CK       18
-> +#define PERI_MSDC20_1_CK       19
-> +#define PERI_AP_DMA_CK         20
-> +#define PERI_USB1_CK           21
-> +#define PERI_USB0_CK           22
-> +#define PERI_PWM_CK            23
-> +#define PERI_PWM7_CK           24
-> +#define PERI_PWM6_CK           25
-> +#define PERI_PWM5_CK           26
-> +#define PERI_PWM4_CK           27
-> +#define PERI_PWM3_CK           28
-> +#define PERI_PWM2_CK           29
-> +#define PERI_PWM1_CK           30
-> +#define PERI_THERM_CK          31
-> +#define PERI_NFI_CK            32
-> +#define PERI_USBSLV_CK         33
-> +#define PERI_USB1_MCU_CK       34
-> +#define PERI_USB0_MCU_CK       35
-> +#define PERI_GCPU_CK           36
-> +#define PERI_FHCTL_CK          37
-> +#define PERI_SPI1_CK           38
-> +#define PERI_AUXADC_CK         39
-> +#define PERI_PERI_PWRAP_CK     40
-> +#define PERI_I2C6_CK           41
-> +#define PERI_NR_CLK            42
-> +
-> +#endif /* _DT_BINDINGS_CLK_MT8135_H */
-> -- 
-> 1.8.1.1.dirty
-> 
+> +	/* Set a good dma_mask */
+> +	pdev->dev.coherent_dma_mask = DMA_BIT_MASK(64);
+> +	pdev->dev.dma_mask = &pdev->dev.coherent_dma_mask;
+
+I thought a dma-ranges property in the DT could be used to set up the
+DMA mask appropriately?
+
+Thanks,
+Mark.
