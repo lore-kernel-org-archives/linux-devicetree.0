@@ -1,56 +1,68 @@
 From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v3 2/3] arm64: dts: Add APM X-Gene DMA device and DMA clock DTS nodes
-Date: Mon, 19 Jan 2015 16:17:39 +0100
-Message-ID: <4015362.jQuStL4p6a@wuerfel>
-References: <1421671269-19441-1-git-send-email-rsahu@apm.com> <2407238.x2YxDm0cd4@wuerfel> <CAFd313wyVqsqGNdxrAzmGCCYd-RAEcrX6f4y2Gngi44OOkbx-Q@mail.gmail.com>
+Subject: Re: [PATCH 4/5] PCI: designware: Add setup bus-related to pcie_host_ops
+Date: Mon, 19 Jan 2015 14:54:26 +0100
+Message-ID: <6696411.b9yjvPTFJo@wuerfel>
+References: <1418812486-12394-1-git-send-email-gabriel.fernandez@linaro.org> <000e01d01a7f$47592e20$d60b8a60$%han@samsung.com> <CAG374jBZCn+V2zjcAwdKEb0COzBT2VES5uiw0gc40mFvoraERA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFd313wyVqsqGNdxrAzmGCCYd-RAEcrX6f4y2Gngi44OOkbx-Q@mail.gmail.com>
+In-Reply-To: <CAG374jBZCn+V2zjcAwdKEb0COzBT2VES5uiw0gc40mFvoraERA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rameshwar Sahu <rsahu@apm.com>
-Cc: vinod.koul@intel.com, dan.j.williams@intel.com, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ddutile@redhat.com, jcm@redhat.com, patches@apm.com, Loc Ho <lho@apm.com>
+To: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+Cc: Jingoo Han <jg1.han@samsung.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Bjorn Helgaas <bhelgaas@google.com>, Mohit Kumar <mohit.kumar@st.com>, Grant Likely <grant.likely@linaro.org>, Fabrice Gasnier <fabrice.gasnier@st.com>, Viresh Kumar <viresh.kumar@linaro.org>, Thierry Reding <treding@nvidia.com>, Minghuan Lian <Minghuan.Lian@freescale.com>, Magnus Damm <damm@opensource.se>, Will Deacon <will.deacon@arm.com>, Tanmay Inamdar <tinamdar@apm.com>, Murali Karicheri <m-karicheri2@ti.com>, Kishon
 List-Id: devicetree@vger.kernel.org
 
-On Monday 19 January 2015 20:11:22 Rameshwar Sahu wrote:
-> 
+On Monday 19 January 2015 13:38:53 Gabriel Fernandez wrote:
+>=20
+> On 18 December 2014 at 05:58, Jingoo Han <jg1.han@samsung.com> wrote:
+>=20
+> > On Thursday, December 18, 2014 7:16 AM, Arnd Bergmann wrote:
+> > > On Wednesday 17 December 2014 11:34:45 Gabriel FERNANDEZ wrote:
+> > > > ST sti SoCs PCIe IPs are built around DesignWare IP Core.
+> > > > But in these SoCs PCIe IP doesn't support IO.
+> > I cannot understand how ST sti SoCs PCIe IP does not support I/O.
+> > As far as I know, it cannot be selected by the 'parameter'.
+> > Then, H/W engineers dropped out the I/O control logic?
 > >
-> > The value should be
+> > > >
+> > > > To support this, add setup_bus() to pcie_host_ops.
 > >
-> >         dma-ranges = <0x40 0x0 0x40 0x0 0x200 0>;
 > >
-> 
-> then it should be :
-> 
-> dma-ranges = <0x40 0x0 0x40 0x0 0x400 0>;
-> 
-> 
-> to say that any DMA to physical addresses from 0 to 0x3f.ffffffff
+> > > >
+> > > > Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> > > > Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+> > >
+> > > The dw-pcie driver should be able to tell whether the device has
+> > > an I/O space or not, and do the right thing based on that. Don't
+> > > add an implementation specific callback for that.
+> >
+> > I agree with Arnd's opinion.
+> >
+> > In addition, I have one more question.
+> > Then, if a device that requires I/O region is connected to
+> > PCIe slot of ST sti SoCs PCIe, what will happen?
+> > It just prints error messages?
+> >
+> >
+> Arnd i
+> n other post mention to add an empty I/O space to workaround lack of =
+I/O
+> port access.
+> Is it the right thing to do ?
+> =E2=80=8B
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2014-November/2=
+99623.html
+>=20
 
-No, the property above is for a bus that extends from
-0x40.00000000 to 0x43f.ffffffff
+Good question. Given the latest development, I'd feel tempted to
+try moving the entire pcie-designware driver to use the generic probing
+that bypassses pci_common_init_dev(). Rob Herring posted a patch
+for the versatile PCI driver, you could try doing the same thing
+here, see http://permalink.gmane.org/gmane.linux.kernel.pci/30346.
 
-The first tuple is the address that is used for the local
-bus, the second one is the address that it gets translated to
-on the parent bus, and the third tuple is the length.
-
-> > is disallowed and dma to physical addresses from 0x40.00000000
-> > to 0x23f.ffffffff is allowed and gets translated using an
-> > identity mapping.
-> >
-> > I also see that on Mustang, all memory is outside of this range,
-> >
-> 
-> Do you mean all other device controller node in DT here??
-> Basically these are all device controller memory, as what I understood is
-> dma-ranges tells about DDR ranges like start address of DDR
-> and length.
-
-It has absolutely nothing to do with where the DDR memory resides,
-only which addresses are valid on a particular bus, like the
-ranges property for the opposite direction. This is usually set
-up in some control register for the bus, and you should use the
-same value here.
+I think that would completely avoid this problem, and also help everyon=
+e
+that wants to use this driver on arm64.
 
 	Arnd
