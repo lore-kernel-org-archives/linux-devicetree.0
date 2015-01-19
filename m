@@ -1,70 +1,34 @@
-From: wstephen-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Subject: Re: [PATCH] ethernet: atheros: Add nss-gmac driver
-Date: Mon, 19 Jan 2015 21:58:09 -0000
-Message-ID: <3ad19b16fe5c58612479f70c052d0045.squirrel@www.codeaurora.org>
-References: <1420754626-30121-1-git-send-email-wstephen@codeaurora.org>
-    <5550127.3sXOcCISZN@wuerfel>
-    <bca0eaf2183036ff6a913daea6e09ad9.squirrel@www.codeaurora.org>
-    <2318041.V2OJAPu7gC@wuerfel>
+From: Peter Korsgaard <peter@korsgaard.com>
+Subject: Re: [PATCH 7/8] gpio/mpc8xxx: Convert to platform device interface.
+Date: Mon, 19 Jan 2015 23:36:59 +0100
+Message-ID: <87oapu9z3o.fsf@dell.be.48ers.dk>
+References: <1421581173-28416-1-git-send-email-ricardo.ribalda@gmail.com>
+	<1421581173-28416-8-git-send-email-ricardo.ribalda@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2318041.V2OJAPu7gC@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: wstephen-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jcliburn-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1421581173-28416-8-git-send-email-ricardo.ribalda@gmail.com>
+	(Ricardo Ribalda Delgado's message of "Sun, 18 Jan 2015 12:39:32
+	+0100")
+Sender: linux-gpio-owner@vger.kernel.org
+To: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Peter Korsgaard <jacmet@sunsite.dk>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> On Thursday 15 January 2015 08:12:51 wstephen-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org wrote:
->>
->> The nss-gmac driver is for the internal GMAC IP in the Qualcomm IPQ806x
->> SoC. There are 2 ARM cores and 2 NSS cores inside the IPQ806x SoC. The
->> main purpose of these NSS cores is to offload the networking stack from
->> the ARM cores to achieve high performance at routing/ipsec..etc without
->> exhausting the ARM core CPU cycles. There is another nss-drv driver for
->> the NSS cores.
->
-> I see.
->
->> The nss-gmac driver is designed to work standalone or with the nss-drv
->> driver so the switchable data plane overlay was implemented. When it
->> worked standalone, the data plane is running on the ARM core as a
->> standard
->> networking driver.
->
-> How do you decide which way it gets used on a particular system?
->
+>>>>> "Ricardo" == Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com> writes:
 
-By default the GMAC driver uses a native (Host ARM CPU) based data plane. 
-If the configuration loads the offload nss-drv driver, the offload driver
-registers an overlay with the GMAC.
+ > This way we do not need to transverse the device tree manually.
+ > Cc: Linus Walleij <linus.walleij@linaro.org>
+ > Cc: Alexandre Courbot <gnurou@gmail.com>
+ > Cc: Grant Likely <grant.likely@linaro.org>
+ > Cc: Rob Herring <robh+dt@kernel.org>
+ > Cc: Peter Korsgaard <jacmet@sunsite.dk>
+ > Cc: devicetree@vger.kernel.org
+ > Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
 
->> The nss-drv driver can take over the data plane and
->> offload it to the NSS cores. The STMicro stmmac driver does not have
->> this
->> kind of overlay design so is not suitable for IPQ806x. This is why we
->> don't based on the stmmac driver
->
-> Which kind of offload is implemented specifically? 'data plane' sounds
-> fairly generic and could mean anything, and the code isn't readable enough
-> in its current form for me to find out.
+Looks sensible.
 
-The Network Subsystem (NSS core) provides a GMAC pass-through until it is
-given a rule to offload work.  Once a rule is given, it is capable of
-performing: bridging, IPv4 NAT/FWD, IPv6 NAT/FWD, IPSec, LAG, and other
-protocols.
->
-> 	Arnd
->
+Acked-by: Peter Korsgaard <peter@korsgaard.com>
 
-Hope this clarify your question!
-
-Thanks,
-Stephen
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Bye, Peter Korsgaard
