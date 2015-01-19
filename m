@@ -1,137 +1,187 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v10 0/6] Add Skyworks SKY81452 device drivers
-Date: Mon, 19 Jan 2015 08:10:20 +0000
-Message-ID: <20150119081020.GC21886@x1>
-References: <1420597167-3188-1-git-send-email-jack.yoo@skyworksinc.com>
- <20150118174037.GF3574@x1>
- <20150119014134.GA3333@jack-ThinkPad-T520>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 3/3] Documentation: Add documentation for rt5033
+ multifunction device
+Date: Mon, 19 Jan 2015 08:15:02 +0000
+Message-ID: <20150119081502.GD21886@x1>
+References: <1420793114-20586-1-git-send-email-beomho.seo@samsung.com>
+ <1420793114-20586-4-git-send-email-beomho.seo@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20150119014134.GA3333@jack-ThinkPad-T520>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gyungoh Yoo <gyungoh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org, hs-ynQEQJNshbs@public.gmane.org, stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org, matti.vaittinen-OYasijW0DpE@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, florian.vaussard-p8DiymsW2f8@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, hytszk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org, jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1420793114-20586-4-git-send-email-beomho.seo@samsung.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Beomho Seo <beomho.seo@samsung.com>
+Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, sre@kernel.org, lee.jone@linaro.org, broonie@kernel.org, dbaryshkov@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, cw00.choi@samsung.com, inki.dae@samsung.com, sw0312.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 19 Jan 2015, Gyungoh Yoo wrote:
+DT Ack please gents.
 
-> On Sun, Jan 18, 2015 at 05:40:37PM +0000, Lee Jones wrote:
-> > > From: Gyungoh Yoo <jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>
-> > >=20
-> > > This patch set includes regulator and backlight driver for SKY814=
-52.
-> > > Also it includes documents for device tree and module.
-> > > sky81452-regulator was already applied. So this series doesn't
-> > > include it.
-> >=20
-> > Tell us what you need?  What's missing?
+> This patch device tree binding documentation for rt5033 multifunction=
+ device.
 >=20
-> I need DT's Ack for 3/6 and 4/6.
-
-Patch 3 looks simple enough.
-
-Patch 4 _does_ need a DT ack though.
-
-> > > v10:
-> > > Removed trivial get_brightness implementations for sky81452-backl=
-ight
-> > >=20
-> > > v9:
-> > > Removed the change to remove MODULE_VERSION() for sky81452-regula=
-tor
-> > >=20
-> > > v8:
-> > > Renamed property names for backlight with vendor prefix
-> > > Modified gpio-enable property to generic property for GPIO
-> > > Made up the example for backlight DT
-> > > Changed the DT parsing of regulator using regulator_node and of_m=
-atch
-> > >=20
-> > > v7:
-> > > Modified licensing text to GPLv2
-> > > Splitted Kconfig renaming from DT patch
-> > >=20
-> > > v6:
-> > > Added new line character at the end of line of dev_err()
-> > >=20
-> > > v5:
-> > > Changed DT for regulator : 'lout' node should be defined under 'r=
-egulator'
-> > > Removed compatible string from sky81452-regulator driver
-> > > Modified sky81452-regulator to return EINVAL when of_node is NULL
-> > > Move sky81452-backlight.h to include/linux/platform_data
-> > >=20
-> > > v4:
-> > > Removed MODULE_VERSION()
-> > > Modified license to GPLv2
-> > > Removed calling to backlight_device_unregister() in sky81452-back=
-light
-> > >=20
-> > > v3:
-> > > Cleaned-up DBG messages
-> > > Cleaned-up DT
-> > > Fixed the backlight name from 'sky81452-bl' to 'sky81452-backligh=
-t'
-> > > Assigned mfd_cell.of_compatible for binding device node
-> > > Modified error messages
-> > > Modified sky81452-regulator to return ENODATA when of_node is NUL=
-L
-> > >=20
-> > > v2:
-> > > Split the patches for each sub-system
-> > > Added 'reg' attribute for I2C address in device tree documents
-> > > Added 'compatible' attribute in child drivers
-> > > Renamed CONFIG_SKY81452 to CONFIG_MFD_SKY81452
-> > > Changed the dependency from I2C=3Dy to I2C, for CONFIG_MFD_SKY814=
-52
-> > > Added message for exception or errors.
-> > > Added vendor prefix for Skyworks Solutions, Inc.
-> > > Add SKY81452 to the Trivial Devices list
-> > >=20
-> > > Gyungoh Yoo (6):
-> > >   mfd: Add support for Skyworks SKY81452 driver
-> > >   backlight: Add support Skyworks SKY81452 backlight driver
-> > >   devicetree: mfd: Add new SKY81452 mfd binding
-> > >   devicetree: backlight: Add new SKY81452 backlight binding
-> > >   devicetree: Add vendor prefix for Skyworks Solutions, Inc.
-> > >   devicetree: i2c: Add SKY81452 to the Trivial Devices list
-> > >=20
-> > >  .../devicetree/bindings/i2c/trivial-devices.txt    |   1 +
-> > >  Documentation/devicetree/bindings/mfd/sky81452.txt |  36 +++
-> > >  .../devicetree/bindings/vendor-prefixes.txt        |   1 +
-> > >  .../video/backlight/sky81452-backlight.txt         |  29 ++
-> > >  drivers/mfd/Kconfig                                |  12 +
-> > >  drivers/mfd/Makefile                               |   1 +
-> > >  drivers/mfd/sky81452.c                             | 108 +++++++
-> > >  drivers/video/backlight/Kconfig                    |  10 +
-> > >  drivers/video/backlight/Makefile                   |   1 +
-> > >  drivers/video/backlight/sky81452-backlight.c       | 334 +++++++=
-++++++++++++++
-> > >  include/linux/mfd/sky81452.h                       |  31 ++
-> > >  include/linux/platform_data/sky81452-backlight.h   |  46 +++
-> > >  12 files changed, 610 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/mfd/sky8145=
-2.txt
-> > >  create mode 100644 Documentation/devicetree/bindings/video/backl=
-ight/sky81452-backlight.txt
-> > >  create mode 100644 drivers/mfd/sky81452.c
-> > >  create mode 100644 drivers/video/backlight/sky81452-backlight.c
-> > >  create mode 100644 include/linux/mfd/sky81452.h
-> > >  create mode 100644 include/linux/platform_data/sky81452-backligh=
-t.h
-> > >=20
-> >=20
+> Cc: Sebastian Reichel <sre@kernel.org>
+> Cc: Lee Jones <lee.jones@linaro.org>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Ian campbell <ijc+devicetree@hellion.org.uk>
+> Cc: Kumar Gala <galak@codeaurora.org>
+> Signed-off-by: Beomho Seo <beomho.seo@samsung.com>
+> Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+> ---
+> Changes in v2
+> - Fix incorrect typo.
+> - Align -uamp and -uvolt names with regulator binding suffixes.
+> - Drop incorrect phandle.
+> - Fix incorrect example.
+> ---
+>  Documentation/devicetree/bindings/mfd/rt5033.txt   |  101 ++++++++++=
+++++++++++
+>  .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+>  2 files changed, 102 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/rt5033.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/mfd/rt5033.txt b/Docum=
+entation/devicetree/bindings/mfd/rt5033.txt
+> new file mode 100644
+> index 0000000..64b23e8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/rt5033.txt
+> @@ -0,0 +1,101 @@
+> +Richtek RT5033 Power management Integrated Circuit
+> +
+> +RT5033 is a Multifunction device which includes battery charger, fue=
+l gauge,
+> +flash LED current source, LDO and synchronous Buck converter for por=
+table
+> +applications. It is interfaced to host controller using i2c interfac=
+e.
+> +
+> +Required properties:
+> +- compatible : Must be "richtek,rt5033"
+> +- reg : Specifies the i2c slave address of general part.
+> +- interrupts : This i2c devices has an IRQ line connected to the mai=
+n SoC.
+> +- interrupt-parent : The parent interrupt controller.
+> +
+> +Optional node:
+> +Regulators: The regulators of RT5033 have to be instantiated under s=
+ub-node
+> +named "regulators" using the following format.
+> +
+> +	regulators {
+> +		regulator-name {
+> +			regulator-name =3D LDO/BUCK
+> +			regulator subnodes called X, Y and Z
+> +		};
+> +	};
+> +	refer Documentation/devicetree/bindings/regulator/regulator.txt
+> +
+> +
+> +Battery charger: There battery charger of RT5033 have to be instanti=
+ated under
+> +sub-node named "charger" using the following format.
+> +
+> +Required properties:
+> +- compatible : Must be "richtek,rt5033-charger".
+> +- richtek,pre-uamp : Current of pre-charge mode. The pre-charge curr=
+ent levels
+> +  are 350 mA to 650 mA programmed by I2C per 100 mA.
+> +- richtek,fast-uamp : Current of fast-charge mode. The fast-charge c=
+urrent
+> +  levels are 700 mA to 2000 mA programmed by I2C per 100 mA.
+> +- richtek,eoc-uamp : This property is end of charge current. Its lev=
+el 150 mA
+> +  to 200 mA.
+> +- richtek,pre-threshold-uvolt : Voltage of threshold pre-charge mode=
+=2E Battery
+> +  voltage is below pre-charge threshold voltage, the charger is in p=
+re-charge
+> +  mode with pre-charge current. Its levels are 2.3 V  to 3.8 V progr=
+ammed
+> +  by I2C per 0.1 V.
+> +- richtek,const-uvolt :  Battery regulation voltage of constant volt=
+age mode.
+> +  This voltage level 3.65 V to 4.4 V bye I2C per 0.025 V.
+> +
+> +	charger {
+> +		compatible =3D "richtek,rt5033-charger";
+> +		richtek,pre-uamp =3D <350000>;
+> +		richtek,fast-uamp =3D <2000000>;
+> +		richtek,eoc-uamp =3D <250000>;
+> +		richtek,pre-threshold-uvolt =3D <3400000>;
+> +		richtek,const-uvolt =3D <4350000>;
+> +
+> +	};
+> +
+> +
+> +Fuelgauge: There fuelgauge of RT5033 to be instantiated node named "=
+fuelgauge"
+> +using the following format.
+> +
+> +Required properties:
+> +- compatible =3D Must be "richtek,rt5033-battery".
+> +
+> +	rt5033@35 {
+> +		compatible =3D "richtek,rt5033-battery";
+> +		interrupt-parent =3D <&gpx2>;
+> +		interrupts =3D <3 0>;
+> +		reg =3D <0x35>;
+> +	};
+> +
+> +Example:
+> +
+> +		rt5033@34 {
+> +			compatible =3D "richtek,rt5033";
+> +			reg =3D <0x34>;
+> +			interrupt-parent =3D <&gpx1>;
+> +			interrupts =3D <5 0>;
+> +
+> +			regulators {
+> +				buck_reg: BUCK {
+> +					regulator-name =3D "BUCK";
+> +					regulator-min-microvolt =3D <1200000>;
+> +					regulator-max-microvolt =3D <1200000>;
+> +					regulator-always-on;
+> +				};
+> +			};
+> +
+> +			charger {
+> +				compatible =3D "richtek,rt5033-charger";
+> +				richtek,pre-uamp =3D <350000>;
+> +				richtek,fast-uamp =3D <2000000>;
+> +				richtek,eoc-uamp =3D <250000>;
+> +				richtek,pre-threshold-uvolt =3D <3400000>;
+> +				richtek,const-uvolt =3D <4350000>;
+> +			};
+> +
+> +		};
+> +
+> +		rt5033@35 {
+> +				compatible =3D "richtek,rt5033-battery";
+> +				interrupt-parent =3D <&gpx2>;
+> +				interrupts =3D <3 0>;
+> +				reg =3D <0x35>;
+> +		};
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/=
+Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 723999d..611b543 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -124,6 +124,7 @@ ralink	Mediatek/Ralink Technology Corp.
+>  ramtron	Ramtron International
+>  realtek Realtek Semiconductor Corp.
+>  renesas	Renesas Electronics Corporation
+> +richtek	Richtek Technology Corporation
+>  ricoh	Ricoh Co. Ltd.
+>  rockchip	Fuzhou Rockchip Electronics Co., Ltd
+>  samsung	Samsung Semiconductor
 
 --=20
 Lee Jones
 Linaro STMicroelectronics Landing Team Lead
 Linaro.org =E2=94=82 Open source software for ARM SoCs
 =46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
