@@ -1,344 +1,377 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH] added sun7i-a20-inet-k970.dts
-Date: Mon, 19 Jan 2015 19:50:43 +0100
-Message-ID: <54BD5203.90000@redhat.com>
-References: <3184462.M90eiSWZKq@x64.localnet>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: David Daney <ddaney.cavm@gmail.com>
+Subject: Re: [PATCH] mmc: OCTEON: Add host driver for OCTEON MMC controller
+Date: Mon, 19 Jan 2015 11:01:51 -0800
+Message-ID: <54BD549F.1060309@gmail.com>
+References: <1421675198-30213-1-git-send-email-aleksey.makarov@auriga.com> <20150119142805.GE21553@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBENE6WSQKGQEEJT75KQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <3184462.M90eiSWZKq-01DtBWzyqXQXpj0+iOhflA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20150119142805.GE21553@leverpostej>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>, Aleksey Makarov <aleksey.makarov@auriga.com>
+Cc: "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-mips@linux-mips.org" <linux-mips@linux-mips.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Daney <david.daney@cavium.com>, Leonid Rosenboim <lrosenboim@caviumnetworks.com>, Aaron Williams <aaron.williams@cavium.com>, Chandrakala Chavva <cchavva@caviumnetworks.com>, Peter Swain <pswain@cavium.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 19-01-15 18:53, Lars Doelle wrote:
-> Hi everyone,
+On 01/19/2015 06:28 AM, Mark Rutland wrote:
+> Hi,
 >
-> this patch adds the DT for the [[Inet-K970] tablet.
+> On Mon, Jan 19, 2015 at 01:46:36PM +0000, Aleksey Makarov wrote:
+>> The OCTEON MMC controller is currently found on cn61XX and cnf71XX
+>> devices.  Device parameters are configured from device tree data.
+>>
+>> Currenly supported are eMMC, MMC and SD devices.
 >
-> Note that the wiki page has been renamed from [[Tristan-Auron-Planet-1]]
-> after identifying the mainboard. Earlier patches concerning U-Boot and
-> FEX have been filed under original name to this list and are now somewhat
-> in limbo. FEX is checked in, U-Boot on hold to the best of my knowledge.
->
-> Should I post a rename patch for the FEX and repost the unchanged U-boot
-> patch for the device under the new name or how to proceed best?
->
-> Kind regards, Lars
+> Does that mean there are other devices that this could support in
+> future, or that this supports everything it possibly can already?
 
-Thanks, we've recently moved over from using a full node
-hierarchy to using label references in board dts files, see e.g. :
-
-https://git.kernel.org/cgit/linux/kernel/git/mripard/linux.git/commit/?h=3D=
-sunxi/dt-for-3.20&id=3D327f121fea91fd79d6b71f47a8e1bc62a7fd86e5
-
-Can you please respin this to follow that style (the nodes should
-be sorted alphabetically).
-
-Also like with the u-boot patch, when submitting patches for upstream
-they should not be send to the linux-sunxi list, sunxi dts patches
-should go to Maxime Ripard (added to the Cc) with the linux-arm and
-devicetree lists both in the Cc (also added to the Cc) note you do
-not need to be subscribed to these lists.
-
-This makes me realize that we should probably write a manual on
-how to add a new sunxi board to upstream u-boot / a dts to the
-kernel. Since you've just gone through the process, could you
-perhaps write a manual for this on linux-sunxi.org, it is a wiki
-so you should be able to add an account and create a new page,
-note I've also asked Aleksei Mamlin (also added to the Cc) to
-create a manual for this, so if you do please coordinate with
-him to avoid doing double work. Also note that me asking you
-both is not an excuse for the both of you to look at the other
-for doing this, but rather me hoping that at least one of you
-will do it :)
-
-Thanks & Regards,
-
-Hans
-
+It is software, so obviously there are some changes that could be made 
+to support other devices.  However, the bus host hardware is designed 
+such that it can run only certain fixed sequences of the MMC and SD 
+protocols.  Therefore it is probable that support for some types of 
+devices would be impossible...
 
 >
-> ---
->   arch/arm/boot/dts/sun7i-a20-inet-k970.dts | 249 +++++++++++++++++++++++=
-+++++++
->   1 file changed, 249 insertions(+)
->   create mode 100644 arch/arm/boot/dts/sun7i-a20-inet-k970.dts
+> [...]
 >
-> diff --git a/arch/arm/boot/dts/sun7i-a20-inet-k970.dts b/arch/arm/boot/dt=
-s/sun7i-a20-inet-k970.dts
-> new file mode 100644
-> index 0000000..5a34082
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/sun7i-a20-inet-k970.dts
-> @@ -0,0 +1,249 @@
-> +/*
-> + * Copyright 2014 - Iain Paton <ipaton0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> + * Copyright 2015 - Lars D=C3=B6lle <lars.doelle-RMqqONVpFt+ELgA04lAiVw@public.gmane.org>
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This file is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License as
-> + *     published by the Free Software Foundation; either version 2 of th=
-e
-> + *     License, or (at your option) any later version.
-> + *
-> + *     This file is distributed in the hope that it will be useful,
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + *     You should have received a copy of the GNU General Public
-> + *     License along with this file; if not, write to the Free
-> + *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
-> + *     MA 02110-1301 USA
-> + *
-> + * Or, alternatively,
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use,
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + */
-> +
-> +/dts-v1/;
-> +#include "sun7i-a20.dtsi"
-> +#include "sunxi-common-regulators.dtsi"
-> +
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +#include <dt-bindings/pinctrl/sun4i-a10.h>
-> +
-> +#include <dt-bindings/input/input.h>
-> +
-> +/ {
-> +	model =3D "Inet A20-Inet-K970";
-> +
-> +	compatible =3D "inet,a20-inet-k970", "allwinner,sun7i-a20";
-> +
-> +	soc@01c00000 {
-> +		mmc0: mmc@01c0f000 {
-> +			pinctrl-names =3D "default";
-> +			pinctrl-0 =3D <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
-> +			vmmc-supply =3D <&reg_vcc3v3>;
-> +			bus-width =3D <4>;
-> +			cd-gpios =3D <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
-> +			cd-inverted;
-> +			status =3D "okay";
-> +		};
-> +
-> +		usbphy: phy@01c13400 {
-> +			usb1_vbus-supply =3D <&reg_usb1_vbus>;
-> +			usb2_vbus-supply =3D <&reg_usb2_vbus>;
-> +			status =3D "okay";
-> +		};
-> +
-> +		ehci0: usb@01c14000 {
-> +			status =3D "okay";
-> +		};
-> +
-> +		ohci0: usb@01c14400 {
-> +			status =3D "okay";
-> +		};
-> +
-> +		ehci1: usb@01c1c000 {
-> +			status =3D "okay";
-> +		};
-> +
-> +		ohci1: usb@01c1c400 {
-> +			status =3D "okay";
-> +		};
-> +
-> +		uart0: serial@01c28000 {
-> +			pinctrl-names =3D "default";
-> +			pinctrl-0 =3D <&uart0_pins_a>;
-> +			status =3D "okay";
-> +		};
-> +
-> +		i2c0: i2c@01c2ac00 {
-> +			pinctrl-names =3D "default";
-> +			pinctrl-0 =3D <&i2c0_pins_a>;
-> +			status =3D "okay";
-> +
-> +			axp209: pmic@34 {
-> +				compatible =3D "x-powers,axp209";
-> +				reg =3D <0x34>;
-> +				interrupt-parent =3D <&nmi_intc>;
-> +				interrupts =3D <0 IRQ_TYPE_LEVEL_LOW>;
-> +
-> +				interrupt-controller;
-> +				#interrupt-cells =3D <1>;
-> +
-> +				acin-supply =3D <&reg_axp_ipsout>;
-> +				vin2-supply =3D <&reg_axp_ipsout>;
-> +				vin3-supply =3D <&reg_axp_ipsout>;
-> +				ldo24in-supply =3D <&reg_axp_ipsout>;
-> +				ldo3in-supply =3D <&reg_axp_ipsout>;
-> +
-> +				regulators {
-> +					vdd_rtc: ldo1 {
-> +						regulator-min-microvolt =3D <1300000>;
-> +						regulator-max-microvolt =3D <1300000>;
-> +						regulator-always-on;
-> +					};
-> +
-> +					avcc: ldo2 {
-> +						regulator-min-microvolt =3D <1800000>;
-> +						regulator-max-microvolt =3D <3300000>;
-> +						regulator-always-on;
-> +					};
-> +
-> +					vcc_csi0: ldo3 {
-> +						regulator-min-microvolt =3D <700000>;
-> +						regulator-max-microvolt =3D <3500000>;
-> +						regulator-always-on;
-> +					};
-> +
-> +					vcc_csi1: ldo4 {
-> +						regulator-min-microvolt =3D <1250000>;
-> +						regulator-max-microvolt =3D <3300000>;
-> +						regulator-always-on;
-> +					};
-> +
-> +					vdd_cpu: dcdc2 {
-> +						regulator-min-microvolt =3D <700000>;
-> +						regulator-max-microvolt =3D <2275000>;
-> +						regulator-always-on;
-> +					};
-> +
-> +					vdd_int: dcdc3 {
-> +						regulator-min-microvolt =3D <700000>;
-> +						regulator-max-microvolt =3D <3500000>;
-> +						regulator-always-on;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +                i2c1: i2c@01c2b000 {
-> +                        pinctrl-names =3D "default";
-> +                        pinctrl-0 =3D <&i2c1_pins_a>;
-> +                        status =3D "okay";
-> +
-> +                        // accelerometer mma865x on 0x1d
-> +                };
-> +
-> +		pio: pinctrl@01c20800 {
-> +
-> +			edt_ft5x06_pins_a: ft5@0 { // interrupt
-> +				allwinner,pins     =3D "PH21";
-> +				allwinner,function =3D "irq";
-> +  				allwinner,drive    =3D <SUN4I_PINCTRL_20_MA>;
-> +  				allwinner,pull     =3D <SUN4I_PINCTRL_NO_PULL>;
-> +			};
-> +			edt_ft5x06_pins_b: ft5@1 { // power
-> +				allwinner,pins     =3D "PH22";
-> +  				allwinner,function =3D "gpio_out";
-> +  				allwinner,drive    =3D <SUN4I_PINCTRL_20_MA>;
-> +  				allwinner,pull     =3D <SUN4I_PINCTRL_NO_PULL>;
-> +                                output_high;
-> +			};
-> +		};
-> +
-> +                i2c2: i2c@01c2b400 {
-> +                        pinctrl-names =3D "default";
-> +                        pinctrl-0 =3D <&i2c2_pins_a>;
-> +                        status =3D "okay";
-> +
-> +			polytouch: edt-ft5x06@38 {
-> +				compatible =3D "edt,edt-ft5x06";
-> +				reg =3D <0x38>;
-> +				pinctrl-names =3D "default";
-> +  				pinctrl-0 =3D <&edt_ft5x06_pins_a &edt_ft5x06_pins_b>;
-> +  				interrupt-parent =3D <&pio>;
-> +  				interrupts =3D <21 IRQ_TYPE_EDGE_FALLING>;
-> +                                // wakeup spelled in script.bin. not ope=
-rational, here
-> +			};
-> +                };
-> +
-> +		lradc: lradc@01c22800 {
-> +
-> +			vref-supply =3D <&reg_vcc3v0>;
-> +	              	status =3D "okay";
-> +
-> +                	// The driver picks the closest voltage.
-> +
-> +			button@158 {
-> +				label =3D "Volume Up";
-> +				linux,code =3D <KEY_VOLUMEUP>;
-> +				channel =3D <0>;
-> +				voltage =3D <158730>;
-> +			};
-> +
-> +			button@952 {
-> +				label =3D "Volume Down";
-> +				linux,code =3D <KEY_VOLUMEDOWN>;
-> +				channel =3D <0>;
-> +				voltage =3D <952380>;
-> +			};
-> +
-> +			button@1142 {
-> +				label =3D "Menu"; // labeled ESC on the back cover
-> +				linux,code =3D <KEY_MENU>;
-> +				channel =3D <0>;
-> +				voltage =3D <1142857>;
-> +			};
-> +		};
-> +	};
-> +
-> +	reg_usb1_vbus: usb1-vbus {
-> +		status =3D "okay";
-> +	};
-> +
-> +	reg_usb2_vbus: usb2-vbus {
-> +		status =3D "okay";
-> +	};
-> +
-> +	reg_axp_ipsout: axp_ipsout {
-> +		compatible =3D "regulator-fixed";
-> +		regulator-name =3D "axp-ipsout";
-> +		regulator-min-microvolt =3D <5000000>;
-> +		regulator-max-microvolt =3D <5000000>;
-> +		regulator-always-on;
-> +	};
-> +};
+>> diff --git a/Documentation/devicetree/bindings/mmc/octeon-mmc.txt b/Documentation/devicetree/bindings/mmc/octeon-mmc.txt
+>> new file mode 100644
+>> index 0000000..ce373cf
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mmc/octeon-mmc.txt
+>> @@ -0,0 +1,51 @@
+>> +* OCTEON SD/MMC Host Controller
+>> +
+>> +This controller is present on some members of the Cavium OCTEON SoC
+>> +family, provide an interface for eMMC, MMC and SD devices.  There is a
+>> +single controller that may have several "slots" connected.  These
+>> +slots appear as children of the main controller node.
+>> +
+>> +Required properties:
+>> +- compatible : Should be "cavium,octeon-6130-mmc" or "cavium,octeon-7890-mmc"
+>> +- reg : Two entries:
+>> +       1) The base address of the MMC controller register bank.
+>> +       2) The base address of the MMC DMA engine register bank.
+>> +- interrupts : Two entries:
+>> +       1) The MMC controller interrupt line.
+>> +       2) The MMC DMA engine interrupt line.
+>
+> Is the DMA engine part of the MMC controller block, or is it a
+> separate/generic component that happens to be used in combination with
+> the MMC controller?
+
+The DMA engine is an integral part of the MMC bus controller block.
+
+>
+>> +- #address-cells : Must be <1>
+>> +- #size-cells : Must be <0>
+>> +
+>> +Required properties of child nodes:
+>> +- compatible : Should be "cavium,octeon-6130-mmc-slot".
+>> +- reg : The slot number.
+>> +- cavium,bus-max-width : The number of data lines present in the slot.
+>> +- spi-max-frequency : The maximum operating frequency of the slot.
+>> +
+>> +Optional properties of child nodes:
+>> +- cd-gpios : Specify GPIOs for card detection
+>> +- wp-gpios : Specify GPIOs for write protection
+>> +- power-gpios : Specify GPIOs for power control
+>
+> No clocks in the DT?
+
+No.  The reference clock rates can be probed at runtime, so they are not 
+specified in the DT.
+
+>
+>> +
+>> +Example:
+>> +       mmc@1180000002000 {
+>> +               compatible = "cavium,octeon-6130-mmc";
+>> +               reg = <0x11800 0x00002000 0x0 0x100>,
+>> +                     <0x11800 0x00000168 0x0 0x20>;
+>> +               #address-cells = <1>;
+>> +               #size-cells = <0>;
+>> +               /* EMM irq, DMA irq */
+>> +               interrupts = <1 19>, <0 63>;
+>> +
+>> +               /* The board only has a single MMC slot */
+>> +               mmc-slot@0 {
+>> +                       compatible = "cavium,octeon-6130-mmc-slot";
+>> +                       reg = <0>;
+>> +                       spi-max-frequency = <20000000>;
+>> +                       /* bus width can be 1, 4 or 8 */
+>> +                       cavium,bus-max-width = <8>;
+>> +                       cd-gpios = <&gpio 9 0>;
+>> +                       wp-gpios = <&gpio 10 0>;
+>> +                       power-gpios = <&gpio 8 0>;
+>> +               };
+>> +       };
+>
+[...]
+>> +
+>> +/**
+>> + * Unlock a single line in the L2 cache.
+>> + *
+>> + * @addr       Physical address to unlock
+>> + *
+>> + * Return Zero on success
+>> + */
+>> +static void l2c_unlock_line(u64 addr)
+>> +{
+>> +       char *addr_ptr = phys_to_ptr(addr);
+>> +       asm volatile (
+>> +               "cache 23, %[line]"     /* Unlock the line */
+>> +               :: [line] "m" (*addr_ptr));
+>> +}
+>> +
+>> +/**
+>> + * Unlock a memory region in the L2 cache
+>> + *
+>> + * @start - start address to unlock
+>> + * @len - length to unlock in bytes
+>> + */
+>> +static void l2c_unlock_mem_region(u64 start, u64 len)
+>> +{
+>> +       u64 end;
+>> +
+>> +       /* Round start/end to cache line boundaries */
+>> +       end = ALIGN(start + len - 1, CVMX_CACHE_LINE_SIZE);
+>> +       start = ALIGN(start, CVMX_CACHE_LINE_SIZE);
+>> +
+>> +       while (start <= end) {
+>> +               l2c_unlock_line(start);
+>> +               start += CVMX_CACHE_LINE_SIZE;
+>> +       }
+>> +}
+>
+> Why do you need to mess with the cache in this way within an MMC driver?
+
+Due to an imperfection in the design of the MMC bus hardware, The 2nd. 
+to last cache block of a DMA read must be locked into the L2 Cache. 
+Otherwise, data corruption may occur.  Please note that this MMC bus 
+hardware block is only ever encountered on SoCs where the L2 Cache is 
+resident on the same piece of silicon.
+
+> To me it seems somewhat surprising that you need to do that,
+
+Your surprise was shared by many.
+
+> and again
+> surprising that you have custom functions within the MMC driver.
 >
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+It is only used by this file, so we decided to put it here to keep 
+everything in one place.
+
+> [...]
+>
+>> +static int octeon_mmc_probe(struct platform_device *pdev)
+>> +{
+>> +       union cvmx_mio_emm_cfg emm_cfg;
+>> +       struct octeon_mmc_host *host;
+>> +       struct resource *res;
+>> +       void __iomem *base;
+>> +       int mmc_irq[9];
+>> +       int i;
+>> +       int ret = 0;
+>> +       struct device_node *node = pdev->dev.of_node;
+>> +       int found = 0;
+>> +       bool cn78xx_style;
+>> +       u64 t;
+>> +       enum of_gpio_flags f;
+>> +
+>> +       host = devm_kzalloc(&pdev->dev, sizeof(*host), GFP_KERNEL);
+>> +       if (!host)
+>> +               return -ENOMEM;
+>> +
+>> +       spin_lock_init(&host->irq_handler_lock);
+>> +       sema_init(&host->mmc_serializer, 1);
+>> +
+>> +       cn78xx_style = of_device_is_compatible(node, "cavium,octeon-7890-mmc");
+>> +       if (cn78xx_style) {
+>> +               host->need_bootbus_lock = false;
+>> +               host->big_dma_addr = true;
+>> +               host->need_irq_handler_lock = true;
+>> +               /*
+>> +                * First seven are the EMM_INT bits 0..6, then two for
+>> +                * the EMM_DMA_INT bits
+>> +                */
+>> +               for (i = 0; i < 9; i++) {
+>> +                       mmc_irq[i] = platform_get_irq(pdev, i);
+>> +                       if (mmc_irq[i] < 0)
+>> +                               return mmc_irq[i];
+>
+> The documentation describes two interrupts,
+
+The documentation is incorrect for the case of cn78xx_style.  The 
+documentation should be (and will be) corrected to reflect what each of 
+these lines is used for.
+
+> yet here you try to acquire
+> nine. Please document which interrupts you expect (i.e. in what order
+> and what the logical function of each is), and when you expect them.
+>
+> If some interrupts might not always be present, use interrupt-names.
+>
+[...]
+>> +       base = devm_ioremap_resource(&pdev->dev, res);
+>> +       if (IS_ERR(base))
+>> +               return PTR_ERR(base);
+>> +       host->base = (u64)base;
+>
+> I take it this can only be used on a 64-bit platform?
+
+Yes.
+
+>
+[...]
+>> +
+>> +       platform_set_drvdata(pdev, host);
+>> +
+>> +       node = of_get_next_child(pdev->dev.of_node, NULL);
+>> +       while (node) {
+>
+> You should use for_each_child_of_node here.
+>
+> Also, you'll want to skip nodes that aren't compatible with
+> "cavium,octeon-6130-mmc-slot", and you'll probably want to log a warning
+> in that case.
+
+OK, I think those functions did not exist when the code was originally 
+written.  We will try to improve it here.
+
+
+>
+>> +               int r;
+>> +               u32 slot;
+>> +
+>> +               found = 0;
+>> +
+>> +               r = of_property_read_u32(node, "reg", &slot);
+>> +               if (!r) {
+>
+> If you use for_each_child_of_node, you can just skip ahead in this case,
+> rather than having 90% of this block conditional.
+>
+> e.g.
+>
+> for_each_child_of_node(pdev->dev.of_node, node) {
+> 	
+> 	if (!of_device_is_compatible(node, "cavium,octeon-6130-mmc-slot") {
+> 		pr_warn("sub node isn't slot: %s\n", of_node_full_name(node));
+> 		continue;
+> 	}
+>
+> 	if (of_property_read_u32(node, "reg", &slot) != 0) {
+> 		pr_warn("Missing or invalid reg property on %s\n",
+> 			of_node_full_name(node));
+> 		continue;
+> 	}
+>
+> 	other_stuff();
+> 	not_indented();
+>
+> }
+>
+>> +                       int ro_gpio, cd_gpio, pwr_gpio;
+>> +                       bool ro_low, cd_low, pwr_low;
+>> +                       u32 bus_width, max_freq, cmd_skew, dat_skew;
+>> +
+>> +                       r = of_property_read_u32(node, "cavium,bus-max-width",
+>> +                                                &bus_width);
+>> +                       if (r) {
+>> +                               pr_info("Bus width not found for slot %d\n",
+>> +                                       slot);
+>> +                               bus_width = 8;
+>
+> If the default assumption is 8 lanes, document that in the binding.
+> Otherwise, make this mandatory and skip the slot if this is missing from
+> the DT.
+>
+>> +                       } else {
+>> +                               switch (bus_width) {
+>> +                               case 1:
+>> +                               case 4:
+>> +                               case 8:
+>> +                                       break;
+>> +                               default:
+>> +                                       bus_width = 8;
+>> +                                       break;
+>> +                               }
+>> +                       }
+>
+> Silently modifying this value is not a good idea. If you get an invalid
+> value, warn and skip the node. If the DT was wrong then you have no
+> chance of guessing better anyway.
+>
+>> +
+>> +                       r = of_property_read_u32(node, "cavium,cmd-clk-skew",
+>> +                                                &cmd_skew);
+>> +                       if (r)
+>> +                               cmd_skew = 0;
+>> +
+>> +                       r = of_property_read_u32(node, "cavium,dat-clk-skew",
+>> +                                                &dat_skew);
+>> +                       if (r)
+>> +                               dat_skew = 0;
+>> +
+>
+> These weren't in the binding. They need to be documented.
+>
+>
+>> +                       r = of_property_read_u32(node, "spi-max-frequency",
+>> +                                                &max_freq);
+>> +                       if (r) {
+>> +                               max_freq = 52000000;
+>> +                               pr_info("no spi-max-frequency for slot %d, defautling to %d\n",
+>
+> s/defautling/defaulting/
+>
+>> +                                       slot, max_freq);
+>> +                       }
+>> +
+>> +                       ro_gpio = of_get_named_gpio_flags(node, "wp-gpios",
+>> +                                                         0, &f);
+>> +                       ro_low = (ro_gpio >= 0 && f == OF_GPIO_ACTIVE_LOW);
+>> +                       cd_gpio = of_get_named_gpio_flags(node, "cd-gpios",
+>> +                                                         0, &f);
+>> +                       cd_low = (cd_gpio >= 0 && f == OF_GPIO_ACTIVE_LOW);
+>> +                       pwr_gpio = of_get_named_gpio_flags(node, "power-gpios",
+>> +                                                          0, &f);
+>> +                       pwr_low = (pwr_gpio >= 0 && f == OF_GPIO_ACTIVE_LOW);
+>> +
+>> +                       ret = octeon_init_slot(host, slot, bus_width, max_freq,
+>> +                                              ro_gpio, cd_gpio, pwr_gpio,
+>> +                                              ro_low, cd_low, pwr_low,
+>> +                                              cmd_skew, dat_skew);
+>> +                       octeon_mmc_dbg("init slot %d, ret = %d\n", slot, ret);
+>> +                       if (ret)
+>> +                               goto err;
+>> +               }
+>> +               node = of_get_next_child(pdev->dev.of_node, node);
+>> +       }
+>> +
+>> +       return ret;
+>> +
+>> +err:
+>> +       /* Disable MMC controller */
+>> +       emm_cfg.s.bus_ena = 0;
+>> +       cvmx_write_csr(host->base + OCT_MIO_EMM_CFG, emm_cfg.u64);
+>> +
+>> +       if (host->global_pwr_gpio >= 0) {
+>> +               dev_dbg(&pdev->dev, "Global power off\n");
+>> +               gpio_set_value_cansleep(host->global_pwr_gpio,
+>> +                                       host->global_pwr_gpio_low);
+>> +               gpio_free(host->global_pwr_gpio);
+>> +       }
+>> +
+>> +       return ret;
+>> +}
+>
+> It's probably worth having some logging in this error path.
+>
+> Thanks,
+> Mark.
+>
+>
+
