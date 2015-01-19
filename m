@@ -1,112 +1,85 @@
 From: Vincent Yang <vincent.yang.fujitsu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v4 2/8] mailbox: arm_mhu: add driver for ARM MHU controller
-Date: Mon, 19 Jan 2015 18:31:03 +0800
-Message-ID: <1421663463-1426-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
+Subject: [PATCH v4 4/8] clk: Add clock driver for mb86s7x
+Date: Mon, 19 Jan 2015 18:32:49 +0800
+Message-ID: <1421663569-1510-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
 References: <1421663016-1327-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1421663016-1327-1-git-send-email-Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Vincent Yang <Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>, Tetsuya Nuriya <nuriya.tetsuya-+CUm20s59erQFUHtdCDX3A@public.gmane.org>
+Cc: arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Vincent Yang <Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>, Tetsuya Nuriya <nuriya.tetsuya-+CUm20s59erQFUHtdCDX3A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Add driver for the ARM Message-Handling-Unit (MHU).
+ The CRG11 clock controller is managed by remote f/w.
+This driver simply maps Linux CLK ops onto mailbox api.
 
 Signed-off-by: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Signed-off-by: Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Signed-off-by: Vincent Yang <Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>
 Signed-off-by: Tetsuya Nuriya <nuriya.tetsuya-+CUm20s59erQFUHtdCDX3A@public.gmane.org>
 ---
- .../devicetree/bindings/mailbox/arm-mhu.txt        |  33 ++++
- drivers/mailbox/Kconfig                            |   7 +
- drivers/mailbox/Makefile                           |   2 +
- drivers/mailbox/arm_mhu.c                          | 211 +++++++++++++++++++++
- 4 files changed, 253 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mailbox/arm-mhu.txt
- create mode 100644 drivers/mailbox/arm_mhu.c
+ .../bindings/clock/fujitsu,mb86s70-crg11.txt       |  26 ++
+ drivers/clk/Makefile                               |   1 +
+ drivers/clk/clk-mb86s7x.c                          | 386 +++++++++++++++++++++
+ 3 files changed, 413 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/fujitsu,mb86s70-crg11.txt
+ create mode 100644 drivers/clk/clk-mb86s7x.c
 
-diff --git a/Documentation/devicetree/bindings/mailbox/arm-mhu.txt b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
+diff --git a/Documentation/devicetree/bindings/clock/fujitsu,mb86s70-crg11.txt b/Documentation/devicetree/bindings/clock/fujitsu,mb86s70-crg11.txt
 new file mode 100644
-index 0000000..b1b9888
+index 0000000..f692d0b
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
-@@ -0,0 +1,33 @@
-+ARM MHU Mailbox Driver
-+======================
++++ b/Documentation/devicetree/bindings/clock/fujitsu,mb86s70-crg11.txt
+@@ -0,0 +1,26 @@
++Fujitsu CRG11 clock driver bindings
++-----------------------------------
 +
-+The ARM's Message-Handling-Unit (MHU) is a mailbox controller that has
-+3 independent channels/links to communicate with remote processor(s).
-+ MHU links are hardwired on a platform. A link raises interrupt for any
-+received data. However, there is no specified way of knowing if the sent
-+data has been read by the remote. This driver assumes the sender polls
-+STAT register and the remote clears it after having read the data.
++Required properties :
++- compatible : Shall contain "fujitsu,mb86s70-crg11"
++- #clock-cells : Shall be 3 {cntrlr domain port}
 +
-+Mailbox Device Node:
-+====================
-+
-+Required properties:
-+--------------------
-+- compatible:		Shall be "arm,mbox-mhu"
-+- reg:			Contains the mailbox register address range (base
-+			address and length)
-+- #mbox-cells		Shall be 1
-+- interrupts:		Contains the interrupt information corresponding to
-+			each of the 3 links of MHU.
++The consumer specifies the desired clock pointing to its phandle.
 +
 +Example:
-+--------
 +
-+	mhu: mailbox@2b1f0000 {
++	clock: crg11 {
++		compatible = "fujitsu,mb86s70-crg11";
++		#clock-cells = <3>;
++	};
++
++	mhu: mhu0@2b1f0000 {
 +		#mbox-cells = <1>;
 +		compatible = "arm,mbox-mhu";
-+		reg = <0 0x2b1f0000 0x1000>;
-+		interrupts = <0 36 4>,
-+			     <0 35 4>,
-+			     <0 37 4>;
++		reg = <0 0x2B1F0000 0x1000>;
++		interrupts = <0 36 4>, /* LP Non-Sec */
++			     <0 35 4>, /* HP Non-Sec */
++			     <0 37 4>; /* Secure */
++		clocks = <&clock 0 2 1>; /* Cntrlr:0 Domain:2 Port:1 */
++		clock-names = "clk";
 +	};
-diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
-index c04fed9..9238440 100644
---- a/drivers/mailbox/Kconfig
-+++ b/drivers/mailbox/Kconfig
-@@ -6,6 +6,13 @@ menuconfig MAILBOX
- 	  signals. Say Y if your platform supports hardware mailboxes.
- 
- if MAILBOX
-+
-+config ARM_MHU
-+	tristate "ARM MHU Mailbox"
-+	depends on ARM
-+	help
-+	  Say Y here if you want to build the ARM MHU controller driver
-+
- config PL320_MBOX
- 	bool "ARM PL320 Mailbox"
- 	depends on ARM_AMBA
-diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile
-index dd412c2..c83791d 100644
---- a/drivers/mailbox/Makefile
-+++ b/drivers/mailbox/Makefile
-@@ -2,6 +2,8 @@
- 
- obj-$(CONFIG_MAILBOX)		+= mailbox.o
- 
-+obj-$(CONFIG_ARM_MHU)	+= arm_mhu.o
-+
- obj-$(CONFIG_PL320_MBOX)	+= pl320-ipc.o
- 
- obj-$(CONFIG_OMAP2PLUS_MBOX)	+= omap-mailbox.o
-diff --git a/drivers/mailbox/arm_mhu.c b/drivers/mailbox/arm_mhu.c
+diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+index d5fba5b..19d73a1 100644
+--- a/drivers/clk/Makefile
++++ b/drivers/clk/Makefile
+@@ -26,6 +26,7 @@ obj-$(CONFIG_MACH_LOONGSON1)		+= clk-ls1x.o
+ obj-$(CONFIG_COMMON_CLK_MAX_GEN)	+= clk-max-gen.o
+ obj-$(CONFIG_COMMON_CLK_MAX77686)	+= clk-max77686.o
+ obj-$(CONFIG_COMMON_CLK_MAX77802)	+= clk-max77802.o
++obj-$(CONFIG_ARCH_MB86S7X)		+= clk-mb86s7x.o
+ obj-$(CONFIG_ARCH_MOXART)		+= clk-moxart.o
+ obj-$(CONFIG_ARCH_NOMADIK)		+= clk-nomadik.o
+ obj-$(CONFIG_ARCH_NSPIRE)		+= clk-nspire.o
+diff --git a/drivers/clk/clk-mb86s7x.c b/drivers/clk/clk-mb86s7x.c
 new file mode 100644
-index 0000000..4f9d559
+index 0000000..51703cb
 --- /dev/null
-+++ b/drivers/mailbox/arm_mhu.c
-@@ -0,0 +1,211 @@
++++ b/drivers/clk/clk-mb86s7x.c
+@@ -0,0 +1,386 @@
 +/*
-+ * Copyright (C) 2013-2015 Fujitsu Semiconductor Ltd.
++ * Copyright (C) 2013-2015 FUJITSU SEMICONDUCTOR LIMITED
 + * Copyright (C) 2015 Linaro Ltd.
-+ * Author: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 + *
 + * This program is free software: you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -118,202 +91,378 @@ index 0000000..4f9d559
 + * GNU General Public License for more details.
 + */
 +
-+#include <linux/interrupt.h>
-+#include <linux/spinlock.h>
-+#include <linux/mutex.h>
-+#include <linux/delay.h>
-+#include <linux/slab.h>
++#include <linux/clkdev.h>
 +#include <linux/err.h>
 +#include <linux/io.h>
-+#include <linux/clk.h>
++#include <linux/of.h>
++#include <linux/cpu.h>
++#include <linux/clk-provider.h>
++#include <linux/spinlock.h>
 +#include <linux/module.h>
-+#include <linux/mailbox_controller.h>
++#include <linux/topology.h>
++#include <linux/mailbox_client.h>
 +#include <linux/platform_device.h>
 +
-+#define INTR_STAT_OFS	0x0
-+#define INTR_SET_OFS	0x8
-+#define INTR_CLR_OFS	0x10
++#include <soc/mb86s7x/scb_mhu.h>
 +
-+struct mhu_link {
-+	unsigned irq;
-+	void __iomem *tx_reg;
-+	void __iomem *rx_reg;
++#define to_crg_clk(p) container_of(p, struct crg_clk, hw)
++#define to_clc_clk(p) container_of(p, struct cl_clk, hw)
++
++struct mb86s7x_peri_clk {
++	u32 payload_size;
++	u32 cntrlr;
++	u32 domain;
++	u32 port;
++	u32 en;
++	u64 freqency;
++} __packed __aligned(4);
++
++struct hack_rate {
++	unsigned clk_id;
++	unsigned long rate;
++	int gated;
 +};
 +
-+struct arm_mhu {
-+	void __iomem *base;
-+	struct clk *clk;
-+	struct mhu_link mlink[3];
-+	struct mbox_chan chan[3];
-+	struct mbox_controller mbox;
++struct crg_clk {
++	struct clk_hw hw;
++	u8 cntrlr, domain, port;
 +};
 +
-+static irqreturn_t mhu_rx_interrupt(int irq, void *p)
++static int crg_gate_control(struct clk_hw *hw, int en)
 +{
-+	struct mbox_chan *chan = p;
-+	struct mhu_link *mlink = chan->con_priv;
-+	u32 val;
-+
-+	pr_debug("%s:%d\n", __func__, __LINE__);
-+	val = readl_relaxed(mlink->rx_reg + INTR_STAT_OFS);
-+	if (!val)
-+		return IRQ_NONE;
-+
-+	mbox_chan_received_data(chan, (void *)val);
-+
-+	writel_relaxed(val, mlink->rx_reg + INTR_CLR_OFS);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static bool mhu_last_tx_done(struct mbox_chan *chan)
-+{
-+	struct mhu_link *mlink = chan->con_priv;
-+	u32 val;
-+
-+	pr_debug("%s:%d\n", __func__, __LINE__);
-+	val = readl_relaxed(mlink->tx_reg + INTR_STAT_OFS);
-+
-+	return (val == 0);
-+}
-+
-+static int mhu_send_data(struct mbox_chan *chan, void *data)
-+{
-+	struct mhu_link *mlink = chan->con_priv;
-+
-+	pr_debug("%s:%d\n", __func__, __LINE__);
-+	if (!mhu_last_tx_done(chan)) {
-+		dev_err(chan->mbox->dev, "Last TX(%d) pending!\n", mlink->irq);
-+		return -EBUSY;
-+	}
-+
-+	writel_relaxed((u32)data, mlink->tx_reg + INTR_SET_OFS);
-+
-+	return 0;
-+}
-+
-+static int mhu_startup(struct mbox_chan *chan)
-+{
-+	struct mhu_link *mlink = chan->con_priv;
-+	u32 val;
++	struct crg_clk *crgclk = to_crg_clk(hw);
++	struct mb86s7x_peri_clk cmd;
 +	int ret;
 +
-+	pr_debug("%s:%d\n", __func__, __LINE__);
-+	val = readl_relaxed(mlink->tx_reg + INTR_STAT_OFS);
-+	writel_relaxed(val, mlink->tx_reg + INTR_CLR_OFS);
++	cmd.payload_size = sizeof(cmd);
++	cmd.cntrlr = crgclk->cntrlr;
++	cmd.domain = crgclk->domain;
++	cmd.port = crgclk->port;
++	cmd.en = en;
 +
-+	ret = request_irq(mlink->irq, mhu_rx_interrupt, 0, "mhu_link", chan);
-+	if (ret) {
-+		dev_err(chan->mbox->dev,
-+			"Unable to aquire IRQ %d\n", mlink->irq);
++	/* Port is UngatedCLK */
++	if (cmd.port == 8)
++		return en ? 0 : -EINVAL;
++
++	pr_debug("%s:%d CMD Cntrlr-%u Dom-%u Port-%u En-%u}\n",
++		 __func__, __LINE__, cmd.cntrlr,
++		 cmd.domain, cmd.port, cmd.en);
++
++	ret = mb86s7x_send_packet(CMD_PERI_CLOCK_GATE_SET_REQ,
++				  &cmd, sizeof(cmd));
++	if (ret < 0) {
++		pr_err("%s:%d failed!\n", __func__, __LINE__);
 +		return ret;
 +	}
 +
-+	return 0;
-+}
++	pr_debug("%s:%d REP Cntrlr-%u Dom-%u Port-%u En-%u}\n",
++		 __func__, __LINE__, cmd.cntrlr,
++		 cmd.domain, cmd.port, cmd.en);
 +
-+static void mhu_shutdown(struct mbox_chan *chan)
-+{
-+	struct mhu_link *mlink = chan->con_priv;
-+
-+	pr_debug("%s:%d\n", __func__, __LINE__);
-+	free_irq(mlink->irq, chan);
-+}
-+
-+static struct mbox_chan_ops mhu_ops = {
-+	.send_data = mhu_send_data,
-+	.startup = mhu_startup,
-+	.shutdown = mhu_shutdown,
-+	.last_tx_done = mhu_last_tx_done,
-+};
-+
-+static int arm_mhu_probe(struct platform_device *pdev)
-+{
-+	int i, err;
-+	struct arm_mhu *mhu;
-+	struct resource *res;
-+	struct device *dev = &pdev->dev;
-+	int mhu_reg[3] = {0x0, 0x20, 0x200};
-+
-+	/* Allocate memory for device */
-+	mhu = devm_kzalloc(dev, sizeof(*mhu), GFP_KERNEL);
-+	if (!mhu)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!res) {
-+		dev_err(dev, "No IOMEM found\n");
-+		return -ENXIO;
-+	}
-+	mhu->base = devm_ioremap(dev, res->start, resource_size(res));
-+	if (!mhu->base) {
-+		dev_err(dev, "ioremap failed\n");
-+		return -ENXIO;
-+	}
-+
-+	for (i = 0; i < 3; i++) {
-+		mhu->chan[i].con_priv = &mhu->mlink[i];
-+		res = platform_get_resource(pdev, IORESOURCE_IRQ, i);
-+		mhu->mlink[i].irq = res->start;
-+		mhu->mlink[i].rx_reg = mhu->base + mhu_reg[i];
-+		mhu->mlink[i].tx_reg = mhu->mlink[i].rx_reg + 0x100;
-+	}
-+
-+	mhu->mbox.dev = dev;
-+	mhu->mbox.chans = &mhu->chan[0];
-+	mhu->mbox.num_chans = 3;
-+	mhu->mbox.ops = &mhu_ops;
-+	mhu->mbox.txdone_irq = false;
-+	mhu->mbox.txdone_poll = true;
-+	mhu->mbox.txpoll_period = 10;
-+
-+	platform_set_drvdata(pdev, mhu);
-+
-+	err = mbox_controller_register(&mhu->mbox);
-+	if (err) {
-+		dev_err(dev, "Failed to register mailboxes %d\n", err);
-+		return err;
-+	}
-+
-+	mhu->clk = devm_clk_get(dev, "clk");
-+	if (IS_ERR(mhu->clk))
-+		dev_info(dev, "unable to init clock\n");
++	/* If the request was rejected */
++	if (cmd.en != en)
++		ret = -EINVAL;
 +	else
-+		clk_prepare_enable(mhu->clk);
++		ret = 0;
 +
-+	dev_info(dev, "ARM MHU Mailbox registered\n");
-+	return 0;
++	return ret;
 +}
 +
-+static int arm_mhu_remove(struct platform_device *pdev)
++static int crg_port_prepare(struct clk_hw *hw)
 +{
-+	struct arm_mhu *mhu = platform_get_drvdata(pdev);
++	return crg_gate_control(hw, 1);
++}
 +
-+	clk_disable_unprepare(mhu->clk);
-+	mbox_controller_unregister(&mhu->mbox);
++static void crg_port_unprepare(struct clk_hw *hw)
++{
++	crg_gate_control(hw, 0);
++}
 +
++static int
++crg_rate_control(struct clk_hw *hw, int set, unsigned long *rate)
++{
++	struct crg_clk *crgclk = to_crg_clk(hw);
++	struct mb86s7x_peri_clk cmd;
++	int code, ret;
++
++	cmd.payload_size = sizeof(cmd);
++	cmd.cntrlr = crgclk->cntrlr;
++	cmd.domain = crgclk->domain;
++	cmd.port = crgclk->port;
++	cmd.freqency = *rate;
++
++	if (set) {
++		code = CMD_PERI_CLOCK_RATE_SET_REQ;
++		pr_debug("%s:%d CMD Cntrlr-%u Dom-%u Port-%u Rate-SET %lluHz}\n",
++			 __func__, __LINE__, cmd.cntrlr,
++			 cmd.domain, cmd.port, cmd.freqency);
++	} else {
++		code = CMD_PERI_CLOCK_RATE_GET_REQ;
++		pr_debug("%s:%d CMD Cntrlr-%u Dom-%u Port-%u Rate-GET}\n",
++			 __func__, __LINE__, cmd.cntrlr,
++			 cmd.domain, cmd.port);
++	}
++
++	ret = mb86s7x_send_packet(code, &cmd, sizeof(cmd));
++	if (ret < 0) {
++		pr_err("%s:%d failed!\n", __func__, __LINE__);
++		return ret;
++	}
++
++	if (set)
++		pr_debug("%s:%d REP Cntrlr-%u Dom-%u Port-%u Rate-SET %lluHz}\n",
++			 __func__, __LINE__, cmd.cntrlr,
++			 cmd.domain, cmd.port, cmd.freqency);
++	else
++		pr_debug("%s:%d REP Cntrlr-%u Dom-%u Port-%u Rate-GOT %lluHz}\n",
++			 __func__, __LINE__, cmd.cntrlr,
++			 cmd.domain, cmd.port, cmd.freqency);
++
++	*rate = cmd.freqency;
 +	return 0;
 +}
 +
-+static const struct of_device_id arm_mhu_dt_ids[] = {
-+	{ .compatible = "arm,mbox-mhu" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, arm_mhu_dt_ids);
++static unsigned long
++crg_port_recalc_rate(struct clk_hw *hw,	unsigned long parent_rate)
++{
++	unsigned long rate;
 +
-+static struct platform_driver arm_mhu_driver = {
-+	.driver = {
-+		.name = "arm_mhu",
-+		.of_match_table = arm_mhu_dt_ids,
-+	},
-+	.probe = arm_mhu_probe,
-+	.remove = arm_mhu_remove,
-+};
-+module_platform_driver(arm_mhu_driver);
++	crg_rate_control(hw, 0, &rate);
 +
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("ARM MHU Driver");
-+MODULE_AUTHOR("Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>");
++	return rate;
++}
++
++static long
++crg_port_round_rate(struct clk_hw *hw,
++		    unsigned long rate, unsigned long *pr)
++{
++	return rate;
++}
++
++static int
++crg_port_set_rate(struct clk_hw *hw,
++		  unsigned long rate, unsigned long parent_rate)
++{
++	return crg_rate_control(hw, 1, &rate);
++}
++
++const struct clk_ops crg_port_ops = {
++	.prepare = crg_port_prepare,
++	.unprepare = crg_port_unprepare,
++	.recalc_rate = crg_port_recalc_rate,
++	.round_rate = crg_port_round_rate,
++	.set_rate = crg_port_set_rate,
++};
++
++struct mb86s70_crg11 {
++	struct mutex lock; /* protects CLK populating and searching */
++};
++
++static struct clk *crg11_get(struct of_phandle_args *clkspec, void *data)
++{
++	struct mb86s70_crg11 *crg11 = data;
++	struct clk_init_data init;
++	u32 cntrlr, domain, port;
++	struct crg_clk *crgclk;
++	struct clk *clk;
++	char clkp[20];
++
++	if (clkspec->args_count != 3)
++		return ERR_PTR(-EINVAL);
++
++	cntrlr = clkspec->args[0];
++	domain = clkspec->args[1];
++	port = clkspec->args[2];
++
++	if (port > 7)
++		snprintf(clkp, 20, "UngatedCLK%d_%X", cntrlr, domain);
++	else
++		snprintf(clkp, 20, "CLK%d_%X_%d", cntrlr, domain, port);
++
++	mutex_lock(&crg11->lock);
++
++	clk = __clk_lookup(clkp);
++	if (clk) {
++		mutex_unlock(&crg11->lock);
++		return clk;
++	}
++
++	crgclk = kzalloc(sizeof(*crgclk), GFP_KERNEL);
++	if (!crgclk) {
++		mutex_unlock(&crg11->lock);
++		return ERR_PTR(-ENOMEM);
++	}
++
++	init.name = clkp;
++	init.num_parents = 0;
++	init.ops = &crg_port_ops;
++	init.flags = CLK_IS_ROOT;
++	crgclk->hw.init = &init;
++	crgclk->cntrlr = cntrlr;
++	crgclk->domain = domain;
++	crgclk->port = port;
++	clk = clk_register(NULL, &crgclk->hw);
++	if (IS_ERR(clk))
++		pr_err("%s:%d Error!\n", __func__, __LINE__);
++	else
++		pr_debug("Registered %s\n", clkp);
++
++	clk_register_clkdev(clk, clkp, NULL);
++	mutex_unlock(&crg11->lock);
++	return clk;
++}
++
++static void __init crg_port_init(struct device_node *node)
++{
++	struct mb86s70_crg11 *crg11;
++
++	crg11 = kzalloc(sizeof(*crg11), GFP_KERNEL);
++	if (!crg11)
++		return;
++
++	mutex_init(&crg11->lock);
++
++	of_clk_add_provider(node, crg11_get, crg11);
++}
++CLK_OF_DECLARE(crg11_gate, "fujitsu,mb86s70-crg11", crg_port_init);
++
++struct cl_clk {
++	struct clk_hw hw;
++	int cluster;
++};
++
++struct mb86s7x_cpu_freq {
++	u32 payload_size;
++	u32 cluster_class;
++	u32 cluster_id;
++	u32 cpu_id;
++	u64 freqency;
++};
++
++static void mhu_cluster_rate(struct clk_hw *hw, unsigned long *rate, int get)
++{
++	struct cl_clk *clc = to_clc_clk(hw);
++	struct mb86s7x_cpu_freq cmd;
++	int code, ret;
++
++	cmd.payload_size = sizeof(cmd);
++	cmd.cluster_class = 0;
++	cmd.cluster_id = clc->cluster;
++	cmd.cpu_id = 0;
++	cmd.freqency = *rate;
++
++	if (get)
++		code = CMD_CPU_CLOCK_RATE_GET_REQ;
++	else
++		code = CMD_CPU_CLOCK_RATE_SET_REQ;
++
++	pr_debug("%s:%d CMD Cl_Class-%u CL_ID-%u CPU_ID-%u Freq-%llu}\n",
++		 __func__, __LINE__, cmd.cluster_class,
++		 cmd.cluster_id, cmd.cpu_id, cmd.freqency);
++
++	ret = mb86s7x_send_packet(code, &cmd, sizeof(cmd));
++	if (ret < 0) {
++		pr_err("%s:%d failed!\n", __func__, __LINE__);
++		return;
++	}
++
++	pr_debug("%s:%d REP Cl_Class-%u CL_ID-%u CPU_ID-%u Freq-%llu}\n",
++		 __func__, __LINE__, cmd.cluster_class,
++		 cmd.cluster_id, cmd.cpu_id, cmd.freqency);
++
++	*rate = cmd.freqency;
++}
++
++static unsigned long
++clc_recalc_rate(struct clk_hw *hw, unsigned long unused)
++{
++	unsigned long rate;
++
++	mhu_cluster_rate(hw, &rate, 1);
++	return rate;
++}
++
++static long
++clc_round_rate(struct clk_hw *hw, unsigned long rate,
++	       unsigned long *unused)
++{
++	return rate;
++}
++
++static int
++clc_set_rate(struct clk_hw *hw, unsigned long rate,
++	     unsigned long unused)
++{
++	unsigned long res = rate;
++
++	mhu_cluster_rate(hw, &res, 0);
++
++	return (res == rate) ? 0 : -EINVAL;
++}
++
++static struct clk_ops clk_clc_ops = {
++	.recalc_rate = clc_recalc_rate,
++	.round_rate = clc_round_rate,
++	.set_rate = clc_set_rate,
++};
++
++struct clk *mb86s7x_clclk_register(struct device *cpu_dev)
++{
++	struct clk_init_data init;
++	struct cl_clk *clc;
++
++	clc = kzalloc(sizeof(*clc), GFP_KERNEL);
++	if (!clc)
++		return ERR_PTR(-ENOMEM);
++
++	clc->hw.init = &init;
++	clc->cluster = topology_physical_package_id(cpu_dev->id);
++
++	init.name = dev_name(cpu_dev);
++	init.ops = &clk_clc_ops;
++	init.flags = CLK_IS_ROOT | CLK_GET_RATE_NOCACHE;
++	init.num_parents = 0;
++
++	return devm_clk_register(cpu_dev, &clc->hw);
++}
++
++static int mb86s7x_clclk_of_init(void)
++{
++	int cpu, ret = -ENODEV;
++	struct device_node *np;
++	struct clk *clk;
++
++	np = of_find_compatible_node(NULL, NULL, "fujitsu,mb86s70-scb-1.0");
++	if (!np || !of_device_is_available(np))
++		goto exit;
++
++	for_each_possible_cpu(cpu) {
++		struct device *cpu_dev = get_cpu_device(cpu);
++
++		if (!cpu_dev) {
++			pr_err("failed to get cpu%d device\n", cpu);
++			continue;
++		}
++
++		clk = mb86s7x_clclk_register(cpu_dev);
++		if (IS_ERR(clk)) {
++			pr_err("failed to register cpu%d clock\n", cpu);
++			continue;
++		}
++		if (clk_register_clkdev(clk, NULL, dev_name(cpu_dev))) {
++			pr_err("failed to register cpu%d clock lookup\n", cpu);
++			continue;
++		}
++		pr_debug("registered clk for %s\n", dev_name(cpu_dev));
++	}
++	ret = 0;
++
++	platform_device_register_simple("arm-bL-cpufreq-dt", -1, NULL, 0);
++exit:
++	of_node_put(np);
++	return ret;
++}
++module_init(mb86s7x_clclk_of_init);
 -- 
 1.9.0
 
