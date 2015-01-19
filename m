@@ -1,62 +1,81 @@
-From: "Opensource [Steve Twiss]" <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH V1] mfd: da9063: Add device tree support
-Date: Mon, 19 Jan 2015 14:22:59 +0000
-Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7D0B52C08@SW-EX-MBX02.diasemi.com>
-References: <201501141438.t0EEcMBg010491@swsrvapps-01.diasemi.com>
- <20150119095423.GM21886@x1>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH 1/5] mfd: tps65218: make INT[12] and STATUS registers
+ volatile
+Date: Mon, 19 Jan 2015 08:41:07 -0600
+Message-ID: <20150119144107.GC20386@saruman>
+References: <1419622104-25812-1-git-send-email-balbi@ti.com>
+ <1419622104-25812-2-git-send-email-balbi@ti.com>
+ <20150118095214.GA3574@x1>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150119095423.GM21886@x1>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Dajun Chen <david.chen-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="yLVHuoLXiP9kZBkt"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150118095214.GA3574@x1>
+Sender: linux-omap-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Felipe Balbi <balbi@ti.com>, Tony Lindgren <tony@atomide.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>, stable@vger.kernel.org, Keerthy <j-keerthy@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMTkgSmFudWFyeSAyMDE1IDA5OjU0LCBMZWUgSm9uZXMgd3JvdGU6DQoNCj4gT24gV2VkLCAx
-NCBKYW4gMjAxNSwgU3RldmUgVHdpc3Mgd3JvdGU6DQo+ID4gRnJvbTogU3RldmUgVHdpc3MgPHN0
-d2lzcy5vcGVuc291cmNlQGRpYXNlbWkuY29tPg0KPiA+DQo+ID4gLS0tDQo+ID4gQ2hlY2tzIHBl
-cmZvcm1lZCB3aXRoIGxpbnV4LW5leHQvdjMuMTktcmM0L3NjcmlwdHMvY2hlY2twYXRjaC5wbA0K
-PiA+ICBkYTkwNjMudHh0ICAgICAgICAgICAgICAgIHRvdGFsOiAwIGVycm9ycywgMCB3YXJuaW5n
-cywgOTQgbGluZXMgY2hlY2tlZA0KPiA+ICBkYTkwNjMtY29yZS5jICAgICAgICAgICAgIHRvdGFs
-OiAwIGVycm9ycywgMCB3YXJuaW5ncywgMTkyIGxpbmVzIGNoZWNrZWQNCj4gPiAgZGE5MDYzLWky
-Yy5jICAgICAgICAgICAgICB0b3RhbDogMCBlcnJvcnMsIDAgd2FybmluZ3MsIDI3NyBsaW5lcyBj
-aGVja2VkDQo+ID4gIGNvcmUuaCAgICAgICAgICAgICAgICAgICAgdG90YWw6IDAgZXJyb3JzLCAw
-IHdhcm5pbmdzLCA5OSBsaW5lcyBjaGVja2VkDQo+IA0KPiBUaGVyZSBpcyBubyBuZWVkIHRvIHB1
-dCB0aGlzIGluIGhlcmUgcmVhbGx5LiAgSXQgaXMgYXNzdW1lZCB0aGF0DQo+IGNoZWNrcGF0Y2gu
-cGwgaGFzIGJlZW4gcnVuIGFuZCB0aGF0IG5vIHdhcm5pbmdzL2Vycm9ycyBleGlzdHMuDQo+IA0K
-DQpvayAtLSBJIHdpbGwgcmVtb3ZlIHRoaXMgaW4gZnV0dXJlDQoNClsuLi5dDQoNCj4gPiArUmVx
-dWlyZWQgcHJvcGVydGllczoNCj4gPiArDQo+ID4gKy0gY29tcGF0aWJsZSA6IFNob3VsZCBiZSAi
-ZGxnLGRhOTA2My1jYSIsICJkbGcsZGE5MDYzLWJiIiBvci9hbmQNCj4gPiArICAiZGxnLGRhOTA2
-My1hZCIuDQo+IA0KPiBXaGF0IGFyZSAnY2EnLCAnYmInIGFuZCAnYWQnPw0KDQpUaGVyZSBhcmUg
-bXVsdGlwbGUgdmFyaWFudHMgb2YgdGhlIERBOTA2MyBjaGlwIC0tIGhpc3RvcmljYWwgc3VwcG9y
-dC4NClRoZSBBRCBjaGlwIGhhcyBhIGRpZmZlcmVudCByZWdpc3RlciBtYXAgdG8gQkIgYW5kIENB
-ICBzaWxpY29uIGFuZCB0aGUNCnZhcmlhbnQgaW5mb3JtYXRpb24gaXMgcmVhZCBmcm9tIHRoZSBj
-aGlwIGF0IHJ1bi10aW1lIGFuZCB1c2VkIHRvIHNldA0KdXAgdGhlIGNvcnJlY3QgcmVnbWFwX2Nv
-bmZpZyB0YWJsZXMgZHVyaW5nIGluaXRpYWxpc2F0aW9uLg0KDQpbLi4uXQ0KDQo+ID4gKysrIGIv
-ZHJpdmVycy9tZmQvZGE5MDYzLWNvcmUuYw0KPiA+IEBAIC04NSw2ICs4NSw3IEBAIHN0YXRpYyBj
-b25zdCBzdHJ1Y3QgbWZkX2NlbGwgZGE5MDYzX2RldnNbXSA9IHsNCj4gPiAgCQkubmFtZQkJPSBE
-QTkwNjNfRFJWTkFNRV9MRURTLA0KPiA+ICAJfSwNCj4gPiAgCXsNCj4gPiArCQkub2ZfY29tcGF0
-aWJsZSA9ICJkbGcsZGE5MDYzLXdhdGNoZG9nIiwNCj4gDQo+IENhbiB5b3UgcHV0IHRoZSBvZl9j
-b21wYXRpYmxlIGF0dHJpYnV0ZSBhdCB0aGUgZW5kIG9mIHRoZSBzdHJ1Y3R1cmUNCj4gcGxlYXNl
-Pw0KPiANCj4gPiAgCQkubmFtZQkJPSBEQTkwNjNfRFJWTkFNRV9XQVRDSERPRywNCj4gPiAgCX0s
-DQo+ID4gIAl7DQo+ID4gQEAgLTk4LDYgKzk5LDcgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBtZmRf
-Y2VsbCBkYTkwNjNfZGV2c1tdID0gew0KPiA+ICAJCS5yZXNvdXJjZXMJPSBkYTkwNjNfb25rZXlf
-cmVzb3VyY2VzLA0KPiA+ICAJfSwNCj4gPiAgCXsNCj4gPiArCQkub2ZfY29tcGF0aWJsZSA9ICJk
-bGcsZGE5MDYzLXJ0YyIsDQo+IA0KPiBTYW1lIGhlcmUuDQoNClN1cmUuDQoNClsuLi5dDQo+ID4N
-Cj4gPiArc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgZGE5MDYzX2R0X2lkc1tdID0g
-ew0KPiA+ICsJeyAuY29tcGF0aWJsZSA9ICJkbGcsZGE5MDYzLWFkIiwgfSwNCj4gPiArCXsgLmNv
-bXBhdGlibGUgPSAiZGxnLGRhOTA2My1iYiIsIH0sDQo+ID4gKwl7IC5jb21wYXRpYmxlID0gImRs
-ZyxkYTkwNjMtY2EiLCB9LA0KPiANCj4gV2h5IGlzIHRoZXJlIGEgbmVlZCB0byBkaWZmZXJpZW50
-aWFlIGJldHdlZW4gJ2FkJywgJ2JiJyBhbmQgJ2NhJw0KPiAod2hhdGV2ZXIgdGhleSBhcmUpPw0K
-DQpBcyBkZXNjcmliZWQgYWJvdmUuDQoNCj4gPiArCXsgLyogc2VudGluZWwgKi8gfQ0KPiANCj4g
-Tml0OiBZb3UgY2FuIGRyb3AgdGhpcyBjb21tZW50Lg0KDQpvay4NCg0KWy4uLl0NCg0KSSB3aWxs
-IGFsc28gbWFrZSBjaGFuZ2VzIHRvIHNlcGFyYXRlIGludG8gbXVsdGlwbGUgcGF0Y2hlcw0KYXMg
-ZGVzY3JpYmVkIGluIGh0dHBzOi8vbGttbC5vcmcvbGttbC8yMDE1LzEvMTkvMTQ5DQpXaWxsIHJl
-LXNlbmQgYXMgcGF0Y2ggVjIgLi4uDQoNClJlZ2FyZHMsDQpTdGV2ZQ0KDQo=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--yLVHuoLXiP9kZBkt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Sun, Jan 18, 2015 at 09:52:14AM +0000, Lee Jones wrote:
+> On Fri, 26 Dec 2014, Felipe Balbi wrote:
+>=20
+> > STATUS register can be modified by the HW, so we
+> > should bypass cache because of that.
+> >=20
+> > In the case of INT[12] registers, they are the ones
+> > that actually clear the IRQ source at the time they
+> > are read. If we rely on the cache for them, we will
+> > never be able to clear the interrupt, which will cause
+> > our IRQ line to be disabled due to IRQ throttling.
+> >=20
+> > Fixes: 44b4dc6 mfd: tps65218: Add driver for the TPS65218 PMIC
+> > Cc: <stable@vger.kernel.org> # v3.15+
+> > Cc: Keerthy <j-keerthy@ti.com>
+> > Cc: Lee Jones <lee.jones@linaro.org>
+> > Signed-off-by: Felipe Balbi <balbi@ti.com>
+> > ---
+> >  drivers/mfd/tps65218.c | 11 +++++++++++
+> >  1 file changed, 11 insertions(+)
+>=20
+> Sorry for the delay.  It's difficult to get a WiFi signal 2000m up in
+> an Austrian mountain. :)
+
+now you're just making excuses ;-)
+
+> Applied now, thanks.
+
+thanks :-)
+
+--=20
+balbi
+
+--yLVHuoLXiP9kZBkt
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUvReDAAoJEIaOsuA1yqREzTEQAKUiV3wcT4B0fNjFeTHiffC4
+GyeF0MVYuexwwnb+EhNfSm3ykAc1DU6T8C0xvcgfWhS9H4hy/EQcVVtVLQJybUm2
+pYZkNuOcN+FN1sZOBIwXwMu3ggmZpltMTW6rmR8wu6/9uWfVwDdg/5vfjyWmMsZu
+8EsXVZzzmrqL1W5Fd+iOr89qlWnLICl8FQ0QdSwdVRgsOZrv7+zB05iXcGPB/SU3
+/bbKFTX8v1fEr6RXJyX86DsJQCy3LZBU70Wienvbk2JJxcn4hH0KHNnHHfKMaTZB
+vGwJqGQ2mP3IEAN23rItI5QQevWIUh+iZgZT/vyjwl+oCfW3dYYCZfdrVMBhrPVY
+GC56zvTHrC5TSlZotbNG+bGNfohNnQ1wJV7YCk1MpCEdCmYoALfIsdtbJDrrIyeN
+xJJwKZMCjPM+C3jQhEq7mgmPrs1nTmHiyQGWu6VxmcauUgbX0hJ0Qbxl1HLcVRNk
+1G1RwrDhkjh4/NUC1Uhaetqq/va8456dhjDRS08JzGF9HfRhEE59meqmnOxiw/qZ
+VPq18e+Qbebf374NMQlr1RioXnj98NVZcNqjG0RI2e0+Zohxy/niCqYaGz6MBBxt
+LtJJvbC1cczRSP7e9bSPVaUxkFh5gclMrwjJYXarlGla84vUckLplqvydMSZcWJd
+zcfWffnqoly6MbeuMQSB
+=lUXq
+-----END PGP SIGNATURE-----
+
+--yLVHuoLXiP9kZBkt--
