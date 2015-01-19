@@ -1,108 +1,103 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun4i: Add simplefb node with
- de_fe0-de_be0-lcd0-hdmi pipeline
-Date: Mon, 19 Jan 2015 14:20:02 +0100
-Message-ID: <20150119132002.GD4367@lukather>
-References: <1421672477-12978-1-git-send-email-hdegoede@redhat.com>
- <1421672477-12978-2-git-send-email-hdegoede@redhat.com>
+From: Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>
+Subject: [PATCH v3] of: i2c: Add i2c-mux-idle-disconnect DT property to PCA954x
+ mux driver
+Date: Mon, 19 Jan 2015 14:29:00 +0100
+Message-ID: <54BD069C.2080108@nsn.com>
+References: <5494599A.8050803@nsn.com> <20150115123237.GC2549@katana> <54B7BBF5.4010001@nsn.com> <20150115131935.GE2549@katana> <54B7C206.8030809@nsn.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="BRE3mIcgqKzpedwo"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1421672477-12978-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <54B7C206.8030809-OYasijW0DpE@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: ext Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, jdelvare-l3A5Bk7waGM@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Lawnick Michael 61283229 <michael.lawnick-OYasijW0DpE@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+of: i2c: Add i2c-mux-idle-disconnect DT property to PCA954x mux driver
 
---BRE3mIcgqKzpedwo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Add i2c-mux-idle-disconnect device tree property to PCA954x mux driver. The new
+property forces the multiplexer to disconnect child buses in idle state. This is
+used, for example, when there are several multiplexers on the same bus and the
+devices on the underlying buses might have same I2C addresses.
 
-Hi Hans,
+Signed-off-by: Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>
+---
 
-On Mon, Jan 19, 2015 at 02:01:17PM +0100, Hans de Goede wrote:
-> Testing has shown that on sun4i the display backend engine does not have
-> deep enough fifo-s causing flickering / tearing in full-hd mode due to
-> fifo underruns. This can be avoided by letting the display frontend engine
-> do the dma from memory, and then letting it feed the data directly into
-> the backend unmodified, as the frontend does have deep enough fifo-s.
->=20
-> Note since u-boot-v2015.01 has been released using the de_be0-lcd0-hdmi
-> pipeline on sun4i, we need to keep that one around too (unfortunately).
->=20
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> ---
->  arch/arm/boot/dts/sun4i-a10.dtsi | 8 ++++++++
->  1 file changed, 8 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a=
-10.dtsi
-> index f5e35b5..ccd60e3 100644
-> --- a/arch/arm/boot/dts/sun4i-a10.dtsi
-> +++ b/arch/arm/boot/dts/sun4i-a10.dtsi
-> @@ -44,6 +44,14 @@
->  				 <&ahb_gates 44>;
->  			status =3D "disabled";
->  		};
-> +
-> +		framebuffer@1 {
-> +			compatible =3D "allwinner,simple-framebuffer", "simple-framebuffer";
-> +			allwinner,pipeline =3D "de_fe0-de_be0-lcd0-hdmi";
-> +			clocks =3D <&pll5 1>, <&ahb_gates 36>, <&ahb_gates 43>,
-> +				 <&ahb_gates 44>, <&ahb_gates 46>;
-> +			status =3D "disabled";
-> +		};
+Changes in v3:
+- preserve legacy platform data deselect_on_exit flag
+- change property name to i2c-mux-idle-disconnect
+Changes in v2:
+- dropped idle-state binding
+- headers in alphabetical order
+- removed old platform data deselect_on_exit flag
 
-Thanks for this.
+ .../devicetree/bindings/i2c/i2c-mux-pca954x.txt    |    3 +++
+ drivers/i2c/muxes/i2c-mux-pca954x.c                |   11 ++++++++++-
+ 2 files changed, 13 insertions(+), 1 deletions(-)
 
-I do have a question though, maybe I'm missing something, but what
-would prevent us from using the existing node already? The output
-pipeline seems to be the same, at least for which output we
-use. Wether we use or not the display frontend looks like an
-implementation detail.
-
-That or just having several strings in allwinner,pipeline.
-
-If this simplefb binding is just going to be a collection of all the
-various combinations we have, plus the legacy options, I'm a bit
-worried that this is just going to be a hell to maintain, without any
-way to remove it at compile time (if such feature is ever merged in
-DTC).
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---BRE3mIcgqKzpedwo
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUvQSCAAoJEBx+YmzsjxAgu60P/RYBTh8OyIHMrG0CN+az2mey
-YwPzEJfNBqFjAIczne6sPINI6QOgqY3GnKKz04ASCwbYO4L1HANW9BkmiILw3mqm
-uQI3DVUcRPCGGp1mSmwS2QdThoArhsstvofAlDfgj5kdQGB/10UiO5Ob+BnLoCOm
-gKIqmPRqs+i1SweetS1Jy7eTnzd/A8RSfLEmpDEjOQu8VDqeXWuR5IifNZCLXRAy
-7pHqHEd5OEOXx6LuwPOi2RVwTQMv1eeIEd1uNNEovPGYxt6y3ZiuQe25ONftCs2s
-Fs3qC/ny5aB6yMc/BSUOFf7Ot6dalkf5H6SgTocTIUyPmLvHk9IpMl1eg39EcLfS
-ggCFbLPbT1vQGkVeTouGY7OIW5Q2AW1zGu7vhyRyHgyXyO15dYnCoLc2k277eUjn
-4E/GEgJtjjn5CbojgpsCTrWzPj92HrNqtxOcp63Iz8A1L2ETcl77DXBdDacRAYSx
-MlFCFLbKmJFyvhMGmBzOf5dDAzq3/iwe4HIjGwlboCR956iDfRTHibuPSO1ozSGt
-jdX5Z3tmxE8/npAhJx1m7VFgOdaHq+sZyetOCMDEFQ5ZOp1hYjnBehDUL5nwHB8O
-yqAxVGFpPtb8N9ZnzIVVI0aMa6I+YH81BJS55Noz/6gHQ+DD7wGo7gyJ3CLlw/LY
-ni+Bim6QrCQQmBWdR/1V
-=+bpN
------END PGP SIGNATURE-----
-
---BRE3mIcgqKzpedwo--
+--- a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
+@@ -16,6 +16,9 @@ Required Properties:
+ Optional Properties:
+ 
+   - reset-gpios: Reference to the GPIO connected to the reset input.
++  - i2c-mux-idle-disconnect: Boolean; if defined, forces mux to disconnect all
++    children in idle state. This is necessary for example, if there are several
++    multiplexers on the bus and the devices behind them use same I2C addresses.
+ 
+ 
+ Example:
+--- a/drivers/i2c/muxes/i2c-mux-pca954x.c
++++ b/drivers/i2c/muxes/i2c-mux-pca954x.c
+@@ -41,6 +41,7 @@
+ #include <linux/i2c-mux.h>
+ #include <linux/i2c/pca954x.h>
+ #include <linux/module.h>
++#include <linux/of.h>
+ #include <linux/pm.h>
+ #include <linux/slab.h>
+ 
+@@ -186,6 +187,9 @@ static int pca954x_probe(struct i2c_client *client,
+ {
+ 	struct i2c_adapter *adap = to_i2c_adapter(client->dev.parent);
+ 	struct pca954x_platform_data *pdata = dev_get_platdata(&client->dev);
++	struct device_node *np = client->dev.of_node;
++	struct device_node *of_node = client->dev.of_node;
++	bool idle_disconnect_dt;
+ 	struct gpio_desc *gpio;
+ 	int num, force, class;
+ 	struct pca954x *data;
+@@ -217,10 +221,14 @@ static int pca954x_probe(struct i2c_client *client,
+ 	data->type = id->driver_data;
+ 	data->last_chan = 0;		   /* force the first selection */
+ 
++	idle_disconnect_dt = of_node &&
++		of_property_read_bool(of_node, "i2c-mux-idle-disconnect");
++
+ 	/* Now create an adapter for each channel */
+ 	for (num = 0; num < chips[data->type].nchans; num++) {
+ 		force = 0;			  /* dynamic adap number */
+ 		class = 0;			  /* no class by default */
++		bool idle_disconnect_pd = false;
+ 		if (pdata) {
+ 			if (num < pdata->num_modes) {
+ 				/* force static number */
+@@ -229,12 +237,13 @@ static int pca954x_probe(struct i2c_client *client,
+ 			} else
+ 				/* discard unconfigured channels */
+ 				break;
++			idle_disconnect_pd = pdata->modes[num].deselect_on_exit;
+ 		}
+ 
+ 		data->virt_adaps[num] =
+ 			i2c_add_mux_adapter(adap, &client->dev, client,
+ 				force, num, class, pca954x_select_chan,
+-				(pdata && pdata->modes[num].deselect_on_exit)
++				(idle_disconnect_pd || idle_disconnect_dt)
+ 					? pca954x_deselect_mux : NULL);
+ 
+ 		if (data->virt_adaps[num] == NULL) {
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
