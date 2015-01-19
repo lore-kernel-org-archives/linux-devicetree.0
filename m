@@ -1,75 +1,57 @@
-From: Rameshwar Prasad Sahu <rsahu@apm.com>
-Subject: [PATCH v3 2/3] arm64: dts: Add APM X-Gene DMA device and DMA clock DTS nodes
-Date: Mon, 19 Jan 2015 18:11:08 +0530
-Message-ID: <1421671269-19441-3-git-send-email-rsahu@apm.com>
-References: <1421671269-19441-1-git-send-email-rsahu@apm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1421671269-19441-1-git-send-email-rsahu@apm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: vinod.koul@intel.com, dan.j.williams@intel.com
-Cc: dmaengine@vger.kernel.org, arnd@arndb.de, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ddutile@redhat.com, jcm@redhat.com, patches@apm.com, Rameshwar Prasad Sahu <rsahu@apm.com>, Loc Ho <lho@apm.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH] ARM: dts: sun4i: Add simplefb node with
+ de_fe0-de_be0-lcd0-hdmi pipeline
+Date: Mon, 19 Jan 2015 14:01:17 +0100
+Message-ID: <1421672477-12978-2-git-send-email-hdegoede@redhat.com>
+References: <1421672477-12978-1-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBJ4A6SSQKGQEHDX7DMA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1421672477-12978-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the device tree node for APM X-Gene SoC
-DMA controller and DMA clock.
+Testing has shown that on sun4i the display backend engine does not have
+deep enough fifo-s causing flickering / tearing in full-hd mode due to
+fifo underruns. This can be avoided by letting the display frontend engine
+do the dma from memory, and then letting it feed the data directly into
+the backend unmodified, as the frontend does have deep enough fifo-s.
 
-Signed-off-by: Rameshwar Prasad Sahu <rsahu@apm.com>
-Signed-off-by: Loc Ho <lho@apm.com>
+Note since u-boot-v2015.01 has been released using the de_be0-lcd0-hdmi
+pipeline on sun4i, we need to keep that one around too (unfortunately).
+
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm64/boot/dts/apm/apm-storm.dtsi | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ arch/arm/boot/dts/sun4i-a10.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/apm/apm-storm.dtsi b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-index f1ad9c2..e20da23 100644
---- a/arch/arm64/boot/dts/apm/apm-storm.dtsi
-+++ b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-@@ -103,6 +103,9 @@
- 		#size-cells = <2>;
- 		ranges;
-
-+		/* DDR range is 42-bit addressing */
-+		dma-ranges = <0x40 0x0 0x40 0x0 0x1ff 0xffffffff>;
-+
- 		clocks {
- 			#address-cells = <2>;
- 			#size-cells = <2>;
-@@ -352,6 +355,15 @@
- 				reg-names = "csr-reg";
- 				clock-output-names = "pcie4clk";
- 			};
-+
-+			dmaclk: dmaclk@1f27c000 {
-+				compatible = "apm,xgene-device-clock";
-+				#clock-cells = <1>;
-+				clocks = <&socplldiv2 0>;
-+				reg = <0x0 0x1f27c000 0x0 0x1000>;
-+				reg-names = "csr-reg";
-+				clock-output-names = "dmaclk";
-+			};
- 		};
-
- 		pcie0: pcie@1f2b0000 {
-@@ -656,5 +668,21 @@
- 			interrupts = <0x0 0x41 0x4>;
- 			clocks = <&rngpkaclk 0>;
+diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
+index f5e35b5..ccd60e3 100644
+--- a/arch/arm/boot/dts/sun4i-a10.dtsi
++++ b/arch/arm/boot/dts/sun4i-a10.dtsi
+@@ -44,6 +44,14 @@
+ 				 <&ahb_gates 44>;
+ 			status = "disabled";
  		};
 +
-+		dma: dma@1f270000 {
-+			compatible = "apm,xgene-dma";
-+			device_type = "dma";
-+			reg = <0x0 0x1f270000 0x0 0x10000>,
-+			      <0x0 0x1f200000 0x0 0x10000>,
-+			      <0x0 0x1b008000 0x0 0x2000>;
-+			reg-names = "dma_csr", "ring_csr", "ring_cmd";
-+			interrupts = <0x0 0x82 0x4>,
-+				     <0x0 0xb8 0x4>,
-+				     <0x0 0xb9 0x4>,
-+				     <0x0 0xba 0x4>,
-+				     <0x0 0xbb 0x4>;
-+			dma-coherent;
-+			clocks = <&dmaclk 0>;
++		framebuffer@1 {
++			compatible = "allwinner,simple-framebuffer", "simple-framebuffer";
++			allwinner,pipeline = "de_fe0-de_be0-lcd0-hdmi";
++			clocks = <&pll5 1>, <&ahb_gates 36>, <&ahb_gates 43>,
++				 <&ahb_gates 44>, <&ahb_gates 46>;
++			status = "disabled";
 +		};
  	};
- };
---
-1.8.2.1
+ 
+ 	cpus {
+-- 
+2.1.0
