@@ -1,279 +1,204 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun4i: Add Marsboard A10 board
-Date: Mon, 19 Jan 2015 11:41:20 +0100
-Message-ID: <54BCDF50.2070702@redhat.com>
-References: <1421661748-8390-1-git-send-email-mamlinav@gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: basic-mmio-gpio: add DT support
+Date: Mon, 19 Jan 2015 10:45:46 +0000
+Message-ID: <20150119104546.GB21553@leverpostej>
+References: <5490B528.2020305@gmail.com>
+ <CAAVeFuLoZPptaqnN8s6r_aN_rpBj+MpmT=5Xc2-iO3kGKZfctw@mail.gmail.com>
+ <54B65110.8030509@gmail.com>
+ <CAAVeFu+sv9XGus0QXpamkRaGebTsgWcpfCRY50Q0F3xb2psGrg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBWF66OSQKGQE6JG3M4Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1421661748-8390-1-git-send-email-mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAAVeFu+sv9XGus0QXpamkRaGebTsgWcpfCRY50Q0F3xb2psGrg@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Alexandre Courbot <gnurou@gmail.com>
+Cc: =?utf-8?B?w4FsdmFybyBGZXJuw6FuZGV6?= Rojas <noltari@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Mon, Jan 19, 2015 at 03:37:18AM +0000, Alexandre Courbot wrote:
+> On Wed, Jan 14, 2015 at 8:20 PM, =C3=81lvaro Fern=C3=A1ndez Rojas
+> <noltari@gmail.com> wrote:
+> > El 14/01/2015 a las 6:32, Alexandre Courbot escribi=C3=B3:
+> >> On Wed, Dec 17, 2014 at 7:41 AM, =C3=81lvaro Fern=C3=A1ndez Rojas
+> >> <noltari@gmail.com> wrote:
+> >>> Add DT support while keeping legacy support.
+> >>>
+> >>> Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.co=
+m>
+> >>> ---
+> >>> diff --git a/drivers/gpio/gpio-generic.c b/drivers/gpio/gpio-gene=
+ric.c
+> >>
+> >> There is no documentation for these new bindings?
+> >
+> > Actually, I was waiting for this patch (by kamlakant.patel@linaro.o=
+rg) to be accepted before: "[PATCH v1 5/5] gpio: document basic mmio gp=
+io library".
+> > Anyway, I will add documentation on the next version of this patch.
+> >
+> >>
+> >>> index 16f6115..9792783 100644
+> >>> --- a/drivers/gpio/gpio-generic.c
+> >>> +++ b/drivers/gpio/gpio-generic.c
+> >>> @@ -61,6 +61,9 @@ o        `                     ~~~~\___/~~~~   =
+ ` controller in FPGA is ,.`
+> >>>  #include <linux/platform_device.h>
+> >>>  #include <linux/mod_devicetable.h>
+> >>>  #include <linux/basic_mmio_gpio.h>
+> >>> +#include <linux/of.h>
+> >>> +#include <linux/of_device.h>
+> >>> +#include <linux/of_gpio.h>
+> >>>
+> >>>  static void bgpio_write8(void __iomem *reg, unsigned long data)
+> >>>  {
+> >>> @@ -488,8 +491,58 @@ static void __iomem *bgpio_map(struct platfo=
+rm_device *pdev,
+> >>>         return ret;
+> >>>  }
+> >>>
+> >>> +#ifdef CONFIG_OF
+> >>> +static const struct of_device_id bgpio_dt_ids[] =3D {
+> >>> +       { .compatible =3D "basic-mmio-gpio" },
+> >>> +};
+> >>> +MODULE_DEVICE_TABLE(of, bgpio_dt_ids);
+> >>> +
+> >>> +static int bgpio_probe_dt(struct platform_device *pdev)
+> >>> +{
+> >>> +       u32 tmp;
+> >>> +       struct bgpio_pdata *pdata;
+> >>> +       struct device_node *np;
+> >>> +
+> >>> +       np =3D pdev->dev.of_node;
+> >>> +       if (!np)
+> >>> +               return 0;
+> >>> +
+> >>> +       pdata =3D devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KE=
+RNEL);
+> >>> +       if (!pdata)
+> >>> +               return -ENOMEM;
+> >>> +
+> >>> +       pdata->label =3D dev_name(&pdev->dev);
+> >>> +       pdata->base =3D -1;
+> >>> +       if (of_find_property(np, "byte-be", NULL)) {
+> >>> +               pdata->flags |=3D BGPIOF_BIG_ENDIAN_BYTE_ORDER;
+> >>> +       }
+> >>> +       if (of_find_property(np, "bit-be", NULL)) {
+> >>> +               pdata->flags |=3D BGPIOF_BIG_ENDIAN;
+> >>> +       }
+> >>> +       if (of_find_property(np, "regset-nr", NULL)) {
+> >>> +               pdata->flags |=3D BGPIOF_UNREADABLE_REG_SET;
+> >>> +       }
+> >>> +       if (of_find_property(np, "regdir-nr", NULL)) {
+> >>> +               pdata->flags |=3D BGPIOF_UNREADABLE_REG_DIR;
+> >>> +       }
+> >>> +       if (!of_property_read_u32(np, "num-gpios", &tmp)) {
+> >>> +               pdata->ngpio =3D tmp;
+> >>> +       }
+> >>
+> >> I don't think this is acceptable. gpio-generic is designed to be u=
+sed
+> >> as a framework for other drivers to build upon. These drivers shou=
+ld
+> >> have their own compatible strings, which should be enough to infer=
+ all
+> >> the properties you defined here.
+> >>
+> >
+> > gpio-generic is not only designed as a framework for other drivers,=
+ it can also be used directly by registering the driver through platfor=
+m device (basic-mmio-gpio/basic-mmio-gpio-be).
+>=20
+> This works for platform drivers which stay confined to the kernel, bu=
+t
+> DT is a firmware definition where such generic bindings are much less
+> desirable.
+>=20
+> > My intention is to make it DT compatible as a generic driver, which=
+ can be used for different hardware, by selecting different DT properti=
+es as configuration.
+> >
+> >> Device Tree identifies hardware precisely (vendor and model), and =
+this
+> >> new binding is just not that. You *could* however have a very simp=
+le
+> >> driver that associates compatible strings to static tables contain=
+ing
+> >> the values of the properties you wanted to see passed through the =
+DT,
+> >> and have one single driver that covers many mmio-based GPIO device=
+s.
+> >> But I'm afraid "basic-mmio-gpio" is *way* to vague to describe
+> >> hardware.
+> >>
+> >
+> > I don't think making a new driver mapping different compatible stri=
+ngs to static tables containing the values of the properties passed thr=
+ough DT is a sane way of doing it, since it will require multiple combi=
+nations to cover all the possibilites.
+> >
+> > My plan is to be able to do something like this (btw, I actually te=
+sted this patch on BCM63xx and works perfectly):
+> > gpio-controller@10000084 {
+> >         compatible =3D "basic-mmio-gpio", "brcm,brcm6368";
+>=20
+> Here your compatible string should be
+>=20
+>         compatible =3D "brcm,brcm6368", "basic-mmio-gpio";
+>=20
+> I.e. from more precise to less precise. A dedicated BRCM6368 driver
+> should take precedence over your generic one.
+>=20
+> >         reg =3D <0x10000084 0x4>, <0x1000008c 0x4>;
+> >         reg-names =3D "dirout", "dat";
+> >
+> >         num-gpios =3D <32>;
+> >         byte-be;
+> >
+> >         gpio-controller;
+> >         #gpio-cells =3D <2>;
+> > };
+> > And for other hardware you could do:
+> > gpio-controller@10000180 {
+> >         compatible =3D "basic-mmio-gpio", "foo,bar";
+> >         reg =3D <0x10000180 0x4>, <0x10000184 0x4>, <0x10000188 0x4=
+>;
+> >         reg-names =3D "dirin", "dirout", "dat";
+> >
+> >         num-gpios =3D <20>;
+> >         bit-be;
+> >         byte-be;
+> >         regdir-nr;
+> >
+> >         gpio-controller;
+> >         #gpio-cells =3D <2>;
+> > };
+> > This way you wouldn't need to add a wrapper for each specific hardw=
+are using basic-mmio-gpio, and you would save time by using the generic=
+ driver.
+>=20
+> I understand the intent but IIUC the history of DT speaks  against
+> such generic bindings. On the other hand I can see some instances of
+> them like "simple-bus" for instance. Added the DT maintainers and
+> mailing list to get more informed opinions on the matter.
 
-On 19-01-15 11:02, Aleksei Mamlin wrote:
-> This patch add support for Marsboard A10 board.
->
-> The Marsboard A10 is a A10 based development board with 1G RAM, 1G NAND,
-> micro SD card slot, SATA 2.0 socket, 10/100 ethernet, mini HDMI port,
-> 1 USB OTG port and 2 USB 2.0 ports. Board does not use the AXP209 pmic,
-> it does not have a pmic at all.
-> Board also have 2 expansion 70 pin headers.
->
->
-> Signed-off-by: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+While generic bindings can be ok, they either need to be incredibly
+simple (e.g. simple-bus, which has no configuration whatsoever), or nee=
+d
+to be rigorously specified (e.g. the generic PCI host controller
+binding, which follows an existing specification).
 
-Thanks, we've recently moved over from using a full node
-hierarchy to using label references in board dts files, see e.g. :
+=46rom the context above, this looks relatively complex. At the least, =
+a
+full binding document is required along with a rationale, so that can b=
+e
+reviewed.
 
-https://git.kernel.org/cgit/linux/kernel/git/mripard/linux.git/commit/?h=sunxi/dt-for-3.20&id=327f121fea91fd79d6b71f47a8e1bc62a7fd86e5
-
-Can you please respin this to follow that style (the nodes should
-be sorted alphabetically).
-
-Also like with the u-boot patch, when submitting patches for upstream
-they should not be send to the linux-sunxi list, sunxi dts patches
-should go to Maxime Ripard (added to the Cc) with the linux-arm and
-devicetree lists both in the Cc (also added to the Cc) note you do
-not need to be subscribed to these lists.
-
-This makes me realize that we should probably write a manual on
-how to add a new sunxi board to upstream u-boot / a dts to the
-kernel. Since you've just gone through the process, could you
-perhaps write a manual for this on linux-sunxi.org, it is a wiki
-so you should be able to add an account and create a new page.
-
-Thanks & Regards,
-
-Hans
-
-
-
-
-> ---
->   arch/arm/boot/dts/Makefile                |   1 +
->   arch/arm/boot/dts/sun4i-a10-marsboard.dts | 192 ++++++++++++++++++++++++++++++
->   2 files changed, 193 insertions(+)
->   create mode 100644 arch/arm/boot/dts/sun4i-a10-marsboard.dts
->
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 66a4282..20957b5 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -446,6 +446,7 @@ dtb-$(CONFIG_MACH_SUN4I) += \
->   	sun4i-a10-a1000.dtb \
->   	sun4i-a10-ba10-tvbox.dtb \
->   	sun4i-a10-cubieboard.dtb \
-> +	sun4i-a10-marsboard.dtb \
->   	sun4i-a10-mini-xplus.dtb \
->   	sun4i-a10-hackberry.dtb \
->   	sun4i-a10-inet97fv2.dtb \
-> diff --git a/arch/arm/boot/dts/sun4i-a10-marsboard.dts b/arch/arm/boot/dts/sun4i-a10-marsboard.dts
-> new file mode 100644
-> index 0000000..041dd95
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/sun4i-a10-marsboard.dts
-> @@ -0,0 +1,192 @@
-> +/*
-> + * Copyright 2015 Aleksei Mamlin
-> + * Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This file is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License as
-> + *     published by the Free Software Foundation; either version 2 of the
-> + *     License, or (at your option) any later version.
-> + *
-> + *     This file is distributed in the hope that it will be useful,
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + *     You should have received a copy of the GNU General Public
-> + *     License along with this file; if not, write to the Free
-> + *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
-> + *     MA 02110-1301 USA
-> + *
-> + * Or, alternatively,
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use,
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + */
-> +
-> +/dts-v1/;
-> +#include "sun4i-a10.dtsi"
-> +#include "sunxi-common-regulators.dtsi"
-> +
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/pinctrl/sun4i-a10.h>
-> +
-> +/ {
-> +	model = "HAOYU Electronics Marsboard A10";
-> +	compatible = "haoyu,a10-marsboard", "allwinner,sun4i-a10";
-> +
-> +	soc@01c00000 {
-> +		emac: ethernet@01c0b000 {
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&emac_pins_a>;
-> +			phy = <&phy1>;
-> +			status = "okay";
-> +		};
-> +
-> +		mdio@01c0b080 {
-> +			status = "okay";
-> +
-> +			phy1: ethernet-phy@1 {
-> +				reg = <1>;
-> +			};
-> +		};
-> +
-> +		mmc0: mmc@01c0f000 {
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_reference_design>;
-> +			vmmc-supply = <&reg_vcc3v3>;
-> +			bus-width = <4>;
-> +			cd-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
-> +			cd-inverted;
-> +			status = "okay";
-> +		};
-> +
-> +		usbphy: phy@01c13400 {
-> +			usb1_vbus-supply = <&reg_usb1_vbus>;
-> +			usb2_vbus-supply = <&reg_usb2_vbus>;
-> +			status = "okay";
-> +		};
-> +
-> +		ehci0: usb@01c14000 {
-> +			status = "okay";
-> +		};
-> +
-> +		ohci0: usb@01c14400 {
-> +			status = "okay";
-> +		};
-> +
-> +		ahci: sata@01c18000 {
-> +			status = "okay";
-> +		};
-> +
-> +		ehci1: usb@01c1c000 {
-> +			status = "okay";
-> +		};
-> +
-> +		ohci1: usb@01c1c400 {
-> +			status = "okay";
-> +		};
-> +
-> +		pinctrl@01c20800 {
-> +			led_pins_marsboard: led_pins@0 {
-> +				allwinner,pins = "PB5", "PB6", "PB7", "PB8";
-> +				allwinner,function = "gpio_out";
-> +				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-> +				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-> +			};
-> +		};
-> +
-> +		uart0: serial@01c28000 {
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&uart0_pins_a>;
-> +			status = "okay";
-> +		};
-> +
-> +		i2c0: i2c@01c2ac00 {
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&i2c0_pins_a>;
-> +			status = "okay";
-> +		};
-> +
-> +		i2c1: i2c@01c2b000 {
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&i2c1_pins_a>;
-> +			status = "okay";
-> +		};
-> +
-> +		spi0: spi@01c05000 {
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&spi0_pins_a>;
-> +			status = "okay";
-> +		};
-> +
-> +		spi1: spi@01c06000 {
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&spi1_pins_a>;
-> +			status = "okay";
-> +		};
-> +
-> +		spi2: spi@01c17000 {
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&spi2_pins_a>;
-> +			status = "okay";
-> +		};
-> +	};
-> +
-> +	leds {
-> +		compatible = "gpio-leds";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&led_pins_marsboard>;
-> +
-> +		red1 {
-> +			label = "marsboard:red1:usr";
-> +			gpios = <&pio 1 5 GPIO_ACTIVE_HIGH>; /* LED1 */
-> +			linux,default-trigger = "heartbeat";
-> +		};
-> +
-> +		red2 {
-> +			label = "marsboard:red2:usr";
-> +			gpios = <&pio 1 6 GPIO_ACTIVE_HIGH>; /* LED2 */
-> +		};
-> +
-> +		red3 {
-> +			label = "marsboard:red3:usr";
-> +			gpios = <&pio 1 7 GPIO_ACTIVE_HIGH>; /* LED3 */
-> +		};
-> +
-> +		red4 {
-> +			label = "marsboard:red4:usr";
-> +			gpios = <&pio 1 8 GPIO_ACTIVE_HIGH>; /* LED4 */
-> +		};
-> +	};
-> +
-> +	reg_usb1_vbus: usb1-vbus {
-> +		status = "okay";
-> +	};
-> +
-> +	reg_usb2_vbus: usb2-vbus {
-> +		status = "okay";
-> +	};
-> +};
->
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
