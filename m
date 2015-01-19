@@ -1,279 +1,183 @@
-From: Aleksey Makarov <aleksey.makarov-tx70/tkNEWbQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH] SATA: OCTEON: support SATA on OCTEON platform
-Date: Mon, 19 Jan 2015 18:23:58 +0300
-Message-ID: <1421681040-3392-1-git-send-email-aleksey.makarov@auriga.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] soc: tegra: Add Tegra132 SoC to the DT list of Tegra SoCs
+Date: Mon, 19 Jan 2015 15:28:02 +0000
+Message-ID: <20150119152801.GG21553@leverpostej>
+References: <alpine.DEB.2.02.1501161137351.9776@utopia.booyaka.com>
+ <20150116150749.GA32155@leverpostej>
+ <20150116170926.GA17763@ulmo.nvidia.com>
+ <20150116173005.GH32155@leverpostej>
+ <20150119132453.GG7312@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Aleksey Makarov <aleksey.makarov-tx70/tkNEWbQT0dZR+AlfA@public.gmane.org>, Anton Vorontsov <avorontsov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org>, Vinita Gupta <vgupta-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150119132453.GG7312-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The OCTEON SATA controller is currently found on cn71XX devices.
+On Mon, Jan 19, 2015 at 01:24:55PM +0000, Thierry Reding wrote:
+> On Fri, Jan 16, 2015 at 05:30:05PM +0000, Mark Rutland wrote:
+> > On Fri, Jan 16, 2015 at 05:09:28PM +0000, Thierry Reding wrote:
+> > > On Fri, Jan 16, 2015 at 03:07:49PM +0000, Mark Rutland wrote:
+> > > > Hi Paul,
+> > > > 
+> > > > /me opens a delicious can of Lumbricus terrestris
+> > > > 
+> > > > My comments below aren't so much about this patch alone, but more about
+> > > > the entire strategy with drivers/soc and the kind of code living there.
+> > > > 
+> > > > On Fri, Jan 16, 2015 at 11:39:13AM +0000, Paul Walmsley wrote:
+> > > > > 
+> > > > > Add "nvidia,tegra132" as a compatible string that denotes a Tegra SoC.
+> > > > > 
+> > > > > Signed-off-by: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
+> > > > > Cc: Paul Walmsley <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> > > > > Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+> > > > > Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > > > > Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > > > > ---
+> > > > >  drivers/soc/tegra/common.c | 1 +
+> > > > >  1 file changed, 1 insertion(+)
+> > > > > 
+> > > > > diff --git a/drivers/soc/tegra/common.c b/drivers/soc/tegra/common.c
+> > > > > index a71cb74..a952986 100644
+> > > > > --- a/drivers/soc/tegra/common.c
+> > > > > +++ b/drivers/soc/tegra/common.c
+> > > > > @@ -15,6 +15,7 @@ static const struct of_device_id tegra_machine_match[] = {
+> > > > >  	{ .compatible = "nvidia,tegra30", },
+> > > > >  	{ .compatible = "nvidia,tegra114", },
+> > > > >  	{ .compatible = "nvidia,tegra124", },
+> > > > > +	{ .compatible = "nvidia,tegra132", },
+> > > > >  	{ }
+> > > > >  };
+> > > > 
+> > > > I'm rather worried by this.
+> > > > 
+> > > > The only user of this table is soc_is_tegra(), which seems to guard
+> > > > several probe paths in drivers which are DT driven. Given that, I don't
+> > > > see why this is necessary at all, because the presence of the
+> > > > appropriate nodes should be sufficient to handle the early return from
+> > > > an initcall.
+> > > 
+> > > We need this to preserve backward-compatibility. There are some
+> > > instances where any device tree nodes that could be used to guard the
+> > > code execution were only added after the fact. So in order to keep
+> > > systems with an old DTB running we need to continue running with hard
+> > > coded physical addresses.
+> > 
+> > Except that you don't need them for arm64 systems, becuase we don't yet
+> > have that legacy for arm64...
+> > 
+> > > > More worryingly, if soc_is_tegra() returns true but the node isn't
+> > > > found, the drivers decide to do things. If tegra_pmc_early_init passes
+> > > > soc_is_tegra() (because we happened to match "nvidia,tegra132"), but
+> > > > doesn't find a DTB entry for the pmc, it then pokes an assumed
+> > > > hard-coded physical address.
+> > > 
+> > > And that's (currently) safe. It at least makes sure that breakage (if
+> > > any) is restricted to Tegra boards. There are other occurrences where
+> > > drivers don't even bother checking for this at all and simply use an
+> > > initcall to unconditionally create a platform device which then goes
+> > > and tries to access physical addresses on *every* board in a multi-
+> > > platform kernel.
+> > 
+> > So doing the wrong thing on a subset of boards is fine because it's not
+> > all boards?
+> 
+> It's not doing anything wrong. If the string is added to the above table
+> then the assumption is that it supports the (very few) cases where we've
+> needed physical addresses. For anything sufficiently recent we already
+> have all the nodes in the DTB, so there's no issue.
+> 
+> > Imagine I make a typo in a DT for a 64-bit system, and suddnely hit
+> > youre legacy code. Things happen to work, because I don't botehr reading
+> > the splat in dmesg for whatever reason.
+> 
+> That's a bit of a stretch. You'd have to typo the top-level compatible
+> string of some future board that happens not to have this IP anymore.
+> Catching those types of mistakes is what we have the review process for.
 
-Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Vinita Gupta <vgupta-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-[aleksey.makarov-tx70/tkNEWbQT0dZR+AlfA@public.gmane.org: preparing for submission,
-conflict resolution, fixes for the platform code]
-Signed-off-by: Aleksey Makarov <aleksey.makarov-tx70/tkNEWbQT0dZR+AlfA@public.gmane.org>
----
- .../devicetree/bindings/ata/ahci-platform.txt      |   1 +
- .../devicetree/bindings/mips/cavium/sata-uctl.txt  |  31 ++++++
- arch/mips/cavium-octeon/octeon-platform.c          |   1 +
- drivers/ata/Kconfig                                |   9 ++
- drivers/ata/Makefile                               |   1 +
- drivers/ata/ahci_platform.c                        |  10 ++
- drivers/ata/sata_octeon.c                          | 107 +++++++++++++++++++++
- 7 files changed, 160 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mips/cavium/sata-uctl.txt
- create mode 100644 drivers/ata/sata_octeon.c
+I was imagining that the root was correct, but a particular device was
+wrong. A typo in the root is also a possibility.
 
-diff --git a/Documentation/devicetree/bindings/ata/ahci-platform.txt b/Documentation/devicetree/bindings/ata/ahci-platform.txt
-index 4ab09f2..1a5d3be 100644
---- a/Documentation/devicetree/bindings/ata/ahci-platform.txt
-+++ b/Documentation/devicetree/bindings/ata/ahci-platform.txt
-@@ -11,6 +11,7 @@ Required properties:
- - compatible        : compatible string, one of:
-   - "allwinner,sun4i-a10-ahci"
-   - "hisilicon,hisi-ahci"
-+  - "cavium,octeon-7130-ahci"
-   - "ibm,476gtr-ahci"
-   - "marvell,armada-380-ahci"
-   - "snps,dwc-ahci"
-diff --git a/Documentation/devicetree/bindings/mips/cavium/sata-uctl.txt b/Documentation/devicetree/bindings/mips/cavium/sata-uctl.txt
-new file mode 100644
-index 0000000..222e66e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mips/cavium/sata-uctl.txt
-@@ -0,0 +1,31 @@
-+* UCTL SATA controller glue
-+
-+Properties:
-+- compatible: "cavium,octeon-7130-sata-uctl"
-+
-+  Compatibility with the cn7130 SOC.
-+
-+- reg: The base address of the UCTL register bank.
-+
-+- #address-cells: Must be <2>.
-+
-+- #size-cells: Must be <2>.
-+
-+- ranges: Empty to signify direct mapping of the children.
-+
-+Example:
-+
-+	uctl@118006c000000 {
-+	        compatible = "cavium,octeon-7130-sata-uctl";
-+	        reg = <0x00011800 0x6c000000 0x00000000 0x00000100>;
-+	        ranges;
-+	        #address-cells = <0x00000002>;
-+	        #size-cells = <0x00000002>;
-+	        sata@16c00 {
-+	                compatible = "cavium,octeon-7130-ahci";
-+	                reg = <0x00016c00 0x00000000 0x00000000 0x00000200>;
-+	                interrupt-parent = <0x0000000d>;
-+	                interrupts = <0x00000002 0x00000004>;
-+	                cavium,qlm-trim-alias = "sata";
-+	        };
-+	};
-diff --git a/arch/mips/cavium-octeon/octeon-platform.c b/arch/mips/cavium-octeon/octeon-platform.c
-index b67ddf0..6518231 100644
---- a/arch/mips/cavium-octeon/octeon-platform.c
-+++ b/arch/mips/cavium-octeon/octeon-platform.c
-@@ -445,6 +445,7 @@ static struct of_device_id __initdata octeon_ids[] = {
- 	{ .compatible = "cavium,octeon-3860-bootbus", },
- 	{ .compatible = "cavium,mdio-mux", },
- 	{ .compatible = "gpio-leds", },
-+	{ .compatible = "cavium,octeon-7130-sata-uctl", },
- 	{},
- };
- 
-diff --git a/drivers/ata/Kconfig b/drivers/ata/Kconfig
-index a3a1360..28a11fe 100644
---- a/drivers/ata/Kconfig
-+++ b/drivers/ata/Kconfig
-@@ -188,6 +188,15 @@ config SATA_SIL24
- 
- 	  If unsure, say N.
- 
-+config SATA_OCTEON
-+	tristate "Cavium Octeon Soc Serial ATA"
-+	depends on SATA_AHCI_PLATFORM && CAVIUM_OCTEON_SOC
-+	default y
-+	help
-+	  This option enables support for Cavium Octeon SoC Serial ATA.
-+
-+	  If unsure, say N.
-+
- config ATA_SFF
- 	bool "ATA SFF support (for legacy IDE and PATA)"
- 	default y
-diff --git a/drivers/ata/Makefile b/drivers/ata/Makefile
-index ae41107..4a0e5e3 100644
---- a/drivers/ata/Makefile
-+++ b/drivers/ata/Makefile
-@@ -17,6 +17,7 @@ obj-$(CONFIG_AHCI_SUNXI)	+= ahci_sunxi.o libahci.o libahci_platform.o
- obj-$(CONFIG_AHCI_ST)		+= ahci_st.o libahci.o libahci_platform.o
- obj-$(CONFIG_AHCI_TEGRA)	+= ahci_tegra.o libahci.o libahci_platform.o
- obj-$(CONFIG_AHCI_XGENE)	+= ahci_xgene.o libahci.o libahci_platform.o
-+obj-$(CONFIG_SATA_OCTEON)	+= sata_octeon.o
- 
- # SFF w/ custom DMA
- obj-$(CONFIG_PDC_ADMA)		+= pdc_adma.o
-diff --git a/drivers/ata/ahci_platform.c b/drivers/ata/ahci_platform.c
-index 18d5398..bb36396 100644
---- a/drivers/ata/ahci_platform.c
-+++ b/drivers/ata/ahci_platform.c
-@@ -22,6 +22,12 @@
- #include <linux/ahci_platform.h>
- #include "ahci.h"
- 
-+#if IS_ENABLED(CONFIG_SATA_OCTEON)
-+void ahci_octeon_config(struct platform_device *pdev);
-+#else
-+static inline void ahci_octeon_config(struct platform_device *pdev) {}
-+#endif
-+
- static const struct ata_port_info ahci_port_info = {
- 	.flags		= AHCI_FLAG_COMMON,
- 	.pio_mask	= ATA_PIO4,
-@@ -46,6 +52,9 @@ static int ahci_probe(struct platform_device *pdev)
- 	if (of_device_is_compatible(dev->of_node, "hisilicon,hisi-ahci"))
- 		hpriv->flags |= AHCI_HFLAG_NO_FBS | AHCI_HFLAG_NO_NCQ;
- 
-+	if (of_device_is_compatible(dev->of_node, "cavium,octeon-7130-ahci"))
-+		ahci_octeon_config(pdev);
-+
- 	rc = ahci_platform_init_host(pdev, hpriv, &ahci_port_info);
- 	if (rc)
- 		goto disable_resources;
-@@ -67,6 +76,7 @@ static const struct of_device_id ahci_of_match[] = {
- 	{ .compatible = "ibm,476gtr-ahci", },
- 	{ .compatible = "snps,dwc-ahci", },
- 	{ .compatible = "hisilicon,hisi-ahci", },
-+	{ .compatible = "cavium,octeon-7130-ahci", },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, ahci_of_match);
-diff --git a/drivers/ata/sata_octeon.c b/drivers/ata/sata_octeon.c
-new file mode 100644
-index 0000000..e24cc27
---- /dev/null
-+++ b/drivers/ata/sata_octeon.c
-@@ -0,0 +1,107 @@
-+/*
-+ * SATA glue for Cavium Octeon III SOCs.
-+ *
-+ *
-+ * This file is subject to the terms and conditions of the GNU General Public
-+ * License.  See the file "COPYING" in the main directory of this archive
-+ * for more details.
-+ *
-+ * Copyright (C) 2010-2015 Cavium Networks
-+ *
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/platform_device.h>
-+
-+#include <asm/octeon/octeon.h>
-+#include <asm/bitfield.h>
-+
-+/**
-+ * cvmx_sata_uctl_shim_cfg
-+ * from cvmx-sata-defs.h
-+ *
-+ * Accessible by: only when A_CLKDIV_EN
-+ * Reset by: IOI reset (srst_n) or SATA_UCTL_CTL[SATA_UCTL_RST]
-+ * This register allows configuration of various shim (UCTL) features.
-+ * Fields XS_NCB_OOB_* are captured when there are no outstanding OOB errors
-+ * indicated in INTSTAT and a new OOB error arrives.
-+ * Fields XS_BAD_DMA_* are captured when there are no outstanding DMA errors
-+ * indicated in INTSTAT and a new DMA error arrives.
-+ */
-+union cvmx_sata_uctl_shim_cfg {
-+	uint64_t u64;
-+	struct cvmx_sata_uctl_shim_cfg_s {
-+	/*
-+	 * Read/write error log for out-of-bound UAHC register access.
-+	 * 0 = read, 1 = write.
-+	 */
-+	__BITFIELD_FIELD(uint64_t xs_ncb_oob_wrn               : 1,
-+	__BITFIELD_FIELD(uint64_t reserved_57_62               : 6,
-+	/*
-+	 * SRCID error log for out-of-bound UAHC register access.
-+	 * The IOI outbound SRCID for the OOB error.
-+	 */
-+	__BITFIELD_FIELD(uint64_t xs_ncb_oob_osrc              : 9,
-+	/*
-+	 * Read/write error log for bad DMA access from UAHC.
-+	 * 0 = read error log, 1 = write error log.
-+	 */
-+	__BITFIELD_FIELD(uint64_t xm_bad_dma_wrn               : 1,
-+	__BITFIELD_FIELD(uint64_t reserved_44_46               : 3,
-+	/*
-+	 * ErrType error log for bad DMA access from UAHC. Encodes the type of
-+	 * error encountered (error largest encoded value has priority).
-+	 * See SATA_UCTL_XM_BAD_DMA_TYPE_E.
-+	 */
-+	__BITFIELD_FIELD(uint64_t xm_bad_dma_type              : 4,
-+	__BITFIELD_FIELD(uint64_t reserved_13_39               : 27,
-+	/*
-+	 * Selects the IOI read command used by DMA accesses.
-+	 * See SATA_UCTL_DMA_READ_CMD_E.
-+	 */
-+	__BITFIELD_FIELD(uint64_t dma_read_cmd                 : 1,
-+	__BITFIELD_FIELD(uint64_t reserved_10_11               : 2,
-+	/*
-+	 * Selects the endian format for DMA accesses to the L2C.
-+	 * See SATA_UCTL_ENDIAN_MODE_E.
-+	 */
-+	__BITFIELD_FIELD(uint64_t dma_endian_mode              : 2,
-+	__BITFIELD_FIELD(uint64_t reserved_2_7                 : 6,
-+	/*
-+	 * Selects the endian format for IOI CSR accesses to the UAHC.
-+	 * Note that when UAHC CSRs are accessed via RSL, they are returned
-+	 * as big-endian. See SATA_UCTL_ENDIAN_MODE_E.
-+	 */
-+	__BITFIELD_FIELD(uint64_t csr_endian_mode              : 2,
-+		;))))))))))))
-+	} s;
-+};
-+
-+#define CVMX_SATA_UCTL_SHIM_CFG (CVMX_ADD_IO_SEG(0x000118006C0000E8ull))
-+
-+void ahci_octeon_config(struct platform_device *pdev)
-+{
-+	union cvmx_sata_uctl_shim_cfg shim_cfg;
-+
-+	/* set-up endian mode */
-+	shim_cfg.u64 = cvmx_read_csr(CVMX_SATA_UCTL_SHIM_CFG);
-+#ifdef __BIG_ENDIAN
-+	shim_cfg.s.dma_endian_mode = 1;
-+	shim_cfg.s.csr_endian_mode = 1;
-+#else
-+	shim_cfg.s.dma_endian_mode = 0;
-+	shim_cfg.s.csr_endian_mode = 0;
-+#endif
-+	shim_cfg.s.dma_read_cmd = 1; /* No allocate L2C */
-+	cvmx_write_csr(CVMX_SATA_UCTL_SHIM_CFG, shim_cfg.u64);
-+
-+	/* Set a good dma_mask */
-+	pdev->dev.coherent_dma_mask = DMA_BIT_MASK(64);
-+	pdev->dev.dma_mask = &pdev->dev.coherent_dma_mask;
-+}
-+EXPORT_SYMBOL(ahci_octeon_config);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Cavium, Inc. <support-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>");
-+MODULE_DESCRIPTION("Cavium Inc. sata config.");
--- 
-2.2.2
+Even if review is perfect in-tree, people are going to use out-of-tree
+DTBs to some extent, and I'm not sure we can argue that's an entirely
+wrong thing to do. So review may not help.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> If you're concerned about the splat, we could probably turn it into a
+> WARN() to make it abundantly clear that you've done something wrong.
+> 
+> > Later we do some cleanup of the existing legacy, for whatever reason,
+> > and we get rid of this particular path for arm64.
+> > 
+> > Suddenly my board won't boot, and to fix that we have to reintroduce
+> > legacy support code only because said legacy support was enabled where
+> > it should never have been in the first place. Another OS trying to
+> > target/use these DTBs has barely any chance of success.
+> 
+> We've had cases in the past where it was argued that clearly broken DTBs
+> didn't have to be considered for ABI stability. I'd argue that whatever
+> kind of typo you're referring to falls into this obviously wrong
+> category.
+
+The line here is extremely fuzzy; I don't know what we can class as 
+"clearly broken".
+
+> > > > Assuming things because of the _lack_ of a node has been a major pain
+> > > > point on 32-bit as DTBs advanced and code was changed, resulting in boot
+> > > > breaking or DTB compatibility breaking over time as old and new kernels
+> > > > made conflicting assumptions.
+> > > 
+> > > So what are you saying? We can't support 64-bit ARM because we need to
+> > > keep backwards-compatibility with old DTBs and weren't smart enough to
+> > > see this through all the way three years ago?
+> > 
+> > No. I'm saying that the workarounds we have in place for legacy DTBs
+> > should be constrained to those cases where legacy DTBs actually exist.
+> > There is no reason for that legacy to carry across to 64-bit.
+> 
+> That's fair. Note, though, that we're bound to make mistakes on 64-bit
+> too, so it's wishful thinking that we'll live without legacy on 64-bit
+> forever. But that's of course not to say we should start out with
+> supporting legacy from the beginning.
+
+I agree that we will accumulate legacy no matter how careful we are.
+
+I would like to ensure that we avoid as much of that as possible. For
+cases like these where the DTB has insufficient information, we can
+avoid those for now by requiring the information to be in the DT and
+doing nothing otherwise -- there's no legacy DT to support yet.
+
+I can imagine that we may need to add workarounds of this sort in
+future, and I'd like to ensure they are precisely targeted (e.g. have
+needs_missing_dt_pmc rather than soc_is_tegra, and ideally warning).
+
+I'm hoping that by being as explicit as possible now in the DT (e.g.
+requiring enable-method), we can allow for future variation and not get
+stuck in painful corners w.r.t. wide-reaching assumptions in platform
+code. I'm also hoping that this will make sharing DTs with other
+software more feasible, as it won't be necessary to make identical
+assumptions regarding the platform.
+
+> > > > I don't want to see arm64 kernels making assumptions in that manner (nor
+> > > > would I like to see it in new code for 32-bit ARM); it always leads to
+> > > > boot breakage, and it's completely avoidable. The only thing we can know
+> > > > is what is described in the DTB.
+> > > 
+> > > I guess we could always make this conditional on 32-bit ARM. Or we could
+> > > decide that we don't care about DTB backwards-compatibility anymore. In
+> > > fact we're quite likely going to break it soon anyway because of Marc's
+> > > gic_arch_extn rework, so might as well start with a clean plate after
+> > > that...
+> > 
+> > At the very least I think the soc_is_tegra stuff needs to be constrained
+> > to fallback paths that can only possibly run on 32-bit.
+> 
+> I think that's something we can do.
+
+Exactly what I was hoping to hear :)
+
+Thanks,
+Mark.
