@@ -1,101 +1,81 @@
-From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v4 0/4] power: Add max77693 charger driver
-Date: Mon, 19 Jan 2015 08:40:26 +0100
-Message-ID: <1421653226.4247.5.camel@AMDC1943>
-References: <1420453019-28614-1-git-send-email-k.kozlowski@samsung.com>
- <20150118180002.GJ3574@x1>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20150118180002.GJ3574@x1>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Sneeker Yeh <sneeker.yeh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 0/5] Add support for Fujitsu USB host controller
+Date: Mon, 19 Jan 2015 15:56:44 +0800
+Message-ID: <1421654209-6486-1-git-send-email-Sneeker.Yeh@tw.fujitsu.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Huang Rui <ray.huang-5C7GfCeVMHo@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sneeker Yeh <Sneeker.Yeh-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On nie, 2015-01-18 at 18:00 +0000, Lee Jones wrote:
-> Tell us what you need?
+These patches add support for XHCI compliant Host controller found
+on Fujitsu Socs, and are based on http://lwn.net/Articles/629162/
+The first patch is to add Fujitsu glue layer of Synopsis DesignWare USB3 driver
+and last four patch is about quirk implementation of errata in Synopsis
+DesignWare USB3 IP.
 
-Hi Lee,
+Patch 1 introduces Fujitsu Specific Glue layer in Synopsis DesignWare USB3 IP
+driver. 
 
+Patch 2 is to add a revison number 3.00a of Synopsis DesignWare USB3 IP
+core driver.
 
-All I need is... acks or applying of patchset by Sebastian. Sebastian
-acked main patch (3/4) but then I changed it [1].
+Patch 3 introduces using a quirk based on a errata of Synopsis
+DesignWare USB3 IP which is versions < 3.00a and has hardware configuration
+DWC_USB3_SUSPEND_ON_DISCONNECT_EN=1, which cannot be read from software. As a
+result this quirk has to be enabled via platform data or device tree.
 
-You already acked the MFD change (patch 2/4: mfd: max77693: Add defines
-for MAX77693 charger driver).
+Patch 4 is to set Synopsis quirk in xhci platform driver based on xhci platform
+data.
 
-The patch with bindings (1/4: devicetree: power/mfd: max77693: Document
-new bindings for charger) actually adds bindings for charger so rather
-Sebastian's opinion is needed.
+Patch 5 introduces a quirk with device disconnection management necessary
+Synopsys Designware USB3 IP with versions < 3.00a and hardware configuration
+DWC_USB3_SUSPEND_ON_DISCONNECT_EN=1. It solves a problem where without the
+quirk, that host controller will die after a usb device is disconnected from
+port of root hub.
 
-Other patches are from power supply subsystem.
-Thanks for asking!
+Successfully tested on Fujitsu mb86s7x board.
 
+Changes since v1 (RFC):
+[https://lkml.org/lkml/2014/12/15/929]
+ - based on Arnd's comment, remove entire unnecessary Fujitsu EHCI/OHCI glue,
+ - based on Felipe's comment, fix mis-using of runtime-pm API and setting dma
+   mask, remove unnecessary comment, and refactor suspend/resume handler in
+   Fujitsu Specific Glue layer in dwc3,
+ - based on Felipe's comment, add more commit log and comments in Synopsis
+   quirk implementation, and separate it into four patches.
 
-Dear Sebastian,
+Sneeker Yeh (5):
+  usb: dwc3: add Fujitsu Specific Glue layer
+  usb: dwc3: add revision number DWC3_REVISION_300A
+  usb: dwc3: Add quirk for Synopsis device disconnection errata
+  xhci: Platform: Set Synopsis device disconnection quirk based on
+    platform data
+  xhci: add a quirk for device disconnection errata for Synopsis
+    Designware USB3     core
 
-You already looked at the patchset [1], so maybe you could pick it up?
+ Documentation/devicetree/bindings/usb/dwc3.txt     |   17 ++
+ .../devicetree/bindings/usb/fujitsu-dwc3.txt       |   33 ++++
+ drivers/usb/dwc3/Kconfig                           |   11 ++
+ drivers/usb/dwc3/Makefile                          |    1 +
+ drivers/usb/dwc3/core.c                            |    6 +
+ drivers/usb/dwc3/core.h                            |    2 +
+ drivers/usb/dwc3/dwc3-mb86s70.c                    |  206 ++++++++++++++++++++
+ drivers/usb/dwc3/host.c                            |    4 +
+ drivers/usb/dwc3/platform_data.h                   |    1 +
+ drivers/usb/host/xhci-hub.c                        |    4 +
+ drivers/usb/host/xhci-plat.c                       |    3 +
+ drivers/usb/host/xhci.c                            |   29 +++
+ drivers/usb/host/xhci.h                            |   24 +++
+ include/linux/usb/xhci_pdriver.h                   |    4 +
+ 14 files changed, 345 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/fujitsu-dwc3.txt
+ create mode 100644 drivers/usb/dwc3/dwc3-mb86s70.c
 
-[1] https://lkml.org/lkml/2014/10/27/774
+-- 
+1.7.9.5
 
-Best regards,
-Krzysztof
-
-> 
-> > Changes since v3
-> > ================
-> > 1. Patch 3/4: Don't create platform data structure for charger settings
-> >    because driver won't be used on non-DT SoCs (its for Exynos based
-> >    Trats2).
-> > 2. Patch 3/4: Drop Sebastian's ack [1] because of change above.
-> > 
-> > Changes since v2
-> > ================
-> > 1. Add ack from Sebastian Reichel (charger driver).
-> > 2. Drop patch "mfd: max77693: Map charger device to its own of_node"
-> >    (applied by Lee Jones).
-> > 
-> > 
-> > Changes since v1
-> > ================
-> > 1. Add patch 2/5: mfd: max77693: Map charger device to its own of_node
-> >    (forgot to send it in v1)
-> > 2. Remove patches for DTS and configs. I'll send them later.
-> > 3. Add ack from Lee Jones (patch 3/5).
-> > 
-> > 
-> > Description
-> > ===========
-> > The patchset adds max77693 charger driver present on Trats2 board
-> > (and Galaxy S III). The driver configures battery charger and exposes
-> > power supply interface.
-> > 
-> > Driver is necessary to provide full charging stack on Trats2 device
-> > (extcon, charger-manager etc.).
-> > 
-> > [1] https://lkml.org/lkml/2014/10/27/774
-> > 
-> > 
-> > Best regards,
-> > Krzysztof
-> > 
-> > 
-> > 
-> > Krzysztof Kozlowski (4):
-> >   devicetree: power/mfd: max77693: Document new bindings for charger
-> >   mfd: max77693: Add defines for MAX77693 charger driver
-> >   power: max77693: Add charger driver for Maxim 77693
-> >   Documentation: power: max77693-charger: Document exported sysfs entry
-> > 
-> >  Documentation/ABI/testing/sysfs-class-power        |  42 ++
-> >  Documentation/devicetree/bindings/mfd/max77693.txt |  45 ++
-> >  drivers/power/Kconfig                              |   6 +
-> >  drivers/power/Makefile                             |   1 +
-> >  drivers/power/max77693_charger.c                   | 758 +++++++++++++++++++++
-> >  include/linux/mfd/max77693-private.h               | 108 +++
-> >  6 files changed, 960 insertions(+)
-> >  create mode 100644 drivers/power/max77693_charger.c
-> > 
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
