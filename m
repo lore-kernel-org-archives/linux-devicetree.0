@@ -1,134 +1,82 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun4i: Add simplefb node with
- de_fe0-de_be0-lcd0-hdmi pipeline
-Date: Mon, 19 Jan 2015 21:47:41 +0100
-Message-ID: <20150119204741.GH4367@lukather>
-References: <1421672477-12978-1-git-send-email-hdegoede@redhat.com>
- <1421672477-12978-2-git-send-email-hdegoede@redhat.com>
- <20150119132002.GD4367@lukather>
- <54BD082D.6030905@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v4 2/3] i2c: iproc: Add Broadcom iProc I2C Driver
+Date: Mon, 19 Jan 2015 13:25:05 -0800
+Message-ID: <54BD7631.50205@broadcom.com>
+References: <20150115084119.GN22880@pengutronix.de> <54B98C18.4080807@broadcom.com> <20150117160113.GA22880@pengutronix.de> <54BABEE9.8070801@broadcom.com> <20150117201849.GC22880@pengutronix.de> <54BACB66.6040909@broadcom.com> <20150117211017.GD22880@pengutronix.de> <54BAD391.9080909@broadcom.com> <20150117224021.GA26493@n2100.arm.linux.org.uk> <54BAFEA9.9040900@broadcom.com> <20150119192805.GF26493@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="17/8oYur5Y32USnW"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBD646WSQKGQEZ7UEYOI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <54BD082D.6030905-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150119192805.GF26493-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: =?windows-1252?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---17/8oYur5Y32USnW
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
 
-On Mon, Jan 19, 2015 at 02:35:41PM +0100, Hans de Goede wrote:
-> Hi,
+
+On 1/19/2015 11:28 AM, Russell King - ARM Linux wrote:
+> On Sat, Jan 17, 2015 at 04:30:33PM -0800, Ray Jui wrote:
+>>
+>>
+>> On 1/17/2015 2:40 PM, Russell King - ARM Linux wrote:
+>>> On Sat, Jan 17, 2015 at 01:26:41PM -0800, Ray Jui wrote:
+>>>> 	time_left = wait_for_completion_timeout(&iproc_i2c->done, time_left);
+>>>>
+>>>> 	/* disable all interrupts */
+>>>> 	writel(0, iproc_i2c->base + IE_OFFSET);
+>>>>
+>>>> 	if (!time_left && !atomic_read(&iproc_i2c->transfer_is_successful)) {
+>>>
+>>> Why are you using atomic_read() here?
+>>>
+>> transfer_is_successful 1) will be reset to 0 in this function (before
+>> kick start the I2C transfer), 2) will be set to 1 in the ISR (to signal
+>> completion of the I2C transfer), and 3) will be checked in this function
+>> here. I thought that means I should declare it volatile, because it can
+>> be modified in both the process context and interrupt context (and I use
+>> atomic because I remember Linux checkpatch warns against using volatile)?
 > 
-> On 19-01-15 14:20, Maxime Ripard wrote:
-> >Hi Hans,
-> >
-> >On Mon, Jan 19, 2015 at 02:01:17PM +0100, Hans de Goede wrote:
-> >>Testing has shown that on sun4i the display backend engine does not have
-> >>deep enough fifo-s causing flickering / tearing in full-hd mode due to
-> >>fifo underruns. This can be avoided by letting the display frontend engine
-> >>do the dma from memory, and then letting it feed the data directly into
-> >>the backend unmodified, as the frontend does have deep enough fifo-s.
-> >>
-> >>Note since u-boot-v2015.01 has been released using the de_be0-lcd0-hdmi
-> >>pipeline on sun4i, we need to keep that one around too (unfortunately).
-> >>
-> >>Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> >>---
-> >>  arch/arm/boot/dts/sun4i-a10.dtsi | 8 ++++++++
-> >>  1 file changed, 8 insertions(+)
-> >>
-> >>diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
-> >>index f5e35b5..ccd60e3 100644
-> >>--- a/arch/arm/boot/dts/sun4i-a10.dtsi
-> >>+++ b/arch/arm/boot/dts/sun4i-a10.dtsi
-> >>@@ -44,6 +44,14 @@
-> >>  				 <&ahb_gates 44>;
-> >>  			status = "disabled";
-> >>  		};
-> >>+
-> >>+		framebuffer@1 {
-> >>+			compatible = "allwinner,simple-framebuffer", "simple-framebuffer";
-> >>+			allwinner,pipeline = "de_fe0-de_be0-lcd0-hdmi";
-> >>+			clocks = <&pll5 1>, <&ahb_gates 36>, <&ahb_gates 43>,
-> >>+				 <&ahb_gates 44>, <&ahb_gates 46>;
-> >>+			status = "disabled";
-> >>+		};
-> >
-> >Thanks for this.
-> >
-> >I do have a question though, maybe I'm missing something, but what
-> >would prevent us from using the existing node already? The output
-> >pipeline seems to be the same, at least for which output we
-> >use. Wether we use or not the display frontend looks like an
-> >implementation detail.
+> You don't need volatile or atomic_t for that.
 > 
-> The purpose of having a node per pipeline is to have the rights clocks
-> listed for the pipeline chosen. So the "de_fe0-de_be0-lcd0-hdmi" node
-> has one ahb_gates entry more so as to make sure the kernel does not gate
-> off the frontend.
+> Rather than switching to atomic_t when seeing the checkpatch warning,
+> you'd do better to read Documentation/volatile-considered-harmful.txt
+> to understand why checkpatch issues the warning, and realise that you
+> don't need it for the above.
 > 
-> The idea of having different nodes per pipeline is that when we get
-> support for more module clocks in place, as a preparation for kms
-> support, we can add the module clocks to the relevant nodes, to also
-> ensure the module clocks will not get turned off.
+> Note that in the above code, the compiler can't make an assumption
+> about iproc_i2c->transfer_is_successful because it can't tell whether
+> a called function (eg, wait_for_completion_timeout()) could modify it.
 > 
-> By having this info in the dtb, rather then in u-boot we can update
-> the clocks list as we add new clock nodes in the dtb, ensuring that
-> an older u-boot will keep working as we add support for module
-> clocks, etc.
+Got it. Thanks.
 
-Yeah, I know that, and it's exactly why we have these nodes
-pre-populated it. But my point was exactly that: Why not leverage the
-fact that we have that possibility to add the missing clock for the
-frontend, and just use that.
-
-> >That or just having several strings in allwinner,pipeline.
-> >
-> >If this simplefb binding is just going to be a collection of all the
-> >various combinations we have, plus the legacy options, I'm a bit
-> >worried that this is just going to be a hell to maintain, without any
-> >way to remove it at compile time (if such feature is ever merged in
-> >DTC).
+> Another possible issue with the above code are these lines:
 > 
-> I can understand where you're coming from, I wish I could say there
-> will be no more surprises / additions, but I don't want to make
-> promises I cannot keep. I do not see u-boot adding support for multiple
-> displays anytime soon, so things should stay limited to 3 nodes (one for
-> hdmi, lcd and vga each) or 2 nodes on socs without hdmi.
+> 	/* disable all interrupts */
+> 	writel(0, iproc_i2c->base + IE_OFFSET);
 > 
-> Except on sun4i where we need 2 for hdmi for compat reasons for a total
-> of 4.
+> It would be nice to think that would hit the hardware immediately, but
+> that's making assumptions about hardware which are not necessary true.
+> Your interrupt handler could even be running on another CPU after you've
+> asked for that register to be written.
 > 
-> But my crystal ball is defunct, so I cannot promise things will stay
-> limited to this.
-
-Heh :)
-
-I'm not really asking for a crystal ball. I even expect that list to
-grow, as some board will probably need the second display engine on
-SoCs that have one, and that's ok. But my concern is more that we will
-end up with multiple similar options, including ones that we know are
-not in use, but can't really remove either.
-
-But yeah, ok.
-
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---17/8oYur5Y32USnW--
+> Depending on what you're trying to achieve here, you may need:
+> 
+> 	/* disable all interrupts */
+> 	writel(0, iproc_i2c->base + IE_OFFSET);
+> 	/* read it back to ensure the write has hit */
+> 	readl(iproc_i2c->base + IE_OFFSET);
+> 
+> 	/* make sure the interrupt handler isn't running */
+> 	synchronize_irq(...->irq);
+> 
+> if what you're trying to do is to ensure that the interrupt handler has
+> finished running.
+> 
+This will be the most robust way of handling this. Given that we've
+added an additional flag to check to make sure there's no interrupt
+missed after wait_for_completion_timeout times out, it makes sense to
+ensure that by the time when we check the flag there's no pending irq.
+I'll add this to the driver and make 'xfer_is_done' an 'int' instead of
+'atomic_t'. I will also add the call to readl to flush the write in the
+remove function after interrupts are disabled.
