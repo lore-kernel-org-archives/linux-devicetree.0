@@ -1,99 +1,47 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v2 4/5] xhci: Platform: Set Synopsis device disconnection
- quirk based on platform data
-Date: Mon, 19 Jan 2015 08:51:47 -0600
-Message-ID: <20150119145147.GG20386@saruman>
-References: <1421654209-6486-1-git-send-email-Sneeker.Yeh@tw.fujitsu.com>
- <1421654209-6486-5-git-send-email-Sneeker.Yeh@tw.fujitsu.com>
-Reply-To: <balbi@ti.com>
+From: Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH v4 0/4] ata: libahci: Allow using a regulator for each
+ port
+Date: Mon, 19 Jan 2015 09:54:13 -0500
+Message-ID: <20150119145413.GJ8140@htj.dyndns.org>
+References: <1421330978-9694-1-git-send-email-gregory.clement@free-electrons.com>
+ <54B8C49A.9070302@redhat.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="E69HUUNAyIJqGpVn"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-ide-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1421654209-6486-5-git-send-email-Sneeker.Yeh@tw.fujitsu.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sneeker Yeh <sneeker.yeh@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Grant Likely <grant.likely@linaro.org>, Huang Rui <ray.huang@amd.com>, Kishon Vijay Abraham I <kishon@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, Andy Green <andy.green@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Sneeker Yeh <Sneeker.Yeh@tw.fujitsu.com>
+In-Reply-To: <54B8C49A.9070302@redhat.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Gregory CLEMENT <gregory.clement@free-electrons.com>, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart@free-electrons.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---E69HUUNAyIJqGpVn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Jan 19, 2015 at 03:56:48PM +0800, Sneeker Yeh wrote:
-> If an xhci platform has Synopsis device disconnection errata then enable
-> XHCI_DISCONNECT_QUIRK quirk flag.
+On Fri, Jan 16, 2015 at 08:58:18AM +0100, Hans de Goede wrote:
+> Hi,
 >=20
-> Signed-off-by: Sneeker Yeh <Sneeker.Yeh@tw.fujitsu.com>
-> ---
->  drivers/usb/host/xhci-plat.c     |    3 +++
->  include/linux/usb/xhci_pdriver.h |    4 ++++
->  2 files changed, 7 insertions(+)
+> On 15-01-15 15:09, Gregory CLEMENT wrote:
+> >The current implementation of the libahci allows using one PHY per
+> >port but we still have one single regulator for the whole
+> >controller. This series adds the support of multiple regulators.
+> >
+> >This is the forth version of the series.
+> >
+> >The improvement of this version is the use of
+> >ahci_platform_put_resources to put the reference to the regulators.
+> >
+> >Thanks,
+> >
+> >Gr=E9gory
 >=20
-> diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
-> index 08d402b..40beb95 100644
-> --- a/drivers/usb/host/xhci-plat.c
-> +++ b/drivers/usb/host/xhci-plat.c
-> @@ -147,6 +147,9 @@ static int xhci_plat_probe(struct platform_device *pd=
-ev)
->  	if ((node && of_property_read_bool(node, "usb3-lpm-capable")) ||
->  			(pdata && pdata->usb3_lpm_capable))
->  		xhci->quirks |=3D XHCI_LPM_SUPPORT;
-> +
-> +	if (pdata && pdata->delay_portcsc_clear)
-> +		xhci->quirks |=3D XHCI_DISCONNECT_QUIRK;
->  	/*
->  	 * Set the xHCI pointer before xhci_plat_setup() (aka hcd_driver.reset)
->  	 * is called by usb_add_hcd().
-> diff --git a/include/linux/usb/xhci_pdriver.h b/include/linux/usb/xhci_pd=
-river.h
-> index 376654b..a37a3a5 100644
-> --- a/include/linux/usb/xhci_pdriver.h
-> +++ b/include/linux/usb/xhci_pdriver.h
-> @@ -18,10 +18,14 @@
->   *
->   * @usb3_lpm_capable:	determines if this xhci platform supports USB3
->   *			LPM capability
-> + * @delay_portcsc_clear:	determines if Synopsis USB3 core has errata in
-> + *				"DWC_USB3_SUSPEND_ON_DISCONNECT_EN=3D1" hardware
-> + *				configuration.
->   *
->   */
->  struct usb_xhci_pdata {
->  	unsigned	usb3_lpm_capable:1;
-> +	unsigned	delay_portcsc_clear:1;
+> Thanks, patches 1 - 3 look good and are:
+>=20
+> Acked-by: Hans de Goede <hdegoede@redhat.com>
+>=20
+> Tejun, can you please queue up 1 - 3 ?
 
-previous patch won't build before this is applied. That's a problem.
-Please shuffle things around so that each and every patch builds and
-works on its own.
+Applied 1-3 to libata/for-3.20.
 
-We cannot break bisectability ;-)
+Thanks.
 
 --=20
-balbi
-
---E69HUUNAyIJqGpVn
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUvRoDAAoJEIaOsuA1yqREwZQP/Ro63nKCR+jAvXhaP6unSFTr
-bygIfDSB6whT/q6GcM58rIDhj5fWkYKxbBYNYBtLcrtQlVYqCT0jVA2D1EAGt6S+
-kgCHMROb1l1WapfigaZPytW67QlAlS528JC9vS1R1N4iDor4JdkpR/MAHwQlgCKT
-j4HMk/Rc6g40m4AiT0AYf06ae405NjqSmo2xesnxoY/t0o5yZu70VvavKPg7sBFG
-dlKEyTaL8c2Iw+FVLvDfLPyG4v70xf0lYKl1riNobFEoBQF8DraO+bxfuzWbkCGi
-CsoxIPDKMmlhdbUD2/+AXZgT0Kd4efdP4tjrUNkTvWxfb/dkqtjP5Vrr8LhtyfPC
-oiopgFKGJBmGyaWoRtlW+CYGYqdxc2dBi4YTrGiMPYofo6DFqFPDijuGGk7rf6Il
-AKjhAV/51E48tR7U4Y5KLv+0PYaP3ZTPe6/5Mug0pphipOsmmh5+igu0rE1M8tUg
-7Spc/Lt6UDBSlcNkSs8mSpkDVrn67VyOXAF/GZdh47jgKoPQuRQFqnVEPZ2+swj7
-qnNEH1ElHYasYNpOs3Lccs2JE4lDstMKJ30NCZq4x7gjEPN4e5IpfQczPdyYiFau
-Pnh08J8UBfNrDPet12d1WCkmK8yfKjGvDx8x+P9Xcwsycw8itWQ7YqQvr9TdlTSo
-D06i0ZYEibQlZbyhVpRV
-=oscX
------END PGP SIGNATURE-----
-
---E69HUUNAyIJqGpVn--
+tejun
