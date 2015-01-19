@@ -1,129 +1,62 @@
-From: Vincent Yang <vincent.yang.fujitsu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v4 0/8] Support for Fujitsu MB86S7X SoCs
-Date: Mon, 19 Jan 2015 18:23:36 +0800
-Message-ID: <1421663016-1327-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 5/9] dts: versatile: add sysregs nodes
+Date: Mon, 19 Jan 2015 11:25:35 +0100
+Message-ID: <CACRpkdbLdtXeVYWvd5DSmEVkMBT8YGs0kXPC+fktiNtgJhpp=w@mail.gmail.com>
+References: <1419967718-26909-1-git-send-email-robherring2@gmail.com>
+	<1419967718-26909-6-git-send-email-robherring2@gmail.com>
+	<CACRpkdbinR3Uvi5zZmQJFxJgnWfvE6JZouMVxxRRGVtMNXkBQQ@mail.gmail.com>
+	<CAL_JsqKBLx03E1w0NMH8CH+Pm_L8yQvnR6VTTDxqnpOwAoDhXg@mail.gmail.com>
+	<20150115160635.GA1576@red-moon>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150115160635.GA1576@red-moon>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Vincent Yang <Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>
+To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Peter Maydell <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On Thu, Jan 15, 2015 at 5:06 PM, Lorenzo Pieralisi
+<lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org> wrote:
+> On Thu, Jan 08, 2015 at 11:53:15PM +0000, Rob Herring wrote:
+>> On Thu, Jan 8, 2015 at 1:44 PM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> > On Tue, Dec 30, 2014 at 8:28 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-  Fujitsu have a series of SoC already shipping based around
-variations of 2xCA7+2xCA15 big.LITTLE architecture, and we would like
-to upstream the basic support in this series.
+>> >> +                               reg = <0x00000 0x1000>;
+>> >> +
+>> >> +                               v2m_led_gpios: sys_led@08 {
+>> >> +                                       compatible = "arm,vexpress-sysreg,sys_led";
+>> >> +                                       gpio-controller;
+>> >> +                                       #gpio-cells = <2>;
+>> >> +                               };
+>> >
+>> > These are not GPIOs. These are LED registers really.
+>>
+>> A register bit that controls an i/o signal sounds like a GPIO to me.
+>
+> To me too. I agree that definining a gpio-controller for every possible
+> gpio pin would soon get unwieldy, but hey, the choice made for vexpress
+> leds makes perfect sense to me, after all they are gpio signals
+> connected to leds, and there is a driver for that in the kernel:
+>
+> drivers/leds/leds-gpio.c
+>
+> we could move this stuff to syscon-leds, but honestly I think is one of those
+> things we could argue forever about that.
 
-  MB86S70 is a big.LITTLE platform with 2xCA7+2xCA15 and an additional
-CM3 as the master. MB86S73 is a simple 2xCA7 and an additional CM3
-master.
+OK it's just so that the GPIO maintainer disagrees with the way
+gpio-controller is being used here, and I consequently NACK it
+so for the record add my:
 
-  The DT includes references to sdhci patches which are being sent to
-the mmc list at the same time.
+Nacked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-  We welcome any comments or questions.
+To this patch if/when merging it through ARM SoC.
 
-Changes since v3:
-* Identify platform, by checking presence of DT node
-"fujitsu,mb86s70-scb-1.0" before populating cpu clocks and MCPM
-support.
-* Disable clock upon gpio module remove
-* Lower init level of gpio driver from subsys_initcall to module_init
-* Use managed device resource allocation in MHU driver
+If the DT people think it is a good way to describe the hardware
+and override this then I will live with it I guess...
 
-Changes since v2:
-* Minor cleanup of MCPM as suggested by Nicolas Pitre.
-
-Changes since v1:
-* Thanks to Arnd, modified clock driver to populate clocks only when
-some user need them. Node name changed from "fujitsu,mb86s70-clk" to
-"fujitsu,mb86s70-crg11" . Controller+Domain+Port of a clock are now
-three cells specified by the user node.
-* aliases moved into board DTS files
-* Voltage supply moved as per-board DT node.
-* Removed default overly verbose loglevel=8
-* Specify -march=armv7-a flag for mcpm.c and smc.S that contain ARMv7
-specific code.
-* Removed wrongly put outer_flush_all(), now using standard
-v7_exit_coherency_flush() instead of platform specific macro.
-* Simplified GPIO offset calculations in gpio-mb86s70.c driver. And
-added .remove() for the driver
-* ARM MHU driver provided a .remove() to enable module unloading.
-* A few other misc cleanups suggested in v1 submission.
-
-Thanks.
-
-Jassi Brar (8):
-  ARM: Add platform support for Fujitsu MB86S7X SoCs
-  mailbox: arm_mhu: add driver for ARM MHU controller
-  ARM: MB86S7X: Add MCPM support
-  clk: Add clock driver for mb86s7x
-  gpio: Add Fujitsu MB86S7x GPIO driver
-  dt: mb86s7x: add dt files for MB86S7x evbs
-  of: add Fujitsu vendor prefix
-  ARM: MB86S7x: Add configs
-
- Documentation/devicetree/bindings/arm/mb86s7x.txt  |   8 +
- .../bindings/clock/fujitsu,mb86s70-crg11.txt       |  26 +
- .../bindings/gpio/fujitsu,mb86s70-gpio.txt         |  20 +
- .../devicetree/bindings/mailbox/arm-mhu.txt        |  33 ++
- .../devicetree/bindings/soc/mb86s7x/scb_mhu.txt    |  35 ++
- .../devicetree/bindings/vendor-prefixes.txt        |   1 +
- MAINTAINERS                                        |   7 +
- arch/arm/Kconfig                                   |   2 +
- arch/arm/Makefile                                  |   1 +
- arch/arm/boot/dts/Makefile                         |   1 +
- arch/arm/boot/dts/mb86s70.dtsi                     |  91 ++++
- arch/arm/boot/dts/mb86s70eb.dts                    |  57 +++
- arch/arm/boot/dts/mb86s73.dtsi                     |  63 +++
- arch/arm/boot/dts/mb86s73eb.dts                    |  44 ++
- arch/arm/boot/dts/mb86s7x.dtsi                     | 140 ++++++
- arch/arm/configs/fujitsu_defconfig                 | 232 +++++++++
- arch/arm/configs/multi_v7_defconfig                |   5 +
- arch/arm/mach-mb86s7x/Kconfig                      |  19 +
- arch/arm/mach-mb86s7x/Makefile                     |   3 +
- arch/arm/mach-mb86s7x/board.c                      |  23 +
- arch/arm/mach-mb86s7x/mcpm.c                       | 318 +++++++++++++
- arch/arm/mach-mb86s7x/smc.S                        |  27 ++
- drivers/clk/Makefile                               |   1 +
- drivers/clk/clk-mb86s7x.c                          | 386 +++++++++++++++
- drivers/gpio/Kconfig                               |   6 +
- drivers/gpio/Makefile                              |   1 +
- drivers/gpio/gpio-mb86s7x.c                        | 232 +++++++++
- drivers/mailbox/Kconfig                            |   7 +
- drivers/mailbox/Makefile                           |   2 +
- drivers/mailbox/arm_mhu.c                          | 211 ++++++++
- drivers/soc/Makefile                               |   1 +
- drivers/soc/mb86s7x/Makefile                       |   4 +
- drivers/soc/mb86s7x/scb_mhu.c                      | 528 +++++++++++++++++++++
- include/soc/mb86s7x/scb_mhu.h                      | 105 ++++
- 34 files changed, 2640 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/mb86s7x.txt
- create mode 100644 Documentation/devicetree/bindings/clock/fujitsu,mb86s70-crg11.txt
- create mode 100644 Documentation/devicetree/bindings/gpio/fujitsu,mb86s70-gpio.txt
- create mode 100644 Documentation/devicetree/bindings/mailbox/arm-mhu.txt
- create mode 100644 Documentation/devicetree/bindings/soc/mb86s7x/scb_mhu.txt
- create mode 100644 arch/arm/boot/dts/mb86s70.dtsi
- create mode 100644 arch/arm/boot/dts/mb86s70eb.dts
- create mode 100644 arch/arm/boot/dts/mb86s73.dtsi
- create mode 100644 arch/arm/boot/dts/mb86s73eb.dts
- create mode 100644 arch/arm/boot/dts/mb86s7x.dtsi
- create mode 100644 arch/arm/configs/fujitsu_defconfig
- create mode 100644 arch/arm/mach-mb86s7x/Kconfig
- create mode 100644 arch/arm/mach-mb86s7x/Makefile
- create mode 100644 arch/arm/mach-mb86s7x/board.c
- create mode 100644 arch/arm/mach-mb86s7x/mcpm.c
- create mode 100644 arch/arm/mach-mb86s7x/smc.S
- create mode 100644 drivers/clk/clk-mb86s7x.c
- create mode 100644 drivers/gpio/gpio-mb86s7x.c
- create mode 100644 drivers/mailbox/arm_mhu.c
- create mode 100644 drivers/soc/mb86s7x/Makefile
- create mode 100644 drivers/soc/mb86s7x/scb_mhu.c
- create mode 100644 include/soc/mb86s7x/scb_mhu.h
-
--- 
-1.9.0
-
+Yours,
+Linus Walleij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
