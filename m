@@ -1,213 +1,329 @@
-From: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
-Subject: Re: [PATCH V8 00/14] drm/exynos: few patches to enhance bridge chip
- support
-Date: Mon, 19 Jan 2015 18:43:32 +0100
-Message-ID: <1421689412.6818.16.camel@collabora.co.uk>
-References: <1416045309-13359-1-git-send-email-ajaykumar.rs@samsung.com>
-	 <CAEC9eQOrKw2Z1q-ztFfadXmsL3CTcAkkv9kcS2QnDOAVSh2AuQ@mail.gmail.com>
-	 <548ABAB6.6010200@collabora.co.uk> <3197445.qizQc0zeRb@avalon>
-	 <54914D7D.9060108@collabora.co.uk>
-	 <CAPj87rN4HZzDt5JBLyTRmKZs7XcOG=0ha7ZQf9hmjPAFgTyhYQ@mail.gmail.com>
-	 <20150105135015.GA12010@ulmo.nvidia.com> <54BCDC28.7080003@collabora.co.uk>
-	 <20150119163043.GB7751@ulmo.nvidia.com> <20150119170125.GH2001@joana>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 1/5] extcon: gpio-usb: Introduce gpio usb extcon driver
+Date: Mon, 19 Jan 2015 19:52:18 +0200
+Message-ID: <1421689942-10201-2-git-send-email-rogerq@ti.com>
+References: <1421689942-10201-1-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="sha-1"; protocol="application/x-pkcs7-signature";
-	boundary="=-nc83x8dkpQCPhfYrDV8s"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20150119170125.GH2001@joana>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Gustavo Padovan <gustavo@padovan.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Daniel Stone <daniel@fooishbar.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, dri-devel <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Sean Paul <seanpaul@google.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Ajay kumar <ajaynumb@gmail.com>, Kukjin Kim <kgene.kim@samsung.com>, Pannaga Bhushan Reddy Patel <bhushan.r@samsung.com>, Prashanth G <prashanth.g@samsung.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1421689942-10201-1-git-send-email-rogerq-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: balbi-l0cyMroinI0@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Cc: george.cherian-l0cyMroinI0@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+This driver observes the USB ID pin connected over a GPIO and
+updates the USB cable extcon states accordingly.
 
---=-nc83x8dkpQCPhfYrDV8s
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+The existing GPIO extcon driver is not suitable for this purpose
+as it needs to be taught to understand USB cable states and it
+can't handle more than one cable per instance.
 
-On Mon, 2015-01-19 at 15:01 -0200, Gustavo Padovan wrote:
-> 2015-01-19 Thierry Reding <thierry.reding@gmail.com>:
->=20
-> > On Mon, Jan 19, 2015 at 11:27:52AM +0100, Javier Martinez Canillas wrot=
-e:
-> > > Hello Thierry,
-> > >=20
-> > > On 01/05/2015 02:50 PM, Thierry Reding wrote:
-> > > > On Fri, Jan 02, 2015 at 01:10:14PM +0000, Daniel Stone wrote:
-> > > >> >
-> > > >> > Ajay's series don't apply cleanly anymore because it has been a =
-while since
-> > > >> > he posted it but he can rebase on top of 3.19-rc1 once it is rel=
-eased and
-> > > >> > re-resend.
-> > > >> >
-> > > >>=20
-> > > >> Do you have any plans to rebase this so it's ready for merging?
-> > > >>=20
-> > > >> Thierry, Daniel, Dave - whose tree would this be best to merge thr=
-ough?
-> > > >=20
-> > > > The plan is for me to take the bridge patches through the drm/panel
-> > > > tree. I'm going to look at these patches again later this week but =
-from
-> > > > a very quick peek there don't seem to be any major issues left.
-> > > >
-> > >=20
-> > > I know you probably are very busy but it would be great if you can ta=
-ke a look
-> > > to this series to avoid another kernel release to be missed since we =
-are already
-> > > at v3.19-rc5.
-> > >=20
-> > > Only this version was posted 2 months ago and the first version of th=
-e series
-> > > was sent on May, 2014 so it has been on the list for almost a year no=
-w...
-> > >=20
-> > > Tomi and Laurent had already agreed with the DT binging so I think th=
-at we can
-> > > already merge these and if there are any remaining issues, those can =
-be fixed
-> > > during the 3.20 -rc cycle.
-> >=20
-> > I see only a single Tested-by on this series and that seems to be with =
-a
-> > bunch of out-of-tree patches applied on top. Does this now actually wor=
-k
-> > applied on top of upstream? Also it seems like many people actually wan=
-t
-> > this to get merged but there's been no Reviewed-bys and only a single
-> > Tested-by? Is that as good as it's going to get?
->=20
-> I've been using this series on top of exynos-drm for more than a month an=
-d it=20
-> works fine for me so..
->=20
-> Tested-by: Gustavo Padovan <gustavo.padovan@collabora.co.uk>
+For the USB case we need to handle 2 cable states.
+1) USB (attach/detach)
+2) USB-Host (attach/detach)
 
-Same here, just test-booted on my snow with just these patch on top of
-3.19-rc5 and got a nicely working display.=20
+This driver can be easily updated in the future to handle VBUS
+events in case it happens to be available on GPIO for any platform.
 
-Tested-by: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+---
+ .../devicetree/bindings/extcon/extcon-usb.txt      |  20 ++
+ drivers/extcon/Kconfig                             |   7 +
+ drivers/extcon/Makefile                            |   1 +
+ drivers/extcon/extcon-gpio-usb.c                   | 225 +++++++++++++++++++++
+ 4 files changed, 253 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/extcon/extcon-usb.txt
+ create mode 100644 drivers/extcon/extcon-gpio-usb.c
 
---=20
-Sjoerd Simons <sjoerd.simons@collabora.co.uk>
-Collabora Ltd.
+diff --git a/Documentation/devicetree/bindings/extcon/extcon-usb.txt b/Documentation/devicetree/bindings/extcon/extcon-usb.txt
+new file mode 100644
+index 0000000..171c5a4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/extcon/extcon-usb.txt
+@@ -0,0 +1,20 @@
++USB Extcon device
++
++This is a virtual device used to generate USB cable states from the USB ID pin
++connected to a GPIO pin.
++
++Required properties:
++- compatible: Should be "linux,extcon-usb"
++- id-gpio: gpio for USB ID pin. See gpio binding.
++
++Example:
++	extcon_usb1 {
++		compatible = "linux,extcon-usb";
++		id-gpio = <&gpio6 1 GPIO_ACTIVE_HIGH>;
++	}
++
++	usb@1 {
++		...
++		extcon = <&extcon_usb1>;
++		...
++	};
+diff --git a/drivers/extcon/Kconfig b/drivers/extcon/Kconfig
+index 6a1f7de..8106a83 100644
+--- a/drivers/extcon/Kconfig
++++ b/drivers/extcon/Kconfig
+@@ -35,6 +35,13 @@ config EXTCON_GPIO
+ 	  Say Y here to enable GPIO based extcon support. Note that GPIO
+ 	  extcon supports single state per extcon instance.
+ 
++config EXTCON_GPIO_USB
++	tristate "USB GPIO extcon support"
++	depends on GPIOLIB
++	help
++	  Say Y here to enable GPIO based USB cable detection extcon support.
++	  Used typically if GPIO is used for USB ID pin detection.
++
+ config EXTCON_MAX14577
+ 	tristate "MAX14577/77836 EXTCON Support"
+ 	depends on MFD_MAX14577
+diff --git a/drivers/extcon/Makefile b/drivers/extcon/Makefile
+index 0370b42..bae594b 100644
+--- a/drivers/extcon/Makefile
++++ b/drivers/extcon/Makefile
+@@ -12,3 +12,4 @@ obj-$(CONFIG_EXTCON_MAX8997)	+= extcon-max8997.o
+ obj-$(CONFIG_EXTCON_PALMAS)	+= extcon-palmas.o
+ obj-$(CONFIG_EXTCON_RT8973A)	+= extcon-rt8973a.o
+ obj-$(CONFIG_EXTCON_SM5502)	+= extcon-sm5502.o
++obj-$(CONFIG_EXTCON_GPIO_USB)	+= extcon-gpio-usb.o
+diff --git a/drivers/extcon/extcon-gpio-usb.c b/drivers/extcon/extcon-gpio-usb.c
+new file mode 100644
+index 0000000..aeb2298
+--- /dev/null
++++ b/drivers/extcon/extcon-gpio-usb.c
+@@ -0,0 +1,225 @@
++/**
++ * drivers/extcon/extcon_gpio_usb.c - USB GPIO extcon driver
++ *
++ * Copyright (C) 2015 Texas Instruments Incorporated - http://www.ti.com
++ *
++ * Author: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <linux/extcon.h>
++#include <linux/extcon/extcon-gpio.h>
++#include <linux/gpio.h>
++#include <linux/init.h>
++#include <linux/interrupt.h>
++#include <linux/irq.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/of_gpio.h>
++#include <linux/platform_device.h>
++#include <linux/slab.h>
++#include <linux/workqueue.h>
++
++#define USB_GPIO_DEBOUNCE_MS	20	/* ms */
++
++struct usb_extcon_info {
++	struct device *dev;
++	struct extcon_dev *edev;
++
++	struct gpio_desc *id_gpiod;
++	int id_irq;
++
++	unsigned long debounce_jiffies;
++	struct delayed_work wq_detcable;
++};
++
++/* List of detectable cables */
++enum {
++	EXTCON_CABLE_USB = 0,
++	EXTCON_CABLE_USB_HOST,
++
++	EXTCON_CABLE_END,
++};
++
++static const char *usb_extcon_cable[] = {
++	[EXTCON_CABLE_USB] = "USB",
++	[EXTCON_CABLE_USB_HOST] = "USB-Host",
++	NULL,
++};
++
++static void usb_extcon_detect_cable(struct work_struct *work)
++{
++	int id;
++	struct usb_extcon_info *info;
++	const char **cable_names;
++
++	info  = container_of(to_delayed_work(work), struct usb_extcon_info,
++			     wq_detcable);
++	cable_names = info->edev->supported_cable;
++
++	/* check ID and update cable state */
++	id = gpiod_get_value_cansleep(info->id_gpiod);
++
++	if (id) {
++		/*
++		 * ID = 1 means USB HOST cable detached.
++		 * As we don't have event for USB peripheral cable attached,
++		 * we simulate USB peripheral attach here.
++		 */
++		extcon_set_cable_state(info->edev,
++				       cable_names[EXTCON_CABLE_USB_HOST],
++				       false);
++		extcon_set_cable_state(info->edev,
++				       cable_names[EXTCON_CABLE_USB], true);
++	} else {
++		/*
++		 * ID = 0 means USB HOST cable attached.
++		 * As we don't have event for USB peripheral cable detached,
++		 * we simulate USB peripheral detach here.
++		 */
++		extcon_set_cable_state(info->edev,
++				       cable_names[EXTCON_CABLE_USB], false);
++		extcon_set_cable_state(info->edev,
++				       cable_names[EXTCON_CABLE_USB_HOST],
++				       true);
++	}
++}
++
++static irqreturn_t usb_irq_handler(int irq, void *dev_id)
++{
++	struct usb_extcon_info *info = dev_id;
++
++	/* debounce the GPIO via delayed work */
++	queue_delayed_work(system_power_efficient_wq, &info->wq_detcable,
++			   info->debounce_jiffies);
++	return IRQ_HANDLED;
++}
++
++static int usb_extcon_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct device_node *np = dev->of_node;
++	struct usb_extcon_info *info;
++	int ret;
++
++	if (!np)
++		return -EINVAL;
++
++	info = devm_kzalloc(&pdev->dev, sizeof(struct usb_extcon_info),
++			    GFP_KERNEL);
++	if (!info)
++		return -ENOMEM;
++
++	info->dev = dev;
++	info->id_gpiod = devm_gpiod_get(&pdev->dev, "id");
++	if (IS_ERR(info->id_gpiod)) {
++		dev_err(dev, "failed to get ID GPIO\n");
++		return PTR_ERR(info->id_gpiod);
++	}
++
++	ret = gpiod_set_debounce(info->id_gpiod,
++				 USB_GPIO_DEBOUNCE_MS * 1000);
++	if (ret < 0)
++		info->debounce_jiffies = msecs_to_jiffies(USB_GPIO_DEBOUNCE_MS);
++
++	INIT_DELAYED_WORK(&info->wq_detcable, usb_extcon_detect_cable);
++
++	info->id_irq = gpiod_to_irq(info->id_gpiod);
++	if (info->id_irq < 0) {
++		dev_err(dev, "failed to get ID IRQ\n");
++		return info->id_irq;
++	}
++
++	ret = devm_request_threaded_irq(dev, info->id_irq, NULL,
++					usb_irq_handler,
++					IRQF_SHARED | IRQF_ONESHOT,
++					pdev->name, info);
++	if (ret < 0) {
++		dev_err(dev, "failed to request handler for ID IRQ\n");
++		return ret;
++	}
++
++	info->edev = devm_extcon_dev_allocate(dev, usb_extcon_cable);
++	if (IS_ERR(info->edev)) {
++		dev_err(dev, "failed to allocate extcon device\n");
++		return -ENOMEM;
++	}
++
++	ret = devm_extcon_dev_register(dev, info->edev);
++	if (ret < 0) {
++		dev_err(dev, "failed to allocate extcon device\n");
++		return ret;
++	}
++
++	platform_set_drvdata(pdev, info);
++	/* Perform initial detection */
++	usb_extcon_detect_cable(&info->wq_detcable.work);
++
++	return 0;
++}
++
++static int usb_extcon_remove(struct platform_device *pdev)
++{
++	struct usb_extcon_info *info = platform_get_drvdata(pdev);
++
++	cancel_delayed_work_sync(&info->wq_detcable);
++	return 0;
++}
++
++#ifdef CONFIG_PM_SLEEP
++static int usb_extcon_suspend(struct device *dev)
++{
++	struct usb_extcon_info *info;
++
++	info = dev_get_drvdata(dev);
++
++	if (!IS_ERR(info->id_gpiod))
++		enable_irq_wake(info->id_irq);
++
++	return 0;
++}
++
++static int usb_extcon_resume(struct device *dev)
++{
++	struct usb_extcon_info *info;
++
++	info = dev_get_drvdata(dev);
++
++	if (!IS_ERR(info->id_gpiod))
++		disable_irq_wake(info->id_irq);
++
++	return 0;
++}
++#endif
++
++static SIMPLE_DEV_PM_OPS(usb_extcon_pm_ops,
++			 usb_extcon_suspend, usb_extcon_resume);
++
++static struct of_device_id usb_extcon_dt_match[] = {
++	{ .compatible = "linux,extcon-usb", },
++	{ /* end */ }
++};
++
++static struct platform_driver usb_extcon_driver = {
++	.probe		= usb_extcon_probe,
++	.remove		= usb_extcon_remove,
++	.driver		= {
++		.name	= "extcon-usb",
++		.pm	= &usb_extcon_pm_ops,
++		.of_match_table = usb_extcon_dt_match,
++	},
++};
++
++module_platform_driver(usb_extcon_driver);
++
++MODULE_AUTHOR("Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>");
++MODULE_DESCRIPTION("USB GPIO extcon driver");
++MODULE_LICENSE("GPL v2");
+-- 
+2.1.0
 
---=-nc83x8dkpQCPhfYrDV8s
-Content-Type: application/x-pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExCzAJBgUrDgMCGgUAMIAGCSqGSIb3DQEHAQAAoIIUzDCCBsIw
-ggWqoAMCAQICEAoE3yF0XU0rjOozcgUAUOkwDQYJKoZIhvcNAQEFBQAwZTELMAkGA1UEBhMCVVMx
-FTATBgNVBAoTDERpZ2lDZXJ0IEluYzEZMBcGA1UECxMQd3d3LmRpZ2ljZXJ0LmNvbTEkMCIGA1UE
-AxMbRGlnaUNlcnQgQXNzdXJlZCBJRCBSb290IENBMB4XDTA2MTExMDAwMDAwMFoXDTIxMTExMDAw
-MDAwMFowYjELMAkGA1UEBhMCVVMxFTATBgNVBAoTDERpZ2lDZXJ0IEluYzEZMBcGA1UECxMQd3d3
-LmRpZ2ljZXJ0LmNvbTEhMB8GA1UEAxMYRGlnaUNlcnQgQXNzdXJlZCBJRCBDQS0xMIIBIjANBgkq
-hkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA6IItmfnKwkKVpYBzQHDSnlZUXKnE0kEGj8kz/E1FkVyB
-n+0snPgWWd+etSQVwpi5tHdJ3InECtqvy15r7a2wcTHrzzpADEZNk+yLejYIA6sMNP4YSYL+x8cx
-SIB8HqIPkg5QycaH6zY/2DDD/6b3+6LNb3Mj/qxWBZDwMiEWicZwiPkFl32jx0PdAug7Pe2xQaPt
-P77blUjE7h6z8rwMK5nQxl0SQoHhg26Ccz8mSxSQrllmCsSNvtLOBq6thG9IhJtPQLnxTPKvmPv2
-zkBdXPao8S+v7Iki8msYZbHBc63X8djPHgp0XEK4aH631XcKJ1Z8D2KkPzIUYJX9BwSiCQIDAQAB
-o4IDbzCCA2swDgYDVR0PAQH/BAQDAgGGMDsGA1UdJQQ0MDIGCCsGAQUFBwMBBggrBgEFBQcDAgYI
-KwYBBQUHAwMGCCsGAQUFBwMEBggrBgEFBQcDCDCCAcYGA1UdIASCAb0wggG5MIIBtQYLYIZIAYb9
-bAEDAAQwggGkMDoGCCsGAQUFBwIBFi5odHRwOi8vd3d3LmRpZ2ljZXJ0LmNvbS9zc2wtY3BzLXJl
-cG9zaXRvcnkuaHRtMIIBZAYIKwYBBQUHAgIwggFWHoIBUgBBAG4AeQAgAHUAcwBlACAAbwBmACAA
-dABoAGkAcwAgAEMAZQByAHQAaQBmAGkAYwBhAHQAZQAgAGMAbwBuAHMAdABpAHQAdQB0AGUAcwAg
-AGEAYwBjAGUAcAB0AGEAbgBjAGUAIABvAGYAIAB0AGgAZQAgAEQAaQBnAGkAQwBlAHIAdAAgAEMA
-UAAvAEMAUABTACAAYQBuAGQAIAB0AGgAZQAgAFIAZQBsAHkAaQBuAGcAIABQAGEAcgB0AHkAIABB
-AGcAcgBlAGUAbQBlAG4AdAAgAHcAaABpAGMAaAAgAGwAaQBtAGkAdAAgAGwAaQBhAGIAaQBsAGkA
-dAB5ACAAYQBuAGQAIABhAHIAZQAgAGkAbgBjAG8AcgBwAG8AcgBhAHQAZQBkACAAaABlAHIAZQBp
-AG4AIABiAHkAIAByAGUAZgBlAHIAZQBuAGMAZQAuMA8GA1UdEwEB/wQFMAMBAf8wfQYIKwYBBQUH
-AQEEcTBvMCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5kaWdpY2VydC5jb20wRwYIKwYBBQUHMAKG
-O2h0dHA6Ly93d3cuZGlnaWNlcnQuY29tL0NBQ2VydHMvRGlnaUNlcnRBc3N1cmVkSURSb290Q0Eu
-Y3J0MIGBBgNVHR8EejB4MDqgOKA2hjRodHRwOi8vY3JsMy5kaWdpY2VydC5jb20vRGlnaUNlcnRB
-c3N1cmVkSURSb290Q0EuY3JsMDqgOKA2hjRodHRwOi8vY3JsNC5kaWdpY2VydC5jb20vRGlnaUNl
-cnRBc3N1cmVkSURSb290Q0EuY3JsMB0GA1UdDgQWBBQVABIrE5iymQftHt+ivlcNK2cCzTAfBgNV
-HSMEGDAWgBRF66Kv9JLLgjEtUYunpyGd823IDzANBgkqhkiG9w0BAQUFAAOCAQEAhGFOQR64dgQq
-tbbvj/JVhbldVv4KmObkvWWKfUAp0/yxXUX9OrgqWzNLJFzNubTkc61hXXatdDOKZtUjr0wfcm5F
-2XVAu6I7z41JL8BBsOIpo1E4Q1CZFKwzBjViiX13qVIH5WwgV7aBum+8s8KU7XYCgNl8zoWoHOzH
-Q0pLsVfPcs7f9SU8yyJP/Z9S0TfLCLs4PuDVPm95Ca1bfDGzdzXD5GP5aAqYB+dGOHeE0j6XvAqg
-qKwlT0RukeHSWq9r7zAcjaNEQrMQiyP61+Y1dDesz+urWB/JiCP/NtQH6jRqR+qdlWyeKU9T7eMr
-lSBOKs+WYHr4LIDwlVLOKZaBYjCCBv8wggXnoAMCAQICEA2fwUKNhvkL8dN88tUFvVwwDQYJKoZI
-hvcNAQEFBQAwYjELMAkGA1UEBhMCVVMxFTATBgNVBAoTDERpZ2lDZXJ0IEluYzEZMBcGA1UECxMQ
-d3d3LmRpZ2ljZXJ0LmNvbTEhMB8GA1UEAxMYRGlnaUNlcnQgQXNzdXJlZCBJRCBDQS0xMB4XDTE0
-MDIxNzAwMDAwMFoXDTE1MDMxMjEyMDAwMFowgaQxCzAJBgNVBAYTAkdCMRcwFQYDVQQIEw5DYW1i
-cmlkZ2VzaGlyZTESMBAGA1UEBxMJQ2FtYnJpZGdlMRYwFAYDVQQKEw1Db2xsYWJvcmEgTHRkMQow
-CAYDVQQLEwExMRYwFAYDVQQDEw1Tam9lcmQgU2ltb25zMSwwKgYJKoZIhvcNAQkBFh1zam9lcmQu
-c2ltb25zQGNvbGxhYm9yYS5jby51azCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAN4Q
-EHeW1NbogMVZpHedG7o509/L4VBhqQd8j8JViWd+yvLlxOBw/gY+7ioHMatrQY2VvY6QOLle2Xqs
-CDvELcXMxwyFpBC0Ia+CVE+5pF+0IMuVkGIL1T8LHeKZYeRP+uFXtmWzas12hsMILNRmK7Q5PACm
-+v/6HFn111hLKkANBtRHIRiDbFQOiluNeR2bq+ck1y2+X//SGumA1XZFdCB/1VcRJXDdFnYdU3j/
-RkoiGggo3MSq3mJ6yV7sqzk04fTLFvfL0KadCMauputeGBybEiFAt6rCm5TkyUqoDOTU07byOEXO
-M32EGeYeV515RzARTpOSE9sdmRq0jNNAqGsCAwEAAaOCA2wwggNoMB8GA1UdIwQYMBaAFBUAEisT
-mLKZB+0e36K+Vw0rZwLNMB0GA1UdDgQWBBRaTG8RXMDSFO5XcrjqYs/YDlmqSDAoBgNVHREEITAf
-gR1zam9lcmQuc2ltb25zQGNvbGxhYm9yYS5jby51azAOBgNVHQ8BAf8EBAMCBaAwHQYDVR0lBBYw
-FAYIKwYBBQUHAwQGCCsGAQUFBwMCMH0GA1UdHwR2MHQwOKA2oDSGMmh0dHA6Ly9jcmwzLmRpZ2lj
-ZXJ0LmNvbS9EaWdpQ2VydEFzc3VyZWRJRENBLTEuY3JsMDigNqA0hjJodHRwOi8vY3JsNC5kaWdp
-Y2VydC5jb20vRGlnaUNlcnRBc3N1cmVkSURDQS0xLmNybDCCAcUGA1UdIASCAbwwggG4MIIBtAYK
-YIZIAYb9bAQBAjCCAaQwOgYIKwYBBQUHAgEWLmh0dHA6Ly93d3cuZGlnaWNlcnQuY29tL3NzbC1j
-cHMtcmVwb3NpdG9yeS5odG0wggFkBggrBgEFBQcCAjCCAVYeggFSAEEAbgB5ACAAdQBzAGUAIABv
-AGYAIAB0AGgAaQBzACAAQwBlAHIAdABpAGYAaQBjAGEAdABlACAAYwBvAG4AcwB0AGkAdAB1AHQA
-ZQBzACAAYQBjAGMAZQBwAHQAYQBuAGMAZQAgAG8AZgAgAHQAaABlACAARABpAGcAaQBDAGUAcgB0
-ACAAQwBQAC8AQwBQAFMAIABhAG4AZAAgAHQAaABlACAAUgBlAGwAeQBpAG4AZwAgAFAAYQByAHQA
-eQAgAEEAZwByAGUAZQBtAGUAbgB0ACAAdwBoAGkAYwBoACAAbABpAG0AaQB0ACAAbABpAGEAYgBp
-AGwAaQB0AHkAIABhAG4AZAAgAGEAcgBlACAAaQBuAGMAbwByAHAAbwByAGEAdABlAGQAIABoAGUA
-cgBlAGkAbgAgAGIAeQAgAHIAZQBmAGUAcgBlAG4AYwBlAC4wdwYIKwYBBQUHAQEEazBpMCQGCCsG
-AQUFBzABhhhodHRwOi8vb2NzcC5kaWdpY2VydC5jb20wQQYIKwYBBQUHMAKGNWh0dHA6Ly9jYWNl
-cnRzLmRpZ2ljZXJ0LmNvbS9EaWdpQ2VydEFzc3VyZWRJRENBLTEuY3J0MAwGA1UdEwEB/wQCMAAw
-DQYJKoZIhvcNAQEFBQADggEBAAc8CwXSms3RbIx+bhxFsGQoN+RpHtjnPvMPPAobv7rxdhQPPz+N
-6h3hpVzegeW2XhyZVC8MT0U6uWXrk+1uQUAXrJEG+W2X8yTEoHDS/SCF/POOsj/ekaDuNE9JJB/9
-cspoa4W+W8pX1sRurBDFHL0DBudUQ1PgvTSLPOHtfKQpu4gRb2u8KpJermp/IvPLImX9xSCbYKQM
-2L0wbpStFIYdyKCKuXuQxOX3BdBKLCFvcIDE6hjj3UpOlThCbeul2Tz5jARCfRK4OUxnXyb/Tp5j
-tshIAa2ZMGaTH9ApeY7P6C2ONF+Mh5yV/raWXOnJ9dEg6/sXcbdiieqzLKYBIgQwggb/MIIF56AD
-AgECAhANn8FCjYb5C/HTfPLVBb1cMA0GCSqGSIb3DQEBBQUAMGIxCzAJBgNVBAYTAlVTMRUwEwYD
-VQQKEwxEaWdpQ2VydCBJbmMxGTAXBgNVBAsTEHd3dy5kaWdpY2VydC5jb20xITAfBgNVBAMTGERp
-Z2lDZXJ0IEFzc3VyZWQgSUQgQ0EtMTAeFw0xNDAyMTcwMDAwMDBaFw0xNTAzMTIxMjAwMDBaMIGk
-MQswCQYDVQQGEwJHQjEXMBUGA1UECBMOQ2FtYnJpZGdlc2hpcmUxEjAQBgNVBAcTCUNhbWJyaWRn
-ZTEWMBQGA1UEChMNQ29sbGFib3JhIEx0ZDEKMAgGA1UECxMBMTEWMBQGA1UEAxMNU2pvZXJkIFNp
-bW9uczEsMCoGCSqGSIb3DQEJARYdc2pvZXJkLnNpbW9uc0Bjb2xsYWJvcmEuY28udWswggEiMA0G
-CSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDeEBB3ltTW6IDFWaR3nRu6OdPfy+FQYakHfI/CVYln
-fsry5cTgcP4GPu4qBzGra0GNlb2OkDi5Xtl6rAg7xC3FzMcMhaQQtCGvglRPuaRftCDLlZBiC9U/
-Cx3imWHkT/rhV7Zls2rNdobDCCzUZiu0OTwApvr/+hxZ9ddYSypADQbURyEYg2xUDopbjXkdm6vn
-JNctvl//0hrpgNV2RXQgf9VXESVw3RZ2HVN4/0ZKIhoIKNzEqt5iesle7Ks5NOH0yxb3y9CmnQjG
-rqbrXhgcmxIhQLeqwpuU5MlKqAzk1NO28jhFzjN9hBnmHledeUcwEU6TkhPbHZkatIzTQKhrAgMB
-AAGjggNsMIIDaDAfBgNVHSMEGDAWgBQVABIrE5iymQftHt+ivlcNK2cCzTAdBgNVHQ4EFgQUWkxv
-EVzA0hTuV3K46mLP2A5ZqkgwKAYDVR0RBCEwH4Edc2pvZXJkLnNpbW9uc0Bjb2xsYWJvcmEuY28u
-dWswDgYDVR0PAQH/BAQDAgWgMB0GA1UdJQQWMBQGCCsGAQUFBwMEBggrBgEFBQcDAjB9BgNVHR8E
-djB0MDigNqA0hjJodHRwOi8vY3JsMy5kaWdpY2VydC5jb20vRGlnaUNlcnRBc3N1cmVkSURDQS0x
-LmNybDA4oDagNIYyaHR0cDovL2NybDQuZGlnaWNlcnQuY29tL0RpZ2lDZXJ0QXNzdXJlZElEQ0Et
-MS5jcmwwggHFBgNVHSAEggG8MIIBuDCCAbQGCmCGSAGG/WwEAQIwggGkMDoGCCsGAQUFBwIBFi5o
-dHRwOi8vd3d3LmRpZ2ljZXJ0LmNvbS9zc2wtY3BzLXJlcG9zaXRvcnkuaHRtMIIBZAYIKwYBBQUH
-AgIwggFWHoIBUgBBAG4AeQAgAHUAcwBlACAAbwBmACAAdABoAGkAcwAgAEMAZQByAHQAaQBmAGkA
-YwBhAHQAZQAgAGMAbwBuAHMAdABpAHQAdQB0AGUAcwAgAGEAYwBjAGUAcAB0AGEAbgBjAGUAIABv
-AGYAIAB0AGgAZQAgAEQAaQBnAGkAQwBlAHIAdAAgAEMAUAAvAEMAUABTACAAYQBuAGQAIAB0AGgA
-ZQAgAFIAZQBsAHkAaQBuAGcAIABQAGEAcgB0AHkAIABBAGcAcgBlAGUAbQBlAG4AdAAgAHcAaABp
-AGMAaAAgAGwAaQBtAGkAdAAgAGwAaQBhAGIAaQBsAGkAdAB5ACAAYQBuAGQAIABhAHIAZQAgAGkA
-bgBjAG8AcgBwAG8AcgBhAHQAZQBkACAAaABlAHIAZQBpAG4AIABiAHkAIAByAGUAZgBlAHIAZQBu
-AGMAZQAuMHcGCCsGAQUFBwEBBGswaTAkBggrBgEFBQcwAYYYaHR0cDovL29jc3AuZGlnaWNlcnQu
-Y29tMEEGCCsGAQUFBzAChjVodHRwOi8vY2FjZXJ0cy5kaWdpY2VydC5jb20vRGlnaUNlcnRBc3N1
-cmVkSURDQS0xLmNydDAMBgNVHRMBAf8EAjAAMA0GCSqGSIb3DQEBBQUAA4IBAQAHPAsF0prN0WyM
-fm4cRbBkKDfkaR7Y5z7zDzwKG7+68XYUDz8/jeod4aVc3oHltl4cmVQvDE9FOrll65PtbkFAF6yR
-Bvltl/MkxKBw0v0ghfzzjrI/3pGg7jRPSSQf/XLKaGuFvlvKV9bEbqwQxRy9AwbnVENT4L00izzh
-7XykKbuIEW9rvCqSXq5qfyLzyyJl/cUgm2CkDNi9MG6UrRSGHcigirl7kMTl9wXQSiwhb3CAxOoY
-491KTpU4Qm3rpdk8+YwEQn0SuDlMZ18m/06eY7bISAGtmTBmkx/QKXmOz+gtjjRfjIeclf62llzp
-yfXRIOv7F3G3YonqsyymASIEMYIDEDCCAwwCAQEwdjBiMQswCQYDVQQGEwJVUzEVMBMGA1UEChMM
-RGlnaUNlcnQgSW5jMRkwFwYDVQQLExB3d3cuZGlnaWNlcnQuY29tMSEwHwYDVQQDExhEaWdpQ2Vy
-dCBBc3N1cmVkIElEIENBLTECEA2fwUKNhvkL8dN88tUFvVwwCQYFKw4DAhoFAKCCAW8wGAYJKoZI
-hvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMTUwMTE5MTc0MzMyWjAjBgkqhkiG
-9w0BCQQxFgQUaFwiv35XP6DQhXwSlJfo/HXr+NAwgYUGCSsGAQQBgjcQBDF4MHYwYjELMAkGA1UE
-BhMCVVMxFTATBgNVBAoTDERpZ2lDZXJ0IEluYzEZMBcGA1UECxMQd3d3LmRpZ2ljZXJ0LmNvbTEh
-MB8GA1UEAxMYRGlnaUNlcnQgQXNzdXJlZCBJRCBDQS0xAhANn8FCjYb5C/HTfPLVBb1cMIGHBgsq
-hkiG9w0BCRACCzF4oHYwYjELMAkGA1UEBhMCVVMxFTATBgNVBAoTDERpZ2lDZXJ0IEluYzEZMBcG
-A1UECxMQd3d3LmRpZ2ljZXJ0LmNvbTEhMB8GA1UEAxMYRGlnaUNlcnQgQXNzdXJlZCBJRCBDQS0x
-AhANn8FCjYb5C/HTfPLVBb1cMA0GCSqGSIb3DQEBAQUABIIBADhgfh2mWgSmc3jYpUNfho8VRdh2
-WflO+dKUvDQ9aHHSY8C5zIv6ZUOCpIExW8Dz0/pjpH7EeLJ3hDpa13EpHeK4l+pu4UGV303kk0D7
-VfTyloPtETct0SPBxcT1xnKhA4D/sJdbXI/zNvSJgywYnOAGU2rGGcEYikBTE11exG/sBM/C17LT
-4lCDcFNEY6r3K8HGnMAx3pdUttbUaGrnfdJXWRhNOlB7YtJBx10quyzHxsEfyOYbsZdPAOp1uwd+
-ROTT2G+Zl3ubqeq6AC+Ige60ygpzBRy7sV0oH7bw6Fx/PlJqChDAKqy5H1XKxL13pOfv8KE7VnPW
-NFN189p+jA8AAAAAAAA=
-
-
---=-nc83x8dkpQCPhfYrDV8s--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
