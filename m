@@ -1,144 +1,81 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v1 3/4] net: stmmac: dwmac-rk: Use standard devicetree property for phy regulator
-Date: Mon, 19 Jan 2015 21:12:44 +0100
-Message-ID: <4603622.ltPA9iTIiK@phil>
-References: <1421690889-11901-1-git-send-email-romain.perier@gmail.com> <1421690889-11901-4-git-send-email-romain.perier@gmail.com>
+From: NeilBrown <neil@brown.name>
+Subject: Re: [PATCH V2 2/4] mmc: pwrseq: Document DT bindings for the simple
+ MMC power sequence
+Date: Tue, 20 Jan 2015 07:17:01 +1100
+Message-ID: <awcfw5ggbfn27usdy0rb72ph.1421698621396@email.android.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1421690889-11901-4-git-send-email-romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: peppe.cavallaro-qxv4g6HH51o@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, roger.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Mark Rutland <mark.rutland@arm.com>, Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org, Chris Ball <chris@printf.net>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Alexandre Courbot <gnurou@gmail.com>, Arend van Spriel <arend@broadcom.com>, Sascha Hauer <s.hauer@pengutronix.de>, Olof Johansson <olof@lixom.net>, Hans de Goede <hdegoede@redhat.com>, Doug Anderson <dianders@chromium.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, 19. Januar 2015, 18:08:08 schrieb Romain Perier:
-> Currently, dwmac-rk uses a custom propety "phy_regulator" to get the name of
-> the right regulator to use to power on or power off the phy. This commit
-> converts the driver to use phy-supply devicetree property and the
-> corresponding API, it cleans the code a bit and make it simpler to
-> maintain.
-> 
-> Signed-off-by: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+CgpPbiBGcmksIDE2IEphbiAyMDE1IDExOjM2OjQ2ICswMDAwIFJ1c3NlbGwgS2luZyAtIEFSTSBM
+aW51eA0KPGxpbnV4QGFybS5saW51eC5vcmcudWs+IHdyb3RlOg0KDQo+IE9uIEZyaSwgSmFuIDE2
+LCAyMDE1IGF0IDA3OjUzOjA4QU0gKzEzMDAsIE5laWxCcm93biB3cm90ZToNCj4gPiBBbHNvLCBp
+dCBpc24ndCBjbGVhciB0byBtZSB3aGV0aGVyIHRoZSBuZWVkIGZvciBwb3dlci9yZXNldCBpcyBh
+IGZ1bmN0aW9uIG9mDQo+ID4gdGhlIG1tYy1ob3N0LCBvciBhIGZ1bmN0aW9uIG9mIHRoZSBkZXZp
+Y2UgYXR0YWNoZWQgdG8gdGhlIGhvc3QuICBJIHN1c3BlY3QNCj4gPiBzb21lIGFyZSBuZWVkZWQg
+Ynkgb25lLCBzb21lIGJ5IHRoZSBvdGhlci4gIEFueSBieSBib3RoPw0KPiANCj4gTmVpbCwNCj4g
+DQo+IFRoZXJlJ3MgYSBob3JyaWQgaXNzdWUgdGhlcmUuICBUaGUgc3RhbmRhcmQgbW9kZWwgb2Yg
+TU1DL1NEIGlzIHRoYXQgdGhlDQo+IGRldmljZSB3aWxsIGJlIHBvd2VyZWQgdXAgYnkgdGhlIGhv
+c3QsIGFuZCB3aWxsIHRoZW4gYmUgcHJvYmVkIHRvIGZpbmQNCj4gb3V0IHdoYXQgdGhlIGRldmlj
+ZSBpcy4gIFRoaXMgbm9ybWFsbHkgd29ya3MgZmluZSBhcyB0aGUgaG9zdCBpcw0KPiByZXNwb25z
+aWJsZSBmb3IgY29udHJvbGxpbmcgdGhlIHBvd2VyIHRvIHRoZSBzb2NrZXQgd2hpY2ggdGhlIGNh
+cmQgaXMNCj4gcGx1Z2dlZCBpbnRvLg0KPiANCj4gV2hlcmUgdGhpbmdzIGZhbGwgZG93biBpcyB3
+aGVuIHlvdSBoYXZlIGEgTU1DL1NEIGRldmljZSBlbWJlZGRlZCBvbnRvDQo+IGEgYm9hcmQsIGFu
+ZCB0aGV5IGRlY2lkZSB0aGF0IGl0J2xsIGJlIGdpdmVuIHNlcGFyYXRlIGNvbnRyb2xzIGZvcg0K
+PiBwb3dlciBhbmQgcmVzZXQgd2hpY2ggYXJlIG5vdCB1bmRlciB0aGUgY29udHJvbCBvZiB0aGUg
+aG9zdC4NCj4gDQo+IElmIHRoZSBNTUMvU0QgZGV2aWNlIGlzIG5vdCBwb3dlcmVkIHVwIGJlZm9y
+ZSB3ZSBwcm9iZSB0aGUgYnVzLCB0aGVuDQo+IHRoZSBkZXZpY2UgaXMgbm90IGRpc2NvdmVyYWJs
+ZSwgYW5kIHRoaXMgYnJlYWtzIHRoZSBzdGFuZGFyZCBtb2RlbDoNCj4gLSBJZiB3ZSBydW4gdGhl
+IHN0YW5kYXJkIE1NQy9TRCBkZXZpY2UgZGlzY292ZXJ5IGNvZGUgd2l0aCB0aGUgZGV2aWNlDQo+
+ICAgcG93ZXJlZCBkb3duLCBpdCB3aWxsIGZpbmQgbm8gZGV2aWNlIGF0dGFjaGVkLCBzbyBubyBk
+ZXZpY2Ugd2lsbCBiZQ0KPiAgIGNyZWF0ZWQuDQo+IA0KPiAtIElmIHdlIGNyZWF0ZSBhIGRldmlj
+ZSwgdGhlbiB0aGUgZGV2aWNlIGRyaXZlciB3aWxsIGJlIHByb2JlZA0KPiAgIGltbWVkaWF0ZWx5
+LiAgV2hpbGUgdGhlIGRldmljZSBkcml2ZXIgY2FuIHRoZW4gYmluZCwgZGlzY292ZXIgdGhlDQo+
+ICAgcG93ZXIgYW5kIHJlc2V0IGNvbnRyb2xzLCBhbmQgYWN0aXZhdGUgdGhlbSwgaXQgY2FuJ3Qg
+dGhlbiB0YWxrIHRvDQo+ICAgaXRzIGRldmljZSBiZWNhdXNlIHRoZSBNTUMgbGF5ZXIgaGFzbid0
+IGdvbmUgdGhyb3VnaCB0aGUgcmVxdWlyZWQNCj4gICBzdGFuZGFyZCBkZXZpY2UgZGlzY292ZXJ5
+IGFuZCBwcm9iZSBzZXF1ZW5jZS4gIElmIHdlIGNvdWxkIGRvIHRoYXQsDQo+ICAgd2Ugd291bGQg
+dGhlbiBuZWVkIHNvbWUgd2F5IHRvIHN0b3AgdGhhdCBtZWNoYW5pc20gY3JlYXRpbmcgYW5vdGhl
+cg0KPiAgIGRldmljZS4NCg0KSGkgUnVzc2VsbCwNCiB0aGFua3MgZm9yIHRoZSBvdmVydmlldyAt
+IHF1aXRlIGhlbHBmdWwuDQogSSB3b3VsZCBsaWtlIHRvIHBhcnRpY3VsYXJseSBmb2N1cyBvbiB0
+aGF0IGxhc3Qgc2VudGVuY2UgbWVudGlvbmluZw0KICJzb21lIHdheSB0byBzdG9wIFtzdGFuZGFy
+ZCBkZXZpY2UgZGlzY292ZXJ5XSBjcmVhdGluZyBhbm90aGVyIGRldmljZSIuDQoNCiBUaGF0IHdh
+eSBhbHJlYWR5IGV4aXN0cywgb3Igc29tZXRoaW5nIHZlcnkgc2ltaWxhciB0byBpdCwgaW4gdGhl
+IG1tYy9zZGlvDQogY29yZS4gSW4gcGFydGljdWxhciwgdGhlICdvbGRjYXJkJyBhcmd1bWVudCB0
+byBtbWNfc2Rpb19pbml0X2NhcmQoKS4NCg0KIFRoaXMgaXMgY2FsbGVkIGJvdGggd2hlbiBpbml0
+aWFsaXNpbmcgYSBjYXJkIGFuZCB3aGVuIHJlc3RvcmluZyBwb3dlciB0byBpdC4NCiBJZiAnb2xk
+Y2FyZCcgaXMgc2V0IGFuZCB0aGUgY2FyZCBmb3VuZCBtYXRjaGVzICdvbGRjYXJkJywgdGhlbiAn
+b2xkY2FyZCcgaXMNCiBsZWZ0IHVuY2hhbmdlZC4gIGkuZS4gYSBuZXcgZGV2aWNlIGlzIG5vdCBj
+cmVhdGVkLg0KDQogU3VwcG9zZSB0aGF0IGRldmljZXRyZWUgbGlzdGVkIGEgY2hpbGQgbm9kZSBm
+b3IgYW4gbW1jIGhvc3Qgd2l0aA0KICJub24tcmVtb3ZhYmxlIiBzZXQsIHRoZW4gd2UgY291bGQg
+ZG8gYSBwcmVsaW1pbmFyeSBwcm9iZSB3aGljaCBzZXRzDQogdXAgaG9zdC0+Y2FyZCBzbyB0aGF0
+IHN1YnNlcXVlbnQgInN0YW5kYXJkIiBwcm9iZXMgZmluZCB0aGUgcHJvcGVybHkNCiBtYXRjaGlu
+ZyBjYXJkIGFuZCBsZWF2ZSAnb2xkY2FyZCcgdW5jaGFuZ2VkLiAgVGhpcyBjYXJkIGNvdWxkIHNv
+bWVob3cNCiByZWdpc3RlciBpdHMgb3duIHBvd2VyLXVwIHNlcXVlbmNlLg0KDQogSW4gdGhlIGNh
+c2Ugb2YgJ25vbi1yZW1vdmFibGUnIGl0IG1pZ2h0IGJlIG5pY2UgdG8gYmUgbXVjaCBtb3JlIGNh
+dXRpb3VzDQogYWJvdXQgY2xlYXJpbmcgaG9zdC0+Y2FyZCB3aGVuIGEgcHJvYmUgZmFpbHMuICBP
+bmUgb2YgdGhlIChtYW55KSBwcm9ibGVtcyBJDQogaGF2ZSBvbiBteSBkZXZpY2UgaXMgdGhhdCBv
+Y2Nhc2lvbmFsbHkgdGhlIHByb2JlIG9mIHRoZSBtbWMvc2Rpby93aWZpIGNhcmQNCiBmYWlscyAo
+RUJVU1kgSSB0aGluaywgYnV0IEknbSBub3Qgc3VyZSBhbmQgSSBoYXZlIG5vIGlkZWEgd2h5KS4g
+IE9uY2UgdGhhdA0KIGhhcHBlbnMsIHRoZSB3aWZpIGJlY29tZXMgaW5hY2Nlc3NpYmxlIHVudGls
+IGEgcmVib290LiANCg0KIEFzIG1tY19yZXNjYW4gZW5zdXJlcyB0aGF0IGEgbm9uLXJlbW92YWJs
+ZSBjYXJkIGlzIG9ubHkgc2Nhbm5lZCBvbmNlLCBpdA0KIHdvdWxkIGJlIHJlYWxseSBnb29kIGlm
+IHdlIHdlcmUgZXh0cmEgY2FyZWZ1bCBuZXZlciB0byByZW1vdmUgYQ0KIG5vbi1yZW1vdmFibGUg
+Y2FyZCwgZXZlbiBpbiB0aGUgZmFjZSBvZiBlcnJvci4uLg0KDQoNCj4gDQo+IElmIHdlIGluc3Rl
+YWQgdGFrZSB0aGUgdmlldyB0aGF0IHRoZSBob3N0IGlzIHJlc3BvbnNpYmxlIGZvciBwb3dlcmlu
+Zw0KPiB1cCB0aGUgZGV2aWNlLCB0aGVuIHdlIGFyZSBtZXJlbHkga2VlcGluZyB3aXRoIHRoZSBz
+dGFuZGFyZCBNTUMvU0QNCj4gbW9kZWwsIGFuZCB3ZSBkb24ndCBoYXZlIHRvIGhhY2sgYXJvdW5k
+IGhpcy4NCj4gDQo+IEtlZXBpbmcgdG8gdGhlIHN0YW5kYXJkIG1vZGVsIG9mIGEgaG9zdCByZXNw
+b25zaWJsZSBmb3IgcG93ZXIgY29udHJvbA0KPiBvZiBpdHMgY2hpbGQgZGV2aWNlcyBpcyBqdXN0
+IGEgd2hvbGUgbG90IG5pY2VyLg0KPiANCg0KSSdtIG5vdCByZWFsbHkgYWdhaW5zdCB0aGUgcHJv
+cG9zZWQgcGF0Y2guICBJdCBzaG91bGQgcmVtb3ZlIGF0IGxlYXN0IG9uZSBvZg0KbXkgcHJvYmxl
+bXMsIGFuZCBJIGRvbid0IHRoaW5rIGl0IG1ha2VzIGFueSBvdGhlciBwcm9ibGVtcyBtb3JlIGRp
+ZmZpY3VsdC4NClNvIGlmIHRoZSBhYm92ZSBpZGVhcyBkb24ndCBhcHBlYWwgdG8gYW55b25lIGVs
+c2UsIEknbGwgcmFpc2Ugbm8gZnVydGhlcg0Kb2JqZWN0aW9ucy4NCg0KVGhhbmtzLA0KTmVpbEJy
+b3duDQoNCg0K
 
-I don't see updated binding documentation in here.
-
-Secondly I think patch4 which changes the property in the evb-rk808 could be 
-in here. The change is simple enough and would keep it bisectable without 
-needing transistional patches.
-
-And there is the one warning down below.
-
-
-> ---
->  drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c | 61
-> ++++++++------------------ 1 file changed, 19 insertions(+), 42
-> deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
-> b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c index 06e1637..8a8091c
-> 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
-> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
-> @@ -32,7 +32,7 @@
->  struct rk_priv_data {
->  	struct platform_device *pdev;
->  	int phy_iface;
-> -	char regulator[32];
-> +	struct regulator *regulator;
-> 
->  	bool clk_enabled;
->  	bool clock_input;
-> @@ -287,46 +287,25 @@ static int gmac_clk_enable(struct rk_priv_data
-> *bsp_priv, bool enable)
-> 
->  static int phy_power_on(struct rk_priv_data *bsp_priv, bool enable)
->  {
-> -	struct regulator *ldo;
-> -	char *ldostr = bsp_priv->regulator;
-> +	struct regulator *ldo = bsp_priv->regulator;
->  	int ret;
->  	struct device *dev = &bsp_priv->pdev->dev;
-> 
-> -	if (!ldostr) {
-> -		dev_err(dev, "%s: no ldo found\n", __func__);
-> +	if (!ldo) {
-> +		dev_err(dev, "%s: no regulator found\n", __func__);
->  		return -1;
->  	}
-> 
-> -	ldo = regulator_get(NULL, ldostr);
-> -	if (!ldo) {
-> -		dev_err(dev, "\n%s get ldo %s failed\n", __func__, ldostr);
-> +	if (enable) {
-> +		ret = regulator_enable(ldo);
-> +		if (ret)
-> +			dev_err(dev, "%s: fail to enable phy-supply\n",
-> +				__func__);
->  	} else {
-> -		if (enable) {
-> -			if (!regulator_is_enabled(ldo)) {
-> -				ret = regulator_enable(ldo);
-> -				if (ret != 0)
-> -					dev_err(dev, "%s: fail to enable %s\n",
-> -						__func__, ldostr);
-> -				else
-> -					dev_info(dev, "turn on ldo done.\n");
-> -			} else {
-> -				dev_warn(dev, "%s is enabled before enable",
-> -					 ldostr);
-> -			}
-> -		} else {
-> -			if (regulator_is_enabled(ldo)) {
-> -				ret = regulator_disable(ldo);
-> -				if (ret != 0)
-> -					dev_err(dev, "%s: fail to disable %s\n",
-> -						__func__, ldostr);
-> -				else
-> -					dev_info(dev, "turn off ldo done.\n");
-> -			} else {
-> -				dev_warn(dev, "%s is disabled before disable",
-> -					 ldostr);
-> -			}
-> -		}
-> -		regulator_put(ldo);
-> +		ret = regulator_disable(ldo);
-> +		if (ret)
-> +			dev_err(dev, "%s: fail to disable phy-supply\n",
-> +				__func__);
->  	}
-> 
->  	return 0;
-> @@ -346,14 +325,12 @@ static void *rk_gmac_setup(struct platform_device
-> *pdev)
-> 
->  	bsp_priv->phy_iface = of_get_phy_mode(dev->of_node);
-> 
-> -	ret = of_property_read_string(dev->of_node, "phy_regulator", &strings);
-> -	if (ret) {
-> -		dev_warn(dev, "%s: Can not read property: phy_regulator.\n",
-> -			 __func__);
-> -	} else {
-> -		dev_info(dev, "%s: PHY power controlled by regulator(%s).\n",
-> -			 __func__, strings);
-> -		strcpy(bsp_priv->regulator, strings);
-> +	bsp_priv->regulator = devm_regulator_get_optional(dev, "phy");
-> +	if (IS_ERR(bsp_priv->regulator)) {
-> +		if (PTR_ERR(bsp_priv->regulator) == -EPROBE_DEFER)
-> +			return -EPROBE_DEFER;
-
-this should be return ERR_PTR(-EPROBE_DEFER) and produces a warning in its 
-current state
-
-
-> +		dev_err(dev, "no regulator found\n");
-> +		bsp_priv->regulator = NULL;
->  	}
-> 
->  	ret = of_property_read_string(dev->of_node, "clock_in_out", &strings);
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
