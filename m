@@ -1,63 +1,116 @@
-From: Gabriel Fernandez <gabriel.fernandez@linaro.org>
-Subject: Re: [PATCH 4/5] PCI: designware: Add setup bus-related to pcie_host_ops
-Date: Mon, 19 Jan 2015 14:09:43 +0100
-Message-ID: <CAG374jBpafrgvSqzmOzUYVNob4OZHT5_EuveD52y+8BRquzXkg@mail.gmail.com>
-References: <1418812486-12394-1-git-send-email-gabriel.fernandez@linaro.org>
-	<1418812486-12394-5-git-send-email-gabriel.fernandez@linaro.org>
-	<1507589.aeTeyNn1QF@wuerfel>
-	<000e01d01a7f$47592e20$d60b8a60$%han@samsung.com>
+From: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH v5 1/7] mfd: Add support for DA9150 combined charger &
+ fuel-gauge device
+Date: Mon, 19 Jan 2015 13:23:15 +0000
+Message-ID: <2E89032DDAA8B9408CB92943514A0337AB52874E@SW-EX-MBX01.diasemi.com>
+References: <cover.1419264383.git.Adam.Thomson.Opensource@diasemi.com>
+ <8768cf84babd1bc3e16dadc25bdbb50cebfb44b6.1419264383.git.Adam.Thomson.Opensource@diasemi.com>
+ <20150119113332.GP21886@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <000e01d01a7f$47592e20$d60b8a60$%han@samsung.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Jingoo Han <jg1.han@samsung.com>
-Cc: Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Bjorn Helgaas <bhelgaas@google.com>, Mohit Kumar <mohit.kumar@st.com>, Grant Likely <grant.likely@linaro.org>, Fabrice Gasnier <fabrice.gasnier@st.com>, Viresh Kumar <viresh.kumar@linaro.org>, Thierry Reding <treding@nvidia.com>, Minghuan Lian <Minghuan.Lian@freescale.com>, Magnus Damm <damm@opensource.se>, Will Deacon <will.deacon@arm.com>, Tanmay Inamdar <tinamdar@apm.com>, Murali Karicheri <m-karicheri2@ti.com>, Kishon
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150119113332.GP21886@x1>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Opensource [Adam Thomson]" <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd, Jingoo,
-
-On 18 December 2014 at 05:58, Jingoo Han <jg1.han@samsung.com> wrote:
-> On Thursday, December 18, 2014 7:16 AM, Arnd Bergmann wrote:
->> On Wednesday 17 December 2014 11:34:45 Gabriel FERNANDEZ wrote:
->> > ST sti SoCs PCIe IPs are built around DesignWare IP Core.
->> > But in these SoCs PCIe IP doesn't support IO.
->
-> Hi Gabriel,
->
-> I cannot understand how ST sti SoCs PCIe IP does not support I/O.
-> As far as I know, it cannot be selected by the 'parameter'.
-> Then, H/W engineers dropped out the I/O control logic?
->
->> >
->> > To support this, add setup_bus() to pcie_host_ops.
->
->
->> >
->> > Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
->> > Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
->>
->> The dw-pcie driver should be able to tell whether the device has
->> an I/O space or not, and do the right thing based on that. Don't
->> add an implementation specific callback for that.
->
-> I agree with Arnd's opinion.
->
-> In addition, I have one more question.
-> Then, if a device that requires I/O region is connected to
-> PCIe slot of ST sti SoCs PCIe, what will happen?
-> It just prints error messages?
->
-> Best regards,
-> Jingoo Han
->
->>
->>       Arnd
->
-
-Arnd in other post mention to add an empty I/O space to workaround
-lack of I/O port access.
-Is it the right thing to do ?
-http://lists.infradead.org/pipermail/linux-arm-kernel/2014-November/299623.html
-
-Best regards
+T24gSmFudWFyeSAxOSwgMjAxNSAxMTozNCwgTGVlIEpvbmVzIHdyb3RlOg0KDQo+IE9uIE1vbiwg
+MjIgRGVjIDIwMTQsIEFkYW0gVGhvbXNvbiB3cm90ZToNCj4gDQo+ID4gREE5MTUwIGlzIGEgY29t
+YmluZWQgQ2hhcmdlciBhbmQgRnVlbC1HYXVnZSBJQywgd2l0aCBhZGRpdGlvbmFsDQo+ID4gR1BJ
+TyBhbmQgR1BBREMgZnVuY3Rpb25hbGl0eS4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEFkYW0g
+VGhvbXNvbiA8QWRhbS5UaG9tc29uLk9wZW5zb3VyY2VAZGlhc2VtaS5jb20+DQo+ID4gLS0tDQo+
+ID4gIGRyaXZlcnMvbWZkL0tjb25maWcgICAgICAgICAgICAgICAgICB8ICAgMTIgKw0KPiA+ICBk
+cml2ZXJzL21mZC9NYWtlZmlsZSAgICAgICAgICAgICAgICAgfCAgICAyICstDQo+ID4gIGRyaXZl
+cnMvbWZkL2RhOTE1MC1jb3JlLmMgICAgICAgICAgICB8ICA0MTMgKysrKysrKysrKysrDQo+ID4g
+IGluY2x1ZGUvbGludXgvbWZkL2RhOTE1MC9jb3JlLmggICAgICB8ICAgNjggKysNCj4gPiAgaW5j
+bHVkZS9saW51eC9tZmQvZGE5MTUwL3JlZ2lzdGVycy5oIHwgMTE1NQ0KPiArKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrDQo+ID4gIDUgZmlsZXMgY2hhbmdlZCwgMTY0OSBpbnNlcnRp
+b25zKCspLCAxIGRlbGV0aW9uKC0pDQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL21m
+ZC9kYTkxNTAtY29yZS5jDQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBpbmNsdWRlL2xpbnV4L21m
+ZC9kYTkxNTAvY29yZS5oDQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBpbmNsdWRlL2xpbnV4L21m
+ZC9kYTkxNTAvcmVnaXN0ZXJzLmgNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL21mZC9L
+Y29uZmlnIGIvZHJpdmVycy9tZmQvS2NvbmZpZw0KPiA+IGluZGV4IDJlNmI3MzEuLjU2ZTgwZDIg
+MTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9tZmQvS2NvbmZpZw0KPiA+ICsrKyBiL2RyaXZlcnMv
+bWZkL0tjb25maWcNCj4gPiBAQCAtMTk1LDYgKzE5NSwxOCBAQCBjb25maWcgTUZEX0RBOTA2Mw0K
+PiA+ICAJICBBZGRpdGlvbmFsIGRyaXZlcnMgbXVzdCBiZSBlbmFibGVkIGluIG9yZGVyIHRvIHVz
+ZSB0aGUgZnVuY3Rpb25hbGl0eQ0KPiA+ICAJICBvZiB0aGUgZGV2aWNlLg0KPiA+DQo+ID4gK2Nv
+bmZpZyBNRkRfREE5MTUwDQo+ID4gKwl0cmlzdGF0ZSAiRGlhbG9nIFNlbWljb25kdWN0b3IgREE5
+MTUwIENoYXJnZXIgRnVlbC1HYXVnZSBjaGlwIg0KPiA+ICsJZGVwZW5kcyBvbiBJMkM9eQ0KPiA+
+ICsJc2VsZWN0IE1GRF9DT1JFDQo+ID4gKwlzZWxlY3QgUkVHTUFQX0kyQw0KPiA+ICsJc2VsZWN0
+IFJFR01BUF9JUlENCj4gPiArCWhlbHANCj4gPiArCSAgVGhpcyBhZGRzIHN1cHBvcnQgZm9yIHRo
+ZSBEQTkxNTAgaW50ZWdyYXRlZCBjaGFyZ2VyIGFuZCBmdWVsLWdhdWdlDQo+ID4gKwkgIGNoaXAu
+IFRoaXMgZHJpdmVyIHByb3ZpZGVzIGNvbW1vbiBzdXBwb3J0IGZvciBhY2Nlc3NpbmcgdGhlIGRl
+dmljZS4NCj4gPiArCSAgQWRkaXRpb25hbCBkcml2ZXJzIG11c3QgYmUgZW5hYmxlZCBpbiBvcmRl
+ciB0byB1c2UgdGhlIHNwZWNpZmljDQo+ID4gKwkgIGZlYXR1cmVzIG9mIHRoZSBkZXZpY2UuDQo+
+ID4gKw0KPiA+ICBjb25maWcgTUZEX0RMTjINCj4gPiAgCXRyaXN0YXRlICJEaW9sYW4gRExOMiBz
+dXBwb3J0Ig0KPiA+ICAJc2VsZWN0IE1GRF9DT1JFDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
+bWZkL01ha2VmaWxlIGIvZHJpdmVycy9tZmQvTWFrZWZpbGUNCj4gPiBpbmRleCA1MzQ2N2UyLi5m
+MDZmNGM2IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvbWZkL01ha2VmaWxlDQo+ID4gKysrIGIv
+ZHJpdmVycy9tZmQvTWFrZWZpbGUNCj4gPiBAQCAtMTEzLDcgKzExMyw3IEBAIG9iai0kKENPTkZJ
+R19NRkRfREE5MDU1KQkrPSBkYTkwNTUubw0KPiA+DQo+ID4gIGRhOTA2My1vYmpzCQkJOj0gZGE5
+MDYzLWNvcmUubyBkYTkwNjMtaXJxLm8gZGE5MDYzLWkyYy5vDQo+ID4gIG9iai0kKENPTkZJR19N
+RkRfREE5MDYzKQkrPSBkYTkwNjMubw0KPiA+IC0NCj4gPiArb2JqLSQoQ09ORklHX01GRF9EQTkx
+NTApCSs9IGRhOTE1MC1jb3JlLm8NCj4gPiAgb2JqLSQoQ09ORklHX01GRF9NQVgxNDU3NykJKz0g
+bWF4MTQ1Nzcubw0KPiA+ICBvYmotJChDT05GSUdfTUZEX01BWDc3Njg2KQkrPSBtYXg3NzY4Ni5v
+DQo+ID4gIG9iai0kKENPTkZJR19NRkRfTUFYNzc2OTMpCSs9IG1heDc3NjkzLm8NCj4gPiBkaWZm
+IC0tZ2l0IGEvZHJpdmVycy9tZmQvZGE5MTUwLWNvcmUuYyBiL2RyaXZlcnMvbWZkL2RhOTE1MC1j
+b3JlLmMNCj4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiA+IGluZGV4IDAwMDAwMDAuLjRkNzU3
+YjkNCj4gPiAtLS0gL2Rldi9udWxsDQo+ID4gKysrIGIvZHJpdmVycy9tZmQvZGE5MTUwLWNvcmUu
+Yw0KPiA+IEBAIC0wLDAgKzEsNDEzIEBADQo+ID4gKy8qDQo+ID4gKyAqIERBOTE1MCBDb3JlIE1G
+RCBEcml2ZXINCj4gPiArICoNCj4gPiArICogQ29weXJpZ2h0IChjKSAyMDE0IERpYWxvZyBTZW1p
+Y29uZHVjdG9yDQo+ID4gKyAqDQo+ID4gKyAqIEF1dGhvcjogQWRhbSBUaG9tc29uIDxBZGFtLlRo
+b21zb24uT3BlbnNvdXJjZUBkaWFzZW1pLmNvbT4NCj4gPiArICoNCj4gPiArICogVGhpcyBwcm9n
+cmFtIGlzIGZyZWUgc29mdHdhcmU7IHlvdSBjYW4gcmVkaXN0cmlidXRlICBpdCBhbmQvb3IgbW9k
+aWZ5IGl0DQo+ID4gKyAqIHVuZGVyICB0aGUgdGVybXMgb2YgIHRoZSBHTlUgR2VuZXJhbCAgUHVi
+bGljIExpY2Vuc2UgYXMgcHVibGlzaGVkIGJ5IHRoZQ0KPiA+ICsgKiBGcmVlIFNvZnR3YXJlIEZv
+dW5kYXRpb247ICBlaXRoZXIgdmVyc2lvbiAyIG9mIHRoZSAgTGljZW5zZSwgb3IgKGF0IHlvdXIN
+Cj4gPiArICogb3B0aW9uKSBhbnkgbGF0ZXIgdmVyc2lvbi4NCj4gPiArICovDQo+IA0KPiBbLi4u
+XQ0KPiANCj4gPiArdTggZGE5MTUwX3JlZ19yZWFkKHN0cnVjdCBkYTkxNTAgKmRhOTE1MCwgdTE2
+IHJlZykNCj4gPiArew0KPiA+ICsJaW50IHZhbCwgcmV0Ow0KPiA+ICsNCj4gPiArCXJldCA9IHJl
+Z21hcF9yZWFkKGRhOTE1MC0+cmVnbWFwLCByZWcsICZ2YWwpOw0KPiA+ICsJaWYgKHJldCkNCj4g
+PiArCQlkZXZfZXJyKGRhOTE1MC0+ZGV2LCAiRmFpbGVkIHRvIHJlYWQgZnJvbSByZWcgMHgleDog
+JWRcbiIsDQo+ID4gKwkJCXJlZywgcmV0KTsNCj4gPiArDQo+ID4gKwlyZXR1cm4gKHU4KSB2YWw7
+DQo+ID4gK30NCj4gPiArRVhQT1JUX1NZTUJPTF9HUEwoZGE5MTUwX3JlZ19yZWFkKTsNCj4gPiAr
+DQo+ID4gK3ZvaWQgZGE5MTUwX3JlZ193cml0ZShzdHJ1Y3QgZGE5MTUwICpkYTkxNTAsIHUxNiBy
+ZWcsIHU4IHZhbCkNCj4gPiArew0KPiA+ICsJaW50IHJldDsNCj4gPiArDQo+ID4gKwlyZXQgPSBy
+ZWdtYXBfd3JpdGUoZGE5MTUwLT5yZWdtYXAsIHJlZywgdmFsKTsNCj4gPiArCWlmIChyZXQpDQo+
+ID4gKwkJZGV2X2VycihkYTkxNTAtPmRldiwgIkZhaWxlZCB0byB3cml0ZSB0byByZWcgMHgleDog
+JWRcbiIsDQo+ID4gKwkJCXJlZywgcmV0KTsNCj4gPiArfQ0KPiA+ICtFWFBPUlRfU1lNQk9MX0dQ
+TChkYTkxNTBfcmVnX3dyaXRlKTsNCj4gPiArDQo+ID4gK3ZvaWQgZGE5MTUwX3NldF9iaXRzKHN0
+cnVjdCBkYTkxNTAgKmRhOTE1MCwgdTE2IHJlZywgdTggbWFzaywgdTggdmFsKQ0KPiA+ICt7DQo+
+ID4gKwlpbnQgcmV0Ow0KPiA+ICsNCj4gPiArCXJldCA9IHJlZ21hcF91cGRhdGVfYml0cyhkYTkx
+NTAtPnJlZ21hcCwgcmVnLCBtYXNrLCB2YWwpOw0KPiA+ICsJaWYgKHJldCkNCj4gPiArCQlkZXZf
+ZXJyKGRhOTE1MC0+ZGV2LCAiRmFpbGVkIHRvIHNldCBiaXRzIGluIHJlZyAweCV4OiAlZFxuIiwN
+Cj4gPiArCQkJcmVnLCByZXQpOw0KPiA+ICt9DQo+ID4gK0VYUE9SVF9TWU1CT0xfR1BMKGRhOTE1
+MF9zZXRfYml0cyk7DQo+ID4gKw0KPiA+ICt2b2lkIGRhOTE1MF9idWxrX3JlYWQoc3RydWN0IGRh
+OTE1MCAqZGE5MTUwLCB1MTYgcmVnLCBpbnQgY291bnQsIHU4ICpidWYpDQo+ID4gK3sNCj4gPiAr
+CWludCByZXQ7DQo+ID4gKw0KPiA+ICsJcmV0ID0gcmVnbWFwX2J1bGtfcmVhZChkYTkxNTAtPnJl
+Z21hcCwgcmVnLCBidWYsIGNvdW50KTsNCj4gPiArCWlmIChyZXQpDQo+ID4gKwkJZGV2X2Vycihk
+YTkxNTAtPmRldiwgIkZhaWxlZCB0byBidWxrIHJlYWQgZnJvbSByZWcgMHgleDogJWRcbiIsDQo+
+ID4gKwkJCXJlZywgcmV0KTsNCj4gPiArfQ0KPiA+ICtFWFBPUlRfU1lNQk9MX0dQTChkYTkxNTBf
+YnVsa19yZWFkKTsNCj4gPiArDQo+ID4gK3ZvaWQgZGE5MTUwX2J1bGtfd3JpdGUoc3RydWN0IGRh
+OTE1MCAqZGE5MTUwLCB1MTYgcmVnLCBpbnQgY291bnQsIGNvbnN0IHU4DQo+ICpidWYpDQo+ID4g
+K3sNCj4gPiArCWludCByZXQ7DQo+ID4gKw0KPiA+ICsJcmV0ID0gcmVnbWFwX3Jhd193cml0ZShk
+YTkxNTAtPnJlZ21hcCwgcmVnLCBidWYsIGNvdW50KTsNCj4gPiArCWlmIChyZXQpDQo+ID4gKwkJ
+ZGV2X2VycihkYTkxNTAtPmRldiwgIkZhaWxlZCB0byBidWxrIHdyaXRlIHRvIHJlZyAweCV4ICVk
+XG4iLA0KPiA+ICsJCQlyZWcsIHJldCk7DQo+ID4gK30NCj4gPiArRVhQT1JUX1NZTUJPTF9HUEwo
+ZGE5MTUwX2J1bGtfd3JpdGUpOw0KPiANCj4gSSd2ZSBuZXZlciBiZWVuIGEgZmFuIG9mIHRoaXMg
+dHlwZSBvZiBhZ2dyZWdhdGlvbi4gIENhbiB5b3UgZXhwbGFpbiB0bw0KPiBtZSB3aGF0IHRoZSBw
+b2ludCBvZiB0aGVtIGlzPw0KDQpJIHJlZmVyIHlvdSBiYWNrIHRvIG91ciBwcmV2aW91cyBkaXNj
+dXNzaW9uIHNvbWUgdGltZSBiYWNrOg0KDQpodHRwczovL2xrbWwub3JnL2xrbWwvMjAxNC85Lzkv
+Mjg0DQoNCidUaGUgcmVhc29uIGZvciB0aGVzZSBpcyBiZWNhdXNlIGZ1dHVyZSBwYXRjaGVzIHRv
+IGFkZCBhZGRpdGlvbmFsIGZ1bmN0aW9uYWxpdHkNCndpbGwgaW50cm9kdWNlIEkyQyBhY2Nlc3Mg
+ZnVuY3Rpb25zIHdoaWNoIGRvIG5vdCB1c2UgcmVnbWFwIGFuZCBhY2Nlc3MgdGhlDQpkZXZpY2Ug
+dmlhIGEgc2VwYXJhdGUgSTJDIGFkZHJlc3MgZm9yIHRoaXMgcHVycG9zZS4gSSB3aWxsIG5lZWQg
+dG8gcHJvdmlkZQ0KYWNjZXNzIGZ1bmN0aW9ucyBmb3IgdGhhdCwgYW5kIHNvIGhhdmluZyBhIGNv
+bW1vbiBzdHlsZSBvZiBJMkMgYWNjZXNzIG1ha2VzDQpzZW5zZSBmb3IgdGhpcyBkcml2ZXIuIE1l
+YW5zIGFueSBhY2Nlc3MganVzdCBuZWVkcyB0byBwcm92aWRlIHRoZSBNRkQgcHJpdmF0ZQ0KZGF0
+YSwgYW5kIHRoZSByZWxldmFudCBmdW5jdGlvbnMgdGFrZSBjYXJlIG9mIHRoZSByZXN0LiBJIHRo
+aW5rIHRoaXMgaXMgY2xlYW5lcg0KaW4gdGhpcyBpbnN0YW5jZS4nDQo=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
