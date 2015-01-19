@@ -1,97 +1,78 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v3 1/3] dt-bindings: mfd: add lubbock-io binding
-Date: Mon, 19 Jan 2015 08:35:33 +0000
-Message-ID: <20150119083533.GF21886@x1>
-References: <1421406010-14851-1-git-send-email-robert.jarzmik@free.fr>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1421406010-14851-1-git-send-email-robert.jarzmik@free.fr>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Robert Jarzmik <robert.jarzmik@free.fr>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH V4 0/4] mmc: core: Add support for MMC power sequences
+Date: Mon, 19 Jan 2015 10:13:00 +0100
+Message-ID: <1421658784-11980-1-git-send-email-ulf.hansson@linaro.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: linux-mmc@vger.kernel.org, Chris Ball <chris@printf.net>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Alexandre Courbot <gnurou@gmail.com>, Arend van Spriel <arend@broadcom.com>, Sascha Hauer <s.hauer@pengutronix.de>, Olof Johansson <olof@lixom.net>, Russell King <linux@arm.linux.org.uk>, Hans de Goede <hdegoede@redhat.com>, Doug Anderson <dianders@chromium.org>, NeilBrown <neilb@suse.de>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Mark Rutland <mark.rutland@arm.com>, Ulf Hansson <ulf.hansson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 16 Jan 2015, Robert Jarzmik wrote:
+Changes in v4:
+	- Fixed call to kfree() in patch3 and patch4.
 
-> Add a binding for lubbock motherboard IO board.
->=20
-> Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
-> ---
->  .../devicetree/bindings/mfd/lubbock-io.txt         | 26 ++++++++++++=
-++++++++++
->  1 file changed, 26 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/lubbock-io.=
-txt
->=20
-> diff --git a/Documentation/devicetree/bindings/mfd/lubbock-io.txt b/D=
-ocumentation/devicetree/bindings/mfd/lubbock-io.txt
-> new file mode 100644
-> index 0000000..33c9e21
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/lubbock-io.txt
-> @@ -0,0 +1,26 @@
-> +Intel's pxa255 system development platform motherboard.
+Changes in v3:
+	Fixed comments from Mark Rutland:
+	- Document binding in one patch to get the big picture.
+	- Keep code and DT document consistent around how many GPIO resets we
+	  support. I decided to go for one GPIO, we can extend that if needed
+	  later on.
+	- Change compatible string for simple MMC power sequence and renamed the
+	  file for its documentation.
+	- Updated commit messages according to above changes.
 
-s/pxa25/PXA25/
+Changes in v2:
+	Fixed comments from Russell King:
+	- Renamed pwrseq callbacks and corresponding interface functions.
+	- Move the call to the previous namned ->power_on() callback, to the
+	  end of mmc_power_up() to get consistent behavior.
 
-"system development platform motherboard" doesn't quite sit right with =
-me.
 
-How about "Intel Xscale PXA255 development platform (Lubbock)"?
+This is yet another try to solve the issues of dealing with power sequences for
+the MMC subsystem. The latest attempt, see link below, took a generic approach
+by adding a new top level driver layer. That's was rejected by several reasons.
+http://lwn.net/Articles/602855/
 
-> +This is the motherboard, or IO board, of the pxa25x development syst=
-em,
-> +supporting a lubbock pxa25x SoC board.
+This time the approach is focused to fix the issues for MMC only.
 
-Again, this sounds weird.
+To give a short background, SOCs may specify a specific MMC power sequence. To
+successfully detect an (e)MMC/SD/SDIO card, that power sequence must be followed
+while initializing the card.
 
-> +Required properties:
-> +  - compatible : One of the following chip-specific strings:
-> +        "intel,lubbock-io"
+To be able to handle these SOC specific power sequences, we add a MMC power
+sequence interface, which helps the mmc core to deal with such.
 
-An odd thing to say with only one entry.
+A MMC power sequence provider then implements a set of callbacks from the above
+mentioned interface. The provider has a corresponding DT compatibility string
+and relies on CONFIG_OF to be set to find it's various resourses, like for
+example a GPIO reset.
 
-Also, please line it up to the right of the ':' above.
+The mmc core will from mmc_of_parse() try find a "mmc-pwrseq" DT node and then
+call the corresponding MMC power sequence provider's initialization function.
 
-> +  - interrupts : The first interrupt is the line the /IRQ signal the=
- IO board
-> +                 multiplex is connected to. The only known case is G=
-PIO0 on the
-> +                 pxa25x SoC.
 
-Can you get someone to help you re-word this into a more fluid
-sentence?
+Ulf Hansson (4):
+  mmc: core: Initial support for MMC power sequences
+  mmc: pwrseq: Document DT bindings for the simple MMC power sequence
+  mmc: pwrseq: Initial support for the simple MMC power sequence
+    provider
+  mmc: pwrseq_simple: Add support for a reset GPIO pin
 
-> +Optional properties:
-> +  - interrupts : The second optional interrupt is the base of the in=
-terrupts
-> +                 multiplexed by the lubbock motherboard. If unspecif=
-ied, the
-> +                 range is fully dynamic, and the irqdomain will gene=
-rate its
-> +                 interrupt base on the fly.
-> +
-> +Example:
-> +
-> +mb: lubbock-mb@0 {
-> +	compatible =3D "intel,lubbock-io";
-> +	interrupts =3D <0 IRQ_TYPE_EDGE_FALLING 400 IRQ_TYPE_NONE>;
-> +	#interrupt-cells =3D <2>;
-> +        interrupt-parent =3D <&pxairq>;
+ .../devicetree/bindings/mmc/mmc-pwrseq-simple.txt  |  20 ++++
+ Documentation/devicetree/bindings/mmc/mmc.txt      |  14 +++
+ drivers/mmc/core/Makefile                          |   2 +-
+ drivers/mmc/core/core.c                            |   7 ++
+ drivers/mmc/core/host.c                            |   4 +-
+ drivers/mmc/core/pwrseq.c                          | 109 +++++++++++++++++++++
+ drivers/mmc/core/pwrseq.h                          |  42 ++++++++
+ drivers/mmc/core/pwrseq_simple.c                   |  86 ++++++++++++++++
+ include/linux/mmc/host.h                           |   2 +
+ 9 files changed, 284 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
+ create mode 100644 drivers/mmc/core/pwrseq.c
+ create mode 100644 drivers/mmc/core/pwrseq.h
+ create mode 100644 drivers/mmc/core/pwrseq_simple.c
 
-Whitespace error.
+-- 
+1.9.1
 
-> +};
-
-I'm guessing mb means motherboard?  I think it's unusual for a
-motherboard to have it's own driver.  Usually we provide drivers for
-the individual components/peripherals situated on the board.
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
