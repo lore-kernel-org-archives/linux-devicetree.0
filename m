@@ -1,86 +1,29 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH v6 2/3] i2c: iproc: Add Broadcom iProc I2C Driver
-Date: Mon, 19 Jan 2015 19:44:20 +0000
-Message-ID: <20150119194420.GG26493@n2100.arm.linux.org.uk>
-References: <rjui@broadcom.com>
- <1421695428-19102-1-git-send-email-rjui@broadcom.com>
- <1421695428-19102-3-git-send-email-rjui@broadcom.com>
+From: John Youn <John.Youn@synopsys.com>
+Subject: RE: [PATCH v2 2/5] usb: dwc3: add revision number DWC3_REVISION_300A
+Date: Mon, 19 Jan 2015 19:45:31 +0000
+Message-ID: <2B3535C5ECE8B5419E3ECBE3007729090174814C4D@us01wembx1.internal.synopsys.com>
+References: <1421654209-6486-1-git-send-email-Sneeker.Yeh@tw.fujitsu.com>
+ <1421654209-6486-3-git-send-email-Sneeker.Yeh@tw.fujitsu.com>
+ <20150119144642.GD20386@saruman>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1421695428-19102-3-git-send-email-rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150119144642.GD20386@saruman>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: "balbi@ti.com" <balbi@ti.com>, Sneeker Yeh <sneeker.yeh@gmail.com>, Paul Zimmerman <paul.zimmerman@synopsys.com>, John Youn <John.Youn@synopsys.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Grant Likely <grant.likely@linaro.org>, Huang Rui <ray.huang@amd.com>, Kishon Vijay Abraham I <kishon@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Andy Green <andy.green@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Sneeker Yeh <Sneeker.Yeh@tw.fujitsu.com>
 List-Id: devicetree@vger.kernel.org
 
-To see why atomic_t is pure obfuscation:
+> -----Original Message-----
+> From: Felipe Balbi [mailto:balbi@ti.com]
+> Sent: Monday, January 19, 2015 6:47 AM
+> 	
+> looking at Synopsys Solvnet for this IP, it shows that current version
+> is 2.90a. There's no 3.00a. Paul, John, is there a 3.00a version of the
+> DWC USB3 IP ?
 
-typedef struct {
-        int counter;
-} atomic_t;
+Yes there is, but it has not been released yet, thus it's not in Solvnet.
 
-So, counter is a plain int.
-
-On Mon, Jan 19, 2015 at 11:23:47AM -0800, Ray Jui wrote:
-> +static irqreturn_t bcm_iproc_i2c_isr(int irq, void *data)
-> +{
-> +	struct bcm_iproc_i2c_dev *iproc_i2c = data;
-> +	u32 status = readl(iproc_i2c->base + IS_OFFSET);
-> +
-> +	status &= ISR_MASK;
-> +
-> +	if (!status)
-> +		return IRQ_NONE;
-> +
-> +	writel(status, iproc_i2c->base + IS_OFFSET);
-> +	atomic_set(&iproc_i2c->xfer_is_done, 1);
-
-#define atomic_set(v,i) (((v)->counter) = (i))
-
-So, this is the same as doing:
-
-	iproc_i2c->xfer_is_done.counter = 1;
-
-which is merely setting the 'int' to 1.
-
-> +	time_left = wait_for_completion_timeout(&iproc_i2c->done, time_left);
-> +
-> +	/* disable all interrupts */
-> +	writel(0, iproc_i2c->base + IE_OFFSET);
-> +
-> +	if (!time_left && !atomic_read(&iproc_i2c->xfer_is_done)) {
-
-#define atomic_read(v)  ACCESS_ONCE((v)->counter)
-
-This is practically the same as:
-
-	if (!time_left && !iproc_i2c->xfer_is_done.counter) {
-
-except that this access will be guaranteed to happen just once at this
-location (see ACCESS_ONCE() in include/linux/compiler.h).
-
-However, complete()..wait_for_completion() ensures that there are
-barriers in the way: complete takes a spinlock on the waiter, so the
-write to iproc_i2c->xfer_is_done.counter will be visible by the time
-wait_for_completion() returns, and wait_for_completion() also does.
-The same spinlock is also manipulated by wait_for_completion(), which
-means there's barriers there as well, so it can't cache the value of
-"counter" across that call.
-
-So, the "volatile" access guaranteed by ACCESS_ONCE() isn't even
-needed here.
-
-(It would be needed if you were spinning in a loop, calling no other
-functions - but then you're supposed to use cpu_relax() in that
-circumstance, which has a compiler barrier in it, which ensures that
-it will re-read such a variable each time.)
-
--- 
-FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
-according to speedtest.net.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+John
