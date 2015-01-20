@@ -1,66 +1,63 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 6/7] mfd: menelaus: make vcore and regulator controls
- internal
-Date: Tue, 20 Jan 2015 14:01:43 +0000
-Message-ID: <20150120140143.GQ13701@x1>
-References: <1419702779-16001-1-git-send-email-aaro.koskinen@iki.fi>
- <1419702779-16001-7-git-send-email-aaro.koskinen@iki.fi>
- <20150120135840.GO13701@x1>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] ethernet: atheros: Add nss-gmac driver
+Date: Tue, 20 Jan 2015 15:05:17 +0100
+Message-ID: <1702448.pOVnDx4KzI@wuerfel>
+References: <1420754626-30121-1-git-send-email-wstephen@codeaurora.org> <2318041.V2OJAPu7gC@wuerfel> <3ad19b16fe5c58612479f70c052d0045.squirrel@www.codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150120135840.GO13701@x1>
-Sender: linux-omap-owner@vger.kernel.org
-To: Aaro Koskinen <aaro.koskinen@iki.fi>
-Cc: Tony Lindgren <tony@atomide.com>, Samuel Ortiz <sameo@linux.intel.com>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <3ad19b16fe5c58612479f70c052d0045.squirrel@www.codeaurora.org>
+Sender: netdev-owner@vger.kernel.org
+To: wstephen@codeaurora.org
+Cc: jcliburn@gmail.com, grant.likely@linaro.org, robh+dt@kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 20 Jan 2015, Lee Jones wrote:
+On Monday 19 January 2015 21:58:09 wstephen@codeaurora.org wrote:
+> > On Thursday 15 January 2015 08:12:51 wstephen@codeaurora.org wrote:
+> >
+> >> The nss-gmac driver is designed to work standalone or with the nss-drv
+> >> driver so the switchable data plane overlay was implemented. When it
+> >> worked standalone, the data plane is running on the ARM core as a
+> >> standard
+> >> networking driver.
+> >
+> > How do you decide which way it gets used on a particular system?
+> >
+> 
+> By default the GMAC driver uses a native (Host ARM CPU) based data plane. 
+> If the configuration loads the offload nss-drv driver, the offload driver
+> registers an overlay with the GMAC.
 
-> On Sat, 27 Dec 2014, Aaro Koskinen wrote:
->=20
-> > Make vcore and regulator control functions internal to the driver.
-> >=20
-> > Signed-off-by: Aaro Koskinen <aaro.koskinen@iki.fi>
-> > ---
-> >  drivers/mfd/menelaus.c       | 13 +++++++++++--
-> >  include/linux/mfd/menelaus.h | 12 ------------
-> >  2 files changed, 11 insertions(+), 14 deletions(-)
-> >=20
-> > diff --git a/drivers/mfd/menelaus.c b/drivers/mfd/menelaus.c
-> > index 4a900cc..8660adf 100644
-> > --- a/drivers/mfd/menelaus.c
-> > +++ b/drivers/mfd/menelaus.c
-> > @@ -163,6 +163,15 @@
-> >  #define MCT_PIN_ST_S1_CD_ST		(1 << 0)
-> >  #define MCT_PIN_ST_S2_CD_ST		(1 << 1)
-> > =20
-> > +#define EN_VPLL_SLEEP			(1 << 7)
-> > +#define EN_VMMC_SLEEP			(1 << 6)
-> > +#define EN_VAUX_SLEEP			(1 << 5)
-> > +#define EN_VIO_SLEEP			(1 << 4)
-> > +#define EN_VMEM_SLEEP			(1 << 3)
-> > +#define EN_DC3_SLEEP			(1 << 2)
-> > +#define EN_DC2_SLEEP			(1 << 1)
-> > +#define EN_VC_SLEEP			(1 << 0)
->=20
-> Better to use the BIT() macro for this kind of stuff.
->=20
-> Please take this opportunity to use it.
+Right. For review purposes, I think it would be helpful to split this
+huge patch into several steps then:
 
-In fact, nevermind.  I'll do it from here.
+- add a base driver
+- add the overlay interface
+- add the nss driver
 
-Applied, thanks.
+Ideally more of them.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> >> The nss-drv driver can take over the data plane and
+> >> offload it to the NSS cores. The STMicro stmmac driver does not have
+> >> this
+> >> kind of overlay design so is not suitable for IPQ806x. This is why we
+> >> don't based on the stmmac driver
+> >
+> > Which kind of offload is implemented specifically? 'data plane' sounds
+> > fairly generic and could mean anything, and the code isn't readable enough
+> > in its current form for me to find out.
+> 
+> The Network Subsystem (NSS core) provides a GMAC pass-through until it is
+> given a rule to offload work.  Once a rule is given, it is capable of
+> performing: bridging, IPv4 NAT/FWD, IPv6 NAT/FWD, IPSec, LAG, and other
+> protocols.
+> 
+> Hope this clarify your question!
+
+Thanks for the description, this sounds very interesting indeed. I do
+have more questions though: how do you get the rules into the NSS driver?
+Does this get handled transparently by the openvswitch driver or
+did you have to add new user interfaces for it?
+
+	Arnd
