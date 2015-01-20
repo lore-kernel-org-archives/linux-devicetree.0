@@ -1,35 +1,80 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 1/3] pinctrl: add driver for Amlogic Meson SoCs
-Date: Tue, 20 Jan 2015 10:59:08 +0100
-Message-ID: <CACRpkdZ6CX1XePa0sOY-0B9He9jYPNLqUtkk3LEGeT6eSQW9ew@mail.gmail.com>
-References: <1421518516-26976-1-git-send-email-b.galvani@gmail.com>
-	<1421518516-26976-2-git-send-email-b.galvani@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1421518516-26976-2-git-send-email-b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jerry Cao <jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Victor Wan <victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: [PATCH v5 0/5] power: Add max77693 charger driver
+Date: Tue, 20 Jan 2015 11:00:51 +0100
+Message-ID: <1421748056-25735-1-git-send-email-k.kozlowski@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-api@vger.kernel.org
+Cc: Kyungmin Park <kyungmin.park@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jan 17, 2015 at 7:15 PM, Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+Dear Sebastian,
 
-> This is a driver for the pinmux and GPIO controller available in
-> Amlogic Meson SoCs. It currently supports only Meson8, however the
-> common code should be generic enough to work also for other SoCs after
-> having defined the proper set of functions and groups.
->
-> GPIO interrupts are not supported at the moment due to lack of
-> documentation.
->
-> Signed-off-by: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Patch applied. Great work Beniamino!
+You already acked some earlier version of this patch. In that time
+there were more dependencies on MFD tree. Now the MFD patch (2/5)
+is acked by Lee Jones so could you pick up everything?
 
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+Changes since v4
+================
+1. Add patch 5/5: Update MAINTAINERS (with Sebastian's ack [2]).
+
+Changes since v3
+================
+1. Patch 3/4: Don't create platform data structure for charger settings
+   because driver won't be used on non-DT SoCs (its for Exynos based
+   Trats2).
+2. Patch 3/4: Drop Sebastian's ack [1] because of change above.
+
+Changes since v2
+================
+1. Add ack from Sebastian Reichel (charger driver).
+2. Drop patch "mfd: max77693: Map charger device to its own of_node"
+   (applied by Lee Jones).
+
+
+Changes since v1
+================
+1. Add patch 2/5: mfd: max77693: Map charger device to its own of_node
+   (forgot to send it in v1)
+2. Remove patches for DTS and configs. I'll send them later.
+3. Add ack from Lee Jones (patch 3/5).
+
+
+Description
+===========
+The patchset adds max77693 charger driver present on Trats2 board
+(and Galaxy S III). The driver configures battery charger and exposes
+power supply interface.
+
+Driver is necessary to provide full charging stack on Trats2 device
+(extcon, charger-manager etc.).
+
+[1] https://lkml.org/lkml/2014/10/27/774
+[2] https://lkml.org/lkml/2015/1/16/464
+
+
+Best regards,
+Krzysztof
+
+
+Krzysztof Kozlowski (5):
+  devicetree: power/mfd: max77693: Document new bindings for charger
+  mfd: max77693: Add defines for MAX77693 charger driver
+  power: max77693: Add charger driver for Maxim 77693
+  Documentation: power: max77693-charger: Document exported sysfs entry
+  MAINTAINERS: Add entry for Maxim chargers on Samsung boards
+
+ Documentation/ABI/testing/sysfs-class-power        |  42 ++
+ Documentation/devicetree/bindings/mfd/max77693.txt |  45 ++
+ MAINTAINERS                                        |   7 +
+ drivers/power/Kconfig                              |   6 +
+ drivers/power/Makefile                             |   1 +
+ drivers/power/max77693_charger.c                   | 758 +++++++++++++++++++++
+ include/linux/mfd/max77693-private.h               | 108 +++
+ 7 files changed, 967 insertions(+)
+ create mode 100644 drivers/power/max77693_charger.c
+
+-- 
+1.9.1
