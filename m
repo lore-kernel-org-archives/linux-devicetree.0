@@ -1,78 +1,103 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [alsa-devel] [PATCH v2 RESEND 2/2] mfd: arizona: Update DT
- binding to support OUTn_MONO init_data
-Date: Tue, 20 Jan 2015 16:57:08 +0000
-Message-ID: <20150120165708.GI30656@x1>
-References: <1420185829-24886-1-git-send-email-ideal.song@samsung.com>
- <1420185829-24886-3-git-send-email-ideal.song@samsung.com>
- <20150120122005.GA13701@x1>
- <20150120132001.GA21293@sirena.org.uk>
- <20150120160248.GK13701@x1>
- <20150120164418.GC14516@opensource.wolfsonmicro.com>
+From: Dylan Reid <dgreid@chromium.org>
+Subject: Re: [PATCH v2 03/11] ARM: tegra: Set the sound card model that
+ alsaucm expects
+Date: Tue, 20 Jan 2015 09:01:34 -0800
+Message-ID: <CAEUnVG4R6NH3EAM9qBaxzC+T26qWeiEm=iZtFQKyrQTcvfzicg@mail.gmail.com>
+References: <1421338359-27467-1-git-send-email-tomeu.vizoso@collabora.com>
+ <1421338359-27467-4-git-send-email-tomeu.vizoso@collabora.com>
+ <54B7F757.5060002@wwwdotorg.org> <CAAObsKCad9O_=TUQrF7fVbBvjDTmfJsLPgr+EasCyhvY+xhdHg@mail.gmail.com>
+ <CAAObsKBKnU_wBaxNFN-buz71qL-te4s6bqrrnxao_N-TwBVkAQ@mail.gmail.com>
+ <54BD3A75.80009@wwwdotorg.org> <CAAObsKBm5mesGqrLQnveKQMy__uEOU1vcLGptnKxqHjV-T9C0g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150120164418.GC14516@opensource.wolfsonmicro.com>
+In-Reply-To: <CAAObsKBm5mesGqrLQnveKQMy__uEOU1vcLGptnKxqHjV-T9C0g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Cc: Mark Brown <broonie@kernel.org>, Inha Song <ideal.song@samsung.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sameo@linux.intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
+To: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Simon Glass <sjg@chromium.org>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 20 Jan 2015, Charles Keepax wrote:
+On Mon, Jan 19, 2015 at 9:11 AM, Tomeu Vizoso
+<tomeu.vizoso@collabora.com> wrote:
+> On 19 January 2015 at 18:10, Stephen Warren <swarren@wwwdotorg.org> wrote:
+>> On 01/16/2015 02:01 AM, Tomeu Vizoso wrote:
+>>>
+>>> On 16 January 2015 at 09:50, Tomeu Vizoso <tomeu.vizoso@collabora.com>
+>>> wrote:
+>>>>
+>>>> On 15 January 2015 at 18:22, Stephen Warren <swarren@wwwdotorg.org>
+>>>> wrote:
+>>>>>
+>>>>> On 01/15/2015 09:12 AM, Tomeu Vizoso wrote:
+>>>>>>
+>>>>>>
+>>>>>> Patches are on its way to add a config file to alsaucm for the Nyan
+>>>>>> boards. Use the same card ID that alsaucm will expect.
+>>>>>>
+>>>>>> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+>>>>>> ---
+>>>>>>    arch/arm/boot/dts/tegra124-nyan-big.dts | 4 ++--
+>>>>>>    1 file changed, 2 insertions(+), 2 deletions(-)
+>>>>>>
+>>>>>> diff --git a/arch/arm/boot/dts/tegra124-nyan-big.dts
+>>>>>> b/arch/arm/boot/dts/tegra124-nyan-big.dts
+>>>>>> index 43e58a4..9a9cffe 100644
+>>>>>> --- a/arch/arm/boot/dts/tegra124-nyan-big.dts
+>>>>>> +++ b/arch/arm/boot/dts/tegra124-nyan-big.dts
+>>>>>> @@ -1976,9 +1976,9 @@
+>>>>>>          };
+>>>>>>
+>>>>>>          sound {
+>>>>>> -               compatible = "nvidia,tegra-audio-max98090-nyan-big",
+>>>>>> +               compatible = "nvidia,tegra-audio-max98090-nyan",
+>>>>>>                               "nvidia,tegra-audio-max98090";
+>>>>>
+>>>>>
+>>>>>
+>>>>> If all the boards that are derived from Nyan truly have identical audio
+>>>>> HW
+>>>>> (or at least any differences can be described by this binding), then it
+>>>>> seems fine to add "nvidia,tegra-audio-max98090-nyan" to the compatible
+>>>>> value.
+>>>>
+>>>>
+>>>>
+>>>>
+>>>>> However, I don't see a reason to remove the board-specific compatible
+>>>>> value
+>>>>> "nvidia,tegra-audio-max98090-nyan-big"; we should always include all the
+>>>>> values that are relevant.
+>>>>
+>>>>
+>>>> Ok.
+>>>
+>>>
+>>> Oh, actually, my intention was to move the whole sound node to the
+>>> nyan dtsi, as there isn't anything specific to the blaze regarding
+>>> sound.
+>>
+>>
+>> There are zero differences between the sound circuits of the boards? If so,
+>> that sounds fine. I suppose if we do need to apply a quirk to one board but
+>> not the other, we can always fall back on the top-level compatible value if
+>> we absolutely have to.
+>
+> Yeah, this is what Dylan said in other thread:
+>
+> "ChromeOS uses one config for both.  The only audio difference between
+> these two boards is the speakers, that isn't represented in UCM, so
+> one config file is fine."
 
-> On Tue, Jan 20, 2015 at 04:02:48PM +0000, Lee Jones wrote:
-> > On Tue, 20 Jan 2015, Mark Brown wrote:
-> >=20
-> > > On Tue, Jan 20, 2015 at 12:20:05PM +0000, Lee Jones wrote:
-> > > > On Fri, 02 Jan 2015, Inha Song wrote:
-> > >=20
-> > > > > This patch update DT binding to support OUTn_MONO init_data. =
-Each
-> > > > > output signal can be configurated as a mono differential outp=
-ut.
-> > > > > The mono differential configuration is selected using the OUT=
-n_MONO
-> > > > > registers.
-> > >=20
-> > > > This requires a DT Ack and an entry in the example.
-> > >=20
-> > > The DT maintainers have said they're OK with maintainers just mer=
-ging
-> > > things if they're comfortable with it (see the bindings specific
-> > > submitting-patches.txt) and given their workload and general resu=
-lting
-> > > responsiveness it's going to make it difficult go get anything do=
-ne.
-> >=20
-> > I only tend to poke the DT guys when I am unsure of something in th=
-e
-> > binding.  In this case it was a doubt whether we should be encoding
-> > register values inside a property like this.
-> >=20
-> > I would also be happy to take it with your Ack if you're happy with
-> > it?
->=20
-> In this case really it is a boolean indicating if the
-> corresponding output is mono or not. It is handled thusly in the
-> code:
->=20
-> 		if (arizona->pdata.out_mono[i])
-> 			val =3D ARIZONA_OUT1_MONO;
-> 		else
-> 			val =3D 0;
->=20
-> Perhaps some further wording tweaks on the Documentation patch
-> would be appropriate, but certainly I am happy enough with the
-> binding.
+Correct, they share the same headset chip and codec, they are both
+wired up the same.
 
-Very well.  As you and Mark seem happy with the approach I will be
-more lenient on the next submission.  An example and some working
-tweaks would improve chances of acceptance further still.
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+>
+> Regards,
+>
+> Tomeu
+>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> Please read the FAQ at  http://www.tux.org/lkml/
