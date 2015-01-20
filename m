@@ -1,30 +1,26 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] gpio: Add APM X-Gene standby GPIO controller driver
-Date: Tue, 20 Jan 2015 10:36:01 +0100
-Message-ID: <CACRpkdb68wwU4t7VW3zgwC9KxSfa4=a85MODowsxV9323D97bw@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v3 2/3] Documentation: gpio: Add APM X-Gene standby GPIO
+ controller DTS binding
+Date: Tue, 20 Jan 2015 10:40:04 +0100
+Message-ID: <CACRpkdZ-wqHjkJJ_3=-u7sj3fSFqbgiDLf2pGJD_k5zr9HW3eA@mail.gmail.com>
 References: <1421393661-4311-1-git-send-email-yvo@apm.com>
-	<1421393661-4311-2-git-send-email-yvo@apm.com>
+	<1421393661-4311-3-git-send-email-yvo@apm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1421393661-4311-2-git-send-email-yvo-qTEPVZfXA3Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Y Vo <yvo-qTEPVZfXA3Y@public.gmane.org>
-Cc: "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Phong Vo <pvo-qTEPVZfXA3Y@public.gmane.org>, Toan Le <toanle-qTEPVZfXA3Y@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1421393661-4311-3-git-send-email-yvo@apm.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Y Vo <yvo@apm.com>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Phong Vo <pvo@apm.com>, Toan Le <toanle@apm.com>, patches <patches@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 16, 2015 at 8:34 AM, Y Vo <yvo-qTEPVZfXA3Y@public.gmane.org> wrote:
+On Fri, Jan 16, 2015 at 8:34 AM, Y Vo <yvo@apm.com> wrote:
 
-> Driver for standby GPIO controller of APM X-Gene SoCs on arm64.
+> Documentation for APM X-Gene standby GPIO controller DTS binding.
 >
-> Signed-off-by: Y Vo <yvo-qTEPVZfXA3Y@public.gmane.org>
+> Signed-off-by: Y Vo <yvo@apm.com>
 
-Compact, beautiful, and precisely to the point.
-Patch applied, excellent work.
+Patch applied after some tweaks.
 
 Yours,
 Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
