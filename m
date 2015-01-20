@@ -1,52 +1,39 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v8 3/3] regulator: qcom-rpm: Add missing state flag in
- call to RPM
-Date: Tue, 20 Jan 2015 16:14:06 +0000
-Message-ID: <20150120161406.GB21293@sirena.org.uk>
-References: <1417038661-30209-1-git-send-email-bjorn.andersson@sonymobile.com>
- <1417038661-30209-4-git-send-email-bjorn.andersson@sonymobile.com>
- <20150120141954.GS13701@x1>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v2 02/11] ARM: tegra: Use the generated pinmux data
+Date: Tue, 20 Jan 2015 09:20:42 -0700
+Message-ID: <54BE805A.3060300@wwwdotorg.org>
+References: <1421338359-27467-1-git-send-email-tomeu.vizoso@collabora.com> <1421338359-27467-3-git-send-email-tomeu.vizoso@collabora.com> <54B7F7F7.1020202@wwwdotorg.org> <CAAObsKAaanrrSYd7gmLAS4K_G9fuU=WmsMXQk0G85hfy_XdE5Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="1LKvkjL3sHcu1TtY"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150120141954.GS13701@x1>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAAObsKAaanrrSYd7gmLAS4K_G9fuU=WmsMXQk0G85hfy_XdE5Q@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc: "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Dylan Reid <dgreid@chromium.org>, Simon Glass <sjg@chromium.org>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On 01/20/2015 06:59 AM, Tomeu Vizoso wrote:
+> On 15 January 2015 at 18:25, Stephen Warren <swarren@wwwdotorg.org> wrote:
+>> On 01/15/2015 09:12 AM, Tomeu Vizoso wrote:
+>>>
+>>> Google has submitted a board config for the pinmux programming of the
+>>> Nyan Big board. Use the whole of it as it's generated to make it easier
+>>> to update as the configuration gets fixed in the future.
+>>
+>>
+>> Submitted to where? I assume you mean tegra-pinmux-scripts. I don't see a
+>> Nyan/Nyan-big configuration there yet. IIRC (and I might not) one was
+>> posted, but there were some review comments that aren't yet addressed?
+>
+> Yeah, that's what I meant by submitted. TTBOMK the v2 doesn't have any
+> comments pending of being addressed?
 
---1LKvkjL3sHcu1TtY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+There's a thread where you and Andrew are discussing the settings for a 
+bunch of the pins, and the differences between Big and Blaze. It didn't 
+seem to me that the resolution was that the V2 patch was fine as is, but 
+perhaps that's what the thread meant!
 
-On Tue, Jan 20, 2015 at 02:19:54PM +0000, Lee Jones wrote:
-
-> Do you want a pull-request for this, or can I absorb it right into my
-> tree?
-
-Just apply it.
-
---1LKvkjL3sHcu1TtY
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJUvn7OAAoJECTWi3JdVIfQvC4H/2t+7GP8eK6yFALo/UGgHlKX
-4rcBfdPvzoGYSc/KEuqEV8xhuxgD02JvKDQExmcVLi5Katg9tQZqHVH4pKWqRSON
-tEdKmFaJjNFP7W2n/9JROjU99ZMv8gQxzUTlhnGmpklM2VvCa/Dxtxd/4xTyh44p
-+X+K3SpiXjIugL99H4yquF/fc450J6Ie87vMW+9pHm+/O1QKyY/Hd3SQIe7uz24p
-Fk7CqTJ6VI2LU4LUkzGUIMAp0D8lA9MGbQ4rGpu/Du/67YinzpoDj+EC/aOo3AIt
-5KpoNjbBX52XxP7wXfLHVV3DbWX063bte9OqKFb02+zkjNQd37Ms3U76siRlZ1Y=
-=l0x+
------END PGP SIGNATURE-----
-
---1LKvkjL3sHcu1TtY--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Either way, it'd be nice if Andrew or someone else from ChromeOS could 
+give an acked-by/reviewed-by for the patch if it's OK as is. That way, 
+I'll know it's good without any doubts.
