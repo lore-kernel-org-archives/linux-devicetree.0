@@ -1,149 +1,135 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH 3/4] mmc: sdhci-st: Update ST SDHCI binding documentation.
-Date: Tue, 20 Jan 2015 15:32:43 +0000
-Message-ID: <1421767964-8798-4-git-send-email-peter.griffin@linaro.org>
-References: <1421767964-8798-1-git-send-email-peter.griffin@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1421767964-8798-1-git-send-email-peter.griffin@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, mturquette@linaro.org, sboyd@codeaurora.org, chris@printf.net, ulf.hansson@linaro.org
-Cc: peter.griffin@linaro.org, lee.jones@linaro.org, peppe.cavallaro@st.com, olivier.bideau@st.com, gabriel.fernandez@st.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH/RFC v10 09/19] DT: Add documentation for the mfd Maxim
+ max77693
+Date: Tue, 20 Jan 2015 15:38:15 +0000
+Message-ID: <20150120153815.GB13701@x1>
+References: <1420816989-1808-1-git-send-email-j.anaszewski@samsung.com>
+ <1420816989-1808-10-git-send-email-j.anaszewski@samsung.com>
+ <20150120112107.GG13701@x1>
+ <54BE67EA.2070507@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <54BE67EA.2070507-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org, sakari.ailus-X3B1VOXEql0@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch updates the binding information to reflect the
-extra dt options which are now supported by the sdhci-st.c
-driver which enable support for stih407 family silicon.
+On Tue, 20 Jan 2015, Jacek Anaszewski wrote:
 
-Stih410 SoC and later support UHS modes for eMMC, so the
-driver now makes use of these common bindings. Examples
-are provided for both eMMC (which has additional bindings)
-and also sd slot for stih407.
+> On 01/20/2015 12:21 PM, Lee Jones wrote:
+> >On Fri, 09 Jan 2015, Jacek Anaszewski wrote:
+> >
+> >>This patch adds device tree binding documentation for
+> >>the flash cell of the Maxim max77693 multifunctional device.
+> >>
+> >>Signed-off-by: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> >>Signed-off-by: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> >>Acked-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> >>Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >>Cc: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> >>Cc: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >>Cc: Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>
+> >>Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> >>Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+> >>Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> >>Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+> >>Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> >>---
+> >>  Documentation/devicetree/bindings/mfd/max77693.txt |   69 +++++++=
++++++++++++++
+> >>  1 file changed, 69 insertions(+)
+> >>
+> >>diff --git a/Documentation/devicetree/bindings/mfd/max77693.txt b/D=
+ocumentation/devicetree/bindings/mfd/max77693.txt
+> >>index 01e9f30..ef184f0 100644
+> >>--- a/Documentation/devicetree/bindings/mfd/max77693.txt
+> >>+++ b/Documentation/devicetree/bindings/mfd/max77693.txt
+> >>@@ -41,7 +41,52 @@ Optional properties:
+> >>  	 To get more informations, please refer to documentaion.
+> >>  	[*] refer Documentation/devicetree/bindings/pwm/pwm.txt
+> >>
+> >>+- led : the LED submodule device node
+> >>+
+> >>+There are two led outputs available - fled1 and fled2. Each of the=
+m can
+> >>+control a separate led or they can be connected together to double
+> >>+the maximum current for a single connected led. One led is represe=
+nted
+> >>+by one child node.
+> >>+
+> >>+Required properties:
+> >>+- compatible : Must be "maxim,max77693-led".
+> >>+
+> >>+Optional properties:
+> >>+- maxim,trigger-type : Flash trigger type.
+> >>+	Possible trigger types:
+> >>+		MAX77693_LED_TRIG_TYPE_EDGE - Rising edge of the signal triggers
+> >>+			the flash,
+> >>+		MAX77693_LED_TRIG_TYPE_LEVEL - Strobe pulse length controls
+> >>+			duration of the flash.
+> >
+> >I think you should represent the proper values here instead of the
+> >defines.
+>=20
+> I see both versions in the existing bindings and also a combination o=
+f
+> them, e.g.: MAX77693_LED_TRIG_TYPE_EDGE (0). I think that it is
+> reasonable to mention the macros, especially if they are to appear
+> in the DT binding example at the end of the documentation file.
+>=20
+> >>+- maxim,boost-mode :
+> >>+	In boost mode the device can produce up to 1.2A of total current
+> >>+	on both outputs. The maximum current on each output is reduced
+> >>+	to 625mA then. If not enabled explicitly, boost setting defaults =
+to
+> >>+	MAX77693_LED_BOOST_FIXED in case both current sources are used.
+> >>+	Possible values:
+> >>+		MAX77693_LED_BOOST_OFF - no boost,
+> >>+		MAX77693_LED_BOOST_ADAPTIVE - adaptive mode,
+> >>+		MAX77693_LED_BOOST_FIXED - fixed mode.
+> >
+> >Same here.
+>=20
+> MAX77693_LED_BOOST_OFF (0) - no boost,
+> MAX77693_LED_BOOST_ADAPTIVE (1) - adaptive mode,
+> MAX77693_LED_BOOST_FIXED (2) - fixed mode.
 
-Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
----
- Documentation/devicetree/bindings/mmc/sdhci-st.txt | 100 ++++++++++++++++++---
- 1 file changed, 90 insertions(+), 10 deletions(-)
+This is fine too.
 
-diff --git a/Documentation/devicetree/bindings/mmc/sdhci-st.txt b/Documentation/devicetree/bindings/mmc/sdhci-st.txt
-index 7527db4..18d950d 100644
---- a/Documentation/devicetree/bindings/mmc/sdhci-st.txt
-+++ b/Documentation/devicetree/bindings/mmc/sdhci-st.txt
-@@ -5,20 +5,62 @@ Documentation/devicetree/bindings/mmc/mmc.txt and the properties
- used by the sdhci-st driver.
- 
- Required properties:
--- compatible :  Must be "st,sdhci"
--- clock-names : Should be "mmc"
--                See: Documentation/devicetree/bindings/resource-names.txt
--- clocks :      Phandle of the clock used by the sdhci controler
--                See: Documentation/devicetree/bindings/clock/clock-bindings.txt
-+- compatible:		Must be "st,sdhci" and it can be compatible to "st,sdhci-stih407"
-+			to set the internal glue logic used for configuring the MMC
-+			subsystem (mmcss) inside the FlashSS (available in STiH407 SoC
-+			family).
-+
-+- clock-names:		Should be "mmc".
-+			See: Documentation/devicetree/bindings/resource-names.txt
-+- clocks:		Phandle to the clock.
-+			See: Documentation/devicetree/bindings/clock/clock-bindings.txt
-+
-+- interrupts:		One mmc interrupt should be described here.
-+- interrupt-names:	Should be "mmcirq".
-+
-+- pinctrl-names:	A pinctrl state names "default" must be defined.
-+- pinctrl-0:		Phandle referencing pin configuration of the sd/emmc controller.
-+			See: Documentation/devicetree/bindings/pinctrl/pinctrl-binding.txt
-+
-+- reg:			This must provide the host controller base address and it can also
-+			contain the FlashSS Top register for TX/RX delay used by the driver
-+			to configure DLL inside the flashSS, if so reg-names must also be
-+			specified.
- 
- Optional properties:
--- non-removable: non-removable slot
--                 See: Documentation/devicetree/bindings/mmc/mmc.txt
--- bus-width: Number of data lines
--                 See: Documentation/devicetree/bindings/mmc/mmc.txt
-+- reg-names:		Should be "mmc" and "top-mmc-delay". "top-mmc-delay" is optional
-+			for eMMC on stih407 family silicon to configure DLL inside FlashSS.
-+
-+- non-removable:	Non-removable slot. Also used for configuring mmcss in STiH407 SoC
-+			family.
-+			See:  Documentation/devicetree/bindings/mmc/mmc.txt.
-+
-+- bus-width:		Number of data lines.
-+			See:  Documentation/devicetree/bindings/mmc/mmc.txt.
-+
-+- max-frequency: 	Can be 200MHz, 100Mz or 50MHz (default) and used for
-+			configuring the CCONFIG3 in the mmcss.
-+			See:  Documentation/devicetree/bindings/mmc/mmc.txt.
-+
-+- resets:		Phandle and reset specifier pair to softreset line of HC IP.
-+			See: Documentation/devicetree/bindings/reset/reset.txt
-+
-+- vqmmc-supply:		Phandle to the regulator dt node, mentioned as the vcc/vdd
-+			supply in eMMC/SD specs.
-+
-+- sd-uhs--sdr50:	To enable the SDR50 in the mmcss.
-+			See:  Documentation/devicetree/bindings/mmc/mmc.txt.
-+
-+- sd-uhs-sdr104:	To enable the SDR104 in the mmcss.
-+			See:  Documentation/devicetree/bindings/mmc/mmc.txt.
-+
-+- sd-uhs-ddr50:		To enable the DDR50 in the mmcss.
-+			See:  Documentation/devicetree/bindings/mmc/mmc.txt.
- 
- Example:
- 
-+/* Example stih416e eMMC configuration */
-+
- mmc0: sdhci@fe81e000 {
- 	compatible	= "st,sdhci";
- 	status		= "disabled";
-@@ -29,5 +71,43 @@ mmc0: sdhci@fe81e000 {
- 	pinctrl-0	= <&pinctrl_mmc0>;
- 	clock-names	= "mmc";
- 	clocks		= <&clk_s_a1_ls 1>;
--	bus-width       = <8>
-+	bus-width	= <8>
-+
-+/* Example SD stih407 family configuration */
-+
-+mmc1: sdhci@09080000 {
-+	compatible	= "st,sdhci-stih407", "st,sdhci";
-+	status		= "disabled";
-+	reg		= <0x09080000 0x7ff>;
-+	reg-names	= "mmc";
-+	interrupts	= <GIC_SPI 90 IRQ_TYPE_NONE>;
-+	interrupt-names	= "mmcirq";
-+	pinctrl-names	= "default";
-+	pinctrl-0	= <&pinctrl_sd1>;
-+	clock-names	= "mmc";
-+	clocks		= <&clk_s_c0_flexgen CLK_MMC_1>;
-+	resets		= <&softreset STIH407_MMC1_SOFTRESET>;
-+	bus-width	= <4>;
-+};
-+
-+/* Example eMMC stih407 family configuration */
-+
-+mmc0: sdhci@09060000 {
-+	compatible	= "st,sdhci-stih407", "st,sdhci";
-+	status		= "disabled";
-+	reg		= <0x09060000 0x7ff>, <0x9061008 0x20>;
-+	reg-names	= "mmc", "top-mmc-delay";
-+	interrupts	= <GIC_SPI 92 IRQ_TYPE_NONE>;
-+	interrupt-names	= "mmcirq";
-+	pinctrl-names	= "default";
-+	pinctrl-0	= <&pinctrl_mmc0>;
-+	clock-names	= "mmc";
-+	clocks		= <&clk_s_c0_flexgen CLK_MMC_0>;
-+	vqmmc-supply	= <&vmmc_reg>;
-+	max-frequency	= <200000000>;
-+	bus-width	= <8>;
-+	non-removable;
-+	sd-uhs-sdr50;
-+	sd-uhs-sdr104;
-+	sd-uhs-ddr50;
- };
--- 
-1.9.1
+> >>+- maxim,boost-vout : Output voltage of the boost module in millivo=
+lts.
+> >
+> >-mvout?
+> >-microvout?
+>=20
+> maxim,boost-mvout ?
+
+Right.
+
+> >>+- maxim,vsys-min : Low input voltage level in millivolts. Flash is=
+ not fired
+> >>+	if chip estimates that system voltage could drop below this level=
+ due
+> >>+	to flash power consumption.
+> >
+> >mvsys?
+> >microvsys?
+>=20
+> maxim,mvsys-min ?
+
+Looks okay to me.
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
