@@ -1,164 +1,369 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [RFC] OPP: Redefine bindings to overcome shortcomings
-Date: Tue, 20 Jan 2015 12:51:01 +0530
-Message-ID: <CAKohpokvkbyWnetSN793am+s4QjxiKwPO2P0QMPWk7Js-btTLg@mail.gmail.com>
-References: <52c403454c3b8fc201abe7ac74cf657638479311.1417691389.git.viresh.kumar@linaro.org>
-	<CAKohpokUXvhqt+z4EPC9k=O8ZnQOqNSGGi8w6w4shYtbvv8mTw@mail.gmail.com>
-	<CAL_JsqJabcXe7-juTnJDcVdzpnFokYmt-N=bjZt5a+32Fzr_vg@mail.gmail.com>
-	<CAKohpo=HkixETTSsrRPHhUtWPVgn_7w0E2jYTokAYQRT5awk8Q@mail.gmail.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: imx6sx-sdb: change default board as reva board
+Date: Tue, 20 Jan 2015 15:35:29 +0800
+Message-ID: <20150120073527.GT2766@dragon>
+References: <1421220998-3491-1-git-send-email-peter.chen@freescale.com>
+ <1421220998-3491-2-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAKohpo=HkixETTSsrRPHhUtWPVgn_7w0E2jYTokAYQRT5awk8Q@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Rafael Wysocki <rjw@rjwysocki.net>, Arnd Bergmann <arnd.bergmann@linaro.org>, Rob Herring <rob.herring@linaro.org>, Grant Likely <grant.likely@linaro.org>, "olof@lixom.net" <olof@lixom.net>, Nishanth Menon <nm@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Lists linaro-kernel <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, santosh shilimkar <santosh.shilimkar@oracle.com>, Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mike.turquette@linaro.org>, Sudeep Holla <Sudeep.Holla@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1421220998-3491-2-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 31 December 2014 at 10:17, Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> On 29 December 2014 at 22:35, Rob Herring <robherring2@gmail.com> wrote:
->>> +  - frequency-kHz: Frequency in kHz
->>
->> s/kHz/khz/
->>
->>> +  - voltage-uV: voltage in micro Volts
->>
->> -microvolt is more consistent with regulator binding.
->>
->> The names are a bit redundant. perhaps opp-khz and opp-microvolt instead.
->
-> All accepted.
->
->>> +Example 1: Simple case of dual-core cortex A9-single cluster, sharing
->>> clock line.
->>> +
->>> +/ {
->>> +       cpus {
->>> +               #address-cells = <1>;
->>> +               #size-cells = <0>;
->>> +
->>> +               cpu@0 {
->>> +                       compatible = "arm,cortex-a9";
->>> +                       reg = <0>;
->>> +                       next-level-cache = <&L2>;
->>> +                       operating-points-v2 = <&opp0>;
->>> +
->>> +                       opp0: opp0 {
->>
->> I don't really like having this under cpu0 when it applies to all
->> cpus. I would move it out of /cpus.
->
-> That's how I had it initially, but then Arnd didn't like it much.
->
->>> +                               compatible = "linux,cpu-dvfs";
->>
->> This should not be linux specific. Probably not cpu specific either.
->
-> This was just an example of one of the bindings and there will be others
-> as well.
->
-> 'linux' here doesn't mean linux specific, but just that its first used by
-> Linux. That's what my understanding is atleast.
->
->>> +                               clocks = <&clk-controller 0>;
->>> +                               clock-names = "cpu";
->>
->> clocks are an input to the cpu, not really an opp. You could have a an
->> OPP which uses a different parent clock, but that is most likely a
->> switch within the clock controller rather than 2 clock inputs to the
->> cpu.
->>
->> I think the clock binding for cpus should stand on its own independent of OPPs.
->>
->>> +                               opp-supply = <&cpu-supply0>;
->>
->> Same comment as clocks applies here.
->
-> Both will be kept in the cpu node where they were initially.
->
->>> +                               voltage-tolerance = <2>; /* percentage */
->>> +                               clock-latency = <300000>;
->>
->> These could be per entry. I'm not sure it is worth the savings to not
->> just always specify them per entry.
->
-> Done.
->
->> We should append units (-us) to clock-latency unless there is a good
->> reason to maintain compatibility.
->
-> So you meant something like this:
->
-> clock-latency-us = <300000>;
->
-> right?
->
->>> +                               opp-list = <&opplist0>;
->>
->> With the above changes, having this list is unnecessary.
->
-> It might be for the use case I mentioned earlier about something
-> like Krait.
->
->> So, what I envision is like this:
->>
->> /cpus {
->>   cpu@0 {
->>     clocks = <...>;
->>     cpu-supply = <...>;
->>     operating-point-v2 = <&cpu0-opp>;
->>    };
->>   cpu@1 {
->>     clocks = <...>;
->>     cpu-supply = <...>;
->>     operating-point-v2 = <&cpu1-opp>;
->>    };
->> };
->
-> Looks fine..
->
->> cpu0-opp : opp0 {
->>   compatible = "operating-point-table";
->>   entry0 {
->>     opp-khz = <500000>;
->>     opp-microvolt = <900000>;
->>   };
->>   entry1 {
->>     opp-khz = <1000000>;
->>     opp-microvolt = <1000000>;
->>     turbo-mode;
->>   };
->> };
->> cpu1-opp : opp1 {
->>   compatible = "operating-point-table";
->> ...
->> };
->
-> What about something like Krait which wants to use exactly same
-> bindings for all CPUs but want to specify they are controlled separately.
->
-> So I had it like:
->
-> cpu0-opp : opp0 {
->   compatible = "operating-point-table";
->   opp-list = <&opplist0>;
->
->   opplist0: opp-list0 {
->           entry0 {
->             opp-khz = <500000>;
->             opp-microvolt = <900000>;
->           };
->           entry1 {
->             opp-khz = <1000000>;
->             opp-microvolt = <1000000>;
->             turbo-mode;
->           };
->   };
-> };
->
-> cpu1-opp : opp1 {
->   compatible = "operating-point-table";
->   opp-list = <&opplist0>;
-> };
+On Wed, Jan 14, 2015 at 03:36:37PM +0800, Peter Chen wrote:
+> The imx6sx sdb board has two revisions, the current mainline one
+> is reva which is mainly for internal use. In this commit, we
+> rename imx6sx-sdb.dts to imx6sx-sdb.dtsi, and move the reva dedicated
+> contents to imx6sx-sdb-reva.dts.
+> 
+> Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/imx6sx-sdb-reva.dts              | 158 +++++++++++++++++++++
+>  .../boot/dts/{imx6sx-sdb.dts => imx6sx-sdb.dtsi}   | 131 -----------------
 
-Gentle reminder, so that we can close this long standing issue soon..
+arch/arm/boot/dts/Makefile needs an update.
+
+>  2 files changed, 158 insertions(+), 131 deletions(-)
+>  create mode 100644 arch/arm/boot/dts/imx6sx-sdb-reva.dts
+>  rename arch/arm/boot/dts/{imx6sx-sdb.dts => imx6sx-sdb.dtsi} (83%)
+> 
+> diff --git a/arch/arm/boot/dts/imx6sx-sdb-reva.dts b/arch/arm/boot/dts/imx6sx-sdb-reva.dts
+> new file mode 100644
+> index 0000000..e7a8c34
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx6sx-sdb-reva.dts
+> @@ -0,0 +1,158 @@
+> +/*
+> + * Copyright (C) 2014-2015 Freescale Semiconductor, Inc.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include "imx6sx-sdb.dtsi"
+> +
+> +/ {
+> +	model = "Freescale i.MX6 SoloX SDB RevA Board";
+> +};
+> +
+> +&cpu0 {
+> +	operating-points = <
+> +		/* kHz    uV */
+> +		996000  1250000
+> +		792000  1175000
+> +		396000  1075000
+> +	>;
+> +	fsl,soc-operating-points = <
+> +		/* ARM kHz  SOC uV */
+> +		996000      1175000
+> +		792000      1175000
+> +		396000      1175000
+> +	>;
+
+I'm wondering why different revision of the board require a different
+OPP settings.
+
+Shawn
+
+> +};
+> +
+> +&i2c1 {
+> +	clock-frequency = <100000>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_i2c1>;
+> +	status = "okay";
+> +
+> +	pmic: pfuze100@08 {
+> +		compatible = "fsl,pfuze100";
+> +		reg = <0x08>;
+> +
+> +		regulators {
+> +			sw1a_reg: sw1ab {
+> +				regulator-min-microvolt = <300000>;
+> +				regulator-max-microvolt = <1875000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +				regulator-ramp-delay = <6250>;
+> +			};
+> +
+> +			sw1c_reg: sw1c {
+> +				regulator-min-microvolt = <300000>;
+> +				regulator-max-microvolt = <1875000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +				regulator-ramp-delay = <6250>;
+> +			};
+> +
+> +			sw2_reg: sw2 {
+> +				regulator-min-microvolt = <800000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			sw3a_reg: sw3a {
+> +				regulator-min-microvolt = <400000>;
+> +				regulator-max-microvolt = <1975000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			sw3b_reg: sw3b {
+> +				regulator-min-microvolt = <400000>;
+> +				regulator-max-microvolt = <1975000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			sw4_reg: sw4 {
+> +				regulator-min-microvolt = <800000>;
+> +				regulator-max-microvolt = <3300000>;
+> +			};
+> +
+> +			swbst_reg: swbst {
+> +				regulator-min-microvolt = <5000000>;
+> +				regulator-max-microvolt = <5150000>;
+> +			};
+> +
+> +			snvs_reg: vsnvs {
+> +				regulator-min-microvolt = <1000000>;
+> +				regulator-max-microvolt = <3000000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			vref_reg: vrefddr {
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			vgen1_reg: vgen1 {
+> +				regulator-min-microvolt = <800000>;
+> +				regulator-max-microvolt = <1550000>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			vgen2_reg: vgen2 {
+> +				regulator-min-microvolt = <800000>;
+> +				regulator-max-microvolt = <1550000>;
+> +			};
+> +
+> +			vgen3_reg: vgen3 {
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			vgen4_reg: vgen4 {
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			vgen5_reg: vgen5 {
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			vgen6_reg: vgen6 {
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-always-on;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&qspi2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_qspi2>;
+> +	status = "okay";
+> +
+> +	flash0: s25fl128s@0 {
+> +		reg = <0>;
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		compatible = "spansion,s25fl128s";
+> +		spi-max-frequency = <66000000>;
+> +	};
+> +
+> +	flash1: s25fl128s@1 {
+> +		reg = <1>;
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		compatible = "spansion,s25fl128s";
+> +		spi-max-frequency = <66000000>;
+> +	};
+> +};
+> diff --git a/arch/arm/boot/dts/imx6sx-sdb.dts b/arch/arm/boot/dts/imx6sx-sdb.dtsi
+> similarity index 83%
+> rename from arch/arm/boot/dts/imx6sx-sdb.dts
+> rename to arch/arm/boot/dts/imx6sx-sdb.dtsi
+> index cdffe84..7b02aa7 100644
+> --- a/arch/arm/boot/dts/imx6sx-sdb.dts
+> +++ b/arch/arm/boot/dts/imx6sx-sdb.dtsi
+> @@ -13,7 +13,6 @@
+>  #include "imx6sx.dtsi"
+>  
+>  / {
+> -	model = "Freescale i.MX6 SoloX SDB Board";
+>  	compatible = "fsl,imx6sx-sdb", "fsl,imx6sx";
+>  
+>  	chosen {
+> @@ -169,114 +168,6 @@
+>  	status = "okay";
+>  };
+>  
+> -&i2c1 {
+> -        clock-frequency = <100000>;
+> -        pinctrl-names = "default";
+> -        pinctrl-0 = <&pinctrl_i2c1>;
+> -        status = "okay";
+> -
+> -	pmic: pfuze100@08 {
+> -		compatible = "fsl,pfuze100";
+> -		reg = <0x08>;
+> -
+> -		regulators {
+> -			sw1a_reg: sw1ab {
+> -				regulator-min-microvolt = <300000>;
+> -				regulator-max-microvolt = <1875000>;
+> -				regulator-boot-on;
+> -				regulator-always-on;
+> -				regulator-ramp-delay = <6250>;
+> -			};
+> -
+> -			sw1c_reg: sw1c {
+> -				regulator-min-microvolt = <300000>;
+> -				regulator-max-microvolt = <1875000>;
+> -				regulator-boot-on;
+> -				regulator-always-on;
+> -				regulator-ramp-delay = <6250>;
+> -			};
+> -
+> -			sw2_reg: sw2 {
+> -				regulator-min-microvolt = <800000>;
+> -				regulator-max-microvolt = <3300000>;
+> -				regulator-boot-on;
+> -				regulator-always-on;
+> -			};
+> -
+> -			sw3a_reg: sw3a {
+> -				regulator-min-microvolt = <400000>;
+> -				regulator-max-microvolt = <1975000>;
+> -				regulator-boot-on;
+> -				regulator-always-on;
+> -			};
+> -
+> -			sw3b_reg: sw3b {
+> -				regulator-min-microvolt = <400000>;
+> -				regulator-max-microvolt = <1975000>;
+> -				regulator-boot-on;
+> -				regulator-always-on;
+> -			};
+> -
+> -			sw4_reg: sw4 {
+> -				regulator-min-microvolt = <800000>;
+> -				regulator-max-microvolt = <3300000>;
+> -			};
+> -
+> -			swbst_reg: swbst {
+> -				regulator-min-microvolt = <5000000>;
+> -				regulator-max-microvolt = <5150000>;
+> -			};
+> -
+> -			snvs_reg: vsnvs {
+> -				regulator-min-microvolt = <1000000>;
+> -				regulator-max-microvolt = <3000000>;
+> -				regulator-boot-on;
+> -				regulator-always-on;
+> -			};
+> -
+> -			vref_reg: vrefddr {
+> -				regulator-boot-on;
+> -				regulator-always-on;
+> -			};
+> -
+> -			vgen1_reg: vgen1 {
+> -				regulator-min-microvolt = <800000>;
+> -				regulator-max-microvolt = <1550000>;
+> -				regulator-always-on;
+> -			};
+> -
+> -			vgen2_reg: vgen2 {
+> -				regulator-min-microvolt = <800000>;
+> -				regulator-max-microvolt = <1550000>;
+> -			};
+> -
+> -			vgen3_reg: vgen3 {
+> -				regulator-min-microvolt = <1800000>;
+> -				regulator-max-microvolt = <3300000>;
+> -				regulator-always-on;
+> -			};
+> -
+> -			vgen4_reg: vgen4 {
+> -				regulator-min-microvolt = <1800000>;
+> -				regulator-max-microvolt = <3300000>;
+> -				regulator-always-on;
+> -			};
+> -
+> -			vgen5_reg: vgen5 {
+> -				regulator-min-microvolt = <1800000>;
+> -				regulator-max-microvolt = <3300000>;
+> -				regulator-always-on;
+> -			};
+> -
+> -			vgen6_reg: vgen6 {
+> -				regulator-min-microvolt = <1800000>;
+> -				regulator-max-microvolt = <3300000>;
+> -				regulator-always-on;
+> -			};
+> -		};
+> -	};
+> -};
+> -
+>  &i2c4 {
+>          clock-frequency = <100000>;
+>          pinctrl-names = "default";
+> @@ -340,28 +231,6 @@
+>  	status = "okay";
+>  };
+>  
+> -&qspi2 {
+> -	pinctrl-names = "default";
+> -	pinctrl-0 = <&pinctrl_qspi2>;
+> -	status = "okay";
+> -
+> -	flash0: s25fl128s@0 {
+> -		reg = <0>;
+> -		#address-cells = <1>;
+> -		#size-cells = <1>;
+> -		compatible = "spansion,s25fl128s";
+> -		spi-max-frequency = <66000000>;
+> -	};
+> -
+> -	flash1: s25fl128s@1 {
+> -		reg = <1>;
+> -		#address-cells = <1>;
+> -		#size-cells = <1>;
+> -		compatible = "spansion,s25fl128s";
+> -		spi-max-frequency = <66000000>;
+> -	};
+> -};
+> -
+>  &ssi2 {
+>  	status = "okay";
+>  };
+> -- 
+> 1.9.1
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
