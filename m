@@ -1,68 +1,61 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: [PATCH v3 0/8] qcom audio clock control drivers
-Date: Mon, 19 Jan 2015 18:05:27 -0800
-Message-ID: <1421719535-28398-1-git-send-email-sboyd@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Kenneth Westfield <kwestfie@codeaurora.org>, Josh Cartwright <joshc@codeaurora.org>, Rajendra Nayak <rnayak@codeaurora.org>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH v3 8/8] devicetree: bindings: Document qcom,lcc
+Date: Mon, 19 Jan 2015 18:05:35 -0800
+Message-ID: <1421719535-28398-9-git-send-email-sboyd@codeaurora.org>
+References: <1421719535-28398-1-git-send-email-sboyd@codeaurora.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1421719535-28398-1-git-send-email-sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patchset adds support for the low power audio subsystem (LPASS)
-clock controller hardware. I split out the #define patch for IPQ so that
-it can go through the clock tree and the arm-soc tree in parallel
-if desired.
+From: Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 
-Changes since v2:
- * Rebased onto v3.19-rc2
- * One fix to a clock parent name
+Document the LPASS (low power audio subsystem) clock controller
+found on Qualcomm devices.
 
-Change since v1:
- * Renamed clk-cdiv to clk-regmap-divider
- * Added msm8960/apq8064 support
- * Split out dividers and branches to check for halt bits
-
-Josh Cartwright (1):
-  clk: qcom: Add support for regmap divider clocks
-
-Rajendra Nayak (3):
-  dt-bindings: Add #defines for IPQ806x lpass clock control
-  clk: qcom: Add IPQ806X LPASS clock controller (LCC) driver
-  devicetree: bindings: Document qcom,lcc
-
-Stephen Boyd (4):
-  clk: Add __clk_mux_determine_rate_closest
-  clk: divider: Make generic for usage elsewhere
-  clk: qcom: Add simple regmap based muxes
-  clk: qcom: Add MSM8960/APQ8064 LPASS clock controller (LCC) driver
-
- .../devicetree/bindings/clock/qcom,lcc.txt         |  21 +
- drivers/clk/clk-divider.c                          | 212 +++++---
- drivers/clk/clk.c                                  |  47 +-
- drivers/clk/qcom/Kconfig                           |  18 +
- drivers/clk/qcom/Makefile                          |   4 +
- drivers/clk/qcom/clk-regmap-divider.c              |  70 +++
- drivers/clk/qcom/clk-regmap-divider.h              |  29 +
- drivers/clk/qcom/clk-regmap-mux.c                  |  59 +++
- drivers/clk/qcom/clk-regmap-mux.h                  |  29 +
- drivers/clk/qcom/gcc-ipq806x.c                     |  12 +
- drivers/clk/qcom/lcc-ipq806x.c                     | 473 +++++++++++++++++
- drivers/clk/qcom/lcc-msm8960.c                     | 585 +++++++++++++++++++++
- include/dt-bindings/clock/qcom,gcc-ipq806x.h       |   1 -
- include/dt-bindings/clock/qcom,lcc-ipq806x.h       |  30 ++
- include/dt-bindings/clock/qcom,lcc-msm8960.h       |  50 ++
- include/linux/clk-provider.h                       |  19 +-
- 16 files changed, 1564 insertions(+), 95 deletions(-)
+Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Signed-off-by: Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Signed-off-by: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Signed-off-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+---
+ .../devicetree/bindings/clock/qcom,lcc.txt          | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/clock/qcom,lcc.txt
- create mode 100644 drivers/clk/qcom/clk-regmap-divider.c
- create mode 100644 drivers/clk/qcom/clk-regmap-divider.h
- create mode 100644 drivers/clk/qcom/clk-regmap-mux.c
- create mode 100644 drivers/clk/qcom/clk-regmap-mux.h
- create mode 100644 drivers/clk/qcom/lcc-ipq806x.c
- create mode 100644 drivers/clk/qcom/lcc-msm8960.c
- create mode 100644 include/dt-bindings/clock/qcom,lcc-ipq806x.h
- create mode 100644 include/dt-bindings/clock/qcom,lcc-msm8960.h
 
+diff --git a/Documentation/devicetree/bindings/clock/qcom,lcc.txt b/Documentation/devicetree/bindings/clock/qcom,lcc.txt
+new file mode 100644
+index 000000000000..dd755be63a01
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/qcom,lcc.txt
+@@ -0,0 +1,21 @@
++Qualcomm LPASS Clock & Reset Controller Binding
++------------------------------------------------
++
++Required properties :
++- compatible : shall contain only one of the following:
++
++			"qcom,lcc-msm8960"
++			"qcom,lcc-apq8064"
++			"qcom,lcc-ipq8064"
++
++- reg : shall contain base register location and length
++- #clock-cells : shall contain 1
++- #reset-cells : shall contain 1
++
++Example:
++	clock-controller@28000000 {
++		compatible = "qcom,lcc-ipq8064";
++		reg = <0x28000000 0x1000>;
++		#clock-cells = <1>;
++		#reset-cells = <1>;
++	};
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
