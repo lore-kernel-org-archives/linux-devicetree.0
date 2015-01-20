@@ -1,62 +1,56 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH] mfd: omap-usb-host: Remove some unused functions
-Date: Tue, 20 Jan 2015 13:43:04 +0000
-Message-ID: <20150120134304.GJ13701@x1>
-References: <1420330281-5228-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
+Subject: Re: [PATCH 1/7] mfd: menelaus: delete omap_has_menelaus
+Date: Tue, 20 Jan 2015 13:50:39 +0000
+Message-ID: <20150120135039.GL13701@x1>
+References: <1419702779-16001-1-git-send-email-aaro.koskinen@iki.fi>
+ <1419702779-16001-2-git-send-email-aaro.koskinen@iki.fi>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1420330281-5228-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <1419702779-16001-2-git-send-email-aaro.koskinen@iki.fi>
+Sender: linux-omap-owner@vger.kernel.org
+To: Aaro Koskinen <aaro.koskinen@iki.fi>
+Cc: Tony Lindgren <tony@atomide.com>, Samuel Ortiz <sameo@linux.intel.com>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 04 Jan 2015, Rickard Strandqvist wrote:
+On Sat, 27 Dec 2014, Aaro Koskinen wrote:
 
-> Removes some functions that are not used anywhere:
-> usbhs_readb() usbhs_writeb()
+> Delete unused macro.
 >=20
-> This was partially found by using a static code analysis program call=
-ed cppcheck.
->=20
-> Signed-off-by: Rickard Strandqvist <rickard_strandqvist@spectrumdigit=
-al.se>
+> Signed-off-by: Aaro Koskinen <aaro.koskinen@iki.fi>
 > ---
->  drivers/mfd/omap-usb-host.c |   10 ----------
->  1 file changed, 10 deletions(-)
+>  include/linux/mfd/menelaus.h | 6 ------
+>  1 file changed, 6 deletions(-)
 
 Applied, thanks.
 
-> diff --git a/drivers/mfd/omap-usb-host.c b/drivers/mfd/omap-usb-host.=
-c
-> index 83dab2f..6b0f305 100644
-> --- a/drivers/mfd/omap-usb-host.c
-> +++ b/drivers/mfd/omap-usb-host.c
-> @@ -129,16 +129,6 @@ static inline u32 usbhs_read(void __iomem *base,=
- u32 reg)
->  	return readl_relaxed(base + reg);
->  }
+> diff --git a/include/linux/mfd/menelaus.h b/include/linux/mfd/menelau=
+s.h
+> index f097e89..a1e12bf3 100644
+> --- a/include/linux/mfd/menelaus.h
+> +++ b/include/linux/mfd/menelaus.h
+> @@ -38,10 +38,4 @@ extern int menelaus_set_vcore_hw(unsigned int roof=
+_mV, unsigned int floor_mV);
 > =20
-> -static inline void usbhs_writeb(void __iomem *base, u8 reg, u8 val)
-> -{
-> -	writeb_relaxed(val, base + reg);
-> -}
-> -
-> -static inline u8 usbhs_readb(void __iomem *base, u8 reg)
-> -{
-> -	return readb_relaxed(base + reg);
-> -}
-> -
->  /*------------------------------------------------------------------=
--------*/
+>  extern int menelaus_set_regulator_sleep(int enable, u32 val);
 > =20
->  /**
+> -#if defined(CONFIG_ARCH_OMAP2) && defined(CONFIG_MENELAUS)
+> -#define omap_has_menelaus()	1
+> -#else
+> -#define omap_has_menelaus()	0
+> -#endif
+> -
+>  #endif
 
 --=20
 Lee Jones
 Linaro STMicroelectronics Landing Team Lead
 Linaro.org =E2=94=82 Open source software for ARM SoCs
 =46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
