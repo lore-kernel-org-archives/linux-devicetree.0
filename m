@@ -1,71 +1,149 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v4 2/6] mfd: MT6397: Add support for PMIC MT6397 MFD
-Date: Tue, 20 Jan 2015 15:33:01 +0000
-Message-ID: <20150120153301.GZ13701@x1>
-References: <1419577768-12037-1-git-send-email-flora.fu@mediatek.com>
- <1419577768-12037-3-git-send-email-flora.fu@mediatek.com>
- <20150120144309.GT13701@x1>
- <20150120150512.GA12209@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: [PATCH 3/4] mmc: sdhci-st: Update ST SDHCI binding documentation.
+Date: Tue, 20 Jan 2015 15:32:43 +0000
+Message-ID: <1421767964-8798-4-git-send-email-peter.griffin@linaro.org>
+References: <1421767964-8798-1-git-send-email-peter.griffin@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150120150512.GA12209@pengutronix.de>
+In-Reply-To: <1421767964-8798-1-git-send-email-peter.griffin@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Flora Fu <flora.fu@mediatek.com>, Mark Rutland <mark.rutland@arm.com>, Menghui Lin <menghui.lin@mediatek.com>, Russell King <linux@arm.linux.org.uk>, Samuel Ortiz <sameo@linux.intel.com>, arm@kernel.org, Grant Likely <grant.likely@linaro.org>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, HenryC Chen <henryc.chen@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Eddie Huang <eddie.huang@mediatek.com>, linux-arm-kernel@lists.infradead.org, Dongdong Cheng <dongdong.cheng@mediatek.com>, srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, Chen Zhong <chen.zhong@mediatek.com>
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, mturquette@linaro.org, sboyd@codeaurora.org, chris@printf.net, ulf.hansson@linaro.org
+Cc: peter.griffin@linaro.org, lee.jones@linaro.org, peppe.cavallaro@st.com, olivier.bideau@st.com, gabriel.fernandez@st.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 20 Jan 2015, Sascha Hauer wrote:
+This patch updates the binding information to reflect the
+extra dt options which are now supported by the sdhci-st.c
+driver which enable support for stih407 family silicon.
 
-> Hi Lee,
->=20
-> On Tue, Jan 20, 2015 at 02:43:09PM +0000, Lee Jones wrote:
-> > On Fri, 26 Dec 2014, Flora Fu wrote:
-> >=20
-> > > Add core files for MT6397 MFD driver.
-> > >=20
-> > > Signed-off-by: Flora Fu <flora.fu@mediatek.com>
-> > > ---
-> > >  drivers/mfd/Kconfig                  |  10 +
-> > >  drivers/mfd/Makefile                 |   1 +
-> > >  drivers/mfd/mt6397-core.c            |  94 +++++++++
-> > >  include/linux/mfd/mt6397/core.h      |  23 +++
-> > >  include/linux/mfd/mt6397/registers.h | 362 +++++++++++++++++++++=
-++++++++++++++
-> > >  5 files changed, 490 insertions(+)
-> > >  create mode 100644 drivers/mfd/mt6397-core.c
-> > >  create mode 100644 include/linux/mfd/mt6397/core.h
-> > >  create mode 100644 include/linux/mfd/mt6397/registers.h
-> >=20
-> > Looks okay.
-> >=20
-> > I assume there are dependancies on this patch.  What are they?
-> >=20
-> > How would you like this set to be handled?
->=20
-> This patch is outdated, I sent an updated series today (you are on Cc=
-).
+Stih410 SoC and later support UHS modes for eMMC, so the
+driver now makes use of these common bindings. Examples
+are provided for both eMMC (which has additional bindings)
+and also sd slot for stih407.
 
-Okay, thanks.
+Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+---
+ Documentation/devicetree/bindings/mmc/sdhci-st.txt | 100 ++++++++++++++++++---
+ 1 file changed, 90 insertions(+), 10 deletions(-)
 
-> There are no compile time dependencies to the PMIC wrapper, but witho=
-ut
-> it the mfd part is pretty useless. I prefer to keep the series togeth=
-er
-> and merge it through arm-soc, but I would be fine with merging it
-> through mfd aswell.
-
-Yes, everyone feels the same about their cross-subsystem patch-sets. ;)
-
-If there are build-time dependencies I am always happy to take sets
-in via MFD and send out pull-requests to other subsystem Maintainers;
-however, if there are only run-time dependencies I prefer to save
-everyone the hassle and have them go in via their own subsystems.
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+diff --git a/Documentation/devicetree/bindings/mmc/sdhci-st.txt b/Documentation/devicetree/bindings/mmc/sdhci-st.txt
+index 7527db4..18d950d 100644
+--- a/Documentation/devicetree/bindings/mmc/sdhci-st.txt
++++ b/Documentation/devicetree/bindings/mmc/sdhci-st.txt
+@@ -5,20 +5,62 @@ Documentation/devicetree/bindings/mmc/mmc.txt and the properties
+ used by the sdhci-st driver.
+ 
+ Required properties:
+-- compatible :  Must be "st,sdhci"
+-- clock-names : Should be "mmc"
+-                See: Documentation/devicetree/bindings/resource-names.txt
+-- clocks :      Phandle of the clock used by the sdhci controler
+-                See: Documentation/devicetree/bindings/clock/clock-bindings.txt
++- compatible:		Must be "st,sdhci" and it can be compatible to "st,sdhci-stih407"
++			to set the internal glue logic used for configuring the MMC
++			subsystem (mmcss) inside the FlashSS (available in STiH407 SoC
++			family).
++
++- clock-names:		Should be "mmc".
++			See: Documentation/devicetree/bindings/resource-names.txt
++- clocks:		Phandle to the clock.
++			See: Documentation/devicetree/bindings/clock/clock-bindings.txt
++
++- interrupts:		One mmc interrupt should be described here.
++- interrupt-names:	Should be "mmcirq".
++
++- pinctrl-names:	A pinctrl state names "default" must be defined.
++- pinctrl-0:		Phandle referencing pin configuration of the sd/emmc controller.
++			See: Documentation/devicetree/bindings/pinctrl/pinctrl-binding.txt
++
++- reg:			This must provide the host controller base address and it can also
++			contain the FlashSS Top register for TX/RX delay used by the driver
++			to configure DLL inside the flashSS, if so reg-names must also be
++			specified.
+ 
+ Optional properties:
+-- non-removable: non-removable slot
+-                 See: Documentation/devicetree/bindings/mmc/mmc.txt
+-- bus-width: Number of data lines
+-                 See: Documentation/devicetree/bindings/mmc/mmc.txt
++- reg-names:		Should be "mmc" and "top-mmc-delay". "top-mmc-delay" is optional
++			for eMMC on stih407 family silicon to configure DLL inside FlashSS.
++
++- non-removable:	Non-removable slot. Also used for configuring mmcss in STiH407 SoC
++			family.
++			See:  Documentation/devicetree/bindings/mmc/mmc.txt.
++
++- bus-width:		Number of data lines.
++			See:  Documentation/devicetree/bindings/mmc/mmc.txt.
++
++- max-frequency: 	Can be 200MHz, 100Mz or 50MHz (default) and used for
++			configuring the CCONFIG3 in the mmcss.
++			See:  Documentation/devicetree/bindings/mmc/mmc.txt.
++
++- resets:		Phandle and reset specifier pair to softreset line of HC IP.
++			See: Documentation/devicetree/bindings/reset/reset.txt
++
++- vqmmc-supply:		Phandle to the regulator dt node, mentioned as the vcc/vdd
++			supply in eMMC/SD specs.
++
++- sd-uhs--sdr50:	To enable the SDR50 in the mmcss.
++			See:  Documentation/devicetree/bindings/mmc/mmc.txt.
++
++- sd-uhs-sdr104:	To enable the SDR104 in the mmcss.
++			See:  Documentation/devicetree/bindings/mmc/mmc.txt.
++
++- sd-uhs-ddr50:		To enable the DDR50 in the mmcss.
++			See:  Documentation/devicetree/bindings/mmc/mmc.txt.
+ 
+ Example:
+ 
++/* Example stih416e eMMC configuration */
++
+ mmc0: sdhci@fe81e000 {
+ 	compatible	= "st,sdhci";
+ 	status		= "disabled";
+@@ -29,5 +71,43 @@ mmc0: sdhci@fe81e000 {
+ 	pinctrl-0	= <&pinctrl_mmc0>;
+ 	clock-names	= "mmc";
+ 	clocks		= <&clk_s_a1_ls 1>;
+-	bus-width       = <8>
++	bus-width	= <8>
++
++/* Example SD stih407 family configuration */
++
++mmc1: sdhci@09080000 {
++	compatible	= "st,sdhci-stih407", "st,sdhci";
++	status		= "disabled";
++	reg		= <0x09080000 0x7ff>;
++	reg-names	= "mmc";
++	interrupts	= <GIC_SPI 90 IRQ_TYPE_NONE>;
++	interrupt-names	= "mmcirq";
++	pinctrl-names	= "default";
++	pinctrl-0	= <&pinctrl_sd1>;
++	clock-names	= "mmc";
++	clocks		= <&clk_s_c0_flexgen CLK_MMC_1>;
++	resets		= <&softreset STIH407_MMC1_SOFTRESET>;
++	bus-width	= <4>;
++};
++
++/* Example eMMC stih407 family configuration */
++
++mmc0: sdhci@09060000 {
++	compatible	= "st,sdhci-stih407", "st,sdhci";
++	status		= "disabled";
++	reg		= <0x09060000 0x7ff>, <0x9061008 0x20>;
++	reg-names	= "mmc", "top-mmc-delay";
++	interrupts	= <GIC_SPI 92 IRQ_TYPE_NONE>;
++	interrupt-names	= "mmcirq";
++	pinctrl-names	= "default";
++	pinctrl-0	= <&pinctrl_mmc0>;
++	clock-names	= "mmc";
++	clocks		= <&clk_s_c0_flexgen CLK_MMC_0>;
++	vqmmc-supply	= <&vmmc_reg>;
++	max-frequency	= <200000000>;
++	bus-width	= <8>;
++	non-removable;
++	sd-uhs-sdr50;
++	sd-uhs-sdr104;
++	sd-uhs-ddr50;
+ };
+-- 
+1.9.1
