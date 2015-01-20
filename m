@@ -1,40 +1,168 @@
-From: Ezequiel Garcia <ezequiel.garcia-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v7 0/3] iio: Add Cosmic Circuits ADC support
-Date: Tue, 20 Jan 2015 07:54:51 -0300
-Message-ID: <54BE33FB.6020800@imgtec.com>
-References: <1420577257-10846-1-git-send-email-ezequiel.garcia@imgtec.com> <54B133FE.1020808@kernel.org>
+From: "Imre Kaloz" <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Subject: Re: [PATCHv2] mvebu: add Linksys WRT1900AC (Mamba) support
+Date: Tue, 20 Jan 2015 11:57:11 +0100
+Message-ID: <op.xsrcplz12s3iss@ecaz>
+References: <1421687701-5667-1-git-send-email-kaloz@openwrt.org>
+ <20150119182113.GH32663@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=utf-8; format=flowed; delsp=yes
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54B133FE.1020808-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, James Hartley <james.hartley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Mark.Rutland-5wv7dgnIgG8@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel.Moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150119182113.GH32663-g2DYL2Zd6BY@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Andrew,
+
+On Mon, 19 Jan 2015 19:21:13 +0100, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> wrote:
+
+> Thanks for the v2. I have a few comments, and some points we will need
+> to discuss.
+
+Sure thing, thanks.
+
+>> + *
+>> + * Note: this board is shipped with a new generation boot loader that
+>> + * remaps internal registers at 0xf1000000. Therefore, if earlyprintk
+>> + * is used, the CONFIG_DEBUG_MVEBU_UART_ALTERNATE option should be
+>
+> There is a patch already queued up for this cycle:
+>
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2015-January/313605.html
+>
+> Please can you change CONFIG_DEBUG_MVEBU_UART_ALTERNATE to
+> CONFIG_DEBUG_MVEBU_UART0_ALTERNATE
+
+Ok.
+
+>> +	model = "Linksys WRT1900AC (Mamba)";
+>> +	compatible = "linksys,mamba", "marvell,armadaxp-mv78230",
+>> +		     "marvell,armadaxp", "marvell,armada-370-xp";
+>
+> So this is where the discussion starts. I don't like Mamba being so
+> prominent. As far as i understand, Mamba is the board, not the device.
+> In theory, another device could be created using the same board as a
+> basis, but with different PCIe cards, etc. At that point, i would
+> suggest refactoring the common parts out into a
+> armada-xp-linksys-mamba.dtsi which is then included into any device
+> .dts file using the Mamba board.
+>
+> This file describes the device. So i would prefer it to be called
+> armada-xp-linksys-wrt1900ac.dts. The first compatible should be
+> "linksys,wrt1900ac". Having "linksys,mamba" second is O.K.
+
+I would like to ask for others' opinion for multiple reasons, and would  
+decide in v3 based on that.
+
+- The device is called the "mamba", the marketing name is the WRT1900AC.  
+As history showed, it's perfectly possible that exactly the same device go  
+on the market under a different name. The E4200v2 is the same device as  
+the EA4500, with a different factory firmware. There the name of the  
+device is "viper".
+
+- OpenWrt is the only firmware/stack other than the official one and  
+people already know this device as "mamba".
+
+- Let's say the same device gets released under the same name or just the  
+radios change - so no redesign takes place at all. In my opinion that  
+hardly justifies adding multiple .dts files just to change the name of the  
+LEDs to reflect that. I think people who want to run mainline on their  
+device wouldn't be concerned about seeing a codename, but on the other  
+hand we could receive patches to "correct" the marketing name in the LEDs.
+
+>> +		internal-regs {
+>
+> It would be nice to document the jumper and pinout here.
+>
+>> +			serial@12000 {
+>> +				status = "okay";
+>> +			};
+
+Do you mean serial console pinout?
 
 
-On 01/10/2015 11:15 AM, Jonathan Cameron wrote:
-> On 06/01/15 20:47, Ezequiel Garcia wrote:
->> This series add the support for an ADC IP block from Cosmic Circuits.
->> The patchset is based on v3.19-rc3.
->>
->> As agreed with Rob, this series drops the vendor prefix in the
->> adc-reserved-channels DT property. This property is generic enough to
->> be used in other drivers (at91 is a potential candidate).
->>
->> A follow-up patch can use the property in at91 and add it to the
->> IIO generic bindings.
-> I'm happy - will let this sit for a little while to let Harmut say
-> if wants to take another look (or give a reviewed-by or similar).
-> 
+> The discussion about the i2c LED controller is still ongoing, but i
+> think TI are unlikely to get a PWM based driver accepted in place of a
+> LED driver. So you could include the LEDs here, and something
+> unexpected happens, we can remove it.
 
-Hi Jonathan,
+Ok, I have that locally already, too.
 
-As Harmut gave a Reviewed-by, I'm wondering if you can pick this sooner
-than later, so we don't miss next window.
+>
+>> +			nand@d0000 {
+>> +				status = "okay";
+>> +				num-cs = <1>;
+>> +				marvell,nand-keep-config;
+>> +				marvell,nand-enable-arbiter;
+>> +				nand-on-flash-bbt;
+>> +				nand-ecc-strength = <4>;
+>> +				nand-ecc-step-size = <512>;
+>> +
+>> +				partition@0 {
+>> +					label = "u-boot";
+>> +					reg = <0x0000000 0x100000>;  /* 1MB */
+>> +					read-only;
+>> +				};
+>> +
+>> +				partition@100000 {
+>> +					label = "u_env";
+>> +					reg = <0x100000 0x40000>;    /* 256KB */
+>> +				};
+>> +
+>> +				partition@140000 {
+>> +					label = "s_env";
+>> +					reg = <0x140000 0x40000>;    /* 256KB */
+>> +				};
+>
+> So there is a big gap here? 768KB of unused space before the devinfo  
+> section?
 
-Thanks a lot!
--- 
-Ezequiel
+See below.
+
+>> +
+>> +				partition@900000 {
+>> +					label = "devinfo";
+>> +					reg = <0x900000 0x100000>;    /* 1MB */
+>> +					read-only;
+>> +				};
+>> +
+>> +				partition@a00000 {
+>> +					label = "kernel1";
+>> +					reg = <0xa00000 0x2800000>;    /* 3MB + rootfs1 */
+>
+> There are some long lines here. We try to keep to the 80 character
+> rule.
+
+I've thought that would look kinda awkward, hence I left it this way.
+
+>
+>> +				};
+>
+> This partition overlaps the next one? That is new to me. Seems to be
+> accepted practice for OpenWRT, but i'm not aware of any mainline
+> Marvell DT doing this. Comments from others welcome...
+
+The gap and the overlapping partitions (pretty much the whole layout) are  
+straight from the official firmware. The overlap is used to flash a single  
+file which contains the rootfs, too.
+
+>> +
+>> +		power {
+>> +			label = "mamba:white:power";
+>
+> Please replace this mamba with wrt1900ac. It is a property of the
+> device, not the board. Another device using the mamba board may use it
+> differently.
+>
+
+See above.
+
+
+
+Imre
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
