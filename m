@@ -1,57 +1,51 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH/RFC v10 07/19] mfd: max77693: Adjust FLASH_EN_SHIFT and
- TORCH_EN_SHIFT macros
-Date: Tue, 20 Jan 2015 17:00:57 +0100
-Message-ID: <20150120160056.GA32144@amd>
-References: <1420816989-1808-1-git-send-email-j.anaszewski@samsung.com>
- <1420816989-1808-8-git-send-email-j.anaszewski@samsung.com>
- <20150120111719.GF13701@x1>
- <54BE51B2.8040209@samsung.com>
- <54BE6228.5070304@samsung.com>
- <20150120154029.GC13701@x1>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [alsa-devel] [PATCH v2 RESEND 2/2] mfd: arizona: Update DT
+ binding to support OUTn_MONO init_data
+Date: Tue, 20 Jan 2015 16:02:48 +0000
+Message-ID: <20150120160248.GK13701@x1>
+References: <1420185829-24886-1-git-send-email-ideal.song@samsung.com>
+ <1420185829-24886-3-git-send-email-ideal.song@samsung.com>
+ <20150120122005.GA13701@x1>
+ <20150120132001.GA21293@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20150120154029.GC13701@x1>
-Sender: linux-leds-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, linux-leds@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, b.zolnierkie@samsung.com, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com, Chanwoo Choi <cw00.choi@samsung.com>
+In-Reply-To: <20150120132001.GA21293@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Inha Song <ideal.song@samsung.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sameo@linux.intel.com, ckeepax@opensource.wolfsonmicro.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue 2015-01-20 15:40:29, Lee Jones wrote:
-> On Tue, 20 Jan 2015, Jacek Anaszewski wrote:
-> 
-> > On 01/20/2015 02:01 PM, Jacek Anaszewski wrote:
-> > >On 01/20/2015 12:17 PM, Lee Jones wrote:
-> > >>On Fri, 09 Jan 2015, Jacek Anaszewski wrote:
-> > >>
-> > >>>Modify FLASH_EN_SHIFT and TORCH_EN_SHIFT macros to work properly
-> > >>>when passed enum max77693_fled values (0 for FLED1 and 1 for FLED2)
-> > >>>from leds-max77693 driver.
-> > >>
-> > >>Off-by-one ay?  Wasn't the original code tested?
-> > >
-> > >The driver using these macros is a part of LED / flash API integration
-> > >patch series, which still undergoes modifications and it hasn't
-> > >reached its final state yet, as there are many things to discuss.
-> > 
-> > To be more precise: the original code had been tested and was working
-> > properly with the header that is in the mainline. Nonetheless, because
-> > of the modifications in the driver that was requested during code
-> > review, it turned out that it would be more convenient to redefine the
-> > macros.
-> > 
-> > I'd opt for just agreeing about the mfd related patches and merge
-> > them no sooner than the leds-max77693 driver is merged.
-> 
-> The only way we can guarantee this is to have them go in during
-> different merge-windows, unless of course they go in via the same tree.
+On Tue, 20 Jan 2015, Mark Brown wrote:
 
-Umm. Maintainers should be able to coordinate that. Delaying patch for
-one major release seems rather cruel. Perhaps one maintainer should
-ack the patch and the second one should merge it...
-									Pavel
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+> On Tue, Jan 20, 2015 at 12:20:05PM +0000, Lee Jones wrote:
+> > On Fri, 02 Jan 2015, Inha Song wrote:
+>=20
+> > > This patch update DT binding to support OUTn_MONO init_data. Each
+> > > output signal can be configurated as a mono differential output.
+> > > The mono differential configuration is selected using the OUTn_MO=
+NO
+> > > registers.
+>=20
+> > This requires a DT Ack and an entry in the example.
+>=20
+> The DT maintainers have said they're OK with maintainers just merging
+> things if they're comfortable with it (see the bindings specific
+> submitting-patches.txt) and given their workload and general resultin=
+g
+> responsiveness it's going to make it difficult go get anything done.
+
+I only tend to poke the DT guys when I am unsure of something in the
+binding.  In this case it was a doubt whether we should be encoding
+register values inside a property like this.
+
+I would also be happy to take it with your Ack if you're happy with
+it?
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
