@@ -1,36 +1,185 @@
-From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Subject: Re: [alsa-devel] [PATCH v2 RESEND 1/2] mfd: arizona: Add support
-	for OUTn_MONO register control
-Date: Tue, 20 Jan 2015 15:46:11 +0000
-Message-ID: <20150120154611.GA14516@opensource.wolfsonmicro.com>
-References: <1420185829-24886-1-git-send-email-ideal.song@samsung.com> <1420185829-24886-2-git-send-email-ideal.song@samsung.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v4 2/5] dt-bindings: Add pinctrl bindings for mt65xx/mt81xx.
+Date: Tue, 20 Jan 2015 16:46:54 +0100
+Message-ID: <CABuKBe+9wG_Pa0S7A+JGT8mRo9embdYXhse1GFJXm8Rj3OTZQQ@mail.gmail.com>
+References: <1418772873-19747-1-git-send-email-hongzhou.yang@mediatek.com>
+	<1418772873-19747-3-git-send-email-hongzhou.yang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1420185829-24886-2-git-send-email-ideal.song@samsung.com>
+In-Reply-To: <1418772873-19747-3-git-send-email-hongzhou.yang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Inha Song <ideal.song@samsung.com>
-Cc: broonie@kernel.org, lee.jones@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sameo@linux.intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
+To: Hongzhou Yang <hongzhou.yang@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, srv_heupstream <srv_heupstream@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, "Joe.C" <yingjoe.chen@mediatek.com>, Catalin Marinas <catalin.marinas@arm.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dandan.he@mediatek.com, alan.cheng@mediatek.com, toby.liu@mediatek.com, maoguang.meng@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 02, 2015 at 05:03:48PM +0900, Inha Song wrote:
-> Some boards need to set the OUTn_MONO register to configurates
-> the output signal path as a mono differential output. This
-> wlf,out-mono property is optional. If present, values must be
-> specified less than or equal to the number of output signals.
-> If values less than the number of output signals, elements
-> that has not been specified are set to 0 by default.
-> 
-> Example:
->  - wlf,out-mono = <1 0 1>; /* set OUT1,OUT3 to mono differential */
-> 
-> Signed-off-by: Inha Song <ideal.song@samsung.com>
+2014-12-17 0:34 GMT+01:00 Hongzhou Yang <hongzhou.yang@mediatek.com>:
+> From: Hongzhou Yang <hongzhou.yang@mediatek.com>
+>
+> Add devicetree bindings for Mediatek SoC pinctrl driver.
+>
+> Signed-off-by: Hongzhou Yang <hongzhou.yang@mediatek.com>
 > ---
+>  .../devicetree/bindings/pinctrl/pinctrl-mt65xx.txt | 142 +++++++++++++++++++++
+>  1 file changed, 142 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt
+>
+> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt
+> new file mode 100644
+> index 0000000..3bf34f9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt
+> @@ -0,0 +1,142 @@
+> +* Mediatek MT65XX Pin Controller
+> +
+> +The Mediatek's Pin controller is used to control SoC pins.
+> +
+> +Required properties:
+> +- compatible: value should be either of the following.
+> +    (a) "mediatek,mt8135-pinctrl", compatible with mt8135 pinctrl.
+> +- mediatek,pctl-regmap: Should be a phandle of the syscfg node.
+> +- gpio-controller : Marks the device node as a gpio controller.
+> +- #gpio-cells: number of cells in GPIO specifier. Since the generic GPIO
+> +  binding is used, the amount of cells must be specified as 2. See the below
+> +  mentioned gpio binding representation for description of particular cells.
+> +
+> +       Eg: <&pio 6 0>
+> +       <[phandle of the gpio controller node]
+> +       [pin number within the gpio controller]
+> +       [flags]>
+> +
+> +       Values for gpio specifier:
+> +       - Pin number: is a value between 0 to 202.
+> +       - Flags:  bit field of flags, as defined in <dt-bindings/gpio/gpio.h>.
+> +            Only the following flags are supported:
+> +            0 - GPIO_ACTIVE_HIGH
+> +            1 - GPIO_ACTIVE_LOW
+> +- reg: physicall address base for EINT registers
+> +- interrupt-controller: Marks the device node as an interrupt controller
+> +- #interrupt-cells: Should be two.
+> +- interrupts : The interrupt outputs from the controller.
+> +
+> +Please refer to pinctrl-bindings.txt in this directory for details of the
+> +common pinctrl bindings used by client devices.
+> +
+> +A pinctrl node should contain at least one subnodes representing the
+> +pinctrl groups available on the machine. Each subnode will list the
+> +pins it needs, and how they should be configured, with regard to muxer
+> +configuration, pullups, drive strngth, input enable/disable and input schmitt.
 
-Apologies, I must have missed this in the December rush here.
+drive strength
 
-Acked-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+> +
+> +Required subnode-properties:
+> +
+> +- pins: 2 integers array, represents gpio pinmux number and config
+> +  setting. The format as following
+> +
+> +    node {
+> +     pins = <PIN_NUMBER_PINMUX>;
+> +                     GENERIC_PINCONFIG;
+> +    };
+> +
+> +    The PIN_NUMBER_PINMUX is combination of GPIO number and pinmux, it can
+> +    use macros which already defind in boot/dts/mt8135-pinfunc.h directly.
+> +    The GENERIC_PINCONFIG is the generic pinconfig options to use, bias-disable,
+> +    bias-pull-down, bias-pull-up, input-enable, input-disable, output-low, output-high,
+> +    input-schmitt-enable, input-schmitt-disable and drive-strength are valid.
+> +
+> +    Some special pins have extra pull up strength, there are R0 and R1 pull-up
+> +    resistors available, but for user, it's only need to set R1R0 as 00, 01, 10 or 11.
+> +    So when config bias-pull-up, it support arguments for those special pins.
+> +    Some macros have been defined for this usage, such as MTK_PUPD_SET_R1R0_00.
+> +    See dt-bindings/pinctrl/mt65xx.h.
+> +
+> +    When config drive-strength, it can support some arguments, such as
+> +    MTK_DRIVE_4mA, MTK_DRIVE_6mA, etc. See dt-bindings/pinctrl/mt65xx.h.
+> +
+> +Examples:
+> +
+> +#include "mt8135-pinfunc.h"
+> +
+> +...
+> +{
+> +       syscfg_pctl_a: syscfg_pctl_a@10005000 {
+> +               compatible = "mediatek,mt8135-pctl-a-syscfg", "syscon";
+> +               reg = <0 0x10005000 0 0x1000>;
+> +       };
+> +
+> +       syscfg_pctl_b: syscfg_pctl_b@1020C020 {
+> +               compatible = "mediatek,mt8135-pctl-b-syscfg", "syscon";
+> +               reg = <0 0x1020C020 0 0x1000>;
+> +       };
+> +
+> +       pinctrl@01c20800 {
+> +               compatible = "mediatek,mt8135-pinctrl";
+> +               reg = <0 0x1000B000 0 0x1000>;
+> +               mediatek,pctl-regmap = <&syscfg_pctl_a &syscfg_pctl_b>;
+> +               gpio-controller;
+> +               #gpio-cells = <2>;
+> +               interrupt-controller;
+> +               #interrupt-cells = <2>;
+> +               interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
+> +                               <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>,
+> +                               <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
+> +
+> +               i2c0_pins_a: i2c0@0 {
+> +                       pins1 {
+> +                               pins = <MT8135_PIN_100_SDA0__FUNC_SDA0>,
+> +                                               <MT8135_PIN_101_SCL0__FUNC_SCL0>;
+> +                               bias-disable;
+> +                       };
+> +               };
+> +
+> +               i2c1_pins_a: i2c1@0 {
+> +                       pins {
+> +                               pins = <MT8135_PIN_195_SDA1__FUNC_SDA1>,
+> +                                               <MT8135_PIN_196_SCL1__FUNC_SCL1>;
+> +                               bias-pull-up = <55>;
+> +                       };
+> +               };
+> +
+> +               i2c2_pins_a: i2c2@0 {
+> +                       pins1 {
+> +                               pins = <MT8135_PIN_193_SDA2__FUNC_SDA2>;
+> +                               bias-pull-down;
+> +                       };
+> +
+> +                       pins2 {
+> +                               pins = <MT8135_PIN_49_WATCHDOG__FUNC_GPIO49>;
+> +                               bias-pull-up;
+> +                       };
+> +               };
+> +
+> +               i2c3_pins_a: i2c3@0 {
+> +                       pins1 {
+> +                               pins = <MT8135_PIN_40_DAC_CLK__FUNC_GPIO40>,
+> +                                               <MT8135_PIN_41_DAC_WS__FUNC_GPIO41>;
+> +                               bias-pull-up = <55>;
+> +                       };
+> +
+> +                       pins2 {
+> +                               pins = <MT8135_PIN_35_SCL3__FUNC_SCL3>,
+> +                                               <MT8135_PIN_36_SDA3__FUNC_SDA3>;
+> +                               output-low;
+> +                               bias-pull-up = <55>;
+> +                       };
+> +
+> +                       pins3 {
+> +                               pins = <MT8135_PIN_57_JTCK__FUNC_GPIO57>,
+> +                                               <MT8135_PIN_60_JTDI__FUNC_JTDI>;
+> +                               drive-strength = <32>;
+> +                       };
+> +               };
+> +
+> +               ...
+> +       }
+> +};
+> --
+> 1.8.1.1.dirty
+>
 
-Thanks,
-Charles
+
+
+-- 
+motzblog.wordpress.com
