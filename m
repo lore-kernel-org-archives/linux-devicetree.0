@@ -1,79 +1,66 @@
-From: Ray Jui <rjui@broadcom.com>
-Subject: Re: [PATCH v6 2/3] gpio: Cygnus: add GPIO driver
-Date: Tue, 20 Jan 2015 11:17:03 -0800
-Message-ID: <54BEA9AF.7070209@broadcom.com>
-References: <rjui@broadcom.com>	<1418696307-19392-1-git-send-email-rjui@broadcom.com>	<1418696307-19392-3-git-send-email-rjui@broadcom.com>	<CACRpkdYGksEseGaO49=1rUi5WBdOxwAd-F1gpgZn+BFatRCdDg@mail.gmail.com>	<54B55068.8050500@broadcom.com>	<CACRpkdZef8S-EAbShjJ1eg+-3wQKn+yx4u1k_Mf8F7uFkJYdFw@mail.gmail.com>	<54B9A8A2.6090209@broadcom.com> <CACRpkdYydCO9Wu3fMyh0qt=e_hxT5ch2gqNhEsfQpf5WYUS-kQ@mail.gmail.com>
+From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH net-next v8 2/4] net: netcp: Add Keystone NetCP core ethernet
+ driver
+Date: Tue, 20 Jan 2015 14:23:52 -0500
+Message-ID: <54BEAB48.6090701@ti.com>
+References: <1421367172-19793-1-git-send-email-m-karicheri2@ti.com>   <1421367172-19793-2-git-send-email-m-karicheri2@ti.com>  <1421741935.9655.73.camel@x220> <54BE8BEA.3000100@ti.com> <1421774797.29393.4.camel@x220>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYydCO9Wu3fMyh0qt=e_hxT5ch2gqNhEsfQpf5WYUS-kQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Joe Perches <joe@perches.com>, Arnd Bergmann <arnd@arndb.de>, Scott Branden <sbranden@broadcom.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1421774797.29393.4.camel@x220>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
+Cc: Wingman Kwok <w-kwok2-l0cyMroinI0@public.gmane.org>, Valentin Rothberg <valentinrothberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 1/20/2015 1:53 AM, Linus Walleij wrote:
-> On Sat, Jan 17, 2015 at 1:11 AM, Ray Jui <rjui@broadcom.com> wrote:
->> On 1/16/2015 2:14 AM, Linus Walleij wrote:
-> 
->>> Some hardware designs put the software-controlled biasing
->>> resistors in the GPIO block electronically connected to the actual
->>> pins, so that e.g. the biasing will be available if some MMC or
->>> whatever is using the same pins in another muxing. In such
->>> situations it's quite evident that they need to be a combined
->>> GPIO and pin controller.
+On 01/20/2015 12:26 PM, Paul Bolle wrote:
+> On Tue, 2015-01-20 at 12:10 -0500, Murali Karicheri wrote:
+>> On 01/20/2015 03:18 AM, Paul Bolle wrote:
+>>> On Thu, 2015-01-15 at 19:12 -0500, Murali Karicheri wrote:
+>>>> diff --git a/drivers/net/ethernet/ti/Kconfig b/drivers/net/ethernet/ti/Kconfig
+>>>> index 605dd90..e11bcfa 100644
+>>>> --- a/drivers/net/ethernet/ti/Kconfig
+>>>> +++ b/drivers/net/ethernet/ti/Kconfig
+>>>> @@ -73,12 +73,23 @@ config TI_CPSW
+>>>>    config TI_CPTS
+>>>>    	boolean "TI Common Platform Time Sync (CPTS) Support"
+>>>>    	depends on TI_CPSW
+>>>> +	depends on TI_CPSW || TI_KEYSTONE_NET
 >>>
->>> I have some regrets that bolting a second pin controller to the
->>> GPIO chip make things a bit complex but it's a price we have
->>> to pay for getting some kind of generic interface.
+>>> You probably meant to add
+>>>       || TI_KEYSTONE_NETCP
+>>>
+>>> here. Ie, add CP. But as this slipped through testing it _might_ not be
+>>> needed at all.
 >>
->> Okay. In summary, I think both of us think the following approach makes
->> sense in my situation:
->> - leave pinmux in pinctrl-bcm-cygnus.c
->> - leave pinctrl + gpio in pinctrl-bcm-cygnus-gpio.c under drivers/pinctrl/*
->>
->> But by thinking about this more, I thought this would create duplicated
->> pinctrl descriptors in our system, one from the pinmux driver, and the
->> other from this pinctrl+gpio driver. That is probably undesirable?
-> 
-> No, there are several systems with multiple pin controllers and the
-> framework easily handles multiple pin controllers in the same
-> system just as well as we handle multiple GPIO chips.
-> 
->> By reviewing various drivers in the pinctrl directory, I found what
->> pinctrl-u300.c and pinctrl-coh901.c does seems to serve as a good model
->> for me to follow:
->> - pinctrl-u300.c is the pinmux driver
->> - pinctrl-coh901.c is the gpio+pinctrl driver
-> 
-> Yeah, I don't know if the separation between them is as beautiful
-> as it should be. I used it when developing the pin control
-> subsystem.
-> 
->> The GPIO pinctrl logic is in the coh901 block, so pinctrl-coh901.c
->> exposed two public functions u300_gpio_config_get, u300_gpio_config_set
->> that pinctrl-u300.c can use. The u300 populates all pinmux/pinctrl
->> related functions into the subsystem. This way there's only one pinctrl
->> descriptor, populated through pinctrl-u300.c.
->>
->> Does that model make more sense to you?
-> 
-> Yeah I wrote it myself so I'm maybe blind for any dumbness in
-> the code. But I think it's kind of elegant. But it is not using the
-> generic pinctrl device tree bindings so it's kind of oldstyle and
-> bloated in that sense.
-> 
-> Yours,
-> Linus Walleij
-> 
-Okay. I think I have a pretty good idea of what you expect. Regarding
-whether or not to keep pinctrl-bcm-cygnus.c and
-pinctrl-bcm-cygnus-gpio.c completely independent with each other and
-therefore have two pinctrl in the system, I'll play with it a bit more
-and make a decision.
+>> Currently CPTS driver is not used for NetCP. So I want to remove the
+>> above Kconfig dependency from Kconfig and cpts.o from the Makefile. Do
+>> you expect me to send an incremental patch for this to the netdev list?
+>
+> That's Dave's call. I think that Dave works with incremental patches
+> exclusively once things have hit (one of the trees that feed into)
+> linux-next.
+>
+>> or can pick the attached patch that addresses this issue. Let me know.
+>
+> I'm just the reporter. Please send it through the regular channels. That
+> would certainly include netdev.
+>
+Sure! I just posted the patch to the netdev list.
 
-Thanks a lot for spending all these time explaining it to me. Really
-appreciate it!
+Thanks for letting me know.
+
+Murali
+>
+> Paul Bolle
+>
+
+
+-- 
+Murali Karicheri
+Linux Kernel, Texas Instruments
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
