@@ -1,50 +1,50 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH V2 0/2]  Add device tree support for DA9063
-Date: Tue, 20 Jan 2015 10:41:45 +0000
-Message-ID: <20150120104145.GQ5767@x1>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V2 2/2] devicetree: Add bindings for DA9063
+Date: Tue, 20 Jan 2015 10:42:50 +0000
+Message-ID: <20150120104250.GR5767@x1>
 References: <cover.1421684991.git.stwiss.opensource@diasemi.com>
+ <7cd71ad47ba0cccd2d2da45fc3f1f82df0842a8c.1421684991.git.stwiss.opensource@diasemi.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <cover.1421684991.git.stwiss.opensource@diasemi.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
-Cc: David Dajun Chen <david.chen@diasemi.com>, Grant Likely <grant.likely@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Brown <broonie@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Support Opensource <support.opensource@diasemi.com>, DT <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <7cd71ad47ba0cccd2d2da45fc3f1f82df0842a8c.1421684991.git.stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Dajun Chen <david.chen-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Support Opensource <support.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 19 Jan 2015, Opensource [Steve Twiss] wrote:
+On Mon, 19 Jan 2015, Steve Twiss wrote:
 
-> From: Steve Twiss <stwiss.opensource@diasemi.com>
+> From: Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
 >=20
-> This patch set adds device tree support for the Dialog
-> Semiconductor DA9063 PMIC. Support is provided for the
-> Regulators; Real-Time Clock and Watchdog.
+> Add device tree bindings for DA9063 regulators; Real-Time Clock
+> and Watchdog.
 >=20
-> [PATCH V2 1/2]: kernel driver device tree support
-> [PATCH V2 2/2]: device tree bindings document
-
-As this is v2, I would expect to see a changelog somewhere.
-
-> Thank you,
-> Steve Twiss, Dialog Semiconductor Ltd.
+> This patch is dependent on PATCH V2 1/2=20
 >=20
-> S Twiss (2):
->   mfd: da9063: Add device tree support
->   devicetree: Add bindings for DA9063
+> Signed-off-by: Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+>=20
+> ---
+> This patch applies against linux-next and v3.19-rc4=20
 >=20
 >  Documentation/devicetree/bindings/mfd/da9063.txt | 94 ++++++++++++++=
 ++++++++++
->  drivers/mfd/da9063-core.c                        |  2 +
->  drivers/mfd/da9063-i2c.c                         | 11 +++
->  include/linux/mfd/da9063/core.h                  |  1 +
->  4 files changed, 108 insertions(+)
+>  1 file changed, 94 insertions(+)
 >  create mode 100644 Documentation/devicetree/bindings/mfd/da9063.txt
->=20
+
+Looks pretty standard.
+
+Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
 --=20
 Lee Jones
 Linaro STMicroelectronics Landing Team Lead
 Linaro.org =E2=94=82 Open source software for ARM SoCs
 =46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
