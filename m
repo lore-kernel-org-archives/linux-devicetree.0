@@ -1,202 +1,70 @@
-Return-Path: <gabriel.fernandez@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <2165161.8vJctS1yVa@wuerfel>
-References: <1418812486-12394-1-git-send-email-gabriel.fernandez@linaro.org>
-	<1418812486-12394-3-git-send-email-gabriel.fernandez@linaro.org>
-	<2165161.8vJctS1yVa@wuerfel>
-Date: Mon, 19 Jan 2015 13:36:19 +0100
-Message-ID: <CAG374jDhgk-5d+mpduSJyJ4xHJ+R7jiwh6PnU=ZM4j8=UC986A@mail.gmail.com>
-Subject: Re: [PATCH 2/5] PCI: st: Add Device Tree bindings for sti pcie
-From: Gabriel Fernandez <gabriel.fernandez@linaro.org>
-Content-Type: multipart/alternative; boundary=001a113c3800b292f4050d00910f
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Bjorn Helgaas <bhelgaas@google.com>, Mohit Kumar <mohit.kumar@st.com>, Jingoo Han <jg1.han@samsung.com>, Grant Likely <grant.likely@linaro.org>, Fabrice Gasnier <fabrice.gasnier@st.com>, Viresh Kumar <viresh.kumar@linaro.org>, Thierry Reding <treding@nvidia.com>, Minghuan Lian <Minghuan.Lian@freescale.com>, Magnus Damm <damm@opensource.se>, Will Deacon <will.deacon@arm.com>, Tanmay Inamdar <tinamdar@apm.com>, Murali Karicheri <m-karicheri2@ti.com>, Kishon Vijay Abraham I <kishon@ti.com>, Pratyush Anand <pratyush.anand@st.com>, Sachin Kamat <sachin.kamat@samsung.com>, Andrew Lunn <andrew@lunn.ch>, Liviu Dudau <Liviu.Dudau@arm.com>, Srikanth Thokala <sthokal@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@stlinux.com" <kernel@stlinux.com>, linux-pci@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
+In-Reply-To: <alpine.DEB.2.11.1501201356370.5526@nanos>
+References: <1421174781-4340-1-git-send-email-boris.brezillon@free-electrons.com>
+	<1421174781-4340-2-git-send-email-boris.brezillon@free-electrons.com>
+	<CAL_JsqJ5DSo6jmAuHPDdV6pMca8BVbg5V-GZ5=2qu96_QYXMtQ@mail.gmail.com>
+	<alpine.DEB.2.11.1501141110190.5526@nanos>
+	<CAL_JsqLwBvV5s531_YsA=sCE4_LG=eXTua8mh069ufRjSNFhng@mail.gmail.com>
+	<alpine.DEB.2.11.1501151003430.5526@nanos>
+	<CAL_JsqLCkU0TA5YCa2h+NyaXxG2vDpGSaNqveAr9XcnFDfuRXA@mail.gmail.com>
+	<alpine.DEB.2.11.1501201356370.5526@nanos>
+Date: Tue, 20 Jan 2015 14:07:03 -0600
+Message-ID: <CAL_JsqKHrdA9=FAerCYs=M=dKo4QL9A6QxovXY6qmO-pH=TQrA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/5] irqchip: add dumb demultiplexer implementation
+From: Rob Herring <robherring2@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
---001a113c3800b292f4050d00910f
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-Hi Arnd,
-
-=E2=80=8BThanks for reviewing=E2=80=8B
-
-On 17 December 2014 at 23:01, Arnd Bergmann <arnd@arndb.de> wrote:
+On Tue, Jan 20, 2015 at 7:08 AM, Thomas Gleixner <tglx@linutronix.de> wrote:
+> On Thu, 15 Jan 2015, Rob Herring wrote:
+>> On Thu, Jan 15, 2015 at 3:11 AM, Thomas Gleixner <tglx@linutronix.de> wrote:
+>> > On Wed, 14 Jan 2015, Rob Herring wrote:
+>>
+>> > We do not change shared interrupts in any way. We provide an
+>> > alternative mechanism for braindead hardware. And if the at91 folks
+>> > are fine with the DT change, then it's their decision. Nothing forces
+>> > this on everyone.
+>>
+>> We are changing how shared interrupts are described in DT. We don't
+>> need 2 ways to describe them. We could say this is only for AT91 and
+>> continue to describe shared interrupts as has been done forever. Then
+>> the next platform that hits this problem will have to go thru the same
+>> ABI breakage. Or we change DT practices to describe all shared
+>> interrupts with a demux node. Given the way DTs are incrementally
+>> created, it is not something we can check with review or tools, so we
+>> will still have the same ABI breakage problem.
 >
-> On Wednesday 17 December 2014 11:34:43 Gabriel FERNANDEZ wrote:
-> > sti pcie is built around a Synopsis Designware PCIe IP.
-> >
-> > Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-> > Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
-> > ---
-> >  Documentation/devicetree/bindings/pci/st-pcie.txt | 53
-> +++++++++++++++++++++++
-> >  1 file changed, 53 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/pci/st-pcie.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/pci/st-pcie.txt
-> b/Documentation/devicetree/bindings/pci/st-pcie.txt
-> > new file mode 100644
-> > index 0000000..bd3488f
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pci/st-pcie.txt
-> > @@ -0,0 +1,53 @@
-> > +STMicroelectronics STi PCIe controller
-> > +
-> > +This PCIe host controller is based on the Synopsis Designware PCIe IP
-> > +and thus inherits all the common properties defined in
-> designware-pcie.txt.
-> > +
-> > +Required properties:
-> > + - compatible: "st,stih407-pcie"
-> > + - reg: base address and length of the pcie controller, mem-window
-> address
-> > +   and length available to the controller.
-> > + - interrupts: A list of interrupt outputs of the controller.
-> > + - interrupt-names: Must include the following entries:
-> > +   "msi": STi interrupt that is asserted when an MSI is received
->
-> You should specify that only one interrupt may be present.
-> If you extend the binding, you will need to describe what the
-> second one is as well.
->
+> This is not describing the proper shared interrupts. This is a special
+> case for a special case of braindamaged hardware. Whats wrong with
+> doing that? We dont have to change that for all shared interrupts
+> because 99% of them have a proper hardware implementation and are not
+> affected by this.
 
-=E2=80=8Bok, i will change into:
-=E2=80=8B
-=E2=80=8B"=E2=80=8B
- - interrupts: A list of interrupt outputs of the controller. Must contain
-an
-  entry for each entry in the interrupt-names property.
-=E2=80=8B"=E2=80=8B
-
-
-
-
-> > + - st,syscfg : should be a phandle of the syscfg node. Also contains
-> syscfg
-> > +   offset for IP configuration.
-> > + - resets, reset-names: the power-down and soft-reset lines of PCIe IP=
-.
-> > +   Associated names must be "powerdown" and "softreset".
-> > + - phys, phy-names: the phandle for the PHY device.
-> > +   Associated name must be "pcie_phy"
->
-> Names should not have underscores in them in general. "pcie-phy" would
-> be fine, but just "pcie" seems good enough, unless there are existing
-> drivers that have established a specific naming.
->
-
-=E2=80=8B
-
-=E2=80=8Bjust "pcie" is fine for me
-
-
-BR
-
-Gabriel
-=E2=80=8B
 
 >
+> What's wrong with serving the AT91 with a proper solution, which does
+> NOT inflict horrible hacks into the core code and does NOT weaken
+> sanity checks and does NOT require irq chip specific knowledge in
+> device drivers?
 >
->         Arnd
+>> >> There are probably ways to do this demux irqchip without a DT change.
 >
+> So far you have not provided any useful hint how to do so.
 >
-
---001a113c3800b292f4050d00910f
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div class=3D"gmail_default" style=3D"font-family:courier =
-new,monospace">Hi Arnd,<br></div><div class=3D"gmail_extra"><br></div><div =
-class=3D"gmail_extra"><div class=3D"gmail_default" style=3D"font-family:&#3=
-9;courier new&#39;,monospace">=E2=80=8BThanks for reviewing=E2=80=8B</div><=
-br><div class=3D"gmail_quote">On 17 December 2014 at 23:01, Arnd Bergmann <=
-span dir=3D"ltr">&lt;<a href=3D"mailto:arnd@arndb.de" target=3D"_blank">arn=
-d@arndb.de</a>&gt;</span> wrote:<blockquote class=3D"gmail_quote" style=3D"=
-margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-lef=
-t:1ex"><div><div>On Wednesday 17 December 2014 11:34:43 Gabriel FERNANDEZ w=
-rote:<br>
-&gt; sti pcie is built around a Synopsis Designware PCIe IP.<br>
-&gt;<br>
-&gt; Signed-off-by: Fabrice Gasnier &lt;<a href=3D"mailto:fabrice.gasnier@s=
-t.com" target=3D"_blank">fabrice.gasnier@st.com</a>&gt;<br>
-&gt; Signed-off-by: Gabriel Fernandez &lt;<a href=3D"mailto:gabriel.fernand=
-ez@linaro.org" target=3D"_blank">gabriel.fernandez@linaro.org</a>&gt;<br>
-&gt; ---<br>
-&gt;=C2=A0 Documentation/devicetree/bindings/pci/st-pcie.txt | 53 +++++++++=
-++++++++++++++<br>
-&gt;=C2=A0 1 file changed, 53 insertions(+)<br>
-&gt;=C2=A0 create mode 100644 Documentation/devicetree/bindings/pci/st-pcie=
-.txt<br>
-&gt;<br>
-&gt; diff --git a/Documentation/devicetree/bindings/pci/st-pcie.txt b/Docum=
-entation/devicetree/bindings/pci/st-pcie.txt<br>
-&gt; new file mode 100644<br>
-&gt; index 0000000..bd3488f<br>
-&gt; --- /dev/null<br>
-&gt; +++ b/Documentation/devicetree/bindings/pci/st-pcie.txt<br>
-&gt; @@ -0,0 +1,53 @@<br>
-&gt; +STMicroelectronics STi PCIe controller<br>
-&gt; +<br>
-&gt; +This PCIe host controller is based on the Synopsis Designware PCIe IP=
-<br>
-&gt; +and thus inherits all the common properties defined in designware-pci=
-e.txt.<br>
-&gt; +<br>
-&gt; +Required properties:<br>
-&gt; + - compatible: &quot;st,stih407-pcie&quot;<br>
-&gt; + - reg: base address and length of the pcie controller, mem-window ad=
-dress<br>
-&gt; +=C2=A0 =C2=A0and length available to the controller.<br>
-&gt; + - interrupts: A list of interrupt outputs of the controller.<br>
-&gt; + - interrupt-names: Must include the following entries:<br>
-&gt; +=C2=A0 =C2=A0&quot;msi&quot;: STi interrupt that is asserted when an =
-MSI is received<br>
-<br>
-</div></div>You should specify that only one interrupt may be present.<br>
-If you extend the binding, you will need to describe what the<br>
-second one is as well.<br></blockquote><div>=C2=A0</div><div><div class=3D"=
-gmail_default" style=3D"display:inline"><span style=3D"font-family:arial,he=
-lvetica,sans-serif">=E2=80=8Bok, i will change into:<br>=E2=80=8B</span></d=
-iv><span style=3D"font-family:arial,helvetica,sans-serif"><div class=3D"gma=
-il_default" style=3D"font-family:courier new,monospace;display:inline">=E2=
-=80=8B&quot;=E2=80=8B</div>=C2=A0- interrupts: A list of interrupt outputs =
-of the controller. Must contain an<br>=C2=A0 entry for each entry in the in=
-terrupt-names property.</span><div class=3D"gmail_default" style=3D"font-fa=
-mily:courier new,monospace;display:inline">=E2=80=8B&quot;=E2=80=8B</div><b=
-r><br><br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0=
-px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">
-<span><br>
-&gt; + - st,syscfg : should be a phandle of the syscfg node. Also contains =
-syscfg<br>
-&gt; +=C2=A0 =C2=A0offset for IP configuration.<br>
-&gt; + - resets, reset-names: the power-down and soft-reset lines of PCIe I=
-P.<br>
-&gt; +=C2=A0 =C2=A0Associated names must be &quot;powerdown&quot; and &quot=
-;softreset&quot;.<br>
-&gt; + - phys, phy-names: the phandle for the PHY device.<br>
-&gt; +=C2=A0 =C2=A0Associated name must be &quot;pcie_phy&quot;<br>
-<br>
-</span>Names should not have underscores in them in general. &quot;pcie-phy=
-&quot; would<br>
-be fine, but just &quot;pcie&quot; seems good enough, unless there are exis=
-ting<br>
-drivers that have established a specific naming.<br></blockquote><div><br><=
-div class=3D"gmail_default" style=3D"display:inline"><span style=3D"font-fa=
-mily:arial,helvetica,sans-serif">=E2=80=8B</span></div><span style=3D"font-=
-family:arial,helvetica,sans-serif">=C2=A0</span><div class=3D"gmail_default=
-" style=3D"font-family:courier new,monospace;display:inline"><span style=3D=
-"font-family:arial,helvetica,sans-serif">=E2=80=8Bjust &quot;pcie&quot; is =
-fine for me</span><br><br><br></div><div class=3D"gmail_default" style=3D"f=
-ont-family:courier new,monospace;display:inline">BR<br><br>Gabriel<br></div=
-><div class=3D"gmail_default" style=3D"font-family:courier new,monospace;di=
-splay:inline">=E2=80=8B</div></div><blockquote class=3D"gmail_quote" style=
-=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding=
--left:1ex">
-<span><font color=3D"#888888"><br>
-<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 Arnd<br>
-<br>
-</font></span></blockquote></div></div></div>
-
---001a113c3800b292f4050d00910f--
+>> > What's the problem with a DT change for a single platform, if the
+>> > maintainers are willing to take it and deal with the fallout?
+>>
+>> What's the solution for a platform that an ABI break is not okay and
+>> can't deal with the fallout?
+>
+> There is no other platform affected. This is a break for a specific
+> set of devices and the 'fallout' is confined, well known and accepted.
+>
+> So what's your problem, really?
+>
+> Thanks,
+>
+>         tglx
+>
