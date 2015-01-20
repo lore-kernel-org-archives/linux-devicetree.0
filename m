@@ -1,68 +1,100 @@
-From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] of: Custom printk format specifier for device node
-Date: Tue, 20 Jan 2015 20:06:15 +0200
-Message-ID: <B282C7F7-D221-4D7D-AB33-533C0204C4CF@konsulko.com>
-References: <1421764441-11928-1-git-send-email-pantelis.antoniou@konsulko.com> <CAL_JsqLVJjq3Ov=J-5LtXiTQPLvR5Y=+tB1i16k_rN3j5dODFQ@mail.gmail.com> <E7065DB3-DD6B-4110-A066-8C7268186831@konsulko.com> <1421776794.2724.1.camel@perches.com>
-Mime-Version: 1.0 (Mac OS X Mail 8.1 \(1993\))
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [RFC PATCH v5 0/4] ARM: OMAP2+: AM33XX: Add suspend-resume
+ support
+Date: Tue, 20 Jan 2015 10:03:47 -0800
+Message-ID: <20150120180347.GJ7718@atomide.com>
+References: <cover.1417038624.git.d-gerlach@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1421776794.2724.1.camel-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <cover.1417038624.git.d-gerlach-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Joe,
+* Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org> [141126 13:54]:
+> Hi,
+> This series is v5 of the series to add suspend/resume support for Texas
+> Instruments AM335x SoC. It has gone through a rather major overhaul
+> since the last version and because of that has been split into multiple
+> different sets of patches, on which this series depends. Previous discussion
+> that influenced there changes can be found here [1]. This series depends on
+> generic sram exec mapping patch here [2], emif series here [3],
+> and wkup_m3_ipc series here [4]. I have pushed a branch containing the patches
+> from ALL required series here [5] for testing or a view of the high level
+> flow of the entire series.
+> 
+> The largest change with this revision is the introduction of a
+> wkup_m3_ipc driver which handles all communication with the Cortex M3
+> present on am335x for handling low power tasks. Previously this was
+> handled in the wkup_m3_rproc driver (also sent in an earlier series)
+> but that driver is now only responsible for booting the wkup_m3. The
+> wkup_m3_ipc driver exposes an API with all required PM functionality
+> needed by the PM code introduced by this series, so the PM code has
+> shrunk considerably.
+> 
+> Another major change is that the EMIF code previously present in the
+> sleep33xx asm code and pm33xx code for save and restore of EMIF context
+> and entry into low power mode has all been moved in to a separate EMIF
+> driver, further reducing the size of the PM code. Because of this, moving
+> the emif header defines into include/linux/ti_emif.h is no longer necessary.
+> 
+> Other changes include clean up of the timer suspend/resume handlers, now
+> look up hwmod in init and use that handle along with renaming to
+> *_idle/*_unidle to avoid confusion with true suspend handlers. 
+> 
+> Suspend support requires:
+> CONFIG_TI_EMIF_SRAM
+> CONFIG_WKUP_M3_RPROC
+> CONFIG_WKUP_M3_IPC
+> 
+> And also requires AM335x USB support to be enabled to work for multiple
+> cycles. If you want to load firmware from rootfs in /lib/firmware you now
+> must also select CONFIG_FW_LOADER_USER_HELPER_FALLBACK.
+> 
+> This code works with version 0x189 of the CM3 firmware found here [6] on
+> the next branch, /bin/am335x-pm-firmware.elf.
 
-> On Jan 20, 2015, at 19:59 , Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org> wrote:
->=20
-> On Tue, 2015-01-20 at 16:52 +0200, Pantelis Antoniou wrote:
->> Hi Rob,
->>=20
->>> On Jan 20, 2015, at 16:47 , Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wro=
-te:
->>>=20
->>> On Tue, Jan 20, 2015 at 8:34 AM, Pantelis Antoniou
->>> <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
->>>> 90% of the usage of device node's full_name is printing it out
->>>> in a kernel message. Preparing for the eventual delayed allocation
->>>> introduce a custom printk format specifier that is both more
->>>> compact and more pleasant to the eye.
-> []
->>>> diff --git a/Documentation/printk-formats.txt b/Documentation/prin=
-tk-formats.txt
-> []
->>>> +Device tree nodes:
->>>> +
->>>> +       %pO{,1,2}
->>>=20
->>> 'O' is not very obvious, but I imagine we are somewhat limted in ou=
-r
->>> choice here?
->>>=20
->>=20
->> All the good women are married, all the handsome men are gay, all th=
-e obvious
->> format specifiers are taken.
->=20
-> Not really at all.
->=20
-> I quite dislike '0' as the format type specifier for
-> a device tree node as there's no mnemonic mapping.
->=20
+Dave, does this series have dependencies to the other patches? Can some
+parts of this already be applied without breaking anything?
 
-There=92s only so many characters one can use; [DdNn] are taken. And it=
-=92s O !=3D 0.
+Regards,
 
-I am open to suggestions.
-
-Regards
-
-=97 Pantelis
-
+Tony
+ 
+> [1] http://www.spinics.net/lists/linux-omap/msg109331.html
+> [2] http://www.spinics.net/linux/lists/kernel/msg1876629.html
+> [3] http://www.spinics.net/linux/lists/kernel/msg1876646.html
+> [4] http://www.spinics.net/linux/lists/kernel/msg1876642.html
+> [5] https://github.com/dgerlach/linux-pm/tree/rfc-pm-am335x-v3.18-rc6
+> [6] https://git.ti.com/ti-cm3-pm-firmware/amx3-cm3/commits/next
+> 
+> Dave Gerlach (3):
+>   ARM: OMAP2+: AM33XX: Add assembly code for PM operations
+>   ARM: OMAP2+: AM33XX: Basic suspend resume support
+>   ARM: OMAP2+: AM33XX: Hookup AM33XX PM code into OMAP builds
+> 
+> Vaibhav Bedia (1):
+>   ARM: OMAP2+: timer: Add suspend-resume callbacks for clkevent device
+> 
+>  arch/arm/boot/dts/am33xx.dtsi   |   2 +
+>  arch/arm/mach-omap2/Makefile    |   2 +
+>  arch/arm/mach-omap2/common.h    |   9 ++
+>  arch/arm/mach-omap2/io.c        |   1 +
+>  arch/arm/mach-omap2/pm.h        |   6 +
+>  arch/arm/mach-omap2/pm33xx.c    | 250 ++++++++++++++++++++++++++++++++++++++++
+>  arch/arm/mach-omap2/sleep33xx.S | 216 ++++++++++++++++++++++++++++++++++
+>  arch/arm/mach-omap2/timer.c     |  28 +++++
+>  8 files changed, 514 insertions(+)
+>  create mode 100644 arch/arm/mach-omap2/pm33xx.c
+>  create mode 100644 arch/arm/mach-omap2/sleep33xx.S
+> 
+> -- 
+> 2.1.0
+> 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
