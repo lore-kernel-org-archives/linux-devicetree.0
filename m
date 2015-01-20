@@ -1,82 +1,85 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCHv2] mvebu: add Linksys WRT1900AC (Mamba) support
-Date: Tue, 20 Jan 2015 22:09:13 +0100
-Message-ID: <20150120210913.GA21891@lunn.ch>
-References: <1421687701-5667-1-git-send-email-kaloz@openwrt.org>
- <20150119182113.GH32663@lunn.ch>
- <op.xsrcplz12s3iss@ecaz>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [RFC PATCH v5 0/4] ARM: OMAP2+: AM33XX: Add suspend-resume support
+Date: Tue, 20 Jan 2015 13:22:12 -0800
+Message-ID: <20150120212212.GN7718@atomide.com>
+References: <cover.1417038624.git.d-gerlach@ti.com>
+ <20150120180347.GJ7718@atomide.com> <54BEBB4D.90802@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <op.xsrcplz12s3iss@ecaz>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Cc: thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <54BEBB4D.90802@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dave Gerlach <d-gerlach@ti.com>
+Cc: devicetree@vger.kernel.org, Paul Walmsley <paul@pwsan.com>, Kevin Hilman <khilman@linaro.org>, Benoit Cousson <bcousson@baylibre.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-> >
-> >It would be nice to document the jumper and pinout here.
-> >
-> >>+			serial@12000 {
-> >>+				status = "okay";
-> >>+			};
+* Dave Gerlach <d-gerlach@ti.com> [150120 12:35]:
+> Tony,
+> On 01/20/2015 12:03 PM, Tony Lindgren wrote:
+> > * Dave Gerlach <d-gerlach@ti.com> [141126 13:54]:
+> >> Hi,
+> >> This series is v5 of the series to add suspend/resume support for Texas
+> >> Instruments AM335x SoC. It has gone through a rather major overhaul
+> >> since the last version and because of that has been split into multiple
+> >> different sets of patches, on which this series depends. Previous discussion
+> >> that influenced there changes can be found here [1]. This series depends on
+> >> generic sram exec mapping patch here [2], emif series here [3],
+> >> and wkup_m3_ipc series here [4]. I have pushed a branch containing the patches
+> >> from ALL required series here [5] for testing or a view of the high level
+> >> flow of the entire series.
+> >>
+> >> The largest change with this revision is the introduction of a
+> >> wkup_m3_ipc driver which handles all communication with the Cortex M3
+> >> present on am335x for handling low power tasks. Previously this was
+> >> handled in the wkup_m3_rproc driver (also sent in an earlier series)
+> >> but that driver is now only responsible for booting the wkup_m3. The
+> >> wkup_m3_ipc driver exposes an API with all required PM functionality
+> >> needed by the PM code introduced by this series, so the PM code has
+> >> shrunk considerably.
+> >>
+> >> Another major change is that the EMIF code previously present in the
+> >> sleep33xx asm code and pm33xx code for save and restore of EMIF context
+> >> and entry into low power mode has all been moved in to a separate EMIF
+> >> driver, further reducing the size of the PM code. Because of this, moving
+> >> the emif header defines into include/linux/ti_emif.h is no longer necessary.
+> >>
+> >> Other changes include clean up of the timer suspend/resume handlers, now
+> >> look up hwmod in init and use that handle along with renaming to
+> >> *_idle/*_unidle to avoid confusion with true suspend handlers. 
+> >>
+> >> Suspend support requires:
+> >> CONFIG_TI_EMIF_SRAM
+> >> CONFIG_WKUP_M3_RPROC
+> >> CONFIG_WKUP_M3_IPC
+> >>
+> >> And also requires AM335x USB support to be enabled to work for multiple
+> >> cycles. If you want to load firmware from rootfs in /lib/firmware you now
+> >> must also select CONFIG_FW_LOADER_USER_HELPER_FALLBACK.
+> >>
+> >> This code works with version 0x189 of the CM3 firmware found here [6] on
+> >> the next branch, /bin/am335x-pm-firmware.elf.
+> > 
+> > Dave, does this series have dependencies to the other patches? Can some
+> > parts of this already be applied without breaking anything?
+> > 
 > 
-> Do you mean serial console pinout?
+> The only patch with no dependencies is patch 1 (ARM: OMAP2+: timer: Add
+> suspend-resume callbacks for clkevent device). It's ready to be applied, I just
+> applied to v3.19-rc5 and built and booted on am335x-evm with no issue just to be
+> sure. It won't actually do anything until suspend is completely implemented.
 
-Yes. Looking at
+OK thanks for checking, best to wait until it's usable then.
 
-https://github.com/Chadster766/McWRT/wiki/Linksys-WRT1900AC-Serial-Port
+Regards,
 
-it seems to be jumper JP10. 
-
-1 - GND
-2 - RX
-4 - TX
-
-What i don't know is, is Rx and Rx from the perspective of the board
-or the host?
- 
-> >>+			nand@d0000 {
-> >>+				status = "okay";
-> >>+				num-cs = <1>;
-> >>+				marvell,nand-keep-config;
-> >>+				marvell,nand-enable-arbiter;
-> >>+				nand-on-flash-bbt;
-> >>+				nand-ecc-strength = <4>;
-> >>+				nand-ecc-step-size = <512>;
-> >>+
-> >>+				partition@0 {
-> >>+					label = "u-boot";
-> >>+					reg = <0x0000000 0x100000>;  /* 1MB */
-> >>+					read-only;
-> >>+				};
-> >>+
-> >>+				partition@100000 {
-> >>+					label = "u_env";
-> >>+					reg = <0x100000 0x40000>;    /* 256KB */
-> >>+				};
-> >>+
-> >>+				partition@140000 {
-> >>+					label = "s_env";
-> >>+					reg = <0x140000 0x40000>;    /* 256KB */
-> >>+				};
-> >
-> >So there is a big gap here? 768KB of unused space before the
-> >devinfo section?
-
-... 
- 
-> The gap and the overlapping partitions (pretty much the whole
-> layout) are straight from the official firmware. The overlap is used
-> to flash a single file which contains the rootfs, too.
-
-We could put a partition in the gap, to make it usable. You could for
-example place the DT blob there. I've not actually checked the version
-of uboot used actually supports this though.
-
-   Andrew
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Tony
