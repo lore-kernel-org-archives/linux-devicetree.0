@@ -1,44 +1,53 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH/RFC v10 07/19] mfd: max77693: Adjust FLASH_EN_SHIFT and
- TORCH_EN_SHIFT macros
-Date: Tue, 20 Jan 2015 15:11:52 +0100
-Message-ID: <54BE6228.5070304@samsung.com>
-References: <1420816989-1808-1-git-send-email-j.anaszewski@samsung.com>
- <1420816989-1808-8-git-send-email-j.anaszewski@samsung.com>
- <20150120111719.GF13701@x1> <54BE51B2.8040209@samsung.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v8 3/3] regulator: qcom-rpm: Add missing state flag in
+ call to RPM
+Date: Tue, 20 Jan 2015 14:19:54 +0000
+Message-ID: <20150120141954.GS13701@x1>
+References: <1417038661-30209-1-git-send-email-bjorn.andersson@sonymobile.com>
+ <1417038661-30209-4-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-reply-to: <54BE51B2.8040209@samsung.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, b.zolnierkie@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com, Chanwoo Choi <cw00.choi@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1417038661-30209-4-git-send-email-bjorn.andersson@sonymobile.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, Josh Cartwright <joshc@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/20/2015 02:01 PM, Jacek Anaszewski wrote:
-> On 01/20/2015 12:17 PM, Lee Jones wrote:
->> On Fri, 09 Jan 2015, Jacek Anaszewski wrote:
->>
->>> Modify FLASH_EN_SHIFT and TORCH_EN_SHIFT macros to work properly
->>> when passed enum max77693_fled values (0 for FLED1 and 1 for FLED2)
->>> from leds-max77693 driver.
->>
->> Off-by-one ay?  Wasn't the original code tested?
->
-> The driver using these macros is a part of LED / flash API integration
-> patch series, which still undergoes modifications and it hasn't
-> reached its final state yet, as there are many things to discuss.
+Mark,
 
-To be more precise: the original code had been tested and was working
-properly with the header that is in the mainline. Nonetheless, because
-of the modifications in the driver that was requested during code
-review, it turned out that it would be more convenient to redefine the
-macros.
+Do you want a pull-request for this, or can I absorb it right into my
+tree?
 
-I'd opt for just agreeing about the mfd related patches and merge
-them no sooner than the leds-max77693 driver is merged.
+> This adds the missing state parameter to the call down to the RPM. Th=
+is
+> is currently hard coded to the active state, as that's all we're
+> supporting at this moment.
+>=20
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+> ---
+>  drivers/regulator/qcom_rpm-regulator.c | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/drivers/regulator/qcom_rpm-regulator.c b/drivers/regulat=
+or/qcom_rpm-regulator.c
+> index b55cd5b..8f66040 100644
+> --- a/drivers/regulator/qcom_rpm-regulator.c
+> +++ b/drivers/regulator/qcom_rpm-regulator.c
+> @@ -198,6 +198,7 @@ static int rpm_reg_write(struct qcom_rpm_reg *vre=
+g,
+>  	vreg->val[req->word] |=3D value << req->shift;
+> =20
+>  	return qcom_rpm_write(vreg->rpm,
+> +			      QCOM_RPM_ACTIVE_STATE,
+>  			      vreg->resource,
+>  			      vreg->val,
+>  			      vreg->parts->request_len);
 
--- 
-Best Regards,
-Jacek Anaszewski
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
