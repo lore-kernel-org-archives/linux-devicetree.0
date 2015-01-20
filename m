@@ -1,61 +1,53 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] mfd: lubbock_io: add lubbock_io board
-Date: Tue, 20 Jan 2015 10:29:19 +0000
-Message-ID: <20150120102919.GP5767@x1>
-References: <1421406010-14851-1-git-send-email-robert.jarzmik@free.fr>
- <1421406010-14851-2-git-send-email-robert.jarzmik@free.fr>
- <20150119091705.GG21886@x1>
- <87ppaah9k5.fsf@free.fr>
+From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC PATCH 0/3] drivers: port PCIe designware to new DT parsing
+ API
+Date: Tue, 20 Jan 2015 10:39:25 +0000
+Message-ID: <20150120103925.GE5398@red-moon>
+References: <1420644571-18928-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <CAL_JsqLYg9vhFVmf=O4YLPfboj-dyoCR0H5dzBbMC3PeAEOwhQ@mail.gmail.com>
+ <1539153.bO1tVUM2dB@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <87ppaah9k5.fsf-GANU6spQydw@public.gmane.org>
+In-Reply-To: <1539153.bO1tVUM2dB@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Mohit Kumar <mohit.kumar-qxv4g6HH51o@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 19 Jan 2015, Robert Jarzmik wrote:
-> Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> writes:
-> > On Fri, 16 Jan 2015, Robert Jarzmik wrote:
+On Mon, Jan 19, 2015 at 04:59:00PM +0000, Arnd Bergmann wrote:
+> On Monday 19 January 2015 10:40:39 Rob Herring wrote:
+> > 
+> > I don't really like exposing ranges to host drivers. We've worked to
+> > not do that. So perhaps we need to rethink the API. I think we need to
+> > provide each range as a pair of resources which are the CPU address
+> > and PCI address. Perhaps an iterator is kind of pointless here. We do
+> > different things for each one. Are there cases with more than a single
+> > i/o space, non-prefetch memory and prefetch memory range? Perhaps we
+> > should just get the i/o and memory resources as separate calls. Just
+> > tossing out some ideas here.
+> 
+> Nice idea, that could be similar to platform_get_resource().
 
-[...]
+I like the idea too, it should simplify the API implementation.
 
-> >> +	res =3D platform_get_resource(pdev, IORESOURCE_IRQ, 0);
-> >
-> > platform_get_irq()?
-> No. I need the flags.
+> We probably also need the distinction between CPU address and (parent)
+> bus address here. In most drivers they are the same, but we actually
+> need to program the latter one into the PCI host bridge registers.
 
-Where are they used?
+Yes, CPU untranslated addresses are a pain in the back. I wrote
+the series at it is to avoid changing the API, but I agree that's
+a bit convoluted, which means we should refactor it.
 
-[...]
+I think the API should always return a pair of CPU-PCI resources as Rob
+said, and provide an "on-demand" request for untranslated addresses, since
+their usage is not that common (at the moment). I need to think about
+that, we might even return a triplet, I hate doing that since I fear
+it might be a one-off need for PCIe designware.
 
-> >> +	if (ret) {
-> >> +		dev_err(&pdev->dev, "Couldn't request main irq : ret =3D %d\n",
-> >> +			ret);
-> >
-> > I'm not keen on this type of formatting.  Besides the system will
-> > print out the returned error on failure.
-> Well, it will print -EINVAL or -ENODEV. When I'll receive an request =
-on the
-> driver with -ENODEV, how will I know it will come from this request_i=
-rq() or
-> another part of the code ... Well I can remove it if you want, but I =
-think it's
-> an error.
-
-I'm not asking you to remove the entire message, just the junk at the
-end.
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Lorenzo
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
