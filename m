@@ -1,66 +1,70 @@
-From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: Re: [PATCH] of: Custom printk format specifier for device node
-Date: Tue, 20 Jan 2015 17:27:42 +0200
-Message-ID: <25E49021-E94D-4DFA-AC37-1D4A3AAE9F88@konsulko.com>
-References: <1421764441-11928-1-git-send-email-pantelis.antoniou@konsulko.com> <CAL_JsqLVJjq3Ov=J-5LtXiTQPLvR5Y=+tB1i16k_rN3j5dODFQ@mail.gmail.com> <CAMuHMdWnjawtgkKGuL8b4A17EhDS6B0L-1_uhSnvEXXk5dNjwQ@mail.gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 8.1 \(1993\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdWnjawtgkKGuL8b4A17EhDS6B0L-1_uhSnvEXXk5dNjwQ@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Rob Herring <robherring2@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Grant Likely <grant.likely@secretlab.ca>, Randy Dunlap <rdunlap@infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: [PATCH 0/4] Add sd/emmc support for stih407 family silicon
+Date: Tue, 20 Jan 2015 15:32:40 +0000
+Message-ID: <1421767964-8798-1-git-send-email-peter.griffin@linaro.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, mturquette@linaro.org, sboyd@codeaurora.org, chris@printf.net, ulf.hansson@linaro.org
+Cc: peter.griffin@linaro.org, lee.jones@linaro.org, peppe.cavallaro@st.com, olivier.bideau@st.com, gabriel.fernandez@st.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
+Hi,
 
-> On Jan 20, 2015, at 17:24 , Geert Uytterhoeven <geert@linux-m68k.org>=
- wrote:
->=20
-> On Tue, Jan 20, 2015 at 3:47 PM, Rob Herring <robherring2@gmail.com> =
-wrote:
->>> +       Examples:
->>> +
->>> +       %pO     /foo/bar@0              - Node full name
->>> +       %pO0    /foo/bar@0              - Same as above
->>> +       %pO1    /foo/bar@0[10]          - Node full name + phandle
->>> +       %pO2    /foo/bar@0[10:DdPB]     - Node full name + phandle =
-+ node flags
->>> +                                        D - dynamic
->>> +                                        d - detached
->>> +                                        P - Populated
->>> +                                        B - Populated bus
->>=20
->> We should think about what else we want to print for a node. Perhaps
->> 'On' for name, 'Oc' for compatible, etc.
->=20
-> I was just going to say "The least verbose variant is name, not full_=
-name=E2=80=9D.
->=20
+This series adds sd/emmc support to the sdhci-st.c driver for stih407
+family silicon. The changes mainly involve congiguring some extra glue
+registers which configure the controller.
 
-Unfortunately in the context of device tree nodes =E2=80=98name' is usu=
-ally not what
-you want to print to identify the node in question. =E2=80=98name=E2=80=
-=99 is usually not unique.
+This series also adds support for UHS modes for eMMC. To allow
+UHS HS200/SD104 modes to function correctly, due to the
+tight timing constriants and data tuning requirement, support
+for PVT independent delay management is also added. Two types
+of delay management are supported, static delay management and
+dynamic delay management (dynamic delay loop), this delay
+management is only available on eMMC pads on stih410 and later
+silicon.
 
-We can add a format specifier for it though.
+This has been tested with stih410-b2120 on eMMC and sd, at various
+clock speeds. As part of this testing a bug was also found in the
+upstream flexgen clock set_rate implementation.
 
-> Gr{oetje,eeting}s,
->=20
->                        Geert
->=20
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linu=
-x-m68k.org
->=20
-> In personal conversations with technical people, I call myself a hack=
-er. But
-> when I'm talking to journalists I just say "programmer" or something =
-like that.
->                                -- Linus Torvalds
+    max-frequency = 200Mhz
+    /dev/mmcblk0p1:
+     Timing buffered disk reads: 270 MB in  3.02 seconds =  89.54 MB/sec
+    
+    max-frequency = 100Mhz
+    root@debian-armhf:~# hdparm -t /dev/mmcblk0p1
+    /dev/mmcblk0p1:
+     Timing buffered disk reads: 210 MB in  3.00 seconds =  70.00 MB/sec
+    
+    max-frequency = 50Mhz
+    root@debian-armhf:~# hdparm -t /dev/mmcblk0p1
+    /dev/mmcblk0p1:
+     Timing buffered disk reads: 118 MB in  3.00 seconds =  39.28 MB/sec
 
-Regards
+It has also been tested on stih416-b2020 to ensure we have caused no
+regressions. Finally the dt documentation has been updated to reflect
+the changes in the driver code. Intrestingly it seems we are the first
+upstream platform to be using some of the uhs bindings such as
+sd-uhs-sdr104.
 
-=E2=80=94 Pantelis
+regards,
+
+Peter.
+
+Peter Griffin (4):
+  clk: st: STiH410: Fix pdiv and fdiv divisor when setting rate
+  sdhci-st: Add support for stih407 family silicon.
+  mmc: sdhci-st: Update ST SDHCI binding documentation.
+  ARM: STi: DT: STiH407: Add dt nodes for sdhci and emmc.
+
+ Documentation/devicetree/bindings/mmc/sdhci-st.txt | 100 +++++-
+ arch/arm/boot/dts/stih407-family.dtsi              |  30 ++
+ arch/arm/boot/dts/stih410-b2120.dts                |  10 +
+ arch/arm/boot/dts/stihxxx-b2120.dtsi               |   8 +
+ drivers/clk/st/clk-flexgen.c                       |  19 +-
+ drivers/mmc/host/sdhci-st.c                        | 351 ++++++++++++++++++++-
+ 6 files changed, 496 insertions(+), 22 deletions(-)
+
+-- 
+1.9.1
 
