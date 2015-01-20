@@ -1,42 +1,38 @@
-From: Ezequiel Garcia <ezequiel.garcia@imgtec.com>
-Subject: Re: [PATCH v8 0/2] Imagination Technologies PWM support
-Date: Tue, 20 Jan 2015 07:52:25 -0300
-Message-ID: <54BE3369.9000802@imgtec.com>
-References: <1420826088-13113-1-git-send-email-ezequiel.garcia@imgtec.com>
+From: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+Subject: Re: [PATCH 7/8] gpio/mpc8xxx: Convert to platform device interface.
+Date: Tue, 20 Jan 2015 11:54:55 +0100
+Message-ID: <CAPybu_0qdumx91RFERp5Ft2HXs6rYv5H0WTFxiiyT4oiGjmzhA@mail.gmail.com>
+References: <1421581173-28416-1-git-send-email-ricardo.ribalda@gmail.com>
+ <1421581173-28416-8-git-send-email-ricardo.ribalda@gmail.com>
+ <87k30i9ykv.fsf@dell.be.48ers.dk> <CAPybu_180vMPMx4yhFAoL9H2b34+tWtqQCTHjxqkTRt9e_VA5g@mail.gmail.com>
+ <8761c191k8.fsf@dell.be.48ers.dk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1420826088-13113-1-git-send-email-ezequiel.garcia@imgtec.com>
+In-Reply-To: <8761c191k8.fsf@dell.be.48ers.dk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Bresticker <abrestic@chromium.org>, Thierry Reding <thierry.reding@gmail.com>, James Hartley <james.hartley@imgtec.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, vladimir_zapolskiy@mentor.com
+To: Peter Korsgaard <peter@korsgaard.com>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Peter Korsgaard <jacmet@sunsite.dk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+No worries :)
+
+On Tue, Jan 20, 2015 at 11:41 AM, Peter Korsgaard <peter@korsgaard.com> wrote:
+>>>>>> "Ricardo" == Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com> writes:
+>
+>  > Hello Peter
+>  > I thought the logic behind the original driver was:
+>
+>  > 1) Create gpiochip so it can be used by other modules/userland
+>  > 2) if there is also a irq available for it, create a irqdomain.
+>  > otherwise continue.
+>
+> Indeed - Sorry, I must have been confused yesterday.
+>
+> --
+> Bye, Peter Korsgaard
 
 
-On 01/09/2015 02:54 PM, Ezequiel Garcia wrote:
-> A new round for the IMG PWM driver.
-> 
-> The IMG PWM controller is muxed with a PDM controller, through a shared
-> so-called periph register bit, which sets the output as PWM or PDM.
-> Because this register is not part of the pin controller block, but rather
-> PWM/PDM specific, and because the register is also used to set the PDM value,
-> it is simpler to use a regmap-based syscon to deal with it.
-> 
-> This time, I'm removing the PDM driver from the submission and submitting the PWM
-> alone. The PDM was written as a misc driver, but had some design issues, so for
-> now I'm proposing to merge the PWM only.
-> 
-> The series is based on v3.19-rc3. If at all possible I'd like to see this merged
-> for v3.20.
-> 
 
-Thierry,
-
-Any comments on this? Any chance we merge it in time for v3.20?
-It's -rc5 already and I've started to worry.
-
-Thanks!
 -- 
-Ezequiel
+Ricardo Ribalda
