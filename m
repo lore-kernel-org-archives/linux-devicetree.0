@@ -1,156 +1,112 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH/RFC v10 09/19] DT: Add documentation for the mfd Maxim
- max77693
-Date: Tue, 20 Jan 2015 11:21:07 +0000
-Message-ID: <20150120112107.GG13701@x1>
-References: <1420816989-1808-1-git-send-email-j.anaszewski@samsung.com>
- <1420816989-1808-10-git-send-email-j.anaszewski@samsung.com>
+From: Liviu Dudau <liviu@dudau.co.uk>
+Subject: Re: [RFC PATCH 1/3] drivers: of: fix resources freeing in
+ of_pci_get_host_bridge_resources()
+Date: Tue, 20 Jan 2015 11:20:32 +0000
+Message-ID: <20150120112031.GA342@bart.dudau.co.uk>
+References: <1420644571-18928-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1420644571-18928-2-git-send-email-lorenzo.pieralisi@arm.com>
+ <20150119183228.GE10762@e106497-lin.cambridge.arm.com>
+ <20150120104922.GF5398@red-moon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1420816989-1808-10-git-send-email-j.anaszewski@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, b.zolnierkie@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com, Andrzej Hajda <a.hajda@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+In-Reply-To: <20150120104922.GF5398@red-moon>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Jingoo Han <jg1.han@samsung.com>, Liviu Dudau <Liviu.Dudau@arm.com>, Rob Herring <robh+dt@kernel.org>, Mohit Kumar <mohit.kumar@st.com>, Bjorn Helgaas <bhelgaas@google.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 09 Jan 2015, Jacek Anaszewski wrote:
+On Tue, Jan 20, 2015 at 10:49:22AM +0000, Lorenzo Pieralisi wrote:
+> On Mon, Jan 19, 2015 at 06:32:29PM +0000, Liviu Dudau wrote:
+> 
+> [...]
+> 
+> > > @@ -146,6 +146,7 @@ int of_pci_get_host_bridge_resources(struct device_node *dev,
+> > >  	struct of_pci_range_parser parser;
+> > >  	char range_type[4];
+> > >  	int err;
+> > > +	struct pci_host_bridge_window *window;
+> > >  
+> > >  	if (io_base)
+> > >  		*io_base = (resource_size_t)OF_BAD_ADDR;
+> > > @@ -225,7 +226,10 @@ int of_pci_get_host_bridge_resources(struct device_node *dev,
+> > >  conversion_failed:
+> > >  	kfree(res);
+> > >  parse_failed:
+> > > +	list_for_each_entry(window, resources, list)
+> > > +		kfree(window->res);
+> > >  	pci_free_resource_list(resources);
+> > > +	kfree(bus_range);
+> > >  	return err;
+> > >  }
+> > >  EXPORT_SYMBOL_GPL(of_pci_get_host_bridge_resources);
+> > 
+> > Hi Lorenzo et all,
+> > 
+> > Here is my personal view and I am happy to hear from others on the desired
+> > behaviour:
+> > 
+> > When I wrote this function what I had in mind was that it will parse as
+> > much as possible from the device tree and return a list of resources that
+> > could be successfully converted. If the entire list of ranges could not
+> > be converted then an error code will be returned, but the caller still
+> > had the list as constructed up to the error. It was the job of the caller
+> > to free the list in either cases, as stated in the comment.
+> 
+> That's what I am questioning. If the function takes an error path, the
+> windows list is freed, so the resource pointers are gone. There is no
+> way the caller can grab those resource pointers and free them.
 
-> This patch adds device tree binding documentation for
-> the flash cell of the Maxim max77693 multifunctional device.
->=20
-> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
-> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
-> Cc: Lee Jones <lee.jones@linaro.org>
-> Cc: Chanwoo Choi <cw00.choi@samsung.com>
-> Cc: Bryan Wu <cooloney@gmail.com>
-> Cc: Richard Purdie <rpurdie@rpsys.net>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Pawel Moll <pawel.moll@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-> Cc: Kumar Gala <galak@codeaurora.org>
-> ---
->  Documentation/devicetree/bindings/mfd/max77693.txt |   69 ++++++++++=
-++++++++++
->  1 file changed, 69 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/mfd/max77693.txt b/Doc=
-umentation/devicetree/bindings/mfd/max77693.txt
-> index 01e9f30..ef184f0 100644
-> --- a/Documentation/devicetree/bindings/mfd/max77693.txt
-> +++ b/Documentation/devicetree/bindings/mfd/max77693.txt
-> @@ -41,7 +41,52 @@ Optional properties:
->  	 To get more informations, please refer to documentaion.
->  	[*] refer Documentation/devicetree/bindings/pwm/pwm.txt
-> =20
-> +- led : the LED submodule device node
-> +
-> +There are two led outputs available - fled1 and fled2. Each of them =
-can
-> +control a separate led or they can be connected together to double
-> +the maximum current for a single connected led. One led is represent=
-ed
-> +by one child node.
-> +
-> +Required properties:
-> +- compatible : Must be "maxim,max77693-led".
-> +
-> +Optional properties:
-> +- maxim,trigger-type : Flash trigger type.
-> +	Possible trigger types:
-> +		MAX77693_LED_TRIG_TYPE_EDGE - Rising edge of the signal triggers
-> +			the flash,
-> +		MAX77693_LED_TRIG_TYPE_LEVEL - Strobe pulse length controls
-> +			duration of the flash.
+I stand corrected. Your patch is needed.
 
-I think you should represent the proper values here instead of the
-defines.
+Thanks,
+Liviu
 
-> +- maxim,boost-mode :
-> +	In boost mode the device can produce up to 1.2A of total current
-> +	on both outputs. The maximum current on each output is reduced
-> +	to 625mA then. If not enabled explicitly, boost setting defaults to
-> +	MAX77693_LED_BOOST_FIXED in case both current sources are used.
-> +	Possible values:
-> +		MAX77693_LED_BOOST_OFF - no boost,
-> +		MAX77693_LED_BOOST_ADAPTIVE - adaptive mode,
-> +		MAX77693_LED_BOOST_FIXED - fixed mode.
+> 
+> So either way, the function needs patching. Either we do not free the
+> windows list (we remove pci_free_resource_list) or we apply my fix (or
+> we refactor the API which is likely to be what I will do).
+> 
+> Lorenzo
+> 
+> > 
+> > The historical reason why the function was written that way was because at
+> > some moment after parsing I've had an additional step where arches could
+> > cleanup / veto the list and they could return an error value to signal
+> > their discontent. Also I was (am) not sure how lenient we could be with
+> > the device tree not being sane (at least one host bridge binding lists the
+> > config space as a range, which was accepted as broken).
+> > 
+> > So, from that point of view, I would NAK this patch, as the function works
+> > as intended. If others find this mode of operation too convoluted, then
+> > the patch should probably make clear that cleanup only needs to be done on
+> > function returning success.
+> > 
+> > Best regards,
+> > 
+> > > -- 
+> > > 2.2.1
+> > > 
+> > > 
 
-Same here.
+-- 
+-------------------
+   .oooO
+   (   )
+    \ (  Oooo.
+     \_) (   )
+          ) /
+         (_/
 
-> +- maxim,boost-vout : Output voltage of the boost module in millivolt=
-s.
-
--mvout?
--microvout?
-
-> +- maxim,vsys-min : Low input voltage level in millivolts. Flash is n=
-ot fired
-> +	if chip estimates that system voltage could drop below this level d=
-ue
-> +	to flash power consumption.
-
-mvsys?
-microvsys?
-
-> +Required properties of the LED child node:
-> +- label : see Documentation/devicetree/bindings/leds/common.txt
-> +- led-sources : see Documentation/devicetree/bindings/leds/common.tx=
-t
-> +
-> +Optional properties of the LED child node:
-> +- max-microamp : see Documentation/devicetree/bindings/leds/common.t=
-xt
-> +		Range: 15625 - 250000
-> +- flash-max-microamp : see Documentation/devicetree/bindings/leds/co=
-mmon.txt
-> +		Range: 15625 - 1000000
-> +- flash-timeout-us : see Documentation/devicetree/bindings/leds/comm=
-on.txt
-> +		Range: 62500 - 1000000
-> +
->  Example:
-> +#include <dt-bindings/mfd/max77693.h>
-> +
->  	max77693@66 {
->  		compatible =3D "maxim,max77693";
->  		reg =3D <0x66>;
-> @@ -73,4 +118,28 @@ Example:
->  			pwms =3D <&pwm 0 40000 0>;
->  			pwm-names =3D "haptic";
->  		};
-> +
-> +		led {
-> +			compatible =3D "maxim,max77693-led";
-> +			maxim,trigger-type =3D <MAX77693_LED_TRIG_TYPE_LEVEL>;
-> +			maxim,boost-mode =3D <MAX77693_LED_BOOST_FIXED>;
-> +			maxim,boost-vout =3D <5000>;
-> +			maxim,vsys-min =3D <2400>;
-> +
-> +			camera1_flash: led1 {
-> +				label =3D "max77693-flash1";
-> +				led-sources =3D <1 0>;
-> +				max-microamp =3D <250000>;
-> +				flash-max-microamp =3D <625000>;
-> +				flash-timeout-us =3D <1000000>;
-> +			};
-> +
-> +			camera2_flash: led2 {
-> +				label =3D "max77693-flash2";
-> +				led-sources =3D <0 1>;
-> +				max-microamp =3D <250000>;
-> +				flash-max-microamp =3D <625000>;
-> +				flash-timeout-us =3D <1000000>;
-> +			};
-> +		};
->  	};
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+ One small step
+   for me ...
