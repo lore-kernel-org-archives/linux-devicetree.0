@@ -1,68 +1,52 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH v2 RESEND 1/2] mfd: arizona: Add support for
- OUTn_MONO register control
-Date: Tue, 20 Jan 2015 12:20:27 +0000
-Message-ID: <20150120122027.GB13701@x1>
-References: <1420185829-24886-1-git-send-email-ideal.song@samsung.com>
- <1420185829-24886-2-git-send-email-ideal.song@samsung.com>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 2/4] clk: mediatek: Add initial common clock support
+ for Mediatek SoCs.
+Date: Tue, 20 Jan 2015 13:39:03 +0100
+Message-ID: <CABuKBeLFvP4ChnzzUJwoLtCHtH6PejENJueBd7D+xMJhBMDBkg@mail.gmail.com>
+References: <1420601123-25859-1-git-send-email-jamesjj.liao@mediatek.com>
+	<1420601123-25859-3-git-send-email-jamesjj.liao@mediatek.com>
+	<CABuKBeLQkTBYWkBWAYXjYudMAza+1zueRSqGFPd+480p1rYNwg@mail.gmail.com>
+	<1420685701.27952.44.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1420185829-24886-2-git-send-email-ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <1420685701.27952.44.camel@mtksdaap41>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Inha Song <ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
+To: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, huang eddie <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, HenryC Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Joe.C" <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-DT Ack (for this and the doc) required.
+2015-01-08 3:55 GMT+01:00 James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>:
+> Hi Matthias,
+>
+> On Wed, 2015-01-07 at 18:22 +0100, Matthias Brugger wrote:
+>> 2015-01-07 4:25 GMT+01:00 James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>:
+[...]
+>> > +
+>> > +extern spinlock_t *get_mtk_clk_lock(void);
+>> > +
+>> > +#define mtk_clk_lock(flags)    spin_lock_irqsave(get_mtk_clk_lock(), flags)
+>> > +#define mtk_clk_unlock(flags)  \
+>> > +       spin_unlock_irqrestore(get_mtk_clk_lock(), flags)
+>>
+>> Please use the spinlock directly without this akward defines.
+>
+> Do you mean we should export clk_ops_lock (from clk-mtk.c) directly
+> instead of get_mtk_clk_lock()? Or simply remove mtk_clk_lock/unlock()?
+>
 
-> Some boards need to set the OUTn_MONO register to configurates
-> the output signal path as a mono differential output. This
-> wlf,out-mono property is optional. If present, values must be
-> specified less than or equal to the number of output signals.
-> If values less than the number of output signals, elements
-> that has not been specified are set to 0 by default.
->=20
-> Example:
->  - wlf,out-mono =3D <1 0 1>; /* set OUT1,OUT3 to mono differential */
->=20
-> Signed-off-by: Inha Song <ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
->  drivers/mfd/arizona-core.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
->=20
-> diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.c
-> index bce7c07..cc2927d 100644
-> --- a/drivers/mfd/arizona-core.c
-> +++ b/drivers/mfd/arizona-core.c
-> @@ -561,6 +561,16 @@ static int arizona_of_get_core_pdata(struct ariz=
-ona *arizona)
->  		count++;
->  	}
-> =20
-> +	count =3D 0;
-> +	of_property_for_each_u32(arizona->dev->of_node,
-> +				 "wlf,out-mono", prop, cur, val) {
-> +		if (count >=3D ARRAY_SIZE(arizona->pdata.out_mono))
-> +			break;
-> +
-> +		arizona->pdata.out_mono[count] =3D !!val;
-> +		count++;
-> +	}
-> +
->  	return 0;
->  }
-> =20
+I think you should use spin_lock_irqsave(&clk_ops_lock, flags) instead
+of mtk_clk_lock.
+In any case I think you should define a spinlock in clk-mt8135.c and
+pass a reference of it in the init functions.
+See drivers/clk/berlin as a good example.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Thanks,
+Matthias
+
+-- 
+motzblog.wordpress.com
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
