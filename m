@@ -1,67 +1,52 @@
-From: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH net-next v13 3/3] net: hisilicon: new hip04 ethernet driver
-Date: Tue, 20 Jan 2015 10:15:05 +0800
-Message-ID: <54BDBA29.10703@huawei.com>
-References: <1421217254-12008-1-git-send-email-dingtianhong@huawei.com> <1421217254-12008-4-git-send-email-dingtianhong@huawei.com> <54BD48BF.3050707@suse.de> <9314032.C8yR0htxiP@wuerfel>
+From: James Liao <jamesjj.liao@mediatek.com>
+Subject: Re: [PATCH v3 1/4] clk: dts: mediatek: add Mediatek MT8135 clock
+ bindings
+Date: Tue, 20 Jan 2015 10:10:40 +0800
+Message-ID: <1421719840.11981.4.camel@mtksdaap41>
+References: <1420601123-25859-1-git-send-email-jamesjj.liao@mediatek.com>
+ <1420601123-25859-2-git-send-email-jamesjj.liao@mediatek.com>
+ <20150119153549.22722.67372@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <9314032.C8yR0htxiP@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Alexander Graf <agraf-l3A5Bk7waGM@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, eric.dumazet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20150119153549.22722.67372@quantum>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mike Turquette <mturquette@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Vladimir Murzin <vladimir.murzin@arm.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, srv_heupstream@mediatek.com, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, linux-kernel@vger.kernel.org, henryc.chen@mediatek.com, jamesjj.liao@mediatek.com, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, "Joe.C" <yingjoe.chen@mediatek.com>, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 2015/1/20 4:34, Arnd Bergmann wrote:
-> On Monday 19 January 2015 19:11:11 Alexander Graf wrote:
->>
->> After hammering on the box a bit again, I'm in a situation where I get 
->> lots of
->>
->> [302398.232603] hip04-ether e28b0000.ethernet eth0: rx drop
->> [302398.377309] hip04-ether e28b0000.ethernet eth0: rx drop
->> [302398.395198] hip04-ether e28b0000.ethernet eth0: rx drop
->> [302398.466118] hip04-ether e28b0000.ethernet eth0: rx drop
->> [302398.659009] hip04-ether e28b0000.ethernet eth0: rx drop
->> [302399.053389] hip04-ether e28b0000.ethernet eth0: rx drop
->> [302399.122067] hip04-ether e28b0000.ethernet eth0: rx drop
->> [302399.268192] hip04-ether e28b0000.ethernet eth0: rx drop
->> [302399.286081] hip04-ether e28b0000.ethernet eth0: rx drop
->> [302399.594201] hip04-ether e28b0000.ethernet eth0: rx drop
->> [302399.683416] hip04-ether e28b0000.ethernet eth0: rx drop
->> [302399.701307] hip04-ether e28b0000.ethernet eth0: rx drop
->>
->> and I really am getting a lot of drops - I can't even ping the machine 
->> anymore.
->>
->> However, as it is there's a good chance the machine is simply 
->> unreachable because it's busy writing to the UART, and even if not all 
->> useful messages indicating anything have scrolled out. I really don't 
->> think you should emit any message over and over again to the user. Once 
->> or twice is enough.
->>
->> Please make sure to rate limit it.
+On Mon, 2015-01-19 at 07:35 -0800, Mike Turquette wrote:
+> Quoting James Liao (2015-01-06 19:25:20)
+> > +Example: I2C controller node that consumes the clock generated by the clock
+> > +  controller (refer to the standard clock bindings for information about
+> > +  "clocks" and "clock-names" properties):
+> > +
+> > +       i2c0: i2c@1100d000 {
+> > +               compatible = "mediatek,mt8135-i2c", "mediatek,mt6589-i2c";
+> > +               reg = <0 0x1100d000 0 0x70>, <0 0x11000300 0 0x80>;
+> > +               interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_LOW>;
+> > +               clock-div = <16>;
+> > +               clocks = <&pericfg PERI_I2C0_CK>, <&pericfg PERI_AP_DMA_CK>;
+> > +               clock-names = "main", "dma";
+> > +       };
 > 
-> I would argue that packet loss is not an error condition at all
-> and you should not print this at netdev_err() level. You could make
-> this a netdev_dbg(), or just make it silent because it's already
-> counted in the statistics.
+> Hello,
 > 
+> Patch looks good to me overall. One suggestion for the next version is
+> that your example above include a node for the clock controller itself,
+> followed by the i2c controller example above.
 
-I think something wrong with Graf's board, I will try to make it happen on my board, and 
-in any case I will add rate limit to xx_drop and change to dbg log level.
-
-Thanks 
-Ding
-
-> 	Arnd
-> 
-> .
-> 
+OK, I'll add pericfg in next patch.
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+James
