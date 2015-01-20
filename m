@@ -1,146 +1,88 @@
-From: Romain Perier <romain.perier@gmail.com>
-Subject: [PATCH v2 3/4] net: stmmac: dwmac-rk: Use standard devicetree
- property for phy regulator
-Date: Tue, 20 Jan 2015 07:09:39 +0000
-Message-ID: <1421737780-1533-4-git-send-email-romain.perier@gmail.com>
-References: <1421737780-1533-1-git-send-email-romain.perier@gmail.com>
+From: Paul Walmsley <paul@pwsan.com>
+Subject: Re: [PATCH 1/5] ARM: AM43xx: hwmod: add VPFE hwmod entries
+Date: Tue, 20 Jan 2015 07:18:19 +0000 (UTC)
+Message-ID: <alpine.DEB.2.02.1501200709440.5450@utopia.booyaka.com>
+References: <1418919854-16164-1-git-send-email-prabhakar.csengg@gmail.com> <1418919854-16164-2-git-send-email-prabhakar.csengg@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1421737780-1533-1-git-send-email-romain.perier@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: peppe.cavallaro@st.com
-Cc: devicetree@vger.kernel.org, heiko@sntech.de, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, roger.chen@rock-chips.com, linux-arm-kernel@lists.infradead.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1418919854-16164-2-git-send-email-prabhakar.csengg@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>, bparrot@ti.com, detheridge@ti.com, balbi@ti.com
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org, LAK <linux-arm-kernel@lists.infradead.org>, OMAP <linux-omap@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Currently, dwmac-rk uses a custom propety "phy_regulator" to get the name of the
-right regulator to use to power on or power off the phy. This commit converts the
-driver to use phy-supply devicetree property and the corresponding API, it cleans
-the code a bit and make it simpler to maintain. This also replaces the property
-phy_regulator by the standard property phy-supply in rk3288-evb-rk808.dts.
+Hi
 
-Signed-off-by: Romain Perier <romain.perier@gmail.com>
----
- arch/arm/boot/dts/rk3288-evb-rk808.dts         |  2 +-
- drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c | 63 +++++++++-----------------
- 2 files changed, 22 insertions(+), 43 deletions(-)
+On Thu, 18 Dec 2014, Lad, Prabhakar wrote:
 
-diff --git a/arch/arm/boot/dts/rk3288-evb-rk808.dts b/arch/arm/boot/dts/rk3288-evb-rk808.dts
-index 831a7aa..e1d3eeb 100644
---- a/arch/arm/boot/dts/rk3288-evb-rk808.dts
-+++ b/arch/arm/boot/dts/rk3288-evb-rk808.dts
-@@ -161,7 +161,7 @@
- };
- 
- &gmac {
--	phy_regulator = "vcc_phy";
-+	phy-supply = <&vcc_phy>;
- 	phy-mode = "rgmii";
- 	clock_in_out = "input";
- 	snps,reset-gpio = <&gpio4 7 0>;
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
-index 06e1637..6249a4e 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
-@@ -32,7 +32,7 @@
- struct rk_priv_data {
- 	struct platform_device *pdev;
- 	int phy_iface;
--	char regulator[32];
-+	struct regulator *regulator;
- 
- 	bool clk_enabled;
- 	bool clock_input;
-@@ -287,46 +287,25 @@ static int gmac_clk_enable(struct rk_priv_data *bsp_priv, bool enable)
- 
- static int phy_power_on(struct rk_priv_data *bsp_priv, bool enable)
- {
--	struct regulator *ldo;
--	char *ldostr = bsp_priv->regulator;
-+	struct regulator *ldo = bsp_priv->regulator;
- 	int ret;
- 	struct device *dev = &bsp_priv->pdev->dev;
- 
--	if (!ldostr) {
--		dev_err(dev, "%s: no ldo found\n", __func__);
-+	if (!ldo) {
-+		dev_err(dev, "%s: no regulator found\n", __func__);
- 		return -1;
- 	}
- 
--	ldo = regulator_get(NULL, ldostr);
--	if (!ldo) {
--		dev_err(dev, "\n%s get ldo %s failed\n", __func__, ldostr);
-+	if (enable) {
-+		ret = regulator_enable(ldo);
-+		if (ret)
-+			dev_err(dev, "%s: fail to enable phy-supply\n",
-+				__func__);
- 	} else {
--		if (enable) {
--			if (!regulator_is_enabled(ldo)) {
--				ret = regulator_enable(ldo);
--				if (ret != 0)
--					dev_err(dev, "%s: fail to enable %s\n",
--						__func__, ldostr);
--				else
--					dev_info(dev, "turn on ldo done.\n");
--			} else {
--				dev_warn(dev, "%s is enabled before enable",
--					 ldostr);
--			}
--		} else {
--			if (regulator_is_enabled(ldo)) {
--				ret = regulator_disable(ldo);
--				if (ret != 0)
--					dev_err(dev, "%s: fail to disable %s\n",
--						__func__, ldostr);
--				else
--					dev_info(dev, "turn off ldo done.\n");
--			} else {
--				dev_warn(dev, "%s is disabled before disable",
--					 ldostr);
--			}
--		}
--		regulator_put(ldo);
-+		ret = regulator_disable(ldo);
-+		if (ret)
-+			dev_err(dev, "%s: fail to disable phy-supply\n",
-+				__func__);
- 	}
- 
- 	return 0;
-@@ -346,14 +325,14 @@ static void *rk_gmac_setup(struct platform_device *pdev)
- 
- 	bsp_priv->phy_iface = of_get_phy_mode(dev->of_node);
- 
--	ret = of_property_read_string(dev->of_node, "phy_regulator", &strings);
--	if (ret) {
--		dev_warn(dev, "%s: Can not read property: phy_regulator.\n",
--			 __func__);
--	} else {
--		dev_info(dev, "%s: PHY power controlled by regulator(%s).\n",
--			 __func__, strings);
--		strcpy(bsp_priv->regulator, strings);
-+	bsp_priv->regulator = devm_regulator_get_optional(dev, "phy");
-+	if (IS_ERR(bsp_priv->regulator)) {
-+		if (PTR_ERR(bsp_priv->regulator) == -EPROBE_DEFER) {
-+			dev_err(dev, "phy regulator is not available yet, deferred probing\n");
-+			return ERR_PTR(-EPROBE_DEFER);
-+		}
-+		dev_err(dev, "no regulator found\n");
-+		bsp_priv->regulator = NULL;
- 	}
- 
- 	ret = of_property_read_string(dev->of_node, "clock_in_out", &strings);
--- 
-1.9.1
+> From: Benoit Parrot <bparrot@ti.com>
+> 
+> this patch adds VPFE HWMOD data for AM43xx.
+> 
+> Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> Signed-off-by: Darren Etheridge <detheridge@ti.com>
+> Signed-off-by: Felipe Balbi <balbi@ti.com>
+> Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+
+...
+
+> ---
+>  arch/arm/mach-omap2/omap_hwmod_43xx_data.c | 56 ++++++++++++++++++++++++++++++
+>  arch/arm/mach-omap2/prcm43xx.h             |  3 +-
+>  2 files changed, 58 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/mach-omap2/omap_hwmod_43xx_data.c b/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
+> index fea01aa..bd9067e 100644
+> --- a/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
+> +++ b/arch/arm/mach-omap2/omap_hwmod_43xx_data.c
+
+...
+
+> @@ -750,6 +788,22 @@ static struct omap_hwmod_ocp_if am43xx_l4_ls__dss_rfbi = {
+>  	.user		= OCP_USER_MPU | OCP_USER_SDMA,
+>  };
+>  
+> +static struct omap_hwmod_ocp_if am43xx_l3__vpfe0 = {
+> +	.master         = &am33xx_l3_main_hwmod,
+> +	.slave          = &am43xx_vpfe0_hwmod,
+> +	.clk            = "l3_gclk",
+> +	.flags          = OCPIF_SWSUP_IDLE,
+> +	.user           = OCP_USER_MPU,
+> +};
+> +
+> +static struct omap_hwmod_ocp_if am43xx_l3__vpfe1 = {
+> +	.master         = &am33xx_l3_main_hwmod,
+> +	.slave          = &am43xx_vpfe1_hwmod,
+> +	.clk            = "l3_gclk",
+> +	.flags          = OCPIF_SWSUP_IDLE,
+> +	.user           = OCP_USER_MPU,
+> +};
+> +
+>  static struct omap_hwmod_ocp_if *am43xx_hwmod_ocp_ifs[] __initdata = {
+>  	&am33xx_l4_wkup__synctimer,
+>  	&am43xx_l4_ls__timer8,
+> @@ -848,6 +902,8 @@ static struct omap_hwmod_ocp_if *am43xx_hwmod_ocp_ifs[] __initdata = {
+>  	&am43xx_l4_ls__dss,
+>  	&am43xx_l4_ls__dss_dispc,
+>  	&am43xx_l4_ls__dss_rfbi,
+> +	&am43xx_l3__vpfe0,
+> +	&am43xx_l3__vpfe1,
+>  	NULL,
+>  };
+
+According to SPRUHL7 Figure 14-1 "VPFE Integration" and Table 14-2 "VPFE 
+Connectivity Attributes", a VPFE has two interconnect ports per instance: 
+one L4-Per port as a register target, and one L3 port as a DMA initiator.  
+It's unclear to me whether the L3 port can also serve as a register 
+target, but Section 2.1 "ARM Cortex-A9 Memory Map", Table 4-1 "L3 
+Master-Slave Connectivity", and Figure 4-2 "L4 Topology" suggest that it 
+cannot.
+
+So if that's correct, there should be two more struct omap_hwmod_ocp_if 
+records added in this patch for the register target ports that are 
+connected to the L4.  DSS is a good example: see am43xx_dss__l3_main and 
+am43xx_l4_ls__dss in this same file.
+
+
+- Paul
