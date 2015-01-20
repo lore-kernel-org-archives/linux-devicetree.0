@@ -1,49 +1,120 @@
-From: "Opensource [Steve Twiss]" <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH V3 2/2] devicetree: Add bindings for DA9063
-Date: Tue, 20 Jan 2015 16:35:27 +0000
-Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7D0B52E11@SW-EX-MBX02.diasemi.com>
-References: <cover.1421762065.git.stwiss.opensource@diasemi.com>
- <99c7b7fb380070e5a2f7f4e9f333e8a2b12b591a.1421762065.git.stwiss.opensource@diasemi.com>
- <20150120155400.GI13701@x1>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150120155400.GI13701@x1>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Dajun Chen <david.chen-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+From: Ajay Kumar <ajaykumar.rs@samsung.com>
+Subject: [PATCH V9 09/14] Documentation: drm: bridge: move to video/bridge
+Date: Tue, 20 Jan 2015 22:08:50 +0530
+Message-ID: <1421771935-31618-10-git-send-email-ajaykumar.rs@samsung.com>
+References: <1421771935-31618-1-git-send-email-ajaykumar.rs@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1421771935-31618-1-git-send-email-ajaykumar.rs@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: dri-devel@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: kgene.kim@samsung.com, inki.dae@samsung.com, thierry.reding@gmail.com, daniel.vetter@ffwll.ch, seanpaul@google.com, ajaynumb@gmail.com, jg1.han@samsung.com, bhushan.r@samsung.com, prashanth.g@samsung.com, Ajay Kumar <ajaykumar.rs@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMjAgSmFudWFyeSAyMDE1IDE1OjU0IExlZSBKb25lcyB3cm90ZToNCg0KWy4uLl0NCg0KPiA+
-ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL2RhOTA2My50eHQgfCA5Mw0K
-PiArKysrKysrKysrKysrKysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDkzIGluc2Vy
-dGlvbnMoKykNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9tZmQvZGE5MDYzLnR4dA0KPiANCj4gSSBhbHJlYWR5IEFja2VkIHRoaXM/ICBB
-bnkgcmVhc29uIHRoYXQgd2Fzbid0IGNhcnJpZWQgZm9yd2FyZCB0byB0aGlzDQo+IHN1Ym1pc3Np
-b24/ICBIYXMgYW55dGhpbmcgY2hhbmdlZD8NCj4gDQoNClllcywgSSBoYWQgdG8gYWx0ZXIgdGhp
-cyBiaW5kaW5ncyBkb2N1bWVudCBiZWNhdXNlIG9mIHRoZSBjb21wYXRpYmxlIGNoYW5nZSAuLi4N
-ClNlZSBiZWxvdzoNCg0KPiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4gaW5kZXggMDAwMDAw
-MC4uNDJjNmZhNg0KPiA+IC0tLSAvZGV2L251bGwNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvbWZkL2RhOTA2My50eHQNCj4gPiBAQCAtMCwwICsxLDkzIEBADQo+
-ID4gKyogRGlhbG9nIERBOTA2MyBQb3dlciBNYW5hZ2VtZW50IEludGVncmF0ZWQgQ2lyY3VpdCAo
-UE1JQykNCj4gPiArDQo+ID4gK0RBOTA5MyBjb25zaXN0cyBvZiBhIGxhcmdlIGFuZCB2YXJpZWQg
-Z3JvdXAgb2Ygc3ViLWRldmljZXMgKEkyQyBPbmx5KToNCj4gPiArDQo+ID4gK0RldmljZSAgICAg
-ICAgICAgICAgICAgICBTdXBwbHkgTmFtZXMgICAgRGVzY3JpcHRpb24NCj4gPiArLS0tLS0tICAg
-ICAgICAgICAgICAgICAgIC0tLS0tLS0tLS0tLSAgICAtLS0tLS0tLS0tLQ0KPiA+ICtkYTkwNjMt
-cmVndWxhdG9yICAgICAgICA6ICAgICAgICAgICAgICAgOiBMRE9zICYgQlVDS3MNCj4gPiArZGE5
-MDYzLXJ0YyAgICAgICAgICAgICAgOiAgICAgICAgICAgICAgIDogUmVhbC1UaW1lIENsb2NrDQo+
-ID4gK2RhOTA2My13YXRjaGRvZyAgICAgICAgIDogICAgICAgICAgICAgICA6IFdhdGNoZG9nDQo+
-ID4gKw0KPiA+ICs9PT09PT0NCj4gPiArDQo+ID4gK1JlcXVpcmVkIHByb3BlcnRpZXM6DQo+ID4g
-Kw0KPiA+ICstIGNvbXBhdGlibGUgOiBTaG91bGQgYmUgImRsZyxkYTkwNjMiDQoNClRoZSBsaW5l
-IGFib3ZlIHVzZWQgdG8gc2F5ICJkbGcsZGE5MDYzLWFkIiwgImRsZyxkYTkwNjMtYmIiLCBldGMu
-DQpOb3cgaXQganVzdCBzYXlzICJkbGcsZGE5MDYzIg0KDQpbLi4uXQ0KDQo+ID4gKw0KPiA+ICtF
-eGFtcGxlOg0KPiA+ICsNCj4gPiArCXBtaWMwOiBkYTkwNjNANTggew0KPiA+ICsJCWNvbXBhdGli
-bGUgPSAiZGxnLGRhOTA2MyINCg0KQW5kIEkgYWxzbyBjaGFuZ2UgYSAgbGluZSBpbiB0aGUgZXhh
-bXBsZSBmb3IgdGhlIHNhbWUgcmVhc29uLg0KU29ycnkgZm9yIHRoZSBjb25mdXNpb24uDQoNClJl
-Z2FyZHMsDQpTdGV2ZQ0KDQo=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Move drm/bridge documentation to video/bridge.
+Also, add proper documentation for gpios used by ptn3460.
+
+Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
+Acked-by: Inki Dae <inki.dae@samsung.com>
+Tested-by: Rahul Sharma <rahul.sharma@samsung.com>
+Tested-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Tested-by: Gustavo Padovan <gustavo.padovan@collabora.co.uk>
+Tested-by: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+---
+ .../devicetree/bindings/drm/bridge/ptn3460.txt     |   39 --------------------
+ .../devicetree/bindings/video/bridge/ptn3460.txt   |   39 ++++++++++++++++++++
+ 2 files changed, 39 insertions(+), 39 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/drm/bridge/ptn3460.txt
+ create mode 100644 Documentation/devicetree/bindings/video/bridge/ptn3460.txt
+
+diff --git a/Documentation/devicetree/bindings/drm/bridge/ptn3460.txt b/Documentation/devicetree/bindings/drm/bridge/ptn3460.txt
+deleted file mode 100644
+index 663fe6c..0000000
+--- a/Documentation/devicetree/bindings/drm/bridge/ptn3460.txt
++++ /dev/null
+@@ -1,39 +0,0 @@
+-ptn3460 bridge bindings
+-
+-Required properties:
+-	- compatible: "nxp,ptn3460"
+-	- reg: i2c address of the bridge
+-	- powerdown-gpio: OF device-tree gpio specification
+-	- reset-gpio: OF device-tree gpio specification
+-	- edid-emulation: The EDID emulation entry to use
+-		+-------+------------+------------------+
+-		| Value | Resolution | Description      |
+-		|   0   |  1024x768  | NXP Generic      |
+-		|   1   |  1920x1080 | NXP Generic      |
+-		|   2   |  1920x1080 | NXP Generic      |
+-		|   3   |  1600x900  | Samsung LTM200KT |
+-		|   4   |  1920x1080 | Samsung LTM230HT |
+-		|   5   |  1366x768  | NXP Generic      |
+-		|   6   |  1600x900  | ChiMei M215HGE   |
+-		+-------+------------+------------------+
+-
+-	- video interfaces: Device node can contain video interface port
+-			    nodes for panel according to [1].
+-
+-[1]: Documentation/devicetree/bindings/media/video-interfaces.txt
+-
+-Example:
+-	lvds-bridge@20 {
+-		compatible = "nxp,ptn3460";
+-		reg = <0x20>;
+-		powerdown-gpio = <&gpy2 5 1 0 0>;
+-		reset-gpio = <&gpx1 5 1 0 0>;
+-		edid-emulation = <5>;
+-		ports {
+-			port@0 {
+-				bridge_out: endpoint {
+-					remote-endpoint = <&panel_in>;
+-				};
+-			};
+-		};
+-	};
+diff --git a/Documentation/devicetree/bindings/video/bridge/ptn3460.txt b/Documentation/devicetree/bindings/video/bridge/ptn3460.txt
+new file mode 100644
+index 0000000..361971b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/video/bridge/ptn3460.txt
+@@ -0,0 +1,39 @@
++ptn3460 bridge bindings
++
++Required properties:
++	- compatible: "nxp,ptn3460"
++	- reg: i2c address of the bridge
++	- powerdown-gpio: OF device-tree gpio specification  for PD_N pin.
++	- reset-gpio: OF device-tree gpio specification for RST_N pin.
++	- edid-emulation: The EDID emulation entry to use
++		+-------+------------+------------------+
++		| Value | Resolution | Description      |
++		|   0   |  1024x768  | NXP Generic      |
++		|   1   |  1920x1080 | NXP Generic      |
++		|   2   |  1920x1080 | NXP Generic      |
++		|   3   |  1600x900  | Samsung LTM200KT |
++		|   4   |  1920x1080 | Samsung LTM230HT |
++		|   5   |  1366x768  | NXP Generic      |
++		|   6   |  1600x900  | ChiMei M215HGE   |
++		+-------+------------+------------------+
++
++	- video interfaces: Device node can contain video interface port
++			    nodes for panel according to [1].
++
++[1]: Documentation/devicetree/bindings/media/video-interfaces.txt
++
++Example:
++	lvds-bridge@20 {
++		compatible = "nxp,ptn3460";
++		reg = <0x20>;
++		powerdown-gpio = <&gpy2 5 1 0 0>;
++		reset-gpio = <&gpx1 5 1 0 0>;
++		edid-emulation = <5>;
++		ports {
++			port@0 {
++				bridge_out: endpoint {
++					remote-endpoint = <&panel_in>;
++				};
++			};
++		};
++	};
+-- 
+1.7.9.5
