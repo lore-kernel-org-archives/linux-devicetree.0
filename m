@@ -1,93 +1,107 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 5/5] tty/serial: Add Spreadtrum sc9836-uart driver support
-Date: Tue, 20 Jan 2015 14:17:56 -0600
-Message-ID: <CAL_JsqJz+G6WjBSf=ye9rTLBUD9bw54szhZJROD5WTKMG99NHQ@mail.gmail.com>
-References: <1421402411-3479-1-git-send-email-chunyan.zhang@spreadtrum.com>
- <1421402411-3479-6-git-send-email-chunyan.zhang@spreadtrum.com>
- <CAL_JsqJg=BtanmR_rhYthCUhKbErs8viZ7MMMXr-PmPjUV4BRQ@mail.gmail.com>
- <CAAfSe-vqqpvbYe0bEeD-3_QsLYz4r7pxMuA1-L4cYRw9TY=NgA@mail.gmail.com>
- <CAL_JsqLTArm1v8ka39_KLq2jMKkK2ZXQ6-an=JSWVgTK1LWmOg@mail.gmail.com> <CAAfSe-tAwURc_P+-0+m22ao9r+Fud6Ae89JF8FGsWgg_49Mdhg@mail.gmail.com>
+From: Dave Gerlach <d-gerlach@ti.com>
+Subject: Re: [RFC PATCH v5 0/4] ARM: OMAP2+: AM33XX: Add suspend-resume support
+Date: Tue, 20 Jan 2015 14:32:13 -0600
+Message-ID: <54BEBB4D.90802@ti.com>
+References: <cover.1417038624.git.d-gerlach@ti.com> <20150120180347.GJ7718@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAAfSe-tAwURc_P+-0+m22ao9r+Fud6Ae89JF8FGsWgg_49Mdhg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lyra Zhang <zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, One Thousand Gnomes <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Hayato Suzuki <hytszk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joel Schopp <Joel.Schopp-5C7GfCeVMHo@public.gmane.org>Suravee Suthikulanit <S>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20150120180347.GJ7718@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Benoit Cousson <bcousson@baylibre.com>, Paul Walmsley <paul@pwsan.com>, Kevin Hilman <khilman@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 20, 2015 at 1:37 AM, Lyra Zhang <zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Hi, Rob
->
-> I still have a question to be conform, specific describes below:
->
-> On Mon, Jan 19, 2015 at 10:11 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On Mon, Jan 19, 2015 at 3:55 AM, Lyra Zhang <zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>> On Sat, Jan 17, 2015 at 12:41 AM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>> On Fri, Jan 16, 2015 at 4:00 AM, Chunyan Zhang
->>>> <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org> wrote:
->>>>> Add a full sc9836-uart driver for SC9836 SoC which is based on the
->>>>> spreadtrum sharkl64 platform.
->>>>> This driver also support earlycon.
->>>>> This patch also replaced the spaces between the macros and their
->>>>> values with the tabs in serial_core.h
+Tony,
+On 01/20/2015 12:03 PM, Tony Lindgren wrote:
+> * Dave Gerlach <d-gerlach@ti.com> [141126 13:54]:
+>> Hi,
+>> This series is v5 of the series to add suspend/resume support for Texas
+>> Instruments AM335x SoC. It has gone through a rather major overhaul
+>> since the last version and because of that has been split into multiple
+>> different sets of patches, on which this series depends. Previous discussion
+>> that influenced there changes can be found here [1]. This series depends on
+>> generic sram exec mapping patch here [2], emif series here [3],
+>> and wkup_m3_ipc series here [4]. I have pushed a branch containing the patches
+>> from ALL required series here [5] for testing or a view of the high level
+>> flow of the entire series.
 >>
->> [...]
+>> The largest change with this revision is the introduction of a
+>> wkup_m3_ipc driver which handles all communication with the Cortex M3
+>> present on am335x for handling low power tasks. Previously this was
+>> handled in the wkup_m3_rproc driver (also sent in an earlier series)
+>> but that driver is now only responsible for booting the wkup_m3. The
+>> wkup_m3_ipc driver exposes an API with all required PM functionality
+>> needed by the PM code introduced by this series, so the PM code has
+>> shrunk considerably.
 >>
->>>>> +static int __init sprd_serial_init(void)
->>>>> +{
->>>>> +       int ret = 0;
->>>>> +
->>>>> +       ret = uart_register_driver(&sprd_uart_driver);
->>>>
->>>> This can be done in probe now. Then you can use module_platform_driver().
->>>>
->>>
->>> Question:
->>> 1. there are 4 uart ports configured in dt for sprd_serial, so probe
->>> will be called 4 times, but uart_register_driver only needs to be
->>> called one time, so can we use uart_driver.state to check if
->>> uart_register_driver has already been called ?
+>> Another major change is that the EMIF code previously present in the
+>> sleep33xx asm code and pm33xx code for save and restore of EMIF context
+>> and entry into low power mode has all been moved in to a separate EMIF
+>> driver, further reducing the size of the PM code. Because of this, moving
+>> the emif header defines into include/linux/ti_emif.h is no longer necessary.
 >>
->> Yes.
+>> Other changes include clean up of the timer suspend/resume handlers, now
+>> look up hwmod in init and use that handle along with renaming to
+>> *_idle/*_unidle to avoid confusion with true suspend handlers. 
 >>
->>> 2. if I use module_platform_driver() instead of
->>> module_init(sprd_serial_init)  and  module_exit(sprd_serial_exit) , I
->>> must move uart_unregister_driver() which is now processed in
->>> sprd_serial_exit() to sprd_remove(), there is a similar problem with
->>> probe(), sprd_remove() will also be called 4 times, and actually it
->>> should be called only one time. How can we deal with this case?
+>> Suspend support requires:
+>> CONFIG_TI_EMIF_SRAM
+>> CONFIG_WKUP_M3_RPROC
+>> CONFIG_WKUP_M3_IPC
 >>
->> Look at pl01x or Samsung UART drivers which have done this conversion.
->
-> Samsung UART does use module_platform_driver, but pl010/pl011 doesn't.
+>> And also requires AM335x USB support to be enabled to work for multiple
+>> cycles. If you want to load firmware from rootfs in /lib/firmware you now
+>> must also select CONFIG_FW_LOADER_USER_HELPER_FALLBACK.
+>>
+>> This code works with version 0x189 of the CM3 firmware found here [6] on
+>> the next branch, /bin/am335x-pm-firmware.elf.
+> 
+> Dave, does this series have dependencies to the other patches? Can some
+> parts of this already be applied without breaking anything?
+> 
 
-That is because pl011 is an amba_device rather than a platform_device
-and there is not an equivalent macro for this boilerplate (although I
-think one has been posted recently).
+The only patch with no dependencies is patch 1 (ARM: OMAP2+: timer: Add
+suspend-resume callbacks for clkevent device). It's ready to be applied, I just
+applied to v3.19-rc5 and built and booted on am335x-evm with no issue just to be
+sure. It won't actually do anything until suspend is completely implemented.
 
-> In the Samsung UART driver, uart_unregister_driver is processed in
-> remove(), like below:
->
-> static int s3c24xx_serial_remove(struct platform_device *dev)
-> {
->     struct uart_port *port = s3c24xx_dev_to_port(&dev->dev);
->
->     if (port) {
->         s3c24xx_serial_cpufreq_deregister(to_ourport(port));
->         uart_remove_one_port(&s3c24xx_uart_drv, port);
->     }
->
->     uart_unregister_driver(&s3c24xx_uart_drv);
-> }
->
-> if this serial has more than one ports, uart_unregister_driver() must
-> be called multiple times when the device need to be removed.
-> I think there may be a problem because that uart_unregister_driver()
-> will do kfree(drv->state) every time when it's called.
+Regards,
+Dave
 
-Yes. Looks like a bug still in the Samsung driver. So follow what the
-pl01x driver does. It had the same problem, but there is a follow-up
-commit to fix it.
+> Regards,
+> 
+> Tony
+>  
+>> [1] http://www.spinics.net/lists/linux-omap/msg109331.html
+>> [2] http://www.spinics.net/linux/lists/kernel/msg1876629.html
+>> [3] http://www.spinics.net/linux/lists/kernel/msg1876646.html
+>> [4] http://www.spinics.net/linux/lists/kernel/msg1876642.html
+>> [5] https://github.com/dgerlach/linux-pm/tree/rfc-pm-am335x-v3.18-rc6
+>> [6] https://git.ti.com/ti-cm3-pm-firmware/amx3-cm3/commits/next
+>>
+>> Dave Gerlach (3):
+>>   ARM: OMAP2+: AM33XX: Add assembly code for PM operations
+>>   ARM: OMAP2+: AM33XX: Basic suspend resume support
+>>   ARM: OMAP2+: AM33XX: Hookup AM33XX PM code into OMAP builds
+>>
+>> Vaibhav Bedia (1):
+>>   ARM: OMAP2+: timer: Add suspend-resume callbacks for clkevent device
 
-Rob
+>>  arch/arm/boot/dts/am33xx.dtsi   |   2 +
+>>  arch/arm/mach-omap2/Makefile    |   2 +
+>>  arch/arm/mach-omap2/common.h    |   9 ++
+>>  arch/arm/mach-omap2/io.c        |   1 +
+>>  arch/arm/mach-omap2/pm.h        |   6 +
+>>  arch/arm/mach-omap2/pm33xx.c    | 250 ++++++++++++++++++++++++++++++++++++++++
+>>  arch/arm/mach-omap2/sleep33xx.S | 216 ++++++++++++++++++++++++++++++++++
+>>  arch/arm/mach-omap2/timer.c     |  28 +++++
+>>  8 files changed, 514 insertions(+)
+>>  create mode 100644 arch/arm/mach-omap2/pm33xx.c
+>>  create mode 100644 arch/arm/mach-omap2/sleep33xx.S
+>>
+>> -- 
+>> 2.1.0
+>>
+
