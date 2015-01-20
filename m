@@ -1,93 +1,71 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH 0/5] extcon: usb: Introduce USB GPIO extcon driver. Fix
- DRA7 USB.
-Date: Tue, 20 Jan 2015 13:02:37 -0600
-Message-ID: <20150120190237.GG15169@saruman>
-References: <1421689942-10201-1-git-send-email-rogerq@ti.com>
-Reply-To: <balbi@ti.com>
+From: Greg Bellows <greg.bellows-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Secure resources in device trees
+Date: Tue, 20 Jan 2015 13:15:51 -0600
+Message-ID: <CAOgzsHVpXZTHoq7HyfrGeGe92onnb6=BQr30PvKrg04h=0De0w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="rV8arf8D5Dod9UkK"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1421689942-10201-1-git-send-email-rogerq@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: balbi@ti.com, tony@atomide.com, myungjoo.ham@samsung.com, cw00.choi@samsung.com, george.cherian@ti.com, nsekhar@ti.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter Maydell <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---rV8arf8D5Dod9UkK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The addition of ARM security extension (TrustZone) support to QEMU has
+exposed the issue of how secure resources are communicated to secure
+software responsible for booting the HLOS.  The natural choice for
+communicating these details is the device tree.
 
-On Mon, Jan 19, 2015 at 07:52:17PM +0200, Roger Quadros wrote:
-> Hi,
->=20
-> On DRA7 EVMs the USB ID pin is connected to a GPIO line. The USB drivers
-> (dwc3 + dwc3-omap) depend on extcon framework to get the USB cable state
-> (USB or USB-Host) to put the controller in the right mode.
->=20
-> There were earlier attempts [1] to get this working by trying to patch up
-> the existing GPIO extcon driver.
->=20
-> This series attemts to take a different approach by introducing a new
-> USB specific extcon driver to handle the USB ID GPIO pin and
-> interpret a right USB cable state.
->=20
-> The reasoning to introduce this new driver is:
-> 1) The existing GPIO extcon driver doesn't understand USB cable states
-> and it can't handle more than one cable per instance.
->   =20
-> For the USB case we need to handle at least 2 cable states.
->     a) USB (attach/detach)
->     b) USB-Host (attach/detach)
-> and could possible include more states like
->     c) Fast-charger (attach/detach)
->     d) Slow-charger (attach/detach)
->    =20
-> 2) This USB specific driver can be easily updated in the future to
-> handle VBUS events, or charger detect events, in case it happens
-> to be available on GPIO for any platform.
->=20
-> 3) The DT implementation is very easy. You just need one extcon node per =
-USB
-> instead of one extcon node per cable state as in case of [1].
->=20
-> 4) The cable state string doesn't need to be encoded in the device tree
-> as in case of [1].
->=20
-> 5) With only ID event available, you can simulate a USB-peripheral attach
-> when USB-Host is detacted instead of hacking the USB driver to do the sam=
-e.
->=20
-> Tested on DRA7-evm and DRA72-evm.
+In the case of real hardware, the device tree supplied to the HLOS
+only needs to describe non-secure resources as secure software can
+rely on static knowledge about the hardware.  This also holds true for
+QEMU machines modeled after actual fixed hardware configurations.
+However, this is not the case with QEMU's virtual machine models, such
+as machvirt, where the hardware configuration can change over time.
+In this case, secure software is dependent on QEMU's dynamically
+constructed device tree to describe the hardware, making it impossible
+for secure software to know ahead of time what is secure, non-secure,
+or both.
 
-while at that, you might want to patch X15 too.
+Two possible approaches for handling this particular case are:
 
---=20
-balbi
+1) Create two device tree blobs; one describing the non-secure
+configuration and the other the full configuration.  This would allow
+secure software to see the full hardware picture including secure
+resources while the non-secure world would only see the non-secure
+device tree configuration.  The QEMU virt machine would be responsible
+for producing the device tree blobs.
 
---rV8arf8D5Dod9UkK
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+The drawbacks to this approach are:
+* There are 2 device trees to manage
+* The two DTBs will typically be almost identical.
+* Not possible to identify whether a device is shared or not between
+the secure and non-secure worlds.
+* Identifying device available only to the secure world require
+cumbersome comparison of the two device trees.
+* A mechanism would be needed to pass an additional device tree.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+2) Modify the standard device tree blob to include annotations or
+modifications to describe which resources are secure or not.  In this
+case, secure software would use the single device tree to identify the
+secure resources.  The added information could be used by secure
+software to trim the device tree before passing it.  Alternatively,
+the information could be passed on to non-secure software with the
+expectation that it would honor the device security.   It would be
+crucial that any data added to the device tree adhere to existing
+conventions or expectations.
 
-iQIcBAEBAgAGBQJUvqZNAAoJEIaOsuA1yqREynQP/25JUbOYs+UiFaV7NHFcFNgL
-iR8q5QvpXRXz09ryR7IX+qAq1EB/IhAFUd03tbM6kOGZV1s/fAsjaAftANJJRr2w
-bipR1obgg7dPTBUiE8ActUcLGVubMo0Rb6IGpadrCL7TxhPUXt7u0W1U92/a8xdu
-3tGlNGBXGxW3id3N0u3ljS3isWX9pqkGjm68nRbSwKbUYmV7xAf9vkSqYPQVo5lp
-Hq/P3NLSP6mDxER+lO2+3K3Wq245hpZoY8kPdlTRoGMc5AMwjTe6876AQY36q8Z/
-w4TO3Lu+IWH1O6hkLp5DzSRRuPbMTZhweiOR+Noc9vDFJZh6TA55g0umOXTov3Qa
-H1U5Asi28nSCM3muQrAOtuRza1mZ/V69hZ5e9kvBrPeN0e5RB8jd0HB0/HjKGzqP
-eBDduYJeRZfINQRMC6U3ZKfaKB8+WJBz0Swr0zGDRCTAweNhZzd3ZfxiSXY4m6AD
-CktC/WLrI95N3+iZC6n0Otx/xt8bbGnwhNuKg5afGU5G/o5IvpFAat6rtEINArfG
-of5oxF31Ua88v5BkFLTXDzcvWtNA/K6Jl9rwYIeOjJLpvKFfy+jhLfCvEIW/MEvQ
-98F3CN4EWh66vHo9yGnYjKgJpat8GyOpD49GyVKcRODNY6I2HUmJMRDaLlYd/b0F
-BEQ7P+54ubiRdsTZYeqv
-=JCEx
------END PGP SIGNATURE-----
+The drawbacks to this approach are:
+* Additional secure state details. potentially unrecognized by current
+consumers,  would need to be added to the device tree.
+* Unless a mechanism already exists, the new secure property runs the
+risk of breaking backwards compatibility.
+* Secure firmware is responsible for understanding and possibly
+filtering the secure device tree data.
 
---rV8arf8D5Dod9UkK--
+Feedback welcomed.
+
+Greg
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree-spec" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
