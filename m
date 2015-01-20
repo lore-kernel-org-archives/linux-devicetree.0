@@ -1,158 +1,377 @@
-From: Ajay Kumar <ajaykumar.rs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH V9 05/14] drm/exynos: dp: support drm_bridge
-Date: Tue, 20 Jan 2015 22:08:46 +0530
-Message-ID: <1421771935-31618-6-git-send-email-ajaykumar.rs@samsung.com>
-References: <1421771935-31618-1-git-send-email-ajaykumar.rs@samsung.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1421771935-31618-1-git-send-email-ajaykumar.rs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, daniel.vetter-/w4YWyX8dFk@public.gmane.org, seanpaul-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, ajaynumb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, bhushan.r-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, prashanth.g-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Ajay Kumar <ajaykumar.rs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: [PATCHv4 2/2] leds: tlc591xx: Driver for the TI 8/16 Channel i2c LED driver
+Date: Tue, 20 Jan 2015 17:45:42 +0100
+Message-ID: <1421772342-13810-3-git-send-email-andrew@lunn.ch>
+References: <1421772342-13810-1-git-send-email-andrew@lunn.ch>
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <1421772342-13810-1-git-send-email-andrew@lunn.ch>
+Sender: linux-leds-owner@vger.kernel.org
+To: cooloney@gmail.com, rpurdie@rpsys.net
+Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux ARM <linux-arm-kernel@lists.infradead.org>, tomi.valkeinen@ti.com, vigneshr@ti.com, Andrew Lunn <andrew@lunn.ch>, Matthew.Fatheree@belkin.com
 List-Id: devicetree@vger.kernel.org
 
-Modify driver to support drm_bridge.
+The TLC59116 is an I2C bus controlled 16-channel LED driver.  The
+TLC59108 is an I2C bus controlled 8-channel LED driver, which is very
+similar to the TLC59116. Each LED output has its own 8-bit
+fixed-frequency PWM controller to control the brightness of the LED.
+The LEDs can also be fixed off and on, making them suitable for use as
+GPOs.
 
-Signed-off-by: Ajay Kumar <ajaykumar.rs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Tested-by: Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Tested-by: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Tested-by: Gustavo Padovan <gustavo.padovan-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Tested-by: Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+This is based on a driver from Belkin, but has been extensively
+rewritten and extended to support both 08 and 16 versions.
+
+Signed-off-by: Andrew Lunn <andrew@lunn.ch>
+Cc: Matthew.Fatheree@belkin.com
 ---
- .../devicetree/bindings/video/exynos_dp.txt        |   12 +++++++
- drivers/gpu/drm/exynos/exynos_dp_core.c            |   37 ++++++++++++++++----
- drivers/gpu/drm/exynos/exynos_dp_core.h            |    1 +
- 3 files changed, 44 insertions(+), 6 deletions(-)
+ drivers/leds/Kconfig         |   8 ++
+ drivers/leds/Makefile        |   1 +
+ drivers/leds/leds-tlc591xx.c | 307 +++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 316 insertions(+)
+ create mode 100644 drivers/leds/leds-tlc591xx.c
 
-diff --git a/Documentation/devicetree/bindings/video/exynos_dp.txt b/Documentation/devicetree/bindings/video/exynos_dp.txt
-index 53dbccf..7a3a9cd 100644
---- a/Documentation/devicetree/bindings/video/exynos_dp.txt
-+++ b/Documentation/devicetree/bindings/video/exynos_dp.txt
-@@ -66,6 +66,10 @@ Optional properties for dp-controller:
- 		Hotplug detect GPIO.
- 			Indicates which GPIO should be used for hotplug
- 			detection
-+	-video interfaces: Device node can contain video interface port
-+			    nodes according to [1].
-+
-+[1]: Documentation/devicetree/bindings/media/video-interfaces.txt
+diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+index a6c3d2f153f3..67cba2032543 100644
+--- a/drivers/leds/Kconfig
++++ b/drivers/leds/Kconfig
+@@ -457,6 +457,14 @@ config LEDS_TCA6507
+ 	  LED driver chips accessed via the I2C bus.
+ 	  Driver support brightness control and hardware-assisted blinking.
  
- Example:
- 
-@@ -105,4 +109,12 @@ Board Specific portion:
- 				vsync-len = <6>;
- 			};
- 		};
++config LEDS_TLC591XX
++	tristate "LED driver for TLC59108 and TLC59116 controllers"
++	depends on LEDS_CLASS && I2C
++	select REGMAP_I2C
++	help
++	  This option enables support for Texas Instruments TLC59108
++	  and TLC59116 LED controllers.
 +
-+		ports {
-+			port@0 {
-+				dp_out: endpoint {
-+					remote-endpoint = <&bridge_in>;
-+				};
-+			};
-+		};
- 	};
-diff --git a/drivers/gpu/drm/exynos/exynos_dp_core.c b/drivers/gpu/drm/exynos/exynos_dp_core.c
-index 27e3d27..46f1497 100644
---- a/drivers/gpu/drm/exynos/exynos_dp_core.c
-+++ b/drivers/gpu/drm/exynos/exynos_dp_core.c
-@@ -18,6 +18,7 @@
- #include <linux/interrupt.h>
- #include <linux/of.h>
- #include <linux/of_gpio.h>
-+#include <linux/of_graph.h>
- #include <linux/gpio.h>
- #include <linux/component.h>
- #include <linux/phy/phy.h>
-@@ -994,9 +995,19 @@ static struct drm_connector_helper_funcs exynos_dp_connector_helper_funcs = {
- };
- 
- /* returns the number of bridges attached */
--static int exynos_drm_attach_lcd_bridge(struct drm_device *dev,
-+static int exynos_drm_attach_lcd_bridge(struct exynos_dp_device *dp,
- 		struct drm_encoder *encoder)
- {
-+	int ret;
+ config LEDS_MAX8997
+ 	tristate "LED support for MAX8997 PMIC"
+ 	depends on LEDS_CLASS && MFD_MAX8997
+diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
+index 1c65a191d907..0558117a9407 100644
+--- a/drivers/leds/Makefile
++++ b/drivers/leds/Makefile
+@@ -30,6 +30,7 @@ obj-$(CONFIG_LEDS_LP8501)		+= leds-lp8501.o
+ obj-$(CONFIG_LEDS_LP8788)		+= leds-lp8788.o
+ obj-$(CONFIG_LEDS_LP8860)		+= leds-lp8860.o
+ obj-$(CONFIG_LEDS_TCA6507)		+= leds-tca6507.o
++obj-$(CONFIG_LEDS_TLC591XX)		+= leds-tlc591xx.o
+ obj-$(CONFIG_LEDS_CLEVO_MAIL)		+= leds-clevo-mail.o
+ obj-$(CONFIG_LEDS_IPAQ_MICRO)		+= leds-ipaq-micro.o
+ obj-$(CONFIG_LEDS_HP6XX)		+= leds-hp6xx.o
+diff --git a/drivers/leds/leds-tlc591xx.c b/drivers/leds/leds-tlc591xx.c
+new file mode 100644
+index 000000000000..5c46d202788d
+--- /dev/null
++++ b/drivers/leds/leds-tlc591xx.c
+@@ -0,0 +1,307 @@
++/*
++ * Copyright 2014 Belkin Inc.
++ * Copyright 2015 Andrew Lunn <andrew@lunn.ch>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; version 2 of the License.
++ */
 +
-+	encoder->bridge = dp->bridge;
-+	dp->bridge->encoder = encoder;
-+	ret = drm_bridge_attach(encoder->dev, dp->bridge);
-+	if (ret) {
-+		DRM_ERROR("Failed to attach bridge to drm\n");
-+		return ret;
++#include <linux/i2c.h>
++#include <linux/leds.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/regmap.h>
++#include <linux/slab.h>
++#include <linux/workqueue.h>
++
++#define TLC59116_LEDS		16
++#define TLC59108_LEDS		8
++
++#define TLC591XX_REG_MODE1	0x00
++#define MODE1_RESPON_ADDR_MASK	0xF0
++#define MODE1_NORMAL_MODE	(0 << 4)
++#define MODE1_SPEED_MODE	(1 << 4)
++
++#define TLC591XX_REG_MODE2	0x01
++#define MODE2_DIM		(0 << 5)
++#define MODE2_BLINK		(1 << 5)
++#define MODE2_OCH_STOP		(0 << 3)
++#define MODE2_OCH_ACK		(1 << 3)
++
++#define TLC591XX_REG_PWM(x)	(0x02 + (x))
++
++#define TLC591XX_REG_GRPPWM	0x12
++#define TLC591XX_REG_GRPFREQ	0x13
++
++/* LED Driver Output State, determine the source that drives LED outputs */
++#define LEDOUT_OFF	0x0	/* Output LOW */
++#define LEDOUT_ON	0x1	/* Output HI-Z */
++#define LEDOUT_DIM	0x2	/* Dimming */
++#define LEDOUT_BLINK	0x3	/* Blinking */
++#define LEDOUT_MASK	0x3
++
++#define ldev_to_led(c)		container_of(c, struct tlc591xx_led, ldev)
++#define work_to_led(work)	container_of(work, struct tlc591xx_led, work)
++
++struct tlc591xx_led {
++	bool active;
++	struct regmap *regmap;
++	unsigned int led_no;
++	struct led_classdev ldev;
++	struct work_struct work;
++	const struct tlc591xx *tlc591xx;
++};
++
++struct tlc591xx_priv {
++	struct tlc591xx_led leds[TLC59116_LEDS];
++};
++
++static int
++tlc59116_reg_ledout(unsigned int led) {
++
++	return (0x14 + (led >> 2));
++}
++
++static int
++tlc59108_reg_ledout(unsigned int led) {
++
++	return (0x0c + (led >> 2));
++}
++
++struct tlc591xx {
++	unsigned int maxleds;
++	int (*reg_ledout)(unsigned int);
++};
++
++static const struct tlc591xx tlc59116 = {
++	.maxleds = TLC59116_LEDS,
++	.reg_ledout = tlc59116_reg_ledout,
++};
++
++static const struct tlc591xx tlc59108 = {
++	.maxleds = TLC59108_LEDS,
++	.reg_ledout = tlc59108_reg_ledout,
++};
++
++static int
++tlc591xx_set_mode(struct regmap *regmap, u8 mode)
++{
++	int err;
++	u8 val;
++
++	if ((mode != MODE2_DIM) && (mode != MODE2_BLINK))
++		mode = MODE2_DIM;
++
++	/* Configure MODE1 register */
++	err = regmap_write(regmap, TLC591XX_REG_MODE1, MODE1_NORMAL_MODE);
++	if (err)
++		return err;
++
++	/* Configure MODE2 Reg */
++	val = MODE2_OCH_STOP | mode;
++
++	return regmap_write(regmap, TLC591XX_REG_MODE2, val);
++}
++
++static int
++tlc591xx_set_ledout(struct tlc591xx_led *led, u8 val)
++{
++	struct regmap *regmap = led->regmap;
++	unsigned int i = (led->led_no % 4) * 2;
++	unsigned int addr = led->tlc591xx->reg_ledout(led->led_no);
++	unsigned int mask = LEDOUT_MASK << i;
++
++	val = val << i;
++
++	return regmap_update_bits(regmap, addr, mask, val);
++}
++
++static int
++tlc591xx_set_pwm(struct tlc591xx_led *led, u8 val)
++{
++	struct regmap *regmap = led->regmap;
++	u8 pwm = TLC591XX_REG_PWM(led->led_no);
++
++	return regmap_write(regmap, pwm, led->ldev.brightness);
++}
++
++static void
++tlc591xx_led_work(struct work_struct *work)
++{
++	struct tlc591xx_led *led = work_to_led(work);
++	int err;
++
++	switch (led->ldev.brightness) {
++	case 0:
++		err = tlc591xx_set_ledout(led, LEDOUT_OFF);
++		break;
++	case LED_FULL:
++		err = tlc591xx_set_ledout(led, LEDOUT_ON);
++		break;
++	default:
++		err = tlc591xx_set_ledout(led, LEDOUT_DIM);
++		if (!err)
++			err = tlc591xx_set_pwm(led, led->ldev.brightness);
 +	}
 +
- 	return 0;
- }
- 
-@@ -1010,9 +1021,11 @@ static int exynos_dp_create_connector(struct exynos_drm_display *display,
- 	dp->encoder = encoder;
- 
- 	/* Pre-empt DP connector creation if there's a bridge */
--	ret = exynos_drm_attach_lcd_bridge(dp->drm_dev, encoder);
--	if (ret)
--		return 0;
-+	if (dp->bridge) {
-+		ret = exynos_drm_attach_lcd_bridge(dp, encoder);
-+		if (!ret)
-+			return 0;
++	if (err)
++		dev_err(led->ldev.dev, "Failed setting brightness\n");
++}
++
++static void
++tlc591xx_led_set(struct led_classdev *led_cdev, enum led_brightness value)
++{
++	struct tlc591xx_led *led = ldev_to_led(led_cdev);
++
++	led->ldev.brightness = value;
++	schedule_work(&led->work);
++}
++
++static void
++tlc591xx_destroy_devices(struct tlc591xx_priv *priv, unsigned int i)
++{
++	while (--i >= 0) {
++		if (priv->leds[i].active) {
++			led_classdev_unregister(&priv->leds[i].ldev);
++			cancel_work_sync(&priv->leds[i].work);
++		}
 +	}
- 
- 	connector->polled = DRM_CONNECTOR_POLL_HPD;
- 
-@@ -1219,7 +1232,7 @@ static int exynos_dp_bind(struct device *dev, struct device *master, void *data)
- 		}
- 	}
- 
--	if (!dp->panel) {
-+	if (!dp->panel && !dp->bridge) {
- 		ret = exynos_dp_dt_parse_panel(dp);
- 		if (ret)
- 			return ret;
-@@ -1303,7 +1316,7 @@ static const struct component_ops exynos_dp_ops = {
- static int exynos_dp_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
--	struct device_node *panel_node;
-+	struct device_node *panel_node, *bridge_node, *endpoint;
- 	struct exynos_dp_device *dp;
- 	int ret;
- 
-@@ -1329,6 +1342,18 @@ static int exynos_dp_probe(struct platform_device *pdev)
- 			return -EPROBE_DEFER;
- 	}
- 
-+	endpoint = of_graph_get_next_endpoint(dev->of_node, NULL);
-+	if (endpoint) {
-+		bridge_node = of_graph_get_remote_port_parent(endpoint);
-+		if (bridge_node) {
-+			dp->bridge = of_drm_find_bridge(bridge_node);
-+			of_node_put(bridge_node);
-+			if (!dp->bridge)
-+				return -EPROBE_DEFER;
-+		} else
-+			return -EPROBE_DEFER;
++}
++
++static int
++tlc591xx_configure(struct device *dev,
++		   struct tlc591xx_priv *priv,
++		   struct regmap *regmap,
++		   const struct tlc591xx *tlc591xx)
++{
++	unsigned int i;
++	int err = 0;
++
++	tlc591xx_set_mode(regmap, MODE2_DIM);
++	for (i = 0; i < TLC59116_LEDS; i++) {
++		struct tlc591xx_led *led = &priv->leds[i];
++
++		if (!led->active)
++			continue;
++
++		led->regmap = regmap;
++		led->led_no = i;
++		led->tlc591xx = tlc591xx;
++		led->ldev.brightness_set = tlc591xx_led_set;
++		led->ldev.max_brightness = LED_FULL;
++		INIT_WORK(&led->work, tlc591xx_led_work);
++		err = led_classdev_register(dev, &led->ldev);
++		if (err < 0) {
++			dev_err(dev, "couldn't register LED %s\n",
++				led->ldev.name);
++			goto exit;
++		}
 +	}
 +
- 	ret = component_add(&pdev->dev, &exynos_dp_ops);
- 	if (ret)
- 		exynos_drm_component_del(&pdev->dev,
-diff --git a/drivers/gpu/drm/exynos/exynos_dp_core.h b/drivers/gpu/drm/exynos/exynos_dp_core.h
-index 164f171..a4e7996 100644
---- a/drivers/gpu/drm/exynos/exynos_dp_core.h
-+++ b/drivers/gpu/drm/exynos/exynos_dp_core.h
-@@ -153,6 +153,7 @@ struct exynos_dp_device {
- 	struct drm_connector	connector;
- 	struct drm_encoder	*encoder;
- 	struct drm_panel	*panel;
-+	struct drm_bridge	*bridge;
- 	struct clk		*clock;
- 	unsigned int		irq;
- 	void __iomem		*reg_base;
++	return 0;
++
++exit:
++	tlc591xx_destroy_devices(priv, i);
++	return err;
++}
++
++static const struct regmap_config tlc591xx_regmap = {
++	.reg_bits = 8,
++	.val_bits = 8,
++	.max_register = 0x1e,
++};
++
++static const struct of_device_id of_tlc591xx_leds_match[] = {
++	{ .compatible = "ti,tlc59116",
++	  .data = &tlc59116 },
++	{ .compatible = "ti,tlc59108",
++	  .data = &tlc59108 },
++	{},
++};
++MODULE_DEVICE_TABLE(of, of_tlc591xx_leds_match);
++
++static int
++tlc591xx_probe(struct i2c_client *client,
++	       const struct i2c_device_id *id)
++{
++	struct device_node *np = client->dev.of_node, *child;
++	struct device *dev = &client->dev;
++	const struct tlc591xx *tlc591xx;
++	struct tlc591xx_priv *priv;
++	struct regmap *regmap;
++	int err, count, reg;
++
++	tlc591xx = of_match_device(of_tlc591xx_leds_match, dev)->data;
++
++	count = of_get_child_count(np);
++	if (!count || count > tlc591xx->maxleds)
++		return -EINVAL;
++
++	if (!i2c_check_functionality(client->adapter,
++		I2C_FUNC_SMBUS_BYTE_DATA))
++		return -EIO;
++
++	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	regmap = devm_regmap_init_i2c(client, &tlc591xx_regmap);
++	if (IS_ERR(regmap)) {
++		err = PTR_ERR(regmap);
++		dev_err(dev, "Failed to allocate register map: %d\n", err);
++		return err;
++	}
++
++	i2c_set_clientdata(client, priv);
++
++	for_each_child_of_node(np, child) {
++		err = of_property_read_u32(child, "reg", &reg);
++		if (err)
++			return err;
++		if (reg < 0 || reg >= tlc591xx->maxleds)
++			return -EINVAL;
++		if (priv->leds[reg].active)
++			return -EINVAL;
++		priv->leds[reg].active = true;
++		priv->leds[reg].ldev.name =
++			of_get_property(child, "label", NULL) ? : child->name;
++		priv->leds[reg].ldev.default_trigger =
++			of_get_property(child, "linux,default-trigger", NULL);
++	}
++	return tlc591xx_configure(dev, priv, regmap, tlc591xx);
++}
++
++static int
++tlc591xx_remove(struct i2c_client *client)
++{
++	struct tlc591xx_priv *priv = i2c_get_clientdata(client);
++
++	tlc591xx_destroy_devices(priv, TLC59116_LEDS);
++
++	return 0;
++}
++
++static const struct i2c_device_id tlc591xx_id[] = {
++	{ "tlc59116" },
++	{ "tlc59108" },
++	{},
++};
++MODULE_DEVICE_TABLE(i2c, tlc591xx_id);
++
++static struct i2c_driver tlc591xx_driver = {
++	.driver = {
++		.name = "tlc591xx",
++		.of_match_table = of_match_ptr(of_tlc591xx_leds_match),
++	},
++	.probe = tlc591xx_probe,
++	.remove = tlc591xx_remove,
++	.id_table = tlc591xx_id,
++};
++
++module_i2c_driver(tlc591xx_driver);
++
++MODULE_AUTHOR("Andrew Lunn <andrew@lunn.ch>");
++MODULE_LICENSE("GPL");
++MODULE_DESCRIPTION("TLC591XX LED driver");
 -- 
-1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.1.4
