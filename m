@@ -1,61 +1,30 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH 5/5] ARM: omap2plus_defconfig: Enable PCF857X and EXTCON_GPIO_USB
-Date: Tue, 20 Jan 2015 11:26:34 +0200
-Message-ID: <54BE1F4A.109@ti.com>
-References: <1421689942-10201-1-git-send-email-rogerq@ti.com> <1421689942-10201-6-git-send-email-rogerq@ti.com> <20150119184546.GA18552@atomide.com> <20150119193841.GD18552@atomide.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] gpio: Add APM X-Gene standby GPIO controller driver
+Date: Tue, 20 Jan 2015 10:36:01 +0100
+Message-ID: <CACRpkdb68wwU4t7VW3zgwC9KxSfa4=a85MODowsxV9323D97bw@mail.gmail.com>
+References: <1421393661-4311-1-git-send-email-yvo@apm.com>
+	<1421393661-4311-2-git-send-email-yvo@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150119193841.GD18552@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: balbi@ti.com, myungjoo.ham@samsung.com, cw00.choi@samsung.com, george.cherian@ti.com, nsekhar@ti.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1421393661-4311-2-git-send-email-yvo-qTEPVZfXA3Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Y Vo <yvo-qTEPVZfXA3Y@public.gmane.org>
+Cc: "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Phong Vo <pvo-qTEPVZfXA3Y@public.gmane.org>, Toan Le <toanle-qTEPVZfXA3Y@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 19/01/15 21:38, Tony Lindgren wrote:
-> * Tony Lindgren <tony@atomide.com> [150119 10:52]:
->> * Roger Quadros <rogerq@ti.com> [150119 09:55]:
->>> Both are needed for USB cable type detection on dra7-evm.
->>>
->>> Signed-off-by: Roger Quadros <rogerq@ti.com>
->>> ---
->>>  arch/arm/configs/omap2plus_defconfig | 2 ++
->>>  1 file changed, 2 insertions(+)
->>>
->>> diff --git a/arch/arm/configs/omap2plus_defconfig b/arch/arm/configs/omap2plus_defconfig
->>> index c2c3a85..bc23b90 100644
->>> --- a/arch/arm/configs/omap2plus_defconfig
->>> +++ b/arch/arm/configs/omap2plus_defconfig
->>> @@ -203,6 +203,7 @@ CONFIG_SPI_OMAP24XX=y
->>>  CONFIG_PINCTRL_SINGLE=y
->>>  CONFIG_DEBUG_GPIO=y
->>>  CONFIG_GPIO_SYSFS=y
->>> +CONFIG_GPIO_PCF857X=y
->>>  CONFIG_GPIO_TWL4030=y
->>>  CONFIG_W1=y
->>>  CONFIG_BATTERY_BQ27x00=m
->>
->> Looks like I have this too but as a loadable module :) So I'll keep
->> that one.
->>
->>> @@ -326,6 +327,7 @@ CONFIG_DMADEVICES=y
->>>  CONFIG_TI_EDMA=y
->>>  CONFIG_DMA_OMAP=y
->>>  CONFIG_EXTCON=y
->>> +CONFIG_EXTCON_GPIO_USB=y
->>>  CONFIG_EXTCON_PALMAS=y
->>>  CONFIG_PWM=y
->>>  CONFIG_PWM_TIECAP=y
->>
->> I'll apply this part into omap-for-v3.20/defconfig but make it into =m
->> instead of =y.
-> 
-> Oh but this depends on the driver being added, so not applying.
-> Can you please repost a patch adding CONFIG_EXTCON_GPIO_USB=m
-> once the driver is merged?
-> 
-Yes, I'll do that.
+On Fri, Jan 16, 2015 at 8:34 AM, Y Vo <yvo-qTEPVZfXA3Y@public.gmane.org> wrote:
 
-cheers,
--roger
+> Driver for standby GPIO controller of APM X-Gene SoCs on arm64.
+>
+> Signed-off-by: Y Vo <yvo-qTEPVZfXA3Y@public.gmane.org>
+
+Compact, beautiful, and precisely to the point.
+Patch applied, excellent work.
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
