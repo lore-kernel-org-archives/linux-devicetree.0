@@ -1,93 +1,36 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v5 4/5] mfd/regulator: dt-bindings: max77686: Document
- gpio properties
-Date: Tue, 20 Jan 2015 15:43:11 +0000
-Message-ID: <20150120154311.GE13701@x1>
-References: <1420458525-22576-1-git-send-email-k.kozlowski@samsung.com>
- <1420458525-22576-5-git-send-email-k.kozlowski@samsung.com>
- <20150120134111.GI13701@x1>
- <1421763703.8855.10.camel@AMDC1943>
+From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Subject: Re: [alsa-devel] [PATCH v2 RESEND 1/2] mfd: arizona: Add support
+	for OUTn_MONO register control
+Date: Tue, 20 Jan 2015 15:46:11 +0000
+Message-ID: <20150120154611.GA14516@opensource.wolfsonmicro.com>
+References: <1420185829-24886-1-git-send-email-ideal.song@samsung.com> <1420185829-24886-2-git-send-email-ideal.song@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1421763703.8855.10.camel@AMDC1943>
+In-Reply-To: <1420185829-24886-2-git-send-email-ideal.song@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+To: Inha Song <ideal.song@samsung.com>
+Cc: broonie@kernel.org, lee.jones@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sameo@linux.intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 20 Jan 2015, Krzysztof Kozlowski wrote:
+On Fri, Jan 02, 2015 at 05:03:48PM +0900, Inha Song wrote:
+> Some boards need to set the OUTn_MONO register to configurates
+> the output signal path as a mono differential output. This
+> wlf,out-mono property is optional. If present, values must be
+> specified less than or equal to the number of output signals.
+> If values less than the number of output signals, elements
+> that has not been specified are set to 0 by default.
+> 
+> Example:
+>  - wlf,out-mono = <1 0 1>; /* set OUT1,OUT3 to mono differential */
+> 
+> Signed-off-by: Inha Song <ideal.song@samsung.com>
+> ---
 
-> On wto, 2015-01-20 at 13:41 +0000, Lee Jones wrote:
-> > On Mon, 05 Jan 2015, Krzysztof Kozlowski wrote:
-> >=20
-> > > Document usage of maxim,ena-gpios properties which turn on extern=
-al/GPIO
-> > > control over regulator.
-> > >=20
-> > > Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> > > ---
-> > >  Documentation/devicetree/bindings/mfd/max77686.txt | 14 ++++++++=
-++++++
-> > >  1 file changed, 14 insertions(+)
-> > >=20
-> > > diff --git a/Documentation/devicetree/bindings/mfd/max77686.txt b=
-/Documentation/devicetree/bindings/mfd/max77686.txt
-> > > index 75fdfaf41831..e39f0bc1f55e 100644
-> > > --- a/Documentation/devicetree/bindings/mfd/max77686.txt
-> > > +++ b/Documentation/devicetree/bindings/mfd/max77686.txt
-> > > @@ -39,6 +39,12 @@ to get matched with their hardware counterpart=
-s as follow:
-> > >  	-BUCKn	:	1-4.
-> > >    Use standard regulator bindings for it ('regulator-off-in-susp=
-end').
-> > > =20
-> > > +  LDO20, LDO21, LDO22, BUCK8 and BUCK9 can be configured to GPIO=
- enable
-> > > +  control. To turn this feature on this property must be added t=
-o the regulator
-> > > +  sub-node:
-> > > +	- maxim,ena-gpios :	one GPIO specifier enable control (the gpio
-> > > +				flags are actually ignored and always
-> > > +				ACTIVE_HIGH is used)
-> >=20
-> > How does this differ to the 'enable-gpio' property which has alread=
-y
-> > been defined?
->=20
-> Strictly speaking - no difference, just a GPIO specifier.
->=20
-> However the 'enable-gpio' property exists only for gpio-regulator. Th=
-e
-> regulator core does not support generic enable-gpio property and each
-> driver implements it on its own.
->=20
-> Anyway Mark Brown already applied this patch to his regulator tree.
+Apologies, I must have missed this in the December rush here.
 
-Well if he has no issue with it, then I guess I don't.
+Acked-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
 
-> > >  Example:
-> > > =20
-> > > @@ -65,4 +71,12 @@ Example:
-> > >  				regulator-always-on;
-> > >  				regulator-boot-on;
-> > >  			};
-> > > +
-> > > +			buck9_reg {
-> > > +				regulator-compatible =3D "BUCK9";
-> > > +				regulator-name =3D "CAM_ISP_CORE_1.2V";
-> > > +				regulator-min-microvolt =3D <1000000>;
-> > > +				regulator-max-microvolt =3D <1200000>;
-> > > +				maxim,ena-gpios =3D <&gpm0 3 GPIO_ACTIVE_HIGH>;
-> > > +			};
-> > >  	}
-> >=20
->=20
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Thanks,
+Charles
