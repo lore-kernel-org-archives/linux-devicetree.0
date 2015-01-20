@@ -1,56 +1,138 @@
-From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Subject: Re: [alsa-devel] [PATCH v2 RESEND 2/2] mfd: arizona: Update DT
-	binding to support OUTn_MONO init_data
-Date: Tue, 20 Jan 2015 16:44:18 +0000
-Message-ID: <20150120164418.GC14516@opensource.wolfsonmicro.com>
-References: <1420185829-24886-1-git-send-email-ideal.song@samsung.com> <1420185829-24886-3-git-send-email-ideal.song@samsung.com> <20150120122005.GA13701@x1> <20150120132001.GA21293@sirena.org.uk> <20150120160248.GK13701@x1>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150120160248.GK13701@x1>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Mark Brown <broonie@kernel.org>, Inha Song <ideal.song@samsung.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sameo@linux.intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
+From: Ajay Kumar <ajaykumar.rs@samsung.com>
+Subject: [PATCH V9 02/14] drm/bridge: do not pass drm_bridge_funcs to
+ drm_bridge_init
+Date: Tue, 20 Jan 2015 22:08:43 +0530
+Message-ID: <1421771935-31618-3-git-send-email-ajaykumar.rs@samsung.com>
+References: <1421771935-31618-1-git-send-email-ajaykumar.rs@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1421771935-31618-1-git-send-email-ajaykumar.rs@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: dri-devel@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: kgene.kim@samsung.com, inki.dae@samsung.com, thierry.reding@gmail.com, daniel.vetter@ffwll.ch, seanpaul@google.com, ajaynumb@gmail.com, jg1.han@samsung.com, bhushan.r@samsung.com, prashanth.g@samsung.com, Ajay Kumar <ajaykumar.rs@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 20, 2015 at 04:02:48PM +0000, Lee Jones wrote:
-> On Tue, 20 Jan 2015, Mark Brown wrote:
-> 
-> > On Tue, Jan 20, 2015 at 12:20:05PM +0000, Lee Jones wrote:
-> > > On Fri, 02 Jan 2015, Inha Song wrote:
-> > 
-> > > > This patch update DT binding to support OUTn_MONO init_data. Each
-> > > > output signal can be configurated as a mono differential output.
-> > > > The mono differential configuration is selected using the OUTn_MONO
-> > > > registers.
-> > 
-> > > This requires a DT Ack and an entry in the example.
-> > 
-> > The DT maintainers have said they're OK with maintainers just merging
-> > things if they're comfortable with it (see the bindings specific
-> > submitting-patches.txt) and given their workload and general resulting
-> > responsiveness it's going to make it difficult go get anything done.
-> 
-> I only tend to poke the DT guys when I am unsure of something in the
-> binding.  In this case it was a doubt whether we should be encoding
-> register values inside a property like this.
-> 
-> I would also be happy to take it with your Ack if you're happy with
-> it?
+Assign the pointer to bridge ops structure(drm_bridge_funcs) in
+the bridge driver itself, instead of passing it to drm_bridge_init.
 
-In this case really it is a boolean indicating if the
-corresponding output is mono or not. It is handled thusly in the
-code:
+This will allow bridge driver developer to pack bridge private
+information inside the bridge object and pass only the drm-relevant
+information to drm_bridge_init.
 
-		if (arizona->pdata.out_mono[i])
-			val = ARIZONA_OUT1_MONO;
-		else
-			val = 0;
+Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
+Acked-by: Inki Dae <inki.dae@samsung.com>
+Tested-by: Rahul Sharma <rahul.sharma@samsung.com>
+Tested-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Tested-by: Gustavo Padovan <gustavo.padovan@collabora.co.uk>
+Tested-by: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+---
+ drivers/gpu/drm/bridge/ptn3460.c       |    3 ++-
+ drivers/gpu/drm/drm_crtc.c             |    5 +----
+ drivers/gpu/drm/msm/hdmi/hdmi_bridge.c |    3 ++-
+ drivers/gpu/drm/sti/sti_hda.c          |    3 ++-
+ drivers/gpu/drm/sti/sti_hdmi.c         |    3 ++-
+ include/drm/drm_crtc.h                 |    3 +--
+ 6 files changed, 10 insertions(+), 10 deletions(-)
 
-Perhaps some further wording tweaks on the Documentation patch
-would be appropriate, but certainly I am happy enough with the
-binding.
-
-Thanks,
-Charles
+diff --git a/drivers/gpu/drm/bridge/ptn3460.c b/drivers/gpu/drm/bridge/ptn3460.c
+index 4db38e1..a2ddc8d 100644
+--- a/drivers/gpu/drm/bridge/ptn3460.c
++++ b/drivers/gpu/drm/bridge/ptn3460.c
+@@ -313,7 +313,8 @@ int ptn3460_init(struct drm_device *dev, struct drm_encoder *encoder,
+ 		goto err;
+ 	}
+ 
+-	ret = drm_bridge_init(dev, &ptn_bridge->bridge, &ptn3460_bridge_funcs);
++	ptn_bridge->bridge.funcs = &ptn3460_bridge_funcs;
++	ret = drm_bridge_init(dev, &ptn_bridge->bridge);
+ 	if (ret) {
+ 		DRM_ERROR("Failed to initialize bridge with drm\n");
+ 		goto err;
+diff --git a/drivers/gpu/drm/drm_crtc.c b/drivers/gpu/drm/drm_crtc.c
+index caec5c3..4acd693 100644
+--- a/drivers/gpu/drm/drm_crtc.c
++++ b/drivers/gpu/drm/drm_crtc.c
+@@ -1030,7 +1030,6 @@ EXPORT_SYMBOL(drm_connector_unplug_all);
+  * drm_bridge_init - initialize a drm transcoder/bridge
+  * @dev: drm device
+  * @bridge: transcoder/bridge to set up
+- * @funcs: bridge function table
+  *
+  * Initialises a preallocated bridge. Bridges should be
+  * subclassed as part of driver connector objects.
+@@ -1038,8 +1037,7 @@ EXPORT_SYMBOL(drm_connector_unplug_all);
+  * Returns:
+  * Zero on success, error code on failure.
+  */
+-int drm_bridge_init(struct drm_device *dev, struct drm_bridge *bridge,
+-		const struct drm_bridge_funcs *funcs)
++int drm_bridge_init(struct drm_device *dev, struct drm_bridge *bridge)
+ {
+ 	int ret;
+ 
+@@ -1050,7 +1048,6 @@ int drm_bridge_init(struct drm_device *dev, struct drm_bridge *bridge,
+ 		goto out;
+ 
+ 	bridge->dev = dev;
+-	bridge->funcs = funcs;
+ 
+ 	list_add_tail(&bridge->head, &dev->mode_config.bridge_list);
+ 	dev->mode_config.num_bridge++;
+diff --git a/drivers/gpu/drm/msm/hdmi/hdmi_bridge.c b/drivers/gpu/drm/msm/hdmi/hdmi_bridge.c
+index 6902ad6..52ed2b5 100644
+--- a/drivers/gpu/drm/msm/hdmi/hdmi_bridge.c
++++ b/drivers/gpu/drm/msm/hdmi/hdmi_bridge.c
+@@ -220,8 +220,9 @@ struct drm_bridge *hdmi_bridge_init(struct hdmi *hdmi)
+ 	hdmi_bridge->hdmi = hdmi;
+ 
+ 	bridge = &hdmi_bridge->base;
++	bridge->funcs = &hdmi_bridge_funcs;
+ 
+-	drm_bridge_init(hdmi->dev, bridge, &hdmi_bridge_funcs);
++	drm_bridge_init(hdmi->dev, bridge);
+ 
+ 	return bridge;
+ 
+diff --git a/drivers/gpu/drm/sti/sti_hda.c b/drivers/gpu/drm/sti/sti_hda.c
+index 2ae9a9b..6cf145d 100644
+--- a/drivers/gpu/drm/sti/sti_hda.c
++++ b/drivers/gpu/drm/sti/sti_hda.c
+@@ -664,7 +664,8 @@ static int sti_hda_bind(struct device *dev, struct device *master, void *data)
+ 		return -ENOMEM;
+ 
+ 	bridge->driver_private = hda;
+-	drm_bridge_init(drm_dev, bridge, &sti_hda_bridge_funcs);
++	bridge->funcs = &sti_hda_bridge_funcs;
++	drm_bridge_init(drm_dev, bridge);
+ 
+ 	encoder->bridge = bridge;
+ 	connector->encoder = encoder;
+diff --git a/drivers/gpu/drm/sti/sti_hdmi.c b/drivers/gpu/drm/sti/sti_hdmi.c
+index d032e02..74e943e 100644
+--- a/drivers/gpu/drm/sti/sti_hdmi.c
++++ b/drivers/gpu/drm/sti/sti_hdmi.c
+@@ -635,7 +635,8 @@ static int sti_hdmi_bind(struct device *dev, struct device *master, void *data)
+ 		goto err_adapt;
+ 
+ 	bridge->driver_private = hdmi;
+-	drm_bridge_init(drm_dev, bridge, &sti_hdmi_bridge_funcs);
++	bridge->funcs = &sti_hdmi_bridge_funcs;
++	drm_bridge_init(drm_dev, bridge);
+ 
+ 	encoder->bridge = bridge;
+ 	connector->encoder = encoder;
+diff --git a/include/drm/drm_crtc.h b/include/drm/drm_crtc.h
+index f444263..e43d9e5 100644
+--- a/include/drm/drm_crtc.h
++++ b/include/drm/drm_crtc.h
+@@ -1209,8 +1209,7 @@ extern unsigned int drm_connector_index(struct drm_connector *connector);
+ /* helper to unplug all connectors from sysfs for device */
+ extern void drm_connector_unplug_all(struct drm_device *dev);
+ 
+-extern int drm_bridge_init(struct drm_device *dev, struct drm_bridge *bridge,
+-			   const struct drm_bridge_funcs *funcs);
++extern int drm_bridge_init(struct drm_device *dev, struct drm_bridge *bridge);
+ extern void drm_bridge_cleanup(struct drm_bridge *bridge);
+ 
+ extern int drm_encoder_init(struct drm_device *dev,
+-- 
+1.7.9.5
