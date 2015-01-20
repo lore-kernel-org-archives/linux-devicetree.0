@@ -1,75 +1,230 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH/RFC v10 07/19] mfd: max77693: Adjust FLASH_EN_SHIFT and
- TORCH_EN_SHIFT macros
-Date: Tue, 20 Jan 2015 16:41:00 +0000
-Message-ID: <20150120164100.GE30656@x1>
-References: <1420816989-1808-1-git-send-email-j.anaszewski@samsung.com>
- <1420816989-1808-8-git-send-email-j.anaszewski@samsung.com>
- <20150120111719.GF13701@x1>
- <54BE51B2.8040209@samsung.com>
- <54BE6228.5070304@samsung.com>
- <20150120154029.GC13701@x1>
- <20150120160056.GA32144@amd>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150120160056.GA32144@amd>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, linux-leds@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, b.zolnierkie@samsung.com, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com, Chanwoo Choi <cw00.choi@samsung.com>
+From: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH v4] irqchip: gic: Allow interrupt level to be set for PPIs.
+Date: Tue, 20 Jan 2015 16:52:59 +0000
+Message-ID: <1421772779-25764-1-git-send-email-Liviu.Dudau@arm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 20 Jan 2015, Pavel Machek wrote:
-> On Tue 2015-01-20 15:40:29, Lee Jones wrote:
-> > On Tue, 20 Jan 2015, Jacek Anaszewski wrote:
-> >=20
-> > > On 01/20/2015 02:01 PM, Jacek Anaszewski wrote:
-> > > >On 01/20/2015 12:17 PM, Lee Jones wrote:
-> > > >>On Fri, 09 Jan 2015, Jacek Anaszewski wrote:
-> > > >>
-> > > >>>Modify FLASH_EN_SHIFT and TORCH_EN_SHIFT macros to work proper=
-ly
-> > > >>>when passed enum max77693_fled values (0 for FLED1 and 1 for F=
-LED2)
-> > > >>>from leds-max77693 driver.
-> > > >>
-> > > >>Off-by-one ay?  Wasn't the original code tested?
-> > > >
-> > > >The driver using these macros is a part of LED / flash API integ=
-ration
-> > > >patch series, which still undergoes modifications and it hasn't
-> > > >reached its final state yet, as there are many things to discuss=
-=2E
-> > >=20
-> > > To be more precise: the original code had been tested and was wor=
-king
-> > > properly with the header that is in the mainline. Nonetheless, be=
-cause
-> > > of the modifications in the driver that was requested during code
-> > > review, it turned out that it would be more convenient to redefin=
-e the
-> > > macros.
-> > >=20
-> > > I'd opt for just agreeing about the mfd related patches and merge
-> > > them no sooner than the leds-max77693 driver is merged.
-> >=20
-> > The only way we can guarantee this is to have them go in during
-> > different merge-windows, unless of course they go in via the same t=
-ree.
->=20
-> Umm. Maintainers should be able to coordinate that. Delaying patch fo=
-r
-> one major release seems rather cruel. Perhaps one maintainer should
-> ack the patch and the second one should merge it...
+During a recent cleanup of the arm64 DTs it has become clear that
+the handling of PPIs in xxxx_set_type() is incorrect. The ARM TRMs
+for GICv2 and later allow for "implementation defined" support for
+setting the edge or level type of the PPI interrupts and don't restrict
+the activation level of the signal. Current ARM implementations
+do restrict the PPI level type to IRQ_TYPE_LEVEL_LOW, but licensees
+of the IP can decide to shoot themselves in the foot at any time.
 
-Wow, you're just everywhere today. :)
+Signed-off-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+---
 
-Read the part after the comma again.
+Changelog:
+ v4: Re-enable the interrupt if it was disabled during the configuration
+     change, even if we fail to set the new configuration.
+ v3: Fixed the bit test logic from v2.
+ v2: Update following comments from Russell King and Marc Zyngier.
+     Thread here: https://lkml.org/lkml/2014/12/1/279
+ v1: Initial version. https://lkml.org/lkml/2014/11/28/400
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+ Documentation/devicetree/bindings/arm/gic.txt |  8 ++++++--
+ drivers/irqchip/irq-gic-common.c              | 18 ++++++++++++------
+ drivers/irqchip/irq-gic-common.h              |  2 +-
+ drivers/irqchip/irq-gic-v3.c                  |  8 ++++----
+ drivers/irqchip/irq-gic.c                     |  9 ++++++---
+ drivers/irqchip/irq-hip04.c                   |  9 ++++++---
+ 6 files changed, 35 insertions(+), 19 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/arm/gic.txt b/Documentation/devicetree/bindings/arm/gic.txt
+index 8112d0c..c97484b 100644
+--- a/Documentation/devicetree/bindings/arm/gic.txt
++++ b/Documentation/devicetree/bindings/arm/gic.txt
+@@ -32,12 +32,16 @@ Main node required properties:
+   The 3rd cell is the flags, encoded as follows:
+ 	bits[3:0] trigger type and level flags.
+ 		1 = low-to-high edge triggered
+-		2 = high-to-low edge triggered
++		2 = high-to-low edge triggered (invalid for SPIs)
+ 		4 = active high level-sensitive
+-		8 = active low level-sensitive
++		8 = active low level-sensitive (invalid for SPIs).
+ 	bits[15:8] PPI interrupt cpu mask.  Each bit corresponds to each of
+ 	the 8 possible cpus attached to the GIC.  A bit set to '1' indicated
+ 	the interrupt is wired to that CPU.  Only valid for PPI interrupts.
++	Also note that the configurability of PPI interrupts is IMPLEMENTATION
++	DEFINED and as such not guaranteed to be present (most SoC available
++	in 2014 seem to ignore the setting of this flag and use the hardware
++	default value).
+ 
+ - reg : Specifies base physical address(s) and size of the GIC registers. The
+   first region is the GIC distributor register base and size. The 2nd region is
+diff --git a/drivers/irqchip/irq-gic-common.c b/drivers/irqchip/irq-gic-common.c
+index 61541ff..ad96ebb 100644
+--- a/drivers/irqchip/irq-gic-common.c
++++ b/drivers/irqchip/irq-gic-common.c
+@@ -21,7 +21,7 @@
+ 
+ #include "irq-gic-common.h"
+ 
+-void gic_configure_irq(unsigned int irq, unsigned int type,
++int gic_configure_irq(unsigned int irq, unsigned int type,
+ 		       void __iomem *base, void (*sync_access)(void))
+ {
+ 	u32 enablemask = 1 << (irq % 32);
+@@ -29,16 +29,17 @@ void gic_configure_irq(unsigned int irq, unsigned int type,
+ 	u32 confmask = 0x2 << ((irq % 16) * 2);
+ 	u32 confoff = (irq / 16) * 4;
+ 	bool enabled = false;
+-	u32 val;
++	u32 val, oldval;
++	int ret = 0;
+ 
+ 	/*
+ 	 * Read current configuration register, and insert the config
+ 	 * for "irq", depending on "type".
+ 	 */
+-	val = readl_relaxed(base + GIC_DIST_CONFIG + confoff);
+-	if (type == IRQ_TYPE_LEVEL_HIGH)
++	val = oldval = readl_relaxed(base + GIC_DIST_CONFIG + confoff);
++	if (type & IRQ_TYPE_LEVEL_MASK)
+ 		val &= ~confmask;
+-	else if (type == IRQ_TYPE_EDGE_RISING)
++	else if (type & IRQ_TYPE_EDGE_BOTH)
+ 		val |= confmask;
+ 
+ 	/*
+@@ -54,15 +55,20 @@ void gic_configure_irq(unsigned int irq, unsigned int type,
+ 
+ 	/*
+ 	 * Write back the new configuration, and possibly re-enable
+-	 * the interrupt.
++	 * the interrupt. If we tried to write a new configuration and failed,
++	 * return an error.
+ 	 */
+ 	writel_relaxed(val, base + GIC_DIST_CONFIG + confoff);
++	if (readl_relaxed(base + GIC_DIST_CONFIG + confoff) != val && val != oldval)
++		ret = -EINVAL;
+ 
+ 	if (enabled)
+ 		writel_relaxed(enablemask, base + GIC_DIST_ENABLE_SET + enableoff);
+ 
+ 	if (sync_access)
+ 		sync_access();
++
++	return ret;
+ }
+ 
+ void __init gic_dist_config(void __iomem *base, int gic_irqs,
+diff --git a/drivers/irqchip/irq-gic-common.h b/drivers/irqchip/irq-gic-common.h
+index b41f024..35a9884 100644
+--- a/drivers/irqchip/irq-gic-common.h
++++ b/drivers/irqchip/irq-gic-common.h
+@@ -20,7 +20,7 @@
+ #include <linux/of.h>
+ #include <linux/irqdomain.h>
+ 
+-void gic_configure_irq(unsigned int irq, unsigned int type,
++int gic_configure_irq(unsigned int irq, unsigned int type,
+                        void __iomem *base, void (*sync_access)(void));
+ void gic_dist_config(void __iomem *base, int gic_irqs,
+ 		     void (*sync_access)(void));
+diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
+index 1a146cc..6e50803 100644
+--- a/drivers/irqchip/irq-gic-v3.c
++++ b/drivers/irqchip/irq-gic-v3.c
+@@ -238,7 +238,9 @@ static int gic_set_type(struct irq_data *d, unsigned int type)
+ 	if (irq < 16)
+ 		return -EINVAL;
+ 
+-	if (type != IRQ_TYPE_LEVEL_HIGH && type != IRQ_TYPE_EDGE_RISING)
++	/* SPIs have restrictions on the supported types */
++	if (irq >= 32 && type != IRQ_TYPE_LEVEL_HIGH &&
++			 type != IRQ_TYPE_EDGE_RISING)
+ 		return -EINVAL;
+ 
+ 	if (gic_irq_in_rdist(d)) {
+@@ -249,9 +251,7 @@ static int gic_set_type(struct irq_data *d, unsigned int type)
+ 		rwp_wait = gic_dist_wait_for_rwp;
+ 	}
+ 
+-	gic_configure_irq(irq, type, base, rwp_wait);
+-
+-	return 0;
++	return gic_configure_irq(irq, type, base, rwp_wait);
+ }
+ 
+ static u64 gic_mpidr_to_affinity(u64 mpidr)
+diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
+index d617ee5..4634cf7 100644
+--- a/drivers/irqchip/irq-gic.c
++++ b/drivers/irqchip/irq-gic.c
+@@ -188,12 +188,15 @@ static int gic_set_type(struct irq_data *d, unsigned int type)
+ {
+ 	void __iomem *base = gic_dist_base(d);
+ 	unsigned int gicirq = gic_irq(d);
++	int ret;
+ 
+ 	/* Interrupt configuration for SGIs can't be changed */
+ 	if (gicirq < 16)
+ 		return -EINVAL;
+ 
+-	if (type != IRQ_TYPE_LEVEL_HIGH && type != IRQ_TYPE_EDGE_RISING)
++	/* SPIs have restrictions on the supported types */
++	if (gicirq >= 32 && type != IRQ_TYPE_LEVEL_HIGH &&
++			    type != IRQ_TYPE_EDGE_RISING)
+ 		return -EINVAL;
+ 
+ 	raw_spin_lock(&irq_controller_lock);
+@@ -201,11 +204,11 @@ static int gic_set_type(struct irq_data *d, unsigned int type)
+ 	if (gic_arch_extn.irq_set_type)
+ 		gic_arch_extn.irq_set_type(d, type);
+ 
+-	gic_configure_irq(gicirq, type, base, NULL);
++	ret = gic_configure_irq(gicirq, type, base, NULL);
+ 
+ 	raw_spin_unlock(&irq_controller_lock);
+ 
+-	return 0;
++	return ret;
+ }
+ 
+ static int gic_retrigger(struct irq_data *d)
+diff --git a/drivers/irqchip/irq-hip04.c b/drivers/irqchip/irq-hip04.c
+index 29b8f21..d059e66 100644
+--- a/drivers/irqchip/irq-hip04.c
++++ b/drivers/irqchip/irq-hip04.c
+@@ -120,21 +120,24 @@ static int hip04_irq_set_type(struct irq_data *d, unsigned int type)
+ {
+ 	void __iomem *base = hip04_dist_base(d);
+ 	unsigned int irq = hip04_irq(d);
++	int ret;
+ 
+ 	/* Interrupt configuration for SGIs can't be changed */
+ 	if (irq < 16)
+ 		return -EINVAL;
+ 
+-	if (type != IRQ_TYPE_LEVEL_HIGH && type != IRQ_TYPE_EDGE_RISING)
++	/* SPIs have restrictions on the supported types */
++	if (irq >= 32 && type != IRQ_TYPE_LEVEL_HIGH &&
++			 type != IRQ_TYPE_EDGE_RISING)
+ 		return -EINVAL;
+ 
+ 	raw_spin_lock(&irq_controller_lock);
+ 
+-	gic_configure_irq(irq, type, base, NULL);
++	ret = gic_configure_irq(irq, type, base, NULL);
+ 
+ 	raw_spin_unlock(&irq_controller_lock);
+ 
+-	return 0;
++	return ret;
+ }
+ 
+ #ifdef CONFIG_SMP
+-- 
+2.2.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
