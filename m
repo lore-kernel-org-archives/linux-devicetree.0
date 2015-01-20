@@ -1,63 +1,44 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] ethernet: atheros: Add nss-gmac driver
-Date: Tue, 20 Jan 2015 15:05:17 +0100
-Message-ID: <1702448.pOVnDx4KzI@wuerfel>
-References: <1420754626-30121-1-git-send-email-wstephen@codeaurora.org> <2318041.V2OJAPu7gC@wuerfel> <3ad19b16fe5c58612479f70c052d0045.squirrel@www.codeaurora.org>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH/RFC v10 07/19] mfd: max77693: Adjust FLASH_EN_SHIFT and
+ TORCH_EN_SHIFT macros
+Date: Tue, 20 Jan 2015 15:11:52 +0100
+Message-ID: <54BE6228.5070304@samsung.com>
+References: <1420816989-1808-1-git-send-email-j.anaszewski@samsung.com>
+ <1420816989-1808-8-git-send-email-j.anaszewski@samsung.com>
+ <20150120111719.GF13701@x1> <54BE51B2.8040209@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <3ad19b16fe5c58612479f70c052d0045.squirrel@www.codeaurora.org>
-Sender: netdev-owner@vger.kernel.org
-To: wstephen@codeaurora.org
-Cc: jcliburn@gmail.com, grant.likely@linaro.org, robh+dt@kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-reply-to: <54BE51B2.8040209@samsung.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: linux-leds@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, b.zolnierkie@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, s.nawrocki@samsung.com, Chanwoo Choi <cw00.choi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 19 January 2015 21:58:09 wstephen@codeaurora.org wrote:
-> > On Thursday 15 January 2015 08:12:51 wstephen@codeaurora.org wrote:
-> >
-> >> The nss-gmac driver is designed to work standalone or with the nss-drv
-> >> driver so the switchable data plane overlay was implemented. When it
-> >> worked standalone, the data plane is running on the ARM core as a
-> >> standard
-> >> networking driver.
-> >
-> > How do you decide which way it gets used on a particular system?
-> >
-> 
-> By default the GMAC driver uses a native (Host ARM CPU) based data plane. 
-> If the configuration loads the offload nss-drv driver, the offload driver
-> registers an overlay with the GMAC.
+On 01/20/2015 02:01 PM, Jacek Anaszewski wrote:
+> On 01/20/2015 12:17 PM, Lee Jones wrote:
+>> On Fri, 09 Jan 2015, Jacek Anaszewski wrote:
+>>
+>>> Modify FLASH_EN_SHIFT and TORCH_EN_SHIFT macros to work properly
+>>> when passed enum max77693_fled values (0 for FLED1 and 1 for FLED2)
+>>> from leds-max77693 driver.
+>>
+>> Off-by-one ay?  Wasn't the original code tested?
+>
+> The driver using these macros is a part of LED / flash API integration
+> patch series, which still undergoes modifications and it hasn't
+> reached its final state yet, as there are many things to discuss.
 
-Right. For review purposes, I think it would be helpful to split this
-huge patch into several steps then:
+To be more precise: the original code had been tested and was working
+properly with the header that is in the mainline. Nonetheless, because
+of the modifications in the driver that was requested during code
+review, it turned out that it would be more convenient to redefine the
+macros.
 
-- add a base driver
-- add the overlay interface
-- add the nss driver
+I'd opt for just agreeing about the mfd related patches and merge
+them no sooner than the leds-max77693 driver is merged.
 
-Ideally more of them.
-
-> >> The nss-drv driver can take over the data plane and
-> >> offload it to the NSS cores. The STMicro stmmac driver does not have
-> >> this
-> >> kind of overlay design so is not suitable for IPQ806x. This is why we
-> >> don't based on the stmmac driver
-> >
-> > Which kind of offload is implemented specifically? 'data plane' sounds
-> > fairly generic and could mean anything, and the code isn't readable enough
-> > in its current form for me to find out.
-> 
-> The Network Subsystem (NSS core) provides a GMAC pass-through until it is
-> given a rule to offload work.  Once a rule is given, it is capable of
-> performing: bridging, IPv4 NAT/FWD, IPv6 NAT/FWD, IPSec, LAG, and other
-> protocols.
-> 
-> Hope this clarify your question!
-
-Thanks for the description, this sounds very interesting indeed. I do
-have more questions though: how do you get the rules into the NSS driver?
-Does this get handled transparently by the openvswitch driver or
-did you have to add new user interfaces for it?
-
-	Arnd
+-- 
+Best Regards,
+Jacek Anaszewski
