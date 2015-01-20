@@ -1,77 +1,201 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [RFC PATCH 1/3] drivers: of: fix resources freeing in
- of_pci_get_host_bridge_resources()
-Date: Tue, 20 Jan 2015 10:49:22 +0000
-Message-ID: <20150120104922.GF5398@red-moon>
-References: <1420644571-18928-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1420644571-18928-2-git-send-email-lorenzo.pieralisi@arm.com>
- <20150119183228.GE10762@e106497-lin.cambridge.arm.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v5 1/7] mfd: Add support for DA9150 combined charger &
+ fuel-gauge device
+Date: Tue, 20 Jan 2015 10:50:22 +0000
+Message-ID: <20150120105022.GA13701@x1>
+References: <cover.1419264383.git.Adam.Thomson.Opensource@diasemi.com>
+ <8768cf84babd1bc3e16dadc25bdbb50cebfb44b6.1419264383.git.Adam.Thomson.Opensource@diasemi.com>
+ <20150119113332.GP21886@x1>
+ <2E89032DDAA8B9408CB92943514A0337AB52874E@SW-EX-MBX01.diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20150119183228.GE10762@e106497-lin.cambridge.arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Liviu Dudau <Liviu.Dudau@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Jingoo Han <jg1.han@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mohit Kumar <mohit.kumar@st.com>, Bjorn Helgaas <bhelgaas@google.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <2E89032DDAA8B9408CB92943514A0337AB52874E@SW-EX-MBX01.diasemi.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource@diasemi.com>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Joe Perches <joe@perches.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Support Opensource <Support.Opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBKYW4gMTksIDIwMTUgYXQgMDY6MzI6MjlQTSArMDAwMCwgTGl2aXUgRHVkYXUgd3Jv
-dGU6CgpbLi4uXQoKPiA+IEBAIC0xNDYsNiArMTQ2LDcgQEAgaW50IG9mX3BjaV9nZXRfaG9zdF9i
-cmlkZ2VfcmVzb3VyY2VzKHN0cnVjdCBkZXZpY2Vfbm9kZSAqZGV2LAo+ID4gIAlzdHJ1Y3Qgb2Zf
-cGNpX3JhbmdlX3BhcnNlciBwYXJzZXI7Cj4gPiAgCWNoYXIgcmFuZ2VfdHlwZVs0XTsKPiA+ICAJ
-aW50IGVycjsKPiA+ICsJc3RydWN0IHBjaV9ob3N0X2JyaWRnZV93aW5kb3cgKndpbmRvdzsKPiA+
-ICAKPiA+ICAJaWYgKGlvX2Jhc2UpCj4gPiAgCQkqaW9fYmFzZSA9IChyZXNvdXJjZV9zaXplX3Qp
-T0ZfQkFEX0FERFI7Cj4gPiBAQCAtMjI1LDcgKzIyNiwxMCBAQCBpbnQgb2ZfcGNpX2dldF9ob3N0
-X2JyaWRnZV9yZXNvdXJjZXMoc3RydWN0IGRldmljZV9ub2RlICpkZXYsCj4gPiAgY29udmVyc2lv
-bl9mYWlsZWQ6Cj4gPiAgCWtmcmVlKHJlcyk7Cj4gPiAgcGFyc2VfZmFpbGVkOgo+ID4gKwlsaXN0
-X2Zvcl9lYWNoX2VudHJ5KHdpbmRvdywgcmVzb3VyY2VzLCBsaXN0KQo+ID4gKwkJa2ZyZWUod2lu
-ZG93LT5yZXMpOwo+ID4gIAlwY2lfZnJlZV9yZXNvdXJjZV9saXN0KHJlc291cmNlcyk7Cj4gPiAr
-CWtmcmVlKGJ1c19yYW5nZSk7Cj4gPiAgCXJldHVybiBlcnI7Cj4gPiAgfQo+ID4gIEVYUE9SVF9T
-WU1CT0xfR1BMKG9mX3BjaV9nZXRfaG9zdF9icmlkZ2VfcmVzb3VyY2VzKTsKPiAKPiBIaSBMb3Jl
-bnpvIGV0IGFsbCwKPiAKPiBIZXJlIGlzIG15IHBlcnNvbmFsIHZpZXcgYW5kIEkgYW0gaGFwcHkg
-dG8gaGVhciBmcm9tIG90aGVycyBvbiB0aGUgZGVzaXJlZAo+IGJlaGF2aW91cjoKPiAKPiBXaGVu
-IEkgd3JvdGUgdGhpcyBmdW5jdGlvbiB3aGF0IEkgaGFkIGluIG1pbmQgd2FzIHRoYXQgaXQgd2ls
-bCBwYXJzZSBhcwo+IG11Y2ggYXMgcG9zc2libGUgZnJvbSB0aGUgZGV2aWNlIHRyZWUgYW5kIHJl
-dHVybiBhIGxpc3Qgb2YgcmVzb3VyY2VzIHRoYXQKPiBjb3VsZCBiZSBzdWNjZXNzZnVsbHkgY29u
-dmVydGVkLiBJZiB0aGUgZW50aXJlIGxpc3Qgb2YgcmFuZ2VzIGNvdWxkIG5vdAo+IGJlIGNvbnZl
-cnRlZCB0aGVuIGFuIGVycm9yIGNvZGUgd2lsbCBiZSByZXR1cm5lZCwgYnV0IHRoZSBjYWxsZXIg
-c3RpbGwKPiBoYWQgdGhlIGxpc3QgYXMgY29uc3RydWN0ZWQgdXAgdG8gdGhlIGVycm9yLiBJdCB3
-YXMgdGhlIGpvYiBvZiB0aGUgY2FsbGVyCj4gdG8gZnJlZSB0aGUgbGlzdCBpbiBlaXRoZXIgY2Fz
-ZXMsIGFzIHN0YXRlZCBpbiB0aGUgY29tbWVudC4KClRoYXQncyB3aGF0IEkgYW0gcXVlc3Rpb25p
-bmcuIElmIHRoZSBmdW5jdGlvbiB0YWtlcyBhbiBlcnJvciBwYXRoLCB0aGUKd2luZG93cyBsaXN0
-IGlzIGZyZWVkLCBzbyB0aGUgcmVzb3VyY2UgcG9pbnRlcnMgYXJlIGdvbmUuIFRoZXJlIGlzIG5v
-CndheSB0aGUgY2FsbGVyIGNhbiBncmFiIHRob3NlIHJlc291cmNlIHBvaW50ZXJzIGFuZCBmcmVl
-IHRoZW0uCgpTbyBlaXRoZXIgd2F5LCB0aGUgZnVuY3Rpb24gbmVlZHMgcGF0Y2hpbmcuIEVpdGhl
-ciB3ZSBkbyBub3QgZnJlZSB0aGUKd2luZG93cyBsaXN0ICh3ZSByZW1vdmUgcGNpX2ZyZWVfcmVz
-b3VyY2VfbGlzdCkgb3Igd2UgYXBwbHkgbXkgZml4IChvcgp3ZSByZWZhY3RvciB0aGUgQVBJIHdo
-aWNoIGlzIGxpa2VseSB0byBiZSB3aGF0IEkgd2lsbCBkbykuCgpMb3JlbnpvCgo+IAo+IFRoZSBo
-aXN0b3JpY2FsIHJlYXNvbiB3aHkgdGhlIGZ1bmN0aW9uIHdhcyB3cml0dGVuIHRoYXQgd2F5IHdh
-cyBiZWNhdXNlIGF0Cj4gc29tZSBtb21lbnQgYWZ0ZXIgcGFyc2luZyBJJ3ZlIGhhZCBhbiBhZGRp
-dGlvbmFsIHN0ZXAgd2hlcmUgYXJjaGVzIGNvdWxkCj4gY2xlYW51cCAvIHZldG8gdGhlIGxpc3Qg
-YW5kIHRoZXkgY291bGQgcmV0dXJuIGFuIGVycm9yIHZhbHVlIHRvIHNpZ25hbAo+IHRoZWlyIGRp
-c2NvbnRlbnQuIEFsc28gSSB3YXMgKGFtKSBub3Qgc3VyZSBob3cgbGVuaWVudCB3ZSBjb3VsZCBi
-ZSB3aXRoCj4gdGhlIGRldmljZSB0cmVlIG5vdCBiZWluZyBzYW5lIChhdCBsZWFzdCBvbmUgaG9z
-dCBicmlkZ2UgYmluZGluZyBsaXN0cyB0aGUKPiBjb25maWcgc3BhY2UgYXMgYSByYW5nZSwgd2hp
-Y2ggd2FzIGFjY2VwdGVkIGFzIGJyb2tlbikuCj4gCj4gU28sIGZyb20gdGhhdCBwb2ludCBvZiB2
-aWV3LCBJIHdvdWxkIE5BSyB0aGlzIHBhdGNoLCBhcyB0aGUgZnVuY3Rpb24gd29ya3MKPiBhcyBp
-bnRlbmRlZC4gSWYgb3RoZXJzIGZpbmQgdGhpcyBtb2RlIG9mIG9wZXJhdGlvbiB0b28gY29udm9s
-dXRlZCwgdGhlbgo+IHRoZSBwYXRjaCBzaG91bGQgcHJvYmFibHkgbWFrZSBjbGVhciB0aGF0IGNs
-ZWFudXAgb25seSBuZWVkcyB0byBiZSBkb25lIG9uCj4gZnVuY3Rpb24gcmV0dXJuaW5nIHN1Y2Nl
-c3MuCj4gCj4gQmVzdCByZWdhcmRzLAo+IAo+ID4gLS0gCj4gPiAyLjIuMQo+ID4gCj4gPiAKPiAK
-PiAtLSAKPiA9PT09PT09PT09PT09PT09PT09PQo+IHwgSSB3b3VsZCBsaWtlIHRvIHwKPiB8IGZp
-eCB0aGUgd29ybGQsICB8Cj4gfCBidXQgdGhleSdyZSBub3QgfAo+IHwgZ2l2aW5nIG1lIHRoZSAg
-IHwKPiAgXCBzb3VyY2UgY29kZSEgIC8KPiAgIC0tLS0tLS0tLS0tLS0tLQo+ICAgICDCr1xfKOOD
-hClfL8KvCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwps
-aW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJh
-ZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51
-eC1hcm0ta2VybmVsCg==
+On Mon, 19 Jan 2015, Opensource [Adam Thomson] wrote:
+
+> On January 19, 2015 11:34, Lee Jones wrote:
+>=20
+> > On Mon, 22 Dec 2014, Adam Thomson wrote:
+> >=20
+> > > DA9150 is a combined Charger and Fuel-Gauge IC, with additional
+> > > GPIO and GPADC functionality.
+> > >
+> > > Signed-off-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+> > > ---
+> > >  drivers/mfd/Kconfig                  |   12 +
+> > >  drivers/mfd/Makefile                 |    2 +-
+> > >  drivers/mfd/da9150-core.c            |  413 ++++++++++++
+> > >  include/linux/mfd/da9150/core.h      |   68 ++
+> > >  include/linux/mfd/da9150/registers.h | 1155
+> > ++++++++++++++++++++++++++++++++++
+> > >  5 files changed, 1649 insertions(+), 1 deletion(-)
+> > >  create mode 100644 drivers/mfd/da9150-core.c
+> > >  create mode 100644 include/linux/mfd/da9150/core.h
+> > >  create mode 100644 include/linux/mfd/da9150/registers.h
+> > >
+> > > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> > > index 2e6b731..56e80d2 100644
+> > > --- a/drivers/mfd/Kconfig
+> > > +++ b/drivers/mfd/Kconfig
+> > > @@ -195,6 +195,18 @@ config MFD_DA9063
+> > >  	  Additional drivers must be enabled in order to use the functi=
+onality
+> > >  	  of the device.
+> > >
+> > > +config MFD_DA9150
+> > > +	tristate "Dialog Semiconductor DA9150 Charger Fuel-Gauge chip"
+> > > +	depends on I2C=3Dy
+> > > +	select MFD_CORE
+> > > +	select REGMAP_I2C
+> > > +	select REGMAP_IRQ
+> > > +	help
+> > > +	  This adds support for the DA9150 integrated charger and fuel-=
+gauge
+> > > +	  chip. This driver provides common support for accessing the d=
+evice.
+> > > +	  Additional drivers must be enabled in order to use the specif=
+ic
+> > > +	  features of the device.
+> > > +
+> > >  config MFD_DLN2
+> > >  	tristate "Diolan DLN2 support"
+> > >  	select MFD_CORE
+> > > diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> > > index 53467e2..f06f4c6 100644
+> > > --- a/drivers/mfd/Makefile
+> > > +++ b/drivers/mfd/Makefile
+> > > @@ -113,7 +113,7 @@ obj-$(CONFIG_MFD_DA9055)	+=3D da9055.o
+> > >
+> > >  da9063-objs			:=3D da9063-core.o da9063-irq.o da9063-i2c.o
+> > >  obj-$(CONFIG_MFD_DA9063)	+=3D da9063.o
+> > > -
+> > > +obj-$(CONFIG_MFD_DA9150)	+=3D da9150-core.o
+> > >  obj-$(CONFIG_MFD_MAX14577)	+=3D max14577.o
+> > >  obj-$(CONFIG_MFD_MAX77686)	+=3D max77686.o
+> > >  obj-$(CONFIG_MFD_MAX77693)	+=3D max77693.o
+> > > diff --git a/drivers/mfd/da9150-core.c b/drivers/mfd/da9150-core.=
+c
+> > > new file mode 100644
+> > > index 0000000..4d757b9
+> > > --- /dev/null
+> > > +++ b/drivers/mfd/da9150-core.c
+> > > @@ -0,0 +1,413 @@
+> > > +/*
+> > > + * DA9150 Core MFD Driver
+> > > + *
+> > > + * Copyright (c) 2014 Dialog Semiconductor
+> > > + *
+> > > + * Author: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+> > > + *
+> > > + * This program is free software; you can redistribute  it and/o=
+r modify it
+> > > + * under  the terms of  the GNU General  Public License as publi=
+shed by the
+> > > + * Free Software Foundation;  either version 2 of the  License, =
+or (at your
+> > > + * option) any later version.
+> > > + */
+> >=20
+> > [...]
+> >=20
+> > > +u8 da9150_reg_read(struct da9150 *da9150, u16 reg)
+> > > +{
+> > > +	int val, ret;
+> > > +
+> > > +	ret =3D regmap_read(da9150->regmap, reg, &val);
+> > > +	if (ret)
+> > > +		dev_err(da9150->dev, "Failed to read from reg 0x%x: %d\n",
+> > > +			reg, ret);
+> > > +
+> > > +	return (u8) val;
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(da9150_reg_read);
+> > > +
+> > > +void da9150_reg_write(struct da9150 *da9150, u16 reg, u8 val)
+> > > +{
+> > > +	int ret;
+> > > +
+> > > +	ret =3D regmap_write(da9150->regmap, reg, val);
+> > > +	if (ret)
+> > > +		dev_err(da9150->dev, "Failed to write to reg 0x%x: %d\n",
+> > > +			reg, ret);
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(da9150_reg_write);
+> > > +
+> > > +void da9150_set_bits(struct da9150 *da9150, u16 reg, u8 mask, u8=
+ val)
+> > > +{
+> > > +	int ret;
+> > > +
+> > > +	ret =3D regmap_update_bits(da9150->regmap, reg, mask, val);
+> > > +	if (ret)
+> > > +		dev_err(da9150->dev, "Failed to set bits in reg 0x%x: %d\n",
+> > > +			reg, ret);
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(da9150_set_bits);
+> > > +
+> > > +void da9150_bulk_read(struct da9150 *da9150, u16 reg, int count,=
+ u8 *buf)
+> > > +{
+> > > +	int ret;
+> > > +
+> > > +	ret =3D regmap_bulk_read(da9150->regmap, reg, buf, count);
+> > > +	if (ret)
+> > > +		dev_err(da9150->dev, "Failed to bulk read from reg 0x%x: %d\n"=
+,
+> > > +			reg, ret);
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(da9150_bulk_read);
+> > > +
+> > > +void da9150_bulk_write(struct da9150 *da9150, u16 reg, int count=
+, const u8
+> > *buf)
+> > > +{
+> > > +	int ret;
+> > > +
+> > > +	ret =3D regmap_raw_write(da9150->regmap, reg, buf, count);
+> > > +	if (ret)
+> > > +		dev_err(da9150->dev, "Failed to bulk write to reg 0x%x %d\n",
+> > > +			reg, ret);
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(da9150_bulk_write);
+> >=20
+> > I've never been a fan of this type of aggregation.  Can you explain=
+ to
+> > me what the point of them is?
+>=20
+> I refer you back to our previous discussion some time back:
+>=20
+> https://lkml.org/lkml/2014/9/9/284
+>=20
+> 'The reason for these is because future patches to add additional fun=
+ctionality
+> will introduce I2C access functions which do not use regmap and acces=
+s the
+> device via a separate I2C address for this purpose. I will need to pr=
+ovide
+> access functions for that, and so having a common style of I2C access=
+ makes
+> sense for this driver. Means any access just needs to provide the MFD=
+ private
+> data, and the relevant functions take care of the rest. I think this =
+is cleaner
+> in this instance.'
+
+Well at least I'm consistent.
+
+=46or my own reference:
+  Acked-by: Lee Jones <lee.jones@linaro.org>
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
