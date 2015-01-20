@@ -1,85 +1,72 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] dt-bindings: Add pinctrl bindings for mt65xx/mt81xx.
-Date: Tue, 20 Jan 2015 10:45:09 +0100
-Message-ID: <CACRpkdYmjrEtds4wLr0cOmCPOLhS9xisfrY-cNZ3r0oh8n489Q@mail.gmail.com>
-References: <1415709535-31515-1-git-send-email-hongzhou.yang@mediatek.com>
-	<1415709535-31515-3-git-send-email-hongzhou.yang@mediatek.com>
-	<CACRpkdYSe_BH_qiHma2BA+c2otEi3wd0TBXy83t8vwrNL+3U2g@mail.gmail.com>
-	<20141127101830.GP30369@pengutronix.de>
-	<CACRpkdbMdJT6y-NL36RgQe0-CAFAVGqKiwY9+yFcwA7JDLmA+Q@mail.gmail.com>
-	<20141202135527.GM30369@pengutronix.de>
-	<CACRpkdZeRd+j7d_iRphruHRg8p3XjqWK8_HQzLH2PTZ_pqOrYA@mail.gmail.com>
-	<20150112122200.GC18908@pengutronix.de>
-	<CACRpkdYXrdiRWMV8YpxrSLe2rLEV-ZnX7=36w21zGquh==6WgA@mail.gmail.com>
-	<20150113161614.GF23940@pengutronix.de>
-	<CACRpkdYRrs2=gNM1XGSh1cSo5Pvx6iNLt4HjL6gdTqGPWYSRDw@mail.gmail.com>
-	<1421403805.11671.58.camel@mtksdaap41>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v6 2/3] gpio: Cygnus: add GPIO driver
+Date: Tue, 20 Jan 2015 10:53:07 +0100
+Message-ID: <CACRpkdYydCO9Wu3fMyh0qt=e_hxT5ch2gqNhEsfQpf5WYUS-kQ@mail.gmail.com>
+References: <rjui@broadcom.com>
+	<1418696307-19392-1-git-send-email-rjui@broadcom.com>
+	<1418696307-19392-3-git-send-email-rjui@broadcom.com>
+	<CACRpkdYGksEseGaO49=1rUi5WBdOxwAd-F1gpgZn+BFatRCdDg@mail.gmail.com>
+	<54B55068.8050500@broadcom.com>
+	<CACRpkdZef8S-EAbShjJ1eg+-3wQKn+yx4u1k_Mf8F7uFkJYdFw@mail.gmail.com>
+	<54B9A8A2.6090209@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1421403805.11671.58.camel@mtksdaap41>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, huang eddie <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, dandan.he-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <54B9A8A2.6090209@broadcom.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Ray Jui <rjui@broadcom.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Joe Perches <joe@perches.com>, Arnd Bergmann <arnd@arndb.de>, Scott Branden <sbranden@broadcom.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 16, 2015 at 11:23 AM, Yingjoe Chen
-<yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> On Fri, 2015-01-16 at 10:53 +0100, Linus Walleij wrote:
->> On Tue, Jan 13, 2015 at 5:16 PM, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
->> > On Tue, Jan 13, 2015 at 11:05:22AM +0100, Linus Walleij wrote:
->>
->> >> > You often talk about ambiguities. Could you give an example what
->> >> > ambiguities you mean?
->> >>
->> >> What happened was this pins = ; arguments were sometimes
->> >> strings and sometimes integers, that becomes strange to handle
->> >> in code, ambiguous.
->> >
->> > I see. I like naming it 'pinmux' because that's what it is: pins and
->> > mux settings. A plain 'pinno' suggests that it contains only pin mubers,
->> > without mux setting. How about 'pin-no-mux'? We also could add an
->> > explicit "pins-are-numbered" property instead of distinguishing this
->> > by property names.
->>
->> I kind of like this "pins-are-numbered" thing.
->>
->> The other property for the pin, whether pinmux or pin-no-mux or
->> pin-num-and-mux etc is no such big deal, as long as it's
->> consistent and documented with the generic bindings.
->
-> Hi Linus,
->
-> To make sure I understand it correct, you think something like this is
-> OK?
->
->         pinctrl@01c20800 {
->                 compatible = "mediatek,mt8135-pinctrl";
-> [...]
->                 pins-are-numbered;
->
->                 i2c0_pins_a: i2c0@0 {
->                         pins1 {
->                                 pins = <MT8135_PIN_100_SDA0__FUNC_SDA0>,
->                                         <MT8135_PIN_101_SCL0__FUNC_SCL0>;
->                                 bias-disable;
->                         };
->                 };
+On Sat, Jan 17, 2015 at 1:11 AM, Ray Jui <rjui@broadcom.com> wrote:
+> On 1/16/2015 2:14 AM, Linus Walleij wrote:
 
-As discussed with Sascha Hauer it is ambigous to use "pins" for
-a numerical value indicating both a mux setting and a pin. Sascha
-suggests using "pinmux" and adding this as a secondary generic
-binding for this type of pin controllers that use numbers and #defines
-to set up bindings.
+>> Some hardware designs put the software-controlled biasing
+>> resistors in the GPIO block electronically connected to the actual
+>> pins, so that e.g. the biasing will be available if some MMC or
+>> whatever is using the same pins in another muxing. In such
+>> situations it's quite evident that they need to be a combined
+>> GPIO and pin controller.
+>>
+>> I have some regrets that bolting a second pin controller to the
+>> GPIO chip make things a bit complex but it's a price we have
+>> to pay for getting some kind of generic interface.
+>
+> Okay. In summary, I think both of us think the following approach makes
+> sense in my situation:
+> - leave pinmux in pinctrl-bcm-cygnus.c
+> - leave pinctrl + gpio in pinctrl-bcm-cygnus-gpio.c under drivers/pinctrl/*
+>
+> But by thinking about this more, I thought this would create duplicated
+> pinctrl descriptors in our system, one from the pinmux driver, and the
+> other from this pinctrl+gpio driver. That is probably undesirable?
 
-We should still move these parsing functions to the core.
+No, there are several systems with multiple pin controllers and the
+framework easily handles multiple pin controllers in the same
+system just as well as we handle multiple GPIO chips.
 
-See this discussion earlier in this thread:
-http://marc.info/?l=linux-kernel&m=142116581226500&w=2
+> By reviewing various drivers in the pinctrl directory, I found what
+> pinctrl-u300.c and pinctrl-coh901.c does seems to serve as a good model
+> for me to follow:
+> - pinctrl-u300.c is the pinmux driver
+> - pinctrl-coh901.c is the gpio+pinctrl driver
+
+Yeah, I don't know if the separation between them is as beautiful
+as it should be. I used it when developing the pin control
+subsystem.
+
+> The GPIO pinctrl logic is in the coh901 block, so pinctrl-coh901.c
+> exposed two public functions u300_gpio_config_get, u300_gpio_config_set
+> that pinctrl-u300.c can use. The u300 populates all pinmux/pinctrl
+> related functions into the subsystem. This way there's only one pinctrl
+> descriptor, populated through pinctrl-u300.c.
+>
+> Does that model make more sense to you?
+
+Yeah I wrote it myself so I'm maybe blind for any dumbness in
+the code. But I think it's kind of elegant. But it is not using the
+generic pinctrl device tree bindings so it's kind of oldstyle and
+bloated in that sense.
 
 Yours,
 Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
