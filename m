@@ -1,40 +1,32 @@
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: [PATCH v5 0/2]  Initial support for voltage ADC
-Date: Tue, 20 Jan 2015 12:15:20 +0200
-Message-ID: <1421748922-8933-1-git-send-email-iivanov@mm-sol.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 7/8] gpio/mpc8xxx: Convert to platform device interface.
+Date: Tue, 20 Jan 2015 11:15:30 +0100
+Message-ID: <CACRpkdY074juk8MYLVY_--vfdFkB7dsaMCBSa-ynADQ8qGt4jQ@mail.gmail.com>
+References: <1421581173-28416-1-git-send-email-ricardo.ribalda@gmail.com>
+	<1421581173-28416-8-git-send-email-ricardo.ribalda@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1421581173-28416-8-git-send-email-ricardo.ribalda@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>
-Cc: "Ivan T. Ivanov" <iivanov@mm-sol.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+To: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Peter Korsgaard <jacmet@sunsite.dk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This type of volatage ADC could be found in Qualcomm's SPMI PMIC's.
-I'm sorry that it took me so long to send the updated version.
+On Sun, Jan 18, 2015 at 12:39 PM, Ricardo Ribalda Delgado
+<ricardo.ribalda@gmail.com> wrote:
 
-Changes since v4.
-- Addressed review comments from Hartmut Knaack and Jonathan Cameron:
-  Fixed spelling errors in DT description files.
-  Removed unused structure member.
-  Access to hardware during conversion is protected with mutex.
-  Measuring reference points moved at driver probe time.
+> This way we do not need to transverse the device tree manually.
+>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Alexandre Courbot <gnurou@gmail.com>
+> Cc: Grant Likely <grant.likely@linaro.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Peter Korsgaard <jacmet@sunsite.dk>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
 
-Patches are based on current iio/testing branch.
+Patch applied with the ACKs, hope nothing explodes.
 
-v4 could be found here: https://lkml.org/lkml/2014/11/3/425
-
-Stanimir Varbanov (2):
-  DT: iio: vadc: document dt binding
-  iio: vadc: Qualcomm SPMI PMIC voltage ADC driver
-
- .../devicetree/bindings/iio/adc/qcom,spmi-vadc.txt |  129 +++
- drivers/iio/adc/Kconfig                            |   14 +
- drivers/iio/adc/Makefile                           |    1 +
- drivers/iio/adc/qcom-spmi-vadc.c                   | 1016 ++++++++++++++++++++
- include/dt-bindings/iio/qcom,spmi-vadc.h           |  119 +++
- 5 files changed, 1279 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
- create mode 100644 drivers/iio/adc/qcom-spmi-vadc.c
- create mode 100644 include/dt-bindings/iio/qcom,spmi-vadc.h
-
---
-1.9.1
+Yours,
+Linus Walleij
