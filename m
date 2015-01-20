@@ -1,103 +1,60 @@
-From: Dylan Reid <dgreid@chromium.org>
-Subject: Re: [PATCH v2 03/11] ARM: tegra: Set the sound card model that
- alsaucm expects
-Date: Tue, 20 Jan 2015 09:01:34 -0800
-Message-ID: <CAEUnVG4R6NH3EAM9qBaxzC+T26qWeiEm=iZtFQKyrQTcvfzicg@mail.gmail.com>
-References: <1421338359-27467-1-git-send-email-tomeu.vizoso@collabora.com>
- <1421338359-27467-4-git-send-email-tomeu.vizoso@collabora.com>
- <54B7F757.5060002@wwwdotorg.org> <CAAObsKCad9O_=TUQrF7fVbBvjDTmfJsLPgr+EasCyhvY+xhdHg@mail.gmail.com>
- <CAAObsKBKnU_wBaxNFN-buz71qL-te4s6bqrrnxao_N-TwBVkAQ@mail.gmail.com>
- <54BD3A75.80009@wwwdotorg.org> <CAAObsKBm5mesGqrLQnveKQMy__uEOU1vcLGptnKxqHjV-T9C0g@mail.gmail.com>
+From: Iain Paton <ipaton0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 5/5] ARM: sunxi: dts: Add PS2 nodes for
+ A20 lime2 board
+Date: Tue, 20 Jan 2015 17:02:06 +0000
+Message-ID: <54BE8A0E.30604@gmail.com>
+References: <1421417021-3247-1-git-send-email-vishnupatekar0510@gmail.com> <1421417021-3247-6-git-send-email-vishnupatekar0510@gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAAObsKBm5mesGqrLQnveKQMy__uEOU1vcLGptnKxqHjV-T9C0g@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Simon Glass <sjg@chromium.org>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <linux-sunxi+bncBDIZ3QVDVUBBBGMU7KSQKGQE6FRQX2Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1421417021-3247-6-git-send-email-vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 19, 2015 at 9:11 AM, Tomeu Vizoso
-<tomeu.vizoso@collabora.com> wrote:
-> On 19 January 2015 at 18:10, Stephen Warren <swarren@wwwdotorg.org> wrote:
->> On 01/16/2015 02:01 AM, Tomeu Vizoso wrote:
->>>
->>> On 16 January 2015 at 09:50, Tomeu Vizoso <tomeu.vizoso@collabora.com>
->>> wrote:
->>>>
->>>> On 15 January 2015 at 18:22, Stephen Warren <swarren@wwwdotorg.org>
->>>> wrote:
->>>>>
->>>>> On 01/15/2015 09:12 AM, Tomeu Vizoso wrote:
->>>>>>
->>>>>>
->>>>>> Patches are on its way to add a config file to alsaucm for the Nyan
->>>>>> boards. Use the same card ID that alsaucm will expect.
->>>>>>
->>>>>> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
->>>>>> ---
->>>>>>    arch/arm/boot/dts/tegra124-nyan-big.dts | 4 ++--
->>>>>>    1 file changed, 2 insertions(+), 2 deletions(-)
->>>>>>
->>>>>> diff --git a/arch/arm/boot/dts/tegra124-nyan-big.dts
->>>>>> b/arch/arm/boot/dts/tegra124-nyan-big.dts
->>>>>> index 43e58a4..9a9cffe 100644
->>>>>> --- a/arch/arm/boot/dts/tegra124-nyan-big.dts
->>>>>> +++ b/arch/arm/boot/dts/tegra124-nyan-big.dts
->>>>>> @@ -1976,9 +1976,9 @@
->>>>>>          };
->>>>>>
->>>>>>          sound {
->>>>>> -               compatible = "nvidia,tegra-audio-max98090-nyan-big",
->>>>>> +               compatible = "nvidia,tegra-audio-max98090-nyan",
->>>>>>                               "nvidia,tegra-audio-max98090";
->>>>>
->>>>>
->>>>>
->>>>> If all the boards that are derived from Nyan truly have identical audio
->>>>> HW
->>>>> (or at least any differences can be described by this binding), then it
->>>>> seems fine to add "nvidia,tegra-audio-max98090-nyan" to the compatible
->>>>> value.
->>>>
->>>>
->>>>
->>>>
->>>>> However, I don't see a reason to remove the board-specific compatible
->>>>> value
->>>>> "nvidia,tegra-audio-max98090-nyan-big"; we should always include all the
->>>>> values that are relevant.
->>>>
->>>>
->>>> Ok.
->>>
->>>
->>> Oh, actually, my intention was to move the whole sound node to the
->>> nyan dtsi, as there isn't anything specific to the blaze regarding
->>> sound.
->>
->>
->> There are zero differences between the sound circuits of the boards? If so,
->> that sounds fine. I suppose if we do need to apply a quirk to one board but
->> not the other, we can always fall back on the top-level compatible value if
->> we absolutely have to.
->
-> Yeah, this is what Dylan said in other thread:
->
-> "ChromeOS uses one config for both.  The only audio difference between
-> these two boards is the speakers, that isn't represented in UCM, so
-> one config file is fine."
+On 16/01/15 14:03, Vishnu Patekar wrote:
+> Signed-off-by: VishnuPatekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts |   12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
+> index ed364d5..3365f12 100644
+> --- a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
+> +++ b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
+> @@ -113,6 +113,18 @@
+>  			status = "okay";
+>  		};
+>  
+> +		ps20: ps2@01c2a000 {
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&ps20_pins_a>;
+> +			status = "okay";
+> +		};
+> +
+> +		ps21: ps2@01c2a400 {
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&ps21_pins_a>;
+> +			status = "okay";
+> +		};
+> +
+>  		i2c0: i2c@01c2ac00 {
+>  			pinctrl-names = "default";
+>  			pinctrl-0 = <&i2c0_pins_a>;
+> 
 
-Correct, they share the same headset chip and codec, they are both
-wired up the same.
+As the Lime2 doesn't actually have any PS2 connectors on the board, 
+I'd prefer that these are not enabled unconditionally. Doing so 
+only makes it more difficult for people who want to use these pins 
+for other functions.
 
->
-> Regards,
->
-> Tomeu
->
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->> Please read the FAQ at  http://www.tux.org/lkml/
+Device tree overlays seem to be close to being merged, perhaps we 
+could leave enabling this to an overlay?
