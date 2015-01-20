@@ -1,112 +1,122 @@
-From: Liviu Dudau <liviu@dudau.co.uk>
-Subject: Re: [RFC PATCH 1/3] drivers: of: fix resources freeing in
- of_pci_get_host_bridge_resources()
-Date: Tue, 20 Jan 2015 11:20:32 +0000
-Message-ID: <20150120112031.GA342@bart.dudau.co.uk>
-References: <1420644571-18928-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1420644571-18928-2-git-send-email-lorenzo.pieralisi@arm.com>
- <20150119183228.GE10762@e106497-lin.cambridge.arm.com>
- <20150120104922.GF5398@red-moon>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 3/6] mfd: ti_am335x_tscadc: Remove unwanted
+ reg_se_cache save
+Date: Tue, 20 Jan 2015 11:53:25 +0000
+Message-ID: <20150120115325.GK13701@x1>
+References: <1420609779-11156-1-git-send-email-vigneshr@ti.com>
+ <1420609779-11156-4-git-send-email-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20150120104922.GF5398@red-moon>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Jingoo Han <jg1.han@samsung.com>, Liviu Dudau <Liviu.Dudau@arm.com>, Rob Herring <robh+dt@kernel.org>, Mohit Kumar <mohit.kumar@st.com>, Bjorn Helgaas <bhelgaas@google.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <1420609779-11156-4-git-send-email-vigneshr-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Brad Griffis <bgriffis-l0cyMroinI0@public.gmane.org>, Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>, Sanjeev Sharma <sanjeev_sharma-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Jan Kardell <jan.kardell-KSZdJiTw9mzQT0dZR+AlfA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap@vger.
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 20, 2015 at 10:49:22AM +0000, Lorenzo Pieralisi wrote:
-> On Mon, Jan 19, 2015 at 06:32:29PM +0000, Liviu Dudau wrote:
-> 
-> [...]
-> 
-> > > @@ -146,6 +146,7 @@ int of_pci_get_host_bridge_resources(struct device_node *dev,
-> > >  	struct of_pci_range_parser parser;
-> > >  	char range_type[4];
-> > >  	int err;
-> > > +	struct pci_host_bridge_window *window;
-> > >  
-> > >  	if (io_base)
-> > >  		*io_base = (resource_size_t)OF_BAD_ADDR;
-> > > @@ -225,7 +226,10 @@ int of_pci_get_host_bridge_resources(struct device_node *dev,
-> > >  conversion_failed:
-> > >  	kfree(res);
-> > >  parse_failed:
-> > > +	list_for_each_entry(window, resources, list)
-> > > +		kfree(window->res);
-> > >  	pci_free_resource_list(resources);
-> > > +	kfree(bus_range);
-> > >  	return err;
-> > >  }
-> > >  EXPORT_SYMBOL_GPL(of_pci_get_host_bridge_resources);
-> > 
-> > Hi Lorenzo et all,
-> > 
-> > Here is my personal view and I am happy to hear from others on the desired
-> > behaviour:
-> > 
-> > When I wrote this function what I had in mind was that it will parse as
-> > much as possible from the device tree and return a list of resources that
-> > could be successfully converted. If the entire list of ranges could not
-> > be converted then an error code will be returned, but the caller still
-> > had the list as constructed up to the error. It was the job of the caller
-> > to free the list in either cases, as stated in the comment.
-> 
-> That's what I am questioning. If the function takes an error path, the
-> windows list is freed, so the resource pointers are gone. There is no
-> way the caller can grab those resource pointers and free them.
+On Wed, 07 Jan 2015, Vignesh R wrote:
 
-I stand corrected. Your patch is needed.
+> In one shot mode, sequencer automatically disables all enabled steps =
+at
+> the end of each cycle. (both ADC steps and TSC steps) Hence these ste=
+ps
+> need not be saved in reg_se_cache for clearing these steps at a later
+> stage.
+> Also, when ADC wakes up Sequencer should not be busy executing any of=
+ the
+> config steps except for the charge step. Previously charge step was 1=
+ ADC
+> clock cycle and hence it was ignored.
+> TSC steps are always disabled at the end of each conversion cycle, he=
+nce
+> there is no need to explicitly disable TSC steps by writing 0 to REG_=
+SE.
+>=20
+> Signed-off-by: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
+> ---
+>=20
+> v5:
+>  - Remove unnecessary clearing of REG_SE
+>=20
+>  drivers/mfd/ti_am335x_tscadc.c       | 13 +++++--------
+>  include/linux/mfd/ti_am335x_tscadc.h |  1 +
+>  2 files changed, 6 insertions(+), 8 deletions(-)
 
-Thanks,
-Liviu
+Looks fine.
 
-> 
-> So either way, the function needs patching. Either we do not free the
-> windows list (we remove pci_free_resource_list) or we apply my fix (or
-> we refactor the API which is likely to be what I will do).
-> 
-> Lorenzo
-> 
-> > 
-> > The historical reason why the function was written that way was because at
-> > some moment after parsing I've had an additional step where arches could
-> > cleanup / veto the list and they could return an error value to signal
-> > their discontent. Also I was (am) not sure how lenient we could be with
-> > the device tree not being sane (at least one host bridge binding lists the
-> > config space as a range, which was accepted as broken).
-> > 
-> > So, from that point of view, I would NAK this patch, as the function works
-> > as intended. If others find this mode of operation too convoluted, then
-> > the patch should probably make clear that cleanup only needs to be done on
-> > function returning success.
-> > 
-> > Best regards,
-> > 
-> > > -- 
-> > > 2.2.1
-> > > 
-> > > 
+=46or my own reference:
+  Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
--- 
--------------------
-   .oooO
-   (   )
-    \ (  Oooo.
-     \_) (   )
-          ) /
-         (_/
+Can this patch be applied on its own?
 
- One small step
-   for me ...
+> diff --git a/drivers/mfd/ti_am335x_tscadc.c b/drivers/mfd/ti_am335x_t=
+scadc.c
+> index 467c80e1c4ae..e4e4b22eebc9 100644
+> --- a/drivers/mfd/ti_am335x_tscadc.c
+> +++ b/drivers/mfd/ti_am335x_tscadc.c
+> @@ -68,12 +68,6 @@ static void am335x_tscadc_need_adc(struct ti_tscad=
+c_dev *tsadc)
+>  	DEFINE_WAIT(wait);
+>  	u32 reg;
+> =20
+> -	/*
+> -	 * disable TSC steps so it does not run while the ADC is using it. =
+If
+> -	 * write 0 while it is running (it just started or was already runn=
+ing)
+> -	 * then it completes all steps that were enabled and stops then.
+> -	 */
+> -	tscadc_writel(tsadc, REG_SE, 0);
+>  	reg =3D tscadc_readl(tsadc, REG_ADCFSM);
+>  	if (reg & SEQ_STATUS) {
+>  		tsadc->adc_waiting =3D true;
+> @@ -86,8 +80,12 @@ static void am335x_tscadc_need_adc(struct ti_tscad=
+c_dev *tsadc)
+>  		spin_lock_irq(&tsadc->reg_lock);
+>  		finish_wait(&tsadc->reg_se_wait, &wait);
+> =20
+> +		/*
+> +		 * Sequencer should either be idle or
+> +		 * busy applying the charge step.
+> +		 */
+>  		reg =3D tscadc_readl(tsadc, REG_ADCFSM);
+> -		WARN_ON(reg & SEQ_STATUS);
+> +		WARN_ON((reg & SEQ_STATUS) && !(reg & CHARGE_STEP));
+>  		tsadc->adc_waiting =3D false;
+>  	}
+>  	tsadc->adc_in_use =3D true;
+> @@ -96,7 +94,6 @@ static void am335x_tscadc_need_adc(struct ti_tscadc=
+_dev *tsadc)
+>  void am335x_tsc_se_set_once(struct ti_tscadc_dev *tsadc, u32 val)
+>  {
+>  	spin_lock_irq(&tsadc->reg_lock);
+> -	tsadc->reg_se_cache |=3D val;
+>  	am335x_tscadc_need_adc(tsadc);
+> =20
+>  	tscadc_writel(tsadc, REG_SE, val);
+> diff --git a/include/linux/mfd/ti_am335x_tscadc.h b/include/linux/mfd=
+/ti_am335x_tscadc.h
+> index 3f4e994ace2b..1fd50dcfe47c 100644
+> --- a/include/linux/mfd/ti_am335x_tscadc.h
+> +++ b/include/linux/mfd/ti_am335x_tscadc.h
+> @@ -128,6 +128,7 @@
+> =20
+>  /* Sequencer Status */
+>  #define SEQ_STATUS BIT(5)
+> +#define CHARGE_STEP		0x11
+> =20
+>  #define ADC_CLK			3000000
+>  #define TOTAL_STEPS		16
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
