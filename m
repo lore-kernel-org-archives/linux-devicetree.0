@@ -1,117 +1,56 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun4i: Add simplefb node with
- de_fe0-de_be0-lcd0-hdmi pipeline
-Date: Tue, 20 Jan 2015 14:18:22 +0100
-Message-ID: <54BE559E.6080404@redhat.com>
-References: <1421672477-12978-1-git-send-email-hdegoede@redhat.com> <1421672477-12978-2-git-send-email-hdegoede@redhat.com> <20150119132002.GD4367@lukather> <54BD082D.6030905@redhat.com> <54BD0A98.9030309@redhat.com> <20150119213239.GI4367@lukather>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [alsa-devel] [PATCH v2 RESEND 2/2] mfd: arizona: Update DT
+ binding to support OUTn_MONO init_data
+Date: Tue, 20 Jan 2015 13:20:01 +0000
+Message-ID: <20150120132001.GA21293@sirena.org.uk>
+References: <1420185829-24886-1-git-send-email-ideal.song@samsung.com>
+ <1420185829-24886-3-git-send-email-ideal.song@samsung.com>
+ <20150120122005.GA13701@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBJFL7GSQKGQETJGTOWY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20150119213239.GI4367@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="gKMricLos+KVdGMg"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150120122005.GA13701@x1>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Inha Song <ideal.song@samsung.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sameo@linux.intel.com, ckeepax@opensource.wolfsonmicro.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On 19-01-15 22:32, Maxime Ripard wrote:
-> On Mon, Jan 19, 2015 at 02:46:00PM +0100, Hans de Goede wrote:
->> Hi,
->>
->> On 19-01-15 14:35, Hans de Goede wrote:
->>> Hi,
->>>
->>> On 19-01-15 14:20, Maxime Ripard wrote:
->>>> Hi Hans,
->>>>
->>>> On Mon, Jan 19, 2015 at 02:01:17PM +0100, Hans de Goede wrote:
->>>>> Testing has shown that on sun4i the display backend engine does not have
->>>>> deep enough fifo-s causing flickering / tearing in full-hd mode due to
->>>>> fifo underruns. This can be avoided by letting the display frontend engine
->>>>> do the dma from memory, and then letting it feed the data directly into
->>>>> the backend unmodified, as the frontend does have deep enough fifo-s.
->>>>>
->>>>> Note since u-boot-v2015.01 has been released using the de_be0-lcd0-hdmi
->>>>> pipeline on sun4i, we need to keep that one around too (unfortunately).
->>>>>
->>>>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->>>>> ---
->>>>>   arch/arm/boot/dts/sun4i-a10.dtsi | 8 ++++++++
->>>>>   1 file changed, 8 insertions(+)
->>>>>
->>>>> diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
->>>>> index f5e35b5..ccd60e3 100644
->>>>> --- a/arch/arm/boot/dts/sun4i-a10.dtsi
->>>>> +++ b/arch/arm/boot/dts/sun4i-a10.dtsi
->>>>> @@ -44,6 +44,14 @@
->>>>>                    <&ahb_gates 44>;
->>>>>               status = "disabled";
->>>>>           };
->>>>> +
->>>>> +        framebuffer@1 {
->>>>> +            compatible = "allwinner,simple-framebuffer", "simple-framebuffer";
->>>>> +            allwinner,pipeline = "de_fe0-de_be0-lcd0-hdmi";
->>>>> +            clocks = <&pll5 1>, <&ahb_gates 36>, <&ahb_gates 43>,
->>>>> +                 <&ahb_gates 44>, <&ahb_gates 46>;
->>>>> +            status = "disabled";
->>>>> +        };
->>>>
->>>> Thanks for this.
->>>>
->>>> I do have a question though, maybe I'm missing something, but what
->>>> would prevent us from using the existing node already? The output
->>>> pipeline seems to be the same, at least for which output we
->>>> use. Wether we use or not the display frontend looks like an
->>>> implementation detail.
->>>
->>> The purpose of having a node per pipeline is to have the rights clocks
->>> listed for the pipeline chosen. So the "de_fe0-de_be0-lcd0-hdmi" node
->>> has one ahb_gates entry more so as to make sure the kernel does not gate
->>> off the frontend.
->>>
->>> The idea of having different nodes per pipeline is that when we get
->>> support for more module clocks in place, as a preparation for kms
->>> support, we can add the module clocks to the relevant nodes, to also
->>> ensure the module clocks will not get turned off.
->>>
->>> By having this info in the dtb, rather then in u-boot we can update
->>> the clocks list as we add new clock nodes in the dtb, ensuring that
->>> an older u-boot will keep working as we add support for module
->>> clocks, etc.
->>
->> Hmm, thinking more about this, and about how u-boot searches for
->> the simplefb node, I think that having a single node like this:
->>
->>          framebuffer@0 {
->>              compatible = "allwinner,simple-framebuffer", "simple-framebuffer";
->>              /* This node is for de_fe0-de_be0-lcd0-hdmi, but we also declare de_be0-lcd0-hdmi
->>                 for compatibility with u-boot-v2015.01 which does not use the frontend */
->>              allwinner,pipeline = "de_fe0-de_be0-lcd0-hdmi", "de_be0-lcd0-hdmi";
->>              clocks = <&pll5 1>, <&ahb_gates 36>, <&ahb_gates 43>,
->>                   <&ahb_gates 44>, <&ahb_gates 46>;
->>              status = "disabled";
->>          };
->>
->> Should work, but this will cause simplefb to enable the frontend ahb gate
->> even if it is not used (this will only impact u-boot-v2015.01 users), and as
->> such feels wrong, so I would prefer to go with my patch as is.
->
-> That's actually what I had in mind. It didn't feel that wrong, since
-> it pretty much mimics the compatible behaviour, but it's your call.
+--gKMricLos+KVdGMg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-If it is my call then I would prefer to go with the 2 separate nodes + v2
-of my lcd / vga nodes addition patch. If things indeed do become the combinatorial
-explosion you fear in the future, then we can always move to listing multiple
-pipelines in one node then.
+On Tue, Jan 20, 2015 at 12:20:05PM +0000, Lee Jones wrote:
+> On Fri, 02 Jan 2015, Inha Song wrote:
 
-Thanks & Regards,
+> > This patch update DT binding to support OUTn_MONO init_data. Each
+> > output signal can be configurated as a mono differential output.
+> > The mono differential configuration is selected using the OUTn_MONO
+> > registers.
 
-Hans
+> This requires a DT Ack and an entry in the example.
+
+The DT maintainers have said they're OK with maintainers just merging
+things if they're comfortable with it (see the bindings specific
+submitting-patches.txt) and given their workload and general resulting
+responsiveness it's going to make it difficult go get anything done.
+
+--gKMricLos+KVdGMg
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJUvlYAAAoJECTWi3JdVIfQePsH/A2qysGVcmVKORiKU0eiv9it
+Z5lW/OBk0Q/7JUcDijm+B8b4+h6ZRI4z/hh8NOTdj5KYyzO/Xt2m54BC6MRbfqvB
+GgA3cU5TERnbmRDZ6w+XcBFnGTZ9GVCKCAPTDuqhBsFdHL4i51YMLJCOd7kx/wV5
+a5UNVDyk6th03/upBEGGCxV1jR2k9+dfeawgfpZWfZB1kuzpj9tTBfZeOOdhwJW+
+PP3QUgkK5UeTURCKdBgWfXK8km32ja94b3TP1cAKvrHB9m7N7SBcEBpUM4I1a0ej
+zYHZQD6oI5AP+uz5CK69U1XWYYEPGcKhRYUCbgw1ptvdm2JhRwt6D487fC0pVcg=
+=8xvF
+-----END PGP SIGNATURE-----
+
+--gKMricLos+KVdGMg--
