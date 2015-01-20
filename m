@@ -1,75 +1,91 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH/RFC v10 03/19] DT: leds: Add led-sources property
-Date: Tue, 20 Jan 2015 11:29:16 -0600
-Message-ID: <CAL_JsqKoiaUmVhbQdnNveG=AAYh4-OHGS70L+LAgLLoKChUuYQ@mail.gmail.com>
-References: <1420816989-1808-1-git-send-email-j.anaszewski@samsung.com>
- <1420816989-1808-4-git-send-email-j.anaszewski@samsung.com>
- <CAL_JsqJKEp6TWaRhJimg3AWBh+MCCr2Bk9+1o7orLLdp5E+n-g@mail.gmail.com>
- <54B38682.5080605@samsung.com> <CAL_Jsq+UaA41DvawdOMmOib=Fi0hC-nBdKV-+P4DFo+MoOy-bQ@mail.gmail.com>
- <54B3F1EF.4060506@samsung.com> <CAL_JsqKpJtUG0G6g1GOuSVpc31oe-dp3qdrKJUE0upG-xRDFhA@mail.gmail.com>
- <54B4DA81.7060900@samsung.com> <CAL_JsqLYxB5hzLAWXpU=uncM5DEMZU78mP673H9oSSNB-cgcYQ@mail.gmail.com>
- <54B8D4D0.3000904@samsung.com> <CAL_Jsq+EFWzs1HP1tVt6P=p=HZn2AtSPjp55YrmMQi_mE+kNfQ@mail.gmail.com>
- <54B933D0.1090004@samsung.com> <54BE7DAB.80702@samsung.com>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [PATCH 1/4] clk: st: STiH410: Fix pdiv and fdiv divisor when setting rate
+Date: Tue, 20 Jan 2015 09:37:55 -0800
+Message-ID: <20150120173755.22722.80361@quantum>
+References: <1421767964-8798-1-git-send-email-peter.griffin@linaro.org>
+ <1421767964-8798-2-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <54BE7DAB.80702@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: linux-leds@vger.kernel.org, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Pavel Machek <pavel@ucw.cz>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, sakari.ailus@iki.fi, Sylwester Nawrocki <s.nawrocki@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1421767964-8798-2-git-send-email-peter.griffin@linaro.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, sboyd@codeaurora.org, chris@printf.net, ulf.hansson@linaro.org
+Cc: peter.griffin@linaro.org, lee.jones@linaro.org, peppe.cavallaro@st.com, olivier.bideau@st.com, gabriel.fernandez@st.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 20, 2015 at 10:09 AM, Jacek Anaszewski
-<j.anaszewski@samsung.com> wrote:
-> On 01/16/2015 04:52 PM, Jacek Anaszewski wrote:
->>
->> On 01/16/2015 02:48 PM, Rob Herring wrote:
+Quoting Peter Griffin (2015-01-20 07:32:41)
+> Debugging eMMC on upstream kernels it has been noticed that when the
+> targetpack configures MMC0 clock to 200Mhz (required to switch to
+> HS200) then everything works OK. However if the kernel sets the
+> clock rate using clk_set_rate, then the eMMC card initialisation
+> fails with timeouts. Lower clock speeds (the default being 50Mhz)
+> work ok, but they we fail to get good eMMC transfer rates.
+> 
+> Looking through the vendor kernel clock driver reveals Giuseppe
+> had already fixed this issue, but the patch hasn't made its way
+> upstream.
+> 
+> The issue is fixed by changing the logic to manage the pdiv and
+> fdiv divisors used for setting the rate inside the flexgen driver code.
+> 
+> Pdiv is mainly targeted for low freq results, while fdiv should be
+> used for divs =< 64. The other way can lead to 'duty cycle'
+> issues.
+> 
+> I have changed the original patch to keep the original behaviour
+> in cases where the div is >64 which matches the original comment
+> and patch description more closely. Although no clocks appear to hit
+> this case currently when booting an upstream kernel.
+> 
+> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> Signed-off-by: Giuseppe Cavallaro <peppe.cavallaro@st.com>
 
-[...]
+Applied to clk-next.
 
->>> You may want to add something like led-output-cnt or led-driver-cnt in
->>> the parent so you know the max list size.
->>
->>
->> Why should we need this? The number of current outputs exposed by the
->> device is fixed and can be specified in a LED device bindings
->> documentation.
->>
->
-> OK. The led-output-cnt property should be put in each sub-node, as the
-> number of the current outputs each LED can be connected to is variable.
+Regards,
+Mike
 
-Sorry, I meant this for the parent node meaning how many outputs the
-driver IC has. I did say maybe because you may always know this. It
-can make it easier to allocate memory for led-sources knowing the max
-size up front.
-
-Rob
-
->
-> New version:
->
->  Optional properties for child nodes:
-> +led-sources-cnt : Number of device current outputs the LED is connected to.
-> +- led-sources : List of device current outputs the LED is connected to. The
-> +               outputs are identified by the numbers that must be defined
-> +               in the LED device binding documentation.
->  - label : The label for this LED.  If omitted, the label is
->    taken from the node name (excluding the unit address).
->
-> @@ -33,7 +47,9 @@ system-status {
->
->  camera-flash {
->         label = "Flash";
-> +       led-sources-cnt = <2>;
-> +       led-sources = <0>, <1>;
->         max-microamp = <50000>;
->         flash-max-microamp = <320000>;
->         flash-timeout-us = <500000>;
-> -}
-> +};
->
->
-> --
-> Best Regards,
-> Jacek Anaszewski
+> ---
+>  drivers/clk/st/clk-flexgen.c | 19 +++++++++++++++----
+>  1 file changed, 15 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/clk/st/clk-flexgen.c b/drivers/clk/st/clk-flexgen.c
+> index 2282cef..3a484b3 100644
+> --- a/drivers/clk/st/clk-flexgen.c
+> +++ b/drivers/clk/st/clk-flexgen.c
+> @@ -138,16 +138,27 @@ static int flexgen_set_rate(struct clk_hw *hw, unsigned long rate,
+>         struct flexgen *flexgen = to_flexgen(hw);
+>         struct clk_hw *pdiv_hw = &flexgen->pdiv.hw;
+>         struct clk_hw *fdiv_hw = &flexgen->fdiv.hw;
+> -       unsigned long primary_div = 0;
+> +       unsigned long div = 0;
+>         int ret = 0;
+>  
+>         pdiv_hw->clk = hw->clk;
+>         fdiv_hw->clk = hw->clk;
+>  
+> -       primary_div = clk_best_div(parent_rate, rate);
+> +       div = clk_best_div(parent_rate, rate);
+>  
+> -       clk_divider_ops.set_rate(fdiv_hw, parent_rate, parent_rate);
+> -       ret = clk_divider_ops.set_rate(pdiv_hw, rate, rate * primary_div);
+> +       /*
+> +       * pdiv is mainly targeted for low freq results, while fdiv
+> +       * should be used for div <= 64. The other way round can
+> +       * lead to 'duty cycle' issues.
+> +       */
+> +
+> +       if (div <= 64) {
+> +               clk_divider_ops.set_rate(pdiv_hw, parent_rate, parent_rate);
+> +               ret = clk_divider_ops.set_rate(fdiv_hw, rate, rate * div);
+> +       } else {
+> +               clk_divider_ops.set_rate(fdiv_hw, parent_rate, parent_rate);
+> +               ret = clk_divider_ops.set_rate(pdiv_hw, rate, rate * div);
+> +       }
+>  
+>         return ret;
+>  }
+> -- 
+> 1.9.1
+> 
