@@ -1,71 +1,79 @@
-From: Greg Bellows <greg.bellows-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Secure resources in device trees
-Date: Tue, 20 Jan 2015 13:15:51 -0600
-Message-ID: <CAOgzsHVpXZTHoq7HyfrGeGe92onnb6=BQr30PvKrg04h=0De0w@mail.gmail.com>
+From: Ray Jui <rjui@broadcom.com>
+Subject: Re: [PATCH v6 2/3] gpio: Cygnus: add GPIO driver
+Date: Tue, 20 Jan 2015 11:17:03 -0800
+Message-ID: <54BEA9AF.7070209@broadcom.com>
+References: <rjui@broadcom.com>	<1418696307-19392-1-git-send-email-rjui@broadcom.com>	<1418696307-19392-3-git-send-email-rjui@broadcom.com>	<CACRpkdYGksEseGaO49=1rUi5WBdOxwAd-F1gpgZn+BFatRCdDg@mail.gmail.com>	<54B55068.8050500@broadcom.com>	<CACRpkdZef8S-EAbShjJ1eg+-3wQKn+yx4u1k_Mf8F7uFkJYdFw@mail.gmail.com>	<54B9A8A2.6090209@broadcom.com> <CACRpkdYydCO9Wu3fMyh0qt=e_hxT5ch2gqNhEsfQpf5WYUS-kQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter Maydell <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdYydCO9Wu3fMyh0qt=e_hxT5ch2gqNhEsfQpf5WYUS-kQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@arm.linux.org.uk>, Joe Perches <joe@perches.com>, Arnd Bergmann <arnd@arndb.de>, Scott Branden <sbranden@broadcom.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The addition of ARM security extension (TrustZone) support to QEMU has
-exposed the issue of how secure resources are communicated to secure
-software responsible for booting the HLOS.  The natural choice for
-communicating these details is the device tree.
 
-In the case of real hardware, the device tree supplied to the HLOS
-only needs to describe non-secure resources as secure software can
-rely on static knowledge about the hardware.  This also holds true for
-QEMU machines modeled after actual fixed hardware configurations.
-However, this is not the case with QEMU's virtual machine models, such
-as machvirt, where the hardware configuration can change over time.
-In this case, secure software is dependent on QEMU's dynamically
-constructed device tree to describe the hardware, making it impossible
-for secure software to know ahead of time what is secure, non-secure,
-or both.
 
-Two possible approaches for handling this particular case are:
+On 1/20/2015 1:53 AM, Linus Walleij wrote:
+> On Sat, Jan 17, 2015 at 1:11 AM, Ray Jui <rjui@broadcom.com> wrote:
+>> On 1/16/2015 2:14 AM, Linus Walleij wrote:
+> 
+>>> Some hardware designs put the software-controlled biasing
+>>> resistors in the GPIO block electronically connected to the actual
+>>> pins, so that e.g. the biasing will be available if some MMC or
+>>> whatever is using the same pins in another muxing. In such
+>>> situations it's quite evident that they need to be a combined
+>>> GPIO and pin controller.
+>>>
+>>> I have some regrets that bolting a second pin controller to the
+>>> GPIO chip make things a bit complex but it's a price we have
+>>> to pay for getting some kind of generic interface.
+>>
+>> Okay. In summary, I think both of us think the following approach makes
+>> sense in my situation:
+>> - leave pinmux in pinctrl-bcm-cygnus.c
+>> - leave pinctrl + gpio in pinctrl-bcm-cygnus-gpio.c under drivers/pinctrl/*
+>>
+>> But by thinking about this more, I thought this would create duplicated
+>> pinctrl descriptors in our system, one from the pinmux driver, and the
+>> other from this pinctrl+gpio driver. That is probably undesirable?
+> 
+> No, there are several systems with multiple pin controllers and the
+> framework easily handles multiple pin controllers in the same
+> system just as well as we handle multiple GPIO chips.
+> 
+>> By reviewing various drivers in the pinctrl directory, I found what
+>> pinctrl-u300.c and pinctrl-coh901.c does seems to serve as a good model
+>> for me to follow:
+>> - pinctrl-u300.c is the pinmux driver
+>> - pinctrl-coh901.c is the gpio+pinctrl driver
+> 
+> Yeah, I don't know if the separation between them is as beautiful
+> as it should be. I used it when developing the pin control
+> subsystem.
+> 
+>> The GPIO pinctrl logic is in the coh901 block, so pinctrl-coh901.c
+>> exposed two public functions u300_gpio_config_get, u300_gpio_config_set
+>> that pinctrl-u300.c can use. The u300 populates all pinmux/pinctrl
+>> related functions into the subsystem. This way there's only one pinctrl
+>> descriptor, populated through pinctrl-u300.c.
+>>
+>> Does that model make more sense to you?
+> 
+> Yeah I wrote it myself so I'm maybe blind for any dumbness in
+> the code. But I think it's kind of elegant. But it is not using the
+> generic pinctrl device tree bindings so it's kind of oldstyle and
+> bloated in that sense.
+> 
+> Yours,
+> Linus Walleij
+> 
+Okay. I think I have a pretty good idea of what you expect. Regarding
+whether or not to keep pinctrl-bcm-cygnus.c and
+pinctrl-bcm-cygnus-gpio.c completely independent with each other and
+therefore have two pinctrl in the system, I'll play with it a bit more
+and make a decision.
 
-1) Create two device tree blobs; one describing the non-secure
-configuration and the other the full configuration.  This would allow
-secure software to see the full hardware picture including secure
-resources while the non-secure world would only see the non-secure
-device tree configuration.  The QEMU virt machine would be responsible
-for producing the device tree blobs.
-
-The drawbacks to this approach are:
-* There are 2 device trees to manage
-* The two DTBs will typically be almost identical.
-* Not possible to identify whether a device is shared or not between
-the secure and non-secure worlds.
-* Identifying device available only to the secure world require
-cumbersome comparison of the two device trees.
-* A mechanism would be needed to pass an additional device tree.
-
-2) Modify the standard device tree blob to include annotations or
-modifications to describe which resources are secure or not.  In this
-case, secure software would use the single device tree to identify the
-secure resources.  The added information could be used by secure
-software to trim the device tree before passing it.  Alternatively,
-the information could be passed on to non-secure software with the
-expectation that it would honor the device security.   It would be
-crucial that any data added to the device tree adhere to existing
-conventions or expectations.
-
-The drawbacks to this approach are:
-* Additional secure state details. potentially unrecognized by current
-consumers,  would need to be added to the device tree.
-* Unless a mechanism already exists, the new secure property runs the
-risk of breaking backwards compatibility.
-* Secure firmware is responsible for understanding and possibly
-filtering the secure device tree data.
-
-Feedback welcomed.
-
-Greg
---
-To unsubscribe from this list: send the line "unsubscribe devicetree-spec" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks a lot for spending all these time explaining it to me. Really
+appreciate it!
