@@ -1,131 +1,53 @@
-From: Steve Twiss <stwiss.opensource@diasemi.com>
-Subject: [PATCH V3 2/2] devicetree: Add bindings for DA9063
-Date: Tue, 20 Jan 2015 13:54:25 +0000
-Message-ID: <99c7b7fb380070e5a2f7f4e9f333e8a2b12b591a.1421762065.git.stwiss.opensource@diasemi.com>
-References: <cover.1421762065.git.stwiss.opensource@diasemi.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 7/7] mfd: menelaus: use macro for magic number
+Date: Tue, 20 Jan 2015 14:01:05 +0000
+Message-ID: <20150120140105.GP13701@x1>
+References: <1419702779-16001-1-git-send-email-aaro.koskinen@iki.fi>
+ <1419702779-16001-8-git-send-email-aaro.koskinen@iki.fi>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1421762065.git.stwiss.opensource@diasemi.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>
-Cc: DT <devicetree@vger.kernel.org>, David Dajun Chen <david.chen@diasemi.com>, Grant Likely <grant.likely@linaro.org>, LKML <linux-kernel@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Support Opensource <support.opensource@diasemi.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1419702779-16001-8-git-send-email-aaro.koskinen-X3B1VOXEql0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Steve Twiss <stwiss.opensource@diasemi.com>
+On Sat, 27 Dec 2014, Aaro Koskinen wrote:
 
-Add device tree bindings for DA9063 regulators; Real-Time Clock
-and Watchdog.
+> Use macro to check a register bit.
+>=20
+> Signed-off-by: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
+> ---
+>  drivers/mfd/menelaus.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-This patch is dependent on PATCH V2 1/2 
+Applied, thanks.
 
-Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
+> diff --git a/drivers/mfd/menelaus.c b/drivers/mfd/menelaus.c
+> index 8660adf..05bae40 100644
+> --- a/drivers/mfd/menelaus.c
+> +++ b/drivers/mfd/menelaus.c
+> @@ -1242,7 +1242,7 @@ static int menelaus_probe(struct i2c_client *cl=
+ient,
+>  	err =3D menelaus_read_reg(MENELAUS_VCORE_CTRL1);
+>  	if (err < 0)
+>  		goto fail;
+> -	if (err & BIT(7))
+> +	if (err & VCORE_CTRL1_HW_NSW)
+>  		menelaus->vcore_hw_mode =3D 1;
+>  	else
+>  		menelaus->vcore_hw_mode =3D 0;
 
----
-This patch applies against linux-next and v3.19-rc4 
-
- Documentation/devicetree/bindings/mfd/da9063.txt | 93 ++++++++++++++++++++++++
- 1 file changed, 93 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/da9063.txt
-
-diff --git a/Documentation/devicetree/bindings/mfd/da9063.txt b/Documentation/devicetree/bindings/mfd/da9063.txt
-new file mode 100644
-index 0000000..42c6fa6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/da9063.txt
-@@ -0,0 +1,93 @@
-+* Dialog DA9063 Power Management Integrated Circuit (PMIC)
-+
-+DA9093 consists of a large and varied group of sub-devices (I2C Only):
-+
-+Device                   Supply Names    Description
-+------                   ------------    -----------
-+da9063-regulator        :               : LDOs & BUCKs
-+da9063-rtc              :               : Real-Time Clock
-+da9063-watchdog         :               : Watchdog
-+
-+======
-+
-+Required properties:
-+
-+- compatible : Should be "dlg,da9063"
-+- reg : Specifies the I2C slave address (this defaults to 0x58 but it can be
-+  modified to match the chip's OTP settings).
-+- interrupt-parent : Specifies the reference to the interrupt controller for
-+  the DA9063.
-+- interrupts : IRQ line information.
-+- interrupt-controller
-+
-+Sub-nodes:
-+
-+- regulators : This node defines the settings for the LDOs and BUCKs. The
-+  DA9063 regulators are bound using their names listed below:
-+
-+    bcore1    : BUCK CORE1
-+    bcore2    : BUCK CORE2
-+    bpro      : BUCK PRO
-+    bmem      : BUCK MEM
-+    bio       : BUCK IO
-+    bperi     : BUCK PERI
-+    ldo1      : LDO_1
-+    ldo2      : LDO_2
-+    ldo3      : LDO_3
-+    ldo4      : LDO_4
-+    ldo5      : LDO_5
-+    ldo6      : LDO_6
-+    ldo7      : LDO_7
-+    ldo8      : LDO_8
-+    ldo9      : LDO_9
-+    ldo10     : LDO_10
-+    ldo11     : LDO_11
-+
-+  The component follows the standard regulator framework and the bindings
-+  details of individual regulator device can be found in:
-+  Documentation/devicetree/bindings/regulator/regulator.txt
-+
-+- rtc : This node defines settings for the Real-Time Clock associated with
-+  the DA9063. There are currently no entries in this binding, however
-+  compatible = "dlg,da9063-rtc" should be added if a node is created.
-+
-+- watchdog : This node defines settings for the Watchdog timer associated
-+  with the DA9063. There are currently no entries in this binding, however
-+  compatible = "dlg,da9063-watchdog" should be added if a node is created.
-+
-+
-+Example:
-+
-+	pmic0: da9063@58 {
-+		compatible = "dlg,da9063"
-+		reg = <0x58>;
-+		interrupt-parent = <&gpio6>;
-+		interrupts = <11 IRQ_TYPE_LEVEL_LOW>;
-+		interrupt-controller;
-+
-+		rtc {
-+			compatible = "dlg,da9063-rtc";
-+		};
-+
-+		wdt {
-+			compatible = "dlg,da9063-watchdog";
-+		};
-+
-+		regulators {
-+			DA9063_BCORE1: bcore1 {
-+				regulator-name = "BCORE1";
-+				regulator-min-microvolt = <300000>;
-+				regulator-max-microvolt = <1570000>;
-+				regulator-min-microamp = <500000>;
-+				regulator-max-microamp = <2000000>;
-+				regulator-boot-on;
-+			};
-+			DA9063_LDO11: ldo11 {
-+				regulator-name = "LDO_11";
-+				regulator-min-microvolt = <900000>;
-+				regulator-max-microvolt = <3600000>;
-+				regulator-boot-on;
-+			};
-+		};
-+	};
-+
--- 
-end-of-patch for PATCH V3
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
