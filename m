@@ -1,94 +1,77 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V2 1/2] mfd: da9063: Add device tree support
-Date: Tue, 20 Jan 2015 10:45:44 +0000
-Message-ID: <20150120104544.GS5767@x1>
-References: <cover.1421684991.git.stwiss.opensource@diasemi.com>
- <d765ef11de06a4ac5721ecf3283ba1333a6d0c8c.1421684991.git.stwiss.opensource@diasemi.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [RFC PATCH 1/3] drivers: of: fix resources freeing in
+ of_pci_get_host_bridge_resources()
+Date: Tue, 20 Jan 2015 10:49:22 +0000
+Message-ID: <20150120104922.GF5398@red-moon>
+References: <1420644571-18928-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1420644571-18928-2-git-send-email-lorenzo.pieralisi@arm.com>
+ <20150119183228.GE10762@e106497-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <d765ef11de06a4ac5721ecf3283ba1333a6d0c8c.1421684991.git.stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Dajun Chen <david.chen-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Support Opensource <support.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <20150119183228.GE10762@e106497-lin.cambridge.arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Liviu Dudau <Liviu.Dudau@arm.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Jingoo Han <jg1.han@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mohit Kumar <mohit.kumar@st.com>, Bjorn Helgaas <bhelgaas@google.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 19 Jan 2015, Steve Twiss wrote:
-
-> From: Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
->=20
-> Add device tree support for DA9063 regulators; Real-Time Clock
-> and Watchdog.
->=20
-> This patch is dependent on PATCH V2 2/2=20
->=20
-> Signed-off-by: Steve Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
->=20
-> ---
-> This patch applies against linux-next and v3.19-rc4=20
->=20
->  drivers/mfd/da9063-core.c       |  2 ++
->  drivers/mfd/da9063-i2c.c        | 11 +++++++++++
->  include/linux/mfd/da9063/core.h |  1 +
->  3 files changed, 14 insertions(+)
->=20
-> diff --git a/drivers/mfd/da9063-core.c b/drivers/mfd/da9063-core.c
-> index f38bc98..facd361 100644
-> --- a/drivers/mfd/da9063-core.c
-> +++ b/drivers/mfd/da9063-core.c
-> @@ -86,6 +86,7 @@ static const struct mfd_cell da9063_devs[] =3D {
->  	},
->  	{
->  		.name		=3D DA9063_DRVNAME_WATCHDOG,
-> +		.of_compatible	=3D "dlg,da9063-watchdog",
->  	},
->  	{
->  		.name		=3D DA9063_DRVNAME_HWMON,
-> @@ -101,6 +102,7 @@ static const struct mfd_cell da9063_devs[] =3D {
->  		.name		=3D DA9063_DRVNAME_RTC,
->  		.num_resources	=3D ARRAY_SIZE(da9063_rtc_resources),
->  		.resources	=3D da9063_rtc_resources,
-> +		.of_compatible	=3D "dlg,da9063-rtc",
->  	},
->  	{
->  		.name		=3D DA9063_DRVNAME_VIBRATION,
-> diff --git a/drivers/mfd/da9063-i2c.c b/drivers/mfd/da9063-i2c.c
-> index 21fd8d9..0e94b20 100644
-> --- a/drivers/mfd/da9063-i2c.c
-> +++ b/drivers/mfd/da9063-i2c.c
-> @@ -25,6 +25,9 @@
->  #include <linux/mfd/da9063/pdata.h>
->  #include <linux/mfd/da9063/registers.h>
-> =20
-> +#include <linux/of.h>
-> +#include <linux/regulator/of_regulator.h>
-> +
->  static const struct regmap_range da9063_ad_readable_ranges[] =3D {
->  	{
->  		.range_min =3D DA9063_REG_PAGE_CON,
-> @@ -203,6 +206,13 @@ static struct regmap_config da9063_regmap_config=
- =3D {
->  	.cache_type =3D REGCACHE_RBTREE,
->  };
-> =20
-> +static const struct of_device_id da9063_dt_ids[] =3D {
-> +	{ .compatible =3D "dlg,da9063-ad", },
-> +	{ .compatible =3D "dlg,da9063-bb", },
-> +	{ .compatible =3D "dlg,da9063-ca", },
-
-I'm still a bit bemused as to why these require their own compatible
-strings?  They are never matched (of_match_device()) on and it appears
-they can be dynamically told apart by poking.
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gTW9uLCBKYW4gMTksIDIwMTUgYXQgMDY6MzI6MjlQTSArMDAwMCwgTGl2aXUgRHVkYXUgd3Jv
+dGU6CgpbLi4uXQoKPiA+IEBAIC0xNDYsNiArMTQ2LDcgQEAgaW50IG9mX3BjaV9nZXRfaG9zdF9i
+cmlkZ2VfcmVzb3VyY2VzKHN0cnVjdCBkZXZpY2Vfbm9kZSAqZGV2LAo+ID4gIAlzdHJ1Y3Qgb2Zf
+cGNpX3JhbmdlX3BhcnNlciBwYXJzZXI7Cj4gPiAgCWNoYXIgcmFuZ2VfdHlwZVs0XTsKPiA+ICAJ
+aW50IGVycjsKPiA+ICsJc3RydWN0IHBjaV9ob3N0X2JyaWRnZV93aW5kb3cgKndpbmRvdzsKPiA+
+ICAKPiA+ICAJaWYgKGlvX2Jhc2UpCj4gPiAgCQkqaW9fYmFzZSA9IChyZXNvdXJjZV9zaXplX3Qp
+T0ZfQkFEX0FERFI7Cj4gPiBAQCAtMjI1LDcgKzIyNiwxMCBAQCBpbnQgb2ZfcGNpX2dldF9ob3N0
+X2JyaWRnZV9yZXNvdXJjZXMoc3RydWN0IGRldmljZV9ub2RlICpkZXYsCj4gPiAgY29udmVyc2lv
+bl9mYWlsZWQ6Cj4gPiAgCWtmcmVlKHJlcyk7Cj4gPiAgcGFyc2VfZmFpbGVkOgo+ID4gKwlsaXN0
+X2Zvcl9lYWNoX2VudHJ5KHdpbmRvdywgcmVzb3VyY2VzLCBsaXN0KQo+ID4gKwkJa2ZyZWUod2lu
+ZG93LT5yZXMpOwo+ID4gIAlwY2lfZnJlZV9yZXNvdXJjZV9saXN0KHJlc291cmNlcyk7Cj4gPiAr
+CWtmcmVlKGJ1c19yYW5nZSk7Cj4gPiAgCXJldHVybiBlcnI7Cj4gPiAgfQo+ID4gIEVYUE9SVF9T
+WU1CT0xfR1BMKG9mX3BjaV9nZXRfaG9zdF9icmlkZ2VfcmVzb3VyY2VzKTsKPiAKPiBIaSBMb3Jl
+bnpvIGV0IGFsbCwKPiAKPiBIZXJlIGlzIG15IHBlcnNvbmFsIHZpZXcgYW5kIEkgYW0gaGFwcHkg
+dG8gaGVhciBmcm9tIG90aGVycyBvbiB0aGUgZGVzaXJlZAo+IGJlaGF2aW91cjoKPiAKPiBXaGVu
+IEkgd3JvdGUgdGhpcyBmdW5jdGlvbiB3aGF0IEkgaGFkIGluIG1pbmQgd2FzIHRoYXQgaXQgd2ls
+bCBwYXJzZSBhcwo+IG11Y2ggYXMgcG9zc2libGUgZnJvbSB0aGUgZGV2aWNlIHRyZWUgYW5kIHJl
+dHVybiBhIGxpc3Qgb2YgcmVzb3VyY2VzIHRoYXQKPiBjb3VsZCBiZSBzdWNjZXNzZnVsbHkgY29u
+dmVydGVkLiBJZiB0aGUgZW50aXJlIGxpc3Qgb2YgcmFuZ2VzIGNvdWxkIG5vdAo+IGJlIGNvbnZl
+cnRlZCB0aGVuIGFuIGVycm9yIGNvZGUgd2lsbCBiZSByZXR1cm5lZCwgYnV0IHRoZSBjYWxsZXIg
+c3RpbGwKPiBoYWQgdGhlIGxpc3QgYXMgY29uc3RydWN0ZWQgdXAgdG8gdGhlIGVycm9yLiBJdCB3
+YXMgdGhlIGpvYiBvZiB0aGUgY2FsbGVyCj4gdG8gZnJlZSB0aGUgbGlzdCBpbiBlaXRoZXIgY2Fz
+ZXMsIGFzIHN0YXRlZCBpbiB0aGUgY29tbWVudC4KClRoYXQncyB3aGF0IEkgYW0gcXVlc3Rpb25p
+bmcuIElmIHRoZSBmdW5jdGlvbiB0YWtlcyBhbiBlcnJvciBwYXRoLCB0aGUKd2luZG93cyBsaXN0
+IGlzIGZyZWVkLCBzbyB0aGUgcmVzb3VyY2UgcG9pbnRlcnMgYXJlIGdvbmUuIFRoZXJlIGlzIG5v
+CndheSB0aGUgY2FsbGVyIGNhbiBncmFiIHRob3NlIHJlc291cmNlIHBvaW50ZXJzIGFuZCBmcmVl
+IHRoZW0uCgpTbyBlaXRoZXIgd2F5LCB0aGUgZnVuY3Rpb24gbmVlZHMgcGF0Y2hpbmcuIEVpdGhl
+ciB3ZSBkbyBub3QgZnJlZSB0aGUKd2luZG93cyBsaXN0ICh3ZSByZW1vdmUgcGNpX2ZyZWVfcmVz
+b3VyY2VfbGlzdCkgb3Igd2UgYXBwbHkgbXkgZml4IChvcgp3ZSByZWZhY3RvciB0aGUgQVBJIHdo
+aWNoIGlzIGxpa2VseSB0byBiZSB3aGF0IEkgd2lsbCBkbykuCgpMb3JlbnpvCgo+IAo+IFRoZSBo
+aXN0b3JpY2FsIHJlYXNvbiB3aHkgdGhlIGZ1bmN0aW9uIHdhcyB3cml0dGVuIHRoYXQgd2F5IHdh
+cyBiZWNhdXNlIGF0Cj4gc29tZSBtb21lbnQgYWZ0ZXIgcGFyc2luZyBJJ3ZlIGhhZCBhbiBhZGRp
+dGlvbmFsIHN0ZXAgd2hlcmUgYXJjaGVzIGNvdWxkCj4gY2xlYW51cCAvIHZldG8gdGhlIGxpc3Qg
+YW5kIHRoZXkgY291bGQgcmV0dXJuIGFuIGVycm9yIHZhbHVlIHRvIHNpZ25hbAo+IHRoZWlyIGRp
+c2NvbnRlbnQuIEFsc28gSSB3YXMgKGFtKSBub3Qgc3VyZSBob3cgbGVuaWVudCB3ZSBjb3VsZCBi
+ZSB3aXRoCj4gdGhlIGRldmljZSB0cmVlIG5vdCBiZWluZyBzYW5lIChhdCBsZWFzdCBvbmUgaG9z
+dCBicmlkZ2UgYmluZGluZyBsaXN0cyB0aGUKPiBjb25maWcgc3BhY2UgYXMgYSByYW5nZSwgd2hp
+Y2ggd2FzIGFjY2VwdGVkIGFzIGJyb2tlbikuCj4gCj4gU28sIGZyb20gdGhhdCBwb2ludCBvZiB2
+aWV3LCBJIHdvdWxkIE5BSyB0aGlzIHBhdGNoLCBhcyB0aGUgZnVuY3Rpb24gd29ya3MKPiBhcyBp
+bnRlbmRlZC4gSWYgb3RoZXJzIGZpbmQgdGhpcyBtb2RlIG9mIG9wZXJhdGlvbiB0b28gY29udm9s
+dXRlZCwgdGhlbgo+IHRoZSBwYXRjaCBzaG91bGQgcHJvYmFibHkgbWFrZSBjbGVhciB0aGF0IGNs
+ZWFudXAgb25seSBuZWVkcyB0byBiZSBkb25lIG9uCj4gZnVuY3Rpb24gcmV0dXJuaW5nIHN1Y2Nl
+c3MuCj4gCj4gQmVzdCByZWdhcmRzLAo+IAo+ID4gLS0gCj4gPiAyLjIuMQo+ID4gCj4gPiAKPiAK
+PiAtLSAKPiA9PT09PT09PT09PT09PT09PT09PQo+IHwgSSB3b3VsZCBsaWtlIHRvIHwKPiB8IGZp
+eCB0aGUgd29ybGQsICB8Cj4gfCBidXQgdGhleSdyZSBub3QgfAo+IHwgZ2l2aW5nIG1lIHRoZSAg
+IHwKPiAgXCBzb3VyY2UgY29kZSEgIC8KPiAgIC0tLS0tLS0tLS0tLS0tLQo+ICAgICDCr1xfKOOD
+hClfL8KvCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwps
+aW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJh
+ZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51
+eC1hcm0ta2VybmVsCg==
