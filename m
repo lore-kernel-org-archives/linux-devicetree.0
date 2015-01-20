@@ -1,230 +1,78 @@
-From: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH v4] irqchip: gic: Allow interrupt level to be set for PPIs.
-Date: Tue, 20 Jan 2015 16:52:59 +0000
-Message-ID: <1421772779-25764-1-git-send-email-Liviu.Dudau@arm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [alsa-devel] [PATCH v2 RESEND 2/2] mfd: arizona: Update DT
+ binding to support OUTn_MONO init_data
+Date: Tue, 20 Jan 2015 16:57:08 +0000
+Message-ID: <20150120165708.GI30656@x1>
+References: <1420185829-24886-1-git-send-email-ideal.song@samsung.com>
+ <1420185829-24886-3-git-send-email-ideal.song@samsung.com>
+ <20150120122005.GA13701@x1>
+ <20150120132001.GA21293@sirena.org.uk>
+ <20150120160248.GK13701@x1>
+ <20150120164418.GC14516@opensource.wolfsonmicro.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20150120164418.GC14516@opensource.wolfsonmicro.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Cc: Mark Brown <broonie@kernel.org>, Inha Song <ideal.song@samsung.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sameo@linux.intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
-During a recent cleanup of the arm64 DTs it has become clear that
-the handling of PPIs in xxxx_set_type() is incorrect. The ARM TRMs
-for GICv2 and later allow for "implementation defined" support for
-setting the edge or level type of the PPI interrupts and don't restrict
-the activation level of the signal. Current ARM implementations
-do restrict the PPI level type to IRQ_TYPE_LEVEL_LOW, but licensees
-of the IP can decide to shoot themselves in the foot at any time.
+On Tue, 20 Jan 2015, Charles Keepax wrote:
 
-Signed-off-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
----
+> On Tue, Jan 20, 2015 at 04:02:48PM +0000, Lee Jones wrote:
+> > On Tue, 20 Jan 2015, Mark Brown wrote:
+> >=20
+> > > On Tue, Jan 20, 2015 at 12:20:05PM +0000, Lee Jones wrote:
+> > > > On Fri, 02 Jan 2015, Inha Song wrote:
+> > >=20
+> > > > > This patch update DT binding to support OUTn_MONO init_data. =
+Each
+> > > > > output signal can be configurated as a mono differential outp=
+ut.
+> > > > > The mono differential configuration is selected using the OUT=
+n_MONO
+> > > > > registers.
+> > >=20
+> > > > This requires a DT Ack and an entry in the example.
+> > >=20
+> > > The DT maintainers have said they're OK with maintainers just mer=
+ging
+> > > things if they're comfortable with it (see the bindings specific
+> > > submitting-patches.txt) and given their workload and general resu=
+lting
+> > > responsiveness it's going to make it difficult go get anything do=
+ne.
+> >=20
+> > I only tend to poke the DT guys when I am unsure of something in th=
+e
+> > binding.  In this case it was a doubt whether we should be encoding
+> > register values inside a property like this.
+> >=20
+> > I would also be happy to take it with your Ack if you're happy with
+> > it?
+>=20
+> In this case really it is a boolean indicating if the
+> corresponding output is mono or not. It is handled thusly in the
+> code:
+>=20
+> 		if (arizona->pdata.out_mono[i])
+> 			val =3D ARIZONA_OUT1_MONO;
+> 		else
+> 			val =3D 0;
+>=20
+> Perhaps some further wording tweaks on the Documentation patch
+> would be appropriate, but certainly I am happy enough with the
+> binding.
 
-Changelog:
- v4: Re-enable the interrupt if it was disabled during the configuration
-     change, even if we fail to set the new configuration.
- v3: Fixed the bit test logic from v2.
- v2: Update following comments from Russell King and Marc Zyngier.
-     Thread here: https://lkml.org/lkml/2014/12/1/279
- v1: Initial version. https://lkml.org/lkml/2014/11/28/400
+Very well.  As you and Mark seem happy with the approach I will be
+more lenient on the next submission.  An example and some working
+tweaks would improve chances of acceptance further still.
 
- Documentation/devicetree/bindings/arm/gic.txt |  8 ++++++--
- drivers/irqchip/irq-gic-common.c              | 18 ++++++++++++------
- drivers/irqchip/irq-gic-common.h              |  2 +-
- drivers/irqchip/irq-gic-v3.c                  |  8 ++++----
- drivers/irqchip/irq-gic.c                     |  9 ++++++---
- drivers/irqchip/irq-hip04.c                   |  9 ++++++---
- 6 files changed, 35 insertions(+), 19 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/arm/gic.txt b/Documentation/devicetree/bindings/arm/gic.txt
-index 8112d0c..c97484b 100644
---- a/Documentation/devicetree/bindings/arm/gic.txt
-+++ b/Documentation/devicetree/bindings/arm/gic.txt
-@@ -32,12 +32,16 @@ Main node required properties:
-   The 3rd cell is the flags, encoded as follows:
- 	bits[3:0] trigger type and level flags.
- 		1 = low-to-high edge triggered
--		2 = high-to-low edge triggered
-+		2 = high-to-low edge triggered (invalid for SPIs)
- 		4 = active high level-sensitive
--		8 = active low level-sensitive
-+		8 = active low level-sensitive (invalid for SPIs).
- 	bits[15:8] PPI interrupt cpu mask.  Each bit corresponds to each of
- 	the 8 possible cpus attached to the GIC.  A bit set to '1' indicated
- 	the interrupt is wired to that CPU.  Only valid for PPI interrupts.
-+	Also note that the configurability of PPI interrupts is IMPLEMENTATION
-+	DEFINED and as such not guaranteed to be present (most SoC available
-+	in 2014 seem to ignore the setting of this flag and use the hardware
-+	default value).
- 
- - reg : Specifies base physical address(s) and size of the GIC registers. The
-   first region is the GIC distributor register base and size. The 2nd region is
-diff --git a/drivers/irqchip/irq-gic-common.c b/drivers/irqchip/irq-gic-common.c
-index 61541ff..ad96ebb 100644
---- a/drivers/irqchip/irq-gic-common.c
-+++ b/drivers/irqchip/irq-gic-common.c
-@@ -21,7 +21,7 @@
- 
- #include "irq-gic-common.h"
- 
--void gic_configure_irq(unsigned int irq, unsigned int type,
-+int gic_configure_irq(unsigned int irq, unsigned int type,
- 		       void __iomem *base, void (*sync_access)(void))
- {
- 	u32 enablemask = 1 << (irq % 32);
-@@ -29,16 +29,17 @@ void gic_configure_irq(unsigned int irq, unsigned int type,
- 	u32 confmask = 0x2 << ((irq % 16) * 2);
- 	u32 confoff = (irq / 16) * 4;
- 	bool enabled = false;
--	u32 val;
-+	u32 val, oldval;
-+	int ret = 0;
- 
- 	/*
- 	 * Read current configuration register, and insert the config
- 	 * for "irq", depending on "type".
- 	 */
--	val = readl_relaxed(base + GIC_DIST_CONFIG + confoff);
--	if (type == IRQ_TYPE_LEVEL_HIGH)
-+	val = oldval = readl_relaxed(base + GIC_DIST_CONFIG + confoff);
-+	if (type & IRQ_TYPE_LEVEL_MASK)
- 		val &= ~confmask;
--	else if (type == IRQ_TYPE_EDGE_RISING)
-+	else if (type & IRQ_TYPE_EDGE_BOTH)
- 		val |= confmask;
- 
- 	/*
-@@ -54,15 +55,20 @@ void gic_configure_irq(unsigned int irq, unsigned int type,
- 
- 	/*
- 	 * Write back the new configuration, and possibly re-enable
--	 * the interrupt.
-+	 * the interrupt. If we tried to write a new configuration and failed,
-+	 * return an error.
- 	 */
- 	writel_relaxed(val, base + GIC_DIST_CONFIG + confoff);
-+	if (readl_relaxed(base + GIC_DIST_CONFIG + confoff) != val && val != oldval)
-+		ret = -EINVAL;
- 
- 	if (enabled)
- 		writel_relaxed(enablemask, base + GIC_DIST_ENABLE_SET + enableoff);
- 
- 	if (sync_access)
- 		sync_access();
-+
-+	return ret;
- }
- 
- void __init gic_dist_config(void __iomem *base, int gic_irqs,
-diff --git a/drivers/irqchip/irq-gic-common.h b/drivers/irqchip/irq-gic-common.h
-index b41f024..35a9884 100644
---- a/drivers/irqchip/irq-gic-common.h
-+++ b/drivers/irqchip/irq-gic-common.h
-@@ -20,7 +20,7 @@
- #include <linux/of.h>
- #include <linux/irqdomain.h>
- 
--void gic_configure_irq(unsigned int irq, unsigned int type,
-+int gic_configure_irq(unsigned int irq, unsigned int type,
-                        void __iomem *base, void (*sync_access)(void));
- void gic_dist_config(void __iomem *base, int gic_irqs,
- 		     void (*sync_access)(void));
-diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-index 1a146cc..6e50803 100644
---- a/drivers/irqchip/irq-gic-v3.c
-+++ b/drivers/irqchip/irq-gic-v3.c
-@@ -238,7 +238,9 @@ static int gic_set_type(struct irq_data *d, unsigned int type)
- 	if (irq < 16)
- 		return -EINVAL;
- 
--	if (type != IRQ_TYPE_LEVEL_HIGH && type != IRQ_TYPE_EDGE_RISING)
-+	/* SPIs have restrictions on the supported types */
-+	if (irq >= 32 && type != IRQ_TYPE_LEVEL_HIGH &&
-+			 type != IRQ_TYPE_EDGE_RISING)
- 		return -EINVAL;
- 
- 	if (gic_irq_in_rdist(d)) {
-@@ -249,9 +251,7 @@ static int gic_set_type(struct irq_data *d, unsigned int type)
- 		rwp_wait = gic_dist_wait_for_rwp;
- 	}
- 
--	gic_configure_irq(irq, type, base, rwp_wait);
--
--	return 0;
-+	return gic_configure_irq(irq, type, base, rwp_wait);
- }
- 
- static u64 gic_mpidr_to_affinity(u64 mpidr)
-diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
-index d617ee5..4634cf7 100644
---- a/drivers/irqchip/irq-gic.c
-+++ b/drivers/irqchip/irq-gic.c
-@@ -188,12 +188,15 @@ static int gic_set_type(struct irq_data *d, unsigned int type)
- {
- 	void __iomem *base = gic_dist_base(d);
- 	unsigned int gicirq = gic_irq(d);
-+	int ret;
- 
- 	/* Interrupt configuration for SGIs can't be changed */
- 	if (gicirq < 16)
- 		return -EINVAL;
- 
--	if (type != IRQ_TYPE_LEVEL_HIGH && type != IRQ_TYPE_EDGE_RISING)
-+	/* SPIs have restrictions on the supported types */
-+	if (gicirq >= 32 && type != IRQ_TYPE_LEVEL_HIGH &&
-+			    type != IRQ_TYPE_EDGE_RISING)
- 		return -EINVAL;
- 
- 	raw_spin_lock(&irq_controller_lock);
-@@ -201,11 +204,11 @@ static int gic_set_type(struct irq_data *d, unsigned int type)
- 	if (gic_arch_extn.irq_set_type)
- 		gic_arch_extn.irq_set_type(d, type);
- 
--	gic_configure_irq(gicirq, type, base, NULL);
-+	ret = gic_configure_irq(gicirq, type, base, NULL);
- 
- 	raw_spin_unlock(&irq_controller_lock);
- 
--	return 0;
-+	return ret;
- }
- 
- static int gic_retrigger(struct irq_data *d)
-diff --git a/drivers/irqchip/irq-hip04.c b/drivers/irqchip/irq-hip04.c
-index 29b8f21..d059e66 100644
---- a/drivers/irqchip/irq-hip04.c
-+++ b/drivers/irqchip/irq-hip04.c
-@@ -120,21 +120,24 @@ static int hip04_irq_set_type(struct irq_data *d, unsigned int type)
- {
- 	void __iomem *base = hip04_dist_base(d);
- 	unsigned int irq = hip04_irq(d);
-+	int ret;
- 
- 	/* Interrupt configuration for SGIs can't be changed */
- 	if (irq < 16)
- 		return -EINVAL;
- 
--	if (type != IRQ_TYPE_LEVEL_HIGH && type != IRQ_TYPE_EDGE_RISING)
-+	/* SPIs have restrictions on the supported types */
-+	if (irq >= 32 && type != IRQ_TYPE_LEVEL_HIGH &&
-+			 type != IRQ_TYPE_EDGE_RISING)
- 		return -EINVAL;
- 
- 	raw_spin_lock(&irq_controller_lock);
- 
--	gic_configure_irq(irq, type, base, NULL);
-+	ret = gic_configure_irq(irq, type, base, NULL);
- 
- 	raw_spin_unlock(&irq_controller_lock);
- 
--	return 0;
-+	return ret;
- }
- 
- #ifdef CONFIG_SMP
--- 
-2.2.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
