@@ -1,66 +1,78 @@
-From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH net-next v8 2/4] net: netcp: Add Keystone NetCP core ethernet
- driver
-Date: Tue, 20 Jan 2015 14:23:52 -0500
-Message-ID: <54BEAB48.6090701@ti.com>
-References: <1421367172-19793-1-git-send-email-m-karicheri2@ti.com>   <1421367172-19793-2-git-send-email-m-karicheri2@ti.com>  <1421741935.9655.73.camel@x220> <54BE8BEA.3000100@ti.com> <1421774797.29393.4.camel@x220>
+From: Jean-Francois Moine <moinejf@free.fr>
+Subject: [PATCH v10 0/9] ASoC: tda998x: add a codec to the HDMI transmitter
+Date: Tue, 20 Jan 2015 20:35:32 +0100
+Message-ID: <cover.1421782532.git.moinejf@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1421774797.29393.4.camel@x220>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
-Cc: Wingman Kwok <w-kwok2-l0cyMroinI0@public.gmane.org>, Valentin Rothberg <valentinrothberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Mark Brown <broonie@kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Andrew Jackson <Andrew.Jackson@arm.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Jyri Sarha <jsarha@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 01/20/2015 12:26 PM, Paul Bolle wrote:
-> On Tue, 2015-01-20 at 12:10 -0500, Murali Karicheri wrote:
->> On 01/20/2015 03:18 AM, Paul Bolle wrote:
->>> On Thu, 2015-01-15 at 19:12 -0500, Murali Karicheri wrote:
->>>> diff --git a/drivers/net/ethernet/ti/Kconfig b/drivers/net/ethernet/ti/Kconfig
->>>> index 605dd90..e11bcfa 100644
->>>> --- a/drivers/net/ethernet/ti/Kconfig
->>>> +++ b/drivers/net/ethernet/ti/Kconfig
->>>> @@ -73,12 +73,23 @@ config TI_CPSW
->>>>    config TI_CPTS
->>>>    	boolean "TI Common Platform Time Sync (CPTS) Support"
->>>>    	depends on TI_CPSW
->>>> +	depends on TI_CPSW || TI_KEYSTONE_NET
->>>
->>> You probably meant to add
->>>       || TI_KEYSTONE_NETCP
->>>
->>> here. Ie, add CP. But as this slipped through testing it _might_ not be
->>> needed at all.
->>
->> Currently CPTS driver is not used for NetCP. So I want to remove the
->> above Kconfig dependency from Kconfig and cpts.o from the Makefile. Do
->> you expect me to send an incremental patch for this to the netdev list?
->
-> That's Dave's call. I think that Dave works with incremental patches
-> exclusively once things have hit (one of the trees that feed into)
-> linux-next.
->
->> or can pick the attached patch that addresses this issue. Let me know.
->
-> I'm just the reporter. Please send it through the regular channels. That
-> would certainly include netdev.
->
-Sure! I just posted the patch to the netdev list.
-
-Thanks for letting me know.
-
-Murali
->
-> Paul Bolle
->
-
-
--- 
-Murali Karicheri
-Linux Kernel, Texas Instruments
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+QmFzZWQgb24gYnJvb25pZS9BU29DCgp2MTA6CgktIGFkZCB0aGUgZ2VuZXJpYyBkdC1jYXJkCgkt
+IGRlZmluZSB0aGUgYXVkaW8gcG9ydHMgZnJvbSBhIERUIGdyYXBoIG9mIHBvcnRzIChSdXNzZWxs
+IEtpbmcpCgktIHJldXNlIEhETUkgY29uc3RhbnRzIChBbmRyZXcgSmFja3NvbiAtIEp5cmkgU2Fy
+aGEpCgktIGFsbG9jIHJhdGVfY29uc3RyYWludHMgaW4gY29kZWMgKEp5cmkgU2FyaGEpCgktIGZp
+eCBiYWQgbnVtYmVyIG9mIGNoYW5uZWxzIChKeXJpIFNhcmhhKQoJLSBjb3JyZWN0IGNvZGVjIGdl
+bmVyYXRpb24gZnJvbSBjb25maWcgKFJ1c3NlbGwgS2luZyAtIEp5cmkgU2FyaGEpCgktIG5vIG1v
+ZHVsZSBpbml0L2V4aXQgKFJ1c3NlbGwgS2luZykKdjk6CgktIGJhY2sgdG8gYSBUREE5OTh4IHNw
+ZWNpZmljIENPREVDCgktIG1vcmUgY29tbWVudHMKCS0gY2hhbmdlIG1hZ2ljIHZhbHVlcyB0byBj
+b25zdGFudHMKdjg6CgktIGNoYW5nZSBzb21lIGNvbW1lbnRzIGFib3V0IHRoZSBwYXRjaGVzCnY3
+OgoJLSByZW1vdmUgdGhlIGNoYW5nZSBvZiB0aGUgSyBwcmVkaXZpZGVyIChKeXJpIFNhcmhhKQoJ
+LSBhZGQgUzI0XzNMRSBhbmQgUzMyX0xFIGFzIHBvc3NpYmxlIGF1ZGlvIGZvcm1hdHMgKEp5cmkg
+U2FyaGEpCgktIGRvbid0IG1vdmUgdGhlIHN0cnVjdCBwcml2MiBkZWZpbml0aW9uIGFuZCB1c2Ug
+dGhlCgkgIHNsYXZlIGVuY29kZXIgcHJpdmF0ZSBkYXRhIGFzIHRoZSBkZXZpY2UgcHJpdmF0ZSBk
+YXRhCgkgIChSdXNzZWxsIEtpbmcpCgktIHJlbW92ZSB0aGUgdXNlbGVzcyByZXF1ZXN0X21vZHVs
+ZSAoUnVzc2VsbCBLaW5nL01hcmsgQnJvd24pCgktIGRvbid0IGxvY2sgdGhlIEhETUkgbW9kdWxl
+IChSdXNzZWxsIEtpbmcpCgktIHVzZSBwbGF0Zm9ybV9kZXZpY2VfdW5yZWdpc3RlciB0byByZW1v
+dmUgdGhlIGNvZGVjCgkgIChSdXNzZWxsIEtpbmcpCnY2OgoJLSBleHRlbmQgdGhlIEhETUkgQ09E
+RUMgaW5zdGVhZCBvZiB1c2luZyBhIHNwZWNpZmljIENPREVDCnY1OgoJLSB1c2UgdGhlIFREQTk5
+OHggcHJpdmF0ZSBkYXRhIGluc3RlYWQgb2YgYSBzcGVjaWZpYyBhcmVhCgkgIGZvciB0aGUgQ09E
+RUMgaW50ZXJmYWNlCgktIHRoZSBDT0RFQyBpcyBUREE5OTh4IHNwZWNpZmljIChNYXJrIEJyb3du
+KQp2NDoKCS0gcmVtb3ZlIGFsbCB0aGUgVERBOTk4eCBzcGVjaWZpYyBzdHVmZiBmcm9tIHRoZSBD
+T0RFQwoJLSBtb3ZlIHRoZSBFRElEIHNjYW4gZnJvbSB0aGUgQ09ERUMgdG8gdGhlIFREQTk5OHgK
+CS0gbW92ZSB0aGUgQ09ERUMgdG8gc291bmQvc29jIChNYXJrIEJyb3duKQoJLSB1cGRhdGUgdGhl
+IGF1ZGlvX3NhbXBsZV9yYXRlIGZyb20gdGhlIEVESUQgKEFuZHJldyBKYWNrc29uKQp2MzogZml4
+IGJhZCByYXRlIChBbmRyZXcgSmFja3NvbikKdjI6IGNoZWNrIGRvdWJsZSBzdHJlYW0gc3RhcnQg
+KE1hcmsgQnJvd24pCgpKZWFuLUZyYW5jb2lzIE1vaW5lICg5KToKICBBU29DOiBraXJrd29vZDog
+ZHluYW1pY2FsbHkgYnVpbGQgdGhlIERBSSBhcnJheQogIEFTb0M6IGtpcmt3b29kOiBjaGVjayB0
+aGUgREFJIHR5cGUgZnJvbSB0aGUgREFJIG5hbWUKICBBU29DOiBraXJrd29vZDogYWNjZXB0IHRo
+ZSBEQUkgZGVmaW5pdGlvbnMgZnJvbSBhIGdyYXBoIG9mIHBvcnRzCiAgZHJtL2kyYzogdGRhOTk4
+eDogQWRkIHN1cHBvcnQgb2YgYSBEVCBncmFwaCBvZiBwb3J0cwogIGRybS9pMmM6IHRkYTk5OHg6
+IENoYW5nZSBkcnZkYXRhIGZvciBhdWRpbyBleHRlbnNpb24KICBBU29DOiB0ZGE5OTh4OiBhZGQg
+YSBjb2RlYyB0byB0aGUgSERNSSB0cmFuc21pdHRlcgogIGRybS9pMmM6IHRkYTk5OHg6IHNldCBj
+dHNfbiBhY2NvcmRpbmcgdG8gdGhlIHNhbXBsZSB3aWR0aAogIEFTb0M6IGNvcmU6IGV4cG9ydCBz
+bmRfc29jX2dldF9kYWlfbmFtZQogIEFTb0M6IGFkZCBnZW5lcmljIGR0LWNhcmQgc3VwcG9ydAoK
+IC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RybS9pMmMvdGRhOTk4eC50eHQgICAgICAgIHwgIDUx
+ICsrKysKIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvdW5kL212ZWJ1LWF1ZGlvLnR4dCAgICAg
+IHwgIDMwICsrKwogZHJpdmVycy9ncHUvZHJtL2kyYy90ZGE5OTh4X2Rydi5jICAgICAgICAgICAg
+ICAgICAgfCAyMzcgKysrKysrKysrKysrKysrKystCiBpbmNsdWRlL3NvdW5kL3NvYy5oICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgMiArCiBpbmNsdWRlL3NvdW5kL3RkYTk5OHgu
+aCAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAzMiArKysKIHNvdW5kL3NvYy9jb2RlY3Mv
+S2NvbmZpZyAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICA1ICsKIHNvdW5kL3NvYy9jb2Rl
+Y3MvTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAyICsKIHNvdW5kL3NvYy9j
+b2RlY3MvdGRhOTk4eC5jICAgICAgICAgICAgICAgICAgICAgICAgIHwgMTc1ICsrKysrKysrKysr
+KysKIHNvdW5kL3NvYy9nZW5lcmljL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICAgIHwg
+ICAyICsKIHNvdW5kL3NvYy9nZW5lcmljL01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAgICAg
+IHwgICAyICsKIHNvdW5kL3NvYy9nZW5lcmljL2R0LWNhcmQuYyAgICAgICAgICAgICAgICAgICAg
+ICAgIHwgMjc1ICsrKysrKysrKysrKysrKysrKysrKwogc291bmQvc29jL2tpcmt3b29kL2tpcmt3
+b29kLWkycy5jICAgICAgICAgICAgICAgICAgfCAxNDEgKysrKysrLS0tLS0KIHNvdW5kL3NvYy9r
+aXJrd29vZC9raXJrd29vZC5oICAgICAgICAgICAgICAgICAgICAgIHwgICA0ICstCiBzb3VuZC9z
+b2Mvc29jLWNvcmUuYyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgNSArLQogMTQg
+ZmlsZXMgY2hhbmdlZCwgODc3IGluc2VydGlvbnMoKyksIDg2IGRlbGV0aW9ucygtKQogY3JlYXRl
+IG1vZGUgMTAwNjQ0IGluY2x1ZGUvc291bmQvdGRhOTk4eC5oCiBjcmVhdGUgbW9kZSAxMDA2NDQg
+c291bmQvc29jL2NvZGVjcy90ZGE5OTh4LmMKIGNyZWF0ZSBtb2RlIDEwMDY0NCBzb3VuZC9zb2Mv
+Z2VuZXJpYy9kdC1jYXJkLmMKCi0tIAoyLjEuNAoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
+aXN0aW5mby9kcmktZGV2ZWwK
