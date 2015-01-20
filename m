@@ -1,57 +1,56 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH v5 0/5] power: Add max77693 charger driver
-Date: Tue, 20 Jan 2015 17:33:26 +0100
-Message-ID: <20150120163326.GA18034@earth.universe>
-References: <1421748056-25735-1-git-send-email-k.kozlowski@samsung.com>
+From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Subject: Re: [alsa-devel] [PATCH v2 RESEND 2/2] mfd: arizona: Update DT
+	binding to support OUTn_MONO init_data
+Date: Tue, 20 Jan 2015 16:44:18 +0000
+Message-ID: <20150120164418.GC14516@opensource.wolfsonmicro.com>
+References: <1420185829-24886-1-git-send-email-ideal.song@samsung.com> <1420185829-24886-3-git-send-email-ideal.song@samsung.com> <20150120122005.GA13701@x1> <20150120132001.GA21293@sirena.org.uk> <20150120160248.GK13701@x1>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="tKW2IUtsqtDRztdT"
-Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1421748056-25735-1-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-api@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+In-Reply-To: <20150120160248.GK13701@x1>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Mark Brown <broonie@kernel.org>, Inha Song <ideal.song@samsung.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sameo@linux.intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Jan 20, 2015 at 04:02:48PM +0000, Lee Jones wrote:
+> On Tue, 20 Jan 2015, Mark Brown wrote:
+> 
+> > On Tue, Jan 20, 2015 at 12:20:05PM +0000, Lee Jones wrote:
+> > > On Fri, 02 Jan 2015, Inha Song wrote:
+> > 
+> > > > This patch update DT binding to support OUTn_MONO init_data. Each
+> > > > output signal can be configurated as a mono differential output.
+> > > > The mono differential configuration is selected using the OUTn_MONO
+> > > > registers.
+> > 
+> > > This requires a DT Ack and an entry in the example.
+> > 
+> > The DT maintainers have said they're OK with maintainers just merging
+> > things if they're comfortable with it (see the bindings specific
+> > submitting-patches.txt) and given their workload and general resulting
+> > responsiveness it's going to make it difficult go get anything done.
+> 
+> I only tend to poke the DT guys when I am unsure of something in the
+> binding.  In this case it was a doubt whether we should be encoding
+> register values inside a property like this.
+> 
+> I would also be happy to take it with your Ack if you're happy with
+> it?
 
---tKW2IUtsqtDRztdT
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+In this case really it is a boolean indicating if the
+corresponding output is mono or not. It is handled thusly in the
+code:
 
-Hi,
+		if (arizona->pdata.out_mono[i])
+			val = ARIZONA_OUT1_MONO;
+		else
+			val = 0;
 
-On Tue, Jan 20, 2015 at 11:00:51AM +0100, Krzysztof Kozlowski wrote:
-> You already acked some earlier version of this patch. In that time
-> there were more dependencies on MFD tree. Now the MFD patch (2/5)
-> is acked by Lee Jones so could you pick up everything?
+Perhaps some further wording tweaks on the Documentation patch
+would be appropriate, but certainly I am happy enough with the
+binding.
 
-Thanks for the patchset, queued:
-
-http://git.infradead.org/battery-2.6.git/commit/f8f847b51a0e1cb0c96e706d5da0ac507d96c605
-
--- Sebastian
-
---tKW2IUtsqtDRztdT
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJUvoNTAAoJENju1/PIO/qawI4P/3v7IYV5EPZE5Uk1R+rj9Fzp
-1eTPsuVRR7cfCFB72G5cbPkl33yLvgX7wxQvSWvI8zlsJ/K4QKWj49amskj3djni
-cjFoi2QBLdD1q1NvA3THFEy73LozEywA79tTlVZPx1Wg7EzWX56+zrfAjXQZ45st
-FHXXzGu4Aio0susB4h2uH9lTjh3dJ4kbwp9HqKT/lNzfLTipfexo1HqoxNYjsNbQ
-8+wx+SHTo9aOhRkCtLpn8n++xjwKSGOsYLCbD91u2tlyR53dP5irzJI7PAFz2uyj
-ZiV9x677Mbr1NBA5Tk7T63fUIl9hAtFvkAzTRzTF97c7ADGMZH7U60FtwJEy90gC
-eM4tNzOh4oAVn9m14mtTcTv1/kEOwRvBSxSX5H7j6xr7SMi/V4/po1VX4rwlA3+q
-1NLoi63kJIxKj3ykkdyoHr7e6tfGK9zPRjoKa4Z9NzPTB2yNt2rFRP55EGOPvKHP
-dDtYF9kuUj0kFNrAqLELNclGhh9SqsbOurco+pulHQ3FOWJ+jL0rnrJZ3P2A/2FH
-x7zUduh4NqXm0y7VBcMcpdR7fm+CDRZdcAYR4pVap4QxtiIrmXP3W17T1QVtAUid
-QcNPaE8nz+ReBrPjreLepqiL8UvSNSceFCMfUsheABFIg8Y4eJ7PrmfGuyZbF0tp
-fB0/WFOCR7lo9aZlTPYw
-=hFF9
------END PGP SIGNATURE-----
-
---tKW2IUtsqtDRztdT--
+Thanks,
+Charles
