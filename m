@@ -1,28 +1,34 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH] ARM: vf610: use zero based naming for GPIO nodes
-Date: Tue, 20 Jan 2015 16:42:49 +0800
-Message-ID: <20150120084247.GZ2766@dragon>
-References: <1421427975-16391-1-git-send-email-stefan@agner.ch>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1421427975-16391-1-git-send-email-stefan@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Agner <stefan@agner.ch>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Stanimir Varbanov <svarbanov@mm-sol.com>
+Subject: [PATCH 0/3] pinctrl: Qualcomm msm8916 pinctrl driver
+Date: Tue, 20 Jan 2015 11:17:53 +0200
+Message-ID: <1421745476-6276-1-git-send-email-svarbanov@mm-sol.com>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Joonwoo Park <joonwoop@codeaurora.org>, Stanimir Varbanov <svarbanov@mm-sol.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 16, 2015 at 06:06:15PM +0100, Stefan Agner wrote:
-> On Vybrid, all peripherals are numbered starting with zero,
-> including the GPIO and PORT module. However, the labels of the
-> corresponding device tree nodes start with one, which is confusing.
-> Fix that by renaming the labels of the gpio nodes in the device
-> tree.
-> 
-> Signed-off-by: Stefan Agner <stefan@agner.ch>
+This series adds a pinctrl driver for Snapdragon 410 (msm8916) SoC. The first
+patch increase the register address variable size, next adds a binding document
+and the last patch adds the pinctrl driver
 
-Yep, this makes sense since Vybrid Reference Manual is numbering GPIO
-port from 0.
+Comments are welcome!
 
-Applied, thanks.
+regards,
+Stan
+
+Joonwoo Park (2):
+  pinctrl: qcom: increase variable size for register addresses
+  pinctrl: qcom: Add msm8916 pinctrl driver
+
+Stanimir Varbanov (1):
+  DT: pinctrl: Document Qualcomm MSM8916 pinctrl binding
+
+ .../bindings/pinctrl/qcom,msm8916-pinctrl.txt      |  186 +++
+ drivers/pinctrl/qcom/Kconfig                       |    8 +
+ drivers/pinctrl/qcom/Makefile                      |    1 +
+ drivers/pinctrl/qcom/pinctrl-msm.h                 |   10 +-
+ drivers/pinctrl/qcom/pinctrl-msm8916.c             | 1280 ++++++++++++++++++++
+ 5 files changed, 1480 insertions(+), 5 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,msm8916-pinctrl.txt
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-msm8916.c
