@@ -1,53 +1,75 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v8 3/3] regulator: qcom-rpm: Add missing state flag in
- call to RPM
-Date: Tue, 20 Jan 2015 14:19:54 +0000
-Message-ID: <20150120141954.GS13701@x1>
-References: <1417038661-30209-1-git-send-email-bjorn.andersson@sonymobile.com>
- <1417038661-30209-4-git-send-email-bjorn.andersson@sonymobile.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH v5 4/5] mfd/regulator: dt-bindings: max77686: Document gpio
+ properties
+Date: Tue, 20 Jan 2015 15:21:43 +0100
+Message-ID: <1421763703.8855.10.camel@AMDC1943>
+References: <1420458525-22576-1-git-send-email-k.kozlowski@samsung.com>
+ <1420458525-22576-5-git-send-email-k.kozlowski@samsung.com>
+ <20150120134111.GI13701@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1417038661-30209-4-git-send-email-bjorn.andersson@sonymobile.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, Josh Cartwright <joshc@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <20150120134111.GI13701@x1>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Mark,
+On wto, 2015-01-20 at 13:41 +0000, Lee Jones wrote:
+> On Mon, 05 Jan 2015, Krzysztof Kozlowski wrote:
+> 
+> > Document usage of maxim,ena-gpios properties which turn on external/GPIO
+> > control over regulator.
+> > 
+> > Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> > ---
+> >  Documentation/devicetree/bindings/mfd/max77686.txt | 14 ++++++++++++++
+> >  1 file changed, 14 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mfd/max77686.txt b/Documentation/devicetree/bindings/mfd/max77686.txt
+> > index 75fdfaf41831..e39f0bc1f55e 100644
+> > --- a/Documentation/devicetree/bindings/mfd/max77686.txt
+> > +++ b/Documentation/devicetree/bindings/mfd/max77686.txt
+> > @@ -39,6 +39,12 @@ to get matched with their hardware counterparts as follow:
+> >  	-BUCKn	:	1-4.
+> >    Use standard regulator bindings for it ('regulator-off-in-suspend').
+> >  
+> > +  LDO20, LDO21, LDO22, BUCK8 and BUCK9 can be configured to GPIO enable
+> > +  control. To turn this feature on this property must be added to the regulator
+> > +  sub-node:
+> > +	- maxim,ena-gpios :	one GPIO specifier enable control (the gpio
+> > +				flags are actually ignored and always
+> > +				ACTIVE_HIGH is used)
+> 
+> How does this differ to the 'enable-gpio' property which has already
+> been defined?
 
-Do you want a pull-request for this, or can I absorb it right into my
-tree?
+Strictly speaking - no difference, just a GPIO specifier.
 
-> This adds the missing state parameter to the call down to the RPM. Th=
-is
-> is currently hard coded to the active state, as that's all we're
-> supporting at this moment.
->=20
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-> ---
->  drivers/regulator/qcom_rpm-regulator.c | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/drivers/regulator/qcom_rpm-regulator.c b/drivers/regulat=
-or/qcom_rpm-regulator.c
-> index b55cd5b..8f66040 100644
-> --- a/drivers/regulator/qcom_rpm-regulator.c
-> +++ b/drivers/regulator/qcom_rpm-regulator.c
-> @@ -198,6 +198,7 @@ static int rpm_reg_write(struct qcom_rpm_reg *vre=
-g,
->  	vreg->val[req->word] |=3D value << req->shift;
-> =20
->  	return qcom_rpm_write(vreg->rpm,
-> +			      QCOM_RPM_ACTIVE_STATE,
->  			      vreg->resource,
->  			      vreg->val,
->  			      vreg->parts->request_len);
+However the 'enable-gpio' property exists only for gpio-regulator. The
+regulator core does not support generic enable-gpio property and each
+driver implements it on its own.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Anyway Mark Brown already applied this patch to his regulator tree.
+
+Best regards,
+Krzysztof
+
+> 
+> >  Example:
+> >  
+> > @@ -65,4 +71,12 @@ Example:
+> >  				regulator-always-on;
+> >  				regulator-boot-on;
+> >  			};
+> > +
+> > +			buck9_reg {
+> > +				regulator-compatible = "BUCK9";
+> > +				regulator-name = "CAM_ISP_CORE_1.2V";
+> > +				regulator-min-microvolt = <1000000>;
+> > +				regulator-max-microvolt = <1200000>;
+> > +				maxim,ena-gpios = <&gpm0 3 GPIO_ACTIVE_HIGH>;
+> > +			};
+> >  	}
+> 
