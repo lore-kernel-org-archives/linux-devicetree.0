@@ -1,233 +1,214 @@
-From: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
-Subject: Re: [PATCH v2] ARM: dts: exynos5422-odroidxu3: add on-board INA231
- sensors
-Date: Tue, 20 Jan 2015 10:19:46 +0100
-Message-ID: <1421745586.6818.34.camel@collabora.co.uk>
-References: <1421284089-421-1-git-send-email-khilman@kernel.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="sha-1"; protocol="application/x-pkcs7-signature";
-	boundary="=-0xSPRf9H6tBAu/pb/5DC"
+From: Stanimir Varbanov <svarbanov@mm-sol.com>
+Subject: [PATCH 2/3] DT: pinctrl: Document Qualcomm MSM8916 pinctrl binding
+Date: Tue, 20 Jan 2015 11:17:55 +0200
+Message-ID: <1421745476-6276-3-git-send-email-svarbanov@mm-sol.com>
+References: <1421745476-6276-1-git-send-email-svarbanov@mm-sol.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1421284089-421-1-git-send-email-khilman@kernel.org>
+In-Reply-To: <1421745476-6276-1-git-send-email-svarbanov@mm-sol.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@kernel.org>
-Cc: Kukjin Kim <kgene.kim@samsung.com>, linux-samsung-soc@vger.kernel.org, linaro-kernel@lists.linaro.org, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
+To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Joonwoo Park <joonwoop@codeaurora.org>, Stanimir Varbanov <svarbanov@mm-sol.com>
 List-Id: devicetree@vger.kernel.org
 
+Adds devicetree binding documentation.
 
---=-0xSPRf9H6tBAu/pb/5DC
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
+---
+ .../bindings/pinctrl/qcom,msm8916-pinctrl.txt      |  186 ++++++++++++++++++++
+ 1 files changed, 186 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,msm8916-pinctrl.txt
 
-On Wed, 2015-01-14 at 17:08 -0800, Kevin Hilman wrote:
-> From: Kevin Hilman <khilman@linaro.org>
->=20
-> The odroid-xu3 has 4 INA231 current sensors on board which can be
-> accessed from the Linux via the hwmon interface.
->=20
-> There is one sensor for each of these power rails:
->=20
-> - A15 cluster: VDD_ARM
-> - A7 cluster: VDD_KFC
-> - GPU: VDD_G3D
-> - memory: VDD_MEM
->=20
-> In addition to adding the sensors, LDO26 from the PMIC needs to be
-> enabled because it's powering these sensor.
-
-I haven't tested whether the sensor values are correct, but based on the
-schematics & the hardkernel dts this describes the hardware correctly.
-
-Reviewed-By: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
-
-> Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-> Cc: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
-> Signed-off-by: Kevin Hilman <khilman@linaro.org>
-> ---
-> v2: use "ti,ina231" as compatible string.
->=20
-> Applies on top of "ARM: dts: Add dts file for odroid XU3 board" from Sjoe=
-rd Simons.
->=20
->  arch/arm/boot/dts/exynos5422-odroidxu3.dts | 39 ++++++++++++++++++++++++=
-++++++
->  1 file changed, 39 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3.dts b/arch/arm/boot/d=
-ts/exynos5422-odroidxu3.dts
-> index c29123c0734d..50353d023225 100644
-> --- a/arch/arm/boot/dts/exynos5422-odroidxu3.dts
-> +++ b/arch/arm/boot/dts/exynos5422-odroidxu3.dts
-> @@ -174,6 +174,13 @@
->  					regulator-always-on;
->  				};
-> =20
-> +				ldo26_reg: LDO26 {
-> +					regulator-name =3D "vdd_ldo26";
-> +					regulator-min-microvolt =3D <3000000>;
-> +					regulator-max-microvolt =3D <3000000>;
-> +					regulator-always-on;
-> +				};
-> +
->  				buck1_reg: BUCK1 {
->  					regulator-name =3D "vdd_mif";
->  					regulator-min-microvolt =3D <800000>;
-> @@ -257,6 +264,38 @@
->  		};
->  	};
-> =20
-> +	i2c_0: i2c@12C60000 {
-> +		status =3D "okay";
-> +
-> +		/* A15 cluster: VDD_ARM */
-> +		ina231@40 {
-> +			compatible =3D "ti,ina231";
-> +			reg =3D <0x40>;
-> +			shunt-resistor =3D <10000>;
-> +		};
-> +
-> +		/* memory: VDD_MEM */
-> +		ina231@41 {
-> +			compatible =3D "ti,ina231";
-> +			reg =3D <0x41>;
-> +			shunt-resistor =3D <10000>;
-> +		};
-> +
-> +		/* GPU: VDD_G3D */
-> +		ina231@44 {
-> +			compatible =3D "ti,ina231";
-> +			reg =3D <0x44>;
-> +			shunt-resistor =3D <10000>;
-> +		};
-> +
-> +		/* A7 cluster: VDD_KFC */
-> +		ina231@45 {
-> +			compatible =3D "ti,ina231";
-> +			reg =3D <0x45>;
-> +			shunt-resistor =3D <10000>;
-> +		};
-> +	};
-> +
->  	i2c_2: i2c@12C80000 {
->  		samsung,i2c-sda-delay =3D <100>;
->  		samsung,i2c-max-bus-freq =3D <66000>;
-
-
-
---=-0xSPRf9H6tBAu/pb/5DC
-Content-Type: application/x-pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExCzAJBgUrDgMCGgUAMIAGCSqGSIb3DQEHAQAAoIIUzDCCBsIw
-ggWqoAMCAQICEAoE3yF0XU0rjOozcgUAUOkwDQYJKoZIhvcNAQEFBQAwZTELMAkGA1UEBhMCVVMx
-FTATBgNVBAoTDERpZ2lDZXJ0IEluYzEZMBcGA1UECxMQd3d3LmRpZ2ljZXJ0LmNvbTEkMCIGA1UE
-AxMbRGlnaUNlcnQgQXNzdXJlZCBJRCBSb290IENBMB4XDTA2MTExMDAwMDAwMFoXDTIxMTExMDAw
-MDAwMFowYjELMAkGA1UEBhMCVVMxFTATBgNVBAoTDERpZ2lDZXJ0IEluYzEZMBcGA1UECxMQd3d3
-LmRpZ2ljZXJ0LmNvbTEhMB8GA1UEAxMYRGlnaUNlcnQgQXNzdXJlZCBJRCBDQS0xMIIBIjANBgkq
-hkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA6IItmfnKwkKVpYBzQHDSnlZUXKnE0kEGj8kz/E1FkVyB
-n+0snPgWWd+etSQVwpi5tHdJ3InECtqvy15r7a2wcTHrzzpADEZNk+yLejYIA6sMNP4YSYL+x8cx
-SIB8HqIPkg5QycaH6zY/2DDD/6b3+6LNb3Mj/qxWBZDwMiEWicZwiPkFl32jx0PdAug7Pe2xQaPt
-P77blUjE7h6z8rwMK5nQxl0SQoHhg26Ccz8mSxSQrllmCsSNvtLOBq6thG9IhJtPQLnxTPKvmPv2
-zkBdXPao8S+v7Iki8msYZbHBc63X8djPHgp0XEK4aH631XcKJ1Z8D2KkPzIUYJX9BwSiCQIDAQAB
-o4IDbzCCA2swDgYDVR0PAQH/BAQDAgGGMDsGA1UdJQQ0MDIGCCsGAQUFBwMBBggrBgEFBQcDAgYI
-KwYBBQUHAwMGCCsGAQUFBwMEBggrBgEFBQcDCDCCAcYGA1UdIASCAb0wggG5MIIBtQYLYIZIAYb9
-bAEDAAQwggGkMDoGCCsGAQUFBwIBFi5odHRwOi8vd3d3LmRpZ2ljZXJ0LmNvbS9zc2wtY3BzLXJl
-cG9zaXRvcnkuaHRtMIIBZAYIKwYBBQUHAgIwggFWHoIBUgBBAG4AeQAgAHUAcwBlACAAbwBmACAA
-dABoAGkAcwAgAEMAZQByAHQAaQBmAGkAYwBhAHQAZQAgAGMAbwBuAHMAdABpAHQAdQB0AGUAcwAg
-AGEAYwBjAGUAcAB0AGEAbgBjAGUAIABvAGYAIAB0AGgAZQAgAEQAaQBnAGkAQwBlAHIAdAAgAEMA
-UAAvAEMAUABTACAAYQBuAGQAIAB0AGgAZQAgAFIAZQBsAHkAaQBuAGcAIABQAGEAcgB0AHkAIABB
-AGcAcgBlAGUAbQBlAG4AdAAgAHcAaABpAGMAaAAgAGwAaQBtAGkAdAAgAGwAaQBhAGIAaQBsAGkA
-dAB5ACAAYQBuAGQAIABhAHIAZQAgAGkAbgBjAG8AcgBwAG8AcgBhAHQAZQBkACAAaABlAHIAZQBp
-AG4AIABiAHkAIAByAGUAZgBlAHIAZQBuAGMAZQAuMA8GA1UdEwEB/wQFMAMBAf8wfQYIKwYBBQUH
-AQEEcTBvMCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5kaWdpY2VydC5jb20wRwYIKwYBBQUHMAKG
-O2h0dHA6Ly93d3cuZGlnaWNlcnQuY29tL0NBQ2VydHMvRGlnaUNlcnRBc3N1cmVkSURSb290Q0Eu
-Y3J0MIGBBgNVHR8EejB4MDqgOKA2hjRodHRwOi8vY3JsMy5kaWdpY2VydC5jb20vRGlnaUNlcnRB
-c3N1cmVkSURSb290Q0EuY3JsMDqgOKA2hjRodHRwOi8vY3JsNC5kaWdpY2VydC5jb20vRGlnaUNl
-cnRBc3N1cmVkSURSb290Q0EuY3JsMB0GA1UdDgQWBBQVABIrE5iymQftHt+ivlcNK2cCzTAfBgNV
-HSMEGDAWgBRF66Kv9JLLgjEtUYunpyGd823IDzANBgkqhkiG9w0BAQUFAAOCAQEAhGFOQR64dgQq
-tbbvj/JVhbldVv4KmObkvWWKfUAp0/yxXUX9OrgqWzNLJFzNubTkc61hXXatdDOKZtUjr0wfcm5F
-2XVAu6I7z41JL8BBsOIpo1E4Q1CZFKwzBjViiX13qVIH5WwgV7aBum+8s8KU7XYCgNl8zoWoHOzH
-Q0pLsVfPcs7f9SU8yyJP/Z9S0TfLCLs4PuDVPm95Ca1bfDGzdzXD5GP5aAqYB+dGOHeE0j6XvAqg
-qKwlT0RukeHSWq9r7zAcjaNEQrMQiyP61+Y1dDesz+urWB/JiCP/NtQH6jRqR+qdlWyeKU9T7eMr
-lSBOKs+WYHr4LIDwlVLOKZaBYjCCBv8wggXnoAMCAQICEA2fwUKNhvkL8dN88tUFvVwwDQYJKoZI
-hvcNAQEFBQAwYjELMAkGA1UEBhMCVVMxFTATBgNVBAoTDERpZ2lDZXJ0IEluYzEZMBcGA1UECxMQ
-d3d3LmRpZ2ljZXJ0LmNvbTEhMB8GA1UEAxMYRGlnaUNlcnQgQXNzdXJlZCBJRCBDQS0xMB4XDTE0
-MDIxNzAwMDAwMFoXDTE1MDMxMjEyMDAwMFowgaQxCzAJBgNVBAYTAkdCMRcwFQYDVQQIEw5DYW1i
-cmlkZ2VzaGlyZTESMBAGA1UEBxMJQ2FtYnJpZGdlMRYwFAYDVQQKEw1Db2xsYWJvcmEgTHRkMQow
-CAYDVQQLEwExMRYwFAYDVQQDEw1Tam9lcmQgU2ltb25zMSwwKgYJKoZIhvcNAQkBFh1zam9lcmQu
-c2ltb25zQGNvbGxhYm9yYS5jby51azCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAN4Q
-EHeW1NbogMVZpHedG7o509/L4VBhqQd8j8JViWd+yvLlxOBw/gY+7ioHMatrQY2VvY6QOLle2Xqs
-CDvELcXMxwyFpBC0Ia+CVE+5pF+0IMuVkGIL1T8LHeKZYeRP+uFXtmWzas12hsMILNRmK7Q5PACm
-+v/6HFn111hLKkANBtRHIRiDbFQOiluNeR2bq+ck1y2+X//SGumA1XZFdCB/1VcRJXDdFnYdU3j/
-RkoiGggo3MSq3mJ6yV7sqzk04fTLFvfL0KadCMauputeGBybEiFAt6rCm5TkyUqoDOTU07byOEXO
-M32EGeYeV515RzARTpOSE9sdmRq0jNNAqGsCAwEAAaOCA2wwggNoMB8GA1UdIwQYMBaAFBUAEisT
-mLKZB+0e36K+Vw0rZwLNMB0GA1UdDgQWBBRaTG8RXMDSFO5XcrjqYs/YDlmqSDAoBgNVHREEITAf
-gR1zam9lcmQuc2ltb25zQGNvbGxhYm9yYS5jby51azAOBgNVHQ8BAf8EBAMCBaAwHQYDVR0lBBYw
-FAYIKwYBBQUHAwQGCCsGAQUFBwMCMH0GA1UdHwR2MHQwOKA2oDSGMmh0dHA6Ly9jcmwzLmRpZ2lj
-ZXJ0LmNvbS9EaWdpQ2VydEFzc3VyZWRJRENBLTEuY3JsMDigNqA0hjJodHRwOi8vY3JsNC5kaWdp
-Y2VydC5jb20vRGlnaUNlcnRBc3N1cmVkSURDQS0xLmNybDCCAcUGA1UdIASCAbwwggG4MIIBtAYK
-YIZIAYb9bAQBAjCCAaQwOgYIKwYBBQUHAgEWLmh0dHA6Ly93d3cuZGlnaWNlcnQuY29tL3NzbC1j
-cHMtcmVwb3NpdG9yeS5odG0wggFkBggrBgEFBQcCAjCCAVYeggFSAEEAbgB5ACAAdQBzAGUAIABv
-AGYAIAB0AGgAaQBzACAAQwBlAHIAdABpAGYAaQBjAGEAdABlACAAYwBvAG4AcwB0AGkAdAB1AHQA
-ZQBzACAAYQBjAGMAZQBwAHQAYQBuAGMAZQAgAG8AZgAgAHQAaABlACAARABpAGcAaQBDAGUAcgB0
-ACAAQwBQAC8AQwBQAFMAIABhAG4AZAAgAHQAaABlACAAUgBlAGwAeQBpAG4AZwAgAFAAYQByAHQA
-eQAgAEEAZwByAGUAZQBtAGUAbgB0ACAAdwBoAGkAYwBoACAAbABpAG0AaQB0ACAAbABpAGEAYgBp
-AGwAaQB0AHkAIABhAG4AZAAgAGEAcgBlACAAaQBuAGMAbwByAHAAbwByAGEAdABlAGQAIABoAGUA
-cgBlAGkAbgAgAGIAeQAgAHIAZQBmAGUAcgBlAG4AYwBlAC4wdwYIKwYBBQUHAQEEazBpMCQGCCsG
-AQUFBzABhhhodHRwOi8vb2NzcC5kaWdpY2VydC5jb20wQQYIKwYBBQUHMAKGNWh0dHA6Ly9jYWNl
-cnRzLmRpZ2ljZXJ0LmNvbS9EaWdpQ2VydEFzc3VyZWRJRENBLTEuY3J0MAwGA1UdEwEB/wQCMAAw
-DQYJKoZIhvcNAQEFBQADggEBAAc8CwXSms3RbIx+bhxFsGQoN+RpHtjnPvMPPAobv7rxdhQPPz+N
-6h3hpVzegeW2XhyZVC8MT0U6uWXrk+1uQUAXrJEG+W2X8yTEoHDS/SCF/POOsj/ekaDuNE9JJB/9
-cspoa4W+W8pX1sRurBDFHL0DBudUQ1PgvTSLPOHtfKQpu4gRb2u8KpJermp/IvPLImX9xSCbYKQM
-2L0wbpStFIYdyKCKuXuQxOX3BdBKLCFvcIDE6hjj3UpOlThCbeul2Tz5jARCfRK4OUxnXyb/Tp5j
-tshIAa2ZMGaTH9ApeY7P6C2ONF+Mh5yV/raWXOnJ9dEg6/sXcbdiieqzLKYBIgQwggb/MIIF56AD
-AgECAhANn8FCjYb5C/HTfPLVBb1cMA0GCSqGSIb3DQEBBQUAMGIxCzAJBgNVBAYTAlVTMRUwEwYD
-VQQKEwxEaWdpQ2VydCBJbmMxGTAXBgNVBAsTEHd3dy5kaWdpY2VydC5jb20xITAfBgNVBAMTGERp
-Z2lDZXJ0IEFzc3VyZWQgSUQgQ0EtMTAeFw0xNDAyMTcwMDAwMDBaFw0xNTAzMTIxMjAwMDBaMIGk
-MQswCQYDVQQGEwJHQjEXMBUGA1UECBMOQ2FtYnJpZGdlc2hpcmUxEjAQBgNVBAcTCUNhbWJyaWRn
-ZTEWMBQGA1UEChMNQ29sbGFib3JhIEx0ZDEKMAgGA1UECxMBMTEWMBQGA1UEAxMNU2pvZXJkIFNp
-bW9uczEsMCoGCSqGSIb3DQEJARYdc2pvZXJkLnNpbW9uc0Bjb2xsYWJvcmEuY28udWswggEiMA0G
-CSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDeEBB3ltTW6IDFWaR3nRu6OdPfy+FQYakHfI/CVYln
-fsry5cTgcP4GPu4qBzGra0GNlb2OkDi5Xtl6rAg7xC3FzMcMhaQQtCGvglRPuaRftCDLlZBiC9U/
-Cx3imWHkT/rhV7Zls2rNdobDCCzUZiu0OTwApvr/+hxZ9ddYSypADQbURyEYg2xUDopbjXkdm6vn
-JNctvl//0hrpgNV2RXQgf9VXESVw3RZ2HVN4/0ZKIhoIKNzEqt5iesle7Ks5NOH0yxb3y9CmnQjG
-rqbrXhgcmxIhQLeqwpuU5MlKqAzk1NO28jhFzjN9hBnmHledeUcwEU6TkhPbHZkatIzTQKhrAgMB
-AAGjggNsMIIDaDAfBgNVHSMEGDAWgBQVABIrE5iymQftHt+ivlcNK2cCzTAdBgNVHQ4EFgQUWkxv
-EVzA0hTuV3K46mLP2A5ZqkgwKAYDVR0RBCEwH4Edc2pvZXJkLnNpbW9uc0Bjb2xsYWJvcmEuY28u
-dWswDgYDVR0PAQH/BAQDAgWgMB0GA1UdJQQWMBQGCCsGAQUFBwMEBggrBgEFBQcDAjB9BgNVHR8E
-djB0MDigNqA0hjJodHRwOi8vY3JsMy5kaWdpY2VydC5jb20vRGlnaUNlcnRBc3N1cmVkSURDQS0x
-LmNybDA4oDagNIYyaHR0cDovL2NybDQuZGlnaWNlcnQuY29tL0RpZ2lDZXJ0QXNzdXJlZElEQ0Et
-MS5jcmwwggHFBgNVHSAEggG8MIIBuDCCAbQGCmCGSAGG/WwEAQIwggGkMDoGCCsGAQUFBwIBFi5o
-dHRwOi8vd3d3LmRpZ2ljZXJ0LmNvbS9zc2wtY3BzLXJlcG9zaXRvcnkuaHRtMIIBZAYIKwYBBQUH
-AgIwggFWHoIBUgBBAG4AeQAgAHUAcwBlACAAbwBmACAAdABoAGkAcwAgAEMAZQByAHQAaQBmAGkA
-YwBhAHQAZQAgAGMAbwBuAHMAdABpAHQAdQB0AGUAcwAgAGEAYwBjAGUAcAB0AGEAbgBjAGUAIABv
-AGYAIAB0AGgAZQAgAEQAaQBnAGkAQwBlAHIAdAAgAEMAUAAvAEMAUABTACAAYQBuAGQAIAB0AGgA
-ZQAgAFIAZQBsAHkAaQBuAGcAIABQAGEAcgB0AHkAIABBAGcAcgBlAGUAbQBlAG4AdAAgAHcAaABp
-AGMAaAAgAGwAaQBtAGkAdAAgAGwAaQBhAGIAaQBsAGkAdAB5ACAAYQBuAGQAIABhAHIAZQAgAGkA
-bgBjAG8AcgBwAG8AcgBhAHQAZQBkACAAaABlAHIAZQBpAG4AIABiAHkAIAByAGUAZgBlAHIAZQBu
-AGMAZQAuMHcGCCsGAQUFBwEBBGswaTAkBggrBgEFBQcwAYYYaHR0cDovL29jc3AuZGlnaWNlcnQu
-Y29tMEEGCCsGAQUFBzAChjVodHRwOi8vY2FjZXJ0cy5kaWdpY2VydC5jb20vRGlnaUNlcnRBc3N1
-cmVkSURDQS0xLmNydDAMBgNVHRMBAf8EAjAAMA0GCSqGSIb3DQEBBQUAA4IBAQAHPAsF0prN0WyM
-fm4cRbBkKDfkaR7Y5z7zDzwKG7+68XYUDz8/jeod4aVc3oHltl4cmVQvDE9FOrll65PtbkFAF6yR
-Bvltl/MkxKBw0v0ghfzzjrI/3pGg7jRPSSQf/XLKaGuFvlvKV9bEbqwQxRy9AwbnVENT4L00izzh
-7XykKbuIEW9rvCqSXq5qfyLzyyJl/cUgm2CkDNi9MG6UrRSGHcigirl7kMTl9wXQSiwhb3CAxOoY
-491KTpU4Qm3rpdk8+YwEQn0SuDlMZ18m/06eY7bISAGtmTBmkx/QKXmOz+gtjjRfjIeclf62llzp
-yfXRIOv7F3G3YonqsyymASIEMYIDEDCCAwwCAQEwdjBiMQswCQYDVQQGEwJVUzEVMBMGA1UEChMM
-RGlnaUNlcnQgSW5jMRkwFwYDVQQLExB3d3cuZGlnaWNlcnQuY29tMSEwHwYDVQQDExhEaWdpQ2Vy
-dCBBc3N1cmVkIElEIENBLTECEA2fwUKNhvkL8dN88tUFvVwwCQYFKw4DAhoFAKCCAW8wGAYJKoZI
-hvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMTUwMTIwMDkxOTQ2WjAjBgkqhkiG
-9w0BCQQxFgQUp831Lpn1lOUByQktJ+e8IVpYq1kwgYUGCSsGAQQBgjcQBDF4MHYwYjELMAkGA1UE
-BhMCVVMxFTATBgNVBAoTDERpZ2lDZXJ0IEluYzEZMBcGA1UECxMQd3d3LmRpZ2ljZXJ0LmNvbTEh
-MB8GA1UEAxMYRGlnaUNlcnQgQXNzdXJlZCBJRCBDQS0xAhANn8FCjYb5C/HTfPLVBb1cMIGHBgsq
-hkiG9w0BCRACCzF4oHYwYjELMAkGA1UEBhMCVVMxFTATBgNVBAoTDERpZ2lDZXJ0IEluYzEZMBcG
-A1UECxMQd3d3LmRpZ2ljZXJ0LmNvbTEhMB8GA1UEAxMYRGlnaUNlcnQgQXNzdXJlZCBJRCBDQS0x
-AhANn8FCjYb5C/HTfPLVBb1cMA0GCSqGSIb3DQEBAQUABIIBAK2LrJwweQfKtQVY4nW9ZmhAQNYv
-1RyrKjMATz2DocMmdCHCFxpX/FBQJeIfvgE8q1aSB8bdA5qGME9z5DzpuqrPhtW2kB2/qlmKxCzL
-X2Svk5WVAyDcpHxU8cku+J81TytZuE5QW7ZDOiMhzfLB53hKoRoY0yiq/+OwWT4RWjyOD5ADAg16
-j7YNHs7yCi/ucLSSQk0Rglm+j0O0+FhOgANZZxvo8asdbC7Vcpf4Cr41W8+8RdWI6L4Qykkq0da8
-1QOHF5df8JFzF8HLC9/UbCTjU0FQsQDig6JGiCF8hYmHgi86AQ364jDP2fi9rUSv/+AjjIufAeWT
-F4AjDAhAg0sAAAAAAAA=
-
-
---=-0xSPRf9H6tBAu/pb/5DC--
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,msm8916-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,msm8916-pinctrl.txt
+new file mode 100644
+index 0000000..10c2dcf
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,msm8916-pinctrl.txt
+@@ -0,0 +1,186 @@
++Qualcomm MSM8916 TLMM block
++
++This binding describes the Top Level Mode Multiplexer block found in the
++MSM8916 platform.
++
++- compatible:
++	Usage: required
++	Value type: <string>
++	Definition: must be "qcom,msm8916-pinctrl"
++
++- reg:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: the base address and size of the TLMM register space.
++
++- interrupts:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: should specify the TLMM summary IRQ.
++
++- interrupt-controller:
++	Usage: required
++	Value type: <none>
++	Definition: identifies this node as an interrupt controller
++
++- #interrupt-cells:
++	Usage: required
++	Value type: <u32>
++	Definition: must be 2. Specifying the pin number and flags, as defined
++		    in <dt-bindings/interrupt-controller/irq.h>
++
++- gpio-controller:
++	Usage: required
++	Value type: <none>
++	Definition: identifies this node as a gpio controller
++
++- #gpio-cells:
++	Usage: required
++	Value type: <u32>
++	Definition: must be 2. Specifying the pin number and flags, as defined
++		    in <dt-bindings/gpio/gpio.h>
++
++Please refer to ../gpio/gpio.txt and ../interrupt-controller/interrupts.txt for
++a general description of GPIO and interrupt bindings.
++
++Please refer to pinctrl-bindings.txt in this directory for details of the
++common pinctrl bindings used by client devices, including the meaning of the
++phrase "pin configuration node".
++
++The pin configuration nodes act as a container for an arbitrary number of
++subnodes. Each of these subnodes represents some desired configuration for a
++pin, a group, or a list of pins or groups. This configuration can include the
++mux function to select on those pin(s)/group(s), and various pin configuration
++parameters, such as pull-up, drive strength, etc.
++
++
++PIN CONFIGURATION NODES:
++
++The name of each subnode is not important; all subnodes should be enumerated
++and processed purely based on their content.
++
++Each subnode only affects those parameters that are explicitly listed. In
++other words, a subnode that lists a mux function but no pin configuration
++parameters implies no information about any pin configuration parameters.
++Similarly, a pin subnode that describes a pullup parameter implies no
++information about e.g. the mux function.
++
++
++The following generic properties as defined in pinctrl-bindings.txt are valid
++to specify in a pin configuration subnode:
++
++- pins:
++	Usage: required
++	Value type: <string-array>
++	Definition: List of gpio pins affected by the properties specified in
++		    this subnode.  Valid pins are:
++		    gpio0-gpio121,
++		    sdc1_clk,
++		    sdc1_cmd,
++		    sdc1_data
++		    sdc2_clk,
++		    sdc2_cmd,
++		    sdc2_data,
++		    qdsd_cmd,
++		    qdsd_data0,
++		    qdsd_data1,
++		    qdsd_data2,
++		    qdsd_data3
++
++- function:
++	Usage: required
++	Value type: <string>
++	Definition: Specify the alternative function to be configured for the
++		    specified pins. Functions are only valid for gpio pins.
++		    Valid values are:
++	adsp_ext, alsp_int, atest_bbrx0, atest_bbrx1, atest_char, atest_char0,
++	atest_char1, atest_char2, atest_char3, atest_combodac, atest_gpsadc0,
++	atest_gpsadc1, atest_tsens, atest_wlan0, atest_wlan1, backlight_en,
++	bimc_dte0, bimc_dte1, blsp1_spi, blsp2_spi, blsp3_spi, blsp_i2c1,
++	blsp_i2c2, blsp_i2c3, blsp_i2c4, blsp_i2c5, blsp_i2c6, blsp_spi1,
++	blsp_spi2, blsp_spi3, blsp_spi4, blsp_spi5, blsp_spi6, blsp_uart1,
++	blsp_uart2, blsp_uim1, blsp_uim2, cam1_rst, cam1_standby, cam_mclk,
++	cci_async, cci_i2c, cci_timer0, cci_timer1, cci_timer2, cdc_pdm0,
++	codec_mad, dbg_out, display_5v, dmic0_clk, dmic0_data, dsi_rst,
++	ebi0_wrcdc, euro_us, ext_lpass, flash_strobe, gcc_gp1_clk_a,
++	gcc_gp1_clk_b, gcc_gp2_clk_a, gcc_gp2_clk_b, gcc_gp3_clk_a,
++	gcc_gp3_clk_b, gpio, gsm0_tx0, gsm0_tx1, gsm1_tx0, gsm1_tx1, gyro_accl,
++	kpsns0, kpsns1, kpsns2, ldo_en, ldo_update, mag_int, mdp_vsync,
++	modem_tsync, m_voc, nav_pps, nav_tsync, pa_indicator, pbs0, pbs1, pbs2,
++	pri_mi2s, pri_mi2s_ws, prng_rosc, pwr_crypto_enabled_a,
++	pwr_crypto_enabled_b, pwr_modem_enabled_a, pwr_modem_enabled_b,
++	pwr_nav_enabled_a, pwr_nav_enabled_b, qdss_cti_trig_in_a0,
++	qdss_cti_trig_in_a1, qdss_cti_trig_in_b0, qdss_cti_trig_in_b1,
++	qdss_cti_trig_out_a0, qdss_cti_trig_out_a1, qdss_cti_trig_out_b0,
++	qdss_cti_trig_out_b1, qdss_traceclk_a, qdss_traceclk_b, qdss_tracectl_a,
++	qdss_tracectl_b, qdss_tracedata_a, qdss_tracedata_b, reset_n, sd_card,
++	sd_write, sec_mi2s, smb_int, ssbi_wtr0, ssbi_wtr1, uim1_clk, uim1_data,
++	uim1_present, uim1_reset, uim2_clk, uim2_data, uim2_present, uim2_reset,
++	uim3_clk, uim3_data, uim3_present, uim3_reset, uim_batt, wcss_bt,
++	wcss_fm, wcss_wlan, wcss_wlan0, wcss_wlan1, wcss_wlan2, webcam1_rst,
++
++- bias-disable:
++	Usage: optional
++	Value type: <none>
++	Definition: The specified pins should be configued as no pull.
++
++- bias-pull-down:
++	Usage: optional
++	Value type: <none>
++	Definition: The specified pins should be configued as pull down.
++
++- bias-pull-up:
++	Usage: optional
++	Value type: <none>
++	Definition: The specified pins should be configued as pull up.
++
++- output-high:
++	Usage: optional
++	Value type: <none>
++	Definition: The specified pins are configured in output mode, driven
++		    high.
++		    Not valid for sdc pins.
++
++- output-low:
++	Usage: optional
++	Value type: <none>
++	Definition: The specified pins are configured in output mode, driven
++		    low.
++		    Not valid for sdc pins.
++
++- drive-strength:
++	Usage: optional
++	Value type: <u32>
++	Definition: Selects the drive strength for the specified pins, in mA.
++		    Valid values are: 2, 4, 6, 8, 10, 12, 14 and 16
++
++Example:
++
++	tlmm: pinctrl@1000000 {
++		compatible = "qcom,msm8916-pinctrl";
++		reg = <0x1000000 0x300000>;
++		interrupts = <0 208 0>;
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++
++		uart2: uart2-default {
++			mux {
++				pins = "gpio4", "gpio5";
++				function = "blsp_uart2";
++			};
++
++			tx {
++				pins = "gpio4";
++				drive-strength = <4>;
++				bias-disable;
++			};
++
++			rx {
++				pins = "gpio5";
++				drive-strength = <2>;
++				bias-pull-up;
++			};
++		};
++	};
+-- 
+1.7.0.4
