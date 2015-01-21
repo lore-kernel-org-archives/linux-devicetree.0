@@ -1,115 +1,109 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 00/13] mtd: st_spi_fsm: Align with ST's internal
- development
-Date: Wed, 21 Jan 2015 12:49:30 +0000
-Message-ID: <20150121124930.GA22024@x1>
-References: <1418644760-18773-1-git-send-email-lee.jones@linaro.org>
- <20150113051452.GR9759@ld-irv-0074>
+From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] I2C: mediatek: Add driver for MediaTek I2C
+ controller
+Date: Wed, 21 Jan 2015 20:49:40 +0800
+Message-ID: <1421844580.11671.145.camel@mtksdaap41>
+References: <1421404418-50718-1-git-send-email-eddie.huang@mediatek.com>
+	 <1421404418-50718-3-git-send-email-eddie.huang@mediatek.com>
+	 <20150118101816.GF22880@pengutronix.de>
+	 <1421810004.15468.825.camel@mtksdaap41>
+	 <1421821809.11671.117.camel@mtksdaap41>
+	 <20150121081519.GS22880@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150113051452.GR9759@ld-irv-0074>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150121081519.GS22880-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>, Xudong Chen <xudong.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, yh.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Wei Yan <sledge.yanwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Neelesh Gupta <neelegup-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_he
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 12 Jan 2015, Brian Norris wrote:
-> On Mon, Dec 15, 2014 at 11:59:07AM +0000, Lee Jones wrote:
-> > Hi Brian, all,
-> > =20
-> >  [x] Bulid test
-> >  [x] Bisectable
-> >  [x] Smatch
-> >  [x] Sparse
+On Wed, 2015-01-21 at 09:15 +0100, Uwe Kleine-K=C3=B6nig wrote:
+> Hello,
 >=20
-> Picked patches 1, 2, and 5 to l2-mtd.git. I requested changes to patc=
-h 3
-> and possibly 4. The rest look OK, but I don't want to futz with patch
-> conflicts on the remaining. Please rebase to l2-mtd.git if/when you
-> resend.
-
-Sure.  I'll get on to that now.
-
-> > v3:
-> >   Further aligned with upstream changes as suggested by Peter Griff=
-in.
-> >   The clk_ignore_unused kernel command line parameter is due to be =
-turned
-> >   off on STiH4* platforms, so we no longer give the driver the chan=
-ce to
-> >   opt-out of fetching the EMI clock.  We also now provide syscfg of=
-fsets
-> >   inside the driver, as it's simpler and reduces the cost of having=
- lots
-> >   of extra DT properties.
->=20
-> Typically "simpler" and "reducing the cost of having lots of extra DT
-> properties" aren't good enough reasons for immediately breaking an
-> existing DT binding. We usually expect to support both for some perio=
-d
-> of time.
-
-Only once a binding has became ABI.  As there are no users of this
-driver yet (this will change after this sync'ing patch-set has been
-applied), so we can safely consider this binding to be in-progress and
-as such, not yet ABI, thus we can do this ol' switch-aroo without the
-usual 6 month deprecation period.
-
-> > v2:
-> >   These are the last remaining patches in the set, all rebased and
-> >   with the DT documentation requested after the last submission.
-> > =20
-> > v1:
-> >   This patch-set updates ST's FSM SPI-NOR driver with all the inter=
-nal
-> >   goodness which has happened since the initial (now upstreamed) sn=
-apshot
-> >   was taken. It covers just over 6 months worth of internal develop=
-ment
-> >   and bug-fixes. A final whitespace clean-up is also appended to th=
-e set
-> >   - to make it look pretty and stuff. :)
+> On Wed, Jan 21, 2015 at 02:30:09PM +0800, Yingjoe Chen wrote:
+> > On Wed, 2015-01-21 at 11:13 +0800, Eddie Huang wrote:
+> > <...>
+> > > > > +		ret =3D -EINVAL;
+> > > > > +		goto err_exit;
+> > > > > +	}
+> > > > > +
+> > > > > +	if (msgs->buf =3D=3D NULL) {
+> > > > > +		dev_dbg(i2c->dev, " data buffer is NULL.\n");
+> > > > > +		ret =3D -EINVAL;
+> > > > > +		goto err_exit;
+> > > > > +	}
+> > > > > +
+> > > > > +	i2c->addr =3D msgs->addr;
+> > > > > +	i2c->msg_len =3D msgs->len;
+> > > > > +	i2c->msg_buf =3D msgs->buf;
+> > > > > +
+> > > > > +	if (msgs->flags & I2C_M_RD)
+> > > > > +		i2c->op =3D I2C_MASTER_RD;
+> > > > > +	else
+> > > > > +		i2c->op =3D I2C_MASTER_WR;
+> > > > > +
+> > > > > +	/* combined two messages into one transaction */
+> > > > > +	if (num > 1) {
+> > > > > +		i2c->msg_aux_len =3D (msgs + 1)->len;
+> > > > > +		i2c->op =3D I2C_MASTER_WRRD;
+> > > > > +	}
+> > > > This means "write then read", right? You should check here that=
+ the
+> > > > first message is really a write and the 2nd a read then.
+> > > > Can this happen at all with the quirks defined below (.max_num_=
+msgs =3D
+> > > > 1)?
+> > > Yes, mean write then read. Indeed, add check is better.
+> > > If msg number is 1, means normal write or read, not "write then r=
+ead".
 > >=20
-> > Angus Clark (3):
-> >   mtd: st_spi_fsm: Add support for N25Q512 and N25Q00A devices
-> >   mtd: st_spi_fsm: Update Spansion device entries
-> >   mtd: st_spi_fsm: Improve busy wait handling
+> > The quirks will increase the message count and check 'write then re=
+ad'
+> > for us. We don't have to add check here.
+> I have to admit I don't know that quirks stuff, so it's well possible
+> that I'm wrong here.
+> =20
+> > > > > +static int mtk_i2c_remove(struct platform_device *pdev)
+> > > > > +{
+> > > > > +	struct mtk_i2c *i2c =3D platform_get_drvdata(pdev);
+> > > > > +
+> > > > > +	i2c_del_adapter(&i2c->adap);
+> > > > > +	free_i2c_dma_bufs(i2c);
+> > > > > +	platform_set_drvdata(pdev, NULL);
+> > > > > +
+> > > > Here you need to make sure that no irq is running when i2c_del_=
+adapter
+> > > > is called.
+> > > OK, add check here
 > >=20
-> > Lee Jones (9):
-> >   mtd: st_spi_fsm: Extend fsm_clear_fifo to handle unwanted bytes
-> >   mtd: st_spi_fsm: Obtain and use EMI clock
-> >   mtd: st_spi_fsm: dt-bindings: Deprecate generic compatible string
-> >   mtd: st_spi_fsm: Fetch boot device locations from DT match tables
-> >   mtd: st_spi_fsm: Fix [-Wsign-compare] build warning
-> >   mtd: st_spi_fsm: Update the JEDEC probe to handle extended READID=
+> > I thought after i2c_del_adapter() is complete, all i2c_transfer for=
+ this
+> > adapter is completed. If this is true, then i2c clock is already of=
+f and
+> > we won't have any on-going transfer/pending irq.
+> Consider that there is an ongoing transaction and before it completes
+> the adapter-device is unbound from the driver. Then i2c_del_adapter i=
 s
-> >   mtd: st_spi_fsm: General tidy-up
-> >   ARM: STi: stih416: Use new platform specific compatible string
-> >   ARM: STi: stih416: Supply EMI clock reference to FSM SPI NOR
-> >=20
-> > Nunzio Raciti (1):
-> >   mtd: st_spi_fsm: Add support for Micron N25Q512A
-> >=20
-> >  Documentation/devicetree/bindings/mtd/st-fsm.txt |  20 +-
-> >  arch/arm/boot/dts/stih416.dtsi                   |   6 +-
-> >  drivers/mtd/devices/st_spi_fsm.c                 | 747 +++++++++++=
-++++--------
-> >  include/dt-bindings/clock/stih416-clks.h         |   1 +
-> >  4 files changed, 519 insertions(+), 255 deletions(-)
-> >=20
->=20
-> Brian
+> called which frees the resources managed by the core, then the device=
+'s
+> completion irq triggers and the freed adapter is used which probably
+> results in an oops.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+Not sure if I missed anything. i2c_transfer() is a synchronize call. If
+we fixed timeout issue you mentioned in mtk_i2c_transfer(), it will tur=
 n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+off clock before it return, which disable any transaction and clear all
+pending irq.
+
+Your scenario can only happens when one thread is still running in
+i2c_transfer/algo->master_xfer and the other thread is trying to remove
+the device. If that happened, then every device data access in
+mtk_i2c_transfer might cause oops. I looked at some i2c drivers and
+can't find any checking for this case, I can't find anything prevent i2=
+c
+device removal before pending i2c_transfer complete either. Would you
+give me an example?
+
+Joe.C
