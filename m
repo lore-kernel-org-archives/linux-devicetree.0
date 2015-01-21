@@ -1,40 +1,60 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v2 0/4] net: stmmac: dwmac-rk: Fix phy regulator issues
-Date: Wed, 21 Jan 2015 09:32:38 +0100
-Message-ID: <1791081.FUojULYATz@phil>
-References: <1421737780-1533-1-git-send-email-romain.perier@gmail.com>
+From: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] I2C: mediatek: Add driver for MediaTek I2C
+ controller
+Date: Wed, 21 Jan 2015 16:34:35 +0800
+Message-ID: <1421829275.6546.6.camel@mtksdaap41>
+References: <1421404418-50718-1-git-send-email-eddie.huang@mediatek.com>
+	 <1421404418-50718-3-git-send-email-eddie.huang@mediatek.com>
+	 <20150118101816.GF22880@pengutronix.de>
+	 <1421810004.15468.825.camel@mtksdaap41>
+	 <20150121082022.GT22880@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1421737780-1533-1-git-send-email-romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Cc: peppe.cavallaro-qxv4g6HH51o@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, roger.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150121082022.GT22880-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Max Schwarz <max.schwarz-BGeptl67XyCzQB+pC5nmwQ@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Anders Berg <anders.berg-1wcpHE2jlwO1Z/+hSey0Gg@public.gmane.org>, Neelesh Gupta <neelegup-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Wei Yan <sledge.yanwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jim Cromie <jim.cromie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Beniamino Galvani <b.galvani@gmai>
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, 20. Januar 2015, 07:09:36 schrieb Romain Perier:
-> This series fixes few issues in dwmac-rk:
-> 
-> 1. Voltage settings was hardcoded into the driver for the phy regulator.
->    The driver now uses the default voltage settings found in the devicetree,
-> which are applied throught the regulator framework.
-> 2. The regulator name used to power on or power off the phy was put in the
-> devicetree variable "phy_regulator", which is not standard and added a lot
-> of code for nothing. The driver now uses the devicetree property
-> "phy-supply" and the corresponding functions to manipulate this regulator.
-> 
-> The corresponding devicetree files are also updated. As this new binding for
-> rk3288 has not been released with any official kernel yet (not until 3.20),
-> I don't need to care about keeping compatibility with the old non standard
-> property.
+Hi Uwe,
 
-This series
-Tested-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Reviewed-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+On Wed, 2015-01-21 at 09:20 +0100, Uwe Kleine-K=C3=B6nig wrote:
+> Hello,
+>=20
+> On Wed, Jan 21, 2015 at 11:13:24AM +0800, Eddie Huang wrote:
+> > > > +	/* set when doing the transfer */
+> > > > +	u16 irq_stat;			/* interrupt status */
+> > > > +	unsigned int speed_hz;		/* The speed in transfer */
+> > > > +	bool trans_stop;		/* i2c transfer stop */
+> > > > +	enum mtk_trans_op op;
+> > > > +	u16 msg_len;
+> > > > +	u8 *msg_buf;			/* pointer to msg data */
+> > > > +	u16 msg_aux_len;		/* WRRD mode to set AUX_LEN register*/
+> > > > +	u16 addr;	/* 7bit slave address, without read/write bit */
+> > > Wouldn't it be easier to maintain a pointer to the message to be
+> > > transferred?
+> > I think use mtk_i2c pointer is more flexible than maintain a pointe=
+r to
+> > message.
+> Not sure you understood what I intended to suggest. My idea was to dr=
+op
+>=20
+> 	u16 msg_len;
+> 	u8 *msg_buf;
+> 	u16 msg_aux_len; // maybe
+> 	u16 addr;
+>=20
+> from struct mtk_i2c and add a struct i2c_msg *msg instead. Up to you =
+to
+> decide.
+>=20
+Because this driver pass mtk_i2c pointer between functions, it's
+flexible to use any member of struct mtk_i2c. The good thing is avoid
+passing one more struct i2c_msg parameter between functions, or another
+struct copy. The bad thing is make struct mtk_i2c larger. I prefer to
+keep as it is now.
 
-@Dave: as said in the v1 mail, this would be nice to have for 3.20
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best Regards
+Eddie
