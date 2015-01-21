@@ -1,74 +1,64 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: [PATCHv5 1/2] leds: tlc591xx: Document binding for the TI 8/16 Channel i2c LED driver
-Date: Wed, 21 Jan 2015 23:29:23 +0100
-Message-ID: <1421879364-8573-2-git-send-email-andrew@lunn.ch>
-References: <1421879364-8573-1-git-send-email-andrew@lunn.ch>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1421879364-8573-1-git-send-email-andrew-g2DYL2Zd6BY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org
-Cc: linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org, vigneshr-l0cyMroinI0@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Matthew.Fatheree-REUqjI8E1xrQT0dZR+AlfA@public.gmane.org
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH RFC 2/3] power: mxs_power: add driver for mxs power
+ subsystem
+Date: Thu, 22 Jan 2015 00:01:49 +0100
+Message-ID: <20150121230148.GJ13715@earth.universe>
+References: <1416514477-19190-1-git-send-email-stefan.wahren@i2se.com>
+ <1416514477-19190-3-git-send-email-stefan.wahren@i2se.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="2fjX3cMESU3XgGmZ"
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1416514477-19190-3-git-send-email-stefan.wahren@i2se.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Shawn Guo <shawn.guo@linaro.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Document the binding for the TLC591xx LED driver.
 
-Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Matthew.Fatheree-REUqjI8E1xrQT0dZR+AlfA@public.gmane.org
----
- .../devicetree/bindings/leds/leds-tlc591xx.txt     | 40 ++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/leds-tlc591xx.txt
+--2fjX3cMESU3XgGmZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-tlc591xx.txt b/Documentation/devicetree/bindings/leds/leds-tlc591xx.txt
-new file mode 100644
-index 000000000000..3bbbf7024411
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/leds-tlc591xx.txt
-@@ -0,0 +1,40 @@
-+LEDs connected to tlc59116 or tlc59108
-+
-+Required properties
-+- compatible: should be "ti,tlc59116" or "ti,tlc59108"
-+- #address-cells: must be 1
-+- #size-cells: must be 0
-+- reg: typically 0x68
-+
-+Each led is represented as a sub-node of the ti,tlc59116.
-+See Documentation/devicetree/bindings/leds/common.txt
-+
-+LED sub-node properties:
-+- reg: number of LED line, 0 to 15 or 0 to 7
-+- label: (optional) name of LED
-+- linux,default-trigger : (optional)
-+
-+Examples:
-+
-+tlc59116@68 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	compatible = "ti,tlc59116";
-+	reg = <0x68>;
-+
-+	wan@0 {
-+		label = "wrt1900ac:amber:wan";
-+		reg = <0x0>;
-+	};
-+
-+	2g@2 {
-+		label = "wrt1900ac:white:2g";
-+		reg = <0x2>;
-+	};
-+
-+	alive@9 {
-+		label = "wrt1900ac:green:alive";
-+		reg = <0x9>;
-+		linux,default_trigger = "heartbeat";
-+	};
-+};
--- 
-2.1.4
+Hi Stefan,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sorry for the big delay.
+
+On Thu, Nov 20, 2014 at 08:14:36PM +0000, Stefan Wahren wrote:
+> This patch adds a minimal driver for the Freescale i.MX23, i.MX28
+> power subsystem. It's required to trigger the probing of the underlying
+> drivers like on-chip regulators. Additionally the drivers supports
+> the configuration of the DC-DC clock frequency to avoid possible
+> interferences.
+
+I would expect PLL to be board specific and part of DT. Why is it
+specified as parameter?
+
+Apart from that the driver/patch looks fine to me.
+
+-- Sebastian
+
+--2fjX3cMESU3XgGmZ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJUwC/VAAoJENju1/PIO/qaHEUP/0ei1/4oIAp/vaGCDf6JGlWy
+IRQdVa9kTiE2OuRWtDJiQEkCQ0z1sgK+GVtdpOX8x9sfZ7oYW4/b5/N1IGT0DIWR
+CKerinJKd856v090rlYNlxXpp+ofcH0AaiXdjMws+rEgREl7ZJ2h672hofhaORdL
+ZqklhCvp9COz39VjITgf2Kk8m6LH4T4TPLG3bcTr/F320b3KbVBPPA4wy0RaTWPx
+Bjqrsyh6HZxT4e0wWfoSDNCsmn+TbxpBcENINRExFN47rsjWpaaUJqs4wyzWdu05
+ZiKUqUJ66ARS8ptCoI4lc0qSyHg1H3xxi74kqT+DVL09kHjpMix1cMywDrjAXjBq
+2uhYZ84x1gumH2UanvYp0hevmHw6gk6CJQzOSnnDrnJDU7e3cLRtbyAZiumBUM0K
+41pZD+ZJVl8eA1lHlMqQ3UJ8SWcW/sTV1XPxvxVSq5DWIg/pLpKL4hPQ3fG5uQq/
+9FuIUwM9AiLQRyc26RZcX0d+n+9TOPI4L1C696AH8d1POwfOH24N9RbS1dJqzCnC
+rS66ICHBJrOrDfE6cwziyXlEOtk4PnKNwlaL0Pz6KP38Q8IJEzag8rJvEGFkdcAW
+oEa6lnbFacG4wOOlbJti2uccmqoP1+4zXSfNfle0k3ifhQbXfen5VOiVV6nDmlRK
+d5Lb7u1tLAy837woOXWS
+=YmPR
+-----END PGP SIGNATURE-----
+
+--2fjX3cMESU3XgGmZ--
