@@ -1,66 +1,156 @@
-From: Jonathan Cameron <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>
-Subject: Re: [PATCH v6 0/7] Add initial support for DA9150 Charger & Fuel-Gauge IC
-Date: Wed, 21 Jan 2015 17:19:38 +0000
-Message-ID: <C1079F30-5D1D-45AA-A129-FE1E68EA5DC5@jic23.retrosnub.co.uk>
-References: <cover.1421854282.git.Adam.Thomson.Opensource@diasemi.com> <20150121165250.GG13715@earth.universe>
+From: Greg Bellows <greg.bellows-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: Secure resources in device trees
+Date: Wed, 21 Jan 2015 11:23:14 -0600
+Message-ID: <CAOgzsHXFfBvMpF3rWe9f9MVOK6qJgxJeSjqyrcUkFMHRDQvRMQ@mail.gmail.com>
+References: <CAOgzsHVpXZTHoq7HyfrGeGe92onnb6=BQr30PvKrg04h=0De0w@mail.gmail.com>
+	<CAL_Jsq+rN07CfdNjErhLipKNJJj3uoczR98YuWSAwjMRW1xVag@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150121165250.GG13715-SfvFxonMDyemK9LvCR3Hrw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Adam Thomson <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, support.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_Jsq+rN07CfdNjErhLipKNJJj3uoczR98YuWSAwjMRW1xVag-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter Maydell <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Thanks Rob, comments inline.
 
+On Wed, Jan 21, 2015 at 10:21 AM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Tue, Jan 20, 2015 at 1:15 PM, Greg Bellows <greg.bellows-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> The addition of ARM security extension (TrustZone) support to QEMU has
+>> exposed the issue of how secure resources are communicated to secure
+>> software responsible for booting the HLOS.  The natural choice for
+>> communicating these details is the device tree.
+>
+> You could also have a secure OS use DT and the HLOS use something else
+> (ACPI). Or the secure OS and non-secure firmware (UEFI) use DT and the
+> OS uses ACPI.
+>
+>> In the case of real hardware, the device tree supplied to the HLOS
+>> only needs to describe non-secure resources as secure software can
+>> rely on static knowledge about the hardware.  This also holds true for
+>> QEMU machines modeled after actual fixed hardware configurations.
+>> However, this is not the case with QEMU's virtual machine models, such
+>> as machvirt, where the hardware configuration can change over time.
+>> In this case, secure software is dependent on QEMU's dynamically
+>> constructed device tree to describe the hardware, making it impossible
+>> for secure software to know ahead of time what is secure, non-secure,
+>> or both.
+>
+> For purposes of this discussion, what works better for QEMU is irrelevant IMO.
+>
 
-On 21 January 2015 16:52:50 GMT+00:00, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->Hi,
->
->On Wed, Jan 21, 2015 at 03:46:25PM +0000, Adam Thomson wrote:
->> This patch set adds initial support for the Dialog DA9150 Integrated
->Charger &
->> Fuel-Gauge IC. The device also provides GPIO and GPADC functionality.
->> 
->> In this patch set the following is provided:
->>  - MFD Core support and DT bindings documentation.
->>  - IIO GPADC support and DT bindings documentation.
->>  - Power Supply Charger support and DT bindings documentation.
->>  - Update to MAINTAINERS file to add DA9150 files to Dialog support
->list.
->> 
->> To keep patch submission from being too large, support for GPIO and
->Fuel-Gauge
->> will come after initial support patches are accepted.
->> 
->> This patch set is baselined against the v3.19-rc5 kernel version.
->> 
->> Changes in v6:
->> - For GPADC driver, Use lower case extended names for IIO GPADC
->channels, and
->>   remove extended names for GPIO related channels.
->> - For charger driver, revert to no devm IRQ request/free functions as
->ordering
->>   is important, and probe failure scenario was not being correctly
->covered. A
->>   helper function for free IRQs has been added to make code cleaner.
->
->Probably a devm_ variant of power_supply_register should be created,
->but for now this is ok for me.
->
->Jonathan, Lee: I assume you are ok with the whole patchset going
->through the power supply subsystem?
->
-Fine by me if either power supply or MFD.
+We just want to make sure that QEMU embraces the expected mechanism
+for handling such a scenario.
 
-Jonathan
->-- Sebastian
+>> Two possible approaches for handling this particular case are:
+>>
+>> 1) Create two device tree blobs; one describing the non-secure
+>> configuration and the other the full configuration.  This would allow
+>> secure software to see the full hardware picture including secure
+>> resources while the non-secure world would only see the non-secure
+>> device tree configuration.  The QEMU virt machine would be responsible
+>> for producing the device tree blobs.
+>
+> I've thought about this some in the past and leaned toward this
+> direction mainly because I'd expect you are partitioning most nodes to
+> one side. You could do some crazy partitioning with secure and
+> non-secure world. It was suggested on highbank to use the secure bit
+> as a 33rd address bit to get 8GB of address space for example. You
+> could have entirely different view of the system.
+>
+>> The drawbacks to this approach are:
+>> * There are 2 device trees to manage
+>
+> You already have 2 bootloaders and 2 OS's to manage.
+>
+>> * The two DTBs will typically be almost identical.
+>
+> I don't really agree. If the secure dtb has all non-secure peripherals
+> too, then yes. But if you only include peripherals allocated to secure
+> world and secure view of peripherals, then I don't think there would
+> be much overlap. You pretty much have to statically allocate each
+> peripheral to one side or the other.
+>
 
--- 
-Sent from my Android device with K-9 Mail. Please excuse my brevity.
+The above option was assuming two fully populated DTs with one also
+including secure resources.  If we strip the secure DT down to only
+secure resources then they would indeed be unique.
+
+>> * Not possible to identify whether a device is shared or not between
+>> the secure and non-secure worlds.
+>
+> Typically, sharing requires a peripheral to be designed to be shared
+> like PL330 or MMU-400. I have seen some h/w with locking registers so
+> 2 different cores/OSs can share an i2c bus. You could do something
+> like that for Trustzone as well I suppose. That's not really secure,
+> but allows shared access. I think it is generally a limited number of
+> peripherals which are shared.
+>
+
+This was more of an issue when the DTs overlapped.  It assumes there
+was the possibility of two distinct resources of the same type
+residing at the same address. One secure the other not.
+
+>> * Identifying device available only to the secure world require
+>> cumbersome comparison of the two device trees.
+>
+> But that is pretty static. It doesn't seem like a big deal to me.
+>
+>> * A mechanism would be needed to pass an additional device tree.
+>>
+>> 2) Modify the standard device tree blob to include annotations or
+>> modifications to describe which resources are secure or not.  In this
+>> case, secure software would use the single device tree to identify the
+>> secure resources.  The added information could be used by secure
+>> software to trim the device tree before passing it.  Alternatively,
+>> the information could be passed on to non-secure software with the
+>> expectation that it would honor the device security.   It would be
+>> crucial that any data added to the device tree adhere to existing
+>> conventions or expectations.
+>
+> You could also do this w/o dts changes. You could start with a full
+> description and the knowledge of what to filter out resides in the
+> secure OS or bootloader. It depends where you want to put the
+> partitioning decisions.
+>
+
+This is likely what happens today.  Unfortunately, this does not help
+in the QEMU case described above because the DT is created dynamically
+for a virtual machine model whose configuration is not fixed.  The
+approach does not truly embrace the advantage of the DT as it requires
+internal HW knowledge which I thought the DT was aimed at alleviating.
+
+> I think there's 2 main cases to consider. Full nodes that are assigned
+> to one side and Trustzone aware nodes. The first could potentially
+> re-use status property adding just a "secure" setting or we just add a
+> new "secure" property. This should probably be inherited by child
+> nodes. The secure firmware would then need to remove or set status to
+> disabled for those nodes. For the latter case, I don't think we can
+> avoid having the firmware having specific knowledge of the bindings.
+> We'll have to filter out the secure only details as I think so far we
+> have only been creating bindings which describe the non-secure view. I
+> don't think this is a big deal as the peripheral set would be pretty
+> limited AFAIK.
+>
+> Rob
+>
+>> The drawbacks to this approach are:
+>> * Additional secure state details. potentially unrecognized by current
+>> consumers,  would need to be added to the device tree.
+>> * Unless a mechanism already exists, the new secure property runs the
+>> risk of breaking backwards compatibility.
+>> * Secure firmware is responsible for understanding and possibly
+>> filtering the secure device tree data.
+>>
+>> Feedback welcomed.
+>>
+>> Greg
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe devicetree-spec" in
+>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree-spec" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
