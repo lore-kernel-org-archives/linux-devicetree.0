@@ -1,68 +1,164 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v3 2/3] mfd: lubbock_io: add lubbock_io board
-Date: Wed, 21 Jan 2015 15:10:52 +0000
-Message-ID: <20150121151052.GD22024@x1>
-References: <20150121123551.GD9258@x1>
- <332399927.402665086.1421847419490.JavaMail.root@zimbra1-e1.priv.proxad.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <332399927.402665086.1421847419490.JavaMail.root@zimbra1-e1.priv.proxad.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robert.jarzmik@free.fr
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, linux-kernel@vger.kernel.org, Haojian Zhuang <haojian.zhuang@gmail.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Daniel Mack <daniel@zonque.org>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v4 02/10] mtd: st_spi_fsm: Fetch boot device locations from DT match tables
+Date: Wed, 21 Jan 2015 15:24:20 +0000
+Message-ID: <1421853868-8262-3-git-send-email-lee.jones@linaro.org>
+References: <1421853868-8262-1-git-send-email-lee.jones@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1421853868-8262-1-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 21 Jan 2015, robert.jarzmik@free.fr wrote:
+To trim down on the amount of properties used by this driver and to conform
+to the newly agreed method of acquiring syscfg registers/offsets, we now
+obtain this information using match tables.
 
-> > ----- Mail original -----
-> > De: "Lee Jones" <lee.jones@linaro.org>
-> First of all, this is my web mail interface, so please be kind with
-> my mail formatting ...
+In the process we are deprecating the old generic compatible string and
+providing 3 shiny new ones for each of the support platforms.  The
+deprecated compatible string will be removed in due course.
 
-I have no idea what you want me to change or do differently?
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ drivers/mtd/devices/st_spi_fsm.c | 74 ++++++++++++++++++++++++++++++----------
+ 1 file changed, 56 insertions(+), 18 deletions(-)
 
-Perhaps it might be more prudent for you to switch to a quality
-mailer?
+diff --git a/drivers/mtd/devices/st_spi_fsm.c b/drivers/mtd/devices/st_spi_fsm.c
+index 3060025..9e4fded 100644
+--- a/drivers/mtd/devices/st_spi_fsm.c
++++ b/drivers/mtd/devices/st_spi_fsm.c
+@@ -29,6 +29,21 @@
+ #include "serial_flash_cmds.h"
+ 
+ /*
++ * FSM SPI Boot Mode Registers/Masks
++ */
++#define STID127_SYSCON_BOOT_DEV_REG	0x0D8
++#define STID127_SYSCON_BOOT_DEV_SPI	0x068
++#define STID127_SYSCON_BOOT_DEV_MASK	0x07C
++
++#define STIH407_SYSCON_BOOT_DEV_REG	0x8C4
++#define STIH407_SYSCON_BOOT_DEV_SPI	0x068
++#define STIH407_SYSCON_BOOT_DEV_MASK	0x07C
++
++#define STIH416_SYSCON_BOOT_DEV_REG	0x958
++#define STIH416_SYSCON_BOOT_DEV_SPI	0x01A
++#define STIH416_SYSCON_BOOT_DEV_MASK	0x01F
++
++/*
+  * FSM SPI Controller Registers
+  */
+ #define SPI_CLOCKDIV			0x0010
+@@ -288,6 +303,12 @@ struct seq_rw_config {
+ 	uint8_t         dummy_cycles;   /* No. of DUMMY cycles */
+ };
+ 
++struct stfsm_boot_dev {
++	uint32_t		reg;
++	uint32_t		spi;
++	uint32_t		mask;
++};
++
+ /* SPI Flash Device Table */
+ struct flash_info {
+ 	char            *name;
+@@ -313,6 +334,24 @@ struct flash_info {
+ 	int             (*config)(struct stfsm *);
+ };
+ 
++static struct stfsm_boot_dev stfsm_stid127_data = {
++	.reg  = STID127_SYSCON_BOOT_DEV_REG,
++	.spi  = STID127_SYSCON_BOOT_DEV_SPI,
++	.mask = STID127_SYSCON_BOOT_DEV_MASK,
++};
++
++static struct stfsm_boot_dev stfsm_stih407_data = {
++	.reg  = STIH407_SYSCON_BOOT_DEV_REG,
++	.spi  = STIH407_SYSCON_BOOT_DEV_SPI,
++	.mask = STIH407_SYSCON_BOOT_DEV_MASK,
++};
++
++static struct stfsm_boot_dev stfsm_stih416_data = {
++	.reg  = STIH416_SYSCON_BOOT_DEV_REG,
++	.spi  = STIH416_SYSCON_BOOT_DEV_SPI,
++	.mask = STIH416_SYSCON_BOOT_DEV_MASK,
++};
++
+ static int stfsm_n25q_config(struct stfsm *fsm);
+ static int stfsm_mx25_config(struct stfsm *fsm);
+ static int stfsm_s25fl_config(struct stfsm *fsm);
+@@ -1977,14 +2016,22 @@ static int stfsm_init(struct stfsm *fsm)
+ 	return 0;
+ }
+ 
++static const struct of_device_id stfsm_match[] = {
++	{ .compatible = "st,stid127-spi-fsm", .data = &stfsm_stid127_data },
++	{ .compatible = "st,stih407-spi-fsm", .data = &stfsm_stih407_data },
++	{ .compatible = "st,stih416-spi-fsm", .data = &stfsm_stih416_data },
++	{},
++};
++MODULE_DEVICE_TABLE(of, stfsm_match);
++
+ static void stfsm_fetch_platform_configs(struct platform_device *pdev)
+ {
+ 	struct stfsm *fsm = platform_get_drvdata(pdev);
+ 	struct device_node *np = pdev->dev.of_node;
++	const struct stfsm_boot_dev *boot_dev;
++	const struct of_device_id *match;
+ 	struct regmap *regmap;
+-	uint32_t boot_device_reg;
+-	uint32_t boot_device_spi;
+-	uint32_t boot_device;     /* Value we read from *boot_device_reg */
++	uint32_t boot_device;    /* Value we read from the boot dev mode pins */
+ 	int ret;
+ 
+ 	/* Booting from SPI NOR Flash is the default */
+@@ -1998,21 +2045,18 @@ static void stfsm_fetch_platform_configs(struct platform_device *pdev)
+ 
+ 	fsm->reset_por = of_property_read_bool(np, "st,reset-por");
+ 
+-	/* Where in the syscon the boot device information lives */
+-	ret = of_property_read_u32(np, "st,boot-device-reg", &boot_device_reg);
+-	if (ret)
++	match = of_match_node(stfsm_match, np);
++	if (!match)
+ 		goto boot_device_fail;
++	boot_dev = match->data;
+ 
+-	/* Boot device value when booted from SPI NOR */
+-	ret = of_property_read_u32(np, "st,boot-device-spi", &boot_device_spi);
++	ret = regmap_read(regmap, boot_dev->reg, &boot_device);
+ 	if (ret)
+ 		goto boot_device_fail;
+ 
+-	ret = regmap_read(regmap, boot_device_reg, &boot_device);
+-	if (ret)
+-		goto boot_device_fail;
++	boot_device &= boot_dev->mask;
+ 
+-	if (boot_device != boot_device_spi)
++	if (boot_device != boot_dev->spi)
+ 		fsm->booted_from_spi = false;
+ 
+ 	return;
+@@ -2156,12 +2200,6 @@ static int stfsmfsm_resume(struct device *dev)
+ 
+ static SIMPLE_DEV_PM_OPS(stfsm_pm_ops, stfsmfsm_suspend, stfsmfsm_resume);
+ 
+-static const struct of_device_id stfsm_match[] = {
+-	{ .compatible = "st,spi-fsm", },
+-	{},
+-};
+-MODULE_DEVICE_TABLE(of, stfsm_match);
+-
+ static struct platform_driver stfsm_driver = {
+ 	.probe		= stfsm_probe,
+ 	.remove		= stfsm_remove,
+-- 
+1.9.1
 
-> > Looking at one of the other patches in the series it appears the fl=
-ag
-> > you're trying to capture is IORESOURCE_IRQ_LOWEDGE.  When I grep fo=
-r
-> > where this is being _used_ (think 'consumed, rather than passed.  I
-> > only see a single entry in drivers/pnp/interface.c.
-> Look at this call chain :
-> request_irq()
->   setup_irq()
->     __setup_irq()
->       __irq_set_trigger()
->         pxa_gpio_irq_type() (aka. chip->irq_set_type)
->           =3D> hardware register manipulation
->=20
-> Moreover, you should be aware of the bijection existing between :
->  - IORESOURCE_IRQ_LOWEDGE and IRQF_TRIGGER_RISING
->  - it's HIGHEDGE twin
->  - it is noted in : include/linux/interrupt.h
->=20
-> > That's what got me thinking... are you sure you're a) making use of
-> this flag
-> Yes, I'm quite sure.
->=20
-> > b) assuming the answer to 'a' is "no"
-> I won't :)
->=20
-> > I think to set an edge trigger on an IRQ, you should instead do so =
-via
-> > irq_set_irq_type(), or have a missed a line or two?
-> __setup_irq(), that's the entry point.
-
-Very well, Russell and yourself have convinced me.  If you fixup the
-remainder of comments, I'm happy.
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
