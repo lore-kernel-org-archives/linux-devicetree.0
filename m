@@ -1,218 +1,52 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v3 04/13] mtd: st_spi_fsm: Fetch boot device locations
- from DT match tables
-Date: Wed, 21 Jan 2015 12:56:23 +0000
-Message-ID: <20150121125623.GB22024@x1>
-References: <1418644760-18773-1-git-send-email-lee.jones@linaro.org>
- <1418644760-18773-5-git-send-email-lee.jones@linaro.org>
- <20150113045511.GO9759@ld-irv-0074>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH v3 2/3] mfd: lubbock_io: add lubbock_io board
+Date: Wed, 21 Jan 2015 13:02:31 +0000
+Message-ID: <20150121130231.GQ26493@n2100.arm.linux.org.uk>
+References: <1421406010-14851-1-git-send-email-robert.jarzmik@free.fr>
+ <1421406010-14851-2-git-send-email-robert.jarzmik@free.fr>
+ <20150119091705.GG21886@x1>
+ <87ppaah9k5.fsf@free.fr>
+ <20150120102919.GP5767@x1>
+ <20150120115658.GJ26493@n2100.arm.linux.org.uk>
+ <873874fuei.fsf@free.fr>
+ <20150121081645.GC9258@x1>
+ <87y4owedx1.fsf@free.fr>
+ <20150121123551.GD9258@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20150113045511.GO9759@ld-irv-0074>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <computersforpeace@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, kernel@stlinux.com, devicetree@vger.kernel.org
+In-Reply-To: <20150121123551.GD9258@x1>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 12 Jan 2015, Brian Norris wrote:
+On Wed, Jan 21, 2015 at 12:35:51PM +0000, Lee Jones wrote:
+> I think to set an edge trigger on an IRQ, you should instead do so via
+> irq_set_irq_type(), or have a missed a line or two?
 
-> + devicetree
->=20
-> On Mon, Dec 15, 2014 at 11:59:11AM +0000, Lee Jones wrote:
-> > To trim down on the amount of properties used by this driver and to=
- conform
-> > to the newly agreed method of acquiring syscfg registers/offsets, w=
-e now
-> > obtain this information using match tables.
-> >=20
-> > In the process we are deprecating the old generic compatible string=
- and
-> > providing 3 shiny new ones for each of the support platforms.  The
-> > deprecated compatible string will be removed in due course.
->=20
-> I'm not sure how this agreement was done, but by default, we expect n=
-ot
-> to break backwards compatibility. This patch does just that.
->=20
-> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> > ---
-> >  drivers/mtd/devices/st_spi_fsm.c | 75 ++++++++++++++++++++++++++++=
-++----------
-> >  1 file changed, 57 insertions(+), 18 deletions(-)
-> >=20
-> > diff --git a/drivers/mtd/devices/st_spi_fsm.c b/drivers/mtd/devices=
-/st_spi_fsm.c
-> > index fac0fe9..d82394a 100644
-> > --- a/drivers/mtd/devices/st_spi_fsm.c
-> > +++ b/drivers/mtd/devices/st_spi_fsm.c
-> > @@ -29,6 +29,21 @@
-> >  #include "serial_flash_cmds.h"
-> > =20
-> >  /*
-> > + * FSM SPI Boot Mode Registers/Masks
-> > + */
-> > +#define STID127_SYSCON_BOOT_DEV_REG	0x0D8
-> > +#define STID127_SYSCON_BOOT_DEV_SPI	0x068
-> > +#define STID127_SYSCON_BOOT_DEV_MASK	0x07C
-> > +
-> > +#define STIH407_SYSCON_BOOT_DEV_REG	0x8C4
-> > +#define STIH407_SYSCON_BOOT_DEV_SPI	0x068
-> > +#define STIH407_SYSCON_BOOT_DEV_MASK	0x07C
-> > +
-> > +#define STIH416_SYSCON_BOOT_DEV_REG	0x958
-> > +#define STIH416_SYSCON_BOOT_DEV_SPI	0x01A
-> > +#define STIH416_SYSCON_BOOT_DEV_MASK	0x01F
-> > +
-> > +/*
-> >   * FSM SPI Controller Registers
-> >   */
-> >  #define SPI_CLOCKDIV			0x0010
-> > @@ -288,6 +303,12 @@ struct seq_rw_config {
-> >  	uint8_t         dummy_cycles;   /* No. of DUMMY cycles */
-> >  };
-> > =20
-> > +struct stfsm_boot_dev {
-> > +	uint32_t		reg;
-> > +	uint32_t		spi;
-> > +	uint32_t		mask;
-> > +};
-> > +
-> >  /* SPI Flash Device Table */
-> >  struct flash_info {
-> >  	char            *name;
-> > @@ -313,6 +334,24 @@ struct flash_info {
-> >  	int             (*config)(struct stfsm *);
-> >  };
-> > =20
-> > +static struct stfsm_boot_dev stfsm_stid127_data =3D {
-> > +	.reg  =3D STID127_SYSCON_BOOT_DEV_REG,
-> > +	.spi  =3D STID127_SYSCON_BOOT_DEV_SPI,
-> > +	.mask =3D STID127_SYSCON_BOOT_DEV_MASK,
-> > +};
-> > +
-> > +static struct stfsm_boot_dev stfsm_stih407_data =3D {
-> > +	.reg  =3D STIH407_SYSCON_BOOT_DEV_REG,
-> > +	.spi  =3D STIH407_SYSCON_BOOT_DEV_SPI,
-> > +	.mask =3D STIH407_SYSCON_BOOT_DEV_MASK,
-> > +};
-> > +
-> > +static struct stfsm_boot_dev stfsm_stih416_data =3D {
-> > +	.reg  =3D STIH416_SYSCON_BOOT_DEV_REG,
-> > +	.spi  =3D STIH416_SYSCON_BOOT_DEV_SPI,
-> > +	.mask =3D STIH416_SYSCON_BOOT_DEV_MASK,
-> > +};
-> > +
-> >  static int stfsm_n25q_config(struct stfsm *fsm);
-> >  static int stfsm_mx25_config(struct stfsm *fsm);
-> >  static int stfsm_s25fl_config(struct stfsm *fsm);
-> > @@ -1977,14 +2016,23 @@ static int stfsm_init(struct stfsm *fsm)
-> >  	return 0;
-> >  }
-> > =20
-> > +static const struct of_device_id stfsm_match[] =3D {
-> > +	{ .compatible =3D "st,spi-fsm" }, /* DEPRECATED */
-> > +	{ .compatible =3D "st,stid127-spi-fsm", .data =3D &stfsm_stid127_=
-data },
-> > +	{ .compatible =3D "st,stih407-spi-fsm", .data =3D &stfsm_stih407_=
-data },
-> > +	{ .compatible =3D "st,stih416-spi-fsm", .data =3D &stfsm_stih416_=
-data },
-> > +	{},
-> > +};
-> > +MODULE_DEVICE_TABLE(of, stfsm_match);
-> > +
-> >  static void stfsm_fetch_platform_configs(struct platform_device *p=
-dev)
-> >  {
-> >  	struct stfsm *fsm =3D platform_get_drvdata(pdev);
-> >  	struct device_node *np =3D pdev->dev.of_node;
-> > +	const struct stfsm_boot_dev *boot_dev;
-> > +	const struct of_device_id *match;
-> >  	struct regmap *regmap;
-> > -	uint32_t boot_device_reg;
-> > -	uint32_t boot_device_spi;
-> > -	uint32_t boot_device;     /* Value we read from *boot_device_reg =
-*/
-> > +	uint32_t boot_device;    /* Value we read from the boot dev mode =
-pins */
-> >  	int ret;
-> > =20
-> >  	/* Booting from SPI NOR Flash is the default */
-> > @@ -1998,21 +2046,18 @@ static void stfsm_fetch_platform_configs(st=
-ruct platform_device *pdev)
-> > =20
-> >  	fsm->reset_por =3D of_property_read_bool(np, "st,reset-por");
-> > =20
-> > -	/* Where in the syscon the boot device information lives */
-> > -	ret =3D of_property_read_u32(np, "st,boot-device-reg", &boot_devi=
-ce_reg);
-> > -	if (ret)
-> > +	match =3D of_match_node(stfsm_match, np);
-> > +	if (!match)
-> >  		goto boot_device_fail;
-> > +	boot_dev =3D match->data;
-> > =20
-> > -	/* Boot device value when booted from SPI NOR */
-> > -	ret =3D of_property_read_u32(np, "st,boot-device-spi", &boot_devi=
-ce_spi);
-> > +	ret =3D regmap_read(regmap, boot_dev->reg, &boot_device);
->=20
->=20
-> ^^^ NULL pointer dereference for any existing DTB that uses the
-> "st,spi-fsm" compatible string. So I'll NAK this patch as-is. Either =
-we
-> need to completely drop the "deprecated" compatible property (what's =
-the
-> point binding to it, if we're going to OOPS on it anyway), or else we
-> need to maintain both methods (at least for whatever deprecation peri=
-od
-> is deemed acceptable).
+Setting the IRQ type in request_irq() is perfectly acceptable.
 
-Great spot Brian.
+include/linux/interrupt.h:
+/*
+ * These correspond to the IORESOURCE_IRQ_* defines in
+ * linux/ioport.h to select the interrupt line behaviour.  When
+ * requesting an interrupt without specifying a IRQF_TRIGGER, the
+ * setting should be assumed to be "as already configured", which
+ * may be as per machine or firmware initialisation.
+ */
+#define IRQF_TRIGGER_NONE       0x00000000
+#define IRQF_TRIGGER_RISING     0x00000001
+#define IRQF_TRIGGER_FALLING    0x00000002
+#define IRQF_TRIGGER_HIGH       0x00000004
+#define IRQF_TRIGGER_LOW        0x00000008
 
-So, as I explained in reply to the cover-letter, this driver isn't
-being used in anger yet.  As the driver is still considered
-in-progress I take the view that it's perfectly okay to remove the old
-compatible string and not match on it at all.
 
-I'll make the necessary changes and re-submit.
-
-> >  	if (ret)
-> >  		goto boot_device_fail;
-> > =20
-> > -	ret =3D regmap_read(regmap, boot_device_reg, &boot_device);
-> > -	if (ret)
-> > -		goto boot_device_fail;
-> > +	boot_device &=3D boot_dev->mask;
-> > =20
-> > -	if (boot_device !=3D boot_device_spi)
-> > +	if (boot_device !=3D boot_dev->spi)
-> >  		fsm->booted_from_spi =3D false;
-> > =20
-> >  	return;
-> > @@ -2156,12 +2201,6 @@ static int stfsmfsm_resume(struct device *de=
-v)
-> > =20
-> >  static SIMPLE_DEV_PM_OPS(stfsm_pm_ops, stfsmfsm_suspend, stfsmfsm_=
-resume);
-> > =20
-> > -static const struct of_device_id stfsm_match[] =3D {
-> > -	{ .compatible =3D "st,spi-fsm", },
-> > -	{},
-> > -};
-> > -MODULE_DEVICE_TABLE(of, stfsm_match);
-> > -
-> >  static struct platform_driver stfsm_driver =3D {
-> >  	.probe		=3D stfsm_probe,
-> >  	.remove		=3D stfsm_remove,
->=20
-> Brian
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+-- 
+FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
+according to speedtest.net.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
