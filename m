@@ -1,63 +1,55 @@
-From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] power: ab8500_fg.c:  Remove unused function
-Date: Wed, 21 Jan 2015 14:32:15 +0100
-Message-ID: <20150121133214.GC13715@earth.universe>
-References: <1420131892-31486-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
+From: robert.jarzmik-GANU6spQydw@public.gmane.org
+Subject: Re: [PATCH v3 2/3] mfd: lubbock_io: add lubbock_io board
+Date: Wed, 21 Jan 2015 14:36:59 +0100 (CET)
+Message-ID: <332399927.402665086.1421847419490.JavaMail.root@zimbra1-e1.priv.proxad.net>
+References: <20150121123551.GD9258@x1>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="9Ek0hoCL9XbhcSqy"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1420131892-31486-1-git-send-email-rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
+In-Reply-To: <20150121123551.GD9258@x1>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
-Cc: Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+> ----- Mail original -----
+> De: "Lee Jones" <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+First of all, this is my web mail interface, so please be kind with
+my mail formatting ...
 
---9Ek0hoCL9XbhcSqy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Looking at one of the other patches in the series it appears the flag
+> you're trying to capture is IORESOURCE_IRQ_LOWEDGE.  When I grep for
+> where this is being _used_ (think 'consumed, rather than passed.  I
+> only see a single entry in drivers/pnp/interface.c.
+Look at this call chain :
+request_irq()
+  setup_irq()
+    __setup_irq()
+      __irq_set_trigger()
+        pxa_gpio_irq_type() (aka. chip->irq_set_type)
+          => hardware register manipulation
 
-Hi,
+Moreover, you should be aware of the bijection existing between :
+ - IORESOURCE_IRQ_LOWEDGE and IRQF_TRIGGER_RISING
+ - it's HIGHEDGE twin
+ - it is noted in : include/linux/interrupt.h
 
-On Thu, Jan 01, 2015 at 06:04:52PM +0100, Rickard Strandqvist wrote:
-> Remove the function ab8500_fg_reinit() that is not used anywhere.
->=20
-> This was partially found by using a static code analysis program called c=
-ppcheck.
->=20
-> Signed-off-by: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.s=
-e>
+> That's what got me thinking... are you sure you're a) making use of
+this flag
+Yes, I'm quite sure.
 
-Thanks, applied with Acked-By from Arnd.
+> b) assuming the answer to 'a' is "no"
+I won't :)
 
--- Sebastian
+> I think to set an edge trigger on an IRQ, you should instead do so via
+> irq_set_irq_type(), or have a missed a line or two?
+__setup_irq(), that's the entry point.
 
---9Ek0hoCL9XbhcSqy
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Cheers.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJUv6pbAAoJENju1/PIO/qajXoP/jPELH5fzUsSDUS8kb7N++4V
-3izCH/kVR/9oumc/LFXID5NfsCLLdbaUGDxyaLqxQeLsEp2D46lvUCbknZMtvbIH
-KuYbZDWyh41gl+LHThJdyyy2eHpOjumyq9aMyovRp6d+QaEBcQpJxPwO9TRmc3cS
-79Zu9atH2AjwjHzIdVRQqec4khd07/m2VphMRg6fqK7Y+RL3rYZ6fko7AHB+nnwX
-nzmtId2b1m1rMMR8L9DVgs8gTs9gCtieovee2CpvemkImUVqLpOIqdlSDjNDoAMr
-duobqXYH71dvNhOWiLDdrWQrnzPhBSRTurJrQvdyDJopMMgbivQkGReQQP/19pKS
-RJBHPegfXS6KnnADruJVZGGGbPhrISC5V0er/PfS9myLbxSpEOhFldRSXfv2tY4b
-I9k4kFQnRg5Xxvol8uL7ZIvP1Q9NSdTjc4ZK2erKct0nywvVKIUYVm+cH9rzdphB
-vH2/g7iAN3dkPXLgJzJkAlrViSsgYUsBHyfEonxALWizTJK8mCdZZHQnWUn8wKQO
-J3jpVNFpHwKW20QjUL4aYDcLFzJ4nerGWduhfUdtU5p38gBOWjf6cDR/L/80QKan
-Fj355KFyJxmizTuUnK25A82t7Z4zgbYCJb/ZO1SAIAs9q/K5H+rZD0oz4XV/Af67
-Q3xKfzK0UV7gBmdcQtlW
-=sxc2
------END PGP SIGNATURE-----
-
---9Ek0hoCL9XbhcSqy--
+--
+Robert
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
