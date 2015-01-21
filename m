@@ -1,52 +1,39 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] mfd: lubbock_io: add lubbock_io board
-Date: Wed, 21 Jan 2015 13:02:31 +0000
-Message-ID: <20150121130231.GQ26493@n2100.arm.linux.org.uk>
-References: <1421406010-14851-1-git-send-email-robert.jarzmik@free.fr>
- <1421406010-14851-2-git-send-email-robert.jarzmik@free.fr>
- <20150119091705.GG21886@x1>
- <87ppaah9k5.fsf@free.fr>
- <20150120102919.GP5767@x1>
- <20150120115658.GJ26493@n2100.arm.linux.org.uk>
- <873874fuei.fsf@free.fr>
- <20150121081645.GC9258@x1>
- <87y4owedx1.fsf@free.fr>
- <20150121123551.GD9258@x1>
+From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+Subject: Re: [PATCH v8 1/2] pwm: Imagination Technologies PWM DAC driver
+Date: Wed, 21 Jan 2015 15:13:05 +0200
+Message-ID: <54BFA5E1.9070201@mentor.com>
+References: <1420826088-13113-1-git-send-email-ezequiel.garcia@imgtec.com> <1420826088-13113-2-git-send-email-ezequiel.garcia@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150121123551.GD9258@x1>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <1420826088-13113-2-git-send-email-ezequiel.garcia@imgtec.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Ezequiel Garcia <ezequiel.garcia@imgtec.com>, Andrew Bresticker <abrestic@chromium.org>, Thierry Reding <thierry.reding@gmail.com>, James Hartley <james.hartley@imgtec.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, vladimir_zapolskiy@mentor.com, Naidu Tellapati <naidu.tellapati@gmail.com>, Naidu Tellapati <Naidu.Tellapati@imgtec.com>, Sai Masarapu <Sai.Masarapu@imgtec.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 21, 2015 at 12:35:51PM +0000, Lee Jones wrote:
-> I think to set an edge trigger on an IRQ, you should instead do so via
-> irq_set_irq_type(), or have a missed a line or two?
+Hi Ezequiel,
 
-Setting the IRQ type in request_irq() is perfectly acceptable.
+On 09.01.2015 19:54, Ezequiel Garcia wrote:
+> From: Naidu Tellapati <naidu.tellapati@gmail.com>
+> 
+> The Pistachio SOC from Imagination Technologies includes a Pulse Width
+> Modulation DAC which produces 1 to 4 digital bit-outputs which represent
+> digital waveforms. These PWM outputs are primarily in charge of controlling
+> backlight LED devices.
+> 
+> Reviewed-by: Andrew Bresticker <abrestic@chromium.org>
+> Signed-off-by: Naidu Tellapati <Naidu.Tellapati@imgtec.com>
+> Signed-off-by: Sai Masarapu <Sai.Masarapu@imgtec.com>
+> Signed-off-by: Ezequiel Garcia <ezequiel.garcia@imgtec.com>
+> ---
+>  drivers/pwm/Kconfig   |  13 +++
+>  drivers/pwm/Makefile  |   1 +
+>  drivers/pwm/pwm-img.c | 250 ++++++++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 264 insertions(+)
+>  create mode 100644 drivers/pwm/pwm-img.c
+> 
 
-include/linux/interrupt.h:
-/*
- * These correspond to the IORESOURCE_IRQ_* defines in
- * linux/ioport.h to select the interrupt line behaviour.  When
- * requesting an interrupt without specifying a IRQF_TRIGGER, the
- * setting should be assumed to be "as already configured", which
- * may be as per machine or firmware initialisation.
- */
-#define IRQF_TRIGGER_NONE       0x00000000
-#define IRQF_TRIGGER_RISING     0x00000001
-#define IRQF_TRIGGER_FALLING    0x00000002
-#define IRQF_TRIGGER_HIGH       0x00000004
-#define IRQF_TRIGGER_LOW        0x00000008
+Reviewed-by: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
 
-
--- 
-FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
-according to speedtest.net.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
