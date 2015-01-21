@@ -1,78 +1,55 @@
-From: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
-Subject: Re: [PATCH v8 2/4] fpga manager: add sysfs interface document
-Date: Wed, 21 Jan 2015 16:01:51 +0000
-Message-ID: <20150121160151.453ba403@lxorguk.ukuu.org.uk>
-References: <20150107084819.GA1887@amd>
- <alpine.DEB.2.02.1501091302370.30067@linuxheads99>
- <20150109205643.GA5761@amd>
- <20150112210134.687176ed@lxorguk.ukuu.org.uk>
- <20150112214314.GA18610@obsidianresearch.com>
- <20150113162847.2778b5a5@lxorguk.ukuu.org.uk>
- <20150113200032.GA16205@obsidianresearch.com>
- <alpine.DEB.2.02.1501131455130.30192@linuxheads99>
- <20150113222450.GA17475@obsidianresearch.com>
- <alpine.DEB.2.02.1501150936390.16760@linuxheads99>
- <20150115184726.GA23247@obsidianresearch.com>
- <20150115204502.591bca1d@lxorguk.ukuu.org.uk>
- <A3B5BC9B-EB88-4C0E-B235-E9C86D23DC34@konsulko.com>
+From: Joe Perches <joe@perches.com>
+Subject: unclear ipv6 redirect message (was Re: [PATCH v3 2/3] mfd:
+ lubbock_io: add lubbock_io board)
+Date: Wed, 21 Jan 2015 08:05:21 -0800
+Message-ID: <1421856321.10574.13.camel@perches.com>
+References: <1421406010-14851-1-git-send-email-robert.jarzmik@free.fr>
+	 <1421406010-14851-2-git-send-email-robert.jarzmik@free.fr>
+	 <20150119091705.GG21886@x1> <87ppaah9k5.fsf@free.fr>
+	 <20150120102919.GP5767@x1> <20150120115658.GJ26493@n2100.arm.linux.org.uk>
+	 <873874fuei.fsf@free.fr> <20150121094453.GO26493@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <A3B5BC9B-EB88-4C0E-B235-E9C86D23DC34@konsulko.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Cc: mark.rutland@arm.com, linux-doc@vger.kernel.org, rubini@gnudd.com, hpa@zytor.com, Steffen Trumtrar <s.trumtrar@pengutronix.de>, devel@driverdev.osuosl.org, sameo@linux.intel.com, nico@linaro.org, ijc+devicetree@hellion.org.uk, Michal Simek <michal.simek@xilinx.com>, kyle.teske@ni.com, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Grant Likely <grant.likely@linaro.org>, davidb@codeaurora.org, Linus Walleij <linus.walleij@linaro.org>, cesarb@cesarb.net, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, iws@ovro.caltech.edu, atull <atull@opensource.altera.com>, galak@codeaurora.org, Mark Brown <broonie@kernel.org>, philip@balister.org, dinguyen@opensource.altera.com, Michal Simek <monstr@monstr.eu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, yvanderv@opensource.altera.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Felipe
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20150121094453.GO26493@n2100.arm.linux.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>, netdev <netdev@vger.kernel.org>
+Cc: Robert Jarzmik <robert.jarzmik@free.fr>, Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, linux-kernel@vger.kernel.org, Haojian Zhuang <haojian.zhuang@gmail.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Daniel Mack <daniel@zonque.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCAxNSBKYW4gMjAxNSAyMjo1NDo0NiArMDIwMApQYW50ZWxpcyBBbnRvbmlvdSA8cGFu
-dGVsaXMuYW50b25pb3VAa29uc3Vsa28uY29tPiB3cm90ZToKCj4gSGkgQWxhbiwKPiAKPiA+IE9u
-IEphbiAxNSwgMjAxNSwgYXQgMjI6NDUgLCBPbmUgVGhvdXNhbmQgR25vbWVzIDxnbm9tZXNAbHhv
-cmd1ay51a3V1Lm9yZy51az4gd3JvdGU6Cj4gPiAKPiA+IE9uIFRodSwgMTUgSmFuIDIwMTUgMTE6
-NDc6MjYgLTA3MDAKPiA+IEphc29uIEd1bnRob3JwZSA8amd1bnRob3JwZUBvYnNpZGlhbnJlc2Vh
-cmNoLmNvbT4gd3JvdGU6Cj4gPj4gSXQgaXMgYSBub3ZlbCBpZGVhLCBteSBjb25jZXJuIHdvdWxk
-IGJlIHRoYXQgZW1iZWRkaW5nIHRoZSBGUEdBIGluIHRoZQo+ID4+IERUIG1ha2VzIGl0IHBlcm1h
-bmVudCB1bnN3YXBwYWJsZSBrZXJuZWwgbWVtb3J5Lgo+ID4+IE5vdCBoYXZpbmcgdGhlIGtlcm5l
-bCBob2xkIHRoZSBGUEdBIGlzIGJlc3QgZm9yIG1hbnkgdXNlcy4KPiA+IAo+ID4gSWYgeW91IGhh
-dmUgYSBmaWxlc3lzeXRlbSBiZWZvcmUgdGhlIEZQR0EgaXMgc2V0IHVwIHRoZW4gaXQgYmVsb25n
-cyBpbgo+ID4gdGhlIGZpbGUgc3lzdGVtLiBBcyB5b3UgcHJlc3VtYWJseSBsb2FkZWQgdGhlIGtl
-cm5lbCBmcm9tIHNvbWV3aGVyZSB0aGVyZQo+ID4gb3VnaHQgdG8gYmUgYSBmaWxlIHN5c3RlbSAo
-ZXZlbiBhbiBpbml0cmQpLgo+ID4gCj4gCj4gUmVxdWVzdCBmaXJtd2FyZSBkb2VzIG5vdCBpbXBs
-eSBrZWVwaW5nIGl0IGFyb3VuZC4gWW91IGNhbiBhbHdheXMgcmUtcmVxdWVzdAo+IHdoZW4gcmVs
-b2FkaW5nIChhbHRob3VnaCB0aGVyZeKAmXMgYSBuYXN0eSBiaWcgb2YgY2FjaGluZyB0aGF0IG5l
-ZWRzIHRvIGJlCj4gcmVzb2x2ZWQgd2l0aCB0aGUgZmlybXdhcmUgbG9hZGVyKS4KCldoaWNoIGNv
-bWVzIGRvd24gdG8gdGhlIHNhbWUgdGhpbmcuIFVubGVzcyB5b3UgY2FuIHByb3ZlIHRoYXQgdGhl
-cmUgaXMgYQpwYXRoIHRvIHJlY292ZXIgdGhlIGZpcm13YXJlIGZpbGUgdGhhdCBkb2VzIG5vdCBo
-YXZlIGFueSBkZXBlbmRhbmNpZXMKdXBvbiB0aGUgZmlybXdhcmUgZXhlY3V0aW5nIChhbmQgdGhv
-c2UgY2FuIGJlIHN1YnRsZSBhbmQgaG9ycmlkIGF0IHRpbWVzKQp5b3UgbmVlZCB0byBrZWVwIGl0
-IGFyb3VuZCBmb3Igc3VzcGVuZC9yZXN1bWUgYXQgbGVhc3QgYW5kIHBvdGVudGlhbGx5CmFueSB1
-bmV4cGVjdGVkIGVycm9yL3Jlc2V0LgoKPiBPbmUgb2YgdGhlIGlkZWFzIHJvbGxpbmcgYWJvdXQg
-aXMgdG8gcHV0IHRoZSBkZXZpY2UgdHJlZSBvdmVybGF5IGJsb2IgaW4KPiBhbiBFRVBST00gYW5k
-IHRoZW4gbG9hZCBpdCBmcm9tIHRoZXJlIChub3QgZnJvbSB0aGUgZmlsZXN5c3RlbSkuCgpUaGF0
-J3MgYSBmaW5lIGV4YW1wbGUgb2Ygb25lIHlvdSBjYW4gcHJvYmFibHkgYWx3YXlzIGdldCB0byBh
-bmQgYXZvaWQKY2FjaGluZy4gSG93ZXZlciBpZiBpdHMgaW4gZWVwcm9tIHlvdSBkb24ndCBuZWVk
-IHJlcXVlc3RfZmlybXdhcmUgYW55d2F5ICEKCj4gQ2FuIHdlIHBsZWFzZSBub3QgdXNlIGlvY3Rs
-cyBpZiBwb3NzaWJsZS4gQ29uZmlnZnMgc2VlbXMgdG8gd29yayBqdXN0IGZpbmUKPiBmb3IgY29u
-ZmlndXJhdGlvbiBhbmQgZm9yIGFueSBvdGhlciBoaWdoZXIgc3BlZWQgQVBJIHdlIHNob3VsZCB1
-c2UgcmVhZC93cml0ZS9tbWFwLgoKWW91IGRvbid0IGhhdmUgdGhlIG5lZWRlZCBzdGF0ZSBpbiBj
-b25maWdmcyBhcyBmYXIgYXMgSSBjYW4gc2VlLgoKPiBJb2N0bHMgYXJlIGEgcGFpbiBmb3Igc2Ny
-aXB0aW5nIGFuZCBpbnRlcnByZXRlZCBsYW5ndWFnZXMgdXN1YWxseS4KCllvdSBjYW4gZG8gaW9j
-dGxzIGluIHBlcmwganVzdCBmaW5lIGlmIHlvdSBhcmUgbWFkIChhbmQgaWYgeW91IGFyZQp1c2lu
-ZyBwZXJsIHlvdSBhcmUgOy0pICkgd2hpbGUgcHl0aG9uIGhhcyBhIGNvbXBsZXRlIGV4cGxpY2l0
-IGZjbnRsLmlvY3RsCm1vZGVsLgoKPiBNYWtpbmcgdGhlIEFQSSBoYW5kbGUgcGFydGlhbCByZWNv
-bmZpZ3VyYXRpb24gZnJvbSBkYXkgb25lIG1pZ2h0IGJlIHB1c2hpbmcgdHJpY2t5Lgo+IEkgZG9u
-4oCZdCByZW1lbWJlciBhbnkgY2FzZSB3aGVyZSBJIGNhbWUgYWNyb3NzIGEgbmVlZCBmb3IgaXQu
-CgpBZ3JlZWQgLSBJIGRvbid0IHNlZSB0aGUgcG9pbnQgaW4gYWRkaW5nIGl0IHVudGlsIHNvbWVv
-bmUgbmVlZHMgaXQgYW5kIGNhbgpkZXNjcmliZSB3aGF0IGlzIG5lZWRlZCBhY2N1cmF0ZWx5LgoK
-QWxhbgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZl
-bCBtYWlsaW5nIGxpc3QKZGV2ZWxAbGludXhkcml2ZXJwcm9qZWN0Lm9yZwpodHRwOi8vZHJpdmVy
-ZGV2LmxpbnV4ZHJpdmVycHJvamVjdC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcml2ZXJkZXYtZGV2
-ZWwK
+(adding netdev)
+
+On Wed, 2015-01-21 at 09:44 +0000, Russell King - ARM Linux wrote:
+> On Wed, Jan 21, 2015 at 08:46:29AM +0100, Robert Jarzmik wrote:
+> > Russell King - ARM Linux <linux@arm.linux.org.uk> writes:
+> > 
+> > > What I'd suggest (and always have done) is:
+> > >
+> > > 	dev_err(&pdev->dev, "couldn't request main irq%d: %d\n",
+> > > 		irq, ret);
+> > I like it, it's even more compact, I'll use it for next patch version.
+> 
+> BTW, this is an example why I have the policy of always ensuring that
+> the kernel messages print sufficient diagnostics.  Right now, I have
+> a problem - since I rebooted my firewall a few nights ago, I now get
+> on one of my machines:
+> 
+>   rt6_redirect: source isn't a valid nexthop for redirect target
+> 
+> and it spews that for a few minutes every 26 hours or so.  No further
+> information, and it leaves you wondering "well, what was the invalid
+> next hop?  What was the source?"
+> 
+> Pretty much the only way to try and find out is to leave a tcpdump or
+> wireshark running for 24 hours to try and get a dump - which is not
+> that easy if you don't have lots of disk space.  So, right now, I have
+> no way to diagnose the above.
+> 
+> If it printed that information, then I'd be able to see what the
+> addresses were, and I'd probably be able to come up with a tcpdump
+> filter which didn't involve logging all IPv6 traffic.
+> 
+> Kernel messages need to be smart.  If not, they might as well just be
+> "The kernel encountered a problem. Abort, Retry or Fail?"
+> 
