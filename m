@@ -1,79 +1,186 @@
-From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: exynos5422-odroidxu3: add sound nodes
-Date: Wed, 21 Jan 2015 12:41:55 +0100
-Message-ID: <54BF9083.5090708@samsung.com>
-References: <1421819923-27575-1-git-send-email-ideal.song@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH] arm64: Add L2 cache topology to ARM Ltd boards/models
+Date: Wed, 21 Jan 2015 12:02:30 +0000
+Message-ID: <1421841750-26722-1-git-send-email-sudeep.holla@arm.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1421819923-27575-1-git-send-email-ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Inha Song <ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Commit 5d425c18653731af6 ("arm64: kernel: add support for cpu cache
+information") adds cacheinfo support for ARM64. Since there's no
+architectural way of detecting the cpus that share particular cache,
+device tree can be used and the core cacheinfo already supports the
+same.
 
-On 21/01/15 06:58, Inha Song wrote:
-> Add MAX98090 audio codec, I2S interface and the sound nodes to support
-> audio on Odroid-XU3 board.
-> 
-> Signed-off-by: Inha Song <ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
->  arch/arm/boot/dts/exynos5422-odroidxu3.dts | 34 ++++++++++++++++++++++++++++++
->  1 file changed, 34 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3.dts b/arch/arm/boot/dts/exynos5422-odroidxu3.dts
-> index 7874da2..79493d1 100644
-> --- a/arch/arm/boot/dts/exynos5422-odroidxu3.dts
-> +++ b/arch/arm/boot/dts/exynos5422-odroidxu3.dts
-> @@ -310,6 +310,40 @@
->  	rtc@101E0000 {
->  		status = "okay";
->  	};
-> +
-> +	sound: sound {
-> +		compatible = "samsung,odroidu3-audio";
+This patch adds the L2 cache topology on Juno board, FVP/RTSM and
+foundation models.
 
-How about using simple-card instead ? I've been trying to switch
-Odroid X2/U3 to simple card. Here a corresponding dts patch:
-http://www.spinics.net/lists/linux-samsung-soc/msg41083.html
-For that recent patches for the I2S driver which area already in -next
-might be needed.
+Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+---
+ arch/arm64/boot/dts/arm/foundation-v8.dts  |  8 ++++++++
+ arch/arm64/boot/dts/arm/juno.dts           | 14 ++++++++++++++
+ arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts |  8 ++++++++
+ 3 files changed, 30 insertions(+)
 
-> +		samsung,model = "Odroid-XU3";
-> +		samsung,i2s-controller = <&i2s0>;
-> +		samsung,audio-codec = <&max98090>;
-> +		assigned-clocks = <&clock_audss EXYNOS_MOUT_AUDSS>,
-> +				  <&clock_audss EXYNOS_MOUT_I2S>;
-> +		assigned-clock-parents = <&clock CLK_FIN_PLL>,
-> +				<&clock_audss EXYNOS_MOUT_AUDSS>;
-> +		samsung,audio-routing =
-> +			"Headphone Jack", "HPL",
-> +			"Headphone Jack", "HPR",
-> +			"Headphone Jack", "MICBIAS",
-> +			"IN1", "Headphone Jack",
-> +			"Speakers", "SPKL",
-> +			"Speakers", "SPKR";
-> +	};
-> +};
-> +
-> +&hsi2c_5 {
-> +	status = "okay";
-> +	max98090: max98090@10 {
-> +		compatible = "maxim,max98090";
-> +		reg = <0x10>;
-> +		interrupt-parent = <&gpx3>;
-> +		interrupts = <2 0>;
-> +		clocks = <&clock_audss EXYNOS_DOUT_AUD_BUS>;
-> +		clock-names = "mclk";
-> +	};
-> +};
+Hi Arnd/Olof,
 
+Though this patch and commit 5d425c18653731af6 ("arm64: kernel: add
+support for cpu cache information") which is in -next(via arm64) are
+dependent to provide desired functionality, then can go indepedently
+if you think there could be conflicts if this change is taken via arm64.
+If not, Catalin can pick up with your acks after the review.
+
+Regards,
+Sudeep
+
+diff --git a/arch/arm64/boot/dts/arm/foundation-v8.dts b/arch/arm64/boot/dts/arm/foundation-v8.dts
+index 27f32962e55c..4eac8dcea423 100644
+--- a/arch/arm64/boot/dts/arm/foundation-v8.dts
++++ b/arch/arm64/boot/dts/arm/foundation-v8.dts
+@@ -34,6 +34,7 @@
+ 			reg = <0x0 0x0>;
+ 			enable-method = "spin-table";
+ 			cpu-release-addr = <0x0 0x8000fff8>;
++			next-level-cache = <&L2_0>;
+ 		};
+ 		cpu@1 {
+ 			device_type = "cpu";
+@@ -41,6 +42,7 @@
+ 			reg = <0x0 0x1>;
+ 			enable-method = "spin-table";
+ 			cpu-release-addr = <0x0 0x8000fff8>;
++			next-level-cache = <&L2_0>;
+ 		};
+ 		cpu@2 {
+ 			device_type = "cpu";
+@@ -48,6 +50,7 @@
+ 			reg = <0x0 0x2>;
+ 			enable-method = "spin-table";
+ 			cpu-release-addr = <0x0 0x8000fff8>;
++			next-level-cache = <&L2_0>;
+ 		};
+ 		cpu@3 {
+ 			device_type = "cpu";
+@@ -55,6 +58,11 @@
+ 			reg = <0x0 0x3>;
+ 			enable-method = "spin-table";
+ 			cpu-release-addr = <0x0 0x8000fff8>;
++			next-level-cache = <&L2_0>;
++		};
++
++		L2_0: l2-cache0 {
++			compatible = "cache";
+ 		};
+ 	};
+ 
+diff --git a/arch/arm64/boot/dts/arm/juno.dts b/arch/arm64/boot/dts/arm/juno.dts
+index cb3073e4e7a8..15dafbb24426 100644
+--- a/arch/arm64/boot/dts/arm/juno.dts
++++ b/arch/arm64/boot/dts/arm/juno.dts
+@@ -39,6 +39,7 @@
+ 			reg = <0x0 0x0>;
+ 			device_type = "cpu";
+ 			enable-method = "psci";
++			next-level-cache = <&A57_L2>;
+ 		};
+ 
+ 		A57_1: cpu@1 {
+@@ -46,6 +47,7 @@
+ 			reg = <0x0 0x1>;
+ 			device_type = "cpu";
+ 			enable-method = "psci";
++			next-level-cache = <&A57_L2>;
+ 		};
+ 
+ 		A53_0: cpu@100 {
+@@ -53,6 +55,7 @@
+ 			reg = <0x0 0x100>;
+ 			device_type = "cpu";
+ 			enable-method = "psci";
++			next-level-cache = <&A53_L2>;
+ 		};
+ 
+ 		A53_1: cpu@101 {
+@@ -60,6 +63,7 @@
+ 			reg = <0x0 0x101>;
+ 			device_type = "cpu";
+ 			enable-method = "psci";
++			next-level-cache = <&A53_L2>;
+ 		};
+ 
+ 		A53_2: cpu@102 {
+@@ -67,6 +71,7 @@
+ 			reg = <0x0 0x102>;
+ 			device_type = "cpu";
+ 			enable-method = "psci";
++			next-level-cache = <&A53_L2>;
+ 		};
+ 
+ 		A53_3: cpu@103 {
+@@ -74,6 +79,15 @@
+ 			reg = <0x0 0x103>;
+ 			device_type = "cpu";
+ 			enable-method = "psci";
++			next-level-cache = <&A53_L2>;
++		};
++
++		A57_L2: l2-cache0 {
++			compatible = "cache";
++		};
++
++		A53_L2: l2-cache1 {
++			compatible = "cache";
+ 		};
+ 	};
+ 
+diff --git a/arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts b/arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts
+index efc59b3baf63..20addabbd127 100644
+--- a/arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts
++++ b/arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts
+@@ -37,6 +37,7 @@
+ 			reg = <0x0 0x0>;
+ 			enable-method = "spin-table";
+ 			cpu-release-addr = <0x0 0x8000fff8>;
++			next-level-cache = <&L2_0>;
+ 		};
+ 		cpu@1 {
+ 			device_type = "cpu";
+@@ -44,6 +45,7 @@
+ 			reg = <0x0 0x1>;
+ 			enable-method = "spin-table";
+ 			cpu-release-addr = <0x0 0x8000fff8>;
++			next-level-cache = <&L2_0>;
+ 		};
+ 		cpu@2 {
+ 			device_type = "cpu";
+@@ -51,6 +53,7 @@
+ 			reg = <0x0 0x2>;
+ 			enable-method = "spin-table";
+ 			cpu-release-addr = <0x0 0x8000fff8>;
++			next-level-cache = <&L2_0>;
+ 		};
+ 		cpu@3 {
+ 			device_type = "cpu";
+@@ -58,6 +61,11 @@
+ 			reg = <0x0 0x3>;
+ 			enable-method = "spin-table";
+ 			cpu-release-addr = <0x0 0x8000fff8>;
++			next-level-cache = <&L2_0>;
++		};
++
++		L2_0: l2-cache0 {
++			compatible = "cache";
+ 		};
+ 	};
+ 
 -- 
-Thanks,
-Sylwester
+1.9.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
