@@ -1,54 +1,78 @@
-From: Gabriel Fernandez <gabriel.fernandez@linaro.org>
-Subject: Re: [PATCH 5/5] PCI: st: disable IO support
-Date: Wed, 21 Jan 2015 16:49:39 +0100
-Message-ID: <CAG374jD3Y_y1Ugt0Y7_j9kz66yUCx8PPNLkkpWBdpVPMxnoC8w@mail.gmail.com>
-References: <1418812486-12394-1-git-send-email-gabriel.fernandez@linaro.org>
-	<1418812486-12394-6-git-send-email-gabriel.fernandez@linaro.org>
-	<20141217140131.607a1ac7@lxorguk.ukuu.org.uk>
+From: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
+Subject: Re: [PATCH v8 2/4] fpga manager: add sysfs interface document
+Date: Wed, 21 Jan 2015 16:01:51 +0000
+Message-ID: <20150121160151.453ba403@lxorguk.ukuu.org.uk>
+References: <20150107084819.GA1887@amd>
+ <alpine.DEB.2.02.1501091302370.30067@linuxheads99>
+ <20150109205643.GA5761@amd>
+ <20150112210134.687176ed@lxorguk.ukuu.org.uk>
+ <20150112214314.GA18610@obsidianresearch.com>
+ <20150113162847.2778b5a5@lxorguk.ukuu.org.uk>
+ <20150113200032.GA16205@obsidianresearch.com>
+ <alpine.DEB.2.02.1501131455130.30192@linuxheads99>
+ <20150113222450.GA17475@obsidianresearch.com>
+ <alpine.DEB.2.02.1501150936390.16760@linuxheads99>
+ <20150115184726.GA23247@obsidianresearch.com>
+ <20150115204502.591bca1d@lxorguk.ukuu.org.uk>
+ <A3B5BC9B-EB88-4C0E-B235-E9C86D23DC34@konsulko.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20141217140131.607a1ac7@lxorguk.ukuu.org.uk>
-Sender: linux-pci-owner@vger.kernel.org
-To: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
-Cc: Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Bjorn Helgaas <bhelgaas@google.com>, Mohit Kumar <mohit.kumar@st.com>, Jingoo Han <jg1.han@samsung.com>, Grant Likely <grant.likely@linaro.org>, Fabrice Gasnier <fabrice.gasnier@st.com>, Arnd Bergmann <arnd@arndb.de>, Viresh Kumar <viresh.kumar@linaro.org>, Thierry Reding <treding@nvidia.com>, Minghuan Lian <Minghuan.Lian@freescale.com>, Magnus Damm <damm@opensource.se>, Will Deacon <will.deacon@arm.com>, Tanmay Inamdar <tinamdar@apm.com>, Murali Karicheri <m-kar>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <A3B5BC9B-EB88-4C0E-B235-E9C86D23DC34@konsulko.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Cc: mark.rutland@arm.com, linux-doc@vger.kernel.org, rubini@gnudd.com, hpa@zytor.com, Steffen Trumtrar <s.trumtrar@pengutronix.de>, devel@driverdev.osuosl.org, sameo@linux.intel.com, nico@linaro.org, ijc+devicetree@hellion.org.uk, Michal Simek <michal.simek@xilinx.com>, kyle.teske@ni.com, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Grant Likely <grant.likely@linaro.org>, davidb@codeaurora.org, Linus Walleij <linus.walleij@linaro.org>, cesarb@cesarb.net, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, iws@ovro.caltech.edu, atull <atull@opensource.altera.com>, galak@codeaurora.org, Mark Brown <broonie@kernel.org>, philip@balister.org, dinguyen@opensource.altera.com, Michal Simek <monstr@monstr.eu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, yvanderv@opensource.altera.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Felipe
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-Yes, we don't really care about this corner case.
-Thanks for your reviewing.
-
-BR
-
-Gabriel
-
-On 17 December 2014 at 15:01, One Thousand Gnomes
-<gnomes@lxorguk.ukuu.org.uk> wrote:
-> On Wed, 17 Dec 2014 11:34:46 +0100
-> Gabriel FERNANDEZ <gabriel.fernandez@st.com> wrote:
->
->> sti SoCs PCIe IPs are built around DesignWare IP Core.
->> But in these SoCs, PCIe IP doesn't support IO.
->> By default, when no IO space is provided, a default one is assigned.
->>
->> Add an empty IO resource to the bus, and disable IO by default.
->
-> As a point of PCI pedantry I don't think this is quite sufficient. PCI
-> has a weird corner case where I/O resources are implied rather than
-> allocated.
->
-> For IDE/SATA you may need to something like
->
->         if (class == PCI_CLASS_STORAGE_IDE) {
->                 u8 progif;
->                 pci_read_config_byte(dev, PCI_CLASS_PROG, &progif);
->                 progif |= 5;
->                 pci_write_config_byte(dev, PCI_CLASS_PROG, &progif);
->         }
->
-> so that any adapter is kicked out of legacy mode and doesn't get implied
-> I/O resources and interrupts. I don't know if that case matters for your
-> usage.
->
->
+T24gVGh1LCAxNSBKYW4gMjAxNSAyMjo1NDo0NiArMDIwMApQYW50ZWxpcyBBbnRvbmlvdSA8cGFu
+dGVsaXMuYW50b25pb3VAa29uc3Vsa28uY29tPiB3cm90ZToKCj4gSGkgQWxhbiwKPiAKPiA+IE9u
+IEphbiAxNSwgMjAxNSwgYXQgMjI6NDUgLCBPbmUgVGhvdXNhbmQgR25vbWVzIDxnbm9tZXNAbHhv
+cmd1ay51a3V1Lm9yZy51az4gd3JvdGU6Cj4gPiAKPiA+IE9uIFRodSwgMTUgSmFuIDIwMTUgMTE6
+NDc6MjYgLTA3MDAKPiA+IEphc29uIEd1bnRob3JwZSA8amd1bnRob3JwZUBvYnNpZGlhbnJlc2Vh
+cmNoLmNvbT4gd3JvdGU6Cj4gPj4gSXQgaXMgYSBub3ZlbCBpZGVhLCBteSBjb25jZXJuIHdvdWxk
+IGJlIHRoYXQgZW1iZWRkaW5nIHRoZSBGUEdBIGluIHRoZQo+ID4+IERUIG1ha2VzIGl0IHBlcm1h
+bmVudCB1bnN3YXBwYWJsZSBrZXJuZWwgbWVtb3J5Lgo+ID4+IE5vdCBoYXZpbmcgdGhlIGtlcm5l
+bCBob2xkIHRoZSBGUEdBIGlzIGJlc3QgZm9yIG1hbnkgdXNlcy4KPiA+IAo+ID4gSWYgeW91IGhh
+dmUgYSBmaWxlc3lzeXRlbSBiZWZvcmUgdGhlIEZQR0EgaXMgc2V0IHVwIHRoZW4gaXQgYmVsb25n
+cyBpbgo+ID4gdGhlIGZpbGUgc3lzdGVtLiBBcyB5b3UgcHJlc3VtYWJseSBsb2FkZWQgdGhlIGtl
+cm5lbCBmcm9tIHNvbWV3aGVyZSB0aGVyZQo+ID4gb3VnaHQgdG8gYmUgYSBmaWxlIHN5c3RlbSAo
+ZXZlbiBhbiBpbml0cmQpLgo+ID4gCj4gCj4gUmVxdWVzdCBmaXJtd2FyZSBkb2VzIG5vdCBpbXBs
+eSBrZWVwaW5nIGl0IGFyb3VuZC4gWW91IGNhbiBhbHdheXMgcmUtcmVxdWVzdAo+IHdoZW4gcmVs
+b2FkaW5nIChhbHRob3VnaCB0aGVyZeKAmXMgYSBuYXN0eSBiaWcgb2YgY2FjaGluZyB0aGF0IG5l
+ZWRzIHRvIGJlCj4gcmVzb2x2ZWQgd2l0aCB0aGUgZmlybXdhcmUgbG9hZGVyKS4KCldoaWNoIGNv
+bWVzIGRvd24gdG8gdGhlIHNhbWUgdGhpbmcuIFVubGVzcyB5b3UgY2FuIHByb3ZlIHRoYXQgdGhl
+cmUgaXMgYQpwYXRoIHRvIHJlY292ZXIgdGhlIGZpcm13YXJlIGZpbGUgdGhhdCBkb2VzIG5vdCBo
+YXZlIGFueSBkZXBlbmRhbmNpZXMKdXBvbiB0aGUgZmlybXdhcmUgZXhlY3V0aW5nIChhbmQgdGhv
+c2UgY2FuIGJlIHN1YnRsZSBhbmQgaG9ycmlkIGF0IHRpbWVzKQp5b3UgbmVlZCB0byBrZWVwIGl0
+IGFyb3VuZCBmb3Igc3VzcGVuZC9yZXN1bWUgYXQgbGVhc3QgYW5kIHBvdGVudGlhbGx5CmFueSB1
+bmV4cGVjdGVkIGVycm9yL3Jlc2V0LgoKPiBPbmUgb2YgdGhlIGlkZWFzIHJvbGxpbmcgYWJvdXQg
+aXMgdG8gcHV0IHRoZSBkZXZpY2UgdHJlZSBvdmVybGF5IGJsb2IgaW4KPiBhbiBFRVBST00gYW5k
+IHRoZW4gbG9hZCBpdCBmcm9tIHRoZXJlIChub3QgZnJvbSB0aGUgZmlsZXN5c3RlbSkuCgpUaGF0
+J3MgYSBmaW5lIGV4YW1wbGUgb2Ygb25lIHlvdSBjYW4gcHJvYmFibHkgYWx3YXlzIGdldCB0byBh
+bmQgYXZvaWQKY2FjaGluZy4gSG93ZXZlciBpZiBpdHMgaW4gZWVwcm9tIHlvdSBkb24ndCBuZWVk
+IHJlcXVlc3RfZmlybXdhcmUgYW55d2F5ICEKCj4gQ2FuIHdlIHBsZWFzZSBub3QgdXNlIGlvY3Rs
+cyBpZiBwb3NzaWJsZS4gQ29uZmlnZnMgc2VlbXMgdG8gd29yayBqdXN0IGZpbmUKPiBmb3IgY29u
+ZmlndXJhdGlvbiBhbmQgZm9yIGFueSBvdGhlciBoaWdoZXIgc3BlZWQgQVBJIHdlIHNob3VsZCB1
+c2UgcmVhZC93cml0ZS9tbWFwLgoKWW91IGRvbid0IGhhdmUgdGhlIG5lZWRlZCBzdGF0ZSBpbiBj
+b25maWdmcyBhcyBmYXIgYXMgSSBjYW4gc2VlLgoKPiBJb2N0bHMgYXJlIGEgcGFpbiBmb3Igc2Ny
+aXB0aW5nIGFuZCBpbnRlcnByZXRlZCBsYW5ndWFnZXMgdXN1YWxseS4KCllvdSBjYW4gZG8gaW9j
+dGxzIGluIHBlcmwganVzdCBmaW5lIGlmIHlvdSBhcmUgbWFkIChhbmQgaWYgeW91IGFyZQp1c2lu
+ZyBwZXJsIHlvdSBhcmUgOy0pICkgd2hpbGUgcHl0aG9uIGhhcyBhIGNvbXBsZXRlIGV4cGxpY2l0
+IGZjbnRsLmlvY3RsCm1vZGVsLgoKPiBNYWtpbmcgdGhlIEFQSSBoYW5kbGUgcGFydGlhbCByZWNv
+bmZpZ3VyYXRpb24gZnJvbSBkYXkgb25lIG1pZ2h0IGJlIHB1c2hpbmcgdHJpY2t5Lgo+IEkgZG9u
+4oCZdCByZW1lbWJlciBhbnkgY2FzZSB3aGVyZSBJIGNhbWUgYWNyb3NzIGEgbmVlZCBmb3IgaXQu
+CgpBZ3JlZWQgLSBJIGRvbid0IHNlZSB0aGUgcG9pbnQgaW4gYWRkaW5nIGl0IHVudGlsIHNvbWVv
+bmUgbmVlZHMgaXQgYW5kIGNhbgpkZXNjcmliZSB3aGF0IGlzIG5lZWRlZCBhY2N1cmF0ZWx5LgoK
+QWxhbgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZl
+bCBtYWlsaW5nIGxpc3QKZGV2ZWxAbGludXhkcml2ZXJwcm9qZWN0Lm9yZwpodHRwOi8vZHJpdmVy
+ZGV2LmxpbnV4ZHJpdmVycHJvamVjdC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcml2ZXJkZXYtZGV2
+ZWwK
