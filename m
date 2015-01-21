@@ -1,55 +1,37 @@
-From: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Subject: [PATCH v6 6/7] power: da9150: Add DT binding documentation for charger
-Date: Wed, 21 Jan 2015 15:47:03 +0000
-Message-ID: <2f011303978f220998ced914874902601edb01bf.1421854282.git.Adam.Thomson.Opensource@diasemi.com>
-References: <cover.1421854282.git.Adam.Thomson.Opensource@diasemi.com>
+From: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] arm64: Add L2 cache topology to ARM Ltd boards/models
+Date: Wed, 21 Jan 2015 15:48:29 +0000
+Message-ID: <20150121154828.GG6358@e104818-lin.cambridge.arm.com>
+References: <1421841750-26722-1-git-send-email-sudeep.holla@arm.com>
+ <1542574.d99bFx24pn@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <cover.1421854282.git.Adam.Thomson.Opensource@diasemi.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, linux-iio@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Joe Perches <joe@perches.com>
-Cc: linux-kernel@vger.kernel.org, support.opensource@diasemi.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1542574.d99bFx24pn@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
----
- .../devicetree/bindings/power/da9150-charger.txt   | 26 ++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/da9150-charger.txt
+On Wed, Jan 21, 2015 at 02:43:23PM +0000, Arnd Bergmann wrote:
+> On Wednesday 21 January 2015 12:02:30 Sudeep Holla wrote:
+> > Though this patch and commit 5d425c18653731af6 ("arm64: kernel: add
+> > support for cpu cache information") which is in -next(via arm64) are
+> > dependent to provide desired functionality, then can go indepedently
+> > if you think there could be conflicts if this change is taken via arm64.
+> > If not, Catalin can pick up with your acks after the review.
+> 
+> I think it would be better to take this through arm-soc. It's not
+> extremely likely to cause conflicts, but as you say there are no
+> strict dependencies on which goes in first, so there is no harm
+> in merging them separately.
 
-diff --git a/Documentation/devicetree/bindings/power/da9150-charger.txt b/Documentation/devicetree/bindings/power/da9150-charger.txt
-new file mode 100644
-index 0000000..f390666
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/da9150-charger.txt
-@@ -0,0 +1,26 @@
-+Dialog Semiconductor DA9150 Charger Power Supply bindings
-+
-+Required properties:
-+- compatible: "dlg,da9150-charger" for DA9150 Charger Power Supply
-+
-+Optional properties:
-+- io-channels: List of phandle and IIO specifier pairs
-+- io-channel-names: List of channel names used by charger
-+      ["CHAN_IBUS", "CHAN_VBUS", "CHAN_TJUNC", "CHAN_VBAT"]
-+  (See Documentation/devicetree/bindings/iio/iio-bindings.txt for further info)
-+
-+
-+Example:
-+
-+	da9150-charger {
-+		compatible = "dlg,da9150-charger";
-+
-+		io-channels = <&gpadc 0>,
-+			      <&gpadc 2>,
-+			      <&gpadc 8>,
-+			      <&gpadc 5>;
-+		io-channel-names = "CHAN_IBUS",
-+				   "CHAN_VBUS",
-+				   "CHAN_TJUNC",
-+				   "CHAN_VBAT";
-+	};
+Fine by me.
+
+-- 
+Catalin
 --
-1.9.3
-
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
