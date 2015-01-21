@@ -1,34 +1,65 @@
-From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v5 0/5] Add Mediatek SoC Pinctrl/GPIO/EINT driver for
- MT8135.
-Date: Wed, 21 Jan 2015 13:39:46 +0800
-Message-ID: <1421818786.11671.75.camel@mtksdaap41>
-References: <1421818097-9281-1-git-send-email-hongzhou.yang@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1421818097-9281-1-git-send-email-hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dandan.he-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, alan.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, toby.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, maoguang.meng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-7yqcWFptrTpBDgjK7y7TUQ@public.gmane.org>
+From: Inha Song <ideal.song@samsung.com>
+Subject: [PATCH] ARM: dts: exynos5422-odroidxu3: add sound nodes
+Date: Wed, 21 Jan 2015 14:58:43 +0900
+Message-ID: <1421819923-27575-1-git-send-email-ideal.song@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: kgene@kernel.org, linux-samsung-soc@vger.kernel.org
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Inha Song <ideal.song@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2015-01-21 at 13:28 +0800, Hongzhou Yang wrote:
-> This is v5 of add Mediatek SoC Pinctrl/GPIO/EINT driver for MT8135.
-> It is based on Joe.C' basic device tree support.
-> See http://lists.infradead.org/pipermail/linux-arm-kernel/2014-October/296093.html
+Add MAX98090 audio codec, I2S interface and the sound nodes to support
+audio on Odroid-XU3 board.
 
-Hi,
+Signed-off-by: Inha Song <ideal.song@samsung.com>
+---
+ arch/arm/boot/dts/exynos5422-odroidxu3.dts | 34 ++++++++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
 
-A little correction.
-I just talked to Hongzhou, this series is based on 3.19-rc1 instead of
-my old patch. Sorry for the confusion.
-
-Joe.C
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3.dts b/arch/arm/boot/dts/exynos5422-odroidxu3.dts
+index 7874da2..79493d1 100644
+--- a/arch/arm/boot/dts/exynos5422-odroidxu3.dts
++++ b/arch/arm/boot/dts/exynos5422-odroidxu3.dts
+@@ -310,6 +310,40 @@
+ 	rtc@101E0000 {
+ 		status = "okay";
+ 	};
++
++	sound: sound {
++		compatible = "samsung,odroidu3-audio";
++		samsung,model = "Odroid-XU3";
++		samsung,i2s-controller = <&i2s0>;
++		samsung,audio-codec = <&max98090>;
++		assigned-clocks = <&clock_audss EXYNOS_MOUT_AUDSS>,
++				  <&clock_audss EXYNOS_MOUT_I2S>;
++		assigned-clock-parents = <&clock CLK_FIN_PLL>,
++				<&clock_audss EXYNOS_MOUT_AUDSS>;
++		samsung,audio-routing =
++			"Headphone Jack", "HPL",
++			"Headphone Jack", "HPR",
++			"Headphone Jack", "MICBIAS",
++			"IN1", "Headphone Jack",
++			"Speakers", "SPKL",
++			"Speakers", "SPKR";
++	};
++};
++
++&hsi2c_5 {
++	status = "okay";
++	max98090: max98090@10 {
++		compatible = "maxim,max98090";
++		reg = <0x10>;
++		interrupt-parent = <&gpx3>;
++		interrupts = <2 0>;
++		clocks = <&clock_audss EXYNOS_DOUT_AUD_BUS>;
++		clock-names = "mclk";
++	};
++};
++
++&i2s0 {
++	status = "okay";
+ };
+ 
+ &hdmi {
+-- 
+2.0.0.390.gcb682f8
