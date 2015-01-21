@@ -1,59 +1,108 @@
-From: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Subject: Re: [PATCH v2 08/11] mmc: pwrseq_simple: Add support for a delay
-Date: Wed, 21 Jan 2015 14:54:06 +0100
-Message-ID: <54BFAF7E.1030703@collabora.com>
-References: <1421338359-27467-1-git-send-email-tomeu.vizoso@collabora.com>	<1421338359-27467-9-git-send-email-tomeu.vizoso@collabora.com>	<54B7F9FB.7030100@wwwdotorg.org> <CAPDyKFoO6evBoAbEE30XiZg51KsM-sD4viFMvqaDwGoHeVL-6w@mail.gmail.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH RFC 1/2] Documentation: arm: define DT bindings for
+ system suspend
+Date: Wed, 21 Jan 2015 13:56:11 +0000
+Message-ID: <20150121135610.GA21950@e102568-lin.cambridge.arm.com>
+References: <1421840155-18990-1-git-send-email-sudeep.holla@arm.com>
+ <1421840155-18990-2-git-send-email-sudeep.holla@arm.com>
+ <20150121212139.1cdc3fd5@xhacker>
+ <20150121213507.695b871b@xhacker>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAPDyKFoO6evBoAbEE30XiZg51KsM-sD4viFMvqaDwGoHeVL-6w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150121213507.695b871b@xhacker>
+Content-Disposition: inline
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Cc: Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jonghwa Lee <jonghwa3.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Amit Daniel Kachhap <amit.daniel-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/21/2015 11:44 AM, Ulf Hansson wrote:
-> On 15 January 2015 at 18:33, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
->> On 01/15/2015 09:12 AM, Tomeu Vizoso wrote:
->>>
->>> Signed-off-by: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
->>
->>
->> Ah, having read the explanation in the next patch, I think ...
->>
->>> diff --git a/Documentation/devicetree/bindings/mmc/mmc,pwrseq-simple.txt
->>> b/Documentation/devicetree/bindings/mmc/mmc,pwrseq-simple.txt
->>
->>
->>> +- delay : delay to wait after driving the reset gpio active [ms].
->>
->>
->> ... delay is the wrong name. reset-pulse-width or reset-pulse-length would
->> be better. delay sounds like a delay after resetting the device before it
->> can be accessed.
+On Wed, Jan 21, 2015 at 01:35:07PM +0000, Jisheng Zhang wrote:
+> Dear Sudeep,
 > 
-> I agree with Stephen's proposal.
-
-Cool.
-
-> This patch needs to be rebased and retested on latest version the
-> mmc-pwrseq patches.
-
-Sure.
-
-> Moreover, if you think the patchset which $subject
-> patch is a part of is material for 3.20, I will need to share an
-> immutable branch with the mmc-pwrseq patches for ARM SOC to pull in,
-> tell me if you need that.
-
-I don't think this will make 3.20 as I have other series with higher
-priority and there's quite some work left to do on this one.
-
-Regards,
-
-Tomeu
-
-> Kind regards
-> Uffe
+> On Wed, 21 Jan 2015 05:21:39 -0800
+> Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org> wrote:
 > 
+> > Dear Sudeep,
+> > 
+> > On Wed, 21 Jan 2015 03:35:54 -0800
+> > Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
+> > 
+> > > ARM based platforms implement unique ways to enter system suspend
+> > > (i.e. Suspend to RAM). The mechanism and the parameters defining the
+> > > system state vary on a per-platform basis forcing the OS to handle it
+> > > in very platform specific way.
+> > > 
+> > > Since ARM 32-bit systems had machine specific code, no attempts to
+> > > standardize are being made as it provides easy way to implement suspend
+> > > operations in a platform specific manner. However, this approach not
+> > > only makes maintainance more difficult as the number of platforms
+> > > supported increases but also not feasible for ARM64.
+> > > 
+> > > This DT binding aims at standardizing the system suspend for ARM
+> > > platforms. ARM64 platforms mandates entry-method property in DT for
+> > > this system suspend node.
+> > > 
+> > > On system implementing PSCI as an enable-method to enter system suspend,
+> > > the PSCI CPU suspend method is used on versions upto v0.2 and requires
+> > > the power_state parameter to be passed to the PSCI CPU suspend function.
+> > > 
+> > > This parameter is platform specific, therefore must be provided by
+> > > firmware to the OS in order to enable proper call sequence.
+> > > 
+> > > This ARM system suspend DT bindings rely on a property
+> > > (i.e. arm,psci-suspend-param) in the PSCI DT bindings that describes
+> > > how the PSCI CPU suspend power_state parameter should be defined in DT.
+> > > 
+> > > Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+> > > ---
+> > >  Documentation/devicetree/bindings/arm/psci.txt     | 11 +++
+> > >  .../devicetree/bindings/arm/system-suspend.txt     | 93
+> > > ++++++++++++++++++++++ 2 files changed, 104 insertions(+)
+> > >  create mode 100644
+> > > Documentation/devicetree/bindings/arm/system-suspend.txt
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/arm/psci.txt
+> > > b/Documentation/devicetree/bindings/arm/psci.txt index
+> > > 5aa40ede0e99..bd3977a2a333 100644 ---
+> > > a/Documentation/devicetree/bindings/arm/psci.txt +++
+> > > b/Documentation/devicetree/bindings/arm/psci.txt @@ -61,6 +61,14 @@ Device
+> > > tree nodes that require usage of PSCI CPU_SUSPEND function (ie idle
+> > > Definition: power_state parameter to pass to the PSCI suspend call.
+> > >  
+> > > +PSCI v0.2 and earlier versions don't have explicit operation for system
+> > > +suspend. However, one can implement system suspend using CPU_SUSPEND by
+> > > +ensuring every other core except the one executing the CPU_SUSPEND call
+> > > +has called into PSCI through a CPU_OFF call.
+> > 
+> > If users explicitly hot-unplug other cores when system load is low to save
+> > power, then we want to suspend at some point, how does the firmware know
+> > this case?
+> 
+> Sorry for confusion. I mean 
+> 
+> If users explicitly hot-unplug other cores when system load is low to save
+> power, then at some point cpuidle want to suspend the cluster, how does the
+> distinguish this case with suspend the system to ram.
+
+Through the arm,psci-suspend-param DT property, ie PSCI CPU_SUSPEND
+power_state parameter.
+
+Did you read the patch :) ?
+
+> > In my private tree, I extend the PSCI spec to tell firmware we want to
+> > suspend the system.
+> 
+> I extend the PSCI suspend function to help firmware distinguish suspend system
+> to ram and other suspend cores/clusters.
+
+See above.
+
+Thanks,
+Lorenzo
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
