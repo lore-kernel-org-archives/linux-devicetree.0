@@ -1,59 +1,149 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [STLinux Kernel] [PATCH 1/1] i2c: i2c-st: Rename clock reference
- to something that exists
-Date: Wed, 21 Jan 2015 15:26:41 +0000
-Message-ID: <20150121152641.GE22024@x1>
-References: <1409234523-20240-1-git-send-email-lee.jones@linaro.org>
- <53FF3D55.40006@st.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+	<u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v4 2/2] I2C: mediatek: Add driver for MediaTek I2C
+ controller
+Date: Wed, 21 Jan 2015 16:31:31 +0100
+Message-ID: <20150121153131.GV22880@pengutronix.de>
+References: <1421404418-50718-1-git-send-email-eddie.huang@mediatek.com>
+ <1421404418-50718-3-git-send-email-eddie.huang@mediatek.com>
+ <20150118101816.GF22880@pengutronix.de>
+ <1421810004.15468.825.camel@mtksdaap41>
+ <1421821809.11671.117.camel@mtksdaap41>
+ <20150121081519.GS22880@pengutronix.de>
+ <1421844580.11671.145.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <53FF3D55.40006@st.com>
+In-Reply-To: <1421844580.11671.145.camel@mtksdaap41>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Coquelin <maxime.coquelin@st.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kernel@stlinux.com, wsa@the-dreams.de
+To: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Cc: Eddie Huang <eddie.huang@mediatek.com>, Mark Rutland <mark.rutland@arm.com>, Wolfram Sang <wsa@the-dreams.de>, Andrew Bresticker <abrestic@chromium.org>, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Jean Delvare <jdelvare@suse.de>, Xudong Chen <xudong.chen@mediatek.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Arnd Bergmann <arnd@arndb.de>, yh.chen@mediatek.com, Wei Yan <sledge.yanwei@huawei.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Beniamino Galvani <b.galvani@gmail.com>, Neelesh Gupta <neelegup@linux.vnet.ibm.com>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org, srv_heupstream@med
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 28 Aug 2014, Maxime Coquelin wrote:
-> On 08/28/2014 04:02 PM, Lee Jones wrote:
-> >CLK_S_ICN_REG_0 hasn't existed for a while now.  This was renamed
-> >over a few commits, then finally removed in commit 5aa02b9 (ARM:
-> >STi: DT: STiH415: Remove unused CLK_S_ICN_REG_0 fixed clock).
-> >
-> >Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Hello,
+
+On Wed, Jan 21, 2015 at 08:49:40PM +0800, Yingjoe Chen wrote:
+> On Wed, 2015-01-21 at 09:15 +0100, Uwe Kleine-K=F6nig wrote:
+> > On Wed, Jan 21, 2015 at 02:30:09PM +0800, Yingjoe Chen wrote:
+> > > On Wed, 2015-01-21 at 11:13 +0800, Eddie Huang wrote:
+> > > <...>
+> > > > > > +		ret =3D -EINVAL;
+> > > > > > +		goto err_exit;
+> > > > > > +	}
+> > > > > > +
+> > > > > > +	if (msgs->buf =3D=3D NULL) {
+> > > > > > +		dev_dbg(i2c->dev, " data buffer is NULL.\n");
+> > > > > > +		ret =3D -EINVAL;
+> > > > > > +		goto err_exit;
+> > > > > > +	}
+> > > > > > +
+> > > > > > +	i2c->addr =3D msgs->addr;
+> > > > > > +	i2c->msg_len =3D msgs->len;
+> > > > > > +	i2c->msg_buf =3D msgs->buf;
+> > > > > > +
+> > > > > > +	if (msgs->flags & I2C_M_RD)
+> > > > > > +		i2c->op =3D I2C_MASTER_RD;
+> > > > > > +	else
+> > > > > > +		i2c->op =3D I2C_MASTER_WR;
+> > > > > > +
+> > > > > > +	/* combined two messages into one transaction */
+> > > > > > +	if (num > 1) {
+> > > > > > +		i2c->msg_aux_len =3D (msgs + 1)->len;
+> > > > > > +		i2c->op =3D I2C_MASTER_WRRD;
+> > > > > > +	}
+> > > > > This means "write then read", right? You should check here th=
+at the
+> > > > > first message is really a write and the 2nd a read then.
+> > > > > Can this happen at all with the quirks defined below (.max_nu=
+m_msgs =3D
+> > > > > 1)?
+> > > > Yes, mean write then read. Indeed, add check is better.
+> > > > If msg number is 1, means normal write or read, not "write then=
+ read".
+> > >=20
+> > > The quirks will increase the message count and check 'write then =
+read'
+> > > for us. We don't have to add check here.
+> > I have to admit I don't know that quirks stuff, so it's well possib=
+le
+> > that I'm wrong here.
+> > =20
+> > > > > > +static int mtk_i2c_remove(struct platform_device *pdev)
+> > > > > > +{
+> > > > > > +	struct mtk_i2c *i2c =3D platform_get_drvdata(pdev);
+> > > > > > +
+> > > > > > +	i2c_del_adapter(&i2c->adap);
+> > > > > > +	free_i2c_dma_bufs(i2c);
+> > > > > > +	platform_set_drvdata(pdev, NULL);
+> > > > > > +
+> > > > > Here you need to make sure that no irq is running when i2c_de=
+l_adapter
+> > > > > is called.
+> > > > OK, add check here
+> > >=20
+> > > I thought after i2c_del_adapter() is complete, all i2c_transfer f=
+or this
+> > > adapter is completed. If this is true, then i2c clock is already =
+off and
+> > > we won't have any on-going transfer/pending irq.
+> > Consider that there is an ongoing transaction and before it complet=
+es
+> > the adapter-device is unbound from the driver. Then i2c_del_adapter=
+ is
+> > called which frees the resources managed by the core, then the devi=
+ce's
+> > completion irq triggers and the freed adapter is used which probabl=
+y
+> > results in an oops.
 >=20
-> Maybe it will be part of my next pull-requests, but in case it is
-> not, you can add my:
-> Acked-by: Maxime Coquelin <maxime.coquelin@st.com>
+> Not sure if I missed anything. i2c_transfer() is a synchronize call. =
+If
+> we fixed timeout issue you mentioned in mtk_i2c_transfer(), it will t=
+urn
+> off clock before it return, which disable any transaction and clear a=
+ll
+> pending irq.
+There is no synchronization to prevent unbinding the i2c-bus device
+while there is a i2c transfer on the wire. i2c_del_adapter only takes
+i2c-core.c's &core_lock while i2c_transfer takes &adapter->bus_lock.
+If you want to test for it: do something like that:
 
-Still nothing from the big man.
+	while true; do dd if=3D/sys/bus/i2c/.../eeprom of=3D/dev/null; done
 
-Can you just take this please Maxime?
+and while this is running do:
 
-> >---
-> >  Documentation/devicetree/bindings/i2c/i2c-st.txt | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> >diff --git a/Documentation/devicetree/bindings/i2c/i2c-st.txt b/Docu=
-mentation/devicetree/bindings/i2c/i2c-st.txt
-> >index 437e0db..4c26fda 100644
-> >--- a/Documentation/devicetree/bindings/i2c/i2c-st.txt
-> >+++ b/Documentation/devicetree/bindings/i2c/i2c-st.txt
-> >@@ -31,7 +31,7 @@ i2c0: i2c@fed40000 {
-> >  	compatible	=3D "st,comms-ssc4-i2c";
-> >  	reg		=3D <0xfed40000 0x110>;
-> >  	interrupts	=3D  <GIC_SPI 187 IRQ_TYPE_LEVEL_HIGH>;
-> >-	clocks		=3D <&CLK_S_ICN_REG_0>;
-> >+	clocks		=3D <&clk_s_a0_ls CLK_ICN_REG>;
-> >  	clock-names	=3D "ssc";
-> >  	clock-frequency =3D <400000>;
-> >  	pinctrl-names	=3D "default";
-> >
+	cd /sys/bus/platform/drivers/mt-i2c
+	while true; do
+		echo 1100d000.i2c > unbind;
+		sleep 1;
+		echo 1100d000.i2c > bind;
+		sleep 1;
+	done
+=20
+> Your scenario can only happens when one thread is still running in
+> i2c_transfer/algo->master_xfer and the other thread is trying to remo=
+ve
+> the device. If that happened, then every device data access in
+> mtk_i2c_transfer might cause oops. I looked at some i2c drivers and
+> can't find any checking for this case, I can't find anything prevent =
+i2c
+> device removal before pending i2c_transfer complete either. Would you
+> give me an example?
+I just noticed that even "my" driver is affected. If the above recipe
+makes your driver barf there is something to fix, if not ... hmm, then
+maybe there is more synchronization than I'm aware of or my recipe is
+wrong.
+
+At least another driver author believed me:
+http://thread.gmane.org/gmane.linux.drivers.i2c/21531/focus=3D21662
+
+Best regards
+Uwe
 
 --=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
+    |
+Industrial Linux Solutions                 | http://www.pengutronix.de/=
+  |
