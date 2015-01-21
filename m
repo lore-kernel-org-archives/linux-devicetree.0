@@ -1,35 +1,47 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 0/3] pinctrl: Qualcomm msm8916 pinctrl driver
-Date: Wed, 21 Jan 2015 17:43:46 +0100
-Message-ID: <CACRpkdY31g+qBumZzWgHj7ZC9rROTwE3AgLhJGB+FPtmMk6iTg@mail.gmail.com>
-References: <1421745476-6276-1-git-send-email-svarbanov@mm-sol.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: unclear ipv6 redirect message (was Re: [PATCH v3 2/3] mfd:
+ lubbock_io: add lubbock_io board)
+Date: Wed, 21 Jan 2015 16:46:41 +0000
+Message-ID: <20150121164641.GU26493@n2100.arm.linux.org.uk>
+References: <1421406010-14851-2-git-send-email-robert.jarzmik@free.fr>
+ <20150119091705.GG21886@x1>
+ <87ppaah9k5.fsf@free.fr>
+ <20150120102919.GP5767@x1>
+ <20150120115658.GJ26493@n2100.arm.linux.org.uk>
+ <873874fuei.fsf@free.fr>
+ <20150121094453.GO26493@n2100.arm.linux.org.uk>
+ <1421856321.10574.13.camel@perches.com>
+ <20150121161059.GT26493@n2100.arm.linux.org.uk>
+ <1421858444.10574.14.camel@perches.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1421745476-6276-1-git-send-email-svarbanov@mm-sol.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Stanimir Varbanov <svarbanov@mm-sol.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Joonwoo Park <joonwoop@codeaurora.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1421858444.10574.14.camel@perches.com>
+Sender: netdev-owner@vger.kernel.org
+To: Joe Perches <joe@perches.com>
+Cc: netdev <netdev@vger.kernel.org>, Robert Jarzmik <robert.jarzmik@free.fr>, Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, linux-kernel@vger.kernel.org, Haojian Zhuang <haojian.zhuang@gmail.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Daniel Mack <daniel@zonque.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 20, 2015 at 10:17 AM, Stanimir Varbanov
-<svarbanov@mm-sol.com> wrote:
+On Wed, Jan 21, 2015 at 08:40:44AM -0800, Joe Perches wrote:
+> On Wed, 2015-01-21 at 16:11 +0000, Russell King - ARM Linux wrote:
+> > On Wed, Jan 21, 2015 at 08:05:21AM -0800, Joe Perches wrote:
+> > > (adding netdev)
+> > 
+> > I wasn't actually reporting that as an issue; I was using it as an
+> > example.  It's from a very old kernel (2.6.27.21) which I run on one
+> > of my old x86 machines.
+> 
+> It's still the same code.
+> If the message can be improved, why not do it?
 
-> This series adds a pinctrl driver for Snapdragon 410 (msm8916) SoC. T=
-he first
-> patch increase the register address variable size, next adds a bindin=
-g document
-> and the last patch adds the pinctrl driver
->
-> Comments are welcome!
+I assume you're taking the responsibility to test anything that comes
+out of this then?
 
-Bj=C3=B6rn can you look at this?
+I'm not; I tried updating the kernel on the machine to 2.6.32 many
+years ago and that was a no-go because of userspace (udev)
+incompatibilities.
 
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
+according to speedtest.net.
