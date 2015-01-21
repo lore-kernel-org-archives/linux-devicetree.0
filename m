@@ -1,42 +1,30 @@
-From: James Liao <jamesjj.liao@mediatek.com>
-Subject: Re: [PATCH v3 2/4] clk: mediatek: Add initial common clock support
- for Mediatek SoCs.
-Date: Wed, 21 Jan 2015 15:49:45 +0800
-Message-ID: <1421826585.2437.3.camel@mtksdaap41>
-References: <1420601123-25859-1-git-send-email-jamesjj.liao@mediatek.com>
- <1420601123-25859-3-git-send-email-jamesjj.liao@mediatek.com>
- <CABuKBeLQkTBYWkBWAYXjYudMAza+1zueRSqGFPd+480p1rYNwg@mail.gmail.com>
- <1420685701.27952.44.camel@mtksdaap41>
- <CABuKBeLFvP4ChnzzUJwoLtCHtH6PejENJueBd7D+xMJhBMDBkg@mail.gmail.com>
+From: "Opensource [Steve Twiss]" <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH V3 2/2] devicetree: Add bindings for DA9063
+Date: Wed, 21 Jan 2015 07:53:57 +0000
+Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7D0B52ECB@SW-EX-MBX02.diasemi.com>
+References: <cover.1421762065.git.stwiss.opensource@diasemi.com>
+ <99c7b7fb380070e5a2f7f4e9f333e8a2b12b591a.1421762065.git.stwiss.opensource@diasemi.com>
+ <20150120155400.GI13701@x1> <20150120170417.GB32437@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CABuKBeLFvP4ChnzzUJwoLtCHtH6PejENJueBd7D+xMJhBMDBkg@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Vladimir Murzin <vladimir.murzin@arm.com>, Mike Turquette <mturquette@linaro.org>, Pawel Moll <pawel.moll@arm.com>, srv_heupstream <srv_heupstream@mediatek.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, HenryC Chen <henryc.chen@mediatek.com>, "Joe.C" <yingjoe.chen@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, jamesjj.liao@mediatek.com, Russell King <linux@arm.linux.org.uk>, huang eddie <eddie.huang@mediatek.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150120170417.GB32437@x1>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Matthias,
-
-On Tue, 2015-01-20 at 13:39 +0100, Matthias Brugger wrote:
-> I think you should use spin_lock_irqsave(&clk_ops_lock, flags) instead
-> of mtk_clk_lock.
-> In any case I think you should define a spinlock in clk-mt8135.c and
-> pass a reference of it in the init functions.
-> See drivers/clk/berlin as a good example.
-
-I see. I'll change it in next patch.
-
-
-Best regards,
-James
+T24gMjAgSmFudWFyeSAyMDE1IDE3OjA0IExlZSBKb25lcyB3cm90ZToNCg0KPiBPbiBUdWUsIDIw
+IEphbiAyMDE1LCBMZWUgSm9uZXMgd3JvdGU6DQo+ID4gT24gVHVlLCAyMCBKYW4gMjAxNSwgU3Rl
+dmUgVHdpc3Mgd3JvdGU6DQo+ID4gPiBGcm9tOiBTdGV2ZSBUd2lzcyA8c3R3aXNzLm9wZW5zb3Vy
+Y2VAZGlhc2VtaS5jb20+DQo+ID4gPg0KPiA+ID4gQWRkIGRldmljZSB0cmVlIGJpbmRpbmdzIGZv
+ciBEQTkwNjMgcmVndWxhdG9yczsgUmVhbC1UaW1lIENsb2NrDQo+ID4gPiBhbmQgV2F0Y2hkb2cu
+DQoNClsuLi5dDQoNCj4gVGhpcyBpcyB3aHkgaW4tcGF0Y2ggY2hhbmdlbG9ncyBhcmUgaGVscGZ1
+bC4gOykNCg0KV2lsbCBkbyBpbi1wYXRjaCBjaGFuZ2Vsb2dzIGluIGZ1dHVyZS4NCg0KPiBBcHBs
+aWVkIG5vdywgdGhhbmtzLg0KDQpUaGFua3MhDQoNClJlZ2FyZHMsDQpTdGV2ZQ0K
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
