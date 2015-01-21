@@ -1,79 +1,47 @@
-From: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Subject: Re: [PATCH v4 2/2] I2C: mediatek: Add driver for MediaTek I2C
- controller
-Date: Wed, 21 Jan 2015 14:30:09 +0800
-Message-ID: <1421821809.11671.117.camel@mtksdaap41>
-References: <1421404418-50718-1-git-send-email-eddie.huang@mediatek.com>
-	 <1421404418-50718-3-git-send-email-eddie.huang@mediatek.com>
-	 <20150118101816.GF22880@pengutronix.de>
-	 <1421810004.15468.825.camel@mtksdaap41>
+From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Subject: Re: [PATCH v3 2/3] mfd: lubbock_io: add lubbock_io board
+Date: Wed, 21 Jan 2015 08:46:29 +0100
+Message-ID: <873874fuei.fsf@free.fr>
+References: <1421406010-14851-1-git-send-email-robert.jarzmik@free.fr>
+	<1421406010-14851-2-git-send-email-robert.jarzmik@free.fr>
+	<20150119091705.GG21886@x1> <87ppaah9k5.fsf@free.fr>
+	<20150120102919.GP5767@x1>
+	<20150120115658.GJ26493@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1421810004.15468.825.camel@mtksdaap41>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eddie Huang <eddie.huang@mediatek.com>, u.kleine-koenig@pengutronix.de
-Cc: Mark Rutland <mark.rutland@arm.com>, Wolfram Sang <wsa@the-dreams.de>, Andrew Bresticker <abrestic@chromium.org>, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Jean Delvare <jdelvare@suse.de>, Xudong Chen <xudong.chen@mediatek.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Arnd Bergmann <arnd@arndb.de>, yh.chen@mediatek.com, Wei Yan <sledge.yanwei@huawei.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Beniamino Galvani <b.galvani@gmail.com>, Neelesh Gupta <neelegup@linux.vnet.ibm.com>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org, srv_heupstream@mediatek.comAnders Berg <and>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> writes:
 
-Hi Uwe,
+> What I'd suggest (and always have done) is:
+>
+> 	dev_err(&pdev->dev, "couldn't request main irq%d: %d\n",
+> 		irq, ret);
+I like it, it's even more compact, I'll use it for next patch version.
 
-Thanks for your review,
+> but I guess printing the IRQ number no longer makes sense with todays
+> dynamic mapping of logical IRQ numbers, as it is no longer meaningful.
+Yes ... we're not yet there with pxa gpio interrupts, maybe it will come
+eventually one day.
 
-On Wed, 2015-01-21 at 11:13 +0800, Eddie Huang wrote:
-<...>
-> > > +		ret = -EINVAL;
-> > > +		goto err_exit;
-> > > +	}
-> > > +
-> > > +	if (msgs->buf == NULL) {
-> > > +		dev_dbg(i2c->dev, " data buffer is NULL.\n");
-> > > +		ret = -EINVAL;
-> > > +		goto err_exit;
-> > > +	}
-> > > +
-> > > +	i2c->addr = msgs->addr;
-> > > +	i2c->msg_len = msgs->len;
-> > > +	i2c->msg_buf = msgs->buf;
-> > > +
-> > > +	if (msgs->flags & I2C_M_RD)
-> > > +		i2c->op = I2C_MASTER_RD;
-> > > +	else
-> > > +		i2c->op = I2C_MASTER_WR;
-> > > +
-> > > +	/* combined two messages into one transaction */
-> > > +	if (num > 1) {
-> > > +		i2c->msg_aux_len = (msgs + 1)->len;
-> > > +		i2c->op = I2C_MASTER_WRRD;
-> > > +	}
-> > This means "write then read", right? You should check here that the
-> > first message is really a write and the 2nd a read then.
-> > Can this happen at all with the quirks defined below (.max_num_msgs =
-> > 1)?
-> Yes, mean write then read. Indeed, add check is better.
-> If msg number is 1, means normal write or read, not "write then read".
+For Lee:
+> > > platform_get_irq()?
+> > No. I need the flags.
+> Where are they used?
+A couple of lines below, using local "irqflags" variable :
+       ret = devm_request_irq(&pdev->dev, cot->irq, lubbock_irq_handler,
+                              irqflags, dev_name(&pdev->dev), cot);
 
-The quirks will increase the message count and check 'write then read'
-for us. We don't have to add check here.
+Cheers.
 
+-- 
+Robert
 
-<...>
-> > > +static int mtk_i2c_remove(struct platform_device *pdev)
-> > > +{
-> > > +	struct mtk_i2c *i2c = platform_get_drvdata(pdev);
-> > > +
-> > > +	i2c_del_adapter(&i2c->adap);
-> > > +	free_i2c_dma_bufs(i2c);
-> > > +	platform_set_drvdata(pdev, NULL);
-> > > +
-> > Here you need to make sure that no irq is running when i2c_del_adapter
-> > is called.
-> OK, add check here
-
-I thought after i2c_del_adapter() is complete, all i2c_transfer for this
-adapter is completed. If this is true, then i2c clock is already off and
-we won't have any on-going transfer/pending irq.
-
-Joe.C
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
