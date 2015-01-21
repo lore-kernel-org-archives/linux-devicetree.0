@@ -1,72 +1,51 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH V8 00/14] drm/exynos: few patches to enhance bridge chip support
-Date: Wed, 21 Jan 2015 01:37:17 +0200
-Message-ID: <13166907.g68bKfaUGl@avalon>
-References: <1416045309-13359-1-git-send-email-ajaykumar.rs@samsung.com> <20150119163043.GB7751@ulmo.nvidia.com> <54BD3943.80402@collabora.co.uk>
+From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH v2 0/2] ARM: imx6sx-sdb: add revb board
+Date: Wed, 21 Jan 2015 09:34:52 +0800
+Message-ID: <1421804094-26379-1-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <54BD3943.80402@collabora.co.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Daniel Stone <daniel@fooishbar.org>, dri-devel <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Sean Paul <seanpaul@google.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Ajay kumar <ajaynumb@gmail.com>, Kukjin Kim <kgene.kim@samsung.com>, Pannaga Bhushan Reddy Patel <bhushan.r@samsung.com>, Prashanth G <prashanth.g@samsung.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Shawn,
 
-On Monday 19 January 2015 18:05:07 Javier Martinez Canillas wrote:
-> On 01/19/2015 05:30 PM, Thierry Reding wrote:
-> >> I know you probably are very busy but it would be great if you can take a
-> >> look to this series to avoid another kernel release to be missed since
-> >> we are already at v3.19-rc5.
-> >> 
-> >> Only this version was posted 2 months ago and the first version of the
-> >> series was sent on May, 2014 so it has been on the list for almost a
-> >> year now...
-> >> 
-> >> Tomi and Laurent had already agreed with the DT binging so I think that
-> >> we can already merge these and if there are any remaining issues, those
-> >> can be fixed during the 3.20 -rc cycle.
-> > 
-> > I see only a single Tested-by on this series and that seems to be with a
-> > bunch of out-of-tree patches applied on top. Does this now actually work
-> > applied on top of upstream? Also it seems like many people actually want
-> > this to get merged but there's been no Reviewed-bys and only a single
-> > Tested-by? Is that as good as it's going to get?
-> 
-> Good point, I provided some feedback on an early version of the series but
-> I'm not an DRM expert so I couldn't review it in detail to provide my
-> Reviewed-by.
-> 
-> I did provide my Tested-by a long time ago though but looking at the patches
-> it seems those were dropped so here goes again:
-> 
-> For the whole series on an Exynos5420 Peach Pit and an Exynos5250 Snow
-> Chromebooks:
-> 
-> Tested-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-> 
-> > Also I think the last update was that Ajay was going to resend this
-> > based on v3.19-rc1 or something. Is that still going to happen?
-> > Otherwise I can probably try to apply as-is, but not sure how well it
-> > will.
-> 
-> Ajay,
-> 
-> Are you going to rebase and resend this series with all the provided tags?
-> Gustavo and I have a rebased branch on top of 3.19-rc5 and one of us can
-> post your series if you are not planning to do it.
-> 
-> Laurent and Tomi,
-> 
-> You said that you are OK with the DT bindings now, does that count as an
-> Acked-by or Reviewed-by for you at least for the DT bindings changes in the
-> series?
+The imx6sx-sdb board has two revisions, the current mainline is the
+reva which is experimental and will not be released, the revb board
+is used widely for internal and external users.
 
-It counts as an Acked-by for the DT bindings.
+The main changes between reva and revb board:
+- OOP setting
+- pfuse
+- qspi
+- can transceiver (not mainlined)
+
+Changes for v2:
+
+- Add missing Makefile entries for both dts files. [Patch 1/2] and [Patch 2/2]
+- Delete OOP setting changed at imx6sx-sdb-reva, it is SoC feature,
+  it doesn't need to be change unless board limitations. [Patch 1/2]
+- Add explanation why OOP setting need to changed at imx6sx-sdb revb board. [Patch 2/2]
+- Make imx6sx-sdb revb board as default imx6sx-sdb board. [Patch 2/2]
+
+Peter Chen (2):
+  ARM: imx6sx-sdb: change default board as reva board
+  ARM: imx6sx-sdb: add revb board and make it default
+
+ arch/arm/boot/dts/Makefile            |   3 +-
+ arch/arm/boot/dts/imx6sx-sdb-reva.dts | 143 +++++++++
+ arch/arm/boot/dts/imx6sx-sdb.dts      | 588 ++--------------------------------
+ arch/arm/boot/dts/imx6sx-sdb.dtsi     | 547 +++++++++++++++++++++++++++++++
+ 4 files changed, 720 insertions(+), 561 deletions(-)
+ create mode 100644 arch/arm/boot/dts/imx6sx-sdb-reva.dts
+ create mode 100644 arch/arm/boot/dts/imx6sx-sdb.dtsi
 
 -- 
-Regards,
+1.9.1
 
-Laurent Pinchart
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
