@@ -1,84 +1,81 @@
-From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-Subject: Re: [PATCH v3 0/5] pwm: support backward compatibility of DTB extending
- PWM args
-Date: Wed, 21 Jan 2015 15:16:35 +0200
-Message-ID: <54BFA6B3.3070702@mentor.com>
-References: <1416339438-7867-1-git-send-email-vladimir_zapolskiy@mentor.com> <547C801F.2010307@mentor.com>
+From: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH RFC 1/2] Documentation: arm: define DT bindings for
+ system suspend
+Date: Wed, 21 Jan 2015 21:21:39 +0800
+Message-ID: <20150121212139.1cdc3fd5@xhacker>
+References: <1421840155-18990-1-git-send-email-sudeep.holla@arm.com>
+	<1421840155-18990-2-git-send-email-sudeep.holla@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <547C801F.2010307@mentor.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-pwm@vger.kernel.org, =?UTF-8?B?TG90aGFy?= =?UTF-8?B?IFdhw59tYW5u?= <LW@KARO-electronics.de>, Sascha Hauer <s.hauer@pengutronix.de>, Heiko Stuebner <heiko@sntech.de>, Tony Prisk <linux@prisktech.co.nz>, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, Shawn Guo <shawn.guo@linaro.org>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1421840155-18990-2-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Amit Daniel Kachhap <amit.daniel-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jonghwa Lee <jonghwa3.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Thierry,
+Dear Sudeep,
 
-On 01.12.2014 16:50, Vladimir Zapolskiy wrote:
-> Hello Thierry,
->=20
-> On 18.11.2014 21:37, Vladimir Zapolskiy wrote:
->> Please review this alternative in-house version of supporting backwa=
-rd
->> compatibility of DTB files (new kernel/PWM driver and old DTS), over=
-coming
->> a problem that pwms arguments of existing PWM drivers are to be exte=
-nded
->> with polarity field.
->>
->> Unfortunately I've firstly created the change and only after that
->> found that Lothar Wa=C3=9Fmann is working on his version, so I won't=
- insist
->> on formal preference, but still I like to share my variant since it
->> technically different from Lothar's one.
->>
->> Changes from v2 to v3:
->> - improved commit messages
->> - added two more patches removing of_pwm_xlate_with_flags()
->>
->> Changes from v1 to v2:
->> - corrected the proper kernel log level, thanks to Lothar Wa=C3=9Fma=
-nn.
->>
->> Vladimir Zapolskiy (5):
->>   pwm: process pwm polarity argument in of_pwm_simple_xlate()
->>   pwm: push up dynamic printk level on errors in of_pwm_get()
->>   pwm: set the actual number of pwms arguments defined in board dts
->>   pwm: do not set of_pwm_xlate_with_flags() as a callback
->>   pwm: remove of_pwm_xlate_with_flags() function
->>
->>  drivers/pwm/core.c            |   42 ++++++++++++------------------=
------------
->>  drivers/pwm/pwm-atmel-hlcdc.c |    2 --
->>  drivers/pwm/pwm-atmel-tcb.c   |    2 --
->>  drivers/pwm/pwm-atmel.c       |    6 ------
->>  drivers/pwm/pwm-bcm-kona.c    |    2 --
->>  drivers/pwm/pwm-fsl-ftm.c     |    2 --
->>  drivers/pwm/pwm-renesas-tpu.c |    2 --
->>  drivers/pwm/pwm-rockchip.c    |    5 -----
->>  drivers/pwm/pwm-samsung.c     |    3 ---
->>  drivers/pwm/pwm-tiecap.c      |    2 --
->>  drivers/pwm/pwm-tiehrpwm.c    |    2 --
->>  drivers/pwm/pwm-vt8500.c      |    2 --
->>  include/linux/pwm.h           |    3 ---
->>  13 files changed, 12 insertions(+), 63 deletions(-)
->>
->=20
-> could you please review this PWM DTB backward compatibility change?
->=20
-> Thank you in advance.
->=20
+On Wed, 21 Jan 2015 03:35:54 -0800
+Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
 
-the first three patches are unmodified since October 2014, but still no=
-t
-reviewed...
+> ARM based platforms implement unique ways to enter system suspend
+> (i.e. Suspend to RAM). The mechanism and the parameters defining the
+> system state vary on a per-platform basis forcing the OS to handle it
+> in very platform specific way.
+> 
+> Since ARM 32-bit systems had machine specific code, no attempts to
+> standardize are being made as it provides easy way to implement suspend
+> operations in a platform specific manner. However, this approach not
+> only makes maintainance more difficult as the number of platforms
+> supported increases but also not feasible for ARM64.
+> 
+> This DT binding aims at standardizing the system suspend for ARM
+> platforms. ARM64 platforms mandates entry-method property in DT for
+> this system suspend node.
+> 
+> On system implementing PSCI as an enable-method to enter system suspend,
+> the PSCI CPU suspend method is used on versions upto v0.2 and requires
+> the power_state parameter to be passed to the PSCI CPU suspend function.
+> 
+> This parameter is platform specific, therefore must be provided by
+> firmware to the OS in order to enable proper call sequence.
+> 
+> This ARM system suspend DT bindings rely on a property
+> (i.e. arm,psci-suspend-param) in the PSCI DT bindings that describes
+> how the PSCI CPU suspend power_state parameter should be defined in DT.
+> 
+> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/arm/psci.txt     | 11 +++
+>  .../devicetree/bindings/arm/system-suspend.txt     | 93
+> ++++++++++++++++++++++ 2 files changed, 104 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/system-suspend.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/psci.txt
+> b/Documentation/devicetree/bindings/arm/psci.txt index
+> 5aa40ede0e99..bd3977a2a333 100644 ---
+> a/Documentation/devicetree/bindings/arm/psci.txt +++
+> b/Documentation/devicetree/bindings/arm/psci.txt @@ -61,6 +61,14 @@ Device
+> tree nodes that require usage of PSCI CPU_SUSPEND function (ie idle
+> Definition: power_state parameter to pass to the PSCI suspend call.
+>  
+> +PSCI v0.2 and earlier versions don't have explicit operation for system
+> +suspend. However, one can implement system suspend using CPU_SUSPEND by
+> +ensuring every other core except the one executing the CPU_SUSPEND call
+> +has called into PSCI through a CPU_OFF call.
 
-Could you please review the changeset?
+If users explicitly hot-unplug other cores when system load is low to save
+power, then we want to suspend at some point, how does the firmware know this
+case?
 
-Thank you in advance.
+In my private tree, I extend the PSCI spec to tell firmware we want to suspend
+the system.
 
+Thanks,
+Jisheng
 --
-With best wishes,
-Vladimir
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
