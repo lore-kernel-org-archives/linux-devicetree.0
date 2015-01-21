@@ -1,47 +1,210 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: unclear ipv6 redirect message (was Re: [PATCH v3 2/3] mfd:
- lubbock_io: add lubbock_io board)
-Date: Wed, 21 Jan 2015 16:46:41 +0000
-Message-ID: <20150121164641.GU26493@n2100.arm.linux.org.uk>
-References: <1421406010-14851-2-git-send-email-robert.jarzmik@free.fr>
- <20150119091705.GG21886@x1>
- <87ppaah9k5.fsf@free.fr>
- <20150120102919.GP5767@x1>
- <20150120115658.GJ26493@n2100.arm.linux.org.uk>
- <873874fuei.fsf@free.fr>
- <20150121094453.GO26493@n2100.arm.linux.org.uk>
- <1421856321.10574.13.camel@perches.com>
- <20150121161059.GT26493@n2100.arm.linux.org.uk>
- <1421858444.10574.14.camel@perches.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] arm64: Add L2 cache topology to ARM Ltd boards/models
+Date: Wed, 21 Jan 2015 16:46:32 +0000
+Message-ID: <20150121164632.GK5044@leverpostej>
+References: <1421841750-26722-1-git-send-email-sudeep.holla@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1421858444.10574.14.camel@perches.com>
-Sender: netdev-owner@vger.kernel.org
-To: Joe Perches <joe@perches.com>
-Cc: netdev <netdev@vger.kernel.org>, Robert Jarzmik <robert.jarzmik@free.fr>, Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, linux-kernel@vger.kernel.org, Haojian Zhuang <haojian.zhuang@gmail.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Daniel Mack <daniel@zonque.org>
+In-Reply-To: <1421841750-26722-1-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Kumar Sankaran <ksankaran-qTEPVZfXA3Y@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>, Vinayak Kale <vkale-qTEPVZfXA3Y@public.gmane.org>, Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Thomas Lendacky <Thomas.Lendacky-5C7GfCeVMHo@public.gmane.org>, Joel Schopp <Joel.Schopp-5C7GfCeVMHo@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 21, 2015 at 08:40:44AM -0800, Joe Perches wrote:
-> On Wed, 2015-01-21 at 16:11 +0000, Russell King - ARM Linux wrote:
-> > On Wed, Jan 21, 2015 at 08:05:21AM -0800, Joe Perches wrote:
-> > > (adding netdev)
-> > 
-> > I wasn't actually reporting that as an issue; I was using it as an
-> > example.  It's from a very old kernel (2.6.27.21) which I run on one
-> > of my old x86 machines.
+On Wed, Jan 21, 2015 at 12:02:30PM +0000, Sudeep Holla wrote:
+> Commit 5d425c18653731af6 ("arm64: kernel: add support for cpu cache
+> information") adds cacheinfo support for ARM64. Since there's no
+> architectural way of detecting the cpus that share particular cache,
+> device tree can be used and the core cacheinfo already supports the
+> same.
+
+This still leaves the possibility that misleading information is exposed
+for systems from other vendors. I've made a quick attempt to Cc the
+authors of other arm64 dts here.
+
+Given that in the absence of these nodes we can't derive a complete view
+of the cache hierarchy, shouldn't we only expose the cacheinfo when we
+have these nodes and can therefore produce correct values?
+
+I can imagine that future dts are likely to appear without these nodes,
+and I imagine that we won't spot all of those cases. We also have
+existing DTBs to take into account.
+
+Thanks,
+Mark.
+
 > 
-> It's still the same code.
-> If the message can be improved, why not do it?
-
-I assume you're taking the responsibility to test anything that comes
-out of this then?
-
-I'm not; I tried updating the kernel on the machine to 2.6.32 many
-years ago and that was a no-go because of userspace (udev)
-incompatibilities.
-
--- 
-FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
-according to speedtest.net.
+> This patch adds the L2 cache topology on Juno board, FVP/RTSM and
+> foundation models.
+> 
+> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+> Cc: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/arm/foundation-v8.dts  |  8 ++++++++
+>  arch/arm64/boot/dts/arm/juno.dts           | 14 ++++++++++++++
+>  arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts |  8 ++++++++
+>  3 files changed, 30 insertions(+)
+> 
+> Hi Arnd/Olof,
+> 
+> Though this patch and commit 5d425c18653731af6 ("arm64: kernel: add
+> support for cpu cache information") which is in -next(via arm64) are
+> dependent to provide desired functionality, then can go indepedently
+> if you think there could be conflicts if this change is taken via arm64.
+> If not, Catalin can pick up with your acks after the review.
+> 
+> Regards,
+> Sudeep
+> 
+> diff --git a/arch/arm64/boot/dts/arm/foundation-v8.dts b/arch/arm64/boot/dts/arm/foundation-v8.dts
+> index 27f32962e55c..4eac8dcea423 100644
+> --- a/arch/arm64/boot/dts/arm/foundation-v8.dts
+> +++ b/arch/arm64/boot/dts/arm/foundation-v8.dts
+> @@ -34,6 +34,7 @@
+>  			reg = <0x0 0x0>;
+>  			enable-method = "spin-table";
+>  			cpu-release-addr = <0x0 0x8000fff8>;
+> +			next-level-cache = <&L2_0>;
+>  		};
+>  		cpu@1 {
+>  			device_type = "cpu";
+> @@ -41,6 +42,7 @@
+>  			reg = <0x0 0x1>;
+>  			enable-method = "spin-table";
+>  			cpu-release-addr = <0x0 0x8000fff8>;
+> +			next-level-cache = <&L2_0>;
+>  		};
+>  		cpu@2 {
+>  			device_type = "cpu";
+> @@ -48,6 +50,7 @@
+>  			reg = <0x0 0x2>;
+>  			enable-method = "spin-table";
+>  			cpu-release-addr = <0x0 0x8000fff8>;
+> +			next-level-cache = <&L2_0>;
+>  		};
+>  		cpu@3 {
+>  			device_type = "cpu";
+> @@ -55,6 +58,11 @@
+>  			reg = <0x0 0x3>;
+>  			enable-method = "spin-table";
+>  			cpu-release-addr = <0x0 0x8000fff8>;
+> +			next-level-cache = <&L2_0>;
+> +		};
+> +
+> +		L2_0: l2-cache0 {
+> +			compatible = "cache";
+>  		};
+>  	};
+>  
+> diff --git a/arch/arm64/boot/dts/arm/juno.dts b/arch/arm64/boot/dts/arm/juno.dts
+> index cb3073e4e7a8..15dafbb24426 100644
+> --- a/arch/arm64/boot/dts/arm/juno.dts
+> +++ b/arch/arm64/boot/dts/arm/juno.dts
+> @@ -39,6 +39,7 @@
+>  			reg = <0x0 0x0>;
+>  			device_type = "cpu";
+>  			enable-method = "psci";
+> +			next-level-cache = <&A57_L2>;
+>  		};
+>  
+>  		A57_1: cpu@1 {
+> @@ -46,6 +47,7 @@
+>  			reg = <0x0 0x1>;
+>  			device_type = "cpu";
+>  			enable-method = "psci";
+> +			next-level-cache = <&A57_L2>;
+>  		};
+>  
+>  		A53_0: cpu@100 {
+> @@ -53,6 +55,7 @@
+>  			reg = <0x0 0x100>;
+>  			device_type = "cpu";
+>  			enable-method = "psci";
+> +			next-level-cache = <&A53_L2>;
+>  		};
+>  
+>  		A53_1: cpu@101 {
+> @@ -60,6 +63,7 @@
+>  			reg = <0x0 0x101>;
+>  			device_type = "cpu";
+>  			enable-method = "psci";
+> +			next-level-cache = <&A53_L2>;
+>  		};
+>  
+>  		A53_2: cpu@102 {
+> @@ -67,6 +71,7 @@
+>  			reg = <0x0 0x102>;
+>  			device_type = "cpu";
+>  			enable-method = "psci";
+> +			next-level-cache = <&A53_L2>;
+>  		};
+>  
+>  		A53_3: cpu@103 {
+> @@ -74,6 +79,15 @@
+>  			reg = <0x0 0x103>;
+>  			device_type = "cpu";
+>  			enable-method = "psci";
+> +			next-level-cache = <&A53_L2>;
+> +		};
+> +
+> +		A57_L2: l2-cache0 {
+> +			compatible = "cache";
+> +		};
+> +
+> +		A53_L2: l2-cache1 {
+> +			compatible = "cache";
+>  		};
+>  	};
+>  
+> diff --git a/arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts b/arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts
+> index efc59b3baf63..20addabbd127 100644
+> --- a/arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts
+> +++ b/arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts
+> @@ -37,6 +37,7 @@
+>  			reg = <0x0 0x0>;
+>  			enable-method = "spin-table";
+>  			cpu-release-addr = <0x0 0x8000fff8>;
+> +			next-level-cache = <&L2_0>;
+>  		};
+>  		cpu@1 {
+>  			device_type = "cpu";
+> @@ -44,6 +45,7 @@
+>  			reg = <0x0 0x1>;
+>  			enable-method = "spin-table";
+>  			cpu-release-addr = <0x0 0x8000fff8>;
+> +			next-level-cache = <&L2_0>;
+>  		};
+>  		cpu@2 {
+>  			device_type = "cpu";
+> @@ -51,6 +53,7 @@
+>  			reg = <0x0 0x2>;
+>  			enable-method = "spin-table";
+>  			cpu-release-addr = <0x0 0x8000fff8>;
+> +			next-level-cache = <&L2_0>;
+>  		};
+>  		cpu@3 {
+>  			device_type = "cpu";
+> @@ -58,6 +61,11 @@
+>  			reg = <0x0 0x3>;
+>  			enable-method = "spin-table";
+>  			cpu-release-addr = <0x0 0x8000fff8>;
+> +			next-level-cache = <&L2_0>;
+> +		};
+> +
+> +		L2_0: l2-cache0 {
+> +			compatible = "cache";
+>  		};
+>  	};
+>  
+> -- 
+> 1.9.1
+> 
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
