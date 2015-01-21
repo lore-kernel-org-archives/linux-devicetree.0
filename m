@@ -1,50 +1,50 @@
-From: Sneeker Yeh <sneeker.yeh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 2/5] usb: dwc3: add revision number DWC3_REVISION_300A
-Date: Wed, 21 Jan 2015 16:57:20 +0800
-Message-ID: <CAJ1gpc1MqFcGQ5tY03X_UHajoHhOcr9+o9YkqUyzvOYsqugcOQ@mail.gmail.com>
-References: <1421654209-6486-1-git-send-email-Sneeker.Yeh@tw.fujitsu.com>
-	<1421654209-6486-3-git-send-email-Sneeker.Yeh@tw.fujitsu.com>
-	<20150119144642.GD20386@saruman>
-	<2B3535C5ECE8B5419E3ECBE3007729090174814C4D@us01wembx1.internal.synopsys.com>
-	<20150119200005.GP20386@saruman>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sun4i: Add simplefb node with
+ de_fe0-de_be0-lcd0-hdmi pipeline
+Date: Wed, 21 Jan 2015 09:56:48 +0100
+Message-ID: <20150121085648.GB4367@lukather>
+References: <1421672477-12978-1-git-send-email-hdegoede@redhat.com>
+ <1421672477-12978-2-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150119200005.GP20386@saruman>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Cc: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Paul Zimmerman <paul.zimmerman-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Huang Rui <ray.huang-5C7GfCeVMHo@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sneeker Yeh <Sneeker.Yeh-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="4rQ9lIe3OahbhU4J"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBFGV7WSQKGQEWPVDHLQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1421672477-12978-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-hi,
+--4rQ9lIe3OahbhU4J
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-2015-01-20 4:00 GMT+08:00 Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>:
-> On Mon, Jan 19, 2015 at 07:45:31PM +0000, John Youn wrote:
->> > -----Original Message-----
->> > From: Felipe Balbi [mailto:balbi-l0cyMroinI0@public.gmane.org]
->> > Sent: Monday, January 19, 2015 6:47 AM
->> >
->> > looking at Synopsys Solvnet for this IP, it shows that current version
->> > is 2.90a. There's no 3.00a. Paul, John, is there a 3.00a version of the
->> > DWC USB3 IP ?
->>
->> Yes there is, but it has not been released yet, thus it's not in Solvnet.
->
-> alright, in that case, Sneeker, can you update this patch to add 2.90a
-> and 3.00a macros ?
+On Mon, Jan 19, 2015 at 02:01:17PM +0100, Hans de Goede wrote:
+> Testing has shown that on sun4i the display backend engine does not have
+> deep enough fifo-s causing flickering / tearing in full-hd mode due to
+> fifo underruns. This can be avoided by letting the display frontend engine
+> do the dma from memory, and then letting it feed the data directly into
+> the backend unmodified, as the frontend does have deep enough fifo-s.
+> 
+> Note since u-boot-v2015.01 has been released using the de_be0-lcd0-hdmi
+> pipeline on sun4i, we need to keep that one around too (unfortunately).
+> 
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
-Sure,
-I'll also add 2.90a in next round,
+Merged, thanks!
 
-Thanks, and much appreciate,
-Sneeker
+Maxime
 
->
-> Thanks
->
-> --
-> balbi
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--4rQ9lIe3OahbhU4J--
