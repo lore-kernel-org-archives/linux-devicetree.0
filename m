@@ -1,43 +1,35 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] mfd: lubbock_io: add lubbock_io board
-Date: Wed, 21 Jan 2015 09:47:11 +0000
-Message-ID: <20150121094711.GP26493@n2100.arm.linux.org.uk>
-References: <1421406010-14851-1-git-send-email-robert.jarzmik@free.fr>
- <1421406010-14851-2-git-send-email-robert.jarzmik@free.fr>
- <20150119091705.GG21886@x1>
- <87ppaah9k5.fsf@free.fr>
- <20150120102919.GP5767@x1>
- <20150120115658.GJ26493@n2100.arm.linux.org.uk>
- <873874fuei.fsf@free.fr>
- <20150121081645.GC9258@x1>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v3 1/3] pinctrl: at91: allow to have disabled gpio bank
+Date: Wed, 21 Jan 2015 10:48:54 +0100
+Message-ID: <CACRpkdZg4hXF6f8o_OkRLRUfC_XqwUXLH4Yx+0p5XJSPya7HDA@mail.gmail.com>
+References: <1421422267-2934-1-git-send-email-ludovic.desroches@atmel.com>
+	<1421422267-2934-2-git-send-email-ludovic.desroches@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20150121081645.GC9258@x1>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <1421422267-2934-2-git-send-email-ludovic.desroches@atmel.com>
+Sender: stable-owner@vger.kernel.org
+To: Ludovic Desroches <ludovic.desroches@atmel.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, stable <stable@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 21, 2015 at 08:16:45AM +0000, Lee Jones wrote:
-> On Wed, 21 Jan 2015, Robert Jarzmik wrote:
-> > > > > platform_get_irq()?
-> > > > No. I need the flags.
-> > > Where are they used?
-> > A couple of lines below, using local "irqflags" variable :
-> >        ret = devm_request_irq(&pdev->dev, cot->irq, lubbock_irq_handler,
-> >                               irqflags, dev_name(&pdev->dev), cot);
-> 
-> No, I mean where are they _used_?
+On Fri, Jan 16, 2015 at 4:31 PM, Ludovic Desroches
+<ludovic.desroches@atmel.com> wrote:
 
-They're used in request_irq, and request_irq uses it to set the interrupt
-type (edge or level) as specified in the IRQ resource.
+> From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+>
+> Today we expect that all the bank are enabled, and count the number of banks
+> used by the pinctrl based on it instead of using the last bank id enabled.
+>
+> So switch to it, set the chained IRQ at runtime based on enabled banks
+> and wait only the number of enabled gpio controllers at probe time.
+>
+> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+> Signed-off-by: Ludovic Desroches <ludovic.desroches@atmel.com>
+>
+> Cc: <stable@vger.kernel.org> # 3.18
 
--- 
-FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
-according to speedtest.net.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Patch applied for fixes with Nicolas' ACK.
+
+Yours,
+Linus Walleij
