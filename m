@@ -1,111 +1,68 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH 2/7] mmc: sdhci-pxav3: Fix Armada 38x controller's caps
- according to erratum ERR-7878951
-Date: Wed, 21 Jan 2015 15:58:58 +0100
-Message-ID: <54BFBEB2.4070801@free-electrons.com>
-References: <1421832726-21656-1-git-send-email-gregory.clement@free-electrons.com>	<1421832726-21656-3-git-send-email-gregory.clement@free-electrons.com> <CAPv3WKeCPRoZCMP+PJoUqi_Nq85s+-5YwWm5EovDio1OQ-d3zA@mail.gmail.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v3 2/3] mfd: lubbock_io: add lubbock_io board
+Date: Wed, 21 Jan 2015 15:10:52 +0000
+Message-ID: <20150121151052.GD22024@x1>
+References: <20150121123551.GD9258@x1>
+ <332399927.402665086.1421847419490.JavaMail.root@zimbra1-e1.priv.proxad.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <CAPv3WKeCPRoZCMP+PJoUqi_Nq85s+-5YwWm5EovDio1OQ-d3zA@mail.gmail.com>
-Sender: stable-owner@vger.kernel.org
-To: Marcin Wojtas <mw@semihalf.com>
-Cc: Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Tawfik Bayouk <tawfik@marvell.com>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, stable@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <332399927.402665086.1421847419490.JavaMail.root@zimbra1-e1.priv.proxad.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robert.jarzmik@free.fr
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, linux-kernel@vger.kernel.org, Haojian Zhuang <haojian.zhuang@gmail.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Daniel Mack <daniel@zonque.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Marcin,
+On Wed, 21 Jan 2015, robert.jarzmik@free.fr wrote:
 
-On 21/01/2015 15:52, Marcin Wojtas wrote:
-> Hi Gregory,
-> 
-> 2015-01-21 10:32 GMT+01:00 Gregory CLEMENT <gregory.clement@free-electrons.com>:
->> According to erratum 'ERR-7878951' Armada 38x SDHCI controller has
->> different capabilities than the ones shown in its registers:
->>
->> - it doesn't support the voltage switching: it can work either with
->>   3.3V or 1.8V supply
->> - it doesn't support the SDR104 mode
->> - SDR50 mode doesn't need tuning
->>
->> The SDHCI_QUIRK_MISSING_CAPS quirk is used for updating the
->> capabilities accordingly.
->>
->> Fixes: 5491ce3f79ee ("mmc: sdhci-pxav3: add support for the Armada 38x SDHCI controller")
->> Cc: <stable@vger.kernel.org> # v3.15+
->>
->> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
->> ---
->>  drivers/mmc/host/sdhci-pxav3.c | 21 +++++++++++++++++++--
->>  1 file changed, 19 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/mmc/host/sdhci-pxav3.c b/drivers/mmc/host/sdhci-pxav3.c
->> index 7b07325b4fba..4daa47a53a62 100644
->> --- a/drivers/mmc/host/sdhci-pxav3.c
->> +++ b/drivers/mmc/host/sdhci-pxav3.c
->> @@ -118,8 +118,11 @@ static int mv_conf_mbus_windows(struct platform_device *pdev,
->>         return 0;
->>  }
->>
->> -static int armada_38x_quirks(struct sdhci_host *host)
->> +static int armada_38x_quirks(struct platform_device *pdev,
->> +                            struct sdhci_host *host)
->>  {
->> +       struct device_node *np = pdev->dev.of_node;
->> +
->>         host->quirks |= SDHCI_QUIRK_MISSING_CAPS;
->>         /*
->>          * According to erratum 'FE-2946959' both SDR50 and DDR50
->> @@ -129,6 +132,20 @@ static int armada_38x_quirks(struct sdhci_host *host)
->>          */
->>         host->caps1 = sdhci_readl(host, SDHCI_CAPABILITIES_1);
->>         host->caps1 &= ~(SDHCI_SUPPORT_SDR50 | SDHCI_SUPPORT_DDR50);
->> +
->> +       /*
->> +        * According to erratum 'ERR-7878951' Armada 38x SDHCI
->> +        * controller has different capabilities than the ones shown
->> +        * in its registers
->> +        */
->> +       host->caps = sdhci_readl(host, SDHCI_CAPABILITIES);
->> +       if (of_get_property(np, "no-1-8-v", NULL)) {
->> +               host->caps &= ~SDHCI_CAN_VDD_180;
->> +               host->mmc->caps &= ~MMC_CAP_1_8V_DDR;
->> +       } else
->> +               host->caps &= ~SDHCI_CAN_VDD_330;
->> +       host->caps1 &= ~(SDHCI_SUPPORT_SDR104 | SDHCI_USE_SDR50_TUNING);
->> +
->>         return 0;
->>  }
->>
->> @@ -333,7 +350,7 @@ static int sdhci_pxav3_probe(struct platform_device *pdev)
->>                 clk_prepare_enable(pxa->clk_core);
->>
->>         if (of_device_is_compatible(np, "marvell,armada-380-sdhci")) {
->> -               ret = armada_38x_quirks(host);
->> +               ret = armada_38x_quirks(pdev, host);
->>                 if (ret < 0)
->>                         goto err_quirks;
->>                 ret = mv_conf_mbus_windows(pdev, mv_mbus_dram_info());
->> --
-> 
-> Right here there are lines:
-> /* enable 1/8V DDR capable */
-> host->mmc->caps |= MMC_CAP_1_8V_DDR;
-> 
-> Which make a possible opposite change from armada_38x_quirks cacelled.
+> > ----- Mail original -----
+> > De: "Lee Jones" <lee.jones@linaro.org>
+> First of all, this is my web mail interface, so please be kind with
+> my mail formatting ...
 
-Good catch!
+I have no idea what you want me to change or do differently?
 
-I will remove it in the v2.
+Perhaps it might be more prudent for you to switch to a quality
+mailer?
 
-Thanks,
+> > Looking at one of the other patches in the series it appears the fl=
+ag
+> > you're trying to capture is IORESOURCE_IRQ_LOWEDGE.  When I grep fo=
+r
+> > where this is being _used_ (think 'consumed, rather than passed.  I
+> > only see a single entry in drivers/pnp/interface.c.
+> Look at this call chain :
+> request_irq()
+>   setup_irq()
+>     __setup_irq()
+>       __irq_set_trigger()
+>         pxa_gpio_irq_type() (aka. chip->irq_set_type)
+>           =3D> hardware register manipulation
+>=20
+> Moreover, you should be aware of the bijection existing between :
+>  - IORESOURCE_IRQ_LOWEDGE and IRQF_TRIGGER_RISING
+>  - it's HIGHEDGE twin
+>  - it is noted in : include/linux/interrupt.h
+>=20
+> > That's what got me thinking... are you sure you're a) making use of
+> this flag
+> Yes, I'm quite sure.
+>=20
+> > b) assuming the answer to 'a' is "no"
+> I won't :)
+>=20
+> > I think to set an edge trigger on an IRQ, you should instead do so =
+via
+> > irq_set_irq_type(), or have a missed a line or two?
+> __setup_irq(), that's the entry point.
 
-Gregory
+Very well, Russell and yourself have convinced me.  If you fixup the
+remainder of comments, I'm happy.
 
-
-
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
