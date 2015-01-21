@@ -1,49 +1,42 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH] of: Custom printk format specifier for device node
-Date: Wed, 21 Jan 2015 09:52:07 -0800
-Message-ID: <1421862727.10574.25.camel@perches.com>
-References: <1421859974-24507-1-git-send-email-pantelis.antoniou@konsulko.com>
-	 <1421861843.10574.23.camel@perches.com>
-	 <D84576D1-27F5-44F9-83DA-347C26F593FE@antoniou-consulting.com>
+From: Suman Anna <s-anna@ti.com>
+Subject: Re: [PATCH v7 1/4] Documentation: dt: add common bindings for hwspinlock
+Date: Wed, 21 Jan 2015 11:56:37 -0600
+Message-ID: <54BFE855.3090200@ti.com>
+References: <1421269101-51105-1-git-send-email-s-anna@ti.com> <1421269101-51105-2-git-send-email-s-anna@ti.com> <20150115135201.GG16217@leverpostej> <20150115135556.GH16217@leverpostej> <CAL_JsqL2LZAooMk-V8+xeF2g6acZE21M+-OBRw8aEVa-5wVHuQ@mail.gmail.com> <CAK=WgbYQ=BbinqJ5fsw2Y+FKdy=nasLsw9mX8pw6S_o3owy9-g@mail.gmail.com> <20150116101746.GA21809@leverpostej> <CAK=WgbYBqPoUm9byx0du_g5ZmHdYaUVLpSPZYHoCVzNoatNKpw@mail.gmail.com> <20150120180548.GK7718@atomide.com> <CAK=WgbZGGtwmQwzWumjpYOsYHTt8vPQpTraABwJBsv5VXOmJ_Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <D84576D1-27F5-44F9-83DA-347C26F593FE@antoniou-consulting.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Pantelis Antoniou <panto@antoniou-consulting.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <robherring2@gmail.com>, Randy Dunlap <rdunlap@infradead.org>, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <CAK=WgbZGGtwmQwzWumjpYOsYHTt8vPQpTraABwJBsv5VXOmJ_Q@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Ohad Ben-Cohen <ohad@wizery.com>, Tony Lindgren <tony@atomide.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robherring2@gmail.com>, Kumar Gala <galak@codeaurora.org>, Bjorn Andersson <bjorn@kryo.se>, Josh Cartwright <joshc@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2015-01-21 at 19:39 +0200, Pantelis Antoniou wrote:
-> Hi Joe,
->=20
-> > On Jan 21, 2015, at 19:37 , Joe Perches <joe@perches.com> wrote:
-> >=20
-> > On Wed, 2015-01-21 at 19:06 +0200, Pantelis Antoniou wrote:
-> >> 90% of the usage of device node's full_name is printing it out
-> >> in a kernel message. Preparing for the eventual delayed allocation
-> >> introduce a custom printk format specifier that is both more
-> >> compact and more pleasant to the eye.
-> >>=20
-> >> For instance typical use is:
-> >> 	pr_info("Frobbing node %s\n", node->full_name);
-> >>=20
-> >> Which can be written now as:
-> >> 	pr_info("Frobbing node %pO\n", node);
-> >=20
-> > Still disliking use of %p0.
-> >=20
->=20
-> Choices are limited. And it=E2=80=99s pO not p0.
+On 01/21/2015 06:41 AM, Ohad Ben-Cohen wrote:
+> On Tue, Jan 20, 2015 at 8:05 PM, Tony Lindgren <tony@atomide.com> wrote:
+>> How about default to Linux id space and allow overriding that with
+>> a module param option if needed?
+> 
+> I'm not sure I'm following.
+> 
+> If the main point of contention is the base_id field, I'm also fine
+> with removing it entirely, as I'm not aware of any actual user for it
+> (Suman please confirm?).
 
-Yet another reason to dislike it.
+Yeah, well the current implementations that I am aware of only have a
+single bank, so all of them would be using a value of 0. I am yet to see
+a platform with multiple instances where the property really makes a
+difference. v7 has the property mandatory, so all the implementations
+would need to define this value even if it is 0.
 
-> > This isn't pretty.  Perhaps there's a better way?
-> >=20
->=20
-> No there isn=E2=80=99t.
+regards
+Suman
 
-There always is.
-
+> 
+> Mark? Rob? Will you accept Suman's patches if the base_id field is removed?
+> 
+> Thanks,
+> Ohad.
+> 
 
