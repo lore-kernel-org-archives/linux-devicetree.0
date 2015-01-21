@@ -1,47 +1,80 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun4i: Add Marsboard A10 board
-Date: Wed, 21 Jan 2015 09:36:07 +0100
-Message-ID: <20150121083607.GA4367@lukather>
-References: <1421777008-15408-1-git-send-email-mamlinav@gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v2 0/7] Fix sti drivers whcih mix reg address spaces
+Date: Wed, 21 Jan 2015 14:24:17 +0530
+Message-ID: <54BF6939.6050200@ti.com>
+References: <1420643052-4506-1-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="zOhrINIRDRtNKIHr"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBZGL7WSQKGQENLDC4BY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1421777008-15408-1-git-send-email-mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1420643052-4506-1-git-send-email-peter.griffin@linaro.org>
+Sender: netdev-owner@vger.kernel.org
+To: Peter Griffin <peter.griffin@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, peppe.cavallaro@st.com, arnd@arndb.de
+Cc: lee.jones@linaro.org, devicetree@vger.kernel.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---zOhrINIRDRtNKIHr
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Hi,
 
-On Tue, Jan 20, 2015 at 10:03:28PM +0400, Aleksei Mamlin wrote:
-> This patch add support for Marsboard A10 board.
+On Wednesday 07 January 2015 08:34 PM, Peter Griffin wrote:
+> Hi folks,
 > 
-> The Marsboard A10 is a A10 based development board with 1G RAM, 1G NAND,
-> micro SD card slot, SATA 2.0 socket, 10/100 ethernet, mini HDMI port,
-> 1 USB OTG port and 2 USB 2.0 ports. Board does not use the AXP209 pmic,
-> it does not have a pmic at all.
-> Board also have 2 expansion 70 pin headers.
+> A V2 of this old series incorporating Arnd and Lees Feedback form v1.
 > 
-> Signed-off-by: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Following on from Arnds comments about the picophy driver here
+> https://lkml.org/lkml/2014/11/13/161, this series fixes the
+> remaining upstreamed drivers for STI, which are mixing address spaces
+> in the reg property. We do this in a way similar to the keystone
+> and bcm7445 platforms, by having sysconfig phandle/ offset pair 
+> (where only one register is required). Or phandle / integer array
+> where multiple offsets in the same bank are needed).
+> 
+> This series breaks DT compatability! But the platform support
+> is WIP and only being used by the few developers who are upstreaming
+> support for it. I've made each change to the driver / dt doc / dt
+> file as a single atomic commit so the kernel will remain bisectable. 
+> 
+> This series then also enables the picophy driver, and adds back in
+> the ehci/ohci dt nodes for stih410 which make use of the picophy.
+> 
+> regards,
+> 
+> Peter.
+> 
+> Changes since v1:
+> - Add missing space after */ (Lee)
+> - Change comment to "indexed from" rather than "not indexed from" (Lee)
+> - Change naming to phy1, phy2 rather than phy@1 phy@2 if there is no reg property (Arnd / Grant)
+> - Rebased on v3.19-rc3 (me)
+> - Checkpatch "no space before tabs" warning in stih41*.dtsi (me)
+> 
+> Peter Griffin (7):
+>   phy: phy-stih407-usb: Pass sysconfig register offsets via syscfg
+>     property.
+>   phy: miphy365x: Pass sysconfig register offsets via syscfg dt
+>     property.
+>   ARM: STi: DT: STiH407: Add usb2 picophy dt nodes
+>   ARM: STi: DT: STiH410: Add usb2 picophy dt nodes
+>   ARM: STi: DT: STiH410: Add DT nodes for the ehci and ohci usb
+>     controllers.
+>   ARM: multi_v7_defconfig: Enable stih407 usb picophy
+>   stmmac: dwmac-sti: Pass sysconfig register offset via syscon dt
+>     property.
+> 
+>  .../devicetree/bindings/net/sti-dwmac.txt          | 14 ++---
+>  .../devicetree/bindings/phy/phy-miphy365x.txt      | 15 ++---
+>  .../devicetree/bindings/phy/phy-stih407-usb.txt    | 10 +---
+>  arch/arm/boot/dts/stih407-family.dtsi              |  9 +++
+>  arch/arm/boot/dts/stih410.dtsi                     | 70 ++++++++++++++++++++++
+>  arch/arm/boot/dts/stih415.dtsi                     | 12 ++--
+>  arch/arm/boot/dts/stih416.dtsi                     | 22 +++----
+>  arch/arm/configs/multi_v7_defconfig                |  1 +
+>  drivers/net/ethernet/stmicro/stmmac/dwmac-sti.c    | 13 ++--
+>  drivers/phy/phy-miphy365x.c                        | 29 ++++-----
+>  drivers/phy/phy-stih407-usb.c                      | 25 ++++----
+>  11 files changed, 143 insertions(+), 77 deletions(-)
+> 
 
-Applied, thanks!
+Queued the first two patches of this series in linux-phy.
 
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---zOhrINIRDRtNKIHr--
+Thanks
+Kishon
