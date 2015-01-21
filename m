@@ -1,209 +1,86 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] arm64: Add L2 cache topology to ARM Ltd boards/models
-Date: Wed, 21 Jan 2015 16:46:32 +0000
-Message-ID: <20150121164632.GK5044@leverpostej>
-References: <1421841750-26722-1-git-send-email-sudeep.holla@arm.com>
+From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 0/7] Add initial support for DA9150 Charger &
+ Fuel-Gauge IC
+Date: Wed, 21 Jan 2015 17:52:50 +0100
+Message-ID: <20150121165250.GG13715@earth.universe>
+References: <cover.1421854282.git.Adam.Thomson.Opensource@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="PyMzGVE0NRonI6bs"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1421841750-26722-1-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <cover.1421854282.git.Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Kumar Sankaran <ksankaran-qTEPVZfXA3Y@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>, Vinayak Kale <vkale-qTEPVZfXA3Y@public.gmane.org>, Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Thomas Lendacky <Thomas.Lendacky-5C7GfCeVMHo@public.gmane.org>, Joel Schopp <Joel.Schopp-5C7GfCeVMHo@public.gmane.org>
+To: Adam Thomson <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, support.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 21, 2015 at 12:02:30PM +0000, Sudeep Holla wrote:
-> Commit 5d425c18653731af6 ("arm64: kernel: add support for cpu cache
-> information") adds cacheinfo support for ARM64. Since there's no
-> architectural way of detecting the cpus that share particular cache,
-> device tree can be used and the core cacheinfo already supports the
-> same.
 
-This still leaves the possibility that misleading information is exposed
-for systems from other vendors. I've made a quick attempt to Cc the
-authors of other arm64 dts here.
+--PyMzGVE0NRonI6bs
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Given that in the absence of these nodes we can't derive a complete view
-of the cache hierarchy, shouldn't we only expose the cacheinfo when we
-have these nodes and can therefore produce correct values?
+Hi,
 
-I can imagine that future dts are likely to appear without these nodes,
-and I imagine that we won't spot all of those cases. We also have
-existing DTBs to take into account.
+On Wed, Jan 21, 2015 at 03:46:25PM +0000, Adam Thomson wrote:
+> This patch set adds initial support for the Dialog DA9150 Integrated Char=
+ger &
+> Fuel-Gauge IC. The device also provides GPIO and GPADC functionality.
+>=20
+> In this patch set the following is provided:
+>  - MFD Core support and DT bindings documentation.
+>  - IIO GPADC support and DT bindings documentation.
+>  - Power Supply Charger support and DT bindings documentation.
+>  - Update to MAINTAINERS file to add DA9150 files to Dialog support list.
+>=20
+> To keep patch submission from being too large, support for GPIO and Fuel-=
+Gauge
+> will come after initial support patches are accepted.
+>=20
+> This patch set is baselined against the v3.19-rc5 kernel version.
+>=20
+> Changes in v6:
+> - For GPADC driver, Use lower case extended names for IIO GPADC channels,=
+ and
+>   remove extended names for GPIO related channels.
+> - For charger driver, revert to no devm IRQ request/free functions as ord=
+ering
+>   is important, and probe failure scenario was not being correctly covere=
+d. A
+>   helper function for free IRQs has been added to make code cleaner.
 
-Thanks,
-Mark.
+Probably a devm_ variant of power_supply_register should be created,
+but for now this is ok for me.
 
-> 
-> This patch adds the L2 cache topology on Juno board, FVP/RTSM and
-> foundation models.
-> 
-> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-> Cc: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/arm/foundation-v8.dts  |  8 ++++++++
->  arch/arm64/boot/dts/arm/juno.dts           | 14 ++++++++++++++
->  arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts |  8 ++++++++
->  3 files changed, 30 insertions(+)
-> 
-> Hi Arnd/Olof,
-> 
-> Though this patch and commit 5d425c18653731af6 ("arm64: kernel: add
-> support for cpu cache information") which is in -next(via arm64) are
-> dependent to provide desired functionality, then can go indepedently
-> if you think there could be conflicts if this change is taken via arm64.
-> If not, Catalin can pick up with your acks after the review.
-> 
-> Regards,
-> Sudeep
-> 
-> diff --git a/arch/arm64/boot/dts/arm/foundation-v8.dts b/arch/arm64/boot/dts/arm/foundation-v8.dts
-> index 27f32962e55c..4eac8dcea423 100644
-> --- a/arch/arm64/boot/dts/arm/foundation-v8.dts
-> +++ b/arch/arm64/boot/dts/arm/foundation-v8.dts
-> @@ -34,6 +34,7 @@
->  			reg = <0x0 0x0>;
->  			enable-method = "spin-table";
->  			cpu-release-addr = <0x0 0x8000fff8>;
-> +			next-level-cache = <&L2_0>;
->  		};
->  		cpu@1 {
->  			device_type = "cpu";
-> @@ -41,6 +42,7 @@
->  			reg = <0x0 0x1>;
->  			enable-method = "spin-table";
->  			cpu-release-addr = <0x0 0x8000fff8>;
-> +			next-level-cache = <&L2_0>;
->  		};
->  		cpu@2 {
->  			device_type = "cpu";
-> @@ -48,6 +50,7 @@
->  			reg = <0x0 0x2>;
->  			enable-method = "spin-table";
->  			cpu-release-addr = <0x0 0x8000fff8>;
-> +			next-level-cache = <&L2_0>;
->  		};
->  		cpu@3 {
->  			device_type = "cpu";
-> @@ -55,6 +58,11 @@
->  			reg = <0x0 0x3>;
->  			enable-method = "spin-table";
->  			cpu-release-addr = <0x0 0x8000fff8>;
-> +			next-level-cache = <&L2_0>;
-> +		};
-> +
-> +		L2_0: l2-cache0 {
-> +			compatible = "cache";
->  		};
->  	};
->  
-> diff --git a/arch/arm64/boot/dts/arm/juno.dts b/arch/arm64/boot/dts/arm/juno.dts
-> index cb3073e4e7a8..15dafbb24426 100644
-> --- a/arch/arm64/boot/dts/arm/juno.dts
-> +++ b/arch/arm64/boot/dts/arm/juno.dts
-> @@ -39,6 +39,7 @@
->  			reg = <0x0 0x0>;
->  			device_type = "cpu";
->  			enable-method = "psci";
-> +			next-level-cache = <&A57_L2>;
->  		};
->  
->  		A57_1: cpu@1 {
-> @@ -46,6 +47,7 @@
->  			reg = <0x0 0x1>;
->  			device_type = "cpu";
->  			enable-method = "psci";
-> +			next-level-cache = <&A57_L2>;
->  		};
->  
->  		A53_0: cpu@100 {
-> @@ -53,6 +55,7 @@
->  			reg = <0x0 0x100>;
->  			device_type = "cpu";
->  			enable-method = "psci";
-> +			next-level-cache = <&A53_L2>;
->  		};
->  
->  		A53_1: cpu@101 {
-> @@ -60,6 +63,7 @@
->  			reg = <0x0 0x101>;
->  			device_type = "cpu";
->  			enable-method = "psci";
-> +			next-level-cache = <&A53_L2>;
->  		};
->  
->  		A53_2: cpu@102 {
-> @@ -67,6 +71,7 @@
->  			reg = <0x0 0x102>;
->  			device_type = "cpu";
->  			enable-method = "psci";
-> +			next-level-cache = <&A53_L2>;
->  		};
->  
->  		A53_3: cpu@103 {
-> @@ -74,6 +79,15 @@
->  			reg = <0x0 0x103>;
->  			device_type = "cpu";
->  			enable-method = "psci";
-> +			next-level-cache = <&A53_L2>;
-> +		};
-> +
-> +		A57_L2: l2-cache0 {
-> +			compatible = "cache";
-> +		};
-> +
-> +		A53_L2: l2-cache1 {
-> +			compatible = "cache";
->  		};
->  	};
->  
-> diff --git a/arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts b/arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts
-> index efc59b3baf63..20addabbd127 100644
-> --- a/arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts
-> +++ b/arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts
-> @@ -37,6 +37,7 @@
->  			reg = <0x0 0x0>;
->  			enable-method = "spin-table";
->  			cpu-release-addr = <0x0 0x8000fff8>;
-> +			next-level-cache = <&L2_0>;
->  		};
->  		cpu@1 {
->  			device_type = "cpu";
-> @@ -44,6 +45,7 @@
->  			reg = <0x0 0x1>;
->  			enable-method = "spin-table";
->  			cpu-release-addr = <0x0 0x8000fff8>;
-> +			next-level-cache = <&L2_0>;
->  		};
->  		cpu@2 {
->  			device_type = "cpu";
-> @@ -51,6 +53,7 @@
->  			reg = <0x0 0x2>;
->  			enable-method = "spin-table";
->  			cpu-release-addr = <0x0 0x8000fff8>;
-> +			next-level-cache = <&L2_0>;
->  		};
->  		cpu@3 {
->  			device_type = "cpu";
-> @@ -58,6 +61,11 @@
->  			reg = <0x0 0x3>;
->  			enable-method = "spin-table";
->  			cpu-release-addr = <0x0 0x8000fff8>;
-> +			next-level-cache = <&L2_0>;
-> +		};
-> +
-> +		L2_0: l2-cache0 {
-> +			compatible = "cache";
->  		};
->  	};
->  
-> -- 
-> 1.9.1
-> 
-> 
+Jonathan, Lee: I assume you are ok with the whole patchset going
+through the power supply subsystem?
+
+-- Sebastian
+
+--PyMzGVE0NRonI6bs
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJUv9lcAAoJENju1/PIO/qaIKIP/14eqxi1ase5m88E13nRORfJ
+3OB3fQIYR0V5yEJCUCAWYAxhYdfiSuVVsZBAyYCPnz2Njae6DPoMNJgcyca1U2S+
+8PqyIlp2PSYOixTHECTXWC/XwS4Y7sk3tc1WVqgoy1x8tCCuAw0shGMyCN87P7U9
+ouNBTgNtF0k/V577HrDjwkgKaC78tdh+h5IeomPpYzQjE7l4MyA1TgNk8UT+v9CB
+jLkzDs8VLThcCnB5GKmRfFOYZMbTs1mtv3D1IoLRJ65M0QEn8kU9Id4YHdwhmNqk
+g7cJe1s+ep7VExJ+qCoVyKnGfZmycDK7KzZ3A4rGUz3KPaxsqI5EAS9/cKiugMCM
+PfI9XhIF31Sw6/erXxfNhTJmueKiSo7yf3tx1ZA3Geg7aR8bSU3SaEbYXOHfiKRj
+A6RjfmAFhBx3N2cJxhylxU0ZiRkZUtVr+KIGDlezYap8md2W94dKFZlegCYN+Y5Q
+/VgKwHVGzXuG2t14k+oek4p0GTYIy8IbnSC4zGZr9qCUOfT6yKzSx/mC81MVPsfD
+9jobcopwL9lghFx44mYwrwgbautZOxmNFrC0j1EMXHlXqcDH1cNvHh1jevdi0LzJ
+srJvcNVz4xDewvrY4Qhhup31Jj6FTX5bqmqF7Z/JNj5tYu2nJajW2cmS1I93kx4R
+/80/ZvrMX6/NDajDv4gy
+=G8aH
+-----END PGP SIGNATURE-----
+
+--PyMzGVE0NRonI6bs--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
