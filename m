@@ -1,66 +1,56 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH/RFC v10 03/19] DT: leds: Add led-sources property
-Date: Wed, 21 Jan 2015 10:39:05 +0100
-Message-ID: <54BF73B9.8060402@samsung.com>
-References: <CAL_Jsq+UaA41DvawdOMmOib=Fi0hC-nBdKV-+P4DFo+MoOy-bQ@mail.gmail.com>
- <54B3F1EF.4060506@samsung.com>
- <CAL_JsqKpJtUG0G6g1GOuSVpc31oe-dp3qdrKJUE0upG-xRDFhA@mail.gmail.com>
- <54B4DA81.7060900@samsung.com>
- <CAL_JsqLYxB5hzLAWXpU=uncM5DEMZU78mP673H9oSSNB-cgcYQ@mail.gmail.com>
- <54B8D4D0.3000904@samsung.com>
- <CAL_Jsq+EFWzs1HP1tVt6P=p=HZn2AtSPjp55YrmMQi_mE+kNfQ@mail.gmail.com>
- <54B933D0.1090004@samsung.com> <54BE7DAB.80702@samsung.com>
- <CAL_JsqKoiaUmVhbQdnNveG=AAYh4-OHGS70L+LAgLLoKChUuYQ@mail.gmail.com>
- <20150120174010.GA2900@amd>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH v3 2/3] mfd: lubbock_io: add lubbock_io board
+Date: Wed, 21 Jan 2015 09:44:53 +0000
+Message-ID: <20150121094453.GO26493@n2100.arm.linux.org.uk>
+References: <1421406010-14851-1-git-send-email-robert.jarzmik@free.fr>
+ <1421406010-14851-2-git-send-email-robert.jarzmik@free.fr>
+ <20150119091705.GG21886@x1>
+ <87ppaah9k5.fsf@free.fr>
+ <20150120102919.GP5767@x1>
+ <20150120115658.GJ26493@n2100.arm.linux.org.uk>
+ <873874fuei.fsf@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <20150120174010.GA2900@amd>
-Sender: linux-leds-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Rob Herring <robherring2@gmail.com>, linux-leds@vger.kernel.org, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, sakari.ailus@iki.fi, Sylwester Nawrocki <s.nawrocki@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <873874fuei.fsf@free.fr>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Robert Jarzmik <robert.jarzmik@free.fr>
+Cc: Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, linux-kernel@vger.kernel.org, Haojian Zhuang <haojian.zhuang@gmail.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Daniel Mack <daniel@zonque.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/20/2015 06:40 PM, Pavel Machek wrote:
-> On Tue 2015-01-20 11:29:16, Rob Herring wrote:
->> On Tue, Jan 20, 2015 at 10:09 AM, Jacek Anaszewski
->> <j.anaszewski@samsung.com> wrote:
->>> On 01/16/2015 04:52 PM, Jacek Anaszewski wrote:
->>>>
->>>> On 01/16/2015 02:48 PM, Rob Herring wrote:
->>
->> [...]
->>
->>>>> You may want to add something like led-output-cnt or led-driver-cnt in
->>>>> the parent so you know the max list size.
->>>>
->>>>
->>>> Why should we need this? The number of current outputs exposed by the
->>>> device is fixed and can be specified in a LED device bindings
->>>> documentation.
->>>>
->>>
->>> OK. The led-output-cnt property should be put in each sub-node, as the
->>> number of the current outputs each LED can be connected to is variable.
->>
->> Sorry, I meant this for the parent node meaning how many outputs the
->> driver IC has. I did say maybe because you may always know this. It
->> can make it easier to allocate memory for led-sources knowing the max
->> size up front.
->
-> Umm. Not sure if that kind of "help" should go to the device
-> tree.
-> 									Pavel
->
+On Wed, Jan 21, 2015 at 08:46:29AM +0100, Robert Jarzmik wrote:
+> Russell King - ARM Linux <linux@arm.linux.org.uk> writes:
+> 
+> > What I'd suggest (and always have done) is:
+> >
+> > 	dev_err(&pdev->dev, "couldn't request main irq%d: %d\n",
+> > 		irq, ret);
+> I like it, it's even more compact, I'll use it for next patch version.
 
-I agree. I think that led-sources-cnt is redundant. A list property
-can be read using of_prop_next_u32 function. I missed that and thus
-proposed putting led-sources-cnt in each sub-node to be able to read 
-led-sources list with of_property_read_u32_array.
+BTW, this is an example why I have the policy of always ensuring that
+the kernel messages print sufficient diagnostics.  Right now, I have
+a problem - since I rebooted my firewall a few nights ago, I now get
+on one of my machines:
 
-Effectively, I propose to avoid adding led-sources-cnt property.
+  rt6_redirect: source isn't a valid nexthop for redirect target
+
+and it spews that for a few minutes every 26 hours or so.  No further
+information, and it leaves you wondering "well, what was the invalid
+next hop?  What was the source?"
+
+Pretty much the only way to try and find out is to leave a tcpdump or
+wireshark running for 24 hours to try and get a dump - which is not
+that easy if you don't have lots of disk space.  So, right now, I have
+no way to diagnose the above.
+
+If it printed that information, then I'd be able to see what the
+addresses were, and I'd probably be able to come up with a tcpdump
+filter which didn't involve logging all IPv6 traffic.
+
+Kernel messages need to be smart.  If not, they might as well just be
+"The kernel encountered a problem. Abort, Retry or Fail?"
 
 -- 
-Best Regards,
-Jacek Anaszewski
+FTTC broadband for 0.8mile line: currently at 10.5Mbps down 400kbps up
+according to speedtest.net.
