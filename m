@@ -1,62 +1,35 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v2 08/11] mmc: pwrseq_simple: Add support for a delay
-Date: Wed, 21 Jan 2015 15:15:09 +0100
-Message-ID: <CAPDyKFoYj3xBoYsn87mxjoqDDnCtopAugX5JbzYritxWn-7XaA@mail.gmail.com>
-References: <1421338359-27467-1-git-send-email-tomeu.vizoso@collabora.com>
-	<1421338359-27467-9-git-send-email-tomeu.vizoso@collabora.com>
-	<54B7F9FB.7030100@wwwdotorg.org>
-	<CAPDyKFoO6evBoAbEE30XiZg51KsM-sD4viFMvqaDwGoHeVL-6w@mail.gmail.com>
-	<54BFAF7E.1030703@collabora.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH] arm64: Add L2 cache topology to ARM Ltd boards/models
+Date: Wed, 21 Jan 2015 15:43:23 +0100
+Message-ID: <1542574.d99bFx24pn@wuerfel>
+References: <1421841750-26722-1-git-send-email-sudeep.holla@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <54BFAF7E.1030703@collabora.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Dylan Reid <dgreid@chromium.org>, Simon Glass <sjg@chromium.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Chris Ball <chris@printf.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mmc <linux-mmc@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1421841750-26722-1-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 21 January 2015 at 14:54, Tomeu Vizoso <tomeu.vizoso@collabora.com> wrote:
-> On 01/21/2015 11:44 AM, Ulf Hansson wrote:
->> On 15 January 2015 at 18:33, Stephen Warren <swarren@wwwdotorg.org> wrote:
->>> On 01/15/2015 09:12 AM, Tomeu Vizoso wrote:
->>>>
->>>> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
->>>
->>>
->>> Ah, having read the explanation in the next patch, I think ...
->>>
->>>> diff --git a/Documentation/devicetree/bindings/mmc/mmc,pwrseq-simple.txt
->>>> b/Documentation/devicetree/bindings/mmc/mmc,pwrseq-simple.txt
->>>
->>>
->>>> +- delay : delay to wait after driving the reset gpio active [ms].
->>>
->>>
->>> ... delay is the wrong name. reset-pulse-width or reset-pulse-length would
->>> be better. delay sounds like a delay after resetting the device before it
->>> can be accessed.
->>
->> I agree with Stephen's proposal.
->
-> Cool.
->
->> This patch needs to be rebased and retested on latest version the
->> mmc-pwrseq patches.
->
-> Sure.
->
->> Moreover, if you think the patchset which $subject
->> patch is a part of is material for 3.20, I will need to share an
->> immutable branch with the mmc-pwrseq patches for ARM SOC to pull in,
->> tell me if you need that.
->
-> I don't think this will make 3.20 as I have other series with higher
-> priority and there's quite some work left to do on this one.
+On Wednesday 21 January 2015 12:02:30 Sudeep Holla wrote:
+> 
+> Hi Arnd/Olof,
+> 
+> Though this patch and commit 5d425c18653731af6 ("arm64: kernel: add
+> support for cpu cache information") which is in -next(via arm64) are
+> dependent to provide desired functionality, then can go indepedently
+> if you think there could be conflicts if this change is taken via arm64.
+> If not, Catalin can pick up with your acks after the review.
 
-If that's the case, I might as well consider this patch separately and
-take it through my mmc tree. Of course, that means you anyway need to
-rebase/test it.
+I think it would be better to take this through arm-soc. It's not
+extremely likely to cause conflicts, but as you say there are no
+strict dependencies on which goes in first, so there is no harm
+in merging them separately.
 
-Kind regards
-Uffe
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
