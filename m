@@ -1,35 +1,105 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH] arm64: Add L2 cache topology to ARM Ltd boards/models
-Date: Wed, 21 Jan 2015 15:43:23 +0100
-Message-ID: <1542574.d99bFx24pn@wuerfel>
-References: <1421841750-26722-1-git-send-email-sudeep.holla@arm.com>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH 0/7] Fixes and improvements for SDHCI on Armada 38x
+Date: Wed, 21 Jan 2015 15:44:00 +0100
+Message-ID: <54BFBB30.9060205@free-electrons.com>
+References: <1421832726-21656-1-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1421841750-26722-1-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1421832726-21656-1-git-send-email-gregory.clement@free-electrons.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Maxime Ripard <maxime.ripard@free-electrons.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 21 January 2015 12:02:30 Sudeep Holla wrote:
+On 21/01/2015 10:31, Gregory CLEMENT wrote:
+> Hi,
 > 
-> Hi Arnd/Olof,
+> this series brings fixes and improvements for the SDHCI controller of
+> the Armada 38x SoCs.
 > 
-> Though this patch and commit 5d425c18653731af6 ("arm64: kernel: add
-> support for cpu cache information") which is in -next(via arm64) are
-> dependent to provide desired functionality, then can go indepedently
-> if you think there could be conflicts if this change is taken via arm64.
-> If not, Catalin can pick up with your acks after the review.
+> The first two patches are fixes and should be also applied on the
+> stable branch (I added stable in copy for this).
+> 
+> The first one removes the SDR50 and DDR50 mode timing from the
+> capabilities of the controller because the current implementation
+> doesn't support it.
+> 
+> The second one fix controller's caps according to the limitation of
+> the hardware.
+> 
+> The third one extends the Device Tree binding of the Armada 38x. It
+> allows using the SDIO3 configuration register.
+> 
+> The forth patch adds the support of this new register in the
+> driver. Thanks to this one, specific clock adjustments can be done in
+> order to support the SDR50 and DDR50 modes timing.
+> 
+> The fifth patch is device tree clean-up.
+> 
+> The sixth patch update the SDHCI node on Armada 38x in order to use
+> the new register and then to be able to support the SDR50 and DDR50
+> modes timing.
+> 
+> Finally, the seventh patch add the description of SDHCI for the Armada
+> 388 RD board which was missing.
+> 
+> Patches 1 to 4 should be merged through the mmc tree and patches 5 to
+> 7 should be merged through mvebu and then arm-soc.
+> 
+> Patch 4 depend on patch 2.
+> Patch 2 depend on patch 1.
+> And patch 1 depend on commit aa8165f91442 "mmc: sdhci-pxav3: do the
+> mbus window configuration after enabling clocks" which have been
+> merged.
+> 
+> But as all this patch should be merged through the same tree it would
+> not be a problem
+> 
+> The patches 5 to 7 depend on the patches already merged in mvebu.
+> 
+> As they are fixes, patches 1 and 2 should be merged in 3.18-rc or at
+> least in 3.19 and then they will be part of 3.18.1. For the other
+> patches it would be nice if they could be part of 3.19.
 
-I think it would be better to take this through arm-soc. It's not
-extremely likely to cause conflicts, but as you say there are no
-strict dependencies on which goes in first, so there is no harm
-in merging them separately.
+I shifted the kernel release by one! I meant:
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+As they are fixes, patches 1 and 2 should be merged in _3.19-rc_ or at
+least in _3.20_ and then they will be part of _3.19.1_. For the other
+patches it would be nice if they could be part of _3.20_.
+
+Thanks,
+
+Gregory
+
+> 
+> Thanks,
+> 
+> Gregory
+> 
+> Gregory CLEMENT (7):
+>   mmc: sdhci-pxav3: Fix SDR50 and DDR50 capabilities for the Armada 38x
+>     flavor
+>   mmc: sdhci-pxav3: Fix Armada 38x controller's caps according to
+>     erratum ERR-7878951
+>   mmc: sdhci-pxav3: Extend binding with SDIO3 conf reg for the Armada
+>     38x
+>   mmc: sdhci-pxav3: Modify clock settings for the SDR50 and DDR50 modes
+>   ARM: mvebu: Use macros for interrupt flags on Armada 38x sdhci node
+>   ARM: mvebu: Update the SDHCI node on Armada 38x
+>   ARM: mvebu: Add Device Tree description of SDHCI for Armada 388 RD
+> 
+>  .../devicetree/bindings/mmc/sdhci-pxa.txt          | 15 ++--
+>  arch/arm/boot/dts/armada-388-rd.dts                | 10 +++
+>  arch/arm/boot/dts/armada-38x.dtsi                  |  7 +-
+>  drivers/mmc/host/sdhci-pxav3.c                     | 79 ++++++++++++++++++++++
+>  4 files changed, 105 insertions(+), 6 deletions(-)
+> 
+
+
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
