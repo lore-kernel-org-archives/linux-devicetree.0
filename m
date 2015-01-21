@@ -1,156 +1,231 @@
-From: Greg Bellows <greg.bellows-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: Secure resources in device trees
-Date: Wed, 21 Jan 2015 11:23:14 -0600
-Message-ID: <CAOgzsHXFfBvMpF3rWe9f9MVOK6qJgxJeSjqyrcUkFMHRDQvRMQ@mail.gmail.com>
-References: <CAOgzsHVpXZTHoq7HyfrGeGe92onnb6=BQr30PvKrg04h=0De0w@mail.gmail.com>
-	<CAL_Jsq+rN07CfdNjErhLipKNJJj3uoczR98YuWSAwjMRW1xVag@mail.gmail.com>
+From: Joe Perches <joe@perches.com>
+Subject: Re: [PATCH] of: Custom printk format specifier for device node
+Date: Wed, 21 Jan 2015 09:37:23 -0800
+Message-ID: <1421861843.10574.23.camel@perches.com>
+References: <1421859974-24507-1-git-send-email-pantelis.antoniou@konsulko.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_Jsq+rN07CfdNjErhLipKNJJj3uoczR98YuWSAwjMRW1xVag-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter Maydell <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1421859974-24507-1-git-send-email-pantelis.antoniou@konsulko.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <robherring2@gmail.com>, Randy Dunlap <rdunlap@infradead.org>, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pantelis Antoniou <panto@antoniou-consulting.com>
 List-Id: devicetree@vger.kernel.org
 
-Thanks Rob, comments inline.
+On Wed, 2015-01-21 at 19:06 +0200, Pantelis Antoniou wrote:
+> 90% of the usage of device node's full_name is printing it out
+> in a kernel message. Preparing for the eventual delayed allocation
+> introduce a custom printk format specifier that is both more
+> compact and more pleasant to the eye.
+> 
+> For instance typical use is:
+> 	pr_info("Frobbing node %s\n", node->full_name);
+> 
+> Which can be written now as:
+> 	pr_info("Frobbing node %pO\n", node);
 
-On Wed, Jan 21, 2015 at 10:21 AM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Tue, Jan 20, 2015 at 1:15 PM, Greg Bellows <greg.bellows-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> The addition of ARM security extension (TrustZone) support to QEMU has
->> exposed the issue of how secure resources are communicated to secure
->> software responsible for booting the HLOS.  The natural choice for
->> communicating these details is the device tree.
->
-> You could also have a secure OS use DT and the HLOS use something else
-> (ACPI). Or the secure OS and non-secure firmware (UEFI) use DT and the
-> OS uses ACPI.
->
->> In the case of real hardware, the device tree supplied to the HLOS
->> only needs to describe non-secure resources as secure software can
->> rely on static knowledge about the hardware.  This also holds true for
->> QEMU machines modeled after actual fixed hardware configurations.
->> However, this is not the case with QEMU's virtual machine models, such
->> as machvirt, where the hardware configuration can change over time.
->> In this case, secure software is dependent on QEMU's dynamically
->> constructed device tree to describe the hardware, making it impossible
->> for secure software to know ahead of time what is secure, non-secure,
->> or both.
->
-> For purposes of this discussion, what works better for QEMU is irrelevant IMO.
->
+Still disliking use of %p0.
 
-We just want to make sure that QEMU embraces the expected mechanism
-for handling such a scenario.
+> More fine-grained control of formatting includes printing the name,
+> flag, path-spec name, reference count and others, explained in the
+> documentation entry.
+> 
+> Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+> 
+> dt-print
+> ---
+>  Documentation/printk-formats.txt |  29 ++++++++
+>  lib/vsprintf.c                   | 151 +++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 180 insertions(+)
+> 
+> diff --git a/Documentation/printk-formats.txt b/Documentation/printk-formats.txt
+> index 5a615c1..2d42c04 100644
+> --- a/Documentation/printk-formats.txt
+> +++ b/Documentation/printk-formats.txt
+> @@ -231,6 +231,35 @@ struct va_format:
+>  	Do not use this feature without some mechanism to verify the
+>  	correctness of the format string and va_list arguments.
+>  
+> +Device tree nodes:
+> +
+> +	%pO[fnpPcCFr]
+> +
+> +	For printing device tree nodes. The optional arguments are:
+> +            f device node full_name
+> +            n device node name
+> +            p device node phandle
+> +            P device node path spec (name + @unit)
+> +            F device node flags
+> +            c major compatible string
+> +            C full compatible string
+> +            r node reference count
+> +	Without any arguments prints full_name (same as %pOf)
+> +	The separator when using multiple arguments is '|'
+> +
+> +	Examples:
+> +
+> +	%pO	/foo/bar@0			- Node full name
+> +	%pOf	/foo/bar@0			- Same as above
+> +	%pOfp	/foo/bar@0|10			- Node full name + phandle
+> +	%pOfcF	/foo/bar@0|foo,device|--P-	- Node full name +
+> +	                                          major compatible string +
+> +						  node flags
+> +							D - dynamic
+> +							d - detached
+> +							P - Populated
+> +							B - Populated bus
+> +
+>  u64 SHOULD be printed with %llu/%llx:
+>  
+>  	printk("%llu", u64_var);
+> diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+[]
 
->> Two possible approaches for handling this particular case are:
->>
->> 1) Create two device tree blobs; one describing the non-secure
->> configuration and the other the full configuration.  This would allow
->> secure software to see the full hardware picture including secure
->> resources while the non-secure world would only see the non-secure
->> device tree configuration.  The QEMU virt machine would be responsible
->> for producing the device tree blobs.
->
-> I've thought about this some in the past and leaned toward this
-> direction mainly because I'd expect you are partitioning most nodes to
-> one side. You could do some crazy partitioning with secure and
-> non-secure world. It was suggested on highbank to use the secure bit
-> as a 33rd address bit to get 8GB of address space for example. You
-> could have entirely different view of the system.
->
->> The drawbacks to this approach are:
->> * There are 2 device trees to manage
->
-> You already have 2 bootloaders and 2 OS's to manage.
->
->> * The two DTBs will typically be almost identical.
->
-> I don't really agree. If the secure dtb has all non-secure peripherals
-> too, then yes. But if you only include peripherals allocated to secure
-> world and secure view of peripherals, then I don't think there would
-> be much overlap. You pretty much have to statically allocate each
-> peripheral to one side or the other.
->
+Add #ifdef back ?
 
-The above option was assuming two fully populated DTs with one also
-including secure resources.  If we strip the secure DT down to only
-secure resources then they would indeed be unique.
+> +static noinline_for_stack
+> +char *device_node_string(char *buf, char *end, struct device_node *dn,
+> +			 struct printf_spec spec, const char *fmt)
+> +{
+> +	char tbuf[sizeof("xxxxxxxxxx") + 1];
+> +	const char *fmtp, *p;
+> +	int len, ret, i, j, pass;
+> +	char c;
+> +
+> +	if (!IS_ENABLED(CONFIG_OF))
+> +		return string(buf, end, "(!OF)", spec);
 
->> * Not possible to identify whether a device is shared or not between
->> the secure and non-secure worlds.
->
-> Typically, sharing requires a peripheral to be designed to be shared
-> like PL330 or MMU-400. I have seen some h/w with locking registers so
-> 2 different cores/OSs can share an i2c bus. You could do something
-> like that for Trustzone as well I suppose. That's not really secure,
-> but allows shared access. I think it is generally a limited number of
-> peripherals which are shared.
->
+Not very descriptive output, maybe the address would be better.
 
-This was more of an issue when the DTs overlapped.  It assumes there
-was the possibility of two distinct resources of the same type
-residing at the same address. One secure the other not.
+> +
+> +	if ((unsigned long)dn < PAGE_SIZE)
+> +		return string(buf, end, "(null)", spec);
+> +
+> +	/* simple case without anything any more format specifiers */
+> +	if (fmt[1] == '\0' || isspace(fmt[1]))
+> +		fmt = "Of";
 
->> * Identifying device available only to the secure world require
->> cumbersome comparison of the two device trees.
->
-> But that is pretty static. It doesn't seem like a big deal to me.
->
->> * A mechanism would be needed to pass an additional device tree.
->>
->> 2) Modify the standard device tree blob to include annotations or
->> modifications to describe which resources are secure or not.  In this
->> case, secure software would use the single device tree to identify the
->> secure resources.  The added information could be used by secure
->> software to trim the device tree before passing it.  Alternatively,
->> the information could be passed on to non-secure software with the
->> expectation that it would honor the device security.   It would be
->> crucial that any data added to the device tree adhere to existing
->> conventions or expectations.
->
-> You could also do this w/o dts changes. You could start with a full
-> description and the knowledge of what to filter out resides in the
-> secure OS or bootloader. It depends where you want to put the
-> partitioning decisions.
->
+why lower case here but upper case above?
 
-This is likely what happens today.  Unfortunately, this does not help
-in the QEMU case described above because the DT is created dynamically
-for a virtual machine model whose configuration is not fixed.  The
-approach does not truly embrace the advantage of the DT as it requires
-internal HW knowledge which I thought the DT was aimed at alleviating.
+> +
+> +	len = 0;
+> +
+> +	/* two passes; the first calculates length, the second fills in */
+> +	for (pass = 1; pass <= 2; pass++) {
+> +		if (pass == 2 && !(spec.flags & LEFT)) {
+> +			/* padding */
+> +			while (len < spec.field_width--) {
+> +				if (buf < end)
+> +					*buf = ' ';
+> +				++buf;
+> +			}
+> +		}
+> +#undef _HANDLE_CH
+> +#define _HANDLE_CH(_ch) \
+> +	do { \
+> +		if (pass == 1) \
+> +			len++; \
+> +		else \
+> +			if (buf < end) \
+> +				*buf++ = (_ch); \
+> +	} while (0)
+> +#undef _HANDLE_STR
+> +#define _HANDLE_STR(_str) \
+> +	do { \
+> +		const char *str = (_str); \
+> +		if (pass == 1) \
+> +			len += strlen(str); \
+> +		else \
+> +			while (*str && buf < end) \
+> +				*buf++ = *str++; \
+> +	} while (0)
 
-> I think there's 2 main cases to consider. Full nodes that are assigned
-> to one side and Trustzone aware nodes. The first could potentially
-> re-use status property adding just a "secure" setting or we just add a
-> new "secure" property. This should probably be inherited by child
-> nodes. The secure firmware would then need to remove or set status to
-> disabled for those nodes. For the latter case, I don't think we can
-> avoid having the firmware having specific knowledge of the bindings.
-> We'll have to filter out the secure only details as I think so far we
-> have only been creating bindings which describe the non-secure view. I
-> don't think this is a big deal as the peripheral set would be pretty
-> limited AFAIK.
->
-> Rob
->
->> The drawbacks to this approach are:
->> * Additional secure state details. potentially unrecognized by current
->> consumers,  would need to be added to the device tree.
->> * Unless a mechanism already exists, the new secure property runs the
->> risk of breaking backwards compatibility.
->> * Secure firmware is responsible for understanding and possibly
->> filtering the secure device tree data.
->>
->> Feedback welcomed.
->>
->> Greg
->> --
->> To unsubscribe from this list: send the line "unsubscribe devicetree-spec" in
->> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree-spec" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This isn't pretty.  Perhaps there's a better way?
+
+> +
+> +		for (fmtp = fmt + 1, j = 0; (c = *fmtp++) != '\0'; ) {
+> +			switch (c) {
+> +			case 'f':	/* full_name */
+> +				if (j++ > 0)
+> +					_HANDLE_CH(':');
+> +				_HANDLE_STR(of_node_full_name(dn));
+> +				break;
+> +			case 'n':	/* name */
+> +				if (j++ > 0)
+> +					_HANDLE_CH('|');
+> +				_HANDLE_STR(dn->name);
+> +				break;
+> +			case 'p':	/* phandle */
+> +				if (j++ > 0)
+> +					_HANDLE_CH('|');
+> +				snprintf(tbuf, sizeof(tbuf), "%u",
+> +						(unsigned int)dn->phandle);
+> +				_HANDLE_STR(tbuf);
+> +				break;
+> +			case 'P':	/* path-spec */
+> +				if (j++ > 0)
+> +					_HANDLE_CH('|');
+> +				_HANDLE_STR(dn->name);
+> +				/* need to tack on the @ postfix */
+> +				p = strchr(of_node_full_name(dn), '@');
+> +				if (p)
+> +					_HANDLE_STR(p);
+> +				break;
+> +			case 'F':	/* flags */
+> +				if (j++ > 0)
+> +					_HANDLE_CH('|');
+> +				snprintf(tbuf, sizeof(tbuf), "%c%c%c%c",
+> +					of_node_check_flag(dn, OF_DYNAMIC) ?
+> +						'D' : '-',
+> +					of_node_check_flag(dn, OF_DETACHED) ?
+> +						'd' : '-',
+> +					of_node_check_flag(dn, OF_POPULATED) ?
+> +						'P' : '-',
+> +					of_node_check_flag(dn,
+> +						OF_POPULATED_BUS) ?  'B' : '-');
+> +				_HANDLE_STR(tbuf);
+> +				break;
+> +			case 'c':	/* major compatible string */
+> +				if (j++ > 0)
+> +					_HANDLE_CH('|');
+> +				ret = of_property_read_string(dn, "compatible",
+> +						&p);
+> +				if (ret == 0)
+> +					_HANDLE_STR(p);
+> +				break;
+> +			case 'C':	/* full compatible string */
+> +				if (j++ > 0)
+> +					_HANDLE_CH('|');
+> +				i = 0;
+> +				while (of_property_read_string_index(dn,
+> +						"compatible", i, &p) == 0) {
+> +					if (i == 0)
+> +						_HANDLE_STR("\"");
+> +					else
+> +						_HANDLE_STR("\",\"");
+> +					_HANDLE_STR(p);
+> +					i++;
+> +				}
+> +				if (i > 0)
+> +					_HANDLE_STR("\"");
+> +				break;
+> +			case 'r':	/* node reference count */
+> +				if (j++ > 0)
+> +					_HANDLE_CH('|');
+> +				snprintf(tbuf, sizeof(tbuf), "%u",
+> +					atomic_read(&dn->kobj.kref.refcount));
+> +				_HANDLE_STR(tbuf);
+> +				break;
+> +			default:
+> +				break;
+> +			}
+> +		}
+> +	}
+> +	/* finish up */
+> +	while (buf < end && len < spec.field_width--)
+> +		*buf++ = ' ';
+> +#undef _HANDLE_CH
+> +#undef _HANDLE_STR
+
+
