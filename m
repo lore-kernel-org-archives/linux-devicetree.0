@@ -1,50 +1,59 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v4 09/10] ARM: STi: stih416: Use new platform specific compatible string
-Date: Wed, 21 Jan 2015 15:24:27 +0000
-Message-ID: <1421853868-8262-10-git-send-email-lee.jones@linaro.org>
-References: <1421853868-8262-1-git-send-email-lee.jones@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1421853868-8262-1-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [STLinux Kernel] [PATCH 1/1] i2c: i2c-st: Rename clock reference
+ to something that exists
+Date: Wed, 21 Jan 2015 15:26:41 +0000
+Message-ID: <20150121152641.GE22024@x1>
+References: <1409234523-20240-1-git-send-email-lee.jones@linaro.org>
+ <53FF3D55.40006@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <53FF3D55.40006@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Coquelin <maxime.coquelin@st.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kernel@stlinux.com, wsa@the-dreams.de
 List-Id: devicetree@vger.kernel.org
 
-The FSM SPI NOR driver now obtains syscfg particulars using DT match. In
-order for this to happen each platform is required to supply their own
-specific compatible string.
+On Thu, 28 Aug 2014, Maxime Coquelin wrote:
+> On 08/28/2014 04:02 PM, Lee Jones wrote:
+> >CLK_S_ICN_REG_0 hasn't existed for a while now.  This was renamed
+> >over a few commits, then finally removed in commit 5aa02b9 (ARM:
+> >STi: DT: STiH415: Remove unused CLK_S_ICN_REG_0 fixed clock).
+> >
+> >Signed-off-by: Lee Jones <lee.jones@linaro.org>
+>=20
+> Maybe it will be part of my next pull-requests, but in case it is
+> not, you can add my:
+> Acked-by: Maxime Coquelin <maxime.coquelin@st.com>
 
-We're also remove the old, now unused vendor properties from the node.
+Still nothing from the big man.
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- arch/arm/boot/dts/stih416.dtsi | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+Can you just take this please Maxime?
 
-diff --git a/arch/arm/boot/dts/stih416.dtsi b/arch/arm/boot/dts/stih416.dtsi
-index fad9073..2e35bab7 100644
---- a/arch/arm/boot/dts/stih416.dtsi
-+++ b/arch/arm/boot/dts/stih416.dtsi
-@@ -216,13 +216,11 @@
- 
- 		/* FSM */
- 		spifsm: spifsm@fe902000 {
--			compatible	   = "st,spi-fsm";
-+			compatible	   = "st,stih416-spi-fsm";
- 			reg		   = <0xfe902000 0x1000>;
- 			pinctrl-0	   = <&pinctrl_fsm>;
- 
- 			st,syscfg	   = <&syscfg_rear>;
--			st,boot-device-reg = <0x958>;
--			st,boot-device-spi = <0x1a>;
- 
- 			status = "disabled";
- 		};
--- 
-1.9.1
+> >---
+> >  Documentation/devicetree/bindings/i2c/i2c-st.txt | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> >diff --git a/Documentation/devicetree/bindings/i2c/i2c-st.txt b/Docu=
+mentation/devicetree/bindings/i2c/i2c-st.txt
+> >index 437e0db..4c26fda 100644
+> >--- a/Documentation/devicetree/bindings/i2c/i2c-st.txt
+> >+++ b/Documentation/devicetree/bindings/i2c/i2c-st.txt
+> >@@ -31,7 +31,7 @@ i2c0: i2c@fed40000 {
+> >  	compatible	=3D "st,comms-ssc4-i2c";
+> >  	reg		=3D <0xfed40000 0x110>;
+> >  	interrupts	=3D  <GIC_SPI 187 IRQ_TYPE_LEVEL_HIGH>;
+> >-	clocks		=3D <&CLK_S_ICN_REG_0>;
+> >+	clocks		=3D <&clk_s_a0_ls CLK_ICN_REG>;
+> >  	clock-names	=3D "ssc";
+> >  	clock-frequency =3D <400000>;
+> >  	pinctrl-names	=3D "default";
+> >
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
