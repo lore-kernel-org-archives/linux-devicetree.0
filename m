@@ -1,97 +1,74 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4 5/5] ARM: sunxi: dts: Add PS2 nodes for
- A20 lime2 board
-Date: Wed, 21 Jan 2015 13:23:29 +0100
-Message-ID: <20150121122329.GG4367@lukather>
-References: <1421417021-3247-1-git-send-email-vishnupatekar0510@gmail.com>
- <1421417021-3247-6-git-send-email-vishnupatekar0510@gmail.com>
- <54BE8A0E.30604@gmail.com>
- <20150120200740.GY4367@lukather>
- <CAEzqOZsWYQ+Aep6HBZXVtKGEJgKYAKJU2b0=nGvP0jPKECxn7g@mail.gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 2/3] mfd: lubbock_io: add lubbock_io board
+Date: Wed, 21 Jan 2015 12:35:51 +0000
+Message-ID: <20150121123551.GD9258@x1>
+References: <1421406010-14851-1-git-send-email-robert.jarzmik@free.fr>
+ <1421406010-14851-2-git-send-email-robert.jarzmik@free.fr>
+ <20150119091705.GG21886@x1>
+ <87ppaah9k5.fsf@free.fr>
+ <20150120102919.GP5767@x1>
+ <20150120115658.GJ26493@n2100.arm.linux.org.uk>
+ <873874fuei.fsf@free.fr>
+ <20150121081645.GC9258@x1>
+ <87y4owedx1.fsf@free.fr>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="0EIE/3F9PxFGTcfe"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBH5V72SQKGQE5YJR6LQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAEzqOZsWYQ+Aep6HBZXVtKGEJgKYAKJU2b0=nGvP0jPKECxn7g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Iain Paton <ipaton0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87y4owedx1.fsf-GANU6spQydw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---0EIE/3F9PxFGTcfe
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+On Wed, 21 Jan 2015, Robert Jarzmik wrote:
 
-On Wed, Jan 21, 2015 at 04:34:45PM +0530, Vishnu Patekar wrote:
-> Hello,
-> 
-> On Wed, Jan 21, 2015 at 1:37 AM, Maxime Ripard
-> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> writes:
+>=20
+> > On Wed, 21 Jan 2015, Robert Jarzmik wrote:
+> >> > > > platform_get_irq()?
+> >> > > No. I need the flags.
+> >> > Where are they used?
+> >> A couple of lines below, using local "irqflags" variable :
+> >>        ret =3D devm_request_irq(&pdev->dev, cot->irq, lubbock_irq_=
+handler,
+> >>                               irqflags, dev_name(&pdev->dev), cot)=
+;
 > >
-> > On Tue, Jan 20, 2015 at 05:02:06PM +0000, Iain Paton wrote:
-> > > On 16/01/15 14:03, Vishnu Patekar wrote:
-> > > > Signed-off-by: VishnuPatekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > > > ---
-> > > >  arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts |   12 ++++++++++++
-> > > >  1 file changed, 12 insertions(+)
-> > > >
-> > > > diff --git a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
-> > > > index ed364d5..3365f12 100644
-> > > > --- a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
-> > > > +++ b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
-> > > > @@ -113,6 +113,18 @@
-> > > >                     status = "okay";
-> > > >             };
-> > > >
-> > > > +           ps20: ps2@01c2a000 {
-> > > > +                   pinctrl-names = "default";
-> > > > +                   pinctrl-0 = <&ps20_pins_a>;
-> > > > +                   status = "okay";
-> > > > +           };
-> > > > +
-> > > > +           ps21: ps2@01c2a400 {
-> > > > +                   pinctrl-names = "default";
-> > > > +                   pinctrl-0 = <&ps21_pins_a>;
-> > > > +                   status = "okay";
-> > > > +           };
-> > > > +
-> > > >             i2c0: i2c@01c2ac00 {
-> > > >                     pinctrl-names = "default";
-> > > >                     pinctrl-0 = <&i2c0_pins_a>;
-> > > >
-> > >
-> > > As the Lime2 doesn't actually have any PS2 connectors on the board,
-> > > I'd prefer that these are not enabled unconditionally. Doing so
-> > > only makes it more difficult for people who want to use these pins
-> > > for other functions.
-> > >
-> > > Device tree overlays seem to be close to being merged, perhaps we
-> > > could leave enabling this to an overlay?
-> >
-> > I already had the exact same reasoning, and this was even removed at
-> > some point. For some reason, it was added back, and I don't really
-> > know why.
-> This was removed in consideration that these pins conflict with HDMI,
-> however, these is not conflict.
-> 
-> It was kept there as an example. But, as there is no ps2 connector on
-> board, I've no problem to remove these nodes from Lime2 dts file.
+> > No, I mean where are they _used_?
+> I don't get your point.
+>=20
+> For you, isn't it "using" irqflags by passing them as an argument to =
+devm_request_irq()
 
-Yet, probing a driver for a device connected to floating lines sounds
-like a pretty bad idea.
+No, this is where the argument is being _passed_.
 
-Maxime
+> ??? And if you think ahead, then there are used all around in
+> kernel/irq/manage.c, as you probably know.
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---0EIE/3F9PxFGTcfe--
+Perhaps some context would help.
+
+Looking at one of the other patches in the series it appears the flag
+you're trying to capture is IORESOURCE_IRQ_LOWEDGE.  When I grep for
+where this is being _used_ (think 'consumed, rather than passed.  I
+only see a single entry in drivers/pnp/interface.c.
+
+That's what got me thinking... are you sure you're a) making use of
+this flag and b) assuming the answer to 'a' is "no" and if everyting's
+working correctly in the code's current state, are you sure you need
+them at all?=20
+
+I think to set an edge trigger on an IRQ, you should instead do so via
+irq_set_irq_type(), or have a missed a line or two?
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
