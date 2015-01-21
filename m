@@ -1,104 +1,68 @@
-From: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH RFC 1/2] Documentation: arm: define DT bindings for
- system suspend
-Date: Wed, 21 Jan 2015 21:35:07 +0800
-Message-ID: <20150121213507.695b871b@xhacker>
-References: <1421840155-18990-1-git-send-email-sudeep.holla@arm.com>
-	<1421840155-18990-2-git-send-email-sudeep.holla@arm.com>
-	<20150121212139.1cdc3fd5@xhacker>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v10 9/9] ASoC: add generic dt-card support
+Date: Wed, 21 Jan 2015 13:50:53 +0000
+Message-ID: <20150121135053.GI21293@sirena.org.uk>
+References: <cover.1421782532.git.moinejf@free.fr>
+ <ddd1b299eca187ab2fa9b119da2ec8297ead1a66.1421782533.git.moinejf@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="GlnCQLZWzqLRJED8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150121212139.1cdc3fd5@xhacker>
+Content-Disposition: inline
+In-Reply-To: <ddd1b299eca187ab2fa9b119da2ec8297ead1a66.1421782533.git.moinejf-GANU6spQydw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jonghwa Lee <jonghwa3.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Amit Daniel Kachhap <amit.daniel-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Jackson <Andrew.Jackson-5wv7dgnIgG8@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Sudeep,
 
-On Wed, 21 Jan 2015 05:21:39 -0800
-Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org> wrote:
+--GlnCQLZWzqLRJED8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> Dear Sudeep,
-> 
-> On Wed, 21 Jan 2015 03:35:54 -0800
-> Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
-> 
-> > ARM based platforms implement unique ways to enter system suspend
-> > (i.e. Suspend to RAM). The mechanism and the parameters defining the
-> > system state vary on a per-platform basis forcing the OS to handle it
-> > in very platform specific way.
-> > 
-> > Since ARM 32-bit systems had machine specific code, no attempts to
-> > standardize are being made as it provides easy way to implement suspend
-> > operations in a platform specific manner. However, this approach not
-> > only makes maintainance more difficult as the number of platforms
-> > supported increases but also not feasible for ARM64.
-> > 
-> > This DT binding aims at standardizing the system suspend for ARM
-> > platforms. ARM64 platforms mandates entry-method property in DT for
-> > this system suspend node.
-> > 
-> > On system implementing PSCI as an enable-method to enter system suspend,
-> > the PSCI CPU suspend method is used on versions upto v0.2 and requires
-> > the power_state parameter to be passed to the PSCI CPU suspend function.
-> > 
-> > This parameter is platform specific, therefore must be provided by
-> > firmware to the OS in order to enable proper call sequence.
-> > 
-> > This ARM system suspend DT bindings rely on a property
-> > (i.e. arm,psci-suspend-param) in the PSCI DT bindings that describes
-> > how the PSCI CPU suspend power_state parameter should be defined in DT.
-> > 
-> > Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-> > ---
-> >  Documentation/devicetree/bindings/arm/psci.txt     | 11 +++
-> >  .../devicetree/bindings/arm/system-suspend.txt     | 93
-> > ++++++++++++++++++++++ 2 files changed, 104 insertions(+)
-> >  create mode 100644
-> > Documentation/devicetree/bindings/arm/system-suspend.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/arm/psci.txt
-> > b/Documentation/devicetree/bindings/arm/psci.txt index
-> > 5aa40ede0e99..bd3977a2a333 100644 ---
-> > a/Documentation/devicetree/bindings/arm/psci.txt +++
-> > b/Documentation/devicetree/bindings/arm/psci.txt @@ -61,6 +61,14 @@ Device
-> > tree nodes that require usage of PSCI CPU_SUSPEND function (ie idle
-> > Definition: power_state parameter to pass to the PSCI suspend call.
-> >  
-> > +PSCI v0.2 and earlier versions don't have explicit operation for system
-> > +suspend. However, one can implement system suspend using CPU_SUSPEND by
-> > +ensuring every other core except the one executing the CPU_SUSPEND call
-> > +has called into PSCI through a CPU_OFF call.
-> 
-> If users explicitly hot-unplug other cores when system load is low to save
-> power, then we want to suspend at some point, how does the firmware know
-> this case?
+On Tue, Jan 20, 2015 at 08:16:25PM +0100, Jean-Francois Moine wrote:
+> To create simple cards, the syntax of the simple-card does not follow
+> the common binding of the device graphs
+> (Documentation/devicetree/bindings/graph.txt).
 
-Sorry for confusion. I mean 
+Please be more specific, I really can't tell what this is supposed to be
+doing from the above - in what way is the binding not common and why
+would anyone care?  Please also address why this is done as a completely
+separate implementation rather than a new revision of simple-card and CC
+Morimoto-san so he can review (given that he did simple-card initially).
 
-If users explicitly hot-unplug other cores when system load is low to save
-power, then at some point cpuidle want to suspend the cluster, how does the
-distinguish this case with suspend the system to ram.
+>  sound/soc/generic/Kconfig   |   2 +
+>  sound/soc/generic/Makefile  |   2 +
+>  sound/soc/generic/dt-card.c | 275 ++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 279 insertions(+)
+>  create mode 100644 sound/soc/generic/dt-card.c
 
-> 
-> In my private tree, I extend the PSCI spec to tell firmware we want to
-> suspend the system.
+As you know all device tree bindings require binding documents; you must
+supply a binding document.  I'm not going to look at any DT patches that
+don't include binding documentation.
 
-I extend the PSCI suspend function to help firmware distinguish suspend system
-to ram and other suspend cores/clusters.
+In general please pay attention to changelogs and documentation when
+submitting patches, the harder it is to understand what a patch is
+supposed to do or why the harder it is to review.  I keep saying this,
+it's really important.
 
-> 
-> Thanks,
-> Jisheng
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+--GlnCQLZWzqLRJED8
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJUv668AAoJECTWi3JdVIfQTCQH/3LeWH0MvFi6Qqax4tZWuAvl
+uPsAYOvWkxKu9b28WmnFC+xco356sr9wcslrN/zmlh7LwuGPQUvnEbCrXOQIosjj
+zb2UuJUJdjlKZDRvoFti8OiEKqcz1L7uO2EDrc8LBMlE40U6rdu+ajrZ+hwtSqhS
+U9i7/ELtVZBCsI6PHSSP7Ajv8XgpWUqqrC7oSrnsW5I3ol9APZIlX0c2MO5fQQrT
+ZZzP99L7kopiJ5LtwkK1/0VxxOoPBAGLWd/JFtByDyESq6APEEuX2EcxqniKvA/W
+Ynv6SoCdm8GjFt9lg0dWc6vmsa1Yf1thdQrGAJ/mYqvorlLN/TO827KNVY+VYTg=
+=0ztJ
+-----END PGP SIGNATURE-----
+
+--GlnCQLZWzqLRJED8--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
