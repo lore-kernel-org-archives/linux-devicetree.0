@@ -1,78 +1,48 @@
-From: Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
-Subject: [PATCH v4 2/3] arm64: dts: Add APM X-Gene DMA device and DMA clock DTS nodes
-Date: Wed, 21 Jan 2015 16:31:10 +0530
-Message-ID: <1421838071-7347-3-git-send-email-rsahu@apm.com>
-References: <1421838071-7347-1-git-send-email-rsahu@apm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1421838071-7347-1-git-send-email-rsahu-qTEPVZfXA3Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
-Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ddutile-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+From: Rameshwar Prasad Sahu <rsahu@apm.com>
+Subject: [PATCH v4 0/3] dmaengine: APM X-Gene SoC DMA engine driver support
+Date: Wed, 21 Jan 2015 16:31:08 +0530
+Message-ID: <1421838071-7347-1-git-send-email-rsahu@apm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: vinod.koul@intel.com, dan.j.williams@intel.com
+Cc: devicetree@vger.kernel.org, arnd@arndb.de, jcm@redhat.com, Rameshwar Prasad Sahu <rsahu@apm.com>, patches@apm.com, linux-kernel@vger.kernel.org, ddutile@redhat.com, Loc Ho <lho@apm.com>, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the device tree node for APM X-Gene SoC
-DMA controller and DMA clock.
+This patch set implements the APM X-Gene SoC DMA driver
+support to offload the DMA operations such as memory copy(memcpy),
+scatter gathering.
 
-Signed-off-by: Rameshwar Prasad Sahu <rsahu-qTEPVZfXA3Y@public.gmane.org>
-Signed-off-by: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+v4 changes:
+	1. Fixed dma-ranges property on DTS.
+
+Signed-off-by: Rameshwar Prasad Sahu <rsahu@apm.com>
+Signed-off-by: Loc Ho <lho@apm.com>
 ---
- arch/arm64/boot/dts/apm/apm-storm.dtsi | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/apm/apm-storm.dtsi b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-index f1ad9c2..1c0c8ca 100644
---- a/arch/arm64/boot/dts/apm/apm-storm.dtsi
-+++ b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-@@ -102,6 +102,7 @@
- 		#address-cells = <2>;
- 		#size-cells = <2>;
- 		ranges;
-+		dma-ranges = <0x0 0x0 0x0 0x0 0x400 0x0>;
+Rameshwar Prasad Sahu (3):
+  dmaengine: Add support for APM X-Gene SoC DMA engine driver
+  arm64: dts: Add APM X-Gene DMA device and DMA clock DTS nodes
+  Documentation: dma: Add APM X-Gene SoC DMA engine driver documentation
 
- 		clocks {
- 			#address-cells = <2>;
-@@ -352,6 +353,15 @@
- 				reg-names = "csr-reg";
- 				clock-output-names = "pcie4clk";
- 			};
-+
-+			dmaclk: dmaclk@1f27c000 {
-+				compatible = "apm,xgene-device-clock";
-+				#clock-cells = <1>;
-+				clocks = <&socplldiv2 0>;
-+				reg = <0x0 0x1f27c000 0x0 0x1000>;
-+				reg-names = "csr-reg";
-+				clock-output-names = "dmaclk";
-+			};
- 		};
+ .../devicetree/bindings/dma/apm-xgene-dma.txt      |   49 +
+ arch/arm64/boot/dts/apm/apm-storm.dtsi             |   26 +
+ drivers/dma/Kconfig                                |    8 +
+ drivers/dma/Makefile                               |    1 +
+ drivers/dma/xgene-dma.c                            | 1566 ++++++++++++++++++++
+ 5 files changed, 1650 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/apm-xgene-dma.txt
+ create mode 100644 drivers/dma/xgene-dma.c
 
- 		pcie0: pcie@1f2b0000 {
-@@ -656,5 +666,21 @@
- 			interrupts = <0x0 0x41 0x4>;
- 			clocks = <&rngpkaclk 0>;
- 		};
-+
-+		dma: dma@1f270000 {
-+			compatible = "apm,xgene-dma";
-+			device_type = "dma";
-+			reg = <0x0 0x1f270000 0x0 0x10000>,
-+			      <0x0 0x1f200000 0x0 0x10000>,
-+			      <0x0 0x1b008000 0x0 0x2000>;
-+			reg-names = "dma_csr", "ring_csr", "ring_cmd";
-+			interrupts = <0x0 0x82 0x4>,
-+				     <0x0 0xb8 0x4>,
-+				     <0x0 0xb9 0x4>,
-+				     <0x0 0xba 0x4>,
-+				     <0x0 0xbb 0x4>;
-+			dma-coherent;
-+			clocks = <&dmaclk 0>;
-+		};
- 	};
- };
 --
 1.8.2.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
