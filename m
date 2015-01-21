@@ -1,143 +1,71 @@
-Return-Path: <gabriel.fernandez@linaro.org>
+Return-Path: <sneeker.yeh@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <000e01d01a7f$47592e20$d60b8a60$%han@samsung.com>
-References: <1418812486-12394-1-git-send-email-gabriel.fernandez@linaro.org>
-	<1418812486-12394-5-git-send-email-gabriel.fernandez@linaro.org>
-	<1507589.aeTeyNn1QF@wuerfel>
-	<000e01d01a7f$47592e20$d60b8a60$%han@samsung.com>
-Date: Mon, 19 Jan 2015 13:38:53 +0100
-Message-ID: <CAG374jBZCn+V2zjcAwdKEb0COzBT2VES5uiw0gc40mFvoraERA@mail.gmail.com>
-Subject: Re: [PATCH 4/5] PCI: designware: Add setup bus-related to pcie_host_ops
-From: Gabriel Fernandez <gabriel.fernandez@linaro.org>
-Content-Type: multipart/alternative; boundary=047d7b3a9a84e78005050d009a70
-To: Jingoo Han <jg1.han@samsung.com>
-Cc: Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Bjorn Helgaas <bhelgaas@google.com>, Mohit Kumar <mohit.kumar@st.com>, Grant Likely <grant.likely@linaro.org>, Fabrice Gasnier <fabrice.gasnier@st.com>, Viresh Kumar <viresh.kumar@linaro.org>, Thierry Reding <treding@nvidia.com>, Minghuan Lian <Minghuan.Lian@freescale.com>, Magnus Damm <damm@opensource.se>, Will Deacon <will.deacon@arm.com>, Tanmay Inamdar <tinamdar@apm.com>, Murali Karicheri <m-karicheri2@ti.com>, Kishon Vijay Abraham I <kishon@ti.com>, Pratyush Anand <pratyush.anand@st.com>, Sachin Kamat <sachin.kamat@samsung.com>, Andrew Lunn <andrew@lunn.ch>, Liviu Dudau <Liviu.Dudau@arm.com>, Srikanth Thokala <sthokal@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@stlinux.com" <kernel@stlinux.com>, linux-pci@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
+In-Reply-To: <20150119144828.GE20386@saruman>
+References: <1421654209-6486-1-git-send-email-Sneeker.Yeh@tw.fujitsu.com>
+	<1421654209-6486-2-git-send-email-Sneeker.Yeh@tw.fujitsu.com>
+	<20150119144828.GE20386@saruman>
+Date: Wed, 21 Jan 2015 16:51:58 +0800
+Message-ID: <CAJ1gpc24aAU6VG6MEH81tMj2nAt+hPDXC-eLLF9Zp+t4u_DQTg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/5] usb: dwc3: add Fujitsu Specific Glue layer
+From: Sneeker Yeh <sneeker.yeh@gmail.com>
+Content-Type: multipart/alternative; boundary=047d7bdc8d66149901050d25ab60
+To: Felipe Balbi <balbi@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Grant Likely <grant.likely@linaro.org>, Huang Rui <ray.huang@amd.com>, Kishon Vijay Abraham I <kishon@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, Andy Green <andy.green@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Sneeker Yeh <Sneeker.Yeh@tw.fujitsu.com>
 List-ID: <devicetree@vger.kernel.org>
 
---047d7b3a9a84e78005050d009a70
+--047d7bdc8d66149901050d25ab60
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
 
-Hi Arnd, Jingoo,
+hi
 
-On 18 December 2014 at 05:58, Jingoo Han <jg1.han@samsung.com> wrote:
+2015-01-19 22:48 GMT+08:00 Felipe Balbi <balbi@ti.com>:
 
-> On Thursday, December 18, 2014 7:16 AM, Arnd Bergmann wrote:
-> > On Wednesday 17 December 2014 11:34:45 Gabriel FERNANDEZ wrote:
-> > > ST sti SoCs PCIe IPs are built around DesignWare IP Core.
-> > > But in these SoCs PCIe IP doesn't support IO.
->
-> Hi Gabriel,
->
-> I cannot understand how ST sti SoCs PCIe IP does not support I/O.
-> As far as I know, it cannot be selected by the 'parameter'.
-> Then, H/W engineers dropped out the I/O control logic?
->
-> > >
-> > > To support this, add setup_bus() to pcie_host_ops.
->
->
-> > >
-> > > Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-> > > Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+> On Mon, Jan 19, 2015 at 03:56:45PM +0800, Sneeker Yeh wrote:
+> > This patch adds support for Synopsis DesignWare USB3 IP Core found
+> > on Fujitsu Socs.
 > >
-> > The dw-pcie driver should be able to tell whether the device has
-> > an I/O space or not, and do the right thing based on that. Don't
-> > add an implementation specific callback for that.
+> > Signed-off-by: Sneeker Yeh <Sneeker.Yeh@tw.fujitsu.com>
 >
-> I agree with Arnd's opinion.
+> if this is moved after patch 3, you don't need to patch it again to add
+> the quirk ;-)
 >
-> In addition, I have one more question.
-> Then, if a device that requires I/O region is connected to
-> PCIe slot of ST sti SoCs PCIe, what will happen?
-> It just prints error messages?
->
-> Best regards,
-> Jingoo Han
->
-> >
-> >       Arnd
->
->
-Arnd i
-n other post mention to add an empty I/O space to workaround lack of I/O
-port access.
-Is it the right thing to do ?
-=E2=80=8B
-http://lists.infradead.org/pipermail/linux-arm-kernel/2014-November/299623.=
-html
+
+oh, I see. I'll re-order this patchset.
+
+Much appreciate,
+Sneeker
 
 
-=E2=80=8BBest regards
-=E2=80=8B=E2=80=8B
+>
+> --
+> balbi
+>
 
---047d7b3a9a84e78005050d009a70
+--047d7bdc8d66149901050d25ab60
 Content-Type: text/html; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><div class=3D"gmail_default" style=3D"font-family:&#39;cou=
-rier new&#39;,monospace">Hi Arnd, Jingoo,</div><div class=3D"gmail_extra"><=
-br><div class=3D"gmail_quote">On 18 December 2014 at 05:58, Jingoo Han <spa=
-n dir=3D"ltr">&lt;<a href=3D"mailto:jg1.han@samsung.com" target=3D"_blank">=
-jg1.han@samsung.com</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quo=
-te" style=3D"margin:0px 0px 0px 0.8ex;border-left-width:1px;border-left-col=
-or:rgb(204,204,204);border-left-style:solid;padding-left:1ex"><span>On Thur=
-sday, December 18, 2014 7:16 AM, Arnd Bergmann wrote:<br>
-&gt; On Wednesday 17 December 2014 11:34:45 Gabriel FERNANDEZ wrote:<br>
-&gt; &gt; ST sti SoCs PCIe IPs are built around DesignWare IP Core.<br>
-&gt; &gt; But in these SoCs PCIe IP doesn&#39;t support IO.<br>
-<br>
-</span>Hi Gabriel,<br>
-<br>
-I cannot understand how ST sti SoCs PCIe IP does not support I/O.<br>
-As far as I know, it cannot be selected by the &#39;parameter&#39;.<br>
-Then, H/W engineers dropped out the I/O control logic?<br>
-<span><br>
-&gt; &gt;<br>
-&gt; &gt; To support this, add setup_bus() to pcie_host_ops.<br>
-<br>
-<br>
-&gt; &gt;<br>
-&gt; &gt; Signed-off-by: Fabrice Gasnier &lt;<a href=3D"mailto:fabrice.gasn=
-ier@st.com" target=3D"_blank">fabrice.gasnier@st.com</a>&gt;<br>
-&gt; &gt; Signed-off-by: Gabriel Fernandez &lt;<a href=3D"mailto:gabriel.fe=
-rnandez@linaro.org" target=3D"_blank">gabriel.fernandez@linaro.org</a>&gt;<=
-br>
+<div dir=3D"ltr">hi<br><div><div class=3D"gmail_extra"><br><div class=3D"gm=
+ail_quote">2015-01-19 22:48 GMT+08:00 Felipe Balbi <span dir=3D"ltr">&lt;<a=
+ href=3D"mailto:balbi@ti.com" target=3D"_blank">balbi@ti.com</a>&gt;</span>=
+:<br><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-le=
+ft:1px #ccc solid;padding-left:1ex"><span class=3D"">On Mon, Jan 19, 2015 a=
+t 03:56:45PM +0800, Sneeker Yeh wrote:<br>
+&gt; This patch adds support for Synopsis DesignWare USB3 IP Core found<br>
+&gt; on Fujitsu Socs.<br>
 &gt;<br>
-&gt; The dw-pcie driver should be able to tell whether the device has<br>
-&gt; an I/O space or not, and do the right thing based on that. Don&#39;t<b=
-r>
-&gt; add an implementation specific callback for that.<br>
+&gt; Signed-off-by: Sneeker Yeh &lt;<a href=3D"mailto:Sneeker.Yeh@tw.fujits=
+u.com">Sneeker.Yeh@tw.fujitsu.com</a>&gt;<br>
 <br>
-</span>I agree with Arnd&#39;s opinion.<br>
-<br>
-In addition, I have one more question.<br>
-Then, if a device that requires I/O region is connected to<br>
-PCIe slot of ST sti SoCs PCIe, what will happen?<br>
-It just prints error messages?<br>
-<br>
-Best regards,<br>
-Jingoo Han<br>
-<br>
-&gt;<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0Arnd<br>
-<br></blockquote><div><div class=3D"gmail_default" style=3D"font-family:&#3=
-9;courier new&#39;,monospace;display:inline"><br></div></div><div><div clas=
-s=3D"gmail_default" style=3D"font-family:&#39;courier new&#39;,monospace;di=
-splay:inline">Arnd i</div><span style=3D"font-family:&#39;courier new&#39;,=
-monospace">n other post mention to add an empty I/O space to workaround lac=
-k of I/O port access.</span></div><div class=3D"gmail_extra"><div class=3D"=
-gmail_default" style=3D"font-family:&#39;courier new&#39;,monospace">Is it =
-the right thing to do ?=C2=A0</div><div class=3D"gmail_default" style=3D"fo=
-nt-family:&#39;courier new&#39;,monospace">=E2=80=8B<span style=3D"font-fam=
-ily:arial,sans-serif"><a href=3D"http://lists.infradead.org/pipermail/linux=
--arm-kernel/2014-November/299623.html" target=3D"_blank">http://lists.infra=
-dead.org/pipermail/linux-arm-kernel/2014-November/299623.html</a></span></d=
-iv></div><div class=3D"gmail_extra"><br></div><div class=3D"gmail_extra"><b=
-r></div><div class=3D"gmail_extra"><div class=3D"gmail_default" style=3D"fo=
-nt-family:&#39;courier new&#39;,monospace">=E2=80=8BBest regards</div></div=
-><div><div class=3D"gmail_default" style=3D"font-family:&#39;courier new&#3=
-9;,monospace;display:inline">=E2=80=8B=E2=80=8B</div>=C2=A0</div></div><br>=
-</div></div>
+</span>if this is moved after patch 3, you don&#39;t need to patch it again=
+ to add<br>
+the quirk ;-)<br></blockquote><div><br></div><div>oh, I see. I&#39;ll re-or=
+der this patchset.<br><br></div><div>Much appreciate,<br>Sneeker<br></div><=
+div>=C2=A0</div><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8e=
+x;border-left:1px #ccc solid;padding-left:1ex">
+<span class=3D"HOEnZb"><font color=3D"#888888"><br>
+--<br>
+balbi<br>
+</font></span></blockquote></div><br></div></div></div>
 
---047d7b3a9a84e78005050d009a70--
+--047d7bdc8d66149901050d25ab60--
