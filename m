@@ -1,187 +1,97 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH] arm64: Add L2 cache topology to ARM Ltd boards/models
-Date: Wed, 21 Jan 2015 12:02:30 +0000
-Message-ID: <1421841750-26722-1-git-send-email-sudeep.holla@arm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v4 5/5] ARM: sunxi: dts: Add PS2 nodes for
+ A20 lime2 board
+Date: Wed, 21 Jan 2015 13:23:29 +0100
+Message-ID: <20150121122329.GG4367@lukather>
+References: <1421417021-3247-1-git-send-email-vishnupatekar0510@gmail.com>
+ <1421417021-3247-6-git-send-email-vishnupatekar0510@gmail.com>
+ <54BE8A0E.30604@gmail.com>
+ <20150120200740.GY4367@lukather>
+ <CAEzqOZsWYQ+Aep6HBZXVtKGEJgKYAKJU2b0=nGvP0jPKECxn7g@mail.gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="0EIE/3F9PxFGTcfe"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBH5V72SQKGQE5YJR6LQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAEzqOZsWYQ+Aep6HBZXVtKGEJgKYAKJU2b0=nGvP0jPKECxn7g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Iain Paton <ipaton0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Commit 5d425c18653731af6 ("arm64: kernel: add support for cpu cache
-information") adds cacheinfo support for ARM64. Since there's no
-architectural way of detecting the cpus that share particular cache,
-device tree can be used and the core cacheinfo already supports the
-same.
+--0EIE/3F9PxFGTcfe
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-This patch adds the L2 cache topology on Juno board, FVP/RTSM and
-foundation models.
+On Wed, Jan 21, 2015 at 04:34:45PM +0530, Vishnu Patekar wrote:
+> Hello,
+> 
+> On Wed, Jan 21, 2015 at 1:37 AM, Maxime Ripard
+> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> >
+> > On Tue, Jan 20, 2015 at 05:02:06PM +0000, Iain Paton wrote:
+> > > On 16/01/15 14:03, Vishnu Patekar wrote:
+> > > > Signed-off-by: VishnuPatekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > > > ---
+> > > >  arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts |   12 ++++++++++++
+> > > >  1 file changed, 12 insertions(+)
+> > > >
+> > > > diff --git a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
+> > > > index ed364d5..3365f12 100644
+> > > > --- a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
+> > > > +++ b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
+> > > > @@ -113,6 +113,18 @@
+> > > >                     status = "okay";
+> > > >             };
+> > > >
+> > > > +           ps20: ps2@01c2a000 {
+> > > > +                   pinctrl-names = "default";
+> > > > +                   pinctrl-0 = <&ps20_pins_a>;
+> > > > +                   status = "okay";
+> > > > +           };
+> > > > +
+> > > > +           ps21: ps2@01c2a400 {
+> > > > +                   pinctrl-names = "default";
+> > > > +                   pinctrl-0 = <&ps21_pins_a>;
+> > > > +                   status = "okay";
+> > > > +           };
+> > > > +
+> > > >             i2c0: i2c@01c2ac00 {
+> > > >                     pinctrl-names = "default";
+> > > >                     pinctrl-0 = <&i2c0_pins_a>;
+> > > >
+> > >
+> > > As the Lime2 doesn't actually have any PS2 connectors on the board,
+> > > I'd prefer that these are not enabled unconditionally. Doing so
+> > > only makes it more difficult for people who want to use these pins
+> > > for other functions.
+> > >
+> > > Device tree overlays seem to be close to being merged, perhaps we
+> > > could leave enabling this to an overlay?
+> >
+> > I already had the exact same reasoning, and this was even removed at
+> > some point. For some reason, it was added back, and I don't really
+> > know why.
+> This was removed in consideration that these pins conflict with HDMI,
+> however, these is not conflict.
+> 
+> It was kept there as an example. But, as there is no ps2 connector on
+> board, I've no problem to remove these nodes from Lime2 dts file.
 
-Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
----
- arch/arm64/boot/dts/arm/foundation-v8.dts  |  8 ++++++++
- arch/arm64/boot/dts/arm/juno.dts           | 14 ++++++++++++++
- arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts |  8 ++++++++
- 3 files changed, 30 insertions(+)
+Yet, probing a driver for a device connected to floating lines sounds
+like a pretty bad idea.
 
-Hi Arnd/Olof,
+Maxime
 
-Though this patch and commit 5d425c18653731af6 ("arm64: kernel: add
-support for cpu cache information") which is in -next(via arm64) are
-dependent to provide desired functionality, then can go indepedently
-if you think there could be conflicts if this change is taken via arm64.
-If not, Catalin can pick up with your acks after the review.
-
-Regards,
-Sudeep
-
-diff --git a/arch/arm64/boot/dts/arm/foundation-v8.dts b/arch/arm64/boot/dts/arm/foundation-v8.dts
-index 27f32962e55c..4eac8dcea423 100644
---- a/arch/arm64/boot/dts/arm/foundation-v8.dts
-+++ b/arch/arm64/boot/dts/arm/foundation-v8.dts
-@@ -34,6 +34,7 @@
- 			reg = <0x0 0x0>;
- 			enable-method = "spin-table";
- 			cpu-release-addr = <0x0 0x8000fff8>;
-+			next-level-cache = <&L2_0>;
- 		};
- 		cpu@1 {
- 			device_type = "cpu";
-@@ -41,6 +42,7 @@
- 			reg = <0x0 0x1>;
- 			enable-method = "spin-table";
- 			cpu-release-addr = <0x0 0x8000fff8>;
-+			next-level-cache = <&L2_0>;
- 		};
- 		cpu@2 {
- 			device_type = "cpu";
-@@ -48,6 +50,7 @@
- 			reg = <0x0 0x2>;
- 			enable-method = "spin-table";
- 			cpu-release-addr = <0x0 0x8000fff8>;
-+			next-level-cache = <&L2_0>;
- 		};
- 		cpu@3 {
- 			device_type = "cpu";
-@@ -55,6 +58,11 @@
- 			reg = <0x0 0x3>;
- 			enable-method = "spin-table";
- 			cpu-release-addr = <0x0 0x8000fff8>;
-+			next-level-cache = <&L2_0>;
-+		};
-+
-+		L2_0: l2-cache0 {
-+			compatible = "cache";
- 		};
- 	};
- 
-diff --git a/arch/arm64/boot/dts/arm/juno.dts b/arch/arm64/boot/dts/arm/juno.dts
-index cb3073e4e7a8..15dafbb24426 100644
---- a/arch/arm64/boot/dts/arm/juno.dts
-+++ b/arch/arm64/boot/dts/arm/juno.dts
-@@ -39,6 +39,7 @@
- 			reg = <0x0 0x0>;
- 			device_type = "cpu";
- 			enable-method = "psci";
-+			next-level-cache = <&A57_L2>;
- 		};
- 
- 		A57_1: cpu@1 {
-@@ -46,6 +47,7 @@
- 			reg = <0x0 0x1>;
- 			device_type = "cpu";
- 			enable-method = "psci";
-+			next-level-cache = <&A57_L2>;
- 		};
- 
- 		A53_0: cpu@100 {
-@@ -53,6 +55,7 @@
- 			reg = <0x0 0x100>;
- 			device_type = "cpu";
- 			enable-method = "psci";
-+			next-level-cache = <&A53_L2>;
- 		};
- 
- 		A53_1: cpu@101 {
-@@ -60,6 +63,7 @@
- 			reg = <0x0 0x101>;
- 			device_type = "cpu";
- 			enable-method = "psci";
-+			next-level-cache = <&A53_L2>;
- 		};
- 
- 		A53_2: cpu@102 {
-@@ -67,6 +71,7 @@
- 			reg = <0x0 0x102>;
- 			device_type = "cpu";
- 			enable-method = "psci";
-+			next-level-cache = <&A53_L2>;
- 		};
- 
- 		A53_3: cpu@103 {
-@@ -74,6 +79,15 @@
- 			reg = <0x0 0x103>;
- 			device_type = "cpu";
- 			enable-method = "psci";
-+			next-level-cache = <&A53_L2>;
-+		};
-+
-+		A57_L2: l2-cache0 {
-+			compatible = "cache";
-+		};
-+
-+		A53_L2: l2-cache1 {
-+			compatible = "cache";
- 		};
- 	};
- 
-diff --git a/arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts b/arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts
-index efc59b3baf63..20addabbd127 100644
---- a/arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts
-+++ b/arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts
-@@ -37,6 +37,7 @@
- 			reg = <0x0 0x0>;
- 			enable-method = "spin-table";
- 			cpu-release-addr = <0x0 0x8000fff8>;
-+			next-level-cache = <&L2_0>;
- 		};
- 		cpu@1 {
- 			device_type = "cpu";
-@@ -44,6 +45,7 @@
- 			reg = <0x0 0x1>;
- 			enable-method = "spin-table";
- 			cpu-release-addr = <0x0 0x8000fff8>;
-+			next-level-cache = <&L2_0>;
- 		};
- 		cpu@2 {
- 			device_type = "cpu";
-@@ -51,6 +53,7 @@
- 			reg = <0x0 0x2>;
- 			enable-method = "spin-table";
- 			cpu-release-addr = <0x0 0x8000fff8>;
-+			next-level-cache = <&L2_0>;
- 		};
- 		cpu@3 {
- 			device_type = "cpu";
-@@ -58,6 +61,11 @@
- 			reg = <0x0 0x3>;
- 			enable-method = "spin-table";
- 			cpu-release-addr = <0x0 0x8000fff8>;
-+			next-level-cache = <&L2_0>;
-+		};
-+
-+		L2_0: l2-cache0 {
-+			compatible = "cache";
- 		};
- 	};
- 
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--0EIE/3F9PxFGTcfe--
