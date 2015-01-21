@@ -1,108 +1,127 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH RFC 1/2] Documentation: arm: define DT bindings for
- system suspend
-Date: Wed, 21 Jan 2015 13:56:11 +0000
-Message-ID: <20150121135610.GA21950@e102568-lin.cambridge.arm.com>
-References: <1421840155-18990-1-git-send-email-sudeep.holla@arm.com>
- <1421840155-18990-2-git-send-email-sudeep.holla@arm.com>
- <20150121212139.1cdc3fd5@xhacker>
- <20150121213507.695b871b@xhacker>
+From: Alim Akhtar <alim.akhtar@gmail.com>
+Subject: Re: [PATCH v4 2/2] ARM: dts: Add HS400 support for exynos5420 and exynos5800
+Date: Wed, 21 Jan 2015 19:42:29 +0530
+Message-ID: <CAGOxZ5186+9U-6eri6OSGw9awsmr0EPP-gdhu-__oCWP1Oyyxg@mail.gmail.com>
+References: <1421231446-4776-1-git-send-email-alim.akhtar@samsung.com>
+ <1421231446-4776-3-git-send-email-alim.akhtar@samsung.com> <54BEDE9C.5060501@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150121213507.695b871b@xhacker>
-Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Cc: Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jonghwa Lee <jonghwa3.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Amit Daniel Kachhap <amit.daniel-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <54BEDE9C.5060501@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Jaehoon Chung <jh80.chung@samsung.com>
+Cc: Alim Akhtar <alim.akhtar@samsung.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Seungwon Jeon <tgih.jun@samsung.com>, Douglas Anderson <dianders@chromium.org>, kgene <kgene@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Abhilash Kesavan <a.kesavan@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 21, 2015 at 01:35:07PM +0000, Jisheng Zhang wrote:
-> Dear Sudeep,
-> 
-> On Wed, 21 Jan 2015 05:21:39 -0800
-> Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org> wrote:
-> 
-> > Dear Sudeep,
-> > 
-> > On Wed, 21 Jan 2015 03:35:54 -0800
-> > Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
-> > 
-> > > ARM based platforms implement unique ways to enter system suspend
-> > > (i.e. Suspend to RAM). The mechanism and the parameters defining the
-> > > system state vary on a per-platform basis forcing the OS to handle it
-> > > in very platform specific way.
-> > > 
-> > > Since ARM 32-bit systems had machine specific code, no attempts to
-> > > standardize are being made as it provides easy way to implement suspend
-> > > operations in a platform specific manner. However, this approach not
-> > > only makes maintainance more difficult as the number of platforms
-> > > supported increases but also not feasible for ARM64.
-> > > 
-> > > This DT binding aims at standardizing the system suspend for ARM
-> > > platforms. ARM64 platforms mandates entry-method property in DT for
-> > > this system suspend node.
-> > > 
-> > > On system implementing PSCI as an enable-method to enter system suspend,
-> > > the PSCI CPU suspend method is used on versions upto v0.2 and requires
-> > > the power_state parameter to be passed to the PSCI CPU suspend function.
-> > > 
-> > > This parameter is platform specific, therefore must be provided by
-> > > firmware to the OS in order to enable proper call sequence.
-> > > 
-> > > This ARM system suspend DT bindings rely on a property
-> > > (i.e. arm,psci-suspend-param) in the PSCI DT bindings that describes
-> > > how the PSCI CPU suspend power_state parameter should be defined in DT.
-> > > 
-> > > Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-> > > ---
-> > >  Documentation/devicetree/bindings/arm/psci.txt     | 11 +++
-> > >  .../devicetree/bindings/arm/system-suspend.txt     | 93
-> > > ++++++++++++++++++++++ 2 files changed, 104 insertions(+)
-> > >  create mode 100644
-> > > Documentation/devicetree/bindings/arm/system-suspend.txt
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/arm/psci.txt
-> > > b/Documentation/devicetree/bindings/arm/psci.txt index
-> > > 5aa40ede0e99..bd3977a2a333 100644 ---
-> > > a/Documentation/devicetree/bindings/arm/psci.txt +++
-> > > b/Documentation/devicetree/bindings/arm/psci.txt @@ -61,6 +61,14 @@ Device
-> > > tree nodes that require usage of PSCI CPU_SUSPEND function (ie idle
-> > > Definition: power_state parameter to pass to the PSCI suspend call.
-> > >  
-> > > +PSCI v0.2 and earlier versions don't have explicit operation for system
-> > > +suspend. However, one can implement system suspend using CPU_SUSPEND by
-> > > +ensuring every other core except the one executing the CPU_SUSPEND call
-> > > +has called into PSCI through a CPU_OFF call.
-> > 
-> > If users explicitly hot-unplug other cores when system load is low to save
-> > power, then we want to suspend at some point, how does the firmware know
-> > this case?
-> 
-> Sorry for confusion. I mean 
-> 
-> If users explicitly hot-unplug other cores when system load is low to save
-> power, then at some point cpuidle want to suspend the cluster, how does the
-> distinguish this case with suspend the system to ram.
+Hi Jaehoon
 
-Through the arm,psci-suspend-param DT property, ie PSCI CPU_SUSPEND
-power_state parameter.
+On Wed, Jan 21, 2015 at 4:32 AM, Jaehoon Chung <jh80.chung@samsung.com> wrote:
+> Hi,
+>
+> If you want to enable the hs400 mode, need to add "mmc-hs400-1_8v" or "mmc-hs400-1_2v".
+> But this patch didn't add them. do you have any other plan?
+>
+Yes, right, plan is to send separate patch to enable hs400, as of now
+I am not sure if all the 5800-peach-pi boards are populated with
+emmc5.0 device or not. So I will enable HS400 after confirming this
+point.
+> On 01/14/2015 07:30 PM, Alim Akhtar wrote:
+>> From: Seungwon Jeon <tgih.jun@samsung.com>
+>>
+>> HS400 timing values are added for SMDK5420, exynos5420-peach-pit
+>> and exynos5800-peach-pi boards.
+>> This also adds RCLK GPIO line, this gpio should be in pull-down
+>> state.
+>>
+>> Signed-off-by: Seungwon Jeon <tgih.jun@samsung.com>
+>> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+>> [Alim: addressed review comments]
+>> ---
+>>  arch/arm/boot/dts/exynos5420-peach-pit.dts |    4 +++-
+>>  arch/arm/boot/dts/exynos5420-pinctrl.dtsi  |    7 +++++++
+>>  arch/arm/boot/dts/exynos5420-smdk5420.dts  |    4 +++-
+>>  arch/arm/boot/dts/exynos5800-peach-pi.dts  |    4 +++-
+>>  4 files changed, 16 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
+>> index 9a050e1..7ffaba8 100644
+>> --- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
+>> +++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
+>> @@ -569,8 +569,10 @@
+>>       samsung,dw-mshc-ciu-div = <3>;
+>>       samsung,dw-mshc-sdr-timing = <0 4>;
+>>       samsung,dw-mshc-ddr-timing = <0 2>;
+>> +     samsung,dw-mshc-hs400-timing = <0 2>;
+>> +     read-strobe-delay = <90>;
+>>       pinctrl-names = "default";
+>> -     pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8>;
+>> +     pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8 &sd0_rclk>;
+>>       bus-width = <8>;
+>>  };
+>>
+>> diff --git a/arch/arm/boot/dts/exynos5420-pinctrl.dtsi b/arch/arm/boot/dts/exynos5420-pinctrl.dtsi
+>> index ba686e4..8b15316 100644
+>> --- a/arch/arm/boot/dts/exynos5420-pinctrl.dtsi
+>> +++ b/arch/arm/boot/dts/exynos5420-pinctrl.dtsi
+>> @@ -201,6 +201,13 @@
+>>                       samsung,pin-drv = <3>;
+>>               };
+>>
+>> +             sd0_rclk: sd0-rclk {
+>
+> I know it used to "sd0_rdqs", not "sd0_rclk".
+> Change name.
+>
+Ok, I will change as per UM of 5800/5420,
 
-Did you read the patch :) ?
+> Best Regards,
+> Jaehoon Chung
+>> +                     samsung,pins = "gpc0-7";
+>> +                     samsung,pin-function = <2>;
+>> +                     samsung,pin-pud = <1>;
+>> +                     samsung,pin-drv = <3>;
+>> +             };
+>> +
+>>               sd1_cmd: sd1-cmd {
+>>                       samsung,pins = "gpc1-1";
+>>                       samsung,pin-function = <2>;
+>> diff --git a/arch/arm/boot/dts/exynos5420-smdk5420.dts b/arch/arm/boot/dts/exynos5420-smdk5420.dts
+>> index 8be3d7b..5290e79 100644
+>> --- a/arch/arm/boot/dts/exynos5420-smdk5420.dts
+>> +++ b/arch/arm/boot/dts/exynos5420-smdk5420.dts
+>> @@ -80,8 +80,10 @@
+>>               samsung,dw-mshc-ciu-div = <3>;
+>>               samsung,dw-mshc-sdr-timing = <0 4>;
+>>               samsung,dw-mshc-ddr-timing = <0 2>;
+>> +             samsung,dw-mshc-hs400-timing = <0 2>;
+>> +             read-strobe-delay = <90>;
+>>               pinctrl-names = "default";
+>> -             pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8>;
+>> +             pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8 &sd0_rclk>;
+>>               bus-width = <8>;
+>>               cap-mmc-highspeed;
+>>       };
+>> diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+>> index e8fdda8..fa1c858 100644
+>> --- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
+>> +++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+>> @@ -557,8 +557,10 @@
+>>       samsung,dw-mshc-ciu-div = <3>;
+>>       samsung,dw-mshc-sdr-timing = <0 4>;
+>>       samsung,dw-mshc-ddr-timing = <0 2>;
+>> +     samsung,dw-mshc-hs400-timing = <0 2>;
+>> +     read-strobe-delay = <90>;
+>>       pinctrl-names = "default";
+>> -     pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8>;
+>> +     pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8 &sd0_rclk>;
+>>       bus-width = <8>;
+>>  };
+>>
+>>
+>
 
-> > In my private tree, I extend the PSCI spec to tell firmware we want to
-> > suspend the system.
-> 
-> I extend the PSCI suspend function to help firmware distinguish suspend system
-> to ram and other suspend cores/clusters.
 
-See above.
 
-Thanks,
-Lorenzo
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Regards,
+Alim
