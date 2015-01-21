@@ -1,80 +1,63 @@
-From: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH RFC 1/2] Documentation: arm: define DT bindings for
- system suspend
-Date: Wed, 21 Jan 2015 21:21:39 +0800
-Message-ID: <20150121212139.1cdc3fd5@xhacker>
-References: <1421840155-18990-1-git-send-email-sudeep.holla@arm.com>
-	<1421840155-18990-2-git-send-email-sudeep.holla@arm.com>
+From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] power: ab8500_fg.c:  Remove unused function
+Date: Wed, 21 Jan 2015 14:32:15 +0100
+Message-ID: <20150121133214.GC13715@earth.universe>
+References: <1420131892-31486-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="9Ek0hoCL9XbhcSqy"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1421840155-18990-2-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1420131892-31486-1-git-send-email-rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Amit Daniel Kachhap <amit.daniel-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jonghwa Lee <jonghwa3.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
+Cc: Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Sudeep,
 
-On Wed, 21 Jan 2015 03:35:54 -0800
-Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
+--9Ek0hoCL9XbhcSqy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> ARM based platforms implement unique ways to enter system suspend
-> (i.e. Suspend to RAM). The mechanism and the parameters defining the
-> system state vary on a per-platform basis forcing the OS to handle it
-> in very platform specific way.
-> 
-> Since ARM 32-bit systems had machine specific code, no attempts to
-> standardize are being made as it provides easy way to implement suspend
-> operations in a platform specific manner. However, this approach not
-> only makes maintainance more difficult as the number of platforms
-> supported increases but also not feasible for ARM64.
-> 
-> This DT binding aims at standardizing the system suspend for ARM
-> platforms. ARM64 platforms mandates entry-method property in DT for
-> this system suspend node.
-> 
-> On system implementing PSCI as an enable-method to enter system suspend,
-> the PSCI CPU suspend method is used on versions upto v0.2 and requires
-> the power_state parameter to be passed to the PSCI CPU suspend function.
-> 
-> This parameter is platform specific, therefore must be provided by
-> firmware to the OS in order to enable proper call sequence.
-> 
-> This ARM system suspend DT bindings rely on a property
-> (i.e. arm,psci-suspend-param) in the PSCI DT bindings that describes
-> how the PSCI CPU suspend power_state parameter should be defined in DT.
-> 
-> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/arm/psci.txt     | 11 +++
->  .../devicetree/bindings/arm/system-suspend.txt     | 93
-> ++++++++++++++++++++++ 2 files changed, 104 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/system-suspend.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/psci.txt
-> b/Documentation/devicetree/bindings/arm/psci.txt index
-> 5aa40ede0e99..bd3977a2a333 100644 ---
-> a/Documentation/devicetree/bindings/arm/psci.txt +++
-> b/Documentation/devicetree/bindings/arm/psci.txt @@ -61,6 +61,14 @@ Device
-> tree nodes that require usage of PSCI CPU_SUSPEND function (ie idle
-> Definition: power_state parameter to pass to the PSCI suspend call.
->  
-> +PSCI v0.2 and earlier versions don't have explicit operation for system
-> +suspend. However, one can implement system suspend using CPU_SUSPEND by
-> +ensuring every other core except the one executing the CPU_SUSPEND call
-> +has called into PSCI through a CPU_OFF call.
+Hi,
 
-If users explicitly hot-unplug other cores when system load is low to save
-power, then we want to suspend at some point, how does the firmware know this
-case?
+On Thu, Jan 01, 2015 at 06:04:52PM +0100, Rickard Strandqvist wrote:
+> Remove the function ab8500_fg_reinit() that is not used anywhere.
+>=20
+> This was partially found by using a static code analysis program called c=
+ppcheck.
+>=20
+> Signed-off-by: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.s=
+e>
 
-In my private tree, I extend the PSCI spec to tell firmware we want to suspend
-the system.
+Thanks, applied with Acked-By from Arnd.
 
-Thanks,
-Jisheng
+-- Sebastian
+
+--9Ek0hoCL9XbhcSqy
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJUv6pbAAoJENju1/PIO/qajXoP/jPELH5fzUsSDUS8kb7N++4V
+3izCH/kVR/9oumc/LFXID5NfsCLLdbaUGDxyaLqxQeLsEp2D46lvUCbknZMtvbIH
+KuYbZDWyh41gl+LHThJdyyy2eHpOjumyq9aMyovRp6d+QaEBcQpJxPwO9TRmc3cS
+79Zu9atH2AjwjHzIdVRQqec4khd07/m2VphMRg6fqK7Y+RL3rYZ6fko7AHB+nnwX
+nzmtId2b1m1rMMR8L9DVgs8gTs9gCtieovee2CpvemkImUVqLpOIqdlSDjNDoAMr
+duobqXYH71dvNhOWiLDdrWQrnzPhBSRTurJrQvdyDJopMMgbivQkGReQQP/19pKS
+RJBHPegfXS6KnnADruJVZGGGbPhrISC5V0er/PfS9myLbxSpEOhFldRSXfv2tY4b
+I9k4kFQnRg5Xxvol8uL7ZIvP1Q9NSdTjc4ZK2erKct0nywvVKIUYVm+cH9rzdphB
+vH2/g7iAN3dkPXLgJzJkAlrViSsgYUsBHyfEonxALWizTJK8mCdZZHQnWUn8wKQO
+J3jpVNFpHwKW20QjUL4aYDcLFzJ4nerGWduhfUdtU5p38gBOWjf6cDR/L/80QKan
+Fj355KFyJxmizTuUnK25A82t7Z4zgbYCJb/ZO1SAIAs9q/K5H+rZD0oz4XV/Af67
+Q3xKfzK0UV7gBmdcQtlW
+=sxc2
+-----END PGP SIGNATURE-----
+
+--9Ek0hoCL9XbhcSqy--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
