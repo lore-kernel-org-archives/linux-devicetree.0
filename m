@@ -1,45 +1,60 @@
-From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH] arm64: dts: add baud rate to Juno stdout-path
-Date: Thu, 22 Jan 2015 11:21:32 +0000
-Message-ID: <d0f44fbb7ffc85806ab00d7e54a64161ef79cad7.1421924801.git.robin.murphy@arm.com>
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+From: Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH v2 0/9] mfd: watchdog: rtc: New driver for ST's LPC IP
+Date: Thu, 22 Jan 2015 11:55:58 +0000
+Message-ID: <1421927767-28889-1-git-send-email-lee.jones@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: lee.jones@linaro.org, kernel@stlinux.com, rtc-linux@googlegroups.com, wim@iguana.be, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux@roeck-us.net, david.paris@st.com
 List-Id: devicetree@vger.kernel.org
 
-Without explicit command-line parameters, the Juno UART ends up running
-at 57600 baud in the kernel, which is at odds with the 115200 baud used
-by the rest of the firmware. Since commit 7914a7c5651a5161 now lets us
-fix this by specifying default options in stdout-path, do so.
+ST's Low Power Controller (LPC) controls two devices; watchdog and RTC.
+Only one of the devices can be used at any one time, which is enforced
+by the correlating MFD driver.
 
-Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
----
- arch/arm64/boot/dts/arm/juno.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This driver set provides everything you need to choose one (and only
+one) of the LPC devices to run per I/P block, of which there are two
+on the enabled STiH407 h/w.
 
-diff --git a/arch/arm64/boot/dts/arm/juno.dts b/arch/arm64/boot/dts/arm/jun=
-o.dts
-index cb3073e..d429129 100644
---- a/arch/arm64/boot/dts/arm/juno.dts
-+++ b/arch/arm64/boot/dts/arm/juno.dts
-@@ -22,7 +22,7 @@
- =09};
-=20
- =09chosen {
--=09=09stdout-path =3D &soc_uart0;
-+=09=09stdout-path =3D "serial0:115200n8";
- =09};
-=20
- =09psci {
---=20
+Version 2:
+ - Only calculate keepalive once in probe()
+ - Check for a 0 clk_rate
+ - Set limits using predefined attributes from watchdog_device
+ - CONFIG_PM => CONFIG_SLEEP
+ - Call st_wdog_setup() on resume
+ - Remove MFD driver -- instead rely on driver probing mechanism
+   which continues attempting to bind to different drivers until
+   one does not return -ENODEV
+
+Lee Jones (9):
+  mfd: dt-bindings: Provide human readable defines for LPC mode choosing
+  ARM: multi_v7_defconfig: Enable support for ST's LPC Watchdog
+  ARM: multi_v7_defconfig: Enable support for ST's LPC RTC
+  ARM: STi: DT: STiH407: Add Device Tree node for the LPC
+  watchdog: bindings: Provide ST bindings for ST's LPC Watchdog device
+  watchdog: st_wdt: Add new driver for ST's LPC Watchdog
+  rtc: bindings: Provide ST bindings for ST's LPC RTC device
+  rtc: st: add new driver for ST's LPC RTC
+  MAINTAINERS: Add Watchdog and RTC files to STI's maintainer entry
+
+ .../devicetree/bindings/rtc/rtc-st-lpc.txt         |  25 ++
+ .../devicetree/bindings/watchdog/st_lpc_wdt.txt    |  38 +++
+ MAINTAINERS                                        |   2 +
+ arch/arm/boot/dts/stih407-family.dtsi              |  20 ++
+ arch/arm/configs/multi_v7_defconfig                |   2 +
+ drivers/rtc/Kconfig                                |  12 +
+ drivers/rtc/Makefile                               |   1 +
+ drivers/rtc/rtc-st-lpc.c                           | 354 +++++++++++++++++++++
+ drivers/watchdog/Kconfig                           |  13 +
+ drivers/watchdog/Makefile                          |   1 +
+ drivers/watchdog/st_lpc_wdt.c                      | 335 +++++++++++++++++++
+ include/dt-bindings/mfd/st-lpc.h                   |  15 +
+ 12 files changed, 818 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rtc/rtc-st-lpc.txt
+ create mode 100644 Documentation/devicetree/bindings/watchdog/st_lpc_wdt.txt
+ create mode 100644 drivers/rtc/rtc-st-lpc.c
+ create mode 100644 drivers/watchdog/st_lpc_wdt.c
+ create mode 100644 include/dt-bindings/mfd/st-lpc.h
+
+-- 
 1.9.1
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
