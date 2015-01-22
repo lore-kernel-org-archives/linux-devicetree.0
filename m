@@ -1,51 +1,41 @@
-From: wstephen-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Subject: Re: [PATCH] ethernet: atheros: Add nss-gmac driver
-Date: Thu, 22 Jan 2015 00:20:59 -0000
-Message-ID: <f9cbb34c9228b2af7ed6c1c96a6aa61c.squirrel@www.codeaurora.org>
-References: <1420754626-30121-1-git-send-email-wstephen@codeaurora.org>
-    <2318041.V2OJAPu7gC@wuerfel>
-    <3ad19b16fe5c58612479f70c052d0045.squirrel@www.codeaurora.org>
-    <1702448.pOVnDx4KzI@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1702448.pOVnDx4KzI@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: wstephen-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jcliburn-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Beomho Seo <beomho.seo@samsung.com>
+Subject: [PATCH v3 0/2] power: rt5033: Add Richtek RT533 drivers
+Date: Thu, 22 Jan 2015 09:38:10 +0900
+Message-ID: <1421887092-4070-1-git-send-email-beomho.seo@samsung.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, sre@kernel.org, robh+dt@kernel.org
+Cc: lee.jone@linaro.org, broonie@kernel.org, dbaryshkov@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, cw00.choi@samsung.com, inki.dae@samsung.com, sw0312.kim@samsung.com, Beomho Seo <beomho.seo@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-> Right. For review purposes, I think it would be helpful to split this
-> huge patch into several steps then:
->
-> - add a base driver
-> - add the overlay interface
-> - add the nss driver
->
-> Ideally more of them.
+This patchset adds driver for Richtek rt5033 chip The chip contains
+switching charge mode Li-Ion/Li-Polymer battery charger, fuelgauge.
+Additionally, This includes document for device tree of RT5033 device.
 
-The nss-drv driver is open sourced but we are currently not planning to
-upstream to linux kernel yet because we are still actively adding new
-features
-https://www.codeaurora.org/cgit/quic/qsdk/oss/lklm/nss-drv
+RT5033 core driver is applied by Lee Jones.
+RT5033 regulator driver is applied by Mark Brown.
+RT5033 fuelgauge driver is applied by Sebastian Reichel.
 
-> Thanks for the description, this sounds very interesting indeed. I do
-> have more questions though: how do you get the rules into the NSS driver?
-> Does this get handled transparently by the openvswitch driver or
-> did you have to add new user interfaces for it?
->
-> 	Arnd
->
+Changes in v3:
+- Applied one of patchset.
+- Add acked-by.
 
-No, we are not using openvswitch. We have a connection manager monitoring
-conntrack events and creates rules then send it through the interface
-built in nss-drv.
+Changes in v2:
+- Revise binding documentation..
 
-Thanks,
-Stephen
+Beomho Seo (2):
+  power: rt5033_charger: Add RT5033 charger device driver
+  Documentation: Add documentation for rt5033 multifunction device
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ Documentation/devicetree/bindings/mfd/rt5033.txt   |  101 ++++
+ .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+ drivers/power/Kconfig                              |    8 +
+ drivers/power/Makefile                             |    1 +
+ drivers/power/rt5033_charger.c                     |  485 ++++++++++++++++++++
+ 5 files changed, 596 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/rt5033.txt
+ create mode 100644 drivers/power/rt5033_charger.c
+
+-- 
+1.7.9.5
+
