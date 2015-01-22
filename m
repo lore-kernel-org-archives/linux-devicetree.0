@@ -1,71 +1,101 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: Secure resources in device trees
-Date: Thu, 22 Jan 2015 18:27:07 +0000
-Message-ID: <20150122182707.GD12911@leverpostej>
-References: <CAOgzsHVpXZTHoq7HyfrGeGe92onnb6=BQr30PvKrg04h=0De0w@mail.gmail.com>
- <20150121162938.GJ5044@leverpostej>
- <CAL_JsqJDNziqcX-8cq0PkSE61NVpmSBUM+fo3vmD3WrBG3=R7Q@mail.gmail.com>
+From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] Documentation: Add documentation for rt5033
+ multifunction device
+Date: Thu, 22 Jan 2015 19:30:37 +0100
+Message-ID: <20150122183037.GA24898@earth.universe>
+References: <1421899601-19327-1-git-send-email-beomho.seo@samsung.com>
+ <1421899601-19327-3-git-send-email-beomho.seo@samsung.com>
+ <20150122074101.GK22024@x1>
+ <54C0B1EA.7030901@samsung.com>
+ <20150122090243.GA5465@x1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="6c2NcOVqGQ03X4Wi"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqJDNziqcX-8cq0PkSE61NVpmSBUM+fo3vmD3WrBG3=R7Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20150122090243.GA5465@x1>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Greg Bellows <greg.bellows-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter Maydell <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lee.jone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-[...]
 
-> >> * A mechanism would be needed to pass an additional device tree.
-> >>
-> >> 2) Modify the standard device tree blob to include annotations or
-> >> modifications to describe which resources are secure or not.  In this
-> >> case, secure software would use the single device tree to identify the
-> >> secure resources.  The added information could be used by secure
-> >> software to trim the device tree before passing it.  Alternatively,
-> >> the information could be passed on to non-secure software with the
-> >> expectation that it would honor the device security.   It would be
-> >> crucial that any data added to the device tree adhere to existing
-> >> conventions or expectations.
-> >
-> > This approach assumes assumes that the secure and non-secure physical
-> > address spaces are identical bar some portions being masked out on the
-> > non-secure side. This is not necessarily the case.
-> 
-> True, but I would guess this is the common case.
+--6c2NcOVqGQ03X4Wi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-In practically every system I can think of, the address spaces are
-essentially the same bar masking.
+Hi,
 
-However, if we're trying to model the architectural envelope, then the
-fact that a single DTB can't encode that needs some consideration in
-this matter.
+On Thu, Jan 22, 2015 at 09:02:43AM +0000, Lee Jones wrote:
+> On Thu, 22 Jan 2015, Beomho Seo wrote:
+>=20
+> > On 01/22/2015 04:41 PM, Lee Jones wrote:
+> > > On Thu, 22 Jan 2015, Beomho Seo wrote:
+> > >=20
+> > >> This patch device tree binding documentation for rt5033 multifunctio=
+n device.
+> > >>
+> > >> Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > >> Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > >> Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > >> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > >> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+> > >> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> > >> Cc: Ian campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+> > >> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> > >> Signed-off-by: Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> > >> Acked-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> > >> Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > >=20
+> > > I did not Ack this patch.
+> > >=20
+> > > Your new vendor bindings require a DT Ack.
+> > >=20
+> > > Although, as the ones I'm concerned with are Regulator related, and
+> > > Ack from Mark Brown will also suffice.
+> > >=20
+> >=20
+> > I want to apologize for my mistake. I completely misunderstood your rep=
+ly.
+> > Unfortunately, This patch merged by Sebastian at his git.
+> > Please tell me what to do.
+>=20
+> That's strange, as I haven't heard anything from Sebastian.
 
-> > Architecturally the secure and non-secure physical address spaces are
-> > entiorely separate, and do not necessarily mirror each other.
-> >
-> > It's entirely valid for some devices/RAM to only exist in one of the
-> > address spaces (we typically see secure-only devices, but
-> > non-secure-only devices are also possible). It's also entirely valid for
-> > the same device to be mapped at different addresses in each address
-> > space (e.g. the same UART could be mapped at both S:0xffff0000 and also
-> > at NS:0xcccc0000 and nowhere else in either address space).
-> >
-> > So approach (2) does not fit the architecture generally. From what I
-> > recall of previous discussions, we eventually figured out that you
-> > either need separate trees or a higher level container to address the
-> > secure vs nonsecure split.
-> 
-> Though there's no reason both approaches can't be supported. If the 2
-> views are radically different, then use 2 DTs. If they are similar and
-> just a matter of partitioning, then you can fix up the DT before
-> passing to non-secure world (or even do this with a script offline
-> (i.e. 1 dts and 2 dtb's)).
+Right, Beomho had a typo in your mail address on patch 0/2 (to which
+I replied).
 
-That sounds possible, yes.
+> Anyway, he needs to remove it from his tree until we receive a
+> suitable Ack.
 
-Mark.
+I removed both patches some hours ago.
+
+-- Sebastian
+
+--6c2NcOVqGQ03X4Wi
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJUwUHKAAoJENju1/PIO/qaLn0P/R7xQhO4c2beKaq4XEJhFxZE
+CSqe3ONwDMfi+SFmxm0eYIbMrilDFicrzJRnLvfZIPqOVk3s3dWgPEoyVuiuyEow
+gcrlkHXHr0J6GFh4mIndAnfB7S+k/NNzhY+Ghfp7+mP1ILsG6Oyw/lyD1FoOWFtN
+/q5Yv4tybtGfHiyk3HNvVnGoq65n/B0Vug6VtBPL079f7T0Ew9noFrYdWE428NHO
+dweueeOXfxsOxFp+KOMbcl8qsMkEOEdwMzpeGKSdI+ROubWoABgfYLq/SBqRZPJi
+6GyC9bCv/ctmQYIPiw1rp+0Vbz0rEeIOOrBzZ6Yu4ZuzMPpW5P03lBCGBiHe2Gm6
+x9B9anh32brns8DpJlsoyudkUgrHfW9FqHKt5VwFI/MC5lKddPajqe1u46wm2DCQ
+eQDs0JRfZG55y/KUXBZD/pxujA/DaUhhqNzM4VQ4s7MrMEmst8iUJkmh1FPnziRI
+pDEC4GPq/1arjK3JMffi1iM/uGjJQ6DZs7GoOKCpgdXTBllFh4BDoAP33jykh0zw
+3nyTtpqZzVnmiQ5B7cBihPzcM017+Mv3c9VTiylTqZ0KW0UgA3SBJQwhSCejMe29
+mQVuuhauZHHavT/Dxh3lvvpksbuC5cVQqSE0I2ICQlxnxRyzreu7PoPFlc1UulC3
+ujryQTOcayuge9ZjDTtR
+=EBPf
+-----END PGP SIGNATURE-----
+
+--6c2NcOVqGQ03X4Wi--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
