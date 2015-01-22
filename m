@@ -1,89 +1,33 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH V4 0/4] mmc: core: Add support for MMC power sequences
-Date: Thu, 22 Jan 2015 10:28:14 +0100
-Message-ID: <CAPDyKFqBXAgu8KSJh2_7JW=L-cFahY2GUO2QxNWjWhTQreuP5w@mail.gmail.com>
-References: <1421658784-11980-1-git-send-email-ulf.hansson@linaro.org>
+From: Rojhalat Ibrahim <imr@rtschenk.de>
+Subject: Re: [PATCH v2 4/4] leds: no longer use unnamed gpios
+Date: Thu, 22 Jan 2015 10:32:35 +0100
+Message-ID: <2355733.gZvsF3iKWH@pcimr>
+References: <1421876028-22799-1-git-send-email-o.schinagl@ultimaker.com> <1421876028-22799-5-git-send-email-o.schinagl@ultimaker.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1421658784-11980-1-git-send-email-ulf.hansson@linaro.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: linux-mmc <linux-mmc@vger.kernel.org>, Chris Ball <chris@printf.net>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Alexandre Courbot <gnurou@gmail.com>, Arend van Spriel <arend@broadcom.com>, Sascha Hauer <s.hauer@pengutronix.de>, Olof Johansson <olof@lixom.net>, Russell King <linux@arm.linux.org.uk>, Hans de Goede <hdegoede@redhat.com>, Doug Anderson <dianders@chromium.org>, NeilBrown <neilb@suse.de>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Mark Rutland <mark.rutland@arm.com>, Ulf Hansson <ulf.hansson@linaro.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <1421876028-22799-5-git-send-email-o.schinagl@ultimaker.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Olliver Schinagl <o.schinagl@ultimaker.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Olliver Schinagl <oliver@schinagl.nl>, Robin Gong <b38343@freescale.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Aaron Lu <aaron.lu@intel.com>, Grant Likely <grant.likely@linaro.org>, Jingoo Han <jg1.han@samsung.com>, Alexander Shiyan <shc_work@mail.ru>, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 19 January 2015 at 10:13, Ulf Hansson <ulf.hansson@linaro.org> wrote:
-> Changes in v4:
->         - Fixed call to kfree() in patch3 and patch4.
->
-> Changes in v3:
->         Fixed comments from Mark Rutland:
->         - Document binding in one patch to get the big picture.
->         - Keep code and DT document consistent around how many GPIO resets we
->           support. I decided to go for one GPIO, we can extend that if needed
->           later on.
->         - Change compatible string for simple MMC power sequence and renamed the
->           file for its documentation.
->         - Updated commit messages according to above changes.
->
-> Changes in v2:
->         Fixed comments from Russell King:
->         - Renamed pwrseq callbacks and corresponding interface functions.
->         - Move the call to the previous namned ->power_on() callback, to the
->           end of mmc_power_up() to get consistent behavior.
->
->
-> This is yet another try to solve the issues of dealing with power sequences for
-> the MMC subsystem. The latest attempt, see link below, took a generic approach
-> by adding a new top level driver layer. That's was rejected by several reasons.
-> http://lwn.net/Articles/602855/
->
-> This time the approach is focused to fix the issues for MMC only.
->
-> To give a short background, SOCs may specify a specific MMC power sequence. To
-> successfully detect an (e)MMC/SD/SDIO card, that power sequence must be followed
-> while initializing the card.
->
-> To be able to handle these SOC specific power sequences, we add a MMC power
-> sequence interface, which helps the mmc core to deal with such.
->
-> A MMC power sequence provider then implements a set of callbacks from the above
-> mentioned interface. The provider has a corresponding DT compatibility string
-> and relies on CONFIG_OF to be set to find it's various resourses, like for
-> example a GPIO reset.
->
-> The mmc core will from mmc_of_parse() try find a "mmc-pwrseq" DT node and then
-> call the corresponding MMC power sequence provider's initialization function.
->
->
-> Ulf Hansson (4):
->   mmc: core: Initial support for MMC power sequences
->   mmc: pwrseq: Document DT bindings for the simple MMC power sequence
->   mmc: pwrseq: Initial support for the simple MMC power sequence
->     provider
->   mmc: pwrseq_simple: Add support for a reset GPIO pin
->
->  .../devicetree/bindings/mmc/mmc-pwrseq-simple.txt  |  20 ++++
->  Documentation/devicetree/bindings/mmc/mmc.txt      |  14 +++
->  drivers/mmc/core/Makefile                          |   2 +-
->  drivers/mmc/core/core.c                            |   7 ++
->  drivers/mmc/core/host.c                            |   4 +-
->  drivers/mmc/core/pwrseq.c                          | 109 +++++++++++++++++++++
->  drivers/mmc/core/pwrseq.h                          |  42 ++++++++
->  drivers/mmc/core/pwrseq_simple.c                   |  86 ++++++++++++++++
->  include/linux/mmc/host.h                           |   2 +
->  9 files changed, 284 insertions(+), 2 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
->  create mode 100644 drivers/mmc/core/pwrseq.c
->  create mode 100644 drivers/mmc/core/pwrseq.h
->  create mode 100644 drivers/mmc/core/pwrseq_simple.c
->
-> --
-> 1.9.1
->
+On Wednesday 21 January 2015 22:33:48 Olliver Schinagl wrote:
+> From: Olliver Schinagl <oliver@schinagl.nl>
+> 
+> The gpio document says we should not use unnamed bindings for gpios.
+> This patch uses the 'led-' prefix to the gpios and updates code and
+> documents. Because the devm_get_gpiod_from_child() falls back to using
+> old-style unnamed gpios, we can update the code first, and update
+> dts files as time allows.
+> 
+> Signed-off-by: Olliver Schinagl <oliver@schinagl.nl>
 
-To get some more testing of this code, I have now applied this v4 of
-this patchset for my next branch.
+Where does devm_get_gpiod_from_child() fall back "to using old-style
+unnamed gpios"?
 
-Kind regards
-Uffe
+After applying this patch the leds defined in my devicetree do not
+work anymore.
+
+   Rojhalat
