@@ -1,59 +1,60 @@
 From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/9] power/reset: brcmstb: Add support for old 65nm chips
-Date: Thu, 22 Jan 2015 02:47:18 +0100
-Message-ID: <20150122014718.GO13715@earth.universe>
-References: <1416962994-27095-1-git-send-email-cernekee@gmail.com>
- <1416962994-27095-4-git-send-email-cernekee@gmail.com>
+Subject: Re: [PATCH] Add devicetree binding documentation for the
+ LTC2941/LTC2943 driver
+Date: Thu, 22 Jan 2015 03:24:54 +0100
+Message-ID: <20150122022453.GQ13715@earth.universe>
+References: <20141027163842.GB20765@earth.universe>
+ <1414480084-3604-1-git-send-email-mike.looijmans@topic.nl>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="B3NBd8mrXZtPJEYR"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="aNvCJ41Feu8IgPyB"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1416962994-27095-4-git-send-email-cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+In-Reply-To: <1414480084-3604-1-git-send-email-mike.looijmans-Oq418RWZeHk@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>
+Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---B3NBd8mrXZtPJEYR
+--aNvCJ41Feu8IgPyB
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
 Hi,
 
-On Tue, Nov 25, 2014 at 04:49:48PM -0800, Kevin Cernekee wrote:
-> The register bit fields are a little different, so add an entry and a
-> compatible string to accommodate them.
+On Tue, Oct 28, 2014 at 08:08:04AM +0100, Mike Looijmans wrote:
+> This adds the devicetree binding documentation for the LTC2941 and LTC2943
+> driver. These are I2C connected battery gas gauge ICs.
 
 Thanks, applied.
 
 -- Sebastian
 
---B3NBd8mrXZtPJEYR
+--aNvCJ41Feu8IgPyB
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBCgAGBQJUwFamAAoJENju1/PIO/qabr8P/1ea3h4M0xKnteM9XGvGal8q
-BHAQBk7O083ZW/D4qhdxJyy+X0Wq/9/CiYVNsJb4xqDMDW6lpVp2V7EI0XeljjhU
-Q171ZNF0jr+l3PiTyAL03yacpWzJ/QPZReJFwJCovN+/JUnVrz1mMzWFP4U5RyMY
-TwtXIc5DiAxuwVv7cfc4sst+zGzSZpsRNToNQILUf9MIFozjiNUtXP83Wcn+Oj0I
-lJ3YVtazMKwvpfN5ZAJ7+llZ2ye0rtr8pY6Pi/Okb0O8Lco6N9m3RCdti9nq3nxw
-YuJVgXxj9bj3xzjAXMINx1HV/yMdL3Z02qSzYaEWZJq/5h7Kk8ZadmUcXEi9keZV
-u3j6HJBcF4Mbh7Dbx227btBRmJUXTui57ssze4QTUxJ1gCilX+lsZEuiBeDC/XwB
-G/UxxYVq+2tpwlco97wZrW6DlljmrLyiMIlgSqfwb602ulunuWdJRvr8BzadFraU
-FG+jgYEEfz/w7sSzCuaPoGLlhc9C08CPowzDbn4PK6ubAptem29Uz2mulknEpUbs
-pa7qGDRTyXsoaLnquJJReDc5VkqVerV1aqmQ0rSlhXeMpzJDuhm+/4lrpR1jVRL0
-RwyqVbYUPQddAWU9rtWL7SBBmWqaSqAGbi8rmKSmqDuUsqyeSS+oJpCOkUP5sNGP
-UxmSuEUsuDskeTxzKPYO
-=Ix8s
+iQIcBAEBCgAGBQJUwF91AAoJENju1/PIO/qaqgEQAKYJbEKtdraEn5Jn3kY4hx0+
+99iNkLZo3rgDgkQ/Ume2RbGDzRFPXjJ4nl1oMbD2L1RtuRD6RzSCMqIlrjcNr916
+U0+LxKI6UZV8bSy7pb708mxMG1AA80xEmOjXchnXy8pFo1OaUZBN3Dmqcirz/RSG
+FXEho3o5U2Kuvebt9XV3nuUGcVaQ3g6zj6a9mkIHcRg3lgHak1DYvptz8fKOl6tq
+9ogd5zBhXIwfKMnV+hdBjebHnHIqaUm2bTtkoOeGmw40YSsnpNLIek1QETP28qap
+7LXHAq0PwWfP+vBiil15izH0nFVPhOk8cN3TbXdyin8qkADY6cEZAyjmj6OFqvSz
+dSBAz9aEAkv6atX2KE+3B3lJu/waAvyKKN0S9LUtK9yAnvBQwb6ao1aBZZcOPkRI
++43OHDLYC+M5Rjvtw9JKNE2M8Gj3YwFb+VRRu75So+lkh+0bWGTamoYZxpsj7xV+
+BuFpFWkXN9C+kkKDqJS+hF5693emrqZP3pZjp2uBuxxs11u0rEHJXoEHOGGtZQAX
+bU+jdi9Nib5G4kRBAoJ0HADGksInqA542HfIqVXD1by2ogUW0l2Wc1hI88o0oQFV
+KNzjZtyRiQj7IfVh+vysBZNZH2HFjCZKTaXG1XLZwSwWzEDFhCZUfEmPfWkg7b+b
+aXKmcPJ2a+u/BV+SB0/C
+=ukVK
 -----END PGP SIGNATURE-----
 
---B3NBd8mrXZtPJEYR--
+--aNvCJ41Feu8IgPyB--
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
