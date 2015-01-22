@@ -1,101 +1,82 @@
-From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] Documentation: Add documentation for rt5033
- multifunction device
-Date: Thu, 22 Jan 2015 19:30:37 +0100
-Message-ID: <20150122183037.GA24898@earth.universe>
-References: <1421899601-19327-1-git-send-email-beomho.seo@samsung.com>
- <1421899601-19327-3-git-send-email-beomho.seo@samsung.com>
- <20150122074101.GK22024@x1>
- <54C0B1EA.7030901@samsung.com>
- <20150122090243.GA5465@x1>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v7 1/4] Documentation: dt: add common bindings for
+ hwspinlock
+Date: Thu, 22 Jan 2015 18:56:22 +0000
+Message-ID: <20150122185622.GE12911@leverpostej>
+References: <1421269101-51105-2-git-send-email-s-anna@ti.com>
+ <20150115135201.GG16217@leverpostej>
+ <20150115135556.GH16217@leverpostej>
+ <CAL_JsqL2LZAooMk-V8+xeF2g6acZE21M+-OBRw8aEVa-5wVHuQ@mail.gmail.com>
+ <CAK=WgbYQ=BbinqJ5fsw2Y+FKdy=nasLsw9mX8pw6S_o3owy9-g@mail.gmail.com>
+ <20150116101746.GA21809@leverpostej>
+ <CAK=WgbYBqPoUm9byx0du_g5ZmHdYaUVLpSPZYHoCVzNoatNKpw@mail.gmail.com>
+ <20150120180548.GK7718@atomide.com>
+ <CAK=WgbZGGtwmQwzWumjpYOsYHTt8vPQpTraABwJBsv5VXOmJ_Q@mail.gmail.com>
+ <54BFE855.3090200@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="6c2NcOVqGQ03X4Wi"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20150122090243.GA5465@x1>
+In-Reply-To: <54BFE855.3090200-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lee.jone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+To: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Cc: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Jan 21, 2015 at 05:56:37PM +0000, Suman Anna wrote:
+> On 01/21/2015 06:41 AM, Ohad Ben-Cohen wrote:
+> > On Tue, Jan 20, 2015 at 8:05 PM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
+> >> How about default to Linux id space and allow overriding that with
+> >> a module param option if needed?
+> > 
+> > I'm not sure I'm following.
+> > 
+> > If the main point of contention is the base_id field, I'm also fine
+> > with removing it entirely, as I'm not aware of any actual user for it
+> > (Suman please confirm?).
+> 
+> Yeah, well the current implementations that I am aware of only have a
+> single bank, so all of them would be using a value of 0. I am yet to see
+> a platform with multiple instances where the property really makes a
+> difference. v7 has the property mandatory, so all the implementations
+> would need to define this value even if it is 0.
+> 
+> regards
+> Suman
+> 
+> > 
+> > Mark? Rob? Will you accept Suman's patches if the base_id field is removed?
 
---6c2NcOVqGQ03X4Wi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+My concern is that the mapping of hwspinlock IDs doesn't seem to be
+explicit in the DT on a per-context basis, which is what I'd expect.
 
-Hi,
+e.g.
 
-On Thu, Jan 22, 2015 at 09:02:43AM +0000, Lee Jones wrote:
-> On Thu, 22 Jan 2015, Beomho Seo wrote:
->=20
-> > On 01/22/2015 04:41 PM, Lee Jones wrote:
-> > > On Thu, 22 Jan 2015, Beomho Seo wrote:
-> > >=20
-> > >> This patch device tree binding documentation for rt5033 multifunctio=
-n device.
-> > >>
-> > >> Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > >> Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > >> Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > >> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > >> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> > >> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> > >> Cc: Ian campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-> > >> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> > >> Signed-off-by: Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> > >> Acked-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> > >> Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > >=20
-> > > I did not Ack this patch.
-> > >=20
-> > > Your new vendor bindings require a DT Ack.
-> > >=20
-> > > Although, as the ones I'm concerned with are Regulator related, and
-> > > Ack from Mark Brown will also suffice.
-> > >=20
-> >=20
-> > I want to apologize for my mistake. I completely misunderstood your rep=
-ly.
-> > Unfortunately, This patch merged by Sebastian at his git.
-> > Please tell me what to do.
->=20
-> That's strange, as I haven't heard anything from Sebastian.
+lck: hwspinlock-device@f00 {
+	...
+	#hwlock-cells = <1>;
+};
 
-Right, Beomho had a typo in your mail address on patch 0/2 (to which
-I replied).
+some-other-os-interface {
+	...
+	hwlocks = <&lck 0>, <&lck 1>, <&lck 2>, <&lck 3>;
+	hwlock-names = "glbl", "pool0", "pool1", "pool2";
+};
 
-> Anyway, he needs to remove it from his tree until we receive a
-> suitable Ack.
+a-different-os-interface {
+	...
+	hwlocks = <&lck 18>, <&lck 21>, <&lck 4>, <&lck 5>;
+	hwlock-names = "init", "teardown", "pool0", "pool1";
+};
 
-I removed both patches some hours ago.
+That's the only way I would expect this to possibly remain a stable
+over time, and it's the entire reason for #hwlock-cells, no?
 
--- Sebastian
+How do you expect the other components sharing the hwspinlocks to be
+described?
 
---6c2NcOVqGQ03X4Wi
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJUwUHKAAoJENju1/PIO/qaLn0P/R7xQhO4c2beKaq4XEJhFxZE
-CSqe3ONwDMfi+SFmxm0eYIbMrilDFicrzJRnLvfZIPqOVk3s3dWgPEoyVuiuyEow
-gcrlkHXHr0J6GFh4mIndAnfB7S+k/NNzhY+Ghfp7+mP1ILsG6Oyw/lyD1FoOWFtN
-/q5Yv4tybtGfHiyk3HNvVnGoq65n/B0Vug6VtBPL079f7T0Ew9noFrYdWE428NHO
-dweueeOXfxsOxFp+KOMbcl8qsMkEOEdwMzpeGKSdI+ROubWoABgfYLq/SBqRZPJi
-6GyC9bCv/ctmQYIPiw1rp+0Vbz0rEeIOOrBzZ6Yu4ZuzMPpW5P03lBCGBiHe2Gm6
-x9B9anh32brns8DpJlsoyudkUgrHfW9FqHKt5VwFI/MC5lKddPajqe1u46wm2DCQ
-eQDs0JRfZG55y/KUXBZD/pxujA/DaUhhqNzM4VQ4s7MrMEmst8iUJkmh1FPnziRI
-pDEC4GPq/1arjK3JMffi1iM/uGjJQ6DZs7GoOKCpgdXTBllFh4BDoAP33jykh0zw
-3nyTtpqZzVnmiQ5B7cBihPzcM017+Mv3c9VTiylTqZ0KW0UgA3SBJQwhSCejMe29
-mQVuuhauZHHavT/Dxh3lvvpksbuC5cVQqSE0I2ICQlxnxRyzreu7PoPFlc1UulC3
-ujryQTOcayuge9ZjDTtR
-=EBPf
------END PGP SIGNATURE-----
-
---6c2NcOVqGQ03X4Wi--
+Thanks,
+Mark.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
