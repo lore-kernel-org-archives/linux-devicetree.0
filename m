@@ -1,23 +1,54 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [alsa-devel] [PATCH v3 2/4] ASoC: samsung: Document Trats2 audio
- subsystem bindings
-Date: Thu, 22 Jan 2015 13:17:25 +0100
-Message-ID: <54C0EA55.5050405@samsung.com>
-References: <1421925482-15861-1-git-send-email-ideal.song@samsung.com>
- <1421925482-15861-3-git-send-email-ideal.song@samsung.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 1/1] i2c: i2c-st: Rename clock reference to something
+ that exists
+Date: Thu, 22 Jan 2015 12:18:19 +0000
+Message-ID: <20150122121819.GC9129@x1>
+References: <1409234523-20240-1-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1421925482-15861-3-git-send-email-ideal.song@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Inha Song <ideal.song@samsung.com>, alsa-devel@alsa-project.org
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, kgene@kernel.org, sbkim73@samsung.com, lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.de, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1409234523-20240-1-git-send-email-lee.jones@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: kernel@stlinux.com, wsa@the-dreams.de, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 22/01/15 12:18, Inha Song wrote:
-> This patch add Trats2 audio subsystem bindings document.
-> 
-> Signed-off-by: Inha Song <ideal.song@samsung.com>
+Wolfram,
 
-Acked-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+This patch has been on the list since forever.
+
+I have Acks from the driver author, so I'm going to take this through
+the MFD tree.  If you perk up later and decide to take it though the
+I2C tree instead, let me know and I'll remove it from MFD.
+
+> CLK_S_ICN_REG_0 hasn't existed for a while now.  This was renamed
+> over a few commits, then finally removed in commit 5aa02b9 (ARM:
+> STi: DT: STiH415: Remove unused CLK_S_ICN_REG_0 fixed clock).
+>=20
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/i2c/i2c-st.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-st.txt b/Docum=
+entation/devicetree/bindings/i2c/i2c-st.txt
+> index 437e0db..4c26fda 100644
+> --- a/Documentation/devicetree/bindings/i2c/i2c-st.txt
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-st.txt
+> @@ -31,7 +31,7 @@ i2c0: i2c@fed40000 {
+>  	compatible	=3D "st,comms-ssc4-i2c";
+>  	reg		=3D <0xfed40000 0x110>;
+>  	interrupts	=3D  <GIC_SPI 187 IRQ_TYPE_LEVEL_HIGH>;
+> -	clocks		=3D <&CLK_S_ICN_REG_0>;
+> +	clocks		=3D <&clk_s_a0_ls CLK_ICN_REG>;
+>  	clock-names	=3D "ssc";
+>  	clock-frequency =3D <400000>;
+>  	pinctrl-names	=3D "default";
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
