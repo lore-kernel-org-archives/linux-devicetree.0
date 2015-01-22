@@ -1,33 +1,35 @@
-From: Rojhalat Ibrahim <imr@rtschenk.de>
-Subject: Re: [PATCH v2 4/4] leds: no longer use unnamed gpios
-Date: Thu, 22 Jan 2015 10:32:35 +0100
-Message-ID: <2355733.gZvsF3iKWH@pcimr>
-References: <1421876028-22799-1-git-send-email-o.schinagl@ultimaker.com> <1421876028-22799-5-git-send-email-o.schinagl@ultimaker.com>
+From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [STLinux Kernel] [PATCH 1/1] i2c: i2c-st: Rename clock reference
+ to something that exists
+Date: Thu, 22 Jan 2015 09:34:23 +0000
+Message-ID: <20150122093423.GA23580@griffinp-ThinkPad-X1-Carbon-2nd>
+References: <1409234523-20240-1-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <1421876028-22799-5-git-send-email-o.schinagl@ultimaker.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Olliver Schinagl <o.schinagl@ultimaker.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Olliver Schinagl <oliver@schinagl.nl>, Robin Gong <b38343@freescale.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Aaron Lu <aaron.lu@intel.com>, Grant Likely <grant.likely@linaro.org>, Jingoo Han <jg1.han@samsung.com>, Alexander Shiyan <shc_work@mail.ru>, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, linux-leds@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1409234523-20240-1-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 21 January 2015 22:33:48 Olliver Schinagl wrote:
-> From: Olliver Schinagl <oliver@schinagl.nl>
+Hi,
+
+On Thu, 28 Aug 2014, Lee Jones wrote:
+
+> CLK_S_ICN_REG_0 hasn't existed for a while now.  This was renamed
+> over a few commits, then finally removed in commit 5aa02b9 (ARM:
+> STi: DT: STiH415: Remove unused CLK_S_ICN_REG_0 fixed clock).
 > 
-> The gpio document says we should not use unnamed bindings for gpios.
-> This patch uses the 'led-' prefix to the gpios and updates code and
-> documents. Because the devm_get_gpiod_from_child() falls back to using
-> old-style unnamed gpios, we can update the code first, and update
-> dts files as time allows.
-> 
-> Signed-off-by: Olliver Schinagl <oliver@schinagl.nl>
+> Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Where does devm_get_gpiod_from_child() fall back "to using old-style
-unnamed gpios"?
+Acked-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-After applying this patch the leds defined in my devicetree do not
-work anymore.
+regards,
 
-   Rojhalat
+Peter.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
