@@ -1,72 +1,173 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v4 3/5] ARM: sunxi: dts: Add PS2 nodes to dtsi for A10
- and A20
-Date: Thu, 22 Jan 2015 16:50:36 +0100
-Message-ID: <20150122155036.GQ4367@lukather>
-References: <1421417021-3247-1-git-send-email-vishnupatekar0510@gmail.com>
- <1421417021-3247-4-git-send-email-vishnupatekar0510@gmail.com>
- <20150120200216.GV4367@lukather>
- <CAEzqOZsX-o9HqtjpBKH48S-R+GDzN=kzrfSqC54s4bGxpDf7kA@mail.gmail.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v9 2/5] mfd: AXP20x: Add bindings documentation
+Date: Thu, 22 Jan 2015 16:02:52 +0000
+Message-ID: <20150122160252.GE9129@x1>
+References: <1421941147-9682-1-git-send-email-wens@csie.org>
+ <1421941147-9682-3-git-send-email-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="HbrDUOEqlDe4KvYA"
-Return-path: <linux-input-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAEzqOZsX-o9HqtjpBKH48S-R+GDzN=kzrfSqC54s4bGxpDf7kA@mail.gmail.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Vishnu Patekar <vishnupatekar0510@gmail.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Hans de Goede <hdegoede@redhat.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-sunxi@googlegroups.com" <linux-sunxi@googlegroups.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+In-Reply-To: <1421941147-9682-3-git-send-email-wens@csie.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Carlo Caione <carlo@caione.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, 22 Jan 2015, Chen-Yu Tsai wrote:
 
---HbrDUOEqlDe4KvYA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> From: Carlo Caione <carlo@caione.org>
+>=20
+> Bindings documentation for the AXP20x driver. In this file also
+> sub-nodes are documented.
+>=20
+> Signed-off-by: Carlo Caione <carlo@caione.org>
+> Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+> [wens@csie.org: clarify interrupt source for the axp PMIC]
+> [wens@csie.org: explain dcdc-workmode in detail and trim lines to 80 =
+chars]
+> [wens@csie.org: make regulator supplies optional if using unregulated=
+ input]
+> [wens@csie.org: use cubieboard2 regulator nodes as example]
+> [wens@csie.org: change dcdc-workmode to dcdc-workmode-pwm boolean pro=
+perty]
+> [wens@csie.org: use clock-frequency for dcdc regulator work frequency=
+]
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> ---
+>  Documentation/devicetree/bindings/mfd/axp20x.txt | 102 +++++++++++++=
+++++++++++
+>  1 file changed, 102 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/axp20x.txt
 
-On Wed, Jan 21, 2015 at 04:40:28PM +0530, Vishnu Patekar wrote:
-> On Wed, Jan 21, 2015 at 1:32 AM, Maxime Ripard
-> <maxime.ripard@free-electrons.com> wrote:
-> > Hi Vishnu,
-> >
-> > On Fri, Jan 16, 2015 at 07:33:39PM +0530, Vishnu Patekar wrote:
-> >> Signed-off-by: VishnuPatekar <vishnupatekar0510@gmail.com>
-> >> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> >
-> > Why is there Hans Signed-off here?
-> Hans has modified the A10 dtsi and also tested on A10 board.
-> Shouldn't I add him as Signed-off?
+This looks okay to me now.
 
-Yeah, you should :)
+If Mark is happy with the remainder, I'll merge this.
 
-Thanks,
-Maxime
+=46or my own reference:
+Acked-by: Lee Jones <lee.jones@linaro.org>
+
+> diff --git a/Documentation/devicetree/bindings/mfd/axp20x.txt b/Docum=
+entation/devicetree/bindings/mfd/axp20x.txt
+> new file mode 100644
+> index 000000000000..c3c80db242c7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/axp20x.txt
+> @@ -0,0 +1,102 @@
+> +AXP202/AXP209 device tree bindings
+> +
+> +The axp20x family current members :
+> +axp202 (X-Powers)
+> +axp209 (X-Powers)
+> +
+> +Required properties:
+> +- compatible: "x-powers,axp202" or "x-powers,axp209"
+> +- reg: The I2C slave address for the AXP chip
+> +- interrupt-parent: The parent interrupt controller
+> +- interrupts: SoC NMI / GPIO interrupt connected to the PMIC's IRQ p=
+in
+> +- interrupt-controller: axp20x has its own internal IRQs
+> +- #interrupt-cells: Should be set to 1
+> +- regulators: A node that houses a sub-node for each regulator. The =
+regulators
+> +	      are bound using their name as listed here: dcdc2, dcdc3, ldo1=
+,
+> +	      ldo2, ldo3, ldo4, ldo5.  The bindings details of individual
+> +	      regulator device can be found in:
+> +	      Documentation/devicetree/bindings/regulator/regulator.txt wit=
+h
+> +	      the exception of x-powers,dcdc-freq. Regulators not used shou=
+ld
+> +	      still be listed for completeness and that the regulator subsy=
+stem
+> +	      properly registers them.
+> +
+> +Optional properties:
+> +- regulator supplies - may be omitted if inputs are unregulated, suc=
+h as using
+> +		       the IPSOUT output from the PMIC
+> +  - acin-supply: The input supply for LDO1
+> +  - vin2-supply: The input supply for DCDC2
+> +  - vin3-supply: The input supply for DCDC3
+> +  - ldo24in-supply: The input supply for LDO2, LDO4
+> +  - ldo3in-supply: The input supply for LDO3
+> +  - ldo5in-supply: The input supply for LDO5
+> +
+> +Optional properties for regulators node:
+> +- clock-frequency: defines the work frequency of DC-DC regulators
+> +		   (range: 750kHz - 1875kHz). Default: 1.5MHz
+> +
+> +Optional properties for DCDC regulators:
+> +- x-powers,dcdc-workmode-pwm: Force the DCDC regulators to run in PW=
+M mode
+> +			      The DCDC regulators rormally work in a mixed
+> +			      PWM/PFM mode, using PFM under light loads and
+> +			      switching to PWM for heavier loads. Forcing
+> +			      PWM mode trades efficiency under light loads
+> +			      for lower output noise. This probably makes
+> +			      sense for HiFi audio related applications that
+> +			      aren't battery constrained.
+> +
+> +Example:
+> +
+> +axp209: pmic@34 {
+> +	compatible =3D "x-powers,axp209";
+> +	reg =3D <0x34>;
+> +	interrupt-parent =3D <&nmi_intc>;
+> +	interrupts =3D <0 IRQ_TYPE_LEVEL_LOW>;
+> +	interrupt-controller;
+> +	#interrupt-cells =3D <1>;
+> +
+> +	regulators {
+> +		clock-frequency =3D <1500000>;
+> +
+> +		vdd_cpu: dcdc2 {
+> +			regulator-always-on;
+> +			regulator-min-microvolt =3D <1000000>;
+> +			regulator-max-microvolt =3D <1450000>;
+> +			regulator-name =3D "vdd-cpu";
+> +		};
+> +
+> +		vdd_int_dll: dcdc3 {
+> +			regulator-always-on;
+> +			regulator-min-microvolt =3D <1000000>;
+> +			regulator-max-microvolt =3D <1400000>;
+> +			regulator-name =3D "vdd-int-dll";
+> +		};
+> +
+> +		vdd_rtc: ldo1 {
+> +			regulator-always-on;
+> +			regulator-min-microvolt =3D <1200000>;
+> +			regulator-max-microvolt =3D <1400000>;
+> +			regulator-name =3D "vdd-rtc";
+> +		};
+> +
+> +		avcc: ldo2 {
+> +			regulator-always-on;
+> +			regulator-min-microvolt =3D <2700000>;
+> +			regulator-max-microvolt =3D <3300000>;
+> +			regulator-name =3D "avcc";
+> +		};
+> +
+> +		ldo3 {
+> +			/* unused */
+> +		};
+> +
+> +		csi1_io_2v8: ldo4 {
+> +			/* output on extension headers */
+> +			regulator-name =3D "csi1-io-2v8";
+> +		};
+> +
+> +		ldo5 {
+> +			/* unused */
+> +		};
+> +	};
+> +};
+> +
 
 --=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---HbrDUOEqlDe4KvYA
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUwRxMAAoJEBx+YmzsjxAgEkUP/3cNgV0Z0UbZ0t+Wqp5TNrFB
-wlBP1pZjNTcsEzD/fsaMM9zZ++RDSnCtD7dmq4K0n9cI0FHWip92MajmxhGF9vvb
-lwOKlMgG1Io+68zHrNCMb+rCalDJG1jTBUTtnz/M3qrjusngiazbxpHj57v/Fv2f
-goEbfBZPw8JuNW1nOYT2DTcDpW0oirryiw36XW85w5kZ7A/ka0mVQ/DSHfNyeSRj
-+aUPVpAVkOmTP1r/RxowSvWCDkEQbrSgNe674C8jbhCtGMrR2eJmMcMRjFZmYetS
-PpibHiuimKNuWZK9WwSxudnFfORKoSd30lXlHsKDW+BPx4LZNDNf0m92sPTB37uf
-/K/d2DS/FbzpLMA1XtLpp1yDD5cgDiT6taG3Zu+Yx5tKBGnq+YqT81wN8sMXnUBJ
-aBv62fwS/LbWYLaAej9XzRqYXkkuHn88YZ9OqsaIU8FRr6kY+gycQmpyJtqHKEpd
-QZ3L0n3FE45ENe+UH8pb8qoTLhbJBHHVXv8gLokt3LpL0Qbndf19P5BIRygAu4ej
-HVhmLo/VDlTqqw5UDND3u8jlOJ8HnL/yWrnKGS9v+UqhNRewMJZ61zQzRx/tZW44
-a6g82FKA+GW8OGeH8abQoGWwjMhovYcYSSzuYfOypadn3yZCtiNs1Xa8XY8ogGPd
-ERyG1xoLjQsoY8IycETP
-=TZbk
------END PGP SIGNATURE-----
-
---HbrDUOEqlDe4KvYA--
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
