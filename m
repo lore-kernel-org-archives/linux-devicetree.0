@@ -1,37 +1,55 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] i2c: Mark instantiated device nodes with OF_POPULATE
-Date: Thu, 22 Jan 2015 08:58:36 -0600
-Message-ID: <CAL_JsqKEBYwX=5zgWbdVRxm-H-sFiDa9rAp26BvuKNECoNW=uQ@mail.gmail.com>
-References: <1421346798-17148-1-git-send-email-pantelis.antoniou@konsulko.com> <20150122144818.GG3413@katana>
+From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [RFC] using dt overlays: how to? today?
+Date: Thu, 22 Jan 2015 16:02:19 +0100
+Message-ID: <20150122150219.GB26928@odux.rfo.atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150122144818.GG3413@katana>
+Content-Disposition: inline
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, arnd-vj4z4lbxKbc@public.gmane.org, koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 22, 2015 at 8:48 AM, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org> wrote:
-> On Thu, Jan 15, 2015 at 08:33:18PM +0200, Pantelis Antoniou wrote:
->> Mark (and unmark) device nodes with the POPULATE flag as appropriate.
->> This is required to avoid multi probing when using I2C and device
->> overlays containing a mux.
->> This patch is also more careful with the release of the adapter device
->> which caused a deadlock with muxes, and does not break the build
->> on !OF since the node flag accessors are not defined then.
->>
->> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
->
-> Applied to for-current, thanks!
+Hi,
 
-Ignoring my comments? It's not a big deal, but Pantelis did send out
-the DT patch necessary for my suggestion[1]. It's needed in another
-place now, too.
+I have assisted to Pantelis' talk about device tree and overlays at ELCE
+2014. Since the patch 'Introduce DT overlay support' is now part of the
+mainline, I wanted to have a look about it and to use it for our boards.
 
-Rob
+Firstly, this is what I want to achieve by using this feature:
+- manage several revisions of our boards
+- manage modules we can plug on the board, mainly display modules
+  (resistive or capacitive one)
+- manage cpu modules plug on the motherboard
+- I would like to have all this stuff in the kernel. I don't want a
+  dependency on the bootloader or the user space.
 
-[1] https://lkml.org/lkml/2015/1/21/602
+At the moment, we have many dts files to manage these cases (not all are
+in mainline). It is becoming a pain.
+
+I wanted to see if we can use device tree fragments as it seems to be
+closed to be achieved when I had assisted to the talk. I have found a
+thread about 'DT-Overlay configfs interface'
+(http://thread.gmane.org/gmane.linux.drivers.devicetree/101871), there
+are still discussions about security concerns, so it may not be included
+quickly. I have also found an interesting thread about cape manager for
+Beaglebone (http://thread.gmane.org/gmane.linux.documentation/8279) but
+there is no more activity on it, is it canceled or is there a new topic
+I have missed?
+
+Here are my questions:
+- Is it acceptable to manage device tree fragments with a driver such as
+  the cape manager? Or at an other place in the kernel such as
+arch/arm/mach-at91/board-dt-sama5.c for example?
+- Is it possible to get access to eeprom from the kernel? Pantelis did
+  an interface to access it through i2c but it seems it was not
+accepted. In my case, it will be through the one wire interface.
+
+Thanks for sharing your opinion about this or redirecting me to a
+similar thread.
+
+Ludovic
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
