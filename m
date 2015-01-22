@@ -1,87 +1,72 @@
-From: clement.perrochaud-BPEPtVrvniRWk0Htik3J/w@public.gmane.org
-Subject: [PATCH 1/4] NFC: nci: Add FWDL support
-Date: Thu, 22 Jan 2015 16:27:37 +0100
-Message-ID: <1421940460-14049-2-git-send-email-clement.perrochaud@effinnov.com>
-References: <1421940460-14049-1-git-send-email-clement.perrochaud@effinnov.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v4 3/5] ARM: sunxi: dts: Add PS2 nodes to dtsi for A10
+ and A20
+Date: Thu, 22 Jan 2015 16:50:36 +0100
+Message-ID: <20150122155036.GQ4367@lukather>
+References: <1421417021-3247-1-git-send-email-vishnupatekar0510@gmail.com>
+ <1421417021-3247-4-git-send-email-vishnupatekar0510@gmail.com>
+ <20150120200216.GV4367@lukather>
+ <CAEzqOZsX-o9HqtjpBKH48S-R+GDzN=kzrfSqC54s4bGxpDf7kA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1421940460-14049-1-git-send-email-clement.perrochaud-BPEPtVrvniRWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
-Cc: =?UTF-8?q?Cl=C3=A9ment=20Perrochaud?= <clement.perrochaud-3arQi8VN3Tc@public.gmane.org>, sunil.jogi-3arQi8VN3Tc@public.gmane.org, jerome.pele-3arQi8VN3Tc@public.gmane.org, Charles.Gorand-Effinnov-3arQi8VN3Tc@public.gmane.org, lauro.venancio-430g2QfJUUCGglJvpFV4uA@public.gmane.org, aloisio.almeida-430g2QfJUUCGglJvpFV4uA@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lefrique-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, cuissard-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, bzhao-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, hirent-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Cl=C3=A9ment=20Perrochaud?= <clement.perrochaud-BPEPtVrvniRWk0Htik3J/w@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="HbrDUOEqlDe4KvYA"
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAEzqOZsX-o9HqtjpBKH48S-R+GDzN=kzrfSqC54s4bGxpDf7kA@mail.gmail.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Vishnu Patekar <vishnupatekar0510@gmail.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Hans de Goede <hdegoede@redhat.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-sunxi@googlegroups.com" <linux-sunxi@googlegroups.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-=46rom: Cl=C3=A9ment Perrochaud <clement.perrochaud-3arQi8VN3Tc@public.gmane.org>
 
-Signed-off-by: Cl=C3=A9ment Perrochaud <clement.perrochaud-3arQi8VN3Tc@public.gmane.org>
-Signed-off-by: Cl=C3=A9ment Perrochaud <clement.perrochaud-BPEPtVrvniRWk0Htik3J/w@public.gmane.org=
->
----
- include/net/nfc/nci_core.h |  1 +
- net/nfc/nci/core.c         | 11 +++++++++++
- 2 files changed, 12 insertions(+)
+--HbrDUOEqlDe4KvYA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/include/net/nfc/nci_core.h b/include/net/nfc/nci_core.h
-index 9e51bb4..137e059 100644
---- a/include/net/nfc/nci_core.h
-+++ b/include/net/nfc/nci_core.h
-@@ -71,6 +71,7 @@ struct nci_ops {
- 	int   (*close)(struct nci_dev *ndev);
- 	int   (*send)(struct nci_dev *ndev, struct sk_buff *skb);
- 	int   (*setup)(struct nci_dev *ndev);
-+	int   (*fw_download)(struct nci_dev *ndev, const char *firmware_name)=
-;
- 	__u32 (*get_rfprotocol)(struct nci_dev *ndev, __u8 rf_protocol);
- 	int   (*discover_se)(struct nci_dev *ndev);
- 	int   (*disable_se)(struct nci_dev *ndev, u32 se_idx);
-diff --git a/net/nfc/nci/core.c b/net/nfc/nci/core.c
-index 51feb5e..1342c7d 100644
---- a/net/nfc/nci/core.c
-+++ b/net/nfc/nci/core.c
-@@ -789,6 +789,16 @@ static int nci_se_io(struct nfc_dev *nfc_dev, u32 =
-se_idx,
- 	return 0;
- }
-=20
-+static int nci_fw_download(struct nfc_dev *nfc_dev, const char *firmwa=
-re_name)
-+{
-+	struct nci_dev *ndev =3D nfc_get_drvdata(nfc_dev);
-+
-+	if (!ndev->ops->fw_download)
-+		return -ENOTSUPP;
-+
-+	return ndev->ops->fw_download(ndev, firmware_name);
-+}
-+
- static struct nfc_ops nci_nfc_ops =3D {
- 	.dev_up =3D nci_dev_up,
- 	.dev_down =3D nci_dev_down,
-@@ -804,6 +814,7 @@ static struct nfc_ops nci_nfc_ops =3D {
- 	.disable_se =3D nci_disable_se,
- 	.discover_se =3D nci_discover_se,
- 	.se_io =3D nci_se_io,
-+	.fw_download =3D nci_fw_download,
- };
-=20
- /* ---- Interface to NCI drivers ---- */
+On Wed, Jan 21, 2015 at 04:40:28PM +0530, Vishnu Patekar wrote:
+> On Wed, Jan 21, 2015 at 1:32 AM, Maxime Ripard
+> <maxime.ripard@free-electrons.com> wrote:
+> > Hi Vishnu,
+> >
+> > On Fri, Jan 16, 2015 at 07:33:39PM +0530, Vishnu Patekar wrote:
+> >> Signed-off-by: VishnuPatekar <vishnupatekar0510@gmail.com>
+> >> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> >
+> > Why is there Hans Signed-off here?
+> Hans has modified the A10 dtsi and also tested on A10 board.
+> Shouldn't I add him as Signed-off?
+
+Yeah, you should :)
+
+Thanks,
+Maxime
+
 --=20
-Cl=C3=A9ment Perrochaud
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 
-Eff'Innov Technologies
-Caen, Aix-En-Provence, Grenoble
+--HbrDUOEqlDe4KvYA
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Eff'Innov Technologies
-Campus EffiScience
-2, Esplanade Anton Philips
-14460 Colombelles, FRANCE
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-http://www.effinnov.com
+iQIcBAEBAgAGBQJUwRxMAAoJEBx+YmzsjxAgEkUP/3cNgV0Z0UbZ0t+Wqp5TNrFB
+wlBP1pZjNTcsEzD/fsaMM9zZ++RDSnCtD7dmq4K0n9cI0FHWip92MajmxhGF9vvb
+lwOKlMgG1Io+68zHrNCMb+rCalDJG1jTBUTtnz/M3qrjusngiazbxpHj57v/Fv2f
+goEbfBZPw8JuNW1nOYT2DTcDpW0oirryiw36XW85w5kZ7A/ka0mVQ/DSHfNyeSRj
++aUPVpAVkOmTP1r/RxowSvWCDkEQbrSgNe674C8jbhCtGMrR2eJmMcMRjFZmYetS
+PpibHiuimKNuWZK9WwSxudnFfORKoSd30lXlHsKDW+BPx4LZNDNf0m92sPTB37uf
+/K/d2DS/FbzpLMA1XtLpp1yDD5cgDiT6taG3Zu+Yx5tKBGnq+YqT81wN8sMXnUBJ
+aBv62fwS/LbWYLaAej9XzRqYXkkuHn88YZ9OqsaIU8FRr6kY+gycQmpyJtqHKEpd
+QZ3L0n3FE45ENe+UH8pb8qoTLhbJBHHVXv8gLokt3LpL0Qbndf19P5BIRygAu4ej
+HVhmLo/VDlTqqw5UDND3u8jlOJ8HnL/yWrnKGS9v+UqhNRewMJZ61zQzRx/tZW44
+a6g82FKA+GW8OGeH8abQoGWwjMhovYcYSSzuYfOypadn3yZCtiNs1Xa8XY8ogGPd
+ERyG1xoLjQsoY8IycETP
+=TZbk
+-----END PGP SIGNATURE-----
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--HbrDUOEqlDe4KvYA--
