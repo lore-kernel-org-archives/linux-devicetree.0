@@ -1,43 +1,53 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2 RESEND 6/8] ARM: STi: STiH407: Enable Cortex-A9 PMU support
-Date: Thu, 22 Jan 2015 09:48:51 +0000
-Message-ID: <1421920133-7914-7-git-send-email-lee.jones@linaro.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH v2 RESEND 7/8] ARM: STi: STiH407: Enable PMU IRQs
+Date: Thu, 22 Jan 2015 09:48:52 +0000
+Message-ID: <1421920133-7914-8-git-send-email-lee.jones@linaro.org>
 References: <1421920133-7914-1-git-send-email-lee.jones@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1421920133-7914-1-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1421920133-7914-1-git-send-email-lee.jones@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: lee.jones@linaro.org, kernel@stlinux.com, tglx@linutronix.de, jason@lakedaemon.net, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This is ARM's generic Performance Monitoring Unit.
+This driver is used to enable System Configuration Register controlled
+External, CTI (Core Sight), PMU (Performance Management), and PL310 L2
+Cache IRQs prior to use.
 
-Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Here we are enabling PMU IRQs on both channels.
+
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- arch/arm/boot/dts/stih407-family.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/arm/boot/dts/stih407-family.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
 diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
-index 3e31d32..939e46e 100644
+index 939e46e..aa86d99 100644
 --- a/arch/arm/boot/dts/stih407-family.dtsi
 +++ b/arch/arm/boot/dts/stih407-family.dtsi
-@@ -56,6 +56,12 @@
- 		cache-level = <2>;
- 	};
+@@ -8,6 +8,7 @@
+  */
+ #include "stih407-pinctrl.dtsi"
+ #include <dt-bindings/reset-controller/stih407-resets.h>
++#include <dt-bindings/interrupt-controller/irq-st.h>
+ / {
+ 	#address-cells = <1>;
+ 	#size-cells = <1>;
+@@ -119,6 +120,15 @@
+ 			reg = <0x94b5100 0x1000>;
+ 		};
  
-+	arm-pmu {
-+		interrupt-parent = <&intc>;
-+		compatible = "arm,cortex-a9-pmu";
-+		interrupts = <GIC_PPI 15 IRQ_TYPE_LEVEL_HIGH>;
-+	};
++		irq-syscfg {
++			compatible    = "st,stih407-irq-syscfg";
++			st,syscfg     = <&syscfg_core>;
++			st,irq-device = <ST_IRQ_SYSCFG_PMU_0>,
++					<ST_IRQ_SYSCFG_PMU_1>;
++			st,fiq-device = <ST_IRQ_SYSCFG_DISABLED>,
++					<ST_IRQ_SYSCFG_DISABLED>;
++		};
 +
- 	soc {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
+ 		serial@9830000 {
+ 			compatible = "st,asc";
+ 			reg = <0x9830000 0x2c>;
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
