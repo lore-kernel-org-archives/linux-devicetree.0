@@ -1,63 +1,80 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v2 6/9] watchdog: st_wdt: Add new driver for ST's LPC
- Watchdog
-Date: Thu, 22 Jan 2015 11:31:45 -0800
-Message-ID: <54C15021.4060907@roeck-us.net>
-References: <1421927767-28889-1-git-send-email-lee.jones@linaro.org> <1421927767-28889-7-git-send-email-lee.jones@linaro.org> <54C12F10.4090901@roeck-us.net> <20150122172100.GF9129@x1>
+From: Kevin Hilman <khilman@kernel.org>
+Subject: Re: [PATCH v2] ARM: dts: exynos5422-odroidxu3: add on-board INA231 sensors
+Date: Thu, 22 Jan 2015 11:47:06 -0800
+Message-ID: <7hy4ou61j9.fsf@deeprootsystems.com>
+References: <1421284089-421-1-git-send-email-khilman@kernel.org>
+	<54BF14FB.8050300@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150122172100.GF9129@x1>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, david.paris-qxv4g6HH51o@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <54BF14FB.8050300@samsung.com> (Joonyoung Shim's message of "Wed,
+	21 Jan 2015 11:54:51 +0900")
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Joonyoung Shim <jy0922.shim@samsung.com>
+Cc: Kukjin Kim <kgene.kim@samsung.com>, linux-samsung-soc@vger.kernel.org, linaro-kernel@lists.linaro.org, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/22/2015 09:21 AM, Lee Jones wrote:
-> On Thu, 22 Jan 2015, Guenter Roeck wrote:
->
->> On 01/22/2015 03:56 AM, Lee Jones wrote:
->>> Signed-off-by: David Paris <david.paris-qxv4g6HH51o@public.gmane.org>
->>> Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>> ---
->>>   drivers/watchdog/Kconfig      |  13 ++
->>>   drivers/watchdog/Makefile     |   1 +
->>>   drivers/watchdog/st_lpc_wdt.c | 335 ++++++++++++++++++++++++++++++++++++++++++
->>>   3 files changed, 349 insertions(+)
->>>   create mode 100644 drivers/watchdog/st_lpc_wdt.c
->
-> [...]
->
->>> +struct st_wdog_syscfg {
->>> +	struct regmap *regmap;
->>
->> Hi David & Lee,
->>
->> Why did you add the regmap pointer to this structure and not to st_wdog ?
->> It is not a configuration value, after all, and it is always dereferenced
->> through wt_wdog->syscfg. So all it does is to make the code more complicated.
->>
->> Am I missing something ?
->
-> I guess it was just to group it all together, as it will all be used
-> at the same time:
->
-> 	regmap_update_bits(st_wdog->syscfg->regmap,
-> 			   st_wdog->syscfg->reset_type_reg,
-> 			   st_wdog->syscfg->reset_type_mask,
-> 			   st_wdog->warm_reset);
->
-> It really doesn't matter to me either way.
->
-Having it in syscfg means it is stored in the static configuration data instead
-of the allocated data, which is at least conceptually wrong. So I think it should
-be in st_wdog.
+Joonyoung Shim <jy0922.shim@samsung.com> writes:
 
-Thanks,
-Guenter
+> Hi Kevin,
+>
+> On 01/15/2015 10:08 AM, Kevin Hilman wrote:
+>> From: Kevin Hilman <khilman@linaro.org>
+>> 
+>> The odroid-xu3 has 4 INA231 current sensors on board which can be
+>> accessed from the Linux via the hwmon interface.
+>> 
+>> There is one sensor for each of these power rails:
+>> 
+>> - A15 cluster: VDD_ARM
+>> - A7 cluster: VDD_KFC
+>> - GPU: VDD_G3D
+>> - memory: VDD_MEM
+>> 
+>> In addition to adding the sensors, LDO26 from the PMIC needs to be
+>> enabled because it's powering these sensor.
+>> 
+>> Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+>> Cc: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+>> Signed-off-by: Kevin Hilman <khilman@linaro.org>
+>> ---
+>> v2: use "ti,ina231" as compatible string.
+>> 
+>> Applies on top of "ARM: dts: Add dts file for odroid XU3 board" from Sjoerd Simons.
+>> 
+>>  arch/arm/boot/dts/exynos5422-odroidxu3.dts | 39 ++++++++++++++++++++++++++++++
+>>  1 file changed, 39 insertions(+)
+>> 
+>> diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3.dts b/arch/arm/boot/dts/exynos5422-odroidxu3.dts
+>> index c29123c0734d..50353d023225 100644
+>> --- a/arch/arm/boot/dts/exynos5422-odroidxu3.dts
+>> +++ b/arch/arm/boot/dts/exynos5422-odroidxu3.dts
+>> @@ -174,6 +174,13 @@
+>>  					regulator-always-on;
+>>  				};
+>>  
+>> +				ldo26_reg: LDO26 {
+>> +					regulator-name = "vdd_ldo26";
+>> +					regulator-min-microvolt = <3000000>;
+>> +					regulator-max-microvolt = <3000000>;
+>> +					regulator-always-on;
+>> +				};
+>> +
+>>  				buck1_reg: BUCK1 {
+>>  					regulator-name = "vdd_mif";
+>>  					regulator-min-microvolt = <800000>;
+>> @@ -257,6 +264,38 @@
+>>  		};
+>>  	};
+>>  
+>> +	i2c_0: i2c@12C60000 {
+>
+> It's ok but IMHO it can split using label reference, e.g. 
+>
+> &i2c_0 {
+> 	...
+> };
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yes, you're right.  I'll spin a v3.
+
+Kevin
