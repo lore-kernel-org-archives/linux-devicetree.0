@@ -1,48 +1,53 @@
-From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH v2 3/3] ASoC: add generic dt-card support
-Date: Thu, 22 Jan 2015 09:07:23 +0100
-Message-ID: <20150122090723.50ac0156@armhf>
-References: <cover.1421868426.git.moinejf@free.fr>
-	<d0c66c2e2f200119f9990fa52a503b1a4af6238f.1421868426.git.moinejf@free.fr>
-	<54C0088F.9070609@metafoo.de>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH RFC 2/3] power: mxs_power: add driver for mxs power subsystem
+Date: Thu, 22 Jan 2015 09:08:04 +0100
+Message-ID: <54C0AFE4.3020701@i2se.com>
+References: <1416514477-19190-1-git-send-email-stefan.wahren@i2se.com> <1416514477-19190-3-git-send-email-stefan.wahren@i2se.com> <20150121230148.GJ13715@earth.universe>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54C0088F.9070609-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20150121230148.GJ13715@earth.universe>
+Sender: linux-pm-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Shawn Guo <shawn.guo@linaro.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Marek Vasut <marex@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 21 Jan 2015 21:14:07 +0100
-Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org> wrote:
+Hi Sebastian,
 
-> [...]
-> > +	card->dai_link->dai_fmt =3D
-> > +		snd_soc_of_parse_daifmt(of_cpu, "dt-audio-card,",
-> > +					NULL, NULL) &
-> > +			~SND_SOC_DAIFMT_MASTER_MASK;
->=20
->=20
-> This one does not seem to be in the bindings documentation.
+[add Marek]
 
-Sorry, I forgot to remove it from the patch.
+Am 22.01.2015 um 00:01 schrieb Sebastian Reichel:
+> Hi Stefan,
+>
+> Sorry for the big delay.
 
-BTW, the graph of port should also contain pieces of the audio specific
-hardware information as the ones found in the simple-card (clock,
-GPIO, ...). This information could be written as generic device node
-properties. i.e without any prefix.
+a late answer is better than no answer :)
 
-I was also wondering about some of these properties, as widgets and
-routing. They seem to be software information and Linux specific.
-Must these properties appear in the DTs?
+>
+> On Thu, Nov 20, 2014 at 08:14:36PM +0000, Stefan Wahren wrote:
+>> This patch adds a minimal driver for the Freescale i.MX23, i.MX28
+>> power subsystem. It's required to trigger the probing of the underlying
+>> drivers like on-chip regulators. Additionally the drivers supports
+>> the configuration of the DC-DC clock frequency to avoid possible
+>> interferences.
+> I would expect PLL to be board specific and part of DT. Why is it
+> specified as parameter?
 
---=20
-Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
-Jef		|		http://moinejf.free.fr/
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I think the switching frequency of the DC-DC belongs to the
+configuration and don't describe how the hardware is connected. But i
+don't have a problem to change it into a DT property.
+
+Does a common property name exists for the switching frequency or would
+it be vendor specific?
+
+> Apart from that the driver/patch looks fine to me.
+
+In the meantime i made some bugfixes on these patches. Now i think it
+would be better to integrate the on-chip regulator driver into the patch
+series. That would clarify the function of the power driver.
+
+> -- Sebastian
+
+Best regards
+Stefan
