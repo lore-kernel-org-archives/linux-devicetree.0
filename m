@@ -1,120 +1,250 @@
-From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] I2C: mediatek: Add driver for MediaTek I2C
- controller
-Date: Thu, 22 Jan 2015 09:30:26 +0800
-Message-ID: <1421890226.5693.4.camel@mtksdaap41>
-References: <1421404418-50718-1-git-send-email-eddie.huang@mediatek.com>
-	 <1421404418-50718-3-git-send-email-eddie.huang@mediatek.com>
-	 <20150118101816.GF22880@pengutronix.de>
-	 <1421810004.15468.825.camel@mtksdaap41>
-	 <1421821809.11671.117.camel@mtksdaap41>
-	 <20150121081519.GS22880@pengutronix.de>
-	 <1421844580.11671.145.camel@mtksdaap41>
-	 <20150121153131.GV22880@pengutronix.de>
+From: Joonyoung Shim <jy0922.shim@samsung.com>
+Subject: Re: [PATCH 1/2] power: reset: add driver for Hardkernel's Odroid boards
+Date: Thu, 22 Jan 2015 10:33:39 +0900
+Message-ID: <54C05373.60308@samsung.com>
+References: <1414588409-8065-1-git-send-email-m.szyprowski@samsung.com>
+ <20150122010631.GL13715@earth.universe>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150121153131.GV22880-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>, Xudong Chen <xudong.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, yh.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Wei Yan <sledge.yanwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Neelesh Gupta <neelegup-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.orgAnders
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <20150122010631.GL13715@earth.universe>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Kukjin Kim <kgene.kim@samsung.com>, Tobias Jakobi <Liquid.Acid@gmx.net>, Daniel Drake <drake@endlessm.com>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
-
 
 Hi,
 
-On Wed, 2015-01-21 at 16:31 +0100, Uwe Kleine-K=C3=B6nig wrote:
-> Hello,
->=20
-> On Wed, Jan 21, 2015 at 08:49:40PM +0800, Yingjoe Chen wrote:
-> > On Wed, 2015-01-21 at 09:15 +0100, Uwe Kleine-K=C3=B6nig wrote:
-<...>
-> > > > > > > +static int mtk_i2c_remove(struct platform_device *pdev)
-> > > > > > > +{
-> > > > > > > +	struct mtk_i2c *i2c =3D platform_get_drvdata(pdev);
-> > > > > > > +
-> > > > > > > +	i2c_del_adapter(&i2c->adap);
-> > > > > > > +	free_i2c_dma_bufs(i2c);
-> > > > > > > +	platform_set_drvdata(pdev, NULL);
-> > > > > > > +
-> > > > > > Here you need to make sure that no irq is running when i2c_=
-del_adapter
-> > > > > > is called.
-> > > > > OK, add check here
-> > > >=20
-> > > > I thought after i2c_del_adapter() is complete, all i2c_transfer=
- for this
-> > > > adapter is completed. If this is true, then i2c clock is alread=
-y off and
-> > > > we won't have any on-going transfer/pending irq.
-> > > Consider that there is an ongoing transaction and before it compl=
-etes
-> > > the adapter-device is unbound from the driver. Then i2c_del_adapt=
-er is
-> > > called which frees the resources managed by the core, then the de=
-vice's
-> > > completion irq triggers and the freed adapter is used which proba=
-bly
-> > > results in an oops.
-> >=20
-> > Not sure if I missed anything. i2c_transfer() is a synchronize call=
-=2E If
-> > we fixed timeout issue you mentioned in mtk_i2c_transfer(), it will=
- turn
-> > off clock before it return, which disable any transaction and clear=
- all
-> > pending irq.
-> There is no synchronization to prevent unbinding the i2c-bus device
-> while there is a i2c transfer on the wire. i2c_del_adapter only takes
-> i2c-core.c's &core_lock while i2c_transfer takes &adapter->bus_lock.
-> If you want to test for it: do something like that:
->=20
-> 	while true; do dd if=3D/sys/bus/i2c/.../eeprom of=3D/dev/null; done
->=20
-> and while this is running do:
->=20
-> 	cd /sys/bus/platform/drivers/mt-i2c
-> 	while true; do
-> 		echo 1100d000.i2c > unbind;
-> 		sleep 1;
-> 		echo 1100d000.i2c > bind;
-> 		sleep 1;
-> 	done
-> =20
-> > Your scenario can only happens when one thread is still running in
-> > i2c_transfer/algo->master_xfer and the other thread is trying to re=
-move
-> > the device. If that happened, then every device data access in
-> > mtk_i2c_transfer might cause oops. I looked at some i2c drivers and
-> > can't find any checking for this case, I can't find anything preven=
-t i2c
-> > device removal before pending i2c_transfer complete either. Would y=
-ou
-> > give me an example?
-> I just noticed that even "my" driver is affected. If the above recipe
-> makes your driver barf there is something to fix, if not ... hmm, the=
-n
-> maybe there is more synchronization than I'm aware of or my recipe is
-> wrong.
->=20
-> At least another driver author believed me:
-> http://thread.gmane.org/gmane.linux.drivers.i2c/21531/focus=3D21662
+On 01/22/2015 10:06 AM, Sebastian Reichel wrote:
+> Hi,
+> 
+> On Wed, Oct 29, 2014 at 02:13:28PM +0100, Marek Szyprowski wrote:
+>> This patch adds a driver implementing correct reboot and poweroff
+>> procedures for Exynos4412-based Hardkernel's Odroid X/X2/U2/U3/U3+
+>> boards.
+> 
+> Sorry it took so long. I have a couple of small requests before
+> applying this (comments inline).
+> 
+>> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+>> ---
+>>  .../bindings/power/reset/odroid-reset.txt          |  18 ++++
+>>  drivers/power/reset/Kconfig                        |   6 ++
+>>  drivers/power/reset/Makefile                       |   1 +
+>>  drivers/power/reset/odroid-reboot.c                | 119 +++++++++++++++++++++
+>>  4 files changed, 144 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/power/reset/odroid-reset.txt
+>>  create mode 100644 drivers/power/reset/odroid-reboot.c
+>>
+>> diff --git a/Documentation/devicetree/bindings/power/reset/odroid-reset.txt b/Documentation/devicetree/bindings/power/reset/odroid-reset.txt
+>> new file mode 100644
+>> index 000000000000..86471a463518
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/power/reset/odroid-reset.txt
+>> @@ -0,0 +1,18 @@
+>> +* Device tree bindings for Hardkernel's Exynos4412 based Odroid boards
+>> +
+>> +This node is intended to allow proper system reboot and power off of
+>> +Odroid X/X2/U2/U3/U3+ boards with eMMC storage. Without this node, board
+>> +hangs during standard reset procedure.
+>> +
+>> +Required properties:
+>> +- compatible:			hardkernel,odroid-reboot
+>> +- samsung,pmureg-phandle:	phandle to Exynos PMU node
+>> +- reset-gpios:			phandle and gpio-specifier to the GPIO pin
+>> +				connected to the eMMC_nDET
+>> +
+>> +Example:
+>> +odroid_reboot {
+>> +	compatible = "hardkernel,odroid-reboot";
+>> +	samsung,pmureg-phandle = <&pmu_system_controller>;
+>> +	reset-gpio = <&gpk1 2 0>;
+>> +};
+>> diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
+>> index f65ff49bb275..f02b13d5344f 100644
+>> --- a/drivers/power/reset/Kconfig
+>> +++ b/drivers/power/reset/Kconfig
+>> @@ -84,6 +84,12 @@ config POWER_RESET_LTC2952
+>>  	  This driver supports an external powerdown trigger and board power
+>>  	  down via the LTC2952. Bindings are made in the device tree.
+>>  
+>> +config POWER_RESET_ODROID
+>> +	bool "Hardkernel's Exynos4412 based Odroid reboot driver"
+>> +	depends on POWER_RESET && ARCH_EXYNOS
+> 
+> once the arm specific restart handler is gone you can add ||
+> COMPILE_TEST
+> 
+>> +	help
+>> +	  Power off and restart support for Odroid boards.
+>> +
+>>  config POWER_RESET_QNAP
+>>  	bool "QNAP power-off driver"
+>>  	depends on OF_GPIO && PLAT_ORION
+>> diff --git a/drivers/power/reset/Makefile b/drivers/power/reset/Makefile
+>> index 76ce1c59469b..178ee86eb813 100644
+>> --- a/drivers/power/reset/Makefile
+>> +++ b/drivers/power/reset/Makefile
+>> @@ -8,6 +8,7 @@ obj-$(CONFIG_POWER_RESET_GPIO_RESTART) += gpio-restart.o
+>>  obj-$(CONFIG_POWER_RESET_HISI) += hisi-reboot.o
+>>  obj-$(CONFIG_POWER_RESET_MSM) += msm-poweroff.o
+>>  obj-$(CONFIG_POWER_RESET_LTC2952) += ltc2952-poweroff.o
+>> +obj-$(CONFIG_POWER_RESET_ODROID) += odroid-reboot.o
+>>  obj-$(CONFIG_POWER_RESET_QNAP) += qnap-poweroff.o
+>>  obj-$(CONFIG_POWER_RESET_RESTART) += restart-poweroff.o
+>>  obj-$(CONFIG_POWER_RESET_SUN6I) += sun6i-reboot.o
+>> diff --git a/drivers/power/reset/odroid-reboot.c b/drivers/power/reset/odroid-reboot.c
+>> new file mode 100644
+>> index 000000000000..823e93539220
+>> --- /dev/null
+>> +++ b/drivers/power/reset/odroid-reboot.c
+>> @@ -0,0 +1,119 @@
+>> +/*
+>> + * Copyright (c) 2014 Samsung Electronics Co., Ltd.
+>> + *		http://www.samsung.com
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License as published by
+>> + * the Free Software Foundation; either version 2 of the License, or
+>> + * (at your option) any later version.
+>> + */
+>> +
+>> +#include <linux/delay.h>
+>> +#include <linux/gpio.h>
+>> +#include <linux/io.h>
+>> +#include <linux/mfd/syscon.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of_platform.h>
+>> +#include <linux/of_gpio.h>
+>> +#include <linux/reboot.h>
+>> +#include <linux/regmap.h>
+>> +
+>> +#include <asm/system_misc.h>
+>> +
+>> +#define PS_HOLD_CONTROL	0x330C
+>> +
+>> +struct odroid_reboot_data {
+>> +	struct device *dev;
+>> +	int power_gpio;
+>> +	struct regmap *reg_pmu;
+>> +	void (*reboot_func)(enum reboot_mode mode, const char *cmd);
+>> +};
+>> +
+>> +static struct odroid_reboot_data *reboot_data;
+>> +
+>> +static void odroid_reboot(enum reboot_mode mode, const char *cmd)
+>> +{
+>> +	local_irq_disable();
+>> +
+>> +	gpio_set_value(reboot_data->power_gpio, 0);
+>> +	mdelay(150);
+>> +	gpio_set_value(reboot_data->power_gpio, 1);
+>> +
+>> +	reboot_data->reboot_func(mode, cmd);
+>> +
 
-If there is no synchronization mechanism then every driver is affected.
-We should add the check in the core instead of fixing it in every
-driver. We could take the bus_lock in i2c_del_adapter() and check if th=
-e
-adapter is removed in __i2c_transfer(), this should fix the problem.
+It is called do_kernel_restart() if arm_pm_restart is NULL from
+machine_restart of arch/arm/kernel/process.c
 
-Wolfram, what do you think about this? Is there anything we are missing=
-?
+How about this?
 
-Joe.C
+if (reboot_data->reboot_func)
+	reboot_data->reboot_func(mode, cmd);
+else
+	do_kernel_restart(cmd);
 
+>> +	pr_emerg("%s: waiting for reboot\n", __func__);
+>> +	while (1)
+>> +		;
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Then this endless loop is also unnecessary.
+
+Thanks.
+
+>> +}
+>> +
+>> +static void odroid_power_off(void)
+>> +{
+>> +	regmap_update_bits(reboot_data->reg_pmu, PS_HOLD_CONTROL, 0xffffffff, 0x5200);
+>> +	while (1) {
+>> +		pr_emerg("%s: should not reach here!\n", __func__);
+>> +		msleep(1000);
+>> +	}
+>> +}
+>> +
+>> +static struct odroid_reboot_data *odroid_reboot_parse_dt(struct device *dev)
+>> +{
+>> +	struct device_node *np = dev->of_node;
+>> +	struct odroid_reboot_data *data;
+>> +
+>> +	data = devm_kzalloc(dev, sizeof(struct odroid_reboot_data), GFP_KERNEL);
+>> +	if (!data)
+>> +		return NULL;
+>> +
+>> +	data->power_gpio = of_get_named_gpio(np, "reset-gpios", 0);
+>> +	if (!gpio_is_valid(data->power_gpio)) {
+>> +		dev_err(dev, "invalid reset gpio pin\n");
+>> +		return NULL;
+>> +	}
+>> +	devm_gpio_request(dev, data->power_gpio, "reset");
+> 
+> please use gpiod interface.
+> 
+>> +
+>> +	data->reg_pmu = syscon_regmap_lookup_by_phandle(np,
+>> +						"samsung,pmureg-phandle");
+>> +	if (IS_ERR(data->reg_pmu)) {
+>> +		dev_err(dev, "failed to map PMU registers\n");
+>> +		return NULL;
+>> +	}
+>> +
+>> +	return data;
+>> +}
+>> +
+>> +static int odroid_reboot_probe(struct platform_device *pdev)
+>> +{
+>> +	struct device *dev = &pdev->dev;
+>> +
+>> +	if (pdev->dev.of_node)
+>> +		reboot_data = odroid_reboot_parse_dt(dev);
+>> +
+>> +	if (!reboot_data)
+>> +		return -EINVAL;
+>> +
+>> +	reboot_data->dev = &pdev->dev;
+>> +	reboot_data->reboot_func = arm_pm_restart;
+>> +
+>> +	/* grab reboot arm specific hook */
+>> +	arm_pm_restart = odroid_reboot;
+> 
+> please use register_restart_handler() and
+> unregister_restart_handler() in remove function.
+> 
+>> +	/* register power off function */
+>> +	pm_power_off = odroid_power_off;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static struct of_device_id odroid_reboot_of_match[] = {
+>> +	{ .compatible = "hardkernel,odroid-reboot", },
+>> +	{ },
+>> +};
+>> +
+>> +static struct platform_driver odroid_reboot_driver = {
+>> +	.probe		= odroid_reboot_probe,
+>> +	.driver		= {
+>> +		.name	= "odroid-reboot",
+>> +		.owner	= THIS_MODULE,
+> 
+> Please remove .owner line (not needed, will trigger a coccinelle
+> warning).
+> 
+>> +		.of_match_table = of_match_ptr(odroid_reboot_of_match),
+>> +	}
+>> +};
+>> +module_platform_driver(odroid_reboot_driver);
+> 
+> -- Sebastian
+> 
