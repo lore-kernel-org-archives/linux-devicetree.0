@@ -1,133 +1,201 @@
-From: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH RFC 1/2] Documentation: arm: define DT bindings for
- system suspend
-Date: Thu, 22 Jan 2015 14:29:49 +0800
-Message-ID: <20150122142949.64c41db6@xhacker>
-References: <1421840155-18990-1-git-send-email-sudeep.holla@arm.com>
-	<1421840155-18990-2-git-send-email-sudeep.holla@arm.com>
-	<20150121212139.1cdc3fd5@xhacker>
-	<20150121213507.695b871b@xhacker>
-	<20150121135610.GA21950@e102568-lin.cambridge.arm.com>
-	<20150122123314.0dc44b67@xhacker>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v4 2/2] Documentation: Add documentation for rt5033
+ multifunction device
+Date: Thu, 22 Jan 2015 07:41:01 +0000
+Message-ID: <20150122074101.GK22024@x1>
+References: <1421899601-19327-1-git-send-email-beomho.seo@samsung.com>
+ <1421899601-19327-3-git-send-email-beomho.seo@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150122123314.0dc44b67@xhacker>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jonghwa Lee <jonghwa3.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Amit Daniel Kachhap <amit.daniel-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1421899601-19327-3-git-send-email-beomho.seo@samsung.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Beomho Seo <beomho.seo@samsung.com>
+Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, sre@kernel.org, robh+dt@kernel.org, lee.jone@linaro.org, broonie@kernel.org, dbaryshkov@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, cw00.choi@samsung.com, inki.dae@samsung.com, sw0312.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Dear Lorenzo and Sudeep,
+On Thu, 22 Jan 2015, Beomho Seo wrote:
 
-On Wed, 21 Jan 2015 20:33:14 -0800
-Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org> wrote:
+> This patch device tree binding documentation for rt5033 multifunction=
+ device.
+>=20
+> Cc: Sebastian Reichel <sre@kernel.org>
+> Cc: Lee Jones <lee.jones@linaro.org>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Ian campbell <ijc+devicetree@hellion.org.uk>
+> Cc: Kumar Gala <galak@codeaurora.org>
+> Signed-off-by: Beomho Seo <beomho.seo@samsung.com>
+> Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+> Acked-by: Lee Jones <lee.jones@linaro.org>
 
-> Dear Lorenzo,
-> 
-> On Wed, 21 Jan 2015 05:56:11 -0800
-> Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org> wrote:
-> 
-> > On Wed, Jan 21, 2015 at 01:35:07PM +0000, Jisheng Zhang wrote:
-> > > Dear Sudeep,
-> > > 
-> > > On Wed, 21 Jan 2015 05:21:39 -0800
-> > > Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org> wrote:
-> > > 
-> > > > Dear Sudeep,
-> > > > 
-> > > > On Wed, 21 Jan 2015 03:35:54 -0800
-> > > > Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
-> > > > 
-> > > > > ARM based platforms implement unique ways to enter system suspend
-> > > > > (i.e. Suspend to RAM). The mechanism and the parameters defining the
-> > > > > system state vary on a per-platform basis forcing the OS to handle
-> > > > > it in very platform specific way.
-> > > > > 
-> > > > > Since ARM 32-bit systems had machine specific code, no attempts to
-> > > > > standardize are being made as it provides easy way to implement
-> > > > > suspend operations in a platform specific manner. However, this
-> > > > > approach not only makes maintainance more difficult as the number of
-> > > > > platforms supported increases but also not feasible for ARM64.
-> > > > > 
-> > > > > This DT binding aims at standardizing the system suspend for ARM
-> > > > > platforms. ARM64 platforms mandates entry-method property in DT for
-> > > > > this system suspend node.
-> > > > > 
-> > > > > On system implementing PSCI as an enable-method to enter system
-> > > > > suspend, the PSCI CPU suspend method is used on versions upto v0.2
-> > > > > and requires the power_state parameter to be passed to the PSCI CPU
-> > > > > suspend function.
-> > > > > 
-> > > > > This parameter is platform specific, therefore must be provided by
-> > > > > firmware to the OS in order to enable proper call sequence.
-> > > > > 
-> > > > > This ARM system suspend DT bindings rely on a property
-> > > > > (i.e. arm,psci-suspend-param) in the PSCI DT bindings that describes
-> > > > > how the PSCI CPU suspend power_state parameter should be defined in
-> > > > > DT.
-> > > > > 
-> > > > > Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-> > > > > ---
-> > > > >  Documentation/devicetree/bindings/arm/psci.txt     | 11 +++
-> > > > >  .../devicetree/bindings/arm/system-suspend.txt     | 93
-> > > > > ++++++++++++++++++++++ 2 files changed, 104 insertions(+)
-> > > > >  create mode 100644
-> > > > > Documentation/devicetree/bindings/arm/system-suspend.txt
-> > > > > 
-> > > > > diff --git a/Documentation/devicetree/bindings/arm/psci.txt
-> > > > > b/Documentation/devicetree/bindings/arm/psci.txt index
-> > > > > 5aa40ede0e99..bd3977a2a333 100644 ---
-> > > > > a/Documentation/devicetree/bindings/arm/psci.txt +++
-> > > > > b/Documentation/devicetree/bindings/arm/psci.txt @@ -61,6 +61,14 @@
-> > > > > Device tree nodes that require usage of PSCI CPU_SUSPEND function
-> > > > > (ie idle Definition: power_state parameter to pass to the PSCI
-> > > > > suspend call. 
-> > > > > +PSCI v0.2 and earlier versions don't have explicit operation for
-> > > > > system +suspend. However, one can implement system suspend using
-> > > > > CPU_SUSPEND by +ensuring every other core except the one executing
-> > > > > the CPU_SUSPEND call +has called into PSCI through a CPU_OFF call.
-> > > > 
-> > > > If users explicitly hot-unplug other cores when system load is low to
-> > > > save power, then we want to suspend at some point, how does the
-> > > > firmware know this case?
-> > > 
-> > > Sorry for confusion. I mean 
-> > > 
-> > > If users explicitly hot-unplug other cores when system load is low to
-> > > save power, then at some point cpuidle want to suspend the cluster, how
-> > > does the distinguish this case with suspend the system to ram.
-> > 
-> > Through the arm,psci-suspend-param DT property, ie PSCI CPU_SUSPEND
-> > power_state parameter.
-> > 
-> > Did you read the patch :) ?
-> 
-> Yep, I do read the patch ;) To be honest, I implemented the s2ram similar as
-> the patch does. But according to PSCI v0.2, "arm,psci-suspend-param =
-> <0x1010000>" means suspend the cluster. I'm not sure I understand it
-> correctly, "can implement system suspend using CPU_SUSPEND by ensuring
-> every other core except the one executing the CPU_SUSPEND call has called
-> into PSCI through a CPU_OFF call" intend to ask firmware to 
-> 
-> suspend the system if other cores has called into PSCI through a CPU_OFF
-> 
-> or
-> 
-> suspend the cpu cluster if other cores are not CPU_OFF.
-> 
-> 
-> I extend the PSCI CPU_SUSPEND function's to use power_state bit[26] to tell
-> firmware whether suspend to ram or not.
-> 
+I did not Ack this patch.
 
-I read the PSCI spec again, power_state bit[0:15] is "platform specific ID",
-Is one of these bits used for suspend system?
+Your new vendor bindings require a DT Ack.
 
-Thanks,
-Jisheng
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Although, as the ones I'm concerned with are Regulator related, and
+Ack from Mark Brown will also suffice.
+
+> ---
+> Changes in v4
+> - none.
+> Changes in v3
+> - Add Acked-by
+> Changes in v2
+> - Fix incorrect typo.
+> - Align -uamp and -uvolt names with regulator binding suffixes.
+> - Drop incorrect phandle.
+> - Fix incorrect example.
+> ---
+>=20
+>  Documentation/devicetree/bindings/mfd/rt5033.txt   |  101 ++++++++++=
+++++++++++
+>  .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+>  2 files changed, 102 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/rt5033.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/mfd/rt5033.txt b/Docum=
+entation/devicetree/bindings/mfd/rt5033.txt
+> new file mode 100644
+> index 0000000..64b23e8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/rt5033.txt
+> @@ -0,0 +1,101 @@
+> +Richtek RT5033 Power management Integrated Circuit
+> +
+> +RT5033 is a Multifunction device which includes battery charger, fue=
+l gauge,
+> +flash LED current source, LDO and synchronous Buck converter for por=
+table
+> +applications. It is interfaced to host controller using i2c interfac=
+e.
+> +
+> +Required properties:
+> +- compatible : Must be "richtek,rt5033"
+> +- reg : Specifies the i2c slave address of general part.
+> +- interrupts : This i2c devices has an IRQ line connected to the mai=
+n SoC.
+> +- interrupt-parent : The parent interrupt controller.
+> +
+> +Optional node:
+> +Regulators: The regulators of RT5033 have to be instantiated under s=
+ub-node
+> +named "regulators" using the following format.
+> +
+> +	regulators {
+> +		regulator-name {
+> +			regulator-name =3D LDO/BUCK
+> +			regulator subnodes called X, Y and Z
+> +		};
+> +	};
+> +	refer Documentation/devicetree/bindings/regulator/regulator.txt
+> +
+> +
+> +Battery charger: There battery charger of RT5033 have to be instanti=
+ated under
+> +sub-node named "charger" using the following format.
+> +
+> +Required properties:
+> +- compatible : Must be "richtek,rt5033-charger".
+> +- richtek,pre-uamp : Current of pre-charge mode. The pre-charge curr=
+ent levels
+> +  are 350 mA to 650 mA programmed by I2C per 100 mA.
+> +- richtek,fast-uamp : Current of fast-charge mode. The fast-charge c=
+urrent
+> +  levels are 700 mA to 2000 mA programmed by I2C per 100 mA.
+> +- richtek,eoc-uamp : This property is end of charge current. Its lev=
+el 150 mA
+> +  to 200 mA.
+> +- richtek,pre-threshold-uvolt : Voltage of threshold pre-charge mode=
+=2E Battery
+> +  voltage is below pre-charge threshold voltage, the charger is in p=
+re-charge
+> +  mode with pre-charge current. Its levels are 2.3 V  to 3.8 V progr=
+ammed
+> +  by I2C per 0.1 V.
+> +- richtek,const-uvolt :  Battery regulation voltage of constant volt=
+age mode.
+> +  This voltage level 3.65 V to 4.4 V bye I2C per 0.025 V.
+> +
+> +	charger {
+> +		compatible =3D "richtek,rt5033-charger";
+> +		richtek,pre-uamp =3D <350000>;
+> +		richtek,fast-uamp =3D <2000000>;
+> +		richtek,eoc-uamp =3D <250000>;
+> +		richtek,pre-threshold-uvolt =3D <3400000>;
+> +		richtek,const-uvolt =3D <4350000>;
+> +
+> +	};
+> +
+> +
+> +Fuelgauge: There fuelgauge of RT5033 to be instantiated node named "=
+fuelgauge"
+> +using the following format.
+> +
+> +Required properties:
+> +- compatible =3D Must be "richtek,rt5033-battery".
+> +
+> +	rt5033@35 {
+> +		compatible =3D "richtek,rt5033-battery";
+> +		interrupt-parent =3D <&gpx2>;
+> +		interrupts =3D <3 0>;
+> +		reg =3D <0x35>;
+> +	};
+> +
+> +Example:
+> +
+> +		rt5033@34 {
+> +			compatible =3D "richtek,rt5033";
+> +			reg =3D <0x34>;
+> +			interrupt-parent =3D <&gpx1>;
+> +			interrupts =3D <5 0>;
+> +
+> +			regulators {
+> +				buck_reg: BUCK {
+> +					regulator-name =3D "BUCK";
+> +					regulator-min-microvolt =3D <1200000>;
+> +					regulator-max-microvolt =3D <1200000>;
+> +					regulator-always-on;
+> +				};
+> +			};
+> +
+> +			charger {
+> +				compatible =3D "richtek,rt5033-charger";
+> +				richtek,pre-uamp =3D <350000>;
+> +				richtek,fast-uamp =3D <2000000>;
+> +				richtek,eoc-uamp =3D <250000>;
+> +				richtek,pre-threshold-uvolt =3D <3400000>;
+> +				richtek,const-uvolt =3D <4350000>;
+> +			};
+> +
+> +		};
+> +
+> +		rt5033@35 {
+> +				compatible =3D "richtek,rt5033-battery";
+> +				interrupt-parent =3D <&gpx2>;
+> +				interrupts =3D <3 0>;
+> +				reg =3D <0x35>;
+> +		};
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/=
+Documentation/devicetree/bindings/vendor-prefixes.txt
+> index b1df0ad..b6a2ca1 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -134,6 +134,7 @@ ralink	Mediatek/Ralink Technology Corp.
+>  ramtron	Ramtron International
+>  realtek Realtek Semiconductor Corp.
+>  renesas	Renesas Electronics Corporation
+> +richtek	Richtek Technology Corporation
+>  ricoh	Ricoh Co. Ltd.
+>  rockchip	Fuzhou Rockchip Electronics Co., Ltd
+>  samsung	Samsung Semiconductor
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
