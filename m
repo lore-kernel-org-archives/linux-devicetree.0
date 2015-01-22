@@ -1,74 +1,38 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH 0/5] extcon: usb: Introduce USB GPIO extcon driver. Fix
- DRA7 USB.
-Date: Thu, 22 Jan 2015 16:57:56 +0200
-Message-ID: <54C10FF4.5030503@ti.com>
-References: <1421689942-10201-1-git-send-email-rogerq@ti.com> <20150120190237.GG15169@saruman> <54C0FBDC.6040803@ti.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] i2c: Mark instantiated device nodes with OF_POPULATE
+Date: Thu, 22 Jan 2015 08:58:36 -0600
+Message-ID: <CAL_JsqKEBYwX=5zgWbdVRxm-H-sFiDa9rAp26BvuKNECoNW=uQ@mail.gmail.com>
+References: <1421346798-17148-1-git-send-email-pantelis.antoniou@konsulko.com> <20150122144818.GG3413@katana>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <54C0FBDC.6040803@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: balbi@ti.com
-Cc: tony@atomide.com, myungjoo.ham@samsung.com, cw00.choi@samsung.com, george.cherian@ti.com, nsekhar@ti.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150122144818.GG3413@katana>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-On 22/01/15 15:32, Roger Quadros wrote:
-> Felipe,
-> 
-> On 20/01/15 21:02, Felipe Balbi wrote:
->> On Mon, Jan 19, 2015 at 07:52:17PM +0200, Roger Quadros wrote:
->>> Hi,
->>>
->>> On DRA7 EVMs the USB ID pin is connected to a GPIO line. The USB drivers
->>> (dwc3 + dwc3-omap) depend on extcon framework to get the USB cable state
->>> (USB or USB-Host) to put the controller in the right mode.
->>>
->>> There were earlier attempts [1] to get this working by trying to patch up
->>> the existing GPIO extcon driver.
->>>
->>> This series attemts to take a different approach by introducing a new
->>> USB specific extcon driver to handle the USB ID GPIO pin and
->>> interpret a right USB cable state.
->>>
->>> The reasoning to introduce this new driver is:
->>> 1) The existing GPIO extcon driver doesn't understand USB cable states
->>> and it can't handle more than one cable per instance.
->>>    
->>> For the USB case we need to handle at least 2 cable states.
->>>     a) USB (attach/detach)
->>>     b) USB-Host (attach/detach)
->>> and could possible include more states like
->>>     c) Fast-charger (attach/detach)
->>>     d) Slow-charger (attach/detach)
->>>     
->>> 2) This USB specific driver can be easily updated in the future to
->>> handle VBUS events, or charger detect events, in case it happens
->>> to be available on GPIO for any platform.
->>>
->>> 3) The DT implementation is very easy. You just need one extcon node per USB
->>> instead of one extcon node per cable state as in case of [1].
->>>
->>> 4) The cable state string doesn't need to be encoded in the device tree
->>> as in case of [1].
->>>
->>> 5) With only ID event available, you can simulate a USB-peripheral attach
->>> when USB-Host is detacted instead of hacking the USB driver to do the same.
->>>
->>> Tested on DRA7-evm and DRA72-evm.
+On Thu, Jan 22, 2015 at 8:48 AM, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org> wrote:
+> On Thu, Jan 15, 2015 at 08:33:18PM +0200, Pantelis Antoniou wrote:
+>> Mark (and unmark) device nodes with the POPULATE flag as appropriate.
+>> This is required to avoid multi probing when using I2C and device
+>> overlays containing a mux.
+>> This patch is also more careful with the release of the adapter device
+>> which caused a deadlock with muxes, and does not break the build
+>> on !OF since the node flag accessors are not defined then.
 >>
->> while at that, you might want to patch X15 too.
->>
-> USB2 port is meant for peripheral use only. ID pin from USB port is not connected to GPIO.
-> 
+>> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+>
+> Applied to for-current, thanks!
 
-OK answering myself here :).
-Peripheral mode doesn't work on x15-bb as the USB driver (dwc3-omap)
-doesn't set the mailbox correctly even when dwc3 node is set as otg = "peripheral".
+Ignoring my comments? It's not a big deal, but Pantelis did send out
+the DT patch necessary for my suggestion[1]. It's needed in another
+place now, too.
 
-Looks like we need to implement usb-gpio-extcon for x15 even though ID is hard coded.
+Rob
 
-cheers,
--roger
+[1] https://lkml.org/lkml/2015/1/21/602
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
