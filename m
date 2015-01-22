@@ -1,139 +1,55 @@
-From: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH RFC 1/2] Documentation: arm: define DT bindings for
- system suspend
-Date: Thu, 22 Jan 2015 12:33:14 +0800
-Message-ID: <20150122123314.0dc44b67@xhacker>
-References: <1421840155-18990-1-git-send-email-sudeep.holla@arm.com>
-	<1421840155-18990-2-git-send-email-sudeep.holla@arm.com>
-	<20150121212139.1cdc3fd5@xhacker>
-	<20150121213507.695b871b@xhacker>
-	<20150121135610.GA21950@e102568-lin.cambridge.arm.com>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH v4 0/2] power: rt5033: Add Richtek RT533 drivers
+Date: Thu, 22 Jan 2015 06:12:06 +0100
+Message-ID: <20150122051205.GC19172@earth.universe>
+References: <1421899601-19327-1-git-send-email-beomho.seo@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20150121135610.GA21950-7AyDDHkRsp3ZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jonghwa Lee <jonghwa3.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Amit Daniel Kachhap <amit.daniel-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="uQr8t48UFsdbeI+V"
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1421899601-19327-1-git-send-email-beomho.seo@samsung.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Beomho Seo <beomho.seo@samsung.com>
+Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, lee.jone@linaro.org, broonie@kernel.org, dbaryshkov@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, cw00.choi@samsung.com, inki.dae@samsung.com, sw0312.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Dear Lorenzo,
 
-On Wed, 21 Jan 2015 05:56:11 -0800
-Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org> wrote:
+--uQr8t48UFsdbeI+V
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> On Wed, Jan 21, 2015 at 01:35:07PM +0000, Jisheng Zhang wrote:
-> > Dear Sudeep,
-> > 
-> > On Wed, 21 Jan 2015 05:21:39 -0800
-> > Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org> wrote:
-> > 
-> > > Dear Sudeep,
-> > > 
-> > > On Wed, 21 Jan 2015 03:35:54 -0800
-> > > Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
-> > > 
-> > > > ARM based platforms implement unique ways to enter system suspend
-> > > > (i.e. Suspend to RAM). The mechanism and the parameters defining the
-> > > > system state vary on a per-platform basis forcing the OS to handle it
-> > > > in very platform specific way.
-> > > > 
-> > > > Since ARM 32-bit systems had machine specific code, no attempts to
-> > > > standardize are being made as it provides easy way to implement
-> > > > suspend operations in a platform specific manner. However, this
-> > > > approach not only makes maintainance more difficult as the number of
-> > > > platforms supported increases but also not feasible for ARM64.
-> > > > 
-> > > > This DT binding aims at standardizing the system suspend for ARM
-> > > > platforms. ARM64 platforms mandates entry-method property in DT for
-> > > > this system suspend node.
-> > > > 
-> > > > On system implementing PSCI as an enable-method to enter system
-> > > > suspend, the PSCI CPU suspend method is used on versions upto v0.2
-> > > > and requires the power_state parameter to be passed to the PSCI CPU
-> > > > suspend function.
-> > > > 
-> > > > This parameter is platform specific, therefore must be provided by
-> > > > firmware to the OS in order to enable proper call sequence.
-> > > > 
-> > > > This ARM system suspend DT bindings rely on a property
-> > > > (i.e. arm,psci-suspend-param) in the PSCI DT bindings that describes
-> > > > how the PSCI CPU suspend power_state parameter should be defined in
-> > > > DT.
-> > > > 
-> > > > Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-> > > > ---
-> > > >  Documentation/devicetree/bindings/arm/psci.txt     | 11 +++
-> > > >  .../devicetree/bindings/arm/system-suspend.txt     | 93
-> > > > ++++++++++++++++++++++ 2 files changed, 104 insertions(+)
-> > > >  create mode 100644
-> > > > Documentation/devicetree/bindings/arm/system-suspend.txt
-> > > > 
-> > > > diff --git a/Documentation/devicetree/bindings/arm/psci.txt
-> > > > b/Documentation/devicetree/bindings/arm/psci.txt index
-> > > > 5aa40ede0e99..bd3977a2a333 100644 ---
-> > > > a/Documentation/devicetree/bindings/arm/psci.txt +++
-> > > > b/Documentation/devicetree/bindings/arm/psci.txt @@ -61,6 +61,14 @@
-> > > > Device tree nodes that require usage of PSCI CPU_SUSPEND function (ie
-> > > > idle Definition: power_state parameter to pass to the PSCI suspend
-> > > > call. 
-> > > > +PSCI v0.2 and earlier versions don't have explicit operation for
-> > > > system +suspend. However, one can implement system suspend using
-> > > > CPU_SUSPEND by +ensuring every other core except the one executing
-> > > > the CPU_SUSPEND call +has called into PSCI through a CPU_OFF call.
-> > > 
-> > > If users explicitly hot-unplug other cores when system load is low to
-> > > save power, then we want to suspend at some point, how does the
-> > > firmware know this case?
-> > 
-> > Sorry for confusion. I mean 
-> > 
-> > If users explicitly hot-unplug other cores when system load is low to save
-> > power, then at some point cpuidle want to suspend the cluster, how does
-> > the distinguish this case with suspend the system to ram.
-> 
-> Through the arm,psci-suspend-param DT property, ie PSCI CPU_SUSPEND
-> power_state parameter.
-> 
-> Did you read the patch :) ?
+Hi,
 
-Yep, I do read the patch ;) To be honest, I implemented the s2ram similar as
-the patch does. But according to PSCI v0.2, "arm,psci-suspend-param = <0x1010000>"
-means suspend the cluster. I'm not sure I understand it correctly, "can implement
-system suspend using CPU_SUSPEND by ensuring every other core except the one
-executing the CPU_SUSPEND call has called into PSCI through a CPU_OFF call" intend
-to ask firmware to 
+On Thu, Jan 22, 2015 at 01:06:38PM +0900, Beomho Seo wrote:
+> This patchset adds driver for Richtek rt5033 chip The chip contains
+> switching charge mode Li-Ion/Li-Polymer battery charger, fuelgauge.
+> Additionally, This includes document for device tree of RT5033 device.
 
-suspend the system if other cores has called into PSCI through a CPU_OFF
+Thanks, applied.
 
-or
+-- Sebastian
 
-suspend the cpu cluster if other cores are not CPU_OFF.
+--uQr8t48UFsdbeI+V
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-I extend the PSCI CPU_SUSPEND function's to use power_state bit[26] to tell firmware
-whether suspend to ram or not.
+iQIcBAEBCgAGBQJUwIaiAAoJENju1/PIO/qa3bYQAJ9Ir4TKmRq6V+aicywjGOVi
+jaOxLf4edYqORMSujuRYyE/CJAC3dbOgAhvId8oDEO74RrqqWhDTIWpJySCPjbsl
+vWpuP0uPSXwIRfICLnUpigk4kmG6ZWQ2OwoCMCgq4BmRX1notPCxq3LK2wyrEA6g
+H0apy57x/G8z24BWUB5ym1ojM+zpRTMacN9Wfw3wq1HtAOQ/8pzH5n1pepKW5hvL
+IblAAFRDuGuBv89rXQ02x52MbqNdeqYOCF1jNSmyQoZzI8XQx6pBES1TpZGyKQHi
+dp5jtYA5Q4eE5tbyJKJRcrrsPZUz5ZCPeRJyfdYmyhdvTNZV6d3BZYPc7U100s9D
+NSev7hiLGdqH7pUhpB9+sgZ4Vsapo8WuLPjr2mVoutdh45Kv4QFYn1E7R+VLqKAb
+vTsceKgIVdezKuCcK82MDJgsMRAM2ZEzo/Q1+qh6FgJsIWdHR6D03sQfRxf6oY1g
+OLznqA42utioupn0y6QGs2RGV9WpQ09Ydm5P7qZGBL5n8xCWEXBPLD1vFBHk87xP
+D51j7mlD0p0mzet7vdPGfWB5Uac6grVG3DiC45o5UnKJwvRCurdrHXmb03yiEyF+
+mGArZ0kAjuXCQRnAVE0Q4bwez+845OcwRbjEiNHbuEMu6izxybxsQU1v9h0pEpz5
+ntC4TdPlr9l3Mgsg573Q
+=kqS0
+-----END PGP SIGNATURE-----
 
-Could you please correct me if I misunderstand something?
-
-Thank you very much,
-Jisheng
-
-> 
-> > > In my private tree, I extend the PSCI spec to tell firmware we want to
-> > > suspend the system.
-> > 
-> > I extend the PSCI suspend function to help firmware distinguish suspend
-> > system to ram and other suspend cores/clusters.
-> 
-> See above.
-> 
-> Thanks,
-> Lorenzo
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--uQr8t48UFsdbeI+V--
