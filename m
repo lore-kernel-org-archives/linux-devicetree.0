@@ -1,61 +1,49 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCHv2 1/2] dts: Documentation: AT91 Watchdog, explain what
- atmel,idle-halt property really do
-Date: Thu, 22 Jan 2015 19:14:03 +0100
-Message-ID: <20150122191403.322059e3@bbrezillon>
-References: <20150118090820.07856398@bbrezillon>
-	<1421587611-32708-1-git-send-email-sylvain.rochet@finsecur.com>
-	<1421587611-32708-2-git-send-email-sylvain.rochet@finsecur.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [RFC PATCH v4 3/4] arm64:thunder: Add initial dts for Cavium's Thunder SoC in 2 Node topology.
+Date: Thu, 22 Jan 2015 19:26:09 +0100
+Message-ID: <1885509.Z0Gm3e3FlX@wuerfel>
+References: <1421924755-26029-1-git-send-email-gkulkarni@caviumnetworks.com> <1421924755-26029-4-git-send-email-gkulkarni@caviumnetworks.com> <2882934.brFyhkGPyE@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1421587611-32708-2-git-send-email-sylvain.rochet-ETtyaVkrhkNWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <2882934.brFyhkGPyE@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sylvain Rochet <sylvain.rochet-ETtyaVkrhkNWk0Htik3J/w@public.gmane.org>
-Cc: Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Will.Deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, roy.franz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ddutile-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 18 Jan 2015 14:26:50 +0100
-Sylvain Rochet <sylvain.rochet-ETtyaVkrhkNWk0Htik3J/w@public.gmane.org> wrote:
-
-> atmel,idle-halt property should be used with care, it actually makes the
-> watchdog not counting when the CPU is in idle state, therefore the
-> watchdog reset time depends on mean CPU usage and will not reset at all
-> of the CPU stop working while it is in idle state, which is probably not
-> what you want.
+On Thursday 22 January 2015 17:47:13 Arnd Bergmann wrote:
 > 
-> Signed-off-by: Sylvain Rochet <sylvain.rochet-ETtyaVkrhkNWk0Htik3J/w@public.gmane.org>
-
-Acked-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-
-> ---
->  Documentation/devicetree/bindings/watchdog/atmel-wdt.txt | 5 +++++
->  1 file changed, 5 insertions(+)
+> This seems wrong still: The clusters and cores do not have unique
+> numbers. I believe the code will not work correctly, and it won't
+> be compliant with the binding from patch 2.
 > 
-> diff --git a/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt b/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
-> index f90e294..a4d8697 100644
-> --- a/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
-> +++ b/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
-> @@ -26,6 +26,11 @@ Optional properties:
->  - atmel,disable : Should be present if you want to disable the watchdog.
->  - atmel,idle-halt : Should be present if you want to stop the watchdog when
->  	entering idle state.
-> +	CAUTION: This property should be used with care, it actually makes the
-> +	watchdog not counting when the CPU is in idle state, therefore the
-> +	watchdog reset time depends on mean CPU usage and will not reset at all
-> +	if the CPU stop working while it is in idle state, which is probably
-> +	not what you want.
->  - atmel,dbg-halt : Should be present if you want to stop the watchdog when
->  	entering debug state.
->  
+> I think the right way here would be to use 
+> 
+>         arm,associativity = <0 2 47>;
+> 
+> for cpu@20f, and
+> 
+>         arm,associativity = <1 3 48>;
+> 
+> for cpu@10000. Your previous version used the numbers from 
+> the reg property, which should be fine as well if that helps:
+> 
+> 
+>         arm,associativity = <0x0 0x200 0x20f>;
+> 
+>         arm,associativity = <0x10000 0x10000 0x10000>;
+> 
+> which should have the same effect as above, as long as the code
+> can handle the numbers not being consecutive.
+> 
+> 
 
+Upon further consideration, I think your patch is correct after
+all, but let me check again on PowerPC machines.
 
-
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+	Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
