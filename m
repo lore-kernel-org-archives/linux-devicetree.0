@@ -1,122 +1,272 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH 0/5] extcon: usb: Introduce USB GPIO extcon driver. Fix
- DRA7 USB.
-Date: Thu, 22 Jan 2015 14:29:07 -0600
-Message-ID: <20150122202907.GC22288@saruman.tx.rr.com>
-References: <1421689942-10201-1-git-send-email-rogerq@ti.com>
- <20150120190237.GG15169@saruman>
- <54C0FBDC.6040803@ti.com>
- <54C10FF4.5030503@ti.com>
-Reply-To: <balbi@ti.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="gr/z0/N6AeWAPJVB"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <54C10FF4.5030503@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: balbi@ti.com, tony@atomide.com, myungjoo.ham@samsung.com, cw00.choi@samsung.com, george.cherian@ti.com, nsekhar@ti.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Pantelis Antoniou <panto@antoniou-consulting.com>
+Subject: Re: [PATCH] of: Custom printk format specifier for device node
+Date: Thu, 22 Jan 2015 22:31:46 +0200
+Message-ID: <7EBFDD59-156A-42FB-AAF0-CE4A88219794@antoniou-consulting.com>
+References: <1421859974-24507-1-git-send-email-pantelis.antoniou@konsulko.com> <1421861843.10574.23.camel@perches.com>
+Mime-Version: 1.0 (Mac OS X Mail 8.1 \(1993\))
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1421861843.10574.23.camel@perches.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Joe Perches <joe@perches.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <robherring2@gmail.com>, Randy Dunlap <rdunlap@infradead.org>, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---gr/z0/N6AeWAPJVB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Joe,
 
-On Thu, Jan 22, 2015 at 04:57:56PM +0200, Roger Quadros wrote:
+> On Jan 21, 2015, at 19:37 , Joe Perches <joe@perches.com> wrote:
 >=20
-> On 22/01/15 15:32, Roger Quadros wrote:
-> > Felipe,
-> >=20
-> > On 20/01/15 21:02, Felipe Balbi wrote:
-> >> On Mon, Jan 19, 2015 at 07:52:17PM +0200, Roger Quadros wrote:
-> >>> Hi,
-> >>>
-> >>> On DRA7 EVMs the USB ID pin is connected to a GPIO line. The USB driv=
-ers
-> >>> (dwc3 + dwc3-omap) depend on extcon framework to get the USB cable st=
-ate
-> >>> (USB or USB-Host) to put the controller in the right mode.
-> >>>
-> >>> There were earlier attempts [1] to get this working by trying to patc=
-h up
-> >>> the existing GPIO extcon driver.
-> >>>
-> >>> This series attemts to take a different approach by introducing a new
-> >>> USB specific extcon driver to handle the USB ID GPIO pin and
-> >>> interpret a right USB cable state.
-> >>>
-> >>> The reasoning to introduce this new driver is:
-> >>> 1) The existing GPIO extcon driver doesn't understand USB cable states
-> >>> and it can't handle more than one cable per instance.
-> >>>   =20
-> >>> For the USB case we need to handle at least 2 cable states.
-> >>>     a) USB (attach/detach)
-> >>>     b) USB-Host (attach/detach)
-> >>> and could possible include more states like
-> >>>     c) Fast-charger (attach/detach)
-> >>>     d) Slow-charger (attach/detach)
-> >>>    =20
-> >>> 2) This USB specific driver can be easily updated in the future to
-> >>> handle VBUS events, or charger detect events, in case it happens
-> >>> to be available on GPIO for any platform.
-> >>>
-> >>> 3) The DT implementation is very easy. You just need one extcon node =
-per USB
-> >>> instead of one extcon node per cable state as in case of [1].
-> >>>
-> >>> 4) The cable state string doesn't need to be encoded in the device tr=
-ee
-> >>> as in case of [1].
-> >>>
-> >>> 5) With only ID event available, you can simulate a USB-peripheral at=
-tach
-> >>> when USB-Host is detacted instead of hacking the USB driver to do the=
- same.
-> >>>
-> >>> Tested on DRA7-evm and DRA72-evm.
-> >>
-> >> while at that, you might want to patch X15 too.
-> >>
-> > USB2 port is meant for peripheral use only. ID pin from USB port is not=
- connected to GPIO.
-> >=20
+> On Wed, 2015-01-21 at 19:06 +0200, Pantelis Antoniou wrote:
+>> 90% of the usage of device node's full_name is printing it out
+>> in a kernel message. Preparing for the eventual delayed allocation
+>> introduce a custom printk format specifier that is both more
+>> compact and more pleasant to the eye.
+>>=20
+>> For instance typical use is:
+>> 	pr_info("Frobbing node %s\n", node->full_name);
+>>=20
+>> Which can be written now as:
+>> 	pr_info("Frobbing node %pO\n", node);
+
+> Still disliking use of %p0.
 >=20
-> OK answering myself here :).
-> Peripheral mode doesn't work on x15-bb as the USB driver (dwc3-omap)
-> doesn't set the mailbox correctly even when dwc3 node is set as otg =3D "=
-peripheral".
+
+pO - Open Firmware
+
+pT for tree is bad, cause we plan to use a tree type in the future in O=
+=46.
+
+>> More fine-grained control of formatting includes printing the name,
+>> flag, path-spec name, reference count and others, explained in the
+>> documentation entry.
+>>=20
+>> Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+>>=20
+>> dt-print
+>> ---
+>> Documentation/printk-formats.txt |  29 ++++++++
+>> lib/vsprintf.c                   | 151 +++++++++++++++++++++++++++++=
+++++++++++
+>> 2 files changed, 180 insertions(+)
+>>=20
+>> diff --git a/Documentation/printk-formats.txt b/Documentation/printk=
+-formats.txt
+>> index 5a615c1..2d42c04 100644
+>> --- a/Documentation/printk-formats.txt
+>> +++ b/Documentation/printk-formats.txt
+>> @@ -231,6 +231,35 @@ struct va_format:
+>> 	Do not use this feature without some mechanism to verify the
+>> 	correctness of the format string and va_list arguments.
+>>=20
+>> +Device tree nodes:
+>> +
+>> +	%pO[fnpPcCFr]
+>> +
+>> +	For printing device tree nodes. The optional arguments are:
+>> +            f device node full_name
+>> +            n device node name
+>> +            p device node phandle
+>> +            P device node path spec (name + @unit)
+>> +            F device node flags
+>> +            c major compatible string
+>> +            C full compatible string
+>> +            r node reference count
+>> +	Without any arguments prints full_name (same as %pOf)
+>> +	The separator when using multiple arguments is '|'
+>> +
+>> +	Examples:
+>> +
+>> +	%pO	/foo/bar@0			- Node full name
+>> +	%pOf	/foo/bar@0			- Same as above
+>> +	%pOfp	/foo/bar@0|10			- Node full name + phandle
+>> +	%pOfcF	/foo/bar@0|foo,device|--P-	- Node full name +
+>> +	                                          major compatible string =
++
+>> +						  node flags
+>> +							D - dynamic
+>> +							d - detached
+>> +							P - Populated
+>> +							B - Populated bus
+>> +
+>> u64 SHOULD be printed with %llu/%llx:
+>>=20
+>> 	printk("%llu", u64_var);
+>> diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+> []
 >=20
-> Looks like we need to implement usb-gpio-extcon for x15 even though ID is=
- hard coded.
+> Add #ifdef back ?
+>=20
 
-right, another option is to have dwc3-omap read the child's DTS to check
-dr_mode and hardcode things based on that.
+The whole thing is optimized away when CONFIG_OF is not defined, leavin=
+g only
+the return statement.
 
---=20
-balbi
+>> +static noinline_for_stack
+>> +char *device_node_string(char *buf, char *end, struct device_node *=
+dn,
+>> +			 struct printf_spec spec, const char *fmt)
+>> +{
+>> +	char tbuf[sizeof("xxxxxxxxxx") + 1];
+>> +	const char *fmtp, *p;
+>> +	int len, ret, i, j, pass;
+>> +	char c;
+>> +
+>> +	if (!IS_ENABLED(CONFIG_OF))
+>> +		return string(buf, end, "(!OF)", spec);
+>=20
+> Not very descriptive output, maybe the address would be better.
+>=20
 
---gr/z0/N6AeWAPJVB
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+OK
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+>> +
+>> +	if ((unsigned long)dn < PAGE_SIZE)
+>> +		return string(buf, end, "(null)", spec);
+>> +
+>> +	/* simple case without anything any more format specifiers */
+>> +	if (fmt[1] =3D=3D '\0' || isspace(fmt[1]))
+>> +		fmt =3D "Of";
+>=20
+> why lower case here but upper case above?
+>=20
 
-iQIcBAEBAgAGBQJUwV2TAAoJEIaOsuA1yqREwQAP/1NXcm42yaTZAnyAH32DfY7R
-XL7LhwBB5u02KlU53Zim+t8IwIUReTPwXzaHhm264vh6sAnySH0G9R4wt6RBUEPY
-8huoIh07NGZaFDXqmGzMu8aVq76Jk4W2pqkfWqHC05hWjLBzRfGfk8yB/G2l6lDr
-26pO7X05rr+JcNUAoDSa1YFpbY0ystd9vAOCNsi1dIWUIcQ0B1Zt1M7oiRLJ4IRJ
-S+8Vbm9Fn1XVsUkmZjDwY9DQAvfRJZD/BjePhW1mfqlt8+InDPBOYykZ8gH9Lg0m
-nPP8V5F1KPh+YgNI7gEIxevXVUFEpZA3ODgxjryLXnfeWv6Hg4wVWGNLgRFqF1lw
-yFPp2g7/U5PNRK6EsI6+BKxxJvorY0OqQGCu9j8gu1HmndXs1ZPUqold9BhfdBDR
-hpiE08SJnAid99ECuak/7/o3iV62RZZwR3qG890duPMIEdNbS5tZe9PrKKK9UVNM
-eDHDzMDyZRR4auOXcqS/E0eirahiJpF1DXgqfjCR1mt2/fng4Ye3A+HigYXPgE49
-yO5IcW38ZZ8GHiHfF+6MCHARlR9JJihw8xqtwBmT81YEnlk6ANilMot82cqTWaGl
-BXl+8HvykdrRHrzuw57L5KouLlVJH/1sMjqlgLh4IknEePwFsQO6m4jeTwGTud5L
-jOhJmoJS6RvNSgu3kK5d
-=td1I
------END PGP SIGNATURE-----
+Cause '(null)' is what=92s printed in string() when null is passed as a=
+ pointer.
 
---gr/z0/N6AeWAPJVB--
+>> +
+>> +	len =3D 0;
+>> +
+>> +	/* two passes; the first calculates length, the second fills in */
+>> +	for (pass =3D 1; pass <=3D 2; pass++) {
+>> +		if (pass =3D=3D 2 && !(spec.flags & LEFT)) {
+>> +			/* padding */
+>> +			while (len < spec.field_width--) {
+>> +				if (buf < end)
+>> +					*buf =3D ' ';
+>> +				++buf;
+>> +			}
+>> +		}
+>> +#undef _HANDLE_CH
+>> +#define _HANDLE_CH(_ch) \
+>> +	do { \
+>> +		if (pass =3D=3D 1) \
+>> +			len++; \
+>> +		else \
+>> +			if (buf < end) \
+>> +				*buf++ =3D (_ch); \
+>> +	} while (0)
+>> +#undef _HANDLE_STR
+>> +#define _HANDLE_STR(_str) \
+>> +	do { \
+>> +		const char *str =3D (_str); \
+>> +		if (pass =3D=3D 1) \
+>> +			len +=3D strlen(str); \
+>> +		else \
+>> +			while (*str && buf < end) \
+>> +				*buf++ =3D *str++; \
+>> +	} while (0)
+>=20
+> This isn't pretty.  Perhaps there's a better way?
+>=20
+
+It=92s the simplest way to do the different operations for the two pass=
+es, without
+bloating the code or adding superfluous methods.
+
+We don=92t want to allocate memory, we don=92t want to use stack space.=
+ We=92re probably
+printing in atomic context too since device nodes don=92t usually print=
+ed out
+during normal operation.
+ =20
+>> +
+>> +		for (fmtp =3D fmt + 1, j =3D 0; (c =3D *fmtp++) !=3D '\0'; ) {
+>> +			switch (c) {
+>> +			case 'f':	/* full_name */
+>> +				if (j++ > 0)
+>> +					_HANDLE_CH(':');
+>> +				_HANDLE_STR(of_node_full_name(dn));
+>> +				break;
+>> +			case 'n':	/* name */
+>> +				if (j++ > 0)
+>> +					_HANDLE_CH('|');
+>> +				_HANDLE_STR(dn->name);
+>> +				break;
+>> +			case 'p':	/* phandle */
+>> +				if (j++ > 0)
+>> +					_HANDLE_CH('|');
+>> +				snprintf(tbuf, sizeof(tbuf), "%u",
+>> +						(unsigned int)dn->phandle);
+>> +				_HANDLE_STR(tbuf);
+>> +				break;
+>> +			case 'P':	/* path-spec */
+>> +				if (j++ > 0)
+>> +					_HANDLE_CH('|');
+>> +				_HANDLE_STR(dn->name);
+>> +				/* need to tack on the @ postfix */
+>> +				p =3D strchr(of_node_full_name(dn), '@');
+>> +				if (p)
+>> +					_HANDLE_STR(p);
+>> +				break;
+>> +			case 'F':	/* flags */
+>> +				if (j++ > 0)
+>> +					_HANDLE_CH('|');
+>> +				snprintf(tbuf, sizeof(tbuf), "%c%c%c%c",
+>> +					of_node_check_flag(dn, OF_DYNAMIC) ?
+>> +						'D' : '-',
+>> +					of_node_check_flag(dn, OF_DETACHED) ?
+>> +						'd' : '-',
+>> +					of_node_check_flag(dn, OF_POPULATED) ?
+>> +						'P' : '-',
+>> +					of_node_check_flag(dn,
+>> +						OF_POPULATED_BUS) ?  'B' : '-');
+>> +				_HANDLE_STR(tbuf);
+>> +				break;
+>> +			case 'c':	/* major compatible string */
+>> +				if (j++ > 0)
+>> +					_HANDLE_CH('|');
+>> +				ret =3D of_property_read_string(dn, "compatible",
+>> +						&p);
+>> +				if (ret =3D=3D 0)
+>> +					_HANDLE_STR(p);
+>> +				break;
+>> +			case 'C':	/* full compatible string */
+>> +				if (j++ > 0)
+>> +					_HANDLE_CH('|');
+>> +				i =3D 0;
+>> +				while (of_property_read_string_index(dn,
+>> +						"compatible", i, &p) =3D=3D 0) {
+>> +					if (i =3D=3D 0)
+>> +						_HANDLE_STR("\"");
+>> +					else
+>> +						_HANDLE_STR("\",\"");
+>> +					_HANDLE_STR(p);
+>> +					i++;
+>> +				}
+>> +				if (i > 0)
+>> +					_HANDLE_STR("\"");
+>> +				break;
+>> +			case 'r':	/* node reference count */
+>> +				if (j++ > 0)
+>> +					_HANDLE_CH('|');
+>> +				snprintf(tbuf, sizeof(tbuf), "%u",
+>> +					atomic_read(&dn->kobj.kref.refcount));
+>> +				_HANDLE_STR(tbuf);
+>> +				break;
+>> +			default:
+>> +				break;
+>> +			}
+>> +		}
+>> +	}
+>> +	/* finish up */
+>> +	while (buf < end && len < spec.field_width--)
+>> +		*buf++ =3D ' ';
+>> +#undef _HANDLE_CH
+>> +#undef _HANDLE_STR
+>=20
+
+Regards
+
+=97 Pantelis
+
