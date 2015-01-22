@@ -1,248 +1,119 @@
-From: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Subject: [RFC PATCH v4 2/4] Documentation: arm64/arm: dt bindings for numa.
-Date: Thu, 22 Jan 2015 16:35:53 +0530
-Message-ID: <1421924755-26029-3-git-send-email-gkulkarni@caviumnetworks.com>
-References: <1421924755-26029-1-git-send-email-gkulkarni@caviumnetworks.com>
+From: Peter Maydell <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: Secure resources in device trees
+Date: Thu, 22 Jan 2015 11:09:02 +0000
+Message-ID: <CAFEAcA_2tVB6655aio52BL9OUrp=zostYq0wx4MYytSX4uHovg@mail.gmail.com>
+References: <CAOgzsHVpXZTHoq7HyfrGeGe92onnb6=BQr30PvKrg04h=0De0w@mail.gmail.com>
+ <CAL_Jsq+rN07CfdNjErhLipKNJJj3uoczR98YuWSAwjMRW1xVag@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1421924755-26029-1-git-send-email-gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Will.Deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, roy.franz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, steve.capper-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ddutile-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
-Cc: gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_Jsq+rN07CfdNjErhLipKNJJj3uoczR98YuWSAwjMRW1xVag-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Greg Bellows <greg.bellows-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-DT bindings for numa map for memory, cores and IOs using
-arm,associativity device node property.
+On 21 January 2015 at 16:21, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Tue, Jan 20, 2015 at 1:15 PM, Greg Bellows <greg.bellows-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> The addition of ARM security extension (TrustZone) support to QEMU has
+>> exposed the issue of how secure resources are communicated to secure
+>> software responsible for booting the HLOS.  The natural choice for
+>> communicating these details is the device tree.
+>
+> You could also have a secure OS use DT and the HLOS use something else
+> (ACPI). Or the secure OS and non-secure firmware (UEFI) use DT and the
+> OS uses ACPI.
+>
+>> In the case of real hardware, the device tree supplied to the HLOS
+>> only needs to describe non-secure resources as secure software can
+>> rely on static knowledge about the hardware.  This also holds true for
+>> QEMU machines modeled after actual fixed hardware configurations.
+>> However, this is not the case with QEMU's virtual machine models, such
+>> as machvirt, where the hardware configuration can change over time.
+>> In this case, secure software is dependent on QEMU's dynamically
+>> constructed device tree to describe the hardware, making it impossible
+>> for secure software to know ahead of time what is secure, non-secure,
+>> or both.
+>
+> For purposes of this discussion, what works better for QEMU is irrelevant IMO.
 
-Signed-off-by: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
----
- Documentation/devicetree/bindings/arm/numa.txt | 212 +++++++++++++++++++++++++
- 1 file changed, 212 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/numa.txt
+Given that this discussion is "how can QEMU do this thing in a
+way that works with device tree", what works better for QEMU
+is worth considering (though not the deciding factor).
 
-diff --git a/Documentation/devicetree/bindings/arm/numa.txt b/Documentation/devicetree/bindings/arm/numa.txt
-new file mode 100644
-index 0000000..dc3ef86
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/numa.txt
-@@ -0,0 +1,212 @@
-+==============================================================================
-+NUMA binding description.
-+==============================================================================
-+
-+==============================================================================
-+1 - Introduction
-+==============================================================================
-+
-+Systems employing a Non Uniform Memory Access (NUMA) architecture contain
-+collections of hardware resources including processors, memory, and I/O buses,
-+that comprise what is commonly known as a NUMA node.
-+Processor accesses to memory within the local NUMA node is generally faster
-+than processor accesses to memory outside of the local NUMA node.
-+DT defines interfaces that allow the platform to convey NUMA node
-+topology information to OS.
-+
-+==============================================================================
-+2 - arm,associativity
-+==============================================================================
-+The mapping is done using arm,associativity device property.
-+this property needs to be present in every device node which needs to to be
-+mapped to numa nodes.
-+
-+arm,associativity property is set of 32-bit integers which defines level of
-+topology and boundary in the system at which a significant difference in
-+performance can be measured between cross-device accesses within
-+a single location and those spanning multiple locations.
-+The first cell always contains the broadest subdivision within the system,
-+while the last cell enumerates the individual devices, such as an SMT thread
-+of a CPU, or a bus bridge within an SoC".
-+
-+ex:
-+	/* board 0, socket 0, cluster 0, core 0  thread 0 */
-+	arm,associativity = <0 0 0 0 0>;
-+
-+==============================================================================
-+3 - arm,associativity-reference-points
-+==============================================================================
-+This property is a set of 32-bit integers, each representing an index into
-+the arm,associativity nodes. The first integer is the most significant
-+NUMA boundary and the following are progressively less significant boundaries.
-+There can be more than one level of NUMA.
-+
-+Ex:
-+	arm,associativity-reference-points = <0 1>;
-+	The board Id(index 0) used first to calculate the associativity (node
-+	distance), then follows the  socket id(index 1).
-+
-+	arm,associativity-reference-points = <1 0>;
-+	The socket Id(index 1) used first to calculate the associativity,
-+	then follows the board id(index 0).
-+
-+	arm,associativity-reference-points = <0>;
-+	Only the board Id(index 0) used to calculate the associativity.
-+
-+	arm,associativity-reference-points = <1>;
-+	Only socket Id(index 1) used to calculate the associativity.
-+
-+==============================================================================
-+4 - Example dts
-+==============================================================================
-+
-+Example: 2 Node system consists of 2 boards and each board having one socket
-+and 8 core in each socket.
-+
-+	arm,associativity-reference-points = <0>;
-+
-+	memory@00c00000 {
-+		device_type = "memory";
-+		reg = <0x0 0x00c00000 0x0 0x80000000>;
-+		/* board 0, socket 0, no specific core */
-+		arm,associativity = <0 0 0xffff>;
-+	};
-+
-+	memory@10000000000 {
-+		device_type = "memory";
-+		reg = <0x100 0x00000000 0x0 0x80000000>;
-+		/* board 1, socket 0, no specific core */
-+		arm,associativity = <1 0 0xffff>;
-+	};
-+
-+	cpus {
-+		#address-cells = <2>;
-+		#size-cells = <0>;
-+
-+		cpu@000 {
-+			device_type = "cpu";
-+			compatible =  "arm,armv8";
-+			reg = <0x0 0x000>;
-+			enable-method = "psci";
-+			/* board 0, socket 0, core 0*/
-+			arm,associativity = <0 0 0>;
-+		};
-+		cpu@001 {
-+			device_type = "cpu";
-+			compatible =  "arm,armv8";
-+			reg = <0x0 0x001>;
-+			enable-method = "psci";
-+			arm,associativity = <0 0 1>;
-+		};
-+		cpu@002 {
-+			device_type = "cpu";
-+			compatible =  "arm,armv8";
-+			reg = <0x0 0x002>;
-+			enable-method = "psci";
-+			arm,associativity = <0 0 2>;
-+		};
-+		cpu@003 {
-+			device_type = "cpu";
-+			compatible =  "arm,armv8";
-+			reg = <0x0 0x003>;
-+			enable-method = "psci";
-+			arm,associativity = <0 0 3>;
-+		};
-+		cpu@004 {
-+			device_type = "cpu";
-+			compatible =  "arm,armv8";
-+			reg = <0x0 0x004>;
-+			enable-method = "psci";
-+			arm,associativity = <0 0 4>;
-+		};
-+		cpu@005 {
-+			device_type = "cpu";
-+			compatible =  "arm,armv8";
-+			reg = <0x0 0x005>;
-+			enable-method = "psci";
-+			arm,associativity = <0 0 5>;
-+		};
-+		cpu@006 {
-+			device_type = "cpu";
-+			compatible =  "arm,armv8";
-+			reg = <0x0 0x006>;
-+			enable-method = "psci";
-+			arm,associativity = <0 0 6>;
-+		};
-+		cpu@007 {
-+			device_type = "cpu";
-+			compatible =  "arm,armv8";
-+			reg = <0x0 0x007>;
-+			enable-method = "psci";
-+			arm,associativity = <0 0 7>;
-+		};
-+		cpu@008 {
-+			device_type = "cpu";
-+			compatible =  "arm,armv8";
-+			reg = <0x0 0x008>;
-+			enable-method = "psci";
-+			/* board 1, socket 0, core 0*/
-+			arm,associativity = <1 0 0>;
-+		};
-+		cpu@009 {
-+			device_type = "cpu";
-+			compatible =  "arm,armv8";
-+			reg = <0x0 0x009>;
-+			enable-method = "psci";
-+			arm,associativity = <1 0 1>;
-+		};
-+		cpu@00a {
-+			device_type = "cpu";
-+			compatible =  "arm,armv8";
-+			reg = <0x0 0x00a>;
-+			enable-method = "psci";
-+			arm,associativity = <0 0 2>;
-+		};
-+		cpu@00b {
-+			device_type = "cpu";
-+			compatible =  "arm,armv8";
-+			reg = <0x0 0x00b>;
-+			enable-method = "psci";
-+			arm,associativity = <1 0 3>;
-+		};
-+		cpu@00c {
-+			device_type = "cpu";
-+			compatible =  "arm,armv8";
-+			reg = <0x0 0x00c>;
-+			enable-method = "psci";
-+			arm,associativity = <1 0 4>;
-+		};
-+		cpu@00d {
-+			device_type = "cpu";
-+			compatible =  "arm,armv8";
-+			reg = <0x0 0x00d>;
-+			enable-method = "psci";
-+			arm,associativity = <1 0 5>;
-+		};
-+		cpu@00e {
-+			device_type = "cpu";
-+			compatible =  "arm,armv8";
-+			reg = <0x0 0x00e>;
-+			enable-method = "psci";
-+			arm,associativity = <1 0 6>;
-+		};
-+		cpu@00f {
-+			device_type = "cpu";
-+			compatible =  "arm,armv8";
-+			reg = <0x0 0x00f>;
-+			enable-method = "psci";
-+			arm,associativity = <1 0 7>;
-+		};
-+	};
-+
-+	pcie0: pcie0@0x8480,00000000 {
-+		compatible = "arm,armv8";
-+		device_type = "pci";
-+		bus-range = <0 255>;
-+		#size-cells = <2>;
-+		#address-cells = <3>;
-+		reg = <0x8480 0x00000000 0 0x10000000>;  /* Configuration space */
-+		ranges = <0x03000000 0x8010 0x00000000 0x8010 0x00000000 0x70 0x00000000>; /* mem ranges */
-+		/* board 0, socket 0, pci bus 0*/
-+		arm,associativity = <0 0 0>;
-+        };
--- 
-1.8.1.4
+>> Two possible approaches for handling this particular case are:
+>>
+>> 1) Create two device tree blobs; one describing the non-secure
+>> configuration and the other the full configuration.  This would allow
+>> secure software to see the full hardware picture including secure
+>> resources while the non-secure world would only see the non-secure
+>> device tree configuration.  The QEMU virt machine would be responsible
+>> for producing the device tree blobs.
+>
+> I've thought about this some in the past and leaned toward this
+> direction mainly because I'd expect you are partitioning most nodes to
+> one side. You could do some crazy partitioning with secure and
+> non-secure world. It was suggested on highbank to use the secure bit
+> as a 33rd address bit to get 8GB of address space for example. You
+> could have entirely different view of the system.
+>
+>> The drawbacks to this approach are:
+>> * There are 2 device trees to manage
+>
+> You already have 2 bootloaders and 2 OS's to manage.
 
+No, QEMU doesn't have multiple numbers of any of those to
+manage. It wants to tell the (single) thing it's booting what
+the config of the (virtual) hardware is, that's all.
+
+>> * The two DTBs will typically be almost identical.
+>
+> I don't really agree. If the secure dtb has all non-secure peripherals
+> too, then yes. But if you only include peripherals allocated to secure
+> world and secure view of peripherals, then I don't think there would
+> be much overlap. You pretty much have to statically allocate each
+> peripheral to one side or the other.
+
+As Pawel notes, the trustzone address space controller lets
+the secure side dynamically choose to allocate some subnodes
+to S or NS as it pleases. (That's not a situation I care about
+at the moment, as it happens, though.)
+
+>> * Not possible to identify whether a device is shared or not between
+>> the secure and non-secure worlds.
+>
+> Typically, sharing requires a peripheral to be designed to be shared
+> like PL330 or MMU-400.
+
+Only if you care about actually dynamically letting both sides
+use it at once. What Greg means by "shared" here is "appears in
+both the S and NS address spaces", as opposed to "appears in only
+one and is physically inaccessible from the other".
+
+>> * Identifying device available only to the secure world require
+>> cumbersome comparison of the two device trees.
+>
+> But that is pretty static. It doesn't seem like a big deal to me.
+
+Static in what sense? The firmware being handed the DTB(s)
+by QEMU by definition doesn't know what is secure and what
+is not without looking at and comparing the DTBs (since the
+DTBs are what tells the firmware what hardware exists and
+whether it is S or NS).
+
+> You could also do this w/o dts changes. You could start with a full
+> description and the knowledge of what to filter out resides in the
+> secure OS or bootloader. It depends where you want to put the
+> partitioning decisions.
+
+The firmware (secure OS, bootloader) can make partitioning
+decisions, but it can't change what the hardware physically
+is. It has to be told whether devices are visible in the S, NS or
+both address spaces (via DTB).
+
+thanks
+-- PMM
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree-spec" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
