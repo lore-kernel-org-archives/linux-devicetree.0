@@ -1,53 +1,93 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 12/13] ARM: dts: omap3-gta04: uart4 is not connected, so
- mark it "disabled"
-Date: Thu, 22 Jan 2015 13:40:53 -0800
-Message-ID: <20150122214052.GY7718@atomide.com>
-References: <1421959099-28319-1-git-send-email-marek@goldelico.com>
- <1421959099-28319-13-git-send-email-marek@goldelico.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 3/4] ARM: shmobile: emev2: Add PFC information to emev2.dtsi
+Date: Thu, 22 Jan 2015 23:50:20 +0200
+Message-ID: <2620818.4JADgt3ejj@avalon>
+References: <1421583604-27256-1-git-send-email-niso@kth.se> <1421583604-27256-4-git-send-email-niso@kth.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1421959099-28319-13-git-send-email-marek@goldelico.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Marek Belisko <marek@goldelico.com>
-Cc: bcousson@baylibre.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, hns@goldelico.com, neilb@suse.de, NeilBrown <neil@brown.name>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1421583604-27256-4-git-send-email-niso@kth.se>
+Sender: linux-sh-owner@vger.kernel.org
+To: Niklas =?ISO-8859-1?Q?S=F6derlund?= <niso@kth.se>
+Cc: linux-kernel@vger.kernel.org, linus.walleij@linaro.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, magnus.damm@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-* Marek Belisko <marek@goldelico.com> [150122 12:42]:
-> From: NeilBrown <neil@brown.name>
-> 
-> Signed-off-by: NeilBrown <neil@brown.name>
+Hi Niklas,
+
+Thank you for the patch.
+
+On Sunday 18 January 2015 13:20:03 Niklas S=F6derlund wrote:
+> With this information all GPIOs can make use of the PFC functionality=
+=2E
+>=20
+> Signed-off-by: Niklas S=F6derlund <niso@kth.se>
+
+Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
 > ---
->  arch/arm/boot/dts/omap3-gta04.dtsi | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
-> index 228e79b..8d2b0a1 100644
-> --- a/arch/arm/boot/dts/omap3-gta04.dtsi
-> +++ b/arch/arm/boot/dts/omap3-gta04.dtsi
-> @@ -357,6 +357,10 @@
->  	pinctrl-0 = <&uart3_pins>;
->  };
->  
-> +&uart4 {
-> +	status = "disabled";
-> +};
+>  arch/arm/boot/dts/emev2.dtsi | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/emev2.dtsi b/arch/arm/boot/dts/emev2.d=
+tsi
+> index cc7bfe0..bb45694 100644
+> --- a/arch/arm/boot/dts/emev2.dtsi
+> +++ b/arch/arm/boot/dts/emev2.dtsi
+> @@ -169,12 +169,18 @@
+>  		clock-names =3D "sclk";
+>  	};
+>=20
+> +	pfc: pfc@e0140200 {
+> +		compatible =3D "renesas,pfc-emev2";
+> +		reg =3D <0xe0140200 0x100>;
+> +	};
 > +
+>  	gpio0: gpio@e0050000 {
+>  		compatible =3D "renesas,em-gio";
+>  		reg =3D <0xe0050000 0x2c>, <0xe0050040 0x20>;
+>  		interrupts =3D <0 67 IRQ_TYPE_LEVEL_HIGH>,
+>  			     <0 68 IRQ_TYPE_LEVEL_HIGH>;
+>  		gpio-controller;
+> +		gpio-ranges =3D <&pfc 0 0 32>;
+>  		#gpio-cells =3D <2>;
+>  		ngpios =3D <32>;
+>  		interrupt-controller;
+> @@ -186,6 +192,7 @@
+>  		interrupts =3D <0 69 IRQ_TYPE_LEVEL_HIGH>,
+>  			     <0 70 IRQ_TYPE_LEVEL_HIGH>;
+>  		gpio-controller;
+> +		gpio-ranges =3D <&pfc 0 32 32>;
+>  		#gpio-cells =3D <2>;
+>  		ngpios =3D <32>;
+>  		interrupt-controller;
+> @@ -197,6 +204,7 @@
+>  		interrupts =3D <0 71 IRQ_TYPE_LEVEL_HIGH>,
+>  			     <0 72 IRQ_TYPE_LEVEL_HIGH>;
+>  		gpio-controller;
+> +		gpio-ranges =3D <&pfc 0 64 32>;
+>  		#gpio-cells =3D <2>;
+>  		ngpios =3D <32>;
+>  		interrupt-controller;
+> @@ -208,6 +216,7 @@
+>  		interrupts =3D <0 73 IRQ_TYPE_LEVEL_HIGH>,
+>  			     <0 74 IRQ_TYPE_LEVEL_HIGH>;
+>  		gpio-controller;
+> +		gpio-ranges =3D <&pfc 0 96 32>;
+>  		#gpio-cells =3D <2>;
+>  		ngpios =3D <32>;
+>  		interrupt-controller;
+> @@ -219,6 +228,7 @@
+>  		interrupts =3D <0 75 IRQ_TYPE_LEVEL_HIGH>,
+>  			     <0 76 IRQ_TYPE_LEVEL_HIGH>;
+>  		gpio-controller;
+> +		gpio-ranges =3D <&pfc 0 128 31>;
+>  		#gpio-cells =3D <2>;
+>  		ngpios =3D <31>;
+>  		interrupt-controller;
 
-This you probably want to avoid from PM point of view. Depending on
-bootloader state of uart4, Linux may or may not be able to hit any
-deeper power states.
-
-Marking something with status = "disabled" in dts causes the device
-entry not even to be created. That means hwmod won't be able to reset
-and idle this device during boot.
-
-The uart4 device is there for sure even if not muxed and in incomplete
-state. You may want to also check other places where you're using
-status = "disabled" for the same reasons.
-
+--=20
 Regards,
 
-Tony
+Laurent Pinchart
+
