@@ -1,7 +1,7 @@
 From: clement.perrochaud-BPEPtVrvniRWk0Htik3J/w@public.gmane.org
-Subject: [PATCH 4/4] NFC: nxp-nci: Allow module removal during download
-Date: Thu, 22 Jan 2015 16:27:40 +0100
-Message-ID: <1421940460-14049-5-git-send-email-clement.perrochaud@effinnov.com>
+Subject: [PATCH 1/4] NFC: nci: Add FWDL support
+Date: Thu, 22 Jan 2015 16:27:37 +0100
+Message-ID: <1421940460-14049-2-git-send-email-clement.perrochaud@effinnov.com>
 References: <1421940460-14049-1-git-send-email-clement.perrochaud@effinnov.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -19,67 +19,54 @@ Signed-off-by: Cl=C3=A9ment Perrochaud <clement.perrochaud-3arQi8VN3Tc@public.gm
 Signed-off-by: Cl=C3=A9ment Perrochaud <clement.perrochaud-BPEPtVrvniRWk0Htik3J/w@public.gmane.org=
 >
 ---
- drivers/nfc/nxp-nci/core.c     | 7 +++----
- drivers/nfc/nxp-nci/firmware.c | 9 ++++++---
- 2 files changed, 9 insertions(+), 7 deletions(-)
+ include/net/nfc/nci_core.h |  1 +
+ net/nfc/nci/core.c         | 11 +++++++++++
+ 2 files changed, 12 insertions(+)
 
-diff --git a/drivers/nfc/nxp-nci/core.c b/drivers/nfc/nxp-nci/core.c
-index d3643ef..c15606d 100644
---- a/drivers/nfc/nxp-nci/core.c
-+++ b/drivers/nfc/nxp-nci/core.c
-@@ -165,12 +165,11 @@ void nxp_nci_remove(struct nci_dev *ndev)
- {
- 	struct nxp_nci_info *info =3D nci_get_drvdata(ndev);
-=20
--	mutex_lock(&info->info_lock);
--
--	cancel_work_sync(&info->fw_info.work);
--
- 	if (info->mode =3D=3D NXP_NCI_MODE_FW)
- 		nxp_nci_fw_work_complete(info, -ESHUTDOWN);
-+	cancel_work_sync(&info->fw_info.work);
-+
-+	mutex_lock(&info->info_lock);
-=20
- 	if (info->phy_ops->disable)
- 		info->phy_ops->disable(info->phy_id);
-diff --git a/drivers/nfc/nxp-nci/firmware.c b/drivers/nfc/nxp-nci/firmw=
-are.c
-index 1814e9f..de136e1 100644
---- a/drivers/nfc/nxp-nci/firmware.c
-+++ b/drivers/nfc/nxp-nci/firmware.c
-@@ -166,7 +166,8 @@ static int nxp_nci_fw_send(struct nxp_nci_info *inf=
-o)
-=20
- 	if (*fw_info->data =3D=3D NXP_NCI_FW_CMD_RESET) {
- 		fw_info->cmd_result =3D 0;
--		schedule_work(&fw_info->work);
-+		if (fw_info->fw)
-+			schedule_work(&fw_info->work);
- 	} else {
- 		completion_rc =3D wait_for_completion_interruptible_timeout(
- 			&fw_info->cmd_completion, NXP_NCI_FW_ANSWER_TIMEOUT);
-@@ -244,7 +245,8 @@ int nxp_nci_fw_download(struct nci_dev *ndev, const=
- char *firmware_name)
- 	fw_info->frame_size =3D 0;
- 	fw_info->cmd_result =3D 0;
-=20
--	schedule_work(&fw_info->work);
-+	if (fw_info->fw)
-+		schedule_work(&fw_info->work);
-=20
- fw_download_exit:
- 	mutex_unlock(&info->info_lock);
-@@ -316,6 +318,7 @@ void nxp_nci_fw_recv_frame(struct nci_dev *ndev, st=
-ruct sk_buff *skb)
- 		fw_info->cmd_result =3D -EIO;
- 	}
-=20
--	schedule_work(&fw_info->work);
-+	if (fw_info->fw)
-+		schedule_work(&fw_info->work);
+diff --git a/include/net/nfc/nci_core.h b/include/net/nfc/nci_core.h
+index 9e51bb4..137e059 100644
+--- a/include/net/nfc/nci_core.h
++++ b/include/net/nfc/nci_core.h
+@@ -71,6 +71,7 @@ struct nci_ops {
+ 	int   (*close)(struct nci_dev *ndev);
+ 	int   (*send)(struct nci_dev *ndev, struct sk_buff *skb);
+ 	int   (*setup)(struct nci_dev *ndev);
++	int   (*fw_download)(struct nci_dev *ndev, const char *firmware_name)=
+;
+ 	__u32 (*get_rfprotocol)(struct nci_dev *ndev, __u8 rf_protocol);
+ 	int   (*discover_se)(struct nci_dev *ndev);
+ 	int   (*disable_se)(struct nci_dev *ndev, u32 se_idx);
+diff --git a/net/nfc/nci/core.c b/net/nfc/nci/core.c
+index 51feb5e..1342c7d 100644
+--- a/net/nfc/nci/core.c
++++ b/net/nfc/nci/core.c
+@@ -789,6 +789,16 @@ static int nci_se_io(struct nfc_dev *nfc_dev, u32 =
+se_idx,
+ 	return 0;
  }
- EXPORT_SYMBOL(nxp_nci_fw_recv_frame);
+=20
++static int nci_fw_download(struct nfc_dev *nfc_dev, const char *firmwa=
+re_name)
++{
++	struct nci_dev *ndev =3D nfc_get_drvdata(nfc_dev);
++
++	if (!ndev->ops->fw_download)
++		return -ENOTSUPP;
++
++	return ndev->ops->fw_download(ndev, firmware_name);
++}
++
+ static struct nfc_ops nci_nfc_ops =3D {
+ 	.dev_up =3D nci_dev_up,
+ 	.dev_down =3D nci_dev_down,
+@@ -804,6 +814,7 @@ static struct nfc_ops nci_nfc_ops =3D {
+ 	.disable_se =3D nci_disable_se,
+ 	.discover_se =3D nci_discover_se,
+ 	.se_io =3D nci_se_io,
++	.fw_download =3D nci_fw_download,
+ };
+=20
+ /* ---- Interface to NCI drivers ---- */
 --=20
 Cl=C3=A9ment Perrochaud
 
