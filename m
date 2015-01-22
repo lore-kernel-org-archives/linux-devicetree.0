@@ -1,45 +1,36 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v2 1/9] mfd: dt-bindings: Provide human readable defines for LPC mode choosing
-Date: Thu, 22 Jan 2015 11:55:59 +0000
-Message-ID: <1421927767-28889-2-git-send-email-lee.jones@linaro.org>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v2 3/9] ARM: multi_v7_defconfig: Enable support for ST's LPC RTC
+Date: Thu, 22 Jan 2015 11:56:01 +0000
+Message-ID: <1421927767-28889-4-git-send-email-lee.jones@linaro.org>
 References: <1421927767-28889-1-git-send-email-lee.jones@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1421927767-28889-1-git-send-email-lee.jones@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: lee.jones@linaro.org, kernel@stlinux.com, rtc-linux@googlegroups.com, wim@iguana.be, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux@roeck-us.net, david.paris@st.com
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1421927767-28889-1-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, david.paris-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-ST's Low Power Controller can currently operate in two supported modes;
-Watchdog and Real Time Clock.  These defines will aid engineers to easily
-identify the selected mode.
-
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- include/dt-bindings/mfd/st-lpc.h | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
- create mode 100644 include/dt-bindings/mfd/st-lpc.h
+ arch/arm/configs/multi_v7_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/dt-bindings/mfd/st-lpc.h b/include/dt-bindings/mfd/st-lpc.h
-new file mode 100644
-index 0000000..e3e6c75
---- /dev/null
-+++ b/include/dt-bindings/mfd/st-lpc.h
-@@ -0,0 +1,15 @@
-+/*
-+ * This header provides shared DT/Driver defines for ST's LPC device
-+ *
-+ * Copyright (C) 2014 STMicroelectronics -- All Rights Reserved
-+ *
-+ * Author: Lee Jones <lee.jones@linaro.org> for STMicroelectronics
-+ */
-+
-+#ifndef __DT_BINDINGS_ST_LPC_H__
-+#define __DT_BINDINGS_ST_LPC_H__
-+
-+#define ST_LPC_MODE_RTC		0
-+#define ST_LPC_MODE_WDT		1
-+
-+#endif /* __DT_BINDINGS_ST_LPC_H__ */
+diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
+index 561ca4f..4e45e53 100644
+--- a/arch/arm/configs/multi_v7_defconfig
++++ b/arch/arm/configs/multi_v7_defconfig
+@@ -405,6 +405,7 @@ CONFIG_RTC_DRV_DS1307=y
+ CONFIG_RTC_DRV_MAX8907=y
+ CONFIG_RTC_DRV_MAX77686=y
+ CONFIG_RTC_DRV_PALMAS=y
++CONFIG_RTC_DRV_ST_LPC=y
+ CONFIG_RTC_DRV_TWL4030=y
+ CONFIG_RTC_DRV_TPS6586X=y
+ CONFIG_RTC_DRV_TPS65910=y
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
