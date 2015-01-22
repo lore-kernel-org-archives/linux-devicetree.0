@@ -1,131 +1,62 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 6/9] watchdog: st_wdt: Add new driver for ST's LPC
- Watchdog
-Date: Thu, 22 Jan 2015 17:21:00 +0000
-Message-ID: <20150122172100.GF9129@x1>
-References: <1421927767-28889-1-git-send-email-lee.jones@linaro.org>
- <1421927767-28889-7-git-send-email-lee.jones@linaro.org>
- <54C12F10.4090901@roeck-us.net>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCHv2 1/2] dts: Documentation: AT91 Watchdog, explain what
+ atmel,idle-halt property really do
+Date: Thu, 22 Jan 2015 19:14:03 +0100
+Message-ID: <20150122191403.322059e3@bbrezillon>
+References: <20150118090820.07856398@bbrezillon>
+	<1421587611-32708-1-git-send-email-sylvain.rochet@finsecur.com>
+	<1421587611-32708-2-git-send-email-sylvain.rochet@finsecur.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <54C12F10.4090901-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+In-Reply-To: <1421587611-32708-2-git-send-email-sylvain.rochet-ETtyaVkrhkNWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, david.paris-qxv4g6HH51o@public.gmane.org
+To: Sylvain Rochet <sylvain.rochet-ETtyaVkrhkNWk0Htik3J/w@public.gmane.org>
+Cc: Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 22 Jan 2015, Guenter Roeck wrote:
+On Sun, 18 Jan 2015 14:26:50 +0100
+Sylvain Rochet <sylvain.rochet-ETtyaVkrhkNWk0Htik3J/w@public.gmane.org> wrote:
 
-> On 01/22/2015 03:56 AM, Lee Jones wrote:
-> >Signed-off-by: David Paris <david.paris-qxv4g6HH51o@public.gmane.org>
-> >Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >---
-> >  drivers/watchdog/Kconfig      |  13 ++
-> >  drivers/watchdog/Makefile     |   1 +
-> >  drivers/watchdog/st_lpc_wdt.c | 335 ++++++++++++++++++++++++++++++=
-++++++++++++
-> >  3 files changed, 349 insertions(+)
-> >  create mode 100644 drivers/watchdog/st_lpc_wdt.c
+> atmel,idle-halt property should be used with care, it actually makes the
+> watchdog not counting when the CPU is in idle state, therefore the
+> watchdog reset time depends on mean CPU usage and will not reset at all
+> of the CPU stop working while it is in idle state, which is probably not
+> what you want.
+> 
+> Signed-off-by: Sylvain Rochet <sylvain.rochet-ETtyaVkrhkNWk0Htik3J/w@public.gmane.org>
 
-[...]
+Acked-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-> >+struct st_wdog_syscfg {
-> >+	struct regmap *regmap;
->=20
-> Hi David & Lee,
->=20
-> Why did you add the regmap pointer to this structure and not to st_wd=
-og ?
-> It is not a configuration value, after all, and it is always derefere=
-nced
-> through wt_wdog->syscfg. So all it does is to make the code more comp=
-licated.
->=20
-> Am I missing something ?
+> ---
+>  Documentation/devicetree/bindings/watchdog/atmel-wdt.txt | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt b/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
+> index f90e294..a4d8697 100644
+> --- a/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
+> +++ b/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
+> @@ -26,6 +26,11 @@ Optional properties:
+>  - atmel,disable : Should be present if you want to disable the watchdog.
+>  - atmel,idle-halt : Should be present if you want to stop the watchdog when
+>  	entering idle state.
+> +	CAUTION: This property should be used with care, it actually makes the
+> +	watchdog not counting when the CPU is in idle state, therefore the
+> +	watchdog reset time depends on mean CPU usage and will not reset at all
+> +	if the CPU stop working while it is in idle state, which is probably
+> +	not what you want.
+>  - atmel,dbg-halt : Should be present if you want to stop the watchdog when
+>  	entering debug state.
+>  
 
-I guess it was just to group it all together, as it will all be used
-at the same time:
 
-	regmap_update_bits(st_wdog->syscfg->regmap,
-			   st_wdog->syscfg->reset_type_reg,
-			   st_wdog->syscfg->reset_type_mask,
-			   st_wdog->warm_reset);
 
-It really doesn't matter to me either way.
-
-> >+	unsigned int reset_type_reg;
-> >+	unsigned int reset_type_mask;
-> >+	unsigned int enable_reg;
-> >+	unsigned int enable_mask;
-> >+};
-> >+
-> >+struct st_wdog {
-> >+	void __iomem *base;
-> >+	struct device *dev;
-> >+	struct st_wdog_syscfg *syscfg;
-> >+	struct clk *clk;
-> >+	unsigned long clkrate;
-> >+	bool warm_reset;
-> >+};
-
-[...]
-
-> >+static int st_wdog_probe(struct platform_device *pdev)
-> >+{
-> >+	const struct of_device_id *match;
-> >+	struct device_node *np =3D pdev->dev.of_node;
-> >+	struct st_wdog *st_wdog;
-> >+	struct regmap *regmap;
-> >+	struct resource *res;
-> >+	struct clk *clk;
-> >+	void __iomem *base;
-> >+	uint32_t mode;
-> >+	int ret;
-> >+
-> >+	ret =3D of_property_read_u32(np, "st,lpc-mode", &mode);
-> >+	if (ret) {
-> >+		dev_err(&pdev->dev, "An LPC mode must be provided\n");
-> >+		return -EINVAL;
-> >+	}
-> >+
-> >+	/* LPC can either run in RTC or WDT mode */
-> >+	if (mode !=3D ST_LPC_MODE_WDT)
-> >+		return -ENODEV;
-> >+
-> >+	st_wdog =3D devm_kzalloc(&pdev->dev, sizeof(*st_wdog), GFP_KERNEL)=
-;
-> >+	if (!st_wdog)
-> >+		return -ENOMEM;
-> >+
-> >+	match =3D of_match_device(st_wdog_match, &pdev->dev);
-> >+	if (!match) {
-> >+		dev_err(&pdev->dev, "Couldn't match device\n");
-> >+		return -ENODEV;
-> >+	}
-> >+	st_wdog->syscfg	=3D (struct st_wdog_syscfg *)match->data;
-> >+
-> >+	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> >+	base =3D devm_ioremap_resource(&pdev->dev, res);
-> >+	if (IS_ERR(base)) {
-> >+		dev_err(&pdev->dev, "Failed to ioremap base\n");
->=20
-> devm_ioremap_resource already displays an error message, do this one =
-is unnecessary.
-
-You're right.  Will fix.
-
-[...]
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
