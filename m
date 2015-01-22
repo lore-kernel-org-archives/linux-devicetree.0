@@ -1,68 +1,45 @@
-From: Kevin Hilman <khilman@kernel.org>
-Subject: Re: [PATCH v3/resend 3/4] drivers: bus: Add Simple Power-Managed Bus DT Bindings
-Date: Thu, 22 Jan 2015 14:42:08 -0800
-Message-ID: <7hvbjy30an.fsf@deeprootsystems.com>
-References: <1421919253-4784-1-git-send-email-geert+renesas@glider.be>
-	<1421919253-4784-4-git-send-email-geert+renesas@glider.be>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] i2c: Mark instantiated device nodes with OF_POPULATE
+Date: Thu, 22 Jan 2015 17:09:32 -0600
+Message-ID: <CAL_JsqKYvcec=xWQM7_Dgrr5zmkefXqGCQvHwJ+uxNgfiv7fcw@mail.gmail.com>
+References: <1421346798-17148-1-git-send-email-pantelis.antoniou@konsulko.com>
+ <20150122144818.GG3413@katana> <CAL_JsqKEBYwX=5zgWbdVRxm-H-sFiDa9rAp26BvuKNECoNW=uQ@mail.gmail.com>
+ <20150122150243.GI3413@katana>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1421919253-4784-4-git-send-email-geert+renesas@glider.be> (Geert
-	Uytterhoeven's message of "Thu, 22 Jan 2015 10:34:12 +0100")
-Sender: linux-pm-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Ulf Hansson <ulf.hansson@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Olof Johansson <olof@lixom.net>, Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20150122150243.GI3413@katana>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Geert Uytterhoeven <geert+renesas@glider.be> writes:
-
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Tested-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-> ---
-> v3:
->   - Add Tested-by,
->   - Document required properties inherited from "simple-bus",
->   - Document required "reg" property for "renesas,bsc",
->   - Move "ranges" before "reg" in the example,
+On Thu, Jan 22, 2015 at 9:02 AM, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org> wrote:
+> On Thu, Jan 22, 2015 at 08:58:36AM -0600, Rob Herring wrote:
+>> On Thu, Jan 22, 2015 at 8:48 AM, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org> wrote:
+>> > On Thu, Jan 15, 2015 at 08:33:18PM +0200, Pantelis Antoniou wrote:
+>> >> Mark (and unmark) device nodes with the POPULATE flag as appropriate.
+>> >> This is required to avoid multi probing when using I2C and device
+>> >> overlays containing a mux.
+>> >> This patch is also more careful with the release of the adapter device
+>> >> which caused a deadlock with muxes, and does not break the build
+>> >> on !OF since the node flag accessors are not defined then.
+>> >>
+>> >> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+>> >
+>> > Applied to for-current, thanks!
+>>
+>> Ignoring my comments? It's not a big deal, but Pantelis did send out
+>> the DT patch necessary for my suggestion[1]. It's needed in another
+>> place now, too.
 >
-> v2:
->   - New.
-> ---
->  .../devicetree/bindings/bus/simple-pm-bus.txt      | 52 ++++++++++++++++++++++
->  1 file changed, 52 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/bus/simple-pm-bus.txt
+> Not sure if I saw this patch before...
 >
-> diff --git a/Documentation/devicetree/bindings/bus/simple-pm-bus.txt b/Documentation/devicetree/bindings/bus/simple-pm-bus.txt
-> new file mode 100644
-> index 0000000000000000..d03abf7fd8e3997a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/bus/simple-pm-bus.txt
-> @@ -0,0 +1,52 @@
-> +Simple Power-Managed Bus
-> +========================
-> +
-> +A Simple Power-Managed Bus is a transparent bus that doesn't need a real
-> +driver, as it's typically initialized by the boot loader.
-> +
-> +However, its bus controller is part of a PM domain, or under the control of a
-> +functional clock.  Hence, the bus controller's PM domain and/or clock must be
-> +enabled for child devices connected to the bus (either on-SoC or externally)
-> +to function.
-> +
-> +
-> +Generic compatible values and properties
-> +----------------------------------------
-> +
-> +Required properties:
-> +  - compatible: Must be at least one of the vendor-specific compatible values
-> +		from a vendor-specific section below, and "simple-bus" as a
-> +		fallback.
+> Is this DT patch targetted to for-next or for-current. Because this
+> patch is a bugfix and needs to go into this cycle. I'll happily apply a
+> cleanup patch to for-next then.
 
-What happened to the idea of using something like "simple-pm-bus"?
+Feel free to apply it for 3.19 with my ack. You then want to pick up
+v1 of this patch.
 
-There's nothing vendor-specific in the driver at all, so the
-vendor-specific binding seem like clutter to me and will result in
-continuing to add vendor-specific compatibles without any
-vendor-specific code.
-
-Kevin
+Rob
