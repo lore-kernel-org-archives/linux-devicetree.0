@@ -1,40 +1,83 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2 RESEND 8/8] ARM: STI: Ensure requested STi's SysCfg Controlled IRQs are enabled at boot
-Date: Thu, 22 Jan 2015 09:48:53 +0000
-Message-ID: <1421920133-7914-9-git-send-email-lee.jones@linaro.org>
-References: <1421920133-7914-1-git-send-email-lee.jones@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1421920133-7914-1-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 1/2] ARM: sti: Provide DT nodes for SSC[0..4]
+Date: Thu, 22 Jan 2015 10:07:16 +0000
+Message-ID: <1421921237-8991-1-git-send-email-lee.jones@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: lee.jones@linaro.org, kernel@stlinux.com, maxime.coquelin@st.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This driver is used to enable System Configuration Register controlled
-External, CTI (Core Sight), PMU (Performance Management), and PL310 L2
-Cache IRQs prior to use.
+The Synchronous Serial Controller is used to provide SPI.
 
-Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- arch/arm/mach-sti/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/stih407-family.dtsi | 54 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 54 insertions(+)
 
-diff --git a/arch/arm/mach-sti/Kconfig b/arch/arm/mach-sti/Kconfig
-index 8825bc9..5d8b3f8 100644
---- a/arch/arm/mach-sti/Kconfig
-+++ b/arch/arm/mach-sti/Kconfig
-@@ -1,6 +1,7 @@
- menuconfig ARCH_STI
- 	bool "STMicroelectronics Consumer Electronics SOCs" if ARCH_MULTI_V7
- 	select ARM_GIC
-+	select ST_IRQCHIP
- 	select ARM_GLOBAL_TIMER
- 	select PINCTRL
- 	select PINCTRL_ST
+diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
+index 3e31d32..d52347a 100644
+--- a/arch/arm/boot/dts/stih407-family.dtsi
++++ b/arch/arm/boot/dts/stih407-family.dtsi
+@@ -274,5 +274,59 @@
+ 
+ 			status = "disabled";
+ 		};
++
++		spi@9840000 {
++			compatible = "st,comms-ssc4-spi";
++			reg = <0x9840000 0x110>;
++			interrupts = <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&clk_s_c0_flexgen CLK_EXT2F_A9>;
++			clock-names = "ssc";
++			pinctrl-0 = <&pinctrl_spi0_default>;
++			pinctrl-names = "default";
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			status = "disabled";
++		};
++
++		spi@9841000 {
++			compatible = "st,comms-ssc4-spi";
++			reg = <0x9841000 0x110>;
++			interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&clk_s_c0_flexgen CLK_EXT2F_A9>;
++			clock-names = "ssc";
++
++			status = "disabled";
++		};
++
++		spi@9842000 {
++			compatible = "st,comms-ssc4-spi";
++			reg = <0x9842000 0x110>;
++			interrupts = <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&clk_s_c0_flexgen CLK_EXT2F_A9>;
++			clock-names = "ssc";
++
++			status = "disabled";
++		};
++
++		spi@9843000 {
++			compatible = "st,comms-ssc4-spi";
++			reg = <0x9843000 0x110>;
++			interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&clk_s_c0_flexgen CLK_EXT2F_A9>;
++			clock-names = "ssc";
++
++			status = "disabled";
++		};
++
++		spi@9844000 {
++			compatible = "st,comms-ssc4-spi";
++			reg = <0x9844000 0x110>;
++			interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&clk_s_c0_flexgen CLK_EXT2F_A9>;
++			clock-names = "ssc";
++
++			status = "disabled";
++		};
+ 	};
+ };
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
