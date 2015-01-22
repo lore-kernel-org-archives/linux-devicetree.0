@@ -1,53 +1,40 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v2 RESEND 7/8] ARM: STi: STiH407: Enable PMU IRQs
-Date: Thu, 22 Jan 2015 09:48:52 +0000
-Message-ID: <1421920133-7914-8-git-send-email-lee.jones@linaro.org>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v2 RESEND 8/8] ARM: STI: Ensure requested STi's SysCfg Controlled IRQs are enabled at boot
+Date: Thu, 22 Jan 2015 09:48:53 +0000
+Message-ID: <1421920133-7914-9-git-send-email-lee.jones@linaro.org>
 References: <1421920133-7914-1-git-send-email-lee.jones@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1421920133-7914-1-git-send-email-lee.jones@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: lee.jones@linaro.org, kernel@stlinux.com, tglx@linutronix.de, jason@lakedaemon.net, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1421920133-7914-1-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 This driver is used to enable System Configuration Register controlled
 External, CTI (Core Sight), PMU (Performance Management), and PL310 L2
 Cache IRQs prior to use.
 
-Here we are enabling PMU IRQs on both channels.
-
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- arch/arm/boot/dts/stih407-family.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ arch/arm/mach-sti/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
-index 939e46e..aa86d99 100644
---- a/arch/arm/boot/dts/stih407-family.dtsi
-+++ b/arch/arm/boot/dts/stih407-family.dtsi
-@@ -8,6 +8,7 @@
-  */
- #include "stih407-pinctrl.dtsi"
- #include <dt-bindings/reset-controller/stih407-resets.h>
-+#include <dt-bindings/interrupt-controller/irq-st.h>
- / {
- 	#address-cells = <1>;
- 	#size-cells = <1>;
-@@ -119,6 +120,15 @@
- 			reg = <0x94b5100 0x1000>;
- 		};
- 
-+		irq-syscfg {
-+			compatible    = "st,stih407-irq-syscfg";
-+			st,syscfg     = <&syscfg_core>;
-+			st,irq-device = <ST_IRQ_SYSCFG_PMU_0>,
-+					<ST_IRQ_SYSCFG_PMU_1>;
-+			st,fiq-device = <ST_IRQ_SYSCFG_DISABLED>,
-+					<ST_IRQ_SYSCFG_DISABLED>;
-+		};
-+
- 		serial@9830000 {
- 			compatible = "st,asc";
- 			reg = <0x9830000 0x2c>;
+diff --git a/arch/arm/mach-sti/Kconfig b/arch/arm/mach-sti/Kconfig
+index 8825bc9..5d8b3f8 100644
+--- a/arch/arm/mach-sti/Kconfig
++++ b/arch/arm/mach-sti/Kconfig
+@@ -1,6 +1,7 @@
+ menuconfig ARCH_STI
+ 	bool "STMicroelectronics Consumer Electronics SOCs" if ARCH_MULTI_V7
+ 	select ARM_GIC
++	select ST_IRQCHIP
+ 	select ARM_GLOBAL_TIMER
+ 	select PINCTRL
+ 	select PINCTRL_ST
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
