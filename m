@@ -1,58 +1,50 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH RFC 2/3] power: mxs_power: add driver for mxs power subsystem
-Date: Thu, 22 Jan 2015 10:48:12 +0100
-Message-ID: <54C0C75C.30603@i2se.com>
-References: <1416514477-19190-1-git-send-email-stefan.wahren@i2se.com> <1416514477-19190-3-git-send-email-stefan.wahren@i2se.com> <20150121230148.GJ13715@earth.universe> <54C0AFE4.3020701@i2se.com> <54C0C4DD.2040302@armadeus.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <54C0C4DD.2040302@armadeus.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: =?windows-1252?Q?S=E9bastien_SZYMANSKI?= <sebastien.szymanski@armadeus.com>, Sebastian Reichel <sre@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Marek Vasut <marex@denx.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Fabio Estevam <festevam@gmail.com>, linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@linaro.org>, David Woodhouse <dwmw2@infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v2 RESEND 0/8] irqchip: New driver for ST's SysCfg controlled IRQs
+Date: Thu, 22 Jan 2015 09:48:45 +0000
+Message-ID: <1421920133-7914-1-git-send-email-lee.jones@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Rebased and resending, as requested by Jason.
 
-Am 22.01.2015 um 10:37 schrieb S=E9bastien SZYMANSKI:
-> Hello,
->
-> On 01/22/2015 09:08 AM, Stefan Wahren wrote:
->> In the meantime i made some bugfixes on these patches. Now i think i=
-t
->> would be better to integrate the on-chip regulator driver into the p=
-atch
->> series. That would clarify the function of the power driver.
->>
-> I was about to resend this series with a poweroff driver for the imx2=
-8
-> SoCs.
+This driver enables IRQs which are controlled using System Configuration
+registers.  Without it Performance Monitoring, Core Sight Tracing and some
+L2 Caches will fail to function.
 
-sounds great.
+v1 => v2:
+ - Fixed up Jason's review comments
 
-> Should I wait this series get merged?
+Lee Jones (8):
+  dt: bindings: Supply shared ST IRQ defines
+  irqchip: Supply new driver for STi based devices
+  irqchip: irq-st: Add documentation for STi based syscfg IRQs
+  ARM: STi: STiH416: Enable Cortex-A9 PMU support
+  ARM: STi: STiH416: Enable PMU IRQs
+  ARM: STi: STiH407: Enable Cortex-A9 PMU support
+  ARM: STi: STiH407: Enable PMU IRQs
+  ARM: STI: Ensure requested STi's SysCfg Controlled IRQs are enabled at
+    boot
 
-Yes, please. In the meantime you can use my repo at github (based on
-pm+acpi-3.19-rc4):
+ .../interrupt-controller/st,sti-irq-syscfg.txt     |  35 ++++
+ arch/arm/boot/dts/stih407-family.dtsi              |  16 ++
+ arch/arm/boot/dts/stih416.dtsi                     |  16 ++
+ arch/arm/mach-sti/Kconfig                          |   1 +
+ drivers/irqchip/Kconfig                            |   7 +
+ drivers/irqchip/Makefile                           |   1 +
+ drivers/irqchip/irq-st.c                           | 208 +++++++++++++++++++++
+ include/dt-bindings/interrupt-controller/irq-st.h  |  30 +++
+ 8 files changed, 314 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/st,sti-irq-syscfg.txt
+ create mode 100644 drivers/irqchip/irq-st.c
+ create mode 100644 include/dt-bindings/interrupt-controller/irq-st.h
 
-https://github.com/lategoodbye/linux-mxs-power
+-- 
+1.9.1
 
->
-> I thought adding a poweroff child node like this:
->
-> power: power@80044000 {
-> 	...
-> 	poweroff: poweroff@80044100 {
-> 		compatible =3D "fsl,imx28-poweroff";
-> 		reg =3D <0x80044100 0x10>;
-> 	};
-> 	...
-> };
-
-Just a note to your driver it would be nice if it's handles i.MX23 and
-i.MX28.
-
-> [...]
-
-Regards Stefan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
