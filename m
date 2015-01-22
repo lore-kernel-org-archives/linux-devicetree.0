@@ -1,65 +1,74 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH 0/5] extcon: usb: Introduce USB GPIO extcon driver. Fix
- DRA7 USB.
-Date: Thu, 22 Jan 2015 15:32:12 +0200
-Message-ID: <54C0FBDC.6040803@ti.com>
-References: <1421689942-10201-1-git-send-email-rogerq@ti.com> <20150120190237.GG15169@saruman>
+From: Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+Subject: [PATCH v6 1/2] Documentation: DT: Add bindings for Spreadtrum SoC Platform
+Date: Thu, 22 Jan 2015 21:35:05 +0800
+Message-ID: <1421933706-4277-2-git-send-email-chunyan.zhang@spreadtrum.com>
+References: <sprd-serial-v6>
+ <1421933706-4277-1-git-send-email-chunyan.zhang@spreadtrum.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20150120190237.GG15169@saruman>
-Sender: linux-kernel-owner@vger.kernel.org
-To: balbi@ti.com
-Cc: tony@atomide.com, myungjoo.ham@samsung.com, cw00.choi@samsung.com, george.cherian@ti.com, nsekhar@ti.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1421933706-4277-1-git-send-email-chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org, peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, florian.vaussard-p8DiymsW2f8@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, hytszk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, orsonzhai-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, geng.ren-lxIno14LUO0EEoCn2XhGlw@public.gmane.org, zhizhou.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org, lanqing.liu-lxIno14LUO0EEoCn2XhGlw@public.gmane.org, zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, wei.qiao-lxIno14LUO0EEoCn2XhGlw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Felipe,
+Adds Spreadtrum's prefix "sprd" to vendor-prefixes file.
+Adds the devicetree binding documentations for Spreadtrum's sc9836-uart
+and SC9836 SoC based on the Sharkl64 Platform which is a 64-bit SoC
+Platform of Spreadtrum.
 
-On 20/01/15 21:02, Felipe Balbi wrote:
-> On Mon, Jan 19, 2015 at 07:52:17PM +0200, Roger Quadros wrote:
->> Hi,
->>
->> On DRA7 EVMs the USB ID pin is connected to a GPIO line. The USB drivers
->> (dwc3 + dwc3-omap) depend on extcon framework to get the USB cable state
->> (USB or USB-Host) to put the controller in the right mode.
->>
->> There were earlier attempts [1] to get this working by trying to patch up
->> the existing GPIO extcon driver.
->>
->> This series attemts to take a different approach by introducing a new
->> USB specific extcon driver to handle the USB ID GPIO pin and
->> interpret a right USB cable state.
->>
->> The reasoning to introduce this new driver is:
->> 1) The existing GPIO extcon driver doesn't understand USB cable states
->> and it can't handle more than one cable per instance.
->>    
->> For the USB case we need to handle at least 2 cable states.
->>     a) USB (attach/detach)
->>     b) USB-Host (attach/detach)
->> and could possible include more states like
->>     c) Fast-charger (attach/detach)
->>     d) Slow-charger (attach/detach)
->>     
->> 2) This USB specific driver can be easily updated in the future to
->> handle VBUS events, or charger detect events, in case it happens
->> to be available on GPIO for any platform.
->>
->> 3) The DT implementation is very easy. You just need one extcon node per USB
->> instead of one extcon node per cable state as in case of [1].
->>
->> 4) The cable state string doesn't need to be encoded in the device tree
->> as in case of [1].
->>
->> 5) With only ID event available, you can simulate a USB-peripheral attach
->> when USB-Host is detacted instead of hacking the USB driver to do the same.
->>
->> Tested on DRA7-evm and DRA72-evm.
-> 
-> while at that, you might want to patch X15 too.
-> 
-USB2 port is meant for peripheral use only. ID pin from USB port is not connected to GPIO.
+Signed-off-by: Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+Signed-off-by: Orson Zhai <orson.zhai-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+---
+ Documentation/devicetree/bindings/arm/sprd.txt     |   11 +++++++++++
+ .../devicetree/bindings/serial/sprd-uart.txt       |    7 +++++++
+ .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+ 3 files changed, 19 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/sprd.txt
+ create mode 100644 Documentation/devicetree/bindings/serial/sprd-uart.txt
 
-cheers,
--roger
+diff --git a/Documentation/devicetree/bindings/arm/sprd.txt b/Documentation/devicetree/bindings/arm/sprd.txt
+new file mode 100644
+index 0000000..31a629d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/sprd.txt
+@@ -0,0 +1,11 @@
++Spreadtrum SoC Platforms Device Tree Bindings
++----------------------------------------------------
++
++Sharkl64 is a Spreadtrum's SoC Platform which is based
++on ARM 64-bit processor.
++
++SC9836 openphone board with SC9836 SoC based on the
++Sharkl64 Platform shall have the following properties.
++
++Required root node properties:
++        - compatible = "sprd,sc9836-openphone", "sprd,sc9836";
+diff --git a/Documentation/devicetree/bindings/serial/sprd-uart.txt b/Documentation/devicetree/bindings/serial/sprd-uart.txt
+new file mode 100644
+index 0000000..2aff0f2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/serial/sprd-uart.txt
+@@ -0,0 +1,7 @@
++* Spreadtrum serial UART
++
++Required properties:
++- compatible: must be "sprd,sc9836-uart"
++- reg: offset and length of the register set for the device
++- interrupts: exactly one interrupt specifier
++- clocks: phandles to input clocks.
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index b1df0ad..0a8384f 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -153,6 +153,7 @@ snps	Synopsys, Inc.
+ solidrun	SolidRun
+ sony	Sony Corporation
+ spansion	Spansion Inc.
++sprd	Spreadtrum Communications Inc.
+ st	STMicroelectronics
+ ste	ST-Ericsson
+ stericsson	ST-Ericsson
+-- 
+1.7.9.5
