@@ -1,187 +1,88 @@
-From: Beomho Seo <beomho.seo@samsung.com>
-Subject: Re: [PATCH v4 2/2] Documentation: Add documentation for rt5033
- multifunction device
-Date: Thu, 22 Jan 2015 17:16:42 +0900
-Message-ID: <54C0B1EA.7030901@samsung.com>
-References: <1421899601-19327-1-git-send-email-beomho.seo@samsung.com>
- <1421899601-19327-3-git-send-email-beomho.seo@samsung.com>
- <20150122074101.GK22024@x1>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH mtd] mtd:devices: Add Altera EPCQ Driver
+Date: Thu, 22 Jan 2015 00:28:51 -0800
+Message-ID: <20150122082851.GB3268@brian-ubuntu>
+References: <CAN1oZWxB5N=YMQcsJppZgp7TXodcR4tKZM+LNFXS7PSx3F-Yag@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20150122074101.GK22024@x1>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, sre@kernel.org, robh+dt@kernel.org, lee.jone@linaro.org, broonie@kernel.org, dbaryshkov@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, cw00.choi@samsung.com, inki.dae@samsung.com, sw0312.kim@samsung.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAN1oZWxB5N=YMQcsJppZgp7TXodcR4tKZM+LNFXS7PSx3F-Yag-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Viet Nga Dao <vndao-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nga_chi86 <ngachi86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/22/2015 04:41 PM, Lee Jones wrote:
-> On Thu, 22 Jan 2015, Beomho Seo wrote:
-> 
->> This patch device tree binding documentation for rt5033 multifunction device.
->>
->> Cc: Sebastian Reichel <sre@kernel.org>
->> Cc: Lee Jones <lee.jones@linaro.org>
->> Cc: Mark Brown <broonie@kernel.org>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: Pawel Moll <pawel.moll@arm.com>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: Ian campbell <ijc+devicetree@hellion.org.uk>
->> Cc: Kumar Gala <galak@codeaurora.org>
->> Signed-off-by: Beomho Seo <beomho.seo@samsung.com>
->> Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
->> Acked-by: Lee Jones <lee.jones@linaro.org>
-> 
-> I did not Ack this patch.
-> 
-> Your new vendor bindings require a DT Ack.
-> 
-> Although, as the ones I'm concerned with are Regulator related, and
-> Ack from Mark Brown will also suffice.
-> 
+Hi Viet,
 
-I want to apologize for my mistake. I completely misunderstood your reply.
-Unfortunately, This patch merged by Sebastian at his git.
-Please tell me what to do.
+On Thu, Jan 15, 2015 at 05:27:10PM +0800, Viet Nga Dao wrote:
+> On Tue, Jan 13, 2015 at 11:33 AM, Brian Norris
+> <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > On Thu, Dec 18, 2014 at 12:23:16AM -0800, vndao-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org wrote:
+> >> From: Viet Nga Dao <vndao-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+> >>
+> >> Altera EPCQ Controller is a soft IP which enables access to Altera EPCQ and
+> >> EPCS flash chips. This patch adds driver for these devices.
+> >>
+> >> Signed-off-by: Viet Nga Dao <vndao-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+> >
+> > This drivers seems awfully similar to (and so I infer it is likely
+> > copy-and-pasted from) m25p80.c / spi-nor.c. Do you think it can be
+> > rewritten as a SPI NOR driver, under drivers/mtd/spi-nor/ ? It looks
+> > like these flash share most (all?) the same basic opcodes.
+> >
+> For Altera EPCQ flashes, almost operations are performed underline
+> hardware.
 
->> ---
->> Changes in v4
->> - none.
->> Changes in v3
->> - Add Acked-by
->> Changes in v2
->> - Fix incorrect typo.
->> - Align -uamp and -uvolt names with regulator binding suffixes.
->> - Drop incorrect phandle.
->> - Fix incorrect example.
->> ---
->>
->>  Documentation/devicetree/bindings/mfd/rt5033.txt   |  101 ++++++++++++++++++++
->>  .../devicetree/bindings/vendor-prefixes.txt        |    1 +
->>  2 files changed, 102 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/mfd/rt5033.txt
->>
->> diff --git a/Documentation/devicetree/bindings/mfd/rt5033.txt b/Documentation/devicetree/bindings/mfd/rt5033.txt
->> new file mode 100644
->> index 0000000..64b23e8
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mfd/rt5033.txt
->> @@ -0,0 +1,101 @@
->> +Richtek RT5033 Power management Integrated Circuit
->> +
->> +RT5033 is a Multifunction device which includes battery charger, fuel gauge,
->> +flash LED current source, LDO and synchronous Buck converter for portable
->> +applications. It is interfaced to host controller using i2c interface.
->> +
->> +Required properties:
->> +- compatible : Must be "richtek,rt5033"
->> +- reg : Specifies the i2c slave address of general part.
->> +- interrupts : This i2c devices has an IRQ line connected to the main SoC.
->> +- interrupt-parent : The parent interrupt controller.
->> +
->> +Optional node:
->> +Regulators: The regulators of RT5033 have to be instantiated under sub-node
->> +named "regulators" using the following format.
->> +
->> +	regulators {
->> +		regulator-name {
->> +			regulator-name = LDO/BUCK
->> +			regulator subnodes called X, Y and Z
->> +		};
->> +	};
->> +	refer Documentation/devicetree/bindings/regulator/regulator.txt
->> +
->> +
->> +Battery charger: There battery charger of RT5033 have to be instantiated under
->> +sub-node named "charger" using the following format.
->> +
->> +Required properties:
->> +- compatible : Must be "richtek,rt5033-charger".
->> +- richtek,pre-uamp : Current of pre-charge mode. The pre-charge current levels
->> +  are 350 mA to 650 mA programmed by I2C per 100 mA.
->> +- richtek,fast-uamp : Current of fast-charge mode. The fast-charge current
->> +  levels are 700 mA to 2000 mA programmed by I2C per 100 mA.
->> +- richtek,eoc-uamp : This property is end of charge current. Its level 150 mA
->> +  to 200 mA.
->> +- richtek,pre-threshold-uvolt : Voltage of threshold pre-charge mode. Battery
->> +  voltage is below pre-charge threshold voltage, the charger is in pre-charge
->> +  mode with pre-charge current. Its levels are 2.3 V  to 3.8 V programmed
->> +  by I2C per 0.1 V.
->> +- richtek,const-uvolt :  Battery regulation voltage of constant voltage mode.
->> +  This voltage level 3.65 V to 4.4 V bye I2C per 0.025 V.
->> +
->> +	charger {
->> +		compatible = "richtek,rt5033-charger";
->> +		richtek,pre-uamp = <350000>;
->> +		richtek,fast-uamp = <2000000>;
->> +		richtek,eoc-uamp = <250000>;
->> +		richtek,pre-threshold-uvolt = <3400000>;
->> +		richtek,const-uvolt = <4350000>;
->> +
->> +	};
->> +
->> +
->> +Fuelgauge: There fuelgauge of RT5033 to be instantiated node named "fuelgauge"
->> +using the following format.
->> +
->> +Required properties:
->> +- compatible = Must be "richtek,rt5033-battery".
->> +
->> +	rt5033@35 {
->> +		compatible = "richtek,rt5033-battery";
->> +		interrupt-parent = <&gpx2>;
->> +		interrupts = <3 0>;
->> +		reg = <0x35>;
->> +	};
->> +
->> +Example:
->> +
->> +		rt5033@34 {
->> +			compatible = "richtek,rt5033";
->> +			reg = <0x34>;
->> +			interrupt-parent = <&gpx1>;
->> +			interrupts = <5 0>;
->> +
->> +			regulators {
->> +				buck_reg: BUCK {
->> +					regulator-name = "BUCK";
->> +					regulator-min-microvolt = <1200000>;
->> +					regulator-max-microvolt = <1200000>;
->> +					regulator-always-on;
->> +				};
->> +			};
->> +
->> +			charger {
->> +				compatible = "richtek,rt5033-charger";
->> +				richtek,pre-uamp = <350000>;
->> +				richtek,fast-uamp = <2000000>;
->> +				richtek,eoc-uamp = <250000>;
->> +				richtek,pre-threshold-uvolt = <3400000>;
->> +				richtek,const-uvolt = <4350000>;
->> +			};
->> +
->> +		};
->> +
->> +		rt5033@35 {
->> +				compatible = "richtek,rt5033-battery";
->> +				interrupt-parent = <&gpx2>;
->> +				interrupts = <3 0>;
->> +				reg = <0x35>;
->> +		};
->> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
->> index b1df0ad..b6a2ca1 100644
->> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
->> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
->> @@ -134,6 +134,7 @@ ralink	Mediatek/Ralink Technology Corp.
->>  ramtron	Ramtron International
->>  realtek Realtek Semiconductor Corp.
->>  renesas	Renesas Electronics Corporation
->> +richtek	Richtek Technology Corporation
->>  ricoh	Ricoh Co. Ltd.
->>  rockchip	Fuzhou Rockchip Electronics Co., Ltd
->>  samsung	Samsung Semiconductor
-> 
+Right, that's understandable. But that's what spi-nor.c was designed
+for: implementing hardware-specific functionality that is targeted
+directly at SPI flash. Did you take a look at the callbacks available in
+'struct spi_nor'?
 
-Thanks,
-Beomho Seo
+> Software only able to perform the following through
+> registers:
+>  -  read status register
+>  -  read id
+>  -  write status registers bit SR_BP0,SR_BP1, SR_BP2,SR_BP3, SR_TB
+> (http://www.altera.com.my/literature/hb/cfg/cfg_cf52012.pdf)
+
+OK.
+
+> For read/write data: all the operations like QUAD_READ/WRITE,
+> FAST_READ/WRITE are handled by hardware as well. From software point
+> of view, there is no difference between these 2 modes.
+
+OK, so you don't have to hook up the dual/quad mode infrastructure. And
+you'd just implement dead-simple spi_nor.{read,write,erase}() callbacks.
+
+> That is why if rewrite the drivers to follow spi-nor structure, it
+> will require extra decoding works for the only few used opcodes.
+
+I think you'd only have some very trivial work here.
+
+There would be some small work to reintroduce a properly-replaceable ID
+table, and callbacks like ->lock() and ->unlock(), but those should be
+implemented in spi-nor.c sooner or later anyway.
+
+Anyway, if you take another look at spi-nor.{c,h} and determine that
+it's too difficult, then I suppose I don't mind accepting your driver
+under its current design. Your hardware is pretty esoteric anyway, the
+driver is still pretty simple, and it'll never be supporting any common
+SPI NOR vendors (right?), so it's not too big of a maintenance problem,
+I expect. But I do want to make sure that we don't copy/paste to repeat
+the mistakes of old drivers. As I noted already, your driver inherited
+some of the quirks of the old m25p80.c code.
+
+So please, give drivers/mtd/spi-nor/ another look, and then we can
+resume this discussion.
+
+[Snip the rest; please don't forget to address these comments in your
+next patch revision. BTW, I recall you sent me some other replies to my
+code review comments in personal email. Please reply to the mailing list
+for all code review.]
+
+Brian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
