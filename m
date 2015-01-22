@@ -1,52 +1,188 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 0/6] ARM: shmobile: sh73a0: DT PM domain support
-Date: Thu, 22 Jan 2015 11:58:19 +0900
-Message-ID: <20150122025818.GB12687@verge.net.au>
-References: <1421237484-16847-1-git-send-email-geert+renesas@glider.be>
- <20150114235302.GC10479@verge.net.au>
- <CAMuHMdVANePZ-fLzaLCEOm0vHR735C=u5_fDa4Uywi_P5ggjBg@mail.gmail.com>
- <20150116011315.GA7830@verge.net.au>
- <20150116024724.GA31654@verge.net.au>
- <CAMuHMdU4hj2p-N8abT-BSadznqF7=0-08o9F4_7+qjdvv6Whmw@mail.gmail.com>
- <20150116124502.GC6285@verge.net.au>
- <20150117011414.GC397@verge.net.au>
- <CAMuHMdX40LTdKt_nBb_U4eXWMuPXSYfC0Q4PvA42grdocCZfAA@mail.gmail.com>
- <20150122025522.GJ31170@verge.net.au>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH v4 08/10] v4l: xilinx: Add Xilinx Video IP core
+Date: Thu, 22 Jan 2015 05:01:17 +0200
+Message-ID: <2694110.qINIujyFZb@avalon>
+References: <1417464820-6718-1-git-send-email-laurent.pinchart@ideasonboard.com> <1417464820-6718-9-git-send-email-laurent.pinchart@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20150122025522.GJ31170@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1417464820-6718-9-git-send-email-laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chris Kohn <christian.kohn-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Hyun Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 22, 2015 at 11:55:22AM +0900, Simon Horman wrote:
-> On Sat, Jan 17, 2015 at 03:12:19PM +0100, Geert Uytterhoeven wrote:
-> > Hi Simon,
-> > 
-> > On Sat, Jan 17, 2015 at 2:14 AM, Simon Horman <horms@verge.net.au> wrote:
-> > >> > If you add patch 6 to sh-drivers-for-v3.20 and merge it in -next,
-> > >> > everything is fine!
-> > >>
-> > >> Thanks, I thought I had that one but I must have missed it somehow.
-> > >
-> > > I have made a second attempt and this time I hope that I haven't missed
-> > > anything. Please see renesas-next-20150117-v3.19-rc1.
-> > 
-> > Thanks, looks better!
-> 
-> For the record: Olof has asked for review comments for the BSC driver and
-> binding patches. Accordingly I have dropped them, and these patches which
-> depend on them, from next.
-> 
-> This dependency may be due to the way the branches are arranged, rather
-> than actual dependencies of the code. But regardless I am dropping all
-> effected branches for now.
+Hi Hans and Chris,
 
-To clarify, only patches 5 and 6 of this series are affected by the above
-statement.
+On Monday 01 December 2014 22:13:38 Laurent Pinchart wrote:
+> Xilinx platforms have no hardwired video capture or video processing
+> interface. Users create capture and memory to memory processing
+> pipelines in the FPGA fabric to suit their particular needs, by
+> instantiating video IP cores from a large library.
+> 
+> The Xilinx Video IP core is a framework that models a video pipeline
+> described in the device tree and expose the pipeline to userspace
+> through the media controller and V4L2 APIs.
+> 
+> Signed-off-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+> Signed-off-by: Hyun Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Radhey Shyam Pandey <radheys-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 
-[PATCH v2 5/6] ARM: shmobile: sh73a0 dtsi: Add PM domain support
-[PATCH v2 6/6] drivers: sh: Disable PM runtime for multi-platform sh73a0 with genpd
+[snip]
+
+> diff --git a/Documentation/devicetree/bindings/media/xilinx/video.txt
+> b/Documentation/devicetree/bindings/media/xilinx/video.txt new file mode
+> 100644
+> index 0000000..15720e4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/xilinx/video.txt
+> @@ -0,0 +1,52 @@
+> +DT bindings for Xilinx video IP cores
+> +-------------------------------------
+> +
+> +Xilinx video IP cores process video streams by acting as video sinks and/or
+> +sources. They are connected by links through their input and output ports,
+> +creating a video pipeline.
+> +
+> +Each video IP core is represented by an AMBA bus child node in the device
+> +tree using bindings documented in this directory. Connections between the
+> IP
+> +cores are represented as defined in ../video-interfaces.txt.
+> +
+> +The whole  pipeline is represented by an AMBA bus child node in the device
+> +tree using bindings documented in ./xlnx,video.txt.
+> +
+> +Common properties
+> +-----------------
+> +
+> +The following properties are common to all Xilinx video IP cores.
+> +
+> +- xlnx,video-format: This property represents a video format transmitted on
+> an
+> +  AXI bus between video IP cores. How the format relates to the IP core is
+> +  decribed in the IP core bindings documentation. The following formats are
+> +  supported.
+> +
+> +	rbg
+> +	xrgb
+> +	yuv422
+> +	yuv444
+> +	rggb
+> +	grbg
+> +	gbrg
+> +	bggr
+> +
+> +- xlnx,video-width: This property qualifies the video format with the
+> sample
+> +  width expressed as a number of bits per pixel component. All components
+> must
+> +  use the same width.
+
+Hans, last time we've discussed this on IRC you were not happy with the format 
+description used in these DT bindings. Your argument was, if I remember 
+correctly, that as the formats map directly to media bus codes, it would be 
+better to use the media bus codes (or a string representation of them) in the 
+bindings instead of creating a new format description. Is that correct ?
+
+Chris, what's your opinion on that ? The RGB and YUV formats in the table 
+below describe the hardware and come from table 1-4 on page 8 of 
+http://www.xilinx.com/support/documentation/ip_documentation/axi_videoip/v1_0/ug934_axi_videoIP.pdf. 
+The Bayer formats are not standardized in the document, and I don't think we 
+need them at the moment.
+
+> +The following table lists the supported formats and widths combinations,
+> along
+> +with the corresponding media bus pixel code.
+> +
+> +----------------+-------+--------------------------------------------------
+> +Format		| Width	| Media bus code
+> +----------------+-------+--------------------------------------------------
+> +rbg		| 8	| V4L2_MBUS_FMT_RBG888_1X24
+> +xrgb		| 8	| V4L2_MBUS_FMT_RGB888_1X32_PADHI
+> +yuv422		| 8	| V4L2_MBUS_FMT_UYVY8_1X16
+> +yuv444		| 8	| V4L2_MBUS_FMT_VUY888_1X24
+> +rggb		| 8	| V4L2_MBUS_FMT_SRGGB8_1X8
+> +grbg		| 8	| V4L2_MBUS_FMT_SGRBG8_1X8
+> +gbrg		| 8	| V4L2_MBUS_FMT_SGBRG8_1X8
+> +bggr		| 8	| V4L2_MBUS_FMT_SBGGR8_1X8
+> +----------------+-------+--------------------------------------------------
+> diff --git
+> a/Documentation/devicetree/bindings/media/xilinx/xlnx,video.txt
+> b/Documentation/devicetree/bindings/media/xilinx/xlnx,video.txt new file
+> mode 100644
+> index 0000000..5a02270
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/xilinx/xlnx,video.txt
+> @@ -0,0 +1,55 @@
+> +Xilinx Video IP Pipeline (VIPP)
+> +-------------------------------
+> +
+> +General concept
+> +---------------
+> +
+> +Xilinx video IP pipeline processes video streams through one or more Xilinx
+> +video IP cores. Each video IP core is represented as documented in
+> video.txt
+> +and IP core specific documentation, xlnx,v-*.txt, in this directory. The DT
+> +node of the VIPP represents as a top level node of the pipeline and defines
+> +mappings between DMAs and the video IP cores.
+> +
+> +Required properties:
+> +
+> +- compatible: Must be "xlnx,video".
+> +
+> +- dmas, dma-names: List of one DMA specifier and identifier string (as
+> defined
+> +  in Documentation/devicetree/bindings/dma/dma.txt) per port. Each port
+> +  requires a DMA channel with the identifier string set to "port" followed
+> by
+> +  the port index.
+> +
+> +- ports: Video port, using the DT bindings defined in
+> ../video-interfaces.txt.
+> +
+> +Required port properties:
+> +
+> +- direction: should be either "input" or "output" depending on the
+> direction
+> +  of stream.
+> +
+> +Example:
+> +
+> +	video_cap {
+> +		compatible = "xlnx,video";
+> +		dmas = <&vdma_1 1>, <&vdma_3 1>;
+> +		dma-names = "port0", "port1";
+> +
+> +		ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			port@0 {
+> +				reg = <0>;
+> +				direction = "input";
+> +				vcap0_in0: endpoint {
+> +					remote-endpoint = <&scaler0_out>;
+> +				};
+> +			};
+> +			port@1 {
+> +				reg = <1>;
+> +				direction = "input";
+> +				vcap0_in1: endpoint {
+> +					remote-endpoint = <&switch_out1>;
+> +				};
+> +			};
+> +		};
+> +	};
+
+-- 
+Regards,
+
+Laurent Pinchart
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
