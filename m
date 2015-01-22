@@ -1,31 +1,140 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: Re: [PATCH v4 1/3] pinctrl: add driver for Amlogic Meson SoCs
-Date: Thu, 22 Jan 2015 09:37:30 +0100
-Message-ID: <CACRpkdb=9K62kJbQHWK=Bqfcz7zVckKcF3riC-9RDdd-8vG7bg@mail.gmail.com>
-References: <1421518516-26976-1-git-send-email-b.galvani@gmail.com>
-	<1421518516-26976-2-git-send-email-b.galvani@gmail.com>
-	<CACRpkdZ6CX1XePa0sOY-0B9He9jYPNLqUtkk3LEGeT6eSQW9ew@mail.gmail.com>
-	<2015012211022773401912@163.com>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 0/2] mtd: hisilicon: add a new driver for NAND
+ controller of hisilicon hip04 Soc
+Date: Thu, 22 Jan 2015 00:45:29 -0800
+Message-ID: <20150122084529.GC3268@brian-ubuntu>
+References: <1415105221-7732-1-git-send-email-wangzhou.bry@gmail.com>
+ <20141130090853.GG3608@norris-Latitude-E6410>
+ <548987D3.3060407@gmail.com>
+ <20141217062333.GD7112@brian-ubuntu>
+ <5491638B.5090403@gmail.com>
+ <20150113041701.GM9759@ld-irv-0074>
+ <54C06E05.9050205@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2015012211022773401912-9Onoh4P/yGk@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <54C06E05.9050205-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: 48169172 <48169172-9Onoh4P/yGk@public.gmane.org>
-Cc: "b.galvani" <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Victor Wan <victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org" <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Jerry Cao <jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Cc: Zhou Wang <wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, caizhiyong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, yubingxu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Iwo Mergler <Iwo.Mergler-/K5RfY/kUqoaXkdz0Xzl5EEOCMrvLtNR@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 22, 2015 at 4:02 AM, 48169172 <48169172-9Onoh4P/yGk@public.gmane.org> wrote:
+Hi Zhou,
 
-> Hi  linus,
-> How could I get these code?
+On Thu, Jan 22, 2015 at 11:27:01AM +0800, Zhou Wang wrote:
+> Very sorry for late, I made tests again and also had a talk with the
+> NAND controller hardware colleague. Please find my reply below.
 
-git clone git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
-git checkout devel
+No problem. Glad to hear you followed through on this one, as the
+results were curious.
 
-Yours,
-Linus Walleij
+> On 2015/1/13 12:17, Brian Norris wrote:
+> > On Wed, Dec 17, 2014 at 07:05:47PM +0800, Zhou Wang wrote:
+> >> On 2014=E5=B9=B412=E6=9C=8817=E6=97=A5 14:23, Brian Norris wrote:
+> > [...]
+> >>>> [  104.648056] mtd_nandbiterrs: ECC failure, read data is incorr=
+ect
+> >>>> despite read success
+> >>>> insmod: can't insert 'mtd_nandbiterrs.ko': Input/output error
+[...]
+> I made testes again in 1bit/ECC and 16bit/ECC modes using 2K(page)+64=
+B(oob)
+> NAND flash. here are the logs, I also printed ECC code in OOB area.
+>=20
+> Results are:
+> 1. in 16bit/ECC, it will return -EBADMSG as the ECC codes have been b=
+roken.
+> 2. in 1bit/ECC, it will not reture -EBADMSG because a hardware design=
+ problem.
+>    I will explain the detail below.
+>=20
+> Test logs:
+> 1. in 16bit/ECC(print ECC codes):
+>=20
+> /home # insmod mtd_nandbiterrs.ko dev=3D2 page_offset=3D1 seed=3D110 =
+mode=3D0
+
+=2E..
+
+> mtd_nandbiterrs: error: read failed at 0x800
+> mtd_nandbiterrs: After 1 biterrors per subpage, read reported error -=
+74
+
+^^^ Ah, that's what I would expect from a driver that doesn't implement
+the raw() functions.
+
+> mtd_nandbiterrs: finished successfully.
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
+> insmod: can't insert 'mtd_nandbiterrs.ko': Input/output error
+>=20
+> 2. in 1bit/ECC(print ECC codes):
+> /home # insmod mtd_nandbiterrs.ko dev=3D2 page_offset=3D1 seed=3D110 =
+mode=3D0
+
+=2E..
+
+> mtd_nandbiterrs: ECC failure, read data is incorrect despite read suc=
+cess
+> insmod: can't insert 'mtd_nandbiterrs.ko': Input/output error
+>=20
+> Reason about above 1bit/ECC test result:
+
+=2E..
+
+> It can not correct this kind of 2bit errors in 1bit/ECC mode in this =
+NAND
+> controller, however, it will trigger a correctable interrupt. As a re=
+sult,
+> software can not find this 1bit error in page data.
+
+IOW, uncorrectable errors are getting reported as corrected bitflips?
+That does sound bad.
+
+> This is a hardware problem of this NAND controller.
+> I plan to remove the 1bit/ECC mode support in patch of next version.
+
+OK, sounds good. 1-bit HW ECC is not really very useful these days
+anyway, if your higher-bit ECC can serve to replace it. Can the ECC
+bytes still fit in the same spare area, though?
+
+> > Are you saying you cannot implement the raw() hooks for this IP? Or=
+ just
+> > that you haven't yet? The latter is probably OK for now (I'd recomm=
+end
+> > doing this, or at least mark a TODO in the code), but the former is=
+ a
+> > little disturbing.
+>=20
+> The function of raw() hooks is just writing the page data to flash, i=
+s this right?
+
+Right, just data (and OOB, if calling the _oob_ functions) without any
+ECC parity bytes.
+
+> In none ECC mode, it can write page date alone to flash. But in ECC m=
+ode, NAND
+> controller will produce related ECC code automatically, write page da=
+ta and ECC code
+> to flash. In ECC mode, it can not write page date alone to flash for =
+this NAND controller.
+
+Perhaps you can switch between ECC mode and non-ECC mode?
+
+At any rate, this isn't absolutely required.
+
+> As a result, the nandbiterrs test can not pass.
+>=20
+> I don't know if I have explained these two problems clearly. If still=
+ have something
+> confused, please let me know.
+
+Brian
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
