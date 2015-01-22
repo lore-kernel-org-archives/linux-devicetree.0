@@ -1,43 +1,51 @@
-From: Jack Pham <jackp-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [Patch v9 3/3] phy: Add Qualcomm DWC3 HS/SS PHY driver
-Date: Thu, 22 Jan 2015 10:59:14 -0800
-Message-ID: <20150122185914.GA4114@usblab-sd-06.qualcomm.com>
-References: <1410550088-8754-1-git-send-email-agross@codeaurora.org>
- <1410550088-8754-4-git-send-email-agross@codeaurora.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [alsa-devel] [PATCH v2 3/3] ASoC: add generic dt-card support
+Date: Thu, 22 Jan 2015 19:00:52 +0000
+Message-ID: <20150122190052.GS21293@sirena.org.uk>
+References: <cover.1421868426.git.moinejf@free.fr>
+ <d0c66c2e2f200119f9990fa52a503b1a4af6238f.1421868426.git.moinejf@free.fr>
+ <54C0088F.9070609@metafoo.de>
+ <20150122090723.50ac0156@armhf>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="5Dr6Wqe9hdyl7LAI"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1410550088-8754-4-git-send-email-agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+In-Reply-To: <20150122090723.50ac0156@armhf>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jean-Francois Moine <moinejf@free.fr>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, linux-kernel@vger.kernel.org, Jyri Sarha <jsarha@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andy,
 
-On Fri, Sep 12, 2014 at 02:28:08PM -0500, Andy Gross wrote:
-> This patch adds a new driver for the Qualcomm USB 3.0 PHY that exists on some
-> Qualcomm platforms.  This driver uses the generic PHY framework and will
-> interact with the DWC3 controller.
-> 
-> Signed-off-by: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> ---
->  drivers/phy/Kconfig         |   11 +
->  drivers/phy/Makefile        |    1 +
->  drivers/phy/phy-qcom-dwc3.c |  483 +++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 495 insertions(+)
->  create mode 100644 drivers/phy/phy-qcom-dwc3.c
+--5Dr6Wqe9hdyl7LAI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-What happened to this patch? Looks like [1/3] & [2/3] made it in during
-the 3.18 merge, but did this one not get picked up by Kishon?
+On Thu, Jan 22, 2015 at 09:07:23AM +0100, Jean-Francois Moine wrote:
 
-Thanks,
-Jack
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> I was also wondering about some of these properties, as widgets and
+> routing. They seem to be software information and Linux specific.
+> Must these properties appear in the DTs?
+
+What's Linux specific about them?  The widgets should all represent
+physical things that can be pointed at on the board and the routing
+reflects how the components are hooked up.
+
+--5Dr6Wqe9hdyl7LAI
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJUwUjjAAoJECTWi3JdVIfQWfcH/RdclJDHsnRFv1ttPnJaYvb4
+TpN8LmEhogNFYAOYAXaVBA5q/XGuM4pmsrPkQB7XiUnFPhJpx63OHirBp/fk8qPm
+oVIALgyQxKZC/XPT6MEe+LJojSTlG2FawswT7j2qEv019kTeZOVrhiAXWD2gmmrG
+feByG7OO0TQXg8YKnCcpvT3630u8mXti/E97cBnAvzw2azUm9xHLUa/mcO0yx/yZ
+Tr6XSoc/+624vqqrUNZqTs5l8+mGkU51haXoH/Ci27Tb45O2QWr8eovoX41RUEka
+ryDwT79mG4aYbtelsmMNIDfB46t5xv+u2nJ0wmdcDLoV0O52bXyRHIP9zVMg044=
+=37D/
+-----END PGP SIGNATURE-----
+
+--5Dr6Wqe9hdyl7LAI--
