@@ -1,5 +1,5 @@
 Return-Path: <48169172@163.com>
-Date: Fri, 23 Jan 2015 10:25:04 +0800
+Date: Thu, 22 Jan 2015 17:12:44 +0800
 From: 48169172 <48169172@163.com>
 Subject: Re: Re: [PATCH v4 1/3] pinctrl: add driver for Amlogic Meson SoCs
 References: <1421518516-26976-1-git-send-email-b.galvani@gmail.com>,
@@ -8,18 +8,18 @@ References: <1421518516-26976-1-git-send-email-b.galvani@gmail.com>,
 	<2015012211022773401912@163.com>,
 	<CACRpkdb=9K62kJbQHWK=Bqfcz7zVckKcF3riC-9RDdd-8vG7bg@mail.gmail.com>
 Mime-Version: 1.0
-Message-ID: <2015012310244690614024@163.com>
+Message-ID: <2015012217124256220419@163.com>
 Content-Type: multipart/alternative;
-	boundary="----=_001_NextPart326057244338_=----"
+	boundary="----=_001_NextPart565358410724_=----"
 To: "linus.walleij" <linus.walleij@linaro.org>
 Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Victor Wan <victor.wan@amlogic.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel <linux-kernel@vger.kernel.org>, "b.galvani" <b.galvani@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Kumar Gala <galak@codeaurora.org>, "carlo@caione.org" <carlo@caione.org>, Jerry Cao <jerry.cao@amlogic.com>, Soren Brinkmann <soren.brinkmann@xilinx.com>
 List-ID: <devicetree@vger.kernel.org>
 
 This is a multi-part message in MIME format.
 
-------=_001_NextPart326057244338_=----
+------=_001_NextPart565358410724_=----
 Content-Type: text/plain;
-	charset="UTF-8"
+	charset="utf-8"
 Content-Transfer-Encoding: base64
 
 SGkgTGludXPvvIwNCkkgZG8gbm90IGZpbmQgdGhlIG1lc29uIGRpciwNCmh0dHBzOi8vZ2l0Lmtl
@@ -42,58 +42,56 @@ cm5lbCBtYWlsaW5nIGxpc3QNCmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZw0K
 aHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2Vy
 bmVsDQo=
 
-------=_001_NextPart326057244338_=----
+------=_001_NextPart565358410724_=----
 Content-Type: text/html;
-	charset="UTF-8"
+	charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
 <html><head><meta http-equiv=3D"content-type" content=3D"text/html; charse=
-t=3DUTF-8"><style>body { line-height: 1.5; }blockquote { margin-top: 0px; =
+t=3Dutf-8"><style>body { line-height: 1.5; }blockquote { margin-top: 0px; =
 margin-bottom: 0px; margin-left: 0.5em; }body { font-size: 10.5pt; font-fa=
 mily: =E6=96=B0=E5=AE=8B=E4=BD=93; color: rgb(0, 0, 0); line-height: 1.5; =
-}body { font-size: 10.5pt; font-family: =E6=96=B0=E5=AE=8B=E4=BD=93; color=
-: rgb(0, 0, 0); line-height: 1.5; }</style></head><body>=0A<div><span></sp=
-an>Hi Linus=EF=BC=8C</div><div>I do not find the meson dir,</div><div><a h=
-ref=3D"https://git.kernel.org/cgit/linux/kernel/git/linusw/linux-pinctrl.g=
-it/tree/drivers/pinctrl?h=3Ddevel" style=3D"font-size: 10.5pt; line-height=
-: 1.5; background-color: window;">https://git.kernel.org/cgit/linux/kernel=
-/git/linusw/linux-pinctrl.git/tree/drivers/pinctrl?h=3Ddevel</a><span styl=
-e=3D"font-size: 10.5pt; line-height: 1.5; background-color: window;">&nbsp=
-;</span></div><div><span style=3D"font-size: 10.5pt; line-height: 1.5; bac=
-kground-color: window;">Is there something wrong?</span></div>=0A<div><br>=
-</div><hr style=3D"width: 210px; height: 1px;" color=3D"#b5c4df" size=3D"1=
-" align=3D"left">=0A<div><span>48169172</span></div>=0A<blockquote style=
-=3D"margin-top: 0px; margin-bottom: 0px; margin-left: 0.5em;"><div>&nbsp;<=
-/div><div style=3D"border:none;border-top:solid #B5C4DF 1.0pt;padding:3.0p=
-t 0cm 0cm 0cm"><div style=3D"PADDING-RIGHT: 8px; PADDING-LEFT: 8px; FONT-S=
-IZE: 12px;FONT-FAMILY:tahoma;COLOR:#000000; BACKGROUND: #efefef; PADDING-B=
-OTTOM: 8px; PADDING-TOP: 8px"><div><b>From:</b>&nbsp;<a href=3D"mailto:lin=
-us.walleij@linaro.org">Linus Walleij</a></div><div><b>Date:</b>&nbsp;2015-=
-01-22&nbsp;16:37</div><div><b>To:</b>&nbsp;<a href=3D"mailto:48169172@163.=
-com">48169172</a></div><div><b>CC:</b>&nbsp;<a href=3D"mailto:mark.rutland=
-@arm.com">Mark Rutland</a>; <a href=3D"mailto:devicetree@vger.kernel.org">=
-devicetree@vger.kernel.org</a>; <a href=3D"mailto:linux@arm.linux.org.uk">=
-Russell King</a>; <a href=3D"mailto:victor.wan@amlogic.com">Victor Wan</a>=
-; <a href=3D"mailto:pawel.moll@arm.com">Pawel Moll</a>; <a href=3D"mailto:=
-ijc+devicetree@hellion.org.uk">Ian Campbell</a>; <a href=3D"mailto:linux-k=
-ernel@vger.kernel.org">linux-kernel</a>; <a href=3D"mailto:b.galvani@gmail=
-.com">b.galvani</a>; <a href=3D"mailto:linux-gpio@vger.kernel.org">linux-g=
-pio@vger.kernel.org</a>; <a href=3D"mailto:robh+dt@kernel.org">Rob Herring=
-</a>; <a href=3D"mailto:arnd@arndb.de">Arnd Bergmann</a>; <a href=3D"mailt=
-o:linux-arm-kernel@lists.infradead.org">linux-arm-kernel@lists.infradead.o=
-rg</a>; <a href=3D"mailto:galak@codeaurora.org">Kumar Gala</a>; <a href=3D=
-"mailto:carlo@caione.org">carlo@caione.org</a>; <a href=3D"mailto:jerry.ca=
-o@amlogic.com">Jerry Cao</a>; <a href=3D"mailto:soren.brinkmann@xilinx.com=
-">Soren Brinkmann</a></div><div><b>Subject:</b>&nbsp;Re: Re: [PATCH v4 1/3=
-] pinctrl: add driver for Amlogic Meson SoCs</div></div></div><div><div>On=
- Thu, Jan 22, 2015 at 4:02 AM, 48169172 &lt;48169172@163.com&gt; wrote:</d=
-iv>=0A<div>&nbsp;</div>=0A<div>&gt; Hi&nbsp; linus,</div>=0A<div>&gt; How =
-could I get these code?</div>=0A<div>&nbsp;</div>=0A<div>git clone git://g=
-it.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git</div>=0A<d=
-iv>git checkout devel</div>=0A<div>&nbsp;</div>=0A<div>Yours,</div>=0A<div=
->Linus Walleij</div>=0A<div>&nbsp;</div>=0A<div>__________________________=
-_____________________</div>=0A<div>linux-arm-kernel mailing list</div>=0A<=
-div>linux-arm-kernel@lists.infradead.org</div>=0A<div>http://lists.infrade=
-ad.org/mailman/listinfo/linux-arm-kernel</div>=0A</div></blockquote>=0A</b=
-ody></html>
-------=_001_NextPart326057244338_=------
+}</style></head><body>=0A<div><span></span>Hi Linus=EF=BC=8C</div><div>I d=
+o not find the meson dir,</div><div><a href=3D"https://git.kernel.org/cgit=
+/linux/kernel/git/linusw/linux-pinctrl.git/tree/drivers/pinctrl?h=3Ddevel"=
+ style=3D"font-size: 10.5pt; line-height: 1.5; background-color: window;">=
+https://git.kernel.org/cgit/linux/kernel/git/linusw/linux-pinctrl.git/tree=
+/drivers/pinctrl?h=3Ddevel</a><span style=3D"font-size: 10.5pt; line-heigh=
+t: 1.5; background-color: window;">&nbsp;</span></div><div><span style=3D"=
+font-size: 10.5pt; line-height: 1.5; background-color: window;">Is there s=
+omething wrong?</span></div>=0A<div><br></div><hr style=3D"width: 210px; h=
+eight: 1px;" color=3D"#b5c4df" size=3D"1" align=3D"left">=0A<div><span>481=
+69172</span></div>=0A<blockquote style=3D"margin-top: 0px; margin-bottom: =
+0px; margin-left: 0.5em;"><div>&nbsp;</div><div style=3D"border:none;borde=
+r-top:solid #B5C4DF 1.0pt;padding:3.0pt 0cm 0cm 0cm"><div style=3D"PADDING=
+-RIGHT: 8px; PADDING-LEFT: 8px; FONT-SIZE: 12px;FONT-FAMILY:tahoma;COLOR:#=
+000000; BACKGROUND: #efefef; PADDING-BOTTOM: 8px; PADDING-TOP: 8px"><div><=
+b>From:</b>&nbsp;<a href=3D"mailto:linus.walleij@linaro.org">Linus Walleij=
+</a></div><div><b>Date:</b>&nbsp;2015-01-22&nbsp;16:37</div><div><b>To:</b=
+>&nbsp;<a href=3D"mailto:48169172@163.com">48169172</a></div><div><b>CC:</=
+b>&nbsp;<a href=3D"mailto:mark.rutland@arm.com">Mark Rutland</a>; <a href=
+=3D"mailto:devicetree@vger.kernel.org">devicetree@vger.kernel.org</a>; <a =
+href=3D"mailto:linux@arm.linux.org.uk">Russell King</a>; <a href=3D"mailto=
+:victor.wan@amlogic.com">Victor Wan</a>; <a href=3D"mailto:pawel.moll@arm.=
+com">Pawel Moll</a>; <a href=3D"mailto:ijc+devicetree@hellion.org.uk">Ian =
+Campbell</a>; <a href=3D"mailto:linux-kernel@vger.kernel.org">linux-kernel=
+</a>; <a href=3D"mailto:b.galvani@gmail.com">b.galvani</a>; <a href=3D"mai=
+lto:linux-gpio@vger.kernel.org">linux-gpio@vger.kernel.org</a>; <a href=3D=
+"mailto:robh+dt@kernel.org">Rob Herring</a>; <a href=3D"mailto:arnd@arndb.=
+de">Arnd Bergmann</a>; <a href=3D"mailto:linux-arm-kernel@lists.infradead.=
+org">linux-arm-kernel@lists.infradead.org</a>; <a href=3D"mailto:galak@cod=
+eaurora.org">Kumar Gala</a>; <a href=3D"mailto:carlo@caione.org">carlo@cai=
+one.org</a>; <a href=3D"mailto:jerry.cao@amlogic.com">Jerry Cao</a>; <a hr=
+ef=3D"mailto:soren.brinkmann@xilinx.com">Soren Brinkmann</a></div><div><b>=
+Subject:</b>&nbsp;Re: Re: [PATCH v4 1/3] pinctrl: add driver for Amlogic M=
+eson SoCs</div></div></div><div><div>On Thu, Jan 22, 2015 at 4:02 AM, 4816=
+9172 &lt;48169172@163.com&gt; wrote:</div>=0A<div>&nbsp;</div>=0A<div>&gt;=
+ Hi&nbsp; linus,</div>=0A<div>&gt; How could I get these code?</div>=0A<di=
+v>&nbsp;</div>=0A<div>git clone git://git.kernel.org/pub/scm/linux/kernel/=
+git/linusw/linux-pinctrl.git</div>=0A<div>git checkout devel</div>=0A<div>=
+&nbsp;</div>=0A<div>Yours,</div>=0A<div>Linus Walleij</div>=0A<div>&nbsp;<=
+/div>=0A<div>_______________________________________________</div>=0A<div>=
+linux-arm-kernel mailing list</div>=0A<div>linux-arm-kernel@lists.infradea=
+d.org</div>=0A<div>http://lists.infradead.org/mailman/listinfo/linux-arm-k=
+ernel</div>=0A</div></blockquote>=0A</body></html>
+------=_001_NextPart565358410724_=------
