@@ -1,87 +1,30 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH mtd] mtd:devices: Add Altera EPCQ Driver
-Date: Thu, 22 Jan 2015 00:28:51 -0800
-Message-ID: <20150122082851.GB3268@brian-ubuntu>
-References: <CAN1oZWxB5N=YMQcsJppZgp7TXodcR4tKZM+LNFXS7PSx3F-Yag@mail.gmail.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: Re: [PATCH v4 1/3] pinctrl: add driver for Amlogic Meson SoCs
+Date: Thu, 22 Jan 2015 09:37:30 +0100
+Message-ID: <CACRpkdb=9K62kJbQHWK=Bqfcz7zVckKcF3riC-9RDdd-8vG7bg@mail.gmail.com>
+References: <1421518516-26976-1-git-send-email-b.galvani@gmail.com>
+	<1421518516-26976-2-git-send-email-b.galvani@gmail.com>
+	<CACRpkdZ6CX1XePa0sOY-0B9He9jYPNLqUtkk3LEGeT6eSQW9ew@mail.gmail.com>
+	<2015012211022773401912@163.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAN1oZWxB5N=YMQcsJppZgp7TXodcR4tKZM+LNFXS7PSx3F-Yag-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <2015012211022773401912-9Onoh4P/yGk@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Viet Nga Dao <vndao-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nga_chi86 <ngachi86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: 48169172 <48169172-9Onoh4P/yGk@public.gmane.org>
+Cc: "b.galvani" <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Victor Wan <victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org" <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Jerry Cao <jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Viet,
+On Thu, Jan 22, 2015 at 4:02 AM, 48169172 <48169172-9Onoh4P/yGk@public.gmane.org> wrote:
 
-On Thu, Jan 15, 2015 at 05:27:10PM +0800, Viet Nga Dao wrote:
-> On Tue, Jan 13, 2015 at 11:33 AM, Brian Norris
-> <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > On Thu, Dec 18, 2014 at 12:23:16AM -0800, vndao-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org wrote:
-> >> From: Viet Nga Dao <vndao-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-> >>
-> >> Altera EPCQ Controller is a soft IP which enables access to Altera EPCQ and
-> >> EPCS flash chips. This patch adds driver for these devices.
-> >>
-> >> Signed-off-by: Viet Nga Dao <vndao-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-> >
-> > This drivers seems awfully similar to (and so I infer it is likely
-> > copy-and-pasted from) m25p80.c / spi-nor.c. Do you think it can be
-> > rewritten as a SPI NOR driver, under drivers/mtd/spi-nor/ ? It looks
-> > like these flash share most (all?) the same basic opcodes.
-> >
-> For Altera EPCQ flashes, almost operations are performed underline
-> hardware.
+> Hi  linus,
+> How could I get these code?
 
-Right, that's understandable. But that's what spi-nor.c was designed
-for: implementing hardware-specific functionality that is targeted
-directly at SPI flash. Did you take a look at the callbacks available in
-'struct spi_nor'?
+git clone git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
+git checkout devel
 
-> Software only able to perform the following through
-> registers:
->  -  read status register
->  -  read id
->  -  write status registers bit SR_BP0,SR_BP1, SR_BP2,SR_BP3, SR_TB
-> (http://www.altera.com.my/literature/hb/cfg/cfg_cf52012.pdf)
-
-OK.
-
-> For read/write data: all the operations like QUAD_READ/WRITE,
-> FAST_READ/WRITE are handled by hardware as well. From software point
-> of view, there is no difference between these 2 modes.
-
-OK, so you don't have to hook up the dual/quad mode infrastructure. And
-you'd just implement dead-simple spi_nor.{read,write,erase}() callbacks.
-
-> That is why if rewrite the drivers to follow spi-nor structure, it
-> will require extra decoding works for the only few used opcodes.
-
-I think you'd only have some very trivial work here.
-
-There would be some small work to reintroduce a properly-replaceable ID
-table, and callbacks like ->lock() and ->unlock(), but those should be
-implemented in spi-nor.c sooner or later anyway.
-
-Anyway, if you take another look at spi-nor.{c,h} and determine that
-it's too difficult, then I suppose I don't mind accepting your driver
-under its current design. Your hardware is pretty esoteric anyway, the
-driver is still pretty simple, and it'll never be supporting any common
-SPI NOR vendors (right?), so it's not too big of a maintenance problem,
-I expect. But I do want to make sure that we don't copy/paste to repeat
-the mistakes of old drivers. As I noted already, your driver inherited
-some of the quirks of the old m25p80.c code.
-
-So please, give drivers/mtd/spi-nor/ another look, and then we can
-resume this discussion.
-
-[Snip the rest; please don't forget to address these comments in your
-next patch revision. BTW, I recall you sent me some other replies to my
-code review comments in personal email. Please reply to the mailing list
-for all code review.]
-
-Brian
+Yours,
+Linus Walleij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
