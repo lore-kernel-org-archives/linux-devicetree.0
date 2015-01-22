@@ -1,77 +1,48 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v6 0/7] Add initial support for DA9150 Charger &
- Fuel-Gauge IC
-Date: Thu, 22 Jan 2015 07:58:11 +0000
-Message-ID: <20150122075811.GO22024@x1>
-References: <cover.1421854282.git.Adam.Thomson.Opensource@diasemi.com>
- <20150121165250.GG13715@earth.universe>
- <C1079F30-5D1D-45AA-A129-FE1E68EA5DC5@jic23.retrosnub.co.uk>
+From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Subject: Re: [alsa-devel] [PATCH v2 3/3] ASoC: add generic dt-card support
+Date: Thu, 22 Jan 2015 09:07:23 +0100
+Message-ID: <20150122090723.50ac0156@armhf>
+References: <cover.1421868426.git.moinejf@free.fr>
+	<d0c66c2e2f200119f9990fa52a503b1a4af6238f.1421868426.git.moinejf@free.fr>
+	<54C0088F.9070609@metafoo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <C1079F30-5D1D-45AA-A129-FE1E68EA5DC5@jic23.retrosnub.co.uk>
-Sender: linux-pm-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
-Cc: Sebastian Reichel <sre@kernel.org>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Jonathan Cameron <jic23@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Hartmut Knaack <knaack.h@gmx.de>, linux-iio@vger.kernel.org, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org, support.opensource@diasemi.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54C0088F.9070609-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 21 Jan 2015, Jonathan Cameron wrote:
+On Wed, 21 Jan 2015 21:14:07 +0100
+Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org> wrote:
 
+> [...]
+> > +	card->dai_link->dai_fmt =3D
+> > +		snd_soc_of_parse_daifmt(of_cpu, "dt-audio-card,",
+> > +					NULL, NULL) &
+> > +			~SND_SOC_DAIFMT_MASTER_MASK;
 >=20
 >=20
-> On 21 January 2015 16:52:50 GMT+00:00, Sebastian Reichel <sre@kernel.=
-org> wrote:
-> >Hi,
-> >
-> >On Wed, Jan 21, 2015 at 03:46:25PM +0000, Adam Thomson wrote:
-> >> This patch set adds initial support for the Dialog DA9150 Integrat=
-ed
-> >Charger &
-> >> Fuel-Gauge IC. The device also provides GPIO and GPADC functionali=
-ty.
-> >>=20
-> >> In this patch set the following is provided:
-> >>  - MFD Core support and DT bindings documentation.
-> >>  - IIO GPADC support and DT bindings documentation.
-> >>  - Power Supply Charger support and DT bindings documentation.
-> >>  - Update to MAINTAINERS file to add DA9150 files to Dialog suppor=
-t
-> >list.
-> >>=20
-> >> To keep patch submission from being too large, support for GPIO an=
-d
-> >Fuel-Gauge
-> >> will come after initial support patches are accepted.
-> >>=20
-> >> This patch set is baselined against the v3.19-rc5 kernel version.
-> >>=20
-> >> Changes in v6:
-> >> - For GPADC driver, Use lower case extended names for IIO GPADC
-> >channels, and
-> >>   remove extended names for GPIO related channels.
-> >> - For charger driver, revert to no devm IRQ request/free functions=
- as
-> >ordering
-> >>   is important, and probe failure scenario was not being correctly
-> >covered. A
-> >>   helper function for free IRQs has been added to make code cleane=
-r.
-> >
-> >Probably a devm_ variant of power_supply_register should be created,
-> >but for now this is ok for me.
-> >
-> >Jonathan, Lee: I assume you are ok with the whole patchset going
-> >through the power supply subsystem?
-> >
-> Fine by me if either power supply or MFD.
+> This one does not seem to be in the bindings documentation.
 
-I am, but there is a lot of MFD code here, so I'd like to take it in
-as well.  I'd like a tagged pull-request from Sebastian.
+Sorry, I forgot to remove it from the patch.
+
+BTW, the graph of port should also contain pieces of the audio specific
+hardware information as the ones found in the simple-card (clock,
+GPIO, ...). This information could be written as generic device node
+properties. i.e without any prefix.
+
+I was also wondering about some of these properties, as widgets and
+routing. They seem to be software information and Linux specific.
+Must these properties appear in the DTs?
 
 --=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
+Jef		|		http://moinejf.free.fr/
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
