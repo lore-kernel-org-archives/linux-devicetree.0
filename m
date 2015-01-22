@@ -1,62 +1,193 @@
-From: Olliver Schinagl <o.schinagl@ultimaker.com>
-Subject: Re: [PATCH v2 4/4] leds: no longer use unnamed gpios
-Date: Thu, 22 Jan 2015 10:37:46 +0100
-Message-ID: <54C0C4EA.5020404@ultimaker.com>
-References: <1421876028-22799-1-git-send-email-o.schinagl@ultimaker.com> <1421876028-22799-5-git-send-email-o.schinagl@ultimaker.com> <2355733.gZvsF3iKWH@pcimr>
+From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Subject: Re: [PATCH v4 08/10] v4l: xilinx: Add Xilinx Video IP core
+Date: Thu, 22 Jan 2015 10:43:56 +0100
+Message-ID: <54C0C65C.7010702@xs4all.nl>
+References: <1417464820-6718-1-git-send-email-laurent.pinchart@ideasonboard.com> <1417464820-6718-9-git-send-email-laurent.pinchart@ideasonboard.com> <2694110.qINIujyFZb@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <2355733.gZvsF3iKWH@pcimr>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Rojhalat Ibrahim <imr@rtschenk.de>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Olliver Schinagl <oliver@schinagl.nl>, Robin Gong <b38343@freescale.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Aaron Lu <aaron.lu@intel.com>, Grant Likely <grant.likely@linaro.org>, Jingoo Han <jg1.han@samsung.com>, Alexander Shiyan <shc_work@mail.ru>, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, linux-leds@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2694110.qINIujyFZb@avalon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Chris Kohn <christian.kohn-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Hyun Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hey Rojhalat,
-
-On 22-01-15 10:32, Rojhalat Ibrahim wrote:
-> On Wednesday 21 January 2015 22:33:48 Olliver Schinagl wrote:
->> From: Olliver Schinagl <oliver@schinagl.nl>
+On 01/22/15 04:01, Laurent Pinchart wrote:
+> Hi Hans and Chris,
+> 
+> On Monday 01 December 2014 22:13:38 Laurent Pinchart wrote:
+>> Xilinx platforms have no hardwired video capture or video processing
+>> interface. Users create capture and memory to memory processing
+>> pipelines in the FPGA fabric to suit their particular needs, by
+>> instantiating video IP cores from a large library.
 >>
->> The gpio document says we should not use unnamed bindings for gpios.
->> This patch uses the 'led-' prefix to the gpios and updates code and
->> documents. Because the devm_get_gpiod_from_child() falls back to usi=
-ng
->> old-style unnamed gpios, we can update the code first, and update
->> dts files as time allows.
+>> The Xilinx Video IP core is a framework that models a video pipeline
+>> described in the device tree and expose the pipeline to userspace
+>> through the media controller and V4L2 APIs.
 >>
->> Signed-off-by: Olliver Schinagl <oliver@schinagl.nl>
-> Where does devm_get_gpiod_from_child() fall back "to using old-style
-> unnamed gpios"?
-Your absolutly right, I accidentally forgot a patch that was supposed t=
-o=20
-get squashed into this patchset. The idea is to do the same as in=20
-gpio-keys-polled.c. I'll make sure it sits in v3 of the set! My appolog=
-ies!
+>> Signed-off-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+>> Signed-off-by: Hyun Kwon <hyun.kwon-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+>> Signed-off-by: Radhey Shyam Pandey <radheys-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+>> Signed-off-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> 
+> [snip]
+> 
+>> diff --git a/Documentation/devicetree/bindings/media/xilinx/video.txt
+>> b/Documentation/devicetree/bindings/media/xilinx/video.txt new file mode
+>> 100644
+>> index 0000000..15720e4
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/media/xilinx/video.txt
+>> @@ -0,0 +1,52 @@
+>> +DT bindings for Xilinx video IP cores
+>> +-------------------------------------
+>> +
+>> +Xilinx video IP cores process video streams by acting as video sinks and/or
+>> +sources. They are connected by links through their input and output ports,
+>> +creating a video pipeline.
+>> +
+>> +Each video IP core is represented by an AMBA bus child node in the device
+>> +tree using bindings documented in this directory. Connections between the
+>> IP
+>> +cores are represented as defined in ../video-interfaces.txt.
+>> +
+>> +The whole  pipeline is represented by an AMBA bus child node in the device
+>> +tree using bindings documented in ./xlnx,video.txt.
+>> +
+>> +Common properties
+>> +-----------------
+>> +
+>> +The following properties are common to all Xilinx video IP cores.
+>> +
+>> +- xlnx,video-format: This property represents a video format transmitted on
+>> an
+>> +  AXI bus between video IP cores. How the format relates to the IP core is
+>> +  decribed in the IP core bindings documentation. The following formats are
+>> +  supported.
+>> +
+>> +	rbg
+>> +	xrgb
+>> +	yuv422
+>> +	yuv444
+>> +	rggb
+>> +	grbg
+>> +	gbrg
+>> +	bggr
+>> +
+>> +- xlnx,video-width: This property qualifies the video format with the
+>> sample
+>> +  width expressed as a number of bits per pixel component. All components
+>> must
+>> +  use the same width.
+> 
+> Hans, last time we've discussed this on IRC you were not happy with the format 
+> description used in these DT bindings. Your argument was, if I remember 
+> correctly, that as the formats map directly to media bus codes, it would be 
+> better to use the media bus codes (or a string representation of them) in the 
+> bindings instead of creating a new format description. Is that correct ?
 
-Olliver
->
-> After applying this patch the leds defined in my devicetree do not
-> work anymore.
->
->     Rojhalat
->
->
->
+Correct. Where possible I think the names should map to the mediabus names.
+So uyvy instead of yuv422, srggb instead of rggb, etc.
 
---=20
-Met vriendelijke groeten, Kind regards, =E4=B8=8E=E4=BA=B2=E5=88=87=E7=9A=
-=84=E9=97=AE=E5=80=99
+Regards,
 
-Olliver Schinagl
-Research & Development
-Ultimaker B.V.
-http://www.ultimaker.com
+	Hans
+
+> 
+> Chris, what's your opinion on that ? The RGB and YUV formats in the table 
+> below describe the hardware and come from table 1-4 on page 8 of 
+> http://www.xilinx.com/support/documentation/ip_documentation/axi_videoip/v1_0/ug934_axi_videoIP.pdf. 
+> The Bayer formats are not standardized in the document, and I don't think we 
+> need them at the moment.
+> 
+>> +The following table lists the supported formats and widths combinations,
+>> along
+>> +with the corresponding media bus pixel code.
+>> +
+>> +----------------+-------+--------------------------------------------------
+>> +Format		| Width	| Media bus code
+>> +----------------+-------+--------------------------------------------------
+>> +rbg		| 8	| V4L2_MBUS_FMT_RBG888_1X24
+>> +xrgb		| 8	| V4L2_MBUS_FMT_RGB888_1X32_PADHI
+>> +yuv422		| 8	| V4L2_MBUS_FMT_UYVY8_1X16
+>> +yuv444		| 8	| V4L2_MBUS_FMT_VUY888_1X24
+>> +rggb		| 8	| V4L2_MBUS_FMT_SRGGB8_1X8
+>> +grbg		| 8	| V4L2_MBUS_FMT_SGRBG8_1X8
+>> +gbrg		| 8	| V4L2_MBUS_FMT_SGBRG8_1X8
+>> +bggr		| 8	| V4L2_MBUS_FMT_SBGGR8_1X8
+>> +----------------+-------+--------------------------------------------------
+>> diff --git
+>> a/Documentation/devicetree/bindings/media/xilinx/xlnx,video.txt
+>> b/Documentation/devicetree/bindings/media/xilinx/xlnx,video.txt new file
+>> mode 100644
+>> index 0000000..5a02270
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/media/xilinx/xlnx,video.txt
+>> @@ -0,0 +1,55 @@
+>> +Xilinx Video IP Pipeline (VIPP)
+>> +-------------------------------
+>> +
+>> +General concept
+>> +---------------
+>> +
+>> +Xilinx video IP pipeline processes video streams through one or more Xilinx
+>> +video IP cores. Each video IP core is represented as documented in
+>> video.txt
+>> +and IP core specific documentation, xlnx,v-*.txt, in this directory. The DT
+>> +node of the VIPP represents as a top level node of the pipeline and defines
+>> +mappings between DMAs and the video IP cores.
+>> +
+>> +Required properties:
+>> +
+>> +- compatible: Must be "xlnx,video".
+>> +
+>> +- dmas, dma-names: List of one DMA specifier and identifier string (as
+>> defined
+>> +  in Documentation/devicetree/bindings/dma/dma.txt) per port. Each port
+>> +  requires a DMA channel with the identifier string set to "port" followed
+>> by
+>> +  the port index.
+>> +
+>> +- ports: Video port, using the DT bindings defined in
+>> ../video-interfaces.txt.
+>> +
+>> +Required port properties:
+>> +
+>> +- direction: should be either "input" or "output" depending on the
+>> direction
+>> +  of stream.
+>> +
+>> +Example:
+>> +
+>> +	video_cap {
+>> +		compatible = "xlnx,video";
+>> +		dmas = <&vdma_1 1>, <&vdma_3 1>;
+>> +		dma-names = "port0", "port1";
+>> +
+>> +		ports {
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +
+>> +			port@0 {
+>> +				reg = <0>;
+>> +				direction = "input";
+>> +				vcap0_in0: endpoint {
+>> +					remote-endpoint = <&scaler0_out>;
+>> +				};
+>> +			};
+>> +			port@1 {
+>> +				reg = <1>;
+>> +				direction = "input";
+>> +				vcap0_in1: endpoint {
+>> +					remote-endpoint = <&switch_out1>;
+>> +				};
+>> +			};
+>> +		};
+>> +	};
+> 
 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
