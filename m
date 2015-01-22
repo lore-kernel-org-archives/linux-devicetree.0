@@ -1,94 +1,41 @@
-From: Kevin Hilman <khilman@kernel.org>
-Subject: [PATCH v3] ARM: dts: exynos5422-odroidxu3: add on-board INA231 sensors
-Date: Thu, 22 Jan 2015 13:54:28 -0800
-Message-ID: <1421963668-28359-1-git-send-email-khilman@kernel.org>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene.kim@samsung.com>, linux-samsung-soc@vger.kernel.org
-Cc: linaro-kernel@lists.linaro.org, linux-arm-kernel@lists.infradead.org, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Kevin Hilman <khilman@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+From: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [PATCH] SATA: OCTEON: support SATA on OCTEON platform
+Date: Thu, 22 Jan 2015 23:55:43 +0200
+Message-ID: <20150122215543.GA5048@fuloong-minipc.musicnaut.iki.fi>
+References: <1421681040-3392-1-git-send-email-aleksey.makarov@auriga.com>
+ <20150119154357.GH21553@leverpostej>
+ <54BD580C.6030701@gmail.com>
+ <20150121165427.GA8722@leverpostej>
+ <54BFDF2B.80708@caviumnetworks.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <54BFDF2B.80708-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Aleksey Makarov <aleksey.makarov-tx70/tkNEWbQT0dZR+AlfA@public.gmane.org>, "linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org" <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Anton Vorontsov <avorontsov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org>, Vinita Gupta <vgupta-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Kevin Hilman <khilman@linaro.org>
+Hi,
 
-The odroid-xu3 has 4 INA231 current sensors on board which can be
-accessed from the Linux via the hwmon interface.
+On Wed, Jan 21, 2015 at 09:17:31AM -0800, David Daney wrote:
+> On 01/21/2015 08:54 AM, Mark Rutland wrote:
+> >While the DTB may already exist, the string "cavium,octeon-7130-ahci"
+> >isn't in mainline, and as far as I can see has never been supported.
+> 
+> There seems to be a disconnect here.  The DTB comes from the hardware boot
+> environment.  The hardware is in some cases already deployed.  It is for all
+> practical purposes, impossible to change the DTB.
 
-There is one sensor for each of these power rails:
+It's possible to change/fix the DTB in platform code like currently
+done for the OCTEON in-tree DTBs. But that's ugly.
 
-- A15 cluster: VDD_ARM
-- A7 cluster: VDD_KFC
-- GPU: VDD_G3D
-- memory: VDD_MEM
+I think there should be also a mechanism to override the DTB completely
+with a user supplied one like with kernel APPENDED_DTB on ARM.
 
-In addition to adding the sensors, LDO26 from the PMIC needs to be
-enabled because it's powering these sensor.
-
-Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
-Reviewed-By: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
-Signed-off-by: Kevin Hilman <khilman@linaro.org>
----
-v3: extend existing i2c_0 node 
-v2: use "ti,ina231" as compatible string.
-
-Applies on top of "ARM: dts: Add dts file for odroid XU3 board" from Sjoerd Simons.
-
- arch/arm/boot/dts/exynos5422-odroidxu3.dts | 39 ++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
-
-diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3.dts b/arch/arm/boot/dts/exynos5422-odroidxu3.dts
-index c29123c0734d..38694a4a5417 100644
---- a/arch/arm/boot/dts/exynos5422-odroidxu3.dts
-+++ b/arch/arm/boot/dts/exynos5422-odroidxu3.dts
-@@ -174,6 +174,13 @@
- 					regulator-always-on;
- 				};
- 
-+				ldo26_reg: LDO26 {
-+					regulator-name = "vdd_ldo26";
-+					regulator-min-microvolt = <3000000>;
-+					regulator-max-microvolt = <3000000>;
-+					regulator-always-on;
-+				};
-+
- 				buck1_reg: BUCK1 {
- 					regulator-name = "vdd_mif";
- 					regulator-min-microvolt = <800000>;
-@@ -330,3 +337,35 @@
- &usbdrd_dwc3_1 {
- 	dr_mode = "otg";
- };
-+
-+&i2c_0 {
-+	status = "okay";
-+
-+	/* A15 cluster: VDD_ARM */
-+	ina231@40 {
-+		compatible = "ti,ina231";
-+		reg = <0x40>;
-+		shunt-resistor = <10000>;
-+	};
-+
-+	/* memory: VDD_MEM */
-+	ina231@41 {
-+		compatible = "ti,ina231";
-+		reg = <0x41>;
-+		shunt-resistor = <10000>;
-+	};
-+
-+	/* GPU: VDD_G3D */
-+	ina231@44 {
-+		compatible = "ti,ina231";
-+		reg = <0x44>;
-+		shunt-resistor = <10000>;
-+	};
-+
-+	/* A7 cluster: VDD_KFC */
-+	ina231@45 {
-+		compatible = "ti,ina231";
-+		reg = <0x45>;
-+		shunt-resistor = <10000>;
-+	};
-+};
--- 
-2.1.3
+A.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
