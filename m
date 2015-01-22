@@ -1,72 +1,159 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v2 4/9] ARM: STi: DT: STiH407: Add Device Tree node for the LPC
-Date: Thu, 22 Jan 2015 11:56:02 +0000
-Message-ID: <1421927767-28889-5-git-send-email-lee.jones@linaro.org>
-References: <1421927767-28889-1-git-send-email-lee.jones@linaro.org>
+From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH RFC 1/2] Documentation: arm: define DT bindings for
+ system suspend
+Date: Thu, 22 Jan 2015 11:59:06 +0000
+Message-ID: <20150122115906.GB1218@red-moon>
+References: <1421840155-18990-1-git-send-email-sudeep.holla@arm.com>
+ <1421840155-18990-2-git-send-email-sudeep.holla@arm.com>
+ <20150121212139.1cdc3fd5@xhacker>
+ <20150121213507.695b871b@xhacker>
+ <20150121135610.GA21950@e102568-lin.cambridge.arm.com>
+ <20150122123314.0dc44b67@xhacker>
+ <20150122142949.64c41db6@xhacker>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1421927767-28889-1-git-send-email-lee.jones@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, kernel@stlinux.com, rtc-linux@googlegroups.com, david.paris@st.com, wim@iguana.be, lee.jones@linaro.org, linux@roeck-us.net, linux-watchdog@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20150122142949.64c41db6@xhacker>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jonghwa Lee <jonghwa3.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Amit Daniel Kachhap <amit.daniel-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On current ST platforms the LPC controls a number of functions.  This
-patch enables support for the LPC Watchdog and LPC RTC devices on LPC1
-and LPC2 respectively.
+On Thu, Jan 22, 2015 at 06:29:49AM +0000, Jisheng Zhang wrote:
+> Dear Lorenzo and Sudeep,
+> 
+> On Wed, 21 Jan 2015 20:33:14 -0800
+> Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org> wrote:
+> 
+> > Dear Lorenzo,
+> > 
+> > On Wed, 21 Jan 2015 05:56:11 -0800
+> > Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org> wrote:
+> > 
+> > > On Wed, Jan 21, 2015 at 01:35:07PM +0000, Jisheng Zhang wrote:
+> > > > Dear Sudeep,
+> > > > 
+> > > > On Wed, 21 Jan 2015 05:21:39 -0800
+> > > > Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org> wrote:
+> > > > 
+> > > > > Dear Sudeep,
+> > > > > 
+> > > > > On Wed, 21 Jan 2015 03:35:54 -0800
+> > > > > Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
+> > > > > 
+> > > > > > ARM based platforms implement unique ways to enter system suspend
+> > > > > > (i.e. Suspend to RAM). The mechanism and the parameters defining the
+> > > > > > system state vary on a per-platform basis forcing the OS to handle
+> > > > > > it in very platform specific way.
+> > > > > > 
+> > > > > > Since ARM 32-bit systems had machine specific code, no attempts to
+> > > > > > standardize are being made as it provides easy way to implement
+> > > > > > suspend operations in a platform specific manner. However, this
+> > > > > > approach not only makes maintainance more difficult as the number of
+> > > > > > platforms supported increases but also not feasible for ARM64.
+> > > > > > 
+> > > > > > This DT binding aims at standardizing the system suspend for ARM
+> > > > > > platforms. ARM64 platforms mandates entry-method property in DT for
+> > > > > > this system suspend node.
+> > > > > > 
+> > > > > > On system implementing PSCI as an enable-method to enter system
+> > > > > > suspend, the PSCI CPU suspend method is used on versions upto v0.2
+> > > > > > and requires the power_state parameter to be passed to the PSCI CPU
+> > > > > > suspend function.
+> > > > > > 
+> > > > > > This parameter is platform specific, therefore must be provided by
+> > > > > > firmware to the OS in order to enable proper call sequence.
+> > > > > > 
+> > > > > > This ARM system suspend DT bindings rely on a property
+> > > > > > (i.e. arm,psci-suspend-param) in the PSCI DT bindings that describes
+> > > > > > how the PSCI CPU suspend power_state parameter should be defined in
+> > > > > > DT.
+> > > > > > 
+> > > > > > Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+> > > > > > ---
+> > > > > >  Documentation/devicetree/bindings/arm/psci.txt     | 11 +++
+> > > > > >  .../devicetree/bindings/arm/system-suspend.txt     | 93
+> > > > > > ++++++++++++++++++++++ 2 files changed, 104 insertions(+)
+> > > > > >  create mode 100644
+> > > > > > Documentation/devicetree/bindings/arm/system-suspend.txt
+> > > > > > 
+> > > > > > diff --git a/Documentation/devicetree/bindings/arm/psci.txt
+> > > > > > b/Documentation/devicetree/bindings/arm/psci.txt index
+> > > > > > 5aa40ede0e99..bd3977a2a333 100644 ---
+> > > > > > a/Documentation/devicetree/bindings/arm/psci.txt +++
+> > > > > > b/Documentation/devicetree/bindings/arm/psci.txt @@ -61,6 +61,14 @@
+> > > > > > Device tree nodes that require usage of PSCI CPU_SUSPEND function
+> > > > > > (ie idle Definition: power_state parameter to pass to the PSCI
+> > > > > > suspend call. 
+> > > > > > +PSCI v0.2 and earlier versions don't have explicit operation for
+> > > > > > system +suspend. However, one can implement system suspend using
+> > > > > > CPU_SUSPEND by +ensuring every other core except the one executing
+> > > > > > the CPU_SUSPEND call +has called into PSCI through a CPU_OFF call.
+> > > > > 
+> > > > > If users explicitly hot-unplug other cores when system load is low to
+> > > > > save power, then we want to suspend at some point, how does the
+> > > > > firmware know this case?
+> > > > 
+> > > > Sorry for confusion. I mean 
+> > > > 
+> > > > If users explicitly hot-unplug other cores when system load is low to
+> > > > save power, then at some point cpuidle want to suspend the cluster, how
+> > > > does the distinguish this case with suspend the system to ram.
+> > > 
+> > > Through the arm,psci-suspend-param DT property, ie PSCI CPU_SUSPEND
+> > > power_state parameter.
+> > > 
+> > > Did you read the patch :) ?
+> > 
+> > Yep, I do read the patch ;) To be honest, I implemented the s2ram similar as
+> > the patch does. But according to PSCI v0.2, "arm,psci-suspend-param =
+> > <0x1010000>" means suspend the cluster. I'm not sure I understand it
+> > correctly, "can implement system suspend using CPU_SUSPEND by ensuring
+> > every other core except the one executing the CPU_SUSPEND call has called
+> > into PSCI through a CPU_OFF call" intend to ask firmware to 
+> > 
+> > suspend the system if other cores has called into PSCI through a CPU_OFF
+> > 
+> > or
+> > 
+> > suspend the cpu cluster if other cores are not CPU_OFF.
+> > 
+> > 
+> > I extend the PSCI CPU_SUSPEND function's to use power_state bit[26] to tell
+> > firmware whether suspend to ram or not.
+> > 
 
-Signed-off-by: David Paris <david.paris@st.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- arch/arm/boot/dts/stih407-family.dtsi | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+And that's what the arm,psci-suspend-param stands for in the
+system-state node.
 
-diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
-index 3e31d32..04448a7 100644
---- a/arch/arm/boot/dts/stih407-family.dtsi
-+++ b/arch/arm/boot/dts/stih407-family.dtsi
-@@ -7,6 +7,7 @@
-  * publishhed by the Free Software Foundation.
-  */
- #include "stih407-pinctrl.dtsi"
-+#include <dt-bindings/mfd/st-lpc.h>
- #include <dt-bindings/reset-controller/stih407-resets.h>
- / {
- 	#address-cells = <1>;
-@@ -274,5 +275,24 @@
- 
- 			status = "disabled";
- 		};
-+
-+		/* Watchdog and Real-Time Clock */
-+		lpc@8787000 {
-+			compatible = "st,stih407-lpc";
-+			reg = <0x8787000 0x1000>;
-+			interrupts = <GIC_SPI 129 IRQ_TYPE_EDGE_RISING>;
-+			clocks = <&clk_s_d3_flexgen CLK_LPC_0>;
-+			timeout-sec = <120>;
-+			st,syscfg = <&syscfg_core>;
-+			st,lpc-mode = <ST_LPC_MODE_WDT>;
-+		};
-+
-+		lpc@8788000 {
-+			compatible = "st,stih407-lpc";
-+			reg = <0x8788000 0x1000>;
-+			interrupts = <GIC_SPI 130 IRQ_TYPE_EDGE_RISING>;
-+			clocks = <&clk_s_d3_flexgen CLK_LPC_1>;
-+			st,lpc-mode = <ST_LPC_MODE_RTC>;
-+		};
- 	};
- };
--- 
-1.9.1
+Since system-suspend corresponds supposedly to the highest level of
+affinity in the system, I would rather say power_state = 0x3010000
+can be used for system suspend (affinity bits[25:24] = 0x3), but we did
+not want to force it, probably that's what we should do.
+
+Yes, there is also a platform specific component in power_state
+param and you can use that too, we wanted to leave flexibility
+to platforms.
+
+PSCI v1.0 will introduce a different separate call for system
+suspend, this patch copes with "legacy" versions, as the patch
+logs describe.
+
+I agree that the value 0x1010000 was a bad choice for the example, it
+is confusing, but it does not mean you _have_ to use that value, is it
+clear ?
+
+> I read the PSCI spec again, power_state bit[0:15] is "platform specific ID",
+> Is one of these bits used for suspend system?
+
+It is platform specific, you define that :) ! That's the reason why
+firmware has to tell the OS what parameter triggers the system-state,
+it is platform specific, and we provide a binding to define it and provide
+the OS with the correct value to use.
+
+Lorenzo
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
