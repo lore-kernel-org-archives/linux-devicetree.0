@@ -1,44 +1,52 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 0/6] ARM: shmobile: sh73a0: DT PM domain support
-Date: Thu, 22 Jan 2015 11:55:22 +0900
-Message-ID: <20150122025522.GJ31170@verge.net.au>
-References: <1421237484-16847-1-git-send-email-geert+renesas@glider.be>
- <20150114235302.GC10479@verge.net.au>
- <CAMuHMdVANePZ-fLzaLCEOm0vHR735C=u5_fDa4Uywi_P5ggjBg@mail.gmail.com>
- <20150116011315.GA7830@verge.net.au>
- <20150116024724.GA31654@verge.net.au>
- <CAMuHMdU4hj2p-N8abT-BSadznqF7=0-08o9F4_7+qjdvv6Whmw@mail.gmail.com>
- <20150116124502.GC6285@verge.net.au>
- <20150117011414.GC397@verge.net.au>
- <CAMuHMdX40LTdKt_nBb_U4eXWMuPXSYfC0Q4PvA42grdocCZfAA@mail.gmail.com>
+From: Viet Nga Dao <vndao-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH mtd] mtd:devices: Add Altera EPCQ Driver
+Date: Thu, 22 Jan 2015 10:56:57 +0800
+Message-ID: <CAN1oZWwBb3nWDKcwFmDD1kc94mxCWBz+O-nUnZdByYsfZSTtCQ@mail.gmail.com>
+References: <CAN1oZWxB5N=YMQcsJppZgp7TXodcR4tKZM+LNFXS7PSx3F-Yag@mail.gmail.com>
+	<CAN1oZWzeev-1uE7gxPnJA=L4Th65CRj8C_LQ7hMJLPHGssDjNQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdX40LTdKt_nBb_U4eXWMuPXSYfC0Q4PvA42grdocCZfAA@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAN1oZWzeev-1uE7gxPnJA=L4Th65CRj8C_LQ7hMJLPHGssDjNQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Viet Nga Dao <vndao-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jan 17, 2015 at 03:12:19PM +0100, Geert Uytterhoeven wrote:
-> Hi Simon,
-> 
-> On Sat, Jan 17, 2015 at 2:14 AM, Simon Horman <horms@verge.net.au> wrote:
-> >> > If you add patch 6 to sh-drivers-for-v3.20 and merge it in -next,
-> >> > everything is fine!
-> >>
-> >> Thanks, I thought I had that one but I must have missed it somehow.
-> >
-> > I have made a second attempt and this time I hope that I haven't missed
-> > anything. Please see renesas-next-20150117-v3.19-rc1.
-> 
-> Thanks, looks better!
-
-For the record: Olof has asked for review comments for the BSC driver and
-binding patches. Accordingly I have dropped them, and these patches which
-depend on them, from next.
-
-This dependency may be due to the way the branches are arranged, rather
-than actual dependencies of the code. But regardless I am dropping all
-effected branches for now.
+On Tue, Jan 20, 2015 at 10:05 AM, Viet Nga Dao <vndao-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org> wrote:
+> On Thu, Jan 15, 2015 at 5:27 PM, Viet Nga Dao <vndao-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org> wrote:
+>> On Tue, Jan 13, 2015 at 11:33 AM, Brian Norris
+>> <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>> On Thu, Dec 18, 2014 at 12:23:16AM -0800, vndao-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org wrote:
+>>>> From: Viet Nga Dao <vndao-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+>>>>
+>>>> Altera EPCQ Controller is a soft IP which enables access to Altera EPCQ and
+>>>> EPCS flash chips. This patch adds driver for these devices.
+>>>>
+>>>> Signed-off-by: Viet Nga Dao <vndao-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+>>>
+>>> This drivers seems awfully similar to (and so I infer it is likely
+>>> copy-and-pasted from) m25p80.c / spi-nor.c. Do you think it can be
+>>> rewritten as a SPI NOR driver, under drivers/mtd/spi-nor/ ? It looks
+>>> like these flash share most (all?) the same basic opcodes.
+>>>
+>> For Altera EPCQ flashes, almost operations are performed underline
+>> hardware. Software only able to perform the following through
+>> registers:
+>>  -  read status register
+>>  -  read id
+>>  -  write status registers bit SR_BP0,SR_BP1, SR_BP2,SR_BP3, SR_TB
+>> (http://www.altera.com.my/literature/hb/cfg/cfg_cf52012.pdf)
+>> For read/write data: all the operations like QUAD_READ/WRITE,
+>> FAST_READ/WRITE are handled by hardware as well. From software point
+>> of view, there is no difference between these 2 modes.
+>> That is why if rewrite the drivers to follow spi-nor structure, it
+>> will require extra decoding works for the only few used opcodes.
+>>
+> Is it OK to remain this driver structure?
+Can someone please reply my question as it is been a while?
+Viet Nga
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
