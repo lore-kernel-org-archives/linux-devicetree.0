@@ -1,140 +1,65 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 0/2] mtd: hisilicon: add a new driver for NAND
- controller of hisilicon hip04 Soc
-Date: Thu, 22 Jan 2015 00:45:29 -0800
-Message-ID: <20150122084529.GC3268@brian-ubuntu>
-References: <1415105221-7732-1-git-send-email-wangzhou.bry@gmail.com>
- <20141130090853.GG3608@norris-Latitude-E6410>
- <548987D3.3060407@gmail.com>
- <20141217062333.GD7112@brian-ubuntu>
- <5491638B.5090403@gmail.com>
- <20150113041701.GM9759@ld-irv-0074>
- <54C06E05.9050205@hisilicon.com>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH/RFC v10 17/19] DT: Add documentation for exynos4-is
+ 'flashes' property
+Date: Thu, 22 Jan 2015 09:47:01 +0100
+Message-ID: <54C0B905.3010002@samsung.com>
+References: <1420816989-1808-1-git-send-email-j.anaszewski@samsung.com>
+ <1420816989-1808-18-git-send-email-j.anaszewski@samsung.com>
+ <54BFD4B9.8030707@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <54C06E05.9050205-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Cc: Zhou Wang <wangzhou.bry-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, caizhiyong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, yubingxu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Iwo Mergler <Iwo.Mergler-/K5RfY/kUqoaXkdz0Xzl5EEOCMrvLtNR@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-reply-to: <54BFD4B9.8030707@samsung.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kyungmin.park@samsung.com, b.zolnierkie@samsung.com, pavel@ucw.cz, cooloney@gmail.com, rpurdie@rpsys.net, sakari.ailus@iki.fi, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Zhou,
+Hi,
 
-On Thu, Jan 22, 2015 at 11:27:01AM +0800, Zhou Wang wrote:
-> Very sorry for late, I made tests again and also had a talk with the
-> NAND controller hardware colleague. Please find my reply below.
+On 01/21/2015 05:32 PM, Sylwester Nawrocki wrote:
+> Hi,
+>
+> On 09/01/15 16:23, Jacek Anaszewski wrote:
+>> This patch adds a description of 'flashes' property
+>> to the samsung-fimc.txt.
+>>
+>> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+>> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+>
+>> ---
+>>   .../devicetree/bindings/media/samsung-fimc.txt     |    7 +++++++
+>>   1 file changed, 7 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/media/samsung-fimc.txt b/Documentation/devicetree/bindings/media/samsung-fimc.txt
+>> index 922d6f8..22a6b2f 100644
+>> --- a/Documentation/devicetree/bindings/media/samsung-fimc.txt
+>> +++ b/Documentation/devicetree/bindings/media/samsung-fimc.txt
+>> @@ -40,6 +40,12 @@ should be inactive. For the "active-a" state the camera port A must be activated
+>>   and the port B deactivated and for the state "active-b" it should be the other
+>>   way around.
+>>
+>> +Optional properties:
+>> +
+>> +- flashes - Array of phandles to flash LED devices, or their sub-nodes
+>> +	    representing sub-leds.
+>> +	    (see Documentation/devicetree/bindings/leds/common.txt)
+>
+> How about renaming this to "illuminators" or something else more generic?
+> The "torch" LED (for video recording illumination?) is not really a flash.
 
-No problem. Glad to hear you followed through on this one, as the
-results were curious.
+OK, currently I can't think of a better substitute for 'illuminators'.
 
-> On 2015/1/13 12:17, Brian Norris wrote:
-> > On Wed, Dec 17, 2014 at 07:05:47PM +0800, Zhou Wang wrote:
-> >> On 2014=E5=B9=B412=E6=9C=8817=E6=97=A5 14:23, Brian Norris wrote:
-> > [...]
-> >>>> [  104.648056] mtd_nandbiterrs: ECC failure, read data is incorr=
-ect
-> >>>> despite read success
-> >>>> insmod: can't insert 'mtd_nandbiterrs.ko': Input/output error
-[...]
-> I made testes again in 1bit/ECC and 16bit/ECC modes using 2K(page)+64=
-B(oob)
-> NAND flash. here are the logs, I also printed ECC code in OOB area.
->=20
-> Results are:
-> 1. in 16bit/ECC, it will return -EBADMSG as the ECC codes have been b=
-roken.
-> 2. in 1bit/ECC, it will not reture -EBADMSG because a hardware design=
- problem.
->    I will explain the detail below.
->=20
-> Test logs:
-> 1. in 16bit/ECC(print ECC codes):
->=20
-> /home # insmod mtd_nandbiterrs.ko dev=3D2 page_offset=3D1 seed=3D110 =
-mode=3D0
+Since it has been agreed that a discrete LED component requires a child
+node in a LED device binding, even if there is only one current output
+exposed by the LED device, this description has to be modified as follows:
 
-=2E..
+- illuminators - Array of phandles to the child nodes of a flash LED
+	device related binding.
+	(see Documentation/devicetree/bindings/leds/common.txt).
 
-> mtd_nandbiterrs: error: read failed at 0x800
-> mtd_nandbiterrs: After 1 biterrors per subpage, read reported error -=
-74
 
-^^^ Ah, that's what I would expect from a driver that doesn't implement
-the raw() functions.
-
-> mtd_nandbiterrs: finished successfully.
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D
-> insmod: can't insert 'mtd_nandbiterrs.ko': Input/output error
->=20
-> 2. in 1bit/ECC(print ECC codes):
-> /home # insmod mtd_nandbiterrs.ko dev=3D2 page_offset=3D1 seed=3D110 =
-mode=3D0
-
-=2E..
-
-> mtd_nandbiterrs: ECC failure, read data is incorrect despite read suc=
-cess
-> insmod: can't insert 'mtd_nandbiterrs.ko': Input/output error
->=20
-> Reason about above 1bit/ECC test result:
-
-=2E..
-
-> It can not correct this kind of 2bit errors in 1bit/ECC mode in this =
-NAND
-> controller, however, it will trigger a correctable interrupt. As a re=
-sult,
-> software can not find this 1bit error in page data.
-
-IOW, uncorrectable errors are getting reported as corrected bitflips?
-That does sound bad.
-
-> This is a hardware problem of this NAND controller.
-> I plan to remove the 1bit/ECC mode support in patch of next version.
-
-OK, sounds good. 1-bit HW ECC is not really very useful these days
-anyway, if your higher-bit ECC can serve to replace it. Can the ECC
-bytes still fit in the same spare area, though?
-
-> > Are you saying you cannot implement the raw() hooks for this IP? Or=
- just
-> > that you haven't yet? The latter is probably OK for now (I'd recomm=
-end
-> > doing this, or at least mark a TODO in the code), but the former is=
- a
-> > little disturbing.
->=20
-> The function of raw() hooks is just writing the page data to flash, i=
-s this right?
-
-Right, just data (and OOB, if calling the _oob_ functions) without any
-ECC parity bytes.
-
-> In none ECC mode, it can write page date alone to flash. But in ECC m=
-ode, NAND
-> controller will produce related ECC code automatically, write page da=
-ta and ECC code
-> to flash. In ECC mode, it can not write page date alone to flash for =
-this NAND controller.
-
-Perhaps you can switch between ECC mode and non-ECC mode?
-
-At any rate, this isn't absolutely required.
-
-> As a result, the nandbiterrs test can not pass.
->=20
-> I don't know if I have explained these two problems clearly. If still=
- have something
-> confused, please let me know.
-
-Brian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Best Regards,
+Jacek Anaszewski
