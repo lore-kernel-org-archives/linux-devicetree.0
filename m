@@ -1,113 +1,62 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v3/resend 0/4] drivers: bus: Add Simple Power-Managed Bus
-Date: Thu, 22 Jan 2015 10:34:09 +0100
-Message-ID: <1421919253-4784-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-sh-owner@vger.kernel.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Olof Johansson <olof@lixom.net>, Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+From: Olliver Schinagl <o.schinagl@ultimaker.com>
+Subject: Re: [PATCH v2 4/4] leds: no longer use unnamed gpios
+Date: Thu, 22 Jan 2015 10:37:46 +0100
+Message-ID: <54C0C4EA.5020404@ultimaker.com>
+References: <1421876028-22799-1-git-send-email-o.schinagl@ultimaker.com> <1421876028-22799-5-git-send-email-o.schinagl@ultimaker.com> <2355733.gZvsF3iKWH@pcimr>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <2355733.gZvsF3iKWH@pcimr>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Rojhalat Ibrahim <imr@rtschenk.de>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Olliver Schinagl <oliver@schinagl.nl>, Robin Gong <b38343@freescale.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Aaron Lu <aaron.lu@intel.com>, Grant Likely <grant.likely@linaro.org>, Jingoo Han <jg1.han@samsung.com>, Alexander Shiyan <shc_work@mail.ru>, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-	Hi all,
+Hey Rojhalat,
 
-The Renesas Bus State Controller (BSC) provides an external bus for
-connecting multiple external devices to an SoC, driving several chip
-select lines, for e.g. NOR FLASH, Ethernet and USB.
-On the kzm9g and ape6evm development boards, an smsc9220 Ethernet
-controller is connnected to the BSC of an SH-Mobile AG5 (sh73a0) resp.
-R-Mobile APE6 (r8a73a4) SoC.
+On 22-01-15 10:32, Rojhalat Ibrahim wrote:
+> On Wednesday 21 January 2015 22:33:48 Olliver Schinagl wrote:
+>> From: Olliver Schinagl <oliver@schinagl.nl>
+>>
+>> The gpio document says we should not use unnamed bindings for gpios.
+>> This patch uses the 'led-' prefix to the gpios and updates code and
+>> documents. Because the devm_get_gpiod_from_child() falls back to usi=
+ng
+>> old-style unnamed gpios, we can update the code first, and update
+>> dts files as time allows.
+>>
+>> Signed-off-by: Olliver Schinagl <oliver@schinagl.nl>
+> Where does devm_get_gpiod_from_child() fall back "to using old-style
+> unnamed gpios"?
+Your absolutly right, I accidentally forgot a patch that was supposed t=
+o=20
+get squashed into this patchset. The idea is to do the same as in=20
+gpio-keys-polled.c. I'll make sure it sits in v3 of the set! My appolog=
+ies!
 
-The BSC is a fairly simple memory-mapped bus, hence a "simple-bus"
-compatibility seems suitable.  However, the BSC is special in two
-ways:
-  1. It is part of a PM domain (A4S on sh73a0),
-  2. It has a gateable functional clock (ZB).
-Before a device connected to the BSC can be accessed, the PM domain
-containing the BSC must be powered on, and the functional clock
-driving the BSC must be enabled.
+Olliver
+>
+> After applying this patch the leds defined in my devicetree do not
+> work anymore.
+>
+>     Rojhalat
+>
+>
+>
 
-Both special properties can be described in DT in a standardized way
-("power-domains = <&pd_a4s>" and "clocks = <&zb_clk>", cfr. the
-example in the DT binding documentation).  Externally connected
-devices are described as children of the BSC node.
+--=20
+Met vriendelijke groeten, Kind regards, =E4=B8=8E=E4=BA=B2=E5=88=87=E7=9A=
+=84=E9=97=AE=E5=80=99
 
-Unfortunately this doesn't mean everything will work out-of-the-box.
-There are two problems:
-  1. Without a device driver bound to the bus device, this device is
-     not attached to the PM domain. And although a child device is
-     present and active, the PM domain may be powered down, as it's
-     considered unused by the PM domain core.
-  2. Without a device driver calling pm_runtime_enable(), its
-     functional clock is not enabled. Once runtime PM is enabled, the
-     R-Mobile PM domain platform driver manages the functional clock
-     using runtime PM.
-
-As none of the above is really bus hardware-specific (PM domains and
-functional clocks in clock domains are handled from genpd and platform
-code), this series adds a Simple Power-Managed Bus driver for
-transparent busses, which just enables runtime PM for the bus device.
-Due to the child-parent relationship of devices connected to the bus,
-as long as the device drivers for the child devices are runtime PM
-enabled, the bus's PM domain will be powered, and the bus's clock will
-be enabled automatically when needed, for both runtime PM and s2ram.
-
-Currently this driver supports the Renesas Bus State Controller only,
-but support for other SoCs and other bus controllers can easily be
-added later by adding more compatible values.
-Note that this driver cannot just bind against "simple-bus", as that
-may prevent a device-specific driver from taking precedence.
-
-This was tested on sh73a0/kzm9g-multiplatform (by me), and on
-r8a73a4/ape6evm-multiplatform (by Ulrich Hecht). Without this,
-Ethernet doesn't work, as the ZB clock is disabled by
-clk_disable_unused().
-
-As drivers/bus doesn't have a maintainer, and this driver is needed to
-move two shmobile platforms away from legacy to multiplatform, I think
-this can go in through Simon's shmobile tree.
-
-Changes compared to v2:
-  - Document required properties inherited from "simple-bus",
-  - Document required "reg" property for "renesas,bsc",
-  - Move "ranges" before "reg" in the example,
-  - Add Tested-by,
-  - Split-off sh73a0/kzm9g and r8a73a4/ape6evm DTS updates.
-
-Changes compared to v1 (more detailed change logs in the individual
-patches):
-  - Added sorting of drivers/bus Kconfig and Makefile entries,
-  - Added DT binding documentation,
-  - Rename from "Renesas Bus State Controller Driver" (renesas-bsc) to
-    "Simple Power-Managed Bus Driver" (simple-pm-bus),
-  - Postponed adding power-domains properties to the dtsi,
-  - Added updates for r8a73a4/ape6evm.
-
-Thanks for your review comments!
-
-Geert Uytterhoeven (4):
-  drivers: bus: Sort Kconfig entries alphabetically
-  drivers: bus: Sort Makefile entries alphabetically
-  drivers: bus: Add Simple Power-Managed Bus DT Bindings
-  drivers: bus: Add Simple Power-Managed Bus Driver
-
- .../devicetree/bindings/bus/simple-pm-bus.txt      | 52 +++++++++++++++++++++
- drivers/bus/Kconfig                                | 53 ++++++++++++++--------
- drivers/bus/Makefile                               | 15 +++---
- drivers/bus/simple-pm-bus.c                        | 51 +++++++++++++++++++++
- 4 files changed, 144 insertions(+), 27 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/bus/simple-pm-bus.txt
- create mode 100644 drivers/bus/simple-pm-bus.c
-
--- 
-1.9.1
-
-Gr{oetje,eeting}s,
-
-						Geert
+Olliver Schinagl
+Research & Development
+Ultimaker B.V.
+http://www.ultimaker.com
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
